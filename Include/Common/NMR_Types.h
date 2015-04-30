@@ -1,3 +1,9 @@
+/*++
+
+Copyright (C) 2015 netfabb GmbH (Original Author)
+
+All rights reserved.
+
 Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
@@ -17,3 +23,32 @@ LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
 ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+Abstract:
+
+NMR_Types.h defines portable aliases for all standard data types.
+
+--*/
+
+#ifndef __NMR_TYPES
+#define __NMR_TYPES
+
+namespace NMR {
+
+	typedef char nfChar;
+	typedef wchar_t nfWChar;
+	typedef unsigned char nfByte;
+	typedef unsigned short nfUint16;
+	typedef signed short nfInt16;
+	typedef int nfInt32;
+	typedef int nfError;
+	typedef bool nfBool;
+	typedef float nfFloat;
+	typedef double nfDouble;
+	typedef unsigned int nfUint32;
+	typedef unsigned int nfColor;
+	typedef long long nfInt64;
+	typedef unsigned long long nfUint64;
+}
+
+#endif // __NMR_TYPES

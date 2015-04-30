@@ -1,3 +1,9 @@
+/*++
+
+Copyright (C) 2015 netfabb GmbH (Original Author)
+
+All rights reserved.
+
 Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
@@ -17,3 +23,18 @@ LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
 ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+Abstract:
+
+NMR_COMVersion.h defines the current implementation version.
+
+--*/
+
+#ifndef __NMR_MODELCOMVERSION
+#define __NMR_MODELCOMVERSION
+
+#define NMR_APIVERSION_MAJOR 1
+#define NMR_APIVERSION_MINOR 0
+#define NMR_APIVERSION_INTERFACE 15
+
+#endif // __NMR_MODELCOMVERSION

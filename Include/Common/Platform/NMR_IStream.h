@@ -1,3 +1,10 @@
+/*++
+
+Copyright (C) 2015 Microsoft Corporation 
+Copyright (C) 2015 netfabb GmbH (Original Author)
+
+All rights reserved.
+
 Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
@@ -17,3 +24,16 @@ LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
 ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+Abstract:
+
+NMR_IStream.h defines several COM Classes in a portable way.
+
+--*/
+
+#ifndef __NMR_ISTREAM
+#define __NMR_ISTREAM
+
+#include <Objidl.h>
+
+#endif // __NMR_ISTREAM

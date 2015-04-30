@@ -1,3 +1,9 @@
+/*++
+
+Copyright (C) 2015 netfabb GmbH (Original Author)
+
+All rights reserved.
+
 Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
@@ -17,3 +23,41 @@ LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
 ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+Abstract:
+
+NMR_MeshExportEdgeMap.h defines the Mesh Export Edge Map Class.
+This class acts as a container for additional topology information.
+
+--*/
+
+#ifndef __NMR_MESHEXPORTEDGEMAP
+#define __NMR_MESHEXPORTEDGEMAP
+
+#include "Common/NMR_Types.h" 
+#include "Common/Math/NMR_Geometry.h" 
+
+#include <vector>
+
+namespace NMR {
+
+	typedef union {
+		nfInt32 m_edgeindices[3];
+	} NMESHEXPORTFACE;
+
+	class CMeshExportEdgeMap {
+	private:
+		std::vector<NMESHEXPORTFACE> m_FaceInfos;
+	public:
+		CMeshExportEdgeMap() = delete;
+		CMeshExportEdgeMap(nfUint32 nFaceCount);
+
+		NMESHEXPORTFACE getFaceData(_In_ nfInt32 nIdx);
+		void setFaceData(_In_ nfInt32 nIdx, _In_ NMESHEXPORTFACE ExportFace);
+	};
+
+	typedef std::shared_ptr <CMeshExportEdgeMap> PMeshExportEdgeMap;
+
+}
+
+#endif // __NMR_MESHEXPORTEDGEMAP

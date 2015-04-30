@@ -1,3 +1,10 @@
+/*++
+
+Copyright (C) 2015 Microsoft Corporation
+Copyright (C) 2015 netfabb GmbH (Original Author)
+
+All rights reserved.
+
 Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
@@ -17,3 +24,44 @@ LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
 ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+Abstract:
+
+NMR_MeshInformation.cpp implements the Mesh Information Class.
+This is a base class for handling all the mesh-related linear information
+(like face colors, textures, etc...). It provides abstract functions to
+interpolate and reconstruct informations while the mesh topology is changing.
+
+--*/
+
+#include "Common/MeshInformation/NMR_MeshInformation.h" 
+#include "Common/NMR_Exception.h" 
+#include <math.h>
+
+namespace NMR {
+
+	CMeshInformation::CMeshInformation()
+	{
+		// empty on purpose
+	}
+
+	_Ret_notnull_ MESHINFORMATIONFACEDATA * CMeshInformation::getFaceData(nfUint32 nFaceIndex)
+	{
+		if (!m_pContainer)
+			throw CNMRException(NMR_ERROR_NOMESHINFORMATIONCONTAINER);
+		return m_pContainer->getFaceData(nFaceIndex);
+	}
+
+	void CMeshInformation::resetFaceInformation(_In_ nfUint32 nFaceIndex)
+	{
+		MESHINFORMATIONFACEDATA * pData = getFaceData(nFaceIndex);
+		if (pData)
+			this->invalidateFace(pData);
+	}
+
+	_Ret_notnull_ MESHINFORMATIONFACEDATA * CMeshInformation::addFaceData(_In_ nfUint32 nNewFaceCount)
+	{
+		return m_pContainer->addFaceData(nNewFaceCount);
+	}
+
+}

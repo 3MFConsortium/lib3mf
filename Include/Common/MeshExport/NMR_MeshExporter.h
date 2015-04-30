@@ -1,3 +1,9 @@
+/*++
+
+Copyright (C) 2015 netfabb GmbH (Original Author)
+
+All rights reserved.
+
 Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
@@ -17,3 +23,44 @@ LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
 ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+Abstract:
+
+NMR_MeshExporter.h defines the Mesh Exporter Class.
+This is an abstract base class for exporting different Mesh Formats.
+
+--*/
+
+#ifndef __NMR_MESHEXPORTER
+#define __NMR_MESHEXPORTER
+
+#include "Common/NMR_Types.h" 
+#include "Common/Math/NMR_Geometry.h" 
+#include "Common/Mesh/NMR_Mesh.h" 
+#include "Common/MeshExport/NMR_MeshExportEdgeMap.h"
+#include "Common/Platform/NMR_ExportStream.h" 
+
+#include <vector>
+
+namespace NMR {
+
+	class CMeshExporter {
+	private:
+		PExportStream m_stream;
+	public:
+		CMeshExporter();
+		CMeshExporter(_In_ PExportStream pStream);
+
+		void setStream(_In_ PExportStream pStream);
+		CExportStream * getStream();
+
+		virtual void exportMeshEx(_In_ CMesh * pMesh, _In_opt_ NMATRIX3 * pmMatrix, _In_opt_ CMeshExportEdgeMap * pExportEdgeMap) = 0;
+
+		void exportMesh(_In_ CMesh * pMesh, _In_opt_ NMATRIX3 * pmMatrix);
+	};
+
+	typedef std::shared_ptr <CMeshExporter> PMeshExporter;
+
+}
+
+#endif // __NMR_MESHEXPORTER

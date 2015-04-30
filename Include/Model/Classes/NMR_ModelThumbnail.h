@@ -1,3 +1,9 @@
+/*++
+
+Copyright (C) 2015 netfabb GmbH (Original Author)
+
+All rights reserved.
+
 Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
@@ -17,3 +23,38 @@ LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
 ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+Abstract:
+
+NMR_ModelThumbnail.h defines the Model Thumbnail Class.
+A Model Thumbnail is a picture reflecting the image of a model object or
+the whole scene.
+
+--*/
+
+#ifndef __NMR_MODELTHUMBNAIL
+#define __NMR_MODELTHUMBNAIL
+
+#include "Common/NMR_Types.h" 
+#include <memory>
+#include <map>
+
+namespace NMR {
+
+	class CModelThumbnail {
+	private:
+		std::wstring m_sName;
+	public:
+		CModelThumbnail() = delete;
+		CModelThumbnail(_In_ std::wstring sName);
+		~CModelThumbnail();
+
+		// Name setter/getter
+		std::wstring getName();
+	};
+
+	typedef std::shared_ptr <CModelThumbnail> PModelThumbnail;
+
+}
+
+#endif // __NMR_MODELTHUMBNAIL

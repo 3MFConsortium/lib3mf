@@ -1,3 +1,10 @@
+/*++
+
+Copyright (C) 2015 Microsoft Corporation (Original Author)
+Copyright (C) 2015 netfabb GmbH
+
+All rights reserved.
+
 Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
@@ -17,3 +24,37 @@ LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
 ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+Abstract:
+
+NMR_ModelWriter.h defines the Model Writer Class.
+A model writer exports the in memory represenation into the 3MF file.
+
+--*/
+
+#ifndef __NMR_MODELWRITER
+#define __NMR_MODELWRITER
+
+#include "Model/Classes/NMR_Model.h" 
+#include "Common/Platform/NMR_ExportStream.h" 
+#include <list>
+
+namespace NMR {
+
+	class CModelWriter {
+	private:
+			
+	protected:
+		PModel m_pModel;
+	public:
+		CModelWriter() = delete;
+		CModelWriter(_In_ PModel pModel);
+
+		virtual void exportToStream(_In_ PExportStream pStream) = 0;
+	};
+
+	typedef std::shared_ptr <CModelWriter> PModelWriter;
+
+}
+
+#endif // __NMR_MODELWRITER

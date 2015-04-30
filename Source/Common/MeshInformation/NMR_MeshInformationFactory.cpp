@@ -1,3 +1,10 @@
+/*++
+
+Copyright (C) 2015 Microsoft Corporation
+Copyright (C) 2015 netfabb GmbH (Original Author)
+
+All rights reserved.
+
 Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
@@ -17,3 +24,34 @@ LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
 ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+Abstract:
+
+NMR_MeshInformationFactory.cpp implements the Mesh Information Factory Class.
+It allows a dynamic creation of different Classes of Information.
+
+--*/
+
+#include "Common/MeshInformation/NMR_MeshInformationFactory.h" 
+#include "Common/NMR_Exception.h" 
+#include <math.h>
+
+namespace NMR {
+
+	CMeshInformationFactory::CMeshInformationFactory()
+	{
+		// empty on purpose
+	}
+
+	PMeshInformation CMeshInformationFactory::createMeshInformation(eMeshInformationType eType, nfUint32 nCurrentFaceCount)
+	{
+		switch (eType) {
+		case emiNodeColors:
+			return std::make_shared<CMeshInformation_NodeColors>(nCurrentFaceCount);
+		case emiTexCoords:
+			return std::make_shared<CMeshInformation_TexCoords>(nCurrentFaceCount);
+		}
+		throw CNMRException(NMR_ERROR_INVALIDINFORMATIONTYPE);
+	}
+
+}

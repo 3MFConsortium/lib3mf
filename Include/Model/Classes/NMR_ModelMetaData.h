@@ -1,3 +1,9 @@
+/*++
+
+Copyright (C) 2015 netfabb GmbH (Original Author)
+
+All rights reserved.
+
 Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
@@ -17,3 +23,40 @@ LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
 ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+Abstract:
+
+NMR_ModelMetaData.h defines the Model MetaData Class.
+A metadata item is an in memory representation of the 3MF
+metadata, and can be attached to any 3MF model node.
+
+--*/
+
+#ifndef __NMR_MODELMETADATA
+#define __NMR_MODELMETADATA
+
+#include "Common/NMR_Types.h" 
+#include "Common/Platform/NMR_SAL.h"
+#include <memory>
+#include <map>
+#include <string>
+
+namespace NMR {
+
+	class CModelMetaData {
+	private:
+		std::wstring m_sName;
+		std::wstring m_sValue;
+	public:
+		CModelMetaData() = delete;
+		CModelMetaData(_In_ std::wstring sName, _In_ std::wstring sValue);
+
+		std::wstring getName();
+		std::wstring getValue();
+	};
+
+	typedef std::shared_ptr <CModelMetaData> PModelMetaData;
+
+}
+
+#endif // __NMR_MODELMETADATA

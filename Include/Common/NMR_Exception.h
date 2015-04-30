@@ -1,3 +1,9 @@
+/*++
+
+Copyright (C) 2015 netfabb GmbH (Original Author)
+
+All rights reserved.
+
 Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
@@ -17,3 +23,34 @@ LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
 ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+Abstract:
+
+NMR_Exception.h defines the generic Exception Class.
+Each exception is identified via a global ErrorCode
+(to be looked up in NMR_ErrorConst.h)
+
+--*/
+
+#ifndef __NMR_EXCEPTION
+#define __NMR_EXCEPTION
+      
+#include "Common/NMR_ErrorConst.h"
+#include "Common/NMR_Types.h"
+#include "Common/NMR_Local.h"
+#include <exception>
+
+namespace NMR {
+
+	class CNMRException : public std::exception {
+	private:
+		nfError m_errorcode;
+	public:
+		CNMRException(_In_ nfError errorcode);
+		virtual const char * what() const throw ();
+		nfError getErrorCode();
+	};
+
+}
+
+#endif // __NMR_EXCEPTION

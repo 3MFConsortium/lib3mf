@@ -21,5 +21,5 @@ http://3mf.io/what-is-3mf/3mf-specification/
 For example code, please refer to 
 https://github.com/3MFConsortium/lib3mf-examples
 
-For a more detailled documentation, please take a look into the PDF in the root directory
+For a more detailed documentation, please take a look into the PDF in the root directory
 of this repository.

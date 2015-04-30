@@ -1,3 +1,10 @@
+/*++
+
+Copyright (C) 2015 Microsoft Corporation 
+Copyright (C) 2015 netfabb GmbH (Original Author)
+
+All rights reserved.
+
 Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
@@ -17,3 +24,29 @@ LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
 ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+Abstract:
+
+NMR_Platform.h defines several factory functions which create platform specific
+classes.
+
+--*/
+
+#ifndef __NMR_PLATFORM
+#define __NMR_PLATFORM
+
+#include "Common/Platform/NMR_ImportStream.h"
+#include "Common/Platform/NMR_ExportStream.h"
+#include "Common/Platform/NMR_XmlReader.h"
+#include "Common/Platform/NMR_XmlWriter.h"
+
+namespace NMR {
+
+	PImportStream fnCreateImportStreamInstance (_In_ const nfWChar * pwszFileName);
+	PExportStream fnCreateExportStreamInstance (_In_ const nfWChar * pwszFileName);
+	PXmlReader fnCreateXMLReaderInstance (_In_ PImportStream pImportStream);
+	PXmlWriter fnCreateXMLWriterInstance (_In_ PExportStream pExportStream);
+
+}
+
+#endif // __NMR_PLATFORM

@@ -1,3 +1,10 @@
+/*++
+
+Copyright (C) 2015 Microsoft Corporation 
+Copyright (C) 2015 netfabb GmbH (Original Author)
+
+All rights reserved.
+
 Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
@@ -17,3 +24,36 @@ LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
 ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+Abstract:
+
+NMR_ExportStream_GCC.h defines the CExportStream_GCC Class.
+This is an abstract base stream class for exporting in GCC.
+
+--*/
+
+#ifndef __NMR_EXPORTSTREAM_GCC
+#define __NMR_EXPORTSTREAM_GCC
+
+#include "Common/Platform/NMR_ExportStream.h"
+#include "Common/NMR_Types.h"
+#include "Common/NMR_Local.h"
+
+namespace NMR {
+
+	class CExportStream_GCC : public CExportStream {
+	private:
+	public:
+		CExportStream_GCC();
+		CExportStream_GCC(_In_ const nfWChar * pwszFileName);
+
+		virtual nfBool seekPosition(_In_ nfUint64 position, _In_ nfBool bHasToSucceed);
+		virtual nfBool seekForward(_In_ nfUint64 bytes, _In_ nfBool bHasToSucceed);
+		virtual nfBool seekFromEnd(_In_ nfUint64 bytes, _In_ nfBool bHasToSucceed);
+		virtual nfUint64 getPosition();
+		virtual nfUint64 writeBuffer(_In_ void * pBuffer, _In_ nfUint64 cbTotalBytesToWrite);
+	};
+
+}
+
+#endif // __NMR_EXPORTSTREAM_GCC

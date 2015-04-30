@@ -1,3 +1,10 @@
+/*++
+
+Copyright (C) 2015 Microsoft Corporation 
+Copyright (C) 2015 netfabb GmbH (Original Author)
+
+All rights reserved.
+
 Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
@@ -17,3 +24,34 @@ LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
 ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+Abstract:
+
+NMR_SAL.h defines Security Annotations for Visual Studio
+
+--*/
+
+#ifndef __NMR_SAL
+#define __NMR_SAL
+
+#ifndef __GCC
+
+#include <sal.h>
+
+#else
+
+#define _In_
+#define _In_z_
+#define _Out_
+#define _Out_opt_
+#define _Inout_
+#define _Outptr_
+#define _Ret_notnull_
+#define _In_opt_
+#define _Ret_maybenull_
+#define _Success_(ARG)
+#define _Outptr_result_buffer_maybenull_(ARG)
+
+#endif // __GCC
+
+#endif // __NMR_SAL

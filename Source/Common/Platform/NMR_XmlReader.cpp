@@ -1,3 +1,10 @@
+/*++
+
+Copyright (C) 2015 Microsoft Corporation
+Copyright (C) 2015 netfabb GmbH (Original Author)
+
+All rights reserved.
+
 Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
@@ -17,3 +24,23 @@ LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
 ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+Abstract:
+
+NMR_XMLReader.cpp implements a XML reader class in a portable way.
+
+--*/
+
+#include "Common/Platform/NMR_XmlReader.h" 
+#include "Common/NMR_Exception.h" 
+
+namespace NMR {
+
+	CXmlReader::CXmlReader(_In_ PImportStream pImportStream)
+	{
+		if (!pImportStream.get())
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+		m_pImportStream = pImportStream;
+	}
+
+}

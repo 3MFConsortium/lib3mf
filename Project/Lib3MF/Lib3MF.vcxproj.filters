@@ -1,0 +1,283 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\Model">
+      <UniqueIdentifier>{0fbf193d-8849-493a-a715-37ce50508ee5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Common">
+      <UniqueIdentifier>{f525eb19-3c18-458c-ab4b-a8ca5350b2bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Common\Mesh">
+      <UniqueIdentifier>{582268bb-ee64-4a2f-b278-187f3314b672}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Common\Math">
+      <UniqueIdentifier>{4258bcb7-7e84-4cbc-b4ad-d48702e6d8ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Common\MeshInformation">
+      <UniqueIdentifier>{fb7d3ebe-b7ee-4a96-8d67-7d35fb03fdbd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Model\Reader">
+      <UniqueIdentifier>{afb4528d-b218-4c88-810e-ced91409fa9d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Model\Writer">
+      <UniqueIdentifier>{de234d89-5c0a-4f8d-bd6f-65b3b86395ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Common\MeshImport">
+      <UniqueIdentifier>{79c92910-506a-4c3d-86dd-10f96786029b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Common\MeshExport">
+      <UniqueIdentifier>{b51cd14b-9cd8-41bf-aa01-d408833c196c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Model\Classes">
+      <UniqueIdentifier>{41c56430-5923-41b3-9ebc-439307625c69}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Model\COM">
+      <UniqueIdentifier>{3d757c5b-445f-4007-9103-24ee67ade7b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Common\Platform">
+      <UniqueIdentifier>{0343e7a2-dac7-4474-bbd1-a905e1bc60c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Model\Reader\v100">
+      <UniqueIdentifier>{3ae2b487-87ba-4af7-b569-67e9d8b15d02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Model\Writer\v100">
+      <UniqueIdentifier>{ffb8aa04-73da-4730-b620-589f1b57e1fa}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\Source\Common\Math\NMR_Matrix.cpp">
+      <Filter>Source Files\Common\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Common\Math\NMR_Vector.cpp">
+      <Filter>Source Files\Common\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Common\Math\NMR_VectorTree.cpp">
+      <Filter>Source Files\Common\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Common\Mesh\NMR_Mesh.cpp">
+      <Filter>Source Files\Common\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Common\Mesh\NMR_MeshBuilder.cpp">
+      <Filter>Source Files\Common\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Common\MeshInformation\NMR_MeshInformation.cpp">
+      <Filter>Source Files\Common\MeshInformation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Common\MeshInformation\NMR_MeshInformation_NodeColors.cpp">
+      <Filter>Source Files\Common\MeshInformation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Common\MeshInformation\NMR_MeshInformation_TexCoords.cpp">
+      <Filter>Source Files\Common\MeshInformation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Common\MeshInformation\NMR_MeshInformationContainer.cpp">
+      <Filter>Source Files\Common\MeshInformation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Common\MeshInformation\NMR_MeshInformationFactory.cpp">
+      <Filter>Source Files\Common\MeshInformation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Common\MeshInformation\NMR_MeshInformationHandler.cpp">
+      <Filter>Source Files\Common\MeshInformation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Common\NMR_StringUtils.cpp">
+      <Filter>Source Files\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Common\NMR_Exception.cpp">
+      <Filter>Source Files\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Common\NMR_Exception_Windows.cpp">
+      <Filter>Source Files\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Reader\NMR_ModelReader.cpp">
+      <Filter>Source Files\Model\Reader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Reader\NMR_ModelReaderNode.cpp">
+      <Filter>Source Files\Model\Reader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Reader\NMR_ModelReaderNode_Model.cpp">
+      <Filter>Source Files\Model\Reader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Reader\NMR_ModelReaderWarnings.cpp">
+      <Filter>Source Files\Model\Reader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Writer\NMR_ModelWriter.cpp">
+      <Filter>Source Files\Model\Writer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Writer\NMR_ModelWriterNode.cpp">
+      <Filter>Source Files\Model\Writer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Common\MeshImport\NMR_MeshImporter.cpp">
+      <Filter>Source Files\Common\MeshImport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Common\MeshImport\NMR_MeshImporter_STL.cpp">
+      <Filter>Source Files\Common\MeshImport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Common\MeshExport\NMR_MeshExporter.cpp">
+      <Filter>Source Files\Common\MeshExport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Common\MeshExport\NMR_MeshExporter_STL.cpp">
+      <Filter>Source Files\Common\MeshExport</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Classes\NMR_Model.cpp">
+      <Filter>Source Files\Model\Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Classes\NMR_ModelBuildItem.cpp">
+      <Filter>Source Files\Model\Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Classes\NMR_ModelComponent.cpp">
+      <Filter>Source Files\Model\Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Classes\NMR_ModelComponentsObject.cpp">
+      <Filter>Source Files\Model\Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Classes\NMR_ModelMeshObject.cpp">
+      <Filter>Source Files\Model\Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Classes\NMR_ModelMetaData.cpp">
+      <Filter>Source Files\Model\Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Classes\NMR_ModelObject.cpp">
+      <Filter>Source Files\Model\Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Classes\NMR_ModelResource.cpp">
+      <Filter>Source Files\Model\Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\COM\NMR_COMInterface_Model.cpp">
+      <Filter>Source Files\Model\COM</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Reader\NMR_ModelReader_3MF.cpp">
+      <Filter>Source Files\Model\Reader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Reader\NMR_ModelReader_3MF_OPC.cpp">
+      <Filter>Source Files\Model\Reader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Reader\NMR_ModelReader_STL.cpp">
+      <Filter>Source Files\Model\Reader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Writer\NMR_ModelWriter_3MF.cpp">
+      <Filter>Source Files\Model\Writer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Writer\NMR_ModelWriter_3MF_OPC.cpp">
+      <Filter>Source Files\Model\Writer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Writer\NMR_ModelWriter_STL.cpp">
+      <Filter>Source Files\Model\Writer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\COM\NMR_COMInterface_ModelReader.cpp">
+      <Filter>Source Files\Model\COM</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\COM\NMR_COMInterface_ModelWriter.cpp">
+      <Filter>Source Files\Model\COM</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\COM\NMR_COMInterface_ModelBuildItem.cpp">
+      <Filter>Source Files\Model\COM</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\COM\NMR_COMInterface_ModelBuildItemIterator.cpp">
+      <Filter>Source Files\Model\COM</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\COM\NMR_COMInterface_ModelResourceIterator.cpp">
+      <Filter>Source Files\Model\COM</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Common\Platform\NMR_ExportStream_COM.cpp">
+      <Filter>Source Files\Common\Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Common\Platform\NMR_ImportStream_COM.cpp">
+      <Filter>Source Files\Common\Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Common\Platform\NMR_Platform_COM.cpp">
+      <Filter>Source Files\Common\Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Common\Platform\NMR_XmlReader.cpp">
+      <Filter>Source Files\Common\Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Common\Platform\NMR_XmlReader_COM.cpp">
+      <Filter>Source Files\Common\Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Common\Platform\NMR_XmlWriter.cpp">
+      <Filter>Source Files\Common\Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Common\Platform\NMR_XmlWriter_COM.cpp">
+      <Filter>Source Files\Common\Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\COM\NMR_COMInterface_ModelResourceFactory.cpp">
+      <Filter>Source Files\Model\COM</Filter>
+    </ClCompile>
+    <ClCompile Include="dllmain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Writer\v100\NMR_ModelWriterNode100_Mesh.cpp">
+      <Filter>Source Files\Model\Writer\v100</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Writer\v100\NMR_ModelWriterNode100_Model.cpp">
+      <Filter>Source Files\Model\Writer\v100</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Reader\v100\NMR_ModelReaderNode100_Build.cpp">
+      <Filter>Source Files\Model\Reader\v100</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Reader\v100\NMR_ModelReaderNode100_BuildItem.cpp">
+      <Filter>Source Files\Model\Reader\v100</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Reader\v100\NMR_ModelReaderNode100_Component.cpp">
+      <Filter>Source Files\Model\Reader\v100</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Reader\v100\NMR_ModelReaderNode100_Components.cpp">
+      <Filter>Source Files\Model\Reader\v100</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Reader\v100\NMR_ModelReaderNode100_Mesh.cpp">
+      <Filter>Source Files\Model\Reader\v100</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Reader\v100\NMR_ModelReaderNode100_MetaData.cpp">
+      <Filter>Source Files\Model\Reader\v100</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Reader\v100\NMR_ModelReaderNode100_Object.cpp">
+      <Filter>Source Files\Model\Reader\v100</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Reader\v100\NMR_ModelReaderNode100_Resources.cpp">
+      <Filter>Source Files\Model\Reader\v100</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Reader\v100\NMR_ModelReaderNode100_Triangle.cpp">
+      <Filter>Source Files\Model\Reader\v100</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Reader\v100\NMR_ModelReaderNode100_Triangles.cpp">
+      <Filter>Source Files\Model\Reader\v100</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Reader\v100\NMR_ModelReaderNode100_Vertex.cpp">
+      <Filter>Source Files\Model\Reader\v100</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Reader\v100\NMR_ModelReaderNode100_Vertices.cpp">
+      <Filter>Source Files\Model\Reader\v100</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\COM\NMR_COMInterface_ModelMeshObject.cpp">
+      <Filter>Source Files\Model\COM</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Classes\NMR_ModelBaseMaterial.cpp">
+      <Filter>Source Files\Model\Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Classes\NMR_ModelThumbnail.cpp">
+      <Filter>Source Files\Model\Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\COM\NMR_COMInterface_ModelComponent.cpp">
+      <Filter>Source Files\Model\COM</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\COM\NMR_COMFactory.cpp">
+      <Filter>Source Files\Model\COM</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\COM\NMR_COMInterface_ModelFactory.cpp">
+      <Filter>Source Files\Model\COM</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\COM\NMR_COMInterface_ModelComponentsObject.cpp">
+      <Filter>Source Files\Model\COM</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

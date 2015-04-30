@@ -1,3 +1,10 @@
+/*++
+
+Copyright (C) 2015 Microsoft Corporation
+Copyright (C) 2015 netfabb GmbH (Original Author)
+
+All rights reserved.
+
 Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
@@ -17,3 +24,30 @@ LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
 ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+Abstract:
+
+NMR_Exception_Windows.cpp implements the Windows Exception Class.
+Each exception is identified via a global ErrorCode, and saves a Win32 HRESULT
+Error Code for further information
+
+(ErrorCodes to be looked up in NMR_ErrorConst.h)
+
+--*/
+
+#include "Common/NMR_Exception_Windows.h" 
+#include <math.h>
+
+namespace NMR {
+
+	CNMRException_Windows::CNMRException_Windows(_In_ nfError errorcode, _In_ HRESULT hResult) : CNMRException(errorcode)
+	{
+		m_hResult = hResult;
+	}
+
+	HRESULT CNMRException_Windows::getHResult()
+	{
+		return m_hResult;
+	}
+
+}

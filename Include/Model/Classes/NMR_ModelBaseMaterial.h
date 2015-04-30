@@ -1,3 +1,9 @@
+/*++
+
+Copyright (C) 2015 netfabb GmbH (Original Author)
+
+All rights reserved.
+
 Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
@@ -17,3 +23,24 @@ LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
 ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+Abstract:
+
+NMR_ModelBaseMaterial.h defines the Model Base Material Resource Class.
+A model material resource is an in memory representation of the 3MF
+material resource object.
+
+--*/
+
+#ifndef __NMR_MODELBASEMATERIAL
+#define __NMR_MODELBASEMATERIAL
+
+#include "Model/Classes/NMR_ModelResource.h" 
+#include "Model/Classes/NMR_Model.h" 
+
+namespace NMR {
+
+
+}
+
+#endif // __NMR_MODELBASEMATERIAL

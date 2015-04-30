@@ -1,3 +1,9 @@
+/*++
+
+Copyright (C) 2015 netfabb GmbH (Original Author)
+
+All rights reserved.
+
 Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
@@ -17,3 +23,28 @@ LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
 ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+Abstract:
+
+NMR_Assertion.h defines portable Assertion commands for the
+Native Model Repair algorithms and modules.
+
+--*/
+
+#ifndef __NMR_ASSERTION
+#define __NMR_ASSERTION
+
+#ifdef NMR_USEASSERTIONS
+#ifdef NMR_UNITTESTS
+#include "CppUnitTest.h"
+#define __NMRASSERT(value)  Microsoft::VisualStudio::CppUnitTestFramework::Assert::IsTrue (((int) (value)) != 0);
+
+#else
+#include <cassert>
+#define __NMRASSERT(value) assert(value);    
+#endif
+#else
+#define __NMRASSERT(value) 
+#endif
+
+#endif // __NMR_ASSERTION
