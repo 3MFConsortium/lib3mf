@@ -34,6 +34,8 @@ COM Interface Implementation for Model Resource Factory Class
 #include "Model/COM/NMR_COMInterface_ModelResourceFactory.h" 
 #include "Model/COM/NMR_COMInterface_ModelMeshObject.h" 
 #include "Model/COM/NMR_COMInterface_ModelComponentsObject.h" 
+#include "Model/COM/NMR_COMInterface_ModelTexture2D.h" 
+#include "Model/COM/NMR_COMInterface_ModelBaseMaterial.h" 
 
 #include "Common/NMR_Exception_Windows.h" 
 
@@ -42,6 +44,8 @@ COM Interface Implementation for Model Resource Factory Class
 #include "Model/Classes/NMR_ModelObject.h" 
 #include "Model/Classes/NMR_ModelMeshObject.h" 
 #include "Model/Classes/NMR_ModelComponentsObject.h" 
+#include "Model/Classes/NMR_ModelTexture2D.h" 
+#include "Model/Classes/NMR_ModelBaseMaterials.h" 
 
 namespace NMR {
 
@@ -87,10 +91,25 @@ namespace NMR {
 		if (pObjectResource)
 			pResult = pObjectResource;
 
-		if (bFailIfUnkownClass && (pResult == nullptr))
-			throw CNMRException(NMR_ERROR_UNKNOWNMODELRESOURCE);
+
+		CModelTexture2DResource * pTextureResource = dynamic_cast<CModelTexture2DResource *> (pResource.get());
+		if (pTextureResource) {
+			CCOMObject <CCOMModelTexture2D> * pComObject = new CCOMObject <CCOMModelTexture2D>();
+			pComObject->setResource(pResource);
+			pResult = pComObject;
+		}
+
+		CModelBaseMaterialResource * pMaterialResource = dynamic_cast<CModelBaseMaterialResource *> (pResource.get());
+		if (pMaterialResource) {
+			CCOMObject <CCOMModelBaseMaterial> * pComObject = new CCOMObject <CCOMModelBaseMaterial>();
+			pComObject->setResource(pResource);
+			pResult = pComObject;
+		}
 
 		*pCOMResource = pResult;
+
+		if (bFailIfUnkownClass && (pResult == nullptr))
+			throw CNMRException(NMR_ERROR_UNKNOWNMODELRESOURCE);
 	}
 
 }

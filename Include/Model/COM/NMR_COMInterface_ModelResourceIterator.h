@@ -44,8 +44,16 @@ namespace NMR {
 	protected:
 		std::vector<PModelResource> m_pResources;
 		nfInt32 m_nCurrentIndex;
+		nfError m_nErrorCode;
+		std::string m_sErrorMessage;
+
+		LIB3MFRESULT handleNMRException(_In_ CNMRException * pException);
+		LIB3MFRESULT handleGenericException();
+		LIB3MFRESULT handleSuccess();
 	public:
 		LIB3MFINTERFACE_DECL(ILib3MFModelResourceIterator)
+
+		LIB3MFMETHOD(GetLastError) (_Out_ DWORD * pErrorCode, _Outptr_opt_ LPCSTR * pErrorMessage);
 			
 		LIB3MFMETHOD(MoveNext) (_Out_ BOOL * pbHasNext);
 		LIB3MFMETHOD(MovePrevious) (_Out_ BOOL * pbHasPrevious);

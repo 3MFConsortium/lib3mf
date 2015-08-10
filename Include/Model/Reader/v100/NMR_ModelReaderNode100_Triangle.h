@@ -52,14 +52,13 @@ namespace NMR {
 		nfInt32 m_nIndex3;
 
 		virtual void OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue);
-		virtual void OnChildElement(_In_z_ const nfWChar * pChildName, _In_ CXmlReader * pXMLReader);
 	public:
 		CModelReaderNode100_Triangle() = delete;
 		CModelReaderNode100_Triangle(_In_ PModelReaderWarnings pWarnings);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 		void retrieveIndices(_Out_ nfInt32 & nIndex1, _Out_ nfInt32 & nIndex2, _Out_ nfInt32 & nIndex3, nfInt32 nNodeCount);
-		nfBool retrieveProperties(_Out_ ModelResourceID & nPropertyID, _Out_ ModelResourceIndex & nPropertyIndex1, _Out_ ModelResourceIndex & nPropertyIndex2, _Out_ ModelResourceIndex & nPropertyIndex3);
+		nfBool retrieveProperties(_Inout_ ModelResourceID & nPropertyID, _Inout_ ModelResourceIndex & nPropertyIndex1, _Inout_ ModelResourceIndex & nPropertyIndex2, _Inout_ ModelResourceIndex & nPropertyIndex3);
 	};
 
 	typedef std::shared_ptr <CModelReaderNode100_Triangle> PModelReaderNode100_Triangle;

@@ -70,25 +70,25 @@
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>..\..\Include;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)$(PlatformShortName)\$(Configuration)\</OutDir>
-    <IntDir>$(PlatformShortName)\$(Configuration)\</IntDir>
+    <IntDir>$(PlatformShortName)\Obj_$(Configuration)_COM\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>..\..\Include;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)$(PlatformShortName)\$(Configuration)\</OutDir>
-    <IntDir>$(PlatformShortName)\$(Configuration)\</IntDir>
+    <IntDir>$(PlatformShortName)\Obj_$(Configuration)_COM\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>..\..\Include;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)$(PlatformShortName)\$(Configuration)\</OutDir>
-    <IntDir>$(PlatformShortName)\$(Configuration)\</IntDir>
+    <IntDir>$(PlatformShortName)\Obj_$(Configuration)_COM\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>..\..\Include;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)$(PlatformShortName)\$(Configuration)\</OutDir>
-    <IntDir>$(PlatformShortName)\$(Configuration)\</IntDir>
+    <IntDir>$(PlatformShortName)\Obj_$(Configuration)_COM\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -156,6 +156,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\Common\Math\NMR_Matrix.cpp" />
+    <ClCompile Include="..\..\Source\Common\Math\NMR_PairMatchingTree.cpp" />
     <ClCompile Include="..\..\Source\Common\Math\NMR_Vector.cpp" />
     <ClCompile Include="..\..\Source\Common\Math\NMR_VectorTree.cpp" />
     <ClCompile Include="..\..\Source\Common\MeshExport\NMR_MeshExporter.cpp" />
@@ -166,6 +167,7 @@
     <ClCompile Include="..\..\Source\Common\MeshInformation\NMR_MeshInformationContainer.cpp" />
     <ClCompile Include="..\..\Source\Common\MeshInformation\NMR_MeshInformationFactory.cpp" />
     <ClCompile Include="..\..\Source\Common\MeshInformation\NMR_MeshInformationHandler.cpp" />
+    <ClCompile Include="..\..\Source\Common\MeshInformation\NMR_MeshInformation_BaseMaterials.cpp" />
     <ClCompile Include="..\..\Source\Common\MeshInformation\NMR_MeshInformation_NodeColors.cpp" />
     <ClCompile Include="..\..\Source\Common\MeshInformation\NMR_MeshInformation_TexCoords.cpp" />
     <ClCompile Include="..\..\Source\Common\Mesh\NMR_Mesh.cpp" />
@@ -182,25 +184,35 @@
     <ClCompile Include="..\..\Source\Common\Platform\NMR_XmlWriter_COM.cpp" />
     <ClCompile Include="..\..\Source\Model\Classes\NMR_Model.cpp" />
     <ClCompile Include="..\..\Source\Model\Classes\NMR_ModelBaseMaterial.cpp" />
+    <ClCompile Include="..\..\Source\Model\Classes\NMR_ModelBaseMaterials.cpp" />
     <ClCompile Include="..\..\Source\Model\Classes\NMR_ModelBuildItem.cpp" />
     <ClCompile Include="..\..\Source\Model\Classes\NMR_ModelComponent.cpp" />
     <ClCompile Include="..\..\Source\Model\Classes\NMR_ModelComponentsObject.cpp" />
+    <ClCompile Include="..\..\Source\Model\Classes\NMR_ModelDefaultProperty.cpp" />
+    <ClCompile Include="..\..\Source\Model\Classes\NMR_ModelDefaultProperty_BaseMaterial.cpp" />
+    <ClCompile Include="..\..\Source\Model\Classes\NMR_ModelDefaultProperty_Color.cpp" />
+    <ClCompile Include="..\..\Source\Model\Classes\NMR_ModelDefaultProperty_TexCoord2D.cpp" />
     <ClCompile Include="..\..\Source\Model\Classes\NMR_ModelMeshObject.cpp" />
     <ClCompile Include="..\..\Source\Model\Classes\NMR_ModelMetaData.cpp" />
     <ClCompile Include="..\..\Source\Model\Classes\NMR_ModelObject.cpp" />
     <ClCompile Include="..\..\Source\Model\Classes\NMR_ModelResource.cpp" />
+    <ClCompile Include="..\..\Source\Model\Classes\NMR_ModelTexture2D.cpp" />
     <ClCompile Include="..\..\Source\Model\Classes\NMR_ModelThumbnail.cpp" />
     <ClCompile Include="..\..\Source\Model\COM\NMR_COMFactory.cpp" />
     <ClCompile Include="..\..\Source\Model\COM\NMR_COMInterface_Model.cpp" />
+    <ClCompile Include="..\..\Source\Model\COM\NMR_COMInterface_ModelBaseMaterial.cpp" />
     <ClCompile Include="..\..\Source\Model\COM\NMR_COMInterface_ModelBuildItem.cpp" />
     <ClCompile Include="..\..\Source\Model\COM\NMR_COMInterface_ModelBuildItemIterator.cpp" />
     <ClCompile Include="..\..\Source\Model\COM\NMR_COMInterface_ModelComponent.cpp" />
     <ClCompile Include="..\..\Source\Model\COM\NMR_COMInterface_ModelComponentsObject.cpp" />
+    <ClCompile Include="..\..\Source\Model\COM\NMR_COMInterface_ModelDefaultPropertyHandler.cpp" />
     <ClCompile Include="..\..\Source\Model\COM\NMR_COMInterface_ModelFactory.cpp" />
     <ClCompile Include="..\..\Source\Model\COM\NMR_COMInterface_ModelMeshObject.cpp" />
+    <ClCompile Include="..\..\Source\Model\COM\NMR_COMInterface_ModelPropertyHandler.cpp" />
     <ClCompile Include="..\..\Source\Model\COM\NMR_COMInterface_ModelReader.cpp" />
     <ClCompile Include="..\..\Source\Model\COM\NMR_COMInterface_ModelResourceFactory.cpp" />
     <ClCompile Include="..\..\Source\Model\COM\NMR_COMInterface_ModelResourceIterator.cpp" />
+    <ClCompile Include="..\..\Source\Model\COM\NMR_COMInterface_ModelTexture2D.cpp" />
     <ClCompile Include="..\..\Source\Model\COM\NMR_COMInterface_ModelWriter.cpp" />
     <ClCompile Include="..\..\Source\Model\Reader\NMR_ModelReader.cpp" />
     <ClCompile Include="..\..\Source\Model\Reader\NMR_ModelReaderNode.cpp" />
@@ -208,15 +220,40 @@
     <ClCompile Include="..\..\Source\Model\Reader\NMR_ModelReaderWarnings.cpp" />
     <ClCompile Include="..\..\Source\Model\Reader\NMR_ModelReader_3MF.cpp" />
     <ClCompile Include="..\..\Source\Model\Reader\NMR_ModelReader_3MF_OPC.cpp" />
+    <ClCompile Include="..\..\Source\Model\Reader\NMR_ModelReader_ColorMapping.cpp" />
     <ClCompile Include="..\..\Source\Model\Reader\NMR_ModelReader_STL.cpp" />
+    <ClCompile Include="..\..\Source\Model\Reader\NMR_ModelReader_TexCoordMapping.cpp" />
+    <ClCompile Include="..\..\Source\Model\Reader\v093\NMR_ModelReaderNode093_Build.cpp" />
+    <ClCompile Include="..\..\Source\Model\Reader\v093\NMR_ModelReaderNode093_BuildItem.cpp" />
+    <ClCompile Include="..\..\Source\Model\Reader\v093\NMR_ModelReaderNode093_Color.cpp" />
+    <ClCompile Include="..\..\Source\Model\Reader\v093\NMR_ModelReaderNode093_Component.cpp" />
+    <ClCompile Include="..\..\Source\Model\Reader\v093\NMR_ModelReaderNode093_Components.cpp" />
+    <ClCompile Include="..\..\Source\Model\Reader\v093\NMR_ModelReaderNode093_Material.cpp" />
+    <ClCompile Include="..\..\Source\Model\Reader\v093\NMR_ModelReaderNode093_Mesh.cpp" />
+    <ClCompile Include="..\..\Source\Model\Reader\v093\NMR_ModelReaderNode093_Object.cpp" />
+    <ClCompile Include="..\..\Source\Model\Reader\v093\NMR_ModelReaderNode093_Resources.cpp" />
+    <ClCompile Include="..\..\Source\Model\Reader\v093\NMR_ModelReaderNode093_Texture.cpp" />
+    <ClCompile Include="..\..\Source\Model\Reader\v093\NMR_ModelReaderNode093_TextureVertex.cpp" />
+    <ClCompile Include="..\..\Source\Model\Reader\v093\NMR_ModelReaderNode093_TextureVertices.cpp" />
+    <ClCompile Include="..\..\Source\Model\Reader\v093\NMR_ModelReaderNode093_Triangle.cpp" />
+    <ClCompile Include="..\..\Source\Model\Reader\v093\NMR_ModelReaderNode093_Triangles.cpp" />
+    <ClCompile Include="..\..\Source\Model\Reader\v093\NMR_ModelReaderNode093_Vertex.cpp" />
+    <ClCompile Include="..\..\Source\Model\Reader\v093\NMR_ModelReaderNode093_Vertices.cpp" />
+    <ClCompile Include="..\..\Source\Model\Reader\v100\NMR_ModelReaderNode100_BaseMaterial.cpp" />
+    <ClCompile Include="..\..\Source\Model\Reader\v100\NMR_ModelReaderNode100_BaseMaterials.cpp" />
     <ClCompile Include="..\..\Source\Model\Reader\v100\NMR_ModelReaderNode100_Build.cpp" />
     <ClCompile Include="..\..\Source\Model\Reader\v100\NMR_ModelReaderNode100_BuildItem.cpp" />
+    <ClCompile Include="..\..\Source\Model\Reader\v100\NMR_ModelReaderNode100_Color.cpp" />
+    <ClCompile Include="..\..\Source\Model\Reader\v100\NMR_ModelReaderNode100_Colors.cpp" />
     <ClCompile Include="..\..\Source\Model\Reader\v100\NMR_ModelReaderNode100_Component.cpp" />
     <ClCompile Include="..\..\Source\Model\Reader\v100\NMR_ModelReaderNode100_Components.cpp" />
     <ClCompile Include="..\..\Source\Model\Reader\v100\NMR_ModelReaderNode100_Mesh.cpp" />
     <ClCompile Include="..\..\Source\Model\Reader\v100\NMR_ModelReaderNode100_MetaData.cpp" />
     <ClCompile Include="..\..\Source\Model\Reader\v100\NMR_ModelReaderNode100_Object.cpp" />
     <ClCompile Include="..\..\Source\Model\Reader\v100\NMR_ModelReaderNode100_Resources.cpp" />
+    <ClCompile Include="..\..\Source\Model\Reader\v100\NMR_ModelReaderNode100_Tex2Coord.cpp" />
+    <ClCompile Include="..\..\Source\Model\Reader\v100\NMR_ModelReaderNode100_Tex2DGroup.cpp" />
+    <ClCompile Include="..\..\Source\Model\Reader\v100\NMR_ModelReaderNode100_Texture2D.cpp" />
     <ClCompile Include="..\..\Source\Model\Reader\v100\NMR_ModelReaderNode100_Triangle.cpp" />
     <ClCompile Include="..\..\Source\Model\Reader\v100\NMR_ModelReaderNode100_Triangles.cpp" />
     <ClCompile Include="..\..\Source\Model\Reader\v100\NMR_ModelReaderNode100_Vertex.cpp" />
@@ -225,7 +262,10 @@
     <ClCompile Include="..\..\Source\Model\Writer\NMR_ModelWriterNode.cpp" />
     <ClCompile Include="..\..\Source\Model\Writer\NMR_ModelWriter_3MF.cpp" />
     <ClCompile Include="..\..\Source\Model\Writer\NMR_ModelWriter_3MF_OPC.cpp" />
+    <ClCompile Include="..\..\Source\Model\Writer\NMR_ModelWriter_ColorMapping.cpp" />
     <ClCompile Include="..\..\Source\Model\Writer\NMR_ModelWriter_STL.cpp" />
+    <ClCompile Include="..\..\Source\Model\Writer\NMR_ModelWriter_TexCoordMapping.cpp" />
+    <ClCompile Include="..\..\Source\Model\Writer\NMR_ModelWriter_TexCoordMappingContainer.cpp" />
     <ClCompile Include="..\..\Source\Model\Writer\v100\NMR_ModelWriterNode100_Mesh.cpp" />
     <ClCompile Include="..\..\Source\Model\Writer\v100\NMR_ModelWriterNode100_Model.cpp" />
     <ClCompile Include="dllmain.cpp">

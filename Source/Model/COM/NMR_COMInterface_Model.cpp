@@ -40,6 +40,8 @@ COM Interface Implementation for Model Class
 #include "Model/COM/NMR_COMInterface_ModelBuildItemIterator.h"
 #include "Model/COM/NMR_COMInterface_ModelMeshObject.h"
 #include "Model/COM/NMR_COMInterface_ModelComponentsObject.h"
+#include "Model/COM/NMR_COMInterface_ModelTexture2D.h"
+#include "Model/COM/NMR_COMInterface_ModelBaseMaterial.h"
 
 #ifndef __GCC
 #include "Model/Reader/NMR_ModelReader_3MF_OPC.h"
@@ -62,52 +64,116 @@ namespace NMR {
 	CCOMModel::CCOMModel()
 	{
 		m_pModel = std::make_shared<CModel>();
+		m_nErrorCode = NMR_SUCCESS;
+	}
+
+	CModel * CCOMModel::getModel()
+	{
+		return m_pModel.get();
+	}
+
+	LIB3MFRESULT CCOMModel::handleSuccess()
+	{
+		m_nErrorCode = NMR_SUCCESS;
+		return LIB3MF_OK;
+	}
+
+	LIB3MFRESULT CCOMModel::handleNMRException(_In_ CNMRException * pException)
+	{
+		__NMRASSERT(pException);
+
+		m_nErrorCode = pException->getErrorCode();
+		m_sErrorMessage = std::string(pException->what());
+
+		CNMRException_Windows * pWinException = dynamic_cast<CNMRException_Windows *> (pException);
+		if (pWinException != nullptr) {
+			return pWinException->getHResult();
+		}
+		else {
+			if (m_nErrorCode == NMR_ERROR_INVALIDPOINTER)
+				return LIB3MF_POINTER;
+			if (m_nErrorCode == NMR_ERROR_INVALIDPARAM)
+				return LIB3MF_INVALIDARG;
+
+			return LIB3MF_FAIL;
+		}
+	}
+
+	LIB3MFRESULT CCOMModel::handleGenericException()
+	{
+		m_nErrorCode = NMR_ERROR_GENERICEXCEPTION;
+		m_sErrorMessage = NMR_GENERICEXCEPTIONSTRING;
+		return LIB3MF_FAIL;
+	}
+
+	LIB3MFMETHODIMP CCOMModel::GetLastError(_Out_ DWORD * pErrorCode, _Outptr_opt_ LPCSTR * pErrorMessage)
+	{
+		if (!pErrorCode)
+			return LIB3MF_POINTER;
+
+		*pErrorCode = m_nErrorCode;
+		if (pErrorMessage) {
+			if (m_nErrorCode != NMR_SUCCESS) {
+				*pErrorMessage = m_sErrorMessage.c_str();
+			}
+			else {
+				*pErrorMessage = nullptr;
+			}
+		}
+
+		return LIB3MF_OK;
 	}
 
 	LIB3MFMETHODIMP CCOMModel::SetUnit(_In_ DWORD Unit)
 	{
 		try {
-			m_pModel->setUnit((eModelUnit) Unit);
-			return LIB3MF_OK;
+			m_pModel->setUnit((eModelUnit)Unit);
+
+			return handleSuccess();
 		}
-		catch (CNMRException_Windows & WinException) {
-			return WinException.getHResult();
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
 		}
 		catch (...) {
-			return LIB3MF_FAIL;
+			return handleGenericException();
 		}
 	}
 
 	LIB3MFMETHODIMP CCOMModel::GetUnit(_Out_ DWORD * pUnit)
 	{
-		if (!pUnit)
-			return LIB3MF_POINTER;
 
 		try {
-			*pUnit = (DWORD) m_pModel->getUnit();
-			return LIB3MF_OK;
+			if (!pUnit)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
+			*pUnit = (DWORD)m_pModel->getUnit();
+
+			return handleSuccess();
 		}
-		catch (CNMRException_Windows & WinException) {
-			return WinException.getHResult();
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
 		}
 		catch (...) {
-			return LIB3MF_FAIL;
+			return handleGenericException();
 		}
 	}
 
 	LIB3MFMETHODIMP CCOMModel::SetLanguage(_In_z_ LPCWSTR pwszLanguage)
 	{
-		if (!pwszLanguage)
-			return LIB3MF_POINTER;
-
 		try {
+			if (!pwszLanguage)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
 			std::wstring sLanguage(pwszLanguage);
 			m_pModel->setLanguage(pwszLanguage);
 
-			return LIB3MF_OK;
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
 		}
 		catch (...) {
-			return LIB3MF_FAIL;
+			return handleGenericException();
 		}
 	}
 
@@ -115,7 +181,7 @@ namespace NMR {
 	{
 		try {
 			if (cbBufferSize > MODEL_MAXSTRINGBUFFERLENGTH)
-				return LIB3MF_FAIL;
+				throw CNMRException(NMR_ERROR_INVALIDBUFFERSIZE);
 
 			// Safely call StringToBuffer
 			nfUint32 nNeededChars = 0;
@@ -125,19 +191,22 @@ namespace NMR {
 			if (pcbNeededChars)
 				*pcbNeededChars = nNeededChars;
 
-			return LIB3MF_OK;
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
 		}
 		catch (...) {
-			return LIB3MF_FAIL;
+			return handleGenericException();
 		}
 	}
 
 	LIB3MFMETHODIMP CCOMModel::QueryWriter(_In_z_ LPCWSTR pwszWriterClass, _Outptr_ ILib3MFModelWriter ** ppWriter)
 	{
-		if ((!ppWriter) || (!pwszWriterClass))
-			return LIB3MF_POINTER;
-
 		try {
+			if ((!ppWriter) || (!pwszWriterClass))
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
 			// Create Writer Object
 			PModelWriter pWriter = nullptr;
 
@@ -153,29 +222,29 @@ namespace NMR {
 				pWriter = std::make_shared<CModelWriter_STL>(m_pModel);
 
 			if (!pWriter)
-				return LIB3MF_INVALIDARG;
+				throw CNMRException(NMR_ERROR_UNKNOWNWRITERCLASS);
 
 			// Create COM Object, and set writer property
 			CCOMObject<CCOMModelWriter> * pCOMObject = new CCOMObject<CCOMModelWriter>();
 			pCOMObject->setWriter(pWriter);
 			*ppWriter = pCOMObject;
 
-			return LIB3MF_OK;
+			return handleSuccess();
 		}
-		catch (CNMRException_Windows & WinException) {
-			return WinException.getHResult();
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
 		}
 		catch (...) {
-			return LIB3MF_FAIL;
+			return handleGenericException();
 		}
 	}
 
 	LIB3MFMETHODIMP CCOMModel::QueryReader(_In_z_ LPCWSTR pwszReaderClass, _Outptr_ ILib3MFModelReader ** ppReader)
 	{
-		if ((!ppReader) || (!pwszReaderClass))
-			return LIB3MF_POINTER;
-
 		try {
+			if ((!ppReader) || (!pwszReaderClass))
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
 			// Create Reader Object
 			PModelReader pReader = nullptr;
 
@@ -191,48 +260,168 @@ namespace NMR {
 				pReader = std::make_shared<CModelReader_STL>(m_pModel);
 
 			if (!pReader)
-				return LIB3MF_INVALIDARG;
+				throw CNMRException(NMR_ERROR_UNKNOWNREADERCLASS);
 
 			// Create COM Object, and set writer property
 			CCOMObject<CCOMModelReader> * pCOMObject = new CCOMObject<CCOMModelReader>();
 			pCOMObject->setReader(pReader);
 			*ppReader = pCOMObject;
 
-			return LIB3MF_OK;
+			return handleSuccess();
 		}
-		catch (CNMRException_Windows & WinException) {
-			return WinException.getHResult();
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
 		}
 		catch (...) {
-			return LIB3MF_FAIL;
+			return handleGenericException();
 		}
 	}
 
 	LIB3MFMETHODIMP CCOMModel::GetResourceByID(_In_ DWORD ResourceID, _Outptr_ ILib3MFModelResource ** ppResource)
 	{
-		if (!ppResource)
-			return LIB3MF_POINTER;
 
 		try {
+			if (!ppResource)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
 			PModelResource pResource = m_pModel->findResource(ResourceID);
 			if (!pResource)
-				return LIB3MF_FAIL;
+				throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
 
 			fnCreateModelResourceFromClass(pResource, true, ppResource);
 
-			return LIB3MF_OK;
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
 		}
 		catch (...) {
-			return LIB3MF_FAIL;
+			return handleGenericException();
 		}
 	}
 
+	LIB3MFMETHODIMP CCOMModel::GetTexture2DByID(_In_ DWORD nResourceID, _Outptr_ ILib3MFModelTexture2D ** ppTexture)
+	{
+		try {
+			if (!ppTexture)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
+			PModelResource pResource = m_pModel->findResource(nResourceID);
+			if (!pResource)
+				throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
+
+			CModelTexture2DResource * pTexture = dynamic_cast<CModelTexture2DResource *>(pResource.get());
+			if (pTexture != nullptr) {
+				ILib3MFModelResource * pResourceInterface;
+				fnCreateModelResourceFromClass(pResource, true, &pResourceInterface);
+
+					*ppTexture = (ILib3MFModelTexture2D*) pResourceInterface;
+			}
+			else {
+				*ppTexture = nullptr;
+			}
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
+	LIB3MFMETHODIMP CCOMModel::GetBaseMaterialByID(_In_ DWORD nResourceID, _Outptr_ ILib3MFModelBaseMaterial ** ppMaterial)
+	{
+		try {
+			if (!ppMaterial)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
+			PModelResource pResource = m_pModel->findResource(nResourceID);
+			if (!pResource)
+				throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
+
+			CModelBaseMaterialResource * pBaseMaterial = dynamic_cast<CModelBaseMaterialResource *>(pResource.get());
+			if (pBaseMaterial != nullptr) {
+				ILib3MFModelResource * pResourceInterface;
+				fnCreateModelResourceFromClass(pResource, true, &pResourceInterface);
+
+				*ppMaterial = (ILib3MFModelBaseMaterial*)pResourceInterface;
+			}
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
+	LIB3MFMETHODIMP CCOMModel::GetMeshObjectByID(_In_ DWORD nResourceID, _Outptr_ ILib3MFModelMeshObject ** ppMeshObject)
+	{
+		try {
+			if (!ppMeshObject)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
+			PModelResource pResource = m_pModel->findResource(nResourceID);
+			if (!pResource)
+				throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
+
+			CModelMeshObject * pMeshObject = dynamic_cast<CModelMeshObject *>(pResource.get());
+			if (pMeshObject != nullptr) {
+				ILib3MFModelResource * pResourceInterface;
+				fnCreateModelResourceFromClass(pResource, true, &pResourceInterface);
+
+				*ppMeshObject = (ILib3MFModelMeshObject*)pResourceInterface;
+			}
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
+	LIB3MFMETHODIMP CCOMModel::GetComponentsObjectByID(_In_ DWORD nResourceID, _Outptr_ ILib3MFModelComponentsObject ** ppComponentsObject)
+	{
+		try {
+			if (!ppComponentsObject)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
+			PModelResource pResource = m_pModel->findResource(nResourceID);
+			if (!pResource)
+				throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
+
+			CModelComponentsObject * pComponentsObject = dynamic_cast<CModelComponentsObject *>(pResource.get());
+			if (pComponentsObject != nullptr) {
+				ILib3MFModelResource * pResourceInterface;
+				fnCreateModelResourceFromClass(pResource, true, &pResourceInterface);
+
+				*ppComponentsObject = (ILib3MFModelComponentsObject*)pResourceInterface;
+			}
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
+
 	LIB3MFMETHODIMP CCOMModel::GetBuildItems(_Outptr_ ILib3MFModelBuildItemIterator ** ppIterator)
 	{
-		if (!ppIterator)
-			return LIB3MF_POINTER;
-
 		try {
+			if (!ppIterator)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
 			CCOMObject<CCOMModelBuildItemIterator> * pResult = new CCOMObject<CCOMModelBuildItemIterator>();
 
 			nfUint32 nBuildItemCount = m_pModel->getBuildItemCount();
@@ -243,20 +432,23 @@ namespace NMR {
 
 			*ppIterator = pResult;
 
-			return LIB3MF_OK;
+			return handleSuccess();
 
 		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
 		catch (...) {
-			return LIB3MF_FAIL;
+			return handleGenericException();
 		}
 	}
 
 	LIB3MFMETHODIMP CCOMModel::GetResources(_Outptr_ ILib3MFModelResourceIterator ** ppIterator)
 	{
-		if (!ppIterator)
-			return LIB3MF_POINTER;
-
 		try {
+			if (!ppIterator)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
 			CCOMObject<CCOMModelResourceIterator> * pResult = new CCOMObject<CCOMModelResourceIterator>();
 
 			nfUint32 nResourceCount = m_pModel->getResourceCount();
@@ -267,19 +459,22 @@ namespace NMR {
 
 			*ppIterator = pResult;
 
-			return LIB3MF_OK;
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
 		}
 		catch (...) {
-			return LIB3MF_FAIL;
+			return handleGenericException();
 		}
 	}
 
 	LIB3MFMETHODIMP CCOMModel::GetObjects(_Outptr_ ILib3MFModelResourceIterator ** ppIterator)
 	{
-		if (!ppIterator)
-			return LIB3MF_POINTER;
-
 		try {
+			if (!ppIterator)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
 			CCOMObject<CCOMModelResourceIterator> * pResult = new CCOMObject<CCOMModelResourceIterator>();
 
 			nfUint32 nObjectCount = m_pModel->getObjectCount();
@@ -290,19 +485,22 @@ namespace NMR {
 
 			*ppIterator = pResult;
 
-			return LIB3MF_OK;
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
 		}
 		catch (...) {
-			return LIB3MF_FAIL;
+			return handleGenericException();
 		}
 	}
 
 	LIB3MFMETHODIMP CCOMModel::GetMeshObjects(_Outptr_ ILib3MFModelResourceIterator ** ppIterator)
 	{
-		if (!ppIterator)
-			return LIB3MF_POINTER;
-
 		try {
+			if (!ppIterator)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
 			CCOMObject<CCOMModelResourceIterator> * pResult = new CCOMObject<CCOMModelResourceIterator>();
 
 			nfUint32 nObjectCount = m_pModel->getObjectCount();
@@ -316,19 +514,22 @@ namespace NMR {
 
 			*ppIterator = pResult;
 
-			return LIB3MF_OK;
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
 		}
 		catch (...) {
-			return LIB3MF_FAIL;
+			return handleGenericException();
 		}
 	}
 
 	LIB3MFMETHODIMP CCOMModel::GetComponentsObjects(_Outptr_ ILib3MFModelResourceIterator ** ppIterator)
 	{
-		if (!ppIterator)
-			return LIB3MF_POINTER;
-
 		try {
+			if (!ppIterator)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
 			CCOMObject<CCOMModelResourceIterator> * pResult = new CCOMObject<CCOMModelResourceIterator>();
 
 			nfUint32 nObjectCount = m_pModel->getObjectCount();
@@ -342,20 +543,23 @@ namespace NMR {
 
 			*ppIterator = pResult;
 
-			return LIB3MF_OK;
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
 		}
 		catch (...) {
-			return LIB3MF_FAIL;
+			return handleGenericException();
 		}
 	}
 
 	LIB3MFMETHODIMP CCOMModel::AddMeshObject(_Outptr_ ILib3MFModelMeshObject ** ppMeshObject)
 	{
-		if (!ppMeshObject)
-			return LIB3MF_POINTER;
-
 		try {
-			ModelResourceID NewResourceID = m_pModel->generateResourceID ();
+			if (!ppMeshObject)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
+			ModelResourceID NewResourceID = m_pModel->generateResourceID();
 			PMesh pNewMesh = std::make_shared<CMesh>();
 			PModelMeshObject pNewResource = std::make_shared<CModelMeshObject>(NewResourceID, m_pModel.get(), pNewMesh);
 
@@ -365,19 +569,22 @@ namespace NMR {
 			pResult->setResource(pNewResource);
 			*ppMeshObject = pResult;
 
-			return LIB3MF_OK;
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
 		}
 		catch (...) {
-			return LIB3MF_FAIL;
+			return handleGenericException();
 		}
 	}
 
-	LIB3MFMETHODIMP CCOMModel::AddComponentsObject (_Outptr_ ILib3MFModelComponentsObject ** ppComponentsObject)
+	LIB3MFMETHODIMP CCOMModel::AddComponentsObject(_Outptr_ ILib3MFModelComponentsObject ** ppComponentsObject)
 	{
-		if (!ppComponentsObject)
-			return LIB3MF_POINTER;
-
 		try {
+			if (!ppComponentsObject)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
 			ModelResourceID NewResourceID = m_pModel->generateResourceID();
 			PModelComponentsObject pNewResource = std::make_shared<CModelComponentsObject>(NewResourceID, m_pModel.get());
 
@@ -387,21 +594,24 @@ namespace NMR {
 			pResult->setResource(pNewResource);
 			*ppComponentsObject = pResult;
 
-			return LIB3MF_OK;
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
 		}
 		catch (...) {
-			return LIB3MF_FAIL;
+			return handleGenericException();
 		}
 	}
 
-	LIB3MFMETHODIMP CCOMModel::AddBuildItem (_In_ ILib3MFModelObjectResource * pObject, _In_opt_ MODELTRANSFORM * pTransform,_Outptr_ ILib3MFModelBuildItem ** ppBuildItem)
+	LIB3MFMETHODIMP CCOMModel::AddBuildItem(_In_ ILib3MFModelObjectResource * pObject, _In_opt_ MODELTRANSFORM * pTransform, _Outptr_ ILib3MFModelBuildItem ** ppBuildItem)
 	{
-		if ((!pObject) || (!ppBuildItem))
-			return LIB3MF_POINTER;
-
 		try {
+			if ((!pObject) || (!ppBuildItem))
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
 			// Get Resource ID
-			ModelResourceID nObjectID;
+			ModelResourceID nObjectID = 0;
 			HRESULT hResult = pObject->GetResourceID(&nObjectID);
 			if (hResult != LIB3MF_OK)
 				return hResult;
@@ -409,10 +619,10 @@ namespace NMR {
 			// Find class instance
 			CModelObject * pObject = m_pModel->findObject(nObjectID);
 			if (pObject == nullptr)
-				return LIB3MF_FAIL;
+				throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
 
 			// Create Build item instance
-			PModelBuildItem pModelBuildItem= std::make_shared<CModelBuildItem>(pObject);
+			PModelBuildItem pModelBuildItem = std::make_shared<CModelBuildItem>(pObject, m_pModel->createHandle());
 			m_pModel->addBuildItem(pModelBuildItem);
 
 			// Create COM Wrapper
@@ -424,44 +634,428 @@ namespace NMR {
 			if (pTransform)
 				pResult->SetObjectTransform(pTransform);
 
-			return LIB3MF_OK;
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
 		}
 		catch (...) {
-			return LIB3MF_FAIL;
+			return handleGenericException();
 		}
 	}
 
 	LIB3MFMETHODIMP CCOMModel::RemoveBuildItem(_In_ ILib3MFModelBuildItem * pBuildItem)
 	{
-		if (!pBuildItem)
-			return LIB3MF_POINTER;
-
 		try {
-			throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
+			if (!pBuildItem)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
+			DWORD nHandle = 0;
+			LIB3MFRESULT hResult = pBuildItem->GetHandle(&nHandle);
+			if (hResult != LIB3MF_OK)
+				throw CNMRException_Windows(NMR_ERROR_COULDNOTGETHANDLE, hResult);
+
+			m_pModel->removeBuildItem(nHandle, true);
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
 		}
 		catch (...) {
-			return LIB3MF_FAIL;
+			return handleGenericException();
 		}
 	}
 
 	LIB3MFMETHODIMP CCOMModel::MergeToModel(_Outptr_ ILib3MFModel ** ppMergedModel)
 	{
-		if (!ppMergedModel)
-			return LIB3MF_POINTER;
-
 		try {
+			if (!ppMergedModel)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
 			// Create merged mesh
 			PMesh pMesh = std::make_shared<CMesh>();
 			m_pModel->mergeToMesh(pMesh.get());
 
-			ILib3MFModel * pNewModel = new CCOMObject<CCOMModel>();
-			*ppMergedModel = pNewModel;
+			CCOMObject<CCOMModel> * pNewModelInterface = new CCOMObject<CCOMModel>();
+			*ppMergedModel = pNewModelInterface;
 
-			return LIB3MF_OK;
+			// Copy relevant resources to new model!
+			CModel * pNewModel = pNewModelInterface->getModel();
+			if (pNewModel == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDMODEL);
+
+			pNewModel->mergeTextureStreams(m_pModel.get());
+			pNewModel->mergeTextures2D(m_pModel.get());
+			pNewModel->mergeBaseMaterials(m_pModel.get());
+			pNewModel->mergeMetaData(m_pModel.get());
+
+
+			PModelMeshObject pMeshObject = std::make_shared<CModelMeshObject>(pNewModel->generateResourceID(), pNewModel, pMesh);
+			pNewModel->addResource(pMeshObject);
+
+			PModelBuildItem pBuildItem = std::make_shared<CModelBuildItem>(pMeshObject.get(), m_pModel->createHandle());
+			pNewModel->addBuildItem(pBuildItem);
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
 		}
 		catch (...) {
-			return LIB3MF_FAIL;
+			return handleGenericException();
 		}
 	}
+
+	LIB3MFMETHODIMP CCOMModel::GetThumbnails(_Outptr_ ILib3MFModelThumbnailIterator ** ppIterator)
+	{
+		try {
+			if (!ppIterator)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
+			throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+
+	}
+
+	LIB3MFMETHODIMP CCOMModel::Get2DTextures(_Outptr_ ILib3MFModelResourceIterator ** ppIterator)
+	{
+		try {
+			if (!ppIterator)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
+			CCOMObject<CCOMModelResourceIterator> * pResult = new CCOMObject<CCOMModelResourceIterator>();
+
+			nfUint32 nResourceCount = m_pModel->getResourceCount();
+			nfUint32 nIdx;
+
+			for (nIdx = 0; nIdx < nResourceCount; nIdx++) {
+				PModelResource pResource = m_pModel->getResource(nIdx);
+				if (dynamic_cast<CModelTexture2DResource *> (pResource.get()) != nullptr)
+					pResult->addResource(pResource);
+			}
+
+			*ppIterator = pResult;
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+
+	}
+
+
+	LIB3MFMETHODIMP CCOMModel::GetBaseMaterials(_Outptr_ ILib3MFModelResourceIterator ** ppIterator)
+	{
+		try {
+			if (!ppIterator)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
+			CCOMObject<CCOMModelResourceIterator> * pResult = new CCOMObject<CCOMModelResourceIterator>();
+
+			nfUint32 nResourceCount = m_pModel->getResourceCount();
+			nfUint32 nIdx;
+
+			for (nIdx = 0; nIdx < nResourceCount; nIdx++) {
+				PModelResource pResource = m_pModel->getResource(nIdx);
+				if (dynamic_cast<CModelBaseMaterialResource *> (pResource.get()) != nullptr)
+					pResult->addResource(pResource);
+			}
+
+			*ppIterator = pResult;
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+
+	}
+
+	LIB3MFMETHODIMP CCOMModel::AddTexture2D(_In_z_ LPCWSTR pwszPath, _Outptr_ ILib3MFModelTexture2D ** ppTextureInstance)
+	{
+		try {
+			if (pwszPath == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+			if (!ppTextureInstance)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
+			PModelTexture2DResource pResource = std::make_shared<CModelTexture2DResource>(m_pModel->generateResourceID(), m_pModel.get());
+			m_pModel->addResource(pResource);
+
+			std::wstring sPath(pwszPath);
+			pResource->setPath(sPath);
+
+			CCOMObject<CCOMModelTexture2D> * pCOMObject = new CCOMObject<CCOMModelTexture2D>();
+			pCOMObject->setResource(pResource);
+			*ppTextureInstance = pCOMObject;
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+
+
+	}
+
+	LIB3MFMETHODIMP CCOMModel::AddBaseMaterialGroup(_Outptr_ ILib3MFModelBaseMaterial ** ppBaseMaterialInstance)
+	{
+		try {
+			if (!ppBaseMaterialInstance)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
+			PModelBaseMaterialResource pResource = std::make_shared<CModelBaseMaterialResource>(m_pModel->generateResourceID(), m_pModel.get());
+			m_pModel->addResource(pResource);
+
+			CCOMObject<CCOMModelBaseMaterial> * pCOMObject = new CCOMObject<CCOMModelBaseMaterial>();
+			pCOMObject->setResource(pResource);
+			*ppBaseMaterialInstance = pCOMObject;
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+
+
+	}
+
+	LIB3MFMETHODIMP CCOMModel::GetTextureStreamCount(_Out_ DWORD * pnCount)
+	{
+		try {
+			if (!pnCount)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+			
+			*pnCount = m_pModel->getTextureStreamCount();
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+
+
+	}
+
+	LIB3MFMETHODIMP CCOMModel::GetTextureStreamSize(_In_ DWORD nIndex, _Out_ UINT64 * pnSize)
+	{
+		try {
+			if (!pnSize)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
+			nfUint32 nCount = m_pModel->getTextureStreamCount();
+			if (nIndex > nCount)
+				throw CNMRException(NMR_ERROR_INVALIDINDEX);
+
+			PImportStream pStream = m_pModel->getTextureStream(nIndex);
+			if (pStream.get() != nullptr) {
+				*pnSize = pStream->retrieveSize();
+			}
+			else {
+				*pnSize = 0;
+			}
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+
+
+	}
+
+	LIB3MFMETHODIMP CCOMModel::GetTextureStreamPath(_In_ DWORD nIndex, _Out_opt_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars)
+	{
+		try {
+			if (cbBufferSize > MODEL_MAXSTRINGBUFFERLENGTH)
+				throw CNMRException(NMR_ERROR_INVALIDBUFFERSIZE);
+
+			nfUint32 nCount = m_pModel->getTextureStreamCount();
+			if (nIndex > nCount)
+				throw CNMRException(NMR_ERROR_INVALIDINDEX);
+
+			std::wstring sPath = m_pModel->getTextureStreamPath(nIndex);
+			// Safely call StringToBuffer
+			nfUint32 nNeededChars = 0;
+			fnWStringToBufferSafe(sPath, pwszBuffer, cbBufferSize, &nNeededChars);
+
+			// Return length if needed
+			if (pcbNeededChars)
+				*pcbNeededChars = nNeededChars;
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+
+
+	}
+
+	LIB3MFMETHODIMP CCOMModel::GetMetaDataCount (_Out_ DWORD * pnCount)
+	{
+		try {
+			if (!pnCount)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
+			nfUint32 nCount = m_pModel->getMetaDataCount();
+			*pnCount = nCount;
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+
+	}
+
+	LIB3MFMETHODIMP CCOMModel::GetMetaDataKey (_In_ DWORD nIndex, _Out_opt_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars)
+	{
+		try {
+			if (cbBufferSize > MODEL_MAXSTRINGBUFFERLENGTH)
+				throw CNMRException(NMR_ERROR_INVALIDBUFFERSIZE);
+
+			nfUint32 nCount = m_pModel->getMetaDataCount();
+			if (nIndex > nCount)
+				throw CNMRException(NMR_ERROR_INVALIDINDEX);
+
+			std::wstring sName;
+			std::wstring sValue;
+			m_pModel->getMetaData(nIndex, sName, sValue);
+	
+			// Safely call StringToBuffer
+			nfUint32 nNeededChars = 0;
+			fnWStringToBufferSafe(sName, pwszBuffer, cbBufferSize, &nNeededChars);
+
+			// Return length if needed
+			if (pcbNeededChars)
+				*pcbNeededChars = nNeededChars;
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+
+
+	}
+
+	LIB3MFMETHODIMP CCOMModel::GetMetaDataValue (_In_ DWORD nIndex, _Out_opt_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars)
+	{
+		try {
+			if (cbBufferSize > MODEL_MAXSTRINGBUFFERLENGTH)
+				throw CNMRException(NMR_ERROR_INVALIDBUFFERSIZE);
+
+			nfUint32 nCount = m_pModel->getMetaDataCount();
+			if (nIndex > nCount)
+				throw CNMRException(NMR_ERROR_INVALIDINDEX);
+
+			std::wstring sName;
+			std::wstring sValue;
+			m_pModel->getMetaData(nIndex, sName, sValue);
+
+			// Safely call StringToBuffer
+			nfUint32 nNeededChars = 0;
+			fnWStringToBufferSafe(sValue, pwszBuffer, cbBufferSize, &nNeededChars);
+
+			// Return length if needed
+			if (pcbNeededChars)
+				*pcbNeededChars = nNeededChars;
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+
+
+	}
+
+	LIB3MFMETHODIMP CCOMModel::AddMetaData (_In_ LPCWSTR pszwKey, _In_ LPCWSTR pszwValue)
+	{
+		try 
+		{
+			if (!pszwKey)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+			if (!pszwValue)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
+			std::wstring sName (pszwKey);
+			std::wstring sValue (pszwValue);
+
+			m_pModel->addMetaData(sName, sValue);
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+
+
+	}
+
+	LIB3MFMETHODIMP CCOMModel::RemoveMetaData (_In_ DWORD nIndex)
+	{
+		try {
+
+			nfUint32 nCount = m_pModel->getMetaDataCount();
+			if (nIndex > nCount)
+				throw CNMRException(NMR_ERROR_INVALIDINDEX);
+
+			m_pModel->removeMetaData(nIndex);
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+
+
+	}
+
+
 
 }

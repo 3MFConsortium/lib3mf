@@ -66,15 +66,19 @@ namespace NMR {
 		__NMRASSERT(pAttributeValue);
 	}
 
-	void CModelReaderNode100_Build::OnChildElement(_In_z_ const nfWChar * pChildName, _In_ CXmlReader * pXMLReader)
+	void CModelReaderNode100_Build::OnNSChildElement(_In_z_ const nfWChar * pChildName, _In_z_ const nfWChar * pNameSpace, _In_ CXmlReader * pXMLReader)
 	{
 		__NMRASSERT(pChildName);
 		__NMRASSERT(pXMLReader);
+		__NMRASSERT(pNameSpace);
 
-		if (wcscmp(pChildName, XML_3MF_ELEMENT_ITEM) == 0) {
-			PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode100_BuildItem>(m_pModel, m_pWarnings);
-			pXMLNode->parseXML(pXMLReader);
+		if (wcscmp(pNameSpace, XML_3MF_NAMESPACE_CORESPEC100) == 0) {
 
+			if (wcscmp(pChildName, XML_3MF_ELEMENT_ITEM) == 0) {
+				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode100_BuildItem>(m_pModel, m_pWarnings);
+				pXMLNode->parseXML(pXMLReader);
+
+			}
 		}
 	}
 

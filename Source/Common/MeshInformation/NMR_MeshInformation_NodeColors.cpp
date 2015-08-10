@@ -60,7 +60,7 @@ namespace NMR {
 		MESHINFORMATION_NODECOLOR * pNodeData = (MESHINFORMATION_NODECOLOR *)pData;
 		if (pNodeData) {
 			for (j = 0; j < 3; j++)
-				pNodeData->m_cColors[j] = 0xffffffff;
+				pNodeData->m_cColors[j] = 0x00000000;
 		}
 	}
 
@@ -108,6 +108,17 @@ namespace NMR {
 	void CMeshInformation_NodeColors::mergeInformationFrom(_In_ CMeshInformation * pInformation)
 	{
 		// nothing to merge
+	}
+
+	nfBool CMeshInformation_NodeColors::faceHasData(_In_ nfUint32 nFaceIndex)
+	{
+		MESHINFORMATION_NODECOLOR * pFaceData = (MESHINFORMATION_NODECOLOR*)getFaceData(nFaceIndex);
+		if (pFaceData) {
+			return ((pFaceData->m_cColors[0] != 0) || (pFaceData->m_cColors[1] != 0) ||
+				(pFaceData->m_cColors[2] != 0));
+		}
+
+		return false;
 	}
 
 }

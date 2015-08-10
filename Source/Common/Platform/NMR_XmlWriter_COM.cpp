@@ -120,4 +120,12 @@ namespace NMR {
 			throw CNMRException_Windows(NMR_ERROR_COULDNOTWRITEXMLENDELEMENT, hResult);
 	}
 
+	void CXmlWriter_COM::WriteText(_In_ const nfWChar * pwszContent, _In_ const nfUint32 cbLength)
+	{
+		HRESULT hResult = m_pXMLWriter->WriteChars(pwszContent, cbLength);
+		if (hResult != S_OK)
+			throw CNMRException_Windows(NMR_ERROR_COULDNOTWRITEXMLCONTENT, hResult);
+	}
+
+
 }

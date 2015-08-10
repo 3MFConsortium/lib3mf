@@ -47,8 +47,9 @@ namespace NMR {
 	public:
 		CXmlReader_COM(_In_ PImportStream pImportStream);
 
-		virtual void GetQualifiedName(_Outptr_result_buffer_maybenull_(*pcwchQualifiedName + 1) const nfWChar ** ppwszQualifiedName, _Out_opt_ nfUint32 *pcwchQualifiedName);
+		virtual void GetLocalName(_Outptr_result_buffer_maybenull_(*pcwchLocalName + 1) const nfWChar ** ppwszLocalName, _Out_opt_ nfUint32 *pcwchLocalName);
 		virtual void GetValue(_Outptr_result_buffer_maybenull_(*pcwchValue + 1)  const nfWChar ** ppwszValue, _Out_opt_  nfUint32 *pcwchValue);
+		virtual void GetNamespaceURI(_Outptr_result_buffer_maybenull_(*pcwchValue + 1)  const nfWChar ** ppwszValue, _Out_opt_  nfUint32 *pcwchValue);
 
 		virtual nfBool Read(_Out_ eXmlReaderNodeType & NodeType);
 		virtual nfBool IsEOF();

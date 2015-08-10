@@ -36,6 +36,8 @@ NMR_ModelReader_3MF.h defines the Model Reader Class for
 #define __NMR_MODELREADER_3MF
 
 #include "Model/Reader/NMR_ModelReader.h" 
+#include <string>
+#include <map>
 
 namespace NMR {
 
@@ -49,6 +51,7 @@ namespace NMR {
 		CModelReader_3MF(_In_ PModel pModel);
 
 		virtual void readStream(_In_ PImportStream pStream);
+		virtual void addTextureStream(_In_ std::wstring sPath, _In_ PImportStream pStream);
 	};
 
 	typedef std::shared_ptr <CModelReader_3MF> PModelReader_3MF;

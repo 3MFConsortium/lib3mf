@@ -31,17 +31,71 @@ COM Interface Implementation for Model Build Item Iterator Classes
 
 --*/
 
-#include "Model/COM/NMR_COMInterface_ModelBuildItemIterator.h" 
-#include "Model/Classes/NMR_ModelConstants.h" 
-#include "Common/NMR_Exception_Windows.h" 
+#include "Model/COM/NMR_COMInterface_ModelBuildItemIterator.h"
+#include "Model/Classes/NMR_ModelConstants.h"
+#include "Common/NMR_Exception_Windows.h"
 
 namespace NMR {
 
 	CCOMModelBuildItemIterator::CCOMModelBuildItemIterator()
 	{
 		m_nCurrentIndex = -1;
+		m_nErrorCode = NMR_SUCCESS;
 	}
-	
+
+	LIB3MFRESULT CCOMModelBuildItemIterator::handleSuccess()
+	{
+		m_nErrorCode = NMR_SUCCESS;
+		return LIB3MF_OK;
+	}
+
+	LIB3MFRESULT CCOMModelBuildItemIterator::handleNMRException(_In_ CNMRException * pException)
+	{
+		__NMRASSERT(pException);
+
+		m_nErrorCode = pException->getErrorCode();
+		m_sErrorMessage = std::string(pException->what());
+
+		CNMRException_Windows * pWinException = dynamic_cast<CNMRException_Windows *> (pException);
+		if (pWinException != nullptr) {
+			return pWinException->getHResult();
+		}
+		else {
+			if (m_nErrorCode == NMR_ERROR_INVALIDPOINTER)
+				return LIB3MF_POINTER;
+			if (m_nErrorCode == NMR_ERROR_INVALIDPARAM)
+				return LIB3MF_INVALIDARG;
+
+			return LIB3MF_FAIL;
+		}
+	}
+
+	LIB3MFRESULT CCOMModelBuildItemIterator::handleGenericException()
+	{
+		m_nErrorCode = NMR_ERROR_GENERICEXCEPTION;
+		m_sErrorMessage = NMR_GENERICEXCEPTIONSTRING;
+		return LIB3MF_FAIL;
+	}
+
+	LIB3MFMETHODIMP CCOMModelBuildItemIterator::GetLastError(_Out_ DWORD * pErrorCode, _Outptr_opt_ LPCSTR * pErrorMessage)
+	{
+		if (!pErrorCode)
+			return LIB3MF_POINTER;
+
+		*pErrorCode = m_nErrorCode;
+		if (pErrorMessage) {
+			if (m_nErrorCode != NMR_SUCCESS) {
+				*pErrorMessage = m_sErrorMessage.c_str();
+			}
+			else {
+				*pErrorMessage = nullptr;
+			}
+		}
+
+		return LIB3MF_OK;
+	}
+
+
 	void CCOMModelBuildItemIterator::addBuildItem(_In_ PModelBuildItem pBuildItem)
 	{
 		if (pBuildItem.get() == nullptr)
@@ -54,10 +108,10 @@ namespace NMR {
 
 	LIB3MFMETHODIMP CCOMModelBuildItemIterator::MoveNext(_Out_ BOOL * pbHasNext)
 	{
-		if (pbHasNext == nullptr)
-			return LIB3MF_POINTER;
-
 		try {
+			if (pbHasNext == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
 			// Get Resource Count
 			nfInt32 nBuildItemCount = (nfInt32)m_pBuildItems.size();
 			m_nCurrentIndex++;
@@ -71,19 +125,22 @@ namespace NMR {
 				*pbHasNext = true;
 			}
 
-			return LIB3MF_OK;
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
 		}
 		catch (...) {
-			return LIB3MF_FAIL;
+			return handleGenericException();
 		}
 	}
 
 	LIB3MFMETHODIMP CCOMModelBuildItemIterator::MovePrevious(_Out_ BOOL * pbHasPrevious)
 	{
-		if (pbHasPrevious == nullptr)
-			return LIB3MF_POINTER;
-
 		try {
+			if (pbHasPrevious == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
 			// Get Resource Count
 			m_nCurrentIndex--;
 
@@ -96,23 +153,26 @@ namespace NMR {
 				*pbHasPrevious = true;
 			}
 
-			return LIB3MF_OK;
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
 		}
 		catch (...) {
-			return LIB3MF_FAIL;
+			return handleGenericException();
 		}
 	}
 
 	LIB3MFMETHODIMP CCOMModelBuildItemIterator::GetCurrent(_Outptr_ ILib3MFModelBuildItem ** ppResultBuildItem)
 	{
-		if (ppResultBuildItem == nullptr)
-			return LIB3MF_POINTER;
-
 		try {
+			if (ppResultBuildItem == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
 			// Get Resource Count
 			nfInt32 nBuildItemCount = (nfInt32)m_pBuildItems.size();
 			if ((m_nCurrentIndex < 0) || (m_nCurrentIndex >= nBuildItemCount))
-				return LIB3MF_FAIL;
+				throw CNMRException(NMR_ERROR_INVALIDINDEX);
 
 			// Create specific COM classes
 			PModelBuildItem pBuildItem = m_pBuildItems[m_nCurrentIndex];
@@ -123,29 +183,35 @@ namespace NMR {
 			// Return result
 			*ppResultBuildItem = pResult;
 
-			return LIB3MF_OK;
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
 		}
 		catch (...) {
-			return LIB3MF_FAIL;
+			return handleGenericException();
 		}
 	}
 
 	LIB3MFMETHODIMP CCOMModelBuildItemIterator::Clone(_Outptr_ ILib3MFModelBuildItemIterator ** ppIterator)
 	{
-		if (ppIterator == nullptr)
-			return LIB3MF_POINTER;
-
 		try {
+			if (ppIterator == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
 			CCOMObject <CCOMModelBuildItemIterator> * pComObject = new CCOMObject <CCOMModelBuildItemIterator>();
 			for (auto iIterator = m_pBuildItems.begin(); iIterator != m_pBuildItems.end(); iIterator++)
 				pComObject->addBuildItem(*iIterator);
 
 			*ppIterator = pComObject;
-			
-			return LIB3MF_OK;
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
 		}
 		catch (...) {
-			return LIB3MF_FAIL;
+			return handleGenericException();
 		}
 	}
 

@@ -37,6 +37,7 @@ NMR_WinTypes.h defines Standard Windows Types on Non-Windows Environments
 #ifdef __GCC
 #define BOOL int
 #define FLOAT float
+#define BYTE unsigned char
 #define DWORD unsigned int
 #define FLOAT float
 #define ULONG unsigned int
@@ -45,6 +46,8 @@ NMR_WinTypes.h defines Standard Windows Types on Non-Windows Environments
 #define LPWSTR wchar_t *
 #define UINT unsigned int
 #define HRESULT unsigned int
+#define LPCSTR const char *
+#define ULONG64 unsigned long long
 #else
 
 #include <Windows.h>

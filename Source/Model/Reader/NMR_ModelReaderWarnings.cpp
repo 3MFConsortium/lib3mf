@@ -69,12 +69,12 @@ namespace NMR {
 		return m_CriticalWarningLevel;
 	}
 
-	void CModelReaderWarnings::setCriticalWarningLevel(eModelReaderWarningLevel WarningLevel)
+	void CModelReaderWarnings::setCriticalWarningLevel(_In_ eModelReaderWarningLevel WarningLevel)
 	{
 		m_CriticalWarningLevel = WarningLevel;
 	}
 
-	void CModelReaderWarnings::addWarning(std::wstring sMessage, nfError nErrorCode, eModelReaderWarningLevel WarningLevel)
+	void CModelReaderWarnings::addWarning(_In_ std::wstring sMessage, _In_ nfError nErrorCode, eModelReaderWarningLevel WarningLevel)
 	{
 		if (m_Warnings.size() < NMR_MAXWARNINGCOUNT) { // Failsafe check for Index overflows
 			PModelReaderWarning pWarning = std::make_shared<CModelReaderWarning>(sMessage, WarningLevel, nErrorCode);
@@ -86,6 +86,20 @@ namespace NMR {
 
 	}
 
+	void CModelReaderWarnings::addException(_In_ CNMRException & Exception, _In_ eModelReaderWarningLevel WarningLevel)
+	{
+		if (m_Warnings.size() < NMR_MAXWARNINGCOUNT) { // Failsafe check for Index overflows
+			std::string sAsciiMessage (Exception.what());
+			std::wstring sMessage (sAsciiMessage.begin(), sAsciiMessage.end());
+
+			PModelReaderWarning pWarning = std::make_shared<CModelReaderWarning>(sMessage, WarningLevel, Exception.getErrorCode());
+			m_Warnings.push_back(pWarning);
+		}
+
+		if ((nfInt32)WarningLevel < (nfInt32)m_CriticalWarningLevel)
+			throw Exception;
+	}
+
 	nfUint32 CModelReaderWarnings::getWarningCount()
 	{
 		return (nfUint32)m_Warnings.size();
@@ -95,5 +109,7 @@ namespace NMR {
 	{
 		return m_Warnings[nIndex];
 	}
+
+
 
 }

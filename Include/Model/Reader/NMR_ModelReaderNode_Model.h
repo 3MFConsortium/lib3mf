@@ -44,15 +44,29 @@ namespace NMR {
 		CModel * m_pModel;
 		std::wstring m_sRequiredExtensions;
 
-		virtual void OnChildElement(_In_z_ const nfWChar * pChildName, _In_ CXmlReader * pXMLReader);
+		nfBool m_bHasResources;
+		nfBool m_bHasBuild;
+
+		// Namespace Handling
+		std::wstring m_RootNameSpace;
+		std::wstring m_MaterialExtensionNameSpace;
+		std::wstring m_MaterialExtensionPrefix;
+
+		virtual void OnNSChildElement(_In_z_ const nfWChar * pChildName, _In_z_ const nfWChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 		virtual void OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue);
+		virtual void OnNSAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue, _In_z_ const nfWChar * pNameSpace);
 	public:
 		CModelReaderNode_Model() = delete;
 		CModelReaderNode_Model(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 		std::wstring getRequiredExtensions ();
+
+		nfBool getHasResources();
+		nfBool getHasBuild();
 	};
+
+	typedef std::shared_ptr <CModelReaderNode_Model> PModelReaderNode_Model;
 
 }
 

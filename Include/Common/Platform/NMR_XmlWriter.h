@@ -52,6 +52,8 @@ namespace NMR {
 		virtual void WriteStartElement(_In_opt_  const nfWChar *  pwszPrefix, _In_  const nfWChar *  pwszLocalName, _In_opt_  const nfWChar *  pwszNamespaceUri) = 0;
 		virtual void WriteEndElement() = 0;
 		virtual void WriteFullEndElement() = 0;
+
+		virtual void WriteText(_In_ const nfWChar * pwszContent, _In_ const nfUint32 cbLength) = 0;
 	};
 
 	typedef std::shared_ptr<CXmlWriter> PXmlWriter;

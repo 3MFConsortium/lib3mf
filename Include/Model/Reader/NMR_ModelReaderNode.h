@@ -56,9 +56,11 @@ namespace NMR {
 		void parseContent(_In_ CXmlReader * pXMLReader);
 
 		virtual void OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue);
-		virtual void OnChildElement(_In_z_ const nfWChar * pChildName, _In_ CXmlReader * pXMLReader);
 		virtual void OnText(_In_z_ const nfWChar * pText, _In_ CXmlReader * pXMLReader);
 		virtual void OnEndElement(_In_ CXmlReader * pXMLReader);
+
+		virtual void OnNSAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue, _In_z_ const nfWChar * pNameSpace);
+		virtual void OnNSChildElement(_In_z_ const nfWChar * pChildName, _In_z_ const nfWChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 	public:
 		CModelReaderNode() = delete;
 		CModelReaderNode(_In_ PModelReaderWarnings pWarnings);

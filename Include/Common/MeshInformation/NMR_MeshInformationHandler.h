@@ -50,8 +50,8 @@ namespace NMR {
 		void addInformation(_In_ PMeshInformation pInformation);
 		void addFace(_In_ nfUint32 nNewFaceCount);
 
-		CMeshInformation * getInformation(_In_ nfUint32 nIdx);
-		CMeshInformation * getInformation(_In_ eMeshInformationType eType);
+		CMeshInformation * getInformationIndexed(_In_ nfUint32 nIdx);
+		CMeshInformation * getInformationByType(_In_ nfUint32 nChannel, _In_ eMeshInformationType eType);
 		nfUint32 getInformationCount();
 
 		void addInfoTableFrom(_In_ CMeshInformationHandler * pOtherInfoHandler, _In_ nfUint32 nCurrentFaceCount);

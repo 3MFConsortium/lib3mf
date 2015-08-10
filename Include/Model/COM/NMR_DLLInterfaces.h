@@ -61,6 +61,13 @@ extern "C" {
 	typedef PLib3MFBase PLib3MFModelComponent;
 	typedef PLib3MFBase PLib3MFModelBuildItem;
 	typedef PLib3MFBase PLib3MFModelBuildItemIterator;
+	typedef PLib3MFBase PLib3MFDefaultPropertyHandler;
+	typedef PLib3MFBase PLib3MFDefaultPropertyHandler;
+	typedef PLib3MFBase PLib3MFPropertyHandler;
+	typedef PLib3MFBase PLib3MFModel;
+	typedef PLib3MFBase PLib3MFModelBaseMaterial;
+	typedef PLib3MFBase PLib3MFModelTexture2D;
+	typedef PLib3MFBase PLib3MFModelThumbnailIterator;
 
 	// Base functions
     /**
@@ -93,11 +100,23 @@ extern "C" {
 	/**
 	* Frees all memory of any object instance.
 	*
-	* @param[out] pObject Object to free memory of.
+	* @param[out] pInstance Object to free memory of.
 	* @return error code or 0 (success)
 	*/
-	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_free(_In_ PLib3MFBase * pInstance);
+	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_release(_In_ PLib3MFBase * pInstance);
 
+	/**
+	* Returns detailed information of the last known error an object method.
+	* The error information is available for every method returning a LIB3MF_FAILED
+	* constant.
+	*
+	* @param[out] pInstance Object instance.
+	* @param[out] pErrorCode Error Code 
+	* @param[out] pErrorMessage Returns pointer to the error message string, NULL if no error.
+	* @return error code or 0 (success)
+	*/
+	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_getlasterror(_In_ PLib3MFBase * pInstance, _Out_ DWORD * pErrorCode, _Outptr_opt_ LPCSTR * pErrorMessage);
+	
 	// Reader/Writer
 	/**
 	* Writes out the model as file. The file type is specified by the Model Writer class
@@ -185,7 +204,8 @@ extern "C" {
 	*/
 	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_resourceiterator_clone(_In_ PLib3MFModelResourceIterator * pIterator, _Outptr_ PLib3MFModelResourceIterator ** ppIterator);
 
-    /**
+
+	/**
     * Retrieves a object's type
     *
 	* @param[in] pObject Object Resource Instance
@@ -240,6 +260,58 @@ extern "C" {
     */
 	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_object_setpartnumber(_In_ PLib3MFModelObjectResource * pObject, _In_z_ LPCWSTR pwszPartNumber);
 
+	/**
+	* Retrieves, if an object is a mesh object
+	*
+	* @param[in] pObject Object Resource Instance
+	* @param[out] pbIsMeshObject returns, if the object is a mesh object
+	* @return error code or 0 (success)
+	*/
+	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_object_ismeshobject(_In_ PLib3MFModelObjectResource * pObject, _Out_ BOOL * pbIsMeshObject);
+
+	/**
+	* Retrieves, if an object is a component object
+	*
+	* @param[in] pObject Object Resource Instance
+	* @param[out] pbIsComponentObject returns, if the object is a mesh object
+	* @return error code or 0 (success)
+	*/
+	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_object_iscomponentsobject(_In_ PLib3MFModelObjectResource * pObject, _Out_ BOOL * pbIsComponentObject);
+
+	/**
+	* Retrieves, if the object is valid according to the core spec.
+	* For mesh objects, we distinguish between the type attribute of the object:
+	* In case of object type "other", this always means "false"
+	* In case of object type "support", this always means "true"
+	* In case of object type "model", this means, if the mesh suffices all requirements of the core spec chapter 4.1
+	* A component objects is valid if and only if it contains at least one component -
+	* and all child components are valid objects.
+	*
+	* @param[in] pObject Object Resource Instance
+	* @param[out] pbIsValid returns, if the object is a valid object description.
+	* @return error code or 0 (success)
+	*/
+	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_object_isvalidobject(_In_ PLib3MFModelObjectResource * pObject, _Out_ BOOL * pbIsValid);
+
+	/**
+	* creates a default property handler for the object
+	*
+	* @param[in] pObject Object Resource Instance	
+	* @param[out] ppPropertyHandler returns a default property handler instance for the object.
+	* @return error code or 0 (success)
+	*/	
+	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_object_createdefaultpropertyhandler(_In_ PLib3MFModelObjectResource * pObject, _Out_ PLib3MFDefaultPropertyHandler ** ppPropertyHandler);
+
+	/**
+	* creates a default property handler for a specific multiproperty channel of an object
+	*
+	* @param[in] pObject Object Resource Instance	
+	* @param[in] nChannel Channel Index
+	* @param[out] ppPropertyHandler returns a default property handler instance of an object.
+	* @return error code or 0 (success)
+	*/	
+	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_object_createdefaultmultipropertyhandler(_In_ PLib3MFModelObjectResource * pObject, _In_ DWORD nChannel, _Out_ PLib3MFDefaultPropertyHandler ** ppPropertyHandler);
+	
 	// Mesh Object
 	/**
 	* Returns the vertex count of a mesh object
@@ -353,6 +425,36 @@ extern "C" {
 	*/
 	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_meshobject_setgeometry(_In_ PLib3MFModelMeshObject * pMeshObject, _In_ MODELMESHVERTEX * pVertices, _In_ DWORD nVertexCount, _In_ MODELMESHTRIANGLE * pTriangles, _In_ DWORD nTriangleCount);
 
+
+	/**
+	* creates a property handler for the mesh
+	*
+	* @param[in] pMeshObject Mesh Object Instance
+	* @param[out] ppPropertyHandler returns a property handler instance for the mesh.
+	* @param[in] pMeshObject Mesh Object Instance
+	* @return error code or 0 (success)
+	*/
+	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_meshobject_createpropertyhandler(_In_ PLib3MFModelMeshObject * pMeshObject, _In_ PLib3MFPropertyHandler ** ppPropertyHandler);
+
+	/**
+	* creates a property handler for a specific multiproperty channel of a mesh
+	*
+	* @param[in] pMeshObject Mesh Object Instance
+	* @param[out] ppPropertyHandler returns a property handler instance for the mesh.
+	* @return error code or 0 (success)
+	*/
+	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_meshobject_createmultipropertyhandler(_In_ PLib3MFModelMeshObject * pMeshObject, _In_ DWORD nChannel, _In_ PLib3MFPropertyHandler ** ppPropertyHandler);
+	
+	
+	/**
+	* Retrieves, if an object describes a topologically oriented and manifold mesh, according to the core spec
+	*
+	* @param[in] pMeshObject Mesh Object Instance
+	* @param[out] pbIsOrientedAndManifold returns, if the object is oriented and manifold
+	* @return error code or 0 (success)
+	*/
+	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_meshobject_ismanifoldandoriented(_In_ PLib3MFModelMeshObject * pMeshObject, _Out_ BOOL * pbIsOrientedAndManifold);
+	
 	// Components
 	/**
 	* Returns the Resource Instance of the component.
@@ -496,6 +598,16 @@ extern "C" {
 	*/
 	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_builditem_setpartnumber(_In_ PLib3MFModelBuildItem * pBuildItem, _In_z_ LPCWSTR pwszPartNumber);
 
+	/**
+	* Retrieves an internal handle of the build item. This 32bit number is unique throughout the model, but only valid
+	* for in-memory use of this instance.
+	*
+	* @param[in] pBuildItem build item instance
+	* @param[out] ppHandle returns the handle
+	* @return error code or 0 (success)
+	*/
+	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_builditem_gethandle(_In_ PLib3MFModelBuildItem * pBuildItem, _Out_ DWORD * pHandle);
+	
 	// Build Item Iterator
 	/**
 	* Iterates to the next build item in the list.
@@ -603,6 +715,47 @@ extern "C" {
 	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_getresourcebyid(_In_ PLib3MFModel * pModel, _In_ DWORD nResourceID, _Outptr_ PLib3MFModelResource ** ppResource);
 
 	/**
+	* finds a model 2d texture by its id
+	*
+	* @param[in] pModel Model instance
+	* @param[in] nResourceID Resource ID
+	* @param[out] ppTexture returns the texture resource instance
+	* @return error code or 0 (success)
+	*/
+	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_gettexture2dbyid(_In_ PLib3MFModel * pModel, _In_ DWORD nResourceID, _Outptr_ PLib3MFModelTexture2D ** ppTexture);
+	
+	/**
+	* finds a base material by its id
+	*
+	* @param[in] pModel Model instance
+	* @param[in] nResourceID Resource ID
+	* @param[out] ppMaterial returns the base material resource instance
+	* @return error code or 0 (success)
+	*/
+	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_getbasematerialbyid(_In_ PLib3MFModel * pModel, _In_ DWORD nResourceID, _Outptr_ PLib3MFModelBaseMaterial ** ppMaterial);
+
+	/**
+	* finds a mesh object resource by its id
+	*
+	* @param[in] pModel Model instance
+	* @param[in] nResourceID Resource ID
+	* @param[out] ppMeshObject returns the resource instance
+	* @return error code or 0 (success)
+	*/
+	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_getmeshobjectbyid(_In_ PLib3MFModel * pModel, _In_ DWORD nResourceID, _Outptr_ PLib3MFModelMeshObject ** ppMeshObject);
+
+	/**
+	* finds a components object resource by its id
+	*
+	* @param[in] pModel Model instance
+	* @param[in] nResourceID Resource ID
+	* @param[out] ppComponentsObject returns the resource instance
+	* @return error code or 0 (success)
+	*/
+	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_getcomponentsobjectbyid(_In_ PLib3MFModel * pModel, _In_ DWORD nResourceID, _Outptr_ PLib3MFModelComponentsObject ** ppComponentsObject);
+		
+	
+	/**
 	* creates a build item iterator instance with all build items
 	*
 	* @param[in] pModel Model instance
@@ -618,7 +771,7 @@ extern "C" {
 	* @param[out] ppIterator returns the iterator instance
 	* @return error code or 0 (success)
 	*/
-	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_resources(_In_ PLib3MFModel * pModel, _Outptr_ PLib3MFModelResourceIterator ** ppIterator);
+	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_getresources(_In_ PLib3MFModel * pModel, _Outptr_ PLib3MFModelResourceIterator ** ppIterator);
 
 	/**
 	* creates a resource iterator instance with all object resources
@@ -627,7 +780,7 @@ extern "C" {
 	* @param[out] ppIterator returns the iterator instance
 	* @return error code or 0 (success)
 	*/
-	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_objects(_In_ PLib3MFModel * pModel, _Outptr_ PLib3MFModelResourceIterator ** ppIterator);
+	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_getobjects(_In_ PLib3MFModel * pModel, _Outptr_ PLib3MFModelResourceIterator ** ppIterator);
 
 	/**
 	* creates a resource iterator instance with all mesh object resources
@@ -636,7 +789,7 @@ extern "C" {
 	* @param[out] ppIterator returns the iterator instance
 	* @return error code or 0 (success)
 	*/
-	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_meshobjects(_In_ PLib3MFModel * pModel, _Outptr_ PLib3MFModelResourceIterator ** ppIterator);
+	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_getmeshobjects(_In_ PLib3MFModel * pModel, _Outptr_ PLib3MFModelResourceIterator ** ppIterator);
 
 	/**
 	* creates a resource iterator instance with all component object resources
@@ -645,8 +798,35 @@ extern "C" {
 	* @param[out] ppIterator returns the iterator instance
 	* @return error code or 0 (success)
 	*/
-	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_componentsobjects(_In_ PLib3MFModel * pModel, _Outptr_ PLib3MFModelResourceIterator ** ppIterator);
+	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_getcomponentsobjects(_In_ PLib3MFModel * pModel, _Outptr_ PLib3MFModelResourceIterator ** ppIterator);
 
+	/**
+	* creates a resource iterator instance with all 2D texture resources
+	*
+	* @param[in] pModel Model instance
+	* @param[out] ppIterator returns the iterator instance
+	* @return error code or 0 (success)
+	*/
+	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_get2dtextures(_In_ PLib3MFModel * pModel, _Outptr_ PLib3MFModelResourceIterator ** ppIterator);
+	
+	/**
+	* creates a resource iterator instance with all base materials
+	*
+	* @param[in] pModel Model instance
+	* @param[out] ppIterator returns the iterator instance
+	* @return error code or 0 (success)
+	*/
+	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_getbasematerials(_In_ PLib3MFModel * pModel, _Outptr_ PLib3MFModelResourceIterator ** ppIterator);
+
+	/**
+	* creates a thumbnail iterator instance with all thumbnails
+	*
+	* @param[in] pModel Model instance
+	* @param[out] ppIterator returns the iterator instance
+	* @return error code or 0 (success)
+	*/
+	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_getthumbnails(_In_ PLib3MFModel * pModel, _Outptr_ PLib3MFModelThumbnailIterator ** ppIterator);
+			
 	/**
 	* merges all components and objects which are referenced by a build item. The memory is duplicated and a
 	* new model is created.
@@ -676,6 +856,26 @@ extern "C" {
 	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_addcomponentsobject(_In_ PLib3MFModel * pModel, _Outptr_ PLib3MFModelComponentsObject ** ppComponentsObject);
 
 	/**
+	* adds an empty texture2d resource to the model
+	*
+	* @param[in] pModel Model instance	
+	* @param[in] pwszPath Package path of the texture
+	* @param[out] ppTextureInstance returns the new texture instance
+	* @return error code or 0 (success)
+	*/	
+	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_addtexture2d(_In_ PLib3MFModel * pModel, _In_z_ LPCWSTR pwszPath, _Outptr_ PLib3MFModelTexture2D ** ppTextureInstance);
+
+	/**
+	* adds an empty basematerials resource to the model
+	*
+	* @param[in] pModel Model instance	
+	* @param[out] ppBaseMaterialInstance returns the new base material instance
+	* @return error code or 0 (success)
+	*/
+	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_addbasematerialgroup(_In_ PLib3MFModel * pModel, _Outptr_ PLib3MFModelBaseMaterial ** ppBaseMaterialInstance);
+	
+	
+	/**
 	* adds a build item to the model
 	*
 	* @param[in] pModel Model instance
@@ -685,6 +885,101 @@ extern "C" {
 	* @return error code or 0 (success)
 	*/
 	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_addbuilditem(_In_ PLib3MFModel * pModel, _In_ PLib3MFModelObjectResource * pObject, _In_opt_ MODELTRANSFORM * pTransform, _Outptr_ PLib3MFModelBuildItem ** ppBuildItem);
+
+	
+	/**
+	* removes a build item from the model
+	*
+	* @param[in] pModel Model instance
+	* @param[in] pBuildItem Build item instance
+	* @return error code or 0 (success)
+	*/	
+	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_removebuilditem(_In_ PLib3MFModel * pModel, _In_ PLib3MFModelBuildItem * pBuildItem);
+
+	/**
+	* returns the number of texture streams of a model
+	*
+	* @param[in] pModel Model instance
+	* @param[out] pnCount returns the number of texture streams.
+	* @return error code or 0 (success)
+	*/
+	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_gettexturestreamcount(_In_ PLib3MFModel * pModel, _Out_ DWORD * pnCount);
+	
+
+	/**
+	* returns the size of a texture stream
+	*
+	* @param[in] pModel Model instance
+	* @param[in] nIndex index of the texture stream
+	* @param[out] pnSize returns the size of a texture stream in bytes.
+	* @return error code or 0 (success)
+	*/
+	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_gettexturestreamsize(_In_ PLib3MFModel * pModel, _In_ DWORD nIndex, _Out_ UINT64 * pnSize);
+	
+	/**
+	* Returns the path of a texture stream in the 3mf package.
+	*
+	* @param[in] pModel Model instance
+	* @param[in] nIndex Index of the Texture Stream
+	* @param[out] pwszBuffer filled with the texture stream path, may be NULL
+	* @param[in] cbBufferSize size of pwszBuffer (including trailing 0).
+	* @param[out] pcbNeededChars filled with the count of the written bytes, or needed buffer size.
+	* @return error code or 0 (success)
+	*/	
+	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_gettexturestreampath(_In_ PLib3MFModel * pModel, _In_ DWORD nIndex, _Out_opt_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars);
+
+	/**
+	* returns the number of metadata strings of a model
+	*
+	* @param[in] pModel Model instance
+	* @param[out] pnCount returns the number metadata strings.
+	* @return error code or 0 (success)
+	*/
+	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_getmetadatacount (_In_ PLib3MFModel * pModel, _Out_ DWORD * pnCount);
+
+	/**
+	* returns a metadata key of a model
+	*
+	* @param[in] pModel Model instance
+	* @param[in] nIndex Index of the Metadata
+	* @param[out] pwszBuffer filled with the texture stream path, may be NULL
+	* @param[in] cbBufferSize size of pwszBuffer (including trailing 0).
+	* @param[out] pcbNeededChars filled with the count of the written bytes, or needed buffer size.
+	* @return error code or 0 (success)
+	*/
+	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_getmetadatakey (_In_ PLib3MFModel * pModel, _In_ DWORD nIndex, _Out_opt_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars);
+
+	/**
+	* returns a metadata value of a model
+	*
+	* @param[in] pModel Model instance
+	* @param[in] nIndex Index of the Metadata
+	* @param[out] pwszBuffer filled with the texture stream path, may be NULL
+	* @param[in] cbBufferSize size of pwszBuffer (including trailing 0).
+	* @param[out] pcbNeededChars filled with the count of the written bytes, or needed buffer size.
+	* @return error code or 0 (success)
+	*/
+	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_getmetadatavalue(_In_ PLib3MFModel * pModel, _In_ DWORD nIndex, _Out_opt_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars);
+
+	/**
+	* adds a new metadata to the model
+	*
+	* @param[in] pModel Model instance
+	* @param[in] pszwKey Metadata Key.
+	* @param[in] pszwValue Metadata Value.
+	* @return error code or 0 (success)
+	*/
+	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_addmetadata(_In_ PLib3MFModel * pModel, _In_ LPCWSTR pszwKey, _In_ LPCWSTR pszwValue);
+
+
+	/**
+	* removes a metadata from the model
+	*
+	* @param[in] pModel Model instance
+	* @param[in] nIndex Index of the metadata
+	* @return error code or 0 (success)
+	*/
+	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_removemetadata(_In_ PLib3MFModel * pModel, _In_ DWORD nIndex);
 
 };
 

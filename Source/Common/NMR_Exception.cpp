@@ -28,12 +28,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 Abstract:
 
 NMR_Exception.cpp implements the generic Exception Class.
-Each exception is identified via a global ErrorCode 
+Each exception is identified via a global ErrorCode
 (to be looked up in NMR_ErrorConst.h)
 
 --*/
 
-#include "Common/NMR_Exception.h" 
+#include "Common/NMR_Exception.h"
 #include <math.h>
 
 namespace NMR {
@@ -80,6 +80,15 @@ namespace NMR {
 		case NMR_ERROR_INVALIDBUFFERSIZE: return "Invalid buffer size";
 		case NMR_ERROR_INSUFFICIENTBUFFERSIZE: return "Insufficient buffer size";
 		case NMR_ERROR_INVALIDCOMPONENT: return "No component has been given";
+		case NMR_ERROR_INVALIDHEXVALUE: return "Invalid hex value";
+		case NMR_ERROR_RANGEERROR: return "Range error";
+		case NMR_ERROR_INVALIDPOINTER: return "Passed invalid null pointer";
+        case NMR_ERROR_XMLELEMENTNOTOPEN: return "XML Element not open";
+        case NMR_ERROR_INVALIDXMLNAME: return "Invalid XML Name";
+
+		// Unhandled exception
+		case NMR_ERROR_GENERICEXCEPTION: return NMR_GENERICEXCEPTIONSTRING;
+
 
 		// Core framework error codes (0x2XXX)
 		case NMR_ERROR_NOPROGRESSINTERVAL: return "No Progress Interval has been specified in the progress handler";
@@ -118,7 +127,7 @@ namespace NMR {
 		case NMR_ERROR_NOMESHINFORMATIONCONTAINER: return "No Mesh Information Container has been assigned";
 		case NMR_ERROR_DISCRETEMERGEERROR: return "Internal Mesh Merge Error because of corrupt mesh structure";
 		case NMR_ERROR_DISCRETEEDGELENGTHVIOLATION: return "Discrete Edges may only have a max length of 30000.";
-		case NMR_ERROR_OCTTREE_OUTOFBOUNDS: return "OctTree Node is out of the OctTree Structure"; 
+		case NMR_ERROR_OCTTREE_OUTOFBOUNDS: return "OctTree Node is out of the OctTree Structure";
 		case NMR_ERROR_COULDNOTDELETENODE: return "Could not delete mesh node, because it still had some edges connected to it";
 		case NMR_ERROR_INVALIDINFORMATIONTYPE: return "Mesh Information has not been found";
 		case NMR_ERROR_FACESARENOTIDENTICAL: return "Mesh Information could not be copied";
@@ -165,7 +174,7 @@ namespace NMR {
 		case NMR_ERROR_COULDNOTSEEKMODELSTREAM: return "Could not seek in XML Model Stream";
 		case NMR_ERROR_SETXMLPROPERTIESFAILED: return "Could not set XML reader properties";
 		case NMR_ERROR_READXMLNODEFAILED: return "Could not read XML node";
-		case NMR_ERROR_COULDNOTGETQUALIFIEDXMLNAME: return "Could not retrieve qualified xml node name";
+		case NMR_ERROR_COULDNOTGETLOCALXMLNAME: return "Could not retrieve local xml node name";
 		case NMR_ERROR_COULDPARSEXMLCONTENT: return "Could not parse XML Node content";
 		case NMR_ERROR_COULDNOTGETXMLTEXT: return "Could not get XML Node value";
 		case NMR_ERROR_COULDNOTGETXMLATTRIBUTES: return "Could not retrieve XML Node attributes";
@@ -231,6 +240,32 @@ namespace NMR {
 		case NMR_ERROR_INVALIDMETADATA: return "Invalid Model Metadata";
 		case NMR_ERROR_INVALIDMODELCOMPONENT: return "Invalid Model Component";
 		case NMR_ERROR_INVALIDMODELOBJECTTYPE: return "Invalid Model Object Type";
+		case NMR_ERROR_MISSINGMODELRESOURCEID: return "Missing Model Resource ID";
+		case NMR_ERROR_DUPLICATERESOURCEID: return "Duplicate Resource ID";
+		case NMR_ERROR_COULDNOTWRITEXMLCONTENT: return "Could not write XML Content";
+		case NMR_ERROR_COULDNOTGETNAMESPACE: return "Could not get XML Namespace";
+		case NMR_ERROR_HANDLEOVERFLOW: return "Handle overflow";
+		case NMR_ERROR_NORESOURCES: return "No resources in model file";
+		case NMR_ERROR_NOBUILD: return "No build section in model file";
+		case NMR_ERROR_DUPLICATERESOURCES: return "Duplicate resources section in model file";
+		case NMR_ERROR_DUPLICATEBUILDSECTION: return "Duplicate build section in model file";
+		case NMR_ERROR_DUPLICATEMODELNODE: return "Duplicate model node in XML Stream";
+		case NMR_ERROR_NOMODELNODE: return "No model node in XML Stream";
+		case NMR_ERROR_RESOURCENOTFOUND: return "Resource not found";
+		case NMR_ERROR_UNKNOWNREADERCLASS: return "Unknown reader class";
+		case NMR_ERROR_UNKNOWNWRITERCLASS: return "Unknown writer class";
+		case NMR_ERROR_MODELTEXTURENOTFOUND: return "Texture not found";
+		case NMR_ERROR_INVALIDCONTENTTYPE: return "Invalid Content Type";
+		case NMR_ERROR_INVALIDBASEMATERIAL: return "Invalid Base Material";
+		case NMR_ERROR_TOOMANYMATERIALS: return "Too many materials";
+		case NMR_ERROR_INVALIDTEXTURE: return "Invalid texture";
+		case NMR_ERROR_COULDNOTGETHANDLE: return "Could not get handle";
+		case NMR_ERROR_BUILDITEMNOTFOUND: return "Build item not found";
+		case NMR_ERROR_OPCCOULDNOTGETTEXTUREURI: return "Could not get texture URI";
+		case NMR_ERROR_OPCCOULDNOTGETTEXTURESTREAM: return "Could not get texture stream";
+		case NMR_ERROR_MODELRELATIONSHIPSETREADFAILED: return "Model Relationship read failed";
+		case NMR_ERROR_COULDNOTCREATESTREAM: return "Could not create stream";
+		case NMR_ERROR_NOTSUPPORTINGLEGACYCMYK: return "Not supporting legacy CMYK color";
 
 		default:
 			return "unknown error";

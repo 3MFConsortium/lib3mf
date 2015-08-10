@@ -37,7 +37,10 @@ A triangles reader model node is a parser for the triangles node of an XML Model
 
 #include "Common/MeshInformation/NMR_MeshInformation_TexCoords.h"
 #include "Common/MeshInformation/NMR_MeshInformation_NodeColors.h"
+#include "Common/MeshInformation/NMR_MeshInformation_BaseMaterials.h"
 #include "Model/Reader/NMR_ModelReaderNode.h"
+#include "Model/Reader/NMR_ModelReader_ColorMapping.h"
+#include "Model/Reader/NMR_ModelReader_TexCoordMapping.h"
 #include "Model/Classes/NMR_ModelComponent.h"
 #include "Model/Classes/NMR_ModelObject.h"
 
@@ -47,15 +50,21 @@ namespace NMR {
 	protected:
 		CMesh * m_pMesh;
 		CModel * m_pModel;
+		PModelReader_ColorMapping m_pColorMapping;
+		PModelReader_TexCoordMapping m_pTexCoordMapping;
+
+		ModelResourceID m_nDefaultPropertyID;
+		ModelResourceIndex m_nDefaultPropertyIndex;
 
 		virtual void OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue);
-		virtual void OnChildElement(_In_z_ const nfWChar * pChildName, _In_ CXmlReader * pXMLReader);
+		virtual void OnNSChildElement(_In_z_ const nfWChar * pChildName, _In_z_ const nfWChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 
 		_Ret_notnull_ CMeshInformation_TexCoords * createTexCoordInformation();
 		_Ret_notnull_ CMeshInformation_NodeColors * createNodeColorInformation();
+		_Ret_notnull_ CMeshInformation_BaseMaterials * createBaseMaterialInformation();
 	public:
 		CModelReaderNode100_Triangles() = delete;
-		CModelReaderNode100_Triangles(_In_ CModel * pModel, _In_ CMesh * pMesh, _In_ PModelReaderWarnings pWarnings);
+		CModelReaderNode100_Triangles(_In_ CModel * pModel, _In_ CMesh * pMesh, _In_ PModelReaderWarnings pWarnings, _In_ PModelReader_ColorMapping pColorMapping, _In_ PModelReader_TexCoordMapping pTexCoordMapping, _In_ ModelResourceID nDefaultPropertyID, _In_ ModelResourceIndex nDefaultPropertyIndex);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 	};

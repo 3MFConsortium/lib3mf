@@ -55,6 +55,9 @@
     <Filter Include="Source Files\Model\Writer\v100">
       <UniqueIdentifier>{ffb8aa04-73da-4730-b620-589f1b57e1fa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Model\Reader\v093">
+      <UniqueIdentifier>{de161334-9d27-4e78-b54f-0f5c216bdebc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\Common\Math\NMR_Matrix.cpp">
@@ -278,6 +281,126 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\Model\COM\NMR_COMInterface_ModelComponentsObject.cpp">
       <Filter>Source Files\Model\COM</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Common\MeshInformation\NMR_MeshInformation_BaseMaterials.cpp">
+      <Filter>Source Files\Common\MeshInformation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Reader\NMR_ModelReader_TexCoordMapping.cpp">
+      <Filter>Source Files\Model\Reader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Writer\NMR_ModelWriter_TexCoordMapping.cpp">
+      <Filter>Source Files\Model\Writer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Reader\NMR_ModelReader_ColorMapping.cpp">
+      <Filter>Source Files\Model\Reader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Common\Math\NMR_PairMatchingTree.cpp">
+      <Filter>Source Files\Common\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Writer\NMR_ModelWriter_ColorMapping.cpp">
+      <Filter>Source Files\Model\Writer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Reader\v100\NMR_ModelReaderNode100_BaseMaterial.cpp">
+      <Filter>Source Files\Model\Reader\v100</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Reader\v100\NMR_ModelReaderNode100_BaseMaterials.cpp">
+      <Filter>Source Files\Model\Reader\v100</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Reader\v100\NMR_ModelReaderNode100_Color.cpp">
+      <Filter>Source Files\Model\Reader\v100</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Reader\v100\NMR_ModelReaderNode100_Colors.cpp">
+      <Filter>Source Files\Model\Reader\v100</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Reader\v100\NMR_ModelReaderNode100_Tex2Coord.cpp">
+      <Filter>Source Files\Model\Reader\v100</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Reader\v100\NMR_ModelReaderNode100_Tex2DGroup.cpp">
+      <Filter>Source Files\Model\Reader\v100</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Reader\v100\NMR_ModelReaderNode100_Texture2D.cpp">
+      <Filter>Source Files\Model\Reader\v100</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Classes\NMR_ModelBaseMaterials.cpp">
+      <Filter>Source Files\Model\Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Classes\NMR_ModelTexture2D.cpp">
+      <Filter>Source Files\Model\Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\COM\NMR_COMInterface_ModelPropertyHandler.cpp">
+      <Filter>Source Files\Model\COM</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Writer\NMR_ModelWriter_TexCoordMappingContainer.cpp">
+      <Filter>Source Files\Model\Writer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Classes\NMR_ModelDefaultProperty.cpp">
+      <Filter>Source Files\Model\Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Classes\NMR_ModelDefaultProperty_BaseMaterial.cpp">
+      <Filter>Source Files\Model\Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Classes\NMR_ModelDefaultProperty_Color.cpp">
+      <Filter>Source Files\Model\Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\COM\NMR_COMInterface_ModelBaseMaterial.cpp">
+      <Filter>Source Files\Model\COM</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\COM\NMR_COMInterface_ModelTexture2D.cpp">
+      <Filter>Source Files\Model\COM</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Classes\NMR_ModelDefaultProperty_TexCoord2D.cpp">
+      <Filter>Source Files\Model\Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Reader\v093\NMR_ModelReaderNode093_Build.cpp">
+      <Filter>Source Files\Model\Reader\v093</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Reader\v093\NMR_ModelReaderNode093_BuildItem.cpp">
+      <Filter>Source Files\Model\Reader\v093</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Reader\v093\NMR_ModelReaderNode093_Color.cpp">
+      <Filter>Source Files\Model\Reader\v093</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Reader\v093\NMR_ModelReaderNode093_Component.cpp">
+      <Filter>Source Files\Model\Reader\v093</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Reader\v093\NMR_ModelReaderNode093_Components.cpp">
+      <Filter>Source Files\Model\Reader\v093</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Reader\v093\NMR_ModelReaderNode093_Mesh.cpp">
+      <Filter>Source Files\Model\Reader\v093</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Reader\v093\NMR_ModelReaderNode093_Object.cpp">
+      <Filter>Source Files\Model\Reader\v093</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Reader\v093\NMR_ModelReaderNode093_Resources.cpp">
+      <Filter>Source Files\Model\Reader\v093</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Reader\v093\NMR_ModelReaderNode093_Texture.cpp">
+      <Filter>Source Files\Model\Reader\v093</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Reader\v093\NMR_ModelReaderNode093_TextureVertex.cpp">
+      <Filter>Source Files\Model\Reader\v093</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Reader\v093\NMR_ModelReaderNode093_TextureVertices.cpp">
+      <Filter>Source Files\Model\Reader\v093</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Reader\v093\NMR_ModelReaderNode093_Triangle.cpp">
+      <Filter>Source Files\Model\Reader\v093</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Reader\v093\NMR_ModelReaderNode093_Triangles.cpp">
+      <Filter>Source Files\Model\Reader\v093</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Reader\v093\NMR_ModelReaderNode093_Vertex.cpp">
+      <Filter>Source Files\Model\Reader\v093</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Reader\v093\NMR_ModelReaderNode093_Vertices.cpp">
+      <Filter>Source Files\Model\Reader\v093</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\COM\NMR_COMInterface_ModelDefaultPropertyHandler.cpp">
+      <Filter>Source Files\Model\COM</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Reader\v093\NMR_ModelReaderNode093_Material.cpp">
+      <Filter>Source Files\Model\Reader\v093</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

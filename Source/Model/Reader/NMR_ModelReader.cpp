@@ -69,7 +69,7 @@ namespace NMR {
 		m_pModel->addResource(pMeshObject);
 
 		// Add Build Item to Model 
-		PModelBuildItem pBuildItem = std::make_shared<CModelBuildItem>(pMeshObject.get());
+		PModelBuildItem pBuildItem = std::make_shared<CModelBuildItem>(pMeshObject.get(), m_pModel->createHandle());
 		m_pModel->addBuildItem(pBuildItem);
 	}
 

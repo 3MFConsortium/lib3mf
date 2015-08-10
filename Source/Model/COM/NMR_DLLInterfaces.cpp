@@ -66,6 +66,12 @@ extern "C" {
 			return LIB3MF_POINTER;
 
 		try {
+		    #ifndef __GCC
+			HRESULT hResult = CoInitialize(NULL);
+			if (hResult != LIB3MF_OK)
+				return hResult;
+            #endif
+
 			ILib3MFModel * pNewModel = new CCOMObject<CCOMModel>();
 			*ppModel = (PLib3MFModel *) pNewModel;
 
@@ -76,15 +82,28 @@ extern "C" {
 		}
     }
 
-	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_free(_In_ PLib3MFBase * pInstance)
+	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_release(_In_ PLib3MFBase * pInstance)
 	{
 	    if (pInstance) {
             ILib3MFBase * pBaseInstance = (ILib3MFBase *) pInstance;
+            #ifndef __GCC
+            pBaseInstance->Release ();
+            #else
             delete pBaseInstance;
+            #endif
 	    }
 
 	    return LIB3MF_OK;
 	}
+
+	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_getlasterror(_In_ PLib3MFBase * pInstance, _Out_ DWORD * pErrorCode, _Outptr_opt_ LPCSTR * pErrorMessage)
+	{
+		if (!pInstance)
+			return LIB3MF_POINTER;
+
+		return ((ILib3MFBase *)pInstance)->GetLastError(pErrorCode, pErrorMessage);
+	}
+
 
 	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_writer_writetofile (_In_ PLib3MFModelWriter * pWriter, _In_z_ LPCWSTR pwszFilename)
 	{
@@ -158,6 +177,24 @@ extern "C" {
         return ((ILib3MFModelResourceIterator *) pIterator)->Clone ((ILib3MFModelResourceIterator **) ppIterator);
 	}
 
+
+	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_object_ismeshobject(_In_ PLib3MFModelObjectResource * pObject, _Out_ BOOL * pbIsMeshObject)
+	{
+		if (!pObject)
+			return LIB3MF_POINTER;
+
+		return ((ILib3MFModelObjectResource *)pObject)->IsMeshObject(pbIsMeshObject);
+	}
+
+	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_object_iscomponentsobject(_In_ PLib3MFModelObjectResource * pObject, _Out_ BOOL * pbIsComponentObject)
+	{
+		if (!pObject)
+			return LIB3MF_POINTER;
+
+		return ((ILib3MFModelObjectResource *)pObject)->IsComponentsObject(pbIsComponentObject);
+
+	}
+
 	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_object_gettype(_In_ PLib3MFModelObjectResource * pObject, _Out_ DWORD * pObjectType)
 	{
 	    if (!pObject)
@@ -205,6 +242,36 @@ extern "C" {
 
         return ((ILib3MFModelObjectResource *) pObject)->SetPartNumber (pwszPartNumber);
 	}
+
+	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_object_isvalidobject(_In_ PLib3MFModelObjectResource * pObject, _Out_ BOOL * pbIsValid)
+	{
+		if (!pObject)
+			return LIB3MF_POINTER;
+
+		return ((ILib3MFModelObjectResource *)pObject)->IsValidObject(pbIsValid);
+
+	}
+
+
+	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_object_createdefaultpropertyhandler(_In_ PLib3MFModelObjectResource * pObject, _Out_ PLib3MFDefaultPropertyHandler ** ppPropertyHandler)
+	{
+		if (!pObject)
+			return LIB3MF_POINTER;
+
+		return ((ILib3MFModelObjectResource *)pObject)->CreateDefaultPropertyHandler((ILib3MFDefaultPropertyHandler**)ppPropertyHandler);
+	}
+
+
+
+	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_object_createdefaultmultipropertyhandler(_In_ PLib3MFModelObjectResource * pObject, _In_ DWORD nChannel, _Out_ PLib3MFDefaultPropertyHandler ** ppPropertyHandler)
+	{
+		if (!pObject)
+			return LIB3MF_POINTER;
+
+		return ((ILib3MFModelObjectResource *)pObject)->CreateDefaultMultiPropertyHandler(nChannel, (ILib3MFDefaultPropertyHandler**)ppPropertyHandler);
+	}
+
+
 
 	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_meshobject_getvertexcount(_In_ PLib3MFModelMeshObject * pMeshObject, _Out_ DWORD * pnVertexCount)
 	{
@@ -293,6 +360,31 @@ extern "C" {
 
         return ((ILib3MFModelMeshObject *) pMeshObject)->SetGeometry (pVertices, nVertexCount, pTriangles, nTriangleCount);
 	}
+
+	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_meshobject_createpropertyhandler(_In_ PLib3MFModelMeshObject * pMeshObject, _In_ PLib3MFPropertyHandler ** ppPropertyHandler)
+	{
+		if (!pMeshObject)
+			return LIB3MF_POINTER;
+
+		return ((ILib3MFModelMeshObject *)pMeshObject)->CreatePropertyHandler((ILib3MFPropertyHandler **) ppPropertyHandler);
+	}
+
+	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_meshobject_createmultipropertyhandler(_In_ PLib3MFModelMeshObject * pMeshObject, _In_ DWORD nChannel, _In_ PLib3MFPropertyHandler ** ppPropertyHandler)
+	{
+		if (!pMeshObject)
+			return LIB3MF_POINTER;
+
+		return ((ILib3MFModelMeshObject *)pMeshObject)->CreateMultiPropertyHandler(nChannel, (ILib3MFPropertyHandler **)ppPropertyHandler);
+	}
+
+	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_meshobject_ismanifoldandoriented(_In_ PLib3MFModelMeshObject * pMeshObject, _Out_ BOOL * pbIsOrientedAndManifold)
+	{
+		if (!pMeshObject)
+			return LIB3MF_POINTER;
+
+		return ((ILib3MFModelMeshObject *)pMeshObject)->IsManifoldAndOriented(pbIsOrientedAndManifold);
+	}
+
 
 	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_component_getobjectresource(_In_ PLib3MFModelComponent * pComponent, _Outptr_ PLib3MFModelObjectResource ** ppObjectResource)
 	{
@@ -414,6 +506,15 @@ extern "C" {
         return ((ILib3MFModelBuildItem *) pBuildItem)->SetPartNumber (pwszPartNumber);
 	}
 
+	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_builditem_gethandle(_In_ PLib3MFModelBuildItem * pBuildItem, _Out_ DWORD * pHandle)
+	{
+		if (!pBuildItem)
+			return LIB3MF_POINTER;
+
+		return ((ILib3MFModelBuildItem *)pBuildItem)->GetHandle(pHandle);
+	}
+
+
 	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_builditemiterator_movenext(_In_ PLib3MFModelBuildItemIterator * pIterator, _Out_ BOOL * pbHasNext)
 	{
 	    if (!pIterator)
@@ -504,6 +605,39 @@ extern "C" {
         return ((ILib3MFModel *) pModel)->GetResourceByID (nResourceID, (ILib3MFModelResource **) ppResource);
 	}
 
+	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_gettexture2dbyid(_In_ PLib3MFModel * pModel, _In_ DWORD nResourceID, _Outptr_ PLib3MFModelTexture2D ** ppTexture)
+	{
+		if (!pModel)
+			return LIB3MF_POINTER;
+
+		return ((ILib3MFModel *)pModel)->GetTexture2DByID(nResourceID, (ILib3MFModelTexture2D **)ppTexture);
+	}
+
+	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_getbasematerialbyid(_In_ PLib3MFModel * pModel, _In_ DWORD nResourceID, _Outptr_ PLib3MFModelBaseMaterial ** ppMaterial)
+	{
+		if (!pModel)
+			return LIB3MF_POINTER;
+
+		return ((ILib3MFModel *)pModel)->GetBaseMaterialByID(nResourceID, (ILib3MFModelBaseMaterial **)ppMaterial);
+	}
+
+	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_getmeshobjectbyid(_In_ PLib3MFModel * pModel, _In_ DWORD nResourceID, _Outptr_ PLib3MFModelMeshObject ** ppMeshObject)
+	{
+		if (!pModel)
+			return LIB3MF_POINTER;
+
+		return ((ILib3MFModel *)pModel)->GetMeshObjectByID(nResourceID, (ILib3MFModelMeshObject **)ppMeshObject);
+	}
+
+	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_getcomponentsobjectbyid(_In_ PLib3MFModel * pModel, _In_ DWORD nResourceID, _Outptr_ PLib3MFModelComponentsObject ** ppComponentsObject)
+	{
+		if (!pModel)
+			return LIB3MF_POINTER;
+
+		return ((ILib3MFModel *)pModel)->GetComponentsObjectByID(nResourceID, (ILib3MFModelComponentsObject **)ppComponentsObject);
+	}
+
+
 	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_getbuilditems(_In_ PLib3MFModel * pModel, _Outptr_ PLib3MFModelBuildItemIterator ** ppIterator)
 	{
 	    if (!pModel)
@@ -520,7 +654,7 @@ extern "C" {
         return ((ILib3MFModel *) pModel)->GetResources ((ILib3MFModelResourceIterator **) ppIterator);
 	}
 
-	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_objects(_In_ PLib3MFModel * pModel, _Outptr_ PLib3MFModelResourceIterator ** ppIterator)
+	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_getobjects(_In_ PLib3MFModel * pModel, _Outptr_ PLib3MFModelResourceIterator ** ppIterator)
 	{
 	    if (!pModel)
             return LIB3MF_POINTER;
@@ -528,7 +662,7 @@ extern "C" {
         return ((ILib3MFModel *) pModel)->GetObjects ((ILib3MFModelResourceIterator **) ppIterator);
 	}
 
-	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_meshobjects(_In_ PLib3MFModel * pModel, _Outptr_ PLib3MFModelResourceIterator ** ppIterator)
+	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_getmeshobjects(_In_ PLib3MFModel * pModel, _Outptr_ PLib3MFModelResourceIterator ** ppIterator)
 	{
 	    if (!pModel)
             return LIB3MF_POINTER;
@@ -536,13 +670,38 @@ extern "C" {
         return ((ILib3MFModel *) pModel)->GetMeshObjects ((ILib3MFModelResourceIterator **) ppIterator);
 	}
 
-	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_componentsobjects(_In_ PLib3MFModel * pModel, _Outptr_ PLib3MFModelResourceIterator ** ppIterator)
+	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_getcomponentsobjects(_In_ PLib3MFModel * pModel, _Outptr_ PLib3MFModelResourceIterator ** ppIterator)
 	{
 	    if (!pModel)
             return LIB3MF_POINTER;
 
         return ((ILib3MFModel *) pModel)->GetComponentsObjects ((ILib3MFModelResourceIterator **) ppIterator);
 	}
+
+	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_get2dtextures(_In_ PLib3MFModel * pModel, _Outptr_ PLib3MFModelResourceIterator ** ppIterator)
+	{
+		if (!pModel)
+			return LIB3MF_POINTER;
+
+		return ((ILib3MFModel *)pModel)->Get2DTextures((ILib3MFModelResourceIterator **)ppIterator);
+	}
+
+	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_getbasematerials(_In_ PLib3MFModel * pModel, _Outptr_ PLib3MFModelResourceIterator ** ppIterator)
+	{
+		if (!pModel)
+			return LIB3MF_POINTER;
+
+		return ((ILib3MFModel *)pModel)->Get2DTextures((ILib3MFModelResourceIterator **)ppIterator);
+	}
+
+	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_getthumbnails(_In_ PLib3MFModel * pModel, _Outptr_ PLib3MFModelThumbnailIterator ** ppIterator)
+	{
+		if (!pModel)
+			return LIB3MF_POINTER;
+
+		return ((ILib3MFModel *)pModel)->GetThumbnails((ILib3MFModelThumbnailIterator **)ppIterator);
+	}
+
 
 	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_mergetomodel(_In_ PLib3MFModel * pModel, _Outptr_ PLib3MFModel ** ppMergedModel)
 	{
@@ -568,12 +727,102 @@ extern "C" {
         return ((ILib3MFModel *) pModel)->AddComponentsObject ((ILib3MFModelComponentsObject **) ppComponentsObject);
 	}
 
+	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_addtexture2d(_In_ PLib3MFModel * pModel, _In_z_ LPCWSTR pwszPath, _Outptr_ PLib3MFModelTexture2D ** ppTextureInstance)
+	{
+		if (!pModel)
+			return LIB3MF_POINTER;
+
+		return ((ILib3MFModel *)pModel)->AddTexture2D(pwszPath, (ILib3MFModelTexture2D **)ppTextureInstance);
+	}
+
+	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_addbasematerialgroup(_In_ PLib3MFModel * pModel, _Outptr_ PLib3MFModelBaseMaterial ** ppBaseMaterialInstance)
+	{
+		if (!pModel)
+			return LIB3MF_POINTER;
+
+		return ((ILib3MFModel *)pModel)->AddBaseMaterialGroup((ILib3MFModelBaseMaterial **)ppBaseMaterialInstance);
+	}
+
+
+
 	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_addbuilditem(_In_ PLib3MFModel * pModel, _In_ PLib3MFModelObjectResource * pObject, _In_opt_ MODELTRANSFORM * pTransform, _Outptr_ PLib3MFModelBuildItem ** ppBuildItem)
 	{
 	    if (!pModel)
             return LIB3MF_POINTER;
 
         return ((ILib3MFModel *) pModel)->AddBuildItem ((ILib3MFModelObjectResource *) pObject, pTransform, (ILib3MFModelBuildItem **) ppBuildItem);
+	}
+
+	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_removebuilditem(_In_ PLib3MFModel * pModel, _In_ PLib3MFModelBuildItem * pBuildItem)
+	{
+		if (!pModel)
+			return LIB3MF_POINTER;
+
+		return ((ILib3MFModel *)pModel)->RemoveBuildItem((ILib3MFModelBuildItem *)pBuildItem);
+	}
+
+	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_gettexturestreamcount(_In_ PLib3MFModel * pModel, _Out_ DWORD * pnCount)
+	{
+		if (!pModel)
+			return LIB3MF_POINTER;
+
+		return ((ILib3MFModel *)pModel)->GetTextureStreamCount(pnCount);
+	}
+
+	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_gettexturestreamsize(_In_ PLib3MFModel * pModel, _In_ DWORD nIndex, _Out_ UINT64 * pnSize)
+	{
+		if (!pModel)
+			return LIB3MF_POINTER;
+
+		return ((ILib3MFModel *)pModel)->GetTextureStreamSize(nIndex, pnSize);
+	}
+
+	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_gettexturestreampath(_In_ PLib3MFModel * pModel, _In_ DWORD nIndex, _Out_opt_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars)
+	{
+		if (!pModel)
+			return LIB3MF_POINTER;
+
+		return ((ILib3MFModel *)pModel)->GetTextureStreamPath(nIndex, pwszBuffer, cbBufferSize, pcbNeededChars);
+	}
+
+	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_getmetadatacount(_In_ PLib3MFModel * pModel, _Out_ DWORD * pnCount)
+	{
+		if (!pModel)
+			return LIB3MF_POINTER;
+
+		return ((ILib3MFModel *)pModel)->GetMetaDataCount(pnCount);
+	}
+
+	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_getmetadatakey(_In_ PLib3MFModel * pModel, _In_ DWORD nIndex, _Out_opt_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars)
+	{
+		if (!pModel)
+			return LIB3MF_POINTER;
+
+		return ((ILib3MFModel *)pModel)->GetMetaDataKey(nIndex, pwszBuffer, cbBufferSize, pcbNeededChars);
+	}
+
+	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_getmetadatavalue(_In_ PLib3MFModel * pModel, _In_ DWORD nIndex, _Out_opt_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars)
+	{
+		if (!pModel)
+			return LIB3MF_POINTER;
+
+		return ((ILib3MFModel *)pModel)->GetMetaDataValue(nIndex, pwszBuffer, cbBufferSize, pcbNeededChars);
+	}
+
+	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_addmetadata(_In_ PLib3MFModel * pModel, _In_ LPCWSTR pszwKey, _In_ LPCWSTR pszwValue)
+	{
+		if (!pModel)
+			return LIB3MF_POINTER;
+
+		return ((ILib3MFModel *)pModel)->AddMetaData(pszwKey, pszwValue);
+	}
+
+	LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_removemetadata(_In_ PLib3MFModel * pModel, _In_ DWORD nIndex)
+	{
+		if (!pModel)
+			return LIB3MF_POINTER;
+
+		return ((ILib3MFModel *)pModel)->RemoveMetaData(nIndex);
 	}
 
 };

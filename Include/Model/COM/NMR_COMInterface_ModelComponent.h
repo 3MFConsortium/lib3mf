@@ -42,8 +42,18 @@ namespace NMR {
 	class CCOMModelComponent : public ILib3MFModelComponent {
 	protected:
 		PModelComponent m_pModelComponent;
+
+		nfError m_nErrorCode;
+		std::string m_sErrorMessage;
+
+		LIB3MFRESULT handleNMRException(_In_ CNMRException * pException);
+		LIB3MFRESULT handleGenericException();
+		LIB3MFRESULT handleSuccess();
+
 	public:
 		LIB3MFINTERFACE_DECL(ILib3MFModelComponent)
+		
+		LIB3MFMETHOD(GetLastError) (_Out_ DWORD * pErrorCode, _Outptr_opt_ LPCSTR * pErrorMessage);
 
 		LIB3MFMETHOD(GetObjectResource) (_Outptr_ ILib3MFModelObjectResource ** ppObjectResource);
 		LIB3MFMETHOD(GetTransform) (_Out_ MODELTRANSFORM * pTransformation);

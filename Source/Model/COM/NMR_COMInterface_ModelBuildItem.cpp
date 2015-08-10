@@ -42,6 +42,7 @@ namespace NMR {
 	CCOMModelBuildItem::CCOMModelBuildItem()
 	{
 		m_pModelBuildItem = nullptr;
+		m_nErrorCode = NMR_SUCCESS;
 	}
 
 	void CCOMModelBuildItem::setItem(_In_ PModelBuildItem pModelBuildItem)
@@ -49,48 +50,106 @@ namespace NMR {
 		m_pModelBuildItem = pModelBuildItem;
 	}
 
-	LIB3MFMETHODIMP CCOMModelBuildItem::HasObjectTransform(_Out_ BOOL * pbHasTransform)
+	LIB3MFRESULT CCOMModelBuildItem::handleSuccess()
 	{
-		if (!pbHasTransform)
+		m_nErrorCode = NMR_SUCCESS;
+		return LIB3MF_OK;
+	}
+
+	LIB3MFRESULT CCOMModelBuildItem::handleNMRException(_In_ CNMRException * pException)
+	{
+		__NMRASSERT(pException);
+
+		m_nErrorCode = pException->getErrorCode();
+		m_sErrorMessage = std::string(pException->what());
+
+		CNMRException_Windows * pWinException = dynamic_cast<CNMRException_Windows *> (pException);
+		if (pWinException != nullptr) {
+			return pWinException->getHResult();
+		}
+		else {
+			if (m_nErrorCode == NMR_ERROR_INVALIDPOINTER)
+				return LIB3MF_POINTER;
+			if (m_nErrorCode == NMR_ERROR_INVALIDPARAM)
+				return LIB3MF_INVALIDARG;
+
+			return LIB3MF_FAIL;
+		}
+	}
+
+	LIB3MFRESULT CCOMModelBuildItem::handleGenericException()
+	{
+		m_nErrorCode = NMR_ERROR_GENERICEXCEPTION;
+		m_sErrorMessage = NMR_GENERICEXCEPTIONSTRING;
+		return LIB3MF_FAIL;
+	}
+
+	LIB3MFMETHODIMP CCOMModelBuildItem::GetLastError(_Out_ DWORD * pErrorCode, _Outptr_opt_ LPCSTR * pErrorMessage)
+	{
+		if (!pErrorCode)
 			return LIB3MF_POINTER;
 
+		*pErrorCode = m_nErrorCode;
+		if (pErrorMessage) {
+			if (m_nErrorCode != NMR_SUCCESS) {
+				*pErrorMessage = m_sErrorMessage.c_str();
+			}
+			else {
+				*pErrorMessage = nullptr;
+			}
+		}
+
+		return LIB3MF_OK;
+	}
+
+	LIB3MFMETHODIMP CCOMModelBuildItem::HasObjectTransform(_Out_ BOOL * pbHasTransform)
+	{
 		try {
+			if (!pbHasTransform)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
 			if (!m_pModelBuildItem.get())
 				throw CNMRException(NMR_ERROR_INVALIDBUILDITEM);
 
 			*pbHasTransform = m_pModelBuildItem->hasTransform();
 
-			return LIB3MF_OK;
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
 		}
 		catch (...) {
-			return LIB3MF_FAIL;
+			return handleGenericException();
 		}
 	}
 
 	LIB3MFMETHODIMP CCOMModelBuildItem::GetObjectResourceID(_Out_ DWORD * pnID)
 	{
-		if (!pnID)
-			return LIB3MF_POINTER;
-
 		try {
+			if (!pnID)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
 			if (!m_pModelBuildItem.get())
 				throw CNMRException(NMR_ERROR_INVALIDBUILDITEM);
 
 			*pnID = m_pModelBuildItem->getObjectID();
 
-			return LIB3MF_OK;
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
 		}
 		catch (...) {
-			return LIB3MF_FAIL;
+			return handleGenericException();
 		}
 	}
 
 	LIB3MFMETHODIMP CCOMModelBuildItem::GetObjectResource(_Outptr_ ILib3MFModelObjectResource ** ppObject)
 	{
-		if (!ppObject)
-			return LIB3MF_POINTER;
-
 		try {
+			if (!ppObject)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
 			if (!m_pModelBuildItem.get())
 				throw CNMRException(NMR_ERROR_INVALIDBUILDITEM);
 
@@ -117,24 +176,27 @@ namespace NMR {
 
 			// We have not found a suitable object class to return..
 			if (pResourceInterface == nullptr)
-				return LIB3MF_FAIL;
+				throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
 
 			// Return result
 			*ppObject = pResourceInterface;
 
-			return LIB3MF_OK;
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
 		}
 		catch (...) {
-			return LIB3MF_FAIL;
+			return handleGenericException();
 		}
 	}
 
 	LIB3MFMETHODIMP CCOMModelBuildItem::GetObjectTransform(_Out_ MODELTRANSFORM * pmTransform)
 	{
-		if (!pmTransform)
-			return LIB3MF_POINTER;
-
 		try {
+			if (!pmTransform)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
 			if (!m_pModelBuildItem.get())
 				throw CNMRException(NMR_ERROR_INVALIDBUILDITEM);
 
@@ -147,19 +209,22 @@ namespace NMR {
 				}
 			}
 
-			return LIB3MF_OK;
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
 		}
 		catch (...) {
-			return LIB3MF_FAIL;
+			return handleGenericException();
 		}
 	}
 
 	LIB3MFMETHODIMP CCOMModelBuildItem::SetObjectTransform(_In_ MODELTRANSFORM * pmTransform)
 	{
-		if (!pmTransform)
-			return LIB3MF_POINTER;
-
 		try {
+			if (!pmTransform)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
 			if (!m_pModelBuildItem.get())
 				throw CNMRException(NMR_ERROR_INVALIDBUILDITEM);
 
@@ -174,29 +239,35 @@ namespace NMR {
 
 			m_pModelBuildItem->setTransform(mMatrix);
 
-			return LIB3MF_OK;
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
 		}
 		catch (...) {
-			return LIB3MF_FAIL;
+			return handleGenericException();
 		}
 	}
 
 	LIB3MFMETHODIMP CCOMModelBuildItem::SetPartNumber(_In_z_ LPCWSTR pwszPartNumber)
 	{
-		if (!pwszPartNumber)
-			return LIB3MF_POINTER;
-
 		try	{
+			if (!pwszPartNumber)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
 			if (!m_pModelBuildItem.get())
 				throw CNMRException(NMR_ERROR_INVALIDBUILDITEM);
 
 			std::wstring sPartNumber(pwszPartNumber);
 			m_pModelBuildItem->setPartNumber(sPartNumber);
 
-			return LIB3MF_OK;
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
 		}
 		catch (...) {
-			return LIB3MF_FAIL;
+			return handleGenericException();
 		}
 	}
 
@@ -207,7 +278,7 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_INVALIDBUILDITEM);
 
 			if (cbBufferSize > MODEL_MAXSTRINGBUFFERLENGTH)
-				return LIB3MF_FAIL;
+				throw CNMRException(NMR_ERROR_INVALIDBUFFERSIZE);
 
 			// Safely call StringToBuffer
 			nfUint32 nNeededChars = 0;
@@ -217,11 +288,37 @@ namespace NMR {
 			if (pcbNeededChars)
 				*pcbNeededChars = nNeededChars;
 
-			return LIB3MF_OK;
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
 		}
 		catch (...) {
-			return LIB3MF_FAIL;
+			return handleGenericException();
 		}
 	}
 
+	LIB3MFMETHODIMP CCOMModelBuildItem::GetHandle(_Outptr_ DWORD * pHandle)
+	{
+		try	{
+			if (pHandle == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
+			if (!m_pModelBuildItem.get())
+				throw CNMRException(NMR_ERROR_INVALIDBUILDITEM);
+
+			*pHandle = m_pModelBuildItem->getHandle();
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+
+	}
+
 }
+

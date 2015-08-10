@@ -42,9 +42,17 @@ namespace NMR {
 	class CCOMModel : public ILib3MFModel	{
 	protected:
 		PModel m_pModel;
+		nfError m_nErrorCode;
+		std::string m_sErrorMessage;
+
+		LIB3MFRESULT handleNMRException(_In_ CNMRException * pException);
+		LIB3MFRESULT handleGenericException();
+		LIB3MFRESULT handleSuccess();
 	public:
 		LIB3MFINTERFACE_DECL(ILib3MFModel)
-	
+		
+		LIB3MFMETHOD(GetLastError) (_Out_ DWORD * pErrorCode, _Outptr_opt_ LPCSTR * pErrorMessage);
+
 		LIB3MFMETHOD(SetUnit) (_In_ DWORD Unit);
 		LIB3MFMETHOD(GetUnit) (_Out_ DWORD * pUnit);
 
@@ -55,6 +63,10 @@ namespace NMR {
 		LIB3MFMETHOD(QueryReader) (_In_z_ LPCWSTR pwszReaderClass, _Outptr_ ILib3MFModelReader ** ppReader);
 
 		LIB3MFMETHOD(GetResourceByID) (_In_ DWORD ResourceID, _Outptr_ ILib3MFModelResource ** ppResource);
+		LIB3MFMETHOD(GetTexture2DByID) (_In_ DWORD nResourceID, _Outptr_ ILib3MFModelTexture2D ** ppTexture);
+		LIB3MFMETHOD(GetBaseMaterialByID) (_In_ DWORD nResourceID, _Outptr_ ILib3MFModelBaseMaterial ** ppMaterial);
+		LIB3MFMETHOD(GetMeshObjectByID) (_In_ DWORD nResourceID, _Outptr_ ILib3MFModelMeshObject ** ppMeshObject);
+		LIB3MFMETHOD(GetComponentsObjectByID) (_In_ DWORD nResourceID, _Outptr_ ILib3MFModelComponentsObject ** ppComponentsObject);
 
 		LIB3MFMETHOD(GetBuildItems) (_Outptr_ ILib3MFModelBuildItemIterator ** ppIterator);
 		LIB3MFMETHOD(GetResources) (_Outptr_ ILib3MFModelResourceIterator ** ppIterator);
@@ -62,17 +74,35 @@ namespace NMR {
 		LIB3MFMETHOD(GetMeshObjects) (_Outptr_ ILib3MFModelResourceIterator ** ppIterator);
 		LIB3MFMETHOD(GetComponentsObjects) (_Outptr_ ILib3MFModelResourceIterator ** ppIterator);
 
+		LIB3MFMETHOD(Get2DTextures) (_Outptr_ ILib3MFModelResourceIterator ** ppIterator);
+		LIB3MFMETHOD(GetBaseMaterials) (_Outptr_ ILib3MFModelResourceIterator ** ppIterator);
+		LIB3MFMETHOD(GetThumbnails) (_Outptr_ ILib3MFModelThumbnailIterator ** ppIterator);
+
 		LIB3MFMETHOD(MergeToModel) (_Outptr_ ILib3MFModel ** ppMergedModel);
 
 		LIB3MFMETHOD(AddMeshObject) (_Outptr_ ILib3MFModelMeshObject ** ppMeshObject);
 		LIB3MFMETHOD(AddComponentsObject) (_Outptr_ ILib3MFModelComponentsObject ** ppComponentObject);
 
+		LIB3MFMETHOD(AddTexture2D) (_In_z_ LPCWSTR pwszPath, _Outptr_ ILib3MFModelTexture2D ** ppTextureInstance);
+		LIB3MFMETHOD(AddBaseMaterialGroup) (_Outptr_ ILib3MFModelBaseMaterial ** ppBaseMaterialInstance);
+
 		LIB3MFMETHOD(AddBuildItem) (_In_ ILib3MFModelObjectResource * pObject, _In_opt_ MODELTRANSFORM * pTransform, _Outptr_ ILib3MFModelBuildItem ** ppBuildItem);
 		LIB3MFMETHOD(RemoveBuildItem) (_In_ ILib3MFModelBuildItem * pBuildItem);
 
+		LIB3MFMETHOD(GetTextureStreamCount) (_Out_ DWORD * pnCount);
+		LIB3MFMETHOD(GetTextureStreamSize) (_In_ DWORD nIndex, _Out_ UINT64 * pnSize);
+		LIB3MFMETHOD(GetTextureStreamPath) (_In_ DWORD nIndex, _Out_opt_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars);
+
+		LIB3MFMETHOD(GetMetaDataCount) (_Out_ DWORD * pnCount);
+		LIB3MFMETHOD(GetMetaDataKey) (_In_ DWORD nIndex, _Out_opt_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars);
+		LIB3MFMETHOD(GetMetaDataValue) (_In_ DWORD nIndex, _Out_opt_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars);
+		LIB3MFMETHOD(AddMetaData) (_In_ LPCWSTR pszwKey, _In_ LPCWSTR pszwValue);
+		LIB3MFMETHOD(RemoveMetaData) (_In_ DWORD nIndex);
+
 		CCOMModel();
+		CModel * getModel();
 	};
-	
+
 }
 
 #endif // __NMR_COMINTERFACE_MODEL

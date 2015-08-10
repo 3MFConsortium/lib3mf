@@ -74,7 +74,7 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_COULDNOTFINDBUILDITEMOBJECT);
 
 		// Create Build Item
-		PModelBuildItem pBuildItem = std::make_shared<CModelBuildItem>(pObject, m_mTransform);
+		PModelBuildItem pBuildItem = std::make_shared<CModelBuildItem>(pObject, m_mTransform, m_pModel->createHandle());
 		m_pModel->addBuildItem(pBuildItem);
 
 		// Set Item Reference
@@ -101,12 +101,6 @@ namespace NMR {
 		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_ITEM_PARTNUMBER) == 0) {
 			m_sPartNumber = std::wstring(pAttributeValue);
 		}
-	}
-
-	void CModelReaderNode100_BuildItem::OnChildElement(_In_z_ const nfWChar * pChildName, _In_ CXmlReader * pXMLReader)
-	{
-		__NMRASSERT(pChildName);
-		__NMRASSERT(pXMLReader);
 	}
 
 	std::wstring CModelReaderNode100_BuildItem::getPartNumber()

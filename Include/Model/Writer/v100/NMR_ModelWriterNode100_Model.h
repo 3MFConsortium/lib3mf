@@ -36,17 +36,34 @@ This is the class for exporting the 3mf model stream root node.
 #define __NMR_MODELWRITERNODE100_MODEL
 
 #include "Model/Writer/NMR_ModelWriterNode.h" 
+#include "Model/Writer/NMR_ModelWriter_ColorMapping.h" 
 #include "Model/Classes/NMR_ModelComponentsObject.h" 
 #include "Common/Platform/NMR_XmlWriter.h"
+#include "Model/Writer/NMR_ModelWriter_TexCoordMappingContainer.h"
 
 namespace NMR {
 
 	class CModelWriterNode100_Model : public CModelWriterNode {
 	protected:
+		PModelWriter_ColorMapping m_pColorMapping;
+		PModelWriter_TexCoordMappingContainer m_pTexCoordMappingContainer;
+		ModelResourceID m_ResourceCounter;
+
+		void calculateColors(_In_ CMesh * pMesh);
+		void calculateTexCoords(_In_ CMesh * pMesh);
+
+		void writeMetaData();
 		void writeResources();
+		void writeBaseMaterials();
+		void writeTextures2D();
+		void writeColors();
+		void writeTex2Coords();
+		void writeObjects();
 		void writeBuild();
 
 		void writeComponentsObject(_In_ CModelComponentsObject * pComponentsObject);
+
+		ModelResourceID generateOutputResourceID();
 	public:
 		CModelWriterNode100_Model() = delete;
 		CModelWriterNode100_Model(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter);

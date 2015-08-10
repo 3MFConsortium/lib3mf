@@ -64,6 +64,7 @@ namespace NMR {
 		virtual void permuteNodeInformation(_In_ nfUint32 nFaceIndex, _In_ nfUint32 nNodeIndex1, _In_ nfUint32 nNodeIndex2, _In_ nfUint32 nNodeIndex3) = 0;
 		virtual void mergeInformationFrom (_In_ CMeshInformation * pInformation) = 0;
 		virtual nfUint32 getBackupSize() = 0;
+		virtual nfBool faceHasData(_In_ nfUint32 nFaceIndex) = 0;
 	};
 
 }

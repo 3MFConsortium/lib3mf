@@ -37,52 +37,127 @@ bothering about global registration of a COM Server.
 #include "Model/COM/NMR_COMInterface_Model.h" 
 #include "Model/COM/NMR_COMVersion.h" 
 #include "Common/Platform/NMR_COM_Native.h" 
+#include "Common/NMR_Exception_Windows.h" 
 
 namespace NMR {
 
 	CCOMModelFactory::CCOMModelFactory()
 	{
+		m_nErrorCode = NMR_SUCCESS;
+	}
 
+	LIB3MFRESULT CCOMModelFactory::handleSuccess()
+	{
+		m_nErrorCode = NMR_SUCCESS;
+		return LIB3MF_OK;
+	}
+
+	LIB3MFRESULT CCOMModelFactory::handleNMRException(_In_ CNMRException * pException)
+	{
+		__NMRASSERT(pException);
+
+		m_nErrorCode = pException->getErrorCode();
+		m_sErrorMessage = std::string(pException->what());
+
+		CNMRException_Windows * pWinException = dynamic_cast<CNMRException_Windows *> (pException);
+		if (pWinException != nullptr) {
+			return pWinException->getHResult();
+		}
+		else {
+			if (m_nErrorCode == NMR_ERROR_INVALIDPOINTER)
+				return E_POINTER;
+			if (m_nErrorCode == NMR_ERROR_INVALIDPARAM)
+				return E_INVALIDARG;
+
+			return LIB3MF_FAIL;
+		}
+	}
+
+	LIB3MFRESULT CCOMModelFactory::handleGenericException()
+	{
+		m_nErrorCode = NMR_ERROR_GENERICEXCEPTION;
+		m_sErrorMessage = NMR_GENERICEXCEPTIONSTRING;
+		return LIB3MF_FAIL;
+	}
+
+	LIB3MFMETHODIMP CCOMModelFactory::GetLastError(_Out_ DWORD * pErrorCode, _Outptr_opt_ LPCSTR * pErrorMessage)
+	{
+		if (!pErrorCode)
+			return LIB3MF_POINTER;
+
+		*pErrorCode = m_nErrorCode;
+		if (pErrorMessage) {
+			if (m_nErrorCode != NMR_SUCCESS) {
+				*pErrorMessage = m_sErrorMessage.c_str();
+			}
+			else {
+				*pErrorMessage = nullptr;
+			}
+		}
+
+		return LIB3MF_OK;
 	}
 
 	LIB3MFMETHODIMP CCOMModelFactory::CreateModel(_Outptr_ ILib3MFModel ** ppModel)
 	{
-		if (ppModel == nullptr)
-			return LIB3MF_POINTER;
 
 		try
 		{
+			if (ppModel == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
 			*ppModel = new CCOMObject<CCOMModel>();
-			return LIB3MF_OK;
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
 		}
 		catch (...) {
-			return LIB3MF_FAIL;
+			return handleGenericException();
 		}
 	}
 
 
 	LIB3MFMETHODIMP CCOMModelFactory::GetSpecVersion(_Out_ DWORD * pMajorVersion, _Out_ DWORD * pMinorVersion)
 	{
-		if (pMajorVersion == nullptr)
-			return LIB3MF_POINTER;
-		if (pMinorVersion == nullptr)
-			return LIB3MF_POINTER;
+		try
+		{
+			if (pMajorVersion == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+			if (pMinorVersion == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
 
-		*pMajorVersion = NMR_APIVERSION_MAJOR;
-		*pMinorVersion = NMR_APIVERSION_MINOR;
+			*pMajorVersion = NMR_APIVERSION_MAJOR;
+			*pMinorVersion = NMR_APIVERSION_MINOR;
 
-		return LIB3MF_OK;
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
 	}
 
 
 	LIB3MFMETHODIMP CCOMModelFactory::GetInterfaceVersion(_Out_ DWORD * pInterfaceVersion)
 	{
-		if (pInterfaceVersion == nullptr)
-			return LIB3MF_POINTER;
+		try
+		{
+			if (pInterfaceVersion == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
 
-		*pInterfaceVersion = NMR_APIVERSION_INTERFACE;
+			*pInterfaceVersion = NMR_APIVERSION_INTERFACE;
 
-		return LIB3MF_OK;
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
 	}
 
 

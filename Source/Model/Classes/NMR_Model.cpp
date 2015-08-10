@@ -38,6 +38,8 @@ A model is an in memory representation of the 3MF file.
 #include "Model/Classes/NMR_ModelConstants.h" 
 #include "Model/Classes/NMR_ModelTypes.h" 
 #include "Model/Classes/NMR_ModelBuildItem.h" 
+#include "Model/Classes/NMR_ModelBaseMaterials.h" 
+#include "Model/Classes/NMR_ModelTexture2D.h" 
 
 #include "Common/Mesh/NMR_Mesh.h" 
 #include "Common/MeshInformation/NMR_MeshInformation.h" 
@@ -51,6 +53,7 @@ namespace NMR {
 	{
 		m_Unit = MODELUNIT_MILLIMETER;
 		m_sLanguage = XML_3MF_LANG_US;
+		m_nHandleCounter = 1;
 	}
 
 	CModel::~CModel()
@@ -60,6 +63,8 @@ namespace NMR {
 		m_Resources.clear();
 		m_MetaData.clear();
 		m_ObjectLookup.clear();
+		m_TextureLookup.clear();
+		m_BaseMaterialLookup.clear();
 	}
 
 	// Merge all build items into one mesh
@@ -202,6 +207,22 @@ namespace NMR {
 		return m_BuildItems[nIdx];
 	}
 
+	void CModel::removeBuildItem(_In_ nfUint32 nHandle, _In_ nfBool bThrowExceptionIfNotFound)
+	{
+		auto iIterator = m_BuildItems.begin();
+		while (iIterator != m_BuildItems.end()) {
+			if ((*iIterator)->getHandle() == nHandle) {
+				m_BuildItems.erase(iIterator);
+				return;
+			}
+			iIterator++;
+		}
+
+		if (bThrowExceptionIfNotFound)
+			throw CNMRException(NMR_ERROR_BUILDITEMNOTFOUND);
+	}
+
+
 	// Metadata setter/getter
 	void CModel::addMetaData(_In_ std::wstring sName, _In_ std::wstring sValue)
 	{
@@ -247,6 +268,23 @@ namespace NMR {
 	{		
 		std::map<std::wstring, PModelMetaData>::iterator iIterator = m_MetaDataMap.find (sName);
 		return iIterator != m_MetaDataMap.end();
+	}
+
+	void CModel::mergeMetaData(_In_ CModel * pSourceModel)
+	{
+		if (pSourceModel == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		nfUint32 nCount = pSourceModel->getMetaDataCount();
+		nfUint32 nIndex;
+
+		for (nIndex = 0; nIndex < nCount; nIndex++) {
+			std::wstring sName;
+			std::wstring sValue;
+			pSourceModel->getMetaData(nIndex, sName, sValue);
+			addMetaData(sName, sValue);
+
+		}
 	}
 
 	// Retrieve a unique Resource ID
@@ -307,6 +345,14 @@ namespace NMR {
 		CModelObject * pModelObject = dynamic_cast<CModelObject *> (pResource.get());
 		if (pModelObject != nullptr)
 			m_ObjectLookup.push_back(pResource);
+
+		CModelBaseMaterialResource * pBaseMaterial = dynamic_cast<CModelBaseMaterialResource *> (pResource.get());
+		if (pBaseMaterial != nullptr)
+			m_BaseMaterialLookup.push_back(pResource);
+
+		CModelTexture2DResource * pTexture2D = dynamic_cast<CModelTexture2DResource *> (pResource.get());
+		if (pTexture2D != nullptr)
+			m_TextureLookup.push_back(pResource);
 	}
 
 	// Clear all build items and Resources
@@ -315,12 +361,237 @@ namespace NMR {
 		m_pGlobalThumbnail = nullptr;
 
 		m_ObjectLookup.clear();
+		m_BaseMaterialLookup.clear();
 		m_BuildItems.clear();
 		m_ResourceMap.clear();
 		m_Resources.clear();
 		m_MetaDataMap.clear();
 		m_MetaData.clear();
+		m_TextureLookup.clear();
 		m_Thumbnails.clear();
+	}
+
+	_Ret_maybenull_ CModelBaseMaterialResource * CModel::findBaseMaterial(_In_ ModelResourceID nResourceID)
+	{
+		PModelResource pResource = findResource(nResourceID);
+		if (pResource != nullptr) {
+			CModelBaseMaterialResource * pBaseMaterial = dynamic_cast<CModelBaseMaterialResource *> (pResource.get());
+			if (pBaseMaterial == nullptr)
+				throw CNMRException(NMR_ERROR_RESOURCETYPEMISMATCH);
+
+			return pBaseMaterial;
+		}
+
+		return nullptr;
+
+	}
+
+	nfUint32 CModel::getBaseMaterialCount()
+	{
+		return (nfUint32) m_BaseMaterialLookup.size();
+
+	}
+
+	PModelResource CModel::getBaseMaterialResource(_In_ nfUint32 nIndex)
+	{
+		nfUint32 nCount = getBaseMaterialCount();
+		if (nIndex >= nCount)
+			throw CNMRException(NMR_ERROR_INVALIDINDEX);
+
+		return m_BaseMaterialLookup[nIndex];
+
+	}
+
+	CModelBaseMaterialResource * CModel::getBaseMaterial(_In_ nfUint32 nIndex)
+	{
+		CModelBaseMaterialResource * pBaseMaterial = dynamic_cast<CModelBaseMaterialResource *> (getBaseMaterialResource(nIndex).get());
+		if (pBaseMaterial == nullptr)
+			throw CNMRException(NMR_ERROR_RESOURCETYPEMISMATCH);
+
+		return pBaseMaterial;
+	}
+
+	void CModel::mergeBaseMaterials(_In_ CModel * pSourceModel)
+	{
+		if (pSourceModel == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		nfUint32 nCount = pSourceModel->getBaseMaterialCount();
+		nfUint32 nIndex;
+
+		for (nIndex = 0; nIndex < nCount; nIndex++) {
+			CModelBaseMaterialResource * pOldMaterial = pSourceModel->getBaseMaterial(nIndex);
+			__NMRASSERT(pOldMaterial != nullptr);
+
+			PModelBaseMaterialResource pNewMaterial = std::make_shared<CModelBaseMaterialResource> (generateResourceID(), this);
+			pNewMaterial->mergeFrom(pOldMaterial);
+			
+			addResource(pNewMaterial);
+		}
+
+	} 
+
+
+	_Ret_maybenull_ CModelTexture2DResource * CModel::findTexture2D(_In_ ModelResourceID nResourceID)
+	{
+		PModelResource pResource = findResource(nResourceID);
+		if (pResource != nullptr) {
+			CModelTexture2DResource * pTexture2D = dynamic_cast<CModelTexture2DResource *> (pResource.get());
+			if (pTexture2D == nullptr)
+				throw CNMRException(NMR_ERROR_RESOURCETYPEMISMATCH);
+
+			return pTexture2D;
+		}
+
+		return nullptr;
+
+	}
+
+	nfUint32 CModel::getTexture2DCount()
+	{
+		return (nfUint32)m_TextureLookup.size();
+
+	}
+
+	PModelResource CModel::getTexture2DResource(_In_ nfUint32 nIndex)
+	{
+		nfUint32 nCount = getTexture2DCount();
+		if (nIndex >= nCount)
+			throw CNMRException(NMR_ERROR_INVALIDINDEX);
+
+		return m_TextureLookup[nIndex];
+
+	}
+
+	CModelTexture2DResource * CModel::getTexture2D(_In_ nfUint32 nIndex)
+	{
+		CModelTexture2DResource * pTexture2D = dynamic_cast<CModelTexture2DResource *> (getTexture2DResource(nIndex).get());
+		if (pTexture2D == nullptr)
+			throw CNMRException(NMR_ERROR_RESOURCETYPEMISMATCH);
+
+		return pTexture2D;
+	}
+
+	void CModel::mergeTextures2D(_In_ CModel * pSourceModel)
+	{
+		if (pSourceModel == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		nfUint32 nCount = pSourceModel->getTexture2DCount();
+		nfUint32 nIndex;
+
+		for (nIndex = 0; nIndex < nCount; nIndex++)
+		{
+			CModelTexture2DResource * pTextureResource = pSourceModel->getTexture2D(nIndex);
+			if (pTextureResource == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+			PModelTexture2DResource pNewTextureResource = std::make_shared<CModelTexture2DResource>(generateResourceID(), this);
+			pNewTextureResource->copyFrom(pTextureResource);
+
+			addResource(pNewTextureResource);
+		}
+	}
+
+	nfUint32 CModel::createHandle()
+	{
+		if (m_nHandleCounter >= NMR_MAXHANDLE)
+			throw CNMRException(NMR_ERROR_HANDLEOVERFLOW);
+
+		nfUint32 nHandle = m_nHandleCounter;
+		m_nHandleCounter++;
+
+		return nHandle;
+	}
+
+	void CModel::addTextureStream(_In_ std::wstring sPath, _In_ PImportStream pStream)
+	{
+		if (pStream.get() == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		std::wstring sLowerPath = sPath;
+		//std::transform(sLowerPath.begin(), sLowerPath.end(), sLowerPath.begin(), towupper);
+
+		auto iIterator = m_TextureStreamMap.find(sLowerPath);
+		if (iIterator != m_TextureStreamMap.end())
+			throw CNMRException(NMR_ERROR_DUPLICATETEXTUREPATH);
+
+		m_TextureStreams.push_back(std::make_pair(sPath, pStream));
+		m_TextureStreamMap.insert(std::make_pair(sLowerPath, pStream));
+	}
+
+	void CModel::removeTextureStream(_In_ std::wstring sPath)
+	{
+		std::wstring sLowerPath = sPath;
+		//std::transform(sLowerPath.begin(), sLowerPath.end(), sLowerPath.begin(), towupper);
+		
+		auto iIterator = m_TextureStreamMap.find(sLowerPath);
+		if (iIterator != m_TextureStreamMap.end()) {
+
+			// Remove Stream from list...
+			auto iListIterator = m_TextureStreams.begin();
+			while (iListIterator != m_TextureStreams.end()) {
+				if (iListIterator->second.get() == iIterator->second.get()) {
+					m_TextureStreams.erase(iListIterator);
+					break;
+				}
+				iListIterator++;
+			}
+
+			m_TextureStreamMap.erase(iIterator);
+		}
+	}
+
+
+	nfUint32 CModel::getTextureStreamCount()
+	{
+		return  (nfUint32)m_TextureStreams.size();
+	}
+
+	PImportStream CModel::getTextureStream(_In_ nfUint32 nIndex)
+	{
+		nfUint32 nCount = getTextureStreamCount();
+		if (nIndex >= nCount)
+			throw CNMRException(NMR_ERROR_INVALIDINDEX);
+
+		return m_TextureStreams[nIndex].second;
+	}
+
+	std::wstring CModel::getTextureStreamPath(_In_ nfUint32 nIndex)
+	{
+		nfUint32 nCount = getTextureStreamCount();
+		if (nIndex >= nCount)
+			throw CNMRException(NMR_ERROR_INVALIDINDEX);
+
+		return m_TextureStreams[nIndex].first;
+	}
+
+	PImportStream CModel::findTextureStream(_In_ std::wstring sPath)
+	{
+		std::wstring sLowerPath = sPath;
+		//std::transform(sLowerPath.begin(), sLowerPath.end(), sLowerPath.begin(), towupper);
+
+		auto iIterator = m_TextureStreamMap.find(sLowerPath);
+		if (iIterator != m_TextureStreamMap.end())
+			return iIterator->second;
+		return nullptr;
+	}
+
+	void CModel::mergeTextureStreams(_In_ CModel * pSourceModel)
+	{
+		if (pSourceModel == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		nfUint32 nCount = pSourceModel->getTextureStreamCount();
+		nfUint32 nIndex;
+
+		for (nIndex = 0; nIndex < nCount; nIndex++) {
+			std::wstring sPath = pSourceModel->getTextureStreamPath(nIndex);
+			PImportStream pTextureStream = pSourceModel->getTextureStream(nIndex);
+			PImportStream pCopiedStream = pTextureStream->copyToMemory();
+			addTextureStream(sPath, pCopiedStream);
+		}
+
 	}
 
 }

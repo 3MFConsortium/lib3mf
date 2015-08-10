@@ -34,8 +34,41 @@ A base material is an in memory representation of the 3MF basematerial node.
 
 #include "Model/Classes/NMR_ModelBaseMaterial.h" 
 #include "Common/NMR_Exception.h" 
+#include "Common/NMR_StringUtils.h" 
 #include <sstream>
 
 namespace NMR {
 
+	CModelBaseMaterial::CModelBaseMaterial(_In_ const std::wstring sName, _In_ nfColor cDisplayColor)
+	{
+		m_sName = sName;
+		m_cDisplayColor = cDisplayColor;
+	}
+
+	nfColor CModelBaseMaterial::getDisplayColor()
+	{
+		return m_cDisplayColor;
+	}
+
+	void CModelBaseMaterial::setColor(_In_ nfColor cColor)
+	{
+		m_cDisplayColor = cColor;
+	}
+
+	std::wstring CModelBaseMaterial::getName()
+	{
+		return m_sName;
+	}
+
+	void CModelBaseMaterial::setName(_In_ const std::wstring sName)
+	{
+		m_sName = sName;
+	}
+
+	std::wstring CModelBaseMaterial::getDisplayColorString()
+	{
+		return fnColorToWString(m_cDisplayColor);
+	}
+
 }
+

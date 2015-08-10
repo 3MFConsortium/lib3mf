@@ -64,11 +64,11 @@ namespace NMR {
 			throw CNMRException_Windows(NMR_ERROR_SETXMLPROPERTIESFAILED, hResult);
 	}
 
-	void CXmlReader_COM::GetQualifiedName(_Outptr_result_buffer_maybenull_(*pcwchQualifiedName + 1) const nfWChar ** ppwszQualifiedName, _Out_opt_ nfUint32 *pcwchQualifiedName)
+	void CXmlReader_COM::GetLocalName(_Outptr_result_buffer_maybenull_(*pcwchLocalName + 1) const nfWChar ** ppwszLocalName, _Out_opt_ nfUint32 *pcwchLocalName)
 	{
-		HRESULT hResult = m_pXMLReader->GetQualifiedName(ppwszQualifiedName, pcwchQualifiedName);
+		HRESULT hResult = m_pXMLReader->GetLocalName(ppwszLocalName, pcwchLocalName);
 		if (hResult != S_OK)
-			throw CNMRException_Windows(NMR_ERROR_COULDNOTGETQUALIFIEDXMLNAME, hResult);
+			throw CNMRException_Windows(NMR_ERROR_COULDNOTGETLOCALXMLNAME, hResult);
 	}
 
 	void CXmlReader_COM::GetValue(_Outptr_result_buffer_maybenull_(*pcwchValue + 1)  const nfWChar ** ppwszValue, _Out_opt_  nfUint32 *pcwchValue)
@@ -76,6 +76,13 @@ namespace NMR {
 		HRESULT hResult = m_pXMLReader->GetValue(ppwszValue, pcwchValue);
 		if (hResult != S_OK)
 			throw CNMRException_Windows(NMR_ERROR_COULDNOTGETXMLTEXT, hResult);
+	}
+
+	void CXmlReader_COM::GetNamespaceURI(_Outptr_result_buffer_maybenull_(*pcwchValue + 1)  const nfWChar ** ppwszValue, _Out_opt_  nfUint32 *pcwchValue)
+	{
+		HRESULT hResult = m_pXMLReader->GetNamespaceUri(ppwszValue, pcwchValue);
+		if (hResult != S_OK)
+			throw CNMRException_Windows(NMR_ERROR_COULDNOTGETNAMESPACE, hResult);
 	}
 
 	nfBool CXmlReader_COM::Read(_Out_ eXmlReaderNodeType & NodeType)

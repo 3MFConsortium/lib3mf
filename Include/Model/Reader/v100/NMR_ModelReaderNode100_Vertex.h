@@ -54,7 +54,6 @@ namespace NMR {
 		CModelReaderNode100_Vertex(_In_ PModelReaderWarnings pWarnings);
 
 		virtual void OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue);
-		virtual void OnChildElement(_In_z_ const nfWChar * pChildName, _In_ CXmlReader * pXMLReader);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 

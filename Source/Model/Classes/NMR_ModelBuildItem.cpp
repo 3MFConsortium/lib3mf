@@ -39,20 +39,22 @@ build item.
 
 namespace NMR {
 
-	CModelBuildItem::CModelBuildItem(_In_ CModelObject * pObject)
+	CModelBuildItem::CModelBuildItem(_In_ CModelObject * pObject, _In_ nfUint32 nHandle)
 	{
 		if (!pObject)
 			throw CNMRException (NMR_ERROR_INVALIDPARAM);
 		m_pObject = pObject;
 		m_mTransform = fnMATRIX3_identity ();
+		m_nHandle = nHandle;
 	}
 
-	CModelBuildItem::CModelBuildItem(_In_ CModelObject * pObject, _In_ const NMATRIX3 mTransform)
+	CModelBuildItem::CModelBuildItem(_In_ CModelObject * pObject, _In_ const NMATRIX3 mTransform, _In_ nfUint32 nHandle)
 	{
 		if (!pObject)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 		m_pObject = pObject;
 		m_mTransform = mTransform;
+		m_nHandle = nHandle;
 	}
 
 	CModelBuildItem::~CModelBuildItem()
@@ -104,6 +106,12 @@ namespace NMR {
 	{
 		__NMRASSERT(pMesh);
 		m_pObject->mergeToMesh(pMesh, m_mTransform);
+	}
+
+	nfUint32 CModelBuildItem::getHandle()
+	{
+		return m_nHandle;
+
 	}
 
 }

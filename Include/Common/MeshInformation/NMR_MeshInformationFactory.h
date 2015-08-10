@@ -36,6 +36,7 @@ It allows a dynamic creation of different Classes of Information.
 
 #include "Common/MeshInformation/NMR_MeshInformation_NodeColors.h"
 #include "Common/MeshInformation/NMR_MeshInformation_TexCoords.h"
+#include "Common/MeshInformation/NMR_MeshInformation_BaseMaterials.h"
 
 namespace NMR {
 

@@ -48,7 +48,6 @@ namespace NMR {
 		NMATRIX3 m_mTransform;
 	protected:
 		virtual void OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue);
-		virtual void OnChildElement(_In_z_ const nfWChar * pChildName, _In_ CXmlReader * pXMLReader);
 	public:
 		CModelReaderNode100_BuildItem() = delete;
 		CModelReaderNode100_BuildItem(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings);

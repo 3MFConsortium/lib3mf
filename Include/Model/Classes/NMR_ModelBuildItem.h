@@ -52,11 +52,12 @@ namespace NMR {
 		CModelObject * m_pObject;
 		NMATRIX3 m_mTransform;
 		std::wstring m_sPartNumber;
+		nfUint32 m_nHandle;
 		
 	public:
 		CModelBuildItem() = delete;
-		CModelBuildItem(_In_ CModelObject * pObject);
-		CModelBuildItem(_In_ CModelObject * pObject, _In_ const NMATRIX3 mTransform);
+		CModelBuildItem(_In_ CModelObject * pObject, _In_ nfUint32 nHandle);
+		CModelBuildItem(_In_ CModelObject * pObject, _In_ const NMATRIX3 mTransform, _In_ nfUint32 nHandle);
 		~CModelBuildItem();
 		
 		CModelObject * getObject ();
@@ -77,6 +78,9 @@ namespace NMR {
 
 		// Merge the build item to the given mesh
 		void mergeToMesh(_In_ CMesh * pMesh);
+
+		// Returns a unique handle to identify the build item
+		nfUint32 getHandle();
 
 	};
 

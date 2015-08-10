@@ -58,8 +58,10 @@ namespace NMR {
 
 		void writeStartElement(_In_z_ const nfWChar * pElementName);
 		void writeStartElementWithNamespace(_In_z_ const nfWChar * pElementName, _In_z_ const nfWChar * pNameSpace);
+		void writeStartElementWithPrefix(_In_z_ const nfWChar * pElementName, _In_z_ const nfWChar * pPrefix);
 		void writeEndElement();
 		void writeFullEndElement();
+		void writeText(_In_z_ const nfWChar * pwszText, _In_ nfUint32 cbLength);
 
 	public:
 		CModelWriterNode() = delete;

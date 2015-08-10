@@ -32,14 +32,33 @@ material resource object.
 
 --*/
 
+#include "Common\NMR_Local.h"
+#include "Common\NMR_Types.h"
+#include <string>
+#include <memory>
+
 #ifndef __NMR_MODELBASEMATERIAL
 #define __NMR_MODELBASEMATERIAL
 
-#include "Model/Classes/NMR_ModelResource.h" 
-#include "Model/Classes/NMR_Model.h" 
-
 namespace NMR {
 
+	class CModelBaseMaterial {
+	private:
+		std::wstring m_sName;
+		nfColor m_cDisplayColor;
+	public:
+		CModelBaseMaterial() = delete;
+		CModelBaseMaterial(_In_ const std::wstring sName, _In_ nfColor cDisplayColor);
+
+		nfColor getDisplayColor();
+		void setColor(_In_ nfColor cColor);
+		std::wstring getDisplayColorString();
+
+		std::wstring getName();
+		void setName(_In_ const std::wstring sName);
+	};
+
+	typedef std::shared_ptr <CModelBaseMaterial> PModelBaseMaterial;
 
 }
 

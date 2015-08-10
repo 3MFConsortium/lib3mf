@@ -39,6 +39,7 @@ model object.
 #include "Model/Classes/NMR_ModelResource.h" 
 #include "Model/Classes/NMR_ModelMetaData.h" 
 #include "Model/Classes/NMR_ModelThumbnail.h" 
+#include "Model/Classes/NMR_ModelDefaultProperty.h" 
 #include "Common/NMR_Types.h" 
 #include "Common/Math/NMR_Matrix.h" 
 
@@ -54,6 +55,7 @@ namespace NMR {
 		std::wstring m_sName;
 		std::wstring m_sPartNumber;
 		PModelThumbnail m_pThumbnail;
+		PModelDefaultProperty m_pModelDefaultProperty;
 		eModelObjectType m_ObjectType;
 		
 	public:
@@ -79,6 +81,14 @@ namespace NMR {
 		// Merge the object into a mesh object
 		virtual void mergeToMesh(_In_ CMesh * pMesh, _In_ const NMATRIX3 mMatrix);
 		void mergeToMesh(_In_ CMesh * pMesh);
+
+		// check, if the object is a valid object description
+		virtual nfBool isValid() = 0;
+
+		// Set/Get Default Property
+		void setDefaultProperty (_In_ PModelDefaultProperty pModelDefaultProperty);
+		PModelDefaultProperty getDefaultProperty();
+
 	};
 
 	typedef std::shared_ptr <CModelObject> PModelObject;

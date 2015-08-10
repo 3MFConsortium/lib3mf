@@ -35,6 +35,6 @@ NMR_COMVersion.h defines the current implementation version.
 
 #define NMR_APIVERSION_MAJOR 1
 #define NMR_APIVERSION_MINOR 0
-#define NMR_APIVERSION_INTERFACE 15
+#define NMR_APIVERSION_INTERFACE 30
 
 #endif // __NMR_MODELCOMVERSION

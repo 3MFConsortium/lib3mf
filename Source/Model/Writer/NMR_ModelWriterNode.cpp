@@ -108,6 +108,11 @@ namespace NMR {
 		m_pXMLWriter->WriteStartElement(nullptr, pElementName, pNameSpace);
 	}
 
+	void CModelWriterNode::writeStartElementWithPrefix(_In_z_ const nfWChar * pElementName, _In_z_ const nfWChar * pPrefix)
+	{
+		m_pXMLWriter->WriteStartElement(pPrefix, pElementName, nullptr);
+	}
+
 	void CModelWriterNode::writeEndElement()
 	{
 		m_pXMLWriter->WriteEndElement();
@@ -117,5 +122,11 @@ namespace NMR {
 	{
 		m_pXMLWriter->WriteFullEndElement();
 	}
+
+	void CModelWriterNode::writeText(_In_z_ const nfWChar * pwszText, _In_ nfUint32 cbLength)
+	{
+		m_pXMLWriter->WriteText(pwszText, cbLength);
+	}
+
 
 }

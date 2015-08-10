@@ -46,10 +46,20 @@ namespace NMR {
 		PModelResource m_pResource;
 		_Ret_notnull_ CModelComponentsObject * getComponentsObject();
 		_Ret_notnull_ CMesh * getMesh();
+
+		nfError m_nErrorCode;
+		std::string m_sErrorMessage;
+
+		LIB3MFRESULT handleNMRException(_In_ CNMRException * pException);
+		LIB3MFRESULT handleGenericException();
+		LIB3MFRESULT handleSuccess();
+
 	public:
 		LIB3MFINTERFACE_DECL(ILib3MFModelComponentsObject)
 
-			LIB3MFMETHOD(AddComponent) (_In_ ILib3MFModelObjectResource * pObject, _In_opt_ MODELTRANSFORM * pmTransform, _Outptr_ ILib3MFModelComponent ** ppComponent);
+		LIB3MFMETHOD(GetLastError) (_Out_ DWORD * pErrorCode, _Outptr_opt_ LPCSTR * pErrorMessage);
+
+		LIB3MFMETHOD(AddComponent) (_In_ ILib3MFModelObjectResource * pObject, _In_opt_ MODELTRANSFORM * pmTransform, _Outptr_ ILib3MFModelComponent ** ppComponent);
 		LIB3MFMETHOD(GetComponent) (_In_ DWORD nIndex, _Outptr_ ILib3MFModelComponent ** ppComponent);
 		LIB3MFMETHOD(GetComponentCount) (_Out_ DWORD * pComponentCount);
 		LIB3MFMETHOD(GetResourceID) (_Out_ DWORD * pnResourceID);
@@ -60,6 +70,12 @@ namespace NMR {
 		LIB3MFMETHOD(SetPartNumber) (_In_z_ LPCWSTR pwszPartNumber);
 		LIB3MFMETHOD(GetType) (_Out_ DWORD * pObjectType);
 		LIB3MFMETHOD(SetType) (_In_ DWORD ObjectType);
+		LIB3MFMETHOD(IsMeshObject) (_Out_ BOOL * pbIsMeshObject);
+		LIB3MFMETHOD(IsComponentsObject) (_Out_ BOOL * pbIsComponentsObject);
+		LIB3MFMETHOD(IsValidObject) (_Out_ BOOL * pbIsValid);
+
+		LIB3MFMETHOD(CreateDefaultPropertyHandler) (_Outptr_ ILib3MFDefaultPropertyHandler ** ppPropertyHandler);
+		LIB3MFMETHOD(CreateDefaultMultiPropertyHandler) (_In_ DWORD nChannel, _Outptr_ ILib3MFDefaultPropertyHandler ** ppPropertyHandler);
 
 			CCOMModelComponentsObject();
 

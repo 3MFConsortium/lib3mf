@@ -82,20 +82,34 @@ namespace NMR {
 		nIndex3 = m_nIndex3;
 	}
 
-	nfBool CModelReaderNode100_Triangle::retrieveProperties(_Out_ ModelResourceID & nPropertyID, _Out_ ModelResourceIndex & nPropertyIndex1, _Out_ ModelResourceIndex & nPropertyIndex2, _Out_ ModelResourceIndex & nPropertyIndex3)
+	nfBool CModelReaderNode100_Triangle::retrieveProperties(_Inout_ ModelResourceID & nPropertyID, _Inout_ ModelResourceIndex & nPropertyIndex1, _Inout_ ModelResourceIndex & nPropertyIndex2, _Inout_ ModelResourceIndex & nPropertyIndex3)
 	{
+
 		if (m_nPropertyID == 0)
 			return false;
-		if ((m_nPropertyIndex1 < 0) || (m_nPropertyIndex2 < 0) ||
-			(m_nPropertyIndex3 < 0))
+		if (m_nPropertyIndex1 < 0)
 			return false;
 
+		// See Core Spec 4.1.3.1 (Triangle)
 		nPropertyID = m_nPropertyID;
 		nPropertyIndex1 = m_nPropertyIndex1;
-		nPropertyIndex2 = m_nPropertyIndex2;
-		nPropertyIndex3 = m_nPropertyIndex3;
+
+		if (m_nPropertyIndex2 >= 0) {
+			nPropertyIndex2 = m_nPropertyIndex2;
+		}
+		else {
+			nPropertyIndex2 = m_nPropertyIndex1;
+		}
+
+		if (m_nPropertyIndex3 >= 0) {
+			nPropertyIndex3 = m_nPropertyIndex3;
+		}
+		else {
+			nPropertyIndex3 = m_nPropertyIndex1;
+		}
 
 		return true;
+
 	}
 
 	void CModelReaderNode100_Triangle::OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue)
@@ -145,12 +159,6 @@ namespace NMR {
 			if ((nValue >= 0) && (nValue < XML_3MF_MAXRESOURCEINDEX))
 				m_nPropertyIndex3 = nValue;
 		}
-	}
-
-	void CModelReaderNode100_Triangle::OnChildElement(_In_z_ const nfWChar * pChildName, _In_ CXmlReader * pXMLReader)
-	{
-		__NMRASSERT(pChildName);
-		__NMRASSERT(pXMLReader);
 	}
 
 }

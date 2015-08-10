@@ -50,7 +50,6 @@ namespace NMR {
 		m_ObjectID = 0;
 		m_bHasID = false;
 		m_mTransform = fnMATRIX3_identity();
-		m_pMetaData = NULL;
 	}
 
 	void CModelReaderNode100_Component::parseXML(_In_ CXmlReader * pXMLReader)
@@ -83,11 +82,6 @@ namespace NMR {
 		}
 	}
 
-	void CModelReaderNode100_Component::OnChildElement(_In_z_ const nfWChar * pChildName, _In_ CXmlReader * pXMLReader)
-	{
-		__NMRASSERT(pChildName);
-		__NMRASSERT(pXMLReader);
-	}
 
 	CModelObject * CModelReaderNode100_Component::getObject()
 	{
@@ -102,9 +96,5 @@ namespace NMR {
 		return m_mTransform;
 	}
 
-	PModelMetaData CModelReaderNode100_Component::getMetaData()
-	{
-		return m_pMetaData;
-	}
 
 }

@@ -46,7 +46,7 @@ namespace NMR {
 		CMesh * m_pMesh;
 	protected:
 		virtual void OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue);
-		virtual void OnChildElement(_In_z_ const nfWChar * pChildName, _In_ CXmlReader * pXMLReader);
+		virtual void OnNSChildElement(_In_z_ const nfWChar * pChildName, _In_z_ const nfWChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 	public:
 		CModelReaderNode100_Vertices() = delete;
 		CModelReaderNode100_Vertices(_In_ CMesh * pMesh, _In_ PModelReaderWarnings pWarnings);

@@ -34,6 +34,10 @@ XML Model Stream.
 
 #include "Model/Reader/v100/NMR_ModelReaderNode100_Resources.h"
 #include "Model/Reader/v100/NMR_ModelReaderNode100_Object.h"
+#include "Model/Reader/v100/NMR_ModelReaderNode100_BaseMaterials.h"
+#include "Model/Reader/v100/NMR_ModelReaderNode100_Colors.h"
+#include "Model/Reader/v100/NMR_ModelReaderNode100_Tex2DGroup.h"
+#include "Model/Reader/v100/NMR_ModelReaderNode100_Texture2D.h"
 
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Common/NMR_Exception.h"
@@ -46,6 +50,9 @@ namespace NMR {
 	{
 		__NMRASSERT(pModel);
 		m_pModel = pModel;
+
+		m_pColorMapping = std::make_shared<CModelReader_ColorMapping>();
+		m_pTexCoordMapping = std::make_shared<CModelReader_TexCoordMapping>();
 	}
 
 	void CModelReaderNode100_Resources::parseXML(_In_ CXmlReader * pXMLReader)
@@ -66,15 +73,42 @@ namespace NMR {
 		__NMRASSERT(pAttributeValue);
 	}
 
-	void CModelReaderNode100_Resources::OnChildElement(_In_z_ const nfWChar * pChildName, _In_ CXmlReader * pXMLReader)
+	void CModelReaderNode100_Resources::OnNSChildElement(_In_z_ const nfWChar * pChildName, _In_z_ const nfWChar * pNameSpace, _In_ CXmlReader * pXMLReader)
 	{
+		
 		__NMRASSERT(pChildName);
 		__NMRASSERT(pXMLReader);
 
-		if (wcscmp(pChildName, XML_3MF_ELEMENT_OBJECT) == 0) {
-			PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode100_Object>(m_pModel, m_pWarnings);
-			pXMLNode->parseXML(pXMLReader);
+		if (wcscmp(pNameSpace, XML_3MF_NAMESPACE_CORESPEC100) == 0) {
+
+			if (wcscmp(pChildName, XML_3MF_ELEMENT_OBJECT) == 0) {
+				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode100_Object>(m_pModel, m_pWarnings, m_pColorMapping, m_pTexCoordMapping);
+				pXMLNode->parseXML(pXMLReader);
+			}
+			if (wcscmp(pChildName, XML_3MF_ELEMENT_BASEMATERIALS) == 0) {
+				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode100_BaseMaterials>(m_pModel, m_pWarnings);
+				pXMLNode->parseXML(pXMLReader);
+			}
 		}
+
+		if (wcscmp(pNameSpace, XML_3MF_NAMESPACE_MATERIALSPEC) == 0) {
+			if (wcscmp(pChildName, XML_3MF_ELEMENT_COLORGROUP) == 0) {
+				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode100_Colors>(m_pModel, m_pWarnings, m_pColorMapping);
+				pXMLNode->parseXML(pXMLReader);
+			}
+
+			if (wcscmp(pChildName, XML_3MF_ELEMENT_TEX2DGROUP) == 0) {
+				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode100_Tex2DGroup>(m_pModel, m_pWarnings, m_pTexCoordMapping);
+				pXMLNode->parseXML(pXMLReader);
+			}
+
+			if (wcscmp(pChildName, XML_3MF_ELEMENT_TEXTURE2D) == 0) {
+				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode100_Texture2D>(m_pModel, m_pWarnings);
+				pXMLNode->parseXML(pXMLReader);
+			}
+		}
+
 	}
+
 
 }

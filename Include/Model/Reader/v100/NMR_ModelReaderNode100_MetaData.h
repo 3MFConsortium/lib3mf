@@ -45,7 +45,7 @@ namespace NMR {
 		std::wstring m_sValue;
 	protected:
 		virtual void OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue);
-		virtual void OnChildElement(_In_z_ const nfWChar * pChildName, _In_ CXmlReader * pXMLReader);
+		virtual void OnText(_In_z_ const nfWChar * pText, _In_ CXmlReader * pXMLReader);
 	public:
 		CModelReaderNode100_MetaData() = delete;
 		CModelReaderNode100_MetaData(_In_ PModelReaderWarnings pWarnings);

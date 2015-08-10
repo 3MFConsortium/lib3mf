@@ -34,6 +34,7 @@ NMR_Model.h defines the Model Class. A model is an in memory representation of t
 #define __NMR_MODEL
 
 #include "Model/Classes/NMR_ModelTypes.h"
+#include "Common/Platform/NMR_ImportStream.h"
 
 #include "Common/Math/NMR_Matrix.h" 
 #include "Common/Mesh/NMR_Mesh.h" 
@@ -60,6 +61,12 @@ namespace NMR {
 	class CModelThumbnail;
 	typedef std::shared_ptr <CModelThumbnail> PModelThumbnail;
 
+	class CModelBaseMaterialResource;
+	typedef std::shared_ptr <CModelBaseMaterialResource> PModelBaseMaterialResource;
+
+	class CModelTexture2DResource;
+	typedef std::shared_ptr <CModelTexture2DResource> PModelTexture2DResource;
+
 	class CModel {
 	private:
 		// Object Resources of the model
@@ -70,6 +77,7 @@ namespace NMR {
 		std::vector<PModelBuildItem> m_BuildItems;
 
 		// Model Properties
+		nfUint32 m_nHandleCounter;
 		eModelUnit m_Unit;
 		std::wstring m_sLanguage;
 		PModelThumbnail m_pGlobalThumbnail;
@@ -81,8 +89,14 @@ namespace NMR {
 		// Thumbnail Container
 		std::vector<PModelThumbnail> m_Thumbnails;
 
+		// Texture Streams
+		std::map<std::wstring, PImportStream> m_TextureStreamMap;
+		std::vector<std::pair <std::wstring, PImportStream>> m_TextureStreams;
+
 		// Indexed lookup lists for standard resource types
 		std::vector<PModelResource> m_ObjectLookup;
+		std::vector<PModelResource> m_BaseMaterialLookup;
+		std::vector<PModelResource> m_TextureLookup;
 
 		// Add Resource to resource lookup tables
 		void addResourceToLookupTable(_In_ PModelResource pResource);
@@ -114,6 +128,8 @@ namespace NMR {
 		void addBuildItem(_In_ PModelBuildItem pBuildItem);
 		nfUint32 getBuildItemCount();
 		PModelBuildItem getBuildItem(_In_ nfUint32 nIdx);
+		// Removes a build item identified by its handle
+		void removeBuildItem(_In_ nfUint32 nHandle, _In_ nfBool bThrowExceptionIfNotFound);
 
 		// Metadata setter/getter
 		void addMetaData(_In_ std::wstring sName, _In_ std::wstring sValue);
@@ -121,6 +137,7 @@ namespace NMR {
 		void getMetaData(_In_ nfUint32 nIndex, _Out_ std::wstring & sName, _Out_ std::wstring & sValue);
 		void removeMetaData(_In_ nfUint32 nIndex);
 		nfBool hasMetaData(_In_ std::wstring sName);
+		void mergeMetaData(_In_ CModel * pSourceModel);
 
 		// Retrieve a unique Resource ID
 		ModelResourceID generateResourceID();
@@ -131,8 +148,34 @@ namespace NMR {
 		PModelResource getObjectResource(_In_ nfUint32 nIndex);
 		CModelObject * getObject(_In_ nfUint32 nIndex);
 
+		// Convenience functions for base materials
+		_Ret_maybenull_ CModelBaseMaterialResource * findBaseMaterial(_In_ ModelResourceID nResourceID);
+		nfUint32 getBaseMaterialCount();
+		PModelResource getBaseMaterialResource(_In_ nfUint32 nIndex);
+		CModelBaseMaterialResource * getBaseMaterial(_In_ nfUint32 nIndex);
+		void mergeBaseMaterials(_In_ CModel * pSourceModel);
+
+		// Convenience functions for 2D Textures
+		_Ret_maybenull_ CModelTexture2DResource * findTexture2D(_In_ ModelResourceID nResourceID);
+		nfUint32 getTexture2DCount();
+		PModelResource getTexture2DResource(_In_ nfUint32 nIndex);
+		CModelTexture2DResource * getTexture2D(_In_ nfUint32 nIndex);
+		void mergeTextures2D(_In_ CModel * pSourceModel);
+
 		// Clear all build items and Resources
 		void clearAll ();
+
+		// Creates a unique handle for identifying child classes (e.g. build items)
+		nfUint32 createHandle();
+
+		// Calculate Texture Streams
+		void addTextureStream(_In_ std::wstring sPath, _In_ PImportStream pStream);
+		void removeTextureStream(_In_ std::wstring sPath);
+		nfUint32 getTextureStreamCount();
+		PImportStream getTextureStream(_In_ nfUint32 nIndex);
+		std::wstring getTextureStreamPath(_In_ nfUint32 nIndex);
+		PImportStream findTextureStream(_In_ std::wstring sPath);
+		void mergeTextureStreams(_In_ CModel * pSourceModel);
 	};
 
 	typedef std::shared_ptr <CModel> PModel;

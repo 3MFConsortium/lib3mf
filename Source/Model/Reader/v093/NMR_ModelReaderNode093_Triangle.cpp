@@ -1,0 +1,156 @@
+/*++
+
+Copyright (C) 2015 Microsoft Corporation (Original Author)
+Copyright (C) 2015 netfabb GmbH
+
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification,
+are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice, this
+list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright notice,
+this list of conditions and the following disclaimer in the documentation
+and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+Abstract:
+
+NMR_ModelReaderNode093_Triangle.cpp implements the Model Reader Triangle Node
+Class. A triangle reader model node is a parser for the triangle node of an
+XML Model Stream.
+
+--*/
+
+#include "Model/Reader/v093/NMR_ModelReaderNode093_Triangle.h"
+
+#include "Model/Classes/NMR_ModelConstants.h"
+#include "Common/NMR_Exception.h"
+#include "Common/NMR_Exception_Windows.h"
+#include "Common/NMR_StringUtils.h"
+#include <climits>
+#include <math.h>
+
+namespace NMR {
+
+	CModelReaderNode093_Triangle::CModelReaderNode093_Triangle(_In_ PModelReaderWarnings pWarnings)
+		: CModelReaderNode(pWarnings)
+	{
+		// Initialise default values
+		m_nIndex1 = -1;
+		m_nIndex2 = -1;
+		m_nIndex3 = -1;
+
+		m_nTextureIndex1 = -1;
+		m_nTextureIndex2 = -1;
+		m_nTextureIndex3 = -1;
+		m_nColorID = -1;
+		m_nMaterialID = -1;
+	}
+
+	void CModelReaderNode093_Triangle::parseXML(_In_ CXmlReader * pXMLReader)
+	{
+		// Parse name
+		parseName(pXMLReader);
+
+		// Parse attribute
+		parseAttributes(pXMLReader);
+
+		// Parse Content
+		parseContent(pXMLReader);
+	}
+
+	void CModelReaderNode093_Triangle::retrieveIndices(_Out_ nfInt32 & nIndex1, _Out_ nfInt32 & nIndex2, _Out_ nfInt32 & nIndex3, nfInt32 nNodeCount)
+	{
+		if ((m_nIndex1 < 0) || (m_nIndex2 < 0) || (m_nIndex3 < 0))
+			throw CNMRException(NMR_ERROR_INVALIDMODELNODEINDEX);
+
+		if ((m_nIndex1 >= nNodeCount) || (m_nIndex2 >= nNodeCount) || (m_nIndex3 >= nNodeCount))
+			throw CNMRException(NMR_ERROR_INVALIDMODELNODEINDEX);
+
+		nIndex1 = m_nIndex1;
+		nIndex2 = m_nIndex2;
+		nIndex3 = m_nIndex3;
+	}
+
+	nfBool CModelReaderNode093_Triangle::retrieveTextureIndices(_Out_ nfInt32 & nIndex1, _Out_ nfInt32 & nIndex2, _Out_ nfInt32 & nIndex3)
+	{
+
+		nIndex1 = m_nTextureIndex1;
+		nIndex2 = m_nTextureIndex2;
+		nIndex3 = m_nTextureIndex3;
+
+		return ((nIndex1 >= 0) && (nIndex2 >= 0) && (nIndex3 >= 0));
+	}
+		
+
+
+	void CModelReaderNode093_Triangle::OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue)
+	{
+		__NMRASSERT(pAttributeName);
+		__NMRASSERT(pAttributeValue);
+		nfInt32 nValue;
+
+		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TRIANGLE_V1) == 0) {
+			nValue = fnWStringToInt32(pAttributeValue);
+			if ((nValue >= 0) && (nValue < XML_3MF_MAXRESOURCEINDEX))
+				m_nIndex1 = nValue;
+		}
+
+		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TRIANGLE_V2) == 0) {
+			nValue = fnWStringToInt32(pAttributeValue);
+			if ((nValue >= 0) && (nValue < XML_3MF_MAXRESOURCEINDEX))
+				m_nIndex2 = nValue;
+		}
+
+		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TRIANGLE_V3) == 0) {
+			nValue = fnWStringToInt32(pAttributeValue);
+			if ((nValue >= 0) && (nValue < XML_3MF_MAXRESOURCEINDEX))
+				m_nIndex3 = nValue;
+		}
+
+		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TRIANGLE_CV1) == 0) {
+			nValue = fnWStringToInt32(pAttributeValue);
+			if ((nValue >= 0) && (nValue < XML_3MF_MAXRESOURCEINDEX))
+				m_nTextureIndex1 = nValue;
+		}
+
+		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TRIANGLE_CV2) == 0) {
+			nValue = fnWStringToInt32(pAttributeValue);
+			if ((nValue >= 0) && (nValue < XML_3MF_MAXRESOURCEINDEX))
+				m_nTextureIndex2 = nValue;
+		}
+
+		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TRIANGLE_CV3) == 0) {
+			nValue = fnWStringToInt32(pAttributeValue);
+			if ((nValue >= 0) && (nValue < XML_3MF_MAXRESOURCEINDEX))
+				m_nTextureIndex3 = nValue;
+		}
+
+		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TRIANGLE_COLORID) == 0) {
+			nValue = fnWStringToInt32(pAttributeValue);
+			if ((nValue >= 0) && (nValue < XML_3MF_MAXRESOURCEINDEX))
+				m_nColorID = nValue;
+		}
+
+		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TRIANGLE_MATERIALID) == 0) {
+			nValue = fnWStringToInt32(pAttributeValue);
+			if ((nValue >= 0) && (nValue < XML_3MF_MAXRESOURCEINDEX))
+				m_nMaterialID = nValue;
+		}
+
+	}
+
+
+}

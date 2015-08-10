@@ -33,6 +33,9 @@ NMR_ErrorConst.h defines all error code constants.
 #ifndef __NMR_ERRORCONST
 #define __NMR_ERRORCONST
 
+// This is the output value of a "uncatched exception"
+#define NMR_GENERICEXCEPTIONSTRING "uncatched exception"
+
 // Function has suceeded, there has been no error
 #define NMR_SUCCESS 0
 
@@ -70,7 +73,7 @@ NMR_ErrorConst.h defines all error code constants.
 // The DLL returns this, if it does not support the suspected filters
 #define NMR_ERROR_DLLINVALIDFILTERNAME 0x1009
 
-// The DLL returns this, if not all parameters are provided 
+// The DLL returns this, if not all parameters are provided
 #define NMR_ERROR_DLLMISSINGPARAMETER 0x100A
 
 // The provided Blocksize is invalid (like in CPagedVector)
@@ -135,6 +138,25 @@ NMR_ErrorConst.h defines all error code constants.
 
 // No component has been given
 #define NMR_ERROR_INVALIDCOMPONENT 0x101F
+
+// Invalid hex value
+#define NMR_ERROR_INVALIDHEXVALUE 0x1020
+
+// Range error
+#define NMR_ERROR_RANGEERROR 0x1021
+
+// Generic Exception
+#define NMR_ERROR_GENERICEXCEPTION 0x1022
+
+// Passed an invalid null pointer
+#define NMR_ERROR_INVALIDPOINTER 0x1023
+
+// XML Element not open
+#define NMR_ERROR_XMLELEMENTNOTOPEN 0x1024
+
+// Invalid XML Name
+#define NMR_ERROR_INVALIDXMLNAME 0x1025
+
 
 /*-------------------------------------------------------------------
   Core framework error codes (0x2XXX)
@@ -387,8 +409,8 @@ Model error codes (0x8XXX)
 // Could not read XML node
 #define NMR_ERROR_READXMLNODEFAILED 0x8017
 
-// Could not retrieve qualified xml node name
-#define NMR_ERROR_COULDNOTGETQUALIFIEDXMLNAME 0x8018
+// Could not retrieve local xml node name
+#define NMR_ERROR_COULDNOTGETLOCALXMLNAME 0x8018
 
 // Could not parse XML Node content
 #define NMR_ERROR_COULDPARSEXMLCONTENT 0x8019
@@ -498,19 +520,19 @@ Model error codes (0x8XXX)
 // Build item Object ID was not specified
 #define NMR_ERROR_MISSINGBUILDITEMOBJECTID 0x803C
 
-// Build item Object ID is ambiguous 
+// Build item Object ID is ambiguous
 #define NMR_ERROR_DUPLICATEBUILDITEMOBJECTID 0x803D
 
 // Build item Object ID is invalid
 #define NMR_ERROR_INVALIDBUILDITEMOBJECTID 0x803E
 
-// Could not find Object associated to the Build item 
+// Could not find Object associated to the Build item
 #define NMR_ERROR_COULDNOTFINDBUILDITEMOBJECT 0x803F
 
 // Could not find Object associated to Component
 #define NMR_ERROR_COULDNOTFINDCOMPONENTOBJECT 0x8040
 
-// Component Object ID is ambiguous 
+// Component Object ID is ambiguous
 #define NMR_ERROR_DUPLICATECOMPONENTOBJECTID 0x8041
 
 // Texture ID was not specified
@@ -602,5 +624,85 @@ Model error codes (0x8XXX)
 
 // Invalid Model Object Type
 #define NMR_ERROR_INVALIDMODELOBJECTTYPE 0x805F
+
+// Missing Model Resource ID
+#define NMR_ERROR_MISSINGMODELRESOURCEID 0x8060
+
+// Duplicate Resource ID
+#define NMR_ERROR_DUPLICATERESOURCEID 0x8061
+
+// Could not write XML Content
+#define NMR_ERROR_COULDNOTWRITEXMLCONTENT 0x8062
+
+// Could not get XML Namespace
+#define NMR_ERROR_COULDNOTGETNAMESPACE 0x8063
+
+// Handle overflow
+#define NMR_ERROR_HANDLEOVERFLOW 0x8064
+
+// No resources in model file
+#define NMR_ERROR_NORESOURCES 0x8065
+
+// No build section in model file
+#define NMR_ERROR_NOBUILD 0x8066
+
+// Duplicate resources section in model file
+#define NMR_ERROR_DUPLICATERESOURCES 0x8067
+
+// Duplicate build section in model file
+#define NMR_ERROR_DUPLICATEBUILDSECTION 0x8068
+
+// Duplicate model node in XML Stream
+#define NMR_ERROR_DUPLICATEMODELNODE 0x8069
+
+// No model node in XML Stream
+#define NMR_ERROR_NOMODELNODE 0x806A
+
+// Resource not found
+#define NMR_ERROR_RESOURCENOTFOUND 0x806B
+
+// Unknown reader class
+#define NMR_ERROR_UNKNOWNREADERCLASS 0x806C
+
+// Unknown writer class
+#define NMR_ERROR_UNKNOWNWRITERCLASS 0x806D
+
+// Texture not found
+#define NMR_ERROR_MODELTEXTURENOTFOUND 0x806E
+
+// Invalid Content Type
+#define NMR_ERROR_INVALIDCONTENTTYPE 0x806F
+
+// Invalid Base Material
+#define NMR_ERROR_INVALIDBASEMATERIAL 0x8070
+
+// Too many materials
+#define NMR_ERROR_TOOMANYMATERIALS 0x8071
+
+// Invalid texture
+#define NMR_ERROR_INVALIDTEXTURE 0x8072
+
+// Could not get handle
+#define NMR_ERROR_COULDNOTGETHANDLE 0x8073
+
+// Build item not found
+#define NMR_ERROR_BUILDITEMNOTFOUND 0x8074
+// Could not get texture URI
+#define NMR_ERROR_OPCCOULDNOTGETTEXTUREURI 0x8075
+
+// Could not get texture stream
+#define NMR_ERROR_OPCCOULDNOTGETTEXTURESTREAM 0x8076
+
+// Model Relationship read failed
+#define NMR_ERROR_MODELRELATIONSHIPSETREADFAILED 0x8077
+
+// No texture stream available
+#define NMR_ERROR_NOTEXTURESTREAM 0x8078
+
+// Could not create stream
+#define NMR_ERROR_COULDNOTCREATESTREAM 0x8079
+
+// Not supporting legacy CMYK color
+#define NMR_ERROR_NOTSUPPORTINGLEGACYCMYK 0x807A
 
 #endif // __NMR_ERRORCONST

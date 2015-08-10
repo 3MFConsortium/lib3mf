@@ -31,17 +31,17 @@ COM Interface Implementation for Model Component Class
 
 --*/
 
-#include "Model/COM/NMR_COMInterface_ModelComponent.h" 
+#include "Model/COM/NMR_COMInterface_ModelComponent.h"
 #include "Model/COM/NMR_COMInterface_ModelResourceFactory.h"
-#include "Model/Classes/NMR_ModelComponent.h" 
-#include "Common/NMR_Exception_Windows.h" 
-#include "Common/Platform/NMR_Platform.h" 
+#include "Model/Classes/NMR_ModelComponent.h"
+#include "Common/NMR_Exception_Windows.h"
+#include "Common/Platform/NMR_Platform.h"
 
 namespace NMR {
 
 	CCOMModelComponent::CCOMModelComponent()
 	{
-		// empty on purpose
+		m_nErrorCode = NMR_SUCCESS;
 	}
 
 	void CCOMModelComponent::setComponent(_In_ PModelComponent pModelComponent)
@@ -49,12 +49,64 @@ namespace NMR {
 		m_pModelComponent = pModelComponent;
 	}
 
-	LIB3MFMETHODIMP CCOMModelComponent::GetObjectResource(_Outptr_ ILib3MFModelObjectResource ** ppObjectResource)
+	LIB3MFRESULT CCOMModelComponent::handleSuccess()
 	{
-		if (!ppObjectResource)
+		m_nErrorCode = NMR_SUCCESS;
+		return LIB3MF_OK;
+	}
+
+	LIB3MFRESULT CCOMModelComponent::handleNMRException(_In_ CNMRException * pException)
+	{
+		__NMRASSERT(pException);
+
+		m_nErrorCode = pException->getErrorCode();
+		m_sErrorMessage = std::string(pException->what());
+
+		CNMRException_Windows * pWinException = dynamic_cast<CNMRException_Windows *> (pException);
+		if (pWinException != nullptr) {
+			return pWinException->getHResult();
+		}
+		else {
+			if (m_nErrorCode == NMR_ERROR_INVALIDPOINTER)
+				return LIB3MF_POINTER;
+			if (m_nErrorCode == NMR_ERROR_INVALIDPARAM)
+				return LIB3MF_INVALIDARG;
+
+			return LIB3MF_FAIL;
+		}
+	}
+
+	LIB3MFRESULT CCOMModelComponent::handleGenericException()
+	{
+		m_nErrorCode = NMR_ERROR_GENERICEXCEPTION;
+		m_sErrorMessage = NMR_GENERICEXCEPTIONSTRING;
+		return LIB3MF_FAIL;
+	}
+
+	LIB3MFMETHODIMP CCOMModelComponent::GetLastError(_Out_ DWORD * pErrorCode, _Outptr_opt_ LPCSTR * pErrorMessage)
+	{
+		if (!pErrorCode)
 			return LIB3MF_POINTER;
 
+		*pErrorCode = m_nErrorCode;
+		if (pErrorMessage) {
+			if (m_nErrorCode != NMR_SUCCESS) {
+				*pErrorMessage = m_sErrorMessage.c_str();
+			}
+			else {
+				*pErrorMessage = nullptr;
+			}
+		}
+
+		return LIB3MF_OK;
+	}
+
+	LIB3MFMETHODIMP CCOMModelComponent::GetObjectResource(_Outptr_ ILib3MFModelObjectResource ** ppObjectResource)
+	{
 		try {
+			if (!ppObjectResource)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
 			if (!m_pModelComponent.get())
 				throw CNMRException(NMR_ERROR_INVALIDMODELCOMPONENT);
 
@@ -83,19 +135,25 @@ namespace NMR {
 			if (pResourceInterface == nullptr)
 				return LIB3MF_FAIL;
 
-			return LIB3MF_OK;
+			// Return result
+			*ppObjectResource = pResourceInterface;
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
 		}
 		catch (...) {
-			return LIB3MF_FAIL;
+			return handleGenericException();
 		}
 	}
 
 	LIB3MFMETHODIMP CCOMModelComponent::GetTransform(_Out_ MODELTRANSFORM * pTransformation)
 	{
-		if (!pTransformation)
-			return LIB3MF_POINTER;
-
 		try {
+			if (!pTransformation)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
 			if (!m_pModelComponent.get())
 				throw CNMRException(NMR_ERROR_INVALIDMODELCOMPONENT);
 
@@ -108,19 +166,22 @@ namespace NMR {
 				}
 			}
 
-			return LIB3MF_OK;
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
 		}
 		catch (...) {
-			return LIB3MF_FAIL;
+			return handleGenericException();
 		}
 	}
 
 	LIB3MFMETHODIMP CCOMModelComponent::SetTransform(_In_opt_ MODELTRANSFORM * pTransformation)
 	{
-		if (!pTransformation)
-			return LIB3MF_POINTER;
-
 		try {
+			if (!pTransformation)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
 			if (!m_pModelComponent.get())
 				throw CNMRException(NMR_ERROR_INVALIDMODELCOMPONENT);
 
@@ -135,46 +196,55 @@ namespace NMR {
 
 			m_pModelComponent->setTransform(mMatrix);
 
-			return LIB3MF_OK;
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
 		}
 		catch (...) {
-			return LIB3MF_FAIL;
+			return handleGenericException();
 		}
 	}
 
 	LIB3MFMETHODIMP CCOMModelComponent::GetObjectResourceID(_Out_ DWORD * pnResourceID)
 	{
-		if (!pnResourceID)
-			return LIB3MF_POINTER;
-
 		try {
+			if (!pnResourceID)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
 			if (!m_pModelComponent.get())
 				throw CNMRException(NMR_ERROR_INVALIDMODELCOMPONENT);
 
 			*pnResourceID = m_pModelComponent->getObjectID();
 
-			return LIB3MF_OK;
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
 		}
 		catch (...) {
-			return LIB3MF_FAIL;
+			return handleGenericException();
 		}
 	}
 
 	LIB3MFMETHODIMP CCOMModelComponent::HasTransform(_Out_ BOOL * pbHasTransform)
 	{
-		if (!pbHasTransform)
-			return LIB3MF_POINTER;
-
 		try {
+			if (!pbHasTransform)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
 			if (!m_pModelComponent.get())
 				throw CNMRException(NMR_ERROR_INVALIDMODELCOMPONENT);
 
 			*pbHasTransform = m_pModelComponent->hasTransform();
 
-			return LIB3MF_OK;
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
 		}
 		catch (...) {
-			return LIB3MF_FAIL;
+			return handleGenericException();
 		}
 	}
 

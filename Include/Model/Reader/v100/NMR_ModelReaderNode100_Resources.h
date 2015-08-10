@@ -36,14 +36,18 @@ A resources reader model node is a parser for the resources node of an XML Model
 #define __NMR_MODELREADERNODE100_RESOURCES
 
 #include "Model/Reader/NMR_ModelReaderNode.h"
+#include "Model/Reader/NMR_ModelReader_ColorMapping.h"
+#include "Model/Reader/NMR_ModelReader_TexCoordMapping.h"
 
 namespace NMR {
 
 	class CModelReaderNode100_Resources : public CModelReaderNode {
 	protected:
 		CModel * m_pModel;
+		PModelReader_ColorMapping m_pColorMapping;
+		PModelReader_TexCoordMapping m_pTexCoordMapping;
 		virtual void OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar *  pAttributeValue);
-		virtual void OnChildElement(_In_z_ const nfWChar *  pChildName, _In_ CXmlReader * pXMLReader);
+		virtual void OnNSChildElement(_In_z_ const nfWChar * pChildName, _In_z_ const nfWChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 	public:
 		CModelReaderNode100_Resources() = delete;
 		CModelReaderNode100_Resources(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings);

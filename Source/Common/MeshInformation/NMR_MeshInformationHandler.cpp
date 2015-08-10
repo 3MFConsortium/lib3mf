@@ -70,7 +70,7 @@ namespace NMR {
 		}
 	}
 
-	CMeshInformation * CMeshInformationHandler::getInformation(_In_ nfUint32 nIdx)
+	CMeshInformation * CMeshInformationHandler::getInformationIndexed(_In_ nfUint32 nIdx)
 	{
 		if (nIdx >= (nfUint32)m_pInformations.size())
 			throw CNMRException(NMR_ERROR_INVALIDMESHINFORMATIONINDEX);
@@ -78,7 +78,7 @@ namespace NMR {
 		return m_pInformations[nIdx].get();
 	}
 
-	CMeshInformation * CMeshInformationHandler::getInformation(_In_ eMeshInformationType eType)
+	CMeshInformation * CMeshInformationHandler::getInformationByType(_In_ nfUint32 nChannel, _In_ eMeshInformationType eType)
 	{
 		return m_pLookup[eType];
 	}

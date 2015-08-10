@@ -42,8 +42,16 @@ namespace NMR {
 	class CCOMModelBuildItem : public ILib3MFModelBuildItem {
 	protected:
 		PModelBuildItem m_pModelBuildItem;
+		nfError m_nErrorCode;
+		std::string m_sErrorMessage;
+
+		LIB3MFRESULT handleNMRException(_In_ CNMRException * pException);
+		LIB3MFRESULT handleGenericException();
+		LIB3MFRESULT handleSuccess();
 	public:
 		LIB3MFINTERFACE_DECL(ILib3MFModelBuildItem)
+		
+		LIB3MFMETHOD(GetLastError) (_Out_ DWORD * pErrorCode, _Outptr_opt_ LPCSTR * pErrorMessage);
 
 		LIB3MFMETHOD(GetObjectResource) (_Outptr_ ILib3MFModelObjectResource ** ppObject);
 		LIB3MFMETHOD(GetObjectResourceID) (_Out_ DWORD * pnID);
@@ -52,6 +60,7 @@ namespace NMR {
 		LIB3MFMETHOD(SetObjectTransform) (_In_ MODELTRANSFORM * pmTransform);
 		LIB3MFMETHOD(SetPartNumber) (_In_z_ LPCWSTR pwszPartNumber);
 		LIB3MFMETHOD(GetPartNumber) (_Out_opt_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_opt_ ULONG * pcbNeededChars);
+		LIB3MFMETHOD(GetHandle) (_Outptr_ DWORD * pHandle);
 
 		CCOMModelBuildItem();
 		void setItem(_In_ PModelBuildItem pModelBuildItem);

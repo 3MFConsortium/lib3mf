@@ -35,6 +35,7 @@ mesh object.
 
 #include "Model/Classes/NMR_ModelObject.h" 
 #include "Model/Classes/NMR_ModelMeshObject.h" 
+#include "Common/Math/NMR_PairMatchingTree.h" 
 
 namespace NMR {
 
@@ -48,10 +49,10 @@ namespace NMR {
 		: CModelObject(sID, pModel)
 	{
 		m_pMesh = pMesh;
-		if (m_pMesh.get () == nullptr)
+		if (m_pMesh.get() == nullptr)
 			m_pMesh = std::make_shared<CMesh>();
 	}
-	
+
 	CModelMeshObject::~CModelMeshObject()
 	{
 		m_pMesh = NULL;
@@ -76,4 +77,104 @@ namespace NMR {
 		pMesh->mergeMesh(m_pMesh.get(), mMatrix);
 	}
 
+	nfBool CModelMeshObject::isValid()
+	{
+		eModelObjectType eType = getObjectType();
+		switch (eType) {
+		case MODELOBJECTTYPE_MODEL: return isManifoldAndOriented();
+		case MODELOBJECTTYPE_SUPPORT: return true;
+		default:
+			return false;
+
+		}
+	}
+
+	nfBool CModelMeshObject::isManifoldAndOriented()
+	{
+		if (!m_pMesh->checkSanity())
+			return false;
+
+		nfUint32 nNodeCount = m_pMesh->getNodeCount();
+		nfUint32 nFaceCount = m_pMesh->getFaceCount();
+
+		if (nNodeCount < 3)
+			return false;
+		if (nFaceCount < 3)
+			return false;
+
+		CPairMatchingTree PairMatchingTree;
+		nfUint32 nFaceIndex;
+		nfInt32 nEdgeIndex;
+		nfInt32 nEdgeCounter = 0;
+		nfUint32 j;
+
+		// Build Edge Tree
+		for (nFaceIndex = 0; nFaceIndex < nFaceCount; nFaceIndex++) {
+			MESHFACE * pFace = m_pMesh->getFace(nFaceIndex);
+
+			for (j = 0; j < 3; j++) {
+				nfInt32 nNodeIndex1 = pFace->m_nodeindices[j];
+				nfInt32 nNodeIndex2 = pFace->m_nodeindices[(j + 1) % 3];
+
+				if (!PairMatchingTree.checkMatch(nNodeIndex1, nNodeIndex2, nEdgeIndex)) {
+					PairMatchingTree.addMatch(nNodeIndex1, nNodeIndex2, nEdgeCounter);
+					nEdgeCounter++;
+
+					if (nEdgeCounter > NMR_MESH_MAXEDGECOUNT)
+						throw CNMRException(NMR_ERROR_INVALIDEDGEINDEX);
+				}
+			}
+
+		}
+
+		// Count positively and negatively oriented edges...
+		std::vector<nfInt32> PositiveOrientations;
+		std::vector<nfInt32> NegativeOrientations;
+
+		// Create Edge arrays
+		PositiveOrientations.resize(nEdgeCounter);
+		NegativeOrientations.resize(nEdgeCounter);
+		for (nEdgeIndex = 0; nEdgeIndex < nEdgeCounter; nEdgeIndex++) {
+			PositiveOrientations[nEdgeIndex] = 0;
+			NegativeOrientations[nEdgeIndex] = 0;
+		}
+
+		for (nFaceIndex = 0; nFaceIndex < nFaceCount; nFaceIndex++) {
+			MESHFACE * pFace = m_pMesh->getFace(nFaceIndex);
+
+			for (j = 0; j < 3; j++) {
+				nfInt32 nNodeIndex1 = pFace->m_nodeindices[j];
+				nfInt32 nNodeIndex2 = pFace->m_nodeindices[(j + 1) % 3];
+
+				if (PairMatchingTree.checkMatch(nNodeIndex1, nNodeIndex2, nEdgeIndex)) {
+					if ((nEdgeIndex < 0) || (nEdgeIndex >= nEdgeCounter))
+						throw CNMRException(NMR_ERROR_INVALIDEDGEINDEX);
+
+					if (nNodeIndex1 <= nNodeIndex2) {
+						PositiveOrientations[nEdgeIndex]++;
+					}
+					else {
+						NegativeOrientations[nEdgeIndex]++;
+					}
+				}
+				else {
+					throw CNMRException(NMR_ERROR_INVALIDMESHTOPOLOGY);
+				}
+			}
+		}
+
+		// Check Edge Orientations and determine manifoldness
+		for (nEdgeIndex = 0; nEdgeIndex < nEdgeCounter; nEdgeIndex++) {
+			if (PositiveOrientations[nEdgeIndex] != 1)
+				return false;
+			if (NegativeOrientations[nEdgeIndex] != 1)
+				return false;
+		}
+
+		// Mesh is non-empty, oriented and manifold
+		return true;
+	}
+
 }
+
+

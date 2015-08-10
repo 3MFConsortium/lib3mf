@@ -108,10 +108,5 @@ namespace NMR {
 		}
 	}
 
-	void CModelReaderNode100_Vertex::OnChildElement(_In_z_ const nfWChar * pChildName, _In_ CXmlReader * pXMLReader)
-	{
-		__NMRASSERT(pChildName);
-		__NMRASSERT(pXMLReader);
-	}
 
 }

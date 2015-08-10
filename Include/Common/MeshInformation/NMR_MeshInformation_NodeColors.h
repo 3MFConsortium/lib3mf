@@ -53,6 +53,7 @@ namespace NMR {
 		virtual void permuteNodeInformation(_In_ nfUint32 nFaceIndex, _In_ nfUint32 nNodeIndex1, _In_ nfUint32 nNodeIndex2, _In_ nfUint32 nNodeIndex3);
 		virtual nfUint32 getBackupSize();
 		virtual void mergeInformationFrom(_In_ CMeshInformation * pInformation);
+		virtual nfBool faceHasData(_In_ nfUint32 nFaceIndex);
 	};
 
 	typedef std::shared_ptr <CMeshInformation_NodeColors> PMeshInformation_NodeColors;

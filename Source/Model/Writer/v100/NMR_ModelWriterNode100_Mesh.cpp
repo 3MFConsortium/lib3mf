@@ -33,17 +33,27 @@ This is the class for exporting the 3mf mesh node.
 --*/
 
 #include "Model/Writer/v100/NMR_ModelWriterNode100_Mesh.h"
+#include "Common/MeshInformation/NMR_MeshInformation_BaseMaterials.h"
+#include "Common/MeshInformation/NMR_MeshInformation_NodeColors.h"
+#include "Common/MeshInformation/NMR_MeshInformation_TexCoords.h"
 
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_Exception_Windows.h"
 
 namespace NMR {
 
-	CModelWriterNode100_Mesh::CModelWriterNode100_Mesh(_In_ CModelMeshObject * pModelMeshObject, _In_ CXmlWriter * pXMLWriter)
+	CModelWriterNode100_Mesh::CModelWriterNode100_Mesh(_In_ CModelMeshObject * pModelMeshObject, _In_ CXmlWriter * pXMLWriter, _In_ PModelWriter_ColorMapping pColorMapping, _In_ PModelWriter_TexCoordMappingContainer pTextureMappingContainer)
 		:CModelWriterNode(pModelMeshObject->getModel(), pXMLWriter)
 	{
 		__NMRASSERT(pModelMeshObject != nullptr);
+		if (!pColorMapping.get())
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+		if (!pTextureMappingContainer.get())
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
 		m_pModelMeshObject = pModelMeshObject;
+		m_pColorMapping = pColorMapping;
+		m_pTextureMappingContainer = pTextureMappingContainer;
 	}
 
 	void CModelWriterNode100_Mesh::writeToXML()
@@ -75,17 +85,120 @@ namespace NMR {
 		}
 		writeFullEndElement();
 
+		// Retrieve Mesh Informations
+		CMeshInformation_BaseMaterials * pBaseMaterials = NULL;
+		CMeshInformation_NodeColors * pNodeColors = NULL;
+		CMeshInformation_TexCoords * pTexCoords = NULL;
+
+		CMeshInformationHandler * pMeshInformationHandler = pMesh->getMeshInformationHandler();
+		if (pMeshInformationHandler) {
+			CMeshInformation * pInformation;
+
+			// Get Base Materials
+			pInformation = pMeshInformationHandler->getInformationByType(0, emiBaseMaterials);
+			if (pInformation)
+				pBaseMaterials = dynamic_cast<CMeshInformation_BaseMaterials *> (pInformation);
+
+			// Get Node Colors
+			pInformation = pMeshInformationHandler->getInformationByType(0, emiNodeColors);
+			if (pInformation)
+				pNodeColors = dynamic_cast<CMeshInformation_NodeColors *> (pInformation);
+
+			// Get Tex Coords
+			pInformation = pMeshInformationHandler->getInformationByType(0, emiTexCoords);
+			if (pInformation)
+				pTexCoords = dynamic_cast<CMeshInformation_TexCoords *> (pInformation);
+
+		}
+
+
 		// Write Triangles
 		writeStartElement(XML_3MF_ELEMENT_TRIANGLES);
 		for (nFaceIndex = 0; nFaceIndex < nFaceCount; nFaceIndex++) {
 			// Get Mesh Face
 			MESHFACE * pMeshFace = pMesh->getFace(nFaceIndex);
 
+			ModelResourceID nPropertyID = 0;
+			ModelResourceIndex nPropertyIndex1 = 0;
+			ModelResourceIndex nPropertyIndex2 = 0;
+			ModelResourceIndex nPropertyIndex3 = 0;
+
+			// Retrieve Base Material
+			if (pBaseMaterials) {
+				MESHINFORMATION_BASEMATERIAL* pFaceData = (MESHINFORMATION_BASEMATERIAL*) pBaseMaterials->getFaceData(nFaceIndex);
+				if (pFaceData->m_nMaterialGroupID) {
+					nPropertyID = pFaceData->m_nMaterialGroupID;
+					nPropertyIndex1 = pFaceData->m_nMaterialIndex;
+					nPropertyIndex2 = pFaceData->m_nMaterialIndex;
+					nPropertyIndex3 = pFaceData->m_nMaterialIndex;
+				}
+			}
+
+			// Retrieve Node Colors
+			if (pNodeColors) {
+				MESHINFORMATION_NODECOLOR* pFaceData = (MESHINFORMATION_NODECOLOR*)pNodeColors->getFaceData(nFaceIndex);
+				if ((pFaceData->m_cColors[0] != 0) || (pFaceData->m_cColors[1] != 0) || (pFaceData->m_cColors[2] != 0)) {
+				
+					ModelResourceIndex nColorIndex1 = 0;
+					ModelResourceIndex nColorIndex2 = 0;
+					ModelResourceIndex nColorIndex3 = 0;
+					nfBool colorsFound = m_pColorMapping->findColor(pFaceData->m_cColors[0], nColorIndex1) &&
+						m_pColorMapping->findColor(pFaceData->m_cColors[1], nColorIndex2) &&
+						m_pColorMapping->findColor(pFaceData->m_cColors[2], nColorIndex3);
+
+					if (colorsFound) {
+						nPropertyID = m_pColorMapping->getResourceID();
+						nPropertyIndex1 = nColorIndex1;
+						nPropertyIndex2 = nColorIndex2;
+						nPropertyIndex3 = nColorIndex3;
+					}
+				}
+			}
+
+			// Retrieve TexCoords
+			if (pTexCoords) {
+				MESHINFORMATION_TEXCOORDS* pFaceData = (MESHINFORMATION_TEXCOORDS*)pTexCoords->getFaceData(nFaceIndex);
+				if (pFaceData->m_TextureID != 0) {
+					ModelResourceIndex nTextureIndex1 = 0;
+					ModelResourceIndex nTextureIndex2 = 0;
+					ModelResourceIndex nTextureIndex3 = 0;
+
+					PModelWriter_TexCoordMapping pMapping = m_pTextureMappingContainer->findTexture(pFaceData->m_TextureID);
+					if (pMapping.get() != nullptr) {
+						nfBool textureFound = pMapping->findTexCoords(pFaceData->m_vCoords[0].m_fields[0], pFaceData->m_vCoords[0].m_fields[1], nTextureIndex1) &&
+							pMapping->findTexCoords(pFaceData->m_vCoords[1].m_fields[0], pFaceData->m_vCoords[1].m_fields[1], nTextureIndex2) &&
+							pMapping->findTexCoords(pFaceData->m_vCoords[2].m_fields[0], pFaceData->m_vCoords[2].m_fields[1], nTextureIndex3);
+
+						if (textureFound) {
+							nPropertyID = pMapping->getResourceID();
+							nPropertyIndex1 = nTextureIndex1;
+							nPropertyIndex2 = nTextureIndex2;
+							nPropertyIndex3 = nTextureIndex3;
+						}
+
+					}
+
+				}
+			}
+
+				
+
 			// Write Triangle
 			writeStartElement(XML_3MF_ELEMENT_TRIANGLE);
 			writeIntAttribute(XML_3MF_ATTRIBUTE_TRIANGLE_V1, pMeshFace->m_nodeindices[0]);
 			writeIntAttribute(XML_3MF_ATTRIBUTE_TRIANGLE_V2, pMeshFace->m_nodeindices[1]);
 			writeIntAttribute(XML_3MF_ATTRIBUTE_TRIANGLE_V3, pMeshFace->m_nodeindices[2]);
+
+			// Write Property Indices
+			if (nPropertyID != 0) {
+				writeIntAttribute(XML_3MF_ATTRIBUTE_TRIANGLE_PID, nPropertyID);
+				writeIntAttribute(XML_3MF_ATTRIBUTE_TRIANGLE_P1, nPropertyIndex1);
+				if ((nPropertyIndex1 != nPropertyIndex2) || (nPropertyIndex1 != nPropertyIndex3)) {
+					writeIntAttribute(XML_3MF_ATTRIBUTE_TRIANGLE_P2, nPropertyIndex2);
+					writeIntAttribute(XML_3MF_ATTRIBUTE_TRIANGLE_P3, nPropertyIndex3);
+				}
+			}
+
 			writeEndElement();
 		}
 		writeFullEndElement();

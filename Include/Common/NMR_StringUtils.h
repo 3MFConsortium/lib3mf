@@ -46,13 +46,17 @@ namespace NMR {
 	nfUint32 fnWStringToUint32(_In_z_ const nfWChar * pwszValue);
 	nfFloat fnWStringToFloat(_In_z_ const nfWChar * pwszValue);
 	nfDouble fnWStringToDouble(_In_z_ const nfWChar * pwszValue);
+	nfBool	fnWStringToSRGBColor(_In_z_ const nfWChar * pwszValue, _Out_ nfColor & cResult);
+	nfUint32 fnWHexStringToUint32(_In_z_ const nfWChar * pwszValue);
 
 	std::wstring fnInt32ToWString(_In_ nfInt32 nValue);
 	std::wstring fnUint32ToWString(_In_ nfUint32 nValue);
 	std::wstring fnFloatToWString(_In_ nfFloat fValue, _In_ nfUint32 precision);
 	std::wstring fnDoubleToWString(_In_ nfFloat dValue, _In_ nfUint32 precision);
+	std::wstring fnColorToWString(_In_ nfColor cColor);
 
 	void fnWStringToBufferSafe(_In_ const std::wstring sString, _Out_opt_ nfWChar * pwszBuffer, nfUint32 cbBufferSize, _Out_opt_ nfUint32 * pcbNeededChars);
+
 }
 
 #endif // __NMR_STRINGUTILS

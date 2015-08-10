@@ -44,10 +44,8 @@ namespace NMR {
 		ModelResourceID m_ObjectID;
 		nfBool m_bHasID;
 		NMATRIX3 m_mTransform;
-		PModelMetaData m_pMetaData;
 
 		virtual void OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue);
-		virtual void OnChildElement(_In_z_ const nfWChar * pChildName, _In_ CXmlReader * pXMLReader);
 	public:
 		CModelReaderNode100_Component() = delete;
 		CModelReaderNode100_Component(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings);
@@ -57,7 +55,6 @@ namespace NMR {
 		CModelObject * getObject();
 		NMATRIX3 getTransform();
 
-		PModelMetaData getMetaData();
 	};
 
 	typedef std::shared_ptr <CModelReaderNode100_Component> PModelReaderNode100_Component;

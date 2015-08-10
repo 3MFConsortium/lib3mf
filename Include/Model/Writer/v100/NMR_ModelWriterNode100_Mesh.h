@@ -36,6 +36,8 @@ This is the class for exporting the 3mf mesh node.
 #define __NMR_MODELWRITERNODE100_MESH
 
 #include "Model/Writer/NMR_ModelWriterNode.h" 
+#include "Model/Writer/NMR_ModelWriter_ColorMapping.h" 
+#include "Model/Writer/NMR_ModelWriter_TexCoordMappingContainer.h" 
 #include "Model/Classes/NMR_ModelObject.h" 
 #include "Model/Classes/NMR_ModelMeshObject.h" 
 #include "Common/Platform/NMR_XmlWriter.h"
@@ -45,9 +47,11 @@ namespace NMR {
 	class CModelWriterNode100_Mesh : public CModelWriterNode {
 	protected:
 		CModelMeshObject * m_pModelMeshObject;
+		PModelWriter_ColorMapping m_pColorMapping;
+		PModelWriter_TexCoordMappingContainer m_pTextureMappingContainer;
 	public:
 		CModelWriterNode100_Mesh() = delete;
-		CModelWriterNode100_Mesh(_In_ CModelMeshObject * pModelMeshObject, _In_ CXmlWriter * pXMLWriter);
+		CModelWriterNode100_Mesh(_In_ CModelMeshObject * pModelMeshObject, _In_ CXmlWriter * pXMLWriter, _In_ PModelWriter_ColorMapping pColorMapping, _In_ PModelWriter_TexCoordMappingContainer pTextureMappingContainer);
 		
 		virtual void writeToXML();
 	};

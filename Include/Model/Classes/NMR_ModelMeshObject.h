@@ -58,6 +58,12 @@ namespace NMR {
 		void setMesh (_In_ PMesh pMesh);
 
 		virtual void mergeToMesh(_In_ CMesh * pMesh, _In_ const NMATRIX3 mMatrix);
+
+		// check, if the object is a valid object description
+		virtual nfBool isValid();
+
+		// check, if the mesh is manifold and oriented
+		virtual nfBool isManifoldAndOriented();
 	};
 
 	typedef std::shared_ptr <CModelMeshObject> PModelMeshObject;

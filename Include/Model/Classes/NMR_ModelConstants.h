@@ -49,19 +49,30 @@ These are given by the 3MF Standard
 #define PACKAGE_CORE_PROPERTIES_URI L"/Metadata/CoreProperties.prop"
 #define PACKAGE_THUMBNAIL_URI_BASE L"/Metadata"
 
+#define NMR_MAXHANDLE 0xfffffffe
+
 #define PACKAGE_XMLNS_093 L"http://schemas.microsoft.com/3dmanufacturing/2013/01"
-#define PACKAGE_XMLNS_100 L"http://schemas.microsoft.com/3dmanufacturing/2015/02"
+#define PACKAGE_XMLNS_100 L"http://schemas.microsoft.com/3dmanufacturing/core/2015/02"
+
 #define PACKAGE_START_PART_RELATIONSHIP_TYPE L"http://schemas.microsoft.com/3dmanufacturing/2013/01/3dmodel"
 #define PACKAGE_PRINT_TICKET_RELATIONSHIP_TYPE L"http://schemas.microsoft.com/3dmanufacturing/2013/01/printticket"
 #define PACKAGE_TEXTURE_RELATIONSHIP_TYPE L"http://schemas.microsoft.com/3dmanufacturing/2013/01/3dtexture"
 #define PACKAGE_CORE_PROPERTIES_RELATIONSHIP_TYPE L"http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties"
 #define PACKAGE_THUMBNAIL_RELATIONSHIP_TYPE L"http://schemas.openxmlformats.org/package/2006/relationships/metadata/thumbnail"
 
+#define XML_3MF_NAMESPACE_XML L"http://www.w3.org/XML/1998/namespace"
+#define XML_3MF_NAMESPACE_CORESPEC093 PACKAGE_XMLNS_093
+#define XML_3MF_NAMESPACE_CORESPEC100 PACKAGE_XMLNS_100
+#define XML_3MF_NAMESPACE_MATERIALSPEC L"http://schemas.microsoft.com/3dmanufacturing/material/2015/02"
+
+#define XML_3MF_NAMESPACEPREFIX_MATERIAL L"m"
+
 #define XML_3MF_ATTRIBUTE_XMLNS                     L"xmlns"
 #define XML_3MF_ATTRIBUTE_PREFIX_XML                L"xml"
 #define XML_3MF_ATTRIBUTE_MUST_UNDERSTAND           L"MustUnderstand"
 
 #define XML_3MF_ELEMENT_METADATA                    L"metadata"
+#define XML_3MF_ATTRIBUTE_METADATA_NAME				L"name"
 
 // Resources element.
 #define XML_3MF_ELEMENT_RESOURCES                   L"resources"
@@ -112,6 +123,16 @@ These are given by the 3MF Standard
 #define XML_3MF_ATTRIBUTE_TEXTUREVERTEX_V           L"v"
 #define XML_3MF_ATTRIBUTE_TEXTUREVERTEX_W           L"w"
 
+// Texture2D element
+#define XML_3MF_ELEMENT_TEXTURE2D                   L"texture2d"
+#define XML_3MF_ATTRIBUTE_TEXTURE2D_ID              L"id"
+#define XML_3MF_ATTRIBUTE_TEXTURE2D_PATH            L"path"
+#define XML_3MF_ATTRIBUTE_TEXTURE2D_CONTENTTYPE     L"contenttype"
+#define XML_3MF_ATTRIBUTE_TEXTURE2D_BOX             L"box"
+#define XML_3MF_ATTRIBUTE_TEXTURE2D_TILESTYLEU      L"tilestyleu"
+#define XML_3MF_ATTRIBUTE_TEXTURE2D_TILESTYLEV      L"tilestylev"
+
+
 // Geometry element.
 #define XML_3MF_ELEMENT_GEOMETRY                    L"geometry"
 #define XML_3MF_ATTRIBUTE_GEOMETRY_DATA             L"data"
@@ -130,6 +151,17 @@ These are given by the 3MF Standard
 #define XML_3MF_ATTRIBUTE_COMPONENT_OBJECTID        L"objectid"
 #define XML_3MF_ATTRIBUTE_COMPONENT_TRANSFORM       L"transform"
 
+// Color resource group
+#define XML_3MF_ELEMENT_COLORGROUP					L"colorgroup"
+#define XML_3MF_ATTRIBUTE_COLORS_COLOR              L"color"
+#define XML_3MF_ATTRIBUTE_COLORS_ID                 L"id"
+
+// TexCoord resource group
+#define XML_3MF_ELEMENT_TEX2DGROUP					L"texture2dgroup"
+#define XML_3MF_ATTRIBUTE_TEX2DGROUP_ID             L"id"
+#define XML_3MF_ELEMENT_TEX2COORD                   L"tex2coord"
+#define XML_3MF_ATTRIBUTE_TEX2DGROUP_TEXTUREID      L"texid"
+
 // Object element.
 #define XML_3MF_ELEMENT_OBJECT                      L"object"
 #define XML_3MF_ATTRIBUTE_OBJECT_ID                 L"id"
@@ -142,6 +174,8 @@ These are given by the 3MF Standard
 #define XML_3MF_ATTRIBUTE_OBJECT_FIT                L"fit"
 #define XML_3MF_ATTRIBUTE_OBJECT_NAME				L"name"
 #define XML_3MF_ATTRIBUTE_OBJECT_PARTNUMBER			L"partnumber"
+#define XML_3MF_ATTRIBUTE_OBJECT_PID                L"pid"
+#define XML_3MF_ATTRIBUTE_OBJECT_PINDEX             L"pindex"
 
 // Model element.
 #define XML_3MF_ELEMENT_MODEL                       L"model"
@@ -178,9 +212,19 @@ These are given by the 3MF Standard
 #define XML_3MF_ATTRIBUTE_COLOR_ID                  L"id"
 #define XML_3MF_ATTRIBUTE_COLOR_VALUE               L"value"
 
+
+// Base Material element.
+#define XML_3MF_ELEMENT_BASEMATERIALS                    L"basematerials"
+#define XML_3MF_ELEMENT_BASE                             L"base"
+#define XML_3MF_ATTRIBUTE_BASEMATERIALS_ID	 			 L"id"
+#define XML_3MF_ATTRIBUTE_BASEMATERIAL_NAME              L"name"
+#define XML_3MF_ATTRIBUTE_BASEMATERIAL_DISPLAYCOLOR      L"displaycolor"
+
 // Material element.
 #define XML_3MF_ELEMENT_MATERIAL                    L"material"
 #define XML_3MF_ATTRIBUTE_MATERIAL_ID               L"id"
+#define XML_3MF_ATTRIBUTE_MATERIAL_COLORID			L"colorid"
+#define XML_3MF_ATTRIBUTE_MATERIAL_NAME				L"name"
 
 #define XML_3MF_MODELUNIT_MICROMETER                L"micron"
 #define XML_3MF_MODELUNIT_MILLIMETER                L"millimeter"

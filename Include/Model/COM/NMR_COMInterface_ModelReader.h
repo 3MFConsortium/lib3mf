@@ -42,8 +42,16 @@ namespace NMR {
 	class CCOMModelReader : public ILib3MFModelReader {
 	protected:
 		PModelReader m_pModelReader;
+		nfError m_nErrorCode;
+		std::string m_sErrorMessage;
+
+		LIB3MFRESULT handleNMRException(_In_ CNMRException * pException);
+		LIB3MFRESULT handleGenericException();
+		LIB3MFRESULT handleSuccess();
 	public:
 		LIB3MFINTERFACE_DECL(ILib3MFModelReader)
+
+		LIB3MFMETHOD(GetLastError) (_Out_ DWORD * pErrorCode, _Outptr_opt_ LPCSTR * pErrorMessage);
 
 		LIB3MFMETHOD(ReadFromFile) (_In_z_ LPCWSTR pwszFilename);
 		LIB3MFMETHOD(GetWarningCount) (_Out_ DWORD * pnWarningCount);
@@ -52,6 +60,8 @@ namespace NMR {
 #ifndef __GCC
 		LIB3MFMETHOD(ReadFromStream) (_In_ IStream * pStream);
 #endif // __GCC
+
+		CCOMModelReader();
 
 		void setReader(_In_ PModelReader pModelReader);
 	};

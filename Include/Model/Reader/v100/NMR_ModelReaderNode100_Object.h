@@ -36,6 +36,8 @@ A object reader model node is a parser for the object node of an XML Model Strea
 #define __NMR_MODELREADERNODE100_OBJECT
 
 #include "Model/Reader/NMR_ModelReaderNode.h"
+#include "Model/Reader/NMR_ModelReader_ColorMapping.h"
+#include "Model/Reader/NMR_ModelReader_TexCoordMapping.h"
 #include "Model/Classes/NMR_ModelComponent.h"
 #include "Model/Classes/NMR_ModelComponentsObject.h"
 #include "Model/Classes/NMR_ModelObject.h"
@@ -46,20 +48,24 @@ namespace NMR {
 	private:
 		CModel * m_pModel;
 		ModelResourceID m_nID;
-		ModelResourceID m_nPropertyID;
-		nfInt32 m_nPropertyIndex;
 		std::wstring m_sThumbnail;
 		std::wstring m_sPartNumber;
 		std::wstring m_sName;
 		std::wstring m_sType;
 		nfBool m_bHasType;
 		PModelObject m_pObject;
+		PModelReader_ColorMapping m_pColorMapping;
+		PModelReader_TexCoordMapping m_pTexCoordMapping;
+		ModelResourceID m_nDefaultPropertyID;
+		ModelResourceIndex m_nDefaultPropertyIndex;
+
+		void createDefaultProperties();
 	protected:
 		virtual void OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue);
-		virtual void OnChildElement(_In_z_ const nfWChar * pChildName, _In_ CXmlReader * pXMLReader);
+		virtual void OnNSChildElement(_In_z_ const nfWChar * pChildName, _In_z_ const nfWChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 	public:
 		CModelReaderNode100_Object() = delete;
-		CModelReaderNode100_Object(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings);
+		CModelReaderNode100_Object(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings, _In_ PModelReader_ColorMapping pColorMapping, _In_ PModelReader_TexCoordMapping pTexCoordMapping);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 	};

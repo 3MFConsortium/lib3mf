@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2015 Microsoft Corporation 
+Copyright (C) 2015 Microsoft Corporation
 Copyright (C) 2015 netfabb GmbH (Original Author)
 
 All rights reserved.
@@ -51,6 +51,7 @@ NMR_SAL.h defines Security Annotations for Visual Studio
 #define _Ret_maybenull_
 #define _Success_(ARG)
 #define _Outptr_result_buffer_maybenull_(ARG)
+#define _Outptr_opt_
 
 #endif // __GCC
 

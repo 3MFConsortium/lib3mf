@@ -36,6 +36,7 @@ This is an abstract base stream class for importing from COM IStreams.
 #include "Common/NMR_Exception.h" 
 #include "Common/NMR_Exception_Windows.h" 
 #include <math.h>
+#include <vector>
 
 namespace NMR {
 
@@ -93,9 +94,10 @@ namespace NMR {
 	{
 		LARGE_INTEGER offset;
 		HRESULT hResult;
+		ULARGE_INTEGER newfilepos;
 
 		offset.QuadPart = bytes;
-		hResult = m_pStream->Seek(offset, STREAM_SEEK_END, NULL);
+		hResult = m_pStream->Seek(offset, STREAM_SEEK_END, &newfilepos);
 
 		if ((hResult != S_OK) && bHasToSucceed)
 			throw CNMRException_Windows(NMR_ERROR_COULDNOTSEEKSTREAM, hResult);
@@ -103,20 +105,6 @@ namespace NMR {
 		return (hResult == S_OK);
 	}
 
-	nfUint64 CImportStream_COM::getPosition()
-	{
-		LARGE_INTEGER offset;
-		ULARGE_INTEGER filepos;
-		HRESULT hResult;
-
-		offset.QuadPart = 0;
-		hResult = m_pStream->Seek(offset, STREAM_SEEK_CUR, &filepos);
-
-		if (hResult != S_OK)
-			throw CNMRException_Windows(NMR_ERROR_COULDNOTSEEKSTREAM, hResult);
-
-		return filepos.QuadPart;
-	}
 
 	nfUint64 CImportStream_COM::readBuffer(_In_ nfByte * pBuffer, _In_ nfUint64 cbTotalBytesToRead, nfBool bNeedsToReadAll)
 	{
@@ -164,4 +152,96 @@ namespace NMR {
 		return m_pStream;
 	}
 	
+	nfUint64 CImportStream_COM::retrieveSize()
+	{
+
+		LARGE_INTEGER offset;
+		HRESULT hResult;
+		ULARGE_INTEGER newfilepos;
+
+		offset.QuadPart = 0;
+		hResult = m_pStream->Seek(offset, STREAM_SEEK_END, &newfilepos);
+
+		if (hResult != S_OK)
+			throw CNMRException_Windows(NMR_ERROR_COULDNOTSEEKSTREAM, hResult);
+
+		seekPosition(0, true);
+
+		return newfilepos.QuadPart;
+	}
+
+	void CImportStream_COM::writeToFile(_In_ const nfWChar * pwszFileName)
+	{
+		if (!pwszFileName)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		CComPtr<IStream> pFileStream;
+
+		HRESULT hResult = SHCreateStreamOnFileEx(pwszFileName, STGM_CREATE | STGM_WRITE, 0, false, NULL, &pFileStream);
+		if (hResult != S_OK)
+			throw CNMRException_Windows(NMR_ERROR_COULDNOTCREATEFILE, hResult);
+
+		nfUint64 cbStreamSize = retrieveSize();
+
+		std::vector<nfByte> pBuffer;
+		pBuffer.resize(NMR_IMPORTSTREAM_COPYBUFFERSIZE);
+
+		nfUint64 cbBytesLeft = cbStreamSize;
+		while (cbBytesLeft > 0) {
+			nfUint64 cbLength = cbBytesLeft;
+			if (cbLength > NMR_IMPORTSTREAM_COPYBUFFERSIZE)
+				cbLength = NMR_IMPORTSTREAM_COPYBUFFERSIZE;
+
+			ULONG cbWrittenBytes = 0;
+			readBuffer(pBuffer.data(), cbLength, true);
+			HRESULT hResult = pFileStream->Write(pBuffer.data(), (nfUint32)cbLength, &cbWrittenBytes);
+			if (hResult != S_OK)
+				throw CNMRException_Windows(NMR_ERROR_COULDNOTWRITESTREAM, hResult);
+
+			if (cbWrittenBytes != cbLength)
+				throw CNMRException(NMR_ERROR_COULDNOTWRITEFULLDATA);
+			cbBytesLeft -= cbLength;
+		}
+
+	}
+
+	PImportStream CImportStream_COM::copyToMemory()
+	{
+		CComPtr<IStream> pMemoryStream = nullptr;
+		HRESULT hResult = CreateStreamOnHGlobal(nullptr, true, &pMemoryStream);
+		if (hResult != S_OK)
+			throw CNMRException_Windows(NMR_ERROR_COULDNOTCREATESTREAM, hResult);
+
+		nfUint64 cbStreamSize = retrieveSize();
+
+		std::vector<nfByte> pBuffer;
+		pBuffer.resize(NMR_IMPORTSTREAM_COPYBUFFERSIZE);
+
+		nfUint64 cbBytesLeft = cbStreamSize;
+		while (cbBytesLeft > 0) {
+			nfUint64 cbLength = cbBytesLeft;
+			if (cbLength > NMR_IMPORTSTREAM_COPYBUFFERSIZE)
+				cbLength = NMR_IMPORTSTREAM_COPYBUFFERSIZE;
+
+			ULONG cbWrittenBytes = 0;
+			readBuffer(pBuffer.data(), cbLength, true);
+			HRESULT hResult = pMemoryStream->Write(pBuffer.data(), (nfUint32)cbLength, &cbWrittenBytes);
+			if (hResult != S_OK)
+				throw CNMRException_Windows(NMR_ERROR_COULDNOTWRITESTREAM, hResult);
+
+			if (cbWrittenBytes != cbLength)
+				throw CNMRException(NMR_ERROR_COULDNOTWRITEFULLDATA);
+			cbBytesLeft -= cbLength;
+		}
+
+		LARGE_INTEGER filepos;
+		filepos.QuadPart = 0;
+		hResult = pMemoryStream->Seek(filepos, STREAM_SEEK_SET, NULL);
+		if (hResult != S_OK)
+			throw CNMRException_Windows(NMR_ERROR_COULDNOTSEEKSTREAM, hResult);
+
+		return std::make_shared<CImportStream_COM>(pMemoryStream);
+	}
+
+
 }

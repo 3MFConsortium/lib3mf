@@ -55,6 +55,8 @@ namespace NMR {
 	{
 		__NMRASSERT(pStream != nullptr);
 
+		nfBool bHasModel = false;
+
 		// Extract Stream from Package
 		PImportStream pModelStream = extract3MFOPCPackage(pStream);
 		pModelStream->seekPosition(0, true);
@@ -69,20 +71,41 @@ namespace NMR {
 				break;
 
 			// Get Node Name
-			LPCWSTR pwszQualifiedName = nullptr;
-			pXMLReader->GetQualifiedName(&pwszQualifiedName, nullptr);
-			if (!pwszQualifiedName)
-				throw CNMRException(NMR_ERROR_COULDNOTGETQUALIFIEDXMLNAME);
+			LPCWSTR pwszLocalName = nullptr;
+			pXMLReader->GetLocalName(&pwszLocalName, nullptr);
+			if (!pwszLocalName)
+				throw CNMRException(NMR_ERROR_COULDNOTGETLOCALXMLNAME);
 
 			// Compare with Model Node Name
-			if (wcscmp(pwszQualifiedName, XML_3MF_ELEMENT_MODEL) == 0) {
-				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode_Model>(m_pModel.get(), m_pWarnings);
+			if (wcscmp(pwszLocalName, XML_3MF_ELEMENT_MODEL) == 0) {
+				if (bHasModel)
+					throw CNMRException(NMR_ERROR_DUPLICATEMODELNODE);
+				bHasModel = true;
+
+				PModelReaderNode_Model pXMLNode = std::make_shared<CModelReaderNode_Model>(m_pModel.get(), m_pWarnings);
 				pXMLNode->parseXML(pXMLReader.get());
+
+				if (!pXMLNode->getHasResources())
+					throw CNMRException(NMR_ERROR_NORESOURCES);
+				if (!pXMLNode->getHasBuild())
+					throw CNMRException(NMR_ERROR_NOBUILD);
 			}
 		}
 
 		// Release Memory of 3MF Package
 		release3MFOPCPackage();
+
+		if (!bHasModel)
+			throw CNMRException(NMR_ERROR_NOMODELNODE);
 	}
+
+	void CModelReader_3MF::addTextureStream(_In_ std::wstring sPath, _In_ PImportStream pStream)
+	{
+		if (pStream.get() == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		m_pModel->addTextureStream(sPath, pStream);
+	}
+
 
 }

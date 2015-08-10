@@ -40,6 +40,7 @@ namespace NMR {
 	CCOMModelResourceIterator::CCOMModelResourceIterator()
 	{
 		m_nCurrentIndex = -1;
+		m_nErrorCode = NMR_SUCCESS;
 	}
 
 	void CCOMModelResourceIterator::addResource(_In_ PModelResource pResource)
@@ -50,12 +51,61 @@ namespace NMR {
 		m_pResources.push_back(pResource);
 	}
 
+	LIB3MFRESULT CCOMModelResourceIterator::handleSuccess()
+	{
+		m_nErrorCode = NMR_SUCCESS;
+		return LIB3MF_OK;
+	}
+
+	LIB3MFRESULT CCOMModelResourceIterator::handleNMRException(_In_ CNMRException * pException)
+	{
+		__NMRASSERT(pException);
+
+		m_nErrorCode = pException->getErrorCode();
+		m_sErrorMessage = std::string(pException->what());
+
+		CNMRException_Windows * pWinException = dynamic_cast<CNMRException_Windows *> (pException);
+		if (pWinException != nullptr) {
+			return pWinException->getHResult();
+		}
+		else {
+			return LIB3MF_FAIL;
+		}
+	}
+
+	LIB3MFRESULT CCOMModelResourceIterator::handleGenericException()
+	{
+		m_nErrorCode = NMR_ERROR_GENERICEXCEPTION;
+		m_sErrorMessage = NMR_GENERICEXCEPTIONSTRING;
+		return LIB3MF_FAIL;
+	}
+
+
+	LIB3MFMETHODIMP CCOMModelResourceIterator::GetLastError(_Out_ DWORD * pErrorCode, _Outptr_opt_ LPCSTR * pErrorMessage)
+	{
+		if (!pErrorCode)
+			return LIB3MF_POINTER;
+
+		*pErrorCode = m_nErrorCode;
+		if (pErrorMessage) {
+			if (m_nErrorCode != NMR_SUCCESS) {
+				*pErrorMessage = m_sErrorMessage.c_str();
+			}
+			else {
+				*pErrorMessage = nullptr;
+			}
+		}
+
+		return LIB3MF_OK;
+	}
+
 	LIB3MFMETHODIMP CCOMModelResourceIterator::MoveNext (_Out_ BOOL * pbHasNext)
 	{
-		if (pbHasNext == nullptr)
-			return LIB3MF_POINTER;
 		
 		try {
+			if (pbHasNext == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
 			// Get Resource Count
 			nfInt32 nResourceCount = (nfInt32)m_pResources.size();
 			m_nCurrentIndex++;
@@ -69,20 +119,23 @@ namespace NMR {
 				*pbHasNext = true;
 			}
 
-			return LIB3MF_OK;
-
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
 		}
 		catch (...) {
-			return LIB3MF_FAIL;
+			return handleGenericException();
 		}
 	}
 
 	LIB3MFMETHODIMP CCOMModelResourceIterator::MovePrevious(_Out_ BOOL * pbHasPrevious)
 	{
-		if (pbHasPrevious == nullptr)
-			return LIB3MF_POINTER;
 
 		try {
+			if (pbHasPrevious == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
 			// Get Resource Count
 			m_nCurrentIndex--;
 
@@ -95,27 +148,31 @@ namespace NMR {
 				*pbHasPrevious = true;
 			}
 
-			return LIB3MF_OK;
-
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
 		}
 		catch (...) {
-			return LIB3MF_FAIL;
+			return handleGenericException();
 		}
 	}
 
 	LIB3MFMETHODIMP CCOMModelResourceIterator::GetCurrent(_Outptr_ ILib3MFModelResource ** ppResultResource)
 	{
-		if (ppResultResource == nullptr)
-			return LIB3MF_POINTER;
 
 		try {
+			if (ppResultResource == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
+
 			// default return 
 			ILib3MFModelResource * pResult = nullptr;
 
 			// Get Resource Count
 			nfInt32 nResourceCount = (nfInt32)m_pResources.size();
 			if ((m_nCurrentIndex < 0) || (m_nCurrentIndex >= nResourceCount))
-				return LIB3MF_FAIL;
+				throw CNMRException(NMR_ERROR_INVALIDINDEX);
 
 			// Cast to specific COM classes
 			PModelResource pResource = m_pResources[m_nCurrentIndex];
@@ -125,35 +182,43 @@ namespace NMR {
 
 			// We have not found a suitable object class to return..
 			if (pResult == nullptr)
-				return LIB3MF_FAIL;
+				throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
 
 			// Return result
 			*ppResultResource = pResult;
 
-			return LIB3MF_OK;
-
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
 		}
 		catch (...) {
-			return LIB3MF_FAIL;
+			return handleGenericException();
 		}
 	}
 
 	LIB3MFMETHODIMP CCOMModelResourceIterator::Clone(_Outptr_ ILib3MFModelResourceIterator ** ppIterator)
 	{
-		if (ppIterator == nullptr)
-			return LIB3MF_POINTER;
 
 		try {
+			if (ppIterator == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
 			CCOMObject <CCOMModelResourceIterator> * pComObject = new CCOMObject <CCOMModelResourceIterator>();
 			for (auto iIterator = m_pResources.begin(); iIterator != m_pResources.end(); iIterator++)
 				pComObject->addResource(*iIterator);
 
 			*ppIterator = pComObject;
-			return LIB3MF_OK;
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
 		}
 		catch (...) {
-			return LIB3MF_FAIL;
+			return handleGenericException();
 		}
 	}
 
 }
+

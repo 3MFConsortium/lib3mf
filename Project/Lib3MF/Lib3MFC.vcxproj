@@ -1,0 +1,290 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{818B6A26-1D01-49A9-B1FB-BA9DF7E64E00}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>Lib3MFC</RootNamespace>
+    <ProjectName>Lib3MFC</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>..\..\Include;$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)$(PlatformShortName)\$(Configuration)\</OutDir>
+    <IntDir>$(PlatformShortName)\Obj_$(Configuration)_CDLL\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>..\..\Include;$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)$(PlatformShortName)\$(Configuration)\</OutDir>
+    <IntDir>$(PlatformShortName)\Obj_$(Configuration)_CDLL\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>..\..\Include;$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)$(PlatformShortName)\$(Configuration)\</OutDir>
+    <IntDir>$(PlatformShortName)\Obj_$(Configuration)_CDLL\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>..\..\Include;$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)$(PlatformShortName)\$(Configuration)\</OutDir>
+    <IntDir>$(PlatformShortName)\Obj_$(Configuration)_CDLL\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;LIB3MF_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>xmllite.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;LIB3MF_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>xmllite.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;LIB3MF_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>xmllite.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;LIB3MF_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>xmllite.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\Source\Common\Math\NMR_Matrix.cpp" />
+    <ClCompile Include="..\..\Source\Common\Math\NMR_PairMatchingTree.cpp" />
+    <ClCompile Include="..\..\Source\Common\Math\NMR_Vector.cpp" />
+    <ClCompile Include="..\..\Source\Common\Math\NMR_VectorTree.cpp" />
+    <ClCompile Include="..\..\Source\Common\MeshExport\NMR_MeshExporter.cpp" />
+    <ClCompile Include="..\..\Source\Common\MeshExport\NMR_MeshExporter_STL.cpp" />
+    <ClCompile Include="..\..\Source\Common\MeshImport\NMR_MeshImporter.cpp" />
+    <ClCompile Include="..\..\Source\Common\MeshImport\NMR_MeshImporter_STL.cpp" />
+    <ClCompile Include="..\..\Source\Common\MeshInformation\NMR_MeshInformation.cpp" />
+    <ClCompile Include="..\..\Source\Common\MeshInformation\NMR_MeshInformationContainer.cpp" />
+    <ClCompile Include="..\..\Source\Common\MeshInformation\NMR_MeshInformationFactory.cpp" />
+    <ClCompile Include="..\..\Source\Common\MeshInformation\NMR_MeshInformationHandler.cpp" />
+    <ClCompile Include="..\..\Source\Common\MeshInformation\NMR_MeshInformation_BaseMaterials.cpp" />
+    <ClCompile Include="..\..\Source\Common\MeshInformation\NMR_MeshInformation_NodeColors.cpp" />
+    <ClCompile Include="..\..\Source\Common\MeshInformation\NMR_MeshInformation_TexCoords.cpp" />
+    <ClCompile Include="..\..\Source\Common\Mesh\NMR_Mesh.cpp" />
+    <ClCompile Include="..\..\Source\Common\Mesh\NMR_MeshBuilder.cpp" />
+    <ClCompile Include="..\..\Source\Common\NMR_Exception.cpp" />
+    <ClCompile Include="..\..\Source\Common\NMR_Exception_Windows.cpp" />
+    <ClCompile Include="..\..\Source\Common\NMR_StringUtils.cpp" />
+    <ClCompile Include="..\..\Source\Common\Platform\NMR_ExportStream_COM.cpp" />
+    <ClCompile Include="..\..\Source\Common\Platform\NMR_ImportStream_COM.cpp" />
+    <ClCompile Include="..\..\Source\Common\Platform\NMR_Platform_COM.cpp" />
+    <ClCompile Include="..\..\Source\Common\Platform\NMR_XmlReader.cpp" />
+    <ClCompile Include="..\..\Source\Common\Platform\NMR_XmlReader_COM.cpp" />
+    <ClCompile Include="..\..\Source\Common\Platform\NMR_XmlWriter.cpp" />
+    <ClCompile Include="..\..\Source\Common\Platform\NMR_XmlWriter_COM.cpp" />
+    <ClCompile Include="..\..\Source\Model\Classes\NMR_Model.cpp" />
+    <ClCompile Include="..\..\Source\Model\Classes\NMR_ModelBaseMaterial.cpp" />
+    <ClCompile Include="..\..\Source\Model\Classes\NMR_ModelBaseMaterials.cpp" />
+    <ClCompile Include="..\..\Source\Model\Classes\NMR_ModelBuildItem.cpp" />
+    <ClCompile Include="..\..\Source\Model\Classes\NMR_ModelComponent.cpp" />
+    <ClCompile Include="..\..\Source\Model\Classes\NMR_ModelComponentsObject.cpp" />
+    <ClCompile Include="..\..\Source\Model\Classes\NMR_ModelDefaultProperty.cpp" />
+    <ClCompile Include="..\..\Source\Model\Classes\NMR_ModelDefaultProperty_BaseMaterial.cpp" />
+    <ClCompile Include="..\..\Source\Model\Classes\NMR_ModelDefaultProperty_Color.cpp" />
+    <ClCompile Include="..\..\Source\Model\Classes\NMR_ModelDefaultProperty_TexCoord2D.cpp" />
+    <ClCompile Include="..\..\Source\Model\Classes\NMR_ModelMeshObject.cpp" />
+    <ClCompile Include="..\..\Source\Model\Classes\NMR_ModelMetaData.cpp" />
+    <ClCompile Include="..\..\Source\Model\Classes\NMR_ModelObject.cpp" />
+    <ClCompile Include="..\..\Source\Model\Classes\NMR_ModelResource.cpp" />
+    <ClCompile Include="..\..\Source\Model\Classes\NMR_ModelTexture2D.cpp" />
+    <ClCompile Include="..\..\Source\Model\Classes\NMR_ModelThumbnail.cpp" />
+    <ClCompile Include="..\..\Source\Model\COM\NMR_COMInterface_Model.cpp" />
+    <ClCompile Include="..\..\Source\Model\COM\NMR_COMInterface_ModelBaseMaterial.cpp" />
+    <ClCompile Include="..\..\Source\Model\COM\NMR_COMInterface_ModelBuildItem.cpp" />
+    <ClCompile Include="..\..\Source\Model\COM\NMR_COMInterface_ModelBuildItemIterator.cpp" />
+    <ClCompile Include="..\..\Source\Model\COM\NMR_COMInterface_ModelComponent.cpp" />
+    <ClCompile Include="..\..\Source\Model\COM\NMR_COMInterface_ModelComponentsObject.cpp" />
+    <ClCompile Include="..\..\Source\Model\COM\NMR_COMInterface_ModelDefaultPropertyHandler.cpp" />
+    <ClCompile Include="..\..\Source\Model\COM\NMR_COMInterface_ModelFactory.cpp" />
+    <ClCompile Include="..\..\Source\Model\COM\NMR_COMInterface_ModelMeshObject.cpp" />
+    <ClCompile Include="..\..\Source\Model\COM\NMR_COMInterface_ModelPropertyHandler.cpp" />
+    <ClCompile Include="..\..\Source\Model\COM\NMR_COMInterface_ModelReader.cpp" />
+    <ClCompile Include="..\..\Source\Model\COM\NMR_COMInterface_ModelResourceFactory.cpp" />
+    <ClCompile Include="..\..\Source\Model\COM\NMR_COMInterface_ModelResourceIterator.cpp" />
+    <ClCompile Include="..\..\Source\Model\COM\NMR_COMInterface_ModelTexture2D.cpp" />
+    <ClCompile Include="..\..\Source\Model\COM\NMR_COMInterface_ModelWriter.cpp" />
+    <ClCompile Include="..\..\Source\Model\COM\NMR_DLLInterfaces.cpp" />
+    <ClCompile Include="..\..\Source\Model\Reader\NMR_ModelReader.cpp" />
+    <ClCompile Include="..\..\Source\Model\Reader\NMR_ModelReaderNode.cpp" />
+    <ClCompile Include="..\..\Source\Model\Reader\NMR_ModelReaderNode_Model.cpp" />
+    <ClCompile Include="..\..\Source\Model\Reader\NMR_ModelReaderWarnings.cpp" />
+    <ClCompile Include="..\..\Source\Model\Reader\NMR_ModelReader_3MF.cpp" />
+    <ClCompile Include="..\..\Source\Model\Reader\NMR_ModelReader_3MF_OPC.cpp" />
+    <ClCompile Include="..\..\Source\Model\Reader\NMR_ModelReader_ColorMapping.cpp" />
+    <ClCompile Include="..\..\Source\Model\Reader\NMR_ModelReader_STL.cpp" />
+    <ClCompile Include="..\..\Source\Model\Reader\NMR_ModelReader_TexCoordMapping.cpp" />
+    <ClCompile Include="..\..\Source\Model\Reader\v093\NMR_ModelReaderNode093_Build.cpp" />
+    <ClCompile Include="..\..\Source\Model\Reader\v093\NMR_ModelReaderNode093_BuildItem.cpp" />
+    <ClCompile Include="..\..\Source\Model\Reader\v093\NMR_ModelReaderNode093_Color.cpp" />
+    <ClCompile Include="..\..\Source\Model\Reader\v093\NMR_ModelReaderNode093_Component.cpp" />
+    <ClCompile Include="..\..\Source\Model\Reader\v093\NMR_ModelReaderNode093_Components.cpp" />
+    <ClCompile Include="..\..\Source\Model\Reader\v093\NMR_ModelReaderNode093_Material.cpp" />
+    <ClCompile Include="..\..\Source\Model\Reader\v093\NMR_ModelReaderNode093_Mesh.cpp" />
+    <ClCompile Include="..\..\Source\Model\Reader\v093\NMR_ModelReaderNode093_Object.cpp" />
+    <ClCompile Include="..\..\Source\Model\Reader\v093\NMR_ModelReaderNode093_Resources.cpp" />
+    <ClCompile Include="..\..\Source\Model\Reader\v093\NMR_ModelReaderNode093_Texture.cpp" />
+    <ClCompile Include="..\..\Source\Model\Reader\v093\NMR_ModelReaderNode093_TextureVertex.cpp" />
+    <ClCompile Include="..\..\Source\Model\Reader\v093\NMR_ModelReaderNode093_TextureVertices.cpp" />
+    <ClCompile Include="..\..\Source\Model\Reader\v093\NMR_ModelReaderNode093_Triangle.cpp" />
+    <ClCompile Include="..\..\Source\Model\Reader\v093\NMR_ModelReaderNode093_Triangles.cpp" />
+    <ClCompile Include="..\..\Source\Model\Reader\v093\NMR_ModelReaderNode093_Vertex.cpp" />
+    <ClCompile Include="..\..\Source\Model\Reader\v093\NMR_ModelReaderNode093_Vertices.cpp" />
+    <ClCompile Include="..\..\Source\Model\Reader\v100\NMR_ModelReaderNode100_BaseMaterial.cpp" />
+    <ClCompile Include="..\..\Source\Model\Reader\v100\NMR_ModelReaderNode100_BaseMaterials.cpp" />
+    <ClCompile Include="..\..\Source\Model\Reader\v100\NMR_ModelReaderNode100_Build.cpp" />
+    <ClCompile Include="..\..\Source\Model\Reader\v100\NMR_ModelReaderNode100_BuildItem.cpp" />
+    <ClCompile Include="..\..\Source\Model\Reader\v100\NMR_ModelReaderNode100_Color.cpp" />
+    <ClCompile Include="..\..\Source\Model\Reader\v100\NMR_ModelReaderNode100_Colors.cpp" />
+    <ClCompile Include="..\..\Source\Model\Reader\v100\NMR_ModelReaderNode100_Component.cpp" />
+    <ClCompile Include="..\..\Source\Model\Reader\v100\NMR_ModelReaderNode100_Components.cpp" />
+    <ClCompile Include="..\..\Source\Model\Reader\v100\NMR_ModelReaderNode100_Mesh.cpp" />
+    <ClCompile Include="..\..\Source\Model\Reader\v100\NMR_ModelReaderNode100_MetaData.cpp" />
+    <ClCompile Include="..\..\Source\Model\Reader\v100\NMR_ModelReaderNode100_Object.cpp" />
+    <ClCompile Include="..\..\Source\Model\Reader\v100\NMR_ModelReaderNode100_Resources.cpp" />
+    <ClCompile Include="..\..\Source\Model\Reader\v100\NMR_ModelReaderNode100_Tex2Coord.cpp" />
+    <ClCompile Include="..\..\Source\Model\Reader\v100\NMR_ModelReaderNode100_Tex2DGroup.cpp" />
+    <ClCompile Include="..\..\Source\Model\Reader\v100\NMR_ModelReaderNode100_Texture2D.cpp" />
+    <ClCompile Include="..\..\Source\Model\Reader\v100\NMR_ModelReaderNode100_Triangle.cpp" />
+    <ClCompile Include="..\..\Source\Model\Reader\v100\NMR_ModelReaderNode100_Triangles.cpp" />
+    <ClCompile Include="..\..\Source\Model\Reader\v100\NMR_ModelReaderNode100_Vertex.cpp" />
+    <ClCompile Include="..\..\Source\Model\Reader\v100\NMR_ModelReaderNode100_Vertices.cpp" />
+    <ClCompile Include="..\..\Source\Model\Writer\NMR_ModelWriter.cpp" />
+    <ClCompile Include="..\..\Source\Model\Writer\NMR_ModelWriterNode.cpp" />
+    <ClCompile Include="..\..\Source\Model\Writer\NMR_ModelWriter_3MF.cpp" />
+    <ClCompile Include="..\..\Source\Model\Writer\NMR_ModelWriter_3MF_OPC.cpp" />
+    <ClCompile Include="..\..\Source\Model\Writer\NMR_ModelWriter_ColorMapping.cpp" />
+    <ClCompile Include="..\..\Source\Model\Writer\NMR_ModelWriter_STL.cpp" />
+    <ClCompile Include="..\..\Source\Model\Writer\NMR_ModelWriter_TexCoordMapping.cpp" />
+    <ClCompile Include="..\..\Source\Model\Writer\NMR_ModelWriter_TexCoordMappingContainer.cpp" />
+    <ClCompile Include="..\..\Source\Model\Writer\v100\NMR_ModelWriterNode100_Mesh.cpp" />
+    <ClCompile Include="..\..\Source\Model\Writer\v100\NMR_ModelWriterNode100_Model.cpp" />
+    <ClCompile Include="dllmain.cpp">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </PrecompiledHeader>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</CompileAsManaged>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </PrecompiledHeader>
+    </ClCompile>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

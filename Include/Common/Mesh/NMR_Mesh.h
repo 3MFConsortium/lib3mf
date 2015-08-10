@@ -80,6 +80,7 @@ namespace NMR {
 
 		_Ret_maybenull_ CMeshInformationHandler * getMeshInformationHandler();
 		_Ret_notnull_ CMeshInformationHandler * createMeshInformationHandler();
+		void clearMeshInformationHandler();
 	};
 
 	typedef std::shared_ptr <CMesh> PMesh;

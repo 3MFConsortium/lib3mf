@@ -68,7 +68,7 @@ namespace NMR {
 		return (nfUint32)m_Components.size();
 	}
 
-	_Ret_notnull_ PModelComponent CModelComponentsObject::getComponent(_In_ nfUint32 nIdx)
+	PModelComponent CModelComponentsObject::getComponent(_In_ nfUint32 nIdx)
 	{
 		if (nIdx >= (nfUint32)m_Components.size())
 			throw CNMRException(NMR_ERROR_INVALIDINDEX);
@@ -81,6 +81,22 @@ namespace NMR {
 		__NMRASSERT(pMesh);
 		for (auto iIterator = m_Components.begin(); iIterator != m_Components.end(); iIterator++)
 			(*iIterator)->mergeToMesh(pMesh, mMatrix);
+	}
+
+	nfBool CModelComponentsObject::isValid()
+	{
+		if (m_Components.size() == 0)
+			return false;
+
+		for (auto iIterator = m_Components.begin(); iIterator != m_Components.end(); iIterator++) {
+			CModelObject * pObject = (*iIterator)->getObject();
+			__NMRASSERT(pObject);
+
+			if (!pObject->isValid())
+				return false;
+		}
+
+		return true;
 	}
 
 }

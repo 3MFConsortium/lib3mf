@@ -84,7 +84,8 @@ namespace NMR {
 		eModelReaderWarningLevel getCriticalWarningLevel ();
 		void setCriticalWarningLevel(_In_ eModelReaderWarningLevel WarningLevel);
 
-		void addWarning(std::wstring sMessage, nfError nErrorCode, eModelReaderWarningLevel WarningLevel);
+		void addWarning(_In_ std::wstring sMessage, _In_ nfError nErrorCode, _In_ eModelReaderWarningLevel WarningLevel);
+		void addException(_In_ CNMRException & Exception, _In_ eModelReaderWarningLevel WarningLevel);
 
 		nfUint32 getWarningCount();
 		PModelReaderWarning getWarning(_In_ nfUint32 nIndex);

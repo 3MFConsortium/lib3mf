@@ -43,8 +43,17 @@ namespace NMR {
 	class CCOMModelFactory : public ILib3MFModelFactory
 	{
 	protected:
+		nfError m_nErrorCode;
+		std::string m_sErrorMessage;
+
+		LIB3MFRESULT handleNMRException(_In_ CNMRException * pException);
+		LIB3MFRESULT handleGenericException();
+		LIB3MFRESULT handleSuccess();
+
 	public:
 		LIB3MFINTERFACE_DECL(ILib3MFModelFactory);
+
+		LIB3MFMETHOD(GetLastError) (_Out_ DWORD * pErrorCode, _Outptr_opt_ LPCSTR * pErrorMessage);
 
 		LIB3MFMETHOD(CreateModel) (_Outptr_ ILib3MFModel ** ppModel);
 		LIB3MFMETHOD(GetSpecVersion) (_Out_ DWORD * pMajorVersion, _Out_ DWORD * pMinorVersion);

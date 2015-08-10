@@ -36,6 +36,7 @@ using the Windows OPC Library Functions.
 #include "Model/Writer/NMR_ModelWriter_3MF_OPC.h" 
 #include "Model/Classes/NMR_ModelConstants.h" 
 #include "Common/Platform/NMR_ExportStream_COM.h" 
+#include "Common/Platform/NMR_ImportStream_COM.h" 
 #include "Common/NMR_Exception.h" 
 #include "Common/NMR_Exception_Windows.h" 
 #include "Common/Platform/NMR_XmlWriter.h" 
@@ -81,7 +82,9 @@ namespace NMR {
 			throw CNMRException_Windows(NMR_ERROR_OPCRELATIONSHIPSETREADFAILED, hResult);
 
 		CComPtr<IOpcPart> pModelPart = createOPCModelPart(PACKAGE_3D_MODEL_URI, PACKAGE_3D_MODEL_CONTENT_TYPE, pModel);
-		addRelationshipToPackage(m_pPackageRelationshipSet, PACKAGE_START_PART_RELATIONSHIP_TYPE, pModelPart);
+		addRelationship(m_pPackageRelationshipSet, PACKAGE_START_PART_RELATIONSHIP_TYPE, pModelPart);
+
+		addTextureParts (pModel, pModelPart);
 	}
 
 	void CModelWriter_3MF_OPC::releasePackage()
@@ -192,7 +195,7 @@ namespace NMR {
 		return pPart;
 	}
 
-	CComPtr<IOpcRelationship> CModelWriter_3MF_OPC::addRelationshipToPackage(_In_ IOpcRelationshipSet * pRelationshipSet, _In_ LPCWSTR pwszRelationshipType, _In_ IOpcPart * pOPCPart)
+	CComPtr<IOpcRelationship> CModelWriter_3MF_OPC::addRelationship(_In_ IOpcRelationshipSet * pRelationshipSet, _In_ LPCWSTR pwszRelationshipType, _In_ IOpcPart * pOPCPart)
 	{
 		__NMRASSERT(pRelationshipSet != nullptr);
 		__NMRASSERT(pwszRelationshipType != nullptr);
@@ -218,6 +221,44 @@ namespace NMR {
 			throw CNMRException_Windows(NMR_ERROR_COULDNOTCREATEOPCRELATIONSHIP, hResult);
 
 		return pRelationship;
+	}
+
+	void CModelWriter_3MF_OPC::addTextureParts(_In_ CModel * pModel, _In_ CComPtr<IOpcPart> pModelPart)
+	{
+		__NMRASSERT(pModel);
+		__NMRASSERT(pModelPart != nullptr);
+
+		nfUint32 nCount = pModel->getTextureStreamCount();
+		nfUint32 nIndex;
+		HRESULT hResult;
+
+		if (nCount > 0) {
+
+			CComPtr<IOpcRelationshipSet> pPartRelationShipSet;
+			hResult = pModelPart->GetRelationshipSet(&pPartRelationShipSet);
+			if (hResult != S_OK)
+				throw CNMRException_Windows(NMR_ERROR_OPCRELATIONSHIPSETREADFAILED, hResult);
+
+			for (nIndex = 0; nIndex < nCount; nIndex++) {
+				PImportStream pStream = pModel->getTextureStream(nIndex);
+				std::wstring sPath = pModel->getTextureStreamPath(nIndex);
+
+				if (pStream.get() == nullptr)
+					throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+				// Seek to stream start
+				pStream->seekPosition(0, true);
+
+				CImportStream_COM * pCastedStream = dynamic_cast<CImportStream_COM *> (pStream.get());
+
+				if (pCastedStream != nullptr){
+					IStream * pCOMStream = pCastedStream->getCOMStream();
+					CComPtr<IOpcPart> pTexturePart = createOPCPartFromStream(sPath.c_str(), PACKAGE_TEXTURE_CONTENT_TYPE, pCOMStream);
+					addRelationship(pPartRelationShipSet, PACKAGE_TEXTURE_RELATIONSHIP_TYPE, pTexturePart);
+				}
+			}
+		}
+
 	}
 
 }

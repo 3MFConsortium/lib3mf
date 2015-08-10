@@ -56,11 +56,14 @@ namespace NMR {
 
 		// Model Parts, RelationShips and XML Stream
 		CComPtr<IOpcPart> m_pModelPart;
+		CComPtr<IOpcRelationshipSet> m_pModelRelationshipSet;
 
 	protected:
 		CComPtr<IOpcRelationship> getSingleRelationShipByType(_In_ IOpcRelationshipSet * pRelationshipSet, _In_ LPCWSTR pszRelationshipType);
 		CComPtr<IOpcPart> getRelationshipTargetPart(_In_ IOpcPartSet* pPartSet, _In_ IOpcRelationship * pRelationship, _In_opt_ LPCWSTR pszExpectedContentType);
 		CComPtr<IOpcPart> getPartFromPackage(_In_ IOpcPartSet* pPartSet, _In_ IOpcRelationshipSet* pRelationshipSet, _In_ LPCWSTR pszRelationshipType, _In_opt_ LPCWSTR pszExpectedContentType);
+
+		void extractTexturesFromRelationships(_In_ IOpcPartSet* pPartSet, _In_ IOpcRelationshipSet* pRelationshipSet);
 
 		void extractModel();
 		virtual PImportStream extract3MFOPCPackage(_In_ PImportStream pPackageStream);

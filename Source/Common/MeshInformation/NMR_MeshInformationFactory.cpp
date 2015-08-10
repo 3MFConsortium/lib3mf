@@ -32,8 +32,8 @@ It allows a dynamic creation of different Classes of Information.
 
 --*/
 
-#include "Common/MeshInformation/NMR_MeshInformationFactory.h" 
-#include "Common/NMR_Exception.h" 
+#include "Common/MeshInformation/NMR_MeshInformationFactory.h"
+#include "Common/NMR_Exception.h"
 #include <math.h>
 
 namespace NMR {
@@ -46,12 +46,16 @@ namespace NMR {
 	PMeshInformation CMeshInformationFactory::createMeshInformation(eMeshInformationType eType, nfUint32 nCurrentFaceCount)
 	{
 		switch (eType) {
+		case emiBaseMaterials:
+			return std::make_shared<CMeshInformation_BaseMaterials>(nCurrentFaceCount);
 		case emiNodeColors:
 			return std::make_shared<CMeshInformation_NodeColors>(nCurrentFaceCount);
 		case emiTexCoords:
 			return std::make_shared<CMeshInformation_TexCoords>(nCurrentFaceCount);
+
+        default:
+            throw CNMRException(NMR_ERROR_INVALIDINFORMATIONTYPE);
 		}
-		throw CNMRException(NMR_ERROR_INVALIDINFORMATIONTYPE);
 	}
 
 }

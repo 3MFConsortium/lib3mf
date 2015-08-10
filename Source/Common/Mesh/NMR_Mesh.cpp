@@ -250,6 +250,11 @@ namespace NMR {
 		m_Nodes.clearAllData();
 	}
 
+	void CMesh::clearMeshInformationHandler()
+	{
+		m_pMeshInformationHandler = NULL;
+	}
+
 	_Ret_maybenull_ CMeshInformationHandler * CMesh::getMeshInformationHandler()
 	{
 		return m_pMeshInformationHandler.get();

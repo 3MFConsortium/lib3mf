@@ -119,4 +119,13 @@ namespace NMR {
 		//__NMRASSERT(pTexCoords);
 	}
 
+	nfBool CMeshInformation_TexCoords::faceHasData(_In_ nfUint32 nFaceIndex)
+	{
+		MESHINFORMATION_TEXCOORDS * pFaceData = (MESHINFORMATION_TEXCOORDS*)getFaceData(nFaceIndex);
+		if (pFaceData)
+			return (pFaceData->m_TextureID != 0);
+
+		return false;
+	}
+
 }

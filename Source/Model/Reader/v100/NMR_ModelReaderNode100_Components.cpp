@@ -66,26 +66,31 @@ namespace NMR {
 		__NMRASSERT(pAttributeValue);
 	}
 
-	void CModelReaderNode100_Components::OnChildElement(_In_z_ const nfWChar * pChildName, _In_ CXmlReader * pXMLReader)
+	void CModelReaderNode100_Components::OnNSChildElement(_In_z_ const nfWChar * pChildName, _In_z_ const nfWChar * pNameSpace, _In_ CXmlReader * pXMLReader)
 	{
 		__NMRASSERT(pChildName);
 		__NMRASSERT(pXMLReader);
-		if (wcscmp(pChildName, XML_3MF_ELEMENT_COMPONENT) == 0) {
-			// Read Component
-			PModelReaderNode100_Component pXMLNode = std::make_shared<CModelReaderNode100_Component>(m_pComponentsObject->getModel(), m_pWarnings);
-			pXMLNode->parseXML(pXMLReader);
+		__NMRASSERT(pNameSpace);
 
-			// Retrieve object and transform
-			CModelObject * pObject = pXMLNode->getObject();
-			NMATRIX3 mTransform = pXMLNode->getTransform();
+		if (wcscmp(pNameSpace, XML_3MF_NAMESPACE_CORESPEC100) == 0) {
 
-			// Check, if we have an associated object
-			if (!pObject)
-				throw CNMRException(NMR_ERROR_COULDNOTFINDCOMPONENTOBJECT);
+			if (wcscmp(pChildName, XML_3MF_ELEMENT_COMPONENT) == 0) {
+				// Read Component
+				PModelReaderNode100_Component pXMLNode = std::make_shared<CModelReaderNode100_Component>(m_pComponentsObject->getModel(), m_pWarnings);
+				pXMLNode->parseXML(pXMLReader);
 
-			// Create component
-			PModelComponent pComponent = std::make_shared<CModelComponent>(pObject, mTransform);
-			m_pComponentsObject->addComponent(pComponent);
+				// Retrieve object and transform
+				CModelObject * pObject = pXMLNode->getObject();
+				NMATRIX3 mTransform = pXMLNode->getTransform();
+
+				// Check, if we have an associated object
+				if (!pObject)
+					throw CNMRException(NMR_ERROR_COULDNOTFINDCOMPONENTOBJECT);
+
+				// Create component
+				PModelComponent pComponent = std::make_shared<CModelComponent>(pObject, mTransform);
+				m_pComponentsObject->addComponent(pComponent);
+			}
 		}
 	}
 

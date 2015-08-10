@@ -118,5 +118,15 @@ namespace NMR {
             return L"";
 		}
 	}
-	
+
+	void CModelObject::setDefaultProperty(_In_ PModelDefaultProperty pModelDefaultProperty)
+	{
+		m_pModelDefaultProperty = pModelDefaultProperty;
+	}
+
+	PModelDefaultProperty CModelObject::getDefaultProperty()
+	{
+		return m_pModelDefaultProperty;
+	}
+
 }

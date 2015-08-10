@@ -67,19 +67,23 @@ namespace NMR {
 		__NMRASSERT(pAttributeValue);
 	}
 
-	void CModelReaderNode100_Vertices::OnChildElement(_In_z_ const nfWChar * pChildName, _In_ CXmlReader * pXMLReader)
+	void CModelReaderNode100_Vertices::OnNSChildElement(_In_z_ const nfWChar * pChildName, _In_z_ const nfWChar * pNameSpace, _In_ CXmlReader * pXMLReader)
 	{
 		__NMRASSERT(pChildName);
 		__NMRASSERT(pXMLReader);
-		if (wcscmp(pChildName, XML_3MF_ELEMENT_VERTEX) == 0)
-		{
-			PModelReaderNode100_Vertex pXMLNode = std::make_shared<CModelReaderNode100_Vertex>(m_pWarnings);
-			pXMLNode->parseXML(pXMLReader);
+		__NMRASSERT(pNameSpace);
 
-			// Create Mesh Node
-			nfFloat fX, fY, fZ;
-			pXMLNode->retrievePosition(fX, fY, fZ);
-			m_pMesh->addNode(fnVEC3_make(fX, fY, fZ));
+		if (wcscmp(pNameSpace, XML_3MF_NAMESPACE_CORESPEC100) == 0) {
+			if (wcscmp(pChildName, XML_3MF_ELEMENT_VERTEX) == 0)
+			{
+				PModelReaderNode100_Vertex pXMLNode = std::make_shared<CModelReaderNode100_Vertex>(m_pWarnings);
+				pXMLNode->parseXML(pXMLReader);
+
+				// Create Mesh Node
+				nfFloat fX, fY, fZ;
+				pXMLNode->retrievePosition(fX, fY, fZ);
+				m_pMesh->addNode(fnVEC3_make(fX, fY, fZ));
+			}
 		}
 	}
 

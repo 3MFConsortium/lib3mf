@@ -57,9 +57,12 @@ namespace NMR {
 		
 		void addComponent (_In_ PModelComponent pComponent);		
 		nfUint32 getComponentCount();
-		_Ret_notnull_ PModelComponent getComponent(_In_ nfUint32 nIdx);
+		PModelComponent getComponent(_In_ nfUint32 nIdx);
 
 		virtual void mergeToMesh(_In_ CMesh * pMesh, _In_ const NMATRIX3 mMatrix);
+
+		// check, if the object is a valid object description
+		virtual nfBool isValid();
 	};
 
 	typedef std::shared_ptr <CModelComponentsObject> PModelComponentsObject;

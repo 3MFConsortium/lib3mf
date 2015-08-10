@@ -1,0 +1,119 @@
+/*++
+
+Copyright (C) 2015 Microsoft Corporation (Original Author)
+Copyright (C) 2015 netfabb GmbH
+
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification,
+are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice, this
+list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright notice,
+this list of conditions and the following disclaimer in the documentation
+and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+Abstract:
+NMR_ModelReaderNode093_Resources.cpp implements the Model Reader Resources Node
+Class. A resources reader model node is a parser for the resources node of an
+XML Model Stream.
+
+--*/
+
+#include "Model/Reader/v093/NMR_ModelReaderNode093_Resources.h"
+#include "Model/Reader/v093/NMR_ModelReaderNode093_Object.h"
+#include "Model/Reader/v093/NMR_ModelReaderNode093_Color.h"
+#include "Model/Reader/v093/NMR_ModelReaderNode093_Material.h"
+
+#include "Model/Classes/NMR_ModelConstants.h"
+#include "Model/Classes/NMR_ModelResource.h"
+#include "Model/Classes/NMR_ModelBaseMaterials.h"
+#include "Model/Classes/NMR_Model.h"
+
+#include "Common/NMR_Exception.h"
+#include "Common/NMR_Exception_Windows.h"
+
+namespace NMR {
+
+	CModelReaderNode093_Resources::CModelReaderNode093_Resources(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings)
+		: CModelReaderNode(pWarnings)
+	{
+		__NMRASSERT(pModel);
+		m_pModel = pModel;
+
+		m_pColorMapping = std::make_shared<CModelReader_ColorMapping>();
+
+	}
+
+	void CModelReaderNode093_Resources::parseXML(_In_ CXmlReader * pXMLReader)
+	{
+		// Parse name
+		parseName(pXMLReader);
+
+		// Parse attribute
+		parseAttributes(pXMLReader);
+
+		// Parse Content
+		parseContent(pXMLReader);
+	}
+
+	void CModelReaderNode093_Resources::OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue)
+	{
+		__NMRASSERT(pAttributeName);
+		__NMRASSERT(pAttributeValue);
+	}
+
+	void CModelReaderNode093_Resources::OnNSChildElement(_In_z_ const nfWChar * pChildName, _In_z_ const nfWChar * pNameSpace, _In_ CXmlReader * pXMLReader)
+	{
+		__NMRASSERT(pChildName);
+		__NMRASSERT(pXMLReader);
+		__NMRASSERT(pNameSpace);
+
+		if (wcscmp(pNameSpace, XML_3MF_NAMESPACE_CORESPEC093) == 0) {
+
+			if (wcscmp(pChildName, XML_3MF_ELEMENT_OBJECT) == 0) {
+				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode093_Object>(m_pModel, m_pWarnings);
+				pXMLNode->parseXML(pXMLReader);
+			}
+
+			if (wcscmp(pChildName, XML_3MF_ELEMENT_COLOR) == 0) {
+				PModelReaderNode093_Color pXMLNode = std::make_shared<CModelReaderNode093_Color>(m_pWarnings);
+				pXMLNode->parseXML(pXMLReader);
+
+				m_pColorMapping->registerColor(pXMLNode->retrieveID(), 0, pXMLNode->retrieveColor());
+			}
+
+			if (wcscmp(pChildName, XML_3MF_ELEMENT_MATERIAL) == 0) {
+				PModelReaderNode093_Material pXMLNode = std::make_shared<CModelReaderNode093_Material>(m_pWarnings);
+				pXMLNode->parseXML(pXMLReader);
+
+				if (m_pMaterialResource.get() == nullptr) {
+					m_pMaterialResource = std::make_shared<CModelBaseMaterialResource> (m_pModel->generateResourceID(), m_pModel);
+					m_pModel->addResource(m_pMaterialResource);
+				}
+
+				nfColor cColor;
+				if (!m_pColorMapping->findColor(pXMLNode->retrieveColorID(), 0, cColor)) {
+					cColor = 0xffffffff;
+				}
+
+				m_pMaterialResource->addBaseMaterial(pXMLNode->getName (), cColor);
+			}
+
+		}
+	}
+
+
+}

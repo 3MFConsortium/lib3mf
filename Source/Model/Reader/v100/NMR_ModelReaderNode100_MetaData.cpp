@@ -63,12 +63,16 @@ namespace NMR {
 	{
 		__NMRASSERT(pAttributeName);
 		__NMRASSERT(pAttributeValue);
+		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_METADATA_NAME) == 0) {
+			m_sName = std::wstring(pAttributeValue);
+		}
+
 	}
 
-	void CModelReaderNode100_MetaData::OnChildElement(_In_z_ const nfWChar * pChildName, _In_ CXmlReader * pXMLReader)
+	void CModelReaderNode100_MetaData::OnText(_In_z_ const nfWChar * pText, _In_ CXmlReader * pXMLReader)
 	{
-		__NMRASSERT(pChildName);
-		__NMRASSERT(pXMLReader);
+		__NMRASSERT(pText);
+		m_sValue += std::wstring(pText);
 	}
 
 	std::wstring CModelReaderNode100_MetaData::getName()

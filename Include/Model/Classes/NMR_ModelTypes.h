@@ -59,6 +59,23 @@ namespace NMR {
 		FLOAT m_fFields[3][4];
 	} MODELTRANSFORM;
 
+	typedef struct {
+		BYTE m_Red;
+		BYTE m_Green;
+		BYTE m_Blue;
+		BYTE m_Alpha;
+	} MODELMESHCOLOR_SRGB;
+
+	typedef struct {
+		DWORD m_nTextureID;
+		FLOAT m_fU[3];
+		FLOAT m_fV[3];
+	} MODELMESHTEXTURE2D;
+
+	typedef struct {
+		MODELMESHCOLOR_SRGB m_Colors[3];
+	} MODELMESH_TRIANGLECOLOR_SRGB;
+
 #pragma pack()
 
 	typedef DWORD ModelResourceID;
@@ -86,7 +103,22 @@ namespace NMR {
 		MODELOBJECTTYPE_MODEL = 1,
 		MODELOBJECTTYPE_SUPPORT = 2
 	};
-	
+
+	enum eModelPropertyType {
+		MODELPROPERTYTYPE_NONE = 0,
+		MODELPROPERTYTYPE_BASEMATERIALS = 1,
+		MODELPROPERTYTYPE_COLOR = 2,
+		MODELPROPERTYTYPE_TEXCOORD2D = 3,
+		MODELPROPERTYTYPE_COMPOSITE = 4,
+	};
+
+	enum eModelTexture2DType {
+		MODELTEXTURETYPE_UNKNOWN = 0,
+		MODELTEXTURETYPE_PNG = 1,
+		MODELTEXTURETYPE_JPEG = 2,
+	};
+
+
 }
 
 #endif // __NMR_MODELTYPES

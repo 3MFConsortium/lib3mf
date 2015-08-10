@@ -41,14 +41,26 @@ XML Model Stream.
 #include "Common/NMR_Exception_Windows.h"
 #include "Common/MeshInformation/NMR_MeshInformation_TexCoords.h"
 #include "Common/MeshInformation/NMR_MeshInformation_NodeColors.h"
+#include "Model/Classes/NMR_ModelBaseMaterial.h"
+#include "Model/Reader/NMR_ModelReader_ColorMapping.h"
 
 namespace NMR {
 
-	CModelReaderNode100_Triangles::CModelReaderNode100_Triangles(_In_ CModel * pModel, _In_ CMesh * pMesh, _In_ PModelReaderWarnings pWarnings)
+	CModelReaderNode100_Triangles::CModelReaderNode100_Triangles(_In_ CModel * pModel, _In_ CMesh * pMesh, _In_ PModelReaderWarnings pWarnings, _In_ PModelReader_ColorMapping pColorMapping, _In_ PModelReader_TexCoordMapping pTexCoordMapping, _In_ ModelResourceID nDefaultPropertyID, _In_ ModelResourceIndex nDefaultPropertyIndex)
 		: CModelReaderNode(pWarnings)
 	{
 		__NMRASSERT(pMesh);
 		__NMRASSERT(pModel);
+		if (!pColorMapping.get())
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+		if (!pTexCoordMapping.get())
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+		m_pColorMapping = pColorMapping;
+		m_pTexCoordMapping = pTexCoordMapping;
+
+		m_nDefaultPropertyID = nDefaultPropertyID;
+		m_nDefaultPropertyIndex = nDefaultPropertyIndex;
+
 		m_pModel = pModel;
 		m_pMesh = pMesh;
 	}
@@ -75,7 +87,7 @@ namespace NMR {
 	{
 		CMeshInformationHandler * pMeshInformationHandler = m_pMesh->createMeshInformationHandler();
 
-		CMeshInformation * pInformation = pMeshInformationHandler->getInformation(emiTexCoords);
+		CMeshInformation * pInformation = pMeshInformationHandler->getInformationByType (0, emiTexCoords);
 		CMeshInformation_TexCoords * pTexCoords = nullptr;
 
 		if (pInformation)
@@ -95,7 +107,7 @@ namespace NMR {
 	{
 		CMeshInformationHandler * pMeshInformationHandler = m_pMesh->createMeshInformationHandler();
 
-		CMeshInformation * pInformation = pMeshInformationHandler->getInformation(emiNodeColors);
+		CMeshInformation * pInformation = pMeshInformationHandler->getInformationByType(0, emiNodeColors);
 		CMeshInformation_NodeColors * pNodeColors = nullptr;
 
 		if (pInformation)
@@ -111,26 +123,101 @@ namespace NMR {
 		return pNodeColors;
 	}
 
-	void CModelReaderNode100_Triangles::OnChildElement(_In_z_ const nfWChar * pChildName, _In_ CXmlReader * pXMLReader)
+	_Ret_notnull_ CMeshInformation_BaseMaterials * CModelReaderNode100_Triangles::createBaseMaterialInformation()
+	{
+		CMeshInformationHandler * pMeshInformationHandler = m_pMesh->createMeshInformationHandler();
+
+		CMeshInformation * pInformation = pMeshInformationHandler->getInformationByType(0, emiBaseMaterials);
+		CMeshInformation_BaseMaterials * pBaseMaterials = nullptr;
+
+		if (pInformation)
+			pBaseMaterials = dynamic_cast<CMeshInformation_BaseMaterials *> (pInformation);
+
+		if (!pBaseMaterials) {
+			PMeshInformation_BaseMaterials pNewMeshInformation = std::make_shared<CMeshInformation_BaseMaterials>(m_pMesh->getFaceCount());
+			pMeshInformationHandler->addInformation(pNewMeshInformation);
+
+			pBaseMaterials = pNewMeshInformation.get();
+		}
+
+		return pBaseMaterials;
+	}
+
+	void CModelReaderNode100_Triangles::OnNSChildElement(_In_z_ const nfWChar * pChildName, _In_z_ const nfWChar * pNameSpace, _In_ CXmlReader * pXMLReader)
 	{
 		__NMRASSERT(pChildName);
 		__NMRASSERT(pXMLReader);
+		__NMRASSERT(pNameSpace);
 
-		if (wcscmp(pChildName, XML_3MF_ELEMENT_TRIANGLE) == 0) {
-			// Parse XML
-			PModelReaderNode100_Triangle pXMLNode = std::make_shared<CModelReaderNode100_Triangle>(m_pWarnings);
-			pXMLNode->parseXML(pXMLReader);
+		if (wcscmp(pNameSpace, XML_3MF_NAMESPACE_CORESPEC100) == 0) {
 
-			// Retrieve node indices
-			nfInt32 nIndex1, nIndex2, nIndex3;
-			pXMLNode->retrieveIndices(nIndex1, nIndex2, nIndex3, m_pMesh->getNodeCount());
+			if (wcscmp(pChildName, XML_3MF_ELEMENT_TRIANGLE) == 0) {
+				// Parse XML
+				PModelReaderNode100_Triangle pXMLNode = std::make_shared<CModelReaderNode100_Triangle>(m_pWarnings);
+				pXMLNode->parseXML(pXMLReader);
 
-			// Create face if valid
-			if ((nIndex1 != nIndex2) && (nIndex1 != nIndex3) && (nIndex2 != nIndex3)) {
-				MESHNODE * pNode1 = m_pMesh->getNode(nIndex1);
-				MESHNODE * pNode2 = m_pMesh->getNode(nIndex2);
-				MESHNODE * pNode3 = m_pMesh->getNode(nIndex3);
-				m_pMesh->addFace(pNode1, pNode2, pNode3);
+				// Retrieve node indices
+				nfInt32 nIndex1, nIndex2, nIndex3;
+				pXMLNode->retrieveIndices(nIndex1, nIndex2, nIndex3, m_pMesh->getNodeCount());
+
+				// Create face if valid
+				if ((nIndex1 != nIndex2) && (nIndex1 != nIndex3) && (nIndex2 != nIndex3)) {
+					MESHNODE * pNode1 = m_pMesh->getNode(nIndex1);
+					MESHNODE * pNode2 = m_pMesh->getNode(nIndex2);
+					MESHNODE * pNode3 = m_pMesh->getNode(nIndex3);
+					MESHFACE * pFace = m_pMesh->addFace(pNode1, pNode2, pNode3);
+
+					ModelResourceID nPropertyID = m_nDefaultPropertyID;
+					ModelResourceIndex nPropertyIndex1 = m_nDefaultPropertyIndex;
+					ModelResourceIndex nPropertyIndex2 = m_nDefaultPropertyIndex;
+					ModelResourceIndex nPropertyIndex3 = m_nDefaultPropertyIndex;
+
+					if (pXMLNode->retrieveProperties(nPropertyID, nPropertyIndex1, nPropertyIndex2, nPropertyIndex3) || (nPropertyID != 0)) {
+						// Find and Assign Base Material Resource
+						CModelBaseMaterialResource * pBaseMaterial = m_pModel->findBaseMaterial(nPropertyID);
+						if (pBaseMaterial) {
+							CMeshInformation_BaseMaterials * pBaseMaterials = createBaseMaterialInformation();
+							MESHINFORMATION_BASEMATERIAL* pFaceData = (MESHINFORMATION_BASEMATERIAL*)pBaseMaterials->getFaceData(pFace->m_index);
+							if (pFaceData) {
+								pFaceData->m_nMaterialGroupID = nPropertyID;
+								pFaceData->m_nMaterialIndex = nPropertyIndex1;
+							}
+						}
+
+						// Find Color Material
+						if (m_pColorMapping->hasResource(nPropertyID)) {
+							CMeshInformation_NodeColors * pNodeColors = createNodeColorInformation();
+							MESHINFORMATION_NODECOLOR* pFaceData = (MESHINFORMATION_NODECOLOR*)pNodeColors->getFaceData(pFace->m_index);
+							if (pFaceData) {
+								m_pColorMapping->findColor(nPropertyID, nPropertyIndex1, pFaceData->m_cColors[0]);
+								m_pColorMapping->findColor(nPropertyID, nPropertyIndex2, pFaceData->m_cColors[1]);
+								m_pColorMapping->findColor(nPropertyID, nPropertyIndex3, pFaceData->m_cColors[2]);
+							}
+
+						}
+
+						// Find Texture Material
+						if (m_pTexCoordMapping->hasResource(nPropertyID)) {
+							CMeshInformation_TexCoords * pTexCoords = createTexCoordInformation();
+							MESHINFORMATION_TEXCOORDS * pFaceData = (MESHINFORMATION_TEXCOORDS*)pTexCoords->getFaceData(pFace->m_index);
+							if (pFaceData) {
+								ModelResourceID nTextureID1;
+								ModelResourceID nTextureID2;
+								ModelResourceID nTextureID3;
+								m_pTexCoordMapping->findTexCoords(nPropertyID, nPropertyIndex1, nTextureID1, pFaceData->m_vCoords[0].m_fields[0], pFaceData->m_vCoords[0].m_fields[1]);
+								m_pTexCoordMapping->findTexCoords(nPropertyID, nPropertyIndex2, nTextureID2, pFaceData->m_vCoords[1].m_fields[0], pFaceData->m_vCoords[1].m_fields[1]);
+								m_pTexCoordMapping->findTexCoords(nPropertyID, nPropertyIndex3, nTextureID3, pFaceData->m_vCoords[2].m_fields[0], pFaceData->m_vCoords[2].m_fields[1]);
+
+								if ((nTextureID1 == nTextureID2) && (nTextureID1 == nTextureID3) && (nTextureID2 == nTextureID3)) {
+									pFaceData->m_TextureID = nTextureID1;
+								}
+							}
+
+						}
+
+
+					}
+				}
 			}
 		}
 	}

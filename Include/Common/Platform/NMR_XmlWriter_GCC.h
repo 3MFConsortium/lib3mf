@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2015 Microsoft Corporation 
+Copyright (C) 2015 Microsoft Corporation
 Copyright (C) 2015 netfabb GmbH (Original Author)
 
 All rights reserved.
@@ -51,6 +51,8 @@ namespace NMR {
 		virtual void WriteStartElement(_In_opt_  const nfWChar *  pwszPrefix, _In_  const nfWChar *  pwszLocalName, _In_opt_  const nfWChar *  pwszNamespaceUri);
 		virtual void WriteEndElement();
 		virtual void WriteFullEndElement();
+
+		virtual void WriteText(_In_ const nfWChar * pwszContent, _In_ const nfUint32 cbLength);
 	};
 
 	typedef std::shared_ptr<CXmlWriter_GCC> PXmlWriter_GCC;

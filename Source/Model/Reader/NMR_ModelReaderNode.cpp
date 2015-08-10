@@ -34,12 +34,13 @@ A model reader node is an abstract base class for all XML nodes of a
 --*/
 
 #include "Model/Reader/NMR_ModelReaderNode.h"
+#include "Model/Classes/NMR_ModelConstants.h"
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_Exception_Windows.h"
 
 namespace NMR {
 
-	CModelReaderNode::CModelReaderNode(PModelReaderWarnings pWarnings)
+	CModelReaderNode::CModelReaderNode(_In_ PModelReaderWarnings pWarnings)
 	{
 		m_bParsedAttributes = false;
 		m_bParsedContent = false;
@@ -57,9 +58,9 @@ namespace NMR {
 		__NMRASSERT(pXMLReader);
 
 		LPCWSTR pwszName = nullptr;
-		pXMLReader->GetQualifiedName(&pwszName, nullptr);
+		pXMLReader->GetLocalName(&pwszName, nullptr);
 		if (!pwszName)
-			throw CNMRException(NMR_ERROR_COULDNOTGETQUALIFIEDXMLNAME);
+			throw CNMRException(NMR_ERROR_COULDNOTGETLOCALXMLNAME);
 
 		std::wstring sName(pwszName);
 		m_sName = sName;
@@ -95,23 +96,35 @@ namespace NMR {
 		while (bContinue) {
 
 			if (!pXMLReader->IsDefault()) {
-				LPCWSTR pwszQualifiedName = nullptr;
+				LPCWSTR pwszLocalName = nullptr;
+				LPCWSTR pwszNameSpaceURI = nullptr;
 				LPCWSTR pwszValue = nullptr;
 				UINT nNameCount = 0;
 				UINT nValueCount = 0;
+				UINT nNameSpaceCount = 0;
 
 				// Get Attribute Name
-				pXMLReader->GetQualifiedName(&pwszQualifiedName, &nNameCount);
-				if (!pwszQualifiedName)
-					throw CNMRException(NMR_ERROR_COULDNOTGETQUALIFIEDXMLNAME);
+				pXMLReader->GetNamespaceURI(&pwszNameSpaceURI, &nNameSpaceCount);
+				if (!pwszNameSpaceURI)
+					throw CNMRException(NMR_ERROR_COULDNOTGETNAMESPACE);
+
+				pXMLReader->GetLocalName(&pwszLocalName, &nNameCount);
+				if (!pwszLocalName)
+					throw CNMRException(NMR_ERROR_COULDNOTGETLOCALXMLNAME);
 
 				// Get Attribute Value
 				pXMLReader->GetValue(&pwszValue, &nValueCount);
 				if (!pwszValue)
 					throw CNMRException(NMR_ERROR_COULDNOTGETXMLVALUE);
 
-				if (nNameCount > 0)
-					OnAttribute(pwszQualifiedName, pwszValue);
+				if (nNameCount > 0) {
+					if (nNameSpaceCount == 0) {
+						OnAttribute(pwszLocalName, pwszValue);
+					}
+					else {
+						OnNSAttribute(pwszLocalName, pwszValue, pwszNameSpaceURI);
+					}
+				}
 			}
 
 			bContinue = pXMLReader->MoveToNextAttribute();
@@ -133,21 +146,33 @@ namespace NMR {
 			return;
 
 		while (!pXMLReader->IsEOF()) {
-			LPCWSTR pwszQualifiedName = nullptr;
+			LPCWSTR pwszLocalName = nullptr;
+			LPCWSTR pwszNameSpaceURI = nullptr;
 			LPCWSTR pwszText = nullptr;
 			UINT nCount = 0;
+			UINT nNameSpaceCount = 0;
 
 			eXmlReaderNodeType NodeType;
 			pXMLReader->Read(NodeType);
 
 			switch (NodeType) {
 			case XMLREADERNODETYPE_STARTELEMENT:
-				pXMLReader->GetQualifiedName(&pwszQualifiedName, &nCount);
-				if (!pwszQualifiedName)
-					throw CNMRException(NMR_ERROR_COULDNOTGETQUALIFIEDXMLNAME);
+				pXMLReader->GetLocalName(&pwszLocalName, &nCount);
+				if (!pwszLocalName)
+					throw CNMRException(NMR_ERROR_COULDNOTGETLOCALXMLNAME);
 
-				if (nCount > 0)
-					OnChildElement(pwszQualifiedName, pXMLReader);
+				pXMLReader->GetNamespaceURI(&pwszNameSpaceURI, &nNameSpaceCount);
+				if (!pwszNameSpaceURI)
+					throw CNMRException(NMR_ERROR_COULDNOTGETNAMESPACE);
+
+					if (nCount > 0) {
+						if (pwszNameSpaceURI == nullptr) {
+							OnNSChildElement(pwszLocalName, L"", pXMLReader);
+						}
+						else {
+							OnNSChildElement(pwszLocalName, pwszNameSpaceURI, pXMLReader);
+						}
+					}
 				break;
 
 			case XMLREADERNODETYPE_TEXT:
@@ -160,11 +185,11 @@ namespace NMR {
 				break;
 
 			case XMLREADERNODETYPE_ENDELEMENT:
-				pXMLReader->GetQualifiedName(&pwszQualifiedName, &nCount);
-				if (!pwszQualifiedName)
-					throw CNMRException(NMR_ERROR_COULDNOTGETQUALIFIEDXMLNAME);
+				pXMLReader->GetLocalName(&pwszLocalName, &nCount);
+				if (!pwszLocalName)
+					throw CNMRException(NMR_ERROR_COULDNOTGETLOCALXMLNAME);
 
-				if (wcscmp(pwszQualifiedName, m_sName.c_str()) == 0) {
+				if (wcscmp(pwszLocalName, m_sName.c_str()) == 0) {
 					OnEndElement (pXMLReader);
 					return;
 				}
@@ -181,11 +206,6 @@ namespace NMR {
 		// empty on purpose, to be implemented by child classes
 	}
 
-	void CModelReaderNode::OnChildElement(_In_z_ const nfWChar * pChildName, _In_ CXmlReader * pXMLReader)
-	{
-		// empty on purpose, to be implemented by child classes
-	}
-
 	void CModelReaderNode::OnText(_In_z_ const nfWChar * pText, _In_ CXmlReader * pXMLReader)
 	{
 		// empty on purpose, to be implemented by child classes
@@ -195,5 +215,17 @@ namespace NMR {
 	{
 		// empty on purpose, to be implemented by child classes
 	}
+
+	void CModelReaderNode::OnNSAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue, _In_z_ const nfWChar * pNameSpace)
+	{
+		// empty on purpose, to be implemented by child classes
+	}
+
+	void CModelReaderNode::OnNSChildElement(_In_z_ const nfWChar * pChildName, _In_z_ const nfWChar * pNameSpace, _In_ CXmlReader * pXMLReader)
+	{
+		// empty on purpose, to be implemented by child classes
+
+	}
+
 
 }
