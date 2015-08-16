@@ -43,16 +43,19 @@ A mesh reader model node is a parser for the mesh node of an XML Model Stream.
 
 namespace NMR {
 
-	CModelReaderNode093_Mesh::CModelReaderNode093_Mesh(_In_ CModel * pModel, _In_ CMesh * pMesh, _In_ PModelReaderWarnings pWarnings)
+	CModelReaderNode093_Mesh::CModelReaderNode093_Mesh(_In_ CModel * pModel, _In_ CMesh * pMesh, _In_ PModelReader_ColorMapping pColorMapping, _In_ PModelBaseMaterialResource pMaterialResource, _In_ PModelReaderWarnings pWarnings)
 		: CModelReaderNode(pWarnings)
 	{
 		__NMRASSERT(pMesh);
 		__NMRASSERT(pModel);
+		__NMRASSERT(pColorMapping.get() != nullptr);
 
 		m_pMesh = pMesh;
 		m_pModel = pModel;
 
 		m_pTexCoordMapping = std::make_shared<CModelReader_TexCoordMapping>();
+		m_pColorMapping = pColorMapping;
+		m_pMaterialResource = pMaterialResource;
 	}
 
 	void CModelReaderNode093_Mesh::parseXML(_In_ CXmlReader * pXMLReader)
@@ -89,7 +92,7 @@ namespace NMR {
 
 			if (wcscmp(pChildName, XML_3MF_ELEMENT_TRIANGLES) == 0)
 			{
-				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode093_Triangles>(m_pModel, m_pMesh, m_pWarnings);
+				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode093_Triangles>(m_pModel, m_pMesh, m_pColorMapping, m_pTexCoordMapping, m_pMaterialResource, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 			}
 

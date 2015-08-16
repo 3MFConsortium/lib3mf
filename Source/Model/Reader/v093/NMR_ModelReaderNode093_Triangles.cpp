@@ -46,14 +46,20 @@ XML Model Stream.
 
 namespace NMR {
 
-	CModelReaderNode093_Triangles::CModelReaderNode093_Triangles(_In_ CModel * pModel, _In_ CMesh * pMesh, _In_ PModelReaderWarnings pWarnings)
+	CModelReaderNode093_Triangles::CModelReaderNode093_Triangles(_In_ CModel * pModel, _In_ CMesh * pMesh, _In_ PModelReader_ColorMapping pColorMapping, _In_ PModelReader_TexCoordMapping pTexCoordMapping, _In_ PModelBaseMaterialResource pMaterialResource, _In_ PModelReaderWarnings pWarnings)
 		: CModelReaderNode(pWarnings)
 	{
 		__NMRASSERT(pMesh);
 		__NMRASSERT(pModel);
+		__NMRASSERT(pColorMapping.get() != nullptr);
+		__NMRASSERT(pTexCoordMapping.get() != nullptr);
 
 		m_pModel = pModel;
 		m_pMesh = pMesh;
+
+		m_pColorMapping = pColorMapping;
+		m_pTexCoordMapping = pTexCoordMapping;
+		m_pMaterialResource = pMaterialResource;
 	}
 
 	void CModelReaderNode093_Triangles::parseXML(_In_ CXmlReader * pXMLReader)
@@ -156,9 +162,85 @@ namespace NMR {
 					MESHNODE * pNode1 = m_pMesh->getNode(nIndex1);
 					MESHNODE * pNode2 = m_pMesh->getNode(nIndex2);
 					MESHNODE * pNode3 = m_pMesh->getNode(nIndex3);
-					/*MESHFACE * pFace = */ m_pMesh->addFace(pNode1, pNode2, pNode3);
+					MESHFACE * pFace = m_pMesh->addFace(pNode1, pNode2, pNode3);
 
+					nfInt32 nColorID1, nColorID2, nColorID3;
+					pXMLNode->retrieveColorIDs(nColorID1, nColorID2, nColorID3);
+					nfInt32 nMaterialID = pXMLNode->retrieveMaterialID();
+					nfInt32 nTextureID = pXMLNode->retrieveTextureID();
 
+					// map colors to textures
+					if ((nColorID1 == nColorID2) && (nColorID1 == nColorID3)) {
+						if (m_pColorMapping->hasTextureReference(nColorID1)) {
+							nTextureID = m_pColorMapping->getTextureReference(nColorID1);
+						}
+					}
+
+					// Create Texture Info
+					if (nTextureID > 0) {
+						CMeshInformation_TexCoords * pTexCoords = createTexCoordInformation();
+						MESHINFORMATION_TEXCOORDS * pFaceData = (MESHINFORMATION_TEXCOORDS*)pTexCoords->getFaceData(pFace->m_index);
+						if (pFaceData) {
+
+							// Convert Texture Coordinates to in memory representation
+							pFaceData->m_TextureID = nTextureID;
+							nfInt32 nTextureIndex1 = 0;
+							nfInt32 nTextureIndex2 = 0;
+							nfInt32 nTextureIndex3 = 0;
+							ModelResourceIndex nTextureID = 0;
+
+							pFaceData->m_vCoords[0].m_fields[0] = 0.0f;
+							pFaceData->m_vCoords[0].m_fields[1] = 0.0f;
+							pFaceData->m_vCoords[1].m_fields[0] = 0.0f;
+							pFaceData->m_vCoords[1].m_fields[1] = 0.0f;
+							pFaceData->m_vCoords[2].m_fields[0] = 0.0f;
+							pFaceData->m_vCoords[2].m_fields[1] = 0.0f;
+
+							if (pXMLNode->retrieveTextureIndices(nTextureIndex1, nTextureIndex2, nTextureIndex3)) {
+								m_pTexCoordMapping->findTexCoords(1, nTextureIndex1, nTextureID, pFaceData->m_vCoords[0].m_fields[0], pFaceData->m_vCoords[0].m_fields[1]);
+								m_pTexCoordMapping->findTexCoords(1, nTextureIndex2, nTextureID, pFaceData->m_vCoords[1].m_fields[0], pFaceData->m_vCoords[1].m_fields[1]);
+								m_pTexCoordMapping->findTexCoords(1, nTextureIndex3, nTextureID, pFaceData->m_vCoords[2].m_fields[0], pFaceData->m_vCoords[2].m_fields[1]);
+							}
+						}
+
+					}
+					else {
+						if ((nColorID1 > 0) && (nColorID2 > 0) && (nColorID3 > 0)) {
+							CMeshInformation_NodeColors * pNodeColors = createNodeColorInformation();
+							MESHINFORMATION_NODECOLOR* pFaceData = (MESHINFORMATION_NODECOLOR*)pNodeColors->getFaceData(pFace->m_index);
+							nfInt32 j;
+
+							if (pFaceData) {
+								// Convert Colors to in memory representation
+								for (j = 0; j < 3; j++) 
+									pFaceData->m_cColors[j] = 0;
+								m_pColorMapping->findColor(nColorID1, 0, pFaceData->m_cColors[0]);
+								m_pColorMapping->findColor(nColorID2, 0, pFaceData->m_cColors[1]);
+								m_pColorMapping->findColor(nColorID3, 0, pFaceData->m_cColors[2]);
+							}
+
+						}
+						else {
+
+							if (nMaterialID > 0) {
+								CMeshInformation_BaseMaterials * pBaseMaterials = createBaseMaterialInformation();
+								MESHINFORMATION_BASEMATERIAL* pFaceData = (MESHINFORMATION_BASEMATERIAL*)pBaseMaterials->getFaceData(pFace->m_index);
+								if (pFaceData != nullptr) {
+									pFaceData->m_nMaterialGroupID = 0;
+									pFaceData->m_nMaterialIndex = 0;
+
+									if (m_pMaterialResource.get() != nullptr) {
+										ModelResourceIndex nIndex;
+										if (m_pColorMapping->getMaterialReference(nMaterialID, nIndex)) {
+											pFaceData->m_nMaterialGroupID = m_pMaterialResource->getResourceID();
+											pFaceData->m_nMaterialIndex = nIndex;
+										}
+									}
+								}
+
+							}
+						}
+					}
 				}
 			}
 		}

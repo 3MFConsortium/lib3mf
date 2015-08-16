@@ -41,6 +41,7 @@ XML Model Stream.
 #include "Common/NMR_StringUtils.h"
 #include <climits>
 #include <math.h>
+#include <wchar.h>
 
 namespace NMR {
 
@@ -55,8 +56,11 @@ namespace NMR {
 		m_nTextureIndex1 = -1;
 		m_nTextureIndex2 = -1;
 		m_nTextureIndex3 = -1;
-		m_nColorID = -1;
-		m_nMaterialID = -1;
+		m_nColorID1 = 0;
+		m_nColorID2 = 0;
+		m_nColorID3 = 0;
+		m_nMaterialID = 0;
+		m_nTextureID = 0;
 	}
 
 	void CModelReaderNode093_Triangle::parseXML(_In_ CXmlReader * pXMLReader)
@@ -93,7 +97,7 @@ namespace NMR {
 
 		return ((nIndex1 >= 0) && (nIndex2 >= 0) && (nIndex3 >= 0));
 	}
-		
+
 
 
 	void CModelReaderNode093_Triangle::OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue)
@@ -139,18 +143,78 @@ namespace NMR {
 		}
 
 		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TRIANGLE_COLORID) == 0) {
-			nValue = fnWStringToInt32(pAttributeValue);
-			if ((nValue >= 0) && (nValue < XML_3MF_MAXRESOURCEINDEX))
-				m_nColorID = nValue;
+			std::wstring sValue(pAttributeValue);
+			std::wstring sSubStr = sValue.substr(0, 4);
+			if (sSubStr == L"tex(") {
+				if (sValue.length() > 4) {
+					std::wstring sTexID = sValue.substr(4, sValue.length() - sSubStr.length() - 1);
+					nfInt32 nValue = fnWStringToInt32(sTexID.c_str());
+					if ((nValue < 0) || (nValue >= XML_3MF_MAXRESOURCEINDEX))
+						throw CNMRException(NMR_ERROR_INVALIDTEXTUREREFERENCE);
+
+					m_nTextureID = nValue + 1;
+
+				}
+				else {
+					throw CNMRException(NMR_ERROR_INVALIDTEXTUREREFERENCE);
+				}
+
+			}
+			else {
+				const wchar_t * pCommaValue = wcschr(pAttributeValue, L',');
+
+				// Check, if we have a single value
+				if (pCommaValue == nullptr) {
+
+					nValue = fnWStringToInt32(pAttributeValue);
+					if ((nValue >= 0) && (nValue < XML_3MF_MAXRESOURCEINDEX)) {
+						m_nColorID1 = nValue + 1;
+						m_nColorID2 = nValue + 1;
+						m_nColorID3 = nValue + 1;
+					}
+				}
+				else {
+					// Check, if we have a color triplet
+					nfInt32 nColorID1 = -1;
+					nfInt32 nColorID2 = -1;
+					nfInt32 nColorID3 = -1;
+
+					fnStringToCommaSeparatedIntegerTriplet(pAttributeValue, nColorID1, nColorID2, nColorID3);
+
+					if ((nColorID1 >= 0) && (nColorID1 < XML_3MF_MAXRESOURCEINDEX))
+						m_nColorID1 = nColorID1 + 1;
+					if ((nColorID2 >= 0) && (nColorID2 < XML_3MF_MAXRESOURCEINDEX))
+						m_nColorID2 = nColorID2 + 1;
+					if ((nColorID3 >= 0) && (nColorID3 < XML_3MF_MAXRESOURCEINDEX))
+						m_nColorID3 = nColorID3 + 1;
+				}
+			}
 		}
 
 		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TRIANGLE_MATERIALID) == 0) {
 			nValue = fnWStringToInt32(pAttributeValue);
 			if ((nValue >= 0) && (nValue < XML_3MF_MAXRESOURCEINDEX))
-				m_nMaterialID = nValue;
+				m_nMaterialID = nValue + 1;
 		}
 
 	}
 
+	nfBool CModelReaderNode093_Triangle::retrieveColorIDs(_Out_ nfInt32 & nColorID1, _Out_ nfInt32 & nColorID2, _Out_ nfInt32 & nColorID3)
+	{
+		nColorID1 = m_nColorID1;
+		nColorID2 = m_nColorID2;
+		nColorID3 = m_nColorID3;
+		return ((nColorID1 != 0) && (nColorID2 != 0) && (nColorID3 != 0));
+	}
+
+	nfInt32 CModelReaderNode093_Triangle::retrieveTextureID()
+	{
+		return m_nTextureID;
+	}
+
+	nfInt32 CModelReaderNode093_Triangle::retrieveMaterialID()
+	{
+		return m_nMaterialID;
+	}
 
 }

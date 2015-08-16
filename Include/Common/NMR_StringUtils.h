@@ -55,6 +55,8 @@ namespace NMR {
 	std::wstring fnDoubleToWString(_In_ nfFloat dValue, _In_ nfUint32 precision);
 	std::wstring fnColorToWString(_In_ nfColor cColor);
 
+	void fnStringToCommaSeparatedIntegerTriplet(_In_z_ const nfWChar * pwszValue, _Out_ nfInt32 & nValue1, _Out_ nfInt32 & nValue2, _Out_ nfInt32 & nValue3);
+
 	void fnWStringToBufferSafe(_In_ const std::wstring sString, _Out_opt_ nfWChar * pwszBuffer, nfUint32 cbBufferSize, _Out_opt_ nfUint32 * pcbNeededChars);
 
 }

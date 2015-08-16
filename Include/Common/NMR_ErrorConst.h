@@ -157,6 +157,9 @@ NMR_ErrorConst.h defines all error code constants.
 // Invalid XML Name
 #define NMR_ERROR_INVALIDXMLNAME 0x1025
 
+// Invalid Integer Triplet String
+#define NMR_ERROR_INVALIDINTEGERTRIPLET 0x1026
+
 
 /*-------------------------------------------------------------------
   Core framework error codes (0x2XXX)
@@ -704,5 +707,11 @@ Model error codes (0x8XXX)
 
 // Not supporting legacy CMYK color
 #define NMR_ERROR_NOTSUPPORTINGLEGACYCMYK 0x807A
+
+// Invalid Texture Reference
+#define NMR_ERROR_INVALIDTEXTUREREFERENCE 0x807B
+
+// Invalid Texture ID
+#define NMR_ERROR_INVALIDTEXTUREID 0x807C
 
 #endif // __NMR_ERRORCONST

@@ -50,9 +50,11 @@ Stream.
 
 namespace NMR {
 
-	CModelReaderNode093_Object::CModelReaderNode093_Object(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings)
+	CModelReaderNode093_Object::CModelReaderNode093_Object(_In_ CModel * pModel, _In_ PModelReader_ColorMapping pColorMapping, _In_ PModelBaseMaterialResource pMaterialResource, _In_ PModelReaderWarnings pWarnings)
 		: CModelReaderNode(pWarnings)
 	{
+		__NMRASSERT(pColorMapping.get() != nullptr);
+
 		m_nID = 0;
 		m_sType = L"";
 		m_bHasType = false;
@@ -61,6 +63,12 @@ namespace NMR {
 		m_pObject = NULL;
 		m_sThumbnail = L"";
 		m_sName = L"";
+
+		m_nColorID = 0;
+		m_nMaterialID = 0;
+
+		m_pColorMapping = pColorMapping;
+		m_pMaterialResource = pMaterialResource;
 
 	}
 
@@ -85,6 +93,40 @@ namespace NMR {
 
 		// Set Object Parameters
 		m_pObject->setName(m_sName);
+
+
+		// Set Default Parameters
+		if (m_nColorID > 0) {
+
+			nfColor cColor = 0;
+			if (m_pColorMapping->findColor(m_nColorID, 0, cColor)) {
+				m_pObject->setDefaultProperty(std::make_shared<CModelDefaultProperty_Color>(cColor));
+
+			}
+
+
+		}
+		else {
+
+			if (m_nMaterialID > 0) {
+				ModelResourceID nMaterialGroupID = 0;
+				ModelResourceIndex nMaterialIndex = 0;
+
+				if (m_pMaterialResource.get() != nullptr) {
+					ModelResourceIndex nIndex;
+					if (m_pColorMapping->getMaterialReference(m_nMaterialID, nIndex)) {
+						nMaterialGroupID = m_pMaterialResource->getResourceID();
+						nMaterialIndex = nIndex;
+					}
+				}
+
+				if (nMaterialGroupID > 0) {
+					m_pObject->setDefaultProperty(std::make_shared<CModelDefaultProperty_BaseMaterial>(nMaterialGroupID, nMaterialIndex));
+				}
+			}
+
+		}
+
 
 		// Set Object Type (might fail, if string is invalid)
 		if (m_sType.length() > 0) {
@@ -124,6 +166,20 @@ namespace NMR {
 			m_sName = sValue;
 		}
 
+		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TRIANGLE_COLORID) == 0) {
+
+			nfInt32 nValue = fnWStringToInt32(pAttributeValue);
+			if ((nValue >= 0) && (nValue < XML_3MF_MAXRESOURCEINDEX)) {
+				m_nColorID = nValue + 1;
+			}
+		}
+
+		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TRIANGLE_MATERIALID) == 0) {
+			nfInt32 nValue = fnWStringToInt32(pAttributeValue);
+			if ((nValue >= 0) && (nValue < XML_3MF_MAXRESOURCEINDEX))
+				m_nMaterialID = nValue + 1;
+		}
+
 
 	}
 
@@ -147,7 +203,7 @@ namespace NMR {
 				m_pObject = std::make_shared<CModelMeshObject>(m_nID, m_pModel, pMesh);
 
 				// Read Mesh
-				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode093_Mesh>(m_pModel, pMesh.get(), m_pWarnings);
+				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode093_Mesh>(m_pModel, pMesh.get(), m_pColorMapping, m_pMaterialResource, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 
 				// Add Object to Parent

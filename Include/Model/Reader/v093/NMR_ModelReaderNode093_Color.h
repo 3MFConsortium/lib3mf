@@ -43,8 +43,12 @@ namespace NMR {
 
 	class CModelReaderNode093_Color : public CModelReaderNode {
 	private:
+		ModelResourceID m_nTextureID;
 		std::wstring m_sColorString;
 		ModelResourceID m_nResourceID;
+		nfColor m_cColor;
+
+		void parseColor();
 	public:
 		CModelReaderNode093_Color() = delete;
 		CModelReaderNode093_Color(_In_ PModelReaderWarnings pWarnings);
@@ -55,6 +59,7 @@ namespace NMR {
 
 		nfColor retrieveColor();
 		ModelResourceID retrieveID();
+		ModelResourceID retrieveTextureID();
 	};
 
 	typedef std::shared_ptr <CModelReaderNode093_Color> PModelReaderNode093_Color;

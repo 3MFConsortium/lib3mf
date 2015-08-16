@@ -103,7 +103,7 @@ namespace NMR {
 				PModelReaderNode100_BaseMaterial pXMLNode = std::make_shared<CModelReaderNode100_BaseMaterial>(m_pModel, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 
-				if (m_pBaseMaterialResource) {
+				if (m_pBaseMaterialResource.get() != nullptr) {
 					m_pBaseMaterialResource->addBaseMaterial(pXMLNode->getMaterialName(), pXMLNode->getDisplayColor());
 
 				}

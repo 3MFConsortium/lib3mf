@@ -36,9 +36,14 @@ XML Model Stream.
 #include "Model/Reader/v093/NMR_ModelReaderNode093_Object.h"
 #include "Model/Reader/v093/NMR_ModelReaderNode093_Color.h"
 #include "Model/Reader/v093/NMR_ModelReaderNode093_Material.h"
+#include "Model/Reader/v093/NMR_ModelReaderNode093_Texture.h"
+
+#include "Model/Reader/NMR_ModelReader_ColorMapping.h"
+#include "Model/Reader/NMR_ModelReader_TexCoordMapping.h"
 
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Model/Classes/NMR_ModelResource.h"
+#include "Model/Classes/NMR_ModelTexture2D.h"
 #include "Model/Classes/NMR_ModelBaseMaterials.h"
 #include "Model/Classes/NMR_Model.h"
 
@@ -67,6 +72,7 @@ namespace NMR {
 
 		// Parse Content
 		parseContent(pXMLReader);
+
 	}
 
 	void CModelReaderNode093_Resources::OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue)
@@ -84,7 +90,7 @@ namespace NMR {
 		if (wcscmp(pNameSpace, XML_3MF_NAMESPACE_CORESPEC093) == 0) {
 
 			if (wcscmp(pChildName, XML_3MF_ELEMENT_OBJECT) == 0) {
-				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode093_Object>(m_pModel, m_pWarnings);
+				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode093_Object>(m_pModel, m_pColorMapping, m_pMaterialResource, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 			}
 
@@ -92,7 +98,20 @@ namespace NMR {
 				PModelReaderNode093_Color pXMLNode = std::make_shared<CModelReaderNode093_Color>(m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 
-				m_pColorMapping->registerColor(pXMLNode->retrieveID(), 0, pXMLNode->retrieveColor());
+				ModelResourceID nResourceID = pXMLNode->retrieveID();
+				ModelResourceID nTextureRefID = pXMLNode->retrieveTextureID();
+
+				if (nTextureRefID > 0) {
+					m_pColorMapping->registerTextureReference(nResourceID, nTextureRefID);
+				}
+				else {
+					m_pColorMapping->registerColor(pXMLNode->retrieveID(), 0, pXMLNode->retrieveColor());
+				}
+			}
+
+			if (wcscmp(pChildName, XML_3MF_ELEMENT_TEXTURE) == 0) {
+				PModelReaderNode093_Texture pXMLNode = std::make_shared<CModelReaderNode093_Texture>(m_pModel, m_pWarnings);
+				pXMLNode->parseXML(pXMLReader);
 			}
 
 			if (wcscmp(pChildName, XML_3MF_ELEMENT_MATERIAL) == 0) {
@@ -109,7 +128,9 @@ namespace NMR {
 					cColor = 0xffffffff;
 				}
 
-				m_pMaterialResource->addBaseMaterial(pXMLNode->getName (), cColor);
+				ModelResourceIndex nMaterialIndex;
+				nMaterialIndex = m_pMaterialResource->addBaseMaterial(pXMLNode->retrieveName(), cColor);
+				m_pColorMapping->registerMaterialReference(pXMLNode->retrieveID(), nMaterialIndex);
 			}
 
 		}

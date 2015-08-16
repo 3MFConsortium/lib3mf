@@ -115,5 +115,31 @@ namespace NMR {
 
 	}
 
+	ModelResourceID CModelReaderNode093_Texture::getID()
+	{
+		return m_nID;
+	}
+
+	std::wstring CModelReaderNode093_Texture::getPath()
+	{
+		return m_sPath;
+	}
+
+	std::wstring CModelReaderNode093_Texture::getContentType()
+	{
+		return m_sContentType;
+	}
+
+	std::wstring CModelReaderNode093_Texture::getTileStyleU()
+	{
+		return m_sTileStyleU;
+	}
+
+	std::wstring CModelReaderNode093_Texture::getTileStyleV()
+	{
+		return m_sTileStyleV;
+	}
+
 
 }
+

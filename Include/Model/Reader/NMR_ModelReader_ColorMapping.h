@@ -54,6 +54,8 @@ namespace NMR {
 	protected:
 		std::map <READERCOLORMAPPINGTREEENTRY, nfColor> m_ColorEntries;
 		std::map <ModelResourceID, nfInt32> m_ResourceIDs;
+		std::map <ModelResourceID, ModelResourceID> m_TextureMappings;
+		std::map <ModelResourceID, ModelResourceIndex> m_MaterialMappings;
 	public:
 		CModelReader_ColorMapping();
 
@@ -61,6 +63,14 @@ namespace NMR {
 		nfBool findColor(_In_ ModelResourceID nResourceID, _In_ ModelResourceIndex nResourceIndex, _Out_ nfColor & cColor);
 
 		nfBool hasResource(_In_ ModelResourceID nResourceID);
+
+		void registerTextureReference(_In_ ModelResourceID nResourceID, _In_ ModelResourceID nTextureID);
+		nfBool hasTextureReference(_In_ ModelResourceID nResourceID);
+		ModelResourceID getTextureReference(_In_ ModelResourceID nResourceID);
+
+		void registerMaterialReference(_In_ ModelResourceID nResourceID, _In_ ModelResourceIndex nMaterialIndex);
+		nfBool hasMaterialReference(_In_ ModelResourceID nResourceID);
+		nfBool getMaterialReference(_In_ ModelResourceID nResourceID, _Out_ ModelResourceIndex & nMaterialIndex);
 	};
 
 	typedef std::shared_ptr <CModelReader_ColorMapping> PModelReader_ColorMapping;

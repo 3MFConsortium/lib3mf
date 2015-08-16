@@ -41,8 +41,10 @@ A triangles reader model node is a parser for the triangles node of an XML Model
 #include "Model/Reader/NMR_ModelReaderNode.h"
 #include "Model/Reader/NMR_ModelReader_ColorMapping.h"
 #include "Model/Reader/NMR_ModelReader_TexCoordMapping.h"
+
 #include "Model/Classes/NMR_ModelComponent.h"
 #include "Model/Classes/NMR_ModelObject.h"
+#include "Model/Classes/NMR_ModelBaseMaterials.h"
 
 namespace NMR {
 
@@ -50,6 +52,9 @@ namespace NMR {
 	protected:
 		CMesh * m_pMesh;
 		CModel * m_pModel;
+		PModelReader_ColorMapping m_pColorMapping;
+		PModelReader_TexCoordMapping m_pTexCoordMapping;
+		PModelBaseMaterialResource m_pMaterialResource;
 
 		virtual void OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue);
 		virtual void OnNSChildElement(_In_z_ const nfWChar * pChildName, _In_z_ const nfWChar * pNameSpace, _In_ CXmlReader * pXMLReader);
@@ -59,7 +64,7 @@ namespace NMR {
 		_Ret_notnull_ CMeshInformation_BaseMaterials * createBaseMaterialInformation();
 	public:
 		CModelReaderNode093_Triangles() = delete;
-		CModelReaderNode093_Triangles(_In_ CModel * pModel, _In_ CMesh * pMesh, _In_ PModelReaderWarnings pWarnings);
+		CModelReaderNode093_Triangles(_In_ CModel * pModel, _In_ CMesh * pMesh, _In_ PModelReader_ColorMapping pColorMapping, _In_ PModelReader_TexCoordMapping pTexCoordMapping, PModelBaseMaterialResource pMaterialResource, _In_ PModelReaderWarnings pWarnings);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 	};

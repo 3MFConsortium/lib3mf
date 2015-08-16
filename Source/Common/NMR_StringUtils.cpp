@@ -226,6 +226,57 @@ namespace NMR {
 		return nResult;
 	}
 
+	nfInt32 fnWStringToInt32Comma(_In_z_ const nfWChar * pwszValue)
+	{
+		__NMRASSERT(pwszValue);
+		nfInt32 nResult = 0;
+
+		// Convert to integer and make a input and range check!
+		nfWChar * pEndPtr;
+
+		nResult = wcstol(pwszValue, &pEndPtr, 10);
+
+		// Check if any conversion happened
+		if ((pEndPtr == pwszValue) || (!pEndPtr))
+			throw CNMRException(NMR_ERROR_EMPTYSTRINGTOINTCONVERSION);
+
+		if ((*pEndPtr != L'\0') && (*pEndPtr != L' ') && (*pEndPtr != L','))
+			throw CNMRException(NMR_ERROR_INVALIDSTRINGTOINTCONVERSION);
+
+		if ((nResult == LONG_MAX) || (nResult == LONG_MIN))
+			throw CNMRException(NMR_ERROR_STRINGTOINTCONVERSIONOUTOFRANGE);
+
+		return nResult;
+	}
+
+
+	void fnStringToCommaSeparatedIntegerTriplet(_In_z_ const nfWChar * pwszValue, _Out_ nfInt32 & nValue1, _Out_ nfInt32 & nValue2, _Out_ nfInt32 & nValue3)
+	{
+		const wchar_t * pwszCommaValue1 = wcschr(pwszValue, L',');
+		if (pwszCommaValue1 != nullptr) {
+			if (*pwszCommaValue1 == 0)
+				throw CNMRException(NMR_ERROR_INVALIDINTEGERTRIPLET);
+			pwszCommaValue1++;
+
+			const wchar_t * pwszCommaValue2 = wcschr(pwszCommaValue1, L',');
+			if (pwszCommaValue2 != nullptr) {
+				if (*pwszCommaValue2 == 0)
+					throw CNMRException(NMR_ERROR_INVALIDINTEGERTRIPLET);
+				pwszCommaValue2++;
+
+				nValue1 = fnWStringToInt32Comma(pwszValue);
+				nValue2 = fnWStringToInt32Comma(pwszCommaValue1);
+				nValue3 = fnWStringToInt32Comma(pwszCommaValue2);
+			}
+			else
+				throw CNMRException(NMR_ERROR_INVALIDINTEGERTRIPLET);
+
+		}
+		else
+			throw CNMRException(NMR_ERROR_INVALIDINTEGERTRIPLET);
+
+	}
+
 	void fnWStringToBufferSafe(_In_ const std::wstring sString, _Out_opt_ nfWChar * pwszBuffer, nfUint32 cbBufferSize, _Out_opt_ nfUint32 * pcbNeededChars)
 	{
 		__NMRASSERT(pwszBuffer);

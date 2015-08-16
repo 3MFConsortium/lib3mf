@@ -37,8 +37,10 @@ A mesh reader model node is a parser for the mesh node of an XML Model Stream.
 
 #include "Model/Reader/NMR_ModelReaderNode.h"
 #include "Model/Reader/NMR_ModelReader_TexCoordMapping.h"
+#include "Model/Reader/NMR_ModelReader_ColorMapping.h"
 #include "Model/Classes/NMR_ModelComponent.h"
 #include "Model/Classes/NMR_ModelObject.h"
+#include "Model/Classes/NMR_ModelBaseMaterials.h"
 
 namespace NMR {
 
@@ -47,12 +49,14 @@ namespace NMR {
 		CMesh * m_pMesh;
 		CModel * m_pModel;
 		PModelReader_TexCoordMapping m_pTexCoordMapping;
+		PModelReader_ColorMapping m_pColorMapping;
+		PModelBaseMaterialResource m_pMaterialResource;
 	protected:
 		virtual void OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue);
 		virtual void OnNSChildElement(_In_z_ const nfWChar * pChildName, _In_z_ const nfWChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 	public:
 		CModelReaderNode093_Mesh() = delete;
-		CModelReaderNode093_Mesh(_In_ CModel * pModel, _In_ CMesh * pMesh, _In_ PModelReaderWarnings pWarnings);
+		CModelReaderNode093_Mesh(_In_ CModel * pModel, _In_ CMesh * pMesh, _In_ PModelReader_ColorMapping pColorMapping, _In_ PModelBaseMaterialResource pMaterialResource, _In_ PModelReaderWarnings pWarnings);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 	};

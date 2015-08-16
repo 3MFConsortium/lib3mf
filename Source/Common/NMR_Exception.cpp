@@ -85,6 +85,7 @@ namespace NMR {
 		case NMR_ERROR_INVALIDPOINTER: return "Passed invalid null pointer";
         case NMR_ERROR_XMLELEMENTNOTOPEN: return "XML Element not open";
         case NMR_ERROR_INVALIDXMLNAME: return "Invalid XML Name";
+		case NMR_ERROR_INVALIDINTEGERTRIPLET: return "Invalid Integer Triplet String";
 
 		// Unhandled exception
 		case NMR_ERROR_GENERICEXCEPTION: return NMR_GENERICEXCEPTIONSTRING;
@@ -266,6 +267,8 @@ namespace NMR {
 		case NMR_ERROR_MODELRELATIONSHIPSETREADFAILED: return "Model Relationship read failed";
 		case NMR_ERROR_COULDNOTCREATESTREAM: return "Could not create stream";
 		case NMR_ERROR_NOTSUPPORTINGLEGACYCMYK: return "Not supporting legacy CMYK color";
+		case NMR_ERROR_INVALIDTEXTUREREFERENCE: return "Invalid Texture Reference";
+		case NMR_ERROR_INVALIDTEXTUREID: return "Invalid Texture ID";
 
 		default:
 			return "unknown error";

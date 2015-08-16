@@ -59,7 +59,17 @@ namespace NMR {
 		CModelReaderNode093_Texture(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
+
+		ModelResourceID getID ();
+
+		std::wstring getPath();
+		std::wstring getContentType();
+		std::wstring getTileStyleU();
+		std::wstring getTileStyleV();
 	};
+
+	typedef std::shared_ptr <CModelReaderNode093_Texture> PModelReaderNode093_Texture;
+
 
 }
 

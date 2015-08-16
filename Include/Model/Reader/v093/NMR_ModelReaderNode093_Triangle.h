@@ -49,7 +49,9 @@ namespace NMR {
 		nfInt32 m_nTextureIndex1;
 		nfInt32 m_nTextureIndex2;
 		nfInt32 m_nTextureIndex3;
-		nfInt32 m_nColorID;
+		nfInt32 m_nColorID1;
+		nfInt32 m_nColorID2;
+		nfInt32 m_nColorID3;
 		nfInt32 m_nMaterialID;
 		nfInt32 m_nTextureID;
 
@@ -62,7 +64,7 @@ namespace NMR {
 		void retrieveIndices(_Out_ nfInt32 & nIndex1, _Out_ nfInt32 & nIndex2, _Out_ nfInt32 & nIndex3, nfInt32 nNodeCount);
 		nfBool retrieveTextureIndices(_Out_ nfInt32 & nIndex1, _Out_ nfInt32 & nIndex2, _Out_ nfInt32 & nIndex3);
 
-		nfInt32 retrieveColorID();
+		nfBool retrieveColorIDs(_Out_ nfInt32 & nColorID1, _Out_ nfInt32 & nColorID2, _Out_ nfInt32 & nColorID3);
 		nfInt32 retrieveTextureID();
 		nfInt32 retrieveMaterialID();
 	};

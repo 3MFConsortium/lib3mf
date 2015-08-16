@@ -46,6 +46,7 @@ namespace NMR {
 		: CModelReaderNode(pWarnings)
 	{
 		m_nResourceID = 0;
+		m_nTextureID = 0;
 	}
 
 	void CModelReaderNode093_Color::parseXML(_In_ CXmlReader * pXMLReader)
@@ -58,18 +59,26 @@ namespace NMR {
 
 		// Parse Content
 		parseContent(pXMLReader);
+
+		// Parse Color
+		parseColor();
 	}
 
 	nfColor CModelReaderNode093_Color::retrieveColor()
 	{
-		nfColor cColor = 0;
+		return m_cColor;
+	}
+
+	void CModelReaderNode093_Color::parseColor()
+	{
+		m_cColor = 0;
 
 		try {
 			if (m_sColorString.length() > 0) {
 				nfWChar bFirstChar = m_sColorString[0];
 				if (bFirstChar == L'#') {
-					if (fnWStringToSRGBColor(m_sColorString.c_str(), cColor)) {
-						return cColor;
+					if (fnWStringToSRGBColor(m_sColorString.c_str(), m_cColor)) {
+						return;
 					}
 				}
 
@@ -78,6 +87,26 @@ namespace NMR {
 					if (sSubStr == L"scRGB") {
 						// parse scRGB String
 						throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
+					}
+				}
+
+				if (bFirstChar == L't') {
+					std::wstring sSubStr = m_sColorString.substr(0, 4);
+					if (sSubStr == L"tex(") {
+						// parse Texture String
+
+						if (m_sColorString.length() > 4) {
+							std::wstring sTexID = m_sColorString.substr(4, m_sColorString.length() - sSubStr.length() - 1);
+							nfInt32 nValue = fnWStringToInt32(sTexID.c_str());
+							if ((nValue < 0) || (nValue >= XML_3MF_MAXRESOURCEINDEX))
+								throw CNMRException(NMR_ERROR_INVALIDTEXTUREREFERENCE);
+
+							m_nTextureID = nValue + 1;
+
+						}
+						else {
+							throw CNMRException(NMR_ERROR_INVALIDTEXTUREREFERENCE);
+						}
 					}
 				}
 
@@ -96,7 +125,6 @@ namespace NMR {
 			m_pWarnings->addException(Exception, mrwMissingMandatoryValue);
 		}
 
-		return cColor;
 	}
 
 
@@ -134,5 +162,9 @@ namespace NMR {
 
 	}
 
+	ModelResourceID CModelReaderNode093_Color::retrieveTextureID()
+	{
+		return m_nTextureID;
+	}
 
 }

@@ -39,6 +39,10 @@ A object reader model node is a parser for the object node of an XML Model Strea
 #include "Model/Classes/NMR_ModelComponent.h"
 #include "Model/Classes/NMR_ModelComponentsObject.h"
 #include "Model/Classes/NMR_ModelObject.h"
+#include "Model/Classes/NMR_ModelBaseMaterials.h"
+
+#include "Model/Reader/NMR_ModelReader_ColorMapping.h"
+#include "Model/Reader/NMR_ModelReader_TexCoordMapping.h"
 
 namespace NMR {
 
@@ -51,6 +55,10 @@ namespace NMR {
 		std::wstring m_sType;
 		nfBool m_bHasType;
 		PModelObject m_pObject;
+		PModelReader_ColorMapping m_pColorMapping;
+		PModelBaseMaterialResource m_pMaterialResource;
+		nfInt32 m_nColorID;
+		nfInt32 m_nMaterialID;
 
 		void createDefaultProperties();
 	protected:
@@ -58,7 +66,7 @@ namespace NMR {
 		virtual void OnNSChildElement(_In_z_ const nfWChar * pChildName, _In_z_ const nfWChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 	public:
 		CModelReaderNode093_Object() = delete;
-		CModelReaderNode093_Object(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings);
+		CModelReaderNode093_Object(_In_ CModel * pModel, _In_ PModelReader_ColorMapping pColorMapping, _In_ PModelBaseMaterialResource pMaterialResource, _In_ PModelReaderWarnings pWarnings);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 	};

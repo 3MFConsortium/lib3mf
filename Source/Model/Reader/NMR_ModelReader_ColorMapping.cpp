@@ -84,4 +84,47 @@ namespace NMR {
 		auto iIterator = m_ResourceIDs.find(nResourceID);
 		return (iIterator != m_ResourceIDs.end());
 	}
+
+	void CModelReader_ColorMapping::registerTextureReference(_In_ ModelResourceID nResourceID, _In_ ModelResourceID nTextureID)
+	{
+		m_TextureMappings.insert(std::make_pair(nResourceID, nTextureID));
+	}
+
+	nfBool CModelReader_ColorMapping::hasTextureReference(_In_ ModelResourceID nResourceID)
+	{
+		auto iIterator = m_TextureMappings.find(nResourceID);
+		return (iIterator != m_TextureMappings.end());
+	}
+
+	ModelResourceID CModelReader_ColorMapping::getTextureReference(_In_ ModelResourceID nResourceID)
+	{
+		auto iIterator = m_TextureMappings.find(nResourceID);
+		if (iIterator != m_TextureMappings.end()) {
+			return iIterator->second;
+		}
+		return 0;
+	}
+
+	void CModelReader_ColorMapping::registerMaterialReference(_In_ ModelResourceID nResourceID, _In_ ModelResourceIndex nMaterialIndex)
+	{
+		m_MaterialMappings.insert(std::make_pair(nResourceID, nMaterialIndex));
+	}
+
+	nfBool CModelReader_ColorMapping::hasMaterialReference(_In_ ModelResourceID nResourceID)
+	{
+		auto iIterator = m_MaterialMappings.find(nResourceID);
+		return (iIterator != m_MaterialMappings.end());
+	}
+
+	nfBool CModelReader_ColorMapping::getMaterialReference(_In_ ModelResourceID nResourceID, _Out_ ModelResourceIndex & nMaterialIndex)
+	{
+		auto iIterator = m_MaterialMappings.find(nResourceID);
+		if (iIterator != m_MaterialMappings.end()) {
+			nMaterialIndex = iIterator->second;
+			return true;
+		}
+		nMaterialIndex = 0;
+		return false;
+	}
+
 }

@@ -47,6 +47,7 @@ namespace NMR {
 	{
 		m_nResourceID = 0;
 		m_nColorID = 0;
+		m_sName = L"material";
 	}
 
 	void CModelReaderNode093_Material::parseXML(_In_ CXmlReader * pXMLReader)
