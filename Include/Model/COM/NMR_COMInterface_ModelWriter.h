@@ -56,6 +56,8 @@ namespace NMR {
 		LIB3MFMETHOD(GetLastError) (_Out_ DWORD * pErrorCode, _Outptr_opt_ LPCSTR * pErrorMessage);
 
 		LIB3MFMETHOD(WriteToFile) (_In_z_ LPCWSTR pwszFilename);
+		LIB3MFMETHOD(WriteToFileUTF8) (_In_z_ LPCSTR pwszFilename);
+
 #ifndef __GCC
 		LIB3MFMETHOD(WriteToStream) (_In_ IStream * pStream);
 #endif

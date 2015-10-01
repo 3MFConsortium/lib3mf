@@ -119,7 +119,7 @@ namespace NMR {
 		return filepos.QuadPart;
 	}
 
-	nfUint64 CExportStream_COM::writeBuffer(_In_ void * pBuffer, _In_ nfUint64 cbTotalBytesToWrite)
+	nfUint64 CExportStream_COM::writeBuffer(_In_ const void * pBuffer, _In_ nfUint64 cbTotalBytesToWrite)
 	{
 		HRESULT hResult;
 		ULONG cbBytesToWrite;

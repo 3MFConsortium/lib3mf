@@ -46,7 +46,7 @@ namespace NMR {
 	};
 
 	class CXmlReader {
-  private:
+    protected:
 		PImportStream m_pImportStream;
 	public:
 		CXmlReader(_In_ PImportStream pImportStream);
@@ -61,6 +61,7 @@ namespace NMR {
 		virtual nfBool MoveToFirstAttribute() = 0;
 		virtual nfBool MoveToNextAttribute() = 0;
 		virtual nfBool IsDefault() = 0;
+		virtual void CloseElement();
 	};
 
 	typedef std::shared_ptr<CXmlReader> PXmlReader;

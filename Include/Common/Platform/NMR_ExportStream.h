@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2015 Microsoft Corporation 
+Copyright (C) 2015 Microsoft Corporation
 Copyright (C) 2015 netfabb GmbH (Original Author)
 
 All rights reserved.
@@ -35,8 +35,11 @@ This is an abstract base stream class for exporting from various data sources.
 #ifndef __NMR_EXPORTSTREAM
 #define __NMR_EXPORTSTREAM
 
-#include "Common/NMR_Types.h" 
-#include "Common/NMR_Local.h" 
+#include "Common/NMR_Types.h"
+#include "Common/NMR_Local.h"
+#include "Common/Platform/NMR_ImportStream.h"
+
+#define NMR_EXPORTSTREAM_WRITEBUFFERSIZE (128 * 1024)
 
 namespace NMR {
 
@@ -47,7 +50,8 @@ namespace NMR {
 		virtual nfBool seekForward(_In_ nfUint64 bytes, _In_ nfBool bHasToSucceed) = 0;
 		virtual nfBool seekFromEnd(_In_ nfUint64 bytes, _In_ nfBool bHasToSucceed) = 0;
 		virtual nfUint64 getPosition () = 0;
-		virtual nfUint64 writeBuffer(_Out_ void * pBuffer, _In_ nfUint64 cbTotalBytesToWrite) = 0;
+		virtual nfUint64 writeBuffer(_In_ const void * pBuffer, _In_ nfUint64 cbTotalBytesToWrite) = 0;
+		void copyFrom(_In_ CImportStream * pImportStream, _In_ nfUint64 cbCount, _In_ nfUint32 cbBufferSize);
 	};
 
 	typedef std::shared_ptr <CExportStream> PExportStream;

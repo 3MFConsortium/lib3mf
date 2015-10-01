@@ -40,6 +40,7 @@ This class provides a memory container for holding the texture information state
 #include "Common/NMR_Local.h"
 
 #include <vector>
+#include <memory>
 
 #define MESHINFORMATIONCOUNTER_BUFFERSIZE 256
 

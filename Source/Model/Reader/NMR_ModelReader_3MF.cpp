@@ -59,7 +59,6 @@ namespace NMR {
 
 		// Extract Stream from Package
 		PImportStream pModelStream = extract3MFOPCPackage(pStream);
-		pModelStream->seekPosition(0, true);
 
 		// Create XML Reader
 		PXmlReader pXMLReader = fnCreateXMLReaderInstance(pModelStream);

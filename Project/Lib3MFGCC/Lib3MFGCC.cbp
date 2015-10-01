@@ -19,6 +19,7 @@
 					<Add option="-g" />
 					<Add option="-DBUILD_DLL" />
 					<Add option="-D__GCC" />
+					<Add option="-D__GCC_WIN32" />
 					<Add option="-DNMR_COM_EMULATION" />
 					<Add directory="../../Include" />
 				</Compiler>
@@ -39,6 +40,7 @@
 					<Add option="-Wall" />
 					<Add option="-DBUILD_DLL" />
 					<Add option="-D__GCC" />
+					<Add option="-D__GCC_WIN32" />
 					<Add option="-DNMR_COM_EMULATION" />
 					<Add directory="../../Include" />
 				</Compiler>
@@ -80,11 +82,9 @@
 		<Unit filename="../../Include/Common/Platform/NMR_COM_Native.h" />
 		<Unit filename="../../Include/Common/Platform/NMR_ExportStream.h" />
 		<Unit filename="../../Include/Common/Platform/NMR_ExportStream_COM.h" />
-		<Unit filename="../../Include/Common/Platform/NMR_ExportStream_GCC.h" />
 		<Unit filename="../../Include/Common/Platform/NMR_IStream.h" />
 		<Unit filename="../../Include/Common/Platform/NMR_ImportStream.h" />
 		<Unit filename="../../Include/Common/Platform/NMR_ImportStream_COM.h" />
-		<Unit filename="../../Include/Common/Platform/NMR_ImportStream_GCC.h" />
 		<Unit filename="../../Include/Common/Platform/NMR_Platform.h" />
 		<Unit filename="../../Include/Common/Platform/NMR_SAL.h" />
 		<Unit filename="../../Include/Common/Platform/NMR_WinTypes.h" />
@@ -92,8 +92,6 @@
 		<Unit filename="../../Include/Common/Platform/NMR_XmlReader_COM.h" />
 		<Unit filename="../../Include/Common/Platform/NMR_XmlReader_GCC.h" />
 		<Unit filename="../../Include/Common/Platform/NMR_XmlWriter.h" />
-		<Unit filename="../../Include/Common/Platform/NMR_XmlWriter_COM.h" />
-		<Unit filename="../../Include/Common/Platform/NMR_XmlWriter_GCC.h" />
 		<Unit filename="../../Include/Model/COM/NMR_COMInterface_Model.h" />
 		<Unit filename="../../Include/Model/COM/NMR_COMInterface_ModelBuildItem.h" />
 		<Unit filename="../../Include/Model/COM/NMR_COMInterface_ModelBuildItemIterator.h" />
@@ -168,22 +166,359 @@
 		<Unit filename="../../Source/Common/NMR_Exception.cpp" />
 		<Unit filename="../../Source/Common/NMR_Exception_Windows.cpp" />
 		<Unit filename="../../Source/Common/NMR_StringUtils.cpp" />
-		<Unit filename="../../Source/Common/Platform/NMR_ExportStream_GCC.cpp" />
-		<Unit filename="../../Source/Common/Platform/NMR_ImportStream_GCC.cpp" />
+		<Unit filename="../../Source/Common/OPC/NMR_OpcPackagePart.cpp" />
+		<Unit filename="../../Source/Common/OPC/NMR_OpcPackageReader.cpp" />
+		<Unit filename="../../Source/Common/OPC/NMR_OpcPackageRelationship.cpp" />
+		<Unit filename="../../Source/Common/OPC/NMR_OpcPackageRelationshipReader.cpp" />
+		<Unit filename="../../Source/Common/OPC/NMR_OpcPackageWriter.cpp" />
+		<Unit filename="../../Source/Common/Platform/NMR_ExportStream.cpp" />
+		<Unit filename="../../Source/Common/Platform/NMR_ExportStream_GCC_Native.cpp" />
+		<Unit filename="../../Source/Common/Platform/NMR_ExportStream_GCC_Win32.cpp" />
+		<Unit filename="../../Source/Common/Platform/NMR_ExportStream_ZIP.cpp" />
+		<Unit filename="../../Source/Common/Platform/NMR_ImportStream_GCC_Native.cpp" />
+		<Unit filename="../../Source/Common/Platform/NMR_ImportStream_GCC_Win32.cpp" />
+		<Unit filename="../../Source/Common/Platform/NMR_ImportStream_Memory.cpp" />
+		<Unit filename="../../Source/Common/Platform/NMR_ImportStream_ZIP.cpp" />
 		<Unit filename="../../Source/Common/Platform/NMR_Platform_GCC.cpp" />
+		<Unit filename="../../Source/Common/Platform/NMR_PortableZIPWriter.cpp" />
+		<Unit filename="../../Source/Common/Platform/NMR_PortableZIPWriterEntry.cpp" />
+		<Unit filename="../../Source/Common/Platform/NMR_Time.cpp" />
 		<Unit filename="../../Source/Common/Platform/NMR_XmlReader.cpp" />
-		<Unit filename="../../Source/Common/Platform/NMR_XmlReader_GCC.cpp" />
+		<Unit filename="../../Source/Common/Platform/NMR_XmlReader_Native.cpp" />
 		<Unit filename="../../Source/Common/Platform/NMR_XmlWriter.cpp" />
-		<Unit filename="../../Source/Common/Platform/NMR_XmlWriter_GCC.cpp" />
+		<Unit filename="../../Source/Common/Platform/NMR_XmlWriter_Native.cpp" />
+		<Unit filename="../../Source/Libraries/libzip/zip_add.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_add_dir.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_add_entry.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_buffer.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_close.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_delete.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_dir_add.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_dirent.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_discard.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_entry.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_err_str.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_error.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_error_clear.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_error_get.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_error_get_sys_type.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_error_strerror.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_error_to_str.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_extra_field.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_extra_field_api.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_fclose.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_file_add.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_file_error_clear.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_file_error_get.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_file_get_comment.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_file_get_external_attributes.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_file_get_offset.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_file_rename.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_file_replace.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_file_set_comment.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_file_set_external_attributes.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_file_set_mtime.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_file_strerror.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_filerange_crc.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_fopen.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_fopen_encrypted.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_fopen_index.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_fopen_index_encrypted.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_fread.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_get_archive_comment.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_get_archive_flag.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_get_compression_implementation.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_get_encryption_implementation.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_get_file_comment.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_get_name.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_get_num_entries.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_get_num_files.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_io_util.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_memdup.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_name_locate.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_new.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_open.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_rename.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_replace.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_set_archive_comment.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_set_archive_flag.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_set_file_comment.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_set_file_compression.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_set_name.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_source_begin_write.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_source_buffer.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_source_call.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_source_close.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_source_commit_write.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_source_crc.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_source_deflate.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_source_error.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_source_free.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_source_function.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_source_is_deleted.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_source_layered.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_source_open.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_source_pkware.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_source_read.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_source_remove.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_source_rollback_write.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_source_seek.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_source_seek_write.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_source_stat.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_source_supports.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_source_tell.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_source_tell_write.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_source_window.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_source_write.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_source_zip.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_source_zip_new.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_stat.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_stat_index.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_stat_init.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_strerror.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_string.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_unchange.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_unchange_all.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_unchange_archive.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_unchange_data.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/libzip/zip_utf-8.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/zlib/adler32.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/zlib/compress.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/zlib/crc32.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/zlib/deflate.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/zlib/infback.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/zlib/inffast.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/zlib/inflate.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/zlib/inftrees.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/zlib/trees.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/zlib/uncompr.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Libraries/zlib/zutil.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../Source/Model/COM/NMR_COMInterface_GCC.cpp" />
 		<Unit filename="../../Source/Model/COM/NMR_COMInterface_Model.cpp" />
+		<Unit filename="../../Source/Model/COM/NMR_COMInterface_ModelBaseMaterial.cpp" />
 		<Unit filename="../../Source/Model/COM/NMR_COMInterface_ModelBuildItem.cpp" />
 		<Unit filename="../../Source/Model/COM/NMR_COMInterface_ModelBuildItemIterator.cpp" />
 		<Unit filename="../../Source/Model/COM/NMR_COMInterface_ModelComponent.cpp" />
 		<Unit filename="../../Source/Model/COM/NMR_COMInterface_ModelComponentsObject.cpp" />
+		<Unit filename="../../Source/Model/COM/NMR_COMInterface_ModelDefaultPropertyHandler.cpp" />
 		<Unit filename="../../Source/Model/COM/NMR_COMInterface_ModelMeshObject.cpp" />
+		<Unit filename="../../Source/Model/COM/NMR_COMInterface_ModelPropertyHandler.cpp" />
 		<Unit filename="../../Source/Model/COM/NMR_COMInterface_ModelReader.cpp" />
 		<Unit filename="../../Source/Model/COM/NMR_COMInterface_ModelResourceFactory.cpp" />
 		<Unit filename="../../Source/Model/COM/NMR_COMInterface_ModelResourceIterator.cpp" />
+		<Unit filename="../../Source/Model/COM/NMR_COMInterface_ModelTexture2D.cpp" />
 		<Unit filename="../../Source/Model/COM/NMR_COMInterface_ModelWriter.cpp" />
 		<Unit filename="../../Source/Model/COM/NMR_DLLInterfaces.cpp" />
 		<Unit filename="../../Source/Model/Classes/NMR_Model.cpp" />
@@ -192,20 +527,41 @@
 		<Unit filename="../../Source/Model/Classes/NMR_ModelBuildItem.cpp" />
 		<Unit filename="../../Source/Model/Classes/NMR_ModelComponent.cpp" />
 		<Unit filename="../../Source/Model/Classes/NMR_ModelComponentsObject.cpp" />
+		<Unit filename="../../Source/Model/Classes/NMR_ModelDefaultProperty.cpp" />
+		<Unit filename="../../Source/Model/Classes/NMR_ModelDefaultProperty_BaseMaterial.cpp" />
+		<Unit filename="../../Source/Model/Classes/NMR_ModelDefaultProperty_Color.cpp" />
+		<Unit filename="../../Source/Model/Classes/NMR_ModelDefaultProperty_TexCoord2D.cpp" />
 		<Unit filename="../../Source/Model/Classes/NMR_ModelMeshObject.cpp" />
 		<Unit filename="../../Source/Model/Classes/NMR_ModelMetaData.cpp" />
 		<Unit filename="../../Source/Model/Classes/NMR_ModelObject.cpp" />
 		<Unit filename="../../Source/Model/Classes/NMR_ModelResource.cpp" />
 		<Unit filename="../../Source/Model/Classes/NMR_ModelTexture2D.cpp" />
+		<Unit filename="../../Source/Model/Classes/NMR_ModelThumbnail.cpp" />
 		<Unit filename="../../Source/Model/Reader/NMR_ModelReader.cpp" />
 		<Unit filename="../../Source/Model/Reader/NMR_ModelReaderNode.cpp" />
 		<Unit filename="../../Source/Model/Reader/NMR_ModelReaderNode_Model.cpp" />
 		<Unit filename="../../Source/Model/Reader/NMR_ModelReaderWarnings.cpp" />
 		<Unit filename="../../Source/Model/Reader/NMR_ModelReader_3MF.cpp" />
-		<Unit filename="../../Source/Model/Reader/NMR_ModelReader_3MF_GCC.cpp" />
+		<Unit filename="../../Source/Model/Reader/NMR_ModelReader_3MF_Native.cpp" />
 		<Unit filename="../../Source/Model/Reader/NMR_ModelReader_ColorMapping.cpp" />
 		<Unit filename="../../Source/Model/Reader/NMR_ModelReader_STL.cpp" />
 		<Unit filename="../../Source/Model/Reader/NMR_ModelReader_TexCoordMapping.cpp" />
+		<Unit filename="../../Source/Model/Reader/v093/NMR_ModelReaderNode093_Build.cpp" />
+		<Unit filename="../../Source/Model/Reader/v093/NMR_ModelReaderNode093_BuildItem.cpp" />
+		<Unit filename="../../Source/Model/Reader/v093/NMR_ModelReaderNode093_Color.cpp" />
+		<Unit filename="../../Source/Model/Reader/v093/NMR_ModelReaderNode093_Component.cpp" />
+		<Unit filename="../../Source/Model/Reader/v093/NMR_ModelReaderNode093_Components.cpp" />
+		<Unit filename="../../Source/Model/Reader/v093/NMR_ModelReaderNode093_Material.cpp" />
+		<Unit filename="../../Source/Model/Reader/v093/NMR_ModelReaderNode093_Mesh.cpp" />
+		<Unit filename="../../Source/Model/Reader/v093/NMR_ModelReaderNode093_Object.cpp" />
+		<Unit filename="../../Source/Model/Reader/v093/NMR_ModelReaderNode093_Resources.cpp" />
+		<Unit filename="../../Source/Model/Reader/v093/NMR_ModelReaderNode093_Texture.cpp" />
+		<Unit filename="../../Source/Model/Reader/v093/NMR_ModelReaderNode093_TextureVertex.cpp" />
+		<Unit filename="../../Source/Model/Reader/v093/NMR_ModelReaderNode093_TextureVertices.cpp" />
+		<Unit filename="../../Source/Model/Reader/v093/NMR_ModelReaderNode093_Triangle.cpp" />
+		<Unit filename="../../Source/Model/Reader/v093/NMR_ModelReaderNode093_Triangles.cpp" />
+		<Unit filename="../../Source/Model/Reader/v093/NMR_ModelReaderNode093_Vertex.cpp" />
+		<Unit filename="../../Source/Model/Reader/v093/NMR_ModelReaderNode093_Vertices.cpp" />
 		<Unit filename="../../Source/Model/Reader/v100/NMR_ModelReaderNode100_BaseMaterial.cpp" />
 		<Unit filename="../../Source/Model/Reader/v100/NMR_ModelReaderNode100_BaseMaterials.cpp" />
 		<Unit filename="../../Source/Model/Reader/v100/NMR_ModelReaderNode100_Build.cpp" />
@@ -228,10 +584,11 @@
 		<Unit filename="../../Source/Model/Writer/NMR_ModelWriter.cpp" />
 		<Unit filename="../../Source/Model/Writer/NMR_ModelWriterNode.cpp" />
 		<Unit filename="../../Source/Model/Writer/NMR_ModelWriter_3MF.cpp" />
-		<Unit filename="../../Source/Model/Writer/NMR_ModelWriter_3MF_GCC.cpp" />
+		<Unit filename="../../Source/Model/Writer/NMR_ModelWriter_3MF_Native.cpp" />
 		<Unit filename="../../Source/Model/Writer/NMR_ModelWriter_ColorMapping.cpp" />
 		<Unit filename="../../Source/Model/Writer/NMR_ModelWriter_STL.cpp" />
 		<Unit filename="../../Source/Model/Writer/NMR_ModelWriter_TexCoordMapping.cpp" />
+		<Unit filename="../../Source/Model/Writer/NMR_ModelWriter_TexCoordMappingContainer.cpp" />
 		<Unit filename="../../Source/Model/Writer/v100/NMR_ModelWriterNode100_Mesh.cpp" />
 		<Unit filename="../../Source/Model/Writer/v100/NMR_ModelWriterNode100_Model.cpp" />
 		<Unit filename="main.cpp" />

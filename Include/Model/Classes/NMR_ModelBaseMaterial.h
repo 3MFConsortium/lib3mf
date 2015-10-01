@@ -32,8 +32,8 @@ material resource object.
 
 --*/
 
-#include "Common\NMR_Local.h"
-#include "Common\NMR_Types.h"
+#include "Common/NMR_Local.h"
+#include "Common/NMR_Types.h"
 #include <string>
 #include <memory>
 

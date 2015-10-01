@@ -41,7 +41,6 @@ specific classes for COM.
 #include "Common/Platform/NMR_ImportStream_COM.h"
 #include "Common/Platform/NMR_ExportStream_COM.h"
 #include "Common/Platform/NMR_XmlReader_COM.h"
-#include "Common/Platform/NMR_XmlWriter_COM.h"
 
 namespace NMR {
 
@@ -54,16 +53,12 @@ namespace NMR {
 	{
 		return std::make_shared<CExportStream_COM> (pwszFileName);
 	}
-
+		
 	PXmlReader fnCreateXMLReaderInstance (_In_ PImportStream pImportStream)
 	{
 		return std::make_shared<CXmlReader_COM> (pImportStream);
 	}
 
-	PXmlWriter fnCreateXMLWriterInstance (_In_ PExportStream pExportStream)
-	{
-		return std::make_shared<CXmlWriter_COM> (pExportStream);
-	}
 
 }
 

@@ -40,6 +40,10 @@ This is the class for exporting the 3mf mesh node.
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_Exception_Windows.h"
 
+#ifdef __GCC
+#include <stdio.h>
+#endif // __GCC
+
 namespace NMR {
 
 	CModelWriterNode100_Mesh::CModelWriterNode100_Mesh(_In_ CModelMeshObject * pModelMeshObject, _In_ CXmlWriter * pXMLWriter, _In_ PModelWriter_ColorMapping pColorMapping, _In_ PModelWriter_TexCoordMappingContainer pTextureMappingContainer)
@@ -54,6 +58,13 @@ namespace NMR {
 		m_pModelMeshObject = pModelMeshObject;
 		m_pColorMapping = pColorMapping;
 		m_pTextureMappingContainer = pTextureMappingContainer;
+
+		// Initialize buffer arrays
+		m_pszFloatFormat = "%.3f";
+		m_nTriangleBufferPos = 0;
+		m_nVertexBufferPos = 0;
+		putVertexString(MODELWRITERMESH100_VERTEXLINESTART);
+		putTriangleString(MODELWRITERMESH100_TRIANGLELINESTART);
 	}
 
 	void CModelWriterNode100_Mesh::writeToXML()
@@ -75,13 +86,16 @@ namespace NMR {
 		for (nNodeIndex = 0; nNodeIndex < nNodeCount; nNodeIndex++) {
 			// Get Mesh Node
 			MESHNODE * pMeshNode = pMesh->getNode(nNodeIndex);
+			writeVertexData(pMeshNode);
+
+			/* The following works, but would be a major output speed bottleneck!
 
 			// Write Vertex
 			writeStartElement(XML_3MF_ELEMENT_VERTEX);
 			writeFloatAttribute(XML_3MF_ATTRIBUTE_VERTEX_X, pMeshNode->m_position.m_values.x);
 			writeFloatAttribute(XML_3MF_ATTRIBUTE_VERTEX_Y, pMeshNode->m_position.m_values.y);
 			writeFloatAttribute(XML_3MF_ATTRIBUTE_VERTEX_Z, pMeshNode->m_position.m_values.z);
-			writeEndElement();
+			writeEndElement(); */
 		}
 		writeFullEndElement();
 
@@ -125,7 +139,7 @@ namespace NMR {
 
 			// Retrieve Base Material
 			if (pBaseMaterials) {
-				MESHINFORMATION_BASEMATERIAL* pFaceData = (MESHINFORMATION_BASEMATERIAL*) pBaseMaterials->getFaceData(nFaceIndex);
+				MESHINFORMATION_BASEMATERIAL* pFaceData = (MESHINFORMATION_BASEMATERIAL*)pBaseMaterials->getFaceData(nFaceIndex);
 				if (pFaceData->m_nMaterialGroupID) {
 					nPropertyID = pFaceData->m_nMaterialGroupID;
 					nPropertyIndex1 = pFaceData->m_nMaterialIndex;
@@ -138,7 +152,7 @@ namespace NMR {
 			if (pNodeColors) {
 				MESHINFORMATION_NODECOLOR* pFaceData = (MESHINFORMATION_NODECOLOR*)pNodeColors->getFaceData(nFaceIndex);
 				if ((pFaceData->m_cColors[0] != 0) || (pFaceData->m_cColors[1] != 0) || (pFaceData->m_cColors[2] != 0)) {
-				
+
 					ModelResourceIndex nColorIndex1 = 0;
 					ModelResourceIndex nColorIndex2 = 0;
 					ModelResourceIndex nColorIndex3 = 0;
@@ -181,7 +195,21 @@ namespace NMR {
 				}
 			}
 
-				
+			if (nPropertyID != 0) {
+				if ((nPropertyIndex1 != nPropertyIndex2) || (nPropertyIndex1 != nPropertyIndex3)) {
+					writeFaceData_ThreeProperties(pMeshFace, nPropertyID, nPropertyIndex1, nPropertyIndex2, nPropertyIndex3);
+				}
+				else {
+					writeFaceData_OneProperty(pMeshFace, nPropertyID, nPropertyIndex1);
+				}
+			}
+			else
+			{
+				writeFaceData_Plain(pMeshFace);
+
+			}
+
+			/* The following works, but would be a major output speed bottleneck!
 
 			// Write Triangle
 			writeStartElement(XML_3MF_ELEMENT_TRIANGLE);
@@ -199,12 +227,140 @@ namespace NMR {
 				}
 			}
 
-			writeEndElement();
+			writeEndElement();  */
 		}
 		writeFullEndElement();
 
 		// Finish Mesh Element
 		writeFullEndElement();
+	}
+
+
+	void CModelWriterNode100_Mesh::putVertexString(_In_ const nfChar * pszString)
+	{
+		__NMRASSERT(pszString);
+		const nfChar * pChar = pszString;
+		nfChar * pTarget = &m_VertexLine[m_nVertexBufferPos];
+
+		while (*pChar != 0) {
+			*pTarget = *pChar;
+			pTarget++;
+			pChar++;
+			m_nVertexBufferPos++;
+		}
+	}
+
+	void CModelWriterNode100_Mesh::putVertexFloat(_In_ const nfFloat fValue)
+	{
+
+#ifdef __GCC
+		int nCount = sprintf(&m_VertexLine[m_nVertexBufferPos], m_pszFloatFormat, fValue);
+#else
+		int nCount = sprintf_s(&m_VertexLine[m_nVertexBufferPos], MODELWRITERMESH100_LINEBUFFERSIZE - m_nVertexBufferPos, m_pszFloatFormat, fValue);
+#endif // __GCC
+
+		if (nCount < 1)
+			throw CNMRException(NMR_ERROR_COULDNOTCONVERTNUMBER);
+		m_nVertexBufferPos += nCount;
+	}
+
+
+	void CModelWriterNode100_Mesh::putTriangleString(_In_ const nfChar * pszString)
+	{
+		__NMRASSERT(pszString);
+		const nfChar * pChar = pszString;
+		nfChar * pTarget = &m_TriangleLine[m_nTriangleBufferPos];
+
+		while (*pChar != 0) {
+			*pTarget = *pChar;
+			pTarget++;
+			pChar++;
+			m_nTriangleBufferPos++;
+		}
+	}
+
+	void CModelWriterNode100_Mesh::putTriangleUInt32(_In_ const nfUint32 nValue)
+	{
+
+#ifdef __GCC
+		int nCount = sprintf(&m_TriangleLine[m_nTriangleBufferPos], "%d", nValue);
+#else
+		int nCount = sprintf_s(&m_TriangleLine[m_nTriangleBufferPos], MODELWRITERMESH100_LINEBUFFERSIZE - m_nTriangleBufferPos, "%d", nValue);
+#endif // __GCC
+
+		if (nCount < 1)
+			throw CNMRException(NMR_ERROR_COULDNOTCONVERTNUMBER);
+		m_nTriangleBufferPos += nCount;
+	}
+
+
+	void CModelWriterNode100_Mesh::writeVertexData(_In_ MESHNODE * pNode)
+	{
+		__NMRASSERT(pNode);
+		m_nVertexBufferPos = MODELWRITERMESH100_VERTEXLINESTARTLENGTH;
+		putVertexFloat(pNode->m_position.m_values.x);
+		putVertexString("\" y=\"");
+		putVertexFloat(pNode->m_position.m_values.y);
+		putVertexString("\" z=\"");
+		putVertexFloat(pNode->m_position.m_values.z);
+		putVertexString("\" />");
+
+		m_pXMLWriter->WriteRawLine(&m_VertexLine[0], m_nVertexBufferPos);
+	}
+
+	void CModelWriterNode100_Mesh::writeFaceData_Plain(_In_ MESHFACE * pFace)
+	{
+		__NMRASSERT(pFace);
+		m_nTriangleBufferPos = MODELWRITERMESH100_TRIANGLELINESTARTLENGTH;
+		putTriangleUInt32(pFace->m_nodeindices[0]);
+		putTriangleString("\" v2=\"");
+		putTriangleUInt32(pFace->m_nodeindices[1]);
+		putTriangleString("\" v3=\"");
+		putTriangleUInt32(pFace->m_nodeindices[2]);
+		putTriangleString("\" />");
+		m_pXMLWriter->WriteRawLine(&m_TriangleLine[0], m_nTriangleBufferPos);
+	}
+
+	void CModelWriterNode100_Mesh::writeFaceData_OneProperty(_In_ MESHFACE * pFace, _In_ const ModelResourceID nPropertyID, _In_ const ModelResourceIndex nPropertyIndex)
+	{
+		__NMRASSERT(pFace);
+		m_nTriangleBufferPos = MODELWRITERMESH100_TRIANGLELINESTARTLENGTH;
+		putTriangleUInt32(pFace->m_nodeindices[0]);
+		putTriangleString("\" v2=\"");
+		putTriangleUInt32(pFace->m_nodeindices[1]);
+		putTriangleString("\" v3=\"");
+		putTriangleUInt32(pFace->m_nodeindices[2]);
+		if (nPropertyID != 0) {
+			putTriangleString("\" pid=\"");
+			putTriangleUInt32(nPropertyID);
+		}
+		putTriangleString("\" p1=\"");
+		putTriangleUInt32(nPropertyIndex);
+		putTriangleString("\" />");
+		m_pXMLWriter->WriteRawLine(&m_TriangleLine[0], m_nTriangleBufferPos);
+	}
+
+	void CModelWriterNode100_Mesh::writeFaceData_ThreeProperties(_In_ MESHFACE * pFace, _In_ const ModelResourceID nPropertyID, _In_ const ModelResourceIndex nPropertyIndex1, _In_ const ModelResourceIndex nPropertyIndex2, _In_ const ModelResourceIndex nPropertyIndex3)
+	{
+		__NMRASSERT(pFace);
+		m_nTriangleBufferPos = MODELWRITERMESH100_TRIANGLELINESTARTLENGTH;
+		putTriangleUInt32(pFace->m_nodeindices[0]);
+		putTriangleString("\" v2=\"");
+		putTriangleUInt32(pFace->m_nodeindices[1]);
+		putTriangleString("\" v3=\"");
+		putTriangleUInt32(pFace->m_nodeindices[2]);
+		if (nPropertyID != 0) {
+			putTriangleString("\" pid=\"");
+			putTriangleUInt32(nPropertyID);
+		}
+		putTriangleString("\" p1=\"");
+		putTriangleUInt32(nPropertyIndex1);
+		putTriangleString("\" p2=\"");
+		putTriangleUInt32(nPropertyIndex2);
+		putTriangleString("\" p3=\"");
+		putTriangleUInt32(nPropertyIndex3);
+		putTriangleString("\" />");
+		m_pXMLWriter->WriteRawLine(&m_TriangleLine[0], m_nTriangleBufferPos);
 	}
 
 }

@@ -41,8 +41,6 @@ This is an abstract base stream class for importing from COM IStreams.
 #include "Common/Platform/NMR_IStream.h"
 #include "Common/Platform/NMR_CComPtr.h"
 
-#define NMR_IMPORTSTREAM_READBUFFERSIZE (1024 * 1024)
-
 namespace NMR {
 
 	class CImportStream_COM : public CImportStream {

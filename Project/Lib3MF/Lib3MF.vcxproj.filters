@@ -58,6 +58,15 @@
     <Filter Include="Source Files\Model\Reader\v093">
       <UniqueIdentifier>{de161334-9d27-4e78-b54f-0f5c216bdebc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Common\OPC">
+      <UniqueIdentifier>{e4dce86a-276d-4484-a654-981cbfdee4dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Libraries">
+      <UniqueIdentifier>{c5e53fab-5d31-4d55-8c52-5c5b7d7e7849}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Libraries\zlib">
+      <UniqueIdentifier>{8572da14-f61f-4ede-ada2-322d84b26d7e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\Common\Math\NMR_Matrix.cpp">
@@ -171,9 +180,6 @@
     <ClCompile Include="..\..\Source\Model\Writer\NMR_ModelWriter_3MF.cpp">
       <Filter>Source Files\Model\Writer</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\Model\Writer\NMR_ModelWriter_3MF_OPC.cpp">
-      <Filter>Source Files\Model\Writer</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Source\Model\Writer\NMR_ModelWriter_STL.cpp">
       <Filter>Source Files\Model\Writer</Filter>
     </ClCompile>
@@ -208,9 +214,6 @@
       <Filter>Source Files\Common\Platform</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Common\Platform\NMR_XmlWriter.cpp">
-      <Filter>Source Files\Common\Platform</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\Common\Platform\NMR_XmlWriter_COM.cpp">
       <Filter>Source Files\Common\Platform</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Model\COM\NMR_COMInterface_ModelResourceFactory.cpp">
@@ -401,6 +404,72 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\Model\Reader\v093\NMR_ModelReaderNode093_Material.cpp">
       <Filter>Source Files\Model\Reader\v093</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Common\Platform\NMR_ExportStream_ZIP.cpp">
+      <Filter>Source Files\Common\Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Common\Platform\NMR_PortableZIPWriter.cpp">
+      <Filter>Source Files\Common\Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Common\Platform\NMR_PortableZIPWriterEntry.cpp">
+      <Filter>Source Files\Common\Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Common\Platform\NMR_Time.cpp">
+      <Filter>Source Files\Common\Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Common\Platform\NMR_XmlWriter_Native.cpp">
+      <Filter>Source Files\Common\Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Common\OPC\NMR_OpcPackagePart.cpp">
+      <Filter>Source Files\Common\OPC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Common\OPC\NMR_OpcPackageRelationship.cpp">
+      <Filter>Source Files\Common\OPC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Common\OPC\NMR_OpcPackageWriter.cpp">
+      <Filter>Source Files\Common\OPC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Model\Writer\NMR_ModelWriter_3MF_Native.cpp">
+      <Filter>Source Files\Model\Writer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Libraries\zlib\adler32.c">
+      <Filter>Source Files\Libraries\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Libraries\zlib\compress.c">
+      <Filter>Source Files\Libraries\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Libraries\zlib\crc32.c">
+      <Filter>Source Files\Libraries\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Libraries\zlib\deflate.c">
+      <Filter>Source Files\Libraries\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Libraries\zlib\infback.c">
+      <Filter>Source Files\Libraries\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Libraries\zlib\inffast.c">
+      <Filter>Source Files\Libraries\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Libraries\zlib\inflate.c">
+      <Filter>Source Files\Libraries\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Libraries\zlib\inftrees.c">
+      <Filter>Source Files\Libraries\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Libraries\zlib\trees.c">
+      <Filter>Source Files\Libraries\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Libraries\zlib\uncompr.c">
+      <Filter>Source Files\Libraries\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Libraries\zlib\zutil.c">
+      <Filter>Source Files\Libraries\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Common\Platform\NMR_ExportStream.cpp">
+      <Filter>Source Files\Common\Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Common\Platform\NMR_ImportStream_Memory.cpp">
+      <Filter>Source Files\Common\Platform</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

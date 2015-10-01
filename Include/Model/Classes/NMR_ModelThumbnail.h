@@ -35,9 +35,11 @@ the whole scene.
 #ifndef __NMR_MODELTHUMBNAIL
 #define __NMR_MODELTHUMBNAIL
 
-#include "Common/NMR_Types.h" 
+#include "Common/NMR_Types.h"
+#include "Common/NMR_Local.h"
 #include <memory>
 #include <map>
+#include <string>
 
 namespace NMR {
 

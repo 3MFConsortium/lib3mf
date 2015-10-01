@@ -78,7 +78,7 @@ END_INTERFACE_MAP
 
 #define LIB3MFINTERFACE(iface, baseiface, iid) __INTERFACE__ __declspec(uuid(iid)) __declspec(novtable)  iface : baseiface 
 #define LIB3MFABSTRACT /* */
-#define LIB3MFPUBLIC /* */
+#define LIB3MFPUBLIC(X) /* */
 #define LIB3MFMETHOD(x) _Success_(return == 0) STDMETHOD(x)
 #define LIB3MFRESULT HRESULT
 #define LIB3MFMETHODIMP _Success_(return == 0) STDMETHODIMP

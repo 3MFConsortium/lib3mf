@@ -160,6 +160,65 @@ NMR_ErrorConst.h defines all error code constants.
 // Invalid Integer Triplet String
 #define NMR_ERROR_INVALIDINTEGERTRIPLET 0x1026
 
+// Invalid ZIP Entry key
+#define NMR_ERROR_INVALIDZIPENTRYKEY 0x1027
+
+// Invalid ZIP Name
+#define NMR_ERRORINVALIDZIPNAME 0x1028
+
+// ZIP Stream cannot seek
+#define NMR_ERROR_ZIPSTREAMCANNOTSEEK 0x1029
+
+// Could not convert to UTF8
+#define NMR_ERROR_COULDNOTCONVERTTOUTF8 0x102A
+
+// Could not convert to UTF16
+#define NMR_ERROR_COULDNOTCONVERTTOUTF16 0x102B
+
+// ZIP Entry overflow
+#define NMR_ERROR_ZIPENTRYOVERFLOW 0x102C
+
+// Invalid ZIP Entry
+#define NMR_ERROR_INVALIDZIPENTRY 0x102D
+
+// Export Stream not empty
+#define NMR_ERROR_EXPORTSTREAMNOTEMPTY 0x102E
+
+// Zip already finished
+#define NMR_ERROR_ZIPALREADYFINISHED 0x102F
+
+// Deflate init failed
+#define NMR_ERROR_DEFLATEINITFAILED 0x1030
+
+// Could not deflate data
+#define NMR_ERROR_COULDNOTDEFLATE 0x1031
+
+// Could not close written XML node
+#define NMR_ERROR_XMLWRITER_CLOSENODEERROR 0x1032
+
+// Invalid OPC Part URI
+#define NMR_ERROR_INVALIDOPCPARTURI 0x1033
+
+// Could not convert number
+#define NMR_ERROR_COULDNOTCONVERTNUMBER 0x1034
+
+// Could not read ZIP file
+#define NMR_ERROR_COULDNOTREADZIPFILE 0x1035
+
+// Could not seek in ZIP file
+#define NMR_ERROR_COULDNOTSEEKINZIP 0x1036
+
+// Could not stat ZIP entry
+#define NMR_ERROR_COULDNOTSTATZIPENTRY 0x1037
+
+// Could not open ZIP entry
+#define NMR_ERROR_COULDNOTOPENZIPENTRY 0x1038
+
+// Invalid XML Depth
+#define NMR_ERROR_INVALIDXMLDEPTH 0x1039
+
+// XML Element not empty
+#define NMR_ERROR_XMLELEMENTNOTEMPTY 0x103A
 
 /*-------------------------------------------------------------------
   Core framework error codes (0x2XXX)
@@ -338,6 +397,9 @@ NMR_ErrorConst.h defines all error code constants.
 
 // Mesh Information Block was not assigned
 #define NMR_ERROR_INVALIDMESHINFORMATIONDATA 0x203A
+
+// Could not get stream position
+#define NMR_ERROR_COULDNOTGETSTREAMPOSITION 0x203B
 
 /*-------------------------------------------------------------------
 Model error codes (0x8XXX)
@@ -713,5 +775,64 @@ Model error codes (0x8XXX)
 
 // Invalid Texture ID
 #define NMR_ERROR_INVALIDTEXTUREID 0x807C
+
+// No model to write
+#define NMR_ERROR_NOMODELTOWRITE 0x807D
+
+
+/*-------------------------------------------------------------------
+XML Parser Error Constants (0x9XXX)
+-------------------------------------------------------------------*/
+
+// Invalid XML attribute value
+#define NMR_ERROR_XMLPARSER_INVALIDATTRIBVALUE 0x9001
+
+// Invalid XML parse result
+#define NMR_ERROR_XMLPARSER_INVALIDPARSERESULT 0x9002
+
+// Too many XML characters used
+#define NMR_ERROR_XMLPARSER_TOOMANYUSEDCHARS 0x9003
+
+// Invalid XML end delimiter
+#define NMR_ERROR_XMLPARSER_INVALIDENDDELIMITER 0x9004
+
+// Invalid XML namespace prefix
+#define NMR_ERROR_XMLPARSER_INVALIDNAMESPACEPREFIX 0x9005
+
+// Could not parse XML entity
+#define NMR_ERROR_XMLPARSER_COULDNOTPARSEENTITY 0x9006
+
+// Empty XML element name
+#define NMR_ERROR_XMLPARSER_EMPTYELEMENTNAME 0x9007
+
+// Invalid characters in XML element name
+#define NMR_ERROR_XMLPARSER_INVALIDCHARACTERINELEMENTNAME 0x9008
+
+// Empty XML instruction name
+#define NMR_ERROR_XMLPARSER_EMPTYINSTRUCTIONNAME 0x9009
+
+// Invlaid XML instruction name
+#define NMR_ERROR_XMLPARSER_INVALIDINSTRUCTIONNAME 0x900A
+
+// Could not close XML instruction
+#define NMR_ERROR_XMLPARSER_COULDNOTCLOSEINSTRUCTION 0x900B
+
+// Could not end XML element
+#define NMR_ERROR_XMLPARSER_COULDNOTENDELEMENT 0x900C
+
+// Empty XML end element
+#define NMR_ERROR_XMLPARSER_EMPTYENDELEMENT 0x900D
+
+// Could not close XML element
+#define NMR_ERROR_XMLPARSER_COULDNOTCLOSEELEMENT 0x900E
+
+// Invalid XML attribute name
+#define NMR_ERROR_XMLPARSER_INVALIDATTRIBUTENAME 0x900F
+
+// Space in XML attribute name
+#define NMR_ERROR_XMLPARSER_SPACEINATTRIBUTENAME 0x9010
+
+// No quotes around XML attribute
+#define NMR_ERROR_XMLPARSER_NOQUOTESAROUNDATTRIBUTE 0x9011
 
 #endif // __NMR_ERRORCONST

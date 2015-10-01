@@ -60,8 +60,8 @@ shown to the outside world.
 #define CLSID_Lib3MF_ModelResource          "BF38DC27-4169-4AA3-BFD1-35C8D046C0A8"
 #define CLSID_Lib3MF_ModelResourceIterator  "11845233-4A6A-4B10-8B55-00A84048959C"
 #define CLSID_Lib3MF_ModelObjectResource    "FB9F7E2C-D8A3-4C84-831E-76928A91CC7B"
-#define CLSID_Lib3MF_ModelTexture2D         "29DD25F2-607D-4804-A737-ED2CBC7199F2"   
-#define CLSID_Lib3MF_ModelBaseMaterial      "943648CF-B9BB-40AD-8264-79C69195A116"   
+#define CLSID_Lib3MF_ModelTexture2D         "29DD25F2-607D-4804-A737-ED2CBC7199F2"
+#define CLSID_Lib3MF_ModelBaseMaterial      "943648CF-B9BB-40AD-8264-79C69195A116"
 #define CLSID_Lib3MF_ModelMeshObject        "8B7FE33C-8EF0-4927-A106-1C069B49B01D"
 #define CLSID_Lib3MF_ModelComponent         "99F7DB2E-9A6F-4DD5-9F96-27DDAF32A0CF"
 #define CLSID_Lib3MF_ModelComponentsObject  "F4125D0E-297A-41E4-84F0-9D7110C46341"
@@ -108,12 +108,14 @@ namespace NMR {
 	***********************************************************************************************************/
 
 	LIB3MFINTERFACE(ILib3MFBase, ILib3MFUnknown, CLSID_Lib3MF_Base) {
+		LIB3MFPUBLIC(ILib3MFBase)
+
 		/**
 		* Returns detailed information of the last known error an object method.
 		* The error information is available for every method returning a LIB3MF_FAILED
 		* constant.
 		*
-		* @param[out] pErrorCode Error Code 
+		* @param[out] pErrorCode Error Code
 		* @param[out] pErrorMessage Returns pointer to the error message string, NULL if no error.
 		* @return error code or 0 (success)
 		*/
@@ -129,15 +131,23 @@ namespace NMR {
 	***********************************************************************************************************/
 
 	LIB3MFINTERFACE(ILib3MFModelWriter, ILib3MFBase, CLSID_Lib3MF_ModelWriter) {
-		LIB3MFPUBLIC;
+		LIB3MFPUBLIC(ILib3MFModelWriter)
 
 		/**
 		* Writes out the model as file. The file type is specified by the Model Writer class
 		*
-		* @param[in] pwszFilename Filename to write into
+		* @param[in] pwszFilename Filename to write into as UTF16 string
 		* @return error code or 0 (success)
 		*/
 		LIB3MFMETHOD(WriteToFile) (_In_z_ LPCWSTR pwszFilename) LIB3MFABSTRACT;
+
+		/**
+		* Writes out the model as file. The file type is specified by the Model Writer class
+		*
+		* @param[in] pwszFilename Filename to write into as UTF8 string
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(WriteToFileUTF8) (_In_z_ LPCSTR pwszFilename) LIB3MFABSTRACT;
 
 #ifndef __GCC
 		/**
@@ -159,15 +169,23 @@ namespace NMR {
 	***********************************************************************************************************/
 
 	LIB3MFINTERFACE(ILib3MFModelReader, ILib3MFBase, CLSID_Lib3MF_ModelReader) {
-		LIB3MFPUBLIC;
+		LIB3MFPUBLIC(ILib3MFModelReader)
 
 		/**
 		* Reads a model from a file. The file type is specified by the Model Reader class
 		*
-		* @param[in] pwszFilename Filename to read from
+		* @param[in] pwszFilename Filename to read from as UTF16 string
 		* @return error code or 0 (success)
 		*/
 		LIB3MFMETHOD(ReadFromFile) (_In_z_ LPCWSTR pwszFilename) LIB3MFABSTRACT;
+
+		/**
+		* Reads a model from a file. The file type is specified by the Model Reader class
+		*
+		* @param[in] pwszFilename Filename to read from as UTF8 string
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(ReadFromFileUTF8) (_In_z_ LPCSTR pwszFilename) LIB3MFABSTRACT;
 
 		/**
 		* Returns Warning and Error Count of the read process
@@ -206,7 +224,7 @@ namespace NMR {
 	***********************************************************************************************************/
 
 	LIB3MFINTERFACE(ILib3MFModelResource, ILib3MFBase, CLSID_Lib3MF_ModelResource) {
-		LIB3MFPUBLIC;
+		LIB3MFPUBLIC(ILib3MFModelResource)
 
 		/**
 		* Retrieves the ID of a Model Resource Instance
@@ -224,7 +242,7 @@ namespace NMR {
 	***********************************************************************************************************/
 
 	LIB3MFINTERFACE(ILib3MFModelResourceIterator, ILib3MFBase, CLSID_Lib3MF_ModelResourceIterator) {
-		LIB3MFPUBLIC;
+		LIB3MFPUBLIC(ILib3MFModelResourceIterator)
 
 		/**
 		* Iterates to the next resource in the list.
@@ -266,7 +284,7 @@ namespace NMR {
 	***********************************************************************************************************/
 
 	LIB3MFINTERFACE(ILib3MFModelThumbnail, ILib3MFBase, CLSID_Lib3MF_ModelThumbnail) {
-		LIB3MFPUBLIC;
+		LIB3MFPUBLIC(ILib3MFModelThumbnail)
 
 	};
 
@@ -279,7 +297,7 @@ namespace NMR {
 	***********************************************************************************************************/
 
 	LIB3MFINTERFACE(ILib3MFModelThumbnailIterator, ILib3MFBase, CLSID_Lib3MF_ModelThumbnailIterator) {
-		LIB3MFPUBLIC;
+		LIB3MFPUBLIC(ILib3MFModelThumbnailIterator)
 
 		/**
 		* Iterates to the next thumbnail in the list.
@@ -313,7 +331,7 @@ namespace NMR {
 		*/
 		LIB3MFMETHOD(Clone) (_Outptr_ ILib3MFModelThumbnailIterator ** ppIterator) LIB3MFABSTRACT;
 	};
-	
+
 
 
 
@@ -323,8 +341,8 @@ namespace NMR {
 	***********************************************************************************************************/
 
 	LIB3MFINTERFACE(ILib3MFPropertyHandler, ILib3MFBase, CLSID_Lib3MF_PropertyHandler) {
-		
-		LIB3MFPUBLIC;
+
+		LIB3MFPUBLIC(ILib3MFPropertyHandler)
 
 		/**
 		* Removes all properties of a specific triangle.
@@ -365,7 +383,7 @@ namespace NMR {
 		* If a triangle property is not a material, the returned material group ID will be 0.
 		*
 		* @param[out] pnMaterialGroupIDs will be filled with the material group ids of the triangles. Array must have trianglecount entries. A return group id of 0 means either no property at all or a non-material property.
-		* @param[out] pnMaterialIndices will be filled with the material group indices of the triangles. Array must have trianglecount entries. 
+		* @param[out] pnMaterialIndices will be filled with the material group indices of the triangles. Array must have trianglecount entries.
 		* @return error code or 0 (success)
 		*/
 		LIB3MFMETHOD(GetBaseMaterialArray) (_Out_ DWORD * pnMaterialGroupIDs, _Out_ DWORD * pnMaterialIndices) LIB3MFABSTRACT;
@@ -382,7 +400,7 @@ namespace NMR {
 		LIB3MFMETHOD(SetBaseMaterial) (_In_ DWORD nIndex, _In_ ModelResourceID nMaterialGroupID, _In_ DWORD nMaterialIndex) LIB3MFABSTRACT;
 
 		/**
-		* Sets the materials of all triangles to specific values. 
+		* Sets the materials of all triangles to specific values.
 		*
 		* @param[in] pnMaterialGroupIDs array of the material Group IDs. Must have trianglecount entries. If a group ID of 0 is specified.
 		* @param[in] pnMaterialIndices array of the corresponding material indices. Must have trianglecount entries.
@@ -527,7 +545,7 @@ namespace NMR {
 
 	LIB3MFINTERFACE(ILib3MFDefaultPropertyHandler, ILib3MFBase, CLSID_Lib3MF_DefaultPropertyHandler) {
 
-		LIB3MFPUBLIC;
+		LIB3MFPUBLIC(ILib3MFDefaultPropertyHandler)
 
 		/**
 		* Removes the default property of the object.
@@ -554,7 +572,7 @@ namespace NMR {
 		LIB3MFMETHOD(GetBaseMaterial) (_Out_ DWORD * pnMaterialGroupID, _Out_ DWORD * pnMaterialIndex) LIB3MFABSTRACT;
 
 		/**
-		* Sets the material of an object to a specific single value. 
+		* Sets the material of an object to a specific single value.
 		* This must be a base material .
 		*
 		* @param[in] nMaterialGroupID Group ID of the Material Group
@@ -646,7 +664,7 @@ namespace NMR {
 
 	LIB3MFINTERFACE(ILib3MFModelObjectResource, ILib3MFModelResource, CLSID_Lib3MF_ModelObjectResource) {
 
-		LIB3MFPUBLIC;
+		LIB3MFPUBLIC(ILib3MFModelObjectResource)
 
 		/**
 		* Retrieves a object's type
@@ -675,12 +693,30 @@ namespace NMR {
 		LIB3MFMETHOD(GetName) (_Out_opt_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars) LIB3MFABSTRACT;
 
 		/**
+		* Retrieves a object's name string (UTF8)
+		*
+		* @param[out] pszBuffer buffer to fill
+		* @param[in] cbBufferSize size of buffer to fill. needs to be at least string length + 1
+		* @param[out] pcbNeededChars returns needed characters in buffer
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(GetNameUTF8) (_Out_opt_ LPSTR pszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars) LIB3MFABSTRACT;
+
+		/**
 		* Sets a object's name string
 		*
-		* @param[in] pwszName new name of the object. (e.g. "Car")
+		* @param[in] pwszName new name of the object as UTF16 string. (e.g. "Car")
 		* @return error code or 0 (success)
 		*/
 		LIB3MFMETHOD(SetName) (_In_z_ LPCWSTR pwszName) LIB3MFABSTRACT;
+
+		/**
+		* Sets a object's name string
+		*
+		* @param[in] pszName new name of the object as UTF8 string. (e.g. "Car")
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(SetNameUTF8) (_In_z_ LPCSTR pszName) LIB3MFABSTRACT;
 
 		/**
 		* Retrieves a object's part number string
@@ -693,12 +729,32 @@ namespace NMR {
 		LIB3MFMETHOD(GetPartNumber) (_Out_opt_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars) LIB3MFABSTRACT;
 
 		/**
+		* Retrieves a object's part number string (UTF8)
+		*
+		* @param[out] pszBuffer buffer to fill
+		* @param[in] cbBufferSize size of buffer to fill. needs to be at least string length + 1
+		* @param[out] pcbNeededChars returns needed characters in buffer
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(GetPartNumberUTF8) (_Out_opt_ LPSTR pszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars) LIB3MFABSTRACT;
+
+
+		/**
 		* Sets a object's part number string
 		*
-		* @param[in] pwszPartNumber new part number string for referencing parts from an outside context.
+		* @param[in] pwszPartNumber new part number (UTF16) string for referencing parts from an outside context.
 		* @return error code or 0 (success)
 		*/
 		LIB3MFMETHOD(SetPartNumber) (_In_z_ LPCWSTR pwszPartNumber) LIB3MFABSTRACT;
+
+		/**
+		* Sets a object's part number string
+		*
+		* @param[in] pszPartNumber new part number (UTF8) string for referencing parts from an outside context.
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(SetPartNumberUTF8) (_In_z_ LPCSTR pszPartNumber) LIB3MFABSTRACT;
+
 
 		/**
 		* Retrieves, if an object is a mesh object
@@ -759,7 +815,7 @@ namespace NMR {
 
 	LIB3MFINTERFACE(ILib3MFModelBaseMaterial, ILib3MFModelResource, CLSID_Lib3MF_ModelBaseMaterial) {
 
-		LIB3MFPUBLIC;
+		LIB3MFPUBLIC(ILib3MFModelBaseMaterial)
 
 		/**
 		* Retrieves the count of base materials in the material group.
@@ -772,7 +828,7 @@ namespace NMR {
 		/**
 		* Adds a new material to the material group
 		*
-		* @param[in] pwszName new name of the base material. (e.g. "ABS red")
+		* @param[in] pwszName new name of the base material. (UTF16 String, e.g. "ABS red")
 		* @param[in] bRed New red value of display color (0-255)
 		* @param[in] bGreen New red value of display color (0-255)
 		* @param[in] bBlue New red value of display color (0-255)
@@ -780,6 +836,18 @@ namespace NMR {
 		* @return error code or 0 (success)
 		*/
 		LIB3MFMETHOD(AddMaterial) (_In_z_ LPCWSTR pwszName, _In_ BYTE bRed, _In_ BYTE bGreen, _In_ BYTE bBlue, _In_ DWORD * pnResourceIndex) LIB3MFABSTRACT;
+
+		/**
+		* Adds a new material to the material group
+		*
+		* @param[in] pwszName new name of the base material. (UTF8 String, e.g. "ABS red")
+		* @param[in] bRed New red value of display color (0-255)
+		* @param[in] bGreen New red value of display color (0-255)
+		* @param[in] bBlue New red value of display color (0-255)
+		* @param[out] pnResourceIndex returns new Index of the material in the material group
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(AddMaterialUTF8) (_In_z_ LPCSTR pszName, _In_ BYTE bRed, _In_ BYTE bGreen, _In_ BYTE bBlue, _In_ DWORD * pnResourceIndex) LIB3MFABSTRACT;
 
 
 		/**
@@ -802,13 +870,33 @@ namespace NMR {
 		LIB3MFMETHOD(GetName) (_In_ DWORD nIndex, _Out_opt_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars) LIB3MFABSTRACT;
 
 		/**
-		* Sets a base material's name
+		* Retrieves a base material's name (UTF8)
+		*
+		* @param[in] nIndex Index of the material in the material group
+		* @param[out] pszBuffer buffer to fill
+		* @param[in] cbBufferSize size of buffer to fill. needs to be at least string length + 1
+		* @param[out] pcbNeededChars returns needed characters in buffer
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(GetNameUTF8) (_In_ DWORD nIndex, _Out_opt_ LPSTR pszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars) LIB3MFABSTRACT;
+
+		/**
+		* Sets a base material's name (UTF16)
 		*
 		* @param[in] nIndex Index of the material in the material group
 		* @param[in] pwszName new name of the base material. (e.g. "ABS red")
 		* @return error code or 0 (success)
 		*/
 		LIB3MFMETHOD(SetName) (_In_ DWORD nIndex, _In_z_ LPCWSTR pwszName) LIB3MFABSTRACT;
+
+		/**
+		* Sets a base material's name (UTF8)
+		*
+		* @param[in] nIndex Index of the material in the material group
+		* @param[in] pwszName new name of the base material. (e.g. "ABS red")
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(SetNameUTF8) (_In_ DWORD nIndex, _In_z_ LPCSTR pszName) LIB3MFABSTRACT;
 
 		/**
 		* Sets a base material's display color. Alpha is set to 255.
@@ -871,14 +959,14 @@ namespace NMR {
 	};
 
 	/**********************************************************************************************************
-	*  ILib3MFModelTexture2D implements the Texture2D Resources of a 3MF model stream, and allows direct access to the 
+	*  ILib3MFModelTexture2D implements the Texture2D Resources of a 3MF model stream, and allows direct access to the
 	*  texture properties and the image data.
 	*
 	***********************************************************************************************************/
 
 	LIB3MFINTERFACE(ILib3MFModelTexture2D, ILib3MFModelResource, CLSID_Lib3MF_ModelTexture2D) {
 
-		LIB3MFPUBLIC;
+		LIB3MFPUBLIC(ILib3MFModelTexture2D)
 
 		/**
 		* Retrieves a texture's package path
@@ -891,6 +979,16 @@ namespace NMR {
 		LIB3MFMETHOD(GetPath) (_Out_opt_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars) LIB3MFABSTRACT;
 
 		/**
+		* Retrieves a texture's package path (UTF8)
+		*
+		* @param[out] pszBuffer buffer to fill
+		* @param[in] cbBufferSize size of buffer to fill. needs to be at least string length + 1
+		* @param[out] pcbNeededChars returns needed characters in buffer
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(GetPathUTF8) (_Out_opt_ LPSTR pszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars) LIB3MFABSTRACT;
+
+		/**
 		* Sets a texture's package path
 		*
 		* @param[in] pwszPath new path of the texture resource. (e.g. "/Textures/logo.png")
@@ -899,7 +997,15 @@ namespace NMR {
 		LIB3MFMETHOD(SetPath) (_In_z_ LPCWSTR pwszPath) LIB3MFABSTRACT;
 
 		/**
-		* Retrieves a texture's content type 
+		* Sets a texture's package path (UTF8)
+		*
+		* @param[in] pszPath new path of the texture resource. (e.g. "/Textures/logo.png")
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(SetPathUTF8) (_In_z_ LPCSTR pszPath) LIB3MFABSTRACT;
+
+		/**
+		* Retrieves a texture's content type
 		*
 		* @param[out] peContentType returns content type enum
 		* @return error code or 0 (success)
@@ -907,7 +1013,7 @@ namespace NMR {
 		LIB3MFMETHOD(GetContentType) (_Out_ eModelTexture2DType * peContentType) LIB3MFABSTRACT;
 
 		/**
-		* Sets a texture's content type 
+		* Sets a texture's content type
 		*
 		* @param[in] eContentType new Content Type
 		* @return error code or 0 (success)
@@ -938,7 +1044,7 @@ namespace NMR {
 
 		/**
 		* Clears a texture's box2D coordinates.
-		*		
+		*
 		* @return error code or 0 (success)
 		*/
 		LIB3MFMETHOD(ClearBox2D) () LIB3MFABSTRACT;
@@ -952,12 +1058,20 @@ namespace NMR {
 		LIB3MFMETHOD(GetStreamSize) (_Out_ ULONG64 * pcbStreamSize) LIB3MFABSTRACT;
 
 		/**
-		* Writes out the texture as file. 
+		* Writes out the texture as file.
 		*
 		* @param[in] pwszFilename Filename to write into
 		* @return error code or 0 (success)
 		*/
 		LIB3MFMETHOD(WriteToFile) (_In_z_ LPCWSTR pwszFilename) LIB3MFABSTRACT;
+
+		/**
+		* Writes out the texture as file. (UTF8)
+		*
+		* @param[in] pszFilename Filename to write into
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(WriteToFileUTF8) (_In_z_ LPCSTR pszFilename) LIB3MFABSTRACT;
 
 		/**
 		* Writes out the texture into a buffer. Buffer size must be at least the size of the stream.
@@ -979,12 +1093,20 @@ namespace NMR {
 #endif// __GCC
 
 		/**
-		* Reads a texture from a file. 
+		* Reads a texture from a file.
 		*
 		* @param[in] pwszFilename Filename to read from
 		* @return error code or 0 (success)
 		*/
 		LIB3MFMETHOD(ReadFromFile) (_In_z_ LPCWSTR pwszFilename) LIB3MFABSTRACT;
+
+		/**
+		* Reads a texture from a file.
+		*
+		* @param[in] pszFilename Filename to read from
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(ReadFromFileUTF8) (_In_z_ LPCSTR pwszFilename) LIB3MFABSTRACT;
 
 		/**
 		* Reads a texture from a memory buffer.
@@ -1013,7 +1135,7 @@ namespace NMR {
 	***********************************************************************************************************/
 
 	LIB3MFINTERFACE(ILib3MFModelMeshObject, ILib3MFModelObjectResource, CLSID_Lib3MF_ModelMeshObject) {
-		LIB3MFPUBLIC;
+		LIB3MFPUBLIC(ILib3MFModelMeshObject)
 
 		/**
 		* Returns the vertex count of a mesh object
@@ -1154,7 +1276,7 @@ namespace NMR {
 	***********************************************************************************************************/
 
 	LIB3MFINTERFACE(ILib3MFModelComponent, ILib3MFBase, CLSID_Lib3MF_ModelComponent) {
-		LIB3MFPUBLIC;
+		LIB3MFPUBLIC(ILib3MFModelComponent)
 
 		/**
 		* Returns the associated resource Instance of the component.
@@ -1203,7 +1325,7 @@ namespace NMR {
 	***********************************************************************************************************/
 
 	LIB3MFINTERFACE(ILib3MFModelComponentsObject, ILib3MFModelObjectResource, CLSID_Lib3MF_ModelComponentsObject) {
-		LIB3MFPUBLIC;
+		LIB3MFPUBLIC(ILib3MFModelComponentsObject)
 
 		/**
 		* Adds a new component to a component object
@@ -1239,7 +1361,7 @@ namespace NMR {
 	***********************************************************************************************************/
 
 	LIB3MFINTERFACE(ILib3MFModelBuildItem, ILib3MFBase, CLSID_Lib3MF_ModelBuildItem) {
-		LIB3MFPUBLIC;
+		LIB3MFPUBLIC(ILib3MFModelBuildItem)
 
 		/**
 		* Retrieves the object resource associated to a build item
@@ -1292,12 +1414,30 @@ namespace NMR {
 		LIB3MFMETHOD(GetPartNumber) (_Out_opt_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars) LIB3MFABSTRACT;
 
 		/**
+		* Retrieves a build item's part number string (UTF8)
+		*
+		* @param[out] pszBuffer buffer to fill
+		* @param[in] cbBufferSize size of buffer to fill. needs to be at least string length + 1
+		* @param[out] pcbNeededChars returns needed characters in buffer
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(GetPartNumberUTF8) (_Out_opt_ LPSTR pszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars) LIB3MFABSTRACT;
+
+		/**
 		* Sets a build item's part number string
 		*
 		* @param[in] pwszPartNumber new part number string for referencing parts from the outside world.
 		* @return error code or 0 (success)+
 		*/
 		LIB3MFMETHOD(SetPartNumber) (_In_z_ LPCWSTR pwszPartNumber) LIB3MFABSTRACT;
+
+		/**
+		* Sets a build item's part number string (UTF8)
+		*
+		* @param[in] pwszPartNumber new part number string for referencing parts from the outside world.
+		* @return error code or 0 (success)+
+		*/
+		LIB3MFMETHOD(SetPartNumberUTF8) (_In_z_ LPCSTR pszPartNumber) LIB3MFABSTRACT;
 
 		/**
 		* Retrieves an internal handle of the build item. This 32bit number is unique throughout the model, but only valid
@@ -1315,7 +1455,7 @@ namespace NMR {
 	***********************************************************************************************************/
 
 	LIB3MFINTERFACE(ILib3MFModelBuildItemIterator, ILib3MFBase, CLSID_Lib3MF_ModelBuildItemIterator) {
-		LIB3MFPUBLIC;
+		LIB3MFPUBLIC(ILib3MFModelBuildItemIterator)
 
 		/**
 		* Iterates to the next build item in the list.
@@ -1356,7 +1496,7 @@ namespace NMR {
 	***********************************************************************************************************/
 
 	LIB3MFINTERFACE(ILib3MFModel, ILib3MFBase, CLSID_Lib3MF_Model) {
-		LIB3MFPUBLIC;
+		LIB3MFPUBLIC(ILib3MFModel)
 
 		/**
 		* sets the units of a model
@@ -1383,6 +1523,14 @@ namespace NMR {
 		LIB3MFMETHOD(SetLanguage) (_In_z_ LPCWSTR pwszLanguage) LIB3MFABSTRACT;
 
 		/**
+		* sets the language of a model (UTF8)
+		*
+		* @param[in] pszLanguage Language string identifier
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(SetLanguageUTF8) (_In_z_ LPCSTR pszLanguage) LIB3MFABSTRACT;
+
+		/**
 		* retrieves the language of a model
 		*
 		* @param[out] pwszBuffer Buffer to write into
@@ -1393,22 +1541,32 @@ namespace NMR {
 		LIB3MFMETHOD(GetLanguage) (_Out_opt_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_opt_ ULONG * pcbNeededChars) LIB3MFABSTRACT;
 
 		/**
+		* retrieves the language of a model (UTF8)
+		*
+		* @param[out] pszBuffer Buffer to write into
+		* @param[in] cbBufferSize Buffer size
+		* @param[out] pcbNeededChars returns chars which are necessary to store the language string
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(GetLanguageUTF8) (_Out_opt_ LPSTR pszBuffer, _In_ ULONG cbBufferSize, _Out_opt_ ULONG * pcbNeededChars) LIB3MFABSTRACT;
+
+		/**
 		* creates a model writer instance for a specific file type
 		*
-		* @param[in] pwszWriterClass string identifier for the file (currently "stl" and "3mf")
+		* @param[in] pszWriterClass string identifier for the file (ASCII string, currently "stl" and "3mf")
 		* @param[out] ppWriter returns the writer instance
 		* @return error code or 0 (success)
 		*/
-		LIB3MFMETHOD(QueryWriter) (_In_z_ LPCWSTR pwszWriterClass, _Outptr_ ILib3MFModelWriter ** ppWriter) LIB3MFABSTRACT;
+		LIB3MFMETHOD(QueryWriter) (_In_z_ LPCSTR pszWriterClass, _Outptr_ ILib3MFModelWriter ** ppWriter) LIB3MFABSTRACT;
 
 		/**
 		* creates a model reader instance for a specific file type
 		*
-		* @param[in] pwszWriterClass string identifier for the file (currently "stl" and "3mf")
+		* @param[in] pszWriterClass string identifier for the file (ASCII string,  currently "stl" and "3mf")
 		* @param[out] ppReader returns the reader instance
 		* @return error code or 0 (success)
 		*/
-		LIB3MFMETHOD(QueryReader) (_In_z_ LPCWSTR pwszReaderClass, _Outptr_ ILib3MFModelReader ** ppReader) LIB3MFABSTRACT;
+		LIB3MFMETHOD(QueryReader) (_In_z_ LPCSTR pszReaderClass, _Outptr_ ILib3MFModelReader ** ppReader) LIB3MFABSTRACT;
 
 		/**
 		* finds a model resource by its id
@@ -1556,6 +1714,15 @@ namespace NMR {
 		LIB3MFMETHOD(AddTexture2D) (_In_z_ LPCWSTR pwszPath, _Outptr_ ILib3MFModelTexture2D ** ppTextureInstance) LIB3MFABSTRACT;
 
 		/**
+		* adds an empty texture2d resource to the model (UTF8)
+		*
+		* @param[in] pszPath Package path of the texture
+		* @param[out] ppTextureInstance returns the new texture instance
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(AddTexture2DUTF8) (_In_z_ LPCSTR pszPath, _Outptr_ ILib3MFModelTexture2D ** ppTextureInstance) LIB3MFABSTRACT;
+
+		/**
 		* adds an empty basematerials resource to the model
 		*
 		* @param[out] ppBaseMaterialInstance returns the new base material instance
@@ -1597,7 +1764,7 @@ namespace NMR {
 		* @return error code or 0 (success)
 		*/
 		LIB3MFMETHOD(GetTextureStreamSize) (_In_ DWORD nIndex, _Out_ UINT64 * pnSize) LIB3MFABSTRACT;
-		
+
 		/**
 		* Returns the path of a texture stream in the 3mf package.
 		*
@@ -1608,6 +1775,17 @@ namespace NMR {
 		* @return error code or 0 (success)
 		*/
 		LIB3MFMETHOD(GetTextureStreamPath) (_In_ DWORD nIndex, _Out_opt_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars) LIB3MFABSTRACT;
+
+		/**
+		* Returns the path of a texture stream in the 3mf package. (UTF8)
+		*
+		* @param[in] nIndex Index of the Texture Stream
+		* @param[out] pszBuffer filled with the texture stream path, may be NULL
+		* @param[in] cbBufferSize size of pwszBuffer (including trailing 0).
+		* @param[out] pcbNeededChars filled with the count of the written bytes, or needed buffer size.
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(GetTextureStreamPathUTF8) (_In_ DWORD nIndex, _Out_opt_ LPSTR pszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars) LIB3MFABSTRACT;
 
 		/**
 		* returns the number of metadata strings of a model
@@ -1629,6 +1807,17 @@ namespace NMR {
 		LIB3MFMETHOD(GetMetaDataKey) (_In_ DWORD nIndex, _Out_opt_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars) LIB3MFABSTRACT;
 
 		/**
+		* returns a metadata key of a model (UTF8)
+		*
+		* @param[in] nIndex Index of the Metadata
+		* @param[out] pszBuffer filled with the texture stream path, may be NULL
+		* @param[in] cbBufferSize size of pwszBuffer (including trailing 0).
+		* @param[out] pcbNeededChars filled with the count of the written bytes, or needed buffer size.
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(GetMetaDataKeyUTF8) (_In_ DWORD nIndex, _Out_opt_ LPSTR pszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars) LIB3MFABSTRACT;
+
+		/**
 		* returns a metadata value of a model
 		*
 		* @param[in] nIndex Index of the Metadata
@@ -1640,6 +1829,17 @@ namespace NMR {
 		LIB3MFMETHOD(GetMetaDataValue) (_In_ DWORD nIndex, _Out_opt_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars) LIB3MFABSTRACT;
 
 		/**
+		* returns a metadata value of a model (UTF8)
+		*
+		* @param[in] nIndex Index of the Metadata
+		* @param[out] pszBuffer filled with the texture stream path, may be NULL
+		* @param[in] cbBufferSize size of pwszBuffer (including trailing 0).
+		* @param[out] pcbNeededChars filled with the count of the written bytes, or needed buffer size.
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(GetMetaDataValueUTF8) (_In_ DWORD nIndex, _Out_opt_ LPSTR pszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars) LIB3MFABSTRACT;
+
+		/**
 		* adds a new metadata to the model
 		*
 		* @param[in] pszwKey Metadata Key.
@@ -1648,6 +1848,14 @@ namespace NMR {
 		*/
 		LIB3MFMETHOD(AddMetaData) (_In_ LPCWSTR pszwKey, _In_ LPCWSTR pszwValue) LIB3MFABSTRACT;
 
+		/**
+		* adds a new metadata to the model (UTF8)
+		*
+		* @param[in] pszKey Metadata Key.
+		* @param[in] pszValue Metadata Value.
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(AddMetaDataUTF8) (_In_ LPCSTR pszKey, _In_ LPCSTR pszValue) LIB3MFABSTRACT;
 
 		/**
 		* removes a metadata from the model
@@ -1659,10 +1867,10 @@ namespace NMR {
 	};
 
 	// ILib3MFModelFactory is the global factory class for model instances.
-	
+
 	LIB3MFINTERFACE(ILib3MFModelFactory, ILib3MFBase, CLSID_Lib3MF_ModelFactory) {
 
-		LIB3MFPUBLIC;
+		LIB3MFPUBLIC(ILib3MFModelFactory)
 
 		/**
 		* creates an empty model instance

@@ -31,14 +31,15 @@ COM Interface Implementation for Model Writer Class
 
 --*/
 
-#include "Model/COM/NMR_COMInterface_ModelWriter.h" 
-#include "Model/Writer/NMR_ModelWriter.h" 
-#include "Common/NMR_Exception.h" 
-#include "Common/NMR_Exception_Windows.h" 
-#include "Common/Platform/NMR_Platform.h" 
+#include "Model/COM/NMR_COMInterface_ModelWriter.h"
+#include "Model/Writer/NMR_ModelWriter.h"
+#include "Common/NMR_Exception.h"
+#include "Common/NMR_Exception_Windows.h"
+#include "Common/Platform/NMR_Platform.h"
+#include "Common/NMR_StringUtils.h"
 
 #ifndef __GCC
-#include "Common/Platform/NMR_ExportStream_COM.h" 
+#include "Common/Platform/NMR_ExportStream_COM.h"
 #endif // __GCC
 
 namespace NMR {
@@ -114,6 +115,38 @@ namespace NMR {
 			m_pModelWriter->exportToStream(pStream);
 
 			return handleSuccess();
+		}
+		catch (CNMRException_Windows & WinException) {
+			return handleNMRException(&WinException);
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
+	LIB3MFMETHODIMP CCOMModelWriter::WriteToFileUTF8(_In_z_ LPCSTR pwszFilename)
+	{
+
+		try {
+			if (pwszFilename == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+			if (m_pModelWriter.get() == nullptr)
+				throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
+
+			// Convert to UTF16
+			std::string sUTF8FileName(pwszFilename);
+			std::wstring sUTF16FileName = fnUTF8toUTF16(sUTF8FileName);
+
+			PExportStream pStream = fnCreateExportStreamInstance(sUTF16FileName.c_str());
+			m_pModelWriter->exportToStream(pStream);
+
+			return handleSuccess();
+		}
+		catch (CNMRException_Windows & WinException) {
+			return handleNMRException(&WinException);
 		}
 		catch (CNMRException & Exception) {
 			return handleNMRException(&Exception);

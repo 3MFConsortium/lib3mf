@@ -38,6 +38,8 @@ It should be used in every header file of the project.
 #include "NMR_Assertion.h"
 #include "Common/Platform/NMR_SAL.h"
 
+#define __NMR_INLINE __inline
+
 #ifndef __GCC
 #pragma warning (3:4706)
 #endif

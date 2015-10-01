@@ -43,4 +43,8 @@ namespace NMR {
 		m_pImportStream = pImportStream;
 	}
 
+	void CXmlReader::CloseElement()
+	{
+	}
+
 }

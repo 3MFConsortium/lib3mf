@@ -58,7 +58,27 @@ namespace NMR {
 	void fnStringToCommaSeparatedIntegerTriplet(_In_z_ const nfWChar * pwszValue, _Out_ nfInt32 & nValue1, _Out_ nfInt32 & nValue2, _Out_ nfInt32 & nValue3);
 
 	void fnWStringToBufferSafe(_In_ const std::wstring sString, _Out_opt_ nfWChar * pwszBuffer, nfUint32 cbBufferSize, _Out_opt_ nfUint32 * pcbNeededChars);
+	void fnStringToBufferSafe(_In_ const std::string sString, _Out_opt_ nfChar * pwszBuffer, nfUint32 cbBufferSize, _Out_opt_ nfUint32 * pcbNeededChars);
 
+	// UTF8 Functions
+	nfBool fnUTF16CharIsSurrogate(_In_ nfWChar cChar);
+	nfBool fnUTF16CharIsHighSurrogate(_In_ nfWChar cChar);
+	nfBool fnUTF16CharIsLowSurrogate(_In_ nfWChar cChar);
+	nfUint32 fnUTF16toCharacterID(_In_ nfUint16 nHighSurrogate, _In_ nfUint16 nLowSurrogate);
+	void fnCharacterIDToUTF16(_In_ nfUint32 nCharacterID, _Out_ nfUint16 & nHighSurrogate, _Out_ nfUint16 & nLowSurrogate);
+
+	std::string fnUTF16toUTF8(_In_ const std::wstring sString);
+	std::wstring fnUTF8toUTF16(_In_ const std::string sString);
+
+	// Returns number of converted WChars
+	// If the input data did contain not enough chars for the last multi-byte characters, pcbNeededCharacters is not equal 0.
+	// pszLastChar returns the last converted Multibyte character.
+	nfUint32 fnBufferedUTF8toUTF16(_In_ const nfChar * pszInBuffer, _Out_ nfWChar * pszwOutBuffer, _In_ nfUint32 cbBufferSize, _Out_ nfUint32 * pnLastChar, _Out_ nfUint32 * pcbNeededCharacters);
+
+	// Path and File name functions
+	std::wstring fnRemoveLeadingPathDelimiter(_In_ const std::wstring sPath);
+	std::wstring fnIncludeLeadingPathDelimiter(_In_ const std::wstring sPath);
+	std::wstring fnExtractFileName(_In_ const std::wstring sFullPath);
 }
 
 #endif // __NMR_STRINGUTILS

@@ -86,6 +86,26 @@ namespace NMR {
         case NMR_ERROR_XMLELEMENTNOTOPEN: return "XML Element not open";
         case NMR_ERROR_INVALIDXMLNAME: return "Invalid XML Name";
 		case NMR_ERROR_INVALIDINTEGERTRIPLET: return "Invalid Integer Triplet String";
+		case NMR_ERROR_INVALIDZIPENTRYKEY: return "Invalid ZIP Entry key";
+		case NMR_ERRORINVALIDZIPNAME: return "Invalid ZIP Name";
+		case NMR_ERROR_ZIPSTREAMCANNOTSEEK: return "ZIP Stream cannot seek";
+		case NMR_ERROR_COULDNOTCONVERTTOUTF8: return "Could not convert to UTF8";
+		case NMR_ERROR_COULDNOTCONVERTTOUTF16: return "Could not convert to UTF16";
+		case NMR_ERROR_ZIPENTRYOVERFLOW: return "ZIP Entry overflow";
+		case NMR_ERROR_INVALIDZIPENTRY: return "Invalid ZIP Entry";
+		case NMR_ERROR_EXPORTSTREAMNOTEMPTY: return "Export Stream not empty";
+		case NMR_ERROR_DEFLATEINITFAILED: return "Deflate init failed";
+		case NMR_ERROR_ZIPALREADYFINISHED: return "Zip already finished";
+		case NMR_ERROR_COULDNOTDEFLATE: return "Could not deflate data";
+		case NMR_ERROR_XMLWRITER_CLOSENODEERROR: return "Could not close written XML node";
+		case NMR_ERROR_INVALIDOPCPARTURI: return "Invalid OPC Part URI";
+		case NMR_ERROR_COULDNOTGETSTREAMPOSITION: return "Could not get stream position";
+		case NMR_ERROR_COULDNOTREADZIPFILE: return "Could not read ZIP file";
+		case NMR_ERROR_COULDNOTSEEKINZIP: return "Could not seek in ZIP file";
+		case NMR_ERROR_COULDNOTSTATZIPENTRY: return "Could not stat ZIP entry";
+		case NMR_ERROR_COULDNOTOPENZIPENTRY: return "Could not open ZIP entry";
+		case NMR_ERROR_INVALIDXMLDEPTH: return "Invalid XML Depth";
+		case NMR_ERROR_XMLELEMENTNOTEMPTY: return "XML Element not empty";
 
 		// Unhandled exception
 		case NMR_ERROR_GENERICEXCEPTION: return NMR_GENERICEXCEPTIONSTRING;
@@ -150,6 +170,7 @@ namespace NMR {
 		case NMR_ERROR_DUPLICATETILESTYLEW: return "Texture tilestyle W is already existing";
 		case NMR_ERROR_DUPLICATECOLORID: return "Color ID is already existing";
 		case NMR_ERROR_INVALIDMESHINFORMATIONDATA: return "Mesh Information Block was not assigned";
+
 
 		// Model error codes (0x8XXX)
 		case NMR_ERROR_OPCREADFAILED: return "3MF Loading - OPC could not be loaded";
@@ -269,6 +290,27 @@ namespace NMR {
 		case NMR_ERROR_NOTSUPPORTINGLEGACYCMYK: return "Not supporting legacy CMYK color";
 		case NMR_ERROR_INVALIDTEXTUREREFERENCE: return "Invalid Texture Reference";
 		case NMR_ERROR_INVALIDTEXTUREID: return "Invalid Texture ID";
+		case NMR_ERROR_NOMODELTOWRITE: return "No model to write";
+		case NMR_ERROR_COULDNOTCONVERTNUMBER: return "Could not convert number";
+
+		// XML Parser Error Constants(0x9XXX)
+		case NMR_ERROR_XMLPARSER_INVALIDATTRIBVALUE: return "Invalid XML attribute value";
+		case NMR_ERROR_XMLPARSER_INVALIDPARSERESULT: return "Invalid XML parse result";
+		case NMR_ERROR_XMLPARSER_TOOMANYUSEDCHARS: return "Too many XML characters used";
+		case NMR_ERROR_XMLPARSER_INVALIDENDDELIMITER: return "Invalid XML end delimiter";
+		case NMR_ERROR_XMLPARSER_INVALIDNAMESPACEPREFIX: return "Invalid XML namespace prefix";
+		case NMR_ERROR_XMLPARSER_COULDNOTPARSEENTITY: return "Could not parse XML entity";
+		case NMR_ERROR_XMLPARSER_EMPTYELEMENTNAME: return "Empty XML element name";
+		case NMR_ERROR_XMLPARSER_INVALIDCHARACTERINELEMENTNAME: return "Invalid characters in XML element name";
+		case NMR_ERROR_XMLPARSER_EMPTYINSTRUCTIONNAME: return "Empty XML instruction name";
+		case NMR_ERROR_XMLPARSER_INVALIDINSTRUCTIONNAME: return "Invalid XML instruction name";
+		case NMR_ERROR_XMLPARSER_COULDNOTCLOSEINSTRUCTION: return "Could not close XML instruction";
+		case NMR_ERROR_XMLPARSER_COULDNOTENDELEMENT: return "Could not end XML element";
+		case NMR_ERROR_XMLPARSER_EMPTYENDELEMENT: return "Empty XML end element";
+		case NMR_ERROR_XMLPARSER_COULDNOTCLOSEELEMENT: return "Could not close XML element";
+		case NMR_ERROR_XMLPARSER_INVALIDATTRIBUTENAME: return "Invalid XML attribute name";
+		case NMR_ERROR_XMLPARSER_SPACEINATTRIBUTENAME: return "Space in XML attribute name";
+		case NMR_ERROR_XMLPARSER_NOQUOTESAROUNDATTRIBUTE: return "No quotes around XML attribute";
 
 		default:
 			return "unknown error";

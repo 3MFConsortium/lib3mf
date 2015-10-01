@@ -58,9 +58,12 @@ namespace NMR {
 
 		LIB3MFMETHOD(GetCount) (_Out_ DWORD * pcbCount);
 		LIB3MFMETHOD(AddMaterial) (_In_z_ LPCWSTR pwszName, _In_ BYTE bRed, _In_ BYTE bGreen, _In_ BYTE bBlue, _In_opt_ DWORD * pnResourceIndex);
+		LIB3MFMETHOD(AddMaterialUTF8) (_In_z_ LPCSTR pszName, _In_ BYTE bRed, _In_ BYTE bGreen, _In_ BYTE bBlue, _In_opt_ DWORD * pnResourceIndex);
 		LIB3MFMETHOD(RemoveMaterial) (_In_ DWORD nIndex);
 		LIB3MFMETHOD(GetName) (_In_ DWORD nIndex, _Out_opt_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars);
+		LIB3MFMETHOD(GetNameUTF8) (_In_ DWORD nIndex, _Out_opt_ LPSTR pszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars);
 		LIB3MFMETHOD(SetName) (_In_ DWORD nIndex, _In_z_ LPCWSTR pwszName);
+		LIB3MFMETHOD(SetNameUTF8) (_In_ DWORD nIndex, _In_z_ LPCSTR pszName);
 		LIB3MFMETHOD(SetDisplayColorRGB) (_In_ DWORD nIndex, _In_ BYTE bRed, _In_ BYTE bGreen, _In_ BYTE bBlue);
 		LIB3MFMETHOD(SetDisplayColorRGBA) (_In_ DWORD nIndex, _In_ BYTE bRed, _In_ BYTE bGreen, _In_ BYTE bBlue, _In_ BYTE bAlpha);
 		LIB3MFMETHOD(SetDisplayColorFloatRGB) (_In_ DWORD nIndex, _In_ FLOAT fRed, _In_ FLOAT fGreen, _In_ FLOAT fBlue);
