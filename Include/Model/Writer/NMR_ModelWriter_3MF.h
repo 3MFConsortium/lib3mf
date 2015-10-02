@@ -36,13 +36,14 @@ A model writer exports the in memory represenation into a 3MF file.
 #define __NMR_MODELWRITER_3MF
 
 #include "Model/Writer/NMR_ModelWriter.h" 
+#include "Common/Platform/NMR_XmlWriter.h" 
 
 namespace NMR {
 
 	class CModelWriter_3MF : public CModelWriter {
 	protected:
 		// Creates a model stream
-		void writeModelStream(_In_ PExportStream pStream, _In_ CModel * pModel);
+		void writeModelStream(_In_ CXmlWriter * pXMLWriter, _In_ CModel * pModel);
 
 		// These are OPC dependent functions
 		virtual void createPackage(_In_ CModel * pModel) = 0;

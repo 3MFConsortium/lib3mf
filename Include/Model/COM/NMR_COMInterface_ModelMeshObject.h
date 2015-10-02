@@ -78,9 +78,13 @@ namespace NMR {
 		LIB3MFMETHOD(GetResourceID) (_Out_ DWORD * pnResourceID);
 
 		LIB3MFMETHOD(GetName) (_Out_opt_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars);
+		LIB3MFMETHOD(GetNameUTF8) (_Out_opt_ LPSTR pszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars);
 		LIB3MFMETHOD(SetName) (_In_z_ LPCWSTR pwszName);
+		LIB3MFMETHOD(SetNameUTF8) (_In_z_ LPCSTR pszName);
 		LIB3MFMETHOD(GetPartNumber) (_Out_opt_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars);
+		LIB3MFMETHOD(GetPartNumberUTF8) (_Out_opt_ LPSTR pszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars);
 		LIB3MFMETHOD(SetPartNumber) (_In_z_ LPCWSTR pwszPartNumber);
+		LIB3MFMETHOD(SetPartNumberUTF8) (_In_z_ LPCSTR pszPartNumber);
 		LIB3MFMETHOD(GetType) (_Out_ DWORD * pObjectType);
 		LIB3MFMETHOD(SetType) (_In_ DWORD ObjectType);
 		LIB3MFMETHOD(IsMeshObject) (_Out_ BOOL * pbIsMeshObject);

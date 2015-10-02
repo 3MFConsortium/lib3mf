@@ -54,6 +54,8 @@ namespace NMR {
 		LIB3MFMETHOD(GetLastError) (_Out_ DWORD * pErrorCode, _Outptr_opt_ LPCSTR * pErrorMessage);
 
 		LIB3MFMETHOD(ReadFromFile) (_In_z_ LPCWSTR pwszFilename);
+		LIB3MFMETHOD(ReadFromFileUTF8) (_In_z_ LPCSTR pwszFilename);
+
 		LIB3MFMETHOD(GetWarningCount) (_Out_ DWORD * pnWarningCount);
 		LIB3MFMETHOD(GetWarning) (_In_ DWORD nIndex, _Out_ DWORD * pErrorCode, _Out_opt_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_opt_ ULONG * pcbNeededChars);
 

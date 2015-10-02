@@ -45,10 +45,10 @@ COM Interface Implementation for Model Class
 
 #ifndef __GCC
 #include "Model/Reader/NMR_ModelReader_3MF_OPC.h"
-#include "Model/Writer/NMR_ModelWriter_3MF_OPC.h"
+#include "Model/Writer/NMR_ModelWriter_3MF_Native.h"
 #else
-#include "Model/Reader/NMR_ModelReader_3MF_GCC.h"
-#include "Model/Writer/NMR_ModelWriter_3MF_GCC.h"
+#include "Model/Reader/NMR_ModelReader_3MF_Native.h"
+#include "Model/Writer/NMR_ModelWriter_3MF_Native.h"
 #endif
 
 #include "Model/Classes/NMR_ModelMeshObject.h"
@@ -58,6 +58,8 @@ COM Interface Implementation for Model Class
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_StringUtils.h"
 #include "Common/NMR_Exception_Windows.h"
+
+#include <string.h>
 
 namespace NMR {
 
@@ -177,6 +179,26 @@ namespace NMR {
 		}
 	}
 
+	LIB3MFMETHODIMP CCOMModel::SetLanguageUTF8(_In_z_ LPCSTR pszLanguage)
+	{
+		try {
+			if (!pszLanguage)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
+			std::string sUTF8Language(pszLanguage);
+			std::wstring sUTF16Language = fnUTF8toUTF16(sUTF8Language);
+			m_pModel->setLanguage(sUTF16Language);
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
 	LIB3MFMETHODIMP CCOMModel::GetLanguage(_Out_opt_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_opt_ ULONG * pcbNeededChars)
 	{
 		try {
@@ -201,24 +223,47 @@ namespace NMR {
 		}
 	}
 
-	LIB3MFMETHODIMP CCOMModel::QueryWriter(_In_z_ LPCWSTR pwszWriterClass, _Outptr_ ILib3MFModelWriter ** ppWriter)
+	LIB3MFMETHODIMP CCOMModel::GetLanguageUTF8(_Out_opt_ LPSTR pszBuffer, _In_ ULONG cbBufferSize, _Out_opt_ ULONG * pcbNeededChars)
 	{
 		try {
-			if ((!ppWriter) || (!pwszWriterClass))
+			if (cbBufferSize > MODEL_MAXSTRINGBUFFERLENGTH)
+				throw CNMRException(NMR_ERROR_INVALIDBUFFERSIZE);
+
+			std::wstring sUTF16Language = m_pModel->getLanguage();
+			std::string sUTF8Language = fnUTF16toUTF8(sUTF16Language);
+
+			// Safely call StringToBuffer
+			nfUint32 nNeededChars = 0;
+			fnStringToBufferSafe(sUTF8Language, pszBuffer, cbBufferSize, &nNeededChars);
+
+			// Return length if needed
+			if (pcbNeededChars)
+				*pcbNeededChars = nNeededChars;
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
+	LIB3MFMETHODIMP CCOMModel::QueryWriter(_In_z_ LPCSTR pszWriterClass, _Outptr_ ILib3MFModelWriter ** ppWriter)
+	{
+		try {
+			if ((!ppWriter) || (!pszWriterClass))
 				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
 
 			// Create Writer Object
 			PModelWriter pWriter = nullptr;
 
 			// Create specified writer instance
-			if (wcscmp(pwszWriterClass, MODELWRITERCLASS_3MF) == 0) {
-#ifndef __GCC
-				pWriter = std::make_shared<CModelWriter_3MF_OPC>(m_pModel);
-#else
-				pWriter = std::make_shared<CModelWriter_3MF_GCC>(m_pModel);
-#endif
+			if (strcmp(pszWriterClass, MODELWRITERCLASS_3MF) == 0) {
+				pWriter = std::make_shared<CModelWriter_3MF_Native>(m_pModel);
 			}
-			if (wcscmp(pwszWriterClass, MODELWRITERCLASS_STL) == 0)
+			if (strcmp(pszWriterClass, MODELWRITERCLASS_STL) == 0)
 				pWriter = std::make_shared<CModelWriter_STL>(m_pModel);
 
 			if (!pWriter)
@@ -239,24 +284,24 @@ namespace NMR {
 		}
 	}
 
-	LIB3MFMETHODIMP CCOMModel::QueryReader(_In_z_ LPCWSTR pwszReaderClass, _Outptr_ ILib3MFModelReader ** ppReader)
+	LIB3MFMETHODIMP CCOMModel::QueryReader(_In_z_ LPCSTR pszReaderClass, _Outptr_ ILib3MFModelReader ** ppReader)
 	{
 		try {
-			if ((!ppReader) || (!pwszReaderClass))
+			if ((!ppReader) || (!pszReaderClass))
 				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
 
 			// Create Reader Object
 			PModelReader pReader = nullptr;
 
 			// Create specified writer instance
-			if (wcscmp(pwszReaderClass, MODELREADERCLASS_3MF) == 0) {
+			if (strcmp(pszReaderClass, MODELREADERCLASS_3MF) == 0) {
 #ifndef __GCC
 				pReader = std::make_shared<CModelReader_3MF_OPC>(m_pModel);
 #else
-				pReader = std::make_shared<CModelReader_3MF_GCC>(m_pModel);
+				pReader = std::make_shared<CModelReader_3MF_Native>(m_pModel);
 #endif // __GCC
 			}
-			if (wcscmp(pwszReaderClass, MODELREADERCLASS_STL) == 0)
+			if (strcmp(pszReaderClass, MODELREADERCLASS_STL) == 0)
 				pReader = std::make_shared<CModelReader_STL>(m_pModel);
 
 			if (!pReader)
@@ -690,6 +735,8 @@ namespace NMR {
 			pNewModel->mergeBaseMaterials(m_pModel.get());
 			pNewModel->mergeMetaData(m_pModel.get());
 
+			pNewModel->setUnit(m_pModel->getUnit());
+			pNewModel->setLanguage(m_pModel->getLanguage());
 
 			PModelMeshObject pMeshObject = std::make_shared<CModelMeshObject>(pNewModel->generateResourceID(), pNewModel, pMesh);
 			pNewModel->addResource(pMeshObject);
@@ -815,6 +862,38 @@ namespace NMR {
 
 	}
 
+
+	LIB3MFMETHODIMP CCOMModel::AddTexture2DUTF8(_In_z_ LPCSTR pszPath, _Outptr_ ILib3MFModelTexture2D ** ppTextureInstance)
+	{
+		try {
+			if (pszPath == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+			if (!ppTextureInstance)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
+			PModelTexture2DResource pResource = std::make_shared<CModelTexture2DResource>(m_pModel->generateResourceID(), m_pModel.get());
+			m_pModel->addResource(pResource);
+
+			std::string sUTF8Path(pszPath);
+			std::wstring sUTF16Path = fnUTF8toUTF16(sUTF8Path);
+			pResource->setPath(sUTF16Path);
+
+			CCOMObject<CCOMModelTexture2D> * pCOMObject = new CCOMObject<CCOMModelTexture2D>();
+			pCOMObject->setResource(pResource);
+			*ppTextureInstance = pCOMObject;
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+
+
+	}
+
 	LIB3MFMETHODIMP CCOMModel::AddBaseMaterialGroup(_Outptr_ ILib3MFModelBaseMaterial ** ppBaseMaterialInstance)
 	{
 		try {
@@ -845,7 +924,7 @@ namespace NMR {
 		try {
 			if (!pnCount)
 				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
-			
+
 			*pnCount = m_pModel->getTextureStreamCount();
 
 			return handleSuccess();
@@ -921,6 +1000,42 @@ namespace NMR {
 
 	}
 
+
+
+	LIB3MFMETHODIMP CCOMModel::GetTextureStreamPathUTF8(_In_ DWORD nIndex, _Out_opt_ LPSTR pszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars)
+	{
+		try {
+			if (cbBufferSize > MODEL_MAXSTRINGBUFFERLENGTH)
+				throw CNMRException(NMR_ERROR_INVALIDBUFFERSIZE);
+
+			nfUint32 nCount = m_pModel->getTextureStreamCount();
+			if (nIndex > nCount)
+				throw CNMRException(NMR_ERROR_INVALIDINDEX);
+
+			std::wstring sUTF16Path = m_pModel->getTextureStreamPath(nIndex);
+			std::string sUTF8Path = fnUTF16toUTF8(sUTF16Path);
+
+			// Safely call StringToBuffer
+			nfUint32 nNeededChars = 0;
+			fnStringToBufferSafe(sUTF8Path, pszBuffer, cbBufferSize, &nNeededChars);
+
+			// Return length if needed
+			if (pcbNeededChars)
+				*pcbNeededChars = nNeededChars;
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+
+
+	}
+
+
 	LIB3MFMETHODIMP CCOMModel::GetMetaDataCount (_Out_ DWORD * pnCount)
 	{
 		try {
@@ -954,10 +1069,46 @@ namespace NMR {
 			std::wstring sName;
 			std::wstring sValue;
 			m_pModel->getMetaData(nIndex, sName, sValue);
-	
+
 			// Safely call StringToBuffer
 			nfUint32 nNeededChars = 0;
 			fnWStringToBufferSafe(sName, pwszBuffer, cbBufferSize, &nNeededChars);
+
+			// Return length if needed
+			if (pcbNeededChars)
+				*pcbNeededChars = nNeededChars;
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+
+
+	}
+
+	LIB3MFMETHODIMP CCOMModel::GetMetaDataKeyUTF8(_In_ DWORD nIndex, _Out_opt_ LPSTR pszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars)
+	{
+		try {
+			if (cbBufferSize > MODEL_MAXSTRINGBUFFERLENGTH)
+				throw CNMRException(NMR_ERROR_INVALIDBUFFERSIZE);
+
+			nfUint32 nCount = m_pModel->getMetaDataCount();
+			if (nIndex > nCount)
+				throw CNMRException(NMR_ERROR_INVALIDINDEX);
+
+			std::wstring sUTF16Name;
+			std::wstring sUTF16Value;
+			m_pModel->getMetaData(nIndex, sUTF16Name, sUTF16Value);
+
+			std::string sUTF8Name = fnUTF16toUTF8(sUTF16Name);
+
+			// Safely call StringToBuffer
+			nfUint32 nNeededChars = 0;
+			fnStringToBufferSafe(sUTF8Name, pszBuffer, cbBufferSize, &nNeededChars);
 
 			// Return length if needed
 			if (pcbNeededChars)
@@ -1009,9 +1160,46 @@ namespace NMR {
 
 	}
 
+
+	LIB3MFMETHODIMP CCOMModel::GetMetaDataValueUTF8(_In_ DWORD nIndex, _Out_opt_ LPSTR pszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars)
+	{
+		try {
+			if (cbBufferSize > MODEL_MAXSTRINGBUFFERLENGTH)
+				throw CNMRException(NMR_ERROR_INVALIDBUFFERSIZE);
+
+			nfUint32 nCount = m_pModel->getMetaDataCount();
+			if (nIndex > nCount)
+				throw CNMRException(NMR_ERROR_INVALIDINDEX);
+
+			std::wstring sUTF16Name;
+			std::wstring sUTF16Value;
+			m_pModel->getMetaData(nIndex, sUTF16Name, sUTF16Value);
+
+			std::string sUTF8Value = fnUTF16toUTF8(sUTF16Value);
+
+			// Safely call StringToBuffer
+			nfUint32 nNeededChars = 0;
+			fnStringToBufferSafe(sUTF8Value, pszBuffer, cbBufferSize, &nNeededChars);
+
+			// Return length if needed
+			if (pcbNeededChars)
+				*pcbNeededChars = nNeededChars;
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+
+
+	}
+
 	LIB3MFMETHODIMP CCOMModel::AddMetaData (_In_ LPCWSTR pszwKey, _In_ LPCWSTR pszwValue)
 	{
-		try 
+		try
 		{
 			if (!pszwKey)
 				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
@@ -1022,6 +1210,34 @@ namespace NMR {
 			std::wstring sValue (pszwValue);
 
 			m_pModel->addMetaData(sName, sValue);
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+
+
+	}
+
+	LIB3MFMETHODIMP CCOMModel::AddMetaDataUTF8(_In_ LPCSTR pszKey, _In_ LPCSTR pszValue)
+	{
+		try
+		{
+			if (!pszKey)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+			if (!pszValue)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
+			std::string sUTF8Name(pszKey);
+			std::string sUTF8Value(pszValue);
+
+			std::wstring sUTF16Name = fnUTF8toUTF16(sUTF8Name);
+			std::wstring sUTF16Value = fnUTF8toUTF16(sUTF8Value);
+
+			m_pModel->addMetaData(sUTF16Name, sUTF16Value);
 			return handleSuccess();
 		}
 		catch (CNMRException & Exception) {

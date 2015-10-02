@@ -296,6 +296,30 @@ namespace NMR {
 		}
 	}
 
+	LIB3MFMETHODIMP CCOMModelComponentsObject::SetPartNumberUTF8(_In_z_ LPCSTR pszPartNumber)
+	{
+		try {
+			if (!pszPartNumber)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
+			CModelComponentsObject * pObject = getComponentsObject();
+			__NMRASSERT(pObject);
+
+			std::string sPartNumberUTF8(pszPartNumber);
+			std::wstring sPartNumberUTF16 = fnUTF8toUTF16(sPartNumberUTF8);
+
+			pObject->setPartNumber(sPartNumberUTF16.c_str());
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
 	LIB3MFMETHODIMP CCOMModelComponentsObject::GetPartNumber(_Out_opt_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_opt_ ULONG * pcbNeededChars)
 	{
 		try {
@@ -308,6 +332,36 @@ namespace NMR {
 			// Safely call StringToBuffer
 			nfUint32 nNeededChars = 0;
 			fnWStringToBufferSafe(pObject->getPartNumber(), pwszBuffer, cbBufferSize, &nNeededChars);
+
+			// Return length if needed
+			if (pcbNeededChars)
+				*pcbNeededChars = nNeededChars;
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
+	LIB3MFMETHODIMP CCOMModelComponentsObject::GetPartNumberUTF8(_Out_opt_ LPSTR pszBuffer, _In_ ULONG cbBufferSize, _Out_opt_ ULONG * pcbNeededChars)
+	{
+		try {
+			if (cbBufferSize > MODEL_MAXSTRINGBUFFERLENGTH)
+				throw CNMRException(NMR_ERROR_INVALIDBUFFERSIZE);
+
+			CModelComponentsObject * pObject = getComponentsObject();
+			__NMRASSERT(pObject);
+
+			std::wstring sUTF16PartNumber = pObject->getPartNumber();
+			std::string sUTF8PartNumber = fnUTF16toUTF8(sUTF16PartNumber);
+
+			// Safely call StringToBuffer
+			nfUint32 nNeededChars = 0;
+			fnStringToBufferSafe(sUTF8PartNumber, pszBuffer, cbBufferSize, &nNeededChars);
 
 			// Return length if needed
 			if (pcbNeededChars)
@@ -345,6 +399,29 @@ namespace NMR {
 		}
 	}
 
+	LIB3MFMETHODIMP CCOMModelComponentsObject::SetNameUTF8(_In_z_ LPCSTR pszName)
+	{
+		try {
+			if (!pszName)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
+			CModelComponentsObject * pObject = getComponentsObject();
+			__NMRASSERT(pObject);
+
+			std::string sUTF8Name(pszName);
+			std::wstring sUTF16Name = fnUTF8toUTF16(sUTF8Name);
+			pObject->setName(sUTF16Name.c_str());
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
 	LIB3MFMETHODIMP CCOMModelComponentsObject::GetName(_Out_opt_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_opt_ ULONG * pcbNeededChars)
 	{
 		try {
@@ -357,6 +434,36 @@ namespace NMR {
 			// Safely call StringToBuffer
 			nfUint32 nNeededChars = 0;
 			fnWStringToBufferSafe(pObject->getName(), pwszBuffer, cbBufferSize, &nNeededChars);
+
+			// Return length if needed
+			if (pcbNeededChars)
+				*pcbNeededChars = nNeededChars;
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
+	LIB3MFMETHODIMP CCOMModelComponentsObject::GetNameUTF8(_Out_opt_ LPSTR pszBuffer, _In_ ULONG cbBufferSize, _Out_opt_ ULONG * pcbNeededChars)
+	{
+		try {
+			if (cbBufferSize > MODEL_MAXSTRINGBUFFERLENGTH)
+				throw CNMRException(NMR_ERROR_INVALIDBUFFERSIZE);
+
+			CModelComponentsObject * pObject = getComponentsObject();
+			__NMRASSERT(pObject);
+
+			std::wstring sUTF16Name = pObject->getName();
+			std::string sUTF8Name = fnUTF16toUTF8(sUTF16Name);
+
+			// Safely call StringToBuffer
+			nfUint32 nNeededChars = 0;
+			fnStringToBufferSafe(sUTF8Name, pszBuffer, cbBufferSize, &nNeededChars);
 
 			// Return length if needed
 			if (pcbNeededChars)
@@ -435,9 +542,6 @@ namespace NMR {
 			if (!ppPropertyHandler)
 				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
 
-			CModelComponentsObject * pObject = getComponentsObject();
-			__NMRASSERT(pObject);
-
 			CCOMObject<CCOMModelDefaultPropertyHandler> * pNewPropertyHandler = new CCOMObject<CCOMModelDefaultPropertyHandler>();
 			pNewPropertyHandler->setChannel(0);
 			pNewPropertyHandler->setResource(m_pResource);
@@ -458,9 +562,6 @@ namespace NMR {
 		try {
 			if (!ppPropertyHandler)
 				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
-
-			CModelComponentsObject * pObject = getComponentsObject();
-			__NMRASSERT(pObject);
 
 			CCOMObject<CCOMModelDefaultPropertyHandler> * pNewPropertyHandler = new CCOMObject<CCOMModelDefaultPropertyHandler>();
 			pNewPropertyHandler->setChannel(nChannel);

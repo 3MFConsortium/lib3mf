@@ -41,7 +41,7 @@ NMR_COM_Emulation.h defines Macros for a non-Windows Emulation of COM Interfaces
 #define LIB3MF_INVALIDARG 0x80070057L
 
 #define LIB3MFINTERFACE(iface, baseiface, iid) class iface : public baseiface
-#define LIB3MFPUBLIC public:
+#define LIB3MFPUBLIC(X) public: X(); virtual ~X();
 #define LIB3MFABSTRACT = 0
 
 #ifdef _WIN32

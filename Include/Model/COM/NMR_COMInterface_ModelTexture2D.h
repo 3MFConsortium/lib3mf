@@ -57,7 +57,9 @@ namespace NMR {
 		LIB3MFMETHOD(GetResourceID) (_Out_ DWORD * pnVertexCount);
 
 		LIB3MFMETHOD(GetPath) (_Out_opt_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars);
+		LIB3MFMETHOD(GetPathUTF8) (_Out_opt_ LPSTR pszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars);
 		LIB3MFMETHOD(SetPath) (_In_z_ LPCWSTR pwszPath);
+		LIB3MFMETHOD(SetPathUTF8) (_In_z_ LPCSTR pszPath);
 		LIB3MFMETHOD(GetContentType) (_Out_ eModelTexture2DType * peContentType);
 		LIB3MFMETHOD(SetContentType) (_In_ eModelTexture2DType eContentType);
 		LIB3MFMETHOD(GetBox2D) (_Out_ FLOAT * pfU, _Out_ FLOAT * pfV, _Out_ FLOAT * pfWidth, _Out_ FLOAT * pfHeight);
@@ -65,6 +67,7 @@ namespace NMR {
 		LIB3MFMETHOD(ClearBox2D) ();
 		LIB3MFMETHOD(GetStreamSize) (_Out_ ULONG64 * pcbStreamSize);
 		LIB3MFMETHOD(WriteToFile) (_In_z_ LPCWSTR pwszFilename);
+		LIB3MFMETHOD(WriteToFileUTF8) (_In_z_ LPCSTR pszFilename);
 		LIB3MFMETHOD(WriteToBuffer) (_Out_ BYTE * pBuffer, _In_ ULONG64 cbBufferSize);
 
 #ifndef __GCC
@@ -72,6 +75,7 @@ namespace NMR {
 #endif// __GCC
 
 		LIB3MFMETHOD(ReadFromFile) (_In_z_ LPCWSTR pwszFilename);
+		LIB3MFMETHOD(ReadFromFileUTF8) (_In_z_ LPCSTR pszFilename);
 		LIB3MFMETHOD(ReadFromBuffer) (_In_ BYTE * pBuffer, _In_ ULONG64 cbBufferSize);
 
 #ifndef __GCC

@@ -47,7 +47,10 @@ NMR_WinTypes.h defines Standard Windows Types on Non-Windows Environments
 #define UINT unsigned int
 #define HRESULT unsigned int
 #define LPCSTR const char *
+#define LPSTR char *
 #define ULONG64 unsigned long long
+#define UINT64 unsigned long long
+
 #else
 
 #include <Windows.h>

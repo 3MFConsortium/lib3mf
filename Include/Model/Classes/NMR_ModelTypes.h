@@ -35,11 +35,11 @@ NMR_ModelTypes.h defines 3MF Model Type Definitions
 
 #include "Common/Platform/NMR_WinTypes.h"
 
-#define MODELREADERCLASS_3MF L"3mf"
-#define MODELWRITERCLASS_3MF L"3mf"
+#define MODELREADERCLASS_3MF "3mf"
+#define MODELWRITERCLASS_3MF "3mf"
 
-#define MODELREADERCLASS_STL L"stl"
-#define MODELWRITERCLASS_STL L"stl"
+#define MODELREADERCLASS_STL "stl"
+#define MODELWRITERCLASS_STL "stl"
 
 #define MODEL_MAXSTRINGBUFFERLENGTH 1073741823 // (Safe margin for buffer overflows: 2^30 - 1)
 

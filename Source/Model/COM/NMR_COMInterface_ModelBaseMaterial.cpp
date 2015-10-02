@@ -184,6 +184,37 @@ namespace NMR {
 		}
 	}
 
+	LIB3MFMETHODIMP CCOMModelBaseMaterial::AddMaterialUTF8(_In_z_ LPCSTR pszName, _In_ BYTE bRed, _In_ BYTE bGreen, _In_ BYTE bBlue, _In_opt_ DWORD * pnResourceIndex)
+	{
+		try {
+			if (pszName == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
+			CModelBaseMaterialResource * pMaterialResource = getBaseMaterials();
+
+			std::string sUTF8Name(pszName);
+			std::wstring sUTF16Name = fnUTF8toUTF16(sUTF8Name);
+			nfUint32 nRed = bRed;
+			nfUint32 nGreen = bGreen;
+			nfUint32 nBlue = bBlue;
+			nfColor cColor = nRed | (nGreen << 8) | (nBlue << 16);
+
+			nfUint32 nNewResourceIndex = pMaterialResource->getCount();
+			pMaterialResource->addBaseMaterial(sUTF16Name, cColor);
+
+			if (pnResourceIndex != nullptr)
+				*pnResourceIndex = nNewResourceIndex;
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
 	LIB3MFMETHODIMP CCOMModelBaseMaterial::RemoveMaterial (_In_ DWORD nIndex)
 	{
 		try {
@@ -238,6 +269,43 @@ namespace NMR {
 
 	}
 
+	LIB3MFMETHODIMP CCOMModelBaseMaterial::GetNameUTF8(_In_ DWORD nIndex, _Out_opt_ LPSTR pszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars)
+	{
+		try {
+			if (cbBufferSize > MODEL_MAXSTRINGBUFFERLENGTH)
+				throw CNMRException(NMR_ERROR_INVALIDBUFFERSIZE);
+
+			CModelBaseMaterialResource * pMaterialResource = getBaseMaterials();
+			__NMRASSERT(pMaterialResource);
+
+			PModelBaseMaterial pMaterial = pMaterialResource->getBaseMaterial(nIndex);
+			if (!pMaterial.get())
+				throw CNMRException(NMR_ERROR_INVALIDINDEX);
+
+			// Retrieve Name
+			std::wstring sUTF16Name = pMaterial->getName();
+			std::string sUTF8Name = fnUTF16toUTF8(sUTF16Name);
+
+			// Safely call StringToBuffer
+			nfUint32 nNeededChars = 0;
+			fnStringToBufferSafe(sUTF8Name, pszBuffer, cbBufferSize, &nNeededChars);
+
+			// Return length if needed
+			if (pcbNeededChars)
+				*pcbNeededChars = nNeededChars;
+
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+
+	}
+
 	LIB3MFMETHODIMP CCOMModelBaseMaterial::SetName(_In_ DWORD nIndex, _In_z_ LPCWSTR pwszName)
 	{
 		try {
@@ -253,6 +321,34 @@ namespace NMR {
 
 			std::wstring sName(pwszName);
 			pMaterial->setName(sName);
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+
+	}
+
+	LIB3MFMETHODIMP CCOMModelBaseMaterial::SetNameUTF8(_In_ DWORD nIndex, _In_z_ LPCSTR pszName)
+	{
+		try {
+			if (pszName == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
+			CModelBaseMaterialResource * pMaterialResource = getBaseMaterials();
+			__NMRASSERT(pMaterialResource);
+
+			PModelBaseMaterial pMaterial = pMaterialResource->getBaseMaterial(nIndex);
+			if (!pMaterial.get())
+				throw CNMRException(NMR_ERROR_INVALIDINDEX);
+
+			std::string sUTF8Name(pszName);
+			std::wstring sUTF16Name = fnUTF8toUTF16(sUTF8Name);
+			pMaterial->setName(sUTF16Name);
 
 			return handleSuccess();
 		}

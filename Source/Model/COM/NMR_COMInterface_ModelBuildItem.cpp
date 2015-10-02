@@ -271,6 +271,30 @@ namespace NMR {
 		}
 	}
 
+	LIB3MFMETHODIMP CCOMModelBuildItem::SetPartNumberUTF8(_In_z_ LPCSTR pszPartNumber)
+	{
+		try {
+			if (!pszPartNumber)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
+			if (!m_pModelBuildItem.get())
+				throw CNMRException(NMR_ERROR_INVALIDBUILDITEM);
+
+			std::string sUTF8PartNumber(pszPartNumber);
+			std::wstring sUTF16PartNumber = fnUTF8toUTF16(sUTF8PartNumber);
+			m_pModelBuildItem->setPartNumber(sUTF16PartNumber);
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
+
 	LIB3MFMETHODIMP CCOMModelBuildItem::GetPartNumber(_Out_opt_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_opt_ ULONG * pcbNeededChars)
 	{
 		try	{
@@ -297,6 +321,37 @@ namespace NMR {
 			return handleGenericException();
 		}
 	}
+
+	LIB3MFMETHODIMP CCOMModelBuildItem::GetPartNumberUTF8(_Out_opt_ LPSTR pszBuffer, _In_ ULONG cbBufferSize, _Out_opt_ ULONG * pcbNeededChars)
+	{
+		try {
+			if (!m_pModelBuildItem.get())
+				throw CNMRException(NMR_ERROR_INVALIDBUILDITEM);
+
+			if (cbBufferSize > MODEL_MAXSTRINGBUFFERLENGTH)
+				throw CNMRException(NMR_ERROR_INVALIDBUFFERSIZE);
+
+			// Safely call StringToBuffer
+			nfUint32 nNeededChars = 0;
+			std::wstring sUTF16PartNumber = m_pModelBuildItem->getPartNumber();
+			std::string sUTF8PartNumber = fnUTF16toUTF8(sUTF16PartNumber);
+
+			fnStringToBufferSafe(sUTF8PartNumber, pszBuffer, cbBufferSize, &nNeededChars);
+
+			// Return length if needed
+			if (pcbNeededChars)
+				*pcbNeededChars = nNeededChars;
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
 
 	LIB3MFMETHODIMP CCOMModelBuildItem::GetHandle(_Outptr_ DWORD * pHandle)
 	{

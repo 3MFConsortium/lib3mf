@@ -64,17 +64,15 @@ namespace NMR {
 		releasePackage();
 	}
 
-	void CModelWriter_3MF::writeModelStream(_In_ PExportStream pStream, _In_ CModel * pModel)
+	void CModelWriter_3MF::writeModelStream(_In_ CXmlWriter * pXMLWriter, _In_ CModel * pModel)
 	{
 		__NMRASSERT(pModel != nullptr);
-		if (pStream.get() == nullptr)
+		if (pXMLWriter == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
-
-		PXmlWriter pXMLWriter = fnCreateXMLWriterInstance(pStream);
 
 		pXMLWriter->WriteStartDocument();
 
-		CModelWriterNode100_Model ModelNode(pModel, pXMLWriter.get());
+		CModelWriterNode100_Model ModelNode(pModel, pXMLWriter);
 		ModelNode.writeToXML();
 
 		pXMLWriter->WriteEndDocument();

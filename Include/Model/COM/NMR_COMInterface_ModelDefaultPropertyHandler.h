@@ -33,9 +33,9 @@ COM Interface Implementation for Model Property Handler Class
 #ifndef __NMR_COMINTERFACE_MODELDEFAULTPROPERTYHANDLER
 #define __NMR_COMINTERFACE_MODELDEFAULTPROPERTYHANDLER
 
-#include "Model/COM/NMR_COMInterfaces.h" 
-#include "Model/Classes/NMR_ModelObject.h" 
-#include "Model/Classes/NMR_ModelMeshObject.h" 
+#include "Model/COM/NMR_COMInterfaces.h"
+#include "Model/Classes/NMR_ModelObject.h"
+#include "Model/Classes/NMR_ModelMeshObject.h"
 
 namespace NMR {
 
@@ -56,18 +56,18 @@ namespace NMR {
 
 			LIB3MFMETHOD(GetLastError) (_Out_ DWORD * pErrorCode, _Outptr_opt_ LPCSTR * pErrorMessage);
 
-		LIB3MFMETHOD(RemoveProperty) () LIB3MFABSTRACT;
-		LIB3MFMETHOD(GetPropertyType) (_Out_ eModelPropertyType * pnPropertyType) LIB3MFABSTRACT;
-		LIB3MFMETHOD(GetBaseMaterial) (_Out_ DWORD * pnMaterialGroupID, _Out_ DWORD * pnMaterialIndex) LIB3MFABSTRACT;
-		LIB3MFMETHOD(SetBaseMaterial) (_In_ ModelResourceID nMaterialGroupID, _In_ DWORD nMaterialIndex) LIB3MFABSTRACT;
-		LIB3MFMETHOD(GetColor) (_In_ DWORD nIndex, _Out_ MODELMESHCOLOR_SRGB * pColor) LIB3MFABSTRACT;
-		LIB3MFMETHOD(SetColor) (_In_ MODELMESHCOLOR_SRGB * pColor) LIB3MFABSTRACT;
-		LIB3MFMETHOD(SetColorRGB) (_In_ BYTE bRed, _In_ BYTE bGreen, _In_ BYTE bBlue) LIB3MFABSTRACT;
-		LIB3MFMETHOD(SetColorRGBA) (_In_ BYTE bRed, _In_ BYTE bGreen, _In_ BYTE bBlue, _In_ BYTE bAlpha) LIB3MFABSTRACT;
-		LIB3MFMETHOD(SetFloatColorRGB) (_In_ FLOAT fRed, _In_ FLOAT fGreen, _In_ FLOAT fBlue) LIB3MFABSTRACT;
-		LIB3MFMETHOD(SetFloatColorRGBA) (_In_ FLOAT fRed, _In_ FLOAT fGreen, _In_ FLOAT fBlue, _In_ FLOAT fAlpha) LIB3MFABSTRACT;
-		LIB3MFMETHOD(GetTexture) (_Out_ ModelResourceID * pnTextureID, _Out_ FLOAT * pfU, _Out_ FLOAT * pfV) LIB3MFABSTRACT;
-		LIB3MFMETHOD(SetTexture) (_In_ ModelResourceID nTextureID, _In_ FLOAT fU, _In_ FLOAT fV) LIB3MFABSTRACT;
+		LIB3MFMETHOD(RemoveProperty) ();
+		LIB3MFMETHOD(GetPropertyType) (_Out_ eModelPropertyType * pnPropertyType);
+		LIB3MFMETHOD(GetBaseMaterial) (_Out_ DWORD * pnMaterialGroupID, _Out_ DWORD * pnMaterialIndex);
+		LIB3MFMETHOD(SetBaseMaterial) (_In_ ModelResourceID nMaterialGroupID, _In_ DWORD nMaterialIndex);
+		LIB3MFMETHOD(GetColor) (_In_ DWORD nIndex, _Out_ MODELMESHCOLOR_SRGB * pColor);
+		LIB3MFMETHOD(SetColor) (_In_ MODELMESHCOLOR_SRGB * pColor);
+		LIB3MFMETHOD(SetColorRGB) (_In_ BYTE bRed, _In_ BYTE bGreen, _In_ BYTE bBlue);
+		LIB3MFMETHOD(SetColorRGBA) (_In_ BYTE bRed, _In_ BYTE bGreen, _In_ BYTE bBlue, _In_ BYTE bAlpha);
+		LIB3MFMETHOD(SetFloatColorRGB) (_In_ FLOAT fRed, _In_ FLOAT fGreen, _In_ FLOAT fBlue);
+		LIB3MFMETHOD(SetFloatColorRGBA) (_In_ FLOAT fRed, _In_ FLOAT fGreen, _In_ FLOAT fBlue, _In_ FLOAT fAlpha);
+		LIB3MFMETHOD(GetTexture) (_Out_ ModelResourceID * pnTextureID, _Out_ FLOAT * pfU, _Out_ FLOAT * pfV);
+		LIB3MFMETHOD(SetTexture) (_In_ ModelResourceID nTextureID, _In_ FLOAT fU, _In_ FLOAT fV);
 
 		CCOMModelDefaultPropertyHandler();
 		void setResource(_In_ PModelResource pResource);

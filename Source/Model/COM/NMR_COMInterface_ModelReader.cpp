@@ -122,6 +122,30 @@ namespace NMR {
 		}
 	}
 
+	LIB3MFMETHODIMP CCOMModelReader::ReadFromFileUTF8(_In_z_ LPCSTR pwszFilename)
+	{
+		try {
+			if (pwszFilename == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+			if (m_pModelReader.get() == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDREADEROBJECT);
+
+			// Convert to UTF16
+			std::string sUTF8FileName(pwszFilename);
+			std::wstring sUTF16FileName = fnUTF8toUTF16(sUTF8FileName);
+
+			PImportStream pStream = fnCreateImportStreamInstance(sUTF16FileName.c_str());
+			m_pModelReader->readStream(pStream);
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
 	LIB3MFMETHODIMP CCOMModelReader::GetWarningCount(_Out_ DWORD * pnWarningCount)
 	{
 

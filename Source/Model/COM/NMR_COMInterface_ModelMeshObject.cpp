@@ -503,7 +503,7 @@ namespace NMR {
 
 			if (m_pResource.get() == nullptr)
 				throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
-			
+
 			*pnResourceID = m_pResource->getResourceID();
 
 			return handleSuccess();
@@ -546,7 +546,7 @@ namespace NMR {
 		try {
 			if (m_pResource.get() == nullptr)
 				throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
-			
+
 			CModelMeshObject * pObject = getMeshObject();
 			__NMRASSERT(pObject);
 
@@ -571,8 +571,30 @@ namespace NMR {
 			CModelMeshObject * pObject = getMeshObject();
 			__NMRASSERT(pObject);
 
-			std::wstring sPartNumber(pwszPartNumber);
 			pObject->setPartNumber(pwszPartNumber);
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
+	LIB3MFMETHODIMP CCOMModelMeshObject::SetPartNumberUTF8(_In_z_ LPCSTR pszPartNumber)
+	{
+		try {
+			if (!pszPartNumber)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
+			CModelMeshObject * pObject = getMeshObject();
+			__NMRASSERT(pObject);
+
+			std::string sUTF8PartNumber(pszPartNumber);
+			std::wstring sUTF16PartNumber = fnUTF8toUTF16(sUTF8PartNumber);
+			pObject->setPartNumber(sUTF16PartNumber.c_str());
 
 			return handleSuccess();
 		}
@@ -611,6 +633,36 @@ namespace NMR {
 		}
 	}
 
+	LIB3MFMETHODIMP CCOMModelMeshObject::GetPartNumberUTF8(_Out_opt_ LPSTR pszBuffer, _In_ ULONG cbBufferSize, _Out_opt_ ULONG * pcbNeededChars)
+	{
+		try {
+			if (cbBufferSize > MODEL_MAXSTRINGBUFFERLENGTH)
+				throw CNMRException(NMR_ERROR_INVALIDBUFFERSIZE);
+
+			CModelMeshObject * pObject = getMeshObject();
+			__NMRASSERT(pObject);
+
+			std::wstring sUTF16PartNumber = pObject->getPartNumber();
+			std::string sUTF8PartNumber = fnUTF16toUTF8(sUTF16PartNumber);
+
+			// Safely call StringToBuffer
+			nfUint32 nNeededChars = 0;
+			fnStringToBufferSafe(sUTF8PartNumber, pszBuffer, cbBufferSize, &nNeededChars);
+
+			// Return length if needed
+			if (pcbNeededChars)
+				*pcbNeededChars = nNeededChars;
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
 	LIB3MFMETHODIMP CCOMModelMeshObject::SetName(_In_z_ LPCWSTR pwszName)
 	{
 		try {
@@ -620,8 +672,31 @@ namespace NMR {
 			CModelMeshObject * pObject = getMeshObject();
 			__NMRASSERT(pObject);
 
-			std::wstring sName(pwszName);
 			pObject->setName(pwszName);
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
+	LIB3MFMETHODIMP CCOMModelMeshObject::SetNameUTF8(_In_z_ LPCSTR pszName)
+	{
+		try {
+			if (!pszName)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
+			CModelMeshObject * pObject = getMeshObject();
+			__NMRASSERT(pObject);
+
+			std::string sUTF8Name(pszName);
+			std::wstring sUTF16Name = fnUTF8toUTF16(sUTF8Name);
+
+			pObject->setName(sUTF16Name.c_str());
 
 			return handleSuccess();
 		}
@@ -659,6 +734,37 @@ namespace NMR {
 			return handleGenericException();
 		}
 	}
+
+	LIB3MFMETHODIMP CCOMModelMeshObject::GetNameUTF8(_Out_opt_ LPSTR pszBuffer, _In_ ULONG cbBufferSize, _Out_opt_ ULONG * pcbNeededChars)
+	{
+		try {
+			if (cbBufferSize > MODEL_MAXSTRINGBUFFERLENGTH)
+				throw CNMRException(NMR_ERROR_INVALIDBUFFERSIZE);
+
+			CModelMeshObject * pObject = getMeshObject();
+			__NMRASSERT(pObject);
+
+			std::wstring sUTF16Name = pObject->getName();
+			std::string sUTF8Name = fnUTF16toUTF8(sUTF16Name);
+
+			// Safely call StringToBuffer
+			nfUint32 nNeededChars = 0;
+			fnStringToBufferSafe(sUTF8Name, pszBuffer, cbBufferSize, &nNeededChars);
+
+			// Return length if needed
+			if (pcbNeededChars)
+				*pcbNeededChars = nNeededChars;
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
 
 	LIB3MFMETHODIMP CCOMModelMeshObject::IsMeshObject(_Out_ BOOL * pbIsMeshObject)
 	{
@@ -704,7 +810,7 @@ namespace NMR {
 		try {
 			if (!pbIsValid)
 				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
-			
+
 			CModelMeshObject * pObject = getMeshObject();
 			__NMRASSERT(pObject);
 
@@ -775,9 +881,6 @@ namespace NMR {
 			if (!ppPropertyHandler)
 				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
 
-			CModelMeshObject * pObject = getMeshObject();
-			__NMRASSERT(pObject);
-
 			CCOMObject<CCOMModelDefaultPropertyHandler> * pNewPropertyHandler = new CCOMObject<CCOMModelDefaultPropertyHandler>();
 			pNewPropertyHandler->setChannel(0);
 			pNewPropertyHandler->setResource(m_pResource);
@@ -798,9 +901,6 @@ namespace NMR {
 		try {
 			if (!ppPropertyHandler)
 				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
-
-			CModelMeshObject * pObject = getMeshObject();
-			__NMRASSERT(pObject);
 
 			CCOMObject<CCOMModelDefaultPropertyHandler> * pNewPropertyHandler = new CCOMObject<CCOMModelDefaultPropertyHandler>();
 			pNewPropertyHandler->setChannel(nChannel);

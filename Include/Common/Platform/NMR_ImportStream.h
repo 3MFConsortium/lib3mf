@@ -35,10 +35,11 @@ This is an abstract base stream class for importing from various data sources.
 #ifndef __NMR_IMPORTSTREAM
 #define __NMR_IMPORTSTREAM
 
-#include "Common/NMR_Types.h" 
-#include "Common/NMR_Local.h" 
+#include "Common/NMR_Types.h"
+#include "Common/NMR_Local.h"
 
-#define NMR_IMPORTSTREAM_COPYBUFFERSIZE 1024*1024
+#define NMR_IMPORTSTREAM_COPYBUFFERSIZE (128 * 1024)
+#define NMR_IMPORTSTREAM_READBUFFERSIZE (128 * 1024)
 
 namespace NMR {
 

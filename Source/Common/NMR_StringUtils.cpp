@@ -37,8 +37,33 @@ correctly and Exception-safe
 #include <climits>
 #include <sstream>
 #include <math.h>
+#include <string.h>
+#include <vector>
 
 namespace NMR {
+
+	// Lookup table to convert UTF8 bytes to sequence length
+	const nfByte UTF8DecodeTable[256] = {
+		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+		2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,
+		2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,
+		3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,
+		4,4,4,4,4,4,4,4,5,5,5,5,6,6,0,0
+	};
+
+	// Masks to decode highest UTF8 sequence byte
+	const nfByte UTF8DecodeMask[7] = {0, 0x7f, 0x1f, 0x0f, 0x07, 0x03, 0x01};
 
 	nfInt32 fnWStringToInt32(_In_z_ const nfWChar * pwszValue)
 	{
@@ -138,9 +163,9 @@ namespace NMR {
 	nfWChar fnColorDigitToHex(_In_ nfByte digit)
 	{
 		if (digit < 10)
-			return (nfWChar) (digit + 48);
+			return (nfWChar)(digit + 48);
 		if (digit < 16)
-			return (nfWChar) (digit + 55);
+			return (nfWChar)(digit + 55);
 
 		return L' ';
 	}
@@ -159,7 +184,7 @@ namespace NMR {
 		pBuffer[7] = fnColorDigitToHex((cColor >> 28) & 0xf); // A
 		pBuffer[9] = 0;
 
-		return std::wstring (pBuffer);
+		return std::wstring(pBuffer);
 	}
 
 	std::wstring fnDoubleToWString(_In_ nfFloat dValue, _In_ nfUint32 precision)
@@ -304,4 +329,387 @@ namespace NMR {
 		}
 	}
 
+
+	void fnStringToBufferSafe(_In_ const std::string sString, _Out_opt_ nfChar * pszBuffer, nfUint32 cbBufferSize, _Out_opt_ nfUint32 * pcbNeededChars)
+	{
+		__NMRASSERT(pszBuffer);
+
+		// Check for possible integer overflows
+		size_t cbLength = sString.length();
+		if (cbLength > NMR_MAXSTRINGBUFFERSIZE)
+			throw CNMRException(NMR_ERROR_INVALIDBUFFERSIZE);
+
+		// return used buffer size
+		nfUint32 cbNeededChars = ((nfUint32)cbLength);
+		if (pcbNeededChars)
+			*pcbNeededChars = cbNeededChars;
+
+		// copy string
+		if (pszBuffer) {
+			if (cbNeededChars >= cbBufferSize)
+				throw CNMRException(NMR_ERROR_INSUFFICIENTBUFFERSIZE);
+
+#ifndef __GCC
+			strcpy_s(pszBuffer, cbBufferSize, sString.c_str());
+#else
+			strcpy(pszBuffer, sString.c_str());
+#endif
+		}
+	}
+
+	// UTF conversion functions
+	nfBool fnUTF16CharIsSurrogate(_In_ nfWChar cChar)
+	{
+		nfUint32 nSignature = (cChar & 0xfc00);
+		return (nSignature == 0xd800) || (nSignature == 0xdc00);
+	}
+
+	nfBool fnUTF16CharIsHighSurrogate(_In_ nfWChar cChar)
+	{
+		nfUint32 nSignature = (cChar & 0xfc00);
+		return (nSignature == 0xd800);
+	}
+
+	nfBool fnUTF16CharIsLowSurrogate(_In_ nfWChar cChar)
+	{
+		nfUint32 nSignature = (cChar & 0xfc00);
+		return (nSignature == 0xdc00);
+	}
+
+	nfUint32 fnUTF16toCharacterID(_In_ nfUint16 nHighSurrogate, _In_ nfUint16 nLowSurrogate)
+	{
+		if ((fnUTF16CharIsHighSurrogate(nLowSurrogate)) && (fnUTF16CharIsLowSurrogate(nHighSurrogate))) {
+			std::swap(nLowSurrogate, nHighSurrogate); // UTF16LE
+		}
+
+		if ((!fnUTF16CharIsHighSurrogate(nHighSurrogate)) || (!fnUTF16CharIsLowSurrogate(nLowSurrogate)))
+			throw CNMRException(NMR_ERROR_COULDNOTCONVERTTOUTF8);
+
+		nfUint32 nCode = (((nfUint32)(nHighSurrogate & 0x3ff)) << 10 | ((nfUint32)(nLowSurrogate & 0x3ff)));
+		return nCode + 0x10000;
+	}
+
+	void fnCharacterIDToUTF16(_In_ nfUint32 nCharacterID, _Out_ nfUint16 & nHighSurrogate, _Out_ nfUint16 & nLowSurrogate)
+	{
+		if ((nCharacterID < 0x10000) || (nCharacterID > 0x10FFFF))
+			throw CNMRException(NMR_ERROR_COULDNOTCONVERTTOUTF16);
+		nCharacterID -= 0x10000;
+		nHighSurrogate = (nCharacterID >> 10) | 0xd800;
+		nLowSurrogate = (nCharacterID & 0x3ff) | 0xdc00;
+	}
+
+
+	std::string fnUTF16toUTF8(_In_ const std::wstring sString)
+	{
+
+		// Check Input Sanity
+		size_t nLength = sString.length();
+		if (nLength == 0)
+			return "";
+		if (nLength > NMR_MAXSTRINGBUFFERSIZE)
+			throw CNMRException(NMR_ERROR_INVALIDBUFFERSIZE);
+
+		// Reserve UTF8 Buffer
+		nfUint32 nBufferSize = (nfUint32)nLength * 4 + 1;
+		std::vector<nfChar> Buffer;
+		Buffer.resize(nBufferSize);
+
+		// nfInt32 nResult;
+		// Alternative: Convert via Win API
+		// nResult = WideCharToMultiByte(CP_UTF8, 0, sString.c_str(), (nfUint32)nLength, &Buffer[0], nBufferSize, nullptr, nullptr);
+		// if (nResult == 0)
+		//	throw CNMRException(NMR_ERROR_COULDNOTCONVERTTOUTF8);
+
+		const nfWChar * pChar = sString.c_str();
+		nfChar * pOutput = &Buffer[0];
+
+		while (*pChar) {
+			nfWChar cChar = *pChar;
+			nfUint32 nCharacter;
+			pChar++;
+
+			if (fnUTF16CharIsSurrogate(cChar)) {
+				nfWChar cLowChar = *pChar;
+				if (cLowChar == 0)
+					throw CNMRException(NMR_ERROR_COULDNOTCONVERTTOUTF8);
+				pChar++;
+
+				nCharacter = fnUTF16toCharacterID(cChar, cLowChar);
+			}
+			else {
+				nCharacter = cChar;
+			}
+
+			if (nCharacter < 0x80) {
+				// One Byte Encoding
+				*pOutput = nCharacter;
+				pOutput++;
+			}
+			else if (nCharacter < 0x800) {
+				// Two Byte Encoding
+				*pOutput = (nCharacter >> 6) | 0xC0;
+				pOutput++;
+				*pOutput = (nCharacter & 0x3f) | 0x80;
+				pOutput++;
+			}
+			else if (nCharacter < 0x10000) {
+				// Three Byte Encoding
+				*pOutput = (nCharacter >> 12) | 0xE0;
+				pOutput++;
+				*pOutput = ((nCharacter >> 6) & 0x3f) | 0x80;
+				pOutput++;
+				*pOutput = (nCharacter & 0x3f) | 0x80;
+				pOutput++;
+			}
+			else if (nCharacter < 0x200000) {
+				// Four Byte Encoding
+				*pOutput = (nCharacter >> 18) | 0xF0;
+				pOutput++;
+				*pOutput = ((nCharacter >> 12) & 0x3f) | 0x80;
+				pOutput++;
+				*pOutput = ((nCharacter >> 6) & 0x3f) | 0x80;
+				pOutput++;
+				*pOutput = (nCharacter & 0x3f) | 0x80;
+				pOutput++;
+			}
+			else if (nCharacter < 0x4000000) {
+				// Five Byte Encoding
+				*pOutput = (nCharacter >> 24) | 0xF8;
+				pOutput++;
+				*pOutput = ((nCharacter >> 18) & 0x3f) | 0x80;
+				pOutput++;
+				*pOutput = ((nCharacter >> 12) & 0x3f) | 0x80;
+				pOutput++;
+				*pOutput = ((nCharacter >> 6) & 0x3f) | 0x80;
+				pOutput++;
+				*pOutput = (nCharacter & 0x3f) | 0x80;
+				pOutput++;
+			}
+			else {
+				// Six Byte Encoding
+				*pOutput = (nCharacter >> 30) | 0xFC;
+				pOutput++;
+				*pOutput = ((nCharacter >> 24) & 0x3f) | 0x80;
+				pOutput++;
+				*pOutput = ((nCharacter >> 18) & 0x3f) | 0x80;
+				pOutput++;
+				*pOutput = ((nCharacter >> 12) & 0x3f) | 0x80;
+				pOutput++;
+				*pOutput = ((nCharacter >> 6) & 0x3f) | 0x80;
+				pOutput++;
+				*pOutput = (nCharacter & 0x3f) | 0x80;
+				pOutput++;
+			}
+
+		}
+
+		// write end byte
+		*pOutput = 0;
+
+		return std::string(&Buffer[0]);
+
+	}
+
+
+
+
+	std::wstring fnUTF8toUTF16(_In_ const std::string sString)
+	{
+
+		// Check Input Sanity
+		size_t nLength = sString.length();
+		if (nLength == 0)
+			return 0;
+		if (nLength > NMR_MAXSTRINGBUFFERSIZE)
+			throw CNMRException(NMR_ERROR_INVALIDBUFFERSIZE);
+
+		// Reserve UTF8 Buffer
+		nfUint32 nBufferSize = (nfUint32)nLength;
+		std::vector<nfWChar> Buffer;
+		Buffer.resize(nBufferSize * 2 + 1);
+
+		// Alternative: Convert via Win API
+		// nfInt32 nResult;
+		//nResult = MultiByteToWideChar(CP_UTF8, 0, sString.c_str(), (nfUint32)nLength, &Buffer[0], nBufferSize);
+		//if (nResult == 0)
+			//throw CNMRException(NMR_ERROR_COULDNOTCONVERTTOUTF16);
+
+		const nfChar * pChar = sString.c_str();
+		nfWChar * pOutput = &Buffer[0];
+
+		while (*pChar) {
+			nfChar cChar = *pChar;
+			nfUint32 nLength = UTF8DecodeTable[(nfUint32)cChar];
+			pChar++;
+
+			if (nLength == 0)
+				throw CNMRException(NMR_ERROR_COULDNOTCONVERTTOUTF16);
+			__NMRASSERT(nLength <= 6);
+
+			nfUint32 nCode = cChar & UTF8DecodeMask[nLength];
+
+			while (nLength > 1) {
+				cChar = *pChar;
+				if ((cChar & 0xc0) != 0x80)
+					throw CNMRException(NMR_ERROR_COULDNOTCONVERTTOUTF16);
+				pChar++;
+
+				// Map UTF8 sequence to code
+				nCode = (nCode << 6) | (cChar & 0x3f);
+				nLength--;
+			}
+
+			// Map Code to UTF16
+			if (nCode < 0xd800) {
+				*pOutput = nCode;
+				pOutput++;
+			}
+			else {
+				nfUint16 nHighSurrogate, nLowSurrogate;
+				fnCharacterIDToUTF16(nCode, nHighSurrogate, nLowSurrogate);
+				*pOutput = nHighSurrogate;
+				pOutput++;
+				*pOutput = nLowSurrogate;
+				pOutput++;
+			}
+		}
+
+		// write end byte
+		*pOutput = 0;
+
+		return std::wstring(&Buffer[0]);
+
+	}
+
+
+	nfUint32 fnBufferedUTF8toUTF16(_In_ const nfChar * pszInBuffer, _Out_ nfWChar * pszwOutBuffer, _In_ nfUint32 cbBufferSize, _Out_ nfUint32 * pnLastChar, _Out_ nfUint32 * pcbNeededCharacters)
+	{
+		if (pszInBuffer == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+		if (pszwOutBuffer == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+		if ((pnLastChar == nullptr) || (pcbNeededCharacters == nullptr))
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		// Set default values
+		nfUint32 cbOutCount = 0;
+		*pnLastChar = 0;
+		*pcbNeededCharacters = 0;
+
+		// Set iterating pointers
+		const nfChar * pInChar = pszInBuffer;
+		nfWChar * pOutChar = pszwOutBuffer;
+
+		// Iterate through input
+		nfUint32 cbCount = cbBufferSize;
+		while (cbCount > 0) {
+			nfChar cChar = *pInChar;
+
+			// Check Multibyte Length Character
+			nfUint32 nLength = UTF8DecodeTable[(nfUint32)cChar];
+			if (nLength == 0)
+				throw CNMRException(NMR_ERROR_COULDNOTCONVERTTOUTF16);
+			__NMRASSERT(nLength <= 6);
+
+			// If we do not have enough Bytes left for the multibyte character, return needed count.
+			if (nLength > cbCount) {
+				*pcbNeededCharacters = nLength - cbCount;
+				return cbOutCount;
+			}
+
+			// Set multibyte character to next char
+			*pnLastChar += nLength;
+
+			// Read multibyte character byte by byte.
+			pInChar++;
+			cbCount--;
+
+			// create utf16 code
+			nfUint32 nCode = cChar & UTF8DecodeMask[nLength];
+
+			while (nLength > 1) {
+				cChar = *pInChar;
+				if ((cChar & 0xc0) != 0x80)
+					throw CNMRException(NMR_ERROR_COULDNOTCONVERTTOUTF16);
+				pInChar++;
+				cbCount--;
+
+				// Map UTF8 sequence to code
+				nCode = (nCode << 6) | (cChar & 0x3f);
+				nLength--;
+			}
+
+			// Map Code to UTF16
+			if (nCode < 0xd800) {
+				*pOutChar = nCode;
+				pOutChar++;
+				cbOutCount++;
+			}
+			else {
+				nfUint16 nHighSurrogate, nLowSurrogate;
+				fnCharacterIDToUTF16(nCode, nHighSurrogate, nLowSurrogate);
+				*pOutChar = nHighSurrogate;
+				pOutChar++;
+				*pOutChar = nLowSurrogate;
+				pOutChar++;
+
+				cbOutCount += 2;
+			}
+
+		}
+
+		// everything has been processed.
+		return cbOutCount;
+
+	}
+
+
+
+	std::wstring fnRemoveLeadingPathDelimiter(_In_ const std::wstring sPath)
+	{
+		const nfWChar * pChar = sPath.c_str();
+
+		while ((*pChar == L'/') || (*pChar == L'\\'))
+			pChar++;
+
+		return std::wstring(pChar);
+	}
+
+	std::wstring fnIncludeLeadingPathDelimiter(_In_ const std::wstring sPath)
+	{
+		if (sPath.length() == 0) {
+			return L"/";
+		}
+
+		const nfWChar * pChar = sPath.c_str();
+		if ((*pChar == L'/') || (*pChar == L'\\'))
+			return sPath;
+		std::wstring sPrefix = L"/";
+
+		return sPrefix + sPath;
+	}
+
+	std::wstring fnExtractFileName(_In_ const std::wstring sFullPath)
+	{
+		const nfWChar * pChar = sFullPath.c_str();
+		const nfWChar * pLastDelimiter = nullptr;
+
+		while (*pChar != 0) {
+			if ((*pChar == L'/') || (*pChar == L'\\'))
+				pLastDelimiter = pChar;
+
+			pChar++;
+		}
+
+		if (pLastDelimiter != nullptr) {
+			// Leave away delimiter
+			pLastDelimiter++;
+			return std::wstring(pLastDelimiter);
+		}
+		else {
+			// We have no directory given
+			return sFullPath;
+		}
+
+	}
 }

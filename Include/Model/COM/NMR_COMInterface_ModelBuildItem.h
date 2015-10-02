@@ -59,7 +59,9 @@ namespace NMR {
 		LIB3MFMETHOD(GetObjectTransform) (_Out_ MODELTRANSFORM * pmTransform);
 		LIB3MFMETHOD(SetObjectTransform) (_In_ MODELTRANSFORM * pmTransform);
 		LIB3MFMETHOD(SetPartNumber) (_In_z_ LPCWSTR pwszPartNumber);
+		LIB3MFMETHOD(SetPartNumberUTF8) (_In_z_ LPCSTR pszPartNumber);
 		LIB3MFMETHOD(GetPartNumber) (_Out_opt_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_opt_ ULONG * pcbNeededChars);
+		LIB3MFMETHOD(GetPartNumberUTF8) (_Out_opt_ LPSTR pszBuffer, _In_ ULONG cbBufferSize, _Out_opt_ ULONG * pcbNeededChars);
 		LIB3MFMETHOD(GetHandle) (_Outptr_ DWORD * pHandle);
 
 		CCOMModelBuildItem();

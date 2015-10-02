@@ -49,6 +49,7 @@ namespace NMR {
 	typedef unsigned int nfColor;
 	typedef long long nfInt64;
 	typedef unsigned long long nfUint64;
+	typedef nfUint64 nfTimeStamp;
 }
 
 #endif // __NMR_TYPES

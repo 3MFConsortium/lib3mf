@@ -142,8 +142,10 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_ALREADYPARSEDXMLNODE);
 		m_bParsedContent = true;
 
-		if (m_bIsEmptyElement)
+		if (m_bIsEmptyElement) {
+			pXMLReader->CloseElement();
 			return;
+		}
 
 		while (!pXMLReader->IsEOF()) {
 			LPCWSTR pwszLocalName = nullptr;
@@ -191,6 +193,8 @@ namespace NMR {
 
 				if (wcscmp(pwszLocalName, m_sName.c_str()) == 0) {
 					OnEndElement (pXMLReader);
+
+					pXMLReader->CloseElement();
 					return;
 				}
 				break;

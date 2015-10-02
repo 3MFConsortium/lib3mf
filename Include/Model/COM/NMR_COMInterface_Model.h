@@ -57,10 +57,12 @@ namespace NMR {
 		LIB3MFMETHOD(GetUnit) (_Out_ DWORD * pUnit);
 
 		LIB3MFMETHOD(SetLanguage) (_In_z_ LPCWSTR pwszLanguage);
+		LIB3MFMETHOD(SetLanguageUTF8) (_In_z_ LPCSTR pszLanguage);
 		LIB3MFMETHOD(GetLanguage) (_Out_opt_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_opt_ ULONG * pcbNeededChars);
+		LIB3MFMETHOD(GetLanguageUTF8) (_Out_opt_ LPSTR pszBuffer, _In_ ULONG cbBufferSize, _Out_opt_ ULONG * pcbNeededChars);
 
-		LIB3MFMETHOD(QueryWriter) (_In_z_ LPCWSTR pwszWriterClass, _Outptr_ ILib3MFModelWriter ** ppWriter);
-		LIB3MFMETHOD(QueryReader) (_In_z_ LPCWSTR pwszReaderClass, _Outptr_ ILib3MFModelReader ** ppReader);
+		LIB3MFMETHOD(QueryWriter) (_In_z_ LPCSTR pszWriterClass, _Outptr_ ILib3MFModelWriter ** ppWriter);
+		LIB3MFMETHOD(QueryReader) (_In_z_ LPCSTR pszReaderClass, _Outptr_ ILib3MFModelReader ** ppReader);
 
 		LIB3MFMETHOD(GetResourceByID) (_In_ DWORD ResourceID, _Outptr_ ILib3MFModelResource ** ppResource);
 		LIB3MFMETHOD(GetTexture2DByID) (_In_ DWORD nResourceID, _Outptr_ ILib3MFModelTexture2D ** ppTexture);
@@ -84,6 +86,7 @@ namespace NMR {
 		LIB3MFMETHOD(AddComponentsObject) (_Outptr_ ILib3MFModelComponentsObject ** ppComponentObject);
 
 		LIB3MFMETHOD(AddTexture2D) (_In_z_ LPCWSTR pwszPath, _Outptr_ ILib3MFModelTexture2D ** ppTextureInstance);
+		LIB3MFMETHOD(AddTexture2DUTF8) (_In_z_ LPCSTR pszPath, _Outptr_ ILib3MFModelTexture2D ** ppTextureInstance);
 		LIB3MFMETHOD(AddBaseMaterialGroup) (_Outptr_ ILib3MFModelBaseMaterial ** ppBaseMaterialInstance);
 
 		LIB3MFMETHOD(AddBuildItem) (_In_ ILib3MFModelObjectResource * pObject, _In_opt_ MODELTRANSFORM * pTransform, _Outptr_ ILib3MFModelBuildItem ** ppBuildItem);
@@ -92,11 +95,15 @@ namespace NMR {
 		LIB3MFMETHOD(GetTextureStreamCount) (_Out_ DWORD * pnCount);
 		LIB3MFMETHOD(GetTextureStreamSize) (_In_ DWORD nIndex, _Out_ UINT64 * pnSize);
 		LIB3MFMETHOD(GetTextureStreamPath) (_In_ DWORD nIndex, _Out_opt_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars);
+		LIB3MFMETHOD(GetTextureStreamPathUTF8) (_In_ DWORD nIndex, _Out_opt_ LPSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars);
 
 		LIB3MFMETHOD(GetMetaDataCount) (_Out_ DWORD * pnCount);
 		LIB3MFMETHOD(GetMetaDataKey) (_In_ DWORD nIndex, _Out_opt_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars);
+		LIB3MFMETHOD(GetMetaDataKeyUTF8) (_In_ DWORD nIndex, _Out_opt_ LPSTR pszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars);
 		LIB3MFMETHOD(GetMetaDataValue) (_In_ DWORD nIndex, _Out_opt_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars);
+		LIB3MFMETHOD(GetMetaDataValueUTF8) (_In_ DWORD nIndex, _Out_opt_ LPSTR pszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars);
 		LIB3MFMETHOD(AddMetaData) (_In_ LPCWSTR pszwKey, _In_ LPCWSTR pszwValue);
+		LIB3MFMETHOD(AddMetaDataUTF8) (_In_ LPCSTR pszKey, _In_ LPCSTR pszValue);
 		LIB3MFMETHOD(RemoveMetaData) (_In_ DWORD nIndex);
 
 		CCOMModel();

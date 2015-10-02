@@ -35,6 +35,7 @@ These are given by the 3MF Standard
 #ifndef __NMR_MODELCONSTANTS
 #define __NMR_MODELCONSTANTS
 
+#define PACKAGE_3D_RELS_CONTENT_TYPE L"application/vnd.openxmlformats-package.relationships+xml"
 #define PACKAGE_3D_MODEL_CONTENT_TYPE L"application/vnd.ms-package.3dmanufacturing-3dmodel+xml"
 #define PACKAGE_TEXTURE_CONTENT_TYPE L"application/vnd.ms-package.3dmanufacturing-3dmodeltexture"
 #define PACKAGE_PRINT_TICKET_CONTENT_TYPE L"application/vnd.ms-printing.printticket+xml"
@@ -42,6 +43,13 @@ These are given by the 3MF Standard
 #define PACKAGE_GIF_CONTENT_TYPE L"image/gif"
 #define PACKAGE_JPG_CONTENT_TYPE L"image/jpeg"
 #define PACKAGE_PNG_CONTENT_TYPE L"image/png"
+
+#define PACKAGE_3D_MODEL_EXTENSION L"model"
+#define PACKAGE_3D_TEXTURE_EXTENSION L"texture"
+#define PACKAGE_3D_RELS_EXTENSION L"rels"
+#define PACKAGE_3D_JPG_EXTENSION L"jpg"
+#define PACKAGE_3D_JPEG_EXTENSION L"jpeg"
+#define PACKAGE_3D_PNG_EXTENSION L"png"
 
 #define PACKAGE_3D_MODEL_URI L"/3D/3dmodel.model"
 #define PACKAGE_TEXTURE_URI_BASE L"/3D/Texture"

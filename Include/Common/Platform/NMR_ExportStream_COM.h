@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2015 Microsoft Corporation 
+Copyright (C) 2015 Microsoft Corporation
 Copyright (C) 2015 netfabb GmbH (Original Author)
 
 All rights reserved.
@@ -35,13 +35,13 @@ This is an abstract base stream class for exporting to COM IStreams.
 #ifndef __NMR_EXPORTSTREAM_COM
 #define __NMR_EXPORTSTREAM_COM
 
-#include "Common/Platform/NMR_ExportStream.h" 
-#include "Common/NMR_Types.h" 
-#include "Common/NMR_Local.h" 
+#include "Common/Platform/NMR_ExportStream.h"
+#include "Common/NMR_Types.h"
+#include "Common/NMR_Local.h"
 #include "Common/Platform/NMR_IStream.h"
 #include "Common/Platform/NMR_CComPtr.h"
 
-#define NMR_EXPORTSTREAM_WRITEBUFFERSIZE (1024 * 1024)
+#define NMR_EXPORTSTREAM_WRITEBUFFERSIZE (128 * 1024)
 
 namespace NMR {
 
@@ -57,7 +57,7 @@ namespace NMR {
 		virtual nfBool seekForward(_In_ nfUint64 bytes, _In_ nfBool bHasToSucceed);
 		virtual nfBool seekFromEnd(_In_ nfUint64 bytes, _In_ nfBool bHasToSucceed);
 		virtual nfUint64 getPosition();
-		virtual nfUint64 writeBuffer(_In_ void * pBuffer, _In_ nfUint64 cbTotalBytesToWrite);
+		virtual nfUint64 writeBuffer(_In_ const void * pBuffer, _In_ nfUint64 cbTotalBytesToWrite);
 
 		CComPtr <IStream> getCOMStream();
 	};
