@@ -80,12 +80,9 @@ namespace NMR {
 		return m_pImportStream;
 	}
 
-	POpcPackageRelationship COpcPackagePart::addRelationship(_In_ std::wstring sID, _In_ std::wstring sType, _In_ COpcPackagePart * pTargetPart)
+	POpcPackageRelationship COpcPackagePart::addRelationship(_In_ std::wstring sID, _In_ std::wstring sType, _In_ std::wstring sURI)
 	{
-		if (pTargetPart == nullptr)
-			throw CNMRException(NMR_ERROR_INVALIDPARAM);
-
-		POpcPackageRelationship pRelationship = std::make_shared<COpcPackageRelationship>(sID, sType, pTargetPart->getURI());
+		POpcPackageRelationship pRelationship = std::make_shared<COpcPackageRelationship>(sID, sType, sURI);
 		m_Relationships.push_back(pRelationship);
 		return pRelationship;
 	}
@@ -93,6 +90,11 @@ namespace NMR {
 	nfBool COpcPackagePart::hasRelationships()
 	{
 		return m_Relationships.size() > 0;
+	}
+
+	std::list<POpcPackageRelationship> COpcPackagePart::getRelationShips()
+	{
+		return m_Relationships;
 	}
 
 	void COpcPackagePart::writeRelationships(_In_ PExportStream pExportStream)

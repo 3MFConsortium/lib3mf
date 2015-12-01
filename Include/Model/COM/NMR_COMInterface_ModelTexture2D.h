@@ -37,6 +37,8 @@ COM Interface Implementation for Model Reader Class
 #include "Model/COM/NMR_COMInterfaces.h" 
 #include "Model/Classes/NMR_ModelTexture2D.h" 
 
+#define MODELTEXTURE2D_BUFFERSIZE 65536
+
 namespace NMR {
 
 	class CCOMModelTexture2D : public ILib3MFModelTexture2D {
@@ -69,6 +71,7 @@ namespace NMR {
 		LIB3MFMETHOD(WriteToFile) (_In_z_ LPCWSTR pwszFilename);
 		LIB3MFMETHOD(WriteToFileUTF8) (_In_z_ LPCSTR pszFilename);
 		LIB3MFMETHOD(WriteToBuffer) (_Out_ BYTE * pBuffer, _In_ ULONG64 cbBufferSize);
+		LIB3MFMETHOD(WriteToCallback) (_In_ void * pWriteCallback, _In_opt_ void * pUserData);
 
 #ifndef __GCC
 		LIB3MFMETHOD(WriteToStream) (_In_ IStream * pStream);

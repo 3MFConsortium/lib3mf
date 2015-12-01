@@ -142,8 +142,8 @@ namespace NMR {
 			}
 		}
 
-		if (wcscmp(pNameSpace, XML_3MF_NAMESPACE_CORESPEC093) == 0) {
-			if (wcscmp(pChildName, XML_3MF_ELEMENT_RESOURCES) == 0) {
+		if ((wcscmp(pNameSpace, XML_3MF_NAMESPACE_CORESPEC093) == 0) || (wcscmp(pNameSpace, L"") == 0)) {
+		   if (wcscmp(pChildName, XML_3MF_ELEMENT_RESOURCES) == 0) {
 				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode093_Resources>(m_pModel, m_pWarnings);
 				if (m_bHasResources)
 					throw CNMRException(NMR_ERROR_DUPLICATERESOURCES);

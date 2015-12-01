@@ -59,6 +59,10 @@ template <class BASE>
 class CCOMObject : public BASE {
 private:
 public:
+    void AddRef ()
+    {
+    }
+
 };
 
 class ILib3MFUnknown {

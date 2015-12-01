@@ -208,6 +208,27 @@ namespace NMR {
 		POpcPackagePart pPart = std::make_shared<COpcPackagePart>(sRealPath, pStream);
 		m_Parts.insert(std::make_pair(sRealPath, pPart));
 
+		std::wstring sRelationShipName = fnExtractFileName(sRealPath);
+		std::wstring sRelationShipPath = sRealPath.substr(0, sRealPath.length() - sRelationShipName.length());
+		sRelationShipPath += L"_rels/";
+		sRelationShipPath += sRelationShipName;
+		sRelationShipPath += L".rels";
+
+		PImportStream pRelStream = openZIPEntry(sRelationShipPath);
+
+		if (pRelStream.get() != nullptr) {
+		    POpcPackageRelationshipReader pReader = std::make_shared<COpcPackageRelationshipReader>(pRelStream);
+
+		    nfUint32 nCount = pReader->getCount();
+		    nfUint32 nIndex;
+
+		    for (nIndex = 0; nIndex < nCount; nIndex++) {
+		    	POpcPackageRelationship pRelationShip = pReader->getRelationShip(nIndex);
+		    	pPart->addRelationship(pRelationShip->getID(), pRelationShip->getType(), pRelationShip->getTargetPartURI());
+		    }
+		}
+
+
 		return pPart;
 	}
 

@@ -178,6 +178,7 @@ namespace NMR {
 			PModelBuildItem pBuildItem = m_pBuildItems[m_nCurrentIndex];
 
 			CCOMObject<CCOMModelBuildItem> * pResult = new CCOMObject<CCOMModelBuildItem>();
+			pResult->AddRef();
 			pResult->setItem(pBuildItem);
 
 			// Return result
@@ -200,6 +201,7 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
 
 			CCOMObject <CCOMModelBuildItemIterator> * pComObject = new CCOMObject <CCOMModelBuildItemIterator>();
+			pComObject->AddRef();
 			for (auto iIterator = m_pBuildItems.begin(); iIterator != m_pBuildItems.end(); iIterator++)
 				pComObject->addBuildItem(*iIterator);
 

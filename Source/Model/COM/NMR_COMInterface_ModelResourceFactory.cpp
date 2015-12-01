@@ -60,6 +60,7 @@ namespace NMR {
 		CModelMeshObject * pMeshObject = dynamic_cast<CModelMeshObject *> (pResource.get());
 		if (pMeshObject) {
 			CCOMObject <CCOMModelMeshObject> * pComObject = new CCOMObject <CCOMModelMeshObject>();
+			pComObject->AddRef();
 			pComObject->setResource(pResource);
 			pResult = pComObject;
 		}
@@ -95,6 +96,7 @@ namespace NMR {
 		CModelTexture2DResource * pTextureResource = dynamic_cast<CModelTexture2DResource *> (pResource.get());
 		if (pTextureResource) {
 			CCOMObject <CCOMModelTexture2D> * pComObject = new CCOMObject <CCOMModelTexture2D>();
+			pComObject->AddRef();
 			pComObject->setResource(pResource);
 			pResult = pComObject;
 		}
@@ -102,6 +104,7 @@ namespace NMR {
 		CModelBaseMaterialResource * pMaterialResource = dynamic_cast<CModelBaseMaterialResource *> (pResource.get());
 		if (pMaterialResource) {
 			CCOMObject <CCOMModelBaseMaterial> * pComObject = new CCOMObject <CCOMModelBaseMaterial>();
+			pComObject->AddRef();
 			pComObject->setResource(pResource);
 			pResult = pComObject;
 		}

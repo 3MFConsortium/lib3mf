@@ -74,7 +74,21 @@ namespace NMR {
 	{
 		if (pModelPart == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
-		//throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
+
+		std::list<POpcPackageRelationship> RelationShips = pModelPart->getRelationShips();
+		std::list<POpcPackageRelationship>::iterator iIterator;
+
+		for (iIterator = RelationShips.begin(); iIterator != RelationShips.end(); iIterator++) {
+			std::wstring sType = (*iIterator)->getType();
+			if (wcscmp(sType.c_str(), PACKAGE_TEXTURE_RELATIONSHIP_TYPE) == 0) {
+				std::wstring sURI = (*iIterator)->getTargetPartURI();
+				POpcPackagePart pTexturePart = m_pPackageReader->createPart(sURI);
+				PImportStream pTextureStream = pTexturePart->getImportStream();
+				PImportStream pMemoryStream = pTextureStream->copyToMemory();
+				addTextureStream(sURI, pMemoryStream);
+			}
+		}
+
 	}
 
 	void CModelReader_3MF_Native::checkContentTypes()

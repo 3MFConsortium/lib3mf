@@ -455,13 +455,19 @@ namespace NMR {
 		while (pChar != pszwEnd) {
 			switch (*pChar) {
 			case L'<':
-				if (pChar != pszwStart)
-					pushEntity(pszwStart, pChar, pChar, NMR_NATIVEXMLTYPE_TEXT, false, true);
-				pushZeroInsert(pChar);
-				pChar++;
+				if (pChar+1 != pszwEnd && *(pChar+1) == L'!' &&
+					pChar+2 != pszwEnd && *(pChar+2) == L'-' &&
+					pChar+3 != pszwEnd && *(pChar+3) == L'-'){
+					pChar += 4;
+					return parseComment(pChar, pszwEnd);
+				} else {
+					if (pChar != pszwStart)
+						pushEntity(pszwStart, pChar, pChar, NMR_NATIVEXMLTYPE_TEXT, false, true);
+					pushZeroInsert(pChar);
+					pChar++;
 
-				return parseElement(pChar, pszwEnd);
-
+					return parseElement(pChar, pszwEnd);
+				}
 			default:
 				pChar++;
 			}
@@ -522,6 +528,25 @@ namespace NMR {
 
 		return pChar;
 
+	}
+
+	nfWChar * CXmlReader_Native::parseComment(_In_ nfWChar * pszwStart, _In_ nfWChar * pszwEnd)
+	{
+		nfWChar * pChar = pszwStart;
+		static nfWChar commentEnd [3] = {L'-', L'-', L'>'};
+		nfInt32 endPosition = 0;
+		while (pChar != pszwEnd) {
+			if (*pChar == commentEnd[endPosition]){
+				if (endPosition == 2)
+					return pChar;
+				endPosition++;
+			} else {
+				if (*pChar != L'-')
+				  endPosition = 0;
+			}
+			pChar++;
+		}
+		return pChar;
 	}
 
 	nfWChar * CXmlReader_Native::parseProcessingInstruction(_In_ nfWChar * pszwStart, _In_ nfWChar * pszwEnd)
@@ -602,7 +627,7 @@ namespace NMR {
 				if (pszwStart == pChar)
 					throw CNMRException(NMR_ERROR_XMLPARSER_EMPTYENDELEMENT);
 				pushZeroInsert(pChar);
-				pushEntity(pszwStart, pChar, pChar + 1, NMR_NATIVEXMLTYPE_ELEMENTEND, false, true);
+				pushEntity(pszwStart, pChar, pChar + 1, NMR_NATIVEXMLTYPE_ELEMENTEND, true, true);
 				pChar++;
 
 				return pChar;

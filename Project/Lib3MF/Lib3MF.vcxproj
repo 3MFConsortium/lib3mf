@@ -179,6 +179,7 @@
     <ClCompile Include="..\..\Source\Common\OPC\NMR_OpcPackageRelationship.cpp" />
     <ClCompile Include="..\..\Source\Common\OPC\NMR_OpcPackageWriter.cpp" />
     <ClCompile Include="..\..\Source\Common\Platform\NMR_ExportStream.cpp" />
+    <ClCompile Include="..\..\Source\Common\Platform\NMR_ExportStream_Callback.cpp" />
     <ClCompile Include="..\..\Source\Common\Platform\NMR_ExportStream_COM.cpp" />
     <ClCompile Include="..\..\Source\Common\Platform\NMR_ExportStream_ZIP.cpp" />
     <ClCompile Include="..\..\Source\Common\Platform\NMR_ImportStream_COM.cpp" />

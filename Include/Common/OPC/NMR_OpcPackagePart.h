@@ -61,8 +61,9 @@ namespace NMR {
 		PExportStream getExportStream ();
 		PImportStream getImportStream();
 
-		POpcPackageRelationship addRelationship(_In_ std::wstring sID, _In_ std::wstring sType, _In_ COpcPackagePart * pTargetPart);
+		POpcPackageRelationship addRelationship(_In_ std::wstring sID, _In_ std::wstring sType, _In_ std::wstring sURI);
 		nfBool hasRelationships();
+		std::list<POpcPackageRelationship> getRelationShips();
 
 		void writeRelationships(_In_ PExportStream pExportStream);
 	};

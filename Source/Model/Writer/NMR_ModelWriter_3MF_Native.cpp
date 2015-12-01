@@ -128,7 +128,7 @@ namespace NMR {
 				pExportStream->copyFrom(pStream.get(), pStream->retrieveSize(), MODELWRITER_NATIVE_BUFFERSIZE);
 
 				// add relationships
-				pModelPart->addRelationship(generateRelationShipID(), PACKAGE_TEXTURE_RELATIONSHIP_TYPE, pTexturePart.get());
+				pModelPart->addRelationship(generateRelationShipID(), PACKAGE_TEXTURE_RELATIONSHIP_TYPE, pTexturePart->getURI());
 
 			}
 		}

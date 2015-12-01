@@ -220,8 +220,17 @@ NMR_ErrorConst.h defines all error code constants.
 // XML Element not empty
 #define NMR_ERROR_XMLELEMENTNOTEMPTY 0x103A
 
+// Could not initialize COM
+#define NMR_ERROR_COULDNOTINITITALIZECOM 0x103B
+
+// Callback stream cannot seek
+#define NMR_ERROR_CALLBACKSTREAMCANNOTSEEK 0x103C
+
+// Could not write to callback stream
+#define NMR_ERROR_COULDNOTWRITETOCALLBACKSTREAM 0x103D
+
 /*-------------------------------------------------------------------
-  Core framework error codes (0x2XXX)
+Core framework error codes (0x2XXX)
 -------------------------------------------------------------------*/
 
 // No Progress Interval has been specified in the progress handler
@@ -834,5 +843,27 @@ XML Parser Error Constants (0x9XXX)
 
 // No quotes around XML attribute
 #define NMR_ERROR_XMLPARSER_NOQUOTESAROUNDATTRIBUTE 0x9011
+
+/*-------------------------------------------------------------------
+Library errors (0xAXXX)
+-------------------------------------------------------------------*/
+
+// Could not get interface version
+#define NMR_ERROR_COULDNOTGETINTERFACEVERSION 0xA001
+
+// Invalid interface version
+#define NMR_ERROR_INVALIDINTERFACEVERSION 0xA002
+
+// Invalid stream size
+#define NMR_ERROR_INVALIDSTREAMSIZE 0xA003
+
+// Invalid name length
+#define NMR_ERROR_INVALIDNAMELENGTH 0xA004
+
+// Could not create model
+#define NMR_ERROR_COULDNOTCREATEMODEL 0xA005
+
+// Invalid Texture type
+#define NMR_ERROR_INVALIDTEXTURETYPE 0xA006
 
 #endif // __NMR_ERRORCONST

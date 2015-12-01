@@ -107,6 +107,7 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
 
 			*ppModel = new CCOMObject<CCOMModel>();
+			(*ppModel)->AddRef();
 			return handleSuccess();
 		}
 		catch (CNMRException & Exception) {

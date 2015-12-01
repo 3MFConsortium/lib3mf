@@ -106,7 +106,10 @@ namespace NMR {
 		case NMR_ERROR_COULDNOTOPENZIPENTRY: return "Could not open ZIP entry";
 		case NMR_ERROR_INVALIDXMLDEPTH: return "Invalid XML Depth";
 		case NMR_ERROR_XMLELEMENTNOTEMPTY: return "XML Element not empty";
-
+		case NMR_ERROR_COULDNOTINITITALIZECOM: return "Could not initialize COM";
+		case NMR_ERROR_CALLBACKSTREAMCANNOTSEEK: return "Callback stream cannot seek";
+		case NMR_ERROR_COULDNOTWRITETOCALLBACKSTREAM: return "Could not write to callback stream";
+				
 		// Unhandled exception
 		case NMR_ERROR_GENERICEXCEPTION: return NMR_GENERICEXCEPTIONSTRING;
 
@@ -311,6 +314,14 @@ namespace NMR {
 		case NMR_ERROR_XMLPARSER_INVALIDATTRIBUTENAME: return "Invalid XML attribute name";
 		case NMR_ERROR_XMLPARSER_SPACEINATTRIBUTENAME: return "Space in XML attribute name";
 		case NMR_ERROR_XMLPARSER_NOQUOTESAROUNDATTRIBUTE: return "No quotes around XML attribute";
+
+		// Library errors (0xAXXX)
+		case NMR_ERROR_COULDNOTGETINTERFACEVERSION: return "Could not get interface version";
+		case NMR_ERROR_INVALIDINTERFACEVERSION: return "Invalid interface version";
+		case NMR_ERROR_INVALIDSTREAMSIZE: return "Invalid stream size";
+		case NMR_ERROR_INVALIDNAMELENGTH: return "Invalid name length";
+		case NMR_ERROR_COULDNOTCREATEMODEL: return "Could not create model";
+		case NMR_ERROR_INVALIDTEXTURETYPE: return "Invalid Texture type";
 
 		default:
 			return "unknown error";

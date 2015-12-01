@@ -40,7 +40,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v120_xp</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -84,12 +84,14 @@
     <IncludePath>..\..\Include;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)$(PlatformShortName)\$(Configuration)\</OutDir>
     <IntDir>$(PlatformShortName)\Obj_$(Configuration)_CDLL\</IntDir>
+    <TargetName>$(ProjectName)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>..\..\Include;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)$(PlatformShortName)\$(Configuration)\</OutDir>
     <IntDir>$(PlatformShortName)\Obj_$(Configuration)_CDLL\</IntDir>
+    <TargetName>$(ProjectName)</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -180,6 +182,7 @@
     <ClCompile Include="..\..\Source\Common\OPC\NMR_OpcPackageRelationship.cpp" />
     <ClCompile Include="..\..\Source\Common\OPC\NMR_OpcPackageWriter.cpp" />
     <ClCompile Include="..\..\Source\Common\Platform\NMR_ExportStream.cpp" />
+    <ClCompile Include="..\..\Source\Common\Platform\NMR_ExportStream_Callback.cpp" />
     <ClCompile Include="..\..\Source\Common\Platform\NMR_ExportStream_COM.cpp" />
     <ClCompile Include="..\..\Source\Common\Platform\NMR_ExportStream_ZIP.cpp" />
     <ClCompile Include="..\..\Source\Common\Platform\NMR_ImportStream_COM.cpp" />
