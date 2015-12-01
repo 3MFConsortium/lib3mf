@@ -44,4 +44,11 @@ It should be used in every header file of the project.
 #pragma warning (3:4706)
 #endif
 
+
+#ifndef __GCC
+#define LIB3MF_CDECL __cdecl
+#else
+#define LIB3MF_CDECL
+#endif
+
 #endif // __NMR_LOCAL

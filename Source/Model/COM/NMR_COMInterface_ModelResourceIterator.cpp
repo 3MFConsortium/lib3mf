@@ -205,6 +205,8 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
 
 			CCOMObject <CCOMModelResourceIterator> * pComObject = new CCOMObject <CCOMModelResourceIterator>();
+			pComObject->AddRef();
+
 			for (auto iIterator = m_pResources.begin(); iIterator != m_pResources.end(); iIterator++)
 				pComObject->addResource(*iIterator);
 

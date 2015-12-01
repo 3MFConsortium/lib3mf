@@ -519,14 +519,14 @@ namespace NMR {
 		// Check Input Sanity
 		size_t nLength = sString.length();
 		if (nLength == 0)
-			return 0;
+			return L"";
 		if (nLength > NMR_MAXSTRINGBUFFERSIZE)
 			throw CNMRException(NMR_ERROR_INVALIDBUFFERSIZE);
 
 		// Reserve UTF8 Buffer
 		nfUint32 nBufferSize = (nfUint32)nLength;
 		std::vector<nfWChar> Buffer;
-		Buffer.resize(nBufferSize * 2 + 1);
+		Buffer.resize(nBufferSize * 2 + 2);
 
 		// Alternative: Convert via Win API
 		// nfInt32 nResult;
@@ -538,7 +538,7 @@ namespace NMR {
 		nfWChar * pOutput = &Buffer[0];
 
 		while (*pChar) {
-			nfChar cChar = *pChar;
+			nfByte cChar = (nfByte) *pChar;
 			nfUint32 nLength = UTF8DecodeTable[(nfUint32)cChar];
 			pChar++;
 
@@ -546,31 +546,50 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_COULDNOTCONVERTTOUTF16);
 			__NMRASSERT(nLength <= 6);
 
-			nfUint32 nCode = cChar & UTF8DecodeMask[nLength];
+			// Check for BOM (0xEF,0xBB,0xBF), this also checks for #0 characters at the end,
+			// so it does not read over the string end!
+			nfBool bIsBOM = false;
+			if (cChar == 0xef) {
+				if (*((const nfByte*) pChar) == 0xbb) {
+					if (*((const nfByte*) (pChar + 1)) == 0xbf) {
+						bIsBOM = true;
+					}
+				}
+			};
 
-			while (nLength > 1) {
-				cChar = *pChar;
-				if ((cChar & 0xc0) != 0x80)
-					throw CNMRException(NMR_ERROR_COULDNOTCONVERTTOUTF16);
-				pChar++;
 
-				// Map UTF8 sequence to code
-				nCode = (nCode << 6) | (cChar & 0x3f);
-				nLength--;
-			}
+			if (!bIsBOM) {
+				nfUint32 nCode = cChar & UTF8DecodeMask[nLength];
 
-			// Map Code to UTF16
-			if (nCode < 0xd800) {
-				*pOutput = nCode;
-				pOutput++;
+				while (nLength > 1) {
+					cChar = *pChar;
+					if ((cChar & 0xc0) != 0x80)
+						throw CNMRException(NMR_ERROR_COULDNOTCONVERTTOUTF16);
+					pChar++;
+
+					// Map UTF8 sequence to code
+					nCode = (nCode << 6) | (cChar & 0x3f);
+					nLength--;
+				}
+
+				// Map Code to UTF16
+				if (nCode < 0xd800) {
+					*pOutput = nCode;
+					pOutput++;
+				}
+				else {
+					nfUint16 nHighSurrogate, nLowSurrogate;
+					fnCharacterIDToUTF16(nCode, nHighSurrogate, nLowSurrogate);
+					*pOutput = nHighSurrogate;
+					pOutput++;
+					*pOutput = nLowSurrogate;
+					pOutput++;
+				}
 			}
 			else {
-				nfUint16 nHighSurrogate, nLowSurrogate;
-				fnCharacterIDToUTF16(nCode, nHighSurrogate, nLowSurrogate);
-				*pOutput = nHighSurrogate;
-				pOutput++;
-				*pOutput = nLowSurrogate;
-				pOutput++;
+				// If we find a UTF8 bom, we just ignore it.
+				__NMRASSERT(nLength == 3);
+				pChar += 2;
 			}
 		}
 
@@ -590,6 +609,8 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 		if ((pnLastChar == nullptr) || (pcbNeededCharacters == nullptr))
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+		if (cbBufferSize > NMR_MAXSTRINGBUFFERSIZE)
+			throw CNMRException(NMR_ERROR_INVALIDBUFFERSIZE);
 
 		// Set default values
 		nfUint32 cbOutCount = 0;
@@ -601,9 +622,9 @@ namespace NMR {
 		nfWChar * pOutChar = pszwOutBuffer;
 
 		// Iterate through input
-		nfUint32 cbCount = cbBufferSize;
+		nfInt32 cbCount = (nfInt32) cbBufferSize;
 		while (cbCount > 0) {
-			nfChar cChar = *pInChar;
+			nfByte cChar = *pInChar;
 
 			// Check Multibyte Length Character
 			nfUint32 nLength = UTF8DecodeTable[(nfUint32)cChar];
@@ -612,7 +633,7 @@ namespace NMR {
 			__NMRASSERT(nLength <= 6);
 
 			// If we do not have enough Bytes left for the multibyte character, return needed count.
-			if (nLength > cbCount) {
+			if (((nfInt32) nLength) > cbCount) {
 				*pcbNeededCharacters = nLength - cbCount;
 				return cbOutCount;
 			}
@@ -624,36 +645,55 @@ namespace NMR {
 			pInChar++;
 			cbCount--;
 
-			// create utf16 code
-			nfUint32 nCode = cChar & UTF8DecodeMask[nLength];
+			// Check for BOM (0xEF,0xBB,0xBF), this also checks for #0 characters at the end,
+			// so it does not read over the string end!
+			nfBool bIsBOM = false;
+			if (cChar == 0xef) {
+				if (*((const nfByte *)pInChar) == 0xbb) {
+					if (*((const nfByte *) (pInChar + 1)) == 0xbf) {
+						bIsBOM = true;
+					}
+				}
+			};
 
-			while (nLength > 1) {
-				cChar = *pInChar;
-				if ((cChar & 0xc0) != 0x80)
-					throw CNMRException(NMR_ERROR_COULDNOTCONVERTTOUTF16);
-				pInChar++;
-				cbCount--;
+			if (!bIsBOM) {
+				// create utf16 code
+				nfUint32 nCode = cChar & UTF8DecodeMask[nLength];
 
-				// Map UTF8 sequence to code
-				nCode = (nCode << 6) | (cChar & 0x3f);
-				nLength--;
-			}
+				while (nLength > 1) {
+					cChar = *pInChar;
+					if ((cChar & 0xc0) != 0x80)
+						throw CNMRException(NMR_ERROR_COULDNOTCONVERTTOUTF16);
+					pInChar++;
+					cbCount--;
 
-			// Map Code to UTF16
-			if (nCode < 0xd800) {
-				*pOutChar = nCode;
-				pOutChar++;
-				cbOutCount++;
+					// Map UTF8 sequence to code
+					nCode = (nCode << 6) | (cChar & 0x3f);
+					nLength--;
+				}
+
+				// Map Code to UTF16
+				if (nCode < 0xd800) {
+					*pOutChar = nCode;
+					pOutChar++;
+					cbOutCount++;
+				}
+				else {
+					nfUint16 nHighSurrogate, nLowSurrogate;
+					fnCharacterIDToUTF16(nCode, nHighSurrogate, nLowSurrogate);
+					*pOutChar = nHighSurrogate;
+					pOutChar++;
+					*pOutChar = nLowSurrogate;
+					pOutChar++;
+
+					cbOutCount += 2;
+				}
 			}
 			else {
-				nfUint16 nHighSurrogate, nLowSurrogate;
-				fnCharacterIDToUTF16(nCode, nHighSurrogate, nLowSurrogate);
-				*pOutChar = nHighSurrogate;
-				pOutChar++;
-				*pOutChar = nLowSurrogate;
-				pOutChar++;
+				__NMRASSERT(nLength == 3);
+				pInChar += 2;
+				cbCount -= 2;
 
-				cbOutCount += 2;
 			}
 
 		}

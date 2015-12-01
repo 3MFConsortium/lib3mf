@@ -62,6 +62,8 @@ namespace NMR {
 		LIB3MFMETHOD(WriteToStream) (_In_ IStream * pStream);
 #endif
 
+		LIB3MFMETHOD(WriteToCallback) (_In_ void * pWriteCallback, _In_opt_ void * pSeekCallback, _In_opt_ void * pUserData);
+
 		CCOMModelWriter();
 		void setWriter(_In_ PModelWriter pModelWriter);
 	};

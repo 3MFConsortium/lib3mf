@@ -38,6 +38,9 @@ COM Interface Implementation for Model Writer Class
 #include "Common/Platform/NMR_Platform.h"
 #include "Common/NMR_StringUtils.h"
 
+#include "Common/Platform/NMR_ExportStream_Callback.h"
+#include <locale.h>
+
 #ifndef __GCC
 #include "Common/Platform/NMR_ExportStream_COM.h"
 #endif // __GCC
@@ -111,6 +114,7 @@ namespace NMR {
 			if (m_pModelWriter.get() == nullptr)
 				throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
 
+			setlocale (LC_ALL, "C");
 			PExportStream pStream = fnCreateExportStreamInstance(pwszFilename);
 			m_pModelWriter->exportToStream(pStream);
 
@@ -140,6 +144,8 @@ namespace NMR {
 			std::string sUTF8FileName(pwszFilename);
 			std::wstring sUTF16FileName = fnUTF8toUTF16(sUTF8FileName);
 
+			setlocale (LC_ALL, "C");
+
 			PExportStream pStream = fnCreateExportStreamInstance(sUTF16FileName.c_str());
 			m_pModelWriter->exportToStream(pStream);
 
@@ -156,6 +162,37 @@ namespace NMR {
 		}
 	}
 
+	LIB3MFMETHODIMP CCOMModelWriter::WriteToCallback(_In_ void * pWriteCallback, _In_opt_ void * pSeekCallback, _In_opt_ void * pUserData)
+	{
+		try {
+			if (pWriteCallback == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+			if (m_pModelWriter.get() == nullptr)
+				throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
+
+			setlocale (LC_ALL, "C");
+
+			ExportStream_WriteCallbackType pTypedWriteCallback = (ExportStream_WriteCallbackType) pWriteCallback;
+			ExportStream_SeekCallbackType pTypedSeekCallback = (ExportStream_SeekCallbackType)pSeekCallback;
+
+			PExportStream pStream = std::make_shared<CExportStream_Callback> (pTypedWriteCallback, pTypedSeekCallback, pUserData);
+			m_pModelWriter->exportToStream(pStream);
+		
+			return handleSuccess();
+		}
+		catch (CNMRException_Windows & WinException) {
+			return handleNMRException(&WinException);
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
+
 #ifndef __GCC
 	LIB3MFMETHODIMP CCOMModelWriter::WriteToStream(_In_ IStream * pStream)
 	{
@@ -165,6 +202,8 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
 			if (m_pModelWriter.get() == nullptr)
 				throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
+
+			setlocale (LC_ALL, "C");
 
 			PExportStream pExportStream = std::make_shared<CExportStream_COM>(pStream);
 			m_pModelWriter->exportToStream(pExportStream);

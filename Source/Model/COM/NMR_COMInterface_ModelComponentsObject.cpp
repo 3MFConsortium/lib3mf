@@ -154,6 +154,7 @@ namespace NMR {
 			// Create Component COM Wrapper
 			if (ppComponent) {
 				CCOMObject<CCOMModelComponent> * pResult = new CCOMObject<CCOMModelComponent>();
+				pResult->AddRef();
 				pResult->setComponent(pNewComponent);
 				*ppComponent = pResult;
 			}
@@ -178,6 +179,7 @@ namespace NMR {
 			PModelComponent pModelComponent = pComponentsObject->getComponent(nIndex);
 
 			CCOMObject<CCOMModelComponent> * pResult = new CCOMObject<CCOMModelComponent>();
+			pResult->AddRef();
 			pResult->setComponent(pModelComponent);
 			*ppComponent = pResult;
 
@@ -543,6 +545,7 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
 
 			CCOMObject<CCOMModelDefaultPropertyHandler> * pNewPropertyHandler = new CCOMObject<CCOMModelDefaultPropertyHandler>();
+			pNewPropertyHandler->AddRef();
 			pNewPropertyHandler->setChannel(0);
 			pNewPropertyHandler->setResource(m_pResource);
 			*ppPropertyHandler = pNewPropertyHandler;
@@ -564,6 +567,7 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
 
 			CCOMObject<CCOMModelDefaultPropertyHandler> * pNewPropertyHandler = new CCOMObject<CCOMModelDefaultPropertyHandler>();
+			pNewPropertyHandler->AddRef();
 			pNewPropertyHandler->setChannel(nChannel);
 			pNewPropertyHandler->setResource(m_pResource);
 			*ppPropertyHandler = pNewPropertyHandler;

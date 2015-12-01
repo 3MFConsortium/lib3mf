@@ -74,6 +74,8 @@ namespace NMR {
 		typedef PLib3MFBase PLib3MFModelThumbnailIterator;
 		typedef PLib3MFBase PLib3MFModelThumbnail;
 
+		typedef BOOL(*PLib3MFModelWriterCallback)(_In_ const BYTE * pData, _In_ const DWORD cbBytes, _In_ const void * pUserData);
+
 		// Base functions
 		/**
 		* retrieves the current version of the 3MF implementation and specification
@@ -100,7 +102,7 @@ namespace NMR {
 		* @param[out] ppModel returns created model instance
 		* @return error code or 0 (success)
 		*/
-		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_createmodel(_Outptr_ PLib3MFModel ** ppModel);
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_createmodel(_Outptr_ PLib3MFModel ** ppModel, _In_ BOOL bInitialize);
 
 		/**
 		* Frees all memory of any object instance.
@@ -140,6 +142,17 @@ namespace NMR {
 		* @return error code or 0 (success)
 		*/
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_writer_writetofileutf8(_In_ PLib3MFModelWriter * pWriter, _In_z_ LPCSTR pwszFilename);
+
+		/**
+		* Writes out the model and passes the data to a provided callback function. The file type is specified by the Model Writer class
+		*
+		* @param[in] pWriter Writer Instance
+		* @param[in] pWriteCallback Callback to call for writing a data chunk.
+		* @param[in] pSeekCallback Callback to call for seeking in the streamk.
+		* @param[in] pUserData Userdata that is passed to the callback function
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_writer_writetocallback(_In_ PLib3MFModelWriter * pWriter, _In_ void * pWriteCallback, _In_ void * pSeekCallback, _In_opt_ void * pUserData);
 
 		/**
 		* Reads a model from a file. The file type is specified by the Model Read class
@@ -865,7 +878,7 @@ namespace NMR {
 		* @return error code or 0 (success)
 		*/
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_basematerial_setdisplaycolorrgba(_In_ PLib3MFModelBaseMaterial * pBaseMaterial, _In_ DWORD nIndex, _In_ BYTE bRed, _In_ BYTE bGreen, _In_ BYTE bBlue, _In_ BYTE bAlpha);
-		
+
 		/**
 		* Sets a base material's display color. Alpha is set to 1.0.
 		*
@@ -1031,6 +1044,15 @@ namespace NMR {
 		*/
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_texture2d_writetobuffer(_In_ PLib3MFModelTexture2D * pTexture2D, _Out_ BYTE * pBuffer, _In_ ULONG64 cbBufferSize);
 
+		/**
+		* Writes out the texture and passes the data to a provided callback function. The file type is specified by the Model Writer class
+		*
+		* @param[in] pTexture2D Texture2D Resource Instance
+		* @param[in] pWriteCallback Callback to call for writing a data chunk.
+		* @param[in] pUserData Userdata that is passed to the callback function
+		* @return error code or 0 (success)
+		*/ 
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_texture2d_writetocallback(_In_ PLib3MFModelTexture2D * pTexture2D, _In_ void * pWriteCallback, _In_opt_ void * pUserData);
 
 		/**
 		* Reads a texture from a file.

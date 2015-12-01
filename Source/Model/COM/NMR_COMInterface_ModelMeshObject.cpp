@@ -860,6 +860,7 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
 
 			CCOMObject<CCOMModelPropertyHandler> * pNewPropertyHandler = new CCOMObject<CCOMModelPropertyHandler>();
+			pNewPropertyHandler->AddRef();
 			pNewPropertyHandler->setChannel(nChannel);
 			pNewPropertyHandler->setMesh(m_pResource);
 			*ppPropertyHandler = pNewPropertyHandler;
@@ -882,6 +883,7 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
 
 			CCOMObject<CCOMModelDefaultPropertyHandler> * pNewPropertyHandler = new CCOMObject<CCOMModelDefaultPropertyHandler>();
+			pNewPropertyHandler->AddRef();
 			pNewPropertyHandler->setChannel(0);
 			pNewPropertyHandler->setResource(m_pResource);
 			*ppPropertyHandler = pNewPropertyHandler;
@@ -903,6 +905,7 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
 
 			CCOMObject<CCOMModelDefaultPropertyHandler> * pNewPropertyHandler = new CCOMObject<CCOMModelDefaultPropertyHandler>();
+			pNewPropertyHandler->AddRef();
 			pNewPropertyHandler->setChannel(nChannel);
 			pNewPropertyHandler->setResource(m_pResource);
 			*ppPropertyHandler = pNewPropertyHandler;

@@ -33,6 +33,7 @@ NMR_OpcPackageRelationship.cpp implements an OPC Package Relationship Object.
 #include "Common/OPC/NMR_OpcPackageRelationship.h" 
 #include "Common/OPC/NMR_OpcPackageTypes.h"
 #include "Common/NMR_Exception.h" 
+#include "Common/NMR_StringUtils.h" 
 
 namespace NMR {
 
@@ -63,9 +64,11 @@ namespace NMR {
 		if (pXMLWriter == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
+		std::wstring sTarget = fnIncludeLeadingPathDelimiter(m_sTargetPartURI);
+
 		pXMLWriter->WriteStartElement(nullptr, L"Relationship", nullptr);
 		pXMLWriter->WriteAttributeString(nullptr, L"Type", nullptr, m_sType.c_str());
-		pXMLWriter->WriteAttributeString(nullptr, L"Target", nullptr, m_sTargetPartURI.c_str());
+		pXMLWriter->WriteAttributeString(nullptr, L"Target", nullptr, sTarget.c_str());
 		pXMLWriter->WriteAttributeString(nullptr, L"Id", nullptr, m_sID.c_str());
 		pXMLWriter->WriteEndElement();
 	}

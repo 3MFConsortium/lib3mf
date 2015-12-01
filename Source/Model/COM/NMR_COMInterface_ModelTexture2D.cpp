@@ -33,6 +33,7 @@ Abstract: COM Interface Implementation for Model Classes
 
 #include "Model/COM/NMR_COMInterface_ModelTexture2D.h"
 #include "Common/Platform/NMR_Platform.h"
+#include "Common/Platform/NMR_ExportStream_Callback.h"
 
 #include "Common/NMR_Exception_Windows.h"
 #include "Common/NMR_StringUtils.h"
@@ -495,6 +496,38 @@ namespace NMR {
 		}
 
 	}
+
+	LIB3MFMETHODIMP CCOMModelTexture2D::WriteToCallback(_In_ void * pWriteCallback, _In_opt_ void * pUserData)
+	{
+		try {
+			if (pWriteCallback == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
+			CModelTexture2DResource * pTextureResource = getTexture2D();
+			__NMRASSERT(pTextureResource);
+
+			PImportStream pTextureStream = pTextureResource->getTextureStream();
+			ExportStream_WriteCallbackType pTypedWriteCallback = (ExportStream_WriteCallbackType)pWriteCallback;
+
+			if (pTextureStream.get() != nullptr) {
+				PExportStream pExportStream = std::make_shared<CExportStream_Callback>(pTypedWriteCallback, nullptr, pUserData);
+				pExportStream->copyFrom(pTextureStream.get(), pTextureStream->retrieveSize(), MODELTEXTURE2D_BUFFERSIZE);
+			}
+			else {
+				throw CNMRException(NMR_ERROR_NOTEXTURESTREAM);
+			}
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+
+	}
+
 
 #ifndef __GCC
 	LIB3MFMETHODIMP CCOMModelTexture2D::WriteToStream(_In_ IStream * pStream)

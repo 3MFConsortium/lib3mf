@@ -122,6 +122,7 @@ namespace NMR {
 		LIB3MFMETHOD(GetLastError) (_Out_ DWORD * pErrorCode, _Outptr_opt_ LPCSTR *	pErrorMessage) LIB3MFABSTRACT;
 	};
 
+
 	/**********************************************************************************************************
 	*  ILib3MFModelWriter encapsulates an writer class for a writing the model into a specific file type.
 	*  Current implementations include (binary) STL and 3MF.
@@ -158,6 +159,17 @@ namespace NMR {
 		*/
 		LIB3MFMETHOD(WriteToStream) (_In_ IStream * pStream) LIB3MFABSTRACT;
 #endif// __GCC
+
+		/**
+		* Writes out the model and passes the data to a provided callback function. The file type is specified by the Model Writer class
+		*
+		* @param[in] pWriteCallback Callback to call for writing a data chunk.
+		* @param[in] pSeekCallback Callback to call for seeking in the streamk.
+		* @param[in] pUserData Userdata that is passed to the callback function
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(WriteToCallback) (_In_ void * pWriteCallback, _In_opt_ void * pSeekCallback, _In_opt_ void * pUserData) LIB3MFABSTRACT;
+
 	};
 
 	/**********************************************************************************************************
@@ -1091,6 +1103,16 @@ namespace NMR {
 		*/
 		LIB3MFMETHOD(WriteToStream) (_In_ IStream * pStream) LIB3MFABSTRACT;
 #endif// __GCC
+
+		/**
+		* Writes out the texture and passes the data to a provided callback function. The file type is specified by the Model Writer class
+		*
+		* @param[in] pWriteCallback Callback to call for writing a data chunk.
+		* @param[in] pUserData Userdata that is passed to the callback function
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(WriteToCallback) (_In_ void * pWriteCallback, _In_opt_ void * pUserData) LIB3MFABSTRACT;
+
 
 		/**
 		* Reads a texture from a file.

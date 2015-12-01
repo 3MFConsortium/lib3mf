@@ -131,6 +131,7 @@ namespace NMR {
 		nfWChar * parseUnknown(_In_ nfWChar * pszwStart, _In_ nfWChar * pszwEnd);
 		nfWChar * parseText(_In_ nfWChar * pszwStart, _In_ nfWChar * pszwEnd);
 		nfWChar * parseElement(_In_ nfWChar * pszwStart, _In_ nfWChar * pszwEnd);
+		nfWChar * parseComment(_In_ nfWChar * pszwStart, _In_ nfWChar * pszwEnd);
 		nfWChar * parseEndElement(_In_ nfWChar * pszwStart, _In_ nfWChar * pszwEnd);
 		nfWChar * parseCloseElement(_In_ nfWChar * pszwStart, _In_ nfWChar * pszwEnd);
 		nfWChar * parseAttributes(_In_ nfWChar * pszwStart, _In_ nfWChar * pszwEnd);

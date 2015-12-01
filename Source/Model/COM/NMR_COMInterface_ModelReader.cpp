@@ -36,6 +36,7 @@ COM Interface Implementation for Model Reader Class
 #include "Common/NMR_Exception_Windows.h" 
 #include "Common/Platform/NMR_Platform.h" 
 #include "Common/NMR_StringUtils.h" 
+#include <locale.h>
 
 #ifndef __GCC
 #include "Common/Platform/NMR_ImportStream_COM.h" 
@@ -110,6 +111,8 @@ namespace NMR {
 			if (m_pModelReader.get() == nullptr)
 				throw CNMRException(NMR_ERROR_INVALIDREADEROBJECT);
 
+			setlocale (LC_ALL, "C");
+
 			PImportStream pStream = fnCreateImportStreamInstance(pwszFilename);
 			m_pModelReader->readStream(pStream);
 			return handleSuccess();
@@ -129,6 +132,8 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
 			if (m_pModelReader.get() == nullptr)
 				throw CNMRException(NMR_ERROR_INVALIDREADEROBJECT);
+
+			setlocale (LC_ALL, "C");
 
 			// Convert to UTF16
 			std::string sUTF8FileName(pwszFilename);
@@ -217,6 +222,7 @@ namespace NMR {
 			if (m_pModelReader.get() == nullptr)
 				throw CNMRException(NMR_ERROR_INVALIDREADEROBJECT);
 
+			setlocale (LC_ALL, "C");
 			PImportStream pImportStream = std::make_shared<CImportStream_COM>(pStream);
 			m_pModelReader->readStream(pImportStream);
 			return handleSuccess();

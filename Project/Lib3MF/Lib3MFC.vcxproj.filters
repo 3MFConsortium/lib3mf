@@ -471,5 +471,8 @@
     <ClCompile Include="..\..\Source\Common\Platform\NMR_ImportStream_Memory.cpp">
       <Filter>Source Files\Common\Platform</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\Common\Platform\NMR_ExportStream_Callback.cpp">
+      <Filter>Source Files\Common\Platform</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

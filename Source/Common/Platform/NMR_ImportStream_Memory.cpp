@@ -49,6 +49,7 @@ namespace NMR {
 		if (cbBytesToCopy > NMR_IMPORTSTREAM_MAXMEMSTREAMSIZE)
 			throw CNMRException(NMR_ERROR_INVALIDBUFFERSIZE);
 
+
 		// Retrieve Capacity and allocate buffer.
 		nfUint64 cbCapacity = cbBytesToCopy;
 		m_Buffer.resize((size_t) cbCapacity);
@@ -98,7 +99,7 @@ namespace NMR {
 		nfByte * pTarget = &m_Buffer[0];
 
 		nfUint64 nIndex = cbBytes;
-		while (nIndex >= 0) {
+		while (nIndex > 0) {
 			*pTarget = *pSource;
 
 			pSource++;
@@ -177,6 +178,8 @@ namespace NMR {
 			pSource++;
 			pTarget++;
 		}
+
+		m_nPosition += cbBytesToRead;
 
 		if ((cbBytesToRead != cbTotalBytesToRead) && bNeedsToReadAll)
 			throw CNMRException(NMR_ERROR_COULDNOTREADFULLDATA);

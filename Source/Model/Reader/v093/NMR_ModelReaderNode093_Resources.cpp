@@ -87,7 +87,7 @@ namespace NMR {
 		__NMRASSERT(pXMLReader);
 		__NMRASSERT(pNameSpace);
 
-		if (wcscmp(pNameSpace, XML_3MF_NAMESPACE_CORESPEC093) == 0) {
+		if ((wcscmp(pNameSpace, XML_3MF_NAMESPACE_CORESPEC093) == 0) || (wcscmp(pNameSpace, L"") == 0)) {
 
 			if (wcscmp(pChildName, XML_3MF_ELEMENT_OBJECT) == 0) {
 				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode093_Object>(m_pModel, m_pColorMapping, m_pMaterialResource, m_pWarnings);

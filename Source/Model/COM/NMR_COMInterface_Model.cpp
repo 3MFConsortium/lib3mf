@@ -272,6 +272,7 @@ namespace NMR {
 			// Create COM Object, and set writer property
 			CCOMObject<CCOMModelWriter> * pCOMObject = new CCOMObject<CCOMModelWriter>();
 			pCOMObject->setWriter(pWriter);
+			pCOMObject->AddRef();
 			*ppWriter = pCOMObject;
 
 			return handleSuccess();
@@ -310,6 +311,7 @@ namespace NMR {
 			// Create COM Object, and set writer property
 			CCOMObject<CCOMModelReader> * pCOMObject = new CCOMObject<CCOMModelReader>();
 			pCOMObject->setReader(pReader);
+			pCOMObject->AddRef();
 			*ppReader = pCOMObject;
 
 			return handleSuccess();
@@ -468,6 +470,7 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
 
 			CCOMObject<CCOMModelBuildItemIterator> * pResult = new CCOMObject<CCOMModelBuildItemIterator>();
+			pResult->AddRef();
 
 			nfUint32 nBuildItemCount = m_pModel->getBuildItemCount();
 			nfUint32 nIdx;
@@ -495,6 +498,7 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
 
 			CCOMObject<CCOMModelResourceIterator> * pResult = new CCOMObject<CCOMModelResourceIterator>();
+			pResult->AddRef();
 
 			nfUint32 nResourceCount = m_pModel->getResourceCount();
 			nfUint32 nIdx;
@@ -521,6 +525,7 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
 
 			CCOMObject<CCOMModelResourceIterator> * pResult = new CCOMObject<CCOMModelResourceIterator>();
+			pResult->AddRef();
 
 			nfUint32 nObjectCount = m_pModel->getObjectCount();
 			nfUint32 nIdx;
@@ -547,6 +552,7 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
 
 			CCOMObject<CCOMModelResourceIterator> * pResult = new CCOMObject<CCOMModelResourceIterator>();
+			pResult->AddRef();
 
 			nfUint32 nObjectCount = m_pModel->getObjectCount();
 			nfUint32 nIdx;
@@ -576,6 +582,7 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
 
 			CCOMObject<CCOMModelResourceIterator> * pResult = new CCOMObject<CCOMModelResourceIterator>();
+			pResult->AddRef();
 
 			nfUint32 nObjectCount = m_pModel->getObjectCount();
 			nfUint32 nIdx;
@@ -611,6 +618,7 @@ namespace NMR {
 			m_pModel->addResource(pNewResource);
 
 			CCOMObject<CCOMModelMeshObject> * pResult = new CCOMObject<CCOMModelMeshObject>();
+			pResult->AddRef();
 			pResult->setResource(pNewResource);
 			*ppMeshObject = pResult;
 
@@ -636,6 +644,7 @@ namespace NMR {
 			m_pModel->addResource(pNewResource);
 
 			CCOMObject<CCOMModelComponentsObject> * pResult = new CCOMObject<CCOMModelComponentsObject>();
+			pResult->AddRef();
 			pResult->setResource(pNewResource);
 			*ppComponentsObject = pResult;
 
@@ -672,6 +681,7 @@ namespace NMR {
 
 			// Create COM Wrapper
 			CCOMObject<CCOMModelBuildItem> * pResult = new CCOMObject<CCOMModelBuildItem>();
+			pResult->AddRef();
 			pResult->setItem(pModelBuildItem);
 			*ppBuildItem = pResult;
 
@@ -723,6 +733,7 @@ namespace NMR {
 			m_pModel->mergeToMesh(pMesh.get());
 
 			CCOMObject<CCOMModel> * pNewModelInterface = new CCOMObject<CCOMModel>();
+			pNewModelInterface->AddRef();
 			*ppMergedModel = pNewModelInterface;
 
 			// Copy relevant resources to new model!
@@ -778,6 +789,7 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
 
 			CCOMObject<CCOMModelResourceIterator> * pResult = new CCOMObject<CCOMModelResourceIterator>();
+			pResult->AddRef();
 
 			nfUint32 nResourceCount = m_pModel->getResourceCount();
 			nfUint32 nIdx;
@@ -809,6 +821,7 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
 
 			CCOMObject<CCOMModelResourceIterator> * pResult = new CCOMObject<CCOMModelResourceIterator>();
+			pResult->AddRef();
 
 			nfUint32 nResourceCount = m_pModel->getResourceCount();
 			nfUint32 nIdx;
@@ -848,6 +861,7 @@ namespace NMR {
 
 			CCOMObject<CCOMModelTexture2D> * pCOMObject = new CCOMObject<CCOMModelTexture2D>();
 			pCOMObject->setResource(pResource);
+			pCOMObject->AddRef();
 			*ppTextureInstance = pCOMObject;
 
 			return handleSuccess();
@@ -879,6 +893,7 @@ namespace NMR {
 			pResource->setPath(sUTF16Path);
 
 			CCOMObject<CCOMModelTexture2D> * pCOMObject = new CCOMObject<CCOMModelTexture2D>();
+			pCOMObject->AddRef();
 			pCOMObject->setResource(pResource);
 			*ppTextureInstance = pCOMObject;
 
@@ -904,6 +919,7 @@ namespace NMR {
 			m_pModel->addResource(pResource);
 
 			CCOMObject<CCOMModelBaseMaterial> * pCOMObject = new CCOMObject<CCOMModelBaseMaterial>();
+			pCOMObject->AddRef();
 			pCOMObject->setResource(pResource);
 			*ppBaseMaterialInstance = pCOMObject;
 

@@ -62,7 +62,6 @@ namespace NMR {
 		std::array<nfChar, MODELWRITERMESH100_LINEBUFFERSIZE> m_TriangleLine;
 		nfUint32 m_nVertexBufferPos;
 		nfUint32 m_nTriangleBufferPos;
-		const nfChar * m_pszFloatFormat;
 
 		__NMR_INLINE void putVertexString(_In_ const nfChar * pszString);
 		__NMR_INLINE void putVertexFloat(_In_ const nfFloat fValue);

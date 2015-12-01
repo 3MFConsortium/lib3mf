@@ -44,6 +44,8 @@ This is the class for exporting the 3mf mesh node.
 #include <stdio.h>
 #endif // __GCC
 
+#define MAX(a,b) (((a)>(b))?(a):(b))
+
 namespace NMR {
 
 	CModelWriterNode100_Mesh::CModelWriterNode100_Mesh(_In_ CModelMeshObject * pModelMeshObject, _In_ CXmlWriter * pXMLWriter, _In_ PModelWriter_ColorMapping pColorMapping, _In_ PModelWriter_TexCoordMappingContainer pTextureMappingContainer)
@@ -60,7 +62,6 @@ namespace NMR {
 		m_pTextureMappingContainer = pTextureMappingContainer;
 
 		// Initialize buffer arrays
-		m_pszFloatFormat = "%.3f";
 		m_nTriangleBufferPos = 0;
 		m_nVertexBufferPos = 0;
 		putVertexString(MODELWRITERMESH100_VERTEXLINESTART);
@@ -252,16 +253,45 @@ namespace NMR {
 
 	void CModelWriterNode100_Mesh::putVertexFloat(_In_ const nfFloat fValue)
 	{
+		// Format float with "%.3f" syntax
+		nfInt64 nAbsValue = (nfInt64) (fValue * 1000);
+		nAbsValue = MAX(nAbsValue, -nAbsValue);
+		nfBool bIsNegative = fValue < 0;
 
-#ifdef __GCC
-		int nCount = sprintf(&m_VertexLine[m_nVertexBufferPos], m_pszFloatFormat, fValue);
-#else
-		int nCount = sprintf_s(&m_VertexLine[m_nVertexBufferPos], MODELWRITERMESH100_LINEBUFFERSIZE - m_nVertexBufferPos, m_pszFloatFormat, fValue);
-#endif // __GCC
+		int nStart = m_nVertexBufferPos;
+		int nCount = 0;
 
-		if (nCount < 1)
-			throw CNMRException(NMR_ERROR_COULDNOTCONVERTNUMBER);
-		m_nVertexBufferPos += nCount;
+		if (!nAbsValue){
+			m_VertexLine[m_nVertexBufferPos++] = '0';
+		} else {
+			// Write the string in reverse order
+			while(nAbsValue || nCount < 3){
+				m_VertexLine[m_nVertexBufferPos++] = '0' + (nAbsValue % 10);
+				nAbsValue /= 10;
+				nCount++;
+				if (nCount == 3){
+					m_VertexLine[m_nVertexBufferPos++] = '.';
+					if (!nAbsValue){
+						m_VertexLine[m_nVertexBufferPos++] = '0';
+					}
+					nCount++;
+				}
+			}
+			if (bIsNegative){
+				m_VertexLine[m_nVertexBufferPos++] = '-';
+				nCount++;
+			}
+		}
+
+		// Reverse the float string
+		int nEnd = m_nVertexBufferPos - 1;
+		while (nStart < nEnd){
+			char temp = m_VertexLine[nStart];
+			m_VertexLine[nStart] = m_VertexLine[nEnd];
+			m_VertexLine[nEnd] = temp;
+			nStart++;
+			nEnd--;
+		}
 	}
 
 
