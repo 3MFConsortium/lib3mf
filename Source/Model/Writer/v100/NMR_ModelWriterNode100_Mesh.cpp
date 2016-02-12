@@ -40,9 +40,9 @@ This is the class for exporting the 3mf mesh node.
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_Exception_Windows.h"
 
-#ifdef __GCC
+#ifdef __GNUC__
 #include <stdio.h>
-#endif // __GCC
+#endif // __GNUC__
 
 #define MAX(a,b) (((a)>(b))?(a):(b))
 
@@ -312,11 +312,11 @@ namespace NMR {
 	void CModelWriterNode100_Mesh::putTriangleUInt32(_In_ const nfUint32 nValue)
 	{
 
-#ifdef __GCC
+#ifdef __GNUC__
 		int nCount = sprintf(&m_TriangleLine[m_nTriangleBufferPos], "%d", nValue);
 #else
 		int nCount = sprintf_s(&m_TriangleLine[m_nTriangleBufferPos], MODELWRITERMESH100_LINEBUFFERSIZE - m_nTriangleBufferPos, "%d", nValue);
-#endif // __GCC
+#endif // __GNUC__
 
 		if (nCount < 1)
 			throw CNMRException(NMR_ERROR_COULDNOTCONVERTNUMBER);

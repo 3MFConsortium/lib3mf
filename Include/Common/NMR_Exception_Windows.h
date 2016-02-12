@@ -38,7 +38,7 @@ for further information
       
 #include "Common/NMR_Exception.h"
 
-#ifndef __GCC
+#ifndef __GNUC__
 #include <Windows.h>
 #else
 

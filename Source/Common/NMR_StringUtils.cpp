@@ -321,7 +321,7 @@ namespace NMR {
 			if (cbNeededChars >= cbBufferSize)
 				throw CNMRException(NMR_ERROR_INSUFFICIENTBUFFERSIZE);
 
-#ifndef __GCC
+#ifndef __GNUC__
 			wcscpy_s(pwszBuffer, cbBufferSize, sString.c_str());
 #else
 			wcscpy(pwszBuffer, sString.c_str());
@@ -349,7 +349,7 @@ namespace NMR {
 			if (cbNeededChars >= cbBufferSize)
 				throw CNMRException(NMR_ERROR_INSUFFICIENTBUFFERSIZE);
 
-#ifndef __GCC
+#ifndef __GNUC__
 			strcpy_s(pszBuffer, cbBufferSize, sString.c_str());
 #else
 			strcpy(pszBuffer, sString.c_str());

@@ -34,7 +34,7 @@ NMR_WinTypes.h defines Standard Windows Types on Non-Windows Environments
 #ifndef __NMR_WINTYPES
 #define __NMR_WINTYPES
 
-#ifdef __GCC
+#ifdef __GNUC__
 #define BOOL int
 #define FLOAT float
 #define BYTE unsigned char

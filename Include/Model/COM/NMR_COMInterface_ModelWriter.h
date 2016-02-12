@@ -58,7 +58,7 @@ namespace NMR {
 		LIB3MFMETHOD(WriteToFile) (_In_z_ LPCWSTR pwszFilename);
 		LIB3MFMETHOD(WriteToFileUTF8) (_In_z_ LPCSTR pwszFilename);
 
-#ifndef __GCC
+#ifndef __GNUC__
 		LIB3MFMETHOD(WriteToStream) (_In_ IStream * pStream);
 #endif
 

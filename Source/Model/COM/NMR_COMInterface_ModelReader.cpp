@@ -38,9 +38,9 @@ COM Interface Implementation for Model Reader Class
 #include "Common/NMR_StringUtils.h" 
 #include <locale.h>
 
-#ifndef __GCC
+#ifndef __GNUC__
 #include "Common/Platform/NMR_ImportStream_COM.h" 
-#endif // __GCC
+#endif // __GNUC__
 
 namespace NMR {
 
@@ -213,7 +213,7 @@ namespace NMR {
 		}
 	}
 
-#ifndef __GCC
+#ifndef __GNUC__
 	LIB3MFMETHODIMP CCOMModelReader::ReadFromStream(_In_ IStream * pStream)
 	{
 		try {
@@ -234,7 +234,7 @@ namespace NMR {
 			return handleGenericException();
 		}
 	}
-#endif // __GCC
+#endif // __GNUC__
 
 
 }

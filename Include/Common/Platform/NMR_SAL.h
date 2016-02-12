@@ -34,7 +34,7 @@ NMR_SAL.h defines Security Annotations for Visual Studio
 #ifndef __NMR_SAL
 #define __NMR_SAL
 
-#ifndef __GCC
+#ifndef __GNUC__
 
 #include <sal.h>
 
@@ -53,6 +53,6 @@ NMR_SAL.h defines Security Annotations for Visual Studio
 #define _Outptr_result_buffer_maybenull_(ARG)
 #define _Outptr_opt_
 
-#endif // __GCC
+#endif // __GNUC__
 
 #endif // __NMR_SAL

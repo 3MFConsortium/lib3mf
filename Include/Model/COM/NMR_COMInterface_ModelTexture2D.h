@@ -73,17 +73,17 @@ namespace NMR {
 		LIB3MFMETHOD(WriteToBuffer) (_Out_ BYTE * pBuffer, _In_ ULONG64 cbBufferSize);
 		LIB3MFMETHOD(WriteToCallback) (_In_ void * pWriteCallback, _In_opt_ void * pUserData);
 
-#ifndef __GCC
+#ifndef __GNUC__
 		LIB3MFMETHOD(WriteToStream) (_In_ IStream * pStream);
-#endif// __GCC
+#endif// __GNUC__
 
 		LIB3MFMETHOD(ReadFromFile) (_In_z_ LPCWSTR pwszFilename);
 		LIB3MFMETHOD(ReadFromFileUTF8) (_In_z_ LPCSTR pszFilename);
 		LIB3MFMETHOD(ReadFromBuffer) (_In_ BYTE * pBuffer, _In_ ULONG64 cbBufferSize);
 
-#ifndef __GCC
+#ifndef __GNUC__
 		LIB3MFMETHOD(ReadFromStream) (_In_ IStream * pStream);
-#endif //__GCC
+#endif //__GNUC__
 
 		CCOMModelTexture2D();
 

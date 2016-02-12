@@ -32,11 +32,11 @@ Abstract: Interface Exports for plain C DLLs.
 #ifndef __NMR_DLLINTERFACES
 #define __NMR_DLLINTERFACES
 
-#ifdef __GCC
+#ifdef __GNUC__
 #ifndef NMR_COM_EMULATION
 #define NMR_COM_EMULATION
 #endif //NMR_COM_EMULATION
-#endif //__GCC
+#endif //__GNUC__
 
 #ifdef NMR_COM_EMULATION
 #include "Common/Platform/NMR_COM_Emulation.h"

@@ -18,7 +18,6 @@
 					<Add option="-Wall" />
 					<Add option="-g" />
 					<Add option="-DBUILD_DLL" />
-					<Add option="-D__GCC" />
 					<Add option="-D__GCC_WIN32" />
 					<Add option="-DNMR_COM_EMULATION" />
 					<Add directory="../../Include" />
@@ -39,7 +38,6 @@
 					<Add option="-std=c++11" />
 					<Add option="-Wall" />
 					<Add option="-DBUILD_DLL" />
-					<Add option="-D__GCC" />
 					<Add option="-D__GCC_WIN32" />
 					<Add option="-DNMR_COM_EMULATION" />
 					<Add directory="../../Include" />

@@ -45,7 +45,7 @@ namespace NMR {
 	{
 		m_bIsFreshLine = true;
 
-#ifndef __GCC
+#ifndef __GNUC__
 		m_nLineEndingBuffer[0] = 0x0d;
 		m_nLineEndingBuffer[1] = 0x0a;
 		m_nLineEndingCharCount = 2;
@@ -53,7 +53,7 @@ namespace NMR {
 		m_nLineEndingBuffer[0] = 0x0a;
 		m_nLineEndingBuffer[1] = 0x0a;
 		m_nLineEndingCharCount = 1;
-#endif // __GCC
+#endif // __GNUC__
 
 		m_nSpacesPerLayer = 1;
 		m_nLayer = 0;
@@ -199,11 +199,11 @@ namespace NMR {
 		if (pszString == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-#ifdef __GCC
+#ifdef __GNUC__
 		size_t cbSize = strlen(pszString);
 #else
 		size_t cbSize = strnlen_s(pszString, NATIVEXMLMAXSTRINGLENGTH);
-#endif // __GCC
+#endif // __GNUC__
 		if (cbSize > NATIVEXMLMAXSTRINGLENGTH)
 			throw CNMRException(NMR_ERROR_INSUFFICIENTBUFFERSIZE);
 
