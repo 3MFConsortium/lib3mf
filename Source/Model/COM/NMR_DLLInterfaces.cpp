@@ -1318,7 +1318,7 @@ namespace NMR {
 			return ((ILib3MFModel *)pModel)->GetBuildItems((ILib3MFModelBuildItemIterator **)ppIterator);
 		}
 
-		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_resources(_In_ PLib3MFModel * pModel, _Outptr_ PLib3MFModelResourceIterator ** ppIterator)
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_getresources(_In_ PLib3MFModel * pModel, _Outptr_ PLib3MFModelResourceIterator ** ppIterator)
 		{
 			if (!pModel)
 				return LIB3MF_POINTER;
