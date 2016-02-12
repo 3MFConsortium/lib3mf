@@ -46,7 +46,7 @@ shown to the outside world.
 #include "Model/Classes/NMR_ModelTypes.h"
 
 
-#ifndef __GCC
+#ifndef __GNUC__
 #include "Common/Platform/NMR_IStream.h"
 #endif
 
@@ -75,7 +75,7 @@ shown to the outside world.
 #define CLSID_Lib3MF_DefaultPropertyHandler "A62108EE-FB26-44C2-90CB-FBEE9D2823E5"
 
 
-#ifndef __GCC
+#ifndef __GNUC__
 static const IID IID_Lib3MF_Base = { 0x8f1d86bf, 0xcd19, 0x4710, { 0xbc, 0x19, 0x3c, 0x70, 0xd0, 0x95, 0x64, 0x2f } };
 static const IID IID_Lib3MF_ModelWriter = { 0x58ddbe95, 0x34d8, 0x4f77, { 0xbf, 0xdc, 0x15, 0x70, 0xf8, 0x49, 0xbf, 0xf2 } };
 static const IID IID_Lib3MF_ModelReader = { 0xa7fe2c65, 0x121, 0x40aa, { 0xa0, 0xaf, 0x48, 0xc9, 0xd2, 0x28, 0x7a, 0x55 } };
@@ -98,7 +98,7 @@ static const IID IID_Lib3MF_DefaultPropertyHandler = { 0xa62108ee, 0xfb26, 0x44c
 
 
 
-#endif //__GCC
+#endif //__GNUC__
 
 namespace NMR {
 
@@ -150,7 +150,7 @@ namespace NMR {
 		*/
 		LIB3MFMETHOD(WriteToFileUTF8) (_In_z_ LPCSTR pwszFilename) LIB3MFABSTRACT;
 
-#ifndef __GCC
+#ifndef __GNUC__
 		/**
 		* Writes out the model into a COM IStream. Only available on Windows.
 		*
@@ -158,7 +158,7 @@ namespace NMR {
 		* @return error code or 0 (success)
 		*/
 		LIB3MFMETHOD(WriteToStream) (_In_ IStream * pStream) LIB3MFABSTRACT;
-#endif// __GCC
+#endif// __GNUC__
 
 		/**
 		* Writes out the model and passes the data to a provided callback function. The file type is specified by the Model Writer class
@@ -219,7 +219,7 @@ namespace NMR {
 		*/
 		LIB3MFMETHOD(GetWarning) (_In_ DWORD nIndex, _Out_ DWORD * pErrorCode, _Out_opt_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars) LIB3MFABSTRACT;
 
-#ifndef __GCC
+#ifndef __GNUC__
 		/**
 		* Reads a model from a COM IStream. Only available on Windows.
 		*
@@ -227,7 +227,7 @@ namespace NMR {
 		* @return error code or 0 (success)
 		*/
 		LIB3MFMETHOD(ReadFromStream) (_In_ IStream * pStream) LIB3MFABSTRACT;
-#endif //__GCC
+#endif //__GNUC__
 	};
 
 	/**********************************************************************************************************
@@ -1094,7 +1094,7 @@ namespace NMR {
 		*/
 		LIB3MFMETHOD(WriteToBuffer) (_Out_ BYTE * pBuffer, _In_ ULONG64 cbBufferSize) LIB3MFABSTRACT;
 
-#ifndef __GCC
+#ifndef __GNUC__
 		/**
 		* Writes out the texture into a COM IStream. Only available on Windows.
 		*
@@ -1102,7 +1102,7 @@ namespace NMR {
 		* @return error code or 0 (success)
 		*/
 		LIB3MFMETHOD(WriteToStream) (_In_ IStream * pStream) LIB3MFABSTRACT;
-#endif// __GCC
+#endif// __GNUC__
 
 		/**
 		* Writes out the texture and passes the data to a provided callback function. The file type is specified by the Model Writer class
@@ -1139,7 +1139,7 @@ namespace NMR {
 		*/
 		LIB3MFMETHOD(ReadFromBuffer) (_In_ BYTE * pBuffer, _In_ ULONG64 cbBufferSize) LIB3MFABSTRACT;
 
-#ifndef __GCC
+#ifndef __GNUC__
 		/**
 		* Reads a texture from a COM IStream. Only available on Windows.
 		*
@@ -1147,7 +1147,7 @@ namespace NMR {
 		* @return error code or 0 (success)
 		*/
 		LIB3MFMETHOD(ReadFromStream) (_In_ IStream * pStream) LIB3MFABSTRACT;
-#endif //__GCC
+#endif //__GNUC__
 
 	};
 

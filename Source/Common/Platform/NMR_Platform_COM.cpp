@@ -35,7 +35,7 @@ specific classes for COM.
 #include "Common/Platform/NMR_Platform.h"
 #include "Common/NMR_Exception.h"
 
-#ifndef __GCC
+#ifndef __GNUC__
 // Only implement this, if we compile with Visual Studio
 
 #include "Common/Platform/NMR_ImportStream_COM.h"
@@ -62,4 +62,4 @@ namespace NMR {
 
 }
 
-#endif // __GCC
+#endif // __GNUC__

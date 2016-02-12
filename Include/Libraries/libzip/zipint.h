@@ -140,7 +140,7 @@ int _zip_mkstemp(char *);
 #endif
 
 #ifndef SIZE_MAX
-#ifdef __GCC
+#ifdef __GNUC__
 #define SIZE_MAX ZIP_INT64_MAX
 #else
 #if SIZEOF_SIZE_T == 8
@@ -152,7 +152,7 @@ int _zip_mkstemp(char *);
 #else
 #error unsupported size of size_t
 #endif
-#endif //__GCC
+#endif //__GNUC__
 
 #endif
 

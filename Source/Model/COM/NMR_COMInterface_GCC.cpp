@@ -34,7 +34,7 @@ COM Interface Implementation for GCC
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_Exception_Windows.h"
 
-#ifdef __GCC
+#ifdef __GNUC__
 
 namespace NMR {
 
@@ -232,7 +232,7 @@ namespace NMR {
 
 }
 
-#endif // __GCC
+#endif // __GNUC__
 
 
 

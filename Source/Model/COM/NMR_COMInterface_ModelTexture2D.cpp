@@ -40,7 +40,7 @@ Abstract: COM Interface Implementation for Model Classes
 
 #include "Common/Platform/NMR_ImportStream_Memory.h"
 
-#ifndef __GCC
+#ifndef __GNUC__
 #include <atlbase.h>
 #include "Common/Platform/NMR_ImportStream_COM.h"
 
@@ -529,7 +529,7 @@ namespace NMR {
 	}
 
 
-#ifndef __GCC
+#ifndef __GNUC__
 	LIB3MFMETHODIMP CCOMModelTexture2D::WriteToStream(_In_ IStream * pStream)
 	{
 		try {
@@ -580,7 +580,7 @@ namespace NMR {
 
 	}
 
-#endif// __GCC
+#endif// __GNUC__
 
 	LIB3MFMETHODIMP CCOMModelTexture2D::ReadFromFile(_In_z_ LPCWSTR pwszFilename)
 	{
@@ -669,7 +669,7 @@ namespace NMR {
 	}
 
 
-#ifndef __GCC
+#ifndef __GNUC__
 
 		LIB3MFMETHODIMP CCOMModelTexture2D::ReadFromStream(_In_ IStream * pStream)
 		{
@@ -747,7 +747,7 @@ namespace NMR {
 			}
 
 		}
-#endif //__GCC
+#endif //__GNUC__
 
 
 	}

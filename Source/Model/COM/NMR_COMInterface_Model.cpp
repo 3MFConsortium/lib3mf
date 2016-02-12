@@ -43,7 +43,7 @@ COM Interface Implementation for Model Class
 #include "Model/COM/NMR_COMInterface_ModelTexture2D.h"
 #include "Model/COM/NMR_COMInterface_ModelBaseMaterial.h"
 
-#ifndef __GCC
+#ifndef __GNUC__
 #include "Model/Reader/NMR_ModelReader_3MF_OPC.h"
 #include "Model/Writer/NMR_ModelWriter_3MF_Native.h"
 #else
@@ -296,11 +296,11 @@ namespace NMR {
 
 			// Create specified writer instance
 			if (strcmp(pszReaderClass, MODELREADERCLASS_3MF) == 0) {
-#ifndef __GCC
+#ifndef __GNUC__
 				pReader = std::make_shared<CModelReader_3MF_OPC>(m_pModel);
 #else
 				pReader = std::make_shared<CModelReader_3MF_Native>(m_pModel);
-#endif // __GCC
+#endif // __GNUC__
 			}
 			if (strcmp(pszReaderClass, MODELREADERCLASS_STL) == 0)
 				pReader = std::make_shared<CModelReader_STL>(m_pModel);

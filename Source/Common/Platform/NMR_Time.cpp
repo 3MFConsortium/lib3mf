@@ -41,11 +41,11 @@ namespace NMR {
 
 	nfTimeStamp fnGetUnixTime()
 	{
-    #ifdef __GCC
+    #ifdef __GNUC__
 		return time(nullptr);
     #else
         return _time64(nullptr);
-    #endif // __GCC
+    #endif // __GNUC__
 	}
 
 }

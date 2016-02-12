@@ -41,9 +41,9 @@ COM Interface Implementation for Model Writer Class
 #include "Common/Platform/NMR_ExportStream_Callback.h"
 #include <locale.h>
 
-#ifndef __GCC
+#ifndef __GNUC__
 #include "Common/Platform/NMR_ExportStream_COM.h"
-#endif // __GCC
+#endif // __GNUC__
 
 namespace NMR {
 
@@ -193,7 +193,7 @@ namespace NMR {
 	}
 
 
-#ifndef __GCC
+#ifndef __GNUC__
 	LIB3MFMETHODIMP CCOMModelWriter::WriteToStream(_In_ IStream * pStream)
 	{
 
@@ -218,7 +218,7 @@ namespace NMR {
 		}
 
 	}
-#endif // __GCC
+#endif // __GNUC__
 
 
 }

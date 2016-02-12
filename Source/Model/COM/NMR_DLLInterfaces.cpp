@@ -33,9 +33,9 @@ Abstract: COM Interface Exports for plain C DLLs
 #include "Model/COM/NMR_COMInterfaces.h"
 #include "Model/COM/NMR_COMInterface_Model.h"
 
-#ifndef __GCC
+#ifndef __GNUC__
 #include "Common/NMR_Exception_Windows.h"
-#endif // __GCC
+#endif // __GNUC__
 
 namespace NMR {
 
@@ -70,7 +70,7 @@ namespace NMR {
 				return LIB3MF_POINTER;
 
 			try {
-#ifndef __GCC
+#ifndef __GNUC__
 				if (bInitialize) {
 					HRESULT hResult = CoInitialize(NULL);
 					if (hResult != LIB3MF_OK) {
@@ -97,7 +97,7 @@ namespace NMR {
 		{
 			if (pInstance) {
 				ILib3MFBase * pBaseInstance = (ILib3MFBase *)pInstance;
-#ifndef __GCC
+#ifndef __GNUC__
 				pBaseInstance->Release();
 #else
 				delete pBaseInstance;
