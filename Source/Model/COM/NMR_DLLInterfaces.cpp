@@ -1363,7 +1363,7 @@ namespace NMR {
 			if (!pModel)
 				return LIB3MF_POINTER;
 
-			return ((ILib3MFModel *)pModel)->Get2DTextures((ILib3MFModelResourceIterator **)ppIterator);
+			return ((ILib3MFModel *)pModel)->GetBaseMaterials((ILib3MFModelResourceIterator **)ppIterator);
 		}
 
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_getthumbnails(_In_ PLib3MFModel * pModel, _Outptr_ PLib3MFModelThumbnailIterator ** ppIterator)
