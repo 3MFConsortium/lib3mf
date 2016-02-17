@@ -23,3 +23,5 @@ https://github.com/3MFConsortium/lib3mf-examples
 
 For a more detailed documentation, please take a look into the PDF in the root directory
 of this repository.
+
+Lib3MF is licensed under the simplified BSD license.
