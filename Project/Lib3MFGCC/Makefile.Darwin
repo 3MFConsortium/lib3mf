@@ -5,10 +5,10 @@
 
 WORKDIR = `pwd`
 
-CC = gcc -m32
-CXX = g++ -m32
+CC = gcc
+CXX = g++
 AR = ar
-LD = g++ -m32
+LD = g++
 WINDRES = windres
 
 INC = 
