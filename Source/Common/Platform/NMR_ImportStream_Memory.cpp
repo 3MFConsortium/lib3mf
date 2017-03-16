@@ -41,6 +41,13 @@ This is a platform independent class for keeping data in a memory stream.
 
 namespace NMR {
 
+	CImportStream_Memory::CImportStream_Memory()
+	{
+		m_cbSize = 0;
+		m_nPosition = 0;
+	}
+
+
 	CImportStream_Memory::CImportStream_Memory(_In_ CImportStream * pStream, _In_ nfUint64 cbBytesToCopy, _In_ nfBool bNeedsToCopyAllBytes)
 	{
 		if (pStream == nullptr)

@@ -59,6 +59,11 @@ namespace NMR {
 		LIB3MFMETHOD(GetWarningCount) (_Out_ DWORD * pnWarningCount);
 		LIB3MFMETHOD(GetWarning) (_In_ DWORD nIndex, _Out_ DWORD * pErrorCode, _Out_opt_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_opt_ ULONG * pcbNeededChars);
 
+		LIB3MFMETHOD(AddRelationToRead) (_In_z_ LPCWSTR pwszRelationshipType);
+		LIB3MFMETHOD(RemoveRelationToRead) (_In_z_ LPCWSTR pwszRelationshipType);
+		LIB3MFMETHOD(AddRelationToReadUTF8) (_In_z_ LPCSTR pszRelationshipType);
+		LIB3MFMETHOD(RemoveRelationToReadUTF8) (_In_z_ LPCSTR pszRelationshipType);
+
 #ifndef __GNUC__
 		LIB3MFMETHOD(ReadFromStream) (_In_ IStream * pStream);
 #endif // __GNUC__

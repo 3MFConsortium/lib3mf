@@ -65,7 +65,7 @@ namespace NMR {
 		CImportStream_COM * pCOMImportStream = dynamic_cast<CImportStream_COM *> (pPackageStream.get());
 		if (pCOMImportStream == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDSTREAMTYPE);
-		CComPtr<IStream> pCOMPackageStream = pCOMImportStream->getCOMStream ();
+		CComPtr<IStream> pCOMPackageStream = pCOMImportStream->getCOMStream();
 
 		// Define result model stream;
 		CComPtr<IStream> pModelStream = nullptr;
@@ -114,7 +114,8 @@ namespace NMR {
 		if (hResult != S_OK)
 			throw CNMRException_Windows(NMR_ERROR_MODELRELATIONSHIPSETREADFAILED, hResult);
 
-		extractTexturesFromRelationships(m_pPackagePartSet, m_pModelRelationshipSet); 
+		extractTexturesFromRelationships(m_pPackagePartSet, m_pModelRelationshipSet);
+		extractCustomDataFromRelationships(m_pPackagePartSet, m_pModelRelationshipSet);
 
 		return std::make_shared<CImportStream_COM>(pModelStream);
 	}
@@ -265,7 +266,7 @@ namespace NMR {
 				PImportStream pImportStream = std::make_shared<CImportStream_COM>(pTextureStream);
 
 				// Copy Stream of the texture in the memory
-				PImportStream pCopiedStream = pImportStream->copyToMemory ();
+				PImportStream pCopiedStream = pImportStream->copyToMemory();
 
 				// Find out part URI
 				CComPtr<IOpcPartUri> pPartUri;
@@ -288,6 +289,83 @@ namespace NMR {
 		}
 
 	}
+
+
+	void CModelReader_3MF_OPC::extractCustomDataFromRelationships(_In_ IOpcPartSet* pPartSet, _In_ IOpcRelationshipSet* pRelationshipSet)
+	{
+		__NMRASSERT(pRelationshipSet != nullptr);
+		HRESULT hResult;
+
+		// Retrieve Enumerator
+		CComPtr<IOpcRelationshipEnumerator> pEnumerator;
+		hResult = pRelationshipSet->GetEnumerator(&pEnumerator);
+		if (hResult != S_OK)
+			throw CNMRException_Windows(NMR_ERROR_OPCRELATIONSHIPENUMERATIONFAILED, hResult);
+
+
+		// Iterate through the relationships and retrieve textures
+		BOOL bHasNext = true;
+		while (bHasNext) {
+			hResult = pEnumerator->MoveNext(&bHasNext);
+			if (hResult != S_OK)
+				throw CNMRException_Windows(NMR_ERROR_OPCRELATIONSHIPENUMERATIONFAILED, hResult);
+
+			if (bHasNext) {
+				CComPtr<IOpcRelationship> pRelationShip = nullptr;
+				hResult = pEnumerator->GetCurrent(&pRelationShip);
+				if (hResult != S_OK)
+					throw CNMRException_Windows(NMR_ERROR_OPCRELATIONSHIPENUMERATIONFAILED, hResult);
+
+				LPWSTR pwszRelationShipType = nullptr;
+				hResult = pRelationShip->GetRelationshipType(&pwszRelationShipType);
+				if (hResult != S_OK)
+					throw CNMRException_Windows(NMR_ERROR_OPCRELATIONSHIPGETTYPEFAILED, hResult);
+				if (pwszRelationShipType == nullptr)
+					throw CNMRException(NMR_ERROR_OPCRELATIONSHIPGETTYPEFAILED);
+
+				// Find relationship in List
+				std::wstring sRelationShipType(pwszRelationShipType);
+				auto iIterator = m_RelationsToRead.find(sRelationShipType);
+				if (iIterator != m_RelationsToRead.end()) {
+
+					CComPtr<IOpcPart> pPart = getRelationshipTargetPart(m_pPackagePartSet, pRelationShip, nullptr);
+
+					// Extract Model Stream
+					CComPtr<IStream> pAttachedDataStream = nullptr;
+					__NMRASSERT(pPart != nullptr);
+					hResult = pPart->GetContentStream(&pAttachedDataStream);
+					if (hResult != S_OK)
+						throw CNMRException_Windows(NMR_ERROR_OPCCOULDNOTGETTEXTURESTREAM, hResult);
+
+					// Create Import Stream for the texture
+					PImportStream pImportStream = std::make_shared<CImportStream_COM>(pAttachedDataStream);
+
+					// Copy Stream of the texture in the memory
+					PImportStream pCopiedStream = pImportStream->copyToMemory();
+
+					// Find out part URI
+					CComPtr<IOpcPartUri> pPartUri;
+					hResult = pPart->GetName(&pPartUri);
+					if (hResult != S_OK)
+						throw CNMRException_Windows(NMR_ERROR_OPCCOULDNOTGETATTACHMENTURI, hResult);
+
+					// Transform to absolute path
+					wchar_t * pszAbsoluteUri = nullptr;
+					hResult = pPartUri->GetAbsoluteUri(&pszAbsoluteUri);
+					if (hResult != S_OK)
+						throw CNMRException_Windows(NMR_ERROR_OPCCOULDNOTGETATTACHMENTURI, hResult);
+					std::wstring sPartUri(pszAbsoluteUri);
+					SysFreeString(pszAbsoluteUri);
+
+					// Add Attachment Stream to Model
+					m_pModel->addAttachment(sPartUri, sRelationShipType, pCopiedStream);
+				}
+			}
+
+		}
+
+	}
+
 
 
 }

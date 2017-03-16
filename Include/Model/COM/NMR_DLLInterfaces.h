@@ -73,6 +73,7 @@ namespace NMR {
 		typedef PLib3MFBase PLib3MFModelTexture2D;
 		typedef PLib3MFBase PLib3MFModelThumbnailIterator;
 		typedef PLib3MFBase PLib3MFModelThumbnail;
+		typedef PLib3MFBase PLib3MFModelAttachment;
 
 		typedef BOOL(*PLib3MFModelWriterCallback)(_In_ const BYTE * pData, _In_ const DWORD cbBytes, _In_ const void * pUserData);
 
@@ -171,6 +172,45 @@ namespace NMR {
 		* @return error code or 0 (success)
 		*/
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_reader_readfromfileutf8(_In_ PLib3MFModelReader * pReader, _In_z_ LPCSTR pwszFilename);
+
+
+		/**
+		* Adds a relationship type which shall be read as attachment in memory while loading
+		*
+		* @param[in] pReader Reader Instance
+		* @param[in] pwszRelationshipType String of the relationship type (UTF16)
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_reader_addrelationtoread (_In_ PLib3MFModelReader * pReader,  _In_z_ LPCWSTR pwszRelationshipType);
+
+		/**
+		* Removes a relationship type which shall be read as attachment in memory while loading
+		*
+		* @param[in] pReader Reader Instance
+		* @param[in] pwszRelationshipType String of the relationship type (UTF16)
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_reader_removerelationtoread (_In_ PLib3MFModelReader * pReader,  _In_z_ LPCWSTR pwszRelationshipType);
+
+		/**
+		* Adds a relationship type which shall be read as attachment in memory while loading
+		*
+		* @param[in] pReader Reader Instance
+		* @param[in] pszRelationshipType String of the relationship type (UTF8)
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_reader_addrelationtoreadutf8(_In_ PLib3MFModelReader * pReader,  _In_z_ LPCSTR pszRelationshipType);
+
+
+		/**
+		* Remove a relationship type which shall be read as attachment in memory while loading
+		*
+		* @param[in] pReader Reader Instance
+		* @param[in] pszRelationshipType String of the relationship type (UTF8)
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_reader_removerelationtoreadutf8(_In_ PLib3MFModelReader * pReader,  _In_z_ LPCSTR pszRelationshipType);
+
 
 		/**
 		* Returns Warning and Error Count of the read process
@@ -775,6 +815,15 @@ namespace NMR {
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_basematerial_getcount(_In_ PLib3MFModelBaseMaterial * pBaseMaterial, _Out_ DWORD * pcbCount);
 
 		/**
+		* Retrieves the resource id of the material group.
+		*
+		* @param[in] pBaseMaterial Base Material Resource Instance
+		* @param[out] pnResourceID returns the id of the material group.
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_basematerial_getresourceid(_In_ PLib3MFModelBaseMaterial * pBaseMaterial, _Out_ DWORD * pnResourceID);
+
+		/**
 		* Adds a new material to the material group
 		*
 		* @param[in] pBaseMaterial Base Material Resource Instance
@@ -915,6 +964,163 @@ namespace NMR {
 		* @return error code or 0 (success)
 		*/
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_basematerial_getdisplaycolor(_In_ PLib3MFModelBaseMaterial * pBaseMaterial, _In_ DWORD nIndex, _Out_ BYTE* pbRed, _Out_ BYTE* pbGreen, _Out_ BYTE* pbBlue, _Out_ BYTE* pbAlpha);
+
+
+		/**
+		* Retrieves a attachment's package path
+		*
+		* @param[in] pAttachment Attachment Instance
+		* @param[out] pwszBuffer buffer to fill
+		* @param[in] cbBufferSize size of buffer to fill. needs to be at least string length + 1
+		* @param[out] pcbNeededChars returns needed characters in buffer
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_attachment_getpath (_In_ PLib3MFModelAttachment * pAttachment, _Out_opt_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars);
+
+		/**
+		* Retrieves a attachment's package path (UTF8)
+		*
+		* @param[in] pAttachment Attachment Instance
+		* @param[out] pszBuffer buffer to fill
+		* @param[in] cbBufferSize size of buffer to fill. needs to be at least string length + 1
+		* @param[out] pcbNeededChars returns needed characters in buffer
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_attachment_getpathutf8 (_In_ PLib3MFModelAttachment * pAttachment, _Out_opt_ LPSTR pszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars);
+
+		/**
+		* Sets a attachment's package path
+		*
+		* @param[in] pAttachment Attachment Instance
+		* @param[in] pwszPath new path of the attachment. (e.g. "/Textures/logo.png")
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_attachment_setpath (_In_ PLib3MFModelAttachment * pAttachment, _In_z_ LPCWSTR pwszPath);
+
+		/**
+		* Sets a attachment's package path (UTF8)
+		*
+		* @param[in] pAttachment Attachment Instance
+		* @param[in] pszPath new path of the attachment. (e.g. "/Textures/logo.png")
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_attachment_setpathutf8 (_In_ PLib3MFModelAttachment * pAttachment, _In_z_ LPCSTR pszPath);
+
+		/**
+		* Retrieves a attachment's package relationship type
+		*
+		* @param[in] pAttachment Attachment Instance
+		* @param[out] pwszBuffer buffer to fill
+		* @param[in] cbBufferSize size of buffer to fill. needs to be at least string length + 1
+		* @param[out] pcbNeededChars returns needed characters in buffer
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_attachment_getrelationshiptype(_In_ PLib3MFModelAttachment * pAttachment, _Out_opt_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars);
+
+		/**
+		* Retrieves a attachment's package relationship type (UTF8)
+		*
+		* @param[in] pAttachment Attachment Instance
+		* @param[out] pszBuffer buffer to fill
+		* @param[in] cbBufferSize size of buffer to fill. needs to be at least string length + 1
+		* @param[out] pcbNeededChars returns needed characters in buffer
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_attachment_getrelationshiptypeutf8 (_In_ PLib3MFModelAttachment * pAttachment, _Out_opt_ LPSTR pszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars);
+
+		/**
+		* Sets a attachment's package relationship type
+		*
+		* @param[in] pAttachment Attachment Instance
+		* @param[in] pwszRelationShipType new relationship type attachment. (e.g. "/Data/data.xml")
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_attachment_setrelationshiptype (_In_ PLib3MFModelAttachment * pAttachment, _In_z_ LPCWSTR pwszRelationShipType);
+
+		/**
+		* Sets a attachment's package relationship type (UTF8)
+		*
+		* @param[in] pAttachment Attachment Instance
+		* @param[in] pszRelationShipType new path of the attachment. (e.g. "/Data/data.png")
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_attachment_setrelationshiptypeutf8 (_In_ PLib3MFModelAttachment * pAttachment, _In_z_ LPCSTR pszRelationShipType);
+
+		/**
+		* Retrieves the size of the attachment stream.
+		*
+		* @param[in] pAttachment Attachment Instance
+		* @param[out] pcbStreamSize Returns the stream size
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_attachment_getstreamsize (_In_ PLib3MFModelAttachment * pAttachment, _Out_ ULONG64 * pcbStreamSize);
+
+		/**
+		* Writes out the attachment as file.
+		*
+		* @param[in] pAttachment Attachment Instance
+		* @param[in] pwszFilename Filename to write into
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_attachment_writetofile (_In_ PLib3MFModelAttachment * pAttachment, _In_z_ LPCWSTR pwszFilename);
+
+		/**
+		* Writes out the attachment as file. (UTF8)
+		*
+		* @param[in] pAttachment Attachment Instance
+		* @param[in] pszFilename Filename to write into
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_attachment_writetofileutf8 (_In_ PLib3MFModelAttachment * pAttachment, _In_z_ LPCSTR pszFilename);
+
+		/**
+		* Writes out the attachment into a buffer. Buffer size must be at least the size of the stream.
+		*
+		* @param[in] pAttachment Attachment Instance
+		* @param[out] pBuffer Buffer to write into
+		* @param[in] cbBufferSize Size of the buffer in bytes
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_attachment_writetobuffer (_In_ PLib3MFModelAttachment * pAttachment, _Out_ BYTE * pBuffer, _In_ ULONG64 cbBufferSize);
+
+		/**
+		* Writes out the attachment and passes the data to a provided callback function. The file type is specified by the Model Writer class
+		*
+		* @param[in] pAttachment Attachment Instance
+		* @param[in] pWriteCallback Callback to call for writing a data chunk.
+		* @param[in] pUserData Userdata that is passed to the callback function
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_attachment_writetocallback (_In_ PLib3MFModelAttachment * pAttachment, _In_ void * pWriteCallback, _In_opt_ void * pUserData);
+
+
+		/**
+		* Reads a attachment from a file.
+		*
+		* @param[in] pAttachment Attachment Instance
+		* @param[in] pwszFilename Filename to read from
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_attachment_readfromfile (_In_ PLib3MFModelAttachment * pAttachment, _In_z_ LPCWSTR pwszFilename);
+
+		/**
+		* Reads a attachment from a file.
+		*
+		* @param[in] pAttachment Attachment Instance
+		* @param[in] pszFilename Filename to read from
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_attachment_readfromfileutf8 (_In_ PLib3MFModelAttachment * pAttachment, _In_z_ LPCSTR pwszFilename);
+
+		/**
+		* Reads a attachment from a memory buffer.
+		*
+		* @param[in] pAttachment Attachment Instance
+		* @param[in] pBuffer Buffer to read from
+		* @param[in] cbBufferSize Size of the buffer in bytes
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_attachment_readfrombuffer (_In_ PLib3MFModelAttachment * pAttachment, _In_ BYTE * pBuffer, _In_ ULONG64 cbBufferSize);
 
 
 		/**
@@ -1848,6 +2054,143 @@ namespace NMR {
 		* @return error code or 0 (success)
 		*/
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_removemetadata(_In_ PLib3MFModel * pModel, _In_ DWORD nIndex);
+
+
+		/**
+		* adds an attachment stream to the model. The OPC part will be related to the model stream with a certain relationship type.
+		*
+		* @param[in] pModel Model instance
+		* @param[in] pwszURI Path of the attachment
+		* @param[in] pwszRelationShipType Relationship type of the attachment
+		* @param[out] ppAttachmentInstance Instance of the attachment object
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_addattachment (_In_ PLib3MFModel * pModel, _In_z_ LPWSTR pwszURI, _In_z_ LPWSTR pwszRelationShipType, _Outptr_ PLib3MFModelAttachment ** ppAttachmentInstance);
+
+		/**
+		* adds an attachment stream to the model. The OPC part will be related to the model stream with a certain relationship type.
+		*
+		* @param[in] pModel Model instance
+		* @param[in] pszURI Path of the attachment (UTF8)
+		* @param[in] pszRelationShipType Relationship type of the attachment (UTF8)
+		* @param[out] ppAttachmentInstance Instance of the attachment object
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_addattachmentutf8(_In_ PLib3MFModel * pModel, _In_z_ LPSTR pszURI, _In_z_ LPSTR pszRelationShipType, _Outptr_ PLib3MFModelAttachment ** ppAttachmentInstance);
+
+
+		/**
+		* retrieves an attachment stream object from the model.
+		*
+		* @param[in] pModel Model instance
+		* @param[in] nIndex Index of the attachment stream
+		* @param[out] ppAttachmentInstance Instance of the attachment object
+		* @return error code or 0 (success)
+		*/
+	    LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_getattachment (_In_ PLib3MFModel * pModel, _In_ DWORD nIndex, _Outptr_ PLib3MFModelAttachment ** ppAttachmentInstance);
+
+		/**
+		* retrieves an attachment stream object from the model.
+		*
+		* @param[in] pModel Model instance
+		* @param[in] pwszURI Path URI in the package
+		* @param[out] ppAttachmentInstance Instance of the attachment object
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_findattachment (_In_ PLib3MFModel * pModel, _In_z_ LPWSTR pwszURI, _Outptr_ PLib3MFModelAttachment ** ppAttachmentInstance);
+
+		/**
+		* retrieves an attachment stream object from the model.
+		*
+		* @param[in] pModel Model instance
+		* @param[in] pszURI Path URI in the package (UTF8)
+		* @param[out] ppAttachmentInstance Instance of the attachment object
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_findattachmentutf8 (_In_ PLib3MFModel * pModel, _In_z_ LPSTR pszURI, _Outptr_ PLib3MFModelAttachment ** ppAttachmentInstance);
+
+		/**
+		* retrieves the number of attachments of the model.
+		*
+		* @param[in] pModel Model instance
+		* @param[out] pnCount Returns the number of attachments
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_getattachmentcount (_In_ PLib3MFModel * pModel, _Out_ DWORD * pnCount);
+
+		/**
+		* retrieves the size of an attachment in bytes
+		*
+		* @param[in] pModel Model instance
+		* @param[in] nIndex Index of the attachment stream
+		* @param[out] pnSize Returns the size of the attachment
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_getattachmentsize (_In_ PLib3MFModel * pModel, _In_ DWORD nIndex, _Out_ UINT64 * pnSize);
+
+		/**
+		* retrieves the path URI of an attachment
+		*
+		* @param[in] pModel Model instance
+		* @param[in] nIndex Index of the attachment stream
+		* @param[out] pwszBuffer Buffer to write into, may be null to determine needed length
+		* @param[in] cbBufferSize Size of the given buffer
+		* @param[out] pcbNeededChars Returns number of bytes written or number of bytes needed to write.
+
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_getattachmentpath (_In_ PLib3MFModel * pModel, _In_ DWORD nIndex, _Out_opt_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars);
+
+		/**
+		* retrieves the path URI of an attachment (UTF8)
+		*
+		* @param[in] pModel Model instance
+		* @param[in] nIndex Index of the attachment stream
+		* @param[out] pszBuffer Buffer to write into, may be null to determine needed length
+		* @param[in] cbBufferSize Size of the given buffer
+		* @param[out] pcbNeededChars Returns number of bytes written or number of bytes needed to write.
+
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_getattachmentpathutf8 (_In_ PLib3MFModel * pModel, _In_ DWORD nIndex, _Out_opt_ LPSTR pszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars);
+
+		/**
+		* adds a new Content Type to the model
+		*
+		* @param[in] pModel Model instance
+		* @param[in] pszwExtension File Extension
+		* @param[in] pszwContentType Content Type Identifier
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_addcustomcontenttype(_In_ PLib3MFModel * pModel, _In_ LPCWSTR pszwExtension, _In_ LPCWSTR pszwContentType);
+
+		/**
+		* adds a new Content Type to the model (UTF8 version)
+		*
+		* @param[in] pModel Model instance
+		* @param[in] pszExtension File Extension
+		* @param[in] pszContentType Content Type Identifier
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_addcustomcontenttypeutf8(_In_ PLib3MFModel * pModel, _In_ LPCSTR pszExtension, _In_ LPCSTR pszContentType);
+
+		/**
+		* removes a custom Content Type from the model
+		*
+		* @param[in] pModel Model instance
+		* @param[in] pszwExtension File Extension
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_removecustomcontenttype(_In_ PLib3MFModel * pModel, _In_ LPCWSTR pszwExtension);
+
+		/**
+		* removes a custom Content Type from the model (UTF8 version)
+		*
+		* @param[in] pModel Model instance
+		* @param[in] pszExtension File Extension
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_removecustomcontenttypeutf8(_In_ PLib3MFModel * pModel, _In_ LPCSTR pszExtension);
 
 	};
 

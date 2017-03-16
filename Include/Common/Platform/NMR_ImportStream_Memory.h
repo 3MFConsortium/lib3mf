@@ -52,6 +52,7 @@ namespace NMR {
 		nfUint64 m_cbSize;
 		nfUint64 m_nPosition;
 	public:
+		CImportStream_Memory();
 		CImportStream_Memory(_In_ CImportStream * pStream, _In_ nfUint64 cbBytesToCopy, _In_ nfBool bNeedsToCopyAllBytes);
 		CImportStream_Memory(_In_ const nfByte * pBuffer, _In_ nfUint64 cbBytes);
 		~CImportStream_Memory();

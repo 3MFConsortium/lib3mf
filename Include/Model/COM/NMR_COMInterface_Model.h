@@ -106,6 +106,21 @@ namespace NMR {
 		LIB3MFMETHOD(AddMetaDataUTF8) (_In_ LPCSTR pszKey, _In_ LPCSTR pszValue);
 		LIB3MFMETHOD(RemoveMetaData) (_In_ DWORD nIndex);
 
+		LIB3MFMETHOD(AddAttachment) (_In_z_ LPWSTR pwszURI, _In_z_ LPWSTR pwszRelationShipType, _Outptr_ ILib3MFModelAttachment ** ppAttachmentInstance);
+		LIB3MFMETHOD(AddAttachmentUTF8) (_In_z_ LPSTR pszURI, _In_z_ LPSTR pszRelationShipType, _Outptr_ ILib3MFModelAttachment ** ppAttachmentInstance);
+		LIB3MFMETHOD(GetAttachment) (_In_ DWORD nIndex, _Outptr_ ILib3MFModelAttachment ** ppAttachmentInstance);
+		LIB3MFMETHOD(FindAttachment) (_In_z_ LPWSTR pwszURI, _Outptr_ ILib3MFModelAttachment ** ppAttachmentInstance);
+		LIB3MFMETHOD(FindAttachmentUTF8) (_In_z_ LPSTR pwszURI, _Outptr_ ILib3MFModelAttachment ** ppAttachmentInstance);
+		LIB3MFMETHOD(GetAttachmentCount) (_Out_ DWORD * pnCount);
+		LIB3MFMETHOD(GetAttachmentSize) (_In_ DWORD nIndex, _Out_ UINT64 * pnSize);
+		LIB3MFMETHOD(GetAttachmentPath) (_In_ DWORD nIndex, _Out_opt_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars);
+		LIB3MFMETHOD(GetAttachmentPathUTF8) (_In_ DWORD nIndex, _Out_opt_ LPSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars);
+
+		LIB3MFMETHOD(AddCustomContentType) (_In_ LPCWSTR pszwExtension, _In_ LPCWSTR pszwContentType);
+		LIB3MFMETHOD(AddCustomContentTypeUTF8) (_In_ LPCSTR pszExtension, _In_ LPCSTR pszContentType);
+		LIB3MFMETHOD(RemoveCustomContentType) (_In_ LPCWSTR pszwExtension);
+		LIB3MFMETHOD(RemoveCustomContentTypeUTF8) (_In_ LPCSTR pszExtension);
+
 		CCOMModel();
 		CModel * getModel();
 	};

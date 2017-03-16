@@ -68,7 +68,7 @@ namespace NMR {
 		throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
 	}
 
-	nfUint64 CExportStream_GCC::writeBuffer(_In_ void * pBuffer, _In_ nfUint64 cbTotalBytesToWrite)
+	nfUint64 CExportStream_GCC::writeBuffer(_In_ const void * pBuffer, _In_ nfUint64 cbTotalBytesToWrite)
 	{
 		throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
 	}

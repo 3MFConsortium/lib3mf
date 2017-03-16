@@ -48,6 +48,7 @@ namespace NMR {
 		PModel m_pModel;
 		PImportStream m_pPrintTicketStream;
 		std::wstring m_sPrintTicketContentType;
+		std::set<std::wstring> m_RelationsToRead;
 
 		PModelReaderWarnings m_pWarnings;
 
@@ -59,6 +60,9 @@ namespace NMR {
 		virtual void readStream(_In_ PImportStream pStream) = 0;
 		PImportStream retrievePrintTicket(_Out_ std::wstring & sContentType);
 		PModelReaderWarnings getWarnings ();
+
+		void addRelationToRead(_In_ std::wstring sRelationShipType);
+		void removeRelationToRead(_In_ std::wstring sRelationShipType);
 	};
 
 	typedef std::shared_ptr <CModelReader> PModelReader;

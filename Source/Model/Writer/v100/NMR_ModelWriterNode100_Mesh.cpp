@@ -39,6 +39,7 @@ This is the class for exporting the 3mf mesh node.
 
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_Exception_Windows.h"
+#include "Common/NMR_StringUtils.h"
 
 #ifdef __GNUC__
 #include <stdio.h>
@@ -48,7 +49,7 @@ This is the class for exporting the 3mf mesh node.
 
 namespace NMR {
 
-	CModelWriterNode100_Mesh::CModelWriterNode100_Mesh(_In_ CModelMeshObject * pModelMeshObject, _In_ CXmlWriter * pXMLWriter, _In_ PModelWriter_ColorMapping pColorMapping, _In_ PModelWriter_TexCoordMappingContainer pTextureMappingContainer)
+	CModelWriterNode100_Mesh::CModelWriterNode100_Mesh(_In_ CModelMeshObject * pModelMeshObject, _In_ CXmlWriter * pXMLWriter, _In_ PModelWriter_ColorMapping pColorMapping, _In_ PModelWriter_TexCoordMappingContainer pTextureMappingContainer,_In_ nfBool bWriteMaterialExtension)
 		:CModelWriterNode(pModelMeshObject->getModel(), pXMLWriter)
 	{
 		__NMRASSERT(pModelMeshObject != nullptr);
@@ -56,6 +57,8 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 		if (!pTextureMappingContainer.get())
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		m_bWriteMaterialExtension = bWriteMaterialExtension;
 
 		m_pModelMeshObject = pModelMeshObject;
 		m_pColorMapping = pColorMapping;
@@ -75,8 +78,8 @@ namespace NMR {
 
 		CMesh * pMesh = m_pModelMeshObject->getMesh();
 
-		nfUint32 nNodeCount = pMesh->getNodeCount ();
-		nfUint32 nFaceCount = pMesh->getFaceCount();
+		const nfUint32 nNodeCount = pMesh->getNodeCount ();
+		const nfUint32 nFaceCount = pMesh->getFaceCount();
 		nfUint32 nNodeIndex, nFaceIndex;
 
 		// Write Mesh Element
@@ -114,15 +117,17 @@ namespace NMR {
 			if (pInformation)
 				pBaseMaterials = dynamic_cast<CMeshInformation_BaseMaterials *> (pInformation);
 
-			// Get Node Colors
-			pInformation = pMeshInformationHandler->getInformationByType(0, emiNodeColors);
-			if (pInformation)
-				pNodeColors = dynamic_cast<CMeshInformation_NodeColors *> (pInformation);
+			if (m_bWriteMaterialExtension) {
+				// Get Node Colors
+				pInformation = pMeshInformationHandler->getInformationByType(0, emiNodeColors);
+				if (pInformation)
+					pNodeColors = dynamic_cast<CMeshInformation_NodeColors *> (pInformation);
 
-			// Get Tex Coords
-			pInformation = pMeshInformationHandler->getInformationByType(0, emiTexCoords);
-			if (pInformation)
-				pTexCoords = dynamic_cast<CMeshInformation_TexCoords *> (pInformation);
+				// Get Tex Coords
+				pInformation = pMeshInformationHandler->getInformationByType(0, emiTexCoords);
+				if (pInformation)
+					pTexCoords = dynamic_cast<CMeshInformation_TexCoords *> (pInformation);
+			}
 
 		}
 
@@ -149,64 +154,66 @@ namespace NMR {
 				}
 			}
 
-			// Retrieve Node Colors
-			if (pNodeColors) {
-				MESHINFORMATION_NODECOLOR* pFaceData = (MESHINFORMATION_NODECOLOR*)pNodeColors->getFaceData(nFaceIndex);
-				if ((pFaceData->m_cColors[0] != 0) || (pFaceData->m_cColors[1] != 0) || (pFaceData->m_cColors[2] != 0)) {
+			if (m_bWriteMaterialExtension) {
+				// Retrieve Node Colors
+				if (pNodeColors) {
+					MESHINFORMATION_NODECOLOR* pFaceData = (MESHINFORMATION_NODECOLOR*)pNodeColors->getFaceData(nFaceIndex);
+					if ((pFaceData->m_cColors[0] != 0) || (pFaceData->m_cColors[1] != 0) || (pFaceData->m_cColors[2] != 0)) {
 
-					ModelResourceIndex nColorIndex1 = 0;
-					ModelResourceIndex nColorIndex2 = 0;
-					ModelResourceIndex nColorIndex3 = 0;
-					nfBool colorsFound = m_pColorMapping->findColor(pFaceData->m_cColors[0], nColorIndex1) &&
-						m_pColorMapping->findColor(pFaceData->m_cColors[1], nColorIndex2) &&
-						m_pColorMapping->findColor(pFaceData->m_cColors[2], nColorIndex3);
+						ModelResourceIndex nColorIndex1 = 0;
+						ModelResourceIndex nColorIndex2 = 0;
+						ModelResourceIndex nColorIndex3 = 0;
+						nfBool colorsFound = m_pColorMapping->findColor(pFaceData->m_cColors[0], nColorIndex1) &&
+							m_pColorMapping->findColor(pFaceData->m_cColors[1], nColorIndex2) &&
+							m_pColorMapping->findColor(pFaceData->m_cColors[2], nColorIndex3);
 
-					if (colorsFound) {
-						nPropertyID = m_pColorMapping->getResourceID();
-						nPropertyIndex1 = nColorIndex1;
-						nPropertyIndex2 = nColorIndex2;
-						nPropertyIndex3 = nColorIndex3;
+						if (colorsFound) {
+							nPropertyID = m_pColorMapping->getResourceID();
+							nPropertyIndex1 = nColorIndex1;
+							nPropertyIndex2 = nColorIndex2;
+							nPropertyIndex3 = nColorIndex3;
+						}
 					}
 				}
-			}
 
-			// Retrieve TexCoords
-			if (pTexCoords) {
-				MESHINFORMATION_TEXCOORDS* pFaceData = (MESHINFORMATION_TEXCOORDS*)pTexCoords->getFaceData(nFaceIndex);
-				if (pFaceData->m_TextureID != 0) {
-					ModelResourceIndex nTextureIndex1 = 0;
-					ModelResourceIndex nTextureIndex2 = 0;
-					ModelResourceIndex nTextureIndex3 = 0;
+				// Retrieve TexCoords
+				if (pTexCoords) {
+					MESHINFORMATION_TEXCOORDS* pFaceData = (MESHINFORMATION_TEXCOORDS*)pTexCoords->getFaceData(nFaceIndex);
+					if (pFaceData->m_TextureID != 0) {
+						ModelResourceIndex nTextureIndex1 = 0;
+						ModelResourceIndex nTextureIndex2 = 0;
+						ModelResourceIndex nTextureIndex3 = 0;
 
-					PModelWriter_TexCoordMapping pMapping = m_pTextureMappingContainer->findTexture(pFaceData->m_TextureID);
-					if (pMapping.get() != nullptr) {
-						nfBool textureFound = pMapping->findTexCoords(pFaceData->m_vCoords[0].m_fields[0], pFaceData->m_vCoords[0].m_fields[1], nTextureIndex1) &&
-							pMapping->findTexCoords(pFaceData->m_vCoords[1].m_fields[0], pFaceData->m_vCoords[1].m_fields[1], nTextureIndex2) &&
-							pMapping->findTexCoords(pFaceData->m_vCoords[2].m_fields[0], pFaceData->m_vCoords[2].m_fields[1], nTextureIndex3);
+						PModelWriter_TexCoordMapping pMapping = m_pTextureMappingContainer->findTexture(pFaceData->m_TextureID);
+						if (pMapping.get() != nullptr) {
+							nfBool textureFound = pMapping->findTexCoords(pFaceData->m_vCoords[0].m_fields[0], pFaceData->m_vCoords[0].m_fields[1], nTextureIndex1) &&
+								pMapping->findTexCoords(pFaceData->m_vCoords[1].m_fields[0], pFaceData->m_vCoords[1].m_fields[1], nTextureIndex2) &&
+								pMapping->findTexCoords(pFaceData->m_vCoords[2].m_fields[0], pFaceData->m_vCoords[2].m_fields[1], nTextureIndex3);
 
-						if (textureFound) {
-							nPropertyID = pMapping->getResourceID();
-							nPropertyIndex1 = nTextureIndex1;
-							nPropertyIndex2 = nTextureIndex2;
-							nPropertyIndex3 = nTextureIndex3;
+							if (textureFound) {
+								nPropertyID = pMapping->getResourceID();
+								nPropertyIndex1 = nTextureIndex1;
+								nPropertyIndex2 = nTextureIndex2;
+								nPropertyIndex3 = nTextureIndex3;
+							}
+
 						}
 
 					}
-
 				}
 			}
 
 			if (nPropertyID != 0) {
 				if ((nPropertyIndex1 != nPropertyIndex2) || (nPropertyIndex1 != nPropertyIndex3)) {
-					writeFaceData_ThreeProperties(pMeshFace, nPropertyID, nPropertyIndex1, nPropertyIndex2, nPropertyIndex3);
+					writeFaceData_ThreeProperties(pMeshFace, nPropertyID, nPropertyIndex1, nPropertyIndex2, nPropertyIndex3, NULL);
 				}
 				else {
-					writeFaceData_OneProperty(pMeshFace, nPropertyID, nPropertyIndex1);
+					writeFaceData_OneProperty(pMeshFace, nPropertyID, nPropertyIndex1, NULL);
 				}
 			}
 			else
 			{
-				writeFaceData_Plain(pMeshFace);
+				writeFaceData_Plain(pMeshFace, NULL);
 
 			}
 
@@ -251,47 +258,52 @@ namespace NMR {
 		}
 	}
 
-	void CModelWriterNode100_Mesh::putVertexFloat(_In_ const nfFloat fValue)
-	{
+	void CModelWriterNode100_Mesh::putFloat(_In_ const nfFloat fValue, _In_ std::array<nfChar, MODELWRITERMESH100_LINEBUFFERSIZE> & line, _In_ nfUint32 & nBufferPos) {
 		// Format float with "%.3f" syntax
-		nfInt64 nAbsValue = (nfInt64) (fValue * 1000);
+		nfInt64 nAbsValue = (nfInt64)(fValue * 1000);
 		nAbsValue = MAX(nAbsValue, -nAbsValue);
 		nfBool bIsNegative = fValue < 0;
 
-		int nStart = m_nVertexBufferPos;
+		int nStart = nBufferPos;
 		int nCount = 0;
 
-		if (!nAbsValue){
-			m_VertexLine[m_nVertexBufferPos++] = '0';
-		} else {
+		if (!nAbsValue) {
+			line[nBufferPos++] = '0';
+		}
+		else {
 			// Write the string in reverse order
-			while(nAbsValue || nCount < 3){
-				m_VertexLine[m_nVertexBufferPos++] = '0' + (nAbsValue % 10);
+			while (nAbsValue || nCount < 3) {
+				line[nBufferPos++] = '0' + (nAbsValue % 10);
 				nAbsValue /= 10;
 				nCount++;
-				if (nCount == 3){
-					m_VertexLine[m_nVertexBufferPos++] = '.';
-					if (!nAbsValue){
-						m_VertexLine[m_nVertexBufferPos++] = '0';
+				if (nCount == 3) {
+					line[nBufferPos++] = '.';
+					if (!nAbsValue) {
+						line[nBufferPos++] = '0';
 					}
 					nCount++;
 				}
 			}
-			if (bIsNegative){
-				m_VertexLine[m_nVertexBufferPos++] = '-';
+			if (bIsNegative) {
+				line[nBufferPos++] = '-';
 				nCount++;
 			}
 		}
 
 		// Reverse the float string
-		int nEnd = m_nVertexBufferPos - 1;
-		while (nStart < nEnd){
-			char temp = m_VertexLine[nStart];
-			m_VertexLine[nStart] = m_VertexLine[nEnd];
-			m_VertexLine[nEnd] = temp;
+		int nEnd = nBufferPos - 1;
+		while (nStart < nEnd) {
+			char temp = line[nStart];
+			line[nStart] = line[nEnd];
+			line[nEnd] = temp;
 			nStart++;
 			nEnd--;
 		}
+	}
+
+	void CModelWriterNode100_Mesh::putVertexFloat(_In_ const nfFloat fValue)
+	{
+		putFloat(fValue, m_VertexLine, m_nVertexBufferPos);
 	}
 
 
@@ -338,7 +350,7 @@ namespace NMR {
 		m_pXMLWriter->WriteRawLine(&m_VertexLine[0], m_nVertexBufferPos);
 	}
 
-	void CModelWriterNode100_Mesh::writeFaceData_Plain(_In_ MESHFACE * pFace)
+	void CModelWriterNode100_Mesh::writeFaceData_Plain(_In_ MESHFACE * pFace, _In_opt_ const nfChar * pszAdditionalString)
 	{
 		__NMRASSERT(pFace);
 		m_nTriangleBufferPos = MODELWRITERMESH100_TRIANGLELINESTARTLENGTH;
@@ -347,11 +359,15 @@ namespace NMR {
 		putTriangleUInt32(pFace->m_nodeindices[1]);
 		putTriangleString("\" v3=\"");
 		putTriangleUInt32(pFace->m_nodeindices[2]);
-		putTriangleString("\" />");
+		putTriangleString("\"");
+		if (pszAdditionalString) {
+			putTriangleString(pszAdditionalString);
+		}
+		putTriangleString(" />");
 		m_pXMLWriter->WriteRawLine(&m_TriangleLine[0], m_nTriangleBufferPos);
 	}
 
-	void CModelWriterNode100_Mesh::writeFaceData_OneProperty(_In_ MESHFACE * pFace, _In_ const ModelResourceID nPropertyID, _In_ const ModelResourceIndex nPropertyIndex)
+	void CModelWriterNode100_Mesh::writeFaceData_OneProperty(_In_ MESHFACE * pFace, _In_ const ModelResourceID nPropertyID, _In_ const ModelResourceIndex nPropertyIndex, _In_opt_ const nfChar * pszAdditionalString)
 	{
 		__NMRASSERT(pFace);
 		m_nTriangleBufferPos = MODELWRITERMESH100_TRIANGLELINESTARTLENGTH;
@@ -366,11 +382,15 @@ namespace NMR {
 		}
 		putTriangleString("\" p1=\"");
 		putTriangleUInt32(nPropertyIndex);
-		putTriangleString("\" />");
+		putTriangleString("\"");
+		if (pszAdditionalString) {
+			putTriangleString(pszAdditionalString);
+		}
+		putTriangleString(" />");
 		m_pXMLWriter->WriteRawLine(&m_TriangleLine[0], m_nTriangleBufferPos);
 	}
 
-	void CModelWriterNode100_Mesh::writeFaceData_ThreeProperties(_In_ MESHFACE * pFace, _In_ const ModelResourceID nPropertyID, _In_ const ModelResourceIndex nPropertyIndex1, _In_ const ModelResourceIndex nPropertyIndex2, _In_ const ModelResourceIndex nPropertyIndex3)
+	void CModelWriterNode100_Mesh::writeFaceData_ThreeProperties(_In_ MESHFACE * pFace, _In_ const ModelResourceID nPropertyID, _In_ const ModelResourceIndex nPropertyIndex1, _In_ const ModelResourceIndex nPropertyIndex2, _In_ const ModelResourceIndex nPropertyIndex3, _In_opt_ const nfChar * pszAdditionalString)
 	{
 		__NMRASSERT(pFace);
 		m_nTriangleBufferPos = MODELWRITERMESH100_TRIANGLELINESTARTLENGTH;
@@ -389,7 +409,11 @@ namespace NMR {
 		putTriangleUInt32(nPropertyIndex2);
 		putTriangleString("\" p3=\"");
 		putTriangleUInt32(nPropertyIndex3);
-		putTriangleString("\" />");
+		putTriangleString("\"");
+		if (pszAdditionalString) {
+			putTriangleString(pszAdditionalString);
+		}
+		putTriangleString(" />");
 		m_pXMLWriter->WriteRawLine(&m_TriangleLine[0], m_nTriangleBufferPos);
 	}
 

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema elementFormDefault="qualified" xmlns="http://www.w3.org/2001/XMLSchema">
+  <import namespace="http://schemas.microsoft.com/3dmanufacturing/core/2015/02" schemaLocation="core_2015_02.xsd"/>
+  <import namespace="http://schemas.microsoft.com/3dmanufacturing/material/2015/02" schemaLocation="material_2015_02.xsd"/>
+  <!-- <import namespace="ttp://schemas.microsoft.com/3dmanufacturing/production/2015/06" schemaLocation="production_2015_06.xsd"/> -->
+  <import namespace="http://schemas.microsoft.com/3dmanufacturing/slice/2015/07" schemaLocation="slice_2015_07.xsd"/>
+</schema>

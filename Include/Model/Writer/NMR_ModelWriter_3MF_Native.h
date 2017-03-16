@@ -55,6 +55,7 @@ namespace NMR {
 
 		std::wstring generateRelationShipID();
 		void addTextureParts(_In_ CModel * pModel, _In_ POpcPackageWriter pPackageWriter, _In_ POpcPackagePart pModelPart);
+		void addAttachments(_In_ CModel * pModel, _In_ POpcPackageWriter pPackageWriter, _In_ POpcPackagePart pModelPart);
 	public:
 		CModelWriter_3MF_Native() = delete;
 		CModelWriter_3MF_Native(_In_ PModel pModel);

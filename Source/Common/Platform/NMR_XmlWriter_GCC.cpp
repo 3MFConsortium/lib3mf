@@ -78,9 +78,4 @@ namespace NMR {
 		throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
 	}
 
-    void CXmlWriter_GCC::WriteText(_In_ const nfWChar * pwszContent, _In_ const nfUint32 cbLength)
-    {
-		throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
-    }
-
 }

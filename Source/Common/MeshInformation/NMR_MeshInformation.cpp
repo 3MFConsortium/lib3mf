@@ -42,7 +42,7 @@ namespace NMR {
 
 	CMeshInformation::CMeshInformation()
 	{
-		// empty on purpose
+		m_nInternalID = 0;
 	}
 
 	_Ret_notnull_ MESHINFORMATIONFACEDATA * CMeshInformation::getFaceData(nfUint32 nFaceIndex)
@@ -63,5 +63,27 @@ namespace NMR {
 	{
 		return m_pContainer->addFaceData(nNewFaceCount);
 	}
+
+	void CMeshInformation::resetAllFaceInformation()
+	{
+		nfUint32 nCount = m_pContainer->getCurrentFaceCount();
+		nfUint32 nIndex;
+
+		for (nIndex = 0; nIndex < nCount; nIndex++) {
+			resetFaceInformation(nIndex);
+		}
+	}
+
+	void CMeshInformation::setInternalID(nfUint64 nInternalID)
+	{
+		m_nInternalID = nInternalID;
+	}
+
+	nfUint64 CMeshInformation::getInternalID()
+	{
+		return m_nInternalID;
+	}
+
+
 
 }

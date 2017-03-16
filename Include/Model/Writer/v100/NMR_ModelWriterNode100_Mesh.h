@@ -43,7 +43,7 @@ This is the class for exporting the 3mf mesh node.
 #include "Common/Platform/NMR_XmlWriter.h"
 #include <array>
 
-#define MODELWRITERMESH100_LINEBUFFERSIZE 512
+#define MODELWRITERMESH100_LINEBUFFERSIZE 1024
 #define MODELWRITERMESH100_VERTEXLINESTART "<vertex x=\""
 #define MODELWRITERMESH100_TRIANGLELINESTART "<triangle v1=\""
 #define MODELWRITERMESH100_VERTEXLINESTARTLENGTH 11
@@ -57,12 +57,17 @@ namespace NMR {
 		PModelWriter_ColorMapping m_pColorMapping;
 		PModelWriter_TexCoordMappingContainer m_pTextureMappingContainer;
 
+		nfBool m_bWriteMaterialExtension;
+
 		// Internal functions for an efficient and buffered output of raw XML data
 		std::array<nfChar, MODELWRITERMESH100_LINEBUFFERSIZE> m_VertexLine;
 		std::array<nfChar, MODELWRITERMESH100_LINEBUFFERSIZE> m_TriangleLine;
 		nfUint32 m_nVertexBufferPos;
 		nfUint32 m_nTriangleBufferPos;
+	private:
+		static __NMR_INLINE void putFloat(_In_ const nfFloat fValue, _In_ std::array<nfChar, MODELWRITERMESH100_LINEBUFFERSIZE> & line, _In_ nfUint32 & nBufferPos);
 
+	protected:
 		__NMR_INLINE void putVertexString(_In_ const nfChar * pszString);
 		__NMR_INLINE void putVertexFloat(_In_ const nfFloat fValue);
 
@@ -70,12 +75,12 @@ namespace NMR {
 		__NMR_INLINE void putTriangleUInt32(_In_ const nfUint32 nValue);
 
 		__NMR_INLINE void writeVertexData(_In_ MESHNODE * pNode);
-		__NMR_INLINE void writeFaceData_Plain(_In_ MESHFACE * pFace);
-		__NMR_INLINE void writeFaceData_OneProperty(_In_ MESHFACE * pFace, _In_ const ModelResourceID nPropertyID, _In_ const ModelResourceIndex nPropertyIndex);
-		__NMR_INLINE void writeFaceData_ThreeProperties(_In_ MESHFACE * pFace, _In_ const ModelResourceID nPropertyID, _In_ const ModelResourceIndex nPropertyIndex1, _In_ const ModelResourceIndex nPropertyIndex2, _In_ const ModelResourceIndex nPropertyIndex3);
+		__NMR_INLINE void writeFaceData_Plain(_In_ MESHFACE * pFace, _In_opt_ const nfChar * pszAdditionalString);
+		__NMR_INLINE void writeFaceData_OneProperty(_In_ MESHFACE * pFace, _In_ const ModelResourceID nPropertyID, _In_ const ModelResourceIndex nPropertyIndex, _In_opt_ const nfChar * pszAdditionalString);
+		__NMR_INLINE void writeFaceData_ThreeProperties(_In_ MESHFACE * pFace, _In_ const ModelResourceID nPropertyID, _In_ const ModelResourceIndex nPropertyIndex1, _In_ const ModelResourceIndex nPropertyIndex2, _In_ const ModelResourceIndex nPropertyIndex3, _In_opt_ const nfChar * pszAdditionalString);
 	public:
 		CModelWriterNode100_Mesh() = delete;
-		CModelWriterNode100_Mesh(_In_ CModelMeshObject * pModelMeshObject, _In_ CXmlWriter * pXMLWriter, _In_ PModelWriter_ColorMapping pColorMapping, _In_ PModelWriter_TexCoordMappingContainer pTextureMappingContainer);
+		CModelWriterNode100_Mesh(_In_ CModelMeshObject * pModelMeshObject, _In_ CXmlWriter * pXMLWriter, _In_ PModelWriter_ColorMapping pColorMapping, _In_ PModelWriter_TexCoordMappingContainer pTextureMappingContainer, _In_ nfBool bWriteMaterialExtension);
 		
 		virtual void writeToXML();
 	};

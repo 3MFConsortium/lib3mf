@@ -39,6 +39,7 @@ NMR_WinTypes.h defines Standard Windows Types on Non-Windows Environments
 #define FLOAT float
 #define BYTE unsigned char
 #define DWORD unsigned int
+#define INT signed int
 #define FLOAT float
 #define ULONG unsigned int
 #define LPCWSTR const wchar_t *

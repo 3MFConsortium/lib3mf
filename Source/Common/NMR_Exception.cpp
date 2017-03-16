@@ -99,6 +99,7 @@ namespace NMR {
 		case NMR_ERROR_COULDNOTDEFLATE: return "Could not deflate data";
 		case NMR_ERROR_XMLWRITER_CLOSENODEERROR: return "Could not close written XML node";
 		case NMR_ERROR_INVALIDOPCPARTURI: return "Invalid OPC Part URI";
+		case NMR_ERROR_COULDNOTCONVERTNUMBER: return "Could not convert number";
 		case NMR_ERROR_COULDNOTGETSTREAMPOSITION: return "Could not get stream position";
 		case NMR_ERROR_COULDNOTREADZIPFILE: return "Could not read ZIP file";
 		case NMR_ERROR_COULDNOTSEEKINZIP: return "Could not seek in ZIP file";
@@ -109,7 +110,9 @@ namespace NMR {
 		case NMR_ERROR_COULDNOTINITITALIZECOM: return "Could not initialize COM";
 		case NMR_ERROR_CALLBACKSTREAMCANNOTSEEK: return "Callback stream cannot seek";
 		case NMR_ERROR_COULDNOTWRITETOCALLBACKSTREAM: return "Could not write to callback stream";
-				
+		case NMR_ERROR_INVALIDCAST: return "Invalid Type Case";
+		case NMR_ERROR_BUFFERISFULL: return "Buffer is full";
+
 		// Unhandled exception
 		case NMR_ERROR_GENERICEXCEPTION: return NMR_GENERICEXCEPTIONSTRING;
 
@@ -173,7 +176,7 @@ namespace NMR {
 		case NMR_ERROR_DUPLICATETILESTYLEW: return "Texture tilestyle W is already existing";
 		case NMR_ERROR_DUPLICATECOLORID: return "Color ID is already existing";
 		case NMR_ERROR_INVALIDMESHINFORMATIONDATA: return "Mesh Information Block was not assigned";
-
+		case NMR_ERROR_INVALIDMESHINFORMATION: return "Mesh Information Object was not assigned";
 
 		// Model error codes (0x8XXX)
 		case NMR_ERROR_OPCREADFAILED: return "3MF Loading - OPC could not be loaded";
@@ -294,7 +297,11 @@ namespace NMR {
 		case NMR_ERROR_INVALIDTEXTUREREFERENCE: return "Invalid Texture Reference";
 		case NMR_ERROR_INVALIDTEXTUREID: return "Invalid Texture ID";
 		case NMR_ERROR_NOMODELTOWRITE: return "No model to write";
-		case NMR_ERROR_COULDNOTCONVERTNUMBER: return "Could not convert number";
+		case NMR_ERROR_OPCRELATIONSHIPGETTYPEFAILED: return "Failed to get OPC Relationship type";
+		case NMR_ERROR_OPCCOULDNOTGETATTACHMENTURI: return "Could not get attachment URI";
+		case NMR_ERROR_DUPLICATEATTACHMENTPATH: return "Duplicate Attachment Path";
+		case NMR_ERROR_INVALIDMODELATTACHMENT: return "Invalid Model Attachment";
+		case NMR_ERROR_ATTACHMENTNOTFOUND: return "Could not find Model Attachment";
 
 		// XML Parser Error Constants(0x9XXX)
 		case NMR_ERROR_XMLPARSER_INVALIDATTRIBVALUE: return "Invalid XML attribute value";

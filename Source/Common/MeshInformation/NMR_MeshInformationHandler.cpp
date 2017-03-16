@@ -45,6 +45,9 @@ namespace NMR {
 		for (eType = emiAbstract; eType < emiLastType; eType++) {
 			m_pLookup[eType] = NULL;
 		}
+
+		m_nInternalIDCounter = 1;
+
 	}
 
 	void CMeshInformationHandler::addInformation(_In_ PMeshInformation pInformation)
@@ -55,6 +58,12 @@ namespace NMR {
 
 		m_pInformations.push_back(pInformation);
 		m_pLookup[eType] = pInformation.get();
+
+		pInformation->setInternalID(m_nInternalIDCounter);
+		m_nInternalIDCounter++;
+
+		if (m_nInternalIDCounter > MESHINFORMATION_MAXINTERNALID)
+			throw CNMRException(NMR_ERROR_HANDLEOVERFLOW);
 	}
 
 	void CMeshInformationHandler::addFace(_In_ nfUint32 nNewFaceCount)
@@ -76,6 +85,14 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_INVALIDMESHINFORMATIONINDEX);
 
 		return m_pInformations[nIdx].get();
+	}
+
+	PMeshInformation CMeshInformationHandler::getPInformationIndexed(_In_ nfUint32 nIdx)
+	{
+		if (nIdx >= (nfUint32)m_pInformations.size())
+			throw CNMRException(NMR_ERROR_INVALIDMESHINFORMATIONINDEX);
+
+		return m_pInformations[nIdx];
 	}
 
 	CMeshInformation * CMeshInformationHandler::getInformationByType(_In_ nfUint32 nChannel, _In_ eMeshInformationType eType)
@@ -106,7 +123,6 @@ namespace NMR {
 		for (eType = emiAbstract; eType < emiLastType; eType++) {
 			if ((pOtherInfoHandler->m_pLookup[eType]) && (m_pLookup[eType]))
 				m_pLookup[eType]->cloneFaceInfosFrom(nFaceIdx, pOtherInfoHandler->m_pLookup[eType], nOtherFaceIndex);
-
 		}
 	}
 
@@ -151,5 +167,33 @@ namespace NMR {
 				m_pInformations.pop_back();
 		}
 	}
+
+
+	void CMeshInformationHandler::removeInformationIndexed(_In_ nfUint32 nIndex)
+	{
+		nfUint32 nCount = (nfUint32)m_pInformations.size();
+		nfUint32 nIdx;
+		if (nIndex >= nCount)
+			throw CNMRException(NMR_ERROR_INVALIDINDEX);
+
+		PMeshInformation pInformation = m_pInformations[nIndex];
+		eMeshInformationType eType = pInformation->getType();
+
+		// clean lookup table
+		if (m_pLookup[eType] == pInformation.get()) {
+			m_pLookup[eType] = nullptr;
+		}
+
+		// reorder vector
+		for (nIdx = nIndex; nIdx < nCount - 1; nIdx++) {
+			m_pInformations[nIdx] = m_pInformations[nIdx + 1];
+		}
+		m_pInformations[nCount - 1] = nullptr;
+		m_pInformations.pop_back();
+
+
+
+	}
+
 
 }

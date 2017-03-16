@@ -61,6 +61,7 @@ namespace NMR {
 		m_pColorMapping = std::make_shared<CModelWriter_ColorMapping>(generateOutputResourceID ());
 
 		m_pTexCoordMappingContainer = std::make_shared<CModelWriter_TexCoordMappingContainer>();
+		m_bWriteMaterialExtension = true;
 
 		nfInt32 nObjectCount = pModel->getObjectCount();
 		nfInt32 nObjectIndex;
@@ -72,33 +73,36 @@ namespace NMR {
 			if (pMeshObject) {
 				CMesh * pMesh = pMeshObject->getMesh();
 				if (pMesh) {
-					calculateColors(pMesh);
-					calculateTexCoords(pMesh);
+					if (m_bWriteMaterialExtension) {
+						calculateColors(pMesh);
+						calculateTexCoords(pMesh);
+					}
 				}
 			}
 
-			// Register Default Property Resources
-			CModelObject * pObject = dynamic_cast<CModelObject*> (pResource.get());
-			if (pObject) {
-				PModelDefaultProperty pProperty = pObject->getDefaultProperty();
+			if (m_bWriteMaterialExtension) {
+				// Register Default Property Resources
+				CModelObject * pObject = dynamic_cast<CModelObject*> (pResource.get());
+				if (pObject) {
+					PModelDefaultProperty pProperty = pObject->getDefaultProperty();
 
-				CModelDefaultProperty_Color * pColorProperty = dynamic_cast<CModelDefaultProperty_Color *> (pProperty.get());
-				if (pColorProperty != nullptr) {
-					nfColor cColor = pColorProperty->getColor();
-					if (cColor != 0)
-						m_pColorMapping->registerColor(cColor);
-				}
-
-				CModelDefaultProperty_TexCoord2D * pTexCoord2DProperty = dynamic_cast<CModelDefaultProperty_TexCoord2D *> (pProperty.get());
-				if (pTexCoord2DProperty != nullptr) {
-					PModelWriter_TexCoordMapping pTexCoordMapping = m_pTexCoordMappingContainer->findTexture(pTexCoord2DProperty->getTextureID());
-					if (pTexCoordMapping.get() == nullptr) {
-						pTexCoordMapping = m_pTexCoordMappingContainer->addTexture(pTexCoord2DProperty->getTextureID(), generateOutputResourceID());
+					CModelDefaultProperty_Color * pColorProperty = dynamic_cast<CModelDefaultProperty_Color *> (pProperty.get());
+					if (pColorProperty != nullptr) {
+						nfColor cColor = pColorProperty->getColor();
+						if (cColor != 0)
+							m_pColorMapping->registerColor(cColor);
 					}
 
-					pTexCoordMapping->registerTexCoords(pTexCoord2DProperty->getU(), pTexCoord2DProperty->getV());
-				}
+					CModelDefaultProperty_TexCoord2D * pTexCoord2DProperty = dynamic_cast<CModelDefaultProperty_TexCoord2D *> (pProperty.get());
+					if (pTexCoord2DProperty != nullptr) {
+						PModelWriter_TexCoordMapping pTexCoordMapping = m_pTexCoordMappingContainer->findTexture(pTexCoord2DProperty->getTextureID());
+						if (pTexCoordMapping.get() == nullptr) {
+							pTexCoordMapping = m_pTexCoordMappingContainer->addTexture(pTexCoord2DProperty->getTextureID(), generateOutputResourceID());
+						}
 
+						pTexCoordMapping->registerTexCoords(pTexCoord2DProperty->getU(), pTexCoord2DProperty->getV());
+					}
+				}
 			}
 		}
 	}
@@ -111,7 +115,9 @@ namespace NMR {
 
 		writeStringAttribute(XML_3MF_ATTRIBUTE_MODEL_UNIT, m_pModel->getUnitString());
 		writeConstPrefixedStringAttribute(XML_3MF_ATTRIBUTE_PREFIX_XML, XML_3MF_ATTRIBUTE_MODEL_LANG, sLanguage.c_str());
-		writeConstPrefixedStringAttribute(XML_3MF_ATTRIBUTE_XMLNS, XML_3MF_NAMESPACEPREFIX_MATERIAL, XML_3MF_NAMESPACE_MATERIALSPEC);
+		if (m_bWriteMaterialExtension) {
+			writeConstPrefixedStringAttribute(XML_3MF_ATTRIBUTE_XMLNS, XML_3MF_NAMESPACEPREFIX_MATERIAL, XML_3MF_NAMESPACE_MATERIALSPEC);
+		}
 
 		writeMetaData();
 		writeResources();
@@ -226,22 +232,25 @@ namespace NMR {
 			ModelResourceIndex nPropertyIndex = 0;
 
 			PModelDefaultProperty pProperty = pObject->getDefaultProperty();
-			// Color Properties
-			CModelDefaultProperty_Color * pColorProperty = dynamic_cast<CModelDefaultProperty_Color *> (pProperty.get());
-			if (pColorProperty != nullptr) {
-				if (m_pColorMapping->findColor(pColorProperty->getColor(), nPropertyIndex)) {
-					nPropertyID = m_pColorMapping->getResourceID();
-				}
-			}
 
-			// TexCoord2D Properties
-			CModelDefaultProperty_TexCoord2D * pTexCoord2DProperty = dynamic_cast<CModelDefaultProperty_TexCoord2D *> (pProperty.get());
-			if (pTexCoord2DProperty != nullptr) {
-				PModelWriter_TexCoordMapping pTexCoordMapping = m_pTexCoordMappingContainer->findTexture(pTexCoord2DProperty->getTextureID());
-				if (pTexCoordMapping.get() != nullptr) {					
-					if (pTexCoordMapping->findTexCoords(pTexCoord2DProperty->getU(), pTexCoord2DProperty->getV(), nPropertyIndex)) {
-						nPropertyID = pTexCoordMapping->getResourceID();
-					}					
+			if (m_bWriteMaterialExtension) {
+				// Color Properties
+				CModelDefaultProperty_Color * pColorProperty = dynamic_cast<CModelDefaultProperty_Color *> (pProperty.get());
+				if (pColorProperty != nullptr) {
+					if (m_pColorMapping->findColor(pColorProperty->getColor(), nPropertyIndex)) {
+						nPropertyID = m_pColorMapping->getResourceID();
+					}
+				}
+
+				// TexCoord2D Properties
+				CModelDefaultProperty_TexCoord2D * pTexCoord2DProperty = dynamic_cast<CModelDefaultProperty_TexCoord2D *> (pProperty.get());
+				if (pTexCoord2DProperty != nullptr) {
+					PModelWriter_TexCoordMapping pTexCoordMapping = m_pTexCoordMappingContainer->findTexture(pTexCoord2DProperty->getTextureID());
+					if (pTexCoordMapping.get() != nullptr) {
+						if (pTexCoordMapping->findTexCoords(pTexCoord2DProperty->getU(), pTexCoord2DProperty->getV(), nPropertyIndex)) {
+							nPropertyID = pTexCoordMapping->getResourceID();
+						}
+					}
 				}
 			}
 
@@ -262,7 +271,7 @@ namespace NMR {
 			// Check if object is a mesh Object
 			CModelMeshObject * pMeshObject = dynamic_cast<CModelMeshObject *> (pObject);
 			if (pMeshObject) {
-				CModelWriterNode100_Mesh ModelWriter_Mesh(pMeshObject, m_pXMLWriter, m_pColorMapping, m_pTexCoordMappingContainer);
+				CModelWriterNode100_Mesh ModelWriter_Mesh(pMeshObject, m_pXMLWriter, m_pColorMapping, m_pTexCoordMappingContainer, m_bWriteMaterialExtension);
 				ModelWriter_Mesh.writeToXML();
 			}
 
@@ -329,9 +338,11 @@ namespace NMR {
 		writeStartElement(XML_3MF_ELEMENT_RESOURCES);
 
 		writeBaseMaterials();
-		writeTextures2D();
-		writeColors();
-		writeTex2Coords();
+		if (m_bWriteMaterialExtension) {
+			writeTextures2D();
+			writeColors();
+			writeTex2Coords();
+		}
 		writeObjects();
 
 		writeFullEndElement();

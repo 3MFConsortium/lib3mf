@@ -35,22 +35,7 @@ shown to the outside world.
 #ifndef __NMR_COMINTERFACES
 #define __NMR_COMINTERFACES
 
-#ifdef NMR_COM_EMULATION
-#include "Common/Platform/NMR_COM_Emulation.h"
-#else
-#include "Common/Platform/NMR_COM_Native.h"
-#endif
-
-#include "Common/Platform/NMR_SAL.h"
-#include "Common/Platform/NMR_WinTypes.h"
-#include "Model/Classes/NMR_ModelTypes.h"
-
-
-#ifndef __GNUC__
-#include "Common/Platform/NMR_IStream.h"
-#endif
-
-
+#include "Model/COM/NMR_COMInterfaces_Base.h"
 
 
 // Define Class IDs
@@ -61,6 +46,7 @@ shown to the outside world.
 #define CLSID_Lib3MF_ModelResourceIterator  "11845233-4A6A-4B10-8B55-00A84048959C"
 #define CLSID_Lib3MF_ModelObjectResource    "FB9F7E2C-D8A3-4C84-831E-76928A91CC7B"
 #define CLSID_Lib3MF_ModelTexture2D         "29DD25F2-607D-4804-A737-ED2CBC7199F2"
+#define CLSID_Lib3MF_ModelAttachment        "A2EBA5BC-2A64-49CE-B11B-17B134CB48B0"
 #define CLSID_Lib3MF_ModelBaseMaterial      "943648CF-B9BB-40AD-8264-79C69195A116"
 #define CLSID_Lib3MF_ModelMeshObject        "8B7FE33C-8EF0-4927-A106-1C069B49B01D"
 #define CLSID_Lib3MF_ModelComponent         "99F7DB2E-9A6F-4DD5-9F96-27DDAF32A0CF"
@@ -76,13 +62,13 @@ shown to the outside world.
 
 
 #ifndef __GNUC__
-static const IID IID_Lib3MF_Base = { 0x8f1d86bf, 0xcd19, 0x4710, { 0xbc, 0x19, 0x3c, 0x70, 0xd0, 0x95, 0x64, 0x2f } };
 static const IID IID_Lib3MF_ModelWriter = { 0x58ddbe95, 0x34d8, 0x4f77, { 0xbf, 0xdc, 0x15, 0x70, 0xf8, 0x49, 0xbf, 0xf2 } };
 static const IID IID_Lib3MF_ModelReader = { 0xa7fe2c65, 0x121, 0x40aa, { 0xa0, 0xaf, 0x48, 0xc9, 0xd2, 0x28, 0x7a, 0x55 } };
 static const IID IID_Lib3MF_ModelResource = { 0xbf38dc27, 0x4169, 0x4aa3, { 0xbf, 0xd1, 0x35, 0xc8, 0xd0, 0x46, 0xc0, 0xa8 } };
 static const IID IID_Lib3MF_ModelResourceIterator = { 0x11845233, 0x4a6a, 0x4b10, { 0x8b, 0x55, 0x0, 0xa8, 0x40, 0x48, 0x95, 0x9c } };
 static const IID IID_Lib3MF_ModelObjectResource = { 0xfb9f7e2c, 0xd8a3, 0x4c84, { 0x83, 0x1e, 0x76, 0x92, 0x8a, 0x91, 0xcc, 0x7b } };
 static const IID IID_Lib3MF_ModelTexture2D = { 0x29dd25f2, 0x607d, 0x4804, { 0xa7, 0x37, 0xed, 0x2c, 0xbc, 0x71, 0x99, 0xf2 } };
+static const IID IID_Lib3MF_ModelAttachment = { 0xa2eba5bc, 0x2a64, 0x49ce,{ 0xb1, 0x1b, 0x17, 0xb1, 0x34, 0xcb, 0x48, 0xb0 } };
 static const IID IID_Lib3MF_ModelBaseMaterial = { 0x943648cf, 0xb9bb, 0x40ad, { 0x82, 0x64, 0x79, 0xc6, 0x91, 0x95, 0xa1, 0x16 } };
 static const IID IID_Lib3MF_ModelMeshObject = { 0x8b7fe33c, 0x8ef0, 0x4927, { 0xa1, 0x6, 0x1c, 0x6, 0x9b, 0x49, 0xb0, 0x1d } };
 static const IID IID_Lib3MF_ModelComponent = { 0x99f7db2e, 0x9a6f, 0x4dd5, { 0x9f, 0x96, 0x27, 0xdd, 0xaf, 0x32, 0xa0, 0xcf } };
@@ -101,27 +87,6 @@ static const IID IID_Lib3MF_DefaultPropertyHandler = { 0xa62108ee, 0xfb26, 0x44c
 #endif //__GNUC__
 
 namespace NMR {
-
-	/**********************************************************************************************************
-	*  ILib3MFBase is a base interface, which serves as parent for all interfaces
-	*  related to the 3MF Library
-	***********************************************************************************************************/
-
-	LIB3MFINTERFACE(ILib3MFBase, ILib3MFUnknown, CLSID_Lib3MF_Base) {
-		LIB3MFPUBLIC(ILib3MFBase)
-
-		/**
-		* Returns detailed information of the last known error an object method.
-		* The error information is available for every method returning a LIB3MF_FAILED
-		* constant.
-		*
-		* @param[out] pErrorCode Error Code
-		* @param[out] pErrorMessage Returns pointer to the error message string, NULL if no error.
-		* @return error code or 0 (success)
-		*/
-		LIB3MFMETHOD(GetLastError) (_Out_ DWORD * pErrorCode, _Outptr_opt_ LPCSTR *	pErrorMessage) LIB3MFABSTRACT;
-	};
-
 
 	/**********************************************************************************************************
 	*  ILib3MFModelWriter encapsulates an writer class for a writing the model into a specific file type.
@@ -218,6 +183,39 @@ namespace NMR {
 		* @return error code or 0 (success)
 		*/
 		LIB3MFMETHOD(GetWarning) (_In_ DWORD nIndex, _Out_ DWORD * pErrorCode, _Out_opt_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars) LIB3MFABSTRACT;
+
+		/**
+		* Adds a relationship type which shall be read as attachment in memory while loading
+		*
+		* @param[in] pwszRelationshipType String of the relationship type (UTF16)
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(AddRelationToRead) (_In_z_ LPCWSTR pwszRelationshipType) LIB3MFABSTRACT;
+
+		/**
+		* Adds a relationship type which shall be read as attachment in memory while loading
+		*
+		* @param[in] pwszRelationshipType String of the relationship type (UTF16)
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(RemoveRelationToRead) (_In_z_ LPCWSTR pwszRelationshipType) LIB3MFABSTRACT;
+
+		/**
+		* Adds a relationship type which shall be read as attachment in memory while loading
+		*
+		* @param[in] pszRelationshipType String of the relationship type (UTF8)
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(AddRelationToReadUTF8) (_In_z_ LPCSTR pszRelationshipType) LIB3MFABSTRACT;
+
+
+		/**
+		* Adds a relationship type which shall be read as attachment in memory while loading
+		*
+		* @param[in] pszRelationshipType String of the relationship type (UTF8)
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(RemoveRelationToReadUTF8) (_In_z_ LPCSTR pszRelationshipType) LIB3MFABSTRACT;
 
 #ifndef __GNUC__
 		/**
@@ -969,6 +967,180 @@ namespace NMR {
 		LIB3MFMETHOD(GetDisplayColor) (_In_ DWORD nIndex, _Out_ BYTE* pbRed, _Out_ BYTE* pbGreen, _Out_ BYTE* pbBlue, _Out_ BYTE* pbAlpha) LIB3MFABSTRACT;
 
 	};
+
+	/**********************************************************************************************************
+	*  ILib3MFModelAttachment implements the Model Attachments of a 3MF model stream, and allows direct access to 
+	*  direct binary data.
+	*
+	***********************************************************************************************************/
+
+	LIB3MFINTERFACE(ILib3MFModelAttachment, ILib3MFBase, CLSID_Lib3MF_ModelAttachment) {
+
+		LIB3MFPUBLIC(ILib3MFModelAttachment)
+
+		/**
+		* Retrieves a attachment's package path
+		*
+		* @param[out] pwszBuffer buffer to fill
+		* @param[in] cbBufferSize size of buffer to fill. needs to be at least string length + 1
+		* @param[out] pcbNeededChars returns needed characters in buffer
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(GetPath) (_Out_opt_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars) LIB3MFABSTRACT;
+
+		/**
+		* Retrieves a attachment's package path (UTF8)
+		*
+		* @param[out] pszBuffer buffer to fill
+		* @param[in] cbBufferSize size of buffer to fill. needs to be at least string length + 1
+		* @param[out] pcbNeededChars returns needed characters in buffer
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(GetPathUTF8) (_Out_opt_ LPSTR pszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars) LIB3MFABSTRACT;
+
+		/**
+		* Sets a attachment's package path
+		*
+		* @param[in] pwszPath new path of the attachment. (e.g. "/Textures/logo.png")
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(SetPath) (_In_z_ LPCWSTR pwszPath) LIB3MFABSTRACT;
+
+		/**
+		* Sets a attachment's package path (UTF8)
+		*
+		* @param[in] pszPath new path of the attachment. (e.g. "/Textures/logo.png")
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(SetPathUTF8) (_In_z_ LPCSTR pszPath) LIB3MFABSTRACT;
+
+		/**
+		* Retrieves a attachment's package relationship type
+		*
+		* @param[out] pwszBuffer buffer to fill
+		* @param[in] cbBufferSize size of buffer to fill. needs to be at least string length + 1
+		* @param[out] pcbNeededChars returns needed characters in buffer
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(GetRelationshipType) (_Out_opt_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars) LIB3MFABSTRACT;
+
+		/**
+		* Retrieves a attachment's package relationship type (UTF8)
+		*
+		* @param[out] pszBuffer buffer to fill
+		* @param[in] cbBufferSize size of buffer to fill. needs to be at least string length + 1
+		* @param[out] pcbNeededChars returns needed characters in buffer
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(GetRelationshipTypeUTF8) (_Out_opt_ LPSTR pszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars) LIB3MFABSTRACT;
+
+		/**
+		* Sets a attachment's package relationship type
+		*
+		* @param[in] pwszRelationShipType new relationship type attachment. (e.g. "/Data/data.xml")
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(SetRelationshipType) (_In_z_ LPCWSTR pwszRelationShipType) LIB3MFABSTRACT;
+
+		/**
+		* Sets a attachment's package relationship type (UTF8)
+		*
+		* @param[in] pszRelationShipType new path of the attachment. (e.g. "/Data/data.png")
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(SetRelationshipTypeUTF8) (_In_z_ LPCSTR pszRelationShipType) LIB3MFABSTRACT;
+
+		/**
+		* Retrieves the size of the attachment stream.
+		*
+		* @param[out] pcbStreamSize Returns the stream size
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(GetStreamSize) (_Out_ ULONG64 * pcbStreamSize) LIB3MFABSTRACT;
+
+		/**
+		* Writes out the attachment as file.
+		*
+		* @param[in] pwszFilename Filename to write into
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(WriteToFile) (_In_z_ LPCWSTR pwszFilename) LIB3MFABSTRACT;
+
+		/**
+		* Writes out the attachment as file. (UTF8)
+		*
+		* @param[in] pszFilename Filename to write into
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(WriteToFileUTF8) (_In_z_ LPCSTR pszFilename) LIB3MFABSTRACT;
+
+		/**
+		* Writes out the attachment into a buffer. Buffer size must be at least the size of the stream.
+		*
+		* @param[out] pBuffer Buffer to write into
+		* @param[in] cbBufferSize Size of the buffer in bytes
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(WriteToBuffer) (_Out_ BYTE * pBuffer, _In_ ULONG64 cbBufferSize) LIB3MFABSTRACT;
+
+#ifndef __GNUC__
+		/**
+		* Writes out the attachment into a COM IStream. Only available on Windows.
+		*
+		* @param[in] pStream IStream to write into.
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(WriteToStream) (_In_ IStream * pStream) LIB3MFABSTRACT;
+#endif// __GNUC__
+
+		/**
+		* Writes out the attachment and passes the data to a provided callback function. The file type is specified by the Model Writer class
+		*
+		* @param[in] pWriteCallback Callback to call for writing a data chunk.
+		* @param[in] pUserData Userdata that is passed to the callback function
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(WriteToCallback) (_In_ void * pWriteCallback, _In_opt_ void * pUserData) LIB3MFABSTRACT;
+
+
+		/**
+		* Reads a attachment from a file.
+		*
+		* @param[in] pwszFilename Filename to read from
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(ReadFromFile) (_In_z_ LPCWSTR pwszFilename) LIB3MFABSTRACT;
+
+		/**
+		* Reads a attachment from a file.
+		*
+		* @param[in] pszFilename Filename to read from
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(ReadFromFileUTF8) (_In_z_ LPCSTR pwszFilename) LIB3MFABSTRACT;
+
+		/**
+		* Reads a attachment from a memory buffer.
+		*
+		* @param[in] pBuffer Buffer to read from
+		* @param[in] cbBufferSize Size of the buffer in bytes
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(ReadFromBuffer) (_In_ BYTE * pBuffer, _In_ ULONG64 cbBufferSize) LIB3MFABSTRACT;
+
+#ifndef __GNUC__
+		/**
+		* Reads a attachment from a COM IStream. Only available on Windows.
+		*
+		* @param[in] pStream IStream to read from
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(ReadFromStream) (_In_ IStream * pStream) LIB3MFABSTRACT;
+#endif //__GNUC__
+
+
+	};
+
 
 	/**********************************************************************************************************
 	*  ILib3MFModelTexture2D implements the Texture2D Resources of a 3MF model stream, and allows direct access to the
@@ -1886,6 +2058,133 @@ namespace NMR {
 		* @return error code or 0 (success)
 		*/
 		LIB3MFMETHOD(RemoveMetaData) (_In_ DWORD nIndex) LIB3MFABSTRACT;
+
+
+		/**
+		* adds an attachment stream to the model. The OPC part will be related to the model stream with a certain relationship type.
+		*
+		* @param[in] pwszURI Path of the attachment
+		* @param[in] pwszRelationShipType Relationship type of the attachment
+		* @param[out] ppAttachmentInstance Instance of the attachment object
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(AddAttachment) (_In_z_ LPWSTR pwszURI, _In_z_ LPWSTR pwszRelationShipType, _Outptr_ ILib3MFModelAttachment ** ppAttachmentInstance) LIB3MFABSTRACT;
+
+		/**
+		* adds an attachment stream to the model. The OPC part will be related to the model stream with a certain relationship type.
+		*
+		* @param[in] pszURI Path of the attachment (UTF8)
+		* @param[in] pszRelationShipType Relationship type of the attachment (UTF8)
+		* @param[out] ppAttachmentInstance Instance of the attachment object
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(AddAttachmentUTF8) (_In_z_ LPSTR pszURI, _In_z_ LPSTR pszRelationShipType, _Outptr_ ILib3MFModelAttachment ** ppAttachmentInstance) LIB3MFABSTRACT;
+
+
+		/**
+		* retrieves an attachment stream object from the model. 
+		*
+		* @param[in] nIndex Index of the attachment stream
+		* @param[out] ppAttachmentInstance Instance of the attachment object
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(GetAttachment) (_In_ DWORD nIndex, _Outptr_ ILib3MFModelAttachment ** ppAttachmentInstance) LIB3MFABSTRACT;
+
+		/**
+		* retrieves an attachment stream object from the model.
+		*
+		* @param[in] pwszURI Path URI in the package
+		* @param[out] ppAttachmentInstance Instance of the attachment object
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(FindAttachment) (_In_z_ LPWSTR pwszURI, _Outptr_ ILib3MFModelAttachment ** ppAttachmentInstance) LIB3MFABSTRACT;
+
+		/**
+		* retrieves an attachment stream object from the model.
+		*
+		* @param[in] pszURI Path URI in the package (UTF8)
+		* @param[out] ppAttachmentInstance Instance of the attachment object
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(FindAttachmentUTF8) (_In_z_ LPSTR pszURI, _Outptr_ ILib3MFModelAttachment ** ppAttachmentInstance) LIB3MFABSTRACT;
+
+		/**
+		* retrieves the number of attachments of the model.
+		*
+		* @param[out] pnCount Returns the number of attachments
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(GetAttachmentCount) (_Out_ DWORD * pnCount) LIB3MFABSTRACT;
+
+		/**
+		* retrieves the size of an attachment in bytes
+		*
+		* @param[in] nIndex Index of the attachment stream
+		* @param[out] pnSize Returns the size of the attachment
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(GetAttachmentSize) (_In_ DWORD nIndex, _Out_ UINT64 * pnSize) LIB3MFABSTRACT;
+
+		/**
+		* retrieves the path URI of an attachment
+		*
+		* @param[in] nIndex Index of the attachment stream
+		* @param[out] pwszBuffer Buffer to write into, may be null to determine needed length
+		* @param[in] cbBufferSize Size of the given buffer
+		* @param[out] pcbNeededChars Returns number of bytes written or number of bytes needed to write.
+		
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(GetAttachmentPath) (_In_ DWORD nIndex, _Out_opt_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars) LIB3MFABSTRACT;
+
+		/**
+		* retrieves the path URI of an attachment (UTF8)
+		*
+		* @param[in] nIndex Index of the attachment stream
+		* @param[out] pszBuffer Buffer to write into, may be null to determine needed length
+		* @param[in] cbBufferSize Size of the given buffer
+		* @param[out] pcbNeededChars Returns number of bytes written or number of bytes needed to write.
+
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(GetAttachmentPathUTF8) (_In_ DWORD nIndex, _Out_opt_ LPSTR pszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars) LIB3MFABSTRACT;
+
+		/**
+		* adds a new Content Type to the model
+		*
+		* @param[in] pszwExtension File Extension
+		* @param[in] pszwContentType Content Type Identifier
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(AddCustomContentType) (_In_ LPCWSTR pszwExtension, _In_ LPCWSTR pszwContentType) LIB3MFABSTRACT;
+
+		/**
+		* adds a new Content Type to the model (UTF8 version)
+		*
+		* @param[in] pszExtension File Extension
+		* @param[in] pszContentType Content Type Identifier
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(AddCustomContentTypeUTF8) (_In_ LPCSTR pszExtension, _In_ LPCSTR pszContentType) LIB3MFABSTRACT;
+
+		/**
+		* removes a custom Content Type from the model
+		*
+		* @param[in] pszwExtension File Extension
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(RemoveCustomContentType) (_In_ LPCWSTR pszwExtension) LIB3MFABSTRACT;
+
+		/**
+		* removes a custom Content Type from the model (UTF8 version)
+		*
+		* @param[in] pModel Model instance
+		* @param[in] pszExtension File Extension
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(RemoveCustomContentTypeUTF8) (_In_ LPCSTR pszExtension) LIB3MFABSTRACT;
+
+
 	};
 
 	// ILib3MFModelFactory is the global factory class for model instances.

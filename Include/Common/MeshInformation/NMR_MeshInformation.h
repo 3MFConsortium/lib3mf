@@ -49,12 +49,15 @@ namespace NMR {
 	class CMeshInformation {
 	protected:
 		PMeshInformationContainer m_pContainer;
+		nfUint64 m_nInternalID;
+
 	public:
 		CMeshInformation();
 
 		_Ret_notnull_ MESHINFORMATIONFACEDATA * getFaceData(nfUint32 nFaceIndex);
 		_Ret_notnull_ MESHINFORMATIONFACEDATA * addFaceData(_In_ nfUint32 nNewFaceCount);
 		void resetFaceInformation(_In_ nfUint32 nFaceIndex);
+		void resetAllFaceInformation();
 
 		virtual void invalidateFace(_In_ MESHINFORMATIONFACEDATA * pData) = 0;
 
@@ -65,6 +68,10 @@ namespace NMR {
 		virtual void mergeInformationFrom (_In_ CMeshInformation * pInformation) = 0;
 		virtual nfUint32 getBackupSize() = 0;
 		virtual nfBool faceHasData(_In_ nfUint32 nFaceIndex) = 0;
+
+		virtual void setInternalID(nfUint64 nInternalID);
+		virtual nfUint64 getInternalID();
+
 	};
 
 }

@@ -156,6 +156,40 @@ namespace NMR {
 
 			return ((ILib3MFModelReader *)pReader)->ReadFromFileUTF8(pwszFilename);
 		}
+	
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_reader_addrelationtoread(_In_ PLib3MFModelReader * pReader, _In_z_ LPCWSTR pwszRelationshipType)
+		{
+			if (!pReader)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelReader *)pReader)->AddRelationToRead(pwszRelationshipType);
+		}
+
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_reader_removerelationtoread(_In_ PLib3MFModelReader * pReader, _In_z_ LPCWSTR pwszRelationshipType)
+		{
+			if (!pReader)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelReader *)pReader)->RemoveRelationToRead(pwszRelationshipType);
+		}
+		
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_reader_addrelationtoreadutf8(_In_ PLib3MFModelReader * pReader, _In_z_ LPCSTR pszRelationshipType)
+		{
+			if (!pReader)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelReader *)pReader)->AddRelationToReadUTF8(pszRelationshipType);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_reader_removerelationtoreadutf8(_In_ PLib3MFModelReader * pReader, _In_z_ LPCSTR pszRelationshipType)
+		{
+			if (!pReader)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelReader *)pReader)->RemoveRelationToReadUTF8(pszRelationshipType);
+		}
+
 
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_reader_getwarningcount(_In_ PLib3MFModelReader * pReader, _Out_ DWORD * pnWarningCount)
 		{
@@ -672,6 +706,14 @@ namespace NMR {
 			return ((ILib3MFModelBaseMaterial *)pBaseMaterial)->GetCount(pcbCount);
 		}
 
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_basematerial_getresourceid(_In_ PLib3MFModelBaseMaterial * pBaseMaterial, _Out_ DWORD * pnResourceID)
+		{
+			if (!pBaseMaterial)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelBaseMaterial *)pBaseMaterial)->GetResourceID(pnResourceID);
+		}
+
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_basematerial_addmaterial(_In_ PLib3MFModelBaseMaterial * pBaseMaterial, _In_z_ LPCWSTR pwszName, _In_ BYTE bRed, _In_ BYTE bGreen, _In_ BYTE bBlue, _In_ DWORD * pnResourceIndex)
 		{
 			if (!pBaseMaterial)
@@ -768,6 +810,138 @@ namespace NMR {
 
 			return ((ILib3MFModelBaseMaterial *)pBaseMaterial)->GetDisplayColor(nIndex, pbRed, pbGreen, pbBlue, pbAlpha);
 		}
+
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_attachment_getpath(_In_ PLib3MFModelAttachment * pAttachment, _Out_opt_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars)
+		{
+			if (!pAttachment)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelAttachment *)pAttachment)->GetPath(pwszBuffer, cbBufferSize, pcbNeededChars);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_attachment_getpathutf8(_In_ PLib3MFModelAttachment * pAttachment, _Out_opt_ LPSTR pszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars)
+		{
+			if (!pAttachment)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelAttachment *)pAttachment)->GetPathUTF8(pszBuffer, cbBufferSize, pcbNeededChars);
+		}
+
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_attachment_setpath(_In_ PLib3MFModelAttachment * pAttachment, _In_z_ LPCWSTR pwszPath)
+		{
+			if (!pAttachment)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelAttachment *)pAttachment)->SetPath(pwszPath);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_attachment_setpathutf8(_In_ PLib3MFModelAttachment * pAttachment, _In_z_ LPCSTR pszPath)
+		{
+			if (!pAttachment)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelAttachment *)pAttachment)->SetPathUTF8(pszPath);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_attachment_getrelationshiptype(_In_ PLib3MFModelAttachment * pAttachment, _Out_opt_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars)
+		{
+			if (!pAttachment)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelAttachment *)pAttachment)->GetRelationshipType(pwszBuffer, cbBufferSize, pcbNeededChars);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_attachment_getrelationshiptypeutf8(_In_ PLib3MFModelAttachment * pAttachment, _Out_opt_ LPSTR pszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars)
+		{
+			if (!pAttachment)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelAttachment *)pAttachment)->GetRelationshipTypeUTF8(pszBuffer, cbBufferSize, pcbNeededChars);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_attachment_setrelationshiptype(_In_ PLib3MFModelAttachment * pAttachment, _In_z_ LPCWSTR pwszRelationShipType)
+		{
+			if (!pAttachment)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelAttachment *)pAttachment)->SetRelationshipType(pwszRelationShipType);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_attachment_setrelationshiptypeutf8(_In_ PLib3MFModelAttachment * pAttachment, _In_z_ LPCSTR pszRelationShipType)
+		{
+			if (!pAttachment)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelAttachment *)pAttachment)->SetRelationshipTypeUTF8(pszRelationShipType);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_attachment_getstreamsize(_In_ PLib3MFModelAttachment * pAttachment, _Out_ ULONG64 * pcbStreamSize)
+		{
+			if (!pAttachment)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelAttachment *)pAttachment)->GetStreamSize(pcbStreamSize);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_attachment_writetofile(_In_ PLib3MFModelAttachment * pAttachment, _In_z_ LPCWSTR pwszFilename)
+		{
+			if (!pAttachment)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelAttachment *)pAttachment)->WriteToFile(pwszFilename);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_attachment_writetofileutf8(_In_ PLib3MFModelAttachment * pAttachment, _In_z_ LPCSTR pszFilename)
+		{
+			if (!pAttachment)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelAttachment *)pAttachment)->WriteToFileUTF8(pszFilename);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_attachment_writetobuffer(_In_ PLib3MFModelAttachment * pAttachment, _Out_ BYTE * pBuffer, _In_ ULONG64 cbBufferSize)
+		{
+			if (!pAttachment)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelAttachment *)pAttachment)->WriteToBuffer(pBuffer, cbBufferSize);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_attachment_writetocallback(_In_ PLib3MFModelAttachment * pAttachment, _In_ void * pWriteCallback, _In_opt_ void * pUserData)
+		{
+			if (!pAttachment)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelAttachment *)pAttachment)->WriteToCallback(pWriteCallback, pUserData);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_attachment_readfromfile(_In_ PLib3MFModelAttachment * pAttachment, _In_z_ LPCWSTR pwszFilename)
+		{
+			if (!pAttachment)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelAttachment *)pAttachment)->ReadFromFile(pwszFilename);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_attachment_readfromfileutf8(_In_ PLib3MFModelAttachment * pAttachment, _In_z_ LPCSTR pszFilename)
+		{
+			if (!pAttachment)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelAttachment *)pAttachment)->ReadFromFileUTF8(pszFilename);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_attachment_readfrombuffer(_In_ PLib3MFModelAttachment * pAttachment, _In_ BYTE * pBuffer, _In_ ULONG64 cbBufferSize)
+		{
+			if (!pAttachment)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelAttachment *)pAttachment)->ReadFromBuffer(pBuffer, cbBufferSize);
+		}
+
+
 
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_texture2d_getpath(_In_ PLib3MFModelTexture2D * pTexture2D, _Out_opt_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars)
 		{
@@ -1539,6 +1713,111 @@ namespace NMR {
 
 
 
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_addattachment(_In_ PLib3MFModel * pModel, _In_z_ LPWSTR pwszURI, _In_z_ LPWSTR pwszRelationShipType, _Outptr_ PLib3MFModelAttachment ** ppAttachmentInstance)
+		{
+			if (!pModel)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModel *)pModel)->AddAttachment(pwszURI, pwszRelationShipType, (ILib3MFModelAttachment **)ppAttachmentInstance);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_addattachmentutf8(_In_ PLib3MFModel * pModel, _In_z_ LPSTR pszURI, _In_z_ LPSTR pszRelationShipType, _Outptr_ PLib3MFModelAttachment ** ppAttachmentInstance)
+		{
+			if (!pModel)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModel *)pModel)->AddAttachmentUTF8(pszURI, pszRelationShipType, (ILib3MFModelAttachment **)ppAttachmentInstance);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_getattachment(_In_ PLib3MFModel * pModel, _In_ DWORD nIndex, _Outptr_ PLib3MFModelAttachment ** ppAttachmentInstance)
+		{
+			if (!pModel)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModel *)pModel)->GetAttachment(nIndex, (ILib3MFModelAttachment **)ppAttachmentInstance);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_findattachment(_In_ PLib3MFModel * pModel, _In_z_ LPWSTR pwszURI, _Outptr_ PLib3MFModelAttachment ** ppAttachmentInstance)
+		{
+			if (!pModel)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModel *)pModel)->FindAttachment(pwszURI, (ILib3MFModelAttachment **)ppAttachmentInstance);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_findattachmentutf8(_In_ PLib3MFModel * pModel, _In_z_ LPSTR pszURI, _Outptr_ PLib3MFModelAttachment ** ppAttachmentInstance)
+		{
+			if (!pModel)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModel *)pModel)->FindAttachmentUTF8(pszURI, (ILib3MFModelAttachment **)ppAttachmentInstance);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_getattachmentcount(_In_ PLib3MFModel * pModel, _Out_ DWORD * pnCount)
+		{
+			if (!pModel)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModel *)pModel)->GetAttachmentCount(pnCount);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_getattachmentsize(_In_ PLib3MFModel * pModel, _In_ DWORD nIndex, _Out_ UINT64 * pnSize)
+		{
+			if (!pModel)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModel *)pModel)->GetAttachmentSize(nIndex, pnSize);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_getattachmentpath(_In_ PLib3MFModel * pModel, _In_ DWORD nIndex, _Out_opt_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars)
+		{
+			if (!pModel)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModel *)pModel)->GetAttachmentPath(nIndex, pwszBuffer, cbBufferSize, pcbNeededChars);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_getattachmentpathutf8(_In_ PLib3MFModel * pModel, _In_ DWORD nIndex, _Out_opt_ LPSTR pszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars)
+		{
+			if (!pModel)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModel *)pModel)->GetAttachmentPathUTF8(nIndex, pszBuffer, cbBufferSize, pcbNeededChars);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_addcustomcontenttype(_In_ PLib3MFModel * pModel, _In_ LPCWSTR pszwExtension, _In_ LPCWSTR pszwContentType)
+		{
+			if (!pModel)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModel *)pModel)->AddCustomContentType(pszwExtension, pszwContentType);
+		}
+
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_addcustomcontenttypeutf8(_In_ PLib3MFModel * pModel, _In_ LPCSTR pszExtension, _In_ LPCSTR pszContentType)
+		{
+			if (!pModel)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModel *)pModel)->AddCustomContentTypeUTF8(pszExtension, pszContentType);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_removecustomcontenttype(_In_ PLib3MFModel * pModel, _In_ LPCWSTR pszwExtension)
+		{
+			if (!pModel)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModel *)pModel)->RemoveCustomContentType(pszwExtension);
+		}
+
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_removecustomcontenttypeutf8(_In_ PLib3MFModel * pModel, _In_ LPCSTR pszExtension)
+		{
+			if (!pModel)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModel *)pModel)->RemoveCustomContentTypeUTF8(pszExtension);
+		}
 
 
 	};

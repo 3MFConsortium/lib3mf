@@ -207,8 +207,6 @@ namespace NMR {
 	nfBool CMesh::checkSanity()
 	{
 		nfUint32 nIdx, j;
-		MESHNODE * node;
-		MESHFACE * face;
 
 		nfUint32 nNodeCount = getNodeCount();
 		nfUint32 nFaceCount = getFaceCount();
@@ -220,7 +218,7 @@ namespace NMR {
 			return false;
 
 		for (nIdx = 0; nIdx < nNodeCount; nIdx++) {
-			node = getNode(nIdx);
+			MESHNODE * node = getNode(nIdx);
 			if (node->m_index != (nfInt32) nIdx)
 				return false;
 			for (j = 0; j < 3; j++)
@@ -229,7 +227,7 @@ namespace NMR {
 		}
 
 		for (nIdx = 0; nIdx < nFaceCount; nIdx++) {
-			face = getFace(nIdx);
+			MESHFACE * face = getFace(nIdx);
 			for (j = 0; j < 3; j++)
 				if ((face->m_nodeindices[j] < 0) || (((nfUint32)face->m_nodeindices[j]) >= nNodeCount))
 					return false;

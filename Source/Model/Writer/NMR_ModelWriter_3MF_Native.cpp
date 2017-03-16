@@ -36,6 +36,7 @@ using LibZ and a native XML writer implementation.
 
 #include "Model/Writer/NMR_ModelWriter_3MF_Native.h" 
 #include "Model/Classes/NMR_ModelConstants.h" 
+#include "Model/Classes/NMR_ModelAttachment.h" 
 #include "Common/Platform/NMR_ImportStream.h" 
 #include "Common/NMR_Exception.h" 
 #include "Common/Platform/NMR_XmlWriter.h" 
@@ -82,6 +83,9 @@ namespace NMR {
 		// add Textures
 		addTextureParts(m_pModel, pPackageWriter, pModelPart);
 
+		// add Attachments
+		addAttachments(m_pModel, pPackageWriter, pModelPart);
+
 		// add Content Types
 		pPackageWriter->addContentType(PACKAGE_3D_RELS_EXTENSION, PACKAGE_3D_RELS_CONTENT_TYPE);
 		pPackageWriter->addContentType(PACKAGE_3D_MODEL_EXTENSION, PACKAGE_3D_MODEL_CONTENT_TYPE);
@@ -89,7 +93,19 @@ namespace NMR {
 		pPackageWriter->addContentType(PACKAGE_3D_PNG_EXTENSION, PACKAGE_PNG_CONTENT_TYPE);
 		pPackageWriter->addContentType(PACKAGE_3D_JPEG_EXTENSION, PACKAGE_JPG_CONTENT_TYPE);
 		pPackageWriter->addContentType(PACKAGE_3D_JPG_EXTENSION, PACKAGE_JPG_CONTENT_TYPE);
+
+		std::map<std::wstring, std::wstring> CustomContentTypes = m_pModel->getCustomContentTypes();
+		std::map<std::wstring, std::wstring>::iterator iContentTypeIterator;
+
+		for (iContentTypeIterator = CustomContentTypes.begin(); iContentTypeIterator != CustomContentTypes.end(); iContentTypeIterator++) {
+			if (!m_pModel->contentTypeIsDefault(iContentTypeIterator->first)) {
+				pPackageWriter->addContentType(iContentTypeIterator->first, iContentTypeIterator->second);
+			}
+		}
+
+			
 	}
+
 
 	std::wstring CModelWriter_3MF_Native::generateRelationShipID()
 	{
@@ -133,5 +149,43 @@ namespace NMR {
 			}
 		}
 	}
+
+	void CModelWriter_3MF_Native::addAttachments(_In_ CModel * pModel, _In_ POpcPackageWriter pPackageWriter, _In_ POpcPackagePart pModelPart)
+	{
+		__NMRASSERT(pModel != nullptr);
+		__NMRASSERT(pModelPart.get() != nullptr);
+		__NMRASSERT(pPackageWriter.get() != nullptr);
+
+		nfUint32 nCount = pModel->getAttachmentCount();
+		nfUint32 nIndex;
+
+		if (nCount > 0) {
+
+
+			for (nIndex = 0; nIndex < nCount; nIndex++) {
+				PModelAttachment pAttachment = pModel->getModelAttachment(nIndex);
+				PImportStream pStream = pAttachment->getStream();
+				
+				std::wstring sPath = fnIncludeLeadingPathDelimiter(pAttachment->getPathURI());
+				std::wstring sRelationShipType = pAttachment->getRelationShipType();
+
+				if (pStream.get() == nullptr)
+					throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+				// create Texture Part
+				POpcPackagePart pAttachmentPart = pPackageWriter->addPart(sPath);
+				PExportStream pExportStream = pAttachmentPart->getExportStream();
+
+				// Copy data
+				pStream->seekPosition(0, true);
+				pExportStream->copyFrom(pStream.get(), pStream->retrieveSize(), MODELWRITER_NATIVE_BUFFERSIZE);
+
+				// add relationships
+				pModelPart->addRelationship(generateRelationShipID(), sRelationShipType.c_str(), pAttachmentPart->getURI());
+
+			}
+		}
+	}
+
 
 }

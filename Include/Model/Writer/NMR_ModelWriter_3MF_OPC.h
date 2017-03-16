@@ -56,14 +56,12 @@ namespace NMR {
 		CComPtr<IOpcPart> createOPCPartFromStream(_In_ LPCWSTR pwszUriString, _In_ LPCWSTR pwszContentType, _In_ IStream * pStream);
 		CComPtr<IOpcPart> createOPCModelPart(_In_ LPCWSTR pwszUriString, _In_ LPCWSTR pwszContentType, _In_ CModel * pModel);
 
-		CComPtr<IOpcRelationship> addRelationship(_In_ IOpcRelationshipSet * pRelationshipSet, _In_ LPCWSTR pwszRelationshipType, _In_ IOpcPart * pOPCPart);
+		CComPtr<IOpcRelationship> addRelationshipToPackage(_In_ IOpcRelationshipSet * pRelationshipSet, _In_ LPCWSTR pwszRelationshipType, _In_ IOpcPart * pOPCPart);
 
 		// These are OPC dependent functions
 		virtual void createPackage(_In_ CModel * pModel);
 		virtual void writePackageToStream(_In_ PExportStream pStream);
 		virtual void releasePackage();
-
-		void addTextureParts(_In_ CModel * pModel, _In_ CComPtr<IOpcPart> pModelPart);
 	public:
 		CModelWriter_3MF_OPC() = delete;
 		CModelWriter_3MF_OPC(_In_ PModel pModel);

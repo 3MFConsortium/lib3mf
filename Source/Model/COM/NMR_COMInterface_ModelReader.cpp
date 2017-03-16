@@ -175,6 +175,93 @@ namespace NMR {
 		}
 	}
 
+
+	LIB3MFMETHODIMP CCOMModelReader::AddRelationToRead(_In_z_ LPCWSTR pwszRelationshipType)
+	{
+		try {
+			if (pwszRelationshipType == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+			if (m_pModelReader.get() == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDREADEROBJECT);
+
+			std::wstring sRelationShipType(pwszRelationshipType);
+			m_pModelReader->addRelationToRead(sRelationShipType);
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
+	LIB3MFMETHODIMP CCOMModelReader::RemoveRelationToRead (_In_z_ LPCWSTR pwszRelationshipType)
+	{
+		try {
+			if (pwszRelationshipType == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+			if (m_pModelReader.get() == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDREADEROBJECT);
+
+			std::wstring sRelationShipType(pwszRelationshipType);
+			m_pModelReader->removeRelationToRead(sRelationShipType);
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
+	LIB3MFMETHODIMP CCOMModelReader::AddRelationToReadUTF8(_In_z_ LPCSTR pszRelationshipType)
+	{
+		try {
+			if (pszRelationshipType == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+			if (m_pModelReader.get() == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDREADEROBJECT);
+
+			std::string sRelationShipTypeUTF8(pszRelationshipType);
+			std::wstring sRelationShipTypeUTF16 = fnUTF8toUTF16(sRelationShipTypeUTF8);
+			m_pModelReader->addRelationToRead(sRelationShipTypeUTF16);
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
+	LIB3MFMETHODIMP CCOMModelReader::RemoveRelationToReadUTF8(_In_z_ LPCSTR pszRelationshipType)
+	{
+		try {
+			if (pszRelationshipType == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+			if (m_pModelReader.get() == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDREADEROBJECT);
+
+			std::string sRelationShipTypeUTF8(pszRelationshipType);
+			std::wstring sRelationShipTypeUTF16 = fnUTF8toUTF16(sRelationShipTypeUTF8);
+			m_pModelReader->removeRelationToRead(sRelationShipTypeUTF16);
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
 	LIB3MFMETHODIMP CCOMModelReader::GetWarning(_In_ DWORD nIndex, _Out_ DWORD * pErrorCode, _Out_opt_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_opt_ ULONG * pcbNeededChars)
 	{
 

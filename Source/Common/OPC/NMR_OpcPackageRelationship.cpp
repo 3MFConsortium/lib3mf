@@ -1,4 +1,4 @@
-/*++s
+/*++
 
 Copyright (C) 2015 netfabb GmbH (Original Author)
 

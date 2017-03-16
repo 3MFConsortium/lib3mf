@@ -229,6 +229,15 @@ namespace NMR {
     {
     }
 
+/*------------------------------------------------------------------*/
+
+    ILib3MFModelAttachment::ILib3MFModelAttachment()
+    {
+    }
+
+    ILib3MFModelAttachment::~ILib3MFModelAttachment()
+    {
+    }
 
 }
 

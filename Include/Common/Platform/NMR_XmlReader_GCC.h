@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2015 Microsoft Corporation
+Copyright (C) 2015 Microsoft Corporation 
 Copyright (C) 2015 netfabb GmbH (Original Author)
 
 All rights reserved.
@@ -35,32 +35,16 @@ NMR_XmlReader_GCC.h defines the XML Reader Class using GCC.
 #define __NMR_XMLREADER_GCC
 
 #include "Common/Platform/NMR_XmlReader.h"
-#include "Libraries/IrrXML/irrXML.h"
-#include <memory>
-#include <vector>
-#include <string>
-
-#define NMR_MAXXMLNAMELENGTH 1000000
 
 namespace NMR {
 
 	class CXmlReader_GCC : public CXmlReader {
 	private:
-	    std::shared_ptr<irr::io::IrrXMLReaderUTF16> m_pXMLReader;
-	    std::vector<std::wstring> m_sNameStack;
-	    std::wstring m_sCurrentName;
-	    nfBool m_bEOF;
-	    nfBool m_bEmptyElement;
-	    nfBool m_bParsingAttributes;
-	    nfInt32 m_nAttributeCount;
-	    nfInt32 m_nAttributeIndex;
-
 	public:
 		CXmlReader_GCC(_In_ PImportStream pImportStream);
 
+		virtual void GetQualifiedName(_Outptr_result_buffer_maybenull_(*pcwchQualifiedName + 1) const nfWChar ** ppwszQualifiedName, _Out_opt_ nfUint32 *pcwchQualifiedName);
 		virtual void GetValue(_Outptr_result_buffer_maybenull_(*pcwchValue + 1)  const nfWChar ** ppwszValue, _Out_opt_  nfUint32 *pcwchValue);
-		virtual void GetLocalName(_Outptr_result_buffer_maybenull_(*pcwchLocalName + 1) const nfWChar ** ppwszLocalName, _Out_opt_ nfUint32 *pcwchLocalName);
-		virtual void GetNamespaceURI(_Outptr_result_buffer_maybenull_(*pcwchValue + 1)  const nfWChar ** ppwszValue, _Out_opt_  nfUint32 *pcwchValue);
 
 		virtual nfBool Read(_Out_ eXmlReaderNodeType & NodeType);
 		virtual nfBool IsEOF();

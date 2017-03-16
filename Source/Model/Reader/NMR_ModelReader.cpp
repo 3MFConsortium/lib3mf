@@ -84,4 +84,14 @@ namespace NMR {
 		return m_pWarnings;
 	}
 
+	void CModelReader::addRelationToRead(_In_ std::wstring sRelationShipType)
+	{
+		m_RelationsToRead.insert(sRelationShipType);
+	}
+
+	void CModelReader::removeRelationToRead(_In_ std::wstring sRelationShipType)
+	{
+		m_RelationsToRead.erase(sRelationShipType);
+	}
+
 }

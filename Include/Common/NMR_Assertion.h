@@ -37,7 +37,7 @@ Native Model Repair algorithms and modules.
 #ifdef NMR_USEASSERTIONS
 #ifdef NMR_UNITTESTS
 #include "CppUnitTest.h"
-#define __NMRASSERT(value)  Microsoft::VisualStudio::CppUnitTestFramework::Assert::IsTrue (((int) (value)) != 0);
+#define __NMRASSERT(value)  Microsoft::VisualStudio::CppUnitTestFramework::Assert::IsTrue (((uintptr_t) (value)) != 0);
 
 #else
 #include <cassert>

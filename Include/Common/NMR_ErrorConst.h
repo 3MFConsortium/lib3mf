@@ -229,6 +229,12 @@ NMR_ErrorConst.h defines all error code constants.
 // Could not write to callback stream
 #define NMR_ERROR_COULDNOTWRITETOCALLBACKSTREAM 0x103D
 
+// Invalid Type Case
+#define NMR_ERROR_INVALIDCAST 0x103E
+
+// Buffer is full
+#define NMR_ERROR_BUFFERISFULL 0x103F
+
 /*-------------------------------------------------------------------
 Core framework error codes (0x2XXX)
 -------------------------------------------------------------------*/
@@ -409,6 +415,9 @@ Core framework error codes (0x2XXX)
 
 // Could not get stream position
 #define NMR_ERROR_COULDNOTGETSTREAMPOSITION 0x203B
+
+// Mesh Information Object was not assigned
+#define NMR_ERROR_INVALIDMESHINFORMATION 0x203C
 
 /*-------------------------------------------------------------------
 Model error codes (0x8XXX)
@@ -788,6 +797,20 @@ Model error codes (0x8XXX)
 // No model to write
 #define NMR_ERROR_NOMODELTOWRITE 0x807D
 
+// Failed to get OPC Relationship type
+#define NMR_ERROR_OPCRELATIONSHIPGETTYPEFAILED 0x807E
+
+// Could not get attachment URI
+#define NMR_ERROR_OPCCOULDNOTGETATTACHMENTURI 0x807F
+
+// Duplicate Attachment Path
+#define NMR_ERROR_DUPLICATEATTACHMENTPATH 0x8080
+
+// Invalid Model Attachment
+#define NMR_ERROR_INVALIDMODELATTACHMENT 0x8081
+
+// Could not find Model Attachment
+#define NMR_ERROR_ATTACHMENTNOTFOUND 0x8082
 
 /*-------------------------------------------------------------------
 XML Parser Error Constants (0x9XXX)

@@ -42,6 +42,7 @@ COM Interface Implementation for Model Class
 #include "Model/COM/NMR_COMInterface_ModelComponentsObject.h"
 #include "Model/COM/NMR_COMInterface_ModelTexture2D.h"
 #include "Model/COM/NMR_COMInterface_ModelBaseMaterial.h"
+#include "Model/COM/NMR_COMInterface_ModelAttachment.h"
 
 #ifndef __GNUC__
 #include "Model/Reader/NMR_ModelReader_3MF_OPC.h"
@@ -58,6 +59,7 @@ COM Interface Implementation for Model Class
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_StringUtils.h"
 #include "Common/NMR_Exception_Windows.h"
+#include "Common/Platform/NMR_ImportStream_Memory.h"
 
 #include <string.h>
 
@@ -1288,6 +1290,381 @@ namespace NMR {
 
 	}
 
+	LIB3MFMETHODIMP CCOMModel::AddAttachment(_In_z_ LPWSTR pwszURI, _In_z_ LPWSTR pwszRelationShipType, _Outptr_ ILib3MFModelAttachment ** ppAttachmentInstance)
+	{
+		try {
+			if (ppAttachmentInstance == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDPARAM);
+			if (pwszURI == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDPARAM);
+			if (pwszRelationShipType == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
+			PImportStream pStream = std::make_shared<CImportStream_Memory> ();
+			std::wstring sURI(pwszURI);
+			std::wstring sType(pwszRelationShipType);
+			PModelAttachment pAttachment = m_pModel->addAttachment(sURI, sType, pStream);
+
+			CCOMObject<CCOMModelAttachment> * pCOMObject = new CCOMObject<CCOMModelAttachment>();
+			pCOMObject->AddRef();
+			pCOMObject->setAttachment(pAttachment);
+			*ppAttachmentInstance = pCOMObject;
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+
+	}
+
+	LIB3MFMETHODIMP CCOMModel::AddAttachmentUTF8(_In_z_ LPSTR pszURI, _In_z_ LPSTR pszRelationShipType, _Outptr_ ILib3MFModelAttachment ** ppAttachmentInstance)
+	{
+		try {
+
+			if (ppAttachmentInstance == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDPARAM);
+			if (pszURI == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDPARAM);
+			if (pszRelationShipType == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+			PImportStream pStream = std::make_shared<CImportStream_Memory>();
+			std::string sUTF8URI(pszURI);
+			std::string sUTF8Type(pszRelationShipType);
+			std::wstring sUTF16URI = fnUTF8toUTF16 (sUTF8URI);
+			std::wstring sUTF16Type = fnUTF8toUTF16 (sUTF8Type);
+			PModelAttachment pAttachment = m_pModel->addAttachment(sUTF16URI, sUTF16Type, pStream);
+
+			CCOMObject<CCOMModelAttachment> * pCOMObject = new CCOMObject<CCOMModelAttachment>();
+			pCOMObject->AddRef();
+			pCOMObject->setAttachment(pAttachment);
+			*ppAttachmentInstance = pCOMObject;
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+
+
+	}
+
+	LIB3MFMETHODIMP CCOMModel::GetAttachment(_In_ DWORD nIndex, _Outptr_ ILib3MFModelAttachment ** ppAttachmentInstance)
+	{
+		try {
+
+			nfUint32 nCount = m_pModel->getAttachmentCount();
+			if (nIndex >= nCount)
+				throw CNMRException(NMR_ERROR_INVALIDINDEX);
+
+			if (ppAttachmentInstance == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+			PModelAttachment pAttachment = m_pModel->getModelAttachment(nIndex);
+
+			CCOMObject<CCOMModelAttachment> * pCOMObject = new CCOMObject<CCOMModelAttachment>();
+			pCOMObject->AddRef();
+			pCOMObject->setAttachment(pAttachment);
+			*ppAttachmentInstance = pCOMObject;
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+
+	}
+
+	LIB3MFMETHODIMP CCOMModel::FindAttachment(_In_z_ LPWSTR pwszURI, _Outptr_ ILib3MFModelAttachment ** ppAttachmentInstance)
+	{
+		try {
+
+			if (pwszURI == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+			std::wstring sURI(pwszURI);
+
+			PModelAttachment pAttachment = m_pModel->findModelAttachment(sURI);
+
+			if (pAttachment.get() == nullptr)
+				throw CNMRException(NMR_ERROR_ATTACHMENTNOTFOUND);
+
+			CCOMObject<CCOMModelAttachment> * pCOMObject = new CCOMObject<CCOMModelAttachment>();
+			pCOMObject->AddRef();
+			pCOMObject->setAttachment(pAttachment);
+			*ppAttachmentInstance = pCOMObject;
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+
+	}
+
+	LIB3MFMETHODIMP CCOMModel::FindAttachmentUTF8(_In_z_ LPSTR pszURI, _Outptr_ ILib3MFModelAttachment ** ppAttachmentInstance)
+	{
+		try {
+
+			if (pszURI == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+			std::string sUTF8URI(pszURI);
+			std::wstring sUTF16URI = fnUTF8toUTF16(sUTF8URI);
+
+			PModelAttachment pAttachment = m_pModel->findModelAttachment(sUTF16URI);
+
+			if (pAttachment.get() == nullptr)
+				throw CNMRException(NMR_ERROR_ATTACHMENTNOTFOUND);
+
+			CCOMObject<CCOMModelAttachment> * pCOMObject = new CCOMObject<CCOMModelAttachment>();
+			pCOMObject->AddRef();
+			pCOMObject->setAttachment(pAttachment);
+			*ppAttachmentInstance = pCOMObject;
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+
+	}
+
+	LIB3MFMETHODIMP CCOMModel::GetAttachmentCount(_Out_ DWORD * pnCount)
+	{
+		try {
+			if (!pnCount)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
+			nfUint32 nCount = m_pModel->getAttachmentCount();
+			*pnCount = nCount;
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+
+	}
+
+	LIB3MFMETHODIMP CCOMModel::GetAttachmentSize(_In_ DWORD nIndex, _Out_ UINT64 * pnSize)
+	{
+		try {
+
+			if (pnSize == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+			nfUint32 nCount = m_pModel->getAttachmentCount();
+			if (nIndex > nCount)
+				throw CNMRException(NMR_ERROR_INVALIDINDEX);
+
+			PModelAttachment pAttachment = m_pModel->getModelAttachment(nIndex);
+
+			if (pAttachment.get() == nullptr)
+				throw CNMRException(NMR_ERROR_ATTACHMENTNOTFOUND);
+
+			PImportStream pStream = pAttachment->getStream();
+			*pnSize = pStream->retrieveSize();
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+
+
+	}
+
+	LIB3MFMETHODIMP CCOMModel::GetAttachmentPath(_In_ DWORD nIndex, _Out_opt_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars)
+	{
+		try {
+
+			if (cbBufferSize > MODEL_MAXSTRINGBUFFERLENGTH)
+				throw CNMRException(NMR_ERROR_INVALIDBUFFERSIZE);
+
+			nfUint32 nCount = m_pModel->getAttachmentCount();
+			if (nIndex > nCount)
+				throw CNMRException(NMR_ERROR_INVALIDINDEX);
+
+			PModelAttachment pAttachment = m_pModel->getModelAttachment(nIndex);
+
+			if (pAttachment.get() == nullptr)
+				throw CNMRException(NMR_ERROR_ATTACHMENTNOTFOUND);
+
+			std::wstring sValue = pAttachment->getPathURI();
+
+			// Safely call StringToBuffer
+			nfUint32 nNeededChars = 0;
+			fnWStringToBufferSafe(sValue, pwszBuffer, cbBufferSize, &nNeededChars);
+
+			// Return length if needed
+			if (pcbNeededChars)
+				*pcbNeededChars = nNeededChars;
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+
+	}
+
+	LIB3MFMETHODIMP CCOMModel::GetAttachmentPathUTF8(_In_ DWORD nIndex, _Out_opt_ LPSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars)
+	{
+		try {
+
+			if (cbBufferSize > MODEL_MAXSTRINGBUFFERLENGTH)
+				throw CNMRException(NMR_ERROR_INVALIDBUFFERSIZE);
+
+			nfUint32 nCount = m_pModel->getAttachmentCount();
+			if (nIndex > nCount)
+				throw CNMRException(NMR_ERROR_INVALIDINDEX);
+
+			PModelAttachment pAttachment = m_pModel->getModelAttachment(nIndex);
+
+			if (pAttachment.get() == nullptr)
+				throw CNMRException(NMR_ERROR_ATTACHMENTNOTFOUND);
+
+			std::wstring sUTF16Value = pAttachment->getPathURI();
+			std::string sUTF8Value = fnUTF16toUTF8(sUTF16Value);
+
+			// Safely call StringToBuffer
+			nfUint32 nNeededChars = 0;
+			fnStringToBufferSafe(sUTF8Value, pwszBuffer, cbBufferSize, &nNeededChars);
+
+			// Return length if needed
+			if (pcbNeededChars)
+				*pcbNeededChars = nNeededChars;
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+
+	}
+
+	LIB3MFMETHODIMP CCOMModel::AddCustomContentType(_In_ LPCWSTR pszwExtension, _In_ LPCWSTR pszwContentType)
+	{
+
+		try {
+			if (pszwExtension == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDPARAM);
+			if (pszwContentType == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+			std::wstring sExtension(pszwExtension);
+			std::wstring sContentType(pszwContentType);
+
+			m_pModel->addCustomContentType(sExtension, sContentType);
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+
+	}
+
+	LIB3MFMETHODIMP CCOMModel::AddCustomContentTypeUTF8 (_In_ LPCSTR pszExtension, _In_ LPCSTR pszContentType) 
+	{
+		try {
+			if (pszExtension == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDPARAM);
+			if (pszContentType == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+			std::string sUTF8Extension(pszExtension);
+			std::string sUTF8ContentType(pszContentType);
+			std::wstring sExtension = fnUTF8toUTF16(sUTF8Extension);
+			std::wstring sContentType = fnUTF8toUTF16(sUTF8ContentType);
+
+			m_pModel->addCustomContentType(sExtension, sContentType);
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+
+	}
+
+	LIB3MFMETHODIMP CCOMModel::RemoveCustomContentType (_In_ LPCWSTR pszwExtension)
+	{
+		try {
+			if (pszwExtension == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+			std::wstring sExtension(pszwExtension);
+
+			m_pModel->removeCustomContentType(sExtension);
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+
+	}
+
+	LIB3MFMETHODIMP CCOMModel::RemoveCustomContentTypeUTF8 (_In_ LPCSTR pszExtension)
+	{
+		try {
+			if (pszExtension == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+			std::string sUTF8Extension(pszExtension);
+			std::wstring sExtension = fnUTF8toUTF16(sUTF8Extension);
+
+			m_pModel->removeCustomContentType(sExtension);
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+
+
+	}
 
 }

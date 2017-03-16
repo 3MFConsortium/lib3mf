@@ -48,6 +48,8 @@ namespace NMR {
 		PModelWriter_ColorMapping m_pColorMapping;
 		PModelWriter_TexCoordMappingContainer m_pTexCoordMappingContainer;
 		ModelResourceID m_ResourceCounter;
+		
+		nfBool m_bWriteMaterialExtension;
 
 		void calculateColors(_In_ CMesh * pMesh);
 		void calculateTexCoords(_In_ CMesh * pMesh);

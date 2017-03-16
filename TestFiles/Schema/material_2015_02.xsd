@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://schemas.microsoft.com/3dmanufacturing/material/2015/02" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xml="http://www.w3.org/XML/1998/namespace" 
+ targetNamespace="http://schemas.microsoft.com/3dmanufacturing/material/2015/02" elementFormDefault="unqualified" attributeFormDefault="unqualified" blockDefault="#all">
+	<xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="http://www.w3.org/2001/xml.xsd"/>
+	<xs:annotation>
+		<xs:documentation><![CDATA[
+Schema notes:
+Items within this schema follow a simple naming convention of appending a prefix indicating the type of element for references:
+Unprefixed: Element names
+CT_: Complex types
+ST_: Simple types
+]]></xs:documentation>
+	</xs:annotation>
+	<!-- Complex Types -->
+	<xs:complexType name="CT_Texture2D">
+		<xs:attribute name="id" type="ST_ResourceID" use="required"/>
+		<xs:attribute name="path" type="ST_UriReference" use="required"/>
+		<xs:attribute name="contenttype" type="ST_ContentType" use="required"/>
+		<xs:attribute name="box" type="ST_Box2D"/>
+		<xs:attribute name="tilestyleu" type="ST_TileStyle" default="repeat"/>
+		<xs:attribute name="tilestylev" type="ST_TileStyle" default="repeat"/>
+	</xs:complexType>
+	<xs:complexType name="CT_ColorGroup">
+		<xs:sequence>
+			<xs:element ref="color" maxOccurs="1073741824"/>
+		</xs:sequence>
+		<xs:attribute name="id" type="ST_ResourceID" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="CT_Color">
+		<xs:attribute name="color" type="ST_ColorValue" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="CT_Texture2DGroup">
+		<xs:sequence>
+			<xs:element ref="tex2coord" maxOccurs="1073741824"/>
+		</xs:sequence>
+		<xs:attribute name="id" type="ST_ResourceID" use="required"/>
+		<xs:attribute name="texid" type="ST_ResourceID" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="CT_Tex2Coord">
+		<xs:attribute name="u" type="ST_Number" use="required"/>
+		<xs:attribute name="v" type="ST_Number" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="CT_CompositeMaterials">
+		<xs:sequence>
+			<xs:element ref="composite" maxOccurs="1073741824"/>
+		</xs:sequence>
+		<xs:attribute name="id" type="ST_ResourceID" use="required"/>
+		<xs:attribute name="matid" type="ST_ResourceID" use="required"/>
+		<xs:attribute name="matindices" type="xs:string" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="CT_Composite">
+		<xs:attribute name="values" type="xs:string" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="CT_MultiProperties">
+		<xs:sequence>
+			<xs:element ref="multi" maxOccurs="1073741824"/>
+		</xs:sequence>
+		<xs:attribute name="id" type="ST_ResourceID" use="required"/>
+		<xs:attribute name="pids" type="xs:string" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="CT_Multi">
+		<xs:attribute name="pindices" type="xs:string" use="required"/>
+	</xs:complexType>
+	<!-- Simple Types -->
+	<xs:simpleType name="ST_ContentType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="image/jpeg"/>
+			<xs:enumeration value="image/png"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ST_TileStyle">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="none"/>
+			<xs:enumeration value="repeat"/>
+			<xs:enumeration value="reflect"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ST_ColorValue">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="#[0-9|A-F|a-f][0-9|A-F|a-f][0-9|A-F|a-f][0-9|A-F|a-f][0-9|A-F|a-f][0-9|A-F|a-f]([0-9|A-F|a-f][0-9|A-F|a-f])?"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ST_UriReference">
+		<xs:restriction base="xs:anyURI">
+			<xs:pattern value="/.*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ST_Box2D">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="((\-|\+)?(([0-9]+(\.[0-9]+)?)|(\.[0-9]+))((e|E)(\-|\+)?[0-9]+)?) ((\-|\+)?(([0-9]+(\.[0-9]+)?)|(\.[0-9]+))((e|E)(\-|\+)?[0-9]+)?) ((\-|\+)?(([0-9]+(\.[0-9]+)?)|(\.[0-9]+))((e|E)(\-|\+)?[0-9]+)?) ((\-|\+)?(([0-9]+(\.[0-9]+)?)|(\.[0-9]+))((e|E)(\-|\+)?[0-9]+)?)"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ST_Number">
+		<xs:restriction base="xs:double">
+			<xs:whiteSpace value="collapse"/>
+			<xs:pattern value="((\-|\+)?(([0-9]+(\.[0-9]+)?)|(\.[0-9]+))((e|E)(\-|\+)?[0-9]+)?)"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ST_ZeroToOne">
+		<xs:restriction base="ST_Number">
+			<xs:minInclusive value="0.0"/>
+			<xs:maxInclusive value="1.0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ST_ResourceID">
+		<xs:restriction base="xs:positiveInteger">
+			<xs:maxExclusive value="10737418248"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ST_ResourceIndex">
+		<xs:restriction base="xs:nonNegativeInteger">
+			<xs:maxExclusive value="10737418248"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- Elements -->
+	<xs:element name="texture2d" type="CT_Texture2D"/>
+	<xs:element name="colorgroup" type="CT_ColorGroup"/>
+	<xs:element name="color" type="CT_Color"/>
+	<xs:element name="texture2dgroup" type="CT_Texture2DGroup"/>
+	<xs:element name="tex2coord" type="CT_Tex2Coord"/>
+	<xs:element name="compositematerials" type="CT_CompositeMaterials"/>
+	<xs:element name="composite" type="CT_Composite"/>
+	<xs:element name="multiproperties" type="CT_MultiProperties"/>
+	<xs:element name="multi" type="CT_Multi"/>
+</xs:schema>

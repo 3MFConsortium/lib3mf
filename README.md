@@ -14,6 +14,7 @@ energy has been put into keeping it as platform independent as far as possible. 
 it compiles well with the GCC compiler, but there is some work left to recode a few platform 
 specific functionalities, which are now covered by the WinRT platform (like XML parsing and 
 ZIP compression). This will come when time passes.
+To generate projects for Visual Studio or Unix Makefiles use the scripts in the folder cmake.
 
 The specification can be downloaded at
 http://3mf.io/specification/

@@ -61,6 +61,9 @@ namespace NMR {
 	class CModelThumbnail;
 	typedef std::shared_ptr <CModelThumbnail> PModelThumbnail;
 
+	class CModelAttachment;
+	typedef std::shared_ptr <CModelAttachment> PModelAttachment;
+
 	class CModelBaseMaterialResource;
 	typedef std::shared_ptr <CModelBaseMaterialResource> PModelBaseMaterialResource;
 
@@ -92,6 +95,13 @@ namespace NMR {
 		// Texture Streams
 		std::map<std::wstring, PImportStream> m_TextureStreamMap;
 		std::vector<std::pair <std::wstring, PImportStream>> m_TextureStreams;
+
+		// Model Attachments
+		std::vector<PModelAttachment> m_Attachments;
+		std::map<std::wstring, PModelAttachment> m_AttachmentURIMap;
+
+		// Custom Attachment Content Types
+		std::map<std::wstring, std::wstring> m_CustomContentTypes;
 
 		// Indexed lookup lists for standard resource types
 		std::vector<PModelResource> m_ObjectLookup;
@@ -176,6 +186,22 @@ namespace NMR {
 		std::wstring getTextureStreamPath(_In_ nfUint32 nIndex);
 		PImportStream findTextureStream(_In_ std::wstring sPath);
 		void mergeTextureStreams(_In_ CModel * pSourceModel);
+
+		// Custom Attachments
+		PModelAttachment addAttachment(_In_ const std::wstring sPath, _In_ const std::wstring sRelationShipType, PImportStream pCopiedStream);
+		void removeAttachment(_In_ const std::wstring sPath);
+		nfUint32 getAttachmentCount();
+		PModelAttachment getModelAttachment(_In_ nfUint32 nIndex);
+		std::wstring getModelAttachmentPath(_In_ nfUint32 nIndex);
+		PModelAttachment findModelAttachment(_In_ std::wstring sPath);
+
+		// Custom Content Types
+		std::map<std::wstring, std::wstring> getCustomContentTypes();
+		void addCustomContentType(_In_ const std::wstring sExtension, _In_ const std::wstring sContentType);
+		void removeCustomContentType(_In_ const std::wstring sExtension);
+		nfBool contentTypeIsDefault(_In_ const std::wstring sExtension);
+
+
 	};
 
 	typedef std::shared_ptr <CModel> PModel;

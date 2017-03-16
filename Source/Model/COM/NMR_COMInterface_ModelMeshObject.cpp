@@ -266,7 +266,7 @@ namespace NMR {
 			CMesh * pMesh = getMesh();
 			__NMRASSERT(pMesh);
 
-			// retrieve node and return position
+			// retrieve triangle and return indices
 			MESHFACE * pFace = pMesh->getFace(nIndex);
 			for (j = 0; j < 3; j++)
 				pTriangle->m_nIndices[j] = pFace->m_nodeindices[j];
@@ -302,7 +302,7 @@ namespace NMR {
 				(pTriangle->m_nIndices[1] == pTriangle->m_nIndices[2]))
 				throw CNMRException_Windows(NMR_ERROR_INVALIDINDEX, LIB3MF_INVALIDARG);
 
-			// retrieve node and return position
+			// retrieve triangle and set indices
 			MESHFACE * pFace = pMesh->getFace(nIndex);
 			for (j = 0; j < 3; j++)
 				pFace->m_nodeindices[j] = pTriangle->m_nIndices[j];
@@ -338,11 +338,11 @@ namespace NMR {
 				(pTriangle->m_nIndices[1] == pTriangle->m_nIndices[2]))
 				throw CNMRException_Windows(NMR_ERROR_INVALIDINDEX, LIB3MF_INVALIDARG);
 
+			// retrieve nodes and add face
 			MESHNODE * pNodes[3];
 			for (j = 0; j < 3; j++)
 				pNodes[j] = pMesh->getNode(pTriangle->m_nIndices[j]);
 
-			// retrieve node and return position
 			MESHFACE * pFace = pMesh->addFace(pNodes[0], pNodes[1], pNodes[2]);
 			if (pnIndex) {
 				*pnIndex = pFace->m_index;
@@ -417,7 +417,7 @@ namespace NMR {
 
 			MODELMESHTRIANGLE * pTriangle = pIndices;
 			for (nIndex = 0; nIndex < nFaceCount; nIndex++) {
-				// retrieve node and return position
+				// retrieve triangle and return position
 				MESHFACE * pFace = pMesh->getFace(nIndex);
 				for (j = 0; j < 3; j++)
 					pTriangle->m_nIndices[j] = pFace->m_nodeindices[j];

@@ -39,6 +39,8 @@ to contain mesh surface information.
 
 namespace NMR {
 
+#define MESHINFORMATION_MAXINTERNALID 9223372036854775808ULL
+
 	typedef enum _eMeshInformationType {
 		emiAbstract   = 0x0000,
 		emiBaseMaterials = 0x0001,

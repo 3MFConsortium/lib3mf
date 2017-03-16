@@ -37,6 +37,7 @@ A model is an in memory representation of the 3MF file.
 #include "Model/Classes/NMR_ModelMeshObject.h" 
 #include "Model/Classes/NMR_ModelConstants.h" 
 #include "Model/Classes/NMR_ModelTypes.h" 
+#include "Model/Classes/NMR_ModelAttachment.h" 
 #include "Model/Classes/NMR_ModelBuildItem.h" 
 #include "Model/Classes/NMR_ModelBaseMaterials.h" 
 #include "Model/Classes/NMR_ModelTexture2D.h" 
@@ -592,6 +593,116 @@ namespace NMR {
 			addTextureStream(sPath, pCopiedStream);
 		}
 
+	}
+
+
+	PModelAttachment CModel::addAttachment(_In_ const std::wstring sPath, _In_ const std::wstring sRelationShipType, PImportStream pCopiedStream)
+	{
+		if (pCopiedStream.get() == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		std::wstring sLowerPath = sPath;
+		//std::transform(sLowerPath.begin(), sLowerPath.end(), sLowerPath.begin(), towupper);
+
+		auto iIterator = m_AttachmentURIMap.find(sLowerPath);
+		if (iIterator != m_AttachmentURIMap.end())
+			throw CNMRException(NMR_ERROR_DUPLICATEATTACHMENTPATH);
+
+		PModelAttachment pAttachment = std::make_shared<CModelAttachment>(this, sPath, sRelationShipType, pCopiedStream);
+		m_Attachments.push_back(pAttachment);
+		m_AttachmentURIMap.insert(std::make_pair(sLowerPath, pAttachment));
+
+		return pAttachment;
+
+	}
+
+	PModelAttachment CModel::getModelAttachment(_In_ nfUint32 nIndex)
+	{
+		nfUint32 nCount = getAttachmentCount();
+		if (nIndex >= nCount)
+			throw CNMRException(NMR_ERROR_INVALIDINDEX);
+
+		return m_Attachments[nIndex];
+
+	}
+
+	nfUint32 CModel::getAttachmentCount()
+	{
+		return (nfUint32) m_Attachments.size();
+	}
+
+	std::wstring CModel::getModelAttachmentPath(_In_ nfUint32 nIndex)
+	{
+		nfUint32 nCount = getAttachmentCount();
+		if (nIndex >= nCount)
+			throw CNMRException(NMR_ERROR_INVALIDINDEX);
+
+		PModelAttachment pAttachment = m_Attachments[nIndex];
+
+		return pAttachment->getPathURI();
+
+	}
+
+	PModelAttachment CModel::findModelAttachment(_In_ std::wstring sPath)
+	{
+		auto iIterator = m_AttachmentURIMap.find(sPath);
+		if (iIterator != m_AttachmentURIMap.end()) {
+			return iIterator->second;
+		}
+
+		return nullptr;
+	}
+
+	void CModel::removeAttachment(_In_ const std::wstring sPath)
+	{
+		auto iIterator = m_AttachmentURIMap.find(sPath);
+		if (iIterator != m_AttachmentURIMap.end()) {
+			auto iVectorIterator = m_Attachments.begin();
+			while (iVectorIterator != m_Attachments.end()) {
+				if (iVectorIterator->get() == iIterator->second.get()) {
+					m_Attachments.erase(iVectorIterator);
+					break;
+				}
+				iVectorIterator++;
+			}
+
+			m_AttachmentURIMap.erase(iIterator);
+		}
+
+	}
+
+	std::map<std::wstring, std::wstring> CModel::getCustomContentTypes()
+	{
+		return m_CustomContentTypes;
+	}
+
+	void CModel::addCustomContentType(_In_ const std::wstring sExtension, _In_ const std::wstring sContentType)
+	{
+		m_CustomContentTypes.insert(std::make_pair(sExtension, sContentType));
+	}
+
+	void CModel::removeCustomContentType(_In_ const std::wstring sExtension)
+	{
+		m_CustomContentTypes.erase(sExtension);
+	}
+
+
+	nfBool CModel::contentTypeIsDefault(_In_ const std::wstring sExtension)
+	{
+		if (wcscmp(sExtension.c_str(), PACKAGE_3D_RELS_EXTENSION) == 0)
+			return true;
+		if (wcscmp(sExtension.c_str(), PACKAGE_3D_MODEL_EXTENSION) == 0)
+			return true;
+		if (wcscmp(sExtension.c_str(), PACKAGE_3D_TEXTURE_EXTENSION) == 0)
+			return true;
+		if (wcscmp(sExtension.c_str(), PACKAGE_3D_PNG_EXTENSION) == 0)
+			return true;
+		if (wcscmp(sExtension.c_str(), PACKAGE_3D_JPEG_EXTENSION) == 0)
+			return true;
+		if (wcscmp(sExtension.c_str(), PACKAGE_3D_JPG_EXTENSION) == 0)
+			return true;
+
+		return false;
 	}
 
 }

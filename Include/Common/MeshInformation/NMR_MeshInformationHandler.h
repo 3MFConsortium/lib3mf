@@ -44,6 +44,9 @@ namespace NMR {
 	protected:
 		std::vector<PMeshInformation> m_pInformations;
 		std::array<CMeshInformation *, emiLastType> m_pLookup;
+
+		nfUint64 m_nInternalIDCounter;
+
 	public:
 		CMeshInformationHandler();
 
@@ -51,6 +54,7 @@ namespace NMR {
 		void addFace(_In_ nfUint32 nNewFaceCount);
 
 		CMeshInformation * getInformationIndexed(_In_ nfUint32 nIdx);
+		PMeshInformation getPInformationIndexed(_In_ nfUint32 nIdx);
 		CMeshInformation * getInformationByType(_In_ nfUint32 nChannel, _In_ eMeshInformationType eType);
 		nfUint32 getInformationCount();
 
@@ -59,7 +63,8 @@ namespace NMR {
 		void permuteNodeInformation(_In_ nfUint32 nFaceIdx, _In_ nfUint32 nNodeIndex1, _In_ nfUint32 nNodeIndex2, _In_ nfUint32 nNodeIndex3);
 		void resetFaceInformation(_In_ nfUint32 nFaceIdx);
 
-		void removeInformation(eMeshInformationType eType);
+		void removeInformation(_In_ eMeshInformationType eType);
+		void removeInformationIndexed(_In_ nfUint32 nIndex);
 
 	};
 
