@@ -33,11 +33,12 @@ bothering about global registration of a COM Server.
 --*/
 
 #include "Model/COM/NMR_COMInterfaces.h" 
-#include "Model/COM/NMR_COMInterface_ModelFactory.h" 
 #include "Model/COM/NMR_COMInterface_Model.h" 
+#include "Model/COM/NMR_COMInterface_ModelFactory.h" 
 #include "Model/COM/NMR_COMVersion.h" 
-#include "Common/Platform/NMR_COM_Native.h" 
-#include "Common/NMR_Exception_Windows.h" 
+#include "Common/NMR_Exception_Windows.h"
+#include "Model/Classes/NMR_ModelConstants.h"
+#include "Common/NMR_StringUtils.h"
 
 namespace NMR {
 
@@ -65,9 +66,9 @@ namespace NMR {
 		}
 		else {
 			if (m_nErrorCode == NMR_ERROR_INVALIDPOINTER)
-				return E_POINTER;
+				return LIB3MF_POINTER;
 			if (m_nErrorCode == NMR_ERROR_INVALIDPARAM)
-				return E_INVALIDARG;
+				return LIB3MF_INVALIDARG;
 
 			return LIB3MF_FAIL;
 		}
@@ -107,7 +108,7 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
 
 			*ppModel = new CCOMObject<CCOMModel>();
-			(*ppModel)->AddRef();
+			( (CCOMObject<CCOMModel>*) (*ppModel) )->AddRef();
 			return handleSuccess();
 		}
 		catch (CNMRException & Exception) {
@@ -150,6 +151,50 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
 
 			*pInterfaceVersion = NMR_APIVERSION_INTERFACE;
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
+
+	LIB3MFMETHODIMP CCOMModelFactory::QueryExtension(_In_z_ LPCWSTR pwszExtensionUrl, _Out_ BOOL * pbIsSupported, _Out_opt_ DWORD * pExtensionInterfaceVersion)
+	{
+		try
+		{
+			if (pwszExtensionUrl == nullptr || pbIsSupported == nullptr || pExtensionInterfaceVersion == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
+			if (wcscmp(pwszExtensionUrl, XML_3MF_NAMESPACE_MATERIALSPEC) == 0) {
+				*pbIsSupported = true;
+				*pExtensionInterfaceVersion = NMR_APIVERSION_INTERFACE_MATERIALSPEC;
+			}
+			else {
+				*pbIsSupported = false;
+			}
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
+	LIB3MFMETHODIMP CCOMModelFactory::QueryExtensionUTF8(_In_z_ LPCSTR pszExtensionUrl, _Out_ BOOL * pbIsSupported, _Out_opt_ DWORD * pExtensionInterfaceVersion) {
+		try {
+			if (!pszExtensionUrl)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
+			std::string sUTF8ExtensionUrl(pszExtensionUrl);
+			std::wstring sUTF16Language = fnUTF8toUTF16(sUTF8ExtensionUrl);
+			QueryExtension(sUTF16Language.c_str(), pbIsSupported, pExtensionInterfaceVersion);
 
 			return handleSuccess();
 		}

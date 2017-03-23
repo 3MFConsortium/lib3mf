@@ -32,6 +32,7 @@ Abstract: COM Interface Exports for plain C DLLs
 #include "Model/COM/NMR_DLLInterfaces.h"
 #include "Model/COM/NMR_COMInterfaces.h"
 #include "Model/COM/NMR_COMInterface_Model.h"
+#include "Model/COM/NMR_COMInterface_ModelFactory.h"
 
 #ifndef __GNUC__
 #include "Common/NMR_Exception_Windows.h"
@@ -62,6 +63,39 @@ namespace NMR {
 			*pInterfaceVersion = NMR_APIVERSION_INTERFACE;
 
 			return LIB3MF_OK;
+		}
+
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_queryextension(_In_z_ LPCWSTR pwszExtensionUrl, _Out_ BOOL * pbIsSupported, _Out_opt_ DWORD * pExtensionInterfaceVersion)
+		{
+			if (!pwszExtensionUrl || !pbIsSupported || !pExtensionInterfaceVersion)
+				return LIB3MF_POINTER;
+			*pbIsSupported = false;
+
+			CCOMObject<CCOMModelFactory> * pNewModelFactory = new CCOMObject<CCOMModelFactory>;
+			LIB3MFRESULT result = pNewModelFactory->QueryExtension(pwszExtensionUrl, pbIsSupported, pExtensionInterfaceVersion);
+#ifndef __GNUC__
+			pNewModelFactory->Release();
+#else
+			delete pNewModelFactory;
+#endif
+			return result;
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_queryextensionutf8(_In_z_ LPCSTR pszExtensionUrl, _Out_ BOOL * pbIsSupported, _Out_opt_ DWORD * pExtensionInterfaceVersion)
+		{
+			if (!pszExtensionUrl || !pbIsSupported || !pExtensionInterfaceVersion)
+				return LIB3MF_POINTER;
+			*pbIsSupported = false;
+			CCOMObject<CCOMModelFactory> * pNewModelFactory = new CCOMObject<CCOMModelFactory>;
+			LIB3MFRESULT result = pNewModelFactory->QueryExtensionUTF8(pszExtensionUrl, pbIsSupported, pExtensionInterfaceVersion);
+#ifndef __GNUC__
+			pNewModelFactory->Release();
+#else
+			delete pNewModelFactory;
+#endif
+
+			return result;
 		}
 
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_createmodel(_Outptr_ PLib3MFModel ** ppModel, _In_ BOOL bInitialize)
@@ -133,12 +167,12 @@ namespace NMR {
 
 		}
 
-		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_writer_writetofileutf8(_In_ PLib3MFModelWriter * pWriter, _In_z_ LPCSTR pwszFilename)
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_writer_writetofileutf8(_In_ PLib3MFModelWriter * pWriter, _In_z_ LPCSTR pszFilename)
 		{
 			if (!pWriter)
 				return LIB3MF_POINTER;
 
-			return ((ILib3MFModelWriter *)pWriter)->WriteToFileUTF8(pwszFilename);
+			return ((ILib3MFModelWriter *)pWriter)->WriteToFileUTF8(pszFilename);
 		}
 
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_reader_readfromfile(_In_ PLib3MFModelReader * pReader, _In_z_ LPCWSTR pwszFilename)
@@ -149,12 +183,12 @@ namespace NMR {
 			return ((ILib3MFModelReader *)pReader)->ReadFromFile(pwszFilename);
 		}
 
-		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_reader_readfromfileutf8(_In_ PLib3MFModelReader * pReader, _In_z_ LPCSTR pwszFilename)
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_reader_readfromfileutf8(_In_ PLib3MFModelReader * pReader, _In_z_ LPCSTR pszFilename)
 		{
 			if (!pReader)
 				return LIB3MF_POINTER;
 
-			return ((ILib3MFModelReader *)pReader)->ReadFromFileUTF8(pwszFilename);
+			return ((ILib3MFModelReader *)pReader)->ReadFromFileUTF8(pszFilename);
 		}
 	
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_reader_addrelationtoread(_In_ PLib3MFModelReader * pReader, _In_z_ LPCWSTR pwszRelationshipType)

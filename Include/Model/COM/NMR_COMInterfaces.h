@@ -113,7 +113,7 @@ namespace NMR {
 		* @param[in] pwszFilename Filename to write into as UTF8 string
 		* @return error code or 0 (success)
 		*/
-		LIB3MFMETHOD(WriteToFileUTF8) (_In_z_ LPCSTR pwszFilename) LIB3MFABSTRACT;
+		LIB3MFMETHOD(WriteToFileUTF8) (_In_z_ LPCSTR pszFilename) LIB3MFABSTRACT;
 
 #ifndef __GNUC__
 		/**
@@ -159,10 +159,10 @@ namespace NMR {
 		/**
 		* Reads a model from a file. The file type is specified by the Model Reader class
 		*
-		* @param[in] pwszFilename Filename to read from as UTF8 string
+		* @param[in] pszFilename Filename to read from as UTF8 string
 		* @return error code or 0 (success)
 		*/
-		LIB3MFMETHOD(ReadFromFileUTF8) (_In_z_ LPCSTR pwszFilename) LIB3MFABSTRACT;
+		LIB3MFMETHOD(ReadFromFileUTF8) (_In_z_ LPCSTR pszFilename) LIB3MFABSTRACT;
 
 		/**
 		* Returns Warning and Error Count of the read process
@@ -1340,14 +1340,6 @@ namespace NMR {
 		LIB3MFMETHOD(GetVertexCount) (_Out_ DWORD * pnVertexCount) LIB3MFABSTRACT;
 
 		/**
-		* Returns the triangle count of a mesh object
-		*
-		* @param[out] pnTriangleCount filled with the triangle count
-		* @return error code or 0 (success)
-		*/
-		LIB3MFMETHOD(GetTriangleCount) (_Out_ DWORD * pnTriangleCount) LIB3MFABSTRACT;
-
-		/**
 		* Returns coordinates of a single vertex of a mesh object
 		*
 		* @param[in] nIndex Index of the vertex (0 to vertexcount - 1)
@@ -1375,6 +1367,24 @@ namespace NMR {
 		LIB3MFMETHOD(AddVertex) (_In_ MODELMESHVERTEX * pVertex, _Out_opt_ DWORD * pnIndex) LIB3MFABSTRACT;
 
 		/**
+		* Retrieves all vertex coordinates of a mesh object
+		*
+		* @param[out] pVertices buffer filled with the vertex coordinates
+		* @param[in] nBufferSize size of the buffer in elements, must be at least vertexcount
+		* @param[out] pnVertexCount returns how many vertices have been written
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(GetVertices) (_Out_ MODELMESHVERTEX * pVertices, _In_ DWORD nBufferSize, _Out_opt_ DWORD * pnVertexCount) LIB3MFABSTRACT;
+
+		/**
+		* Returns the triangle count of a mesh object
+		*
+		* @param[out] pnTriangleCount filled with the triangle count
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(GetTriangleCount) (_Out_ DWORD * pnTriangleCount) LIB3MFABSTRACT;
+
+		/**
 		* Returns indices of a single triangle of a mesh object
 		*
 		* @param[in] nIndex Index of the triangle (0 to trianglecount - 1)
@@ -1392,7 +1402,6 @@ namespace NMR {
 		*/
 		LIB3MFMETHOD(SetTriangle) (_In_ DWORD nIndex, _In_ MODELMESHTRIANGLE * pTriangle) LIB3MFABSTRACT;
 
-
 		/**
 		* Adds a single triangle to a mesh object
 		*
@@ -1401,16 +1410,6 @@ namespace NMR {
 		* @return error code or 0 (success)
 		*/
 		LIB3MFMETHOD(AddTriangle) (_In_ MODELMESHTRIANGLE * pTriangle, _Out_opt_ DWORD * pnIndex) LIB3MFABSTRACT;
-
-		/**
-		* Retrieves all vertex coordinates of a mesh object
-		*
-		* @param[out] pVertices buffer filled with the vertex coordinates
-		* @param[in] nBufferSize size of the buffer in elements, must be at least vertexcount
-		* @param[out] pnVertexCount returns how many vertices have been written
-		* @return error code or 0 (success)
-		*/
-		LIB3MFMETHOD(GetVertices) (_Out_ MODELMESHVERTEX * pVertices, _In_ DWORD nBufferSize, _Out_opt_ DWORD * pnVertexCount) LIB3MFABSTRACT;
 
 		/**
 		* Retrieves all triangle indices of a mesh object
@@ -1432,7 +1431,6 @@ namespace NMR {
 		* @return error code or 0 (success)
 		*/
 		LIB3MFMETHOD(SetGeometry) (_In_ MODELMESHVERTEX * pVertices, _In_ DWORD nVertexCount, _In_ MODELMESHTRIANGLE * pTriangles, _In_ DWORD nTriangleCount) LIB3MFABSTRACT;
-
 
 		/* Property handling */
 
@@ -2219,6 +2217,31 @@ namespace NMR {
 		* @return error code or 0 (success)
 		*/
 		LIB3MFMETHOD(GetInterfaceVersion) (_Out_ DWORD * pInterfaceVersion) LIB3MFABSTRACT;
+
+		/**
+		* checks whether a extension is supported by the DLL and which version of the interface is used
+		* This extension version will increment with each change of the API of the extension
+		* and may be used to ensure API compatibility.
+		*
+		* @param[in] pwszExtensionUrl URL of extension to check
+		* @param[out] pbIsSupported returns whether the extension is supported or not
+		* @param[out] pInterfaceVersion returns the interface version of of the extensions (if extension is supported)
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(QueryExtension) (_In_z_ LPCWSTR pwszExtensionUrl, _Out_ BOOL * pbIsSupported, _Out_opt_ DWORD * pExtensionInterfaceVersion) LIB3MFABSTRACT;
+
+		/**
+		* checks whether a extension is supported by the DLL and which version of the interface is used
+		* This extension version will increment with each change of the API of the extension
+		* and may be used to ensure API compatibility.
+		*
+		* @param[in] pwszExtensionUrl URL of extension to check as UTF8 string
+		* @param[out] pbIsSupported returns whether the extension is supported or not
+		* @param[out] pInterfaceVersion returns the interface version of of the extensions (if extension is supported)
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(QueryExtensionUTF8) (_In_z_ LPCSTR pszExtensionUrl, _Out_ BOOL * pbIsSupported, _Out_opt_ DWORD * pExtensionInterfaceVersion) LIB3MFABSTRACT;
+
 	};
 
 }

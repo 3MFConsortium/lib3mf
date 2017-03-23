@@ -98,6 +98,30 @@ namespace NMR {
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_getinterfaceversion(_Out_ DWORD * pInterfaceVersion);
 
 		/**
+		* checks whether a extension is supported by the DLL and which version of the interface is used
+		* This extension version will increment with each change of the API of the extension
+		* and may be used to ensure API compatibility.
+		*
+		* @param[in] pwszExtensionUrl URL of extension to check
+		* @param[out] pbIsSupported returns whether the extension is supported or not
+		* @param[out] pInterfaceVersion returns the interface version of of the extensions (if extension is supported)
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_queryextension(_In_z_ LPCWSTR pwszExtensionUrl, _Out_ BOOL * pbIsSupported, _Out_opt_ DWORD * pExtensionInterfaceVersion);
+
+		/**
+		* checks whether a extension is supported by the DLL and which version of the interface is used
+		* This extension version will increment with each change of the API of the extension
+		* and may be used to ensure API compatibility.
+		*
+		* @param[in] pwszExtensionUrl URL of extension to check as UTF8 string
+		* @param[out] pbIsSupported returns whether the extension is supported or not
+		* @param[out] pInterfaceVersion returns the interface version of of the extensions (if extension is supported)
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_queryextensionutf8(_In_z_ LPCSTR pszExtensionUrl, _Out_ BOOL * pbIsSupported, _Out_opt_ DWORD * pExtensionInterfaceVersion);
+
+		/**
 		* creates an empty model instance
 		*
 		* @param[out] ppModel returns created model instance
@@ -125,6 +149,7 @@ namespace NMR {
 		*/
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_getlasterror(_In_ PLib3MFBase * pInstance, _Out_ DWORD * pErrorCode, _Outptr_opt_ LPCSTR * pErrorMessage);
 
+
 		// Reader/Writer
 		/**
 		* Writes out the model as file. The file type is specified by the Model Writer class
@@ -142,7 +167,7 @@ namespace NMR {
 		* @param[in] pwszFilename Filename to write into as UTF8 string
 		* @return error code or 0 (success)
 		*/
-		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_writer_writetofileutf8(_In_ PLib3MFModelWriter * pWriter, _In_z_ LPCSTR pwszFilename);
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_writer_writetofileutf8(_In_ PLib3MFModelWriter * pWriter, _In_z_ LPCSTR pszFilename);
 
 		/**
 		* Writes out the model and passes the data to a provided callback function. The file type is specified by the Model Writer class
@@ -171,7 +196,7 @@ namespace NMR {
 		* @param[in] pwszFilename Filename to read from
 		* @return error code or 0 (success)
 		*/
-		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_reader_readfromfileutf8(_In_ PLib3MFModelReader * pReader, _In_z_ LPCSTR pwszFilename);
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_reader_readfromfileutf8(_In_ PLib3MFModelReader * pReader, _In_z_ LPCSTR pszFilename);
 
 
 		/**
@@ -1110,7 +1135,7 @@ namespace NMR {
 		* @param[in] pszFilename Filename to read from
 		* @return error code or 0 (success)
 		*/
-		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_attachment_readfromfileutf8 (_In_ PLib3MFModelAttachment * pAttachment, _In_z_ LPCSTR pwszFilename);
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_attachment_readfromfileutf8 (_In_ PLib3MFModelAttachment * pAttachment, _In_z_ LPCSTR pszFilename);
 
 		/**
 		* Reads a attachment from a memory buffer.
@@ -1432,7 +1457,7 @@ namespace NMR {
 		*/
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_meshobject_ismanifoldandoriented(_In_ PLib3MFModelMeshObject * pMeshObject, _Out_ BOOL * pbIsOrientedAndManifold);
 
-		// Components
+		// Component
 		/**
 		* Returns the Resource Instance of the component.
 		*

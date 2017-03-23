@@ -27,7 +27,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_SAL.h defines Security Annotations for Visual Studio
+NMR_SAL.h defines Security Annotations for Visual C++. For other compilers,
+they are meaningless.
 
 --*/
 

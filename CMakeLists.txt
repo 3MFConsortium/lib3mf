@@ -36,6 +36,7 @@ set(SRCS_WIN_MANAGEDTEST
 ./Source/UnitTests/UnitTest_Mesh.cpp
 ./Source/UnitTests/UnitTest_MeshFormat_STL.cpp
 ./Source/UnitTests/UnitTest_Model.cpp
+./Source/UnitTests/UnitTest_ModelFactory.cpp
 )
 
 set(SRCS_WINONLY
@@ -45,7 +46,6 @@ set(SRCS_WINONLY
 ./Source/Common/Platform/NMR_XmlReader_COM.cpp
 ./Source/Common/Platform/NMR_XmlWriter_COM.cpp
 ./Source/Model/Reader/NMR_ModelReader_3MF_OPC.cpp
-./Source/Model/COM/NMR_COMInterface_ModelFactory.cpp
 )
 
 set(SRCS_UNIX_MAIN
@@ -142,6 +142,7 @@ set(SRCS_COMMON
 ./Source/Model/COM/NMR_COMInterface_ModelComponent.cpp
 ./Source/Model/COM/NMR_COMInterface_ModelComponentsObject.cpp
 ./Source/Model/COM/NMR_COMInterface_ModelDefaultPropertyHandler.cpp
+./Source/Model/COM/NMR_COMInterface_ModelFactory.cpp
 ./Source/Model/COM/NMR_COMInterface_ModelMeshObject.cpp
 ./Source/Model/COM/NMR_COMInterface_ModelPropertyHandler.cpp
 ./Source/Model/COM/NMR_COMInterface_ModelReader.cpp

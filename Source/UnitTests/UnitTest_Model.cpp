@@ -26,7 +26,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-UnitTest_Model.cpp: Defines Unittests for model class
+UnitTest_Model.cpp: Defines Unittests for the model class
 
 --*/
 
@@ -43,6 +43,7 @@ UnitTest_Model.cpp: Defines Unittests for model class
 #include "Model\Classes\NMR_ModelMeshObject.h"
 #include "Model\Classes\NMR_ModelObject.h"
 #include "Common\NMR_Exception.h"
+
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 

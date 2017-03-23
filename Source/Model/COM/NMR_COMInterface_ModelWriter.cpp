@@ -131,17 +131,17 @@ namespace NMR {
 		}
 	}
 
-	LIB3MFMETHODIMP CCOMModelWriter::WriteToFileUTF8(_In_z_ LPCSTR pwszFilename)
+	LIB3MFMETHODIMP CCOMModelWriter::WriteToFileUTF8(_In_z_ LPCSTR pszFilename)
 	{
 
 		try {
-			if (pwszFilename == nullptr)
+			if (pszFilename == nullptr)
 				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
 			if (m_pModelWriter.get() == nullptr)
 				throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
 
 			// Convert to UTF16
-			std::string sUTF8FileName(pwszFilename);
+			std::string sUTF8FileName(pszFilename);
 			std::wstring sUTF16FileName = fnUTF8toUTF16(sUTF8FileName);
 
 			setlocale (LC_ALL, "C");
