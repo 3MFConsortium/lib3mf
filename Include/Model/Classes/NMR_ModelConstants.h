@@ -241,9 +241,10 @@ These are given by the 3MF Standard
 #define XML_3MF_MODELUNIT_FOOT                      L"foot"
 #define XML_3MF_MODELUNIT_METER                     L"meter"
 
-#define XML_3MF_OBJECTTYPE_OTHER					L"other"
-#define XML_3MF_OBJECTTYPE_MODEL					L"model"
-#define XML_3MF_OBJECTTYPE_SUPPORT					L"support"
+#define XML_3MF_OBJECTTYPE_OTHER			L"other"
+#define XML_3MF_OBJECTTYPE_MODEL			L"model"
+#define XML_3MF_OBJECTTYPE_SUPPORT			L"support"
+#define XML_3MF_OBJECTTYPE_SOLIDSUPPORT			L"solidsupport"
 
 #define XML_3MF_LANG_US                             L"en-US"
 

@@ -83,6 +83,7 @@ namespace NMR {
 		switch (eType) {
 		case MODELOBJECTTYPE_MODEL: return isManifoldAndOriented();
 		case MODELOBJECTTYPE_SUPPORT: return true;
+		case MODELOBJECTTYPE_SOLIDSUPPORT: return isManifoldAndOriented();
 		default:
 			return false;
 

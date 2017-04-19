@@ -98,6 +98,10 @@ namespace NMR {
 			m_ObjectType = MODELOBJECTTYPE_SUPPORT;
 			return true;
 		}
+		if (sTypeString == XML_3MF_OBJECTTYPE_SOLIDSUPPORT) {
+			m_ObjectType = MODELOBJECTTYPE_SOLIDSUPPORT;
+			return true;
+		}
 
 		if (bRaiseException)
 			throw CNMRException(NMR_ERROR_INVALIDMODELOBJECTTYPE);
@@ -114,6 +118,8 @@ namespace NMR {
 			return std::wstring(XML_3MF_OBJECTTYPE_MODEL);
 		case MODELOBJECTTYPE_SUPPORT:
 			return std::wstring(XML_3MF_OBJECTTYPE_SUPPORT);
+		case MODELOBJECTTYPE_SOLIDSUPPORT:
+			return std::wstring(XML_3MF_OBJECTTYPE_SOLIDSUPPORT);
         default:
             return L"";
 		}
