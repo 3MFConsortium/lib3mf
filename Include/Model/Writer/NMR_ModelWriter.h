@@ -51,6 +51,8 @@ namespace NMR {
 		CModelWriter(_In_ PModel pModel);
 
 		virtual void exportToStream(_In_ PExportStream pStream) = 0;
+		void addCustomContentType(_In_ std::wstring sExtension, _In_ std::wstring sContentType);
+ 		void removeCustomContentType(_In_ std::wstring sExtension);
 	};
 
 	typedef std::shared_ptr <CModelWriter> PModelWriter;

@@ -35,6 +35,7 @@ It uses libzip and irrxml to parse the OPC package.
 #include "Model/Reader/NMR_ModelReader_3MF_Native.h" 
 #include "Model/Reader/NMR_ModelReaderNode_Model.h" 
 #include "Model/Classes/NMR_ModelConstants.h" 
+#include "Model/Classes/NMR_ModelAttachment.h" 
 #include "Common/NMR_Exception.h" 
 #include "Common/NMR_Exception_Windows.h" 
 
@@ -60,7 +61,8 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_OPCCOULDNOTGETMODELSTREAM);
 
 		extractTexturesFromRelationships(pModelPart.get());
-
+		extractCustomDataFromRelationships(pModelPart.get());
+		
 		return pModelPart->getImportStream();
 
 	}
@@ -90,6 +92,30 @@ namespace NMR {
 		}
 
 	}
+	
+	void CModelReader_3MF_Native::extractCustomDataFromRelationships(_In_ COpcPackagePart * pModelPart)
+	{
+		if (pModelPart == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		std::list<POpcPackageRelationship> RelationShips = pModelPart->getRelationShips();
+		std::list<POpcPackageRelationship>::iterator iIterator;
+
+		for (iIterator = RelationShips.begin(); iIterator != RelationShips.end(); iIterator++) {
+			std::wstring sRelationShipType = (*iIterator)->getType();
+			auto iRelationIterator = m_RelationsToRead.find(sRelationShipType);
+			if (iRelationIterator != m_RelationsToRead.end()) {			
+				std::wstring sURI = (*iIterator)->getTargetPartURI();
+				POpcPackagePart pPart = m_pPackageReader->createPart(sURI);
+				PImportStream pAttachmentStream = pPart->getImportStream();
+				PImportStream pMemoryStream = pAttachmentStream->copyToMemory();
+				
+				// Add Attachment Stream to Model
+				m_pModel->addAttachment(sURI, sRelationShipType, pMemoryStream);
+			}
+		}
+	}
+ 
 
 	void CModelReader_3MF_Native::checkContentTypes()
 	{

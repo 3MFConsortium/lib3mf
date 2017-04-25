@@ -51,6 +51,7 @@ namespace NMR {
 
 	protected:
 
+		void extractCustomDataFromRelationships(_In_ COpcPackagePart * pModelPart);
 		void extractTexturesFromRelationships(_In_ COpcPackagePart * pModelPart);
 		void checkContentTypes();
 	
