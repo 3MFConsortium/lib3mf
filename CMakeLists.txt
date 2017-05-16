@@ -235,11 +235,14 @@ if(NOT DEFINED LIB3MF_TESTS)
 endif()
 message("LIB3MF_TESTS ... " ${LIB3MF_TESTS})
 
-
+#########################################################
+# shared library
 add_library(${PROJECT_NAME} SHARED ${SRCS})
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include)
 
 if (WIN32)
+	#########################################################
+	# platform specific tests
 	if(LIB3MF_TESTS)
 		SET(UNITTEST_NAME "${PROJECT_NAME}unittests")
 		add_library(${UNITTEST_NAME} SHARED ${SRCS_MANAGED_TEST})
@@ -248,13 +251,25 @@ if (WIN32)
 	
 		target_compile_options(${UNITTEST_NAME} PUBLIC "$<$<CONFIG:DEBUG>:/Od;/Ob0;/Gm;/sdl;/W3;/WX;/FC;-DNMR_USEASSERTIONS;-DNMR_UNITTESTS>")
 		target_compile_options(${UNITTEST_NAME} PUBLIC "$<$<CONFIG:RELEASE>:/O2;/sdl;/WX;/Oi;/Gy;/FC>")
-
 		file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/TestOutput")
 	endif()
 elseif(UNIX AND NOT APPLE)
 	SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES LINK_FLAGS -s)
 endif()
 
-
-
-
+#########################################################
+# platform independent tests for shared library interface
+if(LIB3MF_TESTS)
+	ADD_SUBDIRECTORY (googletest)
+	enable_testing()
+	SET(CTEST_SHARED "${PROJECT_NAME}_CTest_shared")
+	SET(gtest_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/googletest/googletest")
+	include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
+	add_executable(${CTEST_SHARED} ${CMAKE_CURRENT_SOURCE_DIR}/Source/UnitTests/UnitTest_DLLInterfaces.cpp )
+	target_include_directories(${CTEST_SHARED} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include)
+	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
+	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
+	add_dependencies(${CTEST_SHARED} ${PROJECT_NAME})
+	target_link_libraries(${CTEST_SHARED} gtest gtest_main ${PROJECT_NAME})
+	add_test(${CTEST_SHARED} ${CTEST_SHARED})
+endif()
