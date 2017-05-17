@@ -230,23 +230,30 @@ else()
 endif()
 
 
+if(NOT DEFINED LIB3MF_TESTS)
+	set(LIB3MF_TESTS TRUE)
+endif()
+message("LIB3MF_TESTS ... " ${LIB3MF_TESTS})
+
+
 add_library(${PROJECT_NAME} SHARED ${SRCS})
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include)
 
 if (WIN32)
-	SET(UNITTEST_NAME "${PROJECT_NAME}unittests")
-	add_library(${UNITTEST_NAME} SHARED ${SRCS_MANAGED_TEST})
-	target_include_directories(${UNITTEST_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include)
-	target_include_directories (${UNITTEST_NAME} PUBLIC "${VCINSTALLDIR}/../../../UnitTest/include")
+	if(LIB3MF_TESTS)
+		SET(UNITTEST_NAME "${PROJECT_NAME}unittests")
+		add_library(${UNITTEST_NAME} SHARED ${SRCS_MANAGED_TEST})
+		target_include_directories(${UNITTEST_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include)
+		target_include_directories (${UNITTEST_NAME} PUBLIC "${VCINSTALLDIR}/../../../UnitTest/include")
+	
+		target_compile_options(${UNITTEST_NAME} PUBLIC "$<$<CONFIG:DEBUG>:/Od;/Ob0;/Gm;/sdl;/W3;/WX;/FC;-DNMR_USEASSERTIONS;-DNMR_UNITTESTS>")
+		target_compile_options(${UNITTEST_NAME} PUBLIC "$<$<CONFIG:RELEASE>:/O2;/sdl;/WX;/Oi;/Gy;/FC>")
 
-	target_compile_options(${UNITTEST_NAME} PUBLIC "$<$<CONFIG:DEBUG>:/Od;/Ob0;/Gm;/sdl;/W3;/WX;/FC;-DNMR_USEASSERTIONS;-DNMR_UNITTESTS>")
-	target_compile_options(${UNITTEST_NAME} PUBLIC "$<$<CONFIG:RELEASE>:/O2;/sdl;/WX;/Oi;/Gy;/FC>")
-
-	file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/TestOutput")
+		file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/TestOutput")
+	endif()
 elseif(UNIX AND NOT APPLE)
 	SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES LINK_FLAGS -s)
 endif()
-
 
 
 
