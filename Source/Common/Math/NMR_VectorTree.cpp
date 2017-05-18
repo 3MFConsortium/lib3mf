@@ -35,7 +35,7 @@ by their position.
 #include "Common/Math/NMR_VectorTree.h" 
 #include "Common/Math/NMR_Vector.h" 
 #include "Common/NMR_Exception.h" 
-#include <math.h>
+#include <cmath>
 #include <map>
 
 namespace NMR {

@@ -41,6 +41,8 @@ This is the class for exporting the 3mf mesh node.
 #include "Common/NMR_Exception_Windows.h"
 #include "Common/NMR_StringUtils.h"
 
+#include <cmath>
+
 #ifdef __GNUC__
 #include <stdio.h>
 #endif // __GNUC__
@@ -48,8 +50,9 @@ This is the class for exporting the 3mf mesh node.
 #define MAX(a,b) (((a)>(b))?(a):(b))
 
 namespace NMR {
+	const int CModelWriterNode100_Mesh::m_snPutDoubleFactor = (int)(pow(10, CModelWriterNode100_Mesh::m_snPosAfterDecPoint));
 
-	CModelWriterNode100_Mesh::CModelWriterNode100_Mesh(_In_ CModelMeshObject * pModelMeshObject, _In_ CXmlWriter * pXMLWriter, _In_ PModelWriter_ColorMapping pColorMapping, _In_ PModelWriter_TexCoordMappingContainer pTextureMappingContainer,_In_ nfBool bWriteMaterialExtension)
+	CModelWriterNode100_Mesh::CModelWriterNode100_Mesh(_In_ CModelMeshObject * pModelMeshObject, _In_ CXmlWriter * pXMLWriter, _In_ PModelWriter_ColorMapping pColorMapping, _In_ PModelWriter_TexCoordMappingContainer pTextureMappingContainer, _In_ nfBool bWriteMaterialExtension, _In_ nfBool bWriteBeamLatticeExtension)
 		:CModelWriterNode(pModelMeshObject->getModel(), pXMLWriter)
 	{
 		__NMRASSERT(pModelMeshObject != nullptr);
@@ -59,6 +62,7 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
 		m_bWriteMaterialExtension = bWriteMaterialExtension;
+		m_bWriteBeamLatticeExtension = bWriteBeamLatticeExtension;
 
 		m_pModelMeshObject = pModelMeshObject;
 		m_pColorMapping = pColorMapping;
@@ -67,8 +71,33 @@ namespace NMR {
 		// Initialize buffer arrays
 		m_nTriangleBufferPos = 0;
 		m_nVertexBufferPos = 0;
+		m_nBeamBufferPos = 0;
+		m_nBeamRefBufferPos = 0;
 		putVertexString(MODELWRITERMESH100_VERTEXLINESTART);
 		putTriangleString(MODELWRITERMESH100_TRIANGLELINESTART);
+		putBeamString(MODELWRITERMESH100_BEAMLATTICE_BEAMLINESTART);
+		putBeamRefString(MODELWRITERMESH100_BEAMLATTICE_REFLINESTART);
+	}
+
+
+	std::wstring capModeToString(eModelBeamLatticeCapMode eCapMode) {
+		switch (eCapMode) {
+		case eModelBeamLatticeCapMode::MODELBEAMLATTICECAPMODE_SPHERE: return XML_3MF_BEAMLATTICE_CAPMODE_SPHERE; break;
+		case eModelBeamLatticeCapMode::MODELBEAMLATTICECAPMODE_HEMISPHERE: return XML_3MF_BEAMLATTICE_CAPMODE_HEMISPHERE; break;
+		case eModelBeamLatticeCapMode::MODELBEAMLATTICECAPMODE_BUTT: return XML_3MF_BEAMLATTICE_CAPMODE_BUTT; break;
+		default:
+			return XML_3MF_BEAMLATTICE_CAPMODE_SPHERE;
+		}
+	}
+
+	std::wstring clipModeToString(eModelBeamLatticeClipMode eClipMode) {
+		switch (eClipMode) {
+		case eModelBeamLatticeClipMode::MODELBEAMLATTICECLIPMODE_INSIDE: return XML_3MF_BEAMLATTICE_CLIPMODE_INSIDE; break;
+		case eModelBeamLatticeClipMode::MODELBEAMLATTICECLIPMODE_OUTSIDE: return XML_3MF_BEAMLATTICE_CLIPMODE_OUTSIDE; break;
+		case eModelBeamLatticeClipMode::MODELBEAMLATTICECLIPMODE_NONE: return XML_3MF_BEAMLATTICE_CLIPMODE_NONE; break;
+		default:
+			return XML_3MF_BEAMLATTICE_CLIPMODE_NONE;
+		}
 	}
 
 	void CModelWriterNode100_Mesh::writeToXML()
@@ -80,7 +109,8 @@ namespace NMR {
 
 		const nfUint32 nNodeCount = pMesh->getNodeCount ();
 		const nfUint32 nFaceCount = pMesh->getFaceCount();
-		nfUint32 nNodeIndex, nFaceIndex;
+		const nfUint32 nBeamCount = pMesh->getBeamCount();
+		nfUint32 nNodeIndex, nFaceIndex, nBeamIndex;
 
 		// Write Mesh Element
 		writeStartElement(XML_3MF_ELEMENT_MESH);
@@ -128,9 +158,14 @@ namespace NMR {
 				if (pInformation)
 					pTexCoords = dynamic_cast<CMeshInformation_TexCoords *> (pInformation);
 			}
-
 		}
 
+		// if there is a PID, but no DefaultProperty
+		if ( (pBaseMaterials) || (pNodeColors) || (pTexCoords) ) {
+			if ( !(m_pModelMeshObject->getDefaultProperty()) ) {
+				throw CNMRException(NMR_ERROR_MISSINGDEFAULTPID);
+			}
+		}
 
 		// Write Triangles
 		writeStartElement(XML_3MF_ELEMENT_TRIANGLES);
@@ -143,6 +178,7 @@ namespace NMR {
 			ModelResourceIndex nPropertyIndex2 = 0;
 			ModelResourceIndex nPropertyIndex3 = 0;
 
+			nfChar * pAdditionalString = nullptr;
 			// Retrieve Base Material
 			if (pBaseMaterials) {
 				MESHINFORMATION_BASEMATERIAL* pFaceData = (MESHINFORMATION_BASEMATERIAL*)pBaseMaterials->getFaceData(nFaceIndex);
@@ -205,16 +241,15 @@ namespace NMR {
 
 			if (nPropertyID != 0) {
 				if ((nPropertyIndex1 != nPropertyIndex2) || (nPropertyIndex1 != nPropertyIndex3)) {
-					writeFaceData_ThreeProperties(pMeshFace, nPropertyID, nPropertyIndex1, nPropertyIndex2, nPropertyIndex3, NULL);
+					writeFaceData_ThreeProperties(pMeshFace, nPropertyID, nPropertyIndex1, nPropertyIndex2, nPropertyIndex3, pAdditionalString);
 				}
 				else {
-					writeFaceData_OneProperty(pMeshFace, nPropertyID, nPropertyIndex1, NULL);
+					writeFaceData_OneProperty(pMeshFace, nPropertyID, nPropertyIndex1, pAdditionalString);
 				}
 			}
 			else
 			{
-				writeFaceData_Plain(pMeshFace, NULL);
-
+				writeFaceData_Plain(pMeshFace, pAdditionalString);
 			}
 
 			/* The following works, but would be a major output speed bottleneck!
@@ -239,6 +274,58 @@ namespace NMR {
 		}
 		writeFullEndElement();
 
+		if (m_bWriteBeamLatticeExtension) {
+			if (nBeamCount > 0) {
+				// write beamlattice
+				writeStartElementWithPrefix(XML_3MF_ELEMENT_BEAMLATTICE, XML_3MF_NAMESPACEPREFIX_BEAMLATTICE);
+				writeFloatAttribute(XML_3MF_ATTRIBUTE_BEAMLATTICE_RADIUS, float(pMesh->getDefaultBeamRadius()));
+				writeFloatAttribute(XML_3MF_ATTRIBUTE_BEAMLATTICE_MINLENGTH, float(pMesh->getBeamLatticeMinLength()));
+
+				if (m_pModelMeshObject->getBeamLatticeAttributes()->m_bHasClippingMeshID) {
+					writeStringAttribute(XML_3MF_ATTRIBUTE_BEAMLATTICE_CLIPPING, clipModeToString(m_pModelMeshObject->getBeamLatticeAttributes()->m_eClipMode));
+					writeIntAttribute(XML_3MF_ATTRIBUTE_BEAMLATTICE_CLIPPINGMESH, m_pModelMeshObject->getBeamLatticeAttributes()->m_nClippingMeshID->getUniqueID());
+				}
+
+				eModelBeamLatticeCapMode eDefaultCapMode = pMesh->getBeamLatticeCapMode();
+				writeConstStringAttribute(XML_3MF_ATTRIBUTE_BEAMLATTICE_CAPMODE, capModeToString(eDefaultCapMode).c_str());
+				{
+					// write beamlattice: beams
+					writeStartElementWithPrefix(XML_3MF_ELEMENT_BEAMS, XML_3MF_NAMESPACEPREFIX_BEAMLATTICE);
+					for (nBeamIndex = 0; nBeamIndex < nBeamCount; nBeamIndex++) {
+						// write beamlattice: beam
+						MESHBEAM * pMeshBeam = pMesh->getBeam(nBeamIndex);
+						writeBeamData(pMeshBeam, pMesh->getDefaultBeamRadius(), eDefaultCapMode);
+					}
+					writeFullEndElement();
+
+					const nfUint32 nBeamSetCount = pMesh->getBeamSetCount();
+					if (nBeamSetCount > 0) {
+						// write beamlattice: beamsets
+						writeStartElementWithPrefix(XML_3MF_ELEMENT_BEAMSETS, XML_3MF_NAMESPACEPREFIX_BEAMLATTICE);
+						for (nfUint32 nBeamSetIndex = 0; nBeamSetIndex < nBeamSetCount; nBeamSetIndex++) {
+							const PBEAMSET pBeamSet = pMesh->getBeamSet(nBeamSetIndex);
+							{
+								// write beamlattice: beamset
+								writeStartElementWithPrefix(XML_3MF_ELEMENT_BEAMSET, XML_3MF_NAMESPACEPREFIX_BEAMLATTICE);
+								if (pBeamSet->m_sName.length()>0)
+									writeConstStringAttribute(XML_3MF_ATTRIBUTE_BEAMLATTICE_NAME, fnUTF8toUTF16(pBeamSet->m_sName.c_str()).c_str());
+								if (pBeamSet->m_sIdentifier.length()>0)
+									writeConstStringAttribute(XML_3MF_ATTRIBUTE_BEAMLATTICE_IDENTIFIER, fnUTF8toUTF16(pBeamSet->m_sIdentifier.c_str()).c_str());
+								const nfUint32 nRefCount = (nfUint32)pBeamSet->m_Refs.size();
+								for (nfUint32 nRefIndex = 0; nRefIndex < nRefCount; nRefIndex++) {
+									// write beamlattice: ref
+									writeRefData(pBeamSet->m_Refs[nRefIndex]);
+								}
+								writeFullEndElement();
+							}
+						}
+						writeFullEndElement();
+					}
+				}
+				writeFullEndElement();
+			}
+		}
+
 		// Finish Mesh Element
 		writeFullEndElement();
 	}
@@ -259,8 +346,8 @@ namespace NMR {
 	}
 
 	void CModelWriterNode100_Mesh::putFloat(_In_ const nfFloat fValue, _In_ std::array<nfChar, MODELWRITERMESH100_LINEBUFFERSIZE> & line, _In_ nfUint32 & nBufferPos) {
-		// Format float with "%.3f" syntax
-		nfInt64 nAbsValue = (nfInt64)(fValue * 1000);
+		// Format float with "%.$ACCf" syntax where $ACC = m_snPosAfterDecPoint
+		nfInt64 nAbsValue = (nfInt64)(fValue * m_snPutDoubleFactor);
 		nAbsValue = MAX(nAbsValue, -nAbsValue);
 		nfBool bIsNegative = fValue < 0;
 
@@ -272,11 +359,54 @@ namespace NMR {
 		}
 		else {
 			// Write the string in reverse order
-			while (nAbsValue || nCount < 3) {
+			while (nAbsValue || nCount < m_snPosAfterDecPoint) {
 				line[nBufferPos++] = '0' + (nAbsValue % 10);
 				nAbsValue /= 10;
 				nCount++;
-				if (nCount == 3) {
+				if (nCount == m_snPosAfterDecPoint) {
+					line[nBufferPos++] = '.';
+					if (!nAbsValue) {
+						line[nBufferPos++] = '0';
+					}
+					nCount++;
+				}
+			}
+			if (bIsNegative) {
+				line[nBufferPos++] = '-';
+				nCount++;
+			}
+		}
+
+		// Reverse the float string
+		int nEnd = nBufferPos - 1;
+		while (nStart < nEnd) {
+			char temp = line[nStart];
+			line[nStart] = line[nEnd];
+			line[nEnd] = temp;
+			nStart++;
+			nEnd--;
+		}
+	}
+
+	void CModelWriterNode100_Mesh::putDouble(_In_ const nfDouble dValue, _In_ std::array<nfChar, MODELWRITERMESH100_LINEBUFFERSIZE> & line, _In_ nfUint32 & nBufferPos) {
+		// Format float with "%.$ACCf" syntax where $ACC = m_snPosAfterDecPoint
+		nfInt64 nAbsValue = (nfInt64)(dValue * m_snPutDoubleFactor);
+		nAbsValue = MAX(nAbsValue, -nAbsValue);
+		nfBool bIsNegative = dValue < 0;
+
+		int nStart = nBufferPos;
+		int nCount = 0;
+
+		if (!nAbsValue) {
+			line[nBufferPos++] = '0';
+		}
+		else {
+			// Write the string in reverse order
+			while (nAbsValue || nCount < m_snPosAfterDecPoint) {
+				line[nBufferPos++] = '0' + (nAbsValue % 10);
+				nAbsValue /= 10;
+				nCount++;
+				if (nCount == m_snPosAfterDecPoint) {
 					line[nBufferPos++] = '.';
 					if (!nAbsValue) {
 						line[nBufferPos++] = '0';
@@ -333,6 +463,66 @@ namespace NMR {
 		if (nCount < 1)
 			throw CNMRException(NMR_ERROR_COULDNOTCONVERTNUMBER);
 		m_nTriangleBufferPos += nCount;
+	}
+
+
+	void CModelWriterNode100_Mesh::putBeamString(_In_ const nfChar * pszString)
+	{
+		__NMRASSERT(pszString);
+		const nfChar * pChar = pszString;
+		nfChar * pTarget = &m_BeamLine[m_nBeamBufferPos];
+
+		while (*pChar != 0) {
+			*pTarget = *pChar;
+			pTarget++;
+			pChar++;
+			m_nBeamBufferPos++;
+		}
+	}
+
+	void CModelWriterNode100_Mesh::putBeamUInt32(_In_ const nfUint32 nValue)
+	{
+#ifdef __GNUC__
+		int nCount = sprintf(&m_BeamLine[m_nBeamBufferPos], "%d", nValue);
+#else
+		int nCount = sprintf_s(&m_BeamLine[m_nBeamBufferPos], MODELWRITERMESH100_LINEBUFFERSIZE - m_nBeamBufferPos, "%d", nValue);
+#endif // __GNUC__
+
+		if (nCount < 1)
+			throw CNMRException(NMR_ERROR_COULDNOTCONVERTNUMBER);
+		m_nBeamBufferPos += nCount;
+	}
+
+	void CModelWriterNode100_Mesh::putBeamDouble(_In_ const nfDouble dValue)
+	{
+		putDouble(dValue, m_BeamLine, m_nBeamBufferPos);
+	}
+
+	void CModelWriterNode100_Mesh::putBeamRefString(_In_ const nfChar * pszString)
+	{
+		__NMRASSERT(pszString);
+		const nfChar * pChar = pszString;
+		nfChar * pTarget = &m_BeamRefLine[m_nBeamRefBufferPos];
+
+		while (*pChar != 0) {
+			*pTarget = *pChar;
+			pTarget++;
+			pChar++;
+			m_nBeamRefBufferPos++;
+		}
+	}
+
+	void CModelWriterNode100_Mesh::putBeamRefUInt32(_In_ const nfUint32 nValue)
+	{
+#ifdef __GNUC__
+		int nCount = sprintf(&m_BeamRefLine[m_nBeamRefBufferPos], "%d", nValue);
+#else
+		int nCount = sprintf_s(&m_BeamRefLine[m_nBeamRefBufferPos], MODELWRITERMESH100_LINEBUFFERSIZE - m_nBeamRefBufferPos, "%d", nValue);
+#endif // __GNUC__
+
+		if (nCount < 1)
+			throw CNMRException(NMR_ERROR_COULDNOTCONVERTNUMBER);
+		m_nBeamRefBufferPos += nCount;
 	}
 
 
@@ -415,6 +605,57 @@ namespace NMR {
 		}
 		putTriangleString(" />");
 		m_pXMLWriter->WriteRawLine(&m_TriangleLine[0], m_nTriangleBufferPos);
+	}
+
+
+	__NMR_INLINE void CModelWriterNode100_Mesh::writeBeamData(_In_ MESHBEAM * pBeam, _In_ nfDouble dRadius, _In_ eModelBeamLatticeCapMode eDefaultCapMode)
+	{
+		__NMRASSERT(pBeam);
+		m_nBeamBufferPos = MODELWRITERMESH100_BEAMLATTICE_BEAMSTARTLENGTH;
+		putBeamUInt32(pBeam->m_nodeindices[0]);
+		const std::string sV2 = fnUTF16toUTF8(L"\" " + std::wstring(XML_3MF_ATTRIBUTE_BEAMLATTICE_V2) + L"=\"");
+		putBeamString(sV2.c_str());
+		putBeamUInt32(pBeam->m_nodeindices[1]);
+		nfBool bWriteR1 = true;
+		// if the string representation of r1 is different from that of dRadius
+		if (fabs(dRadius - pBeam->m_radius[0]) * m_snPutDoubleFactor > 0.1) {
+			const std::string sR1 = fnUTF16toUTF8(L"\" " + std::wstring(XML_3MF_ATTRIBUTE_BEAMLATTICE_R1) + L"=\"");
+			putBeamString(sR1.c_str());
+			putBeamDouble(pBeam->m_radius[0]);
+			// if the string representation of r1 is different to that of m_radius[0]
+			bWriteR1 = fabs(pBeam->m_radius[0] - pBeam->m_radius[1]) * m_snPutDoubleFactor > 0.1;
+		}
+		else {
+			// if the string representation of r1 is different to that of dRadius
+			bWriteR1 = fabs(dRadius - pBeam->m_radius[1]) * m_snPutDoubleFactor > 0.1;
+		}
+		if (bWriteR1) {
+			const std::string sR2 = fnUTF16toUTF8(L"\" " + std::wstring(XML_3MF_ATTRIBUTE_BEAMLATTICE_R2) + L"=\"");
+			putBeamString(sR2.c_str());
+			putBeamDouble(pBeam->m_radius[1]);
+		}
+
+		if ( eDefaultCapMode != pBeam->m_capMode[0] ) {
+			const std::string sCap1 = fnUTF16toUTF8(L"\" " + std::wstring(XML_3MF_ATTRIBUTE_BEAMLATTICE_CAP1) + L"=\""
+				                                           + capModeToString(eModelBeamLatticeCapMode(pBeam->m_capMode[0])));
+			putBeamString(sCap1.c_str());
+		}
+		if (eDefaultCapMode != pBeam->m_capMode[1]) {
+			const std::string sCap2 = fnUTF16toUTF8(L"\" " + std::wstring(XML_3MF_ATTRIBUTE_BEAMLATTICE_CAP2) + L"=\""
+				+ capModeToString(eModelBeamLatticeCapMode(pBeam->m_capMode[1])));
+			putBeamString(sCap2.c_str());
+		}
+
+		putBeamString("\"/>");
+		m_pXMLWriter->WriteRawLine(&m_BeamLine[0], m_nBeamBufferPos);
+	}
+
+	__NMR_INLINE void CModelWriterNode100_Mesh::writeRefData(_In_ INT nRefID)
+	{
+		m_nBeamRefBufferPos = MODELWRITERMESH100_BEAMLATTICE_REFSTARTLENGTH;
+		putBeamRefUInt32(nRefID);
+		putBeamRefString("\"/>");
+		m_pXMLWriter->WriteRawLine(&m_BeamRefLine[0], m_nBeamRefBufferPos);
 	}
 
 }

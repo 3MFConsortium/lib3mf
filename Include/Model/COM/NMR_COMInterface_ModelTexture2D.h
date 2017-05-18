@@ -53,10 +53,13 @@ namespace NMR {
 		LIB3MFRESULT handleGenericException();
 		LIB3MFRESULT handleSuccess();
 	public:
-		LIB3MFINTERFACE_DECL(ILib3MFModelReader)
+		LIB3MFINTERFACE_DECL(ILib3MFModelTexture2D)
 		
 		LIB3MFMETHOD(GetLastError) (_Out_ DWORD * pErrorCode, _Outptr_opt_ LPCSTR * pErrorMessage);
 		LIB3MFMETHOD(GetResourceID) (_Out_ DWORD * pnVertexCount);
+
+		LIB3MFMETHOD(GetAttachment) (_Out_ ILib3MFModelAttachment ** ppTextureAttachment);
+		LIB3MFMETHOD(SetAttachment) (_In_ ILib3MFModelAttachment * pTextureAttachment);
 
 		LIB3MFMETHOD(GetPath) (_Out_opt_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars);
 		LIB3MFMETHOD(GetPathUTF8) (_Out_opt_ LPSTR pszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars);
@@ -73,17 +76,17 @@ namespace NMR {
 		LIB3MFMETHOD(WriteToBuffer) (_Out_ BYTE * pBuffer, _In_ ULONG64 cbBufferSize);
 		LIB3MFMETHOD(WriteToCallback) (_In_ void * pWriteCallback, _In_opt_ void * pUserData);
 
-#ifndef __GNUC__
+#ifdef NMR_COM_NATIVE
 		LIB3MFMETHOD(WriteToStream) (_In_ IStream * pStream);
-#endif// __GNUC__
+#endif// NMR_COM_NATIVE
 
 		LIB3MFMETHOD(ReadFromFile) (_In_z_ LPCWSTR pwszFilename);
 		LIB3MFMETHOD(ReadFromFileUTF8) (_In_z_ LPCSTR pszFilename);
 		LIB3MFMETHOD(ReadFromBuffer) (_In_ BYTE * pBuffer, _In_ ULONG64 cbBufferSize);
 
-#ifndef __GNUC__
+#ifdef NMR_COM_NATIVE
 		LIB3MFMETHOD(ReadFromStream) (_In_ IStream * pStream);
-#endif //__GNUC__
+#endif //NMR_COM_NATIVE
 
 		CCOMModelTexture2D();
 

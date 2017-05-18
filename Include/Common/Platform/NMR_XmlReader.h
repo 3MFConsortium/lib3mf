@@ -35,6 +35,7 @@ NMR_XMLReader.h defines a XML reader class in a portable way.
 #define __NMR_XMLREADER
 
 #include "Common/Platform/NMR_ImportStream.h"
+#include <string>
 
 namespace NMR {
 
@@ -54,6 +55,8 @@ namespace NMR {
 		virtual void GetLocalName(_Outptr_result_buffer_maybenull_(*pcwchLocalName + 1) const nfWChar ** ppwszLocalName, _Out_opt_ nfUint32 *pcwchLocalName) = 0;
 		virtual void GetValue(_Outptr_result_buffer_maybenull_(*pcwchValue + 1)  const nfWChar ** ppwszValue, _Out_opt_  nfUint32 *pcwchValue) = 0;
 		virtual void GetNamespaceURI(_Outptr_result_buffer_maybenull_(*pcwchValue + 1)  const nfWChar ** ppwszValue, _Out_opt_  nfUint32 *pcwchValue) = 0;
+		virtual bool GetNamespaceURI(const std::wstring &sNameSpacePrefix, std::wstring &sNameSpaceURI) = 0;
+		virtual bool NamespaceRegistered(const std::wstring &sNameSpaceURI) = 0;
 
 		virtual nfBool Read(_Out_ eXmlReaderNodeType & NodeType) = 0;
 		virtual nfBool IsEOF() = 0;

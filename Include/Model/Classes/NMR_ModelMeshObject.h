@@ -36,6 +36,8 @@ mesh object.
 #define __NMR_MODELMESHOBJECT
 
 #include "Common/Mesh/NMR_Mesh.h" 
+#include "Model/Classes/NMR_ModelObject.h"
+#include "Model/Classes/NMR_ModelMeshBeamLatticeAttributes.h"
 
 namespace NMR {
 
@@ -46,24 +48,44 @@ namespace NMR {
 	typedef std::shared_ptr <CModelObject> PModelObject;
 
 	class CModelMeshObject : public CModelObject {
-	private:		
-		PMesh m_pMesh;
+	private:
+		PMesh m_pMesh; 
+		PModelMeshBeamLatticeAttributes m_pBeamLatticeAttributes;
+
+		PPackageResourceID m_pSliceStackId;
+		eModelSlicesMeshResolution m_eSlicesMeshResolution;
+
 	public:
 		CModelMeshObject() = delete;
 		CModelMeshObject(_In_ const ModelResourceID sID, _In_ CModel * pModel);
 		CModelMeshObject(_In_ const ModelResourceID sID, _In_ CModel * pModel, _In_ PMesh pMesh);
 		~CModelMeshObject();
 		
-		_Ret_notnull_ CMesh * getMesh ();		
+		_Ret_notnull_ CMesh * getMesh ();
 		void setMesh (_In_ PMesh pMesh);
 
 		virtual void mergeToMesh(_In_ CMesh * pMesh, _In_ const NMATRIX3 mMatrix);
 
+		void setObjectType(_In_ eModelObjectType ObjectType);
+
 		// check, if the object is a valid object description
 		virtual nfBool isValid();
 
+		virtual nfBool isValidForSlices(const NMATRIX3& totalParentMatrix);
+
 		// check, if the mesh is manifold and oriented
 		virtual nfBool isManifoldAndOriented();
+
+		_Ret_notnull_ CModelMeshBeamLatticeAttributes * getBeamLatticeAttributes();
+		void setBeamLatticeAttributes(_In_ PModelMeshBeamLatticeAttributes pBeamLatticeAttributes);
+
+		void setSliceStackId(PPackageResourceID nSliceStackId);
+		PPackageResourceID getSliceStackId();
+
+		void setSlicesMeshResolution(eModelSlicesMeshResolution eMeshResolution);
+		eModelSlicesMeshResolution slicesMeshResolution() const;
+
+		ModelResourceID calculateDefaultPropertyID() const;
 	};
 
 	typedef std::shared_ptr <CModelMeshObject> PModelMeshObject;

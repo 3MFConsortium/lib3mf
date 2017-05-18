@@ -35,7 +35,7 @@ This is an abstract base stream class for importing from COM IStreams.
 #include "Common/Platform/NMR_ImportStream_COM.h" 
 #include "Common/NMR_Exception.h" 
 #include "Common/NMR_Exception_Windows.h" 
-#include <math.h>
+#include <cmath>
 #include <vector>
 
 namespace NMR {
@@ -154,7 +154,7 @@ namespace NMR {
 	
 	nfUint64 CImportStream_COM::retrieveSize()
 	{
-
+		nfUint64 nOrigPosition = getPosition();
 		LARGE_INTEGER offset;
 		HRESULT hResult;
 		ULARGE_INTEGER newfilepos;
@@ -165,7 +165,22 @@ namespace NMR {
 		if (hResult != S_OK)
 			throw CNMRException_Windows(NMR_ERROR_COULDNOTSEEKSTREAM, hResult);
 
-		seekPosition(0, true);
+		seekPosition(nOrigPosition, true);
+
+		return newfilepos.QuadPart;
+	}
+
+	nfUint64 CImportStream_COM::getPosition()
+	{
+		LARGE_INTEGER offset;
+		HRESULT hResult;
+		ULARGE_INTEGER newfilepos;
+
+		offset.QuadPart = 0;
+		hResult = m_pStream->Seek(offset, STREAM_SEEK_CUR, &newfilepos);
+
+		if (hResult != S_OK)
+			throw CNMRException_Windows(NMR_ERROR_COULDNOTSEEKSTREAM, hResult);
 
 		return newfilepos.QuadPart;
 	}

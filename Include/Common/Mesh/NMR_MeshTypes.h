@@ -28,7 +28,7 @@ Abstract:
 
 NMR_MeshTypes.h defines the basic datastructures for the mesh CMesh.
 
-The  mesh has nodes and faces,  which are defined in this file.
+The mesh has nodes and faces, which are defined in this file.
 In addition, some constants are defined here.
 --*/
 
@@ -38,15 +38,19 @@ In addition, some constants are defined here.
 #include "Common/NMR_Types.h" 
 #include "Common/NMR_Local.h" 
 #include "Common/Math/NMR_Geometry.h" 
+#include "Common/NMR_PagedVector.h"
+#include <string>
 
 #define NMR_MESH_MAXNODECOUNT 2147483646
 #define NMR_MESH_MAXEDGECOUNT 2147483646
 #define NMR_MESH_MAXFACECOUNT 2147483646
+#define NMR_MESH_MAXBEAMCOUNT 2147483646
 #define NMR_MESH_MAXCOORDINATE 1000000000.0f
 
 #define NMR_MESH_NODEBLOCKCOUNT 256
 #define NMR_MESH_EDGEBLOCKCOUNT 256
 #define NMR_MESH_FACEBLOCKCOUNT 256
+#define NMR_MESH_BEAMBLOCKCOUNT 256
 #define NMR_MESH_NODEEDGELINKBLOCKCOUNT 256
 
 namespace NMR {
@@ -55,12 +59,40 @@ namespace NMR {
 		nfInt32 m_index;
 		NVEC3 m_position;
 	} MESHNODE;
+	typedef CPagedVector<MESHNODE, NMR_MESH_NODEBLOCKCOUNT> MESHNODES;
 
 	typedef struct {
 		nfInt32 m_index;
 		nfInt32 m_nodeindices[3];
 	} MESHFACE;
+	typedef CPagedVector<MESHFACE, NMR_MESH_FACEBLOCKCOUNT> MESHFACES;
 
+	typedef struct BEAMSET {
+		std::vector<nfUint32> m_Refs;
+		std::string m_sName;	// "" for no name
+		std::string m_sIdentifier;		// "" for no identifier
+		BEAMSET() {
+			m_sName = "";
+			m_sIdentifier = "";
+		}
+	} BEAMSET;
+	typedef std::shared_ptr <BEAMSET> PBEAMSET;
+
+	typedef struct MESHBEAM {
+		nfInt32 m_index;
+		nfInt32 m_nodeindices[2];
+		nfDouble m_radius[2];
+		nfInt32 m_capMode[2];
+		// eModelBeamLatticeCapMode m_capMode[2];
+		MESHBEAM() { 
+		};
+	} MESHBEAM;
+	typedef CPagedVector<MESHBEAM, NMR_MESH_BEAMBLOCKCOUNT> MESHBEAMS;
+
+  typedef struct {
+    nfInt32 m_index;
+    NVEC2 m_position;
+  } SLICENODE;
 }
 
 #endif // __NMR_MESHTYPES

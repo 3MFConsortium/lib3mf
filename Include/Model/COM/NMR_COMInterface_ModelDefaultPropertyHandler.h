@@ -54,20 +54,20 @@ namespace NMR {
 	public:
 		LIB3MFINTERFACE_DECL(ILib3MFDefaultPropertyHandler)
 
-			LIB3MFMETHOD(GetLastError) (_Out_ DWORD * pErrorCode, _Outptr_opt_ LPCSTR * pErrorMessage);
+		LIB3MFMETHOD(GetLastError) (_Out_ DWORD * pErrorCode, _Outptr_opt_ LPCSTR * pErrorMessage);
 
 		LIB3MFMETHOD(RemoveProperty) ();
 		LIB3MFMETHOD(GetPropertyType) (_Out_ eModelPropertyType * pnPropertyType);
 		LIB3MFMETHOD(GetBaseMaterial) (_Out_ DWORD * pnMaterialGroupID, _Out_ DWORD * pnMaterialIndex);
-		LIB3MFMETHOD(SetBaseMaterial) (_In_ ModelResourceID nMaterialGroupID, _In_ DWORD nMaterialIndex);
+		LIB3MFMETHOD(SetBaseMaterial) (_In_ PackageResourceID nMaterialGroupID, _In_ DWORD nMaterialIndex);
 		LIB3MFMETHOD(GetColor) (_In_ DWORD nIndex, _Out_ MODELMESHCOLOR_SRGB * pColor);
 		LIB3MFMETHOD(SetColor) (_In_ MODELMESHCOLOR_SRGB * pColor);
 		LIB3MFMETHOD(SetColorRGB) (_In_ BYTE bRed, _In_ BYTE bGreen, _In_ BYTE bBlue);
 		LIB3MFMETHOD(SetColorRGBA) (_In_ BYTE bRed, _In_ BYTE bGreen, _In_ BYTE bBlue, _In_ BYTE bAlpha);
 		LIB3MFMETHOD(SetFloatColorRGB) (_In_ FLOAT fRed, _In_ FLOAT fGreen, _In_ FLOAT fBlue);
 		LIB3MFMETHOD(SetFloatColorRGBA) (_In_ FLOAT fRed, _In_ FLOAT fGreen, _In_ FLOAT fBlue, _In_ FLOAT fAlpha);
-		LIB3MFMETHOD(GetTexture) (_Out_ ModelResourceID * pnTextureID, _Out_ FLOAT * pfU, _Out_ FLOAT * pfV);
-		LIB3MFMETHOD(SetTexture) (_In_ ModelResourceID nTextureID, _In_ FLOAT fU, _In_ FLOAT fV);
+		LIB3MFMETHOD(GetTexture) (_Out_ PackageResourceID * pnTextureID, _Out_ FLOAT * pfU, _Out_ FLOAT * pfV);
+		LIB3MFMETHOD(SetTexture) (_In_ PackageResourceID nTextureID, _In_ FLOAT fU, _In_ FLOAT fV);
 
 		CCOMModelDefaultPropertyHandler();
 		void setResource(_In_ PModelResource pResource);

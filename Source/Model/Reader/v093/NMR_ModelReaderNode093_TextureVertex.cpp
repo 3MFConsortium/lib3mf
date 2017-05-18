@@ -36,7 +36,7 @@ A texture vertex reader model node is a parser for the vertex node of an XML Mod
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_Exception_Windows.h"
-#include <math.h>
+#include <cmath>
 #include <climits>
 
 namespace NMR {
@@ -86,7 +86,7 @@ namespace NMR {
 
 		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TEXTURE_U) == 0) {
 			m_fU = wcstof(pAttributeValue, nullptr);
-			if (isnan (m_fU))
+			if (std::isnan (m_fU))
 				throw CNMRException(NMR_ERROR_INVALIDMODELTEXTURECOORDINATES);
 			if (fabs (m_fU) > XML_3MF_MAXIMUMCOORDINATEVALUE)
 				throw CNMRException(NMR_ERROR_INVALIDMODELTEXTURECOORDINATES);
@@ -95,7 +95,7 @@ namespace NMR {
 
 		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TEXTURE_V) == 0) {
 			m_fV = wcstof(pAttributeValue, nullptr);
-			if (isnan (m_fV))
+			if (std::isnan (m_fV))
 				throw CNMRException(NMR_ERROR_INVALIDMODELTEXTURECOORDINATES);
 			if (fabs(m_fV) > XML_3MF_MAXIMUMCOORDINATEVALUE)
 				throw CNMRException(NMR_ERROR_INVALIDMODELTEXTURECOORDINATES);

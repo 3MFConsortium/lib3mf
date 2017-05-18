@@ -93,8 +93,7 @@ namespace NMR {
 				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode093_Object>(m_pModel, m_pColorMapping, m_pMaterialResource, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 			}
-
-			if (wcscmp(pChildName, XML_3MF_ELEMENT_COLOR) == 0) {
+			else if (wcscmp(pChildName, XML_3MF_ELEMENT_COLOR) == 0) {
 				PModelReaderNode093_Color pXMLNode = std::make_shared<CModelReaderNode093_Color>(m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 
@@ -105,21 +104,20 @@ namespace NMR {
 					m_pColorMapping->registerTextureReference(nResourceID, nTextureRefID);
 				}
 				else {
-					m_pColorMapping->registerColor(pXMLNode->retrieveID(), 0, pXMLNode->retrieveColor());
+					m_pColorMapping->registerColor(nResourceID, 0, pXMLNode->retrieveColor());
 				}
 			}
-
-			if (wcscmp(pChildName, XML_3MF_ELEMENT_TEXTURE) == 0) {
+			else if (wcscmp(pChildName, XML_3MF_ELEMENT_TEXTURE) == 0) {
 				PModelReaderNode093_Texture pXMLNode = std::make_shared<CModelReaderNode093_Texture>(m_pModel, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 			}
-
-			if (wcscmp(pChildName, XML_3MF_ELEMENT_MATERIAL) == 0) {
+			else if (wcscmp(pChildName, XML_3MF_ELEMENT_MATERIAL) == 0) {
 				PModelReaderNode093_Material pXMLNode = std::make_shared<CModelReaderNode093_Material>(m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 
 				if (m_pMaterialResource.get() == nullptr) {
-					m_pMaterialResource = std::make_shared<CModelBaseMaterialResource> (m_pModel->generateResourceID(), m_pModel);
+					ModelResourceID nResourceID = pXMLNode->retrieveID();
+					m_pMaterialResource = std::make_shared<CModelBaseMaterialResource>(nResourceID, m_pModel);
 					m_pModel->addResource(m_pMaterialResource);
 				}
 
@@ -132,7 +130,8 @@ namespace NMR {
 				nMaterialIndex = m_pMaterialResource->addBaseMaterial(pXMLNode->retrieveName(), cColor);
 				m_pColorMapping->registerMaterialReference(pXMLNode->retrieveID(), nMaterialIndex);
 			}
-
+			else
+				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
 		}
 	}
 

@@ -54,6 +54,8 @@ namespace NMR {
 		LIB3MFMETHOD(GetLastError) (_Out_ DWORD * pErrorCode, _Outptr_opt_ LPCSTR * pErrorMessage);
 
 		LIB3MFMETHOD(GetObjectResource) (_Outptr_ ILib3MFModelObjectResource ** ppObject);
+		LIB3MFMETHOD(GetUUIDUTF8) (_Out_ BOOL * pbHasUUID, _Out_ LPSTR pszBuffer);
+		LIB3MFMETHOD(SetUUIDUTF8) (_In_z_ LPCSTR pszUUID);
 		LIB3MFMETHOD(GetObjectResourceID) (_Out_ DWORD * pnID);
 		LIB3MFMETHOD(HasObjectTransform) (_Out_ BOOL * pbHasTransform);
 		LIB3MFMETHOD(GetObjectTransform) (_Out_ MODELTRANSFORM * pmTransform);

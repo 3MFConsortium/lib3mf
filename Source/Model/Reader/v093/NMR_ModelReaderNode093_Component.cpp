@@ -35,6 +35,7 @@ Node Class.
 #include "Model/Reader/v093/NMR_ModelReaderNode093_Component.h"
 
 #include "Model/Classes/NMR_ModelConstants.h"
+#include "Model/Classes/NMR_ModelResource.h"
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_StringUtils.h"
 #include "Common/NMR_Exception_Windows.h"
@@ -88,7 +89,10 @@ namespace NMR {
 		if (!m_bHasID)
 			throw CNMRException(NMR_ERROR_MISSINGMODELOBJECTID);
 
-		return m_pModel->findObject(m_ObjectID);
+		PPackageResourceID pRID = m_pModel->findPackageResourceID(m_pModel->curPath(), m_ObjectID);
+		if (pRID.get())
+			return m_pModel->findObject(pRID->getUniqueID());
+		return nullptr;
 	}
 
 	NMATRIX3 CModelReaderNode093_Component::getTransform()

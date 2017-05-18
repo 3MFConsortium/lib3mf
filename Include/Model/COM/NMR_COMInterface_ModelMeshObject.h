@@ -61,6 +61,7 @@ namespace NMR {
 
 		LIB3MFMETHOD(GetVertexCount) (_Out_ DWORD * pnVertexCount);
 		LIB3MFMETHOD(GetTriangleCount) (_Out_ DWORD * pnTriangleCount);
+		LIB3MFMETHOD(GetBeamCount) (_Out_ DWORD * pnBeamCount);
 
 		LIB3MFMETHOD(GetVertex) (_In_ DWORD nIndex, _Out_ MODELMESHVERTEX * pVertex);
 		LIB3MFMETHOD(SetVertex) (_In_ DWORD nIndex, _In_ MODELMESHVERTEX * pVertex);
@@ -70,8 +71,36 @@ namespace NMR {
 		LIB3MFMETHOD(SetTriangle) (_In_ DWORD nIndex, _In_ MODELMESHTRIANGLE * pTriangle);
 		LIB3MFMETHOD(AddTriangle) (_In_ MODELMESHTRIANGLE * pTriangle, _Out_opt_ DWORD * pnIndex);
 
+		LIB3MFMETHOD(GetBeamLatticeMinLength) (_Out_ DOUBLE * pdMinLength);
+		LIB3MFMETHOD(SetBeamLatticeMinLength) (_In_ DOUBLE dMinLength);
+		LIB3MFMETHOD(GetBeamLatticeRadius) (_Out_ DOUBLE * pdRadius);
+		LIB3MFMETHOD(SetBeamLatticeRadius) (_In_ DOUBLE dRadius);
+		LIB3MFMETHOD(GetBeamLatticeCapMode) (_Out_ eModelBeamLatticeCapMode * peCapMode);
+		LIB3MFMETHOD(SetBeamLatticeCapMode) (_In_ eModelBeamLatticeCapMode eCapMode);
+		LIB3MFMETHODIMP GetBeamLatticeClipping(_Out_ eModelBeamLatticeClipMode * peClipMode, _Out_ DWORD *pnResourceID);
+		LIB3MFMETHODIMP SetBeamLatticeClipping(_In_ eModelBeamLatticeClipMode eClipMode, _In_ DWORD nResourceID);
+		LIB3MFMETHODIMP SetBeamLatticeRepresentation(_In_ DWORD nResourceID);
+		LIB3MFMETHODIMP GetBeamLatticeRepresentation(_Out_ BOOL *pbHasRepresentation, _Out_ DWORD *pnResourceID);
+
+		LIB3MFMETHOD(GetBeam) (_In_ DWORD nIndex, _Out_ MODELMESHBEAM * pBeam);
+		LIB3MFMETHOD(SetBeam) (_In_ DWORD nIndex, _In_ MODELMESHBEAM * pBeam);
+		LIB3MFMETHOD(AddBeam) (_In_ MODELMESHBEAM * pBeam, _Out_opt_ DWORD * pnIndex);
+
 		LIB3MFMETHOD(GetVertices) (_Out_ MODELMESHVERTEX * pVertices, _In_ DWORD nBufferSize, _Out_opt_ DWORD * pnVertexCount);
 		LIB3MFMETHOD(GetTriangleIndices) (_Out_ MODELMESHTRIANGLE * pIndices, _In_ DWORD nBufferSize, _Out_opt_ DWORD * pnTriangleCount);
+
+		LIB3MFMETHOD(GetThumbnailPathUTF8) (_Out_opt_ LPSTR pszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars);
+		LIB3MFMETHOD(SetThumbnailPathUTF8) (_In_z_ LPCSTR pszName);
+
+		LIB3MFMETHOD(GetUUIDUTF8) (_Out_ BOOL * pbHasUUID, _Out_ LPSTR pszBuffer);
+		LIB3MFMETHOD(SetUUIDUTF8) (_In_z_ LPCSTR pszUUID);
+
+		LIB3MFMETHOD(SetBeamIndices) (_In_ MODELMESHBEAM * pIndices, _In_ DWORD nBufferSize);
+		LIB3MFMETHOD(GetBeamIndices) (_Out_ MODELMESHBEAM * pIndices, _In_ DWORD nBufferSize, _Out_opt_ DWORD * pnBeamCount);
+		
+		LIB3MFMETHOD(GetBeamSetCount) (_Out_ DWORD * pnBeamSetCount);
+		LIB3MFMETHOD(AddBeamSet) (_Outptr_ ILib3MFModelMeshBeamSet ** ppBeamSet);
+		LIB3MFMETHOD(GetBeamSet) (_In_ DWORD nIndex, _Outptr_ ILib3MFModelMeshBeamSet ** ppBeamSet);
 
 		LIB3MFMETHOD(SetGeometry) (_In_ MODELMESHVERTEX * pVertices, _In_ DWORD nVertexCount, _In_ MODELMESHTRIANGLE * pTriangles, _In_ DWORD nTriangleCount);
 
@@ -97,6 +126,12 @@ namespace NMR {
 		LIB3MFMETHOD(CreateMultiPropertyHandler) (_In_ DWORD nChannel, _Outptr_ ILib3MFPropertyHandler ** ppPropertyHandler);
 
 		LIB3MFMETHOD(IsManifoldAndOriented) (_Out_ BOOL * pbIsOrientedAndManifold);
+
+		LIB3MFMETHOD(SetSliceStackId)(_In_ DWORD nSliceStackId);
+		LIB3MFMETHOD(GetSliceStackId)(_Out_ DWORD *pnSliceStackId);
+
+		LIB3MFMETHOD(SetSlicesMeshResolution)(_In_ eModelSlicesMeshResolution eSlicesMeshResolution);
+		LIB3MFMETHOD(GetSlicesMeshResolution)(_Out_ eModelSlicesMeshResolution *peSlicesMeshResolution);
 
 		CCOMModelMeshObject();
 

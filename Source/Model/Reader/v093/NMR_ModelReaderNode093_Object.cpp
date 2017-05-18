@@ -43,6 +43,7 @@ Stream.
 #include "Model/Classes/NMR_ModelDefaultProperty.h"
 #include "Model/Classes/NMR_ModelDefaultProperty_BaseMaterial.h"
 #include "Model/Classes/NMR_ModelDefaultProperty_Color.h"
+#include "Model/Classes/NMR_ModelDefaultProperty_TexCoord2D.h"
 
 #include "Common/NMR_StringUtils.h"
 #include "Common/NMR_Exception.h"
@@ -101,9 +102,12 @@ namespace NMR {
 			nfColor cColor = 0;
 			if (m_pColorMapping->findColor(m_nColorID, 0, cColor)) {
 				m_pObject->setDefaultProperty(std::make_shared<CModelDefaultProperty_Color>(cColor));
-
 			}
-
+			else {
+				if (m_pColorMapping->hasTextureReference(m_nColorID)) {
+					m_pObject->setDefaultProperty(std::make_shared<CModelDefaultProperty_TexCoord2D>(m_nColorID, 0.0f, 0.0f));
+				}
+			}
 
 		}
 		else {
@@ -115,7 +119,7 @@ namespace NMR {
 				if (m_pMaterialResource.get() != nullptr) {
 					ModelResourceIndex nIndex;
 					if (m_pColorMapping->getMaterialReference(m_nMaterialID, nIndex)) {
-						nMaterialGroupID = m_pMaterialResource->getResourceID();
+						nMaterialGroupID = m_pMaterialResource->getResourceID()->getUniqueID();
 						nMaterialIndex = nIndex;
 					}
 				}
@@ -166,7 +170,7 @@ namespace NMR {
 			m_sName = sValue;
 		}
 
-		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TRIANGLE_COLORID) == 0) {
+		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_OBJECT_COLOR_ID) == 0) {
 
 			nfInt32 nValue = fnWStringToInt32(pAttributeValue);
 			if ((nValue >= 0) && (nValue < XML_3MF_MAXRESOURCEINDEX)) {
@@ -174,7 +178,7 @@ namespace NMR {
 			}
 		}
 
-		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TRIANGLE_MATERIALID) == 0) {
+		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_OBJECT_MATERIALID) == 0) {
 			nfInt32 nValue = fnWStringToInt32(pAttributeValue);
 			if ((nValue >= 0) && (nValue < XML_3MF_MAXRESOURCEINDEX))
 				m_nMaterialID = nValue + 1;

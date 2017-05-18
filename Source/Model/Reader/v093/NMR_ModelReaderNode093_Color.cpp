@@ -37,7 +37,7 @@ A color reader model node is a parser for the color node of an XML Model Stream.
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_Exception_Windows.h"
 #include "Common/NMR_StringUtils.h"
-#include <math.h>
+#include <cmath>
 #include <climits>
 
 namespace NMR {
@@ -102,7 +102,7 @@ namespace NMR {
 								throw CNMRException(NMR_ERROR_INVALIDTEXTUREREFERENCE);
 
 							m_nTextureID = nValue + 1;
-
+							return;
 						}
 						else {
 							throw CNMRException(NMR_ERROR_INVALIDTEXTUREREFERENCE);

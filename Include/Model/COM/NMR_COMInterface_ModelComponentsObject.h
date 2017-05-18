@@ -60,6 +60,12 @@ namespace NMR {
 		LIB3MFMETHOD(GetLastError) (_Out_ DWORD * pErrorCode, _Outptr_opt_ LPCSTR * pErrorMessage);
 
 		LIB3MFMETHOD(AddComponent) (_In_ ILib3MFModelObjectResource * pObject, _In_opt_ MODELTRANSFORM * pmTransform, _Outptr_ ILib3MFModelComponent ** ppComponent);
+		LIB3MFMETHOD(GetUUIDUTF8) (_Out_ BOOL * pbHasUUID, _Out_ LPSTR pszBuffer);
+		LIB3MFMETHOD(SetUUIDUTF8) (_In_z_ LPCSTR pszUUID);
+
+		LIB3MFMETHOD(GetThumbnailPathUTF8) (_Out_opt_ LPSTR pszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars);
+		LIB3MFMETHOD(SetThumbnailPathUTF8) (_In_z_ LPCSTR pszName);
+
 		LIB3MFMETHOD(GetComponent) (_In_ DWORD nIndex, _Outptr_ ILib3MFModelComponent ** ppComponent);
 		LIB3MFMETHOD(GetComponentCount) (_Out_ DWORD * pComponentCount);
 		LIB3MFMETHOD(GetResourceID) (_Out_ DWORD * pnResourceID);

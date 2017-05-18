@@ -50,7 +50,7 @@ namespace NMR {
 	{
 		// Initialize variables
 		m_nID = 0;
-
+		m_hasBox = false;
 		m_pModel = pModel;
 	}
 
@@ -68,7 +68,6 @@ namespace NMR {
 
 		// Create Resource
 		m_pTexture2DResource = std::make_shared<CModelTexture2DResource> (m_nID, m_pModel);
-
 		m_pModel->addResource(m_pTexture2DResource);
 
 		// Set Properties
@@ -76,6 +75,11 @@ namespace NMR {
 		m_pTexture2DResource->setContentTypeString(m_sContentType, true);
 		m_pTexture2DResource->setTileStyleU(m_sTileStyleU);
 		m_pTexture2DResource->setTileStyleV(m_sTileStyleV);
+		if (m_hasBox)
+			m_pTexture2DResource->setBox2D(m_fU, m_fV, m_fWidth, m_fHeight);
+		else
+			m_pTexture2DResource->clearBox2D();
+
 
 		// Parse Content
 		parseContent(pXMLReader);
@@ -94,23 +98,33 @@ namespace NMR {
 			// Convert to integer and make a input and range check!
 			m_nID = fnWStringToUint32(pAttributeValue);
 		}
-
-		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TEXTURE2D_PATH) == 0) {
+		else if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TEXTURE2D_PATH) == 0) {
 			m_sPath = std::wstring(pAttributeValue);
 		}
-
-		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TEXTURE2D_CONTENTTYPE) == 0) {
+		else if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TEXTURE2D_CONTENTTYPE) == 0) {
 			m_sContentType = std::wstring(pAttributeValue);
 		}
-
-		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TEXTURE2D_TILESTYLEU) == 0) {
+		else if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TEXTURE2D_TILESTYLEU) == 0) {
 			m_sTileStyleU = std::wstring(pAttributeValue);
 		}
-
-		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TEXTURE2D_TILESTYLEV) == 0) {
+		else if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TEXTURE2D_TILESTYLEV) == 0) {
 			m_sTileStyleV = std::wstring(pAttributeValue);
 		}
-
+		else if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TEXTURE2D_BOX) == 0) {
+			if (m_hasBox)
+				throw CNMRException(NMR_ERROR_DUPLICATE_BOX_ATTRIBUTE);
+			// parse box
+			std::vector<double> box = fnVctDouble_fromWideString(pAttributeValue);
+			if (box.size() != 4)
+				throw CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE);
+			m_fU = nfFloat(box[0]);
+			m_fV = nfFloat(box[1]);
+			m_fWidth = nfFloat(box[2]);
+			m_fHeight = nfFloat(box[3]);
+			m_hasBox = true;
+		}
+		else 
+			m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE), mrwInvalidOptionalValue);
 	}
 
 

@@ -63,8 +63,10 @@ namespace NMR {
 		CComPtr<IOpcPart> getRelationshipTargetPart(_In_ IOpcPartSet* pPartSet, _In_ IOpcRelationship * pRelationship, _In_opt_ LPCWSTR pszExpectedContentType);
 		CComPtr<IOpcPart> getPartFromPackage(_In_ IOpcPartSet* pPartSet, _In_ IOpcRelationshipSet* pRelationshipSet, _In_ LPCWSTR pszRelationshipType, _In_opt_ LPCWSTR pszExpectedContentType);
 
+		void extractModelDataFromRelationships(_In_ IOpcPartSet* pPartSet, _In_ IOpcRelationshipSet* pRelationshipSet);
 		void extractTexturesFromRelationships(_In_ IOpcPartSet* pPartSet, _In_ IOpcRelationshipSet* pRelationshipSet);
 		void extractCustomDataFromRelationships(_In_ IOpcPartSet* pPartSet, _In_ IOpcRelationshipSet* pRelationshipSet);
+		void extractSliceDataFromRelationships(_In_ IOpcPartSet* pPartSet, _In_ IOpcRelationshipSet* pRelationshipSet);
 
 		void extractModel();
 		virtual PImportStream extract3MFOPCPackage(_In_ PImportStream pPackageStream);

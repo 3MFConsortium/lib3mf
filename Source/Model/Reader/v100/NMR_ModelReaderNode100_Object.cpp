@@ -40,6 +40,7 @@ Stream.
 
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Model/Classes/NMR_ModelMeshObject.h"
+#include "Model/Classes/NMR_ModelAttachment.h"
 
 #include "Model/Classes/NMR_ModelDefaultProperty.h"
 #include "Model/Classes/NMR_ModelDefaultProperty_BaseMaterial.h"
@@ -71,11 +72,17 @@ namespace NMR {
 		m_sPartNumber = L"";
 		m_sName = L"";
 
+		m_bHasThumbnail = false;
+		m_bHasDefaultPropertyID = false;
+		m_bHasDefaultPropertyIndex = false;
 		m_nDefaultPropertyID = 0;
 		m_nDefaultPropertyIndex = 0;
 
 		m_pColorMapping = pColorMapping;
 		m_pTexCoordMapping = pTexCoordMapping;
+		m_nSliceStackId = 0;
+		m_eSlicesMeshResolution = MODELSLICESMESHRESOLUTION_FULL;
+		m_bHasMeshResolution = false;
 	}
 
 	void CModelReaderNode100_Object::parseXML(_In_ CXmlReader * pXMLReader)
@@ -100,12 +107,26 @@ namespace NMR {
 		// Set Object Parameters
 		m_pObject->setName(m_sName);
 		m_pObject->setPartNumber(m_sPartNumber);
+		
+		if (m_bHasThumbnail)
+		{
+			PModelAttachment pAttachment = m_pModel->findModelAttachment(m_sThumbnail);
+			if (!pAttachment)
+				m_pWarnings->addException(CNMRException(NMR_ERROR_NOTEXTURESTREAM), mrwInvalidMandatoryValue);
+			if (! (pAttachment->getRelationShipType() == PACKAGE_TEXTURE_RELATIONSHIP_TYPE) )
+				m_pWarnings->addException(CNMRException(NMR_ERROR_NOTEXTURESTREAM), mrwInvalidMandatoryValue);
 
-		// Set Object Type (might fail, if string is invalid)
-		if (m_sType.length() > 0) {
-			if (!m_pObject->setObjectTypeString(m_sType, false))
-				m_pWarnings->addWarning(MODELREADERWARNING_INVALIDMODELOBJECTTYPE, NMR_ERROR_INVALIDMODELOBJECTTYPE, mrwInvalidOptionalValue);
+			m_pObject->setThumbnail(m_sThumbnail);
 		}
+
+		// Set Production references
+		if (!m_UUID.get()) {
+			if (pXMLReader->NamespaceRegistered(XML_3MF_NAMESPACE_PRODUCTIONSPEC)) {
+				m_pWarnings->addException(CNMRException(NMR_ERROR_MISSINGUUID), mrwMissingMandatoryValue);
+			}
+			m_UUID = std::make_shared<CUUID>();
+		}
+		m_pObject->setUUID(m_UUID);
 	}
 
 	void CModelReaderNode100_Object::OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue)
@@ -131,6 +152,14 @@ namespace NMR {
 			m_bHasType = true;
 		}
 
+		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_OBJECT_THUMBNAIL) == 0) {
+			if (m_bHasThumbnail)
+				throw CNMRException(NMR_ERROR_DUPLICATEOBJECTTHUMBNAIL);
+			std::wstring sValue(pAttributeValue);
+			m_sThumbnail = sValue;
+			m_bHasThumbnail = true;
+		}
+
 		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_OBJECT_NAME) == 0) {
 			std::wstring sValue(pAttributeValue);
 			m_sName = sValue;
@@ -142,13 +171,59 @@ namespace NMR {
 		}
 
 		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_OBJECT_PID) == 0) {
+			if (m_bHasDefaultPropertyID)
+				throw CNMRException(NMR_ERROR_DUPLICATEPID);
+			m_bHasDefaultPropertyID = true;
 			m_nDefaultPropertyID = fnWStringToUint32(pAttributeValue);
 		}
 
 		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_OBJECT_PINDEX) == 0) {
+			if (m_bHasDefaultPropertyIndex)
+				throw CNMRException(NMR_ERROR_DUPLICATEPINDEX);
+			m_bHasDefaultPropertyIndex = true;
 			m_nDefaultPropertyIndex = fnWStringToUint32(pAttributeValue);
 		}
 
+	}
+
+	void CModelReaderNode100_Object::OnNSAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue, _In_z_ const nfWChar * pNameSpace) {
+		__NMRASSERT(pAttributeName);
+		__NMRASSERT(pNameSpace);
+		__NMRASSERT(pAttributeValue);
+
+		if (wcscmp(XML_3MF_NAMESPACE_SLICESPEC, pNameSpace) == 0) {
+			if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_OBJECT_SLICESTACKID) == 0) {
+				if (m_nSliceStackId != 0)
+					m_pWarnings->addException(CNMRException(NMR_ERROR_DUPLICATE_SLICESTACKID), eModelReaderWarningLevel::mrwInvalidOptionalValue);
+				m_nSliceStackId = fnWStringToUint32(pAttributeValue);
+			}
+			else if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_OBJECT_MESHRESOLUTION) == 0) {
+				if (m_bHasMeshResolution) 
+					m_pWarnings->addException(CNMRException(NMR_ERROR_DUPLICATE_MESHRESOLUTION), eModelReaderWarningLevel::mrwInvalidOptionalValue);
+				m_bHasMeshResolution = true;
+				if (wcscmp(pAttributeValue, XML_3MF_VALUE_OBJECT_MESHRESOLUTION_FULL)==0) {
+					m_eSlicesMeshResolution = MODELSLICESMESHRESOLUTION_FULL;
+				}
+				else if (wcscmp(pAttributeValue, XML_3MF_VALUE_OBJECT_MESHRESOLUTION_LOW) == 0) {
+					m_eSlicesMeshResolution = MODELSLICESMESHRESOLUTION_LOW;
+				}
+				else
+					m_pWarnings->addException(CNMRException(NMR_ERROR_INVALID_MESHRESOLUTION), eModelReaderWarningLevel::mrwInvalidOptionalValue);
+			}
+			else
+				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE), mrwInvalidOptionalValue);
+		}
+		
+
+		if (wcscmp(XML_3MF_NAMESPACE_PRODUCTIONSPEC, pNameSpace) == 0) {
+			if (wcscmp(XML_3MF_PRODUCTION_UUID, pAttributeName) == 0) {
+				if (m_UUID.get())
+					m_pWarnings->addException(CNMRException(NMR_ERROR_DUPLICATEUUID), eModelReaderWarningLevel::mrwInvalidMandatoryValue);
+				m_UUID = std::make_shared<CUUID>(pAttributeValue);
+			}
+			else
+				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE), mrwInvalidOptionalValue);
+		}
 	}
 
 	void CModelReaderNode100_Object::OnNSChildElement(_In_z_ const nfWChar * pChildName, _In_z_ const nfWChar * pNameSpace, _In_ CXmlReader * pXMLReader)
@@ -158,7 +233,6 @@ namespace NMR {
 		__NMRASSERT(pNameSpace);
 
 		if (wcscmp(pNameSpace, XML_3MF_NAMESPACE_CORESPEC100) == 0) {
-
 			// Read a mesh object
 			if (wcscmp(pChildName, XML_3MF_ELEMENT_MESH) == 0) {
 				// If we already have parsed an object, the node is duplicate
@@ -169,22 +243,48 @@ namespace NMR {
 				PMesh pMesh = std::make_shared<CMesh>();
 				// Create Mesh Object
 				m_pObject = std::make_shared<CModelMeshObject>(m_nID, m_pModel, pMesh);
+				// Set Object Type (might fail, if string is invalid)
+				if (m_bHasType) {
+					if (!m_pObject->setObjectTypeString(m_sType, false))
+						m_pWarnings->addWarning(MODELREADERWARNING_INVALIDMODELOBJECTTYPE, NMR_ERROR_INVALIDMODELOBJECTTYPE, mrwInvalidOptionalValue);
+				}
 
 				// Read Mesh
-				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode100_Mesh>(m_pModel, pMesh.get(), m_pWarnings, m_pColorMapping, m_pTexCoordMapping, m_nDefaultPropertyID, m_nDefaultPropertyIndex);
+				PModelReaderNode100_Mesh pXMLNode = std::make_shared<CModelReaderNode100_Mesh>(m_pModel, pMesh.get(), m_pWarnings, m_pColorMapping, m_pTexCoordMapping, m_nDefaultPropertyID, m_nDefaultPropertyIndex);
 				pXMLNode->parseXML(pXMLReader);
-
+				
 				// Add Object to Parent
 				m_pModel->addResource(m_pObject);
+
+				// Handle BeamLattice Data
+				handleBeamLatticeExtension(pXMLNode.get());
 
 				// Create Default Properties
 				createDefaultProperties();
 
+				if (m_nSliceStackId > 0) {
+					PPackageResourceID pID = m_pModel->findPackageResourceID(m_pModel->curPath(), m_nSliceStackId);
+					if (!pID.get())
+						throw CNMRException(NMR_ERROR_SLICESTACKRESOURCE_NOT_FOUND);
+					PModelResource pResource = m_pModel->findResource(pID->getUniqueID());
+					CModelSliceStackResource* pSliceStackResource = dynamic_cast<CModelSliceStackResource*>(pResource.get());
+					if (pSliceStackResource) {
+						if ((m_pObject->getObjectType() == MODELOBJECTTYPE_MODEL) || (MODELOBJECTTYPE_SOLIDSUPPORT)) {
+							if (!pSliceStackResource->getSliceStack()->areAllPolygonsClosed()) {
+								throw CNMRException(NMR_ERROR_SLICEPOLYGONNOTCLOSED);
+							}
+						}
+					}
+					else
+						throw CNMRException(NMR_ERROR_SLICESTACKRESOURCE_NOT_FOUND);
+
+					((CModelMeshObject *)(m_pObject.get()))->setSliceStackId(pID);
+					((CModelMeshObject *)(m_pObject.get()))->setSlicesMeshResolution(m_eSlicesMeshResolution);
+				}
 			}
 
-
 			// Read a component object
-			if (wcscmp(pChildName, XML_3MF_ELEMENT_COMPONENTS) == 0) {
+			else if (wcscmp(pChildName, XML_3MF_ELEMENT_COMPONENTS) == 0) {
 				// If we already have parsed an object, the node is duplicate
 				if (m_pObject.get())
 					throw CNMRException(NMR_ERROR_AMBIGUOUSOBJECTDEFINITON);
@@ -192,6 +292,11 @@ namespace NMR {
 				// Create Component List Object
 				PModelComponentsObject pComponentsObject = std::make_shared<CModelComponentsObject>(m_nID, m_pModel);
 				m_pObject = pComponentsObject;
+				// Set Object Type (might fail, if string is invalid)
+				if (m_bHasType) {
+					if (!m_pObject->setObjectTypeString(m_sType, false))
+						m_pWarnings->addWarning(MODELREADERWARNING_INVALIDMODELOBJECTTYPE, NMR_ERROR_INVALIDMODELOBJECTTYPE, mrwInvalidOptionalValue);
+				}
 
 				// Read Components
 				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode100_Components>(pComponentsObject.get(), m_pWarnings);
@@ -199,41 +304,113 @@ namespace NMR {
 
 				// Add Object to Parent
 				m_pModel->addResource(m_pObject);
-
-				// Create default Properties
-				createDefaultProperties();
-
+				
+				if (m_nDefaultPropertyID != 0)
+					m_pWarnings->addException(CNMRException(NMR_ERROR_DEFAULTPID_ON_COMPONENTSOBJECT), mrwInvalidOptionalValue);
 			}
+			else
+				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
+
 		}
 
 	}
 
+	// Create the default property from m_nDefaultPropertyID, if defined
 	void CModelReaderNode100_Object::createDefaultProperties()
 	{
 		if (m_pObject.get() == nullptr)
 			return;
 
 		if (m_nDefaultPropertyID != 0) {
+			bool hasBeenSet = false;
 			// Assign Default Resource Property
-			CModelBaseMaterialResource * pResource = m_pModel->findBaseMaterial(m_nDefaultPropertyID);
+			PPackageResourceID pRID = m_pModel->findPackageResourceID(m_pModel->curPath(), m_nDefaultPropertyID);
+
+			CModelBaseMaterialResource * pResource = nullptr;
+			if (pRID.get())
+				pResource = m_pModel->findBaseMaterial(pRID->getUniqueID());
 			if (pResource != nullptr) {
-				m_pObject->setDefaultProperty (std::make_shared<CModelDefaultProperty_BaseMaterial>(m_nDefaultPropertyID, m_nDefaultPropertyIndex));
+				m_pObject->setDefaultProperty(std::make_shared<CModelDefaultProperty_BaseMaterial>(pRID->getUniqueID(), m_nDefaultPropertyIndex));
+				hasBeenSet = true;
 			}
 
 			// Assign Default ColorResource Property
 			nfColor cColor;
 			if (m_pColorMapping->findColor(m_nDefaultPropertyID, m_nDefaultPropertyIndex, cColor)) {
 				m_pObject->setDefaultProperty(std::make_shared<CModelDefaultProperty_Color>(cColor));
+				hasBeenSet = true;
 			}
-
+			
 			// Assign Default TextureResource Property
 			ModelResourceID nTextureID;
 			nfFloat fU;
 			nfFloat fV;
 			if (m_pTexCoordMapping->findTexCoords(m_nDefaultPropertyID, m_nDefaultPropertyIndex, nTextureID, fU, fV)) {
 				m_pObject->setDefaultProperty(std::make_shared<CModelDefaultProperty_TexCoord2D>(nTextureID, fU, fV));
+				hasBeenSet = true;
 			}
 
+			if (!hasBeenSet) {
+				m_pWarnings->addException(CNMRException(NMR_ERROR_MISSINGDEFAULTPID), mrwMissingMandatoryValue);
+			}
+		}
+	}
+
+	void CModelReaderNode100_Object::handleBeamLatticeExtension(CModelReaderNode100_Mesh* pXMLNode)
+	{
+		CModelMeshObject* pMeshObject = dynamic_cast<CModelMeshObject*>(m_pObject.get());
+		if (pMeshObject == nullptr || pXMLNode == nullptr)
+			return;
+
+		if (pMeshObject->getMesh()->getBeamCount() > 0) {
+			if ( (pMeshObject->getObjectType() != MODELOBJECTTYPE_MODEL) && (pMeshObject->getObjectType() != MODELOBJECTTYPE_SOLIDSUPPORT)) {
+				m_pWarnings->addException(CNMRException(NMR_ERROR_BEAMLATTICE_INVALID_OBJECTTYPE), mrwInvalidOptionalValue);
+			}
+		}
+
+		eModelBeamLatticeClipMode eClipMode;
+		nfBool bHasClippingMeshID;
+		ModelResourceID nClippingMeshID;
+
+		pXMLNode->retrieveClippingInfo(eClipMode, bHasClippingMeshID, nClippingMeshID);
+		if (bHasClippingMeshID) {
+			PPackageResourceID pID = m_pModel->findPackageResourceID(m_pModel->curPath(), nClippingMeshID);
+			if (!pID.get()) {
+				m_pWarnings->addWarning(MODELREADERWARNING_BEAMLATTICECLIPPINGRESOURCENOTDEFINED, NMR_ERROR_BEAMLATTICECLIPPINGRESOURCENOTDEFINED, mrwInvalidMandatoryValue);
+			}
+			else {
+				CModelObject * pModelObject = m_pModel->findObject(pID->getUniqueID());
+				if (pModelObject) {
+					pMeshObject->getBeamLatticeAttributes()->m_bHasClippingMeshID = bHasClippingMeshID;
+					pMeshObject->getBeamLatticeAttributes()->m_nClippingMeshID = pID;
+					pMeshObject->getBeamLatticeAttributes()->m_eClipMode = eClipMode;
+				}
+				else {
+					pMeshObject->getBeamLatticeAttributes()->m_bHasClippingMeshID = false;
+					m_pWarnings->addWarning(MODELREADERWARNING_BEAMLATTICECLIPPINGRESOURCENOTDEFINED, NMR_ERROR_BEAMLATTICECLIPPINGRESOURCENOTDEFINED, mrwInvalidMandatoryValue);
+				}
+			}
+		}
+
+		nfBool bHasRepresentationMeshID;
+		ModelResourceID nRepresentationMeshID;
+		pXMLNode->retrieveRepresentationInfo(bHasRepresentationMeshID, nRepresentationMeshID);
+		if (nRepresentationMeshID) {
+			PPackageResourceID pID = m_pModel->findPackageResourceID(m_pModel->curPath(), nRepresentationMeshID);
+			if (!pID.get()) {
+				m_pWarnings->addWarning(MODELREADERWARNING_BEAMLATTICEREPRESENTATIONRESOURCENOTDEFINED, NMR_ERROR_BEAMLATTICE_INVALID_REPRESENTATIONRESOURCE, mrwInvalidMandatoryValue);
+			}
+			else {
+				CModelObject * pModelObject = m_pModel->findObject(pID->getUniqueID());
+				if (pModelObject) {
+					pMeshObject->getBeamLatticeAttributes()->m_bHasRepresentationMeshID = bHasRepresentationMeshID;
+					pMeshObject->getBeamLatticeAttributes()->m_nRepresentationID = pID;
+				}
+				else {
+					pMeshObject->getBeamLatticeAttributes()->m_bHasRepresentationMeshID = false;
+					m_pWarnings->addWarning(MODELREADERWARNING_BEAMLATTICEREPRESENTATIONRESOURCENOTDEFINED, NMR_ERROR_BEAMLATTICE_INVALID_REPRESENTATIONRESOURCE, mrwInvalidMandatoryValue);
+				}
+			}
 		}
 	}
 

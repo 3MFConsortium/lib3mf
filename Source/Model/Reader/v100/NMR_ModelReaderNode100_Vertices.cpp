@@ -84,6 +84,8 @@ namespace NMR {
 				pXMLNode->retrievePosition(fX, fY, fZ);
 				m_pMesh->addNode(fnVEC3_make(fX, fY, fZ));
 			}
+			else
+				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
 		}
 	}
 

@@ -37,11 +37,16 @@ using LibZ and a native XML writer implementation.
 #include "Model/Writer/NMR_ModelWriter_3MF_Native.h" 
 #include "Model/Classes/NMR_ModelConstants.h" 
 #include "Model/Classes/NMR_ModelAttachment.h" 
+#include "Model/Classes/NMR_ModelTextureAttachment.h" 
+#include "Model/Classes/NMR_ModelSliceResource.h"
 #include "Common/Platform/NMR_ImportStream.h" 
 #include "Common/NMR_Exception.h" 
 #include "Common/Platform/NMR_XmlWriter.h" 
 #include "Common/Platform/NMR_XmlWriter_Native.h" 
+#include "Common/Platform/NMR_ImportStream_Memory.h"
+#include "Common/Platform/NMR_ExportStream_Memory.h"
 #include "Common/NMR_StringUtils.h" 
+#include <functional>
 #include <sstream>
 
 namespace NMR {
@@ -57,6 +62,8 @@ namespace NMR {
 	{
 		__NMRASSERT(pModel != nullptr);
 		m_pModel = pModel;
+
+		m_nRelationIDCounter = 0;
 	}
 
 	void CModelWriter_3MF_Native::releasePackage()
@@ -80,9 +87,23 @@ namespace NMR {
 		// add Root relationships
 		pPackageWriter->addRootRelationship(generateRelationShipID(), PACKAGE_START_PART_RELATIONSHIP_TYPE, pModelPart.get());
 
-		// add Textures
-		addTextureParts(m_pModel, pPackageWriter, pModelPart);
+		PModelAttachment pPackageThumbnail = m_pModel->getPackageThumbnail();
+		if (pPackageThumbnail.get() != nullptr)
+		{
+			// create Package Thumbnail Part
+			POpcPackagePart pThumbnailPart = pPackageWriter->addPart(pPackageThumbnail->getPathURI());
+			PExportStream pExportStream = pThumbnailPart->getExportStream();
+			// Copy data
+			PImportStream pPackageThumbnailStream = pPackageThumbnail->getStream();
+			pPackageThumbnailStream->seekPosition(0, true);
+			pExportStream->copyFrom(pPackageThumbnailStream.get(), pPackageThumbnailStream->retrieveSize(), MODELWRITER_NATIVE_BUFFERSIZE);
+			// add root relationship
+			pPackageWriter->addRootRelationship(generateRelationShipID(), pPackageThumbnail->getRelationShipType(), pThumbnailPart.get());
+		}
 
+		// add slicestacks that reference other files
+		addSlicerefAttachments(m_pModel);
+		
 		// add Attachments
 		addAttachments(m_pModel, pPackageWriter, pModelPart);
 
@@ -116,36 +137,33 @@ namespace NMR {
 		return sStream.str();
 	}
 
-	void CModelWriter_3MF_Native::addTextureParts(_In_ CModel * pModel, _In_ POpcPackageWriter pPackageWriter, _In_ POpcPackagePart pModelPart)
-	{
+	void CModelWriter_3MF_Native::addSlicerefAttachments(_In_ CModel *pModel) {
 		__NMRASSERT(pModel != nullptr);
-		__NMRASSERT(pModelPart.get() != nullptr);
-		__NMRASSERT(pPackageWriter.get() != nullptr);
 
-		nfUint32 nCount = pModel->getTextureStreamCount();
-		nfUint32 nIndex;
+		nfUint32 nCount = pModel->getSliceStackCount();
 
 		if (nCount > 0) {
-
-
+			nfUint32 nIndex;
 			for (nIndex = 0; nIndex < nCount; nIndex++) {
-				PImportStream pStream = pModel->getTextureStream(nIndex);
-				std::wstring sPath = fnIncludeLeadingPathDelimiter (pModel->getTextureStreamPath(nIndex));
+				CModelSliceStackResource* pSliceStackResource = dynamic_cast<CModelSliceStackResource*>(pModel->getSliceStackResource(nIndex).get());
+				CSliceStack* pSliceStack = pSliceStackResource->getSliceStack().get();
+				if (pSliceStack->usesSliceRef()) {
+					PExportStreamMemory p = std::make_shared<CExportStreamMemory>();
 
-				if (pStream.get() == nullptr)
-					throw CNMRException(NMR_ERROR_INVALIDPARAM);
+					PXmlWriter_Native pXMLWriter = std::make_shared<CXmlWriter_Native>(p);
+					writeSlicestackStream(pXMLWriter.get(), pModel, pSliceStackResource);
 
-				// create Texture Part
-				POpcPackagePart pTexturePart = pPackageWriter->addPart(sPath);
-				PExportStream pExportStream = pTexturePart->getExportStream();
-
-				// Copy data
-				pStream->seekPosition(0, true);
-				pExportStream->copyFrom(pStream.get(), pStream->retrieveSize(), MODELWRITER_NATIVE_BUFFERSIZE);
-
-				// add relationships
-				pModelPart->addRelationship(generateRelationShipID(), PACKAGE_TEXTURE_RELATIONSHIP_TYPE, pTexturePart->getURI());
-
+					PImportStream pStream = std::make_shared<CImportStream_Memory>(p->getData(), p->getDataSize());
+					// check, whether that's already in here
+					PModelAttachment pSliceRefAttachment = m_pModel->findModelAttachment(pSliceStackResource->sliceRefPath());
+					if (pSliceRefAttachment.get() != nullptr) {
+						if (pSliceRefAttachment->getRelationShipType() != PACKAGE_START_PART_RELATIONSHIP_TYPE)
+							throw CNMRException(NMR_ERROR_DUPLICATEATTACHMENTPATH);
+						pSliceRefAttachment->setStream(pStream);
+					}
+					else
+						m_pModel->addAttachment(pSliceStackResource->sliceRefPath(), PACKAGE_START_PART_RELATIONSHIP_TYPE, pStream);
+				}
 			}
 		}
 	}
@@ -160,8 +178,6 @@ namespace NMR {
 		nfUint32 nIndex;
 
 		if (nCount > 0) {
-
-
 			for (nIndex = 0; nIndex < nCount; nIndex++) {
 				PModelAttachment pAttachment = pModel->getModelAttachment(nIndex);
 				PImportStream pStream = pAttachment->getStream();
@@ -182,7 +198,6 @@ namespace NMR {
 
 				// add relationships
 				pModelPart->addRelationship(generateRelationShipID(), sRelationShipType.c_str(), pAttachmentPart->getURI());
-
 			}
 		}
 	}

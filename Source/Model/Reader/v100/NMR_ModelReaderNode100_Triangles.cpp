@@ -61,6 +61,8 @@ namespace NMR {
 		m_nDefaultPropertyID = nDefaultPropertyID;
 		m_nDefaultPropertyIndex = nDefaultPropertyIndex;
 
+		m_nUsedPropertyID = 0;
+
 		m_pModel = pModel;
 		m_pMesh = pMesh;
 	}
@@ -150,7 +152,6 @@ namespace NMR {
 		__NMRASSERT(pNameSpace);
 
 		if (wcscmp(pNameSpace, XML_3MF_NAMESPACE_CORESPEC100) == 0) {
-
 			if (wcscmp(pChildName, XML_3MF_ELEMENT_TRIANGLE) == 0) {
 				// Parse XML
 				PModelReaderNode100_Triangle pXMLNode = std::make_shared<CModelReaderNode100_Triangle>(m_pWarnings);
@@ -173,14 +174,20 @@ namespace NMR {
 					ModelResourceIndex nPropertyIndex3 = m_nDefaultPropertyIndex;
 
 					if (pXMLNode->retrieveProperties(nPropertyID, nPropertyIndex1, nPropertyIndex2, nPropertyIndex3) || (nPropertyID != 0)) {
-						// Find and Assign Base Material Resource
-						CModelBaseMaterialResource * pBaseMaterial = m_pModel->findBaseMaterial(nPropertyID);
-						if (pBaseMaterial) {
-							CMeshInformation_BaseMaterials * pBaseMaterials = createBaseMaterialInformation();
-							MESHINFORMATION_BASEMATERIAL* pFaceData = (MESHINFORMATION_BASEMATERIAL*)pBaseMaterials->getFaceData(pFace->m_index);
-							if (pFaceData) {
-								pFaceData->m_nMaterialGroupID = nPropertyID;
-								pFaceData->m_nMaterialIndex = nPropertyIndex1;
+						// set potential default properties (i.e. used pid)
+						m_nUsedPropertyID = nPropertyID;
+
+						PPackageResourceID pID = m_pModel->findPackageResourceID(m_pModel->curPath(), nPropertyID);
+						if (pID.get()) {
+							// Find and Assign Base Material Resource
+							CModelBaseMaterialResource * pBaseMaterial = m_pModel->findBaseMaterial(pID->getUniqueID());
+							if (pBaseMaterial) {
+								CMeshInformation_BaseMaterials * pBaseMaterials = createBaseMaterialInformation();
+								MESHINFORMATION_BASEMATERIAL* pFaceData = (MESHINFORMATION_BASEMATERIAL*)pBaseMaterials->getFaceData(pFace->m_index);
+								if (pFaceData) {
+									pFaceData->m_nMaterialGroupID = pID->getUniqueID();
+									pFaceData->m_nMaterialIndex = nPropertyIndex1;
+								}
 							}
 						}
 
@@ -209,7 +216,9 @@ namespace NMR {
 								m_pTexCoordMapping->findTexCoords(nPropertyID, nPropertyIndex3, nTextureID3, pFaceData->m_vCoords[2].m_fields[0], pFaceData->m_vCoords[2].m_fields[1]);
 
 								if ((nTextureID1 == nTextureID2) && (nTextureID1 == nTextureID3) && (nTextureID2 == nTextureID3)) {
-									pFaceData->m_TextureID = nTextureID1;
+									PPackageResourceID pID = m_pModel->findPackageResourceID(m_pModel->curPath(), nTextureID1);
+									if (pID.get())
+										pFaceData->m_TextureID = pID->getUniqueID();
 								}
 							}
 
@@ -218,8 +227,18 @@ namespace NMR {
 
 					}
 				}
+				else
+					throw CNMRException(NMR_ERROR_INVALIDMODELCOORDINATEINDICES);
 			}
+			else
+				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
+
 		}
+	}
+
+	ModelResourceID CModelReaderNode100_Triangles::getUsedPropertyID() const
+	{
+		return m_nUsedPropertyID;
 	}
 
 }

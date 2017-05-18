@@ -36,10 +36,14 @@ UnitTest_MeshFormat_STL.cpp: Defines Unittests for the STL mesh format
 #include "Common\NMR_Exception.h"
 #include "Common\Mesh\NMR_Mesh.h"
 #include "Common\MeshImport\NMR_MeshImporter_STL.h"
-#include "Common\Platform\NMR_ImportStream_COM.h"
 #include "Common\MeshExport\NMR_MeshExporter_STL.h"
-// #include "Common\MeshExport\NMR_MeshExporter_Debug.h"
+#ifdef NMR_COM_NATIVE
+#include "Common\Platform\NMR_ImportStream_COM.h"
 #include "Common\Platform\NMR_ExportStream_COM.h"
+#else
+#include "Common\Platform\NMR_ImportStream_GCC_Native.h"
+#include "Common\Platform\NMR_ExportStream_GCC_Native.h"
+#endif
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -49,12 +53,19 @@ namespace NMR
 
 	TEST_CLASS(MeshFormatTest_STL)
 	{
+	private:
+		const static std::wstring sInPath;
+		const static std::wstring sOutPath;
 	public:
 
 		TEST_METHOD(MeshImport_STL_Box)
 		{
 			CMesh mesh;
-			PImportStream stream(new CImportStream_COM(L"../../TestFiles/Box.stl"));
+#ifdef NMR_COM_NATIVE
+			PImportStream stream(new CImportStream_COM((sInPath + L"Box.stl").c_str()));
+#else
+			PImportStream stream(new CImportStream_GCC_Native((sInPath + L"Box.stl").c_str()));
+#endif
 			PMeshImporter importer(new CMeshImporter_STL(stream, 0.0001f));
 			importer->loadMesh(&mesh, NULL);
 			Assert::IsTrue(mesh.getNodeCount() == 8);
@@ -65,7 +76,11 @@ namespace NMR
 		TEST_METHOD(MeshImport_STL_Sphere)
 		{
 			CMesh Mesh;
-			PImportStream pStream(new CImportStream_COM(L"../../TestFiles/Sphere.stl"));
+#ifdef NMR_COM_NATIVE
+			PImportStream pStream(new CImportStream_COM((sInPath + L"Sphere.stl").c_str()));
+#else
+			PImportStream pStream(new CImportStream_GCC_Native((sInPath + L"Sphere.stl").c_str()));
+#endif
 			PMeshImporter pImporter(new CMeshImporter_STL(pStream, 0.0001f));
 			pImporter->loadMesh(&Mesh, NULL);
 			Assert::IsTrue(Mesh.getNodeCount() == 1442);
@@ -76,13 +91,21 @@ namespace NMR
 		TEST_METHOD(MeshExport_STL_Box)
 		{
 			CMesh Mesh;
-			PImportStream pStream(new CImportStream_COM(L"../../TestFiles/Box.stl"));
+#ifdef NMR_COM_NATIVE
+			PImportStream pStream(new CImportStream_COM((sInPath + L"Box.stl").c_str()));
+#else
+			PImportStream pStream(new CImportStream_GCC_Native((sInPath + L"Box.stl").c_str()));
+#endif
 			PMeshImporter pImporter(new CMeshImporter_STL(pStream, 0.0001f));
 			pImporter->loadMesh(&Mesh, NULL);
 			Assert::IsTrue(Mesh.getNodeCount() == 8);
 			Assert::IsTrue(Mesh.getFaceCount() == 12);
 
-			PExportStream pExportStream(new CExportStream_COM(L"../TestOutput/output_box.stl"));
+#ifdef NMR_COM_NATIVE
+			PExportStream pExportStream(new CExportStream_COM((sOutPath + L"output_box.stl").c_str()));
+#else
+			PExportStream pExportStream(new CExportStream_GCC_Native((sOutPath + L"output_box.stl").c_str()));
+#endif
 			PMeshExporter pExporter(new CMeshExporter_STL(pExportStream));
 			pExporter->exportMesh(&Mesh, NULL);
 		}
@@ -90,17 +113,27 @@ namespace NMR
 		TEST_METHOD(MeshExport_STL_Sphere)
 		{
 			CMesh Mesh;
-			PImportStream pStream(new CImportStream_COM(L"../../TestFiles/Sphere.stl"));
+#ifdef NMR_COM_NATIVE
+			PImportStream pStream(new CImportStream_COM((sInPath + L"Sphere.stl").c_str()));
+#else
+			PImportStream pStream(new CImportStream_GCC_Native((sInPath + L"Sphere.stl").c_str()));
+#endif
 			PMeshImporter pImporter(new CMeshImporter_STL(pStream, 0.0001f));
 			pImporter->loadMesh(&Mesh, NULL);
 			Assert::IsTrue(Mesh.getNodeCount() == 1442);
 			Assert::IsTrue(Mesh.getFaceCount() == 2880);
 
-			PExportStream pExportStream(new CExportStream_COM(L"../TestOutput/output_sphere.stl"));
+#ifdef NMR_COM_NATIVE
+			PExportStream pExportStream(new CExportStream_COM((sOutPath + L"output_sphere.stl").c_str()));
+#else
+			PExportStream pExportStream(new CExportStream_GCC_Native((sOutPath + L"output_sphere.stl").c_str()));
+#endif
 			PMeshExporter pExporter(new CMeshExporter_STL(pExportStream));
 			pExporter->exportMesh(&Mesh, NULL);
 		}
 
 	};
 
+	const std::wstring MeshFormatTest_STL::sInPath = L"../../TestFiles/VS_UnitTests/";
+	const std::wstring MeshFormatTest_STL::sOutPath = L"../TestOutput/";
 }

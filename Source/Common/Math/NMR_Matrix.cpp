@@ -37,7 +37,7 @@ NMR_Matrix.cpp implements all needed matrix calculations and transforms for
 #include "Common/Math/NMR_Vector.h" 
 #include "Common/NMR_Exception.h" 
 #include "Common/NMR_StringUtils.h" 
-#include <math.h>
+#include <cmath>
 #include <string>
 #include <sstream>
 
@@ -482,6 +482,13 @@ namespace NMR {
 		mResult.m_fields[3][3] = 1.0f;
 
 		return mResult;
+	}
+
+	nfBool fnMATRIX3_isplanar(_In_ const NMATRIX3 mMatrix)
+	{
+		const double eps = 1e-7;
+		return (fabs(mMatrix.m_fields[2][0]) < eps) && (fabs(mMatrix.m_fields[2][1]) < eps) && (fabs(mMatrix.m_fields[2][2] - 1 ) < eps)
+				&& (fabs(mMatrix.m_fields[0][2]) < eps) && (fabs(mMatrix.m_fields[1][2]) < eps); 
 	}
 
 }

@@ -49,9 +49,12 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
 		std::wstring sFileName(pwszFileName);
+#ifdef _WIN32
+		m_Stream.open(sFileName.c_str(), std::ios::out | std::ios::binary);
+#else
 		std::string sUTF8Name = fnUTF16toUTF8(sFileName);
-
-        m_Stream.open(sUTF8Name.c_str(), std::ios::out | std::ios::binary);
+		m_Stream.open(sUTF8Name.c_str(), std::ios::out | std::ios::binary);
+#endif
 		if (m_Stream.fail())
 			throw CNMRException(NMR_ERROR_COULDNOTCREATEFILE);
 

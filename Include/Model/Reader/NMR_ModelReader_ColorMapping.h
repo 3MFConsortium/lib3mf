@@ -71,6 +71,8 @@ namespace NMR {
 		void registerMaterialReference(_In_ ModelResourceID nResourceID, _In_ ModelResourceIndex nMaterialIndex);
 		nfBool hasMaterialReference(_In_ ModelResourceID nResourceID);
 		nfBool getMaterialReference(_In_ ModelResourceID nResourceID, _Out_ ModelResourceIndex & nMaterialIndex);
+
+		nfBool retrieveARessource(_Out_ ModelResourceID& nResourceID);
 	};
 
 	typedef std::shared_ptr <CModelReader_ColorMapping> PModelReader_ColorMapping;

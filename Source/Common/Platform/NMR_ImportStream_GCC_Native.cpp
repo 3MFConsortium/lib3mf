@@ -47,9 +47,12 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
 		std::wstring sFileName(pwszFileName);
+#ifdef _WIN32
+		m_Stream.open(sFileName.c_str(), std::ios::in | std::ios::binary);
+#else
 		std::string sUTF8Name = fnUTF16toUTF8(sFileName);
-
 		m_Stream.open(sUTF8Name.c_str(), std::ios::in | std::ios::binary);
+#endif
 		if (m_Stream.fail())
 			throw CNMRException(NMR_ERROR_COULDNOTOPENFILE);
 	}
@@ -137,8 +140,11 @@ namespace NMR {
 
 	nfUint64 CImportStream_GCC_Native::retrieveSize()
 	{
+		nfUint64 nOrigPosition = getPosition();
 		seekFromEnd(0, true);
-		return getPosition();
+		nfUint64 nSize = getPosition();
+		seekPosition(nOrigPosition, true);
+		return nSize;
 	}
 
 	void CImportStream_GCC_Native::writeToFile(_In_ const nfWChar * pwszFileName)

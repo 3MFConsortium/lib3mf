@@ -184,7 +184,10 @@ namespace NMR {
 
     nfUint64 CImportStream_GCC_Win32::retrieveSize()
     {
-	    HRESULT hResult = S_OK;
+	nfUint64 nOrigPosition = getPosition();
+	
+	HRESULT hResult = S_OK;
+	std::cout<<"CImportStream_GCC_Win32::retrieveSize()" << std::endl;
 
 		LARGE_INTEGER nPosition;
 		nPosition.QuadPart = 0;
@@ -196,8 +199,11 @@ namespace NMR {
                 throw CNMRException_Windows(NMR_ERROR_COULDNOTGETSTREAMPOSITION, hResult);
         }
 
-        return nPosition.QuadPart;
-	}
+        nfUint64 nSize = nPosition.QuadPart;
+        seekPosition(nOrigPosition, true);
+        return nSize;
+        
+    }
 
     void CImportStream_GCC_Win32::writeToFile(_In_ const nfWChar * pwszFileName)
     {

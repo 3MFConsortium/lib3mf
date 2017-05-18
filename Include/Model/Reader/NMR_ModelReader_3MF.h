@@ -51,7 +51,7 @@ namespace NMR {
 		CModelReader_3MF(_In_ PModel pModel);
 
 		virtual void readStream(_In_ PImportStream pStream);
-		virtual void addTextureStream(_In_ std::wstring sPath, _In_ PImportStream pStream);
+		virtual void addTextureAttachment(_In_ std::wstring sPath, _In_ PImportStream pStream);
 	};
 
 	typedef std::shared_ptr <CModelReader_3MF> PModelReader_3MF;

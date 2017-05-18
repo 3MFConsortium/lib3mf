@@ -40,19 +40,19 @@ structure.
 
 --*/
 
-#include "Common/Mesh/NMR_Mesh.h" 
+#include "Common/Mesh/NMR_Mesh.h"
 #include "Common/Math/NMR_Matrix.h" 
 #include "Common/NMR_Exception.h" 
-#include <math.h>
+#include <cmath>
 
 namespace NMR {
 
-	CMesh::CMesh()
+	CMesh::CMesh(): m_BeamLattice(this->m_Nodes)
 	{
 		// empty on purpose
 	}
 
-	CMesh::CMesh(_In_opt_ CMesh * pMesh)
+	CMesh::CMesh(_In_opt_ CMesh * pMesh) : m_BeamLattice(this->m_Nodes)
 	{
 		if (!pMesh)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
@@ -70,10 +70,12 @@ namespace NMR {
 		if (!pMesh)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-		nfInt32 nIdx, nNodeCount, nFaceCount, j;
+		nfInt32 nIdx, nNodeCount, nFaceCount, nBeamCount, j;
 		MESHNODE * pNode;
 		MESHFACE * pFace;
+		MESHBEAM * pBeam;
 		MESHNODE * pFaceNodes[3];
+		MESHNODE * pBeamNodes[2];
 
 		// Copy Mesh Information
 		CMeshInformationHandler * pOtherMeshInformationHandler = pMesh->getMeshInformationHandler();
@@ -84,6 +86,7 @@ namespace NMR {
 
 		nNodeCount = pMesh->getNodeCount();
 		nFaceCount = pMesh->getFaceCount();
+		nBeamCount = pMesh->getBeamCount();
 
 		if (nNodeCount > 0) {
 			std::vector<MESHNODE *> aNewNodes;
@@ -111,8 +114,19 @@ namespace NMR {
 					}
 				}
 			}
-			else
-				throw CNMRException(NMR_ERROR_INVALIDMESHTOPOLOGY);
+			if (nBeamCount > 0) {
+				for (nIdx = 0; nIdx < nBeamCount; nIdx++) {
+					pBeam = pMesh->getBeam(nIdx);
+					for (j = 0; j < 2; j++) {
+						if ((pBeam->m_nodeindices[j] < 0) || (pBeam->m_nodeindices[j] >= nNodeCount))
+							throw CNMRException(NMR_ERROR_INVALIDNODEINDEX);
+
+						pBeamNodes[j] = aNewNodes[pBeam->m_nodeindices[j]];
+					}
+					addBeam(pBeamNodes[0], pBeamNodes[1], &pBeam->m_radius[0], &pBeam->m_radius[1], &pBeam->m_capMode[0], &pBeam->m_capMode[1]);
+				}
+			}
+
 		}
 	}
 
@@ -184,14 +198,61 @@ namespace NMR {
 		return pFace;
 	}
 
-	nfUint32 CMesh::getNodeCount()
+	_Ret_notnull_ MESHBEAM * CMesh::addBeam(_In_ MESHNODE * pNode1, _In_ MESHNODE * pNode2,
+		_In_ nfDouble * pRadius1, _In_ nfDouble * pRadius2,
+		_In_ nfInt32 * peCapMode1, _In_ nfInt32 * peCapMode2)
 	{
+		if ((!pNode1) || (!pNode2) || (!pRadius1) || (!pRadius2) || (!peCapMode1) || (!peCapMode2))
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		if (pNode1 == pNode2)
+			throw CNMRException(NMR_ERROR_DUPLICATENODE);
+
+		MESHBEAM * pBeam;
+		nfUint32 nBeamCount = getBeamCount();
+
+		if (nBeamCount > NMR_MESH_MAXBEAMCOUNT)
+			throw CNMRException(NMR_ERROR_TOOMANYBEAMS);
+
+		nfUint32 nNewIndex;
+
+		pBeam = m_BeamLattice.m_Beams.allocData(nNewIndex);
+		pBeam->m_nodeindices[0] = pNode1->m_index;
+		pBeam->m_nodeindices[1] = pNode2->m_index;
+		pBeam->m_index = nNewIndex;
+		pBeam->m_radius[0] = *pRadius1;
+		pBeam->m_radius[1] = *pRadius2;
+
+		pBeam->m_capMode[0] = *peCapMode1;
+		pBeam->m_capMode[1] = *peCapMode2;
+
+		return pBeam;
+	}
+
+	PBEAMSET CMesh::addBeamSet()
+	{
+		m_BeamLattice.m_pBeamSets.push_back(std::make_shared<BEAMSET>());
+		return m_BeamLattice.m_pBeamSets.back();
+	}
+
+
+	nfUint32 CMesh::getNodeCount()	{
 		return m_Nodes.getCount ();
 	}
 
 	nfUint32 CMesh::getFaceCount()
 	{
 		return m_Faces.getCount ();
+	}
+
+	nfUint32 CMesh::getBeamCount()
+	{
+		return m_BeamLattice.m_Beams.getCount();
+	}
+
+	nfUint32 CMesh::getBeamSetCount()
+	{
+		return (nfUint32)(m_BeamLattice.m_pBeamSets.size());
 	}
 
 	_Ret_notnull_ MESHNODE * CMesh::getNode(_In_ nfUint32 nIdx)
@@ -204,17 +265,62 @@ namespace NMR {
 		return m_Faces.getData(nIdx);
 	}
 
+	_Ret_notnull_ MESHBEAM * CMesh::getBeam(_In_ nfUint32 nIdx)
+	{
+		return m_BeamLattice.m_Beams.getData(nIdx);
+	}
+
+	_Ret_notnull_ PBEAMSET CMesh::getBeamSet(_In_ nfUint32 nIdx)
+	{
+		if (nIdx >= m_BeamLattice.m_pBeamSets.size())
+			throw CNMRException(NMR_ERROR_INVALIDINDEX);
+		return m_BeamLattice.m_pBeamSets[nIdx];
+	}
+
+	void CMesh::setBeamLatticeMinLength(nfDouble dMinLength)
+	{
+		m_BeamLattice.m_dMinLength = dMinLength;
+	}
+
+	nfDouble CMesh::getBeamLatticeMinLength()
+	{
+		return m_BeamLattice.m_dMinLength;
+	}
+
+	void CMesh::setBeamLatticeCapMode(eModelBeamLatticeCapMode eCapMode)
+	{
+		m_BeamLattice.m_CapMode = eCapMode;
+	}
+
+	eModelBeamLatticeCapMode CMesh::getBeamLatticeCapMode()
+	{
+		return m_BeamLattice.m_CapMode;
+	}
+
+	void CMesh::setDefaultBeamRadius(nfDouble dRadius)
+	{
+		m_BeamLattice.m_dRadius = dRadius;
+	}
+
+	nfDouble CMesh::getDefaultBeamRadius()
+	{
+		return m_BeamLattice.m_dRadius;
+	}
+
 	nfBool CMesh::checkSanity()
 	{
 		nfUint32 nIdx, j;
 
 		nfUint32 nNodeCount = getNodeCount();
 		nfUint32 nFaceCount = getFaceCount();
+		nfUint32 nBeamCount = getBeamCount();
 
 		// max 2 billion Nodes/Faces
 		if (nNodeCount > NMR_MESH_MAXNODECOUNT)
 			return false;
 		if (nFaceCount > NMR_MESH_MAXFACECOUNT)
+			return false;
+		if (nBeamCount > NMR_MESH_MAXBEAMCOUNT)
 			return false;
 
 		for (nIdx = 0; nIdx < nNodeCount; nIdx++) {
@@ -238,6 +344,15 @@ namespace NMR {
 				return false;
 		}
 
+		for (nIdx = 0; nIdx < nBeamCount; nIdx++) {
+			MESHBEAM * beam = getBeam(nIdx);
+			for (j = 0; j < 2; j++)
+				if ((beam->m_nodeindices[j] < 0) || (((nfUint32)beam->m_nodeindices[j]) >= nNodeCount))
+					return false;
+
+			if (beam->m_nodeindices[0] == beam->m_nodeindices[1])
+				return false;
+		}
 		return true;
 	}
 
@@ -246,6 +361,11 @@ namespace NMR {
 		m_pMeshInformationHandler = NULL;
 		m_Faces.clearAllData();
 		m_Nodes.clearAllData();
+		clearBeamLattice();
+	}
+	
+	void CMesh::clearBeamLattice() {
+		m_BeamLattice.clear();
 	}
 
 	void CMesh::clearMeshInformationHandler()

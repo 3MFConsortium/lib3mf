@@ -38,6 +38,7 @@ This is the class for exporting the 3mf model stream root node.
 #include "Model/Writer/NMR_ModelWriterNode.h" 
 #include "Model/Writer/NMR_ModelWriter_ColorMapping.h" 
 #include "Model/Classes/NMR_ModelComponentsObject.h" 
+#include "Model/Classes/NMR_ModelMeshObject.h" 
 #include "Common/Platform/NMR_XmlWriter.h"
 #include "Model/Writer/NMR_ModelWriter_TexCoordMappingContainer.h"
 
@@ -50,6 +51,14 @@ namespace NMR {
 		ModelResourceID m_ResourceCounter;
 		
 		nfBool m_bWriteMaterialExtension;
+		nfBool m_bWriteProductionExtension;
+		nfBool m_bWriteBeamLatticeExtension;
+		nfBool m_bWriteSliceExtension;
+		nfBool m_bWriteBaseMaterials;
+		nfBool m_bWriteObjects;
+		nfBool m_bIsRootModel;
+
+		CModelSliceStackResource* m_pSliceStackResource;	// If this is set, only this slicestack should be exported
 
 		void calculateColors(_In_ CMesh * pMesh);
 		void calculateTexCoords(_In_ CMesh * pMesh);
@@ -62,6 +71,10 @@ namespace NMR {
 		void writeTex2Coords();
 		void writeObjects();
 		void writeBuild();
+		void writeSliceStack(_In_ CModelSliceStackResource *pSliceStackResource);
+
+		void writeSliceStacks();
+		void writeSliceStack(_In_ CSliceStack *pSliceStack);
 
 		void writeComponentsObject(_In_ CModelComponentsObject * pComponentsObject);
 
@@ -69,6 +82,7 @@ namespace NMR {
 	public:
 		CModelWriterNode100_Model() = delete;
 		CModelWriterNode100_Model(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter);
+		CModelWriterNode100_Model(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter, CModelSliceStackResource *pSliceStackResource);
 		
 		virtual void writeToXML();
 	};

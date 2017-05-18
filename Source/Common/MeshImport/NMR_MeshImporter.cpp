@@ -34,7 +34,7 @@ This is an abstract base class for Importing different Mesh Formats.
 
 #include "Common/MeshImport/NMR_MeshImporter.h" 
 #include "Common/NMR_Exception.h" 
-#include <math.h>
+#include <cmath>
 
 namespace NMR {
 

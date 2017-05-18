@@ -61,7 +61,7 @@ namespace NMR {
 
 	CModelReaderWarnings::CModelReaderWarnings()
 	{
-		setCriticalWarningLevel(mrwInvalidMandatoryValue);
+		setCriticalWarningLevel(mrwFatal);
 	}
 
 	eModelReaderWarningLevel CModelReaderWarnings::getCriticalWarningLevel()
@@ -81,12 +81,12 @@ namespace NMR {
 			m_Warnings.push_back(pWarning);
 		}
 
-		if ((nfInt32)WarningLevel < (nfInt32)m_CriticalWarningLevel)
+		if ((nfInt32)WarningLevel <= (nfInt32)m_CriticalWarningLevel)
 			throw CNMRException(nErrorCode);
 
 	}
 
-	void CModelReaderWarnings::addException(_In_ CNMRException & Exception, _In_ eModelReaderWarningLevel WarningLevel)
+	void CModelReaderWarnings::addException(const _In_ CNMRException & Exception, _In_ eModelReaderWarningLevel WarningLevel)
 	{
 		if (m_Warnings.size() < NMR_MAXWARNINGCOUNT) { // Failsafe check for Index overflows
 			std::string sAsciiMessage (Exception.what());
@@ -96,7 +96,7 @@ namespace NMR {
 			m_Warnings.push_back(pWarning);
 		}
 
-		if ((nfInt32)WarningLevel < (nfInt32)m_CriticalWarningLevel)
+		if ((nfInt32)WarningLevel <= (nfInt32)m_CriticalWarningLevel)
 			throw Exception;
 	}
 

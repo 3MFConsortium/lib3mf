@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?> 
 <xs:schema xmlns="http://schemas.microsoft.com/3dmanufacturing/slice/2015/07" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xml="http://www.w3.org/XML/1998/namespace" 
-targetNamespace="http://schemas.microsoft.com/3dmanufacturing/slice/2015/07" 
-elementFormDefault="unqualified" attributeFormDefault="unqualified" blockDefault="#all"> 
+targetNamespace="http://schemas.microsoft.com/3dmanufacturing/slice/2015/07" elementFormDefault="unqualified" attributeFormDefault="unqualified" blockDefault="#all"> 
 	<xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="http://www.w3.org/2001/xml.xsd"/>
   <xs:annotation> 
 		<xs:documentation><![CDATA[   Schema notes: 
@@ -17,8 +16,8 @@ elementFormDefault="unqualified" attributeFormDefault="unqualified" blockDefault
 	<!-- Complex Types --> 
 	<xs:complexType name="CT_SliceStack"> 
 		<xs:choice> 
-			<xs:element ref="slice" minOccurs="0" maxOccurs="1073741824"/> 
-			<xs:element ref="sliceref" minOccurs="0" maxOccurs="1073741824"/>  
+			<xs:element ref="slice" minOccurs="0" maxOccurs="2147483647"/> 
+			<xs:element ref="sliceref" minOccurs="0" maxOccurs="2147483647"/>  
 		</xs:choice> 
 		<xs:attribute name="id" type="ST_ResourceID" use="required"/> 
 		<xs:attribute name="zbottom" type="ST_Number"/> 
@@ -27,8 +26,8 @@ elementFormDefault="unqualified" attributeFormDefault="unqualified" blockDefault
 	<xs:complexType name="CT_Slice"> 
 		<xs:sequence> 
 			<xs:element ref="vertices" minOccurs="0" /> 
-			<xs:element ref="polygon" minOccurs="0" maxOccurs="1073741824"/>
-			<xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="1073741824"/> 
+			<xs:element ref="polygon" minOccurs="0" maxOccurs="2147483647"/>
+			<xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="2147483647"/> 
 		</xs:sequence> 
 		<xs:attribute name="ztop" type="ST_Number" use="required"/> 
 		<xs:anyAttribute namespace="##other" processContents="lax"/> 
@@ -40,7 +39,7 @@ elementFormDefault="unqualified" attributeFormDefault="unqualified" blockDefault
 	</xs:complexType> 
 	<xs:complexType name="CT_2DVertices"> 
 		<xs:sequence> 
-			<xs:element ref="vertex" minOccurs="2" maxOccurs="1073741824"/>
+			<xs:element ref="vertex" minOccurs="2" maxOccurs="2147483647"/>
 		</xs:sequence> 
 	</xs:complexType> 
 	<xs:complexType name="CT_2DVertex"> 
@@ -50,7 +49,7 @@ elementFormDefault="unqualified" attributeFormDefault="unqualified" blockDefault
 	</xs:complexType> 
 	<xs:complexType name="CT_Polygon"> 
 		<xs:sequence> 
-			<xs:element ref="segment" minOccurs="1" maxOccurs="1073741824"/> 
+			<xs:element ref="segment" minOccurs="1" maxOccurs="2147483647"/> 
 		</xs:sequence> 
 		<xs:attribute name="startv" type="ST_ResourceIndex" use="required"/> 
 	</xs:complexType> 
@@ -70,12 +69,12 @@ elementFormDefault="unqualified" attributeFormDefault="unqualified" blockDefault
 	</xs:simpleType> 
 	<xs:simpleType name="ST_ResourceID"> 
 		<xs:restriction base="xs:positiveInteger"> 
-			<xs:maxExclusive value="10737418248"/> 
+			<xs:maxExclusive value="21474836478"/> 
 		</xs:restriction> 
 	</xs:simpleType> 
 	<xs:simpleType name="ST_ResourceIndex"> 
 		<xs:restriction base="xs:nonNegativeInteger"> 
-			<xs:maxExclusive value="10737418248"/> 
+			<xs:maxExclusive value="21474836478"/> 
 		</xs:restriction> 
 	</xs:simpleType> 
 	<xs:simpleType name="ST_UriReference"> 

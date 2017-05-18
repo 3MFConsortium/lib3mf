@@ -35,7 +35,7 @@ This is an abstract base stream class for exporting to COM IStreams.
 #include "Common/Platform/NMR_ExportStream_COM.h" 
 #include "Common/NMR_Exception.h" 
 #include "Common/NMR_Exception_Windows.h" 
-#include <math.h>
+#include <cmath>
 
 namespace NMR {
 

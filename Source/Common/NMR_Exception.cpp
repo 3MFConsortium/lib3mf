@@ -34,7 +34,7 @@ Each exception is identified via a global ErrorCode
 --*/
 
 #include "Common/NMR_Exception.h"
-#include <math.h>
+#include <cmath>
 
 namespace NMR {
 
@@ -112,6 +112,16 @@ namespace NMR {
 		case NMR_ERROR_COULDNOTWRITETOCALLBACKSTREAM: return "Could not write to callback stream";
 		case NMR_ERROR_INVALIDCAST: return "Invalid Type Case";
 		case NMR_ERROR_BUFFERISFULL: return "Buffer is full";
+		case NMR_ERROR_COULDNOTREADFROMCALLBACKSTREAM: return "Could not read from callback stream";
+		case NMR_ERROR_OPC_MISSING_EXTENSION_FOR_RELATIONSHIP: return "Content Types does not contain extension for relatioship.";
+		case NMR_ERROR_OPC_MISSING_EXTENSION_FOR_MODEL: return "Content Types does not contain extension or partname for model.";
+		case NMR_ERROR_INVALIDXMLENCODING: return "Document is not UTF-8 encoded.";
+		case NMR_ERROR_FORBIDDENXMLATTRITIBUTE: return "Document contains a forbidden XML-attribute.";
+		case NMR_ERROR_DUPLICATE_PRINTTICKET: return "Document contains more than one printticket.";
+		case NMR_ERROR_OPC_DUPLICATE_RELATIONSHIP_ID: return "Document contains a duplicate relationship ID.";
+		case NMR_ERROR_INVALIDRELATIONSHIPTYPEFORTEXTURE: return "A texture must use a OPC part with relationshiptype 3D Texture.";
+		case NMR_ERROR_IMPORTSTREAMISEMPTY: return "An attachment to be read does coes not have any content.";
+
 
 		// Unhandled exception
 		case NMR_ERROR_GENERICEXCEPTION: return NMR_GENERICEXCEPTIONSTRING;
@@ -177,6 +187,7 @@ namespace NMR {
 		case NMR_ERROR_DUPLICATECOLORID: return "Color ID is already existing";
 		case NMR_ERROR_INVALIDMESHINFORMATIONDATA: return "Mesh Information Block was not assigned";
 		case NMR_ERROR_INVALIDMESHINFORMATION: return "Mesh Information Object was not assigned";
+		case NMR_ERROR_TOOMANYBEAMS: return "The mesh exceeds more than NMR_MESH_MAXBEAMCOUNT (around two billion) beams";
 
 		// Model error codes (0x8XXX)
 		case NMR_ERROR_OPCREADFAILED: return "3MF Loading - OPC could not be loaded";
@@ -292,6 +303,7 @@ namespace NMR {
 		case NMR_ERROR_OPCCOULDNOTGETTEXTUREURI: return "Could not get texture URI";
 		case NMR_ERROR_OPCCOULDNOTGETTEXTURESTREAM: return "Could not get texture stream";
 		case NMR_ERROR_MODELRELATIONSHIPSETREADFAILED: return "Model Relationship read failed";
+		case NMR_ERROR_NOTEXTURESTREAM: return "Texture stream is not available";
 		case NMR_ERROR_COULDNOTCREATESTREAM: return "Could not create stream";
 		case NMR_ERROR_NOTSUPPORTINGLEGACYCMYK: return "Not supporting legacy CMYK color";
 		case NMR_ERROR_INVALIDTEXTUREREFERENCE: return "Invalid Texture Reference";
@@ -302,6 +314,52 @@ namespace NMR {
 		case NMR_ERROR_DUPLICATEATTACHMENTPATH: return "Duplicate Attachment Path";
 		case NMR_ERROR_INVALIDMODELATTACHMENT: return "Invalid Model Attachment";
 		case NMR_ERROR_ATTACHMENTNOTFOUND: return "Could not find Model Attachment";
+		case NMR_ERROR_INVALIDREQUIREDEXTENSIONPREFIX: return "The prefix of a required extension is invalid";
+		case NMR_ERROR_REQUIREDEXTENSIONNOTSUPPORTED: return "A required extension is not supported";
+		case NMR_ERROR_BEAMLATTICECLIPPINGRESOURCENOTDEFINED: return "The resource defined as clippingmesh has not yet been defined in the model";
+		case NMR_ERROR_BEAMLATTICEINVALIDATTRIBUTE: return "An attribute of the beamlattice is invalid";
+		case NMR_ERROR_OPCCOULDNOTGETSLICEREFURI: return "Could not get sliceref URI";
+		case NMR_ERROR_OPCCOULDNOTGETSLICEREFSTREAM: return "Could not get sliceref stream";
+		case NMR_ERROR_OPCCOULDNOTGETATTACHMENTSTREAM: return "Could not get attachment stream";
+		case NMR_ERROR_DUPLICATE_SLICESTACKID: return "Object has dublicate slicestack ID";
+		case NMR_ERROR_SLICESTACKRESOURCE_NOT_FOUND: return "Could not find Slicestack Resource";
+		case NMR_ERROR_SLICESTACK_SLICESANDSLICEREF: return "Slicestack contains slices and slicerefs";
+		case NMR_ERROR_ILLFORMATUUID: return "A UUID is ill formatted";
+		case NMR_ERROR_INVALIDSLICESTACK: return "A slice stack resource is invalid";
+		case NMR_ERROR_DUPLICATEPATH: return "Duplicate path attribute";
+		case NMR_ERROR_DUPLICATEUUID: return "Duplicate UUID attribute";
+		case NMR_ERROR_REFERENCESTOODEEP: return "References in production extension go deeper than one level.";
+		case NMR_ERROR_SLICEREFSTOODEEP: return "A slicestack referenced via a slicepath cannot reference another slicestack.";
+		case NMR_ERROR_SLICES_Z_NOTINCREASING: return "The z-coordinates of slices within a slicestack are not increasing.";
+		case NMR_ERROR_SLICEPOLYGONNOTCLOSED: return "A slice polygon of a model- or solidsupport-object is not closed.";
+		case NMR_ERROR_CLOSED_SLICE_POLYGON_IS_LINE: return "A closed slice polygon is actually a line.";
+		case NMR_ERROR_NAMESPACE_INVALID_ELEMENT: return "Invalid Element in namespace.";
+		case NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE: return "Invalid Attribute in namespace.";
+		case NMR_ERROR_DUPLICATETEZTOP: return "Duplicate Z-top-value in a slice.";
+		case NMR_ERROR_MISSINGTEZTOP: return "Z-top-value is missing in a slice.";
+		case NMR_ERROR_SLICE_INVALIDATTRIBUTE: return "Invalid attribute in slice extension";
+		case NMR_ERROR_SLICETRANSFORMATIONPLANAR: return "A slicestack posesses a nonplanar transformation.";
+		case NMR_ERROR_UUID_NOT_UNIQUE: return "A UUID is not unique within a package.";
+		case NMR_ERROR_METADATA_COULDNOTGETNAMESPACE: return "Could not get XML Namespace for a metadatum.";
+		case NMR_ERROR_INVALID_SLICESEGMENT_VERTEXINDEX: return "Invalid index for slice segment or polygon.";
+		case NMR_ERROR_MISSINGUUID: return "A UUID for a build, build item or object is missing.";
+		case NMR_ERROR_INVALID_SLICEPATH: return "A slicepath is invalid.";
+		case NMR_ERROR_UNKNOWNMETADATA: return "Unknown Model Metadata.";
+		case NMR_ERROR_DUPLICATE_MESHRESOLUTION: return "Object has duplicate meshresolution attribute.";
+		case NMR_ERROR_INVALID_MESHRESOLUTION: return "Object has invalid value for meshresolution attribute.";
+		case NMR_ERROR_INVALIDREADERWARNINGSOBJECT: return "Invalid model reader warnings object.";
+		case NMR_ERROR_OPCCOULDNOTGETTHUMBNAILSTREAM: return "Could not get OPC thumbnail stream.";
+		case NMR_ERROR_DUPLICATEOBJECTTHUMBNAIL: return "Duplicate object thumbnail.";
+		case NMR_ERROR_DUPLICATETHUMBNAIL: return "Duplicate thumbnail.";
+		case NMR_ERROR_DUPLICATEPID: return "Duplicate Property ID.";
+		case NMR_ERROR_DUPLICATEPINDEX: return "Duplicate Property Index.";
+		case NMR_ERROR_MISSINGDEFAULTPID: return "A MeshObject with triangle-properties is missing a default property.";
+		case NMR_ERROR_INVALIDDEFAULTPID: return "A MeshObject with triangle-properties has an invalid a default property.";
+		case NMR_ERROR_BUILDITEMOBJECT_MUSTNOTBE_OTHER: return "Build-item must not reference object of type OTHER.";
+		case NMR_ERROR_DEFAULTPID_ON_COMPONENTSOBJECT: return "A components object must not have a default PID.";
+		case NMR_ERROR_BEAMLATTICENODESTOOCLOSE: return "Nodes used for a beam are closer then the specified minimal length.";
+		case NMR_ERROR_BEAMLATTICE_INVALID_REPRESENTATIONRESOURCE: return "The resource defined as representationmesh is invalid.";
+		case NMR_ERROR_BEAMLATTICE_INVALID_OBJECTTYPE: return "Beamlattice is defined on wrong object type.";
 
 		// XML Parser Error Constants(0x9XXX)
 		case NMR_ERROR_XMLPARSER_INVALIDATTRIBVALUE: return "Invalid XML attribute value";
@@ -321,6 +379,13 @@ namespace NMR {
 		case NMR_ERROR_XMLPARSER_INVALIDATTRIBUTENAME: return "Invalid XML attribute name";
 		case NMR_ERROR_XMLPARSER_SPACEINATTRIBUTENAME: return "Space in XML attribute name";
 		case NMR_ERROR_XMLPARSER_NOQUOTESAROUNDATTRIBUTE: return "No quotes around XML attribute";
+		case NMR_ERROR_DUPLICATE_RELATIONSHIP: return "A relationship is duplicated.";
+		case NMR_ERROR_DUPLICATE_CONTENTTYPE: return "A content type is duplicated.";
+		case NMR_ERROR_CONTENTTYPE_EMPTY_EXTENSION: return "A content type does not have a valid extension.";
+		case NMR_ERROR_CONTENTTYPE_EMPTY_CONTENTTYPE: return "A content type does not have a content type-value.";
+		case NMR_ERROR_CONTENTTYPE_EMPTY_PARTNAME: return "An override content type does not have a partname.";
+		case NMR_ERROR_XMLPARSER_INVALID_ESCAPESTRING: return "XML contains an invalid escape character.";
+		case NMR_ERROR_DUPLICATE_BOX_ATTRIBUTE: return "A box attribute is duplicated.";
 
 		// Library errors (0xAXXX)
 		case NMR_ERROR_COULDNOTGETINTERFACEVERSION: return "Could not get interface version";
@@ -335,7 +400,7 @@ namespace NMR {
 		}
 	}
 
-	nfError CNMRException::getErrorCode()
+	nfError CNMRException::getErrorCode() const
 	{
 		return m_errorcode;
 	}

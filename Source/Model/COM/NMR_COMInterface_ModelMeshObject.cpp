@@ -34,10 +34,11 @@ COM Interface Implementation for Mesh Object Classes
 #include "Model/COM/NMR_COMInterface_ModelMeshObject.h"
 #include "Model/COM/NMR_COMInterface_ModelPropertyHandler.h"
 #include "Model/COM/NMR_COMInterface_ModelDefaultPropertyHandler.h"
+#include "Model/COM/NMR_COMInterface_ModelMeshBeamSet.h"
 #include "Model/Classes/NMR_ModelMeshObject.h"
 #include "Common/NMR_Exception_Windows.h"
 #include "Common/NMR_StringUtils.h"
-#include <math.h>
+#include <cmath>
 
 namespace NMR {
 
@@ -148,6 +149,26 @@ namespace NMR {
 			__NMRASSERT(pMesh);
 
 			*pnTriangleCount = pMesh->getFaceCount();
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
+	LIB3MFMETHODIMP CCOMModelMeshObject::GetBeamCount(_Out_ DWORD * pnBeamCount)
+	{
+		try {
+			if (!pnBeamCount)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
+			CMesh * pMesh = getMesh();
+			__NMRASSERT(pMesh);
+
+			*pnBeamCount = pMesh->getBeamCount();
 			return handleSuccess();
 		}
 		catch (CNMRException & Exception) {
@@ -358,6 +379,371 @@ namespace NMR {
 		}
 	}
 
+
+
+	LIB3MFMETHODIMP CCOMModelMeshObject::GetBeamLatticeMinLength(_In_ DOUBLE *pdMinLength)
+	{
+		try {
+			if (!pdMinLength)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
+			CMesh * pMesh = getMesh();
+			__NMRASSERT(pMesh);
+
+			*pdMinLength = pMesh->getBeamLatticeMinLength();
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
+	LIB3MFMETHODIMP CCOMModelMeshObject::SetBeamLatticeMinLength(_In_ DOUBLE dMinLength)
+	{
+		try {
+			CMesh * pMesh = getMesh();
+			__NMRASSERT(pMesh);
+
+			pMesh->setBeamLatticeMinLength(dMinLength);
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
+	LIB3MFMETHODIMP CCOMModelMeshObject::GetBeamLatticeRadius(_In_ DOUBLE *pdRadius)
+	{
+		try {
+			if (!pdRadius)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
+			CMesh * pMesh = getMesh();
+			__NMRASSERT(pMesh);
+
+			*pdRadius = pMesh->getDefaultBeamRadius();
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
+	LIB3MFMETHODIMP CCOMModelMeshObject::SetBeamLatticeRadius(_In_ DOUBLE dRadius)
+	{
+		try {
+			CMesh * pMesh = getMesh();
+			__NMRASSERT(pMesh);
+
+			pMesh->setDefaultBeamRadius(dRadius);
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
+	LIB3MFMETHODIMP CCOMModelMeshObject::GetBeamLatticeCapMode(_Out_ eModelBeamLatticeCapMode *peCapMode)
+	{
+		try {
+			if (!peCapMode)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
+			CMesh * pMesh = getMesh();
+			__NMRASSERT(pMesh);
+
+			*peCapMode = pMesh->getBeamLatticeCapMode();
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
+	LIB3MFMETHODIMP CCOMModelMeshObject::SetBeamLatticeCapMode(_Out_ eModelBeamLatticeCapMode eCapMode)
+	{
+		try {
+			CMesh * pMesh = getMesh();
+			__NMRASSERT(pMesh);
+
+			pMesh->setBeamLatticeCapMode(eCapMode);
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
+	LIB3MFMETHODIMP CCOMModelMeshObject::GetBeamLatticeClipping(_Out_ eModelBeamLatticeClipMode * peClipMode, _Out_ DWORD *pnResourceID)
+	{
+		try {
+			if ((!peClipMode) || (!pnResourceID))
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
+			CModelMeshObject * pObject = getMeshObject();
+			__NMRASSERT(pObject);
+
+			if (!pObject->getBeamLatticeAttributes()->m_bHasClippingMeshID) {
+				*peClipMode = eModelBeamLatticeClipMode::MODELBEAMLATTICECLIPMODE_NONE;
+			}
+			else {
+				*peClipMode = pObject->getBeamLatticeAttributes()->m_eClipMode;
+				*pnResourceID = pObject->getBeamLatticeAttributes()->m_nClippingMeshID->getUniqueID();
+			}
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
+	LIB3MFMETHODIMP CCOMModelMeshObject::SetBeamLatticeClipping(_In_ eModelBeamLatticeClipMode eClipMode, _In_ DWORD nResourceID)
+	{
+		try {
+			CModelMeshObject * pObject = getMeshObject();
+			__NMRASSERT(pObject);
+
+			if (eClipMode == eModelBeamLatticeClipMode::MODELBEAMLATTICECLIPMODE_NONE) {
+				pObject->getBeamLatticeAttributes()->m_eClipMode = eClipMode;
+				pObject->getBeamLatticeAttributes()->m_bHasClippingMeshID = false;
+				pObject->getBeamLatticeAttributes()->m_nClippingMeshID = nullptr;
+			}
+			else {
+				CModel* pModel = pObject->getModel();
+				__NMRASSERT(pModel);
+
+				CModelMeshObject * pClippingObject = dynamic_cast<CModelMeshObject*>(pModel->findObject(nResourceID));
+				if (pClippingObject == nullptr) {
+					throw CNMRException(LIB3MF_INVALIDARG);
+				}
+				// check, if this object will be written before 
+				nfInt32 nComp = pModel->compareObjectsByResourceID(pClippingObject, pObject);
+				if (nComp < 0) { // pClippingObject has been defined after pObject
+					throw CNMRException(LIB3MF_INVALIDARG);
+				}
+
+				pObject->getBeamLatticeAttributes()->m_eClipMode = eClipMode;
+				pObject->getBeamLatticeAttributes()->m_bHasClippingMeshID = true;
+				pObject->getBeamLatticeAttributes()->m_nClippingMeshID = pClippingObject->getResourceID();
+			}
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
+	LIB3MFMETHODIMP CCOMModelMeshObject::GetBeamLatticeRepresentation(_Out_ BOOL *pbHasRepresentation, _Out_ DWORD *pnResourceID)
+	{
+		try {
+			if (!pbHasRepresentation || !pnResourceID)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
+			CModelMeshObject * pObject = getMeshObject();
+			__NMRASSERT(pObject);
+
+			*pbHasRepresentation = pObject->getBeamLatticeAttributes()->m_bHasRepresentationMeshID;
+			if (pObject->getBeamLatticeAttributes()->m_bHasRepresentationMeshID) {
+				*pnResourceID = pObject->getBeamLatticeAttributes()->m_nRepresentationID->getUniqueID();
+			}
+			else {
+				*pnResourceID = 0;
+			}
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
+	LIB3MFMETHODIMP CCOMModelMeshObject::SetBeamLatticeRepresentation(_In_ DWORD nResourceID)
+	{
+		try {
+			CModelMeshObject * pObject = getMeshObject();
+			__NMRASSERT(pObject);
+
+			CModel* pModel = pObject->getModel();
+			__NMRASSERT(pModel);
+
+			if (nResourceID == 0) {
+				pObject->getBeamLatticeAttributes()->m_bHasRepresentationMeshID = false;
+				pObject->getBeamLatticeAttributes()->m_nRepresentationID = nullptr;
+			}
+			else {
+				CModelMeshObject * pRepresentationObject = dynamic_cast<CModelMeshObject*>(pModel->findObject(nResourceID));
+				if (pRepresentationObject == nullptr) {
+					throw CNMRException(LIB3MF_INVALIDARG);
+				}
+				// check, if this object will be written before 
+				nfInt32 nComp = pModel->compareObjectsByResourceID(pRepresentationObject, pObject);
+				if (nComp < 0) { // pClippingObject has been defined after pObject
+					throw CNMRException(LIB3MF_INVALIDARG);
+				}
+
+				pObject->getBeamLatticeAttributes()->m_bHasRepresentationMeshID = true;
+				pObject->getBeamLatticeAttributes()->m_nRepresentationID = pRepresentationObject->getResourceID();
+			}
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
+	LIB3MFMETHODIMP CCOMModelMeshObject::GetBeam(_In_ DWORD nIndex, _Out_ MODELMESHBEAM * pBeam)
+	{
+		UINT j;
+
+		try {
+			if (!pBeam)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
+			CMesh * pMesh = getMesh();
+			__NMRASSERT(pMesh);
+
+			// retrieve beam and return indices and additional information
+			MESHBEAM * pMeshBeam = pMesh->getBeam(nIndex);
+			for (j = 0; j < 2; j++) {
+				pBeam->m_nIndices[j] = pMeshBeam->m_nodeindices[j];
+				pBeam->m_dRadius[j] = pMeshBeam->m_radius[j];
+				pBeam->m_eCapMode[j] = (eModelBeamLatticeCapMode)(pMeshBeam->m_capMode[j]);
+			}
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
+
+	LIB3MFMETHODIMP CCOMModelMeshObject::SetBeam(_In_ DWORD nIndex, _In_ MODELMESHBEAM * pBeam)
+	{
+		UINT j;
+
+		try {
+			if (!pBeam)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
+			CMesh * pMesh = getMesh();
+			__NMRASSERT(pMesh);
+
+			// Check for input validity
+			UINT nNodeCount = pMesh->getNodeCount();
+			for (j = 0; j < 2; j++)
+				if (pBeam->m_nIndices[j] >= nNodeCount)
+					throw CNMRException_Windows(NMR_ERROR_INVALIDINDEX, LIB3MF_INVALIDARG);
+			if (pBeam->m_nIndices[0] == pBeam->m_nIndices[1])
+				throw CNMRException_Windows(NMR_ERROR_INVALIDINDEX, LIB3MF_INVALIDARG);
+
+			// retrieve beam and set nodes and additional information
+			MESHBEAM * pMeshBeam = pMesh->getBeam(nIndex);
+			for (j = 0; j < 2; j++) {
+				pMeshBeam->m_nodeindices[j] = pBeam->m_nIndices[j];
+				pMeshBeam->m_radius[j] = pBeam->m_dRadius[j];
+				pMeshBeam->m_capMode[j] = pBeam->m_eCapMode[j];
+			}
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
+
+	LIB3MFMETHODIMP CCOMModelMeshObject::AddBeam(_In_ MODELMESHBEAM * pBeam, _Out_opt_ DWORD * pnIndex)
+	{
+		UINT j;
+
+		try {
+			if (!pBeam)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
+			DWORD objectType;
+			GetType(&objectType);
+			if ((objectType != eModelObjectType::MODELOBJECTTYPE_MODEL) && (objectType != eModelObjectType::MODELOBJECTTYPE_SOLIDSUPPORT)) {
+				throw CNMRException(NMR_ERROR_BEAMLATTICE_INVALID_OBJECTTYPE);
+			}
+
+			CMesh * pMesh = getMesh();
+			__NMRASSERT(pMesh);
+
+			// Check for input validity
+			UINT nNodeCount = pMesh->getNodeCount();
+			for (j = 0; j < 2; j++)
+				if (pBeam->m_nIndices[j] >= nNodeCount)
+					throw CNMRException_Windows(NMR_ERROR_INVALIDINDEX, LIB3MF_INVALIDARG);
+			if (pBeam->m_nIndices[0] == pBeam->m_nIndices[1])
+				throw CNMRException_Windows(NMR_ERROR_INVALIDINDEX, LIB3MF_INVALIDARG);
+
+			// retrieve nodes and add beam
+			MESHNODE * pNodes[2];
+			for (j = 0; j < 2; j++)
+				pNodes[j] = pMesh->getNode(pBeam->m_nIndices[j]);
+
+			nfInt32 c1 = pBeam->m_eCapMode[0];
+			nfInt32 c2 = pBeam->m_eCapMode[1];
+			MESHBEAM * pMeshBeam = pMesh->addBeam(pNodes[0], pNodes[1], &pBeam->m_dRadius[0], &pBeam->m_dRadius[1], &c1, &c2);
+			if (pnIndex) {
+				*pnIndex = pMeshBeam->m_index;
+			}
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+	
 	LIB3MFMETHODIMP CCOMModelMeshObject::GetVertices(_Out_ MODELMESHVERTEX * pVertices, _In_ DWORD nBufferSize, _Out_opt_ DWORD * pnVertexCount)
 	{
 		UINT j, nIndex;
@@ -423,6 +809,219 @@ namespace NMR {
 					pTriangle->m_nIndices[j] = pFace->m_nodeindices[j];
 				pTriangle++;
 			}
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
+
+
+	LIB3MFMETHODIMP CCOMModelMeshObject::GetUUIDUTF8(_Out_ BOOL * pbHasUUID, _Out_ LPSTR pszBuffer)
+	{
+		try {
+			if (!pbHasUUID || !pszBuffer)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
+			CModelMeshObject * pMeshObject = getMeshObject();
+			if (!pMeshObject)
+				throw CNMRException(NMR_ERROR_INVALIDMESH);
+
+			PUUID pUUID = pMeshObject->uuid();
+			*pbHasUUID = (pUUID.get()!=nullptr);
+			nfUint32 nNeededChars = 0;
+			if (*pbHasUUID)
+				fnStringToBufferSafe(pUUID->toString(), pszBuffer, 37, &nNeededChars);
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
+	LIB3MFMETHODIMP CCOMModelMeshObject::SetUUIDUTF8(_In_ LPCSTR pszUUID)
+	{
+		try
+		{
+			if (!pszUUID)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
+			CModelMeshObject * pMeshObject = getMeshObject();
+			if (!pMeshObject)
+				throw CNMRException(NMR_ERROR_INVALIDMESH);
+
+			PUUID pUUID = std::make_shared<CUUID>(pszUUID);
+			pMeshObject->setUUID(pUUID);
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
+	LIB3MFMETHODIMP CCOMModelMeshObject::SetBeamIndices(_In_ MODELMESHBEAM * pIndices, _In_ DWORD nBufferSize)
+	{
+		UINT j, nIndex;
+
+		try {
+			if ((nBufferSize > 0) && (!pIndices) )
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
+			if (nBufferSize > 0) {
+				DWORD objectType;
+				GetType(&objectType);
+				if ((objectType != eModelObjectType::MODELOBJECTTYPE_MODEL) && (objectType != eModelObjectType::MODELOBJECTTYPE_SOLIDSUPPORT)) {
+					throw CNMRException(NMR_ERROR_BEAMLATTICE_INVALID_OBJECTTYPE);
+				}
+			}
+
+			CMesh * pMesh = getMesh();
+			__NMRASSERT(pMesh);
+
+			pMesh->clearBeamLattice();
+
+			// Check for input validity
+			UINT nNodeCount = pMesh->getNodeCount();
+
+			for (nIndex = 0; nIndex < nBufferSize; nIndex++) {
+				MODELMESHBEAM* pBeam = pIndices;
+				for (j = 0; j < 2; j++)
+					if (pBeam->m_nIndices[j] >= nNodeCount)
+						throw CNMRException_Windows(NMR_ERROR_INVALIDINDEX, LIB3MF_INVALIDARG);
+				if (pBeam->m_nIndices[0] == pBeam->m_nIndices[1])
+					throw CNMRException_Windows(NMR_ERROR_INVALIDINDEX, LIB3MF_INVALIDARG);
+
+				// retrieve nodes and add beam
+				MESHNODE * pNodes[2];
+				for (j = 0; j < 2; j++)
+					pNodes[j] = pMesh->getNode(pBeam->m_nIndices[j]);
+
+				nfInt32 c1 = pBeam->m_eCapMode[0];
+				nfInt32 c2 = pBeam->m_eCapMode[1];
+				pMesh->addBeam(pNodes[0], pNodes[1], &pBeam->m_dRadius[0], &pBeam->m_dRadius[1], &c1, &c2);
+			}
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
+	LIB3MFMETHODIMP CCOMModelMeshObject::GetBeamIndices(_Out_ MODELMESHBEAM * pIndices, _In_ DWORD nBufferSize, _Out_opt_ DWORD * pnBeamCount)
+	{
+		UINT j, nIndex;
+
+		try {
+			if (!pIndices)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
+			CMesh * pMesh = getMesh();
+			__NMRASSERT(pMesh);
+
+			// Check Buffer size
+			UINT nBeamCount = pMesh->getBeamCount();
+			if (pnBeamCount)
+				*pnBeamCount = nBeamCount;
+
+			if (nBufferSize < nBeamCount)
+				throw CNMRException(NMR_ERROR_INVALIDBUFFERSIZE);
+
+			MODELMESHBEAM * pBeam = pIndices;
+			for (nIndex = 0; nIndex < nBeamCount; nIndex++) {
+				// retrieve node and return position
+				MESHBEAM * pMeshBeam = pMesh->getBeam(nIndex);
+				for (j = 0; j < 2; j++) {
+					pBeam->m_nIndices[j] = pMeshBeam->m_nodeindices[j];
+					pBeam->m_dRadius[j] = pMeshBeam->m_radius[j];
+					pBeam->m_eCapMode[j] = (eModelBeamLatticeCapMode)pMeshBeam->m_capMode[j];
+				}
+				pBeam++;
+			}
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+
+	}
+	LIB3MFMETHODIMP CCOMModelMeshObject::GetBeamSetCount(_Out_ DWORD * pnBeamSetCount)
+	{
+		try {
+			if (!pnBeamSetCount)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
+			CMesh * pMesh = getMesh();
+			__NMRASSERT(pMesh);
+
+			*pnBeamSetCount = pMesh->getBeamSetCount();
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
+	LIB3MFMETHODIMP CCOMModelMeshObject::AddBeamSet(_Outptr_ ILib3MFModelMeshBeamSet ** ppBeamSet)
+	{
+		try {
+			if (!ppBeamSet)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
+			CModelMeshObject * pObject = getMeshObject();
+			__NMRASSERT(pObject);
+
+			CCOMObject<CCOMModelMeshBeamSet> * pNewBeamSet = new CCOMObject<CCOMModelMeshBeamSet>();
+			pNewBeamSet->AddRef();
+			pNewBeamSet->setBeamSet(pObject->getMesh()->addBeamSet());
+			*ppBeamSet = pNewBeamSet;
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
+	LIB3MFMETHODIMP CCOMModelMeshObject::GetBeamSet(_In_ DWORD nIndex, _Outptr_ ILib3MFModelMeshBeamSet ** ppBeamSet)
+	{
+		try {
+			if (!ppBeamSet)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
+			CModelMeshObject * pObject = getMeshObject();
+			__NMRASSERT(pObject);
+
+			CCOMObject<CCOMModelMeshBeamSet> * pNewBeamSet = new CCOMObject<CCOMModelMeshBeamSet>();
+			pNewBeamSet->AddRef();
+			pNewBeamSet->setBeamSet(pObject->getMesh()->getBeamSet(nIndex));
+			*ppBeamSet = pNewBeamSet;
 
 			return handleSuccess();
 		}
@@ -504,7 +1103,7 @@ namespace NMR {
 			if (m_pResource.get() == nullptr)
 				throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
 
-			*pnResourceID = m_pResource->getResourceID();
+			*pnResourceID = m_pResource->getResourceID()->getUniqueID();
 
 			return handleSuccess();
 		}
@@ -910,6 +1509,130 @@ namespace NMR {
 			pNewPropertyHandler->setResource(m_pResource);
 			*ppPropertyHandler = pNewPropertyHandler;
 
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
+	LIB3MFMETHODIMP CCOMModelMeshObject::GetThumbnailPathUTF8(_Out_opt_ LPSTR pszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars)
+	{
+		try {
+			if (cbBufferSize > MODEL_MAXSTRINGBUFFERLENGTH)
+				throw CNMRException(NMR_ERROR_INVALIDBUFFERSIZE);
+
+			CModelMeshObject * pObject = getMeshObject();
+			__NMRASSERT(pObject);
+
+			std::wstring sUTF16Path = pObject->getThumbnail();
+			std::string sUTF8Path = fnUTF16toUTF8(sUTF16Path);
+
+			// Safely call StringToBuffer
+			nfUint32 nNeededChars = 0;
+			fnStringToBufferSafe(sUTF8Path, pszBuffer, cbBufferSize, &nNeededChars);
+
+			// Return length if needed
+			if (pcbNeededChars)
+				*pcbNeededChars = nNeededChars;
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
+	LIB3MFMETHODIMP CCOMModelMeshObject::SetThumbnailPathUTF8(_In_z_ LPCSTR pszName)
+	{
+		try {
+			if (pszName == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+			CModelMeshObject * pObject = getMeshObject();
+			__NMRASSERT(pObject);
+
+			std::string sUTF8ThumbnailPath(pszName);
+			std::wstring sUTF16ThumbnailPath = fnUTF8toUTF16(sUTF8ThumbnailPath);
+			pObject->setThumbnail(sUTF16ThumbnailPath.c_str());
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
+	LIB3MFMETHODIMP CCOMModelMeshObject::SetSliceStackId(_In_ DWORD nSliceStackId)
+	{
+		try {
+			PPackageResourceID pID = getMeshObject()->getModel()->findPackageResourceID(nSliceStackId);
+			getMeshObject()->setSliceStackId(pID);
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
+	LIB3MFMETHODIMP CCOMModelMeshObject::GetSliceStackId(_Out_ DWORD *pnSliceStackId)
+	{
+		try {
+			if (!pnSliceStackId)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
+			PPackageResourceID pID = getMeshObject()->getSliceStackId();
+			if (!pID.get()) {
+				*pnSliceStackId = 0;
+			}
+			else {
+				*pnSliceStackId = pID->getUniqueID();
+			}
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
+	LIB3MFMETHODIMP CCOMModelMeshObject::GetSlicesMeshResolution(_Out_ eModelSlicesMeshResolution *peSlicesMeshResolution)
+	{
+		try {
+			if (!peSlicesMeshResolution)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
+			*peSlicesMeshResolution = getMeshObject()->slicesMeshResolution();
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
+	LIB3MFMETHODIMP CCOMModelMeshObject::SetSlicesMeshResolution(_In_ eModelSlicesMeshResolution eSlicesMeshResolution)
+	{
+		try {
+			getMeshObject()->setSlicesMeshResolution(eSlicesMeshResolution);
+			
 			return handleSuccess();
 		}
 		catch (CNMRException & Exception) {

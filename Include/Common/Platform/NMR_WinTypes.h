@@ -35,22 +35,23 @@ NMR_WinTypes.h defines Standard Windows Types on Non-Windows Environments
 #define __NMR_WINTYPES
 
 #ifdef __GNUC__
-#define BOOL int
-#define FLOAT float
-#define BYTE unsigned char
-#define DWORD unsigned int
-#define INT signed int
-#define FLOAT float
-#define ULONG unsigned int
-#define LPCWSTR const wchar_t *
-#define CHAR
-#define LPWSTR wchar_t *
-#define UINT unsigned int
-#define HRESULT unsigned int
-#define LPCSTR const char *
-#define LPSTR char *
-#define ULONG64 unsigned long long
-#define UINT64 unsigned long long
+typedef int BOOL;
+typedef float FLOAT;
+typedef double DOUBLE;
+typedef unsigned char BYTE;
+typedef unsigned int DWORD;
+typedef signed int INT;
+typedef float FLOAT;
+typedef unsigned int ULONG;
+typedef const wchar_t * LPCWSTR;
+typedef char CHAR;
+typedef wchar_t * LPWSTR;
+typedef unsigned int UINT;
+typedef unsigned int HRESULT;
+typedef const char * LPCSTR;
+typedef char * LPSTR;
+typedef unsigned long long ULONG64;
+typedef unsigned long long UINT64;
 
 #else
 

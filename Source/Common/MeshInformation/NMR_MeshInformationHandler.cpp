@@ -35,7 +35,7 @@ It allows to include different kinds of information in one mesh (like Textures A
 #include "Common/MeshInformation/NMR_MeshInformationHandler.h" 
 #include "Common/Math/NMR_Vector.h" 
 #include "Common/NMR_Exception.h" 
-#include <math.h>
+#include <cmath>
 
 namespace NMR {
 

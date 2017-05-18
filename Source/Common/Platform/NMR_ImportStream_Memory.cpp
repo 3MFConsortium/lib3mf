@@ -175,18 +175,20 @@ namespace NMR {
 		if (cbBytesToRead > cbBytesLeft)
 			cbBytesToRead = cbBytesLeft;
 
-		nfUint64 nIndex = cbBytesToRead;
-		nfByte * pSource = &m_Buffer[(size_t) m_nPosition];
-		nfByte * pTarget = pBuffer;
+		if (cbBytesToRead > 0) {
+			nfUint64 nIndex = cbBytesToRead;
+			nfByte * pSource = &m_Buffer[(size_t)m_nPosition];
+			nfByte * pTarget = pBuffer;
 
-		while (nIndex > 0) {
-			*pTarget = *pSource;
-			nIndex--;
-			pSource++;
-			pTarget++;
+			while (nIndex > 0) {
+				*pTarget = *pSource;
+				nIndex--;
+				pSource++;
+				pTarget++;
+			}
+
+			m_nPosition += cbBytesToRead;
 		}
-
-		m_nPosition += cbBytesToRead;
 
 		if ((cbBytesToRead != cbTotalBytesToRead) && bNeedsToReadAll)
 			throw CNMRException(NMR_ERROR_COULDNOTREADFULLDATA);

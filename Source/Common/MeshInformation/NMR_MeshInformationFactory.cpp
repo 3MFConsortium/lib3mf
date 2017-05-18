@@ -34,7 +34,7 @@ It allows a dynamic creation of different Classes of Information.
 
 #include "Common/MeshInformation/NMR_MeshInformationFactory.h"
 #include "Common/NMR_Exception.h"
-#include <math.h>
+#include <cmath>
 
 namespace NMR {
 

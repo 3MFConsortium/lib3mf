@@ -50,9 +50,9 @@ namespace NMR {
 		POpcPackageReader m_pPackageReader;
 
 	protected:
-
-		void extractCustomDataFromRelationships(_In_ COpcPackagePart * pModelPart);
-		void extractTexturesFromRelationships(_In_ COpcPackagePart * pModelPart);
+		void extractCustomDataFromRelationships(_In_ std::wstring& sTargetPartURIDir, _In_ COpcPackagePart * pModelPart);
+		void extractTexturesFromRelationships(_In_ std::wstring& sTargetPartURIDir, _In_ COpcPackagePart * pModelPart);
+		void extractModelDataFromRelationships(_In_ std::wstring& sTargetPartURIDir, _In_ COpcPackagePart * pModelPart);
 		void checkContentTypes();
 	
 		virtual PImportStream extract3MFOPCPackage(_In_ PImportStream pPackageStream);

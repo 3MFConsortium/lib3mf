@@ -1,6 +1,7 @@
 /*++
 
-Copyright (C) 2015 Microsoft Corporation
+Copyright (C) 2017 Autodesk Inc.
+Copyright (C) 2015 Microsoft Corporation (Original Author)
 Copyright (C) 2015 netfabb GmbH (Original Author)
 
 All rights reserved.
@@ -32,13 +33,7 @@ Abstract: Interface Exports for plain C DLLs.
 #ifndef __NMR_DLLINTERFACES
 #define __NMR_DLLINTERFACES
 
-#ifdef __GNUC__
-#ifndef NMR_COM_EMULATION
-#define NMR_COM_EMULATION
-#endif //NMR_COM_EMULATION
-#endif //__GNUC__
-
-#ifdef NMR_COM_EMULATION
+#ifndef NMR_COM_NATIVE
 #include "Common/Platform/NMR_COM_Emulation.h"
 #else
 #include "Common/Platform/NMR_COM_Native.h"
@@ -51,7 +46,7 @@ Abstract: Interface Exports for plain C DLLs.
 
 
 namespace NMR {
-
+	
 	extern "C" {
 
 		// Define void "class pointers" for piping through the plain C interface
@@ -70,11 +65,13 @@ namespace NMR {
 		typedef PLib3MFBase PLib3MFDefaultPropertyHandler;
 		typedef PLib3MFBase PLib3MFPropertyHandler;
 		typedef PLib3MFBase PLib3MFModelBaseMaterial;
+		typedef PLib3MFBase PLib3MFModelTextureAttachment;
 		typedef PLib3MFBase PLib3MFModelTexture2D;
-		typedef PLib3MFBase PLib3MFModelThumbnailIterator;
-		typedef PLib3MFBase PLib3MFModelThumbnail;
 		typedef PLib3MFBase PLib3MFModelAttachment;
-
+		typedef PLib3MFBase PLib3MFModelMeshBeamSet;
+		typedef PLib3MFBase PLib3MFSlice;
+		typedef PLib3MFBase PLib3MFSliceStack;
+		typedef PLib3MFBase PLib3mfSlicePolygon;
 		typedef BOOL(*PLib3MFModelWriterCallback)(_In_ const BYTE * pData, _In_ const DWORD cbBytes, _In_ const void * pUserData);
 
 		// Base functions
@@ -104,7 +101,7 @@ namespace NMR {
 		*
 		* @param[in] pwszExtensionUrl URL of extension to check
 		* @param[out] pbIsSupported returns whether the extension is supported or not
-		* @param[out] pInterfaceVersion returns the interface version of of the extensions (if extension is supported)
+		* @param[out] pExtensionInterfaceVersion returns the interface version of of the extensions (if extension is supported)
 		* @return error code or 0 (success)
 		*/
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_queryextension(_In_z_ LPCWSTR pwszExtensionUrl, _Out_ BOOL * pbIsSupported, _Out_opt_ DWORD * pExtensionInterfaceVersion);
@@ -114,9 +111,9 @@ namespace NMR {
 		* This extension version will increment with each change of the API of the extension
 		* and may be used to ensure API compatibility.
 		*
-		* @param[in] pwszExtensionUrl URL of extension to check as UTF8 string
+		* @param[in] pszExtensionUrl URL of extension to check as UTF8 string
 		* @param[out] pbIsSupported returns whether the extension is supported or not
-		* @param[out] pInterfaceVersion returns the interface version of of the extensions (if extension is supported)
+		* @param[out] pExtensionInterfaceVersion returns the interface version of of the extensions (if extension is supported)
 		* @return error code or 0 (success)
 		*/
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_queryextensionutf8(_In_z_ LPCSTR pszExtensionUrl, _Out_ BOOL * pbIsSupported, _Out_opt_ DWORD * pExtensionInterfaceVersion);
@@ -127,7 +124,7 @@ namespace NMR {
 		* @param[out] ppModel returns created model instance
 		* @return error code or 0 (success)
 		*/
-		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_createmodel(_Outptr_ PLib3MFModel ** ppModel, _In_ BOOL bInitialize);
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_createmodel(_Outptr_ PLib3MFModel ** ppModel);
 
 		/**
 		* Frees all memory of any object instance.
@@ -164,10 +161,29 @@ namespace NMR {
 		* Writes out the model as file. The file type is specified by the Model Writer class
 		*
 		* @param[in] pWriter Writer Instance
-		* @param[in] pwszFilename Filename to write into as UTF8 string
+		* @param[in] pszFilename Filename to write into as UTF8 string
 		* @return error code or 0 (success)
 		*/
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_writer_writetofileutf8(_In_ PLib3MFModelWriter * pWriter, _In_z_ LPCSTR pszFilename);
+
+		/**
+		* Retrieves the size of the 3MF stream.
+		*
+		* @param[in] pWriter Writer Instance
+		* @param[out] pcbStreamSize Returns the stream size
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_writer_getstreamsize(_In_ PLib3MFModelWriter * pWriter, _Out_ ULONG64 * pcbStreamSize);
+
+		/**
+		* Writes out the 3mf into a buffer. Buffer size must be at least the size of the stream.
+		*
+		* @param[in] pWriter 3MF Writer Instance
+		* @param[out] pBuffer Buffer to write into
+		* @param[in] cbBufferSize Size of the buffer in bytes
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_writer_writetobuffer(_In_ PLib3MFModelWriter * pWriter, _Out_ BYTE * pBuffer, _In_ ULONG64 cbBufferSize);
 
 		/**
 		* Writes out the model and passes the data to a provided callback function. The file type is specified by the Model Writer class
@@ -193,7 +209,7 @@ namespace NMR {
 		* Reads a model from a file. The file type is specified by the Model Read class
 		*
 		* @param[in] pReader Reader Instance
-		* @param[in] pwszFilename Filename to read from
+		* @param[in] pszFilename Filename to read from
 		* @return error code or 0 (success)
 		*/
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_reader_readfromfileutf8(_In_ PLib3MFModelReader * pReader, _In_z_ LPCSTR pszFilename);
@@ -236,6 +252,46 @@ namespace NMR {
 		*/
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_reader_removerelationtoreadutf8(_In_ PLib3MFModelReader * pReader,  _In_z_ LPCSTR pszRelationshipType);
 
+		/**
+		* Activates (deactivates) the strict mode of the reader.
+		* If active, all warnings are reported as errors. Otherwise, they are reported as warnings. By default, it is deactivated.
+		*
+		* @param[in] pReader Reader Instance
+		* @param[in] bStrictModeActive flag whether strict mode is active or not
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_reader_setstrictmodeactive(_In_ PLib3MFModelReader * pReader, _In_ BOOL bStrictModeActive);
+
+		/**
+		* Queries whether the strict mode of the reader is active or not
+		*
+		* @param[in] pReader Reader Instance
+		* @param[out] pbStrictModeActive flag whether strict mode is active or not
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_reader_getstrictmodeactive(_In_ PLib3MFModelReader * pReader, _In_ BOOL *pbStrictModeActive);
+
+		/**
+		* Reads a model from a memory buffer. The file type is specified by the Model Read class
+		*
+		* @param[in] pReader Reader Instance
+		* @param[in] pBuffer Buffer to read from
+		* @param[in] cbBufferSize Size of the buffer in bytes
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_reader_readfrombuffer(_In_ PLib3MFModelReader * pReader, _In_ BYTE * pBuffer, _In_ ULONG64 cbBufferSize);
+
+		/**
+		* Reads a model and from the data provided by a callback function. The file type is specified by the Model Writer class
+		*
+		* @param[in] pReader Reader Instance
+		* @param[in] pReadCallback Callback to call for reading a data chunk.
+		* @param[in] nStreamSize number of bytes the callback returns
+		* @param[in] pSeekCallback Callback to call for seeking in the stream.
+		* @param[in] pUserData Userdata that is passed to the callback function
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_reader_readfromcallback(_In_ PLib3MFModelReader * pReader, _In_ ULONG64 nStreamSize, _In_ void * pReadCallback, _In_opt_ void * pSeekCallback, _In_opt_ void * pUserData);
 
 		/**
 		* Returns Warning and Error Count of the read process
@@ -264,7 +320,7 @@ namespace NMR {
 		* Retrieves the ID of a Model Resource Instance
 
 		*@param[in] pResource Resource Instance
-		* @param[out] nResourceID Filled with the ID of the Resource Instance
+		* @param[out] pnResourceID Filled with the ID of the Resource Instance
 		* @return error code or 0 (success)
 		*/
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_resource_getresourceid(_In_ PLib3MFModelResource * pResource, _Out_ DWORD * pnResourceID);
@@ -304,43 +360,6 @@ namespace NMR {
 		* @return error code or 0 (success)
 		*/
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_resourceiterator_clone(_In_ PLib3MFModelResourceIterator * pIterator, _Outptr_ PLib3MFModelResourceIterator ** ppIterator);
-
-
-		/**
-		* Iterates to the next thumbnail in the list.
-		*
-		* @param[in] pIterator Iterator Instance
-		* @param[out] pbHasNext returns, if there is a thumbnail to use.
-		* @return error code or 0 (success)
-		*/
-		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_thumbnailiterator_movenext(_In_ PLib3MFModelThumbnailIterator * pIterator, _Out_ BOOL * pbHasNext);
-
-		/**
-		* Iterates to the previous thumbnail in the list.
-		*
-		* @param[in] pIterator Iterator Instance
-		* @param[out] pbHasPrevious returns, if there is a thumbnail to use.
-		* @return error code or 0 (success)
-		*/
-		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_thumbnailiterator_moveprevious(_In_ PLib3MFModelThumbnailIterator * pIterator, _Out_ BOOL * pbHasPrevious);
-
-		/**
-		* Returns the resource the iterator points at.
-		*
-		* @param[in] pIterator Iterator Instance
-		* @param[out] ppThumbnailInstance returns the thumbnail instance
-		* @return error code or 0 (success)
-		*/
-		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_thumbnailiterator_getcurrent(_In_ PLib3MFModelThumbnailIterator * pIterator, _Outptr_ PLib3MFModelThumbnail ** ppThumbnailInstance);
-
-		/**
-		* Creates a new resource iterator with the same resource list.
-		*
-		* @param[in] pIterator Iterator Instance
-		* @param[out] ppIterator returns the cloned Iterator instance
-		* @return error code or 0 (success)
-		*/
-		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_thumbnailiterator_clone(_In_ PLib3MFModelThumbnailIterator * pIterator, _Outptr_ PLib3MFModelThumbnailIterator ** ppIterator);
 
 
 		/**
@@ -453,7 +472,9 @@ namespace NMR {
 		*
 		* @param[in] pPropertyHandler Property Handler
 		* @param[in] nIndex Index of the triangle (0 to trianglecount - 1)
-		* @param[in] pColor new color value of the triangle. (#00000000) means no color property.
+		* @param[in] bRed New red value of the color of the triangle (0-255)
+		* @param[in] bGreen New red value of the color of the triangle (0-255)
+		* @param[in] bBlue New red value of the color of the triangle (0-255)
 		* @return error code or 0 (success)
 		*/
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_propertyhandler_setsinglecolorrgb(_In_ PLib3MFPropertyHandler * pPropertyHandler, _In_ DWORD nIndex, _In_ BYTE bRed, _In_ BYTE bGreen, _In_ BYTE bBlue);
@@ -464,7 +485,10 @@ namespace NMR {
 		*
 		* @param[in] pPropertyHandler Property Handler
 		* @param[in] nIndex Index of the triangle (0 to trianglecount - 1)
-		* @param[in] pColor new color value of the triangle. (#00000000) means no color property.
+		* @param[in] bRed New red value of the color of the triangle (0-255)
+		* @param[in] bGreen New red value of the color of the triangle (0-255)
+		* @param[in] bBlue New red value of the color of the triangle (0-255)
+		* @param[in] bAlpha New alpha value of the color of the triangle (0-255)
 		* @return error code or 0 (success)
 		*/
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_propertyhandler_setsinglecolorrgba(_In_ PLib3MFPropertyHandler * pPropertyHandler, _In_ DWORD nIndex, _In_ BYTE bRed, _In_ BYTE bGreen, _In_ BYTE bBlue, _In_ BYTE bAlpha);
@@ -475,7 +499,9 @@ namespace NMR {
 		*
 		* @param[in] pPropertyHandler Property Handler
 		* @param[in] nIndex Index of the triangle (0 to trianglecount - 1)
-		* @param[in] pColor new color value of the triangle. (#00000000) means no color property.
+		* @param[in] fRed New red value of the color of the triangle (0-1)
+		* @param[in] fGreen New red value of the color of the triangle (0-1)
+		* @param[in] fBlue New red value of the color of the triangle (0-1)
 		* @return error code or 0 (success)
 		*/
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_propertyhandler_setsinglecolorfloatrgb(_In_ PLib3MFPropertyHandler * pPropertyHandler, _In_ DWORD nIndex, _In_ FLOAT fRed, _In_ FLOAT fGreen, _In_ FLOAT fBlue);
@@ -487,7 +513,10 @@ namespace NMR {
 		*
 		* @param[in] pPropertyHandler Property Handler
 		* @param[in] nIndex Index of the triangle (0 to trianglecount - 1)
-		* @param[in] pColor new color value of the triangle. (#00000000) means no color property.
+		* @param[in] fRed New red value of the color of the triangle (0-1)
+		* @param[in] fGreen New red value of the color of the triangle (0-1)
+		* @param[in] fBlue New red value of the color of the triangle (0-1)
+		* @param[in] fAlpha New alpha value of the color of the triangle (0-1)
 		* @return error code or 0 (success)
 		*/
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_propertyhandler_setsinglecolorfloatrgba(_In_ PLib3MFPropertyHandler * pPropertyHandler, _In_ DWORD nIndex, _In_ FLOAT fRed, _In_ FLOAT fGreen, _In_ FLOAT fBlue, _In_ FLOAT fAlpha);
@@ -554,7 +583,7 @@ namespace NMR {
 		* Sets the 2D texture information of all triangles.
 		*
 		* @param[in] pPropertyHandler Property Handler
-		* @param[in] pTexture new UV texture values of the three nodes of all triangles. Must have at least trianglecount array entries.
+		* @param[in] pTextures new UV texture values of the three nodes of all triangles. Must have at least trianglecount array entries.
 		* @return error code or 0 (success)
 		*/
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_propertyhandler_settexturearray(_In_ PLib3MFPropertyHandler * pPropertyHandler, _In_ MODELMESHTEXTURE2D * pTextures);
@@ -603,6 +632,7 @@ namespace NMR {
 		* Returns the default property color of an object.
 		*
 		* @param[in] pPropertyHandler Property Handler
+		* @param[in] nIndex Index of the triangle (0 to trianglecount - 1)
 		* @param[out] pColor returns the default color of the object. (#00000000) means no property or a different kind of property!
 		* @return error code or 0 (success)
 		*/
@@ -623,7 +653,9 @@ namespace NMR {
 		* Mixing properties needs the property extension API.
 		*
 		* @param[in] pPropertyHandler Property Handler
-		* @param[in] pColor new default color value of the object. (#00000000) means no color property.
+		* @param[in] bRed New red value of the color of the object (0-255)
+		* @param[in] bGreen New red value of the color of the object (0-255)
+		* @param[in] bBlue New red value of the color of the object (0-255)
 		* @return error code or 0 (success)
 		*/
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_defaultpropertyhandler_setcolorrgb(_In_ PLib3MFDefaultPropertyHandler * pPropertyHandler, _In_ BYTE bRed, _In_ BYTE bGreen, _In_ BYTE bBlue);
@@ -633,7 +665,10 @@ namespace NMR {
 		* Mixing properties needs the property extension API.
 		*
 		* @param[in] pPropertyHandler Property Handler
-		* @param[in] pColor new default color value of the object. (#00000000) means no color property.
+		* @param[in] bRed New red value of the color of the object (0-255)
+		* @param[in] bGreen New red value of the color of the object (0-255)
+		* @param[in] bBlue New red value of the color of the object (0-255)
+		* @param[in] bAlpha New alpha value of the color of the object (0-255)
 		* @return error code or 0 (success)
 		*/
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_defaultpropertyhandler_setcolorrgba(_In_ PLib3MFDefaultPropertyHandler * pPropertyHandler, _In_ BYTE bRed, _In_ BYTE bGreen, _In_ BYTE bBlue, _In_ BYTE bAlpha);
@@ -643,7 +678,9 @@ namespace NMR {
 		* Mixing properties needs the property extension API.
 		*
 		* @param[in] pPropertyHandler Property Handler
-		* @param[in] pColor new default color value of the object. (#00000000) means no color property.
+		* @param[in] fRed New red value of the color of the object (0-1)
+		* @param[in] fGreen New red value of the color of the object (0-1)
+		* @param[in] fBlue New red value of the color of the object (0-1)
 		* @return error code or 0 (success)
 		*/
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_defaultpropertyhandler_setfloatcolorrgb(_In_ PLib3MFDefaultPropertyHandler * pPropertyHandler, _In_ FLOAT fRed, _In_ FLOAT fGreen, _In_ FLOAT fBlue);
@@ -653,7 +690,10 @@ namespace NMR {
 		* Mixing properties needs the property extension API.
 		*
 		* @param[in] pPropertyHandler Property Handler
-		* @param[in] pColor new default color value of the object. (#00000000) means no color property.
+		* @param[in] fRed New red value of the color of the object (0-1)
+		* @param[in] fGreen New red value of the color of the object (0-1)
+		* @param[in] fBlue New red value of the color of the object (0-1)
+		* @param[in] fAlpha New alpha value of the color of the object (0-1)
 		* @return error code or 0 (success)
 		*/
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_defaultpropertyhandler_setfloatcolorrgba(_In_ PLib3MFDefaultPropertyHandler * pPropertyHandler, _In_ FLOAT fRed, _In_ FLOAT fGreen, _In_ FLOAT fBlue, _In_ FLOAT fAlpha);
@@ -773,7 +813,7 @@ namespace NMR {
 		* Sets a build object's part number string
 		*
 		* @param[in] pObject Object Resource Instance
-		* @param[in] pwszPartNumber new part number (UTF8) string for referencing parts from the outside.
+		* @param[in] pszPartNumber new part number (UTF8) string for referencing parts from the outside.
 		* @return error code or 0 (success)
 		*/
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_object_setpartnumberutf8(_In_ PLib3MFModelObjectResource * pObject, _In_z_ LPCSTR pszPartNumber);
@@ -831,6 +871,45 @@ namespace NMR {
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_object_createdefaultmultipropertyhandler(_In_ PLib3MFModelObjectResource * pObject, _In_ DWORD nChannel, _Out_ PLib3MFDefaultPropertyHandler ** ppPropertyHandler);
 
 		/**
+		* Retrieves the path used as thumbnail for an object (UTF8). Returns "" if none is set
+		*
+		* @param[in] pObject Object Resource Instance
+		* @param[out] pszBuffer buffer to fill
+		* @param[in] cbBufferSize size of buffer to fill. needs to be at least string length + 1
+		* @param[out] pcbNeededChars returns needed characters in buffer
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_object_getthumbnailpathutf8(_In_ PLib3MFModelObjectResource * pObject, _Out_opt_ LPSTR pszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars);
+		
+		/**
+		* Sets an object's thumbnail package path (UTF8)
+		*
+		* @param[in] pObject Object Instance
+		* @param[in] pszPath path where to look for the thumbnail (e.g. "/Textures/thumbnail.png"). Call will NULL to clear the thumbnail.
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_object_setthumbnailpathutf8(_In_ PLib3MFModelObjectResource * pObject, _In_z_ LPCSTR pszPath);
+
+		/**
+		* returns, whether an object has a UUID and, if true, the object's UUID
+		*
+		* @param[in] pObject object instance
+		* @param[out] pbHasUUID flag whether the object has a UUID
+		* @param[out] pszBuffer the UUID as string of the form "xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx"
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_object_getuuidutf8(_In_ PLib3MFModelObjectResource * pMeshObject, _Out_ BOOL *pbHasUUID, _Out_ LPSTR pszBuffer);
+		
+		/**
+		* sets the objects's UUID
+		*
+		* @param[in] pObject object instance
+		* @param[in] pszUUID the UUID as string of the form "xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx"
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_object_setuuidutf8(_In_ PLib3MFModelObjectResource * pObject, _In_z_ LPCSTR pszUUID);
+
+		/**
 		* Retrieves the count of base materials in the material group.
 		*
 		* @param[in] pBaseMaterial Base Material Resource Instance
@@ -865,7 +944,7 @@ namespace NMR {
 		* Adds a new material to the material group
 		*
 		* @param[in] pBaseMaterial Base Material Resource Instance
-		* @param[in] pwszName new name of the base material. (UTF8 String, e.g. "ABS red")
+		* @param[in] pszName new name of the base material. (UTF8 String, e.g. "ABS red")
 		* @param[in] bRed New red value of display color (0-255)
 		* @param[in] bGreen New red value of display color (0-255)
 		* @param[in] bBlue New red value of display color (0-255)
@@ -923,7 +1002,7 @@ namespace NMR {
 		*
 		* @param[in] pBaseMaterial Base Material Resource Instance
 		* @param[in] nIndex Index of the material in the material group
-		* @param[in] pwszName new name of the base material. (e.g. "ABS red")
+		* @param[in] pszName new name of the base material. (e.g. "ABS red")
 		* @return error code or 0 (success)
 		*/
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_basematerial_setnameutf8(_In_ PLib3MFModelBaseMaterial * pBaseMaterial, _In_ DWORD nIndex, _In_z_ LPCSTR pszName);
@@ -968,6 +1047,7 @@ namespace NMR {
 		/**
 		* Sets a base material's display color.
 		*
+		* @param[in] pBaseMaterial Base Material Resource Instance
 		* @param[in] nIndex Index of the material in the material group
 		* @param[in] fRed New red value (0.0-1.0)
 		* @param[in] fGreen New green value (0.0-1.0)
@@ -992,7 +1072,7 @@ namespace NMR {
 
 
 		/**
-		* Retrieves a attachment's package path
+		* Retrieves an attachment's package path
 		*
 		* @param[in] pAttachment Attachment Instance
 		* @param[out] pwszBuffer buffer to fill
@@ -1003,7 +1083,7 @@ namespace NMR {
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_attachment_getpath (_In_ PLib3MFModelAttachment * pAttachment, _Out_opt_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars);
 
 		/**
-		* Retrieves a attachment's package path (UTF8)
+		* Retrieves an attachment's package path (UTF8)
 		*
 		* @param[in] pAttachment Attachment Instance
 		* @param[out] pszBuffer buffer to fill
@@ -1014,7 +1094,7 @@ namespace NMR {
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_attachment_getpathutf8 (_In_ PLib3MFModelAttachment * pAttachment, _Out_opt_ LPSTR pszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars);
 
 		/**
-		* Sets a attachment's package path
+		* Sets an attachment's package path
 		*
 		* @param[in] pAttachment Attachment Instance
 		* @param[in] pwszPath new path of the attachment. (e.g. "/Textures/logo.png")
@@ -1023,7 +1103,7 @@ namespace NMR {
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_attachment_setpath (_In_ PLib3MFModelAttachment * pAttachment, _In_z_ LPCWSTR pwszPath);
 
 		/**
-		* Sets a attachment's package path (UTF8)
+		* Sets an attachment's package path (UTF8)
 		*
 		* @param[in] pAttachment Attachment Instance
 		* @param[in] pszPath new path of the attachment. (e.g. "/Textures/logo.png")
@@ -1032,7 +1112,7 @@ namespace NMR {
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_attachment_setpathutf8 (_In_ PLib3MFModelAttachment * pAttachment, _In_z_ LPCSTR pszPath);
 
 		/**
-		* Retrieves a attachment's package relationship type
+		* Retrieves an attachment's package relationship type
 		*
 		* @param[in] pAttachment Attachment Instance
 		* @param[out] pwszBuffer buffer to fill
@@ -1043,7 +1123,7 @@ namespace NMR {
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_attachment_getrelationshiptype(_In_ PLib3MFModelAttachment * pAttachment, _Out_opt_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars);
 
 		/**
-		* Retrieves a attachment's package relationship type (UTF8)
+		* Retrieves an attachment's package relationship type (UTF8)
 		*
 		* @param[in] pAttachment Attachment Instance
 		* @param[out] pszBuffer buffer to fill
@@ -1054,7 +1134,7 @@ namespace NMR {
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_attachment_getrelationshiptypeutf8 (_In_ PLib3MFModelAttachment * pAttachment, _Out_opt_ LPSTR pszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars);
 
 		/**
-		* Sets a attachment's package relationship type
+		* Sets an attachment's package relationship type
 		*
 		* @param[in] pAttachment Attachment Instance
 		* @param[in] pwszRelationShipType new relationship type attachment. (e.g. "/Data/data.xml")
@@ -1063,7 +1143,7 @@ namespace NMR {
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_attachment_setrelationshiptype (_In_ PLib3MFModelAttachment * pAttachment, _In_z_ LPCWSTR pwszRelationShipType);
 
 		/**
-		* Sets a attachment's package relationship type (UTF8)
+		* Sets an attachment's package relationship type (UTF8)
 		*
 		* @param[in] pAttachment Attachment Instance
 		* @param[in] pszRelationShipType new path of the attachment. (e.g. "/Data/data.png")
@@ -1120,7 +1200,7 @@ namespace NMR {
 
 
 		/**
-		* Reads a attachment from a file.
+		* Reads an attachment from a file.
 		*
 		* @param[in] pAttachment Attachment Instance
 		* @param[in] pwszFilename Filename to read from
@@ -1129,7 +1209,7 @@ namespace NMR {
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_attachment_readfromfile (_In_ PLib3MFModelAttachment * pAttachment, _In_z_ LPCWSTR pwszFilename);
 
 		/**
-		* Reads a attachment from a file.
+		* Reads an attachment from a file.
 		*
 		* @param[in] pAttachment Attachment Instance
 		* @param[in] pszFilename Filename to read from
@@ -1138,7 +1218,7 @@ namespace NMR {
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_attachment_readfromfileutf8 (_In_ PLib3MFModelAttachment * pAttachment, _In_z_ LPCSTR pszFilename);
 
 		/**
-		* Reads a attachment from a memory buffer.
+		* Reads an attachment from a memory buffer.
 		*
 		* @param[in] pAttachment Attachment Instance
 		* @param[in] pBuffer Buffer to read from
@@ -1147,6 +1227,23 @@ namespace NMR {
 		*/
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_attachment_readfrombuffer (_In_ PLib3MFModelAttachment * pAttachment, _In_ BYTE * pBuffer, _In_ ULONG64 cbBufferSize);
 
+		/**
+		* Retrieves the attachment located at the path of the texture
+		*
+		* @param[in] pTexture2D Texture2D Resource Instance
+		* @param[out] ppTextureAttachment attachment that holds the texture's image information
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_texture2d_getattachment(_In_ PLib3MFModelTexture2D * pTexture2D, _Out_ PLib3MFModelAttachment ** ppTextureAttachment);
+
+		/**
+		* Sets the texture's package path to the path of the attachment
+		*
+		* @param[in] pTexture2D Texture2D Resource Instance
+		* @param[out] pTextureAttachment attachment that holds the texture's image information
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_texture2d_setattachment(_In_ PLib3MFModelTexture2D * pTexture2D, _In_ PLib3MFModelAttachment * pTextureAttachment);
 
 		/**
 		* Retrieves a texture's package path
@@ -1189,6 +1286,7 @@ namespace NMR {
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_texture2d_setpathutf8(_In_ PLib3MFModelTexture2D * pTexture2D, _In_z_ LPCSTR pszPath);
 
 		/**
+
 		* Retrieves a texture's content type
 		*
 		* @param[in] pTexture2D Texture2D Resource Instance
@@ -1245,7 +1343,7 @@ namespace NMR {
 		* @param[out] pcbStreamSize Returns the stream size
 		* @return error code or 0 (success)
 		*/
-		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_texture2d_getstreamsize(_In_ PLib3MFModelTexture2D * pTexture2D, _Out_ ULONG64 * pcbStreamSize);
+		LIB3MFDEPRECATED( LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_texture2d_getstreamsize(_In_ PLib3MFModelTexture2D * pTexture2D, _Out_ ULONG64 * pcbStreamSize) );
 
 		/**
 		* Writes out the texture as file.
@@ -1254,7 +1352,7 @@ namespace NMR {
 		* @param[in] pwszFilename Filename to write into
 		* @return error code or 0 (success)
 		*/
-		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_texture2d_writetofile(_In_ PLib3MFModelTexture2D * pTexture2D, _In_z_ LPCWSTR pwszFilename);
+		LIB3MFDEPRECATED(LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_texture2d_writetofile(_In_ PLib3MFModelTexture2D * pTexture2D, _In_z_ LPCWSTR pwszFilename) );
 
 		/**
 		* Writes out the texture as file. (UTF8)
@@ -1263,7 +1361,7 @@ namespace NMR {
 		* @param[in] pszFilename Filename to write into
 		* @return error code or 0 (success)
 		*/
-		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_texture2d_writetofileutf8(_In_ PLib3MFModelTexture2D * pTexture2D, _In_z_ LPCSTR pszFilename);
+		LIB3MFDEPRECATED(LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_texture2d_writetofileutf8(_In_ PLib3MFModelTexture2D * pTexture2D, _In_z_ LPCSTR pszFilename) );
 
 		/**
 		* Writes out the texture into a buffer. Buffer size must be at least the size of the stream.
@@ -1273,7 +1371,7 @@ namespace NMR {
 		* @param[in] cbBufferSize Size of the buffer in bytes
 		* @return error code or 0 (success)
 		*/
-		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_texture2d_writetobuffer(_In_ PLib3MFModelTexture2D * pTexture2D, _Out_ BYTE * pBuffer, _In_ ULONG64 cbBufferSize);
+		LIB3MFDEPRECATED(LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_texture2d_writetobuffer(_In_ PLib3MFModelTexture2D * pTexture2D, _Out_ BYTE * pBuffer, _In_ ULONG64 cbBufferSize) );
 
 		/**
 		* Writes out the texture and passes the data to a provided callback function. The file type is specified by the Model Writer class
@@ -1282,8 +1380,8 @@ namespace NMR {
 		* @param[in] pWriteCallback Callback to call for writing a data chunk.
 		* @param[in] pUserData Userdata that is passed to the callback function
 		* @return error code or 0 (success)
-		*/ 
-		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_texture2d_writetocallback(_In_ PLib3MFModelTexture2D * pTexture2D, _In_ void * pWriteCallback, _In_opt_ void * pUserData);
+		*/
+		LIB3MFDEPRECATED(LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_texture2d_writetocallback(_In_ PLib3MFModelTexture2D * pTexture2D, _In_ void * pWriteCallback, _In_opt_ void * pUserData) );
 
 		/**
 		* Reads a texture from a file.
@@ -1292,7 +1390,7 @@ namespace NMR {
 		* @param[in] pwszFilename Filename to read from
 		* @return error code or 0 (success)
 		*/
-		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_texture2d_readfromfile(_In_ PLib3MFModelTexture2D * pTexture2D, _In_z_ LPCWSTR pwszFilename);
+		LIB3MFDEPRECATED(LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_texture2d_readfromfile(_In_ PLib3MFModelTexture2D * pTexture2D, _In_z_ LPCWSTR pwszFilename) );
 
 		/**
 		* Reads a texture from a file.
@@ -1301,7 +1399,7 @@ namespace NMR {
 		* @param[in] pszFilename Filename to read from
 		* @return error code or 0 (success)
 		*/
-		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_texture2d_readfromfileutf8(_In_ PLib3MFModelTexture2D * pTexture2D, _In_z_ LPCSTR pszFilename);
+		LIB3MFDEPRECATED(LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_texture2d_readfromfileutf8(_In_ PLib3MFModelTexture2D * pTexture2D, _In_z_ LPCSTR pszFilename) );
 
 		/**
 		* Reads a texture from a memory buffer.
@@ -1311,7 +1409,7 @@ namespace NMR {
 		* @param[in] cbBufferSize Size of the buffer in bytes
 		* @return error code or 0 (success)
 		*/
-		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_texture2d_readfrombuffer(_In_ PLib3MFModelTexture2D * pTexture2D, _In_ BYTE * pBuffer, _In_ ULONG64 cbBufferSize);
+		LIB3MFDEPRECATED(LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_texture2d_readfrombuffer(_In_ PLib3MFModelTexture2D * pTexture2D, _In_ BYTE * pBuffer, _In_ ULONG64 cbBufferSize) );
 
 
 		// Mesh Object
@@ -1427,7 +1525,275 @@ namespace NMR {
 		*/
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_meshobject_setgeometry(_In_ PLib3MFModelMeshObject * pMeshObject, _In_ MODELMESHVERTEX * pVertices, _In_ DWORD nVertexCount, _In_ MODELMESHTRIANGLE * pTriangles, _In_ DWORD nTriangleCount);
 
+		// API for beamlattice extension
+		/**
+		* Returns the minimal length of beams for the beamlattice
+		*
+		* @param[in] pMeshObject Mesh Object Instance
+		* @param[out] pdMinLength minimal length of beams for the beamlattice
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_meshobject_getbeamlattice_minlength(_In_ PLib3MFModelMeshObject * pMeshObject, _Out_ DOUBLE *pdMinLength);
 
+		/**
+		* Sets the minimal length of beams for the beamlattice
+		*
+		* @param[in] pMeshObject Mesh Object Instance
+		* @param[in] dMinLength minimal length of beams for the beamlattice
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_meshobject_setbeamlattice_minlength(_In_ PLib3MFModelMeshObject * pMeshObject, _In_ DOUBLE dMinLength);
+
+		/**
+		* Returns the default radius for the beamlattice
+		*
+		* @param[in] pMeshObject Mesh Object Instance
+		* @param[out] pdRadius precission of the beams in the beamlattice
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_meshobject_getbeamlattice_radius(_In_ PLib3MFModelMeshObject * pMeshObject, _Out_ DOUBLE *pdRadius);
+
+		/**
+		* Sets the default radius for the beamlattice
+		*
+		* @param[in] pMeshObject Mesh Object Instance
+		* @param[in] dRadius default radius of the beams in the beamlattice
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_meshobject_setbeamlattice_radius(_In_ PLib3MFModelMeshObject * pMeshObject, _In_ DOUBLE dRadius);
+
+		/**
+		* Returns the default capping mode for the beamlattice
+		*
+		* @param[in] pMeshObject Mesh Object Instance
+		* @param[out] peCapMode default eModelBeamLatticeCapMode of the beamlattice
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_meshobject_getbeamlattice_capmode(_In_ PLib3MFModelMeshObject * pMeshObject, _Out_ eModelBeamLatticeCapMode *peCapMode);
+		
+		/**
+		* Sets the default capping mode for the beamlattice
+		*
+		* @param[in] pMeshObject Mesh Object Instance
+		* @param[in] eCapMode default eModelBeamLatticeCapMode of the beamlattice
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_meshobject_setbeamlattice_capmode(_In_ PLib3MFModelMeshObject * pMeshObject, _In_ eModelBeamLatticeCapMode eCapMode);
+		
+		/**
+		* Returns the clipping mode and the clipping-mesh for the beamlattice of this mesh
+		*
+		* @param[in] pMeshObject Mesh Object Instance
+		* @param[out] pClipMode contains the clip mode of this mesh
+		* @param[out] pnResourceID filled with the resourceID of the clipping mesh-object or an undefined value if pClipMode is MODELBEAMLATTICECLIPMODE_NONE
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_meshobject_getbeamlattice_clipping(_In_ PLib3MFModelMeshObject * pMeshObject, _Out_ eModelBeamLatticeClipMode * peClipMode, _Out_ DWORD *pnResourceID);
+
+		/**
+		* Sets the clipping mode and the clipping-mesh for the beamlattice of this mesh
+		*
+		* @param[in] pMeshObject Mesh Object Instance
+		* @param[in] eClipMode contains the clip mode of this mesh
+		* @param[in] nResourceID the resourceID of the clipping mesh-object. This mesh-object has to be defined before setting the Clipping
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_meshobject_setbeamlattice_clipping(_In_ PLib3MFModelMeshObject * pMeshObject, _In_ eModelBeamLatticeClipMode eClipMode, _In_ DWORD nResourceID);
+
+		/**
+		* Returns the representation-mesh for the beamlattice of this mesh
+		*
+		* @param[in] pMeshObject Mesh Object Instance
+		* @param[out] pbHasRepresentation flag whether the beamlattice has a representation mesh.
+		* @param[out] pnResourceID filled with the resourceID of the clipping mesh-object.
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_meshobject_getbeamlattice_representation(_In_ PLib3MFModelMeshObject * pMeshObject, _Out_ BOOL *pbHasRepresentation,  _Out_ DWORD *pnResourceID);
+
+		/**
+		* Sets the representation-mesh for the beamlattice of this mesh
+		*
+		* @param[in] pMeshObject Mesh Object Instance
+		* @param[in] nResourceID the resourceID of the representation mesh-object. This mesh-object has to be defined before setting the representation.
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_meshobject_setbeamlattice_representation(_In_ PLib3MFModelMeshObject * pMeshObject, _In_ DWORD nResourceID);
+		/**
+		* Returns the beam count of a mesh object
+		*
+		* @param[in] pMeshObject Mesh Object Instance
+		* @param[out] pnBeamCount filled with the beam count
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_meshobject_getbeamcount(_In_ PLib3MFModelMeshObject * pMeshObject, _Out_ DWORD * pnBeamCount);
+
+		/**
+		* Returns indices, radii and capmodes of a single beam of a mesh object
+		*
+		* @param[in] pMeshObject Mesh Object Instance
+		* @param[in] nIndex Index of the beam (0 to beamcount - 1)
+		* @param[out] pBeam filled with the beam indices, radii and capmodes
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_meshobject_getbeam(_In_ PLib3MFModelMeshObject * pMeshObject, _In_ DWORD nIndex, _Out_ MODELMESHBEAM * pBeam);
+
+		/**
+		* Adds a single beam to a mesh object
+		*
+		* @param[in] pMeshObject Mesh Object Instance
+		* @param[in] pBeam contains the node indices, radii and capmodes
+		* @param[out] pnIndex filled with the new Index of the beam
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_meshobject_addbeam(_In_ PLib3MFModelMeshObject * pMeshObject, _In_ MODELMESHBEAM * pBeam, _Out_opt_ DWORD * pnIndex);
+		
+		/**
+		* Sets the indices, radii and capmodes of a single beam of a mesh object
+		*
+		* @param[in] pMeshObject Mesh Object Instance
+		* @param[in] nIndex Index of the beam (0 to beamcount - 1)
+		* @param[in] pBeam contains the node indices, radii and capmodes
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_meshobject_setbeam(_In_ PLib3MFModelMeshObject * pMeshObject, _In_ DWORD nIndex, _In_ MODELMESHBEAM * pBeam);
+		
+		/**
+		* Sets all beam indices, radii and capmodes of a mesh object
+		*
+		* @param[in] pMeshObject Mesh Object Instance
+		* @param[in] pIndices buffer with the beam indices
+		* @param[in] nBufferSize size of the buffer in elements
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_meshobject_setbeamindices(_In_ PLib3MFModelMeshObject * pMeshObject, _In_ MODELMESHBEAM * pIndices, _In_ DWORD nBufferSize);
+
+		/**
+		* Retrieves all beam indices of a mesh object
+		*
+		* @param[in] pMeshObject Mesh Object Instance
+		* @param[out] pIndices buffer filled with the beam indices
+		* @param[in] nBufferSize size of the buffer in elements, must be at least beam count
+		* @param[out] pnBeamCount returns how many beams have been written
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_meshobject_getbeamindices(_In_ PLib3MFModelMeshObject * pMeshObject, _Out_ MODELMESHBEAM * pIndices, _In_ DWORD nBufferSize, _Out_opt_ DWORD * pnBeamCount);
+
+		/**
+		* Returns the number of beamsets of a mesh object
+		*
+		* @param[in] pMeshObject Mesh Object Instance
+		* @param[out] pnCount filled with the beamset count
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_meshobject_getbeamsetcount(_In_ PLib3MFModelMeshObject * pMeshObject, _Out_ DWORD * pnCount);
+		
+		/**
+		* Adds an empty beamset to a mesh object
+		*
+		* @param[in] pMeshObject Mesh Object Instance
+		* @param[out] ppBeamSet pointer to the new beamset
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_meshobject_addbeamset(_In_ PLib3MFModelMeshObject * pMeshObject, _Out_ PLib3MFModelMeshBeamSet** ppBeamSet);
+		
+		/**
+		* Returns a beamset of a mesh object
+		*
+		* @param[in] pMeshObject Mesh Object Instance
+		* @param[in] nIndex index of the requested beamset (0 ... beamsetcount-1)
+		* @param[out] ppBeamSet pointer to the requested beamset
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_meshobject_getbeamset(_In_ PLib3MFModelMeshObject * pMeshObject, _In_ DWORD nIndex, _Out_ PLib3MFModelMeshBeamSet** ppBeamSet);
+
+		/**
+		* Sets a beamset's name string
+		*
+		* @param[in] pModelMeshBeamSet BeamSet Instance
+		* @param[in] pwszName new name of the BeamSet as UTF16 string. (e.g. "Car")
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_beamset_setname(_In_ PLib3MFModelMeshBeamSet * pModelMeshBeamSet, _In_z_ LPCWSTR pwszName);
+		
+		/**
+		* Sets a beamset's identifier string
+		*
+		* @param[in] pModelMeshBeamSet BeamSet Instance
+		* @param[in] pwszIdentifier new identifier of the BeamSet as UTF16 string. (e.g. "Car")
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_beamset_setidentifier(_In_ PLib3MFModelMeshBeamSet * pModelMeshBeamSet, _In_z_ LPCWSTR pwszIdentifier);
+		
+		/**
+		* Sets a beamset's name string
+		*
+		* @param[in] pModelMeshBeamSet BeamSet Instance
+		* @param[in] pwszName new name of the BeamSet as UTF8 string. (e.g. "Car")
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_beamset_setnameutf8(_In_ PLib3MFModelMeshBeamSet * pModelMeshBeamSet, _In_z_ LPCSTR pszName);
+		
+		/**
+		* Sets a beamset's identifier string
+		*
+		* @param[in] pModelMeshBeamSet BeamSet Instance
+		* @param[in] pszIdentifier new id of the BeamSet as UTF8 string. (e.g. "Car")
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_beamset_setidentifierutf8(_In_ PLib3MFModelMeshBeamSet * pModelMeshBeamSet, _In_z_ LPCSTR pszIdentifier);
+		
+		/**
+		* Retrieves a BeamSet's name string (UTF8)
+		*
+		* @param[in] pModelMeshBeamSet BeamSet Instance
+		* @param[out] pwszBuffer buffer to fill
+		* @param[in] cbBufferSize size of buffer to fill. needs to be at least string length + 1
+		* @param[out] pcbNeededChars returns needed characters in buffer
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_beamset_getnameutf8(_In_ PLib3MFModelMeshBeamSet * pModelMeshBeamSet, _Out_opt_ LPSTR pszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars);
+		
+		/**
+		* Retrieves a BeamSet's identifier string (UTF8)
+		*
+		* @param[in] pModelMeshBeamSet BeamSet Instance
+		* @param[out] pwszBuffer buffer to fill
+		* @param[in] cbBufferSize size of buffer to fill. needs to be at least string length + 1
+		* @param[out] pcbNeededChars returns needed characters in buffer
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_beamset_getidentifierutf8(_In_ PLib3MFModelMeshBeamSet * pModelMeshBeamSet, _Out_opt_ LPSTR pszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars);
+		
+		/**
+		* Retrieves the reference count of a BeamSet
+		*
+		* @param[in] pBeamSet beamset instance
+		* @param[out] pnCount returns the reference count
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_beamset_getrefcount(_In_ PLib3MFModelMeshBeamSet * pBeamSet, _Out_ DWORD * pnCount);
+		
+		/**
+		* Sets the references in a BeamSet
+		*
+		* @param[in] pBeamSet beamset instance
+		* @param[in] pRefs buffer filled with beam references (indices of beams)
+		* @param[in] nRefCount number of references to be set
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_beamset_setrefs(_In_ PLib3MFModelMeshBeamSet * pBeamSet, _In_ DWORD * pRefs, _In_ DWORD nRefCount);
+		
+		/**
+		* Retrieves all references of a BeamSet
+		*
+		* @param[in] pBeamSet beamset instance
+		* @param[in] pRefs buffer filled with beam references (indices of beams)
+		* @param[in] nBufferSize size of the buffer in elements, must be at least refcount
+		* @param[out] pnRefCount returns how many references have been written
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_beamset_getrefs(_In_ PLib3MFModelMeshBeamSet * pBeamSet, _Out_ DWORD * pRefs, _In_ DWORD nBufferSize, _Out_opt_ DWORD * pnRefCount);
+		
 		/**
 		* creates a property handler for the mesh
 		*
@@ -1442,6 +1808,7 @@ namespace NMR {
 		* creates a property handler for a specific multiproperty channel of a mesh
 		*
 		* @param[in] pMeshObject Mesh Object Instance
+		* @param[in] nChannel Channel Index
 		* @param[out] ppPropertyHandler returns a property handler instance for the mesh.
 		* @return error code or 0 (success)
 		*/
@@ -1457,6 +1824,38 @@ namespace NMR {
 		*/
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_meshobject_ismanifoldandoriented(_In_ PLib3MFModelMeshObject * pMeshObject, _Out_ BOOL * pbIsOrientedAndManifold);
 
+		/**
+		* Link a slicestack to the mesh object
+		*
+		* @param[in] pMeshObject mesh object to link with the slicestack
+		* @param[in] pSliceStack slice stack to link the meshobject to
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_meshobject_setslicestack(_In_ PLib3MFModelMeshObject *pMeshObject, _In_ PLib3MFSliceStack *pSliceStack);
+
+		/**
+		* Get the linked slicestack tof a the mesh object
+		*
+		* @param[in] pMeshObject mesh object to link with the slicestack
+		* @param[out] pSliceStack slice stack to link the meshobject to
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_meshobject_getslicestackid(_In_ PLib3MFModelMeshObject *pMeshObject, _Out_ DWORD *pSliceStackId);
+
+		/**
+		* Set the mesh resolution of a mesh that has sliceinformation
+		*
+		* @param[in] pMeshObject mesh object for which the meshresolution is set
+		* @param[in] eSlicesMeshResolution mesh resolution of the mesh object
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_meshobject_setslicesmeshresolution(_In_ PLib3MFModelMeshObject *pMeshObject, _In_ eModelSlicesMeshResolution eSlicesMeshResolution);
+
+		/**
+		* Get the mesh resolution of a mesh that has sliceinformation
+		*
+		* @param[in] pMeshObject mesh object for which the meshresolution is queried
+		* @param[out] peSlicesMeshResolution mesh resolution of the mesh object
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_meshobject_getslicesmeshresolution(_In_ PLib3MFModelMeshObject *pMeshObject, _Out_ eModelSlicesMeshResolution *eSlicesMeshResolution);
+
 		// Component
 		/**
 		* Returns the Resource Instance of the component.
@@ -1466,6 +1865,25 @@ namespace NMR {
 		* @return error code or 0 (success)
 		*/
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_component_getobjectresource(_In_ PLib3MFModelComponent * pComponent, _Outptr_ PLib3MFModelObjectResource ** ppObjectResource);
+
+		/**
+		* returns, whether a component has a UUID and, if true, the component's UUID
+		*
+		* @param[in] pBuildItem component instance
+		* @param[out] pbHasUUID flag whether the build item has a UUID
+		* @param[out] pszBuffer the UUID as string of the form "xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx"
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_component_getuuidutf8(_In_ PLib3MFModelComponent * pComponent, _Out_ BOOL *pbHasUUID, _Out_ LPSTR pszBuffer);
+
+		/**
+		* sets the component's UUID
+		*
+		* @param[in] pComponent component instance
+		* @param[in] pszUUID the UUID as string of the form "xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx"
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_component_setuuidutf8(_In_ PLib3MFModelComponent * pComponent, _In_z_ LPCSTR pszUUID);
 
 		/**
 		* Returns the transformation matrix of the component.
@@ -1543,6 +1961,25 @@ namespace NMR {
 		* @return error code or 0 (success)
 		*/
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_builditem_getobjectresource(_In_ PLib3MFModelBuildItem * pBuildItem, _Outptr_ PLib3MFModelObjectResource ** ppObject);
+
+		/**
+		* returns, whether a build item has a UUID and, if true, the build item's UUID
+		*
+		* @param[in] pBuildItem build item instance
+		* @param[out] pbHasUUID flag whether the build item has a UUID
+		* @param[out] pszBuffer the UUID as string of the form "xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx"
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_builditem_getuuidutf8(_In_ PLib3MFModelBuildItem * pBuildItem, _Out_ BOOL *pbHasUUID, _Out_ LPSTR pszBuffer);
+
+		/**
+		* sets the build item's UUID
+		*
+		* @param[in] pBuildItem build item instance
+		* @param[in] pszUUID the UUID as string of the form "xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx"
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_builditem_setuuidutf8(_In_ PLib3MFModelBuildItem * pBuildItem, _In_z_ LPCSTR pszUUID);
 
 		/**
 		* Retrieves the object resource id associated to a build item
@@ -1625,7 +2062,7 @@ namespace NMR {
 		* for in-memory use of this instance.
 		*
 		* @param[in] pBuildItem build item instance
-		* @param[out] ppHandle returns the handle
+		* @param[out] pHandle returns the handle
 		* @return error code or 0 (success)
 		*/
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_builditem_gethandle(_In_ PLib3MFModelBuildItem * pBuildItem, _Out_ DWORD * pHandle);
@@ -1741,7 +2178,7 @@ namespace NMR {
 		* creates a model reader instance for a specific file type
 		*
 		* @param[in] pModel Model instance
-		* @param[in] pszWriterClass string identifier for the file (ASCII, currently "stl" and "3mf")
+		* @param[in] pszReaderClass string identifier for the file (ASCII, currently "stl" and "3mf")
 		* @param[out] ppReader returns the reader instance
 		* @return error code or 0 (success)
 		*/
@@ -1756,6 +2193,9 @@ namespace NMR {
 		* @return error code or 0 (success)
 		*/
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_getresourcebyid(_In_ PLib3MFModel * pModel, _In_ DWORD nResourceID, _Outptr_ PLib3MFModelResource ** ppResource);
+
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_getslicestackById(_In_ PLib3MFModel *pModel, _In_ DWORD nSliceStackId, _Out_ PLib3MFSliceStack **ppSliceStack);
 
 		/**
 		* finds a model 2d texture by its id
@@ -1797,6 +2237,24 @@ namespace NMR {
 		*/
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_getcomponentsobjectbyid(_In_ PLib3MFModel * pModel, _In_ DWORD nResourceID, _Outptr_ PLib3MFModelComponentsObject ** ppComponentsObject);
 
+		/**
+		* returns, whether the build has a UUID and, if true, the build's UUID 
+		*
+		* @param[in] pModel Model instance
+		* @param[out] pbHasUUID flag whether the build has a UUID
+		* @param[out] pszBuffer the UUID as string of the form "xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx"
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_getbuilduuidutf8(_In_ PLib3MFModel * pModel, _Out_ BOOL *pbHasUUID, _Out_ LPSTR pszBuffer);
+
+		/**
+		* sets the build's UUID
+		*
+		* @param[in] pModel Model instance
+		* @param[in] pszBuffer the UUID as string of the form "xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx"
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_setbuilduuidutf8(_In_ PLib3MFModel * pModel, _In_z_ LPCSTR pszBuildUUID);
 
 		/**
 		* creates a build item iterator instance with all build items
@@ -1862,15 +2320,6 @@ namespace NMR {
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_getbasematerials(_In_ PLib3MFModel * pModel, _Outptr_ PLib3MFModelResourceIterator ** ppIterator);
 
 		/**
-		* creates a thumbnail iterator instance with all thumbnails
-		*
-		* @param[in] pModel Model instance
-		* @param[out] ppIterator returns the iterator instance
-		* @return error code or 0 (success)
-		*/
-		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_getthumbnails(_In_ PLib3MFModel * pModel, _Outptr_ PLib3MFModelThumbnailIterator ** ppIterator);
-
-		/**
 		* merges all components and objects which are referenced by a build item. The memory is duplicated and a
 		* new model is created.
 		*
@@ -1899,24 +2348,34 @@ namespace NMR {
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_addcomponentsobject(_In_ PLib3MFModel * pModel, _Outptr_ PLib3MFModelComponentsObject ** ppComponentsObject);
 
 		/**
-		* adds an empty texture2d resource to the model
+		* * adds a texture2d resource to the model. Its path is given by that of an existing attachment.
+		*
+		* @param[in] pModel Model instance
+		* @param[in] pTextureAttachment attachment containing the image data
+		* @param[out] ppTextureInstance returns the new texture instance
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_addtexture2dfromattachment(_In_ PLib3MFModel * pModel, _In_ PLib3MFModelAttachment pTextureAttachment, _Outptr_ PLib3MFModelTexture2D ** ppTextureInstance);
+
+		/**
+		* adds a texture2d resource to the model
 		*
 		* @param[in] pModel Model instance
 		* @param[in] pwszPath Package path of the texture
 		* @param[out] ppTextureInstance returns the new texture instance
 		* @return error code or 0 (success)
 		*/
-		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_addtexture2d(_In_ PLib3MFModel * pModel, _In_z_ LPCWSTR pwszPath, _Outptr_ PLib3MFModelTexture2D ** ppTextureInstance);
+		LIB3MFDEPRECATED(LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_addtexture2d(_In_ PLib3MFModel * pModel, _In_z_ LPCWSTR pwszPath, _Outptr_ PLib3MFModelTexture2D ** ppTextureInstance) );
 
 		/**
-		* adds an empty texture2d resource to the model (UTF8)
+		* adds a texture2d resource to the model (UTF8)
 		*
 		* @param[in] pModel Model instance
 		* @param[in] pszPath Package path of the texture
 		* @param[out] ppTextureInstance returns the new texture instance
 		* @return error code or 0 (success)
 		*/
-		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_addtexture2dutf8(_In_ PLib3MFModel * pModel, _In_z_ LPCSTR pszPath, _Outptr_ PLib3MFModelTexture2D ** ppTextureInstance);
+		LIB3MFDEPRECATED(LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_addtexture2dutf8(_In_ PLib3MFModel * pModel, _In_z_ LPCSTR pszPath, _Outptr_ PLib3MFModelTexture2D ** ppTextureInstance) );
 
 
 		/**
@@ -1950,49 +2409,6 @@ namespace NMR {
 		*/
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_removebuilditem(_In_ PLib3MFModel * pModel, _In_ PLib3MFModelBuildItem * pBuildItem);
 
-		/**
-		* returns the number of texture streams of a model
-		*
-		* @param[in] pModel Model instance
-		* @param[out] pnCount returns the number of texture streams.
-		* @return error code or 0 (success)
-		*/
-		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_gettexturestreamcount(_In_ PLib3MFModel * pModel, _Out_ DWORD * pnCount);
-
-
-		/**
-		* returns the size of a texture stream
-		*
-		* @param[in] pModel Model instance
-		* @param[in] nIndex index of the texture stream
-		* @param[out] pnSize returns the size of a texture stream in bytes.
-		* @return error code or 0 (success)
-		*/
-		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_gettexturestreamsize(_In_ PLib3MFModel * pModel, _In_ DWORD nIndex, _Out_ UINT64 * pnSize);
-
-		/**
-		* Returns the path of a texture stream in the 3mf package.
-		*
-		* @param[in] pModel Model instance
-		* @param[in] nIndex Index of the Texture Stream
-		* @param[out] pwszBuffer filled with the texture stream path, may be NULL
-		* @param[in] cbBufferSize size of pwszBuffer (including trailing 0).
-		* @param[out] pcbNeededChars filled with the count of the written bytes, or needed buffer size.
-		* @return error code or 0 (success)
-		*/
-		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_gettexturestreampath(_In_ PLib3MFModel * pModel, _In_ DWORD nIndex, _Out_opt_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars);
-
-		/**
-		* Returns the path of a texture stream in the 3mf package. (UTF8)
-		*
-		* @param[in] pModel Model instance
-		* @param[in] nIndex Index of the Texture Stream
-		* @param[out] pszBuffer filled with the texture stream path, may be NULL
-		* @param[in] cbBufferSize size of pwszBuffer (including trailing 0).
-		* @param[out] pcbNeededChars filled with the count of the written bytes, or needed buffer size.
-		* @return error code or 0 (success)
-		*/
-		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_gettexturestreampathutf8(_In_ PLib3MFModel * pModel, _In_ DWORD nIndex, _Out_opt_ LPSTR pszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars);
 
 		/**
 		* returns the number of metadata strings of a model
@@ -2008,7 +2424,7 @@ namespace NMR {
 		*
 		* @param[in] pModel Model instance
 		* @param[in] nIndex Index of the Metadata
-		* @param[out] pwszBuffer filled with the texture stream path, may be NULL
+		* @param[out] pwszBuffer filled with the key of the Metadata
 		* @param[in] cbBufferSize size of pwszBuffer (including trailing 0).
 		* @param[out] pcbNeededChars filled with the count of the written bytes, or needed buffer size.
 		* @return error code or 0 (success)
@@ -2020,7 +2436,7 @@ namespace NMR {
 		*
 		* @param[in] pModel Model instance
 		* @param[in] nIndex Index of the Metadata
-		* @param[out] pszBuffer filled with the texture stream path, may be NULL
+		* @param[out] pszBuffer filled with the key of the Metadata
 		* @param[in] cbBufferSize size of pwszBuffer (including trailing 0).
 		* @param[out] pcbNeededChars filled with the count of the written bytes, or needed buffer size.
 		* @return error code or 0 (success)
@@ -2032,7 +2448,7 @@ namespace NMR {
 		*
 		* @param[in] pModel Model instance
 		* @param[in] nIndex Index of the Metadata
-		* @param[out] pwszBuffer filled with the texture stream path, may be NULL
+		* @param[out] pwszBuffer filled with the value of the Metadata
 		* @param[in] cbBufferSize size of pwszBuffer (including trailing 0).
 		* @param[out] pcbNeededChars filled with the count of the written bytes, or needed buffer size.
 		* @return error code or 0 (success)
@@ -2044,7 +2460,7 @@ namespace NMR {
 		*
 		* @param[in] pModel Model instance
 		* @param[in] nIndex Index of the Metadata
-		* @param[out] pszBuffer filled with the texture stream path, may be NULL
+		* @param[out] pszBuffer filled with the value of the Metadata
 		* @param[in] cbBufferSize size of pwszBuffer (including trailing 0).
 		* @param[out] pcbNeededChars filled with the count of the written bytes, or needed buffer size.
 		* @return error code or 0 (success)
@@ -2179,6 +2595,25 @@ namespace NMR {
 		*/
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_getattachmentpathutf8 (_In_ PLib3MFModel * pModel, _In_ DWORD nIndex, _Out_opt_ LPSTR pszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars);
 
+
+		/**
+		* Get the attachment to the OPC package containing the package thumbnail
+		*
+		* @param[in] pModel Model instance
+		* @param[in] bCreateIfNotExisting create the attachment if it does not exist
+		* @param[out] ppAttachmentInstance Instance of the thumbnailattachment object
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_getpackagethumbnailattachment(_In_ PLib3MFModel * pModel, _In_ BOOL bCreateIfNotExisting, _Outptr_ PLib3MFModelAttachment ** ppAttachmentInstance);
+
+		/**
+		* Remove the attachment to the OPC package containing the package thumbnail
+		*
+		* @param[in] pModel Model instance
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_removepackagethumbnailattachment(_In_ PLib3MFModel * pModel);
+
 		/**
 		* adds a new Content Type to the model
 		*
@@ -2217,6 +2652,143 @@ namespace NMR {
 		*/
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_removecustomcontenttypeutf8(_In_ PLib3MFModel * pModel, _In_ LPCSTR pszExtension);
 
+		/**
+		* Adds a slicestack to a model
+		* @param[in] pModel Model instance to add slicestack to
+		* @param[in] nBottomZ Bottom Z value of the slicestack
+		* @param[out] ppSliceStackObject returns the new slice stack object
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_addslicestack(_In_ PLib3MFModel * pModel, _In_ float nBottomZ, PLib3MFSliceStack **ppSliceStackObject);
+
+		/**
+		* Adds a slice to a slicestack
+		* @param[in] pStack the slicestack to add the slice to
+		* @param[in] nTopZ upper Z value of the slice
+		* @param[out] pSliceObject returns the new slice object
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_slicestack_addslice(_In_ PLib3MFSliceStack *pStack, _In_ float nTopZ, PLib3MFSlice **pSliceObject);
+
+		/**
+		* Returns the number of slices stored in a slicestack
+		* @param[in] pStack slicestack to query
+		* @param[out] pnSliceCount returns the number of slices on the stack
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_slicestack_getslicecount(_In_ PLib3MFSliceStack *pStack, _Out_ DWORD *pnSliceCount);
+
+		/**
+		* Query a slice of a slicestack
+		* @param[in] pStack slicestack to get the slice from
+		* @param[in] nSliceIndex index of the slice (0 to slicecount - 1)
+		* @param[out] pSlice returns the slice
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_slicestack_getslice(_In_ PLib3MFSliceStack *pStack, _In_ DWORD nSliceIndex, _Out_ PLib3MFSlice **pSlice);
+
+		/**
+		* Specify whether the slice stack should be stored in a separate model file within the 3MF-file as a slice ref
+		* @param[in] pStack slicestack to set the reference
+		* @param[in] bUsesSliceRef flag whether to use a slice-ref or not
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_slicestack_setusessliceref(_In_ PLib3MFSliceStack *pStack, _In_ BOOL bUsesSliceRef);
+
+		/**
+		* Returns the slice reference of a slicestack, i.e. the slicestack is stored in a seperate entity within the 3mf file
+		* Get the specification, whether the slice stack should be stored in a separate model file within the 3MF-file as a slice ref
+		* @param[in] pStack the slice stack
+		* @param[out] pbUsesSliceRef string for the slice reference
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_slicestack_getusessliceref(_In_ PLib3MFSliceStack *pStack, _Out_ BOOL *pbUsesSliceRef);
+
+		/**
+		* Returns the top Z of a slice
+		* @param[in] pSlice the slice to query
+		* @param[out] nTopZ returns the upper Z value of the slice
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_slice_gettopz(_In_ PLib3MFSlice *pSlice, _Out_ float *pTopZ);
+
+		/**
+		* Add an array of vertices to a slice
+		* @param[in] pSlice the slice to add vertices to
+		* @param[in] pVertices array of MODELSLICEVERTEX structures
+		* @param[in] nCount number of MODELSLICEVERTEX strucutres in the array
+		* @param[out] returns the start index of the slice, i.e. for the first vertex array this is "0" but later calls to the function append the vertices to the internal array so the value returned here must be added as an offset if accessing the vertices
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_slice_addvertices(_In_ PLib3MFSlice *pSlice, _In_ MODELSLICEVERTEX *pVertices, _In_ DWORD nCount, _Out_ DWORD *pStartIndex);
+
+		/**
+		* Add a polygon to a slice
+		* @param[in] pSlice the slice to add the polygon to
+		* @param[in] pPolygonIndices an array of indices refering the slice vertices. If more than one call to "lib3mf_addvertices" was done the offset (pStartIndex) must be considered when adding a polygon
+		* @param[out] pPolygonIndex returns index of the newly created polygon
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_slice_addpolygon(_In_ PLib3MFSlice *pSlice, _In_ DWORD *pPolygonIndices, _In_ DWORD nCount, _Out_ DWORD *pPolygonIndex);
+
+		/**
+		* Add a new (empty) polygon to a slice
+		* @param[in] pSlice the slice to add the polygon to
+		* @param[out] pPolygonIndex returns index of the newly created polygon
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_slice_startpolygon(_In_ PLib3MFSlice *pSlice, _Out_ DWORD *pPolygonIndex);
+
+		/**
+		* Add a vertex index to a polygon created with lib3mf_slice_startpolygon
+		* @param[in] pSlice the slice with the polygon
+		* @param[in] nPolygon the polygon index
+		* @param[in] nIndex the vertex index to add to the polygon
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_slice_addindextopolygon(_In_ PLib3MFSlice *pSlice, _In_ DWORD nPolygon, _In_ DWORD nIndex);
+
+		/**
+		* Returns the number of vertices in a slice
+		* @param[in] pSlice the slice to obtain the number of vertices from
+		* @param[out] pVertexCount returns the number of vertices in the slice
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_slice_getvertexcount(_In_ PLib3MFSlice *pSlice, _Out_ DWORD *pVertexCount);
+
+		/**
+		* Returns the number of polgons in a slice
+		* @param[in] pSlice the slice to get the number of polygons from
+		* @param[out] pPolygonCount returns the number of polygons in a slice
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_slice_getpolygoncount(_In_ PLib3MFSlice *pSlice, _Out_ DWORD *pPolygonCount);
+
+		/**
+		* Returns the vertices of a slice
+		* @param[in] pSlice the slice to query the vertices from
+		* @param[out] pVertices the array of MODELSLICEVERTEX to be filled
+		* @param[in] nBufferSize the number of elements in the pVertices array. Should equal the number of vertices in the slice (lib3mf_slice_getvertexcount), if smaller not all vertices are returned, if bigger memory is wasted
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_slice_getvertices(_In_ PLib3MFSlice *pSlice, _Out_ MODELSLICEVERTEX *pVertices, _In_ DWORD nBufferSize);
+
+		/**
+		* Returns the number of indices of a polygon in a slice
+		* @param[in] pSlice the slice to query
+		* @param[in] nPolygonIndex the index of the polygon to query
+		* @param[out] npIndexCount returns the number of polygon indices of the polygon
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_slice_getpolygonindexcount(_In_ PLib3MFSlice *pSlice, _In_ DWORD nPolygonIndex, _Out_ DWORD *npIndexCount);
+
+		/**
+		* Fills a list of polygon indices with the indices of the desired polygon
+		* @param[in] pSlice the slice to query
+		* @param[in] nPolygonIndex the index of the polygon
+		* @param[out] pIndices an array of polygon indices to be filled
+		* @param[in] nBufferSize size of the pIndices array. Should equal the number of indices in the polygon (lib3mf_slice_getpolygonindexcount), if smaller not all indices are returned, if bigger memory is wasted
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_slice_getpolygonindices(_In_ PLib3MFSlice *pSlice, _In_ DWORD nPolygonIndex, _Out_ DWORD *pIndices, _In_ DWORD nBuffersize);
 	};
 
 };

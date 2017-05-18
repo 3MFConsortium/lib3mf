@@ -42,6 +42,7 @@ namespace NMR {
 		: CModelResource(sID, pModel)
 	{
 		m_ObjectType = MODELOBJECTTYPE_MODEL;
+		setUUID(std::make_shared<CUUID>());
 	}
 
 	void CModelObject::mergeToMesh(_In_ CMesh * pMesh, _In_ const NMATRIX3 mMatrix)
@@ -84,22 +85,34 @@ namespace NMR {
 		m_sPartNumber = sPartNumber;
 	}
 
+	PUUID CModelObject::uuid()
+	{
+		return m_UUID;
+	}
+
+	void CModelObject::setUUID(PUUID uuid)
+	{
+		getModel()->registerUUID(uuid);
+		getModel()->unRegisterUUID(m_UUID);
+		m_UUID = uuid;
+	}
+
 	nfBool CModelObject::setObjectTypeString(_In_ std::wstring sTypeString, _In_ nfBool bRaiseException)
 	{
 		if (sTypeString == XML_3MF_OBJECTTYPE_OTHER) {
-			m_ObjectType = MODELOBJECTTYPE_OTHER;
+			setObjectType(MODELOBJECTTYPE_OTHER);
 			return true;
 		}
 		if (sTypeString == XML_3MF_OBJECTTYPE_MODEL) {
-			m_ObjectType = MODELOBJECTTYPE_MODEL;
+			setObjectType(MODELOBJECTTYPE_MODEL);
 			return true;
 		}
 		if (sTypeString == XML_3MF_OBJECTTYPE_SUPPORT) {
-			m_ObjectType = MODELOBJECTTYPE_SUPPORT;
+			setObjectType(MODELOBJECTTYPE_SUPPORT);
 			return true;
 		}
 		if (sTypeString == XML_3MF_OBJECTTYPE_SOLIDSUPPORT) {
-			m_ObjectType = MODELOBJECTTYPE_SOLIDSUPPORT;
+			setObjectType(MODELOBJECTTYPE_SOLIDSUPPORT);
 			return true;
 		}
 
@@ -135,4 +148,13 @@ namespace NMR {
 		return m_pModelDefaultProperty;
 	}
 
+	void CModelObject::setThumbnail(_In_ std::wstring sThumbnail)
+	{
+		m_sThumbnail = sThumbnail;
+	}
+
+	std::wstring CModelObject::getThumbnail()
+	{
+		return m_sThumbnail;
+	}
 }

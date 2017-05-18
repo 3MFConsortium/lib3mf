@@ -52,7 +52,13 @@ namespace NMR {
 
 		ModelResourceID m_nDefaultPropertyID;
 		ModelResourceIndex m_nDefaultPropertyIndex;
+		ModelResourceID m_nUsedPropertyID;
 
+		eModelBeamLatticeClipMode m_eClipMode;
+		nfBool m_bHasClippingMeshID;
+		ModelResourceID m_nClippingMeshID;
+		nfBool m_bHasRepresentationMeshID;
+		ModelResourceID m_nRepresentationMeshID;
 	protected:
 		virtual void OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue);
 		virtual void OnNSChildElement(_In_z_ const nfWChar * pChildName, _In_z_ const nfWChar * pNameSpace, _In_ CXmlReader * pXMLReader);
@@ -61,8 +67,10 @@ namespace NMR {
 		CModelReaderNode100_Mesh(_In_ CModel * pModel, _In_ CMesh * pMesh, _In_ PModelReaderWarnings pWarnings, _In_ PModelReader_ColorMapping pColorMapping, _In_ PModelReader_TexCoordMapping pTexCoordMapping, _In_ ModelResourceID nDefaultPropertyID, _In_ ModelResourceIndex nDefaultPropertyIndex);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
+		void retrieveClippingInfo(_Out_ eModelBeamLatticeClipMode &eClipMode, _Out_ nfBool & bHasClippingMode, _Out_ ModelResourceID & nClippingMeshID);
+		void retrieveRepresentationInfo(_Out_ nfBool & bHasRepresentation, _Out_ ModelResourceID & nRepresentationMeshID);
 	};
-
+	typedef std::shared_ptr <CModelReaderNode100_Mesh> PModelReaderNode100_Mesh;
 }
 
 #endif // __NMR_MODELREADERNODE100_MESH

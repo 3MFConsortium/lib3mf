@@ -56,6 +56,8 @@ namespace NMR {
 
 		HRESULT hResult;
 
+		m_nRelationIDCounter = 0;
+
 		m_pPackagePartSet = nullptr;
 		m_pPackageRelationshipSet = nullptr;
 		m_pPackage = nullptr;

@@ -34,7 +34,6 @@ COM Interface Implementation for GCC
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_Exception_Windows.h"
 
-#ifdef __GNUC__
 
 namespace NMR {
 
@@ -85,26 +84,6 @@ namespace NMR {
     }
 
     ILib3MFModelResourceIterator::~ILib3MFModelResourceIterator()
-    {
-    }
-
-/*------------------------------------------------------------------*/
-
-    ILib3MFModelThumbnail::ILib3MFModelThumbnail()
-    {
-    }
-
-    ILib3MFModelThumbnail::~ILib3MFModelThumbnail()
-    {
-    }
-
-/*------------------------------------------------------------------*/
-
-    ILib3MFModelThumbnailIterator::ILib3MFModelThumbnailIterator()
-    {
-    }
-
-    ILib3MFModelThumbnailIterator::~ILib3MFModelThumbnailIterator()
     {
     }
 
@@ -239,9 +218,41 @@ namespace NMR {
     {
     }
 
+
+/*------------------------------------------------------------------*/
+
+    ILib3MFModelMeshBeamSet::ILib3MFModelMeshBeamSet()
+    {
+    }
+
+    ILib3MFModelMeshBeamSet::~ILib3MFModelMeshBeamSet()
+    {
+    }
+
+/*------------------------------------------------------------------*/
+
+    ILib3MFSlice::ILib3MFSlice()
+    {
+    }
+
+
+    ILib3MFSlice::~ILib3MFSlice()
+    {
+    }
+
+/*------------------------------------------------------------------*/
+
+    ILib3MFSliceStack::ILib3MFSliceStack()
+    {
+    }
+
+
+    ILib3MFSliceStack::~ILib3MFSliceStack()
+    {
+    }
+
 }
 
-#endif // __GNUC__
 
 
 

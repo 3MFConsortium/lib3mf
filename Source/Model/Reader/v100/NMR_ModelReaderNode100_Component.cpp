@@ -34,6 +34,7 @@ Node Class.
 
 #include "Model/Reader/v100/NMR_ModelReaderNode100_Component.h"
 
+#include "Model/Classes/NMR_ModelResource.h" 
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_StringUtils.h"
@@ -49,7 +50,10 @@ namespace NMR {
 		m_pModel = pModel;
 		m_ObjectID = 0;
 		m_bHasID = false;
+		m_sPath = L"";
 		m_mTransform = fnMATRIX3_identity();
+
+		m_bHasPath = false;
 	}
 
 	void CModelReaderNode100_Component::parseXML(_In_ CXmlReader * pXMLReader)
@@ -64,6 +68,31 @@ namespace NMR {
 		parseContent(pXMLReader);
 	}
 
+	void CModelReaderNode100_Component::OnNSAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue, _In_z_ const nfWChar * pNameSpace)
+	{
+		__NMRASSERT(pAttributeName);
+		__NMRASSERT(pAttributeValue);
+		__NMRASSERT(pNameSpace);
+
+		if (wcscmp(pNameSpace, XML_3MF_NAMESPACE_PRODUCTIONSPEC) == 0) {
+			if (wcscmp(pAttributeName, XML_3MF_PRODUCTION_PATH) == 0) {
+				if (m_bHasPath)
+					throw CNMRException(NMR_ERROR_DUPLICATEPATH);
+				m_sPath = pAttributeValue;
+				m_bHasPath = true;
+			}
+			else if (wcscmp(pAttributeName, XML_3MF_PRODUCTION_UUID) == 0) {
+				if (m_UUID.get())
+					throw CNMRException(NMR_ERROR_DUPLICATEUUID);
+				m_UUID = std::make_shared<CUUID>(pAttributeValue);
+			}
+			else
+				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE), mrwInvalidOptionalValue);
+		}
+
+
+	}
+
 	void CModelReaderNode100_Component::OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue)
 	{
 		__NMRASSERT(pAttributeName);
@@ -76,10 +105,11 @@ namespace NMR {
 			m_ObjectID = fnWStringToUint32(pAttributeValue);
 			m_bHasID = true;
 		}
-
-		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_COMPONENT_TRANSFORM) == 0) {
+		else if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_COMPONENT_TRANSFORM) == 0) {
 			m_mTransform = fnMATRIX3_fromWideString(pAttributeValue);
 		}
+		else
+			m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE), mrwInvalidOptionalValue);
 	}
 
 
@@ -87,13 +117,28 @@ namespace NMR {
 	{
 		if (!m_bHasID)
 			throw CNMRException(NMR_ERROR_MISSINGMODELOBJECTID);
-
-		return m_pModel->findObject(m_ObjectID);
+		
+		PPackageResourceID pRID; 
+		if (m_bHasPath) {
+			if (m_pModel->curPath() != m_pModel->rootPath())
+				throw CNMRException(NMR_ERROR_REFERENCESTOODEEP);
+			pRID = m_pModel->findPackageResourceID(m_sPath, m_ObjectID);
+		}
+		else {
+			pRID = m_pModel->findPackageResourceID(m_pModel->curPath(), m_ObjectID);
+		}
+		if (pRID.get())
+			return m_pModel->findObject(pRID->getUniqueID());
+		return nullptr;
 	}
 
 	NMATRIX3 CModelReaderNode100_Component::getTransform()
 	{
 		return m_mTransform;
+	}
+
+	PUUID CModelReaderNode100_Component::uuid() {
+		return m_UUID;
 	}
 
 

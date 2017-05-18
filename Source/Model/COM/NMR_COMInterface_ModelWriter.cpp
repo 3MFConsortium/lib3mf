@@ -31,6 +31,8 @@ COM Interface Implementation for Model Writer Class
 
 --*/
 
+#include <cstring>
+
 #include "Model/COM/NMR_COMInterface_ModelWriter.h"
 #include "Model/Writer/NMR_ModelWriter.h"
 #include "Common/NMR_Exception.h"
@@ -38,12 +40,15 @@ COM Interface Implementation for Model Writer Class
 #include "Common/Platform/NMR_Platform.h"
 #include "Common/NMR_StringUtils.h"
 
+#ifdef NMR_COM_NATIVE
+#include "Common/Platform/NMR_ExportStream_COM.h"
+#endif
+
+#include "Common/Platform/NMR_ExportStream_Memory.h"
+#include "Common/Platform/NMR_ExportStream_Dummy.h"
 #include "Common/Platform/NMR_ExportStream_Callback.h"
 #include <locale.h>
 
-#ifndef __GNUC__
-#include "Common/Platform/NMR_ExportStream_COM.h"
-#endif // __GNUC__
 
 namespace NMR {
 
@@ -133,7 +138,6 @@ namespace NMR {
 
 	LIB3MFMETHODIMP CCOMModelWriter::WriteToFileUTF8(_In_z_ LPCSTR pszFilename)
 	{
-
 		try {
 			if (pszFilename == nullptr)
 				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
@@ -148,6 +152,68 @@ namespace NMR {
 
 			PExportStream pStream = fnCreateExportStreamInstance(sUTF16FileName.c_str());
 			m_pModelWriter->exportToStream(pStream);
+
+			return handleSuccess();
+		}
+		catch (CNMRException_Windows & WinException) {
+			return handleNMRException(&WinException);
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
+	LIB3MFMETHODIMP CCOMModelWriter::GetStreamSize(_Out_ ULONG64 * pcbStreamSize)
+	{
+		try {
+			if (pcbStreamSize == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+			if (m_pModelWriter.get() == nullptr)
+				throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
+
+			setlocale(LC_ALL, "C");
+
+			// Write to a special dummy stream just to calculate the size
+			PExportStreamDummy pStream = std::make_shared<CExportStreamDummy>();
+			m_pModelWriter->exportToStream(pStream);
+
+			*pcbStreamSize = pStream->getDataSize();
+
+			return handleSuccess();
+		}
+		catch (CNMRException_Windows & WinException) {
+			return handleNMRException(&WinException);
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
+	LIB3MFMETHODIMP CCOMModelWriter::WriteToBuffer(_Out_ BYTE * pBuffer, _In_ ULONG64 cbBufferSize)
+	{
+		try {
+			if (m_pModelWriter.get() == nullptr)
+				throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
+			if (pBuffer == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
+			setlocale(LC_ALL, "C");
+
+			PExportStreamMemory pStream = std::make_shared<CExportStreamMemory>();
+			m_pModelWriter->exportToStream(pStream);
+
+			ULONG64 cbStreamSize = pStream->getDataSize();
+			if (cbBufferSize < cbStreamSize)
+				throw CNMRException(NMR_ERROR_INSUFFICIENTBUFFERSIZE);
+
+			// TODO eliminate this copy, perhaps by allowing CExportStreamMemory to use existing buffers
+			memcpy(pBuffer, pStream->getData(), cbStreamSize);
 
 			return handleSuccess();
 		}
@@ -193,7 +259,7 @@ namespace NMR {
 	}
 
 
-#ifndef __GNUC__
+#ifdef NMR_COM_NATIVE
 	LIB3MFMETHODIMP CCOMModelWriter::WriteToStream(_In_ IStream * pStream)
 	{
 
@@ -218,7 +284,7 @@ namespace NMR {
 		}
 
 	}
-#endif // __GNUC__
-
+#endif // NMR_COM_NATIVE
+	
 
 }

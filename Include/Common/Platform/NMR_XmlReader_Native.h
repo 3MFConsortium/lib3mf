@@ -64,9 +64,11 @@ NMR_XMLReader_Native.h defines a XML reader class with a native XML parsing impl
 #define NMR_NATIVEXMLTYPE_PROCESSINGINSTRUCTION 9
 #define NMR_NATIVEXMLTYPE_PROCESSINGINSTRUCTIONEND 10
 
-#define NMR_NATIVEXMLNS_ATTRIBUTE L"xmlns"
 #define NMR_NATIVEXMLNS_XML_PREFIX L"xml"
 #define NMR_NATIVEXMLNS_XML_URI L"http://www.w3.org/XML/1998/namespace"
+
+#define NMR_NATIVEXMLNS_XMLNS_PREFIX L"xmlns"
+#define NMR_NATIVEXMLNS_XMLNS_URI L"http://www.w3.org/2000/xmlns/"
 
 namespace NMR {
 
@@ -89,6 +91,8 @@ namespace NMR {
 		std::vector<nfWChar *> m_CurrentEntityPrefixes;
 		std::vector<nfByte> m_CurrentEntityTypes;
 
+		void performEscapeStringDecoding();
+
 		// Insert List for 0 characters
 		nfUint32 m_nZeroInsertIndex;
 		std::vector<nfWChar *> m_ZeroInsertArray;
@@ -99,6 +103,7 @@ namespace NMR {
 		// how large is the current buffer
 		nfUint32 m_nCurrentBufferSize;
 		nfUint32 m_nCurrentEntityCount;
+		nfUint32 m_nCurrentVerifiedEntityCount;
 		nfUint32 m_nCurrentFullEntityCount;
 		nfUint32 m_nCurrentEntityIndex;
 		nfWChar * m_pCurrentEntityPointer;
@@ -153,6 +158,8 @@ namespace NMR {
 		virtual void GetValue(_Outptr_result_buffer_maybenull_(*pcwchValue + 1)  const nfWChar ** ppwszValue, _Out_opt_  nfUint32 *pcwchValue);
 		virtual void GetLocalName(_Outptr_result_buffer_maybenull_(*pcwchLocalName + 1) const nfWChar ** ppwszLocalName, _Out_opt_ nfUint32 *pcwchLocalName);
 		virtual void GetNamespaceURI(_Outptr_result_buffer_maybenull_(*pcwchValue + 1)  const nfWChar ** ppwszValue, _Out_opt_  nfUint32 *pcwchValue);
+		virtual bool GetNamespaceURI(const std::wstring &sNameSpacePrefix, std::wstring &sNameSpaceURI);
+		virtual bool NamespaceRegistered(const std::wstring &sNameSpaceURI);
 
 		virtual nfBool Read(_Out_ eXmlReaderNodeType & NodeType);
 		virtual nfBool IsEOF();

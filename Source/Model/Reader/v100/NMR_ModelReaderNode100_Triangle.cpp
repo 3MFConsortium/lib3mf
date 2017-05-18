@@ -40,7 +40,7 @@ XML Model Stream.
 #include "Common/NMR_Exception_Windows.h"
 #include "Common/NMR_StringUtils.h"
 #include <climits>
-#include <math.h>
+#include <cmath>
 
 namespace NMR {
 
@@ -123,42 +123,38 @@ namespace NMR {
 			if ((nValue >= 0) && (nValue < XML_3MF_MAXRESOURCEINDEX))
 				m_nIndex1 = nValue;
 		}
-
-		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TRIANGLE_V2) == 0) {
+		else if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TRIANGLE_V2) == 0) {
 			nValue = fnWStringToInt32(pAttributeValue);
 			if ((nValue >= 0) && (nValue < XML_3MF_MAXRESOURCEINDEX))
 				m_nIndex2 = nValue;
 		}
-
-		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TRIANGLE_V3) == 0) {
+		else if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TRIANGLE_V3) == 0) {
 			nValue = fnWStringToInt32(pAttributeValue);
 			if ((nValue >= 0) && (nValue < XML_3MF_MAXRESOURCEINDEX))
 				m_nIndex3 = nValue;
 		}
-
-		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TRIANGLE_PID) == 0) {
+		else if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TRIANGLE_PID) == 0) {
 			nValue = fnWStringToInt32(pAttributeValue);
 			if ((nValue >= 0) && (nValue < XML_3MF_MAXRESOURCEID))
 				m_nPropertyID = nValue;
 		}
-
-		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TRIANGLE_P1) == 0) {
+		else if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TRIANGLE_P1) == 0) {
 			nValue = fnWStringToInt32(pAttributeValue);
 			if ((nValue >= 0) && (nValue < XML_3MF_MAXRESOURCEINDEX))
 				m_nPropertyIndex1 = nValue;
 		}
-
-		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TRIANGLE_P2) == 0) {
+		else if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TRIANGLE_P2) == 0) {
 			nValue = fnWStringToInt32(pAttributeValue);
 			if ((nValue >= 0) && (nValue < XML_3MF_MAXRESOURCEINDEX))
 				m_nPropertyIndex2 = nValue;
 		}
-
-		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TRIANGLE_P3) == 0) {
+		else if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TRIANGLE_P3) == 0) {
 			nValue = fnWStringToInt32(pAttributeValue);
 			if ((nValue >= 0) && (nValue < XML_3MF_MAXRESOURCEINDEX))
 				m_nPropertyIndex3 = nValue;
 		}
+		else
+			m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE), mrwInvalidOptionalValue);
 	}
 
 }

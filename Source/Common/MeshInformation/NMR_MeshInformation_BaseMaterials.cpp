@@ -36,7 +36,7 @@ while the mesh topology is changing.
 
 #include "Common/MeshInformation/NMR_MeshInformation_BaseMaterials.h" 
 #include "Common/NMR_Exception.h" 
-#include <math.h>
+#include <cmath>
 
 namespace NMR {
 

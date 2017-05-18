@@ -40,7 +40,7 @@ XML Model Stream.
 #include "Common/NMR_Exception_Windows.h"
 #include "Common/NMR_StringUtils.h"
 #include <climits>
-#include <math.h>
+#include <cmath>
 #include <wchar.h>
 
 namespace NMR {

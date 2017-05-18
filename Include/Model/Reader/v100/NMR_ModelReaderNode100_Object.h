@@ -36,11 +36,13 @@ A object reader model node is a parser for the object node of an XML Model Strea
 #define __NMR_MODELREADERNODE100_OBJECT
 
 #include "Model/Reader/NMR_ModelReaderNode.h"
+#include "Model/Reader/v100/NMR_ModelReaderNode100_Mesh.h"
 #include "Model/Reader/NMR_ModelReader_ColorMapping.h"
 #include "Model/Reader/NMR_ModelReader_TexCoordMapping.h"
 #include "Model/Classes/NMR_ModelComponent.h"
 #include "Model/Classes/NMR_ModelComponentsObject.h"
 #include "Model/Classes/NMR_ModelObject.h"
+
 
 namespace NMR {
 
@@ -48,19 +50,29 @@ namespace NMR {
 	private:
 		CModel * m_pModel;
 		ModelResourceID m_nID;
+		nfBool m_bHasThumbnail;
 		std::wstring m_sThumbnail;
 		std::wstring m_sPartNumber;
 		std::wstring m_sName;
+		PUUID m_UUID;
 		std::wstring m_sType;
 		nfBool m_bHasType;
 		PModelObject m_pObject;
 		PModelReader_ColorMapping m_pColorMapping;
 		PModelReader_TexCoordMapping m_pTexCoordMapping;
+		nfBool m_bHasDefaultPropertyID;
+		nfBool m_bHasDefaultPropertyIndex;
 		ModelResourceID m_nDefaultPropertyID;
 		ModelResourceIndex m_nDefaultPropertyIndex;
 
+		nfUint32 m_nSliceStackId;
+		eModelSlicesMeshResolution m_eSlicesMeshResolution;
+		nfBool m_bHasMeshResolution;
+
 		void createDefaultProperties();
+		void handleBeamLatticeExtension(CModelReaderNode100_Mesh* pXMLNode);
 	protected:
+    virtual void OnNSAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue, _In_z_ const nfWChar * pNameSpace);
 		virtual void OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue);
 		virtual void OnNSChildElement(_In_z_ const nfWChar * pChildName, _In_z_ const nfWChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 	public:

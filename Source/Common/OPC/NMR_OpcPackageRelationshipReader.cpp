@@ -37,6 +37,8 @@ NMR_OpcPackageReader.cpp defines an OPC Package reader of .rels files in a porta
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_StringUtils.h"
 
+#include "Model/Classes/NMR_ModelConstants.h"
+
 namespace NMR {
 
 	COpcPackageRelationshipReader::COpcPackageRelationshipReader(_In_ PImportStream pImportStream)
@@ -102,6 +104,8 @@ namespace NMR {
 						if (wcscmp(pwszLocalName, OPC_RELS_RELATIONSHIP_NODE) == 0) {
 							parseChildNode(pXMLReader);
 						}
+						else
+							throw CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT);
 					}
 				}
 				break;
@@ -176,6 +180,24 @@ namespace NMR {
 			}
 
 			bContinue = pXMLReader->MoveToNextAttribute();
+		}
+		
+		// must be non-empty and absolute path
+		if (sTarget.empty()) // || (sTarget[0] != L'/') )
+			throw CNMRException(NMR_ERROR_INVALIDOPCPARTURI);
+
+		if (sType == PACKAGE_PRINT_TICKET_RELATIONSHIP_TYPE) {
+			for (auto itRel : m_RelationShips) {
+				if (itRel->getType() == sType) {
+					throw CNMRException(NMR_ERROR_DUPLICATE_PRINTTICKET);
+				}
+			}
+		}
+		
+		for (auto itRel : m_RelationShips) {
+			if (itRel->getID() == sID) {
+				throw CNMRException(NMR_ERROR_OPC_DUPLICATE_RELATIONSHIP_ID);
+			}
 		}
 
 		POpcPackageRelationship pRelationShip = std::make_shared<COpcPackageRelationship> (sID, sType, sTarget);

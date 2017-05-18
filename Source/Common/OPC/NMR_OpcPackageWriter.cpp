@@ -36,6 +36,8 @@ NMR_OpcPackageWriter.cpp defines an OPC Package writer in a portable way.
 #include "Common/NMR_Exception.h" 
 #include "Common/NMR_StringUtils.h" 
 
+#include "Model/Classes/NMR_ModelConstants.h"
+
 namespace NMR {
 
 
@@ -92,7 +94,7 @@ namespace NMR {
 				std::wstring sPath = sURI.substr(0, sURI.length() - sName.length());
 				sPath += L"_rels/";
 				sPath += sName;
-				sPath += L".rels";
+				sPath += std::wstring(L".")+PACKAGE_3D_RELS_EXTENSION;
 
 				PExportStream pStream = m_pZIPWriter->createEntry(sPath, fnGetUnixTime());
 				pPart->writeRelationships(pStream);
@@ -108,15 +110,14 @@ namespace NMR {
 		PXmlWriter_Native pXMLWriter = std::make_shared<CXmlWriter_Native>(pStream);
 
 		pXMLWriter->WriteStartDocument();
-		pXMLWriter->WriteStartElement(nullptr, L"Types", nullptr);
+		pXMLWriter->WriteStartElement(nullptr, OPC_CONTENTTYPES_CONTAINER, nullptr);
 		pXMLWriter->WriteAttributeString(nullptr, L"xmlns", nullptr, OPCPACKAGE_SCHEMA_CONTENTTYPES);
 
 		auto iIterator = m_ContentTypes.begin();
-
 		while (iIterator != m_ContentTypes.end()) {
-			pXMLWriter->WriteStartElement(nullptr, L"Default", nullptr);
-			pXMLWriter->WriteAttributeString(nullptr, L"Extension", nullptr, iIterator->first.c_str());
-			pXMLWriter->WriteAttributeString(nullptr, L"ContentType", nullptr, iIterator->second.c_str());
+			pXMLWriter->WriteStartElement(nullptr, OPC_CONTENTTYPES_NODE, nullptr);
+			pXMLWriter->WriteAttributeString(nullptr, OPC_CONTENTTYPES_ATTRIB_EXTENSION, nullptr, iIterator->first.c_str());
+			pXMLWriter->WriteAttributeString(nullptr, OPC_CONTENTTYPES_ATTRIB_CONTENTTYPE, nullptr, iIterator->second.c_str());
 			pXMLWriter->WriteEndElement();
 
 			iIterator++;

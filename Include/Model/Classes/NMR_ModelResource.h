@@ -47,14 +47,15 @@ namespace NMR {
 	class CModelResource {
 	private:
 		CModel * m_pModel;
-		ModelResourceID m_sResourceID;
+		PPackageResourceID m_sResourceID;
 		
 	public:
 		CModelResource() = delete;
+		// CModelResource(_In_ const PPackageResourceID sResourceID, _In_ CModel * pModel);
 		CModelResource(_In_ const ModelResourceID sResourceID, _In_ CModel * pModel);
 		~CModelResource();
 		
-		virtual ModelResourceID getResourceID();
+		virtual PPackageResourceID getResourceID();
 		
 		_Ret_notnull_ CModel * getModel();
 	};

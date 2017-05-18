@@ -36,7 +36,6 @@ COM Interface Implementation for Model Resource Iterator Class
 
 #include "Model/COM/NMR_COMInterfaces.h" 
 #include "Model/Classes/NMR_ModelResource.h"
-#include "Common/NMR_PagedVector.h"
 
 namespace NMR {
 

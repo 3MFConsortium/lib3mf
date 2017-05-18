@@ -47,6 +47,7 @@ namespace NMR {
 	protected:
 		nfInt32 m_nRelationIDCounter;
 		CModel * m_pModel;
+		std::vector<nfByte> m_aSliceStreamBuffer;
 
 		// These are OPC dependent functions
 		virtual void createPackage(_In_ CModel * pModel);
@@ -54,8 +55,9 @@ namespace NMR {
 		virtual void releasePackage();
 
 		std::wstring generateRelationShipID();
-		void addTextureParts(_In_ CModel * pModel, _In_ POpcPackageWriter pPackageWriter, _In_ POpcPackagePart pModelPart);
 		void addAttachments(_In_ CModel * pModel, _In_ POpcPackageWriter pPackageWriter, _In_ POpcPackagePart pModelPart);
+		void addSlicerefAttachments(_In_ CModel *pModel);
+
 	public:
 		CModelWriter_3MF_Native() = delete;
 		CModelWriter_3MF_Native(_In_ PModel pModel);

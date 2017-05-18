@@ -43,6 +43,8 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 		m_pObject = pObject;
 		m_mTransform = fnMATRIX3_identity();
+
+		m_UUID = std::make_shared<CUUID>();
 	}
 
 	CModelComponent::CModelComponent(_In_ CModelObject * pObject, _In_ const NMATRIX3 mTransform)
@@ -51,6 +53,8 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 		m_pObject = pObject;
 		m_mTransform = mTransform;
+
+		m_UUID = std::make_shared<CUUID>();
 	}
 
 	CModelComponent::~CModelComponent()
@@ -73,9 +77,9 @@ namespace NMR {
 		m_mTransform = mTransform;
 	}
 
-	ModelResourceID CModelComponent::getObjectID()
+	PackageResourceID CModelComponent::getObjectID()
 	{
-		return m_pObject->getResourceID();
+		return m_pObject->getResourceID()->getUniqueID();
 	}
 
 	nfBool CModelComponent::hasTransform()
@@ -86,6 +90,18 @@ namespace NMR {
 	std::wstring CModelComponent::getTransformString()
 	{
 		return fnMATRIX3_toWideString(m_mTransform);
+	}
+
+	PUUID CModelComponent::uuid()
+	{
+		return m_UUID;
+	}
+
+	void CModelComponent::setUUID(PUUID uuid)
+	{
+		getObject()->getModel()->registerUUID(uuid);
+		getObject()->getModel()->unRegisterUUID(m_UUID);
+		m_UUID = uuid;
 	}
 
 	void CModelComponent::mergeToMesh(_In_ CMesh * pMesh, _In_ const NMATRIX3 mMatrix)

@@ -35,7 +35,7 @@ COM Interface Implementation for Model Classes
 #include "Model/COM/NMR_COMInterface_ModelBaseMaterial.h"
 #include "Common/NMR_Exception_Windows.h"
 #include "Common/NMR_StringUtils.h"
-#include <math.h>
+#include <cmath>
 
 namespace NMR {
 
@@ -122,7 +122,7 @@ namespace NMR {
 			if (m_pResource.get() == nullptr)
 				throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
 
-			*pnResourceID = m_pResource->getResourceID();
+			*pnResourceID = m_pResource->getResourceID()->getUniqueID();
 
 			return handleSuccess();
 		}

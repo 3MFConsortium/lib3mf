@@ -37,7 +37,7 @@ the mesh topology is changing.
 #include "Common/MeshInformation/NMR_MeshInformation_TexCoords.h"
 #include "Common/NMR_Exception.h"
 #include "Common/Math/NMR_Vector.h"
-#include <math.h>
+#include <cmath>
 
 namespace NMR {
 

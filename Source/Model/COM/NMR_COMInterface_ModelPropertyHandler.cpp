@@ -38,7 +38,8 @@ COM Interface Implementation for Model Property Handler
 #include "Common/MeshInformation/NMR_MeshInformation_BaseMaterials.h"
 #include "Common/MeshInformation/NMR_MeshInformation_NodeColors.h"
 #include "Common/MeshInformation/NMR_MeshInformation_TexCoords.h"
-#include <math.h>
+
+#include <cmath>
 
 namespace NMR {
 
@@ -70,6 +71,14 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_INVALIDMESH);
 
 		return pMesh;
+	}
+
+	_Ret_notnull_ CModelMeshObject * CCOMModelPropertyHandler::getMeshObject()
+	{
+		CModelMeshObject * pMeshObject = dynamic_cast<CModelMeshObject *> (m_pModelMeshResource.get());
+		if (pMeshObject == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDMESH);
+		return pMeshObject;
 	}
 
 
@@ -306,7 +315,6 @@ namespace NMR {
 	{
 
 		try {
-
 			CMesh * pMesh = getMesh();
 			CMeshInformationHandler * pInfoHandler = pMesh->createMeshInformationHandler();
 			if (pInfoHandler) {
@@ -919,7 +927,7 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
 
 			CMesh * pMesh = getMesh();
-
+			
 			CMeshInformationHandler * pInfoHandler = pMesh->createMeshInformationHandler();
 			if (pInfoHandler) {
 				CMeshInformation * pInformation;
@@ -946,10 +954,9 @@ namespace NMR {
 						pFaceData->m_vCoords[j].m_fields[1] = pTexture->m_fV[j];
 					}
 					pFaceData->m_TextureID = pTexture->m_nTextureID;
-
 				}
 			}
-
+			
 			return handleSuccess();
 		}
 		catch (CNMRException & Exception) {

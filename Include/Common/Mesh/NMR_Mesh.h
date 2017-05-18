@@ -45,14 +45,15 @@ You can only add nodes and faces to mesh. You cannot remove the existing structu
 #include "Common/Mesh/NMR_MeshTypes.h"
 #include "Common/MeshInformation/NMR_MeshInformationHandler.h"
 #include "Common/NMR_Types.h"
-#include "Common/NMR_PagedVector.h"
+#include "Common/Mesh/NMR_BeamLattice.h"
 
 namespace NMR {
 
 	class CMesh {
 	private:
-		CPagedVector<MESHNODE, NMR_MESH_NODEBLOCKCOUNT> m_Nodes;
-		CPagedVector<MESHFACE, NMR_MESH_FACEBLOCKCOUNT> m_Faces;
+		MESHNODES m_Nodes;
+		MESHFACES m_Faces;
+		CBeamLattice m_BeamLattice;
 
 		PMeshInformationHandler m_pMeshInformationHandler;
 
@@ -67,16 +68,33 @@ namespace NMR {
 
 		_Ret_notnull_ MESHNODE * addNode(_In_ const NVEC3 vPosition);
 		_Ret_notnull_ MESHFACE * addFace(_In_ MESHNODE * pNode1, _In_ MESHNODE * pNode2, _In_ MESHNODE * pNode3);
-
+		_Ret_notnull_ MESHBEAM * addBeam(_In_ MESHNODE * pNode1, _In_ MESHNODE * pNode2, _In_ nfDouble * pRadius1, _In_ nfDouble * pRadius2,
+								_In_ nfInt32 * peCapMode1, _In_ nfInt32 * peCapMode2);
+		_Ret_notnull_ PBEAMSET addBeamSet();
+		
 		nfUint32 getNodeCount();
 		nfUint32 getFaceCount();
+		nfUint32 getBeamCount();
+		nfUint32 getBeamSetCount();
 
 		_Ret_notnull_ MESHNODE * getNode(_In_ nfUint32 nIdx);
 		_Ret_notnull_ MESHFACE * getFace(_In_ nfUint32 nIdx);
+		_Ret_notnull_ MESHBEAM * getBeam(_In_ nfUint32 nIdx);
+		_Ret_notnull_ PBEAMSET getBeamSet(_In_ nfUint32 nIdx);
+
+		void setBeamLatticeMinLength(nfDouble dMinLength);
+		nfDouble getBeamLatticeMinLength();
+		void setDefaultBeamRadius(nfDouble dRadius);
+		nfDouble getDefaultBeamRadius();
+		void setBeamLatticeAccuracy(nfDouble dAccuracy);
+		nfBool getBeamLatticeAccuracy(nfDouble * pdAccuracy);
+		void setBeamLatticeCapMode(eModelBeamLatticeCapMode dRadius);
+		eModelBeamLatticeCapMode getBeamLatticeCapMode();
 
 		nfBool checkSanity();
 
 		void clear();
+		void clearBeamLattice();
 
 		_Ret_maybenull_ CMeshInformationHandler * getMeshInformationHandler();
 		_Ret_notnull_ CMeshInformationHandler * createMeshInformationHandler();

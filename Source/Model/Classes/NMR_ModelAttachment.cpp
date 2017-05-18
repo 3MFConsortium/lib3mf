@@ -26,9 +26,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelResource.cpp implements the Model Resource Class.
-A model resource is an in memory representation of the 3MF
-resource object.
+NMR_ModelAttachment.cpp implements the Model Attachment Class.
 
 --*/
 

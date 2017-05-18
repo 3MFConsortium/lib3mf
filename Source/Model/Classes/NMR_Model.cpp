@@ -38,9 +38,11 @@ A model is an in memory representation of the 3MF file.
 #include "Model/Classes/NMR_ModelConstants.h" 
 #include "Model/Classes/NMR_ModelTypes.h" 
 #include "Model/Classes/NMR_ModelAttachment.h" 
+#include "Model/Classes/NMR_ModelTextureAttachment.h" 
 #include "Model/Classes/NMR_ModelBuildItem.h" 
 #include "Model/Classes/NMR_ModelBaseMaterials.h" 
 #include "Model/Classes/NMR_ModelTexture2D.h" 
+#include "Model/Classes/NMR_ModelSliceResource.h"
 
 #include "Common/Mesh/NMR_Mesh.h" 
 #include "Common/MeshInformation/NMR_MeshInformation.h" 
@@ -48,6 +50,12 @@ A model is an in memory representation of the 3MF file.
 #include "Common/NMR_Exception.h" 
 #include <sstream>
 
+#include "Model/Reader/Slice1507/NMR_ModelReader_Slice1507_SliceRefModel.h"
+#include "Common/Platform/NMR_XmlReader.h"
+#include "Common/Platform/NMR_Platform.h"
+#include "Common/Platform/NMR_ImportStream_Memory.h"
+
+#include "Common/NMR_StringUtils.h" 
 namespace NMR {
 
 	CModel::CModel()
@@ -55,17 +63,42 @@ namespace NMR {
 		m_Unit = MODELUNIT_MILLIMETER;
 		m_sLanguage = XML_3MF_LANG_US;
 		m_nHandleCounter = 1;
+		m_sCurPath = L"";
+
+		setBuildUUID(std::make_shared<CUUID>());
 	}
 
 	CModel::~CModel()
 	{
 		m_BuildItems.clear();
 		m_ResourceMap.clear();
+		m_resourceHandler.clear();
 		m_Resources.clear();
 		m_MetaData.clear();
 		m_ObjectLookup.clear();
 		m_TextureLookup.clear();
 		m_BaseMaterialLookup.clear();
+	}
+
+
+	const std::wstring CModel::curPath()
+	{
+		return m_sCurPath;
+	}
+
+	void CModel::setCurPath(const nfWChar* sPath)
+	{
+		m_sCurPath = sPath;
+	}
+
+	const std::wstring CModel::rootPath()
+	{
+		return m_sRootPath;
+	}
+
+	void CModel::setRootPath(const nfWChar* sPath)
+	{
+		m_sRootPath = sPath;
 	}
 
 	// Merge all build items into one mesh
@@ -139,14 +172,42 @@ namespace NMR {
 	}
 
 	// General Resource Handling
-	PModelResource CModel::findResource(_In_ ModelResourceID nID)
+	PModelResource CModel::findResource(_In_ std::wstring path, ModelResourceID nID)
 	{
-		auto iIterator = m_ResourceMap.find(nID);
+		PPackageResourceID pID = m_resourceHandler.findRessourceID(path, nID);
+		if (pID.get())
+			return findResource(pID);
+		else
+			return nullptr;
+	}
+
+	PModelResource CModel::findResource(_In_ PackageResourceID nID)
+	{
+		PPackageResourceID pID = m_resourceHandler.findRessourceID(nID);
+		if (pID.get())
+			return findResource(pID);
+		else
+			return nullptr;
+	}
+
+	PModelResource CModel::findResource(_In_ PPackageResourceID pID)
+	{
+		PackageResourceID uID = pID->getUniqueID();
+
+		auto iIterator = m_ResourceMap.find(uID);
 		if (iIterator != m_ResourceMap.end()) {
 			return iIterator->second;
 		}
-
 		return nullptr;
+	}
+
+	PPackageResourceID CModel::findPackageResourceID(_In_ std::wstring path, ModelResourceID nID)
+	{
+		return m_resourceHandler.findRessourceID(path, nID);
+	}
+	PPackageResourceID CModel::findPackageResourceID(_In_ PackageResourceID nID)
+	{
+		return m_resourceHandler.findRessourceID(nID);
 	}
 
 	nfUint32 CModel::getResourceCount()
@@ -172,13 +233,13 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_INVALIDRESOURCECOUNT);
 
 		// Check if ID already exists
-		ModelResourceID ID = pResource->getResourceID();
-		auto iIterator = m_ResourceMap.find(ID);
+		PackageResourceID nID = pResource->getResourceID()->getUniqueID();
+		auto iIterator = m_ResourceMap.find(nID);
 		if (iIterator != m_ResourceMap.end())
 			throw CNMRException(NMR_ERROR_DUPLICATEMODELRESOURCE);
 
 		// Add ID to objects
-		m_ResourceMap.insert(std::make_pair(ID, pResource));
+		m_ResourceMap.insert(std::make_pair(nID, pResource));
 		m_Resources.push_back(pResource);
 
 		// Create correct lookup table
@@ -192,7 +253,6 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 		if (m_BuildItems.size() >= XML_3MF_MAXBUILDITEMCOUNT)
 			throw CNMRException(NMR_ERROR_INVALIDBUILDITEMCOUNT);
-
 		m_BuildItems.push_back(pBuildItem);
 	}
 
@@ -223,6 +283,34 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_BUILDITEMNOTFOUND);
 	}
 
+	PUUID CModel::buildUUID()
+	{
+		return m_buildUUID;
+	}
+
+	void CModel::setBuildUUID(PUUID pUUID)
+	{
+		registerUUID(pUUID);
+		unRegisterUUID(m_buildUUID);
+		m_buildUUID = pUUID;
+	}
+
+	void CModel::unRegisterUUID(PUUID pUUID)
+	{
+		usedUUIDs.erase(std::remove(usedUUIDs.begin(), usedUUIDs.end(), pUUID), usedUUIDs.end());
+	}
+
+	void CModel::registerUUID(PUUID pUUID)
+	{
+		if (pUUID.get()) {
+			for (auto iUUID : usedUUIDs) {
+				if (*iUUID.get() == *pUUID.get()) {
+					throw CNMRException(NMR_ERROR_UUID_NOT_UNIQUE);
+				}
+			}
+			usedUUIDs.push_back(pUUID);
+		}
+	}
 
 	// Metadata setter/getter
 	void CModel::addMetaData(_In_ std::wstring sName, _In_ std::wstring sValue)
@@ -232,7 +320,7 @@ namespace NMR {
 
 		PModelMetaData pMetaData = std::make_shared<CModelMetaData>(sName, sValue);
 		m_MetaData.push_back(pMetaData);
-		m_MetaDataMap.insert(std::make_pair (sName, pMetaData));
+		m_MetaDataMap.insert(std::make_pair(sName, pMetaData));
 	}
 
 	nfUint32 CModel::getMetaDataCount()
@@ -284,13 +372,14 @@ namespace NMR {
 			std::wstring sValue;
 			pSourceModel->getMetaData(nIndex, sName, sValue);
 			addMetaData(sName, sValue);
-
 		}
 	}
 
 	// Retrieve a unique Resource ID
+
 	ModelResourceID CModel::generateResourceID()
 	{
+		// TODO
 		auto iIterator = m_ResourceMap.rbegin();
 		if (iIterator != m_ResourceMap.rend())
 			return iIterator->first + 1;
@@ -298,8 +387,13 @@ namespace NMR {
 			return 1;
 	}
 
+	PPackageResourceID CModel::generatePackageResourceID(_In_ std::wstring path, ModelResourceID nID)	// per package
+	{
+		return m_resourceHandler.getNewRessourceID(path, nID);
+	}
+
 	// Convenience functions for objects
-	_Ret_maybenull_ CModelObject * CModel::findObject(_In_ ModelResourceID nResourceID)
+	_Ret_maybenull_ CModelObject * CModel::findObject(_In_ PackageResourceID nResourceID)
 	{
 		PModelResource pResource = findResource(nResourceID);
 		if (pResource != nullptr) {
@@ -325,6 +419,32 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_INVALIDINDEX);
 
 		return m_ObjectLookup[nIndex];
+	}
+
+	// Returns 0: if equal, 1 if A before B, -1 if A after B
+	nfInt32 CModel::compareObjectsByResourceID(CModelResource* pObjectResourceA, CModelResource* pObjectResourceB)
+	{
+		nfUint32 nCount = getObjectCount();
+		if ( (pObjectResourceA == nullptr) || (pObjectResourceB == nullptr) )
+			throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
+		nfInt32 indexA = -1;
+		nfInt32 indexB = -1;
+
+		for (nfUint32 i = 0; i < nCount; i++) {
+			if (m_ObjectLookup[i].get() == pObjectResourceA) {
+				indexA = i;
+			}
+			if (m_ObjectLookup[i].get() == pObjectResourceB) {
+				indexB = i;
+			}
+		}
+
+		if ( (indexA==-1) || (indexB == -1))
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+		if (indexA < indexB) return 1;
+		if (indexA > indexB) return -1;
+		return 0;
 	}
 
 	CModelObject * CModel::getObject(_In_ nfUint32 nIndex)
@@ -354,12 +474,16 @@ namespace NMR {
 		CModelTexture2DResource * pTexture2D = dynamic_cast<CModelTexture2DResource *> (pResource.get());
 		if (pTexture2D != nullptr)
 			m_TextureLookup.push_back(pResource);
+
+		CModelSliceStackResource *pSliceStack = dynamic_cast<CModelSliceStackResource *>(pResource.get());
+		if (pSliceStack != nullptr) 
+			m_SliceStackLookup.push_back(pResource);
 	}
 
 	// Clear all build items and Resources
 	void CModel::clearAll()
 	{
-		m_pGlobalThumbnail = nullptr;
+		m_pPackageThumbnailAttachment = nullptr;
 
 		m_ObjectLookup.clear();
 		m_BaseMaterialLookup.clear();
@@ -369,10 +493,10 @@ namespace NMR {
 		m_MetaDataMap.clear();
 		m_MetaData.clear();
 		m_TextureLookup.clear();
-		m_Thumbnails.clear();
+		m_SliceStackLookup.clear();
 	}
 
-	_Ret_maybenull_ CModelBaseMaterialResource * CModel::findBaseMaterial(_In_ ModelResourceID nResourceID)
+	_Ret_maybenull_ CModelBaseMaterialResource * CModel::findBaseMaterial(_In_ PackageResourceID nResourceID)
 	{
 		PModelResource pResource = findResource(nResourceID);
 		if (pResource != nullptr) {
@@ -433,7 +557,7 @@ namespace NMR {
 	} 
 
 
-	_Ret_maybenull_ CModelTexture2DResource * CModel::findTexture2D(_In_ ModelResourceID nResourceID)
+	_Ret_maybenull_ CModelTexture2DResource * CModel::findTexture2D(_In_ PackageResourceID nResourceID)
 	{
 		PModelResource pResource = findResource(nResourceID);
 		if (pResource != nullptr) {
@@ -493,7 +617,7 @@ namespace NMR {
 			addResource(pNewTextureResource);
 		}
 	}
-
+	
 	nfUint32 CModel::createHandle()
 	{
 		if (m_nHandleCounter >= NMR_MAXHANDLE)
@@ -504,97 +628,32 @@ namespace NMR {
 
 		return nHandle;
 	}
-
-	void CModel::addTextureStream(_In_ std::wstring sPath, _In_ PImportStream pStream)
+	
+	PModelAttachment CModel::addPackageThumbnail(_In_ std::wstring sPath, _In_ PImportStream pStream)
 	{
-		if (pStream.get() == nullptr)
-			throw CNMRException(NMR_ERROR_INVALIDPARAM);
-
-		std::wstring sLowerPath = sPath;
-		//std::transform(sLowerPath.begin(), sLowerPath.end(), sLowerPath.begin(), towupper);
-
-		auto iIterator = m_TextureStreamMap.find(sLowerPath);
-		if (iIterator != m_TextureStreamMap.end())
-			throw CNMRException(NMR_ERROR_DUPLICATETEXTUREPATH);
-
-		m_TextureStreams.push_back(std::make_pair(sPath, pStream));
-		m_TextureStreamMap.insert(std::make_pair(sLowerPath, pStream));
-	}
-
-	void CModel::removeTextureStream(_In_ std::wstring sPath)
-	{
-		std::wstring sLowerPath = sPath;
-		//std::transform(sLowerPath.begin(), sLowerPath.end(), sLowerPath.begin(), towupper);
-		
-		auto iIterator = m_TextureStreamMap.find(sLowerPath);
-		if (iIterator != m_TextureStreamMap.end()) {
-
-			// Remove Stream from list...
-			auto iListIterator = m_TextureStreams.begin();
-			while (iListIterator != m_TextureStreams.end()) {
-				if (iListIterator->second.get() == iIterator->second.get()) {
-					m_TextureStreams.erase(iListIterator);
-					break;
-				}
-				iListIterator++;
-			}
-
-			m_TextureStreamMap.erase(iIterator);
+		if (m_pPackageThumbnailAttachment.get() == nullptr)
+		{
+			m_pPackageThumbnailAttachment = std::make_shared<CModelAttachment>(this,
+				sPath,
+				PACKAGE_THUMBNAIL_RELATIONSHIP_TYPE, pStream);
 		}
+		return m_pPackageThumbnailAttachment;
 	}
 
-
-	nfUint32 CModel::getTextureStreamCount()
+	PModelAttachment CModel::addPackageThumbnail()
 	{
-		return  (nfUint32)m_TextureStreams.size();
+		return addPackageThumbnail(PACKAGE_THUMBNAIL_URI_BASE + std::wstring(L"/") + L"thumbnail.png", std::make_shared<CImportStream_Memory>());
 	}
 
-	PImportStream CModel::getTextureStream(_In_ nfUint32 nIndex)
+	void CModel::removePackageThumbnail()
 	{
-		nfUint32 nCount = getTextureStreamCount();
-		if (nIndex >= nCount)
-			throw CNMRException(NMR_ERROR_INVALIDINDEX);
-
-		return m_TextureStreams[nIndex].second;
+		m_pPackageThumbnailAttachment.reset();
 	}
 
-	std::wstring CModel::getTextureStreamPath(_In_ nfUint32 nIndex)
+	PModelAttachment CModel::getPackageThumbnail()
 	{
-		nfUint32 nCount = getTextureStreamCount();
-		if (nIndex >= nCount)
-			throw CNMRException(NMR_ERROR_INVALIDINDEX);
-
-		return m_TextureStreams[nIndex].first;
+		return m_pPackageThumbnailAttachment;
 	}
-
-	PImportStream CModel::findTextureStream(_In_ std::wstring sPath)
-	{
-		std::wstring sLowerPath = sPath;
-		//std::transform(sLowerPath.begin(), sLowerPath.end(), sLowerPath.begin(), towupper);
-
-		auto iIterator = m_TextureStreamMap.find(sLowerPath);
-		if (iIterator != m_TextureStreamMap.end())
-			return iIterator->second;
-		return nullptr;
-	}
-
-	void CModel::mergeTextureStreams(_In_ CModel * pSourceModel)
-	{
-		if (pSourceModel == nullptr)
-			throw CNMRException(NMR_ERROR_INVALIDPARAM);
-
-		nfUint32 nCount = pSourceModel->getTextureStreamCount();
-		nfUint32 nIndex;
-
-		for (nIndex = 0; nIndex < nCount; nIndex++) {
-			std::wstring sPath = pSourceModel->getTextureStreamPath(nIndex);
-			PImportStream pTextureStream = pSourceModel->getTextureStream(nIndex);
-			PImportStream pCopiedStream = pTextureStream->copyToMemory();
-			addTextureStream(sPath, pCopiedStream);
-		}
-
-	}
-
 
 	PModelAttachment CModel::addAttachment(_In_ const std::wstring sPath, _In_ const std::wstring sRelationShipType, PImportStream pCopiedStream)
 	{
@@ -613,7 +672,6 @@ namespace NMR {
 		m_AttachmentURIMap.insert(std::make_pair(sLowerPath, pAttachment));
 
 		return pAttachment;
-
 	}
 
 	PModelAttachment CModel::getModelAttachment(_In_ nfUint32 nIndex)
@@ -623,12 +681,11 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_INVALIDINDEX);
 
 		return m_Attachments[nIndex];
-
 	}
 
 	nfUint32 CModel::getAttachmentCount()
 	{
-		return (nfUint32) m_Attachments.size();
+		return (nfUint32)m_Attachments.size();
 	}
 
 	std::wstring CModel::getModelAttachmentPath(_In_ nfUint32 nIndex)
@@ -640,7 +697,6 @@ namespace NMR {
 		PModelAttachment pAttachment = m_Attachments[nIndex];
 
 		return pAttachment->getPathURI();
-
 	}
 
 	PModelAttachment CModel::findModelAttachment(_In_ std::wstring sPath)
@@ -668,8 +724,117 @@ namespace NMR {
 
 			m_AttachmentURIMap.erase(iIterator);
 		}
+	}
+
+
+	void CModel::mergeModelAttachments(_In_ CModel * pSourceModel)
+	{
+		if (pSourceModel == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		nfUint32 nCount = pSourceModel->getAttachmentCount();
+		nfUint32 nIndex;
+
+		for (nIndex = 0; nIndex < nCount; nIndex++)
+		{
+			PModelAttachment pModelAttachment = pSourceModel->getModelAttachment(nIndex);
+			if (pModelAttachment == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+			// TODO: probably need to copy stream
+			addAttachment(pModelAttachment->getPathURI(), pModelAttachment->getRelationShipType(), pModelAttachment->getStream());
+		}
+	}
+
+	template <typename T>
+	void moveItemToBack(std::vector<T>& v, size_t itemIndex)
+	{
+		auto it = v.begin() + itemIndex;
+		std::rotate(it, it + 1, v.end());
+	}
+
+	PModelAttachment CModel::addProductionAttachment(_In_ const std::wstring sPath, _In_ const std::wstring sRelationShipType, PImportStream pCopiedStream, nfBool bForceUnique)
+	{
+		if (pCopiedStream.get() == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		std::wstring sLowerPath = sPath;
+		//std::transform(sLowerPath.begin(), sLowerPath.end(), sLowerPath.begin(), towupper);
+		PModelAttachment pAttachment;
+		auto iIterator = m_ProductionAttachmentURIMap.find(sLowerPath);
+		if (iIterator != m_ProductionAttachmentURIMap.end()) {
+			if (bForceUnique)
+				throw CNMRException(NMR_ERROR_DUPLICATEATTACHMENTPATH);
+			else {
+				pAttachment = iIterator->second;
+				auto it = std::find(m_ProductionAttachments.begin(), m_ProductionAttachments.end(), iIterator->second);
+				moveItemToBack(m_ProductionAttachments, it - m_ProductionAttachments.begin());
+			}
+		}
+		else 
+		{
+			pAttachment = std::make_shared<CModelAttachment>(this, sPath, sRelationShipType, pCopiedStream);
+			m_ProductionAttachments.push_back(pAttachment);
+			m_ProductionAttachmentURIMap.insert(std::make_pair(sLowerPath, pAttachment));
+		}
+
+		return pAttachment;
+	}
+
+	PModelAttachment CModel::getProductionModelAttachment(_In_ nfUint32 nIndex)
+	{
+		nfUint32 nCount = getProductionAttachmentCount();
+		if (nIndex >= nCount)
+			throw CNMRException(NMR_ERROR_INVALIDINDEX);
+
+		return m_ProductionAttachments[nIndex];
 
 	}
+
+	nfUint32 CModel::getProductionAttachmentCount()
+	{
+		return (nfUint32)m_ProductionAttachments.size();
+	}
+
+	std::wstring CModel::getProductionModelAttachmentPath(_In_ nfUint32 nIndex)
+	{
+		nfUint32 nCount = getProductionAttachmentCount();
+		if (nIndex >= nCount)
+			throw CNMRException(NMR_ERROR_INVALIDINDEX);
+
+		PModelAttachment pProductionAttachment = m_ProductionAttachments[nIndex];
+
+		return pProductionAttachment->getPathURI();
+
+	}
+
+	PModelAttachment CModel::findProductionModelAttachment(_In_ std::wstring sPath)
+	{
+		auto iIterator = m_ProductionAttachmentURIMap.find(sPath);
+		if (iIterator != m_ProductionAttachmentURIMap.end()) {
+			return iIterator->second;
+		}
+
+		return nullptr;
+	}
+
+	void CModel::removeProductionAttachment(_In_ const std::wstring sPath)
+	{
+		auto iIterator = m_ProductionAttachmentURIMap.find(sPath);
+		if (iIterator != m_ProductionAttachmentURIMap.end()) {
+			auto iVectorIterator = m_ProductionAttachments.begin();
+			while (iVectorIterator != m_ProductionAttachments.end()) {
+				if (iVectorIterator->get() == iIterator->second.get()) {
+					m_ProductionAttachments.erase(iVectorIterator);
+					break;
+				}
+				iVectorIterator++;
+			}
+
+			m_ProductionAttachmentURIMap.erase(iIterator);
+		}
+	}
+
 
 	std::map<std::wstring, std::wstring> CModel::getCustomContentTypes()
 	{
@@ -685,7 +850,6 @@ namespace NMR {
 	{
 		m_CustomContentTypes.erase(sExtension);
 	}
-
 
 	nfBool CModel::contentTypeIsDefault(_In_ const std::wstring sExtension)
 	{
@@ -705,4 +869,96 @@ namespace NMR {
 		return false;
 	}
 
+	// returns whether a specific extension has to be marked as required
+	nfBool  CModel::RequireExtension(_In_ const std::wstring sExtension) {
+		// loop over all ressources to check for slices, beamlattices, production-references,
+		// that make it necessary to mark these extensions as required
+		if (sExtension == XML_3MF_NAMESPACE_BEAMLATTICESPEC) {
+			nfBool bRequireBeamLattice = false;
+			for (nfUint32 i = 0; i < m_ObjectLookup.size(); i++) {
+				CModelMeshObject* pMeshObject = dynamic_cast<CModelMeshObject*>(m_ObjectLookup[i].get());
+				if (pMeshObject == nullptr || pMeshObject->getMesh() == nullptr)
+					continue;
+				if (pMeshObject->getMesh()->getBeamCount() > 0) {
+					bRequireBeamLattice = true;
+					break;
+				}
+			}
+			return bRequireBeamLattice;
+		}
+
+		if (sExtension == XML_3MF_NAMESPACE_SLICESPEC) {
+			nfBool bRequireSliceExtension = false;
+			for (nfUint32 i = 0; i < m_ObjectLookup.size(); i++) {
+				CModelMeshObject* pMeshObject = dynamic_cast<CModelMeshObject*>(m_ObjectLookup[i].get());
+				if (pMeshObject == nullptr || pMeshObject->getMesh() == nullptr)
+					continue;
+				if (!pMeshObject->getSliceStackId().get())
+					continue;
+				if (pMeshObject->slicesMeshResolution() == MODELSLICESMESHRESOLUTION_LOW) {
+					bRequireSliceExtension = true;
+					break;
+				}
+			}
+			return bRequireSliceExtension;
+		}
+
+		if (sExtension == XML_3MF_NAMESPACE_PRODUCTIONSPEC) {
+			// We do not write out models that require the production specification
+			// i.e. we do not make use of the "path"-redirection.
+			// Thus, never mark the production extension is required.
+			return false;
+		}
+
+		return false;
+	}
+
+	nfUint32 CModel::getSliceStackCount() {
+		return (nfUint32)m_SliceStackLookup.size();
+	}
+
+	PModelResource CModel::getSliceStackResource(_In_ nfUint32 nIndex) {
+		nfUint32 nCount = getSliceStackCount();
+		if (nIndex >= nCount)
+			throw CNMRException(NMR_ERROR_INVALIDINDEX);
+
+		return m_SliceStackLookup[nIndex];
+	}
+
+	CSliceStack * CModel::getSliceStack(_In_ nfUint32 nIndex)
+	{
+		PModelResource pResouce = getSliceStackResource(nIndex);
+		CModelSliceStackResource * pSliceStackObject = dynamic_cast<CModelSliceStackResource *> (pResouce.get());
+		if (pSliceStackObject == nullptr)
+			throw CNMRException(NMR_ERROR_RESOURCETYPEMISMATCH);
+
+		CSliceStack *pSliceStack = pSliceStackObject->getSliceStack().get();
+		return pSliceStack;
+	}
+
+
+	void CModel::removeReferencedSliceStackResources()
+	{
+		// A slicestack resource that is referenced via the sliceref-attribute must not be referenced via the
+		// slicestack-id of a mesh-object.
+		// All referenced slicestack resources have already been merged into the slicestacks that reference them.
+		// Therefore, remove all referencd slicestack resources.
+		std::vector<PModelResource> vctToRemove;
+		for (auto pSliceStackResource : m_SliceStackLookup) {
+			CModelSliceStackResource * pSliceStackObject = dynamic_cast<CModelSliceStackResource *> (pSliceStackResource.get());
+			if (pSliceStackObject->NumSliceRefsToMe() > 0) {
+				vctToRemove.push_back(pSliceStackResource);
+			}
+			else {
+				pSliceStackObject->sliceRefPath();
+			}
+		}
+		for (auto resource : vctToRemove)
+		{
+			m_Resources.erase(std::find(m_Resources.begin(), m_Resources.end(), resource));
+			m_SliceStackLookup.erase(std::find(m_SliceStackLookup.begin(), m_SliceStackLookup.end(), resource));
+			m_ResourceMap.erase(resource->getResourceID()->getUniqueID());
+		}
+
+	}
 }

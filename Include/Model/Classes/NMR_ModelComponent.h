@@ -45,7 +45,9 @@ namespace NMR {
 	private:
 		CModelObject * m_pObject;
 		NMATRIX3 m_mTransform;
-		
+
+		PUUID m_UUID;
+		std::wstring m_sPath;
 	public:
 		CModelComponent() = delete;
 		CModelComponent(_In_ CModelObject * pObject);
@@ -57,9 +59,13 @@ namespace NMR {
 		NMATRIX3 getTransform ();
 		void setTransform(_In_ const NMATRIX3 mTransform);
 		
-		ModelResourceID getObjectID();
+		PackageResourceID getObjectID();
 		nfBool hasTransform();
 		std::wstring getTransformString();
+
+		// Production extension UUID
+		PUUID uuid();
+		void setUUID(PUUID uuid);
 
 		void mergeToMesh(_In_ CMesh * pMesh, _In_ const NMATRIX3 mMatrix);
 	};

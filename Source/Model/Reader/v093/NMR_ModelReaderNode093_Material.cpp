@@ -37,7 +37,7 @@ A material reader model node is a parser for the material node of an XML Model S
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_Exception_Windows.h"
 #include "Common/NMR_StringUtils.h"
-#include <math.h>
+#include <cmath>
 #include <climits>
 
 namespace NMR {

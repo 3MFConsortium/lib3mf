@@ -52,6 +52,8 @@ namespace NMR {
 		m_bHasID = false;
 		m_sPartNumber = L"";
 
+		m_hasPath = false;
+
 		m_mTransform = fnMATRIX3_identity();
 	}
 
@@ -69,16 +71,47 @@ namespace NMR {
 		if (!m_bHasID)
 			throw CNMRException(NMR_ERROR_MISSINGBUILDITEMOBJECTID);
 
-		CModelObject * pObject = m_pModel->findObject(m_ObjectID);
+		CModelObject * pObject;
+		PPackageResourceID pID;
+		if (m_hasPath) {
+			if (m_pModel->curPath() != m_pModel->rootPath() )
+				throw CNMRException(NMR_ERROR_REFERENCESTOODEEP);
+			pID = m_pModel->findPackageResourceID(m_sPath, m_ObjectID);
+		}
+		else
+			pID = m_pModel->findPackageResourceID(m_pModel->curPath(), m_ObjectID);
+		if (!pID)
+			throw CNMRException(NMR_ERROR_COULDNOTFINDBUILDITEMOBJECT);
+
+		pObject = m_pModel->findObject(pID->getUniqueID());
 		if (!pObject)
 			throw CNMRException(NMR_ERROR_COULDNOTFINDBUILDITEMOBJECT);
 
+		if (MODELOBJECTTYPE_OTHER == pObject->getObjectType()) {
+			m_pWarnings->addException(CNMRException(NMR_ERROR_BUILDITEMOBJECT_MUSTNOTBE_OTHER), mrwInvalidMandatoryValue);
+		}
+
 		// Create Build Item
 		PModelBuildItem pBuildItem = std::make_shared<CModelBuildItem>(pObject, m_mTransform, m_pModel->createHandle());
+		if (!pBuildItem->isValidForSlices()) {
+			// throw CNMRException(NMR_ERROR_SLICETRANSFORMATIONPLANAR);
+			m_pWarnings->addException(CNMRException(NMR_ERROR_SLICETRANSFORMATIONPLANAR), mrwInvalidMandatoryValue);
+		}
+		
 		m_pModel->addBuildItem(pBuildItem);
 
 		// Set Item Reference
 		pBuildItem->setPartNumber(m_sPartNumber);
+
+		// Set Production references
+		if (!m_UUID.get()) {
+			if (pXMLReader->NamespaceRegistered(XML_3MF_NAMESPACE_PRODUCTIONSPEC)) {
+				m_pWarnings->addException(CNMRException(NMR_ERROR_MISSINGUUID), mrwMissingMandatoryValue);
+			}
+			m_UUID = std::make_shared<CUUID>();
+		}
+		pBuildItem->setUUID(m_UUID);
+		pBuildItem->setPath(m_sPath);
 	}
 
 	void CModelReaderNode100_BuildItem::OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue)
@@ -93,13 +126,34 @@ namespace NMR {
 			m_ObjectID = fnWStringToUint32(pAttributeValue);
 			m_bHasID = true;
 		}
-
-		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_ITEM_TRANSFORM) == 0) {
+		else if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_ITEM_TRANSFORM) == 0) {
 			m_mTransform = fnMATRIX3_fromWideString(pAttributeValue);
 		}
-
-		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_ITEM_PARTNUMBER) == 0) {
+		else if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_ITEM_PARTNUMBER) == 0) {
 			m_sPartNumber = std::wstring(pAttributeValue);
+		}
+		else
+			m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE), mrwInvalidOptionalValue);
+	}
+
+	void CModelReaderNode100_BuildItem::OnNSAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue, _In_z_ const nfWChar * pNameSpace)
+	{
+		__NMRASSERT(pAttributeName);
+		__NMRASSERT(pAttributeValue);
+		__NMRASSERT(pNameSpace);
+
+		if (wcscmp(pNameSpace, XML_3MF_NAMESPACE_PRODUCTIONSPEC) == 0) {
+			if (wcscmp(pAttributeName, XML_3MF_PRODUCTION_UUID) == 0) {
+				if (m_UUID.get())
+					throw CNMRException(NMR_ERROR_DUPLICATEUUID);
+				m_UUID = std::make_shared<CUUID>(pAttributeValue);
+			}
+			if (wcscmp(pAttributeName, XML_3MF_PRODUCTION_PATH) == 0) {
+				if (m_hasPath)
+					throw CNMRException(NMR_ERROR_DUPLICATEPATH);
+				m_sPath = std::wstring(pAttributeValue);
+				m_hasPath = true;
+			}
 		}
 	}
 

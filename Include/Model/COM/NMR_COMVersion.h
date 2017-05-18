@@ -38,9 +38,12 @@ NMR_COMVersion.h defines the current implementation version.
 #define NMR_APIVERSION_MINOR 1
 
 // Interface version for core-spec API
-#define NMR_APIVERSION_INTERFACE 61
+#define NMR_APIVERSION_INTERFACE 67
 
 // Interface version for extension API
 #define NMR_APIVERSION_INTERFACE_MATERIALSPEC 1
+#define NMR_APIVERSION_INTERFACE_PRODUCTIONSEPC 1
+#define NMR_APIVERSION_INTERFACE_BEAMLATTICESPEC 1
+#define NMR_APIVERSION_INTERFACE_SLICESPEC 1
 
 #endif // __NMR_MODELCOMVERSION

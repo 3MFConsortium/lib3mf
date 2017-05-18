@@ -58,10 +58,12 @@ namespace NMR {
 		LIB3MFMETHOD(WriteToFile) (_In_z_ LPCWSTR pwszFilename);
 		LIB3MFMETHOD(WriteToFileUTF8) (_In_z_ LPCSTR pwszFilename);
 
-#ifndef __GNUC__
+#ifdef NMR_COM_NATIVE
 		LIB3MFMETHOD(WriteToStream) (_In_ IStream * pStream);
-#endif
+#endif // NMR_COM_NATIVE
 
+		LIB3MFMETHOD(GetStreamSize) (_Out_ ULONG64 * pcbStreamSize);
+		LIB3MFMETHOD(WriteToBuffer) (_Out_ BYTE * pBuffer, _In_ ULONG64 cbBufferSize);
 		LIB3MFMETHOD(WriteToCallback) (_In_ void * pWriteCallback, _In_opt_ void * pSeekCallback, _In_opt_ void * pUserData);
 
 		CCOMModelWriter();

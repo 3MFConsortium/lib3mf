@@ -1,7 +1,8 @@
 /*++
 
+Copyright (C) 2017 Autodesk Inc.
 Copyright (C) 2015 Microsoft Corporation (Original Author)
-Copyright (C) 2015 netfabb GmbH
+Copyright (C) 2015 netfabb GmbH (Original Author)
 
 All rights reserved.
 
@@ -74,7 +75,7 @@ namespace NMR {
 
 			CCOMObject<CCOMModelFactory> * pNewModelFactory = new CCOMObject<CCOMModelFactory>;
 			LIB3MFRESULT result = pNewModelFactory->QueryExtension(pwszExtensionUrl, pbIsSupported, pExtensionInterfaceVersion);
-#ifndef __GNUC__
+#ifdef NMR_COM_NATIVE
 			pNewModelFactory->Release();
 #else
 			delete pNewModelFactory;
@@ -89,7 +90,7 @@ namespace NMR {
 			*pbIsSupported = false;
 			CCOMObject<CCOMModelFactory> * pNewModelFactory = new CCOMObject<CCOMModelFactory>;
 			LIB3MFRESULT result = pNewModelFactory->QueryExtensionUTF8(pszExtensionUrl, pbIsSupported, pExtensionInterfaceVersion);
-#ifndef __GNUC__
+#ifdef NMR_COM_NATIVE
 			pNewModelFactory->Release();
 #else
 			delete pNewModelFactory;
@@ -98,21 +99,22 @@ namespace NMR {
 			return result;
 		}
 
-		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_createmodel(_Outptr_ PLib3MFModel ** ppModel, _In_ BOOL bInitialize)
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_createmodel(_Outptr_ PLib3MFModel ** ppModel)
 		{
 			if (ppModel == nullptr)
 				return LIB3MF_POINTER;
 
 			try {
-#ifndef __GNUC__
-				if (bInitialize) {
-					HRESULT hResult = CoInitialize(NULL);
-					if (hResult != LIB3MF_OK) {
-						if (hResult != S_FALSE)
-							throw CNMRException_Windows(NMR_ERROR_COULDNOTINITITALIZECOM, hResult);
-						else
-							throw CNMRException(NMR_ERROR_COULDNOTINITITALIZECOM);
+#ifdef NMR_COM_NATIVE
+				HRESULT hResult = CoInitialize(NULL);
+				if (hResult != LIB3MF_OK) {
+					if (hResult == S_FALSE) {
+						// The COM library is already initialized on this thread. This is no error.
+						CoUninitialize();
 					}
+					else
+						throw CNMRException_Windows(NMR_ERROR_COULDNOTINITITALIZECOM, hResult);
+							
 				}
 #endif
 
@@ -131,7 +133,7 @@ namespace NMR {
 		{
 			if (pInstance) {
 				ILib3MFBase * pBaseInstance = (ILib3MFBase *)pInstance;
-#ifndef __GNUC__
+#ifdef NMR_COM_NATIVE
 				pBaseInstance->Release();
 #else
 				delete pBaseInstance;
@@ -173,6 +175,22 @@ namespace NMR {
 				return LIB3MF_POINTER;
 
 			return ((ILib3MFModelWriter *)pWriter)->WriteToFileUTF8(pszFilename);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_writer_getstreamsize(_In_ PLib3MFModelWriter * pWriter, _Out_ ULONG64 * pcbStreamSize)
+		{
+			if (!pWriter)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelWriter *)pWriter)->GetStreamSize(pcbStreamSize);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_writer_writetobuffer(_In_ PLib3MFModelWriter * pWriter, _Out_ BYTE * pBuffer, _In_ ULONG64 cbBufferSize)
+		{
+			if (!pWriter)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelWriter *)pWriter)->WriteToBuffer(pBuffer, cbBufferSize);
 		}
 
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_reader_readfromfile(_In_ PLib3MFModelReader * pReader, _In_z_ LPCWSTR pwszFilename)
@@ -222,6 +240,39 @@ namespace NMR {
 				return LIB3MF_POINTER;
 
 			return ((ILib3MFModelReader *)pReader)->RemoveRelationToReadUTF8(pszRelationshipType);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_reader_setstrictmodeactive(_In_ PLib3MFModelReader * pReader, _In_ BOOL bStrictModeActive)
+		{
+			if (!pReader)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelReader *)pReader)->SetStrictModeActive(bStrictModeActive);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_reader_getstrictmodeactive(_In_ PLib3MFModelReader * pReader, _Out_ BOOL* bStrictModeActive)
+		{
+			if ( (!pReader) || (!bStrictModeActive) )
+				return LIB3MF_POINTER;
+			
+			return ((ILib3MFModelReader *)pReader)->GetStrictModeActive(bStrictModeActive);
+		}
+
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_reader_readfrombuffer(_In_ PLib3MFModelReader * pReader, _In_ BYTE * pBuffer, _In_ ULONG64 cbBufferSize)
+		{
+			if (!pReader)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelReader *)pReader)->ReadFromBuffer(pBuffer, cbBufferSize);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_reader_readfromcallback(_In_ PLib3MFModelReader * pReader, _In_ nfUint64 nStreamSize, _In_ void * pReadCallback, _In_opt_ void * pSeekCallback, _In_opt_ void * pUserData)
+		{
+			if (!pReader)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelReader *)pReader)->ReadFromCallback(pReadCallback, nStreamSize, pSeekCallback, pUserData);
 		}
 
 
@@ -280,42 +331,6 @@ namespace NMR {
 
 			return ((ILib3MFModelResourceIterator *)pIterator)->Clone((ILib3MFModelResourceIterator **)ppIterator);
 		}
-
-		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_thumbnailiterator_movenext(_In_ PLib3MFModelThumbnailIterator * pIterator, _Out_ BOOL * pbHasNext)
-		{
-			if (!pIterator)
-				return LIB3MF_POINTER;
-
-			return ((ILib3MFModelThumbnailIterator *)pIterator)->MoveNext(pbHasNext);
-		}
-
-
-		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_thumbnailiterator_moveprevious(_In_ PLib3MFModelThumbnailIterator * pIterator, _Out_ BOOL * pbHasPrevious)
-		{
-			if (!pIterator)
-				return LIB3MF_POINTER;
-
-			return ((ILib3MFModelThumbnailIterator *)pIterator)->MovePrevious(pbHasPrevious);
-		}
-
-
-		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_thumbnailiterator_getcurrent(_In_ PLib3MFModelThumbnailIterator * pIterator, _Outptr_ PLib3MFModelThumbnail ** ppThumbnailInstance)
-		{
-			if (!pIterator)
-				return LIB3MF_POINTER;
-
-			return ((ILib3MFModelThumbnailIterator *)pIterator)->GetCurrent((ILib3MFModelThumbnail **)ppThumbnailInstance);
-		}
-
-
-		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_thumbnailiterator_clone(_In_ PLib3MFModelThumbnailIterator * pIterator, _Outptr_ PLib3MFModelThumbnailIterator ** ppIterator)
-		{
-			if (!pIterator)
-				return LIB3MF_POINTER;
-
-			return ((ILib3MFModelThumbnailIterator *)pIterator)->Clone((ILib3MFModelThumbnailIterator **)ppIterator);
-		}
-
 
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_propertyhandler_removeproperty(_In_ PLib3MFPropertyHandler * pPropertyHandler, _In_ DWORD nIndex)
 		{
@@ -721,8 +736,6 @@ namespace NMR {
 			return ((ILib3MFModelObjectResource *)pObject)->CreateDefaultPropertyHandler((ILib3MFDefaultPropertyHandler**)ppPropertyHandler);
 		}
 
-
-
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_object_createdefaultmultipropertyhandler(_In_ PLib3MFModelObjectResource * pObject, _In_ DWORD nChannel, _Out_ PLib3MFDefaultPropertyHandler ** ppPropertyHandler)
 		{
 			if (!pObject)
@@ -731,6 +744,37 @@ namespace NMR {
 			return ((ILib3MFModelObjectResource *)pObject)->CreateDefaultMultiPropertyHandler(nChannel, (ILib3MFDefaultPropertyHandler**)ppPropertyHandler);
 		}
 
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_object_getthumbnailpathutf8(_In_ PLib3MFModelObjectResource * pObject, _Out_opt_ LPSTR pszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars)
+		{
+			if (!pObject)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelObjectResource *)pObject)->GetThumbnailPathUTF8(pszBuffer, cbBufferSize, pcbNeededChars);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_object_setthumbnailpathutf8(_In_ PLib3MFModelObjectResource * pObject, _In_z_ LPCSTR pszPath)
+		{
+			if (!pObject)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelObjectResource *)pObject)->SetThumbnailPathUTF8(pszPath);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_object_getuuidutf8(_In_ PLib3MFModelObjectResource * pObject, _Out_ BOOL *pbHasUUID, _Out_ LPSTR pszBuffer)
+		{
+			if (!pObject)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelObjectResource *)pObject)->GetUUIDUTF8(pbHasUUID, pszBuffer);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_object_setuuidutf8(_In_ PLib3MFModelObjectResource * pObject, _In_z_ LPCSTR pszUUID)
+		{
+			if (!pObject || !pszUUID)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelObjectResource *)pObject)->SetUUIDUTF8(pszUUID);
+		}
 
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_basematerial_getcount(_In_ PLib3MFModelBaseMaterial * pBaseMaterial, _Out_ DWORD * pcbCount)
 		{
@@ -976,6 +1020,21 @@ namespace NMR {
 		}
 
 
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_texture2d_getattachment(_In_ PLib3MFModelTexture2D * pTexture2D, _Out_ PLib3MFModelAttachment ** ppTextureAttachment)
+		{
+			if (!pTexture2D)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelTexture2D *)pTexture2D)->GetAttachment((ILib3MFModelAttachment**)ppTextureAttachment);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_texture2d_setattachment(_In_ PLib3MFModelTexture2D * pTexture2D, _In_ PLib3MFModelAttachment * pTextureAttachment)
+		{
+			if (!pTexture2D)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelTexture2D *)pTexture2D)->SetAttachment((ILib3MFModelAttachment*)pTextureAttachment);
+		}
 
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_texture2d_getpath(_In_ PLib3MFModelTexture2D * pTexture2D, _Out_opt_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars)
 		{
@@ -1118,9 +1177,6 @@ namespace NMR {
 			return ((ILib3MFModelTexture2D *)pTexture2D)->ReadFromBuffer(pBuffer, cbBufferSize);
 		}
 
-
-
-
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_meshobject_getvertexcount(_In_ PLib3MFModelMeshObject * pMeshObject, _Out_ DWORD * pnVertexCount)
 		{
 			if (!pMeshObject)
@@ -1135,6 +1191,94 @@ namespace NMR {
 				return LIB3MF_POINTER;
 
 			return ((ILib3MFModelMeshObject *)pMeshObject)->GetTriangleCount(pnTriangleCount);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_meshobject_getbeamlattice_minlength(_In_ PLib3MFModelMeshObject * pMeshObject, _In_ DOUBLE* pdMinLength)
+		{
+			if (!pMeshObject)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelMeshObject *)pMeshObject)->GetBeamLatticeMinLength(pdMinLength);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_meshobject_setbeamlattice_minlength(_In_ PLib3MFModelMeshObject * pMeshObject, _In_ DOUBLE dMinLength)
+		{
+			if (!pMeshObject)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelMeshObject *)pMeshObject)->SetBeamLatticeMinLength(dMinLength);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_meshobject_getbeamlattice_radius(_In_ PLib3MFModelMeshObject * pMeshObject, _In_ DOUBLE* pdRadius)
+		{
+			if (!pMeshObject)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelMeshObject *)pMeshObject)->GetBeamLatticeRadius(pdRadius);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_meshobject_setbeamlattice_radius(_In_ PLib3MFModelMeshObject * pMeshObject, _In_ DOUBLE dRadius)
+		{
+			if (!pMeshObject)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelMeshObject *)pMeshObject)->SetBeamLatticeRadius(dRadius);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_meshobject_getbeamlattice_capmode(_In_ PLib3MFModelMeshObject * pMeshObject, _Out_ eModelBeamLatticeCapMode *peCapMode)
+		{
+			if (!pMeshObject)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelMeshObject *)pMeshObject)->GetBeamLatticeCapMode(peCapMode);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_meshobject_setbeamlattice_capmode(_In_ PLib3MFModelMeshObject * pMeshObject, _In_ eModelBeamLatticeCapMode eCapMode)
+		{
+			if (!pMeshObject)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelMeshObject *)pMeshObject)->SetBeamLatticeCapMode(eCapMode);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_meshobject_getbeamlattice_clipping(_In_ PLib3MFModelMeshObject * pMeshObject, _Out_ eModelBeamLatticeClipMode * peClipMode, _Out_ DWORD *pnResourceID)
+		{
+			if (!pMeshObject)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelMeshObject *)pMeshObject)->GetBeamLatticeClipping(peClipMode, pnResourceID);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_meshobject_setbeamlattice_clipping(_In_ PLib3MFModelMeshObject * pMeshObject, _In_ eModelBeamLatticeClipMode eClipMode, _In_ DWORD nResourceID)
+		{
+			if (!pMeshObject)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelMeshObject *)pMeshObject)->SetBeamLatticeClipping(eClipMode, nResourceID);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_meshobject_getbeamlattice_representation(_In_ PLib3MFModelMeshObject * pMeshObject, _Out_ BOOL *pbHasRepresentation, _Out_ DWORD *pnResourceID)
+		{
+			if (!pMeshObject)
+				return LIB3MF_POINTER;
+			
+			return ((ILib3MFModelMeshObject *)pMeshObject)->GetBeamLatticeRepresentation(pbHasRepresentation, pnResourceID);
+		}
+		
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_meshobject_setbeamlattice_representation(_In_ PLib3MFModelMeshObject * pMeshObject, _In_ DWORD nResourceID)
+		{
+			if (!pMeshObject)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelMeshObject *)pMeshObject)->SetBeamLatticeRepresentation(nResourceID);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_meshobject_getbeamcount(_In_ PLib3MFModelMeshObject * pMeshObject, _Out_ DWORD * pnBeamCount)
+		{
+			if (!pMeshObject)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelMeshObject *)pMeshObject)->GetBeamCount(pnBeamCount);
 		}
 
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_meshobject_getvertex(_In_ PLib3MFModelMeshObject * pMeshObject, _In_ DWORD nIndex, _Out_ MODELMESHVERTEX * pVertex)
@@ -1185,6 +1329,30 @@ namespace NMR {
 			return ((ILib3MFModelMeshObject *)pMeshObject)->AddTriangle(pTriangle, pnIndex);
 		}
 
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_meshobject_getbeam(_In_ PLib3MFModelMeshObject * pMeshObject, _In_ DWORD nIndex, _Out_ MODELMESHBEAM * pBeam)
+		{
+			if (!pMeshObject)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelMeshObject *)pMeshObject)->GetBeam(nIndex, pBeam);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_meshobject_setbeam(_In_ PLib3MFModelMeshObject * pMeshObject, _In_ DWORD nIndex, _In_ MODELMESHBEAM * pBeam)
+		{
+			if (!pMeshObject)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelMeshObject *)pMeshObject)->SetBeam(nIndex, pBeam);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_meshobject_addbeam(_In_ PLib3MFModelMeshObject * pMeshObject, _In_ MODELMESHBEAM * pBeam, _Out_opt_ DWORD * pnIndex)
+		{
+			if (!pMeshObject)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelMeshObject *)pMeshObject)->AddBeam(pBeam, pnIndex);
+		}
+
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_meshobject_getvertices(_In_ PLib3MFModelMeshObject * pMeshObject, _Out_ MODELMESHVERTEX * pVertices, _In_ DWORD nBufferSize, _Out_opt_ DWORD * pnVertexCount)
 		{
 			if (!pMeshObject)
@@ -1201,10 +1369,122 @@ namespace NMR {
 			return ((ILib3MFModelMeshObject *)pMeshObject)->GetTriangleIndices(pIndices, nBufferSize, pnTriangleCount);
 		}
 
-		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_meshobject_setgeometry(_In_ PLib3MFModelMeshObject * pMeshObject, _In_ MODELMESHVERTEX * pVertices, _In_ DWORD nVertexCount, _In_ MODELMESHTRIANGLE * pTriangles, _In_ DWORD nTriangleCount)
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_meshobject_setbeamindices(_In_ PLib3MFModelMeshObject * pMeshObject, _In_ MODELMESHBEAM * pIndices, _In_ DWORD nBufferSize)
 		{
 			if (!pMeshObject)
 				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelMeshObject *)pMeshObject)->SetBeamIndices(pIndices, nBufferSize);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_meshobject_getbeamindices(_In_ PLib3MFModelMeshObject * pMeshObject, _Out_ MODELMESHBEAM * pIndices, _In_ DWORD nBufferSize, _Out_opt_ DWORD * pnBeamCount)
+		{
+			if (!pMeshObject)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelMeshObject *)pMeshObject)->GetBeamIndices(pIndices, nBufferSize, pnBeamCount);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_meshobject_getbeamsetcount(_In_ PLib3MFModelMeshObject * pMeshObject, _Out_ DWORD * pnBeamSetCount)
+		{
+			if (!pMeshObject)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelMeshObject *)pMeshObject)->GetBeamSetCount(pnBeamSetCount);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_meshobject_addbeamset(_In_ PLib3MFModelMeshObject * pMeshObject, _Out_ PLib3MFModelMeshBeamSet** ppBeamSet)
+		{
+			if (!ppBeamSet)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelMeshObject *)pMeshObject)->AddBeamSet((ILib3MFModelMeshBeamSet**)ppBeamSet);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_meshobject_getbeamset(_In_ PLib3MFModelMeshObject * pMeshObject, _In_ DWORD nIndex, _Out_ PLib3MFModelMeshBeamSet** ppBeamSet)
+		{
+			if (!ppBeamSet)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelMeshObject *)pMeshObject)->GetBeamSet(nIndex, (ILib3MFModelMeshBeamSet**)ppBeamSet);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_beamset_setname(_In_ PLib3MFModelMeshBeamSet * pModelMeshBeamSet, _In_z_ LPCWSTR pwszName)
+		{
+			if (!pModelMeshBeamSet)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelMeshBeamSet *)pModelMeshBeamSet)->SetName(pwszName);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_beamset_setidentifier(_In_ PLib3MFModelMeshBeamSet * pModelMeshBeamSet, _In_z_ LPCWSTR pwszIdentifier)
+		{
+			if (!pModelMeshBeamSet)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelMeshBeamSet *)pModelMeshBeamSet)->SetIdentifier(pwszIdentifier);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_beamset_setnameutf8(_In_ PLib3MFModelMeshBeamSet * pModelMeshBeamSet, _In_z_ LPCSTR pszName)
+		{
+			if (!pModelMeshBeamSet)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelMeshBeamSet *)pModelMeshBeamSet)->SetNameUTF8(pszName);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_beamset_setidentifierutf8(_In_ PLib3MFModelMeshBeamSet * pModelMeshBeamSet, _In_z_ LPCSTR pszIdentifier)
+		{
+			if (!pModelMeshBeamSet)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelMeshBeamSet *)pModelMeshBeamSet)->SetIdentifierUTF8(pszIdentifier);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_beamset_getnameutf8(_In_ PLib3MFModelMeshBeamSet * pModelMeshBeamSet, _Out_opt_ LPSTR pszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars)
+		{
+			if (!pModelMeshBeamSet)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelMeshBeamSet *)pModelMeshBeamSet)->GetNameUTF8(pszBuffer, cbBufferSize, pcbNeededChars);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_beamset_getidentifierutf8(_In_ PLib3MFModelMeshBeamSet * pModelMeshBeamSet, _Out_opt_ LPSTR pszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars)
+		{
+			if (!pModelMeshBeamSet)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelMeshBeamSet *)pModelMeshBeamSet)->GetIdentifierUTF8(pszBuffer, cbBufferSize, pcbNeededChars);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_beamset_getrefcount(_In_ PLib3MFModelMeshBeamSet * pBeamSet, _Out_ DWORD * pnCount)
+		{
+			if (!pBeamSet)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelMeshBeamSet *)pBeamSet)->GetRefCount(pnCount);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_beamset_setrefs(_In_ PLib3MFModelMeshBeamSet * pBeamSet, _In_ DWORD * pRefs, _In_ DWORD nRefCount)
+		{
+			if (!pBeamSet)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelMeshBeamSet *)pBeamSet)->SetRefs(pRefs, nRefCount);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_beamset_getrefs(_In_ PLib3MFModelMeshBeamSet * pBeamSet, _Out_ DWORD * pRefs, _In_ DWORD nBufferSize, _Out_opt_ DWORD * pnRefCount)
+		{
+			if (!pBeamSet)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelMeshBeamSet *)pBeamSet)->GetRefs(pRefs, nBufferSize, pnRefCount);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_meshobject_setgeometry(_In_ PLib3MFModelMeshObject * pMeshObject, _In_ MODELMESHVERTEX * pVertices, _In_ DWORD nVertexCount, _In_ MODELMESHTRIANGLE * pTriangles, _In_ DWORD nTriangleCount)
+		{
+			if (!pMeshObject)
+			return LIB3MF_POINTER;
 
 			return ((ILib3MFModelMeshObject *)pMeshObject)->SetGeometry(pVertices, nVertexCount, pTriangles, nTriangleCount);
 		}
@@ -1234,12 +1514,67 @@ namespace NMR {
 		}
 
 
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_meshobject_setslicestack(_In_ PLib3MFModelMeshObject *pMeshObject, _In_ PLib3MFSliceStack *pSliceStack)
+		{
+			if (!pMeshObject)
+				return LIB3MF_POINTER;
+
+			DWORD nSliceStackId;
+
+			if (((ILib3MFSliceStack *)pSliceStack)->GetResourceID(&nSliceStackId) != LIB3MF_OK) {
+				return LIB3MF_POINTER;
+			}
+
+			return ((ILib3MFModelMeshObject *)pMeshObject)->SetSliceStackId(nSliceStackId);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_meshobject_getslicestackid(_In_ PLib3MFModelMeshObject *pMeshObject, _Out_ DWORD *pSliceStackId)
+		{
+			if (!pMeshObject)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelMeshObject *)pMeshObject)->GetSliceStackId(pSliceStackId);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_meshobject_setslicesmeshresolution(_In_ PLib3MFModelMeshObject *pMeshObject, _In_ eModelSlicesMeshResolution eSlicesMeshResolution)
+		{
+			if (!pMeshObject)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelMeshObject *)pMeshObject)->SetSlicesMeshResolution(eSlicesMeshResolution);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_meshobject_getslicesmeshresolution(_In_ PLib3MFModelMeshObject *pMeshObject, _Out_ eModelSlicesMeshResolution *peSlicesMeshResolution)
+		{
+			if (!pMeshObject)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelMeshObject *)pMeshObject)->GetSlicesMeshResolution(peSlicesMeshResolution);
+		}
+
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_component_getobjectresource(_In_ PLib3MFModelComponent * pComponent, _Outptr_ PLib3MFModelObjectResource ** ppObjectResource)
 		{
 			if (!pComponent)
 				return LIB3MF_POINTER;
 
 			return ((ILib3MFModelComponent *)pComponent)->GetObjectResource((ILib3MFModelObjectResource**)ppObjectResource);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_component_getuuidutf8(_In_ PLib3MFModelComponent * pComponent, _Out_ BOOL *pbHasUUID, _Out_ LPSTR pszBuffer)
+		{
+			if (!pComponent)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelComponent *)pComponent)->GetUUIDUTF8(pbHasUUID, pszBuffer);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_component_setuuidutf8(_In_ PLib3MFModelComponent * pComponent, _In_z_ LPCSTR pszUUID)
+		{
+			if (!pComponent || !pszUUID)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelComponent *)pComponent)->SetUUIDUTF8(pszUUID);
 		}
 
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_component_gettransform(_In_ PLib3MFModelComponent * pComponent, _Out_ MODELTRANSFORM * pTransformation)
@@ -1304,6 +1639,22 @@ namespace NMR {
 				return LIB3MF_POINTER;
 
 			return ((ILib3MFModelBuildItem *)pBuildItem)->GetObjectResource((ILib3MFModelObjectResource **)ppObject);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_builditem_getuuidutf8(_In_ PLib3MFModelBuildItem * pBuildItem, _Out_ BOOL *pbHasUUID, _Out_ LPSTR pszBuffer) 
+		{
+			if (!pBuildItem)
+				return LIB3MF_POINTER;
+			
+			return ((ILib3MFModelBuildItem *)pBuildItem)->GetUUIDUTF8(pbHasUUID, pszBuffer);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_builditem_setuuidutf8(_In_ PLib3MFModelBuildItem * pBuildItem, _In_z_ LPCSTR pszUUID)
+		{
+			if (!pBuildItem || !pszUUID)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelBuildItem *)pBuildItem)->SetUUIDUTF8(pszUUID);
 		}
 
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_builditem_getobjectresourceid(_In_ PLib3MFModelBuildItem * pBuildItem, _Out_ DWORD * pnID)
@@ -1485,6 +1836,19 @@ namespace NMR {
 			return ((ILib3MFModel *)pModel)->GetResourceByID(nResourceID, (ILib3MFModelResource **)ppResource);
 		}
 
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_getslicestackById(_In_ PLib3MFModel *pModel, _In_ DWORD nSliceStackId, _Out_ PLib3MFSliceStack **ppSliceStack)
+		{
+			if (!pModel)
+				return LIB3MF_POINTER;
+
+			ILib3MFModelResource *pResource;
+
+			((ILib3MFModel *)pModel)->GetResourceByID(nSliceStackId, &pResource);
+
+			*ppSliceStack = (PLib3MFSliceStack *)pResource;
+			return LIB3MF_OK;
+		}
+
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_gettexture2dbyid(_In_ PLib3MFModel * pModel, _In_ DWORD nResourceID, _Outptr_ PLib3MFModelTexture2D ** ppTexture)
 		{
 			if (!pModel)
@@ -1517,6 +1881,21 @@ namespace NMR {
 			return ((ILib3MFModel *)pModel)->GetComponentsObjectByID(nResourceID, (ILib3MFModelComponentsObject **)ppComponentsObject);
 		}
 
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_getbuilduuidutf8(_In_ PLib3MFModel * pModel, _Out_ BOOL *pbHasUUID, _Out_ LPSTR pszBuffer)
+		{
+			if (!pModel || !pbHasUUID || !pszBuffer)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModel *)pModel)->GetBuildUUIDUTF8(pbHasUUID, pszBuffer);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_setbuilduuidutf8(_In_ PLib3MFModel * pModel, _In_z_ LPCSTR pszBuildUUID)
+		{
+			if (!pModel || !pszBuildUUID)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModel *)pModel)->SetBuildUUIDUTF8(pszBuildUUID);
+		}
 
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_getbuilditems(_In_ PLib3MFModel * pModel, _Outptr_ PLib3MFModelBuildItemIterator ** ppIterator)
 		{
@@ -1574,14 +1953,6 @@ namespace NMR {
 			return ((ILib3MFModel *)pModel)->GetBaseMaterials((ILib3MFModelResourceIterator **)ppIterator);
 		}
 
-		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_getthumbnails(_In_ PLib3MFModel * pModel, _Outptr_ PLib3MFModelThumbnailIterator ** ppIterator)
-		{
-			if (!pModel)
-				return LIB3MF_POINTER;
-
-			return ((ILib3MFModel *)pModel)->GetThumbnails((ILib3MFModelThumbnailIterator **)ppIterator);
-		}
-
 
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_mergetomodel(_In_ PLib3MFModel * pModel, _Outptr_ PLib3MFModel ** ppMergedModel)
 		{
@@ -1605,6 +1976,14 @@ namespace NMR {
 				return LIB3MF_POINTER;
 
 			return ((ILib3MFModel *)pModel)->AddComponentsObject((ILib3MFModelComponentsObject **)ppComponentsObject);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_addtexture2dfromattachment(_In_ PLib3MFModel * pModel, _In_ PLib3MFModelAttachment pTextureAttachment, _Outptr_ PLib3MFModelTexture2D ** ppTextureInstance)
+		{
+			if (!pModel)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModel *)pModel)->AddTexture2DFromAttachment((ILib3MFModelAttachment*) pTextureAttachment, (ILib3MFModelTexture2D **)ppTextureInstance);
 		}
 
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_addtexture2d(_In_ PLib3MFModel * pModel, _In_z_ LPCWSTR pwszPath, _Outptr_ PLib3MFModelTexture2D ** ppTextureInstance)
@@ -1648,39 +2027,7 @@ namespace NMR {
 
 			return ((ILib3MFModel *)pModel)->RemoveBuildItem((ILib3MFModelBuildItem *)pBuildItem);
 		}
-
-		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_gettexturestreamcount(_In_ PLib3MFModel * pModel, _Out_ DWORD * pnCount)
-		{
-			if (!pModel)
-				return LIB3MF_POINTER;
-
-			return ((ILib3MFModel *)pModel)->GetTextureStreamCount(pnCount);
-		}
-
-		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_gettexturestreamsize(_In_ PLib3MFModel * pModel, _In_ DWORD nIndex, _Out_ UINT64 * pnSize)
-		{
-			if (!pModel)
-				return LIB3MF_POINTER;
-
-			return ((ILib3MFModel *)pModel)->GetTextureStreamSize(nIndex, pnSize);
-		}
-
-		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_gettexturestreampath(_In_ PLib3MFModel * pModel, _In_ DWORD nIndex, _Out_opt_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars)
-		{
-			if (!pModel)
-				return LIB3MF_POINTER;
-
-			return ((ILib3MFModel *)pModel)->GetTextureStreamPath(nIndex, pwszBuffer, cbBufferSize, pcbNeededChars);
-		}
-
-		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_gettexturestreampathutf8(_In_ PLib3MFModel * pModel, _In_ DWORD nIndex, _Out_opt_ LPSTR pszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars)
-		{
-			if (!pModel)
-				return LIB3MF_POINTER;
-
-			return ((ILib3MFModel *)pModel)->GetTextureStreamPathUTF8(nIndex, pszBuffer, cbBufferSize, pcbNeededChars);
-		}
-
+		
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_getmetadatacount(_In_ PLib3MFModel * pModel, _Out_ DWORD * pnCount)
 		{
 			if (!pModel)
@@ -1819,6 +2166,22 @@ namespace NMR {
 			return ((ILib3MFModel *)pModel)->GetAttachmentPathUTF8(nIndex, pszBuffer, cbBufferSize, pcbNeededChars);
 		}
 
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_getpackagethumbnailattachment(_In_ PLib3MFModel * pModel, _In_ BOOL bCreateIfNotExisting, _Outptr_ PLib3MFModelAttachment ** ppAttachmentInstance)
+		{
+			if (!pModel)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModel *)pModel)->GetPackageThumbnailAttachment(bCreateIfNotExisting, (ILib3MFModelAttachment**)ppAttachmentInstance);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_removepackagethumbnailattachment(_In_ PLib3MFModel * pModel)
+		{
+			if (!pModel)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModel *)pModel)->RemovePackageThumbnailAttachment();
+		}
+
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_addcustomcontenttype(_In_ PLib3MFModel * pModel, _In_ LPCWSTR pszwExtension, _In_ LPCWSTR pszwContentType)
 		{
 			if (!pModel)
@@ -1853,7 +2216,179 @@ namespace NMR {
 			return ((ILib3MFModel *)pModel)->RemoveCustomContentTypeUTF8(pszExtension);
 		}
 
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_model_addslicestack(_In_ PLib3MFModel * pModel, _In_ float nBottomZ, PLib3MFSliceStack **ppSliceStackObject) {
+			if (!pModel)
+				return LIB3MF_POINTER;
 
-	};
+			return ((ILib3MFModel *)pModel)->AddSliceStack(nBottomZ, (ILib3MFSliceStack **)ppSliceStackObject);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_slicestack_addslice(_In_ PLib3MFSliceStack *pStack, _In_ float nTopZ, PLib3MFSlice **pSliceObject) {
+			if (!pStack)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFSliceStack *)pStack)->AddSlice(nTopZ, (ILib3MFSlice **)pSliceObject);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_slicestack_getslicecount(_In_ PLib3MFSliceStack *pStack, _Out_ DWORD *pnSliceCount) {
+			if (!pStack)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFSliceStack *)pStack)->GetSliceCount(pnSliceCount);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_slicestack_getslice(_In_ PLib3MFSliceStack *pStack, _In_ DWORD nSliceIndex, _Out_ PLib3MFSlice **pSlice) {
+			if (!pStack)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFSliceStack *)pStack)->GetSlice(nSliceIndex, (ILib3MFSlice **)pSlice);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_slicestack_setusessliceref(_In_ PLib3MFSliceStack *pStack, _In_ BOOL bUsesSliceRef) {
+			if (!pStack)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFSliceStack *)pStack)->SetUsesSliceRef(bUsesSliceRef);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_slicestack_getusessliceref(_In_ PLib3MFSliceStack *pStack, _Out_ BOOL *pbUsesSliceRef) {
+			if (!pStack)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFSliceStack *)pStack)->GetUsesSliceRef(pbUsesSliceRef);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_slice_getpolygoncount(_In_ PLib3MFSlice *pSlice, _Out_ DWORD *pPolygonCount) {
+			if (!pSlice)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFSlice *)pSlice)->GetPolygonCount(pPolygonCount);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_slice_getvertexcount(_In_ PLib3MFSlice *pSlice, _Out_ DWORD *pVertexCount) {
+			if (!pSlice)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFSlice *)pSlice)->GetVertexCount(pVertexCount);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_slice_gettopz(_In_ PLib3MFSlice *pSlice, _Out_ float *pTopZ) {
+			if (!pSlice)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFSlice *)pSlice)->GetTopZ(pTopZ);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_slice_addvertices(_In_ PLib3MFSlice *pSlice, _In_ MODELSLICEVERTEX *pVertices, _In_ DWORD nCount, _Out_ DWORD *pStartIndex) {
+			if (!pSlice)
+				return LIB3MF_POINTER;
+
+			LIB3MFRESULT nResult = ((ILib3MFSlice *)pSlice)->GetVertexCount(pStartIndex);
+
+			DWORD pIndex;
+
+			nResult = ((ILib3MFSlice *)pSlice)->GetVertexCount(pStartIndex);
+
+			for (DWORD nIdx = 0; nIdx < nCount && nResult == LIB3MF_OK; nIdx++)
+				nResult = ((ILib3MFSlice *)pSlice)->AddVertex(&pVertices[nIdx], &pIndex);
+
+			return nResult;
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_slice_addpolygon(_In_ PLib3MFSlice *pSlice, _In_ DWORD *pPolygonIndices, _In_ DWORD nCount, _Out_ DWORD *pPolygonIndex) {
+			if (!pSlice)
+				return LIB3MF_POINTER;
+
+			LIB3MFRESULT nResult = LIB3MF_OK;
+			nResult = ((ILib3MFSlice*)pSlice)->BeginPolygon(pPolygonIndex);
+
+			if (nResult != LIB3MF_OK)
+				return nResult;
+
+			DWORD nRealIndex;
+
+			nResult = ((ILib3MFSlice *)pSlice)->AddPolygonIndices(*pPolygonIndex, pPolygonIndices, nCount, &nRealIndex);
+
+			return nResult;
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_slice_startpolygon(_In_ PLib3MFSlice *pSlice, _Out_ DWORD *pPolygonIndex) {
+			if (!pSlice)
+				return LIB3MF_POINTER;
+
+			LIB3MFRESULT nResult = LIB3MF_OK;
+			nResult = ((ILib3MFSlice*)pSlice)->BeginPolygon(pPolygonIndex);
+
+			return nResult;
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_slice_addindextopolygon(_In_ PLib3MFSlice *pSlice, _In_ DWORD nPolygon, _In_ DWORD nIndex) {
+			if (!pSlice)
+				return LIB3MF_POINTER;
+
+			LIB3MFRESULT nResult = LIB3MF_OK;
+			nResult = ((ILib3MFSlice*)pSlice)->AddPolygonIndex(nPolygon, nIndex);
+
+			return nResult;
+		}
+
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_slice_getvertices(_In_ PLib3MFSlice *pSlice, _Out_ MODELSLICEVERTEX *pVertices, _In_ DWORD nBufferSize) {
+			if (!pSlice)
+				return LIB3MF_POINTER;
+
+			LIB3MFRESULT nResult = LIB3MF_OK;
+			DWORD nVertexCount;
+			nResult = ((ILib3MFSlice *)pSlice)->GetVertexCount(&nVertexCount);
+
+			if (nResult != LIB3MF_OK)
+				return nResult;
+
+			for (DWORD nIdx = 0; nIdx < nBufferSize && nIdx < nVertexCount && nResult == LIB3MF_OK; nIdx++) {
+				nResult = ((ILib3MFSlice *)pSlice)->GetVertex(nIdx, &pVertices[nIdx]);
+			}
+
+			return nResult;
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_slice_getpolygonindexcount(_In_ PLib3MFSlice *pSlice, _In_ DWORD nPolygonIndex, _Out_ DWORD *npIndexCount) {
+			if (!pSlice)
+				return LIB3MF_POINTER;
+
+			DWORD nPolgonCount;
+			LIB3MFRESULT nResult = LIB3MF_OK;
+
+			nResult = ((ILib3MFSlice *)pSlice)->GetPolygonCount(&nPolgonCount);
+
+			if (nResult != LIB3MF_OK)
+				return nResult;
+
+			if (nPolygonIndex > nPolgonCount)
+				return LIB3MF_INVALIDARG;
+
+			/*ILib3MFSlicePolygon *pPolygon;
+
+			nResult = ((ILib3MFSlice *)pSlice)->GetPolygon(nPolygonIndex, &pPolygon);*/
+			return ((ILib3MFSlice *)pSlice)->GetIndexCountOfPolygon(nPolygonIndex, npIndexCount);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_slice_getpolygonindices(_In_ PLib3MFSlice *pSlice, _In_ DWORD nPolygonIndex, _Out_ DWORD *pIndices, _In_ DWORD nBuffersize) {
+			if (!pSlice)
+				return LIB3MF_POINTER;
+
+			DWORD nPolgonCount;
+			LIB3MFRESULT nResult = LIB3MF_OK;
+
+			nResult = ((ILib3MFSlice *)pSlice)->GetPolygonCount(&nPolgonCount);
+
+			if (nResult != LIB3MF_OK)
+				return nResult;
+
+			if (nPolygonIndex > nPolgonCount)
+				return LIB3MF_INVALIDARG;
+
+			return ((ILib3MFSlice *)pSlice)->GetPolygonIndices(nPolygonIndex, pIndices, nBuffersize);
+		}
+  };
 
 };

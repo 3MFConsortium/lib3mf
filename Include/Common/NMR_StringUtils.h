@@ -37,6 +37,7 @@ and Exception-safe
 #include "Common/NMR_Types.h"
 #include "Common/NMR_Local.h"
 #include <string>
+#include <vector>
 
 #define NMR_MAXSTRINGBUFFERSIZE 1073741823 // (2^30-1)
 
@@ -76,9 +77,13 @@ namespace NMR {
 	nfUint32 fnBufferedUTF8toUTF16(_In_ const nfChar * pszInBuffer, _Out_ nfWChar * pszwOutBuffer, _In_ nfUint32 cbBufferSize, _Out_ nfUint32 * pnLastChar, _Out_ nfUint32 * pcbNeededCharacters);
 
 	// Path and File name functions
+	nfBool fnStartsWithPathDelimiter(_In_ const std::wstring sPath);
 	std::wstring fnRemoveLeadingPathDelimiter(_In_ const std::wstring sPath);
 	std::wstring fnIncludeLeadingPathDelimiter(_In_ const std::wstring sPath);
 	std::wstring fnExtractFileName(_In_ const std::wstring sFullPath);
+	std::wstring fnExtractFileDir(_In_ const std::wstring sFullPath);
+
+	std::vector<double> fnVctDouble_fromWideString(_In_ const std::wstring sString);
 }
 
 #endif // __NMR_STRINGUTILS

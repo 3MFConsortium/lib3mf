@@ -83,6 +83,15 @@ namespace NMR {
 	POpcPackageRelationship COpcPackagePart::addRelationship(_In_ std::wstring sID, _In_ std::wstring sType, _In_ std::wstring sURI)
 	{
 		POpcPackageRelationship pRelationship = std::make_shared<COpcPackageRelationship>(sID, sType, sURI);
+		for (auto iRelationShip : m_Relationships) {
+			if ((iRelationShip->getTargetPartURI() == sURI) && (iRelationShip->getType() == sType) ) {
+				throw CNMRException(NMR_ERROR_DUPLICATE_RELATIONSHIP);
+			}
+			// Include this again for 
+			//if (iRelationShip->getType() == sType) {
+			//	throw CNMRException(NMR_ERROR_DUPLICATE_RELATIONSHIP);
+			//}
+		}
 		m_Relationships.push_back(pRelationship);
 		return pRelationship;
 	}
@@ -105,7 +114,7 @@ namespace NMR {
 		PXmlWriter_Native pXMLWriter = std::make_shared<CXmlWriter_Native>(pExportStream);
 
 		pXMLWriter->WriteStartDocument();
-		pXMLWriter->WriteStartElement(nullptr, L"Relationships", nullptr);
+		pXMLWriter->WriteStartElement(nullptr, OPC_RELS_RELATIONSHIP_CONTAINER, nullptr);
 		pXMLWriter->WriteAttributeString(nullptr, L"xmlns", nullptr, OPCPACKAGE_SCHEMA_RELATIONSHIPS);
 
 		auto iIterator = m_Relationships.begin();

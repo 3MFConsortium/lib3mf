@@ -125,7 +125,7 @@ namespace NMR {
 			__NMRASSERT(pModel);
 
 			// Get Resource ID
-			ModelResourceID nObjectID;
+			PackageResourceID nObjectID;
 			HRESULT hResult = pObject->GetResourceID(&nObjectID);
 			if (hResult != LIB3MF_OK)
 				return hResult;
@@ -159,6 +159,48 @@ namespace NMR {
 				*ppComponent = pResult;
 			}
 
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
+	LIB3MFMETHODIMP CCOMModelComponentsObject::GetUUIDUTF8(_Out_ BOOL * pbHasUUID, _Out_ LPSTR pszBuffer)
+	{
+		try {
+			if (  (!pbHasUUID) || (!pszBuffer) )
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
+			CModelComponentsObject * pComponentsObject = getComponentsObject();
+			PUUID pUUID = pComponentsObject->uuid();
+			*pbHasUUID = (pUUID.get() != nullptr);
+			nfUint32 nNeededChars = 0;
+			if (*pbHasUUID)
+				fnStringToBufferSafe(pUUID->toString(), pszBuffer, 37, &nNeededChars);
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
+	LIB3MFMETHODIMP CCOMModelComponentsObject::SetUUIDUTF8(_In_ LPCSTR pszUUID)
+	{
+		try
+		{
+			if (!pszUUID)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
+			CModelComponentsObject * pComponentsObject = getComponentsObject();
+			PUUID pUUID = std::make_shared<CUUID>(pszUUID);
+			pComponentsObject->setUUID(pUUID);
 			return handleSuccess();
 		}
 		catch (CNMRException & Exception) {
@@ -219,7 +261,7 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
 
 			CModelComponentsObject * pComponentsObject = getComponentsObject();
-			*pnResourceID = pComponentsObject->getResourceID();
+			*pnResourceID = pComponentsObject->getResourceID()->getUniqueID();
 
 			return handleSuccess();
 		}
@@ -582,5 +624,58 @@ namespace NMR {
 		}
 	}
 
+
+	LIB3MFMETHODIMP CCOMModelComponentsObject::GetThumbnailPathUTF8 (_Out_opt_ LPSTR pszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars)
+	{
+		try {
+			if (cbBufferSize > MODEL_MAXSTRINGBUFFERLENGTH)
+				throw CNMRException(NMR_ERROR_INVALIDBUFFERSIZE);
+
+			CModelComponentsObject * pObject = getComponentsObject();
+			__NMRASSERT(pObject);
+
+			std::wstring sUTF16Path = pObject->getThumbnail();
+			std::string sUTF8Path = fnUTF16toUTF8(sUTF16Path);
+
+			// Safely call StringToBuffer
+			nfUint32 nNeededChars = 0;
+			fnStringToBufferSafe(sUTF8Path, pszBuffer, cbBufferSize, &nNeededChars);
+
+			// Return length if needed
+			if (pcbNeededChars)
+				*pcbNeededChars = nNeededChars;
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
+	LIB3MFMETHODIMP CCOMModelComponentsObject::SetThumbnailPathUTF8 (_In_z_ LPCSTR pszName)
+	{
+		try {
+			if (pszName == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+			CModelComponentsObject * pObject = getComponentsObject();
+			__NMRASSERT(pObject);
+
+			std::string sUTF8ThumbnailPath(pszName);
+			std::wstring sUTF16ThumbnailPath = fnUTF8toUTF16(sUTF8ThumbnailPath);
+			pObject->setThumbnail(sUTF16ThumbnailPath.c_str());
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
 
 }

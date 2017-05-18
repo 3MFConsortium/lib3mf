@@ -67,9 +67,13 @@ namespace NMR {
 		if (!m_bHasID)
 			throw CNMRException(NMR_ERROR_MISSINGBUILDITEMOBJECTID);
 
-		CModelObject * pObject = m_pModel->findObject(m_ObjectID);
+		PPackageResourceID pID = m_pModel->findPackageResourceID(m_pModel->curPath(), m_ObjectID);
+		if (!pID.get())
+			throw CNMRException(NMR_ERROR_COULDNOTFINDBUILDITEMOBJECT);
+		CModelObject * pObject = m_pModel->findObject(pID->getUniqueID());
 		if (!pObject)
 			throw CNMRException(NMR_ERROR_COULDNOTFINDBUILDITEMOBJECT);
+		
 
 		// Create Build Item
 		PModelBuildItem pBuildItem = std::make_shared<CModelBuildItem>(pObject, m_mTransform, m_pModel->createHandle());

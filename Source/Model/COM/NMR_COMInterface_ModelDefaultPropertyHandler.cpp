@@ -43,7 +43,7 @@ COM Interface Implementation for Model Default Property Handler
 #include "Model/Classes/NMR_ModelDefaultProperty_Color.h"
 #include "Model/Classes/NMR_ModelDefaultProperty_TexCoord2D.h"
 
-#include <math.h>
+#include <cmath>
 
 namespace NMR {
 
@@ -165,6 +165,8 @@ namespace NMR {
 			 if (pTexCoordProperty != nullptr) {
 				 *pnPropertyType = MODELPROPERTYTYPE_TEXCOORD2D;
 			 }
+			 
+			 // MODELPROPERTYTYPE_COMPOSITE is not supported as default property
 
 			 return handleSuccess();
 		 }

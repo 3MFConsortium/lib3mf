@@ -84,6 +84,17 @@ namespace NMR {
 		if (hResult != S_OK)
 			throw CNMRException_Windows(NMR_ERROR_COULDNOTGETNAMESPACE, hResult);
 	}
+	
+	bool CXmlReader_COM::GetNamespaceURI(const std::wstring &sNameSpacePrefix, std::wstring &sNameSpaceURI)
+	{
+		throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
+	}
+
+	bool CXmlReader_COM::NamespaceRegistered(const std::wstring &sNameSpaceURI)
+	{
+		return false;
+		throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
+	}
 
 	nfBool CXmlReader_COM::Read(_Out_ eXmlReaderNodeType & NodeType)
 	{

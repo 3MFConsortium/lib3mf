@@ -41,9 +41,7 @@ for further information
 #ifndef __GNUC__
 #include <Windows.h>
 #else
-
 #include "Common/Platform/NMR_WinTypes.h"
-
 #endif
 
 namespace NMR {

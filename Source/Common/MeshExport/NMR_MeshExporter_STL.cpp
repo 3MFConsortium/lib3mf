@@ -37,7 +37,7 @@ This is a derived class for Exporting the binary STL and color STL Mesh Format.
 #include "Common/Math/NMR_Matrix.h" 
 #include "Common/Math/NMR_Vector.h" 
 #include "Common/NMR_Exception.h" 
-#include <math.h>
+#include <cmath>
 #include <list>
 
 namespace NMR {

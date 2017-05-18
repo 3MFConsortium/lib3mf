@@ -183,7 +183,10 @@ namespace NMR {
 						if (pFaceData) {
 
 							// Convert Texture Coordinates to in memory representation
-							pFaceData->m_TextureID = nTextureID;
+							PPackageResourceID pID = m_pModel->findPackageResourceID(m_pModel->curPath(), nTextureID);
+							if (pID.get()) {
+								pFaceData->m_TextureID = pID->getUniqueID();
+							}
 							nfInt32 nTextureIndex1 = 0;
 							nfInt32 nTextureIndex2 = 0;
 							nfInt32 nTextureIndex3 = 0;
@@ -232,7 +235,7 @@ namespace NMR {
 									if (m_pMaterialResource.get() != nullptr) {
 										ModelResourceIndex nIndex;
 										if (m_pColorMapping->getMaterialReference(nMaterialID, nIndex)) {
-											pFaceData->m_nMaterialGroupID = m_pMaterialResource->getResourceID();
+											pFaceData->m_nMaterialGroupID = m_pMaterialResource->getResourceID()->getUniqueID();
 											pFaceData->m_nMaterialIndex = nIndex;
 										}
 									}

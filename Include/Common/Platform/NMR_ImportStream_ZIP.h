@@ -57,6 +57,7 @@ namespace NMR {
 		virtual nfUint64 retrieveSize();
 		virtual void writeToFile(_In_ const nfWChar * pwszFileName);
 		virtual PImportStream copyToMemory();
+		virtual nfUint64 getPosition();
 	};
 
 }

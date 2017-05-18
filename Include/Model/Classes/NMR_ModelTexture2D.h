@@ -51,9 +51,10 @@ namespace NMR {
 
 	class CModelTexture2DResource : public CModelResource {
 	private:
-		std::wstring m_sPath;
+		// PModelAttachment m_pAttachment;
+		std::wstring m_sPath;	// this is how CModelTexture2DResource connects to an attachment
 		eModelTexture2DType m_ContentType;
-
+		
 		nfBool m_bHasBox2D;
 		nfFloat m_fBox2D_U;
 		nfFloat m_fBox2D_V;
@@ -61,8 +62,6 @@ namespace NMR {
 		nfFloat m_fBox2D_Height;
 		std::wstring m_sTileStyleU;
 		std::wstring m_sTileStyleV;
-		
-		PImportStream m_pTextureStream;
 	public:
 		CModelTexture2DResource() = delete;
 		CModelTexture2DResource(_In_ const ModelResourceID sID, _In_ CModel * pModel);
@@ -71,7 +70,7 @@ namespace NMR {
 		std::wstring getPath();
 		void setPath (_In_ std::wstring sPath);
 		
-		// getters/setters TextureStream
+		// getters TextureStream
 		PImportStream getTextureStream();
 
 		// getters/setters ContentType

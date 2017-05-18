@@ -46,6 +46,8 @@ namespace NMR {
 		m_pObject = pObject;
 		m_mTransform = fnMATRIX3_identity ();
 		m_nHandle = nHandle;
+
+		setUUID(std::make_shared<CUUID>());
 	}
 
 	CModelBuildItem::CModelBuildItem(_In_ CModelObject * pObject, _In_ const NMATRIX3 mTransform, _In_ nfUint32 nHandle)
@@ -55,6 +57,8 @@ namespace NMR {
 		m_pObject = pObject;
 		m_mTransform = mTransform;
 		m_nHandle = nHandle;
+
+		setUUID(std::make_shared<CUUID>());
 	}
 
 	CModelBuildItem::~CModelBuildItem()
@@ -77,9 +81,9 @@ namespace NMR {
 		m_mTransform = mTransform;
 	}
 	
-	ModelResourceID CModelBuildItem::getObjectID()
+	PackageResourceID CModelBuildItem::getObjectID()
 	{
-		return m_pObject->getResourceID();
+		return m_pObject->getResourceID()->getUniqueID();
 	}
 
 	nfBool CModelBuildItem::hasTransform()
@@ -102,6 +106,32 @@ namespace NMR {
 		m_sPartNumber = sPartNumber;
 	}
 
+	CModel* CModelBuildItem::getModel() {
+		return m_pObject->getModel();
+	}
+
+	PUUID CModelBuildItem::uuid()
+	{
+		return m_UUID;
+	}
+
+	void CModelBuildItem::setUUID(PUUID uuid)
+	{
+		getModel()->registerUUID(uuid);
+		getModel()->unRegisterUUID(m_UUID);
+		m_UUID = uuid;
+	}
+
+	std::wstring CModelBuildItem::path()
+	{
+		return m_sPath;
+	}
+
+	void CModelBuildItem::setPath(std::wstring sPath)
+	{
+		m_sPath = sPath;
+	}
+
 	void CModelBuildItem::mergeToMesh(_In_ CMesh * pMesh)
 	{
 		__NMRASSERT(pMesh);
@@ -114,4 +144,8 @@ namespace NMR {
 
 	}
 
+	bool CModelBuildItem::isValidForSlices() {
+		NMATRIX3 mat = getTransform();
+		return m_pObject->isValidForSlices(mat);
+	}
 }

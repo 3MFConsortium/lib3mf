@@ -143,7 +143,7 @@ namespace NMR {
 			return handleGenericException();
 		}
 	}
-
+	
 	LIB3MFMETHODIMP CCOMModelBuildItem::GetObjectResource(_Outptr_ ILib3MFModelObjectResource ** ppObject)
 	{
 		try {
@@ -181,6 +181,53 @@ namespace NMR {
 			// Return result
 			*ppObject = pResourceInterface;
 
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
+	LIB3MFMETHODIMP CCOMModelBuildItem::GetUUIDUTF8(_Out_ BOOL * pbHasUUID, _Out_ LPSTR pszBuffer)
+	{
+		try {
+			if ( (!pbHasUUID) || (!pszBuffer) )
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
+			if (!m_pModelBuildItem.get())
+				throw CNMRException(NMR_ERROR_INVALIDBUILDITEM);
+
+			PUUID pUUID = m_pModelBuildItem->uuid();
+			*pbHasUUID = (pUUID.get() != nullptr);
+			nfUint32 nNeededChars = 0;
+			if (*pbHasUUID)
+				fnStringToBufferSafe(pUUID->toString(), pszBuffer, 37, &nNeededChars);
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
+	LIB3MFMETHODIMP CCOMModelBuildItem::SetUUIDUTF8(_In_ LPCSTR pszUUID)
+	{
+		try
+		{
+			if (!pszUUID)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
+			if (!m_pModelBuildItem.get())
+				throw CNMRException(NMR_ERROR_INVALIDBUILDITEM);
+
+			PUUID pUUID = std::make_shared<CUUID>(pszUUID);
+			m_pModelBuildItem->setUUID(pUUID);
 			return handleSuccess();
 		}
 		catch (CNMRException & Exception) {

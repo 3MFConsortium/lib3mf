@@ -36,7 +36,7 @@ In addition already existing meshes can be added.
 
 #include "Common/Mesh/NMR_MeshBuilder.h" 
 #include "Common/NMR_Exception.h" 
-#include <math.h>
+#include <cmath>
 
 namespace NMR {
 

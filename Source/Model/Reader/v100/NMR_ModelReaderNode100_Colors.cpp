@@ -88,7 +88,8 @@ namespace NMR {
 			// Convert to integer and make a input and range check!
 			m_nID = fnWStringToUint32(pAttributeValue);
 		}
-
+		else
+			m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE), mrwInvalidOptionalValue);
 	}
 
 	void CModelReaderNode100_Colors::OnNSChildElement(_In_z_ const nfWChar * pChildName, _In_z_ const nfWChar * pNameSpace, _In_ CXmlReader * pXMLReader)
@@ -104,6 +105,8 @@ namespace NMR {
 				if (m_nColorIndex > XML_3MF_MAXRESOURCEINDEX)
 					throw CNMRException(NMR_ERROR_INVALIDINDEX);
 			}
+			else
+				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
 		}
 	}
 

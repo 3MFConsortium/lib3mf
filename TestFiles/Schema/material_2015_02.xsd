@@ -22,7 +22,7 @@ ST_: Simple types
 	</xs:complexType>
 	<xs:complexType name="CT_ColorGroup">
 		<xs:sequence>
-			<xs:element ref="color" maxOccurs="1073741824"/>
+			<xs:element ref="color" maxOccurs="2147483647"/>
 		</xs:sequence>
 		<xs:attribute name="id" type="ST_ResourceID" use="required"/>
 	</xs:complexType>
@@ -31,7 +31,7 @@ ST_: Simple types
 	</xs:complexType>
 	<xs:complexType name="CT_Texture2DGroup">
 		<xs:sequence>
-			<xs:element ref="tex2coord" maxOccurs="1073741824"/>
+			<xs:element ref="tex2coord" maxOccurs="2147483647"/>
 		</xs:sequence>
 		<xs:attribute name="id" type="ST_ResourceID" use="required"/>
 		<xs:attribute name="texid" type="ST_ResourceID" use="required"/>
@@ -42,7 +42,7 @@ ST_: Simple types
 	</xs:complexType>
 	<xs:complexType name="CT_CompositeMaterials">
 		<xs:sequence>
-			<xs:element ref="composite" maxOccurs="1073741824"/>
+			<xs:element ref="composite" maxOccurs="2147483647"/>
 		</xs:sequence>
 		<xs:attribute name="id" type="ST_ResourceID" use="required"/>
 		<xs:attribute name="matid" type="ST_ResourceID" use="required"/>
@@ -53,7 +53,7 @@ ST_: Simple types
 	</xs:complexType>
 	<xs:complexType name="CT_MultiProperties">
 		<xs:sequence>
-			<xs:element ref="multi" maxOccurs="1073741824"/>
+			<xs:element ref="multi" maxOccurs="2147483647"/>
 		</xs:sequence>
 		<xs:attribute name="id" type="ST_ResourceID" use="required"/>
 		<xs:attribute name="pids" type="xs:string" use="required"/>
@@ -104,12 +104,12 @@ ST_: Simple types
 	</xs:simpleType>
 	<xs:simpleType name="ST_ResourceID">
 		<xs:restriction base="xs:positiveInteger">
-			<xs:maxExclusive value="10737418248"/>
+			<xs:maxExclusive value="21474836478"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="ST_ResourceIndex">
 		<xs:restriction base="xs:nonNegativeInteger">
-			<xs:maxExclusive value="10737418248"/>
+			<xs:maxExclusive value="21474836478"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<!-- Elements -->

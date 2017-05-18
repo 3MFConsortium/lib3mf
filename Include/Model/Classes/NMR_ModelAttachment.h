@@ -26,9 +26,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelResource.h defines the Model Resource Class.
-A model resource is an in memory representation of the 3MF
-resource object.
+NMR_ModelAttachment.h defines the Model Attachment Class.
 
 --*/
 
@@ -55,7 +53,7 @@ namespace NMR {
 		CModelAttachment() = delete;
 		CModelAttachment(_In_ CModel * pModel, _In_ const std::wstring sPathURI, _In_ const std::wstring sRelationShipType, _In_ PImportStream pStream);
 		~CModelAttachment();
-				
+		
 		_Ret_notnull_ CModel * getModel();
 		std::wstring getPathURI();
 		std::wstring getRelationShipType();

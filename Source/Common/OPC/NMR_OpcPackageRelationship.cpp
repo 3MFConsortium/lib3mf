@@ -41,6 +41,15 @@ namespace NMR {
 	{
 		m_sID = sID;
 		m_sType = sType;
+		if ( sTargetPartURI.empty()) {	// || (sTargetPartURI[0] != L'/')
+			// must not be emtpy
+			throw CNMRException(NMR_ERROR_INVALIDOPCPARTURI);
+		}
+		std::wstring sName = fnExtractFileName(sTargetPartURI);
+		if ( sName.empty() || (sName[0] == L'.') ) {
+			// must not be emtpy or start with a '.'
+			throw CNMRException(NMR_ERROR_INVALIDOPCPARTURI);
+		}
 		m_sTargetPartURI = sTargetPartURI;
 	}
 
@@ -66,10 +75,10 @@ namespace NMR {
 
 		std::wstring sTarget = fnIncludeLeadingPathDelimiter(m_sTargetPartURI);
 
-		pXMLWriter->WriteStartElement(nullptr, L"Relationship", nullptr);
-		pXMLWriter->WriteAttributeString(nullptr, L"Type", nullptr, m_sType.c_str());
-		pXMLWriter->WriteAttributeString(nullptr, L"Target", nullptr, sTarget.c_str());
-		pXMLWriter->WriteAttributeString(nullptr, L"Id", nullptr, m_sID.c_str());
+		pXMLWriter->WriteStartElement(nullptr, OPC_RELS_RELATIONSHIP_NODE, nullptr);
+		pXMLWriter->WriteAttributeString(nullptr, OPC_RELS_ATTRIB_TYPE, nullptr, m_sType.c_str());
+		pXMLWriter->WriteAttributeString(nullptr, OPC_RELS_ATTRIB_TARGET, nullptr, sTarget.c_str());
+		pXMLWriter->WriteAttributeString(nullptr, OPC_RELS_ATTRIB_ID, nullptr, m_sID.c_str());
 		pXMLWriter->WriteEndElement();
 	}
 

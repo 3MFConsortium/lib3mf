@@ -36,7 +36,7 @@ interpolate and reconstruct informations while the mesh topology is changing.
 
 #include "Common/MeshInformation/NMR_MeshInformation.h" 
 #include "Common/NMR_Exception.h" 
-#include <math.h>
+#include <cmath>
 
 namespace NMR {
 

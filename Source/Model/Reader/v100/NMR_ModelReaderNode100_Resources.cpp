@@ -38,18 +38,22 @@ XML Model Stream.
 #include "Model/Reader/v100/NMR_ModelReaderNode100_Colors.h"
 #include "Model/Reader/v100/NMR_ModelReaderNode100_Tex2DGroup.h"
 #include "Model/Reader/v100/NMR_ModelReaderNode100_Texture2D.h"
+#include "Model/Reader/Slice1507/NMR_ModelReader_Slice1507_SliceStack.h"
 
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_Exception_Windows.h"
+#include "Common/MeshInformation/NMR_MeshInformation_Slices.h"
 
 namespace NMR {
 
-	CModelReaderNode100_Resources::CModelReaderNode100_Resources(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings)
+	CModelReaderNode100_Resources::CModelReaderNode100_Resources(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings, _In_z_ const nfWChar *sPath)
 		: CModelReaderNode(pWarnings)
 	{
 		__NMRASSERT(pModel);
+		__NMRASSERT(sPath);
 		m_pModel = pModel;
+		m_sPath = sPath;
 
 		m_pColorMapping = std::make_shared<CModelReader_ColorMapping>();
 		m_pTexCoordMapping = std::make_shared<CModelReader_TexCoordMapping>();
@@ -80,15 +84,16 @@ namespace NMR {
 		__NMRASSERT(pXMLReader);
 
 		if (wcscmp(pNameSpace, XML_3MF_NAMESPACE_CORESPEC100) == 0) {
-
 			if (wcscmp(pChildName, XML_3MF_ELEMENT_OBJECT) == 0) {
 				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode100_Object>(m_pModel, m_pWarnings, m_pColorMapping, m_pTexCoordMapping);
 				pXMLNode->parseXML(pXMLReader);
 			}
-			if (wcscmp(pChildName, XML_3MF_ELEMENT_BASEMATERIALS) == 0) {
+			else if (wcscmp(pChildName, XML_3MF_ELEMENT_BASEMATERIALS) == 0) {
 				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode100_BaseMaterials>(m_pModel, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 			}
+			else
+				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
 		}
 
 		if (wcscmp(pNameSpace, XML_3MF_NAMESPACE_MATERIALSPEC) == 0) {
@@ -96,17 +101,34 @@ namespace NMR {
 				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode100_Colors>(m_pModel, m_pWarnings, m_pColorMapping);
 				pXMLNode->parseXML(pXMLReader);
 			}
-
-			if (wcscmp(pChildName, XML_3MF_ELEMENT_TEX2DGROUP) == 0) {
+			else if (wcscmp(pChildName, XML_3MF_ELEMENT_TEX2DGROUP) == 0) {
 				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode100_Tex2DGroup>(m_pModel, m_pWarnings, m_pTexCoordMapping);
 				pXMLNode->parseXML(pXMLReader);
 			}
-
-			if (wcscmp(pChildName, XML_3MF_ELEMENT_TEXTURE2D) == 0) {
+			else if (wcscmp(pChildName, XML_3MF_ELEMENT_TEXTURE2D) == 0) {
 				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode100_Texture2D>(m_pModel, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 			}
+			else if (wcscmp(pChildName, XML_3MF_ELEMENT_COMPOSITEMATERIALS) == 0) {
+				// Compositematerials are not implemented in lib3mf.
+				// signal this to the user via a warning
+				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
+			}
+			// there might be other things, that are not yet properly implemented in lib3MF
+			//else
+			//	m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
 		}
+
+		if (wcscmp(pNameSpace, XML_3MF_NAMESPACE_SLICESPEC) == 0) {
+			if (wcscmp(pChildName, XML_3MF_ELEMENT_SLICESTACKRESOURCE) == 0) {
+				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode_Slice1507_SliceStack>(
+					m_pModel, m_pWarnings, m_sPath.c_str());
+				pXMLNode->parseXML(pXMLReader);
+			}
+			else
+				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
+		}
+
 
 	}
 

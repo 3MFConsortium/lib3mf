@@ -50,6 +50,12 @@ namespace NMR {
 		std::wstring m_sContentType;
 		std::wstring m_sTileStyleU;
 		std::wstring m_sTileStyleV;
+		
+		nfBool m_hasBox;
+		nfFloat m_fU;
+		nfFloat m_fV;
+		nfFloat m_fWidth;
+		nfFloat m_fHeight;
 
 		PModelTexture2DResource m_pTexture2DResource;
 	protected:

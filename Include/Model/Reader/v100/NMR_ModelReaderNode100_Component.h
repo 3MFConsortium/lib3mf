@@ -45,6 +45,11 @@ namespace NMR {
 		nfBool m_bHasID;
 		NMATRIX3 m_mTransform;
 
+		nfBool m_bHasPath;
+		PUUID m_UUID;
+		std::wstring m_sPath;
+
+		virtual void OnNSAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue, _In_z_ const nfWChar * pNameSpace);
 		virtual void OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue);
 	public:
 		CModelReaderNode100_Component() = delete;
@@ -54,6 +59,8 @@ namespace NMR {
 
 		CModelObject * getObject();
 		NMATRIX3 getTransform();
+
+		PUUID uuid();
 
 	};
 

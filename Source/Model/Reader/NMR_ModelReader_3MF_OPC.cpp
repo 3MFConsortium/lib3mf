@@ -114,8 +114,14 @@ namespace NMR {
 		if (hResult != S_OK)
 			throw CNMRException_Windows(NMR_ERROR_MODELRELATIONSHIPSETREADFAILED, hResult);
 
+		// TODO: only if toplevel!
+		// extractModelDataFromRelationships(m_pPackagePartSet, m_pModelRelationshipSet);
+
 		extractTexturesFromRelationships(m_pPackagePartSet, m_pModelRelationshipSet);
+		extractSliceDataFromRelationships(m_pPackagePartSet, m_pModelRelationshipSet);
 		extractCustomDataFromRelationships(m_pPackagePartSet, m_pModelRelationshipSet);
+
+
 
 		return std::make_shared<CImportStream_COM>(pModelStream);
 	}
@@ -179,7 +185,7 @@ namespace NMR {
 		hResult = pRelationship->GetSourceUri(&pSourceURI);
 		if (hResult != S_OK)
 			throw CNMRException_Windows(NMR_ERROR_OPCRELATIONSHIPSOURCEURIFAILED, hResult);
-
+		
 		CComPtr<IUri> pTargetURI;
 		hResult = pRelationship->GetTargetUri(&pTargetURI);
 		if (hResult != S_OK)
@@ -189,7 +195,7 @@ namespace NMR {
 		hResult = pSourceURI->CombinePartUri(pTargetURI, &pPartURI);
 		if (hResult != S_OK)
 			throw CNMRException_Windows(NMR_ERROR_OPCRELATIONSHIPCOMBINEURIFAILED, hResult);
-
+		
 		CComPtr<IOpcPart> pPart;
 		hResult = pPartSet->GetPart(pPartURI, &pPart);
 		if (hResult != S_OK)
@@ -225,6 +231,125 @@ namespace NMR {
 
 		CComPtr<IOpcRelationship> pRelationship = getSingleRelationShipByType(pRelationshipSet, pszRelationshipType);
 		return getRelationshipTargetPart(pPartSet, pRelationship, pszExpectedContentType);
+	}
+
+	void CModelReader_3MF_OPC::extractSliceDataFromRelationships(_In_ IOpcPartSet* pPartSet, _In_ IOpcRelationshipSet* pRelationshipSet) {
+		__NMRASSERT(pRelationshipSet != nullptr);
+		HRESULT hResult;
+
+		// Retrieve Enumerator
+		CComPtr<IOpcRelationshipEnumerator> pEnumerator;
+		hResult = pRelationshipSet->GetEnumeratorForType(PACKAGE_START_PART_RELATIONSHIP_TYPE, &pEnumerator);
+		if (hResult != S_OK)
+			throw CNMRException_Windows(NMR_ERROR_OPCRELATIONSHIPENUMERATIONFAILED, hResult);
+
+
+		// Iterate through the relationships and retrieve textures
+		BOOL bHasNext = true;
+		while (bHasNext) {
+			hResult = pEnumerator->MoveNext(&bHasNext);
+			if (hResult != S_OK)
+				throw CNMRException_Windows(NMR_ERROR_OPCRELATIONSHIPENUMERATIONFAILED, hResult);
+
+			if (bHasNext) {
+				CComPtr<IOpcRelationship> pRelationShip = nullptr;
+				hResult = pEnumerator->GetCurrent(&pRelationShip);
+				if (hResult != S_OK)
+					throw CNMRException_Windows(NMR_ERROR_OPCRELATIONSHIPENUMERATIONFAILED, hResult);
+
+				CComPtr<IOpcPart> pPart = getRelationshipTargetPart(m_pPackagePartSet, pRelationShip, nullptr);
+
+				// Extract Model Stream
+				CComPtr<IStream> pSliceStream = nullptr;
+				__NMRASSERT(pPart != nullptr);
+				hResult = pPart->GetContentStream(&pSliceStream);
+				if (hResult != S_OK)
+					throw CNMRException_Windows(NMR_ERROR_OPCCOULDNOTGETSLICEREFSTREAM, hResult);
+
+				// Create Import Stream for the slicestack
+				PImportStream pImportStream = std::make_shared<CImportStream_COM>(pSliceStream);
+
+				// Copy Stream of the slicestack in the memory
+				PImportStream pCopiedStream = pImportStream->copyToMemory();
+
+				// Find out part URI
+				CComPtr<IOpcPartUri> pPartUri;
+				hResult = pPart->GetName(&pPartUri);
+				if (hResult != S_OK)
+					throw CNMRException_Windows(NMR_ERROR_OPCCOULDNOTGETSLICEREFURI, hResult);
+
+				// Transform to absolute path
+				wchar_t * pszAbsoluteUri = nullptr;
+				hResult = pPartUri->GetAbsoluteUri(&pszAbsoluteUri);
+				if (hResult != S_OK)
+					throw CNMRException_Windows(NMR_ERROR_OPCCOULDNOTGETSLICEREFURI, hResult);
+				std::wstring sPartUri(pszAbsoluteUri);
+				SysFreeString(pszAbsoluteUri);
+
+				// Add Slicestack Stream to Model
+				// addSliceStream(sPartUri, pCopiedStream);
+			}
+		}
+	}
+
+	void CModelReader_3MF_OPC::extractModelDataFromRelationships(_In_ IOpcPartSet* pPartSet, _In_ IOpcRelationshipSet* pRelationshipSet)
+	{
+		__NMRASSERT(pRelationshipSet != nullptr);
+		HRESULT hResult;
+
+		// Retrieve Enumerator
+		CComPtr<IOpcRelationshipEnumerator> pEnumerator;
+		hResult = pRelationshipSet->GetEnumeratorForType(PACKAGE_START_PART_RELATIONSHIP_TYPE, &pEnumerator);
+		if (hResult != S_OK)
+			throw CNMRException_Windows(NMR_ERROR_OPCRELATIONSHIPENUMERATIONFAILED, hResult);
+
+		// Iterate through the relationships and retrieve models
+		BOOL bHasNext = true;
+		while (bHasNext) {
+			hResult = pEnumerator->MoveNext(&bHasNext);
+			if (hResult != S_OK)
+				throw CNMRException_Windows(NMR_ERROR_OPCRELATIONSHIPENUMERATIONFAILED, hResult);
+
+			//if (bHasNext) {
+			//	CComPtr<IOpcRelationship> pRelationShip = nullptr;
+			//	hResult = pEnumerator->GetCurrent(&pRelationShip);
+			//	if (hResult != S_OK)
+			//		throw CNMRException_Windows(NMR_ERROR_OPCRELATIONSHIPENUMERATIONFAILED, hResult);
+
+			//	CComPtr<IOpcPart> pPart = getRelationshipTargetPart(m_pPackagePartSet, pRelationShip, nullptr);
+
+			//	// Extract Model Stream
+			//	CComPtr<IStream> pTextureStream = nullptr;
+			//	__NMRASSERT(pPart != nullptr);
+			//	hResult = pPart->GetContentStream(&pTextureStream);
+			//	if (hResult != S_OK)
+			//		throw CNMRException_Windows(NMR_ERROR_OPCCOULDNOTGETTEXTURESTREAM, hResult);
+
+			//	// Create Import Stream for the texture
+			//	PImportStream pImportStream = std::make_shared<CImportStream_COM>(pTextureStream);
+
+			//	// Copy Stream of the texture in the memory
+			//	PImportStream pCopiedStream = pImportStream->copyToMemory();
+
+			//	// Find out part URI
+			//	CComPtr<IOpcPartUri> pPartUri;
+			//	hResult = pPart->GetName(&pPartUri);
+			//	if (hResult != S_OK)
+			//		throw CNMRException_Windows(NMR_ERROR_OPCCOULDNOTGETTEXTUREURI, hResult);
+
+			//	// Transform to absolute path
+			//	wchar_t * pszAbsoluteUri = nullptr;
+			//	hResult = pPartUri->GetAbsoluteUri(&pszAbsoluteUri);
+			//	if (hResult != S_OK)
+			//		throw CNMRException_Windows(NMR_ERROR_OPCCOULDNOTGETTEXTUREURI, hResult);
+			//	std::wstring sPartUri(pszAbsoluteUri);
+			//	SysFreeString(pszAbsoluteUri);
+
+			//	// Add Texture Stream to Model
+			//	addTextureStream(sPartUri, pCopiedStream);
+			//}
+		}
+
 	}
 
 	void CModelReader_3MF_OPC::extractTexturesFromRelationships(_In_ IOpcPartSet* pPartSet, _In_ IOpcRelationshipSet* pRelationshipSet)
@@ -335,7 +460,7 @@ namespace NMR {
 					__NMRASSERT(pPart != nullptr);
 					hResult = pPart->GetContentStream(&pAttachedDataStream);
 					if (hResult != S_OK)
-						throw CNMRException_Windows(NMR_ERROR_OPCCOULDNOTGETTEXTURESTREAM, hResult);
+						throw CNMRException_Windows(NMR_ERROR_OPCCOULDNOTGETATTACHMENTSTREAM, hResult);
 
 					// Create Import Stream for the texture
 					PImportStream pImportStream = std::make_shared<CImportStream_COM>(pAttachedDataStream);

@@ -46,8 +46,15 @@ namespace NMR {
 		nfBool m_bHasID;
 		std::wstring m_sPartNumber;
 		NMATRIX3 m_mTransform;
+
+		// Production Extension
+		std::wstring m_sPath;
+		PUUID m_UUID;
+
+		bool m_hasPath;
 	protected:
 		virtual void OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue);
+		virtual void OnNSAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue, _In_z_ const nfWChar * pNameSpace);
 	public:
 		CModelReaderNode100_BuildItem() = delete;
 		CModelReaderNode100_BuildItem(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings);

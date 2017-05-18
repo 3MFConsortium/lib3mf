@@ -69,18 +69,35 @@ These are given by the 3MF Standard
 #define PACKAGE_THUMBNAIL_RELATIONSHIP_TYPE L"http://schemas.openxmlformats.org/package/2006/relationships/metadata/thumbnail"
 
 #define XML_3MF_NAMESPACE_XML L"http://www.w3.org/XML/1998/namespace"
+#define XML_3MF_NAMESPACE_XMLNS L"http://www.w3.org/2000/xmlns/"
 #define XML_3MF_NAMESPACE_CORESPEC093 PACKAGE_XMLNS_093
 #define XML_3MF_NAMESPACE_CORESPEC100 PACKAGE_XMLNS_100
 #define XML_3MF_NAMESPACE_MATERIALSPEC L"http://schemas.microsoft.com/3dmanufacturing/material/2015/02"
+#define XML_3MF_NAMESPACE_PRODUCTIONSPEC L"http://schemas.microsoft.com/3dmanufacturing/production/2015/06"
+#define XML_3MF_NAMESPACE_BEAMLATTICESPEC L"http://schemas.microsoft.com/3dmanufacturing/beamlattice/2017/02"
+#define XML_3MF_NAMESPACE_SLICESPEC L"http://schemas.microsoft.com/3dmanufacturing/slice/2015/07"
 
 #define XML_3MF_NAMESPACEPREFIX_MATERIAL L"m"
+#define XML_3MF_NAMESPACEPREFIX_PRODUCTION L"p"
+#define XML_3MF_NAMESPACEPREFIX_BEAMLATTICE L"b"
+#define XML_3MF_NAMESPACEPREFIX_SLICE L"s"
 
 #define XML_3MF_ATTRIBUTE_XMLNS                     L"xmlns"
 #define XML_3MF_ATTRIBUTE_PREFIX_XML                L"xml"
 #define XML_3MF_ATTRIBUTE_MUST_UNDERSTAND           L"MustUnderstand"
 
 #define XML_3MF_ELEMENT_METADATA                    L"metadata"
+#define XML_3MF_ELEMENT_METADATA_ENRTY              L"entry"
 #define XML_3MF_ATTRIBUTE_METADATA_NAME				L"name"
+#define XML_3MF_METADATA_VALUE_1                L"Title"
+#define XML_3MF_METADATA_VALUE_2                L"Designer"
+#define XML_3MF_METADATA_VALUE_3                L"Description"
+#define XML_3MF_METADATA_VALUE_4                L"Copyright"
+#define XML_3MF_METADATA_VALUE_5                L"LicenseTerms"
+#define XML_3MF_METADATA_VALUE_6                L"Rating"
+#define XML_3MF_METADATA_VALUE_7                L"CreationDate"
+#define XML_3MF_METADATA_VALUE_8                L"ModificationDate"
+
 
 // Resources element.
 #define XML_3MF_ELEMENT_RESOURCES                   L"resources"
@@ -104,6 +121,14 @@ These are given by the 3MF Standard
 // Triangles element.
 #define XML_3MF_ELEMENT_TRIANGLES                   L"triangles"
 
+
+#define XML_3MF_ELEMENT_BEAMLATTICE                       L"beamlattice"
+#define XML_3MF_ELEMENT_BEAMS                             L"beams"
+#define XML_3MF_ELEMENT_BEAM                              L"beam"
+#define XML_3MF_ELEMENT_BEAMSETS                          L"beamsets"
+#define XML_3MF_ELEMENT_BEAMSET                           L"beamset"
+#define XML_3MF_ELEMENT_REF                               L"ref"
+
 // Triangle element.
 #define XML_3MF_ELEMENT_TRIANGLE                    L"triangle"
 #define XML_3MF_ATTRIBUTE_TRIANGLE_V1               L"v1"
@@ -118,6 +143,25 @@ These are given by the 3MF Standard
 #define XML_3MF_ATTRIBUTE_TRIANGLE_P1               L"p1"
 #define XML_3MF_ATTRIBUTE_TRIANGLE_P2               L"p2"
 #define XML_3MF_ATTRIBUTE_TRIANGLE_P3               L"p3"
+#define XML_3MF_ATTRIBUTE_BEAMLATTICE_V1            L"v1"
+#define XML_3MF_ATTRIBUTE_BEAMLATTICE_V2            L"v2"
+#define XML_3MF_ATTRIBUTE_BEAMLATTICE_NAME          L"name"
+#define XML_3MF_ATTRIBUTE_BEAMLATTICE_IDENTIFIER    L"identifier"
+#define XML_3MF_ATTRIBUTE_BEAMLATTICE_R1            L"r1"
+#define XML_3MF_ATTRIBUTE_BEAMLATTICE_R2            L"r2"
+#define XML_3MF_ATTRIBUTE_BEAMLATTICE_CLIPPING      L"clipping"
+#define XML_3MF_ATTRIBUTE_BEAMLATTICE_CLIPPINGMESH  L"clippingmesh"
+#define XML_3MF_ATTRIBUTE_BEAMLATTICE_REPRESENTATIONMESH  L"representationmesh"
+#define XML_3MF_ATTRIBUTE_BEAMLATTICE_RADIUS        L"radius"
+#define XML_3MF_ATTRIBUTE_BEAMLATTICE_MINLENGTH     L"minlength"
+#define XML_3MF_ATTRIBUTE_BEAMLATTICE_CAPMODE       L"cap"
+#define XML_3MF_ATTRIBUTE_BEAMLATTICE_CAP1          L"cap1"
+#define XML_3MF_ATTRIBUTE_BEAMLATTICE_CAP2          L"cap2"
+#define XML_3MF_ATTRIBUTE_BEAMLATTICE_INDEX         L"index"
+#define XML_3MF_ATTRIBUTE_BEAMLATTICETAG_TAG        L"tag"
+// deprecated (has been used in draft version of the specification):
+#define XML_3MF_ATTRIBUTE_BEAMLATTICE_ACCURACY      L"accuracy"
+#define XML_3MF_ATTRIBUTE_BEAMLATTICE_PRECISION     L"precision"
 
 // Vertex element.
 #define XML_3MF_ELEMENT_VERTEX                      L"vertex"
@@ -140,6 +184,13 @@ These are given by the 3MF Standard
 #define XML_3MF_ATTRIBUTE_TEXTURE2D_TILESTYLEU      L"tilestyleu"
 #define XML_3MF_ATTRIBUTE_TEXTURE2D_TILESTYLEV      L"tilestylev"
 
+// Compositematerials and composite element (not implemented!)
+#define XML_3MF_ELEMENT_COMPOSITEMATERIALS          L"compositematerials"
+#define XML_3MF_ATTRIBUTE_COMPOSITEMATERIALS_ID     L"id"
+#define XML_3MF_ATTRIBUTE_COMPOSITEMATERIALS_MATID  L"matid"
+#define XML_3MF_ATTRIBUTE_COMPOSITEMATERIALS_MATINDICES L"matindices"
+#define XML_3MF_ELEMENT_COMPOSITE                   L"composite"
+#define XML_3MF_ATTRIBUTE_COMPOSITE_VALUES          L"values"
 
 // Geometry element.
 #define XML_3MF_ELEMENT_GEOMETRY                    L"geometry"
@@ -179,16 +230,22 @@ These are given by the 3MF Standard
 #define XML_3MF_ATTRIBUTE_OBJECT_MATERIALID         L"materialid"
 #define XML_3MF_ATTRIBUTE_OBJECT_FILLTEXTUREID      L"filltextureid"
 #define XML_3MF_ATTRIBUTE_OBJECT_MINWALLTHICKNESS   L"minwallthickness"
+#define XML_3MF_ATTRIBUTE_OBJECT_THUMBNAIL	        L"thumbnail"
 #define XML_3MF_ATTRIBUTE_OBJECT_FIT                L"fit"
 #define XML_3MF_ATTRIBUTE_OBJECT_NAME				L"name"
 #define XML_3MF_ATTRIBUTE_OBJECT_PARTNUMBER			L"partnumber"
 #define XML_3MF_ATTRIBUTE_OBJECT_PID                L"pid"
 #define XML_3MF_ATTRIBUTE_OBJECT_PINDEX             L"pindex"
+#define XML_3MF_ATTRIBUTE_OBJECT_SLICESTACKID       L"slicestackid"
+#define XML_3MF_ATTRIBUTE_OBJECT_MESHRESOLUTION     L"meshresolution"
+#define XML_3MF_VALUE_OBJECT_MESHRESOLUTION_LOW     L"lowres"
+#define XML_3MF_VALUE_OBJECT_MESHRESOLUTION_FULL    L"fullres"
 
 // Model element.
 #define XML_3MF_ELEMENT_MODEL                       L"model"
 #define XML_3MF_ATTRIBUTE_MODEL_UNIT                L"unit"
 #define XML_3MF_ATTRIBUTE_MODEL_LANG                L"lang"			// xml:lang
+#define XML_3MF_ATTRIBUTE_MODEL_SPACE               L"space"		// xml:space : forbidden
 #define XML_3MF_ATTRIBUTE_REQUIREDEXTENSIONS        L"requiredextensions"
 
 // Build element.
@@ -241,10 +298,24 @@ These are given by the 3MF Standard
 #define XML_3MF_MODELUNIT_FOOT                      L"foot"
 #define XML_3MF_MODELUNIT_METER                     L"meter"
 
-#define XML_3MF_OBJECTTYPE_OTHER			L"other"
-#define XML_3MF_OBJECTTYPE_MODEL			L"model"
-#define XML_3MF_OBJECTTYPE_SUPPORT			L"support"
-#define XML_3MF_OBJECTTYPE_SOLIDSUPPORT			L"solidsupport"
+#define XML_3MF_OBJECTTYPE_OTHER                    L"other"
+#define XML_3MF_OBJECTTYPE_MODEL                    L"model"
+#define XML_3MF_OBJECTTYPE_SUPPORT                  L"support"
+#define XML_3MF_OBJECTTYPE_SOLIDSUPPORT             L"solidsupport"
+
+#define XML_3MF_BEAMLATTICE_CLIPMODE_NONE           L"none"
+#define XML_3MF_BEAMLATTICE_CLIPMODE_INSIDE         L"inside"
+#define XML_3MF_BEAMLATTICE_CLIPMODE_OUTSIDE        L"outside"
+
+#define XML_3MF_BEAMLATTICE_CAPMODE_SPHERE          L"sphere"
+#define XML_3MF_BEAMLATTICE_CAPMODE_HEMISPHERE      L"hemisphere"
+#define XML_3MF_BEAMLATTICE_CAPMODE_BUTT            L"butt"
+// depricated (from a draft version of the spec):
+#define XML_3MF_BEAMLATTICE_CAPMODE_ROUND           L"round"
+
+
+#define XML_3MF_PRODUCTION_PATH                     L"path"
+#define XML_3MF_PRODUCTION_UUID                     L"UUID"
 
 #define XML_3MF_LANG_US                             L"en-US"
 
@@ -255,5 +326,8 @@ These are given by the 3MF Standard
 #define XML_3MF_MAXMETADATACOUNT                    2147483647
 #define XML_3MF_MAXBUILDITEMCOUNT                   2147483647
 #define XML_3MF_MAXRESOURCECOUNT                    2147483647
+#define XML_3MF_MAXIMUMBEAMRADIUSVALUE              1000000000.0f
+#define XML_3MF_MAXIMUMSKINTHICKNESSVALUE           1000000000.0f
+#define XML_3MF_MAXBEAMCOUNT                        2147483647
 
 #endif // __NMR_MODELCONSTANTS

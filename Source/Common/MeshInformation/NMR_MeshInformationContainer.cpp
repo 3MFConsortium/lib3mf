@@ -35,7 +35,7 @@ information state of a complete mesh structure.
 
 #include "Common/MeshInformation/NMR_MeshInformationContainer.h" 
 #include "Common/NMR_Exception.h" 
-#include <math.h>
+#include <cmath>
 
 namespace NMR {
 

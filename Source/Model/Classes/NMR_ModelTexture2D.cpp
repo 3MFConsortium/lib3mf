@@ -32,6 +32,7 @@ NMR_ModelTexture2D.cpp implements the Model Texture Class.
 --*/
 
 #include "Model/Classes/NMR_ModelTexture2D.h"
+#include "Model/Classes/NMR_ModelTextureAttachment.h"
 #include "Common/NMR_Exception.h"
 #include <sstream>
 #include <algorithm>
@@ -50,7 +51,6 @@ namespace NMR {
 		m_fBox2D_Height = 1.0f;
 		m_sTileStyleU = L"";
 		m_sTileStyleV = L"";
-
 	}
 
 		// getters/setters Path
@@ -61,6 +61,7 @@ namespace NMR {
 
 	void CModelTexture2DResource::setPath(_In_ std::wstring sPath)
 	{
+		// throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
 		m_sPath = sPath;
 	}
 
@@ -68,8 +69,10 @@ namespace NMR {
 	{
 		CModel * pModel = getModel();
 		__NMRASSERT(pModel != nullptr);
-
-		return pModel->findTextureStream(m_sPath);
+		PModelAttachment pAttachment = pModel->findModelAttachment(m_sPath);
+		if (pAttachment) 
+			return pAttachment->getStream();
+		return nullptr;
 	}
 
 

@@ -55,13 +55,27 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
 		// Create new OPC Package
-		createPackage(m_pModel.get ());
+		createPackage(m_pModel.get());
 
 		// Write Package to Stream
 		writePackageToStream(pStream);
 
 		// Release Memory
 		releasePackage();
+	}
+
+	void CModelWriter_3MF::writeSlicestackStream(_In_ CXmlWriter *pXMLWriter, _In_ CModel * pModel, _In_ CModelSliceStackResource *pSliceStackResource)
+	{
+		__NMRASSERT(pSliceStackResource != nullptr);
+		if (pXMLWriter == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		pXMLWriter->WriteStartDocument();
+		CModelWriterNode100_Model ModelNode(pModel, pXMLWriter, pSliceStackResource);
+		ModelNode.writeToXML();
+
+		pXMLWriter->WriteEndDocument();
+		pXMLWriter->Flush();
 	}
 
 	void CModelWriter_3MF::writeModelStream(_In_ CXmlWriter * pXMLWriter, _In_ CModel * pModel)

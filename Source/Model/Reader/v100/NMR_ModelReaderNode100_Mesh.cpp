@@ -35,6 +35,7 @@ A mesh reader model node is a parser for the mesh node of an XML Model Stream.
 #include "Model/Reader/v100/NMR_ModelReaderNode100_Mesh.h"
 #include "Model/Reader/v100/NMR_ModelReaderNode100_Vertices.h"
 #include "Model/Reader/v100/NMR_ModelReaderNode100_Triangles.h"
+#include "Model/Reader/BeamLattice1702/NMR_ModelReaderNode_BeamLattice1702_BeamLattice.h"
 
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Common/NMR_Exception.h"
@@ -61,6 +62,12 @@ namespace NMR {
 
 		m_pMesh = pMesh;
 		m_pModel = pModel;
+
+		m_bHasClippingMeshID = false;
+		m_nClippingMeshID = 0;
+		m_eClipMode = eModelBeamLatticeClipMode::MODELBEAMLATTICECLIPMODE_NONE;
+		m_bHasRepresentationMeshID = false;
+		m_nRepresentationMeshID = 0;
 	}
 
 	void CModelReaderNode100_Mesh::parseXML(_In_ CXmlReader * pXMLReader)
@@ -73,6 +80,19 @@ namespace NMR {
 
 		// Parse Content
 		parseContent(pXMLReader);
+	}
+
+	void CModelReaderNode100_Mesh::retrieveClippingInfo(_Out_ eModelBeamLatticeClipMode &eClipMode, _Out_ nfBool & bHasClippingMode, _Out_ ModelResourceID & nClippingMeshID)
+	{
+		bHasClippingMode = m_bHasClippingMeshID;
+		nClippingMeshID = m_nClippingMeshID;
+		eClipMode = m_eClipMode;
+	}
+	
+	void CModelReaderNode100_Mesh::retrieveRepresentationInfo(_Out_ nfBool & bHasRepresentation, _Out_ ModelResourceID & nRepresentationMeshID)
+	{
+		bHasRepresentation = m_bHasRepresentationMeshID;
+		nRepresentationMeshID = m_nRepresentationMeshID;
 	}
 
 	void CModelReaderNode100_Mesh::OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue)
@@ -94,13 +114,38 @@ namespace NMR {
 				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode100_Vertices>(m_pMesh, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 			}
-
-			if (wcscmp(pChildName, XML_3MF_ELEMENT_TRIANGLES) == 0)
+			else if (wcscmp(pChildName, XML_3MF_ELEMENT_TRIANGLES) == 0)
 			{
-				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode100_Triangles>(m_pModel, m_pMesh, m_pWarnings, m_pColorMapping, m_pTexCoordMapping, m_nDefaultPropertyID, m_nDefaultPropertyIndex);
+				PModelReaderNode100_Triangles pXMLNode = std::make_shared<CModelReaderNode100_Triangles>(m_pModel, m_pMesh, m_pWarnings, m_pColorMapping, m_pTexCoordMapping, m_nDefaultPropertyID, m_nDefaultPropertyIndex);
 				pXMLNode->parseXML(pXMLReader);
+				if (m_nDefaultPropertyID == 0) {
+					// warn, if object does not have a default property, but a triangle has one
+					if (pXMLNode->getUsedPropertyID() != 0) {
+						m_pWarnings->addException(CNMRException(NMR_ERROR_MISSINGDEFAULTPID), mrwMissingMandatoryValue);
+					}
+					// Try and define a default property as some PropertyID used by a triangle in the meshobject
+					m_nDefaultPropertyID = pXMLNode->getUsedPropertyID();
+					m_nDefaultPropertyIndex = 0;
+				}
 			}
+			else
+				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
 		}
+
+
+		if (wcscmp(pNameSpace, XML_3MF_NAMESPACE_BEAMLATTICESPEC) == 0) {
+			if (wcscmp(pChildName, XML_3MF_ELEMENT_BEAMLATTICE) == 0)
+			{
+				PModelReaderNode_BeamLattice1702_BeamLattice pXMLNode = std::make_shared<CModelReaderNode_BeamLattice1702_BeamLattice>(m_pModel, m_pMesh, m_pWarnings);
+				pXMLNode->parseXML(pXMLReader);
+
+				pXMLNode->retrieveClippingInfo(m_eClipMode, m_bHasClippingMeshID, m_nClippingMeshID);
+				pXMLNode->retrieveRepresentationInfo(m_bHasRepresentationMeshID, m_nRepresentationMeshID);
+			}
+			else
+				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
+		}
+
 	}
 
 }

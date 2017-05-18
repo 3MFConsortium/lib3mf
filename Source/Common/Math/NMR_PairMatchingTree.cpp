@@ -34,7 +34,7 @@ duplicate pairs of numbers in a given data set.
 
 #include "Common/Math/NMR_PairMatchingTree.h" 
 #include "Common/NMR_Exception.h" 
-#include <math.h>
+#include <cmath>
 #include <map>
 
 namespace NMR {

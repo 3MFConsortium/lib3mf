@@ -58,12 +58,39 @@ namespace NMR {
 
 		// Parse Content
 		parseContent(pXMLReader);
+
+		if (!m_UUID.get()) {
+			if (   (m_pModel->rootPath() == m_pModel->curPath()) 
+				&& (pXMLReader->NamespaceRegistered(XML_3MF_NAMESPACE_PRODUCTIONSPEC)) )
+			{
+				m_pWarnings->addException(CNMRException(NMR_ERROR_MISSINGUUID), mrwMissingMandatoryValue);
+			}
+			m_UUID = std::make_shared<CUUID>();
+		}
+		m_pModel->setBuildUUID(m_UUID);
 	}
 
 	void CModelReaderNode100_Build::OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue)
 	{
 		__NMRASSERT(pAttributeName);
 		__NMRASSERT(pAttributeValue);
+	}
+
+	void CModelReaderNode100_Build::OnNSAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue, _In_z_ const nfWChar * pNameSpace)
+	{
+		__NMRASSERT(pAttributeName);
+		__NMRASSERT(pAttributeValue);
+		__NMRASSERT(pNameSpace);
+
+		if (wcscmp(pNameSpace, XML_3MF_NAMESPACE_PRODUCTIONSPEC) == 0) {
+			if (wcscmp(pAttributeName, XML_3MF_PRODUCTION_UUID) == 0) {
+				if (m_UUID.get())
+					throw CNMRException(NMR_ERROR_DUPLICATEUUID);
+				m_UUID = std::make_shared<CUUID>(pAttributeValue);
+			}
+			else
+				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE), mrwInvalidOptionalValue);
+		}
 	}
 
 	void CModelReaderNode100_Build::OnNSChildElement(_In_z_ const nfWChar * pChildName, _In_z_ const nfWChar * pNameSpace, _In_ CXmlReader * pXMLReader)
@@ -73,12 +100,12 @@ namespace NMR {
 		__NMRASSERT(pNameSpace);
 
 		if (wcscmp(pNameSpace, XML_3MF_NAMESPACE_CORESPEC100) == 0) {
-
 			if (wcscmp(pChildName, XML_3MF_ELEMENT_ITEM) == 0) {
 				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode100_BuildItem>(m_pModel, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
-
 			}
+			else
+				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
 		}
 	}
 

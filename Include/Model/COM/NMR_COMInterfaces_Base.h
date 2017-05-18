@@ -35,7 +35,7 @@ shown to the outside world.
 #ifndef __NMR_COMINTERFACES_BASE
 #define __NMR_COMINTERFACES_BASE
 
-#ifdef NMR_COM_EMULATION
+#ifndef NMR_COM_NATIVE
 #include "Common/Platform/NMR_COM_Emulation.h"
 #else
 #include "Common/Platform/NMR_COM_Native.h"
@@ -46,7 +46,7 @@ shown to the outside world.
 #include "Model/Classes/NMR_ModelTypes.h"
 
 
-#ifndef __GNUC__
+#ifdef NMR_COM_NATIVE
 #include "Common/Platform/NMR_IStream.h"
 #endif
 
@@ -56,12 +56,9 @@ shown to the outside world.
 // Define Class IDs
 #define CLSID_Lib3MF_Base                   "8F1D86BF-CD19-4710-BC19-3C70D095642F"
 
-#ifndef __GNUC__
+#ifdef NMR_COM_NATIVE
 static const IID IID_Lib3MF_Base = { 0x8f1d86bf, 0xcd19, 0x4710, { 0xbc, 0x19, 0x3c, 0x70, 0xd0, 0x95, 0x64, 0x2f } };
-
-
-
-#endif //__GNUC__
+#endif //NMR_COM_NATIVE
 
 namespace NMR {
 

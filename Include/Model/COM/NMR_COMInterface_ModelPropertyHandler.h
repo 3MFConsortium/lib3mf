@@ -61,8 +61,8 @@ namespace NMR {
 		LIB3MFMETHOD(GetPropertyType) (_In_ DWORD nIndex, _Out_ eModelPropertyType * pnPropertyType);
 		LIB3MFMETHOD(GetBaseMaterial) (_In_ DWORD nIndex, _Out_ DWORD * pnMaterialGroupID, _Out_ DWORD * pnMaterialIndex);
 		LIB3MFMETHOD(GetBaseMaterialArray) (_Out_ DWORD * pnMaterialGroupIDs, _Out_ DWORD * pnMaterialIndices);
-		LIB3MFMETHOD(SetBaseMaterial) (_In_ DWORD nIndex, _In_ ModelResourceID nMaterialGroupID, _In_ DWORD nMaterialIndex);
-		LIB3MFMETHOD(SetBaseMaterialArray) (_In_ ModelResourceID * pnMaterialGroupIDs, _In_ DWORD * pnMaterialIndices);
+		LIB3MFMETHOD(SetBaseMaterial) (_In_ DWORD nIndex, _In_ PackageResourceID nMaterialGroupID, _In_ DWORD nMaterialIndex);
+		LIB3MFMETHOD(SetBaseMaterialArray) (_In_ PackageResourceID * pnMaterialGroupIDs, _In_ DWORD * pnMaterialIndices);
 
 		LIB3MFMETHOD(GetColor) (_In_ DWORD nIndex, _Out_ MODELMESH_TRIANGLECOLOR_SRGB * pColor);
 		LIB3MFMETHOD(GetColorArray) (_Out_ MODELMESH_TRIANGLECOLOR_SRGB * pColors);
@@ -84,7 +84,7 @@ namespace NMR {
 		void setChannel(_In_ DWORD nChannel);
 
 		_Ret_notnull_ CMesh * getMesh();
-
+		_Ret_notnull_ CModelMeshObject * getMeshObject();
 	};
 
 }

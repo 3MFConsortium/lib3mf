@@ -55,6 +55,16 @@ NMR_COM_Emulation.h defines Macros for a non-Windows Emulation of COM Interfaces
 
 #define LIB3MFINTERFACE_DECL(x)
 
+#ifdef __GNUC__
+#define LIB3MFDEPRECATED(func) func __attribute__ ((deprecated))
+#elif defined(_MSC_VER)
+//#define LIB3MFDEPRECATED(func) __declspec(deprecated) func
+#define LIB3MFDEPRECATED(func) func
+#else
+#pragma message("WARNING: You need to implement DEPRECATED for this compiler")
+#define LIB3MFDEPRECATED(func) func
+#endif
+
 template <class BASE>
 class CCOMObject : public BASE {
 private:

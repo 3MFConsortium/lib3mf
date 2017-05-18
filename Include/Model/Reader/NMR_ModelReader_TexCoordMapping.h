@@ -67,6 +67,7 @@ namespace NMR {
 		nfBool findTexCoords(_In_ ModelResourceID nResourceID, _In_ ModelResourceIndex nResourceIndex, _Out_ ModelResourceID & nTextureID, _Out_ nfFloat & fU, _Out_ nfFloat & fV);
 
 		nfBool hasResource(_In_ ModelResourceID nResourceID);
+		nfBool retrieveARessource(_Out_ ModelResourceID& nResourceID);
 	};
 
 	typedef std::shared_ptr <CModelReader_TexCoordMapping> PModelReader_TexCoordMapping;

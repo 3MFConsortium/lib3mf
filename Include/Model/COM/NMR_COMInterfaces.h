@@ -1,7 +1,8 @@
 /*++
 
+Copyright (C) 2017 Autodesk Inc.
 Copyright (C) 2015 Microsoft Corporation (Original Author)
-Copyright (C) 2015 netfabb GmbH
+Copyright (C) 2015 netfabb GmbH (Original Author)
 
 All rights reserved.
 
@@ -47,6 +48,7 @@ shown to the outside world.
 #define CLSID_Lib3MF_ModelObjectResource    "FB9F7E2C-D8A3-4C84-831E-76928A91CC7B"
 #define CLSID_Lib3MF_ModelTexture2D         "29DD25F2-607D-4804-A737-ED2CBC7199F2"
 #define CLSID_Lib3MF_ModelAttachment        "A2EBA5BC-2A64-49CE-B11B-17B134CB48B0"
+#define CLSID_Lib3MF_ModelTextureAttachment "AEEEE547-C4DB-4BD0-AC28-998AFE18EEE6"
 #define CLSID_Lib3MF_ModelBaseMaterial      "943648CF-B9BB-40AD-8264-79C69195A116"
 #define CLSID_Lib3MF_ModelMeshObject        "8B7FE33C-8EF0-4927-A106-1C069B49B01D"
 #define CLSID_Lib3MF_ModelComponent         "99F7DB2E-9A6F-4DD5-9F96-27DDAF32A0CF"
@@ -55,13 +57,15 @@ shown to the outside world.
 #define CLSID_Lib3MF_ModelBuildItemIterator "65E8B244-D2D4-4363-9751-938E28B968D8"
 #define CLSID_Lib3MF_Model                  "BC58EF48-22A0-4A52-94ED-566C07017C49"
 #define CLSID_Lib3MF_ModelFactory           "9A41DB91-678E-4DC5-BF25-D49FE8B176CC"
-#define CLSID_Lib3MF_ModelThumbnail         "35F56BCA-784E-46D5-BC33-4608B405D99B"
-#define CLSID_Lib3MF_ModelThumbnailIterator "26E42A63-BE7D-402B-A638-175A5CCED4A8"
 #define CLSID_Lib3MF_PropertyHandler        "1092CDE7-9A6D-48BC-821B-EBADCF50BC6A"
 #define CLSID_Lib3MF_DefaultPropertyHandler "A62108EE-FB26-44C2-90CB-FBEE9D2823E5"
+#define CLSID_Lib3MF_ModelMeshBeamSet       "C543ADE4-5F1A-456E-B572-7CA9CE05584A"
+#define CLSID_Lib3MF_SliceStack             "72F71407-0DF4-4F16-BD37-5E8094FFCFE7"
+#define CLSID_Lib3MF_Slice                  "266F2E3E-2BD9-4F37-A568-01FEF32D6A4A"
 
 
-#ifndef __GNUC__
+
+#ifdef NMR_COM_NATIVE
 static const IID IID_Lib3MF_ModelWriter = { 0x58ddbe95, 0x34d8, 0x4f77, { 0xbf, 0xdc, 0x15, 0x70, 0xf8, 0x49, 0xbf, 0xf2 } };
 static const IID IID_Lib3MF_ModelReader = { 0xa7fe2c65, 0x121, 0x40aa, { 0xa0, 0xaf, 0x48, 0xc9, 0xd2, 0x28, 0x7a, 0x55 } };
 static const IID IID_Lib3MF_ModelResource = { 0xbf38dc27, 0x4169, 0x4aa3, { 0xbf, 0xd1, 0x35, 0xc8, 0xd0, 0x46, 0xc0, 0xa8 } };
@@ -69,6 +73,7 @@ static const IID IID_Lib3MF_ModelResourceIterator = { 0x11845233, 0x4a6a, 0x4b10
 static const IID IID_Lib3MF_ModelObjectResource = { 0xfb9f7e2c, 0xd8a3, 0x4c84, { 0x83, 0x1e, 0x76, 0x92, 0x8a, 0x91, 0xcc, 0x7b } };
 static const IID IID_Lib3MF_ModelTexture2D = { 0x29dd25f2, 0x607d, 0x4804, { 0xa7, 0x37, 0xed, 0x2c, 0xbc, 0x71, 0x99, 0xf2 } };
 static const IID IID_Lib3MF_ModelAttachment = { 0xa2eba5bc, 0x2a64, 0x49ce,{ 0xb1, 0x1b, 0x17, 0xb1, 0x34, 0xcb, 0x48, 0xb0 } };
+static const IID IID_Lib3MF_ModelTextureAttachment = { 0xaeeee547, 0xc4db, 0x4bd0,{ 0xac, 0x28, 0x99, 0x8a, 0xfe, 0x18, 0xee, 0xe6 } };
 static const IID IID_Lib3MF_ModelBaseMaterial = { 0x943648cf, 0xb9bb, 0x40ad, { 0x82, 0x64, 0x79, 0xc6, 0x91, 0x95, 0xa1, 0x16 } };
 static const IID IID_Lib3MF_ModelMeshObject = { 0x8b7fe33c, 0x8ef0, 0x4927, { 0xa1, 0x6, 0x1c, 0x6, 0x9b, 0x49, 0xb0, 0x1d } };
 static const IID IID_Lib3MF_ModelComponent = { 0x99f7db2e, 0x9a6f, 0x4dd5, { 0x9f, 0x96, 0x27, 0xdd, 0xaf, 0x32, 0xa0, 0xcf } };
@@ -77,19 +82,15 @@ static const IID IID_Lib3MF_ModelBuildItem = { 0x13ba279e, 0x9cf4, 0x41bf, { 0xb
 static const IID IID_Lib3MF_ModelBuildItemIterator = { 0x65e8b244, 0xd2d4, 0x4363, { 0x97, 0x51, 0x93, 0x8e, 0x28, 0xb9, 0x68, 0xd8 } };
 static const IID IID_Lib3MF_Model = { 0xbc58ef48, 0x22a0, 0x4a52, { 0x94, 0xed, 0x56, 0x6c, 0x7, 0x1, 0x7c, 0x49 } };
 static const IID IID_Lib3MF_ModelFactory = { 0x9a41db91, 0x678e, 0x4dc5, { 0xbf, 0x25, 0xd4, 0x9f, 0xe8, 0xb1, 0x76, 0xcc } };
-static const IID IID_Lib3MF_ModelThumbnail = { 0x35f56bca, 0x784e, 0x46d5, { 0xbc, 0x33, 0x46, 0x8, 0xb4, 0x5, 0xd9, 0x9b } };
-static const IID IID_Lib3MF_ModelThumbnailIterator = { 0x26e42a63, 0xbe7d, 0x402b, { 0xa6, 0x38, 0x17, 0x5a, 0x5c, 0xce, 0xd4, 0xa8 } };
 static const IID IID_Lib3MF_PropertyHandler = { 0x1092cde7, 0x9a6d, 0x48bc, { 0x82, 0x1b, 0xeb, 0xad, 0xcf, 0x50, 0xbc, 0x6a } };
 static const IID IID_Lib3MF_DefaultPropertyHandler = { 0xa62108ee, 0xfb26, 0x44c2, { 0x90, 0xcb, 0xfb, 0xee, 0x9d, 0x28, 0x23, 0xe5 } };
-
-
-
-#endif //__GNUC__
+static const IID IID_Lib3MF_ModelMeshBeamSet = { 0xc543ade4, 0x5f1a, 0x456e, { 0xb5, 0x72, 0x7c, 0xa9, 0xce, 0x05, 0x58, 0x4a } };
+#endif //NMR_COM_NATIVE
 
 namespace NMR {
 
 	/**********************************************************************************************************
-	*  ILib3MFModelWriter encapsulates an writer class for a writing the model into a specific file type.
+	*  ILib3MFModelWriter encapsulates a writer class for a writing the model into a specific file type.
 	*  Current implementations include (binary) STL and 3MF.
 	*
 	*  The file type is specified by the derived class of the instance of this interface.
@@ -115,7 +116,7 @@ namespace NMR {
 		*/
 		LIB3MFMETHOD(WriteToFileUTF8) (_In_z_ LPCSTR pszFilename) LIB3MFABSTRACT;
 
-#ifndef __GNUC__
+#ifdef NMR_COM_NATIVE
 		/**
 		* Writes out the model into a COM IStream. Only available on Windows.
 		*
@@ -123,7 +124,24 @@ namespace NMR {
 		* @return error code or 0 (success)
 		*/
 		LIB3MFMETHOD(WriteToStream) (_In_ IStream * pStream) LIB3MFABSTRACT;
-#endif// __GNUC__
+#endif// NMR_COM_NATIVE
+
+		/**
+		* Retrieves the size of the full 3MF file stream.
+		*
+		* @param[out] pcbStreamSize Returns the stream size
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(GetStreamSize) (_Out_ ULONG64 * pcbStreamSize) LIB3MFABSTRACT;
+
+		/**
+		* Writes out the file into a memory buffer. Buffer size must be at least the size of the stream.
+		*
+		* @param[out] pBuffer Buffer to write into
+		* @param[in] cbBufferSize Size of the buffer in bytes
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(WriteToBuffer) (_Out_ BYTE * pBuffer, _In_ ULONG64 cbBufferSize) LIB3MFABSTRACT;
 
 		/**
 		* Writes out the model and passes the data to a provided callback function. The file type is specified by the Model Writer class
@@ -138,7 +156,7 @@ namespace NMR {
 	};
 
 	/**********************************************************************************************************
-	*  ILib3MFModelReader encapsulates an reader class for reading a model from a specific file type.
+	*  ILib3MFModelReader encapsulates a reader class for reading a model from a specific file type.
 	*  Current implementations include (binary) STL and 3MF.
 	*
 	*  The file type is specified by the derived class of the instance of this interface.
@@ -163,6 +181,15 @@ namespace NMR {
 		* @return error code or 0 (success)
 		*/
 		LIB3MFMETHOD(ReadFromFileUTF8) (_In_z_ LPCSTR pszFilename) LIB3MFABSTRACT;
+
+		/**
+		* Reads a model from a memory buffer. The file type is specified by the Model Reader class
+		*
+		* @param[in] pBuffer Buffer to read from
+		* @param[in] cbBufferSize Size of the buffer in bytes
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(ReadFromBuffer) (_In_ BYTE * pBuffer, _In_ ULONG64 cbBufferSize) LIB3MFABSTRACT;
 
 		/**
 		* Returns Warning and Error Count of the read process
@@ -217,7 +244,24 @@ namespace NMR {
 		*/
 		LIB3MFMETHOD(RemoveRelationToReadUTF8) (_In_z_ LPCSTR pszRelationshipType) LIB3MFABSTRACT;
 
-#ifndef __GNUC__
+		/**
+		* Activates (deactivates) the strict mode of the reader.
+		* If active, all warnings are reported as errors. Otherwise, they are reported as warnings. By default, it is deactivated.
+		*
+		* @param[in] bStrictModeActive flag whether strict mode is active or not
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(SetStrictModeActive) (_In_ BOOL bStrictModeActive) LIB3MFABSTRACT;
+
+		/**
+		* Queries whether the strict mode of the reader is active or not
+		*
+		* @param[out] pbStrictModeActive flag whether strict mode is active or not
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(GetStrictModeActive) (_Out_ BOOL * pbStrictModeActive) LIB3MFABSTRACT;
+
+#ifdef NMR_COM_NATIVE
 		/**
 		* Reads a model from a COM IStream. Only available on Windows.
 		*
@@ -225,7 +269,19 @@ namespace NMR {
 		* @return error code or 0 (success)
 		*/
 		LIB3MFMETHOD(ReadFromStream) (_In_ IStream * pStream) LIB3MFABSTRACT;
-#endif //__GNUC__
+#endif //NMR_COM_NATIVE
+
+		/**
+		* Reads a model and from the data provided by a callback function. The file type is specified by the Model Writer class
+		*
+		* @param[in] pReadCallback Callback to call for reading a data chunk.
+		* @param[in] nStreamSize number of bytes the callback returns
+		* @param[in] pSeekCallback Callback to call for seeking in the stream.
+		* @param[in] pUserData Userdata that is passed to the callback function
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(ReadFromCallback) (_In_ void * pReadCallback, _In_ ULONG64 nStreamSize,  _In_opt_ void * pSeekCallback, _In_opt_ void * pUserData) LIB3MFABSTRACT;
+
 	};
 
 	/**********************************************************************************************************
@@ -286,63 +342,6 @@ namespace NMR {
 		*/
 		LIB3MFMETHOD(Clone) (_Outptr_ ILib3MFModelResourceIterator ** ppIterator) LIB3MFABSTRACT;
 	};
-
-
-	/**********************************************************************************************************
-	*  ILib3MFModelThumbnail encapsulates a thumbnail for the whole 3mf or singular objects
-	*
-	***********************************************************************************************************/
-
-	LIB3MFINTERFACE(ILib3MFModelThumbnail, ILib3MFBase, CLSID_Lib3MF_ModelThumbnail) {
-		LIB3MFPUBLIC(ILib3MFModelThumbnail)
-
-	};
-
-
-
-
-	/**********************************************************************************************************
-	*  ILib3MFModelThumbnailIterator is a helper class to iterate through arbitrary lists of 3MF thumbnails
-	*
-	***********************************************************************************************************/
-
-	LIB3MFINTERFACE(ILib3MFModelThumbnailIterator, ILib3MFBase, CLSID_Lib3MF_ModelThumbnailIterator) {
-		LIB3MFPUBLIC(ILib3MFModelThumbnailIterator)
-
-		/**
-		* Iterates to the next thumbnail in the list.
-		*
-		* @param[out] pbHasNext returns, if there is a thumbnail to use.
-		* @return error code or 0 (success)
-		*/
-		LIB3MFMETHOD(MoveNext) (_Out_ BOOL * pbHasNext) LIB3MFABSTRACT;
-
-		/**
-		* Iterates to the previous thumbnail in the list.
-		*
-		* @param[out] pbHasPrevious returns, if there is a thumbnail to use.
-		* @return error code or 0 (success)
-		*/
-		LIB3MFMETHOD(MovePrevious) (_Out_ BOOL * pbHasPrevious) LIB3MFABSTRACT;
-
-		/**
-		* Returns the resource the iterator points at.
-		*
-		* @param[out] ppThumbnailInstance returns the thumbnail instance
-		* @return error code or 0 (success)
-		*/
-		LIB3MFMETHOD(GetCurrent) (_Outptr_ ILib3MFModelThumbnail ** ppThumbnailInstance) LIB3MFABSTRACT;
-
-		/**
-		* Creates a new resource iterator with the same resource list.
-		*
-		* @param[out] ppIterator returns the cloned Iterator instance
-		* @return error code or 0 (success)
-		*/
-		LIB3MFMETHOD(Clone) (_Outptr_ ILib3MFModelThumbnailIterator ** ppIterator) LIB3MFABSTRACT;
-	};
-
-
 
 
 	/**********************************************************************************************************
@@ -407,7 +406,7 @@ namespace NMR {
 		* @param[in] nMaterialIndex Index of the Material in the Group
 		* @return error code or 0 (success)
 		*/
-		LIB3MFMETHOD(SetBaseMaterial) (_In_ DWORD nIndex, _In_ ModelResourceID nMaterialGroupID, _In_ DWORD nMaterialIndex) LIB3MFABSTRACT;
+		LIB3MFMETHOD(SetBaseMaterial) (_In_ DWORD nIndex, _In_ PackageResourceID nMaterialGroupID, _In_ DWORD nMaterialIndex) LIB3MFABSTRACT;
 
 		/**
 		* Sets the materials of all triangles to specific values.
@@ -416,7 +415,7 @@ namespace NMR {
 		* @param[in] pnMaterialIndices array of the corresponding material indices. Must have trianglecount entries.
 		* @return error code or 0 (success)
 		*/
-		LIB3MFMETHOD(SetBaseMaterialArray) (_In_ ModelResourceID * pnMaterialGroupIDs, _In_ DWORD * pnMaterialIndices) LIB3MFABSTRACT;
+		LIB3MFMETHOD(SetBaseMaterialArray) (_In_ PackageResourceID * pnMaterialGroupIDs, _In_ DWORD * pnMaterialIndices) LIB3MFABSTRACT;
 
 
 		/**
@@ -583,7 +582,7 @@ namespace NMR {
 
 		/**
 		* Sets the material of an object to a specific single value.
-		* This must be a base material .
+		* This must be a base material.
 		*
 		* @param[in] nMaterialGroupID Group ID of the Material Group
 		* @param[in] nMaterialIndex Index of the Material in the Group
@@ -653,7 +652,7 @@ namespace NMR {
 		* @param[out] pfV Returns the default V value of the object.
 		* @return error code or 0 (success)
 		*/
-		LIB3MFMETHOD(GetTexture) (_Out_ ModelResourceID * pnTextureID, _Out_ FLOAT * pfU, _Out_ FLOAT * pfV) LIB3MFABSTRACT;
+		LIB3MFMETHOD(GetTexture) (_Out_ PackageResourceID * pnTextureID, _Out_ FLOAT * pfU, _Out_ FLOAT * pfV) LIB3MFABSTRACT;
 
 		/**
 		* Sets the default 2D texture information of an object.
@@ -662,7 +661,7 @@ namespace NMR {
 		* @param[in] fU Sets the default U value of the object.
 		* @param[in] fV Sets the default V value of the object.
 		*/
-		LIB3MFMETHOD(SetTexture) (_In_ ModelResourceID nTextureID, _In_ FLOAT fU, _In_ FLOAT fV) LIB3MFABSTRACT;
+		LIB3MFMETHOD(SetTexture) (_In_ PackageResourceID nTextureID, _In_ FLOAT fU, _In_ FLOAT fV) LIB3MFABSTRACT;
 
 	};
 
@@ -815,6 +814,40 @@ namespace NMR {
 		*/
 		LIB3MFMETHOD(CreateDefaultMultiPropertyHandler) (_In_ DWORD nChannel, _Outptr_ ILib3MFDefaultPropertyHandler ** ppPropertyHandler) LIB3MFABSTRACT;
 
+		/**
+		* Retrieves the path used as thumbnail for an object (UTF8). Returns "" if none is set
+		*
+		* @param[out] pszBuffer buffer to fill
+		* @param[in] cbBufferSize size of buffer to fill. needs to be at least string length + 1
+		* @param[out] pcbNeededChars returns needed characters in buffer
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(GetThumbnailPathUTF8) (_Out_opt_ LPSTR pszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars) LIB3MFABSTRACT;
+
+		/**
+		* Sets an object's thumbnail package path (UTF8)
+		*
+		* @param[in] pszPath path where to look for the thumbnail (e.g. "/Textures/thumbnail.png"). Call will NULL to clear the thumbnail.
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(SetThumbnailPathUTF8) (_In_z_ LPCSTR pszName) LIB3MFABSTRACT;
+
+		/**
+		* returns, whether a object has a UUID and, if true, the object's UUID
+		*
+		* @param[out] pbHasUUID flag whether the object has a UUID
+		* @param[out] pszBuffer the UUID as string of the form "xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx"
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(GetUUIDUTF8) (_Out_ BOOL * pbHasUUID, _Out_ LPSTR pszBuffer) LIB3MFABSTRACT;
+
+		/**
+		* sets the object's UUID
+		*
+		* @param[in] pszUUID the UUID as string of the form "xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx"
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(SetUUIDUTF8) (_In_z_ LPCSTR pszUUID) LIB3MFABSTRACT;
 	};
 
 	/**********************************************************************************************************
@@ -979,7 +1012,7 @@ namespace NMR {
 		LIB3MFPUBLIC(ILib3MFModelAttachment)
 
 		/**
-		* Retrieves a attachment's package path
+		* Retrieves an attachment's package path
 		*
 		* @param[out] pwszBuffer buffer to fill
 		* @param[in] cbBufferSize size of buffer to fill. needs to be at least string length + 1
@@ -989,7 +1022,7 @@ namespace NMR {
 		LIB3MFMETHOD(GetPath) (_Out_opt_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars) LIB3MFABSTRACT;
 
 		/**
-		* Retrieves a attachment's package path (UTF8)
+		* Retrieves an attachment's package path (UTF8)
 		*
 		* @param[out] pszBuffer buffer to fill
 		* @param[in] cbBufferSize size of buffer to fill. needs to be at least string length + 1
@@ -999,7 +1032,7 @@ namespace NMR {
 		LIB3MFMETHOD(GetPathUTF8) (_Out_opt_ LPSTR pszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars) LIB3MFABSTRACT;
 
 		/**
-		* Sets a attachment's package path
+		* Sets an attachment's package path
 		*
 		* @param[in] pwszPath new path of the attachment. (e.g. "/Textures/logo.png")
 		* @return error code or 0 (success)
@@ -1007,7 +1040,7 @@ namespace NMR {
 		LIB3MFMETHOD(SetPath) (_In_z_ LPCWSTR pwszPath) LIB3MFABSTRACT;
 
 		/**
-		* Sets a attachment's package path (UTF8)
+		* Sets an attachment's package path (UTF8)
 		*
 		* @param[in] pszPath new path of the attachment. (e.g. "/Textures/logo.png")
 		* @return error code or 0 (success)
@@ -1015,7 +1048,7 @@ namespace NMR {
 		LIB3MFMETHOD(SetPathUTF8) (_In_z_ LPCSTR pszPath) LIB3MFABSTRACT;
 
 		/**
-		* Retrieves a attachment's package relationship type
+		* Retrieves an attachment's package relationship type
 		*
 		* @param[out] pwszBuffer buffer to fill
 		* @param[in] cbBufferSize size of buffer to fill. needs to be at least string length + 1
@@ -1025,7 +1058,7 @@ namespace NMR {
 		LIB3MFMETHOD(GetRelationshipType) (_Out_opt_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars) LIB3MFABSTRACT;
 
 		/**
-		* Retrieves a attachment's package relationship type (UTF8)
+		* Retrieves an attachment's package relationship type (UTF8)
 		*
 		* @param[out] pszBuffer buffer to fill
 		* @param[in] cbBufferSize size of buffer to fill. needs to be at least string length + 1
@@ -1035,7 +1068,7 @@ namespace NMR {
 		LIB3MFMETHOD(GetRelationshipTypeUTF8) (_Out_opt_ LPSTR pszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars) LIB3MFABSTRACT;
 
 		/**
-		* Sets a attachment's package relationship type
+		* Sets an attachment's package relationship type
 		*
 		* @param[in] pwszRelationShipType new relationship type attachment. (e.g. "/Data/data.xml")
 		* @return error code or 0 (success)
@@ -1043,7 +1076,7 @@ namespace NMR {
 		LIB3MFMETHOD(SetRelationshipType) (_In_z_ LPCWSTR pwszRelationShipType) LIB3MFABSTRACT;
 
 		/**
-		* Sets a attachment's package relationship type (UTF8)
+		* Sets an attachment's package relationship type (UTF8)
 		*
 		* @param[in] pszRelationShipType new path of the attachment. (e.g. "/Data/data.png")
 		* @return error code or 0 (success)
@@ -1083,7 +1116,7 @@ namespace NMR {
 		*/
 		LIB3MFMETHOD(WriteToBuffer) (_Out_ BYTE * pBuffer, _In_ ULONG64 cbBufferSize) LIB3MFABSTRACT;
 
-#ifndef __GNUC__
+#ifdef NMR_COM_NATIVE
 		/**
 		* Writes out the attachment into a COM IStream. Only available on Windows.
 		*
@@ -1091,7 +1124,7 @@ namespace NMR {
 		* @return error code or 0 (success)
 		*/
 		LIB3MFMETHOD(WriteToStream) (_In_ IStream * pStream) LIB3MFABSTRACT;
-#endif// __GNUC__
+#endif// NMR_COM_NATIVE
 
 		/**
 		* Writes out the attachment and passes the data to a provided callback function. The file type is specified by the Model Writer class
@@ -1104,7 +1137,7 @@ namespace NMR {
 
 
 		/**
-		* Reads a attachment from a file.
+		* Reads an attachment from a file.
 		*
 		* @param[in] pwszFilename Filename to read from
 		* @return error code or 0 (success)
@@ -1112,7 +1145,7 @@ namespace NMR {
 		LIB3MFMETHOD(ReadFromFile) (_In_z_ LPCWSTR pwszFilename) LIB3MFABSTRACT;
 
 		/**
-		* Reads a attachment from a file.
+		* Reads an attachment from a file.
 		*
 		* @param[in] pszFilename Filename to read from
 		* @return error code or 0 (success)
@@ -1120,7 +1153,7 @@ namespace NMR {
 		LIB3MFMETHOD(ReadFromFileUTF8) (_In_z_ LPCSTR pwszFilename) LIB3MFABSTRACT;
 
 		/**
-		* Reads a attachment from a memory buffer.
+		* Reads an attachment from a memory buffer.
 		*
 		* @param[in] pBuffer Buffer to read from
 		* @param[in] cbBufferSize Size of the buffer in bytes
@@ -1128,19 +1161,30 @@ namespace NMR {
 		*/
 		LIB3MFMETHOD(ReadFromBuffer) (_In_ BYTE * pBuffer, _In_ ULONG64 cbBufferSize) LIB3MFABSTRACT;
 
-#ifndef __GNUC__
+#ifdef NMR_COM_NATIVE
 		/**
-		* Reads a attachment from a COM IStream. Only available on Windows.
+		* Reads an attachment from a COM IStream. Only available on Windows.
 		*
 		* @param[in] pStream IStream to read from
 		* @return error code or 0 (success)
 		*/
 		LIB3MFMETHOD(ReadFromStream) (_In_ IStream * pStream) LIB3MFABSTRACT;
-#endif //__GNUC__
+#endif //NMR_COM_NATIVE
 
 
 	};
 
+	/**********************************************************************************************************
+	*  ILib3MFModelTextureAttachment implements the TextureAttachment of a 3MF model stream, and allows direct access
+	*  to the the image data.
+	*
+	***********************************************************************************************************/
+	LIB3MFINTERFACE(ILib3MFModelTextureAttachment, ILib3MFBase, CLSID_Lib3MF_ModelTextureAttachment) {
+
+		LIB3MFPUBLIC(ILib3MFModelTextureAttachment)
+
+		LIB3MFMETHOD(GetPath) (_Out_opt_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars) LIB3MFABSTRACT;
+	};
 
 	/**********************************************************************************************************
 	*  ILib3MFModelTexture2D implements the Texture2D Resources of a 3MF model stream, and allows direct access to the
@@ -1151,6 +1195,22 @@ namespace NMR {
 	LIB3MFINTERFACE(ILib3MFModelTexture2D, ILib3MFModelResource, CLSID_Lib3MF_ModelTexture2D) {
 
 		LIB3MFPUBLIC(ILib3MFModelTexture2D)
+
+		/**
+		* Retrieves the attachment located at the path of the texture
+		*
+		* @param[out] ppTextureAttachment attachment that holds the texture's image information
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(GetAttachment) (_Out_ ILib3MFModelAttachment ** ppTextureAttachment) LIB3MFABSTRACT;
+
+		/**
+		* Sets the texture's package path to the path of the attachment
+		*
+		* @param[out] pTextureAttachment attachment that holds the texture's image information
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(SetAttachment) (_In_ ILib3MFModelAttachment * pTextureAttachment) LIB3MFABSTRACT;
 
 		/**
 		* Retrieves a texture's package path
@@ -1266,7 +1326,7 @@ namespace NMR {
 		*/
 		LIB3MFMETHOD(WriteToBuffer) (_Out_ BYTE * pBuffer, _In_ ULONG64 cbBufferSize) LIB3MFABSTRACT;
 
-#ifndef __GNUC__
+#ifdef NMR_COM_NATIVE
 		/**
 		* Writes out the texture into a COM IStream. Only available on Windows.
 		*
@@ -1274,7 +1334,7 @@ namespace NMR {
 		* @return error code or 0 (success)
 		*/
 		LIB3MFMETHOD(WriteToStream) (_In_ IStream * pStream) LIB3MFABSTRACT;
-#endif// __GNUC__
+#endif// NMR_COM_NATIVE
 
 		/**
 		* Writes out the texture and passes the data to a provided callback function. The file type is specified by the Model Writer class
@@ -1311,7 +1371,7 @@ namespace NMR {
 		*/
 		LIB3MFMETHOD(ReadFromBuffer) (_In_ BYTE * pBuffer, _In_ ULONG64 cbBufferSize) LIB3MFABSTRACT;
 
-#ifndef __GNUC__
+#ifdef NMR_COM_NATIVE
 		/**
 		* Reads a texture from a COM IStream. Only available on Windows.
 		*
@@ -1319,15 +1379,246 @@ namespace NMR {
 		* @return error code or 0 (success)
 		*/
 		LIB3MFMETHOD(ReadFromStream) (_In_ IStream * pStream) LIB3MFABSTRACT;
-#endif //__GNUC__
+#endif //NMR_COM_NATIVE
 
+	};
+
+	/**********************************************************************************************************
+	*  ILib3MFModelMeshBeamSet is a class that holds the references that contain to a beamset. It is part of the
+	*  beamlattice extension to 3MF.
+	*
+	***********************************************************************************************************/
+	LIB3MFINTERFACE(ILib3MFModelMeshBeamSet, ILib3MFBase, CLSID_Lib3MF_ModelMeshBeamSet) {
+		LIB3MFPUBLIC(ILib3MFModelMeshBeamSet)
+
+		/**
+		* Sets a beamset's name string
+		*
+		* @param[in] pwszName new name of the BeamSet as UTF16 string. (e.g. "Car")
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(SetName) (_In_z_ LPCWSTR pwszName) LIB3MFABSTRACT;
+
+		/**
+		* Sets a beamset's identifier string
+		*
+		* @param[in] pwszIdentifier new id of the BeamSet as UTF16 string. (e.g. "Car")
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(SetIdentifier) (_In_z_ LPCWSTR pwszIdentifier) LIB3MFABSTRACT;
+
+		/**
+		* Sets a beamset's name string (UTF8)
+		*
+		* @param[in] pwszName new name of the BeamSet as UTF8 string. (e.g. "Car")
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(SetNameUTF8) (_In_z_ LPCSTR pszName) LIB3MFABSTRACT;
+
+		/**
+		* Sets a beamset's identifier string (UTF8)
+		*
+		* @param[in] pszIdentifier new identifier of the BeamSet as UTF8 string. (e.g. "Car")
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(SetIdentifierUTF8) (_In_z_ LPCSTR pszIdentifier) LIB3MFABSTRACT;
+
+		/**
+		* Retrieves a BeamSet's name string (UTF8)
+		*
+		* @param[out] pwszBuffer buffer to fill
+		* @param[in] cbBufferSize size of buffer to fill. needs to be at least string length + 1
+		* @param[out] pcbNeededChars returns needed characters in buffer
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(GetNameUTF8) (_Out_opt_ LPSTR pszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars) LIB3MFABSTRACT;
+
+		/**
+		* Retrieves a BeamSet's identifier string (UTF8)
+		*
+		* @param[out] pwszBuffer buffer to fill
+		* @param[in] cbBufferSize size of buffer to fill. needs to be at least string length + 1
+		* @param[out] pcbNeededChars returns needed characters in buffer
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(GetIdentifierUTF8) (_Out_opt_ LPSTR pszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars) LIB3MFABSTRACT;
+
+		/**
+		* Retrieves the reference count of a BeamSet
+		*
+		* @param[out] pnCount returns the reference count
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(GetRefCount) (_Out_ DWORD * pnCount) LIB3MFABSTRACT;
+
+		/**
+		* Sets the references of a BeamSet
+		*
+		* @param[in] pRefs buffer containing the indices of all beams in this beamset
+		* @param[in] nRefCount number of references to be set
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(SetRefs) (_In_ DWORD * pRefs, _In_ DWORD nRefCount) LIB3MFABSTRACT;
+
+		/**
+		* Retrieves all references of a BeamSet
+		*
+		* @param[in] pRefs buffer filled with beam references (indices of beams)
+		* @param[in] nBufferSize size of the buffer in elements, must be at least refcount
+		* @param[out] pnRefCount returns how many references have been written
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(GetRefs) (_Out_ DWORD * pRefs, _In_ DWORD nBufferSize, _Out_opt_ DWORD * pnRefCount) LIB3MFABSTRACT;
+
+	};
+
+
+	/**********************************************************************************************************
+	*  ILib3MFSlice encapsulates all slice functionality for handling slices in 3mf
+	*
+	***********************************************************************************************************/
+
+  LIB3MFINTERFACE(ILib3MFSlice, ILib3MFBase, CLSID_Lib3MF_Slice) {
+    LIB3MFPUBLIC(ILib3MFSlice)
+
+		/**
+		* Add a single vertex to a slice
+		* @param[in] pVertex holds the vertex coordinates
+		* @param[out] pnIndex returns the index of the vertex. Needed to reference the vertex later on in a polygon
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(AddVertex)(_In_ MODELSLICEVERTEX * pVertex, _Out_opt_ DWORD * pnIndex) LIB3MFABSTRACT;
+
+		/**
+		* Begin a polygon
+		* @param[out] pnIndex index of the newly created polygon
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(BeginPolygon)(_Out_opt_ DWORD *pnIndex) LIB3MFABSTRACT;
+
+		LIB3MFMETHOD(AddPolygonIndex)(_In_ DWORD nPolygonIndex, _In_ DWORD nVertexIndex) LIB3MFABSTRACT;
+
+		/**
+		* Add indices to a polygon
+		* @param[in] nPolygonIndex index of the polygon to add the indices to
+		* @param[in] pnVertexIndices array of the indices for the polygon
+		* @param[in] nBufferSize number of elements in the vertex array
+		* @param[out] nPolygonVertexindex returns the start index of the added indices
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(AddPolygonIndices)(_In_ DWORD nPolygonIndex, _In_ DWORD *pnVertexIndices, _In_ DWORD nBufferSize, _Out_ DWORD * nPolygonVertexIndex) LIB3MFABSTRACT;
+
+		/**
+		* Get the number of polygons in the slice
+		* @param[out] pnPolygonCount returns the number of polygons in the slice
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(GetPolygonCount) (_Out_ DWORD * pnPolygonCount) LIB3MFABSTRACT;
+
+		/**
+		* Get the number of vertices in the slice
+		* @param[out] pnVertexCount returns the number of vertices in the slice
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(GetVertexCount) (_Out_ DWORD * pnVertexCount) LIB3MFABSTRACT;
+
+		/**
+		* Get the upper Z coordinate of the slice
+		* @param[out] pfTopZ returns the upper Z coordinate of the slice
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(GetTopZ) (_Out_ FLOAT * pfTopZ) LIB3MFABSTRACT;
+
+		/**
+		* Get the number of indices of a polygon in the slice
+		* @param[in] nPolygonIndex the index of the polygon
+		* @param[out] pnPolygonCount returns the number of indices in a polygon of the slice
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(GetIndexCountOfPolygon) (_In_ DWORD nPolygonIndex, _Out_ DWORD *pnPolygonCount) LIB3MFABSTRACT;
+
+		/**
+		* Get the indices of a polygon
+		* @param[in] nPolygonIndex the index of the polygon to query
+		* @param[out] nPolygonIndeces an array to be filled with the polygon indices
+		* @param[in] nBufferCount number of elements in "pPolygonIndeces". Should match the number of indices in the polygon (GetIndexCountOfPolygon), if less not all indices are returned, if greater memory is wasted
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(GetPolygonIndices) (_In_ DWORD nPolygonIndex, _Out_ DWORD *pPolygonIndices, _In_ DWORD nBufferCount) LIB3MFABSTRACT;
+
+		/**
+		* Get a vertex of the slice
+		* @param[in] nIndex index of the vertex to get
+		* @param[out] pVertex MODELSLICEVERTEX structure to be filled
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(GetVertex) (_In_ DWORD nIndex, _Out_ MODELSLICEVERTEX *pVertex) LIB3MFABSTRACT;
+  };
+
+	/**********************************************************************************************************
+	*  ILib3MFSliceStack encapsulates all methods for handling slice stacks in 3MF
+	*
+	***********************************************************************************************************/
+	LIB3MFINTERFACE(ILib3MFSliceStack, ILib3MFModelResource, CLSID_Lib3MF_SliceStack) {
+    LIB3MFPUBLIC(ILib3MFSliceStack)
+
+		/**
+		* Adds a slice to the slicestack
+		* @param[in] fTopZ upper Z coordinate of the slice
+		* @param ppSliceObject returns the newly created slice object
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(AddSlice) (_In_ FLOAT fTopZ, _Outptr_ ILib3MFSlice ** ppSliceObject) LIB3MFABSTRACT;
+
+		/**
+		* Query a slice from the slice stack
+		* @param[in] nSliceIndex the index of the slice to query
+		* @param[out] ppSliceObject returns the slice
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(GetSlice) (_In_ DWORD nSliceIndex, _Outptr_ ILib3MFSlice **ppSliceObject) LIB3MFABSTRACT;
+
+		/**
+		* Get the number of slices on the slice stack
+		* @param[out] pnSliceCount returns the number of slices on the slice stack
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(GetSliceCount) (_Out_ DWORD * pnSliceCount) LIB3MFABSTRACT;
+
+		/**
+		* Get the lower Z-Coordinate of the slice stack
+		* @param[out] pfBottomZ the lower Z-Coordinate the slice stack
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(GetBottomZ) (_Out_ FLOAT * pfBottomZ) LIB3MFABSTRACT;
+
+		/**
+		* Get the resource id of the slice stack
+		* @param[out]pnResourceID returns the resource id
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(GetResourceID) (_Out_ DWORD * pnResourceID) LIB3MFABSTRACT;
+
+		/**
+		* Specify whether the slice stack should be stored in a separate model file within the 3MF-file as a slice ref
+		* @param[in] bUsesSliceRef flag whether to use a slice-ref or not
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(SetUsesSliceRef) (_In_ BOOL bUsesSliceRef) LIB3MFABSTRACT;
+
+		/**
+		* Get the specification, whether the slice stack should be stored in a separate model file within the 3MF-file as a slice ref
+		* @param[out] pbUsesSliceRef string for the slice reference
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(GetUsesSliceRef) (_Out_ BOOL *pbUsesSliceRef) LIB3MFABSTRACT;
+		
 	};
 
 	/**********************************************************************************************************
 	*  ILib3MFModelMeshObject encapsulates all methods for handling 3MF mesh objects.
 	*
 	***********************************************************************************************************/
-
 	LIB3MFINTERFACE(ILib3MFModelMeshObject, ILib3MFModelObjectResource, CLSID_Lib3MF_ModelMeshObject) {
 		LIB3MFPUBLIC(ILib3MFModelMeshObject)
 
@@ -1432,6 +1723,171 @@ namespace NMR {
 		*/
 		LIB3MFMETHOD(SetGeometry) (_In_ MODELMESHVERTEX * pVertices, _In_ DWORD nVertexCount, _In_ MODELMESHTRIANGLE * pTriangles, _In_ DWORD nTriangleCount) LIB3MFABSTRACT;
 
+		// API of beam extension
+		/**
+		* Returns the minimal length of beams for the beamlattice
+		*
+		* @param[out] pdMinLength minimal length of beams for the beamlattice
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(GetBeamLatticeMinLength) (_Out_ DOUBLE * pdMinLength) LIB3MFABSTRACT;
+		
+		/**
+		* Sets the minimal length of beams for the beamlattice
+		*
+		* @param[in] dMinLength minimal length of beams for the beamlattice
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(SetBeamLatticeMinLength) (_In_ DOUBLE  dMinLength) LIB3MFABSTRACT;
+		
+		/**
+		* Returns the default radius for the beamlattice
+		*
+		* @param[out] pdRadius precission of the beams in the beamlattice
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(GetBeamLatticeRadius) (_Out_ DOUBLE * pdRadius) LIB3MFABSTRACT;
+		
+		/**
+		* Sets the default radius for the beamlattice
+		*
+		* @param[in] dRadius default radius of the beams in the beamlattice
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(SetBeamLatticeRadius) (_In_ DOUBLE  dRadius) LIB3MFABSTRACT;
+		
+		/**
+		* Returns the default capping mode for the beamlattice
+		*
+		* @param[out] peCapMode default eModelBeamLatticeCapMode of the beamlattice
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(GetBeamLatticeCapMode) (_Out_ eModelBeamLatticeCapMode * peCapMode) LIB3MFABSTRACT;
+		
+		/**
+		* Sets the default capping mode for the beamlattice
+		*
+		* @param[in] eCapMode default eModelBeamLatticeCapMode of the beamlattice
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(SetBeamLatticeCapMode) (_In_ eModelBeamLatticeCapMode eCapMode) LIB3MFABSTRACT;
+		
+		/**
+		* Returns the clipping mode and the clipping-mesh for the beamlattice of this mesh
+		*
+		* @param[out] pClipMode contains the clip mode of this mesh
+		* @param[out] pnResourceID filled with the resourceID of the clipping mesh-object or a undefined value if pClipMode is MODELBEAMLATTICECLIPMODE_NONE
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(GetBeamLatticeClipping) (_Out_ eModelBeamLatticeClipMode * peClipMode, _Out_ DWORD *pnResourceID) LIB3MFABSTRACT;
+		
+		/**
+		* Sets the clipping mode and the clipping-mesh for the beamlattice of this mesh
+		*
+		* @param[in] pMeshObject Mesh Object Instance
+		* @param[in] eClipMode contains the clip mode of this mesh
+		* @param[in] nResourceID the resourceID of the clipping mesh-object. This mesh-object has to be defined before setting the Clipping
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(SetBeamLatticeClipping) (_In_ eModelBeamLatticeClipMode eClipMode, _In_ DWORD nResourceID) LIB3MFABSTRACT;
+
+		/**
+		* Sets the representation-mesh for the beamlattice of this mesh
+		*
+		* @param[in] nResourceID the resourceID of the representation mesh-object. This mesh-object has to be defined before setting the representation mesh. Set "0" to unset the representation mesh.
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(SetBeamLatticeRepresentation) (_In_ DWORD nResourceID) LIB3MFABSTRACT;
+
+		/**
+		* Returns the representation-mesh for the beamlattice of this mesh
+		*
+		* @param[out] pbHasRepresentation flag whether the beamlattice has a representation mesh.
+		* @param[out] pnResourceID filled with the resourceID of the representation mesh-object.
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(GetBeamLatticeRepresentation) (_Out_ BOOL *pbHasRepresentation, _Out_ DWORD *pnResourceID) LIB3MFABSTRACT;
+
+		/**
+		* Returns the beam count of a mesh object
+		*
+		* @param[out] pnBeamCount filled with the beam count
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(GetBeamCount) (_Out_ DWORD * pnBeamCount) LIB3MFABSTRACT;
+
+		/**
+		* Returns indices, radii and capmodes of a single beam of a mesh object
+		*
+		* @param[in] nIndex Index of the beam (0 to beamcount - 1)
+		* @param[out] pBeam filled with the beam indices, radii and capmodes
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(GetBeam) (_In_ DWORD nIndex, _Out_ MODELMESHBEAM * pBeam) LIB3MFABSTRACT;
+
+		/**
+		* Sets the indices, radii and capmodes of a single beam of a mesh object
+		*
+		* @param[in] nIndex Index of the beam (0 to beamcount - 1)
+		* @param[in] pBeam contains the node indices, radii and capmodes
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(SetBeam) (_In_ DWORD nIndex, _In_ MODELMESHBEAM * pBeam) LIB3MFABSTRACT;
+
+		/**
+		* Adds a single beam to a mesh object
+		*
+		* @param[in] pBeam contains the node indices, radii and capmodes
+		* @param[out] pnIndex filled with the new Index of the beam
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(AddBeam) (_In_ MODELMESHBEAM * pBeam, _Out_opt_ DWORD * pnIndex) LIB3MFABSTRACT;
+
+		/**
+		* Sets all beam indices, raddi and capmodes of a mesh object
+		*
+		* @param[in] pIndices buffer with the beam indices
+		* @param[in] nBufferSize size of the buffer in elements
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(SetBeamIndices) (_In_ MODELMESHBEAM * pIndices, _In_ DWORD nBufferSize) LIB3MFABSTRACT;
+		
+		/**
+		* Retrieves all beam indices of a mesh object
+		*
+		* @param[out] pIndices buffer filled with the beam indices
+		* @param[in] nBufferSize size of the buffer in elements, must be at least beam count
+		* @param[out] pnBeamCount returns how many beams have been written
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(GetBeamIndices) (_Out_ MODELMESHBEAM * pIndices, _In_ DWORD nBufferSize, _Out_opt_ DWORD * pnBeamCount) LIB3MFABSTRACT;
+
+		/**
+		* Returns the number of beamsets of a mesh object
+		*
+		* @param[out] pnCount filled with the beamset count
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(GetBeamSetCount) (_Out_ DWORD * pnBeamSetCount) LIB3MFABSTRACT;
+		
+		/**
+		* Adds an empty beamset to a mesh object
+		*
+		* @param[out] ppBeamSet pointer to the new beamset
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(AddBeamSet) (_Outptr_ ILib3MFModelMeshBeamSet ** ppBeamSet) LIB3MFABSTRACT;
+		
+		/**
+		* Returns a beamset of a mesh object
+		*
+		* @param[in] nIndex index of the requested beamset (0 ... beamsetcount-1)
+		* @param[out] ppBeamSet pointer to the requested beamset
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(GetBeamSet) (_In_ DWORD nIndex, _Outptr_ ILib3MFModelMeshBeamSet ** ppBeamSet) LIB3MFABSTRACT;
+
+		
 		/* Property handling */
 
 		/**
@@ -1459,6 +1915,34 @@ namespace NMR {
 		*/
 		LIB3MFMETHOD(IsManifoldAndOriented) (_Out_ BOOL * pbIsOrientedAndManifold) LIB3MFABSTRACT;
 
+		/**
+		* Link the mesh object to a slice stack
+		*
+		* @param[in] nSliceStackId id of the slice stack to link
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(SetSliceStackId)(_In_ DWORD nSliceStackId) LIB3MFABSTRACT;
+
+		/**
+		* get the id of the slice stack linked to the mesh object
+		* @param[out] pnSliceStackId id of the slice stack linked to the mesh object
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(GetSliceStackId)(_Out_ DWORD *pnSliceStackId) LIB3MFABSTRACT;
+
+		/**
+		* set the meshresolution of the mesh object
+		* @param[in] eSlicesMeshResolution meshresolution of this mesh object
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(SetSlicesMeshResolution)(_In_ eModelSlicesMeshResolution eSlicesMeshResolution) LIB3MFABSTRACT;
+
+		/**
+		* get the meshresolution of the mesh object
+		* @param[out] peSlicesMeshResolution meshresolution of this mesh object
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(GetSlicesMeshResolution)(_Out_ eModelSlicesMeshResolution *peSlicesMeshResolution) LIB3MFABSTRACT;
 	};
 
 	/**********************************************************************************************************
@@ -1477,6 +1961,23 @@ namespace NMR {
 		* @return error code or 0 (success)
 		*/
 		LIB3MFMETHOD(GetObjectResource) (_Outptr_ ILib3MFModelObjectResource ** ppResource) LIB3MFABSTRACT;
+
+		/**
+		* returns, whether a component object has a UUID and, if true, the build item's UUID
+		*
+		* @param[out] pbHasUUID flag whether the cmponent object has a UUID
+		* @param[out] pszBuffer the UUID as string of the form "xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx"
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(GetUUIDUTF8) (_Out_ BOOL * pbHasUUID, _Out_ LPSTR pszBuffer) LIB3MFABSTRACT;
+
+		/**
+		* sets the component object's UUID
+		*
+		* @param[in] pszUUID the UUID as string of the form "xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx"
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(SetUUIDUTF8) (_In_z_ LPCSTR pszUUID) LIB3MFABSTRACT;
 
 		/**
 		* Returns the transformation matrix of the component.
@@ -1562,6 +2063,23 @@ namespace NMR {
 		* @return error code or 0 (success)
 		*/
 		LIB3MFMETHOD(GetObjectResource) (_Outptr_ ILib3MFModelObjectResource ** ppResource) LIB3MFABSTRACT;
+
+		/**
+		* returns, whether a build item has a UUID and, if true, the build item's UUID
+		*
+		* @param[out] pbHasUUID flag whether the build item has a UUID
+		* @param[out] pszBuffer the UUID as string of the form "xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx"
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(GetUUIDUTF8) (_Out_ BOOL * pbHasUUID, _Out_ LPSTR pszBuffer) LIB3MFABSTRACT;
+
+		/**
+		* sets the build item's UUID
+		*
+		* @param[in] pszUUID the UUID as string of the form "xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx"
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(SetUUIDUTF8) (_In_z_ LPCSTR pszUUID) LIB3MFABSTRACT;
 
 		/**
 		* Retrieves the object resource id associated to a build item
@@ -1806,6 +2324,23 @@ namespace NMR {
 		LIB3MFMETHOD(GetComponentsObjectByID) (_In_ DWORD nResourceID, _Outptr_ ILib3MFModelComponentsObject ** ppComponentsObject) LIB3MFABSTRACT;
 
 		/**
+		* returns, whether the build has a UUID and, if true, the build's UUID
+		*
+		* @param[out] pbHasUUID flag whether the build has a UUID
+		* @param[out] pszBuffer the UUID as string of the form "xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx"
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(GetBuildUUIDUTF8) (_Out_ BOOL * pbHasUUID, _Out_ LPSTR pszBuffer) LIB3MFABSTRACT;
+
+		/**
+		* sets the build's UUID
+		*
+		* @param[in] pszUUID the UUID as string of the form "xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx"
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(SetBuildUUIDUTF8) (_In_z_ LPCSTR pszUUID) LIB3MFABSTRACT;
+		
+		/**
 		* creates a build item iterator instance with all build items
 		*
 		* @param[out] ppIterator returns the iterator instance
@@ -1863,15 +2398,6 @@ namespace NMR {
 		LIB3MFMETHOD(GetBaseMaterials) (_Outptr_ ILib3MFModelResourceIterator ** ppIterator) LIB3MFABSTRACT;
 
 		/**
-		* creates a thumbnail iterator instance with all thumbnails
-		*
-		* @param[out] ppIterator returns the iterator instance
-		* @return error code or 0 (success)
-		*/
-		LIB3MFMETHOD(GetThumbnails) (_Outptr_ ILib3MFModelThumbnailIterator ** ppIterator) LIB3MFABSTRACT;
-
-
-		/**
 		* merges all components and objects which are referenced by a build item. The memory is duplicated and a
 		* new model is created.
 		*
@@ -1897,7 +2423,16 @@ namespace NMR {
 		LIB3MFMETHOD(AddComponentsObject) (_Outptr_ ILib3MFModelComponentsObject ** ppComponentsObject) LIB3MFABSTRACT;
 
 		/**
-		* adds an empty texture2d resource to the model
+		* adds a texture2d resource to the model. Its path is given by that of an existing attachment.
+		*
+		* @param[in] pTextureAttachment attachment containing the image data
+		* @param[out] ppTextureInstance returns the new texture instance
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(AddTexture2DFromAttachment) (_In_z_ ILib3MFModelAttachment* pTextureAttachment, _Outptr_ ILib3MFModelTexture2D ** ppTextureInstance) LIB3MFABSTRACT;
+
+		/**
+		* adds a texture2d resource to the model
 		*
 		* @param[in] pwszPath Package path of the texture
 		* @param[out] ppTextureInstance returns the new texture instance
@@ -1906,7 +2441,7 @@ namespace NMR {
 		LIB3MFMETHOD(AddTexture2D) (_In_z_ LPCWSTR pwszPath, _Outptr_ ILib3MFModelTexture2D ** ppTextureInstance) LIB3MFABSTRACT;
 
 		/**
-		* adds an empty texture2d resource to the model (UTF8)
+		* adds a texture2d resource to the model (UTF8)
 		*
 		* @param[in] pszPath Package path of the texture
 		* @param[out] ppTextureInstance returns the new texture instance
@@ -1941,45 +2476,6 @@ namespace NMR {
 		LIB3MFMETHOD(RemoveBuildItem) (_In_ ILib3MFModelBuildItem * pBuildItem) LIB3MFABSTRACT;
 
 		/**
-		* returns the number of texture streams of a model
-		*
-		* @param[out] pnCount returns the number of texture streams.
-		* @return error code or 0 (success)
-		*/
-		LIB3MFMETHOD(GetTextureStreamCount) (_Out_ DWORD * pnCount) LIB3MFABSTRACT;
-
-		/**
-		* returns the size of a texture stream
-		*
-		* @param[in] nIndex index of the texture stream
-		* @param[out] pnSize returns the size of a texture stream in bytes.
-		* @return error code or 0 (success)
-		*/
-		LIB3MFMETHOD(GetTextureStreamSize) (_In_ DWORD nIndex, _Out_ UINT64 * pnSize) LIB3MFABSTRACT;
-
-		/**
-		* Returns the path of a texture stream in the 3mf package.
-		*
-		* @param[in] nIndex Index of the Texture Stream
-		* @param[out] pwszBuffer filled with the texture stream path, may be NULL
-		* @param[in] cbBufferSize size of pwszBuffer (including trailing 0).
-		* @param[out] pcbNeededChars filled with the count of the written bytes, or needed buffer size.
-		* @return error code or 0 (success)
-		*/
-		LIB3MFMETHOD(GetTextureStreamPath) (_In_ DWORD nIndex, _Out_opt_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars) LIB3MFABSTRACT;
-
-		/**
-		* Returns the path of a texture stream in the 3mf package. (UTF8)
-		*
-		* @param[in] nIndex Index of the Texture Stream
-		* @param[out] pszBuffer filled with the texture stream path, may be NULL
-		* @param[in] cbBufferSize size of pwszBuffer (including trailing 0).
-		* @param[out] pcbNeededChars filled with the count of the written bytes, or needed buffer size.
-		* @return error code or 0 (success)
-		*/
-		LIB3MFMETHOD(GetTextureStreamPathUTF8) (_In_ DWORD nIndex, _Out_opt_ LPSTR pszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars) LIB3MFABSTRACT;
-
-		/**
 		* returns the number of metadata strings of a model
 		*
 		* @param[out] pnCount returns the number metadata strings.
@@ -1991,7 +2487,7 @@ namespace NMR {
 		* returns a metadata key of a model
 		*
 		* @param[in] nIndex Index of the Metadata
-		* @param[out] pwszBuffer filled with the texture stream path, may be NULL
+		* @param[out] pwszBuffer filled with the key of the Metadata
 		* @param[in] cbBufferSize size of pwszBuffer (including trailing 0).
 		* @param[out] pcbNeededChars filled with the count of the written bytes, or needed buffer size.
 		* @return error code or 0 (success)
@@ -2002,7 +2498,7 @@ namespace NMR {
 		* returns a metadata key of a model (UTF8)
 		*
 		* @param[in] nIndex Index of the Metadata
-		* @param[out] pszBuffer filled with the texture stream path, may be NULL
+		* @param[out] pszBuffer filled with the key of the Metadata
 		* @param[in] cbBufferSize size of pwszBuffer (including trailing 0).
 		* @param[out] pcbNeededChars filled with the count of the written bytes, or needed buffer size.
 		* @return error code or 0 (success)
@@ -2013,7 +2509,7 @@ namespace NMR {
 		* returns a metadata value of a model
 		*
 		* @param[in] nIndex Index of the Metadata
-		* @param[out] pwszBuffer filled with the texture stream path, may be NULL
+		* @param[out] pwszBuffer filled with the value of the Metadata
 		* @param[in] cbBufferSize size of pwszBuffer (including trailing 0).
 		* @param[out] pcbNeededChars filled with the count of the written bytes, or needed buffer size.
 		* @return error code or 0 (success)
@@ -2024,7 +2520,7 @@ namespace NMR {
 		* returns a metadata value of a model (UTF8)
 		*
 		* @param[in] nIndex Index of the Metadata
-		* @param[out] pszBuffer filled with the texture stream path, may be NULL
+		* @param[out] pszBuffer filled with the value of the Metadata
 		* @param[in] cbBufferSize size of pwszBuffer (including trailing 0).
 		* @param[out] pcbNeededChars filled with the count of the written bytes, or needed buffer size.
 		* @return error code or 0 (success)
@@ -2148,6 +2644,22 @@ namespace NMR {
 		LIB3MFMETHOD(GetAttachmentPathUTF8) (_In_ DWORD nIndex, _Out_opt_ LPSTR pszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars) LIB3MFABSTRACT;
 
 		/**
+		* Get the attachment to the OPC package containing the package thumbnail
+		*
+		* @param[in] bCreateIfNotExisting create the attachment if it does not exist
+		* @param[out] ppAttachmentInstance Instance of the thumbnailattachment object
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(GetPackageThumbnailAttachment) (_In_ BOOL bCreateIfNotExisting, _Outptr_ ILib3MFModelAttachment ** ppAttachmentInstance) LIB3MFABSTRACT;
+
+		/**
+		* Remove the attachment to the OPC package containing the package thumbnail
+		*
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(RemovePackageThumbnailAttachment) () LIB3MFABSTRACT;
+
+		/**
 		* adds a new Content Type to the model
 		*
 		* @param[in] pszwExtension File Extension
@@ -2182,6 +2694,13 @@ namespace NMR {
 		*/
 		LIB3MFMETHOD(RemoveCustomContentTypeUTF8) (_In_ LPCSTR pszExtension) LIB3MFABSTRACT;
 
+		/**
+		* Adds a slicestack to a model
+		* @param[in] nBottomZ Bottom Z value of the slicestack
+		* @param[out] ppSliceStackObject returns the new slice stack object
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(AddSliceStack) (_In_opt_ FLOAT nBottomZ, _Out_opt_ ILib3MFSliceStack ** ppSliceStack) LIB3MFABSTRACT;
 
 	};
 
@@ -2241,7 +2760,6 @@ namespace NMR {
 		* @return error code or 0 (success)
 		*/
 		LIB3MFMETHOD(QueryExtensionUTF8) (_In_z_ LPCSTR pszExtensionUrl, _Out_ BOOL * pbIsSupported, _Out_opt_ DWORD * pExtensionInterfaceVersion) LIB3MFABSTRACT;
-
 	};
 
 }

@@ -37,7 +37,7 @@ This is a derived class for Importing the binary STL and color STL Mesh Format.
 #include "Common/Math/NMR_VectorTree.h" 
 #include "Common/Math/NMR_Matrix.h" 
 #include "Common/NMR_Exception.h" 
-#include <math.h>
+#include <cmath>
 #include <array>
 #include <list>
 

@@ -73,7 +73,6 @@ namespace NMR {
 		__NMRASSERT(pNameSpace);
 
 		if (wcscmp(pNameSpace, XML_3MF_NAMESPACE_CORESPEC100) == 0) {
-
 			if (wcscmp(pChildName, XML_3MF_ELEMENT_COMPONENT) == 0) {
 				// Read Component
 				PModelReaderNode100_Component pXMLNode = std::make_shared<CModelReaderNode100_Component>(m_pComponentsObject->getModel(), m_pWarnings);
@@ -89,8 +88,21 @@ namespace NMR {
 
 				// Create component
 				PModelComponent pComponent = std::make_shared<CModelComponent>(pObject, mTransform);
+				
+				// Set Production references
+				PUUID uuid = pXMLNode->uuid();
+				if (!uuid.get()) {
+					if (pXMLReader->NamespaceRegistered(XML_3MF_NAMESPACE_PRODUCTIONSPEC)) {
+						m_pWarnings->addException(CNMRException(NMR_ERROR_MISSINGUUID), mrwMissingMandatoryValue);
+					}
+					uuid = std::make_shared<CUUID>();
+				}
+				pComponent->setUUID(uuid);
+
 				m_pComponentsObject->addComponent(pComponent);
 			}
+			else
+				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
 		}
 	}
 

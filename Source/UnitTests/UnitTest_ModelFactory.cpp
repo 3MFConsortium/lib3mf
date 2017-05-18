@@ -53,7 +53,8 @@ namespace NMR
 
 			CCOMObject<CCOMModelFactory> * pNewModelFactory = new CCOMObject<CCOMModelFactory>;
 			hResult = pNewModelFactory->GetSpecVersion(&nMajorVersion, &nMinorVersion);
-			pNewModelFactory->Release();
+			delete pNewModelFactory;
+			// pNewModelFactory->Release();
 
 			if (hResult != S_OK)
 				Assert::Fail(L"Could not obtain Spec Version");
@@ -70,7 +71,8 @@ namespace NMR
 			DWORD nInterfaceVersion;
 			CCOMObject<CCOMModelFactory> * pNewModelFactory = new CCOMObject<CCOMModelFactory>;
 			hResult = pNewModelFactory->GetInterfaceVersion(&nInterfaceVersion);
-			pNewModelFactory->Release();
+			delete pNewModelFactory;
+			// pNewModelFactory->Release();
 
 			if (hResult != S_OK)
 				Assert::Fail(L"Could not obtain API interface version");
@@ -101,7 +103,16 @@ namespace NMR
 				Assert::Fail(errString.c_str());
 			}
 
-			pNewModelFactory->Release();
+			if (S_OK != pNewModelFactory->QueryExtension(L"http://schemas.microsoft.com/3dmanufacturing/beamlattice/2017/02", &bIsSupported, &nAPIInterfaceVersion))
+				Assert::Fail(L"Failed to check BeamLattice-Spec");
+			if (!bIsSupported)
+				Assert::Fail(L"BeamLattice-Spec not supported");
+			if (nAPIInterfaceVersion != NMR_APIVERSION_INTERFACE_BEAMLATTICESPEC) {
+				std::wstring errString = std::wstring(L"invalid 3MF API interface version for BeamLattice-Spec: " + std::to_wstring(NMR_APIVERSION_INTERFACE_BEAMLATTICESPEC));
+				Assert::Fail(errString.c_str());
+			}
+			delete pNewModelFactory;
+			//pNewModelFactory->Release();
 		}
 
 	};

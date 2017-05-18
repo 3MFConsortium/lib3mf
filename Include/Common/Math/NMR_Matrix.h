@@ -71,6 +71,7 @@ namespace NMR {
 	std::wstring fnMATRIX3_toWideString(_In_ const NMATRIX3 mMatrix);
 	NMATRIX3 fnMATRIX3_fromWideString(_In_ const std::wstring sString);
 
+	nfBool fnMATRIX3_isplanar(_In_ const NMATRIX3 mMatrix);
 }
 
 #endif // __NMR_MATRIX

@@ -235,6 +235,33 @@ NMR_ErrorConst.h defines all error code constants.
 // Buffer is full
 #define NMR_ERROR_BUFFERISFULL 0x103F
 
+// Could not read from callback stream
+#define NMR_ERROR_COULDNOTREADFROMCALLBACKSTREAM 0x1040
+
+// Content Types does not contain etension for relatioship
+#define NMR_ERROR_OPC_MISSING_EXTENSION_FOR_RELATIONSHIP 0x1041
+
+// Content Types does not contain extension or partname for model
+#define NMR_ERROR_OPC_MISSING_EXTENSION_FOR_MODEL 0x1042
+
+// Invalid XML encoding
+#define NMR_ERROR_INVALIDXMLENCODING 0x1043
+
+// Invalid XML attribute
+#define NMR_ERROR_FORBIDDENXMLATTRITIBUTE 0x1044
+
+// Duplicate print ticket
+#define NMR_ERROR_DUPLICATE_PRINTTICKET 0x1045
+
+// Duplicate ID of a relationship
+#define NMR_ERROR_OPC_DUPLICATE_RELATIONSHIP_ID 0x1046
+
+// Attachment has invalid relationship for texture
+#define NMR_ERROR_INVALIDRELATIONSHIPTYPEFORTEXTURE 0x1047
+
+// Attachment has an empty stream
+#define NMR_ERROR_IMPORTSTREAMISEMPTY 0x1048
+
 /*-------------------------------------------------------------------
 Core framework error codes (0x2XXX)
 -------------------------------------------------------------------*/
@@ -418,6 +445,16 @@ Core framework error codes (0x2XXX)
 
 // Mesh Information Object was not assigned
 #define NMR_ERROR_INVALIDMESHINFORMATION 0x203C
+
+// Too many beams
+#define NMR_ERROR_TOOMANYBEAMS 0x203D
+
+
+// Invalid slice polygon index
+#define NMR_ERROR_INVALIDSLICEPOLYGON 0x2040
+
+// Invalid slice vertex index
+#define NMR_ERROR_INVALIDSLICEVERTEX 0x2041
 
 /*-------------------------------------------------------------------
 Model error codes (0x8XXX)
@@ -770,6 +807,7 @@ Model error codes (0x8XXX)
 
 // Build item not found
 #define NMR_ERROR_BUILDITEMNOTFOUND 0x8074
+
 // Could not get texture URI
 #define NMR_ERROR_OPCCOULDNOTGETTEXTUREURI 0x8075
 
@@ -811,6 +849,144 @@ Model error codes (0x8XXX)
 
 // Could not find Model Attachment
 #define NMR_ERROR_ATTACHMENTNOTFOUND 0x8082
+
+// Invalid required extension prefix
+#define NMR_ERROR_INVALIDREQUIREDEXTENSIONPREFIX 0x8091
+
+// Required extension not supported
+#define NMR_ERROR_REQUIREDEXTENSIONNOTSUPPORTED 0x8092
+
+// Clipping resource for beam lattice not found
+#define NMR_ERROR_BEAMLATTICECLIPPINGRESOURCENOTDEFINED 0x8093
+
+// Attribute of beam lattice is invalid
+#define NMR_ERROR_BEAMLATTICEINVALIDATTRIBUTE 0x8094
+
+// Could not get sliceref URI
+#define NMR_ERROR_OPCCOULDNOTGETSLICEREFURI 0x8096
+
+// Could not get sliceref stream
+#define NMR_ERROR_OPCCOULDNOTGETSLICEREFSTREAM 0x8097
+
+// Could not get attachment stream
+#define NMR_ERROR_OPCCOULDNOTGETATTACHMENTSTREAM 0x8098
+
+// Object has duplicate Slicestack ID
+#define NMR_ERROR_DUPLICATE_SLICESTACKID 0x8099
+
+// Slicestack Resource not found
+#define NMR_ERROR_SLICESTACKRESOURCE_NOT_FOUND 0x809A
+
+// Slicestack contains slices and sliceref
+#define NMR_ERROR_SLICESTACK_SLICESANDSLICEREF 0x809B
+
+// a UUID is ill formatted
+#define  NMR_ERROR_ILLFORMATUUID 0x809C
+
+// a slice stack resource is invalid
+#define  NMR_ERROR_INVALIDSLICESTACK 0x809D
+
+// Duplicate path
+#define NMR_ERROR_DUPLICATEPATH 0x809E
+
+// Duplicate UUID
+#define NMR_ERROR_DUPLICATEUUID 0x80A0
+
+// References in production extension too deep
+#define NMR_ERROR_REFERENCESTOODEEP 0x80A1
+
+// References in sliceextensions extension too deep
+#define NMR_ERROR_SLICEREFSTOODEEP 0x80A2
+
+// z-position of slices is not increasing
+#define NMR_ERROR_SLICES_Z_NOTINCREASING 0x80A3
+
+// a slice polygon of a model- or solidsupport-object is not closed
+#define NMR_ERROR_SLICEPOLYGONNOTCLOSED 0x80A4
+
+// a closed slice polygon is a line
+#define NMR_ERROR_CLOSED_SLICE_POLYGON_IS_LINE 0x80A5
+
+// Invalid XML element in namespace
+#define NMR_ERROR_NAMESPACE_INVALID_ELEMENT 0x80A6
+
+// Invalid XML attribute in namespace
+#define NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE 0x80A7
+
+// Duplicate Z-top-value in slice
+#define NMR_ERROR_DUPLICATETEZTOP 0x80A8
+
+// Missing Z-top-value in slice
+#define NMR_ERROR_MISSINGTEZTOP 0x80A9
+
+// Invalid attribute in slice extension
+#define NMR_ERROR_SLICE_INVALIDATTRIBUTE 0x80AA
+
+// Transformation matrix to a slice stack is not planar
+#define NMR_ERROR_SLICETRANSFORMATIONPLANAR 0x80AC
+
+// a UUID is not unique within a package
+#define  NMR_ERROR_UUID_NOT_UNIQUE 0x80AD
+
+// Could not get XML Namespace for a metadatum
+#define NMR_ERROR_METADATA_COULDNOTGETNAMESPACE 0x80AE
+
+// Invalid index for slice segment index
+#define NMR_ERROR_INVALID_SLICESEGMENT_VERTEXINDEX 0x80AF
+
+// Missing UUID
+#define NMR_ERROR_MISSINGUUID 0x80B0
+
+// A slicepath is invalid
+#define NMR_ERROR_INVALID_SLICEPATH 0x80B1
+
+// Unknown Model Metadata
+#define NMR_ERROR_UNKNOWNMETADATA 0x80B2
+
+// Object has duplicate meshresolution attribute
+#define NMR_ERROR_DUPLICATE_MESHRESOLUTION 0x80B3
+
+// Object has invalid meshresolution attribute
+#define NMR_ERROR_INVALID_MESHRESOLUTION 0x80B4
+
+// Invalid model reader warnings object
+#define NMR_ERROR_INVALIDREADERWARNINGSOBJECT 0x80B5
+
+// Could not get OPC Thumbnail Stream
+#define NMR_ERROR_OPCCOULDNOTGETTHUMBNAILSTREAM 0x80B6
+
+// Duplicate Object Thumbnail
+#define NMR_ERROR_DUPLICATEOBJECTTHUMBNAIL 0x80B7
+
+// Duplicate Thumbnail
+#define NMR_ERROR_DUPLICATETHUMBNAIL 0x80B8
+
+// Duplicate Property ID
+#define NMR_ERROR_DUPLICATEPID 0x80B9
+
+// Duplicate Property Index
+#define NMR_ERROR_DUPLICATEPINDEX 0x80BA
+
+// Missing Default Property ID
+#define NMR_ERROR_MISSINGDEFAULTPID 0x80BB
+
+// Invalid Default Property
+#define NMR_ERROR_INVALIDDEFAULTPID 0x80BC
+
+// Build-item must not point to object of type MODELOBJECTTYPE_OTHER
+#define NMR_ERROR_BUILDITEMOBJECT_MUSTNOTBE_OTHER 0x80BD
+
+// Components-object must not have a default PID
+#define NMR_ERROR_DEFAULTPID_ON_COMPONENTSOBJECT 0x80BE
+
+// Nodes used for a beam are too close
+#define NMR_ERROR_BEAMLATTICENODESTOOCLOSE 0x80BF
+
+// Representation resource for beam lattice is invalid
+#define NMR_ERROR_BEAMLATTICE_INVALID_REPRESENTATIONRESOURCE 0x80C0
+
+// Beamlattice is defined on wrong object type
+#define NMR_ERROR_BEAMLATTICE_INVALID_OBJECTTYPE 0x80C1
 
 /*-------------------------------------------------------------------
 XML Parser Error Constants (0x9XXX)
@@ -866,6 +1042,28 @@ XML Parser Error Constants (0x9XXX)
 
 // No quotes around XML attribute
 #define NMR_ERROR_XMLPARSER_NOQUOTESAROUNDATTRIBUTE 0x9011
+
+// A relationship is duplicated
+#define NMR_ERROR_DUPLICATE_RELATIONSHIP 0x9012
+
+// A content type is duplicated
+#define NMR_ERROR_DUPLICATE_CONTENTTYPE 0x9013
+
+// A content type does not have a extension
+#define NMR_ERROR_CONTENTTYPE_EMPTY_EXTENSION 0x9014
+
+// A content type does not have a contenttype
+#define NMR_ERROR_CONTENTTYPE_EMPTY_CONTENTTYPE 0x9015
+
+// An override content type does not have a partname
+#define NMR_ERROR_CONTENTTYPE_EMPTY_PARTNAME 0x9016
+
+// XML contains an invalid escape character
+#define NMR_ERROR_XMLPARSER_INVALID_ESCAPESTRING 0x9017
+
+// A box attribute is duplicated
+#define NMR_ERROR_DUPLICATE_BOX_ATTRIBUTE 0x9018
+
 
 /*-------------------------------------------------------------------
 Library errors (0xAXXX)

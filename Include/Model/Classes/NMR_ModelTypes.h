@@ -55,6 +55,32 @@ namespace NMR {
 		DWORD m_nIndices[3];
 	} MODELMESHTRIANGLE;
 
+	enum eModelBeamLatticeClipMode {
+		MODELBEAMLATTICECLIPMODE_NONE = 0,
+		MODELBEAMLATTICECLIPMODE_INSIDE = 1,
+		MODELBEAMLATTICECLIPMODE_OUTSIDE = 2
+	};
+
+	enum eModelSlicesMeshResolution {
+		MODELSLICESMESHRESOLUTION_FULL = 0,
+		MODELSLICESMESHRESOLUTION_LOW = 1
+	};
+
+	enum eModelBeamLatticeCapMode {
+		MODELBEAMLATTICECAPMODE_SPHERE = 0,
+		MODELBEAMLATTICECAPMODE_HEMISPHERE = 1,
+		MODELBEAMLATTICECAPMODE_BUTT = 2
+	};
+	typedef struct MODELMESHBEAM {
+		DWORD m_nIndices[2];
+		DOUBLE m_dRadius[2];	// the radius of end 0 or 1 of this beam
+		eModelBeamLatticeCapMode m_eCapMode[2];
+		MODELMESHBEAM() {
+			m_eCapMode[0] = MODELBEAMLATTICECAPMODE_SPHERE;
+			m_eCapMode[1] = MODELBEAMLATTICECAPMODE_SPHERE;
+		}
+	} MODELMESHBEAM;
+
 	typedef struct {
 		FLOAT m_fFields[3][4];
 	} MODELTRANSFORM;
@@ -79,6 +105,7 @@ namespace NMR {
 #pragma pack()
 
 	typedef DWORD ModelResourceID;
+	typedef DWORD PackageResourceID;
 	typedef DWORD ModelResourceIndex;
 
 	enum eModelUnit {
@@ -119,7 +146,9 @@ namespace NMR {
 		MODELTEXTURETYPE_JPEG = 2,
 	};
 
-
+  typedef struct {
+    FLOAT m_fPosition[2];
+  } MODELSLICEVERTEX;
 }
 
 #endif // __NMR_MODELTYPES

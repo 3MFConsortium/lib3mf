@@ -48,7 +48,7 @@ namespace NMR {
 	public:
 		CNMRException(_In_ nfError errorcode);
 		virtual const char * what() const throw ();
-		nfError getErrorCode();
+		nfError getErrorCode() const;
 	};
 
 }

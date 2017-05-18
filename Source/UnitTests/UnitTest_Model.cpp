@@ -32,17 +32,36 @@ UnitTest_Model.cpp: Defines Unittests for the model class
 
 #include "CppUnitTest.h"
 #include "Model\Classes\NMR_Model.h"
-#include "Model\Reader\NMR_ModelReader_3MF_OPC.h"
-#include "Model\Writer\NMR_ModelWriter_3MF_OPC.h"
+#include "Model\Reader\NMR_ModelReader_3MF_Native.h"
 #include "Model\Writer\NMR_ModelWriter_3MF_Native.h"
 #include "Common\Mesh\NMR_Mesh.h"
 #include "Common\MeshExport\NMR_MeshExporter_STL.h"
-#include "Common\Platform\NMR_ExportStream_COM.h"
-#include "Common\Platform\NMR_ImportStream_COM.h"
 #include "Model\Classes\NMR_ModelBuildItem.h"
 #include "Model\Classes\NMR_ModelMeshObject.h"
 #include "Model\Classes\NMR_ModelObject.h"
 #include "Common\NMR_Exception.h"
+
+#include "Model\Classes\NMR_ModelTextureAttachment.h"
+
+#ifdef NMR_COM_NATIVE
+#include "Model\Reader\NMR_ModelReader_3MF_OPC.h"
+#include "Model\Writer\NMR_ModelWriter_3MF_OPC.h"
+#include "Common\Platform\NMR_ExportStream_COM.h"
+#include "Common\Platform\NMR_ImportStream_COM.h"
+#define IMPORTSTREAM CImportStream_COM
+#define EXPORTSTREAM CExportStream_COM
+#define WRITER CModelWriter_3MF_OPC
+#define READER CModelReader_3MF_OPC
+#else
+#include "Model\Reader\NMR_ModelReader_3MF_Native.h"
+#include "Model\Writer\NMR_ModelWriter_3MF_Native.h"
+#include "Common\Platform\NMR_ExportStream_GCC_Native.h"
+#include "Common\Platform\NMR_ImportStream_GCC_Native.h"
+#define IMPORTSTREAM CImportStream_GCC_Native
+#define EXPORTSTREAM CExportStream_GCC_Native
+#define WRITER CModelWriter_3MF_Native
+#define READER CModelReader_3MF_Native
+#endif
 
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
@@ -54,22 +73,22 @@ namespace NMR
 	TEST_CLASS(ModelTest)
 	{
 	private:
-
-
+		static const std::wstring sInPath;
+		static const std::wstring sOutPath;
 	public:
 		const double EPS_TOL = 1e-5;
 
 		TEST_METHOD(Model_3MFBox)
 		{
 			PModel pModel = std::make_shared<CModel> ();
-			PModelReader pModelReader = std::make_shared<CModelReader_3MF_OPC> (pModel);
-			PImportStream pImportStream = std::make_shared<CImportStream_COM>(L"../../TestFiles/Box.3mf");
+			PModelReader pModelReader = std::make_shared<READER> (pModel);
+			PImportStream pImportStream = std::make_shared<IMPORTSTREAM>((sInPath + L"Box.3mf").c_str());
 			pModelReader->readStream(pImportStream);
 
 			CMesh Mesh;
 			pModel->mergeToMesh(&Mesh);
 
-			PExportStream pExportStream(new CExportStream_COM(L"../TestOutput/output_3mfbox.stl"));
+			PExportStream pExportStream(new EXPORTSTREAM((sOutPath + L"output_3mfbox.stl").c_str()));
 			PMeshExporter pExporter(new CMeshExporter_STL(pExportStream));
 			pExporter->exportMesh(&Mesh, NULL);
 		}
@@ -77,133 +96,113 @@ namespace NMR
 		TEST_METHOD(Model_3MFBox10)
 		{
 			PModel pModel = std::make_shared<CModel>();
-			PModelReader pModelReader = std::make_shared<CModelReader_3MF_OPC>(pModel);
-			PImportStream pImportStream = std::make_shared<CImportStream_COM>(L"../../TestFiles/cube10.3mf");
+			PModelReader pModelReader = std::make_shared<READER>(pModel);
+			PImportStream pImportStream = std::make_shared<IMPORTSTREAM>((sInPath + L"cube10.3mf").c_str());
 			pModelReader->readStream(pImportStream);
 
-			PModelWriter pModelWriter = std::make_shared<CModelWriter_3MF_Native>(pModel);
-			PExportStream pExportStream = std::make_shared<CExportStream_COM>(L"../TestOutput/output_3mfcube10.3mf");
+			PModelWriter pModelWriter = std::make_shared<WRITER>(pModel);
+			PExportStream pExportStream = std::make_shared<EXPORTSTREAM>((sOutPath + L"output_3mfcube10.3mf").c_str());
 			pModelWriter->exportToStream(pExportStream);
 		}
 
 		TEST_METHOD(Model_3MFModel093)
 		{
 			PModel pModel = std::make_shared<CModel>();
-			PModelReader pModelReader = std::make_shared<CModelReader_3MF_OPC>(pModel);
-			PImportStream pImportStream = std::make_shared<CImportStream_COM>(L"../../TestFiles/track093.3mf");
+			PModelReader pModelReader = std::make_shared<READER>(pModel);
+			PImportStream pImportStream = std::make_shared<IMPORTSTREAM>((sInPath + L"track093.3mf").c_str());
 			pModelReader->readStream(pImportStream);
 
-			PModelWriter pModelWriter = std::make_shared<CModelWriter_3MF_Native>(pModel);
-			PExportStream pExportStream = std::make_shared<CExportStream_COM>(L"../TestOutput/output_track093.3mf");
+			PModelWriter pModelWriter = std::make_shared<WRITER>(pModel);
+			PExportStream pExportStream = std::make_shared<EXPORTSTREAM>((sOutPath + L"output_track093.3mf").c_str());
 			pModelWriter->exportToStream(pExportStream);
 		}
 
 		TEST_METHOD(Model_3MFColor093)
 		{
 			PModel pModel = std::make_shared<CModel>();
-			PModelReader pModelReader = std::make_shared<CModelReader_3MF_OPC>(pModel);
-			PImportStream pImportStream = std::make_shared<CImportStream_COM>(L"../../TestFiles/Color_093.3mf");
+			PModelReader pModelReader = std::make_shared<READER>(pModel);
+			PImportStream pImportStream = std::make_shared<IMPORTSTREAM>((sInPath + L"Color_093.3mf").c_str());
 			pModelReader->readStream(pImportStream);
 
-			PModelWriter pModelWriter = std::make_shared<CModelWriter_3MF_Native>(pModel);
-			PExportStream pExportStream = std::make_shared<CExportStream_COM>(L"../TestOutput/output_color093.3mf");
+			PModelWriter pModelWriter = std::make_shared<WRITER>(pModel);
+			PExportStream pExportStream = std::make_shared<EXPORTSTREAM>((sOutPath + L"output_color093.3mf").c_str());
 			pModelWriter->exportToStream(pExportStream);
 		}
 
 		TEST_METHOD(Model_3MFTexture093)
 		{
 			PModel pModel = std::make_shared<CModel>();
-			PModelReader pModelReader = std::make_shared<CModelReader_3MF_OPC>(pModel);
-			PImportStream pImportStream = std::make_shared<CImportStream_COM>(L"../../TestFiles/Texture_093.3mf");
+			PModelReader pModelReader = std::make_shared<READER>(pModel);
+			PImportStream pImportStream = std::make_shared<IMPORTSTREAM>((sInPath + L"Texture_093.3mf").c_str());
 			pModelReader->readStream(pImportStream);
 
-			PModelWriter pModelWriter = std::make_shared<CModelWriter_3MF_Native>(pModel);
-			PExportStream pExportStream = std::make_shared<CExportStream_COM>(L"../TestOutput/output_texture093.3mf");
+			PModelWriter pModelWriter = std::make_shared<WRITER>(pModel);
+			PExportStream pExportStream = std::make_shared<EXPORTSTREAM>((sOutPath + L"output_texture093.3mf").c_str());
 			pModelWriter->exportToStream(pExportStream);
 		}
 
 		TEST_METHOD(Model_3MFBase1)
 		{
 			PModel pModel = std::make_shared<CModel>();
-			PModelReader pModelReader = std::make_shared<CModelReader_3MF_OPC>(pModel);
-			PImportStream pImportStream = std::make_shared<CImportStream_COM>(L"../../TestFiles/3mfbase1_cube.3mf");
+			PModelReader pModelReader = std::make_shared<READER>(pModel);
+			PImportStream pImportStream = std::make_shared<IMPORTSTREAM>((sInPath+L"3mfbase1_cube.3mf").c_str());
 			pModelReader->readStream(pImportStream);
 
-			PModelWriter pModelWriter = std::make_shared<CModelWriter_3MF_Native>(pModel);
-			PExportStream pExportStream = std::make_shared<CExportStream_COM>(L"../TestOutput/output_3mfbase1.3mf");
+			PModelWriter pModelWriter = std::make_shared<WRITER>(pModel);
+			PExportStream pExportStream = std::make_shared<EXPORTSTREAM>((sOutPath + L"output_3mfbase1.3mf").c_str());
 			pModelWriter->exportToStream(pExportStream);
 		}
 
 		TEST_METHOD(Model_3MFBase2)
 		{
 			PModel pModel = std::make_shared<CModel>();
-			PModelReader pModelReader = std::make_shared<CModelReader_3MF_OPC>(pModel);
-			PImportStream pImportStream = std::make_shared<CImportStream_COM>(L"../../TestFiles/3mfbase2_material093.3mf");
+			PModelReader pModelReader = std::make_shared<READER>(pModel);
+			PImportStream pImportStream = std::make_shared<IMPORTSTREAM>((sInPath+L"3mfbase2_material093.3mf").c_str());
 			pModelReader->readStream(pImportStream);
 
-			PModelWriter pModelWriter = std::make_shared<CModelWriter_3MF_Native>(pModel);
-			PExportStream pExportStream = std::make_shared<CExportStream_COM>(L"../TestOutput/output_3mfbase2.3mf");
+			PModelWriter pModelWriter = std::make_shared<WRITER>(pModel);
+			PExportStream pExportStream = std::make_shared<EXPORTSTREAM>((sOutPath + L"output_3mfbase2.3mf").c_str());
 			pModelWriter->exportToStream(pExportStream);
 		}
 
 		//TEST_METHOD(Model_3MFBase3)
 		//{
 		//	PModel pModel = std::make_shared<CModel>();
-		//	PModelReader pModelReader = std::make_shared<CModelReader_3MF_OPC>(pModel);
-		//	PImportStream pImportStream = std::make_shared<CImportStream_COM>(L"../../TestFiles/3mfbase3_MaterialAndTexture093.3mf");
+		//	PModelReader pModelReader = std::make_shared<READER>(pModel);
+		//	PImportStream pImportStream = std::make_shared<IMPORTSTREAM>((sInPath + L"3mfbase3_MaterialAndTexture093.3mf").c_str());
 		//	pModelReader->readStream(pImportStream);
 
 		//	PModelWriter pModelWriter = std::make_shared<CModelWriter_3MF_OPC>(pModel);
-		//	PExportStream pExportStream = std::make_shared<CExportStream_COM>(L"../TestOutput/output_3mfbase3.3mf");
+		//	PExportStream pExportStream = std::make_shared<EXPORTSTREAM>((sOutPath + L"output_3mfbase3.3mf").c_str());
 		//	pModelWriter->exportToStream(pExportStream);
 		//}
 
 		TEST_METHOD(Model_3MFBase4)
 		{
 			PModel pModel = std::make_shared<CModel>();
-			PModelReader pModelReader = std::make_shared<CModelReader_3MF_OPC>(pModel);
-			PImportStream pImportStream = std::make_shared<CImportStream_COM>(L"../../TestFiles/3mfbase4_Mesh1.3mf");
+#ifdef NMR_COM_NATIVE
+			PModelReader pModelReader = std::make_shared<READER>(pModel);
+			PImportStream pImportStream = std::make_shared<IMPORTSTREAM>((sInPath + L"3mfbase4_Mesh1.3mf").c_str());
+#else
+			PModelReader pModelReader = std::make_shared<READER>(pModel);
+			PImportStream pImportStream = std::make_shared<IMPORTSTREAM>((sInPath + L"3mfbase4_Mesh1.3mf").c_str());
+#endif
 			pModelReader->readStream(pImportStream);
 
-			PModelWriter pModelWriter = std::make_shared<CModelWriter_3MF_Native>(pModel);
-			PExportStream pExportStream = std::make_shared<CExportStream_COM>(L"../TestOutput/output_3mfbase4.3mf");
+			PModelWriter pModelWriter = std::make_shared<WRITER>(pModel);
+			PExportStream pExportStream = std::make_shared<EXPORTSTREAM>((sOutPath + L"output_3mfbase4.3mf").c_str());
 			pModelWriter->exportToStream(pExportStream);
 		}
 
 		TEST_METHOD(Model_3MFBase5)
 		{
 			PModel pModel = std::make_shared<CModel>();
-			PModelReader pModelReader = std::make_shared<CModelReader_3MF_OPC>(pModel);
-			PImportStream pImportStream = std::make_shared<CImportStream_COM>(L"../../TestFiles/3mfbase5_texture093.3mf");
+			PModelReader pModelReader = std::make_shared<READER>(pModel);
+			PImportStream pImportStream = std::make_shared<IMPORTSTREAM>((sInPath + L"3mfbase5_texture093.3mf").c_str());
 			pModelReader->readStream(pImportStream);
 
-			PModelWriter pModelWriter = std::make_shared<CModelWriter_3MF_Native>(pModel);
-			PExportStream pExportStream = std::make_shared<CExportStream_COM>(L"../TestOutput/output_3mfbase5.3mf");
-			pModelWriter->exportToStream(pExportStream);
-		}
-
-
-		TEST_METHOD(Model_3MFBase6)
-		{
-			PModel pModel = std::make_shared<CModel>();
-			PModelReader pModelReader = std::make_shared<CModelReader_3MF_OPC>(pModel);
-			PImportStream pImportStream = std::make_shared<CImportStream_COM>(L"../../TestFiles/3mfbase6_VertexAlex093.3mf");
-			pModelReader->readStream(pImportStream);
-
-			PModelWriter pModelWriter = std::make_shared<CModelWriter_3MF_Native>(pModel);
-			PExportStream pExportStream = std::make_shared<CExportStream_COM>(L"../TestOutput/output_3mfbase6.3mf");
-			pModelWriter->exportToStream(pExportStream);
-		}
-
-		TEST_METHOD(Model_3MFBase7)
-		{
-			PModel pModel = std::make_shared<CModel>();
-			PModelReader pModelReader = std::make_shared<CModelReader_3MF_OPC>(pModel);
-			PImportStream pImportStream = std::make_shared<CImportStream_COM>(L"../../TestFiles/3mfbase7_VertexEmmett1.3mf");
-			pModelReader->readStream(pImportStream);
-
-			PModelWriter pModelWriter = std::make_shared<CModelWriter_3MF_Native>(pModel);
-			PExportStream pExportStream = std::make_shared<CExportStream_COM>(L"../TestOutput/output_3mfbase7.3mf");
+			PModelWriter pModelWriter = std::make_shared<WRITER>(pModel);
+			PExportStream pExportStream = std::make_shared<EXPORTSTREAM>((sOutPath + L"output_3mfbase5.3mf").c_str());
 			pModelWriter->exportToStream(pExportStream);
 		}
 
@@ -211,129 +210,130 @@ namespace NMR
 		TEST_METHOD(Model_3MFBase8)
 		{
 			PModel pModel = std::make_shared<CModel>();
-			PModelReader pModelReader = std::make_shared<CModelReader_3MF_OPC>(pModel);
-			PImportStream pImportStream = std::make_shared<CImportStream_COM>(L"../../TestFiles/3mfbase8_VertexTet1.3mf");
+			PModelReader pModelReader = std::make_shared<READER>(pModel);
+			PImportStream pImportStream = std::make_shared<IMPORTSTREAM>((sInPath + L"3mfbase8_VertexTet1.3mf").c_str());
 			pModelReader->readStream(pImportStream);
 
-			PModelWriter pModelWriter = std::make_shared<CModelWriter_3MF_Native>(pModel);
-			PExportStream pExportStream = std::make_shared<CExportStream_COM>(L"../TestOutput/output_3mfbase8.3mf");
+			PModelWriter pModelWriter = std::make_shared<WRITER>(pModel);
+			PExportStream pExportStream = std::make_shared<EXPORTSTREAM>((sOutPath + L"output_3mfbase8.3mf").c_str());
 			pModelWriter->exportToStream(pExportStream);
 		}
 
 		TEST_METHOD(Model_3MFBase9)
 		{
 			PModel pModel = std::make_shared<CModel>();
-			PModelReader pModelReader = std::make_shared<CModelReader_3MF_OPC>(pModel);
-			PImportStream pImportStream = std::make_shared<CImportStream_COM>(L"../../TestFiles/3mfbase9_ladybug.3mf");
+			PModelReader pModelReader = std::make_shared<READER>(pModel);
+			PImportStream pImportStream = std::make_shared<IMPORTSTREAM>((sInPath + L"3mfbase9_ladybug.3mf").c_str());
 			pModelReader->readStream(pImportStream);
 
-			PModelWriter pModelWriter = std::make_shared<CModelWriter_3MF_Native>(pModel);
-			PExportStream pExportStream = std::make_shared<CExportStream_COM>(L"../TestOutput/output_3mfbase9.3mf");
+			PModelWriter pModelWriter = std::make_shared<WRITER>(pModel);
+			PExportStream pExportStream = std::make_shared<EXPORTSTREAM>((sOutPath + L"output_3mfbase9.3mf").c_str());
 			pModelWriter->exportToStream(pExportStream);
 		}
 
 		TEST_METHOD(Model_3MFBase10)
 		{
 			PModel pModel = std::make_shared<CModel>();
-			PModelReader pModelReader = std::make_shared<CModelReader_3MF_OPC>(pModel);
-			PImportStream pImportStream = std::make_shared<CImportStream_COM>(L"../../TestFiles/3mfbase10_box.3mf");
+			PModelReader pModelReader = std::make_shared<READER>(pModel);
+			PImportStream pImportStream = std::make_shared<IMPORTSTREAM>((sInPath + L"3mfbase10_box.3mf").c_str());
 			pModelReader->readStream(pImportStream);
 
-			PModelWriter pModelWriter = std::make_shared<CModelWriter_3MF_Native>(pModel);
-			PExportStream pExportStream = std::make_shared<CExportStream_COM>(L"../TestOutput/output_3mfbase10.3mf");
+			PModelWriter pModelWriter = std::make_shared<WRITER>(pModel);
+			PExportStream pExportStream = std::make_shared<EXPORTSTREAM>((sOutPath + L"output_3mfbase10.3mf").c_str());
 			pModelWriter->exportToStream(pExportStream);
 		}
 
 		TEST_METHOD(Model_3MFBase11)
 		{
 			PModel pModel = std::make_shared<CModel>();
-			PModelReader pModelReader = std::make_shared<CModelReader_3MF_OPC>(pModel);
-			PImportStream pImportStream = std::make_shared<CImportStream_COM>(L"../../TestFiles/3mfbase11_AdjMount.3mf");
+			PModelReader pModelReader = std::make_shared<READER>(pModel);
+			PImportStream pImportStream = std::make_shared<IMPORTSTREAM>((sInPath + L"3mfbase11_AdjMount.3mf").c_str());
 			pModelReader->readStream(pImportStream);
 
-			PModelWriter pModelWriter = std::make_shared<CModelWriter_3MF_Native>(pModel);
-			PExportStream pExportStream = std::make_shared<CExportStream_COM>(L"../TestOutput/output_3mfbase11.3mf");
+			PModelWriter pModelWriter = std::make_shared<WRITER>(pModel);
+			PExportStream pExportStream = std::make_shared<EXPORTSTREAM>((sOutPath + L"output_3mfbase11.3mf").c_str());
 			pModelWriter->exportToStream(pExportStream);
 		}
 
 		TEST_METHOD(Model_3MFBase12)
 		{
 			PModel pModel = std::make_shared<CModel>();
-			PModelReader pModelReader = std::make_shared<CModelReader_3MF_OPC>(pModel);
-			PImportStream pImportStream = std::make_shared<CImportStream_COM>(L"../../TestFiles/3mfbase12_holed_cube.3mf");
+			PModelReader pModelReader = std::make_shared<READER>(pModel);
+			PImportStream pImportStream = std::make_shared<IMPORTSTREAM>((sInPath + L"3mfbase12_holed_cube.3mf").c_str());
 			pModelReader->readStream(pImportStream);
 
-			PModelWriter pModelWriter = std::make_shared<CModelWriter_3MF_Native>(pModel);
-			PExportStream pExportStream = std::make_shared<CExportStream_COM>(L"../TestOutput/output_3mfbase12.3mf");
+			PModelWriter pModelWriter = std::make_shared<WRITER>(pModel);
+			PExportStream pExportStream = std::make_shared<EXPORTSTREAM>((sOutPath + L"output_3mfbase12.3mf").c_str());
 			pModelWriter->exportToStream(pExportStream);
 		}
 
 		TEST_METHOD(Model_3MFBase13)
 		{
 			PModel pModel = std::make_shared<CModel>();
-			PModelReader pModelReader = std::make_shared<CModelReader_3MF_OPC>(pModel);
-			PImportStream pImportStream = std::make_shared<CImportStream_COM>(L"../../TestFiles/3mfbase13_holed_cube_support.3mf");
+			PModelReader pModelReader = std::make_shared<READER>(pModel);
+			PImportStream pImportStream = std::make_shared<IMPORTSTREAM>((sInPath + L"3mfbase13_holed_cube_support.3mf").c_str());
 			pModelReader->readStream(pImportStream);
 
-			PModelWriter pModelWriter = std::make_shared<CModelWriter_3MF_Native>(pModel);
-			PExportStream pExportStream = std::make_shared<CExportStream_COM>(L"../TestOutput/output_3mfbase13.3mf");
+			PModelWriter pModelWriter = std::make_shared<WRITER>(pModel);
+			PExportStream pExportStream = std::make_shared<EXPORTSTREAM>((sOutPath + L"output_3mfbase13.3mf").c_str());
 			pModelWriter->exportToStream(pExportStream);
 		}
 
 		TEST_METHOD(Model_3MFBase14)
 		{
 			PModel pModel = std::make_shared<CModel>();
-			PModelReader pModelReader = std::make_shared<CModelReader_3MF_OPC>(pModel);
-			PImportStream pImportStream = std::make_shared<CImportStream_COM>(L"../../TestFiles/3mfbase14_materialandcolor2.3mf");
+			PModelReader pModelReader = std::make_shared<READER>(pModel);
+			PImportStream pImportStream = std::make_shared<IMPORTSTREAM>((sInPath + L"3mfbase14_materialandcolor2.3mf").c_str());
 			pModelReader->readStream(pImportStream);
 
-			PModelWriter pModelWriter = std::make_shared<CModelWriter_3MF_Native>(pModel);
-			PExportStream pExportStream = std::make_shared<CExportStream_COM>(L"../TestOutput/output_3mfbase14.3mf");
+			PModelWriter pModelWriter = std::make_shared<WRITER>(pModel);
+			PExportStream pExportStream = std::make_shared<EXPORTSTREAM>((sOutPath + L"output_3mfbase14.3mf").c_str());
 			pModelWriter->exportToStream(pExportStream);
 		}
-		
+
 
 		TEST_METHOD(Model_3MFModel100_TexCube)
 		{
 			PModel pModel = std::make_shared<CModel>();
-			PModelReader pModelReader = std::make_shared<CModelReader_3MF_OPC>(pModel);
-			PImportStream pImportStream = std::make_shared<CImportStream_COM>(L"../../TestFiles/texcube.3mf");
+			PModelReader pModelReader = std::make_shared<READER>(pModel);
+			PImportStream pImportStream = std::make_shared<IMPORTSTREAM>((sInPath + L"texcube.3mf").c_str());
 			pModelReader->readStream(pImportStream);
 
-			nfUint32 nTextureCount = pModel->getTextureStreamCount();
-			Assert::IsTrue(nTextureCount == 2);
-
-			PImportStream pTexStream = pModel->getTextureStream(0);
+			nfUint32 nAttachmentCount = pModel->getAttachmentCount();
+			Assert::IsTrue(nAttachmentCount == 2);
+			
+			PImportStream pTexStream = pModel->getModelAttachment(0)->getStream();
 			Assert::IsTrue(pTexStream.get() != nullptr);
 
 			nfUint64 nTexture0Size = pTexStream->retrieveSize();
-			Assert::IsTrue(nTexture0Size ==	0x158d);
+			Assert::IsTrue(nTexture0Size == 0x158d);
 
-			PModelWriter pModelWriter = std::make_shared<CModelWriter_3MF_Native>(pModel);
-			PExportStream pExportStream = std::make_shared<CExportStream_COM>(L"../TestOutput/output_texcube.3mf");
+			PModelWriter pModelWriter = std::make_shared<WRITER>(pModel);
+			PExportStream pExportStream = std::make_shared<EXPORTSTREAM>((sOutPath + L"output_texcube.3mf").c_str());
 			pModelWriter->exportToStream(pExportStream);
 		}
 
 		TEST_METHOD(Model_3MFTexture)
 		{
-			PModel pModel = std::make_shared<CModel> ();
-			PModelReader_3MF_OPC pModelReader = std::make_shared<CModelReader_3MF_OPC>(pModel);
-			PImportStream pImportStream = std::make_shared<CImportStream_COM>(L"../../TestFiles/Texture.3mf");
+			PModel pModel = std::make_shared<CModel>();
+			PModelReader_3MF pModelReader = std::make_shared<READER>(pModel);
+			PImportStream pImportStream = std::make_shared<IMPORTSTREAM>((sInPath + L"Texture.3mf").c_str());
 			pModelReader->readStream(pImportStream);
 
 			CMesh Mesh;
 			pModel->mergeToMesh(&Mesh);
 
-			PExportStream pExportStream(new CExportStream_COM(L"../TestOutput/output_3mftexture.stl"));
+			PExportStream pExportStream(new EXPORTSTREAM((sOutPath + L"output_3mftexture.stl").c_str()));
 			PMeshExporter pExporter(new CMeshExporter_STL(pExportStream));
 			pExporter->exportMesh(&Mesh, NULL);
 
 
-			PModelWriter pModelWriter = std::make_shared<CModelWriter_3MF_Native>(pModel);
-			PExportStream p3MFExportStream(new CExportStream_COM(L"../TestOutput/output_3mftexture.3mf"));
+			PModelWriter pModelWriter = std::make_shared<WRITER>(pModel);
+			PExportStream p3MFExportStream(new EXPORTSTREAM((sOutPath + L"output_3mftexture.3mf").c_str()));
 			pModelWriter->exportToStream(p3MFExportStream);
 		}
-
 	};
 
+	const std::wstring ModelTest::sInPath = L"../../TestFiles/VS_UnitTests/";
+	const std::wstring ModelTest::sOutPath = L"../TestOutput/";
 }

@@ -43,6 +43,9 @@ namespace NMR {
 		: CModelObject(sID, pModel)
 	{
 		m_pMesh = std::make_shared<CMesh>();
+		m_pBeamLatticeAttributes = std::make_shared<CModelMeshBeamLatticeAttributes>();
+		m_pSliceStackId = 0;
+		m_eSlicesMeshResolution = MODELSLICESMESHRESOLUTION_FULL;
 	}
 
 	CModelMeshObject::CModelMeshObject(_In_ const ModelResourceID sID, _In_ CModel * pModel, _In_ PMesh pMesh)
@@ -51,6 +54,9 @@ namespace NMR {
 		m_pMesh = pMesh;
 		if (m_pMesh.get() == nullptr)
 			m_pMesh = std::make_shared<CMesh>();
+		m_pBeamLatticeAttributes = std::make_shared<CModelMeshBeamLatticeAttributes>();
+		m_pSliceStackId = 0;
+		m_eSlicesMeshResolution = MODELSLICESMESHRESOLUTION_FULL;
 	}
 
 	CModelMeshObject::~CModelMeshObject()
@@ -77,6 +83,15 @@ namespace NMR {
 		pMesh->mergeMesh(m_pMesh.get(), mMatrix);
 	}
 
+	void CModelMeshObject::setObjectType(_In_ eModelObjectType ObjectType)
+	{
+		if ((ObjectType != MODELOBJECTTYPE_MODEL) && (ObjectType != MODELOBJECTTYPE_SOLIDSUPPORT)) {
+			if (m_pMesh->getBeamCount() > 0)
+				throw CNMRException(NMR_ERROR_BEAMLATTICE_INVALID_OBJECTTYPE);
+		}
+		CModelObject::setObjectType(ObjectType);
+	}
+
 	nfBool CModelMeshObject::isValid()
 	{
 		eModelObjectType eType = getObjectType();
@@ -87,6 +102,16 @@ namespace NMR {
 		default:
 			return false;
 
+		}
+	}
+
+	nfBool CModelMeshObject::isValidForSlices(const NMATRIX3& totalParentMatrix)
+	{
+		if (this->getSliceStackId() == 0) {
+			return true;
+		}
+		else {
+			return fnMATRIX3_isplanar(totalParentMatrix);
 		}
 	}
 
@@ -176,6 +201,35 @@ namespace NMR {
 		return true;
 	}
 
+
+	_Ret_notnull_ CModelMeshBeamLatticeAttributes * CModelMeshObject::getBeamLatticeAttributes()
+	{
+		return m_pBeamLatticeAttributes.get();
+	}
+
+	void CModelMeshObject::setBeamLatticeAttributes(_In_ PModelMeshBeamLatticeAttributes pBeamLatticeAttributes)
+	{
+		if (!pBeamLatticeAttributes)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		m_pBeamLatticeAttributes = pBeamLatticeAttributes;
+	}
+
+	void CModelMeshObject::setSliceStackId(PPackageResourceID nSliceStackId) {
+		m_pSliceStackId = nSliceStackId;
+	}
+
+	PPackageResourceID CModelMeshObject::getSliceStackId() {
+		return m_pSliceStackId;
+	}
+
+	void CModelMeshObject::setSlicesMeshResolution(eModelSlicesMeshResolution eMeshResolution) {
+		m_eSlicesMeshResolution = eMeshResolution;
+	}
+
+	eModelSlicesMeshResolution CModelMeshObject::slicesMeshResolution() const {
+		return m_eSlicesMeshResolution;
+	}
 }
 
 

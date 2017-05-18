@@ -55,6 +55,7 @@ namespace NMR {
 
 		ModelResourceID m_nDefaultPropertyID;
 		ModelResourceIndex m_nDefaultPropertyIndex;
+		ModelResourceID m_nUsedPropertyID;
 
 		virtual void OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue);
 		virtual void OnNSChildElement(_In_z_ const nfWChar * pChildName, _In_z_ const nfWChar * pNameSpace, _In_ CXmlReader * pXMLReader);
@@ -67,6 +68,7 @@ namespace NMR {
 		CModelReaderNode100_Triangles(_In_ CModel * pModel, _In_ CMesh * pMesh, _In_ PModelReaderWarnings pWarnings, _In_ PModelReader_ColorMapping pColorMapping, _In_ PModelReader_TexCoordMapping pTexCoordMapping, _In_ ModelResourceID nDefaultPropertyID, _In_ ModelResourceIndex nDefaultPropertyIndex);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
+		ModelResourceID getUsedPropertyID() const;
 	};
 
 	typedef std::shared_ptr <CModelReaderNode100_Triangles> PModelReaderNode100_Triangles;

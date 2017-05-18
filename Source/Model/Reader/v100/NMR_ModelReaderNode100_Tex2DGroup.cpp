@@ -89,15 +89,15 @@ namespace NMR {
 			// Convert to integer and make a input and range check!
 			m_nID = fnWStringToUint32(pAttributeValue);
 		}
-
-		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TEX2DGROUP_TEXTUREID) == 0) {
+		else if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TEX2DGROUP_TEXTUREID) == 0) {
 			if (m_nTextureID != 0)
 				throw CNMRException(NMR_ERROR_DUPLICATERESOURCEID);
 
 			// Convert to integer and make a input and range check!
 			m_nTextureID = fnWStringToUint32(pAttributeValue);
 		}
-
+		else
+			m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE), mrwInvalidOptionalValue);
 	}
 
 
@@ -114,6 +114,8 @@ namespace NMR {
 				if (m_nTexCoordIndex > XML_3MF_MAXRESOURCEINDEX)
 					throw CNMRException(NMR_ERROR_INVALIDINDEX);
 			}
+			else
+				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
 		}
 	}
 

@@ -42,8 +42,11 @@ NMR_COM_Native.h defines Macros for an easy definition of COM Interfaces
 #define LIB3MF_DECLSPEC 
 #endif
 
+#ifndef __INTERFACE__
 #define __INTERFACE__ __interface
+#endif
 
+#ifndef BEGIN_INTERFACE_MAP
 #define BEGIN_INTERFACE_MAP(x)  \
     typedef x* Interface;   \
     __inline HRESULT InternalQueryInterface(_In_ REFIID riid, _COM_Outptr_ void **ppvObject)  \
@@ -53,7 +56,9 @@ if (riid == __uuidof(x)) \
 { \
     pResult = (x*)this; \
 }
+#endif
 
+#ifndef END_INTERFACE_MAP
 #define END_INTERFACE_MAP   \
 			    else if (riid == __uuidof(IUnknown)) \
 {   \
@@ -71,6 +76,7 @@ if (ppvObject) \
 }; \
     return S_OK; \
 };
+#endif
 
 #define LIB3MFINTERFACE_DECL(x) \
  BEGIN_INTERFACE_MAP(x) \
@@ -87,6 +93,15 @@ END_INTERFACE_MAP
 #define LIB3MF_FAIL E_FAIL
 #define LIB3MF_POINTER E_POINTER
 #define LIB3MF_INVALIDARG E_INVALIDARG
+
+#ifdef __GNUC__
+#define LIB3MFDEPRECATED(func) func __attribute__ ((deprecated))
+#elif defined(_MSC_VER)
+#define LIB3MFDEPRECATED(func) __declspec(deprecated) func
+#else
+#pragma message("WARNING: You need to implement DEPRECATED for this compiler")
+#define LIB3MFDEPRECATED(func) func
+#endif
 
 namespace NMR {
 	

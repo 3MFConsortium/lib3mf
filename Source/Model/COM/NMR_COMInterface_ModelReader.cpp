@@ -36,11 +36,13 @@ COM Interface Implementation for Model Reader Class
 #include "Common/NMR_Exception_Windows.h" 
 #include "Common/Platform/NMR_Platform.h" 
 #include "Common/NMR_StringUtils.h" 
+#include "Common/Platform/NMR_ImportStream_Memory.h"
+#include "Common/Platform/NMR_ImportStream_Callback.h" 
 #include <locale.h>
 
-#ifndef __GNUC__
-#include "Common/Platform/NMR_ImportStream_COM.h" 
-#endif // __GNUC__
+#ifdef NMR_COM_NATIVE
+#include "Common/Platform/NMR_ImportStream_COM.h"
+#endif
 
 namespace NMR {
 
@@ -150,6 +152,51 @@ namespace NMR {
 			return handleGenericException();
 		}
 	}
+
+	LIB3MFMETHODIMP CCOMModelReader::ReadFromBuffer(_In_ BYTE * pBuffer, _In_ ULONG64 cbBufferSize)
+	{
+		try {
+			if (pBuffer == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+			if (m_pModelReader.get() == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDREADEROBJECT);
+
+			PImportStream pStream = std::make_shared<CImportStream_Memory>(pBuffer, cbBufferSize);
+			m_pModelReader->readStream(pStream);
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
+	LIB3MFMETHODIMP CCOMModelReader::ReadFromCallback (_In_ void * pReadCallback, _In_ nfUint64 nStreamSize, _In_opt_ void * pSeekCallback, _In_opt_ void * pUserData)
+	{
+		try {
+			if (pReadCallback == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+			if (m_pModelReader.get() == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDREADEROBJECT);
+
+			setlocale(LC_ALL, "C");
+
+			PImportStream pStream = std::make_shared<CImportStream_Callback> (
+				reinterpret_cast<ImportStream_ReadCallbackType>(pReadCallback), 
+				reinterpret_cast<ImportStream_SeekCallbackType>(pSeekCallback), pUserData, nStreamSize);
+			m_pModelReader->readStream(pStream);
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
 
 	LIB3MFMETHODIMP CCOMModelReader::GetWarningCount(_Out_ DWORD * pnWarningCount)
 	{
@@ -262,6 +309,54 @@ namespace NMR {
 		}
 	}
 
+	LIB3MFMETHODIMP CCOMModelReader::SetStrictModeActive(_In_ BOOL bStrictModeActive)
+	{
+		try {
+			if (m_pModelReader.get() == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDREADEROBJECT);
+
+			if (m_pModelReader->getWarnings() == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDREADERWARNINGSOBJECT);
+
+			if (bStrictModeActive)
+				m_pModelReader->getWarnings()->setCriticalWarningLevel(mrwInvalidOptionalValue);
+			else
+				m_pModelReader->getWarnings()->setCriticalWarningLevel(mrwFatal);
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
+	LIB3MFMETHODIMP CCOMModelReader::GetStrictModeActive(_In_ BOOL *pbStrictModeActive)
+	{
+		try {
+			if (pbStrictModeActive == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
+			if (m_pModelReader.get() == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDREADEROBJECT);
+
+			if (m_pModelReader->getWarnings() == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDREADERWARNINGSOBJECT);
+			
+			*pbStrictModeActive = m_pModelReader->getWarnings()->getCriticalWarningLevel() == mrwInvalidOptionalValue;
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+	
 	LIB3MFMETHODIMP CCOMModelReader::GetWarning(_In_ DWORD nIndex, _Out_ DWORD * pErrorCode, _Out_opt_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_opt_ ULONG * pcbNeededChars)
 	{
 
@@ -299,8 +394,8 @@ namespace NMR {
 			return handleGenericException();
 		}
 	}
-
-#ifndef __GNUC__
+	
+#ifdef NMR_COM_NATIVE
 	LIB3MFMETHODIMP CCOMModelReader::ReadFromStream(_In_ IStream * pStream)
 	{
 		try {
@@ -321,7 +416,6 @@ namespace NMR {
 			return handleGenericException();
 		}
 	}
-#endif // __GNUC__
-
+#endif // NMR_COM_NATIVE
 
 }

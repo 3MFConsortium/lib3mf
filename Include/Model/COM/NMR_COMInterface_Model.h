@@ -36,6 +36,7 @@ COM Interface Implementation for Model Class
 
 #include "Model/COM/NMR_COMInterfaces.h" 
 #include "Model/Classes/NMR_Model.h" 
+#include "Model/Classes/NMR_ModelSliceResource.h"
 
 namespace NMR {
 
@@ -70,6 +71,8 @@ namespace NMR {
 		LIB3MFMETHOD(GetMeshObjectByID) (_In_ DWORD nResourceID, _Outptr_ ILib3MFModelMeshObject ** ppMeshObject);
 		LIB3MFMETHOD(GetComponentsObjectByID) (_In_ DWORD nResourceID, _Outptr_ ILib3MFModelComponentsObject ** ppComponentsObject);
 
+		LIB3MFMETHOD(GetBuildUUIDUTF8) (_Out_ BOOL * pbHasUUID, _Out_ LPSTR pszBuffer);
+		LIB3MFMETHOD(SetBuildUUIDUTF8) (_In_ LPCSTR pszUUID);
 		LIB3MFMETHOD(GetBuildItems) (_Outptr_ ILib3MFModelBuildItemIterator ** ppIterator);
 		LIB3MFMETHOD(GetResources) (_Outptr_ ILib3MFModelResourceIterator ** ppIterator);
 		LIB3MFMETHOD(GetObjects) (_Outptr_ ILib3MFModelResourceIterator ** ppIterator);
@@ -78,24 +81,19 @@ namespace NMR {
 
 		LIB3MFMETHOD(Get2DTextures) (_Outptr_ ILib3MFModelResourceIterator ** ppIterator);
 		LIB3MFMETHOD(GetBaseMaterials) (_Outptr_ ILib3MFModelResourceIterator ** ppIterator);
-		LIB3MFMETHOD(GetThumbnails) (_Outptr_ ILib3MFModelThumbnailIterator ** ppIterator);
 
 		LIB3MFMETHOD(MergeToModel) (_Outptr_ ILib3MFModel ** ppMergedModel);
 
 		LIB3MFMETHOD(AddMeshObject) (_Outptr_ ILib3MFModelMeshObject ** ppMeshObject);
 		LIB3MFMETHOD(AddComponentsObject) (_Outptr_ ILib3MFModelComponentsObject ** ppComponentObject);
 
+		LIB3MFMETHOD(AddTexture2DFromAttachment) (_In_z_ ILib3MFModelAttachment* pTextureAttachment, _Outptr_ ILib3MFModelTexture2D ** ppTextureInstance);
 		LIB3MFMETHOD(AddTexture2D) (_In_z_ LPCWSTR pwszPath, _Outptr_ ILib3MFModelTexture2D ** ppTextureInstance);
 		LIB3MFMETHOD(AddTexture2DUTF8) (_In_z_ LPCSTR pszPath, _Outptr_ ILib3MFModelTexture2D ** ppTextureInstance);
 		LIB3MFMETHOD(AddBaseMaterialGroup) (_Outptr_ ILib3MFModelBaseMaterial ** ppBaseMaterialInstance);
 
 		LIB3MFMETHOD(AddBuildItem) (_In_ ILib3MFModelObjectResource * pObject, _In_opt_ MODELTRANSFORM * pTransform, _Outptr_ ILib3MFModelBuildItem ** ppBuildItem);
 		LIB3MFMETHOD(RemoveBuildItem) (_In_ ILib3MFModelBuildItem * pBuildItem);
-
-		LIB3MFMETHOD(GetTextureStreamCount) (_Out_ DWORD * pnCount);
-		LIB3MFMETHOD(GetTextureStreamSize) (_In_ DWORD nIndex, _Out_ UINT64 * pnSize);
-		LIB3MFMETHOD(GetTextureStreamPath) (_In_ DWORD nIndex, _Out_opt_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars);
-		LIB3MFMETHOD(GetTextureStreamPathUTF8) (_In_ DWORD nIndex, _Out_opt_ LPSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars);
 
 		LIB3MFMETHOD(GetMetaDataCount) (_Out_ DWORD * pnCount);
 		LIB3MFMETHOD(GetMetaDataKey) (_In_ DWORD nIndex, _Out_opt_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars);
@@ -115,11 +113,14 @@ namespace NMR {
 		LIB3MFMETHOD(GetAttachmentSize) (_In_ DWORD nIndex, _Out_ UINT64 * pnSize);
 		LIB3MFMETHOD(GetAttachmentPath) (_In_ DWORD nIndex, _Out_opt_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars);
 		LIB3MFMETHOD(GetAttachmentPathUTF8) (_In_ DWORD nIndex, _Out_opt_ LPSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars);
+		LIB3MFMETHOD(GetPackageThumbnailAttachment) (_In_ BOOL bCreateIfNotExisting, _Outptr_ ILib3MFModelAttachment ** ppAttachmentInstance);
+		LIB3MFMETHOD(RemovePackageThumbnailAttachment) ();
 
 		LIB3MFMETHOD(AddCustomContentType) (_In_ LPCWSTR pszwExtension, _In_ LPCWSTR pszwContentType);
 		LIB3MFMETHOD(AddCustomContentTypeUTF8) (_In_ LPCSTR pszExtension, _In_ LPCSTR pszContentType);
 		LIB3MFMETHOD(RemoveCustomContentType) (_In_ LPCWSTR pszwExtension);
 		LIB3MFMETHOD(RemoveCustomContentTypeUTF8) (_In_ LPCSTR pszExtension);
+		LIB3MFMETHOD(AddSliceStack) (_In_opt_ FLOAT nBottomZ, _Out_opt_ ILib3MFSliceStack ** pSliceStack);
 
 		CCOMModel();
 		CModel * getModel();

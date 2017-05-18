@@ -36,7 +36,7 @@ Error Code for further information
 --*/
 
 #include "Common/NMR_Exception_Windows.h" 
-#include <math.h>
+#include <cmath>
 
 namespace NMR {
 

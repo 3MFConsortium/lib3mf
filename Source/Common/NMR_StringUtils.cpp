@@ -36,7 +36,7 @@ correctly and Exception-safe
 #include "Common/NMR_Exception.h"
 #include <climits>
 #include <sstream>
-#include <math.h>
+#include <cmath>
 #include <string.h>
 #include <vector>
 
@@ -703,7 +703,11 @@ namespace NMR {
 
 	}
 
-
+	nfBool fnStartsWithPathDelimiter(_In_ const std::wstring sPath)
+	{
+		const nfWChar * pChar = sPath.c_str();
+		return ((*pChar == L'/') || (*pChar == L'\\'));
+	}
 
 	std::wstring fnRemoveLeadingPathDelimiter(_In_ const std::wstring sPath)
 	{
@@ -750,6 +754,57 @@ namespace NMR {
 			// We have no directory given
 			return sFullPath;
 		}
-
 	}
+
+	std::wstring fnExtractFileDir(_In_ const std::wstring sFullPath)
+	{
+		const nfWChar * pChar = sFullPath.c_str();
+		const nfWChar * pLastDelimiter = nullptr;
+
+		while (*pChar != 0) {
+			if ((*pChar == L'/') || (*pChar == L'\\'))
+				pLastDelimiter = pChar;
+			pChar++;
+		}
+
+		if (pLastDelimiter != nullptr) {
+			// Leave away delimiter
+			pLastDelimiter++;
+			return sFullPath.substr(0, pLastDelimiter - sFullPath.c_str());
+		}
+		else {
+			// We have no directory given
+			return std::wstring(L"");
+		}
+	}
+
+
+	std::vector<double> fnVctDouble_fromWideString(_In_ const std::wstring sString)
+	{
+		std::vector<double> vctValues;
+
+		const nfWChar * pwszString = sString.c_str();
+		const nfWChar * pCurrent = pwszString;
+
+		nfBool bFinished = false;
+		while (!bFinished) {
+			// Find next space
+			const nfWChar * pBegin = pCurrent;
+			while ((*pCurrent != L' ') && (*pCurrent))
+				pCurrent++;
+
+			// If we have not found a space, convert value to double
+			if (pBegin != pCurrent) {
+				vctValues.push_back(fnWStringToFloat(pBegin));
+			}
+
+			// If we are finished, break, otherwise skip space!
+			if (!*pCurrent)
+				bFinished = true;
+			else
+				pCurrent++;
+		}
+		return vctValues;
+	}
+
 }

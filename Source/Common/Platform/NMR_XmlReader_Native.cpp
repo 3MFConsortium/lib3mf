@@ -34,6 +34,8 @@ NMR_XMLReader_Native.cpp implements a XML reader class with a native XML parsing
 #include "Common/NMR_Exception.h" 
 #include "Common/NMR_StringUtils.h" 
 
+#include <algorithm>
+
 namespace NMR {
 
 	nfUint32 nfWStrLen(_In_ const nfWChar * pszwString)
@@ -75,6 +77,7 @@ namespace NMR {
 		m_nCurrentEntityIndex = 0;
 		m_nCurrentFullEntityCount = 0;
 		m_nCurrentEntityCount = 0;
+		m_nCurrentVerifiedEntityCount = 0;
 		m_cNullString = 0;
 
 		// Initialise Status Values
@@ -92,7 +95,7 @@ namespace NMR {
 		m_bIsEOF = false;
 
 		registerNameSpace(NMR_NATIVEXMLNS_XML_PREFIX, NMR_NATIVEXMLNS_XML_URI);
-		registerNameSpace(NMR_NATIVEXMLNS_ATTRIBUTE, NMR_NATIVEXMLNS_XML_URI);
+		registerNameSpace(NMR_NATIVEXMLNS_XMLNS_PREFIX, NMR_NATIVEXMLNS_XMLNS_URI);
 	}
 
 	CXmlReader_Native::~CXmlReader_Native()
@@ -106,6 +109,7 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
 		*ppwszValue = m_pCurrentValue;
+		
 		if (pcwchValue != nullptr)
 			*pcwchValue = nfWStrLen(m_pCurrentValue);
 
@@ -132,7 +136,6 @@ namespace NMR {
 			if (m_bNameSpaceIsAttribute) {
 				cbLength = 0;
 				*ppwszValue = &m_cNullString;
-
 			}
 			else {
 				cbLength = m_cbDefaultNameSpaceLength;
@@ -154,6 +157,28 @@ namespace NMR {
 		if (pcwchValue != nullptr)
 			*pcwchValue = cbLength;
 
+	}
+
+	bool CXmlReader_Native::GetNamespaceURI(const std::wstring &sNameSpacePrefix, std::wstring &sNameSpaceURI)
+	{
+		auto iIterator = m_sNameSpaces.find(sNameSpacePrefix);
+		if (iIterator != m_sNameSpaces.end()) {
+			sNameSpaceURI = iIterator->second.c_str();
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
+	bool CXmlReader_Native::NamespaceRegistered(const std::wstring &sNameSpaceURI)
+	{
+		for (auto it : m_sNameSpaces) {
+			if (it.second == sNameSpaceURI) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	nfBool CXmlReader_Native::ensureFilledBuffer()
@@ -214,6 +239,28 @@ namespace NMR {
 			m_pCurrentElementName = &m_cNullString;
 			m_pCurrentElementPrefix = &m_cNullString;
 			break;
+
+
+		case NMR_NATIVEXMLTYPE_PROCESSINGINSTRUCTION:
+			NodeType = XMLREADERNODETYPE_STARTELEMENT;
+			m_pCurrentValue = &m_cNullString;
+			m_pCurrentPrefix = m_CurrentEntityPrefixes[m_nCurrentEntityIndex];
+			m_pCurrentName = m_CurrentEntityList[m_nCurrentEntityIndex];
+			m_pCurrentElementName = m_pCurrentName;
+			m_pCurrentElementPrefix = m_pCurrentPrefix;
+			m_bNameSpaceIsAttribute = false;
+			break;
+
+		case NMR_NATIVEXMLTYPE_PROCESSINGINSTRUCTIONEND:
+			NodeType = XMLREADERNODETYPE_ENDELEMENT;
+			m_pCurrentValue = &m_cNullString;
+			m_pCurrentPrefix = m_CurrentEntityPrefixes[m_nCurrentEntityIndex];
+			m_pCurrentName = m_CurrentEntityList[m_nCurrentEntityIndex];
+			m_pCurrentElementName = m_pCurrentName;
+			m_pCurrentElementPrefix = m_pCurrentPrefix;
+			m_bNameSpaceIsAttribute = false;
+			break;
+
 		default:
 			NodeType = XMLREADERNODETYPE_UNKNOWN;
 		}
@@ -267,11 +314,11 @@ namespace NMR {
 			m_nCurrentEntityIndex++;
 
 			// register Namespaces
-			if ((*m_pCurrentPrefix == 0) && (wcscmp(m_pCurrentName, NMR_NATIVEXMLNS_ATTRIBUTE) == 0)) {
+			if ((*m_pCurrentPrefix == 0) && (wcscmp(m_pCurrentName, NMR_NATIVEXMLNS_XMLNS_PREFIX) == 0)) {
 				m_sDefaultNameSpace = m_pCurrentValue;
 				m_cbDefaultNameSpaceLength = (nfUint32)m_sDefaultNameSpace.length();
 			}
-			if (wcscmp(m_pCurrentPrefix, NMR_NATIVEXMLNS_ATTRIBUTE) == 0)
+			if (wcscmp(m_pCurrentPrefix, NMR_NATIVEXMLNS_XMLNS_PREFIX) == 0)
 				registerNameSpace(m_pCurrentName, m_pCurrentValue);
 
 			return true;
@@ -345,13 +392,11 @@ namespace NMR {
 				if (cbNeededCharacters != 0)
 					throw CNMRException(NMR_ERROR_COULDNOTREADFULLDATA);
 			}
-
-			// Everything is converted to UTF16!
-			__NMRASSERT(pszLastChar);
 		}
 
 		// Reset Entity parser
 		m_nCurrentEntityCount = 0;
+		m_nCurrentVerifiedEntityCount = 0;
 		m_nCurrentFullEntityCount = 0;
 		m_nCurrentEntityIndex = 0;
 
@@ -431,6 +476,8 @@ namespace NMR {
 
 			// Insert all zeros of the entity, as we do not need to rollback.
 			performZeroInserts();
+
+			performEscapeStringDecoding();
 		}
 	}
 
@@ -483,10 +530,10 @@ namespace NMR {
 		nfWChar * pChar = pszwStart;
 		while (pChar != pszwEnd) {
 			switch (*pChar) {
-			case 9:
-			case 10:
-			case 13:
-			case 32:
+			case 9:  // Tab
+			case 10: // LF
+			case 13: // CR
+			case 32: // Space
 				if (pszwStart == pChar)
 					throw CNMRException(NMR_ERROR_XMLPARSER_EMPTYELEMENTNAME);
 				pushEntity(pszwStart, pChar, pChar, NMR_NATIVEXMLTYPE_ELEMENT, true, false);
@@ -720,13 +767,18 @@ namespace NMR {
 		nfWChar * pChar = skipSpaces(pszwStart, pszwEnd);
 		while (pChar != pszwEnd) {
 			switch (*pChar) {
+			// name-ending characters
 			case 9:
 			case 10:
 			case 13:
 			case 32:
+				// push the entity at one of the n name-ending characters
+				// but continue to run through the string unti L'=' is reached
+				// if another name-constituting character appears, throw exception
 				bHadSpacing = true;
+				pushEntity(pszwStart, pChar, pChar + 1, NMR_NATIVEXMLTYPE_ATTRIBNAME, true, false);
+				pushZeroInsert(pChar);
 				pChar++;
-
 				break;
 
 			case 34:
@@ -734,11 +786,14 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_XMLPARSER_INVALIDATTRIBUTENAME);
 
 			case L'=':
-				pushEntity(pszwStart, pChar, pChar + 1, NMR_NATIVEXMLTYPE_ATTRIBNAME, true, false);
-				pushZeroInsert(pChar);
-				pChar++;
+				if (!bHadSpacing) {
+					pushEntity(pszwStart, pChar, pChar + 1, NMR_NATIVEXMLTYPE_ATTRIBNAME, true, false);
+					pushZeroInsert(pChar);
+					pChar++;	
+				}
 				return pChar;
 
+			// name-constituting characters
 			default:
 				if (bHadSpacing)
 					throw CNMRException(NMR_ERROR_XMLPARSER_SPACEINATTRIBUTENAME);
@@ -830,7 +885,6 @@ namespace NMR {
 	void CXmlReader_Native::registerNameSpace(_In_ std::wstring sPrefix, _In_ std::wstring sURI)
 	{
 		m_sNameSpaces.insert(std::make_pair(sPrefix, sURI));
-
 	}
 
 
@@ -839,6 +893,70 @@ namespace NMR {
 		__NMRASSERT(pChar != nullptr);
 		m_ZeroInsertArray[m_nZeroInsertIndex] = pChar;
 		m_nZeroInsertIndex++;
+	}
+	
+	inline void decodeXMLEscapeXMLStrings(nfWChar* pChar) {
+		if (wcspbrk(pChar, L"&") == nullptr) {
+			return;
+		}
+		nfWChar *pIterChar = pChar;
+		nfWChar *pWriteChar = pChar;
+
+		nfWChar *pAmp = nullptr;
+		nfWChar *pColon = nullptr;
+		while (*pIterChar != 0) {
+			if (*pIterChar == L'&') {
+				pAmp = pIterChar;
+				pColon = nullptr;
+			}
+			else if (pAmp == nullptr) {
+				*pWriteChar = *pIterChar;
+				pWriteChar++;
+			} else if (*pIterChar == L';') {
+				if (pAmp != nullptr) {
+					pColon = pIterChar;
+					long long compareLen = pColon - pAmp + 1;
+					if (wcsncmp(pAmp, L"&quot;", std::min((long long)(6), compareLen)) == 0) {
+						*pWriteChar = L'\"';
+						pWriteChar++;
+					}
+					else if (wcsncmp(pAmp, L"&apos;", std::min((long long)(6), compareLen)) == 0) {
+						*pWriteChar = L'\'';
+						pWriteChar++;
+					}
+					else if (wcsncmp(pAmp, L"&lt;", std::min((long long)(4), compareLen)) == 0) {
+						*pWriteChar = L'<';
+						pWriteChar++;
+					}
+					else if (wcsncmp(pAmp, L"&gt;", std::min((long long)(4), compareLen)) == 0) {
+						*pWriteChar = L'>';
+						pWriteChar++;
+					}
+					else if (wcsncmp(pAmp, L"&amp;", std::min((long long)(5), compareLen)) == 0) {
+						*pWriteChar = L'&';
+						pWriteChar++;
+					}
+					else {
+						throw CNMRException(NMR_ERROR_XMLPARSER_INVALID_ESCAPESTRING);
+					}
+					pAmp = nullptr;
+				}
+			}
+			pIterChar++;
+		};
+		if (pAmp != nullptr)
+			throw CNMRException(NMR_ERROR_XMLPARSER_INVALID_ESCAPESTRING);
+		*pWriteChar = 0;
+	}
+
+	void CXmlReader_Native::performEscapeStringDecoding()
+	{
+		for (nfUint32 nIndex  = m_nCurrentVerifiedEntityCount; nIndex < m_nCurrentEntityCount-1; nIndex++) {
+			if (m_CurrentEntityTypes[nIndex] != NMR_NATIVEXMLTYPE_COMMENT) {
+				decodeXMLEscapeXMLStrings(m_CurrentEntityList[nIndex]);
+			}
+		}
+		m_nCurrentVerifiedEntityCount = m_nCurrentEntityCount;
 	}
 
 	void CXmlReader_Native::performZeroInserts()

@@ -34,7 +34,7 @@ This is an abstract base class for exporting different Mesh Formats.
 
 #include "Common/MeshExport/NMR_MeshExporter.h" 
 #include "Common/NMR_Exception.h" 
-#include <math.h>
+#include <cmath>
 
 namespace NMR {
 

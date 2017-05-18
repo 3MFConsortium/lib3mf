@@ -34,7 +34,7 @@ NMR_Vector.cpp implements all needed direct operations on 2D and 3D vectors.
 #include "Common/Math/NMR_Geometry.h" 
 #include "Common/Math/NMR_Vector.h" 
 #include "Common/NMR_Exception.h" 
-#include <math.h>
+#include <cmath>
 #include <algorithm>
 #include <limits>
 

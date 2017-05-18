@@ -55,6 +55,7 @@ namespace NMR {
 
 		LIB3MFMETHOD(ReadFromFile) (_In_z_ LPCWSTR pwszFilename);
 		LIB3MFMETHOD(ReadFromFileUTF8) (_In_z_ LPCSTR pwszFilename);
+		LIB3MFMETHOD(ReadFromBuffer) (_In_ BYTE * pBuffer, _In_ ULONG64 cbBufferSize);
 
 		LIB3MFMETHOD(GetWarningCount) (_Out_ DWORD * pnWarningCount);
 		LIB3MFMETHOD(GetWarning) (_In_ DWORD nIndex, _Out_ DWORD * pErrorCode, _Out_opt_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_opt_ ULONG * pcbNeededChars);
@@ -64,9 +65,14 @@ namespace NMR {
 		LIB3MFMETHOD(AddRelationToReadUTF8) (_In_z_ LPCSTR pszRelationshipType);
 		LIB3MFMETHOD(RemoveRelationToReadUTF8) (_In_z_ LPCSTR pszRelationshipType);
 
-#ifndef __GNUC__
+		LIB3MFMETHOD(SetStrictModeActive) (_In_ BOOL bStrictModeActive);
+		LIB3MFMETHOD(GetStrictModeActive) (_Out_ BOOL * pbStrictModeActive);
+
+#ifdef NMR_COM_NATIVE
 		LIB3MFMETHOD(ReadFromStream) (_In_ IStream * pStream);
-#endif // __GNUC__
+#endif // NMR_COM_NATIVE
+
+		LIB3MFMETHOD(ReadFromCallback) (_In_ void * pReadCallback, _In_ nfUint64 nStreamSize, _In_opt_ void * pSeekCallback, _In_opt_ void * pUserData);
 
 		CCOMModelReader();
 

@@ -43,27 +43,31 @@ namespace NMR {
 	protected:
 		CModel * m_pModel;
 		std::wstring m_sRequiredExtensions;
+		std::map<std::wstring, std::wstring> m_ListedExtensions;
 
+		std::wstring m_sPath;
 		nfBool m_bHasResources;
 		nfBool m_bHasBuild;
 
-		// Namespace Handling
-		std::wstring m_RootNameSpace;
-		std::wstring m_MaterialExtensionNameSpace;
-		std::wstring m_MaterialExtensionPrefix;
+		nfBool m_bWithinIgnoredBuild;
+		nfBool m_bIgnoreBuild;
+
+		virtual void CheckRequiredExtensions();
 
 		virtual void OnNSChildElement(_In_z_ const nfWChar * pChildName, _In_z_ const nfWChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 		virtual void OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue);
 		virtual void OnNSAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue, _In_z_ const nfWChar * pNameSpace);
 	public:
 		CModelReaderNode_Model() = delete;
-		CModelReaderNode_Model(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings);
+		CModelReaderNode_Model(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings, const nfWChar * sPath);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
-		std::wstring getRequiredExtensions ();
 
 		nfBool getHasResources();
 		nfBool getHasBuild();
+
+		nfBool ignoreBuild();
+		void setIgnoreBuild(bool bIgnoreBuild);
 	};
 
 	typedef std::shared_ptr <CModelReaderNode_Model> PModelReaderNode_Model;

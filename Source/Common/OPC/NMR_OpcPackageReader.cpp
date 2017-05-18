@@ -32,17 +32,22 @@ NMR_OpcPackageReader.cpp defines an OPC Package reader in a portable way.
 
 #include "Common/OPC/NMR_OpcPackageReader.h" 
 #include "Common/OPC/NMR_OpcPackageRelationshipReader.h" 
+#include "Common/OPC/NMR_OpcPackageContentTypesReader.h" 
 #include "Common/Platform/NMR_ImportStream_ZIP.h" 
 #include "Common/NMR_Exception.h" 
 #include "Common/NMR_StringUtils.h" 
+
+#include "Model/Classes/NMR_ModelConstants.h"
 
 #include <iostream>
 
 namespace NMR {
 
 
-	COpcPackageReader::COpcPackageReader(_In_ PImportStream pImportStream)
+	COpcPackageReader::COpcPackageReader(_In_ PImportStream pImportStream, _In_ PModelReaderWarnings pWarnings)
 	{
+		m_pWarnings = pWarnings;
+		
 		if (pImportStream.get() == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
@@ -118,7 +123,7 @@ namespace NMR {
 				}
 				else {
 					if (bMustBeUnique)
-						throw CNMRException(NMR_ERROR_OPCRELATIONSHIPNOTUNIQUE);
+						m_pWarnings->addException(CNMRException(NMR_ERROR_OPCRELATIONSHIPNOTUNIQUE), eModelReaderWarningLevel::mrwInvalidOptionalValue);
 				}
 
 			}
@@ -176,7 +181,38 @@ namespace NMR {
 
 	void COpcPackageReader::readContentTypes()
 	{
-		// throw CNMRException(NMR_ERROR_NOTIMPLEMENTED)
+		PImportStream pContentStream = openZIPEntry(OPCPACKAGE_PATH_CONTENTTYPES);
+
+		POpcPackageContentTypesReader pReader = std::make_shared<COpcPackageContentTypesReader>(pContentStream);
+
+		nfUint32 nCount = pReader->getCount();
+		nfUint32 nIndex;
+
+		std::wstring modelExtension = L"";
+		std::wstring modelPart = L"";
+		m_relationShipExtension = L"";
+		for (nIndex = 0; nIndex < nCount; nIndex++) {
+			POpcPackageContentType pContentType = pReader->getContentType(nIndex);
+			if (pContentType->m_contentType == PACKAGE_3D_RELS_CONTENT_TYPE) {
+				m_relationShipExtension = pContentType->m_extension;
+			}
+			if (pContentType->m_contentType == PACKAGE_3D_MODEL_CONTENT_TYPE) {
+				modelExtension = pContentType->m_extension;
+			}
+		}
+		if (m_relationShipExtension.empty())
+			throw CNMRException(NMR_ERROR_OPC_MISSING_EXTENSION_FOR_RELATIONSHIP);
+
+		nCount = pReader->getOverrideCount();
+		for (nIndex = 0; nIndex < nCount; nIndex++) {
+			POpcPackageContentType_Override pOverrideContentType = pReader->getOverrideContentType(nIndex);
+			if (pOverrideContentType->m_contentType == PACKAGE_3D_MODEL_CONTENT_TYPE) {
+				modelPart = pOverrideContentType->m_partName;
+			}
+		}
+
+		if (modelExtension.empty() && modelPart.empty())
+			throw CNMRException(NMR_ERROR_OPC_MISSING_EXTENSION_FOR_MODEL);
 	}
 
 	void COpcPackageReader::readRootRelationships()
@@ -200,7 +236,7 @@ namespace NMR {
 		if (iPartIterator != m_Parts.end()) {
 			return iPartIterator->second;
 		}
-
+		
 		PImportStream pStream = openZIPEntry(sRealPath);
 		if (pStream.get() == nullptr)
 			throw CNMRException(NMR_ERROR_COULDNOTCREATEOPCPART);
@@ -212,7 +248,7 @@ namespace NMR {
 		std::wstring sRelationShipPath = sRealPath.substr(0, sRealPath.length() - sRelationShipName.length());
 		sRelationShipPath += L"_rels/";
 		sRelationShipPath += sRelationShipName;
-		sRelationShipPath += L".rels";
+		sRelationShipPath += L"."+m_relationShipExtension;
 
 		PImportStream pRelStream = openZIPEntry(sRelationShipPath);
 

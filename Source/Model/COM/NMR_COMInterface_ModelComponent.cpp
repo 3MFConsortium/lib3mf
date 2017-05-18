@@ -36,6 +36,7 @@ COM Interface Implementation for Model Component Class
 #include "Model/Classes/NMR_ModelComponent.h"
 #include "Common/NMR_Exception_Windows.h"
 #include "Common/Platform/NMR_Platform.h"
+#include "Common/NMR_StringUtils.h"
 
 namespace NMR {
 
@@ -138,6 +139,53 @@ namespace NMR {
 			// Return result
 			*ppObjectResource = pResourceInterface;
 
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
+	LIB3MFMETHODIMP CCOMModelComponent::GetUUIDUTF8(_Out_ BOOL * pbHasUUID, _Out_ LPSTR pszBuffer)
+	{
+		try {
+			if ((!pbHasUUID) || (!pszBuffer))
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
+			if (!m_pModelComponent.get())
+				throw CNMRException(NMR_ERROR_INVALIDMODELCOMPONENT);
+
+			PUUID pUUID = m_pModelComponent->uuid();
+			*pbHasUUID = (pUUID.get() != nullptr);
+			nfUint32 nNeededChars = 0;
+			if (*pbHasUUID)
+				fnStringToBufferSafe(pUUID->toString(), pszBuffer, 37, &nNeededChars);
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
+	LIB3MFMETHODIMP CCOMModelComponent::SetUUIDUTF8(_In_ LPCSTR pszUUID)
+	{
+		try
+		{
+			if (!pszUUID)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
+			if (!m_pModelComponent.get())
+				throw CNMRException(NMR_ERROR_INVALIDMODELCOMPONENT);
+
+			PUUID pUUID = std::make_shared<CUUID>(pszUUID);
+			m_pModelComponent->setUUID(pUUID);
 			return handleSuccess();
 		}
 		catch (CNMRException & Exception) {

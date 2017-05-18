@@ -40,9 +40,10 @@ namespace NMR {
 
 	CModelResource::CModelResource(_In_ const ModelResourceID sResourceID, _In_ CModel * pModel)
 	{
-		__NMRASSERT(pModel);
-		m_sResourceID = sResourceID;
+		if (!pModel)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 		m_pModel = pModel;
+		m_sResourceID = m_pModel->generatePackageResourceID(pModel->curPath(), sResourceID);
 	}
 
 	CModelResource::~CModelResource()
@@ -50,7 +51,7 @@ namespace NMR {
 		m_pModel = NULL;
 	}
 
-	ModelResourceID CModelResource::getResourceID()
+	PPackageResourceID CModelResource::getResourceID()
 	{
 		return m_sResourceID;
 	}

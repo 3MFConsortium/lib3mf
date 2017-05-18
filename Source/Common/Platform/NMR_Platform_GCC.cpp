@@ -35,8 +35,6 @@ specific classes for GCC.
 #include "Common/Platform/NMR_Platform.h"
 #include "Common/NMR_Exception.h"
 
-#ifdef __GNUC__
-// Only implement this, if we compile with GCC
 
 #define NMR_PLATFORM_XMLREADER_BUFFERSIZE 65536
 
@@ -65,5 +63,3 @@ namespace NMR {
 	}
 
 }
-
-#endif // __GNUC__

@@ -36,6 +36,7 @@ COM Interface Implementation for Model Resource Factory Class
 #include "Model/COM/NMR_COMInterface_ModelComponentsObject.h" 
 #include "Model/COM/NMR_COMInterface_ModelTexture2D.h" 
 #include "Model/COM/NMR_COMInterface_ModelBaseMaterial.h" 
+#include "Model/COM/NMR_COMInterface_Slice.h"
 
 #include "Common/NMR_Exception_Windows.h" 
 
@@ -104,6 +105,14 @@ namespace NMR {
 		CModelBaseMaterialResource * pMaterialResource = dynamic_cast<CModelBaseMaterialResource *> (pResource.get());
 		if (pMaterialResource) {
 			CCOMObject <CCOMModelBaseMaterial> * pComObject = new CCOMObject <CCOMModelBaseMaterial>();
+			pComObject->AddRef();
+			pComObject->setResource(pResource);
+			pResult = pComObject;
+		}
+
+		CModelSliceStackResource *pSliceStackResource = dynamic_cast<CModelSliceStackResource *>(pResource.get());
+		if (pSliceStackResource) {
+			CCOMObject <CCOMSliceStack> *pComObject = new CCOMObject<CCOMSliceStack>();
 			pComObject->AddRef();
 			pComObject->setResource(pResource);
 			pResult = pComObject;

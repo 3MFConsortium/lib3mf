@@ -174,6 +174,18 @@ namespace NMR {
 				*pbIsSupported = true;
 				*pExtensionInterfaceVersion = NMR_APIVERSION_INTERFACE_MATERIALSPEC;
 			}
+			else if (wcscmp(pwszExtensionUrl, XML_3MF_NAMESPACE_PRODUCTIONSPEC) == 0) {
+				*pbIsSupported = true;
+				*pExtensionInterfaceVersion = NMR_APIVERSION_INTERFACE_PRODUCTIONSEPC;
+			}
+			else if (wcscmp(pwszExtensionUrl, XML_3MF_NAMESPACE_BEAMLATTICESPEC) == 0) {
+				*pbIsSupported = true;
+				*pExtensionInterfaceVersion = NMR_APIVERSION_INTERFACE_BEAMLATTICESPEC;
+			}
+			else if (wcscmp(pwszExtensionUrl, XML_3MF_NAMESPACE_SLICESPEC) == 0) {
+				*pbIsSupported = true;
+				*pExtensionInterfaceVersion = NMR_APIVERSION_INTERFACE_SLICESPEC;
+			}
 			else {
 				*pbIsSupported = false;
 			}

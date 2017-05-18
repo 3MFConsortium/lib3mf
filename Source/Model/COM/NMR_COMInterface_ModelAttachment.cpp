@@ -41,12 +41,15 @@ COM Interface Implementation for Model Classes
 
 #include "Common/Platform/NMR_ImportStream_Memory.h"
 
-#ifndef __GNUC__
-#include <atlbase.h>
+#ifdef NMR_COM_NATIVE
 #include "Common/Platform/NMR_ImportStream_COM.h"
-
+#else
+#include "Common/Platform/NMR_ImportStream_GCC_Native.h"
 #endif
 
+#ifndef __GNUC__
+#include <atlbase.h>
+#endif
 
 namespace NMR {
 
@@ -187,12 +190,18 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
 
 			std::wstring sPath(pwszPath);
-			std::wstring sRelationshipType = m_pModelAttachment->getRelationShipType();
-			PImportStream pStream = m_pModelAttachment->getStream();
-
 			CModel * pModel = m_pModelAttachment->getModel();
-			pModel->removeAttachment(m_pModelAttachment->getPathURI());
-			m_pModelAttachment = pModel->addAttachment(sPath, sRelationshipType, pStream);
+			PImportStream pStream = m_pModelAttachment->getStream();
+			if (pModel->getPackageThumbnail() == m_pModelAttachment) {
+				// different handling for package-wide attachment
+				pModel->removePackageThumbnail();
+				m_pModelAttachment = pModel->addPackageThumbnail(sPath, pStream);
+			}
+			else {
+				std::wstring sRelationshipType = m_pModelAttachment->getRelationShipType();
+				pModel->removeAttachment(m_pModelAttachment->getPathURI());
+				m_pModelAttachment = pModel->addAttachment(sPath, sRelationshipType, pStream);
+			}
 
 			return handleSuccess();
 		}
@@ -217,13 +226,18 @@ namespace NMR {
 			std::string sUTF8Path(pszPath);
 			std::wstring sUTF16Path = fnUTF8toUTF16(sUTF8Path);
 
-			std::wstring sRelationshipType = m_pModelAttachment->getRelationShipType();
-			PImportStream pStream = m_pModelAttachment->getStream();
-
 			CModel * pModel = m_pModelAttachment->getModel();
-			pModel->removeAttachment(m_pModelAttachment->getPathURI());
-			m_pModelAttachment = pModel->addAttachment(sUTF16Path, sRelationshipType, pStream);
-
+			PImportStream pStream = m_pModelAttachment->getStream();
+			if (pModel->getPackageThumbnail() == m_pModelAttachment) {
+				// different handling for package-wide attachment
+				pModel->removePackageThumbnail();
+				m_pModelAttachment = pModel->addPackageThumbnail(sUTF16Path, pStream);
+			}
+			else {
+				std::wstring sRelationshipType = m_pModelAttachment->getRelationShipType();
+				pModel->removeAttachment(m_pModelAttachment->getPathURI());
+				m_pModelAttachment = pModel->addAttachment(sUTF16Path, sRelationshipType, pStream);
+			}
 			return handleSuccess();
 		}
 		catch (CNMRException & Exception) {
@@ -254,7 +268,6 @@ namespace NMR {
 			// Return length if needed
 			if (pcbNeededChars)
 				*pcbNeededChars = nNeededChars;
-
 
 			return handleSuccess();
 		}
@@ -473,7 +486,7 @@ namespace NMR {
 
 	}
 
-#ifndef __GNUC__
+#ifdef NMR_COM_NATIVE
 	LIB3MFMETHODIMP CCOMModelAttachment::WriteToStream(_In_ IStream * pCOMStream)
 	{
 		try {
@@ -521,7 +534,7 @@ namespace NMR {
 			return handleGenericException();
 		}
 	}
-#endif// __GNUC__
+#endif// NMR_COM_NATIVE
 
 	LIB3MFMETHODIMP CCOMModelAttachment::WriteToCallback(_In_ void * pWriteCallback, _In_opt_ void * pUserData)
 	{
@@ -625,7 +638,7 @@ namespace NMR {
 
 	}
 
-#ifndef __GNUC__
+#ifdef NMR_COM_NATIVE
 	LIB3MFMETHODIMP CCOMModelAttachment::ReadFromStream(_In_ IStream * pStream)
 	{
 		try {
@@ -682,7 +695,6 @@ namespace NMR {
 				cbBytesLeft -= cbLength;
 			}
 
-
 			PImportStream pImportStream = std::make_shared<CImportStream_COM>(pMemoryStream);
 
 			m_pModelAttachment->setStream(pImportStream);
@@ -697,9 +709,7 @@ namespace NMR {
 		}
 
 	}
-#endif //__GNUC__
-
-
+#endif //NMR_COM_NATIVE
 
 
 	}

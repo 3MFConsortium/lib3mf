@@ -54,6 +54,8 @@ namespace NMR {
 		std::wstring m_sPartNumber;
 		nfUint32 m_nHandle;
 		
+		PUUID m_UUID;
+		std::wstring m_sPath;
 	public:
 		CModelBuildItem() = delete;
 		CModelBuildItem(_In_ CModelObject * pObject, _In_ nfUint32 nHandle);
@@ -70,11 +72,18 @@ namespace NMR {
 		std::wstring getTransformString();
 
 		// Associated object getter/setter
-		ModelResourceID getObjectID();
+		PackageResourceID getObjectID();
 
 		// Item reference getter/setter
 		std::wstring getPartNumber();
 		void setPartNumber(_In_ std::wstring sPartNumber);
+
+		// Production extension UUID
+		PUUID uuid();
+		void setUUID(PUUID uuid);
+
+		std::wstring path();
+		void setPath(std::wstring sPath);
 
 		// Merge the build item to the given mesh
 		void mergeToMesh(_In_ CMesh * pMesh);
@@ -82,6 +91,7 @@ namespace NMR {
 		// Returns a unique handle to identify the build item
 		nfUint32 getHandle();
 
+		bool isValidForSlices();
 	};
 
 	typedef std::shared_ptr <CModelBuildItem> PModelBuildItem;

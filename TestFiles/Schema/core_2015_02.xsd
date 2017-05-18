@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?> 
 <xs:schema xmlns="http://schemas.microsoft.com/3dmanufacturing/core/2015/02" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xml="http://www.w3.org/XML/1998/namespace" targetNamespace="http://schemas.microsoft.com/3dmanufacturing/core/2015/02" 
-elementFormDefault="unqualified" attributeFormDefault="unqualified" blockDefault="#all"> 
-	<xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="http://www.w3.org/2001/xml.xsd"/> 
+elementFormDefault="unqualified" attributeFormDefault="unqualified" blockDefault="#all">
+	<xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="http://www.w3.org/2001/xml.xsd"/>
 	<xs:annotation> 
 		<xs:documentation><![CDATA[   Schema notes: 
  
@@ -16,10 +16,10 @@ elementFormDefault="unqualified" attributeFormDefault="unqualified" blockDefault
 	<!-- Complex Types --> 
 	<xs:complexType name="CT_Model">   
 		<xs:sequence> 
-			<xs:element ref="metadata" minOccurs="0" maxOccurs="1073741824"/> 
+			<xs:element ref="metadata" minOccurs="0" maxOccurs="2147483647"/> 
 			<xs:element ref="resources"/> 
-			<xs:element ref="build"/> 
-			<xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="1073741824"/> 
+			<xs:element ref="build"/>
+			<xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="2147483647"/> 
 		</xs:sequence> 
 		<xs:attribute name="unit" type="ST_Unit" default="millimeter"/> 
 		<xs:attribute ref="xml:lang"/> 
@@ -28,21 +28,21 @@ elementFormDefault="unqualified" attributeFormDefault="unqualified" blockDefault
 	</xs:complexType> 
 	<xs:complexType name="CT_Resources"> 
 		<xs:sequence>	     
-			<xs:element ref="basematerials" minOccurs="0" maxOccurs="1073741824"/> 
-			<xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="1073741824"/> 
-			<xs:element ref="object" minOccurs="0" maxOccurs="1073741824"/>  
-		</xs:sequence> 
+			<xs:element ref="basematerials" minOccurs="0" maxOccurs="2147483647"/> 
+			<xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="2147483647"/> 
+			<xs:element ref="object" minOccurs="0" maxOccurs="2147483647"/>  
+		</xs:sequence>
 		<xs:anyAttribute namespace="##other" processContents="lax"/> 
 	</xs:complexType> 
 	<xs:complexType name="CT_Build"> 
 		<xs:sequence> 
-			<xs:element ref="item" minOccurs="0" maxOccurs="1073741824"/> 
+			<xs:element ref="item" minOccurs="0" maxOccurs="2147483647"/> 
 		</xs:sequence> 
 		<xs:anyAttribute namespace="##other" processContents="lax"/> 
 	</xs:complexType> 
 	<xs:complexType name="CT_BaseMaterials"> 
 		<xs:sequence> 
-			<xs:element ref="base" maxOccurs="1073741824"/> 
+			<xs:element ref="base" maxOccurs="2147483647"/> 
 		</xs:sequence> 
 		<xs:attribute name="id" type="ST_ResourceID" use="required"/> 
 	</xs:complexType> 
@@ -71,12 +71,12 @@ elementFormDefault="unqualified" attributeFormDefault="unqualified" blockDefault
 		<xs:sequence> 
 			<xs:element ref="vertices"/> 
 			<xs:element ref="triangles"/> 
-			<xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="1073741824"/> 
+			<xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="2147483647"/>
 		</xs:sequence> 
 	</xs:complexType> 
 	<xs:complexType name="CT_Vertices"> 
 		<xs:sequence> 
-			<xs:element ref="vertex" minOccurs="3" maxOccurs="1073741824"/> 
+			<xs:element ref="vertex" minOccurs="3" maxOccurs="2147483647"/> 
 		</xs:sequence> 
 	</xs:complexType> 
 	<xs:complexType name="CT_Vertex"> 
@@ -87,7 +87,7 @@ elementFormDefault="unqualified" attributeFormDefault="unqualified" blockDefault
 	</xs:complexType> 
 	<xs:complexType name="CT_Triangles"> 
 		<xs:sequence> 
-			<xs:element ref="triangle" minOccurs="1" maxOccurs="1073741824"/> 
+			<xs:element ref="triangle" minOccurs="1" maxOccurs="2147483647"/> 
 		</xs:sequence> 
 	</xs:complexType> 
 	<xs:complexType name="CT_Triangle"> 
@@ -102,7 +102,7 @@ elementFormDefault="unqualified" attributeFormDefault="unqualified" blockDefault
 	</xs:complexType> 
 	<xs:complexType name="CT_Components"> 
 		<xs:sequence> 
-			<xs:element ref="component" maxOccurs="1073741824"/> 
+			<xs:element ref="component" maxOccurs="2147483647"/> 
 		</xs:sequence> 
 	</xs:complexType> 
 	<xs:complexType name="CT_Component"> 
@@ -143,7 +143,7 @@ elementFormDefault="unqualified" attributeFormDefault="unqualified" blockDefault
 	</xs:simpleType> 
 	<xs:simpleType name="ST_Matrix3D"> 
 		<xs:restriction base="xs:string"> 
-			<xs:pattern value="((\-|\+)?(([0-9]+(\.[0-9]+)?)|(\.[0-9]+))((e|E)(\-|\+)?[0-9]+)?) ((\-|\+)?(([0-9]+(\.[0-9]+)?)|(\.[0-9]+))((e|E)(\-|\+)?[0-9]+)?) ((\-|\+)?(([0-9]+(\.[0-9]+)?)|(\.[0-9]+))((e|E)(\-|\+)?[0-9]+)?) ((\-|\+)?(([0-9]+(\.[0-9]+)?)|(\.[0-9]+))((e|E)(\-|\+)?[0-9]+)?) ((\|\+)?(([0-9]+(\.[0-9]+)?)|(\.[0-9]+))((e|E)(\-|\+)?[0-9]+)?) ((\-|\+)?(([0-9]+(\.[0-9]+)?)|(\.[0-9]+))((e|E)(\-|\+)?[0-9]+)?) ((\-|\+)?(([0-9]+(\.[0-9]+)?)|(\.[0-9]+))((e|E)(\-|\+)?[0-9]+)?) ((\|\+)?(([0-9]+(\.[0-9]+)?)|(\.[0-9]+))((e|E)(\-|\+)?[0-9]+)?) ((\-|\+)?(([0-9]+(\.[0-9]+)?)|(\.[0-9]+))((e|E)(\-|\+)?[0-9]+)?) ((\-|\+)?(([0-9]+(\.[0-9]+)?)|(\.[0-9]+))((e|E)(\-|\+)?[0-9]+)?) ((\-|\+)?(([0-9]+(\.[0-9]+)?)|(\.[0-9]+))((e|E)(\-|\+)?[0-9]+)?) ((\-|\+)?(([0-9]+(\.[0-9]+)?)|(\.[09]+))((e|E)(\-|\+)?[0-9]+)?)"/>
+			<xs:pattern value="((\-|\+)?(([0-9]+(\.[0-9]+)?)|(\.[0-9]+))((e|E)(\-|\+)?[0-9]+)?) ((\-|\+)?(([0-9]+(\.[0-9]+)?)|(\.[0-9]+))((e|E)(\-|\+)?[0-9]+)?) ((\-|\+)?(([0-9]+(\.[0-9]+)?)|(\.[0-9]+))((e|E)(\-|\+)?[0-9]+)?) ((\-|\+)?(([0-9]+(\.[0-9]+)?)|(\.[0-9]+))((e|E)(\-|\+)?[0-9]+)?) ((\-|\+)?(([0-9]+(\.[0-9]+)?)|(\.[0-9]+))((e|E)(\-|\+)?[0-9]+)?) ((\-|\+)?(([0-9]+(\.[0-9]+)?)|(\.[0-9]+))((e|E)(\-|\+)?[0-9]+)?) ((\-|\+)?(([0-9]+(\.[0-9]+)?)|(\.[0-9]+))((e|E)(\-|\+)?[0-9]+)?) ((\-|\+)?(([0-9]+(\.[0-9]+)?)|(\.[0-9]+))((e|E)(\-|\+)?[0-9]+)?) ((\-|\+)?(([0-9]+(\.[0-9]+)?)|(\.[0-9]+))((e|E)(\-|\+)?[0-9]+)?) ((\-|\+)?(([0-9]+(\.[0-9]+)?)|(\.[0-9]+))((e|E)(\-|\+)?[0-9]+)?) ((\-|\+)?(([0-9]+(\.[0-9]+)?)|(\.[0-9]+))((e|E)(\-|\+)?[0-9]+)?) ((\-|\+)?(([0-9]+(\.[0-9]+)?)|(\.[09]+))((e|E)(\-|\+)?[0-9]+)?)"/>
 		</xs:restriction> 
 	</xs:simpleType> 
 	<xs:simpleType name="ST_Number"> 
@@ -154,12 +154,12 @@ elementFormDefault="unqualified" attributeFormDefault="unqualified" blockDefault
 	</xs:simpleType> 
 	<xs:simpleType name="ST_ResourceID"> 
 		<xs:restriction base="xs:positiveInteger"> 
-			<xs:maxExclusive value="10737418248"/> 
+			<xs:maxExclusive value="21474836478"/> 
 		</xs:restriction> 
 	</xs:simpleType> 
 	<xs:simpleType name="ST_ResourceIndex"> 
 		<xs:restriction base="xs:nonNegativeInteger"> 
-			<xs:maxExclusive value="10737418248"/> 
+			<xs:maxExclusive value="21474836478"/> 
 		</xs:restriction> 
 	</xs:simpleType> 
 	<xs:simpleType name="ST_ObjectType"> 
@@ -185,5 +185,5 @@ elementFormDefault="unqualified" attributeFormDefault="unqualified" blockDefault
 	<xs:element name="components" type="CT_Components"/> 
 	<xs:element name="component" type="CT_Component"/> 
 	<xs:element name="metadata" type="CT_Metadata"/> 
-	<xs:element name="item" type="CT_Item"/> 
+	<xs:element name="item" type="CT_Item"/>
 </xs:schema> 

@@ -99,4 +99,20 @@ namespace NMR {
 		return true;
 	}
 
+	nfBool CModelComponentsObject::isValidForSlices(const NMATRIX3& totalParentMatrix)
+	{
+		if (m_Components.size() == 0)
+			return true;
+
+		for (auto iIterator = m_Components.begin(); iIterator != m_Components.end(); iIterator++) {
+			CModelObject * pObject = (*iIterator)->getObject();
+			__NMRASSERT(pObject);
+			NMATRIX3 curMat = fnMATRIX3_multiply(totalParentMatrix, (*iIterator)->getTransform());
+			if (!pObject->isValidForSlices(curMat))
+				return false;
+		}
+
+		return true;
+	}
+
 }
