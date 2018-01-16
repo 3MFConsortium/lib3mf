@@ -143,14 +143,16 @@ namespace NMR {
 	}
 
 
-	LIB3MFMETHODIMP CCOMModelFactory::GetInterfaceVersion(_Out_ DWORD * pInterfaceVersion)
+	LIB3MFMETHODIMP CCOMModelFactory::GetInterfaceVersion(_Out_ DWORD * pInterfaceVersionMajor, _Out_ DWORD * pInterfaceVersionMinor, _Out_ DWORD * pInterfaceVersionMicro)
 	{
 		try
 		{
-			if (pInterfaceVersion == nullptr)
+			if ((pInterfaceVersionMajor == nullptr) || (pInterfaceVersionMinor == nullptr) || (pInterfaceVersionMicro == nullptr))
 				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
 
-			*pInterfaceVersion = NMR_APIVERSION_INTERFACE;
+			*pInterfaceVersionMajor = NMR_APIVERSION_INTERFACE_MAJOR;
+			*pInterfaceVersionMinor = NMR_APIVERSION_INTERFACE_MINOR;
+			*pInterfaceVersionMicro = NMR_APIVERSION_INTERFACE_MICRO;
 
 			return handleSuccess();
 		}

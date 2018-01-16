@@ -56,12 +56,14 @@ namespace NMR {
 			return LIB3MF_OK;
 		}
 
-		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_getinterfaceversion(_Out_ DWORD * pInterfaceVersion)
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_getinterfaceversion(_Out_ DWORD * pInterfaceVersionMajor, _Out_ DWORD * pInterfaceVersionMinor, _Out_ DWORD * pInterfaceVersionMicro)
 		{
-			if (!pInterfaceVersion)
+			if ( (!pInterfaceVersionMajor) || (!pInterfaceVersionMinor) || (!pInterfaceVersionMicro) )
 				return LIB3MF_POINTER;
 
-			*pInterfaceVersion = NMR_APIVERSION_INTERFACE;
+			*pInterfaceVersionMajor = NMR_APIVERSION_INTERFACE_MAJOR;
+			*pInterfaceVersionMinor = NMR_APIVERSION_INTERFACE_MINOR;
+			*pInterfaceVersionMicro = NMR_APIVERSION_INTERFACE_MICRO;
 
 			return LIB3MF_OK;
 		}

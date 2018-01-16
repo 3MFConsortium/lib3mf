@@ -1,9 +1,15 @@
 cmake_minimum_required (VERSION 2.8)
-project (lib3MF)
 
 IF (NOT ${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION} LESS 3.1)
   cmake_policy(SET CMP0054 OLD)
 ENDIF ()
+
+project (lib3MF)
+
+# Define Version
+set(LIB3MF_VERSION_MAJOR 1)				# increase on every backward-compatibility breaking change of the API
+set(LIB3MF_VERSION_MINOR 0)				# increase on every backward compatible change of the API
+set(LIB3MF_VERSION_MICRO 0)				# increase on on every change that does not alter the API
 
 set(NMR_COM_NATIVE FALSE) # by default, do not actually implement a COM interface
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
@@ -21,7 +27,7 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
   # using Visual Studio C++
   add_definitions(-DBUILD_DLL -DLIB3MF_EXPORTS /W3)
   SET(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} xmllite.lib")
-  add_definitions(-D_CRT_NONSTDC_NO_DEPRECATE -D_CRT_SECURE_NO_WARNINGS)	
+  add_definitions(-D_CRT_NONSTDC_NO_DEPRECATE -D_CRT_SECURE_NO_WARNINGS)
   if(NMR_COM_NATIVE)
 	add_definitions(-DNMR_COM_NATIVE)
   endif()
@@ -33,9 +39,10 @@ endif()
 
 file(GLOB LIBZIP_FILES ./Source/Libraries/libzip/*.c)
 
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/Include/Model/COM/NMR_COMVersion.h.in" "${CMAKE_CURRENT_BINARY_DIR}/Include/Model/COM/NMR_COMVersion.h")
+
 # sources for native COM implementation or COM emulation
 set(SRCS_COM)
-
 
 if(NMR_COM_NATIVE)
 	set(SRCS_COM
@@ -292,32 +299,32 @@ if(NOT DEFINED LIB3MF_TESTS)
 endif()
 message("LIB3MF_TESTS ... " ${LIB3MF_TESTS})
 
+
 #########################################################
-# version info
+# Set version info
+
 if(DEFINED ENV{BUILD_NUMBER})
 	set(BUILD_NUMBER $ENV{BUILD_NUMBER})
 else()
-
 	set(BUILD_NUMBER 0)
 endif()
 
 if (WIN32)
 	message("BUILD_NUMBER ... " ${BUILD_NUMBER})
-
 	set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/Release/VersionInfo)
-
+	
 	include(generate_product_version)
 	generate_product_version(
 	   VERSION_FILES_OUTPUTLOCATION
 	   NAME "lib3MF"
 	   FILE_DESCRIPTION "Lib3MF is the reference-implementation of the 3D Manufacturing Format file standard"
 	   BUNDLE "3MF Consortium"
-	   VERSION_MAJOR 1
-	   VERSION_MINOR 1
-	   VERSION_PATCH 0
+	   VERSION_MAJOR ${LIB3MF_VERSION_MAJOR}
+	   VERSION_MINOR ${LIB3MF_VERSION_MINOR}
+	   VERSION_PATCH ${LIB3MF_VERSION_MICRO}
 	   VERSION_REVISION ${BUILD_NUMBER}
-	   PRODUCT_VERSION_MAJOR 1
-	   PRODUCT_VERSION_MINOR 1
+	   PRODUCT_VERSION_MAJOR ${LIB3MF_VERSION_MAJOR}
+	   PRODUCT_VERSION_MINOR ${LIB3MF_VERSION_MINOR}
 	   COMPANY_NAME "3MF Consortium"
 	)
 	message("VERSION_FILES_OUTPUTLOCATION ... " ${VERSION_FILES_OUTPUTLOCATION})
@@ -325,10 +332,12 @@ else()
 	set(VERSION_FILES_OUTPUTLOCATION "")
 endif()
 
+
 #########################################################
 # shared library
 add_library(${PROJECT_NAME} SHARED ${SRCS} ${VERSION_FILES_OUTPUTLOCATION})
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include)
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/Include)
 
 if (WIN32)
 	#########################################################
@@ -337,7 +346,8 @@ if (WIN32)
 		SET(UNITTEST_NAME "${PROJECT_NAME}unittests")
 		add_library(${UNITTEST_NAME} SHARED ${SRCS_MANAGED_TEST})
 		target_include_directories(${UNITTEST_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include)
-		target_include_directories (${UNITTEST_NAME} PUBLIC "${VCINSTALLDIR}/../../../UnitTest/include")
+		target_include_directories(${UNITTEST_NAME} PUBLIC "${VCINSTALLDIR}/../../../UnitTest/include")
+		target_include_directories(${UNITTEST_NAME} PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/Include)
 	
 		target_compile_options(${UNITTEST_NAME} PUBLIC "$<$<CONFIG:DEBUG>:/Od;/Ob0;/Gm;/sdl;/W3;/WX;/FC;-DNMR_USEASSERTIONS;-DNMR_UNITTESTS;/wd4996>")
 		target_compile_options(${UNITTEST_NAME} PUBLIC "$<$<CONFIG:RELEASE>:/O2;/sdl;/WX;/Oi;/Gy;/FC;/wd4996>")
@@ -347,8 +357,9 @@ if (WIN32)
 elseif(UNIX AND NOT APPLE)
 	SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES LINK_FLAGS -s)
 	# Uncomment the following to but the version info into the .so-file.
-	# SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES SOVERSION "1.1.${BUILD_NUMBER}")
+	SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES SOVERSION "${LIB3MF_VERSION_MAJOR}.${LIB3MF_VERSION_MINOR}.${LIB3MF_VERSION_MICRO}.${BUILD_NUMBER}")
 endif()
+
 
 #########################################################
 # platform independent tests for shared library interface
@@ -371,9 +382,6 @@ if(LIB3MF_TESTS)
 	add_test(${CTEST_SHARED} ${CTEST_SHARED})
 endif()
 
-
-
-
 #########################################################
 # testing the production + slice extension
 if(FALSE)
@@ -383,10 +391,3 @@ if(FALSE)
 	add_dependencies(${CTEST_BATCH} ${PROJECT_NAME})
 	target_link_libraries(${CTEST_BATCH} ${PROJECT_NAME})
 endif()
-
-
-
-
-
-
-

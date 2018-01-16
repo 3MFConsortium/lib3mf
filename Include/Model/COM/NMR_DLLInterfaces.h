@@ -86,13 +86,22 @@ namespace NMR {
 
 		/**
 		* retrieves the current interface version of the library (build version)
-		* this version will increment with each official release of the library,
-		* and may be used to ensure API compatibility.
-		*
-		* @param[out] pInterfaceVersion returns the interface version of the DLL
+		* this version will increment with each release of the library, and should
+		* be used to ensure API compatibility.
+		* 
+		* Lib3MF's API is stable in the following way:
+		* - Lib3MF-libraries with different major version are not guaranteed to be compatible
+		* - Lib3MF-libraries with matching major version and different minor versions are backwards compatible:
+		*   A consumer who compiled against the API of version A.B can safely use the binary of version A.C for C>=B.
+		*   I.e., functions will not be removed within the range of a constant major version.
+		* - Lib3MF-libraries with matching values of both major and minor version have an identical API.
+		* 
+		* @param[out] pInterfaceVersionMajor returns the major version of the shared library
+		* @param[out] pInterfaceVersionMinor returns the minor version of the shared library
+		* @param[out] pInterfaceVersionMicro returns the patch version of the shared library
 		* @return error code or 0 (success)
 		*/
-		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_getinterfaceversion(_Out_ DWORD * pInterfaceVersion);
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_getinterfaceversion(_Out_ DWORD * pInterfaceVersionMajor, _Out_ DWORD * pInterfaceVersionMinor, _Out_ DWORD * pInterfaceVersionMicro);
 
 		/**
 		* checks whether a extension is supported by the DLL and which version of the interface is used

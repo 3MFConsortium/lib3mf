@@ -51,15 +51,17 @@ namespace NMR {
 
 	TEST(Extensions, InterfaceVersion)
 	{
-		DWORD nInterfaceVersion;
-		EXPECT_EQ(NMR::lib3mf_getinterfaceversion(&nInterfaceVersion), S_OK) << L"Failed to obtain interface version.";
-		EXPECT_EQ(nInterfaceVersion, (DWORD)(NMR_APIVERSION_INTERFACE)) << std::wstring(L"invalid 3MF interface version: " + std::to_wstring(NMR_APIVERSION_INTERFACE)).c_str();
+		DWORD nInterfaceVersionMajor, nInterfaceVersionMinor, nInterfaceVersionMicro;
+		EXPECT_EQ(NMR::lib3mf_getinterfaceversion(&nInterfaceVersionMajor, &nInterfaceVersionMinor, &nInterfaceVersionMicro), S_OK) << L"Failed to obtain interface version.";
+		EXPECT_EQ(nInterfaceVersionMajor, (DWORD)(NMR_APIVERSION_INTERFACE_MAJOR)) << std::wstring(L"invalid 3MF major interface version: " + std::to_wstring(NMR_APIVERSION_INTERFACE_MAJOR)).c_str();
+		EXPECT_EQ(nInterfaceVersionMinor, (DWORD)(NMR_APIVERSION_INTERFACE_MINOR)) << std::wstring(L"invalid 3MF minor interface version: " + std::to_wstring(NMR_APIVERSION_INTERFACE_MINOR)).c_str();
+		EXPECT_EQ(nInterfaceVersionMicro, (DWORD)(NMR_APIVERSION_INTERFACE_MICRO)) << std::wstring(L"invalid 3MF patch interface version: " + std::to_wstring(NMR_APIVERSION_INTERFACE_MICRO)).c_str();
 		
 		CustomLib3MFBase pModel;
 		// Create Model Instance
 		EXPECT_EQ( NMR::lib3mf_createmodel(&pModel.get()), S_OK) << L"Failed to create model.";
 	}
-		
+	
 	TEST(Extensions, Extensions)
 	{
 		DWORD nAPIInterfaceVersion;

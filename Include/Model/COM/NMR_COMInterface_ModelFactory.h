@@ -57,7 +57,7 @@ namespace NMR {
 
 		LIB3MFMETHOD(CreateModel) (_Outptr_ ILib3MFModel ** ppModel);
 		LIB3MFMETHOD(GetSpecVersion) (_Out_ DWORD * pMajorVersion, _Out_ DWORD * pMinorVersion);
-		LIB3MFMETHOD(GetInterfaceVersion) (_Out_ DWORD * pInterfaceVersion);
+		LIB3MFMETHOD(GetInterfaceVersion) (_Out_ DWORD * pInterfaceVersionMajor, _Out_ DWORD * pInterfaceVersionMinor, _Out_ DWORD * pInterfaceVersionMicro);
 		LIB3MFMETHOD(QueryExtension) (_In_z_ LPCWSTR pwszExtensionUrl, _Out_ BOOL * pbIsSupported, _Out_opt_ DWORD * pExtensionInterfaceVersion);
 		LIB3MFMETHOD(QueryExtensionUTF8) (_In_z_ LPCSTR pszExtensionUrl, _Out_ BOOL * pbIsSupported, _Out_opt_ DWORD * pExtensionInterfaceVersion);
 		

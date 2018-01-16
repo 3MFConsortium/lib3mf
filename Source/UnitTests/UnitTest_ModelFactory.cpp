@@ -68,16 +68,24 @@ namespace NMR
 		TEST_METHOD(ModelFactory_InterfaceVersion)
 		{
 			HRESULT hResult;
-			DWORD nInterfaceVersion;
+			DWORD nInterfaceVersionMajor, nInterfaceVersionMinor, nInterfaceVersionMicro;
 			CCOMObject<CCOMModelFactory> * pNewModelFactory = new CCOMObject<CCOMModelFactory>;
-			hResult = pNewModelFactory->GetInterfaceVersion(&nInterfaceVersion);
+			hResult = pNewModelFactory->GetInterfaceVersion(&nInterfaceVersionMajor, &nInterfaceVersionMinor, &nInterfaceVersionMicro);
 			delete pNewModelFactory;
 			// pNewModelFactory->Release();
 
 			if (hResult != S_OK)
 				Assert::Fail(L"Could not obtain API interface version");
-			if (nInterfaceVersion != NMR_APIVERSION_INTERFACE) {
-				std::wstring errString = std::wstring(L"invalid 3MF interface version: " + std::to_wstring(NMR_APIVERSION_INTERFACE));
+			if (nInterfaceVersionMajor != NMR_APIVERSION_INTERFACE_MAJOR) {
+				std::wstring errString = std::wstring(L"invalid 3MF interface version: " + std::to_wstring(NMR_APIVERSION_INTERFACE_MAJOR));
+				Assert::Fail(errString.c_str());
+			}
+			if (nInterfaceVersionMinor != NMR_APIVERSION_INTERFACE_MINOR) {
+				std::wstring errString = std::wstring(L"invalid 3MF interface version: " + std::to_wstring(NMR_APIVERSION_INTERFACE_MINOR));
+				Assert::Fail(errString.c_str());
+			}
+			if (nInterfaceVersionMicro != NMR_APIVERSION_INTERFACE_MICRO) {
+				std::wstring errString = std::wstring(L"invalid 3MF interface version: " + std::to_wstring(NMR_APIVERSION_INTERFACE_MICRO));
 				Assert::Fail(errString.c_str());
 			}
 		}

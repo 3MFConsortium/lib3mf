@@ -63,8 +63,8 @@ function obtainlibrarycmd {
   else
     cp $LOCATION/lib3MF_$1.$2 $SDKARTIFACTS/Lib/lib3MF.$2 || failed "Error obtaining latest lib3MF.$2"
   fi
-
 }
+
 obtainlibrarycmd "linux64" "so"
 obtainlibrarycmd "win64" "dll"
 obtainlibrarycmd "win64" "lib"

@@ -120,7 +120,7 @@ int main ()
 {
 	// General Variables
 	HRESULT hResult;
-	DWORD nInterfaceVersion;
+	DWORD nInterfaceVersionMajor, nInterfaceVersionMinor, nInterfaceVersionMicro;
 	DWORD nErrorMessage;
 	LPCSTR pszErrorMessage;
 
@@ -137,14 +137,18 @@ int main ()
 	std::cout << "------------------------------------------------------------------" << std::endl;
 
 	// Check 3MF Library Version
-	hResult = lib3mf_getinterfaceversion (&nInterfaceVersion);
+	hResult = lib3mf_getinterfaceversion(&nInterfaceVersionMajor, &nInterfaceVersionMinor, &nInterfaceVersionMicro);
 	if (hResult != LIB3MF_OK) {
 		std::cout << "could not get 3MF Library version: " << std::hex << hResult << std::endl;
 		return -1;
 	}
 
-	if ((nInterfaceVersion != NMR_APIVERSION_INTERFACE)) {
-		std::cout << "invalid 3MF Library version: " << NMR_APIVERSION_INTERFACE << std::endl;
+	if ((nInterfaceVersionMajor != NMR_APIVERSION_INTERFACE_MAJOR)) {
+		std::cout << "invalid 3MF Library major version: " << NMR_APIVERSION_INTERFACE_MAJOR << std::endl;
+		return -1;
+	}
+	if (!(nInterfaceVersionMinor >= NMR_APIVERSION_INTERFACE_MINOR)) {
+		std::cout << "invalid 3MF Library minor version: " << NMR_APIVERSION_INTERFACE_MINOR << std::endl;
 		return -1;
 	}
 
