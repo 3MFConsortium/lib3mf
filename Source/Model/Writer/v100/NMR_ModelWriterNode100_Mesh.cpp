@@ -622,11 +622,17 @@ namespace NMR {
 			const std::string sR1 = fnUTF16toUTF8(L"\" " + std::wstring(XML_3MF_ATTRIBUTE_BEAMLATTICE_R1) + L"=\"");
 			putBeamString(sR1.c_str());
 			putBeamDouble(pBeam->m_radius[0]);
-			// if the string representation of r1 is different to that of m_radius[0]
+			// if the string representation of r2 is different to that of m_radius[0]
 			bWriteR1 = fabs(pBeam->m_radius[0] - pBeam->m_radius[1]) * m_snPutDoubleFactor > 0.1;
 		}
+		//if the string representation of r2 is different to that of m_radius[0]
+		else if (fabs(pBeam->m_radius[0] - pBeam->m_radius[1]) * m_snPutDoubleFactor > 0.1) {
+			const std::string sR1 = fnUTF16toUTF8(L"\" " + std::wstring(XML_3MF_ATTRIBUTE_BEAMLATTICE_R1) + L"=\"");
+			putBeamString(sR1.c_str());
+			putBeamDouble(pBeam->m_radius[0]);
+		}
 		else {
-			// if the string representation of r1 is different to that of dRadius
+			// if the string representation of r2 is different to that of dRadius
 			bWriteR1 = fabs(dRadius - pBeam->m_radius[1]) * m_snPutDoubleFactor > 0.1;
 		}
 		if (bWriteR1) {
