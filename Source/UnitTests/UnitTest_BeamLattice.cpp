@@ -323,6 +323,77 @@ void WriteBeamLattice_Negative()
 	ASSERT_NE(lib3mf_meshobject_addbeam(pMeshObject.get(), &beam, NULL), S_OK) << L"Could add beam to model of type support";
 }
 
+void WriteBeamLattice_Positive()
+{
+	using namespace NMR;
+	CustomLib3MFBase pModel;
+
+	// Create Model Instance
+	ASSERT_EQ(NMR::lib3mf_createmodel(&pModel.get()), S_OK) << L"Could not create model";
+
+	CustomLib3MFBase pMeshObject;
+	ASSERT_EQ(lib3mf_model_addmeshobject(pModel.get(), &pMeshObject.get()), S_OK) << L"Could not add mesh object";
+
+	MODELMESHVERTEX vert;
+	vert.m_fPosition[0] = 0;
+	vert.m_fPosition[1] = 0;
+	vert.m_fPosition[2] = 0;
+	ASSERT_EQ(lib3mf_meshobject_addvertex(pMeshObject.get(), &vert, NULL), S_OK) << L"Could not add vertex";
+	vert.m_fPosition[0] = 1;
+	vert.m_fPosition[1] = 1;
+	vert.m_fPosition[2] = 1;
+	ASSERT_EQ(lib3mf_meshobject_addvertex(pMeshObject.get(), &vert, NULL), S_OK) << L"Could not add vertex";
+	vert.m_fPosition[0] = 2;
+	vert.m_fPosition[1] = 2;
+	vert.m_fPosition[2] = 2;
+	ASSERT_EQ(lib3mf_meshobject_addvertex(pMeshObject.get(), &vert, NULL), S_OK) << L"Could not add vertex";
+	vert.m_fPosition[0] = 3;
+	vert.m_fPosition[1] = 3;
+	vert.m_fPosition[2] = 3;
+	ASSERT_EQ(lib3mf_meshobject_addvertex(pMeshObject.get(), &vert, NULL), S_OK) << L"Could not add vertex";
+	vert.m_fPosition[0] = 4;
+	vert.m_fPosition[1] = 4;
+	vert.m_fPosition[2] = 4;
+	ASSERT_EQ(lib3mf_meshobject_addvertex(pMeshObject.get(), &vert, NULL), S_OK) << L"Could not add vertex";
+
+	MODELMESHBEAM beam;
+	beam.m_nIndices[0] = 0;
+	beam.m_nIndices[1] = 1;
+	beam.m_dRadius[0] = 0.1;
+	beam.m_dRadius[1] = 0.1;
+	ASSERT_EQ(lib3mf_meshobject_addbeam(pMeshObject.get(), &beam, NULL), S_OK) << L"Could not add beam.";
+	ASSERT_EQ(lib3mf_meshobject_setbeamlattice_radius(pMeshObject.get(), 0.1), S_OK) << L"Could not set default radius.";
+
+	beam.m_nIndices[0] = 1;
+	beam.m_nIndices[1] = 2;
+	beam.m_dRadius[0] = 0.2;
+	beam.m_dRadius[1] = 0.1;
+	ASSERT_EQ(lib3mf_meshobject_addbeam(pMeshObject.get(), &beam, NULL), S_OK) << L"Could not add beam.";
+
+	beam.m_nIndices[0] = 2;
+	beam.m_nIndices[1] = 3;
+	beam.m_dRadius[0] = 0.1;
+	beam.m_dRadius[1] = 0.2;
+	ASSERT_EQ(lib3mf_meshobject_addbeam(pMeshObject.get(), &beam, NULL), S_OK) << L"Could not add beam.";
+
+	beam.m_nIndices[0] = 3;
+	beam.m_nIndices[1] = 4;
+	beam.m_dRadius[0] = 0.2;
+	beam.m_dRadius[1] = 0.2;
+	ASSERT_EQ(lib3mf_meshobject_addbeam(pMeshObject.get(), &beam, NULL), S_OK) << L"Could not add beam.";
+
+	beam.m_nIndices[0] = 4;
+	beam.m_nIndices[1] = 0;
+	beam.m_dRadius[0] = 0.2;
+	beam.m_dRadius[1] = 0.3;
+	ASSERT_EQ(lib3mf_meshobject_addbeam(pMeshObject.get(), &beam, NULL), S_OK) << L"Could not add beam.";
+
+	CustomLib3MFBase p3MFWriter;
+	EXPECT_EQ(lib3mf_model_querywriter(pModel.get(), "3mf", &p3MFWriter.get()), S_OK) << L"Could not create modelwriter";
+
+	EXPECT_EQ(lib3mf_writer_writetofileutf8(p3MFWriter.get(), (std::string("TestOutput") + separator() + "beamlattice_default.3mf").c_str()), S_OK) << L"Could not write file";
+}
+
 TEST(BeamLattice, ReadBoxSimple)
 {
 	Box_Simple();
@@ -361,4 +432,8 @@ TEST(BeamLattice, WriteBeamLattice_Negative)
 	WriteBeamLattice_Negative();
 }
 
+TEST(BeamLattice, WriteBeamLattice_Positive)
+{
+	WriteBeamLattice_Positive();
+}
 
