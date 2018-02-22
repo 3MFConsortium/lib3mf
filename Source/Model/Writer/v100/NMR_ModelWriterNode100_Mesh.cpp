@@ -608,6 +608,10 @@ namespace NMR {
 	}
 
 
+	bool stringRepresentationsDiffer(double a, double b, double putFactor) {
+		return  fabs(a - b) * putFactor > 0.1;
+	}
+
 	__NMR_INLINE void CModelWriterNode100_Mesh::writeBeamData(_In_ MESHBEAM * pBeam, _In_ nfDouble dRadius, _In_ eModelBeamLatticeCapMode eDefaultCapMode)
 	{
 		__NMRASSERT(pBeam);
@@ -616,20 +620,15 @@ namespace NMR {
 		const std::string sV2 = fnUTF16toUTF8(L"\" " + std::wstring(XML_3MF_ATTRIBUTE_BEAMLATTICE_V2) + L"=\"");
 		putBeamString(sV2.c_str());
 		putBeamUInt32(pBeam->m_nodeindices[1]);
-		nfBool bWriteR1 = true;
-		// if the string representation of r1 is different from that of dRadius
-		if (fabs(dRadius - pBeam->m_radius[0]) * m_snPutDoubleFactor > 0.1) {
+
+		nfBool bWriteR2 = stringRepresentationsDiffer(pBeam->m_radius[0], pBeam->m_radius[1], m_snPutDoubleFactor);
+		nfBool bWriteR1 = bWriteR2 || stringRepresentationsDiffer(pBeam->m_radius[0], dRadius, m_snPutDoubleFactor);
+		if (bWriteR1) {
 			const std::string sR1 = fnUTF16toUTF8(L"\" " + std::wstring(XML_3MF_ATTRIBUTE_BEAMLATTICE_R1) + L"=\"");
 			putBeamString(sR1.c_str());
 			putBeamDouble(pBeam->m_radius[0]);
-			// if the string representation of r1 is different to that of m_radius[0]
-			bWriteR1 = fabs(pBeam->m_radius[0] - pBeam->m_radius[1]) * m_snPutDoubleFactor > 0.1;
 		}
-		else {
-			// if the string representation of r1 is different to that of dRadius
-			bWriteR1 = fabs(dRadius - pBeam->m_radius[1]) * m_snPutDoubleFactor > 0.1;
-		}
-		if (bWriteR1) {
+		if (bWriteR2) {
 			const std::string sR2 = fnUTF16toUTF8(L"\" " + std::wstring(XML_3MF_ATTRIBUTE_BEAMLATTICE_R2) + L"=\"");
 			putBeamString(sR2.c_str());
 			putBeamDouble(pBeam->m_radius[1]);
