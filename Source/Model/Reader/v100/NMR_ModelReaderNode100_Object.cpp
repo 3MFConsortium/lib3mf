@@ -346,8 +346,10 @@ namespace NMR {
 			nfFloat fU;
 			nfFloat fV;
 			if (m_pTexCoordMapping->findTexCoords(m_nDefaultPropertyID, m_nDefaultPropertyIndex, nTextureID, fU, fV)) {
-				m_pObject->setDefaultProperty(std::make_shared<CModelDefaultProperty_TexCoord2D>(nTextureID, fU, fV));
-				hasBeenSet = true;
+				if (nTextureID != 0) {
+					m_pObject->setDefaultProperty(std::make_shared<CModelDefaultProperty_TexCoord2D>(nTextureID, fU, fV));
+					hasBeenSet = true;
+				}
 			}
 
 			if (!hasBeenSet) {

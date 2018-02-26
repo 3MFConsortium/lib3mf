@@ -41,6 +41,8 @@ namespace NMR {
 	CModelDefaultProperty_TexCoord2D::CModelDefaultProperty_TexCoord2D(_In_ ModelResourceID nTextureID, _In_ nfFloat fU, _In_ nfFloat fV)
 		: CModelDefaultProperty()
 	{
+		if (nTextureID == 0)
+			throw CNMRException(NMR_ERROR_INVALIDDEFAULTPID);
 		m_nTextureID = nTextureID;
 		m_fU = fU;
 		m_fV = fV;

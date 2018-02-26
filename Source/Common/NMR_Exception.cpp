@@ -274,7 +274,7 @@ namespace NMR {
 		case NMR_ERROR_INVALIDBUILDITEM: return "No Build Item has been given";
 		case NMR_ERROR_INVALIDOBJECT: return "No Object has been given";
 		case NMR_ERROR_INVALIDMODEL: return "No Model has been given";
-		case NMR_ERROR_INVALIDMODELRESOURCE: return "No Model Resource has been given";
+		case NMR_ERROR_INVALIDMODELRESOURCE: return "No valid Model Resource has been given";
 		case NMR_ERROR_DUPLICATEMETADATA: return "Duplicate Model Metadata";
 		case NMR_ERROR_INVALIDMETADATA: return "Invalid Model Metadata";
 		case NMR_ERROR_INVALIDMODELCOMPONENT: return "Invalid Model Component";
@@ -354,7 +354,7 @@ namespace NMR {
 		case NMR_ERROR_DUPLICATEPID: return "Duplicate Property ID.";
 		case NMR_ERROR_DUPLICATEPINDEX: return "Duplicate Property Index.";
 		case NMR_ERROR_MISSINGDEFAULTPID: return "A MeshObject with triangle-properties is missing a default property.";
-		case NMR_ERROR_INVALIDDEFAULTPID: return "A MeshObject with triangle-properties has an invalid a default property.";
+		case NMR_ERROR_INVALIDDEFAULTPID: return "A MeshObject with triangle-properties has an invalid default property.";
 		case NMR_ERROR_BUILDITEMOBJECT_MUSTNOTBE_OTHER: return "Build-item must not reference object of type OTHER.";
 		case NMR_ERROR_DEFAULTPID_ON_COMPONENTSOBJECT: return "A components object must not have a default PID.";
 		case NMR_ERROR_BEAMLATTICENODESTOOCLOSE: return "Nodes used for a beam are closer then the specified minimal length.";
