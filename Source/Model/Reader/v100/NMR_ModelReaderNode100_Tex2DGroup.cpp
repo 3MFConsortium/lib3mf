@@ -94,7 +94,11 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_DUPLICATERESOURCEID);
 
 			// Convert to integer and make a input and range check!
-			m_nTextureID = fnWStringToUint32(pAttributeValue);
+			ModelResourceID nID = fnWStringToUint32(pAttributeValue);
+			if (nID == 0)
+				m_pWarnings->addException(CNMRException(NMR_ERROR_INVALIDMODELRESOURCE), mrwInvalidMandatoryValue);
+
+			m_nTextureID = nID;
 		}
 		else
 			m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE), mrwInvalidOptionalValue);
