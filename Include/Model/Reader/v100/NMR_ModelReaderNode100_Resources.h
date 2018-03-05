@@ -48,11 +48,14 @@ namespace NMR {
 
 		PModelReader_ColorMapping m_pColorMapping;
 		PModelReader_TexCoordMapping m_pTexCoordMapping;
+
+		int m_nProgressCount;
+
 		virtual void OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar *  pAttributeValue);
 		virtual void OnNSChildElement(_In_z_ const nfWChar * pChildName, _In_z_ const nfWChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 	public:
 		CModelReaderNode100_Resources() = delete;
-		CModelReaderNode100_Resources(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings, _In_z_ const nfWChar *sPath);
+		CModelReaderNode100_Resources(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings, _In_z_ const nfWChar *sPath, _In_ CProgressMonitor* pProgressMonitor);
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 	};
 

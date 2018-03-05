@@ -50,6 +50,8 @@ namespace NMR {
 		PSliceStack m_pSliceStack;
 		std::wstring m_sSlicePath;
 
+		int m_nProgressCounter;
+
 		bool m_bHasReadSliceRef;
 		bool m_bHasReadSlices;
 	protected:
@@ -58,7 +60,7 @@ namespace NMR {
 
 	public:
 		CModelReaderNode_Slice1507_SliceStack() = delete;
-		CModelReaderNode_Slice1507_SliceStack(_In_ CModel *pModel, _In_ PModelReaderWarnings pWarnings, _In_ const nfWChar* sSlicePath);
+		CModelReaderNode_Slice1507_SliceStack(_In_ CModel *pModel, _In_ PModelReaderWarnings pWarnings, _In_ CProgressMonitor * pProgressMonitor, _In_ const nfWChar* sSlicePath);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 	};

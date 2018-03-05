@@ -34,6 +34,7 @@ NMR_XMLReader_Native.h defines a XML reader class with a native XML parsing impl
 #define __NMR_XMLREADER_NATIVE
 
 #include "Common/Platform/NMR_XmlReader.h"
+#include "Common/3MF_ProgressMonitor.h"
 
 #include <memory>
 #include <vector>
@@ -74,6 +75,9 @@ namespace NMR {
 
 	class CXmlReader_Native : public CXmlReader {
 	private:
+		nfUint32 m_progressCounter;
+		CProgressMonitor* m_pProgressMonitor;
+
 		nfUint32 m_cbBufferCapacity;
 		// Allocated memory of current and next chunk
 		std::vector<nfWChar> m_UTF16Buffer1;
@@ -152,7 +156,7 @@ namespace NMR {
 		void pushEntity(_In_ nfWChar * pszwEntityStartChar, _In_ nfWChar * pszwEntityEndDelimiter, _In_ nfWChar * pszwNextEntityChar, _In_ nfByte nType, _In_ nfBool bParseForNamespaces, _In_ nfBool bEntityIsFinished);
 
 	public:
-		CXmlReader_Native(_In_ PImportStream pImportStream, _In_ nfUint32 cbBufferCapacity);
+		CXmlReader_Native(_In_ PImportStream pImportStream, _In_ nfUint32 cbBufferCapacity, _In_ CProgressMonitor* pProgressMonitor);
 		~CXmlReader_Native();
 
 		virtual void GetValue(_Outptr_result_buffer_maybenull_(*pcwchValue + 1)  const nfWChar ** ppwszValue, _Out_opt_  nfUint32 *pcwchValue);

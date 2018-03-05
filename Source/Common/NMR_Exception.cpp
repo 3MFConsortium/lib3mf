@@ -46,7 +46,8 @@ namespace NMR {
 	const char * CNMRException::what() const throw ()
 	{
 		switch (m_errorcode) {
-
+		// Success / user interaction (0x0XXX)
+		case NMR_USERABORTED: return "The called function was aborted by the user";
 		// General error codes (0x1XXX)
 		case NMR_ERROR_NOTIMPLEMENTED: return "The called function is not fully implemented";
 		case NMR_ERROR_INVALIDPARAM: return "The call parameter to the function was invalid";

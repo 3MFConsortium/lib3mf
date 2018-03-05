@@ -38,6 +38,7 @@ This is the abstract base class for all 3MF model stream exporters.
 #include "Model/Classes/NMR_Model.h"
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Common/Platform/NMR_XmlWriter.h"
+#include "Common/3MF_ProgressMonitor.h"
 
 namespace NMR {
 
@@ -45,6 +46,7 @@ namespace NMR {
 	protected:
 		CModel * m_pModel;
 		CXmlWriter * m_pXMLWriter;
+		CProgressMonitor * m_pProgressMonitor;
 
 		void writeStringAttribute(_In_z_ const nfWChar * pAttributeName, _In_ std::wstring sAttributeValue);
 		void writePrefixedStringAttribute(_In_z_ const nfWChar * pPrefix, _In_ const nfWChar * pAttributeName, std::wstring sAttributeValue);
@@ -65,7 +67,7 @@ namespace NMR {
 
 	public:
 		CModelWriterNode() = delete;
-		CModelWriterNode(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter);
+		CModelWriterNode(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter, _In_ CProgressMonitor * pProgressMonitor);
 
 		virtual void writeToXML () = 0;
 	};

@@ -1,7 +1,6 @@
 /*++
 
-Copyright (C) 2015 Microsoft Corporation (Original Author)
-Copyright (C) 2015 netfabb GmbH
+Copyright (C) 2018 Autodesk Inc.
 
 All rights reserved.
 
@@ -25,42 +24,41 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract:
-
-NMR_ModelWriter.h defines the Model Writer Class.
-A model writer exports the in memory represenation into the 3MF file.
+Abstract: Progress Types
 
 --*/
 
-#ifndef __NMR_MODELWRITER
-#define __NMR_MODELWRITER
+#pragma once
 
-#include "Model/Classes/NMR_Model.h" 
-#include "Common/Platform/NMR_ExportStream.h" 
-#include "Common/3MF_ProgressMonitor.h" 
-#include <list>
 
-namespace NMR {
-
-	class CModelWriter {
-	private:
-			
-	protected:
-		PModel m_pModel;
-		PProgressMonitor m_pProgressMonitor;
-	public:
-		CModelWriter() = delete;
-		CModelWriter(_In_ PModel pModel);
-
-		virtual void exportToStream(_In_ PExportStream pStream) = 0;
-		void addCustomContentType(_In_ std::wstring sExtension, _In_ std::wstring sContentType);
- 		void removeCustomContentType(_In_ std::wstring sExtension);
-
-		void SetProgressCallback(Lib3MFProgressCallback callback, void* userData);
+namespace NMR
+{
+	enum ProgressIdentifier {
+		PROGRESS_QUERYCANCELED = 0,
+		PROGRESS_DONE,
+		PROGRESS_CLEANUP,
+		PROGRESS_READSTREAM,
+		PROGRESS_EXTRACTOPCPACKAGE,
+		PROGRESS_READNONROOTMODELS,
+		PROGRESS_READROOTMODEL,
+		PROGRESS_READRESOURCES,
+		PROGRESS_READMESH,
+		PROGRESS_READSLICES,
+		PROGRESS_READBUILD,
+		PROGRESS_CREATEOPCPACKAGE,
+		PROGRESS_WRITEMODELSTOSTREAM,
+		PROGRESS_WRITEROOTMODEL,
+		PROGRESS_WRITENONROOTMODELS,
+		PROGRESS_WRITEATTACHMENTS,
+		PROGRESS_WRITECONTENTTYPES,
+		PROGRESS_WRITENOBJECTS,
+		PROGRESS_WRITENODES,
+		PROGRESS_WRITETRIANGLES,
+		PROGRESS_WRITESLICES
 	};
-
-	typedef std::shared_ptr <CModelWriter> PModelWriter;
-
-}
-
-#endif // __NMR_MODELWRITER
+	
+	// !!! Matches dll interface type, always modify both
+	// If the first parameter is -1, it does not indicate progress;In that case
+	// it must only be used to stop the execution of the calling function.
+	typedef bool(*Lib3MFProgressCallback)(int, ProgressIdentifier, void*);
+};

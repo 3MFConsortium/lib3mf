@@ -46,6 +46,7 @@ using LibZ and a native XML writer implementation.
 #include "Common/Platform/NMR_ImportStream_Memory.h"
 #include "Common/Platform/NMR_ExportStream_Memory.h"
 #include "Common/NMR_StringUtils.h" 
+#include "Common/3MF_ProgressMonitor.h"
 #include <functional>
 #include <sstream>
 
@@ -82,6 +83,8 @@ namespace NMR {
 		POpcPackageWriter pPackageWriter = std::make_shared<COpcPackageWriter>(pStream);
 		POpcPackagePart pModelPart = pPackageWriter->addPart(PACKAGE_3D_MODEL_URI);
 		PXmlWriter_Native pXMLWriter = std::make_shared<CXmlWriter_Native>(pModelPart->getExportStream());
+		if (!m_pProgressMonitor->Progress(0.01, ProgressIdentifier::PROGRESS_WRITEROOTMODEL))
+			throw CNMRException(NMR_USERABORTED);
 		writeModelStream(pXMLWriter.get(), m_pModel);
 
 		// add Root relationships
@@ -101,11 +104,23 @@ namespace NMR {
 			pPackageWriter->addRootRelationship(generateRelationShipID(), pPackageThumbnail->getRelationShipType(), pThumbnailPart.get());
 		}
 
+
+		if (!m_pProgressMonitor->Progress(0.5, ProgressIdentifier::PROGRESS_WRITENONROOTMODELS))
+			throw CNMRException(NMR_USERABORTED);
 		// add slicestacks that reference other files
+		m_pProgressMonitor->PushLevel(0.5, 0.85);
 		addSlicerefAttachments(m_pModel);
+		m_pProgressMonitor->PopLevel();
 		
 		// add Attachments
+		if (!m_pProgressMonitor->Progress(0.85, ProgressIdentifier::PROGRESS_WRITEATTACHMENTS))
+			throw CNMRException(NMR_USERABORTED);
+		m_pProgressMonitor->PushLevel(0.85, 0.99);
 		addAttachments(m_pModel, pPackageWriter, pModelPart);
+		m_pProgressMonitor->PopLevel();
+
+		if (!m_pProgressMonitor->Progress(0.99, ProgressIdentifier::PROGRESS_WRITECONTENTTYPES))
+			throw CNMRException(NMR_USERABORTED);
 
 		// add Content Types
 		pPackageWriter->addContentType(PACKAGE_3D_RELS_EXTENSION, PACKAGE_3D_RELS_CONTENT_TYPE);
@@ -124,7 +139,6 @@ namespace NMR {
 			}
 		}
 
-			
 	}
 
 
@@ -145,6 +159,8 @@ namespace NMR {
 		if (nCount > 0) {
 			nfUint32 nIndex;
 			for (nIndex = 0; nIndex < nCount; nIndex++) {
+				if (!m_pProgressMonitor->Progress(double(nIndex) / nCount, ProgressIdentifier::PROGRESS_WRITENONROOTMODELS))
+					throw CNMRException(NMR_USERABORTED);
 				CModelSliceStackResource* pSliceStackResource = dynamic_cast<CModelSliceStackResource*>(pModel->getSliceStackResource(nIndex).get());
 				CSliceStack* pSliceStack = pSliceStackResource->getSliceStack().get();
 				if (pSliceStack->usesSliceRef()) {
@@ -179,6 +195,9 @@ namespace NMR {
 
 		if (nCount > 0) {
 			for (nIndex = 0; nIndex < nCount; nIndex++) {
+				if (!m_pProgressMonitor->Progress(double(nIndex) / nCount, ProgressIdentifier::PROGRESS_WRITEATTACHMENTS))
+					throw CNMRException(NMR_USERABORTED);
+
 				PModelAttachment pAttachment = pModel->getModelAttachment(nIndex);
 				PImportStream pStream = pAttachment->getStream();
 				

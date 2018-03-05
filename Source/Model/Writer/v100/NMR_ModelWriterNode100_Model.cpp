@@ -53,10 +53,13 @@ This is the class for exporting the 3mf model stream root node.
 #include "Common/MeshInformation/NMR_MeshInformation_TexCoords.h"
 #include "Common/MeshInformation/NMR_MeshInformation_Slices.h"
 
+#include "Common/3MF_ProgressMonitor.h"
+
+
 namespace NMR {
 
-	CModelWriterNode100_Model::CModelWriterNode100_Model(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter)
-		:CModelWriterNode(pModel, pXMLWriter)
+	CModelWriterNode100_Model::CModelWriterNode100_Model(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter, _In_ CProgressMonitor * pProgressMonitor)
+		:CModelWriterNode(pModel, pXMLWriter, pProgressMonitor)
 	{
 		m_ResourceCounter = pModel->generateResourceID();
 
@@ -116,7 +119,8 @@ namespace NMR {
 		}
 	}
 
-	CModelWriterNode100_Model::CModelWriterNode100_Model(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter, CModelSliceStackResource *pSliceStackResource) : CModelWriterNode(pModel, pXMLWriter)
+	CModelWriterNode100_Model::CModelWriterNode100_Model(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter, _In_ CProgressMonitor * pProgressMonitor,
+		CModelSliceStackResource *pSliceStackResource) : CModelWriterNode(pModel, pXMLWriter, pProgressMonitor)
 	{
 		m_bWriteMaterialExtension = false;
 		m_bWriteMaterialExtension = false;
@@ -302,6 +306,10 @@ namespace NMR {
 		else {
 			nfUint32 nSliceIndex;
 			for (nSliceIndex = 0; nSliceIndex < pSliceStackResource->getSliceStack()->getSliceCount(); nSliceIndex++) {
+				if (nSliceIndex % PROGRESS_SLICEUPDATE == PROGRESS_SLICEUPDATE-1) {
+					if (m_pProgressMonitor && !m_pProgressMonitor->Progress(-1, ProgressIdentifier::PROGRESS_WRITESLICES))
+						throw CNMRException(NMR_USERABORTED);
+				}
 				PSlice pSlice = pSliceStackResource->getSliceStack()->getSlice(nSliceIndex);
 
 				writeStartElementWithPrefix(XML_3MF_ELEMENT_SLICE, XML_3MF_NAMESPACEPREFIX_SLICE);
@@ -363,6 +371,9 @@ namespace NMR {
 		nfUint32 nObjectIndex;
 
 		for (nObjectIndex = 0; nObjectIndex < nObjectCount; nObjectIndex++) {
+			if (m_pProgressMonitor && !m_pProgressMonitor->Progress(-1, ProgressIdentifier::PROGRESS_WRITENOBJECTS))
+				throw CNMRException(NMR_USERABORTED);
+
 			CModelObject * pObject = m_pModel->getObject(nObjectIndex);
 
 			writeStartElement(XML_3MF_ELEMENT_OBJECT);
@@ -451,7 +462,8 @@ namespace NMR {
 					writePrefixedStringAttribute(XML_3MF_NAMESPACEPREFIX_SLICE, XML_3MF_ATTRIBUTE_OBJECT_MESHRESOLUTION,
 						XML_3MF_VALUE_OBJECT_MESHRESOLUTION_LOW);
 				}
-				CModelWriterNode100_Mesh ModelWriter_Mesh(pMeshObject, m_pXMLWriter, m_pColorMapping, m_pTexCoordMappingContainer, m_bWriteMaterialExtension, m_bWriteBeamLatticeExtension);
+				CModelWriterNode100_Mesh ModelWriter_Mesh(pMeshObject, m_pXMLWriter, m_pProgressMonitor,
+					m_pColorMapping, m_pTexCoordMappingContainer, m_bWriteMaterialExtension, m_bWriteBeamLatticeExtension);
 				ModelWriter_Mesh.writeToXML();
 			}
 

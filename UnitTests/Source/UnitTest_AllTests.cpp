@@ -34,8 +34,10 @@ of the library
 int main(int argc, char **argv)
 {
 	// testing::GTEST_FLAG(filter) = "*ObjectThumbnail_Read*";
+	// testing::GTEST_FLAG(filter) = "*ReWriteFileNames*";
 	// testing::GTEST_FLAG(filter) = "*LoadFromMemoryBuffer*";
 	// testing::GTEST_FLAG(filter) = "*Production_LoadFileTest*ReadFiles*";
+	// testing::GTEST_FLAG(filter) = "*ProgressCallback*";
 	// testing::GTEST_FLAG(filter) = "*WriteBeamLattice_Negative*";
 	testing::InitGoogleTest(&argc, argv);
 	return RUN_ALL_TESTS();

@@ -36,8 +36,15 @@ NMR_ErrorConst.h defines all error code constants.
 // This is the output value of a "uncatched exception"
 #define NMR_GENERICEXCEPTIONSTRING "uncatched exception"
 
+/*-------------------------------------------------------------------
+  Success / user interaction (0x0XXX)
+-------------------------------------------------------------------*/
+
 // Function has suceeded, there has been no error
-#define NMR_SUCCESS 0
+#define NMR_SUCCESS 0x0
+
+// Function was aborted by user
+#define NMR_USERABORTED 0x0001
 
 /*-------------------------------------------------------------------
   General error codes (0x1XXX)

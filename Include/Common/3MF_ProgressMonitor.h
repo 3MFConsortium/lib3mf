@@ -1,7 +1,6 @@
 /*++
 
-Copyright (C) 2015 Microsoft Corporation (Original Author)
-Copyright (C) 2015 netfabb GmbH
+Copyright (C) 2018 Autodesk Inc.
 
 All rights reserved.
 
@@ -25,52 +24,56 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract:
-
-NMR_ModelReader.h defines the Model Reader Class.
-A model reader reads in a model file and generates an in-memory representation of it.
+Abstract: Progress Monitor
 
 --*/
 
-#ifndef __NMR_MODELREADER
-#define __NMR_MODELREADER
+#ifndef __NMR_PROGRESSMONITOR
+#define __NMR_PROGRESSMONITOR
 
-#include "Model/Classes/NMR_Model.h" 
-#include "Model/Reader/NMR_ModelReaderWarnings.h" 
-#include "Common/MeshImport/NMR_MeshImporter.h" 
-#include "Common/3MF_ProgressMonitor.h" 
+#include "Common/3MF_ProgressTypes.h"
 
-#include <list>
+#include <memory>
+#include <mutex>
+#include <stack>
 
-namespace NMR {
+namespace NMR
+{
+#define PROGRESS_SLICEUPDATE 1000
+#define PROGRESS_NODEUPDATE 100000
+#define PROGRESS_TRIANGLEUPDATE 100000
+#define PROGRESS_READUPDATE 20000
+#define PROGRESS_READSLICESUPDATE 100
+#define PROGRESS_READBUFFERUPDATE 100
 
-	class CModelReader {
-	protected:
-		PModel m_pModel;
-		PImportStream m_pPrintTicketStream;
-		std::wstring m_sPrintTicketContentType;
-		std::set<std::wstring> m_RelationsToRead;
-
-		PModelReaderWarnings m_pWarnings;
-		PProgressMonitor m_pProgressMonitor;
-
-		void readFromMeshImporter(_In_ CMeshImporter * pImporter);
+	class CProgressMonitor
+	{
 	public:
-		CModelReader() = delete;
-		CModelReader(_In_ PModel pModel);
-
-		virtual void readStream(_In_ PImportStream pStream) = 0;
-		PImportStream retrievePrintTicket(_Out_ std::wstring & sContentType);
-		PModelReaderWarnings getWarnings ();
-
-		void addRelationToRead(_In_ std::wstring sRelationShipType);
-		void removeRelationToRead(_In_ std::wstring sRelationShipType);
-
+		CProgressMonitor();
 		void SetProgressCallback(Lib3MFProgressCallback callback, void* userData);
+		void ClearProgressCallback();
+		// Returns true if the last callback call returned false
+		bool WasAborted();
+		// If Progress() returns false, the task calling it should try to abort
+		bool QueryCancelled();
+		bool Progress(double progress, ProgressIdentifier identifier);
+
+		static void GetProgressMessage(ProgressIdentifier progressIdentifier, const char ** progressString);
+
+		void PushLevel(double relativeStart, double relativeEnd);
+		std::pair<double, double> PopLevel();
+		void ResetLevels();
+	private:
+		Lib3MFProgressCallback m_progressCallback;
+		void* m_userData;
+		bool m_lastCallbackResult;
+		std::stack<std::pair<double, double>> m_levels;
+
+		std::pair<double, double> Level();
+		std::mutex m_callbackMutex;
 	};
 
-	typedef std::shared_ptr <CModelReader> PModelReader;
+	typedef std::shared_ptr <CProgressMonitor> PProgressMonitor;
+};
 
-}
-
-#endif // __NMR_MODELREADER
+#endif // __NMR_PROGRESSMONITOR

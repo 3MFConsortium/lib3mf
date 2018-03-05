@@ -41,6 +41,8 @@ This is the class for exporting the 3mf mesh node.
 #include "Common/NMR_Exception_Windows.h"
 #include "Common/NMR_StringUtils.h"
 
+#include "Common/3MF_ProgressMonitor.h"
+
 #include <cmath>
 
 #ifdef __GNUC__
@@ -52,8 +54,9 @@ This is the class for exporting the 3mf mesh node.
 namespace NMR {
 	const int CModelWriterNode100_Mesh::m_snPutDoubleFactor = (int)(pow(10, CModelWriterNode100_Mesh::m_snPosAfterDecPoint));
 
-	CModelWriterNode100_Mesh::CModelWriterNode100_Mesh(_In_ CModelMeshObject * pModelMeshObject, _In_ CXmlWriter * pXMLWriter, _In_ PModelWriter_ColorMapping pColorMapping, _In_ PModelWriter_TexCoordMappingContainer pTextureMappingContainer, _In_ nfBool bWriteMaterialExtension, _In_ nfBool bWriteBeamLatticeExtension)
-		:CModelWriterNode(pModelMeshObject->getModel(), pXMLWriter)
+	CModelWriterNode100_Mesh::CModelWriterNode100_Mesh(_In_ CModelMeshObject * pModelMeshObject, _In_ CXmlWriter * pXMLWriter, _In_ CProgressMonitor * pProgressMonitor,
+		_In_ PModelWriter_ColorMapping pColorMapping, _In_ PModelWriter_TexCoordMappingContainer pTextureMappingContainer, _In_ nfBool bWriteMaterialExtension, _In_ nfBool bWriteBeamLatticeExtension)
+		:CModelWriterNode(pModelMeshObject->getModel(), pXMLWriter, pProgressMonitor)
 	{
 		__NMRASSERT(pModelMeshObject != nullptr);
 		if (!pColorMapping.get())
@@ -130,6 +133,11 @@ namespace NMR {
 			writeFloatAttribute(XML_3MF_ATTRIBUTE_VERTEX_Y, pMeshNode->m_position.m_values.y);
 			writeFloatAttribute(XML_3MF_ATTRIBUTE_VERTEX_Z, pMeshNode->m_position.m_values.z);
 			writeEndElement(); */
+
+			if (nNodeIndex % PROGRESS_NODEUPDATE == PROGRESS_NODEUPDATE-1) {
+				if (m_pProgressMonitor && !m_pProgressMonitor->Progress(-1, ProgressIdentifier::PROGRESS_WRITENODES) )
+					throw CNMRException(NMR_USERABORTED);
+			}
 		}
 		writeFullEndElement();
 
@@ -170,6 +178,11 @@ namespace NMR {
 		// Write Triangles
 		writeStartElement(XML_3MF_ELEMENT_TRIANGLES);
 		for (nFaceIndex = 0; nFaceIndex < nFaceCount; nFaceIndex++) {
+			if (nFaceIndex % PROGRESS_TRIANGLEUPDATE == PROGRESS_TRIANGLEUPDATE - 1) {
+				if (m_pProgressMonitor && !m_pProgressMonitor->Progress(-1, ProgressIdentifier::PROGRESS_WRITETRIANGLES) )
+					throw CNMRException(NMR_USERABORTED);
+			}
+
 			// Get Mesh Face
 			MESHFACE * pMeshFace = pMesh->getFace(nFaceIndex);
 

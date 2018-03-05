@@ -74,6 +74,8 @@ namespace NMR {
 
 		LIB3MFMETHOD(ReadFromCallback) (_In_ void * pReadCallback, _In_ nfUint64 nStreamSize, _In_opt_ void * pSeekCallback, _In_opt_ void * pUserData);
 
+		LIB3MFMETHOD(SetProgressCallback) (_In_ void * callback, _In_ void* userData);
+
 		CCOMModelReader();
 
 		void setReader(_In_ PModelReader pModelReader);

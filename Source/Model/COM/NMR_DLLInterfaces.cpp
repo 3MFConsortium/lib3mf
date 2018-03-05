@@ -34,6 +34,7 @@ Abstract: COM Interface Exports for plain C DLLs
 #include "Model/COM/NMR_COMInterfaces.h"
 #include "Model/COM/NMR_COMInterface_Model.h"
 #include "Model/COM/NMR_COMInterface_ModelFactory.h"
+#include "Common/3MF_ProgressMonitor.h"
 
 #ifndef __GNUC__
 #include "Common/NMR_Exception_Windows.h"
@@ -99,6 +100,19 @@ namespace NMR {
 #endif
 
 			return result;
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_retrieveprogressmessage(_In_ ProgressIdentifier progressIdentifier, _Out_ LPCSTR * progressMessage)
+		{
+			if ((!progressIdentifier) || (!progressMessage))
+				return LIB3MF_POINTER;
+			try {
+				CProgressMonitor::GetProgressMessage(progressIdentifier, progressMessage);
+				return LIB3MF_OK;
+			}
+			catch (...) {
+				return LIB3MF_FAIL;
+			}
 		}
 
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_createmodel(_Outptr_ PLib3MFModel ** ppModel)
@@ -193,6 +207,14 @@ namespace NMR {
 				return LIB3MF_POINTER;
 
 			return ((ILib3MFModelWriter *)pWriter)->WriteToBuffer(pBuffer, cbBufferSize);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_writer_setprogresscallback(_In_ PLib3MFModelWriter * pWriter, _In_ Lib3MFProgressCallback callback, void* userData)
+		{
+			if (!pWriter)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelWriter *)pWriter)->SetProgressCallback(reinterpret_cast<void *>(callback), userData);
 		}
 
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_reader_readfromfile(_In_ PLib3MFModelReader * pReader, _In_z_ LPCWSTR pwszFilename)
@@ -292,6 +314,14 @@ namespace NMR {
 				return LIB3MF_POINTER;
 
 			return ((ILib3MFModelReader *)pReader)->GetWarning(nIndex, pErrorCode, pwszBuffer, cbBufferSize, pcbNeededChars);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_reader_setprogresscallback(_In_ PLib3MFModelReader * pReader, _In_ Lib3MFProgressCallback callback, void* userData)
+		{
+			if (!pReader)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelReader *)pReader)->SetProgressCallback(reinterpret_cast<void *>(callback), userData);
 		}
 
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_resource_getresourceid(_In_ PLib3MFModelResource * pResource, _Out_ DWORD * pnResourceID)

@@ -66,6 +66,12 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_SLICESTACK_SLICESANDSLICEREF);
 			m_bHasReadSlices = true;
 			PModelReaderNode_Slices1507_Slice pXMLNode = nullptr;
+
+			if (m_pSliceStack->getSliceCount() % PROGRESS_READSLICESUPDATE == PROGRESS_READSLICESUPDATE - 1 ) {
+				if (m_pProgressMonitor && !m_pProgressMonitor->Progress(1 - 2.0 / (++m_nProgressCounter + 2), PROGRESS_READSLICES))
+					throw CNMRException(NMR_USERABORTED);
+			}
+
 			pXMLNode = std::make_shared<CModelReaderNode_Slices1507_Slice>(m_pSliceStack.get(), m_pWarnings);
 			pXMLNode->parseXML(pXMLReader);
 		}
@@ -106,9 +112,11 @@ namespace NMR {
 	}
 
 	CModelReaderNode_Slice1507_SliceStack::CModelReaderNode_Slice1507_SliceStack(
-		_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings, _In_ const nfWChar* sSlicePath)
-		: CModelReaderNode(pWarnings)
+		_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings, _In_ CProgressMonitor * pProgressMonitor,
+		_In_ const nfWChar* sSlicePath)
+		: CModelReaderNode(pWarnings, pProgressMonitor)
 	{
+		m_nProgressCounter = 0;
 		m_sSlicePath = sSlicePath;
 		m_pSliceStack = std::make_shared<CSliceStack>();
 		m_pModel = pModel;

@@ -68,7 +68,7 @@ namespace NMR {
 
 	CModelReader_Slice1507_SliceRefModel::CModelReader_Slice1507_SliceRefModel(
 		_In_ CModel *pModel, _In_ PModelReaderWarnings pWarnings, _In_z_ const nfWChar *pSliceRefPath)
-		:CModelReaderNode_Model(pModel, pWarnings, pSliceRefPath)
+		:CModelReaderNode_Model(pModel, pWarnings, pSliceRefPath, nullptr)
 	{
 		m_sSliceRefPath = pSliceRefPath;
 	}

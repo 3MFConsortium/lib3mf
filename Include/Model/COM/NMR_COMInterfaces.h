@@ -153,6 +153,16 @@ namespace NMR {
 		*/
 		LIB3MFMETHOD(WriteToCallback) (_In_ void * pWriteCallback, _In_opt_ void * pSeekCallback, _In_opt_ void * pUserData) LIB3MFABSTRACT;
 
+		/**
+		* Set the progress callback for calls to this writer
+		* @param[in] callback pointer to the callback function. If the callback returns
+		*            "false" the original function call will be aborted and set the error to
+		*            NMR_USERABORTED.
+		* @param[in] userData pointer to arbitrary user data that is passed without modification
+		*            to the callback.
+		* @return error code or 0 (success)
+		**/
+		LIB3MFMETHOD(SetProgressCallback) (_In_ void * callback, _In_ void* userData) LIB3MFABSTRACT;
 	};
 
 	/**********************************************************************************************************
@@ -281,6 +291,17 @@ namespace NMR {
 		* @return error code or 0 (success)
 		*/
 		LIB3MFMETHOD(ReadFromCallback) (_In_ void * pReadCallback, _In_ ULONG64 nStreamSize,  _In_opt_ void * pSeekCallback, _In_opt_ void * pUserData) LIB3MFABSTRACT;
+
+		/**
+		* Set the progress callback for calls to this reader
+		* @param[in] callback pointer to the callback function. If the callback returns
+		*            "false" the original function call will be aborted and set the error to
+		*            NMR_USERABORTED.
+		* @param[in] userData pointer to arbitrary user data that is passed without modification
+		*            to the callback.
+		* @return error code or 0 (success)
+		**/
+		LIB3MFMETHOD(SetProgressCallback) (_In_ void * callback, _In_ void* userData) LIB3MFABSTRACT;
 
 	};
 
@@ -2769,6 +2790,16 @@ namespace NMR {
 		* @return error code or 0 (success)
 		*/
 		LIB3MFMETHOD(QueryExtensionUTF8) (_In_z_ LPCSTR pszExtensionUrl, _Out_ BOOL * pbIsSupported, _Out_opt_ DWORD * pExtensionInterfaceVersion) LIB3MFABSTRACT;
+		
+		/**
+		* Return an English text for a progress identifier
+		* Note: this is the only function you can call from your callback function.
+		*
+		* @param[in] progressIdentifier the progress identifier that is passed to the callback function
+		* @param[out] progressMessage English text for the progress identifier
+		* @return error code or 0 (success)
+		**/
+		LIB3MFMETHOD(RetrieveProgressMessage) (_In_ int progressIdentifier, _Out_ const char ** progressMessage) LIB3MFABSTRACT;
 	};
 
 }

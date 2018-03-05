@@ -49,6 +49,11 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
 		m_pModel = pModel;
+		m_pProgressMonitor = std::make_shared<CProgressMonitor>();
 	}
 
+	void CModelWriter::SetProgressCallback(Lib3MFProgressCallback callback, void* userData)
+	{
+		m_pProgressMonitor->SetProgressCallback(callback, userData);
+	}
 }
