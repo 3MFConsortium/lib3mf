@@ -25,7 +25,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-TextureCube.cpp : 3MF Texture Cube creation example
+TextureCube.cpp : 3MF Texture Cube creation example. Also demonstrates usage 
+of Progress function.
 
 --*/
 
@@ -111,6 +112,17 @@ LIB3MFRESULT fnLoadModelTexture(PLib3MFModel * pModel, const char * pszPath, con
 
 }
 
+
+bool SimpleCallback(int step, ProgressIdentifier identifier, void * pUserData) {
+
+	std::cout << "Step = " << step;
+	if (identifier != ProgressIdentifier::PROGRESS_QUERYCANCELED) {
+		const char * progressMessage;
+		NMR::lib3mf_retrieveprogressmessage(identifier, &progressMessage);
+		std::cout << " \"" << progressMessage << "\"\n";
+	}
+	return true;	// Return false if you want Lib3MF to abort
+}
 
 #ifndef __GNUC__
 int _tmain(int argc, _TCHAR* argv[])
@@ -353,6 +365,9 @@ int main ()
 		return -1;
 	}
 
+	// Set progress callback
+	lib3mf_writer_setprogresscallback(p3MFWriter, SimpleCallback, nullptr);
+
 	// Export Model into File
 	std::cout << "writing texturecube.3mf..." << std::endl;
 	hResult = lib3mf_writer_writetofileutf8(p3MFWriter, "texturecube.3mf");
@@ -366,14 +381,13 @@ int main ()
 	}
 
 	// Release Model Writer
+	// this also releases the progress callback
 	lib3mf_release(p3MFWriter);
 
 	// Release Model
 	lib3mf_release(pModel);
 
 	std::cout << "done" << std::endl;
-
-
 	return 0;
 }
 

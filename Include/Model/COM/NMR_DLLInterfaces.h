@@ -42,6 +42,7 @@ Abstract: Interface Exports for plain C DLLs.
 #include "Common/Platform/NMR_SAL.h"
 #include "Common/Platform/NMR_WinTypes.h"
 #include "Model/Classes/NMR_ModelTypes.h"
+#include "Common/3MF_ProgressTypes.h"
 #include "Model/COM/NMR_COMVersion.h"
 
 
@@ -128,6 +129,16 @@ namespace NMR {
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_queryextensionutf8(_In_z_ LPCSTR pszExtensionUrl, _Out_ BOOL * pbIsSupported, _Out_opt_ DWORD * pExtensionInterfaceVersion);
 
 		/**
+		* Return an English text for a progress identifier
+		* Note: this is the only function you can call from your callback function.
+		*
+		* @param[in] progressIdentifier the progress identifier that is passed to the callback function
+		* @param[out] progressMessage English text for the progress identifier
+		* @return error code or 0 (success)
+		**/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_retrieveprogressmessage(_In_ ProgressIdentifier progressIdentifier, _Out_ LPCSTR * progressMessage);
+
+		/**
 		* creates an empty model instance
 		*
 		* @param[out] ppModel returns created model instance
@@ -204,6 +215,19 @@ namespace NMR {
 		* @return error code or 0 (success)
 		*/
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_writer_writetocallback(_In_ PLib3MFModelWriter * pWriter, _In_ void * pWriteCallback, _In_ void * pSeekCallback, _In_opt_ void * pUserData);
+
+		/**
+		* Set the progress callback for calls to this writer
+		* 
+		* @param[in] pWriter Writer Instance
+		* @param[in] callback pointer to the callback function. If the callback returns
+		*            "false" the original function call will be aborted and set the error to
+		*            NMR_USERABORTED.
+		* @param[in] userData pointer to arbitrary user data that is passed without modification
+		*            to the callback.
+		* @return error code or 0 (success)
+		**/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_writer_setprogresscallback(_In_ PLib3MFModelWriter * pWriter, _In_ Lib3MFProgressCallback callback, void* userData);
 
 		/**
 		* Reads a model from a file. The file type is specified by the Model Read class
@@ -323,6 +347,19 @@ namespace NMR {
 		* @return error code or 0 (success)
 		*/
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_reader_getwarning(_In_ PLib3MFModelReader * pReader, _In_ DWORD nIndex, _Out_ DWORD * pErrorCode, _Out_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars);
+
+		/**
+		* Set the progress callback for calls to this reader
+		*
+		* @param[in] pReader Reader Instance
+		* @param[in] callback pointer to the callback function. If the callback returns
+		*            "false" the original function call will be aborted and set the error to
+		*            NMR_USERABORTED.
+		* @param[in] userData pointer to arbitrary user data that is passed without modification
+		*            to the callback.
+		* @return error code or 0 (success)
+		**/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_reader_setprogresscallback(_In_ PLib3MFModelReader * pReader, _In_ Lib3MFProgressCallback callback, void* userData);
 
 		// Resources
 		/**

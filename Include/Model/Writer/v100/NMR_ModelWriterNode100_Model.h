@@ -81,8 +81,8 @@ namespace NMR {
 		ModelResourceID generateOutputResourceID();
 	public:
 		CModelWriterNode100_Model() = delete;
-		CModelWriterNode100_Model(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter);
-		CModelWriterNode100_Model(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter, CModelSliceStackResource *pSliceStackResource);
+		CModelWriterNode100_Model(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter, _In_ CProgressMonitor * pProgressMonitor);
+		CModelWriterNode100_Model(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter, _In_ CProgressMonitor * pProgressMonitor, CModelSliceStackResource *pSliceStackResource);
 		
 		virtual void writeToXML();
 	};

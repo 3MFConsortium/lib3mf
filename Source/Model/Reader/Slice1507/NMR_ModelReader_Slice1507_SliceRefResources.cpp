@@ -53,7 +53,7 @@ namespace NMR {
 			if (wcscmp(pChildName, XML_3MF_ELEMENT_SLICESTACKRESOURCE) == 0)
 			{
 				PModelReaderNode_Slice1507_SliceStack pXmlNode =
-					std::make_shared<CModelReaderNode_Slice1507_SliceStack>(m_pModel, m_pWarnings, m_sSliceRefPath.c_str());
+					std::make_shared<CModelReaderNode_Slice1507_SliceStack>(m_pModel, m_pWarnings, nullptr, m_sSliceRefPath.c_str());
 				pXmlNode->parseXML(pXMLReader);
 			}
 			else

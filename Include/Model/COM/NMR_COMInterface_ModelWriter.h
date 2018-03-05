@@ -66,6 +66,8 @@ namespace NMR {
 		LIB3MFMETHOD(WriteToBuffer) (_Out_ BYTE * pBuffer, _In_ ULONG64 cbBufferSize);
 		LIB3MFMETHOD(WriteToCallback) (_In_ void * pWriteCallback, _In_opt_ void * pSeekCallback, _In_opt_ void * pUserData);
 
+		LIB3MFMETHOD(SetProgressCallback) (_In_ void * callback, _In_ void* userData);
+
 		CCOMModelWriter();
 		void setWriter(_In_ PModelWriter pModelWriter);
 	};

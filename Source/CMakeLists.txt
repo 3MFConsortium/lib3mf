@@ -49,6 +49,7 @@ set(SRCS_UNIX_MAIN
 
 set(SRCS_COMMON
 ${SRCS_COM}
+./Source/Common/3MF_ProgressMonitor.cpp
 ./Source/Model/Reader/NMR_ModelReader_InstructionElement.cpp
 ./Source/Common/Math/NMR_Matrix.cpp
 ./Source/Common/Math/NMR_PairMatchingTree.cpp

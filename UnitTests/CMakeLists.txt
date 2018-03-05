@@ -12,6 +12,7 @@ set(SRCS_UNITTEST
 ./Source/UnitTest_Attachments.cpp
 ./Source/UnitTest_BeamLattice.cpp
 ./Source/UnitTest_Production.cpp
+./Source/UnitTest_ProgressCallback.cpp
 ./Source/UnitTest_ReaderStrictMode.cpp
 ./Source/UnitTest_Extensions.cpp
 ./Source/UnitTest_OPC_Issues.cpp

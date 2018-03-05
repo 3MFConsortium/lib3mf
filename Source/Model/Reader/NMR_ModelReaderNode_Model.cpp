@@ -41,8 +41,8 @@ A model reader node is an abstract base class for all XML nodes of a 3MF Model S
 #include "Model/Reader/v093/NMR_ModelReaderNode093_Build.h" 
 
 #include "Model/Classes/NMR_ModelConstants.h" 
+#include "Common/3MF_ProgressMonitor.h"
 #include "Common/NMR_Exception.h"
-#include "Common/NMR_Exception_Windows.h"
 
 #include <iostream>
 #include <string>
@@ -52,8 +52,9 @@ A model reader node is an abstract base class for all XML nodes of a 3MF Model S
 
 namespace NMR {
 
-	CModelReaderNode_Model::CModelReaderNode_Model(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings, const nfWChar* sPath)
-		: CModelReaderNode(pWarnings), m_bIgnoreBuild(false)
+	CModelReaderNode_Model::CModelReaderNode_Model(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings, const nfWChar* sPath,
+		_In_ CProgressMonitor* pProgressMonitor)
+		: CModelReaderNode(pWarnings, pProgressMonitor), m_bIgnoreBuild(false)
 	{
 		__NMRASSERT(pModel);
 		m_pModel = pModel;
@@ -159,19 +160,23 @@ namespace NMR {
 		if (wcscmp(pNameSpace, XML_3MF_NAMESPACE_CORESPEC100) == 0) {
 			if (wcscmp(pChildName, XML_3MF_ELEMENT_RESOURCES) == 0) {
 				m_bWithinIgnoredBuild = false;
-				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode100_Resources>(m_pModel, m_pWarnings, m_sPath.c_str());
+				if (m_pProgressMonitor && !m_pProgressMonitor->Progress(0.2, ProgressIdentifier::PROGRESS_READRESOURCES))
+					throw CNMRException(NMR_USERABORTED);
+				if (m_pProgressMonitor) m_pProgressMonitor->PushLevel(0.2, 0.9);
+				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode100_Resources>(m_pModel, m_pWarnings, m_sPath.c_str(), m_pProgressMonitor);
 				if (m_bHasResources)
 					throw CNMRException(NMR_ERROR_DUPLICATERESOURCES);
-
 				pXMLNode->parseXML(pXMLReader);
+				if (m_pProgressMonitor) m_pProgressMonitor->PopLevel();
 				m_bHasResources = true;
-
 			}
 			else if (wcscmp(pChildName, XML_3MF_ELEMENT_BUILD) == 0) {
 				if (m_bHasBuild)
 					throw CNMRException(NMR_ERROR_DUPLICATEBUILDSECTION);
 				if (!m_bIgnoreBuild) {
 					m_bWithinIgnoredBuild = false;
+					if (m_pProgressMonitor && !m_pProgressMonitor->Progress(0.9, ProgressIdentifier::PROGRESS_READBUILD))
+						throw CNMRException(NMR_USERABORTED);
 					PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode100_Build>(m_pModel, m_pWarnings);
 					pXMLNode->parseXML(pXMLReader);
 				}

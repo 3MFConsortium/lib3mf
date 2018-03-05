@@ -47,6 +47,7 @@ NMR_ModelReader_3MF.cpp implements the Model Reader Class for
 #include "Model/Reader/Slice1507/NMR_ModelReader_Slice1507_SliceRefModel.h"
 #include "Model/Reader/NMR_ModelReader_InstructionElement.h"
 
+#include "Common/3MF_ProgressMonitor.h"
 
 namespace NMR {
 
@@ -56,17 +57,20 @@ namespace NMR {
 		// empty on purpose
 	}
 
-	void readProductionAttachmentModels(_In_ PModel pModel, _In_ PModelReaderWarnings pWarnings)
+	void readProductionAttachmentModels(_In_ PModel pModel, _In_ PModelReaderWarnings pWarnings, _In_ CProgressMonitor* pProgressMonitor)
 	{
 		nfUint32 prodAttCount = pModel->getProductionAttachmentCount();
 		for (nfInt32 i = prodAttCount-1; i >=0; i--)
 		{
+			if (pProgressMonitor && !pProgressMonitor->Progress(double(prodAttCount - i -1) / double(prodAttCount), ProgressIdentifier::PROGRESS_READNONROOTMODELS))
+				throw CNMRException(NMR_USERABORTED);
+
 			PModelAttachment pProdAttachment = pModel->getProductionModelAttachment(i);
 			std::wstring path = pProdAttachment->getPathURI();
 			PImportStream pSubModelStream = pProdAttachment->getStream();
 
 			// Create XML Reader
-			PXmlReader pXMLReader = fnCreateXMLReaderInstance(pSubModelStream);
+			PXmlReader pXMLReader = fnCreateXMLReaderInstance(pSubModelStream, pProgressMonitor);
 
 			nfBool bHasModel = false;
 			eXmlReaderNodeType NodeType;
@@ -94,9 +98,14 @@ namespace NMR {
 
 					PModelReaderNode_Model pXMLNode;
 					pModel->setCurPath(path.c_str());
-					pXMLNode = std::make_shared<CModelReaderNode_Model>(pModel.get(), pWarnings, path.c_str());
+
+					if (pProgressMonitor)
+						pProgressMonitor->PushLevel(double(prodAttCount - i - 1) / double(prodAttCount), double(prodAttCount - i) / double(prodAttCount));
+					pXMLNode = std::make_shared<CModelReaderNode_Model>(pModel.get(), pWarnings, path.c_str(), pProgressMonitor);
 					pXMLNode->setIgnoreBuild(true);
 					pXMLNode->parseXML(pXMLReader.get());
+					if (pProgressMonitor)
+						pProgressMonitor->PopLevel();
 
 					if (!pXMLNode->getHasResources())
 						throw CNMRException(NMR_ERROR_NORESOURCES);
@@ -114,14 +123,32 @@ namespace NMR {
 
 		nfBool bHasModel = false;
 
+		m_pProgressMonitor->ResetLevels();
+		if ( !m_pProgressMonitor->Progress(0, ProgressIdentifier::PROGRESS_READSTREAM) )
+			throw CNMRException(NMR_USERABORTED);
+
+		if (!m_pProgressMonitor->Progress(0.05, ProgressIdentifier::PROGRESS_EXTRACTOPCPACKAGE))
+			throw CNMRException(NMR_USERABORTED);
+
 		// Extract Stream from Package
 		PImportStream pModelStream = extract3MFOPCPackage(pStream);
+		
+		if (!m_pProgressMonitor->Progress(0.1, ProgressIdentifier::PROGRESS_READNONROOTMODELS))
+			throw CNMRException(NMR_USERABORTED);
+		
+		double dProgressNonRoot = 0.6;
+		if (m_pModel->getProductionAttachmentCount() == 0)
+			dProgressNonRoot = 0.1;
 
 		// before reading the root model, read the other models in the file
-		readProductionAttachmentModels(m_pModel, m_pWarnings);
+		m_pProgressMonitor->PushLevel(0.1, dProgressNonRoot);
+		readProductionAttachmentModels(m_pModel, m_pWarnings, m_pProgressMonitor.get());
+		m_pProgressMonitor->PopLevel();
 
+		if (!m_pProgressMonitor->Progress(dProgressNonRoot, ProgressIdentifier::PROGRESS_READROOTMODEL))
+			throw CNMRException(NMR_USERABORTED);
 		// Create XML Reader
-		PXmlReader pXMLReader = fnCreateXMLReaderInstance(pModelStream);
+		PXmlReader pXMLReader = fnCreateXMLReaderInstance(pModelStream, m_pProgressMonitor.get());
 
 		eXmlReaderNodeType NodeType;
 		// Read all XML Root Nodes
@@ -145,9 +172,12 @@ namespace NMR {
 				if (bHasModel)
 					throw CNMRException(NMR_ERROR_DUPLICATEMODELNODE);
 				bHasModel = true;
+
+				m_pProgressMonitor->PushLevel(dProgressNonRoot, 0.95);
 				m_pModel->setCurPath(m_pModel->rootPath().c_str());
-				PModelReaderNode_Model pXMLNode = std::make_shared<CModelReaderNode_Model>(m_pModel.get(), m_pWarnings, m_pModel->rootPath().c_str());
+				PModelReaderNode_Model pXMLNode = std::make_shared<CModelReaderNode_Model>(m_pModel.get(), m_pWarnings, m_pModel->rootPath().c_str(), m_pProgressMonitor.get());
 				pXMLNode->parseXML(pXMLReader.get());
+				m_pProgressMonitor->PopLevel();
 
 				if (!pXMLNode->getHasResources())
 					throw CNMRException(NMR_ERROR_NORESOURCES);
@@ -157,6 +187,9 @@ namespace NMR {
 
 		}
 
+		if (!m_pProgressMonitor->Progress(0.95, ProgressIdentifier::PROGRESS_CLEANUP))
+			throw CNMRException(NMR_USERABORTED);
+
 		m_pModel->removeReferencedSliceStackResources();
 
 		// Release Memory of 3MF Package
@@ -164,6 +197,9 @@ namespace NMR {
 
 		if (!bHasModel)
 			throw CNMRException(NMR_ERROR_NOMODELNODE);
+
+		if (!m_pProgressMonitor->Progress(1.0, ProgressIdentifier::PROGRESS_DONE))
+			throw CNMRException(NMR_USERABORTED);
 	}
 
 	void CModelReader_3MF::addTextureAttachment(_In_ std::wstring sPath, _In_ PImportStream pStream)

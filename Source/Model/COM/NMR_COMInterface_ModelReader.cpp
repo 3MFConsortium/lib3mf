@@ -418,4 +418,25 @@ namespace NMR {
 	}
 #endif // NMR_COM_NATIVE
 
+	LIB3MFMETHODIMP CCOMModelReader::SetProgressCallback(_In_ void * callback, _In_ void* userData)
+	{
+		try
+		{
+			if (m_pModelReader.get() == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDREADEROBJECT);
+
+			if (!callback)
+				m_pModelReader->SetProgressCallback(nullptr, nullptr);
+			else
+				m_pModelReader->SetProgressCallback(reinterpret_cast<Lib3MFProgressCallback>(callback), userData);
+			return  handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
 }

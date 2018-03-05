@@ -39,6 +39,7 @@ bothering about global registration of a COM Server.
 #include "Common/NMR_Exception_Windows.h"
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Common/NMR_StringUtils.h"
+#include "Common/3MF_ProgressMonitor.h"
 
 namespace NMR {
 
@@ -142,6 +143,22 @@ namespace NMR {
 		}
 	}
 
+	LIB3MFMETHODIMP CCOMModelFactory::RetrieveProgressMessage(_In_ int progressIdentifier, _Out_ LPCSTR * progressMessage)
+	{
+		try
+		{
+			if ((!progressIdentifier) || (!progressMessage))
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+			CProgressMonitor::GetProgressMessage(ProgressIdentifier(progressIdentifier), progressMessage);
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
 
 	LIB3MFMETHODIMP CCOMModelFactory::GetInterfaceVersion(_Out_ DWORD * pInterfaceVersionMajor, _Out_ DWORD * pInterfaceVersionMinor, _Out_ DWORD * pInterfaceVersionMicro)
 	{

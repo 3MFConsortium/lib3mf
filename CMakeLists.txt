@@ -8,8 +8,8 @@ project (lib3MF)
 
 # Define Version
 set(LIB3MF_VERSION_MAJOR 1)				# increase on every backward-compatibility breaking change of the API
-set(LIB3MF_VERSION_MINOR 0)				# increase on every backward compatible change of the API
-set(LIB3MF_VERSION_MICRO 9)				# increase on on every change that does not alter the API
+set(LIB3MF_VERSION_MINOR 1)				# increase on every backward compatible change of the API
+set(LIB3MF_VERSION_MICRO 3)				# increase on on every change that does not alter the API
 
 set(CMAKE_INSTALL_BINDIR bin CACHE PATH "directory for installing binary files")
 set(CMAKE_INSTALL_LIBDIR lib CACHE PATH "directory for installing library files")
@@ -99,7 +99,7 @@ SET_TARGET_PROPERTIES(${PROJECT_NAME}_s PROPERTIES PREFIX "" IMPORT_PREFIX "")
 if (UNIX)
 	target_compile_options(${PROJECT_NAME}_s PUBLIC "-fPIC")
 	# Uncomment the following to but the version info into the .so-file.
-	SET_TARGET_PROPERTIES(${PROJECT_NAME}_s PROPERTIES VERSION "${LIB3MF_VERSION_MAJOR}.${LIB3MF_VERSION_MINOR}.${LIB3MF_VERSION_MICRO}.${BUILD_NUMBER}")
+	SET_TARGET_PROPERTIES(${PROJECT_NAME}_s PROPERTIES VERSION "${LIB3MF_VERSION_MAJOR}.${LIB3MF_VERSION_MINOR}.${LIB3MF_VERSION_MICRO}")
 	SET_TARGET_PROPERTIES(${PROJECT_NAME}_s PROPERTIES SOVERSION "${LIB3MF_VERSION_MAJOR}")
 	if (NOT APPLE)
 		SET_TARGET_PROPERTIES(${PROJECT_NAME}_s PROPERTIES LINK_FLAGS -s)

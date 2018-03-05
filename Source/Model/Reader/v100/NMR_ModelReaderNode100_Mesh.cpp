@@ -43,11 +43,14 @@ A mesh reader model node is a parser for the mesh node of an XML Model Stream.
 
 namespace NMR {
 
-	CModelReaderNode100_Mesh::CModelReaderNode100_Mesh(_In_ CModel * pModel, _In_ CMesh * pMesh, _In_ PModelReaderWarnings pWarnings, _In_ PModelReader_ColorMapping pColorMapping, _In_ PModelReader_TexCoordMapping pTexCoordMapping, _In_ ModelResourceID nDefaultPropertyID, _In_ ModelResourceIndex nDefaultPropertyIndex)
-		: CModelReaderNode(pWarnings)
+	CModelReaderNode100_Mesh::CModelReaderNode100_Mesh(_In_ CModel * pModel, _In_ CMesh * pMesh, _In_ PModelReaderWarnings pWarnings, _In_ CProgressMonitor* pProgressMonitor, _In_ PModelReader_ColorMapping pColorMapping, _In_ PModelReader_TexCoordMapping pTexCoordMapping, _In_ ModelResourceID nDefaultPropertyID, _In_ ModelResourceIndex nDefaultPropertyIndex)
+		: CModelReaderNode(pWarnings, pProgressMonitor)
 	{
 		__NMRASSERT(pMesh);
 		__NMRASSERT(pModel);
+
+		m_nProgressCounterNodes = 0;
+		m_nProgressCounterTriangles = 0;
 
 		if (!pColorMapping.get())
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
@@ -111,11 +114,19 @@ namespace NMR {
 
 			if (wcscmp(pChildName, XML_3MF_ELEMENT_VERTICES) == 0)
 			{
+				if (m_pMesh->getNodeCount() % PROGRESS_READUPDATE == PROGRESS_READUPDATE -1)
+					if (m_pProgressMonitor && !m_pProgressMonitor->Progress(0.5 -1./ (2 + ++m_nProgressCounterNodes), PROGRESS_READMESH)) {
+						throw CNMRException(NMR_USERABORTED);
+					}
 				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode100_Vertices>(m_pMesh, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 			}
 			else if (wcscmp(pChildName, XML_3MF_ELEMENT_TRIANGLES) == 0)
 			{
+				if (m_pMesh->getFaceCount() % PROGRESS_READUPDATE == PROGRESS_READUPDATE - 1)
+					if (m_pProgressMonitor && !m_pProgressMonitor->Progress(1 -1. / (2 + ++m_nProgressCounterTriangles), PROGRESS_READMESH)) {
+						throw CNMRException(NMR_USERABORTED);
+					}
 				PModelReaderNode100_Triangles pXMLNode = std::make_shared<CModelReaderNode100_Triangles>(m_pModel, m_pMesh, m_pWarnings, m_pColorMapping, m_pTexCoordMapping, m_nDefaultPropertyID, m_nDefaultPropertyIndex);
 				pXMLNode->parseXML(pXMLReader);
 				if (m_nDefaultPropertyID == 0) {
