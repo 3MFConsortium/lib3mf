@@ -338,6 +338,10 @@ endif()
 add_library(${PROJECT_NAME} SHARED ${SRCS} ${VERSION_FILES_OUTPUTLOCATION})
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include)
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/Include)
+install(TARGETS ${PROJECT_NAME} ARCHIVE DESTINATION lib LIBRARY DESTINATION lib)
+install(DIRECTORY Include/Model DESTINATION include/lib3mf)
+install(DIRECTORY Include/Common DESTINATION include/lib3mf)
+install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/Include/ DESTINATION include/lib3mf)
 
 if (WIN32)
 	#########################################################
