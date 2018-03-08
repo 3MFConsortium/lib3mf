@@ -9,7 +9,7 @@ project (lib3MF)
 # Define Version
 set(LIB3MF_VERSION_MAJOR 1)				# increase on every backward-compatibility breaking change of the API
 set(LIB3MF_VERSION_MINOR 0)				# increase on every backward compatible change of the API
-set(LIB3MF_VERSION_MICRO 2)				# increase on on every change that does not alter the API
+set(LIB3MF_VERSION_MICRO 3)				# increase on on every change that does not alter the API
 
 set(NMR_COM_NATIVE FALSE) # by default, do not actually implement a COM interface
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
@@ -354,10 +354,14 @@ if (WIN32)
 		# wd4996 masks the deprecated-warning
 		file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/TestOutput")
 	endif()
-elseif(UNIX AND NOT APPLE)
-	SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES LINK_FLAGS -s)
+elseif(UNIX)
+	if (NOT APPLE)
+		SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES LINK_FLAGS -s)
+	endif()
 	# Uncomment the following to but the version info into the .so-file.
+	SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES VERSION "${LIB3MF_VERSION_MAJOR}")
 	SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES SOVERSION "${LIB3MF_VERSION_MAJOR}.${LIB3MF_VERSION_MINOR}.${LIB3MF_VERSION_MICRO}.${BUILD_NUMBER}")
+	SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES PREFIX "")
 endif()
 
 
