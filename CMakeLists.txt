@@ -9,7 +9,7 @@ project (lib3MF)
 # Define Version
 set(LIB3MF_VERSION_MAJOR 1)				# increase on every backward-compatibility breaking change of the API
 set(LIB3MF_VERSION_MINOR 0)				# increase on every backward compatible change of the API
-set(LIB3MF_VERSION_MICRO 3)				# increase on on every change that does not alter the API
+set(LIB3MF_VERSION_MICRO 4)				# increase on on every change that does not alter the API
 
 set(NMR_COM_NATIVE FALSE) # by default, do not actually implement a COM interface
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
@@ -325,6 +325,7 @@ if (WIN32)
 	   VERSION_REVISION ${BUILD_NUMBER}
 	   PRODUCT_VERSION_MAJOR ${LIB3MF_VERSION_MAJOR}
 	   PRODUCT_VERSION_MINOR ${LIB3MF_VERSION_MINOR}
+	   PRODUCT_VERSION_PATCH ${LIB3MF_VERSION_MICRO}
 	   COMPANY_NAME "3MF Consortium"
 	)
 	message("VERSION_FILES_OUTPUTLOCATION ... " ${VERSION_FILES_OUTPUTLOCATION})
