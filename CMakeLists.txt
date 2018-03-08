@@ -67,6 +67,7 @@ else()
 	./Source/Common/OPC/NMR_OpcPackageRelationshipReader.cpp
 	./Source/Common/OPC/NMR_OpcPackageContentTypesReader.cpp
 	./Source/Common/Platform/NMR_ImportStream_GCC_Native.cpp
+	./Source/Common/Platform/NMR_ImportStream_GCC_Win32.cpp
 	./Source/Common/Platform/NMR_ImportStream_ZIP.cpp
 	./Source/Common/Platform/NMR_ExportStream_GCC_Native.cpp
 	./Source/Common/Platform/NMR_ExportStream_GCC_Win32.cpp
