@@ -11,6 +11,10 @@ set(LIB3MF_VERSION_MAJOR 1)				# increase on every backward-compatibility breaki
 set(LIB3MF_VERSION_MINOR 0)				# increase on every backward compatible change of the API
 set(LIB3MF_VERSION_MICRO 4)				# increase on on every change that does not alter the API
 
+set(CMAKE_INSTALL_BINDIR bin CACHE PATH "directory for installing binary files")
+set(CMAKE_INSTALL_LIBDIR lib CACHE PATH "directory for installing library files")
+set(CMAKE_INSTALL_INCLUDEDIR include/lib3mf CACHE PATH "directory for installing header files")
+
 set(NMR_COM_NATIVE FALSE) # by default, do not actually implement a COM interface
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
   # using GCC
@@ -339,10 +343,13 @@ endif()
 add_library(${PROJECT_NAME} SHARED ${SRCS} ${VERSION_FILES_OUTPUTLOCATION})
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include)
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/Include)
-install(TARGETS ${PROJECT_NAME} ARCHIVE DESTINATION lib LIBRARY DESTINATION lib)
-install(DIRECTORY Include/Model DESTINATION include/lib3mf)
-install(DIRECTORY Include/Common DESTINATION include/lib3mf)
-install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/Include/ DESTINATION include/lib3mf)
+install(TARGETS ${PROJECT_NAME}
+	ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+	LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+	RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}")
+install(DIRECTORY Include/Model DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
+install(DIRECTORY Include/Common DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
+install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/Include/ DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
 
 if (WIN32)
 	#########################################################
