@@ -375,7 +375,7 @@ endif()
 #########################################################
 # platform independent tests for shared library interface
 if(LIB3MF_TESTS)
-	ADD_SUBDIRECTORY (googletest)
+	ADD_SUBDIRECTORY (googletest EXCLUDE_FROM_ALL)
 	enable_testing()
 	SET(CTEST_SHARED "${PROJECT_NAME}_CTest_shared")
 	SET(gtest_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/googletest/googletest")
