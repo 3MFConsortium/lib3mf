@@ -37,13 +37,16 @@ NMR_UUID.cpp implements a datatype and functions to handle UUIDs
 
 #include <algorithm>
 #include <random>
+#include <ctime>
 
 namespace NMR
 {
 	CUUID::CUUID()
 	{
+		static std::random_device rd;
+
 		std::mt19937 rng;
-		rng.seed(std::random_device()());
+		rng.seed(rd() ^ time(nullptr));
 		std::uniform_int_distribution<std::mt19937::result_type> distHexaDec(0, 15);
 		const nfWChar* hexaDec = L"0123456789abcdef";
 		nfWChar string[33];
