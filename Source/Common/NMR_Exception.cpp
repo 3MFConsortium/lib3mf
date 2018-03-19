@@ -121,6 +121,7 @@ namespace NMR {
 		case NMR_ERROR_OPC_DUPLICATE_RELATIONSHIP_ID: return "Document contains a duplicate relationship ID.";
 		case NMR_ERROR_INVALIDRELATIONSHIPTYPEFORTEXTURE: return "A texture must use a OPC part with relationshiptype 3D Texture.";
 		case NMR_ERROR_IMPORTSTREAMISEMPTY: return "An attachment to be read does coes not have any content.";
+		case NMR_ERROR_UUIDGENERATIONFAILED: return "Generation of a UUID failed.";
 
 
 		// Unhandled exception

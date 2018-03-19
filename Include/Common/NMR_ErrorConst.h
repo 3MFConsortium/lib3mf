@@ -262,6 +262,9 @@ NMR_ErrorConst.h defines all error code constants.
 // Attachment has an empty stream
 #define NMR_ERROR_IMPORTSTREAMISEMPTY 0x1048
 
+// UUID generation failed
+#define NMR_ERROR_UUIDGENERATIONFAILED 0x1049
+
 /*-------------------------------------------------------------------
 Core framework error codes (0x2XXX)
 -------------------------------------------------------------------*/
