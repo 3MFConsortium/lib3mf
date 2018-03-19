@@ -36,17 +36,29 @@ NMR_UUID.cpp implements a datatype and functions to handle UUIDs
 #include "Common/NMR_Exception.h"
 
 #include <algorithm>
+
+#if defined(_WIN32) && !defined(__MINGW32__)
+#include <Objbase.h>
+#include <iomanip>
+#else
 #include <random>
-#include <ctime>
+#include "Common/Platform/NMR_Time.h"
+#endif
 
 namespace NMR
 {
 	CUUID::CUUID()
 	{
-		static std::random_device rd;
-
-		std::mt19937 rng;
-		rng.seed(rd() ^ time(nullptr));
+#if defined(_WIN32) && !defined(__MINGW32__)
+		GUID guid;
+		if (CoCreateGuid(&guid) != S_OK)
+			throw CNMRException(NMR_ERROR_UUIDGENERATIONFAILED);
+		LPOLESTR str;
+		if (StringFromCLSID(guid, &str) != S_OK)
+			throw CNMRException(NMR_ERROR_UUIDGENERATIONFAILED);
+		set(str);
+#else
+		static std::mt19937 rng(((unsigned int)std::random_device()()) ^ ((unsigned int)fnGetUnixTime()) );
 		std::uniform_int_distribution<std::mt19937::result_type> distHexaDec(0, 15);
 		const nfWChar* hexaDec = L"0123456789abcdef";
 		nfWChar string[33];
@@ -54,6 +66,7 @@ namespace NMR
 			string[i] = hexaDec[distHexaDec(rng)];
 		string[32] = 0;
 		set(string);
+#endif
 	}
 
 	CUUID::CUUID(const nfWChar* pString)
