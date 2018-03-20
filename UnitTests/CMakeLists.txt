@@ -30,8 +30,8 @@ if (WIN32)
 endif()
 
 target_include_directories(${TEST_CINTERFACE} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/Include ${gtest_SOURCE_DIR}/include)
-target_link_libraries(${TEST_CINTERFACE} ${PROJECT_NAME}_shared gtest gtest_main)
-add_dependencies(${TEST_CINTERFACE} ${PROJECT_NAME}_shared)
+target_link_libraries(${TEST_CINTERFACE} ${PROJECT_NAME} gtest gtest_main)
+add_dependencies(${TEST_CINTERFACE} ${PROJECT_NAME})
 set_target_properties(${TEST_CINTERFACE} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/")
 
 add_test(${TEST_CINTERFACE} ${TEST_CINTERFACE})
