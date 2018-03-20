@@ -25,8 +25,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-UnitTest_AllTests.cpp: Defines Entry point for the UnitTests of the shared
-library interface
+UnitTest_AllTests.cpp: Defines Entry point for the UnitTests of the C-interace
+of the library
 
 --*/
 #include "gtest/gtest.h"
