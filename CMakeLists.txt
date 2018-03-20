@@ -46,15 +46,13 @@ configure_file("${CMAKE_CURRENT_SOURCE_DIR}/Include/Model/COM/NMR_COMVersion.h.i
 include(Source/CMakeLists.txt)
 
 if (WIN32)
-	SET(SRCS
+	SET(SRCS_MAIN_PLATFORM
 	"${SRCS_WIN_MAIN}"
-	"${SRCS_COMMON}"
 	)
 else()
 	# Linux and MAC
-	SET(SRCS
+	SET(SRCS_MAIN_PLATFORM
 	"${SRCS_UNIX_MAIN}"
-	"${SRCS_COMMON}"
 	)
 endif()
 
@@ -93,8 +91,8 @@ endif()
 
 
 #########################################################
-# shared library
-add_library(${PROJECT_NAME} SHARED ${SRCS} ${VERSION_FILES_OUTPUTLOCATION})
+# Static library (as base for other targets)
+add_library(${PROJECT_NAME} STATIC "${SRCS_MAIN_PLATFORM}" "${SRCS_COMMON}" ${VERSION_FILES_OUTPUTLOCATION})
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include)
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/Include)
 install(TARGETS ${PROJECT_NAME}
@@ -114,8 +112,19 @@ if (UNIX)
 	# Uncomment the following to but the version info into the .so-file.
 	SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES VERSION "${LIB3MF_VERSION_MAJOR}.${LIB3MF_VERSION_MINOR}.${LIB3MF_VERSION_MICRO}")
 	SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES SOVERSION "${LIB3MF_VERSION_MAJOR}")
+else()
+	# wd4996 masks the deprecated-warning
+	target_compile_options(${PROJECT_NAME} PUBLIC "$<$<CONFIG:DEBUG>:/Od;/Ob0;/Gm;/sdl;/W3;/WX;/FC;/wd4996>")
+	target_compile_options(${PROJECT_NAME} PUBLIC "$<$<CONFIG:RELEASE>:/O2;/sdl;/WX;/Oi;/Gy;/FC;/wd4996>")
 endif()
 
+
+#########################################################
+# Shared library
+add_library(${PROJECT_NAME}_shared SHARED "${SRCS_MAIN_PLATFORM}" "./Source/Model/COM/NMR_DLLInterfaces.cpp")
+target_include_directories(${PROJECT_NAME}_shared PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include)
+target_include_directories(${PROJECT_NAME}_shared PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/Include)
+target_link_libraries(${PROJECT_NAME}_shared ${PROJECT_NAME})
 
 #########################################################
 if(NOT DEFINED LIB3MF_TESTS)
@@ -129,14 +138,16 @@ if(LIB3MF_TESTS)
 	# windows specific tests
 	if (WIN32)
 		SET(UNITTEST_NAME "${PROJECT_NAME}unittests")
-		add_library(${UNITTEST_NAME} SHARED "${SRCS_COMMON}" "${SRCS_WIN_MANAGEDTEST}")
+		add_library(${UNITTEST_NAME} SHARED "${SRCS_WIN_MANAGEDTEST}")
 		target_include_directories(${UNITTEST_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include)
 		target_include_directories(${UNITTEST_NAME} PUBLIC "${VCINSTALLDIR}/../../../UnitTest/include")
 		target_include_directories(${UNITTEST_NAME} PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/Include)
 	
-		# wd4996 masks the deprecated-warning
 		target_compile_options(${UNITTEST_NAME} PUBLIC "$<$<CONFIG:DEBUG>:/Od;/Ob0;/Gm;/sdl;/W3;/WX;/FC;-DNMR_USEASSERTIONS;-DNMR_UNITTESTS;/wd4996>")
 		target_compile_options(${UNITTEST_NAME} PUBLIC "$<$<CONFIG:RELEASE>:/O2;/sdl;/WX;/Oi;/Gy;/FC;/wd4996>")
+		
+		add_dependencies(${UNITTEST_NAME} ${PROJECT_NAME})
+		target_link_libraries(${UNITTEST_NAME} ${PROJECT_NAME})
 		
 		file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/TestOutput")
 	endif()
