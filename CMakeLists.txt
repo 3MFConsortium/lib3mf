@@ -90,24 +90,6 @@ set(SRCS_WIN_MANAGEDTEST
 ./Source/UnitTests/UnitTest_ModelFactory.cpp
 )
 
-set(SRCS_UNITTEST
-./Source/UnitTests/UnitTest_AllTests.cpp
-./Source/UnitTests/UnitTest_Attachments.cpp
-./Source/UnitTests/UnitTest_BeamLattice.cpp
-./Source/UnitTests/UnitTest_Production.cpp
-./Source/UnitTests/UnitTest_ReaderStrictMode.cpp
-./Source/UnitTests/UnitTest_Extensions.cpp
-./Source/UnitTests/UnitTest_OPC_Issues.cpp
-./Source/UnitTests/UnitTest_ReadWrite.cpp
-./Source/UnitTests/UnitTest_Slice.cpp
-./Source/UnitTests/UnitTest_Textures.cpp
-./Source/UnitTests/UnitTest_Thumbnails.cpp
-)
-
-set(SRCS_BATCHTEST
-./Source/UnitTests/UnitTest_BatchTests.cpp
-)
-
 set(SRCS_UNIX_MAIN
 ./Source/Main/main.cpp
 )
@@ -356,7 +338,7 @@ set(STARTUPPROJECT ${PROJECT_NAME})
 SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES PREFIX "" IMPORT_PREFIX "")
 if (WIN32)
 	#########################################################
-	# platform specific tests
+	# windows specific tests
 	if(LIB3MF_TESTS)
 		SET(UNITTEST_NAME "${PROJECT_NAME}unittests")
 		add_library(${UNITTEST_NAME} SHARED ${SRCS_MANAGED_TEST})
@@ -364,9 +346,10 @@ if (WIN32)
 		target_include_directories(${UNITTEST_NAME} PUBLIC "${VCINSTALLDIR}/../../../UnitTest/include")
 		target_include_directories(${UNITTEST_NAME} PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/Include)
 	
+		# wd4996 masks the deprecated-warning
 		target_compile_options(${UNITTEST_NAME} PUBLIC "$<$<CONFIG:DEBUG>:/Od;/Ob0;/Gm;/sdl;/W3;/WX;/FC;-DNMR_USEASSERTIONS;-DNMR_UNITTESTS;/wd4996>")
 		target_compile_options(${UNITTEST_NAME} PUBLIC "$<$<CONFIG:RELEASE>:/O2;/sdl;/WX;/Oi;/Gy;/FC;/wd4996>")
-		# wd4996 masks the deprecated-warning
+		
 		file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/TestOutput")
 	endif()
 elseif(UNIX)
@@ -385,24 +368,9 @@ endif()
 
 
 #########################################################
-# platform independent tests for shared library interface
+# platform independent tests on the C-interface of the library
 if(LIB3MF_TESTS)
-	ADD_SUBDIRECTORY (googletest EXCLUDE_FROM_ALL)
-	enable_testing()
-	SET(CTEST_SHARED "${PROJECT_NAME}_CTest_shared")
-	SET(gtest_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/googletest/googletest")
-	if(NMR_COM_NATIVE)
-		add_definitions ( -DNMR_COM_NATIVE)
-	endif()
-	add_definitions ( -DTESTFILESPATH="${CMAKE_CURRENT_SOURCE_DIR}/TestFiles")
-	include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
-	add_executable(${CTEST_SHARED} ${SRCS_UNITTEST})
-	target_include_directories(${CTEST_SHARED} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include)
-	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
-	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
-	add_dependencies(${CTEST_SHARED} ${PROJECT_NAME})
-	target_link_libraries(${CTEST_SHARED} gtest gtest_main ${PROJECT_NAME})
-	add_test(${CTEST_SHARED} ${CTEST_SHARED})
+	add_subdirectory(UnitTests)
 	set(STARTUPPROJECT ${CTEST_SHARED})
 endif()
 
