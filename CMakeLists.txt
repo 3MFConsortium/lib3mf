@@ -92,9 +92,36 @@ endif()
 
 #########################################################
 # Static library (as base for other targets)
-add_library(${PROJECT_NAME} STATIC "${SRCS_MAIN_PLATFORM}" "${SRCS_COMMON}" ${VERSION_FILES_OUTPUTLOCATION})
-target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include)
-target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/Include)
+add_library(${PROJECT_NAME}_s STATIC "${SRCS_MAIN_PLATFORM}" "${SRCS_COMMON}" ${VERSION_FILES_OUTPUTLOCATION})
+target_include_directories(${PROJECT_NAME}_s PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include)
+target_include_directories(${PROJECT_NAME}_s PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/Include)
+SET_TARGET_PROPERTIES(${PROJECT_NAME}_s PROPERTIES PREFIX "" IMPORT_PREFIX "")
+set(STARTUPPROJECT ${PROJECT_NAME}_s)
+if (UNIX)
+	target_compile_options(${PROJECT_NAME}_s PUBLIC "-fPIC")
+	# Uncomment the following to but the version info into the .so-file.
+	SET_TARGET_PROPERTIES(${PROJECT_NAME}_s PROPERTIES VERSION "${LIB3MF_VERSION_MAJOR}")
+	SET_TARGET_PROPERTIES(${PROJECT_NAME}_s PROPERTIES SOVERSION "${LIB3MF_VERSION_MAJOR}.${LIB3MF_VERSION_MINOR}.${LIB3MF_VERSION_MICRO}.${BUILD_NUMBER}")
+	if (NOT APPLE)
+		SET_TARGET_PROPERTIES(${PROJECT_NAME}_s PROPERTIES LINK_FLAGS -s)
+	endif()
+else()
+	# wd4996 masks the deprecated-warning
+	target_compile_options(${PROJECT_NAME}_s PUBLIC "$<$<CONFIG:DEBUG>:/Od;/Ob0;/Gm;/sdl;/W3;/WX;/FC;/wd4996>")
+	target_compile_options(${PROJECT_NAME}_s PUBLIC "$<$<CONFIG:RELEASE>:/O2;/sdl;/WX;/Oi;/Gy;/FC;/wd4996>")
+endif()
+
+
+#########################################################
+# Shared library
+add_library(${PROJECT_NAME} SHARED "${SRCS_MAIN_PLATFORM}" "./Source/Model/COM/NMR_DLLInterfaces.cpp")
+SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES PREFIX "" IMPORT_PREFIX "")
+target_link_libraries(${PROJECT_NAME} ${PROJECT_NAME}_s)
+if (UNIX)
+	# Uncomment the following to but the version info into the .so-file.
+	SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES SOVERSION "${LIB3MF_VERSION_MAJOR}.${LIB3MF_VERSION_MINOR}.${LIB3MF_VERSION_MICRO}")
+	SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES SOVERSION "${LIB3MF_VERSION_MAJOR}")
+endif()
 install(TARGETS ${PROJECT_NAME}
 	ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
 	LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
@@ -102,29 +129,6 @@ install(TARGETS ${PROJECT_NAME}
 install(DIRECTORY Include/Model DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
 install(DIRECTORY Include/Common DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
 install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/Include/ DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
-set(STARTUPPROJECT ${PROJECT_NAME})
-
-SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES PREFIX "" IMPORT_PREFIX "")
-if (UNIX)
-	if (NOT APPLE)
-		SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES LINK_FLAGS -s)
-	endif()
-	# Uncomment the following to but the version info into the .so-file.
-	SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES VERSION "${LIB3MF_VERSION_MAJOR}.${LIB3MF_VERSION_MINOR}.${LIB3MF_VERSION_MICRO}")
-	SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES SOVERSION "${LIB3MF_VERSION_MAJOR}")
-else()
-	# wd4996 masks the deprecated-warning
-	target_compile_options(${PROJECT_NAME} PUBLIC "$<$<CONFIG:DEBUG>:/Od;/Ob0;/Gm;/sdl;/W3;/WX;/FC;/wd4996>")
-	target_compile_options(${PROJECT_NAME} PUBLIC "$<$<CONFIG:RELEASE>:/O2;/sdl;/WX;/Oi;/Gy;/FC;/wd4996>")
-endif()
-
-
-#########################################################
-# Shared library
-add_library(${PROJECT_NAME}_shared SHARED "${SRCS_MAIN_PLATFORM}" "./Source/Model/COM/NMR_DLLInterfaces.cpp")
-target_include_directories(${PROJECT_NAME}_shared PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include)
-target_include_directories(${PROJECT_NAME}_shared PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/Include)
-target_link_libraries(${PROJECT_NAME}_shared ${PROJECT_NAME})
 
 #########################################################
 if(NOT DEFINED LIB3MF_TESTS)
@@ -146,8 +150,8 @@ if(LIB3MF_TESTS)
 		target_compile_options(${UNITTEST_NAME} PUBLIC "$<$<CONFIG:DEBUG>:/Od;/Ob0;/Gm;/sdl;/W3;/WX;/FC;-DNMR_USEASSERTIONS;-DNMR_UNITTESTS;/wd4996>")
 		target_compile_options(${UNITTEST_NAME} PUBLIC "$<$<CONFIG:RELEASE>:/O2;/sdl;/WX;/Oi;/Gy;/FC;/wd4996>")
 		
-		add_dependencies(${UNITTEST_NAME} ${PROJECT_NAME})
-		target_link_libraries(${UNITTEST_NAME} ${PROJECT_NAME})
+		add_dependencies(${UNITTEST_NAME} ${PROJECT_NAME}_s)
+		target_link_libraries(${UNITTEST_NAME} ${PROJECT_NAME}_s)
 		
 		file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/TestOutput")
 	endif()
