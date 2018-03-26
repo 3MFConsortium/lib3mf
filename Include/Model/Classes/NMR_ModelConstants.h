@@ -192,6 +192,9 @@ These are given by the 3MF Standard
 #define XML_3MF_ELEMENT_COMPOSITE                   L"composite"
 #define XML_3MF_ATTRIBUTE_COMPOSITE_VALUES          L"values"
 
+// Multiproperties (not implemented!)
+#define XML_3MF_ELEMENT_MULTIPROPERTIES             L"multiproperties"
+
 // Geometry element.
 #define XML_3MF_ELEMENT_GEOMETRY                    L"geometry"
 #define XML_3MF_ATTRIBUTE_GEOMETRY_DATA             L"data"

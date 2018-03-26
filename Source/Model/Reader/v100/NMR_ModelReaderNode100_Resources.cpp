@@ -109,8 +109,9 @@ namespace NMR {
 				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode100_Texture2D>(m_pModel, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 			}
-			else if (wcscmp(pChildName, XML_3MF_ELEMENT_COMPOSITEMATERIALS) == 0) {
-				// Compositematerials are not implemented in lib3mf.
+			else if ( (wcscmp(pChildName, XML_3MF_ELEMENT_COMPOSITEMATERIALS) == 0) ||
+				(wcscmp(pChildName, XML_3MF_ELEMENT_MULTIPROPERTIES) == 0) ) {
+				// Compositematerials and multiproperties are not implemented in lib3mf.
 				// signal this to the user via a warning
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
 			}
