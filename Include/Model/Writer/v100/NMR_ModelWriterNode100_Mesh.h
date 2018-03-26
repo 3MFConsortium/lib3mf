@@ -75,7 +75,7 @@ namespace NMR {
 		nfUint32 m_nBeamBufferPos;
 		nfUint32 m_nBeamRefBufferPos;
 	private:
-		static const int m_snPosAfterDecPoint = 5;
+		static const int m_snPosAfterDecPoint = 6;
 		static const int m_snPutDoubleFactor;
 		static __NMR_INLINE void putFloat(_In_ const nfFloat fValue, _In_ std::array<nfChar, MODELWRITERMESH100_LINEBUFFERSIZE> & line, _In_ nfUint32 & nBufferPos);
 		static __NMR_INLINE void putDouble(_In_ const nfDouble dValue, _In_ std::array<nfChar, MODELWRITERMESH100_LINEBUFFERSIZE> & line, _In_ nfUint32 & nBufferPos);
