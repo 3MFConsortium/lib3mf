@@ -254,7 +254,7 @@ namespace NMR {
 
 	TEST(Thumbnails, ObjectThumbnail_Read)
 	{
-		LoadFileWithObjectThumbnail(sTestFilesPath + separator() + "Mixed" + separator(), "texcube.3mf", 1);
+		LoadFileWithObjectThumbnail(sTestFilesPath + separator() + "Mixed" + separator(), "texcube.3mf", 2);
 	}
 
 	TEST(Thumbnails, ObjectThumbnail_ReadWrite)
