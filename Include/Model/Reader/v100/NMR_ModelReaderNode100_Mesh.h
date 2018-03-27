@@ -52,7 +52,6 @@ namespace NMR {
 
 		ModelResourceID m_nDefaultPropertyID;
 		ModelResourceIndex m_nDefaultPropertyIndex;
-		ModelResourceID m_nUsedPropertyID;
 
 		eModelBeamLatticeClipMode m_eClipMode;
 		nfBool m_bHasClippingMeshID;
