@@ -351,6 +351,7 @@ install(TARGETS ${PROJECT_NAME}
 install(DIRECTORY Include/Model DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
 install(DIRECTORY Include/Common DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
 install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/Include/ DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
+set(STARTUPPROJECT ${PROJECT_NAME})
 
 SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES PREFIX "" IMPORT_PREFIX "")
 if (WIN32)
@@ -397,6 +398,15 @@ if(LIB3MF_TESTS)
 	add_dependencies(${CTEST_SHARED} ${PROJECT_NAME})
 	target_link_libraries(${CTEST_SHARED} gtest gtest_main ${PROJECT_NAME})
 	add_test(${CTEST_SHARED} ${CTEST_SHARED})
+	set(STARTUPPROJECT ${CTEST_SHARED})
+endif()
+
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+	IF(${CMAKE_VERSION} VERSION_LESS 3.6.3)
+		MESSAGE ("Note: You need to manually select a StartUp-project in Visual Studio.")
+	ELSE()
+		set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${STARTUPPROJECT})
+	ENDIF()
 endif()
 
 #########################################################
