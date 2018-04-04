@@ -96,7 +96,6 @@ add_library(${PROJECT_NAME}_s STATIC ${SRCS_MAIN_PLATFORM} ${SRCS_COMMON} ${VERS
 target_include_directories(${PROJECT_NAME}_s PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include)
 target_include_directories(${PROJECT_NAME}_s PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/Include)
 SET_TARGET_PROPERTIES(${PROJECT_NAME}_s PROPERTIES PREFIX "" IMPORT_PREFIX "")
-set(STARTUPPROJECT ${PROJECT_NAME}_s)
 if (UNIX)
 	target_compile_options(${PROJECT_NAME}_s PUBLIC "-fPIC")
 	# Uncomment the following to but the version info into the .so-file.
@@ -115,6 +114,7 @@ endif()
 #########################################################
 # Shared library
 add_library(${PROJECT_NAME} SHARED ${SRCS_MAIN_PLATFORM} "./Source/Model/COM/NMR_DLLInterfaces.cpp")
+set(STARTUPPROJECT ${PROJECT_NAME})
 SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES PREFIX "" IMPORT_PREFIX "")
 target_link_libraries(${PROJECT_NAME} ${PROJECT_NAME}_s)
 if (UNIX)
@@ -162,13 +162,6 @@ if(LIB3MF_TESTS)
 	target_link_libraries(${PROJECT_NAME} ${LIBUUID_PATH})
 endif()
 
-
-#########################################################
-# platform independent tests on the C-interface of the library
-if(LIB3MF_TESTS)
-	add_subdirectory(UnitTests)
-	set(STARTUPPROJECT ${CTEST_SHARED})
-endif()
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 	IF(${CMAKE_VERSION} VERSION_LESS 3.6.3)
