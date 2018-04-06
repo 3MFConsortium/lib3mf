@@ -51,11 +51,15 @@ namespace NMR {
 		nfUint32 m_nNextEntryKey;
 		nfBool m_bIsFinished;
 
+		nfBool m_bWriteZIP64;
+		nfUint16 m_nVersionMade;
+		nfUint16 m_nVersionNeeded;
+
 		std::list<PPortableZIPWriterEntry> m_Entries;
 		PExportStream m_pCurrentStream;
 	public:
 		CPortableZIPWriter() = delete;
-		CPortableZIPWriter(_In_ PExportStream pExportStream);
+		CPortableZIPWriter(_In_ PExportStream pExportStream, _In_ nfBool bWriteZIP64);
 		~CPortableZIPWriter();
 
 		PExportStream createEntry(_In_ const std::wstring sName, _In_ nfTimeStamp nUnixTimeStamp);
