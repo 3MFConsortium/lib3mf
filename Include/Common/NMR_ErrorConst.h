@@ -272,6 +272,9 @@ NMR_ErrorConst.h defines all error code constants.
 // UUID generation failed
 #define NMR_ERROR_UUIDGENERATIONFAILED 0x1049
 
+// ZIP Entry too large for non zip64 zip-file
+#define NMR_ERROR_ZIPENTRYNON64_TOOLARGE 0x104A
+
 /*-------------------------------------------------------------------
 Core framework error codes (0x2XXX)
 -------------------------------------------------------------------*/

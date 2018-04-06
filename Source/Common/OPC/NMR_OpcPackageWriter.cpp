@@ -47,7 +47,7 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
 		m_pExportStream = pExportStream;
-		m_pZIPWriter = std::make_shared<CPortableZIPWriter>(m_pExportStream);
+		m_pZIPWriter = std::make_shared<CPortableZIPWriter>(m_pExportStream, true);
 	}
 
 	COpcPackageWriter::~COpcPackageWriter()

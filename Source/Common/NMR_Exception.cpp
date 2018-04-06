@@ -123,6 +123,7 @@ namespace NMR {
 		case NMR_ERROR_INVALIDRELATIONSHIPTYPEFORTEXTURE: return "A texture must use a OPC part with relationshiptype 3D Texture.";
 		case NMR_ERROR_IMPORTSTREAMISEMPTY: return "An attachment to be read does coes not have any content.";
 		case NMR_ERROR_UUIDGENERATIONFAILED: return "Generation of a UUID failed.";
+		case NMR_ERROR_ZIPENTRYNON64_TOOLARGE: return "A ZIP Entry is too large for non zip64 zip-file";
 
 
 		// Unhandled exception
