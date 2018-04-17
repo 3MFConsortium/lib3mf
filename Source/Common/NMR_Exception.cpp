@@ -124,6 +124,8 @@ namespace NMR {
 		case NMR_ERROR_IMPORTSTREAMISEMPTY: return "An attachment to be read does coes not have any content.";
 		case NMR_ERROR_UUIDGENERATIONFAILED: return "Generation of a UUID failed.";
 		case NMR_ERROR_ZIPENTRYNON64_TOOLARGE: return "A ZIP Entry is too large for non zip64 zip-file";
+		case NMR_ERROR_ATTACHMENTTOOLARGE: return "An individual custom attachment is too large.";
+		case NMR_ERROR_ZIPCALLBACK: return "Error in libzip callback.";
 
 
 		// Unhandled exception

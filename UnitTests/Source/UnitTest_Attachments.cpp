@@ -87,7 +87,6 @@ namespace NMR {
 					<< L"Could not read attachment from file";
 			}
 
-
 			ASSERT_EQ(NMR::lib3mf_model_addcustomcontenttypeutf8(pModel.get(), "xml", "application/xml"), S_OK) 
 				<< L"Could not add custom contenttype attachment from buffer";
 
@@ -151,14 +150,12 @@ namespace NMR {
 				if (hResult != S_OK) {
 					DWORD errorCode;
 					LPCSTR errString;
-					hResult = lib3mf_getlasterror(p3MFReader.get(), &errorCode, &errString);
+					lib3mf_getlasterror(p3MFReader.get(), &errorCode, &errString);
 					std::string errorMessage = std::string(errString);
 				}
 				ASSERT_EQ(hResult, S_OK) << L"Could not read 3MF file.";
 			}
-			
 			Read3MFAttachments(pModel);
-			
 		}
 	};
 	

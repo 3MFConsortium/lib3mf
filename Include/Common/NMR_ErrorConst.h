@@ -275,6 +275,12 @@ NMR_ErrorConst.h defines all error code constants.
 // ZIP Entry too large for non zip64 zip-file
 #define NMR_ERROR_ZIPENTRYNON64_TOOLARGE 0x104A
 
+// An individual custom attachment is too large
+#define NMR_ERROR_ATTACHMENTTOOLARGE 0x104B
+
+// Error in zip-callback
+#define NMR_ERROR_ZIPCALLBACK 0x104C
+
 /*-------------------------------------------------------------------
 Core framework error codes (0x2XXX)
 -------------------------------------------------------------------*/
