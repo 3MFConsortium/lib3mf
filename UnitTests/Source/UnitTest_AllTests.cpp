@@ -38,7 +38,7 @@ int main(int argc, char **argv)
 	// testing::GTEST_FLAG(filter) = "*LoadFromMemoryBuffer*";
 	// testing::GTEST_FLAG(filter) = "*Production_LoadFileTest*ReadFiles*";
 	// testing::GTEST_FLAG(filter) = "*ProgressCallback*";
-	// testing::GTEST_FLAG(filter) = "*WriteBeamLattice_Negative*";
+	// testing::GTEST_FLAG(filter) = "*Attachments*ReadAttachment*";
 	testing::InitGoogleTest(&argc, argv);
 	return RUN_ALL_TESTS();
 }

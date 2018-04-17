@@ -42,7 +42,60 @@ NMR_OpcPackageReader.cpp defines an OPC Package reader in a portable way.
 #include <iostream>
 
 namespace NMR {
+	
+	// custom callbck function for reading from a CImportStream on the fly
+	zip_int64_t custom_zip_source_callback(void *userData, void *data, zip_uint64_t len, zip_source_cmd_t cmd) {
+		if (userData == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
+		CImportStream* pImportStream = (CImportStream*)(userData);
+
+		switch (cmd) {
+			case ZIP_SOURCE_SUPPORTS:
+				zip_int64_t bitmap;
+				bitmap = zip_source_make_command_bitmap(ZIP_SOURCE_OPEN, ZIP_SOURCE_READ, ZIP_SOURCE_CLOSE,
+					ZIP_SOURCE_STAT, ZIP_SOURCE_ERROR, ZIP_SOURCE_SEEK, ZIP_SOURCE_TELL, ZIP_SOURCE_SUPPORTS, -1);
+				return bitmap;
+
+			case ZIP_SOURCE_SEEK:
+				zip_source_args_seek argsSeek;
+				argsSeek = * ((zip_source_args_seek *)data);
+				if (argsSeek.whence == SEEK_SET)
+					pImportStream->seekPosition(argsSeek.offset, true);
+				else if (argsSeek.whence == SEEK_CUR)
+					pImportStream->seekForward(argsSeek.offset, true);
+				else if (argsSeek.whence == SEEK_END) {
+					pImportStream->seekFromEnd(argsSeek.offset, true);
+				}
+				else
+					throw CNMRException(0);
+				return 0;
+
+			case ZIP_SOURCE_OPEN:
+				return 0;
+
+			case ZIP_SOURCE_READ:
+				return pImportStream->readBuffer((nfByte*)data, len, true);
+
+			case ZIP_SOURCE_CLOSE:
+				return 0;
+
+			case ZIP_SOURCE_TELL:
+				return pImportStream->getPosition();
+
+			case ZIP_SOURCE_STAT:
+				zip_stat_t* zipStat;
+				zipStat  = (zip_stat_t*)data;
+				zip_stat_init(zipStat);
+				zipStat->size = pImportStream->retrieveSize();
+				zipStat->valid |= ZIP_STAT_SIZE;
+				return sizeof(zip_stat_t);
+
+			default:
+				throw CNMRException(NMR_ERROR_ZIPCALLBACK);
+		}
+		return -1;
+	}
 
 	COpcPackageReader::COpcPackageReader(_In_ PImportStream pImportStream, _In_ PModelReaderWarnings pWarnings)
 	{
@@ -65,13 +118,19 @@ namespace NMR {
 			if (nStreamSize == 0)
 				throw CNMRException(NMR_ERROR_COULDNOTGETSTREAMPOSITION);
 
-			// read ZIP into memory
-			m_Buffer.resize ((size_t) nStreamSize);
-			pImportStream->readBuffer(&m_Buffer[0], nStreamSize, true);
-
 			// create ZIP objects
 			zip_error_init(&m_ZIPError);
-			m_ZIPsource = zip_source_buffer_create(&m_Buffer[0], (size_t) nStreamSize, 0, &m_ZIPError);
+
+			if (true) {
+				// read ZIP from callback: faster and requires less memory
+				m_ZIPsource = zip_source_function_create(custom_zip_source_callback, pImportStream.get(), &m_ZIPError);
+			}
+			else {
+				// read ZIP into memory
+				m_Buffer.resize((size_t)nStreamSize);
+				pImportStream->readBuffer(&m_Buffer[0], nStreamSize, true);
+				m_ZIPsource = zip_source_buffer_create(&m_Buffer[0], (size_t)nStreamSize, 0, &m_ZIPError);
+			}
 			if (m_ZIPsource == nullptr)
 				throw CNMRException(NMR_ERROR_COULDNOTREADZIPFILE);
 

@@ -151,13 +151,21 @@ namespace NMR {
 					sURI = sTargetPartURIDir + sURI;
 				POpcPackagePart pPart = m_pPackageReader->createPart(sURI);
 				PImportStream pAttachmentStream = pPart->getImportStream();
-				PImportStream pMemoryStream = pAttachmentStream->copyToMemory();
-				
-				if (pMemoryStream->retrieveSize() == 0)
-					m_pWarnings->addException(CNMRException(NMR_ERROR_IMPORTSTREAMISEMPTY), mrwMissingMandatoryValue);
+				try {
+					PImportStream pMemoryStream = pAttachmentStream->copyToMemory();
 
-				// Add Attachment Stream to Model
-				m_pModel->addAttachment(sURI, sRelationShipType, pMemoryStream);
+					if (pMemoryStream->retrieveSize() == 0)
+						m_pWarnings->addException(CNMRException(NMR_ERROR_IMPORTSTREAMISEMPTY), mrwMissingMandatoryValue);
+
+					// Add Attachment Stream to Model
+					m_pModel->addAttachment(sURI, sRelationShipType, pMemoryStream);
+				}
+				catch (CNMRException &e) {
+					if (e.getErrorCode() == NMR_ERROR_INVALIDBUFFERSIZE)
+						m_pWarnings->addException(CNMRException(NMR_ERROR_ATTACHMENTTOOLARGE), mrwMissingMandatoryValue);
+					else
+						throw;
+				}
 			}
 		}
 	}
