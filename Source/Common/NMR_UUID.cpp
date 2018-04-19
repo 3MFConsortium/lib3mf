@@ -41,8 +41,7 @@ NMR_UUID.cpp implements a datatype and functions to handle UUIDs
 #include <Objbase.h>
 #include <iomanip>
 #else
-#include <random>
-#include "Common/Platform/NMR_Time.h"
+#include <uuid/uuid.h>
 #endif
 
 namespace NMR
@@ -58,14 +57,11 @@ namespace NMR
 			throw CNMRException(NMR_ERROR_UUIDGENERATIONFAILED);
 		set(str);
 #else
-		static std::mt19937 rng(((unsigned int)std::random_device()()) ^ ((unsigned int)fnGetUnixTime()) );
-		std::uniform_int_distribution<std::mt19937::result_type> distHexaDec(0, 15);
-		const nfWChar* hexaDec = L"0123456789abcdef";
-		nfWChar string[33];
-		for (int i = 0; i < 32; i++)
-			string[i] = hexaDec[distHexaDec(rng)];
-		string[32] = 0;
-		set(string);
+		uuid_t uuid;
+		uuid_generate_random(uuid);
+		char s[37];
+		uuid_unparse(uuid, s);
+		set(std::string(s).c_str());
 #endif
 	}
 

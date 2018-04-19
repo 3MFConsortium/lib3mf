@@ -376,6 +376,7 @@ elseif(UNIX)
 	# Uncomment the following to but the version info into the .so-file.
 	SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES VERSION "${LIB3MF_VERSION_MAJOR}.${LIB3MF_VERSION_MINOR}.${LIB3MF_VERSION_MICRO}")
 	SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES SOVERSION "${LIB3MF_VERSION_MAJOR}")
+	target_link_libraries(${PROJECT_NAME} uuid)
 endif()
 
 
