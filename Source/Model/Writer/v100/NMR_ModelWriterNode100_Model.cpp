@@ -308,24 +308,26 @@ namespace NMR {
 
 				writeFloatAttribute(XML_3MF_ATTRIBUTE_SLICEZTOP, pSlice->getTopZ());
 
-				writeStartElementWithPrefix(XML_3MF_ELEMENT_SLICEVERTICES, XML_3MF_NAMESPACEPREFIX_SLICE);
+				if (pSlice->getVertexCount() > 0) {
+					writeStartElementWithPrefix(XML_3MF_ELEMENT_SLICEVERTICES, XML_3MF_NAMESPACEPREFIX_SLICE);
 
-				nfUint32 nVertexIndex;
+					nfUint32 nVertexIndex;
 
-				for (nVertexIndex = 0; nVertexIndex < pSlice->getVertexCount(); nVertexIndex++) {
-					writeStartElementWithPrefix(XML_3MF_ELEMENT_VERTEX, XML_3MF_NAMESPACEPREFIX_SLICE);
+					for (nVertexIndex = 0; nVertexIndex < pSlice->getVertexCount(); nVertexIndex++) {
+						writeStartElementWithPrefix(XML_3MF_ELEMENT_VERTEX, XML_3MF_NAMESPACEPREFIX_SLICE);
 
-					nfFloat x, y;
+						nfFloat x, y;
 
-					pSlice->getVertex(nVertexIndex, &x, &y);
+						pSlice->getVertex(nVertexIndex, &x, &y);
 
-					writeFloatAttribute(XML_3MF_ATTRIBUTE_SLICEVERTEX_X, x);
-					writeFloatAttribute(XML_3MF_ATTRIBUTE_SLICEVERTEX_Y, y);
+						writeFloatAttribute(XML_3MF_ATTRIBUTE_SLICEVERTEX_X, x);
+						writeFloatAttribute(XML_3MF_ATTRIBUTE_SLICEVERTEX_Y, y);
 
-					writeEndElement();
+						writeEndElement();
+					}
+
+					writeFullEndElement();
 				}
-
-				writeFullEndElement();
 
 				nfUint32 nPolygonIndex;
 
