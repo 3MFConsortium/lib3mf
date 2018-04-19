@@ -347,8 +347,11 @@ namespace NMR {
 			nfFloat fV;
 			if (m_pTexCoordMapping->findTexCoords(m_nDefaultPropertyID, m_nDefaultPropertyIndex, nTextureID, fU, fV)) {
 				if (nTextureID != 0) {
-					m_pObject->setDefaultProperty(std::make_shared<CModelDefaultProperty_TexCoord2D>(nTextureID, fU, fV));
-					hasBeenSet = true;
+					PPackageResourceID pID = m_pModel->findPackageResourceID(m_pModel->curPath(), nTextureID);
+					if (pID.get()) {
+						m_pObject->setDefaultProperty(std::make_shared<CModelDefaultProperty_TexCoord2D>(pID->getUniqueID(), fU, fV));
+						hasBeenSet = true;
+					}
 				}
 			}
 
