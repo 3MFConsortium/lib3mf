@@ -104,6 +104,11 @@ if (UNIX)
 	if (NOT APPLE)
 		SET_TARGET_PROPERTIES(${PROJECT_NAME}_s PROPERTIES LINK_FLAGS -s)
 	endif()
+	find_library(LIBUUID_PATH uuid)
+	if(NOT LIBUUID_PATH)
+		message(FATAL_ERROR "libuuid not found")
+	endif()
+	target_link_libraries(${PROJECT_NAME}_s ${LIBUUID_PATH})
 else()
 	# wd4996 masks the deprecated-warning
 	target_compile_options(${PROJECT_NAME}_s PUBLIC "$<$<CONFIG:DEBUG>:/Od;/Ob0;/Gm;/sdl;/W3;/WX;/FC;/wd4996>")
@@ -155,11 +160,6 @@ if(LIB3MF_TESTS)
 		
 		file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/TestOutput")
 	endif()
-	find_library(LIBUUID_PATH uuid)
-	if(NOT LIBUUID_PATH)
-		message(FATAL_ERROR "libuuid not found")
-	endif()
-	target_link_libraries(${PROJECT_NAME} ${LIBUUID_PATH})
 endif()
 
 
