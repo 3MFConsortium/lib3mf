@@ -9,7 +9,7 @@ project (lib3MF)
 # Define Version
 set(LIB3MF_VERSION_MAJOR 1)				# increase on every backward-compatibility breaking change of the API
 set(LIB3MF_VERSION_MINOR 0)				# increase on every backward compatible change of the API
-set(LIB3MF_VERSION_MICRO 4)				# increase on on every change that does not alter the API
+set(LIB3MF_VERSION_MICRO 5)				# increase on on every change that does not alter the API
 
 set(CMAKE_INSTALL_BINDIR bin CACHE PATH "directory for installing binary files")
 set(CMAKE_INSTALL_LIBDIR lib CACHE PATH "directory for installing library files")
@@ -376,7 +376,11 @@ elseif(UNIX)
 	# Uncomment the following to but the version info into the .so-file.
 	SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES VERSION "${LIB3MF_VERSION_MAJOR}.${LIB3MF_VERSION_MINOR}.${LIB3MF_VERSION_MICRO}")
 	SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES SOVERSION "${LIB3MF_VERSION_MAJOR}")
-	target_link_libraries(${PROJECT_NAME} uuid)
+	find_library(LIBUUID_PATH uuid)
+	if(NOT LIBUUID_PATH)
+		message(FATAL_ERROR "libuuid not found")
+	endif()
+	target_link_libraries(${PROJECT_NAME} ${LIBUUID_PATH})
 endif()
 
 
