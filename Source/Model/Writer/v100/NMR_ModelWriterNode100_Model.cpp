@@ -308,7 +308,7 @@ namespace NMR {
 
 				writeFloatAttribute(XML_3MF_ATTRIBUTE_SLICEZTOP, pSlice->getTopZ());
 
-				if (pSlice->getVertexCount() > 0) {
+				if (pSlice->getVertexCount() >= 2) {
 					writeStartElementWithPrefix(XML_3MF_ELEMENT_SLICEVERTICES, XML_3MF_NAMESPACEPREFIX_SLICE);
 
 					nfUint32 nVertexIndex;
