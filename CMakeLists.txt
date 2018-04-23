@@ -92,7 +92,7 @@ endif()
 
 #########################################################
 # Static library (as base for other targets)
-add_library(${PROJECT_NAME}_s STATIC ${SRCS_MAIN_PLATFORM} ${SRCS_COMMON} ${VERSION_FILES_OUTPUTLOCATION})
+add_library(${PROJECT_NAME}_s STATIC ${SRCS_MAIN_PLATFORM} ${SRCS_COMMON})
 target_include_directories(${PROJECT_NAME}_s PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include)
 target_include_directories(${PROJECT_NAME}_s PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/Include)
 SET_TARGET_PROPERTIES(${PROJECT_NAME}_s PROPERTIES PREFIX "" IMPORT_PREFIX "")
@@ -118,7 +118,10 @@ endif()
 
 #########################################################
 # Shared library
-add_library(${PROJECT_NAME} SHARED ${SRCS_MAIN_PLATFORM} "./Source/Model/COM/NMR_DLLInterfaces.cpp")
+add_library(${PROJECT_NAME} SHARED ${SRCS_MAIN_PLATFORM}
+	"./Source/Model/COM/NMR_DLLInterfaces.cpp"
+	${VERSION_FILES_OUTPUTLOCATION}
+)
 set(STARTUPPROJECT ${PROJECT_NAME})
 SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES PREFIX "" IMPORT_PREFIX "")
 target_link_libraries(${PROJECT_NAME} ${PROJECT_NAME}_s)
