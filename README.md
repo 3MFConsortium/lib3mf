@@ -20,6 +20,11 @@ and ZIP compression). This will come when time passes.
 The current code runs on Windows, Linux and Mac. To generate projects for Visual Studio or Unix
 Makefiles use the scripts in the folder [cmake](cmake).
 
+### Dependencies
+* Unix: [uuid](https://linux.die.net/man/3/uuid)
+    * Linux (Ubuntu/Debian): sudo at-get install uuid-dev
+    * MAC: brew install ossp-uuid
+
 Instead of building lib3MF from source, you can download the compiled shared libarary as part of a minimal SDK from the [official releases](https://github.com/3MFConsortium/lib3mf/releases),
 or use the [nightly builds](https://github.com/3MFConsortium/lib3mf-binaries)
 
