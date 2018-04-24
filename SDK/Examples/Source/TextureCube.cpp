@@ -116,7 +116,7 @@ LIB3MFRESULT fnLoadModelTexture(PLib3MFModel * pModel, const char * pszPath, con
 bool SimpleCallback(int step, ProgressIdentifier identifier, void * pUserData) {
 
 	std::cout << "Step = " << step;
-	if (identifier != ProgressIdentifier::PROGRESS_QUERYCANCELED) {
+	if (identifier != PROGRESS_QUERYCANCELED) {
 		const char * progressMessage;
 		NMR::lib3mf_retrieveprogressmessage(identifier, &progressMessage);
 		std::cout << " \"" << progressMessage << "\"\n";
