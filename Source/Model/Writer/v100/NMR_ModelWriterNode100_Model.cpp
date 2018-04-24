@@ -311,9 +311,7 @@ namespace NMR {
 				if (pSlice->getVertexCount() >= 2) {
 					writeStartElementWithPrefix(XML_3MF_ELEMENT_SLICEVERTICES, XML_3MF_NAMESPACEPREFIX_SLICE);
 
-					nfUint32 nVertexIndex;
-
-					for (nVertexIndex = 0; nVertexIndex < pSlice->getVertexCount(); nVertexIndex++) {
+					for (nfUint32 nVertexIndex = 0; nVertexIndex < pSlice->getVertexCount(); nVertexIndex++) {
 						writeStartElementWithPrefix(XML_3MF_ELEMENT_VERTEX, XML_3MF_NAMESPACEPREFIX_SLICE);
 
 						nfFloat x, y;
@@ -328,23 +326,27 @@ namespace NMR {
 
 					writeFullEndElement();
 				}
+				else {
+					if (pSlice->getVertexCount() == 1)
+						throw CNMRException(NMR_ERROR_SLICE_ONEVERTEX);
+				}
 
-				nfUint32 nPolygonIndex;
-
-				for (nPolygonIndex = 0; nPolygonIndex < pSlice->getNumberOfPolygons(); nPolygonIndex++) {
+				for (nfUint32 nPolygonIndex = 0; nPolygonIndex < pSlice->getNumberOfPolygons(); nPolygonIndex++) {
 					if (pSlice->getPolygonIndexCount(nPolygonIndex) >= 2) {
 						writeStartElementWithPrefix(XML_3MF_ELEMENT_SLICEPOLYGON, XML_3MF_NAMESPACEPREFIX_SLICE);
 						writeIntAttribute(XML_3MF_ATTRIBUTE_SLICEPOLYGON_STARTV, pSlice->getPolygonIndex(nPolygonIndex, 0));
 
-						nfUint32 nIndexIndex;
-
-						for (nIndexIndex = 1; nIndexIndex < pSlice->getPolygonIndexCount(nPolygonIndex); nIndexIndex++) {
+						for (nfUint32 nIndexIndex = 1; nIndexIndex < pSlice->getPolygonIndexCount(nPolygonIndex); nIndexIndex++) {
 							writeStartElementWithPrefix(XML_3MF_ELEMENT_SLICESEGMENT, XML_3MF_NAMESPACEPREFIX_SLICE);
 							writeIntAttribute(XML_3MF_ATTRIBUTE_SLICESEGMENT_V2, pSlice->getPolygonIndex(nPolygonIndex, nIndexIndex));
 							writeFullEndElement();
 						}
 
 						writeFullEndElement();
+					}
+					else {
+						if (pSlice->getPolygonIndexCount(nPolygonIndex) == 1)
+							throw CNMRException(NMR_ERROR_SLICE_ONEPOINT);
 					}
 				}
 

@@ -361,6 +361,8 @@ namespace NMR {
 		case NMR_ERROR_BEAMLATTICENODESTOOCLOSE: return "Nodes used for a beam are closer then the specified minimal length.";
 		case NMR_ERROR_BEAMLATTICE_INVALID_REPRESENTATIONRESOURCE: return "The resource defined as representationmesh is invalid.";
 		case NMR_ERROR_BEAMLATTICE_INVALID_OBJECTTYPE: return "Beamlattice is defined on wrong object type.";
+		case NMR_ERROR_SLICE_ONEVERTEX: return "Slice only contains one vertex.";
+		case NMR_ERROR_SLICE_ONEPOINT: return "Slice contains only one point within a polygon";
 
 		// XML Parser Error Constants(0x9XXX)
 		case NMR_ERROR_XMLPARSER_INVALIDATTRIBVALUE: return "Invalid XML attribute value";
