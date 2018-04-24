@@ -21,6 +21,9 @@ The current code runs on Windows, Linux and Mac. To generate projects for Visual
 Makefiles use the scripts in the folder [cmake](cmake).
 
 ### Dependencies
+* All platforms: [googletest](https://github.com/google/googletest)
+    * included as a submodule in [UnitTests](UnitTests). Initialize it by running
+   `git submodule update --init`
 * Unix: [uuid](https://linux.die.net/man/3/uuid)
     * Linux (Ubuntu/Debian): sudo at-get install uuid-dev
     * MAC: brew install ossp-uuid
