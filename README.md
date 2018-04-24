@@ -33,7 +33,7 @@ For example code, please refer to the examples in the SDK (SDK/Examples) or to
 [https://github.com/3MFConsortium/lib3mf-examples](https://github.com/3MFConsortium/lib3mf-examples).
 
 ## Documentation
-For a more detailed documentation, please take a look into the PDF in the root directory
+For a more detailed documentation, please take a look into the [PDF](Lib3MF-1.pdf) in the root directory
 of this repository.
 
 ## License
