@@ -58,7 +58,7 @@ add_executable(Example_BeamLattice Source/BeamLattice.cpp)
 CopySharedLibrary(Example_BeamLattice)
 
 if (WIN32)
-	IF(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION} LESS 3.6)
+	IF(${CMAKE_VERSION} VERSION_LESS 3.6.3)
 		MESSAGE ("Note: You need to manually select a StartUp-project in Visual Studio.")
 	ELSE()
 		set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT Example_Cube)
