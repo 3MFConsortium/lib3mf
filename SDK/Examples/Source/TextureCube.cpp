@@ -366,7 +366,7 @@ int main ()
 	}
 
 	// Set progress callback
-	lib3mf_writer_setprogresscallback(p3MFWriter, SimpleCallback, nullptr);
+	lib3mf_writer_setprogresscallback(p3MFWriter, SimpleCallback, NULL);
 
 	// Export Model into File
 	std::cout << "writing texturecube.3mf..." << std::endl;
