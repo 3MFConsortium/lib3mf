@@ -991,6 +991,12 @@ Model error codes (0x8XXX)
 // Beamlattice is defined on wrong object type
 #define NMR_ERROR_BEAMLATTICE_INVALID_OBJECTTYPE 0x80C1
 
+// Slice only contains one vertex
+#define NMR_ERROR_SLICE_ONEVERTEX 0x80C2
+
+// Slice contains only one point within a polygon
+#define NMR_ERROR_SLICE_ONEPOINT 0x80C3
+
 /*-------------------------------------------------------------------
 XML Parser Error Constants (0x9XXX)
 -------------------------------------------------------------------*/
