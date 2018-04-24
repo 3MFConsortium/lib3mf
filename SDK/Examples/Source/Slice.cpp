@@ -145,7 +145,7 @@ int main()
 
 	// Now add 10 slices ...
 	for (int i = 0; i < 10; i++) {
-		float fTopZ = ((float)i) / 10.0f;
+		float fTopZ = ((float)(i+1)) / 10.0f;
 		CustomLib3MFBase pSlice;
 		DWORD nPolyIndex, nVertexIndex;
 
