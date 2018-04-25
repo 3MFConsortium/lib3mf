@@ -146,6 +146,12 @@ namespace NMR {
 		MODELTEXTURETYPE_JPEG = 2,
 	};
 
+	enum eModelTextureTileStyle {
+		MODELTEXTURETILESTYLE_WRAP = 0,
+		MODELTEXTURETILESTYLE_MIRROR = 1,
+		MODELTEXTURETILESTYLE_CLAMP = 2
+	};
+
 	typedef struct {
 		FLOAT m_fPosition[2];
 	} MODELSLICEVERTEX;

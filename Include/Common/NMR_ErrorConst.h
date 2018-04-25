@@ -1013,6 +1013,9 @@ Model error codes (0x8XXX)
 // Slice contains only one point within a polygon
 #define NMR_ERROR_SLICE_ONEPOINT 0x80C3
 
+// Invalid Tile Style
+#define NMR_ERROR_INVALIDTILESTYLE 0x80C4
+
 /*-------------------------------------------------------------------
 XML Parser Error Constants (0x9XXX)
 -------------------------------------------------------------------*/

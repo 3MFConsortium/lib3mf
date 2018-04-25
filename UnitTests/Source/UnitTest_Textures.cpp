@@ -43,7 +43,7 @@ UnitTest_Textures.cpp: Defines Unittests for reading and writing textures from/t
 
 namespace NMR {
 
-	LIB3MFRESULT fnLoadModelTexture(CustomLib3MFBase& pModel, const char * pszPath, const char * pszFile, eModelTexture2DType eType, DWORD & nTextureID, int useAttachmentMode = 0)
+	LIB3MFRESULT fnLoadModelTexture(CustomLib3MFBase& pModel, const char * pszPath, const char * pszFile, eModelTexture2DType eType, eModelTextureTileStyle eTileStyleU, eModelTextureTileStyle eTileStyleV, DWORD & nTextureID, int useAttachmentMode = 0)
 	{
 		CustomLib3MFBase pTexture2D;
 		if (useAttachmentMode ==0) {
@@ -79,7 +79,8 @@ namespace NMR {
 		EXPECT_EQ(lib3mf_texture2d_setcontenttype(pTexture2D.get(), eType), S_OK) << L"Could not set content type";
 		EXPECT_EQ(lib3mf_texture2d_clearbox2d(pTexture2D.get()), S_OK) << L"Could not clear box2d";
 		EXPECT_EQ(lib3mf_texture2d_setbox2d(pTexture2D.get(), 0.1f, 0.2f, 0.8f, 0.9f), S_OK) << L"Could not set box2d";
-		
+
+		EXPECT_EQ(lib3mf_texture2d_settilestyleuv(pTexture2D.get(), eTileStyleU, eTileStyleV), S_OK) << L"Could not set tilestyle";
 		return 0;
 	}
 
@@ -151,28 +152,32 @@ namespace NMR {
 
 		DWORD nTextureIDA, nTextureIDB, nTextureIDC;
 		std::string sAttachmentPath = std::string(TESTFILESPATH) + separator() + "Textures" + separator() + "tex1.png";
-		fnLoadModelTexture(pModel, "/3D/Textures/tex1.png", sAttachmentPath.c_str(), MODELTEXTURETYPE_PNG, nTextureIDA, 0);
+		fnLoadModelTexture(pModel, "/3D/Textures/tex1.png", sAttachmentPath.c_str(), MODELTEXTURETYPE_PNG, MODELTEXTURETILESTYLE_WRAP, MODELTEXTURETILESTYLE_WRAP, nTextureIDA, 0);
 		sAttachmentPath = std::string(TESTFILESPATH) + separator() + "Textures" + separator() + "tex2.png";
-		fnLoadModelTexture(pModel, "/3D/Textures/tex2.png", sAttachmentPath.c_str(), MODELTEXTURETYPE_PNG, nTextureIDB, 1);
+		fnLoadModelTexture(pModel, "/3D/Textures/tex2.png", sAttachmentPath.c_str(), MODELTEXTURETYPE_PNG, MODELTEXTURETILESTYLE_MIRROR, MODELTEXTURETILESTYLE_WRAP, nTextureIDB, 1);
 		sAttachmentPath = std::string(TESTFILESPATH) + separator() + "Textures" + separator() + "tex3.png";
-		fnLoadModelTexture(pModel, "/3D/Textures/tex3.png", sAttachmentPath.c_str(), MODELTEXTURETYPE_PNG, nTextureIDC, 2);
+		fnLoadModelTexture(pModel, "/3D/Textures/tex3.png", sAttachmentPath.c_str(), MODELTEXTURETYPE_PNG, MODELTEXTURETILESTYLE_CLAMP, MODELTEXTURETILESTYLE_MIRROR, nTextureIDC, 2);
 
 		MODELMESHTEXTURE2D sTexture1, sTexture2;
 		// Side 1
-		sTexture1 = fnCreateTexture(0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, nTextureIDA);
-		sTexture2 = fnCreateTexture(1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, nTextureIDA);
+		float fLow = -0.5f;
+		float fHigh = 1.5f;
+		sTexture1 = fnCreateTexture(fLow, fLow, fHigh, fLow, fHigh, fHigh, nTextureIDA);
+		sTexture2 = fnCreateTexture(fHigh, fHigh, fLow, fHigh, fLow, fLow, nTextureIDA);
 		lib3mf_propertyhandler_settexture(pPropertyHandler.get(), 0, &sTexture1);
 		lib3mf_propertyhandler_settexture(pPropertyHandler.get(), 1, &sTexture2);
 
 		// Side 2
-		sTexture1 = fnCreateTexture(0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, nTextureIDB);
-		sTexture2 = fnCreateTexture(1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, nTextureIDB);
+		fLow = -1.5f;
+		fHigh = 2.5f;
+		sTexture1 = fnCreateTexture(fLow, fLow, fHigh, fLow, fHigh, fHigh, nTextureIDB);
+		sTexture2 = fnCreateTexture(fHigh, fHigh, fLow, 1.0f, fLow, fLow, nTextureIDB);
 		lib3mf_propertyhandler_settexture(pPropertyHandler.get(), 2, &sTexture1);
 		lib3mf_propertyhandler_settexture(pPropertyHandler.get(), 3, &sTexture2);
 
-		// Side 2
-		sTexture1 = fnCreateTexture(0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, nTextureIDC);
-		sTexture2 = fnCreateTexture(1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, nTextureIDC);
+		// Side 3
+		sTexture1 = fnCreateTexture(fLow, fLow, fHigh, 0.0f, fHigh, fHigh, nTextureIDC);
+		sTexture2 = fnCreateTexture(fHigh, fHigh, fLow, fHigh, fLow, fLow, nTextureIDC);
 		lib3mf_propertyhandler_settexture(pPropertyHandler.get(), 4, &sTexture1);
 		lib3mf_propertyhandler_settexture(pPropertyHandler.get(), 5, &sTexture2);
 
@@ -209,32 +214,36 @@ namespace NMR {
 
 		DWORD nTextureIDA, nTextureIDB, nTextureIDC;
 		std::string sAttachmentPath = std::string(TESTFILESPATH) + separator() + "Textures" + separator() + "tex1.png";
-		fnLoadModelTexture(pModel, "/3D/Textures/tex1.png", sAttachmentPath.c_str(), MODELTEXTURETYPE_PNG, nTextureIDA, 0);
+		fnLoadModelTexture(pModel, "/3D/Textures/tex1.png", sAttachmentPath.c_str(), MODELTEXTURETYPE_PNG, MODELTEXTURETILESTYLE_WRAP, MODELTEXTURETILESTYLE_WRAP ,nTextureIDA, 0);
 		sAttachmentPath = std::string(TESTFILESPATH) + separator() + "Textures" + separator() + "tex2.png";
-		fnLoadModelTexture(pModel, "/3D/Textures/tex2.png", sAttachmentPath.c_str(), MODELTEXTURETYPE_PNG, nTextureIDB, 1);
+		fnLoadModelTexture(pModel, "/3D/Textures/tex2.png", sAttachmentPath.c_str(), MODELTEXTURETYPE_PNG, MODELTEXTURETILESTYLE_MIRROR, MODELTEXTURETILESTYLE_WRAP, nTextureIDB, 1);
 		sAttachmentPath = std::string(TESTFILESPATH) + separator() + "Textures" + separator() + "tex3.png";
-		fnLoadModelTexture(pModel, "/3D/Textures/tex3.png", sAttachmentPath.c_str(), MODELTEXTURETYPE_PNG, nTextureIDC, 2);
+		fnLoadModelTexture(pModel, "/3D/Textures/tex3.png", sAttachmentPath.c_str(), MODELTEXTURETYPE_PNG, MODELTEXTURETILESTYLE_CLAMP, MODELTEXTURETILESTYLE_MIRROR, nTextureIDC, 2);
 
 		MODELMESHTEXTURE2D sTexture1, sTexture2;
 		// Side 1
-		sTexture1 = fnCreateTexture(0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, nTextureIDA);
-		sTexture2 = fnCreateTexture(1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, nTextureIDA);
+		float fLow = -0.5f;
+		float fHigh = 1.5f;
+		sTexture1 = fnCreateTexture(fLow, fLow, fHigh, fLow, fHigh, fHigh, nTextureIDA);
+		sTexture2 = fnCreateTexture(fHigh, fHigh, fLow, fHigh, fLow, fLow, nTextureIDA);
 		lib3mf_propertyhandler_settexture(pPropertyHandlerA.get(), 0, &sTexture1);
 		lib3mf_propertyhandler_settexture(pPropertyHandlerA.get(), 1, &sTexture2);
 		lib3mf_propertyhandler_settexture(pPropertyHandlerB.get(), 0, &sTexture2);
 		lib3mf_propertyhandler_settexture(pPropertyHandlerB.get(), 1, &sTexture1);
 
 		// Side 2
-		sTexture1 = fnCreateTexture(0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, nTextureIDB);
-		sTexture2 = fnCreateTexture(1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, nTextureIDB);
+		fLow = -1.5f;
+		fHigh = 2.5f;
+		sTexture1 = fnCreateTexture(fLow, fLow, fHigh, fLow, fHigh, fHigh, nTextureIDB);
+		sTexture2 = fnCreateTexture(fHigh, fHigh, fLow, 1.0f, fLow, fLow, nTextureIDB);
 		lib3mf_propertyhandler_settexture(pPropertyHandlerA.get(), 2, &sTexture1);
 		lib3mf_propertyhandler_settexture(pPropertyHandlerA.get(), 3, &sTexture2);
 		lib3mf_propertyhandler_settexture(pPropertyHandlerB.get(), 2, &sTexture2);
 		lib3mf_propertyhandler_settexture(pPropertyHandlerB.get(), 3, &sTexture1);
 
-		// Side 2
-		sTexture1 = fnCreateTexture(0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, nTextureIDC);
-		sTexture2 = fnCreateTexture(1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, nTextureIDC);
+		// Side 3
+		sTexture1 = fnCreateTexture(fLow, fLow, fHigh, 0.0f, fHigh, fHigh, nTextureIDC);
+		sTexture2 = fnCreateTexture(fHigh, fHigh, fLow, fHigh, fLow, fLow, nTextureIDC);
 		lib3mf_propertyhandler_settexture(pPropertyHandlerA.get(), 4, &sTexture1);
 		lib3mf_propertyhandler_settexture(pPropertyHandlerA.get(), 5, &sTexture2);
 		lib3mf_propertyhandler_settexture(pPropertyHandlerB.get(), 4, &sTexture2);
@@ -265,6 +274,11 @@ namespace NMR {
 		eModelTexture2DType eContentType;
 		ASSERT_EQ(lib3mf_texture2d_getcontenttype(pTexture2D.get(), &eContentType), S_OK) << L"Could not get contenttype";
 		EXPECT_TRUE((eContentType == MODELTEXTURETYPE_UNKNOWN) || (eContentType == MODELTEXTURETYPE_PNG) || (eContentType == MODELTEXTURETYPE_JPEG)) << L"Invalid content type";
+
+		eModelTextureTileStyle eTileStyleU, eTileStyleV;
+		ASSERT_EQ(lib3mf_texture2d_gettilestyleuv(pTexture2D.get(), &eTileStyleU, &eTileStyleV), S_OK) << L"Could not get tilestyle";
+		EXPECT_TRUE((eTileStyleU == MODELTEXTURETILESTYLE_MIRROR) || (eTileStyleU == MODELTEXTURETILESTYLE_WRAP) || (eTileStyleU == MODELTEXTURETILESTYLE_CLAMP)) << L"Invalid tilestyle";
+		EXPECT_TRUE((eTileStyleV == MODELTEXTURETILESTYLE_MIRROR) || (eTileStyleV == MODELTEXTURETILESTYLE_WRAP) || (eTileStyleV == MODELTEXTURETILESTYLE_CLAMP)) << L"Invalid tilestyle";
 
 		CustomLib3MFBase pAttachment;
 		ASSERT_EQ(lib3mf_texture2d_getattachment(pTexture2D.get(), &pAttachment.get()), S_OK) << L"Could not get texture2D attachment";
