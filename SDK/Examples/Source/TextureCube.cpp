@@ -99,6 +99,12 @@ LIB3MFRESULT fnLoadModelTexture(PLib3MFModel * pModel, const char * pszPath, con
 		return hResult;
 	}
 
+	hResult = lib3mf_texture2d_settilestyleuv(pTexture2D, eTileStyleU, eTileStyleV);
+	if (hResult != 0) {
+		lib3mf_release(pTexture2D);
+		return hResult;
+	}
+
 	// Retrieve Texture ID
 	hResult = lib3mf_resource_getresourceid(pTexture2D, pTextureID);
 	if (hResult != 0) {
