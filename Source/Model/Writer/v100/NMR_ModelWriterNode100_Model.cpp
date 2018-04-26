@@ -582,8 +582,13 @@ namespace NMR {
 					}
 					writePrefixedStringAttribute(XML_3MF_NAMESPACEPREFIX_PRODUCTION, XML_3MF_PRODUCTION_UUID, pBuildItem->uuid()->toUTF16String());
 				}
-				if (pBuildItem->hasTransform())
+				if (pBuildItem->hasTransform()) {
+					if (m_bWriteSliceExtension
+						&& !pBuildItem->isValidForSlices()) {
+						throw CNMRException(NMR_ERROR_SLICETRANSFORMATIONPLANAR);
+					}
 					writeStringAttribute(XML_3MF_ATTRIBUTE_ITEM_TRANSFORM, pBuildItem->getTransformString());
+				}
 				writeEndElement();
 
 			}
