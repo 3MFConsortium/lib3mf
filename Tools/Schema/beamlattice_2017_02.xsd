@@ -1,0 +1,124 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://schemas.microsoft.com/3dmanufacturing/beamlattice/2017/02" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xml="http://www.w3.org/XML/1998/namespace" targetNamespace="http://schemas.microsoft.com/3dmanufacturing/beamlattice/2017/02" elementFormDefault="unqualified" attributeFormDefault="unqualified" blockDefault="#all">
+  <!-- Import xml: namespace -->
+  <xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="http://www.w3.org/2001/xml.xsd" />
+
+  <xs:annotation>
+    <xs:documentation>
+      <![CDATA[
+		Schema notes:
+
+		Items within this schema follow a simple naming convention of appending a prefix indicating the type of element for references:
+
+		Unprefixed: Element names
+		CT_: Complex types
+		ST_: Simple types
+		
+		]]>
+    </xs:documentation>
+  </xs:annotation>
+  <!-- Complex Types -->
+  <xs:complexType name="CT_Mesh">
+    <xs:sequence>
+      <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="2147483647"/>
+      <xs:element ref="beamlattice" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="CT_BeamLattice">
+   	<xs:sequence>
+      		<xs:element ref="beams"/>
+      		<xs:element ref="beamsets" minOccurs="0" maxOccurs="1"/>
+          <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="2147483647"/>  
+    </xs:sequence>
+    <xs:attribute name="minlength" type="ST_PositiveNumber" use="required"/>
+    <xs:attribute name="radius" type="ST_PositiveNumber" use="required"/>
+		<xs:attribute name="clipping" type="ST_ClipMode" default="none"/>
+		<xs:attribute name="clippingmesh" type="ST_ResourceID" />
+		<xs:attribute name="representationmesh" type="ST_ResourceID" />
+    <xs:attribute name="pid" type="ST_ResourceID" />
+    <xs:attribute name="pindex" type="ST_ResourceIndex" />
+    <xs:attribute name="cap" type="ST_CapMode" />
+  	<xs:anyAttribute namespace="##other" processContents="lax"/>
+  </xs:complexType>
+   <xs:complexType name="CT_Beam">
+   	<xs:sequence>
+      <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="2147483647"/>  
+    </xs:sequence>
+		<xs:attribute name="v1" type="ST_ResourceIndex" use="required" />
+		<xs:attribute name="v2" type="ST_ResourceIndex" use="required" />
+		<xs:attribute name="r1" type="ST_PositiveNumber" />
+		<xs:attribute name="r2" type="ST_PositiveNumber" />
+		<xs:attribute name="p1" type="ST_ResourceIndex" />
+		<xs:attribute name="p2" type="ST_ResourceIndex" />
+		<xs:attribute name="pid" type="ST_ResourceID" />
+		<xs:attribute name="cap1" type="ST_CapMode" />
+		<xs:attribute name="cap2" type="ST_CapMode" />
+  	<xs:anyAttribute namespace="##other" processContents="lax"/>
+  </xs:complexType>
+  <xs:complexType name="CT_Beams">
+   	<xs:sequence>
+      <xs:element ref="beam"/>
+      <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="2147483647"/>  
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="CT_BeamSet">
+   	<xs:sequence>
+      <xs:element ref="ref" minOccurs="0" maxOccurs="2147483647"/>
+      <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="2147483647"/>  
+    </xs:sequence>
+		<xs:attribute name="name" type="xs:string"/>
+		<xs:attribute name="identifier" type="xs:string"/>
+  	<xs:anyAttribute namespace="##other" processContents="lax"/>
+  </xs:complexType>
+  <xs:complexType name="CT_BeamSets">
+   	<xs:sequence>
+      <xs:element ref="beamset" minOccurs="0" maxOccurs="2147483647"/>
+      <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="2147483647"/>  
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="CT_Ref">
+    <xs:sequence>
+      <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="2147483647"/>
+    </xs:sequence>
+    <xs:attribute name="index" type="ST_ResourceIndex" use="required"/>
+    <xs:anyAttribute namespace="##other" processContents="lax"/>
+  </xs:complexType>
+	<!-- Simple Types -->
+	<xs:simpleType name="ST_ClipMode">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="none"/>
+			<xs:enumeration value="inside"/>
+			<xs:enumeration value="outisde"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ST_CapMode">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="hemisphere"/>
+			<xs:enumeration value="sphere"/>
+			<xs:enumeration value="butt"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ST_ResourceID">
+		<xs:restriction base="xs:positiveInteger">
+			<xs:maxExclusive value="2147483648"/>
+		</xs:restriction>
+	</xs:simpleType>
+  <xs:simpleType name="ST_PositiveNumber">
+    <xs:restriction base="xs:double">
+      <xs:whiteSpace value="collapse"/>
+      <xs:pattern value="((\+)?(([0-9]+(\.[0-9]+)?)|(\.[0-9]+))((e|E)(\-|\+)?[0-9]+)?)"/>
+    </xs:restriction>
+  </xs:simpleType>
+	<xs:simpleType name="ST_ResourceIndex">
+		<xs:restriction base="xs:nonNegativeInteger">
+			<xs:maxExclusive value="2147483648"/>
+		</xs:restriction>
+	</xs:simpleType>
+  <!-- Elements -->
+  <xs:element name="beam" type="CT_Beam"/>
+  <xs:element name="beams" type="CT_Beams"/>
+  <xs:element name="ref" type="CT_Ref"/>
+  <xs:element name="beamset" type="CT_BeamSet"/>
+  <xs:element name="beamsets" type="CT_BeamSets"/>
+	<xs:element name="beamlattice" type="CT_BeamLattice"/>
+</xs:schema>
