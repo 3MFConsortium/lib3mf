@@ -8,8 +8,8 @@ project (lib3MF)
 
 # Define Version
 set(LIB3MF_VERSION_MAJOR 1)				# increase on every backward-compatibility breaking change of the API
-set(LIB3MF_VERSION_MINOR 1)				# increase on every backward compatible change of the API
-set(LIB3MF_VERSION_MICRO 5)				# increase on on every change that does not alter the API
+set(LIB3MF_VERSION_MINOR 2)				# increase on every backward compatible change of the API
+set(LIB3MF_VERSION_MICRO 7)				# increase on on every change that does not alter the API
 
 set(CMAKE_INSTALL_BINDIR bin CACHE PATH "directory for installing binary files")
 set(CMAKE_INSTALL_LIBDIR lib CACHE PATH "directory for installing library files")
