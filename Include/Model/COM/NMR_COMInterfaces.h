@@ -816,6 +816,14 @@ namespace NMR {
 		*/
 		LIB3MFMETHOD(IsValidObject) (_Out_ BOOL * pbIsValid) LIB3MFABSTRACT;
 
+		/**
+		* Retrieves whether this object or one of its children references a slice
+		*
+		* @param[out] pbHasSlices returns true when the object or its children contain slices associated
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(HasSlices) (_Out_ BOOL * pbHasSlices) LIB3MFABSTRACT;
+
 		/* Property handling */
 
 		/**

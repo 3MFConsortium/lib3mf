@@ -115,4 +115,19 @@ namespace NMR {
 		return true;
 	}
 
+	nfBool CModelComponentsObject::hasSlices() 
+	{
+		if (m_Components.size() == 0)
+			return false;
+
+		for (auto iIterator = m_Components.begin(); iIterator != m_Components.end(); iIterator++) {
+			CModelObject * pObject = (*iIterator)->getObject();
+			__NMRASSERT(pObject);
+			if (pObject->hasSlices())
+				return true;
+		}
+
+		return false;
+	}
+
 }

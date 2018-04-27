@@ -83,6 +83,7 @@ namespace NMR {
 		LIB3MFMETHOD(IsMeshObject) (_Out_ BOOL * pbIsMeshObject);
 		LIB3MFMETHOD(IsComponentsObject) (_Out_ BOOL * pbIsComponentsObject);
 		LIB3MFMETHOD(IsValidObject) (_Out_ BOOL * pbIsValid);
+		LIB3MFMETHOD(HasSlices) (_Out_ BOOL * pbHasSlices);
 
 		LIB3MFMETHOD(CreateDefaultPropertyHandler) (_Outptr_ ILib3MFDefaultPropertyHandler ** ppPropertyHandler);
 		LIB3MFMETHOD(CreateDefaultMultiPropertyHandler) (_In_ DWORD nChannel, _Outptr_ ILib3MFDefaultPropertyHandler ** ppPropertyHandler);

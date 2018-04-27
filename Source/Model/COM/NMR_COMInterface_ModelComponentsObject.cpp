@@ -580,6 +580,28 @@ namespace NMR {
 		}
 	}
 
+	LIB3MFMETHODIMP CCOMModelComponentsObject::HasSlices(_Out_ BOOL * pbHasSlices)
+	{
+		try {
+			if (!pbHasSlices)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
+			CModelComponentsObject * pObject = getComponentsObject();
+			__NMRASSERT(pObject);
+
+			*pbHasSlices = pObject->hasSlices();
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
+
 	LIB3MFMETHODIMP CCOMModelComponentsObject::CreateDefaultPropertyHandler (_Outptr_ ILib3MFDefaultPropertyHandler ** ppPropertyHandler)
 	{
 		try {

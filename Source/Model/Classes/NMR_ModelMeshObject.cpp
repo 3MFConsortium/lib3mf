@@ -107,12 +107,17 @@ namespace NMR {
 
 	nfBool CModelMeshObject::isValidForSlices(const NMATRIX3& totalParentMatrix)
 	{
-		if (this->getSliceStackId() == 0) {
+		if (!this->hasSlices()) {
 			return true;
 		}
 		else {
 			return fnMATRIX3_isplanar(totalParentMatrix);
 		}
+	}
+
+	nfBool CModelMeshObject::hasSlices()
+	{
+		return (this->getSliceStackId() != 0);
 	}
 
 	nfBool CModelMeshObject::isManifoldAndOriented()

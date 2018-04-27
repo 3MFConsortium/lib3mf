@@ -65,6 +65,8 @@ namespace NMR {
 		virtual nfBool isValid();
 
 		virtual nfBool isValidForSlices(const NMATRIX3& totalParentMatrix);
+
+		virtual nfBool hasSlices();
 	};
 
 	typedef std::shared_ptr <CModelComponentsObject> PModelComponentsObject;

@@ -669,6 +669,15 @@ namespace NMR {
 
 		}
 
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_object_hasslices(_In_ PLib3MFModelObjectResource * pObject, _Out_ BOOL * pbHasSlices)
+		{
+			if (!pObject)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelObjectResource *)pObject)->HasSlices(pbHasSlices);
+
+		}
+
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_object_gettype(_In_ PLib3MFModelObjectResource * pObject, _Out_ DWORD * pObjectType)
 		{
 			if (!pObject)

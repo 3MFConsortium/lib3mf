@@ -1403,6 +1403,26 @@ namespace NMR {
 		}
 	}
 
+	LIB3MFMETHODIMP CCOMModelMeshObject::HasSlices(_Out_ BOOL * pbHasSlices)
+	{
+		try {
+			if (!pbHasSlices)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
+			CModelMeshObject * pObject = getMeshObject();
+			__NMRASSERT(pObject);
+
+			*pbHasSlices = pObject->hasSlices();
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
 
 	LIB3MFMETHODIMP CCOMModelMeshObject::IsValidObject(_Out_ BOOL * pbIsValid)
 	{

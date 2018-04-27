@@ -882,6 +882,15 @@ namespace NMR {
 		*/
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_object_iscomponentsobject(_In_ PLib3MFModelObjectResource * pObject, _Out_ BOOL * pbIsComponentObject);
 
+
+		/**
+		* Retrieves whether an object references slices or not. If pObject is a components object, each component will be tested recursively.
+		* @param[in] pObject Object Resource Instance
+		* @param[out] pbHasSlices returns true when the object or one of its children make reference to a slice
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_object_hasslices(_In_ PLib3MFModelObjectResource * pObject, _Out_ BOOL * pbHasSlices);
+
+
 		/**
 		* Retrieves, if the object is valid according to the core spec.
 		* For mesh objects, we distinguish between the type attribute of the object:

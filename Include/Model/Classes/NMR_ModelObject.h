@@ -93,6 +93,8 @@ namespace NMR {
 
 		virtual nfBool isValidForSlices(const NMATRIX3& totalParentMatrix) = 0;
 
+		virtual nfBool hasSlices() = 0;
+
 		// Set/Get Default Property
 		void setDefaultProperty (_In_ PModelDefaultProperty pModelDefaultProperty);
 		PModelDefaultProperty getDefaultProperty();

@@ -454,7 +454,7 @@ namespace NMR {
 					writeIntAttribute(XML_3MF_ATTRIBUTE_OBJECT_PINDEX, nPropertyIndex);
 				}
 
-				if (pMeshObject->getSliceStackId() != 0) {
+				if (pMeshObject->hasSlices()) {
 					writePrefixedStringAttribute(XML_3MF_NAMESPACEPREFIX_SLICE, XML_3MF_ATTRIBUTE_OBJECT_SLICESTACKID,
 						fnUint32ToWString(pMeshObject->getSliceStackId()->getUniqueID()));
 				}
