@@ -286,5 +286,25 @@ namespace NMR {
 	}
 #endif // NMR_COM_NATIVE
 	
+	LIB3MFMETHODIMP CCOMModelWriter::SetProgressCallback(_In_ void * callback, _In_ void* userData)
+	{
+		try
+		{
+			if (m_pModelWriter.get() == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDREADEROBJECT);
+
+			if (!callback)
+				m_pModelWriter->SetProgressCallback(nullptr, nullptr);
+			else
+				m_pModelWriter->SetProgressCallback(reinterpret_cast<Lib3MFProgressCallback>(callback), userData);
+			return  handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
 
 }

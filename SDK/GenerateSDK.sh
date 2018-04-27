@@ -47,6 +47,8 @@ cp ../Include/Common/Platform/NMR_COM_Native.h $SDKARTIFACTS/Include/Common/Plat
 cp ../Include/Common/Platform/NMR_SAL.h $SDKARTIFACTS/Include/Common/Platform/.
 cp ../Include/Common/Platform/NMR_WinTypes.h $SDKARTIFACTS/Include/Common/Platform/.
 cp ../Include/Common/Platform/NMR_COM_Emulation.h $SDKARTIFACTS/Include/Common/Platform/.
+cp ../Include/Common/3MF_ProgressTypes.h $SDKARTIFACTS/Include/Common/.
+cp ../Lib3MF-1.pdf $SDKARTIFACTS/Doc/.
 
 #=Obtain latest lib3MF-shared libraries=#
 echo Obtain latest lib3MF-shared libraries

@@ -57,9 +57,9 @@ namespace NMR {
 		return std::make_shared<CExportStream_GCC_Native> (pwszFileName);
 	}
 
-	PXmlReader fnCreateXMLReaderInstance (_In_ PImportStream pImportStream)
+	PXmlReader fnCreateXMLReaderInstance (_In_ PImportStream pImportStream, CProgressMonitor * pProgressMonitor)
 	{
-		return std::make_shared<CXmlReader_Native> (pImportStream, NMR_PLATFORM_XMLREADER_BUFFERSIZE);
+		return std::make_shared<CXmlReader_Native> (pImportStream, NMR_PLATFORM_XMLREADER_BUFFERSIZE, pProgressMonitor);
 	}
 
 }

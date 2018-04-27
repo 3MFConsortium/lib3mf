@@ -46,7 +46,8 @@ namespace NMR {
 	const char * CNMRException::what() const throw ()
 	{
 		switch (m_errorcode) {
-
+		// Success / user interaction (0x0XXX)
+		case NMR_USERABORTED: return "The called function was aborted by the user";
 		// General error codes (0x1XXX)
 		case NMR_ERROR_NOTIMPLEMENTED: return "The called function is not fully implemented";
 		case NMR_ERROR_INVALIDPARAM: return "The call parameter to the function was invalid";
@@ -122,6 +123,9 @@ namespace NMR {
 		case NMR_ERROR_INVALIDRELATIONSHIPTYPEFORTEXTURE: return "A texture must use a OPC part with relationshiptype 3D Texture.";
 		case NMR_ERROR_IMPORTSTREAMISEMPTY: return "An attachment to be read does coes not have any content.";
 		case NMR_ERROR_UUIDGENERATIONFAILED: return "Generation of a UUID failed.";
+		case NMR_ERROR_ZIPENTRYNON64_TOOLARGE: return "A ZIP Entry is too large for non zip64 zip-file";
+		case NMR_ERROR_ATTACHMENTTOOLARGE: return "An individual custom attachment is too large.";
+		case NMR_ERROR_ZIPCALLBACK: return "Error in libzip callback.";
 
 
 		// Unhandled exception
@@ -361,6 +365,8 @@ namespace NMR {
 		case NMR_ERROR_BEAMLATTICENODESTOOCLOSE: return "Nodes used for a beam are closer then the specified minimal length.";
 		case NMR_ERROR_BEAMLATTICE_INVALID_REPRESENTATIONRESOURCE: return "The resource defined as representationmesh is invalid.";
 		case NMR_ERROR_BEAMLATTICE_INVALID_OBJECTTYPE: return "Beamlattice is defined on wrong object type.";
+		case NMR_ERROR_SLICE_ONEVERTEX: return "Slice only contains one vertex.";
+		case NMR_ERROR_SLICE_ONEPOINT: return "Slice contains only one point within a polygon";
 
 		// XML Parser Error Constants(0x9XXX)
 		case NMR_ERROR_XMLPARSER_INVALIDATTRIBVALUE: return "Invalid XML attribute value";

@@ -36,8 +36,15 @@ NMR_ErrorConst.h defines all error code constants.
 // This is the output value of a "uncatched exception"
 #define NMR_GENERICEXCEPTIONSTRING "uncatched exception"
 
+/*-------------------------------------------------------------------
+  Success / user interaction (0x0XXX)
+-------------------------------------------------------------------*/
+
 // Function has suceeded, there has been no error
-#define NMR_SUCCESS 0
+#define NMR_SUCCESS 0x0
+
+// Function was aborted by user
+#define NMR_USERABORTED 0x0001
 
 /*-------------------------------------------------------------------
   General error codes (0x1XXX)
@@ -264,6 +271,15 @@ NMR_ErrorConst.h defines all error code constants.
 
 // UUID generation failed
 #define NMR_ERROR_UUIDGENERATIONFAILED 0x1049
+
+// ZIP Entry too large for non zip64 zip-file
+#define NMR_ERROR_ZIPENTRYNON64_TOOLARGE 0x104A
+
+// An individual custom attachment is too large
+#define NMR_ERROR_ATTACHMENTTOOLARGE 0x104B
+
+// Error in zip-callback
+#define NMR_ERROR_ZIPCALLBACK 0x104C
 
 /*-------------------------------------------------------------------
 Core framework error codes (0x2XXX)
@@ -990,6 +1006,12 @@ Model error codes (0x8XXX)
 
 // Beamlattice is defined on wrong object type
 #define NMR_ERROR_BEAMLATTICE_INVALID_OBJECTTYPE 0x80C1
+
+// Slice only contains one vertex
+#define NMR_ERROR_SLICE_ONEVERTEX 0x80C2
+
+// Slice contains only one point within a polygon
+#define NMR_ERROR_SLICE_ONEPOINT 0x80C3
 
 /*-------------------------------------------------------------------
 XML Parser Error Constants (0x9XXX)

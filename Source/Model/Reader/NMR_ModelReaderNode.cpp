@@ -40,7 +40,8 @@ A model reader node is an abstract base class for all XML nodes of a
 
 namespace NMR {
 
-	CModelReaderNode::CModelReaderNode(_In_ PModelReaderWarnings pWarnings)
+	CModelReaderNode::CModelReaderNode(_In_ PModelReaderWarnings pWarnings, _In_ CProgressMonitor* pProgressMonitor):
+		m_pProgressMonitor(pProgressMonitor)
 	{
 		m_bParsedAttributes = false;
 		m_bParsedContent = false;

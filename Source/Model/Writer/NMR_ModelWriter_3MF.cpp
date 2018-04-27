@@ -41,6 +41,7 @@ A model writer exports the in memory represenation into a 3MF file.
 
 #include "Common/Platform/NMR_XmlWriter.h"
 #include "Common/Platform/NMR_Platform.h"
+#include "Common/3MF_ProgressMonitor.h"
 
 namespace NMR {
 
@@ -54,14 +55,28 @@ namespace NMR {
 		if (pStream == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
+		m_pProgressMonitor->ResetLevels();
+		if (!m_pProgressMonitor->Progress(0.01, ProgressIdentifier::PROGRESS_CREATEOPCPACKAGE))
+			throw CNMRException(NMR_USERABORTED);
+
 		// Create new OPC Package
 		createPackage(m_pModel.get());
 
+		if (!m_pProgressMonitor->Progress(0.05, ProgressIdentifier::PROGRESS_WRITEMODELSTOSTREAM))
+			throw CNMRException(NMR_USERABORTED);
+
+		m_pProgressMonitor->PushLevel(0.05, 0.99);
 		// Write Package to Stream
 		writePackageToStream(pStream);
+		m_pProgressMonitor->PopLevel();
 
+		m_pProgressMonitor->Progress(0.99, ProgressIdentifier::PROGRESS_CLEANUP);
+		
 		// Release Memory
 		releasePackage();
+
+		if (!m_pProgressMonitor->Progress(1, ProgressIdentifier::PROGRESS_DONE))
+			throw CNMRException(NMR_USERABORTED);
 	}
 
 	void CModelWriter_3MF::writeSlicestackStream(_In_ CXmlWriter *pXMLWriter, _In_ CModel * pModel, _In_ CModelSliceStackResource *pSliceStackResource)
@@ -71,7 +86,7 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
 		pXMLWriter->WriteStartDocument();
-		CModelWriterNode100_Model ModelNode(pModel, pXMLWriter, pSliceStackResource);
+		CModelWriterNode100_Model ModelNode(pModel, pXMLWriter, m_pProgressMonitor.get(), pSliceStackResource);
 		ModelNode.writeToXML();
 
 		pXMLWriter->WriteEndDocument();
@@ -86,7 +101,7 @@ namespace NMR {
 
 		pXMLWriter->WriteStartDocument();
 
-		CModelWriterNode100_Model ModelNode(pModel, pXMLWriter);
+		CModelWriterNode100_Model ModelNode(pModel, pXMLWriter, m_pProgressMonitor.get());
 		ModelNode.writeToXML();
 
 		pXMLWriter->WriteEndDocument();

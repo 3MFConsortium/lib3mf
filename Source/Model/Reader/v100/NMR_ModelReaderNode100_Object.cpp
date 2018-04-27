@@ -53,8 +53,8 @@ Stream.
 
 namespace NMR {
 
-	CModelReaderNode100_Object::CModelReaderNode100_Object(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings, _In_ PModelReader_ColorMapping pColorMapping, _In_ PModelReader_TexCoordMapping pTexCoordMapping)
-		: CModelReaderNode(pWarnings)
+	CModelReaderNode100_Object::CModelReaderNode100_Object(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings, _In_ CProgressMonitor * pProgressMonitor, _In_ PModelReader_ColorMapping pColorMapping, _In_ PModelReader_TexCoordMapping pTexCoordMapping)
+		: CModelReaderNode(pWarnings, pProgressMonitor)
 	{
 		// Initialize variables
 		if (!pColorMapping.get())
@@ -248,11 +248,16 @@ namespace NMR {
 					if (!m_pObject->setObjectTypeString(m_sType, false))
 						m_pWarnings->addWarning(MODELREADERWARNING_INVALIDMODELOBJECTTYPE, NMR_ERROR_INVALIDMODELOBJECTTYPE, mrwInvalidOptionalValue);
 				}
-
-				// Read Mesh
-				PModelReaderNode100_Mesh pXMLNode = std::make_shared<CModelReaderNode100_Mesh>(m_pModel, pMesh.get(), m_pWarnings, m_pColorMapping, m_pTexCoordMapping, m_nDefaultPropertyID, m_nDefaultPropertyIndex);
-				pXMLNode->parseXML(pXMLReader);
 				
+
+				if (m_pProgressMonitor)
+					m_pProgressMonitor->PushLevel(0, 1);
+				// Read Mesh
+				PModelReaderNode100_Mesh pXMLNode = std::make_shared<CModelReaderNode100_Mesh>(m_pModel, pMesh.get(), m_pWarnings, m_pProgressMonitor, m_pColorMapping, m_pTexCoordMapping, m_nDefaultPropertyID, m_nDefaultPropertyIndex);
+				pXMLNode->parseXML(pXMLReader);
+				if (m_pProgressMonitor)
+					m_pProgressMonitor->PopLevel();
+
 				// Add Object to Parent
 				m_pModel->addResource(m_pObject);
 

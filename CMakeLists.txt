@@ -8,8 +8,8 @@ project (lib3MF)
 
 # Define Version
 set(LIB3MF_VERSION_MAJOR 1)				# increase on every backward-compatibility breaking change of the API
-set(LIB3MF_VERSION_MINOR 0)				# increase on every backward compatible change of the API
-set(LIB3MF_VERSION_MICRO 7)				# increase on on every change that does not alter the API
+set(LIB3MF_VERSION_MINOR 1)				# increase on every backward compatible change of the API
+set(LIB3MF_VERSION_MICRO 5)				# increase on on every change that does not alter the API
 
 set(CMAKE_INSTALL_BINDIR bin CACHE PATH "directory for installing binary files")
 set(CMAKE_INSTALL_LIBDIR lib CACHE PATH "directory for installing library files")
@@ -96,11 +96,11 @@ add_library(${PROJECT_NAME}_s STATIC ${SRCS_MAIN_PLATFORM} ${SRCS_COMMON})
 target_include_directories(${PROJECT_NAME}_s PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include)
 target_include_directories(${PROJECT_NAME}_s PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/Include)
 SET_TARGET_PROPERTIES(${PROJECT_NAME}_s PROPERTIES PREFIX "" IMPORT_PREFIX "")
-if (UNIX)
+if (UNIX OR MINGW)
 	target_compile_options(${PROJECT_NAME}_s PUBLIC "-fPIC")
 	# Uncomment the following to but the version info into the .so-file.
-	SET_TARGET_PROPERTIES(${PROJECT_NAME}_s PROPERTIES VERSION "${LIB3MF_VERSION_MAJOR}")
-	SET_TARGET_PROPERTIES(${PROJECT_NAME}_s PROPERTIES SOVERSION "${LIB3MF_VERSION_MAJOR}.${LIB3MF_VERSION_MINOR}.${LIB3MF_VERSION_MICRO}.${BUILD_NUMBER}")
+	SET_TARGET_PROPERTIES(${PROJECT_NAME}_s PROPERTIES VERSION "${LIB3MF_VERSION_MAJOR}.${LIB3MF_VERSION_MINOR}.${LIB3MF_VERSION_MICRO}.${BUILD_NUMBER}")
+	SET_TARGET_PROPERTIES(${PROJECT_NAME}_s PROPERTIES SOVERSION "${LIB3MF_VERSION_MAJOR}")
 	if (NOT APPLE)
 		SET_TARGET_PROPERTIES(${PROJECT_NAME}_s PROPERTIES LINK_FLAGS -s)
 	endif()
@@ -125,9 +125,9 @@ add_library(${PROJECT_NAME} SHARED ${SRCS_MAIN_PLATFORM}
 set(STARTUPPROJECT ${PROJECT_NAME})
 SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES PREFIX "" IMPORT_PREFIX "")
 target_link_libraries(${PROJECT_NAME} ${PROJECT_NAME}_s)
-if (UNIX)
+if (UNIX OR MINGW)
 	# Uncomment the following to but the version info into the .so-file.
-	SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES SOVERSION "${LIB3MF_VERSION_MAJOR}.${LIB3MF_VERSION_MINOR}.${LIB3MF_VERSION_MICRO}")
+	SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES VERSION "${LIB3MF_VERSION_MAJOR}.${LIB3MF_VERSION_MINOR}.${LIB3MF_VERSION_MICRO}.${BUILD_NUMBER}")
 	SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES SOVERSION "${LIB3MF_VERSION_MAJOR}")
 endif()
 install(TARGETS ${PROJECT_NAME}

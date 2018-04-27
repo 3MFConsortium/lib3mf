@@ -34,6 +34,8 @@ NMR_XMLReader_Native.cpp implements a XML reader class with a native XML parsing
 #include "Common/NMR_Exception.h" 
 #include "Common/NMR_StringUtils.h" 
 
+#include "Common/3MF_ProgressMonitor.h"
+
 #include <algorithm>
 
 namespace NMR {
@@ -52,9 +54,8 @@ namespace NMR {
 		return nResult;
 
 	}
-
-	CXmlReader_Native::CXmlReader_Native(_In_ PImportStream pImportStream, _In_ nfUint32 cbBufferCapacity)
-		: CXmlReader(pImportStream)
+	CXmlReader_Native::CXmlReader_Native(_In_ PImportStream pImportStream, _In_ nfUint32 cbBufferCapacity, _In_ CProgressMonitor* pProgressMonitor)
+		: CXmlReader(pImportStream), m_progressCounter(0), m_pProgressMonitor(pProgressMonitor)
 	{
 		if ((cbBufferCapacity < NMR_NATIVEXMLREADER_MINBUFFERCAPACITY) ||
 			(cbBufferCapacity > NMR_NATIVEXMLREADER_MAXBUFFERCAPACITY))
@@ -96,6 +97,7 @@ namespace NMR {
 
 		registerNameSpace(NMR_NATIVEXMLNS_XML_PREFIX, NMR_NATIVEXMLNS_XML_URI);
 		registerNameSpace(NMR_NATIVEXMLNS_XMLNS_PREFIX, NMR_NATIVEXMLNS_XMLNS_URI);
+
 	}
 
 	CXmlReader_Native::~CXmlReader_Native()
@@ -185,7 +187,6 @@ namespace NMR {
 	{
 		if (m_nCurrentEntityIndex >= m_nCurrentFullEntityCount) {
 			readNextBufferFromStream();
-
 			__NMRASSERT(m_nCurrentEntityIndex == 0);
 			if (m_nCurrentFullEntityCount == 0) {
 				m_bIsEOF = true;
@@ -339,6 +340,13 @@ namespace NMR {
 
 	void CXmlReader_Native::readNextBufferFromStream()
 	{
+		if (m_progressCounter++ > PROGRESS_READBUFFERUPDATE) {
+			if (m_pProgressMonitor)
+				if (!m_pProgressMonitor->QueryCancelled())
+					throw CNMRException(NMR_USERABORTED);
+			m_progressCounter = 0;
+		}
+		
 		nfUint64 cbBytesRead;
 		nfUint32 j;
 

@@ -146,9 +146,9 @@ namespace NMR {
 		MODELTEXTURETYPE_JPEG = 2,
 	};
 
-  typedef struct {
-    FLOAT m_fPosition[2];
-  } MODELSLICEVERTEX;
+	typedef struct {
+		FLOAT m_fPosition[2];
+	} MODELSLICEVERTEX;
 }
 
 #endif // __NMR_MODELTYPES

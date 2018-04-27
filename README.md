@@ -21,9 +21,12 @@ The current code runs on Windows, Linux and Mac. To generate projects for Visual
 Makefiles use the scripts in the folder [cmake](cmake).
 
 ### Dependencies
+* All platforms: [googletest](https://github.com/google/googletest)
+    * included as a submodule in [UnitTests](UnitTests). Initialize it by running
+   `git submodule update --init`
 * Unix: [uuid](https://linux.die.net/man/3/uuid)
-    * Linux (Ubuntu/Debian): sudo at-get install uuid-dev
-    * MAC: brew install ossp-uuid
+    * Linux (Ubuntu/Debian): `sudo apt-get install uuid-dev`
+    * MAC: `brew install ossp-uuid`
 
 Instead of building lib3MF from source, you can download the compiled shared libarary as part of a minimal SDK from the [official releases](https://github.com/3MFConsortium/lib3mf/releases),
 or use the [nightly builds](https://github.com/3MFConsortium/lib3mf-binaries)
@@ -33,7 +36,7 @@ For example code, please refer to the examples in the SDK (SDK/Examples) or to
 [https://github.com/3MFConsortium/lib3mf-examples](https://github.com/3MFConsortium/lib3mf-examples).
 
 ## Documentation
-For a more detailed documentation, please take a look into the PDF in the root directory
+For a more detailed documentation, please take a look into the [PDF](Lib3MF-1.pdf) in the root directory
 of this repository.
 
 ## License

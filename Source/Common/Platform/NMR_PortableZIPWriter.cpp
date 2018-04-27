@@ -1,5 +1,6 @@
 /*++
 
+Copyright (C) 2018 Autodesk Inc.
 Copyright (C) 2015 netfabb GmbH (Original Author)
 
 All rights reserved.
@@ -37,7 +38,7 @@ NMR_PortableZIPWriter.cpp implements a portable and fast writer of ZIP files
 
 namespace NMR {
 
-	CPortableZIPWriter::CPortableZIPWriter(_In_ PExportStream pExportStream)
+	CPortableZIPWriter::CPortableZIPWriter(_In_ PExportStream pExportStream, _In_ nfBool bWriteZIP64)
 	{
 		if (pExportStream.get() == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
@@ -47,16 +48,26 @@ namespace NMR {
 		m_nNextEntryKey = 1;
 		m_pCurrentEntry = nullptr;
 		m_bIsFinished = false;
+		m_bWriteZIP64 = bWriteZIP64;
+
+		if (m_bWriteZIP64) {
+			m_nVersionMade = ZIPFILEVERSIONNEEDEDZIP64;
+			m_nVersionNeeded = ZIPFILEVERSIONNEEDEDZIP64;
+		}
+		else {
+			m_nVersionMade = ZIPFILEVERSIONNEEDED;
+			m_nVersionNeeded = ZIPFILEVERSIONNEEDED;
+		}
 
 		if (m_pExportStream->getPosition() != 0)
 			throw CNMRException(NMR_ERROR_EXPORTSTREAMNOTEMPTY);
+
 	}
 
 	CPortableZIPWriter::~CPortableZIPWriter()
 	{
 		if (!m_bIsFinished)
 			writeDirectory();
-
 	}
 
 	PExportStream CPortableZIPWriter::createEntry(_In_ const std::wstring sName, _In_ nfTimeStamp nUnixTimeStamp)
@@ -87,7 +98,7 @@ namespace NMR {
 		// Write local file header
 		ZIPLOCALFILEHEADER LocalHeader;
 		LocalHeader.m_nSignature = ZIPFILEHEADERSIGNATURE;
-		LocalHeader.m_nVersion = ZIPFILEVERSIONNEEDED;
+		LocalHeader.m_nVersion = m_nVersionNeeded;
 		LocalHeader.m_nGeneralPurposeFlags = 0;
 		LocalHeader.m_nCompressionMethod = ZIPFILECOMPRESSION_DEFLATED;
 		LocalHeader.m_nLastModTime = nLastModTime;
@@ -98,24 +109,23 @@ namespace NMR {
 		LocalHeader.m_nFileNameLength = nNameLength;
 		LocalHeader.m_nExtraFieldLength = 0;// sizeof(ZIPLOCALFILEADDITIONALHEADER) + sizeof(ZIPLOCALFILEEXTENDEDINFORMATIONFIELD);
 
-		/*ZIPLOCALFILEADDITIONALHEADER AdditionalHeader;
-		AdditionalHeader.m_nHeaderID = ZIPFILEDATAZIP64EXTENDEDINFORMATIONEXTRAFIELD;
-		AdditionalHeader.m_nDataSize = sizeof(ZIPLOCALFILEEXTENDEDINFORMATIONFIELD);
+		if (m_bWriteZIP64) {
+			LocalHeader.m_nExtraFieldLength += sizeof(ZIP64EXTRAINFORMATIONFIELD);
+		}
 
-		ZIPLOCALFILEEXTENDEDINFORMATIONFIELD ExtendedInformation;
-		ExtendedInformation.m_nCompressedSize = 0;
-		ExtendedInformation.m_nUncompressedSize = 0;
-		ExtendedInformation.m_nDiskStartNumber = 0;
-		ExtendedInformation.m_nRelativeHeaderOffset = 0; */
+		ZIP64EXTRAINFORMATIONFIELD zip64ExtraInformation;
+		zip64ExtraInformation.m_nTag = ZIPFILEDATAZIP64EXTENDEDINFORMATIONEXTRAFIELD;
+		zip64ExtraInformation.m_nFieldSize = sizeof(ZIP64EXTRAINFORMATIONFIELD) - 4;
+		zip64ExtraInformation.m_nCompressedSize = 0;
+		zip64ExtraInformation.m_nUncompressedSize = 0;
 
 		// Write data to ZIP stream
 		nfUint64 nFilePosition = m_pExportStream->getPosition();
 		m_pExportStream->writeBuffer(&LocalHeader, sizeof(LocalHeader));
 		m_pExportStream->writeBuffer(sUTF8Name.c_str(), nNameLength);
-		//m_pExportStream->writeBuffer(&AdditionalHeader, sizeof(AdditionalHeader));
-
 		nfUint64 nExtInfoPosition = m_pExportStream->getPosition();
-		//m_pExportStream->writeBuffer(&ExtendedInformation, sizeof(ExtendedInformation));
+		if (m_bWriteZIP64)
+			m_pExportStream->writeBuffer(&zip64ExtraInformation, sizeof(zip64ExtraInformation));
 
 		nfUint64 nDataPosition = m_pExportStream->getPosition();
 
@@ -143,24 +153,34 @@ namespace NMR {
 			// Write CRC and Size
 			ZIPLOCALFILEDESCRIPTOR FileDescriptor;
 			FileDescriptor.m_nCRC32 = m_pCurrentEntry->getCRC32();
-			FileDescriptor.m_nCompressedSize = (nfUint32) m_pCurrentEntry->getCompressedSize();
-			FileDescriptor.m_nUnCompressedSize = (nfUint32) m_pCurrentEntry->getUncompressedSize();
+			if (m_bWriteZIP64) {
+				FileDescriptor.m_nCompressedSize =0xFFFFFFFF;
+				FileDescriptor.m_nUnCompressedSize = 0xFFFFFFFF;
+			}
+			else {
+				if ((m_pCurrentEntry->getCompressedSize() > ZIPFILEMAXIMUMSIZENON64) ||
+					(m_pCurrentEntry->getUncompressedSize() > ZIPFILEMAXIMUMSIZENON64))
+					throw CNMRException(NMR_ERROR_ZIPENTRYNON64_TOOLARGE);
+				FileDescriptor.m_nCompressedSize = (nfUint32)m_pCurrentEntry->getCompressedSize();
+				FileDescriptor.m_nUnCompressedSize = (nfUint32)m_pCurrentEntry->getUncompressedSize();
+			}
 
+			ZIP64EXTRAINFORMATIONFIELD zip64ExtraInformation;
+			zip64ExtraInformation.m_nTag = ZIPFILEDATAZIP64EXTENDEDINFORMATIONEXTRAFIELD;
+			zip64ExtraInformation.m_nFieldSize = sizeof(ZIP64EXTRAINFORMATIONFIELD) - 4;
+			zip64ExtraInformation.m_nCompressedSize = m_pCurrentEntry->getCompressedSize();
+			zip64ExtraInformation.m_nUncompressedSize = m_pCurrentEntry->getUncompressedSize();
+			
 			// Write File Descriptor to file
 			m_pExportStream->seekPosition(m_pCurrentEntry->getFilePosition() + ZIPFILEDESCRIPTOROFFSET, true);
 			m_pExportStream->writeBuffer(&FileDescriptor, sizeof(FileDescriptor));
 
-			// Write Extended Information to file
-			/*ZIPLOCALFILEEXTENDEDINFORMATIONFIELD ExtendedInformation;
-			ExtendedInformation.m_nCompressedSize = m_pCurrentEntry->getCompressedSize();
-			ExtendedInformation.m_nUncompressedSize = m_pCurrentEntry->getUncompressedSize();
-			ExtendedInformation.m_nDiskStartNumber = 0;
-			ExtendedInformation.m_nRelativeHeaderOffset = m_pCurrentEntry->getFilePosition();
+			if (m_bWriteZIP64) {
+				// Write Extra Information to file
+				m_pExportStream->seekPosition(m_pCurrentEntry->getExtInfoPosition(), true);
+				m_pExportStream->writeBuffer(&zip64ExtraInformation, sizeof(zip64ExtraInformation));
+			}
 
-			// Write Info Table
-			m_pExportStream->seekPosition(m_pCurrentEntry->getExtInfoPosition(), true);
-			//m_pExportStream->writeBuffer(&ExtendedInformation, sizeof(ExtendedInformation));
-            */
 			// Reset file pointer
 			m_pExportStream->seekFromEnd(0, true);
 		}
@@ -226,44 +246,80 @@ namespace NMR {
 			PPortableZIPWriterEntry pEntry = *iIterator;
 			std::string sUTF8Name = pEntry->getUTF8Name();
 			nfUint32 nNameLength = (nfUint32)sUTF8Name.length();
-
+			
 			ZIPCENTRALDIRECTORYFILEHEADER DirectoryHeader;
 			DirectoryHeader.m_nSignature = ZIPFILECENTRALHEADERSIGNATURE;
-			DirectoryHeader.m_nVersionMade = ZIPFILEVERSIONNEEDED;
-			DirectoryHeader.m_nVersionNeeded = ZIPFILEVERSIONNEEDED;
+			DirectoryHeader.m_nVersionMade = m_nVersionMade;
+			DirectoryHeader.m_nVersionNeeded = m_nVersionNeeded;
 			DirectoryHeader.m_nGeneralPurposeFlags = 0;
 			DirectoryHeader.m_nCompressionMethod = ZIPFILECOMPRESSION_DEFLATED;
 			DirectoryHeader.m_nLastModTime = pEntry->getLastModTime();
 			DirectoryHeader.m_nLastModDate = pEntry->getLastModDate();
 			DirectoryHeader.m_nCRC32 = pEntry->getCRC32();
-			DirectoryHeader.m_nCompressedSize = (nfUint32) pEntry->getCompressedSize();
-			DirectoryHeader.m_nUnCompressedSize = (nfUint32) pEntry->getUncompressedSize();
+			DirectoryHeader.m_nCompressedSize = 0;
+			DirectoryHeader.m_nUnCompressedSize = 0;
 			DirectoryHeader.m_nFileNameLength = nNameLength;
-			DirectoryHeader.m_nExtraFieldLength = 0;//sizeof(ZIPLOCALFILEADDITIONALHEADER) + sizeof(ZIPLOCALFILEEXTENDEDINFORMATIONFIELD);
+			DirectoryHeader.m_nExtraFieldLength = 0;
 			DirectoryHeader.m_nFileCommentLength = 0;
 			DirectoryHeader.m_nDiskNumberStart = 0;
 			DirectoryHeader.m_nInternalFileAttributes = 0;
 			DirectoryHeader.m_nExternalFileAttributes = ZIPFILEEXTERNALFILEATTRIBUTES;
 			DirectoryHeader.m_nRelativeOffsetOfLocalHeader = (nfUint32) pEntry->getFilePosition();
 
-			/*ZIPLOCALFILEADDITIONALHEADER AdditionalHeader;
-			AdditionalHeader.m_nHeaderID = ZIPFILEDATAZIP64EXTENDEDINFORMATIONEXTRAFIELD;
-			AdditionalHeader.m_nDataSize = sizeof(ZIPLOCALFILEEXTENDEDINFORMATIONFIELD);
-
-			ZIPLOCALFILEEXTENDEDINFORMATIONFIELD ExtendedInformation;
-			ExtendedInformation.m_nCompressedSize = pEntry->getCompressedSize();
-			ExtendedInformation.m_nUncompressedSize = pEntry->getUncompressedSize();
-			ExtendedInformation.m_nDiskStartNumber = 0;
-			ExtendedInformation.m_nRelativeHeaderOffset = 0; */
+			nfUint64 nRelativeOffsetOfLocalHeader = pEntry->getFilePosition();
+			if (m_bWriteZIP64) {
+				DirectoryHeader.m_nCompressedSize = 0xFFFFFFFF;
+				DirectoryHeader.m_nUnCompressedSize = 0xFFFFFFFF;
+				DirectoryHeader.m_nExtraFieldLength += sizeof(ZIP64EXTRAINFORMATIONFIELD) + sizeof(nRelativeOffsetOfLocalHeader);
+				DirectoryHeader.m_nRelativeOffsetOfLocalHeader = 0xFFFFFFFF;
+			}
+			else {
+				if ((m_pCurrentEntry->getCompressedSize() > ZIPFILEMAXIMUMSIZENON64) ||
+					(m_pCurrentEntry->getUncompressedSize() > ZIPFILEMAXIMUMSIZENON64))
+					throw CNMRException(NMR_ERROR_ZIPENTRYNON64_TOOLARGE);
+				DirectoryHeader.m_nCompressedSize = (nfUint32)pEntry->getCompressedSize();
+				DirectoryHeader.m_nUnCompressedSize = (nfUint32)pEntry->getUncompressedSize();
+			}
 
 			m_pExportStream->writeBuffer(&DirectoryHeader, (nfUint64) sizeof(DirectoryHeader));
 			m_pExportStream->writeBuffer(sUTF8Name.c_str(), nNameLength);
-			//m_pExportStream->writeBuffer(&AdditionalHeader, sizeof(AdditionalHeader));
-			//m_pExportStream->writeBuffer(&ExtendedInformation, sizeof(ExtendedInformation));
+			
+			if (m_bWriteZIP64) {
+				ZIP64EXTRAINFORMATIONFIELD zip64ExtraInformation;
+				zip64ExtraInformation.m_nTag = ZIPFILEDATAZIP64EXTENDEDINFORMATIONEXTRAFIELD;
+				zip64ExtraInformation.m_nFieldSize = sizeof(ZIP64EXTRAINFORMATIONFIELD) - 4 + sizeof(nRelativeOffsetOfLocalHeader);
+				zip64ExtraInformation.m_nCompressedSize = pEntry->getCompressedSize();
+				zip64ExtraInformation.m_nUncompressedSize = pEntry->getUncompressedSize();
 
+				m_pExportStream->writeBuffer(&zip64ExtraInformation, sizeof(zip64ExtraInformation));
+				m_pExportStream->writeBuffer(&nRelativeOffsetOfLocalHeader, sizeof(nRelativeOffsetOfLocalHeader));
+			}
+			
 			iIterator++;
 		}
 
+		nfUint64 nEndOfCentralDir64StartPos = m_pExportStream->getPosition();
+
+		// [ZIP64 end of central directory record]
+		ZIP64ENDOFCENTRALDIRHEADER EndHeader64;
+		EndHeader64.m_nSignature = ZIP64FILEENDOFCENTRALDIRRECORDSIGNATURE;
+		EndHeader64.m_nEndOfCentralDirHeaderRecord = (nfUint64)(sizeof(ZIP64ENDOFCENTRALDIRHEADER) - 12);
+		EndHeader64.m_nVersionMade = m_nVersionMade;
+		EndHeader64.m_nVersionNeeded = m_nVersionNeeded;
+		EndHeader64.m_nNumberOfDisk = 0;
+		EndHeader64.m_nNumberOfDiskOfCentralDirectory = 0;
+		EndHeader64.m_nTotalNumberOfEntriesOnThisDisk = m_Entries.size();
+		EndHeader64.m_nTotalNumberOfEntriesInCentralDirectory = m_Entries.size();
+		EndHeader64.m_nSizeOfCentralDirectory = (nfUint64)(m_pExportStream->getPosition() - nCentralDirStartPos);
+		EndHeader64.m_nOffsetOfCentralDirectoryWithRespectToDisk = nCentralDirStartPos;
+		
+		// [ZIP64 end of central directory locator]
+		ZIP64ENDOFCENTRALDIRLOCATOR EndLocator64;
+		EndLocator64.m_nSignature = ZIP64FILEENDOFCENTRALDIRLOCATORSIGNATURE;
+		EndLocator64.m_nNumberOfDiskWithStartOfZIP64EOCentralDir = 0;
+		EndLocator64.m_nTotalNumberOfDisk = 1;
+		EndLocator64.m_nRelativeOffset = nEndOfCentralDir64StartPos;
+		
 		ZIPENDOFCENTRALDIRHEADER EndHeader;
 		EndHeader.m_nSignature = ZIPFILEENDOFCENTRALDIRSIGNATURE;
 		EndHeader.m_nNumberOfDisk = 0;
@@ -274,6 +330,11 @@ namespace NMR {
 		EndHeader.m_nOffsetOfCentralDirectory = (nfUint32)nCentralDirStartPos;
 		EndHeader.m_nCommentLength = 0;
 
+		if (m_bWriteZIP64) {
+			EndHeader.m_nOffsetOfCentralDirectory = 0xFFFFFFFF;
+			m_pExportStream->writeBuffer(&EndHeader64, sizeof(EndHeader64));
+			m_pExportStream->writeBuffer(&EndLocator64, sizeof(EndLocator64));
+		}
 		m_pExportStream->writeBuffer(&EndHeader, (nfUint64) sizeof(EndHeader));
 
 		m_bIsFinished = true;

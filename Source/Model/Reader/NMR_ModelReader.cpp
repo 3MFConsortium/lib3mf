@@ -50,6 +50,8 @@ namespace NMR {
 		m_pModel = pModel;
 		m_pWarnings = std::make_shared<CModelReaderWarnings>();
 
+		m_pProgressMonitor = std::make_shared<CProgressMonitor>();
+
 		// Clear all legacy settings
 		m_pModel->clearAll();
 	}
@@ -94,4 +96,8 @@ namespace NMR {
 		m_RelationsToRead.erase(sRelationShipType);
 	}
 
+	void CModelReader::SetProgressCallback(Lib3MFProgressCallback callback, void* userData)
+	{
+		m_pProgressMonitor->SetProgressCallback(callback, userData);
+	}
 }

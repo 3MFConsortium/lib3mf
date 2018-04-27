@@ -38,9 +38,13 @@ NMR_PortableZIPWriterTypes.h defines a portable and fast writer of ZIP files
 #define ZIPFILEHEADERSIGNATURE 0x04034b50
 #define ZIPFILECENTRALHEADERSIGNATURE 0x02014b50
 #define ZIPFILEENDOFCENTRALDIRSIGNATURE 0x06054b50
-#define ZIPFILEDATADESCRIPTORSIGNATURE 0x08074b5
+#define ZIPFILEDATADESCRIPTORSIGNATURE 0x08074b50
 #define ZIPFILEDESCRIPTOROFFSET 14
 #define ZIPFILEVERSIONNEEDED 10
+#define ZIPFILEVERSIONNEEDEDZIP64 0x2D
+#define ZIP64FILEENDOFCENTRALDIRRECORDSIGNATURE 0x06064b50
+#define ZIP64FILEENDOFCENTRALDIRLOCATORSIGNATURE 0x07064b50
+
 #define ZIPFILEEXTERNALFILEATTRIBUTES 0x80 // faArchive
 #define ZIPFILEMAXENTRIES 2147483647 // 2^31 - 1
 
@@ -51,6 +55,8 @@ NMR_PortableZIPWriterTypes.h defines a portable and fast writer of ZIP files
 #define ZIPFILECOMPRESSION_UNCOMPRESSED 0
 #define ZIPFILECOMPRESSION_DEFLATED 8
 #define ZIPFILEMAXFILENAMELENGTH 32000
+
+#define ZIPFILEMAXIMUMSIZENON64 0xFFFFFFFF
 
 namespace NMR {
 
@@ -75,18 +81,13 @@ namespace NMR {
 		nfUint32 m_nCompressedSize;
 		nfUint32 m_nUnCompressedSize;
 	} ZIPLOCALFILEDESCRIPTOR;
-		
-	typedef struct {
-		nfUint16 m_nHeaderID;
-		nfUint16 m_nDataSize;
-	} ZIPLOCALFILEADDITIONALHEADER;
 
 	typedef struct {
+		nfUint16 m_nTag;
+		nfUint16 m_nFieldSize;
 		nfUint64 m_nUncompressedSize;
 		nfUint64 m_nCompressedSize;
-		nfUint64 m_nRelativeHeaderOffset;
-		nfUint32 m_nDiskStartNumber;
-	} ZIPLOCALFILEEXTENDEDINFORMATIONFIELD;
+	} ZIP64EXTRAINFORMATIONFIELD;
 
 	typedef struct {
 		nfUint32 m_nSignature;
@@ -118,6 +119,27 @@ namespace NMR {
 		nfUint32 m_nOffsetOfCentralDirectory;
 		nfUint16 m_nCommentLength;
 	} ZIPENDOFCENTRALDIRHEADER;
+
+	typedef struct {
+		nfUint32 m_nSignature;
+		nfUint64 m_nEndOfCentralDirHeaderRecord;
+		nfUint16 m_nVersionMade;
+		nfUint16 m_nVersionNeeded;
+		nfUint32 m_nNumberOfDisk;
+		nfUint32 m_nNumberOfDiskOfCentralDirectory;
+		nfUint64 m_nTotalNumberOfEntriesOnThisDisk;
+		nfUint64 m_nTotalNumberOfEntriesInCentralDirectory;
+		nfUint64 m_nSizeOfCentralDirectory;
+		nfUint64 m_nOffsetOfCentralDirectoryWithRespectToDisk;
+		// zip64 extensible data sector, variable size; not used
+	} ZIP64ENDOFCENTRALDIRHEADER;
+
+	typedef struct {
+		nfUint32 m_nSignature;
+		nfUint32 m_nNumberOfDiskWithStartOfZIP64EOCentralDir;
+		nfUint64 m_nRelativeOffset;
+		nfUint32 m_nTotalNumberOfDisk;
+	} ZIP64ENDOFCENTRALDIRLOCATOR;
 
 #pragma pack()
 

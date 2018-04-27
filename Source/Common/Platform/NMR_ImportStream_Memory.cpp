@@ -59,7 +59,12 @@ namespace NMR {
 
 		// Retrieve Capacity and allocate buffer.
 		nfUint64 cbCapacity = cbBytesToCopy;
-		m_Buffer.resize((size_t) cbCapacity);
+		try {
+			m_Buffer.resize((size_t)cbCapacity);
+		}
+		catch (std::bad_alloc) {
+			throw CNMRException(NMR_ERROR_INVALIDBUFFERSIZE);
+		}
 
 		m_cbSize = 0;
 		m_nPosition = 0;
@@ -151,6 +156,11 @@ namespace NMR {
 
 	nfBool CImportStream_Memory::seekFromEnd(_In_ nfUint64 cbBytes, _In_ nfBool bHasToSucceed)
 	{
+		// all seekFromEnd functions follow the calling conventions of fseek.
+		// fseek expects a negative number to seek from the end (SEEK_END).
+		// The program logic in this function requires a positive offset from the end.
+		cbBytes = 1+~cbBytes;
+
 		if (cbBytes > m_cbSize) {
 			if (bHasToSucceed)
 				throw CNMRException(NMR_ERROR_COULDNOTSEEKSTREAM);

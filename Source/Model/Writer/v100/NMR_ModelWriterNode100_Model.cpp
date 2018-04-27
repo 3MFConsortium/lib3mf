@@ -53,10 +53,13 @@ This is the class for exporting the 3mf model stream root node.
 #include "Common/MeshInformation/NMR_MeshInformation_TexCoords.h"
 #include "Common/MeshInformation/NMR_MeshInformation_Slices.h"
 
+#include "Common/3MF_ProgressMonitor.h"
+
+
 namespace NMR {
 
-	CModelWriterNode100_Model::CModelWriterNode100_Model(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter)
-		:CModelWriterNode(pModel, pXMLWriter)
+	CModelWriterNode100_Model::CModelWriterNode100_Model(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter, _In_ CProgressMonitor * pProgressMonitor)
+		:CModelWriterNode(pModel, pXMLWriter, pProgressMonitor)
 	{
 		m_ResourceCounter = pModel->generateResourceID();
 
@@ -116,7 +119,8 @@ namespace NMR {
 		}
 	}
 
-	CModelWriterNode100_Model::CModelWriterNode100_Model(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter, CModelSliceStackResource *pSliceStackResource) : CModelWriterNode(pModel, pXMLWriter)
+	CModelWriterNode100_Model::CModelWriterNode100_Model(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter, _In_ CProgressMonitor * pProgressMonitor,
+		CModelSliceStackResource *pSliceStackResource) : CModelWriterNode(pModel, pXMLWriter, pProgressMonitor)
 	{
 		m_bWriteMaterialExtension = false;
 		m_bWriteMaterialExtension = false;
@@ -302,46 +306,56 @@ namespace NMR {
 		else {
 			nfUint32 nSliceIndex;
 			for (nSliceIndex = 0; nSliceIndex < pSliceStackResource->getSliceStack()->getSliceCount(); nSliceIndex++) {
+				if (nSliceIndex % PROGRESS_SLICEUPDATE == PROGRESS_SLICEUPDATE-1) {
+					if (m_pProgressMonitor && !m_pProgressMonitor->Progress(-1, ProgressIdentifier::PROGRESS_WRITESLICES))
+						throw CNMRException(NMR_USERABORTED);
+				}
 				PSlice pSlice = pSliceStackResource->getSliceStack()->getSlice(nSliceIndex);
 
 				writeStartElementWithPrefix(XML_3MF_ELEMENT_SLICE, XML_3MF_NAMESPACEPREFIX_SLICE);
 
 				writeFloatAttribute(XML_3MF_ATTRIBUTE_SLICEZTOP, pSlice->getTopZ());
 
-				writeStartElementWithPrefix(XML_3MF_ELEMENT_SLICEVERTICES, XML_3MF_NAMESPACEPREFIX_SLICE);
+				if (pSlice->getVertexCount() >= 2) {
+					writeStartElementWithPrefix(XML_3MF_ELEMENT_SLICEVERTICES, XML_3MF_NAMESPACEPREFIX_SLICE);
 
-				nfUint32 nVertexIndex;
+					for (nfUint32 nVertexIndex = 0; nVertexIndex < pSlice->getVertexCount(); nVertexIndex++) {
+						writeStartElementWithPrefix(XML_3MF_ELEMENT_VERTEX, XML_3MF_NAMESPACEPREFIX_SLICE);
 
-				for (nVertexIndex = 0; nVertexIndex < pSlice->getVertexCount(); nVertexIndex++) {
-					writeStartElementWithPrefix(XML_3MF_ELEMENT_VERTEX, XML_3MF_NAMESPACEPREFIX_SLICE);
+						nfFloat x, y;
 
-					nfFloat x, y;
+						pSlice->getVertex(nVertexIndex, &x, &y);
 
-					pSlice->getVertex(nVertexIndex, &x, &y);
+						writeFloatAttribute(XML_3MF_ATTRIBUTE_SLICEVERTEX_X, x);
+						writeFloatAttribute(XML_3MF_ATTRIBUTE_SLICEVERTEX_Y, y);
 
-					writeFloatAttribute(XML_3MF_ATTRIBUTE_SLICEVERTEX_X, x);
-					writeFloatAttribute(XML_3MF_ATTRIBUTE_SLICEVERTEX_Y, y);
-
-					writeEndElement();
-				}
-
-				writeFullEndElement();
-
-				nfUint32 nPolygonIndex;
-
-				for (nPolygonIndex = 0; nPolygonIndex < pSlice->getNumberOfPolygons(); nPolygonIndex++) {
-					writeStartElementWithPrefix(XML_3MF_ELEMENT_SLICEPOLYGON, XML_3MF_NAMESPACEPREFIX_SLICE);
-					writeIntAttribute(XML_3MF_ATTRIBUTE_SLICEPOLYGON_STARTV, pSlice->getPolygonIndex(nPolygonIndex, 0));
-
-					nfUint32 nIndexIndex;
-
-					for (nIndexIndex = 1; nIndexIndex < pSlice->getPolygonIndexCount(nPolygonIndex); nIndexIndex++) {
-						writeStartElementWithPrefix(XML_3MF_ELEMENT_SLICESEGMENT, XML_3MF_NAMESPACEPREFIX_SLICE);
-						writeIntAttribute(XML_3MF_ATTRIBUTE_SLICESEGMENT_V2, pSlice->getPolygonIndex(nPolygonIndex, nIndexIndex));
-						writeFullEndElement();
+						writeEndElement();
 					}
 
 					writeFullEndElement();
+				}
+				else {
+					if (pSlice->getVertexCount() == 1)
+						throw CNMRException(NMR_ERROR_SLICE_ONEVERTEX);
+				}
+
+				for (nfUint32 nPolygonIndex = 0; nPolygonIndex < pSlice->getNumberOfPolygons(); nPolygonIndex++) {
+					if (pSlice->getPolygonIndexCount(nPolygonIndex) >= 2) {
+						writeStartElementWithPrefix(XML_3MF_ELEMENT_SLICEPOLYGON, XML_3MF_NAMESPACEPREFIX_SLICE);
+						writeIntAttribute(XML_3MF_ATTRIBUTE_SLICEPOLYGON_STARTV, pSlice->getPolygonIndex(nPolygonIndex, 0));
+
+						for (nfUint32 nIndexIndex = 1; nIndexIndex < pSlice->getPolygonIndexCount(nPolygonIndex); nIndexIndex++) {
+							writeStartElementWithPrefix(XML_3MF_ELEMENT_SLICESEGMENT, XML_3MF_NAMESPACEPREFIX_SLICE);
+							writeIntAttribute(XML_3MF_ATTRIBUTE_SLICESEGMENT_V2, pSlice->getPolygonIndex(nPolygonIndex, nIndexIndex));
+							writeFullEndElement();
+						}
+
+						writeFullEndElement();
+					}
+					else {
+						if (pSlice->getPolygonIndexCount(nPolygonIndex) == 1)
+							throw CNMRException(NMR_ERROR_SLICE_ONEPOINT);
+					}
 				}
 
 				writeFullEndElement();
@@ -357,6 +371,9 @@ namespace NMR {
 		nfUint32 nObjectIndex;
 
 		for (nObjectIndex = 0; nObjectIndex < nObjectCount; nObjectIndex++) {
+			if (m_pProgressMonitor && !m_pProgressMonitor->Progress(-1, ProgressIdentifier::PROGRESS_WRITENOBJECTS))
+				throw CNMRException(NMR_USERABORTED);
+
 			CModelObject * pObject = m_pModel->getObject(nObjectIndex);
 
 			writeStartElement(XML_3MF_ELEMENT_OBJECT);
@@ -445,7 +462,8 @@ namespace NMR {
 					writePrefixedStringAttribute(XML_3MF_NAMESPACEPREFIX_SLICE, XML_3MF_ATTRIBUTE_OBJECT_MESHRESOLUTION,
 						XML_3MF_VALUE_OBJECT_MESHRESOLUTION_LOW);
 				}
-				CModelWriterNode100_Mesh ModelWriter_Mesh(pMeshObject, m_pXMLWriter, m_pColorMapping, m_pTexCoordMappingContainer, m_bWriteMaterialExtension, m_bWriteBeamLatticeExtension);
+				CModelWriterNode100_Mesh ModelWriter_Mesh(pMeshObject, m_pXMLWriter, m_pProgressMonitor,
+					m_pColorMapping, m_pTexCoordMappingContainer, m_bWriteMaterialExtension, m_bWriteBeamLatticeExtension);
 				ModelWriter_Mesh.writeToXML();
 			}
 

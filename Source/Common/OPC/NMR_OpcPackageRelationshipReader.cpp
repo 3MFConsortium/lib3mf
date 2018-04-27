@@ -46,7 +46,7 @@ namespace NMR {
 		if (pImportStream.get() == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-		PXmlReader pXMLReader = fnCreateXMLReaderInstance(pImportStream);
+		PXmlReader pXMLReader = fnCreateXMLReaderInstance(pImportStream, nullptr);
 
 		eXmlReaderNodeType NodeType;
 		// Read all XML Root Nodes
