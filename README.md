@@ -25,8 +25,8 @@ Makefiles use the scripts in the folder [cmake](cmake).
     * included as a submodule in [UnitTests](UnitTests). Initialize it by running
    `git submodule update --init`
 * Unix: [uuid](https://linux.die.net/man/3/uuid)
-    * Linux (Ubuntu/Debian): sudo at-get install uuid-dev
-    * MAC: brew install ossp-uuid
+    * Linux (Ubuntu/Debian): `sudo apt-get install uuid-dev`
+    * MAC: `brew install ossp-uuid`
 
 Instead of building lib3MF from source, you can download the compiled shared libarary as part of a minimal SDK from the [official releases](https://github.com/3MFConsortium/lib3mf/releases),
 or use the [nightly builds](https://github.com/3MFConsortium/lib3mf-binaries)
