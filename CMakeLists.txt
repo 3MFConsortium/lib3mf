@@ -9,7 +9,19 @@ project (lib3MF)
 # Define Version
 set(LIB3MF_VERSION_MAJOR 1)				# increase on every backward-compatibility breaking change of the API
 set(LIB3MF_VERSION_MINOR 3)				# increase on every backward compatible change of the API
-set(LIB3MF_VERSION_MICRO 1)				# increase on on every change that does not alter the API
+set(LIB3MF_VERSION_MICRO 2)				# increase on on every change that does not alter the API
+
+
+# Add targets
+# By default the shared libray is being built
+# To build the static library, add the cmake option -DBUILD_SHARED_LIBS:BOOL=OFF
+option(BUILD_SHARED_LIBS "build as shared library" ON)
+message("BUILD_SHARED_LIBS ... " ${BUILD_SHARED_LIBS})
+
+# By default the tests of the library are being built
+# To not build the tests, use cmake . -DBUILD_TESTING:BOOL=OFF
+option(BUILD_TESTING "build the tests of the library" ON)
+message("BUILD_TESTING ... " ${BUILD_TESTING})
 
 set(CMAKE_INSTALL_BINDIR bin CACHE PATH "directory for installing binary files")
 set(CMAKE_INSTALL_LIBDIR lib CACHE PATH "directory for installing library files")
@@ -32,6 +44,8 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
   add_definitions(-DBUILD_DLL -DLIB3MF_EXPORTS /W3)
   SET(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} xmllite.lib")
   add_definitions(-D_CRT_NONSTDC_NO_DEPRECATE -D_CRT_SECURE_NO_WARNINGS)
+  set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
+  set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
   if(NMR_COM_NATIVE)
 	add_definitions(-DNMR_COM_NATIVE)
   endif()
@@ -91,44 +105,28 @@ endif()
 
 
 #########################################################
-# Static library (as base for other targets)
-add_library(${PROJECT_NAME}_s STATIC ${SRCS_MAIN_PLATFORM} ${SRCS_COMMON})
-target_include_directories(${PROJECT_NAME}_s PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include)
-target_include_directories(${PROJECT_NAME}_s PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/Include)
-SET_TARGET_PROPERTIES(${PROJECT_NAME}_s PROPERTIES PREFIX "" IMPORT_PREFIX "")
-if (UNIX OR MINGW)
-	target_compile_options(${PROJECT_NAME}_s PUBLIC "-fPIC")
-	# Uncomment the following to but the version info into the .so-file.
-	SET_TARGET_PROPERTIES(${PROJECT_NAME}_s PROPERTIES VERSION "${LIB3MF_VERSION_MAJOR}.${LIB3MF_VERSION_MINOR}.${LIB3MF_VERSION_MICRO}.${BUILD_NUMBER}")
-	SET_TARGET_PROPERTIES(${PROJECT_NAME}_s PROPERTIES SOVERSION "${LIB3MF_VERSION_MAJOR}")
-	if (NOT APPLE)
-		SET_TARGET_PROPERTIES(${PROJECT_NAME}_s PROPERTIES LINK_FLAGS -s)
-	endif()
-	find_library(LIBUUID_PATH uuid)
-	if(NOT LIBUUID_PATH)
-		message(FATAL_ERROR "libuuid not found")
-	endif()
-	target_link_libraries(${PROJECT_NAME}_s ${LIBUUID_PATH})
-else()
-	# wd4996 masks the deprecated-warning
-	target_compile_options(${PROJECT_NAME}_s PUBLIC "$<$<CONFIG:DEBUG>:/Od;/Ob0;/Gm;/sdl;/W3;/WX;/FC;/wd4996>")
-	target_compile_options(${PROJECT_NAME}_s PUBLIC "$<$<CONFIG:RELEASE>:/O2;/sdl;/WX;/Oi;/Gy;/FC;/wd4996>")
-endif()
-
-
-#########################################################
-# Shared library
-add_library(${PROJECT_NAME} SHARED ${SRCS_MAIN_PLATFORM}
-	"./Source/Model/COM/NMR_DLLInterfaces.cpp"
+# The main lib3MF library
+add_library(${PROJECT_NAME} 
+	${SRCS_MAIN_PLATFORM} ${SRCS_COMMON}
 	${VERSION_FILES_OUTPUTLOCATION}
 )
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include)
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/Include)
 set(STARTUPPROJECT ${PROJECT_NAME})
 SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES PREFIX "" IMPORT_PREFIX "")
-target_link_libraries(${PROJECT_NAME} ${PROJECT_NAME}_s)
 if (UNIX OR MINGW)
 	# Uncomment the following to but the version info into the .so-file.
 	SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES VERSION "${LIB3MF_VERSION_MAJOR}.${LIB3MF_VERSION_MINOR}.${LIB3MF_VERSION_MICRO}.${BUILD_NUMBER}")
 	SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES SOVERSION "${LIB3MF_VERSION_MAJOR}")
+
+	find_library(LIBUUID_PATH uuid)
+	if(NOT LIBUUID_PATH)
+		message(FATAL_ERROR "libuuid not found")
+	endif()
+	target_link_libraries(${PROJECT_NAME} ${LIBUUID_PATH})
+	if (NOT APPLE)
+		SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES LINK_FLAGS -s)
+	endif()
 endif()
 install(TARGETS ${PROJECT_NAME}
 	ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
@@ -138,29 +136,24 @@ install(DIRECTORY Include/Model DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
 install(DIRECTORY Include/Common DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
 install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/Include/ DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
 
+
 #########################################################
-if(NOT DEFINED LIB3MF_TESTS)
-	set(LIB3MF_TESTS TRUE)
-endif()
-message("LIB3MF_TESTS ... " ${LIB3MF_TESTS})
-if(LIB3MF_TESTS)
+if(${BUILD_TESTING})
 	include(CTest)
 	# platform independent tests on the C-interface of the library
 	add_subdirectory(UnitTests)
 	
-	# windows specific tests
+	# windows specific tests for the C++ classes of the library
 	if (WIN32)
 		SET(UNITTEST_NAME "${PROJECT_NAME}unittests")
-		add_library(${UNITTEST_NAME} SHARED "${SRCS_WIN_MANAGEDTEST}")
+		add_library(${UNITTEST_NAME} SHARED ${SRCS_MAIN_PLATFORM} ${SRCS_COMMON} ${SRCS_WIN_MANAGEDTEST})
+
 		target_include_directories(${UNITTEST_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include)
 		target_include_directories(${UNITTEST_NAME} PUBLIC "${VCINSTALLDIR}/../../../UnitTest/include")
 		target_include_directories(${UNITTEST_NAME} PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/Include)
 	
 		target_compile_options(${UNITTEST_NAME} PUBLIC "$<$<CONFIG:DEBUG>:/Od;/Ob0;/Gm;/sdl;/W3;/WX;/FC;-DNMR_USEASSERTIONS;-DNMR_UNITTESTS;/wd4996>")
 		target_compile_options(${UNITTEST_NAME} PUBLIC "$<$<CONFIG:RELEASE>:/O2;/sdl;/WX;/Oi;/Gy;/FC;/wd4996>")
-		
-		add_dependencies(${UNITTEST_NAME} ${PROJECT_NAME}_s)
-		target_link_libraries(${UNITTEST_NAME} ${PROJECT_NAME}_s)
 		
 		file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/TestOutput")
 	endif()

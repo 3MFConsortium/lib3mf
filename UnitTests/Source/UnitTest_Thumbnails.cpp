@@ -30,7 +30,7 @@ a 3MF package or individual objects within a model.
 
 --*/
 
-#include "UnitTests/UnitTest_Utilities.h"
+#include "UnitTest_Utilities.h"
 #include "Model/COM/NMR_DLLInterfaces.h"
 
 #include <vector>

@@ -29,7 +29,7 @@ UnitTest_OPC_Issues.cpp: Defines Unittests for OPC related requirements of a
 3MF-reader/writer.
 --*/
 
-#include "UnitTests/UnitTest_Utilities.h"
+#include "UnitTest_Utilities.h"
 #include "Model/COM/NMR_DLLInterfaces.h"
 
 #include <vector>
