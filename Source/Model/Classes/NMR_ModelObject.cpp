@@ -43,6 +43,8 @@ namespace NMR {
 	{
 		m_ObjectType = MODELOBJECTTYPE_MODEL;
 		setUUID(std::make_shared<CUUID>());
+		m_pSliceStackId = 0;
+		m_eSlicesMeshResolution = MODELSLICESMESHRESOLUTION_FULL;
 	}
 
 	void CModelObject::mergeToMesh(_In_ CMesh * pMesh, _In_ const NMATRIX3 mMatrix)
@@ -133,9 +135,25 @@ namespace NMR {
 			return std::wstring(XML_3MF_OBJECTTYPE_SUPPORT);
 		case MODELOBJECTTYPE_SOLIDSUPPORT:
 			return std::wstring(XML_3MF_OBJECTTYPE_SOLIDSUPPORT);
-        default:
-            return L"";
+		default:
+			return L"";
 		}
+	}
+
+	void CModelObject::setSliceStackId(PPackageResourceID nSliceStackId) {
+		m_pSliceStackId = nSliceStackId;
+	}
+
+	PPackageResourceID CModelObject::getSliceStackId() {
+		return m_pSliceStackId;
+	}
+
+	void CModelObject::setSlicesMeshResolution(eModelSlicesMeshResolution eMeshResolution) {
+		m_eSlicesMeshResolution = eMeshResolution;
+	}
+
+	eModelSlicesMeshResolution CModelObject::slicesMeshResolution() const {
+		return m_eSlicesMeshResolution;
 	}
 
 	void CModelObject::setDefaultProperty(_In_ PModelDefaultProperty pModelDefaultProperty)

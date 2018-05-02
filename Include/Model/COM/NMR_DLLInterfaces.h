@@ -2018,6 +2018,38 @@ namespace NMR {
 		*/
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_componentsobject_getcomponentcount(_In_ PLib3MFModelComponentsObject * pComponentsObject, _Out_ DWORD * pComponentCount);
 
+		/**
+		* Link a slicestack to the components object
+		*
+		* @param[in] pComponentsObject components object to link with the slicestack
+		* @param[in] pSliceStack slice stack to link the meshobject to
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_componentsobject_setslicestack(_In_ PLib3MFModelComponentsObject *pComponentsObject, _In_ PLib3MFSliceStack *pSliceStack);
+
+		/**
+		* Get the linked slicestack tof a the components object
+		*
+		* @param[in] pComponentsObject components object to link with the slicestack
+		* @param[out] pSliceStack slice stack to link the meshobject to
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_componentsobject_getslicestackid(_In_ PLib3MFModelComponentsObject *pComponentsObject, _Out_ DWORD *pSliceStackId);
+
+		/**
+		* Set the mesh resolution of a components object that has sliceinformation
+		*
+		* @param[in] pComponentsObject components object for which the meshresolution is set
+		* @param[in] eSlicesMeshResolution mesh resolution of the components object
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_componentsobject_setslicesmeshresolution(_In_ PLib3MFModelComponentsObject *pComponentsObject, _In_ eModelSlicesMeshResolution eSlicesMeshResolution);
+
+		/**
+		* Get the mesh resolution of a components object that has sliceinformation
+		*
+		* @param[in] pComponentsObject components object for which the meshresolution is queried
+		* @param[out] peSlicesMeshResolution mesh resolution of the components object
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_componentsobject_getslicesmeshresolution(_In_ PLib3MFModelComponentsObject *pComponentsObject, _Out_ eModelSlicesMeshResolution *eSlicesMeshResolution);
+
 		// Build Item
 		/**
 		* Retrieves the object resource associated to a build item

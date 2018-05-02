@@ -1680,6 +1680,45 @@ namespace NMR {
 			return ((ILib3MFModelComponentsObject *)pComponentsObject)->GetComponentCount(pComponentCount);
 		}
 
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_componentsobject_setslicestack(_In_ PLib3MFModelComponentsObject *pComponentsObject, _In_ PLib3MFSliceStack *pSliceStack)
+		{
+			if (!pComponentsObject)
+				return LIB3MF_POINTER;
+
+			DWORD nSliceStackId;
+
+			if (((ILib3MFSliceStack *)pSliceStack)->GetResourceID(&nSliceStackId) != LIB3MF_OK) {
+				return LIB3MF_POINTER;
+			}
+
+			return ((ILib3MFModelComponentsObject *)pComponentsObject)->SetSliceStackId(nSliceStackId);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_componentsobject_getslicestackid(_In_ PLib3MFModelComponentsObject *pComponentsObject, _Out_ DWORD *pSliceStackId)
+		{
+			if (!pComponentsObject)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelComponentsObject *)pComponentsObject)->GetSliceStackId(pSliceStackId);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_componentsobject_setslicesmeshresolution(_In_ PLib3MFModelComponentsObject *pComponentsObject, _In_ eModelSlicesMeshResolution eSlicesMeshResolution)
+		{
+			if (!pComponentsObject)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelComponentsObject *)pComponentsObject)->SetSlicesMeshResolution(eSlicesMeshResolution);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_componentsobject_getslicesmeshresolution(_In_ PLib3MFModelComponentsObject *pComponentsObject, _Out_ eModelSlicesMeshResolution *peSlicesMeshResolution)
+		{
+			if (!pComponentsObject)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelComponentsObject *)pComponentsObject)->GetSlicesMeshResolution(peSlicesMeshResolution);
+		}
+
+
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_builditem_getobjectresource(_In_ PLib3MFModelBuildItem * pBuildItem, _Outptr_ PLib3MFModelObjectResource ** ppObject)
 		{
 			if (!pBuildItem)
