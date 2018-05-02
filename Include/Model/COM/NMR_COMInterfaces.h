@@ -816,6 +816,35 @@ namespace NMR {
 		*/
 		LIB3MFMETHOD(IsValidObject) (_Out_ BOOL * pbIsValid) LIB3MFABSTRACT;
 
+		/**
+		* Link the object to a slice stack
+		*
+		* @param[in] nSliceStackId id of the slice stack to link
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(SetSliceStackId)(_In_ DWORD nSliceStackId) LIB3MFABSTRACT;
+
+		/**
+		* get the id of the slice stack linked to the object
+		* @param[out] pnSliceStackId id of the slice stack linked to the object
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(GetSliceStackId)(_Out_ DWORD *pnSliceStackId) LIB3MFABSTRACT;
+
+		/**
+		* set the meshresolution of the object
+		* @param[in] eSlicesMeshResolution meshresolution of this object
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(SetSlicesMeshResolution)(_In_ eModelSlicesMeshResolution eSlicesMeshResolution) LIB3MFABSTRACT;
+
+		/**
+		* get the meshresolution of the object
+		* @param[out] peSlicesMeshResolution meshresolution of this object
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(GetSlicesMeshResolution)(_Out_ eModelSlicesMeshResolution *peSlicesMeshResolution) LIB3MFABSTRACT;
+
 		/* Property handling */
 
 		/**
@@ -1953,35 +1982,6 @@ namespace NMR {
 		* @return error code or 0 (success)
 		*/
 		LIB3MFMETHOD(IsManifoldAndOriented) (_Out_ BOOL * pbIsOrientedAndManifold) LIB3MFABSTRACT;
-
-		/**
-		* Link the mesh object to a slice stack
-		*
-		* @param[in] nSliceStackId id of the slice stack to link
-		* @return error code or 0 (success)
-		*/
-		LIB3MFMETHOD(SetSliceStackId)(_In_ DWORD nSliceStackId) LIB3MFABSTRACT;
-
-		/**
-		* get the id of the slice stack linked to the mesh object
-		* @param[out] pnSliceStackId id of the slice stack linked to the mesh object
-		* @return error code or 0 (success)
-		*/
-		LIB3MFMETHOD(GetSliceStackId)(_Out_ DWORD *pnSliceStackId) LIB3MFABSTRACT;
-
-		/**
-		* set the meshresolution of the mesh object
-		* @param[in] eSlicesMeshResolution meshresolution of this mesh object
-		* @return error code or 0 (success)
-		*/
-		LIB3MFMETHOD(SetSlicesMeshResolution)(_In_ eModelSlicesMeshResolution eSlicesMeshResolution) LIB3MFABSTRACT;
-
-		/**
-		* get the meshresolution of the mesh object
-		* @param[out] peSlicesMeshResolution meshresolution of this mesh object
-		* @return error code or 0 (success)
-		*/
-		LIB3MFMETHOD(GetSlicesMeshResolution)(_Out_ eModelSlicesMeshResolution *peSlicesMeshResolution) LIB3MFABSTRACT;
 	};
 
 	/**********************************************************************************************************

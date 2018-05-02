@@ -266,28 +266,7 @@ namespace NMR {
 
 				// Create Default Properties
 				createDefaultProperties();
-
-				if (m_nSliceStackId > 0) {
-					PPackageResourceID pID = m_pModel->findPackageResourceID(m_pModel->curPath(), m_nSliceStackId);
-					if (!pID.get())
-						throw CNMRException(NMR_ERROR_SLICESTACKRESOURCE_NOT_FOUND);
-					PModelResource pResource = m_pModel->findResource(pID->getUniqueID());
-					CModelSliceStackResource* pSliceStackResource = dynamic_cast<CModelSliceStackResource*>(pResource.get());
-					if (pSliceStackResource) {
-						if ((m_pObject->getObjectType() == MODELOBJECTTYPE_MODEL) || (MODELOBJECTTYPE_SOLIDSUPPORT)) {
-							if (!pSliceStackResource->getSliceStack()->areAllPolygonsClosed()) {
-								throw CNMRException(NMR_ERROR_SLICEPOLYGONNOTCLOSED);
-							}
-						}
-					}
-					else
-						throw CNMRException(NMR_ERROR_SLICESTACKRESOURCE_NOT_FOUND);
-
-					((CModelMeshObject *)(m_pObject.get()))->setSliceStackId(pID);
-					((CModelMeshObject *)(m_pObject.get()))->setSlicesMeshResolution(m_eSlicesMeshResolution);
-				}
 			}
-
 			// Read a component object
 			else if (wcscmp(pChildName, XML_3MF_ELEMENT_COMPONENTS) == 0) {
 				// If we already have parsed an object, the node is duplicate
@@ -315,6 +294,27 @@ namespace NMR {
 			}
 			else
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
+
+			// In any case (component object or mesh object)
+			if (m_nSliceStackId > 0) {
+				PPackageResourceID pID = m_pModel->findPackageResourceID(m_pModel->curPath(), m_nSliceStackId);
+				if (!pID.get())
+					throw CNMRException(NMR_ERROR_SLICESTACKRESOURCE_NOT_FOUND);
+				PModelResource pResource = m_pModel->findResource(pID->getUniqueID());
+				CModelSliceStackResource* pSliceStackResource = dynamic_cast<CModelSliceStackResource*>(pResource.get());
+				if (pSliceStackResource) {
+					if ((m_pObject->getObjectType() == MODELOBJECTTYPE_MODEL) || (MODELOBJECTTYPE_SOLIDSUPPORT)) {
+						if (!pSliceStackResource->getSliceStack()->areAllPolygonsClosed()) {
+							throw CNMRException(NMR_ERROR_SLICEPOLYGONNOTCLOSED);
+						}
+					}
+				}
+				else
+					throw CNMRException(NMR_ERROR_SLICESTACKRESOURCE_NOT_FOUND);
+				
+				m_pObject->setSliceStackId(pID);
+				m_pObject->setSlicesMeshResolution(m_eSlicesMeshResolution);
+			}
 
 		}
 
