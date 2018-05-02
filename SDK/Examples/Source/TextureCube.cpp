@@ -77,7 +77,7 @@ MODELMESHTEXTURE2D fnCreateTexture(float u1, float v1, float u2, float v2, float
 	return result;
 }
 
-LIB3MFRESULT fnLoadModelTexture(PLib3MFModel * pModel, const char * pszPath, const char * pszFile, eModelTexture2DType eType, DWORD * pTextureID)
+LIB3MFRESULT fnLoadModelTexture(PLib3MFModel * pModel, const char * pszPath, const char * pszFile, eModelTexture2DType eType, eModelTextureTileStyle eTileStyleU, eModelTextureTileStyle eTileStyleV, DWORD * pTextureID)
 {
 	LIB3MFRESULT hResult = 0;
 	PLib3MFModelTexture2D * pTexture2D;
@@ -94,6 +94,12 @@ LIB3MFRESULT fnLoadModelTexture(PLib3MFModel * pModel, const char * pszPath, con
 
 	// Read Texture From File
 	hResult = lib3mf_texture2d_readfromfileutf8(pTexture2D, pszFile);
+	if (hResult != 0) {
+		lib3mf_release(pTexture2D);
+		return hResult;
+	}
+
+	hResult = lib3mf_texture2d_settilestyleuv(pTexture2D, eTileStyleU, eTileStyleV);
 	if (hResult != 0) {
 		lib3mf_release(pTexture2D);
 		return hResult;
@@ -259,17 +265,17 @@ int main ()
 	std::string sFolder = TEXTURESPATH;
 #endif
 	std::cout<<"sFolder=\""<<sFolder<<"\"\n";
-	hResult = fnLoadModelTexture(pModel, "/3D/Textures/tex1.png", (sFolder+"tex1.png").c_str(), MODELTEXTURETYPE_PNG, &nTextureID1);
-	if (hResult == 0) 
-		hResult = fnLoadModelTexture(pModel, "/3D/Textures/tex2.png", (sFolder + "tex2.png").c_str(), MODELTEXTURETYPE_PNG, &nTextureID2);
+	hResult = fnLoadModelTexture(pModel, "/3D/Textures/tex1.png", (sFolder+"tex1.png").c_str(), MODELTEXTURETYPE_PNG, MODELTEXTURETILESTYLE_WRAP, MODELTEXTURETILESTYLE_WRAP, &nTextureID1);
 	if (hResult == 0)
-		hResult = fnLoadModelTexture(pModel, "/3D/Textures/tex3.png", (sFolder + "tex3.png").c_str(), MODELTEXTURETYPE_PNG, &nTextureID3);
+		hResult = fnLoadModelTexture(pModel, "/3D/Textures/tex2.png", (sFolder + "tex2.png").c_str(), MODELTEXTURETYPE_PNG, MODELTEXTURETILESTYLE_MIRROR, MODELTEXTURETILESTYLE_WRAP, &nTextureID2);
 	if (hResult == 0)
-		hResult = fnLoadModelTexture(pModel, "/3D/Textures/tex4.png", (sFolder + "tex4.png").c_str(), MODELTEXTURETYPE_PNG, &nTextureID4);
+		hResult = fnLoadModelTexture(pModel, "/3D/Textures/tex3.png", (sFolder + "tex3.png").c_str(), MODELTEXTURETYPE_PNG, MODELTEXTURETILESTYLE_WRAP, MODELTEXTURETILESTYLE_MIRROR, &nTextureID3);
 	if (hResult == 0)
-		hResult = fnLoadModelTexture(pModel, "/3D/Textures/tex5.png", (sFolder + "tex5.png").c_str(), MODELTEXTURETYPE_PNG, &nTextureID5);
+		hResult = fnLoadModelTexture(pModel, "/3D/Textures/tex4.png", (sFolder + "tex4.png").c_str(), MODELTEXTURETYPE_PNG, MODELTEXTURETILESTYLE_WRAP, MODELTEXTURETILESTYLE_CLAMP, &nTextureID4);
 	if (hResult == 0)
-		hResult = fnLoadModelTexture(pModel, "/3D/Textures/tex6.png", (sFolder + "tex6.png").c_str(), MODELTEXTURETYPE_PNG, &nTextureID6);
+		hResult = fnLoadModelTexture(pModel, "/3D/Textures/tex5.png", (sFolder + "tex5.png").c_str(), MODELTEXTURETYPE_PNG, MODELTEXTURETILESTYLE_CLAMP, MODELTEXTURETILESTYLE_WRAP, &nTextureID5);
+	if (hResult == 0)
+		hResult = fnLoadModelTexture(pModel, "/3D/Textures/tex6.png", (sFolder + "tex6.png").c_str(), MODELTEXTURETYPE_PNG, MODELTEXTURETILESTYLE_CLAMP, MODELTEXTURETILESTYLE_MIRROR, &nTextureID6);
 
 	if (hResult != LIB3MF_OK) {
 		std::cout << "could not load model texture: " << std::hex << hResult << std::endl;
@@ -298,8 +304,9 @@ int main ()
 	lib3mf_propertyhandler_settexture(pPropertyHandler, 3, &sTexture2);
 
 	// Side 3
-	sTexture1 = fnCreateTexture(0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, nTextureID3);
-	sTexture2 = fnCreateTexture(1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, nTextureID3);
+	// Go outside of bounds on this side
+	sTexture1 = fnCreateTexture(-1.0f, -1.0f, 2.0f, -1.0f, 2.0f, 2.0f, nTextureID3);
+	sTexture2 = fnCreateTexture(2.0f, 2.0f, -1.0f, 2.0f, -1.0f, -1.0f, nTextureID3);
 	lib3mf_propertyhandler_settexture(pPropertyHandler, 4, &sTexture1);
 	lib3mf_propertyhandler_settexture(pPropertyHandler, 5, &sTexture2);
 

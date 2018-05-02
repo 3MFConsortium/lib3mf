@@ -74,8 +74,29 @@ namespace NMR {
 		// Set Properties
 		m_pTexture2DResource->setPath(m_sPath);
 		m_pTexture2DResource->setContentTypeString(m_sContentType, true);
-		m_pTexture2DResource->setTileStyleU(m_sTileStyleU);
-		m_pTexture2DResource->setTileStyleV(m_sTileStyleV);
+
+		if (!m_sTileStyleU.empty()) {
+			try {
+				m_pTexture2DResource->setTileStyleUString(m_sTileStyleU);
+			}
+			catch (CNMRException & e) {
+				if (e.getErrorCode() == NMR_ERROR_INVALIDTILESTYLE)
+					m_pWarnings->addException(e, mrwInvalidOptionalValue);
+				else
+					throw e;
+			}
+		}
+		if (!m_sTileStyleV.empty()) {
+			try {
+				m_pTexture2DResource->setTileStyleVString(m_sTileStyleV);
+			}
+			catch (CNMRException & e) {
+				if (e.getErrorCode() == NMR_ERROR_INVALIDTILESTYLE)
+					m_pWarnings->addException(e, mrwInvalidOptionalValue);
+				else
+					throw e;
+			}
+		}
 
 		// Parse Content
 		parseContent(pXMLReader);
@@ -139,7 +160,6 @@ namespace NMR {
 	{
 		return m_sTileStyleV;
 	}
-
 
 }
 

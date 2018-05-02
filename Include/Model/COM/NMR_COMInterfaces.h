@@ -1286,6 +1286,24 @@ namespace NMR {
 		LIB3MFMETHOD(SetContentType) (_In_ eModelTexture2DType eContentType) LIB3MFABSTRACT;
 
 		/**
+		* Retrieves a texture's tilestyle type
+		*
+		* @param[out] peTileStyleU returns tilestyle type enum
+		* @param[out] peTileStyleV returns tilestyle type enum
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(GetTileStyleUV) (_Out_ eModelTextureTileStyle * peTileStyleU, _Out_ eModelTextureTileStyle * peTileStyleV) LIB3MFABSTRACT;
+
+		/**
+		* Sets a texture's tilestyle type
+		*
+		* @param[out] eTileStyleU new tilestyle type enum
+		* @param[out] eTileStyleV new tilestyle type enum
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(SetTileStyleUV) (_In_ eModelTextureTileStyle eTileStyleU, _In_ eModelTextureTileStyle eTileStyleV) LIB3MFABSTRACT;
+
+		/**
 		* Retrieves a texture's box2D coordinates.
 		*
 		* @param[out] pfU returns the U value of the texture

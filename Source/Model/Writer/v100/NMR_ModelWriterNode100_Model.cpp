@@ -195,14 +195,10 @@ namespace NMR {
 			writeStringAttribute(XML_3MF_ATTRIBUTE_TEXTURE2D_PATH, pTexture2D->getPath());
 			writeStringAttribute(XML_3MF_ATTRIBUTE_TEXTURE2D_CONTENTTYPE, pTexture2D->getContentTypeString());
 
-			std::wstring sTileStyle;
-			sTileStyle = pTexture2D->getTileStyleU();
-			if (sTileStyle.size() > 0)
-				writeStringAttribute(XML_3MF_ATTRIBUTE_TEXTURE2D_TILESTYLEU, sTileStyle);
-
-			sTileStyle = pTexture2D->getTileStyleV();
-			if (sTileStyle.size() > 0)
-				writeStringAttribute(XML_3MF_ATTRIBUTE_TEXTURE2D_TILESTYLEV, sTileStyle);
+			if (pTexture2D->getTileStyleU() != MODELTEXTURETILESTYLE_WRAP)
+				writeStringAttribute(XML_3MF_ATTRIBUTE_TEXTURE2D_TILESTYLEU, CModelTexture2DResource::tileStyleToString(pTexture2D->getTileStyleU()));
+			if (pTexture2D->getTileStyleV() != MODELTEXTURETILESTYLE_WRAP)
+				writeStringAttribute(XML_3MF_ATTRIBUTE_TEXTURE2D_TILESTYLEV, CModelTexture2DResource::tileStyleToString(pTexture2D->getTileStyleV()));
 			
 			if (pTexture2D->hasBox2D()) {
 				nfFloat fU, fV, fWidth, fHeight;

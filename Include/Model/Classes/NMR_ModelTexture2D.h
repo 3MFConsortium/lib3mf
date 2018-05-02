@@ -60,8 +60,8 @@ namespace NMR {
 		nfFloat m_fBox2D_V;
 		nfFloat m_fBox2D_Width;
 		nfFloat m_fBox2D_Height;
-		std::wstring m_sTileStyleU;
-		std::wstring m_sTileStyleV;
+		eModelTextureTileStyle m_eTileStyleU;
+		eModelTextureTileStyle m_eTileStyleV;
 	public:
 		CModelTexture2DResource() = delete;
 		CModelTexture2DResource(_In_ const ModelResourceID sID, _In_ CModel * pModel);
@@ -78,6 +78,8 @@ namespace NMR {
 		void setContentType(_In_ eModelTexture2DType ContentType);
 		std::wstring getContentTypeString();
 		void setContentTypeString(_In_ std::wstring sValue, _In_ nfBool bFailIfUnknown);
+		void setTileStyleUString(_In_ std::wstring sValue);
+		void setTileStyleVString(_In_ std::wstring sValue);
 		
 		// getters/setters Box2D
 		nfBool getBox2D (_Out_ nfFloat & fU, _Out_ nfFloat & fV, _Out_ nfFloat & fWidth, _Out_ nfFloat & fHeight);
@@ -86,14 +88,16 @@ namespace NMR {
 		nfBool hasBox2D();
 		
 		// getters/setters TileStyle
-		std::wstring getTileStyleU();
-		std::wstring getTileStyleV();
-		void setTileStyleU(_In_ std::wstring sValue);		
-		void setTileStyleV(_In_ std::wstring sValue);
+		eModelTextureTileStyle getTileStyleU();
+		eModelTextureTileStyle getTileStyleV();
+		void setTileStyleU(_In_ eModelTextureTileStyle sStyle);
+		void setTileStyleV(_In_ eModelTextureTileStyle sStyle);
 		
 		// copy all parameters from source
 		void copyFrom(_In_ CModelTexture2DResource * pSourceTexture);
 
+		static eModelTextureTileStyle tileStyleFromString(_In_ std::wstring sValue);
+		static std::wstring tileStyleToString(_In_ eModelTextureTileStyle eTileStyle);
 	};
 
 	typedef std::shared_ptr <CModelTexture2DResource> PModelTexture2DResource;

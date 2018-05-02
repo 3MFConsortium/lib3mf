@@ -1109,13 +1109,28 @@ namespace NMR {
 			return ((ILib3MFModelTexture2D *)pTexture2D)->GetContentType(peContentType);
 		}
 
-
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_texture2d_setcontenttype(_In_ PLib3MFModelTexture2D * pTexture2D, _In_ eModelTexture2DType eContentType)
 		{
 			if (!pTexture2D)
 				return LIB3MF_POINTER;
 
 			return ((ILib3MFModelTexture2D *)pTexture2D)->SetContentType(eContentType);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_texture2d_gettilestyleuv(_In_ PLib3MFModelTexture2D * pTexture2D, _Out_ eModelTextureTileStyle * peTileStyleU, _Out_ eModelTextureTileStyle * peTileStyleV)
+		{
+			if (!pTexture2D)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelTexture2D *)pTexture2D)->GetTileStyleUV(peTileStyleU, peTileStyleV);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_texture2d_settilestyleuv(_In_ PLib3MFModelTexture2D * pTexture2D, _In_ eModelTextureTileStyle eTileStyleU, _In_ eModelTextureTileStyle eTileStyleV)
+		{
+			if (!pTexture2D)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelTexture2D *)pTexture2D)->SetTileStyleUV(eTileStyleU, eTileStyleV);
 		}
 
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_texture2d_getbox2d(_In_ PLib3MFModelTexture2D * pTexture2D, _Out_ FLOAT * pfU, _Out_ FLOAT * pfV, _Out_ FLOAT * pfWidth, _Out_ FLOAT * pfHeight)

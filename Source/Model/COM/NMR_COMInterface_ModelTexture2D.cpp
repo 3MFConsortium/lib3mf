@@ -348,7 +348,6 @@ namespace NMR {
 		catch (...) {
 			return handleGenericException();
 		}
-
 	}
 
 	LIB3MFMETHODIMP CCOMModelTexture2D::SetContentType(_In_ eModelTexture2DType eContentType)
@@ -367,7 +366,47 @@ namespace NMR {
 		catch (...) {
 			return handleGenericException();
 		}
+	}
 
+	LIB3MFMETHODIMP CCOMModelTexture2D::GetTileStyleUV(_Out_ eModelTextureTileStyle * peTileStyleU, _Out_ eModelTextureTileStyle * peTileStyleV)
+	{
+		try {
+			if ((peTileStyleU == nullptr) || (peTileStyleU == nullptr))
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
+			CModelTexture2DResource * pTextureResource = getTexture2D();
+			__NMRASSERT(pTextureResource);
+
+			*peTileStyleU = pTextureResource->getTileStyleU();
+			*peTileStyleV = pTextureResource->getTileStyleV();
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
+	LIB3MFMETHODIMP CCOMModelTexture2D::SetTileStyleUV(_In_ eModelTextureTileStyle eTileStyleU, _In_ eModelTextureTileStyle eTileStyleV)
+	{
+		try {
+			CModelTexture2DResource * pTextureResource = getTexture2D();
+			__NMRASSERT(pTextureResource);
+
+			pTextureResource->setTileStyleU(eTileStyleU);
+			pTextureResource->setTileStyleV(eTileStyleV);
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
 	}
 
 	LIB3MFMETHODIMP CCOMModelTexture2D::GetBox2D(_Out_ FLOAT * pfU, _Out_ FLOAT * pfV, _Out_ FLOAT * pfWidth, _Out_ FLOAT * pfHeight)

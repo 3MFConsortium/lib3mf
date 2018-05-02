@@ -183,6 +183,9 @@ These are given by the 3MF Standard
 #define XML_3MF_ATTRIBUTE_TEXTURE2D_BOX             L"box"
 #define XML_3MF_ATTRIBUTE_TEXTURE2D_TILESTYLEU      L"tilestyleu"
 #define XML_3MF_ATTRIBUTE_TEXTURE2D_TILESTYLEV      L"tilestylev"
+#define XML_3MF_ATTRIBUTE_TEXTURE2D_TILESTYLE_WRAP  L"wrap"
+#define XML_3MF_ATTRIBUTE_TEXTURE2D_TILESTYLE_MIRROR L"mirror"
+#define XML_3MF_ATTRIBUTE_TEXTURE2D_TILESTYLE_CLAMP L"clamp"
 
 // Compositematerials and composite element (not implemented!)
 #define XML_3MF_ELEMENT_COMPOSITEMATERIALS          L"compositematerials"
