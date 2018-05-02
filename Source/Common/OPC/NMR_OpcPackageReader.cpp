@@ -65,7 +65,7 @@ namespace NMR {
 				else if (argsSeek.whence == SEEK_CUR)
 					pImportStream->seekForward(argsSeek.offset, true);
 				else if (argsSeek.whence == SEEK_END) {
-					pImportStream->seekFromEnd(argsSeek.offset, true);
+					pImportStream->seekFromEnd(-argsSeek.offset, true);
 				}
 				else
 					throw CNMRException(0);
