@@ -63,10 +63,7 @@ namespace NMR {
 				if (argsSeek.whence == SEEK_SET)
 					pImportStream->seekPosition(argsSeek.offset, true);
 				else if (argsSeek.whence == SEEK_CUR) {
-					if (argsSeek.offset >= 0)
-						pImportStream->seekForward(argsSeek.offset, true);
-					else// we do not support seekBackward
-						throw CNMRException(NMR_ERROR_ZIPCALLBACK);
+					pImportStream->seekPosition(pImportStream->getPosition() + argsSeek.offset, true);
 				}
 				else if (argsSeek.whence == SEEK_END) {
 					if (argsSeek.offset > 0)
