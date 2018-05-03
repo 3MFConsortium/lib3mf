@@ -1,4 +1,9 @@
 # lib3mf
+
+I am a tet PR!
+
+[![Build Status](https://travis-ci.org/martinweismann/lib3mf.svg?branch=master)](https://travis-ci.org/martinweismann/lib3mf)
+
 Lib3MF is a C++ implementation of the 3D Manufacturing Format file standard.
 
 As 3MF shall become an universal 3D Printing standard, its quick adoption is very important. 

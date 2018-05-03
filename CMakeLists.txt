@@ -144,6 +144,7 @@ if(NOT DEFINED LIB3MF_TESTS)
 endif()
 message("LIB3MF_TESTS ... " ${LIB3MF_TESTS})
 if(LIB3MF_TESTS)
+	include(CTest)
 	# platform independent tests on the C-interface of the library
 	add_subdirectory(UnitTests)
 	
