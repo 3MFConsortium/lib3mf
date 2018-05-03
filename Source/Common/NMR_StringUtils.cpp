@@ -573,7 +573,7 @@ namespace NMR {
 				}
 
 				// Map Code to UTF16
-				if (nCode < 0xd800) {
+				if ((nCode < 0xd800) || ((nCode >= 0xe000) && (nCode <= 0xffff))) {
 					*pOutput = nCode;
 					pOutput++;
 				}
