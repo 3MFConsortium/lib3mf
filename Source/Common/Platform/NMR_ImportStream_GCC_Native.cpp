@@ -96,7 +96,7 @@ namespace NMR {
 
 	nfBool CImportStream_GCC_Native::seekFromEnd(_In_ nfUint64 bytes, _In_ nfBool bHasToSucceed)
 	{
-		std::streampos nStreamOffset = bytes;
+		std::streampos nStreamOffset = 0-bytes;
 		m_Stream.seekg(nStreamOffset, std::ios_base::end);
 
 		if (m_Stream.fail()) {
