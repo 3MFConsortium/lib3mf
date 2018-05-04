@@ -580,6 +580,77 @@ namespace NMR {
 		}
 	}
 
+	LIB3MFMETHODIMP CCOMModelComponentsObject::SetSliceStackId(_In_ DWORD nSliceStackId)
+	{
+		try {
+			PPackageResourceID pID = getComponentsObject()->getModel()->findPackageResourceID(nSliceStackId);
+			getComponentsObject()->setSliceStackId(pID);
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
+	LIB3MFMETHODIMP CCOMModelComponentsObject::GetSliceStackId(_Out_ DWORD *pnSliceStackId)
+	{
+		try {
+			if (!pnSliceStackId)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
+			PPackageResourceID pID = getComponentsObject()->getSliceStackId();
+			if (!pID.get()) {
+				*pnSliceStackId = 0;
+			}
+			else {
+				*pnSliceStackId = pID->getUniqueID();
+			}
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
+	LIB3MFMETHODIMP CCOMModelComponentsObject::GetSlicesMeshResolution(_Out_ eModelSlicesMeshResolution *peSlicesMeshResolution)
+	{
+		try {
+			if (!peSlicesMeshResolution)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
+			*peSlicesMeshResolution = getComponentsObject()->slicesMeshResolution();
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
+	LIB3MFMETHODIMP CCOMModelComponentsObject::SetSlicesMeshResolution(_In_ eModelSlicesMeshResolution eSlicesMeshResolution)
+	{
+		try {
+			getComponentsObject()->setSlicesMeshResolution(eSlicesMeshResolution);
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
 	LIB3MFMETHODIMP CCOMModelComponentsObject::CreateDefaultPropertyHandler (_Outptr_ ILib3MFDefaultPropertyHandler ** ppPropertyHandler)
 	{
 		try {

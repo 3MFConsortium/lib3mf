@@ -40,7 +40,120 @@ UnitTest_Slice.cpp: Defines Unittests for the slice extension to 3MF
 #include "gtest/gtest.h"
 
 namespace NMR {
-	
+
+	void generateSliceStack(CustomLib3MFBase &pSliceStack) {
+		NMR::MODELSLICEVERTEX aVertices[] = {
+			{ { 1.01f, 1.02f } },
+			{ { 9.03f, 1.04f } },
+			{ { 9.05f, 9.06f } },
+			{ { 1.07f, 9.08f } }
+		};
+		DWORD aIndices[] = { 0, 1, 2, 3, 0 };
+
+		ASSERT_EQ(NMR::lib3mf_slicestack_setusessliceref(pSliceStack.get(), true), S_OK) << L"Could not set slice ref";
+		for (int i = 0; i < 10; i++) {
+			float fTopZ = ((float)(i + 1)) / 10.0f;
+			CustomLib3MFBase pSlice;
+			ASSERT_EQ(NMR::lib3mf_slicestack_addslice(pSliceStack.get(), fTopZ, &pSlice.get()), S_OK) << L"Could not add slice to slicestack";
+			DWORD nVertexIndex;
+			ASSERT_EQ(NMR::lib3mf_slice_addvertices(pSlice.get(), aVertices, 4, &nVertexIndex), S_OK) << L"Could not add vertices to slice";
+
+			DWORD nPolyIndex;
+			ASSERT_EQ(NMR::lib3mf_slice_addpolygon(pSlice.get(), aIndices, 5, &nPolyIndex), S_OK) << L"Unable to add slice polygon";
+		}
+
+		DWORD nSliceCount;
+		ASSERT_EQ(NMR::lib3mf_slicestack_getslicecount(pSliceStack.get(), &nSliceCount), S_OK) << L"Unable to retrieve number of slices";
+		ASSERT_EQ(nSliceCount, 10) << L"Incorrect number of slices found";
+		for (DWORD i = 0; i < nSliceCount; i++) {
+
+			CustomLib3MFBase pSlice;
+			ASSERT_EQ(NMR::lib3mf_slicestack_getslice(pSliceStack.get(), i, &pSlice.get()), S_OK) << L"Unable to retrieve slice";
+
+			DWORD nVertexCount;
+			ASSERT_EQ(NMR::lib3mf_slice_getvertexcount(pSlice.get(), &nVertexCount), S_OK) << L"Unable to retrieve number of vertices in slice";
+			ASSERT_EQ(nVertexCount, 4) << L"Retrieved wrong number of vertices in slice";
+
+			NMR::MODELSLICEVERTEX aQueryVertices[4];
+			ASSERT_EQ(NMR::lib3mf_slice_getvertices(pSlice.get(), aQueryVertices, 4), S_OK) << L"Unable to retrieve vertices of slice";
+
+			for (int j = 0; j < 4; j++) {
+				ASSERT_EQ(aQueryVertices[j].m_fPosition[0], aVertices[j].m_fPosition[0]) << L"X-Coordinate of slice vertex does not match";
+				ASSERT_EQ(aQueryVertices[j].m_fPosition[1], aVertices[j].m_fPosition[1]) << L"Y-Coordinate of slice vertex does not match";
+			}
+
+			DWORD nPolygonCount;
+			ASSERT_EQ(NMR::lib3mf_slice_getpolygoncount(pSlice.get(), &nPolygonCount), S_OK) << L"Unable to retrieve number of slice polygons";
+			ASSERT_EQ(nPolygonCount, 1) << L"Incorrect number of slice polygon indices retrieved";
+
+			DWORD nIndexCount;
+			ASSERT_EQ(NMR::lib3mf_slice_getpolygonindexcount(pSlice.get(), 0, &nIndexCount), S_OK) << L"Unable to retrieve number of slice polygon indices";
+			ASSERT_EQ(nIndexCount, 5) << L"Incorrect number of slice polygon indices retrieved";
+
+			DWORD aQueryIndices[5];
+			ASSERT_EQ(NMR::lib3mf_slice_getpolygonindices(pSlice.get(), 0, aQueryIndices, 5), S_OK) << L"Unable to retrieve slice polygon indices";
+
+			for (int j = 0; j < 5; j++) {
+				ASSERT_EQ(aQueryIndices[j], aIndices[j]) << L"Slice polygon index does not match";
+			}
+		}
+	}
+
+	TEST(Test_Slice, SlicesOnComponents)
+	{
+		CustomLib3MFBase pModel;
+
+		// Create Model Instance
+		ASSERT_EQ(NMR::lib3mf_createmodel(&pModel.get()), S_OK) << L"Could not create 3MF model";
+
+		CustomLib3MFBase pSliceStack;
+		ASSERT_EQ(NMR::lib3mf_model_addslicestack(pModel.get(), 0.005f, &pSliceStack.get()), S_OK) << L"Could not add slice stack";
+		generateSliceStack(pSliceStack);
+
+		CustomLib3MFBase pComponetsObject;
+		ASSERT_EQ(NMR::lib3mf_model_addcomponentsobject(pModel.get(), &pComponetsObject.get()), S_OK) << "Unable to add componets object to model";
+
+		ASSERT_EQ(NMR::lib3mf_componentsobject_setslicestack(pComponetsObject.get(), pSliceStack.get()), S_OK) << "Unable to set slicestak for componets object";
+		
+		eModelSlicesMeshResolution eMeshResolution;
+		ASSERT_EQ(NMR::lib3mf_componentsobject_setslicesmeshresolution(pComponetsObject.get(), MODELSLICESMESHRESOLUTION_LOW), S_OK) << "Cannot set meshresolution";
+		ASSERT_EQ(NMR::lib3mf_componentsobject_getslicesmeshresolution(pComponetsObject.get(), &eMeshResolution), S_OK) << "Cannot get meshresolution";
+		ASSERT_EQ(eMeshResolution, MODELSLICESMESHRESOLUTION_LOW) << "Meshresolution is not \"lowres\"";
+
+		CustomLib3MFBase p3MFWriter;
+
+		ASSERT_EQ(NMR::lib3mf_model_querywriter(pModel.get(), "3mf", &p3MFWriter.get()), S_OK) << "Cannot create model writer";
+		ASSERT_EQ(NMR::lib3mf_writer_writetofileutf8(p3MFWriter.get(), (std::string("TestOutput") + separator() + "Slice_SlicesOnComponents.3mf").c_str()), S_OK) << "Cannot write 3mf";
+
+		{
+			CustomLib3MFBase p3mfReader, pModel;
+			ASSERT_EQ(NMR::lib3mf_createmodel(&pModel.get()), S_OK) << "Could not create model";
+			ASSERT_EQ(NMR::lib3mf_model_queryreader(pModel.get(), "3mf", &p3mfReader.get()), S_OK) << "Could not query reader";
+			ASSERT_EQ(NMR::lib3mf_reader_readfromfileutf8(p3mfReader.get(), (std::string("TestOutput") + separator() + "Slice_SlicesOnComponents.3mf").c_str()), S_OK) << "Unable to load file";
+
+			CustomLib3MFBase pComponentsIterator;
+
+			ASSERT_EQ(NMR::lib3mf_model_getcomponentsobjects(pModel.get(), &pComponentsIterator.get()), S_OK) << "Could not get components object";
+
+			BOOL bHasNext;
+
+			ASSERT_EQ(NMR::lib3mf_resourceiterator_movenext(pComponentsIterator.get(), &bHasNext), S_OK) << "Could not retrieve components object";
+
+			CustomLib3MFBase pComponentsObject;
+
+			ASSERT_EQ(NMR::lib3mf_resourceiterator_getcurrent(pComponentsIterator.get(), &pComponentsObject.get()), S_OK) << "Could not get componentsobject from iterator";
+
+			DWORD nSliceStackId;
+
+			ASSERT_EQ(NMR::lib3mf_meshobject_getslicestackid(pComponentsObject.get(), &nSliceStackId), S_OK) << "Could not get slice stack id";
+			ASSERT_NE(nSliceStackId, 0) << "Invalid slice stack id";
+
+			CustomLib3MFBase pSliceStack;
+
+			ASSERT_EQ(NMR::lib3mf_model_getslicestackById(pModel.get(), nSliceStackId, &pSliceStack.get()), S_OK) << "Could not read slice stack";
+		}
+	}
+
 	TEST(Test_Slice, ModelOnly)
 	{
 		CustomLib3MFBase pModel;
@@ -51,61 +164,7 @@ namespace NMR {
 			CustomLib3MFBase pSliceStack;
 			ASSERT_EQ(NMR::lib3mf_model_addslicestack(pModel.get(), 0.005f, &pSliceStack.get()), S_OK) << L"Could not add slice stack";
 			{
-				NMR::MODELSLICEVERTEX aVertices[] = {
-					{ { 1.01f, 1.02f } },
-					{ { 9.03f, 1.04f } },
-					{ { 9.05f, 9.06f } },
-					{ { 1.07f, 9.08f } }
-				};
-				ASSERT_EQ(NMR::lib3mf_slicestack_setusessliceref(pSliceStack.get(), true), S_OK) << L"Could not set slice ref";
-
-				DWORD aIndices[] = { 0, 1, 2, 3, 0 };
-
-				for (int i = 0; i < 10; i++) {
-					float fTopZ = ((float)(i+1)) / 10.0f;
-					CustomLib3MFBase pSlice;
-					ASSERT_EQ(NMR::lib3mf_slicestack_addslice(pSliceStack.get(), fTopZ, &pSlice.get()), S_OK) << L"Could not add slice to slicestack";
-					DWORD nVertexIndex;
-					ASSERT_EQ(NMR::lib3mf_slice_addvertices(pSlice.get(), aVertices, 4, &nVertexIndex), S_OK) << L"Could not add vertices to slice";
-
-					DWORD nPolyIndex;
-					ASSERT_EQ(NMR::lib3mf_slice_addpolygon(pSlice.get(), aIndices, 5, &nPolyIndex), S_OK) << L"Unable to add slice polygon";
-				}
-
-				DWORD nSliceCount;
-				ASSERT_EQ(NMR::lib3mf_slicestack_getslicecount(pSliceStack.get(), &nSliceCount), S_OK) << L"Unable to retrieve number of slices";
-				ASSERT_EQ(nSliceCount, 10) << L"Incorrect number of slices found";
-				for (DWORD i = 0; i < nSliceCount; i++) {
-					CustomLib3MFBase pSlice;
-					ASSERT_EQ(NMR::lib3mf_slicestack_getslice(pSliceStack.get(), i, &pSlice.get()), S_OK) << L"Unable to retrieve slice";
-
-					DWORD nVertexCount;
-					ASSERT_EQ(NMR::lib3mf_slice_getvertexcount(pSlice.get(), &nVertexCount), S_OK) << L"Unable to retrieve number of vertices in slice";
-					ASSERT_EQ(nVertexCount, 4) << L"Retrieved wrong number of vertices in slice";
-
-					NMR::MODELSLICEVERTEX aQueryVertices[4];
-					ASSERT_EQ(NMR::lib3mf_slice_getvertices(pSlice.get(), aQueryVertices, 4), S_OK) << L"Unable to retrieve vertices of slice";
-
-					for (int j = 0; j < 4; j++) {
-						ASSERT_EQ(aQueryVertices[j].m_fPosition[0], aVertices[j].m_fPosition[0]) << L"X-Coordinate of slice vertex does not match";
-						ASSERT_EQ(aQueryVertices[j].m_fPosition[1], aVertices[j].m_fPosition[1]) << L"Y-Coordinate of slice vertex does not match";
-					}
-
-					DWORD nPolygonCount;
-					ASSERT_EQ(NMR::lib3mf_slice_getpolygoncount(pSlice.get(), &nPolygonCount), S_OK) << L"Unable to retrieve number of slice polygons";
-					ASSERT_EQ(nPolygonCount, 1) << L"Incorrect number of slice polygon indices retrieved";
-
-					DWORD nIndexCount;
-					ASSERT_EQ(NMR::lib3mf_slice_getpolygonindexcount(pSlice.get(), 0, &nIndexCount), S_OK) << L"Unable to retrieve number of slice polygon indices";
-					ASSERT_EQ(nIndexCount, 5) << L"Incorrect number of slice polygon indices retrieved";
-
-					DWORD aQueryIndices[5];
-					ASSERT_EQ(NMR::lib3mf_slice_getpolygonindices(pSlice.get(), 0, aQueryIndices, 5), S_OK) << L"Unable to retrieve slice polygon indices";
-
-					for (int j = 0; j < 5; j++) {
-						ASSERT_EQ(aQueryIndices[j], aIndices[j]) << L"Slice polygon index does not match";
-					}
-				}
+				generateSliceStack(pSliceStack);
 			}
 		}
 	}

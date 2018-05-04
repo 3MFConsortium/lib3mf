@@ -441,6 +441,18 @@ namespace NMR {
 				nPropertyIndex = pBaseMaterialProperty->getResourceIndex();
 			}
 
+			// Slice extension content
+			if (m_bWriteSliceExtension) {
+				if (pObject->getSliceStackId() != 0) {
+					writePrefixedStringAttribute(XML_3MF_NAMESPACEPREFIX_SLICE, XML_3MF_ATTRIBUTE_OBJECT_SLICESTACKID,
+						fnUint32ToWString(pObject->getSliceStackId()->getUniqueID()));
+				}
+				if (pObject->slicesMeshResolution() != MODELSLICESMESHRESOLUTION_FULL) {
+					writePrefixedStringAttribute(XML_3MF_NAMESPACEPREFIX_SLICE, XML_3MF_ATTRIBUTE_OBJECT_MESHRESOLUTION,
+						XML_3MF_VALUE_OBJECT_MESHRESOLUTION_LOW);
+				}
+			}
+
 			// Check if object is a mesh Object
 			CModelMeshObject * pMeshObject = dynamic_cast<CModelMeshObject *> (pObject);
 			if (pMeshObject) {
@@ -450,14 +462,6 @@ namespace NMR {
 					writeIntAttribute(XML_3MF_ATTRIBUTE_OBJECT_PINDEX, nPropertyIndex);
 				}
 
-				if (pMeshObject->getSliceStackId() != 0) {
-					writePrefixedStringAttribute(XML_3MF_NAMESPACEPREFIX_SLICE, XML_3MF_ATTRIBUTE_OBJECT_SLICESTACKID,
-						fnUint32ToWString(pMeshObject->getSliceStackId()->getUniqueID()));
-				}
-				if (pMeshObject->slicesMeshResolution() != MODELSLICESMESHRESOLUTION_FULL) {
-					writePrefixedStringAttribute(XML_3MF_NAMESPACEPREFIX_SLICE, XML_3MF_ATTRIBUTE_OBJECT_MESHRESOLUTION,
-						XML_3MF_VALUE_OBJECT_MESHRESOLUTION_LOW);
-				}
 				CModelWriterNode100_Mesh ModelWriter_Mesh(pMeshObject, m_pXMLWriter, m_pProgressMonitor,
 					m_pColorMapping, m_pTexCoordMappingContainer, m_bWriteMaterialExtension, m_bWriteBeamLatticeExtension);
 				ModelWriter_Mesh.writeToXML();

@@ -48,7 +48,7 @@ namespace NMR {
 	typedef std::shared_ptr <CModel> PModel;
 
 	class CModelComponentsObject : public CModelObject {
-	private:		
+	private:
 		std::vector<PModelComponent> m_Components;
 	public:
 		CModelComponentsObject() = delete;
