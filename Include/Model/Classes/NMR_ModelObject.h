@@ -54,7 +54,8 @@ namespace NMR {
 	private:
 		std::wstring m_sName;
 		std::wstring m_sPartNumber;
-
+		PPackageResourceID m_pSliceStackId;
+		eModelSlicesMeshResolution m_eSlicesMeshResolution;
 	private:
 		PUUID m_UUID;
 		std::wstring m_sThumbnail;
@@ -92,6 +93,12 @@ namespace NMR {
 		virtual nfBool isValid() = 0;
 
 		virtual nfBool isValidForSlices(const NMATRIX3& totalParentMatrix) = 0;
+
+		void setSliceStackId(PPackageResourceID nSliceStackId);
+		PPackageResourceID getSliceStackId();
+
+		void setSlicesMeshResolution(eModelSlicesMeshResolution eMeshResolution);
+		eModelSlicesMeshResolution slicesMeshResolution() const;
 
 		// Set/Get Default Property
 		void setDefaultProperty (_In_ PModelDefaultProperty pModelDefaultProperty);
