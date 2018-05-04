@@ -62,13 +62,16 @@ namespace NMR {
 				argsSeek = * ((zip_source_args_seek *)data);
 				if (argsSeek.whence == SEEK_SET)
 					pImportStream->seekPosition(argsSeek.offset, true);
-				else if (argsSeek.whence == SEEK_CUR)
-					pImportStream->seekForward(argsSeek.offset, true);
+				else if (argsSeek.whence == SEEK_CUR) {
+					pImportStream->seekPosition(pImportStream->getPosition() + argsSeek.offset, true);
+				}
 				else if (argsSeek.whence == SEEK_END) {
-					pImportStream->seekFromEnd(argsSeek.offset, true);
+					if (argsSeek.offset > 0)
+						throw CNMRException(NMR_ERROR_ZIPCALLBACK);
+					pImportStream->seekFromEnd(-argsSeek.offset, true);
 				}
 				else
-					throw CNMRException(0);
+					throw CNMRException(NMR_ERROR_ZIPCALLBACK);
 				return 0;
 
 			case ZIP_SOURCE_OPEN:
