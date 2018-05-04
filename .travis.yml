@@ -1,3 +1,8 @@
+# Configuration file for Travis CI (https://travis-ci.org)
+#
+# It used as a status check for all PRs and
+# to generate the build-status-icon in the main README.md-file.
+
 language: cpp
 
 matrix:
@@ -8,7 +13,7 @@ matrix:
       osx_image: xcode7.2
 
 before_script:
-    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install ossp-uuid          ; fi
+    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then HOMEBREW_NO_AUTO_UPDATE=1 brew install ossp-uuid          ; fi
     - sh cmake/GenerateMake.sh
     - cd build
 
