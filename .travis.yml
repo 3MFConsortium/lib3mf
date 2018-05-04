@@ -1,3 +1,8 @@
+# Configuration file for Travis CI (https://travis-ci.org)
+#
+# It used as a status check for all PRs and
+# to generate the build-status-icon in the main README.md-file.
+
 language: cpp
 
 matrix:
