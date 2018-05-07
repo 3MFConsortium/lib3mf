@@ -15,5 +15,5 @@ A new folder “build” is created and contains projects for the IDE/build targ
 
 By default, lib3MF is built as a shared (dynamic) library, and tests are enabled.
 - The shared library only offers the C-like interface
-- The static library only offers both the C-like interface as well as the underlying C++ classes. To enable static library building, add the cmake option `-DBUILD_SHARED_LIBS:BOOL=OFF` either in the scripts in this folder or in the parent project that includes the lib3MF-project.
+- The static library offers both the C-like interface as well as the underlying C++ classes. To enable static library building, add the cmake option `-DBUILD_SHARED_LIBS:BOOL=OFF` either in the scripts in this folder or in the parent project that includes the lib3MF-project.
 - To disable the tests, add the cmake option `-DBUILD_TESTING:BOOL=OFF` either in the scripts in this folder or in the parent project that includes the lib3MF-project.
