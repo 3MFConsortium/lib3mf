@@ -510,7 +510,7 @@ namespace NMR {
 		std::streamsize size = file.tellg();
 		file.seekg(0, std::ios::beg);
 		// Memory buffer
-		std::vector<char> buffer(size);
+		std::vector<char> buffer(static_cast<size_t>(size));
 		EXPECT_TRUE(file.read(buffer.data(), size));
 
 		// Load the 3mf from a buffer, not a file

@@ -924,23 +924,23 @@ namespace NMR {
 				if (pAmp != nullptr) {
 					pColon = pIterChar;
 					long long compareLen = pColon - pAmp + 1;
-					if (wcsncmp(pAmp, L"&quot;", std::min((long long)(6), compareLen)) == 0) {
+					if (wcsncmp(pAmp, L"&quot;", static_cast<size_t>(std::min((long long)(6), compareLen))) == 0) {
 						*pWriteChar = L'\"';
 						pWriteChar++;
 					}
-					else if (wcsncmp(pAmp, L"&apos;", std::min((long long)(6), compareLen)) == 0) {
+					else if (wcsncmp(pAmp, L"&apos;", static_cast<size_t>(std::min((long long)(6), compareLen))) == 0) {
 						*pWriteChar = L'\'';
 						pWriteChar++;
 					}
-					else if (wcsncmp(pAmp, L"&lt;", std::min((long long)(4), compareLen)) == 0) {
+					else if (wcsncmp(pAmp, L"&lt;", static_cast<size_t>(std::min((long long)(4), compareLen))) == 0) {
 						*pWriteChar = L'<';
 						pWriteChar++;
 					}
-					else if (wcsncmp(pAmp, L"&gt;", std::min((long long)(4), compareLen)) == 0) {
+					else if (wcsncmp(pAmp, L"&gt;", static_cast<size_t>(std::min((long long)(4), compareLen))) == 0) {
 						*pWriteChar = L'>';
 						pWriteChar++;
 					}
-					else if (wcsncmp(pAmp, L"&amp;", std::min((long long)(5), compareLen)) == 0) {
+					else if (wcsncmp(pAmp, L"&amp;", static_cast<size_t>(std::min((long long)(5), compareLen))) == 0) {
 						*pWriteChar = L'&';
 						pWriteChar++;
 					}
