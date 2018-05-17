@@ -15,7 +15,7 @@ set(CMAKE_INSTALL_BINDIR bin CACHE PATH "directory for installing binary files")
 set(CMAKE_INSTALL_LIBDIR lib CACHE PATH "directory for installing library files")
 set(CMAKE_INSTALL_INCLUDEDIR include/lib3mf CACHE PATH "directory for installing header files")
 
-set(NMR_COM_NATIVE FALSE) # by default, do not actually implement a COM interface
+set(NMR_COM_NATIVE CACHE BOOL FALSE) # by default, do not actually implement a COM interface
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
   # using GCC
   add_definitions(-DBUILD_DLL)
