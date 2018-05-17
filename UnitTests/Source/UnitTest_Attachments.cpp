@@ -127,7 +127,7 @@ namespace NMR {
 					
 				// get surface regions as xml
 				std::string strAttachmentPayload;
-				strAttachmentPayload.resize(cbStreamSize);
+				strAttachmentPayload.resize(static_cast<size_t>(cbStreamSize));
 				ASSERT_EQ(NMR::lib3mf_attachment_writetobuffer(pAttachment.get(), (BYTE *)&strAttachmentPayload[0], cbStreamSize), S_OK)
 					<< L"could not write model attachment to buffer";
 

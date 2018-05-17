@@ -213,7 +213,7 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_INSUFFICIENTBUFFERSIZE);
 
 			// TODO eliminate this copy, perhaps by allowing CExportStreamMemory to use existing buffers
-			memcpy(pBuffer, pStream->getData(), cbStreamSize);
+			memcpy(pBuffer, pStream->getData(), static_cast<size_t>(cbStreamSize));
 
 			return handleSuccess();
 		}
