@@ -43,17 +43,17 @@ NMR_OpcPackageContentTypeReader.h defines a reader for the OPC Package Content T
 namespace NMR {
 
 	struct COpcPackageContentType {
-		std::wstring m_extension;
-		std::wstring m_contentType;
-		COpcPackageContentType(std::wstring extension, std::wstring contentType) {
+		std::string m_extension;
+		std::string m_contentType;
+		COpcPackageContentType(std::string extension, std::string contentType) {
 			m_extension = extension;
 			m_contentType = contentType;
 		}
 	};
 	struct COpcPackageContentType_Override {
-		std::wstring m_partName;
-		std::wstring m_contentType;
-		COpcPackageContentType_Override(std::wstring partName, std::wstring contentType) {
+		std::string m_partName;
+		std::string m_contentType;
+		COpcPackageContentType_Override(std::string partName, std::string contentType) {
 			m_partName = partName;
 			m_contentType = contentType;
 		}

@@ -160,7 +160,7 @@ namespace NMR {
 			__NMRASSERT(pTextureResource);
 
 			// Retrieve Path
-			std::wstring sPath = pTextureResource->getPath();
+			std::string sPath = pTextureResource->getPath();
 
 			CModel * pModel = pTextureResource->getModel();
 			__NMRASSERT(pModel);
@@ -191,18 +191,18 @@ namespace NMR {
 			__NMRASSERT(pTextureResource);
 
 			// check relationship type
-			std::wstring sRelationshipType;
+			std::string sRelationshipType;
 			ULONG cbNeededChars;
-			pTextureAttachment->GetRelationshipType(nullptr, 0, &cbNeededChars);
+			pTextureAttachment->GetRelationshipTypeUTF8(nullptr, 0, &cbNeededChars);
 			sRelationshipType.resize(cbNeededChars);
-			pTextureAttachment->GetRelationshipType(&(sRelationshipType[0]), cbNeededChars + 1, &cbNeededChars);
+			pTextureAttachment->GetRelationshipTypeUTF8(&(sRelationshipType[0]), cbNeededChars + 1, &cbNeededChars);
 			if (!(sRelationshipType == PACKAGE_TEXTURE_RELATIONSHIP_TYPE))
 				throw CNMRException(NMR_ERROR_INVALIDRELATIONSHIPTYPEFORTEXTURE);
 
-			std::wstring sPath;
-			pTextureAttachment->GetPath(nullptr, 0, &cbNeededChars);
+			std::string sPath;
+			pTextureAttachment->GetPathUTF8(nullptr, 0, &cbNeededChars);
 			sPath.resize(cbNeededChars);
-			pTextureAttachment->GetPath(&(sPath[0]), cbNeededChars+1, &cbNeededChars);
+			pTextureAttachment->GetPathUTF8(&(sPath[0]), cbNeededChars+1, &cbNeededChars);
 
 			pTextureResource->setPath(sPath);
 
@@ -226,11 +226,12 @@ namespace NMR {
 			__NMRASSERT(pTextureResource);
 
 			// Retrieve Path
-			std::wstring sPath = pTextureResource->getPath();
+			std::string sPath = pTextureResource->getPath();
+			std::wstring wPath = fnUTF8toUTF16(sPath);
 
 			// Safely call StringToBuffer
 			nfUint32 nNeededChars = 0;
-			fnWStringToBufferSafe(sPath, pwszBuffer, cbBufferSize, &nNeededChars);
+			fnWStringToBufferSafe(wPath, pwszBuffer, cbBufferSize, &nNeededChars);
 
 			// Return length if needed
 			if (pcbNeededChars)
@@ -257,8 +258,7 @@ namespace NMR {
 			__NMRASSERT(pTextureResource);
 
 			// Retrieve Path
-			std::wstring sUTF16Path = pTextureResource->getPath();
-			std::string sUTF8Path = fnUTF16toUTF8(sUTF16Path);
+			std::string sUTF8Path = pTextureResource->getPath();
 
 			// Safely call StringToBuffer
 			nfUint32 nNeededChars = 0;
@@ -292,7 +292,7 @@ namespace NMR {
 			__NMRASSERT(pTextureResource);
 
 			std::wstring sPath(pwszPath);
-			pTextureResource->setPath(sPath);
+			pTextureResource->setPath(fnUTF16toUTF8(sPath));
 
 			return handleSuccess();
 		}
@@ -315,8 +315,7 @@ namespace NMR {
 			__NMRASSERT(pTextureResource);
 
 			std::string sUTF8Path(pszPath);
-			std::wstring sUTF16Path = fnUTF8toUTF16(sUTF8Path);
-			pTextureResource->setPath(sUTF16Path);
+			pTextureResource->setPath(sUTF8Path);
 
 			return handleSuccess();
 		}

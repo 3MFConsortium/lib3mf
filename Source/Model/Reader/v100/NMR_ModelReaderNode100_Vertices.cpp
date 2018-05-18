@@ -61,20 +61,20 @@ namespace NMR {
 		parseContent(pXMLReader);
 	}
 
-	void CModelReaderNode100_Vertices::OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue)
+	void CModelReaderNode100_Vertices::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
 	{
 		__NMRASSERT(pAttributeName);
 		__NMRASSERT(pAttributeValue);
 	}
 
-	void CModelReaderNode100_Vertices::OnNSChildElement(_In_z_ const nfWChar * pChildName, _In_z_ const nfWChar * pNameSpace, _In_ CXmlReader * pXMLReader)
+	void CModelReaderNode100_Vertices::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
 	{
 		__NMRASSERT(pChildName);
 		__NMRASSERT(pXMLReader);
 		__NMRASSERT(pNameSpace);
 
-		if (wcscmp(pNameSpace, XML_3MF_NAMESPACE_CORESPEC100) == 0) {
-			if (wcscmp(pChildName, XML_3MF_ELEMENT_VERTEX) == 0)
+		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_CORESPEC100) == 0) {
+			if (strcmp(pChildName, XML_3MF_ELEMENT_VERTEX) == 0)
 			{
 				PModelReaderNode100_Vertex pXMLNode = std::make_shared<CModelReaderNode100_Vertex>(m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);

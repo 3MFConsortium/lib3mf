@@ -175,8 +175,7 @@ namespace NMR {
 			if (!pwszLanguage)
 				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
 
-			std::wstring sLanguage(pwszLanguage);
-			m_pModel->setLanguage(pwszLanguage);
+			m_pModel->setLanguage(fnUTF16toUTF8(pwszLanguage));
 
 			return handleSuccess();
 		}
@@ -194,9 +193,7 @@ namespace NMR {
 			if (!pszLanguage)
 				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
 
-			std::string sUTF8Language(pszLanguage);
-			std::wstring sUTF16Language = fnUTF8toUTF16(sUTF8Language);
-			m_pModel->setLanguage(sUTF16Language);
+			m_pModel->setLanguage(pszLanguage);
 
 			return handleSuccess();
 		}
@@ -216,7 +213,7 @@ namespace NMR {
 
 			// Safely call StringToBuffer
 			nfUint32 nNeededChars = 0;
-			fnWStringToBufferSafe(m_pModel->getLanguage(), pwszBuffer, cbBufferSize, &nNeededChars);
+			fnWStringToBufferSafe(fnUTF8toUTF16(m_pModel->getLanguage()), pwszBuffer, cbBufferSize, &nNeededChars);
 
 			// Return length if needed
 			if (pcbNeededChars)
@@ -238,8 +235,7 @@ namespace NMR {
 			if (cbBufferSize > MODEL_MAXSTRINGBUFFERLENGTH)
 				throw CNMRException(NMR_ERROR_INVALIDBUFFERSIZE);
 
-			std::wstring sUTF16Language = m_pModel->getLanguage();
-			std::string sUTF8Language = fnUTF16toUTF8(sUTF16Language);
+			std::string sUTF8Language = m_pModel->getLanguage();
 
 			// Safely call StringToBuffer
 			nfUint32 nNeededChars = 0;
@@ -890,18 +886,18 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
 			
 			// check relationship type
-			std::wstring sRelationshipType;
+			std::string sRelationshipType;
 			ULONG cbNeededChars;
-			pTextureAttachment->GetRelationshipType(nullptr, 0, &cbNeededChars);
+			pTextureAttachment->GetRelationshipTypeUTF8(nullptr, 0, &cbNeededChars);
 			sRelationshipType.resize(cbNeededChars);
-			pTextureAttachment->GetRelationshipType(&(sRelationshipType[0]), cbNeededChars + 1, &cbNeededChars);
+			pTextureAttachment->GetRelationshipTypeUTF8(&(sRelationshipType[0]), cbNeededChars + 1, &cbNeededChars);
 			if ( !(sRelationshipType == PACKAGE_TEXTURE_RELATIONSHIP_TYPE) )
 				throw CNMRException(NMR_ERROR_INVALIDRELATIONSHIPTYPEFORTEXTURE);
 
-			std::wstring sPath;
-			pTextureAttachment->GetPath(nullptr, 0, &cbNeededChars);
+			std::string sPath;
+			pTextureAttachment->GetPathUTF8(nullptr, 0, &cbNeededChars);
 			sPath.resize(cbNeededChars);
-			pTextureAttachment->GetPath(&(sPath[0]), cbNeededChars+1, &cbNeededChars);
+			pTextureAttachment->GetPathUTF8(&(sPath[0]), cbNeededChars+1, &cbNeededChars);
 
 			PModelTexture2DResource pResource = std::make_shared<CModelTexture2DResource>(m_pModel->generateResourceID(), m_pModel.get());
 			m_pModel->addResource(pResource);
@@ -933,8 +929,7 @@ namespace NMR {
 			PModelTexture2DResource pResource = std::make_shared<CModelTexture2DResource>(m_pModel->generateResourceID(), m_pModel.get());
 			m_pModel->addResource(pResource);
 
-			std::wstring sPath(pwszPath);
-			pResource->setPath(sPath);
+			pResource->setPath(fnUTF16toUTF8(pwszPath));
 
 			CCOMObject<CCOMModelTexture2D> * pCOMObject = new CCOMObject<CCOMModelTexture2D>();
 			pCOMObject->setResource(pResource);
@@ -963,9 +958,7 @@ namespace NMR {
 			PModelTexture2DResource pResource = std::make_shared<CModelTexture2DResource>(m_pModel->generateResourceID(), m_pModel.get());
 			m_pModel->addResource(pResource);
 
-			std::string sUTF8Path(pszPath);
-			std::wstring sUTF16Path = fnUTF8toUTF16(sUTF8Path);
-			pResource->setPath(sUTF16Path);
+			pResource->setPath(pszPath);
 
 			CCOMObject<CCOMModelTexture2D> * pCOMObject = new CCOMObject<CCOMModelTexture2D>();
 			pCOMObject->AddRef();
@@ -1040,13 +1033,13 @@ namespace NMR {
 			if (nIndex > nCount)
 				throw CNMRException(NMR_ERROR_INVALIDINDEX);
 
-			std::wstring sName;
-			std::wstring sValue;
+			std::string sName;
+			std::string sValue;
 			m_pModel->getMetaData(nIndex, sName, sValue);
 
 			// Safely call StringToBuffer
 			nfUint32 nNeededChars = 0;
-			fnWStringToBufferSafe(sName, pwszBuffer, cbBufferSize, &nNeededChars);
+			fnWStringToBufferSafe(fnUTF8toUTF16(sName), pwszBuffer, cbBufferSize, &nNeededChars);
 
 			// Return length if needed
 			if (pcbNeededChars)
@@ -1074,15 +1067,13 @@ namespace NMR {
 			if (nIndex > nCount)
 				throw CNMRException(NMR_ERROR_INVALIDINDEX);
 
-			std::wstring sUTF16Name;
-			std::wstring sUTF16Value;
-			m_pModel->getMetaData(nIndex, sUTF16Name, sUTF16Value);
-
-			std::string sUTF8Name = fnUTF16toUTF8(sUTF16Name);
+			std::string sName;
+			std::string sValue;
+			m_pModel->getMetaData(nIndex, sName, sValue);
 
 			// Safely call StringToBuffer
 			nfUint32 nNeededChars = 0;
-			fnStringToBufferSafe(sUTF8Name, pszBuffer, cbBufferSize, &nNeededChars);
+			fnStringToBufferSafe(sName, pszBuffer, cbBufferSize, &nNeededChars);
 
 			// Return length if needed
 			if (pcbNeededChars)
@@ -1110,13 +1101,13 @@ namespace NMR {
 			if (nIndex > nCount)
 				throw CNMRException(NMR_ERROR_INVALIDINDEX);
 
-			std::wstring sName;
-			std::wstring sValue;
+			std::string sName;
+			std::string sValue;
 			m_pModel->getMetaData(nIndex, sName, sValue);
 
 			// Safely call StringToBuffer
 			nfUint32 nNeededChars = 0;
-			fnWStringToBufferSafe(sValue, pwszBuffer, cbBufferSize, &nNeededChars);
+			fnWStringToBufferSafe(fnUTF8toUTF16(sValue), pwszBuffer, cbBufferSize, &nNeededChars);
 
 			// Return length if needed
 			if (pcbNeededChars)
@@ -1145,15 +1136,14 @@ namespace NMR {
 			if (nIndex > nCount)
 				throw CNMRException(NMR_ERROR_INVALIDINDEX);
 
-			std::wstring sUTF16Name;
-			std::wstring sUTF16Value;
-			m_pModel->getMetaData(nIndex, sUTF16Name, sUTF16Value);
+			std::string sName;
+			std::string sValue;
+			m_pModel->getMetaData(nIndex, sName, sValue);
 
-			std::string sUTF8Value = fnUTF16toUTF8(sUTF16Value);
 
 			// Safely call StringToBuffer
 			nfUint32 nNeededChars = 0;
-			fnStringToBufferSafe(sUTF8Value, pszBuffer, cbBufferSize, &nNeededChars);
+			fnStringToBufferSafe(sValue, pszBuffer, cbBufferSize, &nNeededChars);
 
 			// Return length if needed
 			if (pcbNeededChars)
@@ -1180,10 +1170,7 @@ namespace NMR {
 			if (!pszwValue)
 				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
 
-			std::wstring sName (pszwKey);
-			std::wstring sValue (pszwValue);
-
-			m_pModel->addMetaData(sName, sValue);
+			m_pModel->addMetaData(fnUTF16toUTF8(pszwKey), fnUTF16toUTF8(pszwValue));
 			return handleSuccess();
 		}
 		catch (CNMRException & Exception) {
@@ -1205,13 +1192,7 @@ namespace NMR {
 			if (!pszValue)
 				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
 
-			std::string sUTF8Name(pszKey);
-			std::string sUTF8Value(pszValue);
-
-			std::wstring sUTF16Name = fnUTF8toUTF16(sUTF8Name);
-			std::wstring sUTF16Value = fnUTF8toUTF16(sUTF8Value);
-
-			m_pModel->addMetaData(sUTF16Name, sUTF16Value);
+			m_pModel->addMetaData(pszKey, pszValue);
 			return handleSuccess();
 		}
 		catch (CNMRException & Exception) {
@@ -1257,9 +1238,7 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
 			PImportStream pStream = std::make_shared<CImportStream_Memory> ();
-			std::wstring sURI(pwszURI);
-			std::wstring sType(pwszRelationShipType);
-			PModelAttachment pAttachment = m_pModel->addAttachment(sURI, sType, pStream);
+			PModelAttachment pAttachment = m_pModel->addAttachment(fnUTF16toUTF8(pwszURI), fnUTF16toUTF8(pwszRelationShipType), pStream);
 
 			CCOMObject<CCOMModelAttachment> * pCOMObject = new CCOMObject<CCOMModelAttachment>();
 			pCOMObject->AddRef();
@@ -1289,11 +1268,7 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
 			PImportStream pStream = std::make_shared<CImportStream_Memory>();
-			std::string sUTF8URI(pszURI);
-			std::string sUTF8Type(pszRelationShipType);
-			std::wstring sUTF16URI = fnUTF8toUTF16 (sUTF8URI);
-			std::wstring sUTF16Type = fnUTF8toUTF16 (sUTF8Type);
-			PModelAttachment pAttachment = m_pModel->addAttachment(sUTF16URI, sUTF16Type, pStream);
+			PModelAttachment pAttachment = m_pModel->addAttachment(pszURI, pszRelationShipType, pStream);
 
 			CCOMObject<CCOMModelAttachment> * pCOMObject = new CCOMObject<CCOMModelAttachment>();
 			pCOMObject->AddRef();
@@ -1350,7 +1325,7 @@ namespace NMR {
 
 			std::wstring sURI(pwszURI);
 
-			PModelAttachment pAttachment = m_pModel->findModelAttachment(sURI);
+			PModelAttachment pAttachment = m_pModel->findModelAttachment(fnUTF16toUTF8(sURI));
 
 			if (pAttachment.get() == nullptr)
 				throw CNMRException(NMR_ERROR_ATTACHMENTNOTFOUND);
@@ -1378,10 +1353,7 @@ namespace NMR {
 			if (pszURI == nullptr)
 				throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-			std::string sUTF8URI(pszURI);
-			std::wstring sUTF16URI = fnUTF8toUTF16(sUTF8URI);
-
-			PModelAttachment pAttachment = m_pModel->findModelAttachment(sUTF16URI);
+			PModelAttachment pAttachment = m_pModel->findModelAttachment(pszURI);
 
 			if (pAttachment.get() == nullptr)
 				throw CNMRException(NMR_ERROR_ATTACHMENTNOTFOUND);
@@ -1469,11 +1441,11 @@ namespace NMR {
 			if (pAttachment.get() == nullptr)
 				throw CNMRException(NMR_ERROR_ATTACHMENTNOTFOUND);
 
-			std::wstring sValue = pAttachment->getPathURI();
+			std::string sValue = pAttachment->getPathURI();
 
 			// Safely call StringToBuffer
 			nfUint32 nNeededChars = 0;
-			fnWStringToBufferSafe(sValue, pwszBuffer, cbBufferSize, &nNeededChars);
+			fnWStringToBufferSafe(fnUTF8toUTF16(sValue), pwszBuffer, cbBufferSize, &nNeededChars);
 
 			// Return length if needed
 			if (pcbNeededChars)
@@ -1506,12 +1478,9 @@ namespace NMR {
 			if (pAttachment.get() == nullptr)
 				throw CNMRException(NMR_ERROR_ATTACHMENTNOTFOUND);
 
-			std::wstring sUTF16Value = pAttachment->getPathURI();
-			std::string sUTF8Value = fnUTF16toUTF8(sUTF16Value);
-
 			// Safely call StringToBuffer
 			nfUint32 nNeededChars = 0;
-			fnStringToBufferSafe(sUTF8Value, pwszBuffer, cbBufferSize, &nNeededChars);
+			fnStringToBufferSafe(pAttachment->getPathURI(), pwszBuffer, cbBufferSize, &nNeededChars);
 
 			// Return length if needed
 			if (pcbNeededChars)
@@ -1591,7 +1560,10 @@ namespace NMR {
 			std::wstring sExtension(pszwExtension);
 			std::wstring sContentType(pszwContentType);
 
-			m_pModel->addCustomContentType(sExtension, sContentType);
+			std::string sUTF8Extension = fnUTF16toUTF8(sExtension);
+			std::string sUTF8ContentType = fnUTF16toUTF8(sContentType);
+
+			m_pModel->addCustomContentType(sUTF8Extension, sUTF8ContentType);
 
 			return handleSuccess();
 		}
@@ -1612,12 +1584,7 @@ namespace NMR {
 			if (pszContentType == nullptr)
 				throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-			std::string sUTF8Extension(pszExtension);
-			std::string sUTF8ContentType(pszContentType);
-			std::wstring sExtension = fnUTF8toUTF16(sUTF8Extension);
-			std::wstring sContentType = fnUTF8toUTF16(sUTF8ContentType);
-
-			m_pModel->addCustomContentType(sExtension, sContentType);
+			m_pModel->addCustomContentType(pszExtension, pszContentType);
 
 			return handleSuccess();
 		}
@@ -1636,9 +1603,7 @@ namespace NMR {
 			if (pszwExtension == nullptr)
 				throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-			std::wstring sExtension(pszwExtension);
-
-			m_pModel->removeCustomContentType(sExtension);
+			m_pModel->removeCustomContentType(fnUTF16toUTF8(pszwExtension));
 
 			return handleSuccess();
 		}
@@ -1657,10 +1622,7 @@ namespace NMR {
 			if (pszExtension == nullptr)
 				throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-			std::string sUTF8Extension(pszExtension);
-			std::wstring sExtension = fnUTF8toUTF16(sUTF8Extension);
-
-			m_pModel->removeCustomContentType(sExtension);
+			m_pModel->removeCustomContentType(pszExtension);
 
 			return handleSuccess();
 		}

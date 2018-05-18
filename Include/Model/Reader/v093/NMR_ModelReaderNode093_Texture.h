@@ -46,14 +46,14 @@ namespace NMR {
 		CModel * m_pModel;
 		ModelResourceID m_nID;
 
-		std::wstring m_sPath;
-		std::wstring m_sContentType;
-		std::wstring m_sTileStyleU;
-		std::wstring m_sTileStyleV;
+		std::string m_sPath;
+		std::string m_sContentType;
+		std::string m_sTileStyleU;
+		std::string m_sTileStyleV;
 
 		PModelTexture2DResource m_pTexture2DResource;
 	protected:
-		virtual void OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue);
+		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 	public:
 		CModelReaderNode093_Texture() = delete;
 		CModelReaderNode093_Texture(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings);
@@ -62,10 +62,10 @@ namespace NMR {
 
 		ModelResourceID getID ();
 
-		std::wstring getPath();
-		std::wstring getContentType();
-		std::wstring getTileStyleU();
-		std::wstring getTileStyleV();
+		std::string getPath();
+		std::string getContentType();
+		std::string getTileStyleU();
+		std::string getTileStyleV();
 	};
 
 	typedef std::shared_ptr <CModelReaderNode093_Texture> PModelReaderNode093_Texture;

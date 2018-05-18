@@ -60,7 +60,7 @@ namespace NMR
 		const static std::wstring sInPath;
 		const static std::wstring sOutPath;
 		const static std::string sText;
-		nfUint64 writeEntryLarger(PPortableZIPWriter pZipWriter, std::wstring sName, nfUint64 nSize) {
+		nfUint64 writeEntryLarger(PPortableZIPWriter pZipWriter, std::string sName, nfUint64 nSize) {
 			PExportStream pStream = pZipWriter->createEntry(sName, fnGetUnixTime());
 			nfUint64 nUncompressedSize = 0;
 			while (nUncompressedSize <= nSize) {
@@ -78,12 +78,12 @@ namespace NMR
 			PExportStream pExportStreamManual(new CExportStream_GCC_Native((sOutPath + L"Manual64.zip").c_str()));
 			PPortableZIPWriter pZipWriterManual = std::make_shared<CPortableZIPWriter>(pExportStreamManual, true);
 			{
-				PExportStream pStreamManual = pZipWriterManual->createEntry(L"Test/asd.txt", fnGetUnixTime());
+				PExportStream pStreamManual = pZipWriterManual->createEntry("Test/asd.txt", fnGetUnixTime());
 				char sXYZ[] = { 'X','Y','Z', 13,10 };
 				pStreamManual->writeBuffer(sXYZ, 5);
 			}
 			{
-				PExportStream pStreamManual = pZipWriterManual->createEntry(L"fgh.txt", fnGetUnixTime());
+				PExportStream pStreamManual = pZipWriterManual->createEntry("fgh.txt", fnGetUnixTime());
 				char sABC[] = { 'A','B','C', 13, 10 };
 				pStreamManual->writeBuffer(sABC, 5);
 			}
@@ -105,15 +105,15 @@ namespace NMR
 			PExportStream pExportStream(new CExportStream_GCC_Native((sOutPath + L"EntryLarger4GB_zip64.zip").c_str()));
 			PPortableZIPWriter pZipWriter = std::make_shared<CPortableZIPWriter>(pExportStream, true);
 
-			writeEntryLarger(pZipWriter, L"DeBelloGallico.txt", 0x100010000);
+			writeEntryLarger(pZipWriter, "DeBelloGallico.txt", 0x100010000);
 		}
 
 		TEST_METHOD(ZIPExport_AllUncompressedLarger4GB)
 		{
 			PExportStream pExportStream(new CExportStream_GCC_Native((sOutPath + L"AllUncompressedLarger4GB_zip64.zip").c_str()));
 			PPortableZIPWriter pZipWriter = std::make_shared<CPortableZIPWriter>(pExportStream, true);
-			writeEntryLarger(pZipWriter, L"DeBelloGallico1.txt", 0x08F000000);
-			writeEntryLarger(pZipWriter, L"DeBelloGallico2.txt", 0x08F000000);
+			writeEntryLarger(pZipWriter, "DeBelloGallico1.txt", 0x08F000000);
+			writeEntryLarger(pZipWriter, "DeBelloGallico2.txt", 0x08F000000);
 		}
 
 //		// This test takes about WAY too long to be considered a unit test

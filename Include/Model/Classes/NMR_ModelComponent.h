@@ -61,7 +61,7 @@ namespace NMR {
 		
 		PackageResourceID getObjectID();
 		nfBool hasTransform();
-		std::wstring getTransformString();
+		std::string getTransformString();
 
 		// Production extension UUID
 		PUUID uuid();

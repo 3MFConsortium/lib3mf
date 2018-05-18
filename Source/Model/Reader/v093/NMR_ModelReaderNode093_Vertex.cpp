@@ -75,13 +75,13 @@ namespace NMR {
 		fZ = m_fZ;
 	}
 
-	void CModelReaderNode093_Vertex::OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue)
+	void CModelReaderNode093_Vertex::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
 	{
 		__NMRASSERT(pAttributeName);
 		__NMRASSERT(pAttributeValue);
 
-		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_VERTEX_X) == 0) {
-			m_fX = wcstof(pAttributeValue, nullptr);
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_VERTEX_X) == 0) {
+			m_fX = strtof(pAttributeValue, nullptr);
 			if (std::isnan (m_fX))
 				throw CNMRException(NMR_ERROR_INVALIDMODELCOORDINATES);
 			if (fabs (m_fX) > XML_3MF_MAXIMUMCOORDINATEVALUE)
@@ -89,8 +89,8 @@ namespace NMR {
 			m_bHasX = true;
 		}
 
-		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_VERTEX_Y) == 0) {
-			m_fY = wcstof(pAttributeValue, nullptr);
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_VERTEX_Y) == 0) {
+			m_fY = strtof(pAttributeValue, nullptr);
 			if (std::isnan (m_fY))
 				throw CNMRException(NMR_ERROR_INVALIDMODELCOORDINATES);
 			if (fabs(m_fY) > XML_3MF_MAXIMUMCOORDINATEVALUE)
@@ -98,8 +98,8 @@ namespace NMR {
 			m_bHasY = true;
 		}
 
-		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_VERTEX_Z) == 0) {
-			m_fZ = wcstof(pAttributeValue, nullptr);
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_VERTEX_Z) == 0) {
+			m_fZ = strtof(pAttributeValue, nullptr);
 			if (std::isnan (m_fZ))
 				throw CNMRException(NMR_ERROR_INVALIDMODELCOORDINATES);
 			if (fabs(m_fZ) > XML_3MF_MAXIMUMCOORDINATEVALUE)

@@ -52,21 +52,21 @@ namespace NMR {
 	TEST(Extensions, InterfaceVersion)
 	{
 		DWORD nInterfaceVersionMajor, nInterfaceVersionMinor, nInterfaceVersionMicro;
-		EXPECT_EQ(NMR::lib3mf_getinterfaceversion(&nInterfaceVersionMajor, &nInterfaceVersionMinor, &nInterfaceVersionMicro), S_OK) << L"Failed to obtain interface version.";
-		EXPECT_EQ(nInterfaceVersionMajor, (DWORD)(NMR_APIVERSION_INTERFACE_MAJOR)) << std::wstring(L"invalid 3MF major interface version: " + std::to_wstring(NMR_APIVERSION_INTERFACE_MAJOR)).c_str();
-		EXPECT_EQ(nInterfaceVersionMinor, (DWORD)(NMR_APIVERSION_INTERFACE_MINOR)) << std::wstring(L"invalid 3MF minor interface version: " + std::to_wstring(NMR_APIVERSION_INTERFACE_MINOR)).c_str();
-		EXPECT_EQ(nInterfaceVersionMicro, (DWORD)(NMR_APIVERSION_INTERFACE_MICRO)) << std::wstring(L"invalid 3MF patch interface version: " + std::to_wstring(NMR_APIVERSION_INTERFACE_MICRO)).c_str();
+		EXPECT_EQ(NMR::lib3mf_getinterfaceversion(&nInterfaceVersionMajor, &nInterfaceVersionMinor, &nInterfaceVersionMicro), S_OK) << "Failed to obtain interface version.";
+		EXPECT_EQ(nInterfaceVersionMajor, (DWORD)(NMR_APIVERSION_INTERFACE_MAJOR)) << std::string("invalid 3MF major interface version: " + std::to_string(NMR_APIVERSION_INTERFACE_MAJOR)).c_str();
+		EXPECT_EQ(nInterfaceVersionMinor, (DWORD)(NMR_APIVERSION_INTERFACE_MINOR)) << std::string("invalid 3MF minor interface version: " + std::to_string(NMR_APIVERSION_INTERFACE_MINOR)).c_str();
+		EXPECT_EQ(nInterfaceVersionMicro, (DWORD)(NMR_APIVERSION_INTERFACE_MICRO)) << std::string("invalid 3MF patch interface version: " + std::to_string(NMR_APIVERSION_INTERFACE_MICRO)).c_str();
 		
 		CustomLib3MFBase pModel;
 		// Create Model Instance
-		EXPECT_EQ( NMR::lib3mf_createmodel(&pModel.get()), S_OK) << L"Failed to create model.";
+		EXPECT_EQ( NMR::lib3mf_createmodel(&pModel.get()), S_OK) << "Failed to create model.";
 	}
 	
 	TEST(Extensions, Extensions)
 	{
 		DWORD nAPIInterfaceVersion;
 		BOOL bIsSupported;
-		std::wstring errString;
+		std::string errString;
 		
 		// We do not support the mustfail spec
 		EXPECT_EQ(NMR::lib3mf_queryextension(L"http://schemas.microsoft.com/3dmanufacturing/thisspecmustfail/2000/00", &bIsSupported, &nAPIInterfaceVersion),
@@ -76,25 +76,25 @@ namespace NMR {
 		EXPECT_EQ(NMR::lib3mf_queryextension(L"http://schemas.microsoft.com/3dmanufacturing/material/2015/02", &bIsSupported, &nAPIInterfaceVersion),
 			S_OK) << L"Failed to check Materials-Spec";
 		EXPECT_TRUE(bIsSupported) << L"Materials-Spec not supported";
-		errString = std::wstring(L"invalid 3MF API interface version for Materials-Spec: " + std::to_wstring(NMR_APIVERSION_INTERFACE_MATERIALSPEC));
+		errString = std::string("invalid 3MF API interface version for Materials-Spec: " + std::to_string(NMR_APIVERSION_INTERFACE_MATERIALSPEC));
 		EXPECT_EQ(nAPIInterfaceVersion, (DWORD)(NMR_APIVERSION_INTERFACE_MATERIALSPEC)) << errString;
 
 		EXPECT_EQ(NMR::lib3mf_queryextension(L"http://schemas.microsoft.com/3dmanufacturing/production/2015/06", &bIsSupported, &nAPIInterfaceVersion),
 			S_OK) << L"Failed to check Production-Spec";
 		EXPECT_TRUE(bIsSupported) << L"Production-Spec not supported";
-		errString = std::wstring(L"invalid 3MF API interface version for Production-Spec: " + std::to_wstring(NMR_APIVERSION_INTERFACE_PRODUCTIONSEPC));
+		errString = std::string("invalid 3MF API interface version for Production-Spec: " + std::to_string(NMR_APIVERSION_INTERFACE_PRODUCTIONSEPC));
 		EXPECT_EQ(nAPIInterfaceVersion, (DWORD)(NMR_APIVERSION_INTERFACE_PRODUCTIONSEPC)) << errString;
 
 		EXPECT_EQ(NMR::lib3mf_queryextension(L"http://schemas.microsoft.com/3dmanufacturing/slice/2015/07", &bIsSupported, &nAPIInterfaceVersion),
 			S_OK) << L"Failed to check Slice-Spec";
 		EXPECT_TRUE(bIsSupported) << L"Slice-Spec not supported";
-		errString = std::wstring(L"invalid 3MF API interface version for Production-Spec: " + std::to_wstring(NMR_APIVERSION_INTERFACE_SLICESPEC));
+		errString = std::string("invalid 3MF API interface version for Production-Spec: " + std::to_string(NMR_APIVERSION_INTERFACE_SLICESPEC));
 		EXPECT_EQ(nAPIInterfaceVersion, (DWORD)(NMR_APIVERSION_INTERFACE_SLICESPEC)) << errString;
 		
 		EXPECT_EQ(NMR::lib3mf_queryextension(L"http://schemas.microsoft.com/3dmanufacturing/beamlattice/2017/02", &bIsSupported, &nAPIInterfaceVersion),
 			S_OK) << L"Failed to check Beam-Spec";
 		EXPECT_TRUE(bIsSupported) << L"Beam-Spec not supported";
-		errString = std::wstring(L"invalid 3MF API interface version for BeamLattice-Spec: " + std::to_wstring(NMR_APIVERSION_INTERFACE_BEAMLATTICESPEC));
+		errString = std::string("invalid 3MF API interface version for BeamLattice-Spec: " + std::to_string(NMR_APIVERSION_INTERFACE_BEAMLATTICESPEC));
 		EXPECT_EQ(nAPIInterfaceVersion,(DWORD)(NMR_APIVERSION_INTERFACE_BEAMLATTICESPEC)) << errString;
 	}
 

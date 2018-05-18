@@ -75,7 +75,7 @@ namespace NMR {
 		m_pModel->addBuildItem(pBuildItem);
 	}
 
-	PImportStream CModelReader::retrievePrintTicket(_Out_ std::wstring & sContentType)
+	PImportStream CModelReader::retrievePrintTicket(_Out_ std::string & sContentType)
 	{
 		sContentType = m_sPrintTicketContentType;
 		return m_pPrintTicketStream;
@@ -86,12 +86,12 @@ namespace NMR {
 		return m_pWarnings;
 	}
 
-	void CModelReader::addRelationToRead(_In_ std::wstring sRelationShipType)
+	void CModelReader::addRelationToRead(_In_ std::string sRelationShipType)
 	{
 		m_RelationsToRead.insert(sRelationShipType);
 	}
 
-	void CModelReader::removeRelationToRead(_In_ std::wstring sRelationShipType)
+	void CModelReader::removeRelationToRead(_In_ std::string sRelationShipType)
 	{
 		m_RelationsToRead.erase(sRelationShipType);
 	}

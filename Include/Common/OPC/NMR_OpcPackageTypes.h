@@ -33,24 +33,24 @@ NMR_OpcPackageTypes.h defines an OPC Package types.
 #ifndef __NMR_OPCPACKAGETYPES
 #define __NMR_OPCPACKAGETYPES
 
-#define OPCPACKAGE_PATH_CONTENTTYPES L"[Content_Types].xml"
+#define OPCPACKAGE_PATH_CONTENTTYPES "[Content_Types].xml"
 
-#define OPCPACKAGE_PATH_ROOTRELATIONSHIPS L"_rels/.rels"
-#define OPCPACKAGE_SCHEMA_CONTENTTYPES L"http://schemas.openxmlformats.org/package/2006/content-types"
-#define OPCPACKAGE_SCHEMA_RELATIONSHIPS L"http://schemas.openxmlformats.org/package/2006/relationships"
+#define OPCPACKAGE_PATH_ROOTRELATIONSHIPS "_rels/.rels"
+#define OPCPACKAGE_SCHEMA_CONTENTTYPES "http://schemas.openxmlformats.org/package/2006/content-types"
+#define OPCPACKAGE_SCHEMA_RELATIONSHIPS "http://schemas.openxmlformats.org/package/2006/relationships"
 
-#define OPC_CONTENTTYPES_CONTAINER L"Types"
-#define OPC_CONTENTTYPES_NODE L"Default"
-#define OPC_CONTENTTYPES_NODE_OVERRIDE L"Override"
-#define OPC_CONTENTTYPES_ATTRIB_EXTENSION L"Extension"
-#define OPC_CONTENTTYPES_ATTRIB_CONTENTTYPE L"ContentType"
-#define OPC_CONTENTTYPES_ATTRIB_PARTNAME L"PartName"
+#define OPC_CONTENTTYPES_CONTAINER "Types"
+#define OPC_CONTENTTYPES_NODE "Default"
+#define OPC_CONTENTTYPES_NODE_OVERRIDE "Override"
+#define OPC_CONTENTTYPES_ATTRIB_EXTENSION "Extension"
+#define OPC_CONTENTTYPES_ATTRIB_CONTENTTYPE "ContentType"
+#define OPC_CONTENTTYPES_ATTRIB_PARTNAME "PartName"
 
-#define OPC_RELS_RELATIONSHIP_CONTAINER L"Relationships"
-#define OPC_RELS_RELATIONSHIP_NODE L"Relationship"
+#define OPC_RELS_RELATIONSHIP_CONTAINER "Relationships"
+#define OPC_RELS_RELATIONSHIP_NODE "Relationship"
 
-#define OPC_RELS_ATTRIB_TARGET L"Target"
-#define OPC_RELS_ATTRIB_TYPE L"Type"
-#define OPC_RELS_ATTRIB_ID L"Id"
+#define OPC_RELS_ATTRIB_TARGET "Target"
+#define OPC_RELS_ATTRIB_TYPE "Type"
+#define OPC_RELS_ATTRIB_ID "Id"
 
 #endif // __NMR_OPCPACKAGETYPES

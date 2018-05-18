@@ -45,7 +45,7 @@ namespace NMR {
 		nfBool m_bHasID;
 		NMATRIX3 m_mTransform;
 
-		virtual void OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue);
+		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 	public:
 		CModelReaderNode093_Component() = delete;
 		CModelReaderNode093_Component(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings);

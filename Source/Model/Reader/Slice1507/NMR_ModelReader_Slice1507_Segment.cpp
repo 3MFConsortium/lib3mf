@@ -45,13 +45,13 @@ Abstract:
 #include "Model/Classes/NMR_ModelConstants.h"
 
 namespace NMR {
-	void CModelReaderNode_Slices1507_Segment::OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue) {
-		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_SLICESEGMENT_V2) == 0) {
-			m_pSlice->addPolygonIndex(m_PolygonIndex, fnWStringToInt32(pAttributeValue));
+	void CModelReaderNode_Slices1507_Segment::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue) {
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_SLICESEGMENT_V2) == 0) {
+			m_pSlice->addPolygonIndex(m_PolygonIndex, fnStringToInt32(pAttributeValue));
 		}
 	}
 
-	void CModelReaderNode_Slices1507_Segment::OnNSChildElement(_In_z_ const nfWChar * pChildName, _In_z_ const nfWChar * pNameSpace, _In_ CXmlReader * pXMLReader) {
+	void CModelReaderNode_Slices1507_Segment::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader) {
 
 	}
 

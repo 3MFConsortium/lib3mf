@@ -70,20 +70,20 @@ namespace NMR {
 		m_pModel->setBuildUUID(m_UUID);
 	}
 
-	void CModelReaderNode100_Build::OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue)
+	void CModelReaderNode100_Build::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
 	{
 		__NMRASSERT(pAttributeName);
 		__NMRASSERT(pAttributeValue);
 	}
 
-	void CModelReaderNode100_Build::OnNSAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue, _In_z_ const nfWChar * pNameSpace)
+	void CModelReaderNode100_Build::OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace)
 	{
 		__NMRASSERT(pAttributeName);
 		__NMRASSERT(pAttributeValue);
 		__NMRASSERT(pNameSpace);
 
-		if (wcscmp(pNameSpace, XML_3MF_NAMESPACE_PRODUCTIONSPEC) == 0) {
-			if (wcscmp(pAttributeName, XML_3MF_PRODUCTION_UUID) == 0) {
+		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_PRODUCTIONSPEC) == 0) {
+			if (strcmp(pAttributeName, XML_3MF_PRODUCTION_UUID) == 0) {
 				if (m_UUID.get())
 					throw CNMRException(NMR_ERROR_DUPLICATEUUID);
 				m_UUID = std::make_shared<CUUID>(pAttributeValue);
@@ -93,14 +93,14 @@ namespace NMR {
 		}
 	}
 
-	void CModelReaderNode100_Build::OnNSChildElement(_In_z_ const nfWChar * pChildName, _In_z_ const nfWChar * pNameSpace, _In_ CXmlReader * pXMLReader)
+	void CModelReaderNode100_Build::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
 	{
 		__NMRASSERT(pChildName);
 		__NMRASSERT(pXMLReader);
 		__NMRASSERT(pNameSpace);
 
-		if (wcscmp(pNameSpace, XML_3MF_NAMESPACE_CORESPEC100) == 0) {
-			if (wcscmp(pChildName, XML_3MF_ELEMENT_ITEM) == 0) {
+		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_CORESPEC100) == 0) {
+			if (strcmp(pChildName, XML_3MF_ELEMENT_ITEM) == 0) {
 				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode100_BuildItem>(m_pModel, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 			}

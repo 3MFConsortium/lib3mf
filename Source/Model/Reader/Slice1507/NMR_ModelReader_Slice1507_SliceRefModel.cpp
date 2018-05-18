@@ -47,30 +47,30 @@ Abstract:
 
 namespace NMR {
 	void CModelReader_Slice1507_SliceRefModel::OnNSChildElement(
-		_In_z_ const nfWChar * pChildName, _In_z_ const nfWChar * pNameSpace, _In_ CXmlReader * pXMLReader)
+		_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
 	{
-		if (wcscmp(pChildName, XML_3MF_ELEMENT_BUILD) == 0) {
+		if (strcmp(pChildName, XML_3MF_ELEMENT_BUILD) == 0) {
 			if (m_bHasBuild)
 				throw CNMRException(NMR_ERROR_DUPLICATEBUILDSECTION);
 			m_bHasBuild = true;
 		}
-		else if (wcscmp(pChildName, XML_3MF_ELEMENT_RESOURCES) == 0)
+		else if (strcmp(pChildName, XML_3MF_ELEMENT_RESOURCES) == 0)
 		{
 			if (m_bHasResources)
 				throw CNMRException(NMR_ERROR_DUPLICATERESOURCES);
 			std::shared_ptr<CModelReader_Slice1507_SliceRefResources> pXmlNode = 
 				std::make_shared<CModelReader_Slice1507_SliceRefResources>(
-					m_pModel, m_pWarnings, m_sSliceRefPath.c_str());
+					m_pModel, m_pWarnings, m_sSliceRefPath);
 			pXmlNode->parseXML(pXMLReader);
 			m_bHasResources = true;
 		}
 	}
 
 	CModelReader_Slice1507_SliceRefModel::CModelReader_Slice1507_SliceRefModel(
-		_In_ CModel *pModel, _In_ PModelReaderWarnings pWarnings, _In_z_ const nfWChar *pSliceRefPath)
-		:CModelReaderNode_Model(pModel, pWarnings, pSliceRefPath, nullptr)
+		_In_ CModel *pModel, _In_ PModelReaderWarnings pWarnings, _In_z_ std::string sSliceRefPath)
+		:CModelReaderNode_Model(pModel, pWarnings, sSliceRefPath.c_str(), nullptr)
 	{
-		m_sSliceRefPath = pSliceRefPath;
+		m_sSliceRefPath = sSliceRefPath;
 	}
 
 	void CModelReader_Slice1507_SliceRefModel::parseXML(_In_ CXmlReader * pXMLReader) {

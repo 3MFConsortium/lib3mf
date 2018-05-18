@@ -44,18 +44,18 @@ namespace NMR {
 
 	class CModelBaseMaterial {
 	private:
-		std::wstring m_sName;
+		std::string m_sName;
 		nfColor m_cDisplayColor;
 	public:
 		CModelBaseMaterial() = delete;
-		CModelBaseMaterial(_In_ const std::wstring sName, _In_ nfColor cDisplayColor);
+		CModelBaseMaterial(_In_ const std::string sName, _In_ nfColor cDisplayColor);
 
 		nfColor getDisplayColor();
 		void setColor(_In_ nfColor cColor);
-		std::wstring getDisplayColorString();
+		std::string getDisplayColorString();
 
-		std::wstring getName();
-		void setName(_In_ const std::wstring sName);
+		std::string getName();
+		void setName(_In_ const std::string sName);
 	};
 
 	typedef std::shared_ptr <CModelBaseMaterial> PModelBaseMaterial;

@@ -65,21 +65,21 @@ namespace NMR {
 	// Masks to decode highest UTF8 sequence byte
 	const nfByte UTF8DecodeMask[7] = {0, 0x7f, 0x1f, 0x0f, 0x07, 0x03, 0x01};
 
-	nfInt32 fnWStringToInt32(_In_z_ const nfWChar * pwszValue)
+	nfInt32 fnStringToInt32(_In_z_ const nfChar * pszValue)
 	{
-		__NMRASSERT(pwszValue);
+		__NMRASSERT(pszValue);
 		nfInt32 nResult = 0;
 
 		// Convert to integer and make a input and range check!
-		nfWChar * pEndPtr;
+		nfChar * pEndPtr;
 
-		nResult = wcstol(pwszValue, &pEndPtr, 10);
+		nResult = strtol(pszValue, &pEndPtr, 10);
 
 		// Check if any conversion happened
-		if ((pEndPtr == pwszValue) || (!pEndPtr))
+		if ((pEndPtr == pszValue) || (!pEndPtr))
 			throw CNMRException(NMR_ERROR_EMPTYSTRINGTOINTCONVERSION);
 
-		if ((*pEndPtr != L'\0') && (*pEndPtr != L' '))
+		if ((*pEndPtr != '\0') && (*pEndPtr != ' '))
 			throw CNMRException(NMR_ERROR_INVALIDSTRINGTOINTCONVERSION);
 
 		if ((nResult == LONG_MAX) || (nResult == LONG_MIN))
@@ -88,21 +88,21 @@ namespace NMR {
 		return nResult;
 	}
 
-	nfUint32 fnWStringToUint32(_In_z_ const nfWChar * pwszValue)
+	nfUint32 fnStringToUint32(_In_z_ const nfChar * pszValue)
 	{
-		__NMRASSERT(pwszValue);
+		__NMRASSERT(pszValue);
 		nfUint32 nResult = 0;
 
 		// Convert to integer and make a input and range check!
-		nfWChar * pEndPtr;
+		nfChar * pEndPtr;
 
-		nResult = wcstoul(pwszValue, &pEndPtr, 10);
+		nResult = strtoul(pszValue, &pEndPtr, 10);
 
 		// Check if any conversion happened
-		if ((pEndPtr == pwszValue) || (!pEndPtr))
+		if ((pEndPtr == pszValue) || (!pEndPtr))
 			throw CNMRException(NMR_ERROR_EMPTYSTRINGTOINTCONVERSION);
 
-		if ((*pEndPtr != L'\0') && (*pEndPtr != L' '))
+		if ((*pEndPtr != '\0') && (*pEndPtr != ' '))
 			throw CNMRException(NMR_ERROR_INVALIDSTRINGTOINTCONVERSION);
 
 		if (nResult == ULONG_MAX)
@@ -111,26 +111,26 @@ namespace NMR {
 		return nResult;
 	}
 
-	nfFloat fnWStringToFloat(_In_z_ const nfWChar * pwszValue)
+	nfFloat fnStringToFloat(_In_z_ const nfChar * pszValue)
 	{
-		return (nfFloat)fnWStringToDouble(pwszValue);
+		return (nfFloat)fnStringToDouble(pszValue);
 	}
 
-	nfDouble fnWStringToDouble(_In_z_ const nfWChar * pwszValue)
+	nfDouble fnStringToDouble(_In_z_ const nfChar * pszValue)
 	{
 		__NMRASSERT(pwszValue);
 		nfDouble dResult = 0.0;
 
 		// Convert to double and make a input and range check!
-		nfWChar * pEndPtr;
+		nfChar * pEndPtr;
 
-		dResult = wcstod(pwszValue, &pEndPtr);
+		dResult = strtod(pszValue, &pEndPtr);
 
 		// Check if any conversion happened
-		if ((pEndPtr == pwszValue) || (!pEndPtr))
+		if ((pEndPtr == pszValue) || (!pEndPtr))
 			throw CNMRException(NMR_ERROR_EMPTYSTRINGTODOUBLECONVERSION);
 
-		if ((*pEndPtr != L'\0') && (*pEndPtr != L' '))
+		if ((*pEndPtr != '\0') && (*pEndPtr != ' '))
 			throw CNMRException(NMR_ERROR_INVALIDSTRINGTODOUBLECONVERSION);
 
 		if ((dResult == HUGE_VAL) || (dResult == -HUGE_VAL))
@@ -139,41 +139,41 @@ namespace NMR {
 		return dResult;
 	}
 
-	std::wstring fnInt32ToWString(_In_ nfInt32 nValue)
+	std::string fnInt32ToString(_In_ nfInt32 nValue)
 	{
-		std::wstringstream sStream;
+		std::stringstream sStream;
 		sStream << nValue;
 		return sStream.str();
 	}
 
-	std::wstring fnUint32ToWString(_In_ nfUint32 nValue)
+	std::string fnUint32ToString(_In_ nfUint32 nValue)
 	{
-		std::wstringstream sStream;
+		std::stringstream sStream;
 		sStream << nValue;
 		return sStream.str();
 	}
 
-	std::wstring fnFloatToWString(_In_ nfFloat fValue, _In_ nfUint32 precision)
+	std::string fnFloatToString(_In_ nfFloat fValue, _In_ nfUint32 precision)
 	{
-		std::wstringstream sStream;
+		std::stringstream sStream;
 		sStream << fValue;
 		return sStream.str();
 	}
 
-	nfWChar fnColorDigitToHex(_In_ nfByte digit)
+	nfChar fnColorDigitToHex(_In_ nfByte digit)
 	{
 		if (digit < 10)
-			return (nfWChar)(digit + 48);
+			return (nfChar)(digit + 48);
 		if (digit < 16)
-			return (nfWChar)(digit + 55);
+			return (nfChar)(digit + 55);
 
 		return L' ';
 	}
 
-	std::wstring fnColorToWString(_In_ nfColor cColor)
+	std::string fnColorToString(_In_ nfColor cColor)
 	{
-		nfWChar pBuffer[16];
-		pBuffer[0] = L'#';
+		nfChar pBuffer[16];
+		pBuffer[0] = '#';
 		pBuffer[2] = fnColorDigitToHex(cColor & 0xf); // R
 		pBuffer[1] = fnColorDigitToHex((cColor >> 4) & 0xf); // R
 		pBuffer[4] = fnColorDigitToHex((cColor >> 8) & 0xf); // G
@@ -184,21 +184,21 @@ namespace NMR {
 		pBuffer[7] = fnColorDigitToHex((cColor >> 28) & 0xf); // A
 		pBuffer[9] = 0;
 
-		return std::wstring(pBuffer);
+		return std::string(pBuffer);
 	}
 
-	std::wstring fnDoubleToWString(_In_ nfFloat dValue, _In_ nfUint32 precision)
+	std::string fnDoubleToString(_In_ nfFloat dValue, _In_ nfUint32 precision)
 	{
-		std::wstringstream sStream;
+		std::stringstream sStream;
 		sStream << dValue;
 		return sStream.str();
 	}
 
-	nfBool fnWStringToSRGBColor(_In_z_ const nfWChar * pwszValue, _Out_ nfColor & cResult)
+	nfBool fnStringToSRGBColor(_In_z_ const nfChar * pszValue, _Out_ nfColor & cResult)
 	{
 		cResult = 0;
 
-		if (!pwszValue)
+		if (!pszValue)
 			return false;
 
 		nfUint32 nRed = 255;
@@ -206,14 +206,14 @@ namespace NMR {
 		nfUint32 nBlue = 255;
 		nfUint32 nAlpha = 255;
 
-		std::wstring sString(pwszValue);
+		std::string sString(pszValue);
 		if (sString.length() == 7) {
-			if (sString[0] != L'#')
+			if (sString[0] != '#')
 				return false;
 
-			nRed = fnWHexStringToUint32(sString.substr(1, 2).c_str());
-			nGreen = fnWHexStringToUint32(sString.substr(3, 2).c_str());
-			nBlue = fnWHexStringToUint32(sString.substr(5, 2).c_str());
+			nRed = fnHexStringToUint32(sString.substr(1, 2).c_str());
+			nGreen = fnHexStringToUint32(sString.substr(3, 2).c_str());
+			nBlue = fnHexStringToUint32(sString.substr(5, 2).c_str());
 
 			cResult = nRed | (nGreen << 8) | (nBlue << 16) | (nAlpha << 24);
 
@@ -221,13 +221,13 @@ namespace NMR {
 		}
 
 		if (sString.length() == 9) {
-			if (sString[0] != L'#')
+			if (sString[0] != '#')
 				return false;
 
-			nRed = fnWHexStringToUint32(sString.substr(1, 2).c_str());
-			nGreen = fnWHexStringToUint32(sString.substr(3, 2).c_str());
-			nBlue = fnWHexStringToUint32(sString.substr(5, 2).c_str());
-			nAlpha = fnWHexStringToUint32(sString.substr(7, 2).c_str());
+			nRed = fnHexStringToUint32(sString.substr(1, 2).c_str());
+			nGreen = fnHexStringToUint32(sString.substr(3, 2).c_str());
+			nBlue = fnHexStringToUint32(sString.substr(5, 2).c_str());
+			nAlpha = fnHexStringToUint32(sString.substr(7, 2).c_str());
 
 			cResult = nRed | (nGreen << 8) | (nBlue << 16) | (nAlpha << 24);
 
@@ -237,12 +237,12 @@ namespace NMR {
 		return false;
 	}
 
-	nfUint32 fnWHexStringToUint32(_In_z_ const nfWChar * pwszValue)
+	nfUint32 fnHexStringToUint32(_In_z_ const nfChar * pszValue)
 	{
-		if (!pwszValue)
+		if (!pszValue)
 			return 0;
-		nfWChar * p;
-		nfUint32 nResult = wcstoul(pwszValue, &p, 16);
+		nfChar * p;
+		nfUint32 nResult = strtoul(pszValue, &p, 16);
 		if (*p != 0)
 			throw CNMRException(NMR_ERROR_INVALIDHEXVALUE);
 		if (nResult == ULONG_MAX)
@@ -251,21 +251,21 @@ namespace NMR {
 		return nResult;
 	}
 
-	nfInt32 fnWStringToInt32Comma(_In_z_ const nfWChar * pwszValue)
+	nfInt32 fnStringToInt32Comma(_In_z_ const nfChar * pszValue)
 	{
 		__NMRASSERT(pwszValue);
 		nfInt32 nResult = 0;
 
 		// Convert to integer and make a input and range check!
-		nfWChar * pEndPtr;
+		nfChar * pEndPtr;
 
-		nResult = wcstol(pwszValue, &pEndPtr, 10);
+		nResult = strtol(pszValue, &pEndPtr, 10);
 
 		// Check if any conversion happened
-		if ((pEndPtr == pwszValue) || (!pEndPtr))
+		if ((pEndPtr == pszValue) || (!pEndPtr))
 			throw CNMRException(NMR_ERROR_EMPTYSTRINGTOINTCONVERSION);
 
-		if ((*pEndPtr != L'\0') && (*pEndPtr != L' ') && (*pEndPtr != L','))
+		if ((*pEndPtr != '\0') && (*pEndPtr != ' ') && (*pEndPtr != ','))
 			throw CNMRException(NMR_ERROR_INVALIDSTRINGTOINTCONVERSION);
 
 		if ((nResult == LONG_MAX) || (nResult == LONG_MIN))
@@ -275,23 +275,23 @@ namespace NMR {
 	}
 
 
-	void fnStringToCommaSeparatedIntegerTriplet(_In_z_ const nfWChar * pwszValue, _Out_ nfInt32 & nValue1, _Out_ nfInt32 & nValue2, _Out_ nfInt32 & nValue3)
+	void fnStringToCommaSeparatedIntegerTriplet(_In_z_ const nfChar * pszValue, _Out_ nfInt32 & nValue1, _Out_ nfInt32 & nValue2, _Out_ nfInt32 & nValue3)
 	{
-		const wchar_t * pwszCommaValue1 = wcschr(pwszValue, L',');
-		if (pwszCommaValue1 != nullptr) {
-			if (*pwszCommaValue1 == 0)
+		const nfChar * pszCommaValue1 = strchr(pszValue, ',');
+		if (pszCommaValue1 != nullptr) {
+			if (*pszCommaValue1 == 0)
 				throw CNMRException(NMR_ERROR_INVALIDINTEGERTRIPLET);
-			pwszCommaValue1++;
+			pszCommaValue1++;
 
-			const wchar_t * pwszCommaValue2 = wcschr(pwszCommaValue1, L',');
-			if (pwszCommaValue2 != nullptr) {
-				if (*pwszCommaValue2 == 0)
+			const nfChar * pszCommaValue2 = strchr(pszCommaValue1, ',');
+			if (pszCommaValue2 != nullptr) {
+				if (*pszCommaValue2 == 0)
 					throw CNMRException(NMR_ERROR_INVALIDINTEGERTRIPLET);
-				pwszCommaValue2++;
+				pszCommaValue2++;
 
-				nValue1 = fnWStringToInt32Comma(pwszValue);
-				nValue2 = fnWStringToInt32Comma(pwszCommaValue1);
-				nValue3 = fnWStringToInt32Comma(pwszCommaValue2);
+				nValue1 = fnStringToInt32Comma(pszValue);
+				nValue2 = fnStringToInt32Comma(pszCommaValue1);
+				nValue3 = fnStringToInt32Comma(pszCommaValue2);
 			}
 			else
 				throw CNMRException(NMR_ERROR_INVALIDINTEGERTRIPLET);
@@ -703,43 +703,43 @@ namespace NMR {
 
 	}
 
-	nfBool fnStartsWithPathDelimiter(_In_ const std::wstring sPath)
+	nfBool fnStartsWithPathDelimiter(_In_ const std::string sPath)
 	{
-		const nfWChar * pChar = sPath.c_str();
-		return ((*pChar == L'/') || (*pChar == L'\\'));
+		const nfChar * pChar = sPath.c_str();
+		return ((*pChar == '/') || (*pChar == '\\'));
 	}
 
-	std::wstring fnRemoveLeadingPathDelimiter(_In_ const std::wstring sPath)
+	std::string fnRemoveLeadingPathDelimiter(_In_ const std::string sPath)
 	{
-		const nfWChar * pChar = sPath.c_str();
+		const nfChar * pChar = sPath.c_str();
 
-		while ((*pChar == L'/') || (*pChar == L'\\'))
+		while ((*pChar == '/') || (*pChar == '\\'))
 			pChar++;
 
-		return std::wstring(pChar);
+		return std::string(pChar);
 	}
 
-	std::wstring fnIncludeLeadingPathDelimiter(_In_ const std::wstring sPath)
+	std::string fnIncludeLeadingPathDelimiter(_In_ const std::string sPath)
 	{
 		if (sPath.length() == 0) {
-			return L"/";
+			return "/";
 		}
 
-		const nfWChar * pChar = sPath.c_str();
-		if ((*pChar == L'/') || (*pChar == L'\\'))
+		const nfChar * pChar = sPath.c_str();
+		if ((*pChar == '/') || (*pChar == '\\'))
 			return sPath;
-		std::wstring sPrefix = L"/";
+		std::string sPrefix = "/";
 
 		return sPrefix + sPath;
 	}
 
-	std::wstring fnExtractFileName(_In_ const std::wstring sFullPath)
+	std::string fnExtractFileName(_In_ const std::string sFullPath)
 	{
-		const nfWChar * pChar = sFullPath.c_str();
-		const nfWChar * pLastDelimiter = nullptr;
+		const nfChar * pChar = sFullPath.c_str();
+		const nfChar * pLastDelimiter = nullptr;
 
 		while (*pChar != 0) {
-			if ((*pChar == L'/') || (*pChar == L'\\'))
+			if ((*pChar == '/') || (*pChar == '\\'))
 				pLastDelimiter = pChar;
 
 			pChar++;
@@ -748,7 +748,7 @@ namespace NMR {
 		if (pLastDelimiter != nullptr) {
 			// Leave away delimiter
 			pLastDelimiter++;
-			return std::wstring(pLastDelimiter);
+			return std::string(pLastDelimiter);
 		}
 		else {
 			// We have no directory given
@@ -756,13 +756,13 @@ namespace NMR {
 		}
 	}
 
-	std::wstring fnExtractFileDir(_In_ const std::wstring sFullPath)
+	std::string fnExtractFileDir(_In_ const std::string sFullPath)
 	{
-		const nfWChar * pChar = sFullPath.c_str();
-		const nfWChar * pLastDelimiter = nullptr;
+		const nfChar * pChar = sFullPath.c_str();
+		const nfChar * pLastDelimiter = nullptr;
 
 		while (*pChar != 0) {
-			if ((*pChar == L'/') || (*pChar == L'\\'))
+			if ((*pChar == '/') || (*pChar == '\\'))
 				pLastDelimiter = pChar;
 			pChar++;
 		}
@@ -774,28 +774,28 @@ namespace NMR {
 		}
 		else {
 			// We have no directory given
-			return std::wstring(L"");
+			return std::string("");
 		}
 	}
 
 
-	std::vector<double> fnVctDouble_fromWideString(_In_ const std::wstring sString)
+	std::vector<double> fnVctDouble_fromString(_In_ const std::string sString)
 	{
 		std::vector<double> vctValues;
 
-		const nfWChar * pwszString = sString.c_str();
-		const nfWChar * pCurrent = pwszString;
+		const nfChar * pszString = sString.c_str();
+		const nfChar * pCurrent = pszString;
 
 		nfBool bFinished = false;
 		while (!bFinished) {
 			// Find next space
-			const nfWChar * pBegin = pCurrent;
-			while ((*pCurrent != L' ') && (*pCurrent))
+			const nfChar * pBegin = pCurrent;
+			while ((*pCurrent != ' ') && (*pCurrent))
 				pCurrent++;
 
 			// If we have not found a space, convert value to double
 			if (pBegin != pCurrent) {
-				vctValues.push_back(fnWStringToFloat(pBegin));
+				vctValues.push_back(fnStringToFloat(pBegin));
 			}
 
 			// If we are finished, break, otherwise skip space!

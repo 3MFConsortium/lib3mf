@@ -54,7 +54,7 @@ namespace NMR {
 		virtual void writePackageToStream(_In_ PExportStream pStream);
 		virtual void releasePackage();
 
-		std::wstring generateRelationShipID();
+		std::string generateRelationShipID();
 		void addAttachments(_In_ CModel * pModel, _In_ POpcPackageWriter pPackageWriter, _In_ POpcPackagePart pModelPart);
 		void addSlicerefAttachments(_In_ CModel *pModel);
 

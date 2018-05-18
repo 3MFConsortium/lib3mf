@@ -66,20 +66,20 @@ namespace NMR {
 		parseContent(pXMLReader);
 	}
 
-	void CModelReaderNode093_TextureVertices::OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue)
+	void CModelReaderNode093_TextureVertices::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
 	{
 		__NMRASSERT(pAttributeName);
 		__NMRASSERT(pAttributeValue);
 	}
 
-	void CModelReaderNode093_TextureVertices::OnNSChildElement(_In_z_ const nfWChar * pChildName, _In_z_ const nfWChar * pNameSpace, _In_ CXmlReader * pXMLReader)
+	void CModelReaderNode093_TextureVertices::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
 	{
 		__NMRASSERT(pChildName);
 		__NMRASSERT(pXMLReader);
 		__NMRASSERT(pNameSpace);
 
-		if ((wcscmp(pNameSpace, XML_3MF_NAMESPACE_CORESPEC093) == 0) || (wcscmp(pNameSpace, L"") == 0)) {
-			if (wcscmp(pChildName, XML_3MF_ELEMENT_TEXTUREVERTEX) == 0)
+		if ((strcmp(pNameSpace, XML_3MF_NAMESPACE_CORESPEC093) == 0) || (strcmp(pNameSpace, "") == 0)) {
+			if (strcmp(pChildName, XML_3MF_ELEMENT_TEXTUREVERTEX) == 0)
 			{
 				PModelReaderNode093_TextureVertex pXMLNode = std::make_shared<CModelReaderNode093_TextureVertex>(m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);

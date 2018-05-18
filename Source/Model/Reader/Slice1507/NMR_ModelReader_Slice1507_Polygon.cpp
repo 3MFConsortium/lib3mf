@@ -46,17 +46,17 @@ Abstract:
 #include "Model/Classes/NMR_ModelConstants.h"
 
 namespace NMR {
-	void CModelReaderNode_Slices1507_Polygon::OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue) {
-		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_SLICEPOLYGON_STARTV) == 0) {
-			m_StartV = fnWStringToUint32(pAttributeValue);
+	void CModelReaderNode_Slices1507_Polygon::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue) {
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_SLICEPOLYGON_STARTV) == 0) {
+			m_StartV = fnStringToUint32(pAttributeValue);
 		}
 		else
 			throw CNMRException(NMR_ERROR_SLICE_INVALIDATTRIBUTE);
 	}
 
-	void CModelReaderNode_Slices1507_Polygon::OnNSChildElement(_In_z_ const nfWChar * pChildName, _In_z_ const nfWChar * pNameSpace, _In_ CXmlReader * pXMLReader) {
-		if (wcscmp(pNameSpace, XML_3MF_NAMESPACE_SLICESPEC) == 0) {
-			if (wcscmp(pChildName, XML_3MF_ELEMENT_SLICESEGMENT) == 0) {
+	void CModelReaderNode_Slices1507_Polygon::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader) {
+		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_SLICESPEC) == 0) {
+			if (strcmp(pChildName, XML_3MF_ELEMENT_SLICESEGMENT) == 0) {
 				PModelReaderNode_Slices1507_Segment pXMLNode = std::make_shared<CModelReaderNode_Slices1507_Segment>(m_pSlice, m_PolygonIndex, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 			}

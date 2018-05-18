@@ -327,8 +327,7 @@ namespace NMR {
 			CModelComponentsObject * pObject = getComponentsObject();
 			__NMRASSERT(pObject);
 
-			std::wstring sPartNumber(pwszPartNumber);
-			pObject->setPartNumber(pwszPartNumber);
+			pObject->setPartNumber(fnUTF16toUTF8(pwszPartNumber));
 
 			return handleSuccess();
 		}
@@ -349,10 +348,7 @@ namespace NMR {
 			CModelComponentsObject * pObject = getComponentsObject();
 			__NMRASSERT(pObject);
 
-			std::string sPartNumberUTF8(pszPartNumber);
-			std::wstring sPartNumberUTF16 = fnUTF8toUTF16(sPartNumberUTF8);
-
-			pObject->setPartNumber(sPartNumberUTF16.c_str());
+			pObject->setPartNumber(pszPartNumber);
 
 			return handleSuccess();
 		}
@@ -375,7 +371,7 @@ namespace NMR {
 
 			// Safely call StringToBuffer
 			nfUint32 nNeededChars = 0;
-			fnWStringToBufferSafe(pObject->getPartNumber(), pwszBuffer, cbBufferSize, &nNeededChars);
+			fnWStringToBufferSafe(fnUTF8toUTF16(pObject->getPartNumber()), pwszBuffer, cbBufferSize, &nNeededChars);
 
 			// Return length if needed
 			if (pcbNeededChars)
@@ -400,12 +396,9 @@ namespace NMR {
 			CModelComponentsObject * pObject = getComponentsObject();
 			__NMRASSERT(pObject);
 
-			std::wstring sUTF16PartNumber = pObject->getPartNumber();
-			std::string sUTF8PartNumber = fnUTF16toUTF8(sUTF16PartNumber);
-
 			// Safely call StringToBuffer
 			nfUint32 nNeededChars = 0;
-			fnStringToBufferSafe(sUTF8PartNumber, pszBuffer, cbBufferSize, &nNeededChars);
+			fnStringToBufferSafe(pObject->getPartNumber(), pszBuffer, cbBufferSize, &nNeededChars);
 
 			// Return length if needed
 			if (pcbNeededChars)
@@ -430,8 +423,7 @@ namespace NMR {
 			CModelComponentsObject * pObject = getComponentsObject();
 			__NMRASSERT(pObject);
 
-			std::wstring sName(pwszName);
-			pObject->setName(pwszName);
+			pObject->setName(fnUTF16toUTF8(pwszName));
 
 			return handleSuccess();
 		}
@@ -452,9 +444,7 @@ namespace NMR {
 			CModelComponentsObject * pObject = getComponentsObject();
 			__NMRASSERT(pObject);
 
-			std::string sUTF8Name(pszName);
-			std::wstring sUTF16Name = fnUTF8toUTF16(sUTF8Name);
-			pObject->setName(sUTF16Name.c_str());
+			pObject->setName(pszName);
 
 			return handleSuccess();
 		}
@@ -477,7 +467,7 @@ namespace NMR {
 
 			// Safely call StringToBuffer
 			nfUint32 nNeededChars = 0;
-			fnWStringToBufferSafe(pObject->getName(), pwszBuffer, cbBufferSize, &nNeededChars);
+			fnWStringToBufferSafe(fnUTF8toUTF16(pObject->getName()), pwszBuffer, cbBufferSize, &nNeededChars);
 
 			// Return length if needed
 			if (pcbNeededChars)
@@ -502,12 +492,9 @@ namespace NMR {
 			CModelComponentsObject * pObject = getComponentsObject();
 			__NMRASSERT(pObject);
 
-			std::wstring sUTF16Name = pObject->getName();
-			std::string sUTF8Name = fnUTF16toUTF8(sUTF16Name);
-
 			// Safely call StringToBuffer
 			nfUint32 nNeededChars = 0;
-			fnStringToBufferSafe(sUTF8Name, pszBuffer, cbBufferSize, &nNeededChars);
+			fnStringToBufferSafe(pObject->getName(), pszBuffer, cbBufferSize, &nNeededChars);
 
 			// Return length if needed
 			if (pcbNeededChars)
@@ -705,8 +692,7 @@ namespace NMR {
 			CModelComponentsObject * pObject = getComponentsObject();
 			__NMRASSERT(pObject);
 
-			std::wstring sUTF16Path = pObject->getThumbnail();
-			std::string sUTF8Path = fnUTF16toUTF8(sUTF16Path);
+			std::string sUTF8Path = pObject->getThumbnail();
 
 			// Safely call StringToBuffer
 			nfUint32 nNeededChars = 0;
@@ -735,9 +721,7 @@ namespace NMR {
 			CModelComponentsObject * pObject = getComponentsObject();
 			__NMRASSERT(pObject);
 
-			std::string sUTF8ThumbnailPath(pszName);
-			std::wstring sUTF16ThumbnailPath = fnUTF8toUTF16(sUTF8ThumbnailPath);
-			pObject->setThumbnail(sUTF16ThumbnailPath.c_str());
+			pObject->setThumbnail(pszName);
 
 			return handleSuccess();
 		}

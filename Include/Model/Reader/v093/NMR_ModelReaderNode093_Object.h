@@ -50,9 +50,9 @@ namespace NMR {
 	private:
 		CModel * m_pModel;
 		ModelResourceID m_nID;
-		std::wstring m_sThumbnail;
-		std::wstring m_sName;
-		std::wstring m_sType;
+		std::string m_sThumbnail;
+		std::string m_sName;
+		std::string m_sType;
 		nfBool m_bHasType;
 		PModelObject m_pObject;
 		PModelReader_ColorMapping m_pColorMapping;
@@ -62,8 +62,8 @@ namespace NMR {
 
 		void createDefaultProperties();
 	protected:
-		virtual void OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue);
-		virtual void OnNSChildElement(_In_z_ const nfWChar * pChildName, _In_z_ const nfWChar * pNameSpace, _In_ CXmlReader * pXMLReader);
+		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
+		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 	public:
 		CModelReaderNode093_Object() = delete;
 		CModelReaderNode093_Object(_In_ CModel * pModel, _In_ PModelReader_ColorMapping pColorMapping, _In_ PModelBaseMaterialResource pMaterialResource, _In_ PModelReaderWarnings pWarnings);

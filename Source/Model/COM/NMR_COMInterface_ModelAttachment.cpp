@@ -126,11 +126,11 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_INVALIDBUFFERSIZE);
 
 			// Retrieve Path
-			std::wstring sPath = m_pModelAttachment->getPathURI();
+			std::string sPath = m_pModelAttachment->getPathURI();
 
 			// Safely call StringToBuffer
 			nfUint32 nNeededChars = 0;
-			fnWStringToBufferSafe(sPath, pwszBuffer, cbBufferSize, &nNeededChars);
+			fnWStringToBufferSafe(fnUTF8toUTF16(sPath), pwszBuffer, cbBufferSize, &nNeededChars);
 
 			// Return length if needed
 			if (pcbNeededChars)
@@ -158,8 +158,7 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_INVALIDBUFFERSIZE);
 
 			// Retrieve Path
-			std::wstring sUTF16Path = m_pModelAttachment->getPathURI();
-			std::string sUTF8Path = fnUTF16toUTF8(sUTF16Path);
+			std::string sUTF8Path = m_pModelAttachment->getPathURI();
 
 			// Safely call StringToBuffer
 			nfUint32 nNeededChars = 0;
@@ -189,18 +188,18 @@ namespace NMR {
 			if (pwszPath == nullptr)
 				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
 
-			std::wstring sPath(pwszPath);
+			std::string sPathUTF8 = fnUTF16toUTF8(pwszPath);
 			CModel * pModel = m_pModelAttachment->getModel();
 			PImportStream pStream = m_pModelAttachment->getStream();
 			if (pModel->getPackageThumbnail() == m_pModelAttachment) {
 				// different handling for package-wide attachment
 				pModel->removePackageThumbnail();
-				m_pModelAttachment = pModel->addPackageThumbnail(sPath, pStream);
+				m_pModelAttachment = pModel->addPackageThumbnail(sPathUTF8, pStream);
 			}
 			else {
-				std::wstring sRelationshipType = m_pModelAttachment->getRelationShipType();
+				std::string sRelationshipType = m_pModelAttachment->getRelationShipType();
 				pModel->removeAttachment(m_pModelAttachment->getPathURI());
-				m_pModelAttachment = pModel->addAttachment(sPath, sRelationshipType, pStream);
+				m_pModelAttachment = pModel->addAttachment(sPathUTF8, sRelationshipType, pStream);
 			}
 
 			return handleSuccess();
@@ -224,19 +223,18 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
 
 			std::string sUTF8Path(pszPath);
-			std::wstring sUTF16Path = fnUTF8toUTF16(sUTF8Path);
 
 			CModel * pModel = m_pModelAttachment->getModel();
 			PImportStream pStream = m_pModelAttachment->getStream();
 			if (pModel->getPackageThumbnail() == m_pModelAttachment) {
 				// different handling for package-wide attachment
 				pModel->removePackageThumbnail();
-				m_pModelAttachment = pModel->addPackageThumbnail(sUTF16Path, pStream);
+				m_pModelAttachment = pModel->addPackageThumbnail(sUTF8Path, pStream);
 			}
 			else {
-				std::wstring sRelationshipType = m_pModelAttachment->getRelationShipType();
+				std::string sRelationshipType = m_pModelAttachment->getRelationShipType();
 				pModel->removeAttachment(m_pModelAttachment->getPathURI());
-				m_pModelAttachment = pModel->addAttachment(sUTF16Path, sRelationshipType, pStream);
+				m_pModelAttachment = pModel->addAttachment(sUTF8Path, sRelationshipType, pStream);
 			}
 			return handleSuccess();
 		}
@@ -259,11 +257,11 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_INVALIDBUFFERSIZE);
 
 			// Retrieve Path
-			std::wstring sType = m_pModelAttachment->getRelationShipType();
+			std::string sType = m_pModelAttachment->getRelationShipType();
 
 			// Safely call StringToBuffer
 			nfUint32 nNeededChars = 0;
-			fnWStringToBufferSafe(sType, pwszBuffer, cbBufferSize, &nNeededChars);
+			fnWStringToBufferSafe(fnUTF8toUTF16(sType), pwszBuffer, cbBufferSize, &nNeededChars);
 
 			// Return length if needed
 			if (pcbNeededChars)
@@ -291,8 +289,7 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_INVALIDBUFFERSIZE);
 
 			// Retrieve Path
-			std::wstring sUTF16Type = m_pModelAttachment->getRelationShipType();
-			std::string sUTF8Type = fnUTF16toUTF8(sUTF16Type);
+			std::string sUTF8Type = m_pModelAttachment->getRelationShipType();
 
 			// Safely call StringToBuffer
 			nfUint32 nNeededChars = 0;
@@ -323,8 +320,7 @@ namespace NMR {
 			if (pwszRelationShipType == nullptr)
 				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
 
-			std::wstring sType(pwszRelationShipType);
-			m_pModelAttachment->setRelationShipType(sType);
+			m_pModelAttachment->setRelationShipType(fnUTF16toUTF8(pwszRelationShipType));
 
 			return handleSuccess();
 		}
@@ -346,10 +342,7 @@ namespace NMR {
 			if (pszRelationShipType == nullptr)
 				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
 
-			std::string sUTF8Type(pszRelationShipType);
-			std::wstring sUTF16Type = fnUTF8toUTF16(sUTF8Type);
-
-			m_pModelAttachment->setRelationShipType(sUTF16Type);
+			m_pModelAttachment->setRelationShipType(pszRelationShipType);
 
 			return handleSuccess();
 		}

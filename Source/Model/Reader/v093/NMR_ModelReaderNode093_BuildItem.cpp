@@ -80,22 +80,22 @@ namespace NMR {
 		m_pModel->addBuildItem(pBuildItem);
 	}
 
-	void CModelReaderNode093_BuildItem::OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue)
+	void CModelReaderNode093_BuildItem::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
 	{
 		__NMRASSERT(pAttributeName);
 		__NMRASSERT(pAttributeValue);
 
-		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_ITEM_OBJECTID) == 0) {
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_ITEM_OBJECTID) == 0) {
 			if (m_bHasID)
 				throw CNMRException(NMR_ERROR_DUPLICATEBUILDITEMOBJECTID);
 
-			m_ObjectID = fnWStringToUint32(pAttributeValue);
+			m_ObjectID = fnStringToUint32(pAttributeValue);
 			m_ObjectID++;
 			m_bHasID = true;
 		}
 
-		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_ITEM_TRANSFORM) == 0) {
-			m_mTransform = fnMATRIX3_fromWideString(pAttributeValue);
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_ITEM_TRANSFORM) == 0) {
+			m_mTransform = fnMATRIX3_fromString(pAttributeValue);
 		}
 	}
 

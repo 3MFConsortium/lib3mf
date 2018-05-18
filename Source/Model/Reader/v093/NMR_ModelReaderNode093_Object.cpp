@@ -57,13 +57,13 @@ namespace NMR {
 		__NMRASSERT(pColorMapping.get() != nullptr);
 
 		m_nID = 0;
-		m_sType = L"";
+		m_sType = "";
 		m_bHasType = false;
 
 		m_pModel = pModel;
 		m_pObject = NULL;
-		m_sThumbnail = L"";
-		m_sName = L"";
+		m_sThumbnail = "";
+		m_sName = "";
 
 		m_nColorID = 0;
 		m_nMaterialID = 0;
@@ -139,47 +139,45 @@ namespace NMR {
 		}
 	}
 
-	void CModelReaderNode093_Object::OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue)
+	void CModelReaderNode093_Object::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
 	{
 		__NMRASSERT(pAttributeName);
 		__NMRASSERT(pAttributeValue);
 
-		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_OBJECT_ID) == 0) {
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_OBJECT_ID) == 0) {
 			if (m_nID != 0)
 				throw CNMRException(NMR_ERROR_DUPLICATEOBJECTID);
 
 			// Convert to integer and make a input and range check!
-			m_nID = fnWStringToUint32(pAttributeValue);
+			m_nID = fnStringToUint32(pAttributeValue);
 
 			// Increase ID to avoid 0 (was allowed for 0.9.3)
 			m_nID++;
 		}
 
-		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_OBJECT_TYPE) == 0) {
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_OBJECT_TYPE) == 0) {
 			if (m_bHasType)
 				throw CNMRException(NMR_ERROR_DUPLICATEOBJECTTYPE);
 
 			// Convert to integer and make a input and range check!
-			std::wstring sString(pAttributeValue);
-			m_sType = sString;
+			m_sType = pAttributeValue;
 			m_bHasType = true;
 		}
 
-		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_OBJECT_NAME) == 0) {
-			std::wstring sValue(pAttributeValue);
-			m_sName = sValue;
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_OBJECT_NAME) == 0) {
+			m_sName = pAttributeValue;
 		}
 
-		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_OBJECT_COLOR_ID) == 0) {
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_OBJECT_COLOR_ID) == 0) {
 
-			nfInt32 nValue = fnWStringToInt32(pAttributeValue);
+			nfInt32 nValue = fnStringToInt32(pAttributeValue);
 			if ((nValue >= 0) && (nValue < XML_3MF_MAXRESOURCEINDEX)) {
 				m_nColorID = nValue + 1;
 			}
 		}
 
-		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_OBJECT_MATERIALID) == 0) {
-			nfInt32 nValue = fnWStringToInt32(pAttributeValue);
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_OBJECT_MATERIALID) == 0) {
+			nfInt32 nValue = fnStringToInt32(pAttributeValue);
 			if ((nValue >= 0) && (nValue < XML_3MF_MAXRESOURCEINDEX))
 				m_nMaterialID = nValue + 1;
 		}
@@ -187,16 +185,16 @@ namespace NMR {
 
 	}
 
-	void CModelReaderNode093_Object::OnNSChildElement(_In_z_ const nfWChar * pChildName, _In_z_ const nfWChar * pNameSpace, _In_ CXmlReader * pXMLReader)
+	void CModelReaderNode093_Object::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
 	{
 		__NMRASSERT(pChildName);
 		__NMRASSERT(pXMLReader);
 		__NMRASSERT(pNameSpace);
 
-		if ((wcscmp(pNameSpace, XML_3MF_NAMESPACE_CORESPEC093) == 0) || (wcscmp(pNameSpace, L"") == 0)) {
+		if ((strcmp(pNameSpace, XML_3MF_NAMESPACE_CORESPEC093) == 0) || (strcmp(pNameSpace, "") == 0)) {
 
 			// Read a mesh object
-			if (wcscmp(pChildName, XML_3MF_ELEMENT_MESH) == 0) {
+			if (strcmp(pChildName, XML_3MF_ELEMENT_MESH) == 0) {
 				// If we already have parsed an object, the node is duplicate
 				if (m_pObject.get())
 					throw CNMRException(NMR_ERROR_AMBIGUOUSOBJECTDEFINITON);
@@ -217,7 +215,7 @@ namespace NMR {
 
 
 			// Read a component object
-			if (wcscmp(pChildName, XML_3MF_ELEMENT_COMPONENTS) == 0) {
+			if (strcmp(pChildName, XML_3MF_ELEMENT_COMPONENTS) == 0) {
 				// If we already have parsed an object, the node is duplicate
 				if (m_pObject.get())
 					throw CNMRException(NMR_ERROR_AMBIGUOUSOBJECTDEFINITON);

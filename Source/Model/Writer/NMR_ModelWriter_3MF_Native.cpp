@@ -130,8 +130,8 @@ namespace NMR {
 		pPackageWriter->addContentType(PACKAGE_3D_JPEG_EXTENSION, PACKAGE_JPG_CONTENT_TYPE);
 		pPackageWriter->addContentType(PACKAGE_3D_JPG_EXTENSION, PACKAGE_JPG_CONTENT_TYPE);
 
-		std::map<std::wstring, std::wstring> CustomContentTypes = m_pModel->getCustomContentTypes();
-		std::map<std::wstring, std::wstring>::iterator iContentTypeIterator;
+		std::map<std::string, std::string> CustomContentTypes = m_pModel->getCustomContentTypes();
+		std::map<std::string, std::string>::iterator iContentTypeIterator;
 
 		for (iContentTypeIterator = CustomContentTypes.begin(); iContentTypeIterator != CustomContentTypes.end(); iContentTypeIterator++) {
 			if (!m_pModel->contentTypeIsDefault(iContentTypeIterator->first)) {
@@ -142,11 +142,11 @@ namespace NMR {
 	}
 
 
-	std::wstring CModelWriter_3MF_Native::generateRelationShipID()
+	std::string CModelWriter_3MF_Native::generateRelationShipID()
 	{
 		// Create Unique ID String
-		std::wstringstream sStream;
-		sStream << L"rel" << m_nRelationIDCounter;
+		std::stringstream sStream;
+		sStream << "rel" << m_nRelationIDCounter;
 		m_nRelationIDCounter++;
 		return sStream.str();
 	}
@@ -201,8 +201,8 @@ namespace NMR {
 				PModelAttachment pAttachment = pModel->getModelAttachment(nIndex);
 				PImportStream pStream = pAttachment->getStream();
 				
-				std::wstring sPath = fnIncludeLeadingPathDelimiter(pAttachment->getPathURI());
-				std::wstring sRelationShipType = pAttachment->getRelationShipType();
+				std::string sPath = fnIncludeLeadingPathDelimiter(pAttachment->getPathURI());
+				std::string sRelationShipType = pAttachment->getRelationShipType();
 
 				if (pStream.get() == nullptr)
 					throw CNMRException(NMR_ERROR_INVALIDPARAM);

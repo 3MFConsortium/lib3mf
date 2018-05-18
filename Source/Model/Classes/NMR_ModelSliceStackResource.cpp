@@ -139,8 +139,8 @@ namespace NMR {
 		return m_nNumSliceRefsToMe;
 	}
 
-	std::wstring CModelSliceStackResource::sliceRefPath() {
-		return getSliceStack()->usesSliceRef() ? L"/2D/2dmodel_" + std::to_wstring(getResourceID()->getUniqueID()) + L".model" : L"";
+	std::string CModelSliceStackResource::sliceRefPath() {
+		return getSliceStack()->usesSliceRef() ? "/2D/2dmodel_" + std::to_string(getResourceID()->getUniqueID()) + ".model" : "";
 	}
 
 	CSliceStack::CSliceStack() {

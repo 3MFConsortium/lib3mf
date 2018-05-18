@@ -46,22 +46,22 @@ Abstract:
 #include "Model/Classes/NMR_ModelConstants.h"
 
 namespace NMR {
-	void CModelReaderNode_Slices1507_Slice::OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue) {
-		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_SLICEZTOP) == 0) {
+	void CModelReaderNode_Slices1507_Slice::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue) {
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_SLICEZTOP) == 0) {
 			if (m_bHasZTop)
 				throw CNMRException(NMR_ERROR_DUPLICATETEZTOP);
-			m_TopZ = fnWStringToFloat(pAttributeValue);
+			m_TopZ = fnStringToFloat(pAttributeValue);
 			m_bHasZTop = true;
 		}
 	}
 
-	void CModelReaderNode_Slices1507_Slice::OnNSChildElement(_In_z_ const nfWChar * pChildName, _In_z_ const nfWChar * pNameSpace, _In_ CXmlReader * pXMLReader) {
-		if (wcscmp(pNameSpace, XML_3MF_NAMESPACE_SLICESPEC) == 0) {
-			if (wcscmp(pChildName, XML_3MF_ELEMENT_SLICEVERTICES) == 0) {
+	void CModelReaderNode_Slices1507_Slice::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader) {
+		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_SLICESPEC) == 0) {
+			if (strcmp(pChildName, XML_3MF_ELEMENT_SLICEVERTICES) == 0) {
 				PModelReaderNode_Slices1507_Vertices pXMLNode = std::make_shared<CModelReaderNode_Slices1507_Vertices>(m_Slice.get(), m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 			}
-			else if (wcscmp(pChildName, XML_3MF_ELEMENT_SLICEPOLYGON) == 0) {
+			else if (strcmp(pChildName, XML_3MF_ELEMENT_SLICEPOLYGON) == 0) {
 				PModelReaderNode_Slices1507_Polygon pXMLNode = std::make_shared<CModelReaderNode_Slices1507_Polygon>(m_Slice.get(), m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 			}

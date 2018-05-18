@@ -232,7 +232,7 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_INVALIDREADEROBJECT);
 
 			std::wstring sRelationShipType(pwszRelationshipType);
-			m_pModelReader->addRelationToRead(sRelationShipType);
+			m_pModelReader->addRelationToRead(fnUTF16toUTF8(sRelationShipType));
 
 			return handleSuccess();
 		}
@@ -253,7 +253,7 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_INVALIDREADEROBJECT);
 
 			std::wstring sRelationShipType(pwszRelationshipType);
-			m_pModelReader->removeRelationToRead(sRelationShipType);
+			m_pModelReader->removeRelationToRead(fnUTF16toUTF8(sRelationShipType));
 
 			return handleSuccess();
 		}
@@ -274,8 +274,7 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_INVALIDREADEROBJECT);
 
 			std::string sRelationShipTypeUTF8(pszRelationshipType);
-			std::wstring sRelationShipTypeUTF16 = fnUTF8toUTF16(sRelationShipTypeUTF8);
-			m_pModelReader->addRelationToRead(sRelationShipTypeUTF16);
+			m_pModelReader->addRelationToRead(sRelationShipTypeUTF8);
 
 			return handleSuccess();
 		}
@@ -296,8 +295,7 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_INVALIDREADEROBJECT);
 
 			std::string sRelationShipTypeUTF8(pszRelationshipType);
-			std::wstring sRelationShipTypeUTF16 = fnUTF8toUTF16(sRelationShipTypeUTF8);
-			m_pModelReader->removeRelationToRead(sRelationShipTypeUTF16);
+			m_pModelReader->removeRelationToRead(sRelationShipTypeUTF8);
 
 			return handleSuccess();
 		}

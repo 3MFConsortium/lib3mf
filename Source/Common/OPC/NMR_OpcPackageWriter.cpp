@@ -55,7 +55,7 @@ namespace NMR {
 		finishPackage();
 	}
 
-	POpcPackagePart COpcPackageWriter::addPart(_In_ std::wstring sPath)
+	POpcPackagePart COpcPackageWriter::addPart(_In_ std::string sPath)
 	{
 		sPath = fnRemoveLeadingPathDelimiter(sPath);
 		
@@ -66,12 +66,12 @@ namespace NMR {
 		return pPart;
 	}
 
-	void COpcPackageWriter::addContentType(_In_ std::wstring sExtension, _In_ std::wstring sContentType)
+	void COpcPackageWriter::addContentType(_In_ std::string sExtension, _In_ std::string sContentType)
 	{
 		m_ContentTypes.insert(std::make_pair(sExtension, sContentType));
 	}
 
-	POpcPackageRelationship COpcPackageWriter::addRootRelationship(_In_ std::wstring sID, _In_ std::wstring sType, _In_ COpcPackagePart * pTargetPart)
+	POpcPackageRelationship COpcPackageWriter::addRootRelationship(_In_ std::string sID, _In_ std::string sType, _In_ COpcPackagePart * pTargetPart)
 	{
 		if (pTargetPart == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
@@ -89,12 +89,12 @@ namespace NMR {
 		while (iIterator != m_Parts.end()) {
 			POpcPackagePart pPart = *iIterator;
 			if (pPart->hasRelationships()) {
-				std::wstring sURI = pPart->getURI();
-				std::wstring sName = fnExtractFileName(sURI);
-				std::wstring sPath = sURI.substr(0, sURI.length() - sName.length());
-				sPath += L"_rels/";
+				std::string sURI = pPart->getURI();
+				std::string sName = fnExtractFileName(sURI);
+				std::string sPath = sURI.substr(0, sURI.length() - sName.length());
+				sPath += "_rels/";
 				sPath += sName;
-				sPath += std::wstring(L".")+PACKAGE_3D_RELS_EXTENSION;
+				sPath += std::string(".")+PACKAGE_3D_RELS_EXTENSION;
 
 				PExportStream pStream = m_pZIPWriter->createEntry(sPath, fnGetUnixTime());
 				pPart->writeRelationships(pStream);
@@ -111,7 +111,7 @@ namespace NMR {
 
 		pXMLWriter->WriteStartDocument();
 		pXMLWriter->WriteStartElement(nullptr, OPC_CONTENTTYPES_CONTAINER, nullptr);
-		pXMLWriter->WriteAttributeString(nullptr, L"xmlns", nullptr, OPCPACKAGE_SCHEMA_CONTENTTYPES);
+		pXMLWriter->WriteAttributeString(nullptr, "xmlns", nullptr, OPCPACKAGE_SCHEMA_CONTENTTYPES);
 
 		auto iIterator = m_ContentTypes.begin();
 		while (iIterator != m_ContentTypes.end()) {
@@ -137,8 +137,8 @@ namespace NMR {
 		PXmlWriter_Native pXMLWriter = std::make_shared<CXmlWriter_Native>(pStream);
 
 		pXMLWriter->WriteStartDocument();
-		pXMLWriter->WriteStartElement(nullptr, L"Relationships", nullptr);
-		pXMLWriter->WriteAttributeString(nullptr, L"xmlns", nullptr, OPCPACKAGE_SCHEMA_RELATIONSHIPS);
+		pXMLWriter->WriteStartElement(nullptr, "Relationships", nullptr);
+		pXMLWriter->WriteAttributeString(nullptr, "xmlns", nullptr, OPCPACKAGE_SCHEMA_RELATIONSHIPS);
 
 		auto iIterator = m_RootRelationships.begin();
 

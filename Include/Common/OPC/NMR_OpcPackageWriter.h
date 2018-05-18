@@ -50,7 +50,7 @@ namespace NMR {
 		std::list <POpcPackagePart> m_Parts;
 		PPortableZIPWriter m_pZIPWriter;
 
-		std::map<std::wstring, std::wstring> m_ContentTypes;
+		std::map<std::string, std::string> m_ContentTypes;
 		std::list<POpcPackageRelationship> m_RootRelationships;
 
 		void finishPackage();
@@ -60,10 +60,10 @@ namespace NMR {
 		COpcPackageWriter(_In_ PExportStream pExportStream);
 		~COpcPackageWriter();
 
-		POpcPackagePart addPart(_In_ std::wstring sPath);
+		POpcPackagePart addPart(_In_ std::string sPath);
 
-		void addContentType(_In_ std::wstring sExtension, _In_ std::wstring sContentType);
-		POpcPackageRelationship addRootRelationship(_In_ std::wstring sID, _In_ std::wstring sType, _In_ COpcPackagePart * pTargetPart);
+		void addContentType(_In_ std::string sExtension, _In_ std::string sContentType);
+		POpcPackageRelationship addRootRelationship(_In_ std::string sID, _In_ std::string sType, _In_ COpcPackagePart * pTargetPart);
 
 	};
 

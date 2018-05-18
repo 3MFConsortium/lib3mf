@@ -37,7 +37,7 @@ int main(int argc, char **argv)
 	// testing::GTEST_FLAG(filter) = "*ReWriteFileNames*";
 	// testing::GTEST_FLAG(filter) = "*LoadFromMemoryBuffer*";
 	// testing::GTEST_FLAG(filter) = "*Production_LoadFileTest*ReadFiles*";
-	// testing::GTEST_FLAG(filter) = "*ProgressCallback*";
+	// testing::GTEST_FLAG(filter) = "*ReadWrite*EscapeCharacters";
 	// testing::GTEST_FLAG(filter) = "*Attachments*ReadAttachment*";
 	testing::InitGoogleTest(&argc, argv);
 	return RUN_ALL_TESTS();

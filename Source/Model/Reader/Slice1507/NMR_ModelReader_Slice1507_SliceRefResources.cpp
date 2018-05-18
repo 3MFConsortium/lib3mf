@@ -47,13 +47,13 @@ Abstract:
 
 namespace NMR {
 	void CModelReader_Slice1507_SliceRefResources::OnNSChildElement(
-			_In_z_ const nfWChar * pChildName, _In_z_ const nfWChar * pNameSpace, _In_ CXmlReader * pXMLReader)
+			_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
 	{
-		if (wcscmp(pNameSpace, XML_3MF_NAMESPACE_SLICESPEC) == 0) {
-			if (wcscmp(pChildName, XML_3MF_ELEMENT_SLICESTACKRESOURCE) == 0)
+		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_SLICESPEC) == 0) {
+			if (strcmp(pChildName, XML_3MF_ELEMENT_SLICESTACKRESOURCE) == 0)
 			{
 				PModelReaderNode_Slice1507_SliceStack pXmlNode =
-					std::make_shared<CModelReaderNode_Slice1507_SliceStack>(m_pModel, m_pWarnings, nullptr, m_sSliceRefPath.c_str());
+					std::make_shared<CModelReaderNode_Slice1507_SliceStack>(m_pModel, m_pWarnings, nullptr, m_sSliceRefPath);
 				pXmlNode->parseXML(pXMLReader);
 			}
 			else
@@ -62,11 +62,11 @@ namespace NMR {
 	}
 
 	CModelReader_Slice1507_SliceRefResources::CModelReader_Slice1507_SliceRefResources(
-		_In_ CModel *pModel, _In_ PModelReaderWarnings pWarnings, _In_z_ const nfWChar *pSliceRefPath)
+		_In_ CModel *pModel, _In_ PModelReaderWarnings pWarnings, _In_z_ const std::string sSliceRefPath)
 		: CModelReaderNode(pWarnings)
 	{
 		m_pModel = pModel;
-		m_sSliceRefPath = pSliceRefPath;
+		m_sSliceRefPath = sSliceRefPath;
 	}
 
 	void CModelReader_Slice1507_SliceRefResources::parseXML(_In_ CXmlReader * pXMLReader) {
