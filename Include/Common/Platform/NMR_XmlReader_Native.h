@@ -83,9 +83,6 @@ namespace NMR {
 		std::vector<nfChar> m_UTF8Buffer1;
 		std::vector<nfChar> m_UTF8Buffer2;
 
-		// Temporary buffer to read into
-		std::vector<nfByte> m_TempBuffer;
-
 		// Double buffer pointers to UTF16BufferX
 		std::vector<nfChar> * m_pCurrentBuffer;
 		std::vector<nfChar> * m_pNextBuffer;

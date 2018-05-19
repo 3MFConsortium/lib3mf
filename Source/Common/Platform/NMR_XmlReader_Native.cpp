@@ -61,7 +61,6 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_INVALIDBUFFERSIZE);
 
 		m_cbBufferCapacity = cbBufferCapacity;
-		m_TempBuffer.resize(cbBufferCapacity);
 		m_UTF8Buffer1.resize(cbBufferCapacity);
 		m_UTF8Buffer2.resize(cbBufferCapacity);
 		m_CurrentEntityList.resize(cbBufferCapacity);
@@ -375,27 +374,9 @@ namespace NMR {
 			m_cbCurrentOverflowSize = 0;
 		}
 
-		// Read temp buffer into memory
-		// cbBytesRead = m_pImportStream->readBuffer(&m_TempBuffer[0], cbReadSize, false);
-		
-		for (unsigned int i = 0; i < cbReadSize; i++) {
-			(*m_pNextBuffer)[m_nCurrentBufferSize + i] = nfChar(1);
-		}
-
+		// Read buffer into memory
 		cbBytesRead = m_pImportStream->readBuffer((nfByte*)(&((*m_pNextBuffer)[m_nCurrentBufferSize])), cbReadSize, false);
-		//for (int i = 0; i < cbBytesRead; i++) {
-		//	(*m_pNextBuffer)[m_nCurrentBufferSize + i] = m_TempBuffer[i];
-		//}
-		
-		if (cbBytesRead > 0) {
-			nfUint32 pnLastChar = 0;
-			nfUint32 cbNeededCharacters = 0;
-			
-			// TODO
-			//// Convert buffer to UTF16
-			// nfUint64 cbCharsConverted = fnBufferedUTF8toUTF16((nfChar*)&m_TempBuffer[0], &(*m_pNextBuffer)[m_nCurrentBufferSize], (nfUint32)cbBytesRead, &pnLastChar, &cbNeededCharacters);
-			m_nCurrentBufferSize += (nfUint32)cbBytesRead;
-		}
+		m_nCurrentBufferSize += (nfUint32)cbBytesRead;
 
 		// Reset Entity parser
 		m_nCurrentEntityCount = 0;
