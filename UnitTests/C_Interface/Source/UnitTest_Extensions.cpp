@@ -29,7 +29,7 @@ UnitTest_Extensions.cpp: Defines Unittests for general extension handling
 
 --*/
 
-#include "UnitTests/UnitTest_Utilities.h"
+#include "UnitTest_Utilities.h"
 #include "Model/COM/NMR_DLLInterfaces.h"
 #include <memory>
 #include <vector>

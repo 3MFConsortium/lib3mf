@@ -29,7 +29,7 @@ UnitTest_UnitTest_ReaderStrictMode.cpp: Defines Unittests for the StrictMode of 
 
 --*/
 
-#include "UnitTests/UnitTest_Utilities.h"
+#include "UnitTest_Utilities.h"
 #include "Model/COM/NMR_DLLInterfaces.h"
 
 

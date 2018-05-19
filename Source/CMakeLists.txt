@@ -34,15 +34,6 @@ set(SRCS_WIN_MAIN
 ./Source/Main/dllmain.cpp
 )
 
-set(SRCS_WIN_MANAGEDTEST
-./Source/UnitTests/UnitTest_Geometry.cpp
-./Source/UnitTests/UnitTest_Mesh.cpp
-./Source/UnitTests/UnitTest_MeshFormat_STL.cpp
-./Source/UnitTests/UnitTest_Model.cpp
-./Source/UnitTests/UnitTest_ModelFactory.cpp
-./Source/UnitTests/UnitTest_ZIP.cpp
-)
-
 set(SRCS_UNIX_MAIN
 ./Source/Main/main.cpp
 )

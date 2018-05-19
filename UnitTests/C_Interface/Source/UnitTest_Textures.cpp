@@ -30,7 +30,7 @@ UnitTest_Textures.cpp: Defines Unittests for reading and writing textures from/t
 
 --*/
 
-#include "UnitTests/UnitTest_Utilities.h"
+#include "UnitTest_Utilities.h"
 #include "Model/COM/NMR_DLLInterfaces.h"
 
 #include <vector>

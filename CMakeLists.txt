@@ -32,13 +32,11 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
   add_definitions(-DBUILD_DLL -DLIB3MF_EXPORTS /W3)
   SET(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} xmllite.lib")
   add_definitions(-D_CRT_NONSTDC_NO_DEPRECATE -D_CRT_SECURE_NO_WARNINGS)
+  set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
+  set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
   if(NMR_COM_NATIVE)
 	add_definitions(-DNMR_COM_NATIVE)
   endif()
-  
-  string(REGEX REPLACE "/bin/[^/]*$" "" VCINSTALLDIR "${CMAKE_C_COMPILER}")
-  message(STATUS "Guessed MSVC directory: ${VCINSTALLDIR}")
-  link_directories ("${VCINSTALLDIR}/../../../UnitTest/lib")
 endif()
 
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/Include/Model/COM/NMR_COMVersion.h.in" "${CMAKE_CURRENT_BINARY_DIR}/Include/Model/COM/NMR_COMVersion.h")
@@ -145,25 +143,7 @@ endif()
 message("LIB3MF_TESTS ... " ${LIB3MF_TESTS})
 if(LIB3MF_TESTS)
 	include(CTest)
-	# platform independent tests on the C-interface of the library
 	add_subdirectory(UnitTests)
-	
-	# windows specific tests
-	if (WIN32)
-		SET(UNITTEST_NAME "${PROJECT_NAME}unittests")
-		add_library(${UNITTEST_NAME} SHARED "${SRCS_WIN_MANAGEDTEST}")
-		target_include_directories(${UNITTEST_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include)
-		target_include_directories(${UNITTEST_NAME} PUBLIC "${VCINSTALLDIR}/../../../UnitTest/include")
-		target_include_directories(${UNITTEST_NAME} PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/Include)
-	
-		target_compile_options(${UNITTEST_NAME} PUBLIC "$<$<CONFIG:DEBUG>:/Od;/Ob0;/Gm;/sdl;/W3;/WX;/FC;-DNMR_USEASSERTIONS;-DNMR_UNITTESTS;/wd4996>")
-		target_compile_options(${UNITTEST_NAME} PUBLIC "$<$<CONFIG:RELEASE>:/O2;/sdl;/WX;/Oi;/Gy;/FC;/wd4996>")
-		
-		add_dependencies(${UNITTEST_NAME} ${PROJECT_NAME}_s)
-		target_link_libraries(${UNITTEST_NAME} ${PROJECT_NAME}_s)
-		
-		file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/TestOutput")
-	endif()
 endif()
 
 

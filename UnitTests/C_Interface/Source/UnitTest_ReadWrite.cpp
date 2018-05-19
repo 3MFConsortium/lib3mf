@@ -29,7 +29,7 @@ UnitTest_ReadWrite.cpp: Defines Unittests for reading and writing of 3MFs
 
 --*/
 
-#include "UnitTests/UnitTest_Utilities.h"
+#include "UnitTest_Utilities.h"
 #include "Model/COM/NMR_DLLInterfaces.h"
 
 #include <vector>
@@ -500,13 +500,12 @@ namespace NMR {
 								"3mfbase14_materialandcolor2.3mf"
 							));
 
-	// Test name : LoadFromMemoryBuffer/MemoryBufferTest.Load/#
 	TEST_P(MemoryBufferTest, Load)
 	{
 		std::string fileName = GetParam();
 
 		// Read the file fully into a memory buffer
-		std::ifstream file((sTestFilesPath + separator() + "VS_UnitTests" + separator() + fileName).c_str(), std::ios::binary | std::ios::ate);
+		std::ifstream file((sTestFilesPath + separator() + "CPP_UnitTests" + separator() + fileName).c_str(), std::ios::binary | std::ios::ate);
 		std::streamsize size = file.tellg();
 		file.seekg(0, std::ios::beg);
 		// Memory buffer

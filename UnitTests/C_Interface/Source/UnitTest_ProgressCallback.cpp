@@ -29,7 +29,7 @@ UnitTest_ProgressCallback.cpp: Defines Unittests for the progress callback funct
 
 --*/
 
-#include "UnitTests/UnitTest_Utilities.h"
+#include "UnitTest_Utilities.h"
 #include "Model/COM/NMR_DLLInterfaces.h"
 
 #include <vector>
