@@ -62,7 +62,6 @@ namespace NMR {
 
 	void CModelTexture2DResource::setPath(_In_ std::string sPath)
 	{
-		// throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
 		m_sPath = sPath;
 	}
 

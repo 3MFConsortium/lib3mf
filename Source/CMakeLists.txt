@@ -27,7 +27,6 @@ else()
 	./Source/Common/Platform/NMR_ExportStream_ZIP.cpp
 	./Source/Common/Platform/NMR_XmlReader_Native.cpp
 	./Source/Model/Reader/NMR_ModelReader_3MF_Native.cpp
-	./Source/Model/Reader/NMR_ModelReader_3MF_GCC.cpp
 	)
 endif()
 
@@ -79,20 +78,16 @@ ${SRCS_COM}
 ./Source/Common/OPC/NMR_OpcPackageWriter.cpp
 ./Source/Common/Platform/NMR_ExportStream.cpp
 ./Source/Common/Platform/NMR_ExportStream_Callback.cpp
-./Source/Common/Platform/NMR_ExportStream_GCC.cpp
 ./Source/Common/Platform/NMR_ExportStream_Memory.cpp
 ./Source/Common/Platform/NMR_ExportStream_Dummy.cpp
 ./Source/Common/Platform/NMR_ExportStream_ZIP.cpp
-./Source/Common/Platform/NMR_ImportStream_GCC.cpp
 ./Source/Common/Platform/NMR_ImportStream_Callback.cpp
 ./Source/Common/Platform/NMR_ImportStream_Memory.cpp
 ./Source/Common/Platform/NMR_PortableZIPWriter.cpp
 ./Source/Common/Platform/NMR_PortableZIPWriterEntry.cpp
 ./Source/Common/Platform/NMR_Time.cpp
 ./Source/Common/Platform/NMR_XmlReader.cpp
-./Source/Common/Platform/NMR_XmlReader_GCC.cpp
 ./Source/Common/Platform/NMR_XmlWriter.cpp
-./Source/Common/Platform/NMR_XmlWriter_GCC.cpp
 ./Source/Common/Platform/NMR_XmlWriter_Native.cpp
 ./Source/Libraries/zlib/adler32.c
 ./Source/Libraries/zlib/compress.c
@@ -204,7 +199,6 @@ ${SRCS_COM}
 ./Source/Model/Writer/NMR_ModelWriter.cpp
 ./Source/Model/Writer/NMR_ModelWriterNode.cpp
 ./Source/Model/Writer/NMR_ModelWriter_3MF.cpp
-./Source/Model/Writer/NMR_ModelWriter_3MF_GCC.cpp
 ./Source/Model/Writer/NMR_ModelWriter_3MF_Native.cpp
 ./Source/Model/Writer/NMR_ModelWriter_ColorMapping.cpp
 ./Source/Model/Writer/NMR_ModelWriter_STL.cpp
