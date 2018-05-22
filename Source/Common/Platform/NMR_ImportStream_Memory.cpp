@@ -212,7 +212,8 @@ namespace NMR {
 		if (pwszFileName == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-		PExportStream pExportStream = fnCreateExportStreamInstance(pwszFileName);
+		std::string sUTF8FileName = fnUTF16toUTF8(pwszFileName);
+		PExportStream pExportStream = fnCreateExportStreamInstance(sUTF8FileName.c_str());
 		if (m_cbSize > 0) {
 			pExportStream->writeBuffer(&m_Buffer[0], m_cbSize);
 		}

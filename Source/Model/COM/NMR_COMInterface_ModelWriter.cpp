@@ -120,7 +120,8 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
 
 			setlocale (LC_ALL, "C");
-			PExportStream pStream = fnCreateExportStreamInstance(pwszFilename);
+			std::string sFileName = fnUTF16toUTF8(pwszFilename);
+			PExportStream pStream = fnCreateExportStreamInstance(sFileName.c_str());
 			m_pModelWriter->exportToStream(pStream);
 
 			return handleSuccess();
@@ -144,13 +145,10 @@ namespace NMR {
 			if (m_pModelWriter.get() == nullptr)
 				throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
 
-			// Convert to UTF16
 			std::string sUTF8FileName(pszFilename);
-			std::wstring sUTF16FileName = fnUTF8toUTF16(sUTF8FileName);
-
 			setlocale (LC_ALL, "C");
 
-			PExportStream pStream = fnCreateExportStreamInstance(sUTF16FileName.c_str());
+			PExportStream pStream = fnCreateExportStreamInstance(sUTF8FileName.c_str());
 			m_pModelWriter->exportToStream(pStream);
 
 			return handleSuccess();

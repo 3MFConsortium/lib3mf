@@ -510,7 +510,8 @@ namespace NMR {
 			if (pwszFilename == nullptr)
 				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
 
-			PImportStream pImportStream = fnCreateImportStreamInstance(pwszFilename);
+			std::string sFileName = fnUTF16toUTF8(pwszFilename);
+			PImportStream pImportStream = fnCreateImportStreamInstance(sFileName.c_str());
 
 			m_pModelAttachment->setStream(pImportStream);
 
@@ -535,8 +536,7 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
 
 			std::string sUTF8FileName(pszFilename);
-			std::wstring sUTF16FileName = fnUTF8toUTF16(sUTF8FileName);
-			PImportStream pImportStream = fnCreateImportStreamInstance(sUTF16FileName.c_str());
+			PImportStream pImportStream = fnCreateImportStreamInstance(sUTF8FileName.c_str());
 
 			m_pModelAttachment->setStream(pImportStream);
 

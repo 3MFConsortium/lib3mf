@@ -115,7 +115,8 @@ namespace NMR {
 
 			setlocale (LC_ALL, "C");
 
-			PImportStream pStream = fnCreateImportStreamInstance(pwszFilename);
+			std::string sUTF8FileName = fnUTF16toUTF8(pwszFilename);
+			PImportStream pStream = fnCreateImportStreamInstance(sUTF8FileName.c_str());
 			m_pModelReader->readStream(pStream);
 			return handleSuccess();
 		}
@@ -137,11 +138,9 @@ namespace NMR {
 
 			setlocale (LC_ALL, "C");
 
-			// Convert to UTF16
 			std::string sUTF8FileName(pszFilename);
-			std::wstring sUTF16FileName = fnUTF8toUTF16(sUTF8FileName);
 
-			PImportStream pStream = fnCreateImportStreamInstance(sUTF16FileName.c_str());
+			PImportStream pStream = fnCreateImportStreamInstance(sUTF8FileName.c_str());
 			m_pModelReader->readStream(pStream);
 			return handleSuccess();
 		}

@@ -637,7 +637,8 @@ namespace NMR {
 			CModelTexture2DResource * pTextureResource = getTexture2D();
 			__NMRASSERT(pTextureResource);
 
-			PImportStream pImportStream = fnCreateImportStreamInstance(pwszFilename);
+			std::string sUTF8FileName = fnUTF16toUTF8(pwszFilename);
+			PImportStream pImportStream = fnCreateImportStreamInstance(sUTF8FileName.c_str());
 
 			CModel * pModel = pTextureResource->getModel();
 			__NMRASSERT(pModel);
@@ -666,8 +667,7 @@ namespace NMR {
 			__NMRASSERT(pTextureResource);
 
 			std::string sUTF8FileName(pszFilename);
-			std::wstring sUTF16FileName = fnUTF8toUTF16(sUTF8FileName);
-			PImportStream pImportStream = fnCreateImportStreamInstance(sUTF16FileName.c_str());
+			PImportStream pImportStream = fnCreateImportStreamInstance(sUTF8FileName.c_str());
 
 			CModel * pModel = pTextureResource->getModel();
 			__NMRASSERT(pModel);
