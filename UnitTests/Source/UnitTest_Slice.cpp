@@ -29,7 +29,7 @@ UnitTest_Slice.cpp: Defines Unittests for the slice extension to 3MF
 
 --*/
 
-#include "UnitTests/UnitTest_Utilities.h"
+#include "UnitTest_Utilities.h"
 #include "Model/COM/NMR_DLLInterfaces.h"
 
 #include <vector>
