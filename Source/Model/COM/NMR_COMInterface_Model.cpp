@@ -57,11 +57,6 @@ COM Interface Implementation for Model Class
 #include "Common/NMR_Exception_Windows.h"
 #include "Common/Platform/NMR_ImportStream_Memory.h"
 
-#ifndef NMR_COM_NATIVE
-#include "Common/Platform/NMR_COM_Emulation.h"
-#else
-#include "Common/Platform/NMR_COM_Native.h"
-#endif
 #include "Model/Reader/NMR_ModelReader_3MF_Native.h"
 #include "Model/Writer/NMR_ModelWriter_3MF_Native.h"
 

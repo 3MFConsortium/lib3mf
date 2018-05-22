@@ -43,10 +43,6 @@ COM Interface Implementation for Model Classes
 #include "Common/Platform/NMR_ImportStream_Memory.h"
 #include "Model/Classes/NMR_ModelConstants.h"
 
-#ifdef NMR_COM_NATIVE
-#include "Common/Platform/NMR_ImportStream_COM.h"
-#endif
-
 namespace NMR {
 
 	CCOMModelTexture2D::CCOMModelTexture2D()

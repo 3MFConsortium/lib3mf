@@ -33,11 +33,6 @@ Abstract:
 
 #include "Model/COM/NMR_COMInterface_ModelReader.h"
 #include "Model/Classes/NMR_ModelAttachment.h"
-#ifdef NMR_COM_NATIVE
-#include "Common/Platform/NMR_COM_Native.h"
-#else
-#include "Common/Platform/NMR_COM_Emulation.h"
-#endif
 
 #include "Common/NMR_StringUtils.h"
 

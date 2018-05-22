@@ -40,10 +40,6 @@ COM Interface Implementation for Model Writer Class
 #include "Common/Platform/NMR_Platform.h"
 #include "Common/NMR_StringUtils.h"
 
-#ifdef NMR_COM_NATIVE
-#include "Common/Platform/NMR_ExportStream_COM.h"
-#endif
-
 #include "Common/Platform/NMR_ExportStream_Memory.h"
 #include "Common/Platform/NMR_ExportStream_Dummy.h"
 #include "Common/Platform/NMR_ExportStream_Callback.h"

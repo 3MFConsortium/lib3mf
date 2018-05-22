@@ -41,12 +41,6 @@ COM Interface Implementation for Model Classes
 
 #include "Common/Platform/NMR_ImportStream_Memory.h"
 
-#ifdef NMR_COM_NATIVE
-#include "Common/Platform/NMR_ImportStream_COM.h"
-#else
-#include "Common/Platform/NMR_ImportStream_GCC_Native.h"
-#endif
-
 namespace NMR {
 
 	CCOMModelAttachment::CCOMModelAttachment()

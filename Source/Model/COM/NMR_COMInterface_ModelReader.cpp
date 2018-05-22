@@ -40,10 +40,6 @@ COM Interface Implementation for Model Reader Class
 #include "Common/Platform/NMR_ImportStream_Callback.h" 
 #include <locale.h>
 
-#ifdef NMR_COM_NATIVE
-#include "Common/Platform/NMR_ImportStream_COM.h"
-#endif
-
 namespace NMR {
 
 	CCOMModelReader::CCOMModelReader()
