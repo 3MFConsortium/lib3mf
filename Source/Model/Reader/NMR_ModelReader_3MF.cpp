@@ -38,6 +38,7 @@ NMR_ModelReader_3MF.cpp implements the Model Reader Class for
 #include "Model/Classes/NMR_ModelMeshObject.h"
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Model/Classes/NMR_ModelBuildItem.h"
+#include "Common/NMR_StringUtils.h"
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_Exception_Windows.h"
 #include "Common/MeshImport/NMR_MeshImporter_STL.h"

@@ -35,6 +35,7 @@ NMR_ModelTexture2D.cpp implements the Model Texture Class.
 #include "Model/Classes/NMR_ModelTexture2D.h"
 #include "Model/Classes/NMR_ModelTextureAttachment.h"
 #include "Common/NMR_Exception.h"
+#include "Common/NMR_StringUtils.h"
 #include <sstream>
 #include <algorithm>
 

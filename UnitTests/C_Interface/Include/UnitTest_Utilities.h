@@ -51,8 +51,7 @@ const std::string sTestFilesPath = "TestFiles";
 #endif
 
 inline bool CreateDir(std::string sPath) {
-	system( (std::string("mkdir \"")+ sPath + "\"").c_str() );
-	return true;
+	return (system( (std::string("mkdir \"")+ sPath + "\"").c_str() ) != -1);
 }
 
 inline char separator()

@@ -38,6 +38,7 @@ A mesh reader model node is a parser for the mesh node of an XML Model Stream.
 #include "Model/Reader/v093/NMR_ModelReaderNode093_TextureVertices.h"
 
 #include "Model/Classes/NMR_ModelConstants.h"
+#include "Common/NMR_StringUtils.h"
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_Exception_Windows.h"
 

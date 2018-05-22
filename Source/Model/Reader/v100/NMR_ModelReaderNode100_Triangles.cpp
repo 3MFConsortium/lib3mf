@@ -37,6 +37,7 @@ XML Model Stream.
 #include "Model/Reader/v100/NMR_ModelReaderNode100_Triangle.h"
 
 #include "Model/Classes/NMR_ModelConstants.h"
+#include "Common/NMR_StringUtils.h"
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_Exception_Windows.h"
 #include "Common/MeshInformation/NMR_MeshInformation_TexCoords.h"

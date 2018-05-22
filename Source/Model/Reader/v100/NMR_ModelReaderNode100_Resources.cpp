@@ -41,6 +41,7 @@ XML Model Stream.
 #include "Model/Reader/Slice1507/NMR_ModelReader_Slice1507_SliceStack.h"
 
 #include "Model/Classes/NMR_ModelConstants.h"
+#include "Common/NMR_StringUtils.h"
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_Exception_Windows.h"
 #include "Common/MeshInformation/NMR_MeshInformation_Slices.h"

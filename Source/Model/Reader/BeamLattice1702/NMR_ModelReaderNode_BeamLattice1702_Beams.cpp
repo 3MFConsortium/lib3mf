@@ -37,6 +37,7 @@ NMR_ModelReaderNode_BeamLattice1702_Beams.cpp covers the official 3MF beamlattic
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_Exception_Windows.h"
+#include "Common/NMR_StringUtils.h"
 
 namespace NMR {
 

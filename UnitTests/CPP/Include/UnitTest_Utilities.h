@@ -34,6 +34,11 @@ UnitTest_Utilities.h: Utilities for UnitTests
 
 #include "gtest/gtest.h"
 
+#ifdef __GNUC__
+	#define S_OK ((HRESULT)(0))
+#endif
+
+
 #ifdef LTESTFILESPATH
 const std::wstring sTestFilesPath = LTESTFILESPATH;
 #else

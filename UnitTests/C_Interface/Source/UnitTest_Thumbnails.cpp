@@ -212,7 +212,7 @@ namespace NMR {
 		ASSERT_EQ(lib3mf_createmodel(&pModel.get()), S_OK) << L"Could not create 3MF model";
 
 		CustomLib3MFBase pAttachmentOtherType;
-		ASSERT_EQ(lib3mf_model_addattachmentutf8(pModel.get(), "/3D/Textures/Other.xml", "OTHERRELATIONSHIP", &pAttachmentOtherType.get()), S_OK) << L"Could not add attachment.";
+		ASSERT_EQ(lib3mf_model_addattachmentutf8(pModel.get(), "/3D/Textures/Other.xml", "OTHERRELATIONSHIP", &pAttachmentOtherType.get()), S_OK) << "Could not add attachment.";
 
 		std::vector<CustomLib3MFBase> vctAttachments(3);
 		for (size_t i=0; i<vctAttachments.size(); i++)

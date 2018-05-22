@@ -37,6 +37,7 @@ A model reader node is an abstract base class for all XML nodes of a
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_Exception_Windows.h"
+#include "Common/NMR_StringUtils.h"
 
 namespace NMR {
 

@@ -36,6 +36,7 @@ Node Class.
 #include "Model/Reader/v093/NMR_ModelReaderNode093_Component.h"
 
 #include "Model/Classes/NMR_ModelConstants.h"
+#include "Common/NMR_StringUtils.h"
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_Exception_Windows.h"
 

@@ -43,9 +43,9 @@ A model reader node is an abstract base class for all XML nodes of a 3MF Model S
 #include "Model/Classes/NMR_ModelConstants.h" 
 #include "Common/3MF_ProgressMonitor.h"
 #include "Common/NMR_Exception.h"
+#include "Common/NMR_StringUtils.h"
 
 #include <iostream>
-#include <string>
 #include <sstream>
 #include <algorithm>
 #include <iterator>
