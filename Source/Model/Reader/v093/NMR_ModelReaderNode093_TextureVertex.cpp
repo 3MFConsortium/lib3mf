@@ -39,6 +39,7 @@ A texture vertex reader model node is a parser for the vertex node of an XML Mod
 #include "Common/NMR_Exception_Windows.h"
 #include <cmath>
 #include <climits>
+#include <stdlib.h>
 
 namespace NMR {
 
