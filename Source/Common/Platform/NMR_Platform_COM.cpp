@@ -40,7 +40,9 @@ specific classes for COM.
 
 #include "Common/Platform/NMR_ImportStream_COM.h"
 #include "Common/Platform/NMR_ExportStream_COM.h"
-#include "Common/Platform/NMR_XmlReader_COM.h"
+#include "Common/Platform/NMR_XmlReader_Native.h"
+
+#define NMR_PLATFORM_XMLREADER_BUFFERSIZE 65536
 
 namespace NMR {
 
@@ -56,7 +58,7 @@ namespace NMR {
 		
 	PXmlReader fnCreateXMLReaderInstance (_In_ PImportStream pImportStream, CProgressMonitor * pProgressMonitor)
 	{
-		return std::make_shared<CXmlReader_COM> (pImportStream);
+		return std::make_shared<CXmlReader_Native> (pImportStream, NMR_PLATFORM_XMLREADER_BUFFERSIZE, pProgressMonitor);
 	}
 
 

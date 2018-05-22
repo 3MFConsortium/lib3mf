@@ -258,34 +258,6 @@ namespace NMR {
 		}
 	}
 
-
-#ifdef NMR_COM_NATIVE
-	LIB3MFMETHODIMP CCOMModelWriter::WriteToStream(_In_ IStream * pStream)
-	{
-
-		try {
-			if (pStream == nullptr)
-				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
-			if (m_pModelWriter.get() == nullptr)
-				throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
-
-			setlocale (LC_ALL, "C");
-
-			PExportStream pExportStream = std::make_shared<CExportStream_COM>(pStream);
-			m_pModelWriter->exportToStream(pExportStream);
-
-			return handleSuccess();
-		}
-		catch (CNMRException & Exception) {
-			return handleNMRException(&Exception);
-		}
-		catch (...) {
-			return handleGenericException();
-		}
-
-	}
-#endif // NMR_COM_NATIVE
-	
 	LIB3MFMETHODIMP CCOMModelWriter::SetProgressCallback(_In_ void * callback, _In_ void* userData)
 	{
 		try

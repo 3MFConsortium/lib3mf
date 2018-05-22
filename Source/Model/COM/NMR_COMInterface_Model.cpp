@@ -59,13 +59,11 @@ COM Interface Implementation for Model Class
 
 #ifndef NMR_COM_NATIVE
 #include "Common/Platform/NMR_COM_Emulation.h"
-#include "Model/Reader/NMR_ModelReader_3MF_Native.h"
-#include "Model/Writer/NMR_ModelWriter_3MF_Native.h"
 #else
 #include "Common/Platform/NMR_COM_Native.h"
-#include "Model/Reader/NMR_ModelReader_3MF_OPC.h"
-#include "Model/Writer/NMR_ModelWriter_3MF_OPC.h"
 #endif
+#include "Model/Reader/NMR_ModelReader_3MF_Native.h"
+#include "Model/Writer/NMR_ModelWriter_3MF_Native.h"
 
 
 #include <string.h>
@@ -266,11 +264,7 @@ namespace NMR {
 
 			// Create specified writer instance
 			if (strcmp(pszWriterClass, MODELWRITERCLASS_3MF) == 0) {
-#ifdef NMR_COM_NATIVE
-				pWriter = std::make_shared<CModelWriter_3MF_OPC>(m_pModel);
-#else
 				pWriter = std::make_shared<CModelWriter_3MF_Native>(m_pModel);
-#endif
 			}
 			if (strcmp(pszWriterClass, MODELWRITERCLASS_STL) == 0)
 				pWriter = std::make_shared<CModelWriter_STL>(m_pModel);
@@ -305,11 +299,7 @@ namespace NMR {
 
 			// Create specified writer instance
 			if (strcmp(pszReaderClass, MODELREADERCLASS_3MF) == 0) {
-#ifdef NMR_COM_NATIVE
-				pReader = std::make_shared<CModelReader_3MF_OPC>(m_pModel);
-#else
 				pReader = std::make_shared<CModelReader_3MF_Native>(m_pModel);
-#endif
 			}
 			if (strcmp(pszReaderClass, MODELREADERCLASS_STL) == 0)
 				pReader = std::make_shared<CModelReader_STL>(m_pModel);

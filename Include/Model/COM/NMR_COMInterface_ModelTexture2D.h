@@ -78,17 +78,9 @@ namespace NMR {
 		LIB3MFMETHOD(WriteToBuffer) (_Out_ BYTE * pBuffer, _In_ ULONG64 cbBufferSize);
 		LIB3MFMETHOD(WriteToCallback) (_In_ void * pWriteCallback, _In_opt_ void * pUserData);
 
-#ifdef NMR_COM_NATIVE
-		LIB3MFMETHOD(WriteToStream) (_In_ IStream * pStream);
-#endif// NMR_COM_NATIVE
-
 		LIB3MFMETHOD(ReadFromFile) (_In_z_ LPCWSTR pwszFilename);
 		LIB3MFMETHOD(ReadFromFileUTF8) (_In_z_ LPCSTR pszFilename);
 		LIB3MFMETHOD(ReadFromBuffer) (_In_ BYTE * pBuffer, _In_ ULONG64 cbBufferSize);
-
-#ifdef NMR_COM_NATIVE
-		LIB3MFMETHOD(ReadFromStream) (_In_ IStream * pStream);
-#endif //NMR_COM_NATIVE
 
 		CCOMModelTexture2D();
 

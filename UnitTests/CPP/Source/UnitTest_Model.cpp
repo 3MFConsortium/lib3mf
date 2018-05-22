@@ -41,24 +41,21 @@ UnitTest_Model.cpp: Defines Unittests for the model class
 #include "Model/Classes/NMR_ModelTextureAttachment.h"
 #include "Common/NMR_Exception.h"
 
+#include "Model/Reader/NMR_ModelReader_3MF_Native.h"
+#include "Model/Writer/NMR_ModelWriter_3MF_Native.h"
+#define WRITER CModelWriter_3MF_Native
+#define READER CModelReader_3MF_Native
+
 #ifdef NMR_COM_NATIVE
-#include "Model/Reader/NMR_ModelReader_3MF_OPC.h"
-#include "Model/Writer/NMR_ModelWriter_3MF_OPC.h"
 #include "Common/Platform/NMR_ExportStream_COM.h"
 #include "Common/Platform/NMR_ImportStream_COM.h"
 #define IMPORTSTREAM CImportStream_COM
 #define EXPORTSTREAM CExportStream_COM
-#define WRITER CModelWriter_3MF_OPC
-#define READER CModelReader_3MF_OPC
 #else
-#include "Model/Reader/NMR_ModelReader_3MF_Native.h"
-#include "Model/Writer/NMR_ModelWriter_3MF_Native.h"
 #include "Common/Platform/NMR_ExportStream_GCC_Native.h"
 #include "Common/Platform/NMR_ImportStream_GCC_Native.h"
 #define IMPORTSTREAM CImportStream_GCC_Native
 #define EXPORTSTREAM CExportStream_GCC_Native
-#define WRITER CModelWriter_3MF_Native
-#define READER CModelReader_3MF_Native
 #endif
 
 namespace NMR

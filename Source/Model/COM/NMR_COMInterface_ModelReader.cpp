@@ -392,29 +392,6 @@ namespace NMR {
 			return handleGenericException();
 		}
 	}
-	
-#ifdef NMR_COM_NATIVE
-	LIB3MFMETHODIMP CCOMModelReader::ReadFromStream(_In_ IStream * pStream)
-	{
-		try {
-			if (pStream == nullptr)
-				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
-			if (m_pModelReader.get() == nullptr)
-				throw CNMRException(NMR_ERROR_INVALIDREADEROBJECT);
-
-			setlocale (LC_ALL, "C");
-			PImportStream pImportStream = std::make_shared<CImportStream_COM>(pStream);
-			m_pModelReader->readStream(pImportStream);
-			return handleSuccess();
-		}
-		catch (CNMRException & Exception) {
-			return handleNMRException(&Exception);
-		}
-		catch (...) {
-			return handleGenericException();
-		}
-	}
-#endif // NMR_COM_NATIVE
 
 	LIB3MFMETHODIMP CCOMModelReader::SetProgressCallback(_In_ void * callback, _In_ void* userData)
 	{

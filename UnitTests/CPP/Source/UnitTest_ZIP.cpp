@@ -69,7 +69,12 @@ namespace NMR
 
 	TEST(ZIPExport, EntrySmaller4GB)
 	{
+		#ifdef NMR_COM_NATIVE
+		PExportStream pExportStreamManual(new CExportStream_COM((sOutPath + L"Manual64.zip").c_str()));
+		#else
 		PExportStream pExportStreamManual(new CExportStream_GCC_Native((sOutPath + L"Manual64.zip").c_str()));
+		#endif
+		
 		PPortableZIPWriter pZipWriterManual = std::make_shared<CPortableZIPWriter>(pExportStreamManual, true);
 		{
 			PExportStream pStreamManual = pZipWriterManual->createEntry("Test/asd.txt", fnGetUnixTime());
@@ -96,7 +101,11 @@ namespace NMR
 
 	TEST(ZIPExport, EntryLarger4GB)
 	{
+#ifdef NMR_COM_NATIVE
+		PExportStream pExportStream(new CExportStream_COM((sOutPath + L"EntryLarger4GB_zip64.zip").c_str()));
+#else
 		PExportStream pExportStream(new CExportStream_GCC_Native((sOutPath + L"EntryLarger4GB_zip64.zip").c_str()));
+#endif
 		PPortableZIPWriter pZipWriter = std::make_shared<CPortableZIPWriter>(pExportStream, true);
 
 		writeEntryLarger(pZipWriter, "DeBelloGallico.txt", 0x100010000);
@@ -105,7 +114,11 @@ namespace NMR
 	 // This test takes about WAY too long to be considered a unit test
 	TEST(ZIPExport, DISABLED_AllUncompressedLarger4GB)
 	{
+#ifdef NMR_COM_NATIVE
+		PExportStream pExportStream(new CExportStream_COM((sOutPath + L"AllUncompressedLarger4GB_zip64.zip").c_str()));
+#else
 		PExportStream pExportStream(new CExportStream_GCC_Native((sOutPath + L"AllUncompressedLarger4GB_zip64.zip").c_str()));
+#endif
 		PPortableZIPWriter pZipWriter = std::make_shared<CPortableZIPWriter>(pExportStream, true);
 		writeEntryLarger(pZipWriter, "DeBelloGallico1.txt", 0x08F000000);
 		writeEntryLarger(pZipWriter, "DeBelloGallico2.txt", 0x08F000000);
@@ -114,7 +127,11 @@ namespace NMR
 	 // This test takes about WAY too long to be considered a unit test
 	TEST(ZIPExport, DISABLED_CompresedLarger4GB)
 	{
+#ifdef NMR_COM_NATIVE
+		PExportStream pExportStream(new CExportStream_COM((sOutPath + L"ContentLarger4GB_ZipLarger4GB_zip64.zip").c_str()));
+#else
 		PExportStream pExportStream(new CExportStream_GCC_Native((sOutPath + L"ContentLarger4GB_ZipLarger4GB_zip64.zip").c_str()));
+#endif
 		PPortableZIPWriter pZipWriter = std::make_shared<CPortableZIPWriter>(pExportStream, true);
 		
 		for (int iEntry=0; iEntry < 3; iEntry++) {

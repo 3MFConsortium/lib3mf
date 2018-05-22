@@ -34,10 +34,8 @@ Abstract:
 #include "Model/Classes/NMR_ModelAttachment.h"
 #ifdef NMR_COM_NATIVE
 #include "Common/Platform/NMR_COM_Native.h"
-#include "Model/Reader/NMR_ModelReader_3MF_OPC.h"
 #else
 #include "Common/Platform/NMR_COM_Emulation.h"
-#include "Model/Reader/NMR_ModelReader_3MF_Native.h"
 #endif
 
 #include "Common/NMR_StringUtils.h"

@@ -2,13 +2,10 @@ file(GLOB LIBZIP_FILES ./Source/Libraries/libzip/*.c)
 if(NMR_COM_NATIVE)
 	# sources for native COM implementation
 	set(SRCS_COM
+	${LIBZIP_FILES}
+	./Source/Common/Platform/NMR_Platform_COM.cpp
 	./Source/Common/Platform/NMR_ExportStream_COM.cpp
 	./Source/Common/Platform/NMR_ImportStream_COM.cpp
-	./Source/Common/Platform/NMR_Platform_COM.cpp
-	./Source/Common/Platform/NMR_XmlReader_COM.cpp
-	./Source/Common/Platform/NMR_XmlWriter_COM.cpp
-	./Source/Model/Reader/NMR_ModelReader_3MF_OPC.cpp
-	./Source/Model/Writer/NMR_ModelWriter_3MF_OPC.cpp
 	)
 else()
 	# sources for COM emulation
@@ -16,17 +13,11 @@ else()
 	${LIBZIP_FILES}
 	./Source/Model/COM/NMR_COMInterface_GCC.cpp
 	./Source/Common/Platform/NMR_Platform_GCC.cpp
-	./Source/Common/OPC/NMR_OpcPackageReader.cpp
-	./Source/Common/OPC/NMR_OpcPackageRelationshipReader.cpp
-	./Source/Common/OPC/NMR_OpcPackageContentTypesReader.cpp
 	./Source/Common/Platform/NMR_ImportStream_GCC_Native.cpp
 	./Source/Common/Platform/NMR_ImportStream_GCC_Win32.cpp
-	./Source/Common/Platform/NMR_ImportStream_ZIP.cpp
 	./Source/Common/Platform/NMR_ExportStream_GCC_Native.cpp
 	./Source/Common/Platform/NMR_ExportStream_GCC_Win32.cpp
 	./Source/Common/Platform/NMR_ExportStream_ZIP.cpp
-	./Source/Common/Platform/NMR_XmlReader_Native.cpp
-	./Source/Model/Reader/NMR_ModelReader_3MF_Native.cpp
 	)
 endif()
 
@@ -66,7 +57,12 @@ ${SRCS_COM}
 ./Source/Common/NMR_UUID.cpp
 ./Source/Common/OPC/NMR_OpcPackagePart.cpp
 ./Source/Common/OPC/NMR_OpcPackageRelationship.cpp
+./Source/Common/OPC/NMR_OpcPackageReader.cpp
+./Source/Common/OPC/NMR_OpcPackageContentTypesReader.cpp
+./Source/Common/OPC/NMR_OpcPackageRelationshipReader.cpp
 ./Source/Common/OPC/NMR_OpcPackageWriter.cpp
+./Source/Common/Platform/NMR_XmlReader_Native.cpp
+./Source/Model/Reader/NMR_ModelReader_3MF_Native.cpp
 ./Source/Common/Platform/NMR_ExportStream.cpp
 ./Source/Common/Platform/NMR_ExportStream_Callback.cpp
 ./Source/Common/Platform/NMR_ExportStream_Memory.cpp
@@ -74,6 +70,7 @@ ${SRCS_COM}
 ./Source/Common/Platform/NMR_ExportStream_ZIP.cpp
 ./Source/Common/Platform/NMR_ImportStream_Callback.cpp
 ./Source/Common/Platform/NMR_ImportStream_Memory.cpp
+./Source/Common/Platform/NMR_ImportStream_ZIP.cpp
 ./Source/Common/Platform/NMR_PortableZIPWriter.cpp
 ./Source/Common/Platform/NMR_PortableZIPWriterEntry.cpp
 ./Source/Common/Platform/NMR_Time.cpp
