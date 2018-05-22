@@ -311,11 +311,6 @@ namespace NMR {
 
 			ASSERT_EQ(lib3mf_resourceiterator_movenext(pTexture2DResources.get(), &bHasNext), S_OK) << L"Could not move 2dtexturesresources";
 		}
-
-
-		// TODO: investigate file further
-		// checkout stream, checkout individual triangles
-
 	}
 
 	TEST(Textures, Textures_CreateTexturedFile)

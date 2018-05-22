@@ -102,36 +102,34 @@ namespace NMR
 		writeEntryLarger(pZipWriter, "DeBelloGallico.txt", 0x100010000);
 	}
 
-	// // This test takes about WAY too long to be considered a unit test
-	// TODO: disabe this, instead of commenting it out
-	//TEST(ZIPExport, AllUncompressedLarger4GB)
-	//{
-	//	PExportStream pExportStream(new CExportStream_GCC_Native((sOutPath + L"AllUncompressedLarger4GB_zip64.zip").c_str()));
-	//	PPortableZIPWriter pZipWriter = std::make_shared<CPortableZIPWriter>(pExportStream, true);
-	//	writeEntryLarger(pZipWriter, "DeBelloGallico1.txt", 0x08F000000);
-	//	writeEntryLarger(pZipWriter, "DeBelloGallico2.txt", 0x08F000000);
-	//}
+	 // This test takes about WAY too long to be considered a unit test
+	TEST(ZIPExport, DISABLED_AllUncompressedLarger4GB)
+	{
+		PExportStream pExportStream(new CExportStream_GCC_Native((sOutPath + L"AllUncompressedLarger4GB_zip64.zip").c_str()));
+		PPortableZIPWriter pZipWriter = std::make_shared<CPortableZIPWriter>(pExportStream, true);
+		writeEntryLarger(pZipWriter, "DeBelloGallico1.txt", 0x08F000000);
+		writeEntryLarger(pZipWriter, "DeBelloGallico2.txt", 0x08F000000);
+	}
 
-	// // This test takes about WAY too long to be considered a unit test
-	// TODO: disabe this, instead of commenting it out
-	//TEST(ZIPExport,CompresedLarger4GB)
-	//{
-	//	PExportStream pExportStream(new CExportStream_GCC_Native((sOutPath + L"ContentLarger4GB_ZipLarger4GB_zip64.zip").c_str()));
-	//	PPortableZIPWriter pZipWriter = std::make_shared<CPortableZIPWriter>(pExportStream, true);
-	//	
-	//	for (int iEntry=0; iEntry < 3; iEntry++) {
-	//		PExportStream pStream = pZipWriter->createEntry(std::wstring(L"random_")+std::to_wstring(iEntry)+L".data", fnGetUnixTime());
-	//		{
-	//			nfUint64 nUncompressedSize = 0;
-	//			std::vector<nfUint64>vctData(1024);
-	//			while (nUncompressedSize < nfUint64(iEntry + 1)*nfUint64(0x10FFFFFFF) ) {
-	//				for (int k = 0; k < 1024; k++) {
-	//					vctData[k] = rand();
-	//				}
-	//				pStream->writeBuffer(vctData.data(), 8*vctData.size());
-	//				nUncompressedSize += 8*vctData.size();
-	//			}
-	//		}
-	//	}
-	//}
+	 // This test takes about WAY too long to be considered a unit test
+	TEST(ZIPExport, DISABLED_CompresedLarger4GB)
+	{
+		PExportStream pExportStream(new CExportStream_GCC_Native((sOutPath + L"ContentLarger4GB_ZipLarger4GB_zip64.zip").c_str()));
+		PPortableZIPWriter pZipWriter = std::make_shared<CPortableZIPWriter>(pExportStream, true);
+		
+		for (int iEntry=0; iEntry < 3; iEntry++) {
+			PExportStream pStream = pZipWriter->createEntry(std::string("random_")+std::to_string(iEntry)+".data", fnGetUnixTime());
+			{
+				nfUint64 nUncompressedSize = 0;
+				std::vector<nfUint64>vctData(1024);
+				while (nUncompressedSize < nfUint64(iEntry + 1)*nfUint64(0x10FFFFFFF) ) {
+					for (int k = 0; k < 1024; k++) {
+						vctData[k] = rand();
+					}
+					pStream->writeBuffer(vctData.data(), 8*vctData.size());
+					nUncompressedSize += 8*vctData.size();
+				}
+			}
+		}
+	}
 }
