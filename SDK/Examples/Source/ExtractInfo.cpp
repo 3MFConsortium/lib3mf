@@ -32,7 +32,6 @@ ExtractInfo.cpp : 3MF Read Example
 #ifndef __GNUC__
 #include <tchar.h>
 #include <Windows.h>
-#include <atlbase.h>
 #endif // __GNUC__
 
 #include <iostream>

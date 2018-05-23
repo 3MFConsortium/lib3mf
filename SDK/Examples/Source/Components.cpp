@@ -32,7 +32,6 @@ Components.cpp : 3MF Components example
 #ifndef __GNUC__
 #include <tchar.h>
 #include <Windows.h>
-#include <atlbase.h>
 #endif // __GNUC__
 
 #include <iostream>
