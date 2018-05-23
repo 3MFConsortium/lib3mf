@@ -66,24 +66,24 @@ namespace NMR {
 
 	}
 
-	void CModelReaderNode100_Tex2Coord::OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue)
+	void CModelReaderNode100_Tex2Coord::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
 	{
 		__NMRASSERT(pAttributeName);
 		__NMRASSERT(pAttributeValue);
 
 		
-		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TEXTUREVERTEX_U) == 0) {
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_TEXTUREVERTEX_U) == 0) {
 			try {
-				m_fU = fnWStringToFloat(pAttributeValue);
+				m_fU = fnStringToFloat(pAttributeValue);
 			}
 			catch (...)
 			{
 			}
 		}
 
-		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TEXTUREVERTEX_V) == 0) {
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_TEXTUREVERTEX_V) == 0) {
 			try {
-				m_fV = fnWStringToFloat(pAttributeValue);
+				m_fV = fnStringToFloat(pAttributeValue);
 			}
 			catch (...)
 			{

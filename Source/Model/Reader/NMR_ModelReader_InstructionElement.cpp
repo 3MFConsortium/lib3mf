@@ -41,7 +41,7 @@ NMR_ModelReader_InstructionElement.cpp implements a reader for an instruction el
 namespace NMR {
 
 	CModelReader_InstructionElement::CModelReader_InstructionElement(_In_ PModelReaderWarnings pWarnings)
-		: CModelReaderNode(pWarnings), m_sName(L"")
+		: CModelReaderNode(pWarnings), m_sName("")
 	{
 	}
 
@@ -62,25 +62,25 @@ namespace NMR {
 	{
 		__NMRASSERT(pXMLReader);
 
-		LPCWSTR pwszName = nullptr;
-		pXMLReader->GetLocalName(&pwszName, nullptr);
-		if (!pwszName)
+		LPCSTR pszName = nullptr;
+		pXMLReader->GetLocalName(&pszName, nullptr);
+		if (!pszName)
 			throw CNMRException(NMR_ERROR_COULDNOTGETLOCALXMLNAME);
 
-		m_sName = pwszName;
+		m_sName = pszName;
 	}
 
-	void CModelReader_InstructionElement::OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue)
+	void CModelReader_InstructionElement::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
 	{
 		__NMRASSERT(pAttributeName);
 		__NMRASSERT(pAttributeValue);
 
 		if (m_sName == XML_3MF_ATTRIBUTE_PREFIX_XML) {
 			// only do this if this is the xml declaration
-			if (wcscmp(pAttributeName, L"encoding") == 0) {
+			if (strcmp(pAttributeName, "encoding") == 0) {
 				m_sEncoding = pAttributeValue;
 				std::transform(m_sEncoding.begin(), m_sEncoding.end(), m_sEncoding.begin(), tolower);
-				if ((m_sEncoding != L"utf-8") && (m_sEncoding != L"utf8")) {
+				if ((m_sEncoding != "utf-8") && (m_sEncoding != "utf8")) {
 					throw CNMRException(NMR_ERROR_INVALIDXMLENCODING);
 				}
 			}

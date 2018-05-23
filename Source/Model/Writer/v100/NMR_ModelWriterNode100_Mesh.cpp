@@ -83,7 +83,7 @@ namespace NMR {
 	}
 
 
-	std::wstring capModeToString(eModelBeamLatticeCapMode eCapMode) {
+	std::string capModeToString(eModelBeamLatticeCapMode eCapMode) {
 		switch (eCapMode) {
 		case eModelBeamLatticeCapMode::MODELBEAMLATTICECAPMODE_SPHERE: return XML_3MF_BEAMLATTICE_CAPMODE_SPHERE; break;
 		case eModelBeamLatticeCapMode::MODELBEAMLATTICECAPMODE_HEMISPHERE: return XML_3MF_BEAMLATTICE_CAPMODE_HEMISPHERE; break;
@@ -93,7 +93,7 @@ namespace NMR {
 		}
 	}
 
-	std::wstring clipModeToString(eModelBeamLatticeClipMode eClipMode) {
+	std::string clipModeToString(eModelBeamLatticeClipMode eClipMode) {
 		switch (eClipMode) {
 		case eModelBeamLatticeClipMode::MODELBEAMLATTICECLIPMODE_INSIDE: return XML_3MF_BEAMLATTICE_CLIPMODE_INSIDE; break;
 		case eModelBeamLatticeClipMode::MODELBEAMLATTICECLIPMODE_OUTSIDE: return XML_3MF_BEAMLATTICE_CLIPMODE_OUTSIDE; break;
@@ -321,9 +321,9 @@ namespace NMR {
 								// write beamlattice: beamset
 								writeStartElementWithPrefix(XML_3MF_ELEMENT_BEAMSET, XML_3MF_NAMESPACEPREFIX_BEAMLATTICE);
 								if (pBeamSet->m_sName.length()>0)
-									writeConstStringAttribute(XML_3MF_ATTRIBUTE_BEAMLATTICE_NAME, fnUTF8toUTF16(pBeamSet->m_sName.c_str()).c_str());
+									writeConstStringAttribute(XML_3MF_ATTRIBUTE_BEAMLATTICE_NAME, pBeamSet->m_sName.c_str());
 								if (pBeamSet->m_sIdentifier.length()>0)
-									writeConstStringAttribute(XML_3MF_ATTRIBUTE_BEAMLATTICE_IDENTIFIER, fnUTF8toUTF16(pBeamSet->m_sIdentifier.c_str()).c_str());
+									writeConstStringAttribute(XML_3MF_ATTRIBUTE_BEAMLATTICE_IDENTIFIER, pBeamSet->m_sIdentifier.c_str());
 								const nfUint32 nRefCount = (nfUint32)pBeamSet->m_Refs.size();
 								for (nfUint32 nRefIndex = 0; nRefIndex < nRefCount; nRefIndex++) {
 									// write beamlattice: ref
@@ -630,31 +630,31 @@ namespace NMR {
 		__NMRASSERT(pBeam);
 		m_nBeamBufferPos = MODELWRITERMESH100_BEAMLATTICE_BEAMSTARTLENGTH;
 		putBeamUInt32(pBeam->m_nodeindices[0]);
-		const std::string sV2 = fnUTF16toUTF8(L"\" " + std::wstring(XML_3MF_ATTRIBUTE_BEAMLATTICE_V2) + L"=\"");
+		const std::string sV2 = "\" " + std::string(XML_3MF_ATTRIBUTE_BEAMLATTICE_V2) + "=\"";
 		putBeamString(sV2.c_str());
 		putBeamUInt32(pBeam->m_nodeindices[1]);
 
 		nfBool bWriteR2 = stringRepresentationsDiffer(pBeam->m_radius[0], pBeam->m_radius[1], m_snPutDoubleFactor);
 		nfBool bWriteR1 = bWriteR2 || stringRepresentationsDiffer(pBeam->m_radius[0], dRadius, m_snPutDoubleFactor);
 		if (bWriteR1) {
-			const std::string sR1 = fnUTF16toUTF8(L"\" " + std::wstring(XML_3MF_ATTRIBUTE_BEAMLATTICE_R1) + L"=\"");
+			const std::string sR1 = "\" " + std::string(XML_3MF_ATTRIBUTE_BEAMLATTICE_R1) + "=\"";
 			putBeamString(sR1.c_str());
 			putBeamDouble(pBeam->m_radius[0]);
 		}
 		if (bWriteR2) {
-			const std::string sR2 = fnUTF16toUTF8(L"\" " + std::wstring(XML_3MF_ATTRIBUTE_BEAMLATTICE_R2) + L"=\"");
+			const std::string sR2 = "\" " + std::string(XML_3MF_ATTRIBUTE_BEAMLATTICE_R2) + "=\"";
 			putBeamString(sR2.c_str());
 			putBeamDouble(pBeam->m_radius[1]);
 		}
 
 		if ( eDefaultCapMode != pBeam->m_capMode[0] ) {
-			const std::string sCap1 = fnUTF16toUTF8(L"\" " + std::wstring(XML_3MF_ATTRIBUTE_BEAMLATTICE_CAP1) + L"=\""
-				                                           + capModeToString(eModelBeamLatticeCapMode(pBeam->m_capMode[0])));
+			const std::string sCap1 = "\" " + std::string(XML_3MF_ATTRIBUTE_BEAMLATTICE_CAP1) + "=\""
+				                                           + capModeToString(eModelBeamLatticeCapMode(pBeam->m_capMode[0]));
 			putBeamString(sCap1.c_str());
 		}
 		if (eDefaultCapMode != pBeam->m_capMode[1]) {
-			const std::string sCap2 = fnUTF16toUTF8(L"\" " + std::wstring(XML_3MF_ATTRIBUTE_BEAMLATTICE_CAP2) + L"=\""
-				+ capModeToString(eModelBeamLatticeCapMode(pBeam->m_capMode[1])));
+			const std::string sCap2 = "\" " + std::string(XML_3MF_ATTRIBUTE_BEAMLATTICE_CAP2) + "=\""
+				+ capModeToString(eModelBeamLatticeCapMode(pBeam->m_capMode[1]));
 			putBeamString(sCap2.c_str());
 		}
 

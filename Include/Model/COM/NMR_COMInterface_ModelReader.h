@@ -68,10 +68,6 @@ namespace NMR {
 		LIB3MFMETHOD(SetStrictModeActive) (_In_ BOOL bStrictModeActive);
 		LIB3MFMETHOD(GetStrictModeActive) (_Out_ BOOL * pbStrictModeActive);
 
-#ifdef NMR_COM_NATIVE
-		LIB3MFMETHOD(ReadFromStream) (_In_ IStream * pStream);
-#endif // NMR_COM_NATIVE
-
 		LIB3MFMETHOD(ReadFromCallback) (_In_ void * pReadCallback, _In_ nfUint64 nStreamSize, _In_opt_ void * pSeekCallback, _In_opt_ void * pUserData);
 
 		LIB3MFMETHOD(SetProgressCallback) (_In_ void * callback, _In_ void* userData);

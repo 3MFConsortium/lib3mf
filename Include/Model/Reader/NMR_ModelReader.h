@@ -48,8 +48,8 @@ namespace NMR {
 	protected:
 		PModel m_pModel;
 		PImportStream m_pPrintTicketStream;
-		std::wstring m_sPrintTicketContentType;
-		std::set<std::wstring> m_RelationsToRead;
+		std::string m_sPrintTicketContentType;
+		std::set<std::string> m_RelationsToRead;
 
 		PModelReaderWarnings m_pWarnings;
 		PProgressMonitor m_pProgressMonitor;
@@ -60,11 +60,11 @@ namespace NMR {
 		CModelReader(_In_ PModel pModel);
 
 		virtual void readStream(_In_ PImportStream pStream) = 0;
-		PImportStream retrievePrintTicket(_Out_ std::wstring & sContentType);
+		PImportStream retrievePrintTicket(_Out_ std::string & sContentType);
 		PModelReaderWarnings getWarnings ();
 
-		void addRelationToRead(_In_ std::wstring sRelationShipType);
-		void removeRelationToRead(_In_ std::wstring sRelationShipType);
+		void addRelationToRead(_In_ std::string sRelationShipType);
+		void removeRelationToRead(_In_ std::string sRelationShipType);
 
 		void SetProgressCallback(Lib3MFProgressCallback callback, void* userData);
 	};

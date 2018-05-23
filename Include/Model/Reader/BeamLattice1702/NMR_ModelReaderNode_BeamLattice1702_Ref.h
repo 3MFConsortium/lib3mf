@@ -43,7 +43,7 @@ namespace NMR {
 	private:
 		nfInt32 m_nIndex;
 	protected:
-		virtual void OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue);
+		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 	public:
 		CModelReaderNode_BeamLattice1702_Ref() = delete;
 		CModelReaderNode_BeamLattice1702_Ref(_In_ PModelReaderWarnings pWarnings);

@@ -37,29 +37,30 @@ and Exception-safe
 #include "Common/NMR_Types.h"
 #include "Common/NMR_Local.h"
 #include <string>
+#include <string.h>
 #include <vector>
 
 #define NMR_MAXSTRINGBUFFERSIZE 1073741823 // (2^30-1)
 
 namespace NMR {
 
-	nfInt32 fnWStringToInt32(_In_z_ const nfWChar * pwszValue);
-	nfUint32 fnWStringToUint32(_In_z_ const nfWChar * pwszValue);
-	nfFloat fnWStringToFloat(_In_z_ const nfWChar * pwszValue);
-	nfDouble fnWStringToDouble(_In_z_ const nfWChar * pwszValue);
-	nfBool	fnWStringToSRGBColor(_In_z_ const nfWChar * pwszValue, _Out_ nfColor & cResult);
-	nfUint32 fnWHexStringToUint32(_In_z_ const nfWChar * pwszValue);
+	nfInt32 fnStringToInt32(_In_z_ const nfChar * pszValue);
+	nfUint32 fnStringToUint32(_In_z_ const nfChar * pszValue);
+	nfFloat fnStringToFloat(_In_z_ const nfChar * pszValue);
+	nfDouble fnStringToDouble(_In_z_ const nfChar * pszValue);
+	nfBool	fnStringToSRGBColor(_In_z_ const nfChar * pszValue, _Out_ nfColor & cResult);
+	nfUint32 fnHexStringToUint32(_In_z_ const nfChar * pszValue);
 
-	std::wstring fnInt32ToWString(_In_ nfInt32 nValue);
-	std::wstring fnUint32ToWString(_In_ nfUint32 nValue);
-	std::wstring fnFloatToWString(_In_ nfFloat fValue, _In_ nfUint32 precision);
-	std::wstring fnDoubleToWString(_In_ nfFloat dValue, _In_ nfUint32 precision);
-	std::wstring fnColorToWString(_In_ nfColor cColor);
+	std::string fnInt32ToString(_In_ nfInt32 nValue);
+	std::string fnUint32ToString(_In_ nfUint32 nValue);
+	std::string fnFloatToString(_In_ nfFloat fValue, _In_ nfUint32 precision);
+	std::string fnDoubleToString(_In_ nfFloat dValue, _In_ nfUint32 precision);
+	std::string fnColorToString(_In_ nfColor cColor);
 
-	void fnStringToCommaSeparatedIntegerTriplet(_In_z_ const nfWChar * pwszValue, _Out_ nfInt32 & nValue1, _Out_ nfInt32 & nValue2, _Out_ nfInt32 & nValue3);
+	void fnStringToCommaSeparatedIntegerTriplet(_In_z_ const nfChar * pszValue, _Out_ nfInt32 & nValue1, _Out_ nfInt32 & nValue2, _Out_ nfInt32 & nValue3);
 
+	void fnStringToBufferSafe(_In_ const std::string sString, _Out_opt_ nfChar * pszBuffer, nfUint32 cbBufferSize, _Out_opt_ nfUint32 * pcbNeededChars);
 	void fnWStringToBufferSafe(_In_ const std::wstring sString, _Out_opt_ nfWChar * pwszBuffer, nfUint32 cbBufferSize, _Out_opt_ nfUint32 * pcbNeededChars);
-	void fnStringToBufferSafe(_In_ const std::string sString, _Out_opt_ nfChar * pwszBuffer, nfUint32 cbBufferSize, _Out_opt_ nfUint32 * pcbNeededChars);
 
 	// UTF8 Functions
 	nfBool fnUTF16CharIsSurrogate(_In_ nfWChar cChar);
@@ -77,13 +78,13 @@ namespace NMR {
 	nfUint32 fnBufferedUTF8toUTF16(_In_ const nfChar * pszInBuffer, _Out_ nfWChar * pszwOutBuffer, _In_ nfUint32 cbBufferSize, _Out_ nfUint32 * pnLastChar, _Out_ nfUint32 * pcbNeededCharacters);
 
 	// Path and File name functions
-	nfBool fnStartsWithPathDelimiter(_In_ const std::wstring sPath);
-	std::wstring fnRemoveLeadingPathDelimiter(_In_ const std::wstring sPath);
-	std::wstring fnIncludeLeadingPathDelimiter(_In_ const std::wstring sPath);
-	std::wstring fnExtractFileName(_In_ const std::wstring sFullPath);
-	std::wstring fnExtractFileDir(_In_ const std::wstring sFullPath);
+	nfBool fnStartsWithPathDelimiter(_In_ const std::string sPath);
+	std::string fnRemoveLeadingPathDelimiter(_In_ const std::string sPath);
+	std::string fnIncludeLeadingPathDelimiter(_In_ const std::string sPath);
+	std::string fnExtractFileName(_In_ const std::string sFullPath);
+	std::string fnExtractFileDir(_In_ const std::string sFullPath);
 
-	std::vector<double> fnVctDouble_fromWideString(_In_ const std::wstring sString);
+	std::vector<double> fnVctDouble_fromString(_In_ const std::string sString);
 }
 
 #endif // __NMR_STRINGUTILS

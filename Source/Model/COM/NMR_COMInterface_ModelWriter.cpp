@@ -40,10 +40,6 @@ COM Interface Implementation for Model Writer Class
 #include "Common/Platform/NMR_Platform.h"
 #include "Common/NMR_StringUtils.h"
 
-#ifdef NMR_COM_NATIVE
-#include "Common/Platform/NMR_ExportStream_COM.h"
-#endif
-
 #include "Common/Platform/NMR_ExportStream_Memory.h"
 #include "Common/Platform/NMR_ExportStream_Dummy.h"
 #include "Common/Platform/NMR_ExportStream_Callback.h"
@@ -120,7 +116,8 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
 
 			setlocale (LC_ALL, "C");
-			PExportStream pStream = fnCreateExportStreamInstance(pwszFilename);
+			std::string sFileName = fnUTF16toUTF8(pwszFilename);
+			PExportStream pStream = fnCreateExportStreamInstance(sFileName.c_str());
 			m_pModelWriter->exportToStream(pStream);
 
 			return handleSuccess();
@@ -144,13 +141,10 @@ namespace NMR {
 			if (m_pModelWriter.get() == nullptr)
 				throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
 
-			// Convert to UTF16
 			std::string sUTF8FileName(pszFilename);
-			std::wstring sUTF16FileName = fnUTF8toUTF16(sUTF8FileName);
-
 			setlocale (LC_ALL, "C");
 
-			PExportStream pStream = fnCreateExportStreamInstance(sUTF16FileName.c_str());
+			PExportStream pStream = fnCreateExportStreamInstance(sUTF8FileName.c_str());
 			m_pModelWriter->exportToStream(pStream);
 
 			return handleSuccess();
@@ -258,34 +252,6 @@ namespace NMR {
 		}
 	}
 
-
-#ifdef NMR_COM_NATIVE
-	LIB3MFMETHODIMP CCOMModelWriter::WriteToStream(_In_ IStream * pStream)
-	{
-
-		try {
-			if (pStream == nullptr)
-				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
-			if (m_pModelWriter.get() == nullptr)
-				throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
-
-			setlocale (LC_ALL, "C");
-
-			PExportStream pExportStream = std::make_shared<CExportStream_COM>(pStream);
-			m_pModelWriter->exportToStream(pExportStream);
-
-			return handleSuccess();
-		}
-		catch (CNMRException & Exception) {
-			return handleNMRException(&Exception);
-		}
-		catch (...) {
-			return handleGenericException();
-		}
-
-	}
-#endif // NMR_COM_NATIVE
-	
 	LIB3MFMETHODIMP CCOMModelWriter::SetProgressCallback(_In_ void * callback, _In_ void* userData)
 	{
 		try

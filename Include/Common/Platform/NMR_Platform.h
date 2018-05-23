@@ -43,8 +43,8 @@ classes.
 
 namespace NMR {
 
-	PImportStream fnCreateImportStreamInstance (_In_ const nfWChar * pwszFileName);
-	PExportStream fnCreateExportStreamInstance (_In_ const nfWChar * pwszFileName);
+	PImportStream fnCreateImportStreamInstance (_In_ const nfChar * pszFileName);
+	PExportStream fnCreateExportStreamInstance (_In_ const nfChar * pszFileName);
 	PXmlReader fnCreateXMLReaderInstance (_In_ PImportStream pImportStream, CProgressMonitor * pProgressMonitor);
 	PXmlWriter fnCreateXMLWriterInstance (_In_ PExportStream pExportStream, CProgressMonitor * pProgressMonitor);
 

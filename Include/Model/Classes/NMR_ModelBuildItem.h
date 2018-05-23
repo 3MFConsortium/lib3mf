@@ -51,11 +51,11 @@ namespace NMR {
 	private:
 		CModelObject * m_pObject;
 		NMATRIX3 m_mTransform;
-		std::wstring m_sPartNumber;
+		std::string m_sPartNumber;
 		nfUint32 m_nHandle;
 		
 		PUUID m_UUID;
-		std::wstring m_sPath;
+		std::string m_sPath;
 	public:
 		CModelBuildItem() = delete;
 		CModelBuildItem(_In_ CModelObject * pObject, _In_ nfUint32 nHandle);
@@ -69,21 +69,21 @@ namespace NMR {
 		NMATRIX3 getTransform ();
 		void setTransform(_In_ const NMATRIX3 mTransform);
 		nfBool hasTransform();
-		std::wstring getTransformString();
+		std::string getTransformString();
 
 		// Associated object getter/setter
 		PackageResourceID getObjectID();
 
 		// Item reference getter/setter
-		std::wstring getPartNumber();
-		void setPartNumber(_In_ std::wstring sPartNumber);
+		std::string getPartNumber();
+		void setPartNumber(_In_ std::string sPartNumber);
 
 		// Production extension UUID
 		PUUID uuid();
 		void setUUID(PUUID uuid);
 
-		std::wstring path();
-		void setPath(std::wstring sPath);
+		std::string path();
+		void setPath(std::string sPath);
 
 		// Merge the build item to the given mesh
 		void mergeToMesh(_In_ CMesh * pMesh);

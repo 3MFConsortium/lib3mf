@@ -75,29 +75,29 @@ namespace NMR {
 
 		try {
 			if (m_sColorString.length() > 0) {
-				nfWChar bFirstChar = m_sColorString[0];
-				if (bFirstChar == L'#') {
-					if (fnWStringToSRGBColor(m_sColorString.c_str(), m_cColor)) {
+				nfChar bFirstChar = m_sColorString[0];
+				if (bFirstChar == '#') {
+					if (fnStringToSRGBColor(m_sColorString.c_str(), m_cColor)) {
 						return;
 					}
 				}
 
-				if (bFirstChar == L's') {
-					std::wstring sSubStr = m_sColorString.substr(0, 5);
-					if (sSubStr == L"scRGB") {
+				if (bFirstChar == 's') {
+					std::string sSubStr = m_sColorString.substr(0, 5);
+					if (sSubStr == "scRGB") {
 						// parse scRGB String
 						throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
 					}
 				}
 
 				if (bFirstChar == L't') {
-					std::wstring sSubStr = m_sColorString.substr(0, 4);
-					if (sSubStr == L"tex(") {
+					std::string sSubStr = m_sColorString.substr(0, 4);
+					if (sSubStr == "tex(") {
 						// parse Texture String
 
 						if (m_sColorString.length() > 4) {
-							std::wstring sTexID = m_sColorString.substr(4, m_sColorString.length() - sSubStr.length() - 1);
-							nfInt32 nValue = fnWStringToInt32(sTexID.c_str());
+							std::string sTexID = m_sColorString.substr(4, m_sColorString.length() - sSubStr.length() - 1);
+							nfInt32 nValue = fnStringToInt32(sTexID.c_str());
 							if ((nValue < 0) || (nValue >= XML_3MF_MAXRESOURCEINDEX))
 								throw CNMRException(NMR_ERROR_INVALIDTEXTUREREFERENCE);
 
@@ -110,9 +110,9 @@ namespace NMR {
 					}
 				}
 
-				if (bFirstChar == L'C') {
-					std::wstring sSubStr4 = m_sColorString.substr(0, 4);
-					if (sSubStr4 == L"CMYK") {
+				if (bFirstChar == 'C') {
+					std::string sSubStr4 = m_sColorString.substr(0, 4);
+					if (sSubStr4 == "CMYK") {
 						throw CNMRException(NMR_ERROR_NOTSUPPORTINGLEGACYCMYK);
 					}
 				}
@@ -141,22 +141,21 @@ namespace NMR {
 		return m_nResourceID;
 	}
 
-	void CModelReaderNode093_Color::OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue)
+	void CModelReaderNode093_Color::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
 	{
 		__NMRASSERT(pAttributeName);
 		__NMRASSERT(pAttributeValue);
 
-		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_COLOR_VALUE) == 0) {
-			std::wstring sValue(pAttributeValue);
-			m_sColorString = sValue;
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_COLOR_VALUE) == 0) {
+			m_sColorString = pAttributeValue;
 		}
 
-		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_COLOR_ID) == 0) {
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_COLOR_ID) == 0) {
 			if (m_nResourceID != 0)
 				throw CNMRException(NMR_ERROR_DUPLICATECOLORID);
 
 			// Convert to integer and make a input and range check!
-			m_nResourceID = fnWStringToUint32(pAttributeValue);
+			m_nResourceID = fnStringToUint32(pAttributeValue);
 			m_nResourceID++;
 		}
 

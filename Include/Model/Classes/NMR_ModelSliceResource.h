@@ -87,7 +87,7 @@ namespace NMR {
 
 		void setSliceStack(PSliceStack pSliceStack);
 		_Ret_notnull_ PSliceStack getSliceStack();
-		std::wstring sliceRefPath();
+		std::string sliceRefPath();
 		nfUint32& NumSliceRefsToMe();
 	};
 

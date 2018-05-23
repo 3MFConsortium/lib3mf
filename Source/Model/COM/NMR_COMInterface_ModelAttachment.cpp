@@ -41,16 +41,6 @@ COM Interface Implementation for Model Classes
 
 #include "Common/Platform/NMR_ImportStream_Memory.h"
 
-#ifdef NMR_COM_NATIVE
-#include "Common/Platform/NMR_ImportStream_COM.h"
-#else
-#include "Common/Platform/NMR_ImportStream_GCC_Native.h"
-#endif
-
-#ifndef __GNUC__
-#include <atlbase.h>
-#endif
-
 namespace NMR {
 
 	CCOMModelAttachment::CCOMModelAttachment()
@@ -126,11 +116,11 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_INVALIDBUFFERSIZE);
 
 			// Retrieve Path
-			std::wstring sPath = m_pModelAttachment->getPathURI();
+			std::string sPath = m_pModelAttachment->getPathURI();
 
 			// Safely call StringToBuffer
 			nfUint32 nNeededChars = 0;
-			fnWStringToBufferSafe(sPath, pwszBuffer, cbBufferSize, &nNeededChars);
+			fnWStringToBufferSafe(fnUTF8toUTF16(sPath), pwszBuffer, cbBufferSize, &nNeededChars);
 
 			// Return length if needed
 			if (pcbNeededChars)
@@ -158,8 +148,7 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_INVALIDBUFFERSIZE);
 
 			// Retrieve Path
-			std::wstring sUTF16Path = m_pModelAttachment->getPathURI();
-			std::string sUTF8Path = fnUTF16toUTF8(sUTF16Path);
+			std::string sUTF8Path = m_pModelAttachment->getPathURI();
 
 			// Safely call StringToBuffer
 			nfUint32 nNeededChars = 0;
@@ -189,18 +178,18 @@ namespace NMR {
 			if (pwszPath == nullptr)
 				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
 
-			std::wstring sPath(pwszPath);
+			std::string sPathUTF8 = fnUTF16toUTF8(pwszPath);
 			CModel * pModel = m_pModelAttachment->getModel();
 			PImportStream pStream = m_pModelAttachment->getStream();
 			if (pModel->getPackageThumbnail() == m_pModelAttachment) {
 				// different handling for package-wide attachment
 				pModel->removePackageThumbnail();
-				m_pModelAttachment = pModel->addPackageThumbnail(sPath, pStream);
+				m_pModelAttachment = pModel->addPackageThumbnail(sPathUTF8, pStream);
 			}
 			else {
-				std::wstring sRelationshipType = m_pModelAttachment->getRelationShipType();
+				std::string sRelationshipType = m_pModelAttachment->getRelationShipType();
 				pModel->removeAttachment(m_pModelAttachment->getPathURI());
-				m_pModelAttachment = pModel->addAttachment(sPath, sRelationshipType, pStream);
+				m_pModelAttachment = pModel->addAttachment(sPathUTF8, sRelationshipType, pStream);
 			}
 
 			return handleSuccess();
@@ -224,19 +213,18 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
 
 			std::string sUTF8Path(pszPath);
-			std::wstring sUTF16Path = fnUTF8toUTF16(sUTF8Path);
 
 			CModel * pModel = m_pModelAttachment->getModel();
 			PImportStream pStream = m_pModelAttachment->getStream();
 			if (pModel->getPackageThumbnail() == m_pModelAttachment) {
 				// different handling for package-wide attachment
 				pModel->removePackageThumbnail();
-				m_pModelAttachment = pModel->addPackageThumbnail(sUTF16Path, pStream);
+				m_pModelAttachment = pModel->addPackageThumbnail(sUTF8Path, pStream);
 			}
 			else {
-				std::wstring sRelationshipType = m_pModelAttachment->getRelationShipType();
+				std::string sRelationshipType = m_pModelAttachment->getRelationShipType();
 				pModel->removeAttachment(m_pModelAttachment->getPathURI());
-				m_pModelAttachment = pModel->addAttachment(sUTF16Path, sRelationshipType, pStream);
+				m_pModelAttachment = pModel->addAttachment(sUTF8Path, sRelationshipType, pStream);
 			}
 			return handleSuccess();
 		}
@@ -259,11 +247,11 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_INVALIDBUFFERSIZE);
 
 			// Retrieve Path
-			std::wstring sType = m_pModelAttachment->getRelationShipType();
+			std::string sType = m_pModelAttachment->getRelationShipType();
 
 			// Safely call StringToBuffer
 			nfUint32 nNeededChars = 0;
-			fnWStringToBufferSafe(sType, pwszBuffer, cbBufferSize, &nNeededChars);
+			fnWStringToBufferSafe(fnUTF8toUTF16(sType), pwszBuffer, cbBufferSize, &nNeededChars);
 
 			// Return length if needed
 			if (pcbNeededChars)
@@ -291,8 +279,7 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_INVALIDBUFFERSIZE);
 
 			// Retrieve Path
-			std::wstring sUTF16Type = m_pModelAttachment->getRelationShipType();
-			std::string sUTF8Type = fnUTF16toUTF8(sUTF16Type);
+			std::string sUTF8Type = m_pModelAttachment->getRelationShipType();
 
 			// Safely call StringToBuffer
 			nfUint32 nNeededChars = 0;
@@ -323,8 +310,7 @@ namespace NMR {
 			if (pwszRelationShipType == nullptr)
 				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
 
-			std::wstring sType(pwszRelationShipType);
-			m_pModelAttachment->setRelationShipType(sType);
+			m_pModelAttachment->setRelationShipType(fnUTF16toUTF8(pwszRelationShipType));
 
 			return handleSuccess();
 		}
@@ -346,10 +332,7 @@ namespace NMR {
 			if (pszRelationShipType == nullptr)
 				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
 
-			std::string sUTF8Type(pszRelationShipType);
-			std::wstring sUTF16Type = fnUTF8toUTF16(sUTF8Type);
-
-			m_pModelAttachment->setRelationShipType(sUTF16Type);
+			m_pModelAttachment->setRelationShipType(pszRelationShipType);
 
 			return handleSuccess();
 		}
@@ -481,60 +464,7 @@ namespace NMR {
 		catch (...) {
 			return handleGenericException();
 		}
-
-	
-
 	}
-
-#ifdef NMR_COM_NATIVE
-	LIB3MFMETHODIMP CCOMModelAttachment::WriteToStream(_In_ IStream * pCOMStream)
-	{
-		try {
-			if (!m_pModelAttachment.get())
-				throw CNMRException(NMR_ERROR_INVALIDMODELATTACHMENT);
-			if (pCOMStream == nullptr)
-				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
-
-			PImportStream pStream = m_pModelAttachment->getStream();
-
-			if (pStream.get() != nullptr) {
-				nfUint64 cbStreamSize = pStream->retrieveSize();
-
-				pStream->seekPosition(0, true);
-				std::array<nfByte, NMR_IMPORTSTREAM_COPYBUFFERSIZE> pBuffer;
-
-				nfUint64 cbBytesLeft = cbStreamSize;
-				while (cbBytesLeft > 0) {
-					nfUint64 cbLength = cbBytesLeft;
-					if (cbLength > NMR_IMPORTSTREAM_COPYBUFFERSIZE)
-						cbLength = NMR_IMPORTSTREAM_COPYBUFFERSIZE;
-
-					ULONG cbWrittenBytes = 0;
-					pStream->readBuffer(&pBuffer[0], cbLength, true);
-					HRESULT hResult = pCOMStream->Write(&pBuffer[0], (nfUint32)cbLength, &cbWrittenBytes);
-					if (hResult != S_OK)
-						throw CNMRException_Windows(NMR_ERROR_COULDNOTWRITESTREAM, hResult);
-
-					if (cbWrittenBytes != cbLength)
-						throw CNMRException(NMR_ERROR_COULDNOTWRITEFULLDATA);
-					cbBytesLeft -= cbLength;
-				}
-
-			}
-			else {
-				throw CNMRException(NMR_ERROR_NOTEXTURESTREAM);
-			}
-
-			return handleSuccess();
-		}
-		catch (CNMRException & Exception) {
-			return handleNMRException(&Exception);
-		}
-		catch (...) {
-			return handleGenericException();
-		}
-	}
-#endif// NMR_COM_NATIVE
 
 	LIB3MFMETHODIMP CCOMModelAttachment::WriteToCallback(_In_ void * pWriteCallback, _In_opt_ void * pUserData)
 	{
@@ -574,7 +504,8 @@ namespace NMR {
 			if (pwszFilename == nullptr)
 				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
 
-			PImportStream pImportStream = fnCreateImportStreamInstance(pwszFilename);
+			std::string sFileName = fnUTF16toUTF8(pwszFilename);
+			PImportStream pImportStream = fnCreateImportStreamInstance(sFileName.c_str());
 
 			m_pModelAttachment->setStream(pImportStream);
 
@@ -599,8 +530,7 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
 
 			std::string sUTF8FileName(pszFilename);
-			std::wstring sUTF16FileName = fnUTF8toUTF16(sUTF8FileName);
-			PImportStream pImportStream = fnCreateImportStreamInstance(sUTF16FileName.c_str());
+			PImportStream pImportStream = fnCreateImportStreamInstance(sUTF8FileName.c_str());
 
 			m_pModelAttachment->setStream(pImportStream);
 
@@ -638,78 +568,4 @@ namespace NMR {
 
 	}
 
-#ifdef NMR_COM_NATIVE
-	LIB3MFMETHODIMP CCOMModelAttachment::ReadFromStream(_In_ IStream * pStream)
-	{
-		try {
-			if (!m_pModelAttachment.get())
-				throw CNMRException(NMR_ERROR_INVALIDMODELATTACHMENT);
-			if (pStream == nullptr)
-				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
-
-			HRESULT hResult;
-
-			CComPtr<IStream> pMemoryStream = nullptr;
-			hResult = CreateStreamOnHGlobal(nullptr, true, &pMemoryStream);
-			if (hResult != S_OK)
-				throw CNMRException_Windows(NMR_ERROR_COULDNOTCREATESTREAM, hResult);
-
-			// Seek Stream
-			LARGE_INTEGER nOriginPosition;
-			ULARGE_INTEGER nNewPosition;
-			nOriginPosition.HighPart = 0;
-			nOriginPosition.LowPart = 0;
-			hResult = pStream->Seek(nOriginPosition, STREAM_SEEK_END, &nNewPosition);
-			if (hResult != S_OK)
-				throw CNMRException_Windows(NMR_ERROR_COULDNOTSEEKSTREAM, hResult);
-
-			nfUint64 cbStreamSize = nNewPosition.QuadPart;
-
-			hResult = pStream->Seek(nOriginPosition, STREAM_SEEK_SET, &nNewPosition);
-			if (hResult != S_OK)
-				throw CNMRException_Windows(NMR_ERROR_COULDNOTSEEKSTREAM, hResult);
-
-			std::array<nfByte, NMR_IMPORTSTREAM_COPYBUFFERSIZE> pBuffer;
-
-			nfUint64 cbBytesLeft = cbStreamSize;
-			while (cbBytesLeft > 0) {
-				nfUint64 cbLength = cbBytesLeft;
-				if (cbLength > NMR_IMPORTSTREAM_COPYBUFFERSIZE)
-					cbLength = NMR_IMPORTSTREAM_COPYBUFFERSIZE;
-
-				ULONG cbReadBytes = 0;
-				ULONG cbWrittenBytes = 0;
-				hResult = pStream->Read(&pBuffer[0], (nfUint32)cbLength, &cbReadBytes);
-				if (hResult != S_OK)
-					throw CNMRException_Windows(NMR_ERROR_COULDNOTREADSTREAM, hResult);
-
-				if (cbReadBytes != cbLength)
-					throw CNMRException(NMR_ERROR_COULDNOTREADFULLDATA);
-
-				hResult = pMemoryStream->Write(&pBuffer[0], (nfUint32)cbLength, &cbWrittenBytes);
-				if (hResult != S_OK)
-					throw CNMRException_Windows(NMR_ERROR_COULDNOTWRITESTREAM, hResult);
-
-				if (cbWrittenBytes != cbLength)
-					throw CNMRException(NMR_ERROR_COULDNOTWRITEFULLDATA);
-				cbBytesLeft -= cbLength;
-			}
-
-			PImportStream pImportStream = std::make_shared<CImportStream_COM>(pMemoryStream);
-
-			m_pModelAttachment->setStream(pImportStream);
-
-			return handleSuccess();
-		}
-		catch (CNMRException & Exception) {
-			return handleNMRException(&Exception);
-		}
-		catch (...) {
-			return handleGenericException();
-		}
-
-	}
-#endif //NMR_COM_NATIVE
-
-
-	}
+}

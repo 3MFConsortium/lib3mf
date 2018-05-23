@@ -37,7 +37,7 @@ NMR_OpcPackagePart.cpp implements an OPC Package Part in a portable way.
 
 namespace NMR {
 
-	COpcPackagePart::COpcPackagePart(_In_ std::wstring sURI, _In_ PExportStream pExportStream)
+	COpcPackagePart::COpcPackagePart(_In_ std::string sURI, _In_ PExportStream pExportStream)
 	{
 		if (pExportStream.get() == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
@@ -49,7 +49,7 @@ namespace NMR {
 	}
 
 
-	COpcPackagePart::COpcPackagePart(_In_ std::wstring sURI, _In_ PImportStream pImportStream)
+	COpcPackagePart::COpcPackagePart(_In_ std::string sURI, _In_ PImportStream pImportStream)
 	{
 		if (pImportStream.get() == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
@@ -61,7 +61,7 @@ namespace NMR {
 	}
 
 
-	std::wstring COpcPackagePart::getURI()
+	std::string COpcPackagePart::getURI()
 	{
 		return m_sURI;
 	}
@@ -80,7 +80,7 @@ namespace NMR {
 		return m_pImportStream;
 	}
 
-	POpcPackageRelationship COpcPackagePart::addRelationship(_In_ std::wstring sID, _In_ std::wstring sType, _In_ std::wstring sURI)
+	POpcPackageRelationship COpcPackagePart::addRelationship(_In_ std::string sID, _In_ std::string sType, _In_ std::string sURI)
 	{
 		POpcPackageRelationship pRelationship = std::make_shared<COpcPackageRelationship>(sID, sType, sURI);
 		for (auto iRelationShip : m_Relationships) {
@@ -115,7 +115,7 @@ namespace NMR {
 
 		pXMLWriter->WriteStartDocument();
 		pXMLWriter->WriteStartElement(nullptr, OPC_RELS_RELATIONSHIP_CONTAINER, nullptr);
-		pXMLWriter->WriteAttributeString(nullptr, L"xmlns", nullptr, OPCPACKAGE_SCHEMA_RELATIONSHIPS);
+		pXMLWriter->WriteAttributeString(nullptr, "xmlns", nullptr, OPCPACKAGE_SCHEMA_RELATIONSHIPS);
 
 		auto iIterator = m_Relationships.begin();
 

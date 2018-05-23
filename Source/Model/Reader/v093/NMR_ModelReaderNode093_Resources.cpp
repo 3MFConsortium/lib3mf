@@ -47,6 +47,7 @@ XML Model Stream.
 #include "Model/Classes/NMR_ModelBaseMaterials.h"
 #include "Model/Classes/NMR_Model.h"
 
+#include "Common/NMR_StringUtils.h"
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_Exception_Windows.h"
 
@@ -75,25 +76,25 @@ namespace NMR {
 
 	}
 
-	void CModelReaderNode093_Resources::OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue)
+	void CModelReaderNode093_Resources::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
 	{
 		__NMRASSERT(pAttributeName);
 		__NMRASSERT(pAttributeValue);
 	}
 
-	void CModelReaderNode093_Resources::OnNSChildElement(_In_z_ const nfWChar * pChildName, _In_z_ const nfWChar * pNameSpace, _In_ CXmlReader * pXMLReader)
+	void CModelReaderNode093_Resources::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
 	{
 		__NMRASSERT(pChildName);
 		__NMRASSERT(pXMLReader);
 		__NMRASSERT(pNameSpace);
 
-		if ((wcscmp(pNameSpace, XML_3MF_NAMESPACE_CORESPEC093) == 0) || (wcscmp(pNameSpace, L"") == 0)) {
+		if ((strcmp(pNameSpace, XML_3MF_NAMESPACE_CORESPEC093) == 0) || (strcmp(pNameSpace, "") == 0)) {
 
-			if (wcscmp(pChildName, XML_3MF_ELEMENT_OBJECT) == 0) {
+			if (strcmp(pChildName, XML_3MF_ELEMENT_OBJECT) == 0) {
 				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode093_Object>(m_pModel, m_pColorMapping, m_pMaterialResource, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 			}
-			else if (wcscmp(pChildName, XML_3MF_ELEMENT_COLOR) == 0) {
+			else if (strcmp(pChildName, XML_3MF_ELEMENT_COLOR) == 0) {
 				PModelReaderNode093_Color pXMLNode = std::make_shared<CModelReaderNode093_Color>(m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 
@@ -107,11 +108,11 @@ namespace NMR {
 					m_pColorMapping->registerColor(nResourceID, 0, pXMLNode->retrieveColor());
 				}
 			}
-			else if (wcscmp(pChildName, XML_3MF_ELEMENT_TEXTURE) == 0) {
+			else if (strcmp(pChildName, XML_3MF_ELEMENT_TEXTURE) == 0) {
 				PModelReaderNode093_Texture pXMLNode = std::make_shared<CModelReaderNode093_Texture>(m_pModel, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 			}
-			else if (wcscmp(pChildName, XML_3MF_ELEMENT_MATERIAL) == 0) {
+			else if (strcmp(pChildName, XML_3MF_ELEMENT_MATERIAL) == 0) {
 				PModelReaderNode093_Material pXMLNode = std::make_shared<CModelReaderNode093_Material>(m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 

@@ -29,29 +29,17 @@ Abstract:
 --*/
 
 #include "Model/Reader/Slice1507/NMR_ModelReader_Slice1507_Segment.h"
-
-#include "Model/COM/NMR_COMInterface_ModelReader.h"
-#include "Model/Classes/NMR_ModelAttachment.h"
-#ifdef NMR_COM_NATIVE
-#include "Common/Platform/NMR_COM_Native.h"
-#include "Model/Reader/NMR_ModelReader_3MF_OPC.h"
-#else
-#include "Common/Platform/NMR_COM_Emulation.h"
-#include "Model/Reader/NMR_ModelReader_3MF_Native.h"
-#endif
-
 #include "Common/NMR_StringUtils.h"
-
 #include "Model/Classes/NMR_ModelConstants.h"
 
 namespace NMR {
-	void CModelReaderNode_Slices1507_Segment::OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue) {
-		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_SLICESEGMENT_V2) == 0) {
-			m_pSlice->addPolygonIndex(m_PolygonIndex, fnWStringToInt32(pAttributeValue));
+	void CModelReaderNode_Slices1507_Segment::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue) {
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_SLICESEGMENT_V2) == 0) {
+			m_pSlice->addPolygonIndex(m_PolygonIndex, fnStringToInt32(pAttributeValue));
 		}
 	}
 
-	void CModelReaderNode_Slices1507_Segment::OnNSChildElement(_In_z_ const nfWChar * pChildName, _In_z_ const nfWChar * pNameSpace, _In_ CXmlReader * pXMLReader) {
+	void CModelReaderNode_Slices1507_Segment::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader) {
 
 	}
 

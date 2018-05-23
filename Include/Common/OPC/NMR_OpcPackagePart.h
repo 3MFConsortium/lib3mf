@@ -48,20 +48,20 @@ namespace NMR {
 
 	class COpcPackagePart {
 	protected:
-		std::wstring m_sURI;
+		std::string m_sURI;
 		PExportStream m_pExportStream;
 		PImportStream m_pImportStream;
 
 		std::list<POpcPackageRelationship> m_Relationships;
 	public:
-		COpcPackagePart(_In_ std::wstring sURI, _In_ PExportStream pExportStream);
-		COpcPackagePart(_In_ std::wstring sURI, _In_ PImportStream pImportStream);
+		COpcPackagePart(_In_ std::string sURI, _In_ PExportStream pExportStream);
+		COpcPackagePart(_In_ std::string sURI, _In_ PImportStream pImportStream);
 
-		std::wstring getURI ();
+		std::string getURI ();
 		PExportStream getExportStream ();
 		PImportStream getImportStream();
 
-		POpcPackageRelationship addRelationship(_In_ std::wstring sID, _In_ std::wstring sType, _In_ std::wstring sURI);
+		POpcPackageRelationship addRelationship(_In_ std::string sID, _In_ std::string sType, _In_ std::string sURI);
 		nfBool hasRelationships();
 		std::list<POpcPackageRelationship> getRelationShips();
 

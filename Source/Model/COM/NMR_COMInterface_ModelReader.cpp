@@ -40,10 +40,6 @@ COM Interface Implementation for Model Reader Class
 #include "Common/Platform/NMR_ImportStream_Callback.h" 
 #include <locale.h>
 
-#ifdef NMR_COM_NATIVE
-#include "Common/Platform/NMR_ImportStream_COM.h"
-#endif
-
 namespace NMR {
 
 	CCOMModelReader::CCOMModelReader()
@@ -115,7 +111,8 @@ namespace NMR {
 
 			setlocale (LC_ALL, "C");
 
-			PImportStream pStream = fnCreateImportStreamInstance(pwszFilename);
+			std::string sUTF8FileName = fnUTF16toUTF8(pwszFilename);
+			PImportStream pStream = fnCreateImportStreamInstance(sUTF8FileName.c_str());
 			m_pModelReader->readStream(pStream);
 			return handleSuccess();
 		}
@@ -137,11 +134,9 @@ namespace NMR {
 
 			setlocale (LC_ALL, "C");
 
-			// Convert to UTF16
 			std::string sUTF8FileName(pszFilename);
-			std::wstring sUTF16FileName = fnUTF8toUTF16(sUTF8FileName);
 
-			PImportStream pStream = fnCreateImportStreamInstance(sUTF16FileName.c_str());
+			PImportStream pStream = fnCreateImportStreamInstance(sUTF8FileName.c_str());
 			m_pModelReader->readStream(pStream);
 			return handleSuccess();
 		}
@@ -232,7 +227,7 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_INVALIDREADEROBJECT);
 
 			std::wstring sRelationShipType(pwszRelationshipType);
-			m_pModelReader->addRelationToRead(sRelationShipType);
+			m_pModelReader->addRelationToRead(fnUTF16toUTF8(sRelationShipType));
 
 			return handleSuccess();
 		}
@@ -253,7 +248,7 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_INVALIDREADEROBJECT);
 
 			std::wstring sRelationShipType(pwszRelationshipType);
-			m_pModelReader->removeRelationToRead(sRelationShipType);
+			m_pModelReader->removeRelationToRead(fnUTF16toUTF8(sRelationShipType));
 
 			return handleSuccess();
 		}
@@ -274,8 +269,7 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_INVALIDREADEROBJECT);
 
 			std::string sRelationShipTypeUTF8(pszRelationshipType);
-			std::wstring sRelationShipTypeUTF16 = fnUTF8toUTF16(sRelationShipTypeUTF8);
-			m_pModelReader->addRelationToRead(sRelationShipTypeUTF16);
+			m_pModelReader->addRelationToRead(sRelationShipTypeUTF8);
 
 			return handleSuccess();
 		}
@@ -296,8 +290,7 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_INVALIDREADEROBJECT);
 
 			std::string sRelationShipTypeUTF8(pszRelationshipType);
-			std::wstring sRelationShipTypeUTF16 = fnUTF8toUTF16(sRelationShipTypeUTF8);
-			m_pModelReader->removeRelationToRead(sRelationShipTypeUTF16);
+			m_pModelReader->removeRelationToRead(sRelationShipTypeUTF8);
 
 			return handleSuccess();
 		}
@@ -394,29 +387,6 @@ namespace NMR {
 			return handleGenericException();
 		}
 	}
-	
-#ifdef NMR_COM_NATIVE
-	LIB3MFMETHODIMP CCOMModelReader::ReadFromStream(_In_ IStream * pStream)
-	{
-		try {
-			if (pStream == nullptr)
-				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
-			if (m_pModelReader.get() == nullptr)
-				throw CNMRException(NMR_ERROR_INVALIDREADEROBJECT);
-
-			setlocale (LC_ALL, "C");
-			PImportStream pImportStream = std::make_shared<CImportStream_COM>(pStream);
-			m_pModelReader->readStream(pImportStream);
-			return handleSuccess();
-		}
-		catch (CNMRException & Exception) {
-			return handleNMRException(&Exception);
-		}
-		catch (...) {
-			return handleGenericException();
-		}
-	}
-#endif // NMR_COM_NATIVE
 
 	LIB3MFMETHODIMP CCOMModelReader::SetProgressCallback(_In_ void * callback, _In_ void* userData)
 	{

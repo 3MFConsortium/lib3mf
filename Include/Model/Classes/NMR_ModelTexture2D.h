@@ -52,7 +52,7 @@ namespace NMR {
 	class CModelTexture2DResource : public CModelResource {
 	private:
 		// PModelAttachment m_pAttachment;
-		std::wstring m_sPath;	// this is how CModelTexture2DResource connects to an attachment
+		std::string m_sPath;	// this is how CModelTexture2DResource connects to an attachment
 		eModelTexture2DType m_ContentType;
 		
 		nfBool m_bHasBox2D;
@@ -67,8 +67,8 @@ namespace NMR {
 		CModelTexture2DResource(_In_ const ModelResourceID sID, _In_ CModel * pModel);
 
 		// getters/setters Path
-		std::wstring getPath();
-		void setPath (_In_ std::wstring sPath);
+		std::string getPath();
+		void setPath (_In_ std::string sPath);
 		
 		// getters TextureStream
 		PImportStream getTextureStream();
@@ -76,10 +76,10 @@ namespace NMR {
 		// getters/setters ContentType
 		eModelTexture2DType getContentType();
 		void setContentType(_In_ eModelTexture2DType ContentType);
-		std::wstring getContentTypeString();
-		void setContentTypeString(_In_ std::wstring sValue, _In_ nfBool bFailIfUnknown);
-		void setTileStyleUString(_In_ std::wstring sValue);
-		void setTileStyleVString(_In_ std::wstring sValue);
+		std::string getContentTypeString();
+		void setContentTypeString(_In_ std::string sValue, _In_ nfBool bFailIfUnknown);
+		void setTileStyleUString(_In_ std::string sValue);
+		void setTileStyleVString(_In_ std::string sValue);
 		
 		// getters/setters Box2D
 		nfBool getBox2D (_Out_ nfFloat & fU, _Out_ nfFloat & fV, _Out_ nfFloat & fWidth, _Out_ nfFloat & fHeight);
@@ -96,8 +96,8 @@ namespace NMR {
 		// copy all parameters from source
 		void copyFrom(_In_ CModelTexture2DResource * pSourceTexture);
 
-		static eModelTextureTileStyle tileStyleFromString(_In_ std::wstring sValue);
-		static std::wstring tileStyleToString(_In_ eModelTextureTileStyle eTileStyle);
+		static eModelTextureTileStyle tileStyleFromString(_In_ std::string sValue);
+		static std::string tileStyleToString(_In_ eModelTextureTileStyle eTileStyle);
 	};
 
 	typedef std::shared_ptr <CModelTexture2DResource> PModelTexture2DResource;

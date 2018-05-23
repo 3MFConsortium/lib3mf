@@ -47,7 +47,7 @@ namespace NMR {
 	{
 		m_nResourceID = 0;
 		m_nColorID = 0;
-		m_sName = L"material";
+		m_sName = "material";
 	}
 
 	void CModelReaderNode093_Material::parseXML(_In_ CXmlReader * pXMLReader)
@@ -62,7 +62,7 @@ namespace NMR {
 		parseContent(pXMLReader);
 	}
 
-	std::wstring CModelReaderNode093_Material::retrieveName()
+	std::string CModelReaderNode093_Material::retrieveName()
 	{
 		return m_sName;
 	}
@@ -88,30 +88,29 @@ namespace NMR {
 
 	
 	
-	void CModelReaderNode093_Material::OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue)
+	void CModelReaderNode093_Material::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
 	{
 		__NMRASSERT(pAttributeName);
 		__NMRASSERT(pAttributeValue);
 
-		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_MATERIAL_ID) == 0) {
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_MATERIAL_ID) == 0) {
 			if (m_nResourceID != 0)
 				throw CNMRException(NMR_ERROR_DUPLICATEMATERIALID);
 
 			// Convert to integer and make a input and range check!
-			m_nResourceID = fnWStringToUint32(pAttributeValue);
+			m_nResourceID = fnStringToUint32(pAttributeValue);
 			m_nResourceID++;
 		}
 
-		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_MATERIAL_COLORID) == 0) {
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_MATERIAL_COLORID) == 0) {
 			// Convert to integer and make a input and range check!
-			m_nColorID = fnWStringToUint32(pAttributeValue);
+			m_nColorID = fnStringToUint32(pAttributeValue);
 			m_nColorID++;
 		}
 
-		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_MATERIAL_NAME) == 0) {
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_MATERIAL_NAME) == 0) {
 			// Convert to integer and make a input and range check!
-			std::wstring sValue (pAttributeValue);
-			m_sName = sValue;
+			m_sName = pAttributeValue;
 		}
 
 	}

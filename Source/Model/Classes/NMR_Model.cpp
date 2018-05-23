@@ -63,7 +63,7 @@ namespace NMR {
 		m_Unit = MODELUNIT_MILLIMETER;
 		m_sLanguage = XML_3MF_LANG_US;
 		m_nHandleCounter = 1;
-		m_sCurPath = L"";
+		m_sCurPath = "";
 
 		setBuildUUID(std::make_shared<CUUID>());
 	}
@@ -81,22 +81,22 @@ namespace NMR {
 	}
 
 
-	const std::wstring CModel::curPath()
+	const std::string CModel::curPath()
 	{
 		return m_sCurPath;
 	}
 
-	void CModel::setCurPath(const nfWChar* sPath)
+	void CModel::setCurPath(const std::string sPath)
 	{
 		m_sCurPath = sPath;
 	}
 
-	const std::wstring CModel::rootPath()
+	const std::string CModel::rootPath()
 	{
 		return m_sRootPath;
 	}
 
-	void CModel::setRootPath(const nfWChar* sPath)
+	void CModel::setRootPath(const std::string sPath)
 	{
 		m_sRootPath = sPath;
 	}
@@ -115,27 +115,27 @@ namespace NMR {
 		m_Unit = Unit;
 	}
 
-	void CModel::setUnitString(_In_ std::wstring sUnitString)
+	void CModel::setUnitString(_In_ std::string sUnitString)
 	{
-		const wchar_t * pUnitName = sUnitString.c_str();
+		const nfChar * pUnitName = sUnitString.c_str();
 
-		if (wcscmp(pUnitName, XML_3MF_MODELUNIT_MICROMETER) == 0)
+		if (strcmp(pUnitName, XML_3MF_MODELUNIT_MICROMETER) == 0)
 			setUnit(MODELUNIT_MICROMETER);
-		else if (wcscmp(pUnitName, XML_3MF_MODELUNIT_MILLIMETER) == 0)
+		else if (strcmp(pUnitName, XML_3MF_MODELUNIT_MILLIMETER) == 0)
 			setUnit(MODELUNIT_MILLIMETER);
-		else if (wcscmp(pUnitName, XML_3MF_MODELUNIT_CENTIMETER) == 0)
+		else if (strcmp(pUnitName, XML_3MF_MODELUNIT_CENTIMETER) == 0)
 			setUnit(MODELUNIT_CENTIMETER);
-		else if (wcscmp(pUnitName, XML_3MF_MODELUNIT_INCH) == 0)
+		else if (strcmp(pUnitName, XML_3MF_MODELUNIT_INCH) == 0)
 			setUnit(MODELUNIT_INCH);
-		else if (wcscmp(pUnitName, XML_3MF_MODELUNIT_FOOT) == 0)
+		else if (strcmp(pUnitName, XML_3MF_MODELUNIT_FOOT) == 0)
 			setUnit(MODELUNIT_FOOT);
-		else if (wcscmp(pUnitName, XML_3MF_MODELUNIT_METER) == 0)
+		else if (strcmp(pUnitName, XML_3MF_MODELUNIT_METER) == 0)
 			setUnit(MODELUNIT_METER);
 		else
 			throw CNMRException(NMR_ERROR_INVALIDMODELUNIT);
 	}
 
-	std::wstring CModel::getUnitString()
+	std::string CModel::getUnitString()
 	{
 		switch (m_Unit) {
 		case MODELUNIT_MICROMETER:
@@ -151,7 +151,7 @@ namespace NMR {
 		case MODELUNIT_METER:
 			return XML_3MF_MODELUNIT_METER;
 		default:
-			return L"";
+			return "";
 		}
 	}
 
@@ -161,18 +161,18 @@ namespace NMR {
 	}
 
 	// Language setter/getter
-	void CModel::setLanguage(_In_ std::wstring sLanguage)
+	void CModel::setLanguage(_In_ std::string sLanguage)
 	{
 		m_sLanguage = sLanguage;
 	}
 
-	std::wstring CModel::getLanguage()
+	std::string CModel::getLanguage()
 	{
 		return m_sLanguage;
 	}
 
 	// General Resource Handling
-	PModelResource CModel::findResource(_In_ std::wstring path, ModelResourceID nID)
+	PModelResource CModel::findResource(_In_ std::string path, ModelResourceID nID)
 	{
 		PPackageResourceID pID = m_resourceHandler.findRessourceID(path, nID);
 		if (pID.get())
@@ -201,7 +201,7 @@ namespace NMR {
 		return nullptr;
 	}
 
-	PPackageResourceID CModel::findPackageResourceID(_In_ std::wstring path, ModelResourceID nID)
+	PPackageResourceID CModel::findPackageResourceID(_In_ std::string path, ModelResourceID nID)
 	{
 		return m_resourceHandler.findRessourceID(path, nID);
 	}
@@ -313,7 +313,7 @@ namespace NMR {
 	}
 
 	// Metadata setter/getter
-	void CModel::addMetaData(_In_ std::wstring sName, _In_ std::wstring sValue)
+	void CModel::addMetaData(_In_ std::string sName, _In_ std::string sValue)
 	{
 		if (m_MetaData.size() >= XML_3MF_MAXMETADATACOUNT)
 			throw CNMRException(NMR_ERROR_INVALIDMETADATACOUNT);
@@ -328,7 +328,7 @@ namespace NMR {
 		return (nfUint32)m_MetaData.size();
 	}
 
-	void CModel::getMetaData(_In_ nfUint32 nIndex, _Out_ std::wstring & sName, _Out_ std::wstring & sValue)
+	void CModel::getMetaData(_In_ nfUint32 nIndex, _Out_ std::string & sName, _Out_ std::string & sValue)
 	{
 		nfUint32 nCount = getMetaDataCount();
 		if (nIndex >= nCount)
@@ -353,9 +353,9 @@ namespace NMR {
 		m_MetaData.erase(iIterator);
 	}
 
-	nfBool CModel::hasMetaData(_In_ std::wstring sName)
+	nfBool CModel::hasMetaData(_In_ std::string sName)
 	{		
-		std::map<std::wstring, PModelMetaData>::iterator iIterator = m_MetaDataMap.find (sName);
+		std::map<std::string, PModelMetaData>::iterator iIterator = m_MetaDataMap.find (sName);
 		return iIterator != m_MetaDataMap.end();
 	}
 
@@ -368,8 +368,8 @@ namespace NMR {
 		nfUint32 nIndex;
 
 		for (nIndex = 0; nIndex < nCount; nIndex++) {
-			std::wstring sName;
-			std::wstring sValue;
+			std::string sName;
+			std::string sValue;
 			pSourceModel->getMetaData(nIndex, sName, sValue);
 			addMetaData(sName, sValue);
 		}
@@ -387,7 +387,7 @@ namespace NMR {
 			return 1;
 	}
 
-	PPackageResourceID CModel::generatePackageResourceID(_In_ std::wstring path, ModelResourceID nID)	// per package
+	PPackageResourceID CModel::generatePackageResourceID(_In_ std::string path, ModelResourceID nID)	// per package
 	{
 		return m_resourceHandler.getNewRessourceID(path, nID);
 	}
@@ -629,7 +629,7 @@ namespace NMR {
 		return nHandle;
 	}
 	
-	PModelAttachment CModel::addPackageThumbnail(_In_ std::wstring sPath, _In_ PImportStream pStream)
+	PModelAttachment CModel::addPackageThumbnail(_In_ std::string sPath, _In_ PImportStream pStream)
 	{
 		if (m_pPackageThumbnailAttachment.get() == nullptr)
 		{
@@ -642,7 +642,7 @@ namespace NMR {
 
 	PModelAttachment CModel::addPackageThumbnail()
 	{
-		return addPackageThumbnail(PACKAGE_THUMBNAIL_URI_BASE + std::wstring(L"/") + L"thumbnail.png", std::make_shared<CImportStream_Memory>());
+		return addPackageThumbnail(PACKAGE_THUMBNAIL_URI_BASE + std::string("/") + "thumbnail.png", std::make_shared<CImportStream_Memory>());
 	}
 
 	void CModel::removePackageThumbnail()
@@ -655,12 +655,12 @@ namespace NMR {
 		return m_pPackageThumbnailAttachment;
 	}
 
-	PModelAttachment CModel::addAttachment(_In_ const std::wstring sPath, _In_ const std::wstring sRelationShipType, PImportStream pCopiedStream)
+	PModelAttachment CModel::addAttachment(_In_ const std::string sPath, _In_ const std::string sRelationShipType, PImportStream pCopiedStream)
 	{
 		if (pCopiedStream.get() == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-		std::wstring sLowerPath = sPath;
+		std::string sLowerPath = sPath;
 		//std::transform(sLowerPath.begin(), sLowerPath.end(), sLowerPath.begin(), towupper);
 
 		auto iIterator = m_AttachmentURIMap.find(sLowerPath);
@@ -688,7 +688,7 @@ namespace NMR {
 		return (nfUint32)m_Attachments.size();
 	}
 
-	std::wstring CModel::getModelAttachmentPath(_In_ nfUint32 nIndex)
+	std::string CModel::getModelAttachmentPath(_In_ nfUint32 nIndex)
 	{
 		nfUint32 nCount = getAttachmentCount();
 		if (nIndex >= nCount)
@@ -699,7 +699,7 @@ namespace NMR {
 		return pAttachment->getPathURI();
 	}
 
-	PModelAttachment CModel::findModelAttachment(_In_ std::wstring sPath)
+	PModelAttachment CModel::findModelAttachment(_In_ std::string sPath)
 	{
 		auto iIterator = m_AttachmentURIMap.find(sPath);
 		if (iIterator != m_AttachmentURIMap.end()) {
@@ -709,7 +709,7 @@ namespace NMR {
 		return nullptr;
 	}
 
-	void CModel::removeAttachment(_In_ const std::wstring sPath)
+	void CModel::removeAttachment(_In_ const std::string sPath)
 	{
 		auto iIterator = m_AttachmentURIMap.find(sPath);
 		if (iIterator != m_AttachmentURIMap.end()) {
@@ -753,12 +753,12 @@ namespace NMR {
 		std::rotate(it, it + 1, v.end());
 	}
 
-	PModelAttachment CModel::addProductionAttachment(_In_ const std::wstring sPath, _In_ const std::wstring sRelationShipType, PImportStream pCopiedStream, nfBool bForceUnique)
+	PModelAttachment CModel::addProductionAttachment(_In_ const std::string sPath, _In_ const std::string sRelationShipType, PImportStream pCopiedStream, nfBool bForceUnique)
 	{
 		if (pCopiedStream.get() == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-		std::wstring sLowerPath = sPath;
+		std::string sLowerPath = sPath;
 		//std::transform(sLowerPath.begin(), sLowerPath.end(), sLowerPath.begin(), towupper);
 		PModelAttachment pAttachment;
 		auto iIterator = m_ProductionAttachmentURIMap.find(sLowerPath);
@@ -796,7 +796,7 @@ namespace NMR {
 		return (nfUint32)m_ProductionAttachments.size();
 	}
 
-	std::wstring CModel::getProductionModelAttachmentPath(_In_ nfUint32 nIndex)
+	std::string CModel::getProductionModelAttachmentPath(_In_ nfUint32 nIndex)
 	{
 		nfUint32 nCount = getProductionAttachmentCount();
 		if (nIndex >= nCount)
@@ -808,7 +808,7 @@ namespace NMR {
 
 	}
 
-	PModelAttachment CModel::findProductionModelAttachment(_In_ std::wstring sPath)
+	PModelAttachment CModel::findProductionModelAttachment(_In_ std::string sPath)
 	{
 		auto iIterator = m_ProductionAttachmentURIMap.find(sPath);
 		if (iIterator != m_ProductionAttachmentURIMap.end()) {
@@ -818,7 +818,7 @@ namespace NMR {
 		return nullptr;
 	}
 
-	void CModel::removeProductionAttachment(_In_ const std::wstring sPath)
+	void CModel::removeProductionAttachment(_In_ const std::string sPath)
 	{
 		auto iIterator = m_ProductionAttachmentURIMap.find(sPath);
 		if (iIterator != m_ProductionAttachmentURIMap.end()) {
@@ -836,41 +836,41 @@ namespace NMR {
 	}
 
 
-	std::map<std::wstring, std::wstring> CModel::getCustomContentTypes()
+	std::map<std::string, std::string> CModel::getCustomContentTypes()
 	{
 		return m_CustomContentTypes;
 	}
 
-	void CModel::addCustomContentType(_In_ const std::wstring sExtension, _In_ const std::wstring sContentType)
+	void CModel::addCustomContentType(_In_ const std::string sExtension, _In_ const std::string sContentType)
 	{
 		m_CustomContentTypes.insert(std::make_pair(sExtension, sContentType));
 	}
 
-	void CModel::removeCustomContentType(_In_ const std::wstring sExtension)
+	void CModel::removeCustomContentType(_In_ const std::string sExtension)
 	{
 		m_CustomContentTypes.erase(sExtension);
 	}
 
-	nfBool CModel::contentTypeIsDefault(_In_ const std::wstring sExtension)
+	nfBool CModel::contentTypeIsDefault(_In_ const std::string sExtension)
 	{
-		if (wcscmp(sExtension.c_str(), PACKAGE_3D_RELS_EXTENSION) == 0)
+		if (strcmp(sExtension.c_str(), PACKAGE_3D_RELS_EXTENSION) == 0)
 			return true;
-		if (wcscmp(sExtension.c_str(), PACKAGE_3D_MODEL_EXTENSION) == 0)
+		if (strcmp(sExtension.c_str(), PACKAGE_3D_MODEL_EXTENSION) == 0)
 			return true;
-		if (wcscmp(sExtension.c_str(), PACKAGE_3D_TEXTURE_EXTENSION) == 0)
+		if (strcmp(sExtension.c_str(), PACKAGE_3D_TEXTURE_EXTENSION) == 0)
 			return true;
-		if (wcscmp(sExtension.c_str(), PACKAGE_3D_PNG_EXTENSION) == 0)
+		if (strcmp(sExtension.c_str(), PACKAGE_3D_PNG_EXTENSION) == 0)
 			return true;
-		if (wcscmp(sExtension.c_str(), PACKAGE_3D_JPEG_EXTENSION) == 0)
+		if (strcmp(sExtension.c_str(), PACKAGE_3D_JPEG_EXTENSION) == 0)
 			return true;
-		if (wcscmp(sExtension.c_str(), PACKAGE_3D_JPG_EXTENSION) == 0)
+		if (strcmp(sExtension.c_str(), PACKAGE_3D_JPG_EXTENSION) == 0)
 			return true;
 
 		return false;
 	}
 
 	// returns whether a specific extension has to be marked as required
-	nfBool  CModel::RequireExtension(_In_ const std::wstring sExtension) {
+	nfBool  CModel::RequireExtension(_In_ const std::string sExtension) {
 		// loop over all ressources to check for slices, beamlattices, production-references,
 		// that make it necessary to mark these extensions as required
 		if (sExtension == XML_3MF_NAMESPACE_BEAMLATTICESPEC) {

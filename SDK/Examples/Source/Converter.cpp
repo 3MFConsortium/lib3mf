@@ -32,7 +32,6 @@ Converter.cpp : Can convert 3MFs to STL and back
 #ifndef __GNUC__
 #include <tchar.h>
 #include <Windows.h>
-#include <atlbase.h>
 #endif // __GNUC__
 
 #include <iostream>

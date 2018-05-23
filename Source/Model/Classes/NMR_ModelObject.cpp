@@ -67,22 +67,22 @@ namespace NMR {
 		m_ObjectType = ObjectType;
 	}
 
-	std::wstring CModelObject::getName()
+	std::string CModelObject::getName()
 	{
 		return m_sName;
 	}
 
-	void CModelObject::setName(_In_ std::wstring sName)
+	void CModelObject::setName(_In_ std::string sName)
 	{
 		m_sName = sName;
 	}
 
-	std::wstring CModelObject::getPartNumber()
+	std::string CModelObject::getPartNumber()
 	{
 		return m_sPartNumber;
 	}
 
-	void CModelObject::setPartNumber(_In_ std::wstring sPartNumber)
+	void CModelObject::setPartNumber(_In_ std::string sPartNumber)
 	{
 		m_sPartNumber = sPartNumber;
 	}
@@ -99,7 +99,7 @@ namespace NMR {
 		m_UUID = uuid;
 	}
 
-	nfBool CModelObject::setObjectTypeString(_In_ std::wstring sTypeString, _In_ nfBool bRaiseException)
+	nfBool CModelObject::setObjectTypeString(_In_ std::string sTypeString, _In_ nfBool bRaiseException)
 	{
 		if (sTypeString == XML_3MF_OBJECTTYPE_OTHER) {
 			setObjectType(MODELOBJECTTYPE_OTHER);
@@ -124,19 +124,19 @@ namespace NMR {
 		return false;
 	}
 
-	std::wstring CModelObject::getObjectTypeString()
+	std::string CModelObject::getObjectTypeString()
 	{
 		switch (m_ObjectType) {
 		case MODELOBJECTTYPE_OTHER:
-			return std::wstring(XML_3MF_OBJECTTYPE_OTHER);
+			return std::string(XML_3MF_OBJECTTYPE_OTHER);
 		case MODELOBJECTTYPE_MODEL:
-			return std::wstring(XML_3MF_OBJECTTYPE_MODEL);
+			return std::string(XML_3MF_OBJECTTYPE_MODEL);
 		case MODELOBJECTTYPE_SUPPORT:
-			return std::wstring(XML_3MF_OBJECTTYPE_SUPPORT);
+			return std::string(XML_3MF_OBJECTTYPE_SUPPORT);
 		case MODELOBJECTTYPE_SOLIDSUPPORT:
-			return std::wstring(XML_3MF_OBJECTTYPE_SOLIDSUPPORT);
+			return std::string(XML_3MF_OBJECTTYPE_SOLIDSUPPORT);
 		default:
-			return L"";
+			return "";
 		}
 	}
 
@@ -166,12 +166,12 @@ namespace NMR {
 		return m_pModelDefaultProperty;
 	}
 
-	void CModelObject::setThumbnail(_In_ std::wstring sThumbnail)
+	void CModelObject::setThumbnail(_In_ std::string sThumbnail)
 	{
 		m_sThumbnail = sThumbnail;
 	}
 
-	std::wstring CModelObject::getThumbnail()
+	std::string CModelObject::getThumbnail()
 	{
 		return m_sThumbnail;
 	}

@@ -43,24 +43,24 @@ A model reader node is an abstract base class for all XML nodes of a 3MF Model S
 #include "Model/Classes/NMR_ModelConstants.h" 
 #include "Common/3MF_ProgressMonitor.h"
 #include "Common/NMR_Exception.h"
+#include "Common/NMR_StringUtils.h"
 
 #include <iostream>
-#include <string>
 #include <sstream>
 #include <algorithm>
 #include <iterator>
 
 namespace NMR {
 
-	CModelReaderNode_Model::CModelReaderNode_Model(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings, const nfWChar* sPath,
+	CModelReaderNode_Model::CModelReaderNode_Model(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings, const std::string sPath,
 		_In_ CProgressMonitor* pProgressMonitor)
 		: CModelReaderNode(pWarnings, pProgressMonitor), m_bIgnoreBuild(false)
 	{
 		__NMRASSERT(pModel);
 		m_pModel = pModel;
-		m_sRequiredExtensions = L"";
+		m_sRequiredExtensions = "";
 
-		m_pModel->setLanguage(L"und");
+		m_pModel->setLanguage("und");
 
 		m_bHasResources = false;
 		m_bHasBuild = false;
@@ -71,21 +71,21 @@ namespace NMR {
 	
 	void CModelReaderNode_Model::CheckRequiredExtensions() {
 		// check, whether all required extensions are available in this implementation before actually parsing the file
-		std::wistringstream iss(m_sRequiredExtensions);
-		std::vector<std::wstring> tokens{ std::istream_iterator<std::wstring,  wchar_t>{iss},
-			std::istream_iterator<std::wstring,  wchar_t>{} };
+		std::istringstream iss(m_sRequiredExtensions);
+		std::vector<std::string> tokens{ std::istream_iterator<std::string,  char>{iss},
+			std::istream_iterator<std::string,  char>{} };
 		for (auto token : tokens) {
 			// is the extension listed?
 			if (m_ListedExtensions.count(token) < 1) {
 				throw CNMRException(NMR_ERROR_INVALIDREQUIREDEXTENSIONPREFIX);
 			}
 			// is the extension supported?
-			std::wstring sExtensionURI = m_ListedExtensions[token];
-			if (wcscmp(sExtensionURI.c_str(), PACKAGE_XMLNS_100) != 0 &&
-				wcscmp(sExtensionURI.c_str(), XML_3MF_NAMESPACE_MATERIALSPEC) != 0 &&
-				wcscmp(sExtensionURI.c_str(), XML_3MF_NAMESPACE_PRODUCTIONSPEC) != 0 &&
-				wcscmp(sExtensionURI.c_str(), XML_3MF_NAMESPACE_SLICESPEC) != 0 &&
-				wcscmp(sExtensionURI.c_str(), XML_3MF_NAMESPACE_BEAMLATTICESPEC) != 0 )
+			std::string sExtensionURI = m_ListedExtensions[token];
+			if (strcmp(sExtensionURI.c_str(), PACKAGE_XMLNS_100) != 0 &&
+				strcmp(sExtensionURI.c_str(), XML_3MF_NAMESPACE_MATERIALSPEC) != 0 &&
+				strcmp(sExtensionURI.c_str(), XML_3MF_NAMESPACE_PRODUCTIONSPEC) != 0 &&
+				strcmp(sExtensionURI.c_str(), XML_3MF_NAMESPACE_SLICESPEC) != 0 &&
+				strcmp(sExtensionURI.c_str(), XML_3MF_NAMESPACE_BEAMLATTICESPEC) != 0 )
 			{
 				m_pWarnings->addWarning(MODELREADERWARNING_REQUIREDEXTENSIONNOTSUPPORTED, NMR_ERROR_REQUIREDEXTENSIONNOTSUPPORTED, mrwInvalidMandatoryValue);
 			}
@@ -108,12 +108,12 @@ namespace NMR {
 
 	}
 
-	void CModelReaderNode_Model::OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue)
+	void CModelReaderNode_Model::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
 	{
 		__NMRASSERT(pAttributeName);
 		__NMRASSERT(pAttributeValue);
 
-		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_MODEL_UNIT) == 0) {
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_MODEL_UNIT) == 0) {
 
 			// set unit string  and set validity
 			try {
@@ -123,31 +123,31 @@ namespace NMR {
 				m_pWarnings->addWarning(MODELREADERWARNING_INVALIDMODELUNIT, e.getErrorCode(), mrwInvalidMandatoryValue);
 			}
 		}
-		else if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_REQUIREDEXTENSIONS) == 0) {
-			m_sRequiredExtensions = std::wstring(pAttributeValue);
+		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_REQUIREDEXTENSIONS) == 0) {
+			m_sRequiredExtensions = std::string(pAttributeValue);
 		}
 	}
 
-	void CModelReaderNode_Model::OnNSAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue, _In_z_ const nfWChar * pNameSpace)
+	void CModelReaderNode_Model::OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace)
 	{
-		if (wcscmp(pNameSpace, XML_3MF_NAMESPACE_XML) == 0) {
-			if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_MODEL_LANG) == 0) {
-				m_pModel->setLanguage(std::wstring(pAttributeValue));
+		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_XML) == 0) {
+			if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_MODEL_LANG) == 0) {
+				m_pModel->setLanguage(std::string(pAttributeValue));
 			}
-			else if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_MODEL_SPACE) == 0)
+			else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_MODEL_SPACE) == 0)
 			{
 				throw CNMRException(NMR_ERROR_FORBIDDENXMLATTRITIBUTE);
 			}
 			// lax handling here for other XML_3MF_NAMESPACE_XML-attributes
 		}
-		else if (wcscmp(pNameSpace, XML_3MF_NAMESPACE_XMLNS) == 0) {
-			m_ListedExtensions.insert(std::pair<std::wstring, std::wstring>(std::wstring(pAttributeName), std::wstring(pAttributeValue)));
+		else if (strcmp(pNameSpace, XML_3MF_NAMESPACE_XMLNS) == 0) {
+			m_ListedExtensions.insert(std::pair<std::string, std::string>(std::string(pAttributeName), std::string(pAttributeValue)));
 		}
 	}
 
-	bool decomposeIntoNamespaceAndName(const std::wstring &sIn, std::wstring &sNameSpace, std::wstring &sName) {
-		size_t cInd = sIn.find(L":");
-		if (cInd != std::wstring::npos) {
+	bool decomposeIntoNamespaceAndName(const std::string &sIn, std::string &sNameSpace, std::string &sName) {
+		size_t cInd = sIn.find(":");
+		if (cInd != std::string::npos) {
 			sNameSpace = sIn.substr(0, cInd);
 			sName = sIn.substr(cInd+1, sIn.length() - cInd);
 			return true;
@@ -155,10 +155,10 @@ namespace NMR {
 		return false;
 	}
 
-	void CModelReaderNode_Model::OnNSChildElement(_In_z_ const nfWChar * pChildName, _In_z_ const nfWChar * pNameSpace, _In_ CXmlReader * pXMLReader)
+	void CModelReaderNode_Model::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
 	{
-		if (wcscmp(pNameSpace, XML_3MF_NAMESPACE_CORESPEC100) == 0) {
-			if (wcscmp(pChildName, XML_3MF_ELEMENT_RESOURCES) == 0) {
+		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_CORESPEC100) == 0) {
+			if (strcmp(pChildName, XML_3MF_ELEMENT_RESOURCES) == 0) {
 				m_bWithinIgnoredBuild = false;
 				if (m_pProgressMonitor && !m_pProgressMonitor->Progress(0.2, ProgressIdentifier::PROGRESS_READRESOURCES))
 					throw CNMRException(NMR_USERABORTED);
@@ -170,7 +170,7 @@ namespace NMR {
 				if (m_pProgressMonitor) m_pProgressMonitor->PopLevel();
 				m_bHasResources = true;
 			}
-			else if (wcscmp(pChildName, XML_3MF_ELEMENT_BUILD) == 0) {
+			else if (strcmp(pChildName, XML_3MF_ELEMENT_BUILD) == 0) {
 				if (m_bHasBuild)
 					throw CNMRException(NMR_ERROR_DUPLICATEBUILDSECTION);
 				if (!m_bIgnoreBuild) {
@@ -185,35 +185,35 @@ namespace NMR {
 				}
 				m_bHasBuild = true;
 			}
-			else if (wcscmp(pChildName, XML_3MF_ELEMENT_METADATA) == 0) {
+			else if (strcmp(pChildName, XML_3MF_ELEMENT_METADATA) == 0) {
 				m_bWithinIgnoredBuild = false;
 				PModelReaderNode100_MetaData pXMLNode = std::make_shared<CModelReaderNode100_MetaData>(m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 
-				std::wstring sName = pXMLNode->getName();
-				std::wstring sValue = pXMLNode->getValue();
+				std::string sName = pXMLNode->getName();
+				std::string sValue = pXMLNode->getValue();
 				if (sName.length() > 0) {
 					if (m_pModel->hasMetaData(sName)) {
 						m_pWarnings->addWarning(MODELREADERWARNING_DUPLICATEMETADATA, NMR_ERROR_DUPLICATEMETADATA, mrwInvalidOptionalValue);
 					}
-					std::wstring sNameSpace, sNameOnly;
+					std::string sNameSpace, sNameOnly;
 					if (decomposeIntoNamespaceAndName(sName, sNameSpace, sNameOnly)) {
-						std::wstring sNameSpaceURI;
+						std::string sNameSpaceURI;
 						if (pXMLReader->GetNamespaceURI(sNameSpace, sNameSpaceURI))
-							m_pModel->addMetaData(sNameSpaceURI+L":"+sNameOnly, sValue);
+							m_pModel->addMetaData(sNameSpaceURI+":"+sNameOnly, sValue);
 						else
 							throw CNMRException(NMR_ERROR_METADATA_COULDNOTGETNAMESPACE);
 					}
 					else {
 						// default namespace
-						if ((wcscmp(sName.c_str(), XML_3MF_METADATA_VALUE_1) == 0) ||
-							(wcscmp(sName.c_str(), XML_3MF_METADATA_VALUE_2) == 0) ||
-							(wcscmp(sName.c_str(), XML_3MF_METADATA_VALUE_3) == 0) ||
-							(wcscmp(sName.c_str(), XML_3MF_METADATA_VALUE_4) == 0) ||
-							(wcscmp(sName.c_str(), XML_3MF_METADATA_VALUE_5) == 0) ||
-							(wcscmp(sName.c_str(), XML_3MF_METADATA_VALUE_6) == 0) ||
-							(wcscmp(sName.c_str(), XML_3MF_METADATA_VALUE_7) == 0) ||
-							(wcscmp(sName.c_str(), XML_3MF_METADATA_VALUE_8) == 0)
+						if ((strcmp(sName.c_str(), XML_3MF_METADATA_VALUE_1) == 0) ||
+							(strcmp(sName.c_str(), XML_3MF_METADATA_VALUE_2) == 0) ||
+							(strcmp(sName.c_str(), XML_3MF_METADATA_VALUE_3) == 0) ||
+							(strcmp(sName.c_str(), XML_3MF_METADATA_VALUE_4) == 0) ||
+							(strcmp(sName.c_str(), XML_3MF_METADATA_VALUE_5) == 0) ||
+							(strcmp(sName.c_str(), XML_3MF_METADATA_VALUE_6) == 0) ||
+							(strcmp(sName.c_str(), XML_3MF_METADATA_VALUE_7) == 0) ||
+							(strcmp(sName.c_str(), XML_3MF_METADATA_VALUE_8) == 0)
 							)
 						{
 							m_pModel->addMetaData(sName, sValue);
@@ -233,8 +233,8 @@ namespace NMR {
 			}
 		}
 
-		if ((wcscmp(pNameSpace, XML_3MF_NAMESPACE_CORESPEC093) == 0) || (wcscmp(pNameSpace, L"") == 0)) {
-		   if (wcscmp(pChildName, XML_3MF_ELEMENT_RESOURCES) == 0) {
+		if ((strcmp(pNameSpace, XML_3MF_NAMESPACE_CORESPEC093) == 0) || (strcmp(pNameSpace, "") == 0)) {
+		   if (strcmp(pChildName, XML_3MF_ELEMENT_RESOURCES) == 0) {
 				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode093_Resources>(m_pModel, m_pWarnings);
 				if (m_bHasResources)
 					throw CNMRException(NMR_ERROR_DUPLICATERESOURCES);
@@ -243,7 +243,7 @@ namespace NMR {
 				m_bHasResources = true;
 
 			}
-			else if (wcscmp(pChildName, XML_3MF_ELEMENT_BUILD) == 0) {
+			else if (strcmp(pChildName, XML_3MF_ELEMENT_BUILD) == 0) {
 				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode093_Build>(m_pModel, m_pWarnings);
 				if (m_bHasBuild)
 					throw CNMRException(NMR_ERROR_DUPLICATEBUILDSECTION);
@@ -251,7 +251,7 @@ namespace NMR {
 				pXMLNode->parseXML(pXMLReader);
 				m_bHasBuild = true;
 			}
-			else if ( (wcscmp(pChildName, XML_3MF_ELEMENT_METADATA) == 0) ||  (wcscmp(pChildName, XML_3MF_ELEMENT_METADATA_ENRTY) == 0)) {
+			else if ( (strcmp(pChildName, XML_3MF_ELEMENT_METADATA) == 0) ||  (strcmp(pChildName, XML_3MF_ELEMENT_METADATA_ENRTY) == 0)) {
 				// nothing
 			}
 			else 

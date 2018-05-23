@@ -43,14 +43,14 @@ namespace NMR {
 	class CModelReader_Slice1507_SliceRefResources : public CModelReaderNode {
 	private:
 		CModel *m_pModel;
-		std::wstring m_sSliceRefPath;
+		std::string m_sSliceRefPath;
 
 	protected:
-		virtual void OnNSChildElement(_In_z_ const nfWChar * pChildName, _In_z_ const nfWChar * pNameSpace, _In_ CXmlReader * pXMLReader);
+		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 
 	public:
 		CModelReader_Slice1507_SliceRefResources() = delete;
-		CModelReader_Slice1507_SliceRefResources(_In_ CModel *pModel, _In_ PModelReaderWarnings pWarnings, _In_z_ const nfWChar *pSliceRefPath);
+		CModelReader_Slice1507_SliceRefResources(_In_ CModel *pModel, _In_ PModelReaderWarnings pWarnings, _In_z_ const std::string sSliceRefPath);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 	};

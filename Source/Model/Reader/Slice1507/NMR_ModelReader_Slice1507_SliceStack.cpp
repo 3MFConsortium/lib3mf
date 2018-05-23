@@ -31,37 +31,25 @@ Abstract:
 #include "Model/Reader/Slice1507/NMR_ModelReader_Slice1507_SliceStack.h"
 #include "Model/Reader/Slice1507/NMR_ModelReader_Slice1507_SliceRef.h"
 #include "Model/Reader/Slice1507/NMR_ModelReader_Slice1507_Slice.h"
-
-#include "Model/COM/NMR_COMInterface_ModelReader.h"
-#include "Model/Classes/NMR_ModelAttachment.h"
-#ifdef NMR_COM_NATIVE
-#include "Common/Platform/NMR_COM_Native.h"
-#include "Model/Reader/NMR_ModelReader_3MF_OPC.h"
-#else
-#include "Common/Platform/NMR_COM_Emulation.h"
-#include "Model/Reader/NMR_ModelReader_3MF_Native.h"
-#endif
-
 #include "Common/NMR_StringUtils.h"
-
 #include "Model/Classes/NMR_ModelConstants.h"
 
 namespace NMR {
-	void CModelReaderNode_Slice1507_SliceStack::OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue) {
-		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_SLICESTACKZBOTTOM) == 0) {
-			m_BottomZ = fnWStringToFloat(pAttributeValue);
+	void CModelReaderNode_Slice1507_SliceStack::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue) {
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_SLICESTACKZBOTTOM) == 0) {
+			m_BottomZ = fnStringToFloat(pAttributeValue);
 		}
-		else if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_SLICESTACKID) == 0) {
-			m_Id = fnWStringToUint32(pAttributeValue);
+		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_SLICESTACKID) == 0) {
+			m_Id = fnStringToUint32(pAttributeValue);
 		}
 		else
 			throw CNMRException(NMR_ERROR_SLICE_INVALIDATTRIBUTE);
 	}
 
 	void CModelReaderNode_Slice1507_SliceStack::OnNSChildElement(
-		_In_z_ const nfWChar * pChildName, _In_z_ const nfWChar * pNameSpace, _In_ CXmlReader * pXMLReader)
+		_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
 	{
-		if (wcscmp(pChildName, XML_3MF_ELEMENT_SLICE) == 0) {
+		if (strcmp(pChildName, XML_3MF_ELEMENT_SLICE) == 0) {
 			if (m_bHasReadSliceRef)
 				throw CNMRException(NMR_ERROR_SLICESTACK_SLICESANDSLICEREF);
 			m_bHasReadSlices = true;
@@ -75,7 +63,7 @@ namespace NMR {
 			pXMLNode = std::make_shared<CModelReaderNode_Slices1507_Slice>(m_pSliceStack.get(), m_pWarnings);
 			pXMLNode->parseXML(pXMLReader);
 		}
-		else if (wcscmp(pChildName, XML_3MF_ELEMENT_SLICEREFRESOURCE) == 0) {
+		else if (strcmp(pChildName, XML_3MF_ELEMENT_SLICEREFRESOURCE) == 0) {
 			if (m_bHasReadSlices)
 				throw CNMRException(NMR_ERROR_SLICESTACK_SLICESANDSLICEREF);
 			m_bHasReadSliceRef = true;
@@ -83,7 +71,7 @@ namespace NMR {
 			pXmlNode->parseXML(pXMLReader);
 
 			// get slice resource from model
-			std::wstring sPath = pXmlNode->Path();
+			std::string sPath = pXmlNode->Path();
 
 			// must reference a different part
 			if (sPath == m_pModel->curPath())
@@ -113,7 +101,7 @@ namespace NMR {
 
 	CModelReaderNode_Slice1507_SliceStack::CModelReaderNode_Slice1507_SliceStack(
 		_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings, _In_ CProgressMonitor * pProgressMonitor,
-		_In_ const nfWChar* sSlicePath)
+		_In_ const std::string sSlicePath)
 		: CModelReaderNode(pWarnings, pProgressMonitor)
 	{
 		m_nProgressCounter = 0;

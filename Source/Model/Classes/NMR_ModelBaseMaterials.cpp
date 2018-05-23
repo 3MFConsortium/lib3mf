@@ -44,7 +44,7 @@ namespace NMR {
 	{
 	}
 
-	nfUint32 CModelBaseMaterialResource::addBaseMaterial(_In_ const std::wstring sName, _In_ nfColor cDisplayColor)
+	nfUint32 CModelBaseMaterialResource::addBaseMaterial(_In_ const std::string sName, _In_ nfColor cDisplayColor)
 	{
 		nfUint32 nNewIndex = getCount();
 		if (nNewIndex >= XML_3MF_MAXRESOURCEINDEX) {

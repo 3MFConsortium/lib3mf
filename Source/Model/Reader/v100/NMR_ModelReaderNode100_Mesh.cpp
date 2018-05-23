@@ -38,6 +38,7 @@ A mesh reader model node is a parser for the mesh node of an XML Model Stream.
 #include "Model/Reader/BeamLattice1702/NMR_ModelReaderNode_BeamLattice1702_BeamLattice.h"
 
 #include "Model/Classes/NMR_ModelConstants.h"
+#include "Common/NMR_StringUtils.h"
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_Exception_Windows.h"
 
@@ -98,21 +99,21 @@ namespace NMR {
 		nRepresentationMeshID = m_nRepresentationMeshID;
 	}
 
-	void CModelReaderNode100_Mesh::OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue)
+	void CModelReaderNode100_Mesh::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
 	{
 		__NMRASSERT(pAttributeName);
 		__NMRASSERT(pAttributeValue);
 	}
 
-	void CModelReaderNode100_Mesh::OnNSChildElement(_In_z_ const nfWChar * pChildName, _In_z_ const nfWChar * pNameSpace, _In_ CXmlReader * pXMLReader)
+	void CModelReaderNode100_Mesh::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
 	{
 		__NMRASSERT(pChildName);
 		__NMRASSERT(pXMLReader);
 		__NMRASSERT(pNameSpace);
 
-		if (wcscmp(pNameSpace, XML_3MF_NAMESPACE_CORESPEC100) == 0) {
+		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_CORESPEC100) == 0) {
 
-			if (wcscmp(pChildName, XML_3MF_ELEMENT_VERTICES) == 0)
+			if (strcmp(pChildName, XML_3MF_ELEMENT_VERTICES) == 0)
 			{
 				if (m_pMesh->getNodeCount() % PROGRESS_READUPDATE == PROGRESS_READUPDATE -1)
 					if (m_pProgressMonitor && !m_pProgressMonitor->Progress(0.5 -1./ (2 + ++m_nProgressCounterNodes), PROGRESS_READMESH)) {
@@ -121,7 +122,7 @@ namespace NMR {
 				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode100_Vertices>(m_pMesh, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 			}
-			else if (wcscmp(pChildName, XML_3MF_ELEMENT_TRIANGLES) == 0)
+			else if (strcmp(pChildName, XML_3MF_ELEMENT_TRIANGLES) == 0)
 			{
 				if (m_pMesh->getFaceCount() % PROGRESS_READUPDATE == PROGRESS_READUPDATE - 1)
 					if (m_pProgressMonitor && !m_pProgressMonitor->Progress(1 -1. / (2 + ++m_nProgressCounterTriangles), PROGRESS_READMESH)) {
@@ -144,8 +145,8 @@ namespace NMR {
 		}
 
 
-		if (wcscmp(pNameSpace, XML_3MF_NAMESPACE_BEAMLATTICESPEC) == 0) {
-			if (wcscmp(pChildName, XML_3MF_ELEMENT_BEAMLATTICE) == 0)
+		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_BEAMLATTICESPEC) == 0) {
+			if (strcmp(pChildName, XML_3MF_ELEMENT_BEAMLATTICE) == 0)
 			{
 				PModelReaderNode_BeamLattice1702_BeamLattice pXMLNode = std::make_shared<CModelReaderNode_BeamLattice1702_BeamLattice>(m_pModel, m_pMesh, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);

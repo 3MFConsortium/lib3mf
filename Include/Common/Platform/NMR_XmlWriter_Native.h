@@ -53,9 +53,9 @@ namespace NMR {
 	class CXmlWriter_Native : public CXmlWriter {
 	private:
 		std::array<nfByte, NATIVEXMLSPACINGBUFFERSIZE> m_SpacingBuffer;
-		std::list<std::wstring> m_NodeStack;
+		std::list<std::string> m_NodeStack;
 
-		std::array<nfWChar, NATIVEXMLENCODINGBUFFERSIZE> m_FixedEncodingBuffer;
+		std::array<nfChar, NATIVEXMLENCODINGBUFFERSIZE> m_FixedEncodingBuffer;
 
 		nfBool m_bElementIsOpen;
 		nfBool m_bIsFreshLine;
@@ -73,7 +73,7 @@ namespace NMR {
 		void closeCurrentElement(_In_ nfBool bNewLine);
 
 		// Buffer needs to be at least 6 times the length of pszwpszString
-		void escapeXMLString(_In_z_ const nfWChar * pszString, _Out_ nfWChar * pszBuffer);
+		void escapeXMLString(_In_z_ const nfChar * pszString, _Out_ nfChar * pszBuffer);
 
 	public:
 		CXmlWriter_Native(_In_ PExportStream pExportStream);
@@ -82,12 +82,12 @@ namespace NMR {
 		virtual void WriteEndDocument();
 		virtual void Flush();
 
-		virtual void WriteAttributeString(_In_opt_ const nfWChar *  pwszPrefix, _In_opt_ const nfWChar *  pwszLocalName, _In_opt_ const nfWChar *  pwszNamespaceUri, _In_opt_ const nfWChar *  pwszValue);
-		virtual void WriteStartElement(_In_opt_  const nfWChar *  pwszPrefix, _In_  const nfWChar *  pwszLocalName, _In_opt_  const nfWChar *  pwszNamespaceUri);
+		virtual void WriteAttributeString(_In_opt_ const nfChar *  pszPrefix, _In_opt_ const nfChar *  pszLocalName, _In_opt_ const nfChar *  pszNamespaceUri, _In_opt_ const nfChar *  pszValue);
+		virtual void WriteStartElement(_In_opt_  const nfChar *  pszPrefix, _In_  const nfChar *  pszLocalName, _In_opt_  const nfChar *  pszNamespaceUri);
 		virtual void WriteEndElement();
 		virtual void WriteFullEndElement();
 
-		virtual void WriteText(_In_ const nfWChar * pwszContent, _In_ const nfUint32 cbLength);
+		virtual void WriteText(_In_ const nfChar * pszContent, _In_ const nfUint32 cbLength);
 		virtual void WriteRawLine(_In_ const nfChar * pszRawData, _In_ nfUint32 cbCount);
 	};
 
