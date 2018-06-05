@@ -118,7 +118,7 @@ namespace NMR {
 		std::vector<MESHINFORMATIONFACEDATA *>::iterator iter = m_DataBlocks.begin ();
 		while (iter != m_DataBlocks.end()){
 			MESHINFORMATIONFACEDATA * pBlock = *iter;
-			delete pBlock;
+			delete[] pBlock;
 			iter++;
 		}
 
