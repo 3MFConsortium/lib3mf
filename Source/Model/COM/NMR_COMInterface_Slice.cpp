@@ -45,27 +45,10 @@ COM Interface Implementation for Slice and Slicestack Classes
 #include "Model/COM/NMR_COMInterface_ModelAttachment.h"
 #include "Model/COM/NMR_COMInterface_Slice.h"
 
-#ifdef NMR_COM_NATIVE
-#include "Model/Reader/NMR_ModelReader_3MF_OPC.h"
-#include "Model/Writer/NMR_ModelWriter_3MF_Native.h"
-#else
-#include "Model/Reader/NMR_ModelReader_3MF_Native.h"
-#include "Model/Writer/NMR_ModelWriter_3MF_Native.h"
-#endif
-
-#include "Model/Classes/NMR_ModelMeshObject.h"
-#include "Model/Classes/NMR_ModelComponentsObject.h"
-#include "Model/Reader/NMR_ModelReader_STL.h"
-#include "Model/Writer/NMR_ModelWriter_STL.h"
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_StringUtils.h"
 #include "Common/NMR_Exception_Windows.h"
 #include "Common/Platform/NMR_ImportStream_Memory.h"
-#ifdef NMR_COM_NATIVE
-#include "Common/Platform/NMR_COM_Native.h"
-#else
-#include "Common/Platform/NMR_COM_Emulation.h"
-#endif
 
 #include <string.h>
 

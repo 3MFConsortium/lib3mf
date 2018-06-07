@@ -130,7 +130,7 @@ namespace NMR {
 			for (auto iIterator = m_pBlocks.begin(); iIterator != m_pBlocks.end(); iIterator++)
 			{
 				T * pBlock = *iIterator;
-				delete pBlock;
+				delete[] pBlock;
 			}
 
 			m_pBlocks.clear();

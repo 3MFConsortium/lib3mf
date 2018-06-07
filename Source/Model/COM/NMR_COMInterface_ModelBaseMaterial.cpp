@@ -170,7 +170,7 @@ namespace NMR {
 			nfColor cColor = nRed | (nGreen << 8) | (nBlue << 16);
 
 			nfUint32 nNewResourceIndex = pMaterialResource->getCount();
-			pMaterialResource->addBaseMaterial(sName, cColor);
+			pMaterialResource->addBaseMaterial(fnUTF16toUTF8(sName), cColor);
 
 			if (pnResourceIndex != nullptr)
 				*pnResourceIndex = nNewResourceIndex;
@@ -194,14 +194,13 @@ namespace NMR {
 			CModelBaseMaterialResource * pMaterialResource = getBaseMaterials();
 
 			std::string sUTF8Name(pszName);
-			std::wstring sUTF16Name = fnUTF8toUTF16(sUTF8Name);
 			nfUint32 nRed = bRed;
 			nfUint32 nGreen = bGreen;
 			nfUint32 nBlue = bBlue;
 			nfColor cColor = nRed | (nGreen << 8) | (nBlue << 16);
 
 			nfUint32 nNewResourceIndex = pMaterialResource->getCount();
-			pMaterialResource->addBaseMaterial(sUTF16Name, cColor);
+			pMaterialResource->addBaseMaterial(sUTF8Name, cColor);
 
 			if (pnResourceIndex != nullptr)
 				*pnResourceIndex = nNewResourceIndex;
@@ -248,11 +247,11 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_INVALIDINDEX);
 
 			// Retrieve Name
-			std::wstring sName = pMaterial->getName();
+			std::string sName = pMaterial->getName();
 
 			// Safely call StringToBuffer
 			nfUint32 nNeededChars = 0;
-			fnWStringToBufferSafe(sName, pwszBuffer, cbBufferSize, &nNeededChars);
+			fnWStringToBufferSafe(fnUTF8toUTF16(sName), pwszBuffer, cbBufferSize, &nNeededChars);
 
 			// Return length if needed
 			if (pcbNeededChars)
@@ -284,8 +283,7 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_INVALIDINDEX);
 
 			// Retrieve Name
-			std::wstring sUTF16Name = pMaterial->getName();
-			std::string sUTF8Name = fnUTF16toUTF8(sUTF16Name);
+			std::string sUTF8Name = pMaterial->getName();
 
 			// Safely call StringToBuffer
 			nfUint32 nNeededChars = 0;
@@ -320,8 +318,7 @@ namespace NMR {
 			if (!pMaterial.get())
 				throw CNMRException(NMR_ERROR_INVALIDINDEX);
 
-			std::wstring sName(pwszName);
-			pMaterial->setName(sName);
+			pMaterial->setName(fnUTF16toUTF8(pwszName));
 
 			return handleSuccess();
 		}
@@ -347,9 +344,7 @@ namespace NMR {
 			if (!pMaterial.get())
 				throw CNMRException(NMR_ERROR_INVALIDINDEX);
 
-			std::string sUTF8Name(pszName);
-			std::wstring sUTF16Name = fnUTF8toUTF16(sUTF8Name);
-			pMaterial->setName(sUTF16Name);
+			pMaterial->setName(pszName);
 
 			return handleSuccess();
 		}

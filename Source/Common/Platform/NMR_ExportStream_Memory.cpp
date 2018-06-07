@@ -70,10 +70,10 @@ namespace NMR {
 	nfUint64 CExportStreamMemory::writeBuffer(_In_ const void * pBuffer, _In_ nfUint64 cbTotalBytesToWrite) {
 		nfByte *pByteBuffer = (nfByte *)pBuffer;
 		if ((m_Position + cbTotalBytesToWrite) > m_Buffer.size()) {
-			m_Buffer.resize(m_Position + cbTotalBytesToWrite);
+			m_Buffer.resize(static_cast<size_t>(m_Position + cbTotalBytesToWrite));
 		}
 		for (nfUint64 i = 0; i < cbTotalBytesToWrite; i++) {
-			m_Buffer[m_Position + i] = pByteBuffer[i];
+			m_Buffer[static_cast<size_t>(m_Position + i)] = pByteBuffer[i];
 		}
 		m_Position += cbTotalBytesToWrite;
 		return cbTotalBytesToWrite;

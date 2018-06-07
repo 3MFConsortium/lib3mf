@@ -41,13 +41,14 @@ XML Model Stream.
 #include "Model/Reader/Slice1507/NMR_ModelReader_Slice1507_SliceStack.h"
 
 #include "Model/Classes/NMR_ModelConstants.h"
+#include "Common/NMR_StringUtils.h"
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_Exception_Windows.h"
 #include "Common/MeshInformation/NMR_MeshInformation_Slices.h"
 
 namespace NMR {
 
-	CModelReaderNode100_Resources::CModelReaderNode100_Resources(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings, _In_z_ const nfWChar *sPath,
+	CModelReaderNode100_Resources::CModelReaderNode100_Resources(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings, _In_z_ const std::string sPath,
 		_In_ CProgressMonitor* pProgressMonitor)
 		: CModelReaderNode(pWarnings, pProgressMonitor)
 	{
@@ -73,20 +74,20 @@ namespace NMR {
 		parseContent(pXMLReader);
 	}
 
-	void CModelReaderNode100_Resources::OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue)
+	void CModelReaderNode100_Resources::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
 	{
 		__NMRASSERT(pAttributeName);
 		__NMRASSERT(pAttributeValue);
 	}
 
-	void CModelReaderNode100_Resources::OnNSChildElement(_In_z_ const nfWChar * pChildName, _In_z_ const nfWChar * pNameSpace, _In_ CXmlReader * pXMLReader)
+	void CModelReaderNode100_Resources::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
 	{
 		
 		__NMRASSERT(pChildName);
 		__NMRASSERT(pXMLReader);
 
-		if (wcscmp(pNameSpace, XML_3MF_NAMESPACE_CORESPEC100) == 0) {
-			if (wcscmp(pChildName, XML_3MF_ELEMENT_OBJECT) == 0) {
+		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_CORESPEC100) == 0) {
+			if (strcmp(pChildName, XML_3MF_ELEMENT_OBJECT) == 0) {
 				if (m_pProgressMonitor) {
 					if (!m_pProgressMonitor->Progress(1.0 - 2.0 / (++m_nProgressCount + 2), ProgressIdentifier::PROGRESS_READRESOURCES))
 						throw CNMRException(NMR_USERABORTED);
@@ -97,7 +98,7 @@ namespace NMR {
 				if (m_pProgressMonitor)
 					m_pProgressMonitor->PopLevel();
 			}
-			else if (wcscmp(pChildName, XML_3MF_ELEMENT_BASEMATERIALS) == 0) {
+			else if (strcmp(pChildName, XML_3MF_ELEMENT_BASEMATERIALS) == 0) {
 				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode100_BaseMaterials>(m_pModel, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 			}
@@ -105,21 +106,21 @@ namespace NMR {
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
 		}
 
-		if (wcscmp(pNameSpace, XML_3MF_NAMESPACE_MATERIALSPEC) == 0) {
-			if (wcscmp(pChildName, XML_3MF_ELEMENT_COLORGROUP) == 0) {
+		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_MATERIALSPEC) == 0) {
+			if (strcmp(pChildName, XML_3MF_ELEMENT_COLORGROUP) == 0) {
 				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode100_Colors>(m_pModel, m_pWarnings, m_pColorMapping);
 				pXMLNode->parseXML(pXMLReader);
 			}
-			else if (wcscmp(pChildName, XML_3MF_ELEMENT_TEX2DGROUP) == 0) {
+			else if (strcmp(pChildName, XML_3MF_ELEMENT_TEX2DGROUP) == 0) {
 				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode100_Tex2DGroup>(m_pModel, m_pWarnings, m_pTexCoordMapping);
 				pXMLNode->parseXML(pXMLReader);
 			}
-			else if (wcscmp(pChildName, XML_3MF_ELEMENT_TEXTURE2D) == 0) {
+			else if (strcmp(pChildName, XML_3MF_ELEMENT_TEXTURE2D) == 0) {
 				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode100_Texture2D>(m_pModel, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 			}
-			else if ( (wcscmp(pChildName, XML_3MF_ELEMENT_COMPOSITEMATERIALS) == 0) ||
-				(wcscmp(pChildName, XML_3MF_ELEMENT_MULTIPROPERTIES) == 0) ) {
+			else if ( (strcmp(pChildName, XML_3MF_ELEMENT_COMPOSITEMATERIALS) == 0) ||
+				(strcmp(pChildName, XML_3MF_ELEMENT_MULTIPROPERTIES) == 0) ) {
 				// Compositematerials and multiproperties are not implemented in lib3mf.
 				// signal this to the user via a warning
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
@@ -129,8 +130,8 @@ namespace NMR {
 			//	m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
 		}
 
-		if (wcscmp(pNameSpace, XML_3MF_NAMESPACE_SLICESPEC) == 0) {
-			if (wcscmp(pChildName, XML_3MF_ELEMENT_SLICESTACKRESOURCE) == 0) {
+		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_SLICESPEC) == 0) {
+			if (strcmp(pChildName, XML_3MF_ELEMENT_SLICESTACKRESOURCE) == 0) {
 				if (m_pProgressMonitor) {
 					if (!m_pProgressMonitor->Progress(1.0 - 2.0 / (++m_nProgressCount + 2), ProgressIdentifier::PROGRESS_READRESOURCES))
 						throw CNMRException(NMR_USERABORTED);

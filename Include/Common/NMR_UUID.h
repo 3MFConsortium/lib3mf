@@ -45,13 +45,10 @@ namespace NMR
 		std::string m_sUUID;
 	public:
 		CUUID();
-		CUUID(const nfWChar* pString);
 		CUUID(const nfChar* pString);
 		std::string toString();
-		std::wstring toUTF16String();
 
 		bool set(const nfChar* pString);
-		bool set(const nfWChar* pString);
 
 		CUUID& operator=(const CUUID& uuid);
 		bool operator==(const CUUID& uuid);

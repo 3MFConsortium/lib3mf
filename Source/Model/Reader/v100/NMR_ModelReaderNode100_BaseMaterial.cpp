@@ -65,20 +65,19 @@ namespace NMR {
 
 	}
 
-	void CModelReaderNode100_BaseMaterial::OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue)
+	void CModelReaderNode100_BaseMaterial::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
 	{
 		__NMRASSERT(pAttributeName);
 		__NMRASSERT(pAttributeValue);
 
-		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_BASEMATERIAL_NAME) == 0) {
-			std::wstring sString(pAttributeValue);
-			m_sName = sString;
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_BASEMATERIAL_NAME) == 0) {
+			m_sName = pAttributeValue;
 			m_bHasName = true;
 		}
 		
-		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_BASEMATERIAL_DISPLAYCOLOR) == 0) {
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_BASEMATERIAL_DISPLAYCOLOR) == 0) {
 			// Convert to color and make a input and range check!
-			m_bHasDisplayColor = fnWStringToSRGBColor(pAttributeValue, m_cDisplayColor);
+			m_bHasDisplayColor = fnStringToSRGBColor(pAttributeValue, m_cDisplayColor);
 		}
 	}
 
@@ -88,7 +87,7 @@ namespace NMR {
 		return m_cDisplayColor;
 	}
 
-	std::wstring CModelReaderNode100_BaseMaterial::getMaterialName()
+	std::string CModelReaderNode100_BaseMaterial::getMaterialName()
 	{
 		return m_sName;
 	}

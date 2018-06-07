@@ -43,18 +43,18 @@ namespace NMR {
 
 	class CModelReaderNode093_Material : public CModelReaderNode {
 	private:
-		std::wstring m_sName;
+		std::string m_sName;
 		ModelResourceID m_nResourceID;
 		ModelResourceID m_nColorID;
 	public:
 		CModelReaderNode093_Material() = delete;
 		CModelReaderNode093_Material(_In_ PModelReaderWarnings pWarnings);
 
-		virtual void OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue);
+		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 
-		std::wstring retrieveName();
+		std::string retrieveName();
 		ModelResourceID retrieveID();
 		ModelResourceID retrieveColorID();
 	};

@@ -184,30 +184,15 @@ namespace NMR {
 
 	LIB3MFMETHODIMP CCOMModelFactory::QueryExtension(_In_z_ LPCWSTR pwszExtensionUrl, _Out_ BOOL * pbIsSupported, _Out_opt_ DWORD * pExtensionInterfaceVersion)
 	{
-		try
-		{
-			if (pwszExtensionUrl == nullptr || pbIsSupported == nullptr || pExtensionInterfaceVersion == nullptr)
+
+		try {
+			if (!pwszExtensionUrl)
 				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
 
-			if (wcscmp(pwszExtensionUrl, XML_3MF_NAMESPACE_MATERIALSPEC) == 0) {
-				*pbIsSupported = true;
-				*pExtensionInterfaceVersion = NMR_APIVERSION_INTERFACE_MATERIALSPEC;
-			}
-			else if (wcscmp(pwszExtensionUrl, XML_3MF_NAMESPACE_PRODUCTIONSPEC) == 0) {
-				*pbIsSupported = true;
-				*pExtensionInterfaceVersion = NMR_APIVERSION_INTERFACE_PRODUCTIONSEPC;
-			}
-			else if (wcscmp(pwszExtensionUrl, XML_3MF_NAMESPACE_BEAMLATTICESPEC) == 0) {
-				*pbIsSupported = true;
-				*pExtensionInterfaceVersion = NMR_APIVERSION_INTERFACE_BEAMLATTICESPEC;
-			}
-			else if (wcscmp(pwszExtensionUrl, XML_3MF_NAMESPACE_SLICESPEC) == 0) {
-				*pbIsSupported = true;
-				*pExtensionInterfaceVersion = NMR_APIVERSION_INTERFACE_SLICESPEC;
-			}
-			else {
-				*pbIsSupported = false;
-			}
+			std::wstring sUTF16ExtensionUrl(pwszExtensionUrl);
+			std::string sUTF8Language = fnUTF16toUTF8(sUTF16ExtensionUrl);
+			QueryExtensionUTF8(sUTF8Language.c_str(), pbIsSupported, pExtensionInterfaceVersion);
+
 			return handleSuccess();
 		}
 		catch (CNMRException & Exception) {
@@ -219,14 +204,30 @@ namespace NMR {
 	}
 
 	LIB3MFMETHODIMP CCOMModelFactory::QueryExtensionUTF8(_In_z_ LPCSTR pszExtensionUrl, _Out_ BOOL * pbIsSupported, _Out_opt_ DWORD * pExtensionInterfaceVersion) {
-		try {
-			if (!pszExtensionUrl)
+		try
+		{
+			if (pszExtensionUrl == nullptr || pbIsSupported == nullptr || pExtensionInterfaceVersion == nullptr)
 				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
 
-			std::string sUTF8ExtensionUrl(pszExtensionUrl);
-			std::wstring sUTF16Language = fnUTF8toUTF16(sUTF8ExtensionUrl);
-			QueryExtension(sUTF16Language.c_str(), pbIsSupported, pExtensionInterfaceVersion);
-
+			if (strcmp(pszExtensionUrl, XML_3MF_NAMESPACE_MATERIALSPEC) == 0) {
+				*pbIsSupported = true;
+				*pExtensionInterfaceVersion = NMR_APIVERSION_INTERFACE_MATERIALSPEC;
+			}
+			else if (strcmp(pszExtensionUrl, XML_3MF_NAMESPACE_PRODUCTIONSPEC) == 0) {
+				*pbIsSupported = true;
+				*pExtensionInterfaceVersion = NMR_APIVERSION_INTERFACE_PRODUCTIONSEPC;
+			}
+			else if (strcmp(pszExtensionUrl, XML_3MF_NAMESPACE_BEAMLATTICESPEC) == 0) {
+				*pbIsSupported = true;
+				*pExtensionInterfaceVersion = NMR_APIVERSION_INTERFACE_BEAMLATTICESPEC;
+			}
+			else if (strcmp(pszExtensionUrl, XML_3MF_NAMESPACE_SLICESPEC) == 0) {
+				*pbIsSupported = true;
+				*pExtensionInterfaceVersion = NMR_APIVERSION_INTERFACE_SLICESPEC;
+			}
+			else {
+				*pbIsSupported = false;
+			}
 			return handleSuccess();
 		}
 		catch (CNMRException & Exception) {

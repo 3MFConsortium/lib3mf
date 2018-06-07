@@ -70,7 +70,7 @@ namespace NMR {
 			writeDirectory();
 	}
 
-	PExportStream CPortableZIPWriter::createEntry(_In_ const std::wstring sName, _In_ nfTimeStamp nUnixTimeStamp)
+	PExportStream CPortableZIPWriter::createEntry(_In_ const std::string sName, _In_ nfTimeStamp nUnixTimeStamp)
 	{
 		if (m_bIsFinished)
 			throw CNMRException(NMR_ERROR_ZIPALREADYFINISHED);
@@ -84,8 +84,8 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_ZIPENTRYOVERFLOW);
 
 		// Convert Name to UTF8
-		std::wstring sFilteredName = fnRemoveLeadingPathDelimiter(sName);
-		std::string sUTF8Name = fnUTF16toUTF8(sFilteredName);
+		std::string sFilteredName = fnRemoveLeadingPathDelimiter(sName);
+		std::string sUTF8Name = sFilteredName;
 		if (sUTF8Name.length() > ZIPFILEMAXFILENAMELENGTH)
 			throw CNMRException(NMR_ERRORINVALIDZIPNAME);
 		nfUint32 nNameLength = (nfUint32)sUTF8Name.length();

@@ -37,6 +37,7 @@ A model reader node is an abstract base class for all XML nodes of a
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_Exception_Windows.h"
+#include "Common/NMR_StringUtils.h"
 
 namespace NMR {
 
@@ -58,21 +59,21 @@ namespace NMR {
 	{
 		__NMRASSERT(pXMLReader);
 
-		LPCWSTR pwszName = nullptr;
-		pXMLReader->GetLocalName(&pwszName, nullptr);
-		if (!pwszName)
+		LPCSTR pszName = nullptr;
+		pXMLReader->GetLocalName(&pszName, nullptr);
+		if (!pszName)
 			throw CNMRException(NMR_ERROR_COULDNOTGETLOCALXMLNAME);
 
-		std::wstring sName(pwszName);
+		std::string sName(pszName);
 		m_sName = sName;
 
-		if (m_sName == L"")
+		if (m_sName == "")
 			throw CNMRException(NMR_ERROR_NODENAMEISEMPTY);
 
 		m_bIsEmptyElement = pXMLReader->IsEmptyElement() != 0;
 	}
 
-	std::wstring CModelReaderNode::getName()
+	std::string CModelReaderNode::getName()
 	{
 		return m_sName;
 	}
@@ -97,33 +98,33 @@ namespace NMR {
 		while (bContinue) {
 
 			if (!pXMLReader->IsDefault()) {
-				LPCWSTR pwszLocalName = nullptr;
-				LPCWSTR pwszNameSpaceURI = nullptr;
-				LPCWSTR pwszValue = nullptr;
+				LPCSTR pszLocalName = nullptr;
+				LPCSTR pszNameSpaceURI = nullptr;
+				LPCSTR pszValue = nullptr;
 				UINT nNameCount = 0;
 				UINT nValueCount = 0;
 				UINT nNameSpaceCount = 0;
 
 				// Get Attribute Name
-				pXMLReader->GetNamespaceURI(&pwszNameSpaceURI, &nNameSpaceCount);
-				if (!pwszNameSpaceURI)
+				pXMLReader->GetNamespaceURI(&pszNameSpaceURI, &nNameSpaceCount);
+				if (!pszNameSpaceURI)
 					throw CNMRException(NMR_ERROR_COULDNOTGETNAMESPACE);
 
-				pXMLReader->GetLocalName(&pwszLocalName, &nNameCount);
-				if (!pwszLocalName)
+				pXMLReader->GetLocalName(&pszLocalName, &nNameCount);
+				if (!pszLocalName)
 					throw CNMRException(NMR_ERROR_COULDNOTGETLOCALXMLNAME);
 
 				// Get Attribute Value
-				pXMLReader->GetValue(&pwszValue, &nValueCount);
-				if (!pwszValue)
+				pXMLReader->GetValue(&pszValue, &nValueCount);
+				if (!pszValue)
 					throw CNMRException(NMR_ERROR_COULDNOTGETXMLVALUE);
 
 				if (nNameCount > 0) {
 					if (nNameSpaceCount == 0) {
-						OnAttribute(pwszLocalName, pwszValue);
+						OnAttribute(pszLocalName, pszValue);
 					}
 					else {
-						OnNSAttribute(pwszLocalName, pwszValue, pwszNameSpaceURI);
+						OnNSAttribute(pszLocalName, pszValue, pszNameSpaceURI);
 					}
 				}
 			}
@@ -136,7 +137,7 @@ namespace NMR {
 	{
 		__NMRASSERT(pXMLReader);
 
-		if (m_sName == L"")
+		if (m_sName == "")
 			throw CNMRException(NMR_ERROR_NODENAMEISEMPTY);
 
 		if (m_bParsedContent)
@@ -149,9 +150,9 @@ namespace NMR {
 		}
 
 		while (!pXMLReader->IsEOF()) {
-			LPCWSTR pwszLocalName = nullptr;
-			LPCWSTR pwszNameSpaceURI = nullptr;
-			LPCWSTR pwszText = nullptr;
+			LPCSTR pszLocalName = nullptr;
+			LPCSTR pszNameSpaceURI = nullptr;
+			LPCSTR pszText = nullptr;
 			UINT nCount = 0;
 			UINT nNameSpaceCount = 0;
 
@@ -160,39 +161,39 @@ namespace NMR {
 
 			switch (NodeType) {
 			case XMLREADERNODETYPE_STARTELEMENT:
-				pXMLReader->GetLocalName(&pwszLocalName, &nCount);
-				if (!pwszLocalName)
+				pXMLReader->GetLocalName(&pszLocalName, &nCount);
+				if (!pszLocalName)
 					throw CNMRException(NMR_ERROR_COULDNOTGETLOCALXMLNAME);
 
-				pXMLReader->GetNamespaceURI(&pwszNameSpaceURI, &nNameSpaceCount);
-				if (!pwszNameSpaceURI)
+				pXMLReader->GetNamespaceURI(&pszNameSpaceURI, &nNameSpaceCount);
+				if (!pszNameSpaceURI)
 					throw CNMRException(NMR_ERROR_COULDNOTGETNAMESPACE);
 
 					if (nCount > 0) {
-						if (pwszNameSpaceURI == nullptr) {
-							OnNSChildElement(pwszLocalName, L"", pXMLReader);
+						if (pszNameSpaceURI == nullptr) {
+							OnNSChildElement(pszLocalName, "", pXMLReader);
 						}
 						else {
-							OnNSChildElement(pwszLocalName, pwszNameSpaceURI, pXMLReader);
+							OnNSChildElement(pszLocalName, pszNameSpaceURI, pXMLReader);
 						}
 					}
 				break;
 
 			case XMLREADERNODETYPE_TEXT:
-				pXMLReader->GetValue(&pwszText, &nCount);
-				if (!pwszText)
+				pXMLReader->GetValue(&pszText, &nCount);
+				if (!pszText)
 					throw CNMRException(NMR_ERROR_COULDNOTGETXMLTEXT);
 
 				if (nCount > 0)
-					OnText(pwszText, pXMLReader);
+					OnText(pszText, pXMLReader);
 				break;
 
 			case XMLREADERNODETYPE_ENDELEMENT:
-				pXMLReader->GetLocalName(&pwszLocalName, &nCount);
-				if (!pwszLocalName)
+				pXMLReader->GetLocalName(&pszLocalName, &nCount);
+				if (!pszLocalName)
 					throw CNMRException(NMR_ERROR_COULDNOTGETLOCALXMLNAME);
 
-				if (wcscmp(pwszLocalName, m_sName.c_str()) == 0) {
+				if (strcmp(pszLocalName, m_sName.c_str()) == 0) {
 					OnEndElement (pXMLReader);
 
 					pXMLReader->CloseElement();
@@ -206,12 +207,12 @@ namespace NMR {
 		}
 	}
 
-	void CModelReaderNode::OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue)
+	void CModelReaderNode::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
 	{
 		// empty on purpose, to be implemented by child classes
 	}
 
-	void CModelReaderNode::OnText(_In_z_ const nfWChar * pText, _In_ CXmlReader * pXMLReader)
+	void CModelReaderNode::OnText(_In_z_ const nfChar * pText, _In_ CXmlReader * pXMLReader)
 	{
 		// empty on purpose, to be implemented by child classes
 	}
@@ -221,12 +222,12 @@ namespace NMR {
 		// empty on purpose, to be implemented by child classes
 	}
 
-	void CModelReaderNode::OnNSAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue, _In_z_ const nfWChar * pNameSpace)
+	void CModelReaderNode::OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace)
 	{
 		// empty on purpose, to be implemented by child classes
 	}
 
-	void CModelReaderNode::OnNSChildElement(_In_z_ const nfWChar * pChildName, _In_z_ const nfWChar * pNameSpace, _In_ CXmlReader * pXMLReader)
+	void CModelReaderNode::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
 	{
 		// empty on purpose, to be implemented by child classes
 

@@ -51,7 +51,7 @@ namespace NMR {
 		CModelReaderNode093_TextureVertex() = delete;
 		CModelReaderNode093_TextureVertex(_In_ PModelReaderWarnings pWarnings);
 
-		virtual void OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue);
+		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 

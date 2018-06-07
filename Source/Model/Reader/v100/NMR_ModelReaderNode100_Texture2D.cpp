@@ -108,35 +108,35 @@ namespace NMR {
 
 	}
 
-	void CModelReaderNode100_Texture2D::OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue)
+	void CModelReaderNode100_Texture2D::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
 	{
 		__NMRASSERT(pAttributeName);
 		__NMRASSERT(pAttributeValue);
 
-		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TEXTURE2D_ID) == 0) {
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_TEXTURE2D_ID) == 0) {
 			if (m_nID != 0)
 				throw CNMRException(NMR_ERROR_DUPLICATERESOURCEID);
 
 			// Convert to integer and make a input and range check!
-			m_nID = fnWStringToUint32(pAttributeValue);
+			m_nID = fnStringToUint32(pAttributeValue);
 		}
-		else if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TEXTURE2D_PATH) == 0) {
-			m_sPath = std::wstring(pAttributeValue);
+		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_TEXTURE2D_PATH) == 0) {
+			m_sPath = std::string(pAttributeValue);
 		}
-		else if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TEXTURE2D_CONTENTTYPE) == 0) {
-			m_sContentType = std::wstring(pAttributeValue);
+		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_TEXTURE2D_CONTENTTYPE) == 0) {
+			m_sContentType = std::string(pAttributeValue);
 		}
-		else if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TEXTURE2D_TILESTYLEU) == 0) {
-			m_sTileStyleU = std::wstring(pAttributeValue);
+		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_TEXTURE2D_TILESTYLEU) == 0) {
+			m_sTileStyleU = std::string(pAttributeValue);
 		}
-		else if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TEXTURE2D_TILESTYLEV) == 0) {
-			m_sTileStyleV = std::wstring(pAttributeValue);
+		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_TEXTURE2D_TILESTYLEV) == 0) {
+			m_sTileStyleV = std::string(pAttributeValue);
 		}
-		else if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TEXTURE2D_BOX) == 0) {
+		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_TEXTURE2D_BOX) == 0) {
 			if (m_hasBox)
 				throw CNMRException(NMR_ERROR_DUPLICATE_BOX_ATTRIBUTE);
 			// parse box
-			std::vector<double> box = fnVctDouble_fromWideString(pAttributeValue);
+			std::vector<double> box = fnVctDouble_fromString(pAttributeValue);
 			if (box.size() != 4)
 				throw CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE);
 			m_fU = nfFloat(box[0]);

@@ -38,6 +38,7 @@ NMR_ModelReader_3MF.cpp implements the Model Reader Class for
 #include "Model/Classes/NMR_ModelMeshObject.h"
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Model/Classes/NMR_ModelBuildItem.h"
+#include "Common/NMR_StringUtils.h"
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_Exception_Windows.h"
 #include "Common/MeshImport/NMR_MeshImporter_STL.h"
@@ -66,7 +67,7 @@ namespace NMR {
 				throw CNMRException(NMR_USERABORTED);
 
 			PModelAttachment pProdAttachment = pModel->getProductionModelAttachment(i);
-			std::wstring path = pProdAttachment->getPathURI();
+			std::string path = pProdAttachment->getPathURI();
 			PImportStream pSubModelStream = pProdAttachment->getStream();
 
 			// Create XML Reader
@@ -80,18 +81,18 @@ namespace NMR {
 					break;
 
 				// Get Node Name
-				LPCWSTR pwszLocalName = nullptr;
-				pXMLReader->GetLocalName(&pwszLocalName, nullptr);
-				if (!pwszLocalName)
+				LPCSTR pszLocalName = nullptr;
+				pXMLReader->GetLocalName(&pszLocalName, nullptr);
+				if (!pszLocalName)
 					throw CNMRException(NMR_ERROR_COULDNOTGETLOCALXMLNAME);
 
-				if (wcscmp(pwszLocalName, XML_3MF_ATTRIBUTE_PREFIX_XML) == 0) {
+				if (strcmp(pszLocalName, XML_3MF_ATTRIBUTE_PREFIX_XML) == 0) {
 					PModelReader_InstructionElement pXMLNode = std::make_shared<CModelReader_InstructionElement>(pWarnings);
 					pXMLNode->parseXML(pXMLReader.get());
 				}
 
 				// Compare with Model Node Name
-				if (wcscmp(pwszLocalName, XML_3MF_ELEMENT_MODEL) == 0) {
+				if (strcmp(pszLocalName, XML_3MF_ELEMENT_MODEL) == 0) {
 					if (bHasModel)
 						throw CNMRException(NMR_ERROR_DUPLICATEMODELNODE);
 					bHasModel = true;
@@ -157,18 +158,18 @@ namespace NMR {
 				break;
 
 			// Get Node Name
-			LPCWSTR pwszLocalName = nullptr;
-			pXMLReader->GetLocalName(&pwszLocalName, nullptr);
-			if (!pwszLocalName)
+			LPCSTR pszLocalName = nullptr;
+			pXMLReader->GetLocalName(&pszLocalName, nullptr);
+			if (!pszLocalName)
 				throw CNMRException(NMR_ERROR_COULDNOTGETLOCALXMLNAME);
 
-			if (wcscmp(pwszLocalName, XML_3MF_ATTRIBUTE_PREFIX_XML) == 0) {
+			if (strcmp(pszLocalName, XML_3MF_ATTRIBUTE_PREFIX_XML) == 0) {
 				PModelReader_InstructionElement pXMLNode = std::make_shared<CModelReader_InstructionElement>(m_pWarnings);
 				pXMLNode->parseXML(pXMLReader.get());
 			}
 
 			// Compare with Model Node Name
-			if (wcscmp(pwszLocalName, XML_3MF_ELEMENT_MODEL) == 0) {
+			if (strcmp(pszLocalName, XML_3MF_ELEMENT_MODEL) == 0) {
 				if (bHasModel)
 					throw CNMRException(NMR_ERROR_DUPLICATEMODELNODE);
 				bHasModel = true;
@@ -202,7 +203,7 @@ namespace NMR {
 			throw CNMRException(NMR_USERABORTED);
 	}
 
-	void CModelReader_3MF::addTextureAttachment(_In_ std::wstring sPath, _In_ PImportStream pStream)
+	void CModelReader_3MF::addTextureAttachment(_In_ std::string sPath, _In_ PImportStream pStream)
 	{
 		if (pStream.get() == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);

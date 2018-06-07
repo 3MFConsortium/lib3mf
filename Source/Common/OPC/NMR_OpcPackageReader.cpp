@@ -124,7 +124,12 @@ namespace NMR {
 			// create ZIP objects
 			zip_error_init(&m_ZIPError);
 
-			if (true) {
+#ifdef NMR_COM_NATIVE
+			bool bUseCallback = false;
+#else
+			bool bUseCallback = true;
+#endif
+			if (bUseCallback) {
 				// read ZIP from callback: faster and requires less memory
 				m_ZIPsource = zip_source_function_create(custom_zip_source_callback, pImportStream.get(), &m_ZIPError);
 			}
@@ -150,9 +155,7 @@ namespace NMR {
 			nfInt64 nIndex;
 			for (nIndex = 0; nIndex < nEntryCount; nIndex++) {
 				const char * pszName = zip_get_name(m_ZIParchive, (nfUint64) nIndex, ZIP_FL_ENC_GUESS);
-				std::string sUTF8Name(pszName);
-				std::wstring sUTF16Name = fnUTF8toUTF16(sUTF8Name);
-				m_ZIPEntries.insert(std::make_pair(sUTF16Name, nIndex));
+				m_ZIPEntries.insert(std::make_pair(pszName, nIndex));
 			}
 
 			readContentTypes();
@@ -171,14 +174,14 @@ namespace NMR {
 		releaseZIP();
 	}
 
-	_Ret_maybenull_ COpcPackageRelationship * COpcPackageReader::findRootRelation(_In_ std::wstring sRelationType, _In_ nfBool bMustBeUnique)
+	_Ret_maybenull_ COpcPackageRelationship * COpcPackageReader::findRootRelation(_In_ std::string sRelationType, _In_ nfBool bMustBeUnique)
 	{
 		COpcPackageRelationship * pResultRelationship = nullptr;
 		auto iIterator = m_RootRelationships.begin();
 		while (iIterator != m_RootRelationships.end()) {
 			POpcPackageRelationship pRelationship = *iIterator;
 
-			std::wstring sType = pRelationship->getType();
+			std::string sType = pRelationship->getType();
 			if (sType == sRelationType) {
 				if (pResultRelationship == nullptr) {
 					pResultRelationship = pRelationship.get();
@@ -210,7 +213,7 @@ namespace NMR {
 		m_ZIParchive = nullptr;
 	}
 
-	PImportStream COpcPackageReader::openZIPEntry(_In_ std::wstring sName)
+	PImportStream COpcPackageReader::openZIPEntry(_In_ std::string sName)
 	{
 		auto iIterator = m_ZIPEntries.find(sName);
 		if (iIterator == m_ZIPEntries.end()) {
@@ -250,9 +253,9 @@ namespace NMR {
 		nfUint32 nCount = pReader->getCount();
 		nfUint32 nIndex;
 
-		std::wstring modelExtension = L"";
-		std::wstring modelPart = L"";
-		m_relationShipExtension = L"";
+		std::string modelExtension = "";
+		std::string modelPart = "";
+		m_relationShipExtension = "";
 		for (nIndex = 0; nIndex < nCount; nIndex++) {
 			POpcPackageContentType pContentType = pReader->getContentType(nIndex);
 			if (pContentType->m_contentType == PACKAGE_3D_RELS_CONTENT_TYPE) {
@@ -291,9 +294,9 @@ namespace NMR {
 		}
 	}
 
-	POpcPackagePart COpcPackageReader::createPart(_In_ std::wstring sPath)
+	POpcPackagePart COpcPackageReader::createPart(_In_ std::string sPath)
 	{
-		std::wstring sRealPath = fnRemoveLeadingPathDelimiter (sPath);
+		std::string sRealPath = fnRemoveLeadingPathDelimiter (sPath);
 		auto iPartIterator = m_Parts.find(sRealPath);
 		if (iPartIterator != m_Parts.end()) {
 			return iPartIterator->second;
@@ -306,11 +309,11 @@ namespace NMR {
 		POpcPackagePart pPart = std::make_shared<COpcPackagePart>(sRealPath, pStream);
 		m_Parts.insert(std::make_pair(sRealPath, pPart));
 
-		std::wstring sRelationShipName = fnExtractFileName(sRealPath);
-		std::wstring sRelationShipPath = sRealPath.substr(0, sRealPath.length() - sRelationShipName.length());
-		sRelationShipPath += L"_rels/";
+		std::string sRelationShipName = fnExtractFileName(sRealPath);
+		std::string sRelationShipPath = sRealPath.substr(0, sRealPath.length() - sRelationShipName.length());
+		sRelationShipPath += "_rels/";
 		sRelationShipPath += sRelationShipName;
-		sRelationShipPath += L"."+m_relationShipExtension;
+		sRelationShipPath += "."+m_relationShipExtension;
 
 		PImportStream pRelStream = openZIPEntry(sRelationShipPath);
 

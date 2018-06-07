@@ -91,17 +91,17 @@ namespace NMR {
 		return (!fnMATRIX3_isIdentity(m_mTransform));
 	}
 
-	std::wstring CModelBuildItem::getTransformString()
+	std::string CModelBuildItem::getTransformString()
 	{
-		return fnMATRIX3_toWideString(m_mTransform);
+		return fnMATRIX3_toString(m_mTransform);
 	}
 
-	std::wstring CModelBuildItem::getPartNumber()
+	std::string CModelBuildItem::getPartNumber()
 	{
 		return m_sPartNumber;
 	}
 
-	void CModelBuildItem::setPartNumber(_In_ std::wstring sPartNumber)
+	void CModelBuildItem::setPartNumber(_In_ std::string sPartNumber)
 	{
 		m_sPartNumber = sPartNumber;
 	}
@@ -122,12 +122,12 @@ namespace NMR {
 		m_UUID = uuid;
 	}
 
-	std::wstring CModelBuildItem::path()
+	std::string CModelBuildItem::path()
 	{
 		return m_sPath;
 	}
 
-	void CModelBuildItem::setPath(std::wstring sPath)
+	void CModelBuildItem::setPath(std::string sPath)
 	{
 		m_sPath = sPath;
 	}

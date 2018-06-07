@@ -47,10 +47,10 @@ namespace NMR {
 
 		nfBool m_bHasPath;
 		PUUID m_UUID;
-		std::wstring m_sPath;
+		std::string m_sPath;
 
-		virtual void OnNSAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue, _In_z_ const nfWChar * pNameSpace);
-		virtual void OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue);
+		virtual void OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace);
+		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 	public:
 		CModelReaderNode100_Component() = delete;
 		CModelReaderNode100_Component(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings);

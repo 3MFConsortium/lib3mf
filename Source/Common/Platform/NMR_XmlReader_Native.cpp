@@ -40,20 +40,19 @@ NMR_XMLReader_Native.cpp implements a XML reader class with a native XML parsing
 
 namespace NMR {
 
-	nfUint32 nfWStrLen(_In_ const nfWChar * pszwString)
+	nfUint32 nfStrLen(_In_ const nfChar * pszString)
 	{
 		nfUint32 nResult = 0;
-		const nfWChar * pChar = pszwString;
+		const nfChar * pChar = pszString;
 		while (*pChar) {
 			pChar++;
 			nResult++;
 			if (nResult > NMR_MAXXMLSTRINGLENGTH)
 				throw CNMRException(NMR_ERROR_INVALIDBUFFERSIZE);
 		}
-
 		return nResult;
-
 	}
+
 	CXmlReader_Native::CXmlReader_Native(_In_ PImportStream pImportStream, _In_ nfUint32 cbBufferCapacity, _In_ CProgressMonitor* pProgressMonitor)
 		: CXmlReader(pImportStream), m_progressCounter(0), m_pProgressMonitor(pProgressMonitor)
 	{
@@ -62,16 +61,15 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_INVALIDBUFFERSIZE);
 
 		m_cbBufferCapacity = cbBufferCapacity;
-		m_TempBuffer.resize(cbBufferCapacity);
-		m_UTF16Buffer1.resize(cbBufferCapacity);
-		m_UTF16Buffer2.resize(cbBufferCapacity);
+		m_UTF8Buffer1.resize(cbBufferCapacity);
+		m_UTF8Buffer2.resize(cbBufferCapacity);
 		m_CurrentEntityList.resize(cbBufferCapacity);
 		m_CurrentEntityTypes.resize(cbBufferCapacity);
 		m_CurrentEntityPrefixes.resize(cbBufferCapacity);
 		m_ZeroInsertArray.resize(cbBufferCapacity);
 
-		m_pNextBuffer = &m_UTF16Buffer1;
-		m_pCurrentBuffer = &m_UTF16Buffer2;
+		m_pNextBuffer = &m_UTF8Buffer1;
+		m_pCurrentBuffer = &m_UTF8Buffer2;
 
 		m_nCurrentBufferSize = 0;
 		m_cbCurrentOverflowSize = 0;
@@ -105,63 +103,63 @@ namespace NMR {
 
 	}
 
-	void CXmlReader_Native::GetValue(_Outptr_result_buffer_maybenull_(*pcwchValue + 1)  const nfWChar ** ppwszValue, _Out_opt_  nfUint32 *pcwchValue)
+	void CXmlReader_Native::GetValue(_Outptr_result_buffer_maybenull_(*pcchValue + 1)  const nfChar ** ppszValue, _Out_opt_  nfUint32 *pcchValue)
 	{
-		if (ppwszValue == nullptr)
+		if (ppszValue == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-		*ppwszValue = m_pCurrentValue;
+		*ppszValue = m_pCurrentValue;
 		
-		if (pcwchValue != nullptr)
-			*pcwchValue = nfWStrLen(m_pCurrentValue);
+		if (pcchValue != nullptr)
+			*pcchValue = nfStrLen(m_pCurrentValue);
 
 	}
 
-	void CXmlReader_Native::GetLocalName(_Outptr_result_buffer_maybenull_(*pcwchLocalName + 1) const nfWChar ** ppwszLocalName, _Out_opt_ nfUint32 *pcwchLocalName)
+	void CXmlReader_Native::GetLocalName(_Outptr_result_buffer_maybenull_(*pcchLocalName + 1) const nfChar ** ppszLocalName, _Out_opt_ nfUint32 *pcchLocalName)
 	{
-		if (ppwszLocalName == nullptr)
+		if (ppszLocalName == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-		*ppwszLocalName = m_pCurrentName;
-		if (pcwchLocalName != nullptr)
-			*pcwchLocalName = nfWStrLen(m_pCurrentName);
+		*ppszLocalName = m_pCurrentName;
+		if (pcchLocalName != nullptr)
+			*pcchLocalName = nfStrLen(m_pCurrentName);
 
 	}
 
-	void CXmlReader_Native::GetNamespaceURI(_Outptr_result_buffer_maybenull_(*pcwchValue + 1)  const nfWChar ** ppwszValue, _Out_opt_  nfUint32 *pcwchValue)
+	void CXmlReader_Native::GetNamespaceURI(_Outptr_result_buffer_maybenull_(*pcchValue + 1)  const nfChar ** ppszValue, _Out_opt_  nfUint32 *pcchValue)
 	{
-		if (ppwszValue == nullptr)
+		if (ppszValue == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
 		nfUint32 cbLength = 0;
 		if (*m_pCurrentPrefix == 0) {
 			if (m_bNameSpaceIsAttribute) {
 				cbLength = 0;
-				*ppwszValue = &m_cNullString;
+				*ppszValue = &m_cNullString;
 			}
 			else {
 				cbLength = m_cbDefaultNameSpaceLength;
-				*ppwszValue = m_sDefaultNameSpace.c_str();
+				*ppszValue = m_sDefaultNameSpace.c_str();
 			}
 		}
 		else {
 			auto iIterator = m_sNameSpaces.find(m_pCurrentPrefix);
 			if (iIterator != m_sNameSpaces.end()) {
 				cbLength = (nfUint32)iIterator->second.length();
-				*ppwszValue = iIterator->second.c_str();
+				*ppszValue = iIterator->second.c_str();
 			}
 			else {
 				cbLength = 0;
-				*ppwszValue = nullptr;
+				*ppszValue = nullptr;
 			}
 		}
 
-		if (pcwchValue != nullptr)
-			*pcwchValue = cbLength;
+		if (pcchValue != nullptr)
+			*pcchValue = cbLength;
 
 	}
 
-	bool CXmlReader_Native::GetNamespaceURI(const std::wstring &sNameSpacePrefix, std::wstring &sNameSpaceURI)
+	bool CXmlReader_Native::GetNamespaceURI(const std::string &sNameSpacePrefix, std::string &sNameSpaceURI)
 	{
 		auto iIterator = m_sNameSpaces.find(sNameSpacePrefix);
 		if (iIterator != m_sNameSpaces.end()) {
@@ -173,7 +171,7 @@ namespace NMR {
 		}
 	}
 
-	bool CXmlReader_Native::NamespaceRegistered(const std::wstring &sNameSpaceURI)
+	bool CXmlReader_Native::NamespaceRegistered(const std::string &sNameSpaceURI)
 	{
 		for (auto it : m_sNameSpaces) {
 			if (it.second == sNameSpaceURI) {
@@ -315,11 +313,11 @@ namespace NMR {
 			m_nCurrentEntityIndex++;
 
 			// register Namespaces
-			if ((*m_pCurrentPrefix == 0) && (wcscmp(m_pCurrentName, NMR_NATIVEXMLNS_XMLNS_PREFIX) == 0)) {
+			if ((*m_pCurrentPrefix == 0) && (strcmp(m_pCurrentName, NMR_NATIVEXMLNS_XMLNS_PREFIX) == 0)) {
 				m_sDefaultNameSpace = m_pCurrentValue;
 				m_cbDefaultNameSpaceLength = (nfUint32)m_sDefaultNameSpace.length();
 			}
-			if (wcscmp(m_pCurrentPrefix, NMR_NATIVEXMLNS_XMLNS_PREFIX) == 0)
+			if (strcmp(m_pCurrentPrefix, NMR_NATIVEXMLNS_XMLNS_PREFIX) == 0)
 				registerNameSpace(m_pCurrentName, m_pCurrentValue);
 
 			return true;
@@ -362,8 +360,8 @@ namespace NMR {
 		// Copy over unfinished elements of current buffer into new buffer
 		if (m_cbCurrentOverflowSize > 0) {
 			nfUint32 nDeltaIndex = m_nCurrentBufferSize - m_cbCurrentOverflowSize;
-			nfWChar * pSrc = &(*m_pCurrentBuffer)[nDeltaIndex];
-			nfWChar * pDst = &(*m_pNextBuffer)[0];
+			nfChar * pSrc = &(*m_pCurrentBuffer)[nDeltaIndex];
+			nfChar * pDst = &(*m_pNextBuffer)[0];
 			for (j = 0; j < m_cbCurrentOverflowSize; j++)
 				pDst[j] = pSrc[j];
 
@@ -376,31 +374,9 @@ namespace NMR {
 			m_cbCurrentOverflowSize = 0;
 		}
 
-		// Read temp buffer into memory
-		cbBytesRead = m_pImportStream->readBuffer(&m_TempBuffer[0], cbReadSize, false);
-		if (cbBytesRead > 0) {
-			nfUint32 pnLastChar = 0;
-			nfUint32 cbNeededCharacters = 0;
-
-			// Convert buffer to UTF16
-			nfUint64 cbCharsConverted = fnBufferedUTF8toUTF16((nfChar*)&m_TempBuffer[0], &(*m_pNextBuffer)[m_nCurrentBufferSize], (nfUint32)cbBytesRead, &pnLastChar, &cbNeededCharacters);
-			m_nCurrentBufferSize += (nfUint32)cbCharsConverted;
-
-			if (cbNeededCharacters > 0) {
-				// We just need to write the last bytes of a multibyte character!
-				__NMRASSERT(cbNeededCharacters < NMR_NATIVEXMLREADER_BUFFERMARGIN);
-				m_pImportStream->readBuffer(&m_TempBuffer[(nfUint32)cbBytesRead], cbNeededCharacters, true);
-				cbBytesRead += cbNeededCharacters;
-
-				// Convert final character
-				cbCharsConverted = fnBufferedUTF8toUTF16((nfChar*)&m_TempBuffer[pnLastChar], &(*m_pNextBuffer)[m_nCurrentBufferSize], (nfUint32)(cbBytesRead - pnLastChar), &pnLastChar, &cbNeededCharacters);
-				m_nCurrentBufferSize += (nfUint32)cbCharsConverted;
-
-				// Check if everything is finished
-				if (cbNeededCharacters != 0)
-					throw CNMRException(NMR_ERROR_COULDNOTREADFULLDATA);
-			}
-		}
+		// Read buffer into memory
+		cbBytesRead = m_pImportStream->readBuffer((nfByte*)(&((*m_pNextBuffer)[m_nCurrentBufferSize])), cbReadSize, false);
+		m_nCurrentBufferSize += (nfUint32)cbBytesRead;
 
 		// Reset Entity parser
 		m_nCurrentEntityCount = 0;
@@ -409,7 +385,7 @@ namespace NMR {
 		m_nCurrentEntityIndex = 0;
 
 		// Swap Buffers
-		std::vector<nfWChar> * pDummy = m_pCurrentBuffer;
+		std::vector<nfChar> * pDummy = m_pCurrentBuffer;
 		m_pCurrentBuffer = m_pNextBuffer;
 		m_pNextBuffer = pDummy;
 
@@ -426,7 +402,7 @@ namespace NMR {
 			if (nStartPtr > nEndPtr)
 				throw CNMRException(NMR_ERROR_XMLPARSER_INVALIDPARSERESULT);
 
-			nfUint64 nUsedChars = ((nEndPtr - nStartPtr) / sizeof (nfWChar));
+			nfUint64 nUsedChars = ((nEndPtr - nStartPtr) / sizeof (nfChar));
 			if (nUsedChars > (nfUint64)m_nCurrentBufferSize)
 				throw CNMRException(NMR_ERROR_XMLPARSER_TOOMANYUSEDCHARS);
 
@@ -437,12 +413,12 @@ namespace NMR {
 		}
 	}
 
-	void CXmlReader_Native::pushEntity(_In_ nfWChar * pszwEntityStartChar, _In_ nfWChar * pszwEntityEndDelimiter, _In_ nfWChar * pszwNextEntityChar, _In_ nfByte nType, _In_ nfBool bParseForNamespaces, _In_ nfBool bEntityIsFinished)
+	void CXmlReader_Native::pushEntity(_In_ nfChar * pszEntityStartChar, _In_ nfChar * pszEntityEndDelimiter, _In_ nfChar * pszNextEntityChar, _In_ nfByte nType, _In_ nfBool bParseForNamespaces, _In_ nfBool bEntityIsFinished)
 	{
 		if (bParseForNamespaces) {
-			nfWChar * pChar = pszwEntityStartChar;
-			nfWChar * pColon = nullptr;
-			while (pChar != pszwEntityEndDelimiter) {
+			nfChar * pChar = pszEntityStartChar;
+			nfChar * pColon = nullptr;
+			while (pChar != pszEntityEndDelimiter) {
 				if (*pChar == 0)
 					throw CNMRException(NMR_ERROR_XMLPARSER_INVALIDENDDELIMITER);
 
@@ -461,16 +437,16 @@ namespace NMR {
 				pColon++;
 
 				m_CurrentEntityList[m_nCurrentEntityCount] = pColon;
-				m_CurrentEntityPrefixes[m_nCurrentEntityCount] = pszwEntityStartChar;
+				m_CurrentEntityPrefixes[m_nCurrentEntityCount] = pszEntityStartChar;
 			}
 			else {
-				m_CurrentEntityList[m_nCurrentEntityCount] = pszwEntityStartChar;
+				m_CurrentEntityList[m_nCurrentEntityCount] = pszEntityStartChar;
 				m_CurrentEntityPrefixes[m_nCurrentEntityCount] = &m_cNullString;
 			}
 
 		}
 		else {
-			m_CurrentEntityList[m_nCurrentEntityCount] = pszwEntityStartChar;
+			m_CurrentEntityList[m_nCurrentEntityCount] = pszEntityStartChar;
 			m_CurrentEntityPrefixes[m_nCurrentEntityCount] = &m_cNullString;
 		}
 
@@ -479,7 +455,7 @@ namespace NMR {
 
 		if (bEntityIsFinished) {
 			// We have closed a full entity
-			m_pCurrentEntityPointer = pszwNextEntityChar;
+			m_pCurrentEntityPointer = pszNextEntityChar;
 			m_nCurrentFullEntityCount = m_nCurrentEntityCount;
 
 			// Insert all zeros of the entity, as we do not need to rollback.
@@ -490,12 +466,12 @@ namespace NMR {
 	}
 
 
-	nfWChar * CXmlReader_Native::parseUnknown(_In_ nfWChar * pszwStart, _In_ nfWChar * pszwEnd)
+	nfChar * CXmlReader_Native::parseUnknown(_In_ nfChar * pszStart, _In_ nfChar * pszEnd)
 	{
-		nfWChar * pChar = pszwStart;
-		while (pChar != pszwEnd) {
-			nfWChar * pLastChar = pChar;
-			pChar = parseText(pChar, pszwEnd);
+		nfChar * pChar = pszStart;
+		while (pChar != pszEnd) {
+			nfChar * pLastChar = pChar;
+			pChar = parseText(pChar, pszEnd);
 
 			if (pChar == pLastChar)
 				throw CNMRException(NMR_ERROR_XMLPARSER_COULDNOTPARSEENTITY);
@@ -504,24 +480,24 @@ namespace NMR {
 		return pChar;
 	}
 
-	nfWChar * CXmlReader_Native::parseText(_In_ nfWChar * pszwStart, _In_ nfWChar * pszwEnd)
+	nfChar * CXmlReader_Native::parseText(_In_ nfChar * pszStart, _In_ nfChar * pszEnd)
 	{
-		nfWChar * pChar = pszwStart;
-		while (pChar != pszwEnd) {
+		nfChar * pChar = pszStart;
+		while (pChar != pszEnd) {
 			switch (*pChar) {
-			case L'<':
-				if (pChar+1 != pszwEnd && *(pChar+1) == L'!' &&
-					pChar+2 != pszwEnd && *(pChar+2) == L'-' &&
-					pChar+3 != pszwEnd && *(pChar+3) == L'-'){
+			case '<':
+				if (pChar+1 != pszEnd && *(pChar+1) == '!' &&
+					pChar+2 != pszEnd && *(pChar+2) == '-' &&
+					pChar+3 != pszEnd && *(pChar+3) == '-'){
 					pChar += 4;
-					return parseComment(pChar, pszwEnd);
+					return parseComment(pChar, pszEnd);
 				} else {
-					if (pChar != pszwStart)
-						pushEntity(pszwStart, pChar, pChar, NMR_NATIVEXMLTYPE_TEXT, false, true);
+					if (pChar != pszStart)
+						pushEntity(pszStart, pChar, pChar, NMR_NATIVEXMLTYPE_TEXT, false, true);
 					pushZeroInsert(pChar);
 					pChar++;
 
-					return parseElement(pChar, pszwEnd);
+					return parseElement(pChar, pszEnd);
 				}
 			default:
 				pChar++;
@@ -533,46 +509,46 @@ namespace NMR {
 	}
 
 
-	nfWChar * CXmlReader_Native::parseElement(_In_ nfWChar * pszwStart, _In_ nfWChar * pszwEnd)
+	nfChar * CXmlReader_Native::parseElement(_In_ nfChar * pszStart, _In_ nfChar * pszEnd)
 	{
-		nfWChar * pChar = pszwStart;
-		while (pChar != pszwEnd) {
+		nfChar * pChar = pszStart;
+		while (pChar != pszEnd) {
 			switch (*pChar) {
 			case 9:  // Tab
 			case 10: // LF
 			case 13: // CR
 			case 32: // Space
-				if (pszwStart == pChar)
+				if (pszStart == pChar)
 					throw CNMRException(NMR_ERROR_XMLPARSER_EMPTYELEMENTNAME);
-				pushEntity(pszwStart, pChar, pChar, NMR_NATIVEXMLTYPE_ELEMENT, true, false);
+				pushEntity(pszStart, pChar, pChar, NMR_NATIVEXMLTYPE_ELEMENT, true, false);
 				pushZeroInsert(pChar);
 				pChar++;
 
-				return parseAttributes(pChar, pszwEnd);
+				return parseAttributes(pChar, pszEnd);
 
-			case L'?':
-				if (pszwStart != pChar)
+			case '?':
+				if (pszStart != pChar)
 					throw CNMRException(NMR_ERROR_XMLPARSER_INVALIDCHARACTERINELEMENTNAME);
 				pChar++;
-				return parseProcessingInstruction(pChar, pszwEnd);
+				return parseProcessingInstruction(pChar, pszEnd);
 
-			case L'>':
+			case '>':
 				pushZeroInsert(pChar);
-				pushEntity(pszwStart, pChar, pChar + 1, NMR_NATIVEXMLTYPE_ELEMENT, true, true);
+				pushEntity(pszStart, pChar, pChar + 1, NMR_NATIVEXMLTYPE_ELEMENT, true, true);
 				pChar++;
 				return pChar;
 
-			case L'/':
-				if (pszwStart == pChar) {
+			case '/':
+				if (pszStart == pChar) {
 					pChar++;
-					return parseEndElement(pChar, pszwEnd);
+					return parseEndElement(pChar, pszEnd);
 				}
 				else {
-					pushEntity(pszwStart, pChar, pChar + 1, NMR_NATIVEXMLTYPE_ELEMENT, true, false);
+					pushEntity(pszStart, pChar, pChar + 1, NMR_NATIVEXMLTYPE_ELEMENT, true, false);
 					pushZeroInsert(pChar);
 					pChar++;
 
-					return parseCloseElement(pChar, pszwEnd);
+					return parseCloseElement(pChar, pszEnd);
 				}
 
 			default:
@@ -585,18 +561,18 @@ namespace NMR {
 
 	}
 
-	nfWChar * CXmlReader_Native::parseComment(_In_ nfWChar * pszwStart, _In_ nfWChar * pszwEnd)
+	nfChar * CXmlReader_Native::parseComment(_In_ nfChar * pszStart, _In_ nfChar * pszEnd)
 	{
-		nfWChar * pChar = pszwStart;
-		static nfWChar commentEnd [3] = {L'-', L'-', L'>'};
+		nfChar * pChar = pszStart;
+		static nfChar commentEnd [3] = {'-', '-', '>'};
 		nfInt32 endPosition = 0;
-		while (pChar != pszwEnd) {
+		while (pChar != pszEnd) {
 			if (*pChar == commentEnd[endPosition]){
 				if (endPosition == 2)
 					return pChar;
 				endPosition++;
 			} else {
-				if (*pChar != L'-')
+				if (*pChar != '-')
 				  endPosition = 0;
 			}
 			pChar++;
@@ -604,36 +580,36 @@ namespace NMR {
 		return pChar;
 	}
 
-	nfWChar * CXmlReader_Native::parseProcessingInstruction(_In_ nfWChar * pszwStart, _In_ nfWChar * pszwEnd)
+	nfChar * CXmlReader_Native::parseProcessingInstruction(_In_ nfChar * pszStart, _In_ nfChar * pszEnd)
 	{
-		nfWChar * pChar = pszwStart;
-		while (pChar != pszwEnd) {
+		nfChar * pChar = pszStart;
+		while (pChar != pszEnd) {
 			switch (*pChar) {
 			case 9:
 			case 10:
 			case 13:
 			case 32:
-				if (pszwStart == pChar)
+				if (pszStart == pChar)
 					throw CNMRException(NMR_ERROR_XMLPARSER_EMPTYINSTRUCTIONNAME);
-				pushEntity(pszwStart, pChar, pChar, NMR_NATIVEXMLTYPE_PROCESSINGINSTRUCTION, true, false);
+				pushEntity(pszStart, pChar, pChar, NMR_NATIVEXMLTYPE_PROCESSINGINSTRUCTION, true, false);
 				pushZeroInsert(pChar);
 				pChar++;
 
-				return parseAttributes(pChar, pszwEnd);
+				return parseAttributes(pChar, pszEnd);
 
 				break;
 
-			case L'/':
+			case '/':
 				throw CNMRException(NMR_ERROR_XMLPARSER_INVALIDINSTRUCTIONNAME);
 
-			case L'?':
-				if (pszwStart == pChar)
+			case '?':
+				if (pszStart == pChar)
 					throw CNMRException(NMR_ERROR_XMLPARSER_EMPTYINSTRUCTIONNAME);
-				pushEntity(pszwStart, pChar, pChar, NMR_NATIVEXMLTYPE_PROCESSINGINSTRUCTION, true, false);
+				pushEntity(pszStart, pChar, pChar, NMR_NATIVEXMLTYPE_PROCESSINGINSTRUCTION, true, false);
 				pushZeroInsert(pChar);
 				pChar++;
 
-				return parseCloseProcessingInstruction(pChar, pszwEnd);
+				return parseCloseProcessingInstruction(pChar, pszEnd);
 
 			default:
 				pChar++;
@@ -645,27 +621,27 @@ namespace NMR {
 
 	}
 
-	nfWChar * CXmlReader_Native::parseCloseProcessingInstruction(_In_ nfWChar * pszwStart, _In_ nfWChar * pszwEnd)
+	nfChar * CXmlReader_Native::parseCloseProcessingInstruction(_In_ nfChar * pszStart, _In_ nfChar * pszEnd)
 	{
-		if (pszwStart != pszwEnd) {
-			if (*pszwStart != L'>')
+		if (pszStart != pszEnd) {
+			if (*pszStart != '>')
 				throw CNMRException(NMR_ERROR_XMLPARSER_COULDNOTCLOSEINSTRUCTION);
 
-			pushZeroInsert(pszwStart);
-			pushEntity(pszwStart, pszwStart, pszwStart + 1, NMR_NATIVEXMLTYPE_PROCESSINGINSTRUCTIONEND, false, true);
+			pushZeroInsert(pszStart);
+			pushEntity(pszStart, pszStart, pszStart + 1, NMR_NATIVEXMLTYPE_PROCESSINGINSTRUCTIONEND, false, true);
 
-			pszwStart++;
-			return pszwStart;
+			pszStart++;
+			return pszStart;
 		}
 
-		return pszwStart;
+		return pszStart;
 	}
 
 
-	nfWChar * CXmlReader_Native::parseEndElement(_In_ nfWChar * pszwStart, _In_ nfWChar * pszwEnd)
+	nfChar * CXmlReader_Native::parseEndElement(_In_ nfChar * pszStart, _In_ nfChar * pszEnd)
 	{
-		nfWChar * pChar = pszwStart;
-		while (pChar != pszwEnd) {
+		nfChar * pChar = pszStart;
+		while (pChar != pszEnd) {
 			switch (*pChar) {
 			case 9:
 			case 10:
@@ -674,15 +650,15 @@ namespace NMR {
 				pChar++;
 				break;
 
-			case L'/':
-			case L'?':
+			case '/':
+			case '?':
 				throw CNMRException(NMR_ERROR_XMLPARSER_COULDNOTENDELEMENT);
 
-			case L'>':
-				if (pszwStart == pChar)
+			case '>':
+				if (pszStart == pChar)
 					throw CNMRException(NMR_ERROR_XMLPARSER_EMPTYENDELEMENT);
 				pushZeroInsert(pChar);
-				pushEntity(pszwStart, pChar, pChar + 1, NMR_NATIVEXMLTYPE_ELEMENTEND, true, true);
+				pushEntity(pszStart, pChar, pChar + 1, NMR_NATIVEXMLTYPE_ELEMENTEND, true, true);
 				pChar++;
 
 				return pChar;
@@ -697,49 +673,49 @@ namespace NMR {
 
 	}
 
-	nfWChar * CXmlReader_Native::parseCloseElement(_In_ nfWChar * pszwStart, _In_ nfWChar * pszwEnd)
+	nfChar * CXmlReader_Native::parseCloseElement(_In_ nfChar * pszStart, _In_ nfChar * pszEnd)
 	{
-		if (pszwStart != pszwEnd) {
-			if (*pszwStart != L'>')
+		if (pszStart != pszEnd) {
+			if (*pszStart != '>')
 				throw CNMRException(NMR_ERROR_XMLPARSER_COULDNOTCLOSEELEMENT);
 
-			pushZeroInsert (pszwStart);
-			pushEntity(pszwStart, pszwStart, pszwStart + 1, NMR_NATIVEXMLTYPE_CLOSEELEMENT, false, true);
+			pushZeroInsert (pszStart);
+			pushEntity(pszStart, pszStart, pszStart + 1, NMR_NATIVEXMLTYPE_CLOSEELEMENT, false, true);
 
-			pszwStart++;
-			return pszwStart;
+			pszStart++;
+			return pszStart;
 		}
 
-		return pszwStart;
+		return pszStart;
 	}
 
-	nfWChar * CXmlReader_Native::parseAttributes(_In_ nfWChar * pszwStart, _In_ nfWChar * pszwEnd)
+	nfChar * CXmlReader_Native::parseAttributes(_In_ nfChar * pszStart, _In_ nfChar * pszEnd)
 	{
-		nfWChar * pChar = pszwStart;
-		while (pChar != pszwEnd) {
+		nfChar * pChar = pszStart;
+		while (pChar != pszEnd) {
 			switch (*pChar) {
 			case 9:
 			case 10:
 			case 13:
 			case 32:
-				pChar = skipSpaces(++pChar, pszwEnd);
+				pChar = skipSpaces(++pChar, pszEnd);
 				break;
 
-			case L'>':
+			case '>':
 				pChar++;
 				return pChar;
 
-			case L'/':
+			case '/':
 				pChar++;
-				return parseCloseElement(pChar, pszwEnd);
+				return parseCloseElement(pChar, pszEnd);
 
-			case L'?':
+			case '?':
 				pChar++;
-				return parseCloseProcessingInstruction(pChar, pszwEnd);
+				return parseCloseProcessingInstruction(pChar, pszEnd);
 
 			default:
-				pChar = parseAttributeName(pChar, pszwEnd);
-				pChar = parseAttributeValue(pChar, pszwEnd);
+				pChar = parseAttributeName(pChar, pszEnd);
+				pChar = parseAttributeValue(pChar, pszEnd);
 			}
 
 		}
@@ -748,10 +724,10 @@ namespace NMR {
 	}
 
 
-	nfWChar * CXmlReader_Native::skipSpaces(_In_ nfWChar * pszwStart, _In_ nfWChar * pszwEnd)
+	nfChar * CXmlReader_Native::skipSpaces(_In_ nfChar * pszStart, _In_ nfChar * pszEnd)
 	{
-		nfWChar * pChar = pszwStart;
-		while (pChar != pszwEnd) {
+		nfChar * pChar = pszStart;
+		while (pChar != pszEnd) {
 			switch (*pChar) {
 			case 9:
 			case 10:
@@ -769,11 +745,11 @@ namespace NMR {
 		return pChar;
 	}
 
-	nfWChar * CXmlReader_Native::parseAttributeName(_In_ nfWChar * pszwStart, _In_ nfWChar * pszwEnd)
+	nfChar * CXmlReader_Native::parseAttributeName(_In_ nfChar * pszStart, _In_ nfChar * pszEnd)
 	{
 		nfBool bHadSpacing = false;
-		nfWChar * pChar = skipSpaces(pszwStart, pszwEnd);
-		while (pChar != pszwEnd) {
+		nfChar * pChar = skipSpaces(pszStart, pszEnd);
+		while (pChar != pszEnd) {
 			switch (*pChar) {
 			// name-ending characters
 			case 9:
@@ -784,7 +760,7 @@ namespace NMR {
 				// but continue to run through the string unti L'=' is reached
 				// if another name-constituting character appears, throw exception
 				bHadSpacing = true;
-				pushEntity(pszwStart, pChar, pChar + 1, NMR_NATIVEXMLTYPE_ATTRIBNAME, true, false);
+				pushEntity(pszStart, pChar, pChar + 1, NMR_NATIVEXMLTYPE_ATTRIBNAME, true, false);
 				pushZeroInsert(pChar);
 				pChar++;
 				break;
@@ -793,9 +769,9 @@ namespace NMR {
 			case 39:
 				throw CNMRException(NMR_ERROR_XMLPARSER_INVALIDATTRIBUTENAME);
 
-			case L'=':
+			case '=':
 				if (!bHadSpacing) {
-					pushEntity(pszwStart, pChar, pChar + 1, NMR_NATIVEXMLTYPE_ATTRIBNAME, true, false);
+					pushEntity(pszStart, pChar, pChar + 1, NMR_NATIVEXMLTYPE_ATTRIBNAME, true, false);
 					pushZeroInsert(pChar);
 					pChar++;	
 				}
@@ -813,11 +789,11 @@ namespace NMR {
 		return pChar;
 	}
 
-	nfWChar * CXmlReader_Native::parseAttributeValue(_In_ nfWChar * pszwStart, _In_ nfWChar * pszwEnd)
+	nfChar * CXmlReader_Native::parseAttributeValue(_In_ nfChar * pszStart, _In_ nfChar * pszEnd)
 	{
 		nfBool bHadSpacing = false;
-		nfWChar * pChar = skipSpaces(pszwStart, pszwEnd);
-		while (pChar != pszwEnd) {
+		nfChar * pChar = skipSpaces(pszStart, pszEnd);
+		while (pChar != pszEnd) {
 			switch (*pChar) {
 			case 9:
 			case 10:
@@ -830,11 +806,11 @@ namespace NMR {
 
 			case 34:
 				pChar++;
-				return parseAttributeValueDoubleQuote(pChar, pszwEnd);
+				return parseAttributeValueDoubleQuote(pChar, pszEnd);
 
 			case 39:
 				pChar++;
-				return parseAttributeValueSingleQuote(pChar, pszwEnd);
+				return parseAttributeValueSingleQuote(pChar, pszEnd);
 
 			default:
 				if (bHadSpacing)
@@ -847,15 +823,15 @@ namespace NMR {
 		return pChar;
 	}
 
-	nfWChar * CXmlReader_Native::parseAttributeValueDoubleQuote(_In_ nfWChar * pszwStart, _In_ nfWChar * pszwEnd)
+	nfChar * CXmlReader_Native::parseAttributeValueDoubleQuote(_In_ nfChar * pszStart, _In_ nfChar * pszEnd)
 	{
-		nfWChar * pChar = pszwStart;
-		while (pChar != pszwEnd) {
+		nfChar * pChar = pszStart;
+		while (pChar != pszEnd) {
 			switch (*pChar) {
 
 			case 34:
 				pushZeroInsert(pChar);
-				pushEntity(pszwStart, pChar, pChar + 1, NMR_NATIVEXMLTYPE_ATTRIBVALUE, false, false);
+				pushEntity(pszStart, pChar, pChar + 1, NMR_NATIVEXMLTYPE_ATTRIBVALUE, false, false);
 				pChar++;
 				return pChar;
 
@@ -868,15 +844,15 @@ namespace NMR {
 		return pChar;
 	}
 
-	nfWChar * CXmlReader_Native::parseAttributeValueSingleQuote(_In_ nfWChar * pszwStart, _In_ nfWChar * pszwEnd)
+	nfChar * CXmlReader_Native::parseAttributeValueSingleQuote(_In_ nfChar * pszStart, _In_ nfChar * pszEnd)
 	{
-		nfWChar * pChar = pszwStart;
-		while (pChar != pszwEnd) {
+		nfChar * pChar = pszStart;
+		while (pChar != pszEnd) {
 			switch (*pChar) {
 
 			case 39:
 				pushZeroInsert(pChar);
-				pushEntity(pszwStart, pChar, pChar + 1, NMR_NATIVEXMLTYPE_ATTRIBVALUE, false, false);
+				pushEntity(pszStart, pChar, pChar + 1, NMR_NATIVEXMLTYPE_ATTRIBVALUE, false, false);
 				pChar++;
 				return pChar;
 
@@ -890,58 +866,58 @@ namespace NMR {
 	}
 
 
-	void CXmlReader_Native::registerNameSpace(_In_ std::wstring sPrefix, _In_ std::wstring sURI)
+	void CXmlReader_Native::registerNameSpace(_In_ std::string sPrefix, _In_ std::string sURI)
 	{
 		m_sNameSpaces.insert(std::make_pair(sPrefix, sURI));
 	}
 
 
-	void CXmlReader_Native::pushZeroInsert(_In_ nfWChar * pChar)
+	void CXmlReader_Native::pushZeroInsert(_In_ nfChar * pChar)
 	{
 		__NMRASSERT(pChar != nullptr);
 		m_ZeroInsertArray[m_nZeroInsertIndex] = pChar;
 		m_nZeroInsertIndex++;
 	}
 	
-	inline void decodeXMLEscapeXMLStrings(nfWChar* pChar) {
-		if (wcspbrk(pChar, L"&") == nullptr) {
+	inline void decodeXMLEscapeXMLStrings(nfChar* pChar) {
+		if (strpbrk(pChar, "&") == nullptr) {
 			return;
 		}
-		nfWChar *pIterChar = pChar;
-		nfWChar *pWriteChar = pChar;
+		nfChar *pIterChar = pChar;
+		nfChar *pWriteChar = pChar;
 
-		nfWChar *pAmp = nullptr;
-		nfWChar *pColon = nullptr;
+		nfChar *pAmp = nullptr;
+		nfChar *pColon = nullptr;
 		while (*pIterChar != 0) {
-			if (*pIterChar == L'&') {
+			if (*pIterChar == '&') {
 				pAmp = pIterChar;
 				pColon = nullptr;
 			}
 			else if (pAmp == nullptr) {
 				*pWriteChar = *pIterChar;
 				pWriteChar++;
-			} else if (*pIterChar == L';') {
+			} else if (*pIterChar == ';') {
 				if (pAmp != nullptr) {
 					pColon = pIterChar;
 					long long compareLen = pColon - pAmp + 1;
-					if (wcsncmp(pAmp, L"&quot;", std::min((long long)(6), compareLen)) == 0) {
-						*pWriteChar = L'\"';
+					if (strncmp(pAmp, "&quot;", static_cast<size_t>(std::min((long long)(6), compareLen))) == 0) {
+						*pWriteChar = '\"';
 						pWriteChar++;
 					}
-					else if (wcsncmp(pAmp, L"&apos;", std::min((long long)(6), compareLen)) == 0) {
-						*pWriteChar = L'\'';
+					else if (strncmp(pAmp, "&apos;", static_cast<size_t>(std::min((long long)(6), compareLen))) == 0) {
+						*pWriteChar = '\'';
 						pWriteChar++;
 					}
-					else if (wcsncmp(pAmp, L"&lt;", std::min((long long)(4), compareLen)) == 0) {
-						*pWriteChar = L'<';
+					else if (strncmp(pAmp, "&lt;", static_cast<size_t>(std::min((long long)(4), compareLen))) == 0) {
+						*pWriteChar = '<';
 						pWriteChar++;
 					}
-					else if (wcsncmp(pAmp, L"&gt;", std::min((long long)(4), compareLen)) == 0) {
-						*pWriteChar = L'>';
+					else if (strncmp(pAmp, "&gt;", static_cast<size_t>(std::min((long long)(4), compareLen))) == 0) {
+						*pWriteChar = '>';
 						pWriteChar++;
 					}
-					else if (wcsncmp(pAmp, L"&amp;", std::min((long long)(5), compareLen)) == 0) {
-						*pWriteChar = L'&';
+					else if (strncmp(pAmp, "&amp;", static_cast<size_t>(std::min((long long)(5), compareLen))) == 0) {
+						*pWriteChar = '&';
 						pWriteChar++;
 					}
 					else {
@@ -971,7 +947,7 @@ namespace NMR {
 	{
 		nfUint32 nIndex;
 		for (nIndex = 0; nIndex < m_nZeroInsertIndex; nIndex++) {
-			nfWChar * pChar = m_ZeroInsertArray[nIndex];
+			nfChar * pChar = m_ZeroInsertArray[nIndex];
 			*pChar = 0;
 		}
 

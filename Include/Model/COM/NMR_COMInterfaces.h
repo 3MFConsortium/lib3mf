@@ -116,16 +116,6 @@ namespace NMR {
 		*/
 		LIB3MFMETHOD(WriteToFileUTF8) (_In_z_ LPCSTR pszFilename) LIB3MFABSTRACT;
 
-#ifdef NMR_COM_NATIVE
-		/**
-		* Writes out the model into a COM IStream. Only available on Windows.
-		*
-		* @param[in] pStream IStream to write into.
-		* @return error code or 0 (success)
-		*/
-		LIB3MFMETHOD(WriteToStream) (_In_ IStream * pStream) LIB3MFABSTRACT;
-#endif// NMR_COM_NATIVE
-
 		/**
 		* Retrieves the size of the full 3MF file stream.
 		*
@@ -270,16 +260,6 @@ namespace NMR {
 		* @return error code or 0 (success)
 		*/
 		LIB3MFMETHOD(GetStrictModeActive) (_Out_ BOOL * pbStrictModeActive) LIB3MFABSTRACT;
-
-#ifdef NMR_COM_NATIVE
-		/**
-		* Reads a model from a COM IStream. Only available on Windows.
-		*
-		* @param[in] pStream IStream to read from
-		* @return error code or 0 (success)
-		*/
-		LIB3MFMETHOD(ReadFromStream) (_In_ IStream * pStream) LIB3MFABSTRACT;
-#endif //NMR_COM_NATIVE
 
 		/**
 		* Reads a model and from the data provided by a callback function. The file type is specified by the Model Writer class
@@ -1166,16 +1146,6 @@ namespace NMR {
 		*/
 		LIB3MFMETHOD(WriteToBuffer) (_Out_ BYTE * pBuffer, _In_ ULONG64 cbBufferSize) LIB3MFABSTRACT;
 
-#ifdef NMR_COM_NATIVE
-		/**
-		* Writes out the attachment into a COM IStream. Only available on Windows.
-		*
-		* @param[in] pStream IStream to write into.
-		* @return error code or 0 (success)
-		*/
-		LIB3MFMETHOD(WriteToStream) (_In_ IStream * pStream) LIB3MFABSTRACT;
-#endif// NMR_COM_NATIVE
-
 		/**
 		* Writes out the attachment and passes the data to a provided callback function. The file type is specified by the Model Writer class
 		*
@@ -1210,18 +1180,6 @@ namespace NMR {
 		* @return error code or 0 (success)
 		*/
 		LIB3MFMETHOD(ReadFromBuffer) (_In_ BYTE * pBuffer, _In_ ULONG64 cbBufferSize) LIB3MFABSTRACT;
-
-#ifdef NMR_COM_NATIVE
-		/**
-		* Reads an attachment from a COM IStream. Only available on Windows.
-		*
-		* @param[in] pStream IStream to read from
-		* @return error code or 0 (success)
-		*/
-		LIB3MFMETHOD(ReadFromStream) (_In_ IStream * pStream) LIB3MFABSTRACT;
-#endif //NMR_COM_NATIVE
-
-
 	};
 
 	/**********************************************************************************************************
@@ -1394,16 +1352,6 @@ namespace NMR {
 		*/
 		LIB3MFMETHOD(WriteToBuffer) (_Out_ BYTE * pBuffer, _In_ ULONG64 cbBufferSize) LIB3MFABSTRACT;
 
-#ifdef NMR_COM_NATIVE
-		/**
-		* Writes out the texture into a COM IStream. Only available on Windows.
-		*
-		* @param[in] pStream IStream to write into.
-		* @return error code or 0 (success)
-		*/
-		LIB3MFMETHOD(WriteToStream) (_In_ IStream * pStream) LIB3MFABSTRACT;
-#endif// NMR_COM_NATIVE
-
 		/**
 		* Writes out the texture and passes the data to a provided callback function. The file type is specified by the Model Writer class
 		*
@@ -1438,17 +1386,6 @@ namespace NMR {
 		* @return error code or 0 (success)
 		*/
 		LIB3MFMETHOD(ReadFromBuffer) (_In_ BYTE * pBuffer, _In_ ULONG64 cbBufferSize) LIB3MFABSTRACT;
-
-#ifdef NMR_COM_NATIVE
-		/**
-		* Reads a texture from a COM IStream. Only available on Windows.
-		*
-		* @param[in] pStream IStream to read from
-		* @return error code or 0 (success)
-		*/
-		LIB3MFMETHOD(ReadFromStream) (_In_ IStream * pStream) LIB3MFABSTRACT;
-#endif //NMR_COM_NATIVE
-
 	};
 
 	/**********************************************************************************************************

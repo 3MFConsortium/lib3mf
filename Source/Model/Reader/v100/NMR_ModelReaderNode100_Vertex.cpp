@@ -34,10 +34,12 @@ A vertex reader model node is a parser for the vertex node of an XML Model Strea
 #include "Model/Reader/v100/NMR_ModelReaderNode100_Vertex.h"
 
 #include "Model/Classes/NMR_ModelConstants.h"
+#include "Common/NMR_StringUtils.h"
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_Exception_Windows.h"
 #include <cmath>
 #include <climits>
+#include <stdlib.h>
 
 namespace NMR {
 
@@ -75,29 +77,29 @@ namespace NMR {
 		fZ = m_fZ;
 	}
 
-	void CModelReaderNode100_Vertex::OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue)
+	void CModelReaderNode100_Vertex::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
 	{
 		__NMRASSERT(pAttributeName);
 		__NMRASSERT(pAttributeValue);
 
-		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_VERTEX_X) == 0) {
-			m_fX = wcstof(pAttributeValue, nullptr);
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_VERTEX_X) == 0) {
+			m_fX = strtof(pAttributeValue, nullptr);
 			if (std::isnan (m_fX))
 				throw CNMRException(NMR_ERROR_INVALIDMODELCOORDINATES);
 			if (fabs (m_fX) > XML_3MF_MAXIMUMCOORDINATEVALUE)
 				throw CNMRException(NMR_ERROR_INVALIDMODELCOORDINATES);
 			m_bHasX = true;
 		}
-		else if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_VERTEX_Y) == 0) {
-			m_fY = wcstof(pAttributeValue, nullptr);
+		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_VERTEX_Y) == 0) {
+			m_fY = strtof(pAttributeValue, nullptr);
 			if (std::isnan (m_fY))
 				throw CNMRException(NMR_ERROR_INVALIDMODELCOORDINATES);
 			if (fabs(m_fY) > XML_3MF_MAXIMUMCOORDINATEVALUE)
 				throw CNMRException(NMR_ERROR_INVALIDMODELCOORDINATES);
 			m_bHasY = true;
 		}
-		else if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_VERTEX_Z) == 0) {
-			m_fZ = wcstof(pAttributeValue, nullptr);
+		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_VERTEX_Z) == 0) {
+			m_fZ = strtof(pAttributeValue, nullptr);
 			if (std::isnan (m_fZ))
 				throw CNMRException(NMR_ERROR_INVALIDMODELCOORDINATES);
 			if (fabs(m_fZ) > XML_3MF_MAXIMUMCOORDINATEVALUE)
