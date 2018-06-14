@@ -125,6 +125,7 @@ namespace NMR {
 		case NMR_ERROR_ZIPENTRYNON64_TOOLARGE: return "A ZIP Entry is too large for non zip64 zip-file";
 		case NMR_ERROR_ATTACHMENTTOOLARGE: return "An individual custom attachment is too large.";
 		case NMR_ERROR_ZIPCALLBACK: return "Error in libzip callback.";
+		case NMR_ERROR_ZIPCONTAINSINCONSISTENCIES: return "ZIP file contains inconsistencies. It might load with errors or incorrectly.";
 
 
 		// Unhandled exception
