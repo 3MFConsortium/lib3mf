@@ -1,7 +1,7 @@
 /*++
 
-Copyright (C) 2015 Microsoft Corporation
-Copyright (C) 2015 netfabb GmbH (Original Author)
+Copyright (C) 2018 3MF Consortium
+
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification,
