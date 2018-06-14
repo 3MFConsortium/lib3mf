@@ -142,7 +142,7 @@ namespace NMR {
 			if (m_ZIPsource == nullptr)
 				throw CNMRException(NMR_ERROR_COULDNOTREADZIPFILE);
 
-			m_ZIParchive = zip_open_from_source(m_ZIPsource, ZIP_RDONLY | ZIP_CHECKCONS, &m_ZIPError);
+			m_ZIParchive = zip_open_from_source(m_ZIPsource, ZIP_RDONLY, &m_ZIPError);
 			if (m_ZIParchive == nullptr)
 				throw CNMRException(NMR_ERROR_COULDNOTREADZIPFILE);
 
