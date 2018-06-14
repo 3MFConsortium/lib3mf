@@ -143,8 +143,13 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_COULDNOTREADZIPFILE);
 
 			m_ZIParchive = zip_open_from_source(m_ZIPsource, ZIP_RDONLY | ZIP_CHECKCONS, &m_ZIPError);
-			if (m_ZIParchive == nullptr)
-				throw CNMRException(NMR_ERROR_COULDNOTREADZIPFILE);
+			if (m_ZIParchive == nullptr) {
+				m_ZIParchive = zip_open_from_source(m_ZIPsource, ZIP_RDONLY, &m_ZIPError);
+				if (m_ZIParchive == nullptr)
+					throw CNMRException(NMR_ERROR_COULDNOTREADZIPFILE);
+				else
+					m_pWarnings->addException(CNMRException(NMR_ERROR_ZIPCONTAINSINCONSISTENCIES), mrwInvalidMandatoryValue);
+			}
 
 			// Get ZIP Content
 			nfInt64 nEntryCount = zip_get_num_entries(m_ZIParchive, ZIP_FL_UNCHANGED);
