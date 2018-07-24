@@ -1,7 +1,6 @@
 /*++
 
-Copyright (C) 2015 Microsoft Corporation (Original Author)
-Copyright (C) 2015 netfabb GmbH
+Copyright (C) 2018 3MF Consortium
 
 All rights reserved.
 
@@ -46,13 +45,13 @@ namespace NMR {
 		CModel * m_pModel;
 
 		nfBool m_bHasName;
-		std::wstring m_sName;
+		std::string m_sName;
 
 		nfBool m_bHasDisplayColor;
 		nfColor m_cDisplayColor;
 		
 	protected:
-		virtual void OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue);
+		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 	public:
 		CModelReaderNode100_BaseMaterial() = delete;
 		CModelReaderNode100_BaseMaterial(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings);
@@ -62,7 +61,7 @@ namespace NMR {
 		nfBool hasDisplayColor();
 		nfBool hasName();
 		nfColor getDisplayColor();
-		std::wstring getMaterialName();
+		std::string getMaterialName();
 	};
 
 	typedef std::shared_ptr <CModelReaderNode100_BaseMaterial> PModelReaderNode100_BaseMaterial;

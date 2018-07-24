@@ -121,7 +121,7 @@ compress_read(zip_source_t *src, struct deflate *ctx, void *data, zip_uint64_t l
             if (ctx->can_store && ctx->zstr.total_in <= ctx->zstr.total_out) {
                 ctx->is_stored = true;
                 ctx->size = ctx->zstr.total_in;
-                memcpy(data, ctx->buffer, ctx->size);
+                memcpy(data, ctx->buffer, (size_t)ctx->size);
                 return (zip_int64_t)ctx->size;
             }
             /* fallthrough */

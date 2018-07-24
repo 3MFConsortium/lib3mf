@@ -1,7 +1,6 @@
 /*++
 
-Copyright (C) 2015 Microsoft Corporation (Original Author)
-Copyright (C) 2015 netfabb GmbH
+Copyright (C) 2018 3MF Consortium
 
 All rights reserved.
 
@@ -44,7 +43,7 @@ namespace NMR {
 
 	class CModelReaderNode {
 	private:
-		std::wstring m_sName;
+		std::string m_sName;
 		nfBool m_bParsedAttributes;
 		nfBool m_bParsedContent;
 		nfBool m_bIsEmptyElement;
@@ -57,17 +56,17 @@ namespace NMR {
 		void parseAttributes(_In_ CXmlReader * pXMLReader);
 		void parseContent(_In_ CXmlReader * pXMLReader);
 
-		virtual void OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue);
-		virtual void OnText(_In_z_ const nfWChar * pText, _In_ CXmlReader * pXMLReader);
+		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
+		virtual void OnText(_In_z_ const nfChar * pText, _In_ CXmlReader * pXMLReader);
 		virtual void OnEndElement(_In_ CXmlReader * pXMLReader);
 
-		virtual void OnNSAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue, _In_z_ const nfWChar * pNameSpace);
-		virtual void OnNSChildElement(_In_z_ const nfWChar * pChildName, _In_z_ const nfWChar * pNameSpace, _In_ CXmlReader * pXMLReader);
+		virtual void OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace);
+		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 	public:
 		CModelReaderNode() = delete;
 		CModelReaderNode(_In_ PModelReaderWarnings pWarnings, _In_ CProgressMonitor* pProgressMonitor = nullptr);
 
-		std::wstring getName();
+		std::string getName();
 		PModelReaderWarnings getWarnings();
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader) = 0;

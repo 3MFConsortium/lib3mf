@@ -399,7 +399,7 @@ copy_data(zip_t *za, zip_uint64_t len)
     size_t n;
 
     while (len > 0) {
-	n = len > sizeof(buf) ? sizeof(buf) : len;
+	n = len > sizeof(buf) ? sizeof(buf) : (size_t)(len);
 	if (_zip_read(za->src, buf, n, &za->error) < 0) {
 	    return -1;
 	}

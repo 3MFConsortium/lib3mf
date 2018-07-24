@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2015 netfabb GmbH (Original Author)
+Copyright (C) 2018 3MF Consortium
 
 All rights reserved.
 
@@ -75,44 +75,44 @@ namespace NMR {
 	{
 	}
 
-	void CXmlWriter_Native::WriteAttributeString(_In_opt_ LPCWSTR pwszPrefix, _In_opt_ LPCWSTR pwszLocalName, _In_opt_ LPCWSTR pwszNamespaceUri, _In_opt_ LPCWSTR pwszValue)
+	void CXmlWriter_Native::WriteAttributeString(_In_opt_ LPCSTR pszPrefix, _In_opt_ LPCSTR pszLocalName, _In_opt_ LPCSTR pszNamespaceUri, _In_opt_ LPCSTR pszValue)
 	{
 		if (m_bElementIsOpen) {
 			writeUTF8(" ", false);
 
-			if (pwszPrefix != nullptr) {
-				if (*pwszPrefix != 0) {
-					writeUTF16(pwszPrefix, false);
+			if (pszPrefix != nullptr) {
+				if (*pszPrefix != 0) {
+					writeUTF8(pszPrefix, false);
 					writeUTF8(":", false);
 				}
 			}
 
-			writeUTF16(pwszLocalName, false);
+			writeUTF8(pszLocalName, false);
 			writeUTF8("=\"", false);
 
-			size_t nLength = wcslen(pwszValue);
+			size_t nLength = strlen(pszValue);
 			if (nLength < NATIVEXMLFIXEDENCODINGLENGTH) {
 				// for small attribute lengths, use fixed size buffer
-				nfWChar * pwszAttribBuffer = &m_FixedEncodingBuffer[0];
-				escapeXMLString(pwszValue, pwszAttribBuffer);
-				writeUTF16(pwszAttribBuffer, false);
+				nfChar * pszAttribBuffer = &m_FixedEncodingBuffer[0];
+				escapeXMLString(pszValue, pszAttribBuffer);
+				writeUTF8(pszAttribBuffer, false);
 			}
 			else {
 				if (nLength > NATIVEXMLMAXSTRINGLENGTH)
 					throw CNMRException(NMR_ERROR_INVALIDBUFFERSIZE);
 
 				// for large attribute lengths, use dynamic buffer
-				std::vector<nfWChar> Buffer;
+				std::vector<nfChar> Buffer;
 				Buffer.resize((nLength + 1) * 6);
-				nfWChar * pwszAttribBuffer = &Buffer[0];
-				escapeXMLString(pwszValue, pwszAttribBuffer);	
+				nfChar * pszAttribBuffer = &Buffer[0];
+				escapeXMLString(pszValue, pszAttribBuffer);	
 			}
 
 			writeUTF8("\"", false);
 		}
 	}
 
-	void CXmlWriter_Native::WriteStartElement(_In_opt_  LPCWSTR pwszPrefix, _In_  LPCWSTR pwszLocalName, _In_opt_  LPCWSTR pwszNamespaceUri)
+	void CXmlWriter_Native::WriteStartElement(_In_opt_  LPCSTR pszPrefix, _In_  LPCSTR pszLocalName, _In_opt_  LPCSTR pszNamespaceUri)
 	{
 		closeCurrentElement(true);
 
@@ -121,26 +121,26 @@ namespace NMR {
 
 		m_bElementIsOpen = true;
 
-		std::wstring sNodePrefix;
-		if (pwszPrefix != nullptr) {
-			if (*pwszPrefix != 0) {
-				sNodePrefix = pwszPrefix;
-				sNodePrefix += L":";
+		std::string sNodePrefix;
+		if (pszPrefix != nullptr) {
+			if (*pszPrefix != 0) {
+				sNodePrefix = pszPrefix;
+				sNodePrefix += ":";
 
-				writeUTF16(sNodePrefix.c_str(), false);
+				writeUTF8(sNodePrefix.c_str(), false);
 			}
 		}
 
-		writeUTF16(pwszLocalName, false);
+		writeUTF8(pszLocalName, false);
 
-		std::wstring sNodeName (pwszLocalName);
+		std::string sNodeName (pszLocalName);
 		m_NodeStack.push_back(sNodePrefix + sNodeName);
 		m_nLayer++;
 
-		if (pwszNamespaceUri != nullptr) {
-			if (*pwszNamespaceUri != 0) {
+		if (pszNamespaceUri != nullptr) {
+			if (*pszNamespaceUri != 0) {
 				writeUTF8(" xmlns=\"", false);
-				writeUTF16(pwszNamespaceUri, false);
+				writeUTF8(pszNamespaceUri, false);
 				writeUTF8("\"", false);
 			}
 		}
@@ -167,7 +167,7 @@ namespace NMR {
 		if ((m_NodeStack.size() == 0) || (m_nLayer == 0))
 			throw CNMRException(NMR_ERROR_XMLWRITER_CLOSENODEERROR);
 
-		std::wstring sNodeName = m_NodeStack.back();
+		std::string sNodeName = m_NodeStack.back();
 		m_NodeStack.pop_back();
 		m_nLayer--;
 
@@ -175,16 +175,16 @@ namespace NMR {
 			writeSpaces(m_nLayer * m_nSpacesPerLayer);
 
 		writeUTF8("</", false);
-		writeUTF16(sNodeName.c_str(), false);
+		writeUTF8(sNodeName.c_str(), false);
 		writeUTF8(">", true);
 	}
 
-	void CXmlWriter_Native::WriteText(_In_ const nfWChar * pwszContent, _In_ const nfUint32 cbLength)
+	void CXmlWriter_Native::WriteText(_In_ const nfChar * pszContent, _In_ const nfUint32 cbLength)
 	{
-		if (pwszContent == nullptr)
+		if (pszContent == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 		closeCurrentElement(false);
-		writeUTF16(pwszContent, false);
+		writeUTF8(pszContent, false);
 	}
 
 	void CXmlWriter_Native::writeData(_In_ const void * pData, _In_ nfUint32 cbLength)
@@ -259,36 +259,36 @@ namespace NMR {
 		writeData(m_nLineEndingBuffer, m_nLineEndingCharCount);
 	}
 
-	void CXmlWriter_Native::escapeXMLString(_In_z_ const nfWChar * pszString, _Out_ nfWChar * pszBuffer)
+	void CXmlWriter_Native::escapeXMLString(_In_z_ const nfChar * pszString, _Out_ nfChar * pszBuffer)
 	{
 		__NMRASSERT(pszString);
 		__NMRASSERT(pszBuffer);
 
-		const nfWChar * pSrcChar = pszString;
-		nfWChar * pDstChar = pszBuffer;
+		const nfChar * pSrcChar = pszString;
+		nfChar * pDstChar = pszBuffer;
 		while (*pSrcChar) {
 			nfUint32 nReplaceLength = 0;
-			const nfWChar * pszReplacement = nullptr;
+			const nfChar * pszReplacement = nullptr;
 
 			switch (*pSrcChar) {
 			case 34: // "
-				pszReplacement = L"&quot;";
+				pszReplacement = "&quot;";
 				nReplaceLength = 6;
 				break; 
 			case 38: // &
-				pszReplacement = L"&amp;";
+				pszReplacement = "&amp;";
 				nReplaceLength = 5;
 				break;
 			case 39: // '
-				pszReplacement = L"&apos;";
+				pszReplacement = "&apos;";
 				nReplaceLength = 6;
 				break;
 			case 60: // <
-				pszReplacement = L"&lt;";
+				pszReplacement = "&lt;";
 				nReplaceLength = 4;
 				break;
 			case 62: // >
-				pszReplacement = L"&gt;";
+				pszReplacement = "&gt;";
 				nReplaceLength = 4;
 				break;
 			}

@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2015 netfabb GmbH (Original Author)
+Copyright (C) 2018 3MF Consortium
 
 All rights reserved.
 
@@ -52,7 +52,7 @@ namespace NMR {
 	class CModelTexture2DResource : public CModelResource {
 	private:
 		// PModelAttachment m_pAttachment;
-		std::wstring m_sPath;	// this is how CModelTexture2DResource connects to an attachment
+		std::string m_sPath;	// this is how CModelTexture2DResource connects to an attachment
 		eModelTexture2DType m_ContentType;
 		
 		nfBool m_bHasBox2D;
@@ -60,15 +60,15 @@ namespace NMR {
 		nfFloat m_fBox2D_V;
 		nfFloat m_fBox2D_Width;
 		nfFloat m_fBox2D_Height;
-		std::wstring m_sTileStyleU;
-		std::wstring m_sTileStyleV;
+		eModelTextureTileStyle m_eTileStyleU;
+		eModelTextureTileStyle m_eTileStyleV;
 	public:
 		CModelTexture2DResource() = delete;
 		CModelTexture2DResource(_In_ const ModelResourceID sID, _In_ CModel * pModel);
 
 		// getters/setters Path
-		std::wstring getPath();
-		void setPath (_In_ std::wstring sPath);
+		std::string getPath();
+		void setPath (_In_ std::string sPath);
 		
 		// getters TextureStream
 		PImportStream getTextureStream();
@@ -76,8 +76,10 @@ namespace NMR {
 		// getters/setters ContentType
 		eModelTexture2DType getContentType();
 		void setContentType(_In_ eModelTexture2DType ContentType);
-		std::wstring getContentTypeString();
-		void setContentTypeString(_In_ std::wstring sValue, _In_ nfBool bFailIfUnknown);
+		std::string getContentTypeString();
+		void setContentTypeString(_In_ std::string sValue, _In_ nfBool bFailIfUnknown);
+		void setTileStyleUString(_In_ std::string sValue);
+		void setTileStyleVString(_In_ std::string sValue);
 		
 		// getters/setters Box2D
 		nfBool getBox2D (_Out_ nfFloat & fU, _Out_ nfFloat & fV, _Out_ nfFloat & fWidth, _Out_ nfFloat & fHeight);
@@ -86,14 +88,16 @@ namespace NMR {
 		nfBool hasBox2D();
 		
 		// getters/setters TileStyle
-		std::wstring getTileStyleU();
-		std::wstring getTileStyleV();
-		void setTileStyleU(_In_ std::wstring sValue);		
-		void setTileStyleV(_In_ std::wstring sValue);
+		eModelTextureTileStyle getTileStyleU();
+		eModelTextureTileStyle getTileStyleV();
+		void setTileStyleU(_In_ eModelTextureTileStyle sStyle);
+		void setTileStyleV(_In_ eModelTextureTileStyle sStyle);
 		
 		// copy all parameters from source
 		void copyFrom(_In_ CModelTexture2DResource * pSourceTexture);
 
+		static eModelTextureTileStyle tileStyleFromString(_In_ std::string sValue);
+		static std::string tileStyleToString(_In_ eModelTextureTileStyle eTileStyle);
 	};
 
 	typedef std::shared_ptr <CModelTexture2DResource> PModelTexture2DResource;

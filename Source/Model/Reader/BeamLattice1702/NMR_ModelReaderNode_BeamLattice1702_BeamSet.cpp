@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2017 Autodesk Inc.
+Copyright (C) 2018 3MF Consortium
 
 All rights reserved.
 
@@ -62,22 +62,22 @@ namespace NMR {
 
 	}
 
-	void CModelReaderNode_BeamLattice1702_BeamSet::OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue)
+	void CModelReaderNode_BeamLattice1702_BeamSet::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
 	{
 		__NMRASSERT(pAttributeName);
 		__NMRASSERT(pAttributeValue);
 
-		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_BEAMLATTICE_NAME) == 0) {
-			m_pBeamSet->m_sName = fnUTF16toUTF8(pAttributeValue);
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_BEAMLATTICE_NAME) == 0) {
+			m_pBeamSet->m_sName = pAttributeValue;
 		}
-		else if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_BEAMLATTICE_IDENTIFIER) == 0) {
-			m_pBeamSet->m_sIdentifier = fnUTF16toUTF8(pAttributeValue);
+		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_BEAMLATTICE_IDENTIFIER) == 0) {
+			m_pBeamSet->m_sIdentifier = pAttributeValue;
 		}
 		else
 			m_pWarnings->addException(CNMRException(NMR_ERROR_BEAMLATTICEINVALIDATTRIBUTE), mrwInvalidOptionalValue);
 	}
 
-	void CModelReaderNode_BeamLattice1702_BeamSet::OnNSAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue, _In_z_ const nfWChar * pNameSpace)
+	void CModelReaderNode_BeamLattice1702_BeamSet::OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace)
 	{
 		__NMRASSERT(pAttributeName);
 		__NMRASSERT(pAttributeValue);
@@ -85,14 +85,14 @@ namespace NMR {
 
 	}
 	
-	void CModelReaderNode_BeamLattice1702_BeamSet::OnNSChildElement(_In_z_ const nfWChar * pChildName, _In_z_ const nfWChar * pNameSpace, _In_ CXmlReader * pXMLReader)
+	void CModelReaderNode_BeamLattice1702_BeamSet::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
 	{
 		__NMRASSERT(pChildName);
 		__NMRASSERT(pXMLReader);
 		__NMRASSERT(pNameSpace);
 
-		if (wcscmp(pNameSpace, XML_3MF_NAMESPACE_BEAMLATTICESPEC) == 0) {
-			if (wcscmp(pChildName, XML_3MF_ELEMENT_REF) == 0) {
+		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_BEAMLATTICESPEC) == 0) {
+			if (strcmp(pChildName, XML_3MF_ELEMENT_REF) == 0) {
 				PModelReaderNode_BeamLattice1702_Ref pXMLNode = std::make_shared<CModelReaderNode_BeamLattice1702_Ref>(m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 				nfInt32 nIndex;

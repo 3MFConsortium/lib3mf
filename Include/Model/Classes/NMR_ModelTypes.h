@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2015 netfabb GmbH (Original Author)
+Copyright (C) 2018 3MF Consortium
 
 All rights reserved.
 
@@ -144,6 +144,12 @@ namespace NMR {
 		MODELTEXTURETYPE_UNKNOWN = 0,
 		MODELTEXTURETYPE_PNG = 1,
 		MODELTEXTURETYPE_JPEG = 2,
+	};
+
+	enum eModelTextureTileStyle {
+		MODELTEXTURETILESTYLE_WRAP = 0,
+		MODELTEXTURETILESTYLE_MIRROR = 1,
+		MODELTEXTURETILESTYLE_CLAMP = 2
 	};
 
 	typedef struct {

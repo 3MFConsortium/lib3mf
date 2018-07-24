@@ -1,7 +1,6 @@
 /*++
 
-Copyright (C) 2015 Microsoft Corporation 
-Copyright (C) 2015 netfabb GmbH (Original Author)
+Copyright (C) 2018 3MF Consortium
 
 All rights reserved.
 
@@ -43,8 +42,8 @@ classes.
 
 namespace NMR {
 
-	PImportStream fnCreateImportStreamInstance (_In_ const nfWChar * pwszFileName);
-	PExportStream fnCreateExportStreamInstance (_In_ const nfWChar * pwszFileName);
+	PImportStream fnCreateImportStreamInstance (_In_ const nfChar * pszFileName);
+	PExportStream fnCreateExportStreamInstance (_In_ const nfChar * pszFileName);
 	PXmlReader fnCreateXMLReaderInstance (_In_ PImportStream pImportStream, CProgressMonitor * pProgressMonitor);
 	PXmlWriter fnCreateXMLWriterInstance (_In_ PExportStream pExportStream, CProgressMonitor * pProgressMonitor);
 

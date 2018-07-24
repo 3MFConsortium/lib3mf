@@ -1,4 +1,6 @@
 # lib3mf
+[![Build Status](https://travis-ci.org/3MFConsortium/lib3mf.svg?branch=master)](https://travis-ci.org/3MFConsortium/lib3mf)
+
 Lib3MF is a C++ implementation of the 3D Manufacturing Format file standard.
 
 As 3MF shall become an universal 3D Printing standard, its quick adoption is very important. 
@@ -32,8 +34,7 @@ Instead of building lib3MF from source, you can download the compiled shared lib
 or use the [nightly builds](https://github.com/3MFConsortium/lib3mf-binaries)
 
 ## Examples 
-For example code, please refer to the examples in the SDK (SDK/Examples) or to
-[https://github.com/3MFConsortium/lib3mf-examples](https://github.com/3MFConsortium/lib3mf-examples).
+For example code, please refer to the examples in the SDK (SDK/Examples). They are also part of the binary SDK from the [official releases](https://github.com/3MFConsortium/lib3mf/releases).
 
 ## Documentation
 For a more detailed documentation, please take a look into the [PDF](Lib3MF-1.pdf) in the root directory

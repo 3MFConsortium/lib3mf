@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2015 netfabb GmbH (Original Author)
+Copyright (C) 2018 3MF Consortium
 
 All rights reserved.
 
@@ -65,11 +65,11 @@ NMR_XMLReader_Native.h defines a XML reader class with a native XML parsing impl
 #define NMR_NATIVEXMLTYPE_PROCESSINGINSTRUCTION 9
 #define NMR_NATIVEXMLTYPE_PROCESSINGINSTRUCTIONEND 10
 
-#define NMR_NATIVEXMLNS_XML_PREFIX L"xml"
-#define NMR_NATIVEXMLNS_XML_URI L"http://www.w3.org/XML/1998/namespace"
+#define NMR_NATIVEXMLNS_XML_PREFIX "xml"
+#define NMR_NATIVEXMLNS_XML_URI "http://www.w3.org/XML/1998/namespace"
 
-#define NMR_NATIVEXMLNS_XMLNS_PREFIX L"xmlns"
-#define NMR_NATIVEXMLNS_XMLNS_URI L"http://www.w3.org/2000/xmlns/"
+#define NMR_NATIVEXMLNS_XMLNS_PREFIX "xmlns"
+#define NMR_NATIVEXMLNS_XMLNS_URI "http://www.w3.org/2000/xmlns/"
 
 namespace NMR {
 
@@ -80,27 +80,24 @@ namespace NMR {
 
 		nfUint32 m_cbBufferCapacity;
 		// Allocated memory of current and next chunk
-		std::vector<nfWChar> m_UTF16Buffer1;
-		std::vector<nfWChar> m_UTF16Buffer2;
-
-		// Temporary buffer to read into
-		std::vector<nfByte> m_TempBuffer;
+		std::vector<nfChar> m_UTF8Buffer1;
+		std::vector<nfChar> m_UTF8Buffer2;
 
 		// Double buffer pointers to UTF16BufferX
-		std::vector<nfWChar> * m_pCurrentBuffer;
-		std::vector<nfWChar> * m_pNextBuffer;
+		std::vector<nfChar> * m_pCurrentBuffer;
+		std::vector<nfChar> * m_pNextBuffer;
 
 		// parsed entity list
-		std::vector<nfWChar *> m_CurrentEntityList;
-		std::vector<nfWChar *> m_CurrentEntityPrefixes;
+		std::vector<nfChar *> m_CurrentEntityList;
+		std::vector<nfChar *> m_CurrentEntityPrefixes;
 		std::vector<nfByte> m_CurrentEntityTypes;
 
 		void performEscapeStringDecoding();
 
 		// Insert List for 0 characters
 		nfUint32 m_nZeroInsertIndex;
-		std::vector<nfWChar *> m_ZeroInsertArray;
-		void pushZeroInsert(_In_ nfWChar * pChar);
+		std::vector<nfChar *> m_ZeroInsertArray;
+		void pushZeroInsert(_In_ nfChar * pChar);
 		void performZeroInserts();
 		void clearZeroInserts();
 
@@ -110,26 +107,26 @@ namespace NMR {
 		nfUint32 m_nCurrentVerifiedEntityCount;
 		nfUint32 m_nCurrentFullEntityCount;
 		nfUint32 m_nCurrentEntityIndex;
-		nfWChar * m_pCurrentEntityPointer;
+		nfChar * m_pCurrentEntityPointer;
 
 		// Parsing Flag
 		nfBool m_bIsEOF;
 
 		// How many characters have to be transferred into the next buffer?
 		nfUint32 m_cbCurrentOverflowSize;
-		nfWChar * m_pCurrentName;
-		nfWChar * m_pCurrentPrefix;
-		nfWChar * m_pCurrentElementName;
-		nfWChar * m_pCurrentElementPrefix;
-		nfWChar * m_pCurrentValue;
-		nfWChar m_cNullString;
+		nfChar * m_pCurrentName;
+		nfChar * m_pCurrentPrefix;
+		nfChar * m_pCurrentElementName;
+		nfChar * m_pCurrentElementPrefix;
+		nfChar * m_pCurrentValue;
+		nfChar m_cNullString;
 
 		// NameSpace handling
-		std::wstring m_sDefaultNameSpace;
+		std::string m_sDefaultNameSpace;
 		nfUint32 m_cbDefaultNameSpaceLength;
 		nfBool m_bNameSpaceIsAttribute;
-		std::map<std::wstring, std::wstring> m_sNameSpaces;
-		void registerNameSpace(_In_ std::wstring sPrefix, _In_ std::wstring sURI);
+		std::map<std::string, std::string> m_sNameSpaces;
+		void registerNameSpace(_In_ std::string sPrefix, _In_ std::string sURI);
 
 
 		// Fill next buffer chunk
@@ -137,33 +134,33 @@ namespace NMR {
 		void readNextBufferFromStream();
 
 		// Parse Text Buffer
-		nfWChar * parseUnknown(_In_ nfWChar * pszwStart, _In_ nfWChar * pszwEnd);
-		nfWChar * parseText(_In_ nfWChar * pszwStart, _In_ nfWChar * pszwEnd);
-		nfWChar * parseElement(_In_ nfWChar * pszwStart, _In_ nfWChar * pszwEnd);
-		nfWChar * parseComment(_In_ nfWChar * pszwStart, _In_ nfWChar * pszwEnd);
-		nfWChar * parseEndElement(_In_ nfWChar * pszwStart, _In_ nfWChar * pszwEnd);
-		nfWChar * parseCloseElement(_In_ nfWChar * pszwStart, _In_ nfWChar * pszwEnd);
-		nfWChar * parseAttributes(_In_ nfWChar * pszwStart, _In_ nfWChar * pszwEnd);
-		nfWChar * skipSpaces(_In_ nfWChar * pszwStart, _In_ nfWChar * pszwEnd);
-		nfWChar * parseAttributeName(_In_ nfWChar * pszwStart, _In_ nfWChar * pszwEnd);
-		nfWChar * parseAttributeValue(_In_ nfWChar * pszwStart, _In_ nfWChar * pszwEnd);
-		nfWChar * parseAttributeValueDoubleQuote(_In_ nfWChar * pszwStart, _In_ nfWChar * pszwEnd);
-		nfWChar * parseAttributeValueSingleQuote(_In_ nfWChar * pszwStart, _In_ nfWChar * pszwEnd);
+		nfChar * parseUnknown(_In_ nfChar * pszStart, _In_ nfChar * pszEnd);
+		nfChar * parseText(_In_ nfChar * pszStart, _In_ nfChar * pszEnd);
+		nfChar * parseElement(_In_ nfChar * pszStart, _In_ nfChar * pszEnd);
+		nfChar * parseComment(_In_ nfChar * pszStart, _In_ nfChar * pszEnd);
+		nfChar * parseEndElement(_In_ nfChar * pszStart, _In_ nfChar * pszEnd);
+		nfChar * parseCloseElement(_In_ nfChar * pszStart, _In_ nfChar * pszEnd);
+		nfChar * parseAttributes(_In_ nfChar * pszStart, _In_ nfChar * pszEnd);
+		nfChar * skipSpaces(_In_ nfChar * pszStart, _In_ nfChar * pszEnd);
+		nfChar * parseAttributeName(_In_ nfChar * pszStart, _In_ nfChar * pszEnd);
+		nfChar * parseAttributeValue(_In_ nfChar * pszStart, _In_ nfChar * pszEnd);
+		nfChar * parseAttributeValueDoubleQuote(_In_ nfChar * pszStart, _In_ nfChar * pszEnd);
+		nfChar * parseAttributeValueSingleQuote(_In_ nfChar * pszStart, _In_ nfChar * pszEnd);
 
-		nfWChar * parseProcessingInstruction(_In_ nfWChar * pszwStart, _In_ nfWChar * pszwEnd);
-		nfWChar * parseCloseProcessingInstruction(_In_ nfWChar * pszwStart, _In_ nfWChar * pszwEnd);
+		nfChar * parseProcessingInstruction(_In_ nfChar * pszStart, _In_ nfChar * pszEnd);
+		nfChar * parseCloseProcessingInstruction(_In_ nfChar * pszStart, _In_ nfChar * pszEnd);
 
-		void pushEntity(_In_ nfWChar * pszwEntityStartChar, _In_ nfWChar * pszwEntityEndDelimiter, _In_ nfWChar * pszwNextEntityChar, _In_ nfByte nType, _In_ nfBool bParseForNamespaces, _In_ nfBool bEntityIsFinished);
+		void pushEntity(_In_ nfChar * pszwEntityStartChar, _In_ nfChar * pszwEntityEndDelimiter, _In_ nfChar * pszwNextEntityChar, _In_ nfByte nType, _In_ nfBool bParseForNamespaces, _In_ nfBool bEntityIsFinished);
 
 	public:
 		CXmlReader_Native(_In_ PImportStream pImportStream, _In_ nfUint32 cbBufferCapacity, _In_ CProgressMonitor* pProgressMonitor);
 		~CXmlReader_Native();
 
-		virtual void GetValue(_Outptr_result_buffer_maybenull_(*pcwchValue + 1)  const nfWChar ** ppwszValue, _Out_opt_  nfUint32 *pcwchValue);
-		virtual void GetLocalName(_Outptr_result_buffer_maybenull_(*pcwchLocalName + 1) const nfWChar ** ppwszLocalName, _Out_opt_ nfUint32 *pcwchLocalName);
-		virtual void GetNamespaceURI(_Outptr_result_buffer_maybenull_(*pcwchValue + 1)  const nfWChar ** ppwszValue, _Out_opt_  nfUint32 *pcwchValue);
-		virtual bool GetNamespaceURI(const std::wstring &sNameSpacePrefix, std::wstring &sNameSpaceURI);
-		virtual bool NamespaceRegistered(const std::wstring &sNameSpaceURI);
+		virtual void GetValue(_Outptr_result_buffer_maybenull_(*pcwchValue + 1)  const nfChar ** ppwszValue, _Out_opt_  nfUint32 *pcwchValue);
+		virtual void GetLocalName(_Outptr_result_buffer_maybenull_(*pcwchLocalName + 1) const nfChar ** ppwszLocalName, _Out_opt_ nfUint32 *pcwchLocalName);
+		virtual void GetNamespaceURI(_Outptr_result_buffer_maybenull_(*pcwchValue + 1)  const nfChar ** ppwszValue, _Out_opt_  nfUint32 *pcwchValue);
+		virtual bool GetNamespaceURI(const std::string &sNameSpacePrefix, std::string &sNameSpaceURI);
+		virtual bool NamespaceRegistered(const std::string &sNameSpaceURI);
 
 		virtual nfBool Read(_Out_ eXmlReaderNodeType & NodeType);
 		virtual nfBool IsEOF();

@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2015 netfabb GmbH (Original Author)
+Copyright (C) 2018 3MF Consortium
 
 All rights reserved.
 
@@ -62,7 +62,7 @@ namespace NMR {
 		CPortableZIPWriter(_In_ PExportStream pExportStream, _In_ nfBool bWriteZIP64);
 		~CPortableZIPWriter();
 
-		PExportStream createEntry(_In_ const std::wstring sName, _In_ nfTimeStamp nUnixTimeStamp);
+		PExportStream createEntry(_In_ const std::string sName, _In_ nfTimeStamp nUnixTimeStamp);
 		void closeEntry();
 
 		void writeDeflatedBuffer(_In_ nfUint32 nEntryKey, _In_ const void * pBuffer, _In_ nfUint32 cbCompressedBytes);

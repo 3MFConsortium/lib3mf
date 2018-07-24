@@ -1,7 +1,6 @@
 /*++
 
-Copyright (C) 2015 Microsoft Corporation (Original Author)
-Copyright (C) 2015 netfabb GmbH
+Copyright (C) 2018 3MF Consortium
 
 All rights reserved.
 
@@ -44,18 +43,18 @@ namespace NMR {
 	class CModelReaderNode100_Resources : public CModelReaderNode {
 	protected:
 		CModel * m_pModel;
-		std::wstring m_sPath;
+		std::string m_sPath;
 
 		PModelReader_ColorMapping m_pColorMapping;
 		PModelReader_TexCoordMapping m_pTexCoordMapping;
 
 		int m_nProgressCount;
 
-		virtual void OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar *  pAttributeValue);
-		virtual void OnNSChildElement(_In_z_ const nfWChar * pChildName, _In_z_ const nfWChar * pNameSpace, _In_ CXmlReader * pXMLReader);
+		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar *  pAttributeValue);
+		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 	public:
 		CModelReaderNode100_Resources() = delete;
-		CModelReaderNode100_Resources(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings, _In_z_ const nfWChar *sPath, _In_ CProgressMonitor* pProgressMonitor);
+		CModelReaderNode100_Resources(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings, _In_z_ const std::string sPath, _In_ CProgressMonitor* pProgressMonitor);
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 	};
 

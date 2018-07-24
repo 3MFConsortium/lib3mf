@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2015 netfabb GmbH (Original Author)
+Copyright (C) 2018 3MF Consortium
 
 All rights reserved.
 
@@ -156,11 +156,6 @@ namespace NMR {
 
 	nfBool CImportStream_Memory::seekFromEnd(_In_ nfUint64 cbBytes, _In_ nfBool bHasToSucceed)
 	{
-		// all seekFromEnd functions follow the calling conventions of fseek.
-		// fseek expects a negative number to seek from the end (SEEK_END).
-		// The program logic in this function requires a positive offset from the end.
-		cbBytes = 1+~cbBytes;
-
 		if (cbBytes > m_cbSize) {
 			if (bHasToSucceed)
 				throw CNMRException(NMR_ERROR_COULDNOTSEEKSTREAM);
@@ -217,7 +212,8 @@ namespace NMR {
 		if (pwszFileName == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-		PExportStream pExportStream = fnCreateExportStreamInstance(pwszFileName);
+		std::string sUTF8FileName = fnUTF16toUTF8(pwszFileName);
+		PExportStream pExportStream = fnCreateExportStreamInstance(sUTF8FileName.c_str());
 		if (m_cbSize > 0) {
 			pExportStream->writeBuffer(&m_Buffer[0], m_cbSize);
 		}

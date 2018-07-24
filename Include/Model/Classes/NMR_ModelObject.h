@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2015 netfabb GmbH (Original Author)
+Copyright (C) 2018 3MF Consortium
 
 All rights reserved.
 
@@ -52,12 +52,13 @@ namespace NMR {
 
 	class CModelObject : public CModelResource { 
 	private:
-		std::wstring m_sName;
-		std::wstring m_sPartNumber;
-
+		std::string m_sName;
+		std::string m_sPartNumber;
+		PPackageResourceID m_pSliceStackId;
+		eModelSlicesMeshResolution m_eSlicesMeshResolution;
 	private:
 		PUUID m_UUID;
-		std::wstring m_sThumbnail;
+		std::string m_sThumbnail;
 		PModelDefaultProperty m_pModelDefaultProperty;
 		eModelObjectType m_ObjectType;
 	public:
@@ -66,13 +67,13 @@ namespace NMR {
 
 		// setter/getter for name
 		// the name may be an arbitrary string
-		std::wstring getName();
-		void setName(_In_ std::wstring sName);
+		std::string getName();
+		void setName(_In_ std::string sName);
 
 		// setter/getter for part number
 		// the part number may be an arbitrary string
-		std::wstring getPartNumber();
-		void setPartNumber(_In_ std::wstring sPartNumber);
+		std::string getPartNumber();
+		void setPartNumber(_In_ std::string sPartNumber);
 
 		// Production Extension
 		PUUID uuid();
@@ -81,8 +82,8 @@ namespace NMR {
 		// setter/getter for the object type
 		eModelObjectType getObjectType();
 		virtual void setObjectType(_In_ eModelObjectType ObjectType);
-		std::wstring getObjectTypeString();
-		nfBool setObjectTypeString(_In_ std::wstring sTypeString, _In_ nfBool bRaiseException);
+		std::string getObjectTypeString();
+		nfBool setObjectTypeString(_In_ std::string sTypeString, _In_ nfBool bRaiseException);
 
 		// Merge the object into a mesh object
 		virtual void mergeToMesh(_In_ CMesh * pMesh, _In_ const NMATRIX3 mMatrix);
@@ -93,13 +94,19 @@ namespace NMR {
 
 		virtual nfBool isValidForSlices(const NMATRIX3& totalParentMatrix) = 0;
 
+		void setSliceStackId(PPackageResourceID nSliceStackId);
+		PPackageResourceID getSliceStackId();
+
+		void setSlicesMeshResolution(eModelSlicesMeshResolution eMeshResolution);
+		eModelSlicesMeshResolution slicesMeshResolution() const;
+
 		// Set/Get Default Property
 		void setDefaultProperty (_In_ PModelDefaultProperty pModelDefaultProperty);
 		PModelDefaultProperty getDefaultProperty();
 
 		// Set/Get Thumbnail
-		void setThumbnail(_In_ std::wstring sThumbnail);
-		std::wstring getThumbnail();
+		void setThumbnail(_In_ std::string sThumbnail);
+		std::string getThumbnail();
 	};
 
 	typedef std::shared_ptr <CModelObject> PModelObject;

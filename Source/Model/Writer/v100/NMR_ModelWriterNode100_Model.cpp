@@ -1,7 +1,6 @@
 /*++
 
-Copyright (C) 2015 Microsoft Corporation (Original Author)
-Copyright (C) 2015 netfabb GmbH
+Copyright (C) 2018 3MF Consortium
 
 All rights reserved.
 
@@ -134,46 +133,46 @@ namespace NMR {
 
 	void CModelWriterNode100_Model::writeToXML()
 	{
-		std::wstring sLanguage = m_pModel->getLanguage();
+		std::string sLanguage = m_pModel->getLanguage();
 
 		writeStartElementWithNamespace(XML_3MF_ELEMENT_MODEL, PACKAGE_XMLNS_100);
 
 		writeStringAttribute(XML_3MF_ATTRIBUTE_MODEL_UNIT, m_pModel->getUnitString());
 		writeConstPrefixedStringAttribute(XML_3MF_ATTRIBUTE_PREFIX_XML, XML_3MF_ATTRIBUTE_MODEL_LANG, sLanguage.c_str());
 
-		std::wstring wRequiredExtensions = L"";
+		std::string sRequiredExtensions = "";
 		if (m_bWriteMaterialExtension) {
 			writeConstPrefixedStringAttribute(XML_3MF_ATTRIBUTE_XMLNS, XML_3MF_NAMESPACEPREFIX_MATERIAL, XML_3MF_NAMESPACE_MATERIALSPEC);
 		}
 		if (m_bWriteProductionExtension) {
 			writeConstPrefixedStringAttribute(XML_3MF_ATTRIBUTE_XMLNS, XML_3MF_NAMESPACEPREFIX_PRODUCTION, XML_3MF_NAMESPACE_PRODUCTIONSPEC);
 			if (m_pModel->RequireExtension(XML_3MF_NAMESPACEPREFIX_PRODUCTION)) {
-				if (wRequiredExtensions.size() > 0)
-					wRequiredExtensions = wRequiredExtensions + L" ";
-				wRequiredExtensions = wRequiredExtensions + XML_3MF_NAMESPACE_PRODUCTIONSPEC;
+				if (sRequiredExtensions.size() > 0)
+					sRequiredExtensions = sRequiredExtensions + " ";
+				sRequiredExtensions = sRequiredExtensions + XML_3MF_NAMESPACE_PRODUCTIONSPEC;
 			}
 		}
 		if (m_bWriteBeamLatticeExtension) {
 			writeConstPrefixedStringAttribute(XML_3MF_ATTRIBUTE_XMLNS, XML_3MF_NAMESPACEPREFIX_BEAMLATTICE, XML_3MF_NAMESPACE_BEAMLATTICESPEC);
 
 			if (m_pModel->RequireExtension(XML_3MF_NAMESPACE_BEAMLATTICESPEC)) {
-				if (wRequiredExtensions.size() > 0)
-					wRequiredExtensions = wRequiredExtensions + L" ";
-				wRequiredExtensions = wRequiredExtensions + XML_3MF_NAMESPACEPREFIX_BEAMLATTICE;
+				if (sRequiredExtensions.size() > 0)
+					sRequiredExtensions = sRequiredExtensions + " ";
+				sRequiredExtensions = sRequiredExtensions + XML_3MF_NAMESPACEPREFIX_BEAMLATTICE;
 			}
 		}
 
 		if (m_bWriteSliceExtension) {
 			writeConstPrefixedStringAttribute(XML_3MF_ATTRIBUTE_XMLNS, XML_3MF_NAMESPACEPREFIX_SLICE, XML_3MF_NAMESPACE_SLICESPEC);
 			if (m_pModel->RequireExtension(XML_3MF_NAMESPACE_SLICESPEC)) {
-				if (wRequiredExtensions.size() > 0)
-					wRequiredExtensions = wRequiredExtensions + L" ";
-				wRequiredExtensions = wRequiredExtensions + XML_3MF_NAMESPACEPREFIX_SLICE;
+				if (sRequiredExtensions.size() > 0)
+					sRequiredExtensions = sRequiredExtensions + " ";
+				sRequiredExtensions = sRequiredExtensions + XML_3MF_NAMESPACEPREFIX_SLICE;
 			}
 		}
 
-		if (wRequiredExtensions.size()>0)
-			writeConstStringAttribute(XML_3MF_ATTRIBUTE_REQUIREDEXTENSIONS, wRequiredExtensions.c_str());
+		if (sRequiredExtensions.size()>0)
+			writeConstStringAttribute(XML_3MF_ATTRIBUTE_REQUIREDEXTENSIONS, sRequiredExtensions.c_str());
 
 		writeMetaData();
 		writeResources();
@@ -195,20 +194,16 @@ namespace NMR {
 			writeStringAttribute(XML_3MF_ATTRIBUTE_TEXTURE2D_PATH, pTexture2D->getPath());
 			writeStringAttribute(XML_3MF_ATTRIBUTE_TEXTURE2D_CONTENTTYPE, pTexture2D->getContentTypeString());
 
-			std::wstring sTileStyle;
-			sTileStyle = pTexture2D->getTileStyleU();
-			if (sTileStyle.size() > 0)
-				writeStringAttribute(XML_3MF_ATTRIBUTE_TEXTURE2D_TILESTYLEU, sTileStyle);
-
-			sTileStyle = pTexture2D->getTileStyleV();
-			if (sTileStyle.size() > 0)
-				writeStringAttribute(XML_3MF_ATTRIBUTE_TEXTURE2D_TILESTYLEV, sTileStyle);
+			if (pTexture2D->getTileStyleU() != MODELTEXTURETILESTYLE_WRAP)
+				writeStringAttribute(XML_3MF_ATTRIBUTE_TEXTURE2D_TILESTYLEU, CModelTexture2DResource::tileStyleToString(pTexture2D->getTileStyleU()));
+			if (pTexture2D->getTileStyleV() != MODELTEXTURETILESTYLE_WRAP)
+				writeStringAttribute(XML_3MF_ATTRIBUTE_TEXTURE2D_TILESTYLEV, CModelTexture2DResource::tileStyleToString(pTexture2D->getTileStyleV()));
 			
 			if (pTexture2D->hasBox2D()) {
 				nfFloat fU, fV, fWidth, fHeight;
 				pTexture2D->getBox2D(fU, fV, fWidth, fHeight);
 				writeStringAttribute(XML_3MF_ATTRIBUTE_TEXTURE2D_BOX,
-					std::to_wstring(fU) + L" " + std::to_wstring(fV) + L" " + std::to_wstring(fWidth) + L" " + std::to_wstring(fHeight));
+					std::to_string(fU) + " " + std::to_string(fV) + " " + std::to_string(fWidth) + " " + std::to_string(fHeight));
 			}
 			
 			writeEndElement();
@@ -225,8 +220,8 @@ namespace NMR {
 			nfUint32 nMetaDataIndex;
 
 			for (nMetaDataIndex = 0; nMetaDataIndex < nMetaDataCount; nMetaDataIndex++) {
-				std::wstring sKey;
-				std::wstring sValue;
+				std::string sKey;
+				std::string sValue;
 				m_pModel->getMetaData(nMetaDataIndex, sKey, sValue);
 
 				// TODO: translate namespace within metadatum to namespace identifier
@@ -289,8 +284,7 @@ namespace NMR {
 	void CModelWriterNode100_Model::writeSliceStack(_In_ CModelSliceStackResource *pSliceStackResource) {
 		__NMRASSERT(pSliceStackResource);
 
-		std::wstring sNameSpacePrefixW = XML_3MF_NAMESPACEPREFIX_SLICE;
-		std::string sNameSpacePrefix = fnUTF16toUTF8(sNameSpacePrefixW);
+		std::string sNameSpacePrefix = XML_3MF_NAMESPACEPREFIX_SLICE;
 
 		writeStartElementWithPrefix(XML_3MF_ELEMENT_SLICESTACKRESOURCE, XML_3MF_NAMESPACEPREFIX_SLICE);
 
@@ -381,12 +375,12 @@ namespace NMR {
 			writeIntAttribute(XML_3MF_ATTRIBUTE_OBJECT_ID, pObject->getResourceID()->getUniqueID());
 
 			// Write Object Name (optional)
-			std::wstring sObjectName = pObject->getName();
+			std::string sObjectName = pObject->getName();
 			if (sObjectName.length() > 0)
 				writeStringAttribute(XML_3MF_ATTRIBUTE_OBJECT_NAME, sObjectName);
 
 			// Write Object Partnumber (optional)
-			std::wstring sObjectPartNumber = pObject->getPartNumber();
+			std::string sObjectPartNumber = pObject->getPartNumber();
 			if (sObjectPartNumber.length() > 0)
 				writeStringAttribute(XML_3MF_ATTRIBUTE_OBJECT_PARTNUMBER, sObjectPartNumber);
 
@@ -394,7 +388,7 @@ namespace NMR {
 			writeStringAttribute(XML_3MF_ATTRIBUTE_OBJECT_TYPE, pObject->getObjectTypeString());
 
 			// Write Object Thumbnail (optional)
-			std::wstring sThumbnailPath = pObject->getThumbnail();
+			std::string sThumbnailPath = pObject->getThumbnail();
 			if (!sThumbnailPath.empty()) {
 				PModelAttachment pAttachment = m_pModel->findModelAttachment(sThumbnailPath);
 				if (!pAttachment)
@@ -408,7 +402,7 @@ namespace NMR {
 			if (m_bWriteProductionExtension) {
 				if (!pObject->uuid().get())
 					throw CNMRException(NMR_ERROR_MISSINGUUID);
-				writePrefixedStringAttribute(XML_3MF_NAMESPACEPREFIX_PRODUCTION, XML_3MF_PRODUCTION_UUID, pObject->uuid()->toUTF16String());
+				writePrefixedStringAttribute(XML_3MF_NAMESPACEPREFIX_PRODUCTION, XML_3MF_PRODUCTION_UUID, pObject->uuid()->toString());
 			}
 
 			// Write Default Property Indices
@@ -445,6 +439,18 @@ namespace NMR {
 				nPropertyIndex = pBaseMaterialProperty->getResourceIndex();
 			}
 
+			// Slice extension content
+			if (m_bWriteSliceExtension) {
+				if (pObject->getSliceStackId() != 0) {
+					writePrefixedStringAttribute(XML_3MF_NAMESPACEPREFIX_SLICE, XML_3MF_ATTRIBUTE_OBJECT_SLICESTACKID,
+						fnUint32ToString(pObject->getSliceStackId()->getUniqueID()));
+				}
+				if (pObject->slicesMeshResolution() != MODELSLICESMESHRESOLUTION_FULL) {
+					writePrefixedStringAttribute(XML_3MF_NAMESPACEPREFIX_SLICE, XML_3MF_ATTRIBUTE_OBJECT_MESHRESOLUTION,
+						XML_3MF_VALUE_OBJECT_MESHRESOLUTION_LOW);
+				}
+			}
+
 			// Check if object is a mesh Object
 			CModelMeshObject * pMeshObject = dynamic_cast<CModelMeshObject *> (pObject);
 			if (pMeshObject) {
@@ -454,14 +460,6 @@ namespace NMR {
 					writeIntAttribute(XML_3MF_ATTRIBUTE_OBJECT_PINDEX, nPropertyIndex);
 				}
 
-				if (pMeshObject->getSliceStackId() != 0) {
-					writePrefixedStringAttribute(XML_3MF_NAMESPACEPREFIX_SLICE, XML_3MF_ATTRIBUTE_OBJECT_SLICESTACKID,
-						fnUint32ToWString(pMeshObject->getSliceStackId()->getUniqueID()));
-				}
-				if (pMeshObject->slicesMeshResolution() != MODELSLICESMESHRESOLUTION_FULL) {
-					writePrefixedStringAttribute(XML_3MF_NAMESPACEPREFIX_SLICE, XML_3MF_ATTRIBUTE_OBJECT_MESHRESOLUTION,
-						XML_3MF_VALUE_OBJECT_MESHRESOLUTION_LOW);
-				}
 				CModelWriterNode100_Mesh ModelWriter_Mesh(pMeshObject, m_pXMLWriter, m_pProgressMonitor,
 					m_pColorMapping, m_pTexCoordMappingContainer, m_bWriteMaterialExtension, m_bWriteBeamLatticeExtension);
 				ModelWriter_Mesh.writeToXML();
@@ -488,7 +486,7 @@ namespace NMR {
 			for (nIndex = 0; nIndex < nCount; nIndex++) {
 				nfColor cColor = m_pColorMapping->getColor(nIndex);
 				writeStartElementWithPrefix(XML_3MF_ELEMENT_COLOR, XML_3MF_NAMESPACEPREFIX_MATERIAL);
-				writeStringAttribute(XML_3MF_ATTRIBUTE_COLORS_COLOR, fnColorToWString(cColor));
+				writeStringAttribute(XML_3MF_ATTRIBUTE_COLORS_COLOR, fnColorToString(cColor));
 				writeEndElement();
 			}
 
@@ -561,7 +559,7 @@ namespace NMR {
 			if (!m_pModel->buildUUID().get()) {
 				throw CNMRException(NMR_ERROR_MISSINGUUID);
 			}
-			writePrefixedStringAttribute(XML_3MF_NAMESPACEPREFIX_PRODUCTION, XML_3MF_PRODUCTION_UUID, m_pModel->buildUUID()->toUTF16String());
+			writePrefixedStringAttribute(XML_3MF_NAMESPACEPREFIX_PRODUCTION, XML_3MF_PRODUCTION_UUID, m_pModel->buildUUID()->toString());
 		}
 
 		if (m_bIsRootModel)
@@ -580,7 +578,7 @@ namespace NMR {
 					if (!pBuildItem->uuid().get()) {
 						throw CNMRException(NMR_ERROR_MISSINGUUID);
 					}
-					writePrefixedStringAttribute(XML_3MF_NAMESPACEPREFIX_PRODUCTION, XML_3MF_PRODUCTION_UUID, pBuildItem->uuid()->toUTF16String());
+					writePrefixedStringAttribute(XML_3MF_NAMESPACEPREFIX_PRODUCTION, XML_3MF_PRODUCTION_UUID, pBuildItem->uuid()->toString());
 				}
 				if (pBuildItem->hasTransform())
 					writeStringAttribute(XML_3MF_ATTRIBUTE_ITEM_TRANSFORM, pBuildItem->getTransformString());
@@ -609,7 +607,7 @@ namespace NMR {
 				if (!pComponent->uuid().get()) {
 					throw CNMRException(NMR_ERROR_MISSINGUUID);
 				}
-				writePrefixedStringAttribute(XML_3MF_NAMESPACEPREFIX_PRODUCTION, XML_3MF_PRODUCTION_UUID, pComponent->uuid()->toUTF16String());
+				writePrefixedStringAttribute(XML_3MF_NAMESPACEPREFIX_PRODUCTION, XML_3MF_PRODUCTION_UUID, pComponent->uuid()->toString());
 			}
 			writeEndElement();
 		}

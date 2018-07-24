@@ -1,7 +1,6 @@
 /*++
 
-Copyright (C) 2015 Microsoft Corporation
-Copyright (C) 2015 netfabb GmbH (Original Author)
+Copyright (C) 2018 3MF Consortium
 
 All rights reserved.
 
@@ -126,6 +125,7 @@ namespace NMR {
 		case NMR_ERROR_ZIPENTRYNON64_TOOLARGE: return "A ZIP Entry is too large for non zip64 zip-file";
 		case NMR_ERROR_ATTACHMENTTOOLARGE: return "An individual custom attachment is too large.";
 		case NMR_ERROR_ZIPCALLBACK: return "Error in libzip callback.";
+		case NMR_ERROR_ZIPCONTAINSINCONSISTENCIES: return "ZIP file contains inconsistencies. It might load with errors or incorrectly.";
 
 
 		// Unhandled exception
@@ -367,6 +367,7 @@ namespace NMR {
 		case NMR_ERROR_BEAMLATTICE_INVALID_OBJECTTYPE: return "Beamlattice is defined on wrong object type.";
 		case NMR_ERROR_SLICE_ONEVERTEX: return "Slice only contains one vertex.";
 		case NMR_ERROR_SLICE_ONEPOINT: return "Slice contains only one point within a polygon";
+		case NMR_ERROR_INVALIDTILESTYLE: return "Invalid Tile Style";
 
 		// XML Parser Error Constants(0x9XXX)
 		case NMR_ERROR_XMLPARSER_INVALIDATTRIBVALUE: return "Invalid XML attribute value";

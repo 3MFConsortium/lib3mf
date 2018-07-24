@@ -1,7 +1,6 @@
 /*++
 
-Copyright (C) 2015 Microsoft Corporation
-Copyright (C) 2015 netfabb GmbH (Original Author)
+Copyright (C) 2018 3MF Consortium
 
 All rights reserved.
 
@@ -44,8 +43,6 @@ namespace NMR {
 	{
 		m_pMesh = std::make_shared<CMesh>();
 		m_pBeamLatticeAttributes = std::make_shared<CModelMeshBeamLatticeAttributes>();
-		m_pSliceStackId = 0;
-		m_eSlicesMeshResolution = MODELSLICESMESHRESOLUTION_FULL;
 	}
 
 	CModelMeshObject::CModelMeshObject(_In_ const ModelResourceID sID, _In_ CModel * pModel, _In_ PMesh pMesh)
@@ -55,8 +52,6 @@ namespace NMR {
 		if (m_pMesh.get() == nullptr)
 			m_pMesh = std::make_shared<CMesh>();
 		m_pBeamLatticeAttributes = std::make_shared<CModelMeshBeamLatticeAttributes>();
-		m_pSliceStackId = 0;
-		m_eSlicesMeshResolution = MODELSLICESMESHRESOLUTION_FULL;
 	}
 
 	CModelMeshObject::~CModelMeshObject()
@@ -213,22 +208,6 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
 		m_pBeamLatticeAttributes = pBeamLatticeAttributes;
-	}
-
-	void CModelMeshObject::setSliceStackId(PPackageResourceID nSliceStackId) {
-		m_pSliceStackId = nSliceStackId;
-	}
-
-	PPackageResourceID CModelMeshObject::getSliceStackId() {
-		return m_pSliceStackId;
-	}
-
-	void CModelMeshObject::setSlicesMeshResolution(eModelSlicesMeshResolution eMeshResolution) {
-		m_eSlicesMeshResolution = eMeshResolution;
-	}
-
-	eModelSlicesMeshResolution CModelMeshObject::slicesMeshResolution() const {
-		return m_eSlicesMeshResolution;
 	}
 }
 

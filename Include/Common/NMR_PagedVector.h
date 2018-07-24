@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2015 netfabb GmbH (Original Author)
+Copyright (C) 2018 3MF Consortium
 
 All rights reserved.
 
@@ -130,7 +130,7 @@ namespace NMR {
 			for (auto iIterator = m_pBlocks.begin(); iIterator != m_pBlocks.end(); iIterator++)
 			{
 				T * pBlock = *iIterator;
-				delete pBlock;
+				delete[] pBlock;
 			}
 
 			m_pBlocks.clear();

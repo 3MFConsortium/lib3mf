@@ -346,7 +346,7 @@ buffer_read(buffer_t *buffer, zip_uint8_t *data, zip_uint64_t length)
     while (n < length) {
 	zip_uint64_t left = ZIP_MIN(length - n, buffer->fragment_size - fragment_offset);
 	
-	memcpy(data + n, buffer->fragments[i] + fragment_offset, left);
+	memcpy(data + n, buffer->fragments[i] + fragment_offset, (size_t)left);
 
 	n += left;
 	i++;
@@ -393,7 +393,7 @@ buffer_write(buffer_t *buffer, const zip_uint8_t *data, zip_uint64_t length, zip
 		new_capacity *= 2;
 	    }
 
-	    zip_uint8_t **fragments = realloc(buffer->fragments, new_capacity * sizeof(*fragments));
+	    zip_uint8_t **fragments = realloc(buffer->fragments, (size_t)new_capacity * sizeof(*fragments));
 
 	    if (fragments == NULL) {
 		zip_error_set(error, ZIP_ER_MEMORY, 0);
@@ -405,7 +405,7 @@ buffer_write(buffer_t *buffer, const zip_uint8_t *data, zip_uint64_t length, zip
 	}
 
 	while (buffer->nfragments < needed_fragments) {
-	    if ((buffer->fragments[buffer->nfragments] = malloc(buffer->fragment_size)) == NULL) {
+	    if ((buffer->fragments[buffer->nfragments] = malloc((size_t)buffer->fragment_size)) == NULL) {
 		zip_error_set(error, ZIP_ER_MEMORY, 0);
 		return -1;
 	    }
@@ -419,7 +419,7 @@ buffer_write(buffer_t *buffer, const zip_uint8_t *data, zip_uint64_t length, zip
     while (n < length) {
 	zip_uint64_t left = ZIP_MIN(length - n, buffer->fragment_size - fragment_offset);
 		
-	memcpy(buffer->fragments[i] + fragment_offset, data + n, left);
+	memcpy(buffer->fragments[i] + fragment_offset, data + n, (size_t)left);
 
 	n += left;
 	i++;

@@ -1,8 +1,6 @@
 /*++
 
-Copyright (C) 2017 Autodesk Inc.
-Copyright (C) 2015 Microsoft Corporation (Original Author)
-Copyright (C) 2015 netfabb GmbH (Original Author)
+Copyright (C) 2018 3MF Consortium
 
 All rights reserved.
 
@@ -115,16 +113,6 @@ namespace NMR {
 		* @return error code or 0 (success)
 		*/
 		LIB3MFMETHOD(WriteToFileUTF8) (_In_z_ LPCSTR pszFilename) LIB3MFABSTRACT;
-
-#ifdef NMR_COM_NATIVE
-		/**
-		* Writes out the model into a COM IStream. Only available on Windows.
-		*
-		* @param[in] pStream IStream to write into.
-		* @return error code or 0 (success)
-		*/
-		LIB3MFMETHOD(WriteToStream) (_In_ IStream * pStream) LIB3MFABSTRACT;
-#endif// NMR_COM_NATIVE
 
 		/**
 		* Retrieves the size of the full 3MF file stream.
@@ -270,16 +258,6 @@ namespace NMR {
 		* @return error code or 0 (success)
 		*/
 		LIB3MFMETHOD(GetStrictModeActive) (_Out_ BOOL * pbStrictModeActive) LIB3MFABSTRACT;
-
-#ifdef NMR_COM_NATIVE
-		/**
-		* Reads a model from a COM IStream. Only available on Windows.
-		*
-		* @param[in] pStream IStream to read from
-		* @return error code or 0 (success)
-		*/
-		LIB3MFMETHOD(ReadFromStream) (_In_ IStream * pStream) LIB3MFABSTRACT;
-#endif //NMR_COM_NATIVE
 
 		/**
 		* Reads a model and from the data provided by a callback function. The file type is specified by the Model Writer class
@@ -816,6 +794,35 @@ namespace NMR {
 		*/
 		LIB3MFMETHOD(IsValidObject) (_Out_ BOOL * pbIsValid) LIB3MFABSTRACT;
 
+		/**
+		* Link the object to a slice stack
+		*
+		* @param[in] nSliceStackId id of the slice stack to link
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(SetSliceStackId)(_In_ DWORD nSliceStackId) LIB3MFABSTRACT;
+
+		/**
+		* get the id of the slice stack linked to the object
+		* @param[out] pnSliceStackId id of the slice stack linked to the object
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(GetSliceStackId)(_Out_ DWORD *pnSliceStackId) LIB3MFABSTRACT;
+
+		/**
+		* set the meshresolution of the object
+		* @param[in] eSlicesMeshResolution meshresolution of this object
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(SetSlicesMeshResolution)(_In_ eModelSlicesMeshResolution eSlicesMeshResolution) LIB3MFABSTRACT;
+
+		/**
+		* get the meshresolution of the object
+		* @param[out] peSlicesMeshResolution meshresolution of this object
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(GetSlicesMeshResolution)(_Out_ eModelSlicesMeshResolution *peSlicesMeshResolution) LIB3MFABSTRACT;
+
 		/* Property handling */
 
 		/**
@@ -1137,16 +1144,6 @@ namespace NMR {
 		*/
 		LIB3MFMETHOD(WriteToBuffer) (_Out_ BYTE * pBuffer, _In_ ULONG64 cbBufferSize) LIB3MFABSTRACT;
 
-#ifdef NMR_COM_NATIVE
-		/**
-		* Writes out the attachment into a COM IStream. Only available on Windows.
-		*
-		* @param[in] pStream IStream to write into.
-		* @return error code or 0 (success)
-		*/
-		LIB3MFMETHOD(WriteToStream) (_In_ IStream * pStream) LIB3MFABSTRACT;
-#endif// NMR_COM_NATIVE
-
 		/**
 		* Writes out the attachment and passes the data to a provided callback function. The file type is specified by the Model Writer class
 		*
@@ -1181,18 +1178,6 @@ namespace NMR {
 		* @return error code or 0 (success)
 		*/
 		LIB3MFMETHOD(ReadFromBuffer) (_In_ BYTE * pBuffer, _In_ ULONG64 cbBufferSize) LIB3MFABSTRACT;
-
-#ifdef NMR_COM_NATIVE
-		/**
-		* Reads an attachment from a COM IStream. Only available on Windows.
-		*
-		* @param[in] pStream IStream to read from
-		* @return error code or 0 (success)
-		*/
-		LIB3MFMETHOD(ReadFromStream) (_In_ IStream * pStream) LIB3MFABSTRACT;
-#endif //NMR_COM_NATIVE
-
-
 	};
 
 	/**********************************************************************************************************
@@ -1286,6 +1271,24 @@ namespace NMR {
 		LIB3MFMETHOD(SetContentType) (_In_ eModelTexture2DType eContentType) LIB3MFABSTRACT;
 
 		/**
+		* Retrieves a texture's tilestyle type
+		*
+		* @param[out] peTileStyleU returns tilestyle type enum
+		* @param[out] peTileStyleV returns tilestyle type enum
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(GetTileStyleUV) (_Out_ eModelTextureTileStyle * peTileStyleU, _Out_ eModelTextureTileStyle * peTileStyleV) LIB3MFABSTRACT;
+
+		/**
+		* Sets a texture's tilestyle type
+		*
+		* @param[out] eTileStyleU new tilestyle type enum
+		* @param[out] eTileStyleV new tilestyle type enum
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(SetTileStyleUV) (_In_ eModelTextureTileStyle eTileStyleU, _In_ eModelTextureTileStyle eTileStyleV) LIB3MFABSTRACT;
+
+		/**
 		* Retrieves a texture's box2D coordinates.
 		*
 		* @param[out] pfU returns the U value of the texture
@@ -1347,16 +1350,6 @@ namespace NMR {
 		*/
 		LIB3MFMETHOD(WriteToBuffer) (_Out_ BYTE * pBuffer, _In_ ULONG64 cbBufferSize) LIB3MFABSTRACT;
 
-#ifdef NMR_COM_NATIVE
-		/**
-		* Writes out the texture into a COM IStream. Only available on Windows.
-		*
-		* @param[in] pStream IStream to write into.
-		* @return error code or 0 (success)
-		*/
-		LIB3MFMETHOD(WriteToStream) (_In_ IStream * pStream) LIB3MFABSTRACT;
-#endif// NMR_COM_NATIVE
-
 		/**
 		* Writes out the texture and passes the data to a provided callback function. The file type is specified by the Model Writer class
 		*
@@ -1391,17 +1384,6 @@ namespace NMR {
 		* @return error code or 0 (success)
 		*/
 		LIB3MFMETHOD(ReadFromBuffer) (_In_ BYTE * pBuffer, _In_ ULONG64 cbBufferSize) LIB3MFABSTRACT;
-
-#ifdef NMR_COM_NATIVE
-		/**
-		* Reads a texture from a COM IStream. Only available on Windows.
-		*
-		* @param[in] pStream IStream to read from
-		* @return error code or 0 (success)
-		*/
-		LIB3MFMETHOD(ReadFromStream) (_In_ IStream * pStream) LIB3MFABSTRACT;
-#endif //NMR_COM_NATIVE
-
 	};
 
 	/**********************************************************************************************************
@@ -1935,35 +1917,6 @@ namespace NMR {
 		* @return error code or 0 (success)
 		*/
 		LIB3MFMETHOD(IsManifoldAndOriented) (_Out_ BOOL * pbIsOrientedAndManifold) LIB3MFABSTRACT;
-
-		/**
-		* Link the mesh object to a slice stack
-		*
-		* @param[in] nSliceStackId id of the slice stack to link
-		* @return error code or 0 (success)
-		*/
-		LIB3MFMETHOD(SetSliceStackId)(_In_ DWORD nSliceStackId) LIB3MFABSTRACT;
-
-		/**
-		* get the id of the slice stack linked to the mesh object
-		* @param[out] pnSliceStackId id of the slice stack linked to the mesh object
-		* @return error code or 0 (success)
-		*/
-		LIB3MFMETHOD(GetSliceStackId)(_Out_ DWORD *pnSliceStackId) LIB3MFABSTRACT;
-
-		/**
-		* set the meshresolution of the mesh object
-		* @param[in] eSlicesMeshResolution meshresolution of this mesh object
-		* @return error code or 0 (success)
-		*/
-		LIB3MFMETHOD(SetSlicesMeshResolution)(_In_ eModelSlicesMeshResolution eSlicesMeshResolution) LIB3MFABSTRACT;
-
-		/**
-		* get the meshresolution of the mesh object
-		* @param[out] peSlicesMeshResolution meshresolution of this mesh object
-		* @return error code or 0 (success)
-		*/
-		LIB3MFMETHOD(GetSlicesMeshResolution)(_Out_ eModelSlicesMeshResolution *peSlicesMeshResolution) LIB3MFABSTRACT;
 	};
 
 	/**********************************************************************************************************

@@ -1,7 +1,6 @@
 /*++
 
-Copyright (C) 2015 Microsoft Corporation (Original Author)
-Copyright (C) 2015 netfabb GmbH
+Copyright (C) 2018 3MF Consortium
 
 All rights reserved.
 
@@ -51,7 +50,7 @@ namespace NMR {
 		CModelReader_3MF(_In_ PModel pModel);
 
 		virtual void readStream(_In_ PImportStream pStream);
-		virtual void addTextureAttachment(_In_ std::wstring sPath, _In_ PImportStream pStream);
+		virtual void addTextureAttachment(_In_ std::string sPath, _In_ PImportStream pStream);
 	};
 
 	typedef std::shared_ptr <CModelReader_3MF> PModelReader_3MF;

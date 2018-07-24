@@ -1,7 +1,6 @@
 /*++
 
-Copyright (C) 2015 Microsoft Corporation (Original Author)
-Copyright (C) 2015 netfabb GmbH
+Copyright (C) 2018 3MF Consortium
 
 All rights reserved.
 
@@ -50,7 +49,7 @@ namespace NMR {
 		m_pModel = pModel;
 		m_ObjectID = 0;
 		m_bHasID = false;
-		m_sPartNumber = L"";
+		m_sPartNumber = "";
 
 		m_hasPath = false;
 
@@ -114,50 +113,50 @@ namespace NMR {
 		pBuildItem->setPath(m_sPath);
 	}
 
-	void CModelReaderNode100_BuildItem::OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue)
+	void CModelReaderNode100_BuildItem::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
 	{
 		__NMRASSERT(pAttributeName);
 		__NMRASSERT(pAttributeValue);
 
-		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_ITEM_OBJECTID) == 0) {
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_ITEM_OBJECTID) == 0) {
 			if (m_bHasID)
 				throw CNMRException(NMR_ERROR_DUPLICATEBUILDITEMOBJECTID);
 
-			m_ObjectID = fnWStringToUint32(pAttributeValue);
+			m_ObjectID = fnStringToUint32(pAttributeValue);
 			m_bHasID = true;
 		}
-		else if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_ITEM_TRANSFORM) == 0) {
-			m_mTransform = fnMATRIX3_fromWideString(pAttributeValue);
+		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_ITEM_TRANSFORM) == 0) {
+			m_mTransform = fnMATRIX3_fromString(pAttributeValue);
 		}
-		else if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_ITEM_PARTNUMBER) == 0) {
-			m_sPartNumber = std::wstring(pAttributeValue);
+		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_ITEM_PARTNUMBER) == 0) {
+			m_sPartNumber = std::string(pAttributeValue);
 		}
 		else
 			m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE), mrwInvalidOptionalValue);
 	}
 
-	void CModelReaderNode100_BuildItem::OnNSAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue, _In_z_ const nfWChar * pNameSpace)
+	void CModelReaderNode100_BuildItem::OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace)
 	{
 		__NMRASSERT(pAttributeName);
 		__NMRASSERT(pAttributeValue);
 		__NMRASSERT(pNameSpace);
 
-		if (wcscmp(pNameSpace, XML_3MF_NAMESPACE_PRODUCTIONSPEC) == 0) {
-			if (wcscmp(pAttributeName, XML_3MF_PRODUCTION_UUID) == 0) {
+		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_PRODUCTIONSPEC) == 0) {
+			if (strcmp(pAttributeName, XML_3MF_PRODUCTION_UUID) == 0) {
 				if (m_UUID.get())
 					throw CNMRException(NMR_ERROR_DUPLICATEUUID);
 				m_UUID = std::make_shared<CUUID>(pAttributeValue);
 			}
-			if (wcscmp(pAttributeName, XML_3MF_PRODUCTION_PATH) == 0) {
+			if (strcmp(pAttributeName, XML_3MF_PRODUCTION_PATH) == 0) {
 				if (m_hasPath)
 					throw CNMRException(NMR_ERROR_DUPLICATEPATH);
-				m_sPath = std::wstring(pAttributeValue);
+				m_sPath = std::string(pAttributeValue);
 				m_hasPath = true;
 			}
 		}
 	}
 
-	std::wstring CModelReaderNode100_BuildItem::getPartNumber()
+	std::string CModelReaderNode100_BuildItem::getPartNumber()
 	{
 		return m_sPartNumber;
 	}

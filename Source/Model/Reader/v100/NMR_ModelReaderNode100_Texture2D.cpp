@@ -1,7 +1,6 @@
 /*++
 
-Copyright (C) 2015 Microsoft Corporation (Original Author)
-Copyright (C) 2015 netfabb GmbH
+Copyright (C) 2018 3MF Consortium
 
 All rights reserved.
 
@@ -73,12 +72,34 @@ namespace NMR {
 		// Set Properties
 		m_pTexture2DResource->setPath(m_sPath);
 		m_pTexture2DResource->setContentTypeString(m_sContentType, true);
-		m_pTexture2DResource->setTileStyleU(m_sTileStyleU);
-		m_pTexture2DResource->setTileStyleV(m_sTileStyleV);
+
+		if (!m_sTileStyleU.empty()) {
+			try {
+				m_pTexture2DResource->setTileStyleUString(m_sTileStyleU);
+			}
+			catch (CNMRException & e) {
+				if (e.getErrorCode() == NMR_ERROR_INVALIDTILESTYLE)
+					m_pWarnings->addException(e, mrwInvalidOptionalValue);
+				else
+					throw e;
+			}
+		}
+		if (!m_sTileStyleV.empty()) {
+			try {
+				m_pTexture2DResource->setTileStyleVString(m_sTileStyleV);
+			}
+			catch (CNMRException & e) {
+				if (e.getErrorCode() == NMR_ERROR_INVALIDTILESTYLE)
+					m_pWarnings->addException(e, mrwInvalidOptionalValue);
+				else
+					throw e;
+			}
+		}
+
 		if (m_hasBox)
 			m_pTexture2DResource->setBox2D(m_fU, m_fV, m_fWidth, m_fHeight);
 		else
-			m_pTexture2DResource->clearBox2D();
+			m_pTexture2DResource->clearBox2D(); 
 
 
 		// Parse Content
@@ -86,35 +107,35 @@ namespace NMR {
 
 	}
 
-	void CModelReaderNode100_Texture2D::OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue)
+	void CModelReaderNode100_Texture2D::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
 	{
 		__NMRASSERT(pAttributeName);
 		__NMRASSERT(pAttributeValue);
 
-		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TEXTURE2D_ID) == 0) {
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_TEXTURE2D_ID) == 0) {
 			if (m_nID != 0)
 				throw CNMRException(NMR_ERROR_DUPLICATERESOURCEID);
 
 			// Convert to integer and make a input and range check!
-			m_nID = fnWStringToUint32(pAttributeValue);
+			m_nID = fnStringToUint32(pAttributeValue);
 		}
-		else if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TEXTURE2D_PATH) == 0) {
-			m_sPath = std::wstring(pAttributeValue);
+		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_TEXTURE2D_PATH) == 0) {
+			m_sPath = std::string(pAttributeValue);
 		}
-		else if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TEXTURE2D_CONTENTTYPE) == 0) {
-			m_sContentType = std::wstring(pAttributeValue);
+		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_TEXTURE2D_CONTENTTYPE) == 0) {
+			m_sContentType = std::string(pAttributeValue);
 		}
-		else if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TEXTURE2D_TILESTYLEU) == 0) {
-			m_sTileStyleU = std::wstring(pAttributeValue);
+		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_TEXTURE2D_TILESTYLEU) == 0) {
+			m_sTileStyleU = std::string(pAttributeValue);
 		}
-		else if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TEXTURE2D_TILESTYLEV) == 0) {
-			m_sTileStyleV = std::wstring(pAttributeValue);
+		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_TEXTURE2D_TILESTYLEV) == 0) {
+			m_sTileStyleV = std::string(pAttributeValue);
 		}
-		else if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TEXTURE2D_BOX) == 0) {
+		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_TEXTURE2D_BOX) == 0) {
 			if (m_hasBox)
 				throw CNMRException(NMR_ERROR_DUPLICATE_BOX_ATTRIBUTE);
 			// parse box
-			std::vector<double> box = fnVctDouble_fromWideString(pAttributeValue);
+			std::vector<double> box = fnVctDouble_fromString(pAttributeValue);
 			if (box.size() != 4)
 				throw CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE);
 			m_fU = nfFloat(box[0]);

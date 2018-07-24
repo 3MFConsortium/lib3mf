@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2015 netfabb GmbH (Original Author)
+Copyright (C) 2018 3MF Consortium
 
 All rights reserved.
 
@@ -55,13 +55,13 @@ namespace NMR {
 				break;
 
 			// Get Node Name
-			LPCWSTR pwszLocalName = nullptr;
-			pXMLReader->GetLocalName(&pwszLocalName, nullptr);
-			if (!pwszLocalName)
+			LPCSTR pszLocalName = nullptr;
+			pXMLReader->GetLocalName(&pszLocalName, nullptr);
+			if (!pszLocalName)
 				throw CNMRException(NMR_ERROR_COULDNOTGETLOCALXMLNAME);
 
 			// Compare with Model Node Name
-			if (wcscmp(pwszLocalName, OPC_RELS_RELATIONSHIP_CONTAINER) == 0) {
+			if (strcmp(pszLocalName, OPC_RELS_RELATIONSHIP_CONTAINER) == 0) {
 				parseRootNode(pXMLReader.get());
 			}
 		}
@@ -81,8 +81,8 @@ namespace NMR {
 		parseAttributes(pXMLReader);
 
 		while (!pXMLReader->IsEOF()) {
-			LPCWSTR pwszLocalName = nullptr;
-			LPCWSTR pwszNameSpaceURI = nullptr;
+			LPCSTR pszLocalName = nullptr;
+			LPCSTR pszNameSpaceURI = nullptr;
 			UINT nCount = 0;
 			UINT nNameSpaceCount = 0;
 
@@ -91,17 +91,17 @@ namespace NMR {
 
 			switch (NodeType) {
 			case XMLREADERNODETYPE_STARTELEMENT:
-				pXMLReader->GetLocalName(&pwszLocalName, &nCount);
-				if (!pwszLocalName)
+				pXMLReader->GetLocalName(&pszLocalName, &nCount);
+				if (!pszLocalName)
 					throw CNMRException(NMR_ERROR_COULDNOTGETLOCALXMLNAME);
 
-				pXMLReader->GetNamespaceURI(&pwszNameSpaceURI, &nNameSpaceCount);
-				if (!pwszNameSpaceURI)
+				pXMLReader->GetNamespaceURI(&pszNameSpaceURI, &nNameSpaceCount);
+				if (!pszNameSpaceURI)
 					throw CNMRException(NMR_ERROR_COULDNOTGETNAMESPACE);
 
 				if (nCount > 0) {
-					if (wcscmp(pwszNameSpaceURI, OPCPACKAGE_SCHEMA_RELATIONSHIPS) == 0) {
-						if (wcscmp(pwszLocalName, OPC_RELS_RELATIONSHIP_NODE) == 0) {
+					if (strcmp(pszNameSpaceURI, OPCPACKAGE_SCHEMA_RELATIONSHIPS) == 0) {
+						if (strcmp(pszLocalName, OPC_RELS_RELATIONSHIP_NODE) == 0) {
 							parseChildNode(pXMLReader);
 						}
 						else
@@ -111,11 +111,11 @@ namespace NMR {
 				break;
 
 			case XMLREADERNODETYPE_ENDELEMENT:
-				pXMLReader->GetLocalName(&pwszLocalName, &nCount);
-				if (!pwszLocalName)
+				pXMLReader->GetLocalName(&pszLocalName, &nCount);
+				if (!pszLocalName)
 					throw CNMRException(NMR_ERROR_COULDNOTGETLOCALXMLNAME);
 
-				if (wcscmp(pwszLocalName, OPC_RELS_RELATIONSHIP_CONTAINER) == 0) {
+				if (strcmp(pszLocalName, OPC_RELS_RELATIONSHIP_CONTAINER) == 0) {
 					return;
 				}
 				pXMLReader->CloseElement();
@@ -139,42 +139,42 @@ namespace NMR {
 		if (!pXMLReader->MoveToFirstAttribute())
 			return;
 
-		std::wstring sTarget;
-		std::wstring sID;
-		std::wstring sType;
+		std::string sTarget;
+		std::string sID;
+		std::string sType;
 
 		nfBool bContinue = true;
 		while (bContinue) {
 
 			if (!pXMLReader->IsDefault()) {
-				LPCWSTR pwszLocalName = nullptr;
-				LPCWSTR pwszNameSpaceURI = nullptr;
-				LPCWSTR pwszValue = nullptr;
+				LPCSTR pszLocalName = nullptr;
+				LPCSTR pszNameSpaceURI = nullptr;
+				LPCSTR pszValue = nullptr;
 				UINT nNameCount = 0;
 				UINT nValueCount = 0;
 				UINT nNameSpaceCount = 0;
 
 				// Get Attribute Name
-				pXMLReader->GetNamespaceURI(&pwszNameSpaceURI, &nNameSpaceCount);
-				if (!pwszNameSpaceURI)
+				pXMLReader->GetNamespaceURI(&pszNameSpaceURI, &nNameSpaceCount);
+				if (!pszNameSpaceURI)
 					throw CNMRException(NMR_ERROR_COULDNOTGETNAMESPACE);
 
-				pXMLReader->GetLocalName(&pwszLocalName, &nNameCount);
-				if (!pwszLocalName)
+				pXMLReader->GetLocalName(&pszLocalName, &nNameCount);
+				if (!pszLocalName)
 					throw CNMRException(NMR_ERROR_COULDNOTGETLOCALXMLNAME);
 
 				// Get Attribute Value
-				pXMLReader->GetValue(&pwszValue, &nValueCount);
-				if (!pwszValue)
+				pXMLReader->GetValue(&pszValue, &nValueCount);
+				if (!pszValue)
 					throw CNMRException(NMR_ERROR_COULDNOTGETXMLVALUE);
 
 				if (nNameSpaceCount == 0) {
-					if (wcscmp(pwszLocalName, OPC_RELS_ATTRIB_TARGET) == 0)
-						sTarget = pwszValue;
-					if (wcscmp(pwszLocalName, OPC_RELS_ATTRIB_TYPE) == 0)
-						sType = pwszValue;
-					if (wcscmp(pwszLocalName, OPC_RELS_ATTRIB_ID) == 0)
-						sID = pwszValue;
+					if (strcmp(pszLocalName, OPC_RELS_ATTRIB_TARGET) == 0)
+						sTarget = pszValue;
+					if (strcmp(pszLocalName, OPC_RELS_ATTRIB_TYPE) == 0)
+						sType = pszValue;
+					if (strcmp(pszLocalName, OPC_RELS_ATTRIB_ID) == 0)
+						sID = pszValue;
 				}
 
 			}
@@ -231,25 +231,25 @@ namespace NMR {
 		while (bContinue) {
 
 			if (!pXMLReader->IsDefault()) {
-				LPCWSTR pwszLocalName = nullptr;
-				LPCWSTR pwszNameSpaceURI = nullptr;
-				LPCWSTR pwszValue = nullptr;
+				LPCSTR pszLocalName = nullptr;
+				LPCSTR pszNameSpaceURI = nullptr;
+				LPCSTR pszValue = nullptr;
 				UINT nNameCount = 0;
 				UINT nValueCount = 0;
 				UINT nNameSpaceCount = 0;
 
 				// Get Attribute Name
-				pXMLReader->GetNamespaceURI(&pwszNameSpaceURI, &nNameSpaceCount);
-				if (!pwszNameSpaceURI)
+				pXMLReader->GetNamespaceURI(&pszNameSpaceURI, &nNameSpaceCount);
+				if (!pszNameSpaceURI)
 					throw CNMRException(NMR_ERROR_COULDNOTGETNAMESPACE);
 
-				pXMLReader->GetLocalName(&pwszLocalName, &nNameCount);
-				if (!pwszLocalName)
+				pXMLReader->GetLocalName(&pszLocalName, &nNameCount);
+				if (!pszLocalName)
 					throw CNMRException(NMR_ERROR_COULDNOTGETLOCALXMLNAME);
 
 				// Get Attribute Value
-				pXMLReader->GetValue(&pwszValue, &nValueCount);
-				if (!pwszValue)
+				pXMLReader->GetValue(&pszValue, &nValueCount);
+				if (!pszValue)
 					throw CNMRException(NMR_ERROR_COULDNOTGETXMLVALUE);
 			}
 

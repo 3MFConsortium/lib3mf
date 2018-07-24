@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2015 netfabb GmbH (Original Author)
+Copyright (C) 2018 3MF Consortium
 
 All rights reserved.
 
@@ -61,7 +61,7 @@ namespace NMR {
 		
 		PackageResourceID getObjectID();
 		nfBool hasTransform();
-		std::wstring getTransformString();
+		std::string getTransformString();
 
 		// Production extension UUID
 		PUUID uuid();

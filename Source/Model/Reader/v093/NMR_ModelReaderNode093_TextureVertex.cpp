@@ -1,7 +1,6 @@
 /*++
 
-Copyright (C) 2015 Microsoft Corporation (Original Author)
-Copyright (C) 2015 netfabb GmbH
+Copyright (C) 2018 3MF Consortium
 
 All rights reserved.
 
@@ -34,10 +33,12 @@ A texture vertex reader model node is a parser for the vertex node of an XML Mod
 #include "Model/Reader/v093/NMR_ModelReaderNode093_TextureVertex.h"
 
 #include "Model/Classes/NMR_ModelConstants.h"
+#include "Common/NMR_StringUtils.h"
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_Exception_Windows.h"
 #include <cmath>
 #include <climits>
+#include <stdlib.h>
 
 namespace NMR {
 
@@ -79,13 +80,13 @@ namespace NMR {
 		fV = m_fV;
 	}
 
-	void CModelReaderNode093_TextureVertex::OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue)
+	void CModelReaderNode093_TextureVertex::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
 	{
 		__NMRASSERT(pAttributeName);
 		__NMRASSERT(pAttributeValue);
 
-		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TEXTURE_U) == 0) {
-			m_fU = wcstof(pAttributeValue, nullptr);
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_TEXTURE_U) == 0) {
+			m_fU = strtof(pAttributeValue, nullptr);
 			if (std::isnan (m_fU))
 				throw CNMRException(NMR_ERROR_INVALIDMODELTEXTURECOORDINATES);
 			if (fabs (m_fU) > XML_3MF_MAXIMUMCOORDINATEVALUE)
@@ -93,8 +94,8 @@ namespace NMR {
 			m_bHasU = true;
 		}
 
-		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TEXTURE_V) == 0) {
-			m_fV = wcstof(pAttributeValue, nullptr);
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_TEXTURE_V) == 0) {
+			m_fV = strtof(pAttributeValue, nullptr);
 			if (std::isnan (m_fV))
 				throw CNMRException(NMR_ERROR_INVALIDMODELTEXTURECOORDINATES);
 			if (fabs(m_fV) > XML_3MF_MAXIMUMCOORDINATEVALUE)

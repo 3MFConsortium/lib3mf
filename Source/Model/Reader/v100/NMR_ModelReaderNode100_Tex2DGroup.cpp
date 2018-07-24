@@ -1,7 +1,6 @@
 /*++
 
-Copyright (C) 2015 Microsoft Corporation (Original Author)
-Copyright (C) 2015 netfabb GmbH
+Copyright (C) 2018 3MF Consortium
 
 All rights reserved.
 
@@ -77,24 +76,24 @@ namespace NMR {
 
 	}
 
-	void CModelReaderNode100_Tex2DGroup::OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue)
+	void CModelReaderNode100_Tex2DGroup::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
 	{
 		__NMRASSERT(pAttributeName);
 		__NMRASSERT(pAttributeValue);
 
-		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TEX2DGROUP_ID) == 0) {
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_TEX2DGROUP_ID) == 0) {
 			if (m_nID != 0)
 				throw CNMRException(NMR_ERROR_DUPLICATERESOURCEID);
 
 			// Convert to integer and make a input and range check!
-			m_nID = fnWStringToUint32(pAttributeValue);
+			m_nID = fnStringToUint32(pAttributeValue);
 		}
-		else if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TEX2DGROUP_TEXTUREID) == 0) {
+		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_TEX2DGROUP_TEXTUREID) == 0) {
 			if (m_nTextureID != 0)
 				throw CNMRException(NMR_ERROR_DUPLICATERESOURCEID);
 
 			// Convert to integer and make a input and range check!
-			ModelResourceID nID = fnWStringToUint32(pAttributeValue);
+			ModelResourceID nID = fnStringToUint32(pAttributeValue);
 			if (nID == 0)
 				m_pWarnings->addException(CNMRException(NMR_ERROR_INVALIDMODELRESOURCE), mrwInvalidMandatoryValue);
 
@@ -105,10 +104,10 @@ namespace NMR {
 	}
 
 
-	void CModelReaderNode100_Tex2DGroup::OnNSChildElement(_In_z_ const nfWChar * pChildName, _In_z_ const nfWChar * pNameSpace, _In_ CXmlReader * pXMLReader)
+	void CModelReaderNode100_Tex2DGroup::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
 	{
-		if (wcscmp(pNameSpace, XML_3MF_NAMESPACE_MATERIALSPEC) == 0) {
-			if (wcscmp(pChildName, XML_3MF_ELEMENT_TEX2COORD) == 0) {
+		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_MATERIALSPEC) == 0) {
+			if (strcmp(pChildName, XML_3MF_ELEMENT_TEX2COORD) == 0) {
 				PModelReaderNode100_Tex2Coord pXMLNode = std::make_shared<CModelReaderNode100_Tex2Coord>(m_pModel, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 

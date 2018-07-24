@@ -1,7 +1,6 @@
 /*++
 
-Copyright (C) 2015 Microsoft Corporation
-Copyright (C) 2015 netfabb GmbH (Original Author)
+Copyright (C) 2018 3MF Consortium
 
 All rights reserved.
 
@@ -42,15 +41,6 @@ COM Interface Implementation for Model Classes
 
 #include "Common/Platform/NMR_ImportStream_Memory.h"
 #include "Model/Classes/NMR_ModelConstants.h"
-
-#ifdef NMR_COM_NATIVE
-#include "Common/Platform/NMR_ImportStream_COM.h"
-#endif
-
-#ifndef __GNUC__
-#include <atlbase.h>
-#endif
-
 
 namespace NMR {
 
@@ -160,7 +150,7 @@ namespace NMR {
 			__NMRASSERT(pTextureResource);
 
 			// Retrieve Path
-			std::wstring sPath = pTextureResource->getPath();
+			std::string sPath = pTextureResource->getPath();
 
 			CModel * pModel = pTextureResource->getModel();
 			__NMRASSERT(pModel);
@@ -191,18 +181,18 @@ namespace NMR {
 			__NMRASSERT(pTextureResource);
 
 			// check relationship type
-			std::wstring sRelationshipType;
+			std::string sRelationshipType;
 			ULONG cbNeededChars;
-			pTextureAttachment->GetRelationshipType(nullptr, 0, &cbNeededChars);
+			pTextureAttachment->GetRelationshipTypeUTF8(nullptr, 0, &cbNeededChars);
 			sRelationshipType.resize(cbNeededChars);
-			pTextureAttachment->GetRelationshipType(&(sRelationshipType[0]), cbNeededChars + 1, &cbNeededChars);
+			pTextureAttachment->GetRelationshipTypeUTF8(&(sRelationshipType[0]), cbNeededChars + 1, &cbNeededChars);
 			if (!(sRelationshipType == PACKAGE_TEXTURE_RELATIONSHIP_TYPE))
 				throw CNMRException(NMR_ERROR_INVALIDRELATIONSHIPTYPEFORTEXTURE);
 
-			std::wstring sPath;
-			pTextureAttachment->GetPath(nullptr, 0, &cbNeededChars);
+			std::string sPath;
+			pTextureAttachment->GetPathUTF8(nullptr, 0, &cbNeededChars);
 			sPath.resize(cbNeededChars);
-			pTextureAttachment->GetPath(&(sPath[0]), cbNeededChars+1, &cbNeededChars);
+			pTextureAttachment->GetPathUTF8(&(sPath[0]), cbNeededChars+1, &cbNeededChars);
 
 			pTextureResource->setPath(sPath);
 
@@ -226,11 +216,12 @@ namespace NMR {
 			__NMRASSERT(pTextureResource);
 
 			// Retrieve Path
-			std::wstring sPath = pTextureResource->getPath();
+			std::string sPath = pTextureResource->getPath();
+			std::wstring wPath = fnUTF8toUTF16(sPath);
 
 			// Safely call StringToBuffer
 			nfUint32 nNeededChars = 0;
-			fnWStringToBufferSafe(sPath, pwszBuffer, cbBufferSize, &nNeededChars);
+			fnWStringToBufferSafe(wPath, pwszBuffer, cbBufferSize, &nNeededChars);
 
 			// Return length if needed
 			if (pcbNeededChars)
@@ -257,8 +248,7 @@ namespace NMR {
 			__NMRASSERT(pTextureResource);
 
 			// Retrieve Path
-			std::wstring sUTF16Path = pTextureResource->getPath();
-			std::string sUTF8Path = fnUTF16toUTF8(sUTF16Path);
+			std::string sUTF8Path = pTextureResource->getPath();
 
 			// Safely call StringToBuffer
 			nfUint32 nNeededChars = 0;
@@ -292,7 +282,7 @@ namespace NMR {
 			__NMRASSERT(pTextureResource);
 
 			std::wstring sPath(pwszPath);
-			pTextureResource->setPath(sPath);
+			pTextureResource->setPath(fnUTF16toUTF8(sPath));
 
 			return handleSuccess();
 		}
@@ -315,8 +305,7 @@ namespace NMR {
 			__NMRASSERT(pTextureResource);
 
 			std::string sUTF8Path(pszPath);
-			std::wstring sUTF16Path = fnUTF8toUTF16(sUTF8Path);
-			pTextureResource->setPath(sUTF16Path);
+			pTextureResource->setPath(sUTF8Path);
 
 			return handleSuccess();
 		}
@@ -348,7 +337,6 @@ namespace NMR {
 		catch (...) {
 			return handleGenericException();
 		}
-
 	}
 
 	LIB3MFMETHODIMP CCOMModelTexture2D::SetContentType(_In_ eModelTexture2DType eContentType)
@@ -367,7 +355,47 @@ namespace NMR {
 		catch (...) {
 			return handleGenericException();
 		}
+	}
 
+	LIB3MFMETHODIMP CCOMModelTexture2D::GetTileStyleUV(_Out_ eModelTextureTileStyle * peTileStyleU, _Out_ eModelTextureTileStyle * peTileStyleV)
+	{
+		try {
+			if ((peTileStyleU == nullptr) || (peTileStyleU == nullptr))
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
+			CModelTexture2DResource * pTextureResource = getTexture2D();
+			__NMRASSERT(pTextureResource);
+
+			*peTileStyleU = pTextureResource->getTileStyleU();
+			*peTileStyleV = pTextureResource->getTileStyleV();
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
+	LIB3MFMETHODIMP CCOMModelTexture2D::SetTileStyleUV(_In_ eModelTextureTileStyle eTileStyleU, _In_ eModelTextureTileStyle eTileStyleV)
+	{
+		try {
+			CModelTexture2DResource * pTextureResource = getTexture2D();
+			__NMRASSERT(pTextureResource);
+
+			pTextureResource->setTileStyleU(eTileStyleU);
+			pTextureResource->setTileStyleV(eTileStyleV);
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
 	}
 
 	LIB3MFMETHODIMP CCOMModelTexture2D::GetBox2D(_Out_ FLOAT * pfU, _Out_ FLOAT * pfV, _Out_ FLOAT * pfWidth, _Out_ FLOAT * pfHeight)
@@ -595,60 +623,6 @@ namespace NMR {
 
 	}
 
-
-#ifdef NMR_COM_NATIVE
-	LIB3MFMETHODIMP CCOMModelTexture2D::WriteToStream(_In_ IStream * pStream)
-	{
-		try {
-			if (pStream == nullptr)
-				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
-
-			CModelTexture2DResource * pTextureResource = getTexture2D();
-			__NMRASSERT(pTextureResource);
-
-			PImportStream pTextureAttachment = pTextureResource->getTextureStream();
-
-			if (pTextureAttachment.get() != nullptr) {
-				nfUint64 cbStreamSize = pTextureAttachment->retrieveSize();
-
-				pTextureAttachment->seekPosition(0, true);
-				std::array<nfByte, NMR_IMPORTSTREAM_COPYBUFFERSIZE> pBuffer;
-
-				nfUint64 cbBytesLeft = cbStreamSize;
-				while (cbBytesLeft > 0) {
-					nfUint64 cbLength = cbBytesLeft;
-					if (cbLength > NMR_IMPORTSTREAM_COPYBUFFERSIZE)
-						cbLength = NMR_IMPORTSTREAM_COPYBUFFERSIZE;
-
-					ULONG cbWrittenBytes = 0;
-					pTextureAttachment->readBuffer(&pBuffer[0], cbLength, true);
-					HRESULT hResult = pStream->Write(&pBuffer[0], (nfUint32)cbLength, &cbWrittenBytes);
-					if (hResult != S_OK)
-						throw CNMRException_Windows(NMR_ERROR_COULDNOTWRITESTREAM, hResult);
-
-					if (cbWrittenBytes != cbLength)
-						throw CNMRException(NMR_ERROR_COULDNOTWRITEFULLDATA);
-					cbBytesLeft -= cbLength;
-				}
-
-			}
-			else {
-				throw CNMRException(NMR_ERROR_NOTEXTURESTREAM);
-			}
-
-			return handleSuccess();
-		}
-		catch (CNMRException & Exception) {
-			return handleNMRException(&Exception);
-		}
-		catch (...) {
-			return handleGenericException();
-		}
-
-	}
-
-#endif// NMR_COM_NATIVE
-
 	LIB3MFMETHODIMP CCOMModelTexture2D::ReadFromFile(_In_z_ LPCWSTR pwszFilename)
 	{
 		try {
@@ -658,7 +632,8 @@ namespace NMR {
 			CModelTexture2DResource * pTextureResource = getTexture2D();
 			__NMRASSERT(pTextureResource);
 
-			PImportStream pImportStream = fnCreateImportStreamInstance(pwszFilename);
+			std::string sUTF8FileName = fnUTF16toUTF8(pwszFilename);
+			PImportStream pImportStream = fnCreateImportStreamInstance(sUTF8FileName.c_str());
 
 			CModel * pModel = pTextureResource->getModel();
 			__NMRASSERT(pModel);
@@ -687,8 +662,7 @@ namespace NMR {
 			__NMRASSERT(pTextureResource);
 
 			std::string sUTF8FileName(pszFilename);
-			std::wstring sUTF16FileName = fnUTF8toUTF16(sUTF8FileName);
-			PImportStream pImportStream = fnCreateImportStreamInstance(sUTF16FileName.c_str());
+			PImportStream pImportStream = fnCreateImportStreamInstance(sUTF8FileName.c_str());
 
 			CModel * pModel = pTextureResource->getModel();
 			__NMRASSERT(pModel);
@@ -735,86 +709,4 @@ namespace NMR {
 		}
 	}
 
-
-#ifdef NMR_COM_NATIVE
-
-		LIB3MFMETHODIMP CCOMModelTexture2D::ReadFromStream(_In_ IStream * pStream)
-		{
-			try {
-				if (pStream == nullptr)
-					throw CNMRException(NMR_ERROR_INVALIDPOINTER);
-
-				HRESULT hResult;
-
-				CModelTexture2DResource * pTextureResource = getTexture2D();
-				__NMRASSERT(pTextureResource);
-
-				CComPtr<IStream> pMemoryStream = nullptr;
-				hResult = CreateStreamOnHGlobal(nullptr, true, &pMemoryStream);
-				if (hResult != S_OK)
-					throw CNMRException_Windows(NMR_ERROR_COULDNOTCREATESTREAM, hResult);
-
-				// Seek Stream
-				LARGE_INTEGER nOriginPosition;
-				ULARGE_INTEGER nNewPosition;
-				nOriginPosition.HighPart = 0;
-				nOriginPosition.LowPart = 0;
-				hResult = pStream->Seek(nOriginPosition, STREAM_SEEK_END, &nNewPosition);
-				if (hResult != S_OK)
-					throw CNMRException_Windows(NMR_ERROR_COULDNOTSEEKSTREAM, hResult);
-
-				nfUint64 cbStreamSize = nNewPosition.QuadPart;
-
-				hResult = pStream->Seek(nOriginPosition, STREAM_SEEK_SET, &nNewPosition);
-				if (hResult != S_OK)
-					throw CNMRException_Windows(NMR_ERROR_COULDNOTSEEKSTREAM, hResult);
-
-				std::array<nfByte, NMR_IMPORTSTREAM_COPYBUFFERSIZE> pBuffer;
-
-				nfUint64 cbBytesLeft = cbStreamSize;
-				while (cbBytesLeft > 0) {
-					nfUint64 cbLength = cbBytesLeft;
-					if (cbLength > NMR_IMPORTSTREAM_COPYBUFFERSIZE)
-						cbLength = NMR_IMPORTSTREAM_COPYBUFFERSIZE;
-
-					ULONG cbReadBytes = 0;
-					ULONG cbWrittenBytes = 0;
-					hResult = pStream->Read(&pBuffer[0], (nfUint32)cbLength, &cbReadBytes);
-					if (hResult != S_OK)
-						throw CNMRException_Windows(NMR_ERROR_COULDNOTREADSTREAM, hResult);
-
-					if (cbReadBytes != cbLength)
-						throw CNMRException(NMR_ERROR_COULDNOTREADFULLDATA);
-
-					hResult = pMemoryStream->Write(&pBuffer[0], (nfUint32)cbLength, &cbWrittenBytes);
-					if (hResult != S_OK)
-						throw CNMRException_Windows(NMR_ERROR_COULDNOTWRITESTREAM, hResult);
-
-					if (cbWrittenBytes != cbLength)
-						throw CNMRException(NMR_ERROR_COULDNOTWRITEFULLDATA);
-					cbBytesLeft -= cbLength;
-				}
-
-
-				PImportStream pImportStream = std::make_shared<CImportStream_COM>(pMemoryStream);
-
-				CModel * pModel = pTextureResource->getModel();
-				__NMRASSERT(pModel);
-
-				pModel->removeTextureStream(pTextureResource->getPath());
-				pModel->addTextureStream(pTextureResource->getPath(), pImportStream);
-
-				return handleSuccess();
-			}
-			catch (CNMRException & Exception) {
-				return handleNMRException(&Exception);
-			}
-			catch (...) {
-				return handleGenericException();
-			}
-
-		}
-#endif //NMR_COM_NATIVE
-
-
-	}
+}

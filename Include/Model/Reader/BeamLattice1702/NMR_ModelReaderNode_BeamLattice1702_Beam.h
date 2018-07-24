@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2017 Autodesk Inc.
+Copyright (C) 2018 3MF Consortium
 
 All rights reserved.
 
@@ -39,7 +39,7 @@ NMR_ModelReaderNode_BeamLattice1702_Beam.h covers the official 3MF beamlattice e
 #include "Model/Classes/NMR_ModelObject.h"
 
 namespace NMR {
-	eModelBeamLatticeCapMode stringToCapMode(const nfWChar * capModeStr);
+	eModelBeamLatticeCapMode stringToCapMode(const nfChar * capModeStr);
 
 	class CModelReaderNode_BeamLattice1702_Beam : public CModelReaderNode {
 	private:
@@ -56,8 +56,8 @@ namespace NMR {
 		eModelBeamLatticeCapMode m_eCapMode1;
 		eModelBeamLatticeCapMode m_eCapMode2;
 	protected:
-		virtual void OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue);
-		virtual void OnNSAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue, _In_z_ const nfWChar * pNameSpace);
+		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
+		virtual void OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace);
 	public:
 		CModelReaderNode_BeamLattice1702_Beam() = delete;
 		CModelReaderNode_BeamLattice1702_Beam(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings);

@@ -1,7 +1,6 @@
 /*++
 
-Copyright (C) 2015 Microsoft Corporation (Original Author)
-Copyright (C) 2015 netfabb GmbH
+Copyright (C) 2018 3MF Consortium
 
 All rights reserved.
 
@@ -100,55 +99,55 @@ namespace NMR {
 
 
 
-	void CModelReaderNode093_Triangle::OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue)
+	void CModelReaderNode093_Triangle::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
 	{
 		__NMRASSERT(pAttributeName);
 		__NMRASSERT(pAttributeValue);
 		nfInt32 nValue;
 
-		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TRIANGLE_V1) == 0) {
-			nValue = fnWStringToInt32(pAttributeValue);
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_TRIANGLE_V1) == 0) {
+			nValue = fnStringToInt32(pAttributeValue);
 			if ((nValue >= 0) && (nValue < XML_3MF_MAXRESOURCEINDEX))
 				m_nIndex1 = nValue;
 		}
 
-		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TRIANGLE_V2) == 0) {
-			nValue = fnWStringToInt32(pAttributeValue);
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_TRIANGLE_V2) == 0) {
+			nValue = fnStringToInt32(pAttributeValue);
 			if ((nValue >= 0) && (nValue < XML_3MF_MAXRESOURCEINDEX))
 				m_nIndex2 = nValue;
 		}
 
-		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TRIANGLE_V3) == 0) {
-			nValue = fnWStringToInt32(pAttributeValue);
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_TRIANGLE_V3) == 0) {
+			nValue = fnStringToInt32(pAttributeValue);
 			if ((nValue >= 0) && (nValue < XML_3MF_MAXRESOURCEINDEX))
 				m_nIndex3 = nValue;
 		}
 
-		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TRIANGLE_CV1) == 0) {
-			nValue = fnWStringToInt32(pAttributeValue);
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_TRIANGLE_CV1) == 0) {
+			nValue = fnStringToInt32(pAttributeValue);
 			if ((nValue >= 0) && (nValue < XML_3MF_MAXRESOURCEINDEX))
 				m_nTextureIndex1 = nValue;
 		}
 
-		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TRIANGLE_CV2) == 0) {
-			nValue = fnWStringToInt32(pAttributeValue);
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_TRIANGLE_CV2) == 0) {
+			nValue = fnStringToInt32(pAttributeValue);
 			if ((nValue >= 0) && (nValue < XML_3MF_MAXRESOURCEINDEX))
 				m_nTextureIndex2 = nValue;
 		}
 
-		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TRIANGLE_CV3) == 0) {
-			nValue = fnWStringToInt32(pAttributeValue);
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_TRIANGLE_CV3) == 0) {
+			nValue = fnStringToInt32(pAttributeValue);
 			if ((nValue >= 0) && (nValue < XML_3MF_MAXRESOURCEINDEX))
 				m_nTextureIndex3 = nValue;
 		}
 
-		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TRIANGLE_COLORID) == 0) {
-			std::wstring sValue(pAttributeValue);
-			std::wstring sSubStr = sValue.substr(0, 4);
-			if (sSubStr == L"tex(") {
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_TRIANGLE_COLORID) == 0) {
+			std::string sValue(pAttributeValue);
+			std::string sSubStr = sValue.substr(0, 4);
+			if (sSubStr == "tex(") {
 				if (sValue.length() > 4) {
-					std::wstring sTexID = sValue.substr(4, sValue.length() - sSubStr.length() - 1);
-					nfInt32 nValue = fnWStringToInt32(sTexID.c_str());
+					std::string sTexID = sValue.substr(4, sValue.length() - sSubStr.length() - 1);
+					nfInt32 nValue = fnStringToInt32(sTexID.c_str());
 					if ((nValue < 0) || (nValue >= XML_3MF_MAXRESOURCEINDEX))
 						throw CNMRException(NMR_ERROR_INVALIDTEXTUREREFERENCE);
 
@@ -161,12 +160,12 @@ namespace NMR {
 
 			}
 			else {
-				const wchar_t * pCommaValue = wcschr(pAttributeValue, L',');
+				const nfChar * pCommaValue = strchr(pAttributeValue, ',');
 
 				// Check, if we have a single value
 				if (pCommaValue == nullptr) {
 
-					nValue = fnWStringToInt32(pAttributeValue);
+					nValue = fnStringToInt32(pAttributeValue);
 					if ((nValue >= 0) && (nValue < XML_3MF_MAXRESOURCEINDEX)) {
 						m_nColorID1 = nValue + 1;
 						m_nColorID2 = nValue + 1;
@@ -191,8 +190,8 @@ namespace NMR {
 			}
 		}
 
-		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TRIANGLE_MATERIALID) == 0) {
-			nValue = fnWStringToInt32(pAttributeValue);
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_TRIANGLE_MATERIALID) == 0) {
+			nValue = fnStringToInt32(pAttributeValue);
 			if ((nValue >= 0) && (nValue < XML_3MF_MAXRESOURCEINDEX))
 				m_nMaterialID = nValue + 1;
 		}
