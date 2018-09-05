@@ -347,6 +347,19 @@ namespace NMR {
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_reader_getwarning(_In_ PLib3MFModelReader * pReader, _In_ DWORD nIndex, _Out_ DWORD * pErrorCode, _Out_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars);
 
 		/**
+		* Returns Warning and Error Information of the read process (UTF8)
+		*
+		* @param[in] pReader Reader Instance
+		* @param[in] nIndex Index of the Warning. Valid values are 0 to WarningCount - 1
+		* @param[out] pErrorCode filled with the error code of the warning
+		* @param[out] pszBuffer filled with the error message, may be NULL
+		* @param[in] cbBufferSize size of pszBuffer (including trailing 0).
+		* @param[out] pcbNeededChars filled with the count of the written bytes, or needed buffer size.
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_reader_getwarningutf8(_In_ PLib3MFModelReader * pReader, _In_ DWORD nIndex, _Out_ DWORD * pErrorCode, _Out_opt_ LPSTR pszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars);
+
+		/**
 		* Set the progress callback for calls to this reader
 		*
 		* @param[in] pReader Reader Instance
