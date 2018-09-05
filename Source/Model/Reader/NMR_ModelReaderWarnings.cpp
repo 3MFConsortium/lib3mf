@@ -36,14 +36,14 @@ a relaxed import policy on the file format.
 
 namespace NMR {
 
-	CModelReaderWarning::CModelReaderWarning(std::wstring sMessage, eModelReaderWarningLevel WarningLevel, nfError nErrorCode)
+	CModelReaderWarning::CModelReaderWarning(std::string sMessage, eModelReaderWarningLevel WarningLevel, nfError nErrorCode)
 	{
 		m_sMessage = sMessage;
 		m_WarningLevel = WarningLevel;
 		m_nErrorCode = nErrorCode;
 	}
 
-	std::wstring CModelReaderWarning::getMessage()
+	std::string CModelReaderWarning::getMessage()
 	{
 		return m_sMessage;
 	}
@@ -73,7 +73,7 @@ namespace NMR {
 		m_CriticalWarningLevel = WarningLevel;
 	}
 
-	void CModelReaderWarnings::addWarning(_In_ std::wstring sMessage, _In_ nfError nErrorCode, eModelReaderWarningLevel WarningLevel)
+	void CModelReaderWarnings::addWarning(_In_ std::string sMessage, _In_ nfError nErrorCode, eModelReaderWarningLevel WarningLevel)
 	{
 		if (m_Warnings.size() < NMR_MAXWARNINGCOUNT) { // Failsafe check for Index overflows
 			PModelReaderWarning pWarning = std::make_shared<CModelReaderWarning>(sMessage, WarningLevel, nErrorCode);
@@ -88,8 +88,7 @@ namespace NMR {
 	void CModelReaderWarnings::addException(const _In_ CNMRException & Exception, _In_ eModelReaderWarningLevel WarningLevel)
 	{
 		if (m_Warnings.size() < NMR_MAXWARNINGCOUNT) { // Failsafe check for Index overflows
-			std::string sAsciiMessage (Exception.what());
-			std::wstring sMessage (sAsciiMessage.begin(), sAsciiMessage.end());
+			std::string sMessage (Exception.what());
 
 			PModelReaderWarning pWarning = std::make_shared<CModelReaderWarning>(sMessage, WarningLevel, Exception.getErrorCode());
 			m_Warnings.push_back(pWarning);
