@@ -366,7 +366,7 @@ HRESULT ShowMetaDataInformation(_In_ PLib3MFModel * pModel)
 
 		std::wcout << "Metadatum: " << iMeta << ":" << std::endl;
 		std::wcout << "Key   = \"" << sMetaDataKey <<"\""<< std::endl;
-		std::wcout << "Value = \"" << sMetaDataKey << "\"" << std::endl;
+		std::wcout << "Value = \"" << sMetaDataValue << "\"" << std::endl;
 
 	}
 	return LIB3MF_OK;
