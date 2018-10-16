@@ -116,6 +116,10 @@ namespace NMR {
 			setObjectType(MODELOBJECTTYPE_SOLIDSUPPORT);
 			return true;
 		}
+		if (sTypeString == XML_3MF_OBJECTTYPE_SURFACE) {
+			setObjectType(MODELOBJECTTYPE_SURFACE);
+			return true;
+		}
 
 		if (bRaiseException)
 			throw CNMRException(NMR_ERROR_INVALIDMODELOBJECTTYPE);
@@ -134,6 +138,8 @@ namespace NMR {
 			return std::string(XML_3MF_OBJECTTYPE_SUPPORT);
 		case MODELOBJECTTYPE_SOLIDSUPPORT:
 			return std::string(XML_3MF_OBJECTTYPE_SOLIDSUPPORT);
+		case MODELOBJECTTYPE_SURFACE:
+			return std::string(XML_3MF_OBJECTTYPE_SURFACE);
 		default:
 			return "";
 		}

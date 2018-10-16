@@ -94,6 +94,7 @@ namespace NMR {
 		case MODELOBJECTTYPE_MODEL: return isManifoldAndOriented();
 		case MODELOBJECTTYPE_SUPPORT: return true;
 		case MODELOBJECTTYPE_SOLIDSUPPORT: return isManifoldAndOriented();
+		case MODELOBJECTTYPE_SURFACE: return true;
 		default:
 			return false;
 

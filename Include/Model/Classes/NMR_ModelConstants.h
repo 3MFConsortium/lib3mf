@@ -308,6 +308,7 @@ These are given by the 3MF Standard
 #define XML_3MF_OBJECTTYPE_MODEL                    "model"
 #define XML_3MF_OBJECTTYPE_SUPPORT                  "support"
 #define XML_3MF_OBJECTTYPE_SOLIDSUPPORT             "solidsupport"
+#define XML_3MF_OBJECTTYPE_SURFACE                  "surface"
 
 #define XML_3MF_BEAMLATTICE_CLIPMODE_NONE           "none"
 #define XML_3MF_BEAMLATTICE_CLIPMODE_INSIDE         "inside"
