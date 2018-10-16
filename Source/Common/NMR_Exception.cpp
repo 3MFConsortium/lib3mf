@@ -83,8 +83,8 @@ namespace NMR {
 		case NMR_ERROR_INVALIDHEXVALUE: return "Invalid hex value";
 		case NMR_ERROR_RANGEERROR: return "Range error";
 		case NMR_ERROR_INVALIDPOINTER: return "Passed invalid null pointer";
-        case NMR_ERROR_XMLELEMENTNOTOPEN: return "XML Element not open";
-        case NMR_ERROR_INVALIDXMLNAME: return "Invalid XML Name";
+		case NMR_ERROR_XMLELEMENTNOTOPEN: return "XML Element not open";
+		case NMR_ERROR_INVALIDXMLNAME: return "Invalid XML Name";
 		case NMR_ERROR_INVALIDINTEGERTRIPLET: return "Invalid Integer Triplet String";
 		case NMR_ERROR_INVALIDZIPENTRYKEY: return "Invalid ZIP Entry key";
 		case NMR_ERRORINVALIDZIPNAME: return "Invalid ZIP Name";
