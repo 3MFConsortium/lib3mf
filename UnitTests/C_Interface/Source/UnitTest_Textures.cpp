@@ -157,7 +157,7 @@ namespace NMR {
 		sAttachmentPath = std::string(TESTFILESPATH) + separator() + "Textures" + separator() + "tex2.png";
 		fnLoadModelTexture(pModel, "/3D/Textures/tex2.png", sAttachmentPath.c_str(), MODELTEXTURETYPE_PNG, MODELTEXTURETILESTYLE_MIRROR, MODELTEXTURETILESTYLE_WRAP, nTextureIDB, 1);
 		sAttachmentPath = std::string(TESTFILESPATH) + separator() + "Textures" + separator() + "tex3.png";
-		fnLoadModelTexture(pModel, "/3D/Textures/tex3.png", sAttachmentPath.c_str(), MODELTEXTURETYPE_PNG, MODELTEXTURETILESTYLE_CLAMP, MODELTEXTURETILESTYLE_MIRROR, nTextureIDC, 2);
+		fnLoadModelTexture(pModel, "/3D/Textures/tex3.png", sAttachmentPath.c_str(), MODELTEXTURETYPE_PNG, MODELTEXTURETILESTYLE_CLAMP, MODELTEXTURETILESTYLE_NONE, nTextureIDC, 2);
 
 		MODELMESHTEXTURE2D sTexture1, sTexture2;
 		// Side 1
@@ -279,7 +279,7 @@ namespace NMR {
 		eModelTextureTileStyle eTileStyleU, eTileStyleV;
 		ASSERT_EQ(lib3mf_texture2d_gettilestyleuv(pTexture2D.get(), &eTileStyleU, &eTileStyleV), S_OK) << L"Could not get tilestyle";
 		EXPECT_TRUE((eTileStyleU == MODELTEXTURETILESTYLE_MIRROR) || (eTileStyleU == MODELTEXTURETILESTYLE_WRAP) || (eTileStyleU == MODELTEXTURETILESTYLE_CLAMP)) << L"Invalid tilestyle";
-		EXPECT_TRUE((eTileStyleV == MODELTEXTURETILESTYLE_MIRROR) || (eTileStyleV == MODELTEXTURETILESTYLE_WRAP) || (eTileStyleV == MODELTEXTURETILESTYLE_CLAMP)) << L"Invalid tilestyle";
+		EXPECT_TRUE((eTileStyleV == MODELTEXTURETILESTYLE_MIRROR) || (eTileStyleV == MODELTEXTURETILESTYLE_WRAP) || (eTileStyleV == MODELTEXTURETILESTYLE_NONE)) << L"Invalid tilestyle";
 
 		CustomLib3MFBase pAttachment;
 		ASSERT_EQ(lib3mf_texture2d_getattachment(pTexture2D.get(), &pAttachment.get()), S_OK) << L"Could not get texture2D attachment";
