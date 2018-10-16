@@ -215,7 +215,8 @@ namespace NMR {
 								(strcmp(sName.c_str(), XML_3MF_METADATA_VALUE_5) == 0) ||
 								(strcmp(sName.c_str(), XML_3MF_METADATA_VALUE_6) == 0) ||
 								(strcmp(sName.c_str(), XML_3MF_METADATA_VALUE_7) == 0) ||
-								(strcmp(sName.c_str(), XML_3MF_METADATA_VALUE_8) == 0)
+								(strcmp(sName.c_str(), XML_3MF_METADATA_VALUE_8) == 0) ||
+								(strcmp(sName.c_str(), XML_3MF_METADATA_VALUE_9) == 0)
 								)
 							{
 								m_pModel->addMetaData(sName, sValue);

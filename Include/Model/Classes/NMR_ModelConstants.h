@@ -96,6 +96,7 @@ These are given by the 3MF Standard
 #define XML_3MF_METADATA_VALUE_6                "Rating"
 #define XML_3MF_METADATA_VALUE_7                "CreationDate"
 #define XML_3MF_METADATA_VALUE_8                "ModificationDate"
+#define XML_3MF_METADATA_VALUE_9                "Application"
 
 
 // Resources element.
