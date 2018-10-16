@@ -215,6 +215,8 @@ namespace NMR {
 	eModelTextureTileStyle CModelTexture2DResource::tileStyleFromString(_In_ std::string sValue)
 	{
 		std::transform(sValue.begin(), sValue.end(), sValue.begin(), ::tolower);
+		if (strcmp(sValue.c_str(), XML_3MF_ATTRIBUTE_TEXTURE2D_TILESTYLE_NONE) == 0)
+			return MODELTEXTURETILESTYLE_NONE;
 		if (strcmp(sValue.c_str(), XML_3MF_ATTRIBUTE_TEXTURE2D_TILESTYLE_CLAMP) == 0)
 			return MODELTEXTURETILESTYLE_CLAMP;
 		if (strcmp(sValue.c_str(), XML_3MF_ATTRIBUTE_TEXTURE2D_TILESTYLE_WRAP) == 0)
@@ -228,8 +230,10 @@ namespace NMR {
 	std::string CModelTexture2DResource::tileStyleToString(_In_ eModelTextureTileStyle eTileStyle)
 	{
 		switch (eTileStyle) {
+			case MODELTEXTURETILESTYLE_WRAP: return XML_3MF_ATTRIBUTE_TEXTURE2D_TILESTYLE_WRAP;
 			case MODELTEXTURETILESTYLE_MIRROR: return XML_3MF_ATTRIBUTE_TEXTURE2D_TILESTYLE_MIRROR;
 			case MODELTEXTURETILESTYLE_CLAMP: return XML_3MF_ATTRIBUTE_TEXTURE2D_TILESTYLE_CLAMP;
+			case MODELTEXTURETILESTYLE_NONE: return XML_3MF_ATTRIBUTE_TEXTURE2D_TILESTYLE_NONE;
 			default:
 				return XML_3MF_ATTRIBUTE_TEXTURE2D_TILESTYLE_WRAP;
 		}
