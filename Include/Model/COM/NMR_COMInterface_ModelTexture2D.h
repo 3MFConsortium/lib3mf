@@ -68,6 +68,8 @@ namespace NMR {
 		LIB3MFMETHOD(SetContentType) (_In_ eModelTexture2DType eContentType);
 		LIB3MFMETHOD(GetTileStyleUV) (_Out_ eModelTextureTileStyle * peTileStyleU, _Out_ eModelTextureTileStyle * peTileStyleV);
 		LIB3MFMETHOD(SetTileStyleUV) (_In_ eModelTextureTileStyle eTileStyleU, _In_ eModelTextureTileStyle eTileStyleV);
+		LIB3MFMETHOD(GetFilter) (_Out_ eModelTextureFilter * peFilter);
+		LIB3MFMETHOD(SetFilter) (_In_ eModelTextureFilter eFilter);
 		LIB3MFMETHOD(GetBox2D) (_Out_ FLOAT * pfU, _Out_ FLOAT * pfV, _Out_ FLOAT * pfWidth, _Out_ FLOAT * pfHeight);
 		LIB3MFMETHOD(SetBox2D) (_In_ FLOAT fU, _In_ FLOAT fV, _In_ FLOAT fWidth, _In_ FLOAT fHeight);
 		LIB3MFMETHOD(ClearBox2D) ();

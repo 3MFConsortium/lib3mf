@@ -44,7 +44,10 @@ UnitTest_Textures.cpp: Defines Unittests for reading and writing textures from/t
 
 namespace NMR {
 
-	LIB3MFRESULT fnLoadModelTexture(CustomLib3MFBase& pModel, const char * pszPath, const char * pszFile, eModelTexture2DType eType, eModelTextureTileStyle eTileStyleU, eModelTextureTileStyle eTileStyleV, DWORD & nTextureID, int useAttachmentMode = 0)
+
+	std::vector<eModelTextureFilter> filters = { eModelTextureFilter::MODELTEXTUREFILTER_AUTO, eModelTextureFilter::MODELTEXTUREFILTER_LINEAR, eModelTextureFilter::MODELTEXTUREFILTER_NEAREST };
+
+	LIB3MFRESULT fnLoadModelTexture(CustomLib3MFBase& pModel, const char * pszPath, const char * pszFile, eModelTexture2DType eType, eModelTextureTileStyle eTileStyleU, eModelTextureTileStyle eTileStyleV, eModelTextureFilter eFilter, DWORD & nTextureID, int useAttachmentMode = 0)
 	{
 		CustomLib3MFBase pTexture2D;
 		if (useAttachmentMode ==0) {
@@ -82,6 +85,7 @@ namespace NMR {
 		EXPECT_EQ(lib3mf_texture2d_setbox2d(pTexture2D.get(), 0.1f, 0.2f, 0.8f, 0.9f), S_OK) << L"Could not set box2d";
 
 		EXPECT_EQ(lib3mf_texture2d_settilestyleuv(pTexture2D.get(), eTileStyleU, eTileStyleV), S_OK) << L"Could not set tilestyle";
+		EXPECT_EQ(lib3mf_texture2d_setfilter(pTexture2D.get(), eFilter), S_OK) << L"Could not set filter";
 		return 0;
 	}
 
@@ -133,6 +137,7 @@ namespace NMR {
 	}
 
 	bool CreateTexturedModel(CustomLib3MFBase &pModel) {
+
 		// Create Model Instance
 		EXPECT_EQ(lib3mf_createmodel(&pModel.get()), S_OK) << L"Could not create 3MF model";
 
@@ -153,11 +158,11 @@ namespace NMR {
 
 		DWORD nTextureIDA, nTextureIDB, nTextureIDC;
 		std::string sAttachmentPath = std::string(TESTFILESPATH) + separator() + "Textures" + separator() + "tex1.png";
-		fnLoadModelTexture(pModel, "/3D/Textures/tex1.png", sAttachmentPath.c_str(), MODELTEXTURETYPE_PNG, MODELTEXTURETILESTYLE_WRAP, MODELTEXTURETILESTYLE_WRAP, nTextureIDA, 0);
+		fnLoadModelTexture(pModel, "/3D/Textures/tex1.png", sAttachmentPath.c_str(), MODELTEXTURETYPE_PNG, MODELTEXTURETILESTYLE_WRAP, MODELTEXTURETILESTYLE_WRAP, filters[0], nTextureIDA, 0);
 		sAttachmentPath = std::string(TESTFILESPATH) + separator() + "Textures" + separator() + "tex2.png";
-		fnLoadModelTexture(pModel, "/3D/Textures/tex2.png", sAttachmentPath.c_str(), MODELTEXTURETYPE_PNG, MODELTEXTURETILESTYLE_MIRROR, MODELTEXTURETILESTYLE_WRAP, nTextureIDB, 1);
+		fnLoadModelTexture(pModel, "/3D/Textures/tex2.png", sAttachmentPath.c_str(), MODELTEXTURETYPE_PNG, MODELTEXTURETILESTYLE_MIRROR, MODELTEXTURETILESTYLE_WRAP, filters[1], nTextureIDB, 1);
 		sAttachmentPath = std::string(TESTFILESPATH) + separator() + "Textures" + separator() + "tex3.png";
-		fnLoadModelTexture(pModel, "/3D/Textures/tex3.png", sAttachmentPath.c_str(), MODELTEXTURETYPE_PNG, MODELTEXTURETILESTYLE_CLAMP, MODELTEXTURETILESTYLE_NONE, nTextureIDC, 2);
+		fnLoadModelTexture(pModel, "/3D/Textures/tex3.png", sAttachmentPath.c_str(), MODELTEXTURETYPE_PNG, MODELTEXTURETILESTYLE_CLAMP, MODELTEXTURETILESTYLE_NONE, filters[2], nTextureIDC, 2);
 
 		MODELMESHTEXTURE2D sTexture1, sTexture2;
 		// Side 1
@@ -215,11 +220,11 @@ namespace NMR {
 
 		DWORD nTextureIDA, nTextureIDB, nTextureIDC;
 		std::string sAttachmentPath = std::string(TESTFILESPATH) + separator() + "Textures" + separator() + "tex1.png";
-		fnLoadModelTexture(pModel, "/3D/Textures/tex1.png", sAttachmentPath.c_str(), MODELTEXTURETYPE_PNG, MODELTEXTURETILESTYLE_WRAP, MODELTEXTURETILESTYLE_WRAP ,nTextureIDA, 0);
+		fnLoadModelTexture(pModel, "/3D/Textures/tex1.png", sAttachmentPath.c_str(), MODELTEXTURETYPE_PNG, MODELTEXTURETILESTYLE_WRAP, MODELTEXTURETILESTYLE_WRAP, filters[0], nTextureIDA, 0);
 		sAttachmentPath = std::string(TESTFILESPATH) + separator() + "Textures" + separator() + "tex2.png";
-		fnLoadModelTexture(pModel, "/3D/Textures/tex2.png", sAttachmentPath.c_str(), MODELTEXTURETYPE_PNG, MODELTEXTURETILESTYLE_MIRROR, MODELTEXTURETILESTYLE_WRAP, nTextureIDB, 1);
+		fnLoadModelTexture(pModel, "/3D/Textures/tex2.png", sAttachmentPath.c_str(), MODELTEXTURETYPE_PNG, MODELTEXTURETILESTYLE_MIRROR, MODELTEXTURETILESTYLE_WRAP, filters[1], nTextureIDB, 1);
 		sAttachmentPath = std::string(TESTFILESPATH) + separator() + "Textures" + separator() + "tex3.png";
-		fnLoadModelTexture(pModel, "/3D/Textures/tex3.png", sAttachmentPath.c_str(), MODELTEXTURETYPE_PNG, MODELTEXTURETILESTYLE_CLAMP, MODELTEXTURETILESTYLE_MIRROR, nTextureIDC, 2);
+		fnLoadModelTexture(pModel, "/3D/Textures/tex3.png", sAttachmentPath.c_str(), MODELTEXTURETYPE_PNG, MODELTEXTURETILESTYLE_CLAMP, MODELTEXTURETILESTYLE_MIRROR, filters[2], nTextureIDC, 2);
 
 		MODELMESHTEXTURE2D sTexture1, sTexture2;
 		// Side 1
@@ -263,7 +268,7 @@ namespace NMR {
 		return true;
 	}
 
-	void Investigate2DTexture(CustomLib3MFBase &pTexture2D)
+	void Investigate2DTexture(CustomLib3MFBase &pTexture2D, eModelTextureFilter eExpectedFilter)
 	{
 		FLOAT fU, fV, fwU, fwV;
 		ASSERT_EQ(lib3mf_texture2d_getbox2d(pTexture2D.get(), &fU, &fV, &fwU, &fwV), S_OK) << L"Could not get the box2d";
@@ -280,6 +285,10 @@ namespace NMR {
 		ASSERT_EQ(lib3mf_texture2d_gettilestyleuv(pTexture2D.get(), &eTileStyleU, &eTileStyleV), S_OK) << L"Could not get tilestyle";
 		EXPECT_TRUE((eTileStyleU == MODELTEXTURETILESTYLE_MIRROR) || (eTileStyleU == MODELTEXTURETILESTYLE_WRAP) || (eTileStyleU == MODELTEXTURETILESTYLE_CLAMP)) << L"Invalid tilestyle";
 		EXPECT_TRUE((eTileStyleV == MODELTEXTURETILESTYLE_MIRROR) || (eTileStyleV == MODELTEXTURETILESTYLE_WRAP) || (eTileStyleV == MODELTEXTURETILESTYLE_NONE)) << L"Invalid tilestyle";
+
+		eModelTextureFilter eFilter;
+		ASSERT_EQ(lib3mf_texture2d_getfilter(pTexture2D.get(), &eFilter), S_OK) << L"Could not get filter";
+		EXPECT_EQ( eFilter, eExpectedFilter ) << L"Incorrect filter";
 
 		CustomLib3MFBase pAttachment;
 		ASSERT_EQ(lib3mf_texture2d_getattachment(pTexture2D.get(), &pAttachment.get()), S_OK) << L"Could not get texture2D attachment";
@@ -299,6 +308,7 @@ namespace NMR {
 
 		BOOL bHasNext;
 		ASSERT_EQ(lib3mf_resourceiterator_movenext(pTexture2DResources.get(), &bHasNext), S_OK) << L"Could not move texture2dresources";
+		int count = 0;
 		while (bHasNext)
 		{
 			CustomLib3MFBase pTexture2DResource;
@@ -308,7 +318,9 @@ namespace NMR {
 			CustomLib3MFBase pTexture2D;
 			ASSERT_EQ(lib3mf_model_gettexture2dbyid(pModel.get(), nResourceID, &pTexture2D.get()), S_OK) << L"Could not get texture2d ";
 
-			Investigate2DTexture(pTexture2D);
+			ASSERT_TRUE(count < filters.size() ) << L"Too many textures in file";
+			Investigate2DTexture(pTexture2D, filters[count]);
+			count++;
 
 			ASSERT_EQ(lib3mf_resourceiterator_movenext(pTexture2DResources.get(), &bHasNext), S_OK) << L"Could not move 2dtexturesresources";
 		}

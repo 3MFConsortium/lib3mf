@@ -154,6 +154,12 @@ namespace NMR {
 		MODELTEXTURETILESTYLE_NONE = 3
 	};
 
+	enum eModelTextureFilter {
+		MODELTEXTUREFILTER_AUTO = 0,
+		MODELTEXTUREFILTER_LINEAR = 1,
+		MODELTEXTUREFILTER_NEAREST = 2
+	};
+
 	typedef struct {
 		FLOAT m_fPosition[2];
 	} MODELSLICEVERTEX;

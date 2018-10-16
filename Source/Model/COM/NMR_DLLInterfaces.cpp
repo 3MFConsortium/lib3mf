@@ -1139,6 +1139,23 @@ namespace NMR {
 			return ((ILib3MFModelTexture2D *)pTexture2D)->SetTileStyleUV(eTileStyleU, eTileStyleV);
 		}
 
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_texture2d_getfilter(_In_ PLib3MFModelTexture2D * pTexture2D, _Out_ eModelTextureFilter * peFilter)
+		{
+			if (!pTexture2D)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelTexture2D *)pTexture2D)->GetFilter(peFilter);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_texture2d_setfilter(_In_ PLib3MFModelTexture2D * pTexture2D, _In_ eModelTextureFilter eFilter)
+		{
+			if (!pTexture2D)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelTexture2D *)pTexture2D)->SetFilter(eFilter);
+		}
+
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_texture2d_getbox2d(_In_ PLib3MFModelTexture2D * pTexture2D, _Out_ FLOAT * pfU, _Out_ FLOAT * pfV, _Out_ FLOAT * pfWidth, _Out_ FLOAT * pfHeight)
 		{
 			if (!pTexture2D)

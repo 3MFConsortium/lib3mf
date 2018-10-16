@@ -52,6 +52,7 @@ namespace NMR {
 		m_fBox2D_Height = 1.0f;
 		m_eTileStyleU = MODELTEXTURETILESTYLE_WRAP;
 		m_eTileStyleV = MODELTEXTURETILESTYLE_WRAP;
+		m_eFilter = MODELTEXTUREFILTER_AUTO;
 	}
 
 		// getters/setters Path
@@ -129,6 +130,11 @@ namespace NMR {
 		m_eTileStyleV = CModelTexture2DResource::tileStyleFromString(sValue);
 	}
 
+	void CModelTexture2DResource::setFilterFromString(_In_ std::string sValue)
+	{
+		setFilter(CModelTexture2DResource::filterFromString(sValue));
+	}
+
 
 	// getters/setters Box2D
 	nfBool CModelTexture2DResource::getBox2D(_Out_ nfFloat & fU, _Out_ nfFloat & fV, _Out_ nfFloat & fWidth, _Out_ nfFloat & fHeight)
@@ -193,6 +199,15 @@ namespace NMR {
 		m_eTileStyleV = sStyle;
 	}
 
+	eModelTextureFilter CModelTexture2DResource::getFilter()
+	{
+		return m_eFilter;
+	}
+	void CModelTexture2DResource::setFilter(_In_ eModelTextureFilter eFilter)
+	{
+		m_eFilter = eFilter;
+	}
+
 	void CModelTexture2DResource::copyFrom(_In_ CModelTexture2DResource * pSourceTexture)
 	{
 		if (pSourceTexture == nullptr)
@@ -230,12 +245,36 @@ namespace NMR {
 	std::string CModelTexture2DResource::tileStyleToString(_In_ eModelTextureTileStyle eTileStyle)
 	{
 		switch (eTileStyle) {
-			case MODELTEXTURETILESTYLE_WRAP: return XML_3MF_ATTRIBUTE_TEXTURE2D_TILESTYLE_WRAP;
-			case MODELTEXTURETILESTYLE_MIRROR: return XML_3MF_ATTRIBUTE_TEXTURE2D_TILESTYLE_MIRROR;
-			case MODELTEXTURETILESTYLE_CLAMP: return XML_3MF_ATTRIBUTE_TEXTURE2D_TILESTYLE_CLAMP;
-			case MODELTEXTURETILESTYLE_NONE: return XML_3MF_ATTRIBUTE_TEXTURE2D_TILESTYLE_NONE;
-			default:
-				return XML_3MF_ATTRIBUTE_TEXTURE2D_TILESTYLE_WRAP;
+		case MODELTEXTURETILESTYLE_WRAP: return XML_3MF_ATTRIBUTE_TEXTURE2D_TILESTYLE_WRAP;
+		case MODELTEXTURETILESTYLE_MIRROR: return XML_3MF_ATTRIBUTE_TEXTURE2D_TILESTYLE_MIRROR;
+		case MODELTEXTURETILESTYLE_CLAMP: return XML_3MF_ATTRIBUTE_TEXTURE2D_TILESTYLE_CLAMP;
+		case MODELTEXTURETILESTYLE_NONE: return XML_3MF_ATTRIBUTE_TEXTURE2D_TILESTYLE_NONE;
+		default:
+			return XML_3MF_ATTRIBUTE_TEXTURE2D_TILESTYLE_WRAP;
+		}
+	}
+
+	eModelTextureFilter CModelTexture2DResource::filterFromString(_In_ std::string sValue)
+	{
+		std::transform(sValue.begin(), sValue.end(), sValue.begin(), ::tolower);
+		if (strcmp(sValue.c_str(), XML_3MF_ATTRIBUTE_TEXTURE2D_FILTER_AUTO) == 0)
+			return MODELTEXTUREFILTER_AUTO;
+		if (strcmp(sValue.c_str(), XML_3MF_ATTRIBUTE_TEXTURE2D_FILTER_LINEAR) == 0)
+			return MODELTEXTUREFILTER_LINEAR;
+		if (strcmp(sValue.c_str(), XML_3MF_ATTRIBUTE_TEXTURE2D_FILTER_NEAREST) == 0)
+			return MODELTEXTUREFILTER_NEAREST;
+		throw CNMRException(NMR_ERROR_INVALIDFILTER);
+		return MODELTEXTUREFILTER_AUTO;
+	}
+
+	std::string CModelTexture2DResource::filterToString(_In_ eModelTextureFilter eFilter)
+	{
+		switch (eFilter) {
+		case MODELTEXTUREFILTER_AUTO: return XML_3MF_ATTRIBUTE_TEXTURE2D_FILTER_AUTO;
+		case MODELTEXTUREFILTER_LINEAR: return XML_3MF_ATTRIBUTE_TEXTURE2D_FILTER_LINEAR;
+		case MODELTEXTUREFILTER_NEAREST: return XML_3MF_ATTRIBUTE_TEXTURE2D_FILTER_NEAREST;
+		default:
+			return XML_3MF_ATTRIBUTE_TEXTURE2D_FILTER_AUTO;
 		}
 	}
 

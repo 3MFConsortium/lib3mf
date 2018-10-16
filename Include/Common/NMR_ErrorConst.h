@@ -1019,6 +1019,9 @@ Model error codes (0x8XXX)
 // Invalid Tile Style
 #define NMR_ERROR_INVALIDTILESTYLE 0x80C4
 
+// Invalid Filter Style
+#define NMR_ERROR_INVALIDFILTER 0x80C5
+
 /*-------------------------------------------------------------------
 XML Parser Error Constants (0x9XXX)
 -------------------------------------------------------------------*/
