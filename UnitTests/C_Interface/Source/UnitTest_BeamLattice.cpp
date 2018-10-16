@@ -315,6 +315,7 @@ void WriteBeamLattice_Negative()
 
 	ASSERT_EQ(lib3mf_object_settype(pMeshObject.get(), MODELOBJECTTYPE_MODEL), S_OK) << L"Could not set type to MODEL";
 	ASSERT_EQ(lib3mf_object_settype(pMeshObject.get(), MODELOBJECTTYPE_SOLIDSUPPORT), S_OK) << L"Could not set type to SOLIDSUPPORT";
+	ASSERT_NE(lib3mf_object_settype(pMeshObject.get(), MODELOBJECTTYPE_SURFACE), S_OK) << L"Could set type to SURFACE";
 	ASSERT_NE(lib3mf_object_settype(pMeshObject.get(), MODELOBJECTTYPE_SUPPORT), S_OK) << L"Could set type to SUPPORT";
 
 	ASSERT_EQ(lib3mf_meshobject_setbeamindices(pMeshObject.get(), NULL, 0), S_OK) << L"Could not remove beams";
