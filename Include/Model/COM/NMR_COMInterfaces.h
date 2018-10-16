@@ -1301,6 +1301,22 @@ namespace NMR {
 		LIB3MFMETHOD(SetTileStyleUV) (_In_ eModelTextureTileStyle eTileStyleU, _In_ eModelTextureTileStyle eTileStyleV) LIB3MFABSTRACT;
 
 		/**
+		* Retrieves a texture's filter type
+		*
+		* @param[out] peFilter returns filter type enum
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(GetFilter) (_Out_ eModelTextureFilter * peFilter) LIB3MFABSTRACT;
+
+		/**
+		* Sets a texture's filter type
+		*
+		* @param[out] eFilter new filter type enum
+		* @return error code or 0 (success)
+		*/
+		LIB3MFMETHOD(SetFilter) (_In_ eModelTextureFilter eFilter) LIB3MFABSTRACT;
+
+		/**
 		* Retrieves a texture's box2D coordinates.
 		*
 		* @param[out] pfU returns the U value of the texture

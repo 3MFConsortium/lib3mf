@@ -368,6 +368,8 @@ namespace NMR {
 		case NMR_ERROR_SLICE_ONEVERTEX: return "Slice only contains one vertex.";
 		case NMR_ERROR_SLICE_ONEPOINT: return "Slice contains only one point within a polygon";
 		case NMR_ERROR_INVALIDTILESTYLE: return "Invalid Tile Style";
+		case NMR_ERROR_INVALIDFILTER: return "Invalid Filter";
+			
 
 		// XML Parser Error Constants(0x9XXX)
 		case NMR_ERROR_XMLPARSER_INVALIDATTRIBVALUE: return "Invalid XML attribute value";

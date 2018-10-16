@@ -95,16 +95,25 @@ namespace NMR {
 					throw e;
 			}
 		}
+		if (!m_sFilter.empty()) {
+			try {
+				m_pTexture2DResource->setFilterFromString(m_sFilter);
+			}
+			catch (CNMRException & e) {
+				if (e.getErrorCode() == NMR_ERROR_INVALIDFILTER)
+					m_pWarnings->addException(e, mrwInvalidOptionalValue);
+				else
+					throw e;
+			}
+		}
 
 		if (m_hasBox)
 			m_pTexture2DResource->setBox2D(m_fU, m_fV, m_fWidth, m_fHeight);
 		else
 			m_pTexture2DResource->clearBox2D(); 
 
-
 		// Parse Content
 		parseContent(pXMLReader);
-
 	}
 
 	void CModelReaderNode100_Texture2D::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
@@ -130,6 +139,9 @@ namespace NMR {
 		}
 		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_TEXTURE2D_TILESTYLEV) == 0) {
 			m_sTileStyleV = std::string(pAttributeValue);
+		}
+		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_TEXTURE2D_FILTER) == 0) {
+			m_sFilter = std::string(pAttributeValue);
 		}
 		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_TEXTURE2D_BOX) == 0) {
 			if (m_hasBox)

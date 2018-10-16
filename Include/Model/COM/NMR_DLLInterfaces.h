@@ -1375,11 +1375,29 @@ namespace NMR {
 		* Sets a texture's tilestyle type
 		*
 		* @param[in] pTexture2D Texture2D Resource Instance
-		* @param[out] eTileStyleU new tilestyle type enum
-		* @param[out] eTileStyleV new tilestyle type enum
+		* @param[in] eTileStyleU new tilestyle type enum
+		* @param[in] eTileStyleV new tilestyle type enum
 		* @return error code or 0 (success)
 		*/
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_texture2d_settilestyleuv(_In_ PLib3MFModelTexture2D * pTexture2D, _In_ eModelTextureTileStyle eTileStyleU, _In_ eModelTextureTileStyle eTileStyleV);
+
+		/**
+		* Retrieves a texture's filter
+		*
+		* @param[in] pTexture2D Texture2D Resource Instance
+		* @param[out] peFilter returns filter enum
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_texture2d_getfilter(_In_ PLib3MFModelTexture2D * pTexture2D, _Out_ eModelTextureFilter * peFilter);
+
+		/**
+		* Sets a texture's filter type
+		*
+		* @param[in] pTexture2D Texture2D Resource Instance
+		* @param[in] eFilter returns filter enum
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_texture2d_setfilter(_In_ PLib3MFModelTexture2D * pTexture2D, _In_ eModelTextureFilter eFilter);
 
 		/**
 		* Retrieves a texture's box2D coordinates.

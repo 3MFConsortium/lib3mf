@@ -49,6 +49,7 @@ namespace NMR {
 		std::string m_sContentType;
 		std::string m_sTileStyleU;
 		std::string m_sTileStyleV;
+		std::string m_sFilter;
 
 		PModelTexture2DResource m_pTexture2DResource;
 	protected:
