@@ -94,9 +94,12 @@ endif()
 #########################################################
 # Static library (as base for other targets)
 add_library(${PROJECT_NAME}_s STATIC ${SRCS_MAIN_PLATFORM} ${SRCS_COMMON})
+target_include_directories(${PROJECT_NAME}_s PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include/API)
+target_include_directories(${PROJECT_NAME}_s PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include/API/Implementation)
 target_include_directories(${PROJECT_NAME}_s PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include)
 target_include_directories(${PROJECT_NAME}_s PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/Include)
-SET_TARGET_PROPERTIES(${PROJECT_NAME}_s PROPERTIES PREFIX "" IMPORT_PREFIX "")
+SET_TARGET_PROPERTIES(${PROJECT_NAME}_s PROPERTIES PREFIX "" IMPORT_PREFIX "" )
+target_compile_options(${PROJECT_NAME}_s PUBLIC "-D__LIB3MF_DLL")
 if (UNIX OR MINGW)
 	target_compile_options(${PROJECT_NAME}_s PUBLIC "-fPIC")
 	# Uncomment the following to but the version info into the .so-file.
@@ -120,7 +123,7 @@ endif()
 #########################################################
 # Shared library
 add_library(${PROJECT_NAME} SHARED ${SRCS_MAIN_PLATFORM}
-	"./Source/Model/COM/NMR_DLLInterfaces.cpp"
+	"./Source/API/lib3mf_interfacewrapper.cpp"
 	${VERSION_FILES_OUTPUTLOCATION}
 )
 set(STARTUPPROJECT ${PROJECT_NAME})

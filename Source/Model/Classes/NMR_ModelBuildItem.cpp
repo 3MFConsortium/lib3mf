@@ -32,8 +32,8 @@ build item.
 
 --*/
 
-#include "Model/Classes/NMR_ModelBuildItem.h" 
-#include "Common/NMR_Exception.h" 
+#include "Model/Classes/NMR_ModelBuildItem.h"
+#include "Common/NMR_Exception.h"
 #include <sstream>
 
 namespace NMR {
@@ -140,7 +140,6 @@ namespace NMR {
 	nfUint32 CModelBuildItem::getHandle()
 	{
 		return m_nHandle;
-
 	}
 
 	bool CModelBuildItem::isValidForSlices() {

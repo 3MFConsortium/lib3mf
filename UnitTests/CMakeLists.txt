@@ -10,6 +10,6 @@ add_definitions( -DLOUTFILESPATH=L"${CMAKE_BINARY_DIR}/")
 add_subdirectory(C_Interface)
 
 # Tests on internal classes of the library
-add_subdirectory(CPP)
+# add_subdirectory(CPP)
 
 set(STARTUPPROJECT ${STARTUPPROJECT} PARENT_SCOPE)

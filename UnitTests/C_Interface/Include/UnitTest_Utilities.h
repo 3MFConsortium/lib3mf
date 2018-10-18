@@ -33,7 +33,7 @@ UnitTest_Utilities.h: Utilities for UnitTests
 #ifndef __NMR_UNITTEST_UTILITIES
 #define __NMR_UNITTEST_UTILITIES
 
-#include "Model/COM/NMR_DLLInterfaces.h"
+#include "lib3mf.hpp"
 #include <memory>
 #include <vector>
 #include <string>
@@ -63,106 +63,84 @@ inline char separator()
 	return '/';
 #endif
 }
-
-namespace NMR {
-	
-	class CustomLib3MFBase {
-		public:
-			CustomLib3MFBase(): m_pLib3MFBase(nullptr)
-			{	
-			}
-			~CustomLib3MFBase()
-			{
-				if (m_pLib3MFBase) {
-					EXPECT_EQ(NMR::lib3mf_release(m_pLib3MFBase), S_OK) << L"Failed releasing NMR::PLib3MFBase*.";
-					m_pLib3MFBase = nullptr;
-				}
-			}
-			NMR::PLib3MFBase* & get() {
-				return m_pLib3MFBase;
-			}
-		private:
-			NMR::PLib3MFBase* m_pLib3MFBase;
-	};
-}
-
-inline HRESULT ObtainMeshObjectInformation(_In_ NMR::PLib3MFModelMeshObject * pMeshObject, DWORD & nVertexCount, DWORD & nTriangleCount, DWORD & nBeamCount)
-{
-	HRESULT hResult;
-	// Retrieve Mesh Vertex Count
-	hResult = NMR::lib3mf_meshobject_getvertexcount(pMeshObject, &nVertexCount);
-	if (hResult != S_OK)
-		return hResult;
-
-	// Retrieve Mesh triangle Count
-	hResult = NMR::lib3mf_meshobject_gettrianglecount(pMeshObject, &nTriangleCount);
-	if (hResult != S_OK)
-		return hResult;
-
-	// Retrieve Mesh Beam Count
-	hResult = NMR::lib3mf_meshobject_getbeamcount(pMeshObject, &nBeamCount);
-	if (hResult != S_OK)
-		return hResult;
-
-	return S_OK;
-}
-
-
-// Utility functions to create vertices and triangles
-inline NMR::MODELMESHVERTEX fnCreateVertex(float x, float y, float z)
-{
-	NMR::MODELMESHVERTEX result;
-	result.m_fPosition[0] = x;
-	result.m_fPosition[1] = y;
-	result.m_fPosition[2] = z;
-	return result;
-}
-
-inline NMR::MODELMESHTRIANGLE fnCreateTriangle(int v0, int v1, int v2)
-{
-	NMR::MODELMESHTRIANGLE result;
-	result.m_nIndices[0] = v0;
-	result.m_nIndices[1] = v1;
-	result.m_nIndices[2] = v2;
-	return result;
-}
-
-inline int FillMeshObject(NMR::CustomLib3MFBase &pMeshObject)
-{
-	using namespace NMR;
-	// Create mesh structure of a cube
-	MODELMESHVERTEX pVertices[8];
-	MODELMESHTRIANGLE pTriangles[12];
-	float fSizeX = 100.0f;
-	float fSizeY = 100.0f;
-	float fSizeZ = 100.0f;
-
-	// Manually create vertices
-	pVertices[0] = fnCreateVertex(0.0f, 0.0f, 0.0f);
-	pVertices[1] = fnCreateVertex(fSizeX, 0.0f, 0.0f);
-	pVertices[2] = fnCreateVertex(fSizeX, fSizeY, 0.0f);
-	pVertices[3] = fnCreateVertex(0.0f, fSizeY, 0.0f);
-	pVertices[4] = fnCreateVertex(0.0f, 0.0f, fSizeZ);
-	pVertices[5] = fnCreateVertex(fSizeX, 0.0f, fSizeZ);
-	pVertices[6] = fnCreateVertex(fSizeX, fSizeY, fSizeZ);
-	pVertices[7] = fnCreateVertex(0.0f, fSizeY, fSizeZ);
-
-
-	// Manually create triangles
-	pTriangles[0] = fnCreateTriangle(2, 1, 0);
-	pTriangles[1] = fnCreateTriangle(0, 3, 2);
-	pTriangles[2] = fnCreateTriangle(4, 5, 6);
-	pTriangles[3] = fnCreateTriangle(6, 7, 4);
-	pTriangles[4] = fnCreateTriangle(0, 1, 5);
-	pTriangles[5] = fnCreateTriangle(5, 4, 0);
-	pTriangles[6] = fnCreateTriangle(2, 3, 7);
-	pTriangles[7] = fnCreateTriangle(7, 6, 2);
-	pTriangles[8] = fnCreateTriangle(1, 2, 6);
-	pTriangles[9] = fnCreateTriangle(6, 5, 1);
-	pTriangles[10] = fnCreateTriangle(3, 0, 4);
-	pTriangles[11] = fnCreateTriangle(4, 7, 3);
-
-	return lib3mf_meshobject_setgeometry(pMeshObject.get(), pVertices, 8, pTriangles, 12);
-}
+//
+//inline HRESULT ObtainMeshObjectInformation(_In_ NMR::PLib3MFModelMeshObject * pMeshObject, DWORD & nVertexCount, DWORD & nTriangleCount, DWORD & nBeamCount)
+//{
+//	HRESULT hResult;
+//	// Retrieve Mesh Vertex Count
+//	hResult = NMR::lib3mf_meshobject_getvertexcount(pMeshObject, &nVertexCount);
+//	if (hResult != S_OK)
+//		return hResult;
+//
+//	// Retrieve Mesh triangle Count
+//	hResult = NMR::lib3mf_meshobject_gettrianglecount(pMeshObject, &nTriangleCount);
+//	if (hResult != S_OK)
+//		return hResult;
+//
+//	// Retrieve Mesh Beam Count
+//	hResult = NMR::lib3mf_meshobject_getbeamcount(pMeshObject, &nBeamCount);
+//	if (hResult != S_OK)
+//		return hResult;
+//
+//	return S_OK;
+//}
+//
+//
+//// Utility functions to create vertices and triangles
+//inline NMR::MODELMESHVERTEX fnCreateVertex(float x, float y, float z)
+//{
+//	NMR::MODELMESHVERTEX result;
+//	result.m_fPosition[0] = x;
+//	result.m_fPosition[1] = y;
+//	result.m_fPosition[2] = z;
+//	return result;
+//}
+//
+//inline NMR::MODELMESHTRIANGLE fnCreateTriangle(int v0, int v1, int v2)
+//{
+//	NMR::MODELMESHTRIANGLE result;
+//	result.m_nIndices[0] = v0;
+//	result.m_nIndices[1] = v1;
+//	result.m_nIndices[2] = v2;
+//	return result;
+//}
+//
+//inline int FillMeshObject(NMR::CustomLib3MFBase &pMeshObject)
+//{
+//	using namespace NMR;
+//	// Create mesh structure of a cube
+//	MODELMESHVERTEX pVertices[8];
+//	MODELMESHTRIANGLE pTriangles[12];
+//	float fSizeX = 100.0f;
+//	float fSizeY = 100.0f;
+//	float fSizeZ = 100.0f;
+//
+//	// Manually create vertices
+//	pVertices[0] = fnCreateVertex(0.0f, 0.0f, 0.0f);
+//	pVertices[1] = fnCreateVertex(fSizeX, 0.0f, 0.0f);
+//	pVertices[2] = fnCreateVertex(fSizeX, fSizeY, 0.0f);
+//	pVertices[3] = fnCreateVertex(0.0f, fSizeY, 0.0f);
+//	pVertices[4] = fnCreateVertex(0.0f, 0.0f, fSizeZ);
+//	pVertices[5] = fnCreateVertex(fSizeX, 0.0f, fSizeZ);
+//	pVertices[6] = fnCreateVertex(fSizeX, fSizeY, fSizeZ);
+//	pVertices[7] = fnCreateVertex(0.0f, fSizeY, fSizeZ);
+//
+//
+//	// Manually create triangles
+//	pTriangles[0] = fnCreateTriangle(2, 1, 0);
+//	pTriangles[1] = fnCreateTriangle(0, 3, 2);
+//	pTriangles[2] = fnCreateTriangle(4, 5, 6);
+//	pTriangles[3] = fnCreateTriangle(6, 7, 4);
+//	pTriangles[4] = fnCreateTriangle(0, 1, 5);
+//	pTriangles[5] = fnCreateTriangle(5, 4, 0);
+//	pTriangles[6] = fnCreateTriangle(2, 3, 7);
+//	pTriangles[7] = fnCreateTriangle(7, 6, 2);
+//	pTriangles[8] = fnCreateTriangle(1, 2, 6);
+//	pTriangles[9] = fnCreateTriangle(6, 5, 1);
+//	pTriangles[10] = fnCreateTriangle(3, 0, 4);
+//	pTriangles[11] = fnCreateTriangle(4, 7, 3);
+//
+//	return lib3mf_meshobject_setgeometry(pMeshObject.get(), pVertices, 8, pTriangles, 12);
+//}
 
 #endif //__NMR_UNITTEST_UTILITIES
