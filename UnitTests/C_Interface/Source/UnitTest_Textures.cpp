@@ -308,7 +308,7 @@ namespace NMR {
 
 		BOOL bHasNext;
 		ASSERT_EQ(lib3mf_resourceiterator_movenext(pTexture2DResources.get(), &bHasNext), S_OK) << L"Could not move texture2dresources";
-		int count = 0;
+		unsigned int count = 0;
 		while (bHasNext)
 		{
 			CustomLib3MFBase pTexture2DResource;
