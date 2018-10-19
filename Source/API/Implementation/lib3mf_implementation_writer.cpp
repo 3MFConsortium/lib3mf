@@ -69,3 +69,23 @@ void CInternalLib3MFWriter::WriteToBuffer (unsigned int nBufferBufferSize, unsig
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
+bool InternalToExternalCallback(Lib3MFProgressCallback pExternalCallback, int nProgressValue, NMR::ProgressIdentifier eProgressIdentifier, void* p)
+{
+	return pExternalCallback(nProgressValue /100.0, eProgressIdentifier);
+}
+
+void CInternalLib3MFWriter::SetProgressCallback (const Lib3MFProgressCallback pProgressCallback)
+{
+	if (pProgressCallback)
+	{
+		NMR::Lib3MFProgressCallback internalCallback = std::bind(InternalToExternalCallback,
+			pProgressCallback, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
+
+		m_pWriter->SetProgressCallback(internalCallback, nullptr);
+	}
+	else
+	{
+		m_pWriter->SetProgressCallback(nullptr, nullptr);
+	}
+}
+

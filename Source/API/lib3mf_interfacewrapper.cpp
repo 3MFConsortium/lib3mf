@@ -164,6 +164,42 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_writer_writetobuffer (Lib3MF_Writer pWriter,
 	}
 }
 
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_writer_setprogresscallback (Lib3MF_Writer pWriter, const Lib3MFProgressCallback pProgressCallback)
+{
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pWriter, "Writer", "SetProgressCallback");
+		}
+
+
+		IInternalLib3MFBaseClass* pIBaseClass = (IInternalLib3MFBaseClass *)pWriter;
+		IInternalLib3MFWriter* pIWriter = dynamic_cast<IInternalLib3MFWriter*>(pIBaseClass);
+		if (!pIWriter)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+
+
+		pIWriter->SetProgressCallback(pProgressCallback);
+
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & E) {
+		if (pJournalEntry.get() != nullptr)
+			pJournalEntry->writeError(E.getErrorCode());
+		return E.getErrorCode();
+	}
+	catch (...) {
+		if (pJournalEntry.get() != nullptr)
+			pJournalEntry->writeError(LIB3MF_ERROR_GENERICEXCEPTION);
+		return LIB3MF_ERROR_GENERICEXCEPTION;
+	}
+}
+
 
 /*************************************************************************************************************************
  Class implementation for Reader
@@ -8315,7 +8351,9 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_release (Lib3MF_BaseClass pInstance)
 		if (!pIInstance)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDCAST);
 
+
 		CInternalLib3MFWrapper::Release(*pIInstance);
+
 
 		if (pJournalEntry.get() != nullptr) {
 			pJournalEntry->writeSuccess();

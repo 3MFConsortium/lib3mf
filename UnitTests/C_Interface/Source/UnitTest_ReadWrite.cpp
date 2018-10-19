@@ -44,6 +44,13 @@ UnitTest_ReadWrite.cpp: Defines Unittests for reading and writing of 3MFs
 #include <fstream>
 #include "gtest/gtest.h"
 
+
+bool ProgressCallback(double v, unsigned int e) {
+	if (v >= 0)
+		std::cout << "Progress = " << v << ", message = " << e << "\n";
+	return true;
+}
+
 	class DLLInterfacesTester
 	{
 	private:
@@ -120,12 +127,11 @@ UnitTest_ReadWrite.cpp: Defines Unittests for reading and writing of 3MFs
 
 			sLib3MFTransform transform;
 			model->AddBuildItem(meshObject.get(), transform);
-			// meshObject->GetType();
-
-
 
 			auto writer = model->QueryWriter("3mf");
+			writer->SetProgressCallback(ProgressCallback);
 			writer->WriteToFile("testfile.3mf");
+			meshObject->GetType();
 
 			//CustomLib3MFBase pModel;
 

@@ -72,6 +72,7 @@ public:
 
 	void WriteToBuffer (unsigned int nBufferBufferSize, unsigned int * pBufferNeededCount, unsigned char * pBufferBuffer);
 
+	void SetProgressCallback(const Lib3MFProgressCallback pProgressCallback);
 };
 
 }

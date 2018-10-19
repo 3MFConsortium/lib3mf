@@ -76,6 +76,15 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_writer_getstreamsize (Lib3MF_Writer pWriter,
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_writer_writetobuffer (Lib3MF_Writer pWriter, const unsigned int nBufferBufferSize, unsigned int * pBufferNeededCount, unsigned char * pBufferBuffer);
 
+/**
+* Set the progress callback for calls to this writer
+*
+* @param[in] pWriter - Writer instance.
+* @param[in] pProgressCallback - pointer to the callback function.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_writer_setprogresscallback (Lib3MF_Writer pWriter, Lib3MFProgressCallback pProgressCallback);
+
 /*************************************************************************************************************************
  Class definition for Reader
 **************************************************************************************************************************/

@@ -103,6 +103,12 @@ public:
 	*/
 	virtual void WriteToBuffer (unsigned int nBufferBufferSize, unsigned int * pBufferNeededCount, unsigned char * pBufferBuffer) = 0;
 
+	/**
+	* IInternalWriter::SetProgressCallback - Set the progress callback for calls to this writer
+	* @param[in] pProgressCallback - callback function
+	*/
+	virtual void SetProgressCallback (const Lib3MFProgressCallback pProgressCallback) = 0;
+
 };
 
 

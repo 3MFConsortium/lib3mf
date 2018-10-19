@@ -115,6 +115,11 @@ namespace Lib3MF {
         BufferBuffer.resize(elementsNeededBuffer);
         CheckError ( lib3mf_writer_writetobuffer (m_pHandle, elementsNeededBuffer, &elementsWrittenBuffer, BufferBuffer.data()) );
     }
+    
+    void CLib3MFWriter::SetProgressCallback(const Lib3MFProgressCallback progressCallback)
+    {
+        CheckError ( lib3mf_writer_setprogresscallback (m_pHandle, progressCallback) );
+    }
      
 /*************************************************************************************************************************
  Class CLib3MFReader 

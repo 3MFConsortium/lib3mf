@@ -171,6 +171,12 @@ class CLib3MFWriter : public CLib3MFBaseClass {
     * @param[out] BufferBuffer - buffer to write into
     */
     void WriteToBuffer (std::vector<unsigned char> & BufferBuffer);
+    
+    /**
+    * CLib3MFWriter::SetProgressCallback - Set the progress callback for calls to this writer
+    * @param[in] pProgressCallback - pointer to the callback function.
+    */
+    void SetProgressCallback (const Lib3MFProgressCallback ProgressCallback);
 };
 
      
