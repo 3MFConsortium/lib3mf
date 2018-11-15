@@ -140,9 +140,8 @@ install(DIRECTORY Include/Common DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
 install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/Include/ DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
 
 #########################################################
-if(NOT DEFINED LIB3MF_TESTS)
-	set(LIB3MF_TESTS TRUE)
-endif()
+set(LIB3MF_TESTS CACHE BOOL TRUE)
+
 message("LIB3MF_TESTS ... " ${LIB3MF_TESTS})
 if(LIB3MF_TESTS)
 	include(CTest)
