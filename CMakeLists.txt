@@ -140,7 +140,7 @@ install(DIRECTORY Include/Common DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
 install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/Include/ DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
 
 #########################################################
-set(LIB3MF_TESTS CACHE BOOL TRUE)
+option(LIB3MF_TESTS "Switch whether the tests of Lib3MF should be build" ON)
 
 message("LIB3MF_TESTS ... " ${LIB3MF_TESTS})
 if(LIB3MF_TESTS)
