@@ -895,21 +895,21 @@ namespace NMR {
 			UINT nNodeCount = pMesh->getNodeCount();
 
 			for (nIndex = 0; nIndex < nBufferSize; nIndex++) {
-				MODELMESHBEAM* pBeam = pIndices;
+				MODELMESHBEAM &beam = pIndices[nIndex];
 				for (j = 0; j < 2; j++)
-					if (pBeam->m_nIndices[j] >= nNodeCount)
+					if (beam.m_nIndices[j] >= nNodeCount)
 						throw CNMRException_Windows(NMR_ERROR_INVALIDINDEX, LIB3MF_INVALIDARG);
-				if (pBeam->m_nIndices[0] == pBeam->m_nIndices[1])
+				if (beam.m_nIndices[0] == beam.m_nIndices[1])
 					throw CNMRException_Windows(NMR_ERROR_INVALIDINDEX, LIB3MF_INVALIDARG);
 
 				// retrieve nodes and add beam
 				MESHNODE * pNodes[2];
 				for (j = 0; j < 2; j++)
-					pNodes[j] = pMesh->getNode(pBeam->m_nIndices[j]);
+					pNodes[j] = pMesh->getNode(beam.m_nIndices[j]);
 
-				nfInt32 c1 = pBeam->m_eCapMode[0];
-				nfInt32 c2 = pBeam->m_eCapMode[1];
-				pMesh->addBeam(pNodes[0], pNodes[1], &pBeam->m_dRadius[0], &pBeam->m_dRadius[1], &c1, &c2);
+				nfInt32 c1 = beam.m_eCapMode[0];
+				nfInt32 c2 = beam.m_eCapMode[1];
+				pMesh->addBeam(pNodes[0], pNodes[1], &beam.m_dRadius[0], &beam.m_dRadius[1], &c1, &c2);
 			}
 
 			return handleSuccess();

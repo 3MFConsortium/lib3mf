@@ -48,8 +48,9 @@ namespace NMR {
 		nfBool m_bHasResources;
 		nfBool m_bHasBuild;
 
-		nfBool m_bWithinIgnoredBuild;
+		nfBool m_bWithinIgnoredElement;
 		nfBool m_bIgnoreBuild;
+		nfBool m_bIgnoreMetaData;
 
 		virtual void CheckRequiredExtensions();
 
@@ -67,6 +68,8 @@ namespace NMR {
 
 		nfBool ignoreBuild();
 		void setIgnoreBuild(bool bIgnoreBuild);
+		nfBool ignoreMetaData();
+		void setIgnoreMetaData(bool bIgnoreMetaData);
 	};
 
 	typedef std::shared_ptr <CModelReaderNode_Model> PModelReaderNode_Model;

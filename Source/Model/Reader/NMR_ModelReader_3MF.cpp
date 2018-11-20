@@ -103,6 +103,7 @@ namespace NMR {
 						pProgressMonitor->PushLevel(double(prodAttCount - i - 1) / double(prodAttCount), double(prodAttCount - i) / double(prodAttCount));
 					pXMLNode = std::make_shared<CModelReaderNode_Model>(pModel.get(), pWarnings, path.c_str(), pProgressMonitor);
 					pXMLNode->setIgnoreBuild(true);
+					pXMLNode->setIgnoreMetaData(true);
 					pXMLNode->parseXML(pXMLReader.get());
 					if (pProgressMonitor)
 						pProgressMonitor->PopLevel();

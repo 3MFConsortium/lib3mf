@@ -62,6 +62,7 @@ namespace NMR {
 		nfFloat m_fBox2D_Height;
 		eModelTextureTileStyle m_eTileStyleU;
 		eModelTextureTileStyle m_eTileStyleV;
+		eModelTextureFilter m_eFilter;
 	public:
 		CModelTexture2DResource() = delete;
 		CModelTexture2DResource(_In_ const ModelResourceID sID, _In_ CModel * pModel);
@@ -80,6 +81,7 @@ namespace NMR {
 		void setContentTypeString(_In_ std::string sValue, _In_ nfBool bFailIfUnknown);
 		void setTileStyleUString(_In_ std::string sValue);
 		void setTileStyleVString(_In_ std::string sValue);
+		void setFilterFromString(_In_ std::string sValue);
 		
 		// getters/setters Box2D
 		nfBool getBox2D (_Out_ nfFloat & fU, _Out_ nfFloat & fV, _Out_ nfFloat & fWidth, _Out_ nfFloat & fHeight);
@@ -92,12 +94,18 @@ namespace NMR {
 		eModelTextureTileStyle getTileStyleV();
 		void setTileStyleU(_In_ eModelTextureTileStyle sStyle);
 		void setTileStyleV(_In_ eModelTextureTileStyle sStyle);
+
+		eModelTextureFilter getFilter();
+		void setFilter(_In_ eModelTextureFilter eFilter);
 		
 		// copy all parameters from source
 		void copyFrom(_In_ CModelTexture2DResource * pSourceTexture);
 
 		static eModelTextureTileStyle tileStyleFromString(_In_ std::string sValue);
 		static std::string tileStyleToString(_In_ eModelTextureTileStyle eTileStyle);
+
+		static eModelTextureFilter filterFromString(_In_ std::string sValue);
+		static std::string filterToString(_In_ eModelTextureFilter eFilter);
 	};
 
 	typedef std::shared_ptr <CModelTexture2DResource> PModelTexture2DResource;

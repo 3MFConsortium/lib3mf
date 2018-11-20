@@ -398,6 +398,47 @@ namespace NMR {
 		}
 	}
 
+	LIB3MFMETHODIMP CCOMModelTexture2D::GetFilter(_Out_ eModelTextureFilter * peFilter)
+	{
+		try {
+			if (peFilter == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
+			CModelTexture2DResource * pTextureResource = getTexture2D();
+			__NMRASSERT(pTextureResource);
+
+			*peFilter = pTextureResource->getFilter();
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
+	LIB3MFMETHODIMP CCOMModelTexture2D::SetFilter (_In_ eModelTextureFilter eFilter)
+	{
+		try {
+			CModelTexture2DResource * pTextureResource = getTexture2D();
+			__NMRASSERT(pTextureResource);
+
+			pTextureResource->setFilter(eFilter);
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
+
+
 	LIB3MFMETHODIMP CCOMModelTexture2D::GetBox2D(_Out_ FLOAT * pfU, _Out_ FLOAT * pfV, _Out_ FLOAT * pfWidth, _Out_ FLOAT * pfHeight)
 	{
 		try {
@@ -429,8 +470,6 @@ namespace NMR {
 		catch (...) {
 			return handleGenericException();
 		}
-
-
 	}
 
 	LIB3MFMETHODIMP CCOMModelTexture2D::SetBox2D(_In_ FLOAT fU, _In_ FLOAT fV, _In_ FLOAT fWidth, _In_ FLOAT fHeight)

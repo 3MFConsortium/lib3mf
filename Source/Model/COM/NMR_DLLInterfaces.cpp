@@ -314,6 +314,14 @@ namespace NMR {
 			return ((ILib3MFModelReader *)pReader)->GetWarning(nIndex, pErrorCode, pwszBuffer, cbBufferSize, pcbNeededChars);
 		}
 
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_reader_getwarningutf8(_In_ PLib3MFModelReader * pReader, _In_ DWORD nIndex, _Out_ DWORD * pErrorCode, _Out_opt_ LPSTR pszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars)
+		{
+			if (!pReader)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelReader *)pReader)->GetWarningUTF8(nIndex, pErrorCode, pszBuffer, cbBufferSize, pcbNeededChars);
+		}
+
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_reader_setprogresscallback(_In_ PLib3MFModelReader * pReader, _In_ Lib3MFProgressCallback callback, void* userData)
 		{
 			if (!pReader)
@@ -1129,6 +1137,23 @@ namespace NMR {
 				return LIB3MF_POINTER;
 
 			return ((ILib3MFModelTexture2D *)pTexture2D)->SetTileStyleUV(eTileStyleU, eTileStyleV);
+		}
+
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_texture2d_getfilter(_In_ PLib3MFModelTexture2D * pTexture2D, _Out_ eModelTextureFilter * peFilter)
+		{
+			if (!pTexture2D)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelTexture2D *)pTexture2D)->GetFilter(peFilter);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_texture2d_setfilter(_In_ PLib3MFModelTexture2D * pTexture2D, _In_ eModelTextureFilter eFilter)
+		{
+			if (!pTexture2D)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelTexture2D *)pTexture2D)->SetFilter(eFilter);
 		}
 
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_texture2d_getbox2d(_In_ PLib3MFModelTexture2D * pTexture2D, _Out_ FLOAT * pfU, _Out_ FLOAT * pfV, _Out_ FLOAT * pfWidth, _Out_ FLOAT * pfHeight)

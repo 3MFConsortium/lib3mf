@@ -347,6 +347,19 @@ namespace NMR {
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_reader_getwarning(_In_ PLib3MFModelReader * pReader, _In_ DWORD nIndex, _Out_ DWORD * pErrorCode, _Out_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars);
 
 		/**
+		* Returns Warning and Error Information of the read process (UTF8)
+		*
+		* @param[in] pReader Reader Instance
+		* @param[in] nIndex Index of the Warning. Valid values are 0 to WarningCount - 1
+		* @param[out] pErrorCode filled with the error code of the warning
+		* @param[out] pszBuffer filled with the error message, may be NULL
+		* @param[in] cbBufferSize size of pszBuffer (including trailing 0).
+		* @param[out] pcbNeededChars filled with the count of the written bytes, or needed buffer size.
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_reader_getwarningutf8(_In_ PLib3MFModelReader * pReader, _In_ DWORD nIndex, _Out_ DWORD * pErrorCode, _Out_opt_ LPSTR pszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars);
+
+		/**
 		* Set the progress callback for calls to this reader
 		*
 		* @param[in] pReader Reader Instance
@@ -1362,11 +1375,29 @@ namespace NMR {
 		* Sets a texture's tilestyle type
 		*
 		* @param[in] pTexture2D Texture2D Resource Instance
-		* @param[out] eTileStyleU new tilestyle type enum
-		* @param[out] eTileStyleV new tilestyle type enum
+		* @param[in] eTileStyleU new tilestyle type enum
+		* @param[in] eTileStyleV new tilestyle type enum
 		* @return error code or 0 (success)
 		*/
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_texture2d_settilestyleuv(_In_ PLib3MFModelTexture2D * pTexture2D, _In_ eModelTextureTileStyle eTileStyleU, _In_ eModelTextureTileStyle eTileStyleV);
+
+		/**
+		* Retrieves a texture's filter
+		*
+		* @param[in] pTexture2D Texture2D Resource Instance
+		* @param[out] peFilter returns filter enum
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_texture2d_getfilter(_In_ PLib3MFModelTexture2D * pTexture2D, _Out_ eModelTextureFilter * peFilter);
+
+		/**
+		* Sets a texture's filter type
+		*
+		* @param[in] pTexture2D Texture2D Resource Instance
+		* @param[in] eFilter returns filter enum
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_texture2d_setfilter(_In_ PLib3MFModelTexture2D * pTexture2D, _In_ eModelTextureFilter eFilter);
 
 		/**
 		* Retrieves a texture's box2D coordinates.
