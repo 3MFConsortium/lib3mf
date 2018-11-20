@@ -1,7 +1,6 @@
 /*++
 
-Copyright (C) 2015 Microsoft Corporation
-Copyright (C) 2015 netfabb GmbH (Original Author)
+Copyright (C) 2018 3MF Consortium
 
 All rights reserved.
 
@@ -573,7 +572,7 @@ namespace NMR {
 				}
 
 				// Map Code to UTF16
-				if (nCode < 0xd800) {
+				if ((nCode < 0xd800) || ((nCode >= 0xe000) && (nCode <= 0xffff))) {
 					*pOutput = nCode;
 					pOutput++;
 				}
@@ -673,7 +672,7 @@ namespace NMR {
 				}
 
 				// Map Code to UTF16
-				if (nCode < 0xd800) {
+				if ((nCode < 0xd800) || ((nCode >= 0xe000) && (nCode <= 0xffff))) {
 					*pOutChar = nCode;
 					pOutChar++;
 					cbOutCount++;

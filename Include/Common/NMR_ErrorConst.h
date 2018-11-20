@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2015 netfabb GmbH (Original Author)
+Copyright (C) 2018 3MF Consortium
 
 All rights reserved.
 
@@ -280,6 +280,9 @@ NMR_ErrorConst.h defines all error code constants.
 
 // Error in zip-callback
 #define NMR_ERROR_ZIPCALLBACK 0x104C
+
+// ZIP contains inconsistencies
+#define NMR_ERROR_ZIPCONTAINSINCONSISTENCIES 0x104D
 
 /*-------------------------------------------------------------------
 Core framework error codes (0x2XXX)
