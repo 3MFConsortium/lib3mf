@@ -113,11 +113,12 @@ bool ProgressCallback(double v, unsigned int e) {
 		void Write3MF(bool writeTriangles, bool writeBeams) {
 			bool writeVertices = writeTriangles | writeBeams;
 
+			Lib3MF::CLib3MFWrapper::SetJournal("journal.xml");
 			auto model = Lib3MF::CLib3MFWrapper::CreateModel();
 			auto meshObject = model->AddMeshObject();
 
 			if (writeVertices) {
-				for (size_t i = 0; i < m_vertices.size(); i++)
+				for (unsigned int i = 0; i < m_vertices.size(); i++)
 					meshObject->AddVertex(m_vertices[i]);
 			}
 
@@ -126,64 +127,69 @@ bool ProgressCallback(double v, unsigned int e) {
 			}
 
 			sLib3MFTransform transform;
+			transform.m_Fields[0][0] = 1.0;
+			transform.m_Fields[1][1] = 1.0;
+			transform.m_Fields[2][2] = 1.0;
+			transform.m_Fields[3][2] = 1.0;
 			model->AddBuildItem(meshObject.get(), transform);
 
 			auto writer = model->QueryWriter("3mf");
 			writer->SetProgressCallback(ProgressCallback);
 			writer->WriteToFile("testfile.3mf");
 			meshObject->GetType();
-
-			//CustomLib3MFBase pModel;
-
-			//// Create Model Instance
-			//ASSERT_EQ(NMR::lib3mf_createmodel(&pModel.get()), S_OK) << L"Could not create model";
-			//
-			//CustomLib3MFBase pMeshObject;
-			//ASSERT_EQ(lib3mf_model_addmeshobject(pModel.get(), &pMeshObject.get()), S_OK) << L"Could not add mesh object";
-			//
-			//if (writeVertices) {
-			//	for (size_t i = 0; i < m_vertices.size(); i++)
-			//		ASSERT_EQ(lib3mf_meshobject_addvertex(pMeshObject.get(), &m_vertices[i], NULL), S_OK) << L"Could not add vertex";
-			//}
-
-			//if (writeTriangles) {
-			//	ASSERT_EQ(lib3mf_meshobject_addtriangle(pMeshObject.get(), &m_triangle, NULL), S_OK) << L"Could not add triangle";
-			//}
-
-			//if (writeBeams) {
-			//	ASSERT_EQ(lib3mf_meshobject_setbeamlattice_radius(pMeshObject.get(), m_dBeamLatticeDefaultRadius), S_OK) << L"Could not set default beamlattice radius";
-			//	ASSERT_EQ(lib3mf_meshobject_setbeamlattice_minlength(pMeshObject.get(), m_dBeamLatticeMinLength), S_OK) << L"Could not set beamlattice min length";
-			//	ASSERT_EQ(lib3mf_meshobject_setbeamlattice_capmode(pMeshObject.get(), m_eCapMode), S_OK) << L"Could not set beamlattice capmode";
-
-			//	for (size_t i = 0; i < m_beams.size(); i++)
-			//		ASSERT_EQ(lib3mf_meshobject_addbeam(pMeshObject.get(), &m_beams[i], NULL), S_OK) << L"Could not add beam";
-			//	CustomLib3MFBase pBeamSet;
-			//	ASSERT_EQ(lib3mf_meshobject_addbeamset(pMeshObject.get(), &pBeamSet.get()), S_OK) << L"Could not add beamset";
-			//	ASSERT_EQ(lib3mf_beamset_setnameutf8(pBeamSet.get(), m_sBeamSetName.c_str()), S_OK) << L"Could not set beamset name";
-			//	ASSERT_EQ(lib3mf_beamset_setidentifierutf8(pBeamSet.get(), m_sBeamSetId.c_str()), S_OK) << L"Could not set beamset id";
-			//	ASSERT_EQ(lib3mf_beamset_setrefs(pBeamSet.get(), m_vBeamSetRefs.data(), (DWORD)(m_vBeamSetRefs.size()) ), S_OK) << L"Could not set beamset refs";
-
-			//	DWORD nResourceID;	// self reference to this as clipping mesh
-			//	ASSERT_EQ(lib3mf_resource_getresourceid(pMeshObject.get(), &nResourceID), S_OK) << L"Could not get Resource ID";
-			//	ASSERT_EQ(lib3mf_meshobject_setbeamlattice_clipping(pMeshObject.get(), m_eClipMode, nResourceID), S_OK) << L"Could not set Resource ID";
-			//}
-
-			//ASSERT_EQ(lib3mf_object_setpartnumberutf8(pMeshObject.get(), m_sPartNumber.c_str()), S_OK) << L"Could not set part number";
-
-			//ASSERT_EQ(lib3mf_object_setnameutf8(pMeshObject.get(), m_sPartName.c_str()), S_OK) << L"Could not set part name";
-
-			//CustomLib3MFBase pBuildItem;
-			//ASSERT_EQ(lib3mf_model_addbuilditem(pModel.get(), pMeshObject.get(), NULL, &pBuildItem.get()), S_OK) << L"Could not add build item";
-			//ASSERT_EQ(lib3mf_builditem_setpartnumberutf8(pBuildItem.get(), m_sPartNumber.c_str()), S_OK) << L"Could not set build item part number";
-
-			//CustomLib3MFBase p3MFWriter;
-			//ASSERT_EQ(lib3mf_model_querywriter(pModel.get(), "3mf", &p3MFWriter.get()), S_OK) << L"Could create Model Writer";
-			//
-			//ASSERT_TRUE(CreateDir(m_sFolderName.c_str())) << L"Could not create folder.";
-			//ASSERT_EQ(lib3mf_writer_writetofileutf8(p3MFWriter.get(),
-			//	(m_sFolderName + separator() + m_sFilenameReadWrite).c_str()),
-			//	S_OK) << L"Could not write 3MF file.";
 		}
+
+
+		//CustomLib3MFBase pModel;
+
+		//// Create Model Instance
+		//ASSERT_EQ(NMR::lib3mf_createmodel(&pModel.get()), S_OK) << L"Could not create model";
+		//
+		//CustomLib3MFBase pMeshObject;
+		//ASSERT_EQ(lib3mf_model_addmeshobject(pModel.get(), &pMeshObject.get()), S_OK) << L"Could not add mesh object";
+		//
+		//if (writeVertices) {
+		//	for (size_t i = 0; i < m_vertices.size(); i++)
+		//		ASSERT_EQ(lib3mf_meshobject_addvertex(pMeshObject.get(), &m_vertices[i], NULL), S_OK) << L"Could not add vertex";
+		//}
+
+		//if (writeTriangles) {
+		//	ASSERT_EQ(lib3mf_meshobject_addtriangle(pMeshObject.get(), &m_triangle, NULL), S_OK) << L"Could not add triangle";
+		//}
+
+		//if (writeBeams) {
+		//	ASSERT_EQ(lib3mf_meshobject_setbeamlattice_radius(pMeshObject.get(), m_dBeamLatticeDefaultRadius), S_OK) << L"Could not set default beamlattice radius";
+		//	ASSERT_EQ(lib3mf_meshobject_setbeamlattice_minlength(pMeshObject.get(), m_dBeamLatticeMinLength), S_OK) << L"Could not set beamlattice min length";
+		//	ASSERT_EQ(lib3mf_meshobject_setbeamlattice_capmode(pMeshObject.get(), m_eCapMode), S_OK) << L"Could not set beamlattice capmode";
+
+		//	for (size_t i = 0; i < m_beams.size(); i++)
+		//		ASSERT_EQ(lib3mf_meshobject_addbeam(pMeshObject.get(), &m_beams[i], NULL), S_OK) << L"Could not add beam";
+		//	CustomLib3MFBase pBeamSet;
+		//	ASSERT_EQ(lib3mf_meshobject_addbeamset(pMeshObject.get(), &pBeamSet.get()), S_OK) << L"Could not add beamset";
+		//	ASSERT_EQ(lib3mf_beamset_setnameutf8(pBeamSet.get(), m_sBeamSetName.c_str()), S_OK) << L"Could not set beamset name";
+		//	ASSERT_EQ(lib3mf_beamset_setidentifierutf8(pBeamSet.get(), m_sBeamSetId.c_str()), S_OK) << L"Could not set beamset id";
+		//	ASSERT_EQ(lib3mf_beamset_setrefs(pBeamSet.get(), m_vBeamSetRefs.data(), (DWORD)(m_vBeamSetRefs.size()) ), S_OK) << L"Could not set beamset refs";
+
+		//	DWORD nResourceID;	// self reference to this as clipping mesh
+		//	ASSERT_EQ(lib3mf_resource_getresourceid(pMeshObject.get(), &nResourceID), S_OK) << L"Could not get Resource ID";
+		//	ASSERT_EQ(lib3mf_meshobject_setbeamlattice_clipping(pMeshObject.get(), m_eClipMode, nResourceID), S_OK) << L"Could not set Resource ID";
+		//}
+
+		//ASSERT_EQ(lib3mf_object_setpartnumberutf8(pMeshObject.get(), m_sPartNumber.c_str()), S_OK) << L"Could not set part number";
+
+		//ASSERT_EQ(lib3mf_object_setnameutf8(pMeshObject.get(), m_sPartName.c_str()), S_OK) << L"Could not set part name";
+
+		//CustomLib3MFBase pBuildItem;
+		//ASSERT_EQ(lib3mf_model_addbuilditem(pModel.get(), pMeshObject.get(), NULL, &pBuildItem.get()), S_OK) << L"Could not add build item";
+		//ASSERT_EQ(lib3mf_builditem_setpartnumberutf8(pBuildItem.get(), m_sPartNumber.c_str()), S_OK) << L"Could not set build item part number";
+
+		//CustomLib3MFBase p3MFWriter;
+		//ASSERT_EQ(lib3mf_model_querywriter(pModel.get(), "3mf", &p3MFWriter.get()), S_OK) << L"Could create Model Writer";
+		//
+		//ASSERT_TRUE(CreateDir(m_sFolderName.c_str())) << L"Could not create folder.";
+		//ASSERT_EQ(lib3mf_writer_writetofileutf8(p3MFWriter.get(),
+		//	(m_sFolderName + separator() + m_sFilenameReadWrite).c_str()),
+		//	S_OK) << L"Could not write 3MF file.";
 
 
 		void Read3MF (bool readTriangles, bool readBeams){
