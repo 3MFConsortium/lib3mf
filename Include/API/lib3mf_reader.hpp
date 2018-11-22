@@ -75,7 +75,7 @@ public:
 
 	void ReadFromFile (const std::string & sFilename);
 
-	void ReadFromBuffer (const Lib3MF_uint32 nBufferBufferSize, const Lib3MF_uint8 * pBufferBuffer);
+	void ReadFromBuffer (const Lib3MF_uint64 nBufferBufferSize, const Lib3MF_uint8 * pBufferBuffer);
 
 	void AddRelationToRead (const std::string & sRelationShipType);
 

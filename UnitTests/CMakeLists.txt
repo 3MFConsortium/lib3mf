@@ -7,6 +7,8 @@ add_definitions( -DLTESTFILESPATH=L"${CMAKE_CURRENT_SOURCE_DIR}/../TestFiles/")
 add_definitions( -DLOUTFILESPATH=L"${CMAKE_BINARY_DIR}/")
 add_definitions( -DOUTFILESPATH="${CMAKE_BINARY_DIR}/")
 
+file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/Writer)
+
 # Tests on the CPP-Bindings of the library
 add_subdirectory(CPP_Bindings)
 

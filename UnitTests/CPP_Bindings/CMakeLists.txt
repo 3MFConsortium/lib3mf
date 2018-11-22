@@ -4,10 +4,11 @@
 SET(TESTNAME "Test_CPP_Bindings")
 
 set(SRCS_UNITTEST
-./Source/UnitTest_AllTests.cpp
-./Source/UnitTest_Wrapper.cpp
-./Source/UnitTest_Model.cpp
-./Source/UnitTest_Reader.cpp
+	./Source/UnitTest_AllTests.cpp
+	./Source/UnitTest_Wrapper.cpp
+	./Source/UnitTest_Model.cpp
+	./Source/UnitTest_Reader.cpp
+	./Source/UnitTest_Writer.cpp
 )
 
 set(CMAKE_CURRENT_BINARY_DIR ${CMAKE_BINARY_DIR})
@@ -37,4 +38,3 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 		set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${STARTUPPROJECT})
 	ENDIF()
 endif()
-	

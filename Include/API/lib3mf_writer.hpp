@@ -68,15 +68,16 @@ public:
 	*/
 	CLib3MFWriter(std::string sWriterClass, NMR::PModel model);
 
+	NMR::CModelWriter& writer();
 	/**
 	* Public member functions to implement.
 	*/
 
 	void WriteToFile (const std::string & sFilename);
 
-	void GetStreamSize (Lib3MF_uint64 & nStreamSize);
+	Lib3MF_uint64 GetStreamSize ();
 
-	void WriteToBuffer (Lib3MF_uint32 nBufferBufferSize, Lib3MF_uint32* pBufferNeededCount, Lib3MF_uint8 * pBufferBuffer);
+	void WriteToBuffer (Lib3MF_uint64 nBufferBufferSize, Lib3MF_uint64* pBufferNeededCount, Lib3MF_uint8 * pBufferBuffer);
 
 	void SetProgressCallback (const Lib3MFProgressCallback pProgressCallback);
 

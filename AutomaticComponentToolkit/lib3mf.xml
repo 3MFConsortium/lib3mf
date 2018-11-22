@@ -150,7 +150,7 @@
 		</method>
 		
 		<method name="GetStreamSize" description = "Retrieves the size of the full 3MF file stream.">
-			<param name="StreamSize" type="uint64" pass="out" description="the stream size" />
+			<param name="StreamSize" type="uint64" pass="return" description="the stream size" />
 		</method>
 		
 		<method name="WriteToBuffer" description = "Writes out the 3MF file into a memory buffer">

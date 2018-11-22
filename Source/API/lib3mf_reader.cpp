@@ -69,7 +69,7 @@ void CLib3MFReader::ReadFromFile (const std::string & sFilename)
 	reader().readStream(pImportStream);
 }
 
-void CLib3MFReader::ReadFromBuffer (const Lib3MF_uint32 nBufferBufferSize, const Lib3MF_uint8 * pBufferBuffer)
+void CLib3MFReader::ReadFromBuffer (const Lib3MF_uint64 nBufferBufferSize, const Lib3MF_uint8 * pBufferBuffer)
 {
 	NMR::PImportStream pImportStream = std::make_shared<NMR::CImportStream_Memory>(pBufferBuffer, nBufferBufferSize);
 	reader().readStream(pImportStream);

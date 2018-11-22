@@ -33,7 +33,9 @@ UnitTest_Utilities.h: Utilities for UnitTests
 #ifndef __NMR_UNITTEST_UTILITIES
 #define __NMR_UNITTEST_UTILITIES
 
+#include "lib3mf.hpp"
 #include "gtest/gtest.h"
+#include <fstream>
 
 #ifdef LTESTFILESPATH
 const std::string sTestFilesPath = TESTFILESPATH;
@@ -46,5 +48,17 @@ const std::string sOutFilesPath = OUTFILESPATH;
 #else
 const std::string sOutFilesPath = "..\TestOutput";
 #endif
+
+inline std::vector<Lib3MF_uint8> ReadFileIntoBuffer(std::string sFileName)
+{
+	// Read the file fully into a memory buffer
+	std::ifstream file(sFileName, std::ios::binary | std::ios::ate);
+	std::streamsize size = file.tellg();
+	file.seekg(0, std::ios::beg);
+	// Memory buffer
+	std::vector<Lib3MF_uint8> buffer(static_cast<size_t>(size));
+	file.read((char*)buffer.data(), size);
+	return buffer;
+}
 
 #endif //__NMR_UNITTEST_UTILITIES

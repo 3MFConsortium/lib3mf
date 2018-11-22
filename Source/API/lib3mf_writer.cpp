@@ -32,7 +32,10 @@ Abstract: This is a stub class definition of CLib3MFWriter
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
-
+// Include custom headers here.
+#include "Common/Platform/NMR_Platform.h"
+#include "Common/Platform/NMR_ExportStream_Memory.h"
+#include "Common/Platform/NMR_ExportStream_Dummy.h"
 
 using namespace Lib3MF;
 
@@ -54,24 +57,42 @@ CLib3MFWriter::CLib3MFWriter(std::string sWriterClass, NMR::PModel model)
 
 	if (!m_pWriter)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_WRITERCLASSUNKNOWN);
-
-
 }
 
+NMR::CModelWriter& CLib3MFWriter::writer()
+{
+	return *m_pWriter;
+}
 
 void CLib3MFWriter::WriteToFile (const std::string & sFilename)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	setlocale(LC_ALL, "C");
+	NMR::PExportStream pStream = NMR::fnCreateExportStreamInstance(sFilename.c_str());
+	writer().exportToStream(pStream);
 }
 
-void CLib3MFWriter::GetStreamSize (Lib3MF_uint64 & nStreamSize)
+Lib3MF_uint64 CLib3MFWriter::GetStreamSize ()
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	// Write to a special dummy stream just to calculate the size
+	NMR::PExportStreamDummy pStream = std::make_shared<NMR::CExportStreamDummy>();
+	writer().exportToStream(pStream);
+
+	return pStream->getDataSize();
 }
 
-void CLib3MFWriter::WriteToBuffer (Lib3MF_uint32 nBufferBufferSize, Lib3MF_uint32* pBufferNeededCount, Lib3MF_uint8 * pBufferBuffer)
+void CLib3MFWriter::WriteToBuffer (Lib3MF_uint64 nBufferBufferSize, Lib3MF_uint64* pBufferNeededCount, Lib3MF_uint8 * pBufferBuffer)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	NMR::PExportStreamMemory pStream = std::make_shared<NMR::CExportStreamMemory>();
+	writer().exportToStream(pStream);
+
+	Lib3MF_uint64 cbStreamSize = pStream->getDataSize();
+	if (pBufferNeededCount)
+		*pBufferNeededCount = cbStreamSize;
+
+	if (nBufferBufferSize >= cbStreamSize) {
+		// TODO eliminate this copy, perhaps by allowing CExportStreamMemory to use existing buffers
+		memcpy(pBufferBuffer, pStream->getData(), static_cast<size_t>(cbStreamSize));
+	}
 }
 
 void CLib3MFWriter::SetProgressCallback (const Lib3MFProgressCallback pProgressCallback)

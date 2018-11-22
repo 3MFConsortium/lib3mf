@@ -33,8 +33,6 @@ UnitTest_Reader.cpp: Defines Unittests for the Reader classes
 #include "UnitTest_Utilities.h"
 #include "lib3mf.hpp"
 
-#include <fstream>
-
 namespace Lib3MF
 {
 	class Reader : public ::testing::Test {
@@ -75,18 +73,6 @@ namespace Lib3MF
 			std::string sWarning = reader->GetWarning(iWarning, nErrorCode);
 			EXPECT_TRUE(true) << iWarning << ": " << nErrorCode << ", " << sWarning;
 		}
-	}
-
-	std::vector<Lib3MF_uint8> ReadFileIntoBuffer(std::string sFileName)
-	{
-		// Read the file fully into a memory buffer
-		std::ifstream file(sFileName, std::ios::binary | std::ios::ate);
-		std::streamsize size = file.tellg();
-		file.seekg(0, std::ios::beg);
-		// Memory buffer
-		std::vector<Lib3MF_uint8> buffer(static_cast<size_t>(size));
-		file.read( (char*)buffer.data(), size);
-		return buffer;
 	}
 
 	TEST_F(Reader, 3MFReadFromFile)
