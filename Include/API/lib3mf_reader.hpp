@@ -71,7 +71,7 @@ public:
 
 	void ReadFromFile (const std::string & sFilename);
 
-	void ReadFromBuffer (const unsigned int nBufferBufferSize, const unsigned char * pBufferBuffer);
+	void ReadFromBuffer (const Lib3MF_uint32 nBufferBufferSize, const Lib3MF_uint8 * pBufferBuffer);
 
 	void AddRelationToRead (const std::string & sRelationShipType);
 
@@ -81,9 +81,9 @@ public:
 
 	bool GetStrictModeActive ();
 
-	std::string GetWarning (const unsigned int nIndex, unsigned int & nErrorCode);
+	std::string GetWarning (const Lib3MF_uint32 nIndex, Lib3MF_uint32 & nErrorCode);
 
-	unsigned int GetWarningCount ();
+	Lib3MF_uint32 GetWarningCount ();
 
 };
 

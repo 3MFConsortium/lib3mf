@@ -55,7 +55,7 @@ void CLib3MFBuildItem::SetUUID (const std::string & sUUID)
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-unsigned int CLib3MFBuildItem::GetObjectResourceID ()
+Lib3MF_uint32 CLib3MFBuildItem::GetObjectResourceID ()
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }

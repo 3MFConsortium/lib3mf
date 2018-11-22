@@ -75,7 +75,7 @@ public:
 
 	void SetUUID (const std::string & sUUID);
 
-	unsigned int GetObjectResourceID ();
+	Lib3MF_uint32 GetObjectResourceID ();
 
 	bool HasObjectTransform ();
 

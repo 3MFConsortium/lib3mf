@@ -73,55 +73,55 @@ public:
 	* Public member functions to implement.
 	*/
 
-	unsigned int GetVertexCount ();
+	Lib3MF_uint32 GetVertexCount ();
 
-	unsigned int GetTriangleCount ();
+	Lib3MF_uint32 GetTriangleCount ();
 
-	void SetVertex (const unsigned int nIndex, const sLib3MFPosition Coordinates);
+	void SetVertex (const Lib3MF_uint32 nIndex, const sLib3MFPosition Coordinates);
 
-	unsigned int AddVertex (const sLib3MFPosition Coordinates);
+	Lib3MF_uint32 AddVertex (const sLib3MFPosition Coordinates);
 
-	sLib3MFTriangle GetTriangle (const unsigned int nIndex);
+	sLib3MFTriangle GetTriangle (const Lib3MF_uint32 nIndex);
 
-	void SetTriangle (const unsigned int nIndex, const sLib3MFTriangle Indices);
+	void SetTriangle (const Lib3MF_uint32 nIndex, const sLib3MFTriangle Indices);
 
-	unsigned int AddTriangle (const sLib3MFTriangle Indices);
+	Lib3MF_uint32 AddTriangle (const sLib3MFTriangle Indices);
 
-	void GetTriangleIndices (unsigned int nIndicesBufferSize, unsigned int * pIndicesNeededCount, sLib3MFTriangle * pIndicesBuffer);
+	void GetTriangleIndices (Lib3MF_uint32 nIndicesBufferSize, Lib3MF_uint32* pIndicesNeededCount, sLib3MFTriangle * pIndicesBuffer);
 
-	void SetTriangleIndices (const unsigned int nIndicesBufferSize, const sLib3MFTriangle * pIndicesBuffer);
+	void SetTriangleIndices (const Lib3MF_uint32 nIndicesBufferSize, const sLib3MFTriangle * pIndicesBuffer);
 
-	double GetBeamLattice_MinLength ();
+	Lib3MF_double GetBeamLattice_MinLength ();
 
-	void SetBeamLattice_MinLength (const double dMinLength);
+	void SetBeamLattice_MinLength (const Lib3MF_double dMinLength);
 
-	double GetBeamLattice_Radius ();
+	Lib3MF_double GetBeamLattice_Radius ();
 
-	void SetBeamLattice_Radius (const double dRadius);
+	void SetBeamLattice_Radius (const Lib3MF_double dRadius);
 
 	eLib3MFBeamLatticeCapMode GetBeamLattice_CapMode ();
 
 	void SetBeamLattice_CapMode (const eLib3MFBeamLatticeCapMode eCapMode);
 
-	void GetBeamLattice_Clipping (eLib3MFBeamLatticeClipMode & eClipMode, unsigned int & nResourceID);
+	void GetBeamLattice_Clipping (eLib3MFBeamLatticeClipMode & eClipMode, Lib3MF_uint32 & nResourceID);
 
-	void SetBeamLattice_Clipping (const eLib3MFBeamLatticeClipMode eClipMode, const unsigned int nResourceID);
+	void SetBeamLattice_Clipping (const eLib3MFBeamLatticeClipMode eClipMode, const Lib3MF_uint32 nResourceID);
 
-	void GetBeamLattice_Representation (bool & bHasRepresentation, unsigned int & nResourceID);
+	void GetBeamLattice_Representation (bool & bHasRepresentation, Lib3MF_uint32 & nResourceID);
 
-	void SetBeamLattice_Representation (const unsigned int nResourceID);
+	void SetBeamLattice_Representation (const Lib3MF_uint32 nResourceID);
 
-	unsigned int GetBeamCount ();
+	Lib3MF_uint32 GetBeamCount ();
 
-	unsigned int AddBeam (const sLib3MFBeam BeamInfo);
+	Lib3MF_uint32 AddBeam (const sLib3MFBeam BeamInfo);
 
-	void SetBeam (const unsigned int nIndex, const sLib3MFBeam BeamInfo);
+	void SetBeam (const Lib3MF_uint32 nIndex, const sLib3MFBeam BeamInfo);
 
-	unsigned int GetBeamSetCount ();
+	Lib3MF_uint32 GetBeamSetCount ();
 
 	ILib3MFBeamSet * AddBeamSet ();
 
-	ILib3MFBeamSet * GetBeamSet (const unsigned int nIndex);
+	ILib3MFBeamSet * GetBeamSet (const Lib3MF_uint32 nIndex);
 
 	bool IsManifoldAndOriented ();
 

@@ -45,27 +45,27 @@ void CLib3MFDefaultPropertyHandler::RemoveProperty ()
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-eLib3MFPropertyType CLib3MFDefaultPropertyHandler::GetPropertyType (const unsigned int nIndex)
+eLib3MFPropertyType CLib3MFDefaultPropertyHandler::GetPropertyType (const Lib3MF_uint32 nIndex)
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CLib3MFDefaultPropertyHandler::GetBaseMaterial (unsigned int & nMaterialGroupId, unsigned int & nMaterialIndex)
+void CLib3MFDefaultPropertyHandler::GetBaseMaterial (Lib3MF_uint32 & nMaterialGroupId, Lib3MF_uint32 & nMaterialIndex)
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CLib3MFDefaultPropertyHandler::SetBaseMaterial (const unsigned int nMaterialGroupId, const unsigned int nMaterialIndex)
+void CLib3MFDefaultPropertyHandler::SetBaseMaterial (const Lib3MF_uint32 nMaterialGroupId, const Lib3MF_uint32 nMaterialIndex)
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CLib3MFDefaultPropertyHandler::SetColorRGB (const unsigned char nRed, const unsigned char nGreen, const unsigned char nBlue)
+void CLib3MFDefaultPropertyHandler::SetColorRGB (const Lib3MF_uint8 nRed, const Lib3MF_uint8 nGreen, const Lib3MF_uint8 nBlue)
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CLib3MFDefaultPropertyHandler::SetColorRGBA (const unsigned char nRed, const unsigned char nGreen, const unsigned char nBlue, const unsigned char nAlpha)
+void CLib3MFDefaultPropertyHandler::SetColorRGBA (const Lib3MF_uint8 nRed, const Lib3MF_uint8 nGreen, const Lib3MF_uint8 nBlue, const Lib3MF_uint8 nAlpha)
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
@@ -80,12 +80,12 @@ void CLib3MFDefaultPropertyHandler::SetFloatColorRGBA (const float fRed, const f
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CLib3MFDefaultPropertyHandler::GetTexture (unsigned int & nTextureID, float & fU, float & fV)
+void CLib3MFDefaultPropertyHandler::GetTexture (Lib3MF_uint32 & nTextureID, float & fU, float & fV)
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CLib3MFDefaultPropertyHandler::SetTexture (unsigned int & nTextureID, float & fU, float & fV)
+void CLib3MFDefaultPropertyHandler::SetTexture (Lib3MF_uint32 & nTextureID, float & fU, float & fV)
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }

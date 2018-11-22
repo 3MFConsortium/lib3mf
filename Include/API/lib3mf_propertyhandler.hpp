@@ -69,29 +69,29 @@ public:
 	* Public member functions to implement.
 	*/
 
-	void RemoveProperty (const unsigned int nIndex);
+	void RemoveProperty (const Lib3MF_uint32 nIndex);
 
 	void RemoveAllProperties ();
 
-	eLib3MFPropertyType GetPropertyType (const unsigned int nIndex);
+	eLib3MFPropertyType GetPropertyType (const Lib3MF_uint32 nIndex);
 
-	void GetBaseMaterial (const unsigned int nIndex, unsigned int & nMaterialGroupId, unsigned int & nMaterialIndex);
+	void GetBaseMaterial (const Lib3MF_uint32 nIndex, Lib3MF_uint32 & nMaterialGroupId, Lib3MF_uint32 & nMaterialIndex);
 
-	void SetBaseMaterial (const unsigned int nIndex, const unsigned int nMaterialGroupId, const unsigned int nMaterialIndex);
+	void SetBaseMaterial (const Lib3MF_uint32 nIndex, const Lib3MF_uint32 nMaterialGroupId, const Lib3MF_uint32 nMaterialIndex);
 
-	void SetBaseMaterialArray (const unsigned int nMaterialGroupIdsBufferSize, const unsigned int * pMaterialGroupIdsBuffer, const unsigned int nMaterialIndicesBufferSize, const unsigned int * pMaterialIndicesBuffer);
+	void SetBaseMaterialArray (const Lib3MF_uint32 nMaterialGroupIdsBufferSize, const Lib3MF_uint32 * pMaterialGroupIdsBuffer, const Lib3MF_uint32 nMaterialIndicesBufferSize, const Lib3MF_uint32 * pMaterialIndicesBuffer);
 
-	void GetBaseMaterialArray (unsigned int nMaterialGroupIdsBufferSize, unsigned int * pMaterialGroupIdsNeededCount, unsigned int * pMaterialGroupIdsBuffer, unsigned int nMaterialIndicesBufferSize, unsigned int * pMaterialIndicesNeededCount, unsigned int * pMaterialIndicesBuffer);
+	void GetBaseMaterialArray (Lib3MF_uint32 nMaterialGroupIdsBufferSize, Lib3MF_uint32* pMaterialGroupIdsNeededCount, Lib3MF_uint32 * pMaterialGroupIdsBuffer, Lib3MF_uint32 nMaterialIndicesBufferSize, Lib3MF_uint32* pMaterialIndicesNeededCount, Lib3MF_uint32 * pMaterialIndicesBuffer);
 
-	void SetSingleColor (const unsigned int nIndex, const sLib3MFColorRGBA Color);
+	void SetSingleColor (const Lib3MF_uint32 nIndex, const sLib3MFColorRGBA Color);
 
-	void SetSingleColorRGB (const unsigned int nIndex, const unsigned char nRed, const unsigned char nGreen, const unsigned char nBlue);
+	void SetSingleColorRGB (const Lib3MF_uint32 nIndex, const Lib3MF_uint8 nRed, const Lib3MF_uint8 nGreen, const Lib3MF_uint8 nBlue);
 
-	void SetSingleColorRGBA (const unsigned int nIndex, const unsigned char nRed, const unsigned char nGreen, const unsigned char nBlue, const unsigned char nAlpha);
+	void SetSingleColorRGBA (const Lib3MF_uint32 nIndex, const Lib3MF_uint8 nRed, const Lib3MF_uint8 nGreen, const Lib3MF_uint8 nBlue, const Lib3MF_uint8 nAlpha);
 
-	void SetSingleColorFloatRGB (const unsigned int nIndex, const float fRed, const float fGreen, const float fBlue);
+	void SetSingleColorFloatRGB (const Lib3MF_uint32 nIndex, const float fRed, const float fGreen, const float fBlue);
 
-	void SetSingleColorFloatRGBA (const unsigned int nIndex, const float fRed, const float fGreen, const float fBlue, const float fAlpha);
+	void SetSingleColorFloatRGBA (const Lib3MF_uint32 nIndex, const float fRed, const float fGreen, const float fBlue, const float fAlpha);
 
 };
 

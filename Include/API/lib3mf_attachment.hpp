@@ -81,11 +81,11 @@ public:
 
 	void ReadFromFile (const std::string & sFileName);
 
-	unsigned long long GetStreamSize ();
+	Lib3MF_uint64 GetStreamSize ();
 
-	void WriteToBuffer (unsigned int nBufferBufferSize, unsigned int * pBufferNeededCount, unsigned char * pBufferBuffer);
+	void WriteToBuffer (Lib3MF_uint32 nBufferBufferSize, Lib3MF_uint32* pBufferNeededCount, Lib3MF_uint8 * pBufferBuffer);
 
-	void ReadFromBuffer (unsigned int nBufferBufferSize, unsigned int * pBufferNeededCount, unsigned char * pBufferBuffer);
+	void ReadFromBuffer (Lib3MF_uint32 nBufferBufferSize, Lib3MF_uint32* pBufferNeededCount, Lib3MF_uint8 * pBufferBuffer);
 
 };
 

@@ -69,15 +69,15 @@ public:
 	* Public member functions to implement.
 	*/
 
-	unsigned int GetMetaDataCount ();
+	Lib3MF_uint32 GetMetaDataCount ();
 
-	void GetMetaDataKey (const unsigned int nIndex, std::string & sNameSpace, std::string & sName);
+	void GetMetaDataKey (const Lib3MF_uint32 nIndex, std::string & sNameSpace, std::string & sName);
 
-	ILib3MFMetaData * GetMetaData (const unsigned int nIndex);
+	ILib3MFMetaData * GetMetaData (const Lib3MF_uint32 nIndex);
 
 	ILib3MFMetaData * GetMetaDataByKey (const std::string & sNameSpace, const std::string & sName);
 
-	void RemoveMetaData (const unsigned int nIndex);
+	void RemoveMetaData (const Lib3MF_uint32 nIndex);
 
 	void RemoveMetaDataByKey (const std::string & sNameSpace, const std::string & sName);
 

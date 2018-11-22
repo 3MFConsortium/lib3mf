@@ -40,17 +40,17 @@ using namespace Lib3MF;
  Class definition of CLib3MFMetaDataGroup 
 **************************************************************************************************************************/
 
-unsigned int CLib3MFMetaDataGroup::GetMetaDataCount ()
+Lib3MF_uint32 CLib3MFMetaDataGroup::GetMetaDataCount ()
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CLib3MFMetaDataGroup::GetMetaDataKey (const unsigned int nIndex, std::string & sNameSpace, std::string & sName)
+void CLib3MFMetaDataGroup::GetMetaDataKey (const Lib3MF_uint32 nIndex, std::string & sNameSpace, std::string & sName)
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-ILib3MFMetaData * CLib3MFMetaDataGroup::GetMetaData (const unsigned int nIndex)
+ILib3MFMetaData * CLib3MFMetaDataGroup::GetMetaData (const Lib3MF_uint32 nIndex)
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
@@ -60,7 +60,7 @@ ILib3MFMetaData * CLib3MFMetaDataGroup::GetMetaDataByKey (const std::string & sN
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CLib3MFMetaDataGroup::RemoveMetaData (const unsigned int nIndex)
+void CLib3MFMetaDataGroup::RemoveMetaData (const Lib3MF_uint32 nIndex)
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }

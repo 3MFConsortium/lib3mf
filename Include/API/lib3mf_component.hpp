@@ -71,7 +71,7 @@ public:
 
 	ILib3MFObject * GetObjectResource ();
 
-	unsigned int GetObjectResourceID ();
+	Lib3MF_uint32 GetObjectResourceID ();
 
 	std::string GetUUID (bool & bHasUUID);
 

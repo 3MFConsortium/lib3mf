@@ -70,17 +70,17 @@ void CLib3MFAttachment::ReadFromFile (const std::string & sFileName)
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-unsigned long long CLib3MFAttachment::GetStreamSize ()
+Lib3MF_uint64 CLib3MFAttachment::GetStreamSize ()
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CLib3MFAttachment::WriteToBuffer (unsigned int nBufferBufferSize, unsigned int * pBufferNeededCount, unsigned char * pBufferBuffer)
+void CLib3MFAttachment::WriteToBuffer (Lib3MF_uint32 nBufferBufferSize, Lib3MF_uint32* pBufferNeededCount, Lib3MF_uint8 * pBufferBuffer)
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CLib3MFAttachment::ReadFromBuffer (unsigned int nBufferBufferSize, unsigned int * pBufferNeededCount, unsigned char * pBufferBuffer)
+void CLib3MFAttachment::ReadFromBuffer (Lib3MF_uint32 nBufferBufferSize, Lib3MF_uint32* pBufferNeededCount, Lib3MF_uint8 * pBufferBuffer)
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }

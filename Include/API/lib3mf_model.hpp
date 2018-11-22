@@ -81,15 +81,15 @@ public:
 
 	ILib3MFReader * QueryReader (const std::string & sReaderClass);
 
-	ILib3MFResource * GetResourceByID (const unsigned int nResourceID);
+	ILib3MFResource * GetResourceByID (const Lib3MF_uint32 nResourceID);
 
-	ILib3MFTexture2D * GetTexture2DByID (const unsigned int nResourceID);
+	ILib3MFTexture2D * GetTexture2DByID (const Lib3MF_uint32 nResourceID);
 
-	ILib3MFBaseMaterial * GetBaseMaterialByID (const unsigned int nResourceID);
+	ILib3MFBaseMaterial * GetBaseMaterialByID (const Lib3MF_uint32 nResourceID);
 
-	ILib3MFMeshObject * GetMeshObjectByID (const unsigned int nResourceID);
+	ILib3MFMeshObject * GetMeshObjectByID (const Lib3MF_uint32 nResourceID);
 
-	ILib3MFComponentsObject * GetComponentsObjectByID (const unsigned int nResourceID);
+	ILib3MFComponentsObject * GetComponentsObjectByID (const Lib3MF_uint32 nResourceID);
 
 	std::string GetBuildUUID (bool & bHasUUID);
 
@@ -127,15 +127,15 @@ public:
 
 	ILib3MFAttachment * AddAttachment (const std::string & sURI, const std::string & sRelationShipType);
 
-	ILib3MFAttachment * GetAttachment (const unsigned int nIndex);
+	ILib3MFAttachment * GetAttachment (const Lib3MF_uint32 nIndex);
 
 	ILib3MFAttachment * FindAttachment (const std::string & sURI);
 
-	unsigned int GetAttachmentCount ();
+	Lib3MF_uint32 GetAttachmentCount ();
 
-	unsigned long long GetAttachmentSize (const unsigned int nIndex);
+	Lib3MF_uint64 GetAttachmentSize (const Lib3MF_uint32 nIndex);
 
-	std::string GetAttachmentPath (const unsigned int nIndex);
+	std::string GetAttachmentPath (const Lib3MF_uint32 nIndex);
 
 	bool HasPackageThumbnailAttachment ();
 

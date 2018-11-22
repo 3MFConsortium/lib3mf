@@ -45,12 +45,12 @@ ILib3MFComponentsObject * CLib3MFComponentsObject::AddComponent (ILib3MFObject* 
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-ILib3MFComponentsObject * CLib3MFComponentsObject::GetComponent (const unsigned int nIndex)
+ILib3MFComponentsObject * CLib3MFComponentsObject::GetComponent (const Lib3MF_uint32 nIndex)
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-unsigned int CLib3MFComponentsObject::GetComponentCount ()
+Lib3MF_uint32 CLib3MFComponentsObject::GetComponentCount ()
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }

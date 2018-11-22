@@ -69,7 +69,7 @@ public:
 	* Public member functions to implement.
 	*/
 
-	unsigned int GetResourceID ();
+	Lib3MF_uint32 GetResourceID ();
 
 };
 

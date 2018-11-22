@@ -40,7 +40,7 @@ using namespace Lib3MF;
  Class definition of CLib3MFPropertyHandler 
 **************************************************************************************************************************/
 
-void CLib3MFPropertyHandler::RemoveProperty (const unsigned int nIndex)
+void CLib3MFPropertyHandler::RemoveProperty (const Lib3MF_uint32 nIndex)
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
@@ -50,52 +50,52 @@ void CLib3MFPropertyHandler::RemoveAllProperties ()
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-eLib3MFPropertyType CLib3MFPropertyHandler::GetPropertyType (const unsigned int nIndex)
+eLib3MFPropertyType CLib3MFPropertyHandler::GetPropertyType (const Lib3MF_uint32 nIndex)
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CLib3MFPropertyHandler::GetBaseMaterial (const unsigned int nIndex, unsigned int & nMaterialGroupId, unsigned int & nMaterialIndex)
+void CLib3MFPropertyHandler::GetBaseMaterial (const Lib3MF_uint32 nIndex, Lib3MF_uint32 & nMaterialGroupId, Lib3MF_uint32 & nMaterialIndex)
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CLib3MFPropertyHandler::SetBaseMaterial (const unsigned int nIndex, const unsigned int nMaterialGroupId, const unsigned int nMaterialIndex)
+void CLib3MFPropertyHandler::SetBaseMaterial (const Lib3MF_uint32 nIndex, const Lib3MF_uint32 nMaterialGroupId, const Lib3MF_uint32 nMaterialIndex)
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CLib3MFPropertyHandler::SetBaseMaterialArray (const unsigned int nMaterialGroupIdsBufferSize, const unsigned int * pMaterialGroupIdsBuffer, const unsigned int nMaterialIndicesBufferSize, const unsigned int * pMaterialIndicesBuffer)
+void CLib3MFPropertyHandler::SetBaseMaterialArray (const Lib3MF_uint32 nMaterialGroupIdsBufferSize, const Lib3MF_uint32 * pMaterialGroupIdsBuffer, const Lib3MF_uint32 nMaterialIndicesBufferSize, const Lib3MF_uint32 * pMaterialIndicesBuffer)
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CLib3MFPropertyHandler::GetBaseMaterialArray (unsigned int nMaterialGroupIdsBufferSize, unsigned int * pMaterialGroupIdsNeededCount, unsigned int * pMaterialGroupIdsBuffer, unsigned int nMaterialIndicesBufferSize, unsigned int * pMaterialIndicesNeededCount, unsigned int * pMaterialIndicesBuffer)
+void CLib3MFPropertyHandler::GetBaseMaterialArray (Lib3MF_uint32 nMaterialGroupIdsBufferSize, Lib3MF_uint32* pMaterialGroupIdsNeededCount, Lib3MF_uint32 * pMaterialGroupIdsBuffer, Lib3MF_uint32 nMaterialIndicesBufferSize, Lib3MF_uint32* pMaterialIndicesNeededCount, Lib3MF_uint32 * pMaterialIndicesBuffer)
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CLib3MFPropertyHandler::SetSingleColor (const unsigned int nIndex, const sLib3MFColorRGBA Color)
+void CLib3MFPropertyHandler::SetSingleColor (const Lib3MF_uint32 nIndex, const sLib3MFColorRGBA Color)
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CLib3MFPropertyHandler::SetSingleColorRGB (const unsigned int nIndex, const unsigned char nRed, const unsigned char nGreen, const unsigned char nBlue)
+void CLib3MFPropertyHandler::SetSingleColorRGB (const Lib3MF_uint32 nIndex, const Lib3MF_uint8 nRed, const Lib3MF_uint8 nGreen, const Lib3MF_uint8 nBlue)
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CLib3MFPropertyHandler::SetSingleColorRGBA (const unsigned int nIndex, const unsigned char nRed, const unsigned char nGreen, const unsigned char nBlue, const unsigned char nAlpha)
+void CLib3MFPropertyHandler::SetSingleColorRGBA (const Lib3MF_uint32 nIndex, const Lib3MF_uint8 nRed, const Lib3MF_uint8 nGreen, const Lib3MF_uint8 nBlue, const Lib3MF_uint8 nAlpha)
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CLib3MFPropertyHandler::SetSingleColorFloatRGB (const unsigned int nIndex, const float fRed, const float fGreen, const float fBlue)
+void CLib3MFPropertyHandler::SetSingleColorFloatRGB (const Lib3MF_uint32 nIndex, const float fRed, const float fGreen, const float fBlue)
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CLib3MFPropertyHandler::SetSingleColorFloatRGBA (const unsigned int nIndex, const float fRed, const float fGreen, const float fBlue, const float fAlpha)
+void CLib3MFPropertyHandler::SetSingleColorFloatRGBA (const Lib3MF_uint32 nIndex, const float fRed, const float fGreen, const float fBlue, const float fAlpha)
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }

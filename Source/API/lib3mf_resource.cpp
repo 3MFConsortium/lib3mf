@@ -40,7 +40,7 @@ using namespace Lib3MF;
  Class definition of CLib3MFResource 
 **************************************************************************************************************************/
 
-unsigned int CLib3MFResource::GetResourceID ()
+Lib3MF_uint32 CLib3MFResource::GetResourceID ()
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }

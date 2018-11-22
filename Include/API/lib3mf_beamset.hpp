@@ -77,11 +77,11 @@ public:
 
 	std::string GetIdentifier ();
 
-	unsigned int GetReferenceCount ();
+	Lib3MF_uint32 GetReferenceCount ();
 
-	void SetReferences (const unsigned int nReferencesBufferSize, const unsigned int * pReferencesBuffer);
+	void SetReferences (const Lib3MF_uint32 nReferencesBufferSize, const Lib3MF_uint32 * pReferencesBuffer);
 
-	void GetReferences (unsigned int nReferencesBufferSize, unsigned int * pReferencesNeededCount, unsigned int * pReferencesBuffer);
+	void GetReferences (Lib3MF_uint32 nReferencesBufferSize, Lib3MF_uint32* pReferencesNeededCount, Lib3MF_uint32 * pReferencesBuffer);
 
 };
 

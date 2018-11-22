@@ -60,17 +60,17 @@ std::string CLib3MFBeamSet::GetIdentifier ()
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-unsigned int CLib3MFBeamSet::GetReferenceCount ()
+Lib3MF_uint32 CLib3MFBeamSet::GetReferenceCount ()
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CLib3MFBeamSet::SetReferences (const unsigned int nReferencesBufferSize, const unsigned int * pReferencesBuffer)
+void CLib3MFBeamSet::SetReferences (const Lib3MF_uint32 nReferencesBufferSize, const Lib3MF_uint32 * pReferencesBuffer)
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CLib3MFBeamSet::GetReferences (unsigned int nReferencesBufferSize, unsigned int * pReferencesNeededCount, unsigned int * pReferencesBuffer)
+void CLib3MFBeamSet::GetReferences (Lib3MF_uint32 nReferencesBufferSize, Lib3MF_uint32* pReferencesNeededCount, Lib3MF_uint32 * pReferencesBuffer)
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }

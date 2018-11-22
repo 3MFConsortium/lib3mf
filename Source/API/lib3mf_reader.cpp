@@ -45,7 +45,7 @@ void CLib3MFReader::ReadFromFile (const std::string & sFilename)
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CLib3MFReader::ReadFromBuffer (const unsigned int nBufferBufferSize, const unsigned char * pBufferBuffer)
+void CLib3MFReader::ReadFromBuffer (const Lib3MF_uint32 nBufferBufferSize, const Lib3MF_uint8 * pBufferBuffer)
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
@@ -70,12 +70,12 @@ bool CLib3MFReader::GetStrictModeActive ()
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-std::string CLib3MFReader::GetWarning (const unsigned int nIndex, unsigned int & nErrorCode)
+std::string CLib3MFReader::GetWarning (const Lib3MF_uint32 nIndex, Lib3MF_uint32 & nErrorCode)
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-unsigned int CLib3MFReader::GetWarningCount ()
+Lib3MF_uint32 CLib3MFReader::GetWarningCount ()
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }

@@ -70,27 +70,27 @@ ILib3MFReader * CLib3MFModel::QueryReader (const std::string & sReaderClass)
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-ILib3MFResource * CLib3MFModel::GetResourceByID (const unsigned int nResourceID)
+ILib3MFResource * CLib3MFModel::GetResourceByID (const Lib3MF_uint32 nResourceID)
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-ILib3MFTexture2D * CLib3MFModel::GetTexture2DByID (const unsigned int nResourceID)
+ILib3MFTexture2D * CLib3MFModel::GetTexture2DByID (const Lib3MF_uint32 nResourceID)
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-ILib3MFBaseMaterial * CLib3MFModel::GetBaseMaterialByID (const unsigned int nResourceID)
+ILib3MFBaseMaterial * CLib3MFModel::GetBaseMaterialByID (const Lib3MF_uint32 nResourceID)
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-ILib3MFMeshObject * CLib3MFModel::GetMeshObjectByID (const unsigned int nResourceID)
+ILib3MFMeshObject * CLib3MFModel::GetMeshObjectByID (const Lib3MF_uint32 nResourceID)
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-ILib3MFComponentsObject * CLib3MFModel::GetComponentsObjectByID (const unsigned int nResourceID)
+ILib3MFComponentsObject * CLib3MFModel::GetComponentsObjectByID (const Lib3MF_uint32 nResourceID)
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
@@ -185,7 +185,7 @@ ILib3MFAttachment * CLib3MFModel::AddAttachment (const std::string & sURI, const
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-ILib3MFAttachment * CLib3MFModel::GetAttachment (const unsigned int nIndex)
+ILib3MFAttachment * CLib3MFModel::GetAttachment (const Lib3MF_uint32 nIndex)
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
@@ -195,17 +195,17 @@ ILib3MFAttachment * CLib3MFModel::FindAttachment (const std::string & sURI)
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-unsigned int CLib3MFModel::GetAttachmentCount ()
+Lib3MF_uint32 CLib3MFModel::GetAttachmentCount ()
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-unsigned long long CLib3MFModel::GetAttachmentSize (const unsigned int nIndex)
+Lib3MF_uint64 CLib3MFModel::GetAttachmentSize (const Lib3MF_uint32 nIndex)
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-std::string CLib3MFModel::GetAttachmentPath (const unsigned int nIndex)
+std::string CLib3MFModel::GetAttachmentPath (const Lib3MF_uint32 nIndex)
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }

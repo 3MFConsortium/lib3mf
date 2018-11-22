@@ -45,12 +45,12 @@ void CLib3MFWriter::WriteToFile (const std::string & sFilename)
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CLib3MFWriter::GetStreamSize (unsigned long long & nStreamSize)
+void CLib3MFWriter::GetStreamSize (Lib3MF_uint64 & nStreamSize)
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CLib3MFWriter::WriteToBuffer (unsigned int nBufferBufferSize, unsigned int * pBufferNeededCount, unsigned char * pBufferBuffer)
+void CLib3MFWriter::WriteToBuffer (Lib3MF_uint32 nBufferBufferSize, Lib3MF_uint32* pBufferNeededCount, Lib3MF_uint8 * pBufferBuffer)
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }

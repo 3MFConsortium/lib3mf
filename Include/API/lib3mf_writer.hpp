@@ -71,9 +71,9 @@ public:
 
 	void WriteToFile (const std::string & sFilename);
 
-	void GetStreamSize (unsigned long long & nStreamSize);
+	void GetStreamSize (Lib3MF_uint64 & nStreamSize);
 
-	void WriteToBuffer (unsigned int nBufferBufferSize, unsigned int * pBufferNeededCount, unsigned char * pBufferBuffer);
+	void WriteToBuffer (Lib3MF_uint32 nBufferBufferSize, Lib3MF_uint32* pBufferNeededCount, Lib3MF_uint8 * pBufferBuffer);
 
 	void SetProgressCallback (const Lib3MFProgressCallback pProgressCallback);
 

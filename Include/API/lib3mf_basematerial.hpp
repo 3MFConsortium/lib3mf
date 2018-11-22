@@ -73,27 +73,27 @@ public:
 	* Public member functions to implement.
 	*/
 
-	unsigned int GetCount ();
+	Lib3MF_uint32 GetCount ();
 
-	unsigned int GetResourceID ();
+	Lib3MF_uint32 GetResourceID ();
 
-	unsigned int AddMaterial (const std::string & sName, const unsigned char nRed, const unsigned char nGreen, const unsigned char nBlue);
+	Lib3MF_uint32 AddMaterial (const std::string & sName, const Lib3MF_uint8 nRed, const Lib3MF_uint8 nGreen, const Lib3MF_uint8 nBlue);
 
-	void RemoveMaterial (const unsigned int nResourceIndex);
+	void RemoveMaterial (const Lib3MF_uint32 nResourceIndex);
 
-	std::string GetName (const unsigned int nResourceIndex);
+	std::string GetName (const Lib3MF_uint32 nResourceIndex);
 
-	void SetName (const unsigned int nResourceIndex, const std::string & sName);
+	void SetName (const Lib3MF_uint32 nResourceIndex, const std::string & sName);
 
-	void SetDisplayColorRGB (const unsigned int nResourceIndex, const unsigned char nRed, const unsigned char nGreen, const unsigned char nBlue);
+	void SetDisplayColorRGB (const Lib3MF_uint32 nResourceIndex, const Lib3MF_uint8 nRed, const Lib3MF_uint8 nGreen, const Lib3MF_uint8 nBlue);
 
-	void SetDisplayColorRGBA (const unsigned int nResourceIndex, const unsigned char nRed, const unsigned char nGreen, const unsigned char nBlue, const unsigned char nAlpha);
+	void SetDisplayColorRGBA (const Lib3MF_uint32 nResourceIndex, const Lib3MF_uint8 nRed, const Lib3MF_uint8 nGreen, const Lib3MF_uint8 nBlue, const Lib3MF_uint8 nAlpha);
 
-	void SetDisplayColorFloatRGB (const unsigned int nResourceIndex, const float fRed, const float fGreen, const float fBlue);
+	void SetDisplayColorFloatRGB (const Lib3MF_uint32 nResourceIndex, const float fRed, const float fGreen, const float fBlue);
 
-	void SetDisplayColorFloatRGBA (const unsigned int nResourceIndex, const float fRed, const float fGreen, const float fBlue, const float fAlpha);
+	void SetDisplayColorFloatRGBA (const Lib3MF_uint32 nResourceIndex, const float fRed, const float fGreen, const float fBlue, const float fAlpha);
 
-	void GetDisplayColor (const unsigned int nResourceIndex, unsigned char & nRed, unsigned char & nGreen, unsigned char & nBlue, unsigned char & nAlpha);
+	void GetDisplayColor (const Lib3MF_uint32 nResourceIndex, Lib3MF_uint8 & nRed, Lib3MF_uint8 & nGreen, Lib3MF_uint8 & nBlue, Lib3MF_uint8 & nAlpha);
 
 };
 

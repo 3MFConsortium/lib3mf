@@ -40,67 +40,67 @@ using namespace Lib3MF;
  Class definition of CLib3MFMeshObject 
 **************************************************************************************************************************/
 
-unsigned int CLib3MFMeshObject::GetVertexCount ()
+Lib3MF_uint32 CLib3MFMeshObject::GetVertexCount ()
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-unsigned int CLib3MFMeshObject::GetTriangleCount ()
+Lib3MF_uint32 CLib3MFMeshObject::GetTriangleCount ()
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CLib3MFMeshObject::SetVertex (const unsigned int nIndex, const sLib3MFPosition Coordinates)
+void CLib3MFMeshObject::SetVertex (const Lib3MF_uint32 nIndex, const sLib3MFPosition Coordinates)
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-unsigned int CLib3MFMeshObject::AddVertex (const sLib3MFPosition Coordinates)
+Lib3MF_uint32 CLib3MFMeshObject::AddVertex (const sLib3MFPosition Coordinates)
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-sLib3MFTriangle CLib3MFMeshObject::GetTriangle (const unsigned int nIndex)
+sLib3MFTriangle CLib3MFMeshObject::GetTriangle (const Lib3MF_uint32 nIndex)
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CLib3MFMeshObject::SetTriangle (const unsigned int nIndex, const sLib3MFTriangle Indices)
+void CLib3MFMeshObject::SetTriangle (const Lib3MF_uint32 nIndex, const sLib3MFTriangle Indices)
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-unsigned int CLib3MFMeshObject::AddTriangle (const sLib3MFTriangle Indices)
+Lib3MF_uint32 CLib3MFMeshObject::AddTriangle (const sLib3MFTriangle Indices)
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CLib3MFMeshObject::GetTriangleIndices (unsigned int nIndicesBufferSize, unsigned int * pIndicesNeededCount, sLib3MFTriangle * pIndicesBuffer)
+void CLib3MFMeshObject::GetTriangleIndices (Lib3MF_uint32 nIndicesBufferSize, Lib3MF_uint32* pIndicesNeededCount, sLib3MFTriangle * pIndicesBuffer)
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CLib3MFMeshObject::SetTriangleIndices (const unsigned int nIndicesBufferSize, const sLib3MFTriangle * pIndicesBuffer)
+void CLib3MFMeshObject::SetTriangleIndices (const Lib3MF_uint32 nIndicesBufferSize, const sLib3MFTriangle * pIndicesBuffer)
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-double CLib3MFMeshObject::GetBeamLattice_MinLength ()
+Lib3MF_double CLib3MFMeshObject::GetBeamLattice_MinLength ()
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CLib3MFMeshObject::SetBeamLattice_MinLength (const double dMinLength)
+void CLib3MFMeshObject::SetBeamLattice_MinLength (const Lib3MF_double dMinLength)
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-double CLib3MFMeshObject::GetBeamLattice_Radius ()
+Lib3MF_double CLib3MFMeshObject::GetBeamLattice_Radius ()
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CLib3MFMeshObject::SetBeamLattice_Radius (const double dRadius)
+void CLib3MFMeshObject::SetBeamLattice_Radius (const Lib3MF_double dRadius)
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
@@ -115,42 +115,42 @@ void CLib3MFMeshObject::SetBeamLattice_CapMode (const eLib3MFBeamLatticeCapMode 
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CLib3MFMeshObject::GetBeamLattice_Clipping (eLib3MFBeamLatticeClipMode & eClipMode, unsigned int & nResourceID)
+void CLib3MFMeshObject::GetBeamLattice_Clipping (eLib3MFBeamLatticeClipMode & eClipMode, Lib3MF_uint32 & nResourceID)
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CLib3MFMeshObject::SetBeamLattice_Clipping (const eLib3MFBeamLatticeClipMode eClipMode, const unsigned int nResourceID)
+void CLib3MFMeshObject::SetBeamLattice_Clipping (const eLib3MFBeamLatticeClipMode eClipMode, const Lib3MF_uint32 nResourceID)
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CLib3MFMeshObject::GetBeamLattice_Representation (bool & bHasRepresentation, unsigned int & nResourceID)
+void CLib3MFMeshObject::GetBeamLattice_Representation (bool & bHasRepresentation, Lib3MF_uint32 & nResourceID)
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CLib3MFMeshObject::SetBeamLattice_Representation (const unsigned int nResourceID)
+void CLib3MFMeshObject::SetBeamLattice_Representation (const Lib3MF_uint32 nResourceID)
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-unsigned int CLib3MFMeshObject::GetBeamCount ()
+Lib3MF_uint32 CLib3MFMeshObject::GetBeamCount ()
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-unsigned int CLib3MFMeshObject::AddBeam (const sLib3MFBeam BeamInfo)
+Lib3MF_uint32 CLib3MFMeshObject::AddBeam (const sLib3MFBeam BeamInfo)
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CLib3MFMeshObject::SetBeam (const unsigned int nIndex, const sLib3MFBeam BeamInfo)
+void CLib3MFMeshObject::SetBeam (const Lib3MF_uint32 nIndex, const sLib3MFBeam BeamInfo)
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-unsigned int CLib3MFMeshObject::GetBeamSetCount ()
+Lib3MF_uint32 CLib3MFMeshObject::GetBeamSetCount ()
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
@@ -160,7 +160,7 @@ ILib3MFBeamSet * CLib3MFMeshObject::AddBeamSet ()
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-ILib3MFBeamSet * CLib3MFMeshObject::GetBeamSet (const unsigned int nIndex)
+ILib3MFBeamSet * CLib3MFMeshObject::GetBeamSet (const Lib3MF_uint32 nIndex)
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }

@@ -71,9 +71,9 @@ public:
 
 	ILib3MFComponentsObject * AddComponent (ILib3MFObject* pObjectResource, const sLib3MFTransform Transform);
 
-	ILib3MFComponentsObject * GetComponent (const unsigned int nIndex);
+	ILib3MFComponentsObject * GetComponent (const Lib3MF_uint32 nIndex);
 
-	unsigned int GetComponentCount ();
+	Lib3MF_uint32 GetComponentCount ();
 
 };
 

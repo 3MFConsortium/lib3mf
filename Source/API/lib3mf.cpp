@@ -39,12 +39,12 @@ Interface version: 2.0.0
 
 using namespace Lib3MF;
 
-void CLib3MFWrapper::GetLibraryVersion (unsigned int & nMajor, unsigned int & nMinor, unsigned int & nMicro)
+void CLib3MFWrapper::GetLibraryVersion (Lib3MF_uint32 & nMajor, Lib3MF_uint32 & nMinor, Lib3MF_uint32 & nMicro)
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CLib3MFWrapper::GetSpecificationVersion (const std::string & sSpecificationURL, bool & bIsSupported, unsigned int & nMajor, unsigned int & nMinor, unsigned int & nMicro)
+void CLib3MFWrapper::GetSpecificationVersion (const std::string & sSpecificationURL, bool & bIsSupported, Lib3MF_uint32 & nMajor, Lib3MF_uint32 & nMinor, Lib3MF_uint32 & nMicro)
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
