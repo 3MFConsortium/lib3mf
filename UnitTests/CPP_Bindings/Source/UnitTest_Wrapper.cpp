@@ -39,6 +39,24 @@ operations
 
 namespace Lib3MF
 {
+
+	class ParsingEventsTest : public ::testing::Test {
+	protected:
+
+		static int *x;
+
+		static void SetUpTestCase() {
+			x = new int[30];
+		}
+
+		static void TearDownTestCase() {
+			delete[] x;
+		}
+
+		virtual void SetUp() {}
+		virtual void TearDown() {}
+	};
+
 	TEST(Wrapper, GetLibraryVersion)
 	{
 		Lib3MF_uint32 nMajor, nMinor, nMicro;
@@ -91,6 +109,18 @@ namespace Lib3MF
 	TEST(Wrapper, CreateModel)
 	{
 		auto model = CLib3MFWrapper::CreateModel();
+	}
+
+	TEST(Wrapper, CheckError)
+	{
+		CLib3MFWrapper::CheckError(nullptr, 0);
+		try {
+			CLib3MFWrapper::CheckError(nullptr, 1);
+			ASSERT_TRUE(false);
+		}
+		catch (ELib3MFException &e) {
+			ASSERT_EQ(e.getErrorCode(), 1);
+		}
 	}
 
 }

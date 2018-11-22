@@ -37,6 +37,8 @@ Interface version: 2.0.0
 #include "lib3mf_interfaces.hpp"
 #include "lib3mf_interfaceexception.hpp"
 
+#include "lib3mf_model.hpp"
+
 #include "NMR_Spec_Version.h"
 #include "Model/Classes/NMR_ModelConstants.h" 
 
@@ -82,7 +84,7 @@ void CLib3MFWrapper::GetSpecificationVersion (const std::string & sSpecification
 
 ILib3MFModel * CLib3MFWrapper::CreateModel ()
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	return new CLib3MFModel();
 }
 
 void CLib3MFWrapper::Release (ILib3MFBaseClass* pInstance)
