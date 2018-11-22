@@ -37,16 +37,47 @@ Interface version: 2.0.0
 #include "lib3mf_interfaces.hpp"
 #include "lib3mf_interfaceexception.hpp"
 
+#include "NMR_Spec_Version.h"
+#include "Model/Classes/NMR_ModelConstants.h" 
+
 using namespace Lib3MF;
 
 void CLib3MFWrapper::GetLibraryVersion (Lib3MF_uint32 & nMajor, Lib3MF_uint32 & nMinor, Lib3MF_uint32 & nMicro)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	nMajor = LIB3MF_VERSION_MAJOR;
+	nMinor = LIB3MF_VERSION_MINOR;
+	nMicro = LIB3MF_VERSION_MICRO;
 }
 
 void CLib3MFWrapper::GetSpecificationVersion (const std::string & sSpecificationURL, bool & bIsSupported, Lib3MF_uint32 & nMajor, Lib3MF_uint32 & nMinor, Lib3MF_uint32 & nMicro)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	if (!sSpecificationURL.compare(std::string(XML_3MF_NAMESPACE_CORESPEC100))) {
+		nMajor = NMR_SPECVERSION_MAJOR;
+		nMinor = NMR_SPECVERSION_MINOR;
+		nMicro = NMR_SPECVERSION_MICRO;
+		bIsSupported = true;
+	} else if (!sSpecificationURL.compare( std::string(XML_3MF_NAMESPACE_MATERIALSPEC) )) {
+		nMajor = NMR_SPECVERSION_MATERIAL_MAJOR;
+		nMinor = NMR_SPECVERSION_MATERIAL_MINOR;
+		nMicro = NMR_SPECVERSION_MATERIAL_MICRO;
+		bIsSupported = true;
+	} else if (!sSpecificationURL.compare( std::string(XML_3MF_NAMESPACE_PRODUCTIONSPEC) )) {
+		nMajor = NMR_SPECVERSION_PRODUCTION_MAJOR;
+		nMinor = NMR_SPECVERSION_PRODUCTION_MINOR;
+		nMicro = NMR_SPECVERSION_PRODUCTION_MICRO;
+		bIsSupported = true;
+	} else if (!sSpecificationURL.compare( std::string(XML_3MF_NAMESPACE_BEAMLATTICESPEC) )) {
+		nMajor = NMR_SPECVERSION_BEAMLATTICE_MAJOR;
+		nMinor = NMR_SPECVERSION_BEAMLATTICE_MINOR;
+		nMicro = NMR_SPECVERSION_BEAMLATTICE_MICRO;
+	} else if (!sSpecificationURL.compare(std::string(XML_3MF_NAMESPACE_SLICESPEC) )) {
+		nMajor = NMR_SPECVERSION_SLICE_MAJOR;
+		nMinor = NMR_SPECVERSION_SLICE_MINOR;
+		nMicro = NMR_SPECVERSION_SLICE_MICRO;
+	}
+	else {
+		bIsSupported = false;
+	}
 }
 
 ILib3MFModel * CLib3MFWrapper::CreateModel ()
@@ -56,7 +87,7 @@ ILib3MFModel * CLib3MFWrapper::CreateModel ()
 
 void CLib3MFWrapper::Release (ILib3MFBaseClass* pInstance)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	delete pInstance;
 }
 
 void CLib3MFWrapper::SetJournal (const std::string & sJournalPath)

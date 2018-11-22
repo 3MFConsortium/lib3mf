@@ -26,33 +26,25 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_COMVersion.h defines the current implementation version.
+UnitTest_Utilities.h: Utilities for UnitTests
 
 --*/
 
-#ifndef __NMR_MODELCOMVERSION
-#define __NMR_MODELCOMVERSION
+#ifndef __NMR_UNITTEST_UTILITIES
+#define __NMR_UNITTEST_UTILITIES
 
-// version of the core-specification implemented by this library
-#define NMR_SPECVERSION_MAJOR 1
-#define NMR_SPECVERSION_MINOR 2
-#define NMR_SPECVERSION_MICRO 3
+#include "gtest/gtest.h"
 
-// Interface version for extension API
-#define NMR_SPECVERSION_MATERIAL_MAJOR 1
-#define NMR_SPECVERSION_MATERIAL_MINOR 0
-#define NMR_SPECVERSION_MATERIAL_MICRO 0
+#ifdef LTESTFILESPATH
+const std::wstring sTestFilesPath = LTESTFILESPATH;
+#else
+const std::wstring sTestFilesPath = L"TestFiles";
+#endif
 
-#define NMR_SPECVERSION_PRODUCTION_MAJOR 1
-#define NMR_SPECVERSION_PRODUCTION_MINOR 0
-#define NMR_SPECVERSION_PRODUCTION_MICRO 0
+#ifdef LOUTFILESPATH
+const std::wstring sOutFilesPath = LOUTFILESPATH;
+#else
+const std::wstring sOutFilesPath = L"..\TestOutput";
+#endif
 
-#define NMR_SPECVERSION_BEAMLATTICE_MAJOR 1
-#define NMR_SPECVERSION_BEAMLATTICE_MINOR 0
-#define NMR_SPECVERSION_BEAMLATTICE_MICRO 0
-
-#define NMR_SPECVERSION_SLICE_MAJOR 1
-#define NMR_SPECVERSION_SLICE_MINOR 0
-#define NMR_SPECVERSION_SLICE_MICRO 0
-
-#endif // __NMR_MODELCOMVERSION
+#endif //__NMR_UNITTEST_UTILITIES

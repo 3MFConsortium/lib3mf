@@ -136,6 +136,13 @@ else()
 	target_compile_options(${PROJECT_NAME}_s PUBLIC "$<$<CONFIG:RELEASE>:/O2;/sdl;/WX;/Oi;/Gy;/FC;/wd4996>")
 endif()
 
+#########################################################
+option(LIB3MF_TESTS "Switch whether the tests of Lib3MF should be build" ON)
+message("LIB3MF_TESTS ... " ${LIB3MF_TESTS})
+if(LIB3MF_TESTS)
+	include(CTest)
+	add_subdirectory(UnitTests)
+endif()
 
 if (false) 
 	#########################################################
@@ -161,17 +168,6 @@ if (false)
 	install(DIRECTORY Include/Model DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
 	install(DIRECTORY Include/Common DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
 	install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/Include/ DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
-
-	#########################################################
-	if(NOT DEFINED LIB3MF_TESTS)
-		set(LIB3MF_TESTS FALSE)
-	endif()
-	message("LIB3MF_TESTS ... " ${LIB3MF_TESTS})
-	if(LIB3MF_TESTS)
-		include(CTest)
-		add_subdirectory(UnitTests)
-	endif()
-
 
 	if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 		IF(${CMAKE_VERSION} VERSION_LESS 3.6.3)

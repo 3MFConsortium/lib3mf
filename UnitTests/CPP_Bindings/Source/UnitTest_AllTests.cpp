@@ -26,33 +26,17 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_COMVersion.h defines the current implementation version.
+UnitTest_AllTests.cpp: Defines Entry point for the UnitTests of internal classes
+of the library
 
 --*/
+#include "gtest/gtest.h"
 
-#ifndef __NMR_MODELCOMVERSION
-#define __NMR_MODELCOMVERSION
+int main(int argc, char **argv)
+{
+	testing::InitGoogleTest(&argc, argv);
+	RUN_ALL_TESTS();
+	system("pause");
+	return 1;
+}
 
-// version of the core-specification implemented by this library
-#define NMR_SPECVERSION_MAJOR 1
-#define NMR_SPECVERSION_MINOR 2
-#define NMR_SPECVERSION_MICRO 3
-
-// Interface version for extension API
-#define NMR_SPECVERSION_MATERIAL_MAJOR 1
-#define NMR_SPECVERSION_MATERIAL_MINOR 0
-#define NMR_SPECVERSION_MATERIAL_MICRO 0
-
-#define NMR_SPECVERSION_PRODUCTION_MAJOR 1
-#define NMR_SPECVERSION_PRODUCTION_MINOR 0
-#define NMR_SPECVERSION_PRODUCTION_MICRO 0
-
-#define NMR_SPECVERSION_BEAMLATTICE_MAJOR 1
-#define NMR_SPECVERSION_BEAMLATTICE_MINOR 0
-#define NMR_SPECVERSION_BEAMLATTICE_MICRO 0
-
-#define NMR_SPECVERSION_SLICE_MAJOR 1
-#define NMR_SPECVERSION_SLICE_MINOR 0
-#define NMR_SPECVERSION_SLICE_MICRO 0
-
-#endif // __NMR_MODELCOMVERSION
