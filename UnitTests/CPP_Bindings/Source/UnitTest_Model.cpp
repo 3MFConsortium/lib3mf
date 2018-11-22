@@ -26,16 +26,64 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-UnitTest_AllTests.cpp: Defines Entry point for the UnitTests of all exposed classes
+UnitTest_Model.cpp: Defines Unittests for the Model classes
 
 --*/
-#include "gtest/gtest.h"
 
-int main(int argc, char **argv)
+#include "UnitTest_Utilities.h"
+#include "lib3mf.hpp"
+
+namespace Lib3MF
 {
-	testing::InitGoogleTest(&argc, argv);
-	RUN_ALL_TESTS();
-	system("pause");
-	return 1;
-}
+	class Model : public ::testing::Test {
+	protected:
 
+		static void SetUpTestCase() {
+		}
+
+		static void TearDownTestCase() {
+		}
+
+		virtual void SetUp() {
+			m_model = CLib3MFWrapper::CreateModel();
+		}
+		virtual void TearDown() {
+			m_model.reset();
+		}
+	
+		static PLib3MFModel m_model;
+	};
+
+	PLib3MFModel Model::m_model;
+
+	TEST_F(Model, QueryReader)
+	{
+		auto reader3MF = Model::m_model->QueryReader("3mf");
+		auto readerSTL = Model::m_model->QueryReader("stl");
+	}
+
+	TEST_F(Model, QueryWriter)
+	{
+		auto writer3MF = Model::m_model->QueryWriter("3mf");
+		auto writerSTL = Model::m_model->QueryWriter("stl");
+	}
+
+
+	TEST_F(Model, Set_GetUnit)
+	{
+		Model::m_model->SetUnit(eModelUnitInch);
+		ASSERT_EQ(Model::m_model->GetUnit(), eModelUnitInch);
+		Model::m_model->SetUnit(eModelUnitMilliMeter);
+		ASSERT_EQ(Model::m_model->GetUnit(), eModelUnitMilliMeter);
+	}
+
+	TEST_F(Model, Set_GetLanguage)
+	{
+		std::string otherLanguage = "other";
+		Model::m_model->SetLanguage(otherLanguage);
+		ASSERT_FALSE(Model::m_model->GetLanguage().compare(otherLanguage));
+	}
+
+
+
+}

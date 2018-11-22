@@ -36,6 +36,7 @@ Abstract: This is the class declaration of CLib3MFModel
 
 
 // Include custom headers here.
+#include "Model/Classes/NMR_Model.h" 
 
 
 namespace Lib3MF {
@@ -48,9 +49,7 @@ namespace Lib3MF {
 class CLib3MFModel : public virtual ILib3MFModel {
 private:
 
-	/**
-	* Put private members here.
-	*/
+	NMR::PModel m_model;
 
 protected:
 
@@ -63,7 +62,9 @@ public:
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
+	CLib3MFModel();
 
+	NMR::CModel& model();
 
 	/**
 	* Public member functions to implement.

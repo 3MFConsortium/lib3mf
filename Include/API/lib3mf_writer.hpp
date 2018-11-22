@@ -36,7 +36,9 @@ Abstract: This is the class declaration of CLib3MFWriter
 
 
 // Include custom headers here.
-
+#include "Model/Writer/NMR_ModelWriter.h"
+#include "Model/Writer/NMR_ModelWriter_3MF_Native.h"
+#include "Model/Writer/NMR_ModelWriter_STL.h"
 
 namespace Lib3MF {
 
@@ -51,6 +53,7 @@ private:
 	/**
 	* Put private members here.
 	*/
+	NMR::PModelWriter m_pWriter;
 
 protected:
 
@@ -63,7 +66,7 @@ public:
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-
+	CLib3MFWriter(std::string sWriterClass, NMR::PModel model);
 
 	/**
 	* Public member functions to implement.

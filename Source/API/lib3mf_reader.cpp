@@ -32,7 +32,8 @@ Abstract: This is a stub class definition of CLib3MFReader
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
-
+#include "Common/Platform/NMR_Platform.h"
+#include "Common/Platform/NMR_ImportStream_Memory.h"
 
 using namespace Lib3MF;
 
@@ -40,43 +41,72 @@ using namespace Lib3MF;
  Class definition of CLib3MFReader 
 **************************************************************************************************************************/
 
+CLib3MFReader::CLib3MFReader(std::string sReaderClass, NMR::PModel model)
+{
+	m_pReader = nullptr;
+
+	// Create specified writer instance
+	if (sReaderClass.compare("3mf") == 0) {
+		m_pReader = std::make_shared<NMR::CModelReader_3MF_Native>(model);
+
+	}
+	else if (sReaderClass.compare("stl") == 0) {
+		m_pReader = std::make_shared<NMR::CModelReader_STL>(model);
+	}
+
+	if (!m_pReader)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_READERCLASSUNKNOWN);
+}
+
+NMR::CModelReader& CLib3MFReader::reader()
+{
+	return *m_pReader;
+}
+
 void CLib3MFReader::ReadFromFile (const std::string & sFilename)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	NMR::PImportStream pImportStream = NMR::fnCreateImportStreamInstance(sFilename.c_str());
+	reader().readStream(pImportStream);
 }
 
 void CLib3MFReader::ReadFromBuffer (const Lib3MF_uint32 nBufferBufferSize, const Lib3MF_uint8 * pBufferBuffer)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	NMR::PImportStream pImportStream = std::make_shared<NMR::CImportStream_Memory>(pBufferBuffer, nBufferBufferSize);
+	reader().readStream(pImportStream);
 }
 
 void CLib3MFReader::AddRelationToRead (const std::string & sRelationShipType)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	reader().addRelationToRead(sRelationShipType);
 }
 
 void CLib3MFReader::RemoveRelationToRead (const std::string & sRelationShipType)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	reader().removeRelationToRead(sRelationShipType);
 }
 
 void CLib3MFReader::SetStrictModeActive (const bool bStrictModeActive)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	if (bStrictModeActive)
+		reader().getWarnings()->setCriticalWarningLevel(NMR::mrwInvalidOptionalValue);
+	else
+		reader().getWarnings()->setCriticalWarningLevel(NMR::mrwFatal);
 }
 
 bool CLib3MFReader::GetStrictModeActive ()
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	return reader().getWarnings()->getCriticalWarningLevel() == NMR::mrwInvalidOptionalValue;
 }
 
 std::string CLib3MFReader::GetWarning (const Lib3MF_uint32 nIndex, Lib3MF_uint32 & nErrorCode)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	auto warning = reader().getWarnings()->getWarning(nIndex);
+	nErrorCode = warning->getErrorCode();
+	return warning->getMessage();
 }
 
 Lib3MF_uint32 CLib3MFReader::GetWarningCount ()
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	return reader().getWarnings()->getWarningCount();
 }
 

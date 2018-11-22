@@ -36,15 +36,15 @@ UnitTest_Utilities.h: Utilities for UnitTests
 #include "gtest/gtest.h"
 
 #ifdef LTESTFILESPATH
-const std::wstring sTestFilesPath = LTESTFILESPATH;
+const std::string sTestFilesPath = TESTFILESPATH;
 #else
-const std::wstring sTestFilesPath = L"TestFiles";
+const std::string sTestFilesPath = "TestFiles";
 #endif
 
 #ifdef LOUTFILESPATH
-const std::wstring sOutFilesPath = LOUTFILESPATH;
+const std::string sOutFilesPath = OUTFILESPATH;
 #else
-const std::wstring sOutFilesPath = L"..\TestOutput";
+const std::string sOutFilesPath = "..\TestOutput";
 #endif
 
 #endif //__NMR_UNITTEST_UTILITIES

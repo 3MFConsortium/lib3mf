@@ -40,6 +40,25 @@ using namespace Lib3MF;
  Class definition of CLib3MFWriter 
 **************************************************************************************************************************/
 
+CLib3MFWriter::CLib3MFWriter(std::string sWriterClass, NMR::PModel model)
+{
+	m_pWriter = nullptr;
+
+	// Create specified writer instance
+	if (sWriterClass.compare("3mf") == 0) {
+		m_pWriter = std::make_shared<NMR::CModelWriter_3MF_Native>(model);
+	}
+	else if (sWriterClass.compare("stl") == 0) {
+		m_pWriter = std::make_shared<NMR::CModelWriter_STL>(model);
+	}
+
+	if (!m_pWriter)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_WRITERCLASSUNKNOWN);
+
+
+}
+
+
 void CLib3MFWriter::WriteToFile (const std::string & sFilename)
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);

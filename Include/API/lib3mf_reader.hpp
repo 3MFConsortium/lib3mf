@@ -36,7 +36,9 @@ Abstract: This is the class declaration of CLib3MFReader
 
 
 // Include custom headers here.
-
+#include "Model/Reader/NMR_ModelReader.h"
+#include "Model/Reader/NMR_ModelReader_3MF_Native.h"
+#include "Model/Reader/NMR_ModelReader_STL.h"
 
 namespace Lib3MF {
 
@@ -51,20 +53,22 @@ private:
 	/**
 	* Put private members here.
 	*/
+	NMR::PModelReader m_pReader;
 
 protected:
 
 	/**
 	* Put protected members here.
 	*/
-
+	
 public:
 
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
+	CLib3MFReader(std::string sReaderClass, NMR::PModel model);
 
-
+	NMR::CModelReader& reader();
 	/**
 	* Public member functions to implement.
 	*/

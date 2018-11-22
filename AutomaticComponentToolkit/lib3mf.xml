@@ -51,6 +51,10 @@
 		<error name="GENERICEXCEPTION" code="5" description="a generic exception occurred" />
 		<error name="COULDNOTLOADLIBRARY" code="6" description="the library could not be loaded" />
 		<error name="COULDNOTFINDLIBRARYEXPORT" code="7" description="a required exported symbol could not be found in the library" />
+		
+		<error name="READERCLASSUNKNOWN" code="100" description="the queried reader class is unknown" />
+		<error name="WRITERCLASSUNKNOWN" code="101" description="the queried reader class is unknown" />
+		
 	</errors>
 	
 	<enum name="ModelUnit">
@@ -216,6 +220,7 @@
 		</method>
 	</class>
 
+	
 
 	<class name="Resource">
 		<method name="GetResourceID" description="Retrieves the resource id of the resource instance.">

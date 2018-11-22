@@ -26,7 +26,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-UnitTest_Geometry.cpp: Defines Unittests for basic linear algebraic classes and
+UnitTest_Wrapper.cpp: Defines Unittests for the Wrapper classes
 operations
 
 --*/
@@ -34,28 +34,9 @@ operations
 #include "UnitTest_Utilities.h"
 #include "lib3mf.hpp"
 
-#include <iostream>
-
 
 namespace Lib3MF
 {
-
-	class ParsingEventsTest : public ::testing::Test {
-	protected:
-
-		static int *x;
-
-		static void SetUpTestCase() {
-			x = new int[30];
-		}
-
-		static void TearDownTestCase() {
-			delete[] x;
-		}
-
-		virtual void SetUp() {}
-		virtual void TearDown() {}
-	};
 
 	TEST(Wrapper, GetLibraryVersion)
 	{

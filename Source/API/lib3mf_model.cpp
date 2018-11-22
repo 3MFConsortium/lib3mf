@@ -31,6 +31,8 @@ Abstract: This is a stub class definition of CLib3MFModel
 #include "lib3mf_model.hpp"
 #include "lib3mf_interfaceexception.hpp"
 
+#include "lib3mf_reader.hpp"
+#include "lib3mf_writer.hpp"
 // Include custom headers here.
 
 
@@ -40,34 +42,45 @@ using namespace Lib3MF;
  Class definition of CLib3MFModel 
 **************************************************************************************************************************/
 
+
+CLib3MFModel::CLib3MFModel()
+{
+	m_model = std::make_shared<NMR::CModel>();
+}
+
+NMR::CModel& CLib3MFModel::model()
+{
+	return *m_model;
+}
+
 void CLib3MFModel::SetUnit (const eLib3MFModelUnit eUnit)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	model().setUnit(NMR::eModelUnit(eUnit));
 }
 
 eLib3MFModelUnit CLib3MFModel::GetUnit ()
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	return eLib3MFModelUnit(model().getUnit());
 }
 
 std::string CLib3MFModel::GetLanguage ()
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	return model().getLanguage();
 }
 
 void CLib3MFModel::SetLanguage (const std::string & sLanguage)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	model().setLanguage(sLanguage);
 }
 
 ILib3MFWriter * CLib3MFModel::QueryWriter (const std::string & sWriterClass)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	return new CLib3MFWriter(sWriterClass, m_model);
 }
 
 ILib3MFReader * CLib3MFModel::QueryReader (const std::string & sReaderClass)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	return new CLib3MFReader(sReaderClass, m_model);
 }
 
 ILib3MFResource * CLib3MFModel::GetResourceByID (const Lib3MF_uint32 nResourceID)
