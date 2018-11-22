@@ -85,5 +85,10 @@ namespace Lib3MF
 	}
 
 
+	TEST_F(Model, GetBuildItems)
+	{
+		auto iterator = Model::m_model->GetBuildItems();
+	}
+
 
 }

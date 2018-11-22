@@ -36,7 +36,7 @@ Abstract: This is the class declaration of CLib3MFBuildItem
 
 
 // Include custom headers here.
-
+#include "Model/Classes/NMR_ModelBuildItem.h"
 
 namespace Lib3MF {
 
@@ -51,6 +51,7 @@ private:
 	/**
 	* Put private members here.
 	*/
+	NMR::PModelBuildItem m_pBuildItem;
 
 protected:
 
@@ -63,7 +64,7 @@ public:
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-
+	CLib3MFBuildItem(NMR::PModelBuildItem pBuildItem);
 
 	/**
 	* Public member functions to implement.

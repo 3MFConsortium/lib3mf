@@ -33,6 +33,8 @@ Abstract: This is a stub class definition of CLib3MFModel
 
 #include "lib3mf_reader.hpp"
 #include "lib3mf_writer.hpp"
+
+#include "lib3mf_builditemiterator.hpp"
 // Include custom headers here.
 
 
@@ -120,7 +122,14 @@ void CLib3MFModel::SetBuildUUID (const std::string & sUUID)
 
 ILib3MFBuildItemIterator * CLib3MFModel::GetBuildItems ()
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	auto pResult = std::make_unique<CLib3MFBuildItemIterator>();
+	Lib3MF_uint32 nBuildItemCount = m_model->getBuildItemCount();
+	Lib3MF_uint32 nIdx;
+
+	for (nIdx = 0; nIdx < nBuildItemCount; nIdx++)
+		pResult->addBuildItem(m_model->getBuildItem(nIdx));
+
+	return pResult.release();
 }
 
 ILib3MFResourceIterator * CLib3MFModel::GetResources ()

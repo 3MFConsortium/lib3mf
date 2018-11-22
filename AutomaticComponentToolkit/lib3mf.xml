@@ -53,7 +53,9 @@
 		<error name="COULDNOTFINDLIBRARYEXPORT" code="7" description="a required exported symbol could not be found in the library" />
 		
 		<error name="READERCLASSUNKNOWN" code="100" description="the queried reader class is unknown" />
-		<error name="WRITERCLASSUNKNOWN" code="101" description="the queried reader class is unknown" />
+		<error name="WRITERCLASSUNKNOWN" code="101" description="the queried writer class is unknown" />
+		
+		<error name="ITERATORINVALIDINDEX" code="102" description="the current index of an iterator is invalid" />
 		
 	</errors>
 	

@@ -40,6 +40,12 @@ using namespace Lib3MF;
  Class definition of CLib3MFBuildItem 
 **************************************************************************************************************************/
 
+
+CLib3MFBuildItem::CLib3MFBuildItem(NMR::PModelBuildItem pBuildItem)
+{
+	m_pBuildItem = pBuildItem;
+}
+
 ILib3MFResource * CLib3MFBuildItem::GetObjectResource ()
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);

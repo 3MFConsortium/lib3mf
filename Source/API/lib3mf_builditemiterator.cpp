@@ -31,6 +31,7 @@ Abstract: This is a stub class definition of CLib3MFBuildItemIterator
 #include "lib3mf_builditemiterator.hpp"
 #include "lib3mf_interfaceexception.hpp"
 
+#include "lib3mf_builditem.hpp"
 // Include custom headers here.
 
 
@@ -40,23 +41,70 @@ using namespace Lib3MF;
  Class definition of CLib3MFBuildItemIterator 
 **************************************************************************************************************************/
 
+CLib3MFBuildItemIterator::CLib3MFBuildItemIterator()
+{
+	m_nCurrentIndex = -1;
+}
+
+
+void CLib3MFBuildItemIterator::addBuildItem(NMR::PModelBuildItem pBuildItem)
+{
+	m_pBuildItems.push_back(pBuildItem);
+}
+
 bool CLib3MFBuildItemIterator::MoveNext ()
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	// Get Resource Count
+	Lib3MF_int32 nBuildItemCount = (Lib3MF_int32)m_pBuildItems.size();
+	m_nCurrentIndex++;
+
+	// Check new Index
+	if (m_nCurrentIndex >= nBuildItemCount) {
+		m_nCurrentIndex = nBuildItemCount;
+		return false;
+	}
+	else {
+		return true;
+	}
 }
 
 bool CLib3MFBuildItemIterator::MovePrevious ()
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	// Get Resource Count
+	m_nCurrentIndex--;
+
+	// Check new Index
+	if (m_nCurrentIndex <= -1) {
+		m_nCurrentIndex = -1;
+		return false;
+	}
+	else {
+		return true;
+	}
 }
 
 ILib3MFBuildItem * CLib3MFBuildItemIterator::GetCurrent ()
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	// Get Resource Count
+	Lib3MF_int32 nBuildItemCount = (Lib3MF_int32)m_pBuildItems.size();
+	if ((m_nCurrentIndex < 0) || (m_nCurrentIndex >= nBuildItemCount))
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_ITERATORINVALIDINDEX);
+
+	// Create specific API class
+	NMR::PModelBuildItem pBuildItem = m_pBuildItems[m_nCurrentIndex];
+	
+	auto pACTBuildItem = std::make_unique<CLib3MFBuildItem>(pBuildItem);
+	
+	return pACTBuildItem.release();
 }
 
 ILib3MFBuildItemIterator * CLib3MFBuildItemIterator::Clone ()
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	auto pBuildItems = std::make_unique<CLib3MFBuildItemIterator>();
+
+	for (auto iIterator = m_pBuildItems.begin(); iIterator != m_pBuildItems.end(); iIterator++)
+		pBuildItems->addBuildItem(*iIterator);
+
+	return pBuildItems.release();
 }
 
