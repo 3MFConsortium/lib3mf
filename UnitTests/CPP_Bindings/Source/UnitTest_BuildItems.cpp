@@ -71,6 +71,27 @@ namespace Lib3MF
 		ASSERT_EQ(nBuildItems, 2);
 	}
 
+	TEST_F(BuildItems, TestTransformations)
+	{
+		auto buildItems = BuildItems::model->GetBuildItems();
+		ASSERT_TRUE(buildItems->MoveNext());
+		auto buildItem = buildItems->GetCurrent();
+			
+		sLib3MFTransform transformation;
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 3; j++)
+				transformation.m_Fields[i][j] = Lib3MF_single(i - j);
+		}
+
+		buildItem->SetObjectTransform(transformation);
+		ASSERT_TRUE(buildItem->HasObjectTransform());
+		auto newTransformation = buildItem->GetObjectTransform();
+
+		for (int i = 0; i < 4; i++)
+			for (int j = 0; j < 3; j++)
+				ASSERT_EQ(transformation.m_Fields[i][j], newTransformation.m_Fields[i][j]);
+	}
+
 	TEST_F(BuildItems, TestItem)
 	{
 		auto buildItems = BuildItems::model->GetBuildItems();
@@ -78,18 +99,30 @@ namespace Lib3MF
 		{
 			auto buildItem = buildItems->GetCurrent();
 
-			auto meshObject = buildItem->GetObjectResource();
-			ASSERT_FALSE(meshObject->IsMeshObject());
-			ASSERT_TRUE(meshObject->IsComponentsObject());
+			auto componentsObject = buildItem->GetObjectResource();
+			ASSERT_FALSE(componentsObject->IsMeshObject());
+			ASSERT_TRUE(componentsObject->IsComponentsObject());
+
+			ASSERT_FALSE(buildItem->HasObjectTransform());
+
+			std::string partNumber("TestComponent");
+			buildItem->SetPartNumber(partNumber);
+			auto newPartNumber = buildItem->GetPartNumber();
+			ASSERT_TRUE(partNumber == newPartNumber);
 		}
 
 		ASSERT_TRUE(buildItems->MoveNext());
 		{
 			auto buildItem = buildItems->GetCurrent();
 
-			auto componentsObject = buildItem->GetObjectResource();
-			ASSERT_TRUE(componentsObject->IsMeshObject());
-			ASSERT_FALSE(componentsObject->IsComponentsObject());
+			auto meshObject = buildItem->GetObjectResource();
+			ASSERT_TRUE(meshObject->IsMeshObject());
+			ASSERT_FALSE(meshObject->IsComponentsObject());
+
+			ASSERT_TRUE(buildItem->HasObjectTransform());
+
+			auto partNumber = buildItem->GetPartNumber();
+			ASSERT_TRUE(partNumber == "spare wheel");
 		}
 		
 		ASSERT_FALSE(buildItems->MoveNext());

@@ -80,27 +80,49 @@ Lib3MF_uint32 CLib3MFBuildItem::GetObjectResourceID ()
 
 bool CLib3MFBuildItem::HasObjectTransform ()
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	return buildItem().hasTransform();
+}
+
+NMR::NMATRIX3 TransformToMatrix(const sLib3MFTransform Transform)
+{
+	NMR::NMATRIX3 matrix;
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 3; j++)
+			matrix.m_fields[i][j] = Transform.m_Fields[i][j];
+		matrix.m_fields[i][3] = 0 + 1.0f*(i == 3);
+	}
+	return matrix;
+}
+
+sLib3MFTransform MatrixToTransform(const NMR::NMATRIX3 matrix)
+{
+	sLib3MFTransform transform;
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 3; j++)
+			transform.m_Fields[i][j] = matrix.m_fields[i][j];
+	}
+	return transform;
 }
 
 sLib3MFTransform CLib3MFBuildItem::GetObjectTransform ()
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	const NMR::NMATRIX3 matrix = buildItem().getTransform();
+	return MatrixToTransform(matrix);
 }
 
 void CLib3MFBuildItem::SetObjectTransform (const sLib3MFTransform Transform)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	buildItem().setTransform(TransformToMatrix(Transform));
 }
 
 std::string CLib3MFBuildItem::GetPartNumber ()
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	return buildItem().getPartNumber();
 }
 
 void CLib3MFBuildItem::SetPartNumber (const std::string & sSetPartnumber)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	buildItem().setPartNumber(sSetPartnumber);
 }
 
 bool CLib3MFBuildItem::HasMetaDataGroup ()
