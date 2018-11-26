@@ -32,7 +32,7 @@ Abstract: This is a stub class definition of CLib3MFBuildItem
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
-
+#include "lib3mf_object.hpp"
 
 using namespace Lib3MF;
 
@@ -40,15 +40,27 @@ using namespace Lib3MF;
  Class definition of CLib3MFBuildItem 
 **************************************************************************************************************************/
 
+NMR::CModelBuildItem& CLib3MFBuildItem::buildItem()
+{
+	return *m_pBuildItem.get();
+}
 
 CLib3MFBuildItem::CLib3MFBuildItem(NMR::PModelBuildItem pBuildItem)
 {
 	m_pBuildItem = pBuildItem;
 }
 
-ILib3MFResource * CLib3MFBuildItem::GetObjectResource ()
+ILib3MFObject * CLib3MFBuildItem::GetObjectResource ()
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	NMR::PModelResource pResource = buildItem().getModel()->findResource(buildItem().getObjectID());
+	if (!pResource.get())
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDMODELRESOURCE);
+	
+	std::unique_ptr<ILib3MFObject> pResourceInterface(CLib3MFObject::fnCreateObjectFromModelResource(pResource, true));
+	if (pResourceInterface == nullptr)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_RESOURCENOTFOUND);
+
+	return pResourceInterface.release();
 }
 
 std::string CLib3MFBuildItem::GetUUID (bool & bHasUUID)

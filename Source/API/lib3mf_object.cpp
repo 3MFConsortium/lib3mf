@@ -31,14 +31,45 @@ Abstract: This is a stub class definition of CLib3MFObject
 #include "lib3mf_object.hpp"
 #include "lib3mf_interfaceexception.hpp"
 
-// Include custom headers here.
+#include "lib3mf_meshobject.hpp"
+#include "lib3mf_componentsobject.hpp"
 
+// Include custom headers here.
+#include "Model/Classes/NMR_ModelMeshObject.h" 
+#include "Model/Classes/NMR_ModelComponentsObject.h" 
 
 using namespace Lib3MF;
 
 /*************************************************************************************************************************
  Class definition of CLib3MFObject 
 **************************************************************************************************************************/
+
+ILib3MFObject* CLib3MFObject::fnCreateObjectFromModelResource(NMR::PModelResource pResource, bool bFailIfUnkownClass) {
+	
+	if (!pResource.get())
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+
+	NMR::CModelMeshObject * pMeshObject = dynamic_cast<NMR::CModelMeshObject *> (pResource.get());
+	if (pMeshObject) {
+		return new CLib3MFMeshObject(pResource);
+	}
+
+	NMR::CModelComponentsObject * pComponentsResource = dynamic_cast<NMR::CModelComponentsObject *> (pResource.get());
+	if (pComponentsResource) {
+		return new CLib3MFComponentsObject(pResource);
+	}
+
+	if (bFailIfUnkownClass)
+		throw ELib3MFInterfaceException(NMR_ERROR_UNKNOWNMODELRESOURCE);
+
+	return nullptr;
+}
+
+CLib3MFObject::CLib3MFObject(NMR::PModelResource pResource)
+{
+	m_pResource = pResource;
+}
+
 
 eLib3MFObjectType CLib3MFObject::GetType ()
 {

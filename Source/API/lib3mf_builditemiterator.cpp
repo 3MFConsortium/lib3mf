@@ -101,7 +101,7 @@ ILib3MFBuildItem * CLib3MFBuildItemIterator::GetCurrent ()
 ILib3MFBuildItemIterator * CLib3MFBuildItemIterator::Clone ()
 {
 	auto pBuildItems = std::make_unique<CLib3MFBuildItemIterator>();
-
+	
 	for (auto iIterator = m_pBuildItems.begin(); iIterator != m_pBuildItems.end(); iIterator++)
 		pBuildItems->addBuildItem(*iIterator);
 

@@ -57,6 +57,9 @@
 		
 		<error name="ITERATORINVALIDINDEX" code="102" description="the current index of an iterator is invalid" />
 		
+		<error name="INVALIDMODELRESOURCE" code="103" description="no Model Resource has been given" />
+		<error name="RESOURCENOTFOUND" code="104" description="Resource not found" />
+		
 	</errors>
 	
 	<enum name="ModelUnit">
@@ -815,7 +818,7 @@
 		
 	</class>
 	
-	<class name="ComponentsObject">
+	<class name="ComponentsObject" parent="Object">
 
 		<method name="AddComponent" description="Adds a new component to a component object.">
 			<param name="ObjectResource" type="handle" class="Object" pass="in" description="object to add as component. May not lead to circular references!" />
@@ -1031,7 +1034,7 @@
 	<class name="BuildItem">
 	
 		<method name="GetObjectResource" description="Retrieves the object resource associated to a build item">
-			<param name="ObjectResource" type="handle" class="Resource" pass="return" description="returns the associated resource instance"/>
+			<param name="ObjectResource" type="handle" class="Object" pass="return" description="returns the associated resource instance"/>
 		</method>
 		
 		<method name="GetUUID" dllsuffix="utf8" description="returns, whether a build item has a UUID and, if true, the build item's UUID">

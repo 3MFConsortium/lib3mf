@@ -58,6 +58,7 @@ protected:
 	/**
 	* Put protected members here.
 	*/
+	NMR::CModelBuildItem& buildItem();
 
 public:
 
@@ -70,7 +71,7 @@ public:
 	* Public member functions to implement.
 	*/
 
-	ILib3MFResource * GetObjectResource ();
+	ILib3MFObject * GetObjectResource ();
 
 	std::string GetUUID (bool & bHasUUID);
 

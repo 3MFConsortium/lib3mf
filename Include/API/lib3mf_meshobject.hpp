@@ -67,7 +67,7 @@ public:
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-
+	CLib3MFMeshObject(NMR::PModelResource pResource);
 
 	/**
 	* Public member functions to implement.
@@ -87,9 +87,9 @@ public:
 
 	Lib3MF_uint32 AddTriangle (const sLib3MFTriangle Indices);
 
-	void GetTriangleIndices (Lib3MF_uint32 nIndicesBufferSize, Lib3MF_uint32* pIndicesNeededCount, sLib3MFTriangle * pIndicesBuffer);
+	void GetTriangleIndices (Lib3MF_uint64 nIndicesBufferSize, Lib3MF_uint64* pIndicesNeededCount, sLib3MFTriangle * pIndicesBuffer);
 
-	void SetTriangleIndices (const Lib3MF_uint32 nIndicesBufferSize, const sLib3MFTriangle * pIndicesBuffer);
+	void SetTriangleIndices (const Lib3MF_uint64 nIndicesBufferSize, const sLib3MFTriangle * pIndicesBuffer);
 
 	Lib3MF_double GetBeamLattice_MinLength ();
 
@@ -124,6 +124,10 @@ public:
 	ILib3MFBeamSet * GetBeamSet (const Lib3MF_uint32 nIndex);
 
 	bool IsManifoldAndOriented ();
+
+	bool IsMeshObject();
+
+	bool IsComponentsObject();
 
 };
 

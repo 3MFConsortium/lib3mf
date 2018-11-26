@@ -34,6 +34,10 @@ Abstract: This is the class declaration of CLib3MFComponentsObject
 
 #include "lib3mf_interfaces.hpp"
 
+// Parent classes
+#include "lib3mf_object.hpp"
+#pragma warning( push)
+#pragma warning( disable : 4250)
 
 // Include custom headers here.
 
@@ -45,7 +49,7 @@ namespace Lib3MF {
  Class declaration of CLib3MFComponentsObject 
 **************************************************************************************************************************/
 
-class CLib3MFComponentsObject : public virtual ILib3MFComponentsObject {
+class CLib3MFComponentsObject : public virtual ILib3MFComponentsObject, public virtual CLib3MFObject {
 private:
 
 	/**
@@ -63,7 +67,7 @@ public:
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-
+	CLib3MFComponentsObject(NMR::PModelResource pResource);
 
 	/**
 	* Public member functions to implement.
@@ -74,6 +78,10 @@ public:
 	ILib3MFComponentsObject * GetComponent (const Lib3MF_uint32 nIndex);
 
 	Lib3MF_uint32 GetComponentCount ();
+
+	bool IsMeshObject();
+
+	bool IsComponentsObject();
 
 };
 

@@ -40,6 +40,11 @@ using namespace Lib3MF;
  Class definition of CLib3MFMeshObject 
 **************************************************************************************************************************/
 
+CLib3MFMeshObject::CLib3MFMeshObject(NMR::PModelResource pResource)
+	: CLib3MFObject(pResource)
+{
+}
+
 Lib3MF_uint32 CLib3MFMeshObject::GetVertexCount ()
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
@@ -75,12 +80,12 @@ Lib3MF_uint32 CLib3MFMeshObject::AddTriangle (const sLib3MFTriangle Indices)
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CLib3MFMeshObject::GetTriangleIndices (Lib3MF_uint32 nIndicesBufferSize, Lib3MF_uint32* pIndicesNeededCount, sLib3MFTriangle * pIndicesBuffer)
+void CLib3MFMeshObject::GetTriangleIndices (Lib3MF_uint64 nIndicesBufferSize, Lib3MF_uint64* pIndicesNeededCount, sLib3MFTriangle * pIndicesBuffer)
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CLib3MFMeshObject::SetTriangleIndices (const Lib3MF_uint32 nIndicesBufferSize, const sLib3MFTriangle * pIndicesBuffer)
+void CLib3MFMeshObject::SetTriangleIndices (const Lib3MF_uint64 nIndicesBufferSize, const sLib3MFTriangle * pIndicesBuffer)
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
@@ -168,5 +173,15 @@ ILib3MFBeamSet * CLib3MFMeshObject::GetBeamSet (const Lib3MF_uint32 nIndex)
 bool CLib3MFMeshObject::IsManifoldAndOriented ()
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+}
+
+bool CLib3MFMeshObject::IsMeshObject()
+{
+	return true;
+}
+
+bool CLib3MFMeshObject::IsComponentsObject()
+{
+	return false;
 }
 

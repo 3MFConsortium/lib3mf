@@ -40,6 +40,11 @@ using namespace Lib3MF;
  Class definition of CLib3MFComponentsObject 
 **************************************************************************************************************************/
 
+CLib3MFComponentsObject::CLib3MFComponentsObject(NMR::PModelResource pResource)
+	: CLib3MFObject(pResource)
+{
+}
+
 ILib3MFComponentsObject * CLib3MFComponentsObject::AddComponent (ILib3MFObject* pObjectResource, const sLib3MFTransform Transform)
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
@@ -53,5 +58,15 @@ ILib3MFComponentsObject * CLib3MFComponentsObject::GetComponent (const Lib3MF_ui
 Lib3MF_uint32 CLib3MFComponentsObject::GetComponentCount ()
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+}
+
+bool CLib3MFComponentsObject::IsMeshObject()
+{
+	return false;
+}
+
+bool CLib3MFComponentsObject::IsComponentsObject()
+{
+	return true;
 }
 

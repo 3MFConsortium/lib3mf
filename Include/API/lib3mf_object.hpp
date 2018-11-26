@@ -40,7 +40,7 @@ Abstract: This is the class declaration of CLib3MFObject
 #pragma warning( disable : 4250)
 
 // Include custom headers here.
-
+#include "Model/Classes/NMR_ModelResource.h" 
 
 namespace Lib3MF {
 
@@ -55,6 +55,7 @@ private:
 	/**
 	* Put private members here.
 	*/
+	NMR::PModelResource m_pResource;
 
 protected:
 
@@ -67,7 +68,7 @@ public:
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-
+	CLib3MFObject(NMR::PModelResource pResource);
 
 	/**
 	* Public member functions to implement.
@@ -85,9 +86,9 @@ public:
 
 	void SetPartNumber (const std::string & sPartNumber);
 
-	bool IsMeshObject ();
+	virtual bool IsMeshObject ();
 
-	bool IsComponentsObject ();
+	virtual bool IsComponentsObject ();
 
 	bool IsValid ();
 
@@ -99,6 +100,7 @@ public:
 
 	void RemoveMetaDataGroup ();
 
+	static ILib3MFObject* fnCreateObjectFromModelResource(NMR::PModelResource pResource, bool bFailIfUnkownClass);
 };
 
 }
