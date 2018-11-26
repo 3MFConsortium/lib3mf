@@ -69,6 +69,11 @@ namespace NMR
 	{
 		set(pString);
 	}
+
+	CUUID::CUUID(const std::string &string)
+	{
+		set(string.c_str());
+	}
 	
 	std::string CUUID::toString()
 	{

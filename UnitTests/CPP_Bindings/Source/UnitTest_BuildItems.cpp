@@ -71,6 +71,34 @@ namespace Lib3MF
 		ASSERT_EQ(nBuildItems, 2);
 	}
 
+	TEST_F(BuildItems, TestUUID)
+	{
+		auto buildItems = BuildItems::model->GetBuildItems();
+		ASSERT_TRUE(buildItems->MoveNext());
+		auto buildItem1 = buildItems->GetCurrent();
+
+		bool bHasUUID = false;
+		auto uuidString = buildItem1->GetUUID(bHasUUID);
+		ASSERT_TRUE(bHasUUID);
+		//try {
+		//	buildItem1->SetUUID(uuidString);
+		//	ASSERT_TRUE(true) << "Self assignment of UUIDs should work";
+		//}
+		//catch (ELib3MFException) {
+		//	ASSERT_TRUE(false);
+		//}
+
+		ASSERT_TRUE(buildItems->MoveNext());
+		auto buildItem2 = buildItems->GetCurrent();
+		try {
+			buildItem2->SetUUID(uuidString);
+			ASSERT_TRUE(false) << "Duplicate UUIDs must fail";
+		}
+		catch (ELib3MFException) {
+			ASSERT_TRUE(true);
+		}
+	}
+
 	TEST_F(BuildItems, TestTransformations)
 	{
 		auto buildItems = BuildItems::model->GetBuildItems();

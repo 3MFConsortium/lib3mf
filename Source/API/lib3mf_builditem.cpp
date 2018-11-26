@@ -65,12 +65,16 @@ ILib3MFObject * CLib3MFBuildItem::GetObjectResource ()
 
 std::string CLib3MFBuildItem::GetUUID (bool & bHasUUID)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	bHasUUID = buildItem().uuid() != nullptr;
+	if (bHasUUID)
+		return buildItem().uuid()->toString();
+	return "";
 }
 
 void CLib3MFBuildItem::SetUUID (const std::string & sUUID)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	NMR::PUUID pUUID = std::make_shared<NMR::CUUID>(sUUID);
+	buildItem().setUUID(pUUID);
 }
 
 Lib3MF_uint32 CLib3MFBuildItem::GetObjectResourceID ()
