@@ -368,7 +368,45 @@ namespace NMR {
 
 			// Safely call StringToBuffer
 			nfUint32 nNeededChars = 0;
-			fnWStringToBufferSafe(pWarning->getMessage(), pwszBuffer, cbBufferSize, &nNeededChars);
+			fnWStringToBufferSafe(fnUTF8toUTF16(pWarning->getMessage()), pwszBuffer, cbBufferSize, &nNeededChars);
+
+			// Return length if needed
+			if (pcbNeededChars != nullptr)
+				*pcbNeededChars = nNeededChars;
+			if (pErrorCode == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+			*pErrorCode = pWarning->getErrorCode();
+
+			return handleSuccess();
+		}
+		catch (CNMRException & Exception) {
+			return handleNMRException(&Exception);
+		}
+		catch (...) {
+			return handleGenericException();
+		}
+	}
+
+	LIB3MFMETHODIMP CCOMModelReader::GetWarningUTF8(_In_ DWORD nIndex, _Out_ DWORD * pErrorCode, _Out_opt_ LPSTR pszBuffer, _In_ ULONG cbBufferSize, _Out_opt_ ULONG * pcbNeededChars)
+	{
+
+		try {
+			if (m_pModelReader.get() == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDREADEROBJECT);
+
+			PModelReaderWarnings pWarnings = m_pModelReader->getWarnings();
+			if (pWarnings.get() == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+			PModelReaderWarning pWarning = pWarnings->getWarning(nIndex);
+			__NMRASSERT(pWarning.get() != nullptr);
+
+			if (cbBufferSize > MODEL_MAXSTRINGBUFFERLENGTH)
+				throw CNMRException(NMR_ERROR_INVALIDBUFFERSIZE);
+
+			// Safely call StringToBuffer
+			nfUint32 nNeededChars = 0;
+			fnStringToBufferSafe(pWarning->getMessage(), pszBuffer, cbBufferSize, &nNeededChars);
 
 			// Return length if needed
 			if (pcbNeededChars != nullptr)

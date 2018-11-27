@@ -83,8 +83,8 @@ namespace NMR {
 		case NMR_ERROR_INVALIDHEXVALUE: return "Invalid hex value";
 		case NMR_ERROR_RANGEERROR: return "Range error";
 		case NMR_ERROR_INVALIDPOINTER: return "Passed invalid null pointer";
-        case NMR_ERROR_XMLELEMENTNOTOPEN: return "XML Element not open";
-        case NMR_ERROR_INVALIDXMLNAME: return "Invalid XML Name";
+		case NMR_ERROR_XMLELEMENTNOTOPEN: return "XML Element not open";
+		case NMR_ERROR_INVALIDXMLNAME: return "Invalid XML Name";
 		case NMR_ERROR_INVALIDINTEGERTRIPLET: return "Invalid Integer Triplet String";
 		case NMR_ERROR_INVALIDZIPENTRYKEY: return "Invalid ZIP Entry key";
 		case NMR_ERRORINVALIDZIPNAME: return "Invalid ZIP Name";
@@ -120,7 +120,7 @@ namespace NMR {
 		case NMR_ERROR_DUPLICATE_PRINTTICKET: return "Document contains more than one printticket.";
 		case NMR_ERROR_OPC_DUPLICATE_RELATIONSHIP_ID: return "Document contains a duplicate relationship ID.";
 		case NMR_ERROR_INVALIDRELATIONSHIPTYPEFORTEXTURE: return "A texture must use a OPC part with relationshiptype 3D Texture.";
-		case NMR_ERROR_IMPORTSTREAMISEMPTY: return "An attachment to be read does coes not have any content.";
+		case NMR_ERROR_IMPORTSTREAMISEMPTY: return "An attachment to be read does not have any content.";
 		case NMR_ERROR_UUIDGENERATIONFAILED: return "Generation of a UUID failed.";
 		case NMR_ERROR_ZIPENTRYNON64_TOOLARGE: return "A ZIP Entry is too large for non zip64 zip-file";
 		case NMR_ERROR_ATTACHMENTTOOLARGE: return "An individual custom attachment is too large.";
@@ -368,6 +368,8 @@ namespace NMR {
 		case NMR_ERROR_SLICE_ONEVERTEX: return "Slice only contains one vertex.";
 		case NMR_ERROR_SLICE_ONEPOINT: return "Slice contains only one point within a polygon";
 		case NMR_ERROR_INVALIDTILESTYLE: return "Invalid Tile Style";
+		case NMR_ERROR_INVALIDFILTER: return "Invalid Filter";
+			
 
 		// XML Parser Error Constants(0x9XXX)
 		case NMR_ERROR_XMLPARSER_INVALIDATTRIBVALUE: return "Invalid XML attribute value";

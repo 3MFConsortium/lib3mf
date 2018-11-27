@@ -8,8 +8,8 @@ project (lib3MF)
 
 # Define Version
 set(LIB3MF_VERSION_MAJOR 1)				# increase on every backward-compatibility breaking change of the API
-set(LIB3MF_VERSION_MINOR 4)				# increase on every backward compatible change of the API
-set(LIB3MF_VERSION_MICRO 4)				# increase on on every change that does not alter the API
+set(LIB3MF_VERSION_MINOR 8)				# increase on every backward compatible change of the API
+set(LIB3MF_VERSION_MICRO 0)				# increase on on every change that does not alter the API
 
 set(CMAKE_INSTALL_BINDIR bin CACHE PATH "directory for installing binary files")
 set(CMAKE_INSTALL_LIBDIR lib CACHE PATH "directory for installing library files")
@@ -140,9 +140,8 @@ install(DIRECTORY Include/Common DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
 install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/Include/ DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
 
 #########################################################
-if(NOT DEFINED LIB3MF_TESTS)
-	set(LIB3MF_TESTS TRUE)
-endif()
+option(LIB3MF_TESTS "Switch whether the tests of Lib3MF should be build" ON)
+
 message("LIB3MF_TESTS ... " ${LIB3MF_TESTS})
 if(LIB3MF_TESTS)
 	include(CTest)

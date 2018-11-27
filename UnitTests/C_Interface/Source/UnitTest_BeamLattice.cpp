@@ -40,7 +40,6 @@ UnitTest_ReadWrite.cpp: Defines Unittests for reading and writing of 3MFs
 #include <iostream>
 #include "gtest/gtest.h"
 
-
 void Box_Simple()
 {
 	using namespace NMR;
@@ -316,6 +315,7 @@ void WriteBeamLattice_Negative()
 
 	ASSERT_EQ(lib3mf_object_settype(pMeshObject.get(), MODELOBJECTTYPE_MODEL), S_OK) << L"Could not set type to MODEL";
 	ASSERT_EQ(lib3mf_object_settype(pMeshObject.get(), MODELOBJECTTYPE_SOLIDSUPPORT), S_OK) << L"Could not set type to SOLIDSUPPORT";
+	ASSERT_NE(lib3mf_object_settype(pMeshObject.get(), MODELOBJECTTYPE_SURFACE), S_OK) << L"Could set type to SURFACE";
 	ASSERT_NE(lib3mf_object_settype(pMeshObject.get(), MODELOBJECTTYPE_SUPPORT), S_OK) << L"Could set type to SUPPORT";
 
 	ASSERT_EQ(lib3mf_meshobject_setbeamindices(pMeshObject.get(), NULL, 0), S_OK) << L"Could not remove beams";
@@ -323,6 +323,13 @@ void WriteBeamLattice_Negative()
 	ASSERT_EQ(lib3mf_object_settype(pMeshObject.get(), MODELOBJECTTYPE_SUPPORT), S_OK) << L"Could not set type to SUPPORT";
 	ASSERT_NE(lib3mf_meshobject_addbeam(pMeshObject.get(), &beam, NULL), S_OK) << L"Could add beam to model of type support";
 }
+
+void checkBeams(NMR::MODELMESHBEAM& a, NMR::MODELMESHBEAM& b, double dEps) {
+	ASSERT_TRUE(fabs(a.m_dRadius[0] - b.m_dRadius[0]) < dEps) << L"Beam radii do not match.";
+	ASSERT_TRUE(fabs(a.m_dRadius[1] - b.m_dRadius[1]) < dEps) << L"Beam radii do not match.";
+	ASSERT_EQ(a.m_nIndices[0], b.m_nIndices[0]) << L"Beam indices do not match.";
+	ASSERT_EQ(a.m_nIndices[1], b.m_nIndices[1]) << L"Beam indices do not match.";
+};
 
 void WriteBeamLattice_Positive()
 {
@@ -357,37 +364,72 @@ void WriteBeamLattice_Positive()
 	vert.m_fPosition[2] = 4;
 	ASSERT_EQ(lib3mf_meshobject_addvertex(pMeshObject.get(), &vert, NULL), S_OK) << L"Could not add vertex";
 
-	MODELMESHBEAM beam;
-	beam.m_nIndices[0] = 0;
-	beam.m_nIndices[1] = 1;
-	beam.m_dRadius[0] = 0.1;
-	beam.m_dRadius[1] = 0.1;
-	ASSERT_EQ(lib3mf_meshobject_addbeam(pMeshObject.get(), &beam, NULL), S_OK) << L"Could not add beam.";
 	ASSERT_EQ(lib3mf_meshobject_setbeamlattice_radius(pMeshObject.get(), 0.1), S_OK) << L"Could not set default radius.";
+	std::vector<MODELMESHBEAM> beams(5);
 
-	beam.m_nIndices[0] = 1;
-	beam.m_nIndices[1] = 2;
-	beam.m_dRadius[0] = 0.2;
-	beam.m_dRadius[1] = 0.1;
-	ASSERT_EQ(lib3mf_meshobject_addbeam(pMeshObject.get(), &beam, NULL), S_OK) << L"Could not add beam.";
+	{
+		MODELMESHBEAM &beam = beams[0];
+		beam.m_nIndices[0] = 0;
+		beam.m_nIndices[1] = 1;
+		beam.m_dRadius[0] = 0.1;
+		beam.m_dRadius[1] = 0.1;
+		ASSERT_EQ(lib3mf_meshobject_addbeam(pMeshObject.get(), &beam, NULL), S_OK) << L"Could not add beam.";
+	}
+	
+	{
+		MODELMESHBEAM &beam = beams[1];
+		beam.m_nIndices[0] = 1;
+		beam.m_nIndices[1] = 2;
+		beam.m_dRadius[0] = 0.2;
+		beam.m_dRadius[1] = 0.1;
+		ASSERT_EQ(lib3mf_meshobject_addbeam(pMeshObject.get(), &beam, NULL), S_OK) << L"Could not add beam.";
+	}
 
-	beam.m_nIndices[0] = 2;
-	beam.m_nIndices[1] = 3;
-	beam.m_dRadius[0] = 0.1;
-	beam.m_dRadius[1] = 0.2;
-	ASSERT_EQ(lib3mf_meshobject_addbeam(pMeshObject.get(), &beam, NULL), S_OK) << L"Could not add beam.";
+	{
+		MODELMESHBEAM &beam = beams[2];
+		beam.m_nIndices[0] = 2;
+		beam.m_nIndices[1] = 3;
+		beam.m_dRadius[0] = 0.1;
+		beam.m_dRadius[1] = 0.2;
+		ASSERT_EQ(lib3mf_meshobject_addbeam(pMeshObject.get(), &beam, NULL), S_OK) << L"Could not add beam.";
+	}
+	{
+		MODELMESHBEAM &beam = beams[3];
+		beam.m_nIndices[0] = 3;
+		beam.m_nIndices[1] = 4;
+		beam.m_dRadius[0] = 0.2;
+		beam.m_dRadius[1] = 0.2;
+		ASSERT_EQ(lib3mf_meshobject_addbeam(pMeshObject.get(), &beam, NULL), S_OK) << L"Could not add beam.";
+	}
+	
+	{
+		MODELMESHBEAM &beam = beams[4];
+		beam.m_nIndices[0] = 4;
+		beam.m_nIndices[1] = 0;
+		beam.m_dRadius[0] = 0.2;
+		beam.m_dRadius[1] = 0.3;
+		ASSERT_EQ(lib3mf_meshobject_addbeam(pMeshObject.get(), &beam, NULL), S_OK) << L"Could not add beam.";
+	}
 
-	beam.m_nIndices[0] = 3;
-	beam.m_nIndices[1] = 4;
-	beam.m_dRadius[0] = 0.2;
-	beam.m_dRadius[1] = 0.2;
-	ASSERT_EQ(lib3mf_meshobject_addbeam(pMeshObject.get(), &beam, NULL), S_OK) << L"Could not add beam.";
+	std::vector<MODELMESHBEAM> beamsReOut(5);
+	DWORD nBeamCount;
+	ASSERT_EQ(lib3mf_meshobject_getbeamindices(pMeshObject.get(), beamsReOut.data(), 5, &nBeamCount), S_OK) << L"Could not get beams.";
+	ASSERT_EQ(nBeamCount, 5) << L"Incorrect number of beams.";
 
-	beam.m_nIndices[0] = 4;
-	beam.m_nIndices[1] = 0;
-	beam.m_dRadius[0] = 0.2;
-	beam.m_dRadius[1] = 0.3;
-	ASSERT_EQ(lib3mf_meshobject_addbeam(pMeshObject.get(), &beam, NULL), S_OK) << L"Could not add beam.";
+	const double dEps = 1e-3;
+	for (DWORD i = 0; i < nBeamCount; i++) {
+		checkBeams(beamsReOut[i], beams[i], dEps);
+	}
+
+	ASSERT_EQ(lib3mf_meshobject_setbeamindices(pMeshObject.get(), beams.data(), nBeamCount), S_OK) << L"Could not set beams.";
+
+	beamsReOut.clear();
+	beamsReOut.resize(5);
+	ASSERT_EQ(lib3mf_meshobject_getbeamindices(pMeshObject.get(), beamsReOut.data(), 5, &nBeamCount), S_OK) << L"Could not get beams.";
+	ASSERT_EQ(nBeamCount, 5) << L"Incorrect number of beams.";
+	for (DWORD i = 0; i < nBeamCount; i++) {
+		checkBeams(beamsReOut[i], beams[i], dEps);
+	}
 
 	CustomLib3MFBase p3MFWriter;
 	EXPECT_EQ(lib3mf_model_querywriter(pModel.get(), "3mf", &p3MFWriter.get()), S_OK) << L"Could not create modelwriter";

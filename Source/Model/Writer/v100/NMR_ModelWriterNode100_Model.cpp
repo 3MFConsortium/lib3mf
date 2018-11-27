@@ -198,6 +198,8 @@ namespace NMR {
 				writeStringAttribute(XML_3MF_ATTRIBUTE_TEXTURE2D_TILESTYLEU, CModelTexture2DResource::tileStyleToString(pTexture2D->getTileStyleU()));
 			if (pTexture2D->getTileStyleV() != MODELTEXTURETILESTYLE_WRAP)
 				writeStringAttribute(XML_3MF_ATTRIBUTE_TEXTURE2D_TILESTYLEV, CModelTexture2DResource::tileStyleToString(pTexture2D->getTileStyleV()));
+			if (pTexture2D->getFilter() != MODELTEXTUREFILTER_AUTO)
+				writeStringAttribute(XML_3MF_ATTRIBUTE_TEXTURE2D_FILTER, CModelTexture2DResource::filterToString(pTexture2D->getFilter()));
 			
 			if (pTexture2D->hasBox2D()) {
 				nfFloat fU, fV, fWidth, fHeight;
