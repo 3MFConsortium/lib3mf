@@ -31,8 +31,10 @@ Abstract: This is a stub class definition of CLib3MFComponentsObject
 #include "lib3mf_componentsobject.hpp"
 #include "lib3mf_interfaceexception.hpp"
 
-// Include custom headers here.
+#include "lib3mf_component.hpp"
+#include "lib3mf_utils.hpp"
 
+// Include custom headers here.
 
 using namespace Lib3MF;
 
@@ -41,13 +43,47 @@ using namespace Lib3MF;
 **************************************************************************************************************************/
 
 CLib3MFComponentsObject::CLib3MFComponentsObject(NMR::PModelResource pResource)
-	: CLib3MFObject(pResource)
+	: CLib3MFResource(pResource), CLib3MFObject(pResource)
 {
+}
+
+NMR::CModelComponentsObject * CLib3MFComponentsObject::getComponentsObject()
+{
+	NMR::CModelComponentsObject * pComponentsObject = dynamic_cast<NMR::CModelComponentsObject *> (resource());
+	if (pComponentsObject == nullptr)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCOMPONENTSOBJECT);
+
+	return pComponentsObject;
 }
 
 ILib3MFComponent * CLib3MFComponentsObject::AddComponent (ILib3MFObject* pObjectResource, const sLib3MFTransform Transform)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	NMR::CModelComponentsObject * pComponentsObject = getComponentsObject();
+	NMR::CModel * pModel = pComponentsObject->getModel();
+	if (pModel == nullptr)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDMODEL);
+	
+	// Get Resource ID
+	NMR::PackageResourceID nObjectID = pObjectResource->GetResourceID();
+
+	if (GetResourceID() == nObjectID)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_FORBIDDENCYCLICREFERENCE);
+
+	// TODO: check all ancestors
+
+	// Find class instance
+	NMR::CModelObject * pObject = pModel->findObject(nObjectID);
+	if (pObject == nullptr)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_RESOURCENOTFOUND);
+
+	// Convert Transform, if given
+	NMR::NMATRIX3 mMatrix = TransformToMatrix(Transform);
+
+	// Create Model component
+	NMR::PModelComponent pNewComponent = std::make_shared<NMR::CModelComponent>(pObject, mMatrix);
+	pComponentsObject->addComponent(pNewComponent);
+
+	return new CLib3MFComponent(pNewComponent);
 }
 
 ILib3MFComponent * CLib3MFComponentsObject::GetComponent (const Lib3MF_uint32 nIndex)

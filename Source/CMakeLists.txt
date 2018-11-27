@@ -42,6 +42,7 @@ ${SRCS_COM}
 ./Source/API/lib3mf_resourceiterator.cpp
 ./Source/API/lib3mf_texture2d.cpp
 ./Source/API/lib3mf_writer.cpp
+./Source/API/lib3mf_utils.cpp
 ./Source/Common/3MF_ProgressMonitor.cpp
 ./Source/Model/Reader/NMR_ModelReader_InstructionElement.cpp
 ./Source/Common/Math/NMR_Matrix.cpp

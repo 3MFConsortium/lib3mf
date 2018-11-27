@@ -65,11 +65,6 @@ namespace Lib3MF
 		auto component = model->AddComponentsObject();
 	}
 
-	TEST_F(ObjectT, EnsureNoSelfReference)
-	{
-		ASSERT_FALSE(true) << "TODO";
-	}
-
 	void AddHierarchy(PLib3MFModel model)
 	{
 		auto components = model->AddComponentsObject();
@@ -88,9 +83,36 @@ namespace Lib3MF
 		AddHierarchy(model);
 	}
 
+	TEST_F(ObjectT, EnsureNoSelfReference)
+	{
+		auto components = model->AddComponentsObject();
+		try {
+			components->AddComponent(components.get(), getIdentityTransform());
+			ASSERT_FALSE(true) << "Self reference is forbidden.";
+		}
+		catch (...) {
+			ASSERT_TRUE(true);
+		}
+	}
+
+	TEST_F(ObjectT, EnsureNoHigherSelfReference)
+	{
+		auto componentsOuter = model->AddComponentsObject();
+		auto componentsInner = model->AddComponentsObject();
+		componentsOuter->AddComponent(componentsInner.get(), getIdentityTransform());
+		try {
+			componentsInner->AddComponent(componentsOuter.get(), getIdentityTransform());
+			ASSERT_FALSE(true) << "Self reference is forbidden.";
+		}
+		catch (...) {
+			ASSERT_TRUE(true);
+		}
+	}
+
+
 	void TestHierarchy(PLib3MFModel model)
 	{
-		
+		ASSERT_FALSE(true) << "TODO";
 	}
 
 

@@ -60,6 +60,16 @@
 		<error name="INVALIDMODELRESOURCE" code="103" description="no Model Resource has been given" />
 		<error name="RESOURCENOTFOUND" code="104" description="Resource not found" />
 		
+		<error name="INVALIDMODEL" code="105" description="A model is invalid" />
+		<error name="INVALIDOBJECT" code="106" description="An object is invalid" />
+		<error name="INVALIDMESHOBJECT" code="107" description="A mesh object is invalid" />
+		<error name="INVALIDCOMPONENTSOBJECT" code="108" description="A components object is invalid" />
+		<error name="INVALIDCOMPONENT" code="109" description="A component is invalid" />
+		
+		<error name="FORBIDDENCYCLICREFERENCE" code="110" description="A component references one of its ancestors" />
+
+
+		
 	</errors>
 	
 	<enum name="ModelUnit">

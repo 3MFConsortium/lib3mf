@@ -33,7 +33,6 @@ Abstract: This is a stub class definition of CLib3MFMeshObject
 
 // Include custom headers here.
 
-
 using namespace Lib3MF;
 
 /*************************************************************************************************************************
@@ -41,8 +40,9 @@ using namespace Lib3MF;
 **************************************************************************************************************************/
 
 CLib3MFMeshObject::CLib3MFMeshObject(NMR::PModelResource pResource)
-	: CLib3MFObject(pResource)
+	: CLib3MFResource(pResource), CLib3MFObject(pResource)
 {
+
 }
 
 Lib3MF_uint32 CLib3MFMeshObject::GetVertexCount ()

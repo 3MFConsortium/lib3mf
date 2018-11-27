@@ -31,6 +31,7 @@ Abstract: This is a stub class definition of CLib3MFBuildItem
 #include "lib3mf_builditem.hpp"
 #include "lib3mf_interfaceexception.hpp"
 
+#include "lib3mf_utils.hpp"
 // Include custom headers here.
 #include "lib3mf_object.hpp"
 
@@ -85,27 +86,6 @@ Lib3MF_uint32 CLib3MFBuildItem::GetObjectResourceID ()
 bool CLib3MFBuildItem::HasObjectTransform ()
 {
 	return buildItem().hasTransform();
-}
-
-NMR::NMATRIX3 TransformToMatrix(const sLib3MFTransform Transform)
-{
-	NMR::NMATRIX3 matrix;
-	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < 3; j++)
-			matrix.m_fields[i][j] = Transform.m_Fields[i][j];
-		matrix.m_fields[i][3] = 0 + 1.0f*(i == 3);
-	}
-	return matrix;
-}
-
-sLib3MFTransform MatrixToTransform(const NMR::NMATRIX3 matrix)
-{
-	sLib3MFTransform transform;
-	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < 3; j++)
-			transform.m_Fields[i][j] = matrix.m_fields[i][j];
-	}
-	return transform;
 }
 
 sLib3MFTransform CLib3MFBuildItem::GetObjectTransform ()

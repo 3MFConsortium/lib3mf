@@ -36,7 +36,7 @@ Abstract: This is the class declaration of CLib3MFResource
 
 
 // Include custom headers here.
-
+#include "Model/Classes/NMR_ModelResource.h" 
 
 namespace Lib3MF {
 
@@ -51,19 +51,20 @@ private:
 	/**
 	* Put private members here.
 	*/
+	NMR::PModelResource m_pResource;
+	int m_id;
 
 protected:
 
-	/**
-	* Put protected members here.
-	*/
+	NMR::CModelResource* resource();
+	CLib3MFResource(NMR::PModelResource pResource);
 
 public:
 
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-
+	CLib3MFResource() = delete;
 
 	/**
 	* Public member functions to implement.

@@ -24,66 +24,25 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CLib3MFComponentsObject
+Abstract: This file contains utilties used in the API of lib3mf
 
 */
 
 
-#ifndef __LIB3MF_LIB3MFCOMPONENTSOBJECT
-#define __LIB3MF_LIB3MFCOMPONENTSOBJECT
+#ifndef __LIB3MF_LIB3MFUTILS
+#define __LIB3MF_LIB3MFUTILS
 
 #include "lib3mf_interfaces.hpp"
 
-// Parent classes
-#include "lib3mf_object.hpp"
-#pragma warning( push)
-#pragma warning( disable : 4250)
-
 // Include custom headers here.
-#include "Model/Classes/NMR_ModelComponentsObject.h"
-
+#include "Common/Math/NMR_Matrix.h" 
 
 namespace Lib3MF {
 
+NMR::NMATRIX3 TransformToMatrix(const sLib3MFTransform Transform);
 
-/*************************************************************************************************************************
- Class declaration of CLib3MFComponentsObject 
-**************************************************************************************************************************/
-
-class CLib3MFComponentsObject : public virtual ILib3MFComponentsObject, public virtual CLib3MFObject {
-private:
-
-	/**
-	* Put private members here.
-	*/
-
-protected:
-
-	NMR::CModelComponentsObject * getComponentsObject();
-
-public:
-
-	/**
-	* Put additional public members here. They will not be visible in the external API.
-	*/
-	CLib3MFComponentsObject(NMR::PModelResource pResource);
-
-	/**
-	* Public member functions to implement.
-	*/
-
-	ILib3MFComponent * AddComponent (ILib3MFObject* pObjectResource, const sLib3MFTransform Transform);
-
-	ILib3MFComponent * GetComponent (const Lib3MF_uint32 nIndex);
-
-	Lib3MF_uint32 GetComponentCount ();
-
-	bool IsMeshObject();
-
-	bool IsComponentsObject();
-
-};
+sLib3MFTransform MatrixToTransform(const NMR::NMATRIX3 matrix);
 
 }
 
-#endif // __LIB3MF_LIB3MFCOMPONENTSOBJECT
+#endif // __LIB3MF_LIB3MFUTILS

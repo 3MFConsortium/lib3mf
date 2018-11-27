@@ -66,8 +66,8 @@ ILib3MFObject* CLib3MFObject::fnCreateObjectFromModelResource(NMR::PModelResourc
 }
 
 CLib3MFObject::CLib3MFObject(NMR::PModelResource pResource)
+	:CLib3MFResource(pResource)
 {
-	m_pResource = pResource;
 }
 
 

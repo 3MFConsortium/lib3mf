@@ -55,13 +55,8 @@ private:
 	/**
 	* Put private members here.
 	*/
-	NMR::PModelResource m_pResource;
 
 protected:
-
-	/**
-	* Put protected members here.
-	*/
 
 public:
 
@@ -69,6 +64,7 @@ public:
 	* Put additional public members here. They will not be visible in the external API.
 	*/
 	CLib3MFObject(NMR::PModelResource pResource);
+	CLib3MFObject() = delete;
 
 	/**
 	* Public member functions to implement.

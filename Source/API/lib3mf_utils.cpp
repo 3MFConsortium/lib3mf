@@ -24,41 +24,36 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CLib3MFResource
+Abstract: This file implements utilities for the lib3mf API
 
 */
 
-#include "lib3mf_resource.hpp"
+#include "lib3mf_utils.hpp"
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
-#include <iostream>
-
-using namespace Lib3MF;
-
-/*************************************************************************************************************************
- Class definition of CLib3MFResource 
-**************************************************************************************************************************/
 
 
-NMR::CModelResource* CLib3MFResource::resource()
+// using namespace Lib3MF;
+
+NMR::NMATRIX3 Lib3MF::TransformToMatrix(const sLib3MFTransform Transform)
 {
-	if (m_pResource.get()==nullptr)
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDOBJECT);
-
-	return m_pResource.get();
+	NMR::NMATRIX3 matrix;
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 3; j++)
+			matrix.m_fields[i][j] = Transform.m_Fields[i][j];
+		matrix.m_fields[i][3] = 0 + 1.0f*(i == 3);
+	}
+	return matrix;
 }
 
-CLib3MFResource::CLib3MFResource(NMR::PModelResource pResource)
+sLib3MFTransform Lib3MF::MatrixToTransform(const NMR::NMATRIX3 matrix)
 {
-	if (pResource.get() == nullptr)
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDMODELRESOURCE);
-	m_pResource = pResource;
-	m_id = 1;
-}
-
-Lib3MF_uint32 CLib3MFResource::GetResourceID ()
-{
-	return m_pResource->getResourceID()->getUniqueID();
+	sLib3MFTransform transform;
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 3; j++)
+			transform.m_Fields[i][j] = matrix.m_fields[i][j];
+	}
+	return transform;
 }
 

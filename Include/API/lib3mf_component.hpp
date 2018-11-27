@@ -36,7 +36,7 @@ Abstract: This is the class declaration of CLib3MFComponent
 
 
 // Include custom headers here.
-
+#include "Model/Classes/NMR_ModelComponent.h"
 
 namespace Lib3MF {
 
@@ -51,6 +51,7 @@ private:
 	/**
 	* Put private members here.
 	*/
+	NMR::PModelComponent m_pComponent;
 
 protected:
 
@@ -63,7 +64,7 @@ public:
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-
+	CLib3MFComponent(NMR::PModelComponent pComponent);
 
 	/**
 	* Public member functions to implement.

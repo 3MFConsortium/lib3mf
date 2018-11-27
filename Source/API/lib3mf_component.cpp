@@ -40,6 +40,14 @@ using namespace Lib3MF;
  Class definition of CLib3MFComponent 
 **************************************************************************************************************************/
 
+CLib3MFComponent::CLib3MFComponent(NMR::PModelComponent pComponent)
+{
+	if (pComponent.get() == nullptr)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCOMPONENT);
+	m_pComponent = pComponent;
+}
+
+
 ILib3MFObject * CLib3MFComponent::GetObjectResource ()
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);

@@ -35,7 +35,12 @@ Abstract: This is a stub class definition of CLib3MFModel
 #include "lib3mf_writer.hpp"
 
 #include "lib3mf_builditemiterator.hpp"
+#include "lib3mf_meshobject.hpp"
+#include "lib3mf_componentsobject.hpp"
 // Include custom headers here.
+
+#include "Model/Classes/NMR_ModelMeshObject.h"
+#include "Model/Classes/NMR_ModelComponentsObject.h"
 
 
 using namespace Lib3MF;
@@ -169,12 +174,21 @@ ILib3MFModel * CLib3MFModel::MergeToModel ()
 
 ILib3MFMeshObject * CLib3MFModel::AddMeshObject ()
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	NMR::ModelResourceID NewResourceID = model().generateResourceID();
+	NMR::PMesh pNewMesh = std::make_shared<NMR::CMesh>();
+	NMR::PModelMeshObject pNewResource = std::make_shared<NMR::CModelMeshObject>(NewResourceID, &model(), pNewMesh);
+
+	model().addResource(pNewResource);
+	return new CLib3MFMeshObject(pNewResource);
 }
 
 ILib3MFComponentsObject * CLib3MFModel::AddComponentsObject ()
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	NMR::ModelResourceID NewResourceID = model().generateResourceID();
+	NMR::PModelComponentsObject pNewResource = std::make_shared<NMR::CModelComponentsObject>(NewResourceID, &model());
+
+	model().addResource(pNewResource);
+	return new CLib3MFComponentsObject(pNewResource);
 }
 
 ILib3MFTexture2D * CLib3MFModel::AddTexture2DFromAttachment (ILib3MFAttachment* pTextureAttachment)
