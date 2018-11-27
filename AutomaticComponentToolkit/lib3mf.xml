@@ -820,16 +820,15 @@
 	
 	<class name="ComponentsObject" parent="Object">
 
-		<method name="AddComponent" description="Adds a new component to a component object.">
-			<param name="ObjectResource" type="handle" class="Object" pass="in" description="object to add as component. May not lead to circular references!" />
+		<method name="AddComponent" description="Adds a new component to a components object.">
+			<param name="ObjectResource" type="handle" class="Object" pass="in" description="object to add as component. Must not lead to circular references!" />
 			<param name="Transform" type="struct" class="Transform" pass="in" description="optional transform matrix for the component." />
-			<param name="ComponentInstance" type="handle" class="ComponentsObject" pass="return" description="new component instance" />
-			
+			<param name="ComponentInstance" type="handle" class="Component" pass="return" description="new component instance" />
 		</method>
 
 		<method name="GetComponent" description="Retrieves a component from a component object.">
 			<param name="Index" type="uint32" pass="in" description="index of the component to retrieve (0 to componentcount - 1)" />
-			<param name="ComponentInstance" type="handle" class="ComponentsObject" pass="return" description="component instance" />			
+			<param name="ComponentInstance" type="handle" class="Component" pass="return" description="component instance" />			
 		</method>
 
 		<method name="GetComponentCount" description="Retrieves a component count of a component object.">

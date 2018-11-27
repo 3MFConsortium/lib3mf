@@ -45,12 +45,12 @@ CLib3MFComponentsObject::CLib3MFComponentsObject(NMR::PModelResource pResource)
 {
 }
 
-ILib3MFComponentsObject * CLib3MFComponentsObject::AddComponent (ILib3MFObject* pObjectResource, const sLib3MFTransform Transform)
+ILib3MFComponent * CLib3MFComponentsObject::AddComponent (ILib3MFObject* pObjectResource, const sLib3MFTransform Transform)
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-ILib3MFComponentsObject * CLib3MFComponentsObject::GetComponent (const Lib3MF_uint32 nIndex)
+ILib3MFComponent * CLib3MFComponentsObject::GetComponent (const Lib3MF_uint32 nIndex)
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }

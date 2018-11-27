@@ -73,9 +73,9 @@ public:
 	* Public member functions to implement.
 	*/
 
-	ILib3MFComponentsObject * AddComponent (ILib3MFObject* pObjectResource, const sLib3MFTransform Transform);
+	ILib3MFComponent * AddComponent (ILib3MFObject* pObjectResource, const sLib3MFTransform Transform);
 
-	ILib3MFComponentsObject * GetComponent (const Lib3MF_uint32 nIndex);
+	ILib3MFComponent * GetComponent (const Lib3MF_uint32 nIndex);
 
 	Lib3MF_uint32 GetComponentCount ();
 

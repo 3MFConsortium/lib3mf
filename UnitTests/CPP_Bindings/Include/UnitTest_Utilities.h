@@ -61,4 +61,15 @@ inline std::vector<Lib3MF_uint8> ReadFileIntoBuffer(std::string sFileName)
 	return buffer;
 }
 
+
+inline sLib3MFTransform getIdentityTransform()
+{
+	sLib3MFTransform t;
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 3; j++)
+			t.m_Fields[i][j] = 0 + 1.0f * (i==j);
+	}
+	return t;
+}
+
 #endif //__NMR_UNITTEST_UTILITIES

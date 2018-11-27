@@ -10,6 +10,7 @@ set(SRCS_UNITTEST
 	./Source/UnitTest_Reader.cpp
 	./Source/UnitTest_Writer.cpp
 	./Source/UnitTest_BuildItems.cpp
+	./Source/UnitTest_Object.cpp
 )
 
 set(CMAKE_CURRENT_BINARY_DIR ${CMAKE_BINARY_DIR})
