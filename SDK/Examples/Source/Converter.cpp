@@ -1,7 +1,7 @@
 /*++
 
-© 2017 Autodesk Inc
-© 2015 netfabb GmbH (Original Author)
+Copyright (C) 2018 3MF Consortium
+
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -32,7 +32,6 @@ Converter.cpp : Can convert 3MFs to STL and back
 #ifndef __GNUC__
 #include <tchar.h>
 #include <Windows.h>
-#include <atlbase.h>
 #endif // __GNUC__
 
 #include <iostream>

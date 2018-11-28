@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2015 netfabb GmbH (Original Author)
+Copyright (C) 2018 3MF Consortium
 
 All rights reserved.
 
@@ -48,7 +48,7 @@ namespace NMR {
 	typedef std::shared_ptr <CModel> PModel;
 
 	class CModelComponentsObject : public CModelObject {
-	private:		
+	private:
 		std::vector<PModelComponent> m_Components;
 	public:
 		CModelComponentsObject() = delete;

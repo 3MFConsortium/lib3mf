@@ -1,7 +1,6 @@
 /*++
 
-Copyright (C) 2015 Microsoft Corporation (Original Author)
-Copyright (C) 2015 netfabb GmbH
+Copyright (C) 2018 3MF Consortium
 
 All rights reserved.
 
@@ -64,15 +63,15 @@ namespace NMR {
 
 	}
 
-	void CModelReaderNode100_Color::OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue)
+	void CModelReaderNode100_Color::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
 	{
 		__NMRASSERT(pAttributeName);
 		__NMRASSERT(pAttributeValue);
 
 		
-		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_COLORS_COLOR) == 0) {
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_COLORS_COLOR) == 0) {
 			// Convert to color and make a input and range check!
-			m_bHasColor = fnWStringToSRGBColor(pAttributeValue, m_cColor);
+			m_bHasColor = fnStringToSRGBColor(pAttributeValue, m_cColor);
 		}
 	}
 

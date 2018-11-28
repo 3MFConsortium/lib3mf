@@ -1,8 +1,6 @@
 /*++
 
-Copyright (C) 2017 Autodesk Inc.
-Copyright (C) 2015 Microsoft Corporation (Original Author)
-Copyright (C) 2015 netfabb GmbH (Original Author)
+Copyright (C) 2018 3MF Consortium
 
 All rights reserved.
 
@@ -347,6 +345,19 @@ namespace NMR {
 		* @return error code or 0 (success)
 		*/
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_reader_getwarning(_In_ PLib3MFModelReader * pReader, _In_ DWORD nIndex, _Out_ DWORD * pErrorCode, _Out_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars);
+
+		/**
+		* Returns Warning and Error Information of the read process (UTF8)
+		*
+		* @param[in] pReader Reader Instance
+		* @param[in] nIndex Index of the Warning. Valid values are 0 to WarningCount - 1
+		* @param[out] pErrorCode filled with the error code of the warning
+		* @param[out] pszBuffer filled with the error message, may be NULL
+		* @param[in] cbBufferSize size of pszBuffer (including trailing 0).
+		* @param[out] pcbNeededChars filled with the count of the written bytes, or needed buffer size.
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_reader_getwarningutf8(_In_ PLib3MFModelReader * pReader, _In_ DWORD nIndex, _Out_ DWORD * pErrorCode, _Out_opt_ LPSTR pszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars);
 
 		/**
 		* Set the progress callback for calls to this reader
@@ -1360,6 +1371,44 @@ namespace NMR {
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_texture2d_setcontenttype(_In_ PLib3MFModelTexture2D * pTexture2D, _In_ eModelTexture2DType eContentType);
 
 		/**
+		* Retrieves a texture's tilestyle type
+		*
+		* @param[in] pTexture2D Texture2D Resource Instance
+		* @param[out] peTileStyleU returns tilestyle type enum
+		* @param[out] peTileStyleV returns tilestyle type enum
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_texture2d_gettilestyleuv(_In_ PLib3MFModelTexture2D * pTexture2D, _Out_ eModelTextureTileStyle * peTileStyleU, _Out_ eModelTextureTileStyle * peTileStyleV);
+
+		/**
+		* Sets a texture's tilestyle type
+		*
+		* @param[in] pTexture2D Texture2D Resource Instance
+		* @param[in] eTileStyleU new tilestyle type enum
+		* @param[in] eTileStyleV new tilestyle type enum
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_texture2d_settilestyleuv(_In_ PLib3MFModelTexture2D * pTexture2D, _In_ eModelTextureTileStyle eTileStyleU, _In_ eModelTextureTileStyle eTileStyleV);
+
+		/**
+		* Retrieves a texture's filter
+		*
+		* @param[in] pTexture2D Texture2D Resource Instance
+		* @param[out] peFilter returns filter enum
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_texture2d_getfilter(_In_ PLib3MFModelTexture2D * pTexture2D, _Out_ eModelTextureFilter * peFilter);
+
+		/**
+		* Sets a texture's filter type
+		*
+		* @param[in] pTexture2D Texture2D Resource Instance
+		* @param[in] eFilter returns filter enum
+		* @return error code or 0 (success)
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_texture2d_setfilter(_In_ PLib3MFModelTexture2D * pTexture2D, _In_ eModelTextureFilter eFilter);
+
+		/**
 		* Retrieves a texture's box2D coordinates.
 		*
 		* @param[in] pTexture2D Texture2D Resource Instance
@@ -2006,6 +2055,38 @@ namespace NMR {
 		* @return error code or 0 (success)
 		*/
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_componentsobject_getcomponentcount(_In_ PLib3MFModelComponentsObject * pComponentsObject, _Out_ DWORD * pComponentCount);
+
+		/**
+		* Link a slicestack to the components object
+		*
+		* @param[in] pComponentsObject components object to link with the slicestack
+		* @param[in] pSliceStack slice stack to link the meshobject to
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_componentsobject_setslicestack(_In_ PLib3MFModelComponentsObject *pComponentsObject, _In_ PLib3MFSliceStack *pSliceStack);
+
+		/**
+		* Get the linked slicestack tof a the components object
+		*
+		* @param[in] pComponentsObject components object to link with the slicestack
+		* @param[out] pSliceStack slice stack to link the meshobject to
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_componentsobject_getslicestackid(_In_ PLib3MFModelComponentsObject *pComponentsObject, _Out_ DWORD *pSliceStackId);
+
+		/**
+		* Set the mesh resolution of a components object that has sliceinformation
+		*
+		* @param[in] pComponentsObject components object for which the meshresolution is set
+		* @param[in] eSlicesMeshResolution mesh resolution of the components object
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_componentsobject_setslicesmeshresolution(_In_ PLib3MFModelComponentsObject *pComponentsObject, _In_ eModelSlicesMeshResolution eSlicesMeshResolution);
+
+		/**
+		* Get the mesh resolution of a components object that has sliceinformation
+		*
+		* @param[in] pComponentsObject components object for which the meshresolution is queried
+		* @param[out] peSlicesMeshResolution mesh resolution of the components object
+		*/
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_componentsobject_getslicesmeshresolution(_In_ PLib3MFModelComponentsObject *pComponentsObject, _Out_ eModelSlicesMeshResolution *eSlicesMeshResolution);
 
 		// Build Item
 		/**

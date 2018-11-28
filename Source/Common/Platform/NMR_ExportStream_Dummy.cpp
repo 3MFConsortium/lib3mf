@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2017 Autodesk, Inc.
+Copyright (C) 2018 3MF Consortium
 
 All rights reserved.
 

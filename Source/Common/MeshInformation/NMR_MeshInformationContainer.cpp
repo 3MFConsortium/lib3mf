@@ -1,7 +1,6 @@
 /*++
 
-Copyright (C) 2015 Microsoft Corporation
-Copyright (C) 2015 netfabb GmbH (Original Author)
+Copyright (C) 2018 3MF Consortium
 
 All rights reserved.
 
@@ -118,7 +117,7 @@ namespace NMR {
 		std::vector<MESHINFORMATIONFACEDATA *>::iterator iter = m_DataBlocks.begin ();
 		while (iter != m_DataBlocks.end()){
 			MESHINFORMATIONFACEDATA * pBlock = *iter;
-			delete pBlock;
+			delete[] pBlock;
 			iter++;
 		}
 

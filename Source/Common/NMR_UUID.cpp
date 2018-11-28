@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2017 Autodesk Inc.
+Copyright (C) 2018 3MF Consortium
 
 All rights reserved.
 
@@ -37,8 +37,8 @@ NMR_UUID.cpp implements a datatype and functions to handle UUIDs
 
 #include <algorithm>
 
-#if defined(_WIN32) && !defined(__MINGW32__)
-#include <Objbase.h>
+#if defined(_WIN32)
+#include <objbase.h>
 #include <iomanip>
 #else
 #include <uuid/uuid.h>
@@ -48,14 +48,14 @@ namespace NMR
 {
 	CUUID::CUUID()
 	{
-#if defined(_WIN32) && !defined(__MINGW32__)
+#if defined(_WIN32)
 		GUID guid;
 		if (CoCreateGuid(&guid) != S_OK)
 			throw CNMRException(NMR_ERROR_UUIDGENERATIONFAILED);
-		LPOLESTR str;
+		LPOLESTR str; 
 		if (StringFromCLSID(guid, &str) != S_OK)
 			throw CNMRException(NMR_ERROR_UUIDGENERATIONFAILED);
-		set(str);
+		set(fnUTF16toUTF8(str).c_str());
 #else
 		uuid_t uuid;
 		uuid_generate_random(uuid);
@@ -63,11 +63,6 @@ namespace NMR
 		uuid_unparse(uuid, s);
 		set(std::string(s).c_str());
 #endif
-	}
-
-	CUUID::CUUID(const nfWChar* pString)
-	{
-		set(pString);
 	}
 
 	CUUID::CUUID(const nfChar* pString)
@@ -78,11 +73,6 @@ namespace NMR
 	std::string CUUID::toString()
 	{
 		return m_sUUID;
-	}
-
-	std::wstring CUUID::toUTF16String()
-	{
-		return fnUTF8toUTF16(m_sUUID);
 	}
 
 	bool InValid(char c)
@@ -104,10 +94,6 @@ namespace NMR
 		}
 		m_sUUID = str.substr(0, 8) + '-' + str.substr(8, 4) + '-' + str.substr(12, 4) + '-' + str.substr(16, 4) + '-' + str.substr(20, 12);
 		return true;
-	}
-	bool CUUID::set(const nfWChar* pString)
-	{
-		return set(fnUTF16toUTF8(pString).c_str());
 	}
 
 	CUUID& CUUID::operator=(const CUUID& uuid)

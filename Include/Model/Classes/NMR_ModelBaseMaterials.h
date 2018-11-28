@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2015 netfabb GmbH (Original Author)
+Copyright (C) 2018 3MF Consortium
 
 All rights reserved.
 
@@ -52,7 +52,7 @@ namespace NMR {
 		CModelBaseMaterialResource() = delete;
 		CModelBaseMaterialResource(_In_ const ModelResourceID sID, _In_ CModel * pModel);
 
-		nfUint32 addBaseMaterial(_In_ const std::wstring sName, _In_ nfColor cDisplayColor);
+		nfUint32 addBaseMaterial(_In_ const std::string sName, _In_ nfColor cDisplayColor);
 
 		nfUint32 getCount();
 		PModelBaseMaterial getBaseMaterial(_In_ nfUint32 nIndex);

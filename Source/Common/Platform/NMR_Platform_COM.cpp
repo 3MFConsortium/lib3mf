@@ -1,7 +1,6 @@
 /*++
 
-Copyright (C) 2015 Microsoft Corporation
-Copyright (C) 2015 netfabb GmbH (Original Author)
+Copyright (C) 2018 3MF Consortium
 
 All rights reserved.
 
@@ -40,23 +39,28 @@ specific classes for COM.
 
 #include "Common/Platform/NMR_ImportStream_COM.h"
 #include "Common/Platform/NMR_ExportStream_COM.h"
-#include "Common/Platform/NMR_XmlReader_COM.h"
+#include "Common/Platform/NMR_XmlReader_Native.h"
+#include "Common/NMR_StringUtils.h"
+
+#define NMR_PLATFORM_XMLREADER_BUFFERSIZE 65536
 
 namespace NMR {
 
-	PImportStream fnCreateImportStreamInstance (_In_ const nfWChar * pwszFileName)
+	PImportStream fnCreateImportStreamInstance (_In_ const nfChar * pszFileName)
 	{
-		return std::make_shared<CImportStream_COM> (pwszFileName);
+		std::wstring sFileName = fnUTF8toUTF16(pszFileName);
+		return std::make_shared<CImportStream_COM> (sFileName.c_str());
 	}
 
-	PExportStream fnCreateExportStreamInstance (_In_ const nfWChar * pwszFileName)
+	PExportStream fnCreateExportStreamInstance (_In_ const nfChar * pszFileName)
 	{
-		return std::make_shared<CExportStream_COM> (pwszFileName);
+		std::wstring sFileName = fnUTF8toUTF16(pszFileName);
+		return std::make_shared<CExportStream_COM> (sFileName.c_str());
 	}
 		
 	PXmlReader fnCreateXMLReaderInstance (_In_ PImportStream pImportStream, CProgressMonitor * pProgressMonitor)
 	{
-		return std::make_shared<CXmlReader_COM> (pImportStream);
+		return std::make_shared<CXmlReader_Native> (pImportStream, NMR_PLATFORM_XMLREADER_BUFFERSIZE, pProgressMonitor);
 	}
 
 

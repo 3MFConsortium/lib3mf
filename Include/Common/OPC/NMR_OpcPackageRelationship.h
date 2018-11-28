@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2015 netfabb GmbH (Original Author)
+Copyright (C) 2018 3MF Consortium
 
 All rights reserved.
 
@@ -46,15 +46,15 @@ namespace NMR {
 
 	class COpcPackageRelationship {
 	private:
-		std::wstring m_sID;
-		std::wstring m_sType;
-		std::wstring m_sTargetPartURI;
+		std::string m_sID;
+		std::string m_sType;
+		std::string m_sTargetPartURI;
 
 	public:
-		COpcPackageRelationship(_In_ std::wstring sID, _In_ std::wstring sType, _In_ std::wstring sTargetPartURI);
-		std::wstring getID ();
-		std::wstring getType ();
-		std::wstring getTargetPartURI();
+		COpcPackageRelationship(_In_ std::string sID, _In_ std::string sType, _In_ std::string sTargetPartURI);
+		std::string getID ();
+		std::string getType ();
+		std::string getTargetPartURI();
 
 		void writeToXML(_In_ CXmlWriter * pXMLWriter);
 

@@ -1,7 +1,6 @@
 /*++
 
-Copyright (C) 2015 Microsoft Corporation (Original Author)
-Copyright (C) 2015 netfabb GmbH
+Copyright (C) 2018 3MF Consortium
 
 All rights reserved.
 
@@ -305,8 +304,7 @@ namespace NMR {
 			if (!m_pModelBuildItem.get())
 				throw CNMRException(NMR_ERROR_INVALIDBUILDITEM);
 
-			std::wstring sPartNumber(pwszPartNumber);
-			m_pModelBuildItem->setPartNumber(sPartNumber);
+			m_pModelBuildItem->setPartNumber(fnUTF16toUTF8(pwszPartNumber));
 
 			return handleSuccess();
 		}
@@ -327,9 +325,7 @@ namespace NMR {
 			if (!m_pModelBuildItem.get())
 				throw CNMRException(NMR_ERROR_INVALIDBUILDITEM);
 
-			std::string sUTF8PartNumber(pszPartNumber);
-			std::wstring sUTF16PartNumber = fnUTF8toUTF16(sUTF8PartNumber);
-			m_pModelBuildItem->setPartNumber(sUTF16PartNumber);
+			m_pModelBuildItem->setPartNumber(pszPartNumber);
 
 			return handleSuccess();
 		}
@@ -353,7 +349,7 @@ namespace NMR {
 
 			// Safely call StringToBuffer
 			nfUint32 nNeededChars = 0;
-			fnWStringToBufferSafe(m_pModelBuildItem->getPartNumber(), pwszBuffer, cbBufferSize, &nNeededChars);
+			fnWStringToBufferSafe(fnUTF8toUTF16(m_pModelBuildItem->getPartNumber()), pwszBuffer, cbBufferSize, &nNeededChars);
 
 			// Return length if needed
 			if (pcbNeededChars)
@@ -380,10 +376,8 @@ namespace NMR {
 
 			// Safely call StringToBuffer
 			nfUint32 nNeededChars = 0;
-			std::wstring sUTF16PartNumber = m_pModelBuildItem->getPartNumber();
-			std::string sUTF8PartNumber = fnUTF16toUTF8(sUTF16PartNumber);
 
-			fnStringToBufferSafe(sUTF8PartNumber, pszBuffer, cbBufferSize, &nNeededChars);
+			fnStringToBufferSafe(m_pModelBuildItem->getPartNumber(), pszBuffer, cbBufferSize, &nNeededChars);
 
 			// Return length if needed
 			if (pcbNeededChars)

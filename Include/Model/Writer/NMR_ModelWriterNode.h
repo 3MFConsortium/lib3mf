@@ -1,7 +1,6 @@
 /*++
 
-Copyright (C) 2015 Microsoft Corporation (Original Author)
-Copyright (C) 2015 netfabb GmbH
+Copyright (C) 2018 3MF Consortium
 
 All rights reserved.
 
@@ -48,22 +47,22 @@ namespace NMR {
 		CXmlWriter * m_pXMLWriter;
 		CProgressMonitor * m_pProgressMonitor;
 
-		void writeStringAttribute(_In_z_ const nfWChar * pAttributeName, _In_ std::wstring sAttributeValue);
-		void writePrefixedStringAttribute(_In_z_ const nfWChar * pPrefix, _In_ const nfWChar * pAttributeName, std::wstring sAttributeValue);
+		void writeStringAttribute(_In_z_ const nfChar * pAttributeName, _In_ std::string sAttributeValue);
+		void writePrefixedStringAttribute(_In_z_ const nfChar * pPrefix, _In_ const nfChar * pAttributeName, std::string sAttributeValue);
 
-		void writeConstStringAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue);
-		void writeConstPrefixedStringAttribute(_In_z_ const nfWChar * pPrefix, _In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue);
+		void writeConstStringAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
+		void writeConstPrefixedStringAttribute(_In_z_ const nfChar * pPrefix, _In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 
-		void writeIntAttribute(_In_z_ const nfWChar * pAttributeName, _In_ nfInt32 nAttributeValue);
-		void writeUintAttribute(_In_z_ const nfWChar * pAttributeName, _In_ nfUint32 nAttributeValue);
-		void writeFloatAttribute(_In_z_ const nfWChar * pAttributeName, _In_ nfFloat fAttributeValue);
+		void writeIntAttribute(_In_z_ const nfChar * pAttributeName, _In_ nfInt32 nAttributeValue);
+		void writeUintAttribute(_In_z_ const nfChar * pAttributeName, _In_ nfUint32 nAttributeValue);
+		void writeFloatAttribute(_In_z_ const nfChar * pAttributeName, _In_ nfFloat fAttributeValue);
 
-		void writeStartElement(_In_z_ const nfWChar * pElementName);
-		void writeStartElementWithNamespace(_In_z_ const nfWChar * pElementName, _In_z_ const nfWChar * pNameSpace);
-		void writeStartElementWithPrefix(_In_z_ const nfWChar * pElementName, _In_z_ const nfWChar * pPrefix);
+		void writeStartElement(_In_z_ const nfChar * pElementName);
+		void writeStartElementWithNamespace(_In_z_ const nfChar * pElementName, _In_z_ const nfChar * pNameSpace);
+		void writeStartElementWithPrefix(_In_z_ const nfChar * pElementName, _In_z_ const nfChar * pPrefix);
 		void writeEndElement();
 		void writeFullEndElement();
-		void writeText(_In_z_ const nfWChar * pwszText, _In_ nfUint32 cbLength);
+		void writeText(_In_z_ const nfChar * pwszText, _In_ nfUint32 cbLength);
 
 	public:
 		CModelWriterNode() = delete;

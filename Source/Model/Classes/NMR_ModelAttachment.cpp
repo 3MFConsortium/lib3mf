@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2015 netfabb GmbH (Original Author)
+Copyright (C) 2018 3MF Consortium
 
 All rights reserved.
 
@@ -35,7 +35,7 @@ NMR_ModelAttachment.cpp implements the Model Attachment Class.
 
 namespace NMR {
 
-	CModelAttachment::CModelAttachment(_In_ CModel * pModel, _In_ const std::wstring sPathURI, _In_ const std::wstring sRelationShipType, _In_ PImportStream pStream)
+	CModelAttachment::CModelAttachment(_In_ CModel * pModel, _In_ const std::string sPathURI, _In_ const std::string sRelationShipType, _In_ PImportStream pStream)
 	{
 		__NMRASSERT(pModel);
 		if (pStream.get() == nullptr)
@@ -57,12 +57,12 @@ namespace NMR {
 		return m_pModel;
 	}
 
-	std::wstring CModelAttachment::getPathURI()
+	std::string CModelAttachment::getPathURI()
 	{
 		return m_sPathURI;
 	}
 
-	std::wstring CModelAttachment::getRelationShipType()
+	std::string CModelAttachment::getRelationShipType()
 	{
 		return m_sRelationShipType;
 	}
@@ -77,7 +77,7 @@ namespace NMR {
 		m_pStream = pStream;
 	}
 
-	void CModelAttachment::setRelationShipType(_In_ const std::wstring sRelationShipType)
+	void CModelAttachment::setRelationShipType(_In_ const std::string sRelationShipType)
 	{
 		m_sRelationShipType = sRelationShipType;
 	}

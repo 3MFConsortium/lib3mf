@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2015 netfabb GmbH (Original Author)
+Copyright (C) 2018 3MF Consortium
 
 All rights reserved.
 
@@ -51,10 +51,6 @@ namespace NMR {
 	private:
 		PMesh m_pMesh; 
 		PModelMeshBeamLatticeAttributes m_pBeamLatticeAttributes;
-
-		PPackageResourceID m_pSliceStackId;
-		eModelSlicesMeshResolution m_eSlicesMeshResolution;
-
 	public:
 		CModelMeshObject() = delete;
 		CModelMeshObject(_In_ const ModelResourceID sID, _In_ CModel * pModel);
@@ -80,12 +76,6 @@ namespace NMR {
 
 		_Ret_notnull_ CModelMeshBeamLatticeAttributes * getBeamLatticeAttributes();
 		void setBeamLatticeAttributes(_In_ PModelMeshBeamLatticeAttributes pBeamLatticeAttributes);
-
-		void setSliceStackId(PPackageResourceID nSliceStackId);
-		PPackageResourceID getSliceStackId();
-
-		void setSlicesMeshResolution(eModelSlicesMeshResolution eMeshResolution);
-		eModelSlicesMeshResolution slicesMeshResolution() const;
 
 		ModelResourceID calculateDefaultPropertyID() const;
 	};

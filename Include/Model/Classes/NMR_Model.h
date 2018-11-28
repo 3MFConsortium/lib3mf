@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2015 netfabb GmbH (Original Author)
+Copyright (C) 2018 3MF Consortium
 
 All rights reserved.
 
@@ -79,8 +79,8 @@ namespace NMR {
 
 	class CModel {
 	private:
-		std::wstring m_sCurPath;
-		std::wstring m_sRootPath;
+		std::string m_sCurPath;
+		std::string m_sRootPath;
 
 		std::vector<PUUID> usedUUIDs;	// datastructure used to ensure that UUIDs within one model (package) are unique
 
@@ -99,24 +99,24 @@ namespace NMR {
 		// Model Properties
 		nfUint32 m_nHandleCounter;
 		eModelUnit m_Unit;
-		std::wstring m_sLanguage;
+		std::string m_sLanguage;
 		// Package Thumbnail as attachment
 		PModelAttachment m_pPackageThumbnailAttachment;
 
 		// Model Metadata
 		std::vector<PModelMetaData> m_MetaData;
-		std::map<std::wstring, PModelMetaData> m_MetaDataMap;
+		std::map<std::string, PModelMetaData> m_MetaDataMap;
 
 		// Model Attachments
 		std::vector<PModelAttachment> m_Attachments;
-		std::map<std::wstring, PModelAttachment> m_AttachmentURIMap;
+		std::map<std::string, PModelAttachment> m_AttachmentURIMap;
 
 		// Custom Attachment Content Types
-		std::map<std::wstring, std::wstring> m_CustomContentTypes;
+		std::map<std::string, std::string> m_CustomContentTypes;
 
 		// Production Model Attachments
 		std::vector<PModelAttachment> m_ProductionAttachments;
-		std::map<std::wstring, PModelAttachment> m_ProductionAttachmentURIMap;
+		std::map<std::string, PModelAttachment> m_ProductionAttachmentURIMap;
 
 		// Indexed lookup lists for standard resource types
 		std::vector<PModelResource> m_ObjectLookup;
@@ -131,31 +131,31 @@ namespace NMR {
 		CModel();
 		~CModel();
 
-		const std::wstring curPath();
-		void setCurPath(const nfWChar* sPath);
+		const std::string curPath();
+		void setCurPath(const std::string sPath);
 
-		const std::wstring rootPath();
-		void setRootPath(const nfWChar* sPath);
+		const std::string rootPath();
+		void setRootPath(const std::string sPath);
 
 		// Merge all build items into one mesh
 		void mergeToMesh(_In_ CMesh * pMesh);
 
 		// Units setter/getter
 		void setUnit(_In_ eModelUnit Unit);
-		void setUnitString(_In_ std::wstring sUnitString);
+		void setUnitString(_In_ std::string sUnitString);
 		eModelUnit getUnit();
-		std::wstring getUnitString();
+		std::string getUnitString();
 
 		// Language setter/getter
-		void setLanguage(_In_ std::wstring sLanguage);
-		std::wstring getLanguage();
+		void setLanguage(_In_ std::string sLanguage);
+		std::string getLanguage();
 
 		// General Resource Handling
-		PModelResource findResource(_In_ std::wstring path, ModelResourceID nID);
+		PModelResource findResource(_In_ std::string path, ModelResourceID nID);
 		PModelResource findResource(_In_ PackageResourceID nID);
 		PModelResource findResource(_In_ PPackageResourceID pID);
 
-		PPackageResourceID findPackageResourceID(_In_ std::wstring path, ModelResourceID nID);
+		PPackageResourceID findPackageResourceID(_In_ std::string path, ModelResourceID nID);
 		PPackageResourceID findPackageResourceID(_In_ PackageResourceID nID);
 		
 		nfUint32 getResourceCount();
@@ -175,22 +175,22 @@ namespace NMR {
 		void registerUUID(PUUID pUUID);
 
 		// Package Thumbnail Attachment
-		PModelAttachment addPackageThumbnail(_In_ std::wstring sPath, _In_ PImportStream pStream);
+		PModelAttachment addPackageThumbnail(_In_ std::string sPath, _In_ PImportStream pStream);
 		PModelAttachment addPackageThumbnail();
 		void removePackageThumbnail();
 		PModelAttachment getPackageThumbnail();
 
 		// Metadata setter/getter
-		void addMetaData(_In_ std::wstring sName, _In_ std::wstring sValue);
+		void addMetaData(_In_ std::string sName, _In_ std::string sValue);
 		nfUint32 getMetaDataCount();
-		void getMetaData(_In_ nfUint32 nIndex, _Out_ std::wstring & sName, _Out_ std::wstring & sValue);
+		void getMetaData(_In_ nfUint32 nIndex, _Out_ std::string & sName, _Out_ std::string & sValue);
 		void removeMetaData(_In_ nfUint32 nIndex);
-		nfBool hasMetaData(_In_ std::wstring sName);
+		nfBool hasMetaData(_In_ std::string sName);
 		void mergeMetaData(_In_ CModel * pSourceModel);
 
 		// Retrieve a unique Resource ID
 		PackageResourceID generateResourceID();	// unique per model
-		PPackageResourceID generatePackageResourceID(_In_ std::wstring path, ModelResourceID nID);	// unique per package
+		PPackageResourceID generatePackageResourceID(_In_ std::string path, ModelResourceID nID);	// unique per package
 
 		// Convenience functions for objects
 		_Ret_maybenull_ CModelObject * findObject(_In_ PackageResourceID nResourceID);
@@ -220,30 +220,30 @@ namespace NMR {
 		nfUint32 createHandle();
 
 		// Custom Attachments (includes Texture Attachments)
-		PModelAttachment addAttachment(_In_ const std::wstring sPath, _In_ const std::wstring sRelationShipType, PImportStream pCopiedStream);
-		void removeAttachment(_In_ const std::wstring sPath);
+		PModelAttachment addAttachment(_In_ const std::string sPath, _In_ const std::string sRelationShipType, PImportStream pCopiedStream);
+		void removeAttachment(_In_ const std::string sPath);
 		nfUint32 getAttachmentCount();
 		PModelAttachment getModelAttachment(_In_ nfUint32 nIndex);
-		std::wstring getModelAttachmentPath(_In_ nfUint32 nIndex);
-		PModelAttachment findModelAttachment(_In_ std::wstring sPath);
+		std::string getModelAttachmentPath(_In_ nfUint32 nIndex);
+		PModelAttachment findModelAttachment(_In_ std::string sPath);
 		void mergeModelAttachments(_In_ CModel * pSourceModel);
 
 		// Custom Content Types
-		std::map<std::wstring, std::wstring> getCustomContentTypes();
-		void addCustomContentType(_In_ const std::wstring sExtension, _In_ const std::wstring sContentType);
-		void removeCustomContentType(_In_ const std::wstring sExtension);
-		nfBool contentTypeIsDefault(_In_ const std::wstring sExtension);
+		std::map<std::string, std::string> getCustomContentTypes();
+		void addCustomContentType(_In_ const std::string sExtension, _In_ const std::string sContentType);
+		void removeCustomContentType(_In_ const std::string sExtension);
+		nfBool contentTypeIsDefault(_In_ const std::string sExtension);
 
 		// Production Extension Attachments
-		PModelAttachment addProductionAttachment(_In_ const std::wstring sPath, _In_ const std::wstring sRelationShipType, PImportStream pCopiedStream, nfBool bForceUnique);
-		void removeProductionAttachment(_In_ const std::wstring sPath);
+		PModelAttachment addProductionAttachment(_In_ const std::string sPath, _In_ const std::string sRelationShipType, PImportStream pCopiedStream, nfBool bForceUnique);
+		void removeProductionAttachment(_In_ const std::string sPath);
 		nfUint32 getProductionAttachmentCount();
 		PModelAttachment getProductionModelAttachment(_In_ nfUint32 nIndex);
-		std::wstring getProductionModelAttachmentPath(_In_ nfUint32 nIndex);
-		PModelAttachment findProductionModelAttachment(_In_ std::wstring sPath);
+		std::string getProductionModelAttachmentPath(_In_ nfUint32 nIndex);
+		PModelAttachment findProductionModelAttachment(_In_ std::string sPath);
 
 		// Required Extension Handling
-		nfBool RequireExtension(_In_ const std::wstring sExtension);
+		nfBool RequireExtension(_In_ const std::string sExtension);
 
 		// Convenience functions for slice stacks
 		nfUint32 getSliceStackCount();

@@ -1,7 +1,7 @@
 /*++
 
-© 2017 Autodesk Inc.
-© 2015 netfabb GmbH (Original Author)
+Copyright (C) 2018 3MF Consortium
+
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -32,7 +32,6 @@ ExtractInfo.cpp : 3MF Read Example
 #ifndef __GNUC__
 #include <tchar.h>
 #include <Windows.h>
-#include <atlbase.h>
 #endif // __GNUC__
 
 #include <iostream>
@@ -330,44 +329,44 @@ HRESULT ShowMetaDataInformation(_In_ PLib3MFModel * pModel)
 	}
 
 	for (DWORD iMeta = 0; iMeta < nMetaCount; iMeta++) {
-		std::wstring sMetaDataKey;
-		std::wstring sMetaDataValue;
+		std::string sMetaDataKey;
+		std::string sMetaDataValue;
 		DWORD nNeededChars;
-		hResult = lib3mf_model_getmetadatakey(pModel, iMeta, NULL, 0, &nNeededChars);
+		hResult = lib3mf_model_getmetadatakeyutf8(pModel, iMeta, NULL, 0, &nNeededChars);
 		if (hResult != LIB3MF_OK) {
 			return hResult;
 		}
 		// Retrieve Mesh Name
 		if (nNeededChars > 0) {
-			std::vector<wchar_t> pBuffer;
+			std::vector<char> pBuffer;
 			pBuffer.resize(nNeededChars + 1);
-			hResult = lib3mf_model_getmetadatakey(pModel, iMeta, &pBuffer[0], nNeededChars + 1, NULL);
+			hResult = lib3mf_model_getmetadatakeyutf8(pModel, iMeta, &pBuffer[0], nNeededChars + 1, NULL);
 			if (hResult != LIB3MF_OK) {
 				return hResult;
 			}
 			pBuffer[nNeededChars] = 0;
-			sMetaDataKey = std::wstring(&pBuffer[0]);
+			sMetaDataKey = std::string(&pBuffer[0]);
 		}
 
-		hResult = lib3mf_model_getmetadatavalue(pModel, iMeta, NULL, 0, &nNeededChars);
+		hResult = lib3mf_model_getmetadatavalueutf8(pModel, iMeta, NULL, 0, &nNeededChars);
 		if (hResult != LIB3MF_OK) {
 			return hResult;
 		}
 		// Retrieve Mesh Name
 		if (nNeededChars > 0) {
-			std::vector<wchar_t> pBuffer;
+			std::vector<char> pBuffer;
 			pBuffer.resize(nNeededChars + 1);
-			hResult = lib3mf_model_getmetadatavalue(pModel, iMeta, &pBuffer[0], nNeededChars + 1, NULL);
+			hResult = lib3mf_model_getmetadatavalueutf8(pModel, iMeta, &pBuffer[0], nNeededChars + 1, NULL);
 			if (hResult != LIB3MF_OK) {
 				return hResult;
 			}
 			pBuffer[nNeededChars] = 0;
-			sMetaDataValue = std::wstring(&pBuffer[0]);
+			sMetaDataValue = std::string(&pBuffer[0]);
 		}
 
-		std::wcout << "Metadatum: " << iMeta << ":" << std::endl;
-		std::wcout << "Key   = \"" << sMetaDataKey <<"\""<< std::endl;
-		std::wcout << "Value = \"" << sMetaDataKey << "\"" << std::endl;
+		std::cout << "Metadatum: " << iMeta << ":" << std::endl;
+		std::cout << "Key   = \"" << sMetaDataKey << "\"" << std::endl;
+		std::cout << "Value = \"" << sMetaDataValue << "\"" << std::endl;
 
 	}
 	return LIB3MF_OK;
@@ -441,13 +440,13 @@ int main(int argc, char* argv[])
 		lib3mf_release(pModel);
 		return -1;
 	}
-	
+
 	// And deactivate the strict mode (default is "false", anyway. This just demonstrates where/how to use it).
 	hResult = lib3mf_reader_setstrictmodeactive(p3MFReader, false);
 	if (hResult != LIB3MF_OK) {
 		std::cout << "could not set strict mode: " << std::hex << hResult << std::endl;
 	}
-	
+
 	// Import Model from 3MF File
 	bool bErrorOnRead = false;
 	std::cout << "reading " << sAnsiFilename << "..." << std::endl;
@@ -470,7 +469,7 @@ int main(int argc, char* argv[])
 	}
 
 	for (DWORD iWarning = 0; iWarning < nWarningCount; iWarning++) {
-		hResult = lib3mf_reader_getwarning(p3MFReader, iWarning, &nErrorCode, NULL, 0, &nNeededChars);
+		hResult = lib3mf_reader_getwarningutf8(p3MFReader, iWarning, &nErrorCode, NULL, 0, &nNeededChars);
 		if (hResult != LIB3MF_OK) {
 			std::cout << "could get warning : " << std::hex << hResult << std::endl;
 			lib3mf_release(p3MFReader);
@@ -478,9 +477,9 @@ int main(int argc, char* argv[])
 			return hResult;
 		}
 
-		std::wstring sWarning;
+		std::string sWarning;
 		sWarning.resize(nNeededChars + 1);
-		hResult = lib3mf_reader_getwarning(p3MFReader, iWarning, &nErrorCode, &sWarning[0], nNeededChars + 1, NULL);
+		hResult = lib3mf_reader_getwarningutf8(p3MFReader, iWarning, &nErrorCode, &sWarning[0], nNeededChars + 1, NULL);
 		if (hResult != LIB3MF_OK) {
 			std::cout << "could get warning : " << std::hex << hResult << std::endl;
 			lib3mf_release(p3MFReader);
@@ -488,7 +487,7 @@ int main(int argc, char* argv[])
 			return hResult;
 		}
 		// Insert custom warning handling here
-		std::wcout << L"Encountered warning : " << sWarning << std::endl;
+		std::cout << "Encountered warning : " << sWarning << std::endl;
 	}
 
 	// Finally stop if we had an error on read
@@ -516,7 +515,7 @@ int main(int argc, char* argv[])
 		lib3mf_release(pModel);
 		return -1;
 	}
-	
+
 	// Iterate through all the Objects
 	hResult = lib3mf_model_getobjects(pModel, &pResourceIterator);
 	if (hResult != LIB3MF_OK) {

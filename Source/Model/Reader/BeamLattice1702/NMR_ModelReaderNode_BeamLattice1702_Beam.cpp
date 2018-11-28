@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2017 Autodesk Inc.
+Copyright (C) 2018 3MF Consortium
 
 All rights reserved.
 
@@ -43,12 +43,12 @@ NMR_ModelReaderNode_BeamLattice1702_Beam.cpp covers the official 3MF beamlattice
 
 namespace NMR {
 
-	eModelBeamLatticeCapMode stringToCapMode(const nfWChar * capModeStr) {
-		if (wcscmp(capModeStr, XML_3MF_BEAMLATTICE_CAPMODE_BUTT) == 0)
+	eModelBeamLatticeCapMode stringToCapMode(const nfChar * capModeStr) {
+		if (strcmp(capModeStr, XML_3MF_BEAMLATTICE_CAPMODE_BUTT) == 0)
 			return eModelBeamLatticeCapMode::MODELBEAMLATTICECAPMODE_BUTT;
-		if ((wcscmp(capModeStr, XML_3MF_BEAMLATTICE_CAPMODE_HEMISPHERE) == 0) || (wcscmp(capModeStr, XML_3MF_BEAMLATTICE_CAPMODE_ROUND) == 0))
+		if ((strcmp(capModeStr, XML_3MF_BEAMLATTICE_CAPMODE_HEMISPHERE) == 0) || (strcmp(capModeStr, XML_3MF_BEAMLATTICE_CAPMODE_ROUND) == 0))
 			return eModelBeamLatticeCapMode::MODELBEAMLATTICECAPMODE_HEMISPHERE;
-		// if (wcscmp(capModeStr, XML_3MF_BEAMLATTICE_CAPMODE_SPHERE) == 0)
+		// if (strcmp(capModeStr, XML_3MF_BEAMLATTICE_CAPMODE_SPHERE) == 0)
 		//	return eModelBeamLatticeCapMode::MODELBEAMLATTICECAPMODE_SPHERE;
 		return eModelBeamLatticeCapMode::MODELBEAMLATTICECAPMODE_SPHERE;
 	}
@@ -125,40 +125,40 @@ namespace NMR {
 			nTag = m_nTag;
 	}
 
-	void CModelReaderNode_BeamLattice1702_Beam::OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue)
+	void CModelReaderNode_BeamLattice1702_Beam::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
 	{
 		__NMRASSERT(pAttributeName);
 		__NMRASSERT(pAttributeValue);
 
-		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_BEAMLATTICE_V1) == 0) {
-			nfInt32 nValue = fnWStringToInt32(pAttributeValue);
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_BEAMLATTICE_V1) == 0) {
+			nfInt32 nValue = fnStringToInt32(pAttributeValue);
 			if ((nValue >= 0) && (nValue < XML_3MF_MAXRESOURCEINDEX))
 				m_nIndex1 = nValue;
 		}
-		else if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_BEAMLATTICE_V2) == 0) {
-			nfInt32 nValue = fnWStringToInt32(pAttributeValue);
+		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_BEAMLATTICE_V2) == 0) {
+			nfInt32 nValue = fnStringToInt32(pAttributeValue);
 			if ((nValue >= 0) && (nValue < XML_3MF_MAXRESOURCEINDEX))
 				m_nIndex2 = nValue;
 		}
-		else if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_BEAMLATTICE_R1) == 0) {
-			nfFloat fValue = fnWStringToFloat(pAttributeValue);
+		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_BEAMLATTICE_R1) == 0) {
+			nfFloat fValue = fnStringToFloat(pAttributeValue);
 			if ((fValue >= 0) && (fValue < XML_3MF_MAXIMUMBEAMRADIUSVALUE)) {
 				m_dRadius1 = fValue;
 				m_bHasRadius1 = true;
 			}
 		}
-		else if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_BEAMLATTICE_R2) == 0) {
-			nfFloat fValue = fnWStringToFloat(pAttributeValue);
+		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_BEAMLATTICE_R2) == 0) {
+			nfFloat fValue = fnStringToFloat(pAttributeValue);
 			if ((fValue >= 0) && (fValue < XML_3MF_MAXIMUMBEAMRADIUSVALUE)) {
 				m_dRadius2 = fValue;
 				m_bHasRadius2 = true;
 			}
 		}
-		else if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_BEAMLATTICE_CAP1) == 0) {
+		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_BEAMLATTICE_CAP1) == 0) {
 			m_bHasCap1 = true;
 			m_eCapMode1 = stringToCapMode(pAttributeValue);
 		}
-		else if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_BEAMLATTICE_CAP2) == 0) {
+		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_BEAMLATTICE_CAP2) == 0) {
 			m_bHasCap2 = true;
 			m_eCapMode2 = stringToCapMode(pAttributeValue);
 		}
@@ -166,7 +166,7 @@ namespace NMR {
 			m_pWarnings->addException(CNMRException(NMR_ERROR_BEAMLATTICEINVALIDATTRIBUTE), mrwInvalidOptionalValue);
 	}
 
-	void CModelReaderNode_BeamLattice1702_Beam::OnNSAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue, _In_z_ const nfWChar * pNameSpace)
+	void CModelReaderNode_BeamLattice1702_Beam::OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace)
 	{
 		
 	}

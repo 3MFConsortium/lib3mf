@@ -1,8 +1,6 @@
 /*++
 
-Copyright (C) 2017 Autodesk Inc.
-Copyright (C) 2015 Microsoft Corporation (Original Author)
-Copyright (C) 2015 netfabb GmbH (Original Author)
+Copyright (C) 2018 3MF Consortium
 
 All rights reserved.
 
@@ -314,6 +312,14 @@ namespace NMR {
 				return LIB3MF_POINTER;
 
 			return ((ILib3MFModelReader *)pReader)->GetWarning(nIndex, pErrorCode, pwszBuffer, cbBufferSize, pcbNeededChars);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_reader_getwarningutf8(_In_ PLib3MFModelReader * pReader, _In_ DWORD nIndex, _Out_ DWORD * pErrorCode, _Out_opt_ LPSTR pszBuffer, _In_ ULONG cbBufferSize, _Out_ ULONG * pcbNeededChars)
+		{
+			if (!pReader)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelReader *)pReader)->GetWarningUTF8(nIndex, pErrorCode, pszBuffer, cbBufferSize, pcbNeededChars);
 		}
 
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_reader_setprogresscallback(_In_ PLib3MFModelReader * pReader, _In_ Lib3MFProgressCallback callback, void* userData)
@@ -1118,13 +1124,45 @@ namespace NMR {
 			return ((ILib3MFModelTexture2D *)pTexture2D)->GetContentType(peContentType);
 		}
 
-
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_texture2d_setcontenttype(_In_ PLib3MFModelTexture2D * pTexture2D, _In_ eModelTexture2DType eContentType)
 		{
 			if (!pTexture2D)
 				return LIB3MF_POINTER;
 
 			return ((ILib3MFModelTexture2D *)pTexture2D)->SetContentType(eContentType);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_texture2d_gettilestyleuv(_In_ PLib3MFModelTexture2D * pTexture2D, _Out_ eModelTextureTileStyle * peTileStyleU, _Out_ eModelTextureTileStyle * peTileStyleV)
+		{
+			if (!pTexture2D)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelTexture2D *)pTexture2D)->GetTileStyleUV(peTileStyleU, peTileStyleV);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_texture2d_settilestyleuv(_In_ PLib3MFModelTexture2D * pTexture2D, _In_ eModelTextureTileStyle eTileStyleU, _In_ eModelTextureTileStyle eTileStyleV)
+		{
+			if (!pTexture2D)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelTexture2D *)pTexture2D)->SetTileStyleUV(eTileStyleU, eTileStyleV);
+		}
+
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_texture2d_getfilter(_In_ PLib3MFModelTexture2D * pTexture2D, _Out_ eModelTextureFilter * peFilter)
+		{
+			if (!pTexture2D)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelTexture2D *)pTexture2D)->GetFilter(peFilter);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_texture2d_setfilter(_In_ PLib3MFModelTexture2D * pTexture2D, _In_ eModelTextureFilter eFilter)
+		{
+			if (!pTexture2D)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelTexture2D *)pTexture2D)->SetFilter(eFilter);
 		}
 
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_texture2d_getbox2d(_In_ PLib3MFModelTexture2D * pTexture2D, _Out_ FLOAT * pfU, _Out_ FLOAT * pfV, _Out_ FLOAT * pfWidth, _Out_ FLOAT * pfHeight)
@@ -1673,6 +1711,45 @@ namespace NMR {
 
 			return ((ILib3MFModelComponentsObject *)pComponentsObject)->GetComponentCount(pComponentCount);
 		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_componentsobject_setslicestack(_In_ PLib3MFModelComponentsObject *pComponentsObject, _In_ PLib3MFSliceStack *pSliceStack)
+		{
+			if (!pComponentsObject)
+				return LIB3MF_POINTER;
+
+			DWORD nSliceStackId;
+
+			if (((ILib3MFSliceStack *)pSliceStack)->GetResourceID(&nSliceStackId) != LIB3MF_OK) {
+				return LIB3MF_POINTER;
+			}
+
+			return ((ILib3MFModelComponentsObject *)pComponentsObject)->SetSliceStackId(nSliceStackId);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_componentsobject_getslicestackid(_In_ PLib3MFModelComponentsObject *pComponentsObject, _Out_ DWORD *pSliceStackId)
+		{
+			if (!pComponentsObject)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelComponentsObject *)pComponentsObject)->GetSliceStackId(pSliceStackId);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_componentsobject_setslicesmeshresolution(_In_ PLib3MFModelComponentsObject *pComponentsObject, _In_ eModelSlicesMeshResolution eSlicesMeshResolution)
+		{
+			if (!pComponentsObject)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelComponentsObject *)pComponentsObject)->SetSlicesMeshResolution(eSlicesMeshResolution);
+		}
+
+		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_componentsobject_getslicesmeshresolution(_In_ PLib3MFModelComponentsObject *pComponentsObject, _Out_ eModelSlicesMeshResolution *peSlicesMeshResolution)
+		{
+			if (!pComponentsObject)
+				return LIB3MF_POINTER;
+
+			return ((ILib3MFModelComponentsObject *)pComponentsObject)->GetSlicesMeshResolution(peSlicesMeshResolution);
+		}
+
 
 		LIB3MF_DECLSPEC LIB3MFRESULT lib3mf_builditem_getobjectresource(_In_ PLib3MFModelBuildItem * pBuildItem, _Outptr_ PLib3MFModelObjectResource ** ppObject)
 		{

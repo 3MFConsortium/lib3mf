@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2017 Autodesk Inc.
+Copyright (C) 2018 3MF Consortium
 
 All rights reserved.
 
@@ -45,13 +45,10 @@ namespace NMR
 		std::string m_sUUID;
 	public:
 		CUUID();
-		CUUID(const nfWChar* pString);
 		CUUID(const nfChar* pString);
 		std::string toString();
-		std::wstring toUTF16String();
 
 		bool set(const nfChar* pString);
-		bool set(const nfWChar* pString);
 
 		CUUID& operator=(const CUUID& uuid);
 		bool operator==(const CUUID& uuid);

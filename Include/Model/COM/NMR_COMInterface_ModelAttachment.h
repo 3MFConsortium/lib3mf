@@ -1,7 +1,6 @@
 /*++
 
-Copyright (C) 2015 Microsoft Corporation (Original Author)
-Copyright (C) 2015 netfabb GmbH
+Copyright (C) 2018 3MF Consortium
 
 All rights reserved.
 
@@ -74,18 +73,10 @@ namespace NMR {
 		LIB3MFMETHOD(WriteToFileUTF8) (_In_z_ LPCSTR pszFilename);
 		LIB3MFMETHOD(WriteToBuffer) (_Out_ BYTE * pBuffer, _In_ ULONG64 cbBufferSize);
 
-#ifdef NMR_COM_NATIVE
-		LIB3MFMETHOD(WriteToStream) (_In_ IStream * pStream);
-#endif// NMR_COM_NATIVE
-
 		LIB3MFMETHOD(WriteToCallback) (_In_ void * pWriteCallback, _In_opt_ void * pUserData);
 		LIB3MFMETHOD(ReadFromFile) (_In_z_ LPCWSTR pwszFilename);
 		LIB3MFMETHOD(ReadFromFileUTF8) (_In_z_ LPCSTR pwszFilename);
 		LIB3MFMETHOD(ReadFromBuffer) (_In_ BYTE * pBuffer, _In_ ULONG64 cbBufferSize);
-
-#ifdef NMR_COM_NATIVE
-		LIB3MFMETHOD(ReadFromStream) (_In_ IStream * pStream);
-#endif //NMR_COM_NATIVE
 	};
 
 }

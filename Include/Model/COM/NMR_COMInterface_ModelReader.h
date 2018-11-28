@@ -1,7 +1,6 @@
 /*++
 
-Copyright (C) 2015 Microsoft Corporation (Original Author)
-Copyright (C) 2015 netfabb GmbH
+Copyright (C) 2018 3MF Consortium
 
 All rights reserved.
 
@@ -59,6 +58,7 @@ namespace NMR {
 
 		LIB3MFMETHOD(GetWarningCount) (_Out_ DWORD * pnWarningCount);
 		LIB3MFMETHOD(GetWarning) (_In_ DWORD nIndex, _Out_ DWORD * pErrorCode, _Out_opt_ LPWSTR pwszBuffer, _In_ ULONG cbBufferSize, _Out_opt_ ULONG * pcbNeededChars);
+		LIB3MFMETHOD(GetWarningUTF8) (_In_ DWORD nIndex, _Out_ DWORD * pErrorCode, _Out_opt_ LPSTR pszBuffer, _In_ ULONG cbBufferSize, _Out_opt_ ULONG * pcbNeededChars);
 
 		LIB3MFMETHOD(AddRelationToRead) (_In_z_ LPCWSTR pwszRelationshipType);
 		LIB3MFMETHOD(RemoveRelationToRead) (_In_z_ LPCWSTR pwszRelationshipType);
@@ -67,10 +67,6 @@ namespace NMR {
 
 		LIB3MFMETHOD(SetStrictModeActive) (_In_ BOOL bStrictModeActive);
 		LIB3MFMETHOD(GetStrictModeActive) (_Out_ BOOL * pbStrictModeActive);
-
-#ifdef NMR_COM_NATIVE
-		LIB3MFMETHOD(ReadFromStream) (_In_ IStream * pStream);
-#endif // NMR_COM_NATIVE
 
 		LIB3MFMETHOD(ReadFromCallback) (_In_ void * pReadCallback, _In_ nfUint64 nStreamSize, _In_opt_ void * pSeekCallback, _In_opt_ void * pUserData);
 

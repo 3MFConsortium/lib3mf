@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2017 Autodesk Inc.
+Copyright (C) 2018 3MF Consortium
 
 All rights reserved.
 
@@ -38,14 +38,14 @@ Abstract:
 #include "Model/Classes/NMR_ModelConstants.h"
 
 namespace NMR {
-	void CModelReaderNode_Slice1507_SliceRef::OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue) {
-		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_SLICEREF_ID) == 0) {
-			m_SliceStackId = fnWStringToUint32(pAttributeValue);
+	void CModelReaderNode_Slice1507_SliceRef::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue) {
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_SLICEREF_ID) == 0) {
+			m_SliceStackId = fnStringToUint32(pAttributeValue);
 		}
-		else if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_SLICEREF_PATH) == 0) {
+		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_SLICEREF_PATH) == 0) {
 			m_Path = pAttributeValue;
 		}
-		else if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_SLICEZTOP) == 0) {
+		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_SLICEZTOP) == 0) {
 			// according to spec, the attribute "ztop" is not allowed in a SliceRef
 			// We we only warn here
 			m_pWarnings->addException(CNMRException(NMR_ERROR_SLICE_INVALIDATTRIBUTE), mrwInvalidMandatoryValue);
@@ -54,13 +54,13 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_SLICE_INVALIDATTRIBUTE);
 	}
 
-	void CModelReaderNode_Slice1507_SliceRef::OnNSChildElement(_In_z_ const nfWChar * pChildName, _In_z_ const nfWChar * pNameSpace, _In_ CXmlReader * pXMLReader) {
+	void CModelReaderNode_Slice1507_SliceRef::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader) {
 
 	}
 
 	CModelReaderNode_Slice1507_SliceRef::CModelReaderNode_Slice1507_SliceRef(_In_ PModelReaderWarnings pWarnings) : CModelReaderNode(pWarnings) {
 		m_SliceStackId = -1;
-		m_Path = L"";
+		m_Path = "";
 	}
 
 	void CModelReaderNode_Slice1507_SliceRef::parseXML(_In_ CXmlReader * pXMLReader) {
@@ -74,7 +74,7 @@ namespace NMR {
 		parseContent(pXMLReader);
 	}
 
-	std::wstring CModelReaderNode_Slice1507_SliceRef::Path()
+	std::string CModelReaderNode_Slice1507_SliceRef::Path()
 	{
 		return m_Path;
 	}

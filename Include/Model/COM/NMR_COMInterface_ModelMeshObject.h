@@ -1,7 +1,6 @@
 /*++
 
-Copyright (C) 2015 Microsoft Corporation (Original Author)
-Copyright (C) 2015 netfabb GmbH
+Copyright (C) 2018 3MF Consortium
 
 All rights reserved.
 
@@ -130,7 +129,6 @@ namespace NMR {
 
 		LIB3MFMETHOD(SetSliceStackId)(_In_ DWORD nSliceStackId);
 		LIB3MFMETHOD(GetSliceStackId)(_Out_ DWORD *pnSliceStackId);
-
 		LIB3MFMETHOD(SetSlicesMeshResolution)(_In_ eModelSlicesMeshResolution eSlicesMeshResolution);
 		LIB3MFMETHOD(GetSlicesMeshResolution)(_Out_ eModelSlicesMeshResolution *peSlicesMeshResolution);
 

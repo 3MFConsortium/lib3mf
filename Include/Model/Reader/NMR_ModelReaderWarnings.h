@@ -1,7 +1,6 @@
 /*++
 
-Copyright (C) 2015 Microsoft Corporation (Original Author)
-Copyright (C) 2015 netfabb GmbH
+Copyright (C) 2018 3MF Consortium
 
 All rights reserved.
 
@@ -44,13 +43,13 @@ a relaxed import policy on the file format.
 
 #define NMR_MAXWARNINGCOUNT 1000000000
 
-#define MODELREADERWARNING_INVALIDMODELUNIT L"invalid model unit"
-#define MODELREADERWARNING_INVALIDMETADATA L"invalid model metadata"
-#define MODELREADERWARNING_DUPLICATEMETADATA L"duplicate model metadata"
-#define MODELREADERWARNING_INVALIDMODELOBJECTTYPE L"invalid model object tpye"
-#define MODELREADERWARNING_REQUIREDEXTENSIONNOTSUPPORTED L"A required extension is not supported"
-#define MODELREADERWARNING_BEAMLATTICECLIPPINGRESOURCENOTDEFINED L"The resource defined as clippingmesh has not yet been defined in the model"
-#define MODELREADERWARNING_BEAMLATTICEREPRESENTATIONRESOURCENOTDEFINED L"The resource defined as representationmesh has not yet been defined in the model"
+#define MODELREADERWARNING_INVALIDMODELUNIT "invalid model unit"
+#define MODELREADERWARNING_INVALIDMETADATA "invalid model metadata"
+#define MODELREADERWARNING_DUPLICATEMETADATA "duplicate model metadata"
+#define MODELREADERWARNING_INVALIDMODELOBJECTTYPE "invalid model object tpye"
+#define MODELREADERWARNING_REQUIREDEXTENSIONNOTSUPPORTED "A required extension is not supported"
+#define MODELREADERWARNING_BEAMLATTICECLIPPINGRESOURCENOTDEFINED "The resource defined as clippingmesh has not yet been defined in the model"
+#define MODELREADERWARNING_BEAMLATTICEREPRESENTATIONRESOURCENOTDEFINED "The resource defined as representationmesh has not yet been defined in the model"
 
 namespace NMR {
 
@@ -63,14 +62,14 @@ namespace NMR {
 
 	class CModelReaderWarning {
 	private:
-		std::wstring m_sMessage;
+		std::string m_sMessage;
 		eModelReaderWarningLevel m_WarningLevel;
 		nfError m_nErrorCode;
 	public:
 		CModelReaderWarning() = delete;
-		CModelReaderWarning(std::wstring sMessage, eModelReaderWarningLevel WarningLevel, nfError nErrorCode);
+		CModelReaderWarning(std::string sMessage, eModelReaderWarningLevel WarningLevel, nfError nErrorCode);
 
-		std::wstring getMessage();
+		std::string getMessage();
 		eModelReaderWarningLevel getWarningLevel();
 		nfError getErrorCode();
 	};
@@ -87,7 +86,7 @@ namespace NMR {
 		eModelReaderWarningLevel getCriticalWarningLevel ();
 		void setCriticalWarningLevel(_In_ eModelReaderWarningLevel WarningLevel);
 
-		void addWarning(_In_ std::wstring sMessage, _In_ nfError nErrorCode, _In_ eModelReaderWarningLevel WarningLevel);
+		void addWarning(_In_ std::string sMessage, _In_ nfError nErrorCode, _In_ eModelReaderWarningLevel WarningLevel);
 		void addException(const _In_ CNMRException & Exception, _In_ eModelReaderWarningLevel WarningLevel);
 
 		nfUint32 getWarningCount();

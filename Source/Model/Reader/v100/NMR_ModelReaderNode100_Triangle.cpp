@@ -1,7 +1,6 @@
 /*++
 
-Copyright (C) 2015 Microsoft Corporation (Original Author)
-Copyright (C) 2015 netfabb GmbH
+Copyright (C) 2018 3MF Consortium
 
 All rights reserved.
 
@@ -112,44 +111,44 @@ namespace NMR {
 
 	}
 
-	void CModelReaderNode100_Triangle::OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue)
+	void CModelReaderNode100_Triangle::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
 	{
 		__NMRASSERT(pAttributeName);
 		__NMRASSERT(pAttributeValue);
 		nfInt32 nValue;
 
-		if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TRIANGLE_V1) == 0) {
-			nValue = fnWStringToInt32(pAttributeValue);
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_TRIANGLE_V1) == 0) {
+			nValue = fnStringToInt32(pAttributeValue);
 			if ((nValue >= 0) && (nValue < XML_3MF_MAXRESOURCEINDEX))
 				m_nIndex1 = nValue;
 		}
-		else if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TRIANGLE_V2) == 0) {
-			nValue = fnWStringToInt32(pAttributeValue);
+		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_TRIANGLE_V2) == 0) {
+			nValue = fnStringToInt32(pAttributeValue);
 			if ((nValue >= 0) && (nValue < XML_3MF_MAXRESOURCEINDEX))
 				m_nIndex2 = nValue;
 		}
-		else if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TRIANGLE_V3) == 0) {
-			nValue = fnWStringToInt32(pAttributeValue);
+		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_TRIANGLE_V3) == 0) {
+			nValue = fnStringToInt32(pAttributeValue);
 			if ((nValue >= 0) && (nValue < XML_3MF_MAXRESOURCEINDEX))
 				m_nIndex3 = nValue;
 		}
-		else if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TRIANGLE_PID) == 0) {
-			nValue = fnWStringToInt32(pAttributeValue);
+		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_TRIANGLE_PID) == 0) {
+			nValue = fnStringToInt32(pAttributeValue);
 			if ((nValue >= 0) && (nValue < XML_3MF_MAXRESOURCEID))
 				m_nPropertyID = nValue;
 		}
-		else if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TRIANGLE_P1) == 0) {
-			nValue = fnWStringToInt32(pAttributeValue);
+		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_TRIANGLE_P1) == 0) {
+			nValue = fnStringToInt32(pAttributeValue);
 			if ((nValue >= 0) && (nValue < XML_3MF_MAXRESOURCEINDEX))
 				m_nPropertyIndex1 = nValue;
 		}
-		else if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TRIANGLE_P2) == 0) {
-			nValue = fnWStringToInt32(pAttributeValue);
+		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_TRIANGLE_P2) == 0) {
+			nValue = fnStringToInt32(pAttributeValue);
 			if ((nValue >= 0) && (nValue < XML_3MF_MAXRESOURCEINDEX))
 				m_nPropertyIndex2 = nValue;
 		}
-		else if (wcscmp(pAttributeName, XML_3MF_ATTRIBUTE_TRIANGLE_P3) == 0) {
-			nValue = fnWStringToInt32(pAttributeValue);
+		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_TRIANGLE_P3) == 0) {
+			nValue = fnStringToInt32(pAttributeValue);
 			if ((nValue >= 0) && (nValue < XML_3MF_MAXRESOURCEINDEX))
 				m_nPropertyIndex3 = nValue;
 		}

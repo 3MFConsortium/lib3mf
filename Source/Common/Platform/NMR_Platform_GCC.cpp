@@ -1,7 +1,6 @@
 /*++
 
-Copyright (C) 2015 Microsoft Corporation
-Copyright (C) 2015 netfabb GmbH (Original Author)
+Copyright (C) 2018 3MF Consortium
 
 All rights reserved.
 
@@ -43,18 +42,21 @@ specific classes for GCC.
 #include "Common/Platform/NMR_ImportStream_GCC_Native.h"
 #include "Common/Platform/NMR_ExportStream_GCC_Native.h"
 #include "Common/Platform/NMR_XmlReader_Native.h"
+#include "Common/NMR_StringUtils.h"
 
 
 namespace NMR {
 
-	PImportStream fnCreateImportStreamInstance (_In_ const nfWChar * pwszFileName)
+	PImportStream fnCreateImportStreamInstance (_In_ const nfChar * pszFileName)
 	{
-		return std::make_shared<CImportStream_GCC_Native> (pwszFileName);
+		std::wstring sFileName = fnUTF8toUTF16(pszFileName);
+		return std::make_shared<CImportStream_GCC_Native> (sFileName.c_str());
 	}
 
-	PExportStream fnCreateExportStreamInstance (_In_ const nfWChar * pwszFileName)
+	PExportStream fnCreateExportStreamInstance (_In_ const nfChar * pszFileName)
 	{
-		return std::make_shared<CExportStream_GCC_Native> (pwszFileName);
+		std::wstring sFileName = fnUTF8toUTF16(pszFileName);
+		return std::make_shared<CExportStream_GCC_Native> (sFileName.c_str());
 	}
 
 	PXmlReader fnCreateXMLReaderInstance (_In_ PImportStream pImportStream, CProgressMonitor * pProgressMonitor)

@@ -1,7 +1,6 @@
 /*++
 
-Copyright (C) 2015 Microsoft Corporation (Original Author)
-Copyright (C) 2015 netfabb GmbH
+Copyright (C) 2018 3MF Consortium
 
 All rights reserved.
 
@@ -46,10 +45,11 @@ namespace NMR {
 		CModel * m_pModel;
 		ModelResourceID m_nID;
 
-		std::wstring m_sPath;
-		std::wstring m_sContentType;
-		std::wstring m_sTileStyleU;
-		std::wstring m_sTileStyleV;
+		std::string m_sPath;
+		std::string m_sContentType;
+		std::string m_sTileStyleU;
+		std::string m_sTileStyleV;
+		std::string m_sFilter;
 		
 		nfBool m_hasBox;
 		nfFloat m_fU;
@@ -59,7 +59,7 @@ namespace NMR {
 
 		PModelTexture2DResource m_pTexture2DResource;
 	protected:
-		virtual void OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue);
+		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 	public:
 		CModelReaderNode100_Texture2D() = delete;
 		CModelReaderNode100_Texture2D(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings);

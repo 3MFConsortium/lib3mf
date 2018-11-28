@@ -1,7 +1,6 @@
 /*++
 
-Copyright (C) 2015 Microsoft Corporation
-Copyright (C) 2015 netfabb GmbH (Original Author)
+Copyright (C) 2018 3MF Consortium
 
 All rights reserved.
 
@@ -43,6 +42,8 @@ namespace NMR {
 	{
 		m_ObjectType = MODELOBJECTTYPE_MODEL;
 		setUUID(std::make_shared<CUUID>());
+		m_pSliceStackId = 0;
+		m_eSlicesMeshResolution = MODELSLICESMESHRESOLUTION_FULL;
 	}
 
 	void CModelObject::mergeToMesh(_In_ CMesh * pMesh, _In_ const NMATRIX3 mMatrix)
@@ -65,22 +66,22 @@ namespace NMR {
 		m_ObjectType = ObjectType;
 	}
 
-	std::wstring CModelObject::getName()
+	std::string CModelObject::getName()
 	{
 		return m_sName;
 	}
 
-	void CModelObject::setName(_In_ std::wstring sName)
+	void CModelObject::setName(_In_ std::string sName)
 	{
 		m_sName = sName;
 	}
 
-	std::wstring CModelObject::getPartNumber()
+	std::string CModelObject::getPartNumber()
 	{
 		return m_sPartNumber;
 	}
 
-	void CModelObject::setPartNumber(_In_ std::wstring sPartNumber)
+	void CModelObject::setPartNumber(_In_ std::string sPartNumber)
 	{
 		m_sPartNumber = sPartNumber;
 	}
@@ -97,7 +98,7 @@ namespace NMR {
 		m_UUID = uuid;
 	}
 
-	nfBool CModelObject::setObjectTypeString(_In_ std::wstring sTypeString, _In_ nfBool bRaiseException)
+	nfBool CModelObject::setObjectTypeString(_In_ std::string sTypeString, _In_ nfBool bRaiseException)
 	{
 		if (sTypeString == XML_3MF_OBJECTTYPE_OTHER) {
 			setObjectType(MODELOBJECTTYPE_OTHER);
@@ -115,6 +116,10 @@ namespace NMR {
 			setObjectType(MODELOBJECTTYPE_SOLIDSUPPORT);
 			return true;
 		}
+		if (sTypeString == XML_3MF_OBJECTTYPE_SURFACE) {
+			setObjectType(MODELOBJECTTYPE_SURFACE);
+			return true;
+		}
 
 		if (bRaiseException)
 			throw CNMRException(NMR_ERROR_INVALIDMODELOBJECTTYPE);
@@ -122,20 +127,38 @@ namespace NMR {
 		return false;
 	}
 
-	std::wstring CModelObject::getObjectTypeString()
+	std::string CModelObject::getObjectTypeString()
 	{
 		switch (m_ObjectType) {
 		case MODELOBJECTTYPE_OTHER:
-			return std::wstring(XML_3MF_OBJECTTYPE_OTHER);
+			return std::string(XML_3MF_OBJECTTYPE_OTHER);
 		case MODELOBJECTTYPE_MODEL:
-			return std::wstring(XML_3MF_OBJECTTYPE_MODEL);
+			return std::string(XML_3MF_OBJECTTYPE_MODEL);
 		case MODELOBJECTTYPE_SUPPORT:
-			return std::wstring(XML_3MF_OBJECTTYPE_SUPPORT);
+			return std::string(XML_3MF_OBJECTTYPE_SUPPORT);
 		case MODELOBJECTTYPE_SOLIDSUPPORT:
-			return std::wstring(XML_3MF_OBJECTTYPE_SOLIDSUPPORT);
-        default:
-            return L"";
+			return std::string(XML_3MF_OBJECTTYPE_SOLIDSUPPORT);
+		case MODELOBJECTTYPE_SURFACE:
+			return std::string(XML_3MF_OBJECTTYPE_SURFACE);
+		default:
+			return "";
 		}
+	}
+
+	void CModelObject::setSliceStackId(PPackageResourceID nSliceStackId) {
+		m_pSliceStackId = nSliceStackId;
+	}
+
+	PPackageResourceID CModelObject::getSliceStackId() {
+		return m_pSliceStackId;
+	}
+
+	void CModelObject::setSlicesMeshResolution(eModelSlicesMeshResolution eMeshResolution) {
+		m_eSlicesMeshResolution = eMeshResolution;
+	}
+
+	eModelSlicesMeshResolution CModelObject::slicesMeshResolution() const {
+		return m_eSlicesMeshResolution;
 	}
 
 	void CModelObject::setDefaultProperty(_In_ PModelDefaultProperty pModelDefaultProperty)
@@ -148,12 +171,12 @@ namespace NMR {
 		return m_pModelDefaultProperty;
 	}
 
-	void CModelObject::setThumbnail(_In_ std::wstring sThumbnail)
+	void CModelObject::setThumbnail(_In_ std::string sThumbnail)
 	{
 		m_sThumbnail = sThumbnail;
 	}
 
-	std::wstring CModelObject::getThumbnail()
+	std::string CModelObject::getThumbnail()
 	{
 		return m_sThumbnail;
 	}

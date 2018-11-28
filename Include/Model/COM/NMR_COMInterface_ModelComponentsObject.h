@@ -1,7 +1,6 @@
 /*++
 
-Copyright (C) 2015 Microsoft Corporation (Original Author)
-Copyright (C) 2015 netfabb GmbH
+Copyright (C) 2018 3MF Consortium
 
 All rights reserved.
 
@@ -85,10 +84,15 @@ namespace NMR {
 		LIB3MFMETHOD(IsValidObject) (_Out_ BOOL * pbIsValid);
 		LIB3MFMETHOD(HasSlices) (_Out_ BOOL * pbHasSlices);
 
+		LIB3MFMETHOD(SetSliceStackId)(_In_ DWORD nSliceStackId);
+		LIB3MFMETHOD(GetSliceStackId)(_Out_ DWORD *pnSliceStackId);
+		LIB3MFMETHOD(SetSlicesMeshResolution)(_In_ eModelSlicesMeshResolution eSlicesMeshResolution);
+		LIB3MFMETHOD(GetSlicesMeshResolution)(_Out_ eModelSlicesMeshResolution *peSlicesMeshResolution);
+
 		LIB3MFMETHOD(CreateDefaultPropertyHandler) (_Outptr_ ILib3MFDefaultPropertyHandler ** ppPropertyHandler);
 		LIB3MFMETHOD(CreateDefaultMultiPropertyHandler) (_In_ DWORD nChannel, _Outptr_ ILib3MFDefaultPropertyHandler ** ppPropertyHandler);
 
-			CCOMModelComponentsObject();
+		CCOMModelComponentsObject();
 
 		void setResource(_In_ PModelResource pModelResource);
 	};

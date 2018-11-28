@@ -1,7 +1,6 @@
 /*++
 
-Copyright (C) 2015 Microsoft Corporation
-Copyright (C) 2015 netfabb GmbH (Original Author)
+Copyright (C) 2018 3MF Consortium
 
 All rights reserved.
 
@@ -44,7 +43,7 @@ namespace NMR {
 	{
 	}
 
-	nfUint32 CModelBaseMaterialResource::addBaseMaterial(_In_ const std::wstring sName, _In_ nfColor cDisplayColor)
+	nfUint32 CModelBaseMaterialResource::addBaseMaterial(_In_ const std::string sName, _In_ nfColor cDisplayColor)
 	{
 		nfUint32 nNewIndex = getCount();
 		if (nNewIndex >= XML_3MF_MAXRESOURCEINDEX) {

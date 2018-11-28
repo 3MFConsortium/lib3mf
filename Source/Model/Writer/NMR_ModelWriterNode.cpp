@@ -1,7 +1,6 @@
 /*++
 
-Copyright (C) 2015 Microsoft Corporation
-Copyright (C) 2015 netfabb GmbH (Original Author)
+Copyright (C) 2018 3MF Consortium
 
 All rights reserved.
 
@@ -49,17 +48,17 @@ namespace NMR {
 		m_pProgressMonitor = pProgressMonitor;
 	}
 
-	void CModelWriterNode::writeStringAttribute(_In_z_ const nfWChar * pAttributeName, _In_ std::wstring sAttributeValue)
+	void CModelWriterNode::writeStringAttribute(_In_z_ const nfChar * pAttributeName, _In_ std::string sAttributeValue)
 	{
 		writeConstStringAttribute(pAttributeName, sAttributeValue.c_str ());
 	}
 
-	void CModelWriterNode::writePrefixedStringAttribute(_In_z_ const nfWChar * pPrefix, _In_ const nfWChar * pAttributeName, std::wstring sAttributeValue)
+	void CModelWriterNode::writePrefixedStringAttribute(_In_z_ const nfChar * pPrefix, _In_ const nfChar * pAttributeName, std::string sAttributeValue)
 	{
 		writeConstPrefixedStringAttribute(pPrefix, pAttributeName, sAttributeValue.c_str());
 	}
 
-	void CModelWriterNode::writeConstStringAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue)
+	void CModelWriterNode::writeConstStringAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
 	{
 		__NMRASSERT(pAttributeName);
 		__NMRASSERT(pAttributeValue);
@@ -68,7 +67,7 @@ namespace NMR {
 		m_pXMLWriter->WriteAttributeString(nullptr, pAttributeName, nullptr, pAttributeValue);
 	}
 
-	void CModelWriterNode::writeConstPrefixedStringAttribute(_In_z_ const nfWChar * pPrefix, _In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue)
+	void CModelWriterNode::writeConstPrefixedStringAttribute(_In_z_ const nfChar * pPrefix, _In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
 	{
 		__NMRASSERT(pAttributeName);
 		__NMRASSERT(pAttributeValue);
@@ -78,38 +77,38 @@ namespace NMR {
 		m_pXMLWriter->WriteAttributeString(pPrefix, pAttributeName, nullptr, pAttributeValue);
 	}
 
-	void CModelWriterNode::writeIntAttribute(_In_z_ const nfWChar * pAttributeName, _In_ nfInt32 nAttributeValue)
+	void CModelWriterNode::writeIntAttribute(_In_z_ const nfChar * pAttributeName, _In_ nfInt32 nAttributeValue)
 	{
-		std::wstringstream sStream;
+		std::stringstream sStream;
 		sStream << nAttributeValue;
 		writeConstStringAttribute(pAttributeName, sStream.str().c_str());
 	}
 
-	void CModelWriterNode::writeUintAttribute(_In_z_ const nfWChar * pAttributeName, _In_ nfUint32 nAttributeValue)
+	void CModelWriterNode::writeUintAttribute(_In_z_ const nfChar * pAttributeName, _In_ nfUint32 nAttributeValue)
 	{
-		std::wstringstream sStream;
+		std::stringstream sStream;
 		sStream << nAttributeValue;
 		writeConstStringAttribute(pAttributeName, sStream.str().c_str());
 	}
 
-	void CModelWriterNode::writeFloatAttribute(_In_z_ const nfWChar * pAttributeName, _In_ nfFloat fAttributeValue)
+	void CModelWriterNode::writeFloatAttribute(_In_z_ const nfChar * pAttributeName, _In_ nfFloat fAttributeValue)
 	{
-		std::wstringstream sStream;
+		std::stringstream sStream;
 		sStream << fAttributeValue;
 		writeConstStringAttribute(pAttributeName, sStream.str().c_str());
 	}
 
-	void CModelWriterNode::writeStartElement(_In_z_ const nfWChar * pElementName)
+	void CModelWriterNode::writeStartElement(_In_z_ const nfChar * pElementName)
 	{
 		m_pXMLWriter->WriteStartElement(nullptr, pElementName, nullptr);
 	}
 
-	void CModelWriterNode::writeStartElementWithNamespace(_In_z_ const nfWChar * pElementName, _In_z_ const nfWChar * pNameSpace)
+	void CModelWriterNode::writeStartElementWithNamespace(_In_z_ const nfChar * pElementName, _In_z_ const nfChar * pNameSpace)
 	{
 		m_pXMLWriter->WriteStartElement(nullptr, pElementName, pNameSpace);
 	}
 
-	void CModelWriterNode::writeStartElementWithPrefix(_In_z_ const nfWChar * pElementName, _In_z_ const nfWChar * pPrefix)
+	void CModelWriterNode::writeStartElementWithPrefix(_In_z_ const nfChar * pElementName, _In_z_ const nfChar * pPrefix)
 	{
 		m_pXMLWriter->WriteStartElement(pPrefix, pElementName, nullptr);
 	}
@@ -124,7 +123,7 @@ namespace NMR {
 		m_pXMLWriter->WriteFullEndElement();
 	}
 
-	void CModelWriterNode::writeText(_In_z_ const nfWChar * pwszText, _In_ nfUint32 cbLength)
+	void CModelWriterNode::writeText(_In_z_ const nfChar * pwszText, _In_ nfUint32 cbLength)
 	{
 		m_pXMLWriter->WriteText(pwszText, cbLength);
 	}

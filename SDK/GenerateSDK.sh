@@ -23,8 +23,9 @@ echo Clean artifacts-folder $SDKARTIFACTS
 rm -rf $SDKARTIFACTS
 mkdir $SDKARTIFACTS
 
-#=Copy docs and examples=#
-echo Copy docs and examples
+#=Copy license, docs, examples=#
+echo Copy license, docs and examples
+cp  ../LICENSE $SDKARTIFACTS
 cp -r Doc $SDKARTIFACTS
 cp -r Examples $SDKARTIFACTS
 

@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2015 netfabb GmbH (Original Author)
+Copyright (C) 2018 3MF Consortium
 
 All rights reserved.
 
@@ -68,8 +68,8 @@ namespace NMR {
 	NMATRIX3 fnMATRIX3_scale(_In_ nfFloat fScaleX, _In_ nfFloat fScaleY, _In_ nfFloat fScaleZ);
 	NVEC3 fnMATRIX3_apply(_In_ const NMATRIX3 mMatrix, _In_ const NVEC3 vVector);
 	nfBool fnMATRIX3_isIdentity(_In_ const NMATRIX3 mMatrix);
-	std::wstring fnMATRIX3_toWideString(_In_ const NMATRIX3 mMatrix);
-	NMATRIX3 fnMATRIX3_fromWideString(_In_ const std::wstring sString);
+	std::string fnMATRIX3_toString(_In_ const NMATRIX3 mMatrix);
+	NMATRIX3 fnMATRIX3_fromString(_In_ const std::string sString);
 
 	nfBool fnMATRIX3_isplanar(_In_ const NMATRIX3 mMatrix);
 }

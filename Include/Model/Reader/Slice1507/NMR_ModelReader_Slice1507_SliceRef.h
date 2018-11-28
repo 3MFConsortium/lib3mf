@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2017 Autodesk Inc.
+Copyright (C) 2018 3MF Consortium
 
 All rights reserved.
 
@@ -43,11 +43,11 @@ namespace NMR {
 	class CModelReaderNode_Slice1507_SliceRef : public CModelReaderNode {
 	private:
 		nfUint32 m_SliceStackId;
-		std::wstring m_Path;
+		std::string m_Path;
 
 	protected:
-		virtual void OnAttribute(_In_z_ const nfWChar * pAttributeName, _In_z_ const nfWChar * pAttributeValue);
-		virtual void OnNSChildElement(_In_z_ const nfWChar * pChildName, _In_z_ const nfWChar * pNameSpace, _In_ CXmlReader * pXMLReader);
+		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
+		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 
 	public:
 		CModelReaderNode_Slice1507_SliceRef() = delete;
@@ -55,7 +55,7 @@ namespace NMR {
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 		
-		std::wstring Path();
+		std::string Path();
 		nfUint32 SliceStackId();
 
 	};

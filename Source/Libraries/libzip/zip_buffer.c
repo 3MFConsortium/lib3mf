@@ -148,7 +148,7 @@ _zip_buffer_new(zip_uint8_t *data, zip_uint64_t size)
     zip_buffer_t *buffer;
     
     if (data == NULL) {
-        if ((data = (zip_uint8_t *)malloc(size)) == NULL) {
+        if ((data = (zip_uint8_t *)malloc((size_t)size)) == NULL) {
             return NULL;
         }
     }

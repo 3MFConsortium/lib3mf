@@ -1,7 +1,6 @@
 /*++
 
-Copyright (C) 2015 Microsoft Corporation (Original Author)
-Copyright (C) 2015 netfabb GmbH
+Copyright (C) 2018 3MF Consortium
 
 All rights reserved.
 
@@ -67,6 +66,10 @@ namespace NMR {
 		LIB3MFMETHOD(SetPathUTF8) (_In_z_ LPCSTR pszPath);
 		LIB3MFMETHOD(GetContentType) (_Out_ eModelTexture2DType * peContentType);
 		LIB3MFMETHOD(SetContentType) (_In_ eModelTexture2DType eContentType);
+		LIB3MFMETHOD(GetTileStyleUV) (_Out_ eModelTextureTileStyle * peTileStyleU, _Out_ eModelTextureTileStyle * peTileStyleV);
+		LIB3MFMETHOD(SetTileStyleUV) (_In_ eModelTextureTileStyle eTileStyleU, _In_ eModelTextureTileStyle eTileStyleV);
+		LIB3MFMETHOD(GetFilter) (_Out_ eModelTextureFilter * peFilter);
+		LIB3MFMETHOD(SetFilter) (_In_ eModelTextureFilter eFilter);
 		LIB3MFMETHOD(GetBox2D) (_Out_ FLOAT * pfU, _Out_ FLOAT * pfV, _Out_ FLOAT * pfWidth, _Out_ FLOAT * pfHeight);
 		LIB3MFMETHOD(SetBox2D) (_In_ FLOAT fU, _In_ FLOAT fV, _In_ FLOAT fWidth, _In_ FLOAT fHeight);
 		LIB3MFMETHOD(ClearBox2D) ();
@@ -76,17 +79,9 @@ namespace NMR {
 		LIB3MFMETHOD(WriteToBuffer) (_Out_ BYTE * pBuffer, _In_ ULONG64 cbBufferSize);
 		LIB3MFMETHOD(WriteToCallback) (_In_ void * pWriteCallback, _In_opt_ void * pUserData);
 
-#ifdef NMR_COM_NATIVE
-		LIB3MFMETHOD(WriteToStream) (_In_ IStream * pStream);
-#endif// NMR_COM_NATIVE
-
 		LIB3MFMETHOD(ReadFromFile) (_In_z_ LPCWSTR pwszFilename);
 		LIB3MFMETHOD(ReadFromFileUTF8) (_In_z_ LPCSTR pszFilename);
 		LIB3MFMETHOD(ReadFromBuffer) (_In_ BYTE * pBuffer, _In_ ULONG64 cbBufferSize);
-
-#ifdef NMR_COM_NATIVE
-		LIB3MFMETHOD(ReadFromStream) (_In_ IStream * pStream);
-#endif //NMR_COM_NATIVE
 
 		CCOMModelTexture2D();
 

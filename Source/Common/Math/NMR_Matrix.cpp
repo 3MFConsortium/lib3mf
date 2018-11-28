@@ -1,7 +1,6 @@
 /*++
 
-Copyright (C) 2015 Microsoft Corporation 
-Copyright (C) 2015 netfabb GmbH (Original Author)
+Copyright (C) 2018 3MF Consortium
 
 All rights reserved.
 
@@ -419,41 +418,41 @@ namespace NMR {
 		return vResult;
 	}
 
-	std::wstring fnMATRIX3_toWideString(_In_ const NMATRIX3 mMatrix) {
-		std::wstringstream sStream;
+	std::string fnMATRIX3_toString(_In_ const NMATRIX3 mMatrix) {
+		std::stringstream sStream;
 		nfInt32 i, j;
 
 		for (j = 0; j < 4; j++) {
 			for (i = 0; i < 3; i++) {
 				sStream << mMatrix.m_fields[i][j];
 				if ((i != 2) || (j != 3))
-					sStream << L" ";
+					sStream << " ";
 			}
 		}
 
 		return sStream.str();
 	}
 
-	NMATRIX3 fnMATRIX3_fromWideString(_In_ const std::wstring sString)
+	NMATRIX3 fnMATRIX3_fromString(_In_ const std::string sString)
 	{
 		nfUint32 nValueCount = 0;
 		nfFloat nValues[12];
 
-		const nfWChar * pwszString = sString.c_str();
-		const nfWChar * pCurrent = pwszString;
+		const nfChar * pszString = sString.c_str();
+		const nfChar * pCurrent = pszString;
 
 		nfBool bFinished = false;
 		while (!bFinished) {
 			// Find next space
-			const nfWChar * pBegin = pCurrent;
-			while ((*pCurrent != L' ') && (*pCurrent))
+			const nfChar * pBegin = pCurrent;
+			while ((*pCurrent != ' ') && (*pCurrent))
 				pCurrent++;
 
 			// If we have not found a space, convert value to double
 			if (pBegin != pCurrent) {
 				if (nValueCount >= 12)
 					throw CNMRException(NMR_ERROR_TOOMANYVALUESINMATRIXSTRING);
-				nValues[nValueCount] = fnWStringToFloat(pBegin);
+				nValues[nValueCount] = fnStringToFloat(pBegin);
 				nValueCount++;
 			}
 

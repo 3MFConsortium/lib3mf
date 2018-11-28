@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2015 netfabb GmbH (Original Author)
+Copyright (C) 2018 3MF Consortium
 
 All rights reserved.
 
@@ -37,7 +37,7 @@ NMR_OpcPackageRelationship.cpp implements an OPC Package Relationship Object.
 
 namespace NMR {
 
-	COpcPackageRelationship::COpcPackageRelationship(_In_ std::wstring sID, _In_ std::wstring sType, _In_ std::wstring sTargetPartURI)
+	COpcPackageRelationship::COpcPackageRelationship(_In_ std::string sID, _In_ std::string sType, _In_ std::string sTargetPartURI)
 	{
 		m_sID = sID;
 		m_sType = sType;
@@ -45,25 +45,25 @@ namespace NMR {
 			// must not be emtpy
 			throw CNMRException(NMR_ERROR_INVALIDOPCPARTURI);
 		}
-		std::wstring sName = fnExtractFileName(sTargetPartURI);
-		if ( sName.empty() || (sName[0] == L'.') ) {
+		std::string sName = fnExtractFileName(sTargetPartURI);
+		if ( sName.empty() || (sName[0] == '.') ) {
 			// must not be emtpy or start with a '.'
 			throw CNMRException(NMR_ERROR_INVALIDOPCPARTURI);
 		}
 		m_sTargetPartURI = sTargetPartURI;
 	}
 
-	std::wstring COpcPackageRelationship::getID()
+	std::string COpcPackageRelationship::getID()
 	{
 		return m_sID;
 	}
 
-	std::wstring COpcPackageRelationship::getType()
+	std::string COpcPackageRelationship::getType()
 	{
 		return m_sType;
 	}
 
-	std::wstring COpcPackageRelationship::getTargetPartURI()
+	std::string COpcPackageRelationship::getTargetPartURI()
 	{
 		return m_sTargetPartURI;
 	}
@@ -73,7 +73,7 @@ namespace NMR {
 		if (pXMLWriter == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-		std::wstring sTarget = fnIncludeLeadingPathDelimiter(m_sTargetPartURI);
+		std::string sTarget = fnIncludeLeadingPathDelimiter(m_sTargetPartURI);
 
 		pXMLWriter->WriteStartElement(nullptr, OPC_RELS_RELATIONSHIP_NODE, nullptr);
 		pXMLWriter->WriteAttributeString(nullptr, OPC_RELS_ATTRIB_TYPE, nullptr, m_sType.c_str());

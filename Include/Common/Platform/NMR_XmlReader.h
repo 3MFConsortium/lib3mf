@@ -1,7 +1,6 @@
 /*++
 
-Copyright (C) 2015 Microsoft Corporation
-Copyright (C) 2015 netfabb GmbH (Original Author)
+Copyright (C) 2018 3MF Consortium
 
 All rights reserved.
 
@@ -47,16 +46,16 @@ namespace NMR {
 	};
 
 	class CXmlReader {
-    protected:
+	protected:
 		PImportStream m_pImportStream;
 	public:
 		CXmlReader(_In_ PImportStream pImportStream);
 
-		virtual void GetLocalName(_Outptr_result_buffer_maybenull_(*pcwchLocalName + 1) const nfWChar ** ppwszLocalName, _Out_opt_ nfUint32 *pcwchLocalName) = 0;
-		virtual void GetValue(_Outptr_result_buffer_maybenull_(*pcwchValue + 1)  const nfWChar ** ppwszValue, _Out_opt_  nfUint32 *pcwchValue) = 0;
-		virtual void GetNamespaceURI(_Outptr_result_buffer_maybenull_(*pcwchValue + 1)  const nfWChar ** ppwszValue, _Out_opt_  nfUint32 *pcwchValue) = 0;
-		virtual bool GetNamespaceURI(const std::wstring &sNameSpacePrefix, std::wstring &sNameSpaceURI) = 0;
-		virtual bool NamespaceRegistered(const std::wstring &sNameSpaceURI) = 0;
+		virtual void GetLocalName(_Outptr_result_buffer_maybenull_(*pcchLocalName + 1) const nfChar ** ppszLocalName, _Out_opt_ nfUint32 *pcchLocalName) = 0;
+		virtual void GetValue(_Outptr_result_buffer_maybenull_(*pcchValue + 1)  const nfChar ** ppszValue, _Out_opt_  nfUint32 *pcwchValue) = 0;
+		virtual void GetNamespaceURI(_Outptr_result_buffer_maybenull_(*pcchValue + 1)  const nfChar ** ppszValue, _Out_opt_  nfUint32 *pcchValue) = 0;
+		virtual bool GetNamespaceURI(const std::string &sNameSpacePrefix, std::string &sNameSpaceURI) = 0;
+		virtual bool NamespaceRegistered(const std::string &sNameSpaceURI) = 0;
 
 		virtual nfBool Read(_Out_ eXmlReaderNodeType & NodeType) = 0;
 		virtual nfBool IsEOF() = 0;

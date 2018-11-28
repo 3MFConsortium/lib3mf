@@ -1,7 +1,6 @@
 /*++
 
-Copyright (C) 2015 Microsoft Corporation (Original Author)
-Copyright (C) 2015 netfabb GmbH
+Copyright (C) 2018 3MF Consortium
 
 All rights reserved.
 
@@ -39,10 +38,6 @@ COM Interface Implementation for Model Reader Class
 #include "Common/Platform/NMR_ImportStream_Memory.h"
 #include "Common/Platform/NMR_ImportStream_Callback.h" 
 #include <locale.h>
-
-#ifdef NMR_COM_NATIVE
-#include "Common/Platform/NMR_ImportStream_COM.h"
-#endif
 
 namespace NMR {
 
@@ -115,7 +110,8 @@ namespace NMR {
 
 			setlocale (LC_ALL, "C");
 
-			PImportStream pStream = fnCreateImportStreamInstance(pwszFilename);
+			std::string sUTF8FileName = fnUTF16toUTF8(pwszFilename);
+			PImportStream pStream = fnCreateImportStreamInstance(sUTF8FileName.c_str());
 			m_pModelReader->readStream(pStream);
 			return handleSuccess();
 		}
@@ -137,11 +133,9 @@ namespace NMR {
 
 			setlocale (LC_ALL, "C");
 
-			// Convert to UTF16
 			std::string sUTF8FileName(pszFilename);
-			std::wstring sUTF16FileName = fnUTF8toUTF16(sUTF8FileName);
 
-			PImportStream pStream = fnCreateImportStreamInstance(sUTF16FileName.c_str());
+			PImportStream pStream = fnCreateImportStreamInstance(sUTF8FileName.c_str());
 			m_pModelReader->readStream(pStream);
 			return handleSuccess();
 		}
@@ -232,7 +226,7 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_INVALIDREADEROBJECT);
 
 			std::wstring sRelationShipType(pwszRelationshipType);
-			m_pModelReader->addRelationToRead(sRelationShipType);
+			m_pModelReader->addRelationToRead(fnUTF16toUTF8(sRelationShipType));
 
 			return handleSuccess();
 		}
@@ -253,7 +247,7 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_INVALIDREADEROBJECT);
 
 			std::wstring sRelationShipType(pwszRelationshipType);
-			m_pModelReader->removeRelationToRead(sRelationShipType);
+			m_pModelReader->removeRelationToRead(fnUTF16toUTF8(sRelationShipType));
 
 			return handleSuccess();
 		}
@@ -274,8 +268,7 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_INVALIDREADEROBJECT);
 
 			std::string sRelationShipTypeUTF8(pszRelationshipType);
-			std::wstring sRelationShipTypeUTF16 = fnUTF8toUTF16(sRelationShipTypeUTF8);
-			m_pModelReader->addRelationToRead(sRelationShipTypeUTF16);
+			m_pModelReader->addRelationToRead(sRelationShipTypeUTF8);
 
 			return handleSuccess();
 		}
@@ -296,8 +289,7 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_INVALIDREADEROBJECT);
 
 			std::string sRelationShipTypeUTF8(pszRelationshipType);
-			std::wstring sRelationShipTypeUTF16 = fnUTF8toUTF16(sRelationShipTypeUTF8);
-			m_pModelReader->removeRelationToRead(sRelationShipTypeUTF16);
+			m_pModelReader->removeRelationToRead(sRelationShipTypeUTF8);
 
 			return handleSuccess();
 		}
@@ -376,7 +368,7 @@ namespace NMR {
 
 			// Safely call StringToBuffer
 			nfUint32 nNeededChars = 0;
-			fnWStringToBufferSafe(pWarning->getMessage(), pwszBuffer, cbBufferSize, &nNeededChars);
+			fnWStringToBufferSafe(fnUTF8toUTF16(pWarning->getMessage()), pwszBuffer, cbBufferSize, &nNeededChars);
 
 			// Return length if needed
 			if (pcbNeededChars != nullptr)
@@ -394,19 +386,35 @@ namespace NMR {
 			return handleGenericException();
 		}
 	}
-	
-#ifdef NMR_COM_NATIVE
-	LIB3MFMETHODIMP CCOMModelReader::ReadFromStream(_In_ IStream * pStream)
+
+	LIB3MFMETHODIMP CCOMModelReader::GetWarningUTF8(_In_ DWORD nIndex, _Out_ DWORD * pErrorCode, _Out_opt_ LPSTR pszBuffer, _In_ ULONG cbBufferSize, _Out_opt_ ULONG * pcbNeededChars)
 	{
+
 		try {
-			if (pStream == nullptr)
-				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
 			if (m_pModelReader.get() == nullptr)
 				throw CNMRException(NMR_ERROR_INVALIDREADEROBJECT);
 
-			setlocale (LC_ALL, "C");
-			PImportStream pImportStream = std::make_shared<CImportStream_COM>(pStream);
-			m_pModelReader->readStream(pImportStream);
+			PModelReaderWarnings pWarnings = m_pModelReader->getWarnings();
+			if (pWarnings.get() == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+			PModelReaderWarning pWarning = pWarnings->getWarning(nIndex);
+			__NMRASSERT(pWarning.get() != nullptr);
+
+			if (cbBufferSize > MODEL_MAXSTRINGBUFFERLENGTH)
+				throw CNMRException(NMR_ERROR_INVALIDBUFFERSIZE);
+
+			// Safely call StringToBuffer
+			nfUint32 nNeededChars = 0;
+			fnStringToBufferSafe(pWarning->getMessage(), pszBuffer, cbBufferSize, &nNeededChars);
+
+			// Return length if needed
+			if (pcbNeededChars != nullptr)
+				*pcbNeededChars = nNeededChars;
+			if (pErrorCode == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+			*pErrorCode = pWarning->getErrorCode();
+
 			return handleSuccess();
 		}
 		catch (CNMRException & Exception) {
@@ -416,7 +424,6 @@ namespace NMR {
 			return handleGenericException();
 		}
 	}
-#endif // NMR_COM_NATIVE
 
 	LIB3MFMETHODIMP CCOMModelReader::SetProgressCallback(_In_ void * callback, _In_ void* userData)
 	{
