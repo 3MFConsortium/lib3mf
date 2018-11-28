@@ -38,6 +38,8 @@
 		<binding language="Pascal" indentation="tabs" />
 		<binding language="Python" indentation="tabs" />
 		<binding language="CppDynamic" indentation="tabs" />
+		<binding language="Node" indentation="tabs" />
+		<binding language="Go" indentation="tabs" />
 	</bindings>
 	<implementations>
 		<implementation language="Cpp" indentation="tabs" stubidentifier="" />
@@ -83,7 +85,7 @@
 
 	
 	<enum name="PropertyType">
-		<option name="None" value="0" />
+		<option name="NoProperty" value="0" />
 		<option name="BaseMaterials" value="1" />
 		<option name="Color" value="2" />
 		<option name="TexCoord2D" value="3" />
@@ -107,7 +109,7 @@
 		<option name="Wrap" value="0" />
 		<option name="Mirror" value="1" />
 		<option name="Clamp" value="2" />
-		<option name="None" value="3" />
+		<option name="NoTileStyle" value="3" />
 	</enum>
 	
 	<enum name="TextureFilter">	
@@ -122,8 +124,8 @@
 		<option name="Butt" value="2" />
 	</enum>
 	
-	<enum name="BeamLatticeClipMode">	
-		<option name="None" value="0" />
+	<enum name="BeamLatticeClipMode">
+		<option name="NoClipMode" value="0" />
 		<option name="Inside" value="1" />
 		<option name="Outside" value="2" />
 	</enum>
