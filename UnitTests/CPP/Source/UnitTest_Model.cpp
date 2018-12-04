@@ -66,10 +66,53 @@ namespace NMR
 
 	const double EPS_TOL = 1e-5;
 
+	TEST(Model, SliceStackNonPlanarTransform) {
+		try {
+			PModel pModel = std::make_shared<CModel>();
+			PModelReader pModelReader = std::make_shared<READER>(pModel);
+			PImportStream pImportStream = std::make_shared<IMPORTSTREAM>((sInPath + L"PS_505_02_non_planar_transform.3mf").c_str());
+			pModelReader->readStream(pImportStream);
+
+			PModelWriter pModelWriter = std::make_shared<WRITER>(pModel);
+			PExportStream pExportStream = std::make_shared<EXPORTSTREAM>((sOutPath + L"output_PS_505_02_non_planar_transform.3mf").c_str());
+			pModelWriter->exportToStream(pExportStream);
+
+			FAIL(); 
+		}
+		catch (CNMRException e) {
+			ASSERT_STREQ(e.what(), "A slicestack posesses a nonplanar transformation.");
+		}
+		catch (...) {
+			FAIL();
+		}
+	}
+
+	TEST(Model, SliceStackPlanarTransform) {
+		PModel pModel = std::make_shared<CModel>();
+		PModelReader pModelReader = std::make_shared<READER>(pModel);
+		PImportStream pImportStream = std::make_shared<IMPORTSTREAM>((sInPath + L"PS_505_02.3mf").c_str());
+		pModelReader->readStream(pImportStream);
+
+		PModelWriter pModelWriter = std::make_shared<WRITER>(pModel);
+		PExportStream pExportStream = std::make_shared<EXPORTSTREAM>((sOutPath + L"output_PS_505_02.3mf").c_str());
+		pModelWriter->exportToStream(pExportStream);
+	}
+
+	TEST(Model, NoSliceStackNonPlanarTransform) {
+		PModel pModel = std::make_shared<CModel>();
+		PModelReader pModelReader = std::make_shared<READER>(pModel);
+		PImportStream pImportStream = std::make_shared<IMPORTSTREAM>((sInPath + L"3mfbase10_box_non_planar_transform.3mf").c_str());
+		pModelReader->readStream(pImportStream);
+
+		PModelWriter pModelWriter = std::make_shared<WRITER>(pModel);
+		PExportStream pExportStream = std::make_shared<EXPORTSTREAM>((sOutPath + L"output_3mfbase10_box_non_planar_transform.3mf").c_str());
+		pModelWriter->exportToStream(pExportStream);
+	}
+
 	TEST(Model, 3MFBox)
 	{
-		PModel pModel = std::make_shared<CModel> ();
-		PModelReader pModelReader = std::make_shared<READER> (pModel);
+		PModel pModel = std::make_shared<CModel>();
+		PModelReader pModelReader = std::make_shared<READER>(pModel);
 		PImportStream pImportStream = std::make_shared<IMPORTSTREAM>((sInPath + L"Box.3mf").c_str());
 		pModelReader->readStream(pImportStream);
 
@@ -133,7 +176,7 @@ namespace NMR
 	{
 		PModel pModel = std::make_shared<CModel>();
 		PModelReader pModelReader = std::make_shared<READER>(pModel);
-		PImportStream pImportStream = std::make_shared<IMPORTSTREAM>((sInPath+L"3mfbase1_cube.3mf").c_str());
+		PImportStream pImportStream = std::make_shared<IMPORTSTREAM>((sInPath + L"3mfbase1_cube.3mf").c_str());
 		pModelReader->readStream(pImportStream);
 
 		PModelWriter pModelWriter = std::make_shared<WRITER>(pModel);
@@ -145,7 +188,7 @@ namespace NMR
 	{
 		PModel pModel = std::make_shared<CModel>();
 		PModelReader pModelReader = std::make_shared<READER>(pModel);
-		PImportStream pImportStream = std::make_shared<IMPORTSTREAM>((sInPath+L"3mfbase2_material093.3mf").c_str());
+		PImportStream pImportStream = std::make_shared<IMPORTSTREAM>((sInPath + L"3mfbase2_material093.3mf").c_str());
 		pModelReader->readStream(pImportStream);
 
 		PModelWriter pModelWriter = std::make_shared<WRITER>(pModel);
@@ -289,7 +332,7 @@ namespace NMR
 
 		nfUint32 nAttachmentCount = pModel->getAttachmentCount();
 		ASSERT_TRUE(nAttachmentCount == 2);
-			
+
 		PImportStream pTexStream = pModel->getModelAttachment(0)->getStream();
 		ASSERT_TRUE(pTexStream.get() != nullptr);
 
