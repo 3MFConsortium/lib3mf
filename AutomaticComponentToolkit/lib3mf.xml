@@ -1,6 +1,5 @@
-
-
-<component 
+<?xml version="1.0" encoding="UTF-8"?>
+<component xmlns="http://schemas.autodesk.com/netfabb/automaticcomponenttoolkit/2018" 
 	libraryname="the 3MF Library"
 	namespace="Lib3MF" 
 	copyright="3MF Consortium (Original Author)" 
@@ -69,9 +68,6 @@
 		<error name="INVALIDCOMPONENT" code="109" description="A component is invalid" />
 		
 		<error name="FORBIDDENCYCLICREFERENCE" code="110" description="A component references one of its ancestors" />
-
-
-		
 	</errors>
 	
 	<enum name="ModelUnit">
