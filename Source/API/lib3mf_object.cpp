@@ -44,6 +44,14 @@ using namespace Lib3MF;
  Class definition of CLib3MFObject 
 **************************************************************************************************************************/
 
+NMR::CModelObject* CLib3MFObject::object()
+{
+	NMR::CModelObject* pObject = dynamic_cast<NMR::CModelObject*>(resource().get());
+	if (pObject == nullptr)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDOBJECT);
+	return pObject;
+}
+
 ILib3MFObject* CLib3MFObject::fnCreateObjectFromModelResource(NMR::PModelResource pResource, bool bFailIfUnkownClass) {
 	
 	if (!pResource.get())
@@ -83,22 +91,22 @@ void CLib3MFObject::SetType (const eLib3MFObjectType eObjectType)
 
 std::string CLib3MFObject::GetName ()
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	return object()->getName();
 }
 
 void CLib3MFObject::SetName (const std::string & sName)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	object()->setName(sName);
 }
 
 std::string CLib3MFObject::GetPartNumber ()
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	return object()->getPartNumber();
 }
 
 void CLib3MFObject::SetPartNumber (const std::string & sPartNumber)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	object()->setPartNumber(sPartNumber);
 }
 
 bool CLib3MFObject::IsMeshObject ()
@@ -109,6 +117,24 @@ bool CLib3MFObject::IsMeshObject ()
 bool CLib3MFObject::IsComponentsObject ()
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+}
+
+ILib3MFMeshObject * CLib3MFObject::AsMeshObject()
+{
+	if (dynamic_cast<NMR::CModelMeshObject*>(resource().get()))
+	{
+		return new CLib3MFMeshObject(resource());
+	}
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+}
+
+ILib3MFComponentsObject * CLib3MFObject::AsComponentsObject()
+{
+	if (dynamic_cast<NMR::CModelComponentsObject*>(resource().get()))
+	{
+		return new CLib3MFComponentsObject(resource());
+	}
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 }
 
 bool CLib3MFObject::IsValid ()

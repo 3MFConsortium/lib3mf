@@ -52,11 +52,14 @@ namespace NMR {
 	{
 		if (!pComponent)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
-		
+
 		CModel * pModel = getModel();
 		CModelObject * pModelObject = pComponent->getObject();
 
 		if (pModel != pModelObject->getModel())
+			throw CNMRException(NMR_ERROR_MODELMISMATCH);
+
+		if (pComponent->getObjectID() == this->getResourceID()->getUniqueID() )
 			throw CNMRException(NMR_ERROR_MODELMISMATCH);
 
 		m_Components.push_back(pComponent);

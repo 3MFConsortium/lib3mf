@@ -36,6 +36,7 @@ Abstract: This is a stub class definition of CLib3MFModel
 
 #include "lib3mf_builditemiterator.hpp"
 #include "lib3mf_meshobject.hpp"
+#include "lib3mf_resourceiterator.hpp"
 #include "lib3mf_componentsobject.hpp"
 // Include custom headers here.
 
@@ -107,12 +108,22 @@ ILib3MFBaseMaterial * CLib3MFModel::GetBaseMaterialByID (const Lib3MF_uint32 nRe
 
 ILib3MFMeshObject * CLib3MFModel::GetMeshObjectByID (const Lib3MF_uint32 nResourceID)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	NMR::PModelResource pObjectResource = model().findResource(nResourceID);
+	if (dynamic_cast<NMR::CModelMeshObject*>(pObjectResource.get())) {
+		return new CLib3MFMeshObject(pObjectResource);
+	}
+	else 
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDMESHOBJECT);
 }
 
 ILib3MFComponentsObject * CLib3MFModel::GetComponentsObjectByID (const Lib3MF_uint32 nResourceID)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	NMR::PModelResource pObjectResource = model().findResource(nResourceID);
+	if (dynamic_cast<NMR::CModelComponentsObject*>(pObjectResource.get())) {
+		return new CLib3MFComponentsObject(pObjectResource);
+	}
+	else
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCOMPONENTSOBJECT);
 }
 
 std::string CLib3MFModel::GetBuildUUID (bool & bHasUUID)
@@ -144,17 +155,43 @@ ILib3MFResourceIterator * CLib3MFModel::GetResources ()
 
 ILib3MFResourceIterator * CLib3MFModel::GetObjects ()
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	auto pResult = std::make_unique<CLib3MFResourceIterator>();
+	Lib3MF_uint32 nObjectsCount = model().getObjectCount();
+	Lib3MF_uint32 nIdx;
+
+	for (nIdx = 0; nIdx < nObjectsCount; nIdx++) {
+		auto resource = model().getObjectResource(nIdx);
+		pResult->addResource(resource);
+	}
+	return pResult.release();
 }
 
 ILib3MFResourceIterator * CLib3MFModel::GetMeshObjects ()
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	auto pResult = std::make_unique<CLib3MFResourceIterator>();
+	Lib3MF_uint32 nObjectsCount = model().getObjectCount();
+	Lib3MF_uint32 nIdx;
+
+	for (nIdx = 0; nIdx < nObjectsCount; nIdx++) {
+		auto resource = model().getObjectResource(nIdx);
+		if (dynamic_cast<NMR::CModelMeshObject *>(resource.get()))
+			pResult->addResource(resource);
+	}
+	return pResult.release();
 }
 
-ILib3MFResourceIterator * CLib3MFModel::GetComponentsObjects ()
+ILib3MFResourceIterator * CLib3MFModel::GetComponentsObjects()
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	auto pResult = std::make_unique<CLib3MFResourceIterator>();
+	Lib3MF_uint32 nObjectsCount = model().getObjectCount();
+	Lib3MF_uint32 nIdx;
+
+	for (nIdx = 0; nIdx < nObjectsCount; nIdx++) {
+		auto resource = model().getObjectResource(nIdx);
+		if (dynamic_cast<NMR::CModelComponentsObject *>(resource.get()))
+			pResult->addResource(resource);
+	}
+	return pResult.release();
 }
 
 ILib3MFResourceIterator * CLib3MFModel::Get2DTextures ()

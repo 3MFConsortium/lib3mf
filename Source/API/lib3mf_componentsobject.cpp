@@ -49,7 +49,7 @@ CLib3MFComponentsObject::CLib3MFComponentsObject(NMR::PModelResource pResource)
 
 NMR::CModelComponentsObject * CLib3MFComponentsObject::getComponentsObject()
 {
-	NMR::CModelComponentsObject * pComponentsObject = dynamic_cast<NMR::CModelComponentsObject *> (resource());
+	NMR::CModelComponentsObject * pComponentsObject = dynamic_cast<NMR::CModelComponentsObject *> (resource().get());
 	if (pComponentsObject == nullptr)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCOMPONENTSOBJECT);
 
@@ -88,12 +88,14 @@ ILib3MFComponent * CLib3MFComponentsObject::AddComponent (ILib3MFObject* pObject
 
 ILib3MFComponent * CLib3MFComponentsObject::GetComponent (const Lib3MF_uint32 nIndex)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	NMR::CModelComponentsObject * pComponentsObject = getComponentsObject();
+	NMR::PModelComponent pNewComponent = pComponentsObject->getComponent(nIndex);
+	return new CLib3MFComponent(pNewComponent);
 }
 
 Lib3MF_uint32 CLib3MFComponentsObject::GetComponentCount ()
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	return getComponentsObject()->getComponentCount();
 }
 
 bool CLib3MFComponentsObject::IsMeshObject()

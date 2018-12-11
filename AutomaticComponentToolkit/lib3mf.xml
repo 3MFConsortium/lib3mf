@@ -258,7 +258,7 @@
 			<param name="OutResourceIterator" type="handle" class="ResourceIterator" pass="return" description="returns the cloned Iterator instance" />
 		</method>
 	</class>
-
+	
 	<class name="PropertyHandler">
 		<method name="RemoveProperty" description="Removes all properties of a specific triangle.">
 			<param name="Index" type="uint32" pass="in" description="Index of the triangle (0 to trianglecount - 1)" />
@@ -813,12 +813,9 @@
 			<param name="HasTransform" type="bool" pass="return" description="if true is returned, the transformation is not equal than the identity"/>
 		</method>
 		
-<!--
-		Go TODO: Struct return
 		<method name="GetTransform" description="Returns the transformation matrix of the component.">
 			<param name="Transform" type="struct" class="Transform" pass="return" description="filled with the component transformation matrix"/>
 		</method>
--->
 
 		<method name="SetTransform" description="Sets the transformation matrix of the component.">
 			<param name="Transform" type="struct" class="Transform" pass="in" description="new transformation matrix"/>

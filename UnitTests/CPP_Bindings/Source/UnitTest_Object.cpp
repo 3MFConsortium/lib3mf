@@ -95,7 +95,7 @@ namespace Lib3MF
 		}
 	}
 
-	TEST_F(ObjectT, EnsureNoHigherSelfReference)
+	TEST_F(ObjectT, DISABLED_EnsureNoHigherSelfReference)
 	{
 		auto componentsOuter = model->AddComponentsObject();
 		auto componentsInner = model->AddComponentsObject();
@@ -112,7 +112,49 @@ namespace Lib3MF
 
 	void TestHierarchy(PLib3MFModel model)
 	{
-		ASSERT_FALSE(true) << "TODO";
+		{
+			auto meshObjects = model->GetMeshObjects();
+			ASSERT_TRUE(meshObjects->MoveNext());
+			auto res = meshObjects->GetCurrent();
+			auto mesh = model->GetMeshObjectByID(res->GetResourceID());
+			ASSERT_TRUE(mesh->IsMeshObject());
+			ASSERT_FALSE(meshObjects->MoveNext());
+		}
+
+		auto componentsObjects = model->GetComponentsObjects();
+		ASSERT_TRUE(componentsObjects->MoveNext());
+		{
+			auto res = componentsObjects->GetCurrent();
+			auto components1 = model->GetComponentsObjectByID(res->GetResourceID());
+
+			ASSERT_TRUE(components1->IsComponentsObject());
+
+			Lib3MF_uint32 count = components1->GetComponentCount();
+			ASSERT_EQ(count, 2);
+			{
+				auto component0 = components1->GetComponent(0);
+				auto component1 = components1->GetComponent(1);
+				auto supposedToBeMesh = model->GetMeshObjectByID(component0->GetObjectResourceID());
+				auto supposedToBeComponents = model->GetComponentsObjectByID(component1->GetObjectResourceID());
+				ASSERT_TRUE(supposedToBeMesh->IsMeshObject());
+				ASSERT_TRUE(supposedToBeComponents->IsComponentsObject());
+			}
+		}
+		
+		ASSERT_TRUE(componentsObjects->MoveNext());
+		{
+			auto res = componentsObjects->GetCurrent();
+			auto components2 = model->GetComponentsObjectByID(res->GetResourceID());
+			ASSERT_TRUE(components2->IsComponentsObject());
+			Lib3MF_uint32 count = components2->GetComponentCount();
+			ASSERT_EQ(count, 1);
+
+			auto component0 = components2->GetComponent(0);
+			auto supposedToBeMesh = model->GetMeshObjectByID(component0->GetObjectResourceID());
+			ASSERT_TRUE(supposedToBeMesh->IsMeshObject());
+		}
+
+		ASSERT_FALSE(componentsObjects->MoveNext());
 	}
 
 
@@ -201,22 +243,58 @@ namespace Lib3MF
 
 	TEST_F(ObjectSingle, Transform)
 	{
-		ASSERT_FALSE(true) << "TODO";
+		ASSERT_FALSE(component->HasTransform());
+
+		sLib3MFTransform t = getIdentityTransform();
+		t.m_Fields[2][1] = 2;
+		component->SetTransform(t);
+
+		ASSERT_TRUE(component->HasTransform());
+		sLib3MFTransform tOut = component->GetTransform();
+		ASSERT_EQ(t.m_Fields[2][1], tOut.m_Fields[2][1]);
 	}
 
 	TEST_F(ObjectSingle, PartName)
 	{
-		ASSERT_FALSE(true) << "TODO";
+		std::string testName("SomeName");
+		components->SetName(testName);
+		ASSERT_TRUE(components->GetName().compare(testName) == 0);
+
+		mesh->SetName(testName);
+		ASSERT_TRUE(mesh->GetName().compare(testName) == 0);
 	}
 
 	TEST_F(ObjectSingle, PartNumber)
 	{
-		ASSERT_FALSE(true) << "TODO";
+		std::string testNumber("SomeName");
+		components->SetPartNumber(testNumber);
+		ASSERT_TRUE(components->GetPartNumber().compare(testNumber) == 0);
+
+		mesh->SetPartNumber(testNumber);
+		ASSERT_TRUE(mesh->GetPartNumber().compare(testNumber) == 0);
 	}
 
 	TEST_F(ObjectSingle, UUID)
 	{
-		ASSERT_FALSE(true) << "TODO";
+		bool bHasUUID = true;
+		// by default everything has an UUID
+		std::string uuid = component->GetUUID(bHasUUID);
+		ASSERT_TRUE(bHasUUID);
+		ASSERT_FALSE(uuid.empty());
+
+		try {
+			component->SetUUID("NOUUID");
+			ASSERT_TRUE(false);
+		}
+		catch (...) {
+			ASSERT_TRUE(true);
+		}
+		std::string inUUID("f1bcd2d0-6400-4785-9faf-5adde30adc08");
+		component->SetUUID(inUUID);
+		uuid = component->GetUUID(bHasUUID);
+		ASSERT_TRUE(bHasUUID);
+		ASSERT_TRUE(uuid.compare(inUUID) == 0);
+		
 	}
 }
 

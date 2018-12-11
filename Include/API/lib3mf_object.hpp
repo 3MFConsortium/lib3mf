@@ -57,6 +57,7 @@ private:
 	*/
 
 protected:
+	NMR::CModelObject* object();
 
 public:
 
@@ -85,6 +86,10 @@ public:
 	virtual bool IsMeshObject ();
 
 	virtual bool IsComponentsObject ();
+
+	virtual ILib3MFMeshObject * AsMeshObject();
+
+	virtual ILib3MFComponentsObject * AsComponentsObject();
 
 	bool IsValid ();
 

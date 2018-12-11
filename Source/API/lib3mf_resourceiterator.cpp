@@ -28,6 +28,7 @@ Abstract: This is a stub class definition of CLib3MFResourceIterator
 
 */
 
+#include "lib3mf_resource.hpp"
 #include "lib3mf_resourceiterator.hpp"
 #include "lib3mf_interfaceexception.hpp"
 
@@ -40,23 +41,72 @@ using namespace Lib3MF;
  Class definition of CLib3MFResourceIterator 
 **************************************************************************************************************************/
 
+CLib3MFResourceIterator::CLib3MFResourceIterator()
+{
+	m_nCurrentIndex = -1;
+}
+
+void Lib3MF::CLib3MFResourceIterator::addResource(NMR::PModelResource pResource)
+{
+	if (pResource.get() == nullptr)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+
+	m_pResources.push_back(pResource);
+}
+
 bool CLib3MFResourceIterator::MoveNext ()
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	// Get Resource Count
+	Lib3MF_int32 nBuildItemCount = (Lib3MF_int32)m_pResources.size();
+	m_nCurrentIndex++;
+
+	// Check new Index
+	if (m_nCurrentIndex >= nBuildItemCount) {
+		m_nCurrentIndex = nBuildItemCount;
+		return false;
+	}
+	else {
+		return true;
+	}
 }
 
 bool CLib3MFResourceIterator::MovePrevious ()
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	// Get Resource Count
+	m_nCurrentIndex--;
+
+	// Check new Index
+	if (m_nCurrentIndex <= -1) {
+		m_nCurrentIndex = -1;
+		return false;
+	}
+	else {
+		return true;
+	}
 }
 
 ILib3MFResource * CLib3MFResourceIterator::GetCurrent ()
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	// Get Resource Count
+	Lib3MF_int32 nBuildItemCount = (Lib3MF_int32)m_pResources.size();
+	if ((m_nCurrentIndex < 0) || (m_nCurrentIndex >= nBuildItemCount))
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_ITERATORINVALIDINDEX);
+
+	// Create specific API class
+	NMR::PModelResource pResource = m_pResources[m_nCurrentIndex];
+
+	auto pACTBuildItem = std::make_unique<CLib3MFResource>(pResource);
+
+	return pACTBuildItem.release();
 }
 
 ILib3MFResourceIterator * CLib3MFResourceIterator::Clone ()
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	auto pResources = std::make_unique<CLib3MFResourceIterator>();
+
+	for (auto iIterator = m_pResources.begin(); iIterator != m_pResources.end(); iIterator++)
+		pResources->addResource(*iIterator);
+
+	return pResources.release();
 }
 

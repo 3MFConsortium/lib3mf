@@ -36,7 +36,7 @@ Abstract: This is the class declaration of CLib3MFResourceIterator
 
 
 // Include custom headers here.
-
+#include "Model/Classes/NMR_ModelBuildItem.h"
 
 namespace Lib3MF {
 
@@ -51,6 +51,8 @@ private:
 	/**
 	* Put private members here.
 	*/
+	std::vector<NMR::PModelResource> m_pResources;
+	Lib3MF_int32 m_nCurrentIndex;
 
 protected:
 
@@ -63,7 +65,9 @@ public:
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
+	CLib3MFResourceIterator();
 
+	void addResource(NMR::PModelResource pResource);
 
 	/**
 	* Public member functions to implement.

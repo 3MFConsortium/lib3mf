@@ -32,7 +32,8 @@ Abstract: This is a stub class definition of CLib3MFComponent
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
-
+#include "lib3mf_utils.hpp"
+#include "lib3mf_object.hpp"
 
 using namespace Lib3MF;
 
@@ -50,31 +51,51 @@ CLib3MFComponent::CLib3MFComponent(NMR::PModelComponent pComponent)
 
 ILib3MFObject * CLib3MFComponent::GetObjectResource ()
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	NMR::PModelObject pModelObject(m_pComponent->getObject());
+	if (!pModelObject.get())
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDMODELRESOURCE);
+
+	std::unique_ptr<ILib3MFObject> pObject(CLib3MFObject::fnCreateObjectFromModelResource(pModelObject, true));
+	if (pObject == nullptr)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_RESOURCENOTFOUND);
+
+	return pObject.release();
 }
 
 Lib3MF_uint32 CLib3MFComponent::GetObjectResourceID ()
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	return m_pComponent->getObjectID();
 }
 
-std::string CLib3MFComponent::GetUUID (bool & bHasUUID)
+std::string CLib3MFComponent::GetUUID(bool & bHasUUID)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	NMR::PUUID pUUID = m_pComponent->uuid();
+	bHasUUID = (pUUID.get() != nullptr);
+	if (bHasUUID)
+		return pUUID->toString(); 
+	else
+		return "";
 }
 
-void CLib3MFComponent::SetUUID (const std::string & sUUID)
+void CLib3MFComponent::SetUUID(const std::string & sUUID)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	NMR::PUUID pUUID = std::make_shared<NMR::CUUID>(sUUID);
+	m_pComponent->setUUID(pUUID);
 }
 
-bool CLib3MFComponent::HasTransform ()
+bool CLib3MFComponent::HasTransform()
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	return m_pComponent->hasTransform();
 }
 
 void CLib3MFComponent::SetTransform (const sLib3MFTransform Transform)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	m_pComponent->setTransform(TransformToMatrix(Transform));
+}
+
+sLib3MFTransform CLib3MFComponent::GetTransform()
+{
+	const NMR::NMATRIX3 matrix = m_pComponent->getTransform();
+	return MatrixToTransform(matrix);
 }
 

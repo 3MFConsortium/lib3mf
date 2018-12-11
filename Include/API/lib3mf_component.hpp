@@ -82,6 +82,7 @@ public:
 
 	void SetTransform (const sLib3MFTransform Transform);
 
+	virtual sLib3MFTransform GetTransform();
 };
 
 }

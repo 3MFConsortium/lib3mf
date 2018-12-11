@@ -52,12 +52,10 @@ private:
 	* Put private members here.
 	*/
 	NMR::PModelResource m_pResource;
-	int m_id;
 
 protected:
 
-	NMR::CModelResource* resource();
-	CLib3MFResource(NMR::PModelResource pResource);
+	NMR::PModelResource resource();
 
 public:
 
@@ -65,12 +63,15 @@ public:
 	* Put additional public members here. They will not be visible in the external API.
 	*/
 	CLib3MFResource() = delete;
+	CLib3MFResource(NMR::PModelResource pResource);
 
 	/**
 	* Public member functions to implement.
 	*/
 
 	Lib3MF_uint32 GetResourceID ();
+
+	virtual ILib3MFObject * AsObject();
 
 };
 
