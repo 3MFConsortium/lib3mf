@@ -294,7 +294,6 @@ namespace Lib3MF
 		uuid = component->GetUUID(bHasUUID);
 		ASSERT_TRUE(bHasUUID);
 		ASSERT_TRUE(uuid.compare(inUUID) == 0);
-		
 	}
 }
 

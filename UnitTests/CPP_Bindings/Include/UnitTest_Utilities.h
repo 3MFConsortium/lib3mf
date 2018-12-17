@@ -49,6 +49,10 @@ const std::string sOutFilesPath = OUTFILESPATH;
 const std::string sOutFilesPath = "..\TestOutput";
 #endif
 
+inline bool CreateDir(std::string sPath) {
+	return (system((std::string("mkdir \"") + sPath + "\"").c_str()) != -1);
+}
+
 inline std::vector<Lib3MF_uint8> ReadFileIntoBuffer(std::string sFileName)
 {
 	// Read the file fully into a memory buffer

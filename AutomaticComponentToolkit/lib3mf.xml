@@ -68,6 +68,8 @@
 		<error name="INVALIDCOMPONENT" code="109" description="A component is invalid" />
 		
 		<error name="FORBIDDENCYCLICREFERENCE" code="110" description="A component references one of its ancestors" />
+
+		<error name="INVALIDATTACHMENTSTREAM" code="111" description="An attachment stream is invalid" />
 	</errors>
 	
 	<enum name="ModelUnit">
@@ -987,7 +989,7 @@
 		</method>
 		
 		<method name="ReadFromBuffer" description = "Reads an attachment from a memory buffer">
-			<param name="Buffer" type="basicarray" class="uint8" pass="out" description="Buffer to read from" />
+			<param name="Buffer" type="basicarray" class="uint8" pass="in" description="Buffer to read from" />
 		</method>
 		
 		<!--
@@ -1288,16 +1290,6 @@
 			<param name="AttachmentCount" type="uint32" pass="return" description="Returns the number of attachments." />
 		</method>
 
-		<method name="GetAttachmentSize" description = "retrieves the size of an attachment in bytes.">
-			<param name="Index" type="uint32" pass="in" description="Index of the attachment stream" />
-			<param name="AttachmentSize" type="uint64" pass="return" description=" Returns the size of the attachment in bytes." />
-		</method>
-		
-		<method name="GetAttachmentPath" dllsuffix="utf8" description = "retrieves the path URI of an attachment.">
-			<param name="Index" type="uint32" pass="in" description="Index of the attachment stream" />
-			<param name="AttachmentURI" type="string" pass="return" description="Attachment URI" />
-		</method>
-		
 		<method name="HasPackageThumbnailAttachment" description = "Retrieve whether the OPC package contains a package thumbnail.">
 			<param name="HasThumbnail" type="bool" pass="return" description="returns whether the OPC package contains a package thumbnail" />
 		</method>

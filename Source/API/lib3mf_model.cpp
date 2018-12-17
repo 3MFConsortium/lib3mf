@@ -38,11 +38,12 @@ Abstract: This is a stub class definition of CLib3MFModel
 #include "lib3mf_meshobject.hpp"
 #include "lib3mf_resourceiterator.hpp"
 #include "lib3mf_componentsobject.hpp"
+#include "lib3mf_attachment.hpp"
 // Include custom headers here.
 
 #include "Model/Classes/NMR_ModelMeshObject.h"
 #include "Model/Classes/NMR_ModelComponentsObject.h"
-
+#include "Common/Platform/NMR_ImportStream_Memory.h"
 
 using namespace Lib3MF;
 
@@ -255,12 +256,17 @@ ILib3MFMetaDataGroup * CLib3MFModel::GetMetaDataGroup ()
 
 ILib3MFAttachment * CLib3MFModel::AddAttachment (const std::string & sURI, const std::string & sRelationShipType)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	NMR::PImportStream pStream = std::make_shared<NMR::CImportStream_Memory>();
+
+	NMR::PModelAttachment pModelAttachment(model().addAttachment(sURI, sRelationShipType, pStream));
+
+	return new CLib3MFAttachment(pModelAttachment);
 }
 
 ILib3MFAttachment * CLib3MFModel::GetAttachment (const Lib3MF_uint32 nIndex)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	NMR::PModelAttachment pAttachment = m_model->getModelAttachment(nIndex);
+	return new CLib3MFAttachment(pAttachment);
 }
 
 ILib3MFAttachment * CLib3MFModel::FindAttachment (const std::string & sURI)
@@ -270,17 +276,7 @@ ILib3MFAttachment * CLib3MFModel::FindAttachment (const std::string & sURI)
 
 Lib3MF_uint32 CLib3MFModel::GetAttachmentCount ()
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
-}
-
-Lib3MF_uint64 CLib3MFModel::GetAttachmentSize (const Lib3MF_uint32 nIndex)
-{
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
-}
-
-std::string CLib3MFModel::GetAttachmentPath (const Lib3MF_uint32 nIndex)
-{
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	return m_model->getAttachmentCount();
 }
 
 bool CLib3MFModel::HasPackageThumbnailAttachment ()
@@ -305,11 +301,11 @@ void CLib3MFModel::RemovePackageThumbnailAttachment ()
 
 void CLib3MFModel::AddCustomContentType (const std::string & sExtension, const std::string & sContentType)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	m_model->addCustomContentType(sExtension, sContentType);
 }
 
 void CLib3MFModel::RemoveCustomContentType (const std::string & sExtension)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	m_model->removeCustomContentType(sExtension);
 }
 

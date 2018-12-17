@@ -36,7 +36,7 @@ Abstract: This is the class declaration of CLib3MFAttachment
 
 
 // Include custom headers here.
-
+#include "Model/Classes/NMR_ModelAttachment.h"
 
 namespace Lib3MF {
 
@@ -51,6 +51,7 @@ private:
 	/**
 	* Put private members here.
 	*/
+	NMR::PModelAttachment m_pModelAttachment;
 
 protected:
 
@@ -63,7 +64,7 @@ public:
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-
+	CLib3MFAttachment(NMR::PModelAttachment pModelAttachment);
 
 	/**
 	* Public member functions to implement.
@@ -83,9 +84,9 @@ public:
 
 	Lib3MF_uint64 GetStreamSize ();
 
-	void WriteToBuffer (Lib3MF_uint32 nBufferBufferSize, Lib3MF_uint32* pBufferNeededCount, Lib3MF_uint8 * pBufferBuffer);
+	void WriteToBuffer (Lib3MF_uint64 nBufferBufferSize, Lib3MF_uint64* pBufferNeededCount, Lib3MF_uint8 * pBufferBuffer);
 
-	void ReadFromBuffer (Lib3MF_uint32 nBufferBufferSize, Lib3MF_uint32* pBufferNeededCount, Lib3MF_uint8 * pBufferBuffer);
+	void ReadFromBuffer(const Lib3MF_uint64 nBufferBufferSize, const Lib3MF_uint8 * pBufferBuffer);
 
 };
 

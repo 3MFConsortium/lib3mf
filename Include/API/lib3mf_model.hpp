@@ -134,10 +134,6 @@ public:
 
 	Lib3MF_uint32 GetAttachmentCount ();
 
-	Lib3MF_uint64 GetAttachmentSize (const Lib3MF_uint32 nIndex);
-
-	std::string GetAttachmentPath (const Lib3MF_uint32 nIndex);
-
 	bool HasPackageThumbnailAttachment ();
 
 	ILib3MFAttachment * CreatePackageThumbnailAttachment ();
