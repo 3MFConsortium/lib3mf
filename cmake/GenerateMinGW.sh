@@ -12,5 +12,4 @@ echo "SET(CMAKE_FIND_ROOT_PATH /usr/mingw64)" >> toolchain.cmake &&
 echo "SET(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)" >> toolchain.cmake &&
 echo "SET(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)" >> toolchain.cmake &&
 echo "SET(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)" >> toolchain.cmake &&
-echo "SET(LIB3MF_TESTS OFF)" >> toolchain.cmake &&
 cmake .. -DCMAKE_TOOLCHAIN_FILE=toolchain.cmake "$@"
