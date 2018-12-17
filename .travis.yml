@@ -13,7 +13,7 @@ matrix:
       osx_image: xcode7.2
     - os: linux
       compiler: x86_64-w64-mingw32-g++
-      env: USE_MINGW=true
+      env: BUILDMODE=cmake-mingw32
       addons:
         apt:
           packages:
@@ -24,8 +24,10 @@ matrix:
             - g++-mingw-w64-x86-64
 
 before_script:
+    - sudo add-apt-repository --yes ppa:tobydox/mingw
     - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then HOMEBREW_NO_AUTO_UPDATE=1 brew install ossp-uuid          ; fi
-    - if [[ "$USE_MINGW" == "true" ]]; then sh cmake/GenerateMinGW.sh ; else sh cmake/GenerateMake.sh   ; fi
+    - if [ "$BUILDMODE" = "cmake-mingw32" ]; then sudo apt-get -qq install mingw64-x-gcc; fi
+    - if [ "$BUILDMODE" = "cmake-mingw32" ]; then sh cmake/GenerateMinGW.sh ; else sh cmake/GenerateMake.sh   ; fi
     - cd build
 
 script:
