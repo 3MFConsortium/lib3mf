@@ -25,7 +25,7 @@ matrix:
 
 before_script:
     - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then HOMEBREW_NO_AUTO_UPDATE=1 brew install ossp-uuid          ; fi
-    - if [[ "$USE_MINGW" == "true" ]]; then sh cmake/GenerateMinGW.sh ; else ; sh cmake/GenerateMake.sh   ; fi
+    - if [[ "$USE_MINGW" == "true" ]]; then sh cmake/GenerateMinGW.sh ; else sh cmake/GenerateMake.sh   ; fi
     - cd build
 
 script:
