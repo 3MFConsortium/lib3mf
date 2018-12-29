@@ -1,4 +1,11 @@
-file(GLOB LIBZIP_FILES ./Source/Libraries/libzip/*.c)
+if (USE_INCLUDED_LIBZIP)
+	file(GLOB LIBZIP_FILES ./Source/Libraries/libzip/*.c)
+endif()
+
+if (USE_INCLUDED_ZLIB)
+	file(GLOB ZLIB_FILES ./Source/Libraries/zlib/*.c)
+endif()
+
 if(NMR_COM_NATIVE)
 	# sources for native COM implementation
 	set(SRCS_COM
@@ -28,6 +35,7 @@ set(SRCS_WIN_MAIN
 set(SRCS_UNIX_MAIN
 ./Source/Main/main.cpp
 )
+
 
 set(SRCS_COMMON
 ${SRCS_COM}
@@ -77,17 +85,7 @@ ${SRCS_COM}
 ./Source/Common/Platform/NMR_XmlReader.cpp
 ./Source/Common/Platform/NMR_XmlWriter.cpp
 ./Source/Common/Platform/NMR_XmlWriter_Native.cpp
-./Source/Libraries/zlib/adler32.c
-./Source/Libraries/zlib/compress.c
-./Source/Libraries/zlib/crc32.c
-./Source/Libraries/zlib/deflate.c
-./Source/Libraries/zlib/infback.c
-./Source/Libraries/zlib/inffast.c
-./Source/Libraries/zlib/inflate.c
-./Source/Libraries/zlib/inftrees.c
-./Source/Libraries/zlib/trees.c
-./Source/Libraries/zlib/uncompr.c
-./Source/Libraries/zlib/zutil.c
+${ZLIB_FILES}
 ./Source/Model/Classes/NMR_PackageResourceID.cpp
 ./Source/Model/Classes/NMR_Model.cpp
 ./Source/Model/Classes/NMR_ModelAttachment.cpp

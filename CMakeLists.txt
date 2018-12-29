@@ -18,6 +18,9 @@ include(GNUInstallDirs)
 # use the cmake option -DNMR_COM_NATIVE:BOOL=ON to build the COM interface
 option(NMR_COM_NATIVE "Implement a COM interface" OFF)
 
+option(USE_INCLUDED_ZLIB "Use included zlib" ON)
+option(USE_INCLUDED_LIBZIP "Use included libzip" ON)
+
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
   # using GCC
   add_definitions(-DBUILD_DLL)
