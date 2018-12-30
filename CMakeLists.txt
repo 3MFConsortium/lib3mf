@@ -144,8 +144,14 @@ install(DIRECTORY Include/Common DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
 install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/Include/ DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
 
 #########################################################
-option(LIB3MF_TESTS "Switch whether the tests of Lib3MF should be build" ON)
+configure_file(lib3MF.pc.in lib3MF.pc @ONLY)
+install(FILES ${CMAKE_BINARY_DIR}/lib3MF.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
 
+#########################################################
+option(LIB3MF_TESTS "Switch whether the tests of Lib3MF should be build" ON)
+if(NOT DEFINED LIB3MF_TESTS)
+	set(LIB3MF_TESTS TRUE)
+endif()
 message("LIB3MF_TESTS ... " ${LIB3MF_TESTS})
 if(LIB3MF_TESTS)
 	include(CTest)
