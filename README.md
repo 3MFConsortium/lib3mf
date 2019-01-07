@@ -19,44 +19,26 @@ platform specific functionalities, which are now covered by the WinRT platform (
 and ZIP compression). This will come when time passes.
 
 ## Using lib3MF
-The current code runs on Windows, Linux and Mac and has very little external dependencies.
+The current code runs on Windows, Linux and Mac and has a small number of external dependencies.
 
-### Dependencies
+### 1. Obtain dependencies
 * Unix: [uuid](https://linux.die.net/man/3/uuid)
     * Linux (Ubuntu/Debian): `sudo apt-get install uuid-dev`
     * MAC: `brew install ossp-uuid`
 
-You then have two options:
-
-
-
-### A) Build lib3mf yourself
-1. Clone the repository\
-`git clone https://github.com/3MFConsortium/lib3mf`
-2. Enter local checkout\
-`cd lib3mf`
-3. Initialize the [googletest](https://github.com/google/googletest) submodule by running\
-`git submodule update --init`
-4. To generate projects for Visual Studio or Unix Makefiles use the scripts in the folder [cmake](cmake):\
-Call `GenerateVS2015.bat` (Windows) or `GenerateMake.sh` (Linux, Mac), or
-define other targets by specifying custom [CMake generators](https://cmake.org/cmake/help/v3.0/manual/cmake-generators.7.html).\
-A new folder `build` is created and contains projects for the IDE/build target you selected.
-5. Build the projects:
-    * Windows:
-      1. Open the VS Solution in the build folder and build it
-      2. Select the project you want to run as "Start Up Project"
-      3. Run/debug this project in VS
-    * Linux/Mac:
-      1. navigate to the `build`-folder 
-      2. Call `make` to build the projects
-      3. Run/debug a project 
-
-### B) Download the precompiled binary SDK of lib3mf
-Instead of building lib3MF from source, you can download the compiled shared libarary as part of a minimal SDK from the [official releases](https://github.com/3MFConsortium/lib3mf/releases),
+### 2. Download the precompiled binary SDK of lib3mf
+You can download the compiled shared libarary as part of a minimal SDK from the [official releases](https://github.com/3MFConsortium/lib3mf/releases),
 or use the [nightly builds](https://github.com/3MFConsortium/lib3mf-binaries).
 
-## Examples 
-For example code, please refer to the examples in the SDK (SDK/Examples). They are also part of the binary SDK from the [official releases](https://github.com/3MFConsortium/lib3mf/releases).
+### 3. Examples 
+You are best of starting with on of the examples that are shipped with the binary SDK.
+From there, you should be able to include lib3mf in your host application or service.
+
+## Contributing
+lib3mf an open source project and supported by the 3MF Consortium.
+
+Contributions are welcome and we are always looking for people that improve the implementation of the specification and extensions of 3MF. Have a look at the [contributor's guide](CONTRIBUTING.md) for details.
+This guide also contains a section about building lib3mf from source.
 
 ## Documentation
 For a more detailed documentation, please take a look into the [PDF](Lib3MF-1.pdf) in the root directory
