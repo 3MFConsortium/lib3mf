@@ -6,13 +6,16 @@ Contributions are welcome and we are always looking for people that improve the 
 You can also contribute by reporting bugs in the [Issue tracker](../../issues), helping review pull requests, participate in discussions about issues and more.
 
 ## Filing issues
-1. When filing an issue to report errors or problems, make sure to answer these four questions:
+1. When filing an issue to report errors or problems, make sure to answer these five questions:
 	1. Which version of lib3mf are you using?
+
 		a) The API call `lib3mf_geinterfaceversion` exports lib3mf version number.
+
 		b) Windows only: The properties of lib3mfs binary contain version information (e.g. right click on the DLL -> Properties -> Details).
-	2. What did you do?
-	3. What did you expect to see?
-	4. What did you see instead?
+	2. Which operating system are you using?
+	3. What did you do?
+	4. What did you expect to see?
+	5. What did you see instead?
 
 2. When contributing to this repository, please first discuss the change you wish to make via issue with the [maintainers](#maintainers) of this repository. This way, we can ensure that there is no overlap between contributions or development work by the 3MF consortium itself.
 
