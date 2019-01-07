@@ -35,7 +35,7 @@ You are best of starting with on of the examples that are shipped with the binar
 From there, you should be able to include lib3mf in your host application or service.
 
 ## Contributing
-lib3mf an open source project and supported by the 3MF Consortium.
+lib3mf an open source project and supported by the [3MF Consortium](https://3mf.io/).
 
 Contributions are welcome and we are always looking for people that improve the implementation of the specification and extensions of 3MF. Have a look at the [contributor's guide](CONTRIBUTING.md) for details.
 This guide also contains a section about building lib3mf from source.
