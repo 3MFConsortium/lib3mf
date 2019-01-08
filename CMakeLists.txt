@@ -9,7 +9,7 @@ ENDIF ()
 # increase minor version on every backward compatible change of the API
 # increase patch version on every change that does not alter the API
 project (lib3MF
-	VERSION 1.8.0
+	VERSION 1.8.1
 	DESCRIPTION "Lib3MF is a C++ implementation of the 3D Manufacturing Format file standard.")
 
 include(GNUInstallDirs)
