@@ -50,43 +50,37 @@ HRESULT ShowObjectProperties(_In_ PLib3MFModelObjectResource * pObject)
 {
 	HRESULT hResult;
 	DWORD nNeededChars;
-	std::vector<wchar_t> pBuffer;
-	std::wstring sName;
-	std::wstring sPartNumber;
+	std::vector<char> pBuffer;
+	std::string sName;
+	std::string sPartNumber;
 
 	// Retrieve Mesh Name Length
-	hResult = lib3mf_object_getname(pObject, NULL, 0, &nNeededChars);
+	hResult = lib3mf_object_getnameutf8(pObject, NULL, 0, &nNeededChars);
 	if (hResult != LIB3MF_OK)
 		return hResult;
 
 	// Retrieve Mesh Name
 	if (nNeededChars > 0) {
 		pBuffer.resize(nNeededChars + 1);
-		hResult = lib3mf_object_getname(pObject, &pBuffer[0], nNeededChars + 1, NULL);
+		hResult = lib3mf_object_getnameutf8(pObject, &pBuffer[0], nNeededChars + 1, NULL);
 		pBuffer[nNeededChars] = 0;
-		sName = std::wstring(&pBuffer[0]);
+		sName = std::string(&pBuffer[0]);
 	}
-
-	// Output Name in local codepage
-	std::string sAnsiName(sName.begin(), sName.end());
-	std::cout << "   Name:            \"" << sAnsiName << "\"" << std::endl;
+	std::cout << "   Name:            \"" << sName << "\"" << std::endl;
 
 	// Retrieve Mesh Part Number Length
-	hResult = lib3mf_object_getpartnumber(pObject, NULL, 0, &nNeededChars);
+	hResult = lib3mf_object_getpartnumberutf8(pObject, NULL, 0, &nNeededChars);
 	if (hResult != LIB3MF_OK)
 		return hResult;
 
 	// Retrieve Mesh Name
 	if (nNeededChars > 0) {
 		pBuffer.resize(nNeededChars + 1);
-		hResult = lib3mf_object_getpartnumber(pObject, &pBuffer[0], nNeededChars + 1, NULL);
+		hResult = lib3mf_object_getpartnumberutf8(pObject, &pBuffer[0], nNeededChars + 1, NULL);
 		pBuffer[nNeededChars] = 0;
-		sPartNumber = std::wstring(&pBuffer[0]);
+		sPartNumber = std::string(&pBuffer[0]);
 	}
-
-	// Output Part number in local codepage
-	std::string sAnsiPartNumber(sPartNumber.begin(), sPartNumber.end());
-	std::cout << "   Part number:     \"" << sAnsiPartNumber << "\"" << std::endl;
+	std::cout << "   Part number:     \"" << sPartNumber << "\"" << std::endl;
 
 	// Output Object type
 	DWORD ObjectType;
@@ -702,9 +696,9 @@ int main(int argc, char* argv[])
 		}
 
 		// Retrieve Mesh Part Number Length
-		std::wstring sPartNumber;
+		std::string sPartNumber;
 		DWORD nNeededChars;
-		hResult = lib3mf_builditem_getpartnumber(pBuildItem, NULL, 0, &nNeededChars);
+		hResult = lib3mf_builditem_getpartnumberutf8(pBuildItem, NULL, 0, &nNeededChars);
 		if (hResult != LIB3MF_OK) {
 			lib3mf_release(pBuildItem);
 			lib3mf_release(pBuildItemIterator);
@@ -714,16 +708,13 @@ int main(int argc, char* argv[])
 
 		// Retrieve Mesh Name
 		if (nNeededChars > 0) {
-			std::vector<wchar_t> pBuffer;
+			std::vector<char> pBuffer;
 			pBuffer.resize(nNeededChars + 1);
-			hResult = lib3mf_builditem_getpartnumber(pBuildItem, &pBuffer[0], nNeededChars + 1, NULL);
+			hResult = lib3mf_builditem_getpartnumberutf8(pBuildItem, &pBuffer[0], nNeededChars + 1, NULL);
 			pBuffer[nNeededChars] = 0;
-			sPartNumber = std::wstring(&pBuffer[0]);
+			sPartNumber = std::string(&pBuffer[0]);
 		}
-
-		// Output Part number in local codepage
-		std::string sAnsiPartNumber(sPartNumber.begin(), sPartNumber.end());
-		std::cout << "   Part number:     \"" << sAnsiPartNumber << "\"" << std::endl;
+		std::cout << "   Part number:     \"" << sPartNumber << "\"" << std::endl;
 
 		// Release Build Item
 		lib3mf_release(pBuildItem);
