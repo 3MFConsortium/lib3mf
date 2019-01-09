@@ -78,6 +78,8 @@ ${SRCS_COM}
 ./Source/Common/Platform/NMR_ExportStream_ZIP.cpp
 ./Source/Common/Platform/NMR_ImportStream_Callback.cpp
 ./Source/Common/Platform/NMR_ImportStream_Memory.cpp
+./Source/Common/Platform/NMR_ImportStream_Unique_Memory.cpp
+./Source/Common/Platform/NMR_ImportStream_Shared_Memory.cpp
 ./Source/Common/Platform/NMR_ImportStream_ZIP.cpp
 ./Source/Common/Platform/NMR_PortableZIPWriter.cpp
 ./Source/Common/Platform/NMR_PortableZIPWriterEntry.cpp

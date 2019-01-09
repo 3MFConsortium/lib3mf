@@ -42,7 +42,7 @@ using LibZ and a native XML writer implementation.
 #include "Common/NMR_Exception.h" 
 #include "Common/Platform/NMR_XmlWriter.h" 
 #include "Common/Platform/NMR_XmlWriter_Native.h" 
-#include "Common/Platform/NMR_ImportStream_Memory.h"
+#include "Common/Platform/NMR_ImportStream_Unique_Memory.h"
 #include "Common/Platform/NMR_ExportStream_Memory.h"
 #include "Common/NMR_StringUtils.h" 
 #include "Common/3MF_ProgressMonitor.h"
@@ -168,7 +168,7 @@ namespace NMR {
 					PXmlWriter_Native pXMLWriter = std::make_shared<CXmlWriter_Native>(p);
 					writeSlicestackStream(pXMLWriter.get(), pModel, pSliceStackResource);
 
-					PImportStream pStream = std::make_shared<CImportStream_Memory>(p->getData(), p->getDataSize());
+					PImportStream pStream = std::make_shared<CImportStream_Unique_Memory>(p->getData(), p->getDataSize());
 					// check, whether that's already in here
 					PModelAttachment pSliceRefAttachment = m_pModel->findModelAttachment(pSliceStackResource->sliceRefPath());
 					if (pSliceRefAttachment.get() != nullptr) {
