@@ -54,7 +54,7 @@ COM Interface Implementation for Model Class
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_StringUtils.h"
 #include "Common/NMR_Exception_Windows.h"
-#include "Common/Platform/NMR_ImportStream_Memory.h"
+#include "Common/Platform/NMR_ImportStream_Unique_Memory.h"
 
 #include "Model/Reader/NMR_ModelReader_3MF_Native.h"
 #include "Model/Writer/NMR_ModelWriter_3MF_Native.h"
@@ -1221,7 +1221,7 @@ namespace NMR {
 			if (pwszRelationShipType == nullptr)
 				throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-			PImportStream pStream = std::make_shared<CImportStream_Memory> ();
+			PImportStream pStream = std::make_shared<CImportStream_Unique_Memory> ();
 			PModelAttachment pAttachment = m_pModel->addAttachment(fnUTF16toUTF8(pwszURI), fnUTF16toUTF8(pwszRelationShipType), pStream);
 
 			CCOMObject<CCOMModelAttachment> * pCOMObject = new CCOMObject<CCOMModelAttachment>();
@@ -1251,7 +1251,7 @@ namespace NMR {
 			if (pszRelationShipType == nullptr)
 				throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-			PImportStream pStream = std::make_shared<CImportStream_Memory>();
+			PImportStream pStream = std::make_shared<CImportStream_Unique_Memory>();
 			PModelAttachment pAttachment = m_pModel->addAttachment(pszURI, pszRelationShipType, pStream);
 
 			CCOMObject<CCOMModelAttachment> * pCOMObject = new CCOMObject<CCOMModelAttachment>();

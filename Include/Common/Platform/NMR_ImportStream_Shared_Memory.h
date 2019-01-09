@@ -26,43 +26,32 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ImportStream_Memory.h defines the CImportStream_Memory Class.
-This is an abstract platform independent class for keeping data in a memory stream.
+NMR_ImportStream_Shared_Memory.h implements the CImportStream_Memory Class.
+This is a platform independent class for keeping data in a memory stream that doesn't own the wrapped buffer.
 
 --*/
 
-#ifndef __NMR_IMPORTSTREAM_MEMORY
-#define __NMR_IMPORTSTREAM_MEMORY
+#ifndef __NMR_IMPORTSTREAM_SHARED_MEMORY
+#define __NMR_IMPORTSTREAM_SHARED_MEMORY
 
-#include "Common/Platform/NMR_ImportStream.h"
+#include "Common/Platform/NMR_ImportStream_Memory.h"
 #include "Common/NMR_Types.h"
 #include "Common/NMR_Local.h"
 
-#define NMR_IMPORTSTREAM_READCHUNKSIZE (1024*1024)
-
-#define NMR_IMPORTSTREAM_MAXMEMSTREAMSIZE (1024ULL*1024ULL*1024ULL*1024ULL)
+#include <vector>
 
 namespace NMR {
 
-	class CImportStream_Memory : public CImportStream {
-	protected:
-		nfUint64 m_cbSize;
-		nfUint64 m_nPosition;
-		
-		virtual const nfByte * getAt(nfUint64 nPosition) = 0;
-	public:
-		virtual ~CImportStream_Memory();
+    class CImportStream_Shared_Memory : public CImportStream_Memory {
+        private:
+                const nfByte * m_Buffer;
+        protected:
+                virtual const nfByte * getAt(nfUint64 nPosition);
+        public:
+            CImportStream_Shared_Memory(_In_ const nfByte * pBuffer, _In_ nfUint64 cbBytes);
+            virtual PImportStream copyToMemory();
+    };
+    
+} // namespace NMR
 
-		virtual nfBool seekPosition(_In_ nfUint64 nPosition, _In_ nfBool bHasToSucceed);
-		virtual nfBool seekForward(_In_ nfUint64 cbBytes, _In_ nfBool bHasToSucceed);
-		virtual nfBool seekFromEnd(_In_ nfUint64 cbBytes, _In_ nfBool bHasToSucceed);
-		virtual nfUint64 getPosition();
-		virtual nfUint64 readBuffer(_In_ nfByte * pBuffer, _In_ nfUint64 cbTotalBytesToRead, nfBool bNeedsToReadAll);
-		virtual nfUint64 retrieveSize();
-		virtual void writeToFile(_In_ const nfWChar * pwszFileName);
-		virtual PImportStream copyToMemory() = 0;
-	};
-
-}
-
-#endif // __NMR_IMPORTSTREAM_MEMORY
+#endif // __NMR_IMPORTSTREAM_SHARED_MEMORY
