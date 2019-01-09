@@ -50,10 +50,11 @@ Lib3MF is licensed under the [simplified BSD license](LICENSE).
 ## Products using Lib3MF
 A large number of software or hardware products and projects [support 3MF](https://3mf.io/adoption/), and many of them make use of lib3MF:
 
-| Product | Owner/Company |
+| Product | Owner/Company/Developers |
 | --- | --- |
 | [Element](https://www.ntopology.com/element-pro/) | [nTopology](https://www.ntopology.com/) |
 | [Netfabb](https://www.autodesk.com/products/netfabb/overview/) | [Autodesk](https://www.autodesk.com/) |
+| [OpenSCAD](https://www.openscad.org/) | [OpenSCAD developers](https://github.com/orgs/openscad/people) |
 | [Rhino3D](https://www.rhino3d.com/) | [Robert McNeel & Associates](https://www.mcneel.com/) |
 
 If your product or project uses Lib3MF, please create a pull request or an issue to have it included in this list.
