@@ -58,7 +58,7 @@ namespace NMR {
 		try {
 			m_Buffer.resize((size_t)cbCapacity);
 		}
-		catch (std::bad_alloc) {
+		catch (std::bad_alloc&) {
 			throw CNMRException(NMR_ERROR_INVALIDBUFFERSIZE);
 		}
 
@@ -126,5 +126,5 @@ namespace NMR {
     __NMR_INLINE const nfByte * CImportStream_Unique_Memory::getAt(nfUint64 nPosition) { 
         return &m_Buffer[nPosition]; 
     }
-	
+
 }
