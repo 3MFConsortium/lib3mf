@@ -37,7 +37,7 @@ This is a platform independent class for keeping data in a memory stream that ow
 
 namespace NMR {
 
-    CImportStream_Unique_Memory::CImportStream_Unique_Memory()
+	CImportStream_Unique_Memory::CImportStream_Unique_Memory()
 	{
 		m_cbSize = 0;
 		m_nPosition = 0;
@@ -123,8 +123,8 @@ namespace NMR {
 		return std::make_shared<CImportStream_Unique_Memory>(this, m_cbSize - m_nPosition, true);
 	}
 
-    __NMR_INLINE const nfByte * CImportStream_Unique_Memory::getAt(nfUint64 nPosition) { 
-        return &m_Buffer[nPosition]; 
-    }
+	__NMR_INLINE const nfByte * CImportStream_Unique_Memory::getAt(nfUint64 nPosition) { 
+		return &m_Buffer[nPosition]; 
+	}
 
 }

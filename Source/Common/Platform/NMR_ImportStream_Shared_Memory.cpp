@@ -51,16 +51,16 @@ namespace NMR {
 
 		m_Buffer = pBuffer;
 	}	
-    
-    PImportStream CImportStream_Shared_Memory::copyToMemory()
+
+	PImportStream CImportStream_Shared_Memory::copyToMemory()
 	{
 		__NMRASSERT(m_nPosition <= m_cbSize);
 
 		return std::make_shared<CImportStream_Unique_Memory>(this, m_cbSize - m_nPosition, true);
 	}
 
-    __NMR_INLINE const nfByte * CImportStream_Shared_Memory::getAt(nfUint64 nPosition) { 
-        return &m_Buffer[nPosition]; 
-    }
+	__NMR_INLINE const nfByte * CImportStream_Shared_Memory::getAt(nfUint64 nPosition) { 
+		return &m_Buffer[nPosition]; 
+	}
 
 }
