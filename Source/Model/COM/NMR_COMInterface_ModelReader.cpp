@@ -35,7 +35,7 @@ COM Interface Implementation for Model Reader Class
 #include "Common/NMR_Exception_Windows.h" 
 #include "Common/Platform/NMR_Platform.h" 
 #include "Common/NMR_StringUtils.h" 
-#include "Common/Platform/NMR_ImportStream_Memory.h"
+#include "Common/Platform/NMR_ImportStream_Shared_Memory.h"
 #include "Common/Platform/NMR_ImportStream_Callback.h" 
 #include <locale.h>
 
@@ -155,7 +155,7 @@ namespace NMR {
 			if (m_pModelReader.get() == nullptr)
 				throw CNMRException(NMR_ERROR_INVALIDREADEROBJECT);
 
-			PImportStream pStream = std::make_shared<CImportStream_Memory>(pBuffer, cbBufferSize);
+			PImportStream pStream = std::make_shared<CImportStream_Shared_Memory>(pBuffer, cbBufferSize);
 			m_pModelReader->readStream(pStream);
 			return handleSuccess();
 		}

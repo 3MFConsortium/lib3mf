@@ -26,43 +26,41 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ImportStream_Memory.h defines the CImportStream_Memory Class.
-This is an abstract platform independent class for keeping data in a memory stream.
+NMR_ImportStream_Shared_Memory.cpp implements the CImportStream_Memory Class.
+This is a platform independent class for keeping data in a memory stream that doesn't own the wrapped buffer.
 
 --*/
 
-#ifndef __NMR_IMPORTSTREAM_MEMORY
-#define __NMR_IMPORTSTREAM_MEMORY
-
-#include "Common/Platform/NMR_ImportStream.h"
-#include "Common/NMR_Types.h"
-#include "Common/NMR_Local.h"
-
-#define NMR_IMPORTSTREAM_READCHUNKSIZE (1024*1024)
-
-#define NMR_IMPORTSTREAM_MAXMEMSTREAMSIZE (1024ULL*1024ULL*1024ULL*1024ULL)
+#include "Common/Platform/NMR_ImportStream_Shared_Memory.h"
+#include "Common/Platform/NMR_ImportStream_Unique_Memory.h"
+#include "Common/NMR_Exception.h"
+#include "Common/NMR_Exception_Windows.h"
 
 namespace NMR {
 
-	class CImportStream_Memory : public CImportStream {
-	protected:
-		nfUint64 m_cbSize;
-		nfUint64 m_nPosition;
-		
-		virtual const nfByte * getAt(nfUint64 nPosition) = 0;
-	public:
-		virtual ~CImportStream_Memory();
+	CImportStream_Shared_Memory::CImportStream_Shared_Memory(_In_ const nfByte * pBuffer, _In_ nfUint64 cbBytes)
+	{
+		if (pBuffer == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-		virtual nfBool seekPosition(_In_ nfUint64 nPosition, _In_ nfBool bHasToSucceed);
-		virtual nfBool seekForward(_In_ nfUint64 cbBytes, _In_ nfBool bHasToSucceed);
-		virtual nfBool seekFromEnd(_In_ nfUint64 cbBytes, _In_ nfBool bHasToSucceed);
-		virtual nfUint64 getPosition();
-		virtual nfUint64 readBuffer(_In_ nfByte * pBuffer, _In_ nfUint64 cbTotalBytesToRead, nfBool bNeedsToReadAll);
-		virtual nfUint64 retrieveSize();
-		virtual void writeToFile(_In_ const nfWChar * pwszFileName);
-		virtual PImportStream copyToMemory() = 0;
-	};
+		if (cbBytes > NMR_IMPORTSTREAM_MAXMEMSTREAMSIZE)
+			throw CNMRException(NMR_ERROR_INVALIDBUFFERSIZE);
+
+		m_cbSize = cbBytes;
+		m_nPosition = 0;
+
+		m_Buffer = pBuffer;
+	}	
+
+	PImportStream CImportStream_Shared_Memory::copyToMemory()
+	{
+		__NMRASSERT(m_nPosition <= m_cbSize);
+
+		return std::make_shared<CImportStream_Unique_Memory>(this, m_cbSize - m_nPosition, true);
+	}
+
+	__NMR_INLINE const nfByte * CImportStream_Shared_Memory::getAt(nfUint64 nPosition) { 
+		return &m_Buffer[nPosition]; 
+	}
 
 }
-
-#endif // __NMR_IMPORTSTREAM_MEMORY

@@ -39,7 +39,7 @@ COM Interface Implementation for Model Classes
 #include "Common/NMR_Exception_Windows.h"
 #include "Common/NMR_StringUtils.h"
 
-#include "Common/Platform/NMR_ImportStream_Memory.h"
+#include "Common/Platform/NMR_ImportStream_Unique_Memory.h"
 #include "Model/Classes/NMR_ModelConstants.h"
 
 namespace NMR {
@@ -730,7 +730,7 @@ namespace NMR {
 			CModelTexture2DResource * pTextureResource = getTexture2D();
 			__NMRASSERT(pTextureResource);
 
-			PImportStream pImportStream = std::make_shared<CImportStream_Memory>(pBuffer, cbBufferSize);
+			PImportStream pImportStream = std::make_shared<CImportStream_Unique_Memory>(pBuffer, cbBufferSize);
 
 			CModel * pModel = pTextureResource->getModel();
 			__NMRASSERT(pModel);

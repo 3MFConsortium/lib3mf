@@ -38,7 +38,7 @@ COM Interface Implementation for Model Classes
 #include "Common/NMR_Exception_Windows.h"
 #include "Common/NMR_StringUtils.h"
 
-#include "Common/Platform/NMR_ImportStream_Memory.h"
+#include "Common/Platform/NMR_ImportStream_Unique_Memory.h"
 
 namespace NMR {
 
@@ -553,7 +553,7 @@ namespace NMR {
 			if (pBuffer == nullptr)
 				throw CNMRException(NMR_ERROR_INVALIDPOINTER);
 
-			PImportStream pImportStream = std::make_shared<CImportStream_Memory>(pBuffer, cbBufferSize);
+			PImportStream pImportStream = std::make_shared<CImportStream_Unique_Memory>(pBuffer, cbBufferSize);
 			m_pModelAttachment->setStream(pImportStream);
 
 			return handleSuccess();
