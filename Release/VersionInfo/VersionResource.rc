@@ -1,5 +1,5 @@
 #include "VersionInfo.h"
-#include "winres.h"
+#include "winresrc.h"
 
 // IDI_ICON1               ICON                    PRODUCT_ICON
 
