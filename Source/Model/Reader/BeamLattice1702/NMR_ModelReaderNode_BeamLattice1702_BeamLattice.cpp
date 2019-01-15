@@ -104,7 +104,9 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_BEAMLATTICEINVALIDATTRIBUTE);
 			m_pMesh->setBeamLatticeMinLength(dValue);
 		}
-		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_BEAMLATTICE_CLIPPING) == 0) {
+		else if ((strcmp(pAttributeName, XML_3MF_ATTRIBUTE_BEAMLATTICE_CLIPPINGMODE) == 0) ||
+			(strcmp(pAttributeName, XML_3MF_ATTRIBUTE_BEAMLATTICE_CLIPPING) == 0)) // legacy
+		{
 			if (strcmp(pAttributeValue, XML_3MF_BEAMLATTICE_CLIPMODE_INSIDE) == 0) {
 				m_eClipMode = MODELBEAMLATTICECLIPMODE_INSIDE;
 			}
