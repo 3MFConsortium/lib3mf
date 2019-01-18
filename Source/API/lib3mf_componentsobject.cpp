@@ -36,7 +36,7 @@ Abstract: This is a stub class definition of CLib3MFComponentsObject
 
 // Include custom headers here.
 
-using namespace Lib3MF;
+using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
  Class definition of CLib3MFComponentsObject 

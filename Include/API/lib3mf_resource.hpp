@@ -39,6 +39,7 @@ Abstract: This is the class declaration of CLib3MFResource
 #include "Model/Classes/NMR_ModelResource.h" 
 
 namespace Lib3MF {
+namespace Impl {
 
 
 /*************************************************************************************************************************
@@ -75,6 +76,7 @@ public:
 
 };
 
+}
 }
 
 #endif // __LIB3MF_LIB3MFRESOURCE

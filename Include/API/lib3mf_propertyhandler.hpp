@@ -39,7 +39,7 @@ Abstract: This is the class declaration of CLib3MFPropertyHandler
 
 
 namespace Lib3MF {
-
+namespace Impl {
 
 /*************************************************************************************************************************
  Class declaration of CLib3MFPropertyHandler 
@@ -95,6 +95,7 @@ public:
 
 };
 
+}
 }
 
 #endif // __LIB3MF_LIB3MFPROPERTYHANDLER

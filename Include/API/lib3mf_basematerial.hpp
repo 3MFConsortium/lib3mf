@@ -43,6 +43,7 @@ Abstract: This is the class declaration of CLib3MFBaseMaterial
 
 
 namespace Lib3MF {
+namespace Impl {
 
 
 /*************************************************************************************************************************
@@ -97,6 +98,7 @@ public:
 
 };
 
+}
 }
 
 #pragma warning( pop )

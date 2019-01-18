@@ -35,7 +35,7 @@ Abstract: This is a stub class definition of CLib3MFReader
 #include "Common/Platform/NMR_Platform.h"
 #include "Common/Platform/NMR_ImportStream_Memory.h"
 
-using namespace Lib3MF;
+using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
  Class definition of CLib3MFReader 
@@ -73,6 +73,11 @@ void CLib3MFReader::ReadFromBuffer (const Lib3MF_uint64 nBufferBufferSize, const
 {
 	NMR::PImportStream pImportStream = std::make_shared<NMR::CImportStream_Memory>(pBufferBuffer, nBufferBufferSize);
 	reader().readStream(pImportStream);
+}
+
+void CLib3MFReader::SetProgressCallback(const Lib3MFProgressCallback pProgressCallback, const Lib3MF_int64 nUserData)
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 void CLib3MFReader::AddRelationToRead (const std::string & sRelationShipType)

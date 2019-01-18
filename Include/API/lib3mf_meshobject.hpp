@@ -43,6 +43,7 @@ Abstract: This is the class declaration of CLib3MFMeshObject
 
 
 namespace Lib3MF {
+namespace Impl {
 
 
 /*************************************************************************************************************************
@@ -131,6 +132,7 @@ public:
 
 };
 
+}
 }
 
 #pragma warning( pop )

@@ -35,7 +35,7 @@ Abstract: This is a stub class definition of CLib3MFBuildItem
 // Include custom headers here.
 #include "lib3mf_object.hpp"
 
-using namespace Lib3MF;
+using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
  Class definition of CLib3MFBuildItem 

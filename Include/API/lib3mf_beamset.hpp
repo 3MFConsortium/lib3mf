@@ -39,6 +39,7 @@ Abstract: This is the class declaration of CLib3MFBeamSet
 
 
 namespace Lib3MF {
+namespace Impl {
 
 
 /*************************************************************************************************************************
@@ -85,6 +86,7 @@ public:
 
 };
 
+}
 }
 
 #endif // __LIB3MF_LIB3MFBEAMSET

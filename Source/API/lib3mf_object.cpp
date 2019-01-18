@@ -38,7 +38,7 @@ Abstract: This is a stub class definition of CLib3MFObject
 #include "Model/Classes/NMR_ModelMeshObject.h" 
 #include "Model/Classes/NMR_ModelComponentsObject.h" 
 
-using namespace Lib3MF;
+using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
  Class definition of CLib3MFObject 

@@ -37,7 +37,7 @@ Abstract: This is a stub class definition of CLib3MFWriter
 #include "Common/Platform/NMR_ExportStream_Memory.h"
 #include "Common/Platform/NMR_ExportStream_Dummy.h"
 
-using namespace Lib3MF;
+using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
  Class definition of CLib3MFWriter 
@@ -95,8 +95,18 @@ void CLib3MFWriter::WriteToBuffer (Lib3MF_uint64 nBufferBufferSize, Lib3MF_uint6
 	}
 }
 
-void CLib3MFWriter::SetProgressCallback (const Lib3MFProgressCallback pProgressCallback)
+void CLib3MFWriter::SetProgressCallback(const Lib3MFProgressCallback callback, Lib3MF_int64 nUserData)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	// Outer: typedef void(*Lib3MFProgressCallback)(bool*, Lib3MF_double, eLib3MFProgressIdentifier, Lib3MF_int64);
+	// Inner: typedef std::function<bool(int, ProgressIdentifier, void*)> Lib3MFProgressCallback;
+
+	 // store a lambda
+	std::function<bool(int, NMR::ProgressIdentifier, void*)> func = 
+		[callback](int a, NMR::ProgressIdentifier b, void* c)
+		{
+			bool ret;
+			(*callback)(&ret, 1/100.0f, eLib3MFProgressIdentifier::eProgressIdentifierCLEANUP, reinterpret_cast<Lib3MF_uint64>(c)); return ret;
+		};
+	m_pWriter->SetProgressCallback(func, reinterpret_cast<void*>(nUserData));
 }
 

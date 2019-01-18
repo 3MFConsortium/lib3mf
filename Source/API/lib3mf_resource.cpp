@@ -36,7 +36,7 @@ Abstract: This is a stub class definition of CLib3MFResource
 #include "lib3mf_object.hpp"
 #include <iostream>
 
-using namespace Lib3MF;
+using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
  Class definition of CLib3MFResource 

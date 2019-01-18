@@ -39,6 +39,7 @@ Abstract: This is the class declaration of CLib3MFAttachment
 #include "Model/Classes/NMR_ModelAttachment.h"
 
 namespace Lib3MF {
+namespace Impl {
 
 
 /*************************************************************************************************************************
@@ -90,6 +91,7 @@ public:
 
 };
 
+}
 }
 
 #endif // __LIB3MF_LIB3MFATTACHMENT

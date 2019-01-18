@@ -39,6 +39,7 @@ Abstract: This is the class declaration of CLib3MFBuildItem
 #include "Model/Classes/NMR_ModelBuildItem.h"
 
 namespace Lib3MF {
+namespace Impl {
 
 
 /*************************************************************************************************************************
@@ -99,6 +100,7 @@ public:
 
 };
 
+}
 }
 
 #endif // __LIB3MF_LIB3MFBUILDITEM

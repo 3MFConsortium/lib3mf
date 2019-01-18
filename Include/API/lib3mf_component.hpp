@@ -39,6 +39,7 @@ Abstract: This is the class declaration of CLib3MFComponent
 #include "Model/Classes/NMR_ModelComponent.h"
 
 namespace Lib3MF {
+namespace Impl {
 
 
 /*************************************************************************************************************************
@@ -85,6 +86,7 @@ public:
 	virtual sLib3MFTransform GetTransform();
 };
 
+}
 }
 
 #endif // __LIB3MF_LIB3MFCOMPONENT

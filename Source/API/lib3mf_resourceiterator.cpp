@@ -35,7 +35,7 @@ Abstract: This is a stub class definition of CLib3MFResourceIterator
 // Include custom headers here.
 
 
-using namespace Lib3MF;
+using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
  Class definition of CLib3MFResourceIterator 
@@ -46,7 +46,7 @@ CLib3MFResourceIterator::CLib3MFResourceIterator()
 	m_nCurrentIndex = -1;
 }
 
-void Lib3MF::CLib3MFResourceIterator::addResource(NMR::PModelResource pResource)
+void CLib3MFResourceIterator::addResource(NMR::PModelResource pResource)
 {
 	if (pResource.get() == nullptr)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);

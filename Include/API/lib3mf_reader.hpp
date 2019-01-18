@@ -41,6 +41,7 @@ Abstract: This is the class declaration of CLib3MFReader
 #include "Model/Reader/NMR_ModelReader_STL.h"
 
 namespace Lib3MF {
+namespace Impl {
 
 
 /*************************************************************************************************************************
@@ -79,6 +80,8 @@ public:
 
 	void AddRelationToRead (const std::string & sRelationShipType);
 
+	void SetProgressCallback(const Lib3MFProgressCallback pProgressCallback, const Lib3MF_int64 nUserData);
+
 	void RemoveRelationToRead (const std::string & sRelationShipType);
 
 	void SetStrictModeActive (const bool bStrictModeActive);
@@ -91,6 +94,7 @@ public:
 
 };
 
+}
 }
 
 #endif // __LIB3MF_LIB3MFREADER

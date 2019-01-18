@@ -41,7 +41,7 @@ Abstract: This is the class declaration of CLib3MFWriter
 #include "Model/Writer/NMR_ModelWriter_STL.h"
 
 namespace Lib3MF {
-
+namespace Impl {
 
 /*************************************************************************************************************************
  Class declaration of CLib3MFWriter 
@@ -79,10 +79,11 @@ public:
 
 	void WriteToBuffer (Lib3MF_uint64 nBufferBufferSize, Lib3MF_uint64* pBufferNeededCount, Lib3MF_uint8 * pBufferBuffer);
 
-	void SetProgressCallback (const Lib3MFProgressCallback pProgressCallback);
+	void SetProgressCallback(const Lib3MFProgressCallback pProgressCallback, Lib3MF_int64 nUserData);
 
 };
 
+}
 }
 
 #endif // __LIB3MF_LIB3MFWRITER

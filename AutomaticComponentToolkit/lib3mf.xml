@@ -121,11 +121,35 @@
 		<option name="HemiSphere" value="1" />
 		<option name="Butt" value="2" />
 	</enum>
-	
+
 	<enum name="BeamLatticeClipMode">
 		<option name="NoClipMode" value="0" />
 		<option name="Inside" value="1" />
 		<option name="Outside" value="2" />
+	</enum>
+
+	<enum name="ProgressIdentifier">
+		<option name="QUERYCANCELED" value="0" />
+		<option name="DONE" value="1" />
+		<option name="CLEANUP" value="2" />
+		<option name="READSTREAM" value="3" />
+		<option name="EXTRACTOPCPACKAGE" value="4" />
+		<option name="READNONROOTMODELS" value="5" />
+		<option name="READROOTMODEL" value="6" />
+		<option name="READRESOURCES" value="7" />
+		<option name="READMESH" value="8" />
+		<option name="READSLICES" value="9" />
+		<option name="READBUILD" value="10" />
+		<option name="CREATEOPCPACKAGE" value="11" />
+		<option name="WRITEMODELSTOSTREAM" value="12" />
+		<option name="WRITEROOTMODEL" value="13" />
+		<option name="WRITENONROOTMODELS" value="14" />
+		<option name="WRITEATTACHMENTS" value="15" />
+		<option name="WRITECONTENTTYPES" value="16" />
+		<option name="WRITENOBJECTS" value="17" />
+		<option name="WRITENODES" value="18" />
+		<option name="WRITETRIANGLES" value="19" />
+		<option name="WRITESLICES" value="20" />
 	</enum>
 	
 	<struct name="Triangle">
@@ -156,7 +180,8 @@
 	<functiontype name="ProgressCallback" description="A callback function">
 		<param name="Abort" type="bool" pass="return" description="Returns whether the calculation should be aborted"/>
 		<param name="ProgressValue" type="double" pass="in" description="The value of the progress function: values in the interval [0,1] are progress; &lt; mean no progress update"/>
-		<param name="ProgressIdentifier" type="uint32" pass="in" description="An identifier of progress"/>
+		<param name="ProgressIdentifier" type="enum" class="ProgressIdentifier" pass="in" description="An identifier of progress"/>
+		<param name="UserData" type="int64" pass="in" description="Pointer to arbitrary data in the clients frame"/>
 	</functiontype>
 
 	<class name="Writer">
@@ -182,6 +207,7 @@
 		
 		<method name="SetProgressCallback" description = "Set the progress callback for calls to this writer">
 			<param name="ProgressCallback" type="functiontype" class="ProgressCallback" pass="in" description="pointer to the callback function."/>
+			<param name="UserData" type="int64" pass="in" description="pointer to arbitrary user data that is passed without modification to the callback."/>
 		</method>
 	</class>
 
@@ -201,12 +227,11 @@
 			<param name="SeekCallback" type="callback" pass="in" description="Callback to call for seeking in the stream." />
 			<param name="UserData" type="pointer" pass="in" description="Userdata that is passed to the callback function" />
 		</method>
-		
-		<method name="SetProgressCallback" description = "Set the progress callback for calls to this writer">
-			<param name="WriteCallback" type="callback" pass="in" description="pointer to the callback function. If the callback returns "false" the enclosing function call will be aborted and a error *_USERABORTED will be raised/>
-			<param name="UserData" type="pointer" pass="in" description="Userdata that is passed to the callback function" />
-		</method>
 		-->
+		<method name="SetProgressCallback" description = "Set the progress callback for calls to this writer">
+			<param name="ProgressCallback" type="functiontype" class="ProgressCallback" pass="in" description="pointer to the callback function."/>
+			<param name="UserData" type="int64" pass="in" description="pointer to arbitrary user data that is passed without modification to the callback."/>
+		</method>
 
 		<method name="AddRelationToRead" dllsuffix="utf8" description = "Adds a relationship type which shall be read as attachment in memory while loading">
 			<param name="RelationShipType" type="string" pass="in" description="String of the relationship type" />				
@@ -1360,10 +1385,17 @@
 		<method name="Release" description = "releases an object instance">
 			<param name="Instance" type="handle" class="BaseClass" pass="in" description="releases the memory of the passed object." />
 		</method>
-		
+
 		<method name="SetJournal" description = "Sets the journal file path">
 			<param name="JournalPath" type="string" pass="in" description="File name of the journal file" />
 		</method>
+
+		<method name="RetrieveProgressMessage" description = "Return an English text for a progress identifier.|Note: this is the only function you can call from your callback function.">
+			<param name="ProrgessIdentifier" type="enum" class="ProgressIdentifier" pass="in" description="the progress identifier that is passed to the callback function" />
+			<param name="ProegressMessage" type="string" pass="out" description="English text for the progress identifier" />
+		</method>
+		
+		
 	</global>
 	
 </component>

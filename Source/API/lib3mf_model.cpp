@@ -45,7 +45,7 @@ Abstract: This is a stub class definition of CLib3MFModel
 #include "Model/Classes/NMR_ModelComponentsObject.h"
 #include "Common/Platform/NMR_ImportStream_Memory.h"
 
-using namespace Lib3MF;
+using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
  Class definition of CLib3MFModel 

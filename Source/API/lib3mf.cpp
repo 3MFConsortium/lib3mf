@@ -42,7 +42,7 @@ Interface version: 2.0.0
 #include "NMR_Spec_Version.h"
 #include "Model/Classes/NMR_ModelConstants.h" 
 
-using namespace Lib3MF;
+using namespace Lib3MF::Impl;
 
 void CLib3MFWrapper::GetLibraryVersion (Lib3MF_uint32 & nMajor, Lib3MF_uint32 & nMinor, Lib3MF_uint32 & nMicro)
 {
@@ -97,4 +97,9 @@ void CLib3MFWrapper::SetJournal (const std::string & sJournalPath)
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
+
+void CLib3MFWrapper::RetrieveProgressMessage(const eLib3MFProgressIdentifier eProrgessIdentifier, std::string & sProegressMessage)
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
 

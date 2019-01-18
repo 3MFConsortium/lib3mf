@@ -37,7 +37,7 @@ Abstract: This is a stub class definition of CLib3MFAttachment
 #include "Common/Platform/NMR_Platform.h"
 #include "Common/NMR_StringUtils.h"
 
-using namespace Lib3MF;
+using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
  Class definition of CLib3MFAttachment 

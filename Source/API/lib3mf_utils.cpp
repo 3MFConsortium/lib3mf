@@ -34,7 +34,7 @@ Abstract: This file implements utilities for the lib3mf API
 // Include custom headers here.
 
 
-// using namespace Lib3MF;
+// using namespace Lib3MF::Impl;
 
 NMR::NMATRIX3 Lib3MF::TransformToMatrix(const sLib3MFTransform Transform)
 {

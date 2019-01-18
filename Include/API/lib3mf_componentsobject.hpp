@@ -44,6 +44,7 @@ Abstract: This is the class declaration of CLib3MFComponentsObject
 
 
 namespace Lib3MF {
+namespace Impl {
 
 
 /*************************************************************************************************************************
@@ -84,6 +85,7 @@ public:
 
 };
 
+}
 }
 
 #endif // __LIB3MF_LIB3MFCOMPONENTSOBJECT

@@ -43,6 +43,7 @@ Abstract: This is the class declaration of CLib3MFObject
 #include "Model/Classes/NMR_ModelResource.h" 
 
 namespace Lib3MF {
+namespace Impl {
 
 
 /*************************************************************************************************************************
@@ -104,6 +105,7 @@ public:
 	static ILib3MFObject* fnCreateObjectFromModelResource(NMR::PModelResource pResource, bool bFailIfUnkownClass);
 };
 
+}
 }
 
 #pragma warning( pop )
