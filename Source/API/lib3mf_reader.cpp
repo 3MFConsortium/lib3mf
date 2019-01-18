@@ -66,18 +66,43 @@ NMR::CModelReader& CLib3MFReader::reader()
 void CLib3MFReader::ReadFromFile (const std::string & sFilename)
 {
 	NMR::PImportStream pImportStream = NMR::fnCreateImportStreamInstance(sFilename.c_str());
-	reader().readStream(pImportStream);
+
+	try {
+		reader().readStream(pImportStream);
+	}
+	catch (NMR::CNMRException&e) {
+		if (e.getErrorCode() == NMR_USERABORTED) {
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_CALCULATIONABORTED);
+		}
+		else throw e;
+	}
 }
 
 void CLib3MFReader::ReadFromBuffer (const Lib3MF_uint64 nBufferBufferSize, const Lib3MF_uint8 * pBufferBuffer)
 {
 	NMR::PImportStream pImportStream = std::make_shared<NMR::CImportStream_Memory>(pBufferBuffer, nBufferBufferSize);
-	reader().readStream(pImportStream);
+
+	try {
+		reader().readStream(pImportStream);
+	}
+	catch (NMR::CNMRException&e) {
+		if (e.getErrorCode() == NMR_USERABORTED) {
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_CALCULATIONABORTED);
+		}
+		else throw e;
+	}
 }
 
-void CLib3MFReader::SetProgressCallback(const Lib3MFProgressCallback pProgressCallback, const Lib3MF_int64 nUserData)
+void CLib3MFReader::SetProgressCallback(const Lib3MFProgressCallback pProgressCallback, const Lib3MF_uint64 nUserData)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	NMR::Lib3MFProgressCallback lambdaCallback =
+		[pProgressCallback](int progressStep, NMR::ProgressIdentifier identifier, void* pUserData)
+	{
+		bool ret;
+		(*pProgressCallback)(&ret, progressStep / 100.0f, eLib3MFProgressIdentifier(identifier), reinterpret_cast<Lib3MF_uint64>(pUserData));
+		return ret;
+	};
+	m_pReader->SetProgressCallback(lambdaCallback, reinterpret_cast<void*>(nUserData));
 }
 
 void CLib3MFReader::AddRelationToRead (const std::string & sRelationShipType)

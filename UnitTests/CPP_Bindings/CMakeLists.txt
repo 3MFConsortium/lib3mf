@@ -5,12 +5,13 @@ SET(TESTNAME "Test_CPP_Bindings")
 
 set(SRCS_UNITTEST
 	./Source/UnitTest_AllTests.cpp
-	./Source/UnitTest_Wrapper.cpp
+	./Source/UnitTest_BuildItems.cpp
 	./Source/UnitTest_Model.cpp
+	./Source/UnitTest_Object.cpp
+	./Source/UnitTest_ProgressCallback.cpp
 	./Source/UnitTest_Reader.cpp
 	./Source/UnitTest_Writer.cpp
-	./Source/UnitTest_BuildItems.cpp
-	./Source/UnitTest_Object.cpp
+	./Source/UnitTest_Wrapper.cpp
 )
 
 set(CMAKE_CURRENT_BINARY_DIR ${CMAKE_BINARY_DIR})

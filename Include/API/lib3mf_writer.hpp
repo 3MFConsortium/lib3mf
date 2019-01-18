@@ -79,10 +79,9 @@ public:
 
 	void WriteToBuffer (Lib3MF_uint64 nBufferBufferSize, Lib3MF_uint64* pBufferNeededCount, Lib3MF_uint8 * pBufferBuffer);
 
-	void WriteToCallback(const Lib3MFWriteCallback pTheWriteCallback, const Lib3MFSeekCallback pTheSeekCallback, const Lib3MF_int64 nUserData);
+	void WriteToCallback(const Lib3MFWriteCallback pTheWriteCallback, const Lib3MFSeekCallback pTheSeekCallback, const Lib3MF_uint64 nUserData);
 
-	void SetProgressCallback(const Lib3MFProgressCallback pProgressCallback, Lib3MF_int64 nUserData);
-
+	void SetProgressCallback(const Lib3MFProgressCallback pProgressCallback, const Lib3MF_uint64 nUserData);
 };
 
 }

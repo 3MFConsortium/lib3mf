@@ -41,6 +41,7 @@ Interface version: 2.0.0
 
 #include "NMR_Spec_Version.h"
 #include "Model/Classes/NMR_ModelConstants.h" 
+#include "Common/3MF_ProgressMonitor.h"
 
 using namespace Lib3MF::Impl;
 
@@ -98,8 +99,37 @@ void CLib3MFWrapper::SetJournal (const std::string & sJournalPath)
 }
 
 
-void CLib3MFWrapper::RetrieveProgressMessage(const eLib3MFProgressIdentifier eProrgessIdentifier, std::string & sProegressMessage)
+NMR::ProgressIdentifier convertProgressIdentifier(const eLib3MFProgressIdentifier progressIdentifier) {
+	return NMR::ProgressIdentifier(progressIdentifier);
+	//switch (progressIdentifier) {
+	//	case eLib3MFProgressIdentifier::eProgressIdentifierQUERYCANCELED: return NMR::PROGRESS_QUERYCANCELED;
+	//	case eLib3MFProgressIdentifier::eProgressIdentifierDONE: return NMR::PROGRESS_DONE;
+	//	case eLib3MFProgressIdentifier::eProgressIdentifierCLEANUP: return NMR::PROGRESS_CLEANUP;
+	//	case eLib3MFProgressIdentifier::eProgressIdentifierREADSTREAM: return NMR::PROGRESS_READSTREAM;
+	//	case eLib3MFProgressIdentifier::eProgressIdentifierEXTRACTOPCPACKAGE: return NMR::PROGRESS_EXTRACTOPCPACKAGE;
+	//	case eLib3MFProgressIdentifier::eProgressIdentifierREADNONROOTMODELS: return NMR::PROGRESS_READNONROOTMODELS;
+	//	case eLib3MFProgressIdentifier::eProgressIdentifierREADROOTMODEL: return NMR::PROGRESS_READROOTMODEL;
+	//	case eLib3MFProgressIdentifier::eProgressIdentifierREADRESOURCES: return NMR::PROGRESS_READRESOURCES;
+	//	case eLib3MFProgressIdentifier::eProgressIdentifierREADMESH: return NMR::PROGRESS_READMESH;
+	//	case eLib3MFProgressIdentifier::eProgressIdentifierREADSLICES: return NMR::PROGRESS_READSLICES;
+	//	case eLib3MFProgressIdentifier::eProgressIdentifierREADBUILD: return NMR::PROGRESS_READBUILD;
+	//	case eLib3MFProgressIdentifier::eProgressIdentifierCREATEOPCPACKAGE: return NMR::PROGRESS_CREATEOPCPACKAGE;
+	//	case eLib3MFProgressIdentifier::eProgressIdentifierWRITEMODELSTOSTREAM: return NMR::PROGRESS_WRITEMODELSTOSTREAM;
+	//	case eLib3MFProgressIdentifier::eProgressIdentifierWRITEROOTMODEL: return NMR::PROGRESS_WRITEROOTMODEL;
+	//	case eLib3MFProgressIdentifier::eProgressIdentifierWRITENONROOTMODELS: return NMR::PROGRESS_WRITENONROOTMODELS;
+	//	case eLib3MFProgressIdentifier::eProgressIdentifierWRITEATTACHMENTS: return NMR::PROGRESS_WRITEATTACHMENTS;
+	//	case eLib3MFProgressIdentifier::eProgressIdentifierWRITECONTENTTYPES: return NMR::PROGRESS_WRITECONTENTTYPES;
+	//	case eLib3MFProgressIdentifier::eProgressIdentifierWRITENOBJECTS: return NMR::PROGRESS_WRITENOBJECTS;
+	//	case eLib3MFProgressIdentifier::eProgressIdentifierWRITENODES: return NMR::PROGRESS_WRITENODES;
+	//	case eLib3MFProgressIdentifier::eProgressIdentifierWRITETRIANGLES: return NMR::PROGRESS_WRITETRIANGLES;
+	//	case eLib3MFProgressIdentifier::eProgressIdentifierWRITESLICES: return NMR::PROGRESS_WRITESLICES;
+	//	default: throw ELib3MFInterfaceException(LIB3MF_ERROR_UNKOWNPROGRESSIDENTIFIER);
+	//}
+}
+
+
+void CLib3MFWrapper::RetrieveProgressMessage(const eLib3MFProgressIdentifier eProrgessIdentifier, std::string & sProgressMessage)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	NMR::CProgressMonitor::GetProgressMessage(convertProgressIdentifier(eProrgessIdentifier), sProgressMessage);
 }
 

@@ -58,7 +58,7 @@ namespace NMR
 		bool QueryCancelled();
 		bool Progress(double progress, ProgressIdentifier identifier);
 
-		static void GetProgressMessage(ProgressIdentifier progressIdentifier, const char ** progressString);
+		static void GetProgressMessage(ProgressIdentifier progressIdentifier, std::string& progressString);
 
 		void PushLevel(double relativeStart, double relativeEnd);
 		std::pair<double, double> PopLevel();

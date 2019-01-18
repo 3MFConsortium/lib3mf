@@ -69,14 +69,30 @@ void CLib3MFWriter::WriteToFile (const std::string & sFilename)
 {
 	setlocale(LC_ALL, "C");
 	NMR::PExportStream pStream = NMR::fnCreateExportStreamInstance(sFilename.c_str());
-	writer().exportToStream(pStream);
+	try {
+		writer().exportToStream(pStream);
+	}
+	catch (NMR::CNMRException&e) {
+		if (e.getErrorCode() == NMR_USERABORTED) {
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_CALCULATIONABORTED);
+		}
+		else throw e;
+	}
 }
 
 Lib3MF_uint64 CLib3MFWriter::GetStreamSize ()
 {
 	// Write to a special dummy stream just to calculate the size
 	NMR::PExportStreamDummy pStream = std::make_shared<NMR::CExportStreamDummy>();
-	writer().exportToStream(pStream);
+	try {
+		writer().exportToStream(pStream);
+	}
+	catch (NMR::CNMRException&e) {
+		if (e.getErrorCode() == NMR_USERABORTED) {
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_CALCULATIONABORTED);
+		}
+		else throw e;
+	}
 
 	return pStream->getDataSize();
 }
@@ -84,7 +100,15 @@ Lib3MF_uint64 CLib3MFWriter::GetStreamSize ()
 void CLib3MFWriter::WriteToBuffer (Lib3MF_uint64 nBufferBufferSize, Lib3MF_uint64* pBufferNeededCount, Lib3MF_uint8 * pBufferBuffer)
 {
 	NMR::PExportStreamMemory pStream = std::make_shared<NMR::CExportStreamMemory>();
-	writer().exportToStream(pStream);
+	try {
+		writer().exportToStream(pStream);
+	}
+	catch (NMR::CNMRException&e) {
+		if (e.getErrorCode() == NMR_USERABORTED) {
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_CALCULATIONABORTED);
+		}
+		else throw e;
+	}
 
 	Lib3MF_uint64 cbStreamSize = pStream->getDataSize();
 	if (pBufferNeededCount)
@@ -96,7 +120,7 @@ void CLib3MFWriter::WriteToBuffer (Lib3MF_uint64 nBufferBufferSize, Lib3MF_uint6
 	}
 }
 
-void CLib3MFWriter::WriteToCallback(const Lib3MFWriteCallback pTheWriteCallback, const Lib3MFSeekCallback pTheSeekCallback, const Lib3MF_int64 nUserData)
+void CLib3MFWriter::WriteToCallback(const Lib3MFWriteCallback pTheWriteCallback, const Lib3MFSeekCallback pTheSeekCallback, const Lib3MF_uint64 nUserData)
 {
 	NMR::ExportStream_WriteCallbackType lambdaWriteCallback =
 		[pTheWriteCallback](NMR::nfByte* pData, NMR::nfUint64 cbBytes, void* pUserData)
@@ -113,18 +137,26 @@ void CLib3MFWriter::WriteToCallback(const Lib3MFWriteCallback pTheWriteCallback,
 	};
 
 	NMR::PExportStream pStream = std::make_shared<NMR::CExportStream_Callback>(lambdaWriteCallback, lambdaSeekCallback, reinterpret_cast<void*>(nUserData));
-	m_pWriter->exportToStream(pStream);
+	try {
+		writer().exportToStream(pStream);
+	}
+	catch (NMR::CNMRException&e) {
+		if (e.getErrorCode() == NMR_USERABORTED) {
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_CALCULATIONABORTED);
+		}
+		else throw e;
+	}
 }
 
-void CLib3MFWriter::SetProgressCallback(const Lib3MFProgressCallback callback, Lib3MF_int64 nUserData)
+void CLib3MFWriter::SetProgressCallback(const Lib3MFProgressCallback callback, const Lib3MF_uint64 nUserData)
 {
-	 // store a lambda
-	std::function<bool(int, NMR::ProgressIdentifier, void*)> func = 
-		[callback](int a, NMR::ProgressIdentifier b, void* c)
+	NMR::Lib3MFProgressCallback lambdaCallback = 
+		[callback](int progressStep, NMR::ProgressIdentifier identifier, void* pUserData)
 		{
 			bool ret;
-			(*callback)(&ret, 1/100.0f, eLib3MFProgressIdentifier::eProgressIdentifierCLEANUP, reinterpret_cast<Lib3MF_uint64>(c)); return ret;
+			(*callback)(&ret, progressStep /100.0f, eLib3MFProgressIdentifier(identifier), reinterpret_cast<Lib3MF_uint64>(pUserData));
+			return ret;
 		};
-	m_pWriter->SetProgressCallback(func, reinterpret_cast<void*>(nUserData));
+	m_pWriter->SetProgressCallback(lambdaCallback, reinterpret_cast<void*>(nUserData));
 }
 

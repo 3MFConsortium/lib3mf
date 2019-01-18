@@ -52,6 +52,9 @@
 		<error name="GENERICEXCEPTION" code="5" description="a generic exception occurred" />
 		<error name="COULDNOTLOADLIBRARY" code="6" description="the library could not be loaded" />
 		<error name="COULDNOTFINDLIBRARYEXPORT" code="7" description="a required exported symbol could not be found in the library" />
+		<error name="INCOMPATIBLEBINARYVERSION" code="8" description="the version of the binary interface does not match the bindings interface" />
+		
+		<error name="CALCULATIONABORTED" code="10" description="a calculation has been aborted" />
 		
 		<error name="READERCLASSUNKNOWN" code="100" description="the queried reader class is unknown" />
 		<error name="WRITERCLASSUNKNOWN" code="101" description="the queried writer class is unknown" />
@@ -70,6 +73,8 @@
 		<error name="FORBIDDENCYCLICREFERENCE" code="110" description="A component references one of its ancestors" />
 
 		<error name="INVALIDATTACHMENTSTREAM" code="111" description="An attachment stream is invalid" />
+		
+		<error name="UNKOWNPROGRESSIDENTIFIER" code="120" description="A progress identifier is unknown" />
 	</errors>
 	
 	<enum name="ModelUnit">
@@ -190,6 +195,12 @@
 		<param name="UserData" type="uint64" pass="in" description="Userdata that is passed to the callback function"/>
 	</functiontype>
 	
+	<functiontype name="ReadCallback" description="Callback to call for reading a data chunk">
+		<param name="ByteData" type="uint64" pass="in" description="Pointer to a buffer to read data into"/>
+		<param name="NumBytes" type="uint64" pass="in" description="Number of bytes to read"/>
+		<param name="UserData" type="uint64" pass="in" description="Userdata that is passed to the callback function"/>
+	</functiontype>
+	
 	<functiontype name="SeekCallback" description="Callback to call for seeking in the stream">
 		<param name="Position" type="uint64" pass="in" description="Position in the stream to move to"/>
 		<param name="UserData" type="uint64" pass="in" description="Userdata that is passed to the callback function"/>
@@ -211,12 +222,12 @@
 		<method name="WriteToCallback" description = "Writes out the model and passes the data to a provided callback function. The file type is specified by the Model Writer class.">
 			<param name="TheWriteCallback" type="functiontype" class="WriteCallback" pass="in" description="Callback to call for writing a data chunk" />
 			<param name="TheSeekCallback" type="functiontype" class="SeekCallback" pass="in" description="Callback to call for seeking in the stream" />
-			<param name="UserData" type="int64" pass="in" description="Userdata that is passed to the callback function" />
+			<param name="UserData" type="uint64" pass="in" description="Userdata that is passed to the callback function" />
 		</method>
 		
 		<method name="SetProgressCallback" description = "Set the progress callback for calls to this writer">
 			<param name="ProgressCallback" type="functiontype" class="ProgressCallback" pass="in" description="pointer to the callback function."/>
-			<param name="UserData" type="int64" pass="in" description="pointer to arbitrary user data that is passed without modification to the callback."/>
+			<param name="UserData" type="uint64" pass="in" description="pointer to arbitrary user data that is passed without modification to the callback."/>
 		</method>
 	</class>
 
@@ -231,15 +242,15 @@
 		
 		<!--
 		<method name="ReadFromCallback" description = "Reads a model and from the data provided by a callback function">
-			<param name="ReadCallback" type="callback" pass="in" description="Callback to call for reading a data chunk" />
+			<param name="TheReadCallback" type="functiontype" class="ReadCallback" pass="in" description="Callback to call for reading a data chunk" />
 			<param name="StreamSize" type="uint64" pass="in" description="number of bytes the callback returns" />
-			<param name="SeekCallback" type="callback" pass="in" description="Callback to call for seeking in the stream." />
-			<param name="UserData" type="pointer" pass="in" description="Userdata that is passed to the callback function" />
+			<param name="TheSeekCallback" type="functiontype" class="SeekCallback" pass="in" description="Callback to call for seeking in the stream." />
+			<param name="UserData" type="uint64" pass="in" description="Userdata that is passed to the callback function" />
 		</method>
 		-->
 		<method name="SetProgressCallback" description = "Set the progress callback for calls to this writer">
 			<param name="ProgressCallback" type="functiontype" class="ProgressCallback" pass="in" description="pointer to the callback function."/>
-			<param name="UserData" type="int64" pass="in" description="pointer to arbitrary user data that is passed without modification to the callback."/>
+			<param name="UserData" type="uint64" pass="in" description="pointer to arbitrary user data that is passed without modification to the callback."/>
 		</method>
 
 		<method name="AddRelationToRead" dllsuffix="utf8" description = "Adds a relationship type which shall be read as attachment in memory while loading">
@@ -1401,7 +1412,7 @@
 
 		<method name="RetrieveProgressMessage" description = "Return an English text for a progress identifier.|Note: this is the only function you can call from your callback function.">
 			<param name="ProrgessIdentifier" type="enum" class="ProgressIdentifier" pass="in" description="the progress identifier that is passed to the callback function" />
-			<param name="ProegressMessage" type="string" pass="out" description="English text for the progress identifier" />
+			<param name="ProgressMessage" type="string" pass="out" description="English text for the progress identifier" />
 		</method>
 		
 		

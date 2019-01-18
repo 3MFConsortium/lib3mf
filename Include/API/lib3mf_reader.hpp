@@ -80,7 +80,7 @@ public:
 
 	void AddRelationToRead (const std::string & sRelationShipType);
 
-	void SetProgressCallback(const Lib3MFProgressCallback pProgressCallback, const Lib3MF_int64 nUserData);
+	void SetProgressCallback(const Lib3MFProgressCallback pProgressCallback, const Lib3MF_uint64 nUserData);
 
 	void RemoveRelationToRead (const std::string & sRelationShipType);
 
