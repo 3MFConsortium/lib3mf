@@ -78,6 +78,8 @@ public:
 
 	void ReadFromBuffer (const Lib3MF_uint64 nBufferBufferSize, const Lib3MF_uint8 * pBufferBuffer);
 
+	void ReadFromCallback(const Lib3MFReadCallback pTheReadCallback, const Lib3MF_uint64 nStreamSize, const Lib3MFSeekCallback pTheSeekCallback, const Lib3MF_uint64 nUserData);
+
 	void AddRelationToRead (const std::string & sRelationShipType);
 
 	void SetProgressCallback(const Lib3MFProgressCallback pProgressCallback, const Lib3MF_uint64 nUserData);

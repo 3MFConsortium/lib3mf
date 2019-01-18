@@ -101,6 +101,21 @@ struct PositionedVector
 		}
 	};
 
+	static void readCallback(Lib3MF_uint64 nByteData, Lib3MF_uint64 nNumBytes, Lib3MF_uint64 nUserData) {
+		PositionedVector<T>* buffer = reinterpret_cast<PositionedVector<T>*> ((void*)(nUserData));
+		T* pData = (T*)(nByteData);
+		for (int i = 0; i < nNumBytes; i++) {
+			if (buffer->pos < buffer->vec.size()) {
+				*pData = buffer->vec[buffer->pos];
+			}
+			else {
+				ASSERT_TRUE(false);
+			}
+			buffer->pos++;
+			pData++;
+		}
+	};
+
 	static void seekCallback(Lib3MF_uint64 nPosition, Lib3MF_uint64 nUserData) {
 		PositionedVector<T>* buffer = reinterpret_cast<PositionedVector<T>*> ((void*)(nUserData));
 		buffer->pos = nPosition;

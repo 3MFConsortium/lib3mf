@@ -157,7 +157,7 @@ namespace NMR {
 
 
 	nfUint64 CImportStream_Callback::retrieveSize() {
-		throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
+		return m_nSize;
 	}
 
 	void CImportStream_Callback::writeToFile(_In_ const nfWChar * pwszFileName) {

@@ -101,4 +101,18 @@ namespace Lib3MF
 		CheckWarnings(Reader::readerSTL);
 	}
 
+	TEST_F(Reader, 3MFReadFromCallback)
+	{
+		PositionedVector<Lib3MF_uint8> bufferCallback;
+		bufferCallback.vec = ReadFileIntoBuffer(sTestFilesPath + "/Reader/" + "Pyramid.3mf");
+
+		Reader::reader3MF->ReadFromCallback(
+			PositionedVector<Lib3MF_uint8>::readCallback,
+			bufferCallback.vec.size(),
+			PositionedVector<Lib3MF_uint8>::seekCallback,
+			reinterpret_cast<Lib3MF_uint64>(&bufferCallback)
+		);
+		CheckWarnings(Reader::reader3MF);
+	}
+
 }

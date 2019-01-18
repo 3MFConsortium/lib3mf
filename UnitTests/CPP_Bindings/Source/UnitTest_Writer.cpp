@@ -122,10 +122,6 @@ namespace Lib3MF
 		ASSERT_TRUE(bAreEqual);
 	}
 
-	
-
-	
-
 	TEST_F(Writer, 3MFWriteToCallback)
 	{
 		PositionedVector<Lib3MF_uint8> callbackBuffer;

@@ -34,6 +34,7 @@ Abstract: This is a stub class definition of CLib3MFReader
 // Include custom headers here.
 #include "Common/Platform/NMR_Platform.h"
 #include "Common/Platform/NMR_ImportStream_Memory.h"
+#include "Common/Platform/NMR_ImportStream_Callback.h"
 
 using namespace Lib3MF::Impl;
 
@@ -82,6 +83,37 @@ void CLib3MFReader::ReadFromBuffer (const Lib3MF_uint64 nBufferBufferSize, const
 {
 	NMR::PImportStream pImportStream = std::make_shared<NMR::CImportStream_Memory>(pBufferBuffer, nBufferBufferSize);
 
+	try {
+		reader().readStream(pImportStream);
+	}
+	catch (NMR::CNMRException&e) {
+		if (e.getErrorCode() == NMR_USERABORTED) {
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_CALCULATIONABORTED);
+		}
+		else throw e;
+	}
+}
+
+void CLib3MFReader::ReadFromCallback(const Lib3MFReadCallback pTheReadCallback, const Lib3MF_uint64 nStreamSize, const Lib3MFSeekCallback pTheSeekCallback, const Lib3MF_uint64 nUserData)
+{
+	
+	NMR::ImportStream_ReadCallbackType lambdaReadCallback =
+		[pTheReadCallback](NMR::nfByte* pData, NMR::nfUint64 cbBytes, void* pUserData)
+	{
+		(*pTheReadCallback)(reinterpret_cast<Lib3MF_uint64>(pData), cbBytes, reinterpret_cast<Lib3MF_uint64>(pUserData));
+		return 0;
+	};
+
+	NMR::ImportStream_SeekCallbackType lambdaSeekCallback =
+		[pTheSeekCallback](NMR::nfUint64 nPosition, void* pUserData)
+	{
+		(*pTheSeekCallback)(nPosition, reinterpret_cast<Lib3MF_uint64>(pUserData));
+		return 0;
+	};
+
+	NMR::PImportStream pImportStream = std::make_shared<NMR::CImportStream_Callback>(
+		lambdaReadCallback, lambdaSeekCallback,
+		reinterpret_cast<void*>(nUserData), nStreamSize);
 	try {
 		reader().readStream(pImportStream);
 	}

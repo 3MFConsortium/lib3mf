@@ -33,7 +33,7 @@ UnitTest_AllTests.cpp: Defines Entry point for the UnitTests of all exposed clas
 
 int main(int argc, char **argv)
 {
-	//testing::GTEST_FLAG(filter) = "*ProgressCallback*Read*";
+	//testing::GTEST_FLAG(filter) = "*Reader*3MFReadFromCallback*";
 	testing::InitGoogleTest(&argc, argv);
 	RUN_ALL_TESTS();
 	system("pause");
