@@ -76,4 +76,36 @@ inline sLib3MFTransform getIdentityTransform()
 	return t;
 }
 
+template<typename T>
+struct PositionedVector
+{
+	std::vector<T> vec;
+	Lib3MF_uint64 pos;
+	PositionedVector() { pos = 0; };
+
+	static void writeCallback(Lib3MF_uint64 nByteData, Lib3MF_uint64 nNumBytes, Lib3MF_uint64 nUserData) {
+		PositionedVector<T>* buffer = reinterpret_cast<PositionedVector<T>*> ((void*)(nUserData));
+		T* pData = (T*)(nByteData);
+		for (int i = 0; i < nNumBytes; i++) {
+			if (buffer->pos == buffer->vec.size()) {
+				buffer->vec.push_back(*pData);
+			}
+			else  if (buffer->pos < buffer->vec.size()) {
+				buffer->vec[buffer->pos] = *pData;
+			}
+			else {
+				ASSERT_TRUE(false);
+			}
+			buffer->pos++;
+			pData++;
+		}
+	};
+
+	static void seekCallback(Lib3MF_uint64 nPosition, Lib3MF_uint64 nUserData) {
+		PositionedVector<T>* buffer = reinterpret_cast<PositionedVector<T>*> ((void*)(nUserData));
+		buffer->pos = nPosition;
+	};
+
+};
+
 #endif //__NMR_UNITTEST_UTILITIES

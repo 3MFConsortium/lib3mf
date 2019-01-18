@@ -34,6 +34,7 @@ Abstract: This is a stub class definition of CLib3MFWriter
 // Include custom headers here.
 // Include custom headers here.
 #include "Common/Platform/NMR_Platform.h"
+#include "Common/Platform/NMR_ExportStream_Callback.h"
 #include "Common/Platform/NMR_ExportStream_Memory.h"
 #include "Common/Platform/NMR_ExportStream_Dummy.h"
 
@@ -95,11 +96,28 @@ void CLib3MFWriter::WriteToBuffer (Lib3MF_uint64 nBufferBufferSize, Lib3MF_uint6
 	}
 }
 
+void CLib3MFWriter::WriteToCallback(const Lib3MFWriteCallback pTheWriteCallback, const Lib3MFSeekCallback pTheSeekCallback, const Lib3MF_int64 nUserData)
+{
+	NMR::ExportStream_WriteCallbackType lambdaWriteCallback =
+		[pTheWriteCallback](NMR::nfByte* pData, NMR::nfUint64 cbBytes, void* pUserData)
+	{
+		(*pTheWriteCallback)(reinterpret_cast<Lib3MF_uint64>(pData), cbBytes, reinterpret_cast<Lib3MF_uint64>(pUserData) );
+		return 0;
+	};
+
+	NMR::ExportStream_SeekCallbackType lambdaSeekCallback =
+		[pTheSeekCallback](NMR::nfUint64 nPosition, void* pUserData)
+	{
+		(*pTheSeekCallback)(nPosition, reinterpret_cast<Lib3MF_uint64>(pUserData));
+		return 0;
+	};
+
+	NMR::PExportStream pStream = std::make_shared<NMR::CExportStream_Callback>(lambdaWriteCallback, lambdaSeekCallback, reinterpret_cast<void*>(nUserData));
+	m_pWriter->exportToStream(pStream);
+}
+
 void CLib3MFWriter::SetProgressCallback(const Lib3MFProgressCallback callback, Lib3MF_int64 nUserData)
 {
-	// Outer: typedef void(*Lib3MFProgressCallback)(bool*, Lib3MF_double, eLib3MFProgressIdentifier, Lib3MF_int64);
-	// Inner: typedef std::function<bool(int, ProgressIdentifier, void*)> Lib3MFProgressCallback;
-
 	 // store a lambda
 	std::function<bool(int, NMR::ProgressIdentifier, void*)> func = 
 		[callback](int a, NMR::ProgressIdentifier b, void* c)

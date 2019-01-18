@@ -84,20 +84,21 @@ namespace Lib3MF
 
 	TEST_F(Writer, 3MFWriteToBuffer)
 	{
-		// This is a bit silly!
+		// This is a bit silly, as it essentially performs two writes!
 		std::vector<Lib3MF_uint8> buffer;
 		Writer::writer3MF->WriteToBuffer(buffer);
 	}
 
 	TEST_F(Writer, STLWriteToBuffer)
 	{
-		// This is a bit silly!
+		// This is a bit silly, as it essentially performs two writes!
 		std::vector<Lib3MF_uint8> buffer;
 		Writer::writerSTL->WriteToBuffer(buffer);
 	}
 
 	TEST_F(Writer, 3MFCompare)
 	{
+		// This test is atleast functional
 		std::vector<Lib3MF_uint8> buffer;
 		Writer::writer3MF->WriteToBuffer(buffer);
 
@@ -110,6 +111,7 @@ namespace Lib3MF
 
 	TEST_F(Writer, STLCompare)
 	{
+		// This test is atleast functional
 		std::vector<Lib3MF_uint8> buffer;
 		Writer::writerSTL->WriteToBuffer(buffer);
 
@@ -120,12 +122,34 @@ namespace Lib3MF
 		ASSERT_TRUE(bAreEqual);
 	}
 
+	
+
+	
+
 	TEST_F(Writer, 3MFWriteToCallback)
 	{
+		PositionedVector<Lib3MF_uint8> callbackBuffer;
+		Writer::writer3MF->WriteToCallback(PositionedVector<Lib3MF_uint8>::writeCallback,
+			PositionedVector<Lib3MF_uint8>::seekCallback, reinterpret_cast<Lib3MF_uint64>(&callbackBuffer));
+
+		std::vector<Lib3MF_uint8> buffer;
+		Writer::writer3MF->WriteToBuffer(buffer);
+
+		bool bAreEqual = std::equal(buffer.begin(), buffer.end(), callbackBuffer.vec.begin());
+		ASSERT_TRUE(bAreEqual);
 	}
 
 	TEST_F(Writer, STLWriteToCallback)
 	{
+		PositionedVector<Lib3MF_uint8> callbackBuffer;
+		Writer::writerSTL->WriteToCallback(PositionedVector<Lib3MF_uint8>::writeCallback,
+			PositionedVector<Lib3MF_uint8>::seekCallback, reinterpret_cast<Lib3MF_uint64>(&callbackBuffer));
+
+		std::vector<Lib3MF_uint8> buffer;
+		Writer::writerSTL->WriteToBuffer(buffer);
+
+		bool bAreEqual = std::equal(buffer.begin(), buffer.end(), callbackBuffer.vec.begin());
+		ASSERT_TRUE(bAreEqual);
 	}
 
 }

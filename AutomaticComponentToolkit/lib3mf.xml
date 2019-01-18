@@ -181,9 +181,20 @@
 		<param name="Abort" type="bool" pass="return" description="Returns whether the calculation should be aborted"/>
 		<param name="ProgressValue" type="double" pass="in" description="The value of the progress function: values in the interval [0,1] are progress; &lt; mean no progress update"/>
 		<param name="ProgressIdentifier" type="enum" class="ProgressIdentifier" pass="in" description="An identifier of progress"/>
-		<param name="UserData" type="int64" pass="in" description="Pointer to arbitrary data in the clients frame"/>
+		<param name="UserData" type="uint64" pass="in" description="Userdata that is passed to the callback function"/>
 	</functiontype>
-
+	
+	<functiontype name="WriteCallback" description="Callback to call for writing a data chunk">
+		<param name="ByteData" type="uint64" pass="in" description="Pointer to the data to be written"/>
+		<param name="NumBytes" type="uint64" pass="in" description="Number of bytes to write"/>
+		<param name="UserData" type="uint64" pass="in" description="Userdata that is passed to the callback function"/>
+	</functiontype>
+	
+	<functiontype name="SeekCallback" description="Callback to call for seeking in the stream">
+		<param name="Position" type="uint64" pass="in" description="Position in the stream to move to"/>
+		<param name="UserData" type="uint64" pass="in" description="Userdata that is passed to the callback function"/>
+	</functiontype>
+	
 	<class name="Writer">
 		<method name="WriteToFile" dllsuffix="utf8" description = "Writes out the model as file. The file type is specified by the Model Writer class.">
 			<param name="Filename" type="string" pass="in" description="Filename to write into" />
@@ -197,13 +208,11 @@
 			<param name="Buffer" type="basicarray" class="uint8" pass="out" description="buffer to write into" />
 		</method>
 		
-		<!--
 		<method name="WriteToCallback" description = "Writes out the model and passes the data to a provided callback function. The file type is specified by the Model Writer class.">
-			<param name="WriteCallback" type="callback" pass="in" description="Callback to call for writing a data chunk" />
-			<param name="SeekCallback" type="callback" pass="in" description="Callback to call for seeking in the stream" />
-			<param name="UserData" type="pointer" pass="in" description="Userdata that is passed to the callback function" />
+			<param name="TheWriteCallback" type="functiontype" class="WriteCallback" pass="in" description="Callback to call for writing a data chunk" />
+			<param name="TheSeekCallback" type="functiontype" class="SeekCallback" pass="in" description="Callback to call for seeking in the stream" />
+			<param name="UserData" type="int64" pass="in" description="Userdata that is passed to the callback function" />
 		</method>
-		-->
 		
 		<method name="SetProgressCallback" description = "Set the progress callback for calls to this writer">
 			<param name="ProgressCallback" type="functiontype" class="ProgressCallback" pass="in" description="pointer to the callback function."/>
