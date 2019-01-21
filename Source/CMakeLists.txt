@@ -30,13 +30,11 @@ ${SRCS_COM}
 ./Source/API/lib3mf_builditemiterator.cpp
 ./Source/API/lib3mf_component.cpp
 ./Source/API/lib3mf_componentsobject.cpp
-./Source/API/lib3mf_defaultpropertyhandler.cpp
 ./Source/API/lib3mf_meshobject.cpp
 ./Source/API/lib3mf_metadata.cpp
 ./Source/API/lib3mf_metadatagroup.cpp
 ./Source/API/lib3mf_model.cpp
 ./Source/API/lib3mf_object.cpp
-./Source/API/lib3mf_propertyhandler.cpp
 ./Source/API/lib3mf_reader.cpp
 ./Source/API/lib3mf_resource.cpp
 ./Source/API/lib3mf_resourceiterator.cpp

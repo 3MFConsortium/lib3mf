@@ -274,7 +274,7 @@ namespace Lib3MF
 		ASSERT_TRUE(mesh->GetPartNumber().compare(testNumber) == 0);
 	}
 
-	TEST_F(ObjectSingle, UUID)
+	TEST_F(ObjectSingle, UUID_Component)
 	{
 		bool bHasUUID = true;
 		// by default everything has an UUID
@@ -292,6 +292,28 @@ namespace Lib3MF
 		std::string inUUID("f1bcd2d0-6400-4785-9faf-5adde30adc08");
 		component->SetUUID(inUUID);
 		uuid = component->GetUUID(bHasUUID);
+		ASSERT_TRUE(bHasUUID);
+		ASSERT_TRUE(uuid.compare(inUUID) == 0);
+	}
+
+	TEST_F(ObjectSingle, UUID_Object)
+	{
+		bool bHasUUID = true;
+		// by default everything has an UUID
+		std::string uuid = components->GetUUID(bHasUUID);
+		ASSERT_TRUE(bHasUUID);
+		ASSERT_FALSE(uuid.empty());
+
+		try {
+			components->SetUUID("NOUUID");
+			ASSERT_TRUE(false);
+		}
+		catch (...) {
+			ASSERT_TRUE(true);
+		}
+		std::string inUUID("2b0f37c2-812c-46e7-a6e5-91460c6dbc09");
+		components->SetUUID(inUUID);
+		uuid = components->GetUUID(bHasUUID);
 		ASSERT_TRUE(bHasUUID);
 		ASSERT_TRUE(uuid.compare(inUUID) == 0);
 	}

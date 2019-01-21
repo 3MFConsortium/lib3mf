@@ -86,15 +86,6 @@
 		<option name="Meter" value="5" />
 	</enum>
 
-	
-	<enum name="PropertyType">
-		<option name="NoProperty" value="0" />
-		<option name="BaseMaterials" value="1" />
-		<option name="Color" value="2" />
-		<option name="TexCoord2D" value="3" />
-		<option name="Composite" value="4" />	
-	</enum>
-
 	<enum name="ObjectType">	
 		<option name="Other" value="0" />
 		<option name="Model" value="1" />
@@ -304,206 +295,7 @@
 			<param name="OutResourceIterator" type="handle" class="ResourceIterator" pass="return" description="returns the cloned Iterator instance" />
 		</method>
 	</class>
-	
-	<class name="PropertyHandler">
-		<method name="RemoveProperty" description="Removes all properties of a specific triangle.">
-			<param name="Index" type="uint32" pass="in" description="Index of the triangle (0 to trianglecount - 1)" />
-		</method>
-		
-		<method name="RemoveAllProperties" description="Removes all properties of the triangle mesh.">
-		</method>
 
-		<method name="GetPropertyType" description="Returns the property type of the specific triangle.">
-			<param name="Index" type="uint32" pass="in" description="Index of the triangle (0 to trianglecount - 1)" />
-			<param name="PropertyType" type="enum" class="PropertyType" pass="return" description="property type of the triangle." />
-		</method>
-
-		<method name="GetBaseMaterial" description="Returns the base material of a specific triangle.">
-			<param name="Index" type="uint32" pass="in" description="Index of the triangle (0 to trianglecount - 1)" />
-			<param name="MaterialGroupId" type="uint32" pass="out" description="returns the material group id, per triangle. A return group id of 0 means either no property at all or a non-material property." />
-			<param name="MaterialIndex" type="uint32" pass="out" description="returns the material index, per triangle. Returns 0, if no base material is assigned." />
-		</method>
-		
-		<method name="SetBaseMaterial" description="Sets the material of a triangle to a specific single value. All other Triangle properties are removed.">
-			<param name="Index" type="uint32" pass="in" description="Index of the triangle (0 to trianglecount - 1)" />
-			<param name="MaterialGroupId" type="uint32" pass="in" description="Group ID of the Material Group" />
-			<param name="MaterialIndex" type="uint32" pass="in" description="Index of the Material in the Group" />
-		</method>
-
-		<method name="SetBaseMaterialArray" description="Sets the materials of all triangles to specific values.">
-			<param name="MaterialGroupIds" type="basicarray" class="uint32" pass="in" description="array of the material Group IDs. Must have trianglecount entries." />
-			<param name="MaterialIndices" type="basicarray" class="uint32" pass="in" description="array of the corresponding material indices. Must have trianglecount entries." />
-		</method>
-
-		<method name="GetBaseMaterialArray" description="Gets the materials of all triangles.">
-			<param name="MaterialGroupIds" type="basicarray" class="uint32" pass="out" description="array of the material Group IDs. Must have trianglecount entries." />
-			<param name="MaterialIndices" type="basicarray" class="uint32" pass="out" description="array of the corresponding material indices. Must have trianglecount entries." />
-		</method>
-		
-<!--	<method name="GetColor" description="Returns the color of a specific triangle.">
-			<param name="Index" type="uint32" pass="in" description="Index of the triangle (0 to trianglecount - 1)" />
-			<param name="Color" type="struct" class="ColorRGBA" pass="out" description="Color value of the triangle. (#00000000) means no color property." />
-		</method> -->
-		
-<!---		<method name="GetSingleColorRGB" description="Returns the color of a specific triangle.">
-			<param name="Index" type="uint32" pass="in" description="Index of the triangle (0 to trianglecount - 1)" />
-			<param name="Red" type="uint8" pass="out" description="Red value of the color of the triangle (0-255)" />
-			<param name="Green" type="uint8" pass="out" description="Green value of the color of the triangle (0-255)" />
-			<param name="Blue" type="uint8" pass="out" description="Blue value of the color of the triangle (0-255)" />
-		</method>
-		
-		<method name="GetSingleColorRGBA" description="Returns the color of a specific triangle.">
-			<param name="Index" type="uint32" pass="in" description="Index of the triangle (0 to trianglecount - 1)" />
-			<param name="Red" type="uint8" pass="out" description="Red value of the color of the triangle (0-255)" />
-			<param name="Green" type="uint8" pass="out" description="Green value of the color of the triangle (0-255)" />
-			<param name="Blue" type="uint8" pass="out" description="Blue value of the color of the triangle (0-255)" />
-			<param name="Alpha" type="uint8" pass="out" description="Alpha value of the color of the triangle (0-255)" />
-		</method> -->
-		
-<!---		<method name="GetColorArray" description="Returns the color array of all triangles.">
-			// Does not work!
-		</method> -->
-		
-		<method name="SetSingleColor" description="Sets the specific triangle to a single color. All other properties are removed.">
-			<param name="Index" type="uint32" pass="in" description="Index of the triangle (0 to trianglecount - 1)" />
-			<param name="Color" type="struct" class="ColorRGBA" pass="in" description="new color value of the triangle. (#00000000) means no color property." />
-		</method>
-
-		<method name="SetSingleColorRGB" description="Sets the specific triangle to a single color with alpha 255. All other properties are removed.">
-			<param name="Index" type="uint32" pass="in" description="Index of the triangle (0 to trianglecount - 1)" />
-			<param name="Red" type="uint8" pass="in" description="New red value of the color of the triangle (0-255)" />
-			<param name="Green" type="uint8" pass="in" description="New green value of the color of the triangle (0-255)" />
-			<param name="Blue" type="uint8" pass="in" description="New blue value of the color of the triangle (0-255)" />
-		</method>
-		
-		<method name="SetSingleColorRGBA" description="Sets the specific triangle to a single color. All other properties are removed.">
-			<param name="Index" type="uint32" pass="in" description="Index of the triangle (0 to trianglecount - 1)" />
-			<param name="Red" type="uint8" pass="in" description="New red value of the color of the triangle (0-255)" />
-			<param name="Green" type="uint8" pass="in" description="New green value of the color of the triangle (0-255)" />
-			<param name="Blue" type="uint8" pass="in" description="New blue value of the color of the triangle (0-255)" />
-			<param name="Alpha" type="uint8" pass="in" description="New alpha value of the color of the triangle (0-255)" />
-		</method>
-
-		<method name="SetSingleColorFloatRGB" description="Sets the specific triangle to a single color with alpha 255. All other properties are removed.">
-			<param name="Index" type="uint32" pass="in" description="Index of the triangle (0 to trianglecount - 1)" />
-			<param name="Red" type="single" pass="in" description="New red value of the color of the triangle (0-1)" />
-			<param name="Green" type="single" pass="in" description="New green value of the color of the triangle (0-1)" />
-			<param name="Blue" type="single" pass="in" description="New blue value of the color of the triangle (0-1)" />
-		</method>
-		
-		<method name="SetSingleColorFloatRGBA" description="Sets the specific triangle to a single color. All other properties are removed.">
-			<param name="Index" type="uint32" pass="in" description="Index of the triangle (0 to trianglecount - 1)" />
-			<param name="Red" type="single" pass="in" description="New red value of the color of the triangle (0-1)" />
-			<param name="Green" type="single" pass="in" description="New green value of the color of the triangle (0-1)" />
-			<param name="Blue" type="single" pass="in" description="New blue value of the color of the triangle (0-1)" />
-			<param name="Alpha" type="single" pass="in" description="New alpha value of the color of the triangle (0-1)" />
-		</method>
-
-<!--	<method name="SetSingleColorArray" description="Sets the (single) color of all triangles. All other properties are removed.">
-			// Does not work!
-		</method> -->
-
-<!--	<method name="SetGradientColor" description="Sets the specific triangle to a color per vertex. All other properties are removed.">
-			// Does not work!
-		</method> -->
-		
-<!--	<method name="SetGradientColorArray" description="Sets the (gradient) color of all triangles. All other properties are removed.">
-			// Does not work!
-		</method> -->
-
-<!--	<method name="GetTexture" description="Returns the 2D texture information of a specific triangle.">
-			<param name="Index" type="uint32" pass="in" description="Index of the triangle (0 to trianglecount - 1)" />
-			// Does not work!
-		</method> -->
-
-<!--	<method name="GetTextureArray" description="Returns the 2D texture information of all triangles.">
-			// Does not work!
-		</method> -->
-		
-<!--	<method name="SetTexture" description="Sets the 2D texture information of a specific triangle.">
-			<param name="Index" type="uint32" pass="in" description="Index of the triangle (0 to trianglecount - 1)" />
-			// Does not work!
-		</method> -->
-
-<!--	<method name="SetTextureArray" description="Sets the 2D texture information of all triangles.">
-			// Does not work!
-		</method> -->
-	</class>
-
-
-	<class name="DefaultPropertyHandler">
-		<method name="RemoveProperty" description="Removes the default property of the object.">
-		</method>
-		
-		<method name="GetPropertyType" description="Returns the default property type of the object.">
-			<param name="Index" type="uint32" pass="in" description="Index of the triangle (0 to trianglecount - 1)" />
-			<param name="PropertyType" type="enum" class="PropertyType" pass="return" description="property type of the triangle." />
-		</method> 
-
-		<method name="GetBaseMaterial" description="Returns the base material the object.">
-			<param name="MaterialGroupId" type="uint32" pass="out" description="returns the material group id, per triangle. A return group id of 0 means either no property at all or a non-material property." />
-			<param name="MaterialIndex" type="uint32" pass="out" description="returns the material index, per triangle. Returns 0, if no base material is assigned." />
-		</method>
-
-		<method name="SetBaseMaterial" description="Sets the material of an object to a specific single value. This must be a base material.">
-			<param name="MaterialGroupId" type="uint32" pass="in" description="Group ID of the Material Group" />
-			<param name="MaterialIndex" type="uint32" pass="in" description="Index of the Material in the Group" />
-		</method>
-		
-<!---		<method name="GetColor" description="Returns the color of a specific triangle.">
-			// Does not work!
-		</method> -->
-
-<!---		<method name="GetColorArray" description="Returns the color array of all triangles.">
-			// Does not work!
-		</method> -->
-
-<!--	<method name="SetColor" description="Sets the default property of an object to a single color.">
-			// Does not work!
-		</method> -->
-
-		<method name="SetColorRGB" description="Sets the default property of an object to a single color.">
-			<param name="Red" type="uint8" pass="in" description="New red value of the color of the triangle (0-255)" />
-			<param name="Green" type="uint8" pass="in" description="New green value of the color of the triangle (0-255)" />
-			<param name="Blue" type="uint8" pass="in" description="New blue value of the color of the triangle (0-255)" />
-		</method>
-		
-		<method name="SetColorRGBA" description="Sets the default property of an object to a single color.">
-			<param name="Red" type="uint8" pass="in" description="New red value of the color of the triangle (0-255)" />
-			<param name="Green" type="uint8" pass="in" description="New green value of the color of the triangle (0-255)" />
-			<param name="Blue" type="uint8" pass="in" description="New blue value of the color of the triangle (0-255)" />
-			<param name="Alpha" type="uint8" pass="in" description="New alpha value of the color of the triangle (0-255)" />
-		</method>
-
-		<method name="SetFloatColorRGB" description="Sets the default property of an object to a single color.">
-			<param name="Red" type="single" pass="in" description="New red value of the color of the triangle (0-1)" />
-			<param name="Green" type="single" pass="in" description="New green value of the color of the triangle (0-1)" />
-			<param name="Blue" type="single" pass="in" description="New blue value of the color of the triangle (0-1)" />
-		</method>
-		
-		<method name="SetFloatColorRGBA" description="Sets the default property of an object to a single color.">
-			<param name="Red" type="single" pass="in" description="New red value of the color of the triangle (0-1)" />
-			<param name="Green" type="single" pass="in" description="New green value of the color of the triangle (0-1)" />
-			<param name="Blue" type="single" pass="in" description="New blue value of the color of the triangle (0-1)" />
-			<param name="Alpha" type="single" pass="in" description="New alpha value of the color of the triangle (0-1)" />
-		</method>
-		
-		<method name="GetTexture" description="Returns the default 2D texture information of an object.">
-			<param name="TextureID" type="uint32" pass="out" description="Returns the default Texture ID of the object. 0 means no property or a different kind of property." />
-			<param name="U" type="single" pass="out" description="Returns the default U value of the object." />
-			<param name="V" type="single" pass="out" description="Returns the default V value of the object." />
-		</method>
-		
-		<method name="SetTexture" description="Sets the default 2D texture information of an object.">
-			<param name="TextureID" type="uint32" pass="out" description="Returns the default Texture ID of the object. 0 means no property or a different kind of property." />
-			<param name="U" type="single" pass="out" description="Returns the default U value of the object." />
-			<param name="V" type="single" pass="out" description="Returns the default V value of the object." />
-		</method>
-
-		
-	</class>
-	
-	
 	<class name="MetaData">
 		<method name="GetNameSpace" dllsuffix="utf8" description = "returns the namespace URL of the metadata">
 			<param name="NameSpace" type="string" pass="return" description="the namespace URL of the metadata" />
@@ -618,7 +410,6 @@
 		<!-- slice object handling -->
 		<!-- object thumbnails -->
 		
-		<!--
 		<method name="GetUUID" dllsuffix="utf8" description="Retrieves a object's uuid string (see production extension specification)">
 			<param name="HasUUID" type="bool" pass="out" description="flag whether the build item has a UUID"/>
 			<param name="UUID" type="string" pass="return" description="returns object uuid." />
@@ -627,16 +418,6 @@
 		<method name="SetUUID" dllsuffix="utf8" description="Sets a build object's uuid string (see production extension specification)">
 			<param name="UUID" type="string" pass="in" description="new object uuid string." />
 		</method>
-		
-		<method name="CreateDefaultPropertyHandler" description="creates a default property handler for the object">
-			<param name="DefaultPropertyHandler" type="handle" class="DefaultPropertyHandler" pass="return" description="returns a default property handler instance for the object." />
-		</method>
-
-		<method name="CreateDefaultMultiPropertyHandler" description="creates a default property handler for a specific multiproperty channel of an object">
-			<param name="Channel" type="uint32" pass="in" description="multi channel index" />
-			<param name="DefaultPropertyHandler" type="handle" class="DefaultPropertyHandler" pass="return" description="returns a default property handler instance for the object." />
-		</method>
-		-->
 		
 		<method name="HasMetaDataGroup" description="Returns whether the object has a metadatagroup">
 			<param name="HasMetaDataGroup" type="bool" pass="return" description="returns whether the object has a metadatagroup" />
@@ -803,22 +584,6 @@
 			<param name="Index" type="uint32" pass="in" description="index of the requested beamset (0 ... beamsetcount-1)." />
 			<param name="BeamSet" type="handle" class="BeamSet" pass="return" description="the requested beamset" />
 		</method>
-		
-
-<!--
-	TODO: CreateDefaultPropertyHandler should be exposed by inheritance
--->
-<!--		<method name="CreateDefaultPropertyHandler" description="creates a default property handler for the object">
-			<param name="DefaultPropertyHandler" type="handle" class="DefaultPropertyHandler" pass="return" description="returns a default property handler instance for the object." />
-		</method>-->
-
-<!--
-	TODO: CreateDefaultMultiPropertyHandler should be exposed by inheritance
--->
-<!--		<method name="CreateDefaultMultiPropertyHandler" description="creates a default property handler for a specific multiproperty channel of an object">
-			<param name="Channel" type="uint32" pass="in" description="multi channel index" />
-			<param name="DefaultPropertyHandler" type="handle" class="DefaultPropertyHandler" pass="return" description="returns a default property handler instance for the object." />
-		</method>-->
 		
 		<method name="IsManifoldAndOriented" description="Retrieves, if an object describes a topologically oriented and manifold mesh, according to the core spec.">
 			<param name="IsManifoldAndOriented" type="bool" pass="return" description="returns, if the object is oriented and manifold." />

@@ -68,6 +68,8 @@ public:
 	CLib3MFObject(NMR::PModelResource pResource);
 	CLib3MFObject() = delete;
 
+	static ILib3MFObject* fnCreateObjectFromModelResource(NMR::PModelResource pResource, bool bFailIfUnkownClass);
+
 	/**
 	* Public member functions to implement.
 	*/
@@ -102,7 +104,10 @@ public:
 
 	void RemoveMetaDataGroup ();
 
-	static ILib3MFObject* fnCreateObjectFromModelResource(NMR::PModelResource pResource, bool bFailIfUnkownClass);
+	std::string GetUUID(bool & bHasUUID);
+
+	void SetUUID(const std::string & sUUID);
+
 };
 
 }

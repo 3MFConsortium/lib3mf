@@ -162,3 +162,19 @@ void CLib3MFObject::RemoveMetaDataGroup ()
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
+std::string CLib3MFObject::GetUUID(bool & bHasUUID)
+{
+	NMR::PUUID pUUID = object()->uuid();
+	bHasUUID = (pUUID.get() != nullptr);
+	if (bHasUUID)
+		return pUUID->toString();
+	else
+		return "";
+}
+
+void CLib3MFObject::SetUUID(const std::string & sUUID)
+{
+	NMR::PUUID pUUID = std::make_shared<NMR::CUUID>(sUUID);
+	object()->setUUID(pUUID);
+}
+
