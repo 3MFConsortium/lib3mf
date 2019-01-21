@@ -6,6 +6,7 @@ SET(TESTNAME "Test_CPP_Bindings")
 set(SRCS_UNITTEST
 	./Source/UnitTest_AllTests.cpp
 	./Source/UnitTest_BuildItems.cpp
+	./Source/UnitTest_MeshObject.cpp
 	./Source/UnitTest_Model.cpp
 	./Source/UnitTest_Object.cpp
 	./Source/UnitTest_ProgressCallback.cpp

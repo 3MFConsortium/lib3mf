@@ -81,12 +81,12 @@ CLib3MFObject::CLib3MFObject(NMR::PModelResource pResource)
 
 eLib3MFObjectType CLib3MFObject::GetType ()
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	return eLib3MFObjectType(object()->getObjectType());
 }
 
 void CLib3MFObject::SetType (const eLib3MFObjectType eObjectType)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	object()->setObjectType(NMR::eModelObjectType(eObjectType));
 }
 
 std::string CLib3MFObject::GetName ()
@@ -111,12 +111,12 @@ void CLib3MFObject::SetPartNumber (const std::string & sPartNumber)
 
 bool CLib3MFObject::IsMeshObject ()
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 bool CLib3MFObject::IsComponentsObject ()
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 ILib3MFMeshObject * CLib3MFObject::AsMeshObject()

@@ -40,7 +40,7 @@ Abstract: This is the class declaration of CLib3MFMeshObject
 #pragma warning( disable : 4250)
 
 // Include custom headers here.
-
+#include "Model/Classes/NMR_ModelMeshObject.h"
 
 namespace Lib3MF {
 namespace Impl {
@@ -56,6 +56,8 @@ private:
 	/**
 	* Put private members here.
 	*/
+	NMR::CModelMeshObject* meshObject();
+	NMR::CMesh* mesh();
 
 protected:
 
@@ -80,7 +82,11 @@ public:
 
 	void SetVertex (const Lib3MF_uint32 nIndex, const sLib3MFPosition Coordinates);
 
+	sLib3MFPosition GetVertex(const Lib3MF_uint32 nIndex);
+
 	Lib3MF_uint32 AddVertex (const sLib3MFPosition Coordinates);
+
+	virtual void GetVertices(Lib3MF_uint64 nVerticesBufferSize, Lib3MF_uint64* pVerticesNeededCount, sLib3MFPosition * pVerticesBuffer);
 
 	sLib3MFTriangle GetTriangle (const Lib3MF_uint32 nIndex);
 
@@ -90,7 +96,7 @@ public:
 
 	void GetTriangleIndices (Lib3MF_uint64 nIndicesBufferSize, Lib3MF_uint64* pIndicesNeededCount, sLib3MFTriangle * pIndicesBuffer);
 
-	void SetTriangleIndices (const Lib3MF_uint64 nIndicesBufferSize, const sLib3MFTriangle * pIndicesBuffer);
+	void SetGeometry(const Lib3MF_uint64 nVerticesBufferSize, const sLib3MFPosition * pVerticesBuffer, const Lib3MF_uint64 nIndicesBufferSize, const sLib3MFTriangle * pIndicesBuffer);
 
 	Lib3MF_double GetBeamLattice_MinLength ();
 
@@ -129,6 +135,8 @@ public:
 	bool IsMeshObject();
 
 	bool IsComponentsObject();
+
+	bool IsValid();
 
 };
 

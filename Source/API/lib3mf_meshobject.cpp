@@ -27,7 +27,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 Abstract: This is a stub class definition of CLib3MFMeshObject
 
 */
-
 #include "lib3mf_meshobject.hpp"
 #include "lib3mf_interfaceexception.hpp"
 
@@ -45,49 +44,156 @@ CLib3MFMeshObject::CLib3MFMeshObject(NMR::PModelResource pResource)
 
 }
 
+NMR::CModelMeshObject* CLib3MFMeshObject::meshObject()
+{
+	NMR::CModelMeshObject* pMesh = dynamic_cast<NMR::CModelMeshObject*>(object());
+	if (pMesh == nullptr)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDOBJECT);
+	return pMesh;
+}
+
+NMR::CMesh* CLib3MFMeshObject::mesh()
+{
+	return meshObject()->getMesh();
+}
+
 Lib3MF_uint32 CLib3MFMeshObject::GetVertexCount ()
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	return mesh()->getNodeCount();
 }
 
 Lib3MF_uint32 CLib3MFMeshObject::GetTriangleCount ()
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	return mesh()->getFaceCount();
 }
 
 void CLib3MFMeshObject::SetVertex (const Lib3MF_uint32 nIndex, const sLib3MFPosition Coordinates)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	NMR::MESHNODE* node = mesh()->getNode(nIndex);
+	node->m_position.m_fields[0] = Coordinates.m_coordinates[0];
+	node->m_position.m_fields[1] = Coordinates.m_coordinates[1];
+	node->m_position.m_fields[2] = Coordinates.m_coordinates[2];
+}
+
+sLib3MFPosition CLib3MFMeshObject::GetVertex(const Lib3MF_uint32 nIndex)
+{
+	NMR::MESHNODE* node = mesh()->getNode(nIndex);
+	sLib3MFPosition pos;
+	pos.m_coordinates[0] = node->m_position.m_fields[0];
+	pos.m_coordinates[1] = node->m_position.m_fields[1];
+	pos.m_coordinates[2] = node->m_position.m_fields[2];
+	return pos;
 }
 
 Lib3MF_uint32 CLib3MFMeshObject::AddVertex (const sLib3MFPosition Coordinates)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	return mesh()->addNode(Coordinates.m_coordinates[0], Coordinates.m_coordinates[1], Coordinates.m_coordinates[2])->m_index;
+}
+
+void CLib3MFMeshObject::GetVertices(Lib3MF_uint64 nVerticesBufferSize, Lib3MF_uint64* pVerticesNeededCount, sLib3MFPosition * pVerticesBuffer)
+{
+	Lib3MF_uint32 nodeCount = mesh()->getNodeCount();
+	if (pVerticesNeededCount)
+		*pVerticesNeededCount = nodeCount;
+
+	if (nVerticesBufferSize >= nodeCount && pVerticesBuffer)
+	{
+		for (Lib3MF_uint32 i = 0; i < nodeCount; i++)
+		{
+			const NMR::MESHNODE* node = mesh()->getNode(i);
+			pVerticesBuffer[i].m_coordinates[0] = node->m_position.m_fields[0];
+			pVerticesBuffer[i].m_coordinates[1] = node->m_position.m_fields[1];
+			pVerticesBuffer[i].m_coordinates[2] = node->m_position.m_fields[2];
+		}
+	}
 }
 
 sLib3MFTriangle CLib3MFMeshObject::GetTriangle (const Lib3MF_uint32 nIndex)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	sLib3MFTriangle t;
+	NMR::MESHFACE* mf = mesh()->getFace(nIndex);
+
+	t.m_indices[0] = mf->m_nodeindices[0];
+	t.m_indices[1] = mf->m_nodeindices[1];
+	t.m_indices[2] = mf->m_nodeindices[2];
+
+	return t;
 }
 
 void CLib3MFMeshObject::SetTriangle (const Lib3MF_uint32 nIndex, const sLib3MFTriangle Indices)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	NMR::MESHFACE* mf = mesh()->getFace(nIndex);
+
+	mf->m_nodeindices[0] = Indices.m_indices[0];
+	mf->m_nodeindices[1] = Indices.m_indices[1];
+	mf->m_nodeindices[2] = Indices.m_indices[2];
 }
 
-Lib3MF_uint32 CLib3MFMeshObject::AddTriangle (const sLib3MFTriangle Indices)
+Lib3MF_uint32 CLib3MFMeshObject::AddTriangle(const sLib3MFTriangle Indices)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	return mesh()->addFace(Indices.m_indices[0], Indices.m_indices[1], Indices.m_indices[2])->m_index;
 }
 
 void CLib3MFMeshObject::GetTriangleIndices (Lib3MF_uint64 nIndicesBufferSize, Lib3MF_uint64* pIndicesNeededCount, sLib3MFTriangle * pIndicesBuffer)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	Lib3MF_uint32 faceCount = mesh()->getFaceCount();
+	if (pIndicesNeededCount)
+		*pIndicesNeededCount = faceCount;
+
+	if (nIndicesBufferSize >= faceCount && pIndicesBuffer)
+	{
+		for (Lib3MF_uint32 i = 0; i < faceCount; i++)
+		{
+			const NMR::MESHFACE* face = mesh()->getFace(i);
+			pIndicesBuffer[i].m_indices[0] = face->m_nodeindices[0];
+			pIndicesBuffer[i].m_indices[1] = face->m_nodeindices[1];
+			pIndicesBuffer[i].m_indices[2] = face->m_nodeindices[2];
+		}
+	}
 }
 
-void CLib3MFMeshObject::SetTriangleIndices (const Lib3MF_uint64 nIndicesBufferSize, const sLib3MFTriangle * pIndicesBuffer)
+void CLib3MFMeshObject::SetGeometry(const Lib3MF_uint64 nVerticesBufferSize, const sLib3MFPosition * pVerticesBuffer, const Lib3MF_uint64 nIndicesBufferSize, const sLib3MFTriangle * pIndicesBuffer)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	if ((!pVerticesBuffer) || (!pIndicesBuffer))
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+
+	NMR::CMesh * pMesh = mesh();
+
+	// Clear old mesh
+	pMesh->clear();
+
+	// Rebuild Mesh Coordinates
+	const sLib3MFPosition * pVertex = pVerticesBuffer;
+	for (Lib3MF_uint64 nIndex = 0; nIndex < nVerticesBufferSize; nIndex++) {
+		for (int j = 0; j < 3; j++) {
+			if (fabs(pVertex->m_coordinates[j]) > NMR_MESH_MAXCOORDINATE)
+				throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		pMesh->addNode(pVertex->m_coordinates[0], pVertex->m_coordinates[1], pVertex->m_coordinates[2]);
+
+		pVertex++;
+	}
+
+	// Rebuild Mesh Faces
+	const sLib3MFTriangle * pTriangle = pIndicesBuffer;
+	for (int nIndex = 0; nIndex < nIndicesBufferSize; nIndex++) {
+		NMR::MESHNODE * pNodes[3];
+
+		for (int j = 0; j < 3; j++) {
+			if (pTriangle->m_indices[j] >= nVerticesBufferSize)
+				throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+			pNodes[j] = pMesh->getNode(pTriangle->m_indices[j]);
+		}
+
+		if ((pTriangle->m_indices[0] == pTriangle->m_indices[1]) ||
+			(pTriangle->m_indices[0] == pTriangle->m_indices[2]) ||
+			(pTriangle->m_indices[1] == pTriangle->m_indices[2]))
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+
+		pMesh->addFace(pNodes[0], pNodes[1], pNodes[2]);
+
+		pTriangle++;
+	}
 }
 
 Lib3MF_double CLib3MFMeshObject::GetBeamLattice_MinLength ()
@@ -172,7 +278,7 @@ ILib3MFBeamSet * CLib3MFMeshObject::GetBeamSet (const Lib3MF_uint32 nIndex)
 
 bool CLib3MFMeshObject::IsManifoldAndOriented ()
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	return meshObject()->isManifoldAndOriented();
 }
 
 bool CLib3MFMeshObject::IsMeshObject()
@@ -185,3 +291,7 @@ bool CLib3MFMeshObject::IsComponentsObject()
 	return false;
 }
 
+bool CLib3MFMeshObject::IsValid()
+{
+	return meshObject()->isValid();
+}

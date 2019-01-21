@@ -123,4 +123,25 @@ struct PositionedVector
 
 };
 
+
+inline sLib3MFPosition fnCreateVertex(float x, float y, float z)
+{
+	sLib3MFPosition result;
+	result.m_coordinates[0] = x;
+	result.m_coordinates[1] = y;
+	result.m_coordinates[2] = z;
+	return result;
+}
+
+inline sLib3MFTriangle fnCreateTriangle(int v0, int v1, int v2)
+{
+	sLib3MFTriangle result;
+	result.m_indices[0] = v0;
+	result.m_indices[1] = v1;
+	result.m_indices[2] = v2;
+	return result;
+}
+
+
+
 #endif //__NMR_UNITTEST_UTILITIES

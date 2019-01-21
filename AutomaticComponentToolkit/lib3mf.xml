@@ -401,7 +401,7 @@
 			<param name="IsComponentsObject" type="bool" pass="return" description="returns, whether the object is a components object" />
 		</method>
 		
-		<method name="IsValid" description="Retrieves, if the object is valid according to the core spec.For mesh objects, we distinguish between the type attribute of the object:In case of object type other, this always means false.In case of object type model or solidsupport, this means, if the mesh suffices all requirements of the core spec chapter 4.1.In case of object type support or surface, this always means true.A component objects is valid if and only if it contains at least one component and all child components are valid objects.">
+		<method name="IsValid" description="Retrieves, if the object is valid according to the core spec. For mesh objects, we distinguish between the type attribute of the object:In case of object type other, this always means false.In case of object type model or solidsupport, this means, if the mesh suffices all requirements of the core spec chapter 4.1.In case of object type support or surface, this always means true.A component objects is valid if and only if it contains at least one component and all child components are valid objects.">
 			<param name="IsValid" type="bool" pass="return" description="returns whether the object is a valid object description" />
 		</method>
 		
@@ -437,8 +437,6 @@
 	</class>
 
 	<class name="MeshObject" parent="Object">
-		
-		
 		<method name="GetVertexCount" description="Returns the vertex count of a mesh object.">
 			<param name="VertexCount" type="uint32" pass="return" description="filled with the vertex count." />
 		</method>
@@ -447,14 +445,10 @@
 			<param name="VertexCount" type="uint32" pass="return" description="filled with the triangle count." />
 		</method>
 		
-		
-<!--
-		Go TODO: Struct return
 		<method name="GetVertex" description="Returns the vertex count of a mesh object.">
 			<param name="Index" type="uint32" pass="in" description="Index of the vertex (0 to vertexcount - 1)" />
 			<param name="Coordinates" type="struct" class="Position" pass="return" description="filled with the vertex coordinates." />
 		</method>
--->
 		
 		<method name="SetVertex" description="Sets the coordinates of a single vertex of a mesh object">
 			<param name="Index" type="uint32" pass="in" description="Index of the vertex (0 to vertexcount - 1)" />
@@ -465,7 +459,11 @@
 			<param name="Coordinates" type="struct" class="Position" pass="in" description="contains the vertex coordinates." />
 			<param name="NewIndex" type="uint32" pass="return" description="Index of the new vertex" />
 		</method>
-
+		
+		<method name="GetVertices" description="Obtains all vertex positions of a mesh object">
+			<param name="Vertices" type="structarray" class="Position" pass="out" description="contains the vertex coordinates." />
+		</method>
+		
 		<method name="GetTriangle" description="Returns indices of a single triangle of a mesh object.">
 			<param name="Index" type="uint32" pass="in" description="Index of the triangle (0 to trianglecount - 1)" />
 			<param name="Indices" type="struct" class="Triangle" pass="return" description="filled with the triangle indices." />
@@ -485,15 +483,10 @@
 			<param name="Indices" type="structarray" class="Triangle" pass="out" description="contains the triangle indices." />
 		</method>
 		
-		<method name="SetTriangleIndices" description="Set all triangles of a mesh object">
+		<method name="SetGeometry" description="Set all triangles of a mesh object">
+			<param name="Vertices" type="structarray" class="Position" pass="in" description="contains the positions." />
 			<param name="Indices" type="structarray" class="Triangle" pass="in" description="contains the triangle indices." />
 		</method>
-	
-<!--
-		<method name="SetGeometry" description="">
-			not possible yet
-		</method>
--->
 		
 		<method name="GetBeamLattice_MinLength" description="Returns the minimal length of beams for the beamlattice.">
 			<param name="MinLength" type="double" pass="return" description="minimal length of beams for the beamlattice" />

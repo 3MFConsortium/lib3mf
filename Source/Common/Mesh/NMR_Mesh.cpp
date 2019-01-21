@@ -168,6 +168,33 @@ namespace NMR {
 
 		return pNode;
 	}
+	_Ret_notnull_ MESHNODE * CMesh::addNode(_In_ const nfFloat posX, _In_ const nfFloat posY, _In_ const nfFloat posZ)
+	{
+		MESHNODE * pNode;
+
+		// Check Position Validity
+		if (fabs(posX) > NMR_MESH_MAXCOORDINATE)
+			throw CNMRException(NMR_ERROR_INVALIDCOORDINATES);
+		if (fabs(posY) > NMR_MESH_MAXCOORDINATE)
+			throw CNMRException(NMR_ERROR_INVALIDCOORDINATES);
+		if (fabs(posZ) > NMR_MESH_MAXCOORDINATE)
+			throw CNMRException(NMR_ERROR_INVALIDCOORDINATES);
+
+		// Check Node Quota
+		nfUint32 nNodeCount = getNodeCount();
+		if (nNodeCount > NMR_MESH_MAXNODECOUNT)
+			throw CNMRException(NMR_ERROR_TOOMANYNODES);
+
+		// Allocate Data
+		nfUint32 nNewIndex;
+		pNode = m_Nodes.allocData(nNewIndex);
+		pNode->m_index = nNewIndex;
+		pNode->m_position.m_values.x = posX;
+		pNode->m_position.m_values.y = posY;
+		pNode->m_position.m_values.z = posZ;
+
+		return pNode;
+	}
 
 	_Ret_notnull_ MESHFACE * CMesh::addFace(_In_ MESHNODE * pNode1, _In_ MESHNODE * pNode2, _In_ MESHNODE * pNode3)
 	{
@@ -192,7 +219,32 @@ namespace NMR {
 		pFace->m_index = nNewIndex;
 
 		if (m_pMeshInformationHandler)
-			m_pMeshInformationHandler->addFace(getFaceCount ());
+			m_pMeshInformationHandler->addFace(getFaceCount());
+
+		return pFace;
+	}
+	
+	_Ret_notnull_ MESHFACE * CMesh::addFace(_In_ nfInt32 nNodeIndex1, _In_ nfInt32 nNodeIndex2, _In_ nfInt32 nNodeIndex3)
+	{
+		if ((nNodeIndex1 == nNodeIndex2) || (nNodeIndex1 == nNodeIndex3) || (nNodeIndex2 == nNodeIndex3))
+			throw CNMRException(NMR_ERROR_DUPLICATENODE);
+
+		MESHFACE * pFace;
+		nfUint32 nFaceCount = getFaceCount();
+
+		if (nFaceCount > NMR_MESH_MAXFACECOUNT)
+			throw CNMRException(NMR_ERROR_TOOMANYFACES);
+
+		nfUint32 nNewIndex;
+
+		pFace = m_Faces.allocData(nNewIndex);
+		pFace->m_nodeindices[0] = nNodeIndex1;
+		pFace->m_nodeindices[1] = nNodeIndex2;
+		pFace->m_nodeindices[2] = nNodeIndex3;
+		pFace->m_index = nNewIndex;
+
+		if (m_pMeshInformationHandler)
+			m_pMeshInformationHandler->addFace(getFaceCount());
 
 		return pFace;
 	}
