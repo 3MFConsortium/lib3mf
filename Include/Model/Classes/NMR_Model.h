@@ -200,7 +200,7 @@ namespace NMR {
 		CModelObject * getObject(_In_ nfUint32 nIndex);
 
 		// Convenience functions for base materials
-		_Ret_maybenull_ CModelBaseMaterialResource * findBaseMaterial(_In_ PackageResourceID nResourceID);
+		_Ret_maybenull_ PModelBaseMaterialResource findBaseMaterial(_In_ PackageResourceID nResourceID);
 		nfUint32 getBaseMaterialCount();
 		PModelResource getBaseMaterialResource(_In_ nfUint32 nIndex);
 		CModelBaseMaterialResource * getBaseMaterial(_In_ nfUint32 nIndex);

@@ -104,4 +104,41 @@ namespace Lib3MF
 		}
 	}
 
+	TEST(Wrapper, Color)
+	{
+		sLib3MFColor c1, c2;
+		c1.m_Red = 123;
+		c1.m_Green = 0;
+		c1.m_Blue = 255;
+		c1.m_Alpha = 001;
+
+		Lib3MF_single fR, fG, fB, fA;
+		Lib3MF_uint8 nR, nG, nB, nA;
+
+		CLib3MFWrapper::ColorToRGBA(c1, nR, nG, nB, nA);
+		ASSERT_EQ(c1.m_Red, nR);
+		ASSERT_EQ(c1.m_Green, nG);
+		ASSERT_EQ(c1.m_Blue, nB);
+		ASSERT_EQ(c1.m_Alpha, nA);
+
+		double EPS = 1e-6;
+		CLib3MFWrapper::ColorToFloatRGBA(c1, fR, fG, fB, fA);
+		ASSERT_EQ(c1.m_Red, round(fR*255));
+		ASSERT_EQ(c1.m_Green, round(fG * 255));
+		ASSERT_EQ(c1.m_Blue, round(fB * 255));
+		ASSERT_EQ(c1.m_Alpha, round(fA * 255));
+
+		c2 = CLib3MFWrapper::RGBAToColor(nR, nG, nB, nA);
+		ASSERT_EQ(c2.m_Red, nR);
+		ASSERT_EQ(c2.m_Green, nG);
+		ASSERT_EQ(c2.m_Blue, nB);
+		ASSERT_EQ(c2.m_Alpha, nA);
+
+		c2 = CLib3MFWrapper::FloatRGBAToColor(fR, fG, fB, fA);
+		ASSERT_EQ(c1.m_Red, c2.m_Red);
+		ASSERT_EQ(c1.m_Green, c2.m_Green);
+		ASSERT_EQ(c1.m_Blue, c2.m_Blue);
+		ASSERT_EQ(c1.m_Alpha, c2.m_Alpha);
+	}
+
 }

@@ -48,6 +48,7 @@ A model is an in memory representation of the 3MF file.
 #include "Common/MeshInformation/NMR_MeshInformation_TexCoords.h" 
 #include "Common/NMR_Exception.h" 
 #include <sstream>
+#include <memory>
 
 #include "Model/Reader/Slice1507/NMR_ModelReader_Slice1507_SliceRefModel.h"
 #include "Common/Platform/NMR_XmlReader.h"
@@ -495,19 +496,16 @@ namespace NMR {
 		m_SliceStackLookup.clear();
 	}
 
-	_Ret_maybenull_ CModelBaseMaterialResource * CModel::findBaseMaterial(_In_ PackageResourceID nResourceID)
+	_Ret_maybenull_ PModelBaseMaterialResource CModel::findBaseMaterial(_In_ PackageResourceID nResourceID)
 	{
 		PModelResource pResource = findResource(nResourceID);
 		if (pResource != nullptr) {
-			CModelBaseMaterialResource * pBaseMaterial = dynamic_cast<CModelBaseMaterialResource *> (pResource.get());
-			if (pBaseMaterial == nullptr)
+			PModelBaseMaterialResource pBaseMaterialResource = std::dynamic_pointer_cast<CModelBaseMaterialResource>(pResource);
+			if (pBaseMaterialResource.get() == nullptr)
 				throw CNMRException(NMR_ERROR_RESOURCETYPEMISMATCH);
-
-			return pBaseMaterial;
+			return pBaseMaterialResource;
 		}
-
 		return nullptr;
-
 	}
 
 	nfUint32 CModel::getBaseMaterialCount()

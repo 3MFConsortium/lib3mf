@@ -133,3 +133,38 @@ void CLib3MFWrapper::RetrieveProgressMessage(const eLib3MFProgressIdentifier ePr
 	NMR::CProgressMonitor::GetProgressMessage(convertProgressIdentifier(eProrgessIdentifier), sProgressMessage);
 }
 
+sLib3MFColor CLib3MFWrapper::RGBAToColor(const Lib3MF_uint8 nRed, const Lib3MF_uint8 nGreen, const Lib3MF_uint8 nBlue, const Lib3MF_uint8 nAlpha)
+{
+	sLib3MFColor s;
+	s.m_Red = nRed;
+	s.m_Green = nGreen;
+	s.m_Blue = nBlue;
+	s.m_Alpha = nAlpha;
+	return s;
+}
+
+sLib3MFColor CLib3MFWrapper::FloatRGBAToColor(const float fRed, const float fGreen, const float fBlue, const float fAlpha)
+{
+	sLib3MFColor s;
+	s.m_Red = (Lib3MF_uint8)roundf(max(min(fRed, 1.f), 0.f) * 255.0f);
+	s.m_Green = (Lib3MF_uint8)roundf(max(min(fGreen, 1.f), 0.f) * 255.0f);
+	s.m_Blue = (Lib3MF_uint8)roundf(max(min(fBlue, 1.f), 0.f) * 255.0f);
+	s.m_Alpha = (Lib3MF_uint8)roundf(max(min(fAlpha, 1.f), 0.f) * 255.0f);
+	return s;
+}
+
+void CLib3MFWrapper::ColorToRGBA(const sLib3MFColor TheColor, Lib3MF_uint8 & nRed, Lib3MF_uint8 & nGreen, Lib3MF_uint8 & nBlue, Lib3MF_uint8 & nAlpha)
+{
+	nRed = TheColor.m_Red;
+	nGreen = TheColor.m_Green;
+	nBlue = TheColor.m_Blue;
+	nAlpha = TheColor.m_Alpha;
+}
+
+void CLib3MFWrapper::ColorToFloatRGBA(const sLib3MFColor TheColor, float & fRed, float & fGreen, float & fBlue, float & fAlpha)
+{
+	fRed = TheColor.m_Red / 255.f;
+	fGreen = TheColor.m_Green / 255.f;
+	fBlue = TheColor.m_Blue / 255.f;
+	fAlpha = TheColor.m_Alpha / 255.f;
+}

@@ -39,6 +39,7 @@ Abstract: This is a stub class definition of CLib3MFModel
 #include "lib3mf_meshobject.hpp"
 #include "lib3mf_resourceiterator.hpp"
 #include "lib3mf_componentsobject.hpp"
+#include "lib3mf_basematerial.hpp"
 #include "lib3mf_attachment.hpp"
 // Include custom headers here.
 
@@ -107,7 +108,12 @@ ILib3MFTexture2D * CLib3MFModel::GetTexture2DByID (const Lib3MF_uint32 nResource
 
 ILib3MFBaseMaterial * CLib3MFModel::GetBaseMaterialByID (const Lib3MF_uint32 nResourceID)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	NMR::PModelBaseMaterialResource pBaseMaterialResource = model().findBaseMaterial(nResourceID);
+	if (pBaseMaterialResource) {
+		return new CLib3MFBaseMaterial(pBaseMaterialResource);
+	}
+	else
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDBASEMATERIAL);
 }
 
 ILib3MFMeshObject * CLib3MFModel::GetMeshObjectByID (const Lib3MF_uint32 nResourceID)
@@ -210,7 +216,16 @@ ILib3MFResourceIterator * CLib3MFModel::Get2DTextures ()
 
 ILib3MFResourceIterator * CLib3MFModel::GetBaseMaterials ()
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	auto pResult = std::make_unique<CLib3MFResourceIterator>();
+	Lib3MF_uint32 nCount = model().getBaseMaterialCount();
+	Lib3MF_uint32 nIdx;
+
+	for (nIdx = 0; nIdx < nCount; nIdx++) {
+		auto resource = model().getBaseMaterialResource(nIdx);
+		if (dynamic_cast<NMR::CModelBaseMaterialResource *>(resource.get()))
+			pResult->addResource(resource);
+	}
+	return pResult.release();
 }
 
 ILib3MFModel * CLib3MFModel::MergeToModel ()

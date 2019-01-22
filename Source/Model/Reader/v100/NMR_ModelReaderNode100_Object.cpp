@@ -328,10 +328,10 @@ namespace NMR {
 			// Assign Default Resource Property
 			PPackageResourceID pRID = m_pModel->findPackageResourceID(m_pModel->curPath(), m_nDefaultPropertyID);
 
-			CModelBaseMaterialResource * pResource = nullptr;
+			PModelBaseMaterialResource pResource = nullptr;
 			if (pRID.get())
 				pResource = m_pModel->findBaseMaterial(pRID->getUniqueID());
-			if (pResource != nullptr) {
+			if (pResource.get() != nullptr) {
 				m_pObject->setDefaultProperty(std::make_shared<CModelDefaultProperty_BaseMaterial>(pRID->getUniqueID(), m_nDefaultPropertyIndex));
 				hasBeenSet = true;
 			}

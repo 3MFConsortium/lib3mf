@@ -40,6 +40,19 @@ using namespace Lib3MF::Impl;
  Class definition of CLib3MFBaseMaterial 
 **************************************************************************************************************************/
 
+CLib3MFBaseMaterial::CLib3MFBaseMaterial(NMR::PModelBaseMaterialResource pResource)
+	: CLib3MFResource(std::static_pointer_cast<NMR::CModelResource>(pResource))
+{
+}
+
+NMR::CModelBaseMaterialResource& CLib3MFBaseMaterial::baseMaterial()
+{
+	NMR::CModelBaseMaterialResource* pBaseMaterial = dynamic_cast<NMR::CModelBaseMaterialResource*>(resource().get());
+	if (pBaseMaterial == nullptr)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDOBJECT);
+	return *pBaseMaterial;
+}
+
 Lib3MF_uint32 CLib3MFBaseMaterial::GetCount ()
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
@@ -50,7 +63,7 @@ Lib3MF_uint32 CLib3MFBaseMaterial::GetResourceID ()
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-Lib3MF_uint32 CLib3MFBaseMaterial::AddMaterial (const std::string & sName, const Lib3MF_uint8 nRed, const Lib3MF_uint8 nGreen, const Lib3MF_uint8 nBlue)
+Lib3MF_uint32 CLib3MFBaseMaterial::AddMaterial(const std::string & sName, const sLib3MFColor DisplayColor)
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
@@ -70,28 +83,12 @@ void CLib3MFBaseMaterial::SetName (const Lib3MF_uint32 nResourceIndex, const std
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CLib3MFBaseMaterial::SetDisplayColorRGB (const Lib3MF_uint32 nResourceIndex, const Lib3MF_uint8 nRed, const Lib3MF_uint8 nGreen, const Lib3MF_uint8 nBlue)
+void CLib3MFBaseMaterial::SetDisplayColor(const Lib3MF_uint32 nResourceIndex, const sLib3MFColor TheColor)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CLib3MFBaseMaterial::SetDisplayColorRGBA (const Lib3MF_uint32 nResourceIndex, const Lib3MF_uint8 nRed, const Lib3MF_uint8 nGreen, const Lib3MF_uint8 nBlue, const Lib3MF_uint8 nAlpha)
+sLib3MFColor CLib3MFBaseMaterial::GetDisplayColor(const Lib3MF_uint32 nResourceIndex)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
-
-void CLib3MFBaseMaterial::SetDisplayColorFloatRGB (const Lib3MF_uint32 nResourceIndex, const float fRed, const float fGreen, const float fBlue)
-{
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
-}
-
-void CLib3MFBaseMaterial::SetDisplayColorFloatRGBA (const Lib3MF_uint32 nResourceIndex, const float fRed, const float fGreen, const float fBlue, const float fAlpha)
-{
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
-}
-
-void CLib3MFBaseMaterial::GetDisplayColor (const Lib3MF_uint32 nResourceIndex, Lib3MF_uint8 & nRed, Lib3MF_uint8 & nGreen, Lib3MF_uint8 & nBlue, Lib3MF_uint8 & nAlpha)
-{
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
-}
-

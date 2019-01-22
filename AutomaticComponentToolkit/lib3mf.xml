@@ -70,14 +70,15 @@
 		<error name="INVALIDCOMPONENTSOBJECT" code="108" description="A components object is invalid" />
 		<error name="INVALIDCOMPONENT" code="109" description="A component is invalid" />
 		<error name="INVALIDBUILDITEM" code="110" description="A build item is invalid" />
+		<error name="INVALIDBASEMATERIAL" code="111" description="A basematerial is invalid" />
 		
-		<error name="ATTACHMENTNOTFOUND" code="111" description="Attachment not found" />
+		<error name="ATTACHMENTNOTFOUND" code="121" description="Attachment not found" />
 		
-		<error name="FORBIDDENCYCLICREFERENCE" code="120" description="A component references one of its ancestors" />
+		<error name="FORBIDDENCYCLICREFERENCE" code="130" description="A component references one of its ancestors" />
 
-		<error name="INVALIDATTACHMENTSTREAM" code="121" description="An attachment stream is invalid" />
+		<error name="INVALIDATTACHMENTSTREAM" code="131" description="An attachment stream is invalid" />
 		
-		<error name="UNKOWNPROGRESSIDENTIFIER" code="130" description="A progress identifier is unknown" />
+		<error name="UNKOWNPROGRESSIDENTIFIER" code="140" description="A progress identifier is unknown" />
 	</errors>
 	
 	<enum name="ModelUnit">
@@ -163,7 +164,7 @@
 		<member name="Fields" type="single" rows="3" columns="4" />
 	</struct>
 	
-	<struct name="ColorRGBA">
+	<struct name="Color">
 		<member name="Red" type="uint8" />
 		<member name="Green" type="uint8" />
 		<member name="Blue" type="uint8" />
@@ -692,18 +693,9 @@
 			<param name="Count" type="uint32" pass="return" description="returns the count of base materials." />
 		</method>
 
-<!--
-	TODO: GetResourceID should be exposed by inheritance. <-:Why?
--->
-		<method name="GetResourceID" description="Retrieves the resource id of the material group.">
-			<param name="ResourceID" type="uint32" pass="return" description="returns the id of the material group." />
-		</method>
-	
 		<method name="AddMaterial" dllsuffix="utf8" description="Adds a new material to the material group">
 			<param name="Name" type="string" pass="in" description="new name of the base material." />
-			<param name="Red" type="uint8" pass="in" description="New red value of display color (0-255)" />
-			<param name="Green" type="uint8" pass="in" description="New green value of display color (0-255)" />
-			<param name="Blue" type="uint8" pass="in" description="New blue value of display color (0-255)" />
+			<param name="DisplayColor" type="struct" class="Color" pass="in" description="Display color of the material" />
 			<param name="ResourceIndex" type="uint32" pass="return" description="returns new Index of the material in the material group." />			
 		</method>
 	
@@ -721,42 +713,14 @@
 			<param name="Name" type="string" pass="in" description="new name of the base material." />
 		</method>
 
-		<method name="SetDisplayColorRGB" description="Sets a base material's display color. Alpha is set to 255.">
+		<method name="SetDisplayColor" description="Sets a base material's display color.">
 			<param name="ResourceIndex" type="uint32" pass="in" description="Index of the material in the material group." />
-			<param name="Red" type="uint8" pass="in" description="New red value of display color (0-255)" />
-			<param name="Green" type="uint8" pass="in" description="New green value of display color (0-255)" />
-			<param name="Blue" type="uint8" pass="in" description="New blue value of display color (0-255)" />
+			<param name="TheColor" type="struct" class="Color" pass="in" description="The base material's display color" />
 		</method>
 		
-		<method name="SetDisplayColorRGBA" description="Sets a base material's display color.">
-			<param name="ResourceIndex" type="uint32" pass="in" description="Index of the material in the material group." />
-			<param name="Red" type="uint8" pass="in" description="New red value of display color (0-255)" />
-			<param name="Green" type="uint8" pass="in" description="New green value of display color (0-255)" />
-			<param name="Blue" type="uint8" pass="in" description="New blue value of display color (0-255)" />
-			<param name="Alpha" type="uint8" pass="in" description="New alpha value of display color (0-255)" />
-		</method>
-
-		<method name="SetDisplayColorFloatRGB" description="Sets a base material's display color. Alpha is set to 1.0.">
-			<param name="ResourceIndex" type="uint32" pass="in" description="Index of the material in the material group." />
-			<param name="Red" type="single" pass="in" description="New red value of display color (0-1)" />
-			<param name="Green" type="single" pass="in" description="New green value of display color (0-1)" />
-			<param name="Blue" type="single" pass="in" description="New blue value of display color (0-1)" />
-		</method>
-		
-		<method name="SetDisplayColorFloatRGBA" description="Sets a base material's display color.">
-			<param name="ResourceIndex" type="uint32" pass="in" description="Index of the material in the material group." />
-			<param name="Red" type="single" pass="in" description="New red value of display color (0-1)" />
-			<param name="Green" type="single" pass="in" description="New green value of display color (0-1)" />
-			<param name="Blue" type="single" pass="in" description="New blue value of display color (0-1)" />
-			<param name="Alpha" type="single" pass="in" description="New alpha value of display color (0-1)" />
-		</method>
-
 		<method name="GetDisplayColor" description="Returns a base material's display color.">
 			<param name="ResourceIndex" type="uint32" pass="in" description="Index of the material in the material group." />
-			<param name="Red" type="uint8" pass="out" description="Returns red value of display color (0-255)" />
-			<param name="Green" type="uint8" pass="out" description="Returns green value of display color (0-255)" />
-			<param name="Blue" type="uint8" pass="out" description="Returns blue value of display color (0-255)" />
-			<param name="Alpha" type="uint8" pass="out" description="Returns blue value of display color (0-255)" />
+			<param name="TheColor" type="struct" class="Color" pass="return" description="The base material's display color" />
 		</method>
 	</class>
 	
@@ -1175,6 +1139,39 @@
 		<method name="RetrieveProgressMessage" description = "Return an English text for a progress identifier.|Note: this is the only function you can call from your callback function.">
 			<param name="ProrgessIdentifier" type="enum" class="ProgressIdentifier" pass="in" description="the progress identifier that is passed to the callback function" />
 			<param name="ProgressMessage" type="string" pass="out" description="English text for the progress identifier" />
+		</method>
+		
+		
+		<method name="RGBAToColor" description = "Creates a Color from uint8 RGBA values">
+			<param name="Red" type="uint8" pass="in" description="Red value of color (0-255)" />
+			<param name="Green" type="uint8" pass="in" description="Green value of color (0-255)" />
+			<param name="Blue" type="uint8" pass="in" description="Blue value of color (0-255)" />
+			<param name="Alpha" type="uint8" pass="in" description="Alpha value of color (0-255)" />
+			<param name="TheColor" type="struct" class="Color" pass="return" description="Assembled color" />
+		</method>
+		
+		<method name="FloatRGBAToColor" description = "Creates a Color from uint8 RGBA values">
+			<param name="Red" type="single" pass="in" description="Red value of color (0-1)" />
+			<param name="Green" type="single" pass="in" description="Green value of color (0-1)" />
+			<param name="Blue" type="single" pass="in" description="Blue value of color (0-1)" />
+			<param name="Alpha" type="single" pass="in" description="Alpha value of color (0-1)" />
+			<param name="TheColor" type="struct" class="Color" pass="return" description="Assembled color" />
+		</method>
+		
+		<method name="ColorToRGBA" description = "Calculates uint8-RGBA-values from a Color">
+			<param name="TheColor" type="struct" class="Color" pass="in" description="Color to handle" />
+			<param name="Red" type="uint8" pass="out" description="Red value of color (0-255)" />
+			<param name="Green" type="uint8" pass="out" description="Green value of color (0-255)" />
+			<param name="Blue" type="uint8" pass="out" description="Blue value of color (0-255)" />
+			<param name="Alpha" type="uint8" pass="out" description="Alpha value of color (0-255)" />
+		</method>
+		
+		<method name="ColorToFloatRGBA" description = "Calculates float-RGBA-values from a Color">
+			<param name="TheColor" type="struct" class="Color" pass="in" description="Color to handle" />
+			<param name="Red" type="single" pass="out" description="Red value of color (0-1)" />
+			<param name="Green" type="single" pass="out" description="Green value of color (0-1)" />
+			<param name="Blue" type="single" pass="out" description="Blue value of color (0-1)" />
+			<param name="Alpha" type="single" pass="out" description="Alpha value of color (0-1)" />
 		</method>
 		
 		

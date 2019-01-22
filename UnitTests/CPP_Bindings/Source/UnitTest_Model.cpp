@@ -50,7 +50,7 @@ namespace Lib3MF
 		virtual void TearDown() {
 			m_model.reset();
 		}
-	
+
 		static PLib3MFModel m_model;
 	};
 
@@ -128,5 +128,21 @@ namespace Lib3MF
 		auto buildItem = m_model->AddBuildItem(meshObject.get(), transform);
 
 		m_model->RemoveBuildItem(buildItem.get());
+	}
+
+	TEST_F(Model, GetBaseMaterials)
+	{
+		auto iterator = m_model->GetBaseMaterials();
+	}
+
+	TEST_F(Model, GetBaseMaterialByID)
+	{
+		try {
+			auto baseMaterial = m_model->GetBaseMaterialByID(0);
+			ASSERT_FALSE(true);
+		}
+		catch (ELib3MFException &e) {
+			ASSERT_EQ(e.getErrorCode(), LIB3MF_ERROR_INVALIDBASEMATERIAL);
+		}
 	}
 }

@@ -180,7 +180,7 @@ namespace NMR {
 						PPackageResourceID pID = m_pModel->findPackageResourceID(m_pModel->curPath(), nPropertyID);
 						if (pID.get()) {
 							// Find and Assign Base Material Resource
-							CModelBaseMaterialResource * pBaseMaterial = m_pModel->findBaseMaterial(pID->getUniqueID());
+							PModelBaseMaterialResource pBaseMaterial = m_pModel->findBaseMaterial(pID->getUniqueID());
 							if (pBaseMaterial) {
 								CMeshInformation_BaseMaterials * pBaseMaterials = createBaseMaterialInformation();
 								MESHINFORMATION_BASEMATERIAL* pFaceData = (MESHINFORMATION_BASEMATERIAL*)pBaseMaterials->getFaceData(pFace->m_index);

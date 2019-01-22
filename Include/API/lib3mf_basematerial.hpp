@@ -40,7 +40,8 @@ Abstract: This is the class declaration of CLib3MFBaseMaterial
 #pragma warning( disable : 4250)
 
 // Include custom headers here.
-
+#include "Model/Classes/NMR_ModelBaseMaterial.h"
+#include "Model/Classes/NMR_ModelBaseMaterials.h"
 
 namespace Lib3MF {
 namespace Impl {
@@ -56,19 +57,19 @@ private:
 	/**
 	* Put private members here.
 	*/
-
 protected:
 
 	/**
 	* Put protected members here.
 	*/
+	NMR::CModelBaseMaterialResource& baseMaterial();
 
 public:
 
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-
+	CLib3MFBaseMaterial(NMR::PModelBaseMaterialResource pResource);
 
 	/**
 	* Public member functions to implement.
@@ -78,7 +79,7 @@ public:
 
 	Lib3MF_uint32 GetResourceID ();
 
-	Lib3MF_uint32 AddMaterial (const std::string & sName, const Lib3MF_uint8 nRed, const Lib3MF_uint8 nGreen, const Lib3MF_uint8 nBlue);
+	Lib3MF_uint32 AddMaterial(const std::string & sName, const sLib3MFColor DisplayColor);
 
 	void RemoveMaterial (const Lib3MF_uint32 nResourceIndex);
 
@@ -86,16 +87,9 @@ public:
 
 	void SetName (const Lib3MF_uint32 nResourceIndex, const std::string & sName);
 
-	void SetDisplayColorRGB (const Lib3MF_uint32 nResourceIndex, const Lib3MF_uint8 nRed, const Lib3MF_uint8 nGreen, const Lib3MF_uint8 nBlue);
+	void SetDisplayColor(const Lib3MF_uint32 nResourceIndex, const sLib3MFColor TheColor);
 
-	void SetDisplayColorRGBA (const Lib3MF_uint32 nResourceIndex, const Lib3MF_uint8 nRed, const Lib3MF_uint8 nGreen, const Lib3MF_uint8 nBlue, const Lib3MF_uint8 nAlpha);
-
-	void SetDisplayColorFloatRGB (const Lib3MF_uint32 nResourceIndex, const float fRed, const float fGreen, const float fBlue);
-
-	void SetDisplayColorFloatRGBA (const Lib3MF_uint32 nResourceIndex, const float fRed, const float fGreen, const float fBlue, const float fAlpha);
-
-	void GetDisplayColor (const Lib3MF_uint32 nResourceIndex, Lib3MF_uint8 & nRed, Lib3MF_uint8 & nGreen, Lib3MF_uint8 & nBlue, Lib3MF_uint8 & nAlpha);
-
+	sLib3MFColor GetDisplayColor(const Lib3MF_uint32 nResourceIndex);
 };
 
 }
