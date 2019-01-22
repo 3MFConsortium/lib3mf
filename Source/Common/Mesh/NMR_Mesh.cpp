@@ -122,7 +122,7 @@ namespace NMR {
 
 						pBeamNodes[j] = aNewNodes[pBeam->m_nodeindices[j]];
 					}
-					addBeam(pBeamNodes[0], pBeamNodes[1], &pBeam->m_radius[0], &pBeam->m_radius[1], &pBeam->m_capMode[0], &pBeam->m_capMode[1]);
+					addBeam(pBeamNodes[0], pBeamNodes[1], pBeam->m_radius[0], pBeam->m_radius[1], pBeam->m_capMode[0], pBeam->m_capMode[1]);
 				}
 			}
 
@@ -250,10 +250,10 @@ namespace NMR {
 	}
 
 	_Ret_notnull_ MESHBEAM * CMesh::addBeam(_In_ MESHNODE * pNode1, _In_ MESHNODE * pNode2,
-		_In_ nfDouble * pRadius1, _In_ nfDouble * pRadius2,
-		_In_ nfInt32 * peCapMode1, _In_ nfInt32 * peCapMode2)
+		_In_ nfDouble dRadius1, _In_ nfDouble dRadius2,
+		_In_ nfInt32 eCapMode1, _In_ nfInt32 eCapMode2)
 	{
-		if ((!pNode1) || (!pNode2) || (!pRadius1) || (!pRadius2) || (!peCapMode1) || (!peCapMode2))
+		if ((!pNode1) || (!pNode2))
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
 		if (pNode1 == pNode2)
@@ -271,11 +271,11 @@ namespace NMR {
 		pBeam->m_nodeindices[0] = pNode1->m_index;
 		pBeam->m_nodeindices[1] = pNode2->m_index;
 		pBeam->m_index = nNewIndex;
-		pBeam->m_radius[0] = *pRadius1;
-		pBeam->m_radius[1] = *pRadius2;
+		pBeam->m_radius[0] = dRadius1;
+		pBeam->m_radius[1] = dRadius2;
 
-		pBeam->m_capMode[0] = *peCapMode1;
-		pBeam->m_capMode[1] = *peCapMode2;
+		pBeam->m_capMode[0] = eCapMode1;
+		pBeam->m_capMode[1] = eCapMode2;
 
 		return pBeam;
 	}

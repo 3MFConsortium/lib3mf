@@ -69,6 +69,8 @@ namespace NMR {
 
 		virtual nfBool isValidForSlices(const NMATRIX3& totalParentMatrix);
 
+		virtual nfBool isValidForBeamLattices();
+
 		// check, if the mesh is manifold and oriented
 		virtual nfBool isManifoldAndOriented();
 

@@ -50,6 +50,18 @@ namespace Lib3MF
 			mesh = model->AddMeshObject();
 			beamLattice = mesh->BeamLattice();
 			meshAfter = model->AddMeshObject();
+
+			sLib3MFPosition p;
+			p.m_coordinates[0] = 0;
+			p.m_coordinates[1] = 0;
+			p.m_coordinates[2] = 0;
+			mesh->AddVertex(p);
+			
+			p.m_coordinates[1] = 1;
+			mesh->AddVertex(p);
+
+			p.m_coordinates[2] = 1;
+			mesh->AddVertex(p);
 		}
 		virtual void TearDown() {
 			model.reset();
@@ -116,4 +128,124 @@ namespace Lib3MF
 		}
 	}
 
+
+	TEST_F(BeamLattice, GeometryShouldFail)
+	{
+		sLib3MFBeam beam;
+		beam.m_CapModes[0].m_code = eLib3MFBeamLatticeCapMode::eBeamLatticeCapModeHemiSphere;
+		beam.m_CapModes[1].m_code = eLib3MFBeamLatticeCapMode::eBeamLatticeCapModeButt;
+
+		beam.m_Indices[0] = 0;
+		beam.m_Indices[1] = 0;
+		beam.m_Radii[0] = 1.5;
+		beam.m_Radii[1] = 1.2;
+		try {
+			beamLattice->AddBeam(beam);
+			ASSERT_FALSE(true);
+		}
+		catch (ELib3MFException) {
+			ASSERT_TRUE(true);
+		}
+
+		beam.m_CapModes[0].m_code = eLib3MFBeamLatticeCapMode::eBeamLatticeCapModeHemiSphere;
+		beam.m_CapModes[1].m_code = eLib3MFBeamLatticeCapMode::eBeamLatticeCapModeButt;
+		beam.m_Indices[0] = 0;
+		beam.m_Indices[1] = 1;
+		beam.m_Radii[0] = 1.5;
+		beam.m_Radii[1] = 1.2;
+		// That one works
+		beamLattice->AddBeam(beam);
+
+		// That one will fail again
+		beam.m_Radii[1] = -1.2;
+		try {
+			beamLattice->SetBeam(0, beam);
+			ASSERT_FALSE(true);
+		}
+		catch (ELib3MFException) {
+			ASSERT_TRUE(true);
+		}
+	}
+
+	TEST_F(BeamLattice, Geometry)
+	{
+		ASSERT_EQ(beamLattice->GetBeamCount(), 0);
+		sLib3MFBeam beam;
+		beam.m_CapModes[0].m_code = eLib3MFBeamLatticeCapMode::eBeamLatticeCapModeHemiSphere;
+		beam.m_CapModes[1].m_code = eLib3MFBeamLatticeCapMode::eBeamLatticeCapModeButt;
+		beam.m_Indices[0] = 0;
+		beam.m_Indices[1] = 1;
+		beam.m_Radii[0] = 1.5;
+		beam.m_Radii[1] = 1.2;
+
+		beamLattice->AddBeam(beam);
+
+		beam.m_Indices[0] = 1;
+		beam.m_Indices[1] = 2;
+		beamLattice->AddBeam(beam);
+
+		beam.m_Indices[0] = 2;
+		beam.m_Indices[1] = 0;
+		beamLattice->AddBeam(beam);
+		ASSERT_EQ(beamLattice->GetBeamCount(), 3);
+
+		auto outBeam = beamLattice->GetBeam(2);
+		for (int i = 0; i < 2; i++) {
+			ASSERT_EQ(outBeam.m_CapModes[i].m_code, beam.m_CapModes[i].m_code);
+			ASSERT_EQ(outBeam.m_Indices[i], beam.m_Indices[i]);
+			ASSERT_DOUBLE_EQ(outBeam.m_Radii[i], beam.m_Radii[i]);
+		}
+
+		beam.m_Radii[0] = 4;
+		beam.m_Radii[1] = 3.2;
+		beamLattice->SetBeam(2, beam);
+	}
+
+	TEST_F(BeamLattice, GeometryBulk)
+	{
+		// Preparations
+		sLib3MFBeam beam;
+		beam.m_CapModes[0].m_code = eLib3MFBeamLatticeCapMode::eBeamLatticeCapModeHemiSphere;
+		beam.m_CapModes[1].m_code = eLib3MFBeamLatticeCapMode::eBeamLatticeCapModeButt;
+		beam.m_Radii[0] = 1.5;
+		beam.m_Radii[1] = 1.2;
+		std::vector<sLib3MFBeam> beams(3);
+		for (int i = 0; i < 3; i++) {
+			beam.m_Indices[0] = i;
+			beam.m_Indices[1] = (i+1)%3;
+			beams[i] = beam;
+		}
+
+		beamLattice->SetBeams(beams);
+		std::vector<sLib3MFBeam> outBeams;
+
+		beamLattice->GetBeams(outBeams);
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 2; j++) {
+				ASSERT_EQ(outBeams[i].m_CapModes[j].m_code, beams[i].m_CapModes[j].m_code);
+				ASSERT_EQ(outBeams[i].m_Indices[j], beams[i].m_Indices[j]);
+				ASSERT_DOUBLE_EQ(outBeams[i].m_Radii[j], beams[i].m_Radii[j]);
+			}
+		}
+
+		// modify beams to fail:
+		beams[0].m_Indices[0] = 12;
+		try {
+			beamLattice->SetBeams(beams);
+			ASSERT_FALSE(true);
+		}
+		catch (ELib3MFException) {
+			ASSERT_TRUE(true);
+		}
+	}
+
+	TEST_F(BeamLattice, Read)
+	{
+
+	}
+
+	TEST_F(BeamLattice, WriteRead)
+	{
+
+	}
 }

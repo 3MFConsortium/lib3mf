@@ -123,7 +123,7 @@ namespace NMR {
 				if (nIndex1 != nIndex2) {
 					MESHNODE * pNode1 = m_pMesh->getNode(nIndex1);
 					MESHNODE * pNode2 = m_pMesh->getNode(nIndex2);
-					m_pMesh->addBeam(pNode1, pNode2, &dRadius1, &dRadius2, &nCap1, &nCap2);
+					m_pMesh->addBeam(pNode1, pNode2, dRadius1, dRadius2, nCap1, nCap2);
 				}
 			}
 			else

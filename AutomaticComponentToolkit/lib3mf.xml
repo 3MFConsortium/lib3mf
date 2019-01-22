@@ -79,6 +79,8 @@
 		<error name="INVALIDATTACHMENTSTREAM" code="131" description="An attachment stream is invalid" />
 		
 		<error name="UNKOWNPROGRESSIDENTIFIER" code="140" description="A progress identifier is unknown" />
+		
+		<error name="BEAMLATTICE_INVALID_OBJECTTYPE" code="2000" description="This object type is not valid for beamlattices" />
 	</errors>
 	
 	<enum name="ModelUnit">
