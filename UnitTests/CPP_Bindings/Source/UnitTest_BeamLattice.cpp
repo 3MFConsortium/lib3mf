@@ -239,6 +239,16 @@ namespace Lib3MF
 		}
 	}
 
+	TEST_F(BeamLattice, BeamSet)
+	{
+		auto beamSet = beamLattice->AddBeamSet();
+
+		ASSERT_EQ(beamLattice->GetBeamSetCount(), 1);
+
+		auto beamSetOut = beamLattice->GetBeamSet(0);
+
+	}
+
 	TEST_F(BeamLattice, Read)
 	{
 

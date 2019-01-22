@@ -31,6 +31,7 @@ Abstract: This is a stub class definition of CLib3MFBeamLattice
 #include "lib3mf_beamlattice.hpp"
 #include "lib3mf_interfaceexception.hpp"
 
+#include "lib3mf_beamset.hpp"
 // Include custom headers here.
 
 
@@ -248,16 +249,16 @@ void CLib3MFBeamLattice::GetBeams(Lib3MF_uint64 nBeamInfoBufferSize, Lib3MF_uint
 
 Lib3MF_uint32 CLib3MFBeamLattice::GetBeamSetCount ()
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	return m_mesh.getBeamSetCount();
 }
 
 ILib3MFBeamSet * CLib3MFBeamLattice::AddBeamSet ()
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	return new CLib3MFBeamSet(m_mesh.addBeamSet());
 }
 
 ILib3MFBeamSet * CLib3MFBeamLattice::GetBeamSet (const Lib3MF_uint32 nIndex)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	return new CLib3MFBeamSet(m_mesh.getBeamSet(nIndex));
 }
 

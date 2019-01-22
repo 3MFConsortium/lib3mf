@@ -34,7 +34,7 @@ Abstract: This is the class declaration of CLib3MFBeamSet
 
 #include "lib3mf_interfaces.hpp"
 
-
+#include "Common/Mesh/NMR_MeshTypes.h" 
 // Include custom headers here.
 
 
@@ -52,6 +52,7 @@ private:
 	/**
 	* Put private members here.
 	*/
+	NMR::PBEAMSET m_pBeamSet;
 
 protected:
 
@@ -64,25 +65,25 @@ public:
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-
+	CLib3MFBeamSet(NMR::PBEAMSET pBeamSet);
 
 	/**
 	* Public member functions to implement.
 	*/
 
-	void SetName (const std::string & sName);
+	virtual void SetName(const std::string & sName);
 
-	std::string GetName ();
+	virtual std::string GetName();
 
-	void SetIdentifier (const std::string & sIdentifier);
+	virtual void SetIdentifier(const std::string & sIdentifier);
 
-	std::string GetIdentifier ();
+	virtual std::string GetIdentifier();
 
-	Lib3MF_uint32 GetReferenceCount ();
+	virtual Lib3MF_uint32 GetReferenceCount();
 
-	void SetReferences (const Lib3MF_uint32 nReferencesBufferSize, const Lib3MF_uint32 * pReferencesBuffer);
+	virtual void SetReferences(const Lib3MF_uint64 nReferencesBufferSize, const Lib3MF_uint32 * pReferencesBuffer);
 
-	void GetReferences (Lib3MF_uint32 nReferencesBufferSize, Lib3MF_uint32* pReferencesNeededCount, Lib3MF_uint32 * pReferencesBuffer);
+	virtual void GetReferences(Lib3MF_uint64 nReferencesBufferSize, Lib3MF_uint64* pReferencesNeededCount, Lib3MF_uint32 * pReferencesBuffer);
 
 };
 
