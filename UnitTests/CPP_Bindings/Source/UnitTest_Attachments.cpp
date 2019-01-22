@@ -99,6 +99,33 @@ namespace Lib3MF
 		ASSERT_TRUE(bAreEqual);
 	}
 
+	TEST_F(AttachmentsT, FindAttachment)
+	{
+		std::string sRelationShipPath1("/Attachments/test1.xml");
+		std::string sAttachmetType1("http://schemas.autodesk.com/dmg/testattachment/2017/08/1");
+		std::string sRelationShipPath2("/Attachments/test2.xml");
+		std::string sAttachmetType2("http://schemas.autodesk.com/dmg/testattachment/2017/08/2");
+
+		auto attachment1 = model->AddAttachment(sRelationShipPath1, sAttachmetType1);
+		auto attachment2 = model->AddAttachment(sRelationShipPath2, sAttachmetType2);
+
+		try {
+			model->FindAttachment("NotAnAttachmentURI");
+			ASSERT_FALSE(true);
+		}
+		catch (...) {
+			ASSERT_TRUE(true);
+		}
+
+		auto foundAttachment1 = model->FindAttachment(sRelationShipPath1);
+		foundAttachment1->GetPath() == attachment1->GetPath();
+		foundAttachment1->GetRelationShipType() == attachment1->GetRelationShipType();
+
+		auto foundAttachment2 = model->FindAttachment(sRelationShipPath2);
+		foundAttachment2->GetPath() == attachment2->GetPath();
+		foundAttachment2->GetRelationShipType() == attachment1->GetRelationShipType();
+	}
+
 	TEST_F(AttachmentsT, WriteReadAttachment)
 	{
 		{

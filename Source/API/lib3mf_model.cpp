@@ -319,7 +319,13 @@ ILib3MFAttachment * CLib3MFModel::GetAttachment (const Lib3MF_uint32 nIndex)
 
 ILib3MFAttachment * CLib3MFModel::FindAttachment (const std::string & sURI)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	NMR::PModelAttachment pAttachment = m_model->findModelAttachment(sURI);
+
+	if (pAttachment.get() == nullptr)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_ATTACHMENTNOTFOUND);
+	
+	auto pResult = std::make_unique<CLib3MFAttachment>(pAttachment);
+	return pResult.release();
 }
 
 Lib3MF_uint32 CLib3MFModel::GetAttachmentCount ()

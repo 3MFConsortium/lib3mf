@@ -71,6 +71,8 @@
 		<error name="INVALIDCOMPONENT" code="109" description="A component is invalid" />
 		<error name="INVALIDBUILDITEM" code="110" description="A build item is invalid" />
 		
+		<error name="ATTACHMENTNOTFOUND" code="111" description="Attachment not found" />
+		
 		<error name="FORBIDDENCYCLICREFERENCE" code="120" description="A component references one of its ancestors" />
 
 		<error name="INVALIDATTACHMENTSTREAM" code="121" description="An attachment stream is invalid" />
