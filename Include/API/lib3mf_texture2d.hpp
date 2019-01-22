@@ -34,6 +34,10 @@ Abstract: This is the class declaration of CLib3MFTexture2D
 
 #include "lib3mf_interfaces.hpp"
 
+// Parent classes
+#include "lib3mf_resource.hpp"
+#pragma warning( push)
+#pragma warning( disable : 4250)
 
 // Include custom headers here.
 
@@ -46,7 +50,7 @@ namespace Impl {
  Class declaration of CLib3MFTexture2D 
 **************************************************************************************************************************/
 
-class CLib3MFTexture2D : public virtual ILib3MFTexture2D {
+class CLib3MFTexture2D : public virtual ILib3MFTexture2D, public virtual CLib3MFResource {
 private:
 
 	/**
@@ -91,4 +95,5 @@ public:
 }
 }
 
+#pragma warning( pop )
 #endif // __LIB3MF_LIB3MFTEXTURE2D

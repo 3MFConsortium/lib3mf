@@ -802,7 +802,7 @@
 		-->
 	</class>
 
-	<class name="Texture2D">
+	<class name="Texture2D" parent="Resource">
 		<method name="GetAttachment" description = "Retrieves the attachment located at the path of the texture.">
 			<param name="Attachment" type="handle" class="Attachment" pass="return" description="attachment that holds the texture's image information." />
 		</method>
