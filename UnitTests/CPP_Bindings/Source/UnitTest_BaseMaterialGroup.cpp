@@ -100,7 +100,6 @@ namespace Lib3MF
 		baseMaterialGroup->AddMaterial("2", CLib3MFWrapper::RGBAToColor(0, 10, 20, 30));
 
 		baseMaterialGroup->RemoveMaterial(0);
-		
 		try {
 			baseMaterialGroup->GetName(1);
 			ASSERT_FALSE(true);

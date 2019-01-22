@@ -372,7 +372,7 @@
 	</class>
 
 	<class name="Object" parent="Resource">
-		<method name="GetType" description="Retrieves a object's type">
+		<method name="GetType" description="Retrieves an object's type">
 			<param name="ObjectType" type="enum" class="ObjectType" pass="return" description="returns object type enum." />
 		</method> 
 
@@ -409,12 +409,11 @@
 			<param name="IsValid" type="bool" pass="return" description="returns whether the object is a valid object description" />
 		</method>
 		
-		<!-- UUID handling -->
 		<!-- property handling -->
 		<!-- slice object handling -->
 		<!-- object thumbnails -->
 		
-		<method name="GetUUID" dllsuffix="utf8" description="Retrieves a object's uuid string (see production extension specification)">
+		<method name="GetUUID" dllsuffix="utf8" description="Retrieves an object's uuid string (see production extension specification)">
 			<param name="HasUUID" type="bool" pass="out" description="flag whether the build item has a UUID"/>
 			<param name="UUID" type="string" pass="return" description="returns object uuid." />
 		</method>
@@ -492,6 +491,12 @@
 			<param name="Indices" type="structarray" class="Triangle" pass="in" description="contains the triangle indices." />
 		</method>
 		
+		<method name="IsManifoldAndOriented" description="Retrieves, if an object describes a topologically oriented and manifold mesh, according to the core spec.">
+			<param name="IsManifoldAndOriented" type="bool" pass="return" description="returns, if the object is oriented and manifold." />
+		</method>
+		
+		
+		
 		<method name="GetBeamLattice_MinLength" description="Returns the minimal length of beams for the beamlattice.">
 			<param name="MinLength" type="double" pass="return" description="minimal length of beams for the beamlattice" />
 		</method>
@@ -539,13 +544,10 @@
 			<param name="Count" type="uint32" pass="return" description="filled with the beam count." />
 		</method>
 
-<!--
-		Go TODO: Struct return
 		<method name="GetBeam" description="Returns indices, radii and capmodes of a single beam of a mesh object.">
 			<param name="Index" type="uint32" pass="in" description="Index of the beam (0 to beamcount - 1)." />
 			<param name="BeamInfo" type="struct" class="Beam" pass="return" description="filled with the beam indices, radii and capmodes." />
 		</method>
--->
 
 		<method name="AddBeam" description="Adds a single beam to a mesh object.">
 			<param name="BeamInfo" type="struct" class="Beam" pass="in" description="contains the node indices, radii and capmodes." />
@@ -556,18 +558,14 @@
 			<param name="Index" type="uint32" pass="in" description="Index of the beam (0 to beamcount - 1)." />
 			<param name="BeamInfo" type="struct" class="Beam" pass="in" description="filled with the beam indices, radii and capmodes." />
 		</method>
-
 		
-<!---		
-		<method name="SetBeamIndices" description="Sets all beam indices, radii and capmodes of a mesh object.">
-			// not possible
-		</method>
-
-		<method name="GetBeamIndices" description="Retrieves all beam indices of a mesh object.">
-			// not possible
+		<method name="SetBeams" description="Sets all beam indices, radii and capmodes of a mesh object.">
+			<param name="BeamInfo" type="structarray" class="Beam" pass="in" description="contains information of a number of  beams" />
 		</method>
 		
--->
+		<method name="GetBeams" description="obtains all beam indices, radii and capmodes of a mesh object.">
+			<param name="BeamInfo" type="structarray" class="Beam" pass="out" description="contains information of all beams" />
+		</method>
 
 		<method name="GetBeamSetCount" description="Returns the number of beamsets of a mesh object.">
 			<param name="Count" type="uint32" pass="return" description="filled with the beamset count." />
@@ -581,18 +579,13 @@
 			<param name="Index" type="uint32" pass="in" description="index of the requested beamset (0 ... beamsetcount-1)." />
 			<param name="BeamSet" type="handle" class="BeamSet" pass="return" description="the requested beamset" />
 		</method>
-		
-		<method name="IsManifoldAndOriented" description="Retrieves, if an object describes a topologically oriented and manifold mesh, according to the core spec.">
-			<param name="IsManifoldAndOriented" type="bool" pass="return" description="returns, if the object is oriented and manifold." />
-		</method>
-		
+
 <!---
 	TODO: 
 		-	lib3mf_meshobject_setslicestack
 		-	lib3mf_meshobject_getslicestackid
 		-   lib3mf_meshobject_setslicesmeshresolution
 		-   lib3mf_meshobject_getslicesmeshresolution
-
 -->
 		
 		
@@ -807,7 +800,6 @@
 
 	
 	<class name="BuildItem">
-	
 		<method name="GetObjectResource" description="Retrieves the object resource associated to a build item">
 			<param name="ObjectResource" type="handle" class="Object" pass="return" description="returns the associated resource instance"/>
 		</method>
@@ -915,9 +907,7 @@
 		</method>
 
 		<!-- 
-		
 		TODO: lib3mf_model_getslicestackById 
-		
 		-->
 		
 		<method name="GetTexture2DByID" description="finds a model texture by its id">

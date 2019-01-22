@@ -124,6 +124,12 @@ public:
 
 	void SetBeam (const Lib3MF_uint32 nIndex, const sLib3MFBeam BeamInfo);
 
+	sLib3MFBeam GetBeam(const Lib3MF_uint32 nIndex);
+
+	void SetBeams(const Lib3MF_uint64 nBeamInfoBufferSize, const sLib3MFBeam * pBeamInfoBuffer);
+
+	void GetBeams(Lib3MF_uint64 nBeamInfoBufferSize, Lib3MF_uint64* pBeamInfoNeededCount, sLib3MFBeam * pBeamInfoBuffer);
+
 	Lib3MF_uint32 GetBeamSetCount ();
 
 	ILib3MFBeamSet * AddBeamSet ();
