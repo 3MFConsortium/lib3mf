@@ -49,8 +49,6 @@ namespace NMR {
 		std::vector<PBEAMSET> m_pBeamSets;
 		
 		nfDouble m_dMinLength;
-		nfDouble m_dRadius;
-		eModelBeamLatticeCapMode m_CapMode;
 	public:
 		CBeamLattice(_In_ MESHNODES &nodes);
 

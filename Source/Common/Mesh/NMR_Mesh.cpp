@@ -338,26 +338,6 @@ namespace NMR {
 		return m_BeamLattice.m_dMinLength;
 	}
 
-	void CMesh::setBeamLatticeCapMode(eModelBeamLatticeCapMode eCapMode)
-	{
-		m_BeamLattice.m_CapMode = eCapMode;
-	}
-
-	eModelBeamLatticeCapMode CMesh::getBeamLatticeCapMode()
-	{
-		return m_BeamLattice.m_CapMode;
-	}
-
-	void CMesh::setDefaultBeamRadius(nfDouble dRadius)
-	{
-		m_BeamLattice.m_dRadius = dRadius;
-	}
-
-	nfDouble CMesh::getDefaultBeamRadius()
-	{
-		return m_BeamLattice.m_dRadius;
-	}
-
 	nfBool CMesh::checkSanity()
 	{
 		nfUint32 nIdx, j;

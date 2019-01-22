@@ -42,6 +42,7 @@ NMR_ModelReaderNode_BeamLattice1702_Beams.cpp covers the official 3MF beamlattic
 namespace NMR {
 
 	CModelReaderNode_BeamLattice1702_Beams::CModelReaderNode_BeamLattice1702_Beams(_In_ CModel * pModel, _In_ CMesh * pMesh,
+		_In_ nfDouble defaultRadius, _In_ eModelBeamLatticeCapMode defaultCapMode,
 		_In_ PModelReaderWarnings pWarnings)
 		: CModelReaderNode(pWarnings)
 	{
@@ -50,6 +51,8 @@ namespace NMR {
 
 		m_pModel = pModel;
 		m_pMesh = pMesh;
+		m_dDefaultRadius = defaultRadius;
+		m_eDefaultCapMode = defaultCapMode;
 	}
 
 	void CModelReaderNode_BeamLattice1702_Beams::parseXML(_In_ CXmlReader * pXMLReader)
@@ -97,12 +100,12 @@ namespace NMR {
 				nfDouble dRadius1, dRadius2;
 				pXMLNode->retrieveTag(bHasTag, nTag);
 				pXMLNode->retrieveRadii(bHasRadius1, dRadius1, bHasRadius2, dRadius2);
-				nfDouble dDefaultValueForR2 = m_pMesh->getDefaultBeamRadius();
+				nfDouble dDefaultValueForR2 = m_dDefaultRadius;
 				if (bHasRadius1) {
 					dDefaultValueForR2 = dRadius1;
 				}
 				else {
-					dRadius1 = m_pMesh->getDefaultBeamRadius();
+					dRadius1 = m_dDefaultRadius;
 				}
 
 				if (!bHasRadius2) {
@@ -113,8 +116,8 @@ namespace NMR {
 				eModelBeamLatticeCapMode eCap1, eCap2;
 				nfInt32 nCap1, nCap2;
 				pXMLNode->retrieveCapModes(bHasCapMode1, eCap1, bHasCapMode2, eCap2);
-				nCap1 = bHasCapMode1 ? eCap1 : (eModelBeamLatticeCapMode)m_pMesh->getBeamLatticeCapMode();
-				nCap2 = bHasCapMode2 ? eCap2 : (eModelBeamLatticeCapMode)m_pMesh->getBeamLatticeCapMode();
+				nCap1 = bHasCapMode1 ? eCap1 : m_eDefaultCapMode;
+				nCap2 = bHasCapMode2 ? eCap2 : m_eDefaultCapMode;
 
 				// Create beam if valid
 				if (nIndex1 != nIndex2) {

@@ -72,7 +72,7 @@ namespace NMR {
 		// check, if the mesh is manifold and oriented
 		virtual nfBool isManifoldAndOriented();
 
-		_Ret_notnull_ CModelMeshBeamLatticeAttributes * getBeamLatticeAttributes();
+		_Ret_notnull_ PModelMeshBeamLatticeAttributes getBeamLatticeAttributes();
 		void setBeamLatticeAttributes(_In_ PModelMeshBeamLatticeAttributes pBeamLatticeAttributes);
 
 		ModelResourceID calculateDefaultPropertyID() const;

@@ -30,6 +30,7 @@ Abstract: This is a stub class definition of CLib3MFMeshObject
 #include "lib3mf_meshobject.hpp"
 #include "lib3mf_interfaceexception.hpp"
 
+#include "lib3mf_beamlattice.hpp"
 // Include custom headers here.
 
 using namespace Lib3MF::Impl;
@@ -44,9 +45,9 @@ CLib3MFMeshObject::CLib3MFMeshObject(NMR::PModelResource pResource)
 
 }
 
-NMR::CModelMeshObject* CLib3MFMeshObject::meshObject()
+NMR::PModelMeshObject CLib3MFMeshObject::meshObject()
 {
-	NMR::CModelMeshObject* pMesh = dynamic_cast<NMR::CModelMeshObject*>(object());
+	NMR::PModelMeshObject pMesh = std::dynamic_pointer_cast<NMR::CModelMeshObject>(resource());
 	if (pMesh == nullptr)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDOBJECT);
 	return pMesh;
@@ -196,101 +197,6 @@ void CLib3MFMeshObject::SetGeometry(const Lib3MF_uint64 nVerticesBufferSize, con
 	}
 }
 
-Lib3MF_double CLib3MFMeshObject::GetBeamLattice_MinLength ()
-{
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
-}
-
-void CLib3MFMeshObject::SetBeamLattice_MinLength (const Lib3MF_double dMinLength)
-{
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
-}
-
-Lib3MF_double CLib3MFMeshObject::GetBeamLattice_Radius ()
-{
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
-}
-
-void CLib3MFMeshObject::SetBeamLattice_Radius (const Lib3MF_double dRadius)
-{
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
-}
-
-eLib3MFBeamLatticeCapMode CLib3MFMeshObject::GetBeamLattice_CapMode ()
-{
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
-}
-
-void CLib3MFMeshObject::SetBeamLattice_CapMode (const eLib3MFBeamLatticeCapMode eCapMode)
-{
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
-}
-
-void CLib3MFMeshObject::GetBeamLattice_Clipping (eLib3MFBeamLatticeClipMode & eClipMode, Lib3MF_uint32 & nResourceID)
-{
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
-}
-
-void CLib3MFMeshObject::SetBeamLattice_Clipping (const eLib3MFBeamLatticeClipMode eClipMode, const Lib3MF_uint32 nResourceID)
-{
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
-}
-
-void CLib3MFMeshObject::GetBeamLattice_Representation (bool & bHasRepresentation, Lib3MF_uint32 & nResourceID)
-{
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
-}
-
-void CLib3MFMeshObject::SetBeamLattice_Representation (const Lib3MF_uint32 nResourceID)
-{
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
-}
-
-Lib3MF_uint32 CLib3MFMeshObject::GetBeamCount ()
-{
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
-}
-
-Lib3MF_uint32 CLib3MFMeshObject::AddBeam (const sLib3MFBeam BeamInfo)
-{
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
-}
-
-void CLib3MFMeshObject::SetBeam (const Lib3MF_uint32 nIndex, const sLib3MFBeam BeamInfo)
-{
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
-}
-
-sLib3MFBeam CLib3MFMeshObject::GetBeam(const Lib3MF_uint32 nIndex)
-{
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
-}
-
-void CLib3MFMeshObject::SetBeams(const Lib3MF_uint64 nBeamInfoBufferSize, const sLib3MFBeam * pBeamInfoBuffer)
-{
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
-}
-
-void CLib3MFMeshObject::GetBeams(Lib3MF_uint64 nBeamInfoBufferSize, Lib3MF_uint64* pBeamInfoNeededCount, sLib3MFBeam * pBeamInfoBuffer)
-{
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
-}
-
-Lib3MF_uint32 CLib3MFMeshObject::GetBeamSetCount ()
-{
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
-}
-
-ILib3MFBeamSet * CLib3MFMeshObject::AddBeamSet ()
-{
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
-}
-
-ILib3MFBeamSet * CLib3MFMeshObject::GetBeamSet (const Lib3MF_uint32 nIndex)
-{
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
-}
-
 bool CLib3MFMeshObject::IsManifoldAndOriented ()
 {
 	return meshObject()->isManifoldAndOriented();
@@ -309,4 +215,9 @@ bool CLib3MFMeshObject::IsComponentsObject()
 bool CLib3MFMeshObject::IsValid()
 {
 	return meshObject()->isValid();
+}
+
+ILib3MFBeamLattice* CLib3MFMeshObject::BeamLattice()
+{
+	return new CLib3MFBeamLattice(meshObject(), meshObject()->getBeamLatticeAttributes());
 }

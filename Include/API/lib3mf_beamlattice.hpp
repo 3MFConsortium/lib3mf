@@ -24,40 +24,39 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CLib3MFMeshObject
+Abstract: This is the class declaration of CLib3MFBeamLattice
 
 */
 
 
-#ifndef __LIB3MF_LIB3MFMESHOBJECT
-#define __LIB3MF_LIB3MFMESHOBJECT
+#ifndef __LIB3MF_LIB3MFBEAMLATTICE
+#define __LIB3MF_LIB3MFBEAMLATTICE
 
 #include "lib3mf_interfaces.hpp"
 
-// Parent classes
-#include "lib3mf_object.hpp"
-#pragma warning( push)
-#pragma warning( disable : 4250)
-
-// Include custom headers here.
+#include "Common/Mesh/NMR_Mesh.h"
+#include "Model/Classes/NMR_ModelMeshBeamLatticeAttributes.h"
 #include "Model/Classes/NMR_ModelMeshObject.h"
+// Include custom headers here.
+
 
 namespace Lib3MF {
 namespace Impl {
 
 
 /*************************************************************************************************************************
- Class declaration of CLib3MFMeshObject 
+ Class declaration of CLib3MFBeamLattice 
 **************************************************************************************************************************/
 
-class CLib3MFMeshObject : public virtual ILib3MFMeshObject, public virtual CLib3MFObject {
+class CLib3MFBeamLattice : public virtual ILib3MFBeamLattice {
 private:
 
 	/**
 	* Put private members here.
 	*/
-	NMR::PModelMeshObject meshObject();
-	NMR::CMesh* mesh();
+	NMR::CMesh& m_mesh;
+	NMR::PModelMeshBeamLatticeAttributes m_pAttributes;
+	NMR::PModelMeshObject m_pMeshObject;
 
 protected:
 
@@ -70,48 +69,45 @@ public:
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-	CLib3MFMeshObject(NMR::PModelResource pResource);
+	CLib3MFBeamLattice(NMR::PModelMeshObject pMeshObject, NMR::PModelMeshBeamLatticeAttributes pAttributes);
 
 	/**
 	* Public member functions to implement.
 	*/
 
-	Lib3MF_uint32 GetVertexCount ();
+	Lib3MF_double GetMinLength ();
 
-	Lib3MF_uint32 GetTriangleCount ();
+	void SetMinLength (const Lib3MF_double dMinLength);
 
-	void SetVertex (const Lib3MF_uint32 nIndex, const sLib3MFPosition Coordinates);
+	void GetClipping (eLib3MFBeamLatticeClipMode & eClipMode, Lib3MF_uint32 & nResourceID);
 
-	sLib3MFPosition GetVertex(const Lib3MF_uint32 nIndex);
+	void SetClipping (const eLib3MFBeamLatticeClipMode eClipMode, const Lib3MF_uint32 nResourceID);
 
-	Lib3MF_uint32 AddVertex (const sLib3MFPosition Coordinates);
+	bool GetRepresentation(Lib3MF_uint32 & nResourceID);
 
-	virtual void GetVertices(Lib3MF_uint64 nVerticesBufferSize, Lib3MF_uint64* pVerticesNeededCount, sLib3MFPosition * pVerticesBuffer);
+	void SetRepresentation(const Lib3MF_uint32 nResourceID);
 
-	sLib3MFTriangle GetTriangle (const Lib3MF_uint32 nIndex);
+	Lib3MF_uint32 GetBeamCount ();
 
-	void SetTriangle (const Lib3MF_uint32 nIndex, const sLib3MFTriangle Indices);
+	sLib3MFBeam GetBeam (const Lib3MF_uint32 nIndex);
 
-	Lib3MF_uint32 AddTriangle (const sLib3MFTriangle Indices);
+	Lib3MF_uint32 AddBeam (const sLib3MFBeam BeamInfo);
 
-	void GetTriangleIndices (Lib3MF_uint64 nIndicesBufferSize, Lib3MF_uint64* pIndicesNeededCount, sLib3MFTriangle * pIndicesBuffer);
+	void SetBeam (const Lib3MF_uint32 nIndex, const sLib3MFBeam BeamInfo);
 
-	void SetGeometry(const Lib3MF_uint64 nVerticesBufferSize, const sLib3MFPosition * pVerticesBuffer, const Lib3MF_uint64 nIndicesBufferSize, const sLib3MFTriangle * pIndicesBuffer);
+	void SetBeams (const Lib3MF_uint64 nBeamInfoBufferSize, const sLib3MFBeam * pBeamInfoBuffer);
 
-	bool IsManifoldAndOriented();
+	void GetBeams (Lib3MF_uint64 nBeamInfoBufferSize, Lib3MF_uint64* pBeamInfoNeededCount, sLib3MFBeam * pBeamInfoBuffer);
 
-	bool IsMeshObject();
+	Lib3MF_uint32 GetBeamSetCount ();
 
-	bool IsComponentsObject();
+	ILib3MFBeamSet * AddBeamSet ();
 
-	bool IsValid();
-
-	virtual ILib3MFBeamLattice * BeamLattice();
+	ILib3MFBeamSet * GetBeamSet (const Lib3MF_uint32 nIndex);
 
 };
 
-}
-}
+} // namespace Impl
+} // namespace Lib3MF
 
-#pragma warning( pop )
-#endif // __LIB3MF_LIB3MFMESHOBJECT
+#endif // __LIB3MF_LIB3MFBEAMLATTICE

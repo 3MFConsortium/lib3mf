@@ -290,7 +290,9 @@ namespace NMR {
 			if (nBeamCount > 0) {
 				// write beamlattice
 				writeStartElementWithPrefix(XML_3MF_ELEMENT_BEAMLATTICE, XML_3MF_NAMESPACEPREFIX_BEAMLATTICE);
-				writeFloatAttribute(XML_3MF_ATTRIBUTE_BEAMLATTICE_RADIUS, float(pMesh->getDefaultBeamRadius()));
+				// TODO: find correct default BeamRadius
+				nfDouble dDefaultRadius = 1.0; //  pMesh->getDefaultBeamRadius();
+				writeFloatAttribute(XML_3MF_ATTRIBUTE_BEAMLATTICE_RADIUS, float(dDefaultRadius));
 				writeFloatAttribute(XML_3MF_ATTRIBUTE_BEAMLATTICE_MINLENGTH, float(pMesh->getBeamLatticeMinLength()));
 
 				if (m_pModelMeshObject->getBeamLatticeAttributes()->m_bHasClippingMeshID) {
@@ -298,7 +300,8 @@ namespace NMR {
 					writeIntAttribute(XML_3MF_ATTRIBUTE_BEAMLATTICE_CLIPPINGMESH, m_pModelMeshObject->getBeamLatticeAttributes()->m_nClippingMeshID->getUniqueID());
 				}
 
-				eModelBeamLatticeCapMode eDefaultCapMode = pMesh->getBeamLatticeCapMode();
+				// TODO: calculate default eModelBeamLatticeCapMode
+				eModelBeamLatticeCapMode eDefaultCapMode = eModelBeamLatticeCapMode::MODELBEAMLATTICECAPMODE_SPHERE; //  = pMesh->getBeamLatticeCapMode();
 				writeConstStringAttribute(XML_3MF_ATTRIBUTE_BEAMLATTICE_CAPMODE, capModeToString(eDefaultCapMode).c_str());
 				{
 					// write beamlattice: beams
@@ -306,7 +309,7 @@ namespace NMR {
 					for (nBeamIndex = 0; nBeamIndex < nBeamCount; nBeamIndex++) {
 						// write beamlattice: beam
 						MESHBEAM * pMeshBeam = pMesh->getBeam(nBeamIndex);
-						writeBeamData(pMeshBeam, pMesh->getDefaultBeamRadius(), eDefaultCapMode);
+						writeBeamData(pMeshBeam, dDefaultRadius, eDefaultCapMode);
 					}
 					writeFullEndElement();
 

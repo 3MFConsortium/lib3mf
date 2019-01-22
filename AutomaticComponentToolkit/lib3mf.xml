@@ -495,48 +495,44 @@
 			<param name="IsManifoldAndOriented" type="bool" pass="return" description="returns, if the object is oriented and manifold." />
 		</method>
 		
+<!---
+	TODO: 
+		-	lib3mf_meshobject_setslicestack
+		-	lib3mf_meshobject_getslicestackid
+		-   lib3mf_meshobject_setslicesmeshresolution
+		-   lib3mf_meshobject_getslicesmeshresolution
+-->
+		<method name="BeamLattice" description="Retrieves the BeamLattice within this MeshObject.">
+			<param name="TheBeamLattice" type="handle" class="BeamLattice" pass="return" description="the BeamLattice within this MeshObject" />
+		</method>
 		
-		
-		<method name="GetBeamLattice_MinLength" description="Returns the minimal length of beams for the beamlattice.">
+	</class>
+
+	<class name="BeamLattice">
+		<method name="GetMinLength" description="Returns the minimal length of beams for the beamlattice.">
 			<param name="MinLength" type="double" pass="return" description="minimal length of beams for the beamlattice" />
 		</method>
 
-		<method name="SetBeamLattice_MinLength" description="Sets the minimal length of beams for the beamlattice.">
+		<method name="SetMinLength" description="Sets the minimal length of beams for the beamlattice.">
 			<param name="MinLength" type="double" pass="in" description="minimal length of beams for the beamlattice" />
 		</method>
 
-		<method name="GetBeamLattice_Radius" description="Returns the default radius for the beamlattice.">
-			<param name="Radius" type="double" pass="return" description="default radius of the beams in the beamlattice" />
-		</method>
-
-		<method name="SetBeamLattice_Radius" description="Sets the default radius for the beamlattice.">
-			<param name="Radius" type="double" pass="in" description="default radius of the beams in the beamlattice" />
-		</method>
-
-		<method name="GetBeamLattice_CapMode" description="Returns the default capping mode for the beamlattice.">
-			<param name="CapMode" type="enum" class="BeamLatticeCapMode" pass="return" description="default cap mode of the beamlattice" />
-		</method>
-
-		<method name="SetBeamLattice_CapMode" description="Sets the default capping mode for the beamlattice.">
-			<param name="CapMode" type="enum" class="BeamLatticeCapMode" pass="in" description="default cap mode of the beamlattice" />
-		</method>
-
-		<method name="GetBeamLattice_Clipping" description="Returns the clipping mode and the clipping-mesh for the beamlattice of this mesh.">
+		<method name="GetClipping" description="Returns the clipping mode and the clipping-mesh for the beamlattice of this mesh.">
 			<param name="ClipMode" type="enum" class="BeamLatticeClipMode" pass="out" description="contains the clip mode of this mesh" />
 			<param name="ResourceID" type="uint32" pass="out" description="filled with the resourceID of the clipping mesh-object or an undefined value if pClipMode is MODELBEAMLATTICECLIPMODE_NONE" />
 		</method>
 
-		<method name="SetBeamLattice_Clipping" description="Sets the clipping mode and the clipping-mesh for the beamlattice of this mesh.">
+		<method name="SetClipping" description="Sets the clipping mode and the clipping-mesh for the beamlattice of this mesh.">
 			<param name="ClipMode" type="enum" class="BeamLatticeClipMode" pass="in" description="contains the clip mode of this mesh" />
 			<param name="ResourceID" type="uint32" pass="in" description="the resourceID of the clipping mesh-object. This mesh-object has to be defined before setting the Clipping." />
 		</method>
 		
-		<method name="GetBeamLattice_Representation" description="Returns the representation-mesh for the beamlattice of this mesh.">
-			<param name="HasRepresentation" type="bool" pass="out" description="flag whether the beamlattice has a representation mesh." />
+		<method name="GetRepresentation" description="Returns the representation-mesh for the beamlattice of this mesh.">
+			<param name="HasRepresentation" type="bool" pass="return" description="flag whether the beamlattice has a representation mesh." />
 			<param name="ResourceID" type="uint32" pass="out" description="filled with the resourceID of the clipping mesh-object." />
 		</method>
 
-		<method name="SetBeamLattice_Representation" description="Sets the representation-mesh for the beamlattice of this mesh.">
+		<method name="SetRepresentation" description="Sets the representation-mesh for the beamlattice of this mesh.">
 			<param name="ResourceID" type="uint32" pass="in" description="the resourceID of the representation mesh-object. This mesh-object has to be defined before setting the representation." />
 		</method>
 		
@@ -579,18 +575,8 @@
 			<param name="Index" type="uint32" pass="in" description="index of the requested beamset (0 ... beamsetcount-1)." />
 			<param name="BeamSet" type="handle" class="BeamSet" pass="return" description="the requested beamset" />
 		</method>
-
-<!---
-	TODO: 
-		-	lib3mf_meshobject_setslicestack
-		-	lib3mf_meshobject_getslicestackid
-		-   lib3mf_meshobject_setslicesmeshresolution
-		-   lib3mf_meshobject_getslicesmeshresolution
--->
-		
-		
 	</class>
-
+	
 	<class name="Component">
 		<method name="GetObjectResource" description="Returns the Resource Instance of the component..">
 			<param name="ObjectResource" type="handle" class="Object" pass="return" description="filled with the Resource Instance." />

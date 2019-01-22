@@ -201,6 +201,13 @@ namespace Lib3MF
 		mesh->SetType(eLib3MFObjectType::eObjectTypeModel);
 		ASSERT_FALSE(mesh->IsValid());
 	}
+
+
+	TEST_F(MeshObject, BeamLattice)
+	{
+		auto beamLattice = mesh->BeamLattice();
+	}
+	
 }
 
 

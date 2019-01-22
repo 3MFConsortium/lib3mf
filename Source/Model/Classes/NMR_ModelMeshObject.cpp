@@ -198,9 +198,9 @@ namespace NMR {
 	}
 
 
-	_Ret_notnull_ CModelMeshBeamLatticeAttributes * CModelMeshObject::getBeamLatticeAttributes()
+	_Ret_notnull_ PModelMeshBeamLatticeAttributes CModelMeshObject::getBeamLatticeAttributes()
 	{
-		return m_pBeamLatticeAttributes.get();
+		return m_pBeamLatticeAttributes;
 	}
 
 	void CModelMeshObject::setBeamLatticeAttributes(_In_ PModelMeshBeamLatticeAttributes pBeamLatticeAttributes)
