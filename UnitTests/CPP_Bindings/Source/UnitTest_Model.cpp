@@ -112,5 +112,10 @@ namespace Lib3MF
 		ASSERT_TRUE(uuid.compare(inUUID) == 0);
 	}
 
-
+	TEST_F(Model, MergeToModel)
+	{
+		// this is not a functional test but only confirms
+		// that the API handles the call without error
+		auto outModel = m_model->MergeToModel();
+	}
 }

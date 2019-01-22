@@ -212,7 +212,30 @@ ILib3MFResourceIterator * CLib3MFModel::GetBaseMaterials ()
 
 ILib3MFModel * CLib3MFModel::MergeToModel ()
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	// Create merged mesh
+	NMR::PMesh pMesh = std::make_shared<NMR::CMesh>();
+	model().mergeToMesh(pMesh.get());
+
+	auto pOutModel = std::make_unique<CLib3MFModel>();
+
+	// Copy relevant resources to new model
+	NMR::CModel& newModel = pOutModel->model();
+
+	newModel.mergeModelAttachments(&model());
+	newModel.mergeTextures2D(&model());
+	newModel.mergeBaseMaterials(&model());
+	newModel.mergeMetaData(&model());
+
+	newModel.setUnit(model().getUnit());
+	newModel.setLanguage(model().getLanguage());
+
+	NMR::PModelMeshObject pMeshObject = std::make_shared<NMR::CModelMeshObject>(newModel.generateResourceID(), &newModel, pMesh);
+	newModel.addResource(pMeshObject);
+
+	NMR::PModelBuildItem pBuildItem = std::make_shared<NMR::CModelBuildItem>(pMeshObject.get(), model().createHandle());
+	newModel.addBuildItem(pBuildItem);
+
+	return pOutModel.release();
 }
 
 ILib3MFMeshObject * CLib3MFModel::AddMeshObject ()
