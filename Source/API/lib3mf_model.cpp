@@ -129,12 +129,17 @@ ILib3MFComponentsObject * CLib3MFModel::GetComponentsObjectByID (const Lib3MF_ui
 
 std::string CLib3MFModel::GetBuildUUID (bool & bHasUUID)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	NMR::PUUID buildUUID = model().buildUUID();
+	bHasUUID = buildUUID.get() != nullptr;
+	if (bHasUUID)
+		return buildUUID->toString();
+	return "";
 }
 
 void CLib3MFModel::SetBuildUUID (const std::string & sUUID)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	NMR::PUUID pUUID = std::make_shared<NMR::CUUID>(sUUID);
+	model().setBuildUUID(pUUID);
 }
 
 ILib3MFBuildItemIterator * CLib3MFModel::GetBuildItems ()

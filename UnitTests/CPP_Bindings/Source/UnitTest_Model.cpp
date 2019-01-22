@@ -90,5 +90,27 @@ namespace Lib3MF
 		auto iterator = Model::m_model->GetBuildItems();
 	}
 
+	TEST_F(Model, GetBuildUUID)
+	{
+		bool bHasUUID = true;
+		// by default everything has an UUID
+		std::string uuid = m_model->GetBuildUUID(bHasUUID);
+		ASSERT_TRUE(bHasUUID);
+		ASSERT_FALSE(uuid.empty());
+
+		try {
+			m_model->SetBuildUUID("NOUUID");
+			ASSERT_TRUE(false);
+		}
+		catch (...) {
+			ASSERT_TRUE(true);
+		}
+		std::string inUUID("2b0f37c2-812c-46e7-a6e5-91460c6dbc09");
+		m_model->SetBuildUUID(inUUID);
+		uuid = m_model->GetBuildUUID(bHasUUID);
+		ASSERT_TRUE(bHasUUID);
+		ASSERT_TRUE(uuid.compare(inUUID) == 0);
+	}
+
 
 }
