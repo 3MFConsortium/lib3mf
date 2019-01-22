@@ -129,6 +129,8 @@ public:
 
 	ILib3MFAttachment * AddAttachment (const std::string & sURI, const std::string & sRelationShipType);
 
+	void RemoveAttachment(ILib3MFAttachment* pAttachmentInstance);
+
 	ILib3MFAttachment * GetAttachment (const Lib3MF_uint32 nIndex);
 
 	ILib3MFAttachment * FindAttachment (const std::string & sURI);

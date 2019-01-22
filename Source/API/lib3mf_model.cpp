@@ -328,6 +328,11 @@ ILib3MFAttachment * CLib3MFModel::FindAttachment (const std::string & sURI)
 	return pResult.release();
 }
 
+void CLib3MFModel::RemoveAttachment(ILib3MFAttachment* pAttachmentInstance)
+{
+	m_model->removeAttachment(pAttachmentInstance->GetPath());
+}
+
 Lib3MF_uint32 CLib3MFModel::GetAttachmentCount ()
 {
 	return m_model->getAttachmentCount();

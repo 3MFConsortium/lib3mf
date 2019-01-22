@@ -1079,6 +1079,10 @@
 			<param name="AttachmentInstance" type="handle" class="Attachment" pass="return" description="Instance of the attachment object" />
 		</method>
 
+		<method name="RemoveAttachment" dllsuffix="utf8" description = "Removes attachment from the model.">
+			<param name="AttachmentInstance" type="handle" class="Attachment" pass="in" description="Attachment instance to remov" />
+		</method>
+		
 		<method name="GetAttachment" description = "retrieves an attachment stream object from the model..">
 			<param name="Index" type="uint32" pass="in" description="Index of the attachment stream" />
 			<param name="AttachmentInstance" type="handle" class="Attachment" pass="return" description="Instance of the attachment object" />

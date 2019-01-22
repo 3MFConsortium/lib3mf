@@ -73,6 +73,20 @@ namespace Lib3MF
 	};
 	PLib3MFModel AttachmentsT::model;
 
+	TEST_F(AttachmentsT, AddRemove)
+	{
+		auto attachment = model->AddAttachment(m_sRelationShipPath + ".xml", m_sAttachmetType);
+		model->RemoveAttachment(attachment.get());
+
+		try {
+			model->FindAttachment(m_sRelationShipPath + ".xml");
+			ASSERT_FALSE(true);
+		}
+		catch (...) {
+			ASSERT_TRUE(true);
+		}
+	}
+
 	TEST_F(AttachmentsT, AddAttachmentBuffer)
 	{
 		auto attachment = model->AddAttachment(m_sRelationShipPath + ".xml", m_sAttachmetType);
