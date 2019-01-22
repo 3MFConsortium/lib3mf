@@ -68,6 +68,8 @@ public:
 	*/
 	CLib3MFBuildItem(NMR::PModelBuildItem pBuildItem);
 
+	Lib3MF_uint32 GetHandle();
+
 	/**
 	* Public member functions to implement.
 	*/

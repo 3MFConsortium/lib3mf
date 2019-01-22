@@ -34,6 +34,7 @@ Abstract: This is a stub class definition of CLib3MFModel
 #include "lib3mf_reader.hpp"
 #include "lib3mf_writer.hpp"
 
+#include "lib3mf_builditem.hpp"
 #include "lib3mf_builditemiterator.hpp"
 #include "lib3mf_meshobject.hpp"
 #include "lib3mf_resourceiterator.hpp"
@@ -44,6 +45,8 @@ Abstract: This is a stub class definition of CLib3MFModel
 #include "Model/Classes/NMR_ModelMeshObject.h"
 #include "Model/Classes/NMR_ModelComponentsObject.h"
 #include "Common/Platform/NMR_ImportStream_Memory.h"
+
+#include "lib3mf_utils.hpp"
 
 using namespace Lib3MF::Impl;
 
@@ -269,12 +272,29 @@ ILib3MFBaseMaterial * CLib3MFModel::AddBaseMaterialGroup ()
 
 ILib3MFBuildItem * CLib3MFModel::AddBuildItem (ILib3MFObject* pObject, const sLib3MFTransform Transform)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	// Get Resource ID
+	NMR::PackageResourceID nObjectID = pObject->GetResourceID();
+	
+	// Find class instance
+	NMR::CModelObject * pModelObject = model().findObject(nObjectID);
+	if (pModelObject == nullptr)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_RESOURCENOTFOUND);
+
+	// Create Build item instance
+	NMR::PModelBuildItem pModelBuildItem = std::make_shared<NMR::CModelBuildItem>(pModelObject, TransformToMatrix(Transform), model().createHandle());
+	model().addBuildItem(pModelBuildItem);
+
+	auto pResultBuildItem = std::make_unique<CLib3MFBuildItem>(pModelBuildItem);
+
+	return pResultBuildItem.release();
 }
 
 void CLib3MFModel::RemoveBuildItem (ILib3MFBuildItem* pBuildItemInstance)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	CLib3MFBuildItem* pLib3MFBuildItem = dynamic_cast<CLib3MFBuildItem*> (pBuildItemInstance);
+	if (!pLib3MFBuildItem)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDBUILDITEM);
+	model().removeBuildItem(pLib3MFBuildItem->GetHandle(), true);
 }
 
 ILib3MFMetaDataGroup * CLib3MFModel::GetMetaDataGroup ()

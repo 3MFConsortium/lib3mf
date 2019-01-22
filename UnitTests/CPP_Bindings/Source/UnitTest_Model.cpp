@@ -118,4 +118,15 @@ namespace Lib3MF
 		// that the API handles the call without error
 		auto outModel = m_model->MergeToModel();
 	}
+
+
+	TEST_F(Model, AddRemoveBuildItems)
+	{
+		auto meshObject = m_model->AddMeshObject();
+
+		sLib3MFTransform transform = getIdentityTransform();
+		auto buildItem = m_model->AddBuildItem(meshObject.get(), transform);
+
+		m_model->RemoveBuildItem(buildItem.get());
+	}
 }

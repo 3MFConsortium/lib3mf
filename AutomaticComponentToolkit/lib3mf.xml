@@ -69,12 +69,13 @@
 		<error name="INVALIDMESHOBJECT" code="107" description="A mesh object is invalid" />
 		<error name="INVALIDCOMPONENTSOBJECT" code="108" description="A components object is invalid" />
 		<error name="INVALIDCOMPONENT" code="109" description="A component is invalid" />
+		<error name="INVALIDBUILDITEM" code="110" description="A build item is invalid" />
 		
-		<error name="FORBIDDENCYCLICREFERENCE" code="110" description="A component references one of its ancestors" />
+		<error name="FORBIDDENCYCLICREFERENCE" code="120" description="A component references one of its ancestors" />
 
-		<error name="INVALIDATTACHMENTSTREAM" code="111" description="An attachment stream is invalid" />
+		<error name="INVALIDATTACHMENTSTREAM" code="121" description="An attachment stream is invalid" />
 		
-		<error name="UNKOWNPROGRESSIDENTIFIER" code="120" description="A progress identifier is unknown" />
+		<error name="UNKOWNPROGRESSIDENTIFIER" code="130" description="A progress identifier is unknown" />
 	</errors>
 	
 	<enum name="ModelUnit">
@@ -1030,14 +1031,12 @@
 		<method name="AddBaseMaterialGroup" description = "adds an empty basematerials resource to the model.">
 			<param name="BaseMaterialGroupInstance" type="handle" class="BaseMaterial" pass="return" description="returns the new base material instance." />
 		</method>
-
 		
 		<method name="AddBuildItem" description = "adds a build item to the model.">
 			<param name="Object" type="handle" class="Object" pass="in" description="Object instance." />
 			<param name="Transform" type="struct" class="Transform" pass="in" description="Transformation matrix." />
 			<param name="BuildItemInstance" type="handle" class="BuildItem" pass="return" description="returns the build item instance." />
 		</method>
-		
 
 		<method name="RemoveBuildItem" description = "removes a build item from the model">
 			<param name="BuildItemInstance" type="handle" class="BuildItem" pass="in" description="Build item to remove." />

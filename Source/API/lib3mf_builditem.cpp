@@ -51,6 +51,11 @@ CLib3MFBuildItem::CLib3MFBuildItem(NMR::PModelBuildItem pBuildItem)
 	m_pBuildItem = pBuildItem;
 }
 
+Lib3MF_uint32 CLib3MFBuildItem::GetHandle()
+{
+	return buildItem().getHandle();
+}
+
 ILib3MFObject * CLib3MFBuildItem::GetObjectResource ()
 {
 	NMR::PModelResource pResource = buildItem().getModel()->findResource(buildItem().getObjectID());
