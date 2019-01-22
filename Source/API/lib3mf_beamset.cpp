@@ -48,22 +48,22 @@ CLib3MFBeamSet::CLib3MFBeamSet(NMR::PBEAMSET pBeamSet):
 
 void CLib3MFBeamSet::SetName(const std::string & sName)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	m_pBeamSet->m_sName = sName;
 }
 
 std::string CLib3MFBeamSet::GetName()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return m_pBeamSet->m_sName;
 }
 
 void CLib3MFBeamSet::SetIdentifier(const std::string & sIdentifier)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	m_pBeamSet->m_sIdentifier = sIdentifier;
 }
 
 std::string CLib3MFBeamSet::GetIdentifier()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return m_pBeamSet->m_sIdentifier;
 }
 
 Lib3MF_uint32 CLib3MFBeamSet::GetReferenceCount()

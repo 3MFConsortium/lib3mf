@@ -246,7 +246,6 @@ namespace Lib3MF
 		ASSERT_EQ(beamLattice->GetBeamSetCount(), 1);
 
 		auto beamSetOut = beamLattice->GetBeamSet(0);
-
 	}
 
 	TEST_F(BeamLattice, Read)
