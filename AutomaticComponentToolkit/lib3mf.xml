@@ -70,7 +70,7 @@
 		<error name="INVALIDCOMPONENTSOBJECT" code="108" description="A components object is invalid" />
 		<error name="INVALIDCOMPONENT" code="109" description="A component is invalid" />
 		<error name="INVALIDBUILDITEM" code="110" description="A build item is invalid" />
-		<error name="INVALIDBASEMATERIAL" code="111" description="A basematerial is invalid" />
+		<error name="INVALIDBASEMATERIALGROUP" code="111" description="A basematerialgroup is invalid" />
 		
 		<error name="ATTACHMENTNOTFOUND" code="121" description="Attachment not found" />
 		
@@ -688,7 +688,7 @@
 		</method>
 	</class>
 	
-	<class name="BaseMaterial" parent="Resource">
+	<class name="BaseMaterialGroup" parent="Resource">
 		<method name="GetCount" description="Retrieves the count of base materials in the material group.">
 			<param name="Count" type="uint32" pass="return" description="returns the count of base materials." />
 		</method>
@@ -925,9 +925,9 @@
 			<param name="TextureInstance" type="handle" class="Texture2D" pass="return" description="returns the texture2d instance" />
 		</method>
 
-		<method name="GetBaseMaterialByID" description="finds a model base material by its id">
+		<method name="GetBaseMaterialGroupByID" description="finds a model base material by its id">
 			<param name="ResourceID" type="uint32" pass="in" description="Resource ID" />
-			<param name="BaseMaterialInstance" type="handle" class="BaseMaterial" pass="return" description="returns the basematerial instance" />
+			<param name="BaseMaterialGroupInstance" type="handle" class="BaseMaterialGroup" pass="return" description="returns the BaseMaterialGroup instance" />
 		</method>
 		
 		<method name="GetMeshObjectByID" description="finds a mesh object by its id">
@@ -973,7 +973,7 @@
 			<param name="ResourceIterator" type="handle" class="ResourceIterator" pass="return" description="returns the iterator instance." />
 		</method>
 
-		<method name="GetBaseMaterials" description="creates a resource iterator instance with all base material resources.">
+		<method name="GetBaseMaterialGroups" description="creates a resource iterator instance with all base material resources.">
 			<param name="ResourceIterator" type="handle" class="ResourceIterator" pass="return" description="returns the iterator instance." />
 		</method>
 		
@@ -994,8 +994,8 @@
 			<param name="Texture2DInstance" type="handle" class="Texture2D" pass="return" description="returns the new texture instance." />
 		</method>
 		
-		<method name="AddBaseMaterialGroup" description = "adds an empty basematerials resource to the model.">
-			<param name="BaseMaterialGroupInstance" type="handle" class="BaseMaterial" pass="return" description="returns the new base material instance." />
+		<method name="AddBaseMaterialGroup" description = "adds an empty BaseMaterialGroup resource to the model.">
+			<param name="BaseMaterialGroupInstance" type="handle" class="BaseMaterialGroup" pass="return" description="returns the new base material instance." />
 		</method>
 		
 		<method name="AddBuildItem" description = "adds a build item to the model.">

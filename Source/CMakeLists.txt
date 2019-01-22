@@ -24,7 +24,7 @@ set(SRCS_COMMON
 ${SRCS_COM}
 ./Source/API/lib3mf.cpp
 ./Source/API/lib3mf_attachment.cpp
-./Source/API/lib3mf_basematerial.cpp
+./Source/API/lib3mf_basematerialgroup.cpp
 ./Source/API/lib3mf_beamset.cpp
 ./Source/API/lib3mf_builditem.cpp
 ./Source/API/lib3mf_builditemiterator.cpp

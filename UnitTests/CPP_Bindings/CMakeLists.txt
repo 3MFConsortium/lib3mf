@@ -6,7 +6,7 @@ SET(TESTNAME "Test_CPP_Bindings")
 set(SRCS_UNITTEST
 	./Source/UnitTest_AllTests.cpp
 	./Source/UnitTest_Attachments.cpp
-	./Source/UnitTest_BaseMaterial.cpp
+	./Source/UnitTest_BaseMaterialGroup.cpp
 	./Source/UnitTest_BuildItems.cpp
 	./Source/UnitTest_MeshObject.cpp
 	./Source/UnitTest_Model.cpp

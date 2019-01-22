@@ -29,8 +29,8 @@ Abstract: This is the class declaration of CLib3MFBaseMaterial
 */
 
 
-#ifndef __LIB3MF_LIB3MFBASEMATERIAL
-#define __LIB3MF_LIB3MFBASEMATERIAL
+#ifndef __LIB3MF_LIB3MFBASEMATERIALGROUP
+#define __LIB3MF_LIB3MFBASEMATERIALGROUP
 
 #include "lib3mf_interfaces.hpp"
 
@@ -48,10 +48,10 @@ namespace Impl {
 
 
 /*************************************************************************************************************************
- Class declaration of CLib3MFBaseMaterial 
+ Class declaration of CLib3MFBaseMaterialGroup 
 **************************************************************************************************************************/
 
-class CLib3MFBaseMaterial : public virtual ILib3MFBaseMaterial, public virtual CLib3MFResource {
+class CLib3MFBaseMaterialGroup : public virtual ILib3MFBaseMaterialGroup, public virtual CLib3MFResource {
 private:
 
 	/**
@@ -62,22 +62,20 @@ protected:
 	/**
 	* Put protected members here.
 	*/
-	NMR::CModelBaseMaterialResource& baseMaterial();
+	NMR::CModelBaseMaterialResource& baseMaterialGroup();
 
 public:
 
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-	CLib3MFBaseMaterial(NMR::PModelBaseMaterialResource pResource);
+	CLib3MFBaseMaterialGroup(NMR::PModelBaseMaterialResource pResource);
 
 	/**
 	* Public member functions to implement.
 	*/
 
 	Lib3MF_uint32 GetCount ();
-
-	Lib3MF_uint32 GetResourceID ();
 
 	Lib3MF_uint32 AddMaterial(const std::string & sName, const sLib3MFColor DisplayColor);
 
@@ -96,4 +94,4 @@ public:
 }
 
 #pragma warning( pop )
-#endif // __LIB3MF_LIB3MFBASEMATERIAL
+#endif // __LIB3MF_LIB3MFBASEMATERIALGROUP

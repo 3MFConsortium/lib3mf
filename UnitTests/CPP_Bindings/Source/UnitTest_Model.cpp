@@ -132,17 +132,25 @@ namespace Lib3MF
 
 	TEST_F(Model, GetBaseMaterials)
 	{
-		auto iterator = m_model->GetBaseMaterials();
+		auto iterator = m_model->GetBaseMaterialGroups();
 	}
 
 	TEST_F(Model, GetBaseMaterialByID)
 	{
 		try {
-			auto baseMaterial = m_model->GetBaseMaterialByID(0);
+			auto baseMaterial = m_model->GetBaseMaterialGroupByID(0);
 			ASSERT_FALSE(true);
 		}
 		catch (ELib3MFException &e) {
-			ASSERT_EQ(e.getErrorCode(), LIB3MF_ERROR_INVALIDBASEMATERIAL);
+			ASSERT_EQ(e.getErrorCode(), LIB3MF_ERROR_INVALIDBASEMATERIALGROUP);
 		}
 	}
+
+	TEST_F(Model, AddBaseMaterialGroup)
+	{
+		auto baseMaterial = m_model->AddBaseMaterialGroup();
+		baseMaterial->GetResourceID();
+		auto foundBaseMaterial = m_model->GetBaseMaterialGroupByID(baseMaterial->GetResourceID());
+	}
+	
 }

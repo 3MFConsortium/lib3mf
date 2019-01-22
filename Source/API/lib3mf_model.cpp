@@ -39,7 +39,7 @@ Abstract: This is a stub class definition of CLib3MFModel
 #include "lib3mf_meshobject.hpp"
 #include "lib3mf_resourceiterator.hpp"
 #include "lib3mf_componentsobject.hpp"
-#include "lib3mf_basematerial.hpp"
+#include "lib3mf_basematerialgroup.hpp"
 #include "lib3mf_attachment.hpp"
 // Include custom headers here.
 
@@ -106,14 +106,14 @@ ILib3MFTexture2D * CLib3MFModel::GetTexture2DByID (const Lib3MF_uint32 nResource
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-ILib3MFBaseMaterial * CLib3MFModel::GetBaseMaterialByID (const Lib3MF_uint32 nResourceID)
+ILib3MFBaseMaterialGroup * CLib3MFModel::GetBaseMaterialGroupByID (const Lib3MF_uint32 nResourceID)
 {
 	NMR::PModelBaseMaterialResource pBaseMaterialResource = model().findBaseMaterial(nResourceID);
 	if (pBaseMaterialResource) {
-		return new CLib3MFBaseMaterial(pBaseMaterialResource);
+		return new CLib3MFBaseMaterialGroup(pBaseMaterialResource);
 	}
 	else
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDBASEMATERIAL);
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDBASEMATERIALGROUP);
 }
 
 ILib3MFMeshObject * CLib3MFModel::GetMeshObjectByID (const Lib3MF_uint32 nResourceID)
@@ -214,7 +214,7 @@ ILib3MFResourceIterator * CLib3MFModel::Get2DTextures ()
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-ILib3MFResourceIterator * CLib3MFModel::GetBaseMaterials ()
+ILib3MFResourceIterator * CLib3MFModel::GetBaseMaterialGroups ()
 {
 	auto pResult = std::make_unique<CLib3MFResourceIterator>();
 	Lib3MF_uint32 nCount = model().getBaseMaterialCount();
@@ -280,9 +280,13 @@ ILib3MFTexture2D * CLib3MFModel::AddTexture2DFromAttachment (ILib3MFAttachment* 
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-ILib3MFBaseMaterial * CLib3MFModel::AddBaseMaterialGroup ()
+ILib3MFBaseMaterialGroup * CLib3MFModel::AddBaseMaterialGroup ()
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	NMR::PModelBaseMaterialResource pResource = std::make_shared<NMR::CModelBaseMaterialResource>(model().generateResourceID(), &model());
+	model().addResource(pResource);
+
+	auto result = std::make_unique<CLib3MFBaseMaterialGroup>(pResource);
+	return result.release();
 }
 
 ILib3MFBuildItem * CLib3MFModel::AddBuildItem (ILib3MFObject* pObject, const sLib3MFTransform Transform)

@@ -87,7 +87,7 @@ public:
 
 	ILib3MFTexture2D * GetTexture2DByID (const Lib3MF_uint32 nResourceID);
 
-	ILib3MFBaseMaterial * GetBaseMaterialByID (const Lib3MF_uint32 nResourceID);
+	ILib3MFBaseMaterialGroup * GetBaseMaterialGroupByID (const Lib3MF_uint32 nResourceID);
 
 	ILib3MFMeshObject * GetMeshObjectByID (const Lib3MF_uint32 nResourceID);
 
@@ -109,7 +109,7 @@ public:
 
 	ILib3MFResourceIterator * Get2DTextures ();
 
-	ILib3MFResourceIterator * GetBaseMaterials ();
+	ILib3MFResourceIterator * GetBaseMaterialGroups ();
 
 	ILib3MFModel * MergeToModel ();
 
@@ -119,7 +119,7 @@ public:
 
 	ILib3MFTexture2D * AddTexture2DFromAttachment (ILib3MFAttachment* pTextureAttachment);
 
-	ILib3MFBaseMaterial * AddBaseMaterialGroup ();
+	ILib3MFBaseMaterialGroup * AddBaseMaterialGroup ();
 
 	ILib3MFBuildItem * AddBuildItem (ILib3MFObject* pObject, const sLib3MFTransform Transform);
 
