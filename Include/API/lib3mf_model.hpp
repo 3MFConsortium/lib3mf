@@ -111,6 +111,10 @@ public:
 
 	ILib3MFResourceIterator * GetBaseMaterialGroups ();
 
+	ILib3MFResourceIterator * GetNurbsSurfaces ();
+
+
+
 	ILib3MFModel * MergeToModel ();
 
 	ILib3MFMeshObject * AddMeshObject ();
@@ -118,6 +122,8 @@ public:
 	ILib3MFComponentsObject * AddComponentsObject ();
 
 	ILib3MFSliceStack * AddSliceStack(const Lib3MF_double dZBottom);
+
+	ILib3MFNurbsSurface * AddNurbsSurface(const Lib3MF_uint32 nDegreeU, const Lib3MF_uint32 nDegreeV, const Lib3MF_uint32 nControlPointsU, const Lib3MF_uint32 nControlPointsV);
 
 	ILib3MFTexture2D * AddTexture2DFromAttachment (ILib3MFAttachment* pTextureAttachment);
 

@@ -52,6 +52,7 @@ namespace NMR {
 		nfBool m_bWriteMaterialExtension;
 		nfBool m_bWriteProductionExtension;
 		nfBool m_bWriteBeamLatticeExtension;
+		nfBool m_bWriteNurbsExtension;
 		nfBool m_bWriteSliceExtension;
 		nfBool m_bWriteBaseMaterials;
 		nfBool m_bWriteObjects;
@@ -71,7 +72,8 @@ namespace NMR {
 		void writeTex2Coords();
 		void writeObjects();
 		void writeBuild();
-		void writeSliceStack(_In_ CModelSliceStack *pSliceStackResource);
+		void writeNurbs();
+		void writeSliceStack(_In_ CModelSliceStackResource *pSliceStackResource);
 
 		void writeSliceStacks();
 		void writeSliceStack(_In_ CSliceStackGeometry *pSliceStackGeometry);

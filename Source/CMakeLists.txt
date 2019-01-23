@@ -35,6 +35,7 @@ ${SRCS_COM}
 ./Source/API/lib3mf_metadata.cpp
 ./Source/API/lib3mf_metadatagroup.cpp
 ./Source/API/lib3mf_model.cpp
+./Source/API/lib3mf_nurbssurface.cpp
 ./Source/API/lib3mf_object.cpp
 ./Source/API/lib3mf_reader.cpp
 ./Source/API/lib3mf_resource.cpp
@@ -111,6 +112,7 @@ ${SRCS_COM}
 ./Source/Model/Classes/NMR_ModelMeshObject.cpp
 ./Source/Model/Classes/NMR_ModelMetaData.cpp
 ./Source/Model/Classes/NMR_ModelMetaDataGroup.cpp
+./Source/Model/Classes/NMR_ModelNurbsSurface.cpp
 ./Source/Model/Classes/NMR_ModelObject.cpp
 ./Source/Model/Classes/NMR_ModelResource.cpp
 ./Source/Model/Classes/NMR_ModelTexture2D.cpp
@@ -175,6 +177,12 @@ ${SRCS_COM}
 ./Source/Model/Reader/Slice1507/NMR_ModelReader_Slice1507_SliceStack.cpp
 ./Source/Model/Reader/Slice1507/NMR_ModelReader_Slice1507_Vertex.cpp
 ./Source/Model/Reader/Slice1507/NMR_ModelReader_Slice1507_Vertices.cpp
+./Source/Model/Reader/ExactGeometry1901/NMR_ModelReader_ExactGeometry1901_ControlPoints.cpp
+./Source/Model/Reader/ExactGeometry1901/NMR_ModelReader_ExactGeometry1901_ControlPoint.cpp
+./Source/Model/Reader/ExactGeometry1901/NMR_ModelReader_ExactGeometry1901_Knot.cpp
+./Source/Model/Reader/ExactGeometry1901/NMR_ModelReader_ExactGeometry1901_NurbsSurface.cpp
+./Source/Model/Reader/ExactGeometry1901/NMR_ModelReader_ExactGeometry1901_UKnots.cpp
+./Source/Model/Reader/ExactGeometry1901/NMR_ModelReader_ExactGeometry1901_VKnots.cpp
 ./Source/Model/Writer/NMR_ModelWriter.cpp
 ./Source/Model/Writer/NMR_ModelWriterNode.cpp
 ./Source/Model/Writer/NMR_ModelWriter_3MF.cpp

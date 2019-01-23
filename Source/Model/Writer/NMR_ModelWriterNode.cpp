@@ -98,6 +98,13 @@ namespace NMR {
 		writeConstStringAttribute(pAttributeName, sStream.str().c_str());
 	}
 
+	void CModelWriterNode::writeDoubleAttribute(_In_z_ const nfChar * pAttributeName, _In_ nfDouble dAttributeValue)
+	{
+		std::stringstream sStream;
+		sStream << dAttributeValue;
+		writeConstStringAttribute(pAttributeName, sStream.str().c_str());
+	}
+
 	void CModelWriterNode::writeStartElement(_In_z_ const nfChar * pElementName)
 	{
 		m_pXMLWriter->WriteStartElement(nullptr, pElementName, nullptr);

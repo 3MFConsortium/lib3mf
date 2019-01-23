@@ -1045,13 +1045,12 @@ Model error codes (0x8XXX)
 
 // Property already registered
 #define NMR_ERROR_PROPERTYIDALREADYREGISTERED 0x80D0
+// Invalid Control Point Count
+#define NMR_ERROR_INVALIDCONTROLPOINTCOUNT 0x80D0
 
-// Invalid Property Resource ID
-#define NMR_ERROR_INVALIDPROPERTYRESOURCEID 0x80D1
 
-// Property ID not found
-#define NMR_ERROR_PROPERTYIDNOTFOUND 0x80D2
-
+// Too many knots
+#define NMR_ERROR_TOOMANYKNOTS 0x80D1
 
 /*-------------------------------------------------------------------
 XML Parser Error Constants (0x9XXX)

@@ -379,6 +379,8 @@ namespace NMR {
 		case NMR_ERROR_PROPERTYIDALREADYREGISTERED: return "Property already registered";
 		case NMR_ERROR_INVALIDPROPERTYRESOURCEID: return "Invalid Property Resource ID";
 		case NMR_ERROR_PROPERTYIDNOTFOUND: return "Property ID not found";
+		case NMR_ERROR_INVALIDCONTROLPOINTCOUNT: return "Invalid Control Point Count";
+		case NMR_ERROR_TOOMANYKNOTS: return "too many knots";
 
 
 		// XML Parser Error Constants(0x9XXX)
