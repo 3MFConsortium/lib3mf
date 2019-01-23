@@ -354,6 +354,8 @@ namespace Lib3MF
 				ASSERT_EQ(beam.m_Indices[1], 6);
 				EXPECT_NEAR(beam.m_Radii[0], 10., dEps);
 				EXPECT_NEAR(beam.m_Radii[1], 15., dEps);
+
+				ASSERT_DOUBLE_EQ(beamLattice->GetMinLength(), 0.01);
 			}
 			nIndex++;
 		}
