@@ -249,9 +249,9 @@ namespace NMR {
 	}
 
 	// Metadata setter/getter
-	PModelMetaData CModel::addMetaData(_In_ std::string sName, _In_ std::string sValue, _In_ std::string sType, _In_ nfBool bPreserve)
+	PModelMetaData CModel::addMetaData(_In_ std::string sNameSpace, _In_ std::string sName, _In_ std::string sValue, _In_ std::string sType, _In_ nfBool bPreserve)
 	{
-		return m_MetaDataGroup->addMetaData(sName, sValue, sType, bPreserve);
+		return m_MetaDataGroup->addMetaData(sNameSpace, sName, sValue, sType, bPreserve);
 	}
 
 	nfUint32  CModel::getMetaDataCount()

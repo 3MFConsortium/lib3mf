@@ -165,7 +165,7 @@ namespace NMR {
 		void addResource(_In_ PModelResource pResource);
 
 		// Metadata setter/getter
-		PModelMetaData addMetaData(_In_ std::string sName, _In_ std::string sValue, _In_ std::string sType, _In_ nfBool bPreserve);
+		PModelMetaData addMetaData(_In_ std::string sNameSpace, _In_ std::string sName, _In_ std::string sValue, _In_ std::string sType, _In_ nfBool bPreserve);
 		nfUint32 getMetaDataCount();
 		PModelMetaData getMetaData(_In_ nfUint32 nIndex);
 		void removeMetaData(_In_ nfUint32 nIndex);

@@ -78,6 +78,8 @@ public:
 
 	std::string GetName ();
 
+	std::string GetKey();
+
 	void SetName (const std::string & sName);
 
 	bool GetMustPreserve ();

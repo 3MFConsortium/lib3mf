@@ -36,9 +36,10 @@ metadata, and can be attached to any 3MF model node.
 
 namespace NMR {
 
-	CModelMetaData::CModelMetaData(_In_ std::string sName, _In_ std::string sValue,
+	CModelMetaData::CModelMetaData(_In_ std::string sNameSpace, _In_ std::string sName, _In_ std::string sValue,
 		_In_ std::string sType, _In_ nfBool bPreserve)
 	{
+		m_sNameSpace = sNameSpace;
 		m_sName = sName;
 		m_sValue = sValue;
 		m_sType = sType;
@@ -48,6 +49,19 @@ namespace NMR {
 	std::string CModelMetaData::getName()
 	{
 		return m_sName;
+	}
+
+	std::string CModelMetaData::getNameSpace()
+	{
+		return m_sNameSpace;
+	}
+
+	std::string CModelMetaData::getKey()
+	{
+		if (m_sNameSpace.empty())
+			return m_sName;
+		else
+			return m_sNameSpace + ":" + m_sName;
 	}
 
 	std::string CModelMetaData::getValue()
@@ -64,4 +78,31 @@ namespace NMR {
 		return m_bPreserve;
 	}
 
+
+	void CModelMetaData::setName(std::string sName)
+	{
+		// TODO: if no namespace, check whether correct name
+		m_sName = sName;
+	}
+
+	void CModelMetaData::setNameSpace(std::string sNameSpace)
+	{
+		// TODO: if no namespace, check whether correct name
+		m_sNameSpace = sNameSpace;
+	}
+
+	void CModelMetaData::setValue(std::string sValue)
+	{
+		m_sValue = sValue;
+	}
+
+	void CModelMetaData::setType(std::string sType)
+	{
+		m_sType = sType;
+	}
+
+	void CModelMetaData::setPreserve(nfBool bPreserve)
+	{
+		m_bPreserve = bPreserve;
+	}
 }

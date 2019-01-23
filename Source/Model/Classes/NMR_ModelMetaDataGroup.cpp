@@ -47,14 +47,14 @@ namespace NMR {
 	}
 
 
-	PModelMetaData CModelMetaDataGroup::addMetaData(_In_ std::string sName, _In_ std::string sValue, _In_ std::string sType, _In_ nfBool bPreserve)
+	PModelMetaData CModelMetaDataGroup::addMetaData(_In_ std::string sNameSpace, _In_ std::string sName, _In_ std::string sValue, _In_ std::string sType, _In_ nfBool bPreserve)
 	{
 		if (m_MetaData.size() >= XML_3MF_MAXMETADATACOUNT)
 			throw CNMRException(NMR_ERROR_INVALIDMETADATACOUNT);
 
-		PModelMetaData pMetaData = std::make_shared<CModelMetaData>(sName, sValue, sType, bPreserve);
+		PModelMetaData pMetaData = std::make_shared<CModelMetaData>(sNameSpace, sName, sValue, sType, bPreserve);
 		m_MetaData.push_back(pMetaData);
-		m_MetaDataMap.insert(std::make_pair(sName, pMetaData));
+		m_MetaDataMap.insert(std::make_pair(pMetaData->getKey(), pMetaData));
 		return pMetaData;
 	}
 
@@ -105,7 +105,7 @@ namespace NMR {
 			std::string sName;
 			std::string sValue;
 			PModelMetaData metaData = getMetaData(nIndex);
-			addMetaData(metaData->getName(), metaData->getValue(), metaData->getType(), metaData->getPreserve());
+			addMetaData(metaData->getNameSpace(), metaData->getName(), metaData->getValue(), metaData->getType(), metaData->getPreserve());
 		}
 	}
 }

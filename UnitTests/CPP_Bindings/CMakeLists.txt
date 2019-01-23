@@ -11,6 +11,7 @@ set(SRCS_UNITTEST
 	./Source/UnitTest_BeamSets.cpp
 	./Source/UnitTest_BuildItems.cpp
 	./Source/UnitTest_MeshObject.cpp
+	./Source/UnitTest_MetaData.cpp
 	./Source/UnitTest_MetaDataGroup.cpp
 	./Source/UnitTest_Model.cpp
 	./Source/UnitTest_Object.cpp

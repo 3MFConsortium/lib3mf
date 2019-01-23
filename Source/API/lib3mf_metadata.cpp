@@ -48,7 +48,7 @@ CLib3MFMetaData::CLib3MFMetaData(NMR::PModelMetaData pMetaData)
 
 std::string CLib3MFMetaData::GetNameSpace ()
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	return m_pMetaData->getNameSpace();
 }
 
 void CLib3MFMetaData::SetNameSpace (const std::string & sNameSpace)
@@ -56,10 +56,16 @@ void CLib3MFMetaData::SetNameSpace (const std::string & sNameSpace)
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-std::string CLib3MFMetaData::GetName ()
+std::string CLib3MFMetaData::GetName()
 {
 	return m_pMetaData->getName();
 }
+
+std::string CLib3MFMetaData::GetKey()
+{
+	return m_pMetaData->getKey();
+}
+
 
 void CLib3MFMetaData::SetName (const std::string & sName)
 {

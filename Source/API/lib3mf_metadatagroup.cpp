@@ -67,7 +67,7 @@ ILib3MFMetaData * CLib3MFMetaDataGroup::GetMetaDataByKey (const std::string & sN
 			}
 		}
 		else {
-			if (pMetaData->getName() == sNameSpace + ":" + sName) {
+			if (pMetaData->getKey() == sNameSpace + ":" + sName) {
 				return new CLib3MFMetaData(pMetaData);
 			}
 		}
@@ -94,10 +94,7 @@ void CLib3MFMetaDataGroup::RemoveMetaData(ILib3MFMetaData* pTheMetaData)
 
 ILib3MFMetaData * CLib3MFMetaDataGroup::AddMetaData(const std::string & sNameSpace, const std::string & sName, const std::string & sValue, const std::string & sType, const bool bMustPreserve)
 {
-	std::string sKey = sName;
-	if (!sNameSpace.empty())
-		sKey = sNameSpace + ":" + sName;
-	NMR::PModelMetaData pModelMetaData = m_pModelMetaDataGroup->addMetaData(sKey, sValue, sType, bMustPreserve);
+	NMR::PModelMetaData pModelMetaData = m_pModelMetaDataGroup->addMetaData(sNameSpace, sName, sValue, sType, bMustPreserve);
 	return new CLib3MFMetaData(pModelMetaData);
 }
 

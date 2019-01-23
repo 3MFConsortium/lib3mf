@@ -46,19 +46,28 @@ namespace NMR {
 	class CModelMetaData {
 	private:
 		std::string m_sName;
+		std::string m_sNameSpace;
 		std::string m_sValue;
 		std::string m_sType;
 		nfBool m_bPreserve;
 	public:
 		CModelMetaData() = delete;
-		CModelMetaData(_In_ std::string sName, _In_ std::string sValue,
+		CModelMetaData(_In_ std::string sNameSpace, _In_ std::string sName, _In_ std::string sValue,
 			_In_ std::string sType, _In_ nfBool bPreserve);
 
 		std::string getName();
+		std::string getNameSpace();
 		std::string getValue();
-
 		std::string getType();
 		nfBool getPreserve();
+
+		void setName(std::string );
+		void setNameSpace(std::string);
+		void setValue(std::string);
+		void setType(std::string);
+		void setPreserve(nfBool);
+
+		std::string getKey();
 	};
 
 	typedef std::shared_ptr <CModelMetaData> PModelMetaData;

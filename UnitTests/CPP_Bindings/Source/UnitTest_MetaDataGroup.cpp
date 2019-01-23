@@ -67,7 +67,7 @@ namespace Lib3MF
 		ASSERT_EQ(metaDataGroup->GetMetaDataCount(), 0);
 		auto metaDatum = metaDataGroup->AddMetaData("NameSpace", "Name", "TheName", "string", true);
 		ASSERT_EQ(metaDataGroup->GetMetaDataCount(), 1);
-		// ASSERT_EQ(metaDatum->GetNameSpace() == metaDatum->GetNameSpace());
+		ASSERT_TRUE(metaDatum->GetNameSpace() == metaDatum->GetNameSpace());
 
 		metaDataGroup->GetMetaData(0);
 		metaDataGroup->GetMetaDataByKey("NameSpace", "Name");

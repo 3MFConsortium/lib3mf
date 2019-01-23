@@ -297,6 +297,9 @@
 		<method name="SetName" dllsuffix="utf8" description = "sets a new name of a metadata">
 			<param name="Name" type="string" pass="in" description="the new name of the metadata" />
 		</method>
+		<method name="GetKey" dllsuffix="utf8" description = "returns the (namespace+name) of a metadata">
+			<param name="Key" type="string" pass="return" description="the key (namespace+name) of the metadata" />
+		</method>
 		<method name="GetMustPreserve" dllsuffix="utf8" description = "returns, whether a metadata must be preserved">
 			<param name="MustPreserve" type="bool" pass="return" description="returns, whether a metadata must be preserved" />
 		</method>

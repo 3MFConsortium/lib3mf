@@ -46,15 +46,37 @@ namespace Lib3MF
 
 		virtual void SetUp() {
 			model = CLib3MFWrapper::CreateModel();
+			metaDataGroup = model->GetMetaDataGroup();
+			metaData = metaDataGroup->AddMetaData("", "Title", "TheTitle", "xs:string", true);
 		}
 		virtual void TearDown() {
 			model.reset();
 		}
 
 		static PLib3MFModel model;
+		static PLib3MFMetaDataGroup metaDataGroup;
+		static PLib3MFMetaData metaData;
 	};
 
 	PLib3MFModel MetaData::model;
+	PLib3MFMetaDataGroup MetaData::metaDataGroup;
+	PLib3MFMetaData MetaData::metaData;
 
-	
+	TEST_F(MetaData, DefaultNameSpace)
+	{
+		auto md = metaDataGroup->AddMetaData("", "NoStandardName", "TheTitle", "xs:string", true);
+		
+		ASSERT_FALSE(true);
+	}
+
+	TEST_F(MetaData, OtherNameSpace)
+	{
+		ASSERT_FALSE(true);
+	}
+
+	TEST_F(MetaData, DuplicateMetaData)
+	{
+		ASSERT_FALSE(true);
+	}
 }
+
