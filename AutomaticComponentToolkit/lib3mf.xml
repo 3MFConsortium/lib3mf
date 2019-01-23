@@ -583,33 +583,25 @@
 		<method name="GetObjectResource" description="Returns the Resource Instance of the component..">
 			<param name="ObjectResource" type="handle" class="Object" pass="return" description="filled with the Resource Instance." />
 		</method>
-
 		<method name="GetObjectResourceID" description="Returns the Resource ID of the component.">
 			<param name="ObjectResourceID" type="uint32" pass="return" description="returns the Resource ID." />
 		</method>
-		
 		<method name="GetUUID" dllsuffix="utf8" description="returns, whether a component has a UUID and, if true, the component's UUID">
 			<param name="HasUUID" type="bool" pass="out" description="flag whether the component has a UUID"/>
 			<param name="UUID" type="string" pass="return" description="the UUID as string of the form 'xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx'"/>
 		</method>
-		
 		<method name="SetUUID" dllsuffix="utf8" description="sets the component's UUID">
 			<param name="UUID" type="string" pass="in" description="the UUID as string of the form 'xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx'"/>
 		</method>
-
-		
 		<method name="HasTransform" description="Returns, if the component has a different transformation than the identity matrix">
 			<param name="HasTransform" type="bool" pass="return" description="if true is returned, the transformation is not equal than the identity"/>
 		</method>
-		
 		<method name="GetTransform" description="Returns the transformation matrix of the component.">
 			<param name="Transform" type="struct" class="Transform" pass="return" description="filled with the component transformation matrix"/>
 		</method>
-
 		<method name="SetTransform" description="Sets the transformation matrix of the component.">
 			<param name="Transform" type="struct" class="Transform" pass="in" description="new transformation matrix"/>
 		</method>
-		
 	</class>
 	
 	<class name="ComponentsObject" parent="Object">
@@ -791,36 +783,28 @@
 		<method name="GetObjectResource" description="Retrieves the object resource associated to a build item">
 			<param name="ObjectResource" type="handle" class="Object" pass="return" description="returns the associated resource instance"/>
 		</method>
-		
 		<method name="GetUUID" dllsuffix="utf8" description="returns, whether a build item has a UUID and, if true, the build item's UUID">
 			<param name="HasUUID" type="bool" pass="out" description="flag whether the build item has a UUID"/>
 			<param name="UUID" type="string" pass="return" description="the UUID as string of the form 'xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx'"/>
 		</method>
-		
 		<method name="SetUUID" dllsuffix="utf8" description="sets the build item's UUID">
 			<param name="UUID" type="string" pass="in" description="the UUID as string of the form 'xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx'"/>
 		</method>
-		
 		<method name="GetObjectResourceID" description="Retrieves the object resource id associated to a build item">
 			<param name="Id" type="uint32" pass="return" description=" eturns the ID of the object"/>
 		</method>
-		
 		<method name="HasObjectTransform" description="Checks, if a build item has a non-identity transformation matrix">
 			<param name="HasTransform" type="bool" pass="return" description="returns true, if the transformation matrix is not the identity"/>
 		</method>
-		
 		<method name="GetObjectTransform" description="Retrieves a build item's transformation matrix.">
 			<param name="Transform" type="struct" class="Transform" pass="return" description="returns the transformation matrix"/>
 		</method>
-
 		<method name="SetObjectTransform" description="Sets a build item's transformation matrix.">
 			<param name="Transform" type="struct" class="Transform" pass="in" description="new transformation matrix"/>
 		</method>
-		
 		<method name="GetPartNumber" dllsuffix="utf8" description="Retrieves a build item's part number string">
 			<param name="PartNumber" type="string" pass="return" description="Returns a build item's part number string"/>
 		</method>
-		
 		<method name="SetPartNumber" dllsuffix="utf8" description="Sets a build item's part number string">
 			<param name="SetPartnumber" type="string" pass="in" description="new part number string for referencing parts from the outside world" />
 		</method>
@@ -828,18 +812,14 @@
 		<method name="HasMetaDataGroup" description="Returns whether the build item has a metadatagroup">
 			<param name="HasMetaDataGroup" type="bool" pass="return" description="returns whether the build item has a metadatagroup" />
 		</method>
-		
 		<method name="GetMetaDataGroup" description="Returns the metadatagroup of this build item">
 			<param name="MetaDataGroup" type="handle" class="MetaDataGroup" pass="return" description="returns an Instance of the metadatagroup of this build item" />
 		</method>
-		
 		<method name="CreateMetaDataGroup" description="Creates a new metadatagroup for this build item">
 			<param name="MetaDataGroup" type="handle" class="MetaDataGroup" pass="return" description="returns an Instance of a new metadatagroup for this build item" />
 		</method>
-		
 		<method name="RemoveMetaDataGroup" description="Removes the build item's metadatagroup">
 		</method>
-		
 	</class>
 
 	
@@ -866,29 +846,23 @@
 		<method name="SetUnit" description = "sets the units of a model.">
 			<param name="Unit" type="enum" class="ModelUnit" pass="in" description="Unit enum value for the model unit" />
 		</method>
-
 		<method name="GetUnit" description = "returns the units of a model.">
 			<param name="Unit" type="enum" class="ModelUnit" pass="return" description="Unit enum value for the model unit" />
 		</method> 
-	
 		<method name="GetLanguage" dllsuffix="utf8" description="retrieves the language of a model">
 			<param name="Language" type="string" pass="return" description="language identifier"/>
 		</method>
-		
 		<method name="SetLanguage" dllsuffix="utf8" description="sets the language of a model">
 			<param name="Language" type="string" pass="in" description="language identifier" />
 		</method>
-
 		<method name="QueryWriter" description="creates a model writer instance for a specific file type">
 			<param name="WriterClass" type="string" pass="in" description=" string identifier for the file type" />
 			<param name="WriterInstance" type="handle" class="Writer" pass="return" description=" string identifier for the file type" />
 		</method>
-		
 		<method name="QueryReader" description="creates a model reader instance for a specific file type">
 			<param name="ReaderClass" type="string" pass="in" description=" string identifier for the file type" />
 			<param name="ReaderInstance" type="handle" class="Reader" pass="return" description=" string identifier for the file type" />
 		</method>
-		
 		<method name="GetResourceByID" description="finds a model resource by its id">
 			<param name="ResourceID" type="uint32" pass="in" description="Resource ID" />
 			<param name="ResourceInstance" type="handle" class="Resource" pass="return" description="returns the resource instance" />
@@ -902,90 +876,70 @@
 			<param name="ResourceID" type="uint32" pass="in" description="Resource ID" />
 			<param name="TextureInstance" type="handle" class="Texture2D" pass="return" description="returns the texture2d instance" />
 		</method>
-
 		<method name="GetBaseMaterialGroupByID" description="finds a model base material by its id">
 			<param name="ResourceID" type="uint32" pass="in" description="Resource ID" />
 			<param name="BaseMaterialGroupInstance" type="handle" class="BaseMaterialGroup" pass="return" description="returns the BaseMaterialGroup instance" />
 		</method>
-		
 		<method name="GetMeshObjectByID" description="finds a mesh object by its id">
 			<param name="ResourceID" type="uint32" pass="in" description="Resource ID" />
 			<param name="MeshObjectInstance" type="handle" class="MeshObject" pass="return" description="returns the mesh object instance" />
 		</method>
-		
 		<method name="GetComponentsObjectByID" description="finds a components object by its id">
 			<param name="ResourceID" type="uint32" pass="in" description="Resource ID" />
 			<param name="ComponentsObjectInstance" type="handle" class="ComponentsObject" pass="return" description="returns the components object instance" />
 		</method>
-		
 		<method name="GetBuildUUID" dllsuffix="utf8" description="returns, whether a build has a UUID and, if true, the build's UUID">
 			<param name="HasUUID" type="bool" pass="out" description="flag whether the build has a UUID"/>
 			<param name="UUID" type="string" pass="return" description="the UUID as string of the form 'xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx'"/>
 		</method>
-		
 		<method name="SetBuildUUID" dllsuffix="utf8" description="sets the build's UUID">
 			<param name="UUID" type="string" pass="in" description="the UUID as string of the form 'xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx'"/>
 		</method>
-
 		<method name="GetBuildItems" description="creates a build item iterator instance with all build items.">
 			<param name="BuildItemIterator" type="handle" class="BuildItemIterator" pass="return" description="returns the iterator instance." />
 		</method>
-
 		<method name="GetResources" description="creates a resource iterator instance with all resources.">
 			<param name="ResourceIterator" type="handle" class="ResourceIterator" pass="return" description="returns the iterator instance." />
 		</method>
-
 		<method name="GetObjects" description="creates a resource iterator instance with all object resources.">
 			<param name="ResourceIterator" type="handle" class="ResourceIterator" pass="return" description="returns the iterator instance." />
 		</method>
-
 		<method name="GetMeshObjects" description="creates a resource iterator instance with all mesh object resources.">
 			<param name="ResourceIterator" type="handle" class="ResourceIterator" pass="return" description="returns the iterator instance." />
 		</method>
-
 		<method name="GetComponentsObjects" description="creates a resource iterator instance with all components object resources.">
 			<param name="ResourceIterator" type="handle" class="ResourceIterator" pass="return" description="returns the iterator instance." />
 		</method>
-
 		<method name="Get2DTextures" description="creates a resource iterator instance with all texture2d resources.">
 			<param name="ResourceIterator" type="handle" class="ResourceIterator" pass="return" description="returns the iterator instance." />
 		</method>
-
 		<method name="GetBaseMaterialGroups" description="creates a resource iterator instance with all base material resources.">
 			<param name="ResourceIterator" type="handle" class="ResourceIterator" pass="return" description="returns the iterator instance." />
 		</method>
-		
 		<method name="MergeToModel" description = "Merges all components and objects which are referenced by a build item into a mesh. The memory is duplicated and a new model is created.">
 			<param name="MergedModelInstance" type="handle" class="Model" pass="return" description="returns the merged model instance" />
 		</method>
-
 		<method name="AddMeshObject" description = "adds an empty mesh object to the model.">
 			<param name="MeshObjectInstance" type="handle" class="MeshObject" pass="return" description=" returns the mesh object instance" />
 		</method>
-		
 		<method name="AddComponentsObject" description = "adds an empty component object to the model.">
 			<param name="ComponentsObjectInstance" type="handle" class="ComponentsObject" pass="return" description=" returns the components object instance" />
 		</method>
-
 		<method name="AddTexture2DFromAttachment" description = "adds a texture2d resource to the model. Its path is given by that of an existing attachment.">
 			<param name="TextureAttachment" type="handle" class="Attachment" pass="in" description="attachment containing the image data." />
 			<param name="Texture2DInstance" type="handle" class="Texture2D" pass="return" description="returns the new texture instance." />
 		</method>
-		
 		<method name="AddBaseMaterialGroup" description = "adds an empty BaseMaterialGroup resource to the model.">
 			<param name="BaseMaterialGroupInstance" type="handle" class="BaseMaterialGroup" pass="return" description="returns the new base material instance." />
 		</method>
-		
 		<method name="AddBuildItem" description = "adds a build item to the model.">
 			<param name="Object" type="handle" class="Object" pass="in" description="Object instance." />
 			<param name="Transform" type="struct" class="Transform" pass="in" description="Transformation matrix." />
 			<param name="BuildItemInstance" type="handle" class="BuildItem" pass="return" description="returns the build item instance." />
 		</method>
-
 		<method name="RemoveBuildItem" description = "removes a build item from the model">
 			<param name="BuildItemInstance" type="handle" class="BuildItem" pass="in" description="Build item to remove." />
 		</method>
-
 		<method name="GetMetaDataGroup" description="Returns the metadatagroup of the model">
 			<param name="MetaDataGroup" type="handle" class="MetaDataGroup" pass="return" description="returns an Instance of the metadatagroup of the model" />
 		</method>

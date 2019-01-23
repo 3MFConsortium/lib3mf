@@ -253,8 +253,185 @@ namespace Lib3MF
 
 	}
 
-	TEST_F(BeamLattice, WriteRead)
+	TEST_F(BeamLattice, ObjectType1)
 	{
+		sLib3MFBeam beam;
+		beam.m_Indices[0] = 0;
+		beam.m_Indices[1] = 1;
+		beam.m_Radii[0] = 1.5;
+		beam.m_Radii[1] = 1.2;
+		beam.m_CapModes[0].m_enum = eBeamLatticeCapModeSphere;
+		beam.m_CapModes[1].m_enum = eBeamLatticeCapModeSphere;
 
+		mesh->BeamLattice()->AddBeam(beam);
+
+		mesh->SetType(eLib3MFObjectType::eObjectTypeModel);
+		mesh->SetType(eLib3MFObjectType::eObjectTypeSolidSupport);
+
+		try {
+			mesh->SetType(eLib3MFObjectType::eObjectTypeSupport);
+			ASSERT_FALSE(true) << "Could set eObjectTypeSupport";
+		}
+		catch (ELib3MFException) {
+			ASSERT_TRUE(true);
+		}
+		try {
+			mesh->SetType(eLib3MFObjectType::eObjectTypeOther);
+			ASSERT_FALSE(true) << "Could set eObjectTypeOther";
+		}
+		catch (ELib3MFException) {
+			ASSERT_TRUE(true);
+		}
 	}
+
+	TEST_F(BeamLattice, ObjectType2)
+	{
+		sLib3MFBeam beam;
+		beam.m_Indices[0] = 0;
+		beam.m_Indices[1] = 1;
+		beam.m_Radii[0] = 1.5;
+		beam.m_Radii[1] = 1.2;
+		beam.m_CapModes[0].m_enum = eBeamLatticeCapModeSphere;
+		beam.m_CapModes[1].m_enum = eBeamLatticeCapModeSphere;
+
+		mesh->SetType(eLib3MFObjectType::eObjectTypeSupport);
+
+		auto beamLattice = mesh->BeamLattice();
+		try {
+			beamLattice->AddBeam(beam);
+			ASSERT_FALSE(true) << "Could add beam on eObjectTypeSupport";
+		}
+		catch (ELib3MFException) {
+			ASSERT_TRUE(true);
+		}
+	}
+
+	TEST_F(BeamLattice, Read_Attributes_Positive)
+	{
+		std::string fName("Box_Attributes_Positive.3mf");
+		auto model = CLib3MFWrapper::CreateModel();
+		{
+			auto reader = model->QueryReader("3mf");
+			reader->ReadFromFile(sTestFilesPath + "/" + "BeamLattice" + "/" + fName);
+			ASSERT_EQ(reader->GetWarningCount(), 0);
+		}
+	}
+
+	TEST_F(BeamLattice, Read_Box_Simple)
+	{
+		std::string fName("Box_Simple.3mf");
+		auto model = CLib3MFWrapper::CreateModel();
+		{
+			auto reader = model->QueryReader("3mf");
+			reader->ReadFromFile(sTestFilesPath + "/" + "BeamLattice" + "/" + fName);
+			ASSERT_EQ(reader->GetWarningCount(), 0);
+		}
+
+		auto meshObjects = model->GetMeshObjects();
+		int nIndex = 0;
+		while (meshObjects->MoveNext()) {
+			auto modelResource = meshObjects->GetCurrent();
+			auto meshObject = model->GetMeshObjectByID(modelResource->GetResourceID());
+			auto beamLattice = meshObject->BeamLattice();
+			if (beamLattice->GetBeamCount() > 0) // that's the mesh with the beams
+			{
+				const double dEps = 1e-7;
+				ASSERT_EQ(beamLattice->GetBeamCount(), 12);
+				sLib3MFBeam beam = beamLattice->GetBeam(0);
+				ASSERT_EQ(beam.m_Indices[0], 0);
+				ASSERT_EQ(beam.m_Indices[1], 1);
+				EXPECT_NEAR(beam.m_Radii[0], 1., dEps);
+				EXPECT_NEAR(beam.m_Radii[1], 1., dEps);
+
+				beam = beamLattice->GetBeam(1);
+				ASSERT_EQ(beam.m_Indices[0], 0);
+				ASSERT_EQ(beam.m_Indices[1], 3);
+				EXPECT_NEAR(beam.m_Radii[0], 3.1, dEps);
+				EXPECT_NEAR(beam.m_Radii[1], 3.2, dEps);
+
+				beam = beamLattice->GetBeam(10);
+				ASSERT_EQ(beam.m_Indices[0], 5);
+				ASSERT_EQ(beam.m_Indices[1], 6);
+				EXPECT_NEAR(beam.m_Radii[0], 10., dEps);
+				EXPECT_NEAR(beam.m_Radii[1], 15., dEps);
+			}
+			nIndex++;
+		}
+	}
+
+	void Read_Attributes_Negative(std::string fName)
+	{
+		auto model = CLib3MFWrapper::CreateModel();
+
+		{
+			auto reader = model->QueryReader("3mf");
+			reader->ReadFromFile(sTestFilesPath + "/" + "BeamLattice" + "/" + fName);
+			ASSERT_EQ(reader->GetWarningCount(), 1);
+			Lib3MF_uint32 nErrorCode;
+			std::string warning = reader->GetWarning(0, nErrorCode);
+		}
+
+		std::vector<eLib3MFBeamLatticeClipMode> vClipModes;
+		std::vector<Lib3MF_uint32> vClipResourceIDs;
+		std::vector<Lib3MF_uint32> vRepresentationResourceIDs;
+		if (fName == "Box_Attributes_Negative_1.3mf") {
+			vClipModes.push_back(eLib3MFBeamLatticeClipMode::eBeamLatticeClipModeNoClipMode);
+			vClipModes.push_back(eLib3MFBeamLatticeClipMode::eBeamLatticeClipModeNoClipMode);
+			vClipResourceIDs.push_back(0);
+			vClipResourceIDs.push_back(0);
+			vRepresentationResourceIDs.push_back(0);
+			vRepresentationResourceIDs.push_back(0);
+		}
+		if (fName == "Box_Attributes_Negative_2.3mf") {
+			vClipModes.push_back(eLib3MFBeamLatticeClipMode::eBeamLatticeClipModeNoClipMode);
+			vClipModes.push_back(eLib3MFBeamLatticeClipMode::eBeamLatticeClipModeOutside);
+			vClipModes.push_back(eLib3MFBeamLatticeClipMode::eBeamLatticeClipModeInside);
+			vClipResourceIDs.push_back(0);
+			vClipResourceIDs.push_back(1);
+			vClipResourceIDs.push_back(2);
+			vRepresentationResourceIDs.push_back(0);
+			vRepresentationResourceIDs.push_back(0);
+			vRepresentationResourceIDs.push_back(1);
+		}
+
+		auto meshObjects = model->GetMeshObjects();
+		int nIndex = 0;
+		while (meshObjects->MoveNext()) {
+			auto modelResource = meshObjects->GetCurrent();
+			auto meshObject = model->GetMeshObjectByID(modelResource->GetResourceID());
+			auto beamLattice = meshObject->BeamLattice();
+			
+			eLib3MFBeamLatticeClipMode eClipMode;
+			Lib3MF_uint32 nResourceID;
+			beamLattice->GetClipping(eClipMode, nResourceID);
+			ASSERT_EQ(vClipModes[nIndex], eClipMode) << L"Clip mode does not match";
+			if (eClipMode != eLib3MFBeamLatticeClipMode::eBeamLatticeClipModeNoClipMode) {
+				ASSERT_EQ(vClipResourceIDs[nIndex], nResourceID) << L"Clipping Resource ID does not match";
+			}
+
+			if (beamLattice->GetRepresentation(nResourceID)) {
+				ASSERT_EQ(vRepresentationResourceIDs[nIndex], nResourceID) << L"Representation Resource ID does not match";
+			}
+			nIndex++;
+		}
+	}
+
+	// A new one of these is created for each test
+	class BeamLattice_Attributes_Negative : public testing::TestWithParam<const char*>
+	{
+	public:
+		virtual void SetUp() {}
+		virtual void TearDown() {}
+	};
+
+	INSTANTIATE_TEST_CASE_P(InstantiationName,
+		BeamLattice_Attributes_Negative,
+		::testing::Values("Box_Attributes_Negative_1.3mf",
+			"Box_Attributes_Negative_2.3mf"));
+
+	TEST_P(BeamLattice_Attributes_Negative, Read)
+	{
+		Read_Attributes_Negative(GetParam());
+	}
+
 }

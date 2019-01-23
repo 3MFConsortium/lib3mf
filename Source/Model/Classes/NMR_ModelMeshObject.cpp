@@ -113,7 +113,7 @@ namespace NMR {
 
 	nfBool CModelMeshObject::isValidForBeamLattices()
 	{
-		return ( (getObjectType() == eModelObjectType::MODELOBJECTTYPE_MODEL) || (getObjectType() != eModelObjectType::MODELOBJECTTYPE_SOLIDSUPPORT) );
+		return ( (getObjectType() == eModelObjectType::MODELOBJECTTYPE_MODEL) || (getObjectType() == eModelObjectType::MODELOBJECTTYPE_SOLIDSUPPORT) );
 	}
 
 	nfBool CModelMeshObject::isManifoldAndOriented()
