@@ -26,7 +26,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-UnitTest_BeamSets.cpp: Defines Unittests for the BeamSetsT class
+UnitTest_BeamSets.cpp: Defines Unittests for the BeamSet class
 
 --*/
 
@@ -91,6 +91,7 @@ namespace Lib3MF
 	
 	TEST_F(BeamSet, Name)
 	{
+
 		auto beamSet = beamLattice->AddBeamSet();
 		std::string name = "ASDF";
 		beamSet->SetName(name);

@@ -40,6 +40,7 @@ Abstract: This is a stub class definition of CLib3MFModel
 #include "lib3mf_resourceiterator.hpp"
 #include "lib3mf_componentsobject.hpp"
 #include "lib3mf_basematerialgroup.hpp"
+#include "lib3mf_metadatagroup.hpp"
 #include "lib3mf_attachment.hpp"
 // Include custom headers here.
 
@@ -318,7 +319,7 @@ void CLib3MFModel::RemoveBuildItem (ILib3MFBuildItem* pBuildItemInstance)
 
 ILib3MFMetaDataGroup * CLib3MFModel::GetMetaDataGroup ()
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	return new CLib3MFMetaDataGroup(model().getMetaDataGroup());
 }
 
 ILib3MFAttachment * CLib3MFModel::AddAttachment (const std::string & sURI, const std::string & sRelationShipType)

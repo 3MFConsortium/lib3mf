@@ -26,43 +26,35 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelMetaData.h defines the Model MetaData Class.
-A metadata item is an in memory representation of the 3MF
-metadata, and can be attached to any 3MF model node.
+UnitTest_MetaData.cpp: Defines Unittests for the MetaData class
 
 --*/
 
-#ifndef __NMR_MODELMETADATA
-#define __NMR_MODELMETADATA
+#include "UnitTest_Utilities.h"
+#include "lib3mf.hpp"
 
-#include "Common/NMR_Types.h" 
-#include "Common/Platform/NMR_SAL.h"
-#include <memory>
-#include <map>
-#include <string>
+namespace Lib3MF
+{
+	class MetaData : public ::testing::Test {
+	protected:
 
-namespace NMR {
+		static void SetUpTestCase() {
+		}
 
-	class CModelMetaData {
-	private:
-		std::string m_sName;
-		std::string m_sValue;
-		std::string m_sType;
-		nfBool m_bPreserve;
-	public:
-		CModelMetaData() = delete;
-		CModelMetaData(_In_ std::string sName, _In_ std::string sValue,
-			_In_ std::string sType, _In_ nfBool bPreserve);
+		static void TearDownTestCase() {
+		}
 
-		std::string getName();
-		std::string getValue();
+		virtual void SetUp() {
+			model = CLib3MFWrapper::CreateModel();
+		}
+		virtual void TearDown() {
+			model.reset();
+		}
 
-		std::string getType();
-		nfBool getPreserve();
+		static PLib3MFModel model;
 	};
 
-	typedef std::shared_ptr <CModelMetaData> PModelMetaData;
+	PLib3MFModel MetaData::model;
 
+	
 }
-
-#endif // __NMR_MODELMETADATA

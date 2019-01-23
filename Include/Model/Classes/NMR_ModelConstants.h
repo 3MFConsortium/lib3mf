@@ -88,6 +88,8 @@ These are given by the 3MF Standard
 #define XML_3MF_ELEMENT_METADATA                    "metadata"
 #define XML_3MF_ELEMENT_METADATA_ENRTY              "entry"
 #define XML_3MF_ATTRIBUTE_METADATA_NAME         "name"
+#define XML_3MF_ATTRIBUTE_METADATA_PRESERVE     "preserve"
+#define XML_3MF_ATTRIBUTE_METADATA_TYPE         "type"
 #define XML_3MF_METADATA_VALUE_1                "Title"
 #define XML_3MF_METADATA_VALUE_2                "Designer"
 #define XML_3MF_METADATA_VALUE_3                "Description"

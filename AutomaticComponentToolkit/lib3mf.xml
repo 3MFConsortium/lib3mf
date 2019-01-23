@@ -321,11 +321,6 @@
 		<method name="GetMetaDataCount" description = "returns the number of metadata in this metadatagroup">
 			<param name="Count" type="uint32" pass="return" description="returns the number metadata" />
 		</method>
-		<method name="GetMetaDataKey" dllsuffix="utf8" description = "returns a metadata key within this metadatagroup">
-			<param name="Index" type="uint32" pass="in" description="Index of the metadata." />
-			<param name="NameSpace" type="string" pass="out" description="the namespace of the metadata" />
-			<param name="Name" type="string" pass="out" description="the name of the metadata" />
-		</method>
 		<method name="GetMetaData" dllsuffix="utf8" description = "returns a metadata value within this metadatagroup">
 			<param name="Index" type="uint32" pass="in" description="Index of the Metadata." />
 			<param name="MetaData" type="handle" class="MetaData" pass="return" description="an instance of the metadata" />
@@ -335,17 +330,19 @@
 			<param name="Name" type="string" pass="in" description="the name of the Metadata" />
 			<param name="MetaData" type="handle" class="MetaData" pass="return" description="an instance of the metadata" />
 		</method>
-		<method name="RemoveMetaData" description = "removes metadata pair from the model.">
-			<param name="Index" type="uint32" pass="in" description=" Index of the metadata" />
+		<method name="RemoveMetaDataByIndex" description = "removes metadata by index from the model.">
+			<param name="Index" type="uint32" pass="in" description=" Index of the metadata to remove" />
 		</method>
-		<method name="RemoveMetaDataByKey" description = "removes metadata pair from the model.">
-			<param name="NameSpace" type="string" pass="in" description="the namespace of the metadata" />
-			<param name="Name" type="string" pass="in" description="the name of the metadata" />
+		<method name="RemoveMetaData" description = "removes metadata from the model.">
+			<param name="TheMetaData" type="handle" class="MetaData" pass="in" description="The metadata to remove" />
 		</method>
 		<method name="AddMetaData" dllsuffix="utf8" description = "adds a new metadata to this metadatagroup">
 			<param name="NameSpace" type="string" pass="in" description="the namespace of the metadata" />
 			<param name="Name" type="string" pass="in" description="the name of the metadata" />
-			<param name="MetaData" type="handle" class="MetaData" pass="return" description="an instance of the metadata" />
+			<param name="Value" type="string" pass="in" description="the value of the metadata" />
+			<param name="Type" type="string" pass="in" description="the type of the metadata" />
+			<param name="MustPreserve" type="bool" pass="in" description="shuold the metadata be preserved" />
+			<param name="MetaData" type="handle" class="MetaData" pass="return" description="a new instance of the metadata" />
 		</method>
 	</class>
 
@@ -897,35 +894,9 @@
 		<method name="RemoveBuildItem" description = "removes a build item from the model">
 			<param name="BuildItemInstance" type="handle" class="BuildItem" pass="in" description="Build item to remove." />
 		</method>
-		<method name="GetMetaDataGroup" description="Returns the metadatagroup of the model">
-			<param name="MetaDataGroup" type="handle" class="MetaDataGroup" pass="return" description="returns an Instance of the metadatagroup of the model" />
+		<method name="GetMetaDataGroup" description="Returns the metadata of the model as MetaDataGroup">
+			<param name="TheMetaDataGroup" type="handle" class="MetaDataGroup" pass="return" description="returns an Instance of the metadatagroup of the model" />
 		</method>
-		
-		<!-- this is replaced by the above metadatagroup handling
-		<method name="GetMetaDataCount" description = "returns the number of metadata strings of a model.">
-			<param name="Count" type="uint32" pass="return" description="returns the number metadata strings." />
-		</method>
-
-		<method name="GetMetaDataKey" dllsuffix="utf8" description = "returns a metadata key of a model.">
-			<param name="Index" type="uint32" pass="in" description="Index of the Metadata." />
-			<param name="Key" type="string" pass="return" description="the key of the Metadata" />
-		</method>
-
-		<method name="GetMetaDataValue" dllsuffix="utf8" description = "returns a metadata value of a model.">
-			<param name="Index" type="uint32" pass="in" description="Index of the Metadata." />
-			<param name="Value" type="string" pass="return" description="the value of the Metadata" />
-		</method>
-
-		<method name="AddMetaData" dllsuffix="utf8" description = "adds a new metadata to the model.">
-			<param name="Key" type="string" pass="in" description="the key of the Metadata" />
-			<param name="Value" type="string" pass="in" description="the value of the Metadata" />
-		</method>
-
-		<method name="RemoveMetaData" description = "removes metadata pair from the model.">
-			<param name="Index" type="uint32" pass="in" description=" Index of the metadata" />
-		</method>
-		-->
-		
 		<method name="AddAttachment" dllsuffix="utf8" description = "adds an attachment stream to the model. The OPC part will be related to the model stream with a certain relationship type..">
 			<param name="URI" type="string" pass="in" description="Path of the attachment" />
 			<param name="RelationShipType" type="string" pass="in" description="Relationship type of the attachment" />

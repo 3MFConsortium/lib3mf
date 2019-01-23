@@ -36,10 +36,13 @@ metadata, and can be attached to any 3MF model node.
 
 namespace NMR {
 
-	CModelMetaData::CModelMetaData(_In_ std::string sName, _In_ std::string sValue)
+	CModelMetaData::CModelMetaData(_In_ std::string sName, _In_ std::string sValue,
+		_In_ std::string sType, _In_ nfBool bPreserve)
 	{
 		m_sName = sName;
 		m_sValue = sValue;
+		m_sType = sType;
+		m_bPreserve = bPreserve;
 	}
 
 	std::string CModelMetaData::getName()
@@ -50,6 +53,15 @@ namespace NMR {
 	std::string CModelMetaData::getValue()
 	{
 		return m_sValue;
+	}
+
+	std::string CModelMetaData::getType()
+	{
+		return m_sType;
+	}
+
+	nfBool CModelMetaData::getPreserve() {
+		return m_bPreserve;
 	}
 
 }

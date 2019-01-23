@@ -34,6 +34,7 @@ Abstract: This is the class declaration of CLib3MFMetaData
 
 #include "lib3mf_interfaces.hpp"
 
+#include "Model/Classes/NMR_ModelMetaData.h"
 
 // Include custom headers here.
 
@@ -52,6 +53,7 @@ private:
 	/**
 	* Put private members here.
 	*/
+	NMR::PModelMetaData m_pMetaData;
 
 protected:
 
@@ -64,7 +66,7 @@ public:
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-
+	CLib3MFMetaData(NMR::PModelMetaData pMetaData);
 
 	/**
 	* Public member functions to implement.

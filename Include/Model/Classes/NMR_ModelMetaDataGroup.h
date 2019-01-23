@@ -26,43 +26,42 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelMetaData.h defines the Model MetaData Class.
-A metadata item is an in memory representation of the 3MF
-metadata, and can be attached to any 3MF model node.
+NMR_ModelMetaDataGroup.h defines the Model MetaData Group Class.
 
 --*/
 
-#ifndef __NMR_MODELMETADATA
-#define __NMR_MODELMETADATA
+#ifndef __NMR_MODELMETADATAGROUP
+#define __NMR_MODELMETADATAGROUP
 
 #include "Common/NMR_Types.h" 
 #include "Common/Platform/NMR_SAL.h"
 #include <memory>
 #include <map>
 #include <string>
+#include <vector>
+#include "Model/Classes/NMR_ModelMetaData.h"
 
 namespace NMR {
 
-	class CModelMetaData {
+	class CModelMetaDataGroup {
 	private:
-		std::string m_sName;
-		std::string m_sValue;
-		std::string m_sType;
-		nfBool m_bPreserve;
+		std::vector<PModelMetaData> m_MetaData;
+		std::map<std::string, PModelMetaData> m_MetaDataMap;
 	public:
-		CModelMetaData() = delete;
-		CModelMetaData(_In_ std::string sName, _In_ std::string sValue,
-			_In_ std::string sType, _In_ nfBool bPreserve);
+		// CModelMetaDataGroup() = delete;
+		CModelMetaDataGroup();
+		void clear();
 
-		std::string getName();
-		std::string getValue();
-
-		std::string getType();
-		nfBool getPreserve();
+		PModelMetaData addMetaData(_In_ std::string sName, _In_ std::string sValue, _In_ std::string sType, _In_ nfBool bPreserve);
+		nfUint32 getMetaDataCount();
+		PModelMetaData getMetaData(_In_ nfUint32 nIndex);
+		void removeMetaData(_In_ nfUint32 nIndex);
+		nfBool hasMetaData(_In_ std::string sName);
+		void mergeMetaData(_In_ CModelMetaDataGroup * pSourceMetaDataGroup);
 	};
 
-	typedef std::shared_ptr <CModelMetaData> PModelMetaData;
+	typedef std::shared_ptr <CModelMetaDataGroup> PModelMetaDataGroup;
 
 }
 
-#endif // __NMR_MODELMETADATA
+#endif // __NMR_MODELMETADATAGROUP

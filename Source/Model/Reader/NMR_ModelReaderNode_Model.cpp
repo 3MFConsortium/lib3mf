@@ -194,6 +194,9 @@ namespace NMR {
 
 					std::string sName = pXMLNode->getName();
 					std::string sValue = pXMLNode->getValue();
+					std::string sType = pXMLNode->getType();
+					nfBool bPreserve = pXMLNode->getPreserve();
+
 					if (!sName.empty()) {
 						if (m_pModel->hasMetaData(sName)) {
 							m_pWarnings->addWarning(MODELREADERWARNING_DUPLICATEMETADATA, NMR_ERROR_DUPLICATEMETADATA, mrwInvalidOptionalValue);
@@ -202,7 +205,7 @@ namespace NMR {
 						if (decomposeIntoNamespaceAndName(sName, sNameSpace, sNameOnly)) {
 							std::string sNameSpaceURI;
 							if (pXMLReader->GetNamespaceURI(sNameSpace, sNameSpaceURI))
-								m_pModel->addMetaData(sNameSpaceURI + ":" + sNameOnly, sValue);
+								m_pModel->addMetaData(sNameSpaceURI + ":" + sNameOnly, sValue, sType, bPreserve);
 							else
 								throw CNMRException(NMR_ERROR_METADATA_COULDNOTGETNAMESPACE);
 						}
@@ -219,7 +222,7 @@ namespace NMR {
 								(strcmp(sName.c_str(), XML_3MF_METADATA_VALUE_9) == 0)
 								)
 							{
-								m_pModel->addMetaData(sName, sValue);
+								m_pModel->addMetaData(sName, sValue, sType, bPreserve);
 							}
 							else
 								m_pWarnings->addException(CNMRException(NMR_ERROR_UNKNOWNMETADATA), mrwInvalidOptionalValue);

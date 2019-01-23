@@ -42,6 +42,7 @@ A model is an in memory representation of the 3MF file.
 #include "Model/Classes/NMR_ModelBaseMaterials.h" 
 #include "Model/Classes/NMR_ModelTexture2D.h" 
 #include "Model/Classes/NMR_ModelSliceResource.h"
+#include "Model/Classes/NMR_ModelMetaDataGroup.h" 
 
 #include "Common/Mesh/NMR_Mesh.h" 
 #include "Common/MeshInformation/NMR_MeshInformation.h" 
@@ -66,20 +67,21 @@ namespace NMR {
 		m_sCurPath = "";
 
 		setBuildUUID(std::make_shared<CUUID>());
+		m_MetaDataGroup = std::make_shared<CModelMetaDataGroup>();
 	}
 
 	CModel::~CModel()
 	{
+		m_MetaDataGroup->clear();
+
 		m_BuildItems.clear();
 		m_ResourceMap.clear();
 		m_resourceHandler.clear();
 		m_Resources.clear();
-		m_MetaData.clear();
 		m_ObjectLookup.clear();
 		m_TextureLookup.clear();
 		m_BaseMaterialLookup.clear();
 	}
-
 
 	const std::string CModel::curPath()
 	{
@@ -229,7 +231,7 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
 		// Check for resource count overflow
-		if (m_MetaData.size() > XML_3MF_MAXRESOURCECOUNT)
+		if (getMetaDataCount() > XML_3MF_MAXRESOURCECOUNT)
 			throw CNMRException(NMR_ERROR_INVALIDRESOURCECOUNT);
 
 		// Check if ID already exists
@@ -244,6 +246,44 @@ namespace NMR {
 
 		// Create correct lookup table
 		addResourceToLookupTable(pResource);
+	}
+
+	// Metadata setter/getter
+	PModelMetaData CModel::addMetaData(_In_ std::string sName, _In_ std::string sValue, _In_ std::string sType, _In_ nfBool bPreserve)
+	{
+		return m_MetaDataGroup->addMetaData(sName, sValue, sType, bPreserve);
+	}
+
+	nfUint32  CModel::getMetaDataCount()
+	{
+		return m_MetaDataGroup->getMetaDataCount();
+	}
+
+	PModelMetaData CModel::getMetaData(_In_ nfUint32 nIndex)
+	{
+		return m_MetaDataGroup->getMetaData(nIndex);
+	}
+
+	void  CModel::removeMetaData(_In_ nfUint32 nIndex)
+	{
+		m_MetaDataGroup->removeMetaData(nIndex);
+	}
+
+	nfBool  CModel::hasMetaData(_In_ std::string sName)
+	{
+		return m_MetaDataGroup->hasMetaData(sName);
+	}
+
+	void  CModel::mergeMetaData(_In_ CModel * pSourceModel)
+	{
+		if (!pSourceModel)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+		m_MetaDataGroup->mergeMetaData(pSourceModel->m_MetaDataGroup.get());
+	}
+
+	PModelMetaDataGroup CModel::getMetaDataGroup()
+	{
+		return m_MetaDataGroup;
 	}
 
 	// Build Handling
@@ -312,68 +352,6 @@ namespace NMR {
 		}
 	}
 
-	// Metadata setter/getter
-	void CModel::addMetaData(_In_ std::string sName, _In_ std::string sValue)
-	{
-		if (m_MetaData.size() >= XML_3MF_MAXMETADATACOUNT)
-			throw CNMRException(NMR_ERROR_INVALIDMETADATACOUNT);
-
-		PModelMetaData pMetaData = std::make_shared<CModelMetaData>(sName, sValue);
-		m_MetaData.push_back(pMetaData);
-		m_MetaDataMap.insert(std::make_pair(sName, pMetaData));
-	}
-
-	nfUint32 CModel::getMetaDataCount()
-	{
-		return (nfUint32)m_MetaData.size();
-	}
-
-	void CModel::getMetaData(_In_ nfUint32 nIndex, _Out_ std::string & sName, _Out_ std::string & sValue)
-	{
-		nfUint32 nCount = getMetaDataCount();
-		if (nIndex >= nCount)
-			throw CNMRException(NMR_ERROR_INVALIDINDEX);
-
-		PModelMetaData pMetaData = m_MetaData[nIndex];
-		__NMRASSERT(pMetaData.get () != nullptr);
-
-		sName = pMetaData->getName();
-		sValue = pMetaData->getValue();
-	}
-
-	void CModel::removeMetaData(_In_ nfUint32 nIndex)
-	{
-		nfUint32 nCount = getMetaDataCount();
-		if (nIndex >= nCount)
-			throw CNMRException(NMR_ERROR_INVALIDINDEX);
-
-		auto iIterator = m_MetaData.begin();
-		if (nIndex > 0)
-			iIterator += nIndex;
-		m_MetaData.erase(iIterator);
-	}
-
-	nfBool CModel::hasMetaData(_In_ std::string sName)
-	{		
-		std::map<std::string, PModelMetaData>::iterator iIterator = m_MetaDataMap.find (sName);
-		return iIterator != m_MetaDataMap.end();
-	}
-
-	void CModel::mergeMetaData(_In_ CModel * pSourceModel)
-	{
-		if (pSourceModel == nullptr)
-			throw CNMRException(NMR_ERROR_INVALIDPARAM);
-
-		nfUint32 nCount = pSourceModel->getMetaDataCount();
-		nfUint32 nIndex;
-
-		for (nIndex = 0; nIndex < nCount; nIndex++) {
-			std::string sName;
-			std::string sValue;
-			pSourceModel->getMetaData(nIndex, sName, sValue);
-			addMetaData(sName, sValue);
-		}
-	}
 
 	// Retrieve a unique Resource ID
 
@@ -485,13 +463,12 @@ namespace NMR {
 	{
 		m_pPackageThumbnailAttachment = nullptr;
 
+		m_MetaDataGroup->clear();
 		m_ObjectLookup.clear();
 		m_BaseMaterialLookup.clear();
 		m_BuildItems.clear();
 		m_ResourceMap.clear();
 		m_Resources.clear();
-		m_MetaDataMap.clear();
-		m_MetaData.clear();
 		m_TextureLookup.clear();
 		m_SliceStackLookup.clear();
 	}

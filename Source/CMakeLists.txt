@@ -114,6 +114,7 @@ ${SRCS_COM}
 ./Source/Model/Classes/NMR_ModelMeshBeamLatticeAttributes.cpp
 ./Source/Model/Classes/NMR_ModelMeshObject.cpp
 ./Source/Model/Classes/NMR_ModelMetaData.cpp
+./Source/Model/Classes/NMR_ModelMetaDataGroup.cpp
 ./Source/Model/Classes/NMR_ModelObject.cpp
 ./Source/Model/Classes/NMR_ModelResource.cpp
 ./Source/Model/Classes/NMR_ModelTexture2D.cpp

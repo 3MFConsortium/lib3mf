@@ -40,6 +40,12 @@ using namespace Lib3MF::Impl;
  Class definition of CLib3MFMetaData 
 **************************************************************************************************************************/
 
+CLib3MFMetaData::CLib3MFMetaData(NMR::PModelMetaData pMetaData)
+	:m_pMetaData(pMetaData)
+{
+}
+
+
 std::string CLib3MFMetaData::GetNameSpace ()
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
@@ -52,7 +58,7 @@ void CLib3MFMetaData::SetNameSpace (const std::string & sNameSpace)
 
 std::string CLib3MFMetaData::GetName ()
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	return m_pMetaData->getName();
 }
 
 void CLib3MFMetaData::SetName (const std::string & sName)

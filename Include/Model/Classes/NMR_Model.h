@@ -62,6 +62,9 @@ namespace NMR {
 	class CModelMetaData;
 	typedef std::shared_ptr <CModelMetaData> PModelMetaData;
 
+	class CModelMetaDataGroup;
+	typedef std::shared_ptr <CModelMetaDataGroup> PModelMetaDataGroup;
+
 	class CModelAttachment;
 	typedef std::shared_ptr <CModelAttachment> PModelAttachment;
 
@@ -104,8 +107,7 @@ namespace NMR {
 		PModelAttachment m_pPackageThumbnailAttachment;
 
 		// Model Metadata
-		std::vector<PModelMetaData> m_MetaData;
-		std::map<std::string, PModelMetaData> m_MetaDataMap;
+		PModelMetaDataGroup m_MetaDataGroup;
 
 		// Model Attachments
 		std::vector<PModelAttachment> m_Attachments;
@@ -162,6 +164,15 @@ namespace NMR {
 		PModelResource getResource(_In_ nfUint32 nIndex);
 		void addResource(_In_ PModelResource pResource);
 
+		// Metadata setter/getter
+		PModelMetaData addMetaData(_In_ std::string sName, _In_ std::string sValue, _In_ std::string sType, _In_ nfBool bPreserve);
+		nfUint32 getMetaDataCount();
+		PModelMetaData getMetaData(_In_ nfUint32 nIndex);
+		void removeMetaData(_In_ nfUint32 nIndex);
+		nfBool hasMetaData(_In_ std::string sName);
+		void mergeMetaData(_In_ CModel * pSourceModel);
+		PModelMetaDataGroup getMetaDataGroup();
+
 		// Build Handling
 		void addBuildItem(_In_ PModelBuildItem pBuildItem);
 		nfUint32 getBuildItemCount();
@@ -179,14 +190,6 @@ namespace NMR {
 		PModelAttachment addPackageThumbnail();
 		void removePackageThumbnail();
 		PModelAttachment getPackageThumbnail();
-
-		// Metadata setter/getter
-		void addMetaData(_In_ std::string sName, _In_ std::string sValue);
-		nfUint32 getMetaDataCount();
-		void getMetaData(_In_ nfUint32 nIndex, _Out_ std::string & sName, _Out_ std::string & sValue);
-		void removeMetaData(_In_ nfUint32 nIndex);
-		nfBool hasMetaData(_In_ std::string sName);
-		void mergeMetaData(_In_ CModel * pSourceModel);
 
 		// Retrieve a unique Resource ID
 		PackageResourceID generateResourceID();	// unique per model

@@ -222,13 +222,13 @@ namespace NMR {
 			nfUint32 nMetaDataIndex;
 
 			for (nMetaDataIndex = 0; nMetaDataIndex < nMetaDataCount; nMetaDataIndex++) {
-				std::string sKey;
-				std::string sValue;
-				m_pModel->getMetaData(nMetaDataIndex, sKey, sValue);
+				PModelMetaData pMetaData = m_pModel->getMetaData(nMetaDataIndex);
+
+				std::string sValue = pMetaData->getName();
 
 				// TODO: translate namespace within metadatum to namespace identifier
 				writeStartElement(XML_3MF_ELEMENT_METADATA);
-				writeStringAttribute(XML_3MF_ATTRIBUTE_METADATA_NAME, sKey);
+				writeStringAttribute(XML_3MF_ATTRIBUTE_METADATA_NAME, pMetaData->getName());
 				writeText(sValue.c_str(), (nfUint32)sValue.length());
 				writeEndElement();
 			}

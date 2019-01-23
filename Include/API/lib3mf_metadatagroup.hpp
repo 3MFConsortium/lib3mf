@@ -33,7 +33,7 @@ Abstract: This is the class declaration of CLib3MFMetaDataGroup
 #define __LIB3MF_LIB3MFMETADATAGROUP
 
 #include "lib3mf_interfaces.hpp"
-
+#include "Model/Classes/NMR_ModelMetaDataGroup.h"
 
 // Include custom headers here.
 
@@ -52,6 +52,7 @@ private:
 	/**
 	* Put private members here.
 	*/
+	NMR::PModelMetaDataGroup m_pModelMetaDataGroup;
 
 protected:
 
@@ -64,25 +65,24 @@ public:
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-
+	CLib3MFMetaDataGroup(NMR::PModelMetaDataGroup pMetaDataGroup);
 
 	/**
 	* Public member functions to implement.
 	*/
 
-	Lib3MF_uint32 GetMetaDataCount ();
+	virtual Lib3MF_uint32 GetMetaDataCount();
 
-	void GetMetaDataKey (const Lib3MF_uint32 nIndex, std::string & sNameSpace, std::string & sName);
+	ILib3MFMetaData * GetMetaData(const Lib3MF_uint32 nIndex);
 
-	ILib3MFMetaData * GetMetaData (const Lib3MF_uint32 nIndex);
+	ILib3MFMetaData * GetMetaDataByKey(const std::string & sNameSpace, const std::string & sName);
 
-	ILib3MFMetaData * GetMetaDataByKey (const std::string & sNameSpace, const std::string & sName);
+	void RemoveMetaDataByIndex(const Lib3MF_uint32 nIndex);
 
-	void RemoveMetaData (const Lib3MF_uint32 nIndex);
+	void RemoveMetaData(ILib3MFMetaData* pTheMetaData);
 
-	void RemoveMetaDataByKey (const std::string & sNameSpace, const std::string & sName);
+	ILib3MFMetaData * AddMetaData(const std::string & sNameSpace, const std::string & sName, const std::string & sValue, const std::string & sType, const bool bMustPreserve);
 
-	ILib3MFMetaData * AddMetaData (const std::string & sNameSpace, const std::string & sName);
 
 };
 
