@@ -42,11 +42,10 @@ NMR_ModelReaderNode_ExactGeometry1901_NurbsSurface.cpp covers the official 3MF E
 
 namespace NMR {
 
-	CModelReaderNode_ExactGeometry1901_NurbsSurface::CModelReaderNode_ExactGeometry1901_NurbsSurface(_In_ CModel * pModel, _In_ CMesh * pMesh, _In_ PModelReaderWarnings pWarnings)
+	CModelReaderNode_ExactGeometry1901_NurbsSurface::CModelReaderNode_ExactGeometry1901_NurbsSurface(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings)
 		: CModelReaderNode(pWarnings)
 	{
 		m_pModel = pModel;
-		m_pMesh = pMesh;
 		m_pWarnings = pWarnings;
 	}
 

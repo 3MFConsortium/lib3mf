@@ -196,6 +196,12 @@
 		<member name="Fields" type="single" rows="3" columns="4" />
 	</struct>
 	
+  <struct name="NURBSKnot">
+    <member name="Multiplicity" type="uint32" />
+    <member name="Value" type="double" />
+  </struct>
+
+  
 	<struct name="Color">
 		<member name="Red" type="uint8" />
 		<member name="Green" type="uint8" />
@@ -766,8 +772,50 @@
 		</method>
 	</class>
 
+  <class name="NurbsSurface" parent="Resource">
 	
+    <method name="GetDegreeU" description = "Retrieves the surface degree in U.">
+      <param name="Degree" type="double" pass="return" description="the degree in U." />
+    </method>
+
+    <method name="GetDegreeV" description = "Retrieves the surface degree in V.">
+      <param name="Degree" type="double" pass="return" description="the degree in V." />
+    </method>
+
+    <method name="CheckValidity" description = "Checks if the surface describes a valid NURBS">
+      <param name="IsValid" type="bool" pass="return" description="returns if the surface is valid." />
+    </method>
+
+    <method name="GetKnotsU" description = "Retrieves the knots of the surface in U.">
+      <param name="Knots" type="structarray" class="NURBSKnot" pass="out" description="returns an array of knots." />
+    </method>
+
+    <method name="SetKnotsU" description = "Sets the knots of the surface in U.">
+      <param name="Knots" type="structarray" class="NURBSKnot" pass="in" description="sets an array of knots." />
+    </method>
+
+    <method name="AddKnotU" description = "Adds a knot to the surface in U">
+      <param name="Multiplicity" type="uint32" pass="in" description="multiplicity of the knot." />
+      <param name="Value" type="double" pass="in" description="value of the knot." />
+    </method>
+
+    <method name="GetKnotsV" description = "Retrieves the knots of the surface in V.">
+      <param name="Knots" type="structarray" class="NURBSKnot" pass="out" description="returns an array of knots." />
+    </method>
+
+    <method name="SetKnotsV" description = "Sets the knots of the surface in V.">
+      <param name="Knots" type="structarray" class="NURBSKnot" pass="in" description="sets an array of knots." />
+    </method>
+
+    <method name="AddKnotV" description = "Adds a knot to the surface in V">
+      <param name="Multiplicity" type="uint32" pass="in" description="multiplicity of the knot." />
+      <param name="Value" type="double" pass="in" description="value of the knot." />
+    </method>
+
+  </class>
+
 	<class name="BuildItem">
+	
 		<method name="GetObjectResource" description="Retrieves the object resource associated to a build item">
 			<param name="ObjectResource" type="handle" class="Object" pass="return" description="returns the associated resource instance"/>
 		</method>
@@ -963,7 +1011,12 @@
 		<method name="GetBaseMaterialGroups" description="creates a resource iterator instance with all base material resources.">
 			<param name="ResourceIterator" type="handle" class="ResourceIterator" pass="return" description="returns the iterator instance." />
 		</method>
-		<method name="MergeToModel" description = "Merges all components and objects which are referenced by a build item into a mesh. The memory is duplicated and a new model is created.">
+
+    <method name="GetNurbsSurfaces" description="creates a resource iterator instance with all nurbs surface resources.">
+      <param name="ResourceIterator" type="handle" class="ResourceIterator" pass="return" description="returns the iterator instance." />
+    </method>
+
+    <method name="MergeToModel" description = "Merges all components and objects which are referenced by a build item. The memory is duplicated and a new model is created.">
 			<param name="MergedModelInstance" type="handle" class="Model" pass="return" description="returns the merged model instance" />
 		</method>
 		<method name="AddMeshObject" description = "adds an empty mesh object to the model.">
@@ -976,6 +1029,15 @@
 			<param name="ZBottom" type="double" pass="in" description="Bottom Z value of the slicestack"/>
 			<param name="SliceStackInstance" type="handle" class="SliceStack" pass="return" description="returns the new slicestack instance" />
 		</method>
+
+    <method name="AddNurbsSurface" description = "adds a NURBS Surface resource to the model.">
+      <param name="DegreeU" type="uint32" pass="in" description="degree in U" />
+      <param name="DegreeV" type="uint32" pass="in" description="degree in V" />
+      <param name="ControlPointsU" type="uint32" pass="in" description="number of control points in U" />
+      <param name="ControlPointsV" type="uint32" pass="in" description="number of control points in V" />
+      <param name="NurbsInstance" type="handle" class="NurbsSurface" pass="return" description=" returns the nurbs surface instance" />
+    </method>
+
 		<method name="AddTexture2DFromAttachment" description = "adds a texture2d resource to the model. Its path is given by that of an existing attachment.">
 			<param name="TextureAttachment" type="handle" class="Attachment" pass="in" description="attachment containing the image data." />
 			<param name="Texture2DInstance" type="handle" class="Texture2D" pass="return" description="returns the new texture instance." />

@@ -231,15 +231,8 @@ namespace NMR {
 
 			for (nMetaDataIndex = 0; nMetaDataIndex < nMetaDataCount; nMetaDataIndex++) {
 				PModelMetaData pMetaData = m_pModel->getMetaData(nMetaDataIndex);
-
-				std::string sValue = pMetaData->getName();
-
-				// TODO: translate namespace within metadatum to namespace identifier
-				writeStartElement(XML_3MF_ELEMENT_METADATA);
-				writeStringAttribute(XML_3MF_ATTRIBUTE_METADATA_NAME, pMetaData->getName());
-				writeText(sValue.c_str(), (nfUint32)sValue.length());
-				writeEndElement();
-				writeMetaData(pMetaData);			}
+				writeMetaData(pMetaData);
+			}
 		}
 	}
 
