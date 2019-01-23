@@ -35,6 +35,8 @@ Abstract: This is the class declaration of CLib3MFBeamSet
 #include "lib3mf_interfaces.hpp"
 
 #include "Common/Mesh/NMR_MeshTypes.h" 
+#include "Common/Mesh/NMR_Mesh.h"
+#include "Model/Classes/NMR_ModelMeshObject.h"
 // Include custom headers here.
 
 
@@ -53,6 +55,7 @@ private:
 	* Put private members here.
 	*/
 	NMR::PBEAMSET m_pBeamSet;
+	NMR::CMesh& m_mesh;
 
 protected:
 
@@ -65,7 +68,7 @@ public:
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-	CLib3MFBeamSet(NMR::PBEAMSET pBeamSet);
+	CLib3MFBeamSet(NMR::PBEAMSET pBeamSet, NMR::PModelMeshObject pMeshObject);
 
 	/**
 	* Public member functions to implement.

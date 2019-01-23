@@ -40,8 +40,8 @@ using namespace Lib3MF::Impl;
  Class definition of CLib3MFBeamSet 
 **************************************************************************************************************************/
 
-CLib3MFBeamSet::CLib3MFBeamSet(NMR::PBEAMSET pBeamSet):
-	m_pBeamSet(pBeamSet)
+CLib3MFBeamSet::CLib3MFBeamSet(NMR::PBEAMSET pBeamSet, NMR::PModelMeshObject pMeshObject):
+	m_pBeamSet(pBeamSet), m_mesh(*pMeshObject->getMesh())
 {
 
 }
@@ -68,16 +68,35 @@ std::string CLib3MFBeamSet::GetIdentifier()
 
 Lib3MF_uint32 CLib3MFBeamSet::GetReferenceCount()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return (Lib3MF_uint32)m_pBeamSet->m_Refs.size();
 }
 
 void CLib3MFBeamSet::SetReferences(const Lib3MF_uint64 nReferencesBufferSize, const Lib3MF_uint32 * pReferencesBuffer)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	m_pBeamSet->m_Refs.resize(nReferencesBufferSize);
+	const Lib3MF_uint32 beamCount = m_mesh.getBeamCount();
+	for (Lib3MF_uint64 i = 0; i < nReferencesBufferSize; i++) {
+		if (beamCount <= pReferencesBuffer[i])
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+		m_pBeamSet->m_Refs[i] = Lib3MF_uint32(pReferencesBuffer[i]);
+	}
+
 }
 
 void CLib3MFBeamSet::GetReferences(Lib3MF_uint64 nReferencesBufferSize, Lib3MF_uint64* pReferencesNeededCount, Lib3MF_uint32 * pReferencesBuffer)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	Lib3MF_uint32 referenceCount = (Lib3MF_uint32)m_pBeamSet->m_Refs.size();
+	if (pReferencesNeededCount)
+		*pReferencesNeededCount = referenceCount;
+
+	if (nReferencesBufferSize >= referenceCount && pReferencesBuffer)
+	{
+		Lib3MF_uint32* pRef = pReferencesBuffer;
+		for (Lib3MF_uint32 i = 0; i < referenceCount; i++)
+		{
+			*pRef = m_pBeamSet->m_Refs[i];
+			pRef++;
+		}
+	}
 }
 

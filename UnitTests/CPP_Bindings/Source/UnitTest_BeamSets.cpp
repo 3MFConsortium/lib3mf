@@ -105,4 +105,36 @@ namespace Lib3MF
 		ASSERT_EQ(beamSet->GetIdentifier(), ident);
 	}
 
+	TEST_F(BeamSet, References)
+	{
+		auto beamSet = beamLattice->AddBeamSet();
+		
+		ASSERT_EQ(beamSet->GetReferenceCount(), 0);
+
+		Lib3MF_uint32 nReferences = 2;
+		std::vector<Lib3MF_uint32> references(nReferences);
+		references[0] = 2;
+		references[1] = 5;
+		try {
+			beamSet->SetReferences(references);
+			ASSERT_FALSE(true);
+		}
+		catch (ELib3MFException) {
+			ASSERT_TRUE(true);
+		}
+
+		references[1] = 1;
+		beamSet->SetReferences(references);
+
+		ASSERT_EQ(beamSet->GetReferenceCount(), nReferences);
+
+		std::vector<Lib3MF_uint32> referencesOut;
+		beamSet->GetReferences(referencesOut);
+		ASSERT_EQ(beamSet->GetReferenceCount(), referencesOut.size());
+		for (int i = 0; i < referencesOut.size(); i++) {
+			ASSERT_EQ(referencesOut[i], references[i]);
+		}
+
+	}
+
 }

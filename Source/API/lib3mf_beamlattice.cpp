@@ -254,11 +254,11 @@ Lib3MF_uint32 CLib3MFBeamLattice::GetBeamSetCount ()
 
 ILib3MFBeamSet * CLib3MFBeamLattice::AddBeamSet ()
 {
-	return new CLib3MFBeamSet(m_mesh.addBeamSet());
+	return new CLib3MFBeamSet(m_mesh.addBeamSet(), m_pMeshObject);
 }
 
 ILib3MFBeamSet * CLib3MFBeamLattice::GetBeamSet (const Lib3MF_uint32 nIndex)
 {
-	return new CLib3MFBeamSet(m_mesh.getBeamSet(nIndex));
+	return new CLib3MFBeamSet(m_mesh.getBeamSet(nIndex), m_pMeshObject);
 }
 
