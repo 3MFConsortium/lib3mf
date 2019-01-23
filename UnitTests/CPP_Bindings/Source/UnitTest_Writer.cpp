@@ -105,8 +105,7 @@ namespace Lib3MF
 		Writer::writer3MF->WriteToFile(Writer::OutFolder + "Pyramid.3mf");
 		auto bufferFromFile = ReadFileIntoBuffer(Writer::OutFolder + "Pyramid.3mf");
 
-		bool bAreEqual = std::equal(buffer.begin(), buffer.end(), bufferFromFile.begin());
-		ASSERT_TRUE(bAreEqual);
+		ASSERT_TRUE(std::equal(buffer.begin(), buffer.end(), bufferFromFile.begin()));
 	}
 
 	TEST_F(Writer, STLCompare)
@@ -118,8 +117,7 @@ namespace Lib3MF
 		Writer::writerSTL->WriteToFile(Writer::OutFolder + "Pyramid.stl");
 		auto bufferFromFile = ReadFileIntoBuffer(Writer::OutFolder + "Pyramid.stl");
 
-		bool bAreEqual = std::equal(buffer.begin(), buffer.end(), bufferFromFile.begin());
-		ASSERT_TRUE(bAreEqual);
+		ASSERT_TRUE(std::equal(buffer.begin(), buffer.end(), bufferFromFile.begin()));
 	}
 
 	TEST_F(Writer, 3MFWriteToCallback)
@@ -131,8 +129,7 @@ namespace Lib3MF
 		std::vector<Lib3MF_uint8> buffer;
 		Writer::writer3MF->WriteToBuffer(buffer);
 
-		bool bAreEqual = std::equal(buffer.begin(), buffer.end(), callbackBuffer.vec.begin());
-		ASSERT_TRUE(bAreEqual);
+		ASSERT_TRUE(std::equal(buffer.begin(), buffer.end(), callbackBuffer.vec.begin()));
 	}
 
 	TEST_F(Writer, STLWriteToCallback)
@@ -144,8 +141,7 @@ namespace Lib3MF
 		std::vector<Lib3MF_uint8> buffer;
 		Writer::writerSTL->WriteToBuffer(buffer);
 
-		bool bAreEqual = std::equal(buffer.begin(), buffer.end(), callbackBuffer.vec.begin());
-		ASSERT_TRUE(bAreEqual);
+		ASSERT_TRUE(std::equal(buffer.begin(), buffer.end(), callbackBuffer.vec.begin()));
 	}
 
 }
