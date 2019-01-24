@@ -72,6 +72,8 @@ namespace NMR {
 		m_bWriteBaseMaterials = true;
 		m_bWriteObjects = true;
 		m_bIsRootModel = true;
+
+		m_bWriteCustomNamespaces = true;
 		m_pSliceStackResource = NULL;
 
 		nfInt32 nObjectCount = pModel->getObjectCount();
@@ -116,6 +118,44 @@ namespace NMR {
 				}
 			}
 		}
+
+		// register custom NameSpaces from metadata in objects, build items and the model itself
+		RegisterMetaDataNameSpaces();
+	}
+
+	void CModelWriterNode100_Model::RegisterMetaDataGroupNameSpaces(PModelMetaDataGroup mdg)
+	{
+		for (nfUint32 i = 0; i < mdg->getMetaDataCount(); i++)
+		{
+			PModelMetaData md = mdg->getMetaData(i);
+			if (!md->getNameSpace().empty()) {
+				std::string prefix = "customXMLNS" + std::to_string(m_pXMLWriter->GetNamespaceCount());
+				std::string sDummy;
+				if (!m_pXMLWriter->GetNamespacePrefix(md->getNameSpace(), sDummy)) {
+					m_pXMLWriter->RegisterCustomNameSpace(md->getNameSpace(), prefix);
+				}
+			}
+		}
+	}
+
+	void CModelWriterNode100_Model::RegisterMetaDataNameSpaces()
+	{
+		RegisterMetaDataGroupNameSpaces(m_pModel->getMetaDataGroup());
+
+		nfInt32 nObjectCount = m_pModel->getObjectCount();
+		for (nfInt32 nObjectIndex = 0; nObjectIndex < nObjectCount; nObjectIndex++) {
+			PModelResource pResource = m_pModel->getObjectResource(nObjectIndex);
+			CModelObject * pObject = dynamic_cast<CModelObject*> (pResource.get());
+			if (pObject) {
+				RegisterMetaDataGroupNameSpaces(pObject->metaDataGroup());
+			}
+		}
+
+		nfInt32 nOBuildItemCount = m_pModel->getBuildItemCount();
+		for (nfInt32 nBuildItemIndex = 0; nBuildItemIndex < nOBuildItemCount; nBuildItemIndex++) {
+			PModelBuildItem pBuildItem = m_pModel->getBuildItem(nBuildItemIndex);
+			RegisterMetaDataGroupNameSpaces(pBuildItem->metaDataGroup());
+		}
 	}
 
 	CModelWriterNode100_Model::CModelWriterNode100_Model(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter, _In_ CProgressMonitor * pProgressMonitor,
@@ -128,6 +168,8 @@ namespace NMR {
 		m_bWriteObjects = false;
 		m_bIsRootModel = false;
 		m_bWriteSliceExtension = true;
+		m_bWriteCustomNamespaces = true;
+
 		m_pSliceStackResource = pSliceStackResource;
 	}
 
@@ -171,10 +213,19 @@ namespace NMR {
 			}
 		}
 
-		if (sRequiredExtensions.size()>0)
+		if (m_bWriteCustomNamespaces) {
+			nfUint32 nNSCount = m_pXMLWriter->GetNamespaceCount();
+			for (nfUint32 iNSCount = 0; iNSCount < nNSCount; iNSCount++) {
+				writeConstPrefixedStringAttribute(XML_3MF_ATTRIBUTE_XMLNS, m_pXMLWriter->GetNamespacePrefix(iNSCount).c_str(), m_pXMLWriter->GetNamespace(iNSCount).c_str());
+			}
+		}
+
+		if (sRequiredExtensions.size() > 0)
 			writeConstStringAttribute(XML_3MF_ATTRIBUTE_REQUIREDEXTENSIONS, sRequiredExtensions.c_str());
 
-		writeMetaData();
+		if (m_bIsRootModel)
+			writeModelMetaData();
+
 		writeResources();
 		writeBuild();
 
@@ -214,7 +265,7 @@ namespace NMR {
 
 	}
 
-	void CModelWriterNode100_Model::writeMetaData()
+	void CModelWriterNode100_Model::writeModelMetaData()
 	{
 		if (m_bIsRootModel)
 		{
@@ -223,14 +274,7 @@ namespace NMR {
 
 			for (nMetaDataIndex = 0; nMetaDataIndex < nMetaDataCount; nMetaDataIndex++) {
 				PModelMetaData pMetaData = m_pModel->getMetaData(nMetaDataIndex);
-
-				std::string sValue = pMetaData->getName();
-
-				// TODO: translate namespace within metadatum to namespace identifier
-				writeStartElement(XML_3MF_ELEMENT_METADATA);
-				writeStringAttribute(XML_3MF_ATTRIBUTE_METADATA_NAME, pMetaData->getName());
-				writeText(sValue.c_str(), (nfUint32)sValue.length());
-				writeEndElement();
+				writeMetaData(pMetaData);
 			}
 		}
 	}
@@ -453,6 +497,8 @@ namespace NMR {
 				}
 			}
 
+			writeMetaDataGroup(pObject->metaDataGroup());
+
 			// Check if object is a mesh Object
 			CModelMeshObject * pMeshObject = dynamic_cast<CModelMeshObject *> (pObject);
 			if (pMeshObject) {
@@ -476,6 +522,51 @@ namespace NMR {
 			writeFullEndElement();
 		}
 
+	}
+
+	void CModelWriterNode100_Model::writeMetaData(_In_ PModelMetaData pMetaData)
+	{
+		writeStartElement(XML_3MF_ELEMENT_METADATA);
+
+		std::string sNameSpace = pMetaData->getNameSpace();
+		std::string sName = pMetaData->getName();
+		std::string sValue = pMetaData->getValue();
+		std::string sType = pMetaData->getType();
+		nfBool bPreserve = pMetaData->getPreserve();
+
+		if (sNameSpace.empty()) {
+			writeStringAttribute(XML_3MF_ATTRIBUTE_METADATA_NAME, sName);
+		}
+		else {
+			std::string sNameSpacePrefix;
+			if (!m_pXMLWriter->GetNamespacePrefix(sNameSpace, sNameSpacePrefix)) {
+				throw CNMRException(NMR_ERROR_INVALIDBUFFERSIZE);
+			}
+			writeStringAttribute(XML_3MF_ATTRIBUTE_METADATA_NAME, CModelMetaData::calculateKey(sNameSpacePrefix, sName));
+		}
+
+		if (sType != "xs:string") {
+			writeStringAttribute(XML_3MF_ATTRIBUTE_METADATA_TYPE, sType);
+		}
+		if (bPreserve) {
+			writeStringAttribute(XML_3MF_ATTRIBUTE_METADATA_PRESERVE, "1");
+		}
+		writeText(sValue.c_str(), (nfUint32)sValue.length());
+
+		writeEndElement();
+	}
+
+	void CModelWriterNode100_Model::writeMetaDataGroup(_In_ PModelMetaDataGroup pMetaDataGroup)
+	{
+		if (pMetaDataGroup->getMetaDataCount() > 0)
+		{
+			writeStartElement(XML_3MF_ELEMENT_METADATAGROUP);
+			for (nfUint32 index = 0; index<pMetaDataGroup->getMetaDataCount(); index++) {
+				PModelMetaData pMetaData = pMetaDataGroup->getMetaData(index);
+				writeMetaData(pMetaData);
+			}
+			writeFullEndElement();
+		}
 	}
 
 	void CModelWriterNode100_Model::writeColors()
@@ -584,7 +675,13 @@ namespace NMR {
 				}
 				if (pBuildItem->hasTransform())
 					writeStringAttribute(XML_3MF_ATTRIBUTE_ITEM_TRANSFORM, pBuildItem->getTransformString());
-				writeEndElement();
+
+				
+				writeMetaDataGroup(pBuildItem->metaDataGroup());
+				if (pBuildItem->metaDataGroup()->getMetaDataCount() > 0)
+					writeFullEndElement();
+				else 
+					writeEndElement();
 
 			}
 		}

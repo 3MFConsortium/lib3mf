@@ -168,7 +168,7 @@ namespace NMR {
 
 		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_CORESPEC100) == 0) {
 			// Read a metadatagroup object
-			if (strcmp(pChildName, XML_3MF_ELEMENT_METADATGROUP) == 0) {
+			if (strcmp(pChildName, XML_3MF_ELEMENT_METADATAGROUP) == 0) {
 				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode100_MetaDataGroup>(m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 

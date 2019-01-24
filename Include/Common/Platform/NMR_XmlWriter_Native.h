@@ -35,6 +35,7 @@ NMR_XmlWriter_Native.h implements an XML Writer Class without dependencies.
 
 #include "Common/Platform/NMR_XmlWriter.h"
 #include <array>
+#include <map>
 #include <list>
 
 #define NATIVEXMLSPACINGBUFFERSIZE 256
@@ -56,6 +57,8 @@ namespace NMR {
 		std::list<std::string> m_NodeStack;
 
 		std::array<nfChar, NATIVEXMLENCODINGBUFFERSIZE> m_FixedEncodingBuffer;
+
+		std::map<std::string, std::string> m_sNameSpaces;
 
 		nfBool m_bElementIsOpen;
 		nfBool m_bIsFreshLine;
@@ -89,6 +92,12 @@ namespace NMR {
 
 		virtual void WriteText(_In_ const nfChar * pszContent, _In_ const nfUint32 cbLength);
 		virtual void WriteRawLine(_In_ const nfChar * pszRawData, _In_ nfUint32 cbCount);
+
+		virtual bool GetNamespacePrefix(const std::string &sNameSpaceURI, std::string &sNameSpacePrefix);
+		virtual void RegisterCustomNameSpace(const std::string &sNameSpace, const std::string &sNameSpacePrefix);
+		virtual nfUint32 GetNamespaceCount();
+		virtual std::string GetNamespacePrefix(nfUint32 nIndex);
+		virtual std::string GetNamespace(nfUint32 nIndex);
 	};
 
 	typedef std::shared_ptr<CXmlWriter_Native> PXmlWriter_Native;

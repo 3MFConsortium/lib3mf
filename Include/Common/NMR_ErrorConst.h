@@ -284,6 +284,12 @@ NMR_ErrorConst.h defines all error code constants.
 // ZIP contains inconsistencies
 #define NMR_ERROR_ZIPCONTAINSINCONSISTENCIES 0x104D
 
+// XML namespace is already registered.
+#define NMR_ERROR_XMLNAMESPACEALREADYREGISTERED 0x104E
+
+// XML prefix is already registered.
+#define NMR_ERROR_XMLPREFIXALREADYREGISTERED 0x104F
+
 /*-------------------------------------------------------------------
 Core framework error codes (0x2XXX)
 -------------------------------------------------------------------*/

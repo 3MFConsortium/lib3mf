@@ -47,6 +47,7 @@ namespace Lib3MF
 		virtual void SetUp() {
 			model = CLib3MFWrapper::CreateModel();
 			reader = model->QueryReader("3mf");
+			writer = model->QueryWriter("3mf");
 		}
 		virtual void TearDown() {
 			model.reset();
@@ -54,10 +55,14 @@ namespace Lib3MF
 
 		static PLib3MFModel model;
 		static PLib3MFReader reader;
+		static PLib3MFWriter writer;
+		static std::string m_sFolderName;
 	};
 
 	PLib3MFModel MetaDataGroup::model;
 	PLib3MFReader MetaDataGroup::reader;
+	PLib3MFWriter MetaDataGroup::writer;
+	std::string MetaDataGroup::m_sFolderName("TestOutput");
 
 	TEST_F(MetaDataGroup, ModelGet)
 	{
@@ -212,28 +217,68 @@ namespace Lib3MF
 		VerifyFailedVendorMetaDataGroup(metaDataGroup);
 	}
 
-	//TEST_F(MetaDataGroup, ModelWriteRead)
-	//{
-	//	ASSERT_FALSE(true);
-	//}
+	void CompareMetaDataGroups(PLib3MFMetaDataGroup A, PLib3MFMetaDataGroup B)
+	{
+		ASSERT_EQ(A->GetMetaDataCount(), B->GetMetaDataCount());
+		
+		for (Lib3MF_uint32 i = 0; i < A->GetMetaDataCount(); i++) {
+			auto metadataA = A->GetMetaData(i);
+			auto metadataB = B->GetMetaData(i);
 
-	//TEST_F(MetaDataGroup, BuildItemRead)
-	//{
-	//	ASSERT_FALSE(true);
-	//}
+			EXPECT_EQ(metadataA->GetKey(), metadataB->GetKey());
+			EXPECT_EQ(metadataA->GetValue(), metadataB->GetValue());
+			EXPECT_EQ(metadataA->GetType(), metadataB->GetType());
+			EXPECT_EQ(metadataA->GetMustPreserve(), metadataB->GetMustPreserve());
+		}
+	}
 
-	//TEST_F(MetaDataGroup, BuildItemWrite)
-	//{
-	//	ASSERT_FALSE(true);
-	//}
+	TEST_F(MetaDataGroup, Write_DefaultNS_Model)
+	{
+		std::string nameSpace = "ANameSpace";
+		std::string name = "AName";
+		std::string key = nameSpace + ":" + name;
+		std::string value = "AValue";
+		std::string type = "AType";
+		bool mustPreserve = true;
 
-	//TEST_F(MetaDataGroup, ObjectRead)
-	//{
-	//	ASSERT_FALSE(true);
-	//}
+		auto metaDataGroup = model->GetMetaDataGroup();
+		metaDataGroup->AddMetaData(nameSpace, name, value, type, mustPreserve);
 
-	//TEST_F(MetaDataGroup, ObjectWrite)
-	//{
-	//	ASSERT_FALSE(true);
-	//}
+		std::vector<Lib3MF_uint8> buffer;
+		writer->WriteToBuffer(buffer);
+
+		auto newModel = CLib3MFWrapper::CreateModel();
+		{
+			auto newReader = newModel->QueryReader("3mf");
+			newReader->ReadFromBuffer(buffer);
+			CheckReaderWarnings(newReader, 0);
+		}
+		CompareMetaDataGroups(metaDataGroup, newModel->GetMetaDataGroup());
+	}
+
+	TEST_F(MetaDataGroup, Write_DefaultNS_Object)
+	{
+		std::string nameSpace = "ANameSpace";
+		std::string name = "AName";
+		std::string key = nameSpace + ":" + name;
+		std::string value = "AValue";
+		std::string type = "AType";
+		bool mustPreserve = true;
+
+		auto componentsObject = model->AddComponentsObject();
+		auto metaDataGroup = componentsObject->GetMetaDataGroup();
+		metaDataGroup->AddMetaData(nameSpace, name, value, type, mustPreserve);
+
+		std::vector<Lib3MF_uint8> buffer;
+		writer->WriteToBuffer(buffer);
+
+		auto newModel = CLib3MFWrapper::CreateModel();
+		{
+			auto newReader = newModel->QueryReader("3mf");
+			newReader->ReadFromBuffer(buffer);
+			CheckReaderWarnings(newReader, 0);
+		}
+		CompareMetaDataGroups(metaDataGroup, newModel->GetComponentsObjectByID(1)->GetMetaDataGroup());
+	}
+
 }

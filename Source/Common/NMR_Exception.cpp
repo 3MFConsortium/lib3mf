@@ -126,6 +126,8 @@ namespace NMR {
 		case NMR_ERROR_ATTACHMENTTOOLARGE: return "An individual custom attachment is too large.";
 		case NMR_ERROR_ZIPCALLBACK: return "Error in libzip callback.";
 		case NMR_ERROR_ZIPCONTAINSINCONSISTENCIES: return "ZIP file contains inconsistencies. It might load with errors or incorrectly.";
+		case NMR_ERROR_XMLNAMESPACEALREADYREGISTERED: return "An XML namespace is already registered.";
+		case NMR_ERROR_XMLPREFIXALREADYREGISTERED: return "An XML prefix is already registered.";
 
 
 		// Unhandled exception

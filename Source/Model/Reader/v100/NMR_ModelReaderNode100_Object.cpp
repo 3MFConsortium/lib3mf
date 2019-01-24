@@ -293,7 +293,7 @@ namespace NMR {
 				if (m_nDefaultPropertyID != 0)
 					m_pWarnings->addException(CNMRException(NMR_ERROR_DEFAULTPID_ON_COMPONENTSOBJECT), mrwInvalidOptionalValue);
 			}
-			else if (strcmp(pChildName, XML_3MF_ELEMENT_METADATGROUP) == 0) {
+			else if (strcmp(pChildName, XML_3MF_ELEMENT_METADATAGROUP) == 0) {
 				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode100_MetaDataGroup>(m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 

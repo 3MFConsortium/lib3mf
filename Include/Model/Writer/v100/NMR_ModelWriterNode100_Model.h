@@ -56,13 +56,17 @@ namespace NMR {
 		nfBool m_bWriteBaseMaterials;
 		nfBool m_bWriteObjects;
 		nfBool m_bIsRootModel;
+		nfBool m_bWriteCustomNamespaces;
 
 		CModelSliceStackResource* m_pSliceStackResource;	// If this is set, only this slicestack should be exported
 
 		void calculateColors(_In_ CMesh * pMesh);
 		void calculateTexCoords(_In_ CMesh * pMesh);
 
-		void writeMetaData();
+		void writeModelMetaData();
+		void writeMetaData(_In_ PModelMetaData pMetaData);
+		void writeMetaDataGroup(_In_ PModelMetaDataGroup pMetaDataGroup);
+
 		void writeResources();
 		void writeBaseMaterials();
 		void writeTextures2D();
@@ -78,6 +82,10 @@ namespace NMR {
 		void writeComponentsObject(_In_ CModelComponentsObject * pComponentsObject);
 
 		ModelResourceID generateOutputResourceID();
+
+		void RegisterMetaDataGroupNameSpaces(PModelMetaDataGroup mdg);
+		void CModelWriterNode100_Model::RegisterMetaDataNameSpaces();
+
 	public:
 		CModelWriterNode100_Model() = delete;
 		CModelWriterNode100_Model(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter, _In_ CProgressMonitor * pProgressMonitor);
