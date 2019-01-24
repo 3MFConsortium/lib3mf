@@ -157,5 +157,21 @@ namespace Lib3MF
 		baseMaterial->GetResourceID();
 		auto foundBaseMaterial = m_model->GetBaseMaterialGroupByID(baseMaterial->GetResourceID());
 	}
+
+	TEST_F(Model, AddSliceStack)
+	{
+		auto sliceStack = m_model->AddSliceStack();
+	}
+
+	TEST_F(Model, GetSliceStack)
+	{
+		auto sliceStack = m_model->AddSliceStack();
+		Lib3MF_uint32 oldID = sliceStack->GetResourceID();
+		auto newSliceStack = m_model->GetSliceStackByID(oldID);
+		Lib3MF_uint32 newId = newSliceStack->GetResourceID();
+		ASSERT_EQ(oldID, newId);
+	}
+
+	
 	
 }

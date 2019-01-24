@@ -39,6 +39,8 @@ ${SRCS_COM}
 ./Source/API/lib3mf_reader.cpp
 ./Source/API/lib3mf_resource.cpp
 ./Source/API/lib3mf_resourceiterator.cpp
+./Source/API/lib3mf_slice.cpp
+./Source/API/lib3mf_slicestack.cpp
 ./Source/API/lib3mf_texture2d.cpp
 ./Source/API/lib3mf_writer.cpp
 ./Source/API/lib3mf_utils.cpp

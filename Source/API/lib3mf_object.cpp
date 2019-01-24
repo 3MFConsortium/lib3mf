@@ -167,3 +167,33 @@ void CLib3MFObject::SetUUID(const std::string & sUUID)
 	object()->setUUID(pUUID);
 }
 
+void CLib3MFObject::SetSlicesMeshResolution(const eLib3MFSlicesMeshResolution eMeshResolution)
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
+
+eLib3MFSlicesMeshResolution CLib3MFObject::GetSlicesMeshResolution()
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
+
+bool CLib3MFObject::HasSliceStack()
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
+
+void CLib3MFObject::ClearSliceStack()
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
+
+ILib3MFSliceStack * CLib3MFObject::GetSliceStack()
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
+
+void CLib3MFObject::SetSliceStack(ILib3MFSliceStack* pSliceStackInstance)
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
+

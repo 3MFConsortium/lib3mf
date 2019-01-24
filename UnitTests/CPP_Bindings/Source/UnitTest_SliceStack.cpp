@@ -26,17 +26,47 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-UnitTest_AllTests.cpp: Defines Entry point for the UnitTests of all exposed classes
+UnitTest_SliceStack.cpp: Defines Unittests for the SliceStack class
 
 --*/
-#include "gtest/gtest.h"
 
-int main(int argc, char **argv)
+#include "UnitTest_Utilities.h"
+#include "lib3mf.hpp"
+
+namespace Lib3MF
 {
-	//testing::GTEST_FLAG(filter) = "*Slice*";
-	testing::InitGoogleTest(&argc, argv);
-	RUN_ALL_TESTS();
-	system("pause");
-	return 1;
+	class SliceStack : public ::testing::Test {
+	protected:
+
+		static void SetUpTestCase() {
+		}
+
+		static void TearDownTestCase() {
+		}
+
+		virtual void SetUp() {
+			model = CLib3MFWrapper::CreateModel();
+			sliceStack = model->AddSliceStack();
+			mesh = model->AddMeshObject();
+
+		}
+		virtual void TearDown() {
+			model.reset();
+		}
+
+		PLib3MFModel model;
+		PLib3MFSliceStack sliceStack;
+		PLib3MFMeshObject mesh;
+	};
+
+
+	
+	TEST_F(SliceStack, AddSliceStack)
+	{
+		
+		sliceStack->GetResourceID();
+	}
+
+
 }
 

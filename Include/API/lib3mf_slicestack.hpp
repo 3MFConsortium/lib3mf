@@ -24,13 +24,13 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CLib3MFObject
+Abstract: This is the class declaration of CLib3MFSliceStack
 
 */
 
 
-#ifndef __LIB3MF_LIB3MFOBJECT
-#define __LIB3MF_LIB3MFOBJECT
+#ifndef __LIB3MF_LIB3MFSLICESTACK
+#define __LIB3MF_LIB3MFSLICESTACK
 
 #include "lib3mf_interfaces.hpp"
 
@@ -40,17 +40,17 @@ Abstract: This is the class declaration of CLib3MFObject
 #pragma warning( disable : 4250)
 
 // Include custom headers here.
-#include "Model/Classes/NMR_ModelResource.h" 
+#include "Model/Classes/NMR_ModelSliceResource.h"
 
 namespace Lib3MF {
 namespace Impl {
 
 
 /*************************************************************************************************************************
- Class declaration of CLib3MFObject 
+ Class declaration of CLib3MFSliceStack 
 **************************************************************************************************************************/
 
-class CLib3MFObject : public virtual ILib3MFObject, public virtual CLib3MFResource {
+class CLib3MFSliceStack : public virtual ILib3MFSliceStack, public virtual CLib3MFResource {
 private:
 
 	/**
@@ -58,66 +58,40 @@ private:
 	*/
 
 protected:
-	NMR::CModelObject* object();
+
+	/**
+	* Put protected members here.
+	*/
+	NMR::PModelSliceStackResource sliceStack();
 
 public:
 
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-	CLib3MFObject(NMR::PModelResource pResource);
-	CLib3MFObject() = delete;
+	CLib3MFSliceStack(NMR::PModelSliceStackResource pSliceStack);
 
-	static ILib3MFObject* fnCreateObjectFromModelResource(NMR::PModelResource pResource, bool bFailIfUnkownClass);
 
 	/**
 	* Public member functions to implement.
 	*/
 
-	eLib3MFObjectType GetType ();
+	Lib3MF_uint64 GetSliceCount ();
 
-	void SetType (const eLib3MFObjectType eObjectType);
+	ILib3MFSlice * GetSlice (const Lib3MF_uint64 nSliceIndex);
 
-	std::string GetName ();
+	ILib3MFSlice * AddSlice ();
 
-	void SetName (const std::string & sName);
+	void SetSliceRefPath (const std::string & sPath);
 
-	std::string GetPartNumber ();
+	void GetSliceRefPath (std::string & sPath);
 
-	void SetPartNumber (const std::string & sPartNumber);
-
-	virtual bool IsMeshObject ();
-
-	virtual bool IsComponentsObject ();
-
-	virtual ILib3MFMeshObject * AsMeshObject();
-
-	virtual ILib3MFComponentsObject * AsComponentsObject();
-
-	bool IsValid ();
-
-	ILib3MFMetaDataGroup * GetMetaDataGroup ();
-
-	std::string GetUUID(bool & bHasUUID);
-
-	void SetUUID(const std::string & sUUID);
-
-	virtual void SetSlicesMeshResolution(const eLib3MFSlicesMeshResolution eMeshResolution);
-
-	virtual eLib3MFSlicesMeshResolution GetSlicesMeshResolution();
-
-	virtual bool HasSliceStack();
-
-	virtual void ClearSliceStack();
-
-	virtual ILib3MFSliceStack * GetSliceStack();
-
-	virtual void SetSliceStack(ILib3MFSliceStack* pSliceStackInstance);
+	void GetBottomZ (float & fZBottom);
 
 };
 
-}
-}
+} // namespace Impl
+} // namespace Lib3MF
 
 #pragma warning( pop )
-#endif // __LIB3MF_LIB3MFOBJECT
+#endif // __LIB3MF_LIB3MFSLICESTACK

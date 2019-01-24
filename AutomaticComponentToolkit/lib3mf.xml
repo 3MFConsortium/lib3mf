@@ -72,6 +72,8 @@
 		<error name="INVALIDCOMPONENT" code="109" description="A component is invalid" />
 		<error name="INVALIDBUILDITEM" code="110" description="A build item is invalid" />
 		<error name="INVALIDBASEMATERIALGROUP" code="111" description="A basematerialgroup is invalid" />
+		<error name="INVALIDSLICESTACKRESOURCE" code="112" description="A slicestackresource is invalid" />
+		
 		
 		<error name="ATTACHMENTNOTFOUND" code="121" description="Attachment not found" />
 		
@@ -83,6 +85,11 @@
 		
 		<error name="BEAMLATTICE_INVALID_OBJECTTYPE" code="2000" description="This object type is not valid for beamlattices" />
 	</errors>
+	
+	<enum name="SlicesMeshResolution">
+		<option name="Fullres" value="0" />
+		<option name="Lowres" value="1" />
+	</enum>
 	
 	<enum name="ModelUnit">
 		<option name="MicroMeter" value="0" />
@@ -161,6 +168,10 @@
 	
 	<struct name="Position">
 		<member name="coordinates" type="single" rows="3" />
+	</struct>
+	
+	<struct name="Position2D">
+		<member name="coordinates" type="single" rows="2" />
 	</struct>
 	
 	<struct name="Transform">
@@ -380,7 +391,6 @@
 		</method>
 		
 		<!-- property handling -->
-		<!-- slice object handling -->
 		<!-- object thumbnails -->
 		
 		<method name="GetUUID" dllsuffix="utf8" description="Retrieves an object's uuid string (see production extension specification)">
@@ -393,75 +403,73 @@
 		<method name="GetMetaDataGroup" description="Returns the metadatagroup of this object">
 			<param name="MetaDataGroup" type="handle" class="MetaDataGroup" pass="return" description="returns an Instance of the metadatagroup of this object" />
 		</method>
+		
+		<method name="SetSlicesMeshResolution" description="set the meshresolution of the mesh object">
+			<param name="MeshResolution" type="enum" class="SlicesMeshResolution" pass="in" description="meshresolution of this object" />
+		</method>
+		<method name="GetSlicesMeshResolution" description="get the meshresolution of the mesh object">
+			<param name="MeshResolution" type="enum" class="SlicesMeshResolution" pass="return" description="meshresolution of this object" />
+		</method>
+		<method name="HasSliceStack" description="returns whether the Object has a slice stack">
+			<param name="HasStack" type="bool" pass="return" description="does the object have a slice stack" />
+		</method>
+		<method name="ClearSliceStack" description="unlinks the attached slicestack from this object. If no slice stack is attached, do noting.">
+		</method>
+		<method name="GetSliceStack" description="set the meshresolution of the mesh object">
+			<param name="SliceStackInstance" type="handle" class="SliceStack" pass="return" description="returns the slicestack instance" />
+		</method>
+		<method name="SetSliceStack" description="set the meshresolution of the mesh object">
+			<param name="SliceStackInstance" type="handle" class="SliceStack" pass="in" description="returns the slicestack instance" />
+		</method>
 	</class>
 
 	<class name="MeshObject" parent="Object">
 		<method name="GetVertexCount" description="Returns the vertex count of a mesh object.">
 			<param name="VertexCount" type="uint32" pass="return" description="filled with the vertex count." />
 		</method>
-		
 		<method name="GetTriangleCount" description="Returns the triangle count of a mesh object.">
 			<param name="VertexCount" type="uint32" pass="return" description="filled with the triangle count." />
 		</method>
-		
 		<method name="GetVertex" description="Returns the vertex count of a mesh object.">
 			<param name="Index" type="uint32" pass="in" description="Index of the vertex (0 to vertexcount - 1)" />
 			<param name="Coordinates" type="struct" class="Position" pass="return" description="filled with the vertex coordinates." />
 		</method>
-		
 		<method name="SetVertex" description="Sets the coordinates of a single vertex of a mesh object">
 			<param name="Index" type="uint32" pass="in" description="Index of the vertex (0 to vertexcount - 1)" />
 			<param name="Coordinates" type="struct" class="Position" pass="in" description="contains the vertex coordinates." />
 		</method>
-
 		<method name="AddVertex" description="Adds a single vertex to a mesh object">
 			<param name="Coordinates" type="struct" class="Position" pass="in" description="contains the vertex coordinates." />
 			<param name="NewIndex" type="uint32" pass="return" description="Index of the new vertex" />
 		</method>
-		
 		<method name="GetVertices" description="Obtains all vertex positions of a mesh object">
 			<param name="Vertices" type="structarray" class="Position" pass="out" description="contains the vertex coordinates." />
 		</method>
-		
 		<method name="GetTriangle" description="Returns indices of a single triangle of a mesh object.">
 			<param name="Index" type="uint32" pass="in" description="Index of the triangle (0 to trianglecount - 1)" />
 			<param name="Indices" type="struct" class="Triangle" pass="return" description="filled with the triangle indices." />
 		</method>
-		
 		<method name="SetTriangle" description="Sets the indices of a single triangle of a mesh object.">
 			<param name="Index" type="uint32" pass="in" description="Index of the triangle (0 to trianglecount - 1)" />
 			<param name="Indices" type="struct" class="Triangle" pass="in" description="contains the triangle indices." />
 		</method>
-
 		<method name="AddTriangle" description="Adds a single triangle to a mesh object">
 			<param name="Indices" type="struct" class="Triangle" pass="in" description="contains the triangle indices." />
 			<param name="NewIndex" type="uint32" pass="return" description="Index of the new triangle" />
 		</method>
-		
 		<method name="GetTriangleIndices" description="Get all triangles of a mesh object">
 			<param name="Indices" type="structarray" class="Triangle" pass="out" description="contains the triangle indices." />
 		</method>
-		
 		<method name="SetGeometry" description="Set all triangles of a mesh object">
 			<param name="Vertices" type="structarray" class="Position" pass="in" description="contains the positions." />
 			<param name="Indices" type="structarray" class="Triangle" pass="in" description="contains the triangle indices." />
 		</method>
-		
 		<method name="IsManifoldAndOriented" description="Retrieves, if an object describes a topologically oriented and manifold mesh, according to the core spec.">
 			<param name="IsManifoldAndOriented" type="bool" pass="return" description="returns, if the object is oriented and manifold." />
 		</method>
-		
-<!---
-	TODO: 
-		-	lib3mf_meshobject_setslicestack
-		-	lib3mf_meshobject_getslicestackid
-		-   lib3mf_meshobject_setslicesmeshresolution
-		-   lib3mf_meshobject_getslicesmeshresolution
--->
 		<method name="BeamLattice" description="Retrieves the BeamLattice within this MeshObject.">
 			<param name="TheBeamLattice" type="handle" class="BeamLattice" pass="return" description="the BeamLattice within this MeshObject" />
 		</method>
-		
 	</class>
 
 	<class name="BeamLattice">
@@ -574,15 +582,6 @@
 		<method name="GetComponentCount" description="Retrieves a component count of a component object.">
 			<param name="Count" type="uint32" pass="return" description="returns the component count" />
 		</method>
-	
-<!--
-  TODO: 
-	lib3mf_componentsobject_setslicestack
-	lib3mf_componentsobject_getslicestackid
-	lib3mf_componentsobject_setslicesmeshresolution
-	lib3mf_componentsobject_getslicesmeshresolution
-
--->
 	</class>
 
 	<class name="BeamSet">
@@ -783,6 +782,55 @@
 		</method>
 	</class>
 	
+	<class name="Slice">
+		<method name="SetVertices" description="Set all vertices of a slice">
+			<param name="Vertices" type="structarray" class="Position2D" pass="in" description="contains the positions." />
+		</method>
+		<method name="GetVertices" description="Get all vertices of a slice">
+			<param name="Vertices" type="structarray" class="Position2D" pass="out" description="contains the positions." />
+		</method>
+		<method name="GetVertexCount" description="Get the number of vertices in a slice">
+			<param name="Count" type="uint64" pass="out" description="the number of vertices in the slice" />
+		</method>
+		
+		<method name="GetPolygonCount" description="Get the number of polygons in the slice">		
+			<param name="Count" type="uint64" pass="out" description="the number of polygons in the slice" />
+		</method>
+		<method name="SetPolygonIndices" description="Set all indices of a polygon">
+			<param name="Index" type="uint64" pass="in" description="the index of the polygon to manipulate" />
+			<param name="Indices" type="basicarray" class="uint32" pass="in" description="the new indices of the index-th polygon" />
+		</method>
+		<method name="GetPolygonIndices" description="Get all vertices of a slice">
+			<param name="Index" type="uint64" pass="in" description="the index of the polygon to manipulate" />
+			<param name="Indices" type="basicarray" class="uint32" pass="out" description="the indices of the index-th polygon " />
+		</method>
+		<method name="GetPolygonIndexCount" description="Get the number of vertices in a slice">
+			<param name="Index" type="uint64" pass="in" description="the index of the polygon to manipulate" />
+			<param name="Count" type="uint64" pass="out" description="the number of indices of the index-th polygon" />
+		</method>
+	</class>
+	
+	<class name="SliceStack" parent="Resource">
+		<method name="GetSliceCount" description="Returns the number of slices">
+			<param name="Count" type="uint64" pass="return" description="the number of slices" />
+		</method>
+		<method name="GetSlice" description="Query a slice from the slice stack">
+			<param name="SliceIndex" type="uint64" pass="in" description="the index of the slice" />
+			<param name="TheSlice" type="handle" class="Slice" pass="return" description="the Slice instance" />
+		</method>
+		<method name="AddSlice" description="Returns the number of slices">
+			<param name="TheSlice" type="handle" class="Slice" pass="return" description="a new Slice instance" />
+		</method>
+		<method name="SetSliceRefPath" description="Sets the package path where this Slice should be stored. Input an empty string to reset the path">
+			<param name="Path" type="string" pass="in" description="the package path where this Slice should be stored" />
+		</method>
+		<method name="GetSliceRefPath" description="Obtains the package path where this Slice should be stored. Returns an empty string if the slicestack is stored within the root model.">
+			<param name="Path" type="string" pass="out" description="the package path where this Slice will be stored" />
+		</method>
+		<method name="GetBottomZ" description="Get the lower Z-Coordinate of the slice stack.">
+			<param name="ZBottom" type="single" pass="out" description="the lower Z-Coordinate the slice stack" />
+		</method>
+	</class>
 	
 	<class name="Model">
 		<method name="SetUnit" description = "sets the units of a model.">
@@ -805,11 +853,6 @@
 			<param name="ReaderClass" type="string" pass="in" description=" string identifier for the file type" />
 			<param name="ReaderInstance" type="handle" class="Reader" pass="return" description=" string identifier for the file type" />
 		</method>
-		
-		<!-- 
-		TODO: lib3mf_model_getslicestackById 
-		-->
-		
 		<method name="GetTexture2DByID" description="finds a model texture by its id">
 			<param name="ResourceID" type="uint32" pass="in" description="Resource ID" />
 			<param name="TextureInstance" type="handle" class="Texture2D" pass="return" description="returns the texture2d instance" />
@@ -825,6 +868,10 @@
 		<method name="GetComponentsObjectByID" description="finds a components object by its id">
 			<param name="ResourceID" type="uint32" pass="in" description="Resource ID" />
 			<param name="ComponentsObjectInstance" type="handle" class="ComponentsObject" pass="return" description="returns the components object instance" />
+		</method>
+		<method name="GetSliceStackByID" description="finds a model slicestack by its id">
+			<param name="ResourceID" type="uint32" pass="in" description="Resource ID" />
+			<param name="SliceStacInstance" type="handle" class="SliceStack" pass="return" description="returns the slicestack instance" />
 		</method>
 		<method name="GetBuildUUID" dllsuffix="utf8" description="returns, whether a build has a UUID and, if true, the build's UUID">
 			<param name="HasUUID" type="bool" pass="out" description="flag whether the build has a UUID"/>
@@ -862,6 +909,9 @@
 		</method>
 		<method name="AddComponentsObject" description = "adds an empty component object to the model.">
 			<param name="ComponentsObjectInstance" type="handle" class="ComponentsObject" pass="return" description=" returns the components object instance" />
+		</method>
+		<method name="AddSliceStack" description="creates a new model slicestack by its id">
+			<param name="SliceStackInstance" type="handle" class="SliceStack" pass="return" description="returns the new slicestack instance" />
 		</method>
 		<method name="AddTexture2DFromAttachment" description = "adds a texture2d resource to the model. Its path is given by that of an existing attachment.">
 			<param name="TextureAttachment" type="handle" class="Attachment" pass="in" description="attachment containing the image data." />
@@ -918,28 +968,7 @@
 		<method name="RemoveCustomContentType" dllsuffix="utf8" description = "removes a custom Content Type from the model (UTF8 version).">
 			<param name="Extension" type="string" pass="in" description="File Extension" />
 		</method>
-		
-		<!--
-		TODO: 
-			- lib3mf_model_addslicestack
-			- lib3mf_slicestack_addslice
-			- lib3mf_slicestack_getslicecount
-			- lib3mf_slicestack_getslice
-			- lib3mf_slicestack_setusessliceref
-			- lib3mf_slicestack_getusessliceref
-			- lib3mf_slice_gettopz
-			- lib3mf_slice_addvertices
-			- lib3mf_slice_addpolygon
-			- lib3mf_slice_startpolygon
-			- lib3mf_slice_addindextopolygon
-			- lib3mf_slice_getvertexcount
-			- lib3mf_slice_getpolygoncount
-			- lib3mf_slice_getvertices
-			- lib3mf_slice_getpolygonindexcount
-			- lib3mf_slice_getpolygonindices
-		-->
 	</class>
-
 
 	<global releasemethod="Release" journalmethod="SetJournal" versionmethod="GetLibraryVersion" >
 		<method name="GetLibraryVersion" description = "retrieves the current version of the library.">

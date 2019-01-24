@@ -42,6 +42,7 @@ Abstract: This is a stub class definition of CLib3MFModel
 #include "lib3mf_basematerialgroup.hpp"
 #include "lib3mf_metadatagroup.hpp"
 #include "lib3mf_attachment.hpp"
+#include "lib3mf_slicestack.hpp"
 // Include custom headers here.
 
 #include "Model/Classes/NMR_ModelMeshObject.h"
@@ -130,6 +131,16 @@ ILib3MFComponentsObject * CLib3MFModel::GetComponentsObjectByID (const Lib3MF_ui
 	}
 	else
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCOMPONENTSOBJECT);
+}
+
+ILib3MFSliceStack * CLib3MFModel::GetSliceStackByID(const Lib3MF_uint32 nResourceID)
+{
+	NMR::PModelResource pResource = model().findResource(nResourceID);
+	if (dynamic_cast<NMR::CModelSliceStackResource*>(pResource.get())) {
+		return new CLib3MFSliceStack(std::dynamic_pointer_cast<NMR::CModelSliceStackResource>(pResource));
+	}
+	else
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDSLICESTACKRESOURCE);
 }
 
 std::string CLib3MFModel::GetBuildUUID (bool & bHasUUID)
@@ -273,6 +284,17 @@ ILib3MFComponentsObject * CLib3MFModel::AddComponentsObject ()
 	model().addResource(pNewResource);
 	return new CLib3MFComponentsObject(pNewResource);
 }
+
+ILib3MFSliceStack * CLib3MFModel::AddSliceStack()
+{
+	NMR::ModelResourceID NewResourceID = model().generateResourceID();
+	NMR::PSliceStack pSliceStack = std::make_shared<NMR::CSliceStack>();
+	NMR::PModelSliceStackResource pNewResource = std::make_shared<NMR::CModelSliceStackResource>(NewResourceID, &model(), pSliceStack);
+
+	model().addResource(pNewResource);
+	return new CLib3MFSliceStack(pNewResource);
+}
+
 
 ILib3MFTexture2D * CLib3MFModel::AddTexture2DFromAttachment (ILib3MFAttachment* pTextureAttachment)
 {

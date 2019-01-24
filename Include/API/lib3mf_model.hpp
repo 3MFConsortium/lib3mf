@@ -91,6 +91,8 @@ public:
 
 	ILib3MFComponentsObject * GetComponentsObjectByID (const Lib3MF_uint32 nResourceID);
 
+	ILib3MFSliceStack * GetSliceStackByID(const Lib3MF_uint32 nResourceID);
+
 	std::string GetBuildUUID (bool & bHasUUID);
 
 	void SetBuildUUID (const std::string & sUUID);
@@ -114,6 +116,8 @@ public:
 	ILib3MFMeshObject * AddMeshObject ();
 
 	ILib3MFComponentsObject * AddComponentsObject ();
+
+	ILib3MFSliceStack * AddSliceStack();
 
 	ILib3MFTexture2D * AddTexture2DFromAttachment (ILib3MFAttachment* pTextureAttachment);
 
