@@ -197,6 +197,7 @@ namespace NMR {
 							std::string sNameSpaceURI;
 							if (!pXMLReader->GetNamespaceURI(sNameSpace, sNameSpaceURI)) {
 								m_pWarnings->addException(CNMRException(NMR_ERROR_METADATA_COULDNOTGETNAMESPACE), mrwInvalidOptionalValue);
+								sNameSpaceURI = sNameSpace;
 							}
 							m_pModel->addMetaData(sNameSpaceURI, sName, sValue, sType, bPreserve);
 						} else {
