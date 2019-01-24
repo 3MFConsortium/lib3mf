@@ -46,15 +46,18 @@ namespace Lib3MF
 
 		virtual void SetUp() {
 			model = CLib3MFWrapper::CreateModel();
+			reader = model->QueryReader("3mf");
 		}
 		virtual void TearDown() {
 			model.reset();
 		}
 
 		static PLib3MFModel model;
+		static PLib3MFReader reader;
 	};
 
 	PLib3MFModel MetaDataGroup::model;
+	PLib3MFReader MetaDataGroup::reader;
 
 	TEST_F(MetaDataGroup, ModelGet)
 	{
@@ -100,12 +103,54 @@ namespace Lib3MF
 		ASSERT_EQ(metaDataGroup->GetMetaDataCount(), 0);
 	}
 
+	void VerifyMetaDataGroup(PLib3MFMetaDataGroup metaDataGroup)
+	{
+		ASSERT_EQ(metaDataGroup->GetMetaDataCount(), 8);
 
+		ASSERT_TRUE(metaDataGroup->GetMetaDataByKey("", "Copyright")->GetValue() == "(C) Microsoft Corporation 2013");
+		ASSERT_TRUE(metaDataGroup->GetMetaDataByKey("", "Application")->GetValue() == "Microsoft 3D Builder");
+		ASSERT_TRUE(metaDataGroup->GetMetaDataByKey("", "LicenseTerms")->GetValue() == "All rights reserved");
+		ASSERT_TRUE(metaDataGroup->GetMetaDataByKey("", "Title")->GetValue() == "Cube");
+		ASSERT_TRUE(metaDataGroup->GetMetaDataByKey("", "Designer")->GetValue() == "Microsoft Corporation");
+		ASSERT_TRUE(metaDataGroup->GetMetaDataByKey("", "CreationDate")->GetValue() == "2013-10-07");
+		ASSERT_TRUE(metaDataGroup->GetMetaDataByKey("", "ModificationDate")->GetValue() == "2014-03-27");
+		ASSERT_TRUE(metaDataGroup->GetMetaDataByKey("", "Description")->GetValue() == "Cube");
+	}
 
-	//TEST_F(MetaDataGroup, ModelRead)
-	//{
-	//	ASSERT_FALSE(true);
-	//}
+	TEST_F(MetaDataGroup, Read_Model_DefaultNS)
+	{
+		reader->ReadFromFile(sTestFilesPath + "/MetaData/" + "MetaData_Model_DefaultNS.3mf");
+		CheckReaderWarnings(reader);
+
+		auto metaDataGroup = model->GetMetaDataGroup();
+		
+		VerifyMetaDataGroup(metaDataGroup);
+	}
+
+	TEST_F(MetaDataGroup, Read_BuildItem_DefaultNS)
+	{
+		reader->ReadFromFile(sTestFilesPath + "/MetaData/" + "MetaData_BuildItem_DefaultNS.3mf");
+		CheckReaderWarnings(reader);
+
+		auto buildItems = model->GetBuildItems();
+		ASSERT_TRUE(buildItems->MoveNext());
+
+		auto buildItem = buildItems->GetCurrent();
+
+		auto metaDataGroup = buildItem->GetMetaDataGroup();
+
+		VerifyMetaDataGroup(metaDataGroup);
+	}
+
+	TEST_F(MetaDataGroup, Read_Object_DefaultNS)
+	{
+		reader->ReadFromFile(sTestFilesPath + "/MetaData/" + "MetaData_Object_DefaultNS.3mf");
+		CheckReaderWarnings(reader);
+
+		auto metaDataGroup = model->GetMeshObjectByID(2)->GetMetaDataGroup();
+
+		VerifyMetaDataGroup(metaDataGroup);
+	}
 
 	//TEST_F(MetaDataGroup, ModelWriteRead)
 	//{

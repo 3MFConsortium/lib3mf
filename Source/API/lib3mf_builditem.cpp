@@ -32,8 +32,9 @@ Abstract: This is a stub class definition of CLib3MFBuildItem
 #include "lib3mf_interfaceexception.hpp"
 
 #include "lib3mf_utils.hpp"
-// Include custom headers here.
 #include "lib3mf_object.hpp"
+#include "lib3mf_metadatagroup.hpp"
+// Include custom headers here.
 
 using namespace Lib3MF::Impl;
 
@@ -114,23 +115,8 @@ void CLib3MFBuildItem::SetPartNumber (const std::string & sSetPartnumber)
 	buildItem().setPartNumber(sSetPartnumber);
 }
 
-bool CLib3MFBuildItem::HasMetaDataGroup ()
-{
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
-}
-
 ILib3MFMetaDataGroup * CLib3MFBuildItem::GetMetaDataGroup ()
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
-}
-
-ILib3MFMetaDataGroup * CLib3MFBuildItem::CreateMetaDataGroup ()
-{
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
-}
-
-void CLib3MFBuildItem::RemoveMetaDataGroup ()
-{
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	return new CLib3MFMetaDataGroup(buildItem().metaDataGroup());
 }
 

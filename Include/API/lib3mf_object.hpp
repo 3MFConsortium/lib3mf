@@ -96,13 +96,7 @@ public:
 
 	bool IsValid ();
 
-	bool HasMetaDataGroup ();
-
 	ILib3MFMetaDataGroup * GetMetaDataGroup ();
-
-	ILib3MFMetaDataGroup * CreateMetaDataGroup ();
-
-	void RemoveMetaDataGroup ();
 
 	std::string GetUUID(bool & bHasUUID);
 

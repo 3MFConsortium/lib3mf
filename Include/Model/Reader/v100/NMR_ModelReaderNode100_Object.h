@@ -40,6 +40,7 @@ A object reader model node is a parser for the object node of an XML Model Strea
 #include "Model/Reader/NMR_ModelReader_TexCoordMapping.h"
 #include "Model/Classes/NMR_ModelComponent.h"
 #include "Model/Classes/NMR_ModelComponentsObject.h"
+#include "Model/Classes/NMR_ModelMetaDataGroup.h"
 #include "Model/Classes/NMR_ModelObject.h"
 
 
@@ -67,6 +68,8 @@ namespace NMR {
 		nfUint32 m_nSliceStackId;
 		eModelSlicesMeshResolution m_eSlicesMeshResolution;
 		nfBool m_bHasMeshResolution;
+
+		PModelMetaDataGroup m_MetaDataGroup;
 
 		void createDefaultProperties();
 		void handleBeamLatticeExtension(CModelReaderNode100_Mesh* pXMLNode);

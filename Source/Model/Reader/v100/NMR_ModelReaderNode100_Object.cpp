@@ -34,7 +34,7 @@ Stream.
 
 #include "Model/Reader/v100/NMR_ModelReaderNode100_Object.h"
 #include "Model/Reader/v100/NMR_ModelReaderNode100_Mesh.h"
-#include "Model/Reader/v100/NMR_ModelReaderNode100_MetaData.h"
+#include "Model/Reader/v100/NMR_ModelReaderNode100_MetaDataGroup.h"
 #include "Model/Reader/v100/NMR_ModelReaderNode100_Components.h"
 
 #include "Model/Classes/NMR_ModelConstants.h"
@@ -107,6 +107,10 @@ namespace NMR {
 		m_pObject->setName(m_sName);
 		m_pObject->setPartNumber(m_sPartNumber);
 		
+		if (m_MetaDataGroup.get()) {
+			m_pObject->metaDataGroup()->mergeMetaData(m_MetaDataGroup.get());
+		}
+
 		if (m_bHasThumbnail)
 		{
 			PModelAttachment pAttachment = m_pModel->findModelAttachment(m_sThumbnail);
@@ -288,6 +292,15 @@ namespace NMR {
 				
 				if (m_nDefaultPropertyID != 0)
 					m_pWarnings->addException(CNMRException(NMR_ERROR_DEFAULTPID_ON_COMPONENTSOBJECT), mrwInvalidOptionalValue);
+			}
+			else if (strcmp(pChildName, XML_3MF_ELEMENT_METADATGROUP) == 0) {
+				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode100_MetaDataGroup>(m_pWarnings);
+				pXMLNode->parseXML(pXMLReader);
+
+				if (m_MetaDataGroup.get()) {
+					m_pWarnings->addException(CNMRException(NMR_ERROR_DUPLICATEMETADATAGROUP), mrwInvalidOptionalValue);
+				}
+				m_MetaDataGroup = dynamic_cast<CModelReaderNode100_MetaDataGroup*>(pXMLNode.get())->getMetaDataGroup();
 			}
 			else
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);

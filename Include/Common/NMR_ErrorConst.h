@@ -1022,6 +1022,9 @@ Model error codes (0x8XXX)
 // Invalid Filter Style
 #define NMR_ERROR_INVALIDFILTER 0x80C5
 
+// Duplicate MetaDataGroup
+#define NMR_ERROR_DUPLICATEMETADATAGROUP 0x80C6
+
 /*-------------------------------------------------------------------
 XML Parser Error Constants (0x9XXX)
 -------------------------------------------------------------------*/

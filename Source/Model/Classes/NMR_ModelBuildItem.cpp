@@ -45,6 +45,7 @@ namespace NMR {
 		m_pObject = pObject;
 		m_mTransform = fnMATRIX3_identity ();
 		m_nHandle = nHandle;
+		m_MetaDataGroup = std::make_shared<CModelMetaDataGroup>();
 
 		setUUID(std::make_shared<CUUID>());
 	}
@@ -56,6 +57,7 @@ namespace NMR {
 		m_pObject = pObject;
 		m_mTransform = mTransform;
 		m_nHandle = nHandle;
+		m_MetaDataGroup = std::make_shared<CModelMetaDataGroup>();
 
 		setUUID(std::make_shared<CUUID>());
 	}
@@ -119,6 +121,11 @@ namespace NMR {
 		getModel()->registerUUID(uuid);
 		getModel()->unRegisterUUID(m_UUID);
 		m_UUID = uuid;
+	}
+
+	PModelMetaDataGroup CModelBuildItem::metaDataGroup()
+	{
+		return m_MetaDataGroup;
 	}
 
 	std::string CModelBuildItem::path()

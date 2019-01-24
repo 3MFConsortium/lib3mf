@@ -44,6 +44,7 @@ namespace NMR {
 		setUUID(std::make_shared<CUUID>());
 		m_pSliceStackId = 0;
 		m_eSlicesMeshResolution = MODELSLICESMESHRESOLUTION_FULL;
+		m_MetaDataGroup = std::make_shared<CModelMetaDataGroup>();
 	}
 
 	void CModelObject::mergeToMesh(_In_ CMesh * pMesh, _In_ const NMATRIX3 mMatrix)
@@ -96,6 +97,11 @@ namespace NMR {
 		getModel()->registerUUID(uuid);
 		getModel()->unRegisterUUID(m_UUID);
 		m_UUID = uuid;
+	}
+
+	PModelMetaDataGroup CModelObject::metaDataGroup()
+	{
+		return m_MetaDataGroup;
 	}
 
 	nfBool CModelObject::setObjectTypeString(_In_ std::string sTypeString, _In_ nfBool bRaiseException)

@@ -37,7 +37,7 @@ model object.
 
 #include "Model/Classes/NMR_Model.h" 
 #include "Model/Classes/NMR_ModelResource.h" 
-#include "Model/Classes/NMR_ModelMetaData.h" 
+#include "Model/Classes/NMR_ModelMetaDataGroup.h" 
 #include "Model/Classes/NMR_ModelDefaultProperty.h"
 #include "Model/Classes/NMR_ModelSliceResource.h"
 #include "Common/NMR_Types.h" 
@@ -56,6 +56,7 @@ namespace NMR {
 		std::string m_sPartNumber;
 		PPackageResourceID m_pSliceStackId;
 		eModelSlicesMeshResolution m_eSlicesMeshResolution;
+		PModelMetaDataGroup m_MetaDataGroup;
 	private:
 		PUUID m_UUID;
 		std::string m_sThumbnail;
@@ -78,6 +79,9 @@ namespace NMR {
 		// Production Extension
 		PUUID uuid();
 		void setUUID(PUUID uuid);
+
+		// MetaDataGroup
+		PModelMetaDataGroup metaDataGroup();
 
 		// setter/getter for the object type
 		eModelObjectType getObjectType();

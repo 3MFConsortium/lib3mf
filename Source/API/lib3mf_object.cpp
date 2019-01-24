@@ -33,6 +33,7 @@ Abstract: This is a stub class definition of CLib3MFObject
 
 #include "lib3mf_meshobject.hpp"
 #include "lib3mf_componentsobject.hpp"
+#include "lib3mf_metadatagroup.hpp"
 
 // Include custom headers here.
 #include "Model/Classes/NMR_ModelMeshObject.h" 
@@ -142,24 +143,9 @@ bool CLib3MFObject::IsValid ()
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-bool CLib3MFObject::HasMetaDataGroup ()
-{
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
-}
-
 ILib3MFMetaDataGroup * CLib3MFObject::GetMetaDataGroup ()
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
-}
-
-ILib3MFMetaDataGroup * CLib3MFObject::CreateMetaDataGroup ()
-{
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
-}
-
-void CLib3MFObject::RemoveMetaDataGroup ()
-{
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	return new CLib3MFMetaDataGroup(object()->metaDataGroup());
 }
 
 std::string CLib3MFObject::GetUUID(bool & bHasUUID)

@@ -26,44 +26,37 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelReaderNode100_BuildItem.h defines the Model Reader BuildItem Node Class.
-A builditem reader model node is a parser for the builditem node of an XML Model Stream.
+NMR_ModelReaderNode100_MetaDataGroup.h defines the Model Reader MetaDataGroup Node Class.
+A metadatagroup reader node is a parser for the metadatagroup node of an XML Model Stream.
 
 --*/
 
-#ifndef __NMR_MODELREADERNODE100_BUILDITEM
-#define __NMR_MODELREADERNODE100_BUILDITEM
+#ifndef __NMR_MODELREADERNODE100_METADATAGROUP
+#define __NMR_MODELREADERNODE100_METADATAGROUP
 
 #include "Model/Reader/NMR_ModelReaderNode.h"
 #include "Model/Classes/NMR_ModelMetaDataGroup.h"
 
 namespace NMR {
 
-	class CModelReaderNode100_BuildItem : public CModelReaderNode {
+	class CModelReaderNode100_MetaDataGroup : public CModelReaderNode {
 	private:
-		CModel * m_pModel;
-		nfInt32 m_ObjectID;
-		nfBool m_bHasID;
-		std::string m_sPartNumber;
-		NMATRIX3 m_mTransform;
-
-		// Production Extension
-		std::string m_sPath;
-		PUUID m_UUID;
-
-		bool m_hasPath;
 		PModelMetaDataGroup m_MetaDataGroup;
 	protected:
-		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
-		virtual void OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace);
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
+		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
+		virtual void OnText(_In_z_ const nfChar * pText, _In_ CXmlReader * pXMLReader);
 	public:
-		CModelReaderNode100_BuildItem() = delete;
-		CModelReaderNode100_BuildItem(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings);
+		CModelReaderNode100_MetaDataGroup() = delete;
+		CModelReaderNode100_MetaDataGroup(_In_ PModelReaderWarnings pWarnings);
+
+		PModelMetaDataGroup getMetaDataGroup();
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 	};
 
+	typedef std::shared_ptr <CModelReaderNode100_MetaDataGroup> PModelReaderNode100_MetaDataGroup;
+
 }
 
-#endif // __NMR_MODELREADERNODE100_BUILDITEM
+#endif // __NMR_MODELREADERNODE100_METADATAGROUP

@@ -389,16 +389,8 @@
 		<method name="SetUUID" dllsuffix="utf8" description="Sets a build object's uuid string (see production extension specification)">
 			<param name="UUID" type="string" pass="in" description="new object uuid string." />
 		</method>
-		<method name="HasMetaDataGroup" description="Returns whether the object has a metadatagroup">
-			<param name="HasMetaDataGroup" type="bool" pass="return" description="returns whether the object has a metadatagroup" />
-		</method>
 		<method name="GetMetaDataGroup" description="Returns the metadatagroup of this object">
 			<param name="MetaDataGroup" type="handle" class="MetaDataGroup" pass="return" description="returns an Instance of the metadatagroup of this object" />
-		</method>
-		<method name="CreateMetaDataGroup" description="Creates a new metadatagroup for this object">
-			<param name="MetaDataGroup" type="handle" class="MetaDataGroup" pass="return" description="returns an Instance of a new metadatagroup for this object" />
-		</method>
-		<method name="RemoveMetaDataGroup" description="Removes the object's metadatagroup">
 		</method>
 	</class>
 
@@ -769,16 +761,8 @@
 		<method name="SetPartNumber" dllsuffix="utf8" description="Sets a build item's part number string">
 			<param name="SetPartnumber" type="string" pass="in" description="new part number string for referencing parts from the outside world" />
 		</method>
-		<method name="HasMetaDataGroup" description="Returns whether the build item has a metadatagroup">
-			<param name="HasMetaDataGroup" type="bool" pass="return" description="returns whether the build item has a metadatagroup" />
-		</method>
 		<method name="GetMetaDataGroup" description="Returns the metadatagroup of this build item">
 			<param name="MetaDataGroup" type="handle" class="MetaDataGroup" pass="return" description="returns an Instance of the metadatagroup of this build item" />
-		</method>
-		<method name="CreateMetaDataGroup" description="Creates a new metadatagroup for this build item">
-			<param name="MetaDataGroup" type="handle" class="MetaDataGroup" pass="return" description="returns an Instance of a new metadatagroup for this build item" />
-		</method>
-		<method name="RemoveMetaDataGroup" description="Removes the build item's metadatagroup">
 		</method>
 	</class>
 

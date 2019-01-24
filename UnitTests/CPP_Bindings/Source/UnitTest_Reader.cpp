@@ -64,41 +64,30 @@ namespace Lib3MF
 	PLib3MFReader Reader::reader3MF;
 	PLib3MFReader Reader::readerSTL;
 
-	void CheckWarnings(PLib3MFReader reader)
-	{
-		EXPECT_EQ(reader->GetWarningCount(), 0);
-		for (Lib3MF_uint32 iWarning = 0; iWarning < reader->GetWarningCount(); iWarning++)
-		{
-			Lib3MF_uint32 nErrorCode;
-			std::string sWarning = reader->GetWarning(iWarning, nErrorCode);
-			EXPECT_TRUE(true) << iWarning << ": " << nErrorCode << ", " << sWarning;
-		}
-	}
-
 	TEST_F(Reader, 3MFReadFromFile)
 	{
 		Reader::reader3MF->ReadFromFile(sTestFilesPath + "/Reader/" + "Pyramid.3mf");
-		CheckWarnings(Reader::reader3MF);
+		CheckReaderWarnings(Reader::reader3MF);
 	}
 
 	TEST_F(Reader, STLReadFromFile)
 	{
 		Reader::readerSTL->ReadFromFile(sTestFilesPath + "/Reader/" + "Pyramid.stl");
-		CheckWarnings(Reader::readerSTL);
+		CheckReaderWarnings(Reader::readerSTL);
 	}
 
 	TEST_F(Reader, 3MFReadFromBuffer)
 	{
 		auto buffer = ReadFileIntoBuffer(sTestFilesPath + "/Reader/" + "Pyramid.3mf");
 		Reader::reader3MF->ReadFromBuffer(buffer);
-		CheckWarnings(Reader::reader3MF);
+		CheckReaderWarnings(Reader::reader3MF);
 	}
 
 	TEST_F(Reader, STLReadFromBuffer)
 	{
 		auto buffer = ReadFileIntoBuffer(sTestFilesPath + "/Reader/" + "Pyramid.stl");
 		Reader::readerSTL->ReadFromBuffer(buffer);
-		CheckWarnings(Reader::readerSTL);
+		CheckReaderWarnings(Reader::readerSTL);
 	}
 
 	TEST_F(Reader, 3MFReadFromCallback)
@@ -112,7 +101,7 @@ namespace Lib3MF
 			PositionedVector<Lib3MF_uint8>::seekCallback,
 			reinterpret_cast<Lib3MF_uint64>(&bufferCallback)
 		);
-		CheckWarnings(Reader::reader3MF);
+		CheckReaderWarnings(Reader::reader3MF);
 	}
 
 }

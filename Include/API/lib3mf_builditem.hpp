@@ -92,14 +92,7 @@ public:
 
 	void SetPartNumber (const std::string & sSetPartnumber);
 
-	bool HasMetaDataGroup ();
-
 	ILib3MFMetaDataGroup * GetMetaDataGroup ();
-
-	ILib3MFMetaDataGroup * CreateMetaDataGroup ();
-
-	void RemoveMetaDataGroup ();
-
 };
 
 }

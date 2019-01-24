@@ -85,6 +85,7 @@ These are given by the 3MF Standard
 #define XML_3MF_ATTRIBUTE_PREFIX_XML                "xml"
 #define XML_3MF_ATTRIBUTE_MUST_UNDERSTAND           "MustUnderstand"
 
+#define XML_3MF_ELEMENT_METADATGROUP                "metadatagroup"
 #define XML_3MF_ELEMENT_METADATA                    "metadata"
 #define XML_3MF_ELEMENT_METADATA_ENRTY              "entry"
 #define XML_3MF_ATTRIBUTE_METADATA_NAME         "name"

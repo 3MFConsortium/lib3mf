@@ -142,6 +142,16 @@ inline sLib3MFTriangle fnCreateTriangle(int v0, int v1, int v2)
 	return result;
 }
 
+inline void CheckReaderWarnings(Lib3MF::PLib3MFReader reader)
+{
+	EXPECT_EQ(reader->GetWarningCount(), 0);
+	for (Lib3MF_uint32 iWarning = 0; iWarning < reader->GetWarningCount(); iWarning++)
+	{
+		Lib3MF_uint32 nErrorCode;
+		std::string sWarning = reader->GetWarning(iWarning, nErrorCode);
+		EXPECT_TRUE(true) << iWarning << ": " << nErrorCode << ", " << sWarning;
+	}
+}
 
 
 #endif //__NMR_UNITTEST_UTILITIES

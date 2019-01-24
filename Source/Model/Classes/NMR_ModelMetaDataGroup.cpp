@@ -112,7 +112,7 @@ namespace NMR {
 		for (nIndex = 0; nIndex < nCount; nIndex++) {
 			std::string sName;
 			std::string sValue;
-			PModelMetaData metaData = getMetaData(nIndex);
+			PModelMetaData metaData = pSourceMetaDataGroup->getMetaData(nIndex);
 			addMetaData(metaData->getNameSpace(), metaData->getName(), metaData->getValue(), metaData->getType(), metaData->getPreserve());
 		}
 	}
