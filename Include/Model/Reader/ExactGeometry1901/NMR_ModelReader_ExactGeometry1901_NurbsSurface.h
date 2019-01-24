@@ -59,6 +59,9 @@ namespace NMR {
 		nfUint32 m_nDegreeU;
 		nfBool m_bHasDegreeV;
 		nfUint32 m_nDegreeV;
+		nfBool m_bHasID;
+		ModelResourceID m_nID;
+
 
 		std::vector<sModelNurbsSurfaceKnot> m_KnotsU;
 		std::vector<sModelNurbsSurfaceKnot> m_KnotsV;
