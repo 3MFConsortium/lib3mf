@@ -285,13 +285,16 @@ ILib3MFComponentsObject * CLib3MFModel::AddComponentsObject ()
 	return new CLib3MFComponentsObject(pNewResource);
 }
 
-ILib3MFSliceStack * CLib3MFModel::AddSliceStack()
+ILib3MFSliceStack * CLib3MFModel::AddSliceStack(const float fBottomZ)
 {
 	NMR::ModelResourceID NewResourceID = model().generateResourceID();
 	NMR::PSliceStack pSliceStack = std::make_shared<NMR::CSliceStack>();
 	NMR::PModelSliceStackResource pNewResource = std::make_shared<NMR::CModelSliceStackResource>(NewResourceID, &model(), pSliceStack);
 
 	model().addResource(pNewResource);
+
+	pNewResource->getSliceStack()->setBottomZ(fBottomZ);
+
 	return new CLib3MFSliceStack(pNewResource);
 }
 

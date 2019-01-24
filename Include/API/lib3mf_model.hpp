@@ -117,7 +117,7 @@ public:
 
 	ILib3MFComponentsObject * AddComponentsObject ();
 
-	ILib3MFSliceStack * AddSliceStack();
+	ILib3MFSliceStack * AddSliceStack(const float fBottomZ);
 
 	ILib3MFTexture2D * AddTexture2DFromAttachment (ILib3MFAttachment* pTextureAttachment);
 

@@ -160,12 +160,12 @@ namespace Lib3MF
 
 	TEST_F(Model, AddSliceStack)
 	{
-		auto sliceStack = m_model->AddSliceStack();
+		auto sliceStack = m_model->AddSliceStack(0.);
 	}
 
 	TEST_F(Model, GetSliceStack)
 	{
-		auto sliceStack = m_model->AddSliceStack();
+		auto sliceStack = m_model->AddSliceStack(0.);
 		Lib3MF_uint32 oldID = sliceStack->GetResourceID();
 		auto newSliceStack = m_model->GetSliceStackByID(oldID);
 		Lib3MF_uint32 newId = newSliceStack->GetResourceID();

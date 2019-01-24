@@ -808,6 +808,9 @@
 			<param name="Index" type="uint64" pass="in" description="the index of the polygon to manipulate" />
 			<param name="Count" type="uint64" pass="out" description="the number of indices of the index-th polygon" />
 		</method>
+		<method name="GetZTop" description="Get the upper Z-Coordinate of this slice.">
+			<param name="ZTop" type="single" pass="out" description="the upper Z-Coordinate of this slice" />
+		</method>
 	</class>
 	
 	<class name="SliceStack" parent="Resource">
@@ -819,6 +822,7 @@
 			<param name="TheSlice" type="handle" class="Slice" pass="return" description="the Slice instance" />
 		</method>
 		<method name="AddSlice" description="Returns the number of slices">
+			<param name="ZTop" type="single" pass="in" description="upper Z coordinate of the slice"/>
 			<param name="TheSlice" type="handle" class="Slice" pass="return" description="a new Slice instance" />
 		</method>
 		<method name="SetSliceRefPath" description="Sets the package path where this Slice should be stored. Input an empty string to reset the path">
@@ -911,6 +915,7 @@
 			<param name="ComponentsObjectInstance" type="handle" class="ComponentsObject" pass="return" description=" returns the components object instance" />
 		</method>
 		<method name="AddSliceStack" description="creates a new model slicestack by its id">
+			<param name="BottomZ" type="single" pass="in" description="Bottom Z value of the slicestack"/>
 			<param name="SliceStackInstance" type="handle" class="SliceStack" pass="return" description="returns the new slicestack instance" />
 		</method>
 		<method name="AddTexture2DFromAttachment" description = "adds a texture2d resource to the model. Its path is given by that of an existing attachment.">

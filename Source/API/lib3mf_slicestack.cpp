@@ -59,8 +59,7 @@ ILib3MFSlice * CLib3MFSliceStack::GetSlice (const Lib3MF_uint64 nSliceIndex)
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
-
-ILib3MFSlice * CLib3MFSliceStack::AddSlice ()
+ILib3MFSlice * CLib3MFSliceStack::AddSlice (const float fZTop)
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }

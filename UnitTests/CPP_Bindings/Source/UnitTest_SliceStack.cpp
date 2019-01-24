@@ -46,7 +46,7 @@ namespace Lib3MF
 
 		virtual void SetUp() {
 			model = CLib3MFWrapper::CreateModel();
-			sliceStack = model->AddSliceStack();
+			sliceStack = model->AddSliceStack(.0);
 			mesh = model->AddMeshObject();
 
 		}
@@ -59,12 +59,6 @@ namespace Lib3MF
 		PLib3MFMeshObject mesh;
 	};
 
-
-	
-	TEST_F(SliceStack, AddSliceStack)
-	{
-		sliceStack->GetResourceID();
-	}
 
 	TEST_F(SliceStack, HasSetClearSliceStack)
 	{
@@ -80,6 +74,13 @@ namespace Lib3MF
 		ASSERT_FALSE(mesh->HasSliceStack());
 	}
 
+	TEST_F(SliceStack, HandleSlices)
+	{
+		ASSERT_EQ(sliceStack->GetSliceCount(), 0);
+
+		auto slice = sliceStack->AddSlice(0.0);
+		ASSERT_EQ(sliceStack->GetSliceCount(), 1);
+	}
 
 }
 

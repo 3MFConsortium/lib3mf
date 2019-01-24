@@ -80,7 +80,7 @@ public:
 
 	ILib3MFSlice * GetSlice (const Lib3MF_uint64 nSliceIndex);
 
-	ILib3MFSlice * AddSlice ();
+	ILib3MFSlice * AddSlice (const float fZTop);
 
 	void SetSliceRefPath (const std::string & sPath);
 

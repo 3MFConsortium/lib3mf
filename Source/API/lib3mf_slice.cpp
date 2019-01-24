@@ -75,3 +75,4 @@ void CLib3MFSlice::GetPolygonIndexCount (const Lib3MF_uint64 nIndex, Lib3MF_uint
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
+
