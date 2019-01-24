@@ -44,7 +44,7 @@ namespace NMR {
 	CModelReaderNode100_MetaData::CModelReaderNode100_MetaData(_In_ PModelReaderWarnings pWarnings)
 		: CModelReaderNode(pWarnings)
 	{
-		m_sName = "";
+		m_sKey = "";
 		m_sValue = "";
 		m_bPreserve = true;
 		m_sType = "xs:string";
@@ -67,7 +67,7 @@ namespace NMR {
 		__NMRASSERT(pAttributeName);
 		__NMRASSERT(pAttributeValue);
 		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_METADATA_NAME) == 0) {
-			m_sName = std::string(pAttributeValue);
+			m_sKey = std::string(pAttributeValue);
 		} else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_METADATA_PRESERVE) == 0) {
 			m_bPreserve = !(std::string(pAttributeValue) == "0");
 		} else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_METADATA_TYPE) == 0) {
@@ -82,9 +82,9 @@ namespace NMR {
 		m_sValue += std::string(pText);
 	}
 
-	std::string CModelReaderNode100_MetaData::getName()
+	std::string CModelReaderNode100_MetaData::getKey()
 	{
-		return m_sName;
+		return m_sKey;
 	}
 
 	std::string CModelReaderNode100_MetaData::getValue()

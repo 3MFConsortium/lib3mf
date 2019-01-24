@@ -64,19 +64,132 @@ namespace Lib3MF
 
 	TEST_F(MetaData, DefaultNameSpace)
 	{
-		auto md = metaDataGroup->AddMetaData("", "NoStandardName", "TheTitle", "xs:string", true);
-		
-		ASSERT_FALSE(true);
+		auto md = metaDataGroup->AddMetaData("", "Designer", "SomeDesigner", "xs:string", true);
+		try {
+			metaDataGroup->AddMetaData("", "NoStandardName", "TheTitle", "xs:string", true);
+			ASSERT_FALSE(true);
+		}
+		catch (ELib3MFException) {
+			ASSERT_TRUE(true);
+		}
 	}
 
 	TEST_F(MetaData, OtherNameSpace)
 	{
-		ASSERT_FALSE(true);
+		metaDataGroup->AddMetaData("ANameSpace", "NoStandardName", "TheTitle", "xs:string", true);
+	}
+
+	TEST_F(MetaData, GetProperties)
+	{
+		std::string nameSpace = "ANameSpace";
+		std::string name = "AName";
+		std::string key = nameSpace + ":" + name;
+		std::string value = "AValue";
+		std::string type = "AType";
+		bool mustPreserve = true;
+
+		auto md = metaDataGroup->AddMetaData(nameSpace, name, value, type, mustPreserve);
+
+		ASSERT_EQ(md->GetNameSpace(), nameSpace);
+		ASSERT_EQ(md->GetName(), name);
+		ASSERT_EQ(md->GetKey(), key);
+		ASSERT_EQ(md->GetValue(), value);
+		ASSERT_EQ(md->GetType(), type);
+		ASSERT_EQ(md->GetMustPreserve(), mustPreserve);
+	}
+
+	TEST_F(MetaData, SetProperties)
+	{
+		std::string nameSpace = "AnotherNameSpace";
+		std::string name = "AnotherName";
+		std::string key = nameSpace + ":" + name;
+		std::string value = "AnotherValue";
+		std::string type = "AnotherType";
+		bool mustPreserve = false;
+
+		metaData->SetNameSpace(nameSpace);
+		metaData->SetName(name);
+		metaData->SetValue(value);
+		metaData->SetType(type);
+		metaData->SetMustPreserve(mustPreserve);
+
+		ASSERT_EQ(metaData->GetNameSpace(), nameSpace);
+		ASSERT_EQ(metaData->GetName(), name);
+		ASSERT_EQ(metaData->GetKey(), key);
+		ASSERT_EQ(metaData->GetValue(), value);
+		ASSERT_EQ(metaData->GetType(), type);
+		ASSERT_EQ(metaData->GetMustPreserve(), mustPreserve);
 	}
 
 	TEST_F(MetaData, DuplicateMetaData)
 	{
-		ASSERT_FALSE(true);
+		try {
+			metaDataGroup->AddMetaData("", "Title", "TheTitle", "xs:string", true);
+			ASSERT_FALSE(true);
+		}
+		catch (ELib3MFException) {
+			ASSERT_TRUE(true);
+		}
+	}
+
+	TEST_F(MetaData, InvalidNameInDefaultNamespace1)
+	{
+		auto md = metaDataGroup->AddMetaData("", "Designer", "TheTitle", "xs:string", true);
+		try {
+			md->SetName("INVALIDNAME");
+			ASSERT_FALSE(true);
+		}
+		catch (ELib3MFException) {
+			ASSERT_TRUE(true);
+		}
+	}
+
+	TEST_F(MetaData, InvalidNameInDefaultNamespace2)
+	{
+		auto md = metaDataGroup->AddMetaData("ANameSpace", "SomeName", "TheTitle", "xs:string", true);
+		try {
+			md->SetNameSpace("");
+			ASSERT_FALSE(true);
+		}
+		catch (ELib3MFException) {
+			ASSERT_TRUE(true);
+		}
+	}
+
+	TEST_F(MetaData, EmtpyStrings)
+	{
+		try {
+			auto md = metaDataGroup->AddMetaData("ANameSpace", "", "TheTitle", "xs:string", true);
+			ASSERT_FALSE(true);
+		}
+		catch (ELib3MFException) {
+			ASSERT_TRUE(true);
+		}
+
+		try {
+			auto md = metaDataGroup->AddMetaData("ANameSpace", "SomeName", "TheTitle", "", true);
+			ASSERT_FALSE(true);
+		}
+		catch (ELib3MFException) {
+			ASSERT_TRUE(true);
+		}
+
+		auto md = metaDataGroup->AddMetaData("ANameSpace", "SomeName", "TheTitle", "xs:string", true);
+		try {
+			md->SetName("");
+			ASSERT_FALSE(true);
+		}
+		catch (ELib3MFException) {
+			ASSERT_TRUE(true);
+		}
+
+		try {
+			md->SetType("");
+			ASSERT_FALSE(true);
+		}
+		catch (ELib3MFException) {
+			ASSERT_TRUE(true);
+		}
 	}
 }
 

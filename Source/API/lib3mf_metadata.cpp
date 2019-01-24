@@ -53,7 +53,7 @@ std::string CLib3MFMetaData::GetNameSpace ()
 
 void CLib3MFMetaData::SetNameSpace (const std::string & sNameSpace)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	m_pMetaData->setNameSpace(sNameSpace);
 }
 
 std::string CLib3MFMetaData::GetName()
@@ -66,39 +66,38 @@ std::string CLib3MFMetaData::GetKey()
 	return m_pMetaData->getKey();
 }
 
-
 void CLib3MFMetaData::SetName (const std::string & sName)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	m_pMetaData->setName(sName);
 }
 
 bool CLib3MFMetaData::GetMustPreserve ()
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	return m_pMetaData->getPreserve();
 }
 
 void CLib3MFMetaData::SetMustPreserve (const bool bMustPreserve)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	m_pMetaData->setPreserve(bMustPreserve);
 }
 
 std::string CLib3MFMetaData::GetType ()
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	return m_pMetaData->getType();
 }
 
 void CLib3MFMetaData::SetType (const std::string & sType)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	m_pMetaData->setType(sType);
 }
 
 std::string CLib3MFMetaData::GetValue ()
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	return m_pMetaData->getValue();
 }
 
 void CLib3MFMetaData::SetValue (const std::string & sValue)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	m_pMetaData->setValue(sValue);
 }
 

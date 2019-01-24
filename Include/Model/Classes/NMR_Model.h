@@ -169,7 +169,7 @@ namespace NMR {
 		nfUint32 getMetaDataCount();
 		PModelMetaData getMetaData(_In_ nfUint32 nIndex);
 		void removeMetaData(_In_ nfUint32 nIndex);
-		nfBool hasMetaData(_In_ std::string sName);
+		nfBool hasMetaData(_In_ std::string sKey);
 		void mergeMetaData(_In_ CModel * pSourceModel);
 		PModelMetaDataGroup getMetaDataGroup();
 

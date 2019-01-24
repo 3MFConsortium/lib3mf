@@ -269,9 +269,9 @@ namespace NMR {
 		m_MetaDataGroup->removeMetaData(nIndex);
 	}
 
-	nfBool  CModel::hasMetaData(_In_ std::string sName)
+	nfBool  CModel::hasMetaData(_In_ std::string sKey)
 	{
-		return m_MetaDataGroup->hasMetaData(sName);
+		return m_MetaDataGroup->hasMetaData(sKey);
 	}
 
 	void  CModel::mergeMetaData(_In_ CModel * pSourceModel)

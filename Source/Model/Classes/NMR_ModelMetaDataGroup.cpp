@@ -49,6 +49,14 @@ namespace NMR {
 
 	PModelMetaData CModelMetaDataGroup::addMetaData(_In_ std::string sNameSpace, _In_ std::string sName, _In_ std::string sValue, _In_ std::string sType, _In_ nfBool bPreserve)
 	{
+		if (hasMetaData(CModelMetaData::calculateKey(sNameSpace, sName))) {
+			throw CNMRException(NMR_ERROR_DUPLICATEMETADATA);
+		}
+		
+		if (!CModelMetaData::isValidNamespaceAndName(sNameSpace, sName)) {
+			throw CNMRException(NMR_ERROR_INVALIDMETADATA);
+		}
+
 		if (m_MetaData.size() >= XML_3MF_MAXMETADATACOUNT)
 			throw CNMRException(NMR_ERROR_INVALIDMETADATACOUNT);
 
@@ -87,9 +95,9 @@ namespace NMR {
 		m_MetaData.erase(iIterator);
 	}
 
-	nfBool CModelMetaDataGroup::hasMetaData(_In_ std::string sName)
+	nfBool CModelMetaDataGroup::hasMetaData(_In_ std::string sKey)
 	{
-		std::map<std::string, PModelMetaData>::iterator iIterator = m_MetaDataMap.find(sName);
+		std::map<std::string, PModelMetaData>::iterator iIterator = m_MetaDataMap.find(sKey);
 		return iIterator != m_MetaDataMap.end();
 	}
 

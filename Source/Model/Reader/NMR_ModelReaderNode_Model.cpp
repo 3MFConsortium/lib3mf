@@ -144,16 +144,6 @@ namespace NMR {
 		}
 	}
 
-	bool decomposeIntoNamespaceAndName(const std::string &sIn, std::string &sNameSpace, std::string &sName) {
-		size_t cInd = sIn.find(":");
-		if (cInd != std::string::npos) {
-			sNameSpace = sIn.substr(0, cInd);
-			sName = sIn.substr(cInd+1, sIn.length() - cInd);
-			return true;
-		}
-		return false;
-	}
-
 	void CModelReaderNode_Model::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
 	{
 		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_CORESPEC100) == 0) {
@@ -192,36 +182,26 @@ namespace NMR {
 					PModelReaderNode100_MetaData pXMLNode = std::make_shared<CModelReaderNode100_MetaData>(m_pWarnings);
 					pXMLNode->parseXML(pXMLReader);
 
-					std::string sName = pXMLNode->getName();
+					std::string sKey = pXMLNode->getKey();
 					std::string sValue = pXMLNode->getValue();
 					std::string sType = pXMLNode->getType();
 					nfBool bPreserve = pXMLNode->getPreserve();
 
-					if (!sName.empty()) {
-						if (m_pModel->hasMetaData(sName)) {
+					if (!sKey.empty()) {
+						if (m_pModel->hasMetaData(sKey)) {
 							m_pWarnings->addWarning(MODELREADERWARNING_DUPLICATEMETADATA, NMR_ERROR_DUPLICATEMETADATA, mrwInvalidOptionalValue);
 						}
-						std::string sNameSpace, sNameOnly;
-						if (decomposeIntoNamespaceAndName(sName, sNameSpace, sNameOnly)) {
+						std::string sNameSpace, sName;
+						CModelMetaData::decomposeKeyIntoNamespaceAndName(sKey, sNameSpace, sName);
+						if (!sNameSpace.empty()) {
 							std::string sNameSpaceURI;
-							if (pXMLReader->GetNamespaceURI(sNameSpace, sNameSpaceURI))
-								m_pModel->addMetaData(sNameSpaceURI, sNameOnly, sValue, sType, bPreserve);
-							else
-								throw CNMRException(NMR_ERROR_METADATA_COULDNOTGETNAMESPACE);
-						}
-						else {
+							if (!pXMLReader->GetNamespaceURI(sNameSpace, sNameSpaceURI)) {
+								m_pWarnings->addException(CNMRException(NMR_ERROR_METADATA_COULDNOTGETNAMESPACE), mrwInvalidOptionalValue);
+							}
+							m_pModel->addMetaData(sNameSpaceURI, sName, sValue, sType, bPreserve);
+						} else {
 							// default namespace
-							if ((strcmp(sName.c_str(), XML_3MF_METADATA_VALUE_1) == 0) ||
-								(strcmp(sName.c_str(), XML_3MF_METADATA_VALUE_2) == 0) ||
-								(strcmp(sName.c_str(), XML_3MF_METADATA_VALUE_3) == 0) ||
-								(strcmp(sName.c_str(), XML_3MF_METADATA_VALUE_4) == 0) ||
-								(strcmp(sName.c_str(), XML_3MF_METADATA_VALUE_5) == 0) ||
-								(strcmp(sName.c_str(), XML_3MF_METADATA_VALUE_6) == 0) ||
-								(strcmp(sName.c_str(), XML_3MF_METADATA_VALUE_7) == 0) ||
-								(strcmp(sName.c_str(), XML_3MF_METADATA_VALUE_8) == 0) ||
-								(strcmp(sName.c_str(), XML_3MF_METADATA_VALUE_9) == 0)
-								)
-							{
+							if (CModelMetaData::isValidNamespaceAndName("", sName)) {
 								m_pModel->addMetaData("", sName, sValue, sType, bPreserve);
 							}
 							else

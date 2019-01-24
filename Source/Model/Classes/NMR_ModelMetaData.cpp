@@ -33,12 +33,20 @@ metadata, and can be attached to any 3MF model node.
 --*/
 
 #include "Model/Classes/NMR_ModelMetaData.h" 
+#include "Model/Classes/NMR_ModelConstants.h"
+#include "Common/NMR_Exception.h"
 
 namespace NMR {
 
 	CModelMetaData::CModelMetaData(_In_ std::string sNameSpace, _In_ std::string sName, _In_ std::string sValue,
 		_In_ std::string sType, _In_ nfBool bPreserve)
 	{
+		if (!isValidNamespaceAndName(sNameSpace, sName))
+			throw CNMRException(NMR_ERROR_INVALIDMETADATA);
+		
+		if (sType.empty()) 
+			throw CNMRException(NMR_ERROR_INVALIDMETADATA);
+
 		m_sNameSpace = sNameSpace;
 		m_sName = sName;
 		m_sValue = sValue;
@@ -58,10 +66,7 @@ namespace NMR {
 
 	std::string CModelMetaData::getKey()
 	{
-		if (m_sNameSpace.empty())
-			return m_sName;
-		else
-			return m_sNameSpace + ":" + m_sName;
+		return calculateKey(m_sNameSpace, m_sName);
 	}
 
 	std::string CModelMetaData::getValue()
@@ -81,13 +86,17 @@ namespace NMR {
 
 	void CModelMetaData::setName(std::string sName)
 	{
-		// TODO: if no namespace, check whether correct name
+		if (!isValidNamespaceAndName(m_sNameSpace, sName)) {
+			throw CNMRException(NMR_ERROR_INVALIDMETADATA);
+		}
 		m_sName = sName;
 	}
 
 	void CModelMetaData::setNameSpace(std::string sNameSpace)
 	{
-		// TODO: if no namespace, check whether correct name
+		if (!isValidNamespaceAndName(sNameSpace, m_sName)) {
+			throw CNMRException(NMR_ERROR_INVALIDMETADATA);
+		}
 		m_sNameSpace = sNameSpace;
 	}
 
@@ -98,6 +107,8 @@ namespace NMR {
 
 	void CModelMetaData::setType(std::string sType)
 	{
+		if (sType.empty())
+			throw CNMRException(NMR_ERROR_INVALIDMETADATA);
 		m_sType = sType;
 	}
 
@@ -105,4 +116,42 @@ namespace NMR {
 	{
 		m_bPreserve = bPreserve;
 	}
+
+	void CModelMetaData::decomposeKeyIntoNamespaceAndName(const std::string &sKey, std::string &sNameSpace, std::string &sName) {
+		size_t cInd = sKey.find(":");
+		if (cInd != std::string::npos) {
+			sNameSpace = sKey.substr(0, cInd);
+			sName = sKey.substr(cInd + 1, sKey.length() - cInd);
+		} else{
+			sNameSpace = "";
+			sName = sKey;
+		}
+	}
+
+	std::string CModelMetaData::calculateKey(const std::string &sNameSpace, const std::string &sName)
+	{
+		if (sNameSpace.empty())
+			return sName;
+		else
+			return sNameSpace + ":" + sName;
+	}
+
+	bool CModelMetaData::isValidNamespaceAndName(std::string sNameSpace, std::string sName)
+	{
+		if (sNameSpace.empty()) {
+			return ((sName == XML_3MF_METADATA_VALUE_1) ||
+				(sName == XML_3MF_METADATA_VALUE_2) ||
+				(sName == XML_3MF_METADATA_VALUE_3) ||
+				(sName == XML_3MF_METADATA_VALUE_4) ||
+				(sName == XML_3MF_METADATA_VALUE_5) ||
+				(sName == XML_3MF_METADATA_VALUE_6) ||
+				(sName == XML_3MF_METADATA_VALUE_7) ||
+				(sName == XML_3MF_METADATA_VALUE_8) ||
+				(sName == XML_3MF_METADATA_VALUE_9));
+		}
+		else {
+			return !sName.empty();
+		}
+	}
+
 }

@@ -40,7 +40,7 @@ namespace NMR {
 
 	class CModelReaderNode100_MetaData : public CModelReaderNode {
 	private:
-		std::string m_sName;
+		std::string m_sKey;
 		std::string m_sValue;
 		std::string m_sType;
 		nfBool m_bPreserve;
@@ -53,7 +53,7 @@ namespace NMR {
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 		
-		std::string getName();
+		std::string getKey();
 		std::string getValue();
 		std::string getType();
 		nfBool getPreserve();

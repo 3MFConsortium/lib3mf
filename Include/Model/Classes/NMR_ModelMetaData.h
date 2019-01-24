@@ -68,6 +68,10 @@ namespace NMR {
 		void setPreserve(nfBool);
 
 		std::string getKey();
+		
+		static void decomposeKeyIntoNamespaceAndName(const std::string &sKey, std::string &sNameSpace, std::string &sName);
+		static bool isValidNamespaceAndName(std::string sNameSpace, std::string sName);
+		static std::string calculateKey(const std::string &sNameSpace, const std::string &sName);
 	};
 
 	typedef std::shared_ptr <CModelMetaData> PModelMetaData;
