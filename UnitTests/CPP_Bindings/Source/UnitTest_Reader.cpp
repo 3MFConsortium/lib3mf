@@ -67,27 +67,27 @@ namespace Lib3MF
 	TEST_F(Reader, 3MFReadFromFile)
 	{
 		Reader::reader3MF->ReadFromFile(sTestFilesPath + "/Reader/" + "Pyramid.3mf");
-		CheckReaderWarnings(Reader::reader3MF);
+		CheckReaderWarnings(Reader::reader3MF, 0);
 	}
 
 	TEST_F(Reader, STLReadFromFile)
 	{
 		Reader::readerSTL->ReadFromFile(sTestFilesPath + "/Reader/" + "Pyramid.stl");
-		CheckReaderWarnings(Reader::readerSTL);
+		CheckReaderWarnings(Reader::readerSTL, 0);
 	}
 
 	TEST_F(Reader, 3MFReadFromBuffer)
 	{
 		auto buffer = ReadFileIntoBuffer(sTestFilesPath + "/Reader/" + "Pyramid.3mf");
 		Reader::reader3MF->ReadFromBuffer(buffer);
-		CheckReaderWarnings(Reader::reader3MF);
+		CheckReaderWarnings(Reader::reader3MF, 0);
 	}
 
 	TEST_F(Reader, STLReadFromBuffer)
 	{
 		auto buffer = ReadFileIntoBuffer(sTestFilesPath + "/Reader/" + "Pyramid.stl");
 		Reader::readerSTL->ReadFromBuffer(buffer);
-		CheckReaderWarnings(Reader::readerSTL);
+		CheckReaderWarnings(Reader::readerSTL, 0);
 	}
 
 	TEST_F(Reader, 3MFReadFromCallback)
@@ -101,7 +101,7 @@ namespace Lib3MF
 			PositionedVector<Lib3MF_uint8>::seekCallback,
 			reinterpret_cast<Lib3MF_uint64>(&bufferCallback)
 		);
-		CheckReaderWarnings(Reader::reader3MF);
+		CheckReaderWarnings(Reader::reader3MF, 0);
 	}
 
 }

@@ -142,9 +142,9 @@ inline sLib3MFTriangle fnCreateTriangle(int v0, int v1, int v2)
 	return result;
 }
 
-inline void CheckReaderWarnings(Lib3MF::PLib3MFReader reader)
+inline void CheckReaderWarnings(Lib3MF::PLib3MFReader reader, Lib3MF_uint32 nWarnings)
 {
-	EXPECT_EQ(reader->GetWarningCount(), 0);
+	EXPECT_EQ(reader->GetWarningCount(), nWarnings);
 	for (Lib3MF_uint32 iWarning = 0; iWarning < reader->GetWarningCount(); iWarning++)
 	{
 		Lib3MF_uint32 nErrorCode;

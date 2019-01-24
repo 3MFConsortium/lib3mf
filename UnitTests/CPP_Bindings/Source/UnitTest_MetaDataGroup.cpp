@@ -117,10 +117,18 @@ namespace Lib3MF
 		ASSERT_TRUE(metaDataGroup->GetMetaDataByKey("", "Description")->GetValue() == "Cube");
 	}
 
+	void VerifyVendorMetaDataGroup(PLib3MFMetaDataGroup metaDataGroup)
+	{
+		ASSERT_EQ(metaDataGroup->GetMetaDataCount(), 1);
+
+		ASSERT_TRUE(metaDataGroup->GetMetaDataByKey("http://www.vendorwwebsite.com/3mf/vendor13mfextension/2017/01", "CustomMetadata1")->GetValue()
+			== "Value of CustomMetadata1");
+	}
+
 	TEST_F(MetaDataGroup, Read_Model_DefaultNS)
 	{
 		reader->ReadFromFile(sTestFilesPath + "/MetaData/" + "MetaData_Model_DefaultNS.3mf");
-		CheckReaderWarnings(reader);
+		CheckReaderWarnings(reader, 0);
 
 		auto metaDataGroup = model->GetMetaDataGroup();
 		
@@ -130,7 +138,7 @@ namespace Lib3MF
 	TEST_F(MetaDataGroup, Read_BuildItem_DefaultNS)
 	{
 		reader->ReadFromFile(sTestFilesPath + "/MetaData/" + "MetaData_BuildItem_DefaultNS.3mf");
-		CheckReaderWarnings(reader);
+		CheckReaderWarnings(reader, 0);
 
 		auto buildItems = model->GetBuildItems();
 		ASSERT_TRUE(buildItems->MoveNext());
@@ -145,11 +153,39 @@ namespace Lib3MF
 	TEST_F(MetaDataGroup, Read_Object_DefaultNS)
 	{
 		reader->ReadFromFile(sTestFilesPath + "/MetaData/" + "MetaData_Object_DefaultNS.3mf");
-		CheckReaderWarnings(reader);
+		CheckReaderWarnings(reader, 0);
 
 		auto metaDataGroup = model->GetMeshObjectByID(2)->GetMetaDataGroup();
 
 		VerifyMetaDataGroup(metaDataGroup);
+	}
+
+	TEST_F(MetaDataGroup, Read_Model_DefaultNS_Fail)
+	{
+		reader->ReadFromFile(sTestFilesPath + "/MetaData/" + "MetaData_Model_DefaultNS_Fail.3mf");
+		CheckReaderWarnings(reader, 1);
+	}
+
+	TEST_F(MetaDataGroup, Read_Object_DefaultNS_Fail)
+	{
+		reader->ReadFromFile(sTestFilesPath + "/MetaData/" + "MetaData_Object_DefaultNS_Fail.3mf");
+		CheckReaderWarnings(reader, 1);
+	}
+
+	TEST_F(MetaDataGroup, Read_Model_VendorNS)
+	{
+		reader->ReadFromFile(sTestFilesPath + "/MetaData/" + "MetaData_Model_VendorNS.3mf");
+		CheckReaderWarnings(reader, 0);
+		auto metaDataGroup = model->GetMetaDataGroup();
+		VerifyVendorMetaDataGroup(metaDataGroup);
+	}
+
+	TEST_F(MetaDataGroup, Read_Object_VendorNS)
+	{
+		reader->ReadFromFile(sTestFilesPath + "/MetaData/" + "MetaData_Object_VendorNS.3mf");
+		CheckReaderWarnings(reader, 0);
+		auto metaDataGroup = model->GetMeshObjectByID(2)->GetMetaDataGroup();
+		VerifyVendorMetaDataGroup(metaDataGroup);
 	}
 
 	//TEST_F(MetaDataGroup, ModelWriteRead)
