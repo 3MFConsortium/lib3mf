@@ -71,6 +71,17 @@ namespace Lib3MF
 		ASSERT_EQ(nBuildItems, 2);
 	}
 
+	TEST_F(BuildItems, TestObjectID)
+	{
+		auto buildItems = BuildItems::model->GetBuildItems();
+		Lib3MF_uint64 nBuildItems = 0;
+		while (buildItems->MoveNext()) {
+			auto buildItem = buildItems->GetCurrent();
+			Lib3MF_uint32 objectID = buildItem->GetObjectResource()->GetResourceID();
+			ASSERT_EQ(buildItem->GetObjectResourceID(), objectID);
+		}
+	}
+
 	TEST_F(BuildItems, TestUUID)
 	{
 		auto buildItems = BuildItems::model->GetBuildItems();

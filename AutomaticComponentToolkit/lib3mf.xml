@@ -55,6 +55,7 @@
 		<error name="INCOMPATIBLEBINARYVERSION" code="8" description="the version of the binary interface does not match the bindings interface" />
 		
 		<error name="CALCULATIONABORTED" code="10" description="a calculation has been aborted" />
+		<error name="SHOULDNOTBECALLED" code="11" description="functionality should not be called" />
 		
 		<error name="READERCLASSUNKNOWN" code="100" description="the queried reader class is unknown" />
 		<error name="WRITERCLASSUNKNOWN" code="101" description="the queried writer class is unknown" />
@@ -804,11 +805,7 @@
 			<param name="ReaderClass" type="string" pass="in" description=" string identifier for the file type" />
 			<param name="ReaderInstance" type="handle" class="Reader" pass="return" description=" string identifier for the file type" />
 		</method>
-		<method name="GetResourceByID" description="finds a model resource by its id">
-			<param name="ResourceID" type="uint32" pass="in" description="Resource ID" />
-			<param name="ResourceInstance" type="handle" class="Resource" pass="return" description="returns the resource instance" />
-		</method>
-
+		
 		<!-- 
 		TODO: lib3mf_model_getslicestackById 
 		-->

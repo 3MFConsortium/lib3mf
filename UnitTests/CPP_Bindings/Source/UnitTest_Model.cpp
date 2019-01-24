@@ -135,6 +135,11 @@ namespace Lib3MF
 		auto iterator = m_model->GetBaseMaterialGroups();
 	}
 
+	TEST_F(Model, GetResources)
+	{
+		auto iterator = m_model->GetResources();
+	}
+
 	TEST_F(Model, GetBaseMaterialByID)
 	{
 		try {

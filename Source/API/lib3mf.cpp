@@ -95,7 +95,7 @@ void CLib3MFWrapper::Release (ILib3MFBaseClass* pInstance)
 
 void CLib3MFWrapper::SetJournal (const std::string & sJournalPath)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	throw ELib3MFInterfaceException (LIB3MF_ERROR_SHOULDNOTBECALLED);
 }
 
 

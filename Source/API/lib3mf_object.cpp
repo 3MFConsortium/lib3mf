@@ -112,12 +112,14 @@ void CLib3MFObject::SetPartNumber (const std::string & sPartNumber)
 
 bool CLib3MFObject::IsMeshObject ()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	// implemented by base class
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_SHOULDNOTBECALLED);
 }
 
 bool CLib3MFObject::IsComponentsObject ()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	// implemented by base class
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_SHOULDNOTBECALLED);
 }
 
 ILib3MFMeshObject * CLib3MFObject::AsMeshObject()
@@ -140,7 +142,8 @@ ILib3MFComponentsObject * CLib3MFObject::AsComponentsObject()
 
 bool CLib3MFObject::IsValid ()
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	// Implemented by base class
+	throw ELib3MFInterfaceException (LIB3MF_ERROR_SHOULDNOTBECALLED);
 }
 
 ILib3MFMetaDataGroup * CLib3MFObject::GetMetaDataGroup ()

@@ -97,11 +97,6 @@ ILib3MFReader * CLib3MFModel::QueryReader (const std::string & sReaderClass)
 	return new CLib3MFReader(sReaderClass, m_model);
 }
 
-ILib3MFResource * CLib3MFModel::GetResourceByID (const Lib3MF_uint32 nResourceID)
-{
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
-}
-
 ILib3MFTexture2D * CLib3MFModel::GetTexture2DByID (const Lib3MF_uint32 nResourceID)
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
@@ -166,16 +161,22 @@ ILib3MFBuildItemIterator * CLib3MFModel::GetBuildItems ()
 
 ILib3MFResourceIterator * CLib3MFModel::GetResources ()
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	auto pResult = std::make_unique<CLib3MFResourceIterator>();
+	Lib3MF_uint32 nResourcesCount = model().getResourceCount();
+
+	for (Lib3MF_uint32 nIdx = 0; nIdx < nResourcesCount; nIdx++) {
+		auto resource = model().getResource(nIdx);
+		pResult->addResource(resource);
+	}
+	return pResult.release();
 }
 
 ILib3MFResourceIterator * CLib3MFModel::GetObjects ()
 {
 	auto pResult = std::make_unique<CLib3MFResourceIterator>();
 	Lib3MF_uint32 nObjectsCount = model().getObjectCount();
-	Lib3MF_uint32 nIdx;
 
-	for (nIdx = 0; nIdx < nObjectsCount; nIdx++) {
+	for (Lib3MF_uint32 nIdx = 0; nIdx < nObjectsCount; nIdx++) {
 		auto resource = model().getObjectResource(nIdx);
 		pResult->addResource(resource);
 	}
@@ -186,9 +187,8 @@ ILib3MFResourceIterator * CLib3MFModel::GetMeshObjects ()
 {
 	auto pResult = std::make_unique<CLib3MFResourceIterator>();
 	Lib3MF_uint32 nObjectsCount = model().getObjectCount();
-	Lib3MF_uint32 nIdx;
 
-	for (nIdx = 0; nIdx < nObjectsCount; nIdx++) {
+	for (Lib3MF_uint32 nIdx = 0; nIdx < nObjectsCount; nIdx++) {
 		auto resource = model().getObjectResource(nIdx);
 		if (dynamic_cast<NMR::CModelMeshObject *>(resource.get()))
 			pResult->addResource(resource);
@@ -200,9 +200,8 @@ ILib3MFResourceIterator * CLib3MFModel::GetComponentsObjects()
 {
 	auto pResult = std::make_unique<CLib3MFResourceIterator>();
 	Lib3MF_uint32 nObjectsCount = model().getObjectCount();
-	Lib3MF_uint32 nIdx;
 
-	for (nIdx = 0; nIdx < nObjectsCount; nIdx++) {
+	for (Lib3MF_uint32 nIdx = 0; nIdx < nObjectsCount; nIdx++) {
 		auto resource = model().getObjectResource(nIdx);
 		if (dynamic_cast<NMR::CModelComponentsObject *>(resource.get()))
 			pResult->addResource(resource);
@@ -219,9 +218,8 @@ ILib3MFResourceIterator * CLib3MFModel::GetBaseMaterialGroups ()
 {
 	auto pResult = std::make_unique<CLib3MFResourceIterator>();
 	Lib3MF_uint32 nCount = model().getBaseMaterialCount();
-	Lib3MF_uint32 nIdx;
 
-	for (nIdx = 0; nIdx < nCount; nIdx++) {
+	for (Lib3MF_uint32 nIdx = 0; nIdx < nCount; nIdx++) {
 		auto resource = model().getBaseMaterialResource(nIdx);
 		if (dynamic_cast<NMR::CModelBaseMaterialResource *>(resource.get()))
 			pResult->addResource(resource);

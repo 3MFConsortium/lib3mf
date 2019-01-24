@@ -86,7 +86,7 @@ void CLib3MFBuildItem::SetUUID (const std::string & sUUID)
 
 Lib3MF_uint32 CLib3MFBuildItem::GetObjectResourceID ()
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	return buildItem().getObjectID();
 }
 
 bool CLib3MFBuildItem::HasObjectTransform ()

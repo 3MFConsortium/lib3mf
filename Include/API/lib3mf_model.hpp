@@ -83,8 +83,6 @@ public:
 
 	ILib3MFReader * QueryReader (const std::string & sReaderClass);
 
-	ILib3MFResource * GetResourceByID (const Lib3MF_uint32 nResourceID);
-
 	ILib3MFTexture2D * GetTexture2DByID (const Lib3MF_uint32 nResourceID);
 
 	ILib3MFBaseMaterialGroup * GetBaseMaterialGroupByID (const Lib3MF_uint32 nResourceID);
