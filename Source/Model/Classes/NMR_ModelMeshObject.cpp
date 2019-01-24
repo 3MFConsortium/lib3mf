@@ -103,7 +103,7 @@ namespace NMR {
 
 	nfBool CModelMeshObject::isValidForSlices(const NMATRIX3& totalParentMatrix)
 	{
-		if (this->getSliceStackId() == 0) {
+		if (!this->getSliceStack().get()) {
 			return true;
 		}
 		else {

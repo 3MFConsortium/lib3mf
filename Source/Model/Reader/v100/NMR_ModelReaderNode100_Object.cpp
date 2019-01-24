@@ -310,8 +310,7 @@ namespace NMR {
 				PPackageResourceID pID = m_pModel->findPackageResourceID(m_pModel->curPath(), m_nSliceStackId);
 				if (!pID.get())
 					throw CNMRException(NMR_ERROR_SLICESTACKRESOURCE_NOT_FOUND);
-				PModelResource pResource = m_pModel->findResource(pID->getUniqueID());
-				CModelSliceStackResource* pSliceStackResource = dynamic_cast<CModelSliceStackResource*>(pResource.get());
+				PModelSliceStackResource pSliceStackResource = std::dynamic_pointer_cast<CModelSliceStackResource>( m_pModel->findResource(pID->getUniqueID()) );
 				if (pSliceStackResource) {
 					if ((m_pObject->getObjectType() == MODELOBJECTTYPE_MODEL) || (MODELOBJECTTYPE_SOLIDSUPPORT)) {
 						if (!pSliceStackResource->getSliceStack()->areAllPolygonsClosed()) {
@@ -322,7 +321,7 @@ namespace NMR {
 				else
 					throw CNMRException(NMR_ERROR_SLICESTACKRESOURCE_NOT_FOUND);
 				
-				m_pObject->setSliceStackId(pID);
+				m_pObject->setSliceStack(pSliceStackResource);
 				m_pObject->setSlicesMeshResolution(m_eSlicesMeshResolution);
 			}
 

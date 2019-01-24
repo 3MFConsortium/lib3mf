@@ -42,7 +42,7 @@ namespace NMR {
 	{
 		m_ObjectType = MODELOBJECTTYPE_MODEL;
 		setUUID(std::make_shared<CUUID>());
-		m_pSliceStackId = 0;
+		m_pSliceStack.reset();
 		m_eSlicesMeshResolution = MODELSLICESMESHRESOLUTION_FULL;
 		m_MetaDataGroup = std::make_shared<CModelMetaDataGroup>();
 	}
@@ -151,12 +151,16 @@ namespace NMR {
 		}
 	}
 
-	void CModelObject::setSliceStackId(PPackageResourceID nSliceStackId) {
-		m_pSliceStackId = nSliceStackId;
+	void CModelObject::setSliceStack(PModelSliceStackResource pSliceStack) {
+		if (pSliceStack == nullptr)
+			m_pSliceStack.reset();
+		else {
+			m_pSliceStack = pSliceStack;
+		}
 	}
 
-	PPackageResourceID CModelObject::getSliceStackId() {
-		return m_pSliceStackId;
+	PModelSliceStackResource CModelObject::getSliceStack() {
+		return m_pSliceStack;
 	}
 
 	void CModelObject::setSlicesMeshResolution(eModelSlicesMeshResolution eMeshResolution) {

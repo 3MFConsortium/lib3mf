@@ -867,7 +867,7 @@ namespace NMR {
 				CModelMeshObject* pMeshObject = dynamic_cast<CModelMeshObject*>(m_ObjectLookup[i].get());
 				if (pMeshObject == nullptr || pMeshObject->getMesh() == nullptr)
 					continue;
-				if (!pMeshObject->getSliceStackId().get())
+				if (!pMeshObject->getSliceStack().get())
 					continue;
 				if (pMeshObject->slicesMeshResolution() == MODELSLICESMESHRESOLUTION_LOW) {
 					bRequireSliceExtension = true;

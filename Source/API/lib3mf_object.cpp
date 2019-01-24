@@ -34,6 +34,7 @@ Abstract: This is a stub class definition of CLib3MFObject
 #include "lib3mf_meshobject.hpp"
 #include "lib3mf_componentsobject.hpp"
 #include "lib3mf_metadatagroup.hpp"
+#include "lib3mf_slicestack.hpp"
 
 // Include custom headers here.
 #include "Model/Classes/NMR_ModelMeshObject.h" 
@@ -179,21 +180,32 @@ eLib3MFSlicesMeshResolution CLib3MFObject::GetSlicesMeshResolution()
 
 bool CLib3MFObject::HasSliceStack()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return (object()->getSliceStack().get() != nullptr);
 }
 
 void CLib3MFObject::ClearSliceStack()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	object()->setSliceStack(nullptr);
 }
 
 ILib3MFSliceStack * CLib3MFObject::GetSliceStack()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	NMR::PModelSliceStackResource pSliceStackResource = object()->getSliceStack();
+	if (pSliceStackResource)
+		return new CLib3MFSliceStack(pSliceStackResource);
+	else
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDSLICESTACKRESOURCE);
 }
 
 void CLib3MFObject::SetSliceStack(ILib3MFSliceStack* pSliceStackInstance)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	Lib3MF_uint32 id = pSliceStackInstance->GetResourceID();
+
+	NMR::PModelSliceStackResource pSliceStackResource = std::dynamic_pointer_cast<NMR::CModelSliceStackResource>
+		( object()->getModel()->findResource(id) );
+	if (!pSliceStackResource)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDSLICESTACKRESOURCE);
+
+	object()->setSliceStack(pSliceStackResource);
 }
 

@@ -487,9 +487,9 @@ namespace NMR {
 
 			// Slice extension content
 			if (m_bWriteSliceExtension) {
-				if (pObject->getSliceStackId() != 0) {
+				if (pObject->getSliceStack().get()) {
 					writePrefixedStringAttribute(XML_3MF_NAMESPACEPREFIX_SLICE, XML_3MF_ATTRIBUTE_OBJECT_SLICESTACKID,
-						fnUint32ToString(pObject->getSliceStackId()->getUniqueID()));
+						fnUint32ToString(pObject->getSliceStack()->getResourceID()->getUniqueID()));
 				}
 				if (pObject->slicesMeshResolution() != MODELSLICESMESHRESOLUTION_FULL) {
 					writePrefixedStringAttribute(XML_3MF_NAMESPACEPREFIX_SLICE, XML_3MF_ATTRIBUTE_OBJECT_MESHRESOLUTION,

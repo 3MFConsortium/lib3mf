@@ -54,7 +54,7 @@ namespace NMR {
 	private:
 		std::string m_sName;
 		std::string m_sPartNumber;
-		PPackageResourceID m_pSliceStackId;
+		PModelSliceStackResource m_pSliceStack;
 		eModelSlicesMeshResolution m_eSlicesMeshResolution;
 		PModelMetaDataGroup m_MetaDataGroup;
 	private:
@@ -98,8 +98,8 @@ namespace NMR {
 
 		virtual nfBool isValidForSlices(const NMATRIX3& totalParentMatrix) = 0;
 
-		void setSliceStackId(PPackageResourceID nSliceStackId);
-		PPackageResourceID getSliceStackId();
+		void setSliceStack(PModelSliceStackResource pSliceStackId);
+		PModelSliceStackResource getSliceStack();
 
 		void setSlicesMeshResolution(eModelSlicesMeshResolution eMeshResolution);
 		eModelSlicesMeshResolution slicesMeshResolution() const;

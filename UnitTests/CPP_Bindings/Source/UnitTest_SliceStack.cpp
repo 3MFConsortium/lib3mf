@@ -63,8 +63,21 @@ namespace Lib3MF
 	
 	TEST_F(SliceStack, AddSliceStack)
 	{
-		
 		sliceStack->GetResourceID();
+	}
+
+	TEST_F(SliceStack, HasSetClearSliceStack)
+	{
+		ASSERT_FALSE(mesh->HasSliceStack());
+
+		mesh->SetSliceStack(sliceStack.get());
+		ASSERT_TRUE(mesh->HasSliceStack());
+
+		auto copySliceStack = mesh->GetSliceStack();
+		ASSERT_EQ(copySliceStack->GetResourceID(), sliceStack->GetResourceID());
+
+		mesh->ClearSliceStack();
+		ASSERT_FALSE(mesh->HasSliceStack());
 	}
 
 
