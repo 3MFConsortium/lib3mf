@@ -381,6 +381,18 @@ namespace NMR {
 		case NMR_ERROR_PROPERTYIDNOTFOUND: return "Property ID not found";
 		case NMR_ERROR_INVALIDCONTROLPOINTCOUNT: return "Invalid Control Point Count";
 		case NMR_ERROR_TOOMANYKNOTS: return "too many knots";
+		case NMR_ERROR_INVALIDNURBSDEGREE: return "Invalid Nurbs Degree";
+		case NMR_ERROR_NURBSINVALIDATTRIBUTE: return "Invalid Nurbs Attribute";
+		case NMR_ERROR_NURBSMISSINGCOORDINATE: return "Missing Nurbs Coordinate";
+		case NMR_ERROR_NURBSMISSINGDEGREE: return "Missing Nurbs Degree";			
+		case NMR_ERROR_NURBSDUPLICATEUKNOTS: return "Duplicate U Knots";
+		case NMR_ERROR_NURBSDUPLICATEVKNOTS: return "Duplicate V Knots";
+		case NMR_ERROR_NURBSDUPLICATECONTROLPOINTS: return "Duplicate Control Points";
+		case NMR_ERROR_NURBSINVALIDCONTROLPOINTCOUNT: return "Invalid Control Point Count";
+		case NMR_ERROR_NURBSDUPLICATEATTRIBUTE: return "Duplicate Nurbs Attribute";
+		case NMR_ERROR_NURBSMULTIPLICITYMISSING: return "Knot Multiplicity Missing";
+		case NMR_ERROR_NURBSVALUEMISSING: return "Knot Values Missing";
+
 
 
 		// XML Parser Error Constants(0x9XXX)

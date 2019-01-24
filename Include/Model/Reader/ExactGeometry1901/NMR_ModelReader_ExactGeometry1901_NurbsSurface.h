@@ -38,6 +38,9 @@ NMR_ModelReaderNode_ExactGeometry1901_NurbsSurface.h covers the official 3MF Exa
 #include "Model/Classes/NMR_ModelComponent.h"
 #include "Model/Classes/NMR_ModelComponentsObject.h"
 #include "Model/Classes/NMR_ModelObject.h"
+#include "Model/Classes/NMR_ModelNurbsSurface.h"
+
+#include <vector>
 
 namespace NMR {
 
@@ -46,7 +49,20 @@ namespace NMR {
 		CModel * m_pModel;
 		CMesh * m_pMesh;
 		PModelReaderWarnings m_pWarnings;
-		
+
+		PModelNurbsSurface m_pNurbsSurface;
+
+		nfBool m_bHadControlPoints;
+		nfBool m_bHadUKnots;
+		nfBool m_bHadVKnots;
+		nfBool m_bHasDegreeU;
+		nfUint32 m_nDegreeU;
+		nfBool m_bHasDegreeV;
+		nfUint32 m_nDegreeV;
+
+		std::vector<sModelNurbsSurfaceKnot> m_KnotsU;
+		std::vector<sModelNurbsSurfaceKnot> m_KnotsV;
+
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 		virtual void OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace);

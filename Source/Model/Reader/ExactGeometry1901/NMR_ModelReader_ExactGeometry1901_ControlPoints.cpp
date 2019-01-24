@@ -31,6 +31,7 @@ NMR_ModelReaderNode_ExactGeometry1901_NurbsSurface.cpp covers the official 3MF E
 --*/
 
 #include "Model/Reader/ExactGeometry1901/NMR_ModelReader_ExactGeometry1901_ControlPoints.h"
+#include "Model/Reader/ExactGeometry1901/NMR_ModelReader_ExactGeometry1901_ControlPoint.h"
 
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Model/Classes/NMR_ModelMeshObject.h"
@@ -42,12 +43,18 @@ NMR_ModelReaderNode_ExactGeometry1901_NurbsSurface.cpp covers the official 3MF E
 
 namespace NMR {
 
-	CModelReaderNode_ExactGeometry1901_ControlPoints::CModelReaderNode_ExactGeometry1901_ControlPoints(_In_ CModel * pModel, _In_ CMesh * pMesh, _In_ PModelReaderWarnings pWarnings)
+	CModelReaderNode_ExactGeometry1901_ControlPoints::CModelReaderNode_ExactGeometry1901_ControlPoints(_In_ CModel * pModel, _In_ CModelNurbsSurface * pNurbsSurface, _In_ PModelReaderWarnings pWarnings)
 		: CModelReaderNode(pWarnings)
 	{
+		if (pNurbsSurface == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
 		m_pModel = pModel;
-		m_pMesh = pMesh;
 		m_pWarnings = pWarnings;
+		m_pNurbsSurface = pNurbsSurface;
+
+		m_nCurrentIndexU = 0;
+		m_nCurrentIndexV = 0;
 	}
 
 	void CModelReaderNode_ExactGeometry1901_ControlPoints::parseXML(_In_ CXmlReader * pXMLReader)
@@ -69,14 +76,7 @@ namespace NMR {
 		__NMRASSERT(pAttributeName);
 		__NMRASSERT(pAttributeValue);
 
-		/*if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_BEAMLATTICE_RADIUS) == 0) {
-			nfDouble dValue = fnStringToDouble(pAttributeValue);
-			if ( std::isnan(dValue) || (dValue <= 0) || (dValue > XML_3MF_MAXIMUMCOORDINATEVALUE) )
-				throw CNMRException(NMR_ERROR_BEAMLATTICEINVALIDATTRIBUTE);
-			m_pMesh->setDefaultBeamRadius(dValue);
-		} */
-
-		//m_pWarnings->addException(CNMRException(NMR_ERROR_BEAMLATTICEINVALIDATTRIBUTE), mrwInvalidOptionalValue);
+		m_pWarnings->addException(CNMRException(NMR_ERROR_NURBSINVALIDATTRIBUTE), mrwInvalidOptionalValue);
 	}
 
 	void CModelReaderNode_ExactGeometry1901_ControlPoints::OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace)
@@ -92,18 +92,32 @@ namespace NMR {
 		__NMRASSERT(pNameSpace);
 
 		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_NURBSSPEC) == 0) {
-			/*if (strcmp(pChildName, XML_3MF_ELEMENT_BEAMS) == 0)
+			if (strcmp(pChildName, XML_3MF_ELEMENT_NURBS_CONTROLPOINT) == 0)
 			{
-				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode_BeamLattice1702_Beams>(m_pModel, m_pMesh, m_pWarnings);
+				PModelReaderNode_ExactGeometry1901_ControlPoint pXMLNode = std::make_shared<CModelReaderNode_ExactGeometry1901_ControlPoint>(m_pModel, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
-			}
-			else if (strcmp(pChildName, XML_3MF_ELEMENT_BEAMSETS) == 0)
-			{
-				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode_BeamLattice1702_BeamSets>(m_pMesh, m_pWarnings);
-				pXMLNode->parseXML(pXMLReader);
+
+				nfDouble dX, dY, dZ, dW;
+				pXMLNode->retrievePoint(dX, dY, dZ, dW);
+
+				nfUint32 nControlPointCountU = m_pNurbsSurface->getControlPointCountU();
+				nfUint32 nControlPointCountV = m_pNurbsSurface->getControlPointCountV();
+
+				if (m_nCurrentIndexU >= nControlPointCountU)
+					throw CNMRException(NMR_ERROR_NURBSINVALIDCONTROLPOINTCOUNT);
+				if (m_nCurrentIndexV >= nControlPointCountV)
+					throw CNMRException(NMR_ERROR_NURBSINVALIDCONTROLPOINTCOUNT);
+
+				m_pNurbsSurface->setControlPoint(m_nCurrentIndexU, m_nCurrentIndexV, dX, dY, dZ, dW);
+
+				m_nCurrentIndexU++;
+				if (m_nCurrentIndexU >= nControlPointCountU) {
+					m_nCurrentIndexU = 0;
+					m_nCurrentIndexV++;
+				}
 			}
 			else
-				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue); */
+				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue); 
 		}
 	}
 }

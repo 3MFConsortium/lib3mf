@@ -31,6 +31,7 @@ NMR_ModelReaderNode_ExactGeometry1901_NurbsSurface.cpp covers the official 3MF E
 --*/
 
 #include "Model/Reader/ExactGeometry1901/NMR_ModelReader_ExactGeometry1901_VKnots.h"
+#include "Model/Reader/ExactGeometry1901/NMR_ModelReader_ExactGeometry1901_Knot.h"
 
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Model/Classes/NMR_ModelMeshObject.h"
@@ -42,11 +43,10 @@ NMR_ModelReaderNode_ExactGeometry1901_NurbsSurface.cpp covers the official 3MF E
 
 namespace NMR {
 
-	CModelReaderNode_ExactGeometry1901_VKnots::CModelReaderNode_ExactGeometry1901_VKnots(_In_ CModel * pModel, _In_ CMesh * pMesh, _In_ PModelReaderWarnings pWarnings)
+	CModelReaderNode_ExactGeometry1901_VKnots::CModelReaderNode_ExactGeometry1901_VKnots(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings)
 		: CModelReaderNode(pWarnings)
 	{
 		m_pModel = pModel;
-		m_pMesh = pMesh;
 		m_pWarnings = pWarnings;
 	}
 
@@ -69,14 +69,7 @@ namespace NMR {
 		__NMRASSERT(pAttributeName);
 		__NMRASSERT(pAttributeValue);
 
-		/*if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_BEAMLATTICE_RADIUS) == 0) {
-			nfDouble dValue = fnStringToDouble(pAttributeValue);
-			if ( std::isnan(dValue) || (dValue <= 0) || (dValue > XML_3MF_MAXIMUMCOORDINATEVALUE) )
-				throw CNMRException(NMR_ERROR_BEAMLATTICEINVALIDATTRIBUTE);
-			m_pMesh->setDefaultBeamRadius(dValue);
-		} */
-
-		//m_pWarnings->addException(CNMRException(NMR_ERROR_BEAMLATTICEINVALIDATTRIBUTE), mrwInvalidOptionalValue);
+		m_pWarnings->addException(CNMRException(NMR_ERROR_NURBSINVALIDATTRIBUTE), mrwInvalidOptionalValue);
 	}
 
 	void CModelReaderNode_ExactGeometry1901_VKnots::OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace)
@@ -92,18 +85,29 @@ namespace NMR {
 		__NMRASSERT(pNameSpace);
 
 		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_NURBSSPEC) == 0) {
-			/*if (strcmp(pChildName, XML_3MF_ELEMENT_BEAMS) == 0)
+			if (strcmp(pChildName, XML_3MF_ELEMENT_NURBS_KNOT) == 0)
 			{
-				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode_BeamLattice1702_Beams>(m_pModel, m_pMesh, m_pWarnings);
+				PModelReaderNode_ExactGeometry1901_Knot pXMLNode = std::make_shared<CModelReaderNode_ExactGeometry1901_Knot>(m_pModel, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
-			}
-			else if (strcmp(pChildName, XML_3MF_ELEMENT_BEAMSETS) == 0)
-			{
-				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode_BeamLattice1702_BeamSets>(m_pMesh, m_pWarnings);
-				pXMLNode->parseXML(pXMLReader);
+
+				nfUint32 nMultiplicity;
+				nfDouble dValue;
+				pXMLNode->retrieveValues(nMultiplicity, dValue);
+
+				sModelNurbsSurfaceKnot Knot;
+				Knot.m_Multiplicity = nMultiplicity;
+				Knot.m_Value = dValue;
+				Knots.push_back(Knot);
+
 			}
 			else
-				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue); */
+				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
 		}
 	}
+
+	std::vector<sModelNurbsSurfaceKnot> CModelReaderNode_ExactGeometry1901_VKnots::getKnots()
+	{
+		return Knots;
+	}
+
 }

@@ -31,9 +31,13 @@ NMR_ModelReaderNode_ExactGeometry1901_NurbsSurface.cpp covers the official 3MF E
 --*/
 
 #include "Model/Reader/ExactGeometry1901/NMR_ModelReader_ExactGeometry1901_NurbsSurface.h"
+#include "Model/Reader/ExactGeometry1901/NMR_ModelReader_ExactGeometry1901_UKnots.h"
+#include "Model/Reader/ExactGeometry1901/NMR_ModelReader_ExactGeometry1901_VKnots.h"
+#include "Model/Reader/ExactGeometry1901/NMR_ModelReader_ExactGeometry1901_ControlPoints.h"
 
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Model/Classes/NMR_ModelMeshObject.h"
+#include "Model/Classes/NMR_ModelNurbsSurface.h"
 
 #include "Common/NMR_StringUtils.h"
 #include "Common/NMR_Exception.h"
@@ -47,6 +51,15 @@ namespace NMR {
 	{
 		m_pModel = pModel;
 		m_pWarnings = pWarnings;
+		m_bHasDegreeU = false;
+		m_nDegreeU = 0;
+		m_bHasDegreeV = false;
+		m_nDegreeV = 0;
+
+		m_pNurbsSurface = nullptr;
+		m_bHadControlPoints = false;
+		m_bHadUKnots = false;
+		m_bHadVKnots = false;
 	}
 
 	void CModelReaderNode_ExactGeometry1901_NurbsSurface::parseXML(_In_ CXmlReader * pXMLReader)
@@ -57,8 +70,12 @@ namespace NMR {
 		// Parse attribute
 		parseAttributes(pXMLReader);
 
+		if ((!m_bHasDegreeU) || (!m_bHasDegreeV))
+			throw CNMRException(NMR_ERROR_NURBSMISSINGDEGREE);
+
 		// Parse Content
 		parseContent(pXMLReader);
+
 
 	}
 
@@ -68,14 +85,23 @@ namespace NMR {
 		__NMRASSERT(pAttributeName);
 		__NMRASSERT(pAttributeValue);
 
-		/*if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_BEAMLATTICE_RADIUS) == 0) {
-			nfDouble dValue = fnStringToDouble(pAttributeValue);
-			if ( std::isnan(dValue) || (dValue <= 0) || (dValue > XML_3MF_MAXIMUMCOORDINATEVALUE) )
-				throw CNMRException(NMR_ERROR_BEAMLATTICEINVALIDATTRIBUTE);
-			m_pMesh->setDefaultBeamRadius(dValue);
-		} */
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_NURBS_DEGREEU) == 0) {
+			nfUint32 nValue = fnStringToUint32(pAttributeValue);
+			if ((nValue == 0) || (nValue >= MAXNURBSDEGREE))
+				throw CNMRException(NMR_ERROR_INVALIDNURBSDEGREE);
+			m_nDegreeU = nValue;
+			m_bHasDegreeU = true;
+		} else
+			if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_NURBS_DEGREEV) == 0) {
+				nfUint32 nValue = fnStringToUint32(pAttributeValue);
+				if ((nValue == 0) || (nValue >= MAXNURBSDEGREE))
+					throw CNMRException(NMR_ERROR_INVALIDNURBSDEGREE);
+				m_nDegreeV = nValue;
+				m_bHasDegreeV = true;
+			}
+			else
 
-		//m_pWarnings->addException(CNMRException(NMR_ERROR_BEAMLATTICEINVALIDATTRIBUTE), mrwInvalidOptionalValue);
+		m_pWarnings->addException(CNMRException(NMR_ERROR_NURBSINVALIDATTRIBUTE), mrwInvalidOptionalValue);
 	}
 
 	void CModelReaderNode_ExactGeometry1901_NurbsSurface::OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace)
@@ -91,18 +117,49 @@ namespace NMR {
 		__NMRASSERT(pNameSpace);
 
 		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_NURBSSPEC) == 0) {
-			/*if (strcmp(pChildName, XML_3MF_ELEMENT_BEAMS) == 0)
+			if (strcmp(pChildName, XML_3MF_ELEMENT_NURBS_UKNOTS) == 0)
 			{
-				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode_BeamLattice1702_Beams>(m_pModel, m_pMesh, m_pWarnings);
-				pXMLNode->parseXML(pXMLReader);
+				if (m_bHadUKnots)
+					throw CNMRException(NMR_ERROR_NURBSDUPLICATEUKNOTS);
+
+				PModelReaderNode_ExactGeometry1901_UKnots pXMLNode = std::make_shared<CModelReaderNode_ExactGeometry1901_UKnots>(m_pModel, m_pNurbsSurface, m_pWarnings);
+				pXMLNode->parseXML(pXMLReader);			
+
+				m_KnotsU = pXMLNode->getKnots();
+				m_bHadUKnots = true;
 			}
-			else if (strcmp(pChildName, XML_3MF_ELEMENT_BEAMSETS) == 0)
+			else if (strcmp(pChildName, XML_3MF_ELEMENT_NURBS_UKNOTS) == 0)
 			{
-				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode_BeamLattice1702_BeamSets>(m_pMesh, m_pWarnings);
+				if (m_bHadVKnots)
+					throw CNMRException(NMR_ERROR_NURBSDUPLICATEVKNOTS);
+
+				PModelReaderNode_ExactGeometry1901_VKnots pXMLNode = std::make_shared<CModelReaderNode_ExactGeometry1901_VKnots>(m_pModel, m_pNurbsSurface, m_pWarnings);
+				pXMLNode->parseXML(pXMLReader);
+
+				m_KnotsV = pXMLNode->getKnots();
+				m_bHadVKnots = true;
+			}
+			else if (strcmp(pChildName, XML_3MF_ELEMENT_NURBS_CONTROLPOINTS) == 0)
+			{
+				if (m_bHadControlPoints)
+					throw CNMRException(NMR_ERROR_NURBSDUPLICATECONTROLPOINTS);
+				__NMRASSERT(m_pNurbsSurface.get() == nullptr);
+
+				nfUint32 nControlPointCountU = m_nDegreeU + ((nfUint32)m_KnotsU.size()) + 1;
+				nfUint32 nControlPointCountV = m_nDegreeV + ((nfUint32)m_KnotsV.size()) + 1;
+
+				m_pNurbsSurface = std::make_shared<CModelNurbsSurface> (m_nDegreeU, m_nDegreeV, nControlPointCountU, nControlPointCountV);
+
+				m_pNurbsSurface->addKnotsU(m_KnotsU);
+				m_pNurbsSurface->addKnotsV(m_KnotsV);
+
+				m_bHadControlPoints = true;
+
+				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode_ExactGeometry1901_ControlPoints>(m_pModel, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 			}
 			else
-				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue); */
+				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue); 
 		}
 	}
 }

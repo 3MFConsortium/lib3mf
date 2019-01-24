@@ -38,14 +38,18 @@ NMR_ModelReaderNode_ExactGeometry1901_UKnots.h covers the official 3MF Exact Geo
 #include "Model/Classes/NMR_ModelComponent.h"
 #include "Model/Classes/NMR_ModelComponentsObject.h"
 #include "Model/Classes/NMR_ModelObject.h"
+#include "Model/Classes/NMR_ModelNurbsSurface.h"
+
+#include <vector>
 
 namespace NMR {
 
 	class CModelReaderNode_ExactGeometry1901_UKnots : public CModelReaderNode {
 	private:
 		CModel * m_pModel;
-		CMesh * m_pMesh;
 		PModelReaderWarnings m_pWarnings;
+
+		std::vector<sModelNurbsSurfaceKnot> Knots;
 		
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
@@ -53,9 +57,11 @@ namespace NMR {
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 	public:
 		CModelReaderNode_ExactGeometry1901_UKnots() = delete;
-		CModelReaderNode_ExactGeometry1901_UKnots(_In_ CModel * pModel, _In_ CMesh * pMesh, _In_ PModelReaderWarnings pWarnings);
+		CModelReaderNode_ExactGeometry1901_UKnots(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
+
+		std::vector<sModelNurbsSurfaceKnot> getKnots ();
 
 	};
 

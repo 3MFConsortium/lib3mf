@@ -44,18 +44,27 @@ namespace NMR {
 	class CModelReaderNode_ExactGeometry1901_ControlPoint : public CModelReaderNode {
 	private:
 		CModel * m_pModel;
-		CMesh * m_pMesh;
 		PModelReaderWarnings m_pWarnings;
-		
+		nfDouble m_X;
+		nfBool m_bHasX;
+		nfDouble m_Y;
+		nfBool m_bHasY;
+		nfDouble m_Z;
+		nfBool m_bHasZ;
+		nfDouble m_Weight;
+		nfBool m_bHasWeight;
+
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 		virtual void OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace);
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 	public:
 		CModelReaderNode_ExactGeometry1901_ControlPoint() = delete;
-		CModelReaderNode_ExactGeometry1901_ControlPoint(_In_ CModel * pModel, _In_ CMesh * pMesh, _In_ PModelReaderWarnings pWarnings);
+		CModelReaderNode_ExactGeometry1901_ControlPoint(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
+
+		void retrievePoint (nfDouble & dX, nfDouble & dY, nfDouble & dZ, nfDouble & dW);
 
 	};
 

@@ -34,6 +34,7 @@ NMR_ModelReaderNode_ExactGeometry1901_NurbsSurface.cpp covers the official 3MF E
 
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Model/Classes/NMR_ModelMeshObject.h"
+#include "Model/Classes/NMR_ModelNurbsSurface.h"
 
 #include "Common/NMR_StringUtils.h"
 #include "Common/NMR_Exception.h"
@@ -42,12 +43,17 @@ NMR_ModelReaderNode_ExactGeometry1901_NurbsSurface.cpp covers the official 3MF E
 
 namespace NMR {
 
-	CModelReaderNode_ExactGeometry1901_Knot::CModelReaderNode_ExactGeometry1901_Knot(_In_ CModel * pModel, _In_ CMesh * pMesh, _In_ PModelReaderWarnings pWarnings)
+	CModelReaderNode_ExactGeometry1901_Knot::CModelReaderNode_ExactGeometry1901_Knot(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings)
 		: CModelReaderNode(pWarnings)
 	{
 		m_pModel = pModel;
-		m_pMesh = pMesh;
 		m_pWarnings = pWarnings;
+
+		m_bHasMultiplicity = false;
+		m_nMultiplicity = 0;
+		m_bHasValue = false;
+		m_dValue = 0.0;
+
 	}
 
 	void CModelReaderNode_ExactGeometry1901_Knot::parseXML(_In_ CXmlReader * pXMLReader)
@@ -69,14 +75,30 @@ namespace NMR {
 		__NMRASSERT(pAttributeName);
 		__NMRASSERT(pAttributeValue);
 
-		/*if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_BEAMLATTICE_RADIUS) == 0) {
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_NURBS_MULTIPLICITY) == 0) {
+			if (m_bHasMultiplicity)
+				throw CNMRException(NMR_ERROR_NURBSDUPLICATEATTRIBUTE);
+
+			nfUint32 nValue = fnStringToUint32(pAttributeValue);
+			if ((nValue == 0) || (nValue >= MAXNURBSMULTIPLICITY))
+				throw CNMRException(NMR_ERROR_INVALIDNURBSDEGREE);
+
+			m_nMultiplicity = nValue;
+			m_bHasMultiplicity = true;
+		}
+		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_NURBS_VALUE) == 0) {
+			if (m_bHasValue)
+				throw CNMRException(NMR_ERROR_NURBSDUPLICATEATTRIBUTE);
+
 			nfDouble dValue = fnStringToDouble(pAttributeValue);
 			if ( std::isnan(dValue) || (dValue <= 0) || (dValue > XML_3MF_MAXIMUMCOORDINATEVALUE) )
-				throw CNMRException(NMR_ERROR_BEAMLATTICEINVALIDATTRIBUTE);
-			m_pMesh->setDefaultBeamRadius(dValue);
-		} */
-
-		//m_pWarnings->addException(CNMRException(NMR_ERROR_BEAMLATTICEINVALIDATTRIBUTE), mrwInvalidOptionalValue);
+				throw CNMRException(NMR_ERROR_NURBSINVALIDATTRIBUTE);
+			
+			m_dValue = dValue;
+			m_bHasValue = true;
+		} 
+		else
+			m_pWarnings->addException(CNMRException(NMR_ERROR_BEAMLATTICEINVALIDATTRIBUTE), mrwInvalidOptionalValue);
 	}
 
 	void CModelReaderNode_ExactGeometry1901_Knot::OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace)
@@ -92,18 +114,19 @@ namespace NMR {
 		__NMRASSERT(pNameSpace);
 
 		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_NURBSSPEC) == 0) {
-			/*if (strcmp(pChildName, XML_3MF_ELEMENT_BEAMS) == 0)
-			{
-				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode_BeamLattice1702_Beams>(m_pModel, m_pMesh, m_pWarnings);
-				pXMLNode->parseXML(pXMLReader);
-			}
-			else if (strcmp(pChildName, XML_3MF_ELEMENT_BEAMSETS) == 0)
-			{
-				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode_BeamLattice1702_BeamSets>(m_pMesh, m_pWarnings);
-				pXMLNode->parseXML(pXMLReader);
-			}
-			else
-				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue); */
+			m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue); 
 		}
 	}
+
+	void CModelReaderNode_ExactGeometry1901_Knot::retrieveValues(nfUint32 & nMultiplicity, nfDouble & dValue)
+	{
+		if (!m_bHasMultiplicity)
+			throw CNMRException(NMR_ERROR_NURBSMULTIPLICITYMISSING);
+		if (!m_bHasValue)
+			throw CNMRException(NMR_ERROR_NURBSVALUEMISSING);
+
+		nMultiplicity = m_nMultiplicity;
+		dValue = m_dValue;
+	}
+
 }

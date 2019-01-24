@@ -277,14 +277,14 @@ namespace NMR {
 			CModelNurbsSurface * pSurface = dynamic_cast<CModelNurbsSurface *> (pResource);
 
 			if (pSurface != nullptr) {
-				writeStartElement(XML_3MF_ELEMENT_NURBSSURFACE);
+				writeStartElementWithPrefix(XML_3MF_ELEMENT_NURBSSURFACE, XML_3MF_NAMESPACEPREFIX_NURBS);
 
 				// Write Object ID (mandatory)
 				writeIntAttribute(XML_3MF_ATTRIBUTE_NURBS_ID, pSurface->getResourceID()->getUniqueID());
 				writeIntAttribute(XML_3MF_ATTRIBUTE_NURBS_DEGREEU, pSurface->getDegreeU());
 				writeIntAttribute(XML_3MF_ATTRIBUTE_NURBS_DEGREEV, pSurface->getDegreeV());
 
-				writeStartElement(XML_3MF_ELEMENT_NURBS_UKNOTS);
+				writeStartElementWithPrefix(XML_3MF_ELEMENT_NURBS_UKNOTS, XML_3MF_NAMESPACEPREFIX_NURBS);
 				nfUint32 nUKnotCount = pSurface->getKnotCountU();
 				for (nIndexU = 0; nIndexU < nUKnotCount; nIndexU++) {
 					nfUint32 nMultiplicity;
@@ -296,7 +296,7 @@ namespace NMR {
 				}
 				writeFullEndElement();
 
-				writeStartElement(XML_3MF_ELEMENT_NURBS_VKNOTS);
+				writeStartElementWithPrefix(XML_3MF_ELEMENT_NURBS_VKNOTS, XML_3MF_NAMESPACEPREFIX_NURBS);
 				nfUint32 nVKnotCount = pSurface->getKnotCountV();
 				for (nIndexV = 0; nIndexV < nVKnotCount; nIndexV++) {
 					nfUint32 nMultiplicity;
@@ -309,7 +309,7 @@ namespace NMR {
 				writeFullEndElement();
 
 
-				writeStartElement(XML_3MF_ELEMENT_NURBS_CONTROLPOINTS);
+				writeStartElementWithPrefix(XML_3MF_ELEMENT_NURBS_CONTROLPOINTS, XML_3MF_NAMESPACEPREFIX_NURBS);
 				nfUint32 nControlPointCountU = pSurface->getControlPointCountU();
 				nfUint32 nControlPointCountV = pSurface->getControlPointCountV();
 				for (nIndexV = 0; nIndexV < nControlPointCountV; nIndexV++) {
@@ -317,7 +317,7 @@ namespace NMR {
 						nfDouble dX, dY, dZ, dW;
 						pSurface->getControlPoint(nIndexU, nIndexV, dX, dY, dZ, dW);
 
-						writeStartElement(XML_3MF_ELEMENT_NURBS_CONTROLPOINT);
+						writeStartElementWithPrefix(XML_3MF_ELEMENT_NURBS_CONTROLPOINT, XML_3MF_NAMESPACEPREFIX_NURBS);
 						writeDoubleAttribute(XML_3MF_ATTRIBUTE_NURBS_X, dX);
 						writeDoubleAttribute(XML_3MF_ATTRIBUTE_NURBS_Y, dY);
 						writeDoubleAttribute(XML_3MF_ATTRIBUTE_NURBS_Z, dZ);

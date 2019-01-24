@@ -242,6 +242,28 @@ namespace NMR {
 		m_KnotsV.clear();
 	}
 
+	void CModelNurbsSurface::addKnotsU(const std::vector<sModelNurbsSurfaceKnot> & Knots)
+	{
+		auto iIterator = Knots.begin();
+		while (iIterator != Knots.end()) {
+			m_KnotsU.push_back(*iIterator);
+
+			iIterator++;
+		}
+
+	}
+
+	void CModelNurbsSurface::addKnotsV(const std::vector<sModelNurbsSurfaceKnot> & Knots)
+	{
+		auto iIterator = Knots.begin();
+		while (iIterator != Knots.end()) {
+			m_KnotsV.push_back(*iIterator);
+
+			iIterator++;
+		}
+
+	}
+
 	void CModelNurbsSurface::setControlPoint(_In_ const nfUint32 nIndexU, _In_ const nfUint32 nIndexV, _In_ const nfDouble dX, _In_ const nfDouble dY, _In_ const nfDouble dZ, _In_ const nfDouble dW)
 	{
 		if (nIndexU >= m_ControlPointCountU)

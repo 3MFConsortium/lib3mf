@@ -44,8 +44,12 @@ namespace NMR {
 	class CModelReaderNode_ExactGeometry1901_Knot : public CModelReaderNode {
 	private:
 		CModel * m_pModel;
-		CMesh * m_pMesh;
 		PModelReaderWarnings m_pWarnings;
+
+		nfBool m_bHasMultiplicity;
+		nfUint32 m_nMultiplicity;
+		nfBool m_bHasValue;
+		nfDouble m_dValue;
 		
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
@@ -53,10 +57,11 @@ namespace NMR {
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 	public:
 		CModelReaderNode_ExactGeometry1901_Knot() = delete;
-		CModelReaderNode_ExactGeometry1901_Knot(_In_ CModel * pModel, _In_ CMesh * pMesh, _In_ PModelReaderWarnings pWarnings);
+		CModelReaderNode_ExactGeometry1901_Knot(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 
+		void retrieveValues(nfUint32 & nMultiplicity, nfDouble & dValue);
 	};
 
 	typedef std::shared_ptr <CModelReaderNode_ExactGeometry1901_Knot> PModelReaderNode_ExactGeometry1901_Knot;

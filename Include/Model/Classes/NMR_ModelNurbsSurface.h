@@ -44,8 +44,10 @@ NMR_ModelNurbsSurface.h defines the Model Nurbs Surface Class.
 #include <map>
 #include <string>
 
+#define MAXNURBSDEGREE 32
 #define MAXNURBSCONTROLPOINTS 16384
 #define MAXNURBSKNOTS 65536
+#define MAXNURBSMULTIPLICITY 65536
 
 namespace NMR {
 
@@ -93,11 +95,13 @@ namespace NMR {
 		nfUint32 getKnotCountU();
 		void getKnotU(_In_ nfUint32 nIndex, _Out_ nfUint32 & nMultiplicity, _Out_ nfDouble & dValue);
 		void clearKnotsU();
+		void addKnotsU(const std::vector<sModelNurbsSurfaceKnot> & Knots);
 
 		void addKnotV(_In_ const nfUint32 nMultiplicity, _In_ const nfDouble dValue);
 		nfUint32 getKnotCountV();
 		void getKnotV(_In_ nfUint32 nIndex, _Out_ nfUint32 & nMultiplicity, _Out_ nfDouble & dValue);
 		void clearKnotsV();
+		void addKnotsV(const std::vector<sModelNurbsSurfaceKnot> & Knots);
 
 
 		void setControlPoint(_In_ const nfUint32 nIndexU, _In_ const nfUint32 nIndexV, _In_ const nfDouble dX, _In_ const nfDouble dY, _In_ const nfDouble dZ, _In_ const nfDouble dW);

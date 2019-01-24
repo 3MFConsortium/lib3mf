@@ -1052,6 +1052,40 @@ Model error codes (0x8XXX)
 // Too many knots
 #define NMR_ERROR_TOOMANYKNOTS 0x80D1
 
+// Invalid Nurbs Degree
+#define NMR_ERROR_INVALIDNURBSDEGREE 0x80C8
+
+// Invalid Nurbs Attribute
+#define NMR_ERROR_NURBSINVALIDATTRIBUTE 0x80C9
+
+// Missing Nurbs Coordinate
+#define NMR_ERROR_NURBSMISSINGCOORDINATE 0x80CA
+
+// Missing Nurbs Degree
+#define NMR_ERROR_NURBSMISSINGDEGREE 0x80CB
+
+// Duplicate U Knots
+#define NMR_ERROR_NURBSDUPLICATEUKNOTS 0x80CC
+
+// Duplicate V Knots
+#define NMR_ERROR_NURBSDUPLICATEVKNOTS 0x80CD
+
+// Duplicate Control Points
+#define NMR_ERROR_NURBSDUPLICATECONTROLPOINTS 0x80CE
+
+// Invalid Control Point Count
+#define NMR_ERROR_NURBSINVALIDCONTROLPOINTCOUNT 0x80CF
+
+// Duplicate Nurbs Attribute
+#define NMR_ERROR_NURBSDUPLICATEATTRIBUTE 0x80D0
+
+// Knot Multiplicity Missing
+#define NMR_ERROR_NURBSMULTIPLICITYMISSING 0x80D1
+
+// Knot Values Missing
+#define NMR_ERROR_NURBSVALUEMISSING 0x80D2
+
+
 /*-------------------------------------------------------------------
 XML Parser Error Constants (0x9XXX)
 -------------------------------------------------------------------*/
