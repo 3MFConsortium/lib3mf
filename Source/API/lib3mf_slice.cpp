@@ -40,6 +40,12 @@ using namespace Lib3MF::Impl;
  Class definition of CLib3MFSlice 
 **************************************************************************************************************************/
 
+CLib3MFSlice::CLib3MFSlice(NMR::PSlice pSlice)
+	:m_pSlice(pSlice)
+{
+	
+}
+
 void CLib3MFSlice::SetVertices (const Lib3MF_uint64 nVerticesBufferSize, const sLib3MFPosition2D * pVerticesBuffer)
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
@@ -75,4 +81,7 @@ void CLib3MFSlice::GetPolygonIndexCount (const Lib3MF_uint64 nIndex, Lib3MF_uint
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-
+double CLib3MFSlice::GetZTop()
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}

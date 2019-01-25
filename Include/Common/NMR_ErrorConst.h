@@ -1031,6 +1031,9 @@ Model error codes (0x8XXX)
 // Duplicate MetaDataGroup
 #define NMR_ERROR_DUPLICATEMETADATAGROUP 0x80C6
 
+// SliceStack must not contain slices and slicerefs
+#define NMR_ERROR_SLICES_MIXING_SLICES_WITH_SLICEREFS 0x80C7
+
 /*-------------------------------------------------------------------
 XML Parser Error Constants (0x9XXX)
 -------------------------------------------------------------------*/

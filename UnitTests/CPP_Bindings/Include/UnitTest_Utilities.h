@@ -53,6 +53,17 @@ inline bool CreateDir(std::string sPath) {
 	return (system((std::string("mkdir \"") + sPath + "\"").c_str()) != -1);
 }
 
+#define ASSERT_SPECIFIC_THROW(statement, type) {\
+try {\
+  statement;\
+  ASSERT_FALSE(true);\
+}\
+catch (type) {\
+  ASSERT_TRUE(true);\
+}\
+}
+
+
 inline std::vector<Lib3MF_uint8> ReadFileIntoBuffer(std::string sFileName)
 {
 	// Read the file fully into a memory buffer

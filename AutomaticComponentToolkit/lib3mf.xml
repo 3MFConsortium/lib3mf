@@ -809,11 +809,15 @@
 			<param name="Count" type="uint64" pass="out" description="the number of indices of the index-th polygon" />
 		</method>
 		<method name="GetZTop" description="Get the upper Z-Coordinate of this slice.">
-			<param name="ZTop" type="single" pass="out" description="the upper Z-Coordinate of this slice" />
+			<param name="ZTop" type="double" pass="return" description="the upper Z-Coordinate of this slice" />
 		</method>
 	</class>
 	
 	<class name="SliceStack" parent="Resource">
+		<method name="GetBottomZ" description="Get the lower Z-Coordinate of the slice stack.">
+			<param name="ZBottom" type="double" pass="return" description="the lower Z-Coordinate the slice stack" />
+		</method>
+		
 		<method name="GetSliceCount" description="Returns the number of slices">
 			<param name="Count" type="uint64" pass="return" description="the number of slices" />
 		</method>
@@ -822,18 +826,33 @@
 			<param name="TheSlice" type="handle" class="Slice" pass="return" description="the Slice instance" />
 		</method>
 		<method name="AddSlice" description="Returns the number of slices">
-			<param name="ZTop" type="single" pass="in" description="upper Z coordinate of the slice"/>
+			<param name="ZTop" type="double" pass="in" description="upper Z coordinate of the slice"/>
 			<param name="TheSlice" type="handle" class="Slice" pass="return" description="a new Slice instance" />
 		</method>
+		
+		<method name="GetSliceRefCount" description="Returns the number of slice refs">
+			<param name="Count" type="uint64" pass="return" description="the number of slicereferences" />
+		</method>
+		<method name="AddSliceStackReference" description="Adds another existing slicestack as sliceref in this slicestack">
+			<param name="TheSliceStack" type="handle" class="SliceStack" pass="in" description="the slicestack to use as sliceref" />
+		</method>
+		<method name="GetSliceStackReference" description="Adds another existing slicestack as sliceref in this slicestack">
+			<param name="SliceRefIndex" type="uint64" pass="in" description="the index of the slice ref" />
+			<param name="TheSliceStack" type="handle" class="SliceStack" pass="return" description="the slicestack that is used as sliceref" />
+		</method>
+		
+		<method name="CollapseSliceReferences" description="Removes the indirection of slices via slice-refs, i.e. creates the slices of all slice refs of this SliceStack as actual slices of this SliceStack. All previously existing slices or slicerefs will be removed.">
+		</method>
+		
+		<!--
 		<method name="SetSliceRefPath" description="Sets the package path where this Slice should be stored. Input an empty string to reset the path">
 			<param name="Path" type="string" pass="in" description="the package path where this Slice should be stored" />
 		</method>
 		<method name="GetSliceRefPath" description="Obtains the package path where this Slice should be stored. Returns an empty string if the slicestack is stored within the root model.">
 			<param name="Path" type="string" pass="out" description="the package path where this Slice will be stored" />
 		</method>
-		<method name="GetBottomZ" description="Get the lower Z-Coordinate of the slice stack.">
-			<param name="ZBottom" type="single" pass="out" description="the lower Z-Coordinate the slice stack" />
-		</method>
+		-->
+		
 	</class>
 	
 	<class name="Model">
@@ -915,7 +934,7 @@
 			<param name="ComponentsObjectInstance" type="handle" class="ComponentsObject" pass="return" description=" returns the components object instance" />
 		</method>
 		<method name="AddSliceStack" description="creates a new model slicestack by its id">
-			<param name="BottomZ" type="single" pass="in" description="Bottom Z value of the slicestack"/>
+			<param name="ZBottom" type="double" pass="in" description="Bottom Z value of the slicestack"/>
 			<param name="SliceStackInstance" type="handle" class="SliceStack" pass="return" description="returns the new slicestack instance" />
 		</method>
 		<method name="AddTexture2DFromAttachment" description = "adds a texture2d resource to the model. Its path is given by that of an existing attachment.">

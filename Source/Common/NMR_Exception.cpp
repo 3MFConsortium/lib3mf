@@ -372,6 +372,7 @@ namespace NMR {
 		case NMR_ERROR_INVALIDTILESTYLE: return "Invalid Tile Style";
 		case NMR_ERROR_INVALIDFILTER: return "Invalid Filter";
 		case NMR_ERROR_DUPLICATEMETADATAGROUP: return "Duplicate MetaDataGroup";
+		case NMR_ERROR_SLICES_MIXING_SLICES_WITH_SLICEREFS: return "A SliceStack must not contain slices and slicerefs";
 
 		// XML Parser Error Constants(0x9XXX)
 		case NMR_ERROR_XMLPARSER_INVALIDATTRIBVALUE: return "Invalid XML attribute value";

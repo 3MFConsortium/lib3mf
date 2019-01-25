@@ -41,11 +41,68 @@ namespace NMR {
 	{
 		m_pSliceStackGeometry = pSliceStackGeometry;
 		m_nNumSliceRefsToMe = 0;
+		m_dZBottom = 0.0;
+	}
+
+	CModelSliceStack::CModelSliceStack(_In_ const ModelResourceID sID, _In_ CModel * pModel, nfDouble dZBottom)
+		: CModelResource(sID, pModel)
+	{
+		m_pSliceStackGeometry = std::make_shared<CSliceStackGeometry>();
+		m_nNumSliceRefsToMe = 0;
+		m_dZBottom = dZBottom;
 	}
 
 	CModelSliceStack::~CModelSliceStack()
 	{
 
+	}
+
+	//PSlice CModelSliceStack::AddSliceRef()
+	//{
+	//	if (!AllowsReferences()) {
+	//		throw CNMRException(NMR_ERROR_SLICES_MIXING_SLICES_WITH_SLICEREFS);
+	//	}
+
+	//}
+
+	PSlice CModelSliceStack::AddSlice(const nfDouble dZTop)
+	{
+		if (!AllowsGeometry()) {
+			throw CNMRException(NMR_ERROR_SLICES_MIXING_SLICES_WITH_SLICEREFS);
+		}
+
+		if (m_pSlices.size() > 0)
+		{
+			if (m_pSlices.back()->getTopZ() >= dZTop)
+				throw CNMRException(NMR_ERROR_SLICES_Z_NOTINCREASING);
+		}
+		else {
+			if (m_dZBottom >= dZTop)
+				throw CNMRException(NMR_ERROR_SLICES_Z_NOTINCREASING);
+		}
+		PSlice pSlice = std::make_shared<CSlice>(dZTop);
+		m_pSlices.push_back(pSlice);
+		return pSlice;
+	}
+
+	nfUint32 CModelSliceStack::getSliceCount()
+	{
+		return nfUint32(m_pSlices.size());
+	}
+
+	bool CModelSliceStack::AllowsGeometry() const
+	{
+		return m_pSliceRefs.empty();
+	}
+
+	nfUint32 CModelSliceStack::getSliceRefCount()
+	{
+		return nfUint32(m_pSliceRefs.size());
+	}
+
+	bool CModelSliceStack::AllowsReferences() const
+	{
+		return m_pSlices.empty();
 	}
 
 	_Ret_notnull_ PSliceStackGeometry CModelSliceStack::Geometry()
@@ -62,6 +119,27 @@ namespace NMR {
 	{
 		return Geometry()->usesSliceRef() ? "/2D/2dmodel_" + std::to_string(getResourceID()->getUniqueID()) + ".model" : "";
 	}
+
+	nfDouble CModelSliceStack::getZBottom()
+	{
+		return m_dZBottom;
+	}
+	void CModelSliceStack::setZBottom(nfDouble dZBottom)
+	{
+		if (!m_pSlices.empty()) {
+			if (m_pSlices.front()->getTopZ() <= dZBottom)
+				throw CNMRException(NMR_ERROR_SLICES_Z_NOTINCREASING);
+		}
+		if (!m_pSliceRefs.empty()) {
+			if (m_pSliceRefs.front()->getZBottom() < dZBottom)
+				throw CNMRException(NMR_ERROR_SLICES_Z_NOTINCREASING);
+		}
+		m_dZBottom = dZBottom;
+	}
+
+
+
+
 
 	CSliceStackGeometry::CSliceStackGeometry()
 	{
@@ -132,5 +210,7 @@ namespace NMR {
 		}
 		return true;
 	}
+
+	
 }
 

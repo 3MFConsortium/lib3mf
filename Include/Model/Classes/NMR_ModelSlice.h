@@ -46,10 +46,11 @@ namespace NMR {
 		std::vector<SLICENODE> m_Vertices;
 		std::vector<std::vector<nfUint32> > m_Polygons;
 
-		nfFloat m_topZ;
+		nfDouble m_dZTop;
 
 	public:
-		CSlice();
+		CSlice() = delete;
+		CSlice(nfDouble dZTop);
 		~CSlice();
 
 		nfUint32 addVertex(nfFloat x, nfFloat y);
@@ -62,9 +63,9 @@ namespace NMR {
 
 		nfUint32 getPolygonCount();
 
-		nfFloat getTopZ();
+		nfDouble getTopZ();
 
-		void setTopZ(nfFloat nTopZ);
+		void setTopZ(nfDouble dZTop);
 
 		_Ret_notnull_ SLICENODE *getNode(nfUint32 nIndex);
 

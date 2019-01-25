@@ -35,14 +35,13 @@ A Model Slice represents a single slice as vertices and polygons
 #include "Common/NMR_Exception.h"
 
 namespace NMR {
-	CSlice::CSlice()
+	CSlice::CSlice(nfDouble dZTop)
 	{
-		m_topZ = 0.0;
+		m_dZTop = dZTop;
 	}
 
 	CSlice::~CSlice()
 	{
-
 	}
 
 	nfUint32 CSlice::beginPolygon()
@@ -94,14 +93,14 @@ namespace NMR {
 		return (nfUint32)m_Polygons.size();
 	}
 
-	nfFloat CSlice::getTopZ()
+	nfDouble CSlice::getTopZ()
 	{
-		return m_topZ;
+		return m_dZTop;
 	}
 
-	void CSlice::setTopZ(nfFloat nTopZ)
+	void CSlice::setTopZ(nfDouble dZTop)
 	{
-		m_topZ = nTopZ;
+		m_dZTop = dZTop;
 	}
 
 	_Ret_notnull_ SLICENODE *CSlice::getNode(nfUint32 nIndex)

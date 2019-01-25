@@ -31,6 +31,7 @@ Abstract: This is a stub class definition of CLib3MFSliceStack
 #include "lib3mf_slicestack.hpp"
 #include "lib3mf_interfaceexception.hpp"
 
+#include "lib3mf_slice.hpp"
 // Include custom headers here.
 
 
@@ -50,32 +51,43 @@ NMR::PModelSliceStack CLib3MFSliceStack::sliceStack()
 	return std::dynamic_pointer_cast<NMR::CModelSliceStack>(resource());
 }
 
+double CLib3MFSliceStack::GetBottomZ()
+{
+	return sliceStack()->getZBottom();
+}
+
 Lib3MF_uint64 CLib3MFSliceStack::GetSliceCount ()
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	return sliceStack()->getSliceCount();
 }
 
 ILib3MFSlice * CLib3MFSliceStack::GetSlice (const Lib3MF_uint64 nSliceIndex)
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
-ILib3MFSlice * CLib3MFSliceStack::AddSlice (const float fZTop)
+ILib3MFSlice * CLib3MFSliceStack::AddSlice (const double fZTop)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	NMR::PSlice pSlice = sliceStack()->AddSlice(fZTop);
+	return new CLib3MFSlice(pSlice);
 }
 
-void CLib3MFSliceStack::SetSliceRefPath (const std::string & sPath)
+Lib3MF_uint64 CLib3MFSliceStack::GetSliceRefCount()
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	return sliceStack()->getSliceRefCount();
 }
 
-void CLib3MFSliceStack::GetSliceRefPath (std::string & sPath)
+void CLib3MFSliceStack::AddSliceStackReference(ILib3MFSliceStack* pTheSliceStack)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CLib3MFSliceStack::GetBottomZ (float & fZBottom)
+ILib3MFSliceStack * CLib3MFSliceStack::GetSliceStackReference(const Lib3MF_uint64 nSliceRefIndex)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
+
+void CLib3MFSliceStack::CollapseSliceReferences()
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 

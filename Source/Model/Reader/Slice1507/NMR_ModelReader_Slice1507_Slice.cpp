@@ -66,7 +66,7 @@ namespace NMR {
 	}
 
 	void CModelReaderNode_Slices1507_Slice::parseXML(_In_ CXmlReader * pXMLReader) {
-		m_Slice = std::make_shared<CSlice>();
+		m_Slice = std::make_shared<CSlice>(0.0f);
 
 		// Parse name
 		parseName(pXMLReader);

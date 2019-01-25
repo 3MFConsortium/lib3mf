@@ -36,7 +36,7 @@ Abstract: This is the class declaration of CLib3MFSlice
 
 
 // Include custom headers here.
-
+#include "Model/Classes/NMR_ModelSlice.h"
 
 namespace Lib3MF {
 namespace Impl {
@@ -52,6 +52,7 @@ private:
 	/**
 	* Put private members here.
 	*/
+	NMR::PSlice m_pSlice;
 
 protected:
 
@@ -64,7 +65,7 @@ public:
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-
+	CLib3MFSlice(NMR::PSlice);
 
 	/**
 	* Public member functions to implement.
@@ -84,6 +85,7 @@ public:
 
 	void GetPolygonIndexCount (const Lib3MF_uint64 nIndex, Lib3MF_uint64 & nCount);
 
+	double GetZTop();
 };
 
 } // namespace Impl

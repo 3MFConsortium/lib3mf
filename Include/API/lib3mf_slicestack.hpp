@@ -76,17 +76,21 @@ public:
 	* Public member functions to implement.
 	*/
 
+	double GetBottomZ();
+
 	Lib3MF_uint64 GetSliceCount ();
+
+	ILib3MFSlice * AddSlice(const double fZTop);
 
 	ILib3MFSlice * GetSlice (const Lib3MF_uint64 nSliceIndex);
 
-	ILib3MFSlice * AddSlice (const float fZTop);
+	Lib3MF_uint64 GetSliceRefCount();
 
-	void SetSliceRefPath (const std::string & sPath);
+	void AddSliceStackReference(ILib3MFSliceStack* pTheSliceStack) ;
 
-	void GetSliceRefPath (std::string & sPath);
+	ILib3MFSliceStack * GetSliceStackReference(const Lib3MF_uint64 nSliceRefIndex);
 
-	void GetBottomZ (float & fZBottom);
+	void CollapseSliceReferences();
 
 };
 

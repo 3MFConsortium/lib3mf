@@ -72,16 +72,36 @@ namespace NMR {
 
 	class CModelSliceStack : public CModelResource {
 	private:
+		nfDouble m_dZBottom;
+
 		PSliceStackGeometry m_pSliceStackGeometry;
+		std::vector<PModelSliceStack> m_pSliceRefs;
+		std::vector<PSlice> m_pSlices;
+
 		nfUint32 m_nNumSliceRefsToMe;	// number of sliceref-references to this resource
 	public:
 		CModelSliceStack() = delete;
 		CModelSliceStack(_In_ const ModelResourceID sID, _In_ CModel * pModel, PSliceStackGeometry pSliceStackGeometry);
+		CModelSliceStack(_In_ const ModelResourceID sID, _In_ CModel * pModel, nfDouble dZBottom);
+
 		~CModelSliceStack();
 
+		bool AllowsGeometry() const;
+		bool AllowsReferences() const;
+
+		PSlice AddSlice(const nfDouble dZTop);
+
 		_Ret_notnull_ PSliceStackGeometry Geometry();
+		
 		std::string sliceRefPath();
 		nfUint32& NumSliceRefsToMe();
+
+		nfUint32 getSliceCount();
+
+		nfUint32 getSliceRefCount();
+
+		nfDouble getZBottom();
+		void setZBottom(nfDouble dBottomZ);
 	};
 
 	typedef std::shared_ptr<CModelSliceStack> PModelSliceStack;
