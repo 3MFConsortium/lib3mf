@@ -57,14 +57,6 @@ namespace NMR {
 
 	}
 
-	//PSlice CModelSliceStack::AddSliceRef()
-	//{
-	//	if (!AllowsReferences()) {
-	//		throw CNMRException(NMR_ERROR_SLICES_MIXING_SLICES_WITH_SLICEREFS);
-	//	}
-
-	//}
-
 	PSlice CModelSliceStack::AddSlice(const nfDouble dZTop)
 	{
 		if (!AllowsGeometry()) {
@@ -83,6 +75,25 @@ namespace NMR {
 		PSlice pSlice = std::make_shared<CSlice>(dZTop);
 		m_pSlices.push_back(pSlice);
 		return pSlice;
+	}
+
+	void CModelSliceStack::AddSliceRef(PModelSliceStack pOtherStack)
+	{
+		if (!AllowsReferences()) {
+			throw CNMRException(NMR_ERROR_SLICES_MIXING_SLICES_WITH_SLICEREFS);
+		}
+		if (this == pOtherStack.get()) {
+			throw CNMRException(NMR_ERROR_SLICES_SLICEREF_CIRCULAR);
+		}
+		if (pOtherStack->getSliceRefCount() > 0) {
+			throw CNMRException(NMR_ERROR_SLICES_REFS_LEVELTOODEEP);
+		}
+		if (pOtherStack->getZBottom() < getHighestZ()) {
+			throw CNMRException(NMR_ERROR_SLICES_REFS_Z_NOTINCREASING);
+		}
+
+		// TODO: check in model, whether "this" is used as sliceref anywhere in the model
+		m_pSliceRefs.push_back(pOtherStack);
 	}
 
 	nfUint32 CModelSliceStack::getSliceCount()
@@ -104,6 +115,23 @@ namespace NMR {
 	{
 		return m_pSlices.empty();
 	}
+
+
+	void CModelSliceStack::CollapseSliceReferences()
+	{
+		m_pSlices.clear();
+		nfUint64 nSlices = 0;
+		for (auto pStack : m_pSliceRefs) {
+			nSlices += pStack->getSliceCount();
+		}
+		m_pSlices.reserve(nSlices);
+		for (auto pStack : m_pSliceRefs) {
+			for (auto pOldSlice : pStack->m_pSlices) {
+				m_pSlices.push_back(std::make_shared<CSlice>(*pOldSlice.get()));
+			}
+		}
+	}
+
 
 	_Ret_notnull_ PSliceStackGeometry CModelSliceStack::Geometry()
 	{
@@ -138,7 +166,17 @@ namespace NMR {
 	}
 
 
-
+	nfDouble CModelSliceStack::getHighestZ() const
+	{
+		nfDouble dHighestZ = m_dZBottom;
+		if (!m_pSlices.empty()) {
+			dHighestZ = max(dHighestZ, m_pSlices.back()->getTopZ());
+		}
+		if (!m_pSliceRefs.empty()) {
+			dHighestZ = max(dHighestZ, m_pSliceRefs.back()->getHighestZ());
+		}
+		return dHighestZ;
+	}
 
 
 	CSliceStackGeometry::CSliceStackGeometry()

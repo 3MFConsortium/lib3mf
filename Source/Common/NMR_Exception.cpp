@@ -373,6 +373,10 @@ namespace NMR {
 		case NMR_ERROR_INVALIDFILTER: return "Invalid Filter";
 		case NMR_ERROR_DUPLICATEMETADATAGROUP: return "Duplicate MetaDataGroup";
 		case NMR_ERROR_SLICES_MIXING_SLICES_WITH_SLICEREFS: return "A SliceStack must not contain slices and slicerefs";
+		case NMR_ERROR_SLICES_SLICEREF_CIRCULAR: return "SliceStack references must not be circular";
+		case NMR_ERROR_SLICES_REFS_Z_NOTINCREASING: return "z-position of slicerefs is not increasing";
+		case NMR_ERROR_SLICES_REFS_LEVELTOODEEP: return "level of slicereferences is too deep";
+
 
 		// XML Parser Error Constants(0x9XXX)
 		case NMR_ERROR_XMLPARSER_INVALIDATTRIBVALUE: return "Invalid XML attribute value";

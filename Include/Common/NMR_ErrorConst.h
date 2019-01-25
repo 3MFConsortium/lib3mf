@@ -1034,6 +1034,15 @@ Model error codes (0x8XXX)
 // SliceStack must not contain slices and slicerefs
 #define NMR_ERROR_SLICES_MIXING_SLICES_WITH_SLICEREFS 0x80C7
 
+// SliceStack references must not be circular
+#define NMR_ERROR_SLICES_SLICEREF_CIRCULAR 0x80CD
+
+// z-position of slicerefs is not increasing
+#define NMR_ERROR_SLICES_REFS_Z_NOTINCREASING 0x80CE
+
+// level of slicereferences is too deep
+#define NMR_ERROR_SLICES_REFS_LEVELTOODEEP 0x80CF
+
 /*-------------------------------------------------------------------
 XML Parser Error Constants (0x9XXX)
 -------------------------------------------------------------------*/

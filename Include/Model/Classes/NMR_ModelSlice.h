@@ -44,13 +44,14 @@ namespace NMR {
 	class CSlice {
 	private:
 		std::vector<SLICENODE> m_Vertices;
-		std::vector<std::vector<nfUint32> > m_Polygons;
+		std::vector<std::vector<nfUint32>> m_Polygons;
 
 		nfDouble m_dZTop;
 
 	public:
 		CSlice() = delete;
 		CSlice(nfDouble dZTop);
+		CSlice(CSlice&);
 		~CSlice();
 
 		nfUint32 addVertex(nfFloat x, nfFloat y);

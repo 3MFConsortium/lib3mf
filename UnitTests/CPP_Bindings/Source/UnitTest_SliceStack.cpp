@@ -97,7 +97,6 @@ namespace Lib3MF
 	}
 
 
-
 	class SliceStackArrangement : public ::testing::Test {
 	protected:
 
@@ -109,33 +108,101 @@ namespace Lib3MF
 
 		virtual void SetUp() {
 			model = CLib3MFWrapper::CreateModel();
-			stack = model->AddSliceStack(.0);
-			refStack1 = model->AddSliceStack(0);
-			refStack2 = model->AddSliceStack(10.0);
+			stackA = model->AddSliceStack(.0);
+			stackB = model->AddSliceStack(0);
+			stackC = model->AddSliceStack(10.0);
 			mesh = model->AddMeshObject();
 
-			refStack1->AddSlice(5.0);
-			refStack2->AddSlice(15.0);
+			stackB->AddSlice(5.0);
+			stackC->AddSlice(15.0);
 		}
 		virtual void TearDown() {
 			model.reset();
 		}
 
 		PLib3MFModel model;
-		PLib3MFSliceStack stack, refStack1, refStack2;
+		PLib3MFSliceStack stackA, stackB, stackC;
 		PLib3MFMeshObject mesh;
 	};
 
 
-	TEST_F(SliceStackArrangement, Set)
+	TEST_F(SliceStackArrangement, ForbiddenSelfReference)
 	{
+		ASSERT_SPECIFIC_THROW(stackA->AddSliceStackReference(stackA.get()), ELib3MFException);
+	}
 
+	TEST_F(SliceStackArrangement, ForbiddenSlicesAndSliceRefs)
+	{
+		ASSERT_SPECIFIC_THROW(stackB->AddSliceStackReference(stackA.get()), ELib3MFException);
+
+		stackA->AddSlice(1.0);
+		ASSERT_SPECIFIC_THROW(stackA->AddSliceStackReference(stackB.get()), ELib3MFException);
 	}
 
 
-	TEST_F(SliceStackArrangement, InvalidStructure)
+	TEST_F(SliceStackArrangement, WorkWithRefs)
 	{
+		ASSERT_EQ(stackA->GetSliceRefCount(), 0);
+
+		stackA->AddSliceStackReference(stackB.get());
+		ASSERT_EQ(stackA->GetSliceRefCount(), 1);
+
+		stackA->AddSliceStackReference(stackC.get());
+		ASSERT_EQ(stackA->GetSliceRefCount(), 2);
+	}
+
+	TEST_F(SliceStackArrangement, InvalidRefOrder)
+	{
+		stackA->AddSliceStackReference(stackC.get());
+		ASSERT_SPECIFIC_THROW(stackA->AddSliceStackReference(stackB.get()), ELib3MFException);
+	}
+
+
+	TEST_F(SliceStackArrangement, InvalidSlicesInReferences)
+	{
+		auto s1 = model->AddSliceStack(0.0);
+		auto s2 = model->AddSliceStack(10.0);
+
+		s1->AddSliceStackReference(s2.get());
+		ASSERT_SPECIFIC_THROW(s1->AddSlice(15.0), ELib3MFException);
+	}
+
+	TEST_F(SliceStackArrangement, DISABLED_MustFail_AddRefOfRef1)
+	{
+		auto stack1 = model->AddSliceStack(0.);
+		auto stack2 = model->AddSliceStack(1.);
+		auto stack3 = model->AddSliceStack(2.);
+		stack1->AddSliceStackReference(stack2.get());
+
+		ASSERT_SPECIFIC_THROW(stack2->AddSliceStackReference(stack3.get()), ELib3MFException);
+	}
+
+	TEST_F(SliceStackArrangement, MustFail_AddRefOfRef2)
+	{
+		auto stack1 = model->AddSliceStack(0.);
+		auto stack2 = model->AddSliceStack(1.);
+		auto stack3 = model->AddSliceStack(2.);
+
+		stack2->AddSliceStackReference(stack3.get());
+
+		ASSERT_SPECIFIC_THROW(stack1->AddSliceStackReference(stack2.get()), ELib3MFException);
+	}
+
+	TEST_F(SliceStackArrangement, MustFail_DoubleAssignementOfReference)
+	{
+		stackA->AddSliceStackReference(stackB.get());
+		ASSERT_SPECIFIC_THROW(stackA->AddSliceStackReference(stackB.get()), ELib3MFException);
+	}
+
+	TEST_F(SliceStackArrangement, Collapse)
+	{
+		stackA->AddSliceStackReference(stackB.get());
+		stackA->AddSliceStackReference(stackC.get());
 		
+		stackA->CollapseSliceReferences();
+
+		ASSERT_EQ(stackA->GetSliceCount(), 2);
 	}
+
 }
 

@@ -33,7 +33,7 @@ UnitTest_AllTests.cpp: Defines Entry point for the UnitTests of all exposed clas
 
 int main(int argc, char **argv)
 {
-	testing::GTEST_FLAG(filter) = "*SliceStack*";
+	//testing::GTEST_FLAG(filter) = "*MustFail_AddRefOfRef1*";
 	testing::InitGoogleTest(&argc, argv);
 	RUN_ALL_TESTS();
 	system("pause");

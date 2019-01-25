@@ -40,6 +40,13 @@ namespace NMR {
 		m_dZTop = dZTop;
 	}
 
+	CSlice::CSlice(CSlice& other)
+	{
+		m_dZTop = other.m_dZTop;
+		m_Vertices = other.m_Vertices;
+		m_Polygons = other.m_Polygons;
+	}
+
 	CSlice::~CSlice()
 	{
 	}

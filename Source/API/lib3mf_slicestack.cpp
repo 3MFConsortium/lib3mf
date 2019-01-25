@@ -78,7 +78,13 @@ Lib3MF_uint64 CLib3MFSliceStack::GetSliceRefCount()
 
 void CLib3MFSliceStack::AddSliceStackReference(ILib3MFSliceStack* pTheSliceStack)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	Lib3MF_uint32 nID = pTheSliceStack->GetResourceID();
+	NMR::PModelResource pResource = sliceStack()->getModel()->findResource(nID);
+	NMR::PModelSliceStack pModelSliceStack = std::dynamic_pointer_cast<NMR::CModelSliceStack>(pResource);
+	if (!pModelSliceStack)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDSLICESTACKRESOURCE);
+
+	sliceStack()->AddSliceRef(pModelSliceStack);
 }
 
 ILib3MFSliceStack * CLib3MFSliceStack::GetSliceStackReference(const Lib3MF_uint64 nSliceRefIndex)
@@ -88,6 +94,6 @@ ILib3MFSliceStack * CLib3MFSliceStack::GetSliceStackReference(const Lib3MF_uint6
 
 void CLib3MFSliceStack::CollapseSliceReferences()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	sliceStack()->CollapseSliceReferences();
 }
 
