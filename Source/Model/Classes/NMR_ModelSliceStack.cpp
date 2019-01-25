@@ -36,22 +36,21 @@ NMR_ModelSliceStackResource.h: implements the resource object for a slice stack
 
 namespace NMR {
 
-	CModelSliceStack::CModelSliceStack(_In_ const ModelResourceID sID, _In_ CModel * pModel, PSliceStack pSliceStack) : CModelResource(sID, pModel) 
+	CModelSliceStack::CModelSliceStack(_In_ const ModelResourceID sID, _In_ CModel * pModel, PSliceStackGeometry pSliceStackGeometry)
+		: CModelResource(sID, pModel) 
 	{
-		m_pSliceStack = pSliceStack;
+		m_pSliceStackGeometry = pSliceStackGeometry;
 		m_nNumSliceRefsToMe = 0;
 	}
 
-	CModelSliceStack::~CModelSliceStack() {
+	CModelSliceStack::~CModelSliceStack()
+	{
 
 	}
 
-	void CModelSliceStack::setSliceStack(PSliceStack pSliceStack) {
-		m_pSliceStack = pSliceStack;
-	}
-
-	_Ret_notnull_ PSliceStack CModelSliceStack::getSliceStack() {
-		return m_pSliceStack;
+	_Ret_notnull_ PSliceStackGeometry CModelSliceStack::Geometry()
+	{
+		return m_pSliceStackGeometry;
 	}
 
 	nfUint32& CModelSliceStack::NumSliceRefsToMe()
@@ -59,23 +58,28 @@ namespace NMR {
 		return m_nNumSliceRefsToMe;
 	}
 
-	std::string CModelSliceStack::sliceRefPath() {
-		return getSliceStack()->usesSliceRef() ? "/2D/2dmodel_" + std::to_string(getResourceID()->getUniqueID()) + ".model" : "";
+	std::string CModelSliceStack::sliceRefPath()
+	{
+		return Geometry()->usesSliceRef() ? "/2D/2dmodel_" + std::to_string(getResourceID()->getUniqueID()) + ".model" : "";
 	}
 
-	CSliceStack::CSliceStack() {
+	CSliceStackGeometry::CSliceStackGeometry()
+	{
 		m_BottomZ = 0.0;
 		m_bUsesSliceRef = false;
 	}
 
-	CSliceStack::~CSliceStack() {
+	CSliceStackGeometry::~CSliceStackGeometry()
+	{
 	}
 
-	_Ret_notnull_ PSlice CSliceStack::getSlice(nfUint32 nIndex) {
+	_Ret_notnull_ PSlice CSliceStackGeometry::getSlice(nfUint32 nIndex)
+	{
 		return m_Slices[nIndex];
 	}
 
-	nfUint32 CSliceStack::addSlice(PSlice pSlice) {
+	nfUint32 CSliceStackGeometry::addSlice(PSlice pSlice)
+	{
 		if (pSlice->getTopZ() < m_BottomZ)
 			throw CNMRException(NMR_ERROR_SLICES_Z_NOTINCREASING);
 		if (!m_Slices.empty()) {
@@ -87,35 +91,41 @@ namespace NMR {
 		return (nfUint32)m_Slices.size() - 1;
 	}
 
-	void CSliceStack::mergeSliceStack(PSliceStack pSliceStack)
+	void CSliceStackGeometry::mergeSliceStackGeometry(PSliceStackGeometry pSliceStackGeometry)
 	{
-		for (int i = 0; i < (int)pSliceStack->getSliceCount(); i++)
+		for (int i = 0; i < (int)pSliceStackGeometry->getSliceCount(); i++)
 		{
-			this->addSlice(pSliceStack->getSlice(i));
+			this->addSlice(pSliceStackGeometry->getSlice(i));
 		}
 	}
 
-	nfUint32 CSliceStack::getSliceCount() {
+	nfUint32 CSliceStackGeometry::getSliceCount()
+	{
 		return (nfUint32)m_Slices.size();
 	}
 
-	nfFloat CSliceStack::getBottomZ() {
+	nfFloat CSliceStackGeometry::getBottomZ()
+	{
 		return m_BottomZ;
 	}
 
-	void CSliceStack::setBottomZ(nfFloat nBottomZ) {
+	void CSliceStackGeometry::setBottomZ(nfFloat nBottomZ)
+	{
 		m_BottomZ = nBottomZ;
 	}
 
-	void CSliceStack::setUsesSliceRef(nfBool bUsesSliceRef) {
+	void CSliceStackGeometry::setUsesSliceRef(nfBool bUsesSliceRef)
+	{
 		m_bUsesSliceRef = bUsesSliceRef;
 	}
 
-	nfBool CSliceStack::usesSliceRef() {
+	nfBool CSliceStackGeometry::usesSliceRef()
+	{
 		return m_bUsesSliceRef;
 	}
 
-	bool CSliceStack::areAllPolygonsClosed() {
+	bool CSliceStackGeometry::areAllPolygonsClosed()
+	{
 		for (auto pSlice : m_Slices) {
 			if (!pSlice->allPolygonsAreClosed())
 				return false;

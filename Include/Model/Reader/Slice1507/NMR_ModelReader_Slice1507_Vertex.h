@@ -37,7 +37,7 @@ NMR_ModelReaderNode_slice1507_Segment.h covers the segments of the private 3MF s
 #include "Model/Classes/NMR_ModelComponent.h"
 #include "Model/Classes/NMR_ModelComponentsObject.h"
 #include "Model/Classes/NMR_ModelObject.h"
-#include "Common/MeshInformation/NMR_MeshInformation_Slices.h"
+#include "Model/Classes/NMR_ModelConstants_Slices.h"
 
 namespace NMR {
 	class CModelReaderNode_Slices1507_Vertex : public CModelReaderNode {

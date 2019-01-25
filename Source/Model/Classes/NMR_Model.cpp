@@ -899,14 +899,14 @@ namespace NMR {
 		return m_SliceStackLookup[nIndex];
 	}
 
-	CSliceStack * CModel::getSliceStack(_In_ nfUint32 nIndex)
+	CSliceStackGeometry * CModel::getSliceStack(_In_ nfUint32 nIndex)
 	{
 		PModelResource pResouce = getSliceStackResource(nIndex);
 		CModelSliceStack * pSliceStackObject = dynamic_cast<CModelSliceStack *> (pResouce.get());
 		if (pSliceStackObject == nullptr)
 			throw CNMRException(NMR_ERROR_RESOURCETYPEMISMATCH);
 
-		CSliceStack *pSliceStack = pSliceStackObject->getSliceStack().get();
+		CSliceStackGeometry *pSliceStack = pSliceStackObject->Geometry().get();
 		return pSliceStack;
 	}
 

@@ -33,7 +33,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "Model/Classes/NMR_ModelComponent.h"
 #include "Model/Classes/NMR_ModelComponentsObject.h"
 #include "Model/Classes/NMR_ModelObject.h"
-#include "Common/MeshInformation/NMR_MeshInformation_Slices.h"
+
+#include "Model/Classes/NMR_ModelConstants_Slices.h"
 
 namespace NMR {
 

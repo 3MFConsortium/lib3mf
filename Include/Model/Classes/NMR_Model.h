@@ -77,8 +77,8 @@ namespace NMR {
 	class CModelSliceStack;
 	typedef std::shared_ptr <CModelSliceStack> PModelSliceStack;
 
-	class CSliceStack;
-	typedef std::shared_ptr <CSliceStack> PSliceStack;
+	class CSliceStackGeometry;
+	typedef std::shared_ptr <CSliceStackGeometry> PSliceStackGeometry;
 
 	class CModel {
 	private:
@@ -251,7 +251,7 @@ namespace NMR {
 		// Convenience functions for slice stacks
 		nfUint32 getSliceStackCount();
 		PModelResource getSliceStackResource(_In_ nfUint32 nIndex);
-		CSliceStack * getSliceStack(_In_ nfUint32 nIndex);
+		CSliceStackGeometry * getSliceStack(_In_ nfUint32 nIndex);
 
 		void removeReferencedSliceStackResources();
 	};

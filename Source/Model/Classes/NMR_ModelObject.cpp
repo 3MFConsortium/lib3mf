@@ -151,7 +151,7 @@ namespace NMR {
 		}
 	}
 
-	void CModelObject::setSliceStack(PModelSliceStack pSliceStack) {
+	void CModelObject::assignSliceStack(PModelSliceStack pSliceStack) {
 		if (pSliceStack == nullptr)
 			m_pSliceStack.reset();
 		else {

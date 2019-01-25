@@ -185,7 +185,7 @@ bool CLib3MFObject::HasSliceStack()
 
 void CLib3MFObject::ClearSliceStack()
 {
-	object()->setSliceStack(nullptr);
+	object()->assignSliceStack(nullptr);
 }
 
 ILib3MFSliceStack * CLib3MFObject::GetSliceStack()
@@ -197,7 +197,7 @@ ILib3MFSliceStack * CLib3MFObject::GetSliceStack()
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDSLICESTACKRESOURCE);
 }
 
-void CLib3MFObject::SetSliceStack(ILib3MFSliceStack* pSliceStackInstance)
+void CLib3MFObject::AssignSliceStack(ILib3MFSliceStack* pSliceStackInstance)
 {
 	Lib3MF_uint32 id = pSliceStackInstance->GetResourceID();
 
@@ -206,6 +206,6 @@ void CLib3MFObject::SetSliceStack(ILib3MFSliceStack* pSliceStackInstance)
 	if (!pSliceStackResource)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDSLICESTACKRESOURCE);
 
-	object()->setSliceStack(pSliceStackResource);
+	object()->assignSliceStack(pSliceStackResource);
 }
 

@@ -64,7 +64,7 @@ namespace Lib3MF
 	{
 		ASSERT_FALSE(mesh->HasSliceStack());
 
-		mesh->SetSliceStack(sliceStack.get());
+		mesh->AssignSliceStack(sliceStack.get());
 		ASSERT_TRUE(mesh->HasSliceStack());
 
 		auto copySliceStack = mesh->GetSliceStack();

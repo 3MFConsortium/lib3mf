@@ -418,8 +418,8 @@
 		<method name="GetSliceStack" description="set the meshresolution of the mesh object">
 			<param name="SliceStackInstance" type="handle" class="SliceStack" pass="return" description="returns the slicestack instance" />
 		</method>
-		<method name="SetSliceStack" description="set the meshresolution of the mesh object">
-			<param name="SliceStackInstance" type="handle" class="SliceStack" pass="in" description="returns the slicestack instance" />
+		<method name="AssignSliceStack" description="assigns a slicestack to the object">
+			<param name="SliceStackInstance" type="handle" class="SliceStack" pass="in" description="the new slice stack of this Object" />
 		</method>
 	</class>
 

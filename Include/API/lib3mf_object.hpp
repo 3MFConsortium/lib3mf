@@ -112,7 +112,7 @@ public:
 
 	virtual ILib3MFSliceStack * GetSliceStack();
 
-	virtual void SetSliceStack(ILib3MFSliceStack* pSliceStackInstance);
+	virtual void AssignSliceStack(ILib3MFSliceStack* pSliceStackInstance);
 
 };
 

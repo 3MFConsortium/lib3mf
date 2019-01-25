@@ -42,43 +42,44 @@ A Model Slice Stack represents a ordered list of slices.
 #include <vector>
 
 namespace NMR {
-	class CSliceStack {
+
+	class CSliceStackGeometry {
 	private:
-		nfFloat  m_BottomZ;
+		nfFloat m_BottomZ;
 		std::vector<PSlice> m_Slices;
 		nfBool m_bUsesSliceRef;
 
 	public:
-		CSliceStack();
-		~CSliceStack();
+		CSliceStackGeometry();
+		~CSliceStackGeometry();
 
 		_Ret_notnull_ PSlice getSlice(nfUint32 nIndex);
 
 		nfUint32 getSliceCount();
 		nfUint32 addSlice(PSlice pSlice);
-		void mergeSliceStack(PSliceStack pSliceStack);
-
+		void mergeSliceStackGeometry(PSliceStackGeometry pSliceStack);
+		
+		void setUsesSliceRef(nfBool bUsesSliceRef);
 		nfBool usesSliceRef();
 
 		nfFloat getBottomZ();
 		void setBottomZ(nfFloat nBottomZ);
-		void setUsesSliceRef(nfBool bUsesSliceRef);
+		
 		bool areAllPolygonsClosed();
 	};
 
-	typedef std::shared_ptr<CSliceStack> PSliceStack;
+	typedef std::shared_ptr<CSliceStackGeometry> PSliceStackGeometry;
 
 	class CModelSliceStack : public CModelResource {
 	private:
-		PSliceStack m_pSliceStack;
+		PSliceStackGeometry m_pSliceStackGeometry;
 		nfUint32 m_nNumSliceRefsToMe;	// number of sliceref-references to this resource
 	public:
 		CModelSliceStack() = delete;
-		CModelSliceStack(_In_ const ModelResourceID sID, _In_ CModel * pModel, PSliceStack pSliceStack);
+		CModelSliceStack(_In_ const ModelResourceID sID, _In_ CModel * pModel, PSliceStackGeometry pSliceStackGeometry);
 		~CModelSliceStack();
 
-		void setSliceStack(PSliceStack pSliceStack);
-		_Ret_notnull_ PSliceStack getSliceStack();
+		_Ret_notnull_ PSliceStackGeometry Geometry();
 		std::string sliceRefPath();
 		nfUint32& NumSliceRefsToMe();
 	};

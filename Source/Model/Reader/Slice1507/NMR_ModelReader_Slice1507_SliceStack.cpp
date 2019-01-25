@@ -82,11 +82,11 @@ namespace NMR {
 			if (!pSliceStackResource)
 				throw CNMRException(NMR_ERROR_SLICESTACKRESOURCE_NOT_FOUND);
 			// can't have slice refs reference slicerefs
-			if (pSliceStackResource->getSliceStack()->usesSliceRef())
+			if (pSliceStackResource->Geometry()->usesSliceRef())
 				throw CNMRException(NMR_ERROR_SLICEREFSTOODEEP);
 			pSliceStackResource->NumSliceRefsToMe()++;
 			try {
-				m_pSliceStack->mergeSliceStack(pSliceStackResource->getSliceStack());
+				m_pSliceStack->mergeSliceStackGeometry(pSliceStackResource->Geometry());
 			}
 			catch (CNMRException &e) {
 				if (e.getErrorCode() == NMR_ERROR_SLICES_Z_NOTINCREASING) {
@@ -106,7 +106,7 @@ namespace NMR {
 	{
 		m_nProgressCounter = 0;
 		m_sSlicePath = sSlicePath;
-		m_pSliceStack = std::make_shared<CSliceStack>();
+		m_pSliceStack = std::make_shared<CSliceStackGeometry>();
 		m_pModel = pModel;
 		m_bHasReadSliceRef = false;
 		m_bHasReadSlices = false;

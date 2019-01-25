@@ -35,20 +35,24 @@ A Model Slice represents a single slice as vertices and polygons
 #include "Common/NMR_Exception.h"
 
 namespace NMR {
-	CSlice::CSlice() {
+	CSlice::CSlice()
+	{
 		m_topZ = 0.0;
 	}
 
-	CSlice::~CSlice() {
+	CSlice::~CSlice()
+	{
 
 	}
 
-	nfUint32 CSlice::beginPolygon() {
+	nfUint32 CSlice::beginPolygon()
+	{
 		m_Polygons.push_back(std::vector<nfUint32>());
 		return (nfUint32)m_Polygons.size() - 1;
 	}
 
-	nfUint32 CSlice::addVertex(nfFloat x, nfFloat y) {
+	nfUint32 CSlice::addVertex(nfFloat x, nfFloat y)
+	{
 		SLICENODE cNode;
 
 		cNode.m_position.m_fields[0] = x;
@@ -61,7 +65,8 @@ namespace NMR {
 		return cNode.m_index;
 	}
 
-	void CSlice::getVertex(nfUint32 nIndex, nfFloat *x, nfFloat *y) {
+	void CSlice::getVertex(nfUint32 nIndex, nfFloat *x, nfFloat *y)
+	{
 		if (nIndex >= m_Vertices.size())
 			throw CNMRException(NMR_ERROR_INVALIDINDEX);
 
@@ -69,7 +74,8 @@ namespace NMR {
 		*y = m_Vertices[nIndex].m_position.m_values.y;
 	}
 
-	void CSlice::addPolygonIndex(nfUint32 nPolygonIndex, nfUint32 nIndex) {
+	void CSlice::addPolygonIndex(nfUint32 nPolygonIndex, nfUint32 nIndex)
+	{
 		if (nPolygonIndex >= m_Polygons.size())
 			throw CNMRException(NMR_ERROR_INVALIDINDEX);
 
@@ -83,27 +89,33 @@ namespace NMR {
 		m_Polygons[nPolygonIndex].push_back(nIndex);
 	}
 
-	nfUint32 CSlice::getPolygonCount() {
+	nfUint32 CSlice::getPolygonCount()
+	{
 		return (nfUint32)m_Polygons.size();
 	}
 
-	nfFloat CSlice::getTopZ() {
+	nfFloat CSlice::getTopZ()
+	{
 		return m_topZ;
 	}
 
-	void CSlice::setTopZ(nfFloat nTopZ) {
+	void CSlice::setTopZ(nfFloat nTopZ)
+	{
 		m_topZ = nTopZ;
 	}
 
-	_Ret_notnull_ SLICENODE *CSlice::getNode(nfUint32 nIndex) {
+	_Ret_notnull_ SLICENODE *CSlice::getNode(nfUint32 nIndex)
+	{
 		return &m_Vertices[nIndex];
 	}
 
-	nfUint32 CSlice::getVertexCount() {
+	nfUint32 CSlice::getVertexCount()
+	{
 		return (nfUint32)m_Vertices.size();
 	}
 
-	bool CSlice::allPolygonsAreClosed() {
+	bool CSlice::allPolygonsAreClosed()
+	{
 		for (auto polygon : m_Polygons) {
 			if (polygon.size() > 1) {
 				if (*polygon.begin() != *polygon.rbegin()) {
@@ -126,11 +138,13 @@ namespace NMR {
 		return m_Polygons[nPolygonIndex][0] != m_Polygons[nPolygonIndex][1];
 	}
 
-	nfUint32 CSlice::getNumberOfPolygons() {
+	nfUint32 CSlice::getNumberOfPolygons()
+	{
 		return (nfUint32)m_Polygons.size();
 	}
 
-	nfUint32 CSlice::getPolygonIndex(nfUint32 nPolygonIndex, nfUint32 nIndexOfIndex) {
+	nfUint32 CSlice::getPolygonIndex(nfUint32 nPolygonIndex, nfUint32 nIndexOfIndex)
+	{
 		if (nPolygonIndex >= m_Polygons.size())
 			throw CNMRException(NMR_ERROR_INVALIDINDEX);
 
@@ -140,7 +154,8 @@ namespace NMR {
 		return m_Polygons[nPolygonIndex][nIndexOfIndex];
 	}
 
-	nfUint32 CSlice::getPolygonIndexCount(nfUint32 nPolygonIndex) {
+	nfUint32 CSlice::getPolygonIndexCount(nfUint32 nPolygonIndex)
+	{
 		if (nPolygonIndex >= m_Polygons.size())
 			throw CNMRException(NMR_ERROR_INVALIDINDEX);
 

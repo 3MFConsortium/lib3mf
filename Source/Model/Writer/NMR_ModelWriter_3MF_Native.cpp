@@ -161,8 +161,8 @@ namespace NMR {
 				if (!m_pProgressMonitor->Progress(double(nIndex) / nCount, ProgressIdentifier::PROGRESS_WRITENONROOTMODELS))
 					throw CNMRException(NMR_USERABORTED);
 				CModelSliceStack* pSliceStackResource = dynamic_cast<CModelSliceStack*>(pModel->getSliceStackResource(nIndex).get());
-				CSliceStack* pSliceStack = pSliceStackResource->getSliceStack().get();
-				if (pSliceStack->usesSliceRef()) {
+				CSliceStackGeometry* pSliceStackGeometry = pSliceStackResource->Geometry().get();
+				if (pSliceStackGeometry->usesSliceRef()) {
 					PExportStreamMemory p = std::make_shared<CExportStreamMemory>();
 
 					PXmlWriter_Native pXMLWriter = std::make_shared<CXmlWriter_Native>(p);

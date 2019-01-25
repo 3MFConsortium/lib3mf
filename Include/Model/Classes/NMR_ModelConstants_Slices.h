@@ -26,7 +26,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_MeshInformation_Slices.h covers the private 3MF slice extension.
+NMR_ModelConstants_Slices.h defines the 3MF Model Constants of the slice extension.
 
 --*/
 

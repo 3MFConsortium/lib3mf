@@ -98,7 +98,7 @@ namespace NMR {
 
 		virtual nfBool isValidForSlices(const NMATRIX3& totalParentMatrix) = 0;
 
-		void setSliceStack(PModelSliceStack pSliceStackId);
+		void assignSliceStack(PModelSliceStack pSliceStackId);
 		PModelSliceStack getSliceStack();
 
 		void setSlicesMeshResolution(eModelSlicesMeshResolution eMeshResolution);

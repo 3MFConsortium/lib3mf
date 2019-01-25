@@ -50,7 +50,7 @@ This is the class for exporting the 3mf model stream root node.
 #include "Common/NMR_StringUtils.h"
 #include "Common/MeshInformation/NMR_MeshInformation_NodeColors.h"
 #include "Common/MeshInformation/NMR_MeshInformation_TexCoords.h"
-#include "Common/MeshInformation/NMR_MeshInformation_Slices.h"
+#include "Model/Classes/NMR_ModelConstants_Slices.h"
 
 #include "Common/3MF_ProgressMonitor.h"
 
@@ -335,9 +335,9 @@ namespace NMR {
 		writeStartElementWithPrefix(XML_3MF_ELEMENT_SLICESTACKRESOURCE, XML_3MF_NAMESPACEPREFIX_SLICE);
 
 		writeIntAttribute(XML_3MF_ATTRIBUTE_SLICESTACKID, pSliceStackResource->getResourceID()->getUniqueID());
-		writeFloatAttribute(XML_3MF_ATTRIBUTE_SLICESTACKZBOTTOM, pSliceStackResource->getSliceStack()->getBottomZ());
+		writeFloatAttribute(XML_3MF_ATTRIBUTE_SLICESTACKZBOTTOM, pSliceStackResource->Geometry()->getBottomZ());
 
-		if (pSliceStackResource->getSliceStack()->usesSliceRef() && (m_pSliceStackResource == NULL)) {
+		if (pSliceStackResource->Geometry()->usesSliceRef() && (m_pSliceStackResource == NULL)) {
 			writeStartElementWithPrefix(XML_3MF_ELEMENT_SLICEREFRESOURCE, XML_3MF_NAMESPACEPREFIX_SLICE);
 			writeIntAttribute(XML_3MF_ATTRIBUTE_SLICEREF_ID, pSliceStackResource->getResourceID()->getUniqueID());
 			writeStringAttribute(XML_3MF_ATTRIBUTE_SLICEREF_PATH, pSliceStackResource->sliceRefPath());
@@ -345,12 +345,12 @@ namespace NMR {
 		}
 		else {
 			nfUint32 nSliceIndex;
-			for (nSliceIndex = 0; nSliceIndex < pSliceStackResource->getSliceStack()->getSliceCount(); nSliceIndex++) {
+			for (nSliceIndex = 0; nSliceIndex < pSliceStackResource->Geometry()->getSliceCount(); nSliceIndex++) {
 				if (nSliceIndex % PROGRESS_SLICEUPDATE == PROGRESS_SLICEUPDATE-1) {
 					if (m_pProgressMonitor && !m_pProgressMonitor->Progress(-1, ProgressIdentifier::PROGRESS_WRITESLICES))
 						throw CNMRException(NMR_USERABORTED);
 				}
-				PSlice pSlice = pSliceStackResource->getSliceStack()->getSlice(nSliceIndex);
+				PSlice pSlice = pSliceStackResource->Geometry()->getSlice(nSliceIndex);
 
 				writeStartElementWithPrefix(XML_3MF_ELEMENT_SLICE, XML_3MF_NAMESPACEPREFIX_SLICE);
 
