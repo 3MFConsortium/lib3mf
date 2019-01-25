@@ -101,6 +101,13 @@ namespace NMR {
 		return nfUint32(m_pSlices.size());
 	}
 
+	PSlice CModelSliceStack::getSlice(nfUint32 nIndex)
+	{
+		if (nIndex >= m_pSlices.size())
+			throw CNMRException(NMR_ERROR_INVALIDINDEX);
+		return m_pSlices[nIndex];
+	}
+
 	bool CModelSliceStack::AllowsGeometry() const
 	{
 		return m_pSliceRefs.empty();
@@ -109,6 +116,13 @@ namespace NMR {
 	nfUint32 CModelSliceStack::getSliceRefCount()
 	{
 		return nfUint32(m_pSliceRefs.size());
+	}
+
+	PModelSliceStack CModelSliceStack::getSliceRef(nfUint32 nIndex)
+	{
+		if (nIndex >= m_pSliceRefs.size())
+			throw CNMRException(NMR_ERROR_INVALIDINDEX);
+		return m_pSliceRefs[nIndex];
 	}
 
 	bool CModelSliceStack::AllowsReferences() const

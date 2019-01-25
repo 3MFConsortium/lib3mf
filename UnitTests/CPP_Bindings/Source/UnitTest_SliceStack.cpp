@@ -96,6 +96,19 @@ namespace Lib3MF
 		ASSERT_EQ(s->GetSliceRefCount(), 0);
 	}
 
+	TEST_F(SliceStack, WorkWithSlices)
+	{
+		auto stack = model->AddSliceStack(1.0);
+		auto sliceA = stack->AddSlice(2.);
+		ASSERT_EQ(stack->GetSliceCount(),1);
+		
+		auto sliceA1 = stack->GetSlice(0);
+
+		auto sliceB = stack->AddSlice(3.);
+		ASSERT_EQ(stack->GetSliceCount(), 2);
+		auto sliceAB1 = stack->GetSlice(0);
+	}
+
 
 	class SliceStackArrangement : public ::testing::Test {
 	protected:
@@ -147,8 +160,14 @@ namespace Lib3MF
 		stackA->AddSliceStackReference(stackB.get());
 		ASSERT_EQ(stackA->GetSliceRefCount(), 1);
 
+		auto stackB2 = stackA->GetSliceStackReference(0);
+		ASSERT_EQ(stackB2->GetResourceID(), stackB->GetResourceID());
+
 		stackA->AddSliceStackReference(stackC.get());
 		ASSERT_EQ(stackA->GetSliceRefCount(), 2);
+
+		auto stackC2 = stackA->GetSliceStackReference(1);
+		ASSERT_EQ(stackC2->GetResourceID(), stackC->GetResourceID());
 	}
 
 	TEST_F(SliceStackArrangement, InvalidRefOrder)
@@ -204,5 +223,31 @@ namespace Lib3MF
 		ASSERT_EQ(stackA->GetSliceCount(), 2);
 	}
 
+
+
+
+	class SliceStackWriting : public ::testing::Test {
+	protected:
+
+		static void SetUpTestCase() {
+		}
+
+		static void TearDownTestCase() {
+		}
+
+		virtual void SetUp() {
+			model = CLib3MFWrapper::CreateModel();
+		}
+		virtual void TearDown() {
+			model.reset();
+		}
+
+		PLib3MFModel model;
+	};
+
+	TEST_F(SliceStackWriting, DISABLED_WriteSliceFile)
+	{
+		ASSERT_FALSE(true);
+	}
 }
 

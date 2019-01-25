@@ -93,8 +93,10 @@ namespace NMR {
 		void AddSliceRef(PModelSliceStack);
 
 		nfUint32 getSliceCount();
+		PSlice getSlice(nfUint32 nIndex);
 
 		nfUint32 getSliceRefCount();
+		PModelSliceStack getSliceRef(nfUint32 nIndex);
 
 		nfDouble getZBottom();
 		void setZBottom(nfDouble dBottomZ);

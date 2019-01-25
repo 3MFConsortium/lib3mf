@@ -63,7 +63,8 @@ Lib3MF_uint64 CLib3MFSliceStack::GetSliceCount ()
 
 ILib3MFSlice * CLib3MFSliceStack::GetSlice (const Lib3MF_uint64 nSliceIndex)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	NMR::PSlice pSlice = sliceStack()->getSlice(Lib3MF_uint32(nSliceIndex));
+	return new CLib3MFSlice(pSlice);
 }
 ILib3MFSlice * CLib3MFSliceStack::AddSlice (const double fZTop)
 {
@@ -89,7 +90,8 @@ void CLib3MFSliceStack::AddSliceStackReference(ILib3MFSliceStack* pTheSliceStack
 
 ILib3MFSliceStack * CLib3MFSliceStack::GetSliceStackReference(const Lib3MF_uint64 nSliceRefIndex)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	NMR::PModelSliceStack pModelSliceStack = sliceStack()->getSliceRef(Lib3MF_uint32(nSliceRefIndex));
+	return new CLib3MFSliceStack(pModelSliceStack);
 }
 
 void CLib3MFSliceStack::CollapseSliceReferences()
