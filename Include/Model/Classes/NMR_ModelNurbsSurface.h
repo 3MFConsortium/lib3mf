@@ -42,6 +42,7 @@ NMR_ModelNurbsSurface.h defines the Model Nurbs Surface Class.
 #include "Common/Platform/NMR_ImportStream.h"  
 #include <memory>
 #include <map>
+#include <functional>
 #include <string>
 
 #define MAXNURBSDEGREE 32
@@ -53,6 +54,7 @@ namespace NMR {
 
 	class CModel;
 	typedef std::shared_ptr <CModel> PModel;
+	typedef std::function<void(uint32_t nID, double dU, double dV)> NurbsSurfaceUVWalker;
 
 	typedef struct {
 		nfUint32 m_Multiplicity;
@@ -65,7 +67,6 @@ namespace NMR {
 	} sModelNurbsControlPoint;
 
 	typedef struct {
-		nfUint32 m_nID;
 		nfDouble m_U;
 		nfDouble m_V;
 	} sModelNurbsUVCoord;
@@ -126,9 +127,11 @@ namespace NMR {
 		nfUint32 addUVCoordinate (_In_ nfDouble fU, _In_ nfDouble fV);
 		nfBool getUVCoordinate (_In_ nfUint32 nID, _Out_ nfDouble & fU, _Out_ nfDouble & fV);
 		nfUint32 getUVCoordinateCount();
+		void walkUVCoordinates(NurbsSurfaceUVWalker Walker);
 
 		void setUVBounds(nfDouble dMinU, nfDouble dMinV, nfDouble dMaxU, nfDouble dMaxV);
 		void getUVBounds(nfDouble & dMinU, nfDouble & dMinV, nfDouble & dMaxU, nfDouble & dMaxV);
+
 
 
 	};

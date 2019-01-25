@@ -183,6 +183,8 @@ void CLib3MFNurbsSurface::GetUVCoordinate(const Lib3MF_uint32 nId, sLib3MFNURBSU
 	}
 }
 
+typedef std::function<void(uint32_t nID, double dU, double dV)> NurbsSurfaceUVWalker;
+
 void CLib3MFNurbsSurface::GetUVCoordinates(Lib3MF_uint64 nUVCoordinatesBufferSize, Lib3MF_uint64* pUVCoordinatesNeededCount, sLib3MFNURBSUVCoordinate * pUVCoordinatesBuffer)
 {
 	uint32_t nCoordinateCount = m_pNurbsSurface->getUVCoordinateCount();
@@ -194,6 +196,15 @@ void CLib3MFNurbsSurface::GetUVCoordinates(Lib3MF_uint64 nUVCoordinatesBufferSiz
 		if (nCoordinateCount > nUVCoordinatesBufferSize)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_BUFFERTOOSMALL);
 
+		sLib3MFNURBSUVCoordinate * pUVCoordinate = pUVCoordinatesBuffer;
+		auto Walker = [&pUVCoordinate](uint32_t nID, double dU, double dV) {
+			pUVCoordinate->m_Id = nID;
+			pUVCoordinate->m_U = dU;
+			pUVCoordinate->m_V = dV;
+			pUVCoordinate++;
+		};
+
+		m_pNurbsSurface->walkUVCoordinates(Walker);
 	}
 	
 }
@@ -202,4 +213,15 @@ void CLib3MFNurbsSurface::AddUVCoordinate(const sLib3MFNURBSUVCoordinate UVCoord
 {
 	nId = m_pNurbsSurface->addUVCoordinate(UVCoordinate.m_U, UVCoordinate.m_V);
 }
+
+void CLib3MFNurbsSurface::RemoveUVCoordinate(const Lib3MF_uint32 nId)
+{
+
+}
+
+void CLib3MFNurbsSurface::HasUVCoordinate(const Lib3MF_uint32 nId, bool & bExists)
+{
+
+}
+
 

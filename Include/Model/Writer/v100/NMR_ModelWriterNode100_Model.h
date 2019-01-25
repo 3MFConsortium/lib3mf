@@ -73,9 +73,9 @@ namespace NMR {
 		void writeObjects();
 		void writeBuild();
 		void writeNurbs();
-		void writeSliceStack(_In_ CModelSliceStackResource *pSliceStackResource);
 
 		void writeSliceStacks();
+		void writeSliceStack(_In_ CModelSliceStack *pSliceStack);
 		void writeSliceStack(_In_ CSliceStackGeometry *pSliceStackGeometry);
 
 		void writeComponentsObject(_In_ CModelComponentsObject * pComponentsObject);

@@ -48,7 +48,6 @@ Abstract: This is the class declaration of CLib3MFNurbsSurface
 namespace Lib3MF {
 namespace Impl {
 
-
 /*************************************************************************************************************************
  Class declaration of CLib3MFNurbsSurface 
 **************************************************************************************************************************/
@@ -106,6 +105,10 @@ public:
 	void GetUVCoordinates(Lib3MF_uint64 nUVCoordinatesBufferSize, Lib3MF_uint64* pUVCoordinatesNeededCount, sLib3MFNURBSUVCoordinate * pUVCoordinatesBuffer);
 
 	void AddUVCoordinate(const sLib3MFNURBSUVCoordinate UVCoordinate, Lib3MF_uint32 & nId);
+
+	void RemoveUVCoordinate(const Lib3MF_uint32 nId);
+
+	void HasUVCoordinate(const Lib3MF_uint32 nId, bool & bExists);
 
 };
 

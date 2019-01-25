@@ -201,10 +201,6 @@
     <member name="Value" type="double" />
   </struct>
 
-<<<<<<< HEAD
-  
-	<struct name="Color">
-=======
   <struct name="NURBSUVCoordinate">
     <member name="Id" type="uint32" />
     <member name="U" type="double" />
@@ -212,7 +208,6 @@
   </struct>
 
   <struct name="Color">
->>>>>>> added Nurbs Reader and in memory representation.
 		<member name="Red" type="uint8" />
 		<member name="Green" type="uint8" />
 		<member name="Blue" type="uint8" />
@@ -491,7 +486,8 @@
 			<param name="Indices" type="struct" class="Triangle" pass="in" description="contains the triangle indices." />
 			<param name="NewIndex" type="uint32" pass="return" description="Index of the new triangle" />
 		</method>
-		<method name="GetTriangleIndices" description="Get all triangles of a mesh object">
+
+    <method name="GetTriangleIndices" description="Get all triangles of a mesh object">
 			<param name="Indices" type="structarray" class="Triangle" pass="out" description="contains the triangle indices." />
 		</method>
     <method name="SetTriangleProperties" description="Sets the properties of a single triangle of a mesh object.">

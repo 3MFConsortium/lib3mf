@@ -1035,7 +1035,7 @@ Model error codes (0x8XXX)
 #define NMR_ERROR_SLICES_MIXING_SLICES_WITH_SLICEREFS 0x80C7
 
 // SliceStack references must not be circular
-#define NMR_ERROR_SLICES_SLICEREF_CIRCULAR 0x80CD
+#define NMR_ERROR_SLICES_SLICEREF_CIRCULAR 0x80C8
 
 // z-position of slicerefs is not increasing
 #define NMR_ERROR_SLICES_REFS_Z_NOTINCREASING 0x80CE
@@ -1090,6 +1090,18 @@ Model error codes (0x8XXX)
 
 // Invalid Nurbs Surface Order
 #define NMR_ERROR_INVALIDNURBSSURFACEORDER 0x80D5
+
+// z-position of slicerefs is not increasing
+#define NMR_ERROR_SLICES_REFS_Z_NOTINCREASING 0x80D6
+
+// level of slicereferences is too deep
+#define NMR_ERROR_SLICES_REFS_LEVELTOODEEP 0x80D7
+
+// Invalid Control Point Count
+#define NMR_ERROR_INVALIDCONTROLPOINTCOUNT 0x80D8
+
+// Too many knots
+#define NMR_ERROR_TOOMANYKNOTS 0x80D9
 
 
 /*-------------------------------------------------------------------
