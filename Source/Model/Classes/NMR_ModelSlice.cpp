@@ -57,6 +57,12 @@ namespace NMR {
 		return (nfUint32)m_Polygons.size() - 1;
 	}
 
+	void CSlice::Clear()
+	{
+		m_Polygons.clear();
+		m_Vertices.clear();
+	}
+
 	nfUint32 CSlice::addVertex(nfFloat x, nfFloat y)
 	{
 		SLICENODE cNode;
@@ -142,11 +148,6 @@ namespace NMR {
 			return false;
 		// closed polygon must have 3 points or more.
 		return m_Polygons[nPolygonIndex][0] != m_Polygons[nPolygonIndex][1];
-	}
-
-	nfUint32 CSlice::getNumberOfPolygons()
-	{
-		return (nfUint32)m_Polygons.size();
 	}
 
 	nfUint32 CSlice::getPolygonIndex(nfUint32 nPolygonIndex, nfUint32 nIndexOfIndex)

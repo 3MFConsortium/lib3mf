@@ -379,7 +379,7 @@ namespace NMR {
 						throw CNMRException(NMR_ERROR_SLICE_ONEVERTEX);
 				}
 
-				for (nfUint32 nPolygonIndex = 0; nPolygonIndex < pSlice->getNumberOfPolygons(); nPolygonIndex++) {
+				for (nfUint32 nPolygonIndex = 0; nPolygonIndex < pSlice->getPolygonCount(); nPolygonIndex++) {
 					if (pSlice->getPolygonIndexCount(nPolygonIndex) >= 2) {
 						writeStartElementWithPrefix(XML_3MF_ELEMENT_SLICEPOLYGON, XML_3MF_NAMESPACEPREFIX_SLICE);
 						writeIntAttribute(XML_3MF_ATTRIBUTE_SLICEPOLYGON_STARTV, pSlice->getPolygonIndex(nPolygonIndex, 0));

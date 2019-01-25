@@ -783,18 +783,18 @@
 	</class>
 	
 	<class name="Slice">
-		<method name="SetVertices" description="Set all vertices of a slice">
+		<method name="SetVertices" description="Set all vertices of a slice. All polygons will be cleared.">
 			<param name="Vertices" type="structarray" class="Position2D" pass="in" description="contains the positions." />
 		</method>
 		<method name="GetVertices" description="Get all vertices of a slice">
 			<param name="Vertices" type="structarray" class="Position2D" pass="out" description="contains the positions." />
 		</method>
 		<method name="GetVertexCount" description="Get the number of vertices in a slice">
-			<param name="Count" type="uint64" pass="out" description="the number of vertices in the slice" />
+			<param name="Count" type="uint64" pass="return" description="the number of vertices in the slice" />
 		</method>
 		
 		<method name="GetPolygonCount" description="Get the number of polygons in the slice">		
-			<param name="Count" type="uint64" pass="out" description="the number of polygons in the slice" />
+			<param name="Count" type="uint64" pass="return" description="the number of polygons in the slice" />
 		</method>
 		<method name="SetPolygonIndices" description="Set all indices of a polygon">
 			<param name="Index" type="uint64" pass="in" description="the index of the polygon to manipulate" />

@@ -75,9 +75,9 @@ public:
 
 	void GetVertices (Lib3MF_uint64 nVerticesBufferSize, Lib3MF_uint64* pVerticesNeededCount, sLib3MFPosition2D * pVerticesBuffer);
 
-	void GetVertexCount (Lib3MF_uint64 & nCount);
+	Lib3MF_uint64 GetVertexCount ();
 
-	void GetPolygonCount (Lib3MF_uint64 & nCount);
+	Lib3MF_uint64 GetPolygonCount();
 
 	void SetPolygonIndices (const Lib3MF_uint64 nIndex, const Lib3MF_uint64 nIndicesBufferSize, const Lib3MF_uint32 * pIndicesBuffer);
 

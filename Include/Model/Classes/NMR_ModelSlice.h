@@ -54,6 +54,8 @@ namespace NMR {
 		CSlice(CSlice&);
 		~CSlice();
 
+		void Clear();
+
 		nfUint32 addVertex(nfFloat x, nfFloat y);
 
 		void getVertex(nfUint32 nIndex, nfFloat *x, nfFloat *y);
@@ -69,8 +71,6 @@ namespace NMR {
 		void setTopZ(nfDouble dZTop);
 
 		_Ret_notnull_ SLICENODE *getNode(nfUint32 nIndex);
-
-		nfUint32 getNumberOfPolygons();
 
 		nfUint32 getPolygonIndex(nfUint32 nPolygonIndex, nfUint32 nIndexOfIndex);
 
