@@ -71,7 +71,8 @@ namespace NMR {
 		m_bWriteObjects = true;
 
 		m_bIsRootModel = true;
-		m_bWriteCustomNamespaces = true;		m_pSliceStackResource = NULL;
+		m_bWriteCustomNamespaces = true;		
+		m_pSliceStackResource = NULL;
 
 		// register custom NameSpaces from metadata in objects, build items and the model itself
 		RegisterMetaDataNameSpaces();
@@ -508,7 +509,7 @@ namespace NMR {
 				}
 
 				CModelWriterNode100_Mesh ModelWriter_Mesh(pMeshObject, m_pXMLWriter, m_pProgressMonitor,
-					m_pColorMapping, m_pTexCoordMappingContainer, m_bWriteMaterialExtension, m_bWriteBeamLatticeExtension);
+					m_pColorMapping, m_pTexCoordMappingContainer, m_bWriteMaterialExtension, m_bWriteBeamLatticeExtension, m_bWriteNurbsExtension);
 				ModelWriter_Mesh.writeToXML();
 			}
 

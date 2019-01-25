@@ -836,6 +836,15 @@
       <param name="Id" type="uint32" pass="out" description="Id of the coordinate." />
     </method>
 
+    <method name="RemoveUVCoordinate" description = "Remove a UV Coordinate of the surface.">
+      <param name="Id" type="uint32" pass="in" description="Id of the coordinate." />
+    </method>
+
+    <method name="HasUVCoordinate" description = "Checks if the surface has a UV Coordinate.">
+      <param name="Id" type="uint32" pass="in" description="Id of the coordinate." />
+      <param name="Exists" type="bool" pass="out" description="Boolean of the ID coordinate." />
+    </method>
+
   </class>
 
 	<class name="BuildItem">

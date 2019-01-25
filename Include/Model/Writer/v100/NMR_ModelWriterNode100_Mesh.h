@@ -63,6 +63,7 @@ namespace NMR {
 
 		nfBool m_bWriteMaterialExtension;
 		nfBool m_bWriteBeamLatticeExtension;
+		nfBool m_bWriteNurbsExtension;
 
 		// Internal functions for an efficient and buffered output of raw XML data
 		std::array<nfChar, MODELWRITERMESH100_LINEBUFFERSIZE> m_VertexLine;
@@ -102,7 +103,7 @@ namespace NMR {
 	public:
 		CModelWriterNode100_Mesh() = delete;
 		CModelWriterNode100_Mesh(_In_ CModelMeshObject * pModelMeshObject, _In_ CXmlWriter * pXMLWriter, _In_ CProgressMonitor * pProgressMonitor,
-			_In_ PModelWriter_ColorMapping pColorMapping, _In_ PModelWriter_TexCoordMappingContainer pTextureMappingContainer, _In_ nfBool bWriteMaterialExtension, _In_ nfBool m_bWriteBeamLatticeExtension);
+			_In_ PModelWriter_ColorMapping pColorMapping, _In_ PModelWriter_TexCoordMappingContainer pTextureMappingContainer, _In_ nfBool bWriteMaterialExtension, _In_ nfBool m_bWriteBeamLatticeExtension, _In_ nfBool bWriteNurbsExtension);
 		virtual void writeToXML();
 	};
 

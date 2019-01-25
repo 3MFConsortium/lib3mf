@@ -33,6 +33,7 @@ This is the class for exporting the 3mf mesh node.
 
 #include "Model/Writer/v100/NMR_ModelWriterNode100_Mesh.h"
 #include "Common/MeshInformation/NMR_MeshInformation_Properties.h"
+#include "Common/MeshInformation/NMR_MeshInformation_Nurbs.h"
 
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_Exception_Windows.h"
@@ -52,7 +53,7 @@ namespace NMR {
 	const int CModelWriterNode100_Mesh::m_snPutDoubleFactor = (int)(pow(10, CModelWriterNode100_Mesh::m_snPosAfterDecPoint));
 
 	CModelWriterNode100_Mesh::CModelWriterNode100_Mesh(_In_ CModelMeshObject * pModelMeshObject, _In_ CXmlWriter * pXMLWriter, _In_ CProgressMonitor * pProgressMonitor,
-		_In_ PModelWriter_ColorMapping pColorMapping, _In_ PModelWriter_TexCoordMappingContainer pTextureMappingContainer, _In_ nfBool bWriteMaterialExtension, _In_ nfBool bWriteBeamLatticeExtension)
+		_In_ PModelWriter_ColorMapping pColorMapping, _In_ PModelWriter_TexCoordMappingContainer pTextureMappingContainer, _In_ nfBool bWriteMaterialExtension, _In_ nfBool bWriteBeamLatticeExtension, _In_ nfBool bWriteNurbsExtension)
 		:CModelWriterNode(pModelMeshObject->getModel(), pXMLWriter, pProgressMonitor)
 	{
 		__NMRASSERT(pModelMeshObject != nullptr);
@@ -63,6 +64,7 @@ namespace NMR {
 
 		m_bWriteMaterialExtension = bWriteMaterialExtension;
 		m_bWriteBeamLatticeExtension = bWriteBeamLatticeExtension;
+		m_bWriteNurbsExtension = bWriteNurbsExtension;
 
 		m_pModelMeshObject = pModelMeshObject;
 		m_pColorMapping = pColorMapping;
@@ -140,6 +142,7 @@ namespace NMR {
 
 		// Retrieve Mesh Informations
 		CMeshInformation_Properties * pProperties = NULL;
+		CMeshInformation_Nurbs * pNurbs = NULL;
 		
 		CMeshInformationHandler * pMeshInformationHandler = pMesh->getMeshInformationHandler();
 		if (pMeshInformationHandler) {

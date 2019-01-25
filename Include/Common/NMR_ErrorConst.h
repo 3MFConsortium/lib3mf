@@ -1086,10 +1086,10 @@ Model error codes (0x8XXX)
 #define NMR_ERROR_NURBSVALUEMISSING 0x80D3
 
 // Duplicate Nurbs UV Mapping
-#define NMR_ERROR_NURBSDUPLICATEUVMAPPING 0x80D3
+#define NMR_ERROR_NURBSDUPLICATEUVMAPPING 0x80D4
 
 // Invalid Nurbs Surface Order
-#define NMR_ERROR_INVALIDNURBSSURFACEORDER 0x80D4
+#define NMR_ERROR_INVALIDNURBSSURFACEORDER 0x80D5
 
 
 /*-------------------------------------------------------------------
