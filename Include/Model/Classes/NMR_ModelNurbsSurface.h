@@ -64,10 +64,21 @@ namespace NMR {
 		nfDouble m_Weight;
 	} sModelNurbsControlPoint;
 
+	typedef struct {
+		nfUint32 m_nID;
+		nfDouble m_U;
+		nfDouble m_V;
+	} sModelNurbsUVCoord;
+
 	class CModelNurbsSurface : public CModelResource {
 	private:
 		nfUint32 m_nDegreeU;
 		nfUint32 m_nDegreeV;
+
+		nfDouble m_dMinU;
+		nfDouble m_dMinV;
+		nfDouble m_dMaxU;
+		nfDouble m_dMaxV;
 
 		nfUint32 m_ControlPointCountU;
 		nfUint32 m_ControlPointCountV;
@@ -75,6 +86,9 @@ namespace NMR {
 		std::vector<sModelNurbsSurfaceKnot> m_KnotsU;
 		std::vector<sModelNurbsSurfaceKnot> m_KnotsV;
 		std::vector<sModelNurbsControlPoint> m_ControlPoints;
+
+		std::map<nfUint32, sModelNurbsUVCoord> m_UVCoords;
+		nfUint32 m_nNextUVID;
 
 	public:
 		CModelNurbsSurface() = delete;
@@ -108,6 +122,13 @@ namespace NMR {
 		nfUint32 getControlPointCountU();
 		nfUint32 getControlPointCountV();
 		void getControlPoint(_In_ const nfUint32 nIndexU, _In_ const nfUint32 nIndexV, _Out_ nfDouble & dX, _Out_ nfDouble & dY, _Out_ nfDouble & dZ, _Out_ nfDouble & dW);
+
+		nfUint32 addUVCoordinate (_In_ nfDouble fU, _In_ nfDouble fV);
+		nfBool getUVCoordinate (_In_ nfUint32 nID, _Out_ nfDouble & fU, _Out_ nfDouble & fV);
+		nfUint32 getUVCoordinateCount();
+
+		void setUVBounds(nfDouble dMinU, nfDouble dMinV, nfDouble dMaxU, nfDouble dMaxV);
+		void getUVBounds(nfDouble & dMinU, nfDouble & dMinV, nfDouble & dMaxU, nfDouble & dMaxV);
 
 
 	};

@@ -31,8 +31,8 @@ NMR_ModelReaderNode_ExactGeometry1901_VKnots.h covers the official 3MF Exact Geo
 
 --*/
 
-#ifndef __NMR_MODELREADERNODE_BEAMLATTICE1901_VKNOTS
-#define __NMR_MODELREADERNODE_BEAMLATTICE1901_VKNOTS
+#ifndef __NMR_MODELREADERNODE_EXACTGEOMETRY1901_VKNOTS
+#define __NMR_MODELREADERNODE_EXACTGEOMETRY1901_VKNOTS
 
 #include "Model/Reader/NMR_ModelReaderNode.h"
 #include "Model/Classes/NMR_ModelComponent.h"
@@ -67,5 +67,5 @@ namespace NMR {
 
 }
 
-#endif // __NMR_MODELREADERNODE_BEAMLATTICE1901_VKNOTS
+#endif // __NMR_MODELREADERNODE_EXACTGEOMETRY1901_VKNOTS
 

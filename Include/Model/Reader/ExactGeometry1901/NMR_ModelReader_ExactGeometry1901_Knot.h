@@ -31,8 +31,8 @@ NMR_ModelReaderNode_ExactGeometry1901_Knot.h covers the official 3MF Exact Geome
 
 --*/
 
-#ifndef __NMR_MODELREADERNODE_BEAMLATTICE1901_KNOT
-#define __NMR_MODELREADERNODE_BEAMLATTICE1901_KNOT
+#ifndef __NMR_MODELREADERNODE_EXACTGEOMETRY1901_KNOT
+#define __NMR_MODELREADERNODE_EXACTGEOMETRY1901_KNOT
 
 #include "Model/Reader/NMR_ModelReaderNode.h"
 #include "Model/Classes/NMR_ModelComponent.h"
@@ -68,5 +68,5 @@ namespace NMR {
 
 }
 
-#endif // __NMR_MODELREADERNODE_BEAMLATTICE1901_KNOT
+#endif // __NMR_MODELREADERNODE_EXACTGEOMETRY1901_KNOT
 

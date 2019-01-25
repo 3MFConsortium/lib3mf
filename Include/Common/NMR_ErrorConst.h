@@ -1085,6 +1085,12 @@ Model error codes (0x8XXX)
 // Knot Values Missing
 #define NMR_ERROR_NURBSVALUEMISSING 0x80D3
 
+// Duplicate Nurbs UV Mapping
+#define NMR_ERROR_NURBSDUPLICATEUVMAPPING 0x80D3
+
+// Invalid Nurbs Surface Order
+#define NMR_ERROR_INVALIDNURBSSURFACEORDER 0x80D4
+
 
 /*-------------------------------------------------------------------
 XML Parser Error Constants (0x9XXX)

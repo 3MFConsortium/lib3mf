@@ -26,13 +26,13 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelReaderNode_ExactGeometry1901_UKnots.h covers the official 3MF Exact Geometry Extension.
+NMR_ModelReaderNode_ExactGeometry1901_UVMapping.h covers the official 3MF Exact Geometry Extension.
 
 
 --*/
 
-#ifndef __NMR_MODELREADERNODE_EXACTGEOMETRY1901_UKNOTS
-#define __NMR_MODELREADERNODE_EXACTGEOMETRY1901_UKNOTS
+#ifndef __NMR_MODELREADERNODE_EXACTGEOMETRY1901_UVMAPPING
+#define __NMR_MODELREADERNODE_EXACTGEOMETRY1901_UVMAPPING
 
 #include "Model/Reader/NMR_ModelReaderNode.h"
 #include "Model/Classes/NMR_ModelComponent.h"
@@ -40,34 +40,31 @@ NMR_ModelReaderNode_ExactGeometry1901_UKnots.h covers the official 3MF Exact Geo
 #include "Model/Classes/NMR_ModelObject.h"
 #include "Model/Classes/NMR_ModelNurbsSurface.h"
 
-#include <vector>
-
 namespace NMR {
 
-	class CModelReaderNode_ExactGeometry1901_UKnots : public CModelReaderNode {
+	class CModelReaderNode_ExactGeometry1901_UVMapping : public CModelReaderNode {
 	private:
 		CModel * m_pModel;
 		PModelReaderWarnings m_pWarnings;
 
-		std::vector<sModelNurbsSurfaceKnot> Knots;
-		
+		CModelNurbsSurface * m_pNurbsSurface;
+
+
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 		virtual void OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace);
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 	public:
-		CModelReaderNode_ExactGeometry1901_UKnots() = delete;
-		CModelReaderNode_ExactGeometry1901_UKnots(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings);
+		CModelReaderNode_ExactGeometry1901_UVMapping() = delete;
+		CModelReaderNode_ExactGeometry1901_UVMapping(_In_ CModel * pModel, _In_ CModelNurbsSurface * pNurbsSurface, _In_ PModelReaderWarnings pWarnings);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 
-		std::vector<sModelNurbsSurfaceKnot> getKnots ();
-
 	};
 
-	typedef std::shared_ptr <CModelReaderNode_ExactGeometry1901_UKnots> PModelReaderNode_ExactGeometry1901_UKnots;
+	typedef std::shared_ptr <CModelReaderNode_ExactGeometry1901_UVMapping> PModelReaderNode_ExactGeometry1901_UVMapping;
 
 }
 
-#endif // __NMR_MODELREADERNODE_EXACTGEOMETRY1901_UKNOTS
+#endif // __NMR_MODELREADERNODE_EXACTGEOMETRY1901_UVMAPPING
 

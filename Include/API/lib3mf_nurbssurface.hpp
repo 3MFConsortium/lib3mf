@@ -101,6 +101,12 @@ public:
 
 	void AddKnotV(const Lib3MF_uint32 nMultiplicity, const Lib3MF_double dValue);
 
+	void GetUVCoordinate(const Lib3MF_uint32 nId, sLib3MFNURBSUVCoordinate & sUVCoordinate);
+
+	void GetUVCoordinates(Lib3MF_uint64 nUVCoordinatesBufferSize, Lib3MF_uint64* pUVCoordinatesNeededCount, sLib3MFNURBSUVCoordinate * pUVCoordinatesBuffer);
+
+	void AddUVCoordinate(const sLib3MFNURBSUVCoordinate UVCoordinate, Lib3MF_uint32 & nId);
+
 };
 
 } // namespace Impl

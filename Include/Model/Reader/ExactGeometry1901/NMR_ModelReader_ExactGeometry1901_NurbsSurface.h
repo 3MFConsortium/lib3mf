@@ -31,8 +31,8 @@ NMR_ModelReaderNode_ExactGeometry1901_NurbsSurface.h covers the official 3MF Exa
 
 --*/
 
-#ifndef __NMR_MODELREADERNODE_BEAMLATTICE1901_NURBSSURFACE
-#define __NMR_MODELREADERNODE_BEAMLATTICE1901_NURBSSURFACE
+#ifndef __NMR_MODELREADERNODE_EXACTGEOMETRY1901_NURBSSURFACE
+#define __NMR_MODELREADERNODE_EXACTGEOMETRY1901_NURBSSURFACE
 
 #include "Model/Reader/NMR_ModelReaderNode.h"
 #include "Model/Classes/NMR_ModelComponent.h"
@@ -55,6 +55,7 @@ namespace NMR {
 		nfBool m_bHadControlPoints;
 		nfBool m_bHadUKnots;
 		nfBool m_bHadVKnots;
+		nfBool m_bHadUVMapping;
 		nfBool m_bHasDegreeU;
 		nfUint32 m_nDegreeU;
 		nfBool m_bHasDegreeV;
@@ -82,5 +83,5 @@ namespace NMR {
 
 }
 
-#endif // __NMR_MODELREADERNODE_BEAMLATTICE1901_NURBSSURFACE
+#endif // __NMR_MODELREADERNODE_EXACTGEOMETRY1901_NURBSSURFACE
 

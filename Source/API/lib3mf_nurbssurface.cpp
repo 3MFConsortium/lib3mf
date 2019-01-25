@@ -168,3 +168,38 @@ void CLib3MFNurbsSurface::AddKnotV(const Lib3MF_uint32 nMultiplicity, const Lib3
 	m_pNurbsSurface->addKnotV(nMultiplicity, dValue);
 }
 
+void CLib3MFNurbsSurface::GetUVCoordinate(const Lib3MF_uint32 nId, sLib3MFNURBSUVCoordinate & sUVCoordinate)
+{
+	double dU, dV;
+	if (m_pNurbsSurface->getUVCoordinate(nId, dU, dV)) {
+		sUVCoordinate.m_Id = nId;
+		sUVCoordinate.m_U = dU;
+		sUVCoordinate.m_V = dV;
+	}
+	else {
+		sUVCoordinate.m_Id = 0;
+		sUVCoordinate.m_U = 0.0;
+		sUVCoordinate.m_V = 0.0;
+	}
+}
+
+void CLib3MFNurbsSurface::GetUVCoordinates(Lib3MF_uint64 nUVCoordinatesBufferSize, Lib3MF_uint64* pUVCoordinatesNeededCount, sLib3MFNURBSUVCoordinate * pUVCoordinatesBuffer)
+{
+	uint32_t nCoordinateCount = m_pNurbsSurface->getUVCoordinateCount();
+	if (pUVCoordinatesNeededCount != nullptr) {
+		*pUVCoordinatesNeededCount = nCoordinateCount;
+	}
+
+	if (pUVCoordinatesBuffer != nullptr) {
+		if (nCoordinateCount > nUVCoordinatesBufferSize)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_BUFFERTOOSMALL);
+
+	}
+	
+}
+
+void CLib3MFNurbsSurface::AddUVCoordinate(const sLib3MFNURBSUVCoordinate UVCoordinate, Lib3MF_uint32 & nId)
+{
+	nId = m_pNurbsSurface->addUVCoordinate(UVCoordinate.m_U, UVCoordinate.m_V);
+}
+

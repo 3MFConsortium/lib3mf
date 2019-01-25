@@ -34,6 +34,7 @@ NMR_ModelReaderNode_ExactGeometry1901_NurbsSurface.cpp covers the official 3MF E
 #include "Model/Reader/ExactGeometry1901/NMR_ModelReader_ExactGeometry1901_UKnots.h"
 #include "Model/Reader/ExactGeometry1901/NMR_ModelReader_ExactGeometry1901_VKnots.h"
 #include "Model/Reader/ExactGeometry1901/NMR_ModelReader_ExactGeometry1901_ControlPoints.h"
+#include "Model/Reader/ExactGeometry1901/NMR_ModelReader_ExactGeometry1901_UVMapping.h"
 
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Model/Classes/NMR_ModelMeshObject.h"
@@ -62,6 +63,7 @@ namespace NMR {
 		m_bHadControlPoints = false;
 		m_bHadUKnots = false;
 		m_bHadVKnots = false;
+		m_bHadUVMapping = false;
 	}
 
 	void CModelReaderNode_ExactGeometry1901_NurbsSurface::parseXML(_In_ CXmlReader * pXMLReader)
@@ -146,7 +148,7 @@ namespace NMR {
 				m_KnotsU = pXMLNode->getKnots();
 				m_bHadUKnots = true;
 			}
-			else if (strcmp(pChildName, XML_3MF_ELEMENT_NURBS_UKNOTS) == 0)
+			else if (strcmp(pChildName, XML_3MF_ELEMENT_NURBS_VKNOTS) == 0)
 			{
 				if (m_bHadVKnots)
 					throw CNMRException(NMR_ERROR_NURBSDUPLICATEVKNOTS);
@@ -166,7 +168,7 @@ namespace NMR {
 				nfUint32 nControlPointCountU = m_nDegreeU + ((nfUint32)m_KnotsU.size()) + 1;
 				nfUint32 nControlPointCountV = m_nDegreeV + ((nfUint32)m_KnotsV.size()) + 1;
 
-				m_pNurbsSurface = std::make_shared<CModelNurbsSurface> (m_nID, m_pModel, m_nDegreeU, m_nDegreeV, nControlPointCountU, nControlPointCountV);
+				m_pNurbsSurface = std::make_shared<CModelNurbsSurface>(m_nID, m_pModel, m_nDegreeU, m_nDegreeV, nControlPointCountU, nControlPointCountV);
 
 				m_pNurbsSurface->addKnotsU(m_KnotsU);
 				m_pNurbsSurface->addKnotsV(m_KnotsV);
@@ -175,6 +177,19 @@ namespace NMR {
 
 				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode_ExactGeometry1901_ControlPoints>(m_pModel, m_pNurbsSurface.get(), m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
+			}
+			else if (strcmp(pChildName, XML_3MF_ELEMENT_NURBS_UVMAPPING) == 0)
+			{
+				if (m_pNurbsSurface.get() == nullptr)
+					throw CNMRException(NMR_ERROR_INVALIDNURBSSURFACEORDER);
+
+				if (m_bHadUVMapping)
+					throw CNMRException(NMR_ERROR_NURBSDUPLICATEUVMAPPING);
+
+				PModelReaderNode_ExactGeometry1901_UVMapping pXMLNode = std::make_shared<CModelReaderNode_ExactGeometry1901_UVMapping>(m_pModel, m_pNurbsSurface.get(), m_pWarnings);
+				pXMLNode->parseXML(pXMLReader);
+
+				m_bHadUVMapping = true;
 			}
 			else
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue); 

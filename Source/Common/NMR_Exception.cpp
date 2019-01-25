@@ -392,6 +392,8 @@ namespace NMR {
 		case NMR_ERROR_NURBSDUPLICATEATTRIBUTE: return "Duplicate Nurbs Attribute";
 		case NMR_ERROR_NURBSMULTIPLICITYMISSING: return "Knot Multiplicity Missing";
 		case NMR_ERROR_NURBSVALUEMISSING: return "Knot Values Missing";
+		case NMR_ERROR_NURBSDUPLICATEUVMAPPING: return "Duplicate Nurbs UV Mapping";
+		case NMR_ERROR_INVALIDNURBSSURFACEORDER: return "Invalid Nurbs Surface Order";
 
 
 

@@ -201,8 +201,18 @@
     <member name="Value" type="double" />
   </struct>
 
+<<<<<<< HEAD
   
 	<struct name="Color">
+=======
+  <struct name="NURBSUVCoordinate">
+    <member name="Id" type="uint32" />
+    <member name="U" type="double" />
+    <member name="V" type="double" />
+  </struct>
+
+  <struct name="Color">
+>>>>>>> added Nurbs Reader and in memory representation.
 		<member name="Red" type="uint8" />
 		<member name="Green" type="uint8" />
 		<member name="Blue" type="uint8" />
@@ -810,6 +820,20 @@
     <method name="AddKnotV" description = "Adds a knot to the surface in V">
       <param name="Multiplicity" type="uint32" pass="in" description="multiplicity of the knot." />
       <param name="Value" type="double" pass="in" description="value of the knot." />
+    </method>
+
+    <method name="GetUVCoordinate" description = "Retrieves a UV Coordinate of the surface.">
+      <param name="Id" type="uint32" pass="in" description="Id of the coordinate." />
+      <param name="UVCoordinate" type="struct" class="NURBSUVCoordinate" pass="out" description="returns the uv coordinates." />
+    </method>
+
+    <method name="GetUVCoordinates" description = "Retrieves the UV Coordinates of the surface.">
+      <param name="UVCoordinates" type="structarray" class="NURBSUVCoordinate" pass="out" description="returns an array of uv coordinates." />
+    </method>
+
+    <method name="AddUVCoordinate" description = "Retrieves the UV Coordinates of the surface.">
+      <param name="UVCoordinate" type="struct" class="NURBSUVCoordinate" pass="in" description="the uv coordinate to add." />
+      <param name="Id" type="uint32" pass="out" description="Id of the coordinate." />
     </method>
 
   </class>

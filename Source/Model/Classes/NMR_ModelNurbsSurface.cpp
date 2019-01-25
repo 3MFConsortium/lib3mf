@@ -47,6 +47,8 @@ namespace NMR {
 	{
 		setDegree(nDegreeU, nDegreeV);
 		setControlPointCount(nControlPointCountU, nControlPointCountV);
+
+		m_nNextUVID = 1;
 	}
 
 
@@ -303,5 +305,47 @@ namespace NMR {
 
 	}
 
+	nfUint32 CModelNurbsSurface::addUVCoordinate(_In_ nfDouble fU, _In_ nfDouble fV)
+	{
+		sModelNurbsUVCoord UVCoord;
+		UVCoord.m_nID = m_nNextUVID;
+		UVCoord.m_U = fU;
+		UVCoord.m_V = fV;
+
+		m_UVCoords.insert(std::make_pair (UVCoord.m_nID, UVCoord));
+		m_nNextUVID++;
+
+		return UVCoord.m_nID;
+	}
+
+	nfBool CModelNurbsSurface::getUVCoordinate(_In_ nfUint32 nID, _Out_ nfDouble & fU, _Out_ nfDouble & fV)
+	{
+		auto iIterator = m_UVCoords.find(nID);
+		if (iIterator != m_UVCoords.end()) {
+			fU = iIterator->second.m_U;
+			fV = iIterator->second.m_V;
+
+			return true;
+		}
+		else
+			return false;
+	}
+
+	void CModelNurbsSurface::setUVBounds(nfDouble dMinU, nfDouble dMinV, nfDouble dMaxU, nfDouble dMaxV)
+	{
+		m_dMinU = dMinU;
+		m_dMinV = dMinV;
+		m_dMaxU = dMaxU;
+		m_dMaxV = dMaxV;
+	}
+
+	void CModelNurbsSurface::getUVBounds(nfDouble & dMinU, nfDouble & dMinV, nfDouble & dMaxU, nfDouble & dMaxV)
+	{
+		dMinU = m_dMinU;
+		dMinV = m_dMinV;
+		dMaxU = m_dMaxU;
+		dMaxV = m_dMaxV;
+	}
+	
 
 }

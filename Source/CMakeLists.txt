@@ -59,6 +59,7 @@ ${SRCS_COM}
 ./Source/Common/MeshInformation/NMR_MeshInformationContainer.cpp
 ./Source/Common/MeshInformation/NMR_MeshInformationFactory.cpp
 ./Source/Common/MeshInformation/NMR_MeshInformationHandler.cpp
+
 ./Source/Common/MeshInformation/NMR_MeshInformation_Properties.cpp
 ./Source/Common/Mesh/NMR_Mesh.cpp
 ./Source/Common/Mesh/NMR_BeamLattice.cpp
@@ -108,6 +109,7 @@ ${SRCS_COM}
 ./Source/Model/Classes/NMR_ModelBuildItem.cpp
 ./Source/Model/Classes/NMR_ModelComponent.cpp
 ./Source/Model/Classes/NMR_ModelComponentsObject.cpp
+
 ./Source/Model/Classes/NMR_ModelMeshBeamLatticeAttributes.cpp
 ./Source/Model/Classes/NMR_ModelMeshObject.cpp
 ./Source/Model/Classes/NMR_ModelMetaData.cpp
@@ -183,6 +185,8 @@ ${SRCS_COM}
 ./Source/Model/Reader/ExactGeometry1901/NMR_ModelReader_ExactGeometry1901_NurbsSurface.cpp
 ./Source/Model/Reader/ExactGeometry1901/NMR_ModelReader_ExactGeometry1901_UKnots.cpp
 ./Source/Model/Reader/ExactGeometry1901/NMR_ModelReader_ExactGeometry1901_VKnots.cpp
+./Source/Model/Reader/ExactGeometry1901/NMR_ModelReader_ExactGeometry1901_UVMapping.cpp
+./Source/Model/Reader/ExactGeometry1901/NMR_ModelReader_ExactGeometry1901_UVCoord.cpp
 ./Source/Model/Writer/NMR_ModelWriter.cpp
 ./Source/Model/Writer/NMR_ModelWriterNode.cpp
 ./Source/Model/Writer/NMR_ModelWriter_3MF.cpp

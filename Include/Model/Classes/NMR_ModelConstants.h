@@ -313,6 +313,8 @@ These are given by the 3MF Standard
 #define XML_3MF_ATTRIBUTE_NURBS_Y                   "y"
 #define XML_3MF_ATTRIBUTE_NURBS_Z                   "z"
 #define XML_3MF_ATTRIBUTE_NURBS_W                   "w"
+#define XML_3MF_ATTRIBUTE_NURBS_U                   "u"
+#define XML_3MF_ATTRIBUTE_NURBS_V                   "v"
 
 
 // Base Material element.
