@@ -26,12 +26,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelSliceStackResource.h: implements the resource object for a slice stack
+NMR_ModelSliceStack.cpp: implementes the Model Slice Class.
+A Model Slice represents a single slice as vertices and polygons
 
 --*/
 
-#include "Model/Classes/NMR_ModelSliceResource.h"
-#include "Model/Classes/NMR_ModelResource.h"
+#include "Model/Classes/NMR_ModelSlice.h"
 #include "Common/NMR_Exception.h"
 
 namespace NMR {
@@ -145,94 +145,6 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_INVALIDINDEX);
 
 		return (nfUint32)m_Polygons[nPolygonIndex].size();
-	}
-
-
-	CModelSliceStackResource::CModelSliceStackResource(_In_ const ModelResourceID sID, _In_ CModel * pModel, PSliceStack pSliceStack) : CModelResource(sID, pModel) 
-	{
-		m_pSliceStack = pSliceStack;
-		m_nNumSliceRefsToMe = 0;
-	}
-
-	CModelSliceStackResource::~CModelSliceStackResource() {
-
-	}
-
-	void CModelSliceStackResource::setSliceStack(PSliceStack pSliceStack) {
-		m_pSliceStack = pSliceStack;
-	}
-
-	_Ret_notnull_ PSliceStack CModelSliceStackResource::getSliceStack() {
-		return m_pSliceStack;
-	}
-
-	nfUint32& CModelSliceStackResource::NumSliceRefsToMe()
-	{
-		return m_nNumSliceRefsToMe;
-	}
-
-	std::string CModelSliceStackResource::sliceRefPath() {
-		return getSliceStack()->usesSliceRef() ? "/2D/2dmodel_" + std::to_string(getResourceID()->getUniqueID()) + ".model" : "";
-	}
-
-	CSliceStack::CSliceStack() {
-		m_BottomZ = 0.0;
-		m_bUsesSliceRef = false;
-	}
-
-	CSliceStack::~CSliceStack() {
-	}
-
-	_Ret_notnull_ PSlice CSliceStack::getSlice(nfUint32 nIndex) {
-		return m_Slices[nIndex];
-	}
-
-	nfUint32 CSliceStack::addSlice(PSlice pSlice) {
-		if (pSlice->getTopZ() < m_BottomZ)
-			throw CNMRException(NMR_ERROR_SLICES_Z_NOTINCREASING);
-		if (!m_Slices.empty()) {
-			if (pSlice->getTopZ() < m_Slices.rbegin()->get()->getTopZ() ) {
-				throw CNMRException(NMR_ERROR_SLICES_Z_NOTINCREASING);
-			}
-		}
-		m_Slices.push_back(pSlice);
-		return (nfUint32)m_Slices.size() - 1;
-	}
-
-	void CSliceStack::mergeSliceStack(PSliceStack pSliceStack)
-	{
-		for (int i = 0; i < (int)pSliceStack->getSliceCount(); i++)
-		{
-			this->addSlice(pSliceStack->getSlice(i));
-		}
-	}
-
-	nfUint32 CSliceStack::getSliceCount() {
-		return (nfUint32)m_Slices.size();
-	}
-
-	nfFloat CSliceStack::getBottomZ() {
-		return m_BottomZ;
-	}
-
-	void CSliceStack::setBottomZ(nfFloat nBottomZ) {
-		m_BottomZ = nBottomZ;
-	}
-
-	void CSliceStack::setUsesSliceRef(nfBool bUsesSliceRef) {
-		m_bUsesSliceRef = bUsesSliceRef;
-	}
-
-	nfBool CSliceStack::usesSliceRef() {
-		return m_bUsesSliceRef;
-	}
-
-	bool CSliceStack::areAllPolygonsClosed() {
-		for (auto pSlice : m_Slices) {
-			if (!pSlice->allPolygonsAreClosed())
-				return false;
-		}
-		return true;
 	}
 }
 

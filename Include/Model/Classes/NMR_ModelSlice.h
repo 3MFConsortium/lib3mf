@@ -26,38 +26,62 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelWriter_3MF.h defines the 3MF Model Writer Class.
-A model writer exports the in memory represenation into a 3MF file.
+NMR_ModelSlice.h: defines the Model Slice Class.
+A Model Slice represents a single slice as vertices and polygons
 
 --*/
 
-#ifndef __NMR_MODELWRITER_3MF
-#define __NMR_MODELWRITER_3MF
+#ifndef __NMR_MODELSLICE
+#define __NMR_MODELSLICE
 
-#include "Model/Writer/NMR_ModelWriter.h" 
-#include "Common/Platform/NMR_XmlWriter.h" 
+#include "Common/NMR_Types.h"
+#include "Common/Mesh/NMR_MeshTypes.h"
+#include "Model/Classes/NMR_ModelResource.h"
+
+#include <vector>
 
 namespace NMR {
+	class CSlice {
+	private:
+		std::vector<SLICENODE> m_Vertices;
+		std::vector<std::vector<nfUint32> > m_Polygons;
 
-	class CModelWriter_3MF : public CModelWriter {
-	protected:
-		// Creates a model stream
-		void writeModelStream(_In_ CXmlWriter * pXMLWriter, _In_ CModel * pModel);
+		nfFloat m_topZ;
 
-		// Creates a slicestack attachment stream
-		void writeSlicestackStream(_In_ CXmlWriter *pXMLWriter, _In_ CModel * pModel, _In_ CModelSliceStack *pSliceStackResource);
-
-		// These are OPC dependent functions
-		virtual void createPackage(_In_ CModel * pModel) = 0;
-		virtual void writePackageToStream(_In_ PExportStream pStream) = 0;
-		virtual void releasePackage() = 0;
 	public:
-		CModelWriter_3MF() = delete;
-		CModelWriter_3MF(_In_ PModel pModel);
+		CSlice();
+		~CSlice();
 
-		virtual void exportToStream(_In_ PExportStream pStream);
+		nfUint32 addVertex(nfFloat x, nfFloat y);
+
+		void getVertex(nfUint32 nIndex, nfFloat *x, nfFloat *y);
+
+		nfUint32 beginPolygon();
+
+		void addPolygonIndex(nfUint32 nPolygonIndex, nfUint32 nIndex);
+
+		nfUint32 getPolygonCount();
+
+		nfFloat getTopZ();
+
+		void setTopZ(nfFloat nTopZ);
+
+		_Ret_notnull_ SLICENODE *getNode(nfUint32 nIndex);
+
+		nfUint32 getNumberOfPolygons();
+
+		nfUint32 getPolygonIndex(nfUint32 nPolygonIndex, nfUint32 nIndexOfIndex);
+
+		nfUint32 getPolygonIndexCount(nfUint32 nPolygonIndex);
+
+		nfUint32 getVertexCount();
+
+		bool allPolygonsAreClosed();
+
+		bool isPolygonValid(nfUint32 nPolygonIndex);
 	};
 
+	typedef std::shared_ptr <CSlice> PSlice;
 }
 
-#endif // __NMR_MODELWRITER_3MF
+#endif // __NMR_MODELSLICE

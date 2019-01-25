@@ -74,8 +74,8 @@ namespace NMR {
 	class CModelTexture2DResource;
 	typedef std::shared_ptr <CModelTexture2DResource> PModelTexture2DResource;
 
-	class CModelSliceStackResource;
-	typedef std::shared_ptr <CModelSliceStackResource> PModelSliceStackResource;
+	class CModelSliceStack;
+	typedef std::shared_ptr <CModelSliceStack> PModelSliceStack;
 
 	class CSliceStack;
 	typedef std::shared_ptr <CSliceStack> PSliceStack;

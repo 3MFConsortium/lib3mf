@@ -40,14 +40,14 @@ using namespace Lib3MF::Impl;
  Class definition of CLib3MFSliceStack 
 **************************************************************************************************************************/
 
-CLib3MFSliceStack::CLib3MFSliceStack(NMR::PModelSliceStackResource pSliceStack):
+CLib3MFSliceStack::CLib3MFSliceStack(NMR::PModelSliceStack pSliceStack):
 	CLib3MFResource(pSliceStack)
 {
 }
 
-NMR::PModelSliceStackResource CLib3MFSliceStack::sliceStack()
+NMR::PModelSliceStack CLib3MFSliceStack::sliceStack()
 {
-	return std::dynamic_pointer_cast<NMR::CModelSliceStackResource>(resource());
+	return std::dynamic_pointer_cast<NMR::CModelSliceStack>(resource());
 }
 
 Lib3MF_uint64 CLib3MFSliceStack::GetSliceCount ()

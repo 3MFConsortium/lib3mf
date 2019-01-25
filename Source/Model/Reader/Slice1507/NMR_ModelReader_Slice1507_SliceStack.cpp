@@ -78,7 +78,7 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_INVALID_SLICEPATH);
 			
 			PModelResource pResource = m_pModel->findResource(pXmlNode->Path(), pXmlNode->SliceStackId());
-			CModelSliceStackResource* pSliceStackResource = dynamic_cast<CModelSliceStackResource*>(pResource.get());
+			CModelSliceStack* pSliceStackResource = dynamic_cast<CModelSliceStack*>(pResource.get());
 			if (!pSliceStackResource)
 				throw CNMRException(NMR_ERROR_SLICESTACKRESOURCE_NOT_FOUND);
 			// can't have slice refs reference slicerefs
@@ -124,7 +124,7 @@ namespace NMR {
 		// Parse Content
 		parseContent(pXMLReader);
 
-		PModelSliceStackResource pSliceStackResource = std::make_shared<CModelSliceStackResource>(m_Id, m_pModel, m_pSliceStack);
+		PModelSliceStack pSliceStackResource = std::make_shared<CModelSliceStack>(m_Id, m_pModel, m_pSliceStack);
 		m_pModel->addResource(pSliceStackResource);
 	}
 }

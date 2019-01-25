@@ -37,7 +37,7 @@ using LibZ and a native XML writer implementation.
 #include "Model/Classes/NMR_ModelConstants.h" 
 #include "Model/Classes/NMR_ModelAttachment.h" 
 #include "Model/Classes/NMR_ModelTextureAttachment.h" 
-#include "Model/Classes/NMR_ModelSliceResource.h"
+#include "Model/Classes/NMR_ModelSliceStack.h"
 #include "Common/Platform/NMR_ImportStream.h" 
 #include "Common/NMR_Exception.h" 
 #include "Common/Platform/NMR_XmlWriter.h" 
@@ -160,7 +160,7 @@ namespace NMR {
 			for (nIndex = 0; nIndex < nCount; nIndex++) {
 				if (!m_pProgressMonitor->Progress(double(nIndex) / nCount, ProgressIdentifier::PROGRESS_WRITENONROOTMODELS))
 					throw CNMRException(NMR_USERABORTED);
-				CModelSliceStackResource* pSliceStackResource = dynamic_cast<CModelSliceStackResource*>(pModel->getSliceStackResource(nIndex).get());
+				CModelSliceStack* pSliceStackResource = dynamic_cast<CModelSliceStack*>(pModel->getSliceStackResource(nIndex).get());
 				CSliceStack* pSliceStack = pSliceStackResource->getSliceStack().get();
 				if (pSliceStack->usesSliceRef()) {
 					PExportStreamMemory p = std::make_shared<CExportStreamMemory>();

@@ -39,7 +39,7 @@ model object.
 #include "Model/Classes/NMR_ModelResource.h" 
 #include "Model/Classes/NMR_ModelMetaDataGroup.h" 
 #include "Model/Classes/NMR_ModelDefaultProperty.h"
-#include "Model/Classes/NMR_ModelSliceResource.h"
+#include "Model/Classes/NMR_ModelSliceStack.h"
 #include "Common/NMR_Types.h" 
 #include "Common/Math/NMR_Matrix.h" 
 
@@ -54,7 +54,7 @@ namespace NMR {
 	private:
 		std::string m_sName;
 		std::string m_sPartNumber;
-		PModelSliceStackResource m_pSliceStack;
+		PModelSliceStack m_pSliceStack;
 		eModelSlicesMeshResolution m_eSlicesMeshResolution;
 		PModelMetaDataGroup m_MetaDataGroup;
 	private:
@@ -98,8 +98,8 @@ namespace NMR {
 
 		virtual nfBool isValidForSlices(const NMATRIX3& totalParentMatrix) = 0;
 
-		void setSliceStack(PModelSliceStackResource pSliceStackId);
-		PModelSliceStackResource getSliceStack();
+		void setSliceStack(PModelSliceStack pSliceStackId);
+		PModelSliceStack getSliceStack();
 
 		void setSlicesMeshResolution(eModelSlicesMeshResolution eMeshResolution);
 		eModelSlicesMeshResolution slicesMeshResolution() const;

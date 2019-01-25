@@ -120,7 +120,8 @@ ${SRCS_COM}
 ./Source/Model/Classes/NMR_ModelObject.cpp
 ./Source/Model/Classes/NMR_ModelResource.cpp
 ./Source/Model/Classes/NMR_ModelTexture2D.cpp
-./Source/Model/Classes/NMR_ModelSliceStackResource.cpp
+./Source/Model/Classes/NMR_ModelSlice.cpp
+./Source/Model/Classes/NMR_ModelSliceStack.cpp
 ./Source/Model/Reader/BeamLattice1702/NMR_ModelReaderNode_BeamLattice1702_Beam.cpp
 ./Source/Model/Reader/BeamLattice1702/NMR_ModelReaderNode_BeamLattice1702_Beams.cpp
 ./Source/Model/Reader/BeamLattice1702/NMR_ModelReaderNode_BeamLattice1702_BeamLattice.cpp

@@ -159,7 +159,7 @@ namespace NMR {
 	}
 
 	CModelWriterNode100_Model::CModelWriterNode100_Model(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter, _In_ CProgressMonitor * pProgressMonitor,
-		CModelSliceStackResource *pSliceStackResource) : CModelWriterNode(pModel, pXMLWriter, pProgressMonitor)
+		CModelSliceStack *pSliceStackResource) : CModelWriterNode(pModel, pXMLWriter, pProgressMonitor)
 	{
 		m_bWriteMaterialExtension = false;
 		m_bWriteMaterialExtension = false;
@@ -315,7 +315,7 @@ namespace NMR {
 
 		if (m_pSliceStackResource == nullptr) {
 			for (nSliceStackIndex = 0; nSliceStackIndex < nSliceStackCount; nSliceStackIndex++) {
-				CModelSliceStackResource *pSliceStackResource = dynamic_cast<CModelSliceStackResource*>(m_pModel->getSliceStackResource(nSliceStackIndex).get());
+				CModelSliceStack *pSliceStackResource = dynamic_cast<CModelSliceStack*>(m_pModel->getSliceStackResource(nSliceStackIndex).get());
 				if (pSliceStackResource != nullptr) {
 					writeSliceStack(pSliceStackResource);
 				}
@@ -327,7 +327,7 @@ namespace NMR {
 	}
 
 
-	void CModelWriterNode100_Model::writeSliceStack(_In_ CModelSliceStackResource *pSliceStackResource) {
+	void CModelWriterNode100_Model::writeSliceStack(_In_ CModelSliceStack *pSliceStackResource) {
 		__NMRASSERT(pSliceStackResource);
 
 		std::string sNameSpacePrefix = XML_3MF_NAMESPACEPREFIX_SLICE;

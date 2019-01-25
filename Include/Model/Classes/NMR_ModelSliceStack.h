@@ -26,62 +26,22 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelSliceResource.h: defines the resource object for slices
+NMR_ModelSliceStack.h: defines the Model Slice Stack Class.
+A Model Slice Stack represents a ordered list of slices.
 
 --*/
 
-#ifndef __NMR_SLICERESOURCE
-#define __NMR_SLICERESOURCE
+#ifndef __NMR_MODELSLICESTACK
+#define __NMR_MODELSLICESTACK
 
 #include "Common/NMR_Types.h"
 #include "Common/Mesh/NMR_MeshTypes.h"
 #include "Model/Classes/NMR_ModelResource.h"
+#include "Model/Classes/NMR_ModelSlice.h"
 
 #include <vector>
 
 namespace NMR {
-	class CSlice {
-	private:
-		std::vector<SLICENODE> m_Vertices;
-		std::vector<std::vector<nfUint32> > m_Polygons;
-
-		nfFloat m_topZ;
-
-	public:
-		CSlice();
-		~CSlice();
-
-		nfUint32 addVertex(nfFloat x, nfFloat y);
-
-		void getVertex(nfUint32 nIndex, nfFloat *x, nfFloat *y);
-
-		nfUint32 beginPolygon();
-
-		void addPolygonIndex(nfUint32 nPolygonIndex, nfUint32 nIndex);
-
-		nfUint32 getPolygonCount();
-
-		nfFloat getTopZ();
-
-		void setTopZ(nfFloat nTopZ);
-
-		_Ret_notnull_ SLICENODE *getNode(nfUint32 nIndex);
-
-		nfUint32 getNumberOfPolygons();
-
-		nfUint32 getPolygonIndex(nfUint32 nPolygonIndex, nfUint32 nIndexOfIndex);
-
-		nfUint32 getPolygonIndexCount(nfUint32 nPolygonIndex);
-
-		nfUint32 getVertexCount();
-
-		bool allPolygonsAreClosed();
-
-		bool isPolygonValid(nfUint32 nPolygonIndex);
-	};
-
-	typedef std::shared_ptr <CSlice> PSlice;
-
 	class CSliceStack {
 	private:
 		nfFloat  m_BottomZ;
@@ -108,14 +68,14 @@ namespace NMR {
 
 	typedef std::shared_ptr<CSliceStack> PSliceStack;
 
-	class CModelSliceStackResource : public CModelResource {
+	class CModelSliceStack : public CModelResource {
 	private:
 		PSliceStack m_pSliceStack;
 		nfUint32 m_nNumSliceRefsToMe;	// number of sliceref-references to this resource
 	public:
-		CModelSliceStackResource() = delete;
-		CModelSliceStackResource(_In_ const ModelResourceID sID, _In_ CModel * pModel, PSliceStack pSliceStack);
-		~CModelSliceStackResource();
+		CModelSliceStack() = delete;
+		CModelSliceStack(_In_ const ModelResourceID sID, _In_ CModel * pModel, PSliceStack pSliceStack);
+		~CModelSliceStack();
 
 		void setSliceStack(PSliceStack pSliceStack);
 		_Ret_notnull_ PSliceStack getSliceStack();
@@ -123,7 +83,7 @@ namespace NMR {
 		nfUint32& NumSliceRefsToMe();
 	};
 
-	typedef std::shared_ptr<CModelSliceStackResource> PModelSliceStackResource;
+	typedef std::shared_ptr<CModelSliceStack> PModelSliceStack;
 }
 
-#endif
+#endif // __NMR_MODELSLICESTACK

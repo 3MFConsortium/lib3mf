@@ -40,7 +40,7 @@ Abstract: This is the class declaration of CLib3MFSliceStack
 #pragma warning( disable : 4250)
 
 // Include custom headers here.
-#include "Model/Classes/NMR_ModelSliceResource.h"
+#include "Model/Classes/NMR_ModelSliceStack.h"
 
 namespace Lib3MF {
 namespace Impl {
@@ -62,14 +62,14 @@ protected:
 	/**
 	* Put protected members here.
 	*/
-	NMR::PModelSliceStackResource sliceStack();
+	NMR::PModelSliceStack sliceStack();
 
 public:
 
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-	CLib3MFSliceStack(NMR::PModelSliceStackResource pSliceStack);
+	CLib3MFSliceStack(NMR::PModelSliceStack pSliceStack);
 
 
 	/**

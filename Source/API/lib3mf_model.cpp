@@ -136,8 +136,8 @@ ILib3MFComponentsObject * CLib3MFModel::GetComponentsObjectByID (const Lib3MF_ui
 ILib3MFSliceStack * CLib3MFModel::GetSliceStackByID(const Lib3MF_uint32 nResourceID)
 {
 	NMR::PModelResource pResource = model().findResource(nResourceID);
-	if (dynamic_cast<NMR::CModelSliceStackResource*>(pResource.get())) {
-		return new CLib3MFSliceStack(std::dynamic_pointer_cast<NMR::CModelSliceStackResource>(pResource));
+	if (dynamic_cast<NMR::CModelSliceStack*>(pResource.get())) {
+		return new CLib3MFSliceStack(std::dynamic_pointer_cast<NMR::CModelSliceStack>(pResource));
 	}
 	else
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDSLICESTACKRESOURCE);
@@ -289,7 +289,7 @@ ILib3MFSliceStack * CLib3MFModel::AddSliceStack(const float fBottomZ)
 {
 	NMR::ModelResourceID NewResourceID = model().generateResourceID();
 	NMR::PSliceStack pSliceStack = std::make_shared<NMR::CSliceStack>();
-	NMR::PModelSliceStackResource pNewResource = std::make_shared<NMR::CModelSliceStackResource>(NewResourceID, &model(), pSliceStack);
+	NMR::PModelSliceStack pNewResource = std::make_shared<NMR::CModelSliceStack>(NewResourceID, &model(), pSliceStack);
 
 	model().addResource(pNewResource);
 

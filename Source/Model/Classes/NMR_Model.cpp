@@ -41,7 +41,7 @@ A model is an in memory representation of the 3MF file.
 #include "Model/Classes/NMR_ModelBuildItem.h" 
 #include "Model/Classes/NMR_ModelBaseMaterials.h" 
 #include "Model/Classes/NMR_ModelTexture2D.h" 
-#include "Model/Classes/NMR_ModelSliceResource.h"
+#include "Model/Classes/NMR_ModelSliceStack.h"
 #include "Model/Classes/NMR_ModelMetaDataGroup.h" 
 
 #include "Common/Mesh/NMR_Mesh.h" 
@@ -453,7 +453,7 @@ namespace NMR {
 		if (pTexture2D != nullptr)
 			m_TextureLookup.push_back(pResource);
 
-		CModelSliceStackResource *pSliceStack = dynamic_cast<CModelSliceStackResource *>(pResource.get());
+		CModelSliceStack *pSliceStack = dynamic_cast<CModelSliceStack *>(pResource.get());
 		if (pSliceStack != nullptr) 
 			m_SliceStackLookup.push_back(pResource);
 	}
@@ -902,7 +902,7 @@ namespace NMR {
 	CSliceStack * CModel::getSliceStack(_In_ nfUint32 nIndex)
 	{
 		PModelResource pResouce = getSliceStackResource(nIndex);
-		CModelSliceStackResource * pSliceStackObject = dynamic_cast<CModelSliceStackResource *> (pResouce.get());
+		CModelSliceStack * pSliceStackObject = dynamic_cast<CModelSliceStack *> (pResouce.get());
 		if (pSliceStackObject == nullptr)
 			throw CNMRException(NMR_ERROR_RESOURCETYPEMISMATCH);
 
@@ -919,7 +919,7 @@ namespace NMR {
 		// Therefore, remove all referencd slicestack resources.
 		std::vector<PModelResource> vctToRemove;
 		for (auto pSliceStackResource : m_SliceStackLookup) {
-			CModelSliceStackResource * pSliceStackObject = dynamic_cast<CModelSliceStackResource *> (pSliceStackResource.get());
+			CModelSliceStack * pSliceStackObject = dynamic_cast<CModelSliceStack *> (pSliceStackResource.get());
 			if (pSliceStackObject->NumSliceRefsToMe() > 0) {
 				vctToRemove.push_back(pSliceStackResource);
 			}

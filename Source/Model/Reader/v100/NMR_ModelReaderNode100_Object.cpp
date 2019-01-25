@@ -310,7 +310,7 @@ namespace NMR {
 				PPackageResourceID pID = m_pModel->findPackageResourceID(m_pModel->curPath(), m_nSliceStackId);
 				if (!pID.get())
 					throw CNMRException(NMR_ERROR_SLICESTACKRESOURCE_NOT_FOUND);
-				PModelSliceStackResource pSliceStackResource = std::dynamic_pointer_cast<CModelSliceStackResource>( m_pModel->findResource(pID->getUniqueID()) );
+				PModelSliceStack pSliceStackResource = std::dynamic_pointer_cast<CModelSliceStack>( m_pModel->findResource(pID->getUniqueID()) );
 				if (pSliceStackResource) {
 					if ((m_pObject->getObjectType() == MODELOBJECTTYPE_MODEL) || (MODELOBJECTTYPE_SOLIDSUPPORT)) {
 						if (!pSliceStackResource->getSliceStack()->areAllPolygonsClosed()) {

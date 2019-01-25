@@ -190,7 +190,7 @@ void CLib3MFObject::ClearSliceStack()
 
 ILib3MFSliceStack * CLib3MFObject::GetSliceStack()
 {
-	NMR::PModelSliceStackResource pSliceStackResource = object()->getSliceStack();
+	NMR::PModelSliceStack pSliceStackResource = object()->getSliceStack();
 	if (pSliceStackResource)
 		return new CLib3MFSliceStack(pSliceStackResource);
 	else
@@ -201,7 +201,7 @@ void CLib3MFObject::SetSliceStack(ILib3MFSliceStack* pSliceStackInstance)
 {
 	Lib3MF_uint32 id = pSliceStackInstance->GetResourceID();
 
-	NMR::PModelSliceStackResource pSliceStackResource = std::dynamic_pointer_cast<NMR::CModelSliceStackResource>
+	NMR::PModelSliceStack pSliceStackResource = std::dynamic_pointer_cast<NMR::CModelSliceStack>
 		( object()->getModel()->findResource(id) );
 	if (!pSliceStackResource)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDSLICESTACKRESOURCE);

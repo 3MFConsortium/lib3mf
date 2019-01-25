@@ -58,7 +58,7 @@ namespace NMR {
 		nfBool m_bIsRootModel;
 		nfBool m_bWriteCustomNamespaces;
 
-		CModelSliceStackResource* m_pSliceStackResource;	// If this is set, only this slicestack should be exported
+		CModelSliceStack* m_pSliceStackResource;	// If this is set, only this slicestack should be exported
 
 		void calculateColors(_In_ CMesh * pMesh);
 		void calculateTexCoords(_In_ CMesh * pMesh);
@@ -74,7 +74,7 @@ namespace NMR {
 		void writeTex2Coords();
 		void writeObjects();
 		void writeBuild();
-		void writeSliceStack(_In_ CModelSliceStackResource *pSliceStackResource);
+		void writeSliceStack(_In_ CModelSliceStack *pSliceStackResource);
 
 		void writeSliceStacks();
 		void writeSliceStack(_In_ CSliceStack *pSliceStack);
@@ -89,7 +89,7 @@ namespace NMR {
 	public:
 		CModelWriterNode100_Model() = delete;
 		CModelWriterNode100_Model(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter, _In_ CProgressMonitor * pProgressMonitor);
-		CModelWriterNode100_Model(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter, _In_ CProgressMonitor * pProgressMonitor, CModelSliceStackResource *pSliceStackResource);
+		CModelWriterNode100_Model(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter, _In_ CProgressMonitor * pProgressMonitor, CModelSliceStack *pSliceStackResource);
 		
 		virtual void writeToXML();
 	};

@@ -78,7 +78,7 @@ namespace NMR {
 			throw CNMRException(NMR_USERABORTED);
 	}
 
-	void CModelWriter_3MF::writeSlicestackStream(_In_ CXmlWriter *pXMLWriter, _In_ CModel * pModel, _In_ CModelSliceStackResource *pSliceStackResource)
+	void CModelWriter_3MF::writeSlicestackStream(_In_ CXmlWriter *pXMLWriter, _In_ CModel * pModel, _In_ CModelSliceStack *pSliceStackResource)
 	{
 		__NMRASSERT(pSliceStackResource != nullptr);
 		if (pXMLWriter == nullptr)
