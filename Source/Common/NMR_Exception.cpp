@@ -66,7 +66,7 @@ namespace NMR {
 		case NMR_ERROR_ABSTRACT: return "The function called is abstract and should not have been called";
 		case NMR_ERROR_INVALIDHEADBLOCK: return "The current block is not assigned";
 		case NMR_ERROR_COMINITIALIZATIONFAILED: return "COM CoInitialize failed";
-		case NMR_ERROR_STANDARDCPPEXCEPTION: return "A Standard C++ Exception occured";
+		case NMR_ERROR_STANDARDCPPEXCEPTION: return "A Standard C++ Exception occurred";
 		case NMR_ERROR_INVALIDMESH: return "No mesh has been given";
 		case NMR_ERROR_COULDNOTCREATECONTEXT: return "Context could not be created";
 		case NMR_ERROR_EMPTYSTRINGTOINTCONVERSION: return "Wanted to convert empty string to integer";

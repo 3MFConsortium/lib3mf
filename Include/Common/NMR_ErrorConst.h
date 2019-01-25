@@ -104,7 +104,7 @@ NMR_ErrorConst.h defines all error code constants.
 // COM CoInitialize failed
 #define NMR_ERROR_COMINITIALIZATIONFAILED 0x1011
 
-// A Standard C++ Exception occured
+// A Standard C++ Exception occurred
 #define NMR_ERROR_STANDARDCPPEXCEPTION 0x1012
 
 // No mesh has been given

@@ -190,7 +190,7 @@ void ReadAttributes_Negative(std::string fName)
 		ASSERT_EQ(hResult, S_OK) << L"Could read 3MF file.";
 		DWORD nWarningCount;
 		ASSERT_EQ(lib3mf_reader_getwarningcount(p3MFReader.get(), &nWarningCount), S_OK) << L"Could not get warning count";
-		ASSERT_EQ(nWarningCount, (DWORD)(1)) << L"Different number of warnings occured.";
+		ASSERT_EQ(nWarningCount, (DWORD)(1)) << L"Different number of warnings occurred.";
 		DWORD nErrorCode;
 		wchar_t sWarning[2048];
 		ASSERT_EQ(lib3mf_reader_getwarning(p3MFReader.get(), 0, &nErrorCode, sWarning, 2048, NULL), S_OK) << L"Could not get warning";
