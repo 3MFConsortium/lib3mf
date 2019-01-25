@@ -50,7 +50,7 @@ void CLib3MFSlice::SetVertices (const Lib3MF_uint64 nVerticesBufferSize, const s
 {
 	m_pSlice->Clear();
 	for (Lib3MF_uint64 index = 0; index < nVerticesBufferSize; index++) {
-		m_pSlice->addVertex(pVerticesBuffer->m_coordinates[0], pVerticesBuffer->m_coordinates[0]);
+		m_pSlice->addVertex(pVerticesBuffer->m_coordinates[0], pVerticesBuffer->m_coordinates[1]);
 		pVerticesBuffer++;
 	}
 }
