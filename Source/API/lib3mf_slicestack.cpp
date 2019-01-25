@@ -66,6 +66,7 @@ ILib3MFSlice * CLib3MFSliceStack::GetSlice (const Lib3MF_uint64 nSliceIndex)
 	NMR::PSlice pSlice = sliceStack()->getSlice(Lib3MF_uint32(nSliceIndex));
 	return new CLib3MFSlice(pSlice);
 }
+
 ILib3MFSlice * CLib3MFSliceStack::AddSlice (const double fZTop)
 {
 	NMR::PSlice pSlice = sliceStack()->AddSlice(fZTop);

@@ -96,6 +96,7 @@ namespace Lib3MF
 
 	TEST_F(Slice, Properties)
 	{
+		ASSERT_DOUBLE_EQ(slice->GetZTop(), 1.0);
 		ASSERT_EQ(slice->GetVertexCount(), 0);
 		ASSERT_EQ(slice->GetPolygonCount(), 0);
 	}
@@ -116,7 +117,20 @@ namespace Lib3MF
 
 	TEST_F(Slice, Polygons)
 	{
-		
+		slice->SetVertices(vVertices);
+
+		slice->AddPolygon(vOpenPolygon);
+		ASSERT_EQ(slice->GetPolygonCount(), 1);
+
+		ASSERT_EQ(slice->GetPolygonIndexCount(0), vOpenPolygon.size());
+
+		std::vector<Lib3MF_uint32> vIndices;
+		slice->GetPolygonIndices(0, vIndices);
+		ASSERT_TRUE(vOpenPolygon == vIndices);
+
+		slice->SetPolygonIndices(0, vClosedPolygon);
+		slice->GetPolygonIndices(0, vIndices);
+		ASSERT_TRUE(vClosedPolygon == vIndices);
 	}
 
 	TEST_F(Slice, PolygonsFail)

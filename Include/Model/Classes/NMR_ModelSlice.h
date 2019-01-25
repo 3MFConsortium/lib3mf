@@ -64,6 +64,8 @@ namespace NMR {
 
 		void addPolygonIndex(nfUint32 nPolygonIndex, nfUint32 nIndex);
 
+		void clearPolygon(nfUint32 nPolygonIndex);
+
 		nfUint32 getPolygonCount();
 
 		nfDouble getTopZ();

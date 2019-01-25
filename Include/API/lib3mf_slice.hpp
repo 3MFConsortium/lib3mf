@@ -79,11 +79,13 @@ public:
 
 	Lib3MF_uint64 GetPolygonCount();
 
+	Lib3MF_uint64 AddPolygon(const Lib3MF_uint64 nIndicesBufferSize, const Lib3MF_uint32 * pIndicesBuffer);
+
 	void SetPolygonIndices (const Lib3MF_uint64 nIndex, const Lib3MF_uint64 nIndicesBufferSize, const Lib3MF_uint32 * pIndicesBuffer);
 
 	void GetPolygonIndices (const Lib3MF_uint64 nIndex, Lib3MF_uint64 nIndicesBufferSize, Lib3MF_uint64* pIndicesNeededCount, Lib3MF_uint32 * pIndicesBuffer);
 
-	void GetPolygonIndexCount (const Lib3MF_uint64 nIndex, Lib3MF_uint64 & nCount);
+	Lib3MF_uint64 GetPolygonIndexCount (const Lib3MF_uint64 nIndex);
 
 	double GetZTop();
 };

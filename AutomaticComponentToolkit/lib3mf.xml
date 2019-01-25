@@ -793,6 +793,10 @@
 			<param name="Count" type="uint64" pass="return" description="the number of vertices in the slice" />
 		</method>
 		
+		<method name="AddPolygon" description="Add a new polygon to this slice">
+			<param name="Indices" type="basicarray" class="uint32" pass="in" description="the new indices of the new polygon" />
+			<param name="Index" type="uint64" pass="return" description="the index of the new polygon" />
+		</method>
 		<method name="GetPolygonCount" description="Get the number of polygons in the slice">		
 			<param name="Count" type="uint64" pass="return" description="the number of polygons in the slice" />
 		</method>
@@ -806,7 +810,7 @@
 		</method>
 		<method name="GetPolygonIndexCount" description="Get the number of vertices in a slice">
 			<param name="Index" type="uint64" pass="in" description="the index of the polygon to manipulate" />
-			<param name="Count" type="uint64" pass="out" description="the number of indices of the index-th polygon" />
+			<param name="Count" type="uint64" pass="return" description="the number of indices of the index-th polygon" />
 		</method>
 		<method name="GetZTop" description="Get the upper Z-Coordinate of this slice.">
 			<param name="ZTop" type="double" pass="return" description="the upper Z-Coordinate of this slice" />

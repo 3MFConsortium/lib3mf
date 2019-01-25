@@ -77,6 +77,13 @@ Lib3MF_uint64 CLib3MFSlice::GetVertexCount ()
 	return m_pSlice->getVertexCount();
 }
 
+Lib3MF_uint64 CLib3MFSlice::AddPolygon(const Lib3MF_uint64 nIndicesBufferSize, const Lib3MF_uint32 * pIndicesBuffer)
+{
+	Lib3MF_uint32 index = m_pSlice->beginPolygon();
+	SetPolygonIndices(index, nIndicesBufferSize, pIndicesBuffer);
+	return index;
+}
+
 Lib3MF_uint64 CLib3MFSlice::GetPolygonCount ()
 {
 	return m_pSlice->getPolygonCount();
@@ -84,20 +91,34 @@ Lib3MF_uint64 CLib3MFSlice::GetPolygonCount ()
 
 void CLib3MFSlice::SetPolygonIndices (const Lib3MF_uint64 nIndex, const Lib3MF_uint64 nIndicesBufferSize, const Lib3MF_uint32 * pIndicesBuffer)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	m_pSlice->clearPolygon(NMR::nfUint32(nIndex));
+
+	for (Lib3MF_uint64 i=0; i< nIndicesBufferSize; i++)
+		m_pSlice->addPolygonIndex(NMR::nfUint32(nIndex), pIndicesBuffer[i]);
 }
 
 void CLib3MFSlice::GetPolygonIndices (const Lib3MF_uint64 nIndex, Lib3MF_uint64 nIndicesBufferSize, Lib3MF_uint64* pIndicesNeededCount, Lib3MF_uint32 * pIndicesBuffer)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	Lib3MF_uint64 indexCount = m_pSlice->getPolygonIndexCount(NMR::nfUint32(nIndex));
+	if (pIndicesNeededCount)
+		*pIndicesNeededCount = indexCount;
+
+	if (nIndicesBufferSize >= indexCount && pIndicesBuffer)
+	{
+		for (Lib3MF_uint32 i = 0; i < indexCount; i++)
+		{
+			pIndicesBuffer[i] = m_pSlice->getPolygonIndex(NMR::nfUint32(nIndex), i);
+		}
+	}
+
 }
 
-void CLib3MFSlice::GetPolygonIndexCount (const Lib3MF_uint64 nIndex, Lib3MF_uint64 & nCount)
+Lib3MF_uint64 CLib3MFSlice::GetPolygonIndexCount (const Lib3MF_uint64 nIndex)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	return m_pSlice->getPolygonIndexCount(NMR::nfUint32(nIndex));
 }
 
 double CLib3MFSlice::GetZTop()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return m_pSlice->getTopZ();
 }

@@ -86,6 +86,13 @@ namespace NMR {
 		*y = m_Vertices[nIndex].m_position.m_values.y;
 	}
 
+	void CSlice::clearPolygon(nfUint32 nPolygonIndex)
+	{
+		if (nPolygonIndex >= m_Polygons.size())
+			throw CNMRException(NMR_ERROR_INVALIDINDEX);
+		m_Polygons.clear();
+	}
+
 	void CSlice::addPolygonIndex(nfUint32 nPolygonIndex, nfUint32 nIndex)
 	{
 		if (nPolygonIndex >= m_Polygons.size())
