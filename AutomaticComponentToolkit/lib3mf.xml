@@ -85,8 +85,18 @@
 		
 		<error name="BEAMLATTICE_INVALID_OBJECTTYPE" code="2000" description="This object type is not valid for beamlattices" />
 	</errors>
-	
-	<enum name="SlicesMeshResolution">
+
+  <enum name="PropertyType">
+    <option name="None" value="0" />
+    <option name="BaseMaterial" value="1" />
+    <option name="TexCoord" value="2" />
+    <option name="Colors" value="3" />
+    <option name="Composite" value="4" />
+    <option name="Multi" value="1024" />
+  </enum>
+
+
+  <enum name="SlicesMeshResolution">
 		<option name="Fullres" value="0" />
 		<option name="Lowres" value="1" />
 	</enum>
@@ -165,8 +175,14 @@
 	<struct name="Triangle">
 		<member name="indices" type="uint32" rows="3" />
 	</struct>
-	
-	<struct name="Position">
+
+  <struct name="TriangleProperties">
+    <member name="PropertyType" type="enum" class="PropertyType" />
+    <member name="ResourceID" type="uint32" />
+    <member name="PropertyIDs" type="uint32" rows="3" />
+  </struct>
+  
+  <struct name="Position">
 		<member name="coordinates" type="single" rows="3" />
 	</struct>
 	
@@ -460,7 +476,22 @@
 		<method name="GetTriangleIndices" description="Get all triangles of a mesh object">
 			<param name="Indices" type="structarray" class="Triangle" pass="out" description="contains the triangle indices." />
 		</method>
-		<method name="SetGeometry" description="Set all triangles of a mesh object">
+    <method name="SetTriangleProperties" description="Sets the properties of a single triangle of a mesh object.">
+      <param name="Index" type="uint32" pass="in" description="Index of the triangle (0 to trianglecount - 1)" />
+      <param name="Properties" type="struct" class="TriangleProperties" pass="in" description="contains the triangle properties." />
+    </method>
+    <method name="GetTriangleProperties" description="Gets the properties of a single triangle of a mesh object.">
+      <param name="Index" type="uint32" pass="in" description="Index of the triangle (0 to trianglecount - 1)" />
+      <param name="Property" type="struct" class="TriangleProperties" pass="out" description="returns the triangle properties." />
+    </method>
+    <method name="SetAllTriangleProperties" description="Sets the properties of all triangles of a mesh object.">
+      <param name="PropertiesArray" type="structarray" class="TriangleProperties" pass="in" description="contains the triangle properties array. Must have trianglecount elements." />
+    </method>
+    <method name="GetAllTriangleProperties" description="Gets the properties of all triangles of a mesh object.">
+      <param name="PropertiesArray" type="structarray" class="TriangleProperties" pass="out" description="returns the triangle properties array. Must have trianglecount elements." />
+    </method>
+
+    <method name="SetGeometry" description="Set all triangles of a mesh object">
 			<param name="Vertices" type="structarray" class="Position" pass="in" description="contains the positions." />
 			<param name="Indices" type="structarray" class="Triangle" pass="in" description="contains the triangle indices." />
 		</method>
@@ -470,6 +501,8 @@
 		<method name="BeamLattice" description="Retrieves the BeamLattice within this MeshObject.">
 			<param name="TheBeamLattice" type="handle" class="BeamLattice" pass="return" description="the BeamLattice within this MeshObject" />
 		</method>
+    
+    
 	</class>
 
 	<class name="BeamLattice">

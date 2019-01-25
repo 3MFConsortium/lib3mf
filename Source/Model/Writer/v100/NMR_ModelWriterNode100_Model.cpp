@@ -42,14 +42,10 @@ This is the class for exporting the 3mf model stream root node.
 #include "Model/Classes/NMR_ModelMeshObject.h"
 #include "Model/Classes/NMR_ModelComponentsObject.h"
 #include "Model/Classes/NMR_Model.h"
-#include "Model/Classes/NMR_ModelDefaultProperty_Color.h"
-#include "Model/Classes/NMR_ModelDefaultProperty_BaseMaterial.h"
-#include "Model/Classes/NMR_ModelDefaultProperty_TexCoord2D.h"
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_Exception_Windows.h"
 #include "Common/NMR_StringUtils.h"
-#include "Common/MeshInformation/NMR_MeshInformation_NodeColors.h"
-#include "Common/MeshInformation/NMR_MeshInformation_TexCoords.h"
+#include "Common/MeshInformation/NMR_MeshInformation_Properties.h"
 #include "Model/Classes/NMR_ModelConstants_Slices.h"
 
 #include "Common/3MF_ProgressMonitor.h"
@@ -75,49 +71,6 @@ namespace NMR {
 
 		m_bWriteCustomNamespaces = true;
 		m_pSliceStackResource = NULL;
-
-		nfInt32 nObjectCount = pModel->getObjectCount();
-		nfInt32 nObjectIndex;
-
-		for (nObjectIndex = 0; nObjectIndex < nObjectCount; nObjectIndex++) {
-			PModelResource pResource = pModel->getObjectResource(nObjectIndex);
-
-			CModelMeshObject * pMeshObject = dynamic_cast<CModelMeshObject*> (pResource.get());
-			if (pMeshObject) {
-				CMesh * pMesh = pMeshObject->getMesh();
-				if (pMesh) {
-					if (m_bWriteMaterialExtension) {
-						calculateColors(pMesh);
-						calculateTexCoords(pMesh);
-					}
-				}
-			}
-
-			if (m_bWriteMaterialExtension) {
-				// Register Default Property Resources
-				CModelObject * pObject = dynamic_cast<CModelObject*> (pResource.get());
-				if (pObject) {
-					PModelDefaultProperty pProperty = pObject->getDefaultProperty();
-
-					CModelDefaultProperty_Color * pColorProperty = dynamic_cast<CModelDefaultProperty_Color *> (pProperty.get());
-					if (pColorProperty != nullptr) {
-						nfColor cColor = pColorProperty->getColor();
-						if (cColor != 0)
-							m_pColorMapping->registerColor(cColor);
-					}
-
-					CModelDefaultProperty_TexCoord2D * pTexCoord2DProperty = dynamic_cast<CModelDefaultProperty_TexCoord2D *> (pProperty.get());
-					if (pTexCoord2DProperty != nullptr) {
-						PModelWriter_TexCoordMapping pTexCoordMapping = m_pTexCoordMappingContainer->findTexture(pTexCoord2DProperty->getTextureID());
-						if (pTexCoordMapping.get() == nullptr) {
-							pTexCoordMapping = m_pTexCoordMappingContainer->addTexture(pTexCoord2DProperty->getTextureID(), generateOutputResourceID());
-						}
-
-						pTexCoordMapping->registerTexCoords(pTexCoord2DProperty->getU(), pTexCoord2DProperty->getV());
-					}
-				}
-			}
-		}
 
 		// register custom NameSpaces from metadata in objects, build items and the model itself
 		RegisterMetaDataNameSpaces();
@@ -452,38 +405,9 @@ namespace NMR {
 			}
 
 			// Write Default Property Indices
-			ModelResourceID nPropertyID = 0;
-			ModelResourceIndex nPropertyIndex = 0;
-
-			PModelDefaultProperty pProperty = pObject->getDefaultProperty();
-
-			if (m_bWriteMaterialExtension) {
-				// Color Properties
-				CModelDefaultProperty_Color * pColorProperty = dynamic_cast<CModelDefaultProperty_Color *> (pProperty.get());
-				if (pColorProperty != nullptr) {
-					if (m_pColorMapping->findColor(pColorProperty->getColor(), nPropertyIndex)) {
-						nPropertyID = m_pColorMapping->getResourceID();
-					}
-				}
-
-				// TexCoord2D Properties
-				CModelDefaultProperty_TexCoord2D * pTexCoord2DProperty = dynamic_cast<CModelDefaultProperty_TexCoord2D *> (pProperty.get());
-				if (pTexCoord2DProperty != nullptr) {
-					PModelWriter_TexCoordMapping pTexCoordMapping = m_pTexCoordMappingContainer->findTexture(pTexCoord2DProperty->getTextureID());
-					if (pTexCoordMapping.get() != nullptr) {
-						if (pTexCoordMapping->findTexCoords(pTexCoord2DProperty->getU(), pTexCoord2DProperty->getV(), nPropertyIndex)) {
-							nPropertyID = pTexCoordMapping->getResourceID();
-						}
-					}
-				}
-			}
-
-			// Base Material Properties
-			CModelDefaultProperty_BaseMaterial * pBaseMaterialProperty = dynamic_cast<CModelDefaultProperty_BaseMaterial *> (pProperty.get());
-			if (pBaseMaterialProperty != nullptr) {
-				nPropertyID = pBaseMaterialProperty->getResourceID();
-				nPropertyIndex = pBaseMaterialProperty->getResourceIndex();
-			}
+			ModelResourceID nDefaultPropertyID = 0;
+			ModelResourceIndex nDefaultPropertyIndex = 0;
+			// TODO: make default property work
 
 			// Slice extension content
 			if (m_bWriteSliceExtension) {
@@ -503,9 +427,9 @@ namespace NMR {
 			CModelMeshObject * pMeshObject = dynamic_cast<CModelMeshObject *> (pObject);
 			if (pMeshObject) {
 				// Write Attributes (only for meshes)
-				if ( nPropertyID != 0) {
-					writeIntAttribute(XML_3MF_ATTRIBUTE_OBJECT_PID, nPropertyID);
-					writeIntAttribute(XML_3MF_ATTRIBUTE_OBJECT_PINDEX, nPropertyIndex);
+				if ( nDefaultPropertyID != 0) {
+					writeIntAttribute(XML_3MF_ATTRIBUTE_OBJECT_PID, nDefaultPropertyID);
+					writeIntAttribute(XML_3MF_ATTRIBUTE_OBJECT_PINDEX, nDefaultPropertyIndex);
 				}
 
 				CModelWriterNode100_Mesh ModelWriter_Mesh(pMeshObject, m_pXMLWriter, m_pProgressMonitor,
@@ -714,63 +638,6 @@ namespace NMR {
 		writeFullEndElement();
 	}
 
-	void CModelWriterNode100_Model::calculateColors(_In_ CMesh * pMesh)
-	{
-		nfUint32 nFaceCount = pMesh->getFaceCount();
-		nfUint32 nIndex;
-
-		CMeshInformationHandler * pHandler = pMesh->getMeshInformationHandler();
-
-		if (pHandler) {
-			CMeshInformation_NodeColors * pNodeColorInfo = dynamic_cast<CMeshInformation_NodeColors *> (pHandler->getInformationByType(0, emiNodeColors));
-			if (pNodeColorInfo) {
-				for (nIndex = 0; nIndex < nFaceCount; nIndex++) {
-					MESHINFORMATION_NODECOLOR * pFaceData = (MESHINFORMATION_NODECOLOR*)pNodeColorInfo->getFaceData(nIndex);
-					nfInt32 j;
-					for (j = 0; j < 3; j++) {
-						if (pFaceData->m_cColors[j] != 0)
-							m_pColorMapping->registerColor(pFaceData->m_cColors[j]);
-					}
-				}
-
-			}
-
-		}
-
-	}
-
-	void CModelWriterNode100_Model::calculateTexCoords(_In_ CMesh * pMesh)
-	{
-		nfUint32 nFaceCount = pMesh->getFaceCount();
-		nfUint32 nIndex;
-
-		CMeshInformationHandler * pHandler = pMesh->getMeshInformationHandler();
-
-		if (pHandler) {
-			CMeshInformation_TexCoords * pTexCoordInfo = dynamic_cast<CMeshInformation_TexCoords *> (pHandler->getInformationByType(0, emiTexCoords));
-			if (pTexCoordInfo) {
-				for (nIndex = 0; nIndex < nFaceCount; nIndex++) {
-					MESHINFORMATION_TEXCOORDS * pFaceData = (MESHINFORMATION_TEXCOORDS*)pTexCoordInfo->getFaceData(nIndex);
-					if (pFaceData->m_TextureID != 0) {
-
-						nfInt32 j;
-						PModelWriter_TexCoordMapping pMapping = m_pTexCoordMappingContainer->findTexture(pFaceData->m_TextureID);
-						if (pMapping.get() == nullptr) {
-							pMapping = m_pTexCoordMappingContainer->addTexture(pFaceData->m_TextureID, generateOutputResourceID ());
-
-						}
-
-						for (j = 0; j < 3; j++) {
-							pMapping->registerTexCoords(pFaceData->m_vCoords[j].m_fields[0], pFaceData->m_vCoords[j].m_fields[1]);
-						}
-					}
-				}
-
-			}
-
-		}
-
-	}
 
 	ModelResourceID CModelWriterNode100_Model::generateOutputResourceID()
 	{

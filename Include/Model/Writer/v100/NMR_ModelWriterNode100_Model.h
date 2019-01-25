@@ -60,9 +60,6 @@ namespace NMR {
 
 		CModelSliceStack* m_pSliceStackResource;	// If this is set, only this slicestack should be exported
 
-		void calculateColors(_In_ CMesh * pMesh);
-		void calculateTexCoords(_In_ CMesh * pMesh);
-
 		void writeModelMetaData();
 		void writeMetaData(_In_ PModelMetaData pMetaData);
 		void writeMetaDataGroup(_In_ PModelMetaDataGroup pMetaDataGroup);

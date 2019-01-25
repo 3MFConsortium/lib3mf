@@ -38,7 +38,6 @@ model object.
 #include "Model/Classes/NMR_Model.h" 
 #include "Model/Classes/NMR_ModelResource.h" 
 #include "Model/Classes/NMR_ModelMetaDataGroup.h" 
-#include "Model/Classes/NMR_ModelDefaultProperty.h"
 #include "Model/Classes/NMR_ModelSliceStack.h"
 #include "Common/NMR_Types.h" 
 #include "Common/Math/NMR_Matrix.h" 
@@ -60,7 +59,6 @@ namespace NMR {
 	private:
 		PUUID m_UUID;
 		std::string m_sThumbnail;
-		PModelDefaultProperty m_pModelDefaultProperty;
 		eModelObjectType m_ObjectType;
 	public:
 		CModelObject() = delete;
@@ -103,10 +101,6 @@ namespace NMR {
 
 		void setSlicesMeshResolution(eModelSlicesMeshResolution eMeshResolution);
 		eModelSlicesMeshResolution slicesMeshResolution() const;
-
-		// Set/Get Default Property
-		void setDefaultProperty (_In_ PModelDefaultProperty pModelDefaultProperty);
-		PModelDefaultProperty getDefaultProperty();
 
 		// Set/Get Thumbnail
 		void setThumbnail(_In_ std::string sThumbnail);

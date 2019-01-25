@@ -45,12 +45,8 @@ namespace NMR {
 	PMeshInformation CMeshInformationFactory::createMeshInformation(eMeshInformationType eType, nfUint32 nCurrentFaceCount)
 	{
 		switch (eType) {
-		case emiBaseMaterials:
-			return std::make_shared<CMeshInformation_BaseMaterials>(nCurrentFaceCount);
-		case emiNodeColors:
-			return std::make_shared<CMeshInformation_NodeColors>(nCurrentFaceCount);
-		case emiTexCoords:
-			return std::make_shared<CMeshInformation_TexCoords>(nCurrentFaceCount);
+		case emiProperties:
+			return std::make_shared<CMeshInformation_Properties>(nCurrentFaceCount);
 
         default:
             throw CNMRException(NMR_ERROR_INVALIDINFORMATIONTYPE);

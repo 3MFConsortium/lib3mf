@@ -26,14 +26,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_MeshInformation_TexCoords.h defines the Texture Mesh Information Class.
-This class specializes the abstract Mesh Information Class to "textures". It implements functions
-to interpolate and reconstruct texture coordinates while the mesh topology is changing.
+NMR_MeshInformation_Properties.h defines the Property Information Class.
 
 --*/
 
-#ifndef __NMR_MESHINFORMATION_TEXCOORDS
-#define __NMR_MESHINFORMATION_TEXCOORDS
+#ifndef __NMR_MESHINFORMATION_PROPERTIES
+#define __NMR_MESHINFORMATION_PROPERTIES
 
 #include "Common/MeshInformation/NMR_MeshInformation.h"
 #include <list>
@@ -41,11 +39,22 @@ to interpolate and reconstruct texture coordinates while the mesh topology is ch
 
 namespace NMR {
 
-	class CMeshInformation_TexCoords : public CMeshInformation {
+	class CMeshInformation_PropertyIndexMapping {
+	public:
+		nfUint32 mapPropertyIDToIndex(nfUint32 nResourceID, nfUint32 nPropertyID);
+		
+		nfUint32 getDefaultResourceID ();
+		nfUint32 getDefaultResourceIndex ();
+	};
+
+	typedef std::shared_ptr <CMeshInformation_PropertyIndexMapping> PMeshInformation_PropertyIndexMapping;
+
+
+	class CMeshInformation_Properties : public CMeshInformation {
 	protected:
 	public:
-		CMeshInformation_TexCoords();
-		CMeshInformation_TexCoords(nfUint32 nCurrentFaceCount);
+		CMeshInformation_Properties();
+		CMeshInformation_Properties(nfUint32 nCurrentFaceCount);
 
 		virtual void invalidateFace(_In_ MESHINFORMATIONFACEDATA * pData);
 
@@ -56,10 +65,13 @@ namespace NMR {
 		virtual nfUint32 getBackupSize();
 		virtual void mergeInformationFrom(_In_ CMeshInformation * pInformation);
 		virtual nfBool faceHasData(_In_ nfUint32 nFaceIndex);
+
+		PMeshInformation_PropertyIndexMapping createIndexMapping();
 	};
 
-	typedef std::shared_ptr <CMeshInformation_TexCoords> PMeshInformation_TexCoords;
+	typedef std::shared_ptr <CMeshInformation_Properties> PMeshInformation_Properties;
 
 }
 
-#endif // __NMR_MESHINFORMATION_TEXCOORDS
+#endif // __NMR_MESHINFORMATION_PROPERTIES
+

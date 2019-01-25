@@ -41,11 +41,6 @@ Stream.
 #include "Model/Classes/NMR_ModelMeshObject.h"
 #include "Model/Classes/NMR_ModelAttachment.h"
 
-#include "Model/Classes/NMR_ModelDefaultProperty.h"
-#include "Model/Classes/NMR_ModelDefaultProperty_BaseMaterial.h"
-#include "Model/Classes/NMR_ModelDefaultProperty_Color.h"
-#include "Model/Classes/NMR_ModelDefaultProperty_TexCoord2D.h"
-
 #include "Common/NMR_StringUtils.h"
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_Exception_Windows.h"
@@ -340,38 +335,7 @@ namespace NMR {
 			// Assign Default Resource Property
 			PPackageResourceID pRID = m_pModel->findPackageResourceID(m_pModel->curPath(), m_nDefaultPropertyID);
 
-			PModelBaseMaterialResource pResource = nullptr;
-			if (pRID.get())
-				pResource = m_pModel->findBaseMaterial(pRID->getUniqueID());
-			if (pResource.get() != nullptr) {
-				m_pObject->setDefaultProperty(std::make_shared<CModelDefaultProperty_BaseMaterial>(pRID->getUniqueID(), m_nDefaultPropertyIndex));
-				hasBeenSet = true;
-			}
-
-			// Assign Default ColorResource Property
-			nfColor cColor;
-			if (m_pColorMapping->findColor(m_nDefaultPropertyID, m_nDefaultPropertyIndex, cColor)) {
-				m_pObject->setDefaultProperty(std::make_shared<CModelDefaultProperty_Color>(cColor));
-				hasBeenSet = true;
-			}
-			
-			// Assign Default TextureResource Property
-			ModelResourceID nTextureID;
-			nfFloat fU;
-			nfFloat fV;
-			if (m_pTexCoordMapping->findTexCoords(m_nDefaultPropertyID, m_nDefaultPropertyIndex, nTextureID, fU, fV)) {
-				if (nTextureID != 0) {
-					PPackageResourceID pID = m_pModel->findPackageResourceID(m_pModel->curPath(), nTextureID);
-					if (pID.get()) {
-						m_pObject->setDefaultProperty(std::make_shared<CModelDefaultProperty_TexCoord2D>(pID->getUniqueID(), fU, fV));
-						hasBeenSet = true;
-					}
-				}
-			}
-
-			if (!hasBeenSet) {
-				m_pWarnings->addException(CNMRException(NMR_ERROR_MISSINGDEFAULTPID), mrwMissingMandatoryValue);
-			}
+			// TODO: Default properties
 		}
 	}
 

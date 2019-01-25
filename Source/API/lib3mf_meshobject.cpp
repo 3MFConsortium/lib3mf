@@ -153,6 +153,27 @@ void CLib3MFMeshObject::GetTriangleIndices (Lib3MF_uint64 nIndicesBufferSize, Li
 	}
 }
 
+void CLib3MFMeshObject::SetTriangleProperties(const Lib3MF_uint32 nIndex, const sLib3MFTriangleProperties Properties)
+{
+
+}
+
+void CLib3MFMeshObject::GetTriangleProperties(const Lib3MF_uint32 nIndex, sLib3MFTriangleProperties & sProperty)
+{
+
+}
+
+void CLib3MFMeshObject::SetAllTriangleProperties(const Lib3MF_uint64 nPropertiesArrayBufferSize, const sLib3MFTriangleProperties * pPropertiesArrayBuffer)
+{
+
+}
+
+void CLib3MFMeshObject::GetAllTriangleProperties(Lib3MF_uint64 nPropertiesArrayBufferSize, Lib3MF_uint64* pPropertiesArrayNeededCount, sLib3MFTriangleProperties * pPropertiesArrayBuffer)
+{
+
+}
+
+
 void CLib3MFMeshObject::SetGeometry(const Lib3MF_uint64 nVerticesBufferSize, const sLib3MFPosition * pVerticesBuffer, const Lib3MF_uint64 nIndicesBufferSize, const sLib3MFTriangle * pIndicesBuffer)
 {
 	if ((!pVerticesBuffer) || (!pIndicesBuffer))

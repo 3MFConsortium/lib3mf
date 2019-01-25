@@ -171,16 +171,6 @@ namespace NMR {
 		return m_eSlicesMeshResolution;
 	}
 
-	void CModelObject::setDefaultProperty(_In_ PModelDefaultProperty pModelDefaultProperty)
-	{
-		m_pModelDefaultProperty = pModelDefaultProperty;
-	}
-
-	PModelDefaultProperty CModelObject::getDefaultProperty()
-	{
-		return m_pModelDefaultProperty;
-	}
-
 	void CModelObject::setThumbnail(_In_ std::string sThumbnail)
 	{
 		m_sThumbnail = sThumbnail;

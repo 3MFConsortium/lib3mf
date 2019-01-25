@@ -108,6 +108,14 @@ public:
 
 	virtual ILib3MFBeamLattice * BeamLattice();
 
+	void SetTriangleProperties(const Lib3MF_uint32 nIndex, const sLib3MFTriangleProperties Properties);
+
+	void GetTriangleProperties(const Lib3MF_uint32 nIndex, sLib3MFTriangleProperties & sProperty);
+
+	void SetAllTriangleProperties(const Lib3MF_uint64 nPropertiesArrayBufferSize, const sLib3MFTriangleProperties * pPropertiesArrayBuffer);
+
+	void GetAllTriangleProperties(Lib3MF_uint64 nPropertiesArrayBufferSize, Lib3MF_uint64* pPropertiesArrayNeededCount, sLib3MFTriangleProperties * pPropertiesArrayBuffer);
+
 };
 
 }

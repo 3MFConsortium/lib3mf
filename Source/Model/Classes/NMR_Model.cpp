@@ -46,7 +46,7 @@ A model is an in memory representation of the 3MF file.
 
 #include "Common/Mesh/NMR_Mesh.h" 
 #include "Common/MeshInformation/NMR_MeshInformation.h" 
-#include "Common/MeshInformation/NMR_MeshInformation_TexCoords.h" 
+#include "Common/MeshInformation/NMR_MeshInformation_Properties.h" 
 #include "Common/NMR_Exception.h" 
 #include <sstream>
 #include <memory>

@@ -39,8 +39,7 @@ XML Model Stream.
 #include "Common/NMR_StringUtils.h"
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_Exception_Windows.h"
-#include "Common/MeshInformation/NMR_MeshInformation_TexCoords.h"
-#include "Common/MeshInformation/NMR_MeshInformation_NodeColors.h"
+#include "Common/MeshInformation/NMR_MeshInformation_Properties.h"
 #include "Model/Classes/NMR_ModelBaseMaterial.h"
 #include "Model/Reader/NMR_ModelReader_ColorMapping.h"
 
@@ -80,66 +79,27 @@ namespace NMR {
 		__NMRASSERT(pAttributeValue);
 	}
 
-	_Ret_notnull_ CMeshInformation_TexCoords * CModelReaderNode093_Triangles::createTexCoordInformation()
+	_Ret_notnull_ CMeshInformation_Properties * CModelReaderNode093_Triangles::createPropertyInformation()
 	{
 		CMeshInformationHandler * pMeshInformationHandler = m_pMesh->createMeshInformationHandler();
 
-		CMeshInformation * pInformation = pMeshInformationHandler->getInformationByType(0, emiTexCoords);
-		CMeshInformation_TexCoords * pTexCoords = nullptr;
+		CMeshInformation * pInformation = pMeshInformationHandler->getInformationByType(0, emiProperties);
+		CMeshInformation_Properties * pProperties = nullptr;
 
 		if (pInformation)
-			pTexCoords = dynamic_cast<CMeshInformation_TexCoords *> (pInformation);
+			pProperties = dynamic_cast<CMeshInformation_Properties *> (pInformation);
 
-		if (!pTexCoords) {
-			PMeshInformation_TexCoords pNewMeshInformation = std::make_shared<CMeshInformation_TexCoords>(m_pMesh->getFaceCount());
+		if (!pProperties) {
+			PMeshInformation_Properties pNewMeshInformation = std::make_shared<CMeshInformation_Properties>(m_pMesh->getFaceCount());
 			pMeshInformationHandler->addInformation(pNewMeshInformation);
 
-			pTexCoords = pNewMeshInformation.get();
+			pProperties = pNewMeshInformation.get();
 		}
 
-		return pTexCoords;
+		return pProperties;
 	}
 
-	_Ret_notnull_ CMeshInformation_NodeColors * CModelReaderNode093_Triangles::createNodeColorInformation()
-	{
-		CMeshInformationHandler * pMeshInformationHandler = m_pMesh->createMeshInformationHandler();
-
-		CMeshInformation * pInformation = pMeshInformationHandler->getInformationByType(0, emiNodeColors);
-		CMeshInformation_NodeColors * pNodeColors = nullptr;
-
-		if (pInformation)
-			pNodeColors = dynamic_cast<CMeshInformation_NodeColors *> (pInformation);
-
-		if (!pNodeColors) {
-			PMeshInformation_NodeColors pNewMeshInformation = std::make_shared<CMeshInformation_NodeColors>(m_pMesh->getFaceCount());
-			pMeshInformationHandler->addInformation(pNewMeshInformation);
-
-			pNodeColors = pNewMeshInformation.get();
-		}
-
-		return pNodeColors;
-	}
-
-	_Ret_notnull_ CMeshInformation_BaseMaterials * CModelReaderNode093_Triangles::createBaseMaterialInformation()
-	{
-		CMeshInformationHandler * pMeshInformationHandler = m_pMesh->createMeshInformationHandler();
-
-		CMeshInformation * pInformation = pMeshInformationHandler->getInformationByType(0, emiBaseMaterials);
-		CMeshInformation_BaseMaterials * pBaseMaterials = nullptr;
-
-		if (pInformation)
-			pBaseMaterials = dynamic_cast<CMeshInformation_BaseMaterials *> (pInformation);
-
-		if (!pBaseMaterials) {
-			PMeshInformation_BaseMaterials pNewMeshInformation = std::make_shared<CMeshInformation_BaseMaterials>(m_pMesh->getFaceCount());
-			pMeshInformationHandler->addInformation(pNewMeshInformation);
-
-			pBaseMaterials = pNewMeshInformation.get();
-		}
-
-		return pBaseMaterials;
-	}
-
+	
 	void CModelReaderNode093_Triangles::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
 	{
 		__NMRASSERT(pChildName);
@@ -157,7 +117,7 @@ namespace NMR {
 				nfInt32 nIndex1, nIndex2, nIndex3;
 				pXMLNode->retrieveIndices(nIndex1, nIndex2, nIndex3, m_pMesh->getNodeCount());
 
-				// Create face if valid
+/*				// Create face if valid
 				if ((nIndex1 != nIndex2) && (nIndex1 != nIndex3) && (nIndex2 != nIndex3)) {
 					MESHNODE * pNode1 = m_pMesh->getNode(nIndex1);
 					MESHNODE * pNode2 = m_pMesh->getNode(nIndex2);
@@ -175,6 +135,7 @@ namespace NMR {
 							nTextureID = m_pColorMapping->getTextureReference(nColorID1);
 						}
 					}
+
 
 					// Create Texture Info
 					if (nTextureID > 0) {
@@ -243,8 +204,8 @@ namespace NMR {
 
 							}
 						}
-					}
-				}
+					} 
+				}*/
 			}
 		}
 	}

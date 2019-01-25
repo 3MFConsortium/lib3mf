@@ -58,9 +58,7 @@ ${SRCS_COM}
 ./Source/Common/MeshInformation/NMR_MeshInformationContainer.cpp
 ./Source/Common/MeshInformation/NMR_MeshInformationFactory.cpp
 ./Source/Common/MeshInformation/NMR_MeshInformationHandler.cpp
-./Source/Common/MeshInformation/NMR_MeshInformation_BaseMaterials.cpp
-./Source/Common/MeshInformation/NMR_MeshInformation_NodeColors.cpp
-./Source/Common/MeshInformation/NMR_MeshInformation_TexCoords.cpp
+./Source/Common/MeshInformation/NMR_MeshInformation_Properties.cpp
 ./Source/Common/Mesh/NMR_Mesh.cpp
 ./Source/Common/Mesh/NMR_BeamLattice.cpp
 ./Source/Common/Mesh/NMR_MeshBuilder.cpp
@@ -109,10 +107,6 @@ ${SRCS_COM}
 ./Source/Model/Classes/NMR_ModelBuildItem.cpp
 ./Source/Model/Classes/NMR_ModelComponent.cpp
 ./Source/Model/Classes/NMR_ModelComponentsObject.cpp
-./Source/Model/Classes/NMR_ModelDefaultProperty.cpp
-./Source/Model/Classes/NMR_ModelDefaultProperty_BaseMaterial.cpp
-./Source/Model/Classes/NMR_ModelDefaultProperty_Color.cpp
-./Source/Model/Classes/NMR_ModelDefaultProperty_TexCoord2D.cpp
 ./Source/Model/Classes/NMR_ModelMeshBeamLatticeAttributes.cpp
 ./Source/Model/Classes/NMR_ModelMeshObject.cpp
 ./Source/Model/Classes/NMR_ModelMetaData.cpp

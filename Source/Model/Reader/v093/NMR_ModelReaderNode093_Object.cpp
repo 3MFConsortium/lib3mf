@@ -39,11 +39,6 @@ Stream.
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Model/Classes/NMR_ModelMeshObject.h"
 
-#include "Model/Classes/NMR_ModelDefaultProperty.h"
-#include "Model/Classes/NMR_ModelDefaultProperty_BaseMaterial.h"
-#include "Model/Classes/NMR_ModelDefaultProperty_Color.h"
-#include "Model/Classes/NMR_ModelDefaultProperty_TexCoord2D.h"
-
 #include "Common/NMR_StringUtils.h"
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_Exception_Windows.h"
@@ -93,42 +88,6 @@ namespace NMR {
 
 		// Set Object Parameters
 		m_pObject->setName(m_sName);
-
-
-		// Set Default Parameters
-		if (m_nColorID > 0) {
-
-			nfColor cColor = 0;
-			if (m_pColorMapping->findColor(m_nColorID, 0, cColor)) {
-				m_pObject->setDefaultProperty(std::make_shared<CModelDefaultProperty_Color>(cColor));
-			}
-			else {
-				if (m_pColorMapping->hasTextureReference(m_nColorID)) {
-					m_pObject->setDefaultProperty(std::make_shared<CModelDefaultProperty_TexCoord2D>(m_nColorID, 0.0f, 0.0f));
-				}
-			}
-
-		}
-		else {
-
-			if (m_nMaterialID > 0) {
-				ModelResourceID nMaterialGroupID = 0;
-				ModelResourceIndex nMaterialIndex = 0;
-
-				if (m_pMaterialResource.get() != nullptr) {
-					ModelResourceIndex nIndex;
-					if (m_pColorMapping->getMaterialReference(m_nMaterialID, nIndex)) {
-						nMaterialGroupID = m_pMaterialResource->getResourceID()->getUniqueID();
-						nMaterialIndex = nIndex;
-					}
-				}
-
-				if (nMaterialGroupID > 0) {
-					m_pObject->setDefaultProperty(std::make_shared<CModelDefaultProperty_BaseMaterial>(nMaterialGroupID, nMaterialIndex));
-				}
-			}
-
-		}
 
 
 		// Set Object Type (might fail, if string is invalid)
