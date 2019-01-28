@@ -223,6 +223,9 @@ namespace NMR {
 		}
 
 		pIndexMapping->findDefaultProperties ();
+
+		return pIndexMapping;
 	}
+
 
 }
