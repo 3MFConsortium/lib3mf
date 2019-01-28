@@ -80,10 +80,13 @@
 		<error name="FORBIDDENCYCLICREFERENCE" code="130" description="A component references one of its ancestors" />
 
 		<error name="INVALIDATTACHMENTSTREAM" code="131" description="An attachment stream is invalid" />
-		
-		<error name="UNKOWNPROGRESSIDENTIFIER" code="140" description="A progress identifier is unknown" />
-		
-		<error name="BEAMLATTICE_INVALID_OBJECTTYPE" code="2000" description="This object type is not valid for beamlattices" />
+
+    <error name="INVALIDPROPERTYCOUNT" code="132" description="Invalid property count." />
+
+    <error name="UNKOWNPROGRESSIDENTIFIER" code="140" description="A progress identifier is unknown" />
+
+
+    <error name="BEAMLATTICE_INVALID_OBJECTTYPE" code="2000" description="This object type is not valid for beamlattices" />
 	</errors>
 
   <enum name="PropertyType">
@@ -177,7 +180,6 @@
 	</struct>
 
   <struct name="TriangleProperties">
-    <member name="PropertyType" type="enum" class="PropertyType" />
     <member name="ResourceID" type="uint32" />
     <member name="PropertyIDs" type="uint32" rows="3" />
   </struct>
