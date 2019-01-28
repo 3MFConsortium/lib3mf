@@ -376,6 +376,9 @@ namespace NMR {
 		case NMR_ERROR_SLICES_SLICEREF_CIRCULAR: return "SliceStack references must not be circular";
 		case NMR_ERROR_SLICES_REFS_Z_NOTINCREASING: return "z-position of slicerefs is not increasing";
 		case NMR_ERROR_SLICES_REFS_LEVELTOODEEP: return "level of slicereferences is too deep";
+		case NMR_ERROR_PROPERTYIDALREADYREGISTERED: return "Property already registered";
+		case NMR_ERROR_INVALIDPROPERTYRESOURCEID: return "Invalid Property Resource ID";
+		case NMR_ERROR_PROPERTYIDNOTFOUND: return "Property ID not found";
 
 
 		// XML Parser Error Constants(0x9XXX)

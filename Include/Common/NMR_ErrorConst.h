@@ -1043,6 +1043,16 @@ Model error codes (0x8XXX)
 // level of slicereferences is too deep
 #define NMR_ERROR_SLICES_REFS_LEVELTOODEEP 0x80CF
 
+// Property already registered
+#define NMR_ERROR_PROPERTYIDALREADYREGISTERED 0x80D0
+
+// Invalid Property Resource ID
+#define NMR_ERROR_INVALIDPROPERTYRESOURCEID 0x80D1
+
+// Property ID not found
+#define NMR_ERROR_PROPERTYIDNOTFOUND 0x80D2
+
+
 /*-------------------------------------------------------------------
 XML Parser Error Constants (0x9XXX)
 -------------------------------------------------------------------*/

@@ -37,19 +37,89 @@ NMR_MeshInformation_Properties.cpp implements the Texture Mesh Information Class
 
 namespace NMR {
 
-	nfUint32 CMeshInformation_PropertyIndexMapping::mapPropertyIDToIndex(nfUint32 nResourceID, nfUint32 nPropertyID)
+
+	CMeshInformation_PropertyIndexMapping::CMeshInformation_PropertyIndexMapping()
 	{
-		return 0;
-	}
-	
-	nfUint32 CMeshInformation_PropertyIndexMapping::getDefaultResourceID()
-	{
-		return 0;
 	}
 
+
+	nfUint32 CMeshInformation_PropertyIndexMapping::getDefaultResourceID()
+	{
+		return m_nDefaultResourceID;
+	}
+	
 	nfUint32 CMeshInformation_PropertyIndexMapping::getDefaultResourceIndex()
 	{
-		return 0;
+		return m_nDefaultResourceIndex;
+	}
+
+
+	nfUint32 CMeshInformation_PropertyIndexMapping::createNewIndex(nfUint32 nResourceID)
+	{
+		nfUint32 nResourceIndex;
+		auto iIterator = m_ResourceMap.find(nResourceID);
+		if (iIterator != m_ResourceMap.end()) {
+			nResourceIndex = iIterator->second;
+			m_ResourceMap.insert(std::make_pair(nResourceID, nResourceIndex + 1));
+		}
+		else {
+			nResourceIndex = 0;
+			m_ResourceMap.insert(std::make_pair(nResourceID, 1));
+		}
+
+		return nResourceID;
+	}
+
+
+	nfUint32 CMeshInformation_PropertyIndexMapping::registerPropertyID(nfUint32 nResourceID, nfUint32 nPropertyID)
+	{
+		nfUint32 nResourceIndex;
+
+		if (nResourceID == 0)
+			throw CNMRException(NMR_ERROR_INVALIDPROPERTYRESOURCEID);
+
+		auto iIterator = m_IDMap.find(std::make_pair(nResourceID, nPropertyID));		
+		if (iIterator != m_IDMap.end()) {
+			nResourceIndex = iIterator->second.first;							
+			m_IDMap.insert(std::make_pair(std::make_pair(nResourceID, nPropertyID), std::make_pair(nResourceIndex, iIterator->second.second++)));
+		}
+		else {
+			nResourceIndex = createNewIndex(nResourceID);
+			m_IDMap.insert(std::make_pair(std::make_pair(nResourceID, nPropertyID), std::make_pair (nResourceIndex, 1)));
+		}
+
+		return nResourceIndex;
+	}
+
+
+	nfUint32 CMeshInformation_PropertyIndexMapping::mapPropertyIDToIndex(nfUint32 nResourceID, nfUint32 nPropertyID)
+	{
+		if (nResourceID == 0)
+			throw CNMRException(NMR_ERROR_INVALIDPROPERTYRESOURCEID);
+
+		auto iIterator = m_IDMap.find(std::make_pair(nResourceID, nPropertyID));
+		if (iIterator == m_IDMap.end())
+			throw CNMRException(NMR_ERROR_PROPERTYIDNOTFOUND);
+
+		return iIterator->second.first;
+	}
+
+
+	void CMeshInformation_PropertyIndexMapping::findDefaultProperties()
+	{
+		nfUint32 nMaxCount = 0;
+		auto iIterator = m_IDMap.begin();
+		while (iIterator != m_IDMap.end()) {
+			nfUint32 nCurrentCount = iIterator->second.second;
+			if (nCurrentCount > nMaxCount) {
+				m_nDefaultResourceID = iIterator->first.first;
+				m_nDefaultResourceIndex = iIterator->second.first;
+
+				nMaxCount = nCurrentCount;
+			}
+
+			iIterator++;
+		}
 	}
 
 
@@ -140,7 +210,19 @@ namespace NMR {
 
 	PMeshInformation_PropertyIndexMapping CMeshInformation_Properties::createIndexMapping()
 	{
-		return std::make_shared<CMeshInformation_PropertyIndexMapping>();
+		auto pIndexMapping = std::make_shared<CMeshInformation_PropertyIndexMapping>();
+		nfUint32 nFaceCount = m_pContainer->getCurrentFaceCount();
+		nfUint32 nFaceIndex;
+
+		for (nFaceIndex = 0; nFaceIndex < nFaceCount; nFaceIndex++) {
+			MESHINFORMATION_PROPERTIES * pFaceData = (MESHINFORMATION_PROPERTIES*)getFaceData(nFaceIndex);
+			if (pFaceData) {
+				for (unsigned int j = 0; j < 3; j++)
+					pIndexMapping->registerPropertyID(pFaceData->m_nResourceID, pFaceData->m_nPropertyIDs[j]);
+			}
+		}
+
+		pIndexMapping->findDefaultProperties ();
 	}
 
 }

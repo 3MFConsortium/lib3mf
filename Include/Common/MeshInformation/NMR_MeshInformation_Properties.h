@@ -40,11 +40,25 @@ NMR_MeshInformation_Properties.h defines the Property Information Class.
 namespace NMR {
 
 	class CMeshInformation_PropertyIndexMapping {
+	private:
+		nfUint32 m_nDefaultResourceID;
+		nfUint32 m_nDefaultResourceIndex;
+
+		std::map<nfUint32, nfUint32> m_ResourceMap;
+		std::map<std::pair <nfUint32, nfUint32>, std::pair <nfUint32, nfUint32>> m_IDMap;
+
+		nfUint32 createNewIndex(nfUint32 nResourceID);
 	public:
+		CMeshInformation_PropertyIndexMapping();
+
 		nfUint32 mapPropertyIDToIndex(nfUint32 nResourceID, nfUint32 nPropertyID);
 		
 		nfUint32 getDefaultResourceID ();
 		nfUint32 getDefaultResourceIndex ();
+
+		nfUint32 registerPropertyID (nfUint32 nResourceID, nfUint32 nPropertyID);
+
+		void findDefaultProperties ();
 	};
 
 	typedef std::shared_ptr <CMeshInformation_PropertyIndexMapping> PMeshInformation_PropertyIndexMapping;
@@ -66,7 +80,7 @@ namespace NMR {
 		virtual void mergeInformationFrom(_In_ CMeshInformation * pInformation);
 		virtual nfBool faceHasData(_In_ nfUint32 nFaceIndex);
 
-		PMeshInformation_PropertyIndexMapping createIndexMapping();
+		PMeshInformation_PropertyIndexMapping createIndexMapping ();
 	};
 
 	typedef std::shared_ptr <CMeshInformation_Properties> PMeshInformation_Properties;
