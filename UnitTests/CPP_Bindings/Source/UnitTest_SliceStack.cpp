@@ -74,6 +74,20 @@ namespace Lib3MF
 		ASSERT_FALSE(mesh->HasSliceStack());
 	}
 
+	TEST_F(SliceStack, SliceResolution)
+	{
+		ASSERT_FALSE(mesh->HasSliceStack());
+
+		eLib3MFSlicesMeshResolution res = mesh->GetSlicesMeshResolution();
+		ASSERT_EQ(res, eLib3MFSlicesMeshResolution::eSlicesMeshResolutionFullres);
+
+		mesh->SetSlicesMeshResolution(eLib3MFSlicesMeshResolution::eSlicesMeshResolutionLowres);
+		ASSERT_EQ(mesh->GetSlicesMeshResolution(), eLib3MFSlicesMeshResolution::eSlicesMeshResolutionLowres);
+
+		mesh->SetSlicesMeshResolution(eLib3MFSlicesMeshResolution::eSlicesMeshResolutionFullres);
+		ASSERT_EQ(mesh->GetSlicesMeshResolution(), eLib3MFSlicesMeshResolution::eSlicesMeshResolutionFullres);
+	}
+
 	TEST_F(SliceStack, AddSlicesNegative)
 	{
 		ASSERT_EQ(sliceStack->GetSliceCount(), 0);
@@ -246,6 +260,32 @@ namespace Lib3MF
 	};
 
 	TEST_F(SliceStackWriting, DISABLED_WriteSliceFile)
+	{
+		ASSERT_FALSE(true);
+	}
+
+
+
+	class SliceStackReading : public ::testing::Test {
+	protected:
+
+		static void SetUpTestCase() {
+		}
+
+		static void TearDownTestCase() {
+		}
+
+		virtual void SetUp() {
+			model = CLib3MFWrapper::CreateModel();
+		}
+		virtual void TearDown() {
+			model.reset();
+		}
+
+		PLib3MFModel model;
+	};
+
+	TEST_F(SliceStackReading, DISABLED_ReadSliceFile)
 	{
 		ASSERT_FALSE(true);
 	}

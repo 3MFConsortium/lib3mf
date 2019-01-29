@@ -90,7 +90,7 @@ namespace NMR {
 	{
 		if (nPolygonIndex >= m_Polygons.size())
 			throw CNMRException(NMR_ERROR_INVALIDINDEX);
-		m_Polygons.clear();
+		m_Polygons[nPolygonIndex].clear();
 	}
 
 	void CSlice::addPolygonIndex(nfUint32 nPolygonIndex, nfUint32 nIndex)
