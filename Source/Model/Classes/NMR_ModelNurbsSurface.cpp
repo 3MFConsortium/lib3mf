@@ -328,8 +328,12 @@ namespace NMR {
 
 			return true;
 		}
-		else
+		else {
+			fU = 0.0;
+			fV = 0.0;
+
 			return false;
+		}
 	}
 
 	void CModelNurbsSurface::setUVBounds(nfDouble dMinU, nfDouble dMinV, nfDouble dMaxU, nfDouble dMaxV)
@@ -361,6 +365,30 @@ namespace NMR {
 
 			iIterator++;
 		}
+	}
+
+	void CModelNurbsSurface::removeUVCoordinate(_In_ nfUint32 nID)
+	{
+		m_UVCoords.erase(nID);
+	}
+
+
+	void CModelNurbsSurface::registerProperties(nfUint32 nResourceID, CMeshInformation_PropertyIndexMapping * pPropertyMapping, std::vector<sModelNurbsUVCoord> & ValueList)
+	{
+		if (pPropertyMapping == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		auto iIterator = m_UVCoords.begin ();
+		while (iIterator != m_UVCoords.end()) {
+			nfUint32 nResourceIndex = (nfUint32)ValueList.size();
+			ValueList.push_back(iIterator->second);
+			
+			nfUint32 nPropertyID = iIterator->first;
+			pPropertyMapping->registerPropertyID(nResourceID, nPropertyID, nResourceIndex);
+			
+			iIterator++;
+		}
+
 	}
 
 }

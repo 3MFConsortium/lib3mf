@@ -308,7 +308,7 @@ These are given by the 3MF Standard
 #define XML_3MF_ATTRIBUTE_NURBS_DEGREEU             "degreeu"
 #define XML_3MF_ATTRIBUTE_NURBS_DEGREEV             "degreev"
 #define XML_3MF_ATTRIBUTE_NURBS_MULTIPLICITY        "multiplicity"
-#define XML_3MF_ATTRIBUTE_NURBS_VALUE               "degreev"
+#define XML_3MF_ATTRIBUTE_NURBS_VALUE               "value"
 #define XML_3MF_ATTRIBUTE_NURBS_X                   "x"
 #define XML_3MF_ATTRIBUTE_NURBS_Y                   "y"
 #define XML_3MF_ATTRIBUTE_NURBS_Z                   "z"

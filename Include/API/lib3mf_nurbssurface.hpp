@@ -104,11 +104,15 @@ public:
 
 	void GetUVCoordinates(Lib3MF_uint64 nUVCoordinatesBufferSize, Lib3MF_uint64* pUVCoordinatesNeededCount, sLib3MFNURBSUVCoordinate * pUVCoordinatesBuffer);
 
-	void AddUVCoordinate(const sLib3MFNURBSUVCoordinate UVCoordinate, Lib3MF_uint32 & nId);
+	Lib3MF_uint32 AddUVCoordinate(const Lib3MF_double dU, const Lib3MF_double dV);
 
 	void RemoveUVCoordinate(const Lib3MF_uint32 nId);
 
-	void HasUVCoordinate(const Lib3MF_uint32 nId, bool & bExists);
+	bool HasUVCoordinate(const Lib3MF_uint32 nId);
+
+	void SetControlPoint(const Lib3MF_uint32 nIndexU, const Lib3MF_uint32 nIndexV, const Lib3MF_double dX, const Lib3MF_double dY, const Lib3MF_double dZ, const Lib3MF_double dW);
+
+	void GetControlPoint(const Lib3MF_uint32 nIndexU, const Lib3MF_uint32 nIndexV, Lib3MF_double & dX, Lib3MF_double & dY, Lib3MF_double & dZ, Lib3MF_double & dW);
 
 };
 

@@ -44,10 +44,7 @@ namespace NMR {
 		nfUint32 m_nDefaultResourceID;
 		nfUint32 m_nDefaultResourceIndex;
 
-		std::map<nfUint32, nfUint32> m_ResourceMap;
-		std::map<std::pair <nfUint32, nfUint32>, std::pair <nfUint32, nfUint32>> m_IDMap;
-
-		nfUint32 createNewIndex(nfUint32 nResourceID);
+		std::map<std::pair <nfUint32, nfUint32>, nfUint32> m_IDMap;
 	public:
 		CMeshInformation_PropertyIndexMapping();
 
@@ -56,9 +53,8 @@ namespace NMR {
 		nfUint32 getDefaultResourceID ();
 		nfUint32 getDefaultResourceIndex ();
 
-		nfUint32 registerPropertyID (nfUint32 nResourceID, nfUint32 nPropertyID);
+		nfUint32 registerPropertyID (nfUint32 nResourceID, nfUint32 nPropertyID, nfUint32 nResourceIndex);
 
-		void findDefaultProperties ();
 	};
 
 	typedef std::shared_ptr <CMeshInformation_PropertyIndexMapping> PMeshInformation_PropertyIndexMapping;
@@ -80,7 +76,7 @@ namespace NMR {
 		virtual void mergeInformationFrom(_In_ CMeshInformation * pInformation);
 		virtual nfBool faceHasData(_In_ nfUint32 nFaceIndex);
 
-		PMeshInformation_PropertyIndexMapping createIndexMapping ();
+
 	};
 
 	typedef std::shared_ptr <CMeshInformation_Properties> PMeshInformation_Properties;

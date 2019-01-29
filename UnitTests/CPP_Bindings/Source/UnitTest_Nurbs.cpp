@@ -66,7 +66,35 @@ namespace Lib3MF
 	TEST_F(Nurbs, Export)
 	{
 
-		auto surface = Nurbs::model->AddNurbsSurface (3, 3, 8, 8);
+		auto surface = Nurbs::model->AddNurbsSurface(3, 3, 4, 4);
+		surface->AddKnotU(4, 0.0);
+		surface->AddKnotU(4, 1.0);
+		surface->AddKnotV(4, 0.0);
+		surface->AddKnotV(4, 1.0);
+
+		surface->AddUVCoordinate(0.5, 0.5);
+		surface->AddUVCoordinate(0.75, 0.5);
+		surface->AddUVCoordinate(0.5, 0.75);
+
+		surface->SetControlPoint(0, 0, 0.0, 0.0, 1.0, 1.0);
+		surface->SetControlPoint(1, 0, 0.0, 0.0, 1.0, 1.0 / 3.0);
+		surface->SetControlPoint(2, 0, 0.0, 0.0, 1.0, 1.0 / 3.0);
+		surface->SetControlPoint(3, 0, 0.0, 0.0, 1.0, 1.0);
+
+		surface->SetControlPoint(0, 1, 2.0, 0.0, 1.0, 1.0 / 3.0);
+		surface->SetControlPoint(1, 1, 2.0, 4.0, 1.0, 1.0 / 9.0);
+		surface->SetControlPoint(2, 1, -2.0, 4.0, 1.0, 1.0 / 9.0);
+		surface->SetControlPoint(3, 1, -2.0, 0.0, 1.0, 1.0 / 3.0);
+
+		surface->SetControlPoint(0, 2, 2.0, 0.0, -1.0, 1.0 / 3.0);
+		surface->SetControlPoint(1, 2, 2.0, 4.0, -1.0, 1.0 / 9.0);
+		surface->SetControlPoint(2, 2, -2.0, 4.0, -1.0, 1.0 / 9.0);
+		surface->SetControlPoint(3, 2, -2.0, 0.0, -1.0, 1.0 / 3.0);
+
+		surface->SetControlPoint(0, 3, 0.0, 0.0, -1.0, 1.0);
+		surface->SetControlPoint(1, 3, 0.0, 0.0, -1.0, 1.0 / 3.0);
+		surface->SetControlPoint(2, 3, 0.0, 0.0, -1.0, 1.0 / 3.0);
+		surface->SetControlPoint(3, 3, 0.0, 0.0, -1.0, 1.0);
 
 		auto writer = Nurbs::model->QueryWriter("3mf");
 		writer->WriteToFile(sOutFilesPath + "nurbstest1.3mf");

@@ -828,8 +828,9 @@
     </method>
 
     <method name="AddUVCoordinate" description = "Retrieves the UV Coordinates of the surface.">
-      <param name="UVCoordinate" type="struct" class="NURBSUVCoordinate" pass="in" description="the uv coordinate to add." />
-      <param name="Id" type="uint32" pass="out" description="Id of the coordinate." />
+      <param name="U" type="double" pass="in" description="the u coordinate to add." />
+      <param name="V" type="double" pass="in" description="the v coordinate to add." />
+      <param name="Id" type="uint32" pass="return" description="Id of the coordinate." />
     </method>
 
     <method name="RemoveUVCoordinate" description = "Remove a UV Coordinate of the surface.">
@@ -838,7 +839,25 @@
 
     <method name="HasUVCoordinate" description = "Checks if the surface has a UV Coordinate.">
       <param name="Id" type="uint32" pass="in" description="Id of the coordinate." />
-      <param name="Exists" type="bool" pass="out" description="Boolean of the ID coordinate." />
+      <param name="Exists" type="bool" pass="return" description="Boolean of the ID coordinate." />
+    </method>
+
+    <method name="SetControlPoint" description = "Sets the coordinates of a control point.">
+      <param name="IndexU" type="uint32" pass="in" description="Index in U." />
+      <param name="IndexV" type="uint32" pass="in" description="Index in V." />
+      <param name="X" type="double" pass="in" description="Position X" />
+      <param name="Y" type="double" pass="in" description="Position Y" />
+      <param name="Z" type="double" pass="in" description="Position Z" />
+      <param name="W" type="double" pass="in" description="Weight" />
+    </method>
+
+    <method name="GetControlPoint" description = "Gets the coordinates of a control point.">
+      <param name="IndexU" type="uint32" pass="in" description="Index in U." />
+      <param name="IndexV" type="uint32" pass="in" description="Index in V." />
+      <param name="X" type="double" pass="out" description="Position X" />
+      <param name="Y" type="double" pass="out" description="Position Y" />
+      <param name="Z" type="double" pass="out" description="Position Z" />
+      <param name="W" type="double" pass="out" description="Weight" />
     </method>
 
   </class>

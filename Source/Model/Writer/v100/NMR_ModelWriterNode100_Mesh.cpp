@@ -33,7 +33,6 @@ This is the class for exporting the 3mf mesh node.
 
 #include "Model/Writer/v100/NMR_ModelWriterNode100_Mesh.h"
 #include "Common/MeshInformation/NMR_MeshInformation_Properties.h"
-#include "Common/MeshInformation/NMR_MeshInformation_Nurbs.h"
 
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_Exception_Windows.h"
@@ -53,13 +52,11 @@ namespace NMR {
 	const int CModelWriterNode100_Mesh::m_snPutDoubleFactor = (int)(pow(10, CModelWriterNode100_Mesh::m_snPosAfterDecPoint));
 
 	CModelWriterNode100_Mesh::CModelWriterNode100_Mesh(_In_ CModelMeshObject * pModelMeshObject, _In_ CXmlWriter * pXMLWriter, _In_ CProgressMonitor * pProgressMonitor,
-		_In_ PModelWriter_ColorMapping pColorMapping, _In_ PModelWriter_TexCoordMappingContainer pTextureMappingContainer, _In_ nfBool bWriteMaterialExtension, _In_ nfBool bWriteBeamLatticeExtension, _In_ nfBool bWriteNurbsExtension)
+		_In_ PMeshInformation_PropertyIndexMapping pPropertyIndexMapping, _In_ nfBool bWriteMaterialExtension, _In_ nfBool bWriteBeamLatticeExtension, _In_ nfBool bWriteNurbsExtension)
 		:CModelWriterNode(pModelMeshObject->getModel(), pXMLWriter, pProgressMonitor)
 	{
 		__NMRASSERT(pModelMeshObject != nullptr);
-		if (!pColorMapping.get())
-			throw CNMRException(NMR_ERROR_INVALIDPARAM);
-		if (!pTextureMappingContainer.get())
+		if (!pPropertyIndexMapping.get())
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
 		m_bWriteMaterialExtension = bWriteMaterialExtension;
@@ -67,8 +64,7 @@ namespace NMR {
 		m_bWriteNurbsExtension = bWriteNurbsExtension;
 
 		m_pModelMeshObject = pModelMeshObject;
-		m_pColorMapping = pColorMapping;
-		m_pTextureMappingContainer = pTextureMappingContainer;
+		m_pPropertyIndexMapping = pPropertyIndexMapping;
 
 		// Initialize buffer arrays
 		m_nTriangleBufferPos = 0;
@@ -142,26 +138,18 @@ namespace NMR {
 
 		// Retrieve Mesh Informations
 		CMeshInformation_Properties * pProperties = NULL;
-		CMeshInformation_Nurbs * pNurbs = NULL;
 		
 		CMeshInformationHandler * pMeshInformationHandler = pMesh->getMeshInformationHandler();
 		if (pMeshInformationHandler) {
 			CMeshInformation * pInformation;
 
 			// Get Base Materials
-			pInformation = pMeshInformationHandler->getInformationByType(0, emiBaseMaterials);
+			pInformation = pMeshInformationHandler->getInformationByType(0, emiProperties);
 			if (pInformation)
 				pProperties = dynamic_cast<CMeshInformation_Properties *> (pInformation);
 
 		}
-
-
-		// Prepare PropertyMapping
-		PMeshInformation_PropertyIndexMapping pPropertyIndexMapping;
-		if (pProperties != nullptr) {
-			pPropertyIndexMapping = pProperties->createIndexMapping ();
-		}
-
+		
 		// Write Triangles
 		writeStartElement(XML_3MF_ELEMENT_TRIANGLES);
 		for (nFaceIndex = 0; nFaceIndex < nFaceCount; nFaceIndex++) {
@@ -180,13 +168,15 @@ namespace NMR {
 
 			nfChar * pAdditionalString = nullptr;
 			// Retrieve Property Indices
-			if (pPropertyIndexMapping.get() != nullptr) {
+			if (pProperties != nullptr) {
 				MESHINFORMATION_PROPERTIES* pFaceData = (MESHINFORMATION_PROPERTIES*)pProperties->getFaceData(nFaceIndex);
-				if (pFaceData->m_nResourceID) {
-					nPropertyID = pFaceData->m_nResourceID;
-					nPropertyIndex1 = pPropertyIndexMapping->mapPropertyIDToIndex(nPropertyID, pFaceData->m_nPropertyIDs[0]);
-					nPropertyIndex2 = pPropertyIndexMapping->mapPropertyIDToIndex(nPropertyID, pFaceData->m_nPropertyIDs[1]);
-					nPropertyIndex3 = pPropertyIndexMapping->mapPropertyIDToIndex(nPropertyID, pFaceData->m_nPropertyIDs[2]);
+				if (pFaceData != nullptr) {
+					if (pFaceData->m_nResourceID) {
+						nPropertyID = pFaceData->m_nResourceID;
+						nPropertyIndex1 = m_pPropertyIndexMapping->mapPropertyIDToIndex(nPropertyID, pFaceData->m_nPropertyIDs[0]);
+						nPropertyIndex2 = m_pPropertyIndexMapping->mapPropertyIDToIndex(nPropertyID, pFaceData->m_nPropertyIDs[1]);
+						nPropertyIndex3 = m_pPropertyIndexMapping->mapPropertyIDToIndex(nPropertyID, pFaceData->m_nPropertyIDs[2]);
+					}
 				}
 			}
 

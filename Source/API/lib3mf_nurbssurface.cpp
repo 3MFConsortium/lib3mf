@@ -209,19 +209,29 @@ void CLib3MFNurbsSurface::GetUVCoordinates(Lib3MF_uint64 nUVCoordinatesBufferSiz
 	
 }
 
-void CLib3MFNurbsSurface::AddUVCoordinate(const sLib3MFNURBSUVCoordinate UVCoordinate, Lib3MF_uint32 & nId)
+Lib3MF_uint32 CLib3MFNurbsSurface::AddUVCoordinate(const Lib3MF_double dU, const Lib3MF_double dV)
 {
-	nId = m_pNurbsSurface->addUVCoordinate(UVCoordinate.m_U, UVCoordinate.m_V);
+	return m_pNurbsSurface->addUVCoordinate(dU, dV);
 }
 
 void CLib3MFNurbsSurface::RemoveUVCoordinate(const Lib3MF_uint32 nId)
 {
-
+	m_pNurbsSurface->removeUVCoordinate(nId);
 }
 
-void CLib3MFNurbsSurface::HasUVCoordinate(const Lib3MF_uint32 nId, bool & bExists)
+bool CLib3MFNurbsSurface::HasUVCoordinate(const Lib3MF_uint32 nId)
 {
-
+	double dU, dV;
+	return m_pNurbsSurface->getUVCoordinate (nId, dU, dV);
 }
 
 
+void CLib3MFNurbsSurface::SetControlPoint(const Lib3MF_uint32 nIndexU, const Lib3MF_uint32 nIndexV, const Lib3MF_double dX, const Lib3MF_double dY, const Lib3MF_double dZ, const Lib3MF_double dW)
+{
+	m_pNurbsSurface->setControlPoint(nIndexU, nIndexV, dX, dY, dZ, dW);
+}
+
+void CLib3MFNurbsSurface::GetControlPoint(const Lib3MF_uint32 nIndexU, const Lib3MF_uint32 nIndexV, Lib3MF_double & dX, Lib3MF_double & dY, Lib3MF_double & dZ, Lib3MF_double & dW)
+{
+	m_pNurbsSurface->getControlPoint(nIndexU, nIndexV, dX, dY, dZ, dW);
+}

@@ -45,6 +45,9 @@ NMR_ModelNurbsSurface.h defines the Model Nurbs Surface Class.
 #include <functional>
 #include <string>
 
+#include "Common/MeshInformation/NMR_MeshInformation_Properties.h"
+
+
 #define MAXNURBSDEGREE 32
 #define MAXNURBSCONTROLPOINTS 16384
 #define MAXNURBSKNOTS 65536
@@ -127,11 +130,13 @@ namespace NMR {
 		nfUint32 addUVCoordinate (_In_ nfDouble fU, _In_ nfDouble fV);
 		nfBool getUVCoordinate (_In_ nfUint32 nID, _Out_ nfDouble & fU, _Out_ nfDouble & fV);
 		nfUint32 getUVCoordinateCount();
+		void removeUVCoordinate(_In_ nfUint32 nID);
 		void walkUVCoordinates(NurbsSurfaceUVWalker Walker);
 
 		void setUVBounds(nfDouble dMinU, nfDouble dMinV, nfDouble dMaxU, nfDouble dMaxV);
 		void getUVBounds(nfDouble & dMinU, nfDouble & dMinV, nfDouble & dMaxU, nfDouble & dMaxV);
 
+		void registerProperties (nfUint32 nResourceID, CMeshInformation_PropertyIndexMapping * pPropertyMapping, std::vector<sModelNurbsUVCoord> & ValueList);
 
 
 	};
