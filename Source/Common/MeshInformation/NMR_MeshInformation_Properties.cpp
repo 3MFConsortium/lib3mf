@@ -60,7 +60,7 @@ namespace NMR {
 		auto iIterator = m_ResourceMap.find(nResourceID);
 		if (iIterator != m_ResourceMap.end()) {
 			nResourceIndex = iIterator->second;
-			m_ResourceMap.insert(std::make_pair(nResourceID, nResourceIndex + 1));
+			iIterator->second++;			
 		}
 		else {
 			nResourceIndex = 0;
@@ -81,7 +81,7 @@ namespace NMR {
 		auto iIterator = m_IDMap.find(std::make_pair(nResourceID, nPropertyID));		
 		if (iIterator != m_IDMap.end()) {
 			nResourceIndex = iIterator->second.first;							
-			m_IDMap.insert(std::make_pair(std::make_pair(nResourceID, nPropertyID), std::make_pair(nResourceIndex, iIterator->second.second++)));
+			iIterator->second.second++;			
 		}
 		else {
 			nResourceIndex = createNewIndex(nResourceID);
