@@ -47,7 +47,7 @@ namespace NMR {
 		nfFloat  m_BottomZ;
 		nfUint32 m_Id;
 
-		PSliceStackGeometry m_pSliceStack;
+		PModelSliceStack m_pSliceStackResource;
 		std::string m_sSlicePath;
 
 		int m_nProgressCounter;

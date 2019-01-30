@@ -963,6 +963,9 @@
 		<method name="GetBaseMaterialGroups" description="creates a resource iterator instance with all base material resources.">
 			<param name="ResourceIterator" type="handle" class="ResourceIterator" pass="return" description="returns the iterator instance." />
 		</method>
+		<method name="GetSliceStacks" description="creates a resource iterator instance with all slice stack resources.">
+			<param name="ResourceIterator" type="handle" class="ResourceIterator" pass="return" description="returns the iterator instance." />
+		</method>
 		<method name="MergeToModel" description = "Merges all components and objects which are referenced by a build item into a mesh. The memory is duplicated and a new model is created.">
 			<param name="MergedModelInstance" type="handle" class="Model" pass="return" description="returns the merged model instance" />
 		</method>

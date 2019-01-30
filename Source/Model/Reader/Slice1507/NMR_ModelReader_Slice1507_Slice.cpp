@@ -60,26 +60,23 @@ namespace NMR {
 		}
 	}
 
-	CModelReaderNode_Slices1507_Slice::CModelReaderNode_Slices1507_Slice(_In_ CSliceStackGeometry *pSliceStack, _In_ PModelReaderWarnings pWarnings) : CModelReaderNode(pWarnings) {
+	CModelReaderNode_Slices1507_Slice::CModelReaderNode_Slices1507_Slice(_In_ CModelSliceStack *pSliceStack, _In_ PModelReaderWarnings pWarnings) : CModelReaderNode(pWarnings) {
 		m_pSliceStack = pSliceStack;
 		m_bHasZTop = false;
 	}
 
 	void CModelReaderNode_Slices1507_Slice::parseXML(_In_ CXmlReader * pXMLReader) {
-		m_Slice = std::make_shared<CSlice>(0.0f);
-
 		// Parse name
 		parseName(pXMLReader);
 
 		// Parse attribute
 		parseAttributes(pXMLReader);
 
+		m_Slice = m_pSliceStack->AddSlice(m_TopZ);
+
 		// Parse Content
 		parseContent(pXMLReader);
 		if (!m_bHasZTop)
 			throw CNMRException(NMR_ERROR_MISSINGTEZTOP);
-
-		m_Slice->setTopZ(m_TopZ);
-		m_pSliceStack->addSlice(m_Slice);
 	}
 }

@@ -155,32 +155,35 @@ namespace NMR {
 
 		nfUint32 nCount = pModel->getSliceStackCount();
 
-		if (nCount > 0) {
-			nfUint32 nIndex;
-			for (nIndex = 0; nIndex < nCount; nIndex++) {
-				if (!m_pProgressMonitor->Progress(double(nIndex) / nCount, ProgressIdentifier::PROGRESS_WRITENONROOTMODELS))
-					throw CNMRException(NMR_USERABORTED);
-				CModelSliceStack* pSliceStackResource = dynamic_cast<CModelSliceStack*>(pModel->getSliceStackResource(nIndex).get());
-				CSliceStackGeometry* pSliceStackGeometry = pSliceStackResource->Geometry().get();
-				if (pSliceStackGeometry->usesSliceRef()) {
-					PExportStreamMemory p = std::make_shared<CExportStreamMemory>();
+		for (nfUint32 nIndex = 0; nIndex < nCount; nIndex++) {
+			if (!m_pProgressMonitor->Progress(double(nIndex) / nCount, ProgressIdentifier::PROGRESS_WRITENONROOTMODELS))
+				throw CNMRException(NMR_USERABORTED);
+			CModelSliceStack* pSliceStackResource = dynamic_cast<CModelSliceStack*>(pModel->getSliceStackResource(nIndex).get());
 
-					PXmlWriter_Native pXMLWriter = std::make_shared<CXmlWriter_Native>(p);
-					writeSlicestackStream(pXMLWriter.get(), pModel, pSliceStackResource);
+			//if (!pSliceStackResource->sliceRefPath().empty()) {
+			//	throw CNMRException(NMR_USERABORTED);
+			//}
 
-					PImportStream pStream = std::make_shared<CImportStream_Memory>(p->getData(), p->getDataSize());
-					// check, whether that's already in here
-					PModelAttachment pSliceRefAttachment = m_pModel->findModelAttachment(pSliceStackResource->sliceRefPath());
-					if (pSliceRefAttachment.get() != nullptr) {
-						if (pSliceRefAttachment->getRelationShipType() != PACKAGE_START_PART_RELATIONSHIP_TYPE)
-							throw CNMRException(NMR_ERROR_DUPLICATEATTACHMENTPATH);
-						pSliceRefAttachment->setStream(pStream);
-					}
-					else
-						m_pModel->addAttachment(pSliceStackResource->sliceRefPath(), PACKAGE_START_PART_RELATIONSHIP_TYPE, pStream);
-				}
-			}
+			//CSliceStackGeometry* pSliceStackGeometry = pSliceStackResource->Geometry().get();
+			//if (pSliceStackGeometry->usesSliceRef()) {
+			//	PExportStreamMemory p = std::make_shared<CExportStreamMemory>();
+
+			//	PXmlWriter_Native pXMLWriter = std::make_shared<CXmlWriter_Native>(p);
+			//	writeSlicestackStream(pXMLWriter.get(), pModel, pSliceStackResource);
+
+			//	PImportStream pStream = std::make_shared<CImportStream_Memory>(p->getData(), p->getDataSize());
+			//	// check, whether that's already in here
+			//	PModelAttachment pSliceRefAttachment = m_pModel->findModelAttachment(pSliceStackResource->sliceRefPath());
+			//	if (pSliceRefAttachment.get() != nullptr) {
+			//		if (pSliceRefAttachment->getRelationShipType() != PACKAGE_START_PART_RELATIONSHIP_TYPE)
+			//			throw CNMRException(NMR_ERROR_DUPLICATEATTACHMENTPATH);
+			//		pSliceRefAttachment->setStream(pStream);
+			//	}
+			//	else
+			//		m_pModel->addAttachment(pSliceStackResource->sliceRefPath(), PACKAGE_START_PART_RELATIONSHIP_TYPE, pStream);
+			//}
 		}
+		
 	}
 
 	void CModelWriter_3MF_Native::addAttachments(_In_ CModel * pModel, _In_ POpcPackageWriter pPackageWriter, _In_ POpcPackagePart pModelPart)

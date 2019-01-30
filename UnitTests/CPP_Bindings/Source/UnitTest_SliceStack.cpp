@@ -231,13 +231,22 @@ namespace Lib3MF
 	{
 		stackA->AddSliceStackReference(stackB.get());
 		stackA->AddSliceStackReference(stackC.get());
-		
+
 		stackA->CollapseSliceReferences();
 
 		ASSERT_EQ(stackA->GetSliceCount(), 2);
 	}
 
-
+	TEST_F(SliceStackArrangement, GetSliceStacks)
+	{
+		auto stacks = model->GetSliceStacks();
+		int count = 0;
+		while (stacks->MoveNext()) {
+			auto stack = stacks->GetCurrent();
+			count++;
+		}
+		ASSERT_EQ(count, 3);
+	}
 
 
 	class SliceStackWriting : public ::testing::Test {
@@ -251,17 +260,125 @@ namespace Lib3MF
 
 		virtual void SetUp() {
 			model = CLib3MFWrapper::CreateModel();
+			stackWithSlices = model->AddSliceStack(1.);
+			auto slice = stackWithSlices->AddSlice(2.);
+
+			writer = model->QueryWriter("3mf");
+
+			std::vector<sLib3MFPosition2D> vVertices;
+			sLib3MFPosition2D pos;
+			pos.m_coordinates[0] = 0;
+			pos.m_coordinates[1] = 0;
+			vVertices.push_back(pos);
+
+			pos.m_coordinates[0] = 0;
+			pos.m_coordinates[1] = 1;
+			vVertices.push_back(pos);
+
+			pos.m_coordinates[0] = 1;
+			pos.m_coordinates[1] = 1;
+			vVertices.push_back(pos);
+
+			pos.m_coordinates[0] = 1;
+			pos.m_coordinates[1] = 0;
+			vVertices.push_back(pos);
+
+			std::vector<Lib3MF_uint32> vOpenPolygon;
+			vOpenPolygon.push_back(0);
+			vOpenPolygon.push_back(1);
+			vOpenPolygon.push_back(2);
+
+			slice->SetVertices(vVertices);
+			slice->AddPolygon(vOpenPolygon);
 		}
 		virtual void TearDown() {
 			model.reset();
 		}
 
 		PLib3MFModel model;
+		PLib3MFSliceStack stackWithSlices;
+		PLib3MFWriter writer;
 	};
 
-	TEST_F(SliceStackWriting, DISABLED_WriteSliceFile)
+	void CompareSliceStacks(PLib3MFSliceStack A, PLib3MFSliceStack B)
+	{
+		EXPECT_TRUE(abs(A->GetBottomZ() - B->GetBottomZ())<1e-5);
+
+		ASSERT_EQ(A->GetSliceCount(), B->GetSliceCount());
+		for (int i = 0; i < A->GetSliceCount(); i++) {
+			auto slice = A->GetSlice(i);
+			auto readSlice = B->GetSlice(i);
+
+			ASSERT_EQ(slice->GetPolygonCount(), readSlice->GetPolygonCount());
+			ASSERT_EQ(slice->GetVertexCount(), readSlice->GetVertexCount());
+		}
+
+		ASSERT_EQ(A->GetSliceRefCount(), B->GetSliceRefCount());
+		for (int i = 0; i < A->GetSliceRefCount(); i++) {
+			auto sliceRef = A->GetSliceStackReference(i);
+			auto readSliceRef = B->GetSliceStackReference(i);
+
+			CompareSliceStacks(sliceRef, readSliceRef);
+		}
+	}
+
+	void checkSliceModels(PLib3MFModel A, PLib3MFModel B)
+	{
+		auto stacks = A->GetSliceStacks();
+		auto readStacks = B->GetSliceStacks();
+		while (readStacks->MoveNext()) {
+			ASSERT_TRUE(stacks->MoveNext());
+
+			auto stack = A->GetSliceStackByID(stacks->GetCurrent()->GetResourceID());
+			auto readStack = B->GetSliceStackByID(readStacks->GetCurrent()->GetResourceID());
+
+			CompareSliceStacks(stack, readStack);
+		}
+	}
+
+	TEST_F(SliceStackWriting, WriteSlices)
+	{
+		std::vector<Lib3MF_uint8> buffer;
+		writer->WriteToBuffer(buffer);
+
+		writer->WriteToFile("WriteSlices.3mf");
+
+		auto readModel = CLib3MFWrapper::CreateModel();
+		auto reader = readModel->QueryReader("3mf");
+		reader->ReadFromBuffer(buffer);
+
+		checkSliceModels(model, readModel);
+	}
+
+	TEST_F(SliceStackWriting, WriteSliceReference)
+	{
+		auto stack2 = model->AddSliceStack(0);
+		stack2->AddSliceStackReference(stackWithSlices.get());
+
+		std::vector<Lib3MF_uint8> buffer;
+		writer->WriteToBuffer(buffer);
+
+		auto readModel = CLib3MFWrapper::CreateModel();
+		auto reader = readModel->QueryReader("3mf");
+		reader->ReadFromBuffer(buffer);
+
+		checkSliceModels(model, readModel);
+	}
+
+	TEST_F(SliceStackWriting, WriteSliceReferenceOutOfPlace)
 	{
 		ASSERT_FALSE(true);
+		//auto stack2 = model->AddSliceStack(0);
+		//stack2->AddSliceStackReference(stackWithSlices.get());
+
+		//std::vector<Lib3MF_uint8> buffer;
+		//writer->WriteToBuffer(buffer);
+
+		//auto readModel = CLib3MFWrapper::CreateModel();
+		//auto reader = readModel->QueryReader("3mf");
+		//reader->ReadFromBuffer(buffer);
+
+		//checkSliceModels(model, readModel);
 	}
 
 
@@ -285,7 +402,7 @@ namespace Lib3MF
 		PLib3MFModel model;
 	};
 
-	TEST_F(SliceStackReading, DISABLED_ReadSliceFile)
+	TEST_F(SliceStackReading, DISABLED_ReadSlices)
 	{
 		ASSERT_FALSE(true);
 	}

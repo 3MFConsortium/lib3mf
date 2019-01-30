@@ -36,18 +36,9 @@ NMR_ModelSliceStackResource.h: implements the resource object for a slice stack
 
 namespace NMR {
 
-	CModelSliceStack::CModelSliceStack(_In_ const ModelResourceID sID, _In_ CModel * pModel, PSliceStackGeometry pSliceStackGeometry)
-		: CModelResource(sID, pModel) 
-	{
-		m_pSliceStackGeometry = pSliceStackGeometry;
-		m_nNumSliceRefsToMe = 0;
-		m_dZBottom = 0.0;
-	}
-
 	CModelSliceStack::CModelSliceStack(_In_ const ModelResourceID sID, _In_ CModel * pModel, nfDouble dZBottom)
 		: CModelResource(sID, pModel)
 	{
-		m_pSliceStackGeometry = std::make_shared<CSliceStackGeometry>();
 		m_nNumSliceRefsToMe = 0;
 		m_dZBottom = dZBottom;
 	}
@@ -146,12 +137,6 @@ namespace NMR {
 		}
 	}
 
-
-	_Ret_notnull_ PSliceStackGeometry CModelSliceStack::Geometry()
-	{
-		return m_pSliceStackGeometry;
-	}
-
 	nfUint32& CModelSliceStack::NumSliceRefsToMe()
 	{
 		return m_nNumSliceRefsToMe;
@@ -159,7 +144,8 @@ namespace NMR {
 
 	std::string CModelSliceStack::sliceRefPath()
 	{
-		return Geometry()->usesSliceRef() ? "/2D/2dmodel_" + std::to_string(getResourceID()->getUniqueID()) + ".model" : "";
+		throw 0;
+		// return Geometry()->usesSliceRef() ? "/2D/2dmodel_" + std::to_string(getResourceID()->getUniqueID()) + ".model" : "";
 	}
 
 	nfDouble CModelSliceStack::getZBottom()
@@ -192,76 +178,84 @@ namespace NMR {
 		return dHighestZ;
 	}
 
-
-	CSliceStackGeometry::CSliceStackGeometry()
+	bool CModelSliceStack::areAllPolygonsClosed()
 	{
-		m_BottomZ = 0.0;
-		m_bUsesSliceRef = false;
-	}
-
-	CSliceStackGeometry::~CSliceStackGeometry()
-	{
-	}
-
-	_Ret_notnull_ PSlice CSliceStackGeometry::getSlice(nfUint32 nIndex)
-	{
-		return m_Slices[nIndex];
-	}
-
-	nfUint32 CSliceStackGeometry::addSlice(PSlice pSlice)
-	{
-		if (pSlice->getTopZ() < m_BottomZ)
-			throw CNMRException(NMR_ERROR_SLICES_Z_NOTINCREASING);
-		if (!m_Slices.empty()) {
-			if (pSlice->getTopZ() < m_Slices.rbegin()->get()->getTopZ() ) {
-				throw CNMRException(NMR_ERROR_SLICES_Z_NOTINCREASING);
-			}
-		}
-		m_Slices.push_back(pSlice);
-		return (nfUint32)m_Slices.size() - 1;
-	}
-
-	void CSliceStackGeometry::mergeSliceStackGeometry(PSliceStackGeometry pSliceStackGeometry)
-	{
-		for (int i = 0; i < (int)pSliceStackGeometry->getSliceCount(); i++)
-		{
-			this->addSlice(pSliceStackGeometry->getSlice(i));
-		}
-	}
-
-	nfUint32 CSliceStackGeometry::getSliceCount()
-	{
-		return (nfUint32)m_Slices.size();
-	}
-
-	nfFloat CSliceStackGeometry::getBottomZ()
-	{
-		return m_BottomZ;
-	}
-
-	void CSliceStackGeometry::setBottomZ(nfFloat nBottomZ)
-	{
-		m_BottomZ = nBottomZ;
-	}
-
-	void CSliceStackGeometry::setUsesSliceRef(nfBool bUsesSliceRef)
-	{
-		m_bUsesSliceRef = bUsesSliceRef;
-	}
-
-	nfBool CSliceStackGeometry::usesSliceRef()
-	{
-		return m_bUsesSliceRef;
-	}
-
-	bool CSliceStackGeometry::areAllPolygonsClosed()
-	{
-		for (auto pSlice : m_Slices) {
+		for (auto pSlice : m_pSlices) {
 			if (!pSlice->allPolygonsAreClosed())
 				return false;
 		}
+
+		for (auto pSliceRef : m_pSliceRefs) {
+			if (!pSliceRef->areAllPolygonsClosed())
+				return false;
+		}
+
 		return true;
 	}
+
+
+	//CSliceStackGeometry::CSliceStackGeometry()
+	//{
+	//	m_BottomZ = 0.0;
+	//	m_bUsesSliceRef = false;
+	//}
+
+	//CSliceStackGeometry::~CSliceStackGeometry()
+	//{
+	//}
+
+	//_Ret_notnull_ PSlice CSliceStackGeometry::getSlice(nfUint32 nIndex)
+	//{
+	//	return m_Slices[nIndex];
+	//}
+
+	//nfUint32 CSliceStackGeometry::addSlice(PSlice pSlice)
+	//{
+	//	if (pSlice->getTopZ() < m_BottomZ)
+	//		throw CNMRException(NMR_ERROR_SLICES_Z_NOTINCREASING);
+	//	if (!m_Slices.empty()) {
+	//		if (pSlice->getTopZ() < m_Slices.rbegin()->get()->getTopZ() ) {
+	//			throw CNMRException(NMR_ERROR_SLICES_Z_NOTINCREASING);
+	//		}
+	//	}
+	//	m_Slices.push_back(pSlice);
+	//	return (nfUint32)m_Slices.size() - 1;
+	//}
+
+	//void CSliceStackGeometry::mergeSliceStackGeometry(PSliceStackGeometry pSliceStackGeometry)
+	//{
+	//	for (int i = 0; i < (int)pSliceStackGeometry->getSliceCount(); i++)
+	//	{
+	//		this->addSlice(pSliceStackGeometry->getSlice(i));
+	//	}
+	//}
+
+	//nfUint32 CSliceStackGeometry::getSliceCount()
+	//{
+	//	return (nfUint32)m_Slices.size();
+	//}
+
+	//nfFloat CSliceStackGeometry::getBottomZ()
+	//{
+	//	return m_BottomZ;
+	//}
+
+	//void CSliceStackGeometry::setBottomZ(nfFloat nBottomZ)
+	//{
+	//	m_BottomZ = nBottomZ;
+	//}
+
+	//void CSliceStackGeometry::setUsesSliceRef(nfBool bUsesSliceRef)
+	//{
+	//	m_bUsesSliceRef = bUsesSliceRef;
+	//}
+
+	//nfBool CSliceStackGeometry::usesSliceRef()
+	//{
+	//	return m_bUsesSliceRef;
+	//}
+
+	
 
 	
 }

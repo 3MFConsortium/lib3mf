@@ -42,7 +42,7 @@ NMR_ModelReaderNode_slice1507_Segment.h covers the slices of the private 3MF sli
 namespace NMR {
 	class CModelReaderNode_Slices1507_Slice : public CModelReaderNode {
 	private:
-		CSliceStackGeometry *m_pSliceStack;
+		CModelSliceStack *m_pSliceStack;
 		PSlice m_Slice;
 
 		nfFloat m_TopZ;
@@ -54,7 +54,7 @@ namespace NMR {
 
 	public:
 		CModelReaderNode_Slices1507_Slice() = delete;
-		CModelReaderNode_Slices1507_Slice(_In_ CSliceStackGeometry *pSliceStack, _In_ PModelReaderWarnings pWarnings);
+		CModelReaderNode_Slices1507_Slice(_In_ CModelSliceStack *pSliceStack, _In_ PModelReaderWarnings pWarnings);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 	};

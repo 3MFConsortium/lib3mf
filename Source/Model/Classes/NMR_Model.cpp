@@ -899,18 +899,6 @@ namespace NMR {
 		return m_SliceStackLookup[nIndex];
 	}
 
-	CSliceStackGeometry * CModel::getSliceStack(_In_ nfUint32 nIndex)
-	{
-		PModelResource pResouce = getSliceStackResource(nIndex);
-		CModelSliceStack * pSliceStackObject = dynamic_cast<CModelSliceStack *> (pResouce.get());
-		if (pSliceStackObject == nullptr)
-			throw CNMRException(NMR_ERROR_RESOURCETYPEMISMATCH);
-
-		CSliceStackGeometry *pSliceStack = pSliceStackObject->Geometry().get();
-		return pSliceStack;
-	}
-
-
 	void CModel::removeReferencedSliceStackResources()
 	{
 		// A slicestack resource that is referenced via the sliceref-attribute must not be referenced via the

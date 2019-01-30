@@ -77,9 +77,6 @@ namespace NMR {
 	class CModelSliceStack;
 	typedef std::shared_ptr <CModelSliceStack> PModelSliceStack;
 
-	class CSliceStackGeometry;
-	typedef std::shared_ptr <CSliceStackGeometry> PSliceStackGeometry;
-
 	class CModel {
 	private:
 		std::string m_sCurPath;
@@ -251,7 +248,6 @@ namespace NMR {
 		// Convenience functions for slice stacks
 		nfUint32 getSliceStackCount();
 		PModelResource getSliceStackResource(_In_ nfUint32 nIndex);
-		CSliceStackGeometry * getSliceStack(_In_ nfUint32 nIndex);
 
 		void removeReferencedSliceStackResources();
 	};

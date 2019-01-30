@@ -308,8 +308,8 @@ namespace NMR {
 				PModelSliceStack pSliceStackResource = std::dynamic_pointer_cast<CModelSliceStack>( m_pModel->findResource(pID->getUniqueID()) );
 				if (pSliceStackResource) {
 					if ((m_pObject->getObjectType() == MODELOBJECTTYPE_MODEL) || (MODELOBJECTTYPE_SOLIDSUPPORT)) {
-						if (!pSliceStackResource->Geometry()->areAllPolygonsClosed()) {
-							throw CNMRException(NMR_ERROR_SLICEPOLYGONNOTCLOSED);
+						if (!pSliceStackResource->areAllPolygonsClosed()) {
+							m_pWarnings->addException(CNMRException(NMR_ERROR_SLICEPOLYGONNOTCLOSED), mrwInvalidMandatoryValue);
 						}
 					}
 				}
