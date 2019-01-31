@@ -123,6 +123,7 @@ namespace NMR {
 		m_bWriteSliceExtension = true;
 		m_bWriteCustomNamespaces = true;
 
+		// This is silly and will be removed
 		m_pSliceStackResource = pSliceStackResource;
 	}
 
@@ -296,7 +297,7 @@ namespace NMR {
 
 				writeStartElementWithPrefix(XML_3MF_ELEMENT_SLICEREFRESOURCE, XML_3MF_NAMESPACEPREFIX_SLICE);
 				writeIntAttribute(XML_3MF_ATTRIBUTE_SLICEREF_ID, sliceRef->getResourceID()->getUniqueID());
-				if (sliceRef->sliceRefPath().empty())
+				if (!sliceRef->sliceRefPath().empty())
 					writeStringAttribute(XML_3MF_ATTRIBUTE_SLICEREF_PATH, sliceRef->sliceRefPath());
 				writeEndElement();
 			}

@@ -139,12 +139,14 @@ namespace NMR {
 
 	nfUint32& CModelSliceStack::NumSliceRefsToMe()
 	{
-		return m_nNumSliceRefsToMe;
+		throw 0;
+		// return m_nNumSliceRefsToMe;
 	}
 
 	std::string CModelSliceStack::sliceRefPath()
 	{
-		throw 0;
+		return "";
+		// throw 0;
 		// return Geometry()->usesSliceRef() ? "/2D/2dmodel_" + std::to_string(getResourceID()->getUniqueID()) + ".model" : "";
 	}
 

@@ -67,33 +67,18 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_SLICESTACK_SLICESANDSLICEREF);
 			PModelReaderNode_Slice1507_SliceRef pXmlNode = std::make_shared<CModelReaderNode_Slice1507_SliceRef>(m_pWarnings);
 			pXmlNode->parseXML(pXMLReader);
-
-			//// get slice resource from model
-			//std::string sPath = pXmlNode->Path();
-
-			//// must reference a different part
-			//if (sPath == m_pModel->curPath())
-			//	throw CNMRException(NMR_ERROR_INVALID_SLICEPATH);
-			//
-			//PModelResource pResource = m_pModel->findResource(pXmlNode->Path(), pXmlNode->SliceStackId());
-			//CModelSliceStack* pSliceStackResource = dynamic_cast<CModelSliceStack*>(pResource.get());
-			//if (!pSliceStackResource)
-			//	throw CNMRException(NMR_ERROR_SLICESTACKRESOURCE_NOT_FOUND);
-			//// can't have slice refs reference slicerefs
-			//if (pSliceStackResource->Geometry()->usesSliceRef())
-			//	throw CNMRException(NMR_ERROR_SLICEREFSTOODEEP);
-			//pSliceStackResource->NumSliceRefsToMe()++;
-			//try {
-			//	m_pSliceStack->mergeSliceStackGeometry(pSliceStackResource->Geometry());
-			//}
-			//catch (CNMRException &e) {
-			//	if (e.getErrorCode() == NMR_ERROR_SLICES_Z_NOTINCREASING) {
-			//		m_pWarnings->addException(e, mrwInvalidMandatoryValue);
-			//	}
-			//	else
-			//		throw e;
-			//}
-			//m_pSliceStack->setUsesSliceRef(true);
+			
+			std::string path = pXmlNode->Path();
+			if (path.empty()) {
+				path = m_pModel->curPath();
+			}
+			PModelResource pResource = m_pModel->findResource(path, pXmlNode->SliceStackId());
+			PModelSliceStack pSliceStackResource = std::dynamic_pointer_cast<CModelSliceStack>(pResource);
+			if (!pSliceStackResource)
+				throw CNMRException(NMR_ERROR_SLICESTACKRESOURCE_NOT_FOUND);
+			if (!pSliceStackResource->sliceRefPath().empty())
+				throw CNMRException(NMR_ERROR_SLICEREFSTOODEEP);
+			m_pSliceStackResource->AddSliceRef(pSliceStackResource);
 		}
 	}
 

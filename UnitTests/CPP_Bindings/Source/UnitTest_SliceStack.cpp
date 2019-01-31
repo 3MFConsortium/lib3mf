@@ -341,8 +341,6 @@ namespace Lib3MF
 		std::vector<Lib3MF_uint8> buffer;
 		writer->WriteToBuffer(buffer);
 
-		writer->WriteToFile("WriteSlices.3mf");
-
 		auto readModel = CLib3MFWrapper::CreateModel();
 		auto reader = readModel->QueryReader("3mf");
 		reader->ReadFromBuffer(buffer);
@@ -360,7 +358,7 @@ namespace Lib3MF
 
 		auto readModel = CLib3MFWrapper::CreateModel();
 		auto reader = readModel->QueryReader("3mf");
-		reader->ReadFromBuffer(buffer);
+		reader->ReadFromFile("WriteSliceReference.3mf");
 
 		checkSliceModels(model, readModel);
 	}
@@ -368,17 +366,20 @@ namespace Lib3MF
 	TEST_F(SliceStackWriting, WriteSliceReferenceOutOfPlace)
 	{
 		ASSERT_FALSE(true);
-		//auto stack2 = model->AddSliceStack(0);
-		//stack2->AddSliceStackReference(stackWithSlices.get());
+		auto stack2 = model->AddSliceStack(0);
+		stack2->AddSliceStackReference(stackWithSlices.get());
 
-		//std::vector<Lib3MF_uint8> buffer;
-		//writer->WriteToBuffer(buffer);
+		std::vector<Lib3MF_uint8> buffer;
+		// writer->WriteToBuffer(buffer);
 
-		//auto readModel = CLib3MFWrapper::CreateModel();
-		//auto reader = readModel->QueryReader("3mf");
-		//reader->ReadFromBuffer(buffer);
+		writer->WriteToFile("WriteSliceReference.3mf");
 
-		//checkSliceModels(model, readModel);
+		auto readModel = CLib3MFWrapper::CreateModel();
+		auto reader = readModel->QueryReader("3mf");
+		// reader->ReadFromBuffer(buffer);
+		reader->ReadFromFile("WriteSliceReference.3mf");
+
+		checkSliceModels(model, readModel);
 	}
 
 
