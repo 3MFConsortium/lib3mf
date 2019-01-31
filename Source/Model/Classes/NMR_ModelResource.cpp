@@ -44,6 +44,7 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 		m_pModel = pModel;
 		m_sResourceID = m_pModel->generatePackageResourceID(pModel->curPath(), sResourceID);
+		m_bHasResourceIndexMap = false;
 	}
 
 	CModelResource::~CModelResource()
@@ -59,6 +60,35 @@ namespace NMR {
 	_Ret_notnull_ CModel * CModelResource::getModel()
 	{
 		return m_pModel;
+	}
+
+
+	void CModelResource::clearResourceIndexMap()
+	{
+		m_ResourceIndexMap.clear();
+		m_bHasResourceIndexMap = false;
+	}
+
+	void CModelResource::buildResourceIndexMap()
+	{
+		clearResourceIndexMap();
+		m_bHasResourceIndexMap = true;
+	}
+
+	nfBool CModelResource::hasResourceIndexMap()
+	{
+		return m_bHasResourceIndexMap;
+	}
+
+	bool CModelResource::mapResourceIndexToPropertyID(_In_ ModelResourceIndex nIndex, _Out_ ModelResourceID & nResourceID)
+	{
+		if (nIndex < m_ResourceIndexMap.size()) {
+			nResourceID = m_ResourceIndexMap[nIndex];
+			return true;
+		}
+
+		nResourceID = 0;
+		return false;
 	}
 
 }

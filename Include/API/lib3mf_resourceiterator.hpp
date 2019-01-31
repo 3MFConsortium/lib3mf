@@ -49,17 +49,10 @@ namespace Impl {
 class CLib3MFResourceIterator : public virtual ILib3MFResourceIterator {
 private:
 
-	/**
-	* Put private members here.
-	*/
-	std::vector<NMR::PModelResource> m_pResources;
-	Lib3MF_int32 m_nCurrentIndex;
-
 protected:
 
-	/**
-	* Put protected members here.
-	*/
+	std::vector<NMR::PModelResource> m_pResources;
+	Lib3MF_int32 m_nCurrentIndex;
 
 public:
 
