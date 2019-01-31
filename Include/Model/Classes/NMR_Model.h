@@ -248,8 +248,6 @@ namespace NMR {
 		// Convenience functions for slice stacks
 		nfUint32 getSliceStackCount();
 		PModelResource getSliceStackResource(_In_ nfUint32 nIndex);
-
-		void removeReferencedSliceStackResources();
 	};
 
 	typedef std::shared_ptr <CModel> PModel;

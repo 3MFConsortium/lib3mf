@@ -879,19 +879,14 @@
 			<param name="SliceRefIndex" type="uint64" pass="in" description="the index of the slice ref" />
 			<param name="TheSliceStack" type="handle" class="SliceStack" pass="return" description="the slicestack that is used as sliceref" />
 		</method>
-		
 		<method name="CollapseSliceReferences" description="Removes the indirection of slices via slice-refs, i.e. creates the slices of all slice refs of this SliceStack as actual slices of this SliceStack. All previously existing slices or slicerefs will be removed.">
 		</method>
-		
-		<!--
-		<method name="SetSliceRefPath" description="Sets the package path where this Slice should be stored. Input an empty string to reset the path">
+		<method name="SetOwnPath" description="Sets the package path where this Slice should be stored. Input an empty string to reset the path">
 			<param name="Path" type="string" pass="in" description="the package path where this Slice should be stored" />
 		</method>
-		<method name="GetSliceRefPath" description="Obtains the package path where this Slice should be stored. Returns an empty string if the slicestack is stored within the root model.">
-			<param name="Path" type="string" pass="out" description="the package path where this Slice will be stored" />
+		<method name="GetOwnPath" description="Obtains the package path where this Slice should be stored. Returns an empty string if the slicestack is stored within the root model.">
+			<param name="Path" type="string" pass="return" description="the package path where this Slice will be stored" />
 		</method>
-		-->
-		
 	</class>
 	
 	<class name="Model">

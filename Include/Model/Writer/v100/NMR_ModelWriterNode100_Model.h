@@ -58,8 +58,6 @@ namespace NMR {
 		nfBool m_bIsRootModel;
 		nfBool m_bWriteCustomNamespaces;
 
-		CModelSliceStack* m_pSliceStackResource;	// If this is set, only this slicestack should be exported
-
 		void writeModelMetaData();
 		void writeMetaData(_In_ PModelMetaData pMetaData);
 		void writeMetaDataGroup(_In_ PModelMetaDataGroup pMetaDataGroup);
@@ -85,7 +83,7 @@ namespace NMR {
 	public:
 		CModelWriterNode100_Model() = delete;
 		CModelWriterNode100_Model(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter, _In_ CProgressMonitor * pProgressMonitor);
-		CModelWriterNode100_Model(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter, _In_ CProgressMonitor * pProgressMonitor, CModelSliceStack *pSliceStackResource);
+		CModelWriterNode100_Model(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter, _In_ CProgressMonitor * pProgressMonitor, nfBool bWritesRootModel);
 		
 		virtual void writeToXML();
 	};

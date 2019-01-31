@@ -47,11 +47,10 @@ namespace NMR {
 	class CModelSliceStack : public CModelResource {
 	private:
 		nfDouble m_dZBottom;
+		std::string m_sOwnPath;
 
 		std::vector<PModelSliceStack> m_pSliceRefs;
 		std::vector<PSlice> m_pSlices;
-
-		nfUint32 m_nNumSliceRefsToMe;	// number of sliceref-references to this resource
 	public:
 		bool AllowsGeometry() const;
 		bool AllowsReferences() const;
@@ -78,8 +77,8 @@ namespace NMR {
 
 		void CollapseSliceReferences();
 
-		std::string sliceRefPath();
-		nfUint32& NumSliceRefsToMe();
+		std::string OwnPath();
+		void SetOwnPath(std::string);
 
 		bool areAllPolygonsClosed();
 	};

@@ -92,6 +92,9 @@ public:
 
 	void CollapseSliceReferences();
 
+	virtual void SetOwnPath(const std::string & sPath);
+
+	virtual std::string GetOwnPath();
 };
 
 } // namespace Impl

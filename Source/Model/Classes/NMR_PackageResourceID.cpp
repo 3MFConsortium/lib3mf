@@ -54,11 +54,6 @@ namespace NMR {
 		return m_uniqueID;
 	}
 
-	PPackageResourceID CResourceHandler::getNewRessourceID(std::wstring path, ModelResourceID id)
-	{
-		return getNewRessourceID(fnUTF16toUTF8(path), id);
-	}
-
 	PPackageResourceID CResourceHandler::getNewRessourceID(std::string path, ModelResourceID id)	// this is supposed to be the only way to generate a CPackageResourceID
 	{
 		PPackageResourceID p = std::make_shared<CPackageResourceID>();

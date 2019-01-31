@@ -76,7 +76,7 @@ namespace NMR {
 			PModelSliceStack pSliceStackResource = std::dynamic_pointer_cast<CModelSliceStack>(pResource);
 			if (!pSliceStackResource)
 				throw CNMRException(NMR_ERROR_SLICESTACKRESOURCE_NOT_FOUND);
-			if (!pSliceStackResource->sliceRefPath().empty())
+			if (!m_pSliceStackResource->OwnPath().empty())
 				throw CNMRException(NMR_ERROR_SLICEREFSTOODEEP);
 			m_pSliceStackResource->AddSliceRef(pSliceStackResource);
 		}
@@ -105,7 +105,8 @@ namespace NMR {
 		// Parse Content
 		parseContent(pXMLReader);
 
+		m_pSliceStackResource->SetOwnPath(m_sSlicePath);
+
 		m_pModel->addResource(m_pSliceStackResource);
-		// TODO: set path of this resource
 	}
 }

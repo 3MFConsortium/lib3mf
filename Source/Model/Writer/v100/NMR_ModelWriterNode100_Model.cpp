@@ -70,11 +70,29 @@ namespace NMR {
 		m_bIsRootModel = true;
 
 		m_bWriteCustomNamespaces = true;
-		m_pSliceStackResource = NULL;
 
 		// register custom NameSpaces from metadata in objects, build items and the model itself
 		RegisterMetaDataNameSpaces();
 	}
+
+
+	CModelWriterNode100_Model::CModelWriterNode100_Model(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter, _In_ CProgressMonitor * pProgressMonitor,
+		nfBool bWritesRootModel) : CModelWriterNode(pModel, pXMLWriter, pProgressMonitor)
+	{
+		if (bWritesRootModel) {
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+		}
+
+		m_bWriteMaterialExtension = false;
+		m_bWriteMaterialExtension = false;
+		m_bWriteBeamLatticeExtension = false;
+		m_bWriteBaseMaterials = false;
+		m_bWriteObjects = false;
+		m_bIsRootModel = false;
+		m_bWriteSliceExtension = true;
+		m_bWriteCustomNamespaces = true;
+	}
+
 
 	void CModelWriterNode100_Model::RegisterMetaDataGroupNameSpaces(PModelMetaDataGroup mdg)
 	{
@@ -109,22 +127,6 @@ namespace NMR {
 			PModelBuildItem pBuildItem = m_pModel->getBuildItem(nBuildItemIndex);
 			RegisterMetaDataGroupNameSpaces(pBuildItem->metaDataGroup());
 		}
-	}
-
-	CModelWriterNode100_Model::CModelWriterNode100_Model(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter, _In_ CProgressMonitor * pProgressMonitor,
-		CModelSliceStack *pSliceStackResource) : CModelWriterNode(pModel, pXMLWriter, pProgressMonitor)
-	{
-		m_bWriteMaterialExtension = false;
-		m_bWriteMaterialExtension = false;
-		m_bWriteBeamLatticeExtension = false;
-		m_bWriteBaseMaterials = false;
-		m_bWriteObjects = false;
-		m_bIsRootModel = false;
-		m_bWriteSliceExtension = true;
-		m_bWriteCustomNamespaces = true;
-
-		// This is silly and will be removed
-		m_pSliceStackResource = pSliceStackResource;
 	}
 
 	void CModelWriterNode100_Model::writeToXML()
@@ -265,19 +267,14 @@ namespace NMR {
 
 	void CModelWriterNode100_Model::writeSliceStacks() {
 		nfUint32 nSliceStackCount = m_pModel->getSliceStackCount();
-		nfUint32 nSliceStackIndex;
 
-		if (m_pSliceStackResource == nullptr) {
-			for (nSliceStackIndex = 0; nSliceStackIndex < nSliceStackCount; nSliceStackIndex++) {
-				CModelSliceStack *pSliceStackResource = dynamic_cast<CModelSliceStack*>(m_pModel->getSliceStackResource(nSliceStackIndex).get());
-				if (pSliceStackResource != nullptr) {
-					writeSliceStack(pSliceStackResource);
-				}
+		for (nfUint32 nSliceStackIndex = 0; nSliceStackIndex < nSliceStackCount; nSliceStackIndex++) {
+			CModelSliceStack *pSliceStackResource = dynamic_cast<CModelSliceStack*>(m_pModel->getSliceStackResource(nSliceStackIndex).get());
+			if (pSliceStackResource != nullptr) {
+				writeSliceStack(pSliceStackResource);
 			}
 		}
-		else {
-			writeSliceStack(m_pSliceStackResource);
-		}
+
 	}
 
 
@@ -286,76 +283,90 @@ namespace NMR {
 
 		std::string sNameSpacePrefix = XML_3MF_NAMESPACEPREFIX_SLICE;
 
-		writeStartElementWithPrefix(XML_3MF_ELEMENT_SLICESTACKRESOURCE, XML_3MF_NAMESPACEPREFIX_SLICE);
+		if (
+			(!m_bIsRootModel && pSliceStackResource->OwnPath() == m_pModel->curPath()) ||
+			(m_bIsRootModel && (pSliceStackResource->OwnPath() == m_pModel->rootPath() || pSliceStackResource->OwnPath().empty() ) ) 
+		)
+		{
+			writeStartElementWithPrefix(XML_3MF_ELEMENT_SLICESTACKRESOURCE, XML_3MF_NAMESPACEPREFIX_SLICE);
 
-		writeIntAttribute(XML_3MF_ATTRIBUTE_SLICESTACKID, pSliceStackResource->getResourceID()->getUniqueID());
-		writeFloatAttribute(XML_3MF_ATTRIBUTE_SLICESTACKZBOTTOM, (float)pSliceStackResource->getZBottom());
+			writeIntAttribute(XML_3MF_ATTRIBUTE_SLICESTACKID, pSliceStackResource->getResourceID()->getUniqueID());
+			writeFloatAttribute(XML_3MF_ATTRIBUTE_SLICESTACKZBOTTOM, (float)pSliceStackResource->getZBottom());
 
-		if (pSliceStackResource->getSliceRefCount() > 0) {
-			for (nfUint32 sliceRefIndex = 0; sliceRefIndex < pSliceStackResource->getSliceRefCount(); sliceRefIndex++) {
-				auto sliceRef = pSliceStackResource->getSliceRef(sliceRefIndex);
 
-				writeStartElementWithPrefix(XML_3MF_ELEMENT_SLICEREFRESOURCE, XML_3MF_NAMESPACEPREFIX_SLICE);
-				writeIntAttribute(XML_3MF_ATTRIBUTE_SLICEREF_ID, sliceRef->getResourceID()->getUniqueID());
-				if (!sliceRef->sliceRefPath().empty())
-					writeStringAttribute(XML_3MF_ATTRIBUTE_SLICEREF_PATH, sliceRef->sliceRefPath());
-				writeEndElement();
-			}
-		}
-		
+			if (pSliceStackResource->getSliceRefCount() > 0) {
+				for (nfUint32 sliceRefIndex = 0; sliceRefIndex < pSliceStackResource->getSliceRefCount(); sliceRefIndex++) {
+					auto sliceRef = pSliceStackResource->getSliceRef(sliceRefIndex);
 
-		if (pSliceStackResource->getSliceCount() > 0) {
-			for (nfUint32 nSliceIndex = 0; nSliceIndex < pSliceStackResource->getSliceCount(); nSliceIndex++) {
-				if (nSliceIndex % PROGRESS_SLICEUPDATE == PROGRESS_SLICEUPDATE-1) {
-					if (m_pProgressMonitor && !m_pProgressMonitor->Progress(-1, ProgressIdentifier::PROGRESS_WRITESLICES))
-						throw CNMRException(NMR_USERABORTED);
-				}
-				PSlice pSlice = pSliceStackResource->getSlice(nSliceIndex);
-				writeStartElementWithPrefix(XML_3MF_ELEMENT_SLICE, XML_3MF_NAMESPACEPREFIX_SLICE);
-
-				writeFloatAttribute(XML_3MF_ATTRIBUTE_SLICEZTOP, nfFloat(pSlice->getTopZ()));
-				if (pSlice->getVertexCount() >= 2) {
-					writeStartElementWithPrefix(XML_3MF_ELEMENT_SLICEVERTICES, XML_3MF_NAMESPACEPREFIX_SLICE);
-
-					for (nfUint32 nVertexIndex = 0; nVertexIndex < pSlice->getVertexCount(); nVertexIndex++) {
-						writeStartElementWithPrefix(XML_3MF_ELEMENT_VERTEX, XML_3MF_NAMESPACEPREFIX_SLICE);
-						nfFloat x, y;
-						pSlice->getVertex(nVertexIndex, &x, &y);
-						writeFloatAttribute(XML_3MF_ATTRIBUTE_SLICEVERTEX_X, x);
-						writeFloatAttribute(XML_3MF_ATTRIBUTE_SLICEVERTEX_Y, y);
-						writeEndElement();
+					writeStartElementWithPrefix(XML_3MF_ELEMENT_SLICEREFRESOURCE, XML_3MF_NAMESPACEPREFIX_SLICE);
+					writeIntAttribute(XML_3MF_ATTRIBUTE_SLICEREF_ID, sliceRef->getResourceID()->getUniqueID());
+					if (m_bIsRootModel) {
+						if (!sliceRef->OwnPath().empty() && (sliceRef->OwnPath() != m_pModel->rootPath())) {
+							writeStringAttribute(XML_3MF_ATTRIBUTE_SLICEREF_PATH, sliceRef->OwnPath());
+						}
 					}
-					writeFullEndElement();
+					else {
+						if (!sliceRef->OwnPath().empty() && (sliceRef->OwnPath() != m_pModel->curPath())) {
+							writeStringAttribute(XML_3MF_ATTRIBUTE_SLICEREF_PATH, sliceRef->OwnPath());
+						}
+					}
+					writeEndElement();
 				}
-				else {
-					if (pSlice->getVertexCount() == 1)
-						throw CNMRException(NMR_ERROR_SLICE_ONEVERTEX);
-				}
+			}
 
-				for (nfUint32 nPolygonIndex = 0; nPolygonIndex < pSlice->getPolygonCount(); nPolygonIndex++) {
-					if (pSlice->getPolygonIndexCount(nPolygonIndex) >= 2) {
-						writeStartElementWithPrefix(XML_3MF_ELEMENT_SLICEPOLYGON, XML_3MF_NAMESPACEPREFIX_SLICE);
-						writeIntAttribute(XML_3MF_ATTRIBUTE_SLICEPOLYGON_STARTV, pSlice->getPolygonIndex(nPolygonIndex, 0));
 
-						for (nfUint32 nIndexIndex = 1; nIndexIndex < pSlice->getPolygonIndexCount(nPolygonIndex); nIndexIndex++) {
-							writeStartElementWithPrefix(XML_3MF_ELEMENT_SLICESEGMENT, XML_3MF_NAMESPACEPREFIX_SLICE);
-							writeIntAttribute(XML_3MF_ATTRIBUTE_SLICESEGMENT_V2, pSlice->getPolygonIndex(nPolygonIndex, nIndexIndex));
+			if (pSliceStackResource->getSliceCount() > 0) {
+				for (nfUint32 nSliceIndex = 0; nSliceIndex < pSliceStackResource->getSliceCount(); nSliceIndex++) {
+					if (nSliceIndex % PROGRESS_SLICEUPDATE == PROGRESS_SLICEUPDATE - 1) {
+						if (m_pProgressMonitor && !m_pProgressMonitor->Progress(-1, ProgressIdentifier::PROGRESS_WRITESLICES))
+							throw CNMRException(NMR_USERABORTED);
+					}
+					PSlice pSlice = pSliceStackResource->getSlice(nSliceIndex);
+					writeStartElementWithPrefix(XML_3MF_ELEMENT_SLICE, XML_3MF_NAMESPACEPREFIX_SLICE);
+
+					writeFloatAttribute(XML_3MF_ATTRIBUTE_SLICEZTOP, nfFloat(pSlice->getTopZ()));
+					if (pSlice->getVertexCount() >= 2) {
+						writeStartElementWithPrefix(XML_3MF_ELEMENT_SLICEVERTICES, XML_3MF_NAMESPACEPREFIX_SLICE);
+
+						for (nfUint32 nVertexIndex = 0; nVertexIndex < pSlice->getVertexCount(); nVertexIndex++) {
+							writeStartElementWithPrefix(XML_3MF_ELEMENT_VERTEX, XML_3MF_NAMESPACEPREFIX_SLICE);
+							nfFloat x, y;
+							pSlice->getVertex(nVertexIndex, &x, &y);
+							writeFloatAttribute(XML_3MF_ATTRIBUTE_SLICEVERTEX_X, x);
+							writeFloatAttribute(XML_3MF_ATTRIBUTE_SLICEVERTEX_Y, y);
 							writeEndElement();
 						}
-
 						writeFullEndElement();
 					}
 					else {
-						if (pSlice->getPolygonIndexCount(nPolygonIndex) == 1)
-							throw CNMRException(NMR_ERROR_SLICE_ONEPOINT);
+						if (pSlice->getVertexCount() == 1)
+							throw CNMRException(NMR_ERROR_SLICE_ONEVERTEX);
 					}
+
+					for (nfUint32 nPolygonIndex = 0; nPolygonIndex < pSlice->getPolygonCount(); nPolygonIndex++) {
+						if (pSlice->getPolygonIndexCount(nPolygonIndex) >= 2) {
+							writeStartElementWithPrefix(XML_3MF_ELEMENT_SLICEPOLYGON, XML_3MF_NAMESPACEPREFIX_SLICE);
+							writeIntAttribute(XML_3MF_ATTRIBUTE_SLICEPOLYGON_STARTV, pSlice->getPolygonIndex(nPolygonIndex, 0));
+
+							for (nfUint32 nIndexIndex = 1; nIndexIndex < pSlice->getPolygonIndexCount(nPolygonIndex); nIndexIndex++) {
+								writeStartElementWithPrefix(XML_3MF_ELEMENT_SLICESEGMENT, XML_3MF_NAMESPACEPREFIX_SLICE);
+								writeIntAttribute(XML_3MF_ATTRIBUTE_SLICESEGMENT_V2, pSlice->getPolygonIndex(nPolygonIndex, nIndexIndex));
+								writeEndElement();
+							}
+
+							writeFullEndElement();
+						}
+						else {
+							if (pSlice->getPolygonIndexCount(nPolygonIndex) == 1)
+								throw CNMRException(NMR_ERROR_SLICE_ONEPOINT);
+						}
+					}
+
+					writeFullEndElement();
 				}
-
-				writeFullEndElement();
 			}
+			writeFullEndElement();
 		}
-
-		writeFullEndElement();
 	}
 
 	void CModelWriterNode100_Model::writeObjects()

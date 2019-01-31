@@ -358,28 +358,42 @@ namespace Lib3MF
 
 		auto readModel = CLib3MFWrapper::CreateModel();
 		auto reader = readModel->QueryReader("3mf");
-		reader->ReadFromFile("WriteSliceReference.3mf");
+		reader->ReadFromBuffer(buffer);
 
 		checkSliceModels(model, readModel);
 	}
 
 	TEST_F(SliceStackWriting, WriteSliceReferenceOutOfPlace)
 	{
-		ASSERT_FALSE(true);
-		auto stack2 = model->AddSliceStack(0);
-		stack2->AddSliceStackReference(stackWithSlices.get());
+		auto stack3 = model->AddSliceStack(0);
+		auto stack2 = model->AddSliceStack(5);
+		auto stack1 = model->AddSliceStack(0);
+		stack1->SetOwnPath("/2D/A2dmodel.model");
+		stack2->SetOwnPath("/2D/A2dmodel.model");
+	
+		stack3->AddSliceStackReference(stack1.get());
+		stack3->AddSliceStackReference(stack2.get());
 
 		std::vector<Lib3MF_uint8> buffer;
-		// writer->WriteToBuffer(buffer);
-
-		writer->WriteToFile("WriteSliceReference.3mf");
+		writer->WriteToBuffer(buffer);
 
 		auto readModel = CLib3MFWrapper::CreateModel();
-		auto reader = readModel->QueryReader("3mf");
-		// reader->ReadFromBuffer(buffer);
-		reader->ReadFromFile("WriteSliceReference.3mf");
+		{
+			auto reader = readModel->QueryReader("3mf");
+			reader->ReadFromBuffer(buffer);
+		}
 
-		checkSliceModels(model, readModel);
+
+		auto readModelAgain = CLib3MFWrapper::CreateModel();
+		{
+			// write write and read again, since a true "fixpoint" is only reached after one more iteration
+			auto writerAgain = readModel->QueryWriter("3mf");
+			writerAgain->WriteToBuffer(buffer);
+
+			auto readerAgain = readModelAgain->QueryReader("3mf");
+			readerAgain->ReadFromBuffer(buffer);
+		}
+		checkSliceModels(readModel, readModelAgain);
 	}
 
 

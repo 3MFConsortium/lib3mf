@@ -39,8 +39,8 @@ namespace NMR {
 	CModelSliceStack::CModelSliceStack(_In_ const ModelResourceID sID, _In_ CModel * pModel, nfDouble dZBottom)
 		: CModelResource(sID, pModel)
 	{
-		m_nNumSliceRefsToMe = 0;
 		m_dZBottom = dZBottom;
+		m_sOwnPath = "";
 	}
 
 	CModelSliceStack::~CModelSliceStack()
@@ -137,17 +137,17 @@ namespace NMR {
 		}
 	}
 
-	nfUint32& CModelSliceStack::NumSliceRefsToMe()
+	std::string CModelSliceStack::OwnPath()
 	{
-		throw 0;
-		// return m_nNumSliceRefsToMe;
+		return m_sOwnPath;
 	}
 
-	std::string CModelSliceStack::sliceRefPath()
+	void CModelSliceStack::SetOwnPath(std::string sOwnPath)
 	{
-		return "";
-		// throw 0;
-		// return Geometry()->usesSliceRef() ? "/2D/2dmodel_" + std::to_string(getResourceID()->getUniqueID()) + ".model" : "";
+		if (sOwnPath == getModel()->rootPath())
+			m_sOwnPath = "";
+		else
+			m_sOwnPath = sOwnPath;
 	}
 
 	nfDouble CModelSliceStack::getZBottom()
@@ -196,21 +196,6 @@ namespace NMR {
 	}
 
 
-	//CSliceStackGeometry::CSliceStackGeometry()
-	//{
-	//	m_BottomZ = 0.0;
-	//	m_bUsesSliceRef = false;
-	//}
-
-	//CSliceStackGeometry::~CSliceStackGeometry()
-	//{
-	//}
-
-	//_Ret_notnull_ PSlice CSliceStackGeometry::getSlice(nfUint32 nIndex)
-	//{
-	//	return m_Slices[nIndex];
-	//}
-
 	//nfUint32 CSliceStackGeometry::addSlice(PSlice pSlice)
 	//{
 	//	if (pSlice->getTopZ() < m_BottomZ)
@@ -222,14 +207,6 @@ namespace NMR {
 	//	}
 	//	m_Slices.push_back(pSlice);
 	//	return (nfUint32)m_Slices.size() - 1;
-	//}
-
-	//void CSliceStackGeometry::mergeSliceStackGeometry(PSliceStackGeometry pSliceStackGeometry)
-	//{
-	//	for (int i = 0; i < (int)pSliceStackGeometry->getSliceCount(); i++)
-	//	{
-	//		this->addSlice(pSliceStackGeometry->getSlice(i));
-	//	}
 	//}
 
 	//nfUint32 CSliceStackGeometry::getSliceCount()
