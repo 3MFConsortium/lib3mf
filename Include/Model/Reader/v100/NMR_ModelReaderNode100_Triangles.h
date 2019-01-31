@@ -50,9 +50,9 @@ namespace NMR {
 		PModelReader_ColorMapping m_pColorMapping;
 		PModelReader_TexCoordMapping m_pTexCoordMapping;
 
-		ModelResourceID m_nDefaultPropertyID;
-		ModelResourceIndex m_nDefaultPropertyIndex;
-		ModelResourceID m_nUsedPropertyID;
+		ModelResourceID m_nDefaultResourceID;
+		ModelResourceIndex m_nDefaultResourceIndex;
+		ModelResourceID m_nUsedResourceID;
 
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);

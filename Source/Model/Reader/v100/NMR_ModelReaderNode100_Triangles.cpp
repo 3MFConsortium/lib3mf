@@ -56,10 +56,10 @@ namespace NMR {
 		m_pColorMapping = pColorMapping;
 		m_pTexCoordMapping = pTexCoordMapping;
 
-		m_nDefaultPropertyID = nDefaultPropertyID;
-		m_nDefaultPropertyIndex = nDefaultPropertyIndex;
+		m_nDefaultResourceID = nDefaultPropertyID;
+		m_nDefaultResourceIndex = nDefaultPropertyIndex;
 
-		m_nUsedPropertyID = 0;
+		m_nUsedResourceID = 0;
 
 		m_pModel = pModel;
 		m_pMesh = pMesh;
@@ -128,27 +128,43 @@ namespace NMR {
 					MESHNODE * pNode3 = m_pMesh->getNode(nIndex3);
 					MESHFACE * pFace = m_pMesh->addFace(pNode1, pNode2, pNode3);
 
-					ModelResourceID nPropertyID = m_nDefaultPropertyID;
-					ModelResourceIndex nPropertyIndex1 = m_nDefaultPropertyIndex;
-					ModelResourceIndex nPropertyIndex2 = m_nDefaultPropertyIndex;
-					ModelResourceIndex nPropertyIndex3 = m_nDefaultPropertyIndex;
+					ModelResourceID nResourceID = m_nDefaultResourceIndex;
+					ModelResourceIndex nResourceIndex1 = m_nDefaultResourceIndex;
+					ModelResourceIndex nResourceIndex2 = m_nDefaultResourceIndex;
+					ModelResourceIndex nResourceIndex3 = m_nDefaultResourceIndex;
 
-					if (pXMLNode->retrieveProperties(nPropertyID, nPropertyIndex1, nPropertyIndex2, nPropertyIndex3) || (nPropertyID != 0)) {
+					if (pXMLNode->retrieveProperties(nResourceID, nResourceIndex1, nResourceIndex2, nResourceIndex3) || (nResourceID != 0)) {
 						// set potential default properties (i.e. used pid)
-						m_nUsedPropertyID = nPropertyID;
+						m_nUsedResourceID = nResourceID;
 
-						PPackageResourceID pID = m_pModel->findPackageResourceID(m_pModel->curPath(), nPropertyID);
+						PPackageResourceID pID = m_pModel->findPackageResourceID(m_pModel->curPath(), nResourceID);
 						if (pID.get()) {
 							// Find and Assign Base Material Resource
-/*							PModelBaseMaterialResource pBaseMaterial = m_pModel->findBaseMaterial(pID->getUniqueID());
-							if (pBaseMaterial) {
-								CMeshInformation_BaseMaterials * pBaseMaterials = createBaseMaterialInformation();
-								MESHINFORMATION_BASEMATERIAL* pFaceData = (MESHINFORMATION_BASEMATERIAL*)pBaseMaterials->getFaceData(pFace->m_index);
-								if (pFaceData) {
-									pFaceData->m_nMaterialGroupID = pID->getUniqueID();
-									pFaceData->m_nMaterialIndex = nPropertyIndex1;
+							PModelResource pResource = m_pModel->findResource(pID->getUniqueID());
+							if (pResource.get () != nullptr) {
+
+								if (!pResource->hasResourceIndexMap())
+									pResource->buildResourceIndexMap();
+
+								ModelResourceID pPropertyID1;
+								ModelResourceID pPropertyID2;
+								ModelResourceID pPropertyID3;
+								if (pResource->mapResourceIndexToPropertyID (nResourceIndex1, pPropertyID1)
+									&& pResource->mapResourceIndexToPropertyID(nResourceIndex2, pPropertyID2) 
+									&& pResource->mapResourceIndexToPropertyID(nResourceIndex3, pPropertyID3)) {
+
+									CMeshInformation_Properties * pProperties = createPropertiesInformation();
+									MESHINFORMATION_PROPERTIES* pFaceData = (MESHINFORMATION_PROPERTIES*)pProperties->getFaceData(pFace->m_index);
+									if (pFaceData) {
+										pFaceData->m_nResourceID = pID->getUniqueID();
+										pFaceData->m_nPropertyIDs[0] = pPropertyID1;
+										pFaceData->m_nPropertyIDs[1] = pPropertyID2;
+										pFaceData->m_nPropertyIDs[2] = pPropertyID3;
+									}
+
 								}
-							} */
+
+							} 
 						}
 
 					}
@@ -164,7 +180,7 @@ namespace NMR {
 
 	ModelResourceID CModelReaderNode100_Triangles::getUsedPropertyID() const
 	{
-		return m_nUsedPropertyID;
+		return m_nUsedResourceID;
 	}
 
 }

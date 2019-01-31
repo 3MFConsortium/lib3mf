@@ -48,6 +48,10 @@ namespace NMR {
 	private:
 		CModel * m_pModel;
 		PPackageResourceID m_sResourceID;
+
+	protected:
+		std::vector<ModelResourceID> m_ResourceIndexMap;
+		nfBool m_bHasResourceIndexMap;
 		
 	public:
 		CModelResource() = delete;
@@ -56,7 +60,12 @@ namespace NMR {
 		~CModelResource();
 		
 		virtual PPackageResourceID getResourceID();
-		
+
+		bool mapResourceIndexToPropertyID (_In_ ModelResourceIndex nIndex, _Out_ ModelResourceID & nResourceID);
+		void clearResourceIndexMap();
+		virtual void buildResourceIndexMap();
+		nfBool hasResourceIndexMap();
+
 		_Ret_notnull_ CModel * getModel();
 	};
 
