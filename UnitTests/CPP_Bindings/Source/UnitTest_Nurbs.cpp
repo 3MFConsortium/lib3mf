@@ -46,20 +46,18 @@ namespace Lib3MF
 
 		virtual void SetUp() {
 			model = CLib3MFWrapper::CreateModel();
-			mesh = model->AddMeshObject();
+			
 		}
 		virtual void TearDown() {
 			model.reset();
 		}
 	
 		static PLib3MFModel model;
-		static PLib3MFMeshObject mesh;
 
 		static std::string OutFolder;
 	};
 
 	PLib3MFModel Nurbs::model;
-	PLib3MFMeshObject Nurbs::mesh;
 
 	std::string Nurbs::OutFolder(sOutFilesPath + "/Nurbs/");
 	
@@ -72,9 +70,9 @@ namespace Lib3MF
 		surface->AddKnotV(4, 0.0);
 		surface->AddKnotV(4, 1.0);
 
-		surface->AddUVCoordinate(0.5, 0.5);
-		surface->AddUVCoordinate(0.75, 0.5);
-		surface->AddUVCoordinate(0.5, 0.75);
+		auto uv1id = surface->AddUVCoordinate(0.5, 0.5);
+		auto uv2id = surface->AddUVCoordinate(0.75, 0.5);
+		auto uv3id = surface->AddUVCoordinate(0.5, 0.75);
 
 		surface->SetControlPoint(0, 0, 0.0, 0.0, 1.0, 1.0);
 		surface->SetControlPoint(1, 0, 0.0, 0.0, 1.0, 1.0 / 3.0);
@@ -96,9 +94,48 @@ namespace Lib3MF
 		surface->SetControlPoint(2, 3, 0.0, 0.0, -1.0, 1.0 / 3.0);
 		surface->SetControlPoint(3, 3, 0.0, 0.0, -1.0, 1.0);
 
+		auto mesh = model->AddMeshObject();
+		sLib3MFPosition Position;
+		Position.m_coordinates[0] = 0;
+		Position.m_coordinates[1] = 0;
+		Position.m_coordinates[2] = 0;
+		mesh->AddVertex(Position);
+		mesh->AddVertex(Position);
+		mesh->AddVertex(Position);
+
+		sLib3MFTriangle Triangle;
+		Triangle.m_indices[0] = 0;
+		Triangle.m_indices[1] = 1;
+		Triangle.m_indices[2] = 2;
+		mesh->AddTriangle(Triangle);
+
+		sLib3MFTriangleProperties Properties;
+
+		Properties.m_ResourceID = surface->GetResourceID();
+		Properties.m_PropertyIDs[0] = uv1id;
+		Properties.m_PropertyIDs[1] = uv2id;
+		Properties.m_PropertyIDs[2] = uv3id;
+		mesh->SetTriangleProperties(0, Properties);
+
 		auto writer = Nurbs::model->QueryWriter("3mf");
 		writer->WriteToFile(sOutFilesPath + "nurbstest1.3mf");
 	}
 
+	TEST_F(Nurbs, 3MFReadNurbsFromFile)
+	{
+		auto pReader = Nurbs::model->QueryReader ("3mf");
+
+		pReader->ReadFromFile(sTestFilesPath + "/Nurbs/" + "nurbstest.3mf");
+
+		auto SurfaceIterator = Nurbs::model->GetNurbsSurfaces();
+		while (SurfaceIterator->MoveNext()) {
+			auto NurbsSurface = SurfaceIterator->GetCurrentNurbsSurface();
+			sLib3MFNURBSUVCoordinate Coordinate;
+			NurbsSurface->GetUVCoordinate(1, Coordinate);
+
+		}
+
+		//CheckReaderWarnings(pReader, 0);
+	}
 
 }
