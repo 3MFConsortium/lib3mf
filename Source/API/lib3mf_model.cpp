@@ -257,6 +257,19 @@ ILib3MFResourceIterator * CLib3MFModel::GetBaseMaterialGroups ()
 	return pResult.release();
 }
 
+ILib3MFResourceIterator * CLib3MFModel::GetSliceStacks()
+{
+	auto pResult = std::make_unique<CLib3MFResourceIterator>();
+	Lib3MF_uint32 nCount = model().getSliceStackCount();
+
+	for (Lib3MF_uint32 nIdx = 0; nIdx < nCount; nIdx++) {
+		auto resource = model().getSliceStackResource(nIdx);
+		if (dynamic_cast<NMR::CModelSliceStack *>(resource.get()))
+			pResult->addResource(resource);
+	}
+	return pResult.release();
+}
+
 ILib3MFModel * CLib3MFModel::MergeToModel ()
 {
 	// Create merged mesh
@@ -318,12 +331,9 @@ ILib3MFComponentsObject * CLib3MFModel::AddComponentsObject ()
 ILib3MFSliceStack * CLib3MFModel::AddSliceStack(const Lib3MF_double dZBottom)
 {
 	NMR::ModelResourceID NewResourceID = model().generateResourceID();
-	NMR::PSliceStackGeometry pSliceStack = std::make_shared<NMR::CSliceStackGeometry>();
-	NMR::PModelSliceStack pNewResource = std::make_shared<NMR::CModelSliceStack>(NewResourceID, &model(), pSliceStack);
+	NMR::PModelSliceStack pNewResource = std::make_shared<NMR::CModelSliceStack>(NewResourceID, &model(), dZBottom);
 
 	model().addResource(pNewResource);
-
-	pNewResource->setZBottom(dZBottom);
 
 	return new CLib3MFSliceStack(pNewResource);
 }

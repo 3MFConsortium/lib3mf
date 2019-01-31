@@ -78,14 +78,14 @@ namespace NMR {
 			throw CNMRException(NMR_USERABORTED);
 	}
 
-	void CModelWriter_3MF::writeSlicestackStream(_In_ CXmlWriter *pXMLWriter, _In_ CModel * pModel, _In_ CModelSliceStack *pSliceStackResource)
+	void CModelWriter_3MF::writeSlicestackStream(_In_ CXmlWriter *pXMLWriter)
 	{
 		__NMRASSERT(pSliceStackResource != nullptr);
 		if (pXMLWriter == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
 		pXMLWriter->WriteStartDocument();
-		CModelWriterNode100_Model ModelNode(pModel, pXMLWriter, m_pProgressMonitor.get(), pSliceStackResource);
+		CModelWriterNode100_Model ModelNode(m_pModel.get(), pXMLWriter, m_pProgressMonitor.get(), nullptr);
 		ModelNode.writeToXML();
 
 		pXMLWriter->WriteEndDocument();

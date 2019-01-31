@@ -137,6 +137,7 @@ namespace NMR {
 						throw CNMRException(NMR_USERABORTED);
 					m_pProgressMonitor->PushLevel(1.0 - 2.0 / (m_nProgressCount + 2), 1.0 - 2.0 / (m_nProgressCount + 1 + 2));
 				}
+
 				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode_Slice1507_SliceStack>(
 					m_pModel, m_pWarnings, m_pProgressMonitor, m_sPath.c_str());
 				pXMLNode->parseXML(pXMLReader);

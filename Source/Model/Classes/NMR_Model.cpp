@@ -899,40 +899,4 @@ namespace NMR {
 		return m_SliceStackLookup[nIndex];
 	}
 
-	CSliceStackGeometry * CModel::getSliceStack(_In_ nfUint32 nIndex)
-	{
-		PModelResource pResouce = getSliceStackResource(nIndex);
-		CModelSliceStack * pSliceStackObject = dynamic_cast<CModelSliceStack *> (pResouce.get());
-		if (pSliceStackObject == nullptr)
-			throw CNMRException(NMR_ERROR_RESOURCETYPEMISMATCH);
-
-		CSliceStackGeometry *pSliceStack = pSliceStackObject->Geometry().get();
-		return pSliceStack;
-	}
-
-
-	void CModel::removeReferencedSliceStackResources()
-	{
-		// A slicestack resource that is referenced via the sliceref-attribute must not be referenced via the
-		// slicestack-id of a mesh-object.
-		// All referenced slicestack resources have already been merged into the slicestacks that reference them.
-		// Therefore, remove all referencd slicestack resources.
-		std::vector<PModelResource> vctToRemove;
-		for (auto pSliceStackResource : m_SliceStackLookup) {
-			CModelSliceStack * pSliceStackObject = dynamic_cast<CModelSliceStack *> (pSliceStackResource.get());
-			if (pSliceStackObject->NumSliceRefsToMe() > 0) {
-				vctToRemove.push_back(pSliceStackResource);
-			}
-			else {
-				pSliceStackObject->sliceRefPath();
-			}
-		}
-		for (auto resource : vctToRemove)
-		{
-			m_Resources.erase(std::find(m_Resources.begin(), m_Resources.end(), resource));
-			m_SliceStackLookup.erase(std::find(m_SliceStackLookup.begin(), m_SliceStackLookup.end(), resource));
-			m_ResourceMap.erase(resource->getResourceID()->getUniqueID());
-		}
-
-	}
 }

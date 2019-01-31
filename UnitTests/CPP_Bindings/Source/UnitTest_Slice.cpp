@@ -135,12 +135,20 @@ namespace Lib3MF
 
 	TEST_F(Slice, PolygonsFail)
 	{
+		slice->SetVertices(vVertices);
 
+		ASSERT_SPECIFIC_THROW(slice->AddPolygon(vInvalidPolygon), ELib3MFException);
 	}
 
 	TEST_F(Slice, ChangeVertices)
 	{
-		// 
+		slice->SetVertices(vVertices);
+
+		slice->AddPolygon(vOpenPolygon);
+		ASSERT_EQ(slice->GetPolygonCount(), 1);
+
+		slice->SetVertices(vVertices);
+		ASSERT_EQ(slice->GetPolygonCount(), 0);
 	}
 
 }

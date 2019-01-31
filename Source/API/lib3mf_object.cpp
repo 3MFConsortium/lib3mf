@@ -170,12 +170,12 @@ void CLib3MFObject::SetUUID(const std::string & sUUID)
 
 void CLib3MFObject::SetSlicesMeshResolution(const eLib3MFSlicesMeshResolution eMeshResolution)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	object()->setSlicesMeshResolution(NMR::eModelSlicesMeshResolution(eMeshResolution));
 }
 
 eLib3MFSlicesMeshResolution CLib3MFObject::GetSlicesMeshResolution()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return eLib3MFSlicesMeshResolution(object()->slicesMeshResolution());
 }
 
 bool CLib3MFObject::HasSliceStack()

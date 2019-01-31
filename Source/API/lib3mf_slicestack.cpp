@@ -100,3 +100,13 @@ void CLib3MFSliceStack::CollapseSliceReferences()
 	sliceStack()->CollapseSliceReferences();
 }
 
+void CLib3MFSliceStack::SetOwnPath(const std::string & sPath)
+{
+	sliceStack()->SetOwnPath(sPath);
+}
+
+std::string CLib3MFSliceStack::GetOwnPath()
+{
+	return sliceStack()->OwnPath();
+}
+

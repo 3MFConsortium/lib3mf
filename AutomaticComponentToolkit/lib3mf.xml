@@ -207,7 +207,7 @@
     <member name="V" type="double" />
   </struct>
 
-  <struct name="Color">
+	<struct name="Color">
 		<member name="Red" type="uint8" />
 		<member name="Green" type="uint8" />
 		<member name="Blue" type="uint8" />
@@ -493,7 +493,7 @@
 			<param name="NewIndex" type="uint32" pass="return" description="Index of the new triangle" />
 		</method>
 
-    <method name="GetTriangleIndices" description="Get all triangles of a mesh object">
+		<method name="GetTriangleIndices" description="Get all triangles of a mesh object">
 			<param name="Indices" type="structarray" class="Triangle" pass="out" description="contains the triangle indices." />
 		</method>
     <method name="SetTriangleProperties" description="Sets the properties of a single triangle of a mesh object.">
@@ -981,19 +981,14 @@
 			<param name="SliceRefIndex" type="uint64" pass="in" description="the index of the slice ref" />
 			<param name="TheSliceStack" type="handle" class="SliceStack" pass="return" description="the slicestack that is used as sliceref" />
 		</method>
-		
 		<method name="CollapseSliceReferences" description="Removes the indirection of slices via slice-refs, i.e. creates the slices of all slice refs of this SliceStack as actual slices of this SliceStack. All previously existing slices or slicerefs will be removed.">
 		</method>
-		
-		<!--
-		<method name="SetSliceRefPath" description="Sets the package path where this Slice should be stored. Input an empty string to reset the path">
+		<method name="SetOwnPath" description="Sets the package path where this Slice should be stored. Input an empty string to reset the path">
 			<param name="Path" type="string" pass="in" description="the package path where this Slice should be stored" />
 		</method>
-		<method name="GetSliceRefPath" description="Obtains the package path where this Slice should be stored. Returns an empty string if the slicestack is stored within the root model.">
-			<param name="Path" type="string" pass="out" description="the package path where this Slice will be stored" />
+		<method name="GetOwnPath" description="Obtains the package path where this Slice should be stored. Returns an empty string if the slicestack is stored within the root model.">
+			<param name="Path" type="string" pass="return" description="the package path where this Slice will be stored" />
 		</method>
-		-->
-		
 	</class>
 	
 	<class name="Model">
@@ -1065,6 +1060,10 @@
 		<method name="GetBaseMaterialGroups" description="creates a resource iterator instance with all base material resources.">
 			<param name="ResourceIterator" type="handle" class="ResourceIterator" pass="return" description="returns the iterator instance." />
 		</method>
+		<method name="GetSliceStacks" description="creates a resource iterator instance with all slice stack resources.">
+			<param name="ResourceIterator" type="handle" class="ResourceIterator" pass="return" description="returns the iterator instance." />
+		</method>
+		<method name="MergeToModel" description = "Merges all components and objects which are referenced by a build item into a mesh. The memory is duplicated and a new model is created.">
 
     <method name="GetNurbsSurfaces" description="creates a resource iterator instance with all nurbs surface resources.">
       <param name="ResourceIterator" type="handle" class="NurbsSurfaceIterator" pass="return" description="returns the iterator instance." />

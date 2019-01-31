@@ -48,7 +48,7 @@ namespace NMR {
 	class CModelWriterNode100_Model : public CModelWriterNode {
 	protected:
 		ModelResourceID m_ResourceCounter;
-
+		
 		PMeshInformation_PropertyIndexMapping m_pPropertyIndexMapping;
 		
 		nfBool m_bWriteMaterialExtension;
@@ -60,8 +60,6 @@ namespace NMR {
 		nfBool m_bWriteObjects;
 		nfBool m_bIsRootModel;
 		nfBool m_bWriteCustomNamespaces;
-
-		CModelSliceStack* m_pSliceStackResource;	// If this is set, only this slicestack should be exported
 
 		void writeModelMetaData();
 		void writeMetaData(_In_ PModelMetaData pMetaData);
@@ -78,7 +76,6 @@ namespace NMR {
 
 		void writeSliceStacks();
 		void writeSliceStack(_In_ CModelSliceStack *pSliceStack);
-		void writeSliceStack(_In_ CSliceStackGeometry *pSliceStackGeometry);
 
 		void writeComponentsObject(_In_ CModelComponentsObject * pComponentsObject);
 
@@ -90,7 +87,7 @@ namespace NMR {
 	public:
 		CModelWriterNode100_Model() = delete;
 		CModelWriterNode100_Model(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter, _In_ CProgressMonitor * pProgressMonitor);
-		CModelWriterNode100_Model(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter, _In_ CProgressMonitor * pProgressMonitor, CModelSliceStack *pSliceStackResource);
+		CModelWriterNode100_Model(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter, _In_ CProgressMonitor * pProgressMonitor, nfBool bWritesRootModel);
 		
 		virtual void writeToXML();
 	};

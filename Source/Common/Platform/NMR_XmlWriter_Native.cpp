@@ -149,7 +149,7 @@ namespace NMR {
 	void CXmlWriter_Native::WriteEndElement()
 	{
 		if (m_bElementIsOpen) {
-			writeUTF8(" />", true);
+			writeUTF8("/>", true);
 			m_bElementIsOpen = false;
 
 			if ((m_NodeStack.size() == 0) || (m_nLayer == 0))
