@@ -34,24 +34,27 @@ This is the class for exporting the 3mf model stream root node.
 #ifndef __NMR_MODELWRITERNODE100_MODEL
 #define __NMR_MODELWRITERNODE100_MODEL
 
+#include "Model/Classes/NMR_Model.h" 
 #include "Model/Writer/NMR_ModelWriterNode.h" 
-#include "Model/Writer/NMR_ModelWriter_ColorMapping.h" 
 #include "Model/Classes/NMR_ModelComponentsObject.h" 
 #include "Model/Classes/NMR_ModelMeshObject.h" 
 #include "Common/Platform/NMR_XmlWriter.h"
-#include "Model/Writer/NMR_ModelWriter_TexCoordMappingContainer.h"
+
+#include "Common/MeshInformation/NMR_MeshInformation_Properties.h"
+
 
 namespace NMR {
 
 	class CModelWriterNode100_Model : public CModelWriterNode {
 	protected:
-		PModelWriter_ColorMapping m_pColorMapping;
-		PModelWriter_TexCoordMappingContainer m_pTexCoordMappingContainer;
 		ModelResourceID m_ResourceCounter;
+		
+		PMeshInformation_PropertyIndexMapping m_pPropertyIndexMapping;
 		
 		nfBool m_bWriteMaterialExtension;
 		nfBool m_bWriteProductionExtension;
 		nfBool m_bWriteBeamLatticeExtension;
+		nfBool m_bWriteNurbsExtension;
 		nfBool m_bWriteSliceExtension;
 		nfBool m_bWriteBaseMaterials;
 		nfBool m_bWriteObjects;
@@ -69,9 +72,10 @@ namespace NMR {
 		void writeTex2Coords();
 		void writeObjects();
 		void writeBuild();
-		void writeSliceStack(_In_ CModelSliceStack *pSliceStackResource);
+		void writeNurbs();
 
 		void writeSliceStacks();
+		void writeSliceStack(_In_ CModelSliceStack *pSliceStack);
 
 		void writeComponentsObject(_In_ CModelComponentsObject * pComponentsObject);
 

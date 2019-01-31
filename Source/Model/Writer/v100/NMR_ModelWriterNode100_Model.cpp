@@ -58,18 +58,17 @@ namespace NMR {
 	{
 		m_ResourceCounter = pModel->generateResourceID();
 
-		m_pColorMapping = std::make_shared<CModelWriter_ColorMapping>(generateOutputResourceID ());
+		m_pPropertyIndexMapping = std::make_shared<CMeshInformation_PropertyIndexMapping> ();
 
-		m_pTexCoordMappingContainer = std::make_shared<CModelWriter_TexCoordMappingContainer>();
 		m_bWriteMaterialExtension = true;
 		m_bWriteProductionExtension = true;
 		m_bWriteBeamLatticeExtension = true;
 		m_bWriteSliceExtension = true;
 		m_bWriteBaseMaterials = true;
 		m_bWriteObjects = true;
-		m_bIsRootModel = true;
 
-		m_bWriteCustomNamespaces = true;
+		m_bIsRootModel = true;
+		m_bWriteCustomNamespaces = true;		
 
 		// register custom NameSpaces from metadata in objects, build items and the model itself
 		RegisterMetaDataNameSpaces();
@@ -265,6 +264,7 @@ namespace NMR {
 
 	}
 
+
 	void CModelWriterNode100_Model::writeSliceStacks() {
 		nfUint32 nSliceStackCount = m_pModel->getSliceStackCount();
 
@@ -444,7 +444,7 @@ namespace NMR {
 				}
 
 				CModelWriterNode100_Mesh ModelWriter_Mesh(pMeshObject, m_pXMLWriter, m_pProgressMonitor,
-					m_pColorMapping, m_pTexCoordMappingContainer, m_bWriteMaterialExtension, m_bWriteBeamLatticeExtension);
+					m_pPropertyIndexMapping, m_bWriteMaterialExtension, m_bWriteBeamLatticeExtension);
 				ModelWriter_Mesh.writeToXML();
 			}
 
@@ -506,7 +506,7 @@ namespace NMR {
 
 	void CModelWriterNode100_Model::writeColors()
 	{
-		nfUint32 nCount = m_pColorMapping->getCount();
+		/*nfUint32 nCount = m_pColorMapping->getCount();
 		nfUint32 nIndex;
 		if (nCount > 0) {
 			writeStartElementWithPrefix(XML_3MF_ELEMENT_COLORGROUP, XML_3MF_NAMESPACEPREFIX_MATERIAL);
@@ -519,12 +519,12 @@ namespace NMR {
 			}
 
 			writeFullEndElement();
-		}
+		} */
 	}
 
 	void CModelWriterNode100_Model::writeTex2Coords()
 	{
-		nfUint32 nGroupCount = m_pTexCoordMappingContainer->getCount();
+/*		nfUint32 nGroupCount = m_pTexCoordMappingContainer->getCount();
 		nfUint32 nGroupIndex;
 
 		for (nGroupIndex = 0; nGroupIndex < nGroupCount; nGroupIndex++) {
@@ -547,7 +547,7 @@ namespace NMR {
 
 				writeFullEndElement();
 			}
-		}
+		} */
 
 	}
 

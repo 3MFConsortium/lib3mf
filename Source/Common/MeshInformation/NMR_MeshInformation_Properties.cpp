@@ -54,39 +54,14 @@ namespace NMR {
 	}
 
 
-	nfUint32 CMeshInformation_PropertyIndexMapping::createNewIndex(nfUint32 nResourceID)
+
+
+	nfUint32 CMeshInformation_PropertyIndexMapping::registerPropertyID(nfUint32 nResourceID, nfUint32 nPropertyID, nfUint32 nResourceIndex)
 	{
-		nfUint32 nResourceIndex;
-		auto iIterator = m_ResourceMap.find(nResourceID);
-		if (iIterator != m_ResourceMap.end()) {
-			nResourceIndex = iIterator->second;
-			iIterator->second++;			
-		}
-		else {
-			nResourceIndex = 0;
-			m_ResourceMap.insert(std::make_pair(nResourceID, 1));
-		}
-
-		return nResourceID;
-	}
-
-
-	nfUint32 CMeshInformation_PropertyIndexMapping::registerPropertyID(nfUint32 nResourceID, nfUint32 nPropertyID)
-	{
-		nfUint32 nResourceIndex;
-
 		if (nResourceID == 0)
 			throw CNMRException(NMR_ERROR_INVALIDPROPERTYRESOURCEID);
 
-		auto iIterator = m_IDMap.find(std::make_pair(nResourceID, nPropertyID));		
-		if (iIterator != m_IDMap.end()) {
-			nResourceIndex = iIterator->second.first;							
-			iIterator->second.second++;			
-		}
-		else {
-			nResourceIndex = createNewIndex(nResourceID);
-			m_IDMap.insert(std::make_pair(std::make_pair(nResourceID, nPropertyID), std::make_pair (nResourceIndex, 1)));
-		}
+		m_IDMap.insert(std::make_pair(std::make_pair(nResourceID, nPropertyID), nResourceIndex));
 
 		return nResourceIndex;
 	}
@@ -101,11 +76,11 @@ namespace NMR {
 		if (iIterator == m_IDMap.end())
 			throw CNMRException(NMR_ERROR_PROPERTYIDNOTFOUND);
 
-		return iIterator->second.first;
+		return iIterator->second;
 	}
 
 
-	void CMeshInformation_PropertyIndexMapping::findDefaultProperties()
+/*	void CMeshInformation_PropertyIndexMapping::findDefaultProperties()
 	{
 		nfUint32 nMaxCount = 0;
 		auto iIterator = m_IDMap.begin();
@@ -120,7 +95,7 @@ namespace NMR {
 
 			iIterator++;
 		}
-	}
+	} */
 
 
 	CMeshInformation_Properties::CMeshInformation_Properties() : CMeshInformation()
@@ -206,25 +181,6 @@ namespace NMR {
 			return (pFaceData->m_nResourceID != 0);
 
 		return false;
-	}
-
-	PMeshInformation_PropertyIndexMapping CMeshInformation_Properties::createIndexMapping()
-	{
-		auto pIndexMapping = std::make_shared<CMeshInformation_PropertyIndexMapping>();
-		nfUint32 nFaceCount = m_pContainer->getCurrentFaceCount();
-		nfUint32 nFaceIndex;
-
-		for (nFaceIndex = 0; nFaceIndex < nFaceCount; nFaceIndex++) {
-			MESHINFORMATION_PROPERTIES * pFaceData = (MESHINFORMATION_PROPERTIES*)getFaceData(nFaceIndex);
-			if (pFaceData) {
-				for (unsigned int j = 0; j < 3; j++)
-					pIndexMapping->registerPropertyID(pFaceData->m_nResourceID, pFaceData->m_nPropertyIDs[j]);
-			}
-		}
-
-		pIndexMapping->findDefaultProperties ();
-
-		return pIndexMapping;
 	}
 
 
