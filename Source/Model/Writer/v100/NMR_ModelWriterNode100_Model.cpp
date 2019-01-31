@@ -69,13 +69,8 @@ namespace NMR {
 		m_bWriteBaseMaterials = true;
 		m_bWriteObjects = true;
 
-<<<<<<< HEAD
-		m_bWriteCustomNamespaces = true;
-=======
 		m_bIsRootModel = true;
 		m_bWriteCustomNamespaces = true;		
-		m_pSliceStackResource = NULL;
->>>>>>> hourglassnurbs
 
 		// register custom NameSpaces from metadata in objects, build items and the model itself
 		RegisterMetaDataNameSpaces();
@@ -291,7 +286,7 @@ namespace NMR {
 			if (pSurface != nullptr) {
 
 				std::vector <sModelNurbsUVCoord> UVCoordVector;
-				pSurface->registerProperties(pSurface->getResourceID()->getUniqueID(), m_pPropertyIndexMapping.get(), UVCoordVector);
+				pSurface->registerProperties(m_pPropertyIndexMapping.get(), UVCoordVector);
 
 				writeStartElementWithPrefix(XML_3MF_ELEMENT_NURBSSURFACE, XML_3MF_NAMESPACEPREFIX_NURBS);
 

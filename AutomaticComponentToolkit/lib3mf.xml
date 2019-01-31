@@ -1063,8 +1063,8 @@
 		<method name="GetSliceStacks" description="creates a resource iterator instance with all slice stack resources.">
 			<param name="ResourceIterator" type="handle" class="ResourceIterator" pass="return" description="returns the iterator instance." />
 		</method>
-		<method name="MergeToModel" description = "Merges all components and objects which are referenced by a build item into a mesh. The memory is duplicated and a new model is created.">
-
+    
+    
     <method name="GetNurbsSurfaces" description="creates a resource iterator instance with all nurbs surface resources.">
       <param name="ResourceIterator" type="handle" class="NurbsSurfaceIterator" pass="return" description="returns the iterator instance." />
     </method>
