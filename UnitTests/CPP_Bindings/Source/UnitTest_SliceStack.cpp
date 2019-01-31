@@ -409,17 +409,26 @@ namespace Lib3MF
 
 		virtual void SetUp() {
 			model = CLib3MFWrapper::CreateModel();
+			reader = model->QueryReader("3mf");
 		}
 		virtual void TearDown() {
 			model.reset();
 		}
 
 		PLib3MFModel model;
+		PLib3MFReader reader;
 	};
 
-	TEST_F(SliceStackReading, DISABLED_ReadSlices)
+	TEST_F(SliceStackReading, ReadSlices)
 	{
-		ASSERT_FALSE(true);
+		// reader->ReadFromFile(sTestFilesPath+"/ReadSliceTest.3mf");
+
+	}
+
+	TEST_F(SliceStackReading, ReadSlices_Fails)
+	{
+		reader->ReadFromFile(sTestFilesPath + "/ReadSliceTest.3mf");
+
 	}
 }
 
