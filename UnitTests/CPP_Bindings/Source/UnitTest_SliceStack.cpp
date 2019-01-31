@@ -91,7 +91,7 @@ namespace Lib3MF
 	TEST_F(SliceStack, AddSlicesNegative)
 	{
 		ASSERT_EQ(sliceStack->GetSliceCount(), 0);
-		
+
 		ASSERT_SPECIFIC_THROW(sliceStack->AddSlice(-1.0), ELib3MFException);
 
 		auto slice = sliceStack->AddSlice(1.0);
@@ -114,8 +114,8 @@ namespace Lib3MF
 	{
 		auto stack = model->AddSliceStack(1.0);
 		auto sliceA = stack->AddSlice(2.);
-		ASSERT_EQ(stack->GetSliceCount(),1);
-		
+		ASSERT_EQ(stack->GetSliceCount(), 1);
+
 		auto sliceA1 = stack->GetSlice(0);
 
 		auto sliceB = stack->AddSlice(3.);
@@ -302,8 +302,8 @@ namespace Lib3MF
 
 	void CompareSliceStacks(PLib3MFSliceStack A, PLib3MFSliceStack B)
 	{
-		EXPECT_TRUE(abs(A->GetBottomZ() - B->GetBottomZ())<1e-5);
-
+		EXPECT_TRUE(abs(A->GetBottomZ() - B->GetBottomZ()) < 1e-5);
+		EXPECT_TRUE(A->GetOwnPath() == B->GetOwnPath());
 		ASSERT_EQ(A->GetSliceCount(), B->GetSliceCount());
 		for (int i = 0; i < A->GetSliceCount(); i++) {
 			auto slice = A->GetSlice(i);
@@ -370,7 +370,7 @@ namespace Lib3MF
 		auto stack1 = model->AddSliceStack(0);
 		stack1->SetOwnPath("/2D/A2dmodel.model");
 		stack2->SetOwnPath("/2D/A2dmodel.model");
-	
+
 		stack3->AddSliceStackReference(stack1.get());
 		stack3->AddSliceStackReference(stack2.get());
 
@@ -421,14 +421,84 @@ namespace Lib3MF
 
 	TEST_F(SliceStackReading, ReadSlices)
 	{
-		// reader->ReadFromFile(sTestFilesPath+"/ReadSliceTest.3mf");
+		reader->ReadFromFile(sTestFilesPath + "/Slice/Expected_Slice_Hierarchy.3mf");
 
+		auto sliceStack1 = model->GetSliceStackByID(1);
+		auto sliceStack2 = model->GetSliceStackByID(2);
+
+		auto sliceStack3 = model->GetSliceStackByID(3);
+		ASSERT_EQ(sliceStack3->GetSliceCount(), 1);
+		auto slice0 = sliceStack3->GetSlice(0);
+		ASSERT_EQ(slice0->GetPolygonCount(), 1);
+		ASSERT_EQ(slice0->GetVertexCount(), 4);
+
+		auto sliceStack4 = model->GetSliceStackByID(4);
+		ASSERT_EQ(sliceStack4->GetSliceRefCount(), 2);
+
+		ASSERT_EQ(sliceStack4->GetSliceRefCount(), 2);
+		auto sr2 = sliceStack4->GetSliceStackReference(0);
+		auto sr1 = sliceStack4->GetSliceStackReference(1);
+
+		CompareSliceStacks(sr2, sliceStack2);
+		CompareSliceStacks(sr1, sliceStack1);
+		ASSERT_TRUE(sr1->GetOwnPath() == "/2D/A2dmodel.model");
 	}
 
-	TEST_F(SliceStackReading, ReadSlices_Fails)
+	class SliceStackReadingMultiple : public testing::TestWithParam<const char*>
 	{
-		reader->ReadFromFile(sTestFilesPath + "/ReadSliceTest.3mf");
+	public:
+		virtual void SetUp() {
+			model = CLib3MFWrapper::CreateModel();
+			reader = model->QueryReader("3mf");
+		}
+		virtual void TearDown() {
+			model.reset();
+		}
 
+		PLib3MFModel model;
+		PLib3MFReader reader;
+	};
+
+	INSTANTIATE_TEST_CASE_P(WorkingFiles, SliceStackReadingMultiple,
+		::testing::Values(
+			"MultiSliceStack_TwoFiles.3mf",
+			"MultiSliceStack_OneFile.3mf",
+			"MultiSliceStack_NoFile.3mf",
+			"UniSliceStack_TwoFiles.3mf"
+		));
+
+	TEST_P(SliceStackReadingMultiple, WorkingFiles)
+	{
+		std::string fileName = GetParam();
+		reader->ReadFromFile(sTestFilesPath + "/Slice/" + fileName);
 	}
+
+
+	class SliceStackReadingMultipleFailing : public testing::TestWithParam<const char*>
+	{
+	public:
+		virtual void SetUp() {
+			model = CLib3MFWrapper::CreateModel();
+			reader = model->QueryReader("3mf");
+		}
+		virtual void TearDown() {
+			model.reset();
+		}
+
+		PLib3MFModel model;
+		PLib3MFReader reader;
+	};
+
+	INSTANTIATE_TEST_CASE_P(FailingFiles, SliceStackReadingMultipleFailing,
+		::testing::Values(
+			"Slice_MustFail_TooRefsTooDeep.3mf"
+		));
+
+	TEST_P(SliceStackReadingMultipleFailing, FailingFiles)
+	{
+		std::string fileName = GetParam();
+		ASSERT_SPECIFIC_THROW(reader->ReadFromFile(sTestFilesPath + "/Slice/" + fileName), ELib3MFException);
+	}
+
 }
 
