@@ -111,7 +111,7 @@ public:
 
 	ILib3MFResourceIterator * GetBaseMaterialGroups ();
 
-	ILib3MFResourceIterator * GetNurbsSurfaces ();
+	ILib3MFNurbsSurfaceIterator * GetNurbsSurfaces ();
 
 
 

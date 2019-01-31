@@ -325,6 +325,12 @@
 		</method>
 	</class>
 
+  <class name="NurbsSurfaceIterator" parent="ResourceIterator">
+    <method name="GetCurrentNurbsSurface" description="Returns the Nurbs Surface the iterator points at.">
+      <param name="Resource" type="handle" class="NurbsSurface" pass="return" description="returns the resource instance." />
+    </method>
+  </class>
+  
 	<class name="MetaData">
 		<method name="GetNameSpace" dllsuffix="utf8" description = "returns the namespace URL of the metadata">
 			<param name="NameSpace" type="string" pass="return" description="the namespace URL of the metadata" />
@@ -1061,7 +1067,7 @@
 		</method>
 
     <method name="GetNurbsSurfaces" description="creates a resource iterator instance with all nurbs surface resources.">
-      <param name="ResourceIterator" type="handle" class="ResourceIterator" pass="return" description="returns the iterator instance." />
+      <param name="ResourceIterator" type="handle" class="NurbsSurfaceIterator" pass="return" description="returns the iterator instance." />
     </method>
 
     <method name="MergeToModel" description = "Merges all components and objects which are referenced by a build item. The memory is duplicated and a new model is created.">

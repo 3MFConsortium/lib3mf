@@ -78,11 +78,15 @@ namespace NMR {
 			if (std::isnan(dValue) || (dValue < -XML_3MF_MAXIMUMCOORDINATEVALUE) || (dValue > XML_3MF_MAXIMUMCOORDINATEVALUE))
 				throw CNMRException(NMR_ERROR_NURBSINVALIDATTRIBUTE);
 			m_U = dValue;
+			m_bHasU = true;
+
 		} else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_NURBS_V) == 0) {
 			nfDouble dValue = fnStringToDouble(pAttributeValue);
 			if (std::isnan(dValue) || (dValue < -XML_3MF_MAXIMUMCOORDINATEVALUE) || (dValue > XML_3MF_MAXIMUMCOORDINATEVALUE))
 				throw CNMRException(NMR_ERROR_NURBSINVALIDATTRIBUTE);
 			m_V = dValue;
+			m_bHasV = true;
+
 		}
 		else
 			m_pWarnings->addException(CNMRException(NMR_ERROR_NURBSINVALIDATTRIBUTE), mrwInvalidOptionalValue);

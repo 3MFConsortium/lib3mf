@@ -82,6 +82,8 @@ namespace NMR {
 		// Parse Content
 		parseContent(pXMLReader);
 
+		m_pModel->addResource(m_pNurbsSurface);
+
 
 	}
 
@@ -165,8 +167,27 @@ namespace NMR {
 					throw CNMRException(NMR_ERROR_NURBSDUPLICATECONTROLPOINTS);
 				__NMRASSERT(m_pNurbsSurface.get() == nullptr);
 
-				nfUint32 nControlPointCountU = m_nDegreeU + ((nfUint32)m_KnotsU.size()) + 1;
-				nfUint32 nControlPointCountV = m_nDegreeV + ((nfUint32)m_KnotsV.size()) + 1;
+				nfInt32 nKnotsUMultiplicitiesSum = 0;
+				auto iKnotsUIter = m_KnotsU.begin();
+				while (iKnotsUIter != m_KnotsU.end()) {
+					nKnotsUMultiplicitiesSum += iKnotsUIter->m_Multiplicity;
+					iKnotsUIter++;
+				}
+
+				nfInt32 nKnotsVMultiplicitiesSum = 0;					
+				auto iKnotsVIter = m_KnotsV.begin();
+				while (iKnotsVIter != m_KnotsV.end()) {
+					nKnotsVMultiplicitiesSum += iKnotsVIter->m_Multiplicity;
+					iKnotsVIter++;
+				}
+
+				nfInt32 nControlPointCountU = nKnotsUMultiplicitiesSum - (nfInt32) (m_nDegreeU + 1);
+				nfInt32 nControlPointCountV = nKnotsVMultiplicitiesSum - (nfInt32) (m_nDegreeV + 1);
+				if (nControlPointCountV < 1)
+					throw CNMRException(NMR_ERROR_INVALIDCONTROLPOINTCOUNT);
+				if (nControlPointCountU < 1)
+					throw CNMRException(NMR_ERROR_INVALIDCONTROLPOINTCOUNT);
+
 
 				m_pNurbsSurface = std::make_shared<CModelNurbsSurface>(m_nID, m_pModel, m_nDegreeU, m_nDegreeV, nControlPointCountU, nControlPointCountV);
 
@@ -196,3 +217,4 @@ namespace NMR {
 		}
 	}
 }
+

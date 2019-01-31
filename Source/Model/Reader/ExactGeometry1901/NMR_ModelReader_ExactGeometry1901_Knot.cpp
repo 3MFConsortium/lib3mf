@@ -91,7 +91,7 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_NURBSDUPLICATEATTRIBUTE);
 
 			nfDouble dValue = fnStringToDouble(pAttributeValue);
-			if ( std::isnan(dValue) || (dValue <= 0) || (dValue > XML_3MF_MAXIMUMCOORDINATEVALUE) )
+			if ( std::isnan(dValue) || (dValue < -XML_3MF_MAXIMUMCOORDINATEVALUE) || (dValue > XML_3MF_MAXIMUMCOORDINATEVALUE) )
 				throw CNMRException(NMR_ERROR_NURBSINVALIDATTRIBUTE);
 			
 			m_dValue = dValue;

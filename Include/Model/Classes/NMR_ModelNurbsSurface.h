@@ -138,6 +138,7 @@ namespace NMR {
 
 		void registerProperties (nfUint32 nResourceID, CMeshInformation_PropertyIndexMapping * pPropertyMapping, std::vector<sModelNurbsUVCoord> & ValueList);
 
+		virtual void buildResourceIndexMap();
 
 	};
 

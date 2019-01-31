@@ -36,6 +36,7 @@ ${SRCS_COM}
 ./Source/API/lib3mf_metadatagroup.cpp
 ./Source/API/lib3mf_model.cpp
 ./Source/API/lib3mf_nurbssurface.cpp
+./Source/API/lib3mf_nurbssurfaceiterator.cpp
 ./Source/API/lib3mf_object.cpp
 ./Source/API/lib3mf_reader.cpp
 ./Source/API/lib3mf_resource.cpp

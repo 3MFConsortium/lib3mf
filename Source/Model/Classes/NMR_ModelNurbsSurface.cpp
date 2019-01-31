@@ -391,4 +391,19 @@ namespace NMR {
 
 	}
 
+
+	void CModelNurbsSurface::buildResourceIndexMap()
+	{
+		m_ResourceIndexMap.clear();
+		m_ResourceIndexMap.reserve(m_UVCoords.size ());
+
+		auto iIterator = m_UVCoords.begin();
+		while (iIterator != m_UVCoords.end()) {
+			m_ResourceIndexMap.push_back (iIterator->first);
+			iIterator++;
+		}
+
+		m_bHasResourceIndexMap = true;
+	}
+
 }

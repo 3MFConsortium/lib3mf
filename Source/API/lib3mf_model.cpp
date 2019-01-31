@@ -44,6 +44,7 @@ Abstract: This is a stub class definition of CLib3MFModel
 #include "lib3mf_attachment.hpp"
 #include "lib3mf_slicestack.hpp"
 #include "lib3mf_nurbssurface.hpp"
+#include "lib3mf_nurbssurfaceiterator.hpp"
 // Include custom headers here.
 
 #include "Model/Classes/NMR_ModelMeshObject.h"
@@ -173,14 +174,14 @@ ILib3MFBuildItemIterator * CLib3MFModel::GetBuildItems ()
 }
 
 
-ILib3MFResourceIterator * CLib3MFModel::GetNurbsSurfaces()
+ILib3MFNurbsSurfaceIterator * CLib3MFModel::GetNurbsSurfaces()
 {
-	auto pResult = std::make_unique<CLib3MFResourceIterator>();
-	Lib3MF_uint32 nObjectsCount = model().getObjectCount();
+	auto pResult = std::make_unique<CLib3MFNurbsSurfaceIterator>();
+	Lib3MF_uint32 nResourceCount = model().getResourceCount();
 	Lib3MF_uint32 nIdx;
 
-	for (nIdx = 0; nIdx < nObjectsCount; nIdx++) {
-		auto resource = model().getObjectResource(nIdx);
+	for (nIdx = 0; nIdx < nResourceCount; nIdx++) {
+		auto resource = model().getResource(nIdx);
 		if (dynamic_cast<NMR::CModelNurbsSurface *>(resource.get()))
 			pResult->addResource(resource);
 	}

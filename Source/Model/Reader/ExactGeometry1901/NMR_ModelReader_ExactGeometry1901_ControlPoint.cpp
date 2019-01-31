@@ -83,24 +83,28 @@ namespace NMR {
 			if (std::isnan(dValue) || (dValue < -XML_3MF_MAXIMUMCOORDINATEVALUE) || (dValue > XML_3MF_MAXIMUMCOORDINATEVALUE))
 				throw CNMRException(NMR_ERROR_NURBSINVALIDATTRIBUTE);
 			m_X = dValue;
+			m_bHasX = true;
 		} 
 		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_NURBS_Y) == 0) {
 			nfDouble dValue = fnStringToDouble(pAttributeValue);
 			if (std::isnan(dValue) || (dValue < -XML_3MF_MAXIMUMCOORDINATEVALUE) || (dValue > XML_3MF_MAXIMUMCOORDINATEVALUE))
 				throw CNMRException(NMR_ERROR_NURBSINVALIDATTRIBUTE);
 			m_Y = dValue;
+			m_bHasY = true;
 		}
 		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_NURBS_Z) == 0) {
 			nfDouble dValue = fnStringToDouble(pAttributeValue);
 			if (std::isnan(dValue) || (dValue < -XML_3MF_MAXIMUMCOORDINATEVALUE) || (dValue > XML_3MF_MAXIMUMCOORDINATEVALUE))
 				throw CNMRException(NMR_ERROR_NURBSINVALIDATTRIBUTE);
 			m_Z = dValue;
+			m_bHasZ = true;
 		}
 		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_NURBS_W) == 0) {
 			nfDouble dValue = fnStringToDouble(pAttributeValue);
 			if (std::isnan(dValue) || (dValue < -XML_3MF_MAXIMUMCOORDINATEVALUE) || (dValue > XML_3MF_MAXIMUMCOORDINATEVALUE))
 				throw CNMRException(NMR_ERROR_NURBSINVALIDATTRIBUTE);
 			m_Weight = dValue;
+			m_bHasWeight = true;
 		}
 		else
 			m_pWarnings->addException(CNMRException(NMR_ERROR_NURBSINVALIDATTRIBUTE), mrwInvalidOptionalValue);
