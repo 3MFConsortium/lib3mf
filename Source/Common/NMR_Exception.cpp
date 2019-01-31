@@ -381,6 +381,7 @@ namespace NMR {
 		case NMR_ERROR_PROPERTYIDNOTFOUND: return "Property ID not found";
 
 
+
 		// XML Parser Error Constants(0x9XXX)
 		case NMR_ERROR_XMLPARSER_INVALIDATTRIBVALUE: return "Invalid XML attribute value";
 		case NMR_ERROR_XMLPARSER_INVALIDPARSERESULT: return "Invalid XML parse result";
@@ -414,6 +415,24 @@ namespace NMR {
 		case NMR_ERROR_INVALIDNAMELENGTH: return "Invalid name length";
 		case NMR_ERROR_COULDNOTCREATEMODEL: return "Could not create model";
 		case NMR_ERROR_INVALIDTEXTURETYPE: return "Invalid Texture type";
+
+		// Extension Errors - Nurbs
+		case NMR_ERROR_NURBSINVALIDATTRIBUTE: return "Invalid Nurbs Attribute";
+		case NMR_ERROR_NURBSMISSINGCOORDINATE: return "Missing Nurbs Coordinate";
+		case NMR_ERROR_NURBSMISSINGDEGREE: return "Missing Nurbs Degree";
+		case NMR_ERROR_NURBSDUPLICATEUKNOTS: return "Duplicate U Knots";
+		case NMR_ERROR_NURBSDUPLICATEVKNOTS: return "Duplicate V Knots";
+		case NMR_ERROR_NURBSDUPLICATECONTROLPOINTS: return "Duplicate Control Points";
+		case NMR_ERROR_INVALIDCONTROLPOINTCOUNT: return "Invalid Control Point Count";
+		case NMR_ERROR_NURBSDUPLICATEATTRIBUTE: return "Duplicate Nurbs Attribute";
+		case NMR_ERROR_NURBSMULTIPLICITYMISSING: return "Knot Multiplicity Missing";
+		case NMR_ERROR_NURBSVALUEMISSING: return "Knot Values Missing";
+		case NMR_ERROR_NURBSDUPLICATEUVMAPPING: return "Duplicate Nurbs UV Mapping";
+		case NMR_ERROR_INVALIDNURBSSURFACEORDER: return "Invalid Nurbs Surface Order";
+		case NMR_ERROR_NURBSINVALIDCONTROLPOINTCOUNT: return "Invalid Control Point Count";
+		case NMR_ERROR_TOOMANYKNOTS: return "too many knots";
+		case NMR_ERROR_INVALIDNURBSDEGREE: return "Invalid Nurbs Degree";
+
 
 		default:
 			return "unknown error";

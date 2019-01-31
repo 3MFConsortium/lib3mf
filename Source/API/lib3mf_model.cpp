@@ -43,10 +43,13 @@ Abstract: This is a stub class definition of CLib3MFModel
 #include "lib3mf_metadatagroup.hpp"
 #include "lib3mf_attachment.hpp"
 #include "lib3mf_slicestack.hpp"
+#include "lib3mf_nurbssurface.hpp"
+#include "lib3mf_nurbssurfaceiterator.hpp"
 // Include custom headers here.
 
 #include "Model/Classes/NMR_ModelMeshObject.h"
 #include "Model/Classes/NMR_ModelComponentsObject.h"
+#include "Model/Classes/NMR_ModelNurbsSurface.h"
 #include "Common/Platform/NMR_ImportStream_Memory.h"
 
 #include "lib3mf_utils.hpp"
@@ -170,6 +173,22 @@ ILib3MFBuildItemIterator * CLib3MFModel::GetBuildItems ()
 	return pResult.release();
 }
 
+
+ILib3MFNurbsSurfaceIterator * CLib3MFModel::GetNurbsSurfaces()
+{
+	auto pResult = std::make_unique<CLib3MFNurbsSurfaceIterator>();
+	Lib3MF_uint32 nResourceCount = model().getResourceCount();
+	Lib3MF_uint32 nIdx;
+
+	for (nIdx = 0; nIdx < nResourceCount; nIdx++) {
+		auto resource = model().getResource(nIdx);
+		if (dynamic_cast<NMR::CModelNurbsSurface *>(resource.get()))
+			pResult->addResource(resource);
+	}
+
+	return pResult.release();
+}
+
 ILib3MFResourceIterator * CLib3MFModel::GetResources ()
 {
 	auto pResult = std::make_unique<CLib3MFResourceIterator>();
@@ -288,6 +307,17 @@ ILib3MFMeshObject * CLib3MFModel::AddMeshObject ()
 	model().addResource(pNewResource);
 	return new CLib3MFMeshObject(pNewResource);
 }
+
+ILib3MFNurbsSurface * CLib3MFModel::AddNurbsSurface(const Lib3MF_uint32 nDegreeU, const Lib3MF_uint32 nDegreeV, const Lib3MF_uint32 nControlPointsU, const Lib3MF_uint32 nControlPointsV)
+{
+	NMR::ModelResourceID NewResourceID = model().generateResourceID();
+	NMR::PModelNurbsSurface pNewResource = std::make_shared<NMR::CModelNurbsSurface>(NewResourceID, &model(), nDegreeU, nDegreeV, nControlPointsU, nControlPointsV);
+
+	model().addResource(pNewResource);
+	return new CLib3MFNurbsSurface (pNewResource);
+	
+}
+
 
 ILib3MFComponentsObject * CLib3MFModel::AddComponentsObject ()
 {

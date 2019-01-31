@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2018 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -24,45 +24,37 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract:
+Abstract: This is a stub class definition of CLib3MFNurbsSurfaceIterator
 
-NMR_MeshInformationTypes.h defines the basic structs and constants
-to contain mesh surface information.
+*/
 
---*/
+#include "lib3mf_nurbssurfaceiterator.hpp"
+#include "lib3mf_nurbssurface.hpp"
+#include "lib3mf_interfaceexception.hpp"
 
-#ifndef __NMR_MESHINFORMATIONTYPES
-#define __NMR_MESHINFORMATIONTYPES
-
-#include "Common/NMR_Types.h"
-#include "Common/Math/NMR_Vector.h"
-
-namespace NMR {
-
-#define MESHINFORMATION_MAXINTERNALID 9223372036854775808ULL
-
-	typedef enum _eMeshInformationType {
-		emiAbstract   = 0x0000,
-//		emiBaseMaterials = 0x0001,
-//		emiNodeColors = 0x0002,
-//		emiTexCoords  = 0x0003,
-//		emiCompositeMaterials = 0x0004,
-//		emiMultiProperties = 0x0005,
-		emiProperties = 0x0006,
-		emiLastType
-	} eMeshInformationType;
-
-	typedef nfByte MESHINFORMATIONFACEDATA;
-
-#pragma pack (1)
-	typedef struct {
-		nfUint32 m_nResourceID;
-		nfUint32 m_nPropertyIDs[3];
-	} MESHINFORMATION_PROPERTIES;
+// Include custom headers here.
 
 
-#pragma pack()
+using namespace Lib3MF::Impl;
+
+/*************************************************************************************************************************
+ Class definition of CLib3MFNurbsSurfaceIterator 
+**************************************************************************************************************************/
+
+ILib3MFNurbsSurface * CLib3MFNurbsSurfaceIterator::GetCurrentNurbsSurface()
+{
+	// Get Resource Count
+	Lib3MF_int32 nBuildItemCount = (Lib3MF_int32)m_pResources.size();
+	if ((m_nCurrentIndex < 0) || (m_nCurrentIndex >= nBuildItemCount))
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_ITERATORINVALIDINDEX);
+
+	// Create specific API class
+	NMR::PModelResource pResource = m_pResources[m_nCurrentIndex];
+
+	auto pNurbsSurface = std::dynamic_pointer_cast<NMR::CModelNurbsSurface> (pResource);
+
+	auto pACTBuildItem = std::make_unique<CLib3MFNurbsSurface>(pNurbsSurface);
+
+	return pACTBuildItem.release();
 
 }
-
-#endif // __NMR_MESHINFORMATIONTYPES

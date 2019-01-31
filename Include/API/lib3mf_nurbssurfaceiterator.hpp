@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2018 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -24,45 +24,62 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract:
+Abstract: This is the class declaration of CLib3MFNurbsSurfaceIterator
 
-NMR_MeshInformationTypes.h defines the basic structs and constants
-to contain mesh surface information.
-
---*/
-
-#ifndef __NMR_MESHINFORMATIONTYPES
-#define __NMR_MESHINFORMATIONTYPES
-
-#include "Common/NMR_Types.h"
-#include "Common/Math/NMR_Vector.h"
-
-namespace NMR {
-
-#define MESHINFORMATION_MAXINTERNALID 9223372036854775808ULL
-
-	typedef enum _eMeshInformationType {
-		emiAbstract   = 0x0000,
-//		emiBaseMaterials = 0x0001,
-//		emiNodeColors = 0x0002,
-//		emiTexCoords  = 0x0003,
-//		emiCompositeMaterials = 0x0004,
-//		emiMultiProperties = 0x0005,
-		emiProperties = 0x0006,
-		emiLastType
-	} eMeshInformationType;
-
-	typedef nfByte MESHINFORMATIONFACEDATA;
-
-#pragma pack (1)
-	typedef struct {
-		nfUint32 m_nResourceID;
-		nfUint32 m_nPropertyIDs[3];
-	} MESHINFORMATION_PROPERTIES;
+*/
 
 
-#pragma pack()
+#ifndef __LIB3MF_LIB3MFNURBSSURFACEITERATOR
+#define __LIB3MF_LIB3MFNURBSSURFACEITERATOR
 
-}
+#include "lib3mf_interfaces.hpp"
 
-#endif // __NMR_MESHINFORMATIONTYPES
+// Parent classes
+#include "lib3mf_resourceiterator.hpp"
+#pragma warning( push)
+#pragma warning( disable : 4250)
+
+// Include custom headers here.
+
+
+namespace Lib3MF {
+namespace Impl {
+
+
+/*************************************************************************************************************************
+ Class declaration of CLib3MFNurbsSurfaceIterator 
+**************************************************************************************************************************/
+
+class CLib3MFNurbsSurfaceIterator : public virtual ILib3MFNurbsSurfaceIterator, public virtual CLib3MFResourceIterator {
+private:
+
+	/**
+	* Put private members here.
+	*/
+
+protected:
+
+	/**
+	* Put protected members here.
+	*/
+
+public:
+
+	/**
+	* Put additional public members here. They will not be visible in the external API.
+	*/
+
+
+	/**
+	* Public member functions to implement.
+	*/
+
+	ILib3MFNurbsSurface * GetCurrentNurbsSurface();
+
+};
+
+} // namespace Impl
+} // namespace Lib3MF
+
+#pragma warning( pop )
+#endif // __LIB3MF_LIB3MFNURBSSURFACEITERATOR

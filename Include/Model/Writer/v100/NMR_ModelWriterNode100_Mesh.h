@@ -35,10 +35,11 @@ This is the class for exporting the 3mf mesh node.
 #define __NMR_MODELWRITERNODE100_MESH
 
 #include "Model/Writer/NMR_ModelWriterNode.h" 
-#include "Model/Writer/NMR_ModelWriter_ColorMapping.h" 
-#include "Model/Writer/NMR_ModelWriter_TexCoordMappingContainer.h" 
 #include "Model/Classes/NMR_ModelObject.h" 
 #include "Model/Classes/NMR_ModelMeshObject.h" 
+
+#include "Common/MeshInformation/NMR_MeshInformation_Properties.h"
+
 #include "Common/Platform/NMR_XmlWriter.h"
 #include <array>
 
@@ -58,11 +59,12 @@ namespace NMR {
 	class CModelWriterNode100_Mesh : public CModelWriterNode {
 	protected:
 		CModelMeshObject * m_pModelMeshObject;
-		PModelWriter_ColorMapping m_pColorMapping;
-		PModelWriter_TexCoordMappingContainer m_pTextureMappingContainer;
+
+		PMeshInformation_PropertyIndexMapping m_pPropertyIndexMapping;
 
 		nfBool m_bWriteMaterialExtension;
 		nfBool m_bWriteBeamLatticeExtension;
+		nfBool m_bWriteNurbsExtension;
 
 		// Internal functions for an efficient and buffered output of raw XML data
 		std::array<nfChar, MODELWRITERMESH100_LINEBUFFERSIZE> m_VertexLine;
@@ -102,7 +104,7 @@ namespace NMR {
 	public:
 		CModelWriterNode100_Mesh() = delete;
 		CModelWriterNode100_Mesh(_In_ CModelMeshObject * pModelMeshObject, _In_ CXmlWriter * pXMLWriter, _In_ CProgressMonitor * pProgressMonitor,
-			_In_ PModelWriter_ColorMapping pColorMapping, _In_ PModelWriter_TexCoordMappingContainer pTextureMappingContainer, _In_ nfBool bWriteMaterialExtension, _In_ nfBool m_bWriteBeamLatticeExtension);
+			_In_ PMeshInformation_PropertyIndexMapping pPropertyIndexMapping, _In_ nfBool bWriteMaterialExtension, _In_ nfBool m_bWriteBeamLatticeExtension, _In_ nfBool bWriteNurbsExtension);
 		virtual void writeToXML();
 	};
 

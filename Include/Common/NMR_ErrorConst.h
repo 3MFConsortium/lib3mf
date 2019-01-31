@@ -1152,4 +1152,57 @@ Library errors (0xAXXX)
 // Invalid Texture type
 #define NMR_ERROR_INVALIDTEXTURETYPE 0xA006
 
+
+/*-------------------------------------------------------------------
+Extension Errors - Nurbs (0xB1XX)
+-------------------------------------------------------------------*/
+
+// Invalid Nurbs Attribute
+#define NMR_ERROR_NURBSINVALIDATTRIBUTE 0xB101
+
+// Missing Nurbs Coordinate
+#define NMR_ERROR_NURBSMISSINGCOORDINATE 0xB102
+
+// Missing Nurbs Degree
+#define NMR_ERROR_NURBSMISSINGDEGREE 0xB103
+
+// Duplicate U Knots
+#define NMR_ERROR_NURBSDUPLICATEUKNOTS 0xB104
+
+// Duplicate V Knots
+#define NMR_ERROR_NURBSDUPLICATEVKNOTS 0xB105
+
+// Duplicate Control Points
+#define NMR_ERROR_NURBSDUPLICATECONTROLPOINTS 0xB106
+
+// Invalid Control Point Count
+#define NMR_ERROR_NURBSINVALIDCONTROLPOINTCOUNT 0xB107
+
+// Duplicate Nurbs Attribute
+#define NMR_ERROR_NURBSDUPLICATEATTRIBUTE 0xB108
+
+// Knot Multiplicity Missing
+#define NMR_ERROR_NURBSMULTIPLICITYMISSING 0xB109
+
+// Knot Values Missing
+#define NMR_ERROR_NURBSVALUEMISSING 0xB10A
+
+// Duplicate Nurbs UV Mapping
+#define NMR_ERROR_NURBSDUPLICATEUVMAPPING 0xB10B
+
+// Invalid Nurbs Surface Order
+#define NMR_ERROR_INVALIDNURBSSURFACEORDER 0xB10C
+
+// Invalid Control Point Count
+#define NMR_ERROR_INVALIDCONTROLPOINTCOUNT 0xB10D
+
+// Too many knots
+#define NMR_ERROR_TOOMANYKNOTS 0xB10E
+
+// Invalid Nurbs Degree
+#define NMR_ERROR_INVALIDNURBSDEGREE 0xB10F
+
+
+
 #endif // __NMR_ERRORCONST
+

@@ -1,0 +1,141 @@
+/*++
+
+Copyright (C) 2018 3MF Consortium
+
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification,
+are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice, this
+list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright notice,
+this list of conditions and the following disclaimer in the documentation
+and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+Abstract:
+
+UnitTest_Nurbs.cpp: Defines Unittests for the Nurbs Class
+
+--*/
+
+#include "UnitTest_Utilities.h"
+#include "lib3mf.hpp"
+
+namespace Lib3MF
+{
+	class Nurbs : public ::testing::Test {
+	protected:
+
+		static void SetUpTestCase() {
+		}
+
+		static void TearDownTestCase() {
+		}
+
+		virtual void SetUp() {
+			model = CLib3MFWrapper::CreateModel();
+			
+		}
+		virtual void TearDown() {
+			model.reset();
+		}
+	
+		static PLib3MFModel model;
+
+		static std::string OutFolder;
+	};
+
+	PLib3MFModel Nurbs::model;
+
+	std::string Nurbs::OutFolder(sOutFilesPath + "/Nurbs/");
+	
+	TEST_F(Nurbs, Export)
+	{
+
+		auto surface = Nurbs::model->AddNurbsSurface(3, 3, 4, 4);
+		surface->AddKnotU(4, 0.0);
+		surface->AddKnotU(4, 1.0);
+		surface->AddKnotV(4, 0.0);
+		surface->AddKnotV(4, 1.0);
+
+		auto uv1id = surface->AddUVCoordinate(0.5, 0.5);
+		auto uv2id = surface->AddUVCoordinate(0.75, 0.5);
+		auto uv3id = surface->AddUVCoordinate(0.5, 0.75);
+
+		surface->SetControlPoint(0, 0, 0.0, 0.0, 1.0, 1.0);
+		surface->SetControlPoint(1, 0, 0.0, 0.0, 1.0, 1.0 / 3.0);
+		surface->SetControlPoint(2, 0, 0.0, 0.0, 1.0, 1.0 / 3.0);
+		surface->SetControlPoint(3, 0, 0.0, 0.0, 1.0, 1.0);
+
+		surface->SetControlPoint(0, 1, 2.0, 0.0, 1.0, 1.0 / 3.0);
+		surface->SetControlPoint(1, 1, 2.0, 4.0, 1.0, 1.0 / 9.0);
+		surface->SetControlPoint(2, 1, -2.0, 4.0, 1.0, 1.0 / 9.0);
+		surface->SetControlPoint(3, 1, -2.0, 0.0, 1.0, 1.0 / 3.0);
+
+		surface->SetControlPoint(0, 2, 2.0, 0.0, -1.0, 1.0 / 3.0);
+		surface->SetControlPoint(1, 2, 2.0, 4.0, -1.0, 1.0 / 9.0);
+		surface->SetControlPoint(2, 2, -2.0, 4.0, -1.0, 1.0 / 9.0);
+		surface->SetControlPoint(3, 2, -2.0, 0.0, -1.0, 1.0 / 3.0);
+
+		surface->SetControlPoint(0, 3, 0.0, 0.0, -1.0, 1.0);
+		surface->SetControlPoint(1, 3, 0.0, 0.0, -1.0, 1.0 / 3.0);
+		surface->SetControlPoint(2, 3, 0.0, 0.0, -1.0, 1.0 / 3.0);
+		surface->SetControlPoint(3, 3, 0.0, 0.0, -1.0, 1.0);
+
+		auto mesh = model->AddMeshObject();
+		sLib3MFPosition Position;
+		Position.m_coordinates[0] = 0;
+		Position.m_coordinates[1] = 0;
+		Position.m_coordinates[2] = 0;
+		mesh->AddVertex(Position);
+		mesh->AddVertex(Position);
+		mesh->AddVertex(Position);
+
+		sLib3MFTriangle Triangle;
+		Triangle.m_indices[0] = 0;
+		Triangle.m_indices[1] = 1;
+		Triangle.m_indices[2] = 2;
+		mesh->AddTriangle(Triangle);
+
+		sLib3MFTriangleProperties Properties;
+
+		Properties.m_ResourceID = surface->GetResourceID();
+		Properties.m_PropertyIDs[0] = uv1id;
+		Properties.m_PropertyIDs[1] = uv2id;
+		Properties.m_PropertyIDs[2] = uv3id;
+		mesh->SetTriangleProperties(0, Properties);
+
+		auto writer = Nurbs::model->QueryWriter("3mf");
+		writer->WriteToFile(sOutFilesPath + "nurbstest1.3mf");
+	}
+
+	TEST_F(Nurbs, 3MFReadNurbsFromFile)
+	{
+		auto pReader = Nurbs::model->QueryReader ("3mf");
+
+		pReader->ReadFromFile(sTestFilesPath + "/Nurbs/" + "nurbstest.3mf");
+
+		auto SurfaceIterator = Nurbs::model->GetNurbsSurfaces();
+		while (SurfaceIterator->MoveNext()) {
+			auto NurbsSurface = SurfaceIterator->GetCurrentNurbsSurface();
+			sLib3MFNURBSUVCoordinate Coordinate;
+			NurbsSurface->GetUVCoordinate(1, Coordinate);
+
+		}
+
+		//CheckReaderWarnings(pReader, 0);
+	}
+
+}
