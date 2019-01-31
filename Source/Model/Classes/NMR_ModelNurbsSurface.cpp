@@ -373,7 +373,7 @@ namespace NMR {
 	}
 
 
-	void CModelNurbsSurface::registerProperties(nfUint32 nResourceID, CMeshInformation_PropertyIndexMapping * pPropertyMapping, std::vector<sModelNurbsUVCoord> & ValueList)
+	void CModelNurbsSurface::registerProperties(CMeshInformation_PropertyIndexMapping * pPropertyMapping, std::vector<sModelNurbsUVCoord> & ValueList)
 	{
 		if (pPropertyMapping == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
@@ -384,7 +384,7 @@ namespace NMR {
 			ValueList.push_back(iIterator->second);
 			
 			nfUint32 nPropertyID = iIterator->first;
-			pPropertyMapping->registerPropertyID(nResourceID, nPropertyID, nResourceIndex);
+			pPropertyMapping->registerPropertyID(getResourceID()->getUniqueID(), nPropertyID, nResourceIndex);
 			
 			iIterator++;
 		}

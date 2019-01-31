@@ -136,8 +136,7 @@ namespace NMR {
 		void setUVBounds(nfDouble dMinU, nfDouble dMinV, nfDouble dMaxU, nfDouble dMaxV);
 		void getUVBounds(nfDouble & dMinU, nfDouble & dMinV, nfDouble & dMaxU, nfDouble & dMaxV);
 
-		void registerProperties (nfUint32 nResourceID, CMeshInformation_PropertyIndexMapping * pPropertyMapping, std::vector<sModelNurbsUVCoord> & ValueList);
-
+		void registerProperties (CMeshInformation_PropertyIndexMapping * pPropertyMapping, std::vector<sModelNurbsUVCoord> & ValueList);
 		virtual void buildResourceIndexMap();
 
 	};
