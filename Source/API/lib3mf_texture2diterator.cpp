@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2018 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -24,19 +24,27 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract:
+Abstract: This is a stub class definition of CLib3MFTexture2DIterator
 
-UnitTest_AllTests.cpp: Defines Entry point for the UnitTests of all exposed classes
+*/
 
---*/
-#include "gtest/gtest.h"
+#include "lib3mf_texture2diterator.hpp"
+#include "lib3mf_interfaceexception.hpp"
+#include "lib3mf_texture2d.hpp"
 
-int main(int argc, char **argv)
+// Include custom headers here.
+
+
+using namespace Lib3MF::Impl;
+
+/*************************************************************************************************************************
+ Class definition of CLib3MFTexture2DIterator 
+**************************************************************************************************************************/
+
+ILib3MFTexture2D * CLib3MFTexture2DIterator::GetCurrentTexture2D ()
 {
-	//testing::GTEST_FLAG(filter) = "*Model_TextureResource*AddTexture";
-	testing::InitGoogleTest(&argc, argv);
-	RUN_ALL_TESTS();
-	system("pause");
-	return 1;
+	// Create specific API class
+	auto pACTResource = std::make_unique<CLib3MFTexture2D>( std::dynamic_pointer_cast<NMR::CModelTexture2DResource>(GetCurrentResource()));
+	return pACTResource.release();
 }
 

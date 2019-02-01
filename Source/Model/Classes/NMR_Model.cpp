@@ -531,19 +531,17 @@ namespace NMR {
 	} 
 
 
-	_Ret_maybenull_ CModelTexture2DResource * CModel::findTexture2D(_In_ PackageResourceID nResourceID)
+	_Ret_maybenull_ PModelTexture2DResource CModel::findTexture2D(_In_ PackageResourceID nResourceID)
 	{
+
 		PModelResource pResource = findResource(nResourceID);
 		if (pResource != nullptr) {
-			CModelTexture2DResource * pTexture2D = dynamic_cast<CModelTexture2DResource *> (pResource.get());
-			if (pTexture2D == nullptr)
+			PModelTexture2DResource pTexture2DResource = std::dynamic_pointer_cast<CModelTexture2DResource>(pResource);
+			if (pTexture2DResource.get() == nullptr)
 				throw CNMRException(NMR_ERROR_RESOURCETYPEMISMATCH);
-
-			return pTexture2D;
+			return pTexture2DResource;
 		}
-
 		return nullptr;
-
 	}
 
 	nfUint32 CModel::getTexture2DCount()
@@ -585,7 +583,7 @@ namespace NMR {
 			if (pTextureResource == nullptr)
 				throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-			PModelTexture2DResource pNewTextureResource = std::make_shared<CModelTexture2DResource>(generateResourceID(), this);
+			PModelTexture2DResource pNewTextureResource = CModelTexture2DResource::make(generateResourceID(), this, pTextureResource->getAttachment());
 			pNewTextureResource->copyFrom(pTextureResource);
 
 			addResource(pNewTextureResource);

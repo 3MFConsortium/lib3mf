@@ -207,7 +207,7 @@ namespace NMR {
 		void mergeBaseMaterials(_In_ CModel * pSourceModel);
 
 		// Convenience functions for 2D Textures
-		_Ret_maybenull_ CModelTexture2DResource * findTexture2D(_In_ PackageResourceID nResourceID);
+		_Ret_maybenull_ PModelTexture2DResource findTexture2D(_In_ PackageResourceID nResourceID);
 		nfUint32 getTexture2DCount();
 		PModelResource getTexture2DResource(_In_ nfUint32 nIndex);
 		CModelTexture2DResource * getTexture2D(_In_ nfUint32 nIndex);

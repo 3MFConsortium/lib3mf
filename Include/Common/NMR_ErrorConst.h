@@ -839,9 +839,6 @@ Model error codes (0x8XXX)
 // Could not get texture URI
 #define NMR_ERROR_OPCCOULDNOTGETTEXTUREURI 0x8075
 
-// Could not get texture stream
-#define NMR_ERROR_OPCCOULDNOTGETTEXTURESTREAM 0x8076
-
 // Model Relationship read failed
 #define NMR_ERROR_MODELRELATIONSHIPSETREADFAILED 0x8077
 

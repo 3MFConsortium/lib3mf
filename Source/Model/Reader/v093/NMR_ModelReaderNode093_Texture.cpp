@@ -65,13 +65,14 @@ namespace NMR {
 		if (m_nID == 0)
 			throw CNMRException(NMR_ERROR_MISSINGMODELRESOURCEID);
 
+		PModelAttachment pAttachment = m_pModel->findModelAttachment(m_sPath);
+
 		// Create Resource
-		m_pTexture2DResource = std::make_shared<CModelTexture2DResource> (m_nID, m_pModel);
+		m_pTexture2DResource = CModelTexture2DResource::make(m_nID, m_pModel, pAttachment);
 
 		m_pModel->addResource(m_pTexture2DResource);
 
 		// Set Properties
-		m_pTexture2DResource->setPath(m_sPath);
 		m_pTexture2DResource->setContentTypeString(m_sContentType, true);
 
 		if (!m_sTileStyleU.empty()) {

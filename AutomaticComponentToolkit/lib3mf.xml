@@ -72,8 +72,8 @@
 		<error name="INVALIDCOMPONENT" code="109" description="A component is invalid" />
 		<error name="INVALIDBUILDITEM" code="110" description="A build item is invalid" />
 		<error name="INVALIDBASEMATERIALGROUP" code="111" description="A basematerialgroup is invalid" />
-		<error name="INVALIDSLICESTACKRESOURCE" code="112" description="A slicestackresource is invalid" />
-		
+		<error name="INVALIDSLICESTACKRESOURCE" code="112" description="A slicestack resource is invalid" />
+		<error name="INVALIDINVALIDTEXTURERESOURCE" code="113" description="A texture resource is invalid" />
 		
 		<error name="ATTACHMENTNOTFOUND" code="121" description="Attachment not found" />
 		
@@ -311,6 +311,12 @@
 		</method>
 		<method name="Clone" description="Creates a new resource iterator with the same resource list.">
 			<param name="OutResourceIterator" type="handle" class="ResourceIterator" pass="return" description="returns the cloned Iterator instance" />
+		</method>
+	</class>
+	
+	<class name="Texture2DIterator" parent="ResourceIterator">
+		<method name="GetCurrentTexture2D" description="Returns the Texture2D the iterator points at.">
+			<param name="Resource" type="handle" class="Texture2D" pass="return" description="returns the Texture2D instance." />
 		</method>
 	</class>
 
@@ -952,8 +958,8 @@
 		<method name="GetComponentsObjects" description="creates a resource iterator instance with all components object resources.">
 			<param name="ResourceIterator" type="handle" class="ResourceIterator" pass="return" description="returns the iterator instance." />
 		</method>
-		<method name="Get2DTextures" description="creates a resource iterator instance with all texture2d resources.">
-			<param name="ResourceIterator" type="handle" class="ResourceIterator" pass="return" description="returns the iterator instance." />
+		<method name="GetTexture2Ds" description="creates a Texture2DIterator instance with all texture2d resources.">
+			<param name="ResourceIterator" type="handle" class="Texture2DIterator" pass="return" description="returns the iterator instance." />
 		</method>
 		<method name="GetBaseMaterialGroups" description="creates a resource iterator instance with all base material resources.">
 			<param name="ResourceIterator" type="handle" class="ResourceIterator" pass="return" description="returns the iterator instance." />

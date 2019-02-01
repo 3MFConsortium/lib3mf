@@ -308,7 +308,6 @@ namespace NMR {
 		case NMR_ERROR_COULDNOTGETHANDLE: return "Could not get handle";
 		case NMR_ERROR_BUILDITEMNOTFOUND: return "Build item not found";
 		case NMR_ERROR_OPCCOULDNOTGETTEXTUREURI: return "Could not get texture URI";
-		case NMR_ERROR_OPCCOULDNOTGETTEXTURESTREAM: return "Could not get texture stream";
 		case NMR_ERROR_MODELRELATIONSHIPSETREADFAILED: return "Model Relationship read failed";
 		case NMR_ERROR_NOTEXTURESTREAM: return "Texture stream is not available";
 		case NMR_ERROR_COULDNOTCREATESTREAM: return "Could not create stream";

@@ -107,7 +107,7 @@ public:
 
 	ILib3MFResourceIterator * GetComponentsObjects ();
 
-	ILib3MFResourceIterator * Get2DTextures ();
+	ILib3MFTexture2DIterator * GetTexture2Ds ();
 
 	ILib3MFResourceIterator * GetBaseMaterialGroups ();
 

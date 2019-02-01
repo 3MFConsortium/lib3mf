@@ -36,7 +36,7 @@ Abstract: This is the class declaration of CLib3MFResourceIterator
 
 
 // Include custom headers here.
-#include "Model/Classes/NMR_ModelBuildItem.h"
+#include "Model/Classes/NMR_ModelResource.h"
 
 namespace Lib3MF {
 namespace Impl {
@@ -47,13 +47,13 @@ namespace Impl {
 **************************************************************************************************************************/
 
 class CLib3MFResourceIterator : public virtual ILib3MFResourceIterator {
+
 private:
-
-protected:
-
 	std::vector<NMR::PModelResource> m_pResources;
 	Lib3MF_int32 m_nCurrentIndex;
 
+protected:
+	inline NMR::PModelResource GetCurrentResource();
 public:
 
 	/**

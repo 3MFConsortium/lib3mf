@@ -42,6 +42,7 @@ Source/API/lib3mf_resourceiterator.cpp
 Source/API/lib3mf_slice.cpp
 Source/API/lib3mf_slicestack.cpp
 Source/API/lib3mf_texture2d.cpp
+Source/API/lib3mf_texture2diterator.cpp
 Source/API/lib3mf_writer.cpp
 Source/API/lib3mf_utils.cpp
 Source/Common/3MF_ProgressMonitor.cpp

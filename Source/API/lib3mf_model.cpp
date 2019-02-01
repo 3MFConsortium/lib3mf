@@ -43,6 +43,8 @@ Abstract: This is a stub class definition of CLib3MFModel
 #include "lib3mf_metadatagroup.hpp"
 #include "lib3mf_attachment.hpp"
 #include "lib3mf_slicestack.hpp"
+#include "lib3mf_texture2d.hpp"
+#include "lib3mf_texture2diterator.hpp"
 // Include custom headers here.
 
 #include "Model/Classes/NMR_ModelMeshObject.h"
@@ -100,7 +102,12 @@ ILib3MFReader * CLib3MFModel::QueryReader (const std::string & sReaderClass)
 
 ILib3MFTexture2D * CLib3MFModel::GetTexture2DByID (const Lib3MF_uint32 nResourceID)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	NMR::PModelTexture2DResource pTexture2DResource = model().findTexture2D(nResourceID);
+	if (pTexture2DResource) {
+		return new CLib3MFTexture2D(pTexture2DResource);
+	}
+	else
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDINVALIDTEXTURERESOURCE);
 }
 
 ILib3MFBaseMaterialGroup * CLib3MFModel::GetBaseMaterialGroupByID (const Lib3MF_uint32 nResourceID)
@@ -220,9 +227,17 @@ ILib3MFResourceIterator * CLib3MFModel::GetComponentsObjects()
 	return pResult.release();
 }
 
-ILib3MFResourceIterator * CLib3MFModel::Get2DTextures ()
+ILib3MFTexture2DIterator * CLib3MFModel::GetTexture2Ds()
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	auto pResult = std::make_unique<CLib3MFTexture2DIterator>();
+	Lib3MF_uint32 nCount = model().getTexture2DCount();
+
+	for (Lib3MF_uint32 nIdx = 0; nIdx < nCount; nIdx++) {
+		auto resource = model().getTexture2DResource(nIdx);
+		if (dynamic_cast<NMR::CModelTexture2DResource *>(resource.get()))
+			pResult->addResource(resource);
+	}
+	return pResult.release();
 }
 
 ILib3MFResourceIterator * CLib3MFModel::GetBaseMaterialGroups ()
@@ -311,7 +326,13 @@ ILib3MFSliceStack * CLib3MFModel::AddSliceStack(const Lib3MF_double dZBottom)
 
 ILib3MFTexture2D * CLib3MFModel::AddTexture2DFromAttachment (ILib3MFAttachment* pTextureAttachment)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	NMR::PModelAttachment attachment = model().findModelAttachment(pTextureAttachment->GetPath());
+
+	NMR::PModelTexture2DResource pResource = NMR::CModelTexture2DResource::make(model().generateResourceID(), &model(), attachment);
+	model().addResource(pResource);
+
+	auto result = std::make_unique<CLib3MFTexture2D>(pResource);
+	return result.release();
 }
 
 ILib3MFBaseMaterialGroup * CLib3MFModel::AddBaseMaterialGroup ()
