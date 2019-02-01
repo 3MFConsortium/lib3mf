@@ -75,11 +75,13 @@ These are given by the 3MF Standard
 #define XML_3MF_NAMESPACE_PRODUCTIONSPEC "http://schemas.microsoft.com/3dmanufacturing/production/2015/06"
 #define XML_3MF_NAMESPACE_BEAMLATTICESPEC "http://schemas.microsoft.com/3dmanufacturing/beamlattice/2017/02"
 #define XML_3MF_NAMESPACE_SLICESPEC "http://schemas.microsoft.com/3dmanufacturing/slice/2015/07"
+#define XML_3MF_NAMESPACE_NURBSSPEC "http://schemas.microsoft.com/3dmanufacturing/exactgeometry/2019/01"
 
 #define XML_3MF_NAMESPACEPREFIX_MATERIAL "m"
 #define XML_3MF_NAMESPACEPREFIX_PRODUCTION "p"
 #define XML_3MF_NAMESPACEPREFIX_BEAMLATTICE "b"
 #define XML_3MF_NAMESPACEPREFIX_SLICE "s"
+#define XML_3MF_NAMESPACEPREFIX_NURBS "n"
 
 #define XML_3MF_ATTRIBUTE_XMLNS                     "xmlns"
 #define XML_3MF_ATTRIBUTE_PREFIX_XML                "xml"
@@ -290,6 +292,29 @@ These are given by the 3MF Standard
 #define XML_3MF_ELEMENT_COLOR                       "color"
 #define XML_3MF_ATTRIBUTE_COLOR_ID                  "id"
 #define XML_3MF_ATTRIBUTE_COLOR_VALUE               "value"
+
+// Nurbs Surfaces
+#define XML_3MF_ELEMENT_NURBSSURFACE				"nurbssurface"
+#define XML_3MF_ELEMENT_NURBS_UKNOTS                "uknots"
+#define XML_3MF_ELEMENT_NURBS_VKNOTS                "vknots"
+#define XML_3MF_ELEMENT_NURBS_KNOT                  "knot"
+#define XML_3MF_ELEMENT_NURBS_CONTROLPOINTS         "controlpoints"
+#define XML_3MF_ELEMENT_NURBS_CONTROLPOINT          "controlpoint"
+
+#define XML_3MF_ELEMENT_NURBS_UVMAPPING             "uvmapping"
+#define XML_3MF_ELEMENT_NURBS_UVCOORD               "uvcoord"
+
+#define XML_3MF_ATTRIBUTE_NURBS_ID                  "id"
+#define XML_3MF_ATTRIBUTE_NURBS_DEGREEU             "degreeu"
+#define XML_3MF_ATTRIBUTE_NURBS_DEGREEV             "degreev"
+#define XML_3MF_ATTRIBUTE_NURBS_MULTIPLICITY        "multiplicity"
+#define XML_3MF_ATTRIBUTE_NURBS_VALUE               "value"
+#define XML_3MF_ATTRIBUTE_NURBS_X                   "x"
+#define XML_3MF_ATTRIBUTE_NURBS_Y                   "y"
+#define XML_3MF_ATTRIBUTE_NURBS_Z                   "z"
+#define XML_3MF_ATTRIBUTE_NURBS_W                   "w"
+#define XML_3MF_ATTRIBUTE_NURBS_U                   "u"
+#define XML_3MF_ATTRIBUTE_NURBS_V                   "v"
 
 
 // Base Material element.

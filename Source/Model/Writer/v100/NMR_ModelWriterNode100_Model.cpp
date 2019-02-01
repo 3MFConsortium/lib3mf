@@ -39,6 +39,7 @@ This is the class for exporting the 3mf model stream root node.
 #include "Model/Classes/NMR_ModelObject.h"
 #include "Model/Classes/NMR_ModelBaseMaterials.h"
 #include "Model/Classes/NMR_ModelTexture2D.h"
+#include "Model/Classes/NMR_ModelNurbsSurface.h"
 #include "Model/Classes/NMR_ModelMeshObject.h"
 #include "Model/Classes/NMR_ModelComponentsObject.h"
 #include "Model/Classes/NMR_Model.h"
@@ -64,6 +65,7 @@ namespace NMR {
 		m_bWriteProductionExtension = true;
 		m_bWriteBeamLatticeExtension = true;
 		m_bWriteSliceExtension = true;
+		m_bWriteNurbsExtension = true;
 		m_bWriteBaseMaterials = true;
 		m_bWriteObjects = true;
 
@@ -140,6 +142,9 @@ namespace NMR {
 		std::string sRequiredExtensions = "";
 		if (m_bWriteMaterialExtension) {
 			writeConstPrefixedStringAttribute(XML_3MF_ATTRIBUTE_XMLNS, XML_3MF_NAMESPACEPREFIX_MATERIAL, XML_3MF_NAMESPACE_MATERIALSPEC);
+		}
+		if (m_bWriteNurbsExtension) {
+			writeConstPrefixedStringAttribute(XML_3MF_ATTRIBUTE_XMLNS, XML_3MF_NAMESPACEPREFIX_NURBS, XML_3MF_NAMESPACE_NURBSSPEC);
 		}
 		if (m_bWriteProductionExtension) {
 			writeConstPrefixedStringAttribute(XML_3MF_ATTRIBUTE_XMLNS, XML_3MF_NAMESPACEPREFIX_PRODUCTION, XML_3MF_NAMESPACE_PRODUCTIONSPEC);
@@ -264,6 +269,104 @@ namespace NMR {
 
 	}
 
+
+	void CModelWriterNode100_Model::writeNurbs()
+	{
+		nfUint32 nResourceCount = m_pModel->getResourceCount();
+		nfUint32 nResourceIndex;
+		nfUint32 nIndexU, nIndexV;
+
+
+
+		for (nResourceIndex = 0; nResourceIndex < nResourceCount; nResourceIndex++) {
+			CModelResource * pResource = m_pModel->getResource(nResourceIndex).get();
+			CModelNurbsSurface * pSurface = dynamic_cast<CModelNurbsSurface *> (pResource);
+
+
+			if (pSurface != nullptr) {
+
+				std::vector <sModelNurbsUVCoord> UVCoordVector;
+				pSurface->registerProperties(m_pPropertyIndexMapping.get(), UVCoordVector);
+
+				writeStartElementWithPrefix(XML_3MF_ELEMENT_NURBSSURFACE, XML_3MF_NAMESPACEPREFIX_NURBS);
+
+				// Write Object ID (mandatory)
+				writeIntAttribute(XML_3MF_ATTRIBUTE_NURBS_ID, pSurface->getResourceID()->getUniqueID());
+				writeIntAttribute(XML_3MF_ATTRIBUTE_NURBS_DEGREEU, pSurface->getDegreeU());
+				writeIntAttribute(XML_3MF_ATTRIBUTE_NURBS_DEGREEV, pSurface->getDegreeV());
+
+				writeStartElementWithPrefix(XML_3MF_ELEMENT_NURBS_UKNOTS, XML_3MF_NAMESPACEPREFIX_NURBS);
+				nfUint32 nUKnotCount = pSurface->getKnotCountU();
+				for (nIndexU = 0; nIndexU < nUKnotCount; nIndexU++) {
+					nfUint32 nMultiplicity;
+					nfDouble dValue;
+					pSurface->getKnotU(nIndexU, nMultiplicity, dValue);
+
+					writeStartElementWithPrefix(XML_3MF_ELEMENT_NURBS_KNOT, XML_3MF_NAMESPACEPREFIX_NURBS);
+					writeIntAttribute(XML_3MF_ATTRIBUTE_NURBS_MULTIPLICITY, nMultiplicity);
+					writeDoubleAttribute(XML_3MF_ATTRIBUTE_NURBS_VALUE, dValue);
+					writeEndElement();
+				}
+				writeFullEndElement();
+
+				writeStartElementWithPrefix(XML_3MF_ELEMENT_NURBS_VKNOTS, XML_3MF_NAMESPACEPREFIX_NURBS);
+				nfUint32 nVKnotCount = pSurface->getKnotCountV();
+				for (nIndexV = 0; nIndexV < nVKnotCount; nIndexV++) {
+					nfUint32 nMultiplicity;
+					nfDouble dValue;
+					pSurface->getKnotV(nIndexV, nMultiplicity, dValue);
+
+					writeStartElementWithPrefix(XML_3MF_ELEMENT_NURBS_KNOT, XML_3MF_NAMESPACEPREFIX_NURBS);
+					writeIntAttribute(XML_3MF_ATTRIBUTE_NURBS_MULTIPLICITY, nMultiplicity);
+					writeDoubleAttribute(XML_3MF_ATTRIBUTE_NURBS_VALUE, dValue);
+					writeEndElement();
+				}
+				writeFullEndElement();
+
+
+				writeStartElementWithPrefix(XML_3MF_ELEMENT_NURBS_CONTROLPOINTS, XML_3MF_NAMESPACEPREFIX_NURBS);
+				nfUint32 nControlPointCountU = pSurface->getControlPointCountU();
+				nfUint32 nControlPointCountV = pSurface->getControlPointCountV();
+				for (nIndexV = 0; nIndexV < nControlPointCountV; nIndexV++) {
+					for (nIndexU = 0; nIndexU < nControlPointCountU; nIndexU++) {
+						nfDouble dX, dY, dZ, dW;
+						pSurface->getControlPoint(nIndexU, nIndexV, dX, dY, dZ, dW);
+
+						writeStartElementWithPrefix(XML_3MF_ELEMENT_NURBS_CONTROLPOINT, XML_3MF_NAMESPACEPREFIX_NURBS);
+						writeDoubleAttribute(XML_3MF_ATTRIBUTE_NURBS_X, dX);
+						writeDoubleAttribute(XML_3MF_ATTRIBUTE_NURBS_Y, dY);
+						writeDoubleAttribute(XML_3MF_ATTRIBUTE_NURBS_Z, dZ);
+						writeDoubleAttribute(XML_3MF_ATTRIBUTE_NURBS_W, dW);
+						writeEndElement();
+
+					}
+
+				}
+				writeFullEndElement();
+
+				writeStartElementWithPrefix(XML_3MF_ELEMENT_NURBS_UVMAPPING, XML_3MF_NAMESPACEPREFIX_NURBS);
+
+				auto iCoordIterator = UVCoordVector.begin();
+
+				while (iCoordIterator != UVCoordVector.end()) {
+					writeStartElementWithPrefix(XML_3MF_ELEMENT_NURBS_UVCOORD, XML_3MF_NAMESPACEPREFIX_NURBS);
+					writeDoubleAttribute(XML_3MF_ATTRIBUTE_NURBS_U, iCoordIterator->m_U);
+					writeDoubleAttribute(XML_3MF_ATTRIBUTE_NURBS_V, iCoordIterator->m_V);
+					writeEndElement();
+
+					iCoordIterator++;
+				}
+
+				writeFullEndElement();
+
+
+				writeFullEndElement();
+
+			}
+
+		}
+
+	}
 
 	void CModelWriterNode100_Model::writeSliceStacks() {
 		nfUint32 nSliceStackCount = m_pModel->getSliceStackCount();
@@ -557,6 +660,9 @@ namespace NMR {
 
 		if (m_bIsRootModel)
 		{
+			if (m_bWriteNurbsExtension)
+				writeNurbs();
+
 			if (m_bWriteBaseMaterials)
 				writeBaseMaterials();
 

@@ -64,6 +64,7 @@ namespace NMR {
 
 		nfBool m_bWriteMaterialExtension;
 		nfBool m_bWriteBeamLatticeExtension;
+		nfBool m_bWriteNurbsExtension;
 
 		// Internal functions for an efficient and buffered output of raw XML data
 		std::array<nfChar, MODELWRITERMESH100_LINEBUFFERSIZE> m_VertexLine;

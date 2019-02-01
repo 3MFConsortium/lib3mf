@@ -14,6 +14,7 @@ set(SRCS_UNITTEST
 	./Source/UnitTest_MetaData.cpp
 	./Source/UnitTest_MetaDataGroup.cpp
 	./Source/UnitTest_Model.cpp
+	./Source/UnitTest_Nurbs.cpp
 	./Source/UnitTest_Object.cpp
 	./Source/UnitTest_ProgressCallback.cpp
 	./Source/UnitTest_Reader.cpp

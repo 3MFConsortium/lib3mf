@@ -37,6 +37,8 @@ XML Model Stream.
 #include "Model/Reader/v093/NMR_ModelReaderNode093_Material.h"
 #include "Model/Reader/v093/NMR_ModelReaderNode093_Texture.h"
 
+#include "Model/Reader/ExactGeometry1901/NMR_ModelReader_ExactGeometry1901_NurbsSurface.h"
+
 #include "Model/Reader/NMR_ModelReader_ColorMapping.h"
 #include "Model/Reader/NMR_ModelReader_TexCoordMapping.h"
 
@@ -133,6 +135,16 @@ namespace NMR {
 			else
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
 		}
+
+		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_NURBSSPEC) == 0) {
+			if (strcmp(pChildName, XML_3MF_ELEMENT_NURBSSURFACE) == 0) {
+				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode_ExactGeometry1901_NurbsSurface>(m_pModel, m_pWarnings);
+				pXMLNode->parseXML(pXMLReader);
+			}
+			else
+				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
+		}
+
 	}
 
 
