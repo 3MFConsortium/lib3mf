@@ -52,7 +52,7 @@ namespace NMR {
 	const int CModelWriterNode100_Mesh::m_snPutDoubleFactor = (int)(pow(10, CModelWriterNode100_Mesh::m_snPosAfterDecPoint));
 
 	CModelWriterNode100_Mesh::CModelWriterNode100_Mesh(_In_ CModelMeshObject * pModelMeshObject, _In_ CXmlWriter * pXMLWriter, _In_ CProgressMonitor * pProgressMonitor,
-		_In_ PMeshInformation_PropertyIndexMapping pPropertyIndexMapping, _In_ nfBool bWriteMaterialExtension, _In_ nfBool bWriteBeamLatticeExtension, _In_ nfBool bWriteNurbsExtension)
+		_In_ PMeshInformation_PropertyIndexMapping pPropertyIndexMapping, _In_ nfBool bWriteMaterialExtension, _In_ nfBool bWriteBeamLatticeExtension)
 		:CModelWriterNode(pModelMeshObject->getModel(), pXMLWriter, pProgressMonitor)
 	{
 		__NMRASSERT(pModelMeshObject != nullptr);
@@ -61,7 +61,6 @@ namespace NMR {
 
 		m_bWriteMaterialExtension = bWriteMaterialExtension;
 		m_bWriteBeamLatticeExtension = bWriteBeamLatticeExtension;
-		m_bWriteNurbsExtension = bWriteNurbsExtension;
 
 		m_pModelMeshObject = pModelMeshObject;
 		m_pPropertyIndexMapping = pPropertyIndexMapping;

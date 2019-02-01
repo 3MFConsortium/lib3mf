@@ -547,7 +547,7 @@ namespace NMR {
 				}
 
 				CModelWriterNode100_Mesh ModelWriter_Mesh(pMeshObject, m_pXMLWriter, m_pProgressMonitor,
-					m_pPropertyIndexMapping, m_bWriteMaterialExtension, m_bWriteBeamLatticeExtension, m_bWriteNurbsExtension);
+					m_pPropertyIndexMapping, m_bWriteMaterialExtension, m_bWriteBeamLatticeExtension);
 				ModelWriter_Mesh.writeToXML();
 			}
 
