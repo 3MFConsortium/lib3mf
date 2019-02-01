@@ -35,6 +35,8 @@ Source/API/lib3mf_meshobject.cpp
 Source/API/lib3mf_metadata.cpp
 Source/API/lib3mf_metadatagroup.cpp
 Source/API/lib3mf_model.cpp
+Source/API/lib3mf_nurbssurface.cpp
+Source/API/lib3mf_nurbssurfaceiterator.cpp
 Source/API/lib3mf_object.cpp
 Source/API/lib3mf_reader.cpp
 Source/API/lib3mf_resource.cpp
@@ -122,6 +124,14 @@ Source/Model/Reader/BeamLattice1702/NMR_ModelReaderNode_BeamLattice1702_BeamLatt
 Source/Model/Reader/BeamLattice1702/NMR_ModelReaderNode_BeamLattice1702_BeamSet.cpp
 Source/Model/Reader/BeamLattice1702/NMR_ModelReaderNode_BeamLattice1702_BeamSets.cpp
 Source/Model/Reader/BeamLattice1702/NMR_ModelReaderNode_BeamLattice1702_Ref.cpp
+Source/Model/Reader/ExactGeometry1901/NMR_ModelReader_ExactGeometry1901_ControlPoints.cpp
+Source/Model/Reader/ExactGeometry1901/NMR_ModelReader_ExactGeometry1901_ControlPoint.cpp
+Source/Model/Reader/ExactGeometry1901/NMR_ModelReader_ExactGeometry1901_Knot.cpp
+Source/Model/Reader/ExactGeometry1901/NMR_ModelReader_ExactGeometry1901_NurbsSurface.cpp
+Source/Model/Reader/ExactGeometry1901/NMR_ModelReader_ExactGeometry1901_UKnots.cpp
+Source/Model/Reader/ExactGeometry1901/NMR_ModelReader_ExactGeometry1901_VKnots.cpp
+Source/Model/Reader/ExactGeometry1901/NMR_ModelReader_ExactGeometry1901_UVMapping.cpp
+Source/Model/Reader/ExactGeometry1901/NMR_ModelReader_ExactGeometry1901_UVCoord.cpp
 Source/Model/Reader/NMR_ModelReader.cpp
 Source/Model/Reader/NMR_ModelReaderNode.cpp
 Source/Model/Reader/NMR_ModelReaderNode_Model.cpp
