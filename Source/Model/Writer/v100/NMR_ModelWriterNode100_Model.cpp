@@ -244,19 +244,29 @@ namespace NMR {
 		for (nMaterialIndex = 0; nMaterialIndex < nMaterialCount; nMaterialIndex++) {
 			CModelBaseMaterialResource * pBaseMaterial = m_pModel->getBaseMaterial(nMaterialIndex);
 
+			pBaseMaterial->buildResourceIndexMap();
+
+			ModelResourceID nResourceID = pBaseMaterial->getResourceID()->getUniqueID();
+
 			writeStartElement(XML_3MF_ELEMENT_BASEMATERIALS);
 			// Write Object ID (mandatory)
-			writeIntAttribute(XML_3MF_ATTRIBUTE_BASEMATERIALS_ID, pBaseMaterial->getResourceID()->getUniqueID());
+			writeIntAttribute(XML_3MF_ATTRIBUTE_BASEMATERIALS_ID, nResourceID);
 
 			nfUint32 nElementCount = pBaseMaterial->getCount();
 
 			for (j = 0; j < nElementCount; j++) {
-				PModelBaseMaterial pElement = pBaseMaterial->getBaseMaterial(j);
+				ModelPropertyID nPropertyID;
+				if (!pBaseMaterial->mapResourceIndexToPropertyID(j, nPropertyID)) {
+					throw CNMRException(NMR_ERROR_INVALIDPROPERTYRESOURCEID);
+				}
+				PModelBaseMaterial pElement = pBaseMaterial->getBaseMaterial(nPropertyID);
+				
+				m_pPropertyIndexMapping->registerPropertyID(nResourceID, pElement->getPropertyID(), j);
+
 				writeStartElement(XML_3MF_ELEMENT_BASE);
 				writeStringAttribute(XML_3MF_ATTRIBUTE_BASEMATERIAL_NAME, pElement->getName());
 				writeStringAttribute(XML_3MF_ATTRIBUTE_BASEMATERIAL_DISPLAYCOLOR, pElement->getDisplayColorString());
 				writeEndElement();
-
 			}
 
 			writeFullEndElement();
@@ -415,11 +425,6 @@ namespace NMR {
 				writePrefixedStringAttribute(XML_3MF_NAMESPACEPREFIX_PRODUCTION, XML_3MF_PRODUCTION_UUID, pObject->uuid()->toString());
 			}
 
-			// Write Default Property Indices
-			ModelResourceID nDefaultPropertyID = 0;
-			ModelResourceIndex nDefaultPropertyIndex = 0;
-			// TODO: make default property work
-
 			// Slice extension content
 			if (m_bWriteSliceExtension) {
 				if (pObject->getSliceStack().get()) {
@@ -437,6 +442,10 @@ namespace NMR {
 			// Check if object is a mesh Object
 			CModelMeshObject * pMeshObject = dynamic_cast<CModelMeshObject *> (pObject);
 			if (pMeshObject) {
+				// Write Default Property Indices
+				ModelResourceID nDefaultPropertyID = 0;
+				ModelResourceIndex nDefaultPropertyIndex = 0;
+
 				// Write Attributes (only for meshes)
 				if ( nDefaultPropertyID != 0) {
 					writeIntAttribute(XML_3MF_ATTRIBUTE_OBJECT_PID, nDefaultPropertyID);

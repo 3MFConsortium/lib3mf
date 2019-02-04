@@ -43,12 +43,7 @@ namespace NMR {
 
 	typedef enum _eMeshInformationType {
 		emiAbstract   = 0x0000,
-		emiBaseMaterials = 0x0001,
-		emiNodeColors = 0x0002,
-		emiTexCoords  = 0x0003,
-		emiCompositeMaterials = 0x0004,
-		emiMultiProperties = 0x0005,
-		emiProperties = 0x0006,
+		emiProperties = 0x0001,
 		emiLastType
 	} eMeshInformationType;
 

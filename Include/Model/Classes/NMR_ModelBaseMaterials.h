@@ -35,9 +35,10 @@ material resource object.
 #ifndef __NMR_MODELBASEMATERIALS
 #define __NMR_MODELBASEMATERIALS
 
-#include "Model/Classes/NMR_ModelBaseMaterial.h" 
-#include "Model/Classes/NMR_ModelResource.h" 
-#include "Model/Classes/NMR_Model.h" 
+#include "Model/Classes/NMR_ModelBaseMaterial.h"
+#include "Model/Classes/NMR_ModelResource.h"
+#include "Model/Classes/NMR_ModelTypes.h"
+#include "Model/Classes/NMR_Model.h"
 #include <vector>
 
 namespace NMR {
@@ -47,7 +48,9 @@ namespace NMR {
 
 	class CModelBaseMaterialResource : public CModelResource {
 	private:
-		std::vector<PModelBaseMaterial> m_pMaterials;
+		std::map<ModelPropertyID, PModelBaseMaterial> m_pMaterials;
+		ModelPropertyID m_nNextPropertyID;
+
 	public:
 		CModelBaseMaterialResource() = delete;
 		CModelBaseMaterialResource(_In_ const ModelResourceID sID, _In_ CModel * pModel);
@@ -55,10 +58,11 @@ namespace NMR {
 		nfUint32 addBaseMaterial(_In_ const std::string sName, _In_ nfColor cDisplayColor);
 
 		nfUint32 getCount();
-		PModelBaseMaterial getBaseMaterial(_In_ nfUint32 nIndex);
+		PModelBaseMaterial getBaseMaterial(_In_ nfUint32 nPropertyID);
 
-		void removeMaterial(_In_ nfUint32 nIndex);
+		void removeMaterial(_In_ nfUint32 nPropertyID);
 		void mergeFrom(_In_ CModelBaseMaterialResource * pSourceMaterial);
+		void buildResourceIndexMap();
 	};
 
 	typedef std::shared_ptr <CModelBaseMaterialResource> PModelBaseMaterialResource;

@@ -34,6 +34,7 @@ NMR_MeshInformation_Properties.h defines the Property Information Class.
 #define __NMR_MESHINFORMATION_PROPERTIES
 
 #include "Common/MeshInformation/NMR_MeshInformation.h"
+#include "Model/Classes/NMR_ModelTypes.h"
 #include <list>
 #include <map>
 
@@ -44,16 +45,16 @@ namespace NMR {
 		nfUint32 m_nDefaultResourceID;
 		nfUint32 m_nDefaultResourceIndex;
 
-		std::map<std::pair <nfUint32, nfUint32>, nfUint32> m_IDMap;
+		std::map<std::pair <nfUint32, ModelPropertyID>, nfUint32> m_IDMap;
 	public:
 		CMeshInformation_PropertyIndexMapping();
 
-		nfUint32 mapPropertyIDToIndex(nfUint32 nResourceID, nfUint32 nPropertyID);
+		nfUint32 mapPropertyIDToIndex(nfUint32 nResourceID, ModelPropertyID nPropertyID);
 		
 		nfUint32 getDefaultResourceID ();
 		nfUint32 getDefaultResourceIndex ();
 
-		nfUint32 registerPropertyID (nfUint32 nResourceID, nfUint32 nPropertyID, nfUint32 nResourceIndex);
+		nfUint32 registerPropertyID (nfUint32 nResourceID, ModelPropertyID nPropertyID, nfUint32 nResourceIndex);
 
 	};
 

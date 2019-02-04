@@ -24,76 +24,62 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CLib3MFBaseMaterial
+Abstract: This is the class declaration of CLib3MFBaseMaterialGroupIterator
 
 */
 
 
-#ifndef __LIB3MF_LIB3MFBASEMATERIALGROUP
-#define __LIB3MF_LIB3MFBASEMATERIALGROUP
+#ifndef __LIB3MF_LIB3MFBASEMATERIALGROUPITERATOR
+#define __LIB3MF_LIB3MFBASEMATERIALGROUPITERATOR
 
 #include "lib3mf_interfaces.hpp"
 
 // Parent classes
-#include "lib3mf_resource.hpp"
+#include "lib3mf_resourceiterator.hpp"
 #pragma warning( push)
 #pragma warning( disable : 4250)
 
 // Include custom headers here.
-#include "Model/Classes/NMR_ModelBaseMaterial.h"
-#include "Model/Classes/NMR_ModelBaseMaterials.h"
+
 
 namespace Lib3MF {
 namespace Impl {
 
 
 /*************************************************************************************************************************
- Class declaration of CLib3MFBaseMaterialGroup 
+ Class declaration of CLib3MFBaseMaterialGroupIterator 
 **************************************************************************************************************************/
 
-class CLib3MFBaseMaterialGroup : public virtual ILib3MFBaseMaterialGroup, public virtual CLib3MFResource {
+class CLib3MFBaseMaterialGroupIterator : public virtual ILib3MFBaseMaterialGroupIterator, public virtual CLib3MFResourceIterator {
 private:
 
 	/**
 	* Put private members here.
 	*/
+
 protected:
 
 	/**
 	* Put protected members here.
 	*/
-	NMR::CModelBaseMaterialResource& baseMaterialGroup();
 
 public:
 
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-	CLib3MFBaseMaterialGroup(NMR::PModelBaseMaterialResource pResource);
+
 
 	/**
 	* Public member functions to implement.
 	*/
 
-	Lib3MF_uint32 GetCount ();
+	ILib3MFBaseMaterialGroup * GetCurrentBaseMaterialGroup ();
 
-	Lib3MF_uint32 AddMaterial(const std::string & sName, const sLib3MFColor DisplayColor);
-
-	void RemoveMaterial (const Lib3MF_uint32 nPropertyID);
-
-	std::string GetName (const Lib3MF_uint32 nPropertyID);
-
-	void SetName (const Lib3MF_uint32 nPropertyID, const std::string & sName);
-
-	void SetDisplayColor(const Lib3MF_uint32 nPropertyID, const sLib3MFColor TheColor);
-
-	sLib3MFColor GetDisplayColor(const Lib3MF_uint32 nPropertyID);
-
-	void GetAllPropertyIDs(Lib3MF_uint64 nPropertyIDsBufferSize, Lib3MF_uint64* pPropertyIDsNeededCount, Lib3MF_uint32 * pPropertyIDsBuffer);
 };
 
-}
-}
+} // namespace Impl
+} // namespace Lib3MF
 
 #pragma warning( pop )
-#endif // __LIB3MF_LIB3MFBASEMATERIALGROUP
+#endif // __LIB3MF_LIB3MFBASEMATERIALGROUPITERATOR

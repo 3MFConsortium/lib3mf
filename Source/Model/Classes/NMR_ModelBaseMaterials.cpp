@@ -41,18 +41,25 @@ namespace NMR {
 	CModelBaseMaterialResource::CModelBaseMaterialResource(_In_ const ModelResourceID sID, _In_ CModel * pModel)
 		: CModelResource(sID, pModel)
 	{
+		m_nNextPropertyID = 1;
 	}
 
 	nfUint32 CModelBaseMaterialResource::addBaseMaterial(_In_ const std::string sName, _In_ nfColor cDisplayColor)
 	{
-		nfUint32 nNewIndex = getCount();
-		if (nNewIndex >= XML_3MF_MAXRESOURCEINDEX) {
+		nfUint32 nID = m_nNextPropertyID;
+		if (getCount() >= XML_3MF_MAXRESOURCEINDEX) {
 			throw CNMRException(NMR_ERROR_TOOMANYMATERIALS);
 		}
 
-		m_pMaterials.push_back(std::make_shared<CModelBaseMaterial> (sName, cDisplayColor));
+		m_pMaterials.insert(
+			std::make_pair(nID, std::make_shared<CModelBaseMaterial>(sName, cDisplayColor, nID))
+		);
 
-		return nNewIndex;
+		m_nNextPropertyID++;
+
+		clearResourceIndexMap();
+
+		return nID;
 	}
 
 	nfUint32 CModelBaseMaterialResource::getCount()
@@ -60,19 +67,21 @@ namespace NMR {
 		return (nfUint32)m_pMaterials.size();
 	}
 
-	PModelBaseMaterial CModelBaseMaterialResource::getBaseMaterial(_In_ nfUint32 nIndex)
+	PModelBaseMaterial CModelBaseMaterialResource::getBaseMaterial(_In_ nfUint32 nPropertyID)
 	{
-		if (nIndex >= (nfUint32)m_pMaterials.size())
+		auto iIterator = m_pMaterials.find(nPropertyID);
+		if (iIterator != m_pMaterials.end()) {
+			return iIterator->second;
+		}
+		else {
 			throw CNMRException(NMR_ERROR_INVALIDINDEX);
-
-		return m_pMaterials[nIndex];
+		}
 	}
 
-	void CModelBaseMaterialResource::removeMaterial(_In_ nfUint32 nIndex)
+	void CModelBaseMaterialResource::removeMaterial(_In_ nfUint32 nPropertyID)
 	{
-		if (nIndex >= (nfUint32)m_pMaterials.size())
-			throw CNMRException(NMR_ERROR_INVALIDINDEX);
-		m_pMaterials.erase(m_pMaterials.begin() + nIndex);
+		m_pMaterials.erase(nPropertyID);
+		clearResourceIndexMap();
 	}
 
 	void CModelBaseMaterialResource::mergeFrom(_In_ CModelBaseMaterialResource * pSourceMaterial)
@@ -87,7 +96,21 @@ namespace NMR {
 			PModelBaseMaterial pMaterial = pSourceMaterial->getBaseMaterial(nIndex);
 			addBaseMaterial(pMaterial->getName(), pMaterial->getDisplayColor());
 		}
+		clearResourceIndexMap();
+	}
 
+	void CModelBaseMaterialResource::buildResourceIndexMap()
+	{
+		m_ResourceIndexMap.clear();
+		m_ResourceIndexMap.reserve(m_pMaterials.size());
+
+		auto iIterator = m_pMaterials.begin();
+		while (iIterator != m_pMaterials.end()) {
+			m_ResourceIndexMap.push_back(iIterator->first);
+			iIterator++;
+		}
+
+		m_bHasResourceIndexMap = true;
 	}
 
 }

@@ -45,6 +45,7 @@ Abstract: This is a stub class definition of CLib3MFModel
 #include "lib3mf_slicestack.hpp"
 #include "lib3mf_texture2d.hpp"
 #include "lib3mf_texture2diterator.hpp"
+#include "lib3mf_basematerialgroupiterator.hpp"
 // Include custom headers here.
 
 #include "Model/Classes/NMR_ModelMeshObject.h"
@@ -107,7 +108,7 @@ ILib3MFTexture2D * CLib3MFModel::GetTexture2DByID (const Lib3MF_uint32 nResource
 		return new CLib3MFTexture2D(pTexture2DResource);
 	}
 	else
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDINVALIDTEXTURERESOURCE);
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDTEXTURERESOURCE);
 }
 
 ILib3MFBaseMaterialGroup * CLib3MFModel::GetBaseMaterialGroupByID (const Lib3MF_uint32 nResourceID)
@@ -240,9 +241,9 @@ ILib3MFTexture2DIterator * CLib3MFModel::GetTexture2Ds()
 	return pResult.release();
 }
 
-ILib3MFResourceIterator * CLib3MFModel::GetBaseMaterialGroups ()
+ILib3MFBaseMaterialGroupIterator * CLib3MFModel::GetBaseMaterialGroups ()
 {
-	auto pResult = std::make_unique<CLib3MFResourceIterator>();
+	auto pResult = std::make_unique<CLib3MFBaseMaterialGroupIterator>();
 	Lib3MF_uint32 nCount = model().getBaseMaterialCount();
 
 	for (Lib3MF_uint32 nIdx = 0; nIdx < nCount; nIdx++) {

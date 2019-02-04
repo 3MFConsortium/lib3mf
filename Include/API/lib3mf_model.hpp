@@ -109,7 +109,7 @@ public:
 
 	ILib3MFTexture2DIterator * GetTexture2Ds ();
 
-	ILib3MFResourceIterator * GetBaseMaterialGroups ();
+	ILib3MFBaseMaterialGroupIterator * GetBaseMaterialGroups ();
 
 	ILib3MFResourceIterator * GetSliceStacks();
 

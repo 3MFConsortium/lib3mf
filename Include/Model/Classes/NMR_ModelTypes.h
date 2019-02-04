@@ -104,6 +104,7 @@ namespace NMR {
 
 #pragma pack()
 
+	typedef DWORD ModelPropertyID;
 	typedef DWORD ModelResourceID;
 	typedef DWORD PackageResourceID;
 	typedef DWORD ModelResourceIndex;

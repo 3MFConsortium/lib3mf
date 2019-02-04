@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2018 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -24,55 +24,26 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract:
+Abstract: This is a stub class definition of CLib3MFBaseMaterialGroupIterator
 
-NMR_ModelBaseMaterial.cpp implements the Model Base Material Class.
-A base material is an in memory representation of the 3MF basematerial node.
+*/
 
---*/
+#include "lib3mf_basematerialgroupiterator.hpp"
+#include "lib3mf_interfaceexception.hpp"
+#include "lib3mf_basematerialgroup.hpp"
+// Include custom headers here.
 
-#include "Model/Classes/NMR_ModelBaseMaterial.h" 
-#include "Common/NMR_Exception.h" 
-#include "Common/NMR_StringUtils.h" 
-#include <sstream>
 
-namespace NMR {
+using namespace Lib3MF::Impl;
 
-	CModelBaseMaterial::CModelBaseMaterial(_In_ const std::string sName, _In_ nfColor cDisplayColor, _In_ ModelPropertyID nPropertyID)
-	{
-		m_sName = sName;
-		m_cDisplayColor = cDisplayColor;
-		m_nPropertyID = nPropertyID;
-	}
+/*************************************************************************************************************************
+ Class definition of CLib3MFBaseMaterialGroupIterator 
+**************************************************************************************************************************/
 
-	nfColor CModelBaseMaterial::getDisplayColor()
-	{
-		return m_cDisplayColor;
-	}
-
-	void CModelBaseMaterial::setColor(_In_ nfColor cColor)
-	{
-		m_cDisplayColor = cColor;
-	}
-
-	std::string CModelBaseMaterial::getName()
-	{
-		return m_sName;
-	}
-
-	void CModelBaseMaterial::setName(_In_ const std::string sName)
-	{
-		m_sName = sName;
-	}
-
-	std::string CModelBaseMaterial::getDisplayColorString()
-	{
-		return fnColorToString(m_cDisplayColor);
-	}
-
-	nfUint32 CModelBaseMaterial::getPropertyID()
-	{
-		return m_nPropertyID;
-	}
+ILib3MFBaseMaterialGroup * CLib3MFBaseMaterialGroupIterator::GetCurrentBaseMaterialGroup()
+{
+	// Create specific API class
+	auto pACTResource = std::make_unique<CLib3MFBaseMaterialGroup>(std::dynamic_pointer_cast<NMR::CModelBaseMaterialResource>(GetCurrentResource()));
+	return pACTResource.release();
 }
 

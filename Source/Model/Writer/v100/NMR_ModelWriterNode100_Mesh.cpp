@@ -146,7 +146,6 @@ namespace NMR {
 			pInformation = pMeshInformationHandler->getInformationByType(0, emiProperties);
 			if (pInformation)
 				pProperties = dynamic_cast<CMeshInformation_Properties *> (pInformation);
-
 		}
 		
 		// Write Triangles

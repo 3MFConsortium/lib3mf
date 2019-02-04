@@ -51,7 +51,7 @@ NMR::PModelTexture2DResource CLib3MFTexture2D::texture()
 {
 	NMR::PModelTexture2DResource pTexture = std::dynamic_pointer_cast<NMR::CModelTexture2DResource>(resource());
 	if (!pTexture)
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDINVALIDTEXTURERESOURCE);
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDTEXTURERESOURCE);
 	return pTexture;
 }
 

@@ -16,9 +16,11 @@ set(SRCS_UNITTEST
 	./Source/UnitTest_Model.cpp
 	./Source/UnitTest_Object.cpp
 	./Source/UnitTest_ProgressCallback.cpp
+	./Source/UnitTest_Properties.cpp
 	./Source/UnitTest_Reader.cpp
 	./Source/UnitTest_Slice.cpp
 	./Source/UnitTest_SliceStack.cpp
+	./Source/UnitTest_Utilities.cpp
 	./Source/UnitTest_Writer.cpp
 	./Source/UnitTest_TextureResources.cpp
 	./Source/UnitTest_Wrapper.cpp

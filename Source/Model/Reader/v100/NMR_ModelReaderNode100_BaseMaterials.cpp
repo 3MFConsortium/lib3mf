@@ -104,7 +104,6 @@ namespace NMR {
 
 				if (m_pBaseMaterialResource.get() != nullptr) {
 					m_pBaseMaterialResource->addBaseMaterial(pXMLNode->getMaterialName(), pXMLNode->getDisplayColor());
-
 				}
 			}
 		}

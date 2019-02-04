@@ -39,7 +39,6 @@ XML Model Stream.
 #include "Common/NMR_StringUtils.h"
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_Exception_Windows.h"
-#include "Model/Classes/NMR_ModelBaseMaterial.h"
 #include "Model/Reader/NMR_ModelReader_ColorMapping.h"
 
 namespace NMR {
@@ -139,10 +138,9 @@ namespace NMR {
 
 						PPackageResourceID pID = m_pModel->findPackageResourceID(m_pModel->curPath(), nResourceID);
 						if (pID.get()) {
-							// Find and Assign Base Material Resource
+							// Find and Assign Resource of this Property
 							PModelResource pResource = m_pModel->findResource(pID->getUniqueID());
 							if (pResource.get () != nullptr) {
-
 								if (!pResource->hasResourceIndexMap())
 									pResource->buildResourceIndexMap();
 
@@ -161,10 +159,13 @@ namespace NMR {
 										pFaceData->m_nPropertyIDs[1] = pPropertyID2;
 										pFaceData->m_nPropertyIDs[2] = pPropertyID3;
 									}
-
+								} else {
+									m_pWarnings->addException(CNMRException(NMR_ERROR_INVALIDMESHINFORMATIONINDEX), mrwInvalidOptionalValue);
 								}
-
-							} 
+							}
+						}
+						else {
+							m_pWarnings->addException(CNMRException(NMR_ERROR_INVALIDMODELRESOURCE), mrwInvalidOptionalValue);
 						}
 
 					}

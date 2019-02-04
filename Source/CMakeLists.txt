@@ -25,6 +25,7 @@ ${SRCS_COM}
 Source/API/lib3mf.cpp
 Source/API/lib3mf_attachment.cpp
 Source/API/lib3mf_basematerialgroup.cpp
+Source/API/lib3mf_basematerialgroupiterator.cpp
 Source/API/lib3mf_beamlattice.cpp
 Source/API/lib3mf_beamset.cpp
 Source/API/lib3mf_builditem.cpp
