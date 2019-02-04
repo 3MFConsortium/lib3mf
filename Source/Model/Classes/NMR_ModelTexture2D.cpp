@@ -45,7 +45,7 @@ namespace NMR {
 	CModelTexture2DResource::CModelTexture2DResource(_In_ const ModelResourceID sID, _In_ CModel * pModel, _In_ PModelAttachment pAttachment)
 		:CModelResource(sID, pModel), m_pAttachment(pAttachment)
 	{
-		m_ContentType = MODELTEXTURETYPE_UNKNOWN;
+		m_ContentType = MODELTEXTURETYPE_PNG;
 		m_bHasBox2D = false;
 		m_fBox2D_U = 0.0f;
 		m_fBox2D_V = 0.0f;

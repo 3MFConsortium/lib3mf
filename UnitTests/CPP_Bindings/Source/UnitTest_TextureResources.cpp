@@ -78,17 +78,6 @@ namespace Lib3MF
 		ASSERT_SPECIFIC_THROW(texture->SetAttachment(otherAttachment.get()), ELib3MFException);
 	}
 
-	TEST_F(Model_TextureResource, WriteRead)
-	{
-		ASSERT_FALSE(true);
-	}
-
-	TEST_F(Model_TextureResource, Read)
-	{
-		ASSERT_FALSE(true);
-	}
-
-
 	class Model_TextureResources : public ::testing::Test {
 	protected:
 
@@ -126,6 +115,44 @@ namespace Lib3MF
 		}
 	}
 
+	TEST_F(Model_TextureResource, WriteRead)
+	{
+		auto writeModel = CLib3MFWrapper::CreateModel();
+		std::string sRelationshipType_Texture = "http://schemas.microsoft.com/3dmanufacturing/2013/01/3dtexture";
+		std::string sPath_Texture = "/3D/Textures/MyTexture";
+		std::vector<Lib3MF_uint8> buffer;
+		{
+			auto textureAttachment1 = writeModel->AddAttachment(m_sPath_Texture + "0.png", sRelationshipType_Texture);
+			auto textureAttachment2 = writeModel->AddAttachment(m_sPath_Texture + "1.png", sRelationshipType_Texture);
+			auto textureAttachment3 = writeModel->AddAttachment(m_sPath_Texture + "2.png", sRelationshipType_Texture);
+
+			auto texture1 = writeModel->AddTexture2DFromAttachment(textureAttachment1.get());
+			auto texture2 = writeModel->AddTexture2DFromAttachment(textureAttachment2.get());
+			auto texture3 = writeModel->AddTexture2DFromAttachment(textureAttachment3.get());
+
+			textureAttachment1->ReadFromFile(sTestFilesPath + "Textures/tex1.png");
+			textureAttachment2->ReadFromFile(sTestFilesPath + "Textures/tex2.png");
+			textureAttachment3->ReadFromFile(sTestFilesPath + "Textures/tex3.png");
+
+			auto writer = writeModel->QueryWriter("3mf");
+			writer->WriteToBuffer(buffer);
+		}
+		
+		auto readModel = CLib3MFWrapper::CreateModel();
+		auto reader = readModel->QueryReader("3mf");
+		reader->ReadFromBuffer(buffer);
+
+		ASSERT_EQ(readModel->GetAttachmentCount(), 3);
+
+		auto textures = readModel->GetTexture2Ds();
+		int count = 0;
+		while (textures->MoveNext()) {
+			auto texture = textures->GetCurrentTexture2D();
+			count++;
+		}
+		ASSERT_EQ(count, 3);
+	}
+
 	class TextureResource : public ::testing::Test {
 	protected:
 
@@ -150,10 +177,9 @@ namespace Lib3MF
 
 	TEST_F(TextureResource, Properties)
 	{
-		EXPECT_EQ(texture->GetContentType(), eLib3MFTextureType::eTextureTypeUnknown);
-		texture->SetContentType(eLib3MFTextureType::eTextureTypePNG);
 		EXPECT_EQ(texture->GetContentType(), eLib3MFTextureType::eTextureTypePNG);
-
+		texture->SetContentType(eLib3MFTextureType::eTextureTypeJPEG);
+		EXPECT_EQ(texture->GetContentType(), eLib3MFTextureType::eTextureTypeJPEG);
 
 		eLib3MFTextureTileStyle u, v, u1, v1;
 		texture->GetTileStyleUV(u, v);
