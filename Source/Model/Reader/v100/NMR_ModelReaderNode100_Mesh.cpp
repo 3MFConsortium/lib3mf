@@ -43,7 +43,7 @@ A mesh reader model node is a parser for the mesh node of an XML Model Stream.
 
 namespace NMR {
 
-	CModelReaderNode100_Mesh::CModelReaderNode100_Mesh(_In_ CModel * pModel, _In_ CMesh * pMesh, _In_ PModelReaderWarnings pWarnings, _In_ CProgressMonitor* pProgressMonitor, _In_ PModelReader_ColorMapping pColorMapping, _In_ PModelReader_TexCoordMapping pTexCoordMapping, _In_ ModelResourceID nDefaultPropertyID, _In_ ModelResourceIndex nDefaultPropertyIndex)
+	CModelReaderNode100_Mesh::CModelReaderNode100_Mesh(_In_ CModel * pModel, _In_ CMesh * pMesh, _In_ PModelReaderWarnings pWarnings, _In_ CProgressMonitor* pProgressMonitor, _In_ PModelReader_TexCoordMapping pTexCoordMapping, _In_ ModelResourceID nDefaultPropertyID, _In_ ModelResourceIndex nDefaultPropertyIndex)
 		: CModelReaderNode(pWarnings, pProgressMonitor)
 	{
 		__NMRASSERT(pMesh);
@@ -52,12 +52,9 @@ namespace NMR {
 		m_nProgressCounterNodes = 0;
 		m_nProgressCounterTriangles = 0;
 
-		if (!pColorMapping.get())
-			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 		if (!pTexCoordMapping.get())
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-		m_pColorMapping = pColorMapping;
 		m_pTexCoordMapping = pTexCoordMapping;
 
 		m_nDefaultPropertyID = nDefaultPropertyID;
@@ -127,7 +124,7 @@ namespace NMR {
 					if (m_pProgressMonitor && !m_pProgressMonitor->Progress(1 -1. / (2 + ++m_nProgressCounterTriangles), PROGRESS_READMESH)) {
 						throw CNMRException(NMR_USERABORTED);
 					}
-				PModelReaderNode100_Triangles pXMLNode = std::make_shared<CModelReaderNode100_Triangles>(m_pModel, m_pMesh, m_pWarnings, m_pColorMapping, m_pTexCoordMapping, m_nDefaultPropertyID, m_nDefaultPropertyIndex);
+				PModelReaderNode100_Triangles pXMLNode = std::make_shared<CModelReaderNode100_Triangles>(m_pModel, m_pMesh, m_pWarnings, m_pTexCoordMapping, m_nDefaultPropertyID, m_nDefaultPropertyIndex);
 				pXMLNode->parseXML(pXMLReader);
 				if (m_nDefaultPropertyID == 0) {
 					// warn, if object does not have a default property, but a triangle has one

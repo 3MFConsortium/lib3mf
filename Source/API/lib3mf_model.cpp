@@ -46,11 +46,14 @@ Abstract: This is a stub class definition of CLib3MFModel
 #include "lib3mf_texture2d.hpp"
 #include "lib3mf_texture2diterator.hpp"
 #include "lib3mf_basematerialgroupiterator.hpp"
+#include "lib3mf_colorgroup.hpp"
+#include "lib3mf_colorgroupiterator.hpp"
 // Include custom headers here.
 
 #include "Model/Classes/NMR_ModelMeshObject.h"
 #include "Model/Classes/NMR_ModelComponentsObject.h"
 #include "Common/Platform/NMR_ImportStream_Memory.h"
+#include "Model/Classes/NMR_ModelColorGroup.h" 
 
 #include "lib3mf_utils.hpp"
 
@@ -139,6 +142,16 @@ ILib3MFComponentsObject * CLib3MFModel::GetComponentsObjectByID (const Lib3MF_ui
 	}
 	else
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCOMPONENTSOBJECT);
+}
+
+ILib3MFColorGroup * CLib3MFModel::GetColorGroupByID(const Lib3MF_uint32 nResourceID)
+{
+	NMR::PModelResource pResource = model().findResource(nResourceID);
+	if (dynamic_cast<NMR::CModelColorGroupResource*>(pResource.get())) {
+		return new CLib3MFColorGroup(std::dynamic_pointer_cast<NMR::CModelColorGroupResource>(pResource));
+	}
+	else
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCOLORGROUP);
 }
 
 ILib3MFSliceStack * CLib3MFModel::GetSliceStackByID(const Lib3MF_uint32 nResourceID)
@@ -241,7 +254,7 @@ ILib3MFTexture2DIterator * CLib3MFModel::GetTexture2Ds()
 	return pResult.release();
 }
 
-ILib3MFBaseMaterialGroupIterator * CLib3MFModel::GetBaseMaterialGroups ()
+ILib3MFBaseMaterialGroupIterator * CLib3MFModel::GetBaseMaterialGroups()
 {
 	auto pResult = std::make_unique<CLib3MFBaseMaterialGroupIterator>();
 	Lib3MF_uint32 nCount = model().getBaseMaterialCount();
@@ -249,6 +262,19 @@ ILib3MFBaseMaterialGroupIterator * CLib3MFModel::GetBaseMaterialGroups ()
 	for (Lib3MF_uint32 nIdx = 0; nIdx < nCount; nIdx++) {
 		auto resource = model().getBaseMaterialResource(nIdx);
 		if (dynamic_cast<NMR::CModelBaseMaterialResource *>(resource.get()))
+			pResult->addResource(resource);
+	}
+	return pResult.release();
+}
+
+ILib3MFColorGroupIterator * CLib3MFModel::GetColorGroups()
+{
+	auto pResult = std::make_unique<CLib3MFColorGroupIterator>();
+	Lib3MF_uint32 nCount = model().getColorGroupCount();
+
+	for (Lib3MF_uint32 nIdx = 0; nIdx < nCount; nIdx++) {
+		auto resource = model().getColorGroupResource(nIdx);
+		if (dynamic_cast<NMR::CModelColorGroupResource *>(resource.get()))
 			pResult->addResource(resource);
 	}
 	return pResult.release();
@@ -281,6 +307,7 @@ ILib3MFModel * CLib3MFModel::MergeToModel ()
 	newModel.mergeModelAttachments(&model());
 	newModel.mergeTextures2D(&model());
 	newModel.mergeBaseMaterials(&model());
+	newModel.mergeColorGroups(&model());
 	newModel.mergeMetaData(&model());
 
 	newModel.setUnit(model().getUnit());
@@ -342,6 +369,15 @@ ILib3MFBaseMaterialGroup * CLib3MFModel::AddBaseMaterialGroup ()
 	model().addResource(pResource);
 
 	auto result = std::make_unique<CLib3MFBaseMaterialGroup>(pResource);
+	return result.release();
+}
+
+ILib3MFColorGroup * CLib3MFModel::AddColorGroup()
+{
+	NMR::PModelColorGroupResource pResource = std::make_shared<NMR::CModelColorGroupResource>(model().generateResourceID(), &model());
+	model().addResource(pResource);
+
+	auto result = std::make_unique<CLib3MFColorGroup>(pResource);
 	return result.release();
 }
 

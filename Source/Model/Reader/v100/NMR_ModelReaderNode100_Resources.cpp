@@ -57,7 +57,6 @@ namespace NMR {
 		m_sPath = sPath;
 		m_nProgressCount = 0;
 
-		m_pColorMapping = std::make_shared<CModelReader_ColorMapping>();
 		m_pTexCoordMapping = std::make_shared<CModelReader_TexCoordMapping>();
 	}
 
@@ -92,7 +91,7 @@ namespace NMR {
 						throw CNMRException(NMR_USERABORTED);
 					m_pProgressMonitor->PushLevel(1.0 - 2.0 / (m_nProgressCount + 2), 1.0 - 2.0 / (m_nProgressCount + 1 + 2));
 				}
-				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode100_Object>(m_pModel, m_pWarnings, m_pProgressMonitor, m_pColorMapping, m_pTexCoordMapping);
+				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode100_Object>(m_pModel, m_pWarnings, m_pProgressMonitor, m_pTexCoordMapping);
 				pXMLNode->parseXML(pXMLReader);
 				if (m_pProgressMonitor)
 					m_pProgressMonitor->PopLevel();
@@ -107,7 +106,7 @@ namespace NMR {
 
 		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_MATERIALSPEC) == 0) {
 			if (strcmp(pChildName, XML_3MF_ELEMENT_COLORGROUP) == 0) {
-				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode100_Colors>(m_pModel, m_pWarnings, m_pColorMapping);
+				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode100_Colors>(m_pModel, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 			}
 			else if (strcmp(pChildName, XML_3MF_ELEMENT_TEX2DGROUP) == 0) {

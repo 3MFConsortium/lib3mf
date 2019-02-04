@@ -121,7 +121,7 @@ namespace Lib3MF
 		}
 	}
 
-	class Properties_Writer : public ::testing::Test {
+	class Properties_BaseMaterial : public ::testing::Test {
 	protected:
 
 		virtual void SetUp() {
@@ -160,14 +160,17 @@ namespace Lib3MF
 		PLib3MFMeshObject mesh;
 	};
 
-	TEST_F(Properties_Writer, BaseMaterial)
+	TEST_F(Properties_BaseMaterial, WriteRead)
 	{
 		auto writer = model->QueryWriter("3mf");
-		writer->WriteToFile("BaseMaterial_Out.3mf");
+		std::vector<Lib3MF_uint8> buffer;
+		writer->WriteToBuffer(buffer);
+		// writer->WriteToFile("BaseMaterial_Out.3mf");
 
 		auto readModel = CLib3MFWrapper::CreateModel();
 		auto reader = readModel->QueryReader("3mf");
-		reader->ReadFromFile("BaseMaterial_Out.3mf");
+		// reader->ReadFromFile("BaseMaterial_Out.3mf");
+		reader->ReadFromBuffer(buffer);
 
 		auto iterator = readModel->GetBaseMaterialGroups();
 		while (iterator->MoveNext())
@@ -176,5 +179,93 @@ namespace Lib3MF
 			ASSERT_EQ(basematerialgroup->GetCount(), 2);
 		}
 	}
+
+
+
+	class Properties_Color : public ::testing::Test {
+	protected:
+
+		virtual void SetUp() {
+			model = CLib3MFWrapper::CreateModel();
+
+			std::vector<sLib3MFPosition> vctVertices;
+			std::vector<sLib3MFTriangle> vctTriangles;
+			fnCreateBox(vctVertices, vctTriangles);
+
+			mesh = model->AddMeshObject();
+			mesh->SetGeometry(vctVertices, vctTriangles);
+			model->AddBuildItem(mesh.get(), getIdentityTransform());
+			
+			auto colorGroup = model->AddColorGroup();
+			cSomeColor = CLib3MFWrapper::RGBAToColor(100, 200, 150, 255);
+			cAnotherColor = CLib3MFWrapper::RGBAToColor(250, 100, 50, 200);
+			auto someColor = colorGroup->AddColor(cSomeColor);
+			auto anotherColor = colorGroup->AddColor(cAnotherColor);
+
+			std::vector<sLib3MFTriangleProperties> properties(mesh->GetTriangleCount());
+			for (Lib3MF_uint64 i = 0; i < mesh->GetTriangleCount(); i++) {
+				properties[i].m_ResourceID = colorGroup->GetResourceID();
+				auto color = someColor;
+				if (i % 2 == 0) {
+					color = anotherColor;
+				}
+				properties[i].m_PropertyIDs[0] = color;
+				properties[i].m_PropertyIDs[1] = anotherColor;
+				properties[i].m_PropertyIDs[2] = someColor;
+			}
+			mesh->SetAllTriangleProperties(properties);
+		}
+		virtual void TearDown() {
+			model.reset();
+		}
+
+		PLib3MFModel model;
+		PLib3MFMeshObject mesh;
+		sLib3MFColor cSomeColor, cAnotherColor;
+	};
+
+	void CompareColors(sLib3MFColor c1, sLib3MFColor c2)
+	{
+		EXPECT_EQ(c1.m_Alpha, c2.m_Alpha);
+		EXPECT_EQ(c1.m_Red, c2.m_Red);
+		EXPECT_EQ(c1.m_Green, c2.m_Green);
+		EXPECT_EQ(c1.m_Blue, c2.m_Blue);
+	}
+
+	TEST_F(Properties_Color, WriteRead)
+	{
+		auto writer = model->QueryWriter("3mf");
+		std::vector<Lib3MF_uint8> buffer;
+		// writer->WriteToBuffer(buffer);
+		//writer->WriteToFile("Color_Out.3mf");
+
+		auto readModel = CLib3MFWrapper::CreateModel();
+		auto reader = readModel->QueryReader("3mf");
+		reader->ReadFromFile("Color_Out.3mf");
+		// reader->ReadFromBuffer(buffer);
+
+		auto iterator = readModel->GetColorGroups();
+		while (iterator->MoveNext())
+		{
+			auto colorgroup = iterator->GetCurrentColorGroup();
+			ASSERT_EQ(colorgroup->GetCount(), 2);
+		}
+
+		auto mesh = readModel->GetMeshObjectByID(2);
+		std::vector<sLib3MFTriangleProperties> properties;
+		mesh->GetAllTriangleProperties(properties);
+
+		for (Lib3MF_uint64 i = 0; i < mesh->GetTriangleCount(); i++) {
+			auto colorGroup = readModel->GetColorGroupByID(properties[i].m_ResourceID);
+			auto color = cSomeColor;
+			if (i % 2 == 0) {
+				color = cAnotherColor;
+			}
+			CompareColors(color, colorGroup->GetColor(properties[i].m_PropertyIDs[0]));
+			CompareColors(cAnotherColor, colorGroup->GetColor(properties[i].m_PropertyIDs[1]));
+			CompareColors(cSomeColor, colorGroup->GetColor(properties[i].m_PropertyIDs[2]));
+		}
+	}
+
 
 }

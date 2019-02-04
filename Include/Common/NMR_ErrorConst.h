@@ -1126,6 +1126,8 @@ XML Parser Error Constants (0x9XXX)
 // A box attribute is duplicated
 #define NMR_ERROR_DUPLICATE_BOX_ATTRIBUTE 0x9018
 
+// Too many colors
+#define NMR_ERROR_TOOMANYCOLORS 0x9019
 
 /*-------------------------------------------------------------------
 Library errors (0xAXXX)

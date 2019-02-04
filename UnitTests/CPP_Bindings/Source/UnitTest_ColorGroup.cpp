@@ -26,7 +26,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-UnitTest_BaseMaterialGroup.cpp: Defines Unittests for the BaseMaterialGroup class
+UnitTest_ColorGroup.cpp: Defines Unittests for the ColorGroup class
 
 --*/
 
@@ -35,70 +35,65 @@ UnitTest_BaseMaterialGroup.cpp: Defines Unittests for the BaseMaterialGroup clas
 
 namespace Lib3MF
 {
-	class BaseMaterialGroup : public ::testing::Test {
+	class ColorGroup : public ::testing::Test {
 	protected:
 
 		virtual void SetUp() {
 			model = CLib3MFWrapper::CreateModel();
-			baseMaterialGroup = model->AddBaseMaterialGroup();
+			colorGroup = model->AddColorGroup();
 		}
 		virtual void TearDown() {
 			model.reset();
 		}
 
 		PLib3MFModel model;
-		PLib3MFBaseMaterialGroup baseMaterialGroup;
+		PLib3MFColorGroup colorGroup;
 	};
 
-	TEST_F(BaseMaterialGroup, GetCount)
+	TEST_F(ColorGroup, GetCount)
 	{
-		ASSERT_EQ(baseMaterialGroup->GetCount(), 0);
+		ASSERT_EQ(colorGroup->GetCount(), 0);
 	}
 
-	TEST_F(BaseMaterialGroup, AddGetSetMaterial)
+	TEST_F(ColorGroup, AddGetSetColor)
 	{
 		sLib3MFColor tIn;
 		tIn.m_Red = 20;
 		tIn.m_Blue = 10;
 		tIn.m_Green = 100;
 		tIn.m_Alpha = 255;
-		std::string inName = "MyMaterial";
-		Lib3MF_uint32 propertyID = baseMaterialGroup->AddMaterial(inName, tIn);
+		Lib3MF_uint32 propertyID = colorGroup->AddColor(tIn);
 
-		baseMaterialGroup->AddMaterial("OtherMaterial", CLib3MFWrapper::RGBAToColor(0, 10, 20, 30));
-		ASSERT_EQ(baseMaterialGroup->GetCount(), 2);
+		colorGroup->AddColor(CLib3MFWrapper::RGBAToColor(0, 10, 20, 30));
+		ASSERT_EQ(colorGroup->GetCount(), 2);
 
 		std::vector<Lib3MF_uint32> propertyIDs;
-		baseMaterialGroup->GetAllPropertyIDs(propertyIDs);
+		colorGroup->GetAllPropertyIDs(propertyIDs);
 		ASSERT_EQ(propertyIDs.size(), 2);
 		
-		sLib3MFColor tReOut = baseMaterialGroup->GetDisplayColor(propertyIDs[0]);
+		sLib3MFColor tReOut = colorGroup->GetColor(propertyIDs[0]);
 		ASSERT_EQ(tIn.m_Red, tReOut.m_Red);
 		ASSERT_EQ(tIn.m_Green, tReOut.m_Green);
 		ASSERT_EQ(tIn.m_Blue, tReOut.m_Blue);
 		ASSERT_EQ(tIn.m_Alpha, tReOut.m_Alpha);
 
-		baseMaterialGroup->SetDisplayColor(propertyIDs[0], CLib3MFWrapper::RGBAToColor(12, 123, 23, 234));
-
-		std::string outName = baseMaterialGroup->GetName(propertyIDs[0]);
-		ASSERT_TRUE(inName == outName);
-
-		baseMaterialGroup->SetName(propertyIDs[1], "NewName");
-		outName = baseMaterialGroup->GetName(propertyIDs[1]);
-		ASSERT_TRUE(outName == "NewName");
+		colorGroup->SetColor(propertyIDs[0], CLib3MFWrapper::RGBAToColor(12, 123, 23, 234));
 	}
 
-	TEST_F(BaseMaterialGroup, AddRemoveMaterial)
+	TEST_F(ColorGroup, AddRemoveColor)
 	{
-		baseMaterialGroup->AddMaterial("1", CLib3MFWrapper::RGBAToColor(0, 10, 20, 30));
-		baseMaterialGroup->AddMaterial("2", CLib3MFWrapper::RGBAToColor(0, 10, 20, 30));
+		colorGroup->AddColor(CLib3MFWrapper::RGBAToColor(0, 10, 20, 30));
+		colorGroup->AddColor(CLib3MFWrapper::RGBAToColor(5, 15, 25, 35));
 
 		std::vector<Lib3MF_uint32> propertyIDs;
-		baseMaterialGroup->GetAllPropertyIDs(propertyIDs);
+		colorGroup->GetAllPropertyIDs(propertyIDs);
 
-		baseMaterialGroup->RemoveMaterial(propertyIDs[0]);
-		ASSERT_SPECIFIC_THROW(baseMaterialGroup->GetName(propertyIDs[0]), ELib3MFException);
-		ASSERT_EQ("2", baseMaterialGroup->GetName(propertyIDs[1]));
+		colorGroup->RemoveColor(propertyIDs[0]);
+		ASSERT_SPECIFIC_THROW(colorGroup->GetColor(propertyIDs[0]), ELib3MFException);
+		ASSERT_EQ(CLib3MFWrapper::RGBAToColor(5, 15, 25, 35).m_Alpha, colorGroup->GetColor(propertyIDs[1]).m_Alpha);
+		ASSERT_EQ(CLib3MFWrapper::RGBAToColor(5, 15, 25, 35).m_Blue, colorGroup->GetColor(propertyIDs[1]).m_Blue);
+		ASSERT_EQ(CLib3MFWrapper::RGBAToColor(5, 15, 25, 35).m_Green, colorGroup->GetColor(propertyIDs[1]).m_Green);
+		ASSERT_EQ(CLib3MFWrapper::RGBAToColor(5, 15, 25, 35).m_Red, colorGroup->GetColor(propertyIDs[1]).m_Red);
 	}
 
 }

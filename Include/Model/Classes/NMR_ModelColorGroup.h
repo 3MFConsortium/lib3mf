@@ -26,37 +26,48 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelReaderNode100_BaseMaterials.h defines the Model Reader Colors Class.
+NMR_ModelColorGroup.h defines the Model Color Group Resource Class.
+A model color group resource is an in memory representation of the 3MF
+color group resource object.
 
 --*/
 
-#ifndef __NMR_MODELREADERNODE100_COLORS
-#define __NMR_MODELREADERNODE100_COLORS
+#ifndef __NMR_MODELCOLORGROUP
+#define __NMR_MODELCOLORGROUP
 
-#include "Model/Reader/NMR_ModelReaderNode.h"
-#include "Model/Classes/NMR_ModelComponent.h"
-#include "Model/Classes/NMR_ModelComponentsObject.h"
-#include "Model/Classes/NMR_ModelObject.h"
+#include "Model/Classes/NMR_ModelBaseMaterial.h"
+#include "Model/Classes/NMR_ModelResource.h"
+#include "Model/Classes/NMR_ModelTypes.h"
+#include "Model/Classes/NMR_Model.h"
+#include <vector>
 
 namespace NMR {
 
-	class CModelReaderNode100_Colors : public CModelReaderNode {
+	class CModel;
+	typedef std::shared_ptr <CModel> PModel;
+
+	class CModelColorGroupResource : public CModelResource {
 	private:
-		CModel * m_pModel;
-		ModelResourceID m_nID;
-		ModelResourceIndex m_nColorIndex;
-		PModelColorGroupResource m_pColorGroup;
+		std::map<ModelPropertyID, nfColor> m_pColors;
+		ModelPropertyID m_nNextPropertyID;
 
-	protected:
-		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
-		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 	public:
-		CModelReaderNode100_Colors() = delete;
-		CModelReaderNode100_Colors(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings);
+		CModelColorGroupResource() = delete;
+		CModelColorGroupResource(_In_ const ModelResourceID sID, _In_ CModel * pModel);
 
-		virtual void parseXML(_In_ CXmlReader * pXMLReader);
+		nfUint32 addColor(_In_ nfColor cColor);
+
+		nfUint32 getCount();
+		nfColor getColor(_In_ ModelPropertyID nPropertyID);
+		void setColor(_In_ ModelPropertyID nPropertyID, _In_ nfColor cColor);
+
+		void removeColor(_In_ ModelPropertyID nPropertyID);
+		void mergeFrom(_In_ CModelColorGroupResource * pSourceMaterial);
+		void buildResourceIndexMap();
 	};
+
+	typedef std::shared_ptr <CModelColorGroupResource> PModelColorGroupResource;
 
 }
 
-#endif // __NMR_MODELREADERNODE100_COLORS
+#endif // __NMR_MODELCOLORGROUP

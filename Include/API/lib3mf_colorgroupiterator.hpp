@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2018 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -24,39 +24,62 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract:
+Abstract: This is the class declaration of CLib3MFColorGroupIterator
 
-NMR_ModelReaderNode100_BaseMaterials.h defines the Model Reader Colors Class.
+*/
 
---*/
 
-#ifndef __NMR_MODELREADERNODE100_COLORS
-#define __NMR_MODELREADERNODE100_COLORS
+#ifndef __LIB3MF_LIB3MFCOLORGROUPITERATOR
+#define __LIB3MF_LIB3MFCOLORGROUPITERATOR
 
-#include "Model/Reader/NMR_ModelReaderNode.h"
-#include "Model/Classes/NMR_ModelComponent.h"
-#include "Model/Classes/NMR_ModelComponentsObject.h"
-#include "Model/Classes/NMR_ModelObject.h"
+#include "lib3mf_interfaces.hpp"
 
-namespace NMR {
+// Parent classes
+#include "lib3mf_resourceiterator.hpp"
+#pragma warning( push)
+#pragma warning( disable : 4250)
 
-	class CModelReaderNode100_Colors : public CModelReaderNode {
-	private:
-		CModel * m_pModel;
-		ModelResourceID m_nID;
-		ModelResourceIndex m_nColorIndex;
-		PModelColorGroupResource m_pColorGroup;
+// Include custom headers here.
 
-	protected:
-		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
-		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
-	public:
-		CModelReaderNode100_Colors() = delete;
-		CModelReaderNode100_Colors(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings);
 
-		virtual void parseXML(_In_ CXmlReader * pXMLReader);
-	};
+namespace Lib3MF {
+namespace Impl {
 
-}
 
-#endif // __NMR_MODELREADERNODE100_COLORS
+/*************************************************************************************************************************
+ Class declaration of CLib3MFColorGroupIterator 
+**************************************************************************************************************************/
+
+class CLib3MFColorGroupIterator : public virtual ILib3MFColorGroupIterator, public virtual CLib3MFResourceIterator {
+private:
+
+	/**
+	* Put private members here.
+	*/
+
+protected:
+
+	/**
+	* Put protected members here.
+	*/
+
+public:
+
+	/**
+	* Put additional public members here. They will not be visible in the external API.
+	*/
+
+
+	/**
+	* Public member functions to implement.
+	*/
+
+	ILib3MFColorGroup * GetCurrentColorGroup ();
+
+};
+
+} // namespace Impl
+} // namespace Lib3MF
+
+#pragma warning( pop )
+#endif // __LIB3MF_LIB3MFCOLORGROUPITERATOR

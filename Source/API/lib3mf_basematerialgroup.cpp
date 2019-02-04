@@ -118,7 +118,6 @@ void CLib3MFBaseMaterialGroup::GetAllPropertyIDs(Lib3MF_uint64 nPropertyIDsBuffe
 			}
 			pPropertyIDsBuffer++;
 		}
-		
 	}
 
 }

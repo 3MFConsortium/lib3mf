@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2018 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -24,39 +24,26 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract:
+Abstract: This is a stub class definition of CLib3MFColorGroupIterator
 
-NMR_ModelReaderNode100_BaseMaterials.h defines the Model Reader Colors Class.
+*/
 
---*/
+#include "lib3mf_colorgroupiterator.hpp"
+#include "lib3mf_interfaceexception.hpp"
+#include "lib3mf_colorgroup.hpp"
+// Include custom headers here.
 
-#ifndef __NMR_MODELREADERNODE100_COLORS
-#define __NMR_MODELREADERNODE100_COLORS
 
-#include "Model/Reader/NMR_ModelReaderNode.h"
-#include "Model/Classes/NMR_ModelComponent.h"
-#include "Model/Classes/NMR_ModelComponentsObject.h"
-#include "Model/Classes/NMR_ModelObject.h"
+using namespace Lib3MF::Impl;
 
-namespace NMR {
+/*************************************************************************************************************************
+ Class definition of CLib3MFColorGroupIterator 
+**************************************************************************************************************************/
 
-	class CModelReaderNode100_Colors : public CModelReaderNode {
-	private:
-		CModel * m_pModel;
-		ModelResourceID m_nID;
-		ModelResourceIndex m_nColorIndex;
-		PModelColorGroupResource m_pColorGroup;
-
-	protected:
-		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
-		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
-	public:
-		CModelReaderNode100_Colors() = delete;
-		CModelReaderNode100_Colors(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings);
-
-		virtual void parseXML(_In_ CXmlReader * pXMLReader);
-	};
-
+ILib3MFColorGroup * CLib3MFColorGroupIterator::GetCurrentColorGroup ()
+{
+	// Create specific API class
+	auto pACTResource = std::make_unique<CLib3MFColorGroup>(std::dynamic_pointer_cast<NMR::CModelColorGroupResource>(GetCurrentResource()));
+	return pACTResource.release();
 }
 
-#endif // __NMR_MODELREADERNODE100_COLORS
