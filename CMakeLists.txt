@@ -27,19 +27,23 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
   add_compile_options(-Wall) 
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O2")
   set(CMAKE_MACOSX_RPATH ON)
-elseif (${CMAKE_CXX_COMPILER_ID} STREQUAL "MSVC")
-  # using Visual Studio C++
-  add_definitions(-DBUILD_DLL -DLIB3MF_EXPORTS /W3)
-  SET(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} xmllite.lib")
-  add_definitions(-D_CRT_NONSTDC_NO_DEPRECATE -D_CRT_SECURE_NO_WARNINGS)
-  set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
-  set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
-  if(NMR_COM_NATIVE)
-    add_definitions(-DNMR_COM_NATIVE)
-  endif()
 endif()
 
+if (${MSVC})
+	# using Visual Studio C++
 
+	# this ensures that the min/max macros of minwindef.h are not used
+	add_definitions(-DNOMINMAX /W3)
+
+	add_definitions(/W3)
+  
+	# add_definitions(-D_CRT_NONSTDC_NO_DEPRECATE -D_CRT_SECURE_NO_WARNINGS)
+	# set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
+	# set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
+	if(NMR_COM_NATIVE)
+		add_definitions(-DNMR_COM_NATIVE)
+	endif()
+endif()
 
 ### The API generation target
 if (WIN32)

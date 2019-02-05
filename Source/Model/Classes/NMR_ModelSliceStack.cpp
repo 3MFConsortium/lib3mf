@@ -34,6 +34,8 @@ NMR_ModelSliceStackResource.h: implements the resource object for a slice stack
 #include "Model/Classes/NMR_ModelResource.h"
 #include "Common/NMR_Exception.h"
 
+#include <cmath>
+
 namespace NMR {
 
 	CModelSliceStack::CModelSliceStack(_In_ const ModelResourceID sID, _In_ CModel * pModel, nfDouble dZBottom)
@@ -172,10 +174,10 @@ namespace NMR {
 	{
 		nfDouble dHighestZ = m_dZBottom;
 		if (!m_pSlices.empty()) {
-			dHighestZ = max(dHighestZ, m_pSlices.back()->getTopZ());
+			dHighestZ = std::max(dHighestZ, m_pSlices.back()->getTopZ());
 		}
 		if (!m_pSliceRefs.empty()) {
-			dHighestZ = max(dHighestZ, m_pSliceRefs.back()->getHighestZ());
+			dHighestZ = std::max(dHighestZ, m_pSliceRefs.back()->getHighestZ());
 		}
 		return dHighestZ;
 	}

@@ -42,6 +42,8 @@ Interface version: 2.0.0
 #include "NMR_Spec_Version.h"
 #include "Model/Classes/NMR_ModelConstants.h" 
 #include "Common/3MF_ProgressMonitor.h"
+#include <cmath>
+#include <algorithm>
 
 using namespace Lib3MF::Impl;
 
@@ -146,10 +148,10 @@ sLib3MFColor CLib3MFWrapper::RGBAToColor(const Lib3MF_uint8 nRed, const Lib3MF_u
 sLib3MFColor CLib3MFWrapper::FloatRGBAToColor(const float fRed, const float fGreen, const float fBlue, const float fAlpha)
 {
 	sLib3MFColor s;
-	s.m_Red = (Lib3MF_uint8)roundf(max(min(fRed, 1.f), 0.f) * 255.0f);
-	s.m_Green = (Lib3MF_uint8)roundf(max(min(fGreen, 1.f), 0.f) * 255.0f);
-	s.m_Blue = (Lib3MF_uint8)roundf(max(min(fBlue, 1.f), 0.f) * 255.0f);
-	s.m_Alpha = (Lib3MF_uint8)roundf(max(min(fAlpha, 1.f), 0.f) * 255.0f);
+	s.m_Red = (Lib3MF_uint8)std::round(std::max(std::min(fRed, 1.f), 0.f) * 255.0f);
+	s.m_Green = (Lib3MF_uint8)std::round(std::max(std::min(fGreen, 1.f), 0.f) * 255.0f);
+	s.m_Blue = (Lib3MF_uint8)std::round(std::max(std::min(fBlue, 1.f), 0.f) * 255.0f);
+	s.m_Alpha = (Lib3MF_uint8)std::round(std::max(std::min(fAlpha, 1.f), 0.f) * 255.0f);
 	return s;
 }
 
