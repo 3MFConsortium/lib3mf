@@ -43,7 +43,6 @@ using namespace Lib3MF::Impl;
 ILib3MFColorGroup * CLib3MFColorGroupIterator::GetCurrentColorGroup ()
 {
 	// Create specific API class
-	auto pACTResource = std::make_unique<CLib3MFColorGroup>(std::dynamic_pointer_cast<NMR::CModelColorGroupResource>(GetCurrentResource()));
-	return pACTResource.release();
+	return new CLib3MFColorGroup(std::dynamic_pointer_cast<NMR::CModelColorGroupResource>(GetCurrentResource()));
 }
 

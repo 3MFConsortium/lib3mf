@@ -98,13 +98,12 @@ inline NMR::PModelResource CLib3MFResourceIterator::GetCurrentResource()
 ILib3MFResource * CLib3MFResourceIterator::GetCurrent ()
 {
 	// Create specific API class
-	auto pACTResource = std::make_unique<CLib3MFResource>(GetCurrentResource());
-	return pACTResource.release();
+	return new CLib3MFResource(GetCurrentResource());
 }
 
 ILib3MFResourceIterator * CLib3MFResourceIterator::Clone ()
 {
-	auto pResources = std::make_unique<CLib3MFResourceIterator>();
+	auto pResources = std::unique_ptr<CLib3MFResourceIterator>(new CLib3MFResourceIterator());
 
 	for (auto iIterator = m_pResources.begin(); iIterator != m_pResources.end(); iIterator++)
 		pResources->addResource(*iIterator);

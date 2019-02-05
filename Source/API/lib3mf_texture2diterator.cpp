@@ -44,7 +44,6 @@ using namespace Lib3MF::Impl;
 ILib3MFTexture2D * CLib3MFTexture2DIterator::GetCurrentTexture2D ()
 {
 	// Create specific API class
-	auto pACTResource = std::make_unique<CLib3MFTexture2D>( std::dynamic_pointer_cast<NMR::CModelTexture2DResource>(GetCurrentResource()));
-	return pACTResource.release();
+	return new CLib3MFTexture2D(std::dynamic_pointer_cast<NMR::CModelTexture2DResource>(GetCurrentResource()));
 }
 

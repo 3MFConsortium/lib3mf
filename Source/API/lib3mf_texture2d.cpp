@@ -58,8 +58,7 @@ NMR::PModelTexture2DResource CLib3MFTexture2D::texture()
 
 ILib3MFAttachment * CLib3MFTexture2D::GetAttachment ()
 {
-	auto pResult = std::make_unique<CLib3MFAttachment>(texture()->getAttachment());
-	return pResult.release();
+	return new CLib3MFAttachment(texture()->getAttachment());
 }
 
 void CLib3MFTexture2D::SetAttachment (ILib3MFAttachment* pAttachment)

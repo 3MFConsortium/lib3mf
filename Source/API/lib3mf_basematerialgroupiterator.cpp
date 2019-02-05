@@ -43,7 +43,6 @@ using namespace Lib3MF::Impl;
 ILib3MFBaseMaterialGroup * CLib3MFBaseMaterialGroupIterator::GetCurrentBaseMaterialGroup()
 {
 	// Create specific API class
-	auto pACTResource = std::make_unique<CLib3MFBaseMaterialGroup>(std::dynamic_pointer_cast<NMR::CModelBaseMaterialResource>(GetCurrentResource()));
-	return pACTResource.release();
+	return new CLib3MFBaseMaterialGroup(std::dynamic_pointer_cast<NMR::CModelBaseMaterialResource>(GetCurrentResource()));
 }
 
