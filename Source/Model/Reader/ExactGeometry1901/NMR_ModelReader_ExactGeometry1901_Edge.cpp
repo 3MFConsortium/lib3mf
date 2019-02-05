@@ -138,7 +138,7 @@ namespace NMR {
 		__NMRASSERT(pNameSpace);
 
 		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_NURBSSPEC) == 0) {
-			if (strcmp(pChildName, XML_3MF_ELEMENT_NURBS_UVCOORD) == 0)
+			if (strcmp(pChildName, XML_3MF_ELEMENT_NURBS_UVTCOORD) == 0)
 			{
 				PModelReaderNode_ExactGeometry1901_UVTCoord pXMLNode = std::make_shared<CModelReaderNode_ExactGeometry1901_UVTCoord>(m_pModel, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
