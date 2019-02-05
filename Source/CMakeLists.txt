@@ -61,6 +61,7 @@ Source/Common/MeshInformation/NMR_MeshInformationContainer.cpp
 Source/Common/MeshInformation/NMR_MeshInformationFactory.cpp
 Source/Common/MeshInformation/NMR_MeshInformationHandler.cpp
 Source/Common/MeshInformation/NMR_MeshInformation_Properties.cpp
+Source/Common/MeshInformation/NMR_MeshInformation_Nurbs.cpp
 Source/Common/Mesh/NMR_Mesh.cpp
 Source/Common/Mesh/NMR_BeamLattice.cpp
 Source/Common/Mesh/NMR_MeshBuilder.cpp
@@ -127,12 +128,15 @@ Source/Model/Reader/BeamLattice1702/NMR_ModelReaderNode_BeamLattice1702_BeamSets
 Source/Model/Reader/BeamLattice1702/NMR_ModelReaderNode_BeamLattice1702_Ref.cpp
 Source/Model/Reader/ExactGeometry1901/NMR_ModelReader_ExactGeometry1901_ControlPoints.cpp
 Source/Model/Reader/ExactGeometry1901/NMR_ModelReader_ExactGeometry1901_ControlPoint.cpp
+Source/Model/Reader/ExactGeometry1901/NMR_ModelReader_ExactGeometry1901_Edge.cpp
+Source/Model/Reader/ExactGeometry1901/NMR_ModelReader_ExactGeometry1901_EdgeMapping.cpp
 Source/Model/Reader/ExactGeometry1901/NMR_ModelReader_ExactGeometry1901_Knot.cpp
 Source/Model/Reader/ExactGeometry1901/NMR_ModelReader_ExactGeometry1901_NurbsSurface.cpp
 Source/Model/Reader/ExactGeometry1901/NMR_ModelReader_ExactGeometry1901_UKnots.cpp
 Source/Model/Reader/ExactGeometry1901/NMR_ModelReader_ExactGeometry1901_VKnots.cpp
 Source/Model/Reader/ExactGeometry1901/NMR_ModelReader_ExactGeometry1901_UVMapping.cpp
 Source/Model/Reader/ExactGeometry1901/NMR_ModelReader_ExactGeometry1901_UVCoord.cpp
+Source/Model/Reader/ExactGeometry1901/NMR_ModelReader_ExactGeometry1901_UVTCoord.cpp
 Source/Model/Reader/NMR_ModelReader.cpp
 Source/Model/Reader/NMR_ModelReaderNode.cpp
 Source/Model/Reader/NMR_ModelReaderNode_Model.cpp

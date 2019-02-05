@@ -432,7 +432,11 @@ namespace NMR {
 		case NMR_ERROR_NURBSINVALIDCONTROLPOINTCOUNT: return "Invalid Control Point Count";
 		case NMR_ERROR_TOOMANYKNOTS: return "too many knots";
 		case NMR_ERROR_INVALIDNURBSDEGREE: return "Invalid Nurbs Degree";
-
+		case NMR_ERROR_COULDNOTFINDEDGEMAPPING: return "Could not find edge mapping";
+		case NMR_ERROR_TOOMANYUVCOORDINATES: return "Too many UV Coordinates";
+		case NMR_ERROR_INVALIDCURVEID: return "Invalid Curve ID";
+		case NMR_ERROR_MISSINGNURBSEDGEATTRIBUTE: return "Missing Nurbs Edge Attribute";
+		case NMR_ERROR_NURBSDUPLICATEEDGEMAPPING: return "Duplicate Nurbs Edge Mapping";
 
 		default:
 			return "unknown error";

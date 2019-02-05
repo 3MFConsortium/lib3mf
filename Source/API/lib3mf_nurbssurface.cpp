@@ -168,8 +168,10 @@ void CLib3MFNurbsSurface::AddKnotV(const Lib3MF_uint32 nMultiplicity, const Lib3
 	m_pNurbsSurface->addKnotV(nMultiplicity, dValue);
 }
 
-void CLib3MFNurbsSurface::GetUVCoordinate(const Lib3MF_uint32 nId, sLib3MFNURBSUVCoordinate & sUVCoordinate)
+sLib3MFNURBSUVCoordinate CLib3MFNurbsSurface::GetUVCoordinate(const Lib3MF_uint32 nId)
 {
+	sLib3MFNURBSUVCoordinate sUVCoordinate;
+
 	double dU, dV;
 	if (m_pNurbsSurface->getUVCoordinate(nId, dU, dV)) {
 		sUVCoordinate.m_Id = nId;
@@ -181,9 +183,9 @@ void CLib3MFNurbsSurface::GetUVCoordinate(const Lib3MF_uint32 nId, sLib3MFNURBSU
 		sUVCoordinate.m_U = 0.0;
 		sUVCoordinate.m_V = 0.0;
 	}
-}
 
-typedef std::function<void(uint32_t nID, double dU, double dV)> NurbsSurfaceUVWalker;
+	return sUVCoordinate;
+}
 
 void CLib3MFNurbsSurface::GetUVCoordinates(Lib3MF_uint64 nUVCoordinatesBufferSize, Lib3MF_uint64* pUVCoordinatesNeededCount, sLib3MFNURBSUVCoordinate * pUVCoordinatesBuffer)
 {
@@ -235,3 +237,92 @@ void CLib3MFNurbsSurface::GetControlPoint(const Lib3MF_uint32 nIndexU, const Lib
 {
 	m_pNurbsSurface->getControlPoint(nIndexU, nIndexV, dX, dY, dZ, dW);
 }
+
+
+sLib3MFNURBSEdgeMapping CLib3MFNurbsSurface::GetEdgeMapping(const Lib3MF_uint32 nId)
+{
+	sLib3MFNURBSEdgeMapping sEdgeMapping;
+
+	double dT1, dT2;
+	NMR::ModelResourceID nCurveID;
+	if (m_pNurbsSurface->getEdgeMapping(nId, nCurveID, dT1, dT2)) {
+		sEdgeMapping.m_Id = nId;
+		sEdgeMapping.m_CurveId = nCurveID;
+		sEdgeMapping.m_T1 = dT1;
+		sEdgeMapping.m_T2 = dT2;
+	}
+	else {
+		sEdgeMapping.m_Id = 0;
+		sEdgeMapping.m_CurveId = 0;
+		sEdgeMapping.m_T1 = 0;
+		sEdgeMapping.m_T2 = 0;
+	}
+
+	return sEdgeMapping;
+}
+
+void CLib3MFNurbsSurface::GetEdgeMappings(Lib3MF_uint64 nEdgeMappingsBufferSize, Lib3MF_uint64* pEdgeMappingsNeededCount, sLib3MFNURBSEdgeMapping * pEdgeMappingsBuffer)
+{
+	uint32_t nEdgeMappingCount = m_pNurbsSurface->getEdgeMappingCount();
+	if (pEdgeMappingsNeededCount != nullptr) {
+		*pEdgeMappingsNeededCount = nEdgeMappingCount;
+	}
+
+	if (pEdgeMappingsBuffer != nullptr) {
+		if (nEdgeMappingCount > nEdgeMappingsBufferSize)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_BUFFERTOOSMALL);
+
+		sLib3MFNURBSEdgeMapping * pEdgeMapping = pEdgeMappingsBuffer;
+		auto Walker = [&pEdgeMapping](uint32_t nID, uint32_t nCurveID, double dT1, double dT2) {
+			pEdgeMapping->m_Id = nID;
+			pEdgeMapping->m_CurveId = nCurveID;
+			pEdgeMapping->m_T1 = dT1;
+			pEdgeMapping->m_T2 = dT2;
+			pEdgeMapping++;
+		};
+
+		m_pNurbsSurface->walkEdgeMappings(Walker);
+	}
+
+
+}
+
+Lib3MF_uint32 CLib3MFNurbsSurface::AddEdgeMapping(const Lib3MF_uint32 nCurveID, const Lib3MF_double dT1, const Lib3MF_double dT2)
+{
+	return m_pNurbsSurface->addEdgeMapping(nCurveID, dT1, dT2);
+}
+
+void CLib3MFNurbsSurface::RemoveEdgeMapping(const Lib3MF_uint32 nId)
+{
+	m_pNurbsSurface->removeEdgeMapping(nId);
+}
+
+bool CLib3MFNurbsSurface::HasEdgeMapping(const Lib3MF_uint32 nId)
+{
+	double dT1, dT2;
+	NMR::ModelResourceID nCurveID;
+
+	return m_pNurbsSurface->getEdgeMapping(nId, nCurveID, dT1, dT2);
+}
+
+void CLib3MFNurbsSurface::AddEdgeMappingUVCoordinate(const Lib3MF_uint32 nId, const Lib3MF_double dU, const Lib3MF_double dV, const Lib3MF_double dT)
+{
+	m_pNurbsSurface->addEdgeMappingUVCoordinate(nId, dU, dV, dT);
+}
+
+void CLib3MFNurbsSurface::ClearEdgeMappingUVCoordinates(const Lib3MF_uint32 nId)
+{
+	m_pNurbsSurface->clearEdgeMappingUVCoordinate(nId);
+}
+
+
+void CLib3MFNurbsSurface::GetEdgeMappingUVCoordinate(const Lib3MF_uint32 nId, const Lib3MF_uint32 nIndex, Lib3MF_double & dU, Lib3MF_double & dV, Lib3MF_double & dT)
+{
+	m_pNurbsSurface->getEdgeMappingUVCoordinate(nId, nIndex, dU, dV, dT);
+}
+
+Lib3MF_uint32 CLib3MFNurbsSurface::GetEdgeMappingUVCoordinateCount(const Lib3MF_uint32 nId)
+{
+	return m_pNurbsSurface->getEdgeMappingUVCoordinateCount(nId);
+}
+

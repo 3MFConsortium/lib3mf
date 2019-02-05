@@ -56,6 +56,7 @@ namespace NMR {
 		nfBool m_bHadUKnots;
 		nfBool m_bHadVKnots;
 		nfBool m_bHadUVMapping;
+		nfBool m_bHadEdgeMapping;
 		nfBool m_bHasDegreeU;
 		nfUint32 m_nDegreeU;
 		nfBool m_bHasDegreeV;

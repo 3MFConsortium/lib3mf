@@ -26,51 +26,42 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelResource.h defines the Model Resource Class.
-A model resource is an in memory representation of the 3MF
-resource object.
+NMR_MeshInformation_Nurbs.h defines the Property Information Class.
 
 --*/
 
-#ifndef __NMR_MODELRESOURCE
-#define __NMR_MODELRESOURCE
+#ifndef __NMR_MESHINFORMATION_NURBS
+#define __NMR_MESHINFORMATION_NURBS
 
-#include "Model/Classes/NMR_ModelMetaData.h" 
-#include "Common/NMR_Types.h" 
-#include "Model/Classes/NMR_ModelTypes.h" 
-#include "Model/Classes/NMR_Model.h" 
-
-#include <string>
+#include "Common/MeshInformation/NMR_MeshInformation.h"
+#include <list>
+#include <map>
 
 namespace NMR {
 
-	class CModelResource {
-	private:
-		CModel * m_pModel;
-		PPackageResourceID m_sResourceID;
 
+	class CMeshInformation_Nurbs : public CMeshInformation {
 	protected:
-		std::vector<ModelResourceID> m_ResourceIndexMap;
-		nfBool m_bHasResourceIndexMap;
-		
 	public:
-		CModelResource() = delete;
-		// CModelResource(_In_ const PPackageResourceID sResourceID, _In_ CModel * pModel);
-		CModelResource(_In_ const ModelResourceID sResourceID, _In_ CModel * pModel);
-		~CModelResource();
-		
-		virtual PPackageResourceID getResourceID();
+		CMeshInformation_Nurbs();
+		CMeshInformation_Nurbs(nfUint32 nCurrentFaceCount);
 
-		bool mapResourceIndexToPropertyID (_In_ ModelResourceIndex nIndex, _Out_ ModelResourceID & nResourceID);
-		virtual void clearResourceIndexMap();
-		virtual void buildResourceIndexMap();
-		nfBool hasResourceIndexMap();
+		virtual void invalidateFace(_In_ MESHINFORMATIONFACEDATA * pData);
 
-		_Ret_notnull_ CModel * getModel();
+		virtual eMeshInformationType getType();
+		virtual void cloneFaceInfosFrom(_In_ nfUint32 nFaceIndex, _In_ CMeshInformation * pOtherInformation, _In_ nfUint32 nOtherFaceIndex);
+		virtual PMeshInformation cloneInstance(_In_ nfUint32 nCurrentFaceCount);
+		virtual void permuteNodeInformation(_In_ nfUint32 nFaceIndex, _In_ nfUint32 nNodeIndex1, _In_ nfUint32 nNodeIndex2, _In_ nfUint32 nNodeIndex3);
+		virtual nfUint32 getBackupSize();
+		virtual void mergeInformationFrom(_In_ CMeshInformation * pInformation);
+		virtual nfBool faceHasData(_In_ nfUint32 nFaceIndex);
+
+
 	};
 
-	typedef std::shared_ptr <CModelResource> PModelResource;
+	typedef std::shared_ptr <CMeshInformation_Nurbs> PMeshInformation_Nurbs;
 
 }
 
-#endif // __NMR_MODELRESOURCE
+#endif // __NMR_MESHINFORMATION_NURBS
+

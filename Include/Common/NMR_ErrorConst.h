@@ -1202,7 +1202,20 @@ Extension Errors - Nurbs (0xB1XX)
 // Invalid Nurbs Degree
 #define NMR_ERROR_INVALIDNURBSDEGREE 0xB10F
 
+// Could not find edge mapping
+#define NMR_ERROR_COULDNOTFINDEDGEMAPPING 0xB110
 
+// Too many UV Coordinates
+#define NMR_ERROR_TOOMANYUVCOORDINATES 0xB111
+
+// Invalid Curve ID
+#define NMR_ERROR_INVALIDCURVEID 0xB112
+
+// Missing Nurbs Edge Attribute
+#define NMR_ERROR_MISSINGNURBSEDGEATTRIBUTE 0xB113
+
+// Duplicate Nurbs Edge Mapping
+#define NMR_ERROR_NURBSDUPLICATEEDGEMAPPING 0xB114
 
 #endif // __NMR_ERRORCONST
 

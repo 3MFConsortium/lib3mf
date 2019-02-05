@@ -35,6 +35,7 @@ NMR_ModelReaderNode_ExactGeometry1901_NurbsSurface.cpp covers the official 3MF E
 #include "Model/Reader/ExactGeometry1901/NMR_ModelReader_ExactGeometry1901_VKnots.h"
 #include "Model/Reader/ExactGeometry1901/NMR_ModelReader_ExactGeometry1901_ControlPoints.h"
 #include "Model/Reader/ExactGeometry1901/NMR_ModelReader_ExactGeometry1901_UVMapping.h"
+#include "Model/Reader/ExactGeometry1901/NMR_ModelReader_ExactGeometry1901_EdgeMapping.h"
 
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Model/Classes/NMR_ModelMeshObject.h"
@@ -64,6 +65,7 @@ namespace NMR {
 		m_bHadUKnots = false;
 		m_bHadVKnots = false;
 		m_bHadUVMapping = false;
+		m_bHadEdgeMapping = false;
 	}
 
 	void CModelReaderNode_ExactGeometry1901_NurbsSurface::parseXML(_In_ CXmlReader * pXMLReader)
@@ -211,6 +213,19 @@ namespace NMR {
 				pXMLNode->parseXML(pXMLReader);
 
 				m_bHadUVMapping = true;
+			}
+			else if (strcmp(pChildName, XML_3MF_ELEMENT_NURBS_EDGEMAPPING) == 0)
+			{
+				if (m_pNurbsSurface.get() == nullptr)
+					throw CNMRException(NMR_ERROR_INVALIDNURBSSURFACEORDER);
+
+				if (m_bHadEdgeMapping)
+					throw CNMRException(NMR_ERROR_NURBSDUPLICATEEDGEMAPPING);
+
+				PModelReaderNode_ExactGeometry1901_EdgeMapping pXMLNode = std::make_shared<CModelReaderNode_ExactGeometry1901_EdgeMapping>(m_pModel, m_pNurbsSurface.get(), m_pWarnings);
+				pXMLNode->parseXML(pXMLReader);
+
+				m_bHadEdgeMapping = true;
 			}
 			else
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue); 

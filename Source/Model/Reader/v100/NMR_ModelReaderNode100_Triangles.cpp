@@ -40,6 +40,7 @@ XML Model Stream.
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_Exception_Windows.h"
 #include "Model/Classes/NMR_ModelBaseMaterial.h"
+#include "Model/Classes/NMR_ModelNurbsSurface.h"
 #include "Model/Reader/NMR_ModelReader_ColorMapping.h"
 
 namespace NMR {
@@ -104,6 +105,26 @@ namespace NMR {
 		return pProperties;
 	}
 
+	_Ret_notnull_ CMeshInformation_Nurbs * CModelReaderNode100_Triangles::createNurbsInformation()
+	{
+		CMeshInformationHandler * pMeshInformationHandler = m_pMesh->createMeshInformationHandler();
+
+		CMeshInformation * pInformation = pMeshInformationHandler->getInformationByType(0, emiNurbs);
+		CMeshInformation_Nurbs * pNurbs = nullptr;
+
+		if (pInformation)
+			pNurbs = dynamic_cast<CMeshInformation_Nurbs *> (pInformation);
+
+		if (!pNurbs) {
+			PMeshInformation_Nurbs pNewMeshInformation = std::make_shared<CMeshInformation_Nurbs>(m_pMesh->getFaceCount());
+			pMeshInformationHandler->addInformation(pNewMeshInformation);
+
+			pNurbs = pNewMeshInformation.get();
+		}
+
+		return pNurbs;
+	}
+
 
 	void CModelReaderNode100_Triangles::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
 	{
@@ -132,6 +153,53 @@ namespace NMR {
 					ModelResourceIndex nResourceIndex1 = m_nDefaultResourceIndex;
 					ModelResourceIndex nResourceIndex2 = m_nDefaultResourceIndex;
 					ModelResourceIndex nResourceIndex3 = m_nDefaultResourceIndex;
+
+
+					ModelResourceID nNurbsID;
+					ModelResourceIndex nNurbsUVIndex1, nNurbsUVIndex2, nNurbsUVIndex3;
+					ModelResourceIndex nNurbsEdgeIndex1, nNurbsEdgeIndex2, nNurbsEdgeIndex3;
+					if (pXMLNode->retrieveNurbsIndices(nNurbsID, nNurbsUVIndex1, nNurbsUVIndex2, nNurbsUVIndex3, nNurbsEdgeIndex1, nNurbsEdgeIndex2, nNurbsEdgeIndex3)) {
+						PPackageResourceID pID = m_pModel->findPackageResourceID(m_pModel->curPath(), nNurbsID);
+						if (pID.get()) {
+							PModelResource pResource = m_pModel->findResource(pID->getUniqueID());
+							CModelNurbsSurface * pNurbsSurface = dynamic_cast<CModelNurbsSurface*> (pResource.get());
+
+							if (pNurbsSurface != nullptr) {
+								if (!pNurbsSurface->hasResourceIndexMap())
+									pNurbsSurface->buildResourceIndexMap();
+
+								ModelResourceID pUVPropertyID1;
+								ModelResourceID pUVPropertyID2;
+								ModelResourceID pUVPropertyID3;
+								if (pNurbsSurface->mapResourceIndexToPropertyID(nNurbsUVIndex1, pUVPropertyID1)
+									&& pNurbsSurface->mapResourceIndexToPropertyID(nNurbsUVIndex2, pUVPropertyID2)
+									&& pNurbsSurface->mapResourceIndexToPropertyID(nNurbsUVIndex3, pUVPropertyID3)) {
+
+									ModelResourceID pEdgePropertyID1 = pNurbsSurface->mapResourceIndexToEdgePropertyID(nNurbsEdgeIndex1);
+									ModelResourceID pEdgePropertyID2 = pNurbsSurface->mapResourceIndexToEdgePropertyID(nNurbsEdgeIndex2);
+									ModelResourceID pEdgePropertyID3 = pNurbsSurface->mapResourceIndexToEdgePropertyID(nNurbsEdgeIndex3);
+
+									CMeshInformation_Nurbs * pNurbsInformation = createNurbsInformation();
+									MESHINFORMATION_NURBS* pFaceData = (MESHINFORMATION_NURBS*)pNurbsInformation->getFaceData(pFace->m_index);
+									if (pFaceData) {
+										pFaceData->m_nResourceID = pID->getUniqueID();
+										pFaceData->m_nUVIDs[0] = pUVPropertyID1;
+										pFaceData->m_nUVIDs[1] = pUVPropertyID2;
+										pFaceData->m_nUVIDs[2] = pUVPropertyID3;
+										pFaceData->m_nEdgeIDs[0] = pEdgePropertyID1;
+										pFaceData->m_nEdgeIDs[1] = pEdgePropertyID2;
+										pFaceData->m_nEdgeIDs[2] = pEdgePropertyID3;
+									}
+
+								}
+
+
+
+							}
+						}
+
+					}
+
 
 					if (pXMLNode->retrieveProperties(nResourceID, nResourceIndex1, nResourceIndex2, nResourceIndex3) || (nResourceID != 0)) {
 						// set potential default properties (i.e. used pid)

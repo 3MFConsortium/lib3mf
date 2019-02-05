@@ -42,13 +42,72 @@ NMR_ModelTexture2D.cpp implements the Model Texture Class.
 
 namespace NMR {
 
+
+	CModelNurbsEdgeMapping::CModelNurbsEdgeMapping(ModelResourceID CurveID, nfDouble CurveT1, nfDouble CurveT2)
+	{
+		m_CurveID = CurveID;
+		m_CurveT1 = CurveT1;
+		m_CurveT2 = CurveT2;
+	}
+
+	ModelResourceID CModelNurbsEdgeMapping::getCurveID()
+	{
+		return m_CurveID;
+	}
+
+	nfDouble CModelNurbsEdgeMapping::getCurveT1()
+	{
+		return m_CurveT1;
+	}
+
+	nfDouble CModelNurbsEdgeMapping::getCurveT2()
+	{
+		return m_CurveT2;
+	}
+
+	void CModelNurbsEdgeMapping::addUVTCoordinate(nfDouble dU, nfDouble dV, nfDouble dT)
+	{
+		if (m_UVTCoords.size() >= MAXNURBSUVTCOORDINATES)
+			throw CNMRException(NMR_ERROR_TOOMANYUVCOORDINATES);
+
+		sModelNurbsUVTCoord Coord;
+		Coord.m_U = dU;
+		Coord.m_V = dV;
+		Coord.m_T = dT;
+		m_UVTCoords.push_back(Coord);
+	}
+
+	void CModelNurbsEdgeMapping::getUVTCoordinate(nfUint32 nIndex, nfDouble & dU, nfDouble & dV, nfDouble & dT)
+	{
+		if (nIndex >= m_UVTCoords.size())
+			throw CNMRException(NMR_ERROR_INVALIDINDEX);
+
+		sModelNurbsUVTCoord * pCoord = &m_UVTCoords[nIndex];
+		dU = pCoord->m_U;
+		dV = pCoord->m_V;
+		dT = pCoord->m_T;
+
+	}
+
+	void CModelNurbsEdgeMapping::clearUVTCoordinates()
+	{
+		m_UVTCoords.clear();
+	}
+
+	nfUint32 CModelNurbsEdgeMapping::getUVTCoordinateCount()
+	{
+		return (nfUint32)m_UVTCoords.size();
+	}
+
+
+
 	CModelNurbsSurface::CModelNurbsSurface(_In_ const ModelResourceID sID, _In_ CModel * pModel, _In_ nfUint32 nDegreeU, _In_ nfUint32 nDegreeV, _In_ nfUint32 nControlPointCountU, _In_ nfUint32 nControlPointCountV)
 		: CModelResource(sID, pModel)
 	{
 		setDegree(nDegreeU, nDegreeV);
 		setControlPointCount(nControlPointCountU, nControlPointCountV);
 
-		m_nNextUVID = 1;
+		m_nNextID = 1;
 	}
 
 
@@ -307,14 +366,14 @@ namespace NMR {
 
 	nfUint32 CModelNurbsSurface::addUVCoordinate(_In_ nfDouble fU, _In_ nfDouble fV)
 	{
-		nfUint32 nID = m_nNextUVID;
+		nfUint32 nID = m_nNextID;
 
 		sModelNurbsUVCoord UVCoord;
 		UVCoord.m_U = fU;
 		UVCoord.m_V = fV;
 
 		m_UVCoords.insert(std::make_pair (nID, UVCoord));
-		m_nNextUVID++;
+		m_nNextID++;
 
 		return nID;
 	}
@@ -334,22 +393,6 @@ namespace NMR {
 
 			return false;
 		}
-	}
-
-	void CModelNurbsSurface::setUVBounds(nfDouble dMinU, nfDouble dMinV, nfDouble dMaxU, nfDouble dMaxV)
-	{
-		m_dMinU = dMinU;
-		m_dMinV = dMinV;
-		m_dMaxU = dMaxU;
-		m_dMaxV = dMaxV;
-	}
-
-	void CModelNurbsSurface::getUVBounds(nfDouble & dMinU, nfDouble & dMinV, nfDouble & dMaxU, nfDouble & dMaxV)
-	{
-		dMinU = m_dMinU;
-		dMinV = m_dMinV;
-		dMaxU = m_dMaxU;
-		dMaxV = m_dMaxV;
 	}
 
 	nfUint32 CModelNurbsSurface::getUVCoordinateCount()
@@ -373,20 +416,143 @@ namespace NMR {
 	}
 
 
-	void CModelNurbsSurface::registerProperties(CMeshInformation_PropertyIndexMapping * pPropertyMapping, std::vector<sModelNurbsUVCoord> & ValueList)
+	nfUint32 CModelNurbsSurface::addEdgeMapping(_In_ ModelResourceID nCurveID, _In_ nfDouble dT1, _In_ nfDouble dT2)
+	{
+		nfUint32 nID = m_nNextID;
+			
+		m_EdgeMappings.insert(std::make_pair(nID, CModelNurbsEdgeMapping (nCurveID, dT1, dT2)));
+		m_nNextID++;
+
+		return nID;
+
+	}
+
+	nfBool CModelNurbsSurface::getEdgeMapping(_In_ nfUint32 nID, _Out_ ModelResourceID & nCurveID, _Out_ nfDouble & dT1, _Out_ nfDouble & dT2)
+	{
+		auto iIterator = m_EdgeMappings.find(nID);
+		if (iIterator != m_EdgeMappings.end()) {
+			nID = iIterator->second.getCurveID();
+			dT1 = iIterator->second.getCurveT1 ();
+			dT2 = iIterator->second.getCurveT2 ();
+
+			return true;
+		}
+		else {
+			nID = 0;
+			dT1 = 0.0;
+			dT2 = 0.0;
+
+			return false;
+		}
+
+	}
+
+	nfUint32 CModelNurbsSurface::getEdgeMappingCount()
+	{
+		return (nfUint32)m_EdgeMappings.size();
+	}
+
+	void CModelNurbsSurface::removeEdgeMapping(_In_ nfUint32 nID)
+	{
+		m_EdgeMappings.erase(nID);
+	}
+
+	void CModelNurbsSurface::walkEdgeMappings(NurbsSurfaceEdgeMappingWalker Walker)
+	{
+		auto iIterator = m_EdgeMappings.begin();
+		while (iIterator != m_EdgeMappings.end()) {
+			Walker(iIterator->first, iIterator->second.getCurveID(), iIterator->second.getCurveT1(), iIterator->second.getCurveT2());
+
+			iIterator++;
+		}
+
+	}
+
+
+	void CModelNurbsSurface::addEdgeMappingUVCoordinate(_In_ nfUint32 nID, _In_ nfDouble dU, _In_ nfDouble dV, _In_ nfDouble dT)
+	{
+		auto iIterator = m_EdgeMappings.find(nID);
+		if (iIterator != m_EdgeMappings.end()) {
+			iIterator->second.addUVTCoordinate(dU, dV, dT);
+		}
+		else
+			throw CNMRException(NMR_ERROR_COULDNOTFINDEDGEMAPPING);
+	}
+
+	void CModelNurbsSurface::clearEdgeMappingUVCoordinate(_In_ nfUint32 nID)
+	{
+		auto iIterator = m_EdgeMappings.find(nID);
+		if (iIterator != m_EdgeMappings.end()) {
+			iIterator->second.clearUVTCoordinates ();
+		}
+		else
+			throw CNMRException(NMR_ERROR_COULDNOTFINDEDGEMAPPING);
+	}
+
+	void CModelNurbsSurface::getEdgeMappingUVCoordinate(_In_ nfUint32 nID, _In_ nfUint32 nIndex, _In_ nfDouble & dU, _In_ nfDouble & dV, _In_ nfDouble & dT)
+	{
+		auto iIterator = m_EdgeMappings.find(nID);
+		if (iIterator != m_EdgeMappings.end()) {
+			iIterator->second.getUVTCoordinate(nIndex, dU, dV, dT);
+		}
+		else
+			throw CNMRException(NMR_ERROR_COULDNOTFINDEDGEMAPPING);
+	}
+
+	nfUint32 CModelNurbsSurface::getEdgeMappingUVCoordinateCount(_In_ nfUint32 nID)
+	{
+		auto iIterator = m_EdgeMappings.find(nID);
+		if (iIterator != m_EdgeMappings.end()) {
+			return iIterator->second.getUVTCoordinateCount();
+		}
+		else
+			throw CNMRException(NMR_ERROR_COULDNOTFINDEDGEMAPPING);
+	}
+
+
+	void CModelNurbsSurface::setUVBounds(nfDouble dMinU, nfDouble dMinV, nfDouble dMaxU, nfDouble dMaxV)
+	{
+		m_dMinU = dMinU;
+		m_dMinV = dMinV;
+		m_dMaxU = dMaxU;
+		m_dMaxV = dMaxV;
+	}
+
+	void CModelNurbsSurface::getUVBounds(nfDouble & dMinU, nfDouble & dMinV, nfDouble & dMaxU, nfDouble & dMaxV)
+	{
+		dMinU = m_dMinU;
+		dMinV = m_dMinV;
+		dMaxU = m_dMaxU;
+		dMaxV = m_dMaxV;
+	}
+
+	void CModelNurbsSurface::registerProperties(CMeshInformation_PropertyIndexMapping * pPropertyMapping, std::vector<sModelNurbsUVCoord> & UVMappingVector, std::vector <CModelNurbsEdgeMapping *> & EdgeMappingVector)
 	{
 		if (pPropertyMapping == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
+		ModelResourceID nResourceID = getResourceID()->getUniqueID();
+
 		auto iIterator = m_UVCoords.begin ();
 		while (iIterator != m_UVCoords.end()) {
-			nfUint32 nResourceIndex = (nfUint32)ValueList.size();
-			ValueList.push_back(iIterator->second);
+			nfUint32 nResourceIndex = (nfUint32)UVMappingVector.size();
+			UVMappingVector.push_back(iIterator->second);
 			
 			nfUint32 nPropertyID = iIterator->first;
-			pPropertyMapping->registerPropertyID(getResourceID()->getUniqueID(), nPropertyID, nResourceIndex);
+			pPropertyMapping->registerPropertyID(nResourceID, nPropertyID, nResourceIndex);
 			
 			iIterator++;
+		}
+
+		auto iEdgeIterator = m_EdgeMappings.begin();
+		while (iEdgeIterator != m_EdgeMappings.end()) {
+			nfUint32 nResourceIndex = (nfUint32)EdgeMappingVector.size();
+			EdgeMappingVector.push_back(&iEdgeIterator->second);
+
+			nfUint32 nPropertyID = iEdgeIterator->first;
+			pPropertyMapping->registerPropertyID(nResourceID, nPropertyID, nResourceIndex);
+
+			iEdgeIterator++;
 		}
 
 	}
@@ -397,13 +563,37 @@ namespace NMR {
 		m_ResourceIndexMap.clear();
 		m_ResourceIndexMap.reserve(m_UVCoords.size ());
 
-		auto iIterator = m_UVCoords.begin();
-		while (iIterator != m_UVCoords.end()) {
-			m_ResourceIndexMap.push_back (iIterator->first);
-			iIterator++;
+		m_EdgeIndexMap.clear();
+		m_EdgeIndexMap.reserve(m_EdgeMappings.size ());
+
+		auto iUVIterator = m_UVCoords.begin();
+		while (iUVIterator != m_UVCoords.end()) {
+			m_ResourceIndexMap.push_back (iUVIterator->first);
+			iUVIterator++;
+		}
+
+		auto iEdgeIterator = m_EdgeMappings.begin();
+		while (iEdgeIterator != m_EdgeMappings.end()) {
+			m_EdgeIndexMap.push_back(iEdgeIterator->first);
+			iEdgeIterator++;
 		}
 
 		m_bHasResourceIndexMap = true;
+	}
+
+	void CModelNurbsSurface::clearResourceIndexMap()
+	{
+		CModelResource::clearResourceIndexMap();
+		m_EdgeIndexMap.clear();
+
+	}
+
+	nfUint32 CModelNurbsSurface::mapResourceIndexToEdgePropertyID(ModelResourceIndex nEdgeIndex)
+	{
+		if (nEdgeIndex < m_EdgeIndexMap.size())
+			return m_EdgeIndexMap[nEdgeIndex];
+
+		return 0;
 	}
 
 }

@@ -100,7 +100,7 @@ public:
 
 	void AddKnotV(const Lib3MF_uint32 nMultiplicity, const Lib3MF_double dValue);
 
-	void GetUVCoordinate(const Lib3MF_uint32 nId, sLib3MFNURBSUVCoordinate & sUVCoordinate);
+	sLib3MFNURBSUVCoordinate GetUVCoordinate(const Lib3MF_uint32 nId);
 
 	void GetUVCoordinates(Lib3MF_uint64 nUVCoordinatesBufferSize, Lib3MF_uint64* pUVCoordinatesNeededCount, sLib3MFNURBSUVCoordinate * pUVCoordinatesBuffer);
 
@@ -113,6 +113,25 @@ public:
 	void SetControlPoint(const Lib3MF_uint32 nIndexU, const Lib3MF_uint32 nIndexV, const Lib3MF_double dX, const Lib3MF_double dY, const Lib3MF_double dZ, const Lib3MF_double dW);
 
 	void GetControlPoint(const Lib3MF_uint32 nIndexU, const Lib3MF_uint32 nIndexV, Lib3MF_double & dX, Lib3MF_double & dY, Lib3MF_double & dZ, Lib3MF_double & dW);
+
+	sLib3MFNURBSEdgeMapping GetEdgeMapping(const Lib3MF_uint32 nId);
+
+	void GetEdgeMappings(Lib3MF_uint64 nEdgeMappingsBufferSize, Lib3MF_uint64* pEdgeMappingsNeededCount, sLib3MFNURBSEdgeMapping * pEdgeMappingsBuffer);
+	
+	Lib3MF_uint32 AddEdgeMapping(const Lib3MF_uint32 nCurveID, const Lib3MF_double dT1, const Lib3MF_double dT2);
+	
+	void RemoveEdgeMapping(const Lib3MF_uint32 nId);
+
+	bool HasEdgeMapping(const Lib3MF_uint32 nId);
+
+	void AddEdgeMappingUVCoordinate(const Lib3MF_uint32 nId, const Lib3MF_double dU, const Lib3MF_double dV, const Lib3MF_double dT);
+
+	void ClearEdgeMappingUVCoordinates(const Lib3MF_uint32 nId);
+
+	void GetEdgeMappingUVCoordinate(const Lib3MF_uint32 nId, const Lib3MF_uint32 nIndex, Lib3MF_double & dU, Lib3MF_double & dV, Lib3MF_double & dT);
+
+	Lib3MF_uint32 GetEdgeMappingUVCoordinateCount(const Lib3MF_uint32 nId);
+
 
 };
 

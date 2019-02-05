@@ -52,6 +52,8 @@ This is the class for exporting the 3mf mesh node.
 #define MODELWRITERMESH100_BEAMLATTICE_BEAMSTARTLENGTH 12
 #define MODELWRITERMESH100_BEAMLATTICE_REFLINESTART  "<b:ref index=\""
 #define MODELWRITERMESH100_BEAMLATTICE_REFSTARTLENGTH 14
+#define MODELWRITERMESH100_NURBSLINESTART " n:nid=\""
+#define MODELWRITERMESH100_NURBSLINESTARTLENGTH 8
 
 
 namespace NMR {
@@ -71,10 +73,14 @@ namespace NMR {
 		std::array<nfChar, MODELWRITERMESH100_LINEBUFFERSIZE> m_TriangleLine;
 		std::array<nfChar, MODELWRITERMESH100_LINEBUFFERSIZE> m_BeamLine;
 		std::array<nfChar, MODELWRITERMESH100_LINEBUFFERSIZE> m_BeamRefLine;
+		std::array<nfChar, MODELWRITERMESH100_LINEBUFFERSIZE> m_NurbsLine;
+
 		nfUint32 m_nVertexBufferPos;
 		nfUint32 m_nTriangleBufferPos;
 		nfUint32 m_nBeamBufferPos;
 		nfUint32 m_nBeamRefBufferPos;
+		nfUint32 m_nNurbsBufferPos;
+
 	private:
 		static const int m_snPosAfterDecPoint = 6;
 		static const int m_snPutDoubleFactor;
@@ -94,6 +100,9 @@ namespace NMR {
 
 		__NMR_INLINE void putBeamRefString(_In_ const nfChar * pszString);
 		__NMR_INLINE void putBeamRefUInt32(_In_ const nfUint32 nValue);
+
+		__NMR_INLINE void putNurbsString(_In_ const nfChar * pszString);
+		__NMR_INLINE void putNurbsUInt32(_In_ const nfUint32 nValue);
 
 		__NMR_INLINE void writeVertexData(_In_ MESHNODE * pNode);
 		__NMR_INLINE void writeFaceData_Plain(_In_ MESHFACE * pFace, _In_opt_ const nfChar * pszAdditionalString);

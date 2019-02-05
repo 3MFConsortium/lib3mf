@@ -26,53 +26,45 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelReaderNode100_Triangle.h defines the Model Reader Triangle Node Class.
-A triangle reader model node is a parser for the triangle node of an XML Model Stream.
+NMR_ModelReaderNode_ExactGeometry1901_EdgeMapping.h covers the official 3MF Exact Geometry Extension.
+
 
 --*/
 
-#ifndef __NMR_MODELREADERNODE100_TRIANGLE
-#define __NMR_MODELREADERNODE100_TRIANGLE
+#ifndef __NMR_MODELREADERNODE_EXACTGEOMETRY1901_EDGEMAPPING
+#define __NMR_MODELREADERNODE_EXACTGEOMETRY1901_EDGEMAPPING
 
 #include "Model/Reader/NMR_ModelReaderNode.h"
 #include "Model/Classes/NMR_ModelComponent.h"
+#include "Model/Classes/NMR_ModelComponentsObject.h"
 #include "Model/Classes/NMR_ModelObject.h"
+#include "Model/Classes/NMR_ModelNurbsSurface.h"
 
 namespace NMR {
 
-	class CModelReaderNode100_Triangle : public CModelReaderNode {
+	class CModelReaderNode_ExactGeometry1901_EdgeMapping : public CModelReaderNode {
+	private:
+		CModel * m_pModel;
+		PModelReaderWarnings m_pWarnings;
+
+		CModelNurbsSurface * m_pNurbsSurface;
+
+
 	protected:
-		nfInt32 m_nPropertyID;
-		nfInt32 m_nPropertyIndex1;
-		nfInt32 m_nPropertyIndex2;
-		nfInt32 m_nPropertyIndex3;
-		nfInt32 m_nIndex1;
-		nfInt32 m_nIndex2;
-		nfInt32 m_nIndex3;
-
-		nfInt32 m_nNurbsID;
-		nfInt32 m_nNurbsUVIndex1;
-		nfInt32 m_nNurbsUVIndex2;
-		nfInt32 m_nNurbsUVIndex3;
-		nfInt32 m_nNurbsEdgeIndex1;
-		nfInt32 m_nNurbsEdgeIndex2;
-		nfInt32 m_nNurbsEdgeIndex3;
-
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 		virtual void OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace);
+		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 	public:
-		CModelReaderNode100_Triangle() = delete;
-		CModelReaderNode100_Triangle(_In_ PModelReaderWarnings pWarnings);
+		CModelReaderNode_ExactGeometry1901_EdgeMapping() = delete;
+		CModelReaderNode_ExactGeometry1901_EdgeMapping(_In_ CModel * pModel, _In_ CModelNurbsSurface * pNurbsSurface, _In_ PModelReaderWarnings pWarnings);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
-		void retrieveIndices(_Out_ nfInt32 & nIndex1, _Out_ nfInt32 & nIndex2, _Out_ nfInt32 & nIndex3, nfInt32 nNodeCount);
-		nfBool retrieveProperties(_Inout_ ModelResourceID & nPropertyID, _Inout_ ModelResourceIndex & nPropertyIndex1, _Inout_ ModelResourceIndex & nPropertyIndex2, _Inout_ ModelResourceIndex & nPropertyIndex3);
 
-		nfBool retrieveNurbsIndices(_Out_ ModelResourceID & nNurbsID, _Out_ ModelResourceIndex & nNurbsUVIndex1, _Out_ ModelResourceIndex & nNurbsUVIndex2, _Out_ ModelResourceIndex & nNurbsUVIndex3, _Out_ ModelResourceIndex & nNurbsEdgeIndex1, _Out_ ModelResourceIndex & nNurbsEdgeIndex2, _Out_ ModelResourceIndex & nNurbsEdgeIndex3);
 	};
 
-	typedef std::shared_ptr <CModelReaderNode100_Triangle> PModelReaderNode100_Triangle;
+	typedef std::shared_ptr <CModelReaderNode_ExactGeometry1901_EdgeMapping> PModelReaderNode_ExactGeometry1901_EdgeMapping;
 
 }
 
-#endif // __NMR_MODELREADERNODE100_TRIANGLE
+#endif // __NMR_MODELREADERNODE_EXACTGEOMETRY1901_EDGEMAPPING
+

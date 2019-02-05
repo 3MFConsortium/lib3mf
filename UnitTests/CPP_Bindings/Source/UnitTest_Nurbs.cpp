@@ -73,6 +73,12 @@ namespace Lib3MF
 		auto uv1id = surface->AddUVCoordinate(0.5, 0.5);
 		auto uv2id = surface->AddUVCoordinate(0.75, 0.5);
 		auto uv3id = surface->AddUVCoordinate(0.5, 0.75);
+		auto edge1id = surface->AddEdgeMapping(2, 0.5, 0.75);
+
+		surface->AddEdgeMappingUVCoordinate(edge1id, 0.213, 0.237, 20.5);
+		surface->AddEdgeMappingUVCoordinate(edge1id, 0.213, 0.294, 20.5);
+		surface->AddEdgeMappingUVCoordinate(edge1id, 0.213, 0.437, 20.5);
+		surface->AddEdgeMappingUVCoordinate(edge1id, 0.213, 0.227, 20.5);
 
 		surface->SetControlPoint(0, 0, 0.0, 0.0, 1.0, 1.0);
 		surface->SetControlPoint(1, 0, 0.0, 0.0, 1.0, 1.0 / 3.0);
@@ -109,13 +115,16 @@ namespace Lib3MF
 		Triangle.m_indices[2] = 2;
 		mesh->AddTriangle(Triangle);
 
-		sLib3MFTriangleProperties Properties;
+		sLib3MFTriangleNurbsProperties Properties;
 
 		Properties.m_ResourceID = surface->GetResourceID();
-		Properties.m_PropertyIDs[0] = uv1id;
-		Properties.m_PropertyIDs[1] = uv2id;
-		Properties.m_PropertyIDs[2] = uv3id;
-		mesh->SetTriangleProperties(0, Properties);
+		Properties.m_UVIDs[0] = uv1id;
+		Properties.m_UVIDs[1] = uv2id;
+		Properties.m_UVIDs[2] = uv3id;
+		Properties.m_EdgeIDs[0] = edge1id;
+		Properties.m_EdgeIDs[1] = 0;
+		Properties.m_EdgeIDs[2] = 0;
+		mesh->SetTriangleNurbsProperties(0, Properties);
 
 		auto writer = Nurbs::model->QueryWriter("3mf");
 		writer->WriteToFile(sOutFilesPath + "nurbstest1.3mf");
@@ -131,7 +140,7 @@ namespace Lib3MF
 		while (SurfaceIterator->MoveNext()) {
 			auto NurbsSurface = SurfaceIterator->GetCurrentNurbsSurface();
 			sLib3MFNURBSUVCoordinate Coordinate;
-			NurbsSurface->GetUVCoordinate(1, Coordinate);
+			Coordinate = NurbsSurface->GetUVCoordinate(1);
 
 		}
 

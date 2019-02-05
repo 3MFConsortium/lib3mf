@@ -48,7 +48,7 @@ namespace NMR {
 	public:
 		CMeshInformation_PropertyIndexMapping();
 
-		nfUint32 mapPropertyIDToIndex(nfUint32 nResourceID, nfUint32 nPropertyID);
+		nfUint32 mapPropertyIDToIndex(nfUint32 nResourceID, nfUint32 nPropertyID, nfUint32 nDefaultPropertyID);
 		
 		nfUint32 getDefaultResourceID ();
 		nfUint32 getDefaultResourceIndex ();

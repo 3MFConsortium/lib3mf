@@ -54,6 +54,15 @@ namespace NMR {
 		m_nIndex1 = -1;
 		m_nIndex2 = -1;
 		m_nIndex3 = -1;
+
+		m_nNurbsID = -1;
+		m_nNurbsUVIndex1 = -1;
+		m_nNurbsUVIndex2 = -1;
+		m_nNurbsUVIndex3 = -1;
+		m_nNurbsEdgeIndex1 = -1;
+		m_nNurbsEdgeIndex2 = -1;
+		m_nNurbsEdgeIndex3 = -1;
+
 	}
 
 	void CModelReaderNode100_Triangle::parseXML(_In_ CXmlReader * pXMLReader)
@@ -111,6 +120,53 @@ namespace NMR {
 
 	}
 
+	void CModelReaderNode100_Triangle::OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace)
+	{
+		__NMRASSERT(pAttributeName);
+		__NMRASSERT(pAttributeValue);
+		__NMRASSERT(pNameSpace);
+		nfInt32 nValue;
+
+		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_NURBSSPEC) == 0) {
+			if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_NURBS_N1) == 0) {
+				nValue = fnStringToInt32(pAttributeValue);
+				if ((nValue >= 0) && (nValue < XML_3MF_MAXRESOURCEINDEX))
+					m_nNurbsUVIndex1 = nValue;
+			}
+			else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_NURBS_N2) == 0) {
+				nValue = fnStringToInt32(pAttributeValue);
+				if ((nValue >= 0) && (nValue < XML_3MF_MAXRESOURCEINDEX))
+					m_nNurbsUVIndex2 = nValue;
+			}
+			else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_NURBS_N3) == 0) {
+				nValue = fnStringToInt32(pAttributeValue);
+				if ((nValue >= 0) && (nValue < XML_3MF_MAXRESOURCEINDEX))
+					m_nNurbsUVIndex3 = nValue;
+			}
+			else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_NURBS_E1) == 0) {
+				nValue = fnStringToInt32(pAttributeValue);
+				if ((nValue >= 0) && (nValue < XML_3MF_MAXRESOURCEINDEX))
+					m_nNurbsEdgeIndex1 = nValue;
+			}
+			else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_NURBS_E2) == 0) {
+				nValue = fnStringToInt32(pAttributeValue);
+				if ((nValue >= 0) && (nValue < XML_3MF_MAXRESOURCEINDEX))
+					m_nNurbsEdgeIndex2 = nValue;
+			}
+			else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_NURBS_E3) == 0) {
+				nValue = fnStringToInt32(pAttributeValue);
+				if ((nValue >= 0) && (nValue < XML_3MF_MAXRESOURCEINDEX))
+					m_nNurbsEdgeIndex3 = nValue;
+			}
+			else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_NURBS_NID) == 0) {
+				nValue = fnStringToInt32(pAttributeValue);
+				if ((nValue >= 0) && (nValue < XML_3MF_MAXRESOURCEINDEX))
+					m_nNurbsID = nValue;
+			}
+		}
+
+	}
+
 	void CModelReaderNode100_Triangle::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
 	{
 		__NMRASSERT(pAttributeName);
@@ -154,6 +210,20 @@ namespace NMR {
 		}
 		else
 			m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE), mrwInvalidOptionalValue);
+	}
+
+	nfBool CModelReaderNode100_Triangle::retrieveNurbsIndices(_Out_ ModelResourceID & nNurbsID, _Out_ ModelResourceIndex & nNurbsUVIndex1, _Out_ ModelResourceIndex & nNurbsUVIndex2, _Out_ ModelResourceIndex & nNurbsUVIndex3, _Out_ ModelResourceIndex & nNurbsEdgeIndex1, _Out_ ModelResourceIndex & nNurbsEdgeIndex2, _Out_ ModelResourceIndex & nNurbsEdgeIndex3)
+	{
+		nNurbsID = m_nNurbsID;
+		nNurbsUVIndex1 = m_nNurbsUVIndex1;
+		nNurbsUVIndex2 = m_nNurbsUVIndex2;
+		nNurbsUVIndex3 = m_nNurbsUVIndex3;
+		nNurbsEdgeIndex1 = m_nNurbsEdgeIndex1;
+		nNurbsEdgeIndex2 = m_nNurbsEdgeIndex2;
+		nNurbsEdgeIndex3 = m_nNurbsEdgeIndex3;
+
+		return ((m_nNurbsID > 0) && (m_nNurbsUVIndex1 >= 0) && (m_nNurbsUVIndex2 >= 0) && (m_nNurbsUVIndex3 >= 0));
+
 	}
 
 }

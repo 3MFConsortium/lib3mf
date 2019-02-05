@@ -276,17 +276,15 @@ namespace NMR {
 		nfUint32 nResourceIndex;
 		nfUint32 nIndexU, nIndexV;
 
-
-
 		for (nResourceIndex = 0; nResourceIndex < nResourceCount; nResourceIndex++) {
 			CModelResource * pResource = m_pModel->getResource(nResourceIndex).get();
 			CModelNurbsSurface * pSurface = dynamic_cast<CModelNurbsSurface *> (pResource);
 
-
 			if (pSurface != nullptr) {
 
 				std::vector <sModelNurbsUVCoord> UVCoordVector;
-				pSurface->registerProperties(m_pPropertyIndexMapping.get(), UVCoordVector);
+				std::vector <CModelNurbsEdgeMapping *> EdgeMappingVector;
+				pSurface->registerProperties(m_pPropertyIndexMapping.get(), UVCoordVector, EdgeMappingVector);
 
 				writeStartElementWithPrefix(XML_3MF_ELEMENT_NURBSSURFACE, XML_3MF_NAMESPACEPREFIX_NURBS);
 
@@ -355,6 +353,38 @@ namespace NMR {
 					writeEndElement();
 
 					iCoordIterator++;
+				}
+
+				writeFullEndElement();
+
+
+				writeStartElementWithPrefix(XML_3MF_ELEMENT_NURBS_EDGEMAPPING, XML_3MF_NAMESPACEPREFIX_NURBS);
+
+				auto iEdgeMappingIterator = EdgeMappingVector.begin();
+
+				while (iEdgeMappingIterator != EdgeMappingVector.end()) {
+					writeStartElementWithPrefix(XML_3MF_ELEMENT_NURBS_EDGE, XML_3MF_NAMESPACEPREFIX_NURBS);
+					writeUintAttribute(XML_3MF_ATTRIBUTE_NURBS_CURVEID, (*iEdgeMappingIterator)->getCurveID ());
+					writeDoubleAttribute(XML_3MF_ATTRIBUTE_NURBS_T1, (*iEdgeMappingIterator)->getCurveT1());
+					writeDoubleAttribute(XML_3MF_ATTRIBUTE_NURBS_T2, (*iEdgeMappingIterator)->getCurveT2());
+
+					nfUint32 nUVCount = (*iEdgeMappingIterator)->getUVTCoordinateCount ();
+
+					for (nfUint32 nUVIndex = 0; nUVIndex < nUVCount; nUVIndex++) {
+
+						nfDouble dU, dV, dT;
+						(*iEdgeMappingIterator)->getUVTCoordinate(nUVIndex, dU, dV, dT);
+
+						writeStartElementWithPrefix(XML_3MF_ELEMENT_NURBS_UVTCOORD, XML_3MF_NAMESPACEPREFIX_NURBS);
+						writeFloatAttribute(XML_3MF_ATTRIBUTE_NURBS_U, (nfFloat) dU);
+						writeFloatAttribute(XML_3MF_ATTRIBUTE_NURBS_V, (nfFloat) dV);
+						writeFloatAttribute(XML_3MF_ATTRIBUTE_NURBS_T, (nfFloat) dT);
+						writeEndElement();
+					}
+
+					writeEndElement();
+
+					iEdgeMappingIterator++;
 				}
 
 				writeFullEndElement();

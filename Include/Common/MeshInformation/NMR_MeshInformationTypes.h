@@ -49,6 +49,7 @@ namespace NMR {
 //		emiCompositeMaterials = 0x0004,
 //		emiMultiProperties = 0x0005,
 		emiProperties = 0x0006,
+		emiNurbs = 0x0007,
 		emiLastType
 	} eMeshInformationType;
 
@@ -60,6 +61,11 @@ namespace NMR {
 		nfUint32 m_nPropertyIDs[3];
 	} MESHINFORMATION_PROPERTIES;
 
+	typedef struct {
+		nfUint32 m_nResourceID;
+		nfUint32 m_nUVIDs[3];
+		nfUint32 m_nEdgeIDs[3];
+	} MESHINFORMATION_NURBS;	
 
 #pragma pack()
 

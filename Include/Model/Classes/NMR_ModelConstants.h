@@ -302,7 +302,10 @@ These are given by the 3MF Standard
 #define XML_3MF_ELEMENT_NURBS_CONTROLPOINT          "controlpoint"
 
 #define XML_3MF_ELEMENT_NURBS_UVMAPPING             "uvmapping"
+#define XML_3MF_ELEMENT_NURBS_EDGEMAPPING           "edgemapping"
+#define XML_3MF_ELEMENT_NURBS_EDGE                  "edge"
 #define XML_3MF_ELEMENT_NURBS_UVCOORD               "uvcoord"
+#define XML_3MF_ELEMENT_NURBS_UVTCOORD               "uvtcoord"
 
 #define XML_3MF_ATTRIBUTE_NURBS_ID                  "id"
 #define XML_3MF_ATTRIBUTE_NURBS_DEGREEU             "degreeu"
@@ -315,6 +318,18 @@ These are given by the 3MF Standard
 #define XML_3MF_ATTRIBUTE_NURBS_W                   "w"
 #define XML_3MF_ATTRIBUTE_NURBS_U                   "u"
 #define XML_3MF_ATTRIBUTE_NURBS_V                   "v"
+#define XML_3MF_ATTRIBUTE_NURBS_T                   "t"
+#define XML_3MF_ATTRIBUTE_NURBS_CURVEID             "curveid"
+#define XML_3MF_ATTRIBUTE_NURBS_T1                  "t1"
+#define XML_3MF_ATTRIBUTE_NURBS_T2                  "t2"
+
+#define XML_3MF_ATTRIBUTE_NURBS_NID                  "nid"
+#define XML_3MF_ATTRIBUTE_NURBS_N1                   "n1"
+#define XML_3MF_ATTRIBUTE_NURBS_N2                   "n2"
+#define XML_3MF_ATTRIBUTE_NURBS_N3                   "n3"
+#define XML_3MF_ATTRIBUTE_NURBS_E1                   "e1"
+#define XML_3MF_ATTRIBUTE_NURBS_E2                   "e2"
+#define XML_3MF_ATTRIBUTE_NURBS_E3                   "e3"
 
 
 // Base Material element.
