@@ -72,7 +72,6 @@ namespace NMR {
 		void writeTex2Coords();
 		void writeObjects();
 		void writeBuild();
-		void writeNurbs();
 
 		void writeSliceStacks();
 		void writeSliceStack(_In_ CModelSliceStack *pSliceStack);
@@ -82,7 +81,7 @@ namespace NMR {
 		ModelResourceID generateOutputResourceID();
 
 		void RegisterMetaDataGroupNameSpaces(PModelMetaDataGroup mdg);
-		void CModelWriterNode100_Model::RegisterMetaDataNameSpaces();
+		void RegisterMetaDataNameSpaces();
 
 	public:
 		CModelWriterNode100_Model() = delete;
