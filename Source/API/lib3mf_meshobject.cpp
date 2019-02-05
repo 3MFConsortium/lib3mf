@@ -34,6 +34,7 @@ Abstract: This is a stub class definition of CLib3MFMeshObject
 // Include custom headers here.
 
 #include "Common/MeshInformation/NMR_MeshInformation_Properties.h"
+#include <cmath>
 
 using namespace Lib3MF::Impl;
 
@@ -298,7 +299,7 @@ void CLib3MFMeshObject::SetGeometry(const Lib3MF_uint64 nVerticesBufferSize, con
 	const sLib3MFPosition * pVertex = pVerticesBuffer;
 	for (Lib3MF_uint64 nIndex = 0; nIndex < nVerticesBufferSize; nIndex++) {
 		for (int j = 0; j < 3; j++) {
-			if (fabs(pVertex->m_coordinates[j]) > NMR_MESH_MAXCOORDINATE)
+			if (std::fabs(pVertex->m_coordinates[j]) > NMR_MESH_MAXCOORDINATE)
 				throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
 		}
 		pMesh->addNode(pVertex->m_coordinates[0], pVertex->m_coordinates[1], pVertex->m_coordinates[2]);

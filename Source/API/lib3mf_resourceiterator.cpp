@@ -85,7 +85,7 @@ bool CLib3MFResourceIterator::MovePrevious ()
 	}
 }
 
-inline NMR::PModelResource CLib3MFResourceIterator::GetCurrentResource()
+NMR::PModelResource CLib3MFResourceIterator::GetCurrentResource()
 {
 	// Get Resource Count
 	Lib3MF_int32 nBuildItemCount = (Lib3MF_int32)m_pResources.size();
