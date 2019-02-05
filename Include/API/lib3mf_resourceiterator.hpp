@@ -53,7 +53,7 @@ private:
 	Lib3MF_int32 m_nCurrentIndex;
 
 protected:
-	inline NMR::PModelResource GetCurrentResource();
+	virtual NMR::PModelResource GetCurrentResource();
 public:
 
 	/**
