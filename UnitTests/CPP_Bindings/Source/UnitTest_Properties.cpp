@@ -236,13 +236,13 @@ namespace Lib3MF
 	{
 		auto writer = model->QueryWriter("3mf");
 		std::vector<Lib3MF_uint8> buffer;
-		// writer->WriteToBuffer(buffer);
+		writer->WriteToBuffer(buffer);
 		//writer->WriteToFile("Color_Out.3mf");
 
 		auto readModel = CLib3MFWrapper::CreateModel();
 		auto reader = readModel->QueryReader("3mf");
-		reader->ReadFromFile("Color_Out.3mf");
-		// reader->ReadFromBuffer(buffer);
+		reader->ReadFromBuffer(buffer);
+		// reader->ReadFromFile("Color_Out.3mf");
 
 		auto iterator = readModel->GetColorGroups();
 		while (iterator->MoveNext())

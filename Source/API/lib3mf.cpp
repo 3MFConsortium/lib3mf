@@ -75,10 +75,12 @@ void CLib3MFWrapper::GetSpecificationVersion (const std::string & sSpecification
 		nMajor = NMR_SPECVERSION_BEAMLATTICE_MAJOR;
 		nMinor = NMR_SPECVERSION_BEAMLATTICE_MINOR;
 		nMicro = NMR_SPECVERSION_BEAMLATTICE_MICRO;
+		bIsSupported = true;
 	} else if (!sSpecificationURL.compare(std::string(XML_3MF_NAMESPACE_SLICESPEC) )) {
 		nMajor = NMR_SPECVERSION_SLICE_MAJOR;
 		nMinor = NMR_SPECVERSION_SLICE_MINOR;
 		nMicro = NMR_SPECVERSION_SLICE_MICRO;
+		bIsSupported = true;
 	}
 	else {
 		bIsSupported = false;
