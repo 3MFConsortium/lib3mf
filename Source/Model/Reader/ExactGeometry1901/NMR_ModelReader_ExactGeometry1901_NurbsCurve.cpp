@@ -128,10 +128,10 @@ namespace NMR {
 		__NMRASSERT(pNameSpace);
 
 		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_NURBSSPEC) == 0) {
-			if (strcmp(pChildName, XML_3MF_ELEMENT_NURBS_UKNOTS) == 0)
+			if (strcmp(pChildName, XML_3MF_ELEMENT_NURBS_KNOTS) == 0)
 			{
 				if (m_bHadKnots)
-					throw CNMRException(NMR_ERROR_NURBSDUPLICATEUKNOTS);
+					throw CNMRException(NMR_ERROR_NURBSDUPLICATECURVEKNOTS);
 
 				PModelReaderNode_ExactGeometry1901_CurveKnots pXMLNode = std::make_shared<CModelReaderNode_ExactGeometry1901_CurveKnots>(m_pModel, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);			

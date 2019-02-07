@@ -1222,5 +1222,8 @@ Extension Errors - Nurbs (0xB1XX)
 // Invalid Nurbs Curve Order
 #define NMR_ERROR_INVALIDNURBSCURVEORDER 0xB116
 
+// Duplicate Curve Knots
+#define NMR_ERROR_NURBSDUPLICATECURVEKNOTS 0xB117
+
 #endif // __NMR_ERRORCONST
 

@@ -131,15 +131,15 @@ namespace Lib3MF
 
 	TEST_F(Nurbs, 3MFReadNurbsFromFile)
 	{
+		std::vector<sLib3MFNURBSKnot> KnotBuffer;
+		double dX, dY, dZ, dW;
+
 		auto pReader = Nurbs::model->QueryReader ("3mf");
 
 		pReader->ReadFromFile(sTestFilesPath + "/Nurbs/" + "nurbscylinder.3mf");
 
 		auto CurveIterator = Nurbs::model->GetNurbsCurves();
-
 		ASSERT_TRUE(CurveIterator->MoveNext());
-
-		std::vector<sLib3MFNURBSKnot> KnotBuffer;
 
 		auto NurbsCurve1 = CurveIterator->GetCurrentNurbsCurve();
 		ASSERT_EQ(NurbsCurve1->GetResourceID(), 1);
@@ -154,7 +154,6 @@ namespace Lib3MF
 		ASSERT_EQ(KnotBuffer[1].m_Value, -1.5708);
 		ASSERT_EQ(KnotBuffer[2].m_Value, 0);
 
-		double dX, dY, dZ, dW;
 		NurbsCurve1->GetControlPoint(0, dX, dY, dZ, dW);
 		ASSERT_EQ(dX, -2.95265);
 		ASSERT_EQ(dY, 0);
@@ -169,6 +168,33 @@ namespace Lib3MF
 
 		auto SurfaceIterator = Nurbs::model->GetNurbsSurfaces();
 		ASSERT_TRUE(SurfaceIterator->MoveNext());
+		
+		auto NurbsSurface1 = SurfaceIterator->GetCurrentNurbsSurface();
+		ASSERT_EQ(NurbsSurface1->GetResourceID(), 20);
+		ASSERT_EQ(NurbsSurface1->GetDegreeU(), 1);
+		ASSERT_EQ(NurbsSurface1->GetDegreeV(), 2);
+
+		NurbsSurface1->GetKnotsU(KnotBuffer);
+		ASSERT_EQ(KnotBuffer.size(), 2);
+		ASSERT_EQ(KnotBuffer[0].m_Multiplicity, 2);
+		ASSERT_EQ(KnotBuffer[1].m_Multiplicity, 2);
+		ASSERT_EQ(KnotBuffer[0].m_Value, 0);
+		ASSERT_EQ(KnotBuffer[1].m_Value, 1.0892);
+
+		NurbsSurface1->GetKnotsV(KnotBuffer);
+		ASSERT_EQ(KnotBuffer.size(), 3);
+		ASSERT_EQ(KnotBuffer[0].m_Multiplicity, 3);
+		ASSERT_EQ(KnotBuffer[1].m_Multiplicity, 2);
+		ASSERT_EQ(KnotBuffer[2].m_Multiplicity, 3);
+		ASSERT_EQ(KnotBuffer[0].m_Value, -3.14159);
+		ASSERT_EQ(KnotBuffer[1].m_Value, -1.5708);
+		ASSERT_EQ(KnotBuffer[2].m_Value, 0);
+
+		NurbsSurface1->GetControlPoint(0, 0, dX, dY, dZ, dW);
+		ASSERT_EQ(dX, -2.95265);
+		ASSERT_EQ(dY, 0);
+		ASSERT_EQ(dZ, 20);
+		ASSERT_EQ(dW, 1);
 
 	}
 

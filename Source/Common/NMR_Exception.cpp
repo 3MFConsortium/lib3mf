@@ -439,6 +439,7 @@ namespace NMR {
 		case NMR_ERROR_NURBSDUPLICATEEDGEMAPPING: return "Duplicate Nurbs Edge Mapping";
 		case NMR_ERROR_NURBSINSUFFICIENTDESCRIPTION: return "Insufficient Nurbs Description";
 		case NMR_ERROR_INVALIDNURBSCURVEORDER: return "Invalid Nurbs Curve Order";
+		case NMR_ERROR_NURBSDUPLICATECURVEKNOTS: return "Duplicate Curve Knots";
 
 		default:
 			return "unknown error";
