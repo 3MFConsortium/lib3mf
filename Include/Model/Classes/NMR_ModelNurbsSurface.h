@@ -80,7 +80,6 @@ namespace NMR {
 	typedef struct {
 		nfDouble m_U;
 		nfDouble m_V;
-		nfDouble m_T;
 	} sModelNurbsUVTCoord;
 
 	class CModelNurbsEdgeMapping {
@@ -95,8 +94,8 @@ namespace NMR {
 		nfDouble getCurveT1 ();
 		nfDouble getCurveT2 ();
 
-		void addUVTCoordinate(nfDouble dU, nfDouble dV, nfDouble dT);
-		void getUVTCoordinate(nfUint32 nIndex, nfDouble & dU, nfDouble & dV, nfDouble & dT);
+		void addUVTCoordinate(nfDouble dU, nfDouble dV);
+		void getUVTCoordinate(nfUint32 nIndex, nfDouble & dU, nfDouble & dV);
 		void clearUVTCoordinates();
 		nfUint32 getUVTCoordinateCount ();
 	};
@@ -172,9 +171,9 @@ namespace NMR {
 		void removeEdgeMapping(_In_ nfUint32 nID);
 		void walkEdgeMappings(NurbsSurfaceEdgeMappingWalker Walker);
 
-		void addEdgeMappingUVCoordinate(_In_ nfUint32 nID, _In_ nfDouble dU, _In_ nfDouble dV, _In_ nfDouble dT);
+		void addEdgeMappingUVCoordinate(_In_ nfUint32 nID, _In_ nfDouble dU, _In_ nfDouble dV);
 		void clearEdgeMappingUVCoordinate(_In_ nfUint32 nID);
-		void getEdgeMappingUVCoordinate(_In_ nfUint32 nID, _In_ nfUint32 nIndex, _In_ nfDouble & dU, _In_ nfDouble & dV, _In_ nfDouble & dT);
+		void getEdgeMappingUVCoordinate(_In_ nfUint32 nID, _In_ nfUint32 nIndex, _In_ nfDouble & dU, _In_ nfDouble & dV);
 		nfUint32 getEdgeMappingUVCoordinateCount(_In_ nfUint32 nID);
 
 		void registerProperties (CMeshInformation_PropertyIndexMapping * pPropertyMapping, std::vector<sModelNurbsUVCoord> & UVMappingVector, std::vector <CModelNurbsEdgeMapping *> & EdgeMappingVector);

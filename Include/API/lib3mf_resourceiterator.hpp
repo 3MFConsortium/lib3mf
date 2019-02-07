@@ -48,11 +48,10 @@ namespace Impl {
 
 class CLib3MFResourceIterator : public virtual ILib3MFResourceIterator {
 
-private:
+protected:
 	std::vector<NMR::PModelResource> m_pResources;
 	Lib3MF_int32 m_nCurrentIndex;
 
-protected:
 	virtual NMR::PModelResource GetCurrentResource();
 public:
 

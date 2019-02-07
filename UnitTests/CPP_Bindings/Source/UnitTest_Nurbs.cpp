@@ -75,10 +75,9 @@ namespace Lib3MF
 		auto uv3id = surface->AddUVCoordinate(0.5, 0.75);
 		auto edge1id = surface->AddEdgeMapping(2, 0.5, 0.75);
 
-		surface->AddEdgeMappingUVCoordinate(edge1id, 0.213, 0.237, 20.5);
-		surface->AddEdgeMappingUVCoordinate(edge1id, 0.213, 0.294, 20.5);
-		surface->AddEdgeMappingUVCoordinate(edge1id, 0.213, 0.437, 20.5);
-		surface->AddEdgeMappingUVCoordinate(edge1id, 0.213, 0.227, 20.5);
+		surface->AddEdgeMappingUVCoordinate(edge1id, 0.213, 0.237);
+		surface->AddEdgeMappingUVCoordinate(edge1id, 0.213, 0.294);
+		surface->AddEdgeMappingUVCoordinate(edge1id, 0.213, 0.437);
 
 		surface->SetControlPoint(0, 0, 0.0, 0.0, 1.0, 1.0);
 		surface->SetControlPoint(1, 0, 0.0, 0.0, 1.0, 1.0 / 3.0);

@@ -1005,7 +1005,6 @@
       <param name="Id" type="uint32" pass="in" description="Id of the edge mapping." />
       <param name="U" type="double" pass="in" description="the u coordinate to add." />
       <param name="V" type="double" pass="in" description="the v coordinate to add." />
-      <param name="T" type="double" pass="in" description="the associated t parameter of the curve" />
     </method>
 
     <method name="ClearEdgeMappingUVCoordinates" description = "Clears the UV Coordinates of an edge mapping.">
@@ -1017,7 +1016,6 @@
       <param name="Index" type="uint32" pass="in" description="Index of the Id mapping" />
       <param name="U" type="double" pass="out" description="the u coordinate to add." />
       <param name="V" type="double" pass="out" description="the v coordinate to add." />
-      <param name="T" type="double" pass="out" description="the associated t parameter of the curve" />
     </method>
 
     <method name="GetEdgeMappingUVCoordinateCount" description = "Retrieves the count of UV Coordinates of an edge mapping.">

@@ -50,10 +50,8 @@ namespace NMR {
 
 		m_bHasU = false;
 		m_bHasV = false;
-		m_bHasT = false;
 		m_U = 0.0;
 		m_V = 0.0;
-		m_T = 0.0;
 	}
 
 	void CModelReaderNode_ExactGeometry1901_UVTCoord::parseXML(_In_ CXmlReader * pXMLReader)
@@ -90,14 +88,6 @@ namespace NMR {
 			m_bHasV = true;
 
 		}
-		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_NURBS_T) == 0) {
-			nfDouble dValue = fnStringToDouble(pAttributeValue);
-			if (std::isnan(dValue) || (dValue < -XML_3MF_MAXIMUMCOORDINATEVALUE) || (dValue > XML_3MF_MAXIMUMCOORDINATEVALUE))
-				throw CNMRException(NMR_ERROR_NURBSINVALIDATTRIBUTE);
-			m_T = dValue;
-			m_bHasT = true;
-
-		}
 		else
 			m_pWarnings->addException(CNMRException(NMR_ERROR_NURBSINVALIDATTRIBUTE), mrwInvalidOptionalValue);
 	}
@@ -120,14 +110,13 @@ namespace NMR {
 		}
 	}
 
-	void CModelReaderNode_ExactGeometry1901_UVTCoord::retrieveCoord(_Out_ nfDouble & dU, _Out_ nfDouble & dV, _Out_ nfDouble & dT)
+	void CModelReaderNode_ExactGeometry1901_UVTCoord::retrieveCoord(_Out_ nfDouble & dU, _Out_ nfDouble & dV)
 	{
 		if ((!m_bHasU) || (!m_bHasV))
 			throw CNMRException(NMR_ERROR_NURBSMISSINGCOORDINATE);
 
 		dU = m_U;
 		dV = m_V;
-		dT = m_T;
 	}
 
 }

@@ -124,11 +124,11 @@ public:
 
 	bool HasEdgeMapping(const Lib3MF_uint32 nId);
 
-	void AddEdgeMappingUVCoordinate(const Lib3MF_uint32 nId, const Lib3MF_double dU, const Lib3MF_double dV, const Lib3MF_double dT);
+	void AddEdgeMappingUVCoordinate(const Lib3MF_uint32 nId, const Lib3MF_double dU, const Lib3MF_double dV);
 
 	void ClearEdgeMappingUVCoordinates(const Lib3MF_uint32 nId);
 
-	void GetEdgeMappingUVCoordinate(const Lib3MF_uint32 nId, const Lib3MF_uint32 nIndex, Lib3MF_double & dU, Lib3MF_double & dV, Lib3MF_double & dT);
+	void GetEdgeMappingUVCoordinate(const Lib3MF_uint32 nId, const Lib3MF_uint32 nIndex, Lib3MF_double & dU, Lib3MF_double & dV);
 
 	Lib3MF_uint32 GetEdgeMappingUVCoordinateCount(const Lib3MF_uint32 nId);
 

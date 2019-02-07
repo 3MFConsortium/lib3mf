@@ -65,7 +65,7 @@ namespace NMR {
 		return m_CurveT2;
 	}
 
-	void CModelNurbsEdgeMapping::addUVTCoordinate(nfDouble dU, nfDouble dV, nfDouble dT)
+	void CModelNurbsEdgeMapping::addUVTCoordinate(nfDouble dU, nfDouble dV)
 	{
 		if (m_UVTCoords.size() >= MAXNURBSUVTCOORDINATES)
 			throw CNMRException(NMR_ERROR_TOOMANYUVCOORDINATES);
@@ -73,11 +73,10 @@ namespace NMR {
 		sModelNurbsUVTCoord Coord;
 		Coord.m_U = dU;
 		Coord.m_V = dV;
-		Coord.m_T = dT;
 		m_UVTCoords.push_back(Coord);
 	}
 
-	void CModelNurbsEdgeMapping::getUVTCoordinate(nfUint32 nIndex, nfDouble & dU, nfDouble & dV, nfDouble & dT)
+	void CModelNurbsEdgeMapping::getUVTCoordinate(nfUint32 nIndex, nfDouble & dU, nfDouble & dV)
 	{
 		if (nIndex >= m_UVTCoords.size())
 			throw CNMRException(NMR_ERROR_INVALIDINDEX);
@@ -85,8 +84,6 @@ namespace NMR {
 		sModelNurbsUVTCoord * pCoord = &m_UVTCoords[nIndex];
 		dU = pCoord->m_U;
 		dV = pCoord->m_V;
-		dT = pCoord->m_T;
-
 	}
 
 	void CModelNurbsEdgeMapping::clearUVTCoordinates()
@@ -469,11 +466,11 @@ namespace NMR {
 	}
 
 
-	void CModelNurbsSurface::addEdgeMappingUVCoordinate(_In_ nfUint32 nID, _In_ nfDouble dU, _In_ nfDouble dV, _In_ nfDouble dT)
+	void CModelNurbsSurface::addEdgeMappingUVCoordinate(_In_ nfUint32 nID, _In_ nfDouble dU, _In_ nfDouble dV)
 	{
 		auto iIterator = m_EdgeMappings.find(nID);
 		if (iIterator != m_EdgeMappings.end()) {
-			iIterator->second.addUVTCoordinate(dU, dV, dT);
+			iIterator->second.addUVTCoordinate(dU, dV);
 		}
 		else
 			throw CNMRException(NMR_ERROR_COULDNOTFINDEDGEMAPPING);
@@ -489,11 +486,11 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_COULDNOTFINDEDGEMAPPING);
 	}
 
-	void CModelNurbsSurface::getEdgeMappingUVCoordinate(_In_ nfUint32 nID, _In_ nfUint32 nIndex, _In_ nfDouble & dU, _In_ nfDouble & dV, _In_ nfDouble & dT)
+	void CModelNurbsSurface::getEdgeMappingUVCoordinate(_In_ nfUint32 nID, _In_ nfUint32 nIndex, _In_ nfDouble & dU, _In_ nfDouble & dV)
 	{
 		auto iIterator = m_EdgeMappings.find(nID);
 		if (iIterator != m_EdgeMappings.end()) {
-			iIterator->second.getUVTCoordinate(nIndex, dU, dV, dT);
+			iIterator->second.getUVTCoordinate(nIndex, dU, dV);
 		}
 		else
 			throw CNMRException(NMR_ERROR_COULDNOTFINDEDGEMAPPING);

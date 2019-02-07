@@ -442,13 +442,12 @@ namespace NMR {
 
 					for (nfUint32 nUVIndex = 0; nUVIndex < nUVCount; nUVIndex++) {
 
-						nfDouble dU, dV, dT;
-						(*iEdgeMappingIterator)->getUVTCoordinate(nUVIndex, dU, dV, dT);
+						nfDouble dU, dV;
+						(*iEdgeMappingIterator)->getUVTCoordinate(nUVIndex, dU, dV);
 
 						writeStartElementWithPrefix(XML_3MF_ELEMENT_NURBS_UVTCOORD, XML_3MF_NAMESPACEPREFIX_NURBS);
 						writeFloatAttribute(XML_3MF_ATTRIBUTE_NURBS_U, (nfFloat) dU);
 						writeFloatAttribute(XML_3MF_ATTRIBUTE_NURBS_V, (nfFloat) dV);
-						//writeFloatAttribute(XML_3MF_ATTRIBUTE_NURBS_T, (nfFloat) dT);
 						writeEndElement();
 					}
 

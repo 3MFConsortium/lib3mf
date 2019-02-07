@@ -145,10 +145,9 @@ namespace NMR {
 
 				nfDouble dU;
 				nfDouble dV;
-				nfDouble dT;
-				pXMLNode->retrieveCoord(dU, dV, dT);
+				pXMLNode->retrieveCoord(dU, dV);
 
-				m_pNurbsSurface->addEdgeMappingUVCoordinate(m_bNurbsEdgeID, dU, dV, dT);
+				m_pNurbsSurface->addEdgeMappingUVCoordinate(m_bNurbsEdgeID, dU, dV);
 
 			}
 			else

@@ -51,8 +51,6 @@ namespace NMR {
 		nfBool m_bHasU;
 		nfDouble m_V;
 		nfBool m_bHasV;
-		nfDouble m_T;
-		nfBool m_bHasT;
 
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
@@ -64,7 +62,7 @@ namespace NMR {
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 
-		void retrieveCoord(_Out_ nfDouble & dU, _Out_ nfDouble & dV, _Out_ nfDouble & dT);
+		void retrieveCoord(_Out_ nfDouble & dU, _Out_ nfDouble & dV);
 
 	};
 
