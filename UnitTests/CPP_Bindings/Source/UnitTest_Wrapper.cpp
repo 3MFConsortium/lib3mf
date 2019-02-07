@@ -34,6 +34,8 @@ operations
 #include "UnitTest_Utilities.h"
 #include "lib3mf.hpp"
 
+#include <cmath>
+
 
 namespace Lib3MF
 {
@@ -121,12 +123,11 @@ namespace Lib3MF
 		ASSERT_EQ(c1.m_Blue, nB);
 		ASSERT_EQ(c1.m_Alpha, nA);
 
-		double EPS = 1e-6;
 		CLib3MFWrapper::ColorToFloatRGBA(c1, fR, fG, fB, fA);
-		ASSERT_EQ(c1.m_Red, round(fR*255));
-		ASSERT_EQ(c1.m_Green, round(fG * 255));
-		ASSERT_EQ(c1.m_Blue, round(fB * 255));
-		ASSERT_EQ(c1.m_Alpha, round(fA * 255));
+		ASSERT_EQ(c1.m_Red, std::round(fR*255));
+		ASSERT_EQ(c1.m_Green, std::round(fG * 255));
+		ASSERT_EQ(c1.m_Blue, std::round(fB * 255));
+		ASSERT_EQ(c1.m_Alpha, std::round(fA * 255));
 
 		c2 = CLib3MFWrapper::RGBAToColor(nR, nG, nB, nA);
 		ASSERT_EQ(c2.m_Red, nR);

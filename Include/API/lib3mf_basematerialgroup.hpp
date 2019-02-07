@@ -79,15 +79,17 @@ public:
 
 	Lib3MF_uint32 AddMaterial(const std::string & sName, const sLib3MFColor DisplayColor);
 
-	void RemoveMaterial (const Lib3MF_uint32 nResourceIndex);
+	void RemoveMaterial (const Lib3MF_uint32 nPropertyID);
 
-	std::string GetName (const Lib3MF_uint32 nResourceIndex);
+	std::string GetName (const Lib3MF_uint32 nPropertyID);
 
-	void SetName (const Lib3MF_uint32 nResourceIndex, const std::string & sName);
+	void SetName (const Lib3MF_uint32 nPropertyID, const std::string & sName);
 
-	void SetDisplayColor(const Lib3MF_uint32 nResourceIndex, const sLib3MFColor TheColor);
+	void SetDisplayColor(const Lib3MF_uint32 nPropertyID, const sLib3MFColor TheColor);
 
-	sLib3MFColor GetDisplayColor(const Lib3MF_uint32 nResourceIndex);
+	sLib3MFColor GetDisplayColor(const Lib3MF_uint32 nPropertyID);
+
+	void GetAllPropertyIDs(Lib3MF_uint64 nPropertyIDsBufferSize, Lib3MF_uint64* pPropertyIDsNeededCount, Lib3MF_uint32 * pPropertyIDsBuffer);
 };
 
 }

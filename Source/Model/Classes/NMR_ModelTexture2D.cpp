@@ -40,11 +40,12 @@ NMR_ModelTexture2D.cpp implements the Model Texture Class.
 
 namespace NMR {
 
-	CModelTexture2DResource::CModelTexture2DResource(_In_ const ModelResourceID sID, _In_ CModel * pModel)
-		:CModelResource(sID, pModel)
+
+
+	CModelTexture2DResource::CModelTexture2DResource(_In_ const ModelResourceID sID, _In_ CModel * pModel, _In_ PModelAttachment pAttachment)
+		:CModelResource(sID, pModel), m_pAttachment(pAttachment)
 	{
-		m_sPath = "";
-		m_ContentType = MODELTEXTURETYPE_UNKNOWN;
+		m_ContentType = MODELTEXTURETYPE_PNG;
 		m_bHasBox2D = false;
 		m_fBox2D_U = 0.0f;
 		m_fBox2D_V = 0.0f;
@@ -55,27 +56,29 @@ namespace NMR {
 		m_eFilter = MODELTEXTUREFILTER_AUTO;
 	}
 
-		// getters/setters Path
-	std::string CModelTexture2DResource::getPath()
+	PModelTexture2DResource CModelTexture2DResource::make(_In_ const ModelResourceID sID, _In_ CModel * pModel, _In_ PModelAttachment pAttachment)
 	{
-		return m_sPath;
+		if (!pAttachment.get())
+			throw CNMRException(NMR_ERROR_INVALIDTEXTURE);
+		if (pAttachment->getRelationShipType() != PACKAGE_TEXTURE_RELATIONSHIP_TYPE)
+			throw CNMRException(NMR_ERROR_INVALIDRELATIONSHIPTYPEFORTEXTURE);
+
+		return std::make_shared<CModelTexture2DResource>(CModelTexture2DResource(sID, pModel, pAttachment));
 	}
 
-	void CModelTexture2DResource::setPath(_In_ std::string sPath)
+	PModelAttachment CModelTexture2DResource::getAttachment()
 	{
-		m_sPath = sPath;
+		if (m_pAttachment->getRelationShipType() != PACKAGE_TEXTURE_RELATIONSHIP_TYPE)
+			throw CNMRException(NMR_ERROR_INVALIDRELATIONSHIPTYPEFORTEXTURE);
+		return m_pAttachment;
 	}
 
-	PImportStream CModelTexture2DResource::getTextureStream()
+	void CModelTexture2DResource::setAttachment(PModelAttachment pAttachment)
 	{
-		CModel * pModel = getModel();
-		__NMRASSERT(pModel != nullptr);
-		PModelAttachment pAttachment = pModel->findModelAttachment(m_sPath);
-		if (pAttachment) 
-			return pAttachment->getStream();
-		return nullptr;
+		if (pAttachment->getRelationShipType() != PACKAGE_TEXTURE_RELATIONSHIP_TYPE)
+			throw CNMRException(NMR_ERROR_INVALIDRELATIONSHIPTYPEFORTEXTURE);
+		m_pAttachment = pAttachment;
 	}
-
 
 	// getters/setters ContentType
 	eModelTexture2DType CModelTexture2DResource::getContentType()
@@ -213,7 +216,7 @@ namespace NMR {
 		if (pSourceTexture == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-		setPath(pSourceTexture->getPath());
+		setAttachment(pSourceTexture->getAttachment());
 		setContentType(pSourceTexture->getContentType ());
 		setTileStyleU(pSourceTexture->getTileStyleU());
 		setTileStyleV(pSourceTexture->getTileStyleV());

@@ -82,7 +82,7 @@ namespace NMR {
 		ModelResourceID generateOutputResourceID();
 
 		void RegisterMetaDataGroupNameSpaces(PModelMetaDataGroup mdg);
-		void CModelWriterNode100_Model::RegisterMetaDataNameSpaces();
+		void RegisterMetaDataNameSpaces();
 
 	public:
 		CModelWriterNode100_Model() = delete;

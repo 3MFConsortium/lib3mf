@@ -65,30 +65,30 @@ Lib3MF_uint32 CLib3MFBaseMaterialGroup::AddMaterial(const std::string & sName, c
 	return baseMaterialGroup().addBaseMaterial(sName, cColor);
 }
 
-void CLib3MFBaseMaterialGroup::RemoveMaterial (const Lib3MF_uint32 nResourceIndex)
+void CLib3MFBaseMaterialGroup::RemoveMaterial (const Lib3MF_uint32 nPropertyID)
 {
-	baseMaterialGroup().removeMaterial(nResourceIndex);
+	baseMaterialGroup().removeMaterial(nPropertyID);
 }
 
-std::string CLib3MFBaseMaterialGroup::GetName (const Lib3MF_uint32 nResourceIndex)
+std::string CLib3MFBaseMaterialGroup::GetName (const Lib3MF_uint32 nPropertyID)
 {
-	return baseMaterialGroup().getBaseMaterial(nResourceIndex)->getName();
+	return baseMaterialGroup().getBaseMaterial(nPropertyID)->getName();
 }
 
-void CLib3MFBaseMaterialGroup::SetName (const Lib3MF_uint32 nResourceIndex, const std::string & sName)
+void CLib3MFBaseMaterialGroup::SetName (const Lib3MF_uint32 nPropertyID, const std::string & sName)
 {
-	baseMaterialGroup().getBaseMaterial(nResourceIndex)->setName(sName);
+	baseMaterialGroup().getBaseMaterial(nPropertyID)->setName(sName);
 }
 
-void CLib3MFBaseMaterialGroup::SetDisplayColor(const Lib3MF_uint32 nResourceIndex, const sLib3MFColor TheColor)
+void CLib3MFBaseMaterialGroup::SetDisplayColor(const Lib3MF_uint32 nPropertyID, const sLib3MFColor TheColor)
 {
 	NMR::nfColor cColor = TheColor.m_Red | (TheColor.m_Green << 8) | (TheColor.m_Blue << 16) | (TheColor.m_Alpha << 24);
-	baseMaterialGroup().getBaseMaterial(nResourceIndex)->setColor(cColor);
+	baseMaterialGroup().getBaseMaterial(nPropertyID)->setColor(cColor);
 }
 
-sLib3MFColor CLib3MFBaseMaterialGroup::GetDisplayColor(const Lib3MF_uint32 nResourceIndex)
+sLib3MFColor CLib3MFBaseMaterialGroup::GetDisplayColor(const Lib3MF_uint32 nPropertyID)
 {
-	NMR::nfColor cColor = baseMaterialGroup().getBaseMaterial(nResourceIndex)->getDisplayColor();
+	NMR::nfColor cColor = baseMaterialGroup().getBaseMaterial(nPropertyID)->getDisplayColor();
 	sLib3MFColor c;
 	c.m_Red = (cColor) & 0xff;
 	c.m_Green = (cColor >> 8) & 0xff;
@@ -96,3 +96,30 @@ sLib3MFColor CLib3MFBaseMaterialGroup::GetDisplayColor(const Lib3MF_uint32 nReso
 	c.m_Alpha = (cColor >> 24) & 0xff;
 	return c;
 }
+
+void CLib3MFBaseMaterialGroup::GetAllPropertyIDs(Lib3MF_uint64 nPropertyIDsBufferSize, Lib3MF_uint64* pPropertyIDsNeededCount, Lib3MF_uint32 * pPropertyIDsBuffer)
+{
+	Lib3MF_uint32 nMaterialCount = baseMaterialGroup().getCount();
+
+	if (pPropertyIDsNeededCount)
+		*pPropertyIDsNeededCount = nMaterialCount;
+
+	if (nPropertyIDsBufferSize >= nMaterialCount && pPropertyIDsBuffer) {
+		if (!baseMaterialGroup().hasResourceIndexMap()) {
+			baseMaterialGroup().buildResourceIndexMap();
+		}
+		for (Lib3MF_uint32 i = 0; i < nMaterialCount; i++) {
+			DWORD nPropertyID;
+			if (baseMaterialGroup().mapResourceIndexToPropertyID(i, nPropertyID)) {
+				*pPropertyIDsBuffer = nPropertyID;
+			}
+			else {
+				throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDRESOURCEINDEX);
+			}
+			pPropertyIDsBuffer++;
+		}
+	}
+
+}
+
+

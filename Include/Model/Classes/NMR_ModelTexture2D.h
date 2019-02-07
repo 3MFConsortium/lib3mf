@@ -51,8 +51,8 @@ namespace NMR {
 
 	class CModelTexture2DResource : public CModelResource {
 	private:
-		// PModelAttachment m_pAttachment;
-		std::string m_sPath;	// this is how CModelTexture2DResource connects to an attachment
+		PModelAttachment m_pAttachment;
+		
 		eModelTexture2DType m_ContentType;
 		
 		nfBool m_bHasBox2D;
@@ -63,16 +63,18 @@ namespace NMR {
 		eModelTextureTileStyle m_eTileStyleU;
 		eModelTextureTileStyle m_eTileStyleV;
 		eModelTextureFilter m_eFilter;
+	
+	protected:
+		CModelTexture2DResource(_In_ const ModelResourceID sID, _In_ CModel * pModel, _In_ PModelAttachment pAttachment);
+
 	public:
 		CModelTexture2DResource() = delete;
-		CModelTexture2DResource(_In_ const ModelResourceID sID, _In_ CModel * pModel);
-
-		// getters/setters Path
-		std::string getPath();
-		void setPath (_In_ std::string sPath);
 		
-		// getters TextureStream
-		PImportStream getTextureStream();
+		static PModelTexture2DResource make(_In_ const ModelResourceID sID, _In_ CModel * pModel, _In_ PModelAttachment pAttachment);
+
+
+		PModelAttachment getAttachment();
+		void setAttachment(PModelAttachment);
 
 		// getters/setters ContentType
 		eModelTexture2DType getContentType();

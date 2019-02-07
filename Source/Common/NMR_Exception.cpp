@@ -308,7 +308,6 @@ namespace NMR {
 		case NMR_ERROR_COULDNOTGETHANDLE: return "Could not get handle";
 		case NMR_ERROR_BUILDITEMNOTFOUND: return "Build item not found";
 		case NMR_ERROR_OPCCOULDNOTGETTEXTUREURI: return "Could not get texture URI";
-		case NMR_ERROR_OPCCOULDNOTGETTEXTURESTREAM: return "Could not get texture stream";
 		case NMR_ERROR_MODELRELATIONSHIPSETREADFAILED: return "Model Relationship read failed";
 		case NMR_ERROR_NOTEXTURESTREAM: return "Texture stream is not available";
 		case NMR_ERROR_COULDNOTCREATESTREAM: return "Could not create stream";
@@ -407,6 +406,7 @@ namespace NMR {
 		case NMR_ERROR_CONTENTTYPE_EMPTY_PARTNAME: return "An override content type does not have a partname.";
 		case NMR_ERROR_XMLPARSER_INVALID_ESCAPESTRING: return "XML contains an invalid escape character.";
 		case NMR_ERROR_DUPLICATE_BOX_ATTRIBUTE: return "A box attribute is duplicated.";
+		case NMR_ERROR_TOOMANYCOLORS: return "Too many materials.";
 
 		// Library errors (0xAXXX)
 		case NMR_ERROR_COULDNOTGETINTERFACEVERSION: return "Could not get interface version";

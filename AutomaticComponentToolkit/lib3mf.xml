@@ -7,7 +7,7 @@
 	basename="lib3mf"
 	version="2.0.0"
 	>
-	
+
 	<license>
 		<line value="All rights reserved." />
 		<line value="" />
@@ -31,7 +31,7 @@
 		<line value="(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS" />
 		<line value="SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE." />
 	</license>
-	
+
 	<bindings>
 		<binding language="Cpp" indentation="tabs" />
 		<binding language="Pascal" indentation="tabs" />
@@ -43,7 +43,7 @@
 	<implementations>
 		<implementation language="Cpp" indentation="tabs" stubidentifier="" />
 	</implementations>
-	
+
 	<errors>
 		<error name="NOTIMPLEMENTED" code="1" description="functionality not implemented" />
 		<error name="INVALIDPARAM" code="2" description="an invalid parameter was passed" />
@@ -53,18 +53,18 @@
 		<error name="COULDNOTLOADLIBRARY" code="6" description="the library could not be loaded" />
 		<error name="COULDNOTFINDLIBRARYEXPORT" code="7" description="a required exported symbol could not be found in the library" />
 		<error name="INCOMPATIBLEBINARYVERSION" code="8" description="the version of the binary interface does not match the bindings interface" />
-		
+
 		<error name="CALCULATIONABORTED" code="10" description="a calculation has been aborted" />
 		<error name="SHOULDNOTBECALLED" code="11" description="functionality should not be called" />
-		
+
 		<error name="READERCLASSUNKNOWN" code="100" description="the queried reader class is unknown" />
 		<error name="WRITERCLASSUNKNOWN" code="101" description="the queried writer class is unknown" />
-		
+
 		<error name="ITERATORINVALIDINDEX" code="102" description="the current index of an iterator is invalid" />
-		
+
 		<error name="INVALIDMODELRESOURCE" code="103" description="no Model Resource has been given" />
 		<error name="RESOURCENOTFOUND" code="104" description="Resource not found" />
-		
+
 		<error name="INVALIDMODEL" code="105" description="A model is invalid" />
 		<error name="INVALIDOBJECT" code="106" description="An object is invalid" />
 		<error name="INVALIDMESHOBJECT" code="107" description="A mesh object is invalid" />
@@ -72,38 +72,42 @@
 		<error name="INVALIDCOMPONENT" code="109" description="A component is invalid" />
 		<error name="INVALIDBUILDITEM" code="110" description="A build item is invalid" />
 		<error name="INVALIDBASEMATERIALGROUP" code="111" description="A basematerialgroup is invalid" />
-		<error name="INVALIDSLICESTACKRESOURCE" code="112" description="A slicestackresource is invalid" />
-		
-		
+		<error name="INVALIDSLICESTACKRESOURCE" code="112" description="A slicestack resource is invalid" />
+		<error name="INVALIDTEXTURERESOURCE" code="113" description="A texture resource is invalid" />
+		<error name="INVALIDCOLORGROUP" code="114" description="A color group resource is invalid" />
+
+
+		<error name="INVALIDRESOURCEINDEX" code="115" description="A resource index is invalid" />
+
 		<error name="ATTACHMENTNOTFOUND" code="121" description="Attachment not found" />
-		
+
 		<error name="FORBIDDENCYCLICREFERENCE" code="130" description="A component references one of its ancestors" />
 
 		<error name="INVALIDATTACHMENTSTREAM" code="131" description="An attachment stream is invalid" />
 
-    <error name="INVALIDPROPERTYCOUNT" code="132" description="Invalid property count." />
+		<error name="INVALIDPROPERTYCOUNT" code="132" description="Invalid property count." />
 
-    <error name="UNKOWNPROGRESSIDENTIFIER" code="140" description="A progress identifier is unknown" />
+		<error name="UNKOWNPROGRESSIDENTIFIER" code="140" description="A progress identifier is unknown" />
 
 
-    <error name="BEAMLATTICE_INVALID_OBJECTTYPE" code="2000" description="This object type is not valid for beamlattices" />
+		<error name="BEAMLATTICE_INVALID_OBJECTTYPE" code="2000" description="This object type is not valid for beamlattices" />
 	</errors>
 
-  <enum name="PropertyType">
-    <option name="None" value="0" />
-    <option name="BaseMaterial" value="1" />
-    <option name="TexCoord" value="2" />
-    <option name="Colors" value="3" />
-    <option name="Composite" value="4" />
-    <option name="Multi" value="1024" />
-  </enum>
+	<enum name="PropertyType">
+		<option name="None" value="0" />
+		<option name="BaseMaterial" value="1" />
+		<option name="TexCoord" value="2" />
+		<option name="Colors" value="3" />
+		<option name="Composite" value="4" />
+		<option name="Multi" value="1024" />
+	</enum>
 
 
-  <enum name="SlicesMeshResolution">
+	<enum name="SlicesMeshResolution">
 		<option name="Fullres" value="0" />
 		<option name="Lowres" value="1" />
 	</enum>
-	
+
 	<enum name="ModelUnit">
 		<option name="MicroMeter" value="0" />
 		<option name="MilliMeter" value="1" />
@@ -119,20 +123,20 @@
 		<option name="Support" value="2" />
 		<option name="SolidSupport" value="3" />
 	</enum>
-	
+
 	<enum name="TextureType">	
 		<option name="Unknown" value="0" />
 		<option name="PNG" value="1" />
 		<option name="JPEG" value="2" />
 	</enum>
-	
+
 	<enum name="TextureTileStyle">	
 		<option name="Wrap" value="0" />
 		<option name="Mirror" value="1" />
 		<option name="Clamp" value="2" />
 		<option name="NoTileStyle" value="3" />
 	</enum>
-	
+
 	<enum name="TextureFilter">	
 		<option name="Auto" value="0" />
 		<option name="Linear" value="1" />
@@ -174,15 +178,15 @@
 		<option name="WRITETRIANGLES" value="19" />
 		<option name="WRITESLICES" value="20" />
 	</enum>
-	
+
 	<struct name="Triangle">
 		<member name="indices" type="uint32" rows="3" />
 	</struct>
 
-  <struct name="TriangleProperties">
-    <member name="ResourceID" type="uint32" />
-    <member name="PropertyIDs" type="uint32" rows="3" />
-  </struct>
+	<struct name="TriangleProperties">
+		<member name="ResourceID" type="uint32" />
+		<member name="PropertyIDs" type="uint32" rows="3" />
+	</struct>
 
   <struct name="TriangleNurbsProperties">
     <member name="ResourceID" type="uint32" />
@@ -190,18 +194,18 @@
     <member name="EdgeIDs" type="uint32" rows="3" />
   </struct>
 
-  <struct name="Position">
+	<struct name="Position">
 		<member name="coordinates" type="single" rows="3" />
 	</struct>
-	
+
 	<struct name="Position2D">
 		<member name="coordinates" type="single" rows="2" />
 	</struct>
-	
+
 	<struct name="Transform">
 		<member name="Fields" type="single" rows="3" columns="4" />
 	</struct>
-	
+
   <struct name="NURBSKnot">
     <member name="Multiplicity" type="uint32" />
     <member name="Value" type="double" />
@@ -221,7 +225,7 @@
   </struct>
   
 
-  <struct name="Color">
+	<struct name="Color">
 		<member name="Red" type="uint8" />
 		<member name="Green" type="uint8" />
 		<member name="Blue" type="uint8" />
@@ -240,24 +244,24 @@
 		<param name="ProgressIdentifier" type="enum" class="ProgressIdentifier" pass="in" description="An identifier of progress"/>
 		<param name="UserData" type="uint64" pass="in" description="Userdata that is passed to the callback function"/>
 	</functiontype>
-	
+
 	<functiontype name="WriteCallback" description="Callback to call for writing a data chunk">
 		<param name="ByteData" type="uint64" pass="in" description="Pointer to the data to be written"/>
 		<param name="NumBytes" type="uint64" pass="in" description="Number of bytes to write"/>
 		<param name="UserData" type="uint64" pass="in" description="Userdata that is passed to the callback function"/>
 	</functiontype>
-	
+
 	<functiontype name="ReadCallback" description="Callback to call for reading a data chunk">
 		<param name="ByteData" type="uint64" pass="in" description="Pointer to a buffer to read data into"/>
 		<param name="NumBytes" type="uint64" pass="in" description="Number of bytes to read"/>
 		<param name="UserData" type="uint64" pass="in" description="Userdata that is passed to the callback function"/>
 	</functiontype>
-	
+
 	<functiontype name="SeekCallback" description="Callback to call for seeking in the stream">
 		<param name="Position" type="uint64" pass="in" description="Position in the stream to move to"/>
 		<param name="UserData" type="uint64" pass="in" description="Userdata that is passed to the callback function"/>
 	</functiontype>
-	
+
 	<class name="Writer">
 		<method name="WriteToFile" dllsuffix="utf8" description = "Writes out the model as file. The file type is specified by the Model Writer class.">
 			<param name="Filename" type="string" pass="in" description="Filename to write into" />
@@ -323,7 +327,7 @@
 			<param name="Id" type="uint32" pass="return" description="Retrieves the ID of a Model Resource Instance." />
 		</method>
 	</class>
-	
+
 	<class name="ResourceIterator">
 		<method name="MoveNext" description="Iterates to the next resource in the list.">
 			<param name="HasNext" type="bool" pass="return" description="Iterates to the next resource in the list." />
@@ -336,6 +340,24 @@
 		</method>
 		<method name="Clone" description="Creates a new resource iterator with the same resource list.">
 			<param name="OutResourceIterator" type="handle" class="ResourceIterator" pass="return" description="returns the cloned Iterator instance" />
+		</method>
+	</class>
+
+	<class name="Texture2DIterator" parent="ResourceIterator">
+		<method name="GetCurrentTexture2D" description="Returns the Texture2D the iterator points at.">
+			<param name="Resource" type="handle" class="Texture2D" pass="return" description="returns the Texture2D instance." />
+		</method>
+	</class>
+
+	<class name="BaseMaterialGroupIterator" parent="ResourceIterator">
+		<method name="GetCurrentBaseMaterialGroup" description="Returns the MaterialGroup the iterator points at.">
+			<param name="Resource" type="handle" class="BaseMaterialGroup" pass="return" description="returns the BaseMaterialGroup instance." />
+		</method>
+	</class>
+
+	<class name="ColorGroupIterator" parent="ResourceIterator">
+		<method name="GetCurrentColorGroup" description="Returns the ColorGroup the iterator points at.">
+			<param name="Resource" type="handle" class="ColorGroup" pass="return" description="returns the ColorGroup instance." />
 		</method>
 	</class>
 
@@ -369,7 +391,7 @@
 		</method>
 		<method name="GetMustPreserve" dllsuffix="utf8" description = "returns, whether a metadata must be preserved">
 			<param name="MustPreserve" type="bool" pass="return" description="returns, whether a metadata must be preserved" />
-		</method> 
+		</method>
 		<method name="SetMustPreserve" dllsuffix="utf8" description = "sets whether a metadata must be preserved">
 			<param name="MustPreserve" type="bool" pass="in" description="a new value whether a metadata must be preserved" />
 		</method>
@@ -386,7 +408,7 @@
 			<param name="Value" type="string" pass="in" description="a new value of the metadata" />
 		</method>
 	</class>
-	
+
 	<class name="MetaDataGroup">
 		<method name="GetMetaDataCount" description = "returns the number of metadata in this metadatagroup">
 			<param name="Count" type="uint32" pass="return" description="returns the number metadata" />
@@ -444,10 +466,10 @@
 		<method name="IsValid" description="Retrieves, if the object is valid according to the core spec. For mesh objects, we distinguish between the type attribute of the object:In case of object type other, this always means false.In case of object type model or solidsupport, this means, if the mesh suffices all requirements of the core spec chapter 4.1.In case of object type support or surface, this always means true.A component objects is valid if and only if it contains at least one component and all child components are valid objects.">
 			<param name="IsValid" type="bool" pass="return" description="returns whether the object is a valid object description" />
 		</method>
-		
+
 		<!-- property handling -->
 		<!-- object thumbnails -->
-		
+
 		<method name="GetUUID" dllsuffix="utf8" description="Retrieves an object's uuid string (see production extension specification)">
 			<param name="HasUUID" type="bool" pass="out" description="flag whether the build item has a UUID"/>
 			<param name="UUID" type="string" pass="return" description="returns object uuid." />
@@ -458,7 +480,7 @@
 		<method name="GetMetaDataGroup" description="Returns the metadatagroup of this object">
 			<param name="MetaDataGroup" type="handle" class="MetaDataGroup" pass="return" description="returns an Instance of the metadatagroup of this object" />
 		</method>
-		
+
 		<method name="SetSlicesMeshResolution" description="set the meshresolution of the mesh object">
 			<param name="MeshResolution" type="enum" class="SlicesMeshResolution" pass="in" description="meshresolution of this object" />
 		</method>
@@ -516,20 +538,20 @@
 		<method name="GetTriangleIndices" description="Get all triangles of a mesh object">
 			<param name="Indices" type="structarray" class="Triangle" pass="out" description="contains the triangle indices." />
 		</method>
-    <method name="SetTriangleProperties" description="Sets the properties of a single triangle of a mesh object.">
-      <param name="Index" type="uint32" pass="in" description="Index of the triangle (0 to trianglecount - 1)" />
-      <param name="Properties" type="struct" class="TriangleProperties" pass="in" description="contains the triangle properties." />
-    </method>
-    <method name="GetTriangleProperties" description="Gets the properties of a single triangle of a mesh object.">
-      <param name="Index" type="uint32" pass="in" description="Index of the triangle (0 to trianglecount - 1)" />
-      <param name="Property" type="struct" class="TriangleProperties" pass="out" description="returns the triangle properties." />
+		<method name="SetTriangleProperties" description="Sets the properties of a single triangle of a mesh object.">
+			<param name="Index" type="uint32" pass="in" description="Index of the triangle (0 to trianglecount - 1)" />
+			<param name="Properties" type="struct" class="TriangleProperties" pass="in" description="contains the triangle properties." />
+		</method>
+		<method name="GetTriangleProperties" description="Gets the properties of a single triangle of a mesh object.">
+			<param name="Index" type="uint32" pass="in" description="Index of the triangle (0 to trianglecount - 1)" />
+			<param name="Property" type="struct" class="TriangleProperties" pass="out" description="returns the triangle properties." />
     </method>    
-    <method name="SetAllTriangleProperties" description="Sets the properties of all triangles of a mesh object.">
-      <param name="PropertiesArray" type="structarray" class="TriangleProperties" pass="in" description="contains the triangle properties array. Must have trianglecount elements." />
-    </method>
-    <method name="GetAllTriangleProperties" description="Gets the properties of all triangles of a mesh object.">
+		<method name="SetAllTriangleProperties" description="Sets the properties of all triangles of a mesh object.">
+			<param name="PropertiesArray" type="structarray" class="TriangleProperties" pass="in" description="contains the triangle properties array. Must have trianglecount elements." />
+		</method>
+		<method name="GetAllTriangleProperties" description="Gets the properties of all triangles of a mesh object.">
       <param name="PropertiesArray" type="structarray" class="TriangleProperties" pass="out" description="returns the triangle properties array." />
-    </method>
+		</method>
 
     <method name="SetTriangleNurbsProperties" description="Sets the Nurbs properties of a single triangle of a mesh object.">
       <param name="Index" type="uint32" pass="in" description="Index of the triangle (0 to trianglecount - 1)" />
@@ -546,7 +568,7 @@
       <param name="PropertiesArray" type="structarray" class="TriangleNurbsProperties" pass="out" description="returns the Nurbs triangle properties array." />
     </method>
 
-    <method name="SetGeometry" description="Set all triangles of a mesh object">
+		<method name="SetGeometry" description="Set all triangles of a mesh object">
 			<param name="Vertices" type="structarray" class="Position" pass="in" description="contains the positions." />
 			<param name="Indices" type="structarray" class="Triangle" pass="in" description="contains the triangle indices." />
 		</method>
@@ -556,8 +578,6 @@
 		<method name="BeamLattice" description="Retrieves the BeamLattice within this MeshObject.">
 			<param name="TheBeamLattice" type="handle" class="BeamLattice" pass="return" description="the BeamLattice within this MeshObject" />
 		</method>
-    
-    
 	</class>
 
 	<class name="BeamLattice">
@@ -578,7 +598,7 @@
 			<param name="ClipMode" type="enum" class="BeamLatticeClipMode" pass="in" description="contains the clip mode of this mesh" />
 			<param name="ResourceID" type="uint32" pass="in" description="the resourceID of the clipping mesh-object. This mesh-object has to be defined before setting the Clipping." />
 		</method>
-		
+
 		<method name="GetRepresentation" description="Returns the representation-mesh for the beamlattice of this mesh.">
 			<param name="HasRepresentation" type="bool" pass="return" description="flag whether the beamlattice has a representation mesh." />
 			<param name="ResourceID" type="uint32" pass="out" description="filled with the resourceID of the clipping mesh-object." />
@@ -587,7 +607,7 @@
 		<method name="SetRepresentation" description="Sets the representation-mesh for the beamlattice of this mesh.">
 			<param name="ResourceID" type="uint32" pass="in" description="the resourceID of the representation mesh-object. This mesh-object has to be defined before setting the representation." />
 		</method>
-		
+
 		<method name="GetBeamCount" description="Returns the beam count of a mesh object.">
 			<param name="Count" type="uint32" pass="return" description="filled with the beam count." />
 		</method>
@@ -601,16 +621,16 @@
 			<param name="BeamInfo" type="struct" class="Beam" pass="in" description="contains the node indices, radii and capmodes." />
 			<param name="Index" type="uint32" pass="return" description="filled with the new Index of the beam." />
 		</method>
-		
+
 		<method name="SetBeam" description="Sets the indices, radii and capmodes of a single beam of a mesh object.">
 			<param name="Index" type="uint32" pass="in" description="Index of the beam (0 to beamcount - 1)." />
 			<param name="BeamInfo" type="struct" class="Beam" pass="in" description="filled with the beam indices, radii and capmodes." />
 		</method>
-		
+
 		<method name="SetBeams" description="Sets all beam indices, radii and capmodes of a mesh object.">
 			<param name="BeamInfo" type="structarray" class="Beam" pass="in" description="contains information of a number of  beams" />
 		</method>
-		
+
 		<method name="GetBeams" description="obtains all beam indices, radii and capmodes of a mesh object.">
 			<param name="BeamInfo" type="structarray" class="Beam" pass="out" description="contains information of all beams" />
 		</method>
@@ -628,7 +648,7 @@
 			<param name="BeamSet" type="handle" class="BeamSet" pass="return" description="the requested beamset" />
 		</method>
 	</class>
-	
+
 	<class name="Component">
 		<method name="GetObjectResource" description="Returns the Resource Instance of the component..">
 			<param name="ObjectResource" type="handle" class="Object" pass="return" description="filled with the Resource Instance." />
@@ -653,7 +673,7 @@
 			<param name="Transform" type="struct" class="Transform" pass="in" description="new transformation matrix"/>
 		</method>
 	</class>
-	
+
 	<class name="ComponentsObject" parent="Object">
 
 		<method name="AddComponent" description="Adds a new component to a components object.">
@@ -676,81 +696,109 @@
 		<method name="SetName" dllsuffix="utf8" description="Sets a beamset's name string">
 			<param name="Name" type="string" pass="in" description="new name of the beamset." />
 		</method>
-		
+
 		<method name="GetName" dllsuffix="utf8" description="Retrieves a beamset's name string">
 			<param name="Name" type="string" pass="return" description="returns the name of the beamset." />
 		</method>
-		
+
 		<method name="SetIdentifier" dllsuffix="utf8" description="Sets a beamset's identifier string">
 			<param name="Identifier" type="string" pass="in" description="new name of the beamset." />
 		</method>
-		
+
 		<method name="GetIdentifier" dllsuffix="utf8" description="Retrieves a beamset's identifier string">
 			<param name="Identifier" type="string" pass="return" description="returns the identifier of the beamset." />
 		</method>
-		
+
 		<method name="GetReferenceCount" description="Retrieves the reference count of a beamset">
 			<param name="Count" type="uint32" pass="return" description="returns the reference count" />
 		</method>
-		
+
 		<method name="SetReferences" description="Sets the references of a beamset">
 			<param name="References" type="basicarray" class="uint32" pass="in" description="the new indices of all beams in this beamset" />
 		</method>
-		
+
 		<method name="GetReferences" description="Retrieves the references of a beamset">
 			<param name="References" type="basicarray" class="uint32" pass="out" description="retrieves the indices of all beams in this beamset" />
 		</method>
 	</class>
-	
+
 	<class name="BaseMaterialGroup" parent="Resource">
 		<method name="GetCount" description="Retrieves the count of base materials in the material group.">
 			<param name="Count" type="uint32" pass="return" description="returns the count of base materials." />
+		</method>
+		<method name="GetAllPropertyIDs" dllsuffix="utf8" description="returns all the PropertyIDs of all materials in this group">
+			<param name="PropertyIDs" type="basicarray" class="uint32" pass="out" description="PropertyID of the material in the material group." />
 		</method>
 
 		<method name="AddMaterial" dllsuffix="utf8" description="Adds a new material to the material group">
 			<param name="Name" type="string" pass="in" description="new name of the base material." />
 			<param name="DisplayColor" type="struct" class="Color" pass="in" description="Display color of the material" />
-			<param name="ResourceIndex" type="uint32" pass="return" description="returns new Index of the material in the material group." />			
+			<param name="PropertyID" type="uint32" pass="return" description="returns new PropertyID of the new material in the material group." />			
 		</method>
-	
+
 		<method name="RemoveMaterial" description="Removes a material from the material group.">
-			<param name="ResourceIndex" type="uint32" pass="in" description="Index of the material in the material group." />
+			<param name="PropertyID" type="uint32" pass="in" description="PropertyID of the material in the material group." />
 		</method>
 
 		<method name="GetName" dllsuffix="utf8" description="Returns the base material's name">
-			<param name="ResourceIndex" type="uint32" pass="in" description="Index of the material in the material group." />
+			<param name="PropertyID" type="uint32" pass="in" description="PropertyID of the material in the material group." />
 			<param name="Name" type="string" pass="return" description="returns the name of the base material." />
 		</method>
-		
+
 		<method name="SetName" dllsuffix="utf8" description="Sets a base material's name">
-			<param name="ResourceIndex" type="uint32" pass="in" description="Index of the material in the material group." />
+			<param name="PropertyID" type="uint32" pass="in" description="PropertyID of the material in the material group." />
 			<param name="Name" type="string" pass="in" description="new name of the base material." />
 		</method>
 
 		<method name="SetDisplayColor" description="Sets a base material's display color.">
-			<param name="ResourceIndex" type="uint32" pass="in" description="Index of the material in the material group." />
+			<param name="PropertyID" type="uint32" pass="in" description="PropertyID of the material in the material group." />
 			<param name="TheColor" type="struct" class="Color" pass="in" description="The base material's display color" />
 		</method>
-		
+
 		<method name="GetDisplayColor" description="Returns a base material's display color.">
-			<param name="ResourceIndex" type="uint32" pass="in" description="Index of the material in the material group." />
+			<param name="PropertyID" type="uint32" pass="in" description="PropertyID of the material in the material group." />
 			<param name="TheColor" type="struct" class="Color" pass="return" description="The base material's display color" />
 		</method>
 	</class>
-	
+
+	<class name="ColorGroup" parent="Resource">
+		<method name="GetCount" description="Retrieves the count of base materials in this Color Group.">
+			<param name="Count" type="uint32" pass="return" description="returns the count of colors within this color group." />
+		</method>
+		<method name="GetAllPropertyIDs" dllsuffix="utf8" description="returns all the PropertyIDs of all colors within this group">
+			<param name="PropertyIDs" type="basicarray" class="uint32" pass="out" description="PropertyID of the color in the color group." />
+		</method>
+
+		<method name="AddColor" description="Adds a new value.">
+			<param name="TheColor" type="struct" class="Color" pass="in" description="The new color" />
+			<param name="PropertyID" type="uint32" pass="return" description="PropertyID of the new color within this color group." />
+		</method>
+		<method name="RemoveColor" description="Removes a color from the color group.">
+			<param name="PropertyID" type="uint32" pass="in" description="PropertyID of the color to be removed from the color group." />
+		</method>
+		<method name="SetColor" description="Sets a color value.">
+			<param name="PropertyID" type="uint32" pass="in" description="PropertyID of a color within this color group." />
+			<param name="TheColor" type="struct" class="Color" pass="in" description="The color" />
+		</method>
+		<method name="GetColor" description="Sets a color value.">
+			<param name="PropertyID" type="uint32" pass="in" description="PropertyID of a color within this color group." />
+			<param name="TheColor" type="struct" class="Color" pass="return" description="The color" />
+		</method>
+	</class>
+
 	<class name="Attachment">
 		<method name="GetPath" dllsuffix="utf8" description = "Retrieves an attachment's package path.">
 			<param name="Path" type="string" pass="return" description="returns the attachment's package path string" />
 		</method>
-		
+
 		<method name="SetPath" dllsuffix="utf8" description = "Sets an attachment's package path.">
 			<param name="Path" type="string" pass="in" description="new path of the attachment." />
 		</method>
-		
+
 		<method name="GetRelationShipType" dllsuffix="utf8" description = "Retrieves an attachment's relationship type">
 			<param name="Path" type="string" pass="return" description="returns the attachment's package relationship type string" />
 		</method>
-		
+
 		<method name="SetRelationShipType" dllsuffix="utf8" description = "Sets an attachment's relationship type.">
 			<param name="Path" type="string" pass="in" description="new relationship type string." />
 		</method>
@@ -762,19 +810,19 @@
 		<method name="ReadFromFile" dllsuffix="utf8" description = "Reads an attachment from a file.">
 			<param name="FileName" type="string" pass="in" description="file to read from." />
 		</method>
-		
+
 		<method name="GetStreamSize" description = "Retrieves the size of the attachment stream">
 			<param name="StreamSize" type="uint64" pass="return" description="the stream size" />
 		</method>
-		
+
 		<method name="WriteToBuffer" description = "Writes out the attachment into a buffer">
 			<param name="Buffer" type="basicarray" class="uint8" pass="out" description="Buffer to write into" />
 		</method>
-		
+
 		<method name="ReadFromBuffer" description = "Reads an attachment from a memory buffer">
 			<param name="Buffer" type="basicarray" class="uint8" pass="in" description="Buffer to read from" />
 		</method>
-		
+
 		<!--
 		<method name="WriteToCallback" description = "Writes out the attachment and passes the data to a provided callback function. The file type is specified by the type (and potentially path) of the attachment">
 			<param name="WriteCallback" type="callback" pass="in" description="Callback to call for writing a data chunk" />
@@ -809,7 +857,7 @@
 			<param name="TileStyleU" type="enum" class="TextureTileStyle" pass="in" description="new tilestyle type enum." />
 			<param name="TileStyleV" type="enum" class="TextureTileStyle" pass="in" description="new tilestyle type enum." />
 		</method>
-		
+
 		<method name="GetFilter" description = "Retrieves a texture's filter type.">
 			<param name="Filter" type="enum" class="TextureFilter" pass="return" description="returns filter type enum." />
 		</method>
@@ -1033,7 +1081,7 @@
 		</method>
 	</class>
 
-	
+
 	<class name="BuildItemIterator">
 		<method name="MoveNext" description="Iterates to the next build item in the list.">
 			<param name="HasNext" type="bool" pass="return" description="Iterates to the next build item in the list." />
@@ -1048,7 +1096,7 @@
 			<param name="OutBuildItemIterator" type="handle" class="BuildItemIterator" pass="return" description="returns the cloned Iterator instance" />
 		</method>
 	</class>
-	
+
 	<class name="Slice">
 		<method name="SetVertices" description="Set all vertices of a slice. All polygons will be cleared.">
 			<param name="Vertices" type="structarray" class="Position2D" pass="in" description="contains the positions." />
@@ -1059,7 +1107,7 @@
 		<method name="GetVertexCount" description="Get the number of vertices in a slice">
 			<param name="Count" type="uint64" pass="return" description="the number of vertices in the slice" />
 		</method>
-		
+
 		<method name="AddPolygon" description="Add a new polygon to this slice">
 			<param name="Indices" type="basicarray" class="uint32" pass="in" description="the new indices of the new polygon" />
 			<param name="Index" type="uint64" pass="return" description="the index of the new polygon" />
@@ -1083,12 +1131,12 @@
 			<param name="ZTop" type="double" pass="return" description="the upper Z-Coordinate of this slice" />
 		</method>
 	</class>
-	
+
 	<class name="SliceStack" parent="Resource">
 		<method name="GetBottomZ" description="Get the lower Z-Coordinate of the slice stack.">
 			<param name="ZBottom" type="double" pass="return" description="the lower Z-Coordinate the slice stack" />
 		</method>
-		
+
 		<method name="GetSliceCount" description="Returns the number of slices">
 			<param name="Count" type="uint64" pass="return" description="the number of slices" />
 		</method>
@@ -1100,7 +1148,7 @@
 			<param name="ZTop" type="double" pass="in" description="upper Z coordinate of the slice"/>
 			<param name="TheSlice" type="handle" class="Slice" pass="return" description="a new Slice instance" />
 		</method>
-		
+
 		<method name="GetSliceRefCount" description="Returns the number of slice refs">
 			<param name="Count" type="uint64" pass="return" description="the number of slicereferences" />
 		</method>
@@ -1120,7 +1168,7 @@
 			<param name="Path" type="string" pass="return" description="the package path where this Slice will be stored" />
 		</method>
 	</class>
-	
+
 	<class name="Model">
 		<method name="SetUnit" description = "sets the units of a model.">
 			<param name="Unit" type="enum" class="ModelUnit" pass="in" description="Unit enum value for the model unit" />
@@ -1146,7 +1194,7 @@
 			<param name="ResourceID" type="uint32" pass="in" description="Resource ID" />
 			<param name="TextureInstance" type="handle" class="Texture2D" pass="return" description="returns the texture2d instance" />
 		</method>
-		<method name="GetBaseMaterialGroupByID" description="finds a model base material by its id">
+		<method name="GetBaseMaterialGroupByID" description="finds a model base material group by its id">
 			<param name="ResourceID" type="uint32" pass="in" description="Resource ID" />
 			<param name="BaseMaterialGroupInstance" type="handle" class="BaseMaterialGroup" pass="return" description="returns the BaseMaterialGroup instance" />
 		</method>
@@ -1157,6 +1205,10 @@
 		<method name="GetComponentsObjectByID" description="finds a components object by its id">
 			<param name="ResourceID" type="uint32" pass="in" description="Resource ID" />
 			<param name="ComponentsObjectInstance" type="handle" class="ComponentsObject" pass="return" description="returns the components object instance" />
+		</method>
+		<method name="GetColorGroupByID" description="finds a model color group by its id">
+			<param name="ResourceID" type="uint32" pass="in" description="Resource ID" />
+			<param name="ColorGroupInstance" type="handle" class="ColorGroup" pass="return" description="returns the ColorGroup instance" />
 		</method>
 		<method name="GetSliceStackByID" description="finds a model slicestack by its id">
 			<param name="ResourceID" type="uint32" pass="in" description="Resource ID" />
@@ -1184,11 +1236,14 @@
 		<method name="GetComponentsObjects" description="creates a resource iterator instance with all components object resources.">
 			<param name="ResourceIterator" type="handle" class="ResourceIterator" pass="return" description="returns the iterator instance." />
 		</method>
-		<method name="Get2DTextures" description="creates a resource iterator instance with all texture2d resources.">
-			<param name="ResourceIterator" type="handle" class="ResourceIterator" pass="return" description="returns the iterator instance." />
+		<method name="GetTexture2Ds" description="creates a Texture2DIterator instance with all texture2d resources.">
+			<param name="ResourceIterator" type="handle" class="Texture2DIterator" pass="return" description="returns the iterator instance." />
 		</method>
-		<method name="GetBaseMaterialGroups" description="creates a resource iterator instance with all base material resources.">
-			<param name="ResourceIterator" type="handle" class="ResourceIterator" pass="return" description="returns the iterator instance." />
+		<method name="GetBaseMaterialGroups" description="creates a BaseMaterialGroupIterator instance with all base material resources.">
+			<param name="ResourceIterator" type="handle" class="BaseMaterialGroupIterator" pass="return" description="returns the iterator instance." />
+		</method>
+		<method name="GetColorGroups" description="creates a ColorGroupIterator instance with all ColorGroup resources.">
+			<param name="ResourceIterator" type="handle" class="ColorGroupIterator" pass="return" description="returns the iterator instance." />
 		</method>
 		<method name="GetSliceStacks" description="creates a resource iterator instance with all slice stack resources.">
 			<param name="ResourceIterator" type="handle" class="ResourceIterator" pass="return" description="returns the iterator instance." />
@@ -1230,12 +1285,15 @@
       <param name="NurbsInstance" type="handle" class="NurbsCurve" pass="return" description=" returns the nurbs curve instance" />
     </method>
 
-    <method name="AddTexture2DFromAttachment" description = "adds a texture2d resource to the model. Its path is given by that of an existing attachment.">
+		<method name="AddTexture2DFromAttachment" description = "adds a texture2d resource to the model. Its path is given by that of an existing attachment.">
 			<param name="TextureAttachment" type="handle" class="Attachment" pass="in" description="attachment containing the image data." />
 			<param name="Texture2DInstance" type="handle" class="Texture2D" pass="return" description="returns the new texture instance." />
 		</method>
 		<method name="AddBaseMaterialGroup" description = "adds an empty BaseMaterialGroup resource to the model.">
 			<param name="BaseMaterialGroupInstance" type="handle" class="BaseMaterialGroup" pass="return" description="returns the new base material instance." />
+		</method>
+		<method name="AddColorGroup" description = "adds an empty ColorGroup resource to the model.">
+			<param name="ColorGroupInstance" type="handle" class="ColorGroup" pass="return" description="returns the new ColorGroup instance." />
 		</method>
 		<method name="AddBuildItem" description = "adds a build item to the model.">
 			<param name="Object" type="handle" class="Object" pass="in" description="Object instance." />
@@ -1342,5 +1400,5 @@
 			<param name="Alpha" type="single" pass="out" description="Alpha value of color (0-1)" />
 		</method>
 	</global>
-	
+
 </component>

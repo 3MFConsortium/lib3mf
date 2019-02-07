@@ -91,6 +91,8 @@ public:
 
 	ILib3MFComponentsObject * GetComponentsObjectByID (const Lib3MF_uint32 nResourceID);
 
+	ILib3MFColorGroup * GetColorGroupByID(const Lib3MF_uint32 nResourceID);
+
 	ILib3MFSliceStack * GetSliceStackByID(const Lib3MF_uint32 nResourceID);
 
 	std::string GetBuildUUID (bool & bHasUUID);
@@ -107,9 +109,11 @@ public:
 
 	ILib3MFResourceIterator * GetComponentsObjects ();
 
-	ILib3MFResourceIterator * Get2DTextures ();
+	ILib3MFTexture2DIterator * GetTexture2Ds ();
 
-	ILib3MFResourceIterator * GetBaseMaterialGroups ();
+	ILib3MFBaseMaterialGroupIterator * GetBaseMaterialGroups ();
+
+	ILib3MFColorGroupIterator * GetColorGroups();
 
 	ILib3MFResourceIterator * GetSliceStacks();
 
@@ -132,6 +136,8 @@ public:
 	ILib3MFTexture2D * AddTexture2DFromAttachment (ILib3MFAttachment* pTextureAttachment);
 
 	ILib3MFBaseMaterialGroup * AddBaseMaterialGroup ();
+
+	ILib3MFColorGroup * AddColorGroup();
 
 	ILib3MFBuildItem * AddBuildItem (ILib3MFObject* pObject, const sLib3MFTransform Transform);
 

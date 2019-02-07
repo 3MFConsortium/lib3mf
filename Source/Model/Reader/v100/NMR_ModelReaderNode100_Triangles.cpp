@@ -39,22 +39,18 @@ XML Model Stream.
 #include "Common/NMR_StringUtils.h"
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_Exception_Windows.h"
-#include "Model/Classes/NMR_ModelBaseMaterial.h"
 #include "Model/Classes/NMR_ModelNurbsSurface.h"
 #include "Model/Reader/NMR_ModelReader_ColorMapping.h"
 
 namespace NMR {
 
-	CModelReaderNode100_Triangles::CModelReaderNode100_Triangles(_In_ CModel * pModel, _In_ CMesh * pMesh, _In_ PModelReaderWarnings pWarnings, _In_ PModelReader_ColorMapping pColorMapping, _In_ PModelReader_TexCoordMapping pTexCoordMapping, _In_ ModelResourceID nDefaultPropertyID, _In_ ModelResourceIndex nDefaultPropertyIndex)
+	CModelReaderNode100_Triangles::CModelReaderNode100_Triangles(_In_ CModel * pModel, _In_ CMesh * pMesh, _In_ PModelReaderWarnings pWarnings, _In_ PModelReader_TexCoordMapping pTexCoordMapping, _In_ ModelResourceID nDefaultPropertyID, _In_ ModelResourceIndex nDefaultPropertyIndex)
 		: CModelReaderNode(pWarnings)
 	{
 		__NMRASSERT(pMesh);
 		__NMRASSERT(pModel);
-		if (!pColorMapping.get())
-			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 		if (!pTexCoordMapping.get())
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
-		m_pColorMapping = pColorMapping;
 		m_pTexCoordMapping = pTexCoordMapping;
 
 		m_nDefaultResourceID = nDefaultPropertyID;
@@ -207,10 +203,9 @@ namespace NMR {
 
 						PPackageResourceID pID = m_pModel->findPackageResourceID(m_pModel->curPath(), nResourceID);
 						if (pID.get()) {
-							// Find and Assign Base Material Resource
+							// Find and Assign Resource of this Property
 							PModelResource pResource = m_pModel->findResource(pID->getUniqueID());
 							if (pResource.get () != nullptr) {
-
 								if (!pResource->hasResourceIndexMap())
 									pResource->buildResourceIndexMap();
 
@@ -229,10 +224,13 @@ namespace NMR {
 										pFaceData->m_nPropertyIDs[1] = pPropertyID2;
 										pFaceData->m_nPropertyIDs[2] = pPropertyID3;
 									}
-
+								} else {
+									m_pWarnings->addException(CNMRException(NMR_ERROR_INVALIDMESHINFORMATIONINDEX), mrwInvalidOptionalValue);
 								}
-
-							} 
+							}
+						}
+						else {
+							m_pWarnings->addException(CNMRException(NMR_ERROR_INVALIDMODELRESOURCE), mrwInvalidOptionalValue);
 						}
 
 					}

@@ -38,6 +38,7 @@ This is the class for exporting the 3mf model stream root node.
 #include "Model/Classes/NMR_ModelBuildItem.h"
 #include "Model/Classes/NMR_ModelObject.h"
 #include "Model/Classes/NMR_ModelBaseMaterials.h"
+#include "Model/Classes/NMR_ModelColorGroup.h"
 #include "Model/Classes/NMR_ModelTexture2D.h"
 #include "Model/Classes/NMR_ModelNurbsSurface.h"
 #include "Model/Classes/NMR_ModelNurbsCurve.h"
@@ -203,7 +204,7 @@ namespace NMR {
 
 			writeStartElementWithPrefix(XML_3MF_ELEMENT_TEXTURE2D, XML_3MF_NAMESPACEPREFIX_MATERIAL);
 			writeIntAttribute(XML_3MF_ATTRIBUTE_TEXTURE2D_ID, pTexture2D->getResourceID()->getUniqueID());
-			writeStringAttribute(XML_3MF_ATTRIBUTE_TEXTURE2D_PATH, pTexture2D->getPath());
+			writeStringAttribute(XML_3MF_ATTRIBUTE_TEXTURE2D_PATH, pTexture2D->getAttachment()->getPathURI());
 			writeStringAttribute(XML_3MF_ATTRIBUTE_TEXTURE2D_CONTENTTYPE, pTexture2D->getContentTypeString());
 
 			if (pTexture2D->getTileStyleU() != MODELTEXTURETILESTYLE_WRAP)
@@ -244,25 +245,33 @@ namespace NMR {
 	void CModelWriterNode100_Model::writeBaseMaterials()
 	{
 		nfUint32 nMaterialCount = m_pModel->getBaseMaterialCount();
-		nfUint32 nMaterialIndex;
-		nfUint32 j;
 
-		for (nMaterialIndex = 0; nMaterialIndex < nMaterialCount; nMaterialIndex++) {
+		for (nfUint32 nMaterialIndex = 0; nMaterialIndex < nMaterialCount; nMaterialIndex++) {
 			CModelBaseMaterialResource * pBaseMaterial = m_pModel->getBaseMaterial(nMaterialIndex);
+
+			pBaseMaterial->buildResourceIndexMap();
+
+			ModelResourceID nResourceID = pBaseMaterial->getResourceID()->getUniqueID();
 
 			writeStartElement(XML_3MF_ELEMENT_BASEMATERIALS);
 			// Write Object ID (mandatory)
-			writeIntAttribute(XML_3MF_ATTRIBUTE_BASEMATERIALS_ID, pBaseMaterial->getResourceID()->getUniqueID());
+			writeIntAttribute(XML_3MF_ATTRIBUTE_BASEMATERIALS_ID, nResourceID);
 
 			nfUint32 nElementCount = pBaseMaterial->getCount();
 
-			for (j = 0; j < nElementCount; j++) {
-				PModelBaseMaterial pElement = pBaseMaterial->getBaseMaterial(j);
+			for (nfUint32 j = 0; j < nElementCount; j++) {
+				ModelPropertyID nPropertyID;
+				if (!pBaseMaterial->mapResourceIndexToPropertyID(j, nPropertyID)) {
+					throw CNMRException(NMR_ERROR_INVALIDPROPERTYRESOURCEID);
+				}
+				PModelBaseMaterial pElement = pBaseMaterial->getBaseMaterial(nPropertyID);
+				
+				m_pPropertyIndexMapping->registerPropertyID(nResourceID, pElement->getPropertyID(), j);
+
 				writeStartElement(XML_3MF_ELEMENT_BASE);
 				writeStringAttribute(XML_3MF_ATTRIBUTE_BASEMATERIAL_NAME, pElement->getName());
 				writeStringAttribute(XML_3MF_ATTRIBUTE_BASEMATERIAL_DISPLAYCOLOR, pElement->getDisplayColorString());
 				writeEndElement();
-
 			}
 
 			writeFullEndElement();
@@ -609,11 +618,6 @@ namespace NMR {
 				writePrefixedStringAttribute(XML_3MF_NAMESPACEPREFIX_PRODUCTION, XML_3MF_PRODUCTION_UUID, pObject->uuid()->toString());
 			}
 
-			// Write Default Property Indices
-			ModelResourceID nDefaultPropertyID = 0;
-			ModelResourceIndex nDefaultPropertyIndex = 0;
-			// TODO: make default property work
-
 			// Slice extension content
 			if (m_bWriteSliceExtension) {
 				if (pObject->getSliceStack().get()) {
@@ -631,6 +635,10 @@ namespace NMR {
 			// Check if object is a mesh Object
 			CModelMeshObject * pMeshObject = dynamic_cast<CModelMeshObject *> (pObject);
 			if (pMeshObject) {
+				// Write Default Property Indices
+				ModelResourceID nDefaultPropertyID = 0;
+				ModelResourceIndex nDefaultPropertyIndex = 0;
+
 				// Write Attributes (only for meshes)
 				if ( nDefaultPropertyID != 0) {
 					writeIntAttribute(XML_3MF_ATTRIBUTE_OBJECT_PID, nDefaultPropertyID);
@@ -700,20 +708,37 @@ namespace NMR {
 
 	void CModelWriterNode100_Model::writeColors()
 	{
-		/*nfUint32 nCount = m_pColorMapping->getCount();
-		nfUint32 nIndex;
-		if (nCount > 0) {
+		nfUint32 nCount = m_pModel->getColorGroupCount();
+
+		for (nfUint32 nIndex = 0; nIndex < nCount; nIndex++) {
+			CModelColorGroupResource * pColorGroup = m_pModel->getColorGroup(nIndex);
+
+			pColorGroup->buildResourceIndexMap();
+
+			ModelResourceID nResourceID = pColorGroup->getResourceID()->getUniqueID();
+
 			writeStartElementWithPrefix(XML_3MF_ELEMENT_COLORGROUP, XML_3MF_NAMESPACEPREFIX_MATERIAL);
-			writeIntAttribute(XML_3MF_ATTRIBUTE_COLORS_ID, m_pColorMapping->getResourceID());
-			for (nIndex = 0; nIndex < nCount; nIndex++) {
-				nfColor cColor = m_pColorMapping->getColor(nIndex);
+			// Write Object ID (mandatory)
+			writeIntAttribute(XML_3MF_ATTRIBUTE_COLORS_ID, nResourceID);
+
+			nfUint32 nElementCount = pColorGroup->getCount();
+
+			for (nfUint32 j = 0; j < nElementCount; j++) {
+				ModelPropertyID nPropertyID;
+				if (!pColorGroup->mapResourceIndexToPropertyID(j, nPropertyID)) {
+					throw CNMRException(NMR_ERROR_INVALIDPROPERTYRESOURCEID);
+				}
+				nfColor pElement = pColorGroup->getColor(nPropertyID);
+
+				m_pPropertyIndexMapping->registerPropertyID(nResourceID, nPropertyID, j);
+
 				writeStartElementWithPrefix(XML_3MF_ELEMENT_COLOR, XML_3MF_NAMESPACEPREFIX_MATERIAL);
-				writeStringAttribute(XML_3MF_ATTRIBUTE_COLORS_COLOR, fnColorToString(cColor));
+				writeStringAttribute(XML_3MF_ATTRIBUTE_COLORS_COLOR, fnColorToString(pElement));
 				writeEndElement();
 			}
 
 			writeFullEndElement();
-		} */
+		}
 	}
 
 	void CModelWriterNode100_Model::writeTex2Coords()

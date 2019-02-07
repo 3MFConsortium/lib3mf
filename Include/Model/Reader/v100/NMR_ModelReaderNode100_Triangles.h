@@ -37,7 +37,6 @@ A triangles reader model node is a parser for the triangles node of an XML Model
 #include "Common/MeshInformation/NMR_MeshInformation_Properties.h"
 #include "Common/MeshInformation/NMR_MeshInformation_Nurbs.h"
 #include "Model/Reader/NMR_ModelReaderNode.h"
-#include "Model/Reader/NMR_ModelReader_ColorMapping.h"
 #include "Model/Reader/NMR_ModelReader_TexCoordMapping.h"
 #include "Model/Classes/NMR_ModelComponent.h"
 #include "Model/Classes/NMR_ModelObject.h"
@@ -48,7 +47,6 @@ namespace NMR {
 	protected:
 		CMesh * m_pMesh;
 		CModel * m_pModel;
-		PModelReader_ColorMapping m_pColorMapping;
 		PModelReader_TexCoordMapping m_pTexCoordMapping;
 
 		ModelResourceID m_nDefaultResourceID;
@@ -62,7 +60,7 @@ namespace NMR {
 		_Ret_notnull_ CMeshInformation_Nurbs * createNurbsInformation();
 	public:
 		CModelReaderNode100_Triangles() = delete;
-		CModelReaderNode100_Triangles(_In_ CModel * pModel, _In_ CMesh * pMesh, _In_ PModelReaderWarnings pWarnings, _In_ PModelReader_ColorMapping pColorMapping, _In_ PModelReader_TexCoordMapping pTexCoordMapping, _In_ ModelResourceID nDefaultPropertyID, _In_ ModelResourceIndex nDefaultPropertyIndex);
+		CModelReaderNode100_Triangles(_In_ CModel * pModel, _In_ CMesh * pMesh, _In_ PModelReaderWarnings pWarnings, _In_ PModelReader_TexCoordMapping pTexCoordMapping, _In_ ModelResourceID nDefaultPropertyID, _In_ ModelResourceIndex nDefaultPropertyIndex);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 		ModelResourceID getUsedPropertyID() const;

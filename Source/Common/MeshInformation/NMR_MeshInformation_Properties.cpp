@@ -56,7 +56,7 @@ namespace NMR {
 
 
 
-	nfUint32 CMeshInformation_PropertyIndexMapping::registerPropertyID(nfUint32 nResourceID, nfUint32 nPropertyID, nfUint32 nResourceIndex)
+	nfUint32 CMeshInformation_PropertyIndexMapping::registerPropertyID(nfUint32 nResourceID, ModelPropertyID nPropertyID, nfUint32 nResourceIndex)
 	{
 		if (nResourceID == 0)
 			throw CNMRException(NMR_ERROR_INVALIDPROPERTYRESOURCEID);
@@ -67,7 +67,7 @@ namespace NMR {
 	}
 
 
-	nfUint32 CMeshInformation_PropertyIndexMapping::mapPropertyIDToIndex(nfUint32 nResourceID, nfUint32 nPropertyID, nfUint32 nDefaultPropertyID)
+	nfUint32 CMeshInformation_PropertyIndexMapping::mapPropertyIDToIndex(nfUint32 nResourceID, ModelPropertyID nPropertyID, ModelPropertyID nPropertyID)
 	{
 		if (nResourceID == 0)
 			throw CNMRException(NMR_ERROR_INVALIDPROPERTYRESOURCEID);

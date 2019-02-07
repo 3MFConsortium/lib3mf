@@ -85,24 +85,25 @@ bool CLib3MFResourceIterator::MovePrevious ()
 	}
 }
 
-ILib3MFResource * CLib3MFResourceIterator::GetCurrent ()
+NMR::PModelResource CLib3MFResourceIterator::GetCurrentResource()
 {
 	// Get Resource Count
 	Lib3MF_int32 nBuildItemCount = (Lib3MF_int32)m_pResources.size();
 	if ((m_nCurrentIndex < 0) || (m_nCurrentIndex >= nBuildItemCount))
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_ITERATORINVALIDINDEX);
+	
+	return m_pResources[m_nCurrentIndex];
+}
 
+ILib3MFResource * CLib3MFResourceIterator::GetCurrent ()
+{
 	// Create specific API class
-	NMR::PModelResource pResource = m_pResources[m_nCurrentIndex];
-
-	auto pACTBuildItem = std::make_unique<CLib3MFResource>(pResource);
-
-	return pACTBuildItem.release();
+	return new CLib3MFResource(GetCurrentResource());
 }
 
 ILib3MFResourceIterator * CLib3MFResourceIterator::Clone ()
 {
-	auto pResources = std::make_unique<CLib3MFResourceIterator>();
+	auto pResources = std::unique_ptr<CLib3MFResourceIterator>(new CLib3MFResourceIterator());
 
 	for (auto iIterator = m_pResources.begin(); iIterator != m_pResources.end(); iIterator++)
 		pResources->addResource(*iIterator);

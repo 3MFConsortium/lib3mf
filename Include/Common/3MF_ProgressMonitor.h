@@ -36,6 +36,7 @@ Abstract: Progress Monitor
 #include <memory>
 #include <mutex>
 #include <stack>
+#include <string>
 
 namespace NMR
 {

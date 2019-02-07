@@ -134,7 +134,6 @@ struct PositionedVector
 
 };
 
-
 inline sLib3MFPosition fnCreateVertex(float x, float y, float z)
 {
 	sLib3MFPosition result;
@@ -152,6 +151,10 @@ inline sLib3MFTriangle fnCreateTriangle(int v0, int v1, int v2)
 	result.m_indices[2] = v2;
 	return result;
 }
+
+
+void fnCreateBox(std::vector<sLib3MFPosition> &vctVertices, std::vector<sLib3MFTriangle> &vctTriangles);
+
 
 inline void CheckReaderWarnings(Lib3MF::PLib3MFReader reader, Lib3MF_uint32 nWarnings)
 {

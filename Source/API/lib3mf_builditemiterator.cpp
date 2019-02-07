@@ -93,14 +93,12 @@ ILib3MFBuildItem * CLib3MFBuildItemIterator::GetCurrent ()
 	// Create specific API class
 	NMR::PModelBuildItem pBuildItem = m_pBuildItems[m_nCurrentIndex];
 	
-	auto pACTBuildItem = std::make_unique<CLib3MFBuildItem>(pBuildItem);
-	
-	return pACTBuildItem.release();
+	return new CLib3MFBuildItem(pBuildItem);
 }
 
 ILib3MFBuildItemIterator * CLib3MFBuildItemIterator::Clone ()
 {
-	auto pBuildItems = std::make_unique<CLib3MFBuildItemIterator>();
+	auto pBuildItems = std::unique_ptr<CLib3MFBuildItemIterator>(new CLib3MFBuildItemIterator());
 	
 	for (auto iIterator = m_pBuildItems.begin(); iIterator != m_pBuildItems.end(); iIterator++)
 		pBuildItems->addBuildItem(*iIterator);

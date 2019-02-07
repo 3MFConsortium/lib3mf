@@ -34,9 +34,9 @@ NMR_ModelReaderNode100_Colors.cpp implements the Model Reader Color Group Class.
 #include "Model/Reader/v100/NMR_ModelReaderNode100_Color.h"
 
 #include "Model/Classes/NMR_ModelConstants.h"
-#include "Model/Classes/NMR_ModelMeshObject.h"
 #include "Model/Classes/NMR_ModelResource.h"
 #include "Model/Classes/NMR_Model.h"
+#include "Model/Classes/NMR_ModelColorGroup.h"
 
 #include "Common/NMR_StringUtils.h"
 #include "Common/NMR_Exception.h"
@@ -44,18 +44,14 @@ NMR_ModelReaderNode100_Colors.cpp implements the Model Reader Color Group Class.
 
 namespace NMR {
 
-	CModelReaderNode100_Colors::CModelReaderNode100_Colors(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings, _In_ PModelReader_ColorMapping pColorMapping)
+	CModelReaderNode100_Colors::CModelReaderNode100_Colors(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings)
 		: CModelReaderNode(pWarnings)
 	{
-		if (!pColorMapping.get())
-			throw CNMRException(NMR_ERROR_INVALIDPARAM);
-
 		// Initialize variables
 		m_nID = 0;
 		m_nColorIndex = 0;
 
 		m_pModel = pModel;
-		m_pColorMapping = pColorMapping;
 	}
 
 	void CModelReaderNode100_Colors::parseXML(_In_ CXmlReader * pXMLReader)
@@ -69,6 +65,12 @@ namespace NMR {
 		// Use parameter and assign to model Object
 		if (m_nID == 0)
 			throw CNMRException(NMR_ERROR_MISSINGMODELRESOURCEID);
+
+		// Create Resource
+		m_pColorGroup = std::make_shared<CModelColorGroupResource>(m_nID, m_pModel);
+
+		m_pModel->addResource(m_pColorGroup);
+
 
 		// Parse Content
 		parseContent(pXMLReader);
@@ -98,8 +100,9 @@ namespace NMR {
 				PModelReaderNode100_Color pXMLNode = std::make_shared<CModelReaderNode100_Color>(m_pModel, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 
-				m_pColorMapping->registerColor(m_nID, m_nColorIndex, pXMLNode->getColor());
-				m_nColorIndex++;
+				if (m_pColorGroup.get() != nullptr) {
+					m_pColorGroup->addColor(pXMLNode->getColor());
+				}
 
 				if (m_nColorIndex > XML_3MF_MAXRESOURCEINDEX)
 					throw CNMRException(NMR_ERROR_INVALIDINDEX);

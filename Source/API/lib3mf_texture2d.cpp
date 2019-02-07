@@ -30,6 +30,7 @@ Abstract: This is a stub class definition of CLib3MFTexture2D
 
 #include "lib3mf_texture2d.hpp"
 #include "lib3mf_interfaceexception.hpp"
+#include "lib3mf_attachment.hpp"
 
 // Include custom headers here.
 
@@ -40,43 +41,61 @@ using namespace Lib3MF::Impl;
  Class definition of CLib3MFTexture2D 
 **************************************************************************************************************************/
 
+
+CLib3MFTexture2D::CLib3MFTexture2D(NMR::PModelTexture2DResource pResource)
+	:CLib3MFResource(pResource)
+{
+}
+
+NMR::PModelTexture2DResource CLib3MFTexture2D::texture()
+{
+	NMR::PModelTexture2DResource pTexture = std::dynamic_pointer_cast<NMR::CModelTexture2DResource>(resource());
+	if (!pTexture)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDTEXTURERESOURCE);
+	return pTexture;
+}
+
+
 ILib3MFAttachment * CLib3MFTexture2D::GetAttachment ()
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	return new CLib3MFAttachment(texture()->getAttachment());
 }
 
 void CLib3MFTexture2D::SetAttachment (ILib3MFAttachment* pAttachment)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	NMR::PModelAttachment attachment = texture()->getModel()->findModelAttachment(pAttachment->GetPath());
+	texture()->setAttachment(attachment);
 }
 
 eLib3MFTextureType CLib3MFTexture2D::GetContentType ()
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	return (eLib3MFTextureType)(texture()->getContentType());
 }
 
 void CLib3MFTexture2D::SetContentType (const eLib3MFTextureType eContentType)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	texture()->setContentType(NMR::eModelTexture2DType(eContentType));
 }
 
 void CLib3MFTexture2D::GetTileStyleUV (eLib3MFTextureTileStyle & eTileStyleU, eLib3MFTextureTileStyle & eTileStyleV)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	eTileStyleU = eLib3MFTextureTileStyle(texture()->getTileStyleU());
+	eTileStyleV = eLib3MFTextureTileStyle(texture()->getTileStyleV());
 }
 
 void CLib3MFTexture2D::SetTileStyleUV (const eLib3MFTextureTileStyle eTileStyleU, const eLib3MFTextureTileStyle eTileStyleV)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	texture()->setTileStyleU(NMR::eModelTextureTileStyle(eTileStyleU));
+	texture()->setTileStyleV(NMR::eModelTextureTileStyle(eTileStyleV));
 }
 
 eLib3MFTextureFilter CLib3MFTexture2D::GetFilter ()
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	return eLib3MFTextureFilter(texture()->getFilter());
 }
 
 void CLib3MFTexture2D::SetFilter (const eLib3MFTextureFilter eFilter)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	texture()->setFilter(NMR::eModelTextureFilter(eFilter));
 }
 

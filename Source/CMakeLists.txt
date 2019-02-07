@@ -25,10 +25,13 @@ ${SRCS_COM}
 Source/API/lib3mf.cpp
 Source/API/lib3mf_attachment.cpp
 Source/API/lib3mf_basematerialgroup.cpp
+Source/API/lib3mf_basematerialgroupiterator.cpp
 Source/API/lib3mf_beamlattice.cpp
 Source/API/lib3mf_beamset.cpp
 Source/API/lib3mf_builditem.cpp
 Source/API/lib3mf_builditemiterator.cpp
+Source/API/lib3mf_colorgroup.cpp
+Source/API/lib3mf_colorgroupiterator.cpp
 Source/API/lib3mf_component.cpp
 Source/API/lib3mf_componentsobject.cpp
 Source/API/lib3mf_meshobject.cpp
@@ -46,6 +49,7 @@ Source/API/lib3mf_resourceiterator.cpp
 Source/API/lib3mf_slice.cpp
 Source/API/lib3mf_slicestack.cpp
 Source/API/lib3mf_texture2d.cpp
+Source/API/lib3mf_texture2diterator.cpp
 Source/API/lib3mf_writer.cpp
 Source/API/lib3mf_utils.cpp
 Source/Common/3MF_ProgressMonitor.cpp
@@ -109,6 +113,7 @@ Source/Model/Classes/NMR_Model.cpp
 Source/Model/Classes/NMR_ModelAttachment.cpp
 Source/Model/Classes/NMR_ModelBaseMaterial.cpp
 Source/Model/Classes/NMR_ModelBaseMaterials.cpp
+Source/Model/Classes/NMR_ModelColorGroup.cpp
 Source/Model/Classes/NMR_ModelBuildItem.cpp
 Source/Model/Classes/NMR_ModelComponent.cpp
 Source/Model/Classes/NMR_ModelComponentsObject.cpp

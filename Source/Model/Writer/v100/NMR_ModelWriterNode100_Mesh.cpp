@@ -142,7 +142,7 @@ namespace NMR {
 		// Retrieve Mesh Informations
 		CMeshInformation_Properties * pProperties = NULL;
 		CMeshInformation_Nurbs * pNurbs = NULL;
-
+		
 		CMeshInformationHandler * pMeshInformationHandler = pMesh->getMeshInformationHandler();
 		if (pMeshInformationHandler) {
 			CMeshInformation * pInformation;
@@ -151,7 +151,6 @@ namespace NMR {
 			pInformation = pMeshInformationHandler->getInformationByType(0, emiProperties);
 			if (pInformation)
 				pProperties = dynamic_cast<CMeshInformation_Properties *> (pInformation);
-
 			// Get Nurbs
 			pInformation = pMeshInformationHandler->getInformationByType(0, emiNurbs);
 			if (pInformation)

@@ -40,7 +40,7 @@ Abstract: This is the class declaration of CLib3MFTexture2D
 #pragma warning( disable : 4250)
 
 // Include custom headers here.
-
+#include "Model/Classes/NMR_ModelTexture2D.h"
 
 namespace Lib3MF {
 namespace Impl {
@@ -62,13 +62,15 @@ protected:
 	/**
 	* Put protected members here.
 	*/
+	NMR::PModelTexture2DResource texture();
+
 
 public:
 
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-
+	CLib3MFTexture2D(NMR::PModelTexture2DResource pResource);
 
 	/**
 	* Public member functions to implement.

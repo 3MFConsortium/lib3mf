@@ -80,14 +80,14 @@ namespace NMR {
 		return m_bHasResourceIndexMap;
 	}
 
-	bool CModelResource::mapResourceIndexToPropertyID(_In_ ModelResourceIndex nIndex, _Out_ ModelResourceID & nResourceID)
+	bool CModelResource::mapResourceIndexToPropertyID(_In_ ModelResourceIndex nPropertyIndex, _Out_ ModelPropertyID & nPropertyID)
 	{
-		if (nIndex < m_ResourceIndexMap.size()) {
-			nResourceID = m_ResourceIndexMap[nIndex];
+		if (nPropertyIndex < m_ResourceIndexMap.size()) {
+			nPropertyID = m_ResourceIndexMap[nPropertyIndex];
 			return true;
 		}
 
-		nResourceID = 0;
+		nPropertyID = 0;
 		return false;
 	}
 

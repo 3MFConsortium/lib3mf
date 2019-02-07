@@ -38,6 +38,9 @@ Abstract: This is a stub class definition of CLib3MFWriter
 #include "Common/Platform/NMR_ExportStream_Memory.h"
 #include "Common/Platform/NMR_ExportStream_Dummy.h"
 
+// for memcpy
+#include <cstring>
+
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
@@ -116,7 +119,7 @@ void CLib3MFWriter::WriteToBuffer (Lib3MF_uint64 nBufferBufferSize, Lib3MF_uint6
 
 	if (nBufferBufferSize >= cbStreamSize) {
 		// TODO eliminate this copy, perhaps by allowing CExportStreamMemory to use existing buffers
-		memcpy(pBufferBuffer, pStream->getData(), static_cast<size_t>(cbStreamSize));
+		std::memcpy(pBufferBuffer, pStream->getData(), static_cast<size_t>(cbStreamSize));
 	}
 }
 

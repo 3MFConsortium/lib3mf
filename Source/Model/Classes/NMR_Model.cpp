@@ -31,23 +31,24 @@ A model is an in memory representation of the 3MF file.
 
 --*/
 
-#include "Model/Classes/NMR_Model.h" 
-#include "Model/Classes/NMR_ModelObject.h" 
-#include "Model/Classes/NMR_ModelMeshObject.h" 
-#include "Model/Classes/NMR_ModelConstants.h" 
-#include "Model/Classes/NMR_ModelTypes.h" 
-#include "Model/Classes/NMR_ModelAttachment.h" 
-#include "Model/Classes/NMR_ModelTextureAttachment.h" 
-#include "Model/Classes/NMR_ModelBuildItem.h" 
-#include "Model/Classes/NMR_ModelBaseMaterials.h" 
-#include "Model/Classes/NMR_ModelTexture2D.h" 
+#include "Model/Classes/NMR_Model.h"
+#include "Model/Classes/NMR_ModelObject.h"
+#include "Model/Classes/NMR_ModelMeshObject.h"
+#include "Model/Classes/NMR_ModelConstants.h"
+#include "Model/Classes/NMR_ModelTypes.h"
+#include "Model/Classes/NMR_ModelAttachment.h"
+#include "Model/Classes/NMR_ModelTextureAttachment.h"
+#include "Model/Classes/NMR_ModelBuildItem.h"
+#include "Model/Classes/NMR_ModelBaseMaterials.h"
+#include "Model/Classes/NMR_ModelColorGroup.h"
+#include "Model/Classes/NMR_ModelTexture2D.h"
 #include "Model/Classes/NMR_ModelSliceStack.h"
-#include "Model/Classes/NMR_ModelMetaDataGroup.h" 
+#include "Model/Classes/NMR_ModelMetaDataGroup.h"
 
-#include "Common/Mesh/NMR_Mesh.h" 
-#include "Common/MeshInformation/NMR_MeshInformation.h" 
-#include "Common/MeshInformation/NMR_MeshInformation_Properties.h" 
-#include "Common/NMR_Exception.h" 
+#include "Common/Mesh/NMR_Mesh.h"
+#include "Common/MeshInformation/NMR_MeshInformation.h"
+#include "Common/MeshInformation/NMR_MeshInformation_Properties.h"
+#include "Common/NMR_Exception.h"
 #include <sstream>
 #include <memory>
 
@@ -81,6 +82,7 @@ namespace NMR {
 		m_ObjectLookup.clear();
 		m_TextureLookup.clear();
 		m_BaseMaterialLookup.clear();
+		m_ColorGroupLookup.clear();
 	}
 
 	const std::string CModel::curPath()
@@ -449,6 +451,10 @@ namespace NMR {
 		if (pBaseMaterial != nullptr)
 			m_BaseMaterialLookup.push_back(pResource);
 
+		CModelColorGroupResource * pColorGroup = dynamic_cast<CModelColorGroupResource *> (pResource.get());
+		if (pColorGroup != nullptr)
+			m_ColorGroupLookup.push_back(pResource);
+
 		CModelTexture2DResource * pTexture2D = dynamic_cast<CModelTexture2DResource *> (pResource.get());
 		if (pTexture2D != nullptr)
 			m_TextureLookup.push_back(pResource);
@@ -466,6 +472,7 @@ namespace NMR {
 		m_MetaDataGroup->clear();
 		m_ObjectLookup.clear();
 		m_BaseMaterialLookup.clear();
+		m_ColorGroupLookup.clear();
 		m_BuildItems.clear();
 		m_ResourceMap.clear();
 		m_Resources.clear();
@@ -487,8 +494,7 @@ namespace NMR {
 
 	nfUint32 CModel::getBaseMaterialCount()
 	{
-		return (nfUint32) m_BaseMaterialLookup.size();
-
+		return (nfUint32)m_BaseMaterialLookup.size();
 	}
 
 	PModelResource CModel::getBaseMaterialResource(_In_ nfUint32 nIndex)
@@ -498,7 +504,6 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_INVALIDINDEX);
 
 		return m_BaseMaterialLookup[nIndex];
-
 	}
 
 	CModelBaseMaterialResource * CModel::getBaseMaterial(_In_ nfUint32 nIndex)
@@ -522,28 +527,84 @@ namespace NMR {
 			CModelBaseMaterialResource * pOldMaterial = pSourceModel->getBaseMaterial(nIndex);
 			__NMRASSERT(pOldMaterial != nullptr);
 
-			PModelBaseMaterialResource pNewMaterial = std::make_shared<CModelBaseMaterialResource> (generateResourceID(), this);
+			PModelBaseMaterialResource pNewMaterial = std::make_shared<CModelBaseMaterialResource>(generateResourceID(), this);
 			pNewMaterial->mergeFrom(pOldMaterial);
-			
+
 			addResource(pNewMaterial);
 		}
 
-	} 
+	}
 
-
-	_Ret_maybenull_ CModelTexture2DResource * CModel::findTexture2D(_In_ PackageResourceID nResourceID)
+	_Ret_maybenull_ PModelColorGroupResource CModel::findColorGroup(_In_ PackageResourceID nResourceID)
 	{
 		PModelResource pResource = findResource(nResourceID);
 		if (pResource != nullptr) {
-			CModelTexture2DResource * pTexture2D = dynamic_cast<CModelTexture2DResource *> (pResource.get());
-			if (pTexture2D == nullptr)
+			PModelColorGroupResource pColorGroupResource = std::dynamic_pointer_cast<CModelColorGroupResource>(pResource);
+			if (pColorGroupResource.get() == nullptr)
 				throw CNMRException(NMR_ERROR_RESOURCETYPEMISMATCH);
-
-			return pTexture2D;
+			return pColorGroupResource;
 		}
-
 		return nullptr;
+	}
 
+	nfUint32 CModel::getColorGroupCount()
+	{
+		return (nfUint32)m_ColorGroupLookup.size();
+
+	}
+
+	PModelResource CModel::getColorGroupResource(_In_ nfUint32 nIndex)
+	{
+		nfUint32 nCount = getColorGroupCount();
+		if (nIndex >= nCount)
+			throw CNMRException(NMR_ERROR_INVALIDINDEX);
+
+		return m_ColorGroupLookup[nIndex];
+
+	}
+
+	CModelColorGroupResource * CModel::getColorGroup(_In_ nfUint32 nIndex)
+	{
+		CModelColorGroupResource * pColorGroup = dynamic_cast<CModelColorGroupResource *> (getColorGroupResource(nIndex).get());
+		if (pColorGroup == nullptr)
+			throw CNMRException(NMR_ERROR_RESOURCETYPEMISMATCH);
+
+		return pColorGroup;
+	}
+
+	void CModel::mergeColorGroups(_In_ CModel * pSourceModel)
+	{
+		if (pSourceModel == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		nfUint32 nCount = pSourceModel->getColorGroupCount();
+		nfUint32 nIndex;
+
+		for (nIndex = 0; nIndex < nCount; nIndex++) {
+			CModelColorGroupResource * pOldColor = pSourceModel->getColorGroup(nIndex);
+			__NMRASSERT(pOldColor != nullptr);
+
+			PModelColorGroupResource pNewColor = std::make_shared<CModelColorGroupResource>(generateResourceID(), this);
+			pNewColor->mergeFrom(pOldColor);
+
+			addResource(pNewColor);
+		}
+	}
+
+
+
+
+	_Ret_maybenull_ PModelTexture2DResource CModel::findTexture2D(_In_ PackageResourceID nResourceID)
+	{
+
+		PModelResource pResource = findResource(nResourceID);
+		if (pResource != nullptr) {
+			PModelTexture2DResource pTexture2DResource = std::dynamic_pointer_cast<CModelTexture2DResource>(pResource);
+			if (pTexture2DResource.get() == nullptr)
+				throw CNMRException(NMR_ERROR_RESOURCETYPEMISMATCH);
+			return pTexture2DResource;
+		}
+		return nullptr;
 	}
 
 	nfUint32 CModel::getTexture2DCount()
@@ -585,7 +646,7 @@ namespace NMR {
 			if (pTextureResource == nullptr)
 				throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-			PModelTexture2DResource pNewTextureResource = std::make_shared<CModelTexture2DResource>(generateResourceID(), this);
+			PModelTexture2DResource pNewTextureResource = CModelTexture2DResource::make(generateResourceID(), this, pTextureResource->getAttachment());
 			pNewTextureResource->copyFrom(pTextureResource);
 
 			addResource(pNewTextureResource);
