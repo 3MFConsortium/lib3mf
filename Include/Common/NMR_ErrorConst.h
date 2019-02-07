@@ -1216,5 +1216,11 @@ Extension Errors - Nurbs (0xB1XX)
 // Duplicate Nurbs Edge Mapping
 #define NMR_ERROR_NURBSDUPLICATEEDGEMAPPING 0xB114
 
+// Insufficient Nurbs Description
+#define NMR_ERROR_NURBSINSUFFICIENTDESCRIPTION 0xB115
+
+// Invalid Nurbs Curve Order
+#define NMR_ERROR_INVALIDNURBSCURVEORDER 0xB116
+
 #endif // __NMR_ERRORCONST
 
