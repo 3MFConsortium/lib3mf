@@ -141,7 +141,7 @@ namespace NMR {
 	}
 
 
-	// copy all parameters from source
+/*	// copy all parameters from source
 	void CModelNurbsSurface::copyFrom(_In_ CModelNurbsSurface * pSourceNurbs)
 	{
 		if (pSourceNurbs == nullptr)
@@ -184,7 +184,7 @@ namespace NMR {
 			}
 		}
 
-	}
+	 } */
 
 	nfBool CModelNurbsSurface::CheckValidity()
 	{

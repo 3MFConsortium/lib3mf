@@ -59,7 +59,7 @@ private:
 	* Put private members here.
 	*/
 
-	NMR::CModelNurbsSurface * m_pNurbsSurface;
+	NMR::PModelNurbsSurface m_pNurbsSurface;
 
 protected:
 
@@ -82,9 +82,9 @@ public:
 	CLib3MFNurbsSurface (NMR::PModelNurbsSurface pNurbsSurface);
 	~CLib3MFNurbsSurface ();
 
-	Lib3MF_double GetDegreeU ();
+	Lib3MF_uint32 GetDegreeU ();
 
-	Lib3MF_double GetDegreeV ();
+	Lib3MF_uint32 GetDegreeV ();
 
 	bool CheckValidity ();
 

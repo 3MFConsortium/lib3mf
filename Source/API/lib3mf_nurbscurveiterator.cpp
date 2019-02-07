@@ -24,12 +24,12 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CLib3MFNurbsSurfaceIterator
+Abstract: This is a stub class definition of CLib3MFNurbsCurveIterator
 
 */
 
-#include "lib3mf_nurbssurfaceiterator.hpp"
-#include "lib3mf_nurbssurface.hpp"
+#include "lib3mf_nurbscurve.hpp"
+#include "lib3mf_nurbscurveiterator.hpp"
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
@@ -38,23 +38,23 @@ Abstract: This is a stub class definition of CLib3MFNurbsSurfaceIterator
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CLib3MFNurbsSurfaceIterator 
+ Class definition of CLib3MFNurbsCurveIterator 
 **************************************************************************************************************************/
 
-ILib3MFNurbsSurface * CLib3MFNurbsSurfaceIterator::GetCurrentNurbsSurface()
+ILib3MFNurbsCurve * CLib3MFNurbsCurveIterator::GetCurrentNurbsCurve ()
 {
 	// Get Resource Count
-	Lib3MF_int32 nNurbsCount = (Lib3MF_int32)m_pResources.size();
-	if ((m_nCurrentIndex < 0) || (m_nCurrentIndex >= nNurbsCount))
+	Lib3MF_int32 nCurveCount = (Lib3MF_int32)m_pResources.size();
+	if ((m_nCurrentIndex < 0) || (m_nCurrentIndex >= nCurveCount))
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_ITERATORINVALIDINDEX);
 
 	// Create specific API class
 	NMR::PModelResource pResource = m_pResources[m_nCurrentIndex];
 
-	auto pNurbsSurface = std::dynamic_pointer_cast<NMR::CModelNurbsSurface> (pResource);
+	auto pNurbsCurve = std::dynamic_pointer_cast<NMR::CModelNurbsCurve> (pResource);
 
-	auto pACTNurbsSurface = std::make_unique<CLib3MFNurbsSurface>(pNurbsSurface);
+	auto pACTNurbsCurve = std::make_unique<CLib3MFNurbsCurve>(pNurbsCurve);
 
-	return pACTNurbsSurface.release();
-
+	return pACTNurbsCurve.release();
 }
+

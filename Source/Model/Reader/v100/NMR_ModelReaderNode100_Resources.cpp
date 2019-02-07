@@ -151,7 +151,10 @@ namespace NMR {
 			if (strcmp(pChildName, XML_3MF_ELEMENT_NURBSSURFACE) == 0) {
 				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode_ExactGeometry1901_NurbsSurface>(m_pModel, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
-
+			}
+			if (strcmp(pChildName, XML_3MF_ELEMENT_NURBSCURVE) == 0) {
+				//PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode_ExactGeometry1901_NurbsSurface>(m_pModel, m_pWarnings);
+				//pXMLNode->parseXML(pXMLReader);
 			}
 		}
 

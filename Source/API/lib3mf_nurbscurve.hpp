@@ -24,37 +24,65 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CLib3MFNurbsSurfaceIterator
+Abstract: This is the class declaration of CLib3MFNurbsCurve
 
 */
 
-#include "lib3mf_nurbssurfaceiterator.hpp"
-#include "lib3mf_nurbssurface.hpp"
-#include "lib3mf_interfaceexception.hpp"
+
+#ifndef __LIB3MF_LIB3MFNURBSCURVE
+#define __LIB3MF_LIB3MFNURBSCURVE
+
+#include "lib3mf_interfaces.hpp"
+
+// Parent classes
+#include "lib3mf_resource.hpp"
+#pragma warning( push)
+#pragma warning( disable : 4250)
 
 // Include custom headers here.
+#include "Model/Classes/NMR_ModelNurbsCurve.h"
+#include "Model/Classes/NMR_ModelResource.h" 
+#include "Model/Classes/NMR_Model.h"  
 
 
-using namespace Lib3MF::Impl;
+namespace Lib3MF {
+namespace Impl {
+
 
 /*************************************************************************************************************************
- Class definition of CLib3MFNurbsSurfaceIterator 
+ Class declaration of CLib3MFNurbsCurve 
 **************************************************************************************************************************/
 
-ILib3MFNurbsSurface * CLib3MFNurbsSurfaceIterator::GetCurrentNurbsSurface()
-{
-	// Get Resource Count
-	Lib3MF_int32 nNurbsCount = (Lib3MF_int32)m_pResources.size();
-	if ((m_nCurrentIndex < 0) || (m_nCurrentIndex >= nNurbsCount))
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_ITERATORINVALIDINDEX);
+class CLib3MFNurbsCurve : public virtual ILib3MFNurbsCurve, public virtual CLib3MFResource {
+private:
 
-	// Create specific API class
-	NMR::PModelResource pResource = m_pResources[m_nCurrentIndex];
+	NMR::PModelNurbsCurve m_pNurbsCurve;
+protected:
 
-	auto pNurbsSurface = std::dynamic_pointer_cast<NMR::CModelNurbsSurface> (pResource);
+public:
 
-	auto pACTNurbsSurface = std::make_unique<CLib3MFNurbsSurface>(pNurbsSurface);
+	CLib3MFNurbsCurve() = delete;
+	CLib3MFNurbsCurve(NMR::PModelNurbsCurve pNurbsCurve);
+	~CLib3MFNurbsCurve();
 
-	return pACTNurbsSurface.release();
+	Lib3MF_uint32 GetDegree ();
 
-}
+	bool CheckValidity ();
+
+	void GetKnots (Lib3MF_uint64 nKnotsBufferSize, Lib3MF_uint64* pKnotsNeededCount, sLib3MFNURBSKnot * pKnotsBuffer);
+
+	void SetKnots (const Lib3MF_uint64 nKnotsBufferSize, const sLib3MFNURBSKnot * pKnotsBuffer);
+
+	void AddKnot (const Lib3MF_uint32 nMultiplicity, const Lib3MF_double dValue);
+
+	void SetControlPoint (const Lib3MF_uint32 nIndex, const Lib3MF_double dX, const Lib3MF_double dY, const Lib3MF_double dZ, const Lib3MF_double dW);
+
+	void GetControlPoint (const Lib3MF_uint32 nIndex, Lib3MF_double & dX, Lib3MF_double & dY, Lib3MF_double & dZ, Lib3MF_double & dW);
+
+};
+
+} // namespace Impl
+} // namespace Lib3MF
+
+#pragma warning( pop )
+#endif // __LIB3MF_LIB3MFNURBSCURVE

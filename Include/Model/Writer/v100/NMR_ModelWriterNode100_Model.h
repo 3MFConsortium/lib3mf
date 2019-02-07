@@ -71,7 +71,8 @@ namespace NMR {
 		void writeTex2Coords();
 		void writeObjects();
 		void writeBuild();
-		void writeNurbs();
+		void writeNurbsCurves();
+		void writeNurbsSurfaces();
 
 		void writeSliceStacks();
 		void writeSliceStack(_In_ CModelSliceStack *pSliceStack);

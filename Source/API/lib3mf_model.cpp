@@ -45,11 +45,15 @@ Abstract: This is a stub class definition of CLib3MFModel
 #include "lib3mf_slicestack.hpp"
 #include "lib3mf_nurbssurface.hpp"
 #include "lib3mf_nurbssurfaceiterator.hpp"
+#include "lib3mf_nurbscurve.hpp"
+#include "lib3mf_nurbscurveiterator.hpp"
+
 // Include custom headers here.
 
 #include "Model/Classes/NMR_ModelMeshObject.h"
 #include "Model/Classes/NMR_ModelComponentsObject.h"
 #include "Model/Classes/NMR_ModelNurbsSurface.h"
+#include "Model/Classes/NMR_ModelNurbsCurve.h"
 #include "Common/Platform/NMR_ImportStream_Memory.h"
 
 #include "lib3mf_utils.hpp"
@@ -189,6 +193,24 @@ ILib3MFNurbsSurfaceIterator * CLib3MFModel::GetNurbsSurfaces()
 	return pResult.release();
 }
 
+
+ILib3MFNurbsCurveIterator * CLib3MFModel::GetNurbsCurves()
+{
+	auto pResult = std::make_unique<CLib3MFNurbsCurveIterator>();
+	Lib3MF_uint32 nResourceCount = model().getResourceCount();
+	Lib3MF_uint32 nIdx;
+
+	for (nIdx = 0; nIdx < nResourceCount; nIdx++) {
+		auto resource = model().getResource(nIdx);
+		if (dynamic_cast<NMR::CModelNurbsCurve *>(resource.get()))
+			pResult->addResource(resource);
+	}
+
+	return pResult.release();
+
+}
+
+
 ILib3MFResourceIterator * CLib3MFModel::GetResources ()
 {
 	auto pResult = std::make_unique<CLib3MFResourceIterator>();
@@ -317,6 +339,17 @@ ILib3MFNurbsSurface * CLib3MFModel::AddNurbsSurface(const Lib3MF_uint32 nDegreeU
 	return new CLib3MFNurbsSurface (pNewResource);
 	
 }
+
+ILib3MFNurbsCurve * CLib3MFModel::AddNurbsCurve(const Lib3MF_uint32 nDegree, const Lib3MF_uint32 nControlPoints)
+{
+	NMR::ModelResourceID NewResourceID = model().generateResourceID();
+	NMR::PModelNurbsCurve pNewResource = std::make_shared<NMR::CModelNurbsCurve>(NewResourceID, &model(), nDegree, nControlPoints);
+
+	model().addResource(pNewResource);
+	return new CLib3MFNurbsCurve(pNewResource);
+
+}
+
 
 
 ILib3MFComponentsObject * CLib3MFModel::AddComponentsObject ()

@@ -35,6 +35,8 @@ Source/API/lib3mf_meshobject.cpp
 Source/API/lib3mf_metadata.cpp
 Source/API/lib3mf_metadatagroup.cpp
 Source/API/lib3mf_model.cpp
+Source/API/lib3mf_nurbscurve.cpp
+Source/API/lib3mf_nurbscurveiterator.cpp
 Source/API/lib3mf_nurbssurface.cpp
 Source/API/lib3mf_nurbssurfaceiterator.cpp
 Source/API/lib3mf_object.cpp
@@ -115,6 +117,7 @@ Source/Model/Classes/NMR_ModelMeshObject.cpp
 Source/Model/Classes/NMR_ModelMetaData.cpp
 Source/Model/Classes/NMR_ModelMetaDataGroup.cpp
 Source/Model/Classes/NMR_ModelNurbsSurface.cpp
+Source/Model/Classes/NMR_ModelNurbsCurve.cpp
 Source/Model/Classes/NMR_ModelObject.cpp
 Source/Model/Classes/NMR_ModelResource.cpp
 Source/Model/Classes/NMR_ModelTexture2D.cpp

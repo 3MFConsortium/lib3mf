@@ -137,8 +137,6 @@ namespace NMR {
 		void setDegree(_In_ nfUint32 nDegreeU, _In_ nfUint32 nDegreeV);
 		void setControlPointCount(_In_ nfUint32 nControlPointCountU, _In_ nfUint32 nControlPointCountV);
 							
-		void copyFrom(_In_ CModelNurbsSurface * pSourceNurbs);
-
 		nfBool CheckValidity();
 
 		void addKnotU(_In_ const nfUint32 nMultiplicity, _In_ const nfDouble dValue);

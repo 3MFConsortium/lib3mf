@@ -122,7 +122,7 @@ namespace NMR {
 
 	void CModelReaderNode_ExactGeometry1901_UVTCoord::retrieveCoord(_Out_ nfDouble & dU, _Out_ nfDouble & dV, _Out_ nfDouble & dT)
 	{
-		if ((!m_bHasU) || (!m_bHasV) || (!m_bHasT))
+		if ((!m_bHasU) || (!m_bHasV))
 			throw CNMRException(NMR_ERROR_NURBSMISSINGCOORDINATE);
 
 		dU = m_U;

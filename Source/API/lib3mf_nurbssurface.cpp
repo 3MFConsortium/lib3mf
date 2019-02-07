@@ -47,7 +47,7 @@ using namespace Lib3MF::Impl;
 CLib3MFNurbsSurface::CLib3MFNurbsSurface(NMR::PModelNurbsSurface pNurbsSurface)
 	: CLib3MFResource(pNurbsSurface)
 {
-	m_pNurbsSurface = pNurbsSurface.get();
+	m_pNurbsSurface = pNurbsSurface;
 	if (m_pNurbsSurface == nullptr)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
 
@@ -59,12 +59,12 @@ CLib3MFNurbsSurface::~CLib3MFNurbsSurface()
 }
 
 
-Lib3MF_double CLib3MFNurbsSurface::GetDegreeU ()
+Lib3MF_uint32 CLib3MFNurbsSurface::GetDegreeU ()
 {
 	return m_pNurbsSurface->getDegreeU();
 }
 
-Lib3MF_double CLib3MFNurbsSurface::GetDegreeV ()
+Lib3MF_uint32 CLib3MFNurbsSurface::GetDegreeV ()
 {
 	return m_pNurbsSurface->getDegreeV();
 }

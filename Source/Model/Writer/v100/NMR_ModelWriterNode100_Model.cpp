@@ -40,6 +40,7 @@ This is the class for exporting the 3mf model stream root node.
 #include "Model/Classes/NMR_ModelBaseMaterials.h"
 #include "Model/Classes/NMR_ModelTexture2D.h"
 #include "Model/Classes/NMR_ModelNurbsSurface.h"
+#include "Model/Classes/NMR_ModelNurbsCurve.h"
 #include "Model/Classes/NMR_ModelMeshObject.h"
 #include "Model/Classes/NMR_ModelComponentsObject.h"
 #include "Model/Classes/NMR_Model.h"
@@ -269,8 +270,68 @@ namespace NMR {
 
 	}
 
+	void CModelWriterNode100_Model::writeNurbsCurves()
+	{
+		nfUint32 nResourceCount = m_pModel->getResourceCount();
+		nfUint32 nResourceIndex;
+		nfUint32 nIndex;
 
-	void CModelWriterNode100_Model::writeNurbs()
+		for (nResourceIndex = 0; nResourceIndex < nResourceCount; nResourceIndex++) {
+			CModelResource * pResource = m_pModel->getResource(nResourceIndex).get();
+			CModelNurbsCurve * pCurve = dynamic_cast<CModelNurbsCurve *> (pResource);
+
+			if (pCurve != nullptr) {
+				
+				writeStartElementWithPrefix(XML_3MF_ELEMENT_NURBSCURVE, XML_3MF_NAMESPACEPREFIX_NURBS);
+
+				// Write Object ID (mandatory)
+				writeIntAttribute(XML_3MF_ATTRIBUTE_NURBS_ID, pCurve->getResourceID()->getUniqueID());
+				writeIntAttribute(XML_3MF_ATTRIBUTE_NURBS_DEGREE, pCurve->getDegree());
+
+				writeStartElementWithPrefix(XML_3MF_ELEMENT_NURBS_KNOTS, XML_3MF_NAMESPACEPREFIX_NURBS);
+				nfUint32 nKnotCount = pCurve->getKnotCount();
+				for (nIndex = 0; nIndex < nKnotCount; nIndex++) {
+					nfUint32 nMultiplicity;
+					nfDouble dValue;
+					pCurve->getKnot(nIndex, nMultiplicity, dValue);
+
+					writeStartElementWithPrefix(XML_3MF_ELEMENT_NURBS_KNOT, XML_3MF_NAMESPACEPREFIX_NURBS);
+					writeIntAttribute(XML_3MF_ATTRIBUTE_NURBS_MULTIPLICITY, nMultiplicity);
+					writeDoubleAttribute(XML_3MF_ATTRIBUTE_NURBS_VALUE, dValue);
+					writeEndElement();
+				}
+				writeFullEndElement();
+
+
+
+				writeStartElementWithPrefix(XML_3MF_ELEMENT_NURBS_CONTROLPOINTS, XML_3MF_NAMESPACEPREFIX_NURBS);
+				nfUint32 nControlPointCount = pCurve->getControlPointCount();
+				for (nIndex = 0; nIndex < nControlPointCount; nIndex++) {
+					nfDouble dX, dY, dZ, dW;
+					pCurve->getControlPoint(nIndex, dX, dY, dZ, dW);
+
+					writeStartElementWithPrefix(XML_3MF_ELEMENT_NURBS_CONTROLPOINT, XML_3MF_NAMESPACEPREFIX_NURBS);
+					writeDoubleAttribute(XML_3MF_ATTRIBUTE_NURBS_X, dX);
+					writeDoubleAttribute(XML_3MF_ATTRIBUTE_NURBS_Y, dY);
+					writeDoubleAttribute(XML_3MF_ATTRIBUTE_NURBS_Z, dZ);
+					writeDoubleAttribute(XML_3MF_ATTRIBUTE_NURBS_W, dW);
+					writeEndElement();					
+
+				}
+				writeFullEndElement();
+
+
+
+				writeFullEndElement();
+
+			}
+
+		}
+
+	}
+
+
+	void CModelWriterNode100_Model::writeNurbsSurfaces()
 	{
 		nfUint32 nResourceCount = m_pModel->getResourceCount();
 		nfUint32 nResourceIndex;
@@ -378,7 +439,7 @@ namespace NMR {
 						writeStartElementWithPrefix(XML_3MF_ELEMENT_NURBS_UVTCOORD, XML_3MF_NAMESPACEPREFIX_NURBS);
 						writeFloatAttribute(XML_3MF_ATTRIBUTE_NURBS_U, (nfFloat) dU);
 						writeFloatAttribute(XML_3MF_ATTRIBUTE_NURBS_V, (nfFloat) dV);
-						writeFloatAttribute(XML_3MF_ATTRIBUTE_NURBS_T, (nfFloat) dT);
+						//writeFloatAttribute(XML_3MF_ATTRIBUTE_NURBS_T, (nfFloat) dT);
 						writeEndElement();
 					}
 
@@ -690,8 +751,10 @@ namespace NMR {
 
 		if (m_bIsRootModel)
 		{
-			if (m_bWriteNurbsExtension)
-				writeNurbs();
+			if (m_bWriteNurbsExtension) {
+				writeNurbsCurves();
+				writeNurbsSurfaces();
+			}
 
 			if (m_bWriteBaseMaterials)
 				writeBaseMaterials();

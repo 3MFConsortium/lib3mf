@@ -294,7 +294,9 @@ These are given by the 3MF Standard
 #define XML_3MF_ATTRIBUTE_COLOR_VALUE               "value"
 
 // Nurbs Surfaces
+#define XML_3MF_ELEMENT_NURBSCURVE 				    "nurbscurve"
 #define XML_3MF_ELEMENT_NURBSSURFACE				"nurbssurface"
+#define XML_3MF_ELEMENT_NURBS_KNOTS                 "knots"
 #define XML_3MF_ELEMENT_NURBS_UKNOTS                "uknots"
 #define XML_3MF_ELEMENT_NURBS_VKNOTS                "vknots"
 #define XML_3MF_ELEMENT_NURBS_KNOT                  "knot"
@@ -305,9 +307,10 @@ These are given by the 3MF Standard
 #define XML_3MF_ELEMENT_NURBS_EDGEMAPPING           "edgemapping"
 #define XML_3MF_ELEMENT_NURBS_EDGE                  "edge"
 #define XML_3MF_ELEMENT_NURBS_UVCOORD               "uvcoord"
-#define XML_3MF_ELEMENT_NURBS_UVTCOORD               "uvtcoord"
+#define XML_3MF_ELEMENT_NURBS_UVTCOORD              "uvtcoord"
 
 #define XML_3MF_ATTRIBUTE_NURBS_ID                  "id"
+#define XML_3MF_ATTRIBUTE_NURBS_DEGREE              "degree"
 #define XML_3MF_ATTRIBUTE_NURBS_DEGREEU             "degreeu"
 #define XML_3MF_ATTRIBUTE_NURBS_DEGREEV             "degreev"
 #define XML_3MF_ATTRIBUTE_NURBS_MULTIPLICITY        "multiplicity"
