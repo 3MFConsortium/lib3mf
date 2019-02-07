@@ -188,6 +188,12 @@
 		<member name="PropertyIDs" type="uint32" rows="3" />
 	</struct>
 
+  <struct name="TriangleNurbsProperties">
+    <member name="ResourceID" type="uint32" />
+    <member name="UVIDs" type="uint32" rows="3" />
+    <member name="EdgeIDs" type="uint32" rows="3" />
+  </struct>
+
 	<struct name="Position">
 		<member name="coordinates" type="single" rows="3" />
 	</struct>
@@ -199,6 +205,25 @@
 	<struct name="Transform">
 		<member name="Fields" type="single" rows="3" columns="4" />
 	</struct>
+
+  <struct name="NURBSKnot">
+    <member name="Multiplicity" type="uint32" />
+    <member name="Value" type="double" />
+  </struct>
+
+  <struct name="NURBSUVCoordinate">
+    <member name="Id" type="uint32" />
+    <member name="U" type="double" />
+    <member name="V" type="double" />
+  </struct>
+
+  <struct name="NURBSEdgeMapping">
+    <member name="Id" type="uint32" />
+    <member name="CurveId" type="uint32" />
+    <member name="T1" type="double" />
+    <member name="T2" type="double" />
+  </struct>
+  
 
 	<struct name="Color">
 		<member name="Red" type="uint8" />
@@ -336,6 +361,18 @@
 		</method>
 	</class>
 
+  <class name="NurbsCurveIterator" parent="ResourceIterator">
+    <method name="GetCurrentNurbsCurve" description="Returns the Nurbs Curve the iterator points at.">
+      <param name="Resource" type="handle" class="NurbsCurve" pass="return" description="returns the resource instance." />
+    </method>
+  </class>
+
+  <class name="NurbsSurfaceIterator" parent="ResourceIterator">
+    <method name="GetCurrentNurbsSurface" description="Returns the Nurbs Surface the iterator points at.">
+      <param name="Resource" type="handle" class="NurbsSurface" pass="return" description="returns the resource instance." />
+    </method>
+  </class>
+  
 	<class name="MetaData">
 		<method name="GetNameSpace" dllsuffix="utf8" description = "returns the namespace URL of the metadata">
 			<param name="NameSpace" type="string" pass="return" description="the namespace URL of the metadata" />
@@ -497,6 +534,7 @@
 			<param name="Indices" type="struct" class="Triangle" pass="in" description="contains the triangle indices." />
 			<param name="NewIndex" type="uint32" pass="return" description="Index of the new triangle" />
 		</method>
+
 		<method name="GetTriangleIndices" description="Get all triangles of a mesh object">
 			<param name="Indices" type="structarray" class="Triangle" pass="out" description="contains the triangle indices." />
 		</method>
@@ -507,13 +545,28 @@
 		<method name="GetTriangleProperties" description="Gets the properties of a single triangle of a mesh object.">
 			<param name="Index" type="uint32" pass="in" description="Index of the triangle (0 to trianglecount - 1)" />
 			<param name="Property" type="struct" class="TriangleProperties" pass="out" description="returns the triangle properties." />
-		</method>
+    </method>    
 		<method name="SetAllTriangleProperties" description="Sets the properties of all triangles of a mesh object.">
 			<param name="PropertiesArray" type="structarray" class="TriangleProperties" pass="in" description="contains the triangle properties array. Must have trianglecount elements." />
 		</method>
 		<method name="GetAllTriangleProperties" description="Gets the properties of all triangles of a mesh object.">
-			<param name="PropertiesArray" type="structarray" class="TriangleProperties" pass="out" description="returns the triangle properties array. Must have trianglecount elements." />
+      <param name="PropertiesArray" type="structarray" class="TriangleProperties" pass="out" description="returns the triangle properties array." />
 		</method>
+
+    <method name="SetTriangleNurbsProperties" description="Sets the Nurbs properties of a single triangle of a mesh object.">
+      <param name="Index" type="uint32" pass="in" description="Index of the triangle (0 to trianglecount - 1)" />
+      <param name="Properties" type="struct" class="TriangleNurbsProperties" pass="in" description="contains the triangle Nurbs properties." />
+    </method>
+    <method name="GetTriangleNurbsProperties" description="Gets the Nurbs properties of a single triangle of a mesh object.">
+      <param name="Index" type="uint32" pass="in" description="Index of the triangle (0 to trianglecount - 1)" />
+      <param name="Property" type="struct" class="TriangleNurbsProperties" pass="out" description="returns the triangle Nurbs properties." />
+    </method>
+    <method name="SetAllTriangleNurbsProperties" description="Sets the Nurbs properties of all triangles of a mesh object.">
+      <param name="PropertiesArray" type="structarray" class="TriangleNurbsProperties" pass="in" description="contains the Nurbs triangle properties array. Must have trianglecount elements." />
+    </method>
+    <method name="GetAllTriangleNurbsProperties" description="Gets the Nurbs properties of all triangles of a mesh object.">
+      <param name="PropertiesArray" type="structarray" class="TriangleNurbsProperties" pass="out" description="returns the Nurbs triangle properties array." />
+    </method>
 
 		<method name="SetGeometry" description="Set all triangles of a mesh object">
 			<param name="Vertices" type="structarray" class="Position" pass="in" description="contains the positions." />
@@ -814,8 +867,187 @@
 		</method>
 	</class>
 
+  
+  <class name="NurbsCurve" parent="Resource">
+	
+    <method name="GetDegree" description = "Retrieves the surface degree.">
+      <param name="Degree" type="uint32" pass="return" description="the degree." />
+    </method>
+
+    <method name="CheckValidity" description = "Checks if the surface describes a valid NURBS Curve">
+      <param name="IsValid" type="bool" pass="return" description="returns if the curve is valid." />
+    </method>
+
+    <method name="GetKnots" description = "Retrieves the knots of the curve.">
+      <param name="Knots" type="structarray" class="NURBSKnot" pass="out" description="returns an array of knots." />
+    </method>
+
+    <method name="SetKnots" description = "Sets the knots of the curve.">
+      <param name="Knots" type="structarray" class="NURBSKnot" pass="in" description="sets an array of knots." />
+    </method>
+
+    <method name="AddKnot" description = "Adds a knot to the curve">
+      <param name="Multiplicity" type="uint32" pass="in" description="multiplicity of the knot." />
+      <param name="Value" type="double" pass="in" description="value of the knot." />
+    </method>
+
+
+    <method name="SetControlPoint" description = "Sets the coordinates of a control point.">
+      <param name="Index" type="uint32" pass="in" description="Index." />
+      <param name="X" type="double" pass="in" description="Position X" />
+      <param name="Y" type="double" pass="in" description="Position Y" />
+      <param name="Z" type="double" pass="in" description="Position Z" />
+      <param name="W" type="double" pass="in" description="Weight" />
+    </method>
+
+    <method name="GetControlPoint" description = "Gets the coordinates of a control point.">
+      <param name="Index" type="uint32" pass="in" description="Index" />
+      <param name="X" type="double" pass="out" description="Position X" />
+      <param name="Y" type="double" pass="out" description="Position Y" />
+      <param name="Z" type="double" pass="out" description="Position Z" />
+      <param name="W" type="double" pass="out" description="Weight" />
+    </method>
+
+  </class>
+    
+    
+  <class name="NurbsSurface" parent="Resource">
+	
+    <method name="GetDegreeU" description = "Retrieves the surface degree in U.">
+      <param name="Degree" type="uint32" pass="return" description="the degree in U." />
+    </method>
+
+    <method name="GetDegreeV" description = "Retrieves the surface degree in V.">
+      <param name="Degree" type="uint32" pass="return" description="the degree in V." />
+    </method>
+
+    <method name="CheckValidity" description = "Checks if the surface describes a valid NURBS">
+      <param name="IsValid" type="bool" pass="return" description="returns if the surface is valid." />
+    </method>
+
+    <method name="GetKnotsU" description = "Retrieves the knots of the surface in U.">
+      <param name="Knots" type="structarray" class="NURBSKnot" pass="out" description="returns an array of knots." />
+    </method>
+
+    <method name="SetKnotsU" description = "Sets the knots of the surface in U.">
+      <param name="Knots" type="structarray" class="NURBSKnot" pass="in" description="sets an array of knots." />
+    </method>
+
+    <method name="AddKnotU" description = "Adds a knot to the surface in U">
+      <param name="Multiplicity" type="uint32" pass="in" description="multiplicity of the knot." />
+      <param name="Value" type="double" pass="in" description="value of the knot." />
+    </method>
+
+    <method name="GetKnotsV" description = "Retrieves the knots of the surface in V.">
+      <param name="Knots" type="structarray" class="NURBSKnot" pass="out" description="returns an array of knots." />
+    </method>
+
+    <method name="SetKnotsV" description = "Sets the knots of the surface in V.">
+      <param name="Knots" type="structarray" class="NURBSKnot" pass="in" description="sets an array of knots." />
+    </method>
+
+    <method name="AddKnotV" description = "Adds a knot to the surface in V">
+      <param name="Multiplicity" type="uint32" pass="in" description="multiplicity of the knot." />
+      <param name="Value" type="double" pass="in" description="value of the knot." />
+    </method>
+
+    <method name="GetUVCoordinate" description = "Retrieves a UV Coordinate of the surface.">
+      <param name="Id" type="uint32" pass="in" description="Id of the coordinate." />
+      <param name="UVCoordinate" type="struct" class="NURBSUVCoordinate" pass="return" description="returns the uv coordinates." />
+    </method>
+
+    <method name="GetUVCoordinates" description = "Retrieves the UV Coordinates of the surface.">
+      <param name="UVCoordinates" type="structarray" class="NURBSUVCoordinate" pass="out" description="returns an array of uv coordinates." />
+    </method>
+
+    <method name="AddUVCoordinate" description = "Retrieves the UV Coordinates of the surface.">
+      <param name="U" type="double" pass="in" description="the u coordinate to add." />
+      <param name="V" type="double" pass="in" description="the v coordinate to add." />
+      <param name="Id" type="uint32" pass="return" description="Id of the coordinate." />
+    </method>
+
+    <method name="RemoveUVCoordinate" description = "Remove a UV Coordinate of the surface.">
+      <param name="Id" type="uint32" pass="in" description="Id of the coordinate." />
+    </method>
+
+    <method name="HasUVCoordinate" description = "Checks if the surface has a UV Coordinate.">
+      <param name="Id" type="uint32" pass="in" description="Id of the coordinate." />
+      <param name="Exists" type="bool" pass="return" description="If the coordinate exists." />
+    </method>
+
+    <method name="GetEdgeMapping" description = "Retrieves a Edge Mapping of the surface.">
+      <param name="Id" type="uint32" pass="in" description="Id of the coordinate." />
+      <param name="EdgeMapping" type="struct" class="NURBSEdgeMapping" pass="return" description="returns the edge mapping info." />
+    </method>
+
+    <method name="GetEdgeMappings" description = "Retrieves a Edge Mappings of the surface.">
+      <param name="EdgeMappings" type="structarray" class="NURBSEdgeMapping" pass="out" description="returns the edge mapping info." />
+    </method>
+
+    <method name="AddEdgeMapping" description = "Retrieves the Edge Mapping of the surface.">
+      <param name="CurveID" type="uint32" pass="in" description="the Resource ID of the curve" />
+      <param name="T1" type="double" pass="in" description="the first T coordinate of the edge on the curve." />
+      <param name="T2" type="double" pass="in" description="the second T coordinate of the edge on the curve." />
+      <param name="Id" type="uint32" pass="return" description="Id of the coordinate." />
+    </method>
+
+    <method name="RemoveEdgeMapping" description = "Remove a Edge Mapping of the surface.">
+      <param name="Id" type="uint32" pass="in" description="Id of the edge mapping." />
+    </method>
+
+    <method name="HasEdgeMapping" description = "Checks if the surface has a Edge Mapping.">
+      <param name="Id" type="uint32" pass="in" description="Id of the edge mapping." />
+      <param name="Exists" type="bool" pass="return" description="If the edge exists." />
+    </method>
+
+
+    <method name="AddEdgeMappingUVCoordinate" description = "Adds new UV Coordinates to an edge mapping.">
+      <param name="Id" type="uint32" pass="in" description="Id of the edge mapping." />
+      <param name="U" type="double" pass="in" description="the u coordinate to add." />
+      <param name="V" type="double" pass="in" description="the v coordinate to add." />
+      <param name="T" type="double" pass="in" description="the associated t parameter of the curve" />
+    </method>
+
+    <method name="ClearEdgeMappingUVCoordinates" description = "Clears the UV Coordinates of an edge mapping.">
+      <param name="Id" type="uint32" pass="in" description="Id of the edge mapping." />
+    </method>
+
+    <method name="GetEdgeMappingUVCoordinate" description = "Retrieves the UV Coordinates to an edge mapping.">
+      <param name="Id" type="uint32" pass="in" description="Id of the edge mapping." />
+      <param name="Index" type="uint32" pass="in" description="Index of the Id mapping" />
+      <param name="U" type="double" pass="out" description="the u coordinate to add." />
+      <param name="V" type="double" pass="out" description="the v coordinate to add." />
+      <param name="T" type="double" pass="out" description="the associated t parameter of the curve" />
+    </method>
+
+    <method name="GetEdgeMappingUVCoordinateCount" description = "Retrieves the count of UV Coordinates of an edge mapping.">
+      <param name="Id" type="uint32" pass="in" description="Id of the edge mapping." />
+      <param name="Count" type="uint32" pass="return" description="count of UV Coordinates." />
+    </method>
+
+
+    <method name="SetControlPoint" description = "Sets the coordinates of a control point.">
+      <param name="IndexU" type="uint32" pass="in" description="Index in U." />
+      <param name="IndexV" type="uint32" pass="in" description="Index in V." />
+      <param name="X" type="double" pass="in" description="Position X" />
+      <param name="Y" type="double" pass="in" description="Position Y" />
+      <param name="Z" type="double" pass="in" description="Position Z" />
+      <param name="W" type="double" pass="in" description="Weight" />
+    </method>
+
+    <method name="GetControlPoint" description = "Gets the coordinates of a control point.">
+      <param name="IndexU" type="uint32" pass="in" description="Index in U." />
+      <param name="IndexV" type="uint32" pass="in" description="Index in V." />
+      <param name="X" type="double" pass="out" description="Position X" />
+      <param name="Y" type="double" pass="out" description="Position Y" />
+      <param name="Z" type="double" pass="out" description="Position Z" />
+      <param name="W" type="double" pass="out" description="Weight" />
+    </method>
+
+  </class>
 
 	<class name="BuildItem">
+	
 		<method name="GetObjectResource" description="Retrieves the object resource associated to a build item">
 			<param name="ObjectResource" type="handle" class="Object" pass="return" description="returns the associated resource instance"/>
 		</method>
@@ -1016,7 +1248,16 @@
 		<method name="GetSliceStacks" description="creates a resource iterator instance with all slice stack resources.">
 			<param name="ResourceIterator" type="handle" class="ResourceIterator" pass="return" description="returns the iterator instance." />
 		</method>
-		<method name="MergeToModel" description = "Merges all components and objects which are referenced by a build item into a mesh. The memory is duplicated and a new model is created.">
+    
+    <method name="GetNurbsCurves" description="creates a resource iterator instance with all nurbs curve resources.">
+      <param name="ResourceIterator" type="handle" class="NurbsCurveIterator" pass="return" description="returns the iterator instance." />
+    </method>
+    
+    <method name="GetNurbsSurfaces" description="creates a resource iterator instance with all nurbs surface resources.">
+      <param name="ResourceIterator" type="handle" class="NurbsSurfaceIterator" pass="return" description="returns the iterator instance." />
+    </method>
+
+    <method name="MergeToModel" description = "Merges all components and objects which are referenced by a build item. The memory is duplicated and a new model is created.">
 			<param name="MergedModelInstance" type="handle" class="Model" pass="return" description="returns the merged model instance" />
 		</method>
 		<method name="AddMeshObject" description = "adds an empty mesh object to the model.">
@@ -1029,6 +1270,21 @@
 			<param name="ZBottom" type="double" pass="in" description="Bottom Z value of the slicestack"/>
 			<param name="SliceStackInstance" type="handle" class="SliceStack" pass="return" description="returns the new slicestack instance" />
 		</method>
+
+    <method name="AddNurbsSurface" description = "adds a NURBS Surface resource to the model.">
+      <param name="DegreeU" type="uint32" pass="in" description="degree in U" />
+      <param name="DegreeV" type="uint32" pass="in" description="degree in V" />
+      <param name="ControlPointsU" type="uint32" pass="in" description="number of control points in U" />
+      <param name="ControlPointsV" type="uint32" pass="in" description="number of control points in V" />
+      <param name="NurbsInstance" type="handle" class="NurbsSurface" pass="return" description=" returns the nurbs surface instance" />
+    </method>
+
+    <method name="AddNurbsCurve" description = "adds a NURBS Curve resource to the model.">
+      <param name="Degree" type="uint32" pass="in" description="degree" />
+      <param name="ControlPoints" type="uint32" pass="in" description="number of control points" />
+      <param name="NurbsInstance" type="handle" class="NurbsCurve" pass="return" description=" returns the nurbs curve instance" />
+    </method>
+
 		<method name="AddTexture2DFromAttachment" description = "adds a texture2d resource to the model. Its path is given by that of an existing attachment.">
 			<param name="TextureAttachment" type="handle" class="Attachment" pass="in" description="attachment containing the image data." />
 			<param name="Texture2DInstance" type="handle" class="Texture2D" pass="return" description="returns the new texture instance." />

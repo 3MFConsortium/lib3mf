@@ -35,6 +35,7 @@ A triangles reader model node is a parser for the triangles node of an XML Model
 #define __NMR_MODELREADERNODE100_TRIANGLES
 
 #include "Common/MeshInformation/NMR_MeshInformation_Properties.h"
+#include "Common/MeshInformation/NMR_MeshInformation_Nurbs.h"
 #include "Model/Reader/NMR_ModelReaderNode.h"
 #include "Model/Reader/NMR_ModelReader_TexCoordMapping.h"
 #include "Model/Classes/NMR_ModelComponent.h"
@@ -56,6 +57,7 @@ namespace NMR {
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 
 		_Ret_notnull_ CMeshInformation_Properties * createPropertiesInformation();
+		_Ret_notnull_ CMeshInformation_Nurbs * createNurbsInformation();
 	public:
 		CModelReaderNode100_Triangles() = delete;
 		CModelReaderNode100_Triangles(_In_ CModel * pModel, _In_ CMesh * pMesh, _In_ PModelReaderWarnings pWarnings, _In_ PModelReader_TexCoordMapping pTexCoordMapping, _In_ ModelResourceID nDefaultPropertyID, _In_ ModelResourceIndex nDefaultPropertyIndex);

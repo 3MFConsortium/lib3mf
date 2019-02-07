@@ -33,6 +33,7 @@ This is the class for exporting the 3mf mesh node.
 
 #include "Model/Writer/v100/NMR_ModelWriterNode100_Mesh.h"
 #include "Common/MeshInformation/NMR_MeshInformation_Properties.h"
+#include "Common/MeshInformation/NMR_MeshInformation_Nurbs.h"
 
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_Exception_Windows.h"
@@ -70,10 +71,13 @@ namespace NMR {
 		m_nVertexBufferPos = 0;
 		m_nBeamBufferPos = 0;
 		m_nBeamRefBufferPos = 0;
+		m_nNurbsBufferPos = 0;
+
 		putVertexString(MODELWRITERMESH100_VERTEXLINESTART);
 		putTriangleString(MODELWRITERMESH100_TRIANGLELINESTART);
 		putBeamString(MODELWRITERMESH100_BEAMLATTICE_BEAMLINESTART);
 		putBeamRefString(MODELWRITERMESH100_BEAMLATTICE_REFLINESTART);
+		putNurbsString(MODELWRITERMESH100_NURBSLINESTART);
 	}
 
 
@@ -137,15 +141,21 @@ namespace NMR {
 
 		// Retrieve Mesh Informations
 		CMeshInformation_Properties * pProperties = NULL;
+		CMeshInformation_Nurbs * pNurbs = NULL;
 		
 		CMeshInformationHandler * pMeshInformationHandler = pMesh->getMeshInformationHandler();
 		if (pMeshInformationHandler) {
 			CMeshInformation * pInformation;
 
-			// Get Base Materials
+			// Get Properties
 			pInformation = pMeshInformationHandler->getInformationByType(0, emiProperties);
 			if (pInformation)
 				pProperties = dynamic_cast<CMeshInformation_Properties *> (pInformation);
+			// Get Nurbs
+			pInformation = pMeshInformationHandler->getInformationByType(0, emiNurbs);
+			if (pInformation)
+				pNurbs = dynamic_cast<CMeshInformation_Nurbs *> (pInformation);
+
 		}
 		
 		// Write Triangles
@@ -171,9 +181,49 @@ namespace NMR {
 				if (pFaceData != nullptr) {
 					if (pFaceData->m_nResourceID) {
 						nPropertyID = pFaceData->m_nResourceID;
-						nPropertyIndex1 = m_pPropertyIndexMapping->mapPropertyIDToIndex(nPropertyID, pFaceData->m_nPropertyIDs[0]);
-						nPropertyIndex2 = m_pPropertyIndexMapping->mapPropertyIDToIndex(nPropertyID, pFaceData->m_nPropertyIDs[1]);
-						nPropertyIndex3 = m_pPropertyIndexMapping->mapPropertyIDToIndex(nPropertyID, pFaceData->m_nPropertyIDs[2]);
+						nPropertyIndex1 = m_pPropertyIndexMapping->mapPropertyIDToIndex(nPropertyID, pFaceData->m_nPropertyIDs[0], 0);					
+						nPropertyIndex2 = m_pPropertyIndexMapping->mapPropertyIDToIndex(nPropertyID, pFaceData->m_nPropertyIDs[1], 0);
+						nPropertyIndex3 = m_pPropertyIndexMapping->mapPropertyIDToIndex(nPropertyID, pFaceData->m_nPropertyIDs[2], 0);
+					}
+				}
+			}
+
+			// Retrieve Nurbs Indices
+			if (pNurbs != nullptr) {
+				MESHINFORMATION_NURBS * pFaceData = (MESHINFORMATION_NURBS*)pNurbs->getFaceData(nFaceIndex);
+				if (pFaceData != nullptr) {
+					if (pFaceData->m_nResourceID) {
+						ModelResourceID nNurbsID = pFaceData->m_nResourceID;
+						ModelResourceIndex nNurbsUVIndex1 = m_pPropertyIndexMapping->mapPropertyIDToIndex(nNurbsID, pFaceData->m_nUVIDs[0], 0);
+						ModelResourceIndex nNurbsUVIndex2 = m_pPropertyIndexMapping->mapPropertyIDToIndex(nNurbsID, pFaceData->m_nUVIDs[1], 0);
+						ModelResourceIndex nNurbsUVIndex3 = m_pPropertyIndexMapping->mapPropertyIDToIndex(nNurbsID, pFaceData->m_nUVIDs[2], 0);
+						ModelResourceIndex nNurbsEdgeIndex1 = m_pPropertyIndexMapping->mapPropertyIDToIndex(nNurbsID, pFaceData->m_nEdgeIDs[0], 0xffffffff);
+						ModelResourceIndex nNurbsEdgeIndex2 = m_pPropertyIndexMapping->mapPropertyIDToIndex(nNurbsID, pFaceData->m_nEdgeIDs[1], 0xffffffff);
+						ModelResourceIndex nNurbsEdgeIndex3 = m_pPropertyIndexMapping->mapPropertyIDToIndex(nNurbsID, pFaceData->m_nEdgeIDs[2], 0xffffffff);
+
+						m_nNurbsBufferPos = MODELWRITERMESH100_NURBSLINESTARTLENGTH;
+						putNurbsUInt32(nNurbsID);
+						putNurbsString("\" n:n1=\"");
+						putNurbsUInt32(nNurbsUVIndex1);
+						putNurbsString("\" n:n2=\"");
+						putNurbsUInt32(nNurbsUVIndex2);
+						putNurbsString("\" n:n3=\"");
+						putNurbsUInt32(nNurbsUVIndex3);
+						if (nNurbsEdgeIndex1 != 0xffffffff) {
+							putNurbsString("\" n:e1=\"");
+							putNurbsUInt32(nNurbsEdgeIndex1);
+						}
+						if (nNurbsEdgeIndex2 != 0xffffffff) {
+							putNurbsString("\" n:e2=\"");
+							putNurbsUInt32(nNurbsEdgeIndex2);
+						}
+						if (nNurbsEdgeIndex3 != 0xffffffff) {
+							putNurbsString("\" n:e3=\"");
+							putNurbsUInt32(nNurbsEdgeIndex3);
+						}
+						putNurbsString("\"");
+
+						pAdditionalString = &m_NurbsLine[0];
 					}
 				}
 			}
@@ -421,6 +471,35 @@ namespace NMR {
 			pChar++;
 			m_nBeamBufferPos++;
 		}
+	}
+
+	void CModelWriterNode100_Mesh::putNurbsString(_In_ const nfChar * pszString)
+	{
+		__NMRASSERT(pszString);
+		const nfChar * pChar = pszString;
+		nfChar * pTarget = &m_NurbsLine[m_nNurbsBufferPos];
+
+		while (*pChar != 0) {
+			*pTarget = *pChar;
+			pTarget++;
+			pChar++;
+			m_nNurbsBufferPos++;
+		}
+
+		*pTarget = 0;
+	}
+
+	void CModelWriterNode100_Mesh::putNurbsUInt32(_In_ const nfUint32 nValue)
+	{
+#ifdef __GNUC__
+		int nCount = sprintf(&m_NurbsLine[m_nNurbsBufferPos], "%d", nValue);
+#else
+		int nCount = sprintf_s(&m_NurbsLine[m_nNurbsBufferPos], MODELWRITERMESH100_LINEBUFFERSIZE - m_nNurbsBufferPos, "%d", nValue);
+#endif // __GNUC__
+
+		if (nCount < 1)
+			throw CNMRException(NMR_ERROR_COULDNOTCONVERTNUMBER);
+		m_nNurbsBufferPos += nCount;
 	}
 
 	void CModelWriterNode100_Mesh::putBeamUInt32(_In_ const nfUint32 nValue)

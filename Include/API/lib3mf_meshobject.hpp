@@ -116,6 +116,11 @@ public:
 
 	void GetAllTriangleProperties(Lib3MF_uint64 nPropertiesArrayBufferSize, Lib3MF_uint64* pPropertiesArrayNeededCount, sLib3MFTriangleProperties * pPropertiesArrayBuffer);
 
+	void SetTriangleNurbsProperties(const Lib3MF_uint32 nIndex, const sLib3MFTriangleNurbsProperties Properties);
+	void GetTriangleNurbsProperties(const Lib3MF_uint32 nIndex, sLib3MFTriangleNurbsProperties & sProperty);
+	void SetAllTriangleNurbsProperties(const Lib3MF_uint64 nPropertiesArrayBufferSize, const sLib3MFTriangleNurbsProperties * pPropertiesArrayBuffer);
+	void GetAllTriangleNurbsProperties(Lib3MF_uint64 nPropertiesArrayBufferSize, Lib3MF_uint64* pPropertiesArrayNeededCount, sLib3MFTriangleNurbsProperties * pPropertiesArrayBuffer);
+
 };
 
 }

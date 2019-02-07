@@ -42,7 +42,6 @@ This is the class for exporting the 3mf model stream root node.
 
 #include "Common/MeshInformation/NMR_MeshInformation_Properties.h"
 
-
 namespace NMR {
 
 	class CModelWriterNode100_Model : public CModelWriterNode {
@@ -54,12 +53,12 @@ namespace NMR {
 		nfBool m_bWriteMaterialExtension;
 		nfBool m_bWriteProductionExtension;
 		nfBool m_bWriteBeamLatticeExtension;
-		nfBool m_bWriteNurbsExtension;
 		nfBool m_bWriteSliceExtension;
 		nfBool m_bWriteBaseMaterials;
 		nfBool m_bWriteObjects;
 		nfBool m_bIsRootModel;
 		nfBool m_bWriteCustomNamespaces;
+		nfBool m_bWriteNurbsExtension;
 
 		void writeModelMetaData();
 		void writeMetaData(_In_ PModelMetaData pMetaData);
@@ -72,6 +71,8 @@ namespace NMR {
 		void writeTex2Coords();
 		void writeObjects();
 		void writeBuild();
+		void writeNurbsCurves();
+		void writeNurbsSurfaces();
 
 		void writeSliceStacks();
 		void writeSliceStack(_In_ CModelSliceStack *pSliceStack);

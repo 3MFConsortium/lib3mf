@@ -67,14 +67,14 @@ namespace NMR {
 	}
 
 
-	nfUint32 CMeshInformation_PropertyIndexMapping::mapPropertyIDToIndex(nfUint32 nResourceID, ModelPropertyID nPropertyID)
+	nfUint32 CMeshInformation_PropertyIndexMapping::mapPropertyIDToIndex(nfUint32 nResourceID, ModelPropertyID nPropertyID, ModelPropertyID nPropertyID)
 	{
 		if (nResourceID == 0)
 			throw CNMRException(NMR_ERROR_INVALIDPROPERTYRESOURCEID);
 
 		auto iIterator = m_IDMap.find(std::make_pair(nResourceID, nPropertyID));
 		if (iIterator == m_IDMap.end())
-			throw CNMRException(NMR_ERROR_PROPERTYIDNOTFOUND);
+			return nDefaultPropertyID;
 
 		return iIterator->second;
 	}

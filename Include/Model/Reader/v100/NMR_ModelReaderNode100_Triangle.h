@@ -50,7 +50,16 @@ namespace NMR {
 		nfInt32 m_nIndex2;
 		nfInt32 m_nIndex3;
 
+		nfInt32 m_nNurbsID;
+		nfInt32 m_nNurbsUVIndex1;
+		nfInt32 m_nNurbsUVIndex2;
+		nfInt32 m_nNurbsUVIndex3;
+		nfInt32 m_nNurbsEdgeIndex1;
+		nfInt32 m_nNurbsEdgeIndex2;
+		nfInt32 m_nNurbsEdgeIndex3;
+
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
+		virtual void OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace);
 	public:
 		CModelReaderNode100_Triangle() = delete;
 		CModelReaderNode100_Triangle(_In_ PModelReaderWarnings pWarnings);
@@ -58,6 +67,8 @@ namespace NMR {
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 		void retrieveIndices(_Out_ nfInt32 & nIndex1, _Out_ nfInt32 & nIndex2, _Out_ nfInt32 & nIndex3, nfInt32 nNodeCount);
 		nfBool retrieveProperties(_Inout_ ModelResourceID & nPropertyID, _Inout_ ModelResourceIndex & nPropertyIndex1, _Inout_ ModelResourceIndex & nPropertyIndex2, _Inout_ ModelResourceIndex & nPropertyIndex3);
+
+		nfBool retrieveNurbsIndices(_Out_ ModelResourceID & nNurbsID, _Out_ ModelResourceIndex & nNurbsUVIndex1, _Out_ ModelResourceIndex & nNurbsUVIndex2, _Out_ ModelResourceIndex & nNurbsUVIndex3, _Out_ ModelResourceIndex & nNurbsEdgeIndex1, _Out_ ModelResourceIndex & nNurbsEdgeIndex2, _Out_ ModelResourceIndex & nNurbsEdgeIndex3);
 	};
 
 	typedef std::shared_ptr <CModelReaderNode100_Triangle> PModelReaderNode100_Triangle;
