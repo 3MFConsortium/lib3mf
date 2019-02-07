@@ -133,17 +133,44 @@ namespace Lib3MF
 	{
 		auto pReader = Nurbs::model->QueryReader ("3mf");
 
-		pReader->ReadFromFile(sTestFilesPath + "/Nurbs/" + "nurbstest.3mf");
+		pReader->ReadFromFile(sTestFilesPath + "/Nurbs/" + "nurbscylinder.3mf");
+
+		auto CurveIterator = Nurbs::model->GetNurbsCurves();
+
+		ASSERT_TRUE(CurveIterator->MoveNext());
+
+		std::vector<sLib3MFNURBSKnot> KnotBuffer;
+
+		auto NurbsCurve1 = CurveIterator->GetCurrentNurbsCurve();
+		ASSERT_EQ(NurbsCurve1->GetResourceID(), 1);
+		ASSERT_EQ(NurbsCurve1->GetDegree (), 2);
+
+		NurbsCurve1->GetKnots(KnotBuffer);
+		ASSERT_EQ(KnotBuffer.size (), 3);
+		ASSERT_EQ(KnotBuffer[0].m_Multiplicity, 3);
+		ASSERT_EQ(KnotBuffer[1].m_Multiplicity, 2);
+		ASSERT_EQ(KnotBuffer[2].m_Multiplicity, 3);
+		ASSERT_EQ(KnotBuffer[0].m_Value, -3.14159);
+		ASSERT_EQ(KnotBuffer[1].m_Value, -1.5708);
+		ASSERT_EQ(KnotBuffer[2].m_Value, 0);
+
+		double dX, dY, dZ, dW;
+		NurbsCurve1->GetControlPoint(0, dX, dY, dZ, dW);
+		ASSERT_EQ(dX, -2.95265);
+		ASSERT_EQ(dY, 0);
+		ASSERT_EQ(dZ, 20);
+		ASSERT_EQ(dW, 1);
+		NurbsCurve1->GetControlPoint(4, dX, dY, dZ, dW);
+		ASSERT_EQ(dX, 42.9527);
+		ASSERT_EQ(dY, 0);
+		ASSERT_EQ(dZ, 20);
+		ASSERT_EQ(dW, 1);
+
 
 		auto SurfaceIterator = Nurbs::model->GetNurbsSurfaces();
-		while (SurfaceIterator->MoveNext()) {
-			auto NurbsSurface = SurfaceIterator->GetCurrentNurbsSurface();
-			sLib3MFNURBSUVCoordinate Coordinate;
-			Coordinate = NurbsSurface->GetUVCoordinate(1);
+		ASSERT_TRUE(SurfaceIterator->MoveNext());
 
-		}
-
-		//CheckReaderWarnings(pReader, 0);
 	}
+
 
 }
