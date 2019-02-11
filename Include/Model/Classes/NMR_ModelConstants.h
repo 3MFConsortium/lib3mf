@@ -325,6 +325,10 @@ These are given by the 3MF Standard
 #define XML_3MF_ATTRIBUTE_NURBS_CURVEID             "curveid"
 #define XML_3MF_ATTRIBUTE_NURBS_T1                  "t1"
 #define XML_3MF_ATTRIBUTE_NURBS_T2                  "t2"
+#define XML_3MF_ATTRIBUTE_NURBS_MINU				"minu"
+#define XML_3MF_ATTRIBUTE_NURBS_MINV				"minv"
+#define XML_3MF_ATTRIBUTE_NURBS_MAXU				"maxu"
+#define XML_3MF_ATTRIBUTE_NURBS_MAXV				"maxv"
 
 #define XML_3MF_ATTRIBUTE_NURBS_NID                  "nid"
 #define XML_3MF_ATTRIBUTE_NURBS_N1                   "n1"

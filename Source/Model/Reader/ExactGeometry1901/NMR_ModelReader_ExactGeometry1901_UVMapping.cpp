@@ -52,6 +52,22 @@ namespace NMR {
 		m_pModel = pModel;
 		m_pNurbsSurface = pNurbsSurface;
 		m_pWarnings = pWarnings;
+
+		m_dMinU = 0.0;
+		m_dMinV = 0.0;
+		m_dMaxU = 0.0;
+		m_dMaxV = 0.0;
+
+		m_bHasMinU = false;
+		m_bHasMinV = false;
+		m_bHasMaxU = false;
+		m_bHasMaxV = false;
+
+		if (!m_bHasMinU || !m_bHasMinV || !m_bHasMaxU || !m_bHasMaxV)
+			throw CNMRException(NMR_ERROR_INVALIDUVBOUNDS);
+
+		m_pNurbsSurface->setUVBounds(m_dMinU, m_dMinV, m_dMaxU, m_dMaxV);
+
 	}
 
 	void CModelReaderNode_ExactGeometry1901_UVMapping::parseXML(_In_ CXmlReader * pXMLReader)
@@ -73,7 +89,40 @@ namespace NMR {
 		__NMRASSERT(pAttributeName);
 		__NMRASSERT(pAttributeValue);
 
-		m_pWarnings->addException(CNMRException(NMR_ERROR_NURBSINVALIDATTRIBUTE), mrwInvalidOptionalValue);
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_NURBS_MINU) == 0) {
+			nfDouble dValue = fnStringToDouble(pAttributeValue);
+			if (std::isnan(dValue) || (dValue < -XML_3MF_MAXIMUMCOORDINATEVALUE) || (dValue > XML_3MF_MAXIMUMCOORDINATEVALUE))
+				throw CNMRException(NMR_ERROR_NURBSINVALIDATTRIBUTE);
+			m_dMinU = dValue;
+			m_bHasMinU = true;
+
+		}
+		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_NURBS_MINV) == 0) {
+			nfDouble dValue = fnStringToDouble(pAttributeValue);
+			if (std::isnan(dValue) || (dValue < -XML_3MF_MAXIMUMCOORDINATEVALUE) || (dValue > XML_3MF_MAXIMUMCOORDINATEVALUE))
+				throw CNMRException(NMR_ERROR_NURBSINVALIDATTRIBUTE);
+			m_dMinV = dValue;
+			m_bHasMinV = true;
+
+		}
+		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_NURBS_MAXU) == 0) {
+			nfDouble dValue = fnStringToDouble(pAttributeValue);
+			if (std::isnan(dValue) || (dValue < -XML_3MF_MAXIMUMCOORDINATEVALUE) || (dValue > XML_3MF_MAXIMUMCOORDINATEVALUE))
+				throw CNMRException(NMR_ERROR_NURBSINVALIDATTRIBUTE);
+			m_dMaxU = dValue;
+			m_bHasMaxU = true;
+
+		}
+		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_NURBS_MAXV) == 0) {
+			nfDouble dValue = fnStringToDouble(pAttributeValue);
+			if (std::isnan(dValue) || (dValue < -XML_3MF_MAXIMUMCOORDINATEVALUE) || (dValue > XML_3MF_MAXIMUMCOORDINATEVALUE))
+				throw CNMRException(NMR_ERROR_NURBSINVALIDATTRIBUTE);
+			m_dMaxV = dValue;
+			m_bHasMaxV = true;
+
+		}
+		else
+			m_pWarnings->addException(CNMRException(NMR_ERROR_NURBSINVALIDATTRIBUTE), mrwInvalidOptionalValue);
 	}
 
 	void CModelReaderNode_ExactGeometry1901_UVMapping::OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace)

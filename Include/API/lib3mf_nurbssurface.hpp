@@ -132,6 +132,9 @@ public:
 
 	Lib3MF_uint32 GetEdgeMappingUVCoordinateCount(const Lib3MF_uint32 nId);
 
+	void SetUVBounds(const Lib3MF_double dMinU, const Lib3MF_double dMinV, const Lib3MF_double dMaxU, const Lib3MF_double dMaxV);
+
+	void GetUVBounds(Lib3MF_double & dMinU, Lib3MF_double & dMinV, Lib3MF_double & dMaxU, Lib3MF_double & dMaxV);
 
 };
 

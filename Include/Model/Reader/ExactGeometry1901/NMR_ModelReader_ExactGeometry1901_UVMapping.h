@@ -49,6 +49,15 @@ namespace NMR {
 
 		CModelNurbsSurface * m_pNurbsSurface;
 
+		nfBool m_dMinU;
+		nfBool m_dMinV;
+		nfBool m_dMaxU;
+		nfBool m_dMaxV;
+
+		nfBool m_bHasMinU;
+		nfBool m_bHasMinV;
+		nfBool m_bHasMaxU;
+		nfBool m_bHasMaxV;
 
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);

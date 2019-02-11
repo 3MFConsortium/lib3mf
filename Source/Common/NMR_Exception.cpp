@@ -440,6 +440,7 @@ namespace NMR {
 		case NMR_ERROR_NURBSINSUFFICIENTDESCRIPTION: return "Insufficient Nurbs Description";
 		case NMR_ERROR_INVALIDNURBSCURVEORDER: return "Invalid Nurbs Curve Order";
 		case NMR_ERROR_NURBSDUPLICATECURVEKNOTS: return "Duplicate Curve Knots";
+		case NMR_ERROR_INVALIDUVBOUNDS: return "Invalid UV Bounds";
 
 		default:
 			return "unknown error";

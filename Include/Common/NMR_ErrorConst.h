@@ -1225,5 +1225,8 @@ Extension Errors - Nurbs (0xB1XX)
 // Duplicate Curve Knots
 #define NMR_ERROR_NURBSDUPLICATECURVEKNOTS 0xB117
 
+// Invalid UV Bounds
+#define NMR_ERROR_INVALIDUVBOUNDS 0xB118
+
 #endif // __NMR_ERRORCONST
 

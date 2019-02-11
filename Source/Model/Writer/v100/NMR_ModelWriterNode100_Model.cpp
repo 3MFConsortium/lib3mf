@@ -412,7 +412,13 @@ namespace NMR {
 				}
 				writeFullEndElement();
 
+				nfDouble dMinU, dMinV, dMaxU, dMaxV;
+				pSurface->getUVBounds(dMinU, dMinV, dMaxU, dMaxV);
 				writeStartElementWithPrefix(XML_3MF_ELEMENT_NURBS_UVMAPPING, XML_3MF_NAMESPACEPREFIX_NURBS);
+				writeFloatAttribute(XML_3MF_ATTRIBUTE_NURBS_MINU, (nfFloat)dMinU);
+				writeFloatAttribute(XML_3MF_ATTRIBUTE_NURBS_MINV, (nfFloat)dMinV);
+				writeFloatAttribute(XML_3MF_ATTRIBUTE_NURBS_MAXU, (nfFloat)dMaxU);
+				writeFloatAttribute(XML_3MF_ATTRIBUTE_NURBS_MAXV, (nfFloat)dMaxV);
 
 				auto iCoordIterator = UVCoordVector.begin();
 

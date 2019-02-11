@@ -1041,7 +1041,21 @@
       <param name="Z" type="double" pass="out" description="Position Z" />
       <param name="W" type="double" pass="out" description="Weight" />
     </method>
+	
+	<method name="SetUVBounds" description = "Sets the UV coordinate bounds.">
+      <param name="MinU" type="double" pass="in" description="the minimum u coordinate" />
+      <param name="MinV" type="double" pass="in" description="the minimum v coordinate" />
+      <param name="MaxU" type="double" pass="in" description="the maximum u coordinate" />
+      <param name="MaxV" type="double" pass="in" description="the maximum v coordinate" />
+    </method>
 
+    <method name="GetUVBounds" description = "Retrieves the UV coordinate bounds.">
+      <param name="MinU" type="double" pass="out" description="returns the minimum u coordinate" />
+      <param name="MinV" type="double" pass="out" description="returns the minimum v coordinate" />
+      <param name="MaxU" type="double" pass="out" description="returns the maximum u coordinate" />
+      <param name="MaxV" type="double" pass="out" description="returns the maximum v coordinate" />
+    </method>	
+	
   </class>
 
 	<class name="BuildItem">

@@ -326,3 +326,13 @@ Lib3MF_uint32 CLib3MFNurbsSurface::GetEdgeMappingUVCoordinateCount(const Lib3MF_
 	return m_pNurbsSurface->getEdgeMappingUVCoordinateCount(nId);
 }
 
+void CLib3MFNurbsSurface::SetUVBounds(const Lib3MF_double dMinU, const Lib3MF_double dMinV, const Lib3MF_double dMaxU, const Lib3MF_double dMaxV)
+{
+	m_pNurbsSurface->setUVBounds(dMinU, dMinV, dMaxU, dMaxV);
+}
+
+void CLib3MFNurbsSurface::GetUVBounds(Lib3MF_double & dMinU, Lib3MF_double & dMinV, Lib3MF_double & dMaxU, Lib3MF_double & dMaxV)
+{
+	m_pNurbsSurface->getUVBounds(dMinU, dMinV, dMaxU, dMaxV);
+}
+
