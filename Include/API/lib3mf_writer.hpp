@@ -33,6 +33,9 @@ Abstract: This is the class declaration of CLib3MFWriter
 #define __LIB3MF_LIB3MFWRITER
 
 #include "lib3mf_interfaces.hpp"
+#include "lib3mf_baseclass.hpp"
+#pragma warning( push)
+#pragma warning( disable : 4250)
 
 
 // Include custom headers here.
@@ -47,7 +50,7 @@ namespace Impl {
  Class declaration of CLib3MFWriter 
 **************************************************************************************************************************/
 
-class CLib3MFWriter : public virtual ILib3MFWriter {
+class CLib3MFWriter : public virtual ILib3MFWriter, public virtual CLib3MFBaseClass {
 private:
 
 	/**
@@ -87,4 +90,5 @@ public:
 }
 }
 
+#pragma warning( pop )
 #endif // __LIB3MF_LIB3MFWRITER

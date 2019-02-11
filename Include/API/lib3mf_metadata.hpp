@@ -33,6 +33,9 @@ Abstract: This is the class declaration of CLib3MFMetaData
 #define __LIB3MF_LIB3MFMETADATA
 
 #include "lib3mf_interfaces.hpp"
+#include "lib3mf_baseclass.hpp"
+#pragma warning( push)
+#pragma warning( disable : 4250)
 
 #include "Model/Classes/NMR_ModelMetaData.h"
 
@@ -47,7 +50,7 @@ namespace Impl {
  Class declaration of CLib3MFMetaData 
 **************************************************************************************************************************/
 
-class CLib3MFMetaData : public virtual ILib3MFMetaData {
+class CLib3MFMetaData : public virtual ILib3MFMetaData, public virtual CLib3MFBaseClass {
 private:
 
 	/**
@@ -99,4 +102,5 @@ public:
 }
 }
 
+#pragma warning( pop )
 #endif // __LIB3MF_LIB3MFMETADATA
