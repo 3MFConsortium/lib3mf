@@ -33,6 +33,9 @@ Abstract: This is the class declaration of CLib3MFBuildItemIterator
 #define __LIB3MF_LIB3MFBUILDITEMITERATOR
 
 #include "lib3mf_interfaces.hpp"
+#include "lib3mf_baseclass.hpp"
+#pragma warning( push)
+#pragma warning( disable : 4250)
 
 
 // Include custom headers here.
@@ -46,7 +49,7 @@ namespace Impl {
  Class declaration of CLib3MFBuildItemIterator 
 **************************************************************************************************************************/
 
-class CLib3MFBuildItemIterator : public virtual ILib3MFBuildItemIterator {
+class CLib3MFBuildItemIterator : public virtual ILib3MFBuildItemIterator, public virtual CLib3MFBaseClass {
 private:
 
 	/**
@@ -87,4 +90,5 @@ public:
 }
 }
 
+#pragma warning( pop )
 #endif // __LIB3MF_LIB3MFBUILDITEMITERATOR

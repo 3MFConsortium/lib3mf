@@ -33,6 +33,9 @@ Abstract: This is the class declaration of CLib3MFResource
 #define __LIB3MF_LIB3MFRESOURCE
 
 #include "lib3mf_interfaces.hpp"
+#include "lib3mf_baseclass.hpp"
+#pragma warning( push)
+#pragma warning( disable : 4250)
 
 
 // Include custom headers here.
@@ -46,7 +49,7 @@ namespace Impl {
  Class declaration of CLib3MFResource 
 **************************************************************************************************************************/
 
-class CLib3MFResource : public virtual ILib3MFResource {
+class CLib3MFResource : public virtual ILib3MFResource, public virtual CLib3MFBaseClass {
 private:
 
 	/**
@@ -79,4 +82,5 @@ public:
 }
 }
 
+#pragma warning( pop )
 #endif // __LIB3MF_LIB3MFRESOURCE

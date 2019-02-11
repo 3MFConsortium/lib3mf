@@ -33,6 +33,9 @@ Abstract: This is the class declaration of CLib3MFResourceIterator
 #define __LIB3MF_LIB3MFRESOURCEITERATOR
 
 #include "lib3mf_interfaces.hpp"
+#include "lib3mf_baseclass.hpp"
+#pragma warning( push)
+#pragma warning( disable : 4250)
 
 
 // Include custom headers here.
@@ -46,7 +49,7 @@ namespace Impl {
  Class declaration of CLib3MFResourceIterator 
 **************************************************************************************************************************/
 
-class CLib3MFResourceIterator : public virtual ILib3MFResourceIterator {
+class CLib3MFResourceIterator : public virtual ILib3MFResourceIterator, public virtual CLib3MFBaseClass {
 
 private:
 	std::vector<NMR::PModelResource> m_pResources;
@@ -80,4 +83,5 @@ public:
 }
 }
 
+#pragma warning( pop )
 #endif // __LIB3MF_LIB3MFRESOURCEITERATOR

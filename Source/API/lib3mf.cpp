@@ -172,3 +172,11 @@ void CLib3MFWrapper::ColorToFloatRGBA(const sLib3MFColor TheColor, float & fRed,
 	fBlue = TheColor.m_Blue / 255.f;
 	fAlpha = TheColor.m_Alpha / 255.f;
 }
+
+bool CLib3MFWrapper::GetLastError(ILib3MFBaseClass* pInstance, std::string & sLastErrorString)
+{
+	if (pInstance != nullptr)
+		return pInstance->getLastError(sLastErrorString);
+
+	return false;
+}

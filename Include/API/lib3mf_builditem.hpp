@@ -33,6 +33,9 @@ Abstract: This is the class declaration of CLib3MFBuildItem
 #define __LIB3MF_LIB3MFBUILDITEM
 
 #include "lib3mf_interfaces.hpp"
+#include "lib3mf_baseclass.hpp"
+#pragma warning( push)
+#pragma warning( disable : 4250)
 
 
 // Include custom headers here.
@@ -46,7 +49,7 @@ namespace Impl {
  Class declaration of CLib3MFBuildItem 
 **************************************************************************************************************************/
 
-class CLib3MFBuildItem : public virtual ILib3MFBuildItem {
+class CLib3MFBuildItem : public virtual ILib3MFBuildItem, public virtual CLib3MFBaseClass {
 private:
 
 	/**
@@ -98,4 +101,5 @@ public:
 }
 }
 
+#pragma warning( pop )
 #endif // __LIB3MF_LIB3MFBUILDITEM

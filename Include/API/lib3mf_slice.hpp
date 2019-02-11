@@ -33,6 +33,9 @@ Abstract: This is the class declaration of CLib3MFSlice
 #define __LIB3MF_LIB3MFSLICE
 
 #include "lib3mf_interfaces.hpp"
+#include "lib3mf_baseclass.hpp"
+#pragma warning( push)
+#pragma warning( disable : 4250)
 
 
 // Include custom headers here.
@@ -46,7 +49,7 @@ namespace Impl {
  Class declaration of CLib3MFSlice 
 **************************************************************************************************************************/
 
-class CLib3MFSlice : public virtual ILib3MFSlice {
+class CLib3MFSlice : public virtual ILib3MFSlice, public virtual CLib3MFBaseClass {
 private:
 
 	/**
@@ -93,4 +96,5 @@ public:
 } // namespace Impl
 } // namespace Lib3MF
 
+#pragma warning( pop )
 #endif // __LIB3MF_LIB3MFSLICE

@@ -24,78 +24,40 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CLib3MFAttachment
+Abstract: This is a stub class definition of CLib3MFAttachment
 
 */
 
-
-#ifndef __LIB3MF_LIB3MFATTACHMENT
-#define __LIB3MF_LIB3MFATTACHMENT
-
-#include "lib3mf_interfaces.hpp"
 #include "lib3mf_baseclass.hpp"
-#pragma warning( push)
-#pragma warning( disable : 4250)
+#include "lib3mf_interfaceexception.hpp"
 
-
-// Include custom headers here.
-#include "Model/Classes/NMR_ModelAttachment.h"
-
-namespace Lib3MF {
-namespace Impl {
-
+using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class declaration of CLib3MFAttachment 
+ Class definition of CLib3MFBaseClass
 **************************************************************************************************************************/
 
-class CLib3MFAttachment : public virtual ILib3MFAttachment, public virtual CLib3MFBaseClass {
-private:
-
-	/**
-	* Put private members here.
-	*/
-	NMR::PModelAttachment m_pModelAttachment;
-
-protected:
-
-	/**
-	* Put protected members here.
-	*/
-
-public:
-
-	/**
-	* Put additional public members here. They will not be visible in the external API.
-	*/
-	CLib3MFAttachment(NMR::PModelAttachment pModelAttachment);
-
-	/**
-	* Public member functions to implement.
-	*/
-
-	std::string GetPath ();
-
-	void SetPath (const std::string & sPath);
-
-	std::string GetRelationShipType ();
-
-	void SetRelationShipType (const std::string & sPath);
-
-	void WriteToFile (const std::string & sFileName);
-
-	void ReadFromFile (const std::string & sFileName);
-
-	Lib3MF_uint64 GetStreamSize ();
-
-	void WriteToBuffer (Lib3MF_uint64 nBufferBufferSize, Lib3MF_uint64* pBufferNeededCount, Lib3MF_uint8 * pBufferBuffer);
-
-	void ReadFromBuffer(const Lib3MF_uint64 nBufferBufferSize, const Lib3MF_uint8 * pBufferBuffer);
-
-};
-
-}
+void CLib3MFBaseClass::clearLastErrors()
+{
+	m_LastErrors.clear ();
 }
 
-#pragma warning( pop )
-#endif // __LIB3MF_LIB3MFATTACHMENT
+bool CLib3MFBaseClass::getLastError(std::string & sErrorString)
+{
+	auto iIterator = m_LastErrors.rbegin();
+	if (iIterator != m_LastErrors.rend()) {
+		sErrorString = *iIterator;
+		return true;
+	}
+	else {
+		sErrorString = "";
+		return false;
+	}
+}
+
+void CLib3MFBaseClass::addLastError(std::string ErrorString)
+{
+	m_LastErrors.push_back (ErrorString);
+}
+
+
