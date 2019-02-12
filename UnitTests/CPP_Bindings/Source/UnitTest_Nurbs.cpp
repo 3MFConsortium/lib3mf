@@ -198,5 +198,30 @@ namespace Lib3MF
 
 	}
 
+	TEST_F(Nurbs, 3MFReadNurbsFaceProperties)
+	{
+
+		auto pReader = Nurbs::model->QueryReader("3mf");
+
+		pReader->ReadFromFile(sTestFilesPath + "/Nurbs/" + "nurbsfacedata.3mf");
+
+		auto pMeshObjects = Nurbs::model->GetMeshObjects();
+		ASSERT_TRUE (pMeshObjects->MoveNext());
+
+		auto ResourceID = pMeshObjects->GetCurrent()->GetResourceID();
+		ASSERT_EQ(ResourceID, 8);
+
+		auto MeshObject = Nurbs::model->GetMeshObjectByID(ResourceID);
+
+		std::vector<sLib3MFTriangleNurbsProperties> NurbsProperties;
+		MeshObject->GetAllTriangleNurbsProperties(NurbsProperties);
+
+		ASSERT_EQ(NurbsProperties.size(), 17);
+		ASSERT_EQ(NurbsProperties[0].m_ResourceID, 4);
+		ASSERT_EQ(NurbsProperties[0].m_UVIDs[0], 1);
+		ASSERT_EQ(NurbsProperties[0].m_UVIDs[1], 2);
+		ASSERT_EQ(NurbsProperties[0].m_UVIDs[2], 3);
+
+	}
 
 }

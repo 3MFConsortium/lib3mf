@@ -63,10 +63,6 @@ namespace NMR {
 		m_bHasMaxU = false;
 		m_bHasMaxV = false;
 
-		if (!m_bHasMinU || !m_bHasMinV || !m_bHasMaxU || !m_bHasMaxV)
-			throw CNMRException(NMR_ERROR_INVALIDUVBOUNDS);
-
-		m_pNurbsSurface->setUVBounds(m_dMinU, m_dMinV, m_dMaxU, m_dMaxV);
 
 	}
 
@@ -81,6 +77,10 @@ namespace NMR {
 		// Parse Content
 		parseContent(pXMLReader);
 
+		if (!m_bHasMinU || !m_bHasMinV || !m_bHasMaxU || !m_bHasMaxV)
+			throw CNMRException(NMR_ERROR_INVALIDUVBOUNDS);
+
+		m_pNurbsSurface->setUVBounds(m_dMinU, m_dMinV, m_dMaxU, m_dMaxV);
 	}
 
 	

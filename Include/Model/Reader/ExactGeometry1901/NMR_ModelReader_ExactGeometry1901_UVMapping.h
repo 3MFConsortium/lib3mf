@@ -49,10 +49,10 @@ namespace NMR {
 
 		CModelNurbsSurface * m_pNurbsSurface;
 
-		nfBool m_dMinU;
-		nfBool m_dMinV;
-		nfBool m_dMaxU;
-		nfBool m_dMaxV;
+		nfDouble m_dMinU;
+		nfDouble m_dMinV;
+		nfDouble m_dMaxU;
+		nfDouble m_dMaxV;
 
 		nfBool m_bHasMinU;
 		nfBool m_bHasMinV;

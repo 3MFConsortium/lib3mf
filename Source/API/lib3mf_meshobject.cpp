@@ -429,10 +429,10 @@ void CLib3MFMeshObject::SetAllTriangleNurbsProperties(const Lib3MF_uint64 nPrope
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
 
 	auto pInformationHandler = pMesh->createMeshInformationHandler();
-	NMR::CMeshInformation_Properties * pInformation = dynamic_cast<NMR::CMeshInformation_Properties *> (pInformationHandler->getInformationByType(0, NMR::emiProperties));
+	NMR::CMeshInformation_Nurbs * pInformation = dynamic_cast<NMR::CMeshInformation_Nurbs *> (pInformationHandler->getInformationByType(0, NMR::emiNurbs));
 
 	if (pInformation == nullptr) {
-		NMR::PMeshInformation_Properties pNewInformation = std::make_shared<NMR::CMeshInformation_Properties>(pMesh->getFaceCount());
+		NMR::PMeshInformation_Nurbs pNewInformation = std::make_shared<NMR::CMeshInformation_Nurbs>(pMesh->getFaceCount());
 		pInformationHandler->addInformation(pNewInformation);
 
 		pInformation = pNewInformation.get();
@@ -461,44 +461,46 @@ void CLib3MFMeshObject::GetAllTriangleNurbsProperties(Lib3MF_uint64 nPropertiesA
 	auto pMesh = mesh();
 	uint32_t nFaceCount = pMesh->getFaceCount();
 
-	if (nPropertiesArrayBufferSize != nFaceCount)
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPROPERTYCOUNT);
-	if (pPropertiesArrayBuffer == nullptr)
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
-
-	auto pInformationHandler = pMesh->createMeshInformationHandler();
-	NMR::CMeshInformation_Properties * pInformation = dynamic_cast<NMR::CMeshInformation_Properties *> (pInformationHandler->getInformationByType(0, NMR::emiProperties));
-
-	if (pInformation == nullptr) {
-		NMR::PMeshInformation_Properties pNewInformation = std::make_shared<NMR::CMeshInformation_Properties>(pMesh->getFaceCount());
-		pInformationHandler->addInformation(pNewInformation);
-
-		pInformation = pNewInformation.get();
+	if (pPropertiesArrayNeededCount != nullptr) {
+		*pPropertiesArrayNeededCount = nFaceCount;
 	}
 
-	sLib3MFTriangleNurbsProperties * pProperty = pPropertiesArrayBuffer;
+	if (pPropertiesArrayBuffer != nullptr) {
 
-	uint32_t nIndex;
-	for (nIndex = 0; nIndex < nFaceCount; nIndex++) {
+		if (nPropertiesArrayBufferSize < nFaceCount)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPROPERTYCOUNT);
 
-		NMR::MESHINFORMATION_NURBS * pFaceData = (NMR::MESHINFORMATION_NURBS*)pInformation->getFaceData(nIndex);
-		if (pFaceData != nullptr) {
-			pProperty->m_ResourceID = pFaceData->m_nResourceID;
-			for (unsigned j = 0; j < 3; j++) {
-				pProperty->m_UVIDs[j] = pFaceData->m_nUVIDs[j];
-				pProperty->m_EdgeIDs[j] = pFaceData->m_nEdgeIDs[j];
+		auto pInformationHandler = pMesh->createMeshInformationHandler();
+		NMR::CMeshInformation_Nurbs * pInformation = dynamic_cast<NMR::CMeshInformation_Nurbs *> (pInformationHandler->getInformationByType(0, NMR::emiNurbs));
+
+		sLib3MFTriangleNurbsProperties * pProperty = pPropertiesArrayBuffer;
+
+		uint32_t nIndex;
+		for (nIndex = 0; nIndex < nFaceCount; nIndex++) {
+
+			NMR::MESHINFORMATION_NURBS * pFaceData = nullptr;
+			if (pInformation != nullptr) 
+				pFaceData = (NMR::MESHINFORMATION_NURBS*)pInformation->getFaceData(nIndex);
+
+			if (pFaceData != nullptr) {
+				pProperty->m_ResourceID = pFaceData->m_nResourceID;
+				for (unsigned j = 0; j < 3; j++) {
+					pProperty->m_UVIDs[j] = pFaceData->m_nUVIDs[j];
+					pProperty->m_EdgeIDs[j] = pFaceData->m_nEdgeIDs[j];
+				}
 			}
-		}
-		else {
-			pProperty->m_ResourceID = 0;
-			for (unsigned j = 0; j < 3; j++) {
-				pProperty->m_UVIDs[j] = 0;
-				pProperty->m_EdgeIDs[j] = 0;
+			else {
+				pProperty->m_ResourceID = 0;
+				for (unsigned j = 0; j < 3; j++) {
+					pProperty->m_UVIDs[j] = 0;
+					pProperty->m_EdgeIDs[j] = 0;
+				}
+
 			}
 
+			pProperty++;
 		}
 
-		pProperty++;
 	}
 
 }

@@ -105,6 +105,10 @@ namespace NMR {
 		setControlPointCount(nControlPointCountU, nControlPointCountV);
 
 		m_nNextID = 1;
+		m_dMinU = 0.0;
+		m_dMinV = 0.0;
+		m_dMaxU = 1.0;
+		m_dMaxV = 1.0;
 	}
 
 
