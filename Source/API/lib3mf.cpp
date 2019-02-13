@@ -180,3 +180,52 @@ bool CLib3MFWrapper::GetLastError(ILib3MFBaseClass* pInstance, std::string & sLa
 
 	return false;
 }
+
+
+sLib3MFTransform CLib3MFWrapper::GetIdentityTransform()
+{
+	int i, j;
+	sLib3MFTransform Transform;
+
+	for (i = 0; i < 4; i++)
+		for (j = 0; j < 3; j++)
+			Transform.m_Fields[i][j] = (i == j) ? 1.0f : 0.0f;
+}
+
+sLib3MFTransform CLib3MFWrapper::GetUniformScaleTransform(const float fFactor)
+{
+	int i, j;
+	sLib3MFTransform Transform;
+
+	for (i = 0; i < 4; i++)
+		for (j = 0; j < 3; j++)
+			Transform.m_Fields[i][j] = (i == j) ? fFactor : 0.0f;
+}
+
+sLib3MFTransform CLib3MFWrapper::GetScaleTransform(const float fFactorX, const float fFactorY, const float fFactorZ)
+{
+	int i, j;
+	sLib3MFTransform Transform;
+
+	for (i = 0; i < 4; i++)
+		for (j = 0; j < 3; j++)
+			Transform.m_Fields[i][j] = (i == j) ? 1.0f : 0.0f;
+
+	Transform.m_Fields[0][0] = fFactorX;
+	Transform.m_Fields[1][1] = fFactorY;
+	Transform.m_Fields[2][2] = fFactorZ;
+}
+
+sLib3MFTransform CLib3MFWrapper::GetTranslationTransform(const float fVectorX, const float fVectorY, const float fVectorZ)
+{
+	int i, j;
+	sLib3MFTransform Transform;
+
+	for (i = 0; i < 3; i++)
+		for (j = 0; j < 3; j++)
+			Transform.m_Fields[i][j] = (i == j) ? 1.0f : 0.0f;
+
+	Transform.m_Fields[3][0] = fVectorX;
+	Transform.m_Fields[3][1] = fVectorY;
+	Transform.m_Fields[3][2] = fVectorZ;
+}
