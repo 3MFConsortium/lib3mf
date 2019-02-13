@@ -190,6 +190,9 @@ sLib3MFTransform CLib3MFWrapper::GetIdentityTransform()
 	for (i = 0; i < 4; i++)
 		for (j = 0; j < 3; j++)
 			Transform.m_Fields[i][j] = (i == j) ? 1.0f : 0.0f;
+
+	return Transform;
+
 }
 
 sLib3MFTransform CLib3MFWrapper::GetUniformScaleTransform(const float fFactor)
@@ -200,6 +203,8 @@ sLib3MFTransform CLib3MFWrapper::GetUniformScaleTransform(const float fFactor)
 	for (i = 0; i < 4; i++)
 		for (j = 0; j < 3; j++)
 			Transform.m_Fields[i][j] = (i == j) ? fFactor : 0.0f;
+
+	return Transform;
 }
 
 sLib3MFTransform CLib3MFWrapper::GetScaleTransform(const float fFactorX, const float fFactorY, const float fFactorZ)
@@ -214,6 +219,9 @@ sLib3MFTransform CLib3MFWrapper::GetScaleTransform(const float fFactorX, const f
 	Transform.m_Fields[0][0] = fFactorX;
 	Transform.m_Fields[1][1] = fFactorY;
 	Transform.m_Fields[2][2] = fFactorZ;
+
+	return Transform;
+
 }
 
 sLib3MFTransform CLib3MFWrapper::GetTranslationTransform(const float fVectorX, const float fVectorY, const float fVectorZ)
@@ -228,4 +236,7 @@ sLib3MFTransform CLib3MFWrapper::GetTranslationTransform(const float fVectorX, c
 	Transform.m_Fields[3][0] = fVectorX;
 	Transform.m_Fields[3][1] = fVectorY;
 	Transform.m_Fields[3][2] = fVectorZ;
+
+	return Transform;
+
 }
