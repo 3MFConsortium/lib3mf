@@ -94,26 +94,26 @@ void CLib3MFReader::ReadFromBuffer (const Lib3MF_uint64 nBufferBufferSize, const
 	}
 }
 
-void CLib3MFReader::ReadFromCallback(const Lib3MFReadCallback pTheReadCallback, const Lib3MF_uint64 nStreamSize, const Lib3MFSeekCallback pTheSeekCallback, const Lib3MF_uint64 nUserData)
+void CLib3MFReader::ReadFromCallback(const Lib3MFReadCallback pTheReadCallback, const Lib3MF_uint64 nStreamSize, const Lib3MFSeekCallback pTheSeekCallback, const Lib3MF_pvoid pUserData)
 {
 	
 	NMR::ImportStream_ReadCallbackType lambdaReadCallback =
 		[pTheReadCallback](NMR::nfByte* pData, NMR::nfUint64 cbBytes, void* pUserData)
 	{
-		(*pTheReadCallback)(reinterpret_cast<Lib3MF_uint64>(pData), cbBytes, reinterpret_cast<Lib3MF_uint64>(pUserData));
+		(*pTheReadCallback)(reinterpret_cast<Lib3MF_uint64>(pData), cbBytes, pUserData);
 		return 0;
 	};
 
 	NMR::ImportStream_SeekCallbackType lambdaSeekCallback =
 		[pTheSeekCallback](NMR::nfUint64 nPosition, void* pUserData)
 	{
-		(*pTheSeekCallback)(nPosition, reinterpret_cast<Lib3MF_uint64>(pUserData));
+		(*pTheSeekCallback)(nPosition, pUserData);
 		return 0;
 	};
 
 	NMR::PImportStream pImportStream = std::make_shared<NMR::CImportStream_Callback>(
 		lambdaReadCallback, lambdaSeekCallback,
-		reinterpret_cast<void*>(nUserData), nStreamSize);
+		pUserData, nStreamSize);
 	try {
 		reader().readStream(pImportStream);
 	}
@@ -125,16 +125,16 @@ void CLib3MFReader::ReadFromCallback(const Lib3MFReadCallback pTheReadCallback, 
 	}
 }
 
-void CLib3MFReader::SetProgressCallback(const Lib3MFProgressCallback pProgressCallback, const Lib3MF_uint64 nUserData)
+void CLib3MFReader::SetProgressCallback(const Lib3MFProgressCallback pProgressCallback, const Lib3MF_pvoid pUserData)
 {
 	NMR::Lib3MFProgressCallback lambdaCallback =
 		[pProgressCallback](int progressStep, NMR::ProgressIdentifier identifier, void* pUserData)
 	{
 		bool ret;
-		(*pProgressCallback)(&ret, progressStep / 100.0f, eLib3MFProgressIdentifier(identifier), reinterpret_cast<Lib3MF_uint64>(pUserData));
+		(*pProgressCallback)(&ret, progressStep / 100.0f, eLib3MFProgressIdentifier(identifier), pUserData);
 		return ret;
 	};
-	m_pReader->SetProgressCallback(lambdaCallback, reinterpret_cast<void*>(nUserData));
+	m_pReader->SetProgressCallback(lambdaCallback, pUserData);
 }
 
 void CLib3MFReader::AddRelationToRead (const std::string & sRelationShipType)

@@ -124,7 +124,7 @@ namespace Lib3MF
 	{
 		PositionedVector<Lib3MF_uint8> callbackBuffer;
 		Writer::writer3MF->WriteToCallback(PositionedVector<Lib3MF_uint8>::writeCallback,
-			PositionedVector<Lib3MF_uint8>::seekCallback, reinterpret_cast<Lib3MF_uint64>(&callbackBuffer));
+			PositionedVector<Lib3MF_uint8>::seekCallback, reinterpret_cast<Lib3MF_pvoid>(&callbackBuffer));
 
 		std::vector<Lib3MF_uint8> buffer;
 		Writer::writer3MF->WriteToBuffer(buffer);
@@ -136,7 +136,7 @@ namespace Lib3MF
 	{
 		PositionedVector<Lib3MF_uint8> callbackBuffer;
 		Writer::writerSTL->WriteToCallback(PositionedVector<Lib3MF_uint8>::writeCallback,
-			PositionedVector<Lib3MF_uint8>::seekCallback, reinterpret_cast<Lib3MF_uint64>(&callbackBuffer));
+			PositionedVector<Lib3MF_uint8>::seekCallback, reinterpret_cast<Lib3MF_pvoid>(&callbackBuffer));
 
 		std::vector<Lib3MF_uint8> buffer;
 		Writer::writerSTL->WriteToBuffer(buffer);
