@@ -24,41 +24,41 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CLib3MFBaseClass
+Abstract: This is a stub class definition of CLib3MFBase
 
 */
 
+#include "lib3mf_base.hpp"
+#include "lib3mf_interfaceexception.hpp"
 
-#ifndef __LIB3MF_LIB3MFBASECLASS
-#define __LIB3MF_LIB3MFBASECLASS
+// Include custom headers here.
 
-#include "lib3mf_interfaces.hpp"
-#include <list>
-#include <string>
 
-namespace Lib3MF {
-namespace Impl {
+using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class declaration of CLib3MFBaseClass
+ Class definition of CLib3MFBase 
 **************************************************************************************************************************/
 
-class CLib3MFBaseClass : public virtual ILib3MFBaseClass {
-private:
-
-	std::list <std::string> m_LastErrors;
-
-protected:
-	
-public:
-
-	virtual void clearLastErrors ();
-	virtual bool getLastError (std::string & sErrorString);
-	virtual void addLastError(std::string ErrorString);
-
-};
-
-}
+bool CLib3MFBase::GetLastErrorMessage (std::string & sErrorMessage)
+{
+	auto iIterator = m_errors.rbegin();
+	if (iIterator != m_errors.rend()) {
+		sErrorMessage = *iIterator;
+		return true;
+	}else {
+		sErrorMessage = "";
+		return false;
+	}
 }
 
-#endif // __LIB3MF_LIB3MFBASECLASS
+void CLib3MFBase::ClearErrorMessages ()
+{
+	m_errors.clear();
+}
+
+void CLib3MFBase::RegisterErrorMessage (const std::string & sErrorMessage)
+{
+	m_errors.push_back(sErrorMessage);
+}
+

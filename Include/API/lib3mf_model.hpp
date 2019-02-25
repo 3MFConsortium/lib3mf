@@ -33,7 +33,7 @@ Abstract: This is the class declaration of CLib3MFModel
 #define __LIB3MF_LIB3MFMODEL
 
 #include "lib3mf_interfaces.hpp"
-#include "lib3mf_baseclass.hpp"
+#include "lib3mf_base.hpp"
 
 #pragma warning( push)
 #pragma warning( disable : 4250)
@@ -51,7 +51,7 @@ namespace Impl {
  Class declaration of CLib3MFModel 
 **************************************************************************************************************************/
 
-class CLib3MFModel : public virtual ILib3MFModel, public virtual CLib3MFBaseClass {
+class CLib3MFModel : public virtual ILib3MFModel, public virtual CLib3MFBase {
 private:
 
 	NMR::PModel m_model;

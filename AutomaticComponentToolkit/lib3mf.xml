@@ -237,6 +237,10 @@
 		<param name="UserData" type="uint64" pass="in" description="Userdata that is passed to the callback function"/>
 	</functiontype>
 
+	
+	<class name="Base">
+	</class>
+	
 	<class name="Writer">
 		<method name="WriteToFile" dllsuffix="utf8" description = "Writes out the model as file. The file type is specified by the Model Writer class.">
 			<param name="Filename" type="string" pass="in" description="Filename to write into" />
@@ -1089,7 +1093,7 @@
 		</method>
 	</class>
 
-	<global releasemethod="Release" journalmethod="SetJournal" versionmethod="GetLibraryVersion" errormethod2="GetLastError" >
+	<global baseclassname="Base" releasemethod="Release" journalmethod="SetJournal" versionmethod="GetLibraryVersion" errormethod="GetLastError" >
 		<method name="GetLibraryVersion" description = "retrieves the current version of the library.">
 			<param name="Major" type="uint32" pass="out" description="returns the major version of the library" />
 			<param name="Minor" type="uint32" pass="out" description="returns the minor version of the library" />
@@ -1106,13 +1110,13 @@
 			<param name="Model" type="handle" class="Model" pass="return" description="returns an empty model instance" />
 		</method>
 		<method name="Release" description = "releases an object instance">
-			<param name="Instance" type="handle" class="BaseClass" pass="in" description="releases the memory of the passed object." />
+			<param name="Instance" type="handle" class="Base" pass="in" description="releases the memory of the passed object." />
 		</method>
 		<method name="SetJournal" description = "Sets the journal file path">
 			<param name="JournalPath" type="string" pass="in" description="File name of the journal file" />
 		</method>
 		<method name="GetLastError" description="Retrieves the last error string of an instance">
-			<param name="Instance" type="handle" class="BaseClass" pass="in" description="Object where the error occured." />
+			<param name="Instance" type="handle" class="Base" pass="in" description="Object where the error occured." />
 			<param name="LastErrorString" type="string" pass="out" description="Last Error String" />
 			<param name="HasLastError" type="bool" pass="return" description="Returns if the instance has a last error." />
 		</method>
@@ -1149,24 +1153,24 @@
 			<param name="Alpha" type="single" pass="out" description="Alpha value of color (0-1)" />
 		</method>
 		<method name="GetIdentityTransform" description = "Creates an identity transform">
-      <param name="Transform" type="struct" class="Transform" pass="return" description="Transformation matrix." />
-    </method>
-    <method name="GetUniformScaleTransform" description = "Creates a uniform scale transform">
-      <param name="Factor" type="single" pass="in" description="Factor in X, Y and Z" />
-      <param name="Transform" type="struct" class="Transform" pass="return" description="Transformation matrix." />
-    </method>
-    <method name="GetScaleTransform" description = "Creates a scale transform">
-      <param name="FactorX" type="single" pass="in" description="Factor in X" />
-      <param name="FactorY" type="single" pass="in" description="Factor in Y" />
-      <param name="FactorZ" type="single" pass="in" description="Factor in Z" />
-      <param name="Transform" type="struct" class="Transform" pass="return" description="Transformation matrix." />
-    </method>
-    <method name="GetTranslationTransform" description = "Creates an translation transform">
-      <param name="VectorX" type="single" pass="in" description="Translation in X" />
-      <param name="VectorY" type="single" pass="in" description="Translation in Y" />
-      <param name="VectorZ" type="single" pass="in" description="Translation in Z" />
-      <param name="Transform" type="struct" class="Transform" pass="return" description="Transformation matrix." />
-    </method>
-  </global>
+			<param name="Transform" type="struct" class="Transform" pass="return" description="Transformation matrix." />
+		</method>
+		<method name="GetUniformScaleTransform" description = "Creates a uniform scale transform">
+			<param name="Factor" type="single" pass="in" description="Factor in X, Y and Z" />
+			<param name="Transform" type="struct" class="Transform" pass="return" description="Transformation matrix." />
+		</method>
+		<method name="GetScaleTransform" description = "Creates a scale transform">
+			<param name="FactorX" type="single" pass="in" description="Factor in X" />
+			<param name="FactorY" type="single" pass="in" description="Factor in Y" />
+			<param name="FactorZ" type="single" pass="in" description="Factor in Z" />
+			<param name="Transform" type="struct" class="Transform" pass="return" description="Transformation matrix." />
+		</method>
+		<method name="GetTranslationTransform" description = "Creates an translation transform">
+			<param name="VectorX" type="single" pass="in" description="Translation in X" />
+			<param name="VectorY" type="single" pass="in" description="Translation in Y" />
+			<param name="VectorZ" type="single" pass="in" description="Translation in Z" />
+			<param name="Transform" type="struct" class="Transform" pass="return" description="Transformation matrix." />
+		</method>
+	</global>
 
 </component>

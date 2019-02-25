@@ -24,40 +24,64 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CLib3MFAttachment
+Abstract: This is the class declaration of CLib3MFBase
 
 */
 
-#include "lib3mf_baseclass.hpp"
-#include "lib3mf_interfaceexception.hpp"
 
-using namespace Lib3MF::Impl;
+#ifndef __LIB3MF_LIB3MFBASE
+#define __LIB3MF_LIB3MFBASE
+
+#include "lib3mf_interfaces.hpp"
+#include <vector>
+
+
+// Include custom headers here.
+
+
+namespace Lib3MF {
+namespace Impl {
+
 
 /*************************************************************************************************************************
- Class definition of CLib3MFBaseClass
+ Class declaration of CLib3MFBase 
 **************************************************************************************************************************/
 
-void CLib3MFBaseClass::clearLastErrors()
-{
-	m_LastErrors.clear ();
-}
+class CLib3MFBase : public virtual ILib3MFBase {
+private:
 
-bool CLib3MFBaseClass::getLastError(std::string & sErrorString)
-{
-	auto iIterator = m_LastErrors.rbegin();
-	if (iIterator != m_LastErrors.rend()) {
-		sErrorString = *iIterator;
-		return true;
-	}
-	else {
-		sErrorString = "";
-		return false;
-	}
-}
+	std::vector<std::string> m_errors;
 
-void CLib3MFBaseClass::addLastError(std::string ErrorString)
-{
-	m_LastErrors.push_back (ErrorString);
-}
+	/**
+	* Put private members here.
+	*/
+
+protected:
+
+	/**
+	* Put protected members here.
+	*/
+
+public:
+
+	/**
+	* Put additional public members here. They will not be visible in the external API.
+	*/
+
+	bool GetLastErrorMessage (std::string & sErrorMessage);
+
+	void ClearErrorMessages ();
+
+	void RegisterErrorMessage (const std::string & sErrorMessage);
 
 
+	/**
+	* Public member functions to implement.
+	*/
+
+};
+
+} // namespace Impl
+} // namespace Lib3MF
+
+#endif // __LIB3MF_LIB3MFBASE
