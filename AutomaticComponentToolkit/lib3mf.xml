@@ -37,8 +37,8 @@
 		<binding language="Pascal" indentation="tabs" />
 		<binding language="Python" indentation="tabs" />
 		<binding language="CppDynamic" indentation="tabs" />
-		<!--<binding language="Node" indentation="tabs" />
-		<binding language="Go" indentation="tabs" />-->
+		<binding language="Node" indentation="tabs" />
+		<binding language="Go" indentation="tabs" />
 	</bindings>
 	<implementations>
 		<implementation language="Cpp" indentation="tabs" stubidentifier="" />
