@@ -41,6 +41,7 @@ A model is an in memory representation of the 3MF file.
 #include "Model/Classes/NMR_ModelBuildItem.h"
 #include "Model/Classes/NMR_ModelBaseMaterials.h"
 #include "Model/Classes/NMR_ModelColorGroup.h"
+#include "Model/Classes/NMR_ModelTexture2DGroup.h"
 #include "Model/Classes/NMR_ModelTexture2D.h"
 #include "Model/Classes/NMR_ModelSliceStack.h"
 #include "Model/Classes/NMR_ModelMetaDataGroup.h"
@@ -459,6 +460,10 @@ namespace NMR {
 		if (pTexture2D != nullptr)
 			m_TextureLookup.push_back(pResource);
 
+		CModelTexture2DGroupResource * pTexture2DGroup = dynamic_cast<CModelTexture2DGroupResource *> (pResource.get());
+		if (pTexture2DGroup != nullptr)
+			m_Texture2DGroupLookup.push_back(pResource);
+
 		CModelSliceStack *pSliceStack = dynamic_cast<CModelSliceStack *>(pResource.get());
 		if (pSliceStack != nullptr) 
 			m_SliceStackLookup.push_back(pResource);
@@ -550,7 +555,6 @@ namespace NMR {
 	nfUint32 CModel::getColorGroupCount()
 	{
 		return (nfUint32)m_ColorGroupLookup.size();
-
 	}
 
 	PModelResource CModel::getColorGroupResource(_In_ nfUint32 nIndex)
@@ -592,11 +596,62 @@ namespace NMR {
 	}
 
 
+	_Ret_maybenull_ PModelTexture2DGroupResource CModel::findTexture2DGroup(_In_ PackageResourceID nResourceID)
+	{
+		PModelResource pResource = findResource(nResourceID);
+		if (pResource != nullptr) {
+			PModelTexture2DGroupResource pTexture2DGroupResource = std::dynamic_pointer_cast<CModelTexture2DGroupResource>(pResource);
+			if (pTexture2DGroupResource.get() == nullptr)
+				throw CNMRException(NMR_ERROR_RESOURCETYPEMISMATCH);
+			return pTexture2DGroupResource;
+		}
+		return nullptr;
+	}
+
+	nfUint32 CModel::getTexture2DGroupCount()
+	{
+		return (nfUint32)m_Texture2DGroupLookup.size();
+	}
+
+	PModelResource CModel::getTexture2DGroupResource(_In_ nfUint32 nIndex)
+	{
+		nfUint32 nCount = getTexture2DGroupCount();
+		if (nIndex >= nCount)
+			throw CNMRException(NMR_ERROR_INVALIDINDEX);
+
+		return m_Texture2DGroupLookup[nIndex];
+
+	}
+
+	CModelTexture2DGroupResource * CModel::getTexture2DGroup(_In_ nfUint32 nIndex)
+	{
+		CModelTexture2DGroupResource * pTexture2DGroup = dynamic_cast<CModelTexture2DGroupResource *> (getTexture2DGroupResource(nIndex).get());
+		if (pTexture2DGroup == nullptr)
+			throw CNMRException(NMR_ERROR_RESOURCETYPEMISMATCH);
+
+		return pTexture2DGroup;
+	}
+
+	void CModel::mergeTexture2DGroups(_In_ CModel * pSourceModel)
+	{
+		if (pSourceModel == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		nfUint32 nCount = pSourceModel->getTexture2DGroupCount();
+		for (nfUint32 nIndex = 0; nIndex < nCount; nIndex++) {
+			CModelTexture2DGroupResource * pOldTexture2DGroup = pSourceModel->getTexture2DGroup(nIndex);
+			__NMRASSERT(pNewTexture2DGroup != nullptr);
+
+			PModelTexture2DGroupResource pNewTexture2DGroup = std::make_shared<CModelTexture2DGroupResource>(generateResourceID(), this, pNewTexture2DGroup->getTexture2D());
+			pNewTexture2DGroup->mergeFrom(pOldTexture2DGroup);
+
+			addResource(pNewTexture2DGroup);
+		}
+	}
 
 
 	_Ret_maybenull_ PModelTexture2DResource CModel::findTexture2D(_In_ PackageResourceID nResourceID)
 	{
-
 		PModelResource pResource = findResource(nResourceID);
 		if (pResource != nullptr) {
 			PModelTexture2DResource pTexture2DResource = std::dynamic_pointer_cast<CModelTexture2DResource>(pResource);
@@ -610,7 +665,6 @@ namespace NMR {
 	nfUint32 CModel::getTexture2DCount()
 	{
 		return (nfUint32)m_TextureLookup.size();
-
 	}
 
 	PModelResource CModel::getTexture2DResource(_In_ nfUint32 nIndex)

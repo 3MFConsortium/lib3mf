@@ -22,8 +22,8 @@ if (WIN32)
 endif()
 
 target_include_directories(${TESTNAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/Include ${gtest_SOURCE_DIR}/include)
-target_link_libraries(${TESTNAME} ${PROJECT_NAME}_s gtest gtest_main)
-add_dependencies(${TESTNAME} ${PROJECT_NAME}_s)
+target_link_libraries(${TESTNAME} ${PROJECT_NAME} gtest gtest_main)
+add_dependencies(${TESTNAME} ${PROJECT_NAME})
 set_target_properties(${TESTNAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/")
 
 add_test(${TESTNAME} ${CMAKE_CURRENT_BINARY_DIR}/${TESTNAME})

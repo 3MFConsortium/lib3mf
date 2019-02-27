@@ -33,7 +33,7 @@ Abstract: This is the class declaration of CLib3MFBeamSet
 #define __LIB3MF_LIB3MFBEAMSET
 
 #include "lib3mf_interfaces.hpp"
-#include "lib3mf_baseclass.hpp"
+#include "lib3mf_base.hpp"
 #pragma warning( push)
 #pragma warning( disable : 4250)
 
@@ -51,7 +51,7 @@ namespace Impl {
  Class declaration of CLib3MFBeamSet 
 **************************************************************************************************************************/
 
-class CLib3MFBeamSet : public virtual ILib3MFBeamSet, public virtual CLib3MFBaseClass {
+class CLib3MFBeamSet : public virtual ILib3MFBeamSet, public virtual CLib3MFBase {
 private:
 
 	/**

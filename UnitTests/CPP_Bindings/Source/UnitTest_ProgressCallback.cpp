@@ -61,7 +61,7 @@ namespace Lib3MF
 		static std::string InFolder;
 		static std::string OutFolder;
 	public:
-		static void* m_snUserData;
+		static void* m_spUserData;
 	};
 
 	PLib3MFModel ProgressCallback::model;
@@ -69,9 +69,9 @@ namespace Lib3MF
 	std::string ProgressCallback::InFolder(sTestFilesPath + "/Writer/");
 	std::string ProgressCallback::OutFolder(sOutFilesPath + "/Writer/");
 
-	void* ProgressCallback::m_snUserData = reinterpret_cast<void*>(&ProgressCallback::model);
+	void* ProgressCallback::m_spUserData = reinterpret_cast<void*>(&ProgressCallback::model);
 
-	void Callback_Positive(bool* pAbort, Lib3MF_double dProgress, eLib3MFProgressIdentifier identifier, Lib3MF_uint64 userData)
+	void Callback_Positive(bool* pAbort, Lib3MF_double dProgress, eLib3MFProgressIdentifier identifier, Lib3MF_pvoid pUserData)
 	{
 		std::cout << "Progress " << dProgress*100 << "/100";
 		if (identifier != eLib3MFProgressIdentifier::eProgressIdentifierQUERYCANCELED) {
@@ -80,19 +80,19 @@ namespace Lib3MF
 			std::cout << ": info = \"" << progressMessage << "\"";
 		}
 		std::cout << "\n";
-		EXPECT_TRUE(ProgressCallback::m_snUserData == reinterpret_cast<void*>(userData)) << "Userdata does not match.";
+		EXPECT_TRUE(ProgressCallback::m_spUserData == pUserData) << "Userdata does not match.";
 		*pAbort = false;
 	}
 
-	void Callback_Negative(bool* pAbort, Lib3MF_double dProgress, eLib3MFProgressIdentifier identifier, Lib3MF_uint64 userData)
+	void Callback_Negative(bool* pAbort, Lib3MF_double dProgress, eLib3MFProgressIdentifier identifier, Lib3MF_pvoid pUserData)
 	{
-		Callback_Positive(pAbort, dProgress, identifier, userData);
+		Callback_Positive(pAbort, dProgress, identifier, pUserData);
 		*pAbort = dProgress > 0.5;
 	}
 
 	TEST_F(ProgressCallback, Write)
 	{
-		ProgressCallback::writer3MF->SetProgressCallback(Callback_Positive, reinterpret_cast<Lib3MF_uint64>(ProgressCallback::m_snUserData));
+		ProgressCallback::writer3MF->SetProgressCallback(Callback_Positive, reinterpret_cast<Lib3MF_pvoid>(ProgressCallback::m_spUserData));
 		ProgressCallback::writer3MF->WriteToFile(ProgressCallback::OutFolder + "Pyramid.3mf");
 	}
 
@@ -100,14 +100,14 @@ namespace Lib3MF
 	{
 		auto localModel = CLib3MFWrapper::CreateModel();
 		auto reader = localModel->QueryReader("3mf");
-		reader->SetProgressCallback(Callback_Positive, reinterpret_cast<Lib3MF_uint64>(ProgressCallback::m_snUserData));
+		reader->SetProgressCallback(Callback_Positive, ProgressCallback::m_spUserData);
 		reader->ReadFromFile(InFolder + "Pyramid.3mf");
 	}
 
 	TEST_F(ProgressCallback, WriteNegative)
 	{
 		try {
-			ProgressCallback::writer3MF->SetProgressCallback(Callback_Negative, reinterpret_cast<Lib3MF_uint64>(ProgressCallback::m_snUserData));
+			ProgressCallback::writer3MF->SetProgressCallback(Callback_Negative, ProgressCallback::m_spUserData);
 			ProgressCallback::writer3MF->WriteToFile(ProgressCallback::OutFolder + "Pyramid.3mf");
 			EXPECT_TRUE(false);
 		}

@@ -53,6 +53,8 @@ Abstract: This is a stub class definition of CLib3MFModel
 #include "lib3mf_basematerialgroupiterator.hpp"
 #include "lib3mf_colorgroup.hpp"
 #include "lib3mf_colorgroupiterator.hpp"
+#include "lib3mf_texture2dgroup.hpp"
+#include "lib3mf_texture2dgroupiterator.hpp"
 // Include custom headers here.
 
 #include "Model/Classes/NMR_ModelMeshObject.h"
@@ -61,6 +63,7 @@ Abstract: This is a stub class definition of CLib3MFModel
 #include "Model/Classes/NMR_ModelNurbsCurve.h"
 #include "Common/Platform/NMR_ImportStream_Memory.h"
 #include "Model/Classes/NMR_ModelColorGroup.h" 
+#include "Model/Classes/NMR_ModelTexture2DGroup.h" 
 
 #include "lib3mf_utils.hpp"
 
@@ -169,6 +172,16 @@ ILib3MFSliceStack * CLib3MFModel::GetSliceStackByID(const Lib3MF_uint32 nResourc
 	}
 	else
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDSLICESTACKRESOURCE);
+}
+
+ILib3MFTexture2DGroup * CLib3MFModel::GetTexture2DGroupByID(const Lib3MF_uint32 nResourceID)
+{
+	NMR::PModelResource pResource = model().findResource(nResourceID);
+	if (dynamic_cast<NMR::CModelTexture2DGroupResource*>(pResource.get())) {
+		return new CLib3MFTexture2DGroup(std::dynamic_pointer_cast<NMR::CModelTexture2DGroupResource>(pResource));
+	}
+	else
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDTEXTURE2DGROUP);
 }
 
 std::string CLib3MFModel::GetBuildUUID (bool & bHasUUID)
@@ -321,6 +334,19 @@ ILib3MFColorGroupIterator * CLib3MFModel::GetColorGroups()
 	return pResult.release();
 }
 
+ILib3MFTexture2DGroupIterator * CLib3MFModel::GetTexture2DGroups()
+{
+	auto pResult = std::unique_ptr<CLib3MFTexture2DGroupIterator>(new CLib3MFTexture2DGroupIterator());
+	Lib3MF_uint32 nCount = model().getTexture2DGroupCount();
+
+	for (Lib3MF_uint32 nIdx = 0; nIdx < nCount; nIdx++) {
+		auto resource = model().getTexture2DGroupResource(nIdx);
+		if (dynamic_cast<NMR::CModelTexture2DGroupResource *>(resource.get()))
+			pResult->addResource(resource);
+	}
+	return pResult.release();
+}
+
 ILib3MFResourceIterator * CLib3MFModel::GetSliceStacks()
 {
 	auto pResult = std::unique_ptr<CLib3MFResourceIterator>(new CLib3MFResourceIterator());
@@ -439,6 +465,21 @@ ILib3MFColorGroup * CLib3MFModel::AddColorGroup()
 	model().addResource(pResource);
 
 	return new CLib3MFColorGroup(pResource);
+}
+
+ILib3MFTexture2DGroup * CLib3MFModel::AddTexture2DGroup(ILib3MFTexture2D* pTexture2DInstance)
+{
+	NMR::PackageResourceID nTexture2DID = pTexture2DInstance->GetResourceID();
+
+	// Find class instance
+	NMR::PModelTexture2DResource pModelTexture2DObject = model().findTexture2D(nTexture2DID);
+	if (pModelTexture2DObject == nullptr)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_RESOURCENOTFOUND); 
+
+	NMR::PModelTexture2DGroupResource pResource = std::make_shared<NMR::CModelTexture2DGroupResource>(model().generateResourceID(), &model(), pModelTexture2DObject);
+	model().addResource(pResource);
+
+	return new CLib3MFTexture2DGroup(pResource);
 }
 
 ILib3MFBuildItem * CLib3MFModel::AddBuildItem (ILib3MFObject* pObject, const sLib3MFTransform Transform)

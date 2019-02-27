@@ -99,7 +99,7 @@ namespace Lib3MF
 			PositionedVector<Lib3MF_uint8>::readCallback,
 			bufferCallback.vec.size(),
 			PositionedVector<Lib3MF_uint8>::seekCallback,
-			reinterpret_cast<Lib3MF_uint64>(&bufferCallback)
+			reinterpret_cast<Lib3MF_pvoid>(&bufferCallback)
 		);
 		CheckReaderWarnings(Reader::reader3MF, 0);
 	}

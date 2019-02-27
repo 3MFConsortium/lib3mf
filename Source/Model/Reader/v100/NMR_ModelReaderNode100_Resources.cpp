@@ -58,8 +58,6 @@ namespace NMR {
 		m_pModel = pModel;
 		m_sPath = sPath;
 		m_nProgressCount = 0;
-
-		m_pTexCoordMapping = std::make_shared<CModelReader_TexCoordMapping>();
 	}
 
 	void CModelReaderNode100_Resources::parseXML(_In_ CXmlReader * pXMLReader)
@@ -93,7 +91,7 @@ namespace NMR {
 						throw CNMRException(NMR_USERABORTED);
 					m_pProgressMonitor->PushLevel(1.0 - 2.0 / (m_nProgressCount + 2), 1.0 - 2.0 / (m_nProgressCount + 1 + 2));
 				}
-				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode100_Object>(m_pModel, m_pWarnings, m_pProgressMonitor, m_pTexCoordMapping);
+				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode100_Object>(m_pModel, m_pWarnings, m_pProgressMonitor);
 				pXMLNode->parseXML(pXMLReader);
 				if (m_pProgressMonitor)
 					m_pProgressMonitor->PopLevel();
@@ -112,7 +110,7 @@ namespace NMR {
 				pXMLNode->parseXML(pXMLReader);
 			}
 			else if (strcmp(pChildName, XML_3MF_ELEMENT_TEX2DGROUP) == 0) {
-				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode100_Tex2DGroup>(m_pModel, m_pWarnings, m_pTexCoordMapping);
+				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode100_Tex2DGroup>(m_pModel, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 			}
 			else if (strcmp(pChildName, XML_3MF_ELEMENT_TEXTURE2D) == 0) {

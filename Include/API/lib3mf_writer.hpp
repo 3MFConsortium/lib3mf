@@ -33,7 +33,7 @@ Abstract: This is the class declaration of CLib3MFWriter
 #define __LIB3MF_LIB3MFWRITER
 
 #include "lib3mf_interfaces.hpp"
-#include "lib3mf_baseclass.hpp"
+#include "lib3mf_base.hpp"
 #pragma warning( push)
 #pragma warning( disable : 4250)
 
@@ -50,7 +50,7 @@ namespace Impl {
  Class declaration of CLib3MFWriter 
 **************************************************************************************************************************/
 
-class CLib3MFWriter : public virtual ILib3MFWriter, public virtual CLib3MFBaseClass {
+class CLib3MFWriter : public virtual ILib3MFWriter, public virtual CLib3MFBase {
 private:
 
 	/**
@@ -82,9 +82,9 @@ public:
 
 	void WriteToBuffer (Lib3MF_uint64 nBufferBufferSize, Lib3MF_uint64* pBufferNeededCount, Lib3MF_uint8 * pBufferBuffer);
 
-	void WriteToCallback(const Lib3MFWriteCallback pTheWriteCallback, const Lib3MFSeekCallback pTheSeekCallback, const Lib3MF_uint64 nUserData);
+	void WriteToCallback(const Lib3MFWriteCallback pTheWriteCallback, const Lib3MFSeekCallback pTheSeekCallback, const Lib3MF_pvoid pUserData);
 
-	void SetProgressCallback(const Lib3MFProgressCallback pProgressCallback, const Lib3MF_uint64 nUserData);
+	void SetProgressCallback(const Lib3MFProgressCallback pProgressCallback, const Lib3MF_pvoid pUserData);
 };
 
 }

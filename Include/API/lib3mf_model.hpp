@@ -33,7 +33,7 @@ Abstract: This is the class declaration of CLib3MFModel
 #define __LIB3MF_LIB3MFMODEL
 
 #include "lib3mf_interfaces.hpp"
-#include "lib3mf_baseclass.hpp"
+#include "lib3mf_base.hpp"
 
 #pragma warning( push)
 #pragma warning( disable : 4250)
@@ -51,7 +51,7 @@ namespace Impl {
  Class declaration of CLib3MFModel 
 **************************************************************************************************************************/
 
-class CLib3MFModel : public virtual ILib3MFModel, public virtual CLib3MFBaseClass {
+class CLib3MFModel : public virtual ILib3MFModel, public virtual CLib3MFBase {
 private:
 
 	NMR::PModel m_model;
@@ -97,6 +97,8 @@ public:
 
 	ILib3MFColorGroup * GetColorGroupByID(const Lib3MF_uint32 nResourceID);
 
+	ILib3MFTexture2DGroup * GetTexture2DGroupByID(const Lib3MF_uint32 nResourceID);
+
 	ILib3MFSliceStack * GetSliceStackByID(const Lib3MF_uint32 nResourceID);
 
 	std::string GetBuildUUID (bool & bHasUUID);
@@ -118,6 +120,8 @@ public:
 	ILib3MFBaseMaterialGroupIterator * GetBaseMaterialGroups ();
 
 	ILib3MFColorGroupIterator * GetColorGroups();
+
+	ILib3MFTexture2DGroupIterator * GetTexture2DGroups();
 
 	ILib3MFResourceIterator * GetSliceStacks();
 
@@ -142,6 +146,8 @@ public:
 	ILib3MFBaseMaterialGroup * AddBaseMaterialGroup ();
 
 	ILib3MFColorGroup * AddColorGroup();
+
+	ILib3MFTexture2DGroup * AddTexture2DGroup(ILib3MFTexture2D* pTexture2DInstance);
 
 	ILib3MFBuildItem * AddBuildItem (ILib3MFObject* pObject, const sLib3MFTransform Transform);
 

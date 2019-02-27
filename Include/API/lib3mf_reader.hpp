@@ -33,7 +33,7 @@ Abstract: This is the class declaration of CLib3MFReader
 #define __LIB3MF_LIB3MFREADER
 
 #include "lib3mf_interfaces.hpp"
-#include "lib3mf_baseclass.hpp"
+#include "lib3mf_base.hpp"
 #pragma warning( push)
 #pragma warning( disable : 4250)
 
@@ -51,7 +51,7 @@ namespace Impl {
  Class declaration of CLib3MFReader 
 **************************************************************************************************************************/
 
-class CLib3MFReader : public virtual ILib3MFReader, public virtual CLib3MFBaseClass {
+class CLib3MFReader : public virtual ILib3MFReader, public virtual CLib3MFBase {
 private:
 
 	/**
@@ -81,11 +81,11 @@ public:
 
 	void ReadFromBuffer (const Lib3MF_uint64 nBufferBufferSize, const Lib3MF_uint8 * pBufferBuffer);
 
-	void ReadFromCallback(const Lib3MFReadCallback pTheReadCallback, const Lib3MF_uint64 nStreamSize, const Lib3MFSeekCallback pTheSeekCallback, const Lib3MF_uint64 nUserData);
+	void ReadFromCallback(const Lib3MFReadCallback pTheReadCallback, const Lib3MF_uint64 nStreamSize, const Lib3MFSeekCallback pTheSeekCallback, const Lib3MF_pvoid pUserData);
 
 	void AddRelationToRead (const std::string & sRelationShipType);
 
-	void SetProgressCallback(const Lib3MFProgressCallback pProgressCallback, const Lib3MF_uint64 nUserData);
+	void SetProgressCallback(const Lib3MFProgressCallback pProgressCallback, const Lib3MF_pvoid pUserData);
 
 	void RemoveRelationToRead (const std::string & sRelationShipType);
 

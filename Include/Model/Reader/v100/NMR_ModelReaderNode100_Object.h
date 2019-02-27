@@ -57,7 +57,6 @@ namespace NMR {
 		std::string m_sType;
 		nfBool m_bHasType;
 		PModelObject m_pObject;
-		PModelReader_TexCoordMapping m_pTexCoordMapping;
 		nfBool m_bHasDefaultPropertyID;
 		nfBool m_bHasDefaultPropertyIndex;
 		ModelResourceID m_nDefaultPropertyID;
@@ -77,7 +76,7 @@ namespace NMR {
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 	public:
 		CModelReaderNode100_Object() = delete;
-		CModelReaderNode100_Object(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings, _In_ CProgressMonitor * pProgressMonitor, _In_ PModelReader_TexCoordMapping pTexCoordMapping);
+		CModelReaderNode100_Object(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings, _In_ CProgressMonitor * pProgressMonitor);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 	};

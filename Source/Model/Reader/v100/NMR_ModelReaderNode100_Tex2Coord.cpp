@@ -46,10 +46,10 @@ namespace NMR {
 	{
 
 		m_pModel = pModel;
-	    m_bHasU = false;
-		m_fU = 0.0f;
+		m_bHasU = false;
 		m_bHasV = false;
-		m_fV = 0.0f;
+		m_sUVCoordinate.m_dU = 0.0;
+		m_sUVCoordinate.m_dV = 0.0;
 	}
 
 	void CModelReaderNode100_Tex2Coord::parseXML(_In_ CXmlReader * pXMLReader)
@@ -73,7 +73,7 @@ namespace NMR {
 		
 		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_TEXTUREVERTEX_U) == 0) {
 			try {
-				m_fU = fnStringToFloat(pAttributeValue);
+				m_sUVCoordinate.m_dU = fnStringToDouble(pAttributeValue);
 			}
 			catch (...)
 			{
@@ -82,7 +82,7 @@ namespace NMR {
 
 		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_TEXTUREVERTEX_V) == 0) {
 			try {
-				m_fV = fnStringToFloat(pAttributeValue);
+				m_sUVCoordinate.m_dV = fnStringToDouble(pAttributeValue);
 			}
 			catch (...)
 			{
@@ -90,19 +90,9 @@ namespace NMR {
 		}
 	}
 
-	nfFloat CModelReaderNode100_Tex2Coord::getU()
-	{
-		return m_fU;
-	}
-
 	nfBool CModelReaderNode100_Tex2Coord::hasU()
 	{
 		return m_bHasU;
-	}
-
-	nfFloat CModelReaderNode100_Tex2Coord::getV()
-	{
-		return m_fV;
 	}
 
 	nfBool CModelReaderNode100_Tex2Coord::hasV()
@@ -110,4 +100,8 @@ namespace NMR {
 		return m_bHasV;
 	}
 
+	MODELTEXTURE2DCOORDINATE CModelReaderNode100_Tex2Coord::getUV()
+	{
+		return m_sUVCoordinate;
+	}
 }

@@ -47,13 +47,10 @@ Stream.
 
 namespace NMR {
 
-	CModelReaderNode100_Object::CModelReaderNode100_Object(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings, _In_ CProgressMonitor * pProgressMonitor, _In_ PModelReader_TexCoordMapping pTexCoordMapping)
+	CModelReaderNode100_Object::CModelReaderNode100_Object(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings, _In_ CProgressMonitor * pProgressMonitor)
 		: CModelReaderNode(pWarnings, pProgressMonitor)
 	{
 		// Initialize variables
-		if (!pTexCoordMapping.get())
-			throw CNMRException(NMR_ERROR_INVALIDPARAM);
-
 		m_nID = 0;
 		m_sType = "";
 		m_bHasType = false;
@@ -70,7 +67,6 @@ namespace NMR {
 		m_nDefaultPropertyID = 0;
 		m_nDefaultPropertyIndex = 0;
 
-		m_pTexCoordMapping = pTexCoordMapping;
 		m_nSliceStackId = 0;
 		m_eSlicesMeshResolution = MODELSLICESMESHRESOLUTION_FULL;
 		m_bHasMeshResolution = false;
@@ -246,7 +242,7 @@ namespace NMR {
 				if (m_pProgressMonitor)
 					m_pProgressMonitor->PushLevel(0, 1);
 				// Read Mesh
-				PModelReaderNode100_Mesh pXMLNode = std::make_shared<CModelReaderNode100_Mesh>(m_pModel, pMesh.get(), m_pWarnings, m_pProgressMonitor, m_pTexCoordMapping, m_nDefaultPropertyID, m_nDefaultPropertyIndex);
+				PModelReaderNode100_Mesh pXMLNode = std::make_shared<CModelReaderNode100_Mesh>(m_pModel, pMesh.get(), m_pWarnings, m_pProgressMonitor, m_nDefaultPropertyID, m_nDefaultPropertyIndex);
 				pXMLNode->parseXML(pXMLReader);
 				if (m_pProgressMonitor)
 					m_pProgressMonitor->PopLevel();

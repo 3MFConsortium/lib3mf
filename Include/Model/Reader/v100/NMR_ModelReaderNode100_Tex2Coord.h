@@ -45,10 +45,8 @@ namespace NMR {
 		CModel * m_pModel;
 
 		nfBool m_bHasU;
-		nfFloat m_fU;
-		
 		nfBool m_bHasV;
-		nfFloat m_fV;
+		MODELTEXTURE2DCOORDINATE m_sUVCoordinate;
 		
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
@@ -59,10 +57,8 @@ namespace NMR {
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 
 		nfBool hasU();
-		nfFloat getU();
-		
 		nfBool hasV();
-		nfFloat getV();
+		MODELTEXTURE2DCOORDINATE getUV();
 	};
 
 	typedef std::shared_ptr <CModelReaderNode100_Tex2Coord> PModelReaderNode100_Tex2Coord;
