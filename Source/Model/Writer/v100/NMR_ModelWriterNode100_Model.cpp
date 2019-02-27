@@ -40,6 +40,7 @@ This is the class for exporting the 3mf model stream root node.
 #include "Model/Classes/NMR_ModelBaseMaterials.h"
 #include "Model/Classes/NMR_ModelColorGroup.h"
 #include "Model/Classes/NMR_ModelTexture2D.h"
+#include "Model/Classes/NMR_ModelTexture2DGroup.h"
 #include "Model/Classes/NMR_ModelMeshObject.h"
 #include "Model/Classes/NMR_ModelComponentsObject.h"
 #include "Model/Classes/NMR_Model.h"
@@ -549,30 +550,40 @@ namespace NMR {
 
 	void CModelWriterNode100_Model::writeTex2Coords()
 	{
-/*		nfUint32 nGroupCount = m_pTexCoordMappingContainer->getCount();
-		nfUint32 nGroupIndex;
+		nfUint32 nGroupCount = m_pModel->getTexture2DGroupCount();
 
-		for (nGroupIndex = 0; nGroupIndex < nGroupCount; nGroupIndex++) {
-			PModelWriter_TexCoordMapping pMapping = m_pTexCoordMappingContainer->getMapping(nGroupIndex);
+		for (nfUint32 nGroupIndex = 0; nGroupIndex < nGroupCount; nGroupIndex++) {
 
-			nfUint32 nCount = pMapping->getCount();
-			nfUint32 nIndex;
-			if (nCount > 0) {
-				writeStartElementWithPrefix(XML_3MF_ELEMENT_TEX2DGROUP, XML_3MF_NAMESPACEPREFIX_MATERIAL);
-				writeIntAttribute(XML_3MF_ATTRIBUTE_TEX2DGROUP_ID, pMapping->getResourceID());
-				writeIntAttribute(XML_3MF_ATTRIBUTE_TEX2DGROUP_TEXTUREID, pMapping->getTextureID());
-				for (nIndex = 0; nIndex < nCount; nIndex++) {
-					nfFloat fU, fV;
-					pMapping->getTexCoords(nIndex, fU, fV);
-					writeStartElementWithPrefix(XML_3MF_ELEMENT_TEX2COORD, XML_3MF_NAMESPACEPREFIX_MATERIAL);
-					writeFloatAttribute(XML_3MF_ATTRIBUTE_TEXTURE_U, fU);
-					writeFloatAttribute(XML_3MF_ATTRIBUTE_TEXTURE_V, fV);
-					writeEndElement();
+			CModelTexture2DGroupResource * pTexture2DGroup = m_pModel->getTexture2DGroup(nGroupIndex);
+
+			pTexture2DGroup->buildResourceIndexMap();
+
+			ModelResourceID nResourceID = pTexture2DGroup->getResourceID()->getUniqueID();
+
+			writeStartElementWithPrefix(XML_3MF_ELEMENT_TEX2DGROUP, XML_3MF_NAMESPACEPREFIX_MATERIAL);
+			// Write Object ID (mandatory)
+			writeIntAttribute(XML_3MF_ATTRIBUTE_TEX2DGROUP_ID, nResourceID);
+			writeIntAttribute(XML_3MF_ATTRIBUTE_TEX2DGROUP_TEXTUREID, pTexture2DGroup->getTexture2D()->getResourceID()->getUniqueID());
+
+			nfUint32 nElementCount = pTexture2DGroup->getCount();
+
+			for (nfUint32 j = 0; j < nElementCount; j++) {
+				ModelPropertyID nPropertyID;
+				if (!pTexture2DGroup->mapResourceIndexToPropertyID(j, nPropertyID)) {
+					throw CNMRException(NMR_ERROR_INVALIDPROPERTYRESOURCEID);
 				}
+				MODELTEXTURE2DCOORDINATE uvCoordinate = pTexture2DGroup->getUVCoordinate(nPropertyID);
 
-				writeFullEndElement();
+				m_pPropertyIndexMapping->registerPropertyID(nResourceID, nPropertyID, j);
+
+				writeStartElementWithPrefix(XML_3MF_ELEMENT_TEX2COORD, XML_3MF_NAMESPACEPREFIX_MATERIAL);
+				writeFloatAttribute(XML_3MF_ATTRIBUTE_TEXTURE_U, (float)uvCoordinate.m_dU);
+				writeFloatAttribute(XML_3MF_ATTRIBUTE_TEXTURE_V, (float)uvCoordinate.m_dV);
+				writeEndElement();
 			}
-		} */
+
+			writeFullEndElement();
+		}
 
 	}
 

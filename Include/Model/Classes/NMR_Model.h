@@ -74,6 +74,9 @@ namespace NMR {
 	class CModelColorGroupResource;
 	typedef std::shared_ptr <CModelColorGroupResource> PModelColorGroupResource;
 
+	class CModelTexture2DGroupResource;
+	typedef std::shared_ptr <CModelTexture2DGroupResource> PModelTexture2DGroupResource;
+
 	class CModelTexture2DResource;
 	typedef std::shared_ptr <CModelTexture2DResource> PModelTexture2DResource;
 
@@ -126,6 +129,7 @@ namespace NMR {
 		std::vector<PModelResource> m_TextureLookup;
 		std::vector<PModelResource> m_SliceStackLookup;
 		std::vector<PModelResource> m_ColorGroupLookup;
+		std::vector<PModelResource> m_Texture2DGroupLookup;
 
 		// Add Resource to resource lookup tables
 		void addResourceToLookupTable(_In_ PModelResource pResource);
@@ -216,6 +220,13 @@ namespace NMR {
 		PModelResource getColorGroupResource(_In_ nfUint32 nIndex);
 		CModelColorGroupResource * getColorGroup(_In_ nfUint32 nIndex);
 		void mergeColorGroups(_In_ CModel * pSourceModel);
+
+		// Convenience functions for texture2d groups
+		_Ret_maybenull_ PModelTexture2DGroupResource findTexture2DGroup(_In_ PackageResourceID nResourceID);
+		nfUint32 getTexture2DGroupCount();
+		PModelResource getTexture2DGroupResource(_In_ nfUint32 nIndex);
+		CModelTexture2DGroupResource * getTexture2DGroup(_In_ nfUint32 nIndex);
+		void mergeTexture2DGroups(_In_ CModel * pSourceModel);
 
 		// Convenience functions for 2D Textures
 		_Ret_maybenull_ PModelTexture2DResource findTexture2D(_In_ PackageResourceID nResourceID);

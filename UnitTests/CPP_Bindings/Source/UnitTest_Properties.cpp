@@ -26,7 +26,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-UnitTest_Properties.cpp: Defines Unittests for the Properties
+UnitTest_Properties.cpp: Defines Unittests for the color and basematerial properties
 
 --*/
 

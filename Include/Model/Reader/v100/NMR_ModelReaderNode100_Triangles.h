@@ -46,7 +46,6 @@ namespace NMR {
 	protected:
 		CMesh * m_pMesh;
 		CModel * m_pModel;
-		PModelReader_TexCoordMapping m_pTexCoordMapping;
 
 		ModelResourceID m_nDefaultResourceID;
 		ModelResourceIndex m_nDefaultResourceIndex;
@@ -58,7 +57,7 @@ namespace NMR {
 		_Ret_notnull_ CMeshInformation_Properties * createPropertiesInformation();
 	public:
 		CModelReaderNode100_Triangles() = delete;
-		CModelReaderNode100_Triangles(_In_ CModel * pModel, _In_ CMesh * pMesh, _In_ PModelReaderWarnings pWarnings, _In_ PModelReader_TexCoordMapping pTexCoordMapping, _In_ ModelResourceID nDefaultPropertyID, _In_ ModelResourceIndex nDefaultPropertyIndex);
+		CModelReaderNode100_Triangles(_In_ CModel * pModel, _In_ CMesh * pMesh, _In_ PModelReaderWarnings pWarnings, _In_ ModelResourceID nDefaultPropertyID, _In_ ModelResourceIndex nDefaultPropertyIndex);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 		ModelResourceID getUsedPropertyID() const;

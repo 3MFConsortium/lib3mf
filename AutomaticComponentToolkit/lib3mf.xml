@@ -75,9 +75,10 @@
 		<error name="INVALIDSLICESTACKRESOURCE" code="112" description="A slicestack resource is invalid" />
 		<error name="INVALIDTEXTURERESOURCE" code="113" description="A texture resource is invalid" />
 		<error name="INVALIDCOLORGROUP" code="114" description="A color group resource is invalid" />
+		<error name="INVALIDTEXTURE2DGROUP" code="115" description="A texture2d group resource is invalid" />
 
 
-		<error name="INVALIDRESOURCEINDEX" code="115" description="A resource index is invalid" />
+		<error name="INVALIDRESOURCEINDEX" code="116" description="A resource index is invalid" />
 
 		<error name="ATTACHMENTNOTFOUND" code="121" description="Attachment not found" />
 
@@ -196,6 +197,11 @@
 		<member name="coordinates" type="single" rows="2" />
 	</struct>
 
+	<struct name="Tex2Coord">
+		<member name="U" type="double"/>
+		<member name="V" type="double"/>
+	</struct>
+	
 	<struct name="Transform">
 		<member name="Fields" type="single" rows="3" columns="4" />
 	</struct>
@@ -339,7 +345,13 @@
 			<param name="Resource" type="handle" class="ColorGroup" pass="return" description="returns the ColorGroup instance." />
 		</method>
 	</class>
-
+	
+	<class name="Texture2DGroupIterator" parent="ResourceIterator">
+		<method name="GetCurrentTexture2DGroup" description="Returns the Texture2DGroup the iterator points at.">
+			<param name="Resource" type="handle" class="Texture2DGroup" pass="return" description="returns the Texture2DGroup instance." />
+		</method>
+	</class>
+	
 	<class name="MetaData">
 		<method name="GetNameSpace" dllsuffix="utf8" description = "returns the namespace URL of the metadata">
 			<param name="NameSpace" type="string" pass="return" description="the namespace URL of the metadata" />
@@ -737,6 +749,29 @@
 		</method>
 	</class>
 
+	<class name="Texture2DGroup" parent="Resource">
+		<method name="GetTexture2D" description="Obtains the texture2D instance of this group.">
+			<param name="Texture2DInstance" type="handle" class="Texture2D" pass="return" description="the texture2D instance of this group." />
+		</method>
+		<method name="GetCount" description="Retrieves the count of tex2coords in the Texture2DGroup.">
+			<param name="Count" type="uint32" pass="return" description="returns the count of tex2coords." />
+		</method>
+		<method name="GetAllPropertyIDs" dllsuffix="utf8" description="returns all the PropertyIDs of all tex2coords in this Texture2DGroup">
+			<param name="PropertyIDs" type="basicarray" class="uint32" pass="out" description="PropertyID of the tex2coords in the Texture2DGroup." />
+		</method>
+		<method name="AddTex2Coord" description="Adds a new tex2coord to the Texture2DGroup">
+			<param name="UVCoordinate" type="struct" class="Tex2Coord" pass="in" description="The u/v-coordinate within the texture, horizontally right/vertically up from the origin in the lower left of the texture." />
+			<param name="PropertyID" type="uint32" pass="return" description="returns new PropertyID of the new tex2coord in the Texture2DGroup." />			
+		</method>
+		<method name="GetTex2Coord" description="Obtains a tex2coord to the Texture2DGroup">
+			<param name="PropertyID" type="uint32" pass="in" description="the PropertyID of the tex2coord in the Texture2DGroup." />	
+			<param name="UVCoordinate" type="struct" class="Tex2Coord" pass="return" description="The u/v-coordinate within the texture, horizontally right/vertically up from the origin in the lower left of the texture." />
+		</method>
+		<method name="RemoveTex2Coord" description="Removes a tex2coords from the Texture2DGroup.">
+			<param name="PropertyID" type="uint32" pass="in" description="PropertyID of the tex2coords in the Texture2DGroup." />
+		</method>
+	</class>
+	
 	<class name="Attachment">
 		<method name="GetPath" dllsuffix="utf8" description = "Retrieves an attachment's package path.">
 			<param name="Path" type="string" pass="return" description="returns the attachment's package path string" />
@@ -970,6 +1005,10 @@
 			<param name="ResourceID" type="uint32" pass="in" description="Resource ID" />
 			<param name="BaseMaterialGroupInstance" type="handle" class="BaseMaterialGroup" pass="return" description="returns the BaseMaterialGroup instance" />
 		</method>
+		<method name="GetTexture2DGroupByID" description="finds a model texture2d group by its id">
+			<param name="ResourceID" type="uint32" pass="in" description="Resource ID" />
+			<param name="BaseMaterialGroupInstance" type="handle" class="Texture2DGroup" pass="return" description="returns the Texture2DGroup instance" />
+		</method>
 		<method name="GetMeshObjectByID" description="finds a mesh object by its id">
 			<param name="ResourceID" type="uint32" pass="in" description="Resource ID" />
 			<param name="MeshObjectInstance" type="handle" class="MeshObject" pass="return" description="returns the mesh object instance" />
@@ -1017,6 +1056,9 @@
 		<method name="GetColorGroups" description="creates a ColorGroupIterator instance with all ColorGroup resources.">
 			<param name="ResourceIterator" type="handle" class="ColorGroupIterator" pass="return" description="returns the iterator instance." />
 		</method>
+		<method name="GetTexture2DGroups" description="creates a Texture2DGroupIterator instance with all base material resources.">
+			<param name="ResourceIterator" type="handle" class="Texture2DGroupIterator" pass="return" description="returns the iterator instance." />
+		</method>
 		<method name="GetSliceStacks" description="creates a resource iterator instance with all slice stack resources.">
 			<param name="ResourceIterator" type="handle" class="ResourceIterator" pass="return" description="returns the iterator instance." />
 		</method>
@@ -1042,6 +1084,10 @@
 		</method>
 		<method name="AddColorGroup" description = "adds an empty ColorGroup resource to the model.">
 			<param name="ColorGroupInstance" type="handle" class="ColorGroup" pass="return" description="returns the new ColorGroup instance." />
+		</method>
+		<method name="AddTexture2DGroup" description = "adds an empty Texture2DGroup resource to the model.">
+			<param name="Texture2DInstance" type="handle" class="Texture2D" pass="in" description="The texture2D instance of the created Texture2DGroup." />
+			<param name="Texture2DGroupInstance" type="handle" class="Texture2DGroup" pass="return" description="returns the new Texture2DGroup instance." />
 		</method>
 		<method name="AddBuildItem" description = "adds a build item to the model.">
 			<param name="Object" type="handle" class="Object" pass="in" description="Object instance." />

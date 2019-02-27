@@ -23,6 +23,7 @@ set(SRCS_UNITTEST
 	./Source/UnitTest_SliceStack.cpp
 	./Source/UnitTest_Utilities.cpp
 	./Source/UnitTest_Writer.cpp
+	./Source/UnitTest_TextureProperty.cpp
 	./Source/UnitTest_TextureResources.cpp
 	./Source/UnitTest_Wrapper.cpp
 )

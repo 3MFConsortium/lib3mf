@@ -99,6 +99,11 @@ namespace NMR {
 	} MODELMESHTEXTURE2D;
 
 	typedef struct {
+		DOUBLE m_dU;
+		DOUBLE m_dV;
+	} MODELTEXTURE2DCOORDINATE;
+
+	typedef struct {
 		MODELMESHCOLOR_SRGB m_Colors[3];
 	} MODELMESH_TRIANGLECOLOR_SRGB;
 

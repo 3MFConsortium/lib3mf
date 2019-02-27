@@ -46,6 +46,8 @@ Source/API/lib3mf_resourceiterator.cpp
 Source/API/lib3mf_slice.cpp
 Source/API/lib3mf_slicestack.cpp
 Source/API/lib3mf_texture2d.cpp
+Source/API/lib3mf_texture2dgroup.cpp
+Source/API/lib3mf_texture2dgroupiterator.cpp
 Source/API/lib3mf_texture2diterator.cpp
 Source/API/lib3mf_writer.cpp
 Source/API/lib3mf_utils.cpp
@@ -120,6 +122,7 @@ Source/Model/Classes/NMR_ModelMetaDataGroup.cpp
 Source/Model/Classes/NMR_ModelObject.cpp
 Source/Model/Classes/NMR_ModelResource.cpp
 Source/Model/Classes/NMR_ModelTexture2D.cpp
+Source/Model/Classes/NMR_ModelTexture2DGroup.cpp
 Source/Model/Classes/NMR_ModelSlice.cpp
 Source/Model/Classes/NMR_ModelSliceStack.cpp
 Source/Model/Reader/BeamLattice1702/NMR_ModelReaderNode_BeamLattice1702_Beam.cpp

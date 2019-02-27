@@ -44,19 +44,14 @@ NMR_ModelReaderNode100_Colors.cpp implements the Model Reader Color Group Class.
 
 namespace NMR {
 
-	CModelReaderNode100_Tex2DGroup::CModelReaderNode100_Tex2DGroup(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings, _In_ PModelReader_TexCoordMapping pTexCoordMapping)
+	CModelReaderNode100_Tex2DGroup::CModelReaderNode100_Tex2DGroup(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings)
 		: CModelReaderNode(pWarnings)
 	{
-		if (!pTexCoordMapping.get())
-			throw CNMRException(NMR_ERROR_INVALIDPARAM);
-
 		// Initialize variables
 		m_nID = 0;
 		m_nTextureID = 0;
-		m_nTexCoordIndex = 0;
 
 		m_pModel = pModel;
-		m_pTexCoordMapping = pTexCoordMapping;
 	}
 
 	void CModelReaderNode100_Tex2DGroup::parseXML(_In_ CXmlReader * pXMLReader)
@@ -70,6 +65,20 @@ namespace NMR {
 		// Use parameter and assign to model Object
 		if (m_nID == 0)
 			throw CNMRException(NMR_ERROR_MISSINGMODELRESOURCEID);
+
+		if (m_nTextureID == 0)
+			throw CNMRException(NMR_ERROR_MISSINGMODELRESOURCEID);
+
+		PPackageResourceID pID = m_pModel->findPackageResourceID(m_pModel->curPath(), m_nTextureID);
+		if (!pID)
+			throw CNMRException(NMR_ERROR_INVALIDMODELRESOURCE);
+
+		PModelTexture2DResource pTexture2D = m_pModel->findTexture2D(pID->getUniqueID());
+
+		// Create Resource
+		m_pTexture2DGroup = std::make_shared<CModelTexture2DGroupResource>(m_nID, m_pModel, pTexture2D);
+
+		m_pModel->addResource(m_pTexture2DGroup);
 
 		// Parse Content
 		parseContent(pXMLReader);
@@ -111,10 +120,8 @@ namespace NMR {
 				PModelReaderNode100_Tex2Coord pXMLNode = std::make_shared<CModelReaderNode100_Tex2Coord>(m_pModel, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 
-				m_pTexCoordMapping->registerTexCoords(m_nID, m_nTexCoordIndex, m_nTextureID, pXMLNode->getU(), pXMLNode->getV());
-				m_nTexCoordIndex++;
-
-				if (m_nTexCoordIndex > XML_3MF_MAXRESOURCEINDEX)
+				ModelResourceIndex nTexCoordIndex = m_pTexture2DGroup->addUVCoordinate(pXMLNode->getUV());
+				if (nTexCoordIndex > XML_3MF_MAXRESOURCEINDEX)
 					throw CNMRException(NMR_ERROR_INVALIDINDEX);
 			}
 			else

@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2018 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -24,36 +24,24 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract:
+Abstract: This is a stub class definition of CLib3MFTexture2DIterator
 
-NMR_ModelReaderNode100_Resources.h defines the Model Reader Resources Node Class.
-A resources reader model node is a parser for the resources node of an XML Model Stream.
+*/
 
---*/
+#include "lib3mf_texture2dgroupiterator.hpp"
+#include "lib3mf_interfaceexception.hpp"
+#include "lib3mf_texture2dgroup.hpp"
+// Include custom headers here.
 
-#ifndef __NMR_MODELREADERNODE100_RESOURCES
-#define __NMR_MODELREADERNODE100_RESOURCES
+using namespace Lib3MF::Impl;
 
-#include "Model/Reader/NMR_ModelReaderNode.h"
-#include "Model/Classes/NMR_ModelTexture2DGroup.h"
+/*************************************************************************************************************************
+ Class definition of CLib3MFTexture2DIterator 
+**************************************************************************************************************************/
 
-namespace NMR {
-
-	class CModelReaderNode100_Resources : public CModelReaderNode {
-	protected:
-		CModel * m_pModel;
-		std::string m_sPath;
-
-		int m_nProgressCount;
-
-		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar *  pAttributeValue);
-		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
-	public:
-		CModelReaderNode100_Resources() = delete;
-		CModelReaderNode100_Resources(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings, _In_z_ const std::string sPath, _In_ CProgressMonitor* pProgressMonitor);
-		virtual void parseXML(_In_ CXmlReader * pXMLReader);
-	};
-
+ILib3MFTexture2DGroup * CLib3MFTexture2DGroupIterator::GetCurrentTexture2DGroup()
+{
+	// Create specific API class
+	return new CLib3MFTexture2DGroup(std::dynamic_pointer_cast<NMR::CModelTexture2DGroupResource>(GetCurrentResource()));
 }
 
-#endif // __NMR_MODELREADERNODE100_RESOURCES
