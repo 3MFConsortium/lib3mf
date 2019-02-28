@@ -692,32 +692,26 @@
 		<method name="GetAllPropertyIDs" dllsuffix="utf8" description="returns all the PropertyIDs of all materials in this group">
 			<param name="PropertyIDs" type="basicarray" class="uint32" pass="out" description="PropertyID of the material in the material group." />
 		</method>
-
 		<method name="AddMaterial" dllsuffix="utf8" description="Adds a new material to the material group">
 			<param name="Name" type="string" pass="in" description="new name of the base material." />
 			<param name="DisplayColor" type="struct" class="Color" pass="in" description="Display color of the material" />
 			<param name="PropertyID" type="uint32" pass="return" description="returns new PropertyID of the new material in the material group." />			
 		</method>
-
 		<method name="RemoveMaterial" description="Removes a material from the material group.">
 			<param name="PropertyID" type="uint32" pass="in" description="PropertyID of the material in the material group." />
 		</method>
-
 		<method name="GetName" dllsuffix="utf8" description="Returns the base material's name">
 			<param name="PropertyID" type="uint32" pass="in" description="PropertyID of the material in the material group." />
 			<param name="Name" type="string" pass="return" description="returns the name of the base material." />
 		</method>
-
 		<method name="SetName" dllsuffix="utf8" description="Sets a base material's name">
 			<param name="PropertyID" type="uint32" pass="in" description="PropertyID of the material in the material group." />
 			<param name="Name" type="string" pass="in" description="new name of the base material." />
 		</method>
-
 		<method name="SetDisplayColor" description="Sets a base material's display color.">
 			<param name="PropertyID" type="uint32" pass="in" description="PropertyID of the material in the material group." />
 			<param name="TheColor" type="struct" class="Color" pass="in" description="The base material's display color" />
 		</method>
-
 		<method name="GetDisplayColor" description="Returns a base material's display color.">
 			<param name="PropertyID" type="uint32" pass="in" description="PropertyID of the material in the material group." />
 			<param name="TheColor" type="struct" class="Color" pass="return" description="The base material's display color" />
@@ -731,7 +725,6 @@
 		<method name="GetAllPropertyIDs" dllsuffix="utf8" description="returns all the PropertyIDs of all colors within this group">
 			<param name="PropertyIDs" type="basicarray" class="uint32" pass="out" description="PropertyID of the color in the color group." />
 		</method>
-
 		<method name="AddColor" description="Adds a new value.">
 			<param name="TheColor" type="struct" class="Color" pass="in" description="The new color" />
 			<param name="PropertyID" type="uint32" pass="return" description="PropertyID of the new color within this color group." />
@@ -739,6 +732,7 @@
 		<method name="RemoveColor" description="Removes a color from the color group.">
 			<param name="PropertyID" type="uint32" pass="in" description="PropertyID of the color to be removed from the color group." />
 		</method>
+		
 		<method name="SetColor" description="Sets a color value.">
 			<param name="PropertyID" type="uint32" pass="in" description="PropertyID of a color within this color group." />
 			<param name="TheColor" type="struct" class="Color" pass="in" description="The color" />
@@ -750,9 +744,6 @@
 	</class>
 
 	<class name="Texture2DGroup" parent="Resource">
-		<method name="GetTexture2D" description="Obtains the texture2D instance of this group.">
-			<param name="Texture2DInstance" type="handle" class="Texture2D" pass="return" description="the texture2D instance of this group." />
-		</method>
 		<method name="GetCount" description="Retrieves the count of tex2coords in the Texture2DGroup.">
 			<param name="Count" type="uint32" pass="return" description="returns the count of tex2coords." />
 		</method>
@@ -770,45 +761,39 @@
 		<method name="RemoveTex2Coord" description="Removes a tex2coords from the Texture2DGroup.">
 			<param name="PropertyID" type="uint32" pass="in" description="PropertyID of the tex2coords in the Texture2DGroup." />
 		</method>
+		<method name="GetTexture2D" description="Obtains the texture2D instance of this group.">
+			<param name="Texture2DInstance" type="handle" class="Texture2D" pass="return" description="the texture2D instance of this group." />
+		</method>
 	</class>
 	
 	<class name="Attachment">
 		<method name="GetPath" dllsuffix="utf8" description = "Retrieves an attachment's package path.">
 			<param name="Path" type="string" pass="return" description="returns the attachment's package path string" />
 		</method>
-
 		<method name="SetPath" dllsuffix="utf8" description = "Sets an attachment's package path.">
 			<param name="Path" type="string" pass="in" description="new path of the attachment." />
 		</method>
-
 		<method name="GetRelationShipType" dllsuffix="utf8" description = "Retrieves an attachment's relationship type">
 			<param name="Path" type="string" pass="return" description="returns the attachment's package relationship type string" />
 		</method>
-
 		<method name="SetRelationShipType" dllsuffix="utf8" description = "Sets an attachment's relationship type.">
 			<param name="Path" type="string" pass="in" description="new relationship type string." />
 		</method>
-
 		<method name="WriteToFile" dllsuffix="utf8" description = "Writes out the attachment as file.">
 			<param name="FileName" type="string" pass="in" description="file to write into." />
 		</method>
-
 		<method name="ReadFromFile" dllsuffix="utf8" description = "Reads an attachment from a file.">
 			<param name="FileName" type="string" pass="in" description="file to read from." />
 		</method>
-
 		<method name="GetStreamSize" description = "Retrieves the size of the attachment stream">
 			<param name="StreamSize" type="uint64" pass="return" description="the stream size" />
 		</method>
-
 		<method name="WriteToBuffer" description = "Writes out the attachment into a buffer">
 			<param name="Buffer" type="basicarray" class="uint8" pass="out" description="Buffer to write into" />
 		</method>
-
 		<method name="ReadFromBuffer" description = "Reads an attachment from a memory buffer">
 			<param name="Buffer" type="basicarray" class="uint8" pass="in" description="Buffer to read from" />
 		</method>
-
 		<!--
 		<method name="WriteToCallback" description = "Writes out the attachment and passes the data to a provided callback function. The file type is specified by the type (and potentially path) of the attachment">
 			<param name="WriteCallback" type="callback" pass="in" description="Callback to call for writing a data chunk" />
