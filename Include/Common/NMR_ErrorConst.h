@@ -1129,6 +1129,9 @@ XML Parser Error Constants (0x9XXX)
 // Too many colors
 #define NMR_ERROR_TOOMANYCOLORS 0x9019
 
+// Too many composites
+#define NMR_ERROR_TOOMANYCOMPOSITES 0x9020
+
 /*-------------------------------------------------------------------
 Library errors (0xAXXX)
 -------------------------------------------------------------------*/

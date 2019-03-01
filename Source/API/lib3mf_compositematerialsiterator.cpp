@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2018 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -24,49 +24,25 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract:
+Abstract: This is a stub class definition of CLib3MFCompositeMaterialsIterator
 
-NMR_ModelColorGroup.h defines the Model Color Group Resource Class.
-A model color group resource is an in memory representation of the 3MF
-color group resource object.
+*/
 
---*/
+#include "lib3mf_compositematerialsiterator.hpp"
+#include "lib3mf_interfaceexception.hpp"
 
-#ifndef __NMR_MODELCOLORGROUP
-#define __NMR_MODELCOLORGROUP
+// Include custom headers here.
+#include "lib3mf_compositematerials.hpp"
 
-#include "Model/Classes/NMR_ModelResource.h"
-#include "Model/Classes/NMR_ModelTypes.h"
-#include "Model/Classes/NMR_Model.h"
-#include <vector>
+using namespace Lib3MF::Impl;
 
-namespace NMR {
+/*************************************************************************************************************************
+ Class definition of CLib3MFCompositeMaterialsIterator 
+**************************************************************************************************************************/
 
-	class CModel;
-	typedef std::shared_ptr <CModel> PModel;
-
-	class CModelColorGroupResource : public CModelResource {
-	private:
-		std::map<ModelPropertyID, nfColor> m_pColors;
-		ModelPropertyID m_nNextPropertyID;
-
-	public:
-		CModelColorGroupResource() = delete;
-		CModelColorGroupResource(_In_ const ModelResourceID sID, _In_ CModel * pModel);
-
-		nfUint32 addColor(_In_ nfColor cColor);
-
-		nfUint32 getCount();
-		nfColor getColor(_In_ ModelPropertyID nPropertyID);
-		void setColor(_In_ ModelPropertyID nPropertyID, _In_ nfColor cColor);
-
-		void removeColor(_In_ ModelPropertyID nPropertyID);
-		void mergeFrom(_In_ CModelColorGroupResource * pSourceMaterial);
-		void buildResourceIndexMap();
-	};
-
-	typedef std::shared_ptr <CModelColorGroupResource> PModelColorGroupResource;
-
+ILib3MFCompositeMaterials * CLib3MFCompositeMaterialsIterator::GetCurrentCompositeMaterials ()
+{
+	// Create specific API class
+	return new CLib3MFCompositeMaterials(std::dynamic_pointer_cast<NMR::CModelCompositeMaterialsResource>(GetCurrentResource()));
 }
 
-#endif // __NMR_MODELCOLORGROUP

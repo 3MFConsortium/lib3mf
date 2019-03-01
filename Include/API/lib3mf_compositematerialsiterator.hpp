@@ -24,25 +24,62 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CLib3MFColorGroupIterator
+Abstract: This is the class declaration of CLib3MFCompositeMaterialsIterator
 
 */
 
-#include "lib3mf_colorgroupiterator.hpp"
-#include "lib3mf_interfaceexception.hpp"
+
+#ifndef __LIB3MF_LIB3MFCOMPOSITEMATERIALSITERATOR
+#define __LIB3MF_LIB3MFCOMPOSITEMATERIALSITERATOR
+
+#include "lib3mf_interfaces.hpp"
+
+// Parent classes
+#include "lib3mf_resourceiterator.hpp"
+#pragma warning( push)
+#pragma warning( disable : 4250)
 
 // Include custom headers here.
-#include "lib3mf_colorgroup.hpp"
 
-using namespace Lib3MF::Impl;
+
+namespace Lib3MF {
+namespace Impl {
+
 
 /*************************************************************************************************************************
- Class definition of CLib3MFColorGroupIterator 
+ Class declaration of CLib3MFCompositeMaterialsIterator 
 **************************************************************************************************************************/
 
-ILib3MFColorGroup * CLib3MFColorGroupIterator::GetCurrentColorGroup ()
-{
-	// Create specific API class
-	return new CLib3MFColorGroup(std::dynamic_pointer_cast<NMR::CModelColorGroupResource>(GetCurrentResource()));
-}
+class CLib3MFCompositeMaterialsIterator : public virtual ILib3MFCompositeMaterialsIterator, public virtual CLib3MFResourceIterator {
+private:
 
+	/**
+	* Put private members here.
+	*/
+
+protected:
+
+	/**
+	* Put protected members here.
+	*/
+
+public:
+
+	/**
+	* Put additional public members here. They will not be visible in the external API.
+	*/
+
+
+	/**
+	* Public member functions to implement.
+	*/
+
+	ILib3MFCompositeMaterials * GetCurrentCompositeMaterials ();
+
+};
+
+} // namespace Impl
+} // namespace Lib3MF
+
+#pragma warning( pop )
+#endif // __LIB3MF_LIB3MFCOMPOSITEMATERIALSITERATOR

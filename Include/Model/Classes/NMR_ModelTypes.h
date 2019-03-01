@@ -161,6 +161,11 @@ namespace NMR {
 	typedef struct {
 		FLOAT m_fPosition[2];
 	} MODELSLICEVERTEX;
+
+	typedef struct {
+		DOUBLE m_dMixingRatio;
+		UINT32 m_nPropertyID;
+	} MODELCOMPOSITECONSTITUENT;
 }
 
 #endif // __NMR_MODELTYPES

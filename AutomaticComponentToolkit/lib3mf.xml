@@ -76,9 +76,10 @@
 		<error name="INVALIDTEXTURERESOURCE" code="113" description="A texture resource is invalid" />
 		<error name="INVALIDCOLORGROUP" code="114" description="A color group resource is invalid" />
 		<error name="INVALIDTEXTURE2DGROUP" code="115" description="A texture2d group resource is invalid" />
+		<error name="INVALIDCOMPOSITEMATERIALS" code="116" description="A composite materials resource is invalid" />
 
 
-		<error name="INVALIDRESOURCEINDEX" code="116" description="A resource index is invalid" />
+		<error name="INVALIDRESOURCEINDEX" code="120" description="A resource index is invalid" />
 
 		<error name="ATTACHMENTNOTFOUND" code="121" description="Attachment not found" />
 
@@ -102,7 +103,6 @@
 		<option name="Composite" value="4" />
 		<option name="Multi" value="1024" />
 	</enum>
-
 
 	<enum name="SlicesMeshResolution">
 		<option name="Fullres" value="0" />
@@ -195,6 +195,11 @@
 
 	<struct name="Position2D">
 		<member name="coordinates" type="single" rows="2" />
+	</struct>
+	
+	<struct name="CompositeConstituent">
+		<member name="PropertyID" type="uint32"/>
+		<member name="MixingRatio" type="double"/>
 	</struct>
 
 	<struct name="Tex2Coord">
@@ -312,7 +317,7 @@
 			<param name="Id" type="uint32" pass="return" description="Retrieves the ID of a Model Resource Instance." />
 		</method>
 	</class>
-
+	
 	<class name="ResourceIterator">
 		<method name="MoveNext" description="Iterates to the next resource in the list.">
 			<param name="HasNext" type="bool" pass="return" description="Iterates to the next resource in the list." />
@@ -327,19 +332,19 @@
 			<param name="OutResourceIterator" type="handle" class="ResourceIterator" pass="return" description="returns the cloned Iterator instance" />
 		</method>
 	</class>
-
+	
 	<class name="Texture2DIterator" parent="ResourceIterator">
 		<method name="GetCurrentTexture2D" description="Returns the Texture2D the iterator points at.">
 			<param name="Resource" type="handle" class="Texture2D" pass="return" description="returns the Texture2D instance." />
 		</method>
 	</class>
-
+	
 	<class name="BaseMaterialGroupIterator" parent="ResourceIterator">
 		<method name="GetCurrentBaseMaterialGroup" description="Returns the MaterialGroup the iterator points at.">
 			<param name="Resource" type="handle" class="BaseMaterialGroup" pass="return" description="returns the BaseMaterialGroup instance." />
 		</method>
 	</class>
-
+	
 	<class name="ColorGroupIterator" parent="ResourceIterator">
 		<method name="GetCurrentColorGroup" description="Returns the ColorGroup the iterator points at.">
 			<param name="Resource" type="handle" class="ColorGroup" pass="return" description="returns the ColorGroup instance." />
@@ -349,6 +354,12 @@
 	<class name="Texture2DGroupIterator" parent="ResourceIterator">
 		<method name="GetCurrentTexture2DGroup" description="Returns the Texture2DGroup the iterator points at.">
 			<param name="Resource" type="handle" class="Texture2DGroup" pass="return" description="returns the Texture2DGroup instance." />
+		</method>
+	</class>
+	
+	<class name="CompositeMaterialsIterator" parent="ResourceIterator">
+		<method name="GetCurrentCompositeMaterials" description="Returns the CompositeMaterials the iterator points at.">
+			<param name="Resource" type="handle" class="CompositeMaterials" pass="return" description="returns the CompositeMaterials instance." />
 		</method>
 	</class>
 	
@@ -765,6 +776,29 @@
 			<param name="Texture2DInstance" type="handle" class="Texture2D" pass="return" description="the texture2D instance of this group." />
 		</method>
 	</class>
+
+	<class name="CompositeMaterials" parent="Resource">
+		<method name="GetCount" description="Retrieves the count of Composite-s in the CompositeMaterials.">
+			<param name="Count" type="uint32" pass="return" description="returns the count of Composite-s" />
+		</method>
+		<method name="GetAllPropertyIDs" dllsuffix="utf8" description="returns all the PropertyIDs of all Composite-Mixing Values in this CompositeMaterials">
+			<param name="PropertyIDs" type="basicarray" class="uint32" pass="out" description="PropertyID of the Composite-Mixing Values in the CompositeMaterials." />
+		</method>
+		<method name="GetBaseMaterialGroup" description="Obtains the BaseMaterialGroup instance of this CompositeMaterials.">
+			<param name="BaseMaterialGroupInstance" type="handle" class="BaseMaterialGroup" pass="return" description="returns the BaseMaterialGroup instance of this CompositeMaterials" />
+		</method>
+		<method name="AddComposite" description="Adds a new Composite-Mixing Values to the CompositeMaterials.">
+			<param name="Composite" type="structarray" class="CompositeConstituent" pass="in" description="The Composite Constituents to be added as composite" />
+			<param name="PropertyID" type="uint32" pass="return" description="returns new PropertyID of the new Composite in the CompositeMaterials." />
+		</method>
+		<method name="RemoveComposite" description="Removes a Composite-Maxing Ratio from the CompositeMaterials.">
+			<param name="PropertyID" type="uint32" pass="in" description="PropertyID of the  Composite-Mixing Values in the CompositeMaterials to be removed." />
+		</method>
+		<method name="GetComposite" description="Obtains a Composite-Maxing Ratio of this CompositeMaterials.">
+			<param name="PropertyID" type="uint32" pass="in" description="the PropertyID of the Composite-Maxing Ratio in the CompositeMaterials." />
+			<param name="Composite" type="structarray" class="CompositeConstituent" pass="out" description="The Composite-Mixing Values with the given PropertyID" />
+		</method>
+	</class>
 	
 	<class name="Attachment">
 		<method name="GetPath" dllsuffix="utf8" description = "Retrieves an attachment's package path.">
@@ -992,7 +1026,11 @@
 		</method>
 		<method name="GetTexture2DGroupByID" description="finds a model texture2d group by its id">
 			<param name="ResourceID" type="uint32" pass="in" description="Resource ID" />
-			<param name="BaseMaterialGroupInstance" type="handle" class="Texture2DGroup" pass="return" description="returns the Texture2DGroup instance" />
+			<param name="Texture2DGroupInstance" type="handle" class="Texture2DGroup" pass="return" description="returns the Texture2DGroup instance" />
+		</method>
+		<method name="GetCompositeMaterialsByID" description="finds a model CompositeMaterials by its id">
+			<param name="ResourceID" type="uint32" pass="in" description="Resource ID" />
+			<param name="CompositeMaterialsInstance" type="handle" class="CompositeMaterials" pass="return" description="returns the CompositeMaterials instance" />
 		</method>
 		<method name="GetMeshObjectByID" description="finds a mesh object by its id">
 			<param name="ResourceID" type="uint32" pass="in" description="Resource ID" />
@@ -1044,6 +1082,9 @@
 		<method name="GetTexture2DGroups" description="creates a Texture2DGroupIterator instance with all base material resources.">
 			<param name="ResourceIterator" type="handle" class="Texture2DGroupIterator" pass="return" description="returns the iterator instance." />
 		</method>
+		<method name="GetCompositeMaterials" description="creates a CompositeMaterialsIterator instance with all CompositeMaterials resources.">
+			<param name="ResourceIterator" type="handle" class="CompositeMaterialsIterator" pass="return" description="returns the iterator instance." />
+		</method>
 		<method name="GetSliceStacks" description="creates a resource iterator instance with all slice stack resources.">
 			<param name="ResourceIterator" type="handle" class="ResourceIterator" pass="return" description="returns the iterator instance." />
 		</method>
@@ -1073,6 +1114,10 @@
 		<method name="AddTexture2DGroup" description = "adds an empty Texture2DGroup resource to the model.">
 			<param name="Texture2DInstance" type="handle" class="Texture2D" pass="in" description="The texture2D instance of the created Texture2DGroup." />
 			<param name="Texture2DGroupInstance" type="handle" class="Texture2DGroup" pass="return" description="returns the new Texture2DGroup instance." />
+		</method>
+		<method name="AddCompositeMaterials" description = "adds an empty CompositeMaterials resource to the model.">
+			<param name="BaseMaterialGroupInstance" type="handle" class="BaseMaterialGroup" pass="in" description="The BaseMaterialGroup instance of the created CompositeMaterials." />
+			<param name="CompositeMaterialsInstance" type="handle" class="CompositeMaterials" pass="return" description="returns the new CompositeMaterials instance." />
 		</method>
 		<method name="AddBuildItem" description = "adds a build item to the model.">
 			<param name="Object" type="handle" class="Object" pass="in" description="Object instance." />

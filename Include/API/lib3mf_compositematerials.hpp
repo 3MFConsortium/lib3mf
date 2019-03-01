@@ -24,13 +24,13 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CLib3MFColorGroup
+Abstract: This is the class declaration of CLib3MFCompositeMaterials
 
 */
 
 
-#ifndef __LIB3MF_LIB3MFCOLORGROUP
-#define __LIB3MF_LIB3MFCOLORGROUP
+#ifndef __LIB3MF_LIB3MFCOMPOSITEMATERIALS
+#define __LIB3MF_LIB3MFCOMPOSITEMATERIALS
 
 #include "lib3mf_interfaces.hpp"
 
@@ -40,17 +40,17 @@ Abstract: This is the class declaration of CLib3MFColorGroup
 #pragma warning( disable : 4250)
 
 // Include custom headers here.
-#include "Model/Classes/NMR_ModelColorGroup.h"
+#include "Model/Classes/NMR_ModelCompositeMaterials.h"
 
 namespace Lib3MF {
 namespace Impl {
 
 
 /*************************************************************************************************************************
- Class declaration of CLib3MFColorGroup 
+ Class declaration of CLib3MFCompositeMaterials 
 **************************************************************************************************************************/
 
-class CLib3MFColorGroup : public virtual ILib3MFColorGroup, public virtual CLib3MFResource {
+class CLib3MFCompositeMaterials : public virtual ILib3MFCompositeMaterials, public virtual CLib3MFResource {
 private:
 
 	/**
@@ -62,14 +62,14 @@ protected:
 	/**
 	* Put protected members here.
 	*/
-	NMR::CModelColorGroupResource& colorGroup();
+	NMR::CModelCompositeMaterialsResource& compositeMaterials();
 
 public:
 
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-	CLib3MFColorGroup(NMR::PModelColorGroupResource pResource);
+	CLib3MFCompositeMaterials(NMR::PModelCompositeMaterialsResource pResource);
 
 
 	/**
@@ -80,18 +80,17 @@ public:
 
 	void GetAllPropertyIDs (Lib3MF_uint64 nPropertyIDsBufferSize, Lib3MF_uint64* pPropertyIDsNeededCount, Lib3MF_uint32 * pPropertyIDsBuffer);
 
-	Lib3MF_uint32 AddColor (const sLib3MFColor TheColor);
+	ILib3MFBaseMaterialGroup * GetBaseMaterialGroup ();
 
-	void SetColor (const Lib3MF_uint32 nPropertyID, const sLib3MFColor TheColor);
+	Lib3MF_uint32 AddComposite(const Lib3MF_uint64 nCompositeBufferSize, const sLib3MFCompositeConstituent * pCompositeBuffer);
 
-	sLib3MFColor GetColor (const Lib3MF_uint32 nPropertyID);
+	void RemoveComposite (const Lib3MF_uint32 nPropertyID);
 
-	void RemoveColor(const Lib3MF_uint32 nPropertyID);
-
+	void GetComposite(const Lib3MF_uint32 nPropertyID, Lib3MF_uint64 nCompositeBufferSize, Lib3MF_uint64* pCompositeNeededCount, sLib3MFCompositeConstituent * pCompositeBuffer);
 };
 
 } // namespace Impl
 } // namespace Lib3MF
 
 #pragma warning( pop )
-#endif // __LIB3MF_LIB3MFCOLORGROUP
+#endif // __LIB3MF_LIB3MFCOMPOSITEMATERIALS

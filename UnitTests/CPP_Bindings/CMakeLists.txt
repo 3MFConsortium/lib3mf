@@ -8,6 +8,7 @@ set(SRCS_UNITTEST
 	./Source/UnitTest_Attachments.cpp
 	./Source/UnitTest_BaseMaterialGroup.cpp
 	./Source/UnitTest_ColorGroup.cpp
+	./Source/UnitTest_CompositeMaterials.cpp
 	./Source/UnitTest_BeamLattice.cpp
 	./Source/UnitTest_BeamSets.cpp
 	./Source/UnitTest_BuildItems.cpp

@@ -26,15 +26,16 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelColorGroup.h defines the Model Color Group Resource Class.
+NMR_ModelCompositeMaterials.h defines the Model Color Group Resource Class.
 A model color group resource is an in memory representation of the 3MF
 color group resource object.
 
 --*/
 
-#ifndef __NMR_MODELCOLORGROUP
-#define __NMR_MODELCOLORGROUP
+#ifndef __NMR_MODELCOMPOSITEMATERIALS
+#define __NMR_MODELCOMPOSITEMATERIALS
 
+#include "Model/Classes/NMR_ModelBaseMaterials.h"
 #include "Model/Classes/NMR_ModelResource.h"
 #include "Model/Classes/NMR_ModelTypes.h"
 #include "Model/Classes/NMR_Model.h"
@@ -43,30 +44,37 @@ color group resource object.
 namespace NMR {
 
 	class CModel;
-	typedef std::shared_ptr <CModel> PModel;
+	typedef std::shared_ptr<CModel> PModel;
 
-	class CModelColorGroupResource : public CModelResource {
+	typedef std::vector<MODELCOMPOSITECONSTITUENT> CModelComposite;
+	typedef std::shared_ptr<CModelComposite> PModelComposite;
+
+	class CModelCompositeMaterialsResource : public CModelResource {
 	private:
-		std::map<ModelPropertyID, nfColor> m_pColors;
+		std::map<ModelPropertyID, PModelComposite> m_pComposites;
 		ModelPropertyID m_nNextPropertyID;
 
-	public:
-		CModelColorGroupResource() = delete;
-		CModelColorGroupResource(_In_ const ModelResourceID sID, _In_ CModel * pModel);
+		PModelBaseMaterialResource m_pBaseMaterialResource;
 
-		nfUint32 addColor(_In_ nfColor cColor);
+	public:
+		CModelCompositeMaterialsResource() = delete;
+		CModelCompositeMaterialsResource(_In_ const ModelResourceID sID, _In_ CModel * pModel,
+			_In_ PModelBaseMaterialResource pBaseMaterialResource);
+
+		nfUint32 addComposite(_In_ PModelComposite pComposite);
 
 		nfUint32 getCount();
-		nfColor getColor(_In_ ModelPropertyID nPropertyID);
-		void setColor(_In_ ModelPropertyID nPropertyID, _In_ nfColor cColor);
+		PModelComposite getComposite(_In_ ModelPropertyID nPropertyID);
+		void setComposite(_In_ ModelPropertyID nPropertyID, _In_ PModelComposite pComposite);
 
-		void removeColor(_In_ ModelPropertyID nPropertyID);
-		void mergeFrom(_In_ CModelColorGroupResource * pSourceMaterial);
+		void removeComposite(_In_ ModelPropertyID nPropertyID);
+		void mergeFrom(_In_ CModelCompositeMaterialsResource * pSourceCompositesMaterials);
 		void buildResourceIndexMap();
+
+		PModelBaseMaterialResource getBaseMaterialResource();
 	};
 
-	typedef std::shared_ptr <CModelColorGroupResource> PModelColorGroupResource;
-
+	typedef std::shared_ptr<CModelCompositeMaterialsResource> PModelCompositeMaterialsResource;
 }
 
-#endif // __NMR_MODELCOLORGROUP
+#endif // __NMR_MODELCOMPOSITEMATERIALS

@@ -34,6 +34,8 @@ Source/API/lib3mf_builditemiterator.cpp
 Source/API/lib3mf_colorgroup.cpp
 Source/API/lib3mf_colorgroupiterator.cpp
 Source/API/lib3mf_component.cpp
+Source/API/lib3mf_compositematerials.cpp
+Source/API/lib3mf_compositematerialsiterator.cpp
 Source/API/lib3mf_componentsobject.cpp
 Source/API/lib3mf_meshobject.cpp
 Source/API/lib3mf_metadata.cpp
@@ -112,6 +114,7 @@ Source/Model/Classes/NMR_ModelAttachment.cpp
 Source/Model/Classes/NMR_ModelBaseMaterial.cpp
 Source/Model/Classes/NMR_ModelBaseMaterials.cpp
 Source/Model/Classes/NMR_ModelColorGroup.cpp
+Source/Model/Classes/NMR_ModelCompositeMaterials.cpp
 Source/Model/Classes/NMR_ModelBuildItem.cpp
 Source/Model/Classes/NMR_ModelComponent.cpp
 Source/Model/Classes/NMR_ModelComponentsObject.cpp

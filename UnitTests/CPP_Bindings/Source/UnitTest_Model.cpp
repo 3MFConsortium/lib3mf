@@ -145,6 +145,16 @@ namespace Lib3MF
 		auto iterator = m_model->GetResources();
 	}
 
+	TEST_F(Model, GetTexture2DGroups)
+	{
+		auto iterator = m_model->GetTexture2DGroups();
+	}
+
+	TEST_F(Model, GetCompositeMaterials)
+	{
+		auto iterator = m_model->GetCompositeMaterials();
+	}
+
 	TEST_F(Model, GetBaseMaterialByID)
 	{
 		try {

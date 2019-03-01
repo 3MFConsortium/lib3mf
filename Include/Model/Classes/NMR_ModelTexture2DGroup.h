@@ -69,7 +69,7 @@ namespace NMR {
 		PModelTexture2DResource getTexture2D();
 	};
 
-	typedef std::shared_ptr <CModelTexture2DGroupResource> PModelTexture2DGroupResource;
+	typedef std::shared_ptr<CModelTexture2DGroupResource> PModelTexture2DGroupResource;
 }
 
 #endif // __NMR_TEXTURE2DGROUP

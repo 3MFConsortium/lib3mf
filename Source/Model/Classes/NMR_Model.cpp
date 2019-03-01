@@ -42,6 +42,7 @@ A model is an in memory representation of the 3MF file.
 #include "Model/Classes/NMR_ModelBaseMaterials.h"
 #include "Model/Classes/NMR_ModelColorGroup.h"
 #include "Model/Classes/NMR_ModelTexture2DGroup.h"
+#include "Model/Classes/NMR_ModelCompositeMaterials.h"
 #include "Model/Classes/NMR_ModelTexture2D.h"
 #include "Model/Classes/NMR_ModelSliceStack.h"
 #include "Model/Classes/NMR_ModelMetaDataGroup.h"
@@ -646,6 +647,61 @@ namespace NMR {
 			pNewTexture2DGroup->mergeFrom(pOldTexture2DGroup);
 
 			addResource(pNewTexture2DGroup);
+		}
+	}
+
+
+	_Ret_maybenull_ PModelCompositeMaterialsResource CModel::findCompositeMaterials(_In_ PackageResourceID nResourceID)
+	{
+		PModelResource pResource = findResource(nResourceID);
+		if (pResource != nullptr) {
+			PModelCompositeMaterialsResource pCompositeMaterialsResource = std::dynamic_pointer_cast<CModelCompositeMaterialsResource>(pResource);
+			if (pCompositeMaterialsResource.get() == nullptr)
+				throw CNMRException(NMR_ERROR_RESOURCETYPEMISMATCH);
+			return pCompositeMaterialsResource;
+		}
+		return nullptr;
+	}
+
+	nfUint32 CModel::getCompositeMaterialsCount()
+	{
+		return (nfUint32)m_CompositeMaterialsLookup.size();
+	}
+
+	PModelResource CModel::getCompositeMaterialsResource(_In_ nfUint32 nIndex)
+	{
+		nfUint32 nCount = getCompositeMaterialsCount();
+		if (nIndex >= nCount)
+			throw CNMRException(NMR_ERROR_INVALIDINDEX);
+
+		return m_CompositeMaterialsLookup[nIndex];
+
+	}
+
+	CModelCompositeMaterialsResource * CModel::getCompositeMaterials(_In_ nfUint32 nIndex)
+	{
+		CModelCompositeMaterialsResource * pCompositeMaterialsGroup = dynamic_cast<CModelCompositeMaterialsResource *> (getCompositeMaterialsResource(nIndex).get());
+		if (pCompositeMaterialsGroup == nullptr)
+			throw CNMRException(NMR_ERROR_RESOURCETYPEMISMATCH);
+
+		return pCompositeMaterialsGroup;
+	}
+
+	void CModel::mergeCompositeMaterials(_In_ CModel * pSourceModel)
+	{
+		if (pSourceModel == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		nfUint32 nCount = pSourceModel->getCompositeMaterialsCount();
+		for (nfUint32 nIndex = 0; nIndex < nCount; nIndex++) {
+			CModelCompositeMaterialsResource * pOldCompositeMaterials = pSourceModel->getCompositeMaterials(nIndex);
+			__NMRASSERT(pNewTexture2DGroup != nullptr);
+
+			PModelCompositeMaterialsResource pNewCompositeMaterials = std::make_shared<CModelCompositeMaterialsResource>(generateResourceID(), this,
+				pNewCompositeMaterials->getBaseMaterialResource());
+			pNewCompositeMaterials->mergeFrom(pOldCompositeMaterials);
+
+			addResource(pNewCompositeMaterials);
 		}
 	}
 
