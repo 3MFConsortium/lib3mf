@@ -41,14 +41,11 @@ NMR_ModelReaderNode100_Color.cpp implements the Model Reader Color Node Class.
 
 namespace NMR {
 
-	CModelReaderNode100_Composite::CModelReaderNode100_Composite(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings)
-		: CModelReaderNode(pWarnings)
+	CModelReaderNode100_Composite::CModelReaderNode100_Composite(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings,
+		_In_z_ const std::vector<ModelPropertyID>& baseMaterialPropertyIds)
+		: CModelReaderNode(pWarnings), m_vctBaseMaterialPropertyIds(baseMaterialPropertyIds)
 	{
 		m_pModel = pModel;
-		m_bHasU = false;
-		m_bHasV = false;
-		m_sUVCoordinate.m_dU = 0.0;
-		m_sUVCoordinate.m_dV = 0.0;
 	}
 
 	void CModelReaderNode100_Composite::parseXML(_In_ CXmlReader * pXMLReader)
@@ -64,43 +61,38 @@ namespace NMR {
 
 	}
 
+	PModelComposite CModelReaderNode100_Composite::getComposite()
+	{
+		return m_pModelComposite;
+	}
+
 	void CModelReaderNode100_Composite::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
 	{
 		__NMRASSERT(pAttributeName);
 		__NMRASSERT(pAttributeValue);
 
-		
-		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_TEXTUREVERTEX_U) == 0) {
-			try {
-				m_sUVCoordinate.m_dU = fnStringToDouble(pAttributeValue);
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_COMPOSITE_VALUES) == 0) {
+			m_pModelComposite = std::make_shared<CModelComposite>();
+			std::vector<nfDouble> vctMixingRatios = fnVctType_fromString<nfDouble>(pAttributeValue);
+			for (int i = 0; i < m_vctBaseMaterialPropertyIds.size(); i++) {
+				MODELCOMPOSITECONSTITUENT constituent;
+				constituent.m_nPropertyID = m_vctBaseMaterialPropertyIds[i];
+				if (i < vctMixingRatios.size()) {
+					constituent.m_dMixingRatio = vctMixingRatios[i];
+				}
+				else {
+					constituent.m_dMixingRatio = 0;
+				}
+				m_pModelComposite->push_back(constituent);
 			}
-			catch (...)
-			{
+			if (vctMixingRatios.size() < m_vctBaseMaterialPropertyIds.size())
+				m_pWarnings->addException(CNMRException(NMR_ERROR_MIXINGRATIO_MISSING), mrwInvalidOptionalValue);
+			else if (vctMixingRatios.size() > m_vctBaseMaterialPropertyIds.size()) {
+				m_pWarnings->addException(CNMRException(NMR_ERROR_MIXINGRATIO_TOOMANY), mrwInvalidOptionalValue);
 			}
+		} else {
+			m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE), mrwInvalidOptionalValue);
 		}
-
-		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_TEXTUREVERTEX_V) == 0) {
-			try {
-				m_sUVCoordinate.m_dV = fnStringToDouble(pAttributeValue);
-			}
-			catch (...)
-			{
-			}
-		}
 	}
 
-	nfBool CModelReaderNode100_Composite::hasU()
-	{
-		return m_bHasU;
-	}
-
-	nfBool CModelReaderNode100_Composite::hasV()
-	{
-		return m_bHasV;
-	}
-
-	MODELTEXTURE2DCOORDINATE CModelReaderNode100_Composite::getUV()
-	{
-		return m_sUVCoordinate;
-	}
 }

@@ -66,9 +66,19 @@ namespace NMR {
 
 
 	template<>
+	float fnStringToType(_In_z_ const nfChar * pszValue)
+	{
+		return fnStringToFloat(pszValue);
+	}
+	template<>
 	double fnStringToType(_In_z_ const nfChar * pszValue)
 	{
 		return fnStringToDouble(pszValue);
+	}
+	template<>
+	nfInt32 fnStringToType(_In_z_ const nfChar * pszValue)
+	{
+		return fnStringToInt32(pszValue);
 	}
 	template<>
 	nfUint32 fnStringToType(_In_z_ const nfChar * pszValue)

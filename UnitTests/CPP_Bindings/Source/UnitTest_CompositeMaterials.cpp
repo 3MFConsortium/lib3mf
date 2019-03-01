@@ -174,7 +174,7 @@ namespace Lib3MF
 			auto readBaseMaterialGroup = compositeMaterial->GetBaseMaterialGroup();
 			readBaseMaterialGroup->GetCount();
 			ASSERT_EQ(readBaseMaterialGroup->GetCount(), baseMaterialGroup1->GetCount());
-			for (Lib3MF_uint32 i = 0; i < readBaseMaterialGroup->GetCount(); i++) {
+			for (Lib3MF_uint32 i = 1; i < readBaseMaterialGroup->GetCount()+1; i++) {
 				ASSERT_TRUE(readBaseMaterialGroup->GetName(i) == baseMaterialGroup1->GetName(i));
 				// ASSERT_TRUE(readBaseMaterialGroup->GetDisplayColor(i) == baseMaterialGroup1->GetDisplayColor(i));
 			}

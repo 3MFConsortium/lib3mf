@@ -77,6 +77,18 @@ namespace NMR {
 
 		// Create Resource
 		m_pCompositeMaterials = std::make_shared<CModelCompositeMaterialsResource>(m_nID, m_pModel, pBaseMaterial);
+		
+		if (m_pMatIndices) {
+			pBaseMaterial->buildResourceIndexMap();
+			m_vctMaterialPropertyIDs.resize(m_pMatIndices->size());
+			for (int i = 0; i < m_vctMaterialPropertyIDs.size(); i++) {
+				ModelPropertyID nPropertyID;
+				if (!pBaseMaterial->mapResourceIndexToPropertyID(i, nPropertyID)) {
+					throw CNMRException(NMR_ERROR_INVALIDBASEMATERIAL);
+				}
+				m_vctMaterialPropertyIDs[i] = nPropertyID;
+			}
+		}
 
 		m_pModel->addResource(m_pCompositeMaterials);
 
@@ -124,12 +136,12 @@ namespace NMR {
 	{
 		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_MATERIALSPEC) == 0) {
 			if (strcmp(pChildName, XML_3MF_ELEMENT_COMPOSITE) == 0) {
-				//PModelReaderNode100_Composite pXMLNode = std::make_shared<CModelReaderNode100_Composite>(m_pModel, m_pWarnings);
-				//pXMLNode->parseXML(pXMLReader);
+				PModelReaderNode100_Composite pXMLNode = std::make_shared<CModelReaderNode100_Composite>(m_pModel, m_pWarnings, m_vctMaterialPropertyIDs);
+				pXMLNode->parseXML(pXMLReader);
 
-				//ModelResourceIndex nTexCoordIndex = m_pCompositeMaterials->addUVCoordinate(pXMLNode->getUV());
-				//if (nTexCoordIndex > XML_3MF_MAXRESOURCEINDEX)
-				//	throw CNMRException(NMR_ERROR_INVALIDINDEX);
+				PModelComposite pComposite = pXMLNode->getComposite();
+
+				m_pCompositeMaterials->addComposite(pComposite);
 			}
 			else
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);

@@ -47,6 +47,7 @@ namespace NMR {
 		ModelResourceID m_nID;
 		ModelResourceID m_nBaseMaterialID;
 		std::shared_ptr<std::vector<nfUint32>> m_pMatIndices;
+		std::vector<ModelPropertyID> m_vctMaterialPropertyIDs;
 
 		PModelCompositeMaterialsResource m_pCompositeMaterials;
 	protected:

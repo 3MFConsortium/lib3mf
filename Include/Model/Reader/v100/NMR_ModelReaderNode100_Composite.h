@@ -34,9 +34,9 @@ NMR_ModelReaderNode100_Composite.h defines the Model Reader Tex2Coord Node Class
 #define __NMR_MODELREADERNODE100_COMPOSITE
 
 #include "Model/Reader/NMR_ModelReaderNode.h"
-#include "Model/Classes/NMR_ModelComponent.h"
-#include "Model/Classes/NMR_ModelComponentsObject.h"
 #include "Model/Classes/NMR_ModelObject.h"
+#include "Model/Classes/NMR_ModelCompositeMaterials.h"
+#include "Model/Classes/NMR_ModelTypes.h"
 
 namespace NMR {
 
@@ -44,21 +44,17 @@ namespace NMR {
 	private:
 		CModel * m_pModel;
 
-		nfBool m_bHasU;
-		nfBool m_bHasV;
-		MODELTEXTURE2DCOORDINATE m_sUVCoordinate;
-		
+		PModelComposite m_pModelComposite;
+		const std::vector<ModelPropertyID>& m_vctBaseMaterialPropertyIds;
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 	public:
 		CModelReaderNode100_Composite() = delete;
-		CModelReaderNode100_Composite(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings);
+		CModelReaderNode100_Composite(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings, _In_z_ const std::vector<ModelPropertyID>& baseMaterialPropertyIds);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 
-		nfBool hasU();
-		nfBool hasV();
-		MODELTEXTURE2DCOORDINATE getUV();
+		PModelComposite getComposite();
 	};
 
 	typedef std::shared_ptr<CModelReaderNode100_Composite> PModelReaderNode100_Composite;

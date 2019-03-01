@@ -1058,6 +1058,14 @@ Model error codes (0x8XXX)
 // Composite mixing ratio out of range
 #define NMR_ERROR_MIXINGRATIO_OUTOFRANGE 0x80D5
 
+// A composite mixing ratio is missing
+#define NMR_ERROR_MIXINGRATIO_MISSING 0x80D6
+
+// Too many composite mixing ratio in the list of values
+#define NMR_ERROR_MIXINGRATIO_TOOMANY 0x80D7
+
+
+
 /*-------------------------------------------------------------------
 XML Parser Error Constants (0x9XXX)
 -------------------------------------------------------------------*/

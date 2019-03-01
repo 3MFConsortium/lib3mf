@@ -381,6 +381,8 @@ namespace NMR {
 		case NMR_ERROR_TOOMANYCOLORS: return "Too many colors.";
 		case NMR_ERROR_TOOMANYCOMPOSITES: return "Too many composites.";
 		case NMR_ERROR_MIXINGRATIO_OUTOFRANGE: return "Mixing ratio of composite out of range.";
+		case NMR_ERROR_MIXINGRATIO_MISSING: return "A composite mixing ratio is missing.";
+		case NMR_ERROR_MIXINGRATIO_TOOMANY: return "Too many composite mixing ratio in the list of values";
 
 
 		// XML Parser Error Constants(0x9XXX)

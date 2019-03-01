@@ -47,16 +47,17 @@ namespace NMR {
 	template <typename T>
 	T fnStringToType(_In_z_ const nfChar * pszValue);
 
-	template<>
-	double fnStringToType(_In_z_ const nfChar * pszValue);
-	template<>
-	nfUint32 fnStringToType(_In_z_ const nfChar * pszValue);
+	
+	template<> float fnStringToType(_In_z_ const nfChar * pszValue);
+	template<> double fnStringToType(_In_z_ const nfChar * pszValue);
+	template<> nfInt32 fnStringToType(_In_z_ const nfChar * pszValue);
+	template<> nfUint32 fnStringToType(_In_z_ const nfChar * pszValue);
 
 	nfInt32 fnStringToInt32(_In_z_ const nfChar * pszValue);
 	nfUint32 fnStringToUint32(_In_z_ const nfChar * pszValue);
 	nfFloat fnStringToFloat(_In_z_ const nfChar * pszValue);
 	nfDouble fnStringToDouble(_In_z_ const nfChar * pszValue);
-	nfBool	fnStringToSRGBColor(_In_z_ const nfChar * pszValue, _Out_ nfColor & cResult);
+	nfBool fnStringToSRGBColor(_In_z_ const nfChar * pszValue, _Out_ nfColor & cResult);
 	nfUint32 fnHexStringToUint32(_In_z_ const nfChar * pszValue);
 
 	std::string fnInt32ToString(_In_ nfInt32 nValue);
