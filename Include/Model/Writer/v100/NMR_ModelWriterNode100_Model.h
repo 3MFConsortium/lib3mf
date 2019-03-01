@@ -70,6 +70,8 @@ namespace NMR {
 		void writeTextures2D();
 		void writeColors();
 		void writeTex2Coords();
+		void writeCompositeMaterials();
+
 		void writeObjects();
 		void writeBuild();
 

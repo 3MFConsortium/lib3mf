@@ -41,6 +41,7 @@ This is the class for exporting the 3mf model stream root node.
 #include "Model/Classes/NMR_ModelColorGroup.h"
 #include "Model/Classes/NMR_ModelTexture2D.h"
 #include "Model/Classes/NMR_ModelTexture2DGroup.h"
+#include "Model/Classes/NMR_ModelCompositeMaterials.h"
 #include "Model/Classes/NMR_ModelMeshObject.h"
 #include "Model/Classes/NMR_ModelComponentsObject.h"
 #include "Model/Classes/NMR_Model.h"
@@ -587,6 +588,66 @@ namespace NMR {
 
 	}
 
+	void CModelWriterNode100_Model::writeCompositeMaterials()
+	{
+		nfUint32 nCount = m_pModel->getCompositeMaterialsCount();
+
+		for (nfUint32 nIndex = 0; nIndex < nCount; nIndex++) {
+
+			CModelCompositeMaterialsResource * pCompositeMaterials = m_pModel->getCompositeMaterials(nIndex);
+
+			pCompositeMaterials->buildResourceIndexMap();
+
+			ModelResourceID nResourceID = pCompositeMaterials->getResourceID()->getUniqueID();
+
+			writeStartElementWithPrefix(XML_3MF_ELEMENT_COMPOSITEMATERIALS, XML_3MF_NAMESPACEPREFIX_MATERIAL);
+			// Write Object ID (mandatory)
+			writeIntAttribute(XML_3MF_ATTRIBUTE_COMPOSITEMATERIALS_ID, nResourceID);
+			PModelBaseMaterialResource pBaseMaterialResource = pCompositeMaterials->getBaseMaterialResource();
+			ModelResourceID nBaseMaterialResourceID = pBaseMaterialResource->getResourceID()->getUniqueID();
+			writeIntAttribute(XML_3MF_ATTRIBUTE_COMPOSITEMATERIALS_MATID, nBaseMaterialResourceID);
+
+			std::vector<nfUint32> matIndices;
+			std::set<ModelPropertyID> mapUsedBMPropertyIDs;
+			
+			nfUint32 nElementCount = pCompositeMaterials->getCount();
+			for (nfUint32 j = 0; j < nElementCount; j++) {
+				ModelPropertyID nPropertyID;
+				if (!pCompositeMaterials->mapResourceIndexToPropertyID(j, nPropertyID)) {
+					throw CNMRException(NMR_ERROR_INVALIDPROPERTYRESOURCEID);
+				}
+				m_pPropertyIndexMapping->registerPropertyID(nResourceID, nPropertyID, j);
+				PModelComposite pModelComposite = pCompositeMaterials->getComposite(nPropertyID);
+
+				for (auto constituents : (*pModelComposite)) {
+					nfUint32 nBaseMaterialIndex = m_pPropertyIndexMapping->mapPropertyIDToIndex(nBaseMaterialResourceID, constituents.m_nPropertyID);
+					if (mapUsedBMPropertyIDs.find(constituents.m_nPropertyID) == mapUsedBMPropertyIDs.end()) {
+						mapUsedBMPropertyIDs.insert(constituents.m_nPropertyID);
+						matIndices.push_back(nBaseMaterialIndex);
+					}
+				}
+			}
+			writeStringAttribute(XML_3MF_ATTRIBUTE_COMPOSITEMATERIALS_MATINDICES, fnVectorToSpaceDelimitedString(matIndices));
+
+			for (nfUint32 j = 0; j < nElementCount; j++) {
+				ModelPropertyID nPropertyID;
+				if (!pCompositeMaterials->mapResourceIndexToPropertyID(j, nPropertyID)) {
+					throw CNMRException(NMR_ERROR_INVALIDPROPERTYRESOURCEID);
+				}
+				PModelComposite pModelComposite = pCompositeMaterials->getComposite(nPropertyID);
+
+				std::vector<nfDouble> ratios;
+				writeStartElementWithPrefix(XML_3MF_ELEMENT_COMPOSITE, XML_3MF_NAMESPACEPREFIX_MATERIAL);
+				for (ModelPropertyID nBMPropertyID: mapUsedBMPropertyIDs) {
+					ratios.push_back(pModelComposite->GetMixingRatio(nBMPropertyID));
+				}
+				writeStringAttribute(XML_3MF_ATTRIBUTE_COMPOSITE_VALUES, fnVectorToSpaceDelimitedString(ratios));
+				writeEndElement();
+			}
+			writeFullEndElement();
+		}
+	}
+
 	void CModelWriterNode100_Model::writeResources()
 	{
 		writeStartElement(XML_3MF_ELEMENT_RESOURCES);
@@ -600,6 +661,7 @@ namespace NMR {
 				writeTextures2D();
 				writeColors();
 				writeTex2Coords();
+				writeCompositeMaterials();
 			}
 			if (m_bWriteSliceExtension) {
 				writeSliceStacks();

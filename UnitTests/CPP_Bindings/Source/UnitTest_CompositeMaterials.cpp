@@ -96,21 +96,26 @@ namespace Lib3MF
 		}
 	}
 
-	TEST_F(CompositeMaterials, AddGet_Composites)
+	TEST_F(CompositeMaterials, AddGet)
 	{
 		auto compositeMaterial = model->AddCompositeMaterials(baseMaterialGroup1.get());
 		ASSERT_EQ(compositeMaterial->GetCount(), 0);
-
 
 		std::vector<sLib3MFCompositeConstituent> constituents(1);
 		constituents[0].m_MixingRatio = 0.5;
 		constituents[0].m_PropertyID = 100;
 
 		ASSERT_SPECIFIC_THROW(compositeMaterial->AddComposite(constituents), ELib3MFException);
-		constituents[0].m_PropertyID = 1;
+		constituents[0].m_PropertyID = 2;
+		constituents[0].m_MixingRatio = -0.5;
+		ASSERT_SPECIFIC_THROW(compositeMaterial->AddComposite(constituents), ELib3MFException);
+		constituents[0].m_MixingRatio = 1.5;
+		ASSERT_SPECIFIC_THROW(compositeMaterial->AddComposite(constituents), ELib3MFException);
+		constituents[0].m_MixingRatio = 0.5;
+
 		Lib3MF_uint32 propertyID1 = compositeMaterial->AddComposite(constituents);
 
-		constituents.push_back(sLib3MFCompositeConstituent({2, 0.2 }));
+		constituents.push_back(sLib3MFCompositeConstituent({1, 0.2 }));
 		Lib3MF_uint32 propertyID2 = compositeMaterial->AddComposite(constituents);
 
 		ASSERT_EQ(compositeMaterial->GetCount(), 2);
@@ -123,55 +128,60 @@ namespace Lib3MF
 		ASSERT_EQ(2, outPropertyIDs.size());
 		ASSERT_EQ(propertyID1, outPropertyIDs[0]);
 		ASSERT_EQ(propertyID2, outPropertyIDs[1]);
+
+		compositeMaterial->RemoveComposite(propertyID1);
+		ASSERT_EQ(compositeMaterial->GetCount(), 1);
 	}
 
-	
+	TEST_F(CompositeMaterials, WriteRead)
+	{
+		auto compositeMaterial = model->AddCompositeMaterials(baseMaterialGroup1.get());
+		ASSERT_EQ(compositeMaterial->GetCount(), 0);
 
-	//TEST_F(CompositeMaterials, SetGet_CompositeMaterialGroup)
-	//{
-	//	std::vector<sLib3MFTex2Coord> coords(0);
+		std::vector<sLib3MFCompositeConstituent> constituents(0);
+		constituents.push_back(sLib3MFCompositeConstituent({ 1, 0.5 }));
+		Lib3MF_uint32 propertyID1 = compositeMaterial->AddComposite(constituents);
+		constituents.push_back(sLib3MFCompositeConstituent({ 2, 0.2 }));
+		Lib3MF_uint32 propertyID2 = compositeMaterial->AddComposite(constituents);
 
-	//	auto texture2DGroup = model->AddTexture2DGroup(texture2D.get());
-	//	std::vector<sLib3MFTriangleProperties> properties(mesh->GetTriangleCount());
-	//	for (Lib3MF_uint64 i = 0; i < mesh->GetTriangleCount(); i++) {
-	//		properties[i].m_ResourceID = texture2DGroup->GetResourceID();
+		std::vector<sLib3MFTriangleProperties> properties(mesh->GetTriangleCount());
+		for (Lib3MF_uint64 i = 0; i < mesh->GetTriangleCount(); i++) {
+			properties[i].m_ResourceID = compositeMaterial->GetResourceID();
+			for (int k = 0; k < 3; k++) {
+				properties[i].m_PropertyIDs[k] = ((i + k) % 2) ? propertyID1 : propertyID2;
+			}
+		}
+		mesh->SetAllTriangleProperties(properties);
 
-	//		coords.push_back({ 1.0*i / mesh->GetTriangleCount(), 1.0 - 1.0*i / mesh->GetTriangleCount() });
-	//		properties[i].m_PropertyIDs[0] = texture2DGroup->AddTex2Coord(coords.rbegin()[0]);
-	//		coords.push_back({ 1.0*(i + 1) / mesh->GetTriangleCount(), 1.0 - 1.0*i / mesh->GetTriangleCount() });
-	//		properties[i].m_PropertyIDs[1] = texture2DGroup->AddTex2Coord(coords.rbegin()[0]);
-	//		coords.push_back({ 1.0*i / mesh->GetTriangleCount(), 1.0 - 1.0*(i + 1) / mesh->GetTriangleCount() });
-	//		properties[i].m_PropertyIDs[2] = texture2DGroup->AddTex2Coord(coords.rbegin()[0]);
-	//	}
-	//	mesh->SetAllTriangleProperties(properties);
+		auto writer = model->QueryWriter("3mf");
+		std::vector<Lib3MF_uint8> buffer;
+		// writer->WriteToBuffer(buffer);
+		writer->WriteToFile("Composites_Out.3mf");
 
-	//	std::vector<sLib3MFTriangleProperties> gottenProperties;
-	//	mesh->GetAllTriangleProperties(gottenProperties);
-	//	int count = 0;
-	//	for (Lib3MF_uint64 i = 0; i < mesh->GetTriangleCount(); i++) {
-	//		EXPECT_EQ(gottenProperties[i].m_ResourceID, properties[i].m_ResourceID);
-	//		for (Lib3MF_uint64 j = 0; j < 3; j++) {
-	//			EXPECT_EQ(gottenProperties[i].m_PropertyIDs[j], properties[i].m_PropertyIDs[j]);
-	//		}
+		auto readModel = CLib3MFWrapper::CreateModel();
+		auto reader = readModel->QueryReader("3mf");
+		reader->ReadFromFile("Composites_Out.3mf");
+		// reader->ReadFromBuffer(buffer);
 
-	//		sLib3MFTriangleProperties currentProperty;
-	//		mesh->GetTriangleProperties(Lib3MF_uint32(i), currentProperty);
-	//		auto currentTexture2DGroup = model->GetTexture2DGroupByID(currentProperty.m_ResourceID);
-	//		EXPECT_EQ(currentProperty.m_ResourceID, properties[i].m_ResourceID);
-	//		for (Lib3MF_uint64 j = 0; j < 3; j++) {
-	//			EXPECT_EQ(currentProperty.m_PropertyIDs[j], properties[i].m_PropertyIDs[j]);
-	//			sLib3MFTex2Coord uvcoord = currentTexture2DGroup->GetTex2Coord(currentProperty.m_PropertyIDs[j]);
-	//			EXPECT_DOUBLE_EQ(uvcoord.m_U, coords[count].m_U);
-	//			EXPECT_DOUBLE_EQ(uvcoord.m_V, coords[count++].m_V);
-	//		}
-	//	}
 
-	//	std::vector<Lib3MF_uint32> properties2D;
-	//	texture2DGroup->GetAllPropertyIDs(properties2D);
-	//}
+		int compositeMaterialsCount = 0;
+		auto iterator = readModel->GetCompositeMaterials();
+		while (iterator->MoveNext())
+		{
+			auto readCompositeMaterial = iterator->GetCurrentCompositeMaterials();
+			ASSERT_EQ(readCompositeMaterial->GetCount(), compositeMaterial->GetCount());
+			compositeMaterialsCount++;
+			auto readBaseMaterialGroup = compositeMaterial->GetBaseMaterialGroup();
+			readBaseMaterialGroup->GetCount();
+			ASSERT_EQ(readBaseMaterialGroup->GetCount(), baseMaterialGroup1->GetCount());
+			for (Lib3MF_uint32 i = 0; i < readBaseMaterialGroup->GetCount(); i++) {
+				ASSERT_TRUE(readBaseMaterialGroup->GetName(i) == baseMaterialGroup1->GetName(i));
+				// ASSERT_TRUE(readBaseMaterialGroup->GetDisplayColor(i) == baseMaterialGroup1->GetDisplayColor(i));
+			}
+		}
+		ASSERT_EQ(compositeMaterialsCount, 1);
+	}
 
-	//TEST_F(CompositeMaterials, WriteRead)
-	//{
 
 	//	ASSERT_SPECIFIC_THROW(texture->SetAttachment(otherAttachment.get()), ELib3MFException);
 

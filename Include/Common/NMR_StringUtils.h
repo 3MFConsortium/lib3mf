@@ -44,6 +44,14 @@ and Exception-safe
 
 namespace NMR {
 
+	template <typename T>
+	T fnStringToType(_In_z_ const nfChar * pszValue);
+
+	template<>
+	double fnStringToType(_In_z_ const nfChar * pszValue);
+	template<>
+	nfUint32 fnStringToType(_In_z_ const nfChar * pszValue);
+
 	nfInt32 fnStringToInt32(_In_z_ const nfChar * pszValue);
 	nfUint32 fnStringToUint32(_In_z_ const nfChar * pszValue);
 	nfFloat fnStringToFloat(_In_z_ const nfChar * pszValue);
@@ -58,6 +66,17 @@ namespace NMR {
 	std::string fnColorToString(_In_ nfColor cColor);
 
 	void fnStringToCommaSeparatedIntegerTriplet(_In_z_ const nfChar * pszValue, _Out_ nfInt32 & nValue1, _Out_ nfInt32 & nValue2, _Out_ nfInt32 & nValue3);
+	
+	template<typename T>
+	std::string fnVectorToSpaceDelimitedString(_In_ const std::vector<T> v) {
+		std::string result = "";
+		for (auto i = v.begin(); i != v.end(); i++) {
+			if (i != v.begin())
+				result += " ";
+			result += std::to_string(*i);
+		}
+		return result;
+	};
 
 	void fnStringToBufferSafe(_In_ const std::string sString, _Out_opt_ nfChar * pszBuffer, nfUint32 cbBufferSize, _Out_opt_ nfUint32 * pcbNeededChars);
 	void fnWStringToBufferSafe(_In_ const std::wstring sString, _Out_opt_ nfWChar * pwszBuffer, nfUint32 cbBufferSize, _Out_opt_ nfUint32 * pcbNeededChars);
@@ -84,7 +103,34 @@ namespace NMR {
 	std::string fnExtractFileName(_In_ const std::string sFullPath);
 	std::string fnExtractFileDir(_In_ const std::string sFullPath);
 
-	std::vector<double> fnVctDouble_fromString(_In_ const std::string sString);
+	template<typename T>
+	std::vector<T> fnVctType_fromString(_In_ const std::string sString)
+	{
+		std::vector<T> vctValues;
+
+		const nfChar * pszString = sString.c_str();
+		const nfChar * pCurrent = pszString;
+
+		nfBool bFinished = false;
+		while (!bFinished) {
+			// Find next space
+			const nfChar * pBegin = pCurrent;
+			while ((*pCurrent != ' ') && (*pCurrent))
+				pCurrent++;
+
+			// If we have not found a space, convert value to T
+			if (pBegin != pCurrent) {
+				vctValues.push_back(fnStringToType<T>(pBegin));
+			}
+
+			// If we are finished, break, otherwise skip space!
+			if (!*pCurrent)
+				bFinished = true;
+			else
+				pCurrent++;
+		}
+		return vctValues;
+	}
 }
 
 #endif // __NMR_STRINGUTILS

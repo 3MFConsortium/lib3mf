@@ -64,6 +64,19 @@ namespace NMR {
 	// Masks to decode highest UTF8 sequence byte
 	const nfByte UTF8DecodeMask[7] = {0, 0x7f, 0x1f, 0x0f, 0x07, 0x03, 0x01};
 
+
+	template<>
+	double fnStringToType(_In_z_ const nfChar * pszValue)
+	{
+		return fnStringToDouble(pszValue);
+	}
+	template<>
+	nfUint32 fnStringToType(_In_z_ const nfChar * pszValue)
+	{
+		return fnStringToUint32(pszValue);
+	}
+
+
 	nfInt32 fnStringToInt32(_In_z_ const nfChar * pszValue)
 	{
 		__NMRASSERT(pszValue);
@@ -777,33 +790,6 @@ namespace NMR {
 		}
 	}
 
-
-	std::vector<double> fnVctDouble_fromString(_In_ const std::string sString)
-	{
-		std::vector<double> vctValues;
-
-		const nfChar * pszString = sString.c_str();
-		const nfChar * pCurrent = pszString;
-
-		nfBool bFinished = false;
-		while (!bFinished) {
-			// Find next space
-			const nfChar * pBegin = pCurrent;
-			while ((*pCurrent != ' ') && (*pCurrent))
-				pCurrent++;
-
-			// If we have not found a space, convert value to double
-			if (pBegin != pCurrent) {
-				vctValues.push_back(fnStringToFloat(pBegin));
-			}
-
-			// If we are finished, break, otherwise skip space!
-			if (!*pCurrent)
-				bFinished = true;
-			else
-				pCurrent++;
-		}
-		return vctValues;
-	}
+	
 
 }

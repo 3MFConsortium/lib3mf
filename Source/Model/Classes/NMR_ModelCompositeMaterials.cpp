@@ -56,8 +56,13 @@ namespace NMR {
 		}
 		
 		// check for valid PropertyID
-		for (auto constituent: *pComposite)
+		for (auto constituent : *pComposite) {
 			m_pBaseMaterialResource->getBaseMaterial(constituent.m_nPropertyID);
+			if ((constituent.m_dMixingRatio < 0) || constituent.m_dMixingRatio > 1.0) {
+				throw CNMRException(NMR_ERROR_MIXINGRATIO_OUTOFRANGE);
+			}
+		}
+		
 
 		m_pComposites.insert(std::make_pair(nID, pComposite));
 
@@ -133,6 +138,5 @@ namespace NMR {
 	{
 		return m_pBaseMaterialResource;
 	}
-
 }
 

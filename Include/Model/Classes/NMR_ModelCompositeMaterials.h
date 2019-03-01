@@ -46,7 +46,19 @@ namespace NMR {
 	class CModel;
 	typedef std::shared_ptr<CModel> PModel;
 
-	typedef std::vector<MODELCOMPOSITECONSTITUENT> CModelComposite;
+	class CModelComposite: public std::vector<MODELCOMPOSITECONSTITUENT>
+	{
+	public:
+		nfDouble GetMixingRatio(ModelPropertyID nPropertyID)
+		{
+			for (MODELCOMPOSITECONSTITUENT constituent : (*this)) {
+				if (constituent.m_nPropertyID == nPropertyID) {
+					return constituent.m_dMixingRatio;
+				}
+			}
+			return 0.0;
+		}
+	};
 	typedef std::shared_ptr<CModelComposite> PModelComposite;
 
 	class CModelCompositeMaterialsResource : public CModelResource {
@@ -55,7 +67,6 @@ namespace NMR {
 		ModelPropertyID m_nNextPropertyID;
 
 		PModelBaseMaterialResource m_pBaseMaterialResource;
-
 	public:
 		CModelCompositeMaterialsResource() = delete;
 		CModelCompositeMaterialsResource(_In_ const ModelResourceID sID, _In_ CModel * pModel,

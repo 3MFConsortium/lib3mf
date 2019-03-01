@@ -166,6 +166,8 @@ Source/Model/Reader/v100/NMR_ModelReaderNode100_Color.cpp
 Source/Model/Reader/v100/NMR_ModelReaderNode100_Colors.cpp
 Source/Model/Reader/v100/NMR_ModelReaderNode100_Component.cpp
 Source/Model/Reader/v100/NMR_ModelReaderNode100_Components.cpp
+Source/Model/Reader/v100/NMR_ModelReaderNode100_Composite.cpp
+Source/Model/Reader/v100/NMR_ModelReaderNode100_CompositeMaterials.cpp
 Source/Model/Reader/v100/NMR_ModelReaderNode100_Mesh.cpp
 Source/Model/Reader/v100/NMR_ModelReaderNode100_MetaData.cpp
 Source/Model/Reader/v100/NMR_ModelReaderNode100_MetaDataGroup.cpp

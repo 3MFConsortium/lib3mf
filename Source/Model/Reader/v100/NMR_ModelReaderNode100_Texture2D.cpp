@@ -148,7 +148,7 @@ namespace NMR {
 			if (m_hasBox)
 				throw CNMRException(NMR_ERROR_DUPLICATE_BOX_ATTRIBUTE);
 			// parse box
-			std::vector<double> box = fnVctDouble_fromString(pAttributeValue);
+			std::vector<double> box = fnVctType_fromString<double>(pAttributeValue);
 			if (box.size() != 4)
 				throw CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE);
 			m_fU = nfFloat(box[0]);

@@ -465,6 +465,10 @@ namespace NMR {
 		if (pTexture2DGroup != nullptr)
 			m_Texture2DGroupLookup.push_back(pResource);
 
+		CModelCompositeMaterialsResource * pCompositeMaterials = dynamic_cast<CModelCompositeMaterialsResource *> (pResource.get());
+		if (pCompositeMaterials != nullptr)
+			m_CompositeMaterialsLookup.push_back(pResource);
+
 		CModelSliceStack *pSliceStack = dynamic_cast<CModelSliceStack *>(pResource.get());
 		if (pSliceStack != nullptr) 
 			m_SliceStackLookup.push_back(pResource);

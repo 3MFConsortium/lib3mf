@@ -1049,6 +1049,14 @@ Model error codes (0x8XXX)
 // Property ID not found
 #define NMR_ERROR_PROPERTYIDNOTFOUND 0x80D2
 
+// Too many colors
+#define NMR_ERROR_TOOMANYCOLORS 0x80D3
+
+// Too many composites
+#define NMR_ERROR_TOOMANYCOMPOSITES 0x80D4
+
+// Composite mixing ratio out of range
+#define NMR_ERROR_MIXINGRATIO_OUTOFRANGE 0x80D5
 
 /*-------------------------------------------------------------------
 XML Parser Error Constants (0x9XXX)
@@ -1126,11 +1134,9 @@ XML Parser Error Constants (0x9XXX)
 // A box attribute is duplicated
 #define NMR_ERROR_DUPLICATE_BOX_ATTRIBUTE 0x9018
 
-// Too many colors
-#define NMR_ERROR_TOOMANYCOLORS 0x9019
+// A matindices attribute is duplicated
+#define NMR_ERROR_DUPLICATE_MATINDICES_ATTRIBUTE 0x9019
 
-// Too many composites
-#define NMR_ERROR_TOOMANYCOMPOSITES 0x9020
 
 /*-------------------------------------------------------------------
 Library errors (0xAXXX)

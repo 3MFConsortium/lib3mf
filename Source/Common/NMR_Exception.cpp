@@ -378,6 +378,9 @@ namespace NMR {
 		case NMR_ERROR_PROPERTYIDALREADYREGISTERED: return "Property already registered";
 		case NMR_ERROR_INVALIDPROPERTYRESOURCEID: return "Invalid Property Resource ID";
 		case NMR_ERROR_PROPERTYIDNOTFOUND: return "Property ID not found";
+		case NMR_ERROR_TOOMANYCOLORS: return "Too many colors.";
+		case NMR_ERROR_TOOMANYCOMPOSITES: return "Too many composites.";
+		case NMR_ERROR_MIXINGRATIO_OUTOFRANGE: return "Mixing ratio of composite out of range.";
 
 
 		// XML Parser Error Constants(0x9XXX)
@@ -405,8 +408,7 @@ namespace NMR {
 		case NMR_ERROR_CONTENTTYPE_EMPTY_PARTNAME: return "An override content type does not have a partname.";
 		case NMR_ERROR_XMLPARSER_INVALID_ESCAPESTRING: return "XML contains an invalid escape character.";
 		case NMR_ERROR_DUPLICATE_BOX_ATTRIBUTE: return "A box attribute is duplicated.";
-		case NMR_ERROR_TOOMANYCOLORS: return "Too many colors.";
-		case NMR_ERROR_TOOMANYCOMPOSITES: return "Too many composites.";
+		case NMR_ERROR_DUPLICATE_MATINDICES_ATTRIBUTE: return "A matindices attribute is duplicated.";
 
 		// Library errors (0xAXXX)
 		case NMR_ERROR_COULDNOTGETINTERFACEVERSION: return "Could not get interface version";

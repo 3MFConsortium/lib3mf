@@ -26,11 +26,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelReaderNode100_Tex2Coord.cpp implements the Model Reader Tex2Coord Node Class.
+NMR_ModelReaderNode100_Color.cpp implements the Model Reader Color Node Class.
 
 --*/
 
-#include "Model/Reader/v100/NMR_ModelReaderNode100_Tex2Coord.h"
+#include "Model/Reader/v100/NMR_ModelReaderNode100_Composite.h"
 
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Model/Classes/NMR_ModelMeshObject.h"
@@ -41,10 +41,9 @@ NMR_ModelReaderNode100_Tex2Coord.cpp implements the Model Reader Tex2Coord Node 
 
 namespace NMR {
 
-	CModelReaderNode100_Tex2Coord::CModelReaderNode100_Tex2Coord(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings)
+	CModelReaderNode100_Composite::CModelReaderNode100_Composite(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings)
 		: CModelReaderNode(pWarnings)
 	{
-
 		m_pModel = pModel;
 		m_bHasU = false;
 		m_bHasV = false;
@@ -52,7 +51,7 @@ namespace NMR {
 		m_sUVCoordinate.m_dV = 0.0;
 	}
 
-	void CModelReaderNode100_Tex2Coord::parseXML(_In_ CXmlReader * pXMLReader)
+	void CModelReaderNode100_Composite::parseXML(_In_ CXmlReader * pXMLReader)
 	{
 		// Parse name
 		parseName(pXMLReader);
@@ -65,7 +64,7 @@ namespace NMR {
 
 	}
 
-	void CModelReaderNode100_Tex2Coord::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
+	void CModelReaderNode100_Composite::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
 	{
 		__NMRASSERT(pAttributeName);
 		__NMRASSERT(pAttributeValue);
@@ -90,17 +89,17 @@ namespace NMR {
 		}
 	}
 
-	nfBool CModelReaderNode100_Tex2Coord::hasU()
+	nfBool CModelReaderNode100_Composite::hasU()
 	{
 		return m_bHasU;
 	}
 
-	nfBool CModelReaderNode100_Tex2Coord::hasV()
+	nfBool CModelReaderNode100_Composite::hasV()
 	{
 		return m_bHasV;
 	}
 
-	MODELTEXTURE2DCOORDINATE CModelReaderNode100_Tex2Coord::getUV()
+	MODELTEXTURE2DCOORDINATE CModelReaderNode100_Composite::getUV()
 	{
 		return m_sUVCoordinate;
 	}

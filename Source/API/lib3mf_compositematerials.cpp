@@ -92,18 +92,18 @@ ILib3MFBaseMaterialGroup * CLib3MFCompositeMaterials::GetBaseMaterialGroup ()
 
 Lib3MF_uint32 CLib3MFCompositeMaterials::AddComposite(const Lib3MF_uint64 nCompositeBufferSize, const sLib3MFCompositeConstituent * pCompositeBuffer)
 {
-	NMR::PModelComposite constituents = std::make_shared<NMR::CModelComposite>(nCompositeBufferSize);
+	NMR::PModelComposite constituents = std::make_shared<NMR::CModelComposite>();
+	constituents->resize(nCompositeBufferSize);
 	for (Lib3MF_uint64 i = 0; i < nCompositeBufferSize; i++) {
 		(*constituents)[i].m_dMixingRatio = pCompositeBuffer[i].m_MixingRatio;
 		(*constituents)[i].m_nPropertyID = pCompositeBuffer[i].m_PropertyID;
-
 	}
 	return compositeMaterials().addComposite(constituents);
 }
 
 void CLib3MFCompositeMaterials::RemoveComposite (const Lib3MF_uint32 nPropertyID)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	compositeMaterials().removeComposite(nPropertyID);
 }
 
 void CLib3MFCompositeMaterials::GetComposite(const Lib3MF_uint32 nPropertyID, Lib3MF_uint64 nCompositeBufferSize, Lib3MF_uint64* pCompositeNeededCount, sLib3MFCompositeConstituent * pCompositeBuffer)
