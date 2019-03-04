@@ -119,6 +119,29 @@ ILib3MFTexture2D * CLib3MFModel::GetTexture2DByID (const Lib3MF_uint32 nResource
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDTEXTURERESOURCE);
 }
 
+eLib3MFPropertyType CLib3MFModel::GetPropertyTypeByID(const Lib3MF_uint32 nResourceID)
+{
+	NMR::PModelResource pResource = model().findResource(nResourceID);
+	if (!pResource) {
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_RESOURCENOTFOUND);
+	}
+
+	if (dynamic_cast<NMR::CModelBaseMaterialResource*>(pResource.get())) {
+		return eLib3MFPropertyType::ePropertyTypeBaseMaterial;
+	}
+	else if ((dynamic_cast<NMR::CModelColorGroupResource*>(pResource.get()))) {
+		return eLib3MFPropertyType::ePropertyTypeColors;
+	}
+	else if ((dynamic_cast<NMR::CModelTexture2DGroupResource*>(pResource.get()))) {
+		return eLib3MFPropertyType::ePropertyTypeTexCoord;
+	}
+	else if ((dynamic_cast<NMR::CModelCompositeMaterialsResource*>(pResource.get()))) {
+		return eLib3MFPropertyType::ePropertyTypeComposite;
+	}
+	else
+		return eLib3MFPropertyType::ePropertyTypeNoPropertyType;
+}
+
 ILib3MFBaseMaterialGroup * CLib3MFModel::GetBaseMaterialGroupByID (const Lib3MF_uint32 nResourceID)
 {
 	NMR::PModelBaseMaterialResource pBaseMaterialResource = model().findBaseMaterial(nResourceID);

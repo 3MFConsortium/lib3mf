@@ -96,12 +96,12 @@
 	</errors>
 
 	<enum name="PropertyType">
-		<option name="None" value="0" />
+		<option name="NoPropertyType" value="0" />
 		<option name="BaseMaterial" value="1" />
 		<option name="TexCoord" value="2" />
 		<option name="Colors" value="3" />
 		<option name="Composite" value="4" />
-		<option name="Multi" value="1024" />
+		<option name="Multi" value="5" />
 	</enum>
 
 	<enum name="SlicesMeshResolution">
@@ -1019,6 +1019,10 @@
 		<method name="GetTexture2DByID" description="finds a model texture by its id">
 			<param name="ResourceID" type="uint32" pass="in" description="Resource ID" />
 			<param name="TextureInstance" type="handle" class="Texture2D" pass="return" description="returns the texture2d instance" />
+		</method>
+		<method name="GetPropertyTypeByID" description="returns a Property's type">
+			<param name="ResourceID" type="uint32" pass="in" description="Resource ID of the Property to Query" />
+			<param name="ThePropertyType" type="enum" class="PropertyType" pass="return" description="returns a Property's type" />
 		</method>
 		<method name="GetBaseMaterialGroupByID" description="finds a model base material group by its id">
 			<param name="ResourceID" type="uint32" pass="in" description="Resource ID" />

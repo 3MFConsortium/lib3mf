@@ -89,6 +89,8 @@ public:
 
 	ILib3MFTexture2D * GetTexture2DByID (const Lib3MF_uint32 nResourceID);
 
+	eLib3MFPropertyType GetPropertyTypeByID(const Lib3MF_uint32 nResourceID);
+
 	ILib3MFBaseMaterialGroup * GetBaseMaterialGroupByID (const Lib3MF_uint32 nResourceID);
 
 	ILib3MFMeshObject * GetMeshObjectByID (const Lib3MF_uint32 nResourceID);

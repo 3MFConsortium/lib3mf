@@ -76,7 +76,7 @@ namespace NMR {
 		PModelBaseMaterialResource pBaseMaterial = m_pModel->findBaseMaterial(pID->getUniqueID());
 
 		// Create Resource
-		m_pCompositeMaterials = std::make_shared<CModelCompositeMaterialsResource>(m_nID, m_pModel, pBaseMaterial);
+ 		m_pCompositeMaterials = std::make_shared<CModelCompositeMaterialsResource>(m_nID, m_pModel, pBaseMaterial);
 		
 		if (m_pMatIndices) {
 			pBaseMaterial->buildResourceIndexMap();

@@ -84,13 +84,13 @@ namespace Lib3MF
 		}
 		mesh->SetAllTriangleProperties(properties);
 
-		std::vector<sLib3MFTriangleProperties> gottenProperties;
-		mesh->GetAllTriangleProperties(gottenProperties);
+		std::vector<sLib3MFTriangleProperties> obtainedProperties;
+		mesh->GetAllTriangleProperties(obtainedProperties);
 		int count = 0;
 		for (Lib3MF_uint64 i = 0; i < mesh->GetTriangleCount(); i++) {
-			EXPECT_EQ(gottenProperties[i].m_ResourceID, properties[i].m_ResourceID);
+			EXPECT_EQ(obtainedProperties[i].m_ResourceID, properties[i].m_ResourceID);
 			for (Lib3MF_uint64 j = 0; j < 3; j++) {
-				EXPECT_EQ(gottenProperties[i].m_PropertyIDs[j], properties[i].m_PropertyIDs[j]);
+				EXPECT_EQ(obtainedProperties[i].m_PropertyIDs[j], properties[i].m_PropertyIDs[j]);
 			}
 
 			sLib3MFTriangleProperties currentProperty;
