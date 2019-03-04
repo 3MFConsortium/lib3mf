@@ -52,13 +52,16 @@ Abstract: This is a stub class definition of CLib3MFModel
 #include "lib3mf_texture2dgroupiterator.hpp"
 #include "lib3mf_compositematerials.hpp"
 #include "lib3mf_compositematerialsiterator.hpp"
-// Include custom headers here.
+#include "lib3mf_multipropertygroup.hpp"
+#include "lib3mf_multipropertygroupiterator.hpp"
 
+// Include custom headers here.
 #include "Model/Classes/NMR_ModelMeshObject.h"
 #include "Model/Classes/NMR_ModelComponentsObject.h"
 #include "Common/Platform/NMR_ImportStream_Memory.h"
-#include "Model/Classes/NMR_ModelColorGroup.h" 
-#include "Model/Classes/NMR_ModelTexture2DGroup.h" 
+#include "Model/Classes/NMR_ModelColorGroup.h"
+#include "Model/Classes/NMR_ModelTexture2DGroup.h"
+#include "Model/Classes/NMR_ModelMultiPropertyGroup.h"
 
 #include "lib3mf_utils.hpp"
 
@@ -138,6 +141,9 @@ eLib3MFPropertyType CLib3MFModel::GetPropertyTypeByID(const Lib3MF_uint32 nResou
 	else if ((dynamic_cast<NMR::CModelCompositeMaterialsResource*>(pResource.get()))) {
 		return eLib3MFPropertyType::ePropertyTypeComposite;
 	}
+	else if ((dynamic_cast<NMR::CModelMultiPropertyGroupResource*>(pResource.get()))) {
+		return eLib3MFPropertyType::ePropertyTypeMulti;
+	}
 	else
 		return eLib3MFPropertyType::ePropertyTypeNoPropertyType;
 }
@@ -210,6 +216,16 @@ ILib3MFCompositeMaterials * CLib3MFModel::GetCompositeMaterialsByID(const Lib3MF
 	}
 	else
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCOMPOSITEMATERIALS);
+}
+
+ILib3MFMultiPropertyGroup * CLib3MFModel::GetMultiPropertyGroupByID(const Lib3MF_uint32 nResourceID)
+{
+	NMR::PModelResource pResource = model().findResource(nResourceID);
+	if (dynamic_cast<NMR::CModelMultiPropertyGroupResource*>(pResource.get())) {
+		return new CLib3MFMultiPropertyGroup(std::dynamic_pointer_cast<NMR::CModelMultiPropertyGroupResource>(pResource));
+	}
+	else
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDMULTIPROPERTYGROUP);
 }
 
 std::string CLib3MFModel::GetBuildUUID (bool & bHasUUID)
@@ -354,6 +370,19 @@ ILib3MFCompositeMaterialsIterator * CLib3MFModel::GetCompositeMaterials()
 	return pResult.release();
 }
 
+ILib3MFMultiPropertyGroupIterator * CLib3MFModel::GetMultiPropertyGroups()
+{
+	auto pResult = std::unique_ptr<CLib3MFMultiPropertyGroupIterator>(new CLib3MFMultiPropertyGroupIterator());
+	Lib3MF_uint32 nCount = model().getMultiPropertyGroupCount();
+
+	for (Lib3MF_uint32 nIdx = 0; nIdx < nCount; nIdx++) {
+		auto resource = model().getMultiPropertyGroupResource(nIdx);
+		if (dynamic_cast<NMR::CModelMultiPropertyGroupResource *>(resource.get()))
+			pResult->addResource(resource);
+	}
+	return pResult.release();
+}
+
 
 ILib3MFResourceIterator * CLib3MFModel::GetSliceStacks()
 {
@@ -481,6 +510,14 @@ ILib3MFCompositeMaterials * CLib3MFModel::AddCompositeMaterials(ILib3MFBaseMater
 	model().addResource(pResource);
 
 	return new CLib3MFCompositeMaterials(pResource);
+}
+
+ILib3MFMultiPropertyGroup * CLib3MFModel::AddMultiPropertyGroup()
+{
+	NMR::PModelMultiPropertyGroupResource pResource = std::make_shared<NMR::CModelMultiPropertyGroupResource>(model().generateResourceID(), &model());
+	model().addResource(pResource);
+
+	return new CLib3MFMultiPropertyGroup(pResource);
 }
 
 ILib3MFBuildItem * CLib3MFModel::AddBuildItem (ILib3MFObject* pObject, const sLib3MFTransform Transform)

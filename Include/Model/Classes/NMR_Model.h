@@ -77,6 +77,9 @@ namespace NMR {
 	class CModelCompositeMaterialsResource;
 	typedef std::shared_ptr <CModelCompositeMaterialsResource> PModelCompositeMaterialsResource;
 
+	class CModelMultiPropertyGroupResource;
+	typedef std::shared_ptr <CModelMultiPropertyGroupResource> PModelMultiPropertyGroupResource;
+
 	class CModelTexture2DGroupResource;
 	typedef std::shared_ptr <CModelTexture2DGroupResource> PModelTexture2DGroupResource;
 
@@ -134,6 +137,7 @@ namespace NMR {
 		std::vector<PModelResource> m_ColorGroupLookup;
 		std::vector<PModelResource> m_Texture2DGroupLookup;
 		std::vector<PModelResource> m_CompositeMaterialsLookup;
+		std::vector<PModelResource> m_MultiPropertyGroupLookup;
 
 		// Add Resource to resource lookup tables
 		void addResourceToLookupTable(_In_ PModelResource pResource);
@@ -238,6 +242,13 @@ namespace NMR {
 		PModelResource getCompositeMaterialsResource(_In_ nfUint32 nIndex);
 		CModelCompositeMaterialsResource * getCompositeMaterials(_In_ nfUint32 nIndex);
 		void mergeCompositeMaterials(_In_ CModel * pSourceModel);
+
+		// Convenience functions for multi property groups
+		_Ret_maybenull_ PModelMultiPropertyGroupResource findMultiPropertyGroup(_In_ PackageResourceID nResourceID);
+		nfUint32 getMultiPropertyGroupCount();
+		PModelResource getMultiPropertyGroupResource(_In_ nfUint32 nIndex);
+		CModelMultiPropertyGroupResource * getMultiPropertyGroup(_In_ nfUint32 nIndex);
+		void mergeMultiPropertyGroup(_In_ CModel * pSourceModel);
 
 		// Convenience functions for 2D Textures
 		_Ret_maybenull_ PModelTexture2DResource findTexture2D(_In_ PackageResourceID nResourceID);

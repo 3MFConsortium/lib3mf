@@ -40,6 +40,8 @@ Source/API/lib3mf_componentsobject.cpp
 Source/API/lib3mf_meshobject.cpp
 Source/API/lib3mf_metadata.cpp
 Source/API/lib3mf_metadatagroup.cpp
+Source/API/lib3mf_multipropertygroup.cpp
+Source/API/lib3mf_multipropertygroupiterator.cpp
 Source/API/lib3mf_model.cpp
 Source/API/lib3mf_object.cpp
 Source/API/lib3mf_reader.cpp
@@ -122,6 +124,7 @@ Source/Model/Classes/NMR_ModelMeshBeamLatticeAttributes.cpp
 Source/Model/Classes/NMR_ModelMeshObject.cpp
 Source/Model/Classes/NMR_ModelMetaData.cpp
 Source/Model/Classes/NMR_ModelMetaDataGroup.cpp
+Source/Model/Classes/NMR_ModelMultiPropertyGroup.cpp
 Source/Model/Classes/NMR_ModelObject.cpp
 Source/Model/Classes/NMR_ModelResource.cpp
 Source/Model/Classes/NMR_ModelTexture2D.cpp

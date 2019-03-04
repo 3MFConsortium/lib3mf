@@ -26,9 +26,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelCompositeMaterials.h defines the Model Color Group Resource Class.
-A model color group resource is an in memory representation of the 3MF
-color group resource object.
+NMR_ModelCompositeMaterials.h defines the Model Composite Materials Resource Class.
+A model composite materials resource is an in memory representation of the 3MF
+composite materials resource object.
 
 --*/
 

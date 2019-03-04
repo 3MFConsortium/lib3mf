@@ -26,8 +26,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelCompositeMaterials.cpp implements the Model Color Group Resource Class.
-A color group is an in memory representation of the 3MF color groups node.
+NMR_ModelCompositeMaterials.cpp implements the Model Composite Materials Resource Class.
+A model composite materials resource is an in memory representation of the 3MF
+composite materials resource object.
 
 --*/
 

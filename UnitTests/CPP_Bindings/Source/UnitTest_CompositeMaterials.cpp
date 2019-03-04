@@ -101,36 +101,36 @@ namespace Lib3MF
 		auto compositeMaterial = model->AddCompositeMaterials(baseMaterialGroup1.get());
 		ASSERT_EQ(compositeMaterial->GetCount(), 0);
 
-std::vector<sLib3MFCompositeConstituent> constituents(1);
-constituents[0].m_MixingRatio = 0.5;
-constituents[0].m_PropertyID = 100;
+		std::vector<sLib3MFCompositeConstituent> constituents(1);
+		constituents[0].m_MixingRatio = 0.5;
+		constituents[0].m_PropertyID = 100;
 
-ASSERT_SPECIFIC_THROW(compositeMaterial->AddComposite(constituents), ELib3MFException);
-constituents[0].m_PropertyID = 2;
-constituents[0].m_MixingRatio = -0.5;
-ASSERT_SPECIFIC_THROW(compositeMaterial->AddComposite(constituents), ELib3MFException);
-constituents[0].m_MixingRatio = 1.5;
-ASSERT_SPECIFIC_THROW(compositeMaterial->AddComposite(constituents), ELib3MFException);
-constituents[0].m_MixingRatio = 0.5;
+		ASSERT_SPECIFIC_THROW(compositeMaterial->AddComposite(constituents), ELib3MFException);
+		constituents[0].m_PropertyID = 2;
+		constituents[0].m_MixingRatio = -0.5;
+		ASSERT_SPECIFIC_THROW(compositeMaterial->AddComposite(constituents), ELib3MFException);
+		constituents[0].m_MixingRatio = 1.5;
+		ASSERT_SPECIFIC_THROW(compositeMaterial->AddComposite(constituents), ELib3MFException);
+		constituents[0].m_MixingRatio = 0.5;
 
-Lib3MF_uint32 propertyID1 = compositeMaterial->AddComposite(constituents);
+		Lib3MF_uint32 propertyID1 = compositeMaterial->AddComposite(constituents);
 
-constituents.push_back(sLib3MFCompositeConstituent({ 1, 0.2 }));
-Lib3MF_uint32 propertyID2 = compositeMaterial->AddComposite(constituents);
+		constituents.push_back(sLib3MFCompositeConstituent({ 1, 0.2 }));
+		Lib3MF_uint32 propertyID2 = compositeMaterial->AddComposite(constituents);
 
-ASSERT_EQ(compositeMaterial->GetCount(), 2);
+		ASSERT_EQ(compositeMaterial->GetCount(), 2);
 
-std::vector<sLib3MFCompositeConstituent> outConstituents;
-compositeMaterial->GetComposite(propertyID2, outConstituents);
+		std::vector<sLib3MFCompositeConstituent> outConstituents;
+		compositeMaterial->GetComposite(propertyID2, outConstituents);
 
-std::vector<Lib3MF_uint32> outPropertyIDs;
-compositeMaterial->GetAllPropertyIDs(outPropertyIDs);
-ASSERT_EQ(2, outPropertyIDs.size());
-ASSERT_EQ(propertyID1, outPropertyIDs[0]);
-ASSERT_EQ(propertyID2, outPropertyIDs[1]);
+		std::vector<Lib3MF_uint32> outPropertyIDs;
+		compositeMaterial->GetAllPropertyIDs(outPropertyIDs);
+		ASSERT_EQ(2, outPropertyIDs.size());
+		ASSERT_EQ(propertyID1, outPropertyIDs[0]);
+		ASSERT_EQ(propertyID2, outPropertyIDs[1]);
 
-compositeMaterial->RemoveComposite(propertyID1);
-ASSERT_EQ(compositeMaterial->GetCount(), 1);
+		compositeMaterial->RemoveComposite(propertyID1);
+		ASSERT_EQ(compositeMaterial->GetCount(), 1);
 	}
 
 	TEST_F(CompositeMaterials, WriteRead)

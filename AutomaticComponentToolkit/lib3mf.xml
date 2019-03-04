@@ -77,6 +77,8 @@
 		<error name="INVALIDCOLORGROUP" code="114" description="A color group resource is invalid" />
 		<error name="INVALIDTEXTURE2DGROUP" code="115" description="A texture2d group resource is invalid" />
 		<error name="INVALIDCOMPOSITEMATERIALS" code="116" description="A composite materials resource is invalid" />
+		<error name="INVALIDMULTIPROPERTYGROUP" code="117" description="A MultiPropertyGroup resource is invalid" />
+		
 
 
 		<error name="INVALIDRESOURCEINDEX" code="120" description="A resource index is invalid" />
@@ -179,6 +181,12 @@
 		<option name="WRITETRIANGLES" value="19" />
 		<option name="WRITESLICES" value="20" />
 	</enum>
+	
+	<enum name="BlendMethod">
+		<option name="NoBlendMethod" value="0"/>
+		<option name="Mix" value="1"/>
+		<option name="Multiply" value="2"/>
+	</enum>
 
 	<struct name="Triangle">
 		<member name="indices" type="uint32" rows="3" />
@@ -201,7 +209,12 @@
 		<member name="PropertyID" type="uint32"/>
 		<member name="MixingRatio" type="double"/>
 	</struct>
-
+	
+	<struct name="MultiPropertyLayer">
+		<member name="ResourceID" type="uint32"/>
+		<member name="TheBlendMethod" type="enum" class="BlendMethod"/>
+	</struct>
+	
 	<struct name="Tex2Coord">
 		<member name="U" type="double"/>
 		<member name="V" type="double"/>
@@ -360,6 +373,12 @@
 	<class name="CompositeMaterialsIterator" parent="ResourceIterator">
 		<method name="GetCurrentCompositeMaterials" description="Returns the CompositeMaterials the iterator points at.">
 			<param name="Resource" type="handle" class="CompositeMaterials" pass="return" description="returns the CompositeMaterials instance." />
+		</method>
+	</class>
+	
+	<class name="MultiPropertyGroupIterator" parent="ResourceIterator">
+		<method name="GetCurrentMultiPropertyGroup" description="Returns the MultiPropertyGroup the iterator points at.">
+			<param name="Resource" type="handle" class="MultiPropertyGroup" pass="return" description="returns the MultiPropertyGroup instance." />
 		</method>
 	</class>
 	
@@ -800,6 +819,46 @@
 		</method>
 	</class>
 	
+	<class name="MultiPropertyGroup" parent="Resource">
+		<method name="GetCount" description="Retrieves the count of MultiProperty-s in the MultiPropertyGroup.">
+			<param name="Count" type="uint32" pass="return" description="returns the count of MultiProperty-s" />
+		</method>
+		<method name="GetAllPropertyIDs" dllsuffix="utf8" description="returns all the PropertyIDs of all MultiProperty-s in this MultiPropertyGroup">
+			<param name="PropertyIDs" type="basicarray" class="uint32" pass="out" description="PropertyID of the MultiProperty-s in the MultiPropertyGroup." />
+		</method>
+
+		<method name="AddMultiProperty" description="Adds a new MultiProperty to the MultiPropertyGroup.">
+			<param name="PropertyIDs" type="basicarray" class="uint32" pass="in" description="The PropertyIDs of the new MultiProperty" />
+			<param name="PropertyID" type="uint32" pass="return" description="returns the PropertyID of the new MultiProperty in the MultiPropertyGroup." />
+		</method>
+		<method name="SetMultiProperty" description="Sets the PropertyIDs of a MultiProperty.">
+			<param name="PropertyID" type="uint32" pass="in" description="the PropertyID of the MultiProperty to be changed." />
+			<param name="PropertyIDs" type="basicarray" class="uint32" pass="in" description="The new PropertyIDs of the MultiProperty" />
+		</method>
+		<method name="GetMultiProperty" description="Obtains the PropertyIDs of a MultiProperty.">
+			<param name="PropertyID" type="uint32" pass="in" description="the PropertyID of the MultiProperty to be queried." />
+			<param name="PropertyIDs" type="basicarray" class="uint32" pass="out" description="The PropertyIDs of the MultiProperty" />
+		</method>
+		<method name="RemoveMultiProperty" description="Removes a MultiProperty from this MultiPropertyGroup.">
+			<param name="PropertyID" type="uint32" pass="in" description="the PropertyID of the MultiProperty to be removed." />
+		</method>
+		
+		<method name="GetLayerCount" description="Retrieves the number of layers of this MultiPropertyGroup.">
+			<param name="Count" type="uint32" pass="return" description="returns the number of layers" />
+		</method>
+		<method name="AddLayer" description="Adds a MultiPropertyLayer to this MultiPropertyGroup.">
+			<param name="TheLayer" type="struct" class="MultiPropertyLayer" pass="in" description="The MultiPropertyLayer to add to this MultiPropertyGroup" />
+			<param name="LayerIndex" type="uint32" pass="return" description="returns the index of this MultiPropertyLayer" />
+		</method>
+		<method name="GetLayer" description="Obtains a MultiPropertyLayer of this MultiPropertyGroup.">
+			<param name="LayerIndex" type="uint32" pass="in" description="The Index of the MultiPropertyLayer queried" />
+			<param name="TheLayer" type="struct" class="MultiPropertyLayer" pass="out" description="The MultiPropertyLayer with index LayerIndex within MultiPropertyGroup" />
+		</method>
+		<method name="RemoveLayer" description="Removes a MultiPropertyLayer from this MultiPropertyGroup.">
+			<param name="LayerIndex" type="uint32" pass="in" description="The Index of the MultiPropertyLayer to be removed" />
+		</method>
+	</class>
+	
 	<class name="Attachment">
 		<method name="GetPath" dllsuffix="utf8" description = "Retrieves an attachment's package path.">
 			<param name="Path" type="string" pass="return" description="returns the attachment's package path string" />
@@ -1036,6 +1095,10 @@
 			<param name="ResourceID" type="uint32" pass="in" description="Resource ID" />
 			<param name="CompositeMaterialsInstance" type="handle" class="CompositeMaterials" pass="return" description="returns the CompositeMaterials instance" />
 		</method>
+		<method name="GetMultiPropertyGroupByID" description="finds a model MultiPropertyGroup by its id">
+			<param name="ResourceID" type="uint32" pass="in" description="Resource ID" />
+			<param name="MultiPropertyGroupInstance" type="handle" class="MultiPropertyGroup" pass="return" description="returns the MultiPropertyGroup instance" />
+		</method>
 		<method name="GetMeshObjectByID" description="finds a mesh object by its id">
 			<param name="ResourceID" type="uint32" pass="in" description="Resource ID" />
 			<param name="MeshObjectInstance" type="handle" class="MeshObject" pass="return" description="returns the mesh object instance" />
@@ -1089,6 +1152,10 @@
 		<method name="GetCompositeMaterials" description="creates a CompositeMaterialsIterator instance with all CompositeMaterials resources.">
 			<param name="ResourceIterator" type="handle" class="CompositeMaterialsIterator" pass="return" description="returns the iterator instance." />
 		</method>
+		<method name="GetMultiPropertyGroups" description="creates a MultiPropertyGroupsIterator instance with all MultiPropertyGroup resources.">
+			<param name="ResourceIterator" type="handle" class="MultiPropertyGroupIterator" pass="return" description="returns the iterator instance." />
+		</method>
+		
 		<method name="GetSliceStacks" description="creates a resource iterator instance with all slice stack resources.">
 			<param name="ResourceIterator" type="handle" class="ResourceIterator" pass="return" description="returns the iterator instance." />
 		</method>
@@ -1122,6 +1189,9 @@
 		<method name="AddCompositeMaterials" description = "adds an empty CompositeMaterials resource to the model.">
 			<param name="BaseMaterialGroupInstance" type="handle" class="BaseMaterialGroup" pass="in" description="The BaseMaterialGroup instance of the created CompositeMaterials." />
 			<param name="CompositeMaterialsInstance" type="handle" class="CompositeMaterials" pass="return" description="returns the new CompositeMaterials instance." />
+		</method>
+		<method name="AddMultiPropertyGroup" description = "adds an empty MultiPropertyGroup resource to the model.">
+			<param name="MultiPropertyGroupInstance" type="handle" class="MultiPropertyGroup" pass="return" description="returns the new MultiPropertyGroup instance." />
 		</method>
 		<method name="AddBuildItem" description = "adds a build item to the model.">
 			<param name="Object" type="handle" class="Object" pass="in" description="Object instance." />

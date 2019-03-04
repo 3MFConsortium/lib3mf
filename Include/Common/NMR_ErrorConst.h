@@ -1064,6 +1064,15 @@ Model error codes (0x8XXX)
 // Too many composite mixing ratio in the list of values
 #define NMR_ERROR_MIXINGRATIO_TOOMANY 0x80D7
 
+// A multiproperties must not contain another multiproperties
+#define NMR_ERROR_MULTIPROPERTIES_MUST_NOT_CONTAIN_MULTIPROPERTIES 0x80D8
+
+// A multiproperties must not multiple materials
+#define NMR_ERROR_MULTIPROPERTIES_MUST_NOT_CONTAIN_MULTIPLE_MATERIALS 0x80DA
+
+// A resource of invalid type was passed to a MultiPropertyGroup
+#define NMR_ERROR_MULTIPROPERTIES_INVALID_RESOURCE 0x80DB
+
 
 
 /*-------------------------------------------------------------------

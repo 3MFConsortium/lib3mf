@@ -383,6 +383,9 @@ namespace NMR {
 		case NMR_ERROR_MIXINGRATIO_OUTOFRANGE: return "Mixing ratio of composite out of range.";
 		case NMR_ERROR_MIXINGRATIO_MISSING: return "A composite mixing ratio is missing.";
 		case NMR_ERROR_MIXINGRATIO_TOOMANY: return "Too many composite mixing ratio in the list of values";
+		case NMR_ERROR_MULTIPROPERTIES_MUST_NOT_CONTAIN_MULTIPROPERTIES: return "A multiproperties must not contain another multiproperties";
+		case NMR_ERROR_MULTIPROPERTIES_MUST_NOT_CONTAIN_MULTIPLE_MATERIALS: return "A multiproperties must not multiple materials";
+		case NMR_ERROR_MULTIPROPERTIES_INVALID_RESOURCE: return "A resource of invalid type was passed to a MultiPropertyGroup";
 
 
 		// XML Parser Error Constants(0x9XXX)

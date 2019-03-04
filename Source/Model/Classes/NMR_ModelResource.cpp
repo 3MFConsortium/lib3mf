@@ -52,6 +52,11 @@ namespace NMR {
 		m_pModel = NULL;
 	}
 
+	CModel * CModelResource::Model()
+	{
+		return m_pModel;
+	}
+
 	PPackageResourceID CModelResource::getResourceID()
 	{
 		return m_sResourceID;

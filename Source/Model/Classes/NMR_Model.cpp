@@ -43,6 +43,7 @@ A model is an in memory representation of the 3MF file.
 #include "Model/Classes/NMR_ModelColorGroup.h"
 #include "Model/Classes/NMR_ModelTexture2DGroup.h"
 #include "Model/Classes/NMR_ModelCompositeMaterials.h"
+#include "Model/Classes/NMR_ModelMultiPropertyGroup.h"
 #include "Model/Classes/NMR_ModelTexture2D.h"
 #include "Model/Classes/NMR_ModelSliceStack.h"
 #include "Model/Classes/NMR_ModelMetaDataGroup.h"
@@ -75,16 +76,7 @@ namespace NMR {
 
 	CModel::~CModel()
 	{
-		m_MetaDataGroup->clear();
-
-		m_BuildItems.clear();
-		m_ResourceMap.clear();
-		m_resourceHandler.clear();
-		m_Resources.clear();
-		m_ObjectLookup.clear();
-		m_TextureLookup.clear();
-		m_BaseMaterialLookup.clear();
-		m_ColorGroupLookup.clear();
+		clearAll();
 	}
 
 	const std::string CModel::curPath()
@@ -469,6 +461,10 @@ namespace NMR {
 		if (pCompositeMaterials != nullptr)
 			m_CompositeMaterialsLookup.push_back(pResource);
 
+		CModelMultiPropertyGroupResource * pMultiPropertyGroup = dynamic_cast<CModelMultiPropertyGroupResource *> (pResource.get());
+		if (pMultiPropertyGroup != nullptr)
+			m_MultiPropertyGroupLookup.push_back(pResource);
+
 		CModelSliceStack *pSliceStack = dynamic_cast<CModelSliceStack *>(pResource.get());
 		if (pSliceStack != nullptr) 
 			m_SliceStackLookup.push_back(pResource);
@@ -488,6 +484,10 @@ namespace NMR {
 		m_Resources.clear();
 		m_TextureLookup.clear();
 		m_SliceStackLookup.clear();
+		m_CompositeMaterialsLookup.clear();
+		m_MultiPropertyGroupLookup.clear();
+
+		m_MetaDataGroup->clear();
 	}
 
 	_Ret_maybenull_ PModelBaseMaterialResource CModel::findBaseMaterial(_In_ PackageResourceID nResourceID)
@@ -709,6 +709,58 @@ namespace NMR {
 		}
 	}
 
+	_Ret_maybenull_ PModelMultiPropertyGroupResource CModel::findMultiPropertyGroup(_In_ PackageResourceID nResourceID)
+	{
+		PModelResource pResource = findResource(nResourceID);
+		if (pResource != nullptr) {
+			PModelMultiPropertyGroupResource pMultiPropertyGroupResource = std::dynamic_pointer_cast<CModelMultiPropertyGroupResource>(pResource);
+			if (pMultiPropertyGroupResource.get() == nullptr)
+				throw CNMRException(NMR_ERROR_RESOURCETYPEMISMATCH);
+			return pMultiPropertyGroupResource;
+		}
+		return nullptr;
+	}
+
+	nfUint32 CModel::getMultiPropertyGroupCount()
+	{
+		return (nfUint32)m_MultiPropertyGroupLookup.size();
+	}
+
+	PModelResource CModel::getMultiPropertyGroupResource(_In_ nfUint32 nIndex)
+	{
+		nfUint32 nCount = getMultiPropertyGroupCount();
+		if (nIndex >= nCount)
+			throw CNMRException(NMR_ERROR_INVALIDINDEX);
+
+		return m_MultiPropertyGroupLookup[nIndex];
+
+	}
+
+	CModelMultiPropertyGroupResource * CModel::getMultiPropertyGroup(_In_ nfUint32 nIndex)
+	{
+		CModelMultiPropertyGroupResource * pMultiPropertyGroupGroup = dynamic_cast<CModelMultiPropertyGroupResource *>(getMultiPropertyGroupResource(nIndex).get());
+		if (pMultiPropertyGroupGroup == nullptr)
+			throw CNMRException(NMR_ERROR_RESOURCETYPEMISMATCH);
+
+		return pMultiPropertyGroupGroup;
+	}
+
+	void CModel::mergeMultiPropertyGroup(_In_ CModel * pSourceModel)
+	{
+		if (pSourceModel == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		nfUint32 nCount = pSourceModel->getMultiPropertyGroupCount();
+		for (nfUint32 nIndex = 0; nIndex < nCount; nIndex++) {
+			CModelMultiPropertyGroupResource * pOldMultiPropertyGroup = pSourceModel->getMultiPropertyGroup(nIndex);
+			__NMRASSERT(pNewTexture2DGroup != nullptr);
+
+			PModelMultiPropertyGroupResource pNewMultiPropertyGroup = std::make_shared<CModelMultiPropertyGroupResource>(generateResourceID(), this);
+			pNewMultiPropertyGroup->mergeFrom(pOldMultiPropertyGroup);
+
+			addResource(pNewMultiPropertyGroup);
+		}
+	}
 
 	_Ret_maybenull_ PModelTexture2DResource CModel::findTexture2D(_In_ PackageResourceID nResourceID)
 	{

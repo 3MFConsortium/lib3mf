@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2018 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -24,54 +24,24 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract:
+Abstract: This is a stub class definition of CLib3MFMultiPropertyGroupIterator
 
-NMR_ModelResource.h defines the Model Resource Class.
-A model resource is an in memory representation of the 3MF
-resource object.
+*/
 
---*/
+#include "lib3mf_multipropertygroupiterator.hpp"
+#include "lib3mf_interfaceexception.hpp"
 
-#ifndef __NMR_MODELRESOURCE
-#define __NMR_MODELRESOURCE
+// Include custom headers here.
+#include "lib3mf_multipropertygroup.hpp"
 
-#include "Model/Classes/NMR_ModelMetaData.h" 
-#include "Common/NMR_Types.h" 
-#include "Model/Classes/NMR_ModelTypes.h" 
-#include "Model/Classes/NMR_Model.h" 
+using namespace Lib3MF::Impl;
 
-#include <string>
+/*************************************************************************************************************************
+ Class definition of CLib3MFMultiPropertyGroupIterator 
+**************************************************************************************************************************/
 
-namespace NMR {
-
-	class CModelResource {
-	private:
-		CModel * m_pModel;
-		PPackageResourceID m_sResourceID;
-
-	protected:
-		std::vector<ModelResourceID> m_ResourceIndexMap;
-		nfBool m_bHasResourceIndexMap;
-		CModel * Model();
-		
-	public:
-		CModelResource() = delete;
-		// CModelResource(_In_ const PPackageResourceID sResourceID, _In_ CModel * pModel);
-		CModelResource(_In_ const ModelResourceID sResourceID, _In_ CModel * pModel);
-		~CModelResource();
-		
-		virtual PPackageResourceID getResourceID();
-
-		bool mapResourceIndexToPropertyID (_In_ ModelResourceIndex nPropertyIndex, _Out_ ModelPropertyID & nPropertyID);
-		void clearResourceIndexMap();
-		virtual void buildResourceIndexMap();
-		nfBool hasResourceIndexMap();
-
-		_Ret_notnull_ CModel * getModel();
-	};
-
-	typedef std::shared_ptr <CModelResource> PModelResource;
-
+ILib3MFMultiPropertyGroup * CLib3MFMultiPropertyGroupIterator::GetCurrentMultiPropertyGroup ()
+{
+	return new CLib3MFMultiPropertyGroup(std::dynamic_pointer_cast<NMR::CModelMultiPropertyGroupResource>(GetCurrentResource()));
 }
 
-#endif // __NMR_MODELRESOURCE
