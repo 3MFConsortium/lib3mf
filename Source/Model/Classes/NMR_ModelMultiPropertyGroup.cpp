@@ -139,8 +139,9 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_MULTIPROPERTIES_INVALID_RESOURCE);
 		}
 		
-		if (hasMaterial && (dynamic_cast<CModelBaseMaterialResource*>(pResource.get()) != nullptr)
-			|| (dynamic_cast<CModelCompositeMaterialsResource*>(pResource.get()) != nullptr))
+		if (hasMaterial && ( (dynamic_cast<CModelBaseMaterialResource*>(pResource.get()) != nullptr)
+			|| (dynamic_cast<CModelCompositeMaterialsResource*>(pResource.get()) != nullptr) )
+			)
 		{
 			throw CNMRException(NMR_ERROR_MULTIPROPERTIES_MUST_NOT_CONTAIN_MULTIPLE_MATERIALS);
 		}
