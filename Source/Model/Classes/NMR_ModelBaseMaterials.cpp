@@ -90,10 +90,12 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 		
 		nfUint32 nCount = pSourceMaterial->getCount();
-		nfUint32 nIndex;
 
-		for (nIndex = 0; nIndex < nCount; nIndex++) {
-			PModelBaseMaterial pMaterial = pSourceMaterial->getBaseMaterial(nIndex);
+		pSourceMaterial->buildResourceIndexMap();
+		for (nfUint32 nIndex = 0; nIndex < nCount; nIndex++) {
+			ModelPropertyID nPropertyID;
+			pSourceMaterial->mapResourceIndexToPropertyID(nIndex, nPropertyID);
+			PModelBaseMaterial pMaterial = pSourceMaterial->getBaseMaterial(nPropertyID);
 			addBaseMaterial(pMaterial->getName(), pMaterial->getDisplayColor());
 		}
 		clearResourceIndexMap();

@@ -248,7 +248,7 @@ namespace NMR {
 		nfUint32 getMultiPropertyGroupCount();
 		PModelResource getMultiPropertyGroupResource(_In_ nfUint32 nIndex);
 		CModelMultiPropertyGroupResource * getMultiPropertyGroup(_In_ nfUint32 nIndex);
-		void mergeMultiPropertyGroup(_In_ CModel * pSourceModel);
+		void mergeMultiPropertyGroups(_In_ CModel * pSourceModel);
 
 		// Convenience functions for 2D Textures
 		_Ret_maybenull_ PModelTexture2DResource findTexture2D(_In_ PackageResourceID nResourceID);

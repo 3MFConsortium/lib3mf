@@ -412,6 +412,8 @@ ILib3MFModel * CLib3MFModel::MergeToModel ()
 	newModel.mergeTextures2D(&model());
 	newModel.mergeBaseMaterials(&model());
 	newModel.mergeColorGroups(&model());
+	newModel.mergeCompositeMaterials(&model());
+	newModel.mergeMultiPropertyGroups(&model());
 	newModel.mergeMetaData(&model());
 
 	newModel.setUnit(model().getUnit());

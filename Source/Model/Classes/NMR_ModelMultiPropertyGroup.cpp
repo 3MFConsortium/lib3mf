@@ -186,8 +186,11 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 		
 		nfUint32 nCount = pSourceMultiMaterialGroup->getCount();
+		pSourceMultiMaterialGroup->buildResourceIndexMap();
 		for (nfUint32 nIndex = 0; nIndex < nCount; nIndex++) {
-			PModelMultiProperty pCmposite = pSourceMultiMaterialGroup->getMultiProperty(nIndex);
+			ModelPropertyID nPropertyID;
+			pSourceMultiMaterialGroup->mapResourceIndexToPropertyID(nIndex, nPropertyID);
+			PModelMultiProperty pCmposite = pSourceMultiMaterialGroup->getMultiProperty(nPropertyID);
 			addMultiProperty(pCmposite);
 		}
 

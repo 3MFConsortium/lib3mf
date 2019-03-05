@@ -701,6 +701,7 @@ namespace NMR {
 			CModelCompositeMaterialsResource * pOldCompositeMaterials = pSourceModel->getCompositeMaterials(nIndex);
 			__NMRASSERT(pNewTexture2DGroup != nullptr);
 
+			// TODO: this does not work
 			PModelCompositeMaterialsResource pNewCompositeMaterials = std::make_shared<CModelCompositeMaterialsResource>(generateResourceID(), this,
 				pNewCompositeMaterials->getBaseMaterialResource());
 			pNewCompositeMaterials->mergeFrom(pOldCompositeMaterials);
@@ -745,7 +746,7 @@ namespace NMR {
 		return pMultiPropertyGroupGroup;
 	}
 
-	void CModel::mergeMultiPropertyGroup(_In_ CModel * pSourceModel)
+	void CModel::mergeMultiPropertyGroups(_In_ CModel * pSourceModel)
 	{
 		if (pSourceModel == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);

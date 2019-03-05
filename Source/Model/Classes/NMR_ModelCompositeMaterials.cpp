@@ -114,8 +114,11 @@ namespace NMR {
 		
 		nfUint32 nCount = pSourceCompositesMaterials->getCount();
 
+		pSourceCompositesMaterials->buildResourceIndexMap();
 		for (nfUint32 nIndex = 0; nIndex < nCount; nIndex++) {
-			PModelComposite pCmposite = pSourceCompositesMaterials->getComposite(nIndex);
+			ModelPropertyID nPropertyID;
+			pSourceCompositesMaterials->mapResourceIndexToPropertyID(nIndex, nPropertyID);
+			PModelComposite pCmposite = pSourceCompositesMaterials->getComposite(nPropertyID);
 			addComposite(pCmposite);
 		}
 		clearResourceIndexMap();

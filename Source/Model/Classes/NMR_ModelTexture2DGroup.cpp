@@ -103,9 +103,12 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 		
 		nfUint32 nCount = pSourceTexture2DGroup->getCount();
+		pSourceTexture2DGroup->buildResourceIndexMap();
 
 		for (nfUint32 nIndex = 0; nIndex < nCount; nIndex++) {
-			MODELTEXTURE2DCOORDINATE UVCoordinate = pSourceTexture2DGroup->getUVCoordinate(nIndex);
+			ModelPropertyID nPropertyID;
+			pSourceTexture2DGroup->mapResourceIndexToPropertyID(nIndex, nPropertyID);
+			MODELTEXTURE2DCOORDINATE UVCoordinate = pSourceTexture2DGroup->getUVCoordinate(nPropertyID);
 			addUVCoordinate(UVCoordinate);
 		}
 		clearResourceIndexMap();
