@@ -170,7 +170,7 @@ namespace NMR {
 
 	typedef struct {
 		DOUBLE m_dMixingRatio;
-		UINT32 m_nPropertyID;
+		ModelPropertyID m_nPropertyID;
 	} MODELCOMPOSITECONSTITUENT;
 
 	typedef struct {
