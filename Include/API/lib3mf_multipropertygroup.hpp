@@ -93,7 +93,7 @@ public:
 
 	Lib3MF_uint32 AddLayer (const sLib3MFMultiPropertyLayer TheLayer);
 
-	void GetLayer (const Lib3MF_uint32 nLayerIndex, sLib3MFMultiPropertyLayer & sTheLayer);
+	sLib3MFMultiPropertyLayer GetLayer (const Lib3MF_uint32 nLayerIndex);
 
 	void RemoveLayer (const Lib3MF_uint32 nLayerIndex);
 

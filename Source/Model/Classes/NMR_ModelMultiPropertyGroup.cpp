@@ -58,7 +58,7 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_TOOMANYCOMPOSITES);
 		}
 		
-		// check for valid PropertyID
+		// TODO check for valid PropertyID
 		for (ModelPropertyID constituent : *pMultiProperty) {
 
 		}
@@ -78,7 +78,7 @@ namespace NMR {
 		return (nfUint32)m_vctMultiProperties.size();
 	}
 
-	PModelMultiProperty CModelMultiPropertyGroupResource::getMultiMaterial(_In_ ModelPropertyID nPropertyID)
+	PModelMultiProperty CModelMultiPropertyGroupResource::getMultiProperty(_In_ ModelPropertyID nPropertyID)
 	{
 		auto iIterator = m_vctMultiProperties.find(nPropertyID);
 		if (iIterator != m_vctMultiProperties.end()) {
@@ -89,10 +89,12 @@ namespace NMR {
 		}
 	}
 
-	void CModelMultiPropertyGroupResource::setMultiMaterial(_In_ ModelPropertyID nPropertyID, _In_ PModelMultiProperty pMultiProperty)
+	void CModelMultiPropertyGroupResource::setMultiProperty(_In_ ModelPropertyID nPropertyID, _In_ PModelMultiProperty pMultiProperty)
 	{
 		auto iIterator = m_vctMultiProperties.find(nPropertyID);
 		if (iIterator != m_vctMultiProperties.end()) {
+			// TODO: check whether the respective resource contains the PropertyID
+			// throw CNMRException(NMR_ERROR_PROPERTYIDNOTFOUND);
 			iIterator->second = pMultiProperty;
 		}
 		else {
@@ -100,7 +102,7 @@ namespace NMR {
 		}
 	}
 
-	void CModelMultiPropertyGroupResource::removeMultiMaterial(_In_ ModelPropertyID nPropertyID)
+	void CModelMultiPropertyGroupResource::removeMultiProperty(_In_ ModelPropertyID nPropertyID)
 	{
 		m_vctMultiProperties.erase(nPropertyID);
 		clearResourceIndexMap();
@@ -114,11 +116,13 @@ namespace NMR {
 	nfUint32 CModelMultiPropertyGroupResource::addLayer(_In_ MODELMULTIPROPERTYLAYER sLayer)
 	{
 		bool hasMaterial = false;
+		bool hasColorGroup = false;
 		for (MODELMULTIPROPERTYLAYER layer : m_vctLayers)
 		{
 			PModelResource pResource = Model()->findResource(layer.m_nResourceID);
 			hasMaterial |= (dynamic_cast<CModelBaseMaterialResource*>(pResource.get())!=nullptr)
 				|| (dynamic_cast<CModelCompositeMaterialsResource*>(pResource.get()) != nullptr);
+			hasColorGroup |= (dynamic_cast<CModelColorGroupResource*>(pResource.get()) != nullptr);
 		}
 		
 		PModelResource pResource = Model()->findResource(sLayer.m_nResourceID);
@@ -140,6 +144,12 @@ namespace NMR {
 		{
 			throw CNMRException(NMR_ERROR_MULTIPROPERTIES_MUST_NOT_CONTAIN_MULTIPLE_MATERIALS);
 		}
+
+		if (hasColorGroup && (dynamic_cast<CModelColorGroupResource*>(pResource.get()) != nullptr))
+		{
+			throw CNMRException(NMR_ERROR_MULTIPROPERTIES_MUST_NOT_CONTAIN_MULTIPLE_COLORGOURPS);
+		}
+		
 
 		m_vctLayers.push_back(sLayer);
 		return nfUint32(m_vctLayers.size() - 1);
@@ -176,7 +186,7 @@ namespace NMR {
 		
 		nfUint32 nCount = pSourceMultiMaterialGroup->getCount();
 		for (nfUint32 nIndex = 0; nIndex < nCount; nIndex++) {
-			PModelMultiProperty pCmposite = pSourceMultiMaterialGroup->getMultiMaterial(nIndex);
+			PModelMultiProperty pCmposite = pSourceMultiMaterialGroup->getMultiProperty(nIndex);
 			addMultiProperty(pCmposite);
 		}
 
@@ -201,6 +211,27 @@ namespace NMR {
 		}
 
 		m_bHasResourceIndexMap = true;
+	}
+
+	std::string CModelMultiPropertyGroupResource::blendMethodToString(_In_ eModelBlendMethod eBlendMethod)
+	{
+		switch (eBlendMethod) {
+		case MODELBLENDMETHOD_MIX: return XML_3MF_ATTRIBUTE_MULTIPROPERTIES_BLENDMETHOD_MIX;
+		case MODELBLENDMETHOD_MULTIPLY: return XML_3MF_ATTRIBUTE_MULTIPROPERTIES_BLENDMETHOD_MULTIPLY;
+		default:
+			return XML_3MF_ATTRIBUTE_MULTIPROPERTIES_BLENDMETHOD_MIX;
+		}
+	}
+	eModelBlendMethod CModelMultiPropertyGroupResource::stringToBlendMethod(_In_ std::string sBlendMethod)
+	{
+		if (sBlendMethod == XML_3MF_ATTRIBUTE_MULTIPROPERTIES_BLENDMETHOD_MIX) {
+			return MODELBLENDMETHOD_MIX;
+		} else if (sBlendMethod == XML_3MF_ATTRIBUTE_MULTIPROPERTIES_BLENDMETHOD_MULTIPLY) {
+			return MODELBLENDMETHOD_MULTIPLY;
+		}
+		else {
+			throw CNMRException(NMR_ERROR_INVALID_BLENDMETHOD_ATTRIBUTE);
+		}
 	}
 
 }

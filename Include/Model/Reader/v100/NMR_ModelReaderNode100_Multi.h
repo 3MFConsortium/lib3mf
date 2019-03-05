@@ -26,52 +26,40 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelResource.h defines the Model Resource Class.
-A model resource is an in memory representation of the 3MF
-resource object.
+NMR_ModelReaderNode100_Multi.h defines the Model Reader Multi Node Class.
 
 --*/
 
-#ifndef __NMR_MODELRESOURCE
-#define __NMR_MODELRESOURCE
+#ifndef __NMR_MODELREADERNODE100_MULTI
+#define __NMR_MODELREADERNODE100_MULTI
 
-#include "Model/Classes/NMR_ModelMetaData.h" 
-#include "Common/NMR_Types.h" 
-#include "Model/Classes/NMR_ModelTypes.h" 
-#include "Model/Classes/NMR_Model.h" 
-
-#include <string>
+#include "Model/Reader/NMR_ModelReaderNode.h"
+#include "Model/Classes/NMR_ModelObject.h"
+#include "Model/Classes/NMR_ModelTypes.h"
 
 namespace NMR {
 
-	class CModelResource {
+	class CModelReaderNode100_Multi : public CModelReaderNode {
 	private:
 		CModel * m_pModel;
-		PPackageResourceID m_sResourceID;
 
+		nfBool m_bHasPIndices;
+		std::vector<ModelResourceIndex> m_vctPIndices;
 	protected:
-		std::vector<ModelPropertyID> m_ResourceIndexMap;
-		nfBool m_bHasResourceIndexMap;
-		CModel * Model();
-		
+		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 	public:
-		CModelResource() = delete;
-		// CModelResource(_In_ const PPackageResourceID sResourceID, _In_ CModel * pModel);
-		CModelResource(_In_ const ModelResourceID sResourceID, _In_ CModel * pModel);
-		~CModelResource();
-		
-		virtual PPackageResourceID getResourceID();
+		CModelReaderNode100_Multi() = delete;
+		CModelReaderNode100_Multi(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings);
 
-		bool mapResourceIndexToPropertyID (_In_ ModelResourceIndex nPropertyIndex, _Out_ ModelPropertyID & nPropertyID);
-		void clearResourceIndexMap();
-		virtual void buildResourceIndexMap();
-		nfBool hasResourceIndexMap();
+		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 
-		_Ret_notnull_ CModel * getModel();
+		std::vector<ModelResourceIndex>& getPIndices();
 	};
 
-	typedef std::shared_ptr <CModelResource> PModelResource;
+	typedef std::shared_ptr<CModelReaderNode100_Multi> PModelReaderNode100_Multi;
 
 }
 
-#endif // __NMR_MODELRESOURCE
+#endif // __NMR_MODELREADERNODE100_MULTI
+
+

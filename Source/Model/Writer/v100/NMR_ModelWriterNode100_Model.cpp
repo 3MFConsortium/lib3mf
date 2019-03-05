@@ -42,6 +42,7 @@ This is the class for exporting the 3mf model stream root node.
 #include "Model/Classes/NMR_ModelTexture2D.h"
 #include "Model/Classes/NMR_ModelTexture2DGroup.h"
 #include "Model/Classes/NMR_ModelCompositeMaterials.h"
+#include "Model/Classes/NMR_ModelMultiPropertyGroup.h"
 #include "Model/Classes/NMR_ModelMeshObject.h"
 #include "Model/Classes/NMR_ModelComponentsObject.h"
 #include "Model/Classes/NMR_Model.h"
@@ -71,7 +72,7 @@ namespace NMR {
 		m_bWriteObjects = true;
 
 		m_bIsRootModel = true;
-		m_bWriteCustomNamespaces = true;		
+		m_bWriteCustomNamespaces = true;
 
 		// register custom NameSpaces from metadata in objects, build items and the model itself
 		RegisterMetaDataNameSpaces();
@@ -610,8 +611,8 @@ namespace NMR {
 			std::vector<nfUint32> matIndices;
 			std::set<ModelPropertyID> mapUsedBMPropertyIDs;
 			
-			nfUint32 nElementCount = pCompositeMaterials->getCount();
-			for (nfUint32 j = 0; j < nElementCount; j++) {
+			nfUint32 nCompositeCount = pCompositeMaterials->getCount();
+			for (nfUint32 j = 0; j < nCompositeCount; j++) {
 				ModelPropertyID nPropertyID;
 				if (!pCompositeMaterials->mapResourceIndexToPropertyID(j, nPropertyID)) {
 					throw CNMRException(NMR_ERROR_INVALIDPROPERTYRESOURCEID);
@@ -629,7 +630,7 @@ namespace NMR {
 			}
 			writeStringAttribute(XML_3MF_ATTRIBUTE_COMPOSITEMATERIALS_MATINDICES, fnVectorToSpaceDelimitedString(matIndices));
 
-			for (nfUint32 j = 0; j < nElementCount; j++) {
+			for (nfUint32 j = 0; j < nCompositeCount; j++) {
 				ModelPropertyID nPropertyID;
 				if (!pCompositeMaterials->mapResourceIndexToPropertyID(j, nPropertyID)) {
 					throw CNMRException(NMR_ERROR_INVALIDPROPERTYRESOURCEID);
@@ -648,6 +649,79 @@ namespace NMR {
 		}
 	}
 
+
+	void CModelWriterNode100_Model::writeMultiPropertyAttributes(_In_ CModelMultiPropertyGroupResource* pMultiPropertyGroup)
+	{
+		// assemble and write pids and blendmethods
+		std::vector<ModelResourceID> vctPIDs;
+		std::vector<std::string> vctBlendMethodString;
+
+		nfUint32 nLayerCount = pMultiPropertyGroup->getLayerCount();
+		for (nfUint32 iLayer = 0; iLayer < nLayerCount; iLayer++) {
+			MODELMULTIPROPERTYLAYER layer = pMultiPropertyGroup->getLayer(iLayer);
+			vctPIDs.push_back(layer.m_nResourceID);
+			vctBlendMethodString.push_back(CModelMultiPropertyGroupResource::blendMethodToString(layer.m_nMethod));
+		}
+		ModelResourceID nResourceID = pMultiPropertyGroup->getResourceID()->getUniqueID();
+		writeIntAttribute(XML_3MF_ATTRIBUTE_MULTIPROPERTIES_ID, nResourceID);
+		writeStringAttribute(XML_3MF_ATTRIBUTE_MULTIPROPERTIES_PIDS, fnVectorToSpaceDelimitedString(vctPIDs));
+		writeStringAttribute(XML_3MF_ATTRIBUTE_MULTIPROPERTIES_BLENDMETHODS, fnVectorToSpaceDelimitedString(vctBlendMethodString));
+	}
+
+	void CModelWriterNode100_Model::writeMultiPropertyMultiElements(_In_ CModelMultiPropertyGroupResource* pMultiPropertyGroup)
+	{
+		// assemble and write MultiPropertyElements
+		ModelResourceID nResourceID = pMultiPropertyGroup->getResourceID()->getUniqueID();
+
+		nfUint32 nMultiCount = pMultiPropertyGroup->getCount();
+		nfUint32 nLayerCount = pMultiPropertyGroup->getLayerCount();
+		for (nfUint32 iMulti = 0; iMulti < nMultiCount; iMulti++) {
+			ModelPropertyID nPropertyID;
+			if (!pMultiPropertyGroup->mapResourceIndexToPropertyID(iMulti, nPropertyID)) {
+				throw CNMRException(NMR_ERROR_INVALIDPROPERTYRESOURCEID);
+			}
+			m_pPropertyIndexMapping->registerPropertyID(nResourceID, nPropertyID, iMulti);
+
+			PModelMultiProperty pMultiProperty = pMultiPropertyGroup->getMultiProperty(nPropertyID);
+			std::vector<nfUint32> vctPIndices;
+			for (nfUint32 iLayer = 0; iLayer < nLayerCount; iLayer++) {
+				MODELMULTIPROPERTYLAYER layer = pMultiPropertyGroup->getLayer(iLayer);
+				if (iLayer < pMultiProperty->size()) {
+					nfUint32 pIndex = m_pPropertyIndexMapping->mapPropertyIDToIndex(layer.m_nResourceID, (*pMultiProperty)[iLayer]);
+					vctPIndices.push_back(pIndex);
+				} else {
+					throw CNMRException(NMR_ERROR_MULTIPROPERTIES_NOT_ENOUGH_PROPERTYIDS_SPECIFIED);
+				}
+			}
+
+			writeStartElementWithPrefix(XML_3MF_ELEMENT_MULTI, XML_3MF_NAMESPACEPREFIX_MATERIAL);
+
+			writeStringAttribute(XML_3MF_ATTRIBUTE_MULTI_PINDICES, fnVectorToSpaceDelimitedString(vctPIndices));
+
+			writeEndElement();
+		}
+	}
+
+	void CModelWriterNode100_Model::writeMultiProperties()
+	{
+		nfUint32 nCount = m_pModel->getMultiPropertyGroupCount();
+
+		for (nfUint32 nIndex = 0; nIndex < nCount; nIndex++) {
+
+			CModelMultiPropertyGroupResource * pMultiPropertyGroup = m_pModel->getMultiPropertyGroup(nIndex);
+
+			pMultiPropertyGroup->buildResourceIndexMap();
+
+			writeStartElementWithPrefix(XML_3MF_ELEMENT_MULTIPROPERTIES, XML_3MF_NAMESPACEPREFIX_MATERIAL);
+
+			writeMultiPropertyAttributes(pMultiPropertyGroup);
+			
+			writeMultiPropertyMultiElements(pMultiPropertyGroup);
+
+			writeFullEndElement();
+		}
+	}
+
 	void CModelWriterNode100_Model::writeResources()
 	{
 		writeStartElement(XML_3MF_ELEMENT_RESOURCES);
@@ -662,6 +736,7 @@ namespace NMR {
 				writeColors();
 				writeTex2Coords();
 				writeCompositeMaterials();
+				writeMultiProperties();
 			}
 			if (m_bWriteSliceExtension) {
 				writeSliceStacks();

@@ -54,7 +54,7 @@ namespace NMR {
 		nfUint32 getDefaultResourceID ();
 		nfUint32 getDefaultResourceIndex ();
 
-		nfUint32 registerPropertyID (nfUint32 nResourceID, ModelPropertyID nPropertyID, nfUint32 nResourceIndex);
+		nfUint32 registerPropertyID(nfUint32 nResourceID, ModelPropertyID nPropertyID, nfUint32 nResourceIndex);
 
 	};
 

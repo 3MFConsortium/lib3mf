@@ -60,9 +60,9 @@ namespace NMR {
 
 		nfUint32 getCount();
 		nfUint32 addMultiProperty(_In_ PModelMultiProperty pMultiProperty);
-		PModelMultiProperty getMultiMaterial(_In_ ModelPropertyID nPropertyID);
-		void setMultiMaterial(_In_ ModelPropertyID nPropertyID, _In_ PModelMultiProperty pMultiProperty);
-		void removeMultiMaterial(_In_ ModelPropertyID nPropertyID);
+		PModelMultiProperty getMultiProperty(_In_ ModelPropertyID nPropertyID);
+		void setMultiProperty(_In_ ModelPropertyID nPropertyID, _In_ PModelMultiProperty pMultiProperty);
+		void removeMultiProperty(_In_ ModelPropertyID nPropertyID);
 
 		nfUint32 getLayerCount();
 		nfUint32 addLayer(_In_ MODELMULTIPROPERTYLAYER sLayer);
@@ -72,6 +72,9 @@ namespace NMR {
 
 		void mergeFrom(_In_ CModelMultiPropertyGroupResource * pSourceMultiMaterialGroup);
 		void buildResourceIndexMap();
+
+		static std::string blendMethodToString(_In_ eModelBlendMethod eBlendMethod);
+		static eModelBlendMethod stringToBlendMethod(_In_ std::string sBlendMethod);
 	};
 
 	typedef std::shared_ptr<CModelMultiPropertyGroupResource> PModelMultiPropertyGroupResource;

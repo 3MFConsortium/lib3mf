@@ -85,6 +85,16 @@ namespace NMR {
 	{
 		return fnStringToUint32(pszValue);
 	}
+	template<>
+	unsigned long fnStringToType(_In_z_ const nfChar * pszValue)
+	{
+		return fnStringToUint32(pszValue);
+	}
+	template<>
+	std::string fnStringToType(_In_z_ const nfChar * pszValue)
+	{
+		return std::string(pszValue);
+	}
 
 
 	nfInt32 fnStringToInt32(_In_z_ const nfChar * pszValue)
@@ -350,6 +360,19 @@ namespace NMR {
 #endif
 		}
 	}
+
+
+	template<> std::string fnVectorToSpaceDelimitedString(_In_ const std::vector<std::string> v)
+	{
+		std::string result = "";
+		for (auto i = v.begin(); i != v.end(); i++) {
+			if (i != v.begin())
+				result += " ";
+			result += (*i);
+		}
+		return result;
+	};
+	
 
 
 	void fnStringToBufferSafe(_In_ const std::string sString, _Out_opt_ nfChar * pszBuffer, nfUint32 cbBufferSize, _Out_opt_ nfUint32 * pcbNeededChars)

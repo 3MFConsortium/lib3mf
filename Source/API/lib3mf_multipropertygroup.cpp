@@ -86,22 +86,42 @@ void CLib3MFMultiPropertyGroup::GetAllPropertyIDs (Lib3MF_uint64 nPropertyIDsBuf
 
 Lib3MF_uint32 CLib3MFMultiPropertyGroup::AddMultiProperty (const Lib3MF_uint64 nPropertyIDsBufferSize, const Lib3MF_uint32 * pPropertyIDsBuffer)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	NMR::PModelMultiProperty multiProperty = std::make_shared<NMR::CModelMultiProperty>();
+	multiProperty->resize(nPropertyIDsBufferSize);
+	for (Lib3MF_uint64 i = 0; i < nPropertyIDsBufferSize; i++) {
+		(*multiProperty)[i] = pPropertyIDsBuffer[i];
+	}
+	return multiPropertyGroup().addMultiProperty(multiProperty);
 }
 
 void CLib3MFMultiPropertyGroup::SetMultiProperty (const Lib3MF_uint32 nPropertyID, const Lib3MF_uint64 nPropertyIDsBufferSize, const Lib3MF_uint32 * pPropertyIDsBuffer)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	NMR::PModelMultiProperty multiProperty = std::make_shared<NMR::CModelMultiProperty>();
+	multiProperty->resize(nPropertyIDsBufferSize);
+	for (Lib3MF_uint64 i = 0; i < nPropertyIDsBufferSize; i++) {
+		(*multiProperty)[i] = pPropertyIDsBuffer[i];
+	}
+	multiPropertyGroup().setMultiProperty(nPropertyID, multiProperty);
 }
 
 void CLib3MFMultiPropertyGroup::GetMultiProperty (const Lib3MF_uint32 nPropertyID, Lib3MF_uint64 nPropertyIDsBufferSize, Lib3MF_uint64* pPropertyIDsNeededCount, Lib3MF_uint32 * pPropertyIDsBuffer)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	NMR::PModelMultiProperty multiProperty = multiPropertyGroup().getMultiProperty(nPropertyID);
+
+	if (pPropertyIDsNeededCount) {
+		*pPropertyIDsNeededCount = multiProperty->size();
+	}
+
+	if (pPropertyIDsBuffer && nPropertyIDsBufferSize >= multiProperty->size()) {
+		for (Lib3MF_uint64 i = 0; i < nPropertyIDsBufferSize; i++) {
+			pPropertyIDsBuffer[i] = (*multiProperty)[i];
+		}
+	}
 }
 
 void CLib3MFMultiPropertyGroup::RemoveMultiProperty (const Lib3MF_uint32 nPropertyID)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	multiPropertyGroup().removeMultiProperty(nPropertyID);
 }
 
 Lib3MF_uint32 CLib3MFMultiPropertyGroup::GetLayerCount ()
@@ -114,13 +134,17 @@ Lib3MF_uint32 CLib3MFMultiPropertyGroup::AddLayer (const sLib3MFMultiPropertyLay
 	return multiPropertyGroup().addLayer(NMR::MODELMULTIPROPERTYLAYER{ TheLayer.m_ResourceID, NMR::eModelBlendMethod(TheLayer.m_TheBlendMethod.m_code)});
 }
 
-void CLib3MFMultiPropertyGroup::GetLayer (const Lib3MF_uint32 nLayerIndex, sLib3MFMultiPropertyLayer & sTheLayer)
+sLib3MFMultiPropertyLayer CLib3MFMultiPropertyGroup::GetLayer (const Lib3MF_uint32 nLayerIndex)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	NMR::MODELMULTIPROPERTYLAYER sLayer = multiPropertyGroup().getLayer(nLayerIndex);
+	sLib3MFMultiPropertyLayer outLayer;
+	outLayer.m_ResourceID = sLayer.m_nResourceID;
+	outLayer.m_TheBlendMethod.m_code = sLayer.m_nMethod;
+	return outLayer;
 }
 
 void CLib3MFMultiPropertyGroup::RemoveLayer (const Lib3MF_uint32 nLayerIndex)
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	multiPropertyGroup().removeLayer(nLayerIndex);
 }
 

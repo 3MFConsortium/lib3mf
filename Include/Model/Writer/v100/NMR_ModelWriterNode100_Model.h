@@ -71,6 +71,9 @@ namespace NMR {
 		void writeColors();
 		void writeTex2Coords();
 		void writeCompositeMaterials();
+		void writeMultiProperties();
+		void writeMultiPropertyAttributes(_In_ CModelMultiPropertyGroupResource* pMultiPropertyGroup);
+		void writeMultiPropertyMultiElements(_In_ CModelMultiPropertyGroupResource* pMultiPropertyGroup);
 
 		void writeObjects();
 		void writeBuild();

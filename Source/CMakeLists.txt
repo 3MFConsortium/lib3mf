@@ -174,6 +174,8 @@ Source/Model/Reader/v100/NMR_ModelReaderNode100_CompositeMaterials.cpp
 Source/Model/Reader/v100/NMR_ModelReaderNode100_Mesh.cpp
 Source/Model/Reader/v100/NMR_ModelReaderNode100_MetaData.cpp
 Source/Model/Reader/v100/NMR_ModelReaderNode100_MetaDataGroup.cpp
+Source/Model/Reader/v100/NMR_ModelReaderNode100_Multi.cpp
+Source/Model/Reader/v100/NMR_ModelReaderNode100_MultiProperties.cpp
 Source/Model/Reader/v100/NMR_ModelReaderNode100_Object.cpp
 Source/Model/Reader/v100/NMR_ModelReaderNode100_Resources.cpp
 Source/Model/Reader/v100/NMR_ModelReaderNode100_Tex2Coord.cpp

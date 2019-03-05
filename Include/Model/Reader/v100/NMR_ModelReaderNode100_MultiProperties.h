@@ -26,52 +26,38 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelResource.h defines the Model Resource Class.
-A model resource is an in memory representation of the 3MF
-resource object.
+NMR_ModelReaderNode100_MultiProperties.h defines the Model Reader MultiProperties Class.
 
 --*/
 
-#ifndef __NMR_MODELRESOURCE
-#define __NMR_MODELRESOURCE
+#ifndef __NMR_MODELREADERNODE100_MULTIPROPERTIES
+#define __NMR_MODELREADERNODE100_MULTIPROPERTIES
 
-#include "Model/Classes/NMR_ModelMetaData.h" 
-#include "Common/NMR_Types.h" 
-#include "Model/Classes/NMR_ModelTypes.h" 
-#include "Model/Classes/NMR_Model.h" 
-
-#include <string>
+#include "Model/Reader/NMR_ModelReaderNode.h"
+#include "Model/Classes/NMR_ModelMultiPropertyGroup.h"
 
 namespace NMR {
 
-	class CModelResource {
+	class CModelReaderNode100_MultiProperties : public CModelReaderNode {
 	private:
 		CModel * m_pModel;
-		PPackageResourceID m_sResourceID;
+		ModelResourceID m_nID;
+		std::shared_ptr<std::vector<ModelResourceID>> m_pPIDs;
+		std::shared_ptr<std::vector<eModelBlendMethod>> m_pBlendMethods;
+		PModelMultiPropertyGroupResource m_pMultiPropertyGroup;
 
 	protected:
-		std::vector<ModelPropertyID> m_ResourceIndexMap;
-		nfBool m_bHasResourceIndexMap;
-		CModel * Model();
-		
+		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
+		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 	public:
-		CModelResource() = delete;
-		// CModelResource(_In_ const PPackageResourceID sResourceID, _In_ CModel * pModel);
-		CModelResource(_In_ const ModelResourceID sResourceID, _In_ CModel * pModel);
-		~CModelResource();
-		
-		virtual PPackageResourceID getResourceID();
+		CModelReaderNode100_MultiProperties() = delete;
+		CModelReaderNode100_MultiProperties(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings);
 
-		bool mapResourceIndexToPropertyID (_In_ ModelResourceIndex nPropertyIndex, _Out_ ModelPropertyID & nPropertyID);
-		void clearResourceIndexMap();
-		virtual void buildResourceIndexMap();
-		nfBool hasResourceIndexMap();
-
-		_Ret_notnull_ CModel * getModel();
+		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 	};
-
-	typedef std::shared_ptr <CModelResource> PModelResource;
 
 }
 
-#endif // __NMR_MODELRESOURCE
+#endif // __NMR_MODELREADERNODE100_MULTIPROPERTIES
+
+

@@ -828,7 +828,7 @@
 		</method>
 
 		<method name="AddMultiProperty" description="Adds a new MultiProperty to the MultiPropertyGroup.">
-			<param name="PropertyIDs" type="basicarray" class="uint32" pass="in" description="The PropertyIDs of the new MultiProperty" />
+			<param name="PropertyIDs" type="basicarray" class="uint32" pass="in" description="The PropertyIDs of the new MultiProperty." />
 			<param name="PropertyID" type="uint32" pass="return" description="returns the PropertyID of the new MultiProperty in the MultiPropertyGroup." />
 		</method>
 		<method name="SetMultiProperty" description="Sets the PropertyIDs of a MultiProperty.">
@@ -852,7 +852,7 @@
 		</method>
 		<method name="GetLayer" description="Obtains a MultiPropertyLayer of this MultiPropertyGroup.">
 			<param name="LayerIndex" type="uint32" pass="in" description="The Index of the MultiPropertyLayer queried" />
-			<param name="TheLayer" type="struct" class="MultiPropertyLayer" pass="out" description="The MultiPropertyLayer with index LayerIndex within MultiPropertyGroup" />
+			<param name="TheLayer" type="struct" class="MultiPropertyLayer" pass="return" description="The MultiPropertyLayer with index LayerIndex within MultiPropertyGroup" />
 		</method>
 		<method name="RemoveLayer" description="Removes a MultiPropertyLayer from this MultiPropertyGroup.">
 			<param name="LayerIndex" type="uint32" pass="in" description="The Index of the MultiPropertyLayer to be removed" />

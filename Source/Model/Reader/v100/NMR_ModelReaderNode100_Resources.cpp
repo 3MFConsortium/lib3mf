@@ -38,6 +38,7 @@ XML Model Stream.
 #include "Model/Reader/v100/NMR_ModelReaderNode100_Tex2DGroup.h"
 #include "Model/Reader/v100/NMR_ModelReaderNode100_Texture2D.h"
 #include "Model/Reader/v100/NMR_ModelReaderNode100_CompositeMaterials.h"
+#include "Model/Reader/v100/NMR_ModelReaderNode100_MultiProperties.h"
 #include "Model/Reader/Slice1507/NMR_ModelReader_Slice1507_SliceStack.h"
 
 #include "Model/Classes/NMR_ModelConstants.h"
@@ -119,10 +120,10 @@ namespace NMR {
 			else if (strcmp(pChildName, XML_3MF_ELEMENT_COMPOSITEMATERIALS) == 0) {
 				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode100_CompositeMaterials>(m_pModel, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
-			} else if (strcmp(pChildName, XML_3MF_ELEMENT_MULTIPROPERTIES) == 0) {
-				// multiproperties are not implemented in lib3mf.
-				// signal this to the user via a warning
-				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
+			}
+			else if (strcmp(pChildName, XML_3MF_ELEMENT_MULTIPROPERTIES) == 0) {
+				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode100_MultiProperties>(m_pModel, m_pWarnings);
+				pXMLNode->parseXML(pXMLReader);
 			}
 			// there might be other things, that are not yet properly implemented in lib3MF
 			else

@@ -1067,12 +1067,41 @@ Model error codes (0x8XXX)
 // A multiproperties must not contain another multiproperties
 #define NMR_ERROR_MULTIPROPERTIES_MUST_NOT_CONTAIN_MULTIPROPERTIES 0x80D8
 
-// A multiproperties must not multiple materials
+// A multiproperties must not contain multiple materials
 #define NMR_ERROR_MULTIPROPERTIES_MUST_NOT_CONTAIN_MULTIPLE_MATERIALS 0x80DA
 
-// A resource of invalid type was passed to a MultiPropertyGroup
-#define NMR_ERROR_MULTIPROPERTIES_INVALID_RESOURCE 0x80DB
+// A multiproperties must not contain multiple colorgroups
+#define NMR_ERROR_MULTIPROPERTIES_MUST_NOT_CONTAIN_MULTIPLE_COLORGOURPS 0x80DB
 
+// A resource of invalid type was passed to a MultiPropertyGroup
+#define NMR_ERROR_MULTIPROPERTIES_INVALID_RESOURCE 0x80DC
+
+// A MultiMaterial does not define enough PropertyIDs
+#define NMR_ERROR_MULTIPROPERTIES_NOT_ENOUGH_PROPERTYIDS_SPECIFIED 0x80DD
+
+// PIDs-attribute is missing
+#define NMR_ERROR_MULTIPROPERTIES_MISSING_PIDS 0x80DE
+
+// blendmethods-attribute is missing
+#define NMR_ERROR_MULTIPROPERTIES_MISSING_BLENDMETHODS 0x80E0
+
+// The number of blendmethods and pids does not match
+#define NMR_ERROR_MULTIPROPERTIES_DIFFERNT_NUMBER_OF_BLENDMETHODS_AND_PIDS 0x80E1
+
+// Multiproperties element has duplicate pids attribute
+#define NMR_ERROR_DUPLICATE_PIDS 0x80E2
+
+// Multiproperties element has duplicate blendmethods attribute
+#define NMR_ERROR_DUPLICATE_BLENDMETHOS 0x80E3
+
+// A blendmethods attribute is invalid
+#define NMR_ERROR_INVALID_BLENDMETHOD_ATTRIBUTE 0x80E4
+
+// multi-element is invalid
+#define NMR_ERROR_MULTIPROPERTIES_INVALID_MULTI_ELEMENT 0x80E5
+
+// Invalid resource index
+#define NMR_ERROR_INVALID_RESOURCE_INDEX 0x80E6
 
 
 /*-------------------------------------------------------------------
