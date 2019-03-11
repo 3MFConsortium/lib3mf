@@ -47,11 +47,13 @@ Interface version: 2.0.0
 
 using namespace Lib3MF::Impl;
 
-void CLib3MFWrapper::GetLibraryVersion (Lib3MF_uint32 & nMajor, Lib3MF_uint32 & nMinor, Lib3MF_uint32 & nMicro)
+void CLib3MFWrapper::GetLibraryVersion(Lib3MF_uint32 & nMajor, Lib3MF_uint32 & nMinor, Lib3MF_uint32 & nMicro, std::string & sPreReleaseInfo, std::string & sBuildInfo)
 {
 	nMajor = LIB3MF_VERSION_MAJOR;
 	nMinor = LIB3MF_VERSION_MINOR;
 	nMicro = LIB3MF_VERSION_MICRO;
+	sPreReleaseInfo = LIB3MF_VERSION_PRERELEASEINFO;
+	sBuildInfo = LIB3MF_VERSION_BUILDINFO;
 }
 
 void CLib3MFWrapper::GetSpecificationVersion (const std::string & sSpecificationURL, bool & bIsSupported, Lib3MF_uint32 & nMajor, Lib3MF_uint32 & nMinor, Lib3MF_uint32 & nMicro)

@@ -5,7 +5,7 @@
 	copyright="3MF Consortium (Original Author)" 
 	year="2018"
 	basename="lib3mf"
-	version="2.0.0"
+	version="2.0.0-alpha-0"
 	>
 
 	<license>
@@ -1244,10 +1244,12 @@
 	</class>
 
 	<global baseclassname="Base" releasemethod="Release" journalmethod="SetJournal" versionmethod="GetLibraryVersion" errormethod="GetLastError" >
-		<method name="GetLibraryVersion" description = "retrieves the current version of the library.">
-			<param name="Major" type="uint32" pass="out" description="returns the major version of the library" />
-			<param name="Minor" type="uint32" pass="out" description="returns the minor version of the library" />
-			<param name="Micro" type="uint32" pass="out" description="returns the micro version of the library" />
+		<method name="GetLibraryVersion" description = "retrieves the binary version of this library.">
+			<param name="Major" type="uint32" pass="out" description="returns the major version of this library" />
+			<param name="Minor" type="uint32" pass="out" description="returns the minor version of this library" />
+			<param name="Micro" type="uint32" pass="out" description="returns the micro version of this library" />
+			<param name="PreReleaseInfo" type="string" pass="out" description="returns pre-release info of this library (if this is a pre-release binary)" />
+			<param name="BuildInfo" type="string" pass="out" description="returns build-information of this library (optional)" />
 		</method>
 		<method name="GetSpecificationVersion" description = "retrieves whether a specification is supported, and if so, which version.">
 			<param name="SpecificationURL" type="string" pass="in" description="URL of extension to check" />
