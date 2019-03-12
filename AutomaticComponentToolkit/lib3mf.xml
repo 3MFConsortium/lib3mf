@@ -3,7 +3,7 @@
 	libraryname="the 3MF Library"
 	namespace="Lib3MF" 
 	copyright="3MF Consortium (Original Author)" 
-	year="2018"
+	year="2019"
 	basename="lib3mf"
 	version="2.0.0-alpha-0"
 	>
