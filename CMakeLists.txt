@@ -108,7 +108,7 @@ endif()
 
 if (WIN32)
   message("BUILD_NUMBER ... " ${BUILD_NUMBER})
-  set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/Release/VersionInfo)
+  set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/Include/VersionInfo)
   
   include(generate_product_version)
   generate_product_version(
@@ -183,7 +183,7 @@ option(LIB3MF_TESTS "Switch whether the tests of Lib3MF should be build" ON)
 message("LIB3MF_TESTS ... " ${LIB3MF_TESTS})
 if(LIB3MF_TESTS)
   enable_testing()
-  add_subdirectory(UnitTests)
+  add_subdirectory(Tests)
 endif()
 
 #########################################################
