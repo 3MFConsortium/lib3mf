@@ -37,13 +37,8 @@ UnitTest_MeshFormat_STL.cpp: Defines Unittests for the STL mesh format
 #include "Common/Mesh/NMR_Mesh.h"
 #include "Common/MeshImport/NMR_MeshImporter_STL.h"
 #include "Common/MeshExport/NMR_MeshExporter_STL.h"
-#ifdef NMR_COM_NATIVE
-#include "Common/Platform/NMR_ImportStream_COM.h"
-#include "Common/Platform/NMR_ExportStream_COM.h"
-#else
 #include "Common/Platform/NMR_ImportStream_GCC_Native.h"
 #include "Common/Platform/NMR_ExportStream_GCC_Native.h"
-#endif
 
 namespace NMR
 {
@@ -54,11 +49,7 @@ namespace NMR
 	TEST(MeshImport, STL_Box)
 	{
 		CMesh mesh;
-#ifdef NMR_COM_NATIVE
-		PImportStream stream(new CImportStream_COM((sInPath + L"Box.stl").c_str()));
-#else
 		PImportStream stream(new CImportStream_GCC_Native((sInPath + L"Box.stl").c_str()));
-#endif
 		PMeshImporter importer(new CMeshImporter_STL(stream, 0.0001f));
 		importer->loadMesh(&mesh, NULL);
 		ASSERT_TRUE(mesh.getNodeCount() == 8);
@@ -69,11 +60,7 @@ namespace NMR
 	TEST(MeshImport, STL_Sphere)
 	{
 		CMesh Mesh;
-#ifdef NMR_COM_NATIVE
-		PImportStream pStream(new CImportStream_COM((sInPath + L"Sphere.stl").c_str()));
-#else
 		PImportStream pStream(new CImportStream_GCC_Native((sInPath + L"Sphere.stl").c_str()));
-#endif
 		PMeshImporter pImporter(new CMeshImporter_STL(pStream, 0.0001f));
 		pImporter->loadMesh(&Mesh, NULL);
 		ASSERT_TRUE(Mesh.getNodeCount() == 1442);
@@ -84,21 +71,13 @@ namespace NMR
 	TEST(MeshExport, STL_Box)
 	{
 		CMesh Mesh;
-#ifdef NMR_COM_NATIVE
-		PImportStream pStream(new CImportStream_COM((sInPath + L"Box.stl").c_str()));
-#else
 		PImportStream pStream(new CImportStream_GCC_Native((sInPath + L"Box.stl").c_str()));
-#endif
 		PMeshImporter pImporter(new CMeshImporter_STL(pStream, 0.0001f));
 		pImporter->loadMesh(&Mesh, NULL);
 		ASSERT_TRUE(Mesh.getNodeCount() == 8);
 		ASSERT_TRUE(Mesh.getFaceCount() == 12);
 
-#ifdef NMR_COM_NATIVE
-		PExportStream pExportStream(new CExportStream_COM((sOutPath + L"output_box.stl").c_str()));
-#else
 		PExportStream pExportStream(new CExportStream_GCC_Native((sOutPath + L"output_box.stl").c_str()));
-#endif
 		PMeshExporter pExporter(new CMeshExporter_STL(pExportStream));
 		pExporter->exportMesh(&Mesh, NULL);
 	}
@@ -106,21 +85,13 @@ namespace NMR
 	TEST(MeshExport, STL_Sphere)
 	{
 		CMesh Mesh;
-#ifdef NMR_COM_NATIVE
-		PImportStream pStream(new CImportStream_COM((sInPath + L"Sphere.stl").c_str()));
-#else
 		PImportStream pStream(new CImportStream_GCC_Native((sInPath + L"Sphere.stl").c_str()));
-#endif
 		PMeshImporter pImporter(new CMeshImporter_STL(pStream, 0.0001f));
 		pImporter->loadMesh(&Mesh, NULL);
 		ASSERT_TRUE(Mesh.getNodeCount() == 1442);
 		ASSERT_TRUE(Mesh.getFaceCount() == 2880);
 
-#ifdef NMR_COM_NATIVE
-		PExportStream pExportStream(new CExportStream_COM((sOutPath + L"output_sphere.stl").c_str()));
-#else
 		PExportStream pExportStream(new CExportStream_GCC_Native((sOutPath + L"output_sphere.stl").c_str()));
-#endif
 		PMeshExporter pExporter(new CMeshExporter_STL(pExportStream));
 		pExporter->exportMesh(&Mesh, NULL);
 	}

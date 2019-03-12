@@ -44,7 +44,7 @@ cp ../Include/Model/COM/NMR_COMInterfaces.h $SDKARTIFACTS/Include/Model/COM/.
 
 mkdir -p $SDKARTIFACTS/Include/Common
 mkdir -p $SDKARTIFACTS/Include/Common/Platform
-cp ../Include/Common/Platform/NMR_COM_Native.h $SDKARTIFACTS/Include/Common/Platform/.
+# cp ../Include/Common/Platform/NMR_COM_Native.h $SDKARTIFACTS/Include/Common/Platform/.
 cp ../Include/Common/Platform/NMR_SAL.h $SDKARTIFACTS/Include/Common/Platform/.
 cp ../Include/Common/Platform/NMR_WinTypes.h $SDKARTIFACTS/Include/Common/Platform/.
 cp ../Include/Common/Platform/NMR_COM_Emulation.h $SDKARTIFACTS/Include/Common/Platform/.

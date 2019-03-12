@@ -70,26 +70,26 @@ namespace Lib3MF
 		CLib3MFWrapper::GetSpecificationVersion("http://schemas.microsoft.com/3dmanufacturing/material/2015/02", bIsSupported, nMajor, nMinor, nMicro);
 		ASSERT_TRUE(bIsSupported);
 		ASSERT_EQ(nMajor, 1);
-		ASSERT_EQ(nMinor, 0);
+		ASSERT_EQ(nMinor, 1);
 		ASSERT_EQ(nMicro, 0);
 
 		CLib3MFWrapper::GetSpecificationVersion("http://schemas.microsoft.com/3dmanufacturing/production/2015/06", bIsSupported, nMajor, nMinor, nMicro);
 		ASSERT_TRUE(bIsSupported);
 		ASSERT_EQ(nMajor, 1);
-		ASSERT_EQ(nMinor, 0);
-		ASSERT_EQ(nMicro, 0);
+		ASSERT_EQ(nMinor, 1);
+		ASSERT_EQ(nMicro, 2);
 
 		CLib3MFWrapper::GetSpecificationVersion("http://schemas.microsoft.com/3dmanufacturing/beamlattice/2017/02", bIsSupported, nMajor, nMinor, nMicro);
 		ASSERT_TRUE(bIsSupported);
 		ASSERT_EQ(nMajor, 1);
 		ASSERT_EQ(nMinor, 0);
-		ASSERT_EQ(nMicro, 0);
+		ASSERT_EQ(nMicro, 4);
 
 		CLib3MFWrapper::GetSpecificationVersion("http://schemas.microsoft.com/3dmanufacturing/slice/2015/07", bIsSupported, nMajor, nMinor, nMicro);
 		ASSERT_TRUE(bIsSupported);
 		ASSERT_EQ(nMajor, 1);
 		ASSERT_EQ(nMinor, 0);
-		ASSERT_EQ(nMicro, 0);
+		ASSERT_EQ(nMicro, 2);
 	}
 
 	TEST(Wrapper, CreateModel)

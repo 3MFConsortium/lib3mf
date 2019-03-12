@@ -1,15 +1,7 @@
+
 file(GLOB LIBZIP_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "Source/Libraries/libzip/*.c")
-if(NMR_COM_NATIVE)
-	# sources for native COM implementation
-	set(SRCS_COM
-	${LIBZIP_FILES}
-	Source/Common/Platform/NMR_Platform_COM.cpp
-	Source/Common/Platform/NMR_ExportStream_COM.cpp
-	Source/Common/Platform/NMR_ImportStream_COM.cpp
-	)
-else()
-	# sources for COM emulation
-	set(SRCS_COM
+# sources for COM emulation
+set(SRCS_PLATFORM
 	${LIBZIP_FILES}
 	Source/Common/Platform/NMR_Platform_GCC.cpp
 	Source/Common/Platform/NMR_ImportStream_GCC_Native.cpp
@@ -17,11 +9,10 @@ else()
 	Source/Common/Platform/NMR_ExportStream_GCC_Native.cpp
 	Source/Common/Platform/NMR_ExportStream_GCC_Win32.cpp
 	Source/Common/Platform/NMR_ExportStream_ZIP.cpp
-	)
-endif()
+)
 
 set(SRCS_COMMON
-${SRCS_COM}
+${SRCS_PLATFORM}
 Source/API/lib3mf.cpp
 Source/API/lib3mf_attachment.cpp
 Source/API/lib3mf_base.cpp

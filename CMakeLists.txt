@@ -40,9 +40,6 @@ if (${MSVC})
 	# add_definitions(-D_CRT_NONSTDC_NO_DEPRECATE -D_CRT_SECURE_NO_WARNINGS)
 	# set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
 	# set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
-	if(NMR_COM_NATIVE)
-		add_definitions(-DNMR_COM_NATIVE)
-	endif()
 endif()
 
 ### The API generation target

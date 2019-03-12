@@ -12,10 +12,10 @@ add_definitions( -DOUTFILESPATH="${CMAKE_BINARY_DIR}/")
 
 file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/Writer)
 
-# Tests on the CPP-Bindings of the library
+# Test the CPP-Bindings of the library
 add_subdirectory(CPP_Bindings)
 
-# Tests on internal classes of the library
+# Test internal classes of the library
 # add_subdirectory(CPP)
 
 set(STARTUPPROJECT ${STARTUPPROJECT} PARENT_SCOPE)

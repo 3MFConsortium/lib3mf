@@ -47,17 +47,10 @@ UnitTest_Model.cpp: Defines Unittests for the model class
 #define WRITER CModelWriter_3MF_Native
 #define READER CModelReader_3MF_Native
 
-#ifdef NMR_COM_NATIVE
-#include "Common/Platform/NMR_ExportStream_COM.h"
-#include "Common/Platform/NMR_ImportStream_COM.h"
-#define IMPORTSTREAM CImportStream_COM
-#define EXPORTSTREAM CExportStream_COM
-#else
 #include "Common/Platform/NMR_ExportStream_GCC_Native.h"
 #include "Common/Platform/NMR_ImportStream_GCC_Native.h"
 #define IMPORTSTREAM CImportStream_GCC_Native
 #define EXPORTSTREAM CExportStream_GCC_Native
-#endif
 
 namespace NMR
 {
@@ -168,13 +161,8 @@ namespace NMR
 	TEST(Model, 3MFBase4)
 	{
 		PModel pModel = std::make_shared<CModel>();
-#ifdef NMR_COM_NATIVE
 		PModelReader pModelReader = std::make_shared<READER>(pModel);
 		PImportStream pImportStream = std::make_shared<IMPORTSTREAM>((sInPath + L"3mfbase4_Mesh1.3mf").c_str());
-#else
-		PModelReader pModelReader = std::make_shared<READER>(pModel);
-		PImportStream pImportStream = std::make_shared<IMPORTSTREAM>((sInPath + L"3mfbase4_Mesh1.3mf").c_str());
-#endif
 		pModelReader->readStream(pImportStream);
 
 		PModelWriter pModelWriter = std::make_shared<WRITER>(pModel);
