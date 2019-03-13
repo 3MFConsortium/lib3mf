@@ -4,30 +4,30 @@
 SET(TESTNAME "Test_CPP_Bindings")
 
 set(SRCS_UNITTEST
-	./Source/UnitTest_AllTests.cpp
-	./Source/UnitTest_Attachments.cpp
-	./Source/UnitTest_BaseMaterialGroup.cpp
-	./Source/UnitTest_ColorGroup.cpp
-	./Source/UnitTest_CompositeMaterials.cpp
-	./Source/UnitTest_BeamLattice.cpp
-	./Source/UnitTest_BeamSets.cpp
-	./Source/UnitTest_BuildItems.cpp
-	./Source/UnitTest_MeshObject.cpp
-	./Source/UnitTest_MetaData.cpp
-	./Source/UnitTest_MetaDataGroup.cpp
-	./Source/UnitTest_Model.cpp
-	./Source/UnitTest_MultiProperties.cpp
-	./Source/UnitTest_Object.cpp
-	./Source/UnitTest_ProgressCallback.cpp
-	./Source/UnitTest_Properties.cpp
-	./Source/UnitTest_Reader.cpp
-	./Source/UnitTest_Slice.cpp
-	./Source/UnitTest_SliceStack.cpp
-	./Source/UnitTest_Utilities.cpp
-	./Source/UnitTest_Writer.cpp
-	./Source/UnitTest_TextureProperty.cpp
-	./Source/UnitTest_TextureResources.cpp
-	./Source/UnitTest_Wrapper.cpp
+	./Source/AllTests.cpp
+	./Source/Attachments.cpp
+	./Source/BaseMaterialGroup.cpp
+	./Source/ColorGroup.cpp
+	./Source/CompositeMaterials.cpp
+	./Source/BeamLattice.cpp
+	./Source/BeamSets.cpp
+	./Source/BuildItems.cpp
+	./Source/MeshObject.cpp
+	./Source/MetaData.cpp
+	./Source/MetaDataGroup.cpp
+	./Source/Model.cpp
+	./Source/MultiProperties.cpp
+	./Source/Object.cpp
+	./Source/ProgressCallback.cpp
+	./Source/Properties.cpp
+	./Source/Reader.cpp
+	./Source/Slice.cpp
+	./Source/SliceStack.cpp
+	./Source/Utilities.cpp
+	./Source/Writer.cpp
+	./Source/TextureProperty.cpp
+	./Source/TextureResources.cpp
+	./Source/Wrapper.cpp
 )
 
 set(CMAKE_CURRENT_BINARY_DIR ${CMAKE_BINARY_DIR})
