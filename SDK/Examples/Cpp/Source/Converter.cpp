@@ -29,27 +29,39 @@ Converter.cpp : Can convert 3MFs to STL and back
 
 --*/
 
-#ifndef __GNUC__
-#include <tchar.h>
-#include <Windows.h>
-#endif // __GNUC__
-
 #include <iostream>
 #include <string>
 #include <algorithm>
 
-// Plain C Includes of 3MF Library
-#include "NMR_DLLInterfaces.h"
+#ifndef __GNUC__
+#include <Windows.h>
+#endif
 
-// Use NMR namespace for the interfaces
-using namespace NMR;
+#include "lib3mf.hpp"
+
+using namespace Lib3MF;
+
+
+void printVersion() {
+	Lib3MF_uint32 nMajor, nMinor, nMicro;
+	std::string sReleaseInfo, sBuildInfo;
+	CLib3MFWrapper::GetLibraryVersion(nMajor, nMinor, nMicro, sReleaseInfo, sBuildInfo);
+	std::cout << "Lib3MF version = " << nMajor << "." << nMinor << "." << nMicro;
+	if (!sReleaseInfo.empty()) {
+		std::cout << "-" << sReleaseInfo;
+	}
+	if (!sBuildInfo.empty()) {
+		std::cout << "+" << sBuildInfo;
+	}
+	std::cout << std::endl;
+}
 
 std::string FindExtension(std::string filename) {
 	// this emulates Windows' PathFindExtension
 	std::string::size_type idx;
 	idx = filename.rfind('.');
 
-	if(idx != std::string::npos)
+	if (idx != std::string::npos)
 	{
 		return filename.substr(idx);
 	}
@@ -59,66 +71,19 @@ std::string FindExtension(std::string filename) {
 	}
 }
 
-#ifndef __GNUC__
-int _tmain(int argc, _TCHAR* argv[])
-#else
-int main (int argc, char* argv[])
-#endif // __GNUC__
-{
-	// General Variables
-	HRESULT hResult;
-	#ifndef __GNUC__
-	ULONGLONG nStartTicks;
-	#endif
-	DWORD nInterfaceVersionMajor, nInterfaceVersionMinor, nInterfaceVersionMicro;
 
-	// Objects
-	PLib3MFModel * pModel;
-	PLib3MFModelReader * pReader;
-	PLib3MFModelWriter * pWriter;
-
-
+int convert(std::string sFilename) {
 	std::cout << "------------------------------------------------------------------" << std::endl;
 	std::cout << "3MF Model Converter" << std::endl;
+	printVersion();
 	std::cout << "------------------------------------------------------------------" << std::endl;
-
-
-	// Check 3MF Library Version
-	hResult = lib3mf_getinterfaceversion(&nInterfaceVersionMajor, &nInterfaceVersionMinor, &nInterfaceVersionMicro);
-	if (hResult != LIB3MF_OK) {
-		std::cout << "could not get 3MF Library version: " << std::hex << hResult << std::endl;
-		return -1;
-	}
-
-	if ((nInterfaceVersionMajor != NMR_APIVERSION_INTERFACE_MAJOR)) {
-		std::cout << "invalid 3MF Library major version: " << NMR_APIVERSION_INTERFACE_MAJOR << std::endl;
-		return -1;
-	}
-	if (!(nInterfaceVersionMinor >= NMR_APIVERSION_INTERFACE_MINOR)) {
-		std::cout << "invalid 3MF Library minor version: " << NMR_APIVERSION_INTERFACE_MINOR << std::endl;
-		return -1;
-	}
-
-
-	// Parse Arguments
-	if (argc != 2) {
-		std::cout << "Usage: " << std::endl;
-		std::cout << "Convert 3MF to STL: Converter.exe model.3mf" << std::endl;
-		std::cout << "Convert STL to 3MF: Converter.exe model.stl" << std::endl;
-		return -1;
-	}
 
 	// Extract Extension of filename
 	std::string sReaderName;
 	std::string sWriterName;
 	std::string sNewExtension;
-	std::string sFilename(argv[1]);
 	std::string sExtension = FindExtension(sFilename);
 	std::transform(sExtension.begin(), sExtension.end(), sExtension.begin(), ::tolower);
-
-	// Convert to Ansi
-	std::string sAnsiFilename(sFilename.begin(), sFilename.end());
-	std::string sAnsiExtension(sExtension.begin(), sExtension.end());
 
 	// Which Reader and Writer classes do we need?
 	if (sExtension == ".stl") {
@@ -132,7 +97,7 @@ int main (int argc, char* argv[])
 		sNewExtension = ".stl";
 	}
 	if (sReaderName.length() == 0) {
-		std::cout << "unknown input file extension:" << sAnsiExtension << std::endl;
+		std::cout << "unknown input file extension:" << sExtension << std::endl;
 		return -1;
 	}
 
@@ -140,70 +105,47 @@ int main (int argc, char* argv[])
 	std::string sOutputFilename = sFilename;
 	sOutputFilename.erase(sOutputFilename.length() - sExtension.length());
 	sOutputFilename += sNewExtension;
-	std::string sAnsiOutputFilename(sOutputFilename.begin(), sOutputFilename.end());
 
-	// Create Model Instance
-	hResult = lib3mf_createmodel(&pModel);
-	if (hResult != LIB3MF_OK) {
-		std::cout << "could not create model: " << std::hex << hResult << std::endl;
-		return -1;
-	}
-
-	// Create Model Reader
-	hResult = lib3mf_model_queryreader(pModel, sReaderName.c_str(), &pReader);
-	if (hResult != LIB3MF_OK) {
-		std::cout << "could not create model reader: " << std::hex << hResult << std::endl;
-		lib3mf_release(pModel);
-		return -1;
-	}
+	PLib3MFModel model = CLib3MFWrapper::CreateModel();
+	PLib3MFReader reader = model->QueryReader(sReaderName);
 
 	// Import Model from File
-	std::cout << "reading " << sAnsiFilename << "..." << std::endl;
-	#ifndef __GNUC__
-	nStartTicks = GetTickCount64 ();
-	#endif
-	hResult = lib3mf_reader_readfromfileutf8(pReader, sFilename.c_str());
-	if (hResult != LIB3MF_OK) {
-		std::cout << "could not parse file: " << std::hex << hResult << std::endl;
-		lib3mf_release(pReader);
-		lib3mf_release(pModel);
-		return -1;
-	}
-	#ifndef __GNUC__
+	std::cout << "reading " << sFilename << "..." << std::endl;
+#ifndef __GNUC__
+	ULONGLONG nStartTicks = GetTickCount64();
+#endif
+	reader->ReadFromFile(sFilename);
+#ifndef __GNUC__
 	std::cout << "elapsed time: " << (GetTickCount64() - nStartTicks) << "ms" << std::endl;
-	#endif
+#endif
 
-	// Release Model Reader
-	lib3mf_release(pReader);
-
-	// Create Model Writer
-	hResult = lib3mf_model_querywriter(pModel, sWriterName.c_str(), &pWriter);
-	if (hResult != LIB3MF_OK) {
-		std::cout << "could not create model reader: " << std::hex << hResult << std::endl;
-		lib3mf_release(pModel);
-		return -1;
-	}
-
-	// Export Model into File
-	std::cout << "writing " << sAnsiOutputFilename << "..." << std::endl;
-	#ifndef __GNUC__
+	PLib3MFWriter writer = model->QueryWriter(sWriterName);
+	std::cout << "writing " << sOutputFilename << "..." << std::endl;
+#ifndef __GNUC__
 	nStartTicks = GetTickCount64();
-	#endif
-	hResult = lib3mf_writer_writetofileutf8(pWriter, sOutputFilename.c_str());
-	if (hResult != LIB3MF_OK) {
-		std::cout << "could not write file: " << std::hex << hResult << std::endl;
-		lib3mf_release(pReader);
-		lib3mf_release(pModel);
-		return -1;
-	}
-	#ifndef __GNUC__
+#endif
+	writer->WriteToFile(sOutputFilename);
+#ifndef __GNUC__
 	std::cout << "elapsed time: " << (GetTickCount64() - nStartTicks) << "ms" << std::endl;
-	#endif
+#endif
 	std::cout << "done" << std::endl;
-
-	// Release Model 
-	lib3mf_release(pModel);
-
 	return 0;
 }
 
+int main(int argc, char** argv) {
+
+	try {
+		// Parse Arguments
+		if (argc != 2) {
+			std::cout << "Usage: " << std::endl;
+			std::cout << "Convert 3MF to STL: Converter.exe model.3mf" << std::endl;
+			std::cout << "Convert STL to 3MF: Converter.exe model.stl" << std::endl;
+			return convert(argv[1]);
+		}
+	}
+	catch (ELib3MFException &e) {
+		std::cout << e.what() << std::endl;
+		return e.getErrorCode();
+	}
+	return 0;
+}
