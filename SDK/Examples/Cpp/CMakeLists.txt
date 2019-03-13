@@ -5,11 +5,11 @@ if (WIN32)
 	set(LSUFFIXOUT ".dll")
 elseif(UNIX AND NOT APPLE)
 	set(LSUFFIX "so")
-	set(LSUFFIXOUT ".so.1")
+	set(LSUFFIXOUT ".so.2")
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O2")
 else()
 	set(LSUFFIX "dylib")
-	set(LSUFFIXOUT ".1.dylib")
+	set(LSUFFIXOUT ".2.dylib")
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O2")
 endif()
 
@@ -17,16 +17,16 @@ add_definitions ( -DTEXTURESPATH="${CMAKE_CURRENT_SOURCE_DIR}/../Files/Textures/
 
 project (Examples)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../Bindings/Cpp)
-link_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../Lib)
 
 if (WIN32)
+	link_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../Lib)
 	link_libraries(lib3MF)
 else()
 	# Unix prefixes the name of the library with "lib" anyway
 	link_libraries(3MF)
 	if(APPLE)
 		link_directories(${CMAKE_CURRENT_BINARY_DIR})
-        endif()
+	endif()
 endif()
 
 function(CopySharedLibrary MyTarget)

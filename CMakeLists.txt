@@ -148,6 +148,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES PREFIX "" IMPORT_PREFIX "" )
 # This makes sure symbols are exported
 target_compile_options(${PROJECT_NAME} PRIVATE "-D__LIB3MF_EXPORTS")
 # The following two properties are crucial to reduce the number of undesirably exported symbols
+set_target_properties(${PROJECT_NAME} PROPERTIES C_VISIBILITY_PRESET hidden)
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_VISIBILITY_PRESET hidden)
 set_target_properties(${PROJECT_NAME} PROPERTIES VISIBILITY_INLINES_HIDDEN ON)
 

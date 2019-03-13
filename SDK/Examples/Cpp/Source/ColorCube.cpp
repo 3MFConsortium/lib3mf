@@ -71,6 +71,17 @@ sLib3MFTriangle fnCreateTriangle(int v0, int v1, int v2)
 	return result;
 }
 
+sLib3MFTriangleProperties fnCreateTriangleColor(PLib3MFColorGroup colorGroup, Lib3MF_uint32 colorID1, Lib3MF_uint32 colorID2, Lib3MF_uint32 colorID3)
+{
+	sLib3MFTriangleProperties sTriangleProperty;
+	sTriangleProperty.m_ResourceID = colorGroup->GetResourceID();
+	sTriangleProperty.m_PropertyIDs[0] = colorID1;
+	sTriangleProperty.m_PropertyIDs[1] = colorID2;
+	sTriangleProperty.m_PropertyIDs[2] = colorID3;
+	return sTriangleProperty;
+}
+
+
 void CubeExample() {
 	std::cout << "------------------------------------------------------------------" << std::endl;
 	std::cout << "3MF Cube example" << std::endl;
@@ -124,32 +135,12 @@ void CubeExample() {
 	Lib3MF_uint32 idOrange = colorGroup->AddColor(CLib3MFWrapper::RGBAToColor(255, 128, 0, 255));
 	Lib3MF_uint32 idYellow = colorGroup->AddColor(CLib3MFWrapper::RGBAToColor(255, 255, 0, 255));
 
-	sLib3MFTriangleProperties sTriangleColorRed, sTriangleColorGreen, sTriangleColorBlue,
-		sTriangleColor1, sTriangleColor2;
-	sTriangleColorRed.m_ResourceID = colorGroup->GetResourceID();
-	sTriangleColorRed.m_PropertyIDs[0] = idRed;
-	sTriangleColorRed.m_PropertyIDs[1] = idRed;
-	sTriangleColorRed.m_PropertyIDs[2] = idRed;
+	sLib3MFTriangleProperties sTriangleColorRed = fnCreateTriangleColor(colorGroup, idRed, idRed, idRed);
+	sLib3MFTriangleProperties sTriangleColorGreen = fnCreateTriangleColor(colorGroup, idGreen, idGreen, idGreen);
+	sLib3MFTriangleProperties sTriangleColorBlue = fnCreateTriangleColor(colorGroup, idBlue, idBlue, idBlue);
 
-	sTriangleColorGreen.m_ResourceID = colorGroup->GetResourceID();
-	sTriangleColorGreen.m_PropertyIDs[0] = idGreen;
-	sTriangleColorGreen.m_PropertyIDs[1] = idGreen;
-	sTriangleColorGreen.m_PropertyIDs[2] = idGreen;
-
-	sTriangleColorBlue.m_ResourceID = colorGroup->GetResourceID();
-	sTriangleColorBlue.m_PropertyIDs[0] = idBlue;
-	sTriangleColorBlue.m_PropertyIDs[1] = idBlue;
-	sTriangleColorBlue.m_PropertyIDs[2] = idBlue;
-
-	sTriangleColor1.m_ResourceID = colorGroup->GetResourceID();
-	sTriangleColor1.m_PropertyIDs[0] = idOrange;
-	sTriangleColor1.m_PropertyIDs[1] = idRed;
-	sTriangleColor1.m_PropertyIDs[2] = idYellow;
-
-	sTriangleColor2.m_ResourceID = colorGroup->GetResourceID();
-	sTriangleColor2.m_PropertyIDs[0] = idYellow;
-	sTriangleColor2.m_PropertyIDs[1] = idGreen;
-	sTriangleColor2.m_PropertyIDs[2] = idOrange;
+	sLib3MFTriangleProperties sTriangleColor1 = fnCreateTriangleColor(colorGroup, idOrange, idRed, idYellow);
+	sLib3MFTriangleProperties sTriangleColor2 = fnCreateTriangleColor(colorGroup, idYellow, idGreen, idOrange);
 
 	// One-colored Triangles
 	meshObject->SetTriangleProperties(0, sTriangleColorRed);
@@ -176,7 +167,7 @@ void CubeExample() {
 }
 
 int main() {
-	
+
 	try {
 		CubeExample();
 	}
