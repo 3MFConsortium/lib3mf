@@ -99,14 +99,14 @@ sLib3MFTriangleProperties fnCreateTexture(PLib3MFTexture2DGroup textureGroup, do
 
 void TextureExample() {
 	std::cout << "------------------------------------------------------------------" << std::endl;
-	std::cout << "3MF Color Cube example" << std::endl;
+	std::cout << "3MF Texture Cube example" << std::endl;
 	printVersion();
 	std::cout << "------------------------------------------------------------------" << std::endl;
 
 	PLib3MFModel model = CLib3MFWrapper::CreateModel();
 
 	PLib3MFMeshObject meshObject = model->AddMeshObject();
-	meshObject->SetName("Colored Box");
+	meshObject->SetName("Textured Box");
 
 	// Create mesh structure of a cube
 	std::vector<sLib3MFPosition> vertices(8);

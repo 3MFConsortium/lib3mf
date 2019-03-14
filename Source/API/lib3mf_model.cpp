@@ -37,6 +37,7 @@ Abstract: This is a stub class definition of CLib3MFModel
 #include "lib3mf_builditem.hpp"
 #include "lib3mf_builditemiterator.hpp"
 #include "lib3mf_meshobject.hpp"
+#include "lib3mf_objectiterator.hpp"
 #include "lib3mf_resourceiterator.hpp"
 #include "lib3mf_componentsobject.hpp"
 #include "lib3mf_basematerialgroup.hpp"
@@ -267,9 +268,9 @@ ILib3MFResourceIterator * CLib3MFModel::GetResources ()
 	return pResult.release();
 }
 
-ILib3MFResourceIterator * CLib3MFModel::GetObjects ()
+ILib3MFObjectIterator * CLib3MFModel::GetObjects ()
 {
-	auto pResult = std::unique_ptr<CLib3MFResourceIterator>(new CLib3MFResourceIterator());
+	auto pResult = std::unique_ptr<CLib3MFObjectIterator>(new CLib3MFObjectIterator());
 	Lib3MF_uint32 nObjectsCount = model().getObjectCount();
 
 	for (Lib3MF_uint32 nIdx = 0; nIdx < nObjectsCount; nIdx++) {

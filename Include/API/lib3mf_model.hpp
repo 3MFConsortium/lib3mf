@@ -115,7 +115,7 @@ public:
 
 	ILib3MFResourceIterator * GetResources ();
 
-	ILib3MFResourceIterator * GetObjects ();
+	ILib3MFObjectIterator * GetObjects ();
 
 	ILib3MFResourceIterator * GetMeshObjects ();
 
