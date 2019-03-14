@@ -41,8 +41,8 @@ NMR::NMATRIX3 Lib3MF::TransformToMatrix(const sLib3MFTransform Transform)
 	NMR::NMATRIX3 matrix;
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 3; j++)
-			matrix.m_fields[i][j] = Transform.m_Fields[i][j];
-		matrix.m_fields[i][3] = 0 + 1.0f*(i == 3);
+			matrix.m_fields[j][i] = Transform.m_Fields[i][j];
+		matrix.m_fields[3][i] = 0.f + 1.0f*(i == 3);
 	}
 	return matrix;
 }
@@ -52,7 +52,7 @@ sLib3MFTransform Lib3MF::MatrixToTransform(const NMR::NMATRIX3 matrix)
 	sLib3MFTransform transform;
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 3; j++)
-			transform.m_Fields[i][j] = matrix.m_fields[i][j];
+			transform.m_Fields[i][j] = matrix.m_fields[j][i];
 	}
 	return transform;
 }

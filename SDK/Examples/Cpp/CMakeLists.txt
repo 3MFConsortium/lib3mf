@@ -38,13 +38,13 @@ set(CPP_BINDING_SOURCE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/../../Bindings/Cpp/lib3
 add_executable(Example_ColorCube Source/ColorCube.cpp ${CPP_BINDING_SOURCE_FILES})
 CopySharedLibrary(Example_ColorCube)
 
-# add_executable(Example_Components Source/Components.cpp ${CPP_BINDING_SOURCE_FILES})
-# CopySharedLibrary(Example_Components)
+add_executable(Example_Components Source/Components.cpp ${CPP_BINDING_SOURCE_FILES})
+CopySharedLibrary(Example_Components)
 
 add_executable(Example_Converter Source/Converter.cpp ${CPP_BINDING_SOURCE_FILES})
 CopySharedLibrary(Example_Converter)
 
-add_executable(Example_Cube Source/Cube.cpp ${CPP_BINDING_SOURCE_FILES} ${CPP_BINDING_SOURCE_FILES})
+add_executable(Example_Cube Source/Cube.cpp ${CPP_BINDING_SOURCE_FILES})
 CopySharedLibrary(Example_Cube)
 
 # add_executable(Example_ExtractInfo Source/ExtractInfo.cpp ${CPP_BINDING_SOURCE_FILES})
