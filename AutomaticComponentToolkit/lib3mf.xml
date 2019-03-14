@@ -5,7 +5,7 @@
 	copyright="3MF Consortium (Original Author)" 
 	year="2019"
 	basename="lib3mf"
-	version="2.0.0-alpha-2"
+	version="2.0.0-alpha-3"
 	>
 
 	<license>
@@ -345,7 +345,13 @@
 			<param name="OutResourceIterator" type="handle" class="ResourceIterator" pass="return" description="returns the cloned Iterator instance" />
 		</method>
 	</class>
-	
+
+	<class name="SliceStackIterator" parent="ResourceIterator">
+		<method name="GetCurrentSliceStack" description="Returns the SliceStack the iterator points at.">
+			<param name="Resource" type="handle" class="SliceStack" pass="return" description="returns the SliceStack instance." />
+		</method>
+	</class>
+
 	<class name="ObjectIterator" parent="ResourceIterator">
 		<method name="GetCurrentObject" description="Returns the Object the iterator points at.">
 			<param name="Resource" type="handle" class="Object" pass="return" description="returns the Object instance." />
@@ -1163,7 +1169,7 @@
 		</method>
 		
 		<method name="GetSliceStacks" description="creates a resource iterator instance with all slice stack resources.">
-			<param name="ResourceIterator" type="handle" class="ResourceIterator" pass="return" description="returns the iterator instance." />
+			<param name="ResourceIterator" type="handle" class="SliceStackIterator" pass="return" description="returns the iterator instance." />
 		</method>
 		<method name="MergeToModel" description = "Merges all components and objects which are referenced by a build item into a mesh. The memory is duplicated and a new model is created.">
 			<param name="MergedModelInstance" type="handle" class="Model" pass="return" description="returns the merged model instance" />

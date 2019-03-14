@@ -133,7 +133,7 @@ public:
 
 	ILib3MFMultiPropertyGroupIterator * GetMultiPropertyGroups();
 
-	ILib3MFResourceIterator * GetSliceStacks();
+	ILib3MFSliceStackIterator * GetSliceStacks();
 
 	ILib3MFModel * MergeToModel ();
 

@@ -75,16 +75,16 @@ void ShowMetaDataInformation(PLib3MFMetaDataGroup metaDataGroup)
 	}
 }
 
-void ShowSliceStack(PLib3MFSliceStack sliceStack)
+void ShowSliceStack(PLib3MFSliceStack sliceStack, std::string indent)
 {
-	std::cout << "   SliceStackID:  " << sliceStack->GetResourceID() << std::endl;
+	std::cout << indent << "SliceStackID:  " << sliceStack->GetResourceID() << std::endl;
 	if (sliceStack->GetSliceCount() > 0) {
-		std::cout << "   Slice count:  " << sliceStack->GetSliceCount() << std::endl;
+		std::cout << indent << "  Slice count:  " << sliceStack->GetSliceCount() << std::endl;
 	}
 	if (sliceStack->GetSliceRefCount() > 0) {
-		std::cout << "   Slice ref count:  " << sliceStack->GetSliceRefCount() << std::endl;
+		std::cout << indent << "  Slice ref count:  " << sliceStack->GetSliceRefCount() << std::endl;
 		for (Lib3MF_uint64 iSliceRef = 0; iSliceRef < sliceStack->GetSliceRefCount(); iSliceRef++) {
-			std::cout << "     Slice ref :  " << sliceStack->GetSliceStackReference(iSliceRef)->GetResourceID() << std::endl;
+			std::cout << indent << "  Slice ref :  " << sliceStack->GetSliceStackReference(iSliceRef)->GetResourceID() << std::endl;
 		}
 	}
 }
@@ -114,7 +114,7 @@ void ShowObjectProperties(PLib3MFObject object)
 
 	if (object->HasSliceStack()) {
 		PLib3MFSliceStack sliceStack = object->GetSliceStack();
-		ShowSliceStack(sliceStack);
+		ShowSliceStack(sliceStack, "   ");
 	}
 
 	if (object->GetMetaDataGroup()->GetMetaDataCount() > 0) {
@@ -205,6 +205,12 @@ void ExtractInfoExample(std::string sFileName) {
 
 	ShowMetaDataInformation(model->GetMetaDataGroup());
 
+	PLib3MFResourceIterator sliceStacks = model->GetSliceStacks();
+	while (sliceStacks->MoveNext()) {
+		PLib3MFSliceStack sliceStack = sliceStacks->GetCurrentSliceStack();
+		ShowSliceStack(sliceStack, "");
+	}
+
 	PLib3MFObjectIterator objectIterator = model->GetObjects();
 	while (objectIterator->MoveNext()) {
 		PLib3MFObject object = objectIterator->GetCurrentObject();
@@ -237,8 +243,6 @@ void ExtractInfoExample(std::string sFileName) {
 			ShowMetaDataInformation(buildItem->GetMetaDataGroup());
 		}
 	}
-
-
 
 	std::cout << "done" << std::endl;
 }

@@ -44,6 +44,7 @@ Abstract: This is a stub class definition of CLib3MFModel
 #include "lib3mf_metadatagroup.hpp"
 #include "lib3mf_attachment.hpp"
 #include "lib3mf_slicestack.hpp"
+#include "lib3mf_slicestackiterator.hpp"
 #include "lib3mf_texture2d.hpp"
 #include "lib3mf_texture2diterator.hpp"
 #include "lib3mf_basematerialgroupiterator.hpp"
@@ -385,9 +386,9 @@ ILib3MFMultiPropertyGroupIterator * CLib3MFModel::GetMultiPropertyGroups()
 }
 
 
-ILib3MFResourceIterator * CLib3MFModel::GetSliceStacks()
+ILib3MFSliceStackIterator * CLib3MFModel::GetSliceStacks()
 {
-	auto pResult = std::unique_ptr<CLib3MFResourceIterator>(new CLib3MFResourceIterator());
+	auto pResult = std::unique_ptr<CLib3MFSliceStackIterator>(new CLib3MFSliceStackIterator());
 	Lib3MF_uint32 nCount = model().getSliceStackCount();
 
 	for (Lib3MF_uint32 nIdx = 0; nIdx < nCount; nIdx++) {
