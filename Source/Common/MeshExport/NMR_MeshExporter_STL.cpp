@@ -87,13 +87,13 @@ namespace NMR {
 		}
 
 		nfByte stlheader[80];
-		char HeaderMessage[37] = "STL Export by Microsoft";
+		char HeaderMessage[34] = "STL Export by Lib3MF";
 		nfUint32 nFacetCount = (nfUint32) facetdata.size();
 
 		// Fill Header
-		for (nIdx = 0; nIdx < 36; nIdx++)
+		for (nIdx = 0; nIdx < 33; nIdx++)
 			stlheader[nIdx] = (nfByte)HeaderMessage[nIdx];
-		for (nIdx = 36; nIdx < 80; nIdx++)
+		for (nIdx = 33; nIdx < 80; nIdx++)
 			stlheader[nIdx] = 32;
 
 		// Write Header
