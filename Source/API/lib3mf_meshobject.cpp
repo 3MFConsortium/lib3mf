@@ -74,24 +74,24 @@ Lib3MF_uint32 CLib3MFMeshObject::GetTriangleCount ()
 void CLib3MFMeshObject::SetVertex (const Lib3MF_uint32 nIndex, const sLib3MFPosition Coordinates)
 {
 	NMR::MESHNODE* node = mesh()->getNode(nIndex);
-	node->m_position.m_fields[0] = Coordinates.m_coordinates[0];
-	node->m_position.m_fields[1] = Coordinates.m_coordinates[1];
-	node->m_position.m_fields[2] = Coordinates.m_coordinates[2];
+	node->m_position.m_fields[0] = Coordinates.m_Coordinates[0];
+	node->m_position.m_fields[1] = Coordinates.m_Coordinates[1];
+	node->m_position.m_fields[2] = Coordinates.m_Coordinates[2];
 }
 
 sLib3MFPosition CLib3MFMeshObject::GetVertex(const Lib3MF_uint32 nIndex)
 {
 	NMR::MESHNODE* node = mesh()->getNode(nIndex);
 	sLib3MFPosition pos;
-	pos.m_coordinates[0] = node->m_position.m_fields[0];
-	pos.m_coordinates[1] = node->m_position.m_fields[1];
-	pos.m_coordinates[2] = node->m_position.m_fields[2];
+	pos.m_Coordinates[0] = node->m_position.m_fields[0];
+	pos.m_Coordinates[1] = node->m_position.m_fields[1];
+	pos.m_Coordinates[2] = node->m_position.m_fields[2];
 	return pos;
 }
 
 Lib3MF_uint32 CLib3MFMeshObject::AddVertex (const sLib3MFPosition Coordinates)
 {
-	return mesh()->addNode(Coordinates.m_coordinates[0], Coordinates.m_coordinates[1], Coordinates.m_coordinates[2])->m_index;
+	return mesh()->addNode(Coordinates.m_Coordinates[0], Coordinates.m_Coordinates[1], Coordinates.m_Coordinates[2])->m_index;
 }
 
 void CLib3MFMeshObject::GetVertices(Lib3MF_uint64 nVerticesBufferSize, Lib3MF_uint64* pVerticesNeededCount, sLib3MFPosition * pVerticesBuffer)
@@ -105,9 +105,9 @@ void CLib3MFMeshObject::GetVertices(Lib3MF_uint64 nVerticesBufferSize, Lib3MF_ui
 		for (Lib3MF_uint32 i = 0; i < nodeCount; i++)
 		{
 			const NMR::MESHNODE* node = mesh()->getNode(i);
-			pVerticesBuffer[i].m_coordinates[0] = node->m_position.m_fields[0];
-			pVerticesBuffer[i].m_coordinates[1] = node->m_position.m_fields[1];
-			pVerticesBuffer[i].m_coordinates[2] = node->m_position.m_fields[2];
+			pVerticesBuffer[i].m_Coordinates[0] = node->m_position.m_fields[0];
+			pVerticesBuffer[i].m_Coordinates[1] = node->m_position.m_fields[1];
+			pVerticesBuffer[i].m_Coordinates[2] = node->m_position.m_fields[2];
 		}
 	}
 }
@@ -117,9 +117,9 @@ sLib3MFTriangle CLib3MFMeshObject::GetTriangle (const Lib3MF_uint32 nIndex)
 	sLib3MFTriangle t;
 	NMR::MESHFACE* mf = mesh()->getFace(nIndex);
 
-	t.m_indices[0] = mf->m_nodeindices[0];
-	t.m_indices[1] = mf->m_nodeindices[1];
-	t.m_indices[2] = mf->m_nodeindices[2];
+	t.m_Indices[0] = mf->m_nodeindices[0];
+	t.m_Indices[1] = mf->m_nodeindices[1];
+	t.m_Indices[2] = mf->m_nodeindices[2];
 
 	return t;
 }
@@ -128,14 +128,14 @@ void CLib3MFMeshObject::SetTriangle (const Lib3MF_uint32 nIndex, const sLib3MFTr
 {
 	NMR::MESHFACE* mf = mesh()->getFace(nIndex);
 
-	mf->m_nodeindices[0] = Indices.m_indices[0];
-	mf->m_nodeindices[1] = Indices.m_indices[1];
-	mf->m_nodeindices[2] = Indices.m_indices[2];
+	mf->m_nodeindices[0] = Indices.m_Indices[0];
+	mf->m_nodeindices[1] = Indices.m_Indices[1];
+	mf->m_nodeindices[2] = Indices.m_Indices[2];
 }
 
 Lib3MF_uint32 CLib3MFMeshObject::AddTriangle(const sLib3MFTriangle Indices)
 {
-	return mesh()->addFace(Indices.m_indices[0], Indices.m_indices[1], Indices.m_indices[2])->m_index;
+	return mesh()->addFace(Indices.m_Indices[0], Indices.m_Indices[1], Indices.m_Indices[2])->m_index;
 }
 
 void CLib3MFMeshObject::GetTriangleIndices (Lib3MF_uint64 nIndicesBufferSize, Lib3MF_uint64* pIndicesNeededCount, sLib3MFTriangle * pIndicesBuffer)
@@ -149,9 +149,9 @@ void CLib3MFMeshObject::GetTriangleIndices (Lib3MF_uint64 nIndicesBufferSize, Li
 		for (Lib3MF_uint32 i = 0; i < faceCount; i++)
 		{
 			const NMR::MESHFACE* face = mesh()->getFace(i);
-			pIndicesBuffer[i].m_indices[0] = face->m_nodeindices[0];
-			pIndicesBuffer[i].m_indices[1] = face->m_nodeindices[1];
-			pIndicesBuffer[i].m_indices[2] = face->m_nodeindices[2];
+			pIndicesBuffer[i].m_Indices[0] = face->m_nodeindices[0];
+			pIndicesBuffer[i].m_Indices[1] = face->m_nodeindices[1];
+			pIndicesBuffer[i].m_Indices[2] = face->m_nodeindices[2];
 		}
 	}
 }
@@ -299,10 +299,10 @@ void CLib3MFMeshObject::SetGeometry(const Lib3MF_uint64 nVerticesBufferSize, con
 	const sLib3MFPosition * pVertex = pVerticesBuffer;
 	for (Lib3MF_uint64 nIndex = 0; nIndex < nVerticesBufferSize; nIndex++) {
 		for (int j = 0; j < 3; j++) {
-			if (std::fabs(pVertex->m_coordinates[j]) > NMR_MESH_MAXCOORDINATE)
+			if (std::fabs(pVertex->m_Coordinates[j]) > NMR_MESH_MAXCOORDINATE)
 				throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
 		}
-		pMesh->addNode(pVertex->m_coordinates[0], pVertex->m_coordinates[1], pVertex->m_coordinates[2]);
+		pMesh->addNode(pVertex->m_Coordinates[0], pVertex->m_Coordinates[1], pVertex->m_Coordinates[2]);
 
 		pVertex++;
 	}
@@ -313,14 +313,14 @@ void CLib3MFMeshObject::SetGeometry(const Lib3MF_uint64 nVerticesBufferSize, con
 		NMR::MESHNODE * pNodes[3];
 
 		for (int j = 0; j < 3; j++) {
-			if (pTriangle->m_indices[j] >= nVerticesBufferSize)
+			if (pTriangle->m_Indices[j] >= nVerticesBufferSize)
 				throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
-			pNodes[j] = pMesh->getNode(pTriangle->m_indices[j]);
+			pNodes[j] = pMesh->getNode(pTriangle->m_Indices[j]);
 		}
 
-		if ((pTriangle->m_indices[0] == pTriangle->m_indices[1]) ||
-			(pTriangle->m_indices[0] == pTriangle->m_indices[2]) ||
-			(pTriangle->m_indices[1] == pTriangle->m_indices[2]))
+		if ((pTriangle->m_Indices[0] == pTriangle->m_Indices[1]) ||
+			(pTriangle->m_Indices[0] == pTriangle->m_Indices[2]) ||
+			(pTriangle->m_Indices[1] == pTriangle->m_Indices[2]))
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
 
 		pMesh->addFace(pNodes[0], pNodes[1], pNodes[2]);

@@ -5,7 +5,7 @@
 	copyright="3MF Consortium (Original Author)" 
 	year="2019"
 	basename="lib3mf"
-	version="2.0.0-alpha-0"
+	version="2.0.0-alpha-1"
 	>
 
 	<license>
@@ -189,7 +189,7 @@
 	</enum>
 
 	<struct name="Triangle">
-		<member name="indices" type="uint32" rows="3" />
+		<member name="Indices" type="uint32" rows="3" />
 	</struct>
 
 	<struct name="TriangleProperties">
@@ -198,11 +198,11 @@
 	</struct>
 
 	<struct name="Position">
-		<member name="coordinates" type="single" rows="3" />
+		<member name="Coordinates" type="single" rows="3" />
 	</struct>
 
 	<struct name="Position2D">
-		<member name="coordinates" type="single" rows="2" />
+		<member name="Coordinates" type="single" rows="2" />
 	</struct>
 	
 	<struct name="CompositeConstituent">

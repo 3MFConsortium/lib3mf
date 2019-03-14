@@ -50,15 +50,15 @@ namespace Lib3MF
 			beamLattice = mesh->BeamLattice();
 
 			sLib3MFPosition p;
-			p.m_coordinates[0] = 0;
-			p.m_coordinates[1] = 0;
-			p.m_coordinates[2] = 0;
+			p.m_Coordinates[0] = 0;
+			p.m_Coordinates[1] = 0;
+			p.m_Coordinates[2] = 0;
 			mesh->AddVertex(p);
 			
-			p.m_coordinates[1] = 1;
+			p.m_Coordinates[1] = 1;
 			mesh->AddVertex(p);
 
-			p.m_coordinates[2] = 1;
+			p.m_Coordinates[2] = 1;
 			mesh->AddVertex(p);
 
 			// Preparations

@@ -56,18 +56,18 @@ void printVersion() {
 sLib3MFPosition fnCreateVertex(float x, float y, float z)
 {
 	sLib3MFPosition result;
-	result.m_coordinates[0] = x;
-	result.m_coordinates[1] = y;
-	result.m_coordinates[2] = z;
+	result.m_Coordinates[0] = x;
+	result.m_Coordinates[1] = y;
+	result.m_Coordinates[2] = z;
 	return result;
 }
 
 sLib3MFTriangle fnCreateTriangle(int v0, int v1, int v2)
 {
 	sLib3MFTriangle result;
-	result.m_indices[0] = v0;
-	result.m_indices[1] = v1;
-	result.m_indices[2] = v2;
+	result.m_Indices[0] = v0;
+	result.m_Indices[1] = v1;
+	result.m_Indices[2] = v2;
 	return result;
 }
 
@@ -84,7 +84,7 @@ sLib3MFTriangleProperties fnCreateTriangleColor(PLib3MFColorGroup colorGroup, Li
 
 void CubeExample() {
 	std::cout << "------------------------------------------------------------------" << std::endl;
-	std::cout << "3MF Cube example" << std::endl;
+	std::cout << "3MF Color Cube example" << std::endl;
 	printVersion();
 	std::cout << "------------------------------------------------------------------" << std::endl;
 
@@ -138,10 +138,10 @@ void CubeExample() {
 	sLib3MFTriangleProperties sTriangleColorRed = fnCreateTriangleColor(colorGroup, idRed, idRed, idRed);
 	sLib3MFTriangleProperties sTriangleColorGreen = fnCreateTriangleColor(colorGroup, idGreen, idGreen, idGreen);
 	sLib3MFTriangleProperties sTriangleColorBlue = fnCreateTriangleColor(colorGroup, idBlue, idBlue, idBlue);
-
+	
 	sLib3MFTriangleProperties sTriangleColor1 = fnCreateTriangleColor(colorGroup, idOrange, idRed, idYellow);
 	sLib3MFTriangleProperties sTriangleColor2 = fnCreateTriangleColor(colorGroup, idYellow, idGreen, idOrange);
-
+	
 	// One-colored Triangles
 	meshObject->SetTriangleProperties(0, sTriangleColorRed);
 	meshObject->SetTriangleProperties(1, sTriangleColorRed);
@@ -167,7 +167,7 @@ void CubeExample() {
 }
 
 int main() {
-
+	
 	try {
 		CubeExample();
 	}

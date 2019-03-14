@@ -98,33 +98,33 @@ namespace Lib3MF
 	TEST_F(MeshObject, SingleVertexOperations)
 	{
 		sLib3MFPosition pos, posOut;
-		pos.m_coordinates[0] = 0.0;
-		pos.m_coordinates[1] = 0.0;
-		pos.m_coordinates[2] = 0.0;
+		pos.m_Coordinates[0] = 0.0;
+		pos.m_Coordinates[1] = 0.0;
+		pos.m_Coordinates[2] = 0.0;
 
 		mesh->AddVertex(pos);
 		ASSERT_EQ(1, mesh->GetVertexCount());
 
-		pos.m_coordinates[0] = 1.0;
-		pos.m_coordinates[1] = 1.0;
-		pos.m_coordinates[2] = 0.0;
+		pos.m_Coordinates[0] = 1.0;
+		pos.m_Coordinates[1] = 1.0;
+		pos.m_Coordinates[2] = 0.0;
 		Lib3MF_uint32 index = mesh->AddVertex(pos);
 		ASSERT_EQ(2, mesh->GetVertexCount());
 		ASSERT_EQ(index, 1);
 
 		posOut = mesh->GetVertex(1);
-		ASSERT_EQ(pos.m_coordinates[0], posOut.m_coordinates[0]);
-		ASSERT_EQ(pos.m_coordinates[1], posOut.m_coordinates[1]);
-		ASSERT_EQ(pos.m_coordinates[2], posOut.m_coordinates[2]);
+		ASSERT_EQ(pos.m_Coordinates[0], posOut.m_Coordinates[0]);
+		ASSERT_EQ(pos.m_Coordinates[1], posOut.m_Coordinates[1]);
+		ASSERT_EQ(pos.m_Coordinates[2], posOut.m_Coordinates[2]);
 
-		pos.m_coordinates[0] = 2.0;
-		pos.m_coordinates[1] = 3.0;
-		pos.m_coordinates[2] = 4.0;
+		pos.m_Coordinates[0] = 2.0;
+		pos.m_Coordinates[1] = 3.0;
+		pos.m_Coordinates[2] = 4.0;
 		mesh->SetVertex(0, pos);
 		posOut = mesh->GetVertex(0);
-		ASSERT_EQ(pos.m_coordinates[0], posOut.m_coordinates[0]);
-		ASSERT_EQ(pos.m_coordinates[1], posOut.m_coordinates[1]);
-		ASSERT_EQ(pos.m_coordinates[2], posOut.m_coordinates[2]);
+		ASSERT_EQ(pos.m_Coordinates[0], posOut.m_Coordinates[0]);
+		ASSERT_EQ(pos.m_Coordinates[1], posOut.m_Coordinates[1]);
+		ASSERT_EQ(pos.m_Coordinates[2], posOut.m_Coordinates[2]);
 	}
 
 
@@ -145,15 +145,15 @@ namespace Lib3MF
 		ASSERT_EQ(2, mesh->GetTriangleCount());
 
 		sLib3MFTriangle t = mesh->GetTriangle(1);
-		ASSERT_EQ(t.m_indices[0], t1.m_indices[0]);
-		ASSERT_EQ(t.m_indices[1], t1.m_indices[1]);
-		ASSERT_EQ(t.m_indices[2], t1.m_indices[2]);
+		ASSERT_EQ(t.m_Indices[0], t1.m_Indices[0]);
+		ASSERT_EQ(t.m_Indices[1], t1.m_Indices[1]);
+		ASSERT_EQ(t.m_Indices[2], t1.m_Indices[2]);
 
 		mesh->SetTriangle(1, t0);
 		t = mesh->GetTriangle(1);
-		ASSERT_EQ(t.m_indices[0], t0.m_indices[0]);
-		ASSERT_EQ(t.m_indices[1], t0.m_indices[1]);
-		ASSERT_EQ(t.m_indices[2], t0.m_indices[2]);
+		ASSERT_EQ(t.m_Indices[0], t0.m_Indices[0]);
+		ASSERT_EQ(t.m_Indices[1], t0.m_Indices[1]);
+		ASSERT_EQ(t.m_Indices[2], t0.m_Indices[2]);
 	}
 
 	TEST_F(MeshObject, GeometryOperations)
@@ -168,7 +168,7 @@ namespace Lib3MF
 		for (Lib3MF_uint32 i = 0; i < mesh->GetVertexCount(); i++)
 		{
 			for (int j = 0; j < 3; j++)
-				ASSERT_EQ(pVertices[i].m_coordinates[j], vctPositions[i].m_coordinates[j]);
+				ASSERT_EQ(pVertices[i].m_Coordinates[j], vctPositions[i].m_Coordinates[j]);
 		}
 
 		std::vector<sLib3MFTriangle> vctTriangles;
@@ -177,7 +177,7 @@ namespace Lib3MF
 		for (Lib3MF_uint32 i = 0; i < mesh->GetTriangleCount(); i++)
 		{
 			for (int j = 0; j < 3; j++)
-				ASSERT_EQ(pTriangles[i].m_indices[j], vctTriangles[i].m_indices[j]);
+				ASSERT_EQ(pTriangles[i].m_Indices[j], vctTriangles[i].m_Indices[j]);
 		}
 		
 	}

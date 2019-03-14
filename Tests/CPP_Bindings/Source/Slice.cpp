@@ -50,20 +50,20 @@ namespace Lib3MF
 			slice = sliceStack->AddSlice(1.0);
 
 			sLib3MFPosition2D pos;
-			pos.m_coordinates[0] = 0;
-			pos.m_coordinates[1] = 0;
+			pos.m_Coordinates[0] = 0;
+			pos.m_Coordinates[1] = 0;
 			vVertices.push_back(pos);
 
-			pos.m_coordinates[0] = 0;
-			pos.m_coordinates[1] = 1;
+			pos.m_Coordinates[0] = 0;
+			pos.m_Coordinates[1] = 1;
 			vVertices.push_back(pos);
 
-			pos.m_coordinates[0] = 1;
-			pos.m_coordinates[1] = 1;
+			pos.m_Coordinates[0] = 1;
+			pos.m_Coordinates[1] = 1;
 			vVertices.push_back(pos);
 
-			pos.m_coordinates[0] = 1;
-			pos.m_coordinates[1] = 0;
+			pos.m_Coordinates[0] = 1;
+			pos.m_Coordinates[1] = 0;
 			vVertices.push_back(pos);
 
 			vOpenPolygon.push_back(0);
@@ -110,8 +110,8 @@ namespace Lib3MF
 		slice->GetVertices(vNewVertices);
 		ASSERT_EQ(vVertices.size(), vNewVertices.size());
 		for (int i = 0; i < vVertices.size(); i++) {
-			ASSERT_FLOAT_EQ(vVertices[i].m_coordinates[0], vNewVertices[i].m_coordinates[0]);
-			ASSERT_FLOAT_EQ(vVertices[i].m_coordinates[1], vNewVertices[i].m_coordinates[1]);
+			ASSERT_FLOAT_EQ(vVertices[i].m_Coordinates[0], vNewVertices[i].m_Coordinates[0]);
+			ASSERT_FLOAT_EQ(vVertices[i].m_Coordinates[1], vNewVertices[i].m_Coordinates[1]);
 		}
 	}
 

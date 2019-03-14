@@ -267,20 +267,20 @@ namespace Lib3MF
 
 			std::vector<sLib3MFPosition2D> vVertices;
 			sLib3MFPosition2D pos;
-			pos.m_coordinates[0] = 0;
-			pos.m_coordinates[1] = 0;
+			pos.m_Coordinates[0] = 0;
+			pos.m_Coordinates[1] = 0;
 			vVertices.push_back(pos);
 
-			pos.m_coordinates[0] = 0;
-			pos.m_coordinates[1] = 1;
+			pos.m_Coordinates[0] = 0;
+			pos.m_Coordinates[1] = 1;
 			vVertices.push_back(pos);
 
-			pos.m_coordinates[0] = 1;
-			pos.m_coordinates[1] = 1;
+			pos.m_Coordinates[0] = 1;
+			pos.m_Coordinates[1] = 1;
 			vVertices.push_back(pos);
 
-			pos.m_coordinates[0] = 1;
-			pos.m_coordinates[1] = 0;
+			pos.m_Coordinates[0] = 1;
+			pos.m_Coordinates[1] = 0;
 			vVertices.push_back(pos);
 
 			std::vector<Lib3MF_uint32> vOpenPolygon;

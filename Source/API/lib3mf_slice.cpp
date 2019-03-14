@@ -50,7 +50,7 @@ void CLib3MFSlice::SetVertices (const Lib3MF_uint64 nVerticesBufferSize, const s
 {
 	m_pSlice->Clear();
 	for (Lib3MF_uint64 index = 0; index < nVerticesBufferSize; index++) {
-		m_pSlice->addVertex(pVerticesBuffer->m_coordinates[0], pVerticesBuffer->m_coordinates[1]);
+		m_pSlice->addVertex(pVerticesBuffer->m_Coordinates[0], pVerticesBuffer->m_Coordinates[1]);
 		pVerticesBuffer++;
 	}
 }
@@ -66,8 +66,8 @@ void CLib3MFSlice::GetVertices (Lib3MF_uint64 nVerticesBufferSize, Lib3MF_uint64
 		for (Lib3MF_uint32 i = 0; i < vertexCount; i++)
 		{
 			const NMR::SLICENODE* node = m_pSlice->getNode(i);
-			pVerticesBuffer[i].m_coordinates[0] = node->m_position.m_fields[0];
-			pVerticesBuffer[i].m_coordinates[1] = node->m_position.m_fields[1];
+			pVerticesBuffer[i].m_Coordinates[0] = node->m_position.m_fields[0];
+			pVerticesBuffer[i].m_Coordinates[1] = node->m_position.m_fields[1];
 		}
 	}
 }
