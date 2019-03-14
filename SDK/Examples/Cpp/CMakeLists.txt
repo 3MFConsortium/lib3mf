@@ -44,8 +44,8 @@ CopySharedLibrary(Example_ColorCube)
 add_executable(Example_Converter Source/Converter.cpp ${CPP_BINDING_SOURCE_FILES})
 CopySharedLibrary(Example_Converter)
 
-# add_executable(Example_Cube Source/Cube.cpp ${CPP_BINDING_SOURCE_FILES})
-# CopySharedLibrary(Example_Cube)
+add_executable(Example_Cube Source/Cube.cpp ${CPP_BINDING_SOURCE_FILES} ${CPP_BINDING_SOURCE_FILES})
+CopySharedLibrary(Example_Cube)
 
 # add_executable(Example_ExtractInfo Source/ExtractInfo.cpp ${CPP_BINDING_SOURCE_FILES})
 # CopySharedLibrary(Example_ExtractInfo)
