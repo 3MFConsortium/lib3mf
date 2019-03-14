@@ -42,6 +42,6 @@ using namespace Lib3MF::Impl;
 
 ILib3MFObject * CLib3MFObjectIterator::GetCurrentObject ()
 {
-	return new CLib3MFObject(GetCurrentResource());
+	return CLib3MFObject::fnCreateObjectFromModelResource(GetCurrentResource(), true);
 }
 

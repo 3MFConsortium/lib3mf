@@ -507,7 +507,7 @@
 		</method>
 		<method name="ClearSliceStack" description="unlinks the attached slicestack from this object. If no slice stack is attached, do noting.">
 		</method>
-		<method name="GetSliceStack" description="set the meshresolution of the mesh object">
+		<method name="GetSliceStack" description="get the Slicestack attached to the object">
 			<param name="SliceStackInstance" type="handle" class="SliceStack" pass="return" description="returns the slicestack instance" />
 		</method>
 		<method name="AssignSliceStack" description="assigns a slicestack to the object">

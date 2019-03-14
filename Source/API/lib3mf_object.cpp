@@ -113,13 +113,13 @@ void CLib3MFObject::SetPartNumber (const std::string & sPartNumber)
 
 bool CLib3MFObject::IsMeshObject ()
 {
-	// implemented by base class
+	// overwritten by child class
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_SHOULDNOTBECALLED);
 }
 
 bool CLib3MFObject::IsComponentsObject ()
 {
-	// implemented by base class
+	// overwritten by child class
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_SHOULDNOTBECALLED);
 }
 
