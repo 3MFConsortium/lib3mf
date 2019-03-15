@@ -156,6 +156,14 @@ namespace Lib3MF
 		ASSERT_EQ(t.m_Indices[2], t0.m_Indices[2]);
 	}
 
+	TEST_F(MeshObject, EmptyGeometryOperations)
+	{
+		mesh->SetGeometry(CLib3MFInputVector<sLib3MFPosition>(pVertices, 8), CLib3MFInputVector<sLib3MFTriangle>(nullptr, 0));
+		mesh->SetGeometry(CLib3MFInputVector<sLib3MFPosition>(nullptr, 0), CLib3MFInputVector<sLib3MFTriangle>(nullptr, 0));
+		ASSERT_SPECIFIC_THROW(mesh->SetGeometry(CLib3MFInputVector<sLib3MFPosition>(pVertices, 8), CLib3MFInputVector<sLib3MFTriangle>(nullptr, 1)), ELib3MFException);
+		ASSERT_SPECIFIC_THROW(mesh->SetGeometry(CLib3MFInputVector<sLib3MFPosition>(nullptr, 0), CLib3MFInputVector<sLib3MFTriangle>(pTriangles, 12)), ELib3MFException);
+	}
+
 	TEST_F(MeshObject, GeometryOperations)
 	{
 		mesh->SetGeometry(CLib3MFInputVector<sLib3MFPosition>(pVertices, 8), CLib3MFInputVector<sLib3MFTriangle>(pTriangles, 12));

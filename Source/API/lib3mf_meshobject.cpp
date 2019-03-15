@@ -287,7 +287,7 @@ void CLib3MFMeshObject::GetAllTriangleProperties(Lib3MF_uint64 nPropertiesArrayB
 
 void CLib3MFMeshObject::SetGeometry(const Lib3MF_uint64 nVerticesBufferSize, const sLib3MFPosition * pVerticesBuffer, const Lib3MF_uint64 nIndicesBufferSize, const sLib3MFTriangle * pIndicesBuffer)
 {
-	if ((!pVerticesBuffer) || (!pIndicesBuffer))
+	if ( ((!pVerticesBuffer) && (nVerticesBufferSize>0)) || ((!pIndicesBuffer) && (nIndicesBufferSize>0)))
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
 
 	NMR::CMesh * pMesh = mesh();
