@@ -169,7 +169,6 @@ void ComponentsExample() {
 }
 
 int main() {
-
 	try {
 		ComponentsExample();
 	}

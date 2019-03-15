@@ -187,7 +187,6 @@ void TextureExample() {
 }
 
 int main() {
-
 	try {
 		TextureExample();
 	}

@@ -54,8 +54,8 @@ CopySharedLibrary(Example_ExtractInfo)
 add_executable(Example_TextureCube Source/TextureCube.cpp ${CPP_BINDING_SOURCE_FILES})
 CopySharedLibrary(Example_TextureCube)
 
-# add_executable(Example_Slice Source/Slice.cpp ${CPP_BINDING_SOURCE_FILES})
-# CopySharedLibrary(Example_Slice)
+add_executable(Example_Slice Source/Slice.cpp ${CPP_BINDING_SOURCE_FILES})
+CopySharedLibrary(Example_Slice)
 
 add_executable(Example_BeamLattice Source/BeamLattice.cpp ${CPP_BINDING_SOURCE_FILES})
 CopySharedLibrary(Example_BeamLattice)

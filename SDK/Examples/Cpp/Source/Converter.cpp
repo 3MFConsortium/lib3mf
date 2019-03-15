@@ -133,15 +133,15 @@ int convert(std::string sFilename) {
 }
 
 int main(int argc, char** argv) {
-
+	// Parse Arguments
+	if (argc != 2) {
+		std::cout << "Usage: " << std::endl;
+		std::cout << "Convert 3MF to STL: Converter.exe model.3mf" << std::endl;
+		std::cout << "Convert STL to 3MF: Converter.exe model.stl" << std::endl;
+		return 0;
+	}
+	
 	try {
-		// Parse Arguments
-		if (argc != 2) {
-			std::cout << "Usage: " << std::endl;
-			std::cout << "Convert 3MF to STL: Converter.exe model.3mf" << std::endl;
-			std::cout << "Convert STL to 3MF: Converter.exe model.stl" << std::endl;
-			return 0;
-		}
 		return convert(argv[1]);
 	}
 	catch (ELib3MFException &e) {

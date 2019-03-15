@@ -249,13 +249,13 @@ void ExtractInfoExample(std::string sFileName) {
 
 
 int main(int argc, char** argv) {
-
 	// Parse Arguments
 	if (argc != 2) {
 		std::cout << "Usage: " << std::endl;
 		std::cout << "ExtractInfo.exe model.3mf" << std::endl;
-		return -1;
+		return 0;
 	}
+	
 	try {
 		ExtractInfoExample(argv[1]);
 	}

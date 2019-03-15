@@ -124,6 +124,7 @@ void BeamLatticeExample() {
 	beams[11] = fnCreateBeam(4, 7, r3, r1, eBeamLatticeCapModeHemiSphere, eBeamLatticeCapModeHemiSphere);
 	meshObject->SetGeometry(vertices, triangles);
 
+	// Set beamlattice geometry and metadata
 	PLib3MFBeamLattice beamLattice = meshObject->BeamLattice();
 	beamLattice->SetBeams(beams);
 	beamLattice->SetMinLength(0.005);
@@ -137,6 +138,7 @@ void BeamLatticeExample() {
 	// Add build item
 	model->AddBuildItem(meshObject.get(), CLib3MFWrapper::GetIdentityTransform());
 
+	// Write file
 	PLib3MFWriter writer = model->QueryWriter("3mf");
 	writer->WriteToFile("beamlattice.3mf");
 

@@ -167,7 +167,6 @@ void CubeExample() {
 }
 
 int main() {
-	
 	try {
 		CubeExample();
 	}
