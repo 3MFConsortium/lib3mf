@@ -57,10 +57,10 @@ CopySharedLibrary(Example_TextureCube)
 # add_executable(Example_Slice Source/Slice.cpp ${CPP_BINDING_SOURCE_FILES})
 # CopySharedLibrary(Example_Slice)
 
-# add_executable(Example_BeamLattice Source/BeamLattice.cpp ${CPP_BINDING_SOURCE_FILES})
-# CopySharedLibrary(Example_BeamLattice)
+add_executable(Example_BeamLattice Source/BeamLattice.cpp ${CPP_BINDING_SOURCE_FILES})
+CopySharedLibrary(Example_BeamLattice)
 
-if (WIN32)
+if (${MSVC})
 	IF(${CMAKE_VERSION} VERSION_LESS 3.6.3)
 		MESSAGE ("Note: You need to manually select a StartUp-project in Visual Studio.")
 	ELSE()

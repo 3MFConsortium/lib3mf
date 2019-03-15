@@ -25,157 +25,131 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-Cube.cpp : 3MF beamlattice extension example
+BeamLattice.cpp : 3MF beamlattice creation example
 
 --*/
-
-#ifndef __GNUC__
-#include <tchar.h>
-#include <Windows.h>
-#endif // __GNUC__
 
 #include <iostream>
 #include <string>
 #include <algorithm>
 
-// Plain C Includes of 3MF Library
-#include "NMR_DLLInterfaces.h"
+#include "lib3mf.hpp"
 
-// Use NMR namespace for the interfaces
-using namespace NMR;
+using namespace Lib3MF;
 
-class CustomLib3MFBase {
-public:
-	CustomLib3MFBase() : m_pLib3MFBase(NULL)
-	{
+
+void printVersion() {
+	Lib3MF_uint32 nMajor, nMinor, nMicro;
+	std::string sReleaseInfo, sBuildInfo;
+	CLib3MFWrapper::GetLibraryVersion(nMajor, nMinor, nMicro, sReleaseInfo, sBuildInfo);
+	std::cout << "Lib3MF version = " << nMajor << "." << nMinor << "." << nMicro;
+	if (!sReleaseInfo.empty()) {
+		std::cout << "-" << sReleaseInfo;
 	}
-	~CustomLib3MFBase()
-	{
-		if (m_pLib3MFBase) {
-			NMR::lib3mf_release(m_pLib3MFBase);
-			m_pLib3MFBase = NULL;
-		}
+	if (!sBuildInfo.empty()) {
+		std::cout << "+" << sBuildInfo;
 	}
-	NMR::PLib3MFBase* & get() {
-		return m_pLib3MFBase;
-	}
-private:
-	NMR::PLib3MFBase* m_pLib3MFBase;
-};
+	std::cout << std::endl;
+}
 
-
-#ifndef __GNUC__
-int _tmain(int argc, _TCHAR* argv[])
-#else
-int main()
-#endif // __GNUC__
+// Utility functions to create vertices and beams
+sLib3MFPosition fnCreateVertex(float x, float y, float z)
 {
-	// Vertices for the first 3d model
-	NMR::MODELMESHVERTEX a_cVerties[8] = {
-		{ 0,   0, 0 },
-		{ 100,   0, 0 },
-		{ 100, 100, 0 },
-		{ 0, 100, 0 },
-		{ 0,   0, 100 },
-		{ 100,   0, 100 },
-		{ 100, 100, 100 },
-		{ 0, 100, 100 }
-	};
+	sLib3MFPosition result;
+	result.m_Coordinates[0] = x;
+	result.m_Coordinates[1] = y;
+	result.m_Coordinates[2] = z;
+	return result;
+}
 
-	// Vertices for the second 3d model
-	NMR::MODELMESHVERTEX a_cVerties_CutOut[8] = {
-		{ 0,   0, 0 },
-		{ 50,   0, 0 },
-		{ 50, 50, 0 },
-		{ 0, 50, 0 },
-		{ 0,   0, 50 },
-		{ 50,   0, 50 },
-		{ 50, 50, 50 },
-		{ 0, 50, 50 }
-	};
+sLib3MFBeam fnCreateBeam(int v0, int v1, double r0, double r1, eLib3MFBeamLatticeCapMode c0, eLib3MFBeamLatticeCapMode c1)
+{
+	sLib3MFBeam result;
+	result.m_Indices[0] = v0;
+	result.m_Indices[1] = v1;
+	result.m_Radii[0] = r0;
+	result.m_Radii[1] = r1;
+	result.m_CapModes[0].m_enum = c0;
+	result.m_CapModes[1].m_enum = c1;
+	return result;
+}
 
-	// Indices for the 3d model defined
-	NMR::MODELMESHTRIANGLE a_cTris[12] = {
-		{ 2, 1, 0 },
-		{ 3, 2, 0 },
-		{ 4, 5, 6 },
-		{ 4, 6, 7 },
-		{ 0, 1, 4 },
-		{ 5, 4, 1 },
-		{ 1, 2, 5 },
-		{ 6, 5, 2 },
-		{ 2, 3, 6 },
-		{ 7, 6, 3 },
-		{ 7, 0, 4 },
-		{ 0, 7, 3 }
-	};
 
-	CustomLib3MFBase pModel;
-	CustomLib3MFBase pBuildItem;
-	// Create a lib3mf model
-	if (NMR::lib3mf_createmodel(&pModel.get()) != LIB3MF_OK) {
-		std::cout << "Unable to create model" << std::endl;
-		return 1;
+void BeamLatticeExample() {
+	std::cout << "------------------------------------------------------------------" << std::endl;
+	std::cout << "3MF Beamlattice example" << std::endl;
+	printVersion();
+	std::cout << "------------------------------------------------------------------" << std::endl;
+
+	PLib3MFModel model = CLib3MFWrapper::CreateModel();
+
+	PLib3MFMeshObject meshObject = model->AddMeshObject();
+	meshObject->SetName("Beamlattice");
+
+	// Create mesh structure of a cube
+	std::vector<sLib3MFPosition> vertices(8);
+	std::vector<sLib3MFTriangle> triangles(0);
+	std::vector<sLib3MFBeam> beams(12);
+
+	float fSizeX = 100.0f;
+	float fSizeY = 200.0f;
+	float fSizeZ = 300.0f;
+
+	// Manually create vertices
+	vertices[0] = fnCreateVertex(0.0f, 0.0f, 0.0f);
+	vertices[1] = fnCreateVertex(fSizeX, 0.0f, 0.0f);
+	vertices[2] = fnCreateVertex(fSizeX, fSizeY, 0.0f);
+	vertices[3] = fnCreateVertex(0.0f, fSizeY, 0.0f);
+	vertices[4] = fnCreateVertex(0.0f, 0.0f, fSizeZ);
+	vertices[5] = fnCreateVertex(fSizeX, 0.0f, fSizeZ);
+	vertices[6] = fnCreateVertex(fSizeX, fSizeY, fSizeZ);
+	vertices[7] = fnCreateVertex(0.0f, fSizeY, fSizeZ);
+
+	// Manually create beams
+	double r0 = 1.0;
+	double r1 = 1.5;
+	double r2 = 2.0;
+	double r3 = 2.5;
+	beams[0] = fnCreateBeam(2, 1, r0, r0, eBeamLatticeCapModeButt, eBeamLatticeCapModeButt);
+	beams[1] = fnCreateBeam(0, 3, r0, r1, eBeamLatticeCapModeSphere, eBeamLatticeCapModeButt);
+	beams[2] = fnCreateBeam(4, 5, r0, r2, eBeamLatticeCapModeSphere, eBeamLatticeCapModeButt);
+	beams[3] = fnCreateBeam(6, 7, r0, r3, eBeamLatticeCapModeHemiSphere, eBeamLatticeCapModeButt);
+	beams[4] = fnCreateBeam(0, 1, r1, r0, eBeamLatticeCapModeHemiSphere, eBeamLatticeCapModeButt);
+	beams[5] = fnCreateBeam(5, 4, r1, r1, eBeamLatticeCapModeSphere, eBeamLatticeCapModeHemiSphere);
+	beams[6] = fnCreateBeam(2, 3, r1, r2, eBeamLatticeCapModeSphere, eBeamLatticeCapModeSphere);
+	beams[7] = fnCreateBeam(7, 6, r1, r3, eBeamLatticeCapModeButt, eBeamLatticeCapModeButt);
+	beams[8] = fnCreateBeam(1, 2, r2, r2, eBeamLatticeCapModeButt, eBeamLatticeCapModeButt);
+	beams[9] = fnCreateBeam(6, 5, r2, r3, eBeamLatticeCapModeHemiSphere, eBeamLatticeCapModeButt);
+	beams[10] = fnCreateBeam(3, 0, r3, r0, eBeamLatticeCapModeButt, eBeamLatticeCapModeSphere);
+	beams[11] = fnCreateBeam(4, 7, r3, r1, eBeamLatticeCapModeHemiSphere, eBeamLatticeCapModeHemiSphere);
+	meshObject->SetGeometry(vertices, triangles);
+
+	PLib3MFBeamLattice beamLattice = meshObject->BeamLattice();
+	beamLattice->SetBeams(beams);
+	beamLattice->SetMinLength(0.005);
+
+	PLib3MFBeamSet set = beamLattice->AddBeamSet();
+	set->SetName("Special Beams");
+	set->SetIdentifier("bs1");
+	std::vector<Lib3MF_uint32> references = { 2,0,5 };
+	set->SetReferences(references);
+
+	// Add build item
+	model->AddBuildItem(meshObject.get(), CLib3MFWrapper::GetIdentityTransform());
+
+	PLib3MFWriter writer = model->QueryWriter("3mf");
+	writer->WriteToFile("beamlattice.3mf");
+
+	std::cout << "done" << std::endl;
+}
+
+int main() {
+	try {
+		BeamLatticeExample();
 	}
-
-	CustomLib3MFBase pMeshObject;
-	CustomLib3MFBase pMeshObjectCutOut;
-	
-	// Add a meshobject and set it's size unit to millimeter
-	if (NMR::lib3mf_model_addmeshobject(pModel.get(), &pMeshObjectCutOut.get()) != LIB3MF_OK) { std::cout << "Unable to add mesh object to model" << std::endl; return 1; }
-	if (NMR::lib3mf_model_addmeshobject(pModel.get(), &pMeshObject.get()) != LIB3MF_OK) { std::cout << "Unable to add mesh object to model" << std::endl; return 1; }
-	if (NMR::lib3mf_model_setunit(pModel.get(), NMR::MODELUNIT_MILLIMETER) != LIB3MF_OK) { std::cout << "Cannot set model units" << std::endl; return 1; }
-
-	// Set mesh geometries
-	if (NMR::lib3mf_meshobject_setgeometry(pMeshObjectCutOut.get(), a_cVerties_CutOut, 8, a_cTris, 12) != LIB3MF_OK) {
-		std::cout << "Unable to set mesh geometry on object" << std::endl;
-		return 1;
+	catch (ELib3MFException &e) {
+		std::cout << e.what() << std::endl;
+		return e.getErrorCode();
 	}
-	if (NMR::lib3mf_meshobject_setgeometry(pMeshObject.get(), a_cVerties, 8, a_cTris, 12) != LIB3MF_OK) {
-		std::cout << "Unable to set mesh geometry on object" << std::endl;
-		return 1;
-	}
-	DWORD nResourceID;
-	if (NMR::lib3mf_resource_getresourceid(pMeshObjectCutOut.get(), &nResourceID) != LIB3MF_OK) {
-		std::cout << "Unable to get resource ID" << std::endl;
-		return 1;
-	}
-	if (NMR::lib3mf_meshobject_setbeamlattice_clipping(pMeshObject.get(), MODELBEAMLATTICECLIPMODE_OUTSIDE, nResourceID) != LIB3MF_OK) {
-		std::cout << "Unable to set beamlattice clipping on object" << std::endl;
-		return 1;
-	}
-
-	NMR::MODELMESHBEAM beam;
-	DWORD nIndex;
-	beam.m_dRadius[0] = 1;
-	beam.m_dRadius[1] = 2;
-	beam.m_nIndices[0] = 0;
-	beam.m_nIndices[1] = 1;
-	if (NMR::lib3mf_meshobject_addbeam(pMeshObject.get(), &beam, &nIndex) != LIB3MF_OK) {
-		std::cout << "Unable to add beam to meshobject" << std::endl;
-		return 1;
-	}
-	beam.m_dRadius[0] = 2;
-	beam.m_dRadius[1] = 1.5;
-	beam.m_nIndices[0] = 1;
-	beam.m_nIndices[1] = 2;
-	beam.m_eCapMode[1] = MODELBEAMLATTICECAPMODE_BUTT;
-	if (NMR::lib3mf_meshobject_addbeam(pMeshObject.get(), &beam, &nIndex) != LIB3MF_OK) {
-		std::cout << "Unable to add beam to meshobject" << std::endl;
-		return 1;
-	}
-
-	if (NMR::lib3mf_model_addbuilditem(pModel.get(), pMeshObject.get(), NULL, &pBuildItem.get()) != LIB3MF_OK) {
-		std::cout << "Unable to add build item" << std::endl;
-		return 1;
-	}
-
-	CustomLib3MFBase p3MFWriter;
-
-	// create a 3mf writer
-	if (NMR::lib3mf_model_querywriter(pModel.get(), "3mf", &p3MFWriter.get()), LIB3MF_OK) { std::cout << "Cannot create model writer"; return 1; }
-	// Export the model with the beam to a 3mf file
-	if (NMR::lib3mf_writer_writetofileutf8(p3MFWriter.get(), "beamlattice.3mf"), LIB3MF_OK) { std::cout << "Cannot write 3mf"; return 1; }
-
 	return 0;
 }
