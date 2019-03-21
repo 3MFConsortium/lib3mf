@@ -24,13 +24,13 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CLib3MFCompositeMaterialsIterator
+Abstract: This is the class declaration of CCompositeMaterialsIterator
 
 */
 
 
-#ifndef __LIB3MF_LIB3MFCOMPOSITEMATERIALSITERATOR
-#define __LIB3MF_LIB3MFCOMPOSITEMATERIALSITERATOR
+#ifndef __LIB3MF_COMPOSITEMATERIALSITERATOR
+#define __LIB3MF_COMPOSITEMATERIALSITERATOR
 
 #include "lib3mf_interfaces.hpp"
 
@@ -47,10 +47,10 @@ namespace Impl {
 
 
 /*************************************************************************************************************************
- Class declaration of CLib3MFCompositeMaterialsIterator 
+ Class declaration of CCompositeMaterialsIterator 
 **************************************************************************************************************************/
 
-class CLib3MFCompositeMaterialsIterator : public virtual ILib3MFCompositeMaterialsIterator, public virtual CLib3MFResourceIterator {
+class CCompositeMaterialsIterator : public virtual ICompositeMaterialsIterator, public virtual CResourceIterator {
 private:
 
 	/**
@@ -74,7 +74,7 @@ public:
 	* Public member functions to implement.
 	*/
 
-	ILib3MFCompositeMaterials * GetCurrentCompositeMaterials ();
+	ICompositeMaterials * GetCurrentCompositeMaterials ();
 
 };
 
@@ -82,4 +82,4 @@ public:
 } // namespace Lib3MF
 
 #pragma warning( pop )
-#endif // __LIB3MF_LIB3MFCOMPOSITEMATERIALSITERATOR
+#endif // __LIB3MF_COMPOSITEMATERIALSITERATOR

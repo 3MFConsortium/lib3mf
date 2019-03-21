@@ -24,13 +24,13 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CLib3MFResourceIterator
+Abstract: This is the class declaration of CResourceIterator
 
 */
 
 
-#ifndef __LIB3MF_LIB3MFRESOURCEITERATOR
-#define __LIB3MF_LIB3MFRESOURCEITERATOR
+#ifndef __LIB3MF_RESOURCEITERATOR
+#define __LIB3MF_RESOURCEITERATOR
 
 #include "lib3mf_interfaces.hpp"
 #include "lib3mf_base.hpp"
@@ -46,10 +46,10 @@ namespace Impl {
 
 
 /*************************************************************************************************************************
- Class declaration of CLib3MFResourceIterator 
+ Class declaration of CResourceIterator 
 **************************************************************************************************************************/
 
-class CLib3MFResourceIterator : public virtual ILib3MFResourceIterator, public virtual CLib3MFBase {
+class CResourceIterator : public virtual IResourceIterator, public virtual CBase {
 
 private:
 	std::vector<NMR::PModelResource> m_pResources;
@@ -62,7 +62,7 @@ public:
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-	CLib3MFResourceIterator();
+	CResourceIterator();
 
 	void addResource(NMR::PModelResource pResource);
 
@@ -74,9 +74,9 @@ public:
 
 	bool MovePrevious ();
 
-	ILib3MFResource * GetCurrent ();
+	IResource * GetCurrent ();
 
-	ILib3MFResourceIterator * Clone ();
+	IResourceIterator * Clone ();
 
 };
 
@@ -84,4 +84,4 @@ public:
 }
 
 #pragma warning( pop )
-#endif // __LIB3MF_LIB3MFRESOURCEITERATOR
+#endif // __LIB3MF_RESOURCEITERATOR

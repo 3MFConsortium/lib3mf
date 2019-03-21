@@ -24,7 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CLib3MFBaseMaterialGroup
+Abstract: This is a stub class definition of CBaseMaterialGroup
 
 */
 
@@ -37,15 +37,15 @@ Abstract: This is a stub class definition of CLib3MFBaseMaterialGroup
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CLib3MFBaseMaterialGroup 
+ Class definition of CBaseMaterialGroup 
 **************************************************************************************************************************/
 
-CLib3MFBaseMaterialGroup::CLib3MFBaseMaterialGroup(NMR::PModelBaseMaterialResource pResource)
-	: CLib3MFResource(std::static_pointer_cast<NMR::CModelResource>(pResource))
+CBaseMaterialGroup::CBaseMaterialGroup(NMR::PModelBaseMaterialResource pResource)
+	: CResource(std::static_pointer_cast<NMR::CModelResource>(pResource))
 {
 }
 
-NMR::CModelBaseMaterialResource& CLib3MFBaseMaterialGroup::baseMaterialGroup()
+NMR::CModelBaseMaterialResource& CBaseMaterialGroup::baseMaterialGroup()
 {
 	NMR::CModelBaseMaterialResource* pBaseMaterialGroup = dynamic_cast<NMR::CModelBaseMaterialResource*>(resource().get());
 	if (pBaseMaterialGroup == nullptr)
@@ -53,40 +53,40 @@ NMR::CModelBaseMaterialResource& CLib3MFBaseMaterialGroup::baseMaterialGroup()
 	return *pBaseMaterialGroup;
 }
 
-Lib3MF_uint32 CLib3MFBaseMaterialGroup::GetCount ()
+Lib3MF_uint32 CBaseMaterialGroup::GetCount ()
 {
 	return baseMaterialGroup().getCount();
 }
 
-Lib3MF_uint32 CLib3MFBaseMaterialGroup::AddMaterial(const std::string & sName, const sLib3MFColor DisplayColor)
+Lib3MF_uint32 CBaseMaterialGroup::AddMaterial(const std::string & sName, const sLib3MFColor DisplayColor)
 {
 	NMR::nfColor cColor = DisplayColor.m_Red | (DisplayColor.m_Green << 8) | (DisplayColor.m_Blue << 16) | (DisplayColor.m_Alpha << 24);
 
 	return baseMaterialGroup().addBaseMaterial(sName, cColor);
 }
 
-void CLib3MFBaseMaterialGroup::RemoveMaterial (const Lib3MF_uint32 nPropertyID)
+void CBaseMaterialGroup::RemoveMaterial (const Lib3MF_uint32 nPropertyID)
 {
 	baseMaterialGroup().removeMaterial(nPropertyID);
 }
 
-std::string CLib3MFBaseMaterialGroup::GetName (const Lib3MF_uint32 nPropertyID)
+std::string CBaseMaterialGroup::GetName (const Lib3MF_uint32 nPropertyID)
 {
 	return baseMaterialGroup().getBaseMaterial(nPropertyID)->getName();
 }
 
-void CLib3MFBaseMaterialGroup::SetName (const Lib3MF_uint32 nPropertyID, const std::string & sName)
+void CBaseMaterialGroup::SetName (const Lib3MF_uint32 nPropertyID, const std::string & sName)
 {
 	baseMaterialGroup().getBaseMaterial(nPropertyID)->setName(sName);
 }
 
-void CLib3MFBaseMaterialGroup::SetDisplayColor(const Lib3MF_uint32 nPropertyID, const sLib3MFColor TheColor)
+void CBaseMaterialGroup::SetDisplayColor(const Lib3MF_uint32 nPropertyID, const sLib3MFColor TheColor)
 {
 	NMR::nfColor cColor = TheColor.m_Red | (TheColor.m_Green << 8) | (TheColor.m_Blue << 16) | (TheColor.m_Alpha << 24);
 	baseMaterialGroup().getBaseMaterial(nPropertyID)->setColor(cColor);
 }
 
-sLib3MFColor CLib3MFBaseMaterialGroup::GetDisplayColor(const Lib3MF_uint32 nPropertyID)
+sLib3MFColor CBaseMaterialGroup::GetDisplayColor(const Lib3MF_uint32 nPropertyID)
 {
 	NMR::nfColor cColor = baseMaterialGroup().getBaseMaterial(nPropertyID)->getDisplayColor();
 	sLib3MFColor c;
@@ -97,7 +97,7 @@ sLib3MFColor CLib3MFBaseMaterialGroup::GetDisplayColor(const Lib3MF_uint32 nProp
 	return c;
 }
 
-void CLib3MFBaseMaterialGroup::GetAllPropertyIDs(Lib3MF_uint64 nPropertyIDsBufferSize, Lib3MF_uint64* pPropertyIDsNeededCount, Lib3MF_uint32 * pPropertyIDsBuffer)
+void CBaseMaterialGroup::GetAllPropertyIDs(Lib3MF_uint64 nPropertyIDsBufferSize, Lib3MF_uint64* pPropertyIDsNeededCount, Lib3MF_uint32 * pPropertyIDsBuffer)
 {
 	Lib3MF_uint32 nMaterialCount = baseMaterialGroup().getCount();
 

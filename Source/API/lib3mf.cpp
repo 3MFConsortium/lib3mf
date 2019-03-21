@@ -47,7 +47,7 @@ Interface version: 2.0.0
 
 using namespace Lib3MF::Impl;
 
-void CLib3MFWrapper::GetLibraryVersion(Lib3MF_uint32 & nMajor, Lib3MF_uint32 & nMinor, Lib3MF_uint32 & nMicro, std::string & sPreReleaseInfo, std::string & sBuildInfo)
+void CWrapper::GetLibraryVersion(Lib3MF_uint32 & nMajor, Lib3MF_uint32 & nMinor, Lib3MF_uint32 & nMicro, std::string & sPreReleaseInfo, std::string & sBuildInfo)
 {
 	nMajor = LIB3MF_VERSION_MAJOR;
 	nMinor = LIB3MF_VERSION_MINOR;
@@ -56,7 +56,7 @@ void CLib3MFWrapper::GetLibraryVersion(Lib3MF_uint32 & nMajor, Lib3MF_uint32 & n
 	sBuildInfo = LIB3MF_VERSION_BUILDINFO;
 }
 
-void CLib3MFWrapper::GetSpecificationVersion (const std::string & sSpecificationURL, bool & bIsSupported, Lib3MF_uint32 & nMajor, Lib3MF_uint32 & nMinor, Lib3MF_uint32 & nMicro)
+void CWrapper::GetSpecificationVersion (const std::string & sSpecificationURL, bool & bIsSupported, Lib3MF_uint32 & nMajor, Lib3MF_uint32 & nMinor, Lib3MF_uint32 & nMicro)
 {
 	if (!sSpecificationURL.compare(std::string(XML_3MF_NAMESPACE_CORESPEC100))) {
 		nMajor = NMR_SPECVERSION_MAJOR;
@@ -89,17 +89,17 @@ void CLib3MFWrapper::GetSpecificationVersion (const std::string & sSpecification
 	}
 }
 
-ILib3MFModel * CLib3MFWrapper::CreateModel ()
+IModel * CWrapper::CreateModel ()
 {
-	return new CLib3MFModel();
+	return new CModel();
 }
 
-void CLib3MFWrapper::Release (ILib3MFBase* pInstance)
+void CWrapper::Release (IBase* pInstance)
 {
 	delete pInstance;
 }
 
-void CLib3MFWrapper::SetJournal (const std::string & sJournalPath)
+void CWrapper::SetJournal (const std::string & sJournalPath)
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_SHOULDNOTBECALLED);
 }
@@ -133,7 +133,7 @@ NMR::ProgressIdentifier convertProgressIdentifier(const eLib3MFProgressIdentifie
 	//}
 }
 
-bool CLib3MFWrapper::GetLastError (ILib3MFBase* pInstance, std::string & sLastErrorString)
+bool CWrapper::GetLastError (IBase* pInstance, std::string & sLastErrorString)
 {
 	if (pInstance != nullptr)
 		return pInstance->GetLastErrorMessage(sLastErrorString);
@@ -141,12 +141,12 @@ bool CLib3MFWrapper::GetLastError (ILib3MFBase* pInstance, std::string & sLastEr
 	return false;
 }
 
-void CLib3MFWrapper::RetrieveProgressMessage (const eLib3MFProgressIdentifier eProrgessIdentifier, std::string & sProgressMessage)
+void CWrapper::RetrieveProgressMessage (const eLib3MFProgressIdentifier eProrgessIdentifier, std::string & sProgressMessage)
 {
 	NMR::CProgressMonitor::GetProgressMessage(convertProgressIdentifier(eProrgessIdentifier), sProgressMessage);
 }
 
-sLib3MFColor CLib3MFWrapper::RGBAToColor (const Lib3MF_uint8 nRed, const Lib3MF_uint8 nGreen, const Lib3MF_uint8 nBlue, const Lib3MF_uint8 nAlpha)
+sLib3MFColor CWrapper::RGBAToColor (const Lib3MF_uint8 nRed, const Lib3MF_uint8 nGreen, const Lib3MF_uint8 nBlue, const Lib3MF_uint8 nAlpha)
 {
 	sLib3MFColor s;
 	s.m_Red = nRed;
@@ -156,7 +156,7 @@ sLib3MFColor CLib3MFWrapper::RGBAToColor (const Lib3MF_uint8 nRed, const Lib3MF_
 	return s;
 }
 
-sLib3MFColor CLib3MFWrapper::FloatRGBAToColor (const Lib3MF_single fRed, const Lib3MF_single fGreen, const Lib3MF_single fBlue, const Lib3MF_single fAlpha)
+sLib3MFColor CWrapper::FloatRGBAToColor (const Lib3MF_single fRed, const Lib3MF_single fGreen, const Lib3MF_single fBlue, const Lib3MF_single fAlpha)
 {
 	sLib3MFColor s;
 	s.m_Red = (Lib3MF_uint8)std::round(std::max(std::min(fRed, 1.f), 0.f) * 255.0f);
@@ -166,7 +166,7 @@ sLib3MFColor CLib3MFWrapper::FloatRGBAToColor (const Lib3MF_single fRed, const L
 	return s;
 }
 
-void CLib3MFWrapper::ColorToRGBA (const sLib3MFColor TheColor, Lib3MF_uint8 & nRed, Lib3MF_uint8 & nGreen, Lib3MF_uint8 & nBlue, Lib3MF_uint8 & nAlpha)
+void CWrapper::ColorToRGBA (const sLib3MFColor TheColor, Lib3MF_uint8 & nRed, Lib3MF_uint8 & nGreen, Lib3MF_uint8 & nBlue, Lib3MF_uint8 & nAlpha)
 {
 	nRed = TheColor.m_Red;
 	nGreen = TheColor.m_Green;
@@ -174,7 +174,7 @@ void CLib3MFWrapper::ColorToRGBA (const sLib3MFColor TheColor, Lib3MF_uint8 & nR
 	nAlpha = TheColor.m_Alpha;
 }
 
-void CLib3MFWrapper::ColorToFloatRGBA (const sLib3MFColor TheColor, Lib3MF_single & fRed, Lib3MF_single & fGreen, Lib3MF_single & fBlue, Lib3MF_single & fAlpha)
+void CWrapper::ColorToFloatRGBA (const sLib3MFColor TheColor, Lib3MF_single & fRed, Lib3MF_single & fGreen, Lib3MF_single & fBlue, Lib3MF_single & fAlpha)
 {
 	fRed = TheColor.m_Red / 255.f;
 	fGreen = TheColor.m_Green / 255.f;
@@ -182,7 +182,7 @@ void CLib3MFWrapper::ColorToFloatRGBA (const sLib3MFColor TheColor, Lib3MF_singl
 	fAlpha = TheColor.m_Alpha / 255.f;
 }
 
-sLib3MFTransform CLib3MFWrapper::GetIdentityTransform ()
+sLib3MFTransform CWrapper::GetIdentityTransform ()
 {
 	int i, j;
 	sLib3MFTransform Transform;
@@ -195,7 +195,7 @@ sLib3MFTransform CLib3MFWrapper::GetIdentityTransform ()
 
 }
 
-sLib3MFTransform CLib3MFWrapper::GetUniformScaleTransform (const Lib3MF_single fFactor)
+sLib3MFTransform CWrapper::GetUniformScaleTransform (const Lib3MF_single fFactor)
 {
 	int i, j;
 	sLib3MFTransform Transform;
@@ -207,7 +207,7 @@ sLib3MFTransform CLib3MFWrapper::GetUniformScaleTransform (const Lib3MF_single f
 	return Transform;
 }
 
-sLib3MFTransform CLib3MFWrapper::GetScaleTransform (const Lib3MF_single fFactorX, const Lib3MF_single fFactorY, const Lib3MF_single fFactorZ)
+sLib3MFTransform CWrapper::GetScaleTransform (const Lib3MF_single fFactorX, const Lib3MF_single fFactorY, const Lib3MF_single fFactorZ)
 {
 	int i, j;
 	sLib3MFTransform Transform;
@@ -224,7 +224,7 @@ sLib3MFTransform CLib3MFWrapper::GetScaleTransform (const Lib3MF_single fFactorX
 
 }
 
-sLib3MFTransform CLib3MFWrapper::GetTranslationTransform(const Lib3MF_single fVectorX, const Lib3MF_single fVectorY, const Lib3MF_single fVectorZ)
+sLib3MFTransform CWrapper::GetTranslationTransform(const Lib3MF_single fVectorX, const Lib3MF_single fVectorY, const Lib3MF_single fVectorZ)
 {
 	int i, j;
 	sLib3MFTransform Transform;

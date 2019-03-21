@@ -24,13 +24,13 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CLib3MFComponent
+Abstract: This is the class declaration of CComponent
 
 */
 
 
-#ifndef __LIB3MF_LIB3MFCOMPONENT
-#define __LIB3MF_LIB3MFCOMPONENT
+#ifndef __LIB3MF_COMPONENT
+#define __LIB3MF_COMPONENT
 
 #include "lib3mf_interfaces.hpp"
 #include "lib3mf_base.hpp"
@@ -46,10 +46,10 @@ namespace Impl {
 
 
 /*************************************************************************************************************************
- Class declaration of CLib3MFComponent 
+ Class declaration of CComponent 
 **************************************************************************************************************************/
 
-class CLib3MFComponent : public virtual ILib3MFComponent, public virtual CLib3MFBase {
+class CComponent : public virtual IComponent, public virtual CBase {
 private:
 
 	/**
@@ -68,13 +68,13 @@ public:
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-	CLib3MFComponent(NMR::PModelComponent pComponent);
+	CComponent(NMR::PModelComponent pComponent);
 
 	/**
 	* Public member functions to implement.
 	*/
 
-	ILib3MFObject * GetObjectResource ();
+	IObject * GetObjectResource ();
 
 	Lib3MF_uint32 GetObjectResourceID ();
 
@@ -93,4 +93,4 @@ public:
 }
 
 #pragma warning( pop )
-#endif // __LIB3MF_LIB3MFCOMPONENT
+#endif // __LIB3MF_COMPONENT

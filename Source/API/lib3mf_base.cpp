@@ -24,7 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CLib3MFBase
+Abstract: This is a stub class definition of CBase
 
 */
 
@@ -37,10 +37,10 @@ Abstract: This is a stub class definition of CLib3MFBase
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CLib3MFBase 
+ Class definition of CBase 
 **************************************************************************************************************************/
 
-bool CLib3MFBase::GetLastErrorMessage (std::string & sErrorMessage)
+bool CBase::GetLastErrorMessage (std::string & sErrorMessage)
 {
 	auto iIterator = m_errors.rbegin();
 	if (iIterator != m_errors.rend()) {
@@ -52,12 +52,12 @@ bool CLib3MFBase::GetLastErrorMessage (std::string & sErrorMessage)
 	}
 }
 
-void CLib3MFBase::ClearErrorMessages ()
+void CBase::ClearErrorMessages ()
 {
 	m_errors.clear();
 }
 
-void CLib3MFBase::RegisterErrorMessage (const std::string & sErrorMessage)
+void CBase::RegisterErrorMessage (const std::string & sErrorMessage)
 {
 	m_errors.push_back(sErrorMessage);
 }

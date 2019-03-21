@@ -24,13 +24,13 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CLib3MFMultiPropertyGroup
+Abstract: This is the class declaration of CMultiPropertyGroup
 
 */
 
 
-#ifndef __LIB3MF_LIB3MFMULTIPROPERTYGROUP
-#define __LIB3MF_LIB3MFMULTIPROPERTYGROUP
+#ifndef __LIB3MF_MULTIPROPERTYGROUP
+#define __LIB3MF_MULTIPROPERTYGROUP
 
 #include "lib3mf_interfaces.hpp"
 
@@ -48,10 +48,10 @@ namespace Impl {
 
 
 /*************************************************************************************************************************
- Class declaration of CLib3MFMultiPropertyGroup 
+ Class declaration of CMultiPropertyGroup 
 **************************************************************************************************************************/
 
-class CLib3MFMultiPropertyGroup : public virtual ILib3MFMultiPropertyGroup, public virtual CLib3MFResource {
+class CMultiPropertyGroup : public virtual IMultiPropertyGroup, public virtual CResource {
 private:
 
 	/**
@@ -71,7 +71,7 @@ public:
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-	CLib3MFMultiPropertyGroup(NMR::PModelMultiPropertyGroupResource pResource);
+	CMultiPropertyGroup(NMR::PModelMultiPropertyGroupResource pResource);
 
 	/**
 	* Public member functions to implement.
@@ -103,4 +103,4 @@ public:
 } // namespace Lib3MF
 
 #pragma warning( pop )
-#endif // __LIB3MF_LIB3MFMULTIPROPERTYGROUP
+#endif // __LIB3MF_MULTIPROPERTYGROUP

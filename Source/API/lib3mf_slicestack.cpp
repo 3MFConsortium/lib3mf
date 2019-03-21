@@ -24,7 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CLib3MFSliceStack
+Abstract: This is a stub class definition of CSliceStack
 
 */
 
@@ -38,47 +38,47 @@ Abstract: This is a stub class definition of CLib3MFSliceStack
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CLib3MFSliceStack 
+ Class definition of CSliceStack 
 **************************************************************************************************************************/
 
-CLib3MFSliceStack::CLib3MFSliceStack(NMR::PModelSliceStack pSliceStack):
-	CLib3MFResource(pSliceStack)
+CSliceStack::CSliceStack(NMR::PModelSliceStack pSliceStack):
+	CResource(pSliceStack)
 {
 }
 
-NMR::PModelSliceStack CLib3MFSliceStack::sliceStack()
+NMR::PModelSliceStack CSliceStack::sliceStack()
 {
 	return std::dynamic_pointer_cast<NMR::CModelSliceStack>(resource());
 }
 
-double CLib3MFSliceStack::GetBottomZ()
+double CSliceStack::GetBottomZ()
 {
 	return sliceStack()->getZBottom();
 }
 
-Lib3MF_uint64 CLib3MFSliceStack::GetSliceCount ()
+Lib3MF_uint64 CSliceStack::GetSliceCount ()
 {
 	return sliceStack()->getSliceCount();
 }
 
-ILib3MFSlice * CLib3MFSliceStack::GetSlice (const Lib3MF_uint64 nSliceIndex)
+ISlice * CSliceStack::GetSlice (const Lib3MF_uint64 nSliceIndex)
 {
 	NMR::PSlice pSlice = sliceStack()->getSlice(Lib3MF_uint32(nSliceIndex));
-	return new CLib3MFSlice(pSlice);
+	return new CSlice(pSlice);
 }
 
-ILib3MFSlice * CLib3MFSliceStack::AddSlice (const double fZTop)
+ISlice * CSliceStack::AddSlice (const double fZTop)
 {
 	NMR::PSlice pSlice = sliceStack()->AddSlice(fZTop);
-	return new CLib3MFSlice(pSlice);
+	return new CSlice(pSlice);
 }
 
-Lib3MF_uint64 CLib3MFSliceStack::GetSliceRefCount()
+Lib3MF_uint64 CSliceStack::GetSliceRefCount()
 {
 	return sliceStack()->getSliceRefCount();
 }
 
-void CLib3MFSliceStack::AddSliceStackReference(ILib3MFSliceStack* pTheSliceStack)
+void CSliceStack::AddSliceStackReference(ISliceStack* pTheSliceStack)
 {
 	Lib3MF_uint32 nID = pTheSliceStack->GetResourceID();
 	NMR::PModelResource pResource = sliceStack()->getModel()->findResource(nID);
@@ -89,23 +89,23 @@ void CLib3MFSliceStack::AddSliceStackReference(ILib3MFSliceStack* pTheSliceStack
 	sliceStack()->AddSliceRef(pModelSliceStack);
 }
 
-ILib3MFSliceStack * CLib3MFSliceStack::GetSliceStackReference(const Lib3MF_uint64 nSliceRefIndex)
+ISliceStack * CSliceStack::GetSliceStackReference(const Lib3MF_uint64 nSliceRefIndex)
 {
 	NMR::PModelSliceStack pModelSliceStack = sliceStack()->getSliceRef(Lib3MF_uint32(nSliceRefIndex));
-	return new CLib3MFSliceStack(pModelSliceStack);
+	return new CSliceStack(pModelSliceStack);
 }
 
-void CLib3MFSliceStack::CollapseSliceReferences()
+void CSliceStack::CollapseSliceReferences()
 {
 	sliceStack()->CollapseSliceReferences();
 }
 
-void CLib3MFSliceStack::SetOwnPath(const std::string & sPath)
+void CSliceStack::SetOwnPath(const std::string & sPath)
 {
 	sliceStack()->SetOwnPath(sPath);
 }
 
-std::string CLib3MFSliceStack::GetOwnPath()
+std::string CSliceStack::GetOwnPath()
 {
 	return sliceStack()->OwnPath();
 }

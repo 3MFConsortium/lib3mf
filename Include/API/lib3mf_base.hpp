@@ -24,13 +24,13 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CLib3MFBase
+Abstract: This is the class declaration of CBase
 
 */
 
 
-#ifndef __LIB3MF_LIB3MFBASE
-#define __LIB3MF_LIB3MFBASE
+#ifndef __LIB3MF_BASE
+#define __LIB3MF_BASE
 
 #include "lib3mf_interfaces.hpp"
 #include <vector>
@@ -44,10 +44,10 @@ namespace Impl {
 
 
 /*************************************************************************************************************************
- Class declaration of CLib3MFBase 
+ Class declaration of CBase 
 **************************************************************************************************************************/
 
-class CLib3MFBase : public virtual ILib3MFBase {
+class CBase : public virtual IBase {
 private:
 
 	std::vector<std::string> m_errors;
@@ -84,4 +84,4 @@ public:
 } // namespace Impl
 } // namespace Lib3MF
 
-#endif // __LIB3MF_LIB3MFBASE
+#endif // __LIB3MF_BASE

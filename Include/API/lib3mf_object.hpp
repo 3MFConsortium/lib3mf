@@ -24,13 +24,13 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CLib3MFObject
+Abstract: This is the class declaration of CObject
 
 */
 
 
-#ifndef __LIB3MF_LIB3MFOBJECT
-#define __LIB3MF_LIB3MFOBJECT
+#ifndef __LIB3MF_OBJECT
+#define __LIB3MF_OBJECT
 
 #include "lib3mf_interfaces.hpp"
 
@@ -47,10 +47,10 @@ namespace Impl {
 
 
 /*************************************************************************************************************************
- Class declaration of CLib3MFObject 
+ Class declaration of CObject 
 **************************************************************************************************************************/
 
-class CLib3MFObject : public virtual ILib3MFObject, public virtual CLib3MFResource {
+class CObject : public virtual IObject, public virtual CResource {
 private:
 
 	/**
@@ -65,10 +65,10 @@ public:
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-	CLib3MFObject(NMR::PModelResource pResource);
-	CLib3MFObject() = delete;
+	CObject(NMR::PModelResource pResource);
+	CObject() = delete;
 
-	static ILib3MFObject* fnCreateObjectFromModelResource(NMR::PModelResource pResource, bool bFailIfUnkownClass);
+	static IObject* fnCreateObjectFromModelResource(NMR::PModelResource pResource, bool bFailIfUnkownClass);
 
 	/**
 	* Public member functions to implement.
@@ -90,13 +90,13 @@ public:
 
 	virtual bool IsComponentsObject ();
 
-	virtual ILib3MFMeshObject * AsMeshObject();
+	virtual IMeshObject * AsMeshObject();
 
-	virtual ILib3MFComponentsObject * AsComponentsObject();
+	virtual IComponentsObject * AsComponentsObject();
 
 	bool IsValid ();
 
-	ILib3MFMetaDataGroup * GetMetaDataGroup ();
+	IMetaDataGroup * GetMetaDataGroup ();
 
 	std::string GetUUID(bool & bHasUUID);
 
@@ -110,9 +110,9 @@ public:
 
 	virtual void ClearSliceStack();
 
-	virtual ILib3MFSliceStack * GetSliceStack();
+	virtual ISliceStack * GetSliceStack();
 
-	virtual void AssignSliceStack(ILib3MFSliceStack* pSliceStackInstance);
+	virtual void AssignSliceStack(ISliceStack* pSliceStackInstance);
 
 };
 
@@ -120,4 +120,4 @@ public:
 }
 
 #pragma warning( pop )
-#endif // __LIB3MF_LIB3MFOBJECT
+#endif // __LIB3MF_OBJECT

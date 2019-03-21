@@ -24,7 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CLib3MFCompositeMaterialsIterator
+Abstract: This is a stub class definition of CCompositeMaterialsIterator
 
 */
 
@@ -37,12 +37,12 @@ Abstract: This is a stub class definition of CLib3MFCompositeMaterialsIterator
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CLib3MFCompositeMaterialsIterator 
+ Class definition of CCompositeMaterialsIterator 
 **************************************************************************************************************************/
 
-ILib3MFCompositeMaterials * CLib3MFCompositeMaterialsIterator::GetCurrentCompositeMaterials ()
+ICompositeMaterials * CCompositeMaterialsIterator::GetCurrentCompositeMaterials ()
 {
 	// Create specific API class
-	return new CLib3MFCompositeMaterials(std::dynamic_pointer_cast<NMR::CModelCompositeMaterialsResource>(GetCurrentResource()));
+	return new CCompositeMaterials(std::dynamic_pointer_cast<NMR::CModelCompositeMaterialsResource>(GetCurrentResource()));
 }
 

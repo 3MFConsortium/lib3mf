@@ -24,7 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CLib3MFCompositeMaterials
+Abstract: This is a stub class definition of CCompositeMaterials
 
 */
 
@@ -37,18 +37,18 @@ Abstract: This is a stub class definition of CLib3MFCompositeMaterials
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CLib3MFCompositeMaterials 
+ Class definition of CCompositeMaterials 
 **************************************************************************************************************************/
 
 
-CLib3MFCompositeMaterials::CLib3MFCompositeMaterials(NMR::PModelCompositeMaterialsResource pResource)
-	: CLib3MFResource(std::static_pointer_cast<NMR::CModelResource>(pResource))
+CCompositeMaterials::CCompositeMaterials(NMR::PModelCompositeMaterialsResource pResource)
+	: CResource(std::static_pointer_cast<NMR::CModelResource>(pResource))
 {
 
 }
 
 
-NMR::CModelCompositeMaterialsResource& CLib3MFCompositeMaterials::compositeMaterials()
+NMR::CModelCompositeMaterialsResource& CCompositeMaterials::compositeMaterials()
 {
 	NMR::CModelCompositeMaterialsResource* pCompositeMaterials = dynamic_cast<NMR::CModelCompositeMaterialsResource*>(resource().get());
 	if (pCompositeMaterials == nullptr)
@@ -56,12 +56,12 @@ NMR::CModelCompositeMaterialsResource& CLib3MFCompositeMaterials::compositeMater
 	return *pCompositeMaterials;
 }
 
-Lib3MF_uint32 CLib3MFCompositeMaterials::GetCount ()
+Lib3MF_uint32 CCompositeMaterials::GetCount ()
 {
 	return compositeMaterials().getCount();
 }
 
-void CLib3MFCompositeMaterials::GetAllPropertyIDs (Lib3MF_uint64 nPropertyIDsBufferSize, Lib3MF_uint64* pPropertyIDsNeededCount, Lib3MF_uint32 * pPropertyIDsBuffer)
+void CCompositeMaterials::GetAllPropertyIDs (Lib3MF_uint64 nPropertyIDsBufferSize, Lib3MF_uint64* pPropertyIDsNeededCount, Lib3MF_uint32 * pPropertyIDsBuffer)
 {
 	Lib3MF_uint32 nCompositesCount = compositeMaterials().getCount();
 
@@ -85,12 +85,12 @@ void CLib3MFCompositeMaterials::GetAllPropertyIDs (Lib3MF_uint64 nPropertyIDsBuf
 	}
 }
 
-ILib3MFBaseMaterialGroup * CLib3MFCompositeMaterials::GetBaseMaterialGroup ()
+IBaseMaterialGroup * CCompositeMaterials::GetBaseMaterialGroup ()
 {
-	return new CLib3MFBaseMaterialGroup(compositeMaterials().getBaseMaterialResource());
+	return new CBaseMaterialGroup(compositeMaterials().getBaseMaterialResource());
 }
 
-Lib3MF_uint32 CLib3MFCompositeMaterials::AddComposite(const Lib3MF_uint64 nCompositeBufferSize, const sLib3MFCompositeConstituent * pCompositeBuffer)
+Lib3MF_uint32 CCompositeMaterials::AddComposite(const Lib3MF_uint64 nCompositeBufferSize, const sLib3MFCompositeConstituent * pCompositeBuffer)
 {
 	NMR::PModelComposite constituents = std::make_shared<NMR::CModelComposite>();
 	constituents->resize(nCompositeBufferSize);
@@ -101,12 +101,12 @@ Lib3MF_uint32 CLib3MFCompositeMaterials::AddComposite(const Lib3MF_uint64 nCompo
 	return compositeMaterials().addComposite(constituents);
 }
 
-void CLib3MFCompositeMaterials::RemoveComposite (const Lib3MF_uint32 nPropertyID)
+void CCompositeMaterials::RemoveComposite (const Lib3MF_uint32 nPropertyID)
 {
 	compositeMaterials().removeComposite(nPropertyID);
 }
 
-void CLib3MFCompositeMaterials::GetComposite(const Lib3MF_uint32 nPropertyID, Lib3MF_uint64 nCompositeBufferSize, Lib3MF_uint64* pCompositeNeededCount, sLib3MFCompositeConstituent * pCompositeBuffer)
+void CCompositeMaterials::GetComposite(const Lib3MF_uint32 nPropertyID, Lib3MF_uint64 nCompositeBufferSize, Lib3MF_uint64* pCompositeNeededCount, sLib3MFCompositeConstituent * pCompositeBuffer)
 {
 	NMR::PModelComposite constituents = compositeMaterials().getComposite(nPropertyID);
 	

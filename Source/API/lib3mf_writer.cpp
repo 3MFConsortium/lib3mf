@@ -24,7 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CLib3MFWriter
+Abstract: This is a stub class definition of CWriter
 
 */
 
@@ -44,10 +44,10 @@ Abstract: This is a stub class definition of CLib3MFWriter
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CLib3MFWriter 
+ Class definition of CWriter 
 **************************************************************************************************************************/
 
-CLib3MFWriter::CLib3MFWriter(std::string sWriterClass, NMR::PModel model)
+CWriter::CWriter(std::string sWriterClass, NMR::PModel model)
 {
 	m_pWriter = nullptr;
 
@@ -63,12 +63,12 @@ CLib3MFWriter::CLib3MFWriter(std::string sWriterClass, NMR::PModel model)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_WRITERCLASSUNKNOWN);
 }
 
-NMR::CModelWriter& CLib3MFWriter::writer()
+NMR::CModelWriter& CWriter::writer()
 {
 	return *m_pWriter;
 }
 
-void CLib3MFWriter::WriteToFile (const std::string & sFilename)
+void CWriter::WriteToFile (const std::string & sFilename)
 {
 	setlocale(LC_ALL, "C");
 	NMR::PExportStream pStream = NMR::fnCreateExportStreamInstance(sFilename.c_str());
@@ -83,7 +83,7 @@ void CLib3MFWriter::WriteToFile (const std::string & sFilename)
 	}
 }
 
-Lib3MF_uint64 CLib3MFWriter::GetStreamSize ()
+Lib3MF_uint64 CWriter::GetStreamSize ()
 {
 	// Write to a special dummy stream just to calculate the size
 	NMR::PExportStreamDummy pStream = std::make_shared<NMR::CExportStreamDummy>();
@@ -100,7 +100,7 @@ Lib3MF_uint64 CLib3MFWriter::GetStreamSize ()
 	return pStream->getDataSize();
 }
 
-void CLib3MFWriter::WriteToBuffer (Lib3MF_uint64 nBufferBufferSize, Lib3MF_uint64* pBufferNeededCount, Lib3MF_uint8 * pBufferBuffer)
+void CWriter::WriteToBuffer (Lib3MF_uint64 nBufferBufferSize, Lib3MF_uint64* pBufferNeededCount, Lib3MF_uint8 * pBufferBuffer)
 {
 	NMR::PExportStreamMemory pStream = std::make_shared<NMR::CExportStreamMemory>();
 	try {
@@ -123,7 +123,7 @@ void CLib3MFWriter::WriteToBuffer (Lib3MF_uint64 nBufferBufferSize, Lib3MF_uint6
 	}
 }
 
-void CLib3MFWriter::WriteToCallback(const Lib3MFWriteCallback pTheWriteCallback, const Lib3MFSeekCallback pTheSeekCallback, const Lib3MF_pvoid pUserData)
+void CWriter::WriteToCallback(const Lib3MFWriteCallback pTheWriteCallback, const Lib3MFSeekCallback pTheSeekCallback, const Lib3MF_pvoid pUserData)
 {
 	NMR::ExportStream_WriteCallbackType lambdaWriteCallback =
 		[pTheWriteCallback](NMR::nfByte* pData, NMR::nfUint64 cbBytes, void* pUserData)
@@ -151,7 +151,7 @@ void CLib3MFWriter::WriteToCallback(const Lib3MFWriteCallback pTheWriteCallback,
 	}
 }
 
-void CLib3MFWriter::SetProgressCallback(const Lib3MFProgressCallback callback, const Lib3MF_pvoid pUserData)
+void CWriter::SetProgressCallback(const Lib3MFProgressCallback callback, const Lib3MF_pvoid pUserData)
 {
 	NMR::Lib3MFProgressCallback lambdaCallback = 
 		[callback](int progressStep, NMR::ProgressIdentifier identifier, void* pUserData)

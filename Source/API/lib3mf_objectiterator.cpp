@@ -24,7 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CLib3MFObjectIterator
+Abstract: This is a stub class definition of CObjectIterator
 
 */
 
@@ -37,11 +37,11 @@ Abstract: This is a stub class definition of CLib3MFObjectIterator
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CLib3MFObjectIterator 
+ Class definition of CObjectIterator 
 **************************************************************************************************************************/
 
-ILib3MFObject * CLib3MFObjectIterator::GetCurrentObject ()
+IObject * CObjectIterator::GetCurrentObject ()
 {
-	return CLib3MFObject::fnCreateObjectFromModelResource(GetCurrentResource(), true);
+	return CObject::fnCreateObjectFromModelResource(GetCurrentResource(), true);
 }
 

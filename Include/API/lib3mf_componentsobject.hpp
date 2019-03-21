@@ -24,13 +24,13 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CLib3MFComponentsObject
+Abstract: This is the class declaration of CComponentsObject
 
 */
 
 
-#ifndef __LIB3MF_LIB3MFCOMPONENTSOBJECT
-#define __LIB3MF_LIB3MFCOMPONENTSOBJECT
+#ifndef __LIB3MF_COMPONENTSOBJECT
+#define __LIB3MF_COMPONENTSOBJECT
 
 #include "lib3mf_interfaces.hpp"
 
@@ -48,10 +48,10 @@ namespace Impl {
 
 
 /*************************************************************************************************************************
- Class declaration of CLib3MFComponentsObject 
+ Class declaration of CComponentsObject 
 **************************************************************************************************************************/
 
-class CLib3MFComponentsObject : public virtual ILib3MFComponentsObject, public virtual CLib3MFObject {
+class CComponentsObject : public virtual IComponentsObject, public virtual CObject {
 private:
 
 	/**
@@ -67,15 +67,15 @@ public:
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-	CLib3MFComponentsObject(NMR::PModelResource pResource);
+	CComponentsObject(NMR::PModelResource pResource);
 
 	/**
 	* Public member functions to implement.
 	*/
 
-	ILib3MFComponent * AddComponent (ILib3MFObject* pObjectResource, const sLib3MFTransform Transform);
+	IComponent * AddComponent (IObject* pObjectResource, const sLib3MFTransform Transform);
 
-	ILib3MFComponent * GetComponent (const Lib3MF_uint32 nIndex);
+	IComponent * GetComponent (const Lib3MF_uint32 nIndex);
 
 	Lib3MF_uint32 GetComponentCount ();
 
@@ -88,4 +88,4 @@ public:
 }
 }
 
-#endif // __LIB3MF_LIB3MFCOMPONENTSOBJECT
+#endif // __LIB3MF_COMPONENTSOBJECT

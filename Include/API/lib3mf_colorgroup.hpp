@@ -24,13 +24,13 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CLib3MFColorGroup
+Abstract: This is the class declaration of CColorGroup
 
 */
 
 
-#ifndef __LIB3MF_LIB3MFCOLORGROUP
-#define __LIB3MF_LIB3MFCOLORGROUP
+#ifndef __LIB3MF_COLORGROUP
+#define __LIB3MF_COLORGROUP
 
 #include "lib3mf_interfaces.hpp"
 
@@ -47,10 +47,10 @@ namespace Impl {
 
 
 /*************************************************************************************************************************
- Class declaration of CLib3MFColorGroup 
+ Class declaration of CColorGroup 
 **************************************************************************************************************************/
 
-class CLib3MFColorGroup : public virtual ILib3MFColorGroup, public virtual CLib3MFResource {
+class CColorGroup : public virtual IColorGroup, public virtual CResource {
 private:
 
 	/**
@@ -69,7 +69,7 @@ public:
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-	CLib3MFColorGroup(NMR::PModelColorGroupResource pResource);
+	CColorGroup(NMR::PModelColorGroupResource pResource);
 
 
 	/**
@@ -94,4 +94,4 @@ public:
 } // namespace Lib3MF
 
 #pragma warning( pop )
-#endif // __LIB3MF_LIB3MFCOLORGROUP
+#endif // __LIB3MF_COLORGROUP

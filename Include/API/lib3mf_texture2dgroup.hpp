@@ -24,13 +24,13 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CLib3MFTexture2DGroup
+Abstract: This is the class declaration of CTexture2DGroup
 
 */
 
 
-#ifndef __LIB3MF_LIB3MFTEXTURE2DGROUP
-#define __LIB3MF_LIB3MFTEXTURE2DGROUP
+#ifndef __LIB3MF_TEXTURE2DGROUP
+#define __LIB3MF_TEXTURE2DGROUP
 
 #include "lib3mf_interfaces.hpp"
 
@@ -47,10 +47,10 @@ namespace Impl {
 
 
 /*************************************************************************************************************************
- Class declaration of CLib3MFTexture2DGroup 
+ Class declaration of CTexture2DGroup 
 **************************************************************************************************************************/
 
-class CLib3MFTexture2DGroup : public virtual ILib3MFTexture2DGroup, public virtual CLib3MFResource {
+class CTexture2DGroup : public virtual ITexture2DGroup, public virtual CResource {
 private:
 
 	/**
@@ -69,14 +69,14 @@ public:
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-	CLib3MFTexture2DGroup(NMR::PModelTexture2DGroupResource pResource);
+	CTexture2DGroup(NMR::PModelTexture2DGroupResource pResource);
 
 
 	/**
 	* Public member functions to implement.
 	*/
 
-	ILib3MFTexture2D * GetTexture2D();
+	ITexture2D * GetTexture2D();
 
 	Lib3MF_uint32 GetCount ();
 
@@ -94,4 +94,4 @@ public:
 } // namespace Lib3MF
 
 #pragma warning( pop )
-#endif // __LIB3MF_LIB3MFTEXTURE2DGROUP
+#endif // __LIB3MF_TEXTURE2DGROUP

@@ -24,7 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CLib3MFSliceStackIterator
+Abstract: This is a stub class definition of CSliceStackIterator
 
 */
 
@@ -37,11 +37,11 @@ Abstract: This is a stub class definition of CLib3MFSliceStackIterator
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CLib3MFSliceStackIterator 
+ Class definition of CSliceStackIterator 
 **************************************************************************************************************************/
 
-ILib3MFSliceStack * CLib3MFSliceStackIterator::GetCurrentSliceStack ()
+ISliceStack * CSliceStackIterator::GetCurrentSliceStack ()
 {
-	return new CLib3MFSliceStack(std::dynamic_pointer_cast<NMR::CModelSliceStack>(GetCurrentResource()));
+	return new CSliceStack(std::dynamic_pointer_cast<NMR::CModelSliceStack>(GetCurrentResource()));
 }
 

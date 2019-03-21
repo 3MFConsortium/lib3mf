@@ -24,7 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CLib3MFTexture2DIterator
+Abstract: This is a stub class definition of CTexture2DIterator
 
 */
 
@@ -36,12 +36,12 @@ Abstract: This is a stub class definition of CLib3MFTexture2DIterator
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CLib3MFTexture2DIterator 
+ Class definition of CTexture2DIterator 
 **************************************************************************************************************************/
 
-ILib3MFTexture2DGroup * CLib3MFTexture2DGroupIterator::GetCurrentTexture2DGroup()
+ITexture2DGroup * CTexture2DGroupIterator::GetCurrentTexture2DGroup()
 {
 	// Create specific API class
-	return new CLib3MFTexture2DGroup(std::dynamic_pointer_cast<NMR::CModelTexture2DGroupResource>(GetCurrentResource()));
+	return new CTexture2DGroup(std::dynamic_pointer_cast<NMR::CModelTexture2DGroupResource>(GetCurrentResource()));
 }
 

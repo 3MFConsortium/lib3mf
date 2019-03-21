@@ -24,13 +24,13 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CLib3MFCompositeMaterials
+Abstract: This is the class declaration of CCompositeMaterials
 
 */
 
 
-#ifndef __LIB3MF_LIB3MFCOMPOSITEMATERIALS
-#define __LIB3MF_LIB3MFCOMPOSITEMATERIALS
+#ifndef __LIB3MF_COMPOSITEMATERIALS
+#define __LIB3MF_COMPOSITEMATERIALS
 
 #include "lib3mf_interfaces.hpp"
 
@@ -47,10 +47,10 @@ namespace Impl {
 
 
 /*************************************************************************************************************************
- Class declaration of CLib3MFCompositeMaterials 
+ Class declaration of CCompositeMaterials 
 **************************************************************************************************************************/
 
-class CLib3MFCompositeMaterials : public virtual ILib3MFCompositeMaterials, public virtual CLib3MFResource {
+class CCompositeMaterials : public virtual ICompositeMaterials, public virtual CResource {
 private:
 
 	/**
@@ -69,7 +69,7 @@ public:
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-	CLib3MFCompositeMaterials(NMR::PModelCompositeMaterialsResource pResource);
+	CCompositeMaterials(NMR::PModelCompositeMaterialsResource pResource);
 
 
 	/**
@@ -80,7 +80,7 @@ public:
 
 	void GetAllPropertyIDs (Lib3MF_uint64 nPropertyIDsBufferSize, Lib3MF_uint64* pPropertyIDsNeededCount, Lib3MF_uint32 * pPropertyIDsBuffer);
 
-	ILib3MFBaseMaterialGroup * GetBaseMaterialGroup ();
+	IBaseMaterialGroup * GetBaseMaterialGroup ();
 
 	Lib3MF_uint32 AddComposite(const Lib3MF_uint64 nCompositeBufferSize, const sLib3MFCompositeConstituent * pCompositeBuffer);
 
@@ -93,4 +93,4 @@ public:
 } // namespace Lib3MF
 
 #pragma warning( pop )
-#endif // __LIB3MF_LIB3MFCOMPOSITEMATERIALS
+#endif // __LIB3MF_COMPOSITEMATERIALS

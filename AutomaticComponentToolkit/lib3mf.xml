@@ -330,7 +330,7 @@
 			<param name="Id" type="uint32" pass="return" description="Retrieves the ID of a Model Resource Instance." />
 		</method>
 	</class>
-	
+
 	<class name="ResourceIterator">
 		<method name="MoveNext" description="Iterates to the next resource in the list.">
 			<param name="HasNext" type="bool" pass="return" description="Iterates to the next resource in the list." />

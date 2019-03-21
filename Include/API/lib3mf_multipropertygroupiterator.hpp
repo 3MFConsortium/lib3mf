@@ -24,13 +24,13 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CLib3MFMultiPropertyGroupIterator
+Abstract: This is the class declaration of CMultiPropertyGroupIterator
 
 */
 
 
-#ifndef __LIB3MF_LIB3MFMULTIPROPERTYGROUPITERATOR
-#define __LIB3MF_LIB3MFMULTIPROPERTYGROUPITERATOR
+#ifndef __LIB3MF_MULTIPROPERTYGROUPITERATOR
+#define __LIB3MF_MULTIPROPERTYGROUPITERATOR
 
 #include "lib3mf_interfaces.hpp"
 
@@ -47,10 +47,10 @@ namespace Impl {
 
 
 /*************************************************************************************************************************
- Class declaration of CLib3MFMultiPropertyGroupIterator 
+ Class declaration of CMultiPropertyGroupIterator 
 **************************************************************************************************************************/
 
-class CLib3MFMultiPropertyGroupIterator : public virtual ILib3MFMultiPropertyGroupIterator, public virtual CLib3MFResourceIterator {
+class CMultiPropertyGroupIterator : public virtual IMultiPropertyGroupIterator, public virtual CResourceIterator {
 private:
 
 	/**
@@ -74,7 +74,7 @@ public:
 	* Public member functions to implement.
 	*/
 
-	ILib3MFMultiPropertyGroup * GetCurrentMultiPropertyGroup ();
+	IMultiPropertyGroup * GetCurrentMultiPropertyGroup ();
 
 };
 
@@ -82,4 +82,4 @@ public:
 } // namespace Lib3MF
 
 #pragma warning( pop )
-#endif // __LIB3MF_LIB3MFMULTIPROPERTYGROUPITERATOR
+#endif // __LIB3MF_MULTIPROPERTYGROUPITERATOR

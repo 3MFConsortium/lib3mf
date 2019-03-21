@@ -24,13 +24,13 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CLib3MFWriter
+Abstract: This is the class declaration of CWriter
 
 */
 
 
-#ifndef __LIB3MF_LIB3MFWRITER
-#define __LIB3MF_LIB3MFWRITER
+#ifndef __LIB3MF_WRITER
+#define __LIB3MF_WRITER
 
 #include "lib3mf_interfaces.hpp"
 #include "lib3mf_base.hpp"
@@ -47,10 +47,10 @@ namespace Lib3MF {
 namespace Impl {
 
 /*************************************************************************************************************************
- Class declaration of CLib3MFWriter 
+ Class declaration of CWriter 
 **************************************************************************************************************************/
 
-class CLib3MFWriter : public virtual ILib3MFWriter, public virtual CLib3MFBase {
+class CWriter : public virtual IWriter, public virtual CBase {
 private:
 
 	/**
@@ -69,7 +69,7 @@ public:
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-	CLib3MFWriter(std::string sWriterClass, NMR::PModel model);
+	CWriter(std::string sWriterClass, NMR::PModel model);
 
 	NMR::CModelWriter& writer();
 	/**
@@ -91,4 +91,4 @@ public:
 }
 
 #pragma warning( pop )
-#endif // __LIB3MF_LIB3MFWRITER
+#endif // __LIB3MF_WRITER

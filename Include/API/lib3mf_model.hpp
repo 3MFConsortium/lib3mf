@@ -24,13 +24,13 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CLib3MFModel
+Abstract: This is the class declaration of CModel
 
 */
 
 
-#ifndef __LIB3MF_LIB3MFMODEL
-#define __LIB3MF_LIB3MFMODEL
+#ifndef __LIB3MF_MODEL
+#define __LIB3MF_MODEL
 
 #include "lib3mf_interfaces.hpp"
 #include "lib3mf_base.hpp"
@@ -48,10 +48,10 @@ namespace Impl {
 
 
 /*************************************************************************************************************************
- Class declaration of CLib3MFModel 
+ Class declaration of CModel 
 **************************************************************************************************************************/
 
-class CLib3MFModel : public virtual ILib3MFModel, public virtual CLib3MFBase {
+class CModel : public virtual IModel, public virtual CBase {
 private:
 
 	NMR::PModel m_model;
@@ -67,7 +67,7 @@ public:
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-	CLib3MFModel();
+	CModel();
 
 	NMR::CModel& model();
 
@@ -83,99 +83,99 @@ public:
 
 	void SetLanguage (const std::string & sLanguage);
 
-	ILib3MFWriter * QueryWriter (const std::string & sWriterClass);
+	IWriter * QueryWriter (const std::string & sWriterClass);
 
-	ILib3MFReader * QueryReader (const std::string & sReaderClass);
+	IReader * QueryReader (const std::string & sReaderClass);
 
-	ILib3MFTexture2D * GetTexture2DByID (const Lib3MF_uint32 nResourceID);
+	ITexture2D * GetTexture2DByID (const Lib3MF_uint32 nResourceID);
 
 	eLib3MFPropertyType GetPropertyTypeByID(const Lib3MF_uint32 nResourceID);
 
-	ILib3MFBaseMaterialGroup * GetBaseMaterialGroupByID (const Lib3MF_uint32 nResourceID);
+	IBaseMaterialGroup * GetBaseMaterialGroupByID (const Lib3MF_uint32 nResourceID);
 
-	ILib3MFMeshObject * GetMeshObjectByID (const Lib3MF_uint32 nResourceID);
+	IMeshObject * GetMeshObjectByID (const Lib3MF_uint32 nResourceID);
 
-	ILib3MFComponentsObject * GetComponentsObjectByID (const Lib3MF_uint32 nResourceID);
+	IComponentsObject * GetComponentsObjectByID (const Lib3MF_uint32 nResourceID);
 
-	ILib3MFColorGroup * GetColorGroupByID(const Lib3MF_uint32 nResourceID);
+	IColorGroup * GetColorGroupByID(const Lib3MF_uint32 nResourceID);
 
-	ILib3MFTexture2DGroup * GetTexture2DGroupByID(const Lib3MF_uint32 nResourceID);
+	ITexture2DGroup * GetTexture2DGroupByID(const Lib3MF_uint32 nResourceID);
 
-	ILib3MFCompositeMaterials * GetCompositeMaterialsByID(const Lib3MF_uint32 nResourceID);
+	ICompositeMaterials * GetCompositeMaterialsByID(const Lib3MF_uint32 nResourceID);
 
-	ILib3MFMultiPropertyGroup * GetMultiPropertyGroupByID(const Lib3MF_uint32 nResourceID);
+	IMultiPropertyGroup * GetMultiPropertyGroupByID(const Lib3MF_uint32 nResourceID);
 
-	ILib3MFSliceStack * GetSliceStackByID(const Lib3MF_uint32 nResourceID);
+	ISliceStack * GetSliceStackByID(const Lib3MF_uint32 nResourceID);
 
 	std::string GetBuildUUID (bool & bHasUUID);
 
 	void SetBuildUUID (const std::string & sUUID);
 
-	ILib3MFBuildItemIterator * GetBuildItems ();
+	IBuildItemIterator * GetBuildItems ();
 
-	ILib3MFResourceIterator * GetResources ();
+	IResourceIterator * GetResources ();
 
-	ILib3MFObjectIterator * GetObjects ();
+	IObjectIterator * GetObjects ();
 
-	ILib3MFResourceIterator * GetMeshObjects ();
+	IResourceIterator * GetMeshObjects ();
 
-	ILib3MFResourceIterator * GetComponentsObjects ();
+	IResourceIterator * GetComponentsObjects ();
 
-	ILib3MFTexture2DIterator * GetTexture2Ds ();
+	ITexture2DIterator * GetTexture2Ds ();
 
-	ILib3MFBaseMaterialGroupIterator * GetBaseMaterialGroups ();
+	IBaseMaterialGroupIterator * GetBaseMaterialGroups ();
 
-	ILib3MFColorGroupIterator * GetColorGroups();
+	IColorGroupIterator * GetColorGroups();
 
-	ILib3MFTexture2DGroupIterator * GetTexture2DGroups();
+	ITexture2DGroupIterator * GetTexture2DGroups();
 
-	ILib3MFCompositeMaterialsIterator * GetCompositeMaterials();
+	ICompositeMaterialsIterator * GetCompositeMaterials();
 
-	ILib3MFMultiPropertyGroupIterator * GetMultiPropertyGroups();
+	IMultiPropertyGroupIterator * GetMultiPropertyGroups();
 
-	ILib3MFSliceStackIterator * GetSliceStacks();
+	ISliceStackIterator * GetSliceStacks();
 
-	ILib3MFModel * MergeToModel ();
+	IModel * MergeToModel ();
 
-	ILib3MFMeshObject * AddMeshObject ();
+	IMeshObject * AddMeshObject ();
 
-	ILib3MFComponentsObject * AddComponentsObject ();
+	IComponentsObject * AddComponentsObject ();
 
-	ILib3MFSliceStack * AddSliceStack(const Lib3MF_double dZBottom);
+	ISliceStack * AddSliceStack(const Lib3MF_double dZBottom);
 
-	ILib3MFTexture2D * AddTexture2DFromAttachment (ILib3MFAttachment* pTextureAttachment);
+	ITexture2D * AddTexture2DFromAttachment (IAttachment* pTextureAttachment);
 
-	ILib3MFBaseMaterialGroup * AddBaseMaterialGroup ();
+	IBaseMaterialGroup * AddBaseMaterialGroup ();
 
-	ILib3MFColorGroup * AddColorGroup();
+	IColorGroup * AddColorGroup();
 
-	ILib3MFTexture2DGroup * AddTexture2DGroup(ILib3MFTexture2D* pTexture2DInstance);
+	ITexture2DGroup * AddTexture2DGroup(ITexture2D* pTexture2DInstance);
 
-	ILib3MFCompositeMaterials * AddCompositeMaterials(ILib3MFBaseMaterialGroup* pBaseMaterialGroupInstance);
+	ICompositeMaterials * AddCompositeMaterials(IBaseMaterialGroup* pBaseMaterialGroupInstance);
 
-	ILib3MFMultiPropertyGroup * AddMultiPropertyGroup();
+	IMultiPropertyGroup * AddMultiPropertyGroup();
 
-	ILib3MFBuildItem * AddBuildItem (ILib3MFObject* pObject, const sLib3MFTransform Transform);
+	IBuildItem * AddBuildItem (IObject* pObject, const sLib3MFTransform Transform);
 
-	void RemoveBuildItem (ILib3MFBuildItem* pBuildItemInstance);
+	void RemoveBuildItem (IBuildItem* pBuildItemInstance);
 
-	ILib3MFMetaDataGroup * GetMetaDataGroup ();
+	IMetaDataGroup * GetMetaDataGroup ();
 
-	ILib3MFAttachment * AddAttachment (const std::string & sURI, const std::string & sRelationShipType);
+	IAttachment * AddAttachment (const std::string & sURI, const std::string & sRelationShipType);
 
-	void RemoveAttachment(ILib3MFAttachment* pAttachmentInstance);
+	void RemoveAttachment(IAttachment* pAttachmentInstance);
 
-	ILib3MFAttachment * GetAttachment (const Lib3MF_uint32 nIndex);
+	IAttachment * GetAttachment (const Lib3MF_uint32 nIndex);
 
-	ILib3MFAttachment * FindAttachment (const std::string & sURI);
+	IAttachment * FindAttachment (const std::string & sURI);
 
 	Lib3MF_uint32 GetAttachmentCount ();
 
 	bool HasPackageThumbnailAttachment ();
 
-	ILib3MFAttachment * CreatePackageThumbnailAttachment ();
+	IAttachment * CreatePackageThumbnailAttachment ();
 
-	ILib3MFAttachment * GetPackageThumbnailAttachment ();
+	IAttachment * GetPackageThumbnailAttachment ();
 
 	void RemovePackageThumbnailAttachment ();
 
@@ -190,4 +190,4 @@ public:
 
 #pragma warning( pop )
 
-#endif // __LIB3MF_LIB3MFMODEL
+#endif // __LIB3MF_MODEL

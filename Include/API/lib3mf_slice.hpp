@@ -24,13 +24,13 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CLib3MFSlice
+Abstract: This is the class declaration of CSlice
 
 */
 
 
-#ifndef __LIB3MF_LIB3MFSLICE
-#define __LIB3MF_LIB3MFSLICE
+#ifndef __LIB3MF_SLICE
+#define __LIB3MF_SLICE
 
 #include "lib3mf_interfaces.hpp"
 #include "lib3mf_base.hpp"
@@ -46,10 +46,10 @@ namespace Impl {
 
 
 /*************************************************************************************************************************
- Class declaration of CLib3MFSlice 
+ Class declaration of CSlice 
 **************************************************************************************************************************/
 
-class CLib3MFSlice : public virtual ILib3MFSlice, public virtual CLib3MFBase {
+class CSlice : public virtual ISlice, public virtual CBase {
 private:
 
 	/**
@@ -68,7 +68,7 @@ public:
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-	CLib3MFSlice(NMR::PSlice);
+	CSlice(NMR::PSlice);
 
 	/**
 	* Public member functions to implement.
@@ -97,4 +97,4 @@ public:
 } // namespace Lib3MF
 
 #pragma warning( pop )
-#endif // __LIB3MF_LIB3MFSLICE
+#endif // __LIB3MF_SLICE

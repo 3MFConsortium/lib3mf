@@ -24,13 +24,13 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CLib3MFMetaDataGroup
+Abstract: This is the class declaration of CMetaDataGroup
 
 */
 
 
-#ifndef __LIB3MF_LIB3MFMETADATAGROUP
-#define __LIB3MF_LIB3MFMETADATAGROUP
+#ifndef __LIB3MF_METADATAGROUP
+#define __LIB3MF_METADATAGROUP
 
 #include "lib3mf_interfaces.hpp"
 #include "lib3mf_base.hpp"
@@ -47,10 +47,10 @@ namespace Impl {
 
 
 /*************************************************************************************************************************
- Class declaration of CLib3MFMetaDataGroup 
+ Class declaration of CMetaDataGroup 
 **************************************************************************************************************************/
 
-class CLib3MFMetaDataGroup : public virtual ILib3MFMetaDataGroup, public virtual CLib3MFBase {
+class CMetaDataGroup : public virtual IMetaDataGroup, public virtual CBase {
 private:
 
 	/**
@@ -69,7 +69,7 @@ public:
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-	CLib3MFMetaDataGroup(NMR::PModelMetaDataGroup pMetaDataGroup);
+	CMetaDataGroup(NMR::PModelMetaDataGroup pMetaDataGroup);
 
 	/**
 	* Public member functions to implement.
@@ -77,15 +77,15 @@ public:
 
 	virtual Lib3MF_uint32 GetMetaDataCount();
 
-	ILib3MFMetaData * GetMetaData(const Lib3MF_uint32 nIndex);
+	IMetaData * GetMetaData(const Lib3MF_uint32 nIndex);
 
-	ILib3MFMetaData * GetMetaDataByKey(const std::string & sNameSpace, const std::string & sName);
+	IMetaData * GetMetaDataByKey(const std::string & sNameSpace, const std::string & sName);
 
 	void RemoveMetaDataByIndex(const Lib3MF_uint32 nIndex);
 
-	void RemoveMetaData(ILib3MFMetaData* pTheMetaData);
+	void RemoveMetaData(IMetaData* pTheMetaData);
 
-	ILib3MFMetaData * AddMetaData(const std::string & sNameSpace, const std::string & sName, const std::string & sValue, const std::string & sType, const bool bMustPreserve);
+	IMetaData * AddMetaData(const std::string & sNameSpace, const std::string & sName, const std::string & sValue, const std::string & sType, const bool bMustPreserve);
 
 
 };
@@ -94,4 +94,4 @@ public:
 }
 
 #pragma warning( pop )
-#endif // __LIB3MF_LIB3MFMETADATAGROUP
+#endif // __LIB3MF_METADATAGROUP

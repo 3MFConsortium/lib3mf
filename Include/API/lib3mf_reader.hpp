@@ -24,13 +24,13 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CLib3MFReader
+Abstract: This is the class declaration of CReader
 
 */
 
 
-#ifndef __LIB3MF_LIB3MFREADER
-#define __LIB3MF_LIB3MFREADER
+#ifndef __LIB3MF_READER
+#define __LIB3MF_READER
 
 #include "lib3mf_interfaces.hpp"
 #include "lib3mf_base.hpp"
@@ -48,10 +48,10 @@ namespace Impl {
 
 
 /*************************************************************************************************************************
- Class declaration of CLib3MFReader 
+ Class declaration of CReader 
 **************************************************************************************************************************/
 
-class CLib3MFReader : public virtual ILib3MFReader, public virtual CLib3MFBase {
+class CReader : public virtual IReader, public virtual CBase {
 private:
 
 	/**
@@ -70,7 +70,7 @@ public:
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-	CLib3MFReader(std::string sReaderClass, NMR::PModel model);
+	CReader(std::string sReaderClass, NMR::PModel model);
 
 	NMR::CModelReader& reader();
 	/**
@@ -103,4 +103,4 @@ public:
 }
 
 #pragma warning( pop )
-#endif // __LIB3MF_LIB3MFREADER
+#endif // __LIB3MF_READER

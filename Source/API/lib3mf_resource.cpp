@@ -24,7 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CLib3MFResource
+Abstract: This is a stub class definition of CResource
 
 */
 
@@ -39,11 +39,11 @@ Abstract: This is a stub class definition of CLib3MFResource
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CLib3MFResource 
+ Class definition of CResource 
 **************************************************************************************************************************/
 
 
-NMR::PModelResource CLib3MFResource::resource()
+NMR::PModelResource CResource::resource()
 {
 	if (m_pResource.get()==nullptr)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDOBJECT);
@@ -51,23 +51,23 @@ NMR::PModelResource CLib3MFResource::resource()
 	return m_pResource;
 }
 
-CLib3MFResource::CLib3MFResource(NMR::PModelResource pResource)
+CResource::CResource(NMR::PModelResource pResource)
 {
 	if (pResource.get() == nullptr)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDMODELRESOURCE);
 	m_pResource = pResource;
 }
 
-Lib3MF_uint32 CLib3MFResource::GetResourceID ()
+Lib3MF_uint32 CResource::GetResourceID ()
 {
 	return m_pResource->getResourceID()->getUniqueID();
 }
 
-ILib3MFObject * CLib3MFResource::AsObject()
+IObject * CResource::AsObject()
 {
 	if (dynamic_cast<NMR::CModelObject*>(m_pResource.get()))
 	{
-		return new CLib3MFObject(m_pResource);
+		return new CObject(m_pResource);
 	}
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 }

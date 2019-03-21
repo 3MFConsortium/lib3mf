@@ -24,13 +24,13 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CLib3MFSliceStackIterator
+Abstract: This is the class declaration of CSliceStackIterator
 
 */
 
 
-#ifndef __LIB3MF_LIB3MFSLICESTACKITERATOR
-#define __LIB3MF_LIB3MFSLICESTACKITERATOR
+#ifndef __LIB3MF_SLICESTACKITERATOR
+#define __LIB3MF_SLICESTACKITERATOR
 
 #include "lib3mf_interfaces.hpp"
 
@@ -47,10 +47,10 @@ namespace Impl {
 
 
 /*************************************************************************************************************************
- Class declaration of CLib3MFSliceStackIterator 
+ Class declaration of CSliceStackIterator 
 **************************************************************************************************************************/
 
-class CLib3MFSliceStackIterator : public virtual ILib3MFSliceStackIterator, public virtual CLib3MFResourceIterator {
+class CSliceStackIterator : public virtual ISliceStackIterator, public virtual CResourceIterator {
 private:
 
 	/**
@@ -74,7 +74,7 @@ public:
 	* Public member functions to implement.
 	*/
 
-	ILib3MFSliceStack * GetCurrentSliceStack ();
+	ISliceStack * GetCurrentSliceStack ();
 
 };
 
@@ -82,4 +82,4 @@ public:
 } // namespace Lib3MF
 
 #pragma warning( pop )
-#endif // __LIB3MF_LIB3MFSLICESTACKITERATOR
+#endif // __LIB3MF_SLICESTACKITERATOR

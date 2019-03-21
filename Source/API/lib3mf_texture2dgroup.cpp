@@ -24,7 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CLib3MFTexture2DGroup
+Abstract: This is a stub class definition of CTexture2DGroup
 
 */
 
@@ -37,10 +37,10 @@ Abstract: This is a stub class definition of CLib3MFTexture2DGroup
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CLib3MFTexture2DGroup 
+ Class definition of CTexture2DGroup 
 **************************************************************************************************************************/
 
-NMR::CModelTexture2DGroupResource& CLib3MFTexture2DGroup::texture2DGroup()
+NMR::CModelTexture2DGroupResource& CTexture2DGroup::texture2DGroup()
 {
 	NMR::CModelTexture2DGroupResource* pTexture2dGroup = dynamic_cast<NMR::CModelTexture2DGroupResource*>(resource().get());
 	if (pTexture2dGroup == nullptr)
@@ -48,23 +48,23 @@ NMR::CModelTexture2DGroupResource& CLib3MFTexture2DGroup::texture2DGroup()
 	return *pTexture2dGroup;
 }
 
-CLib3MFTexture2DGroup::CLib3MFTexture2DGroup(NMR::PModelTexture2DGroupResource pResource)
-	: CLib3MFResource(std::static_pointer_cast<NMR::CModelResource>(pResource))
+CTexture2DGroup::CTexture2DGroup(NMR::PModelTexture2DGroupResource pResource)
+	: CResource(std::static_pointer_cast<NMR::CModelResource>(pResource))
 {
 
 }
 
-ILib3MFTexture2D * CLib3MFTexture2DGroup::GetTexture2D()
+ITexture2D * CTexture2DGroup::GetTexture2D()
 {
-	return new CLib3MFTexture2D(texture2DGroup().getTexture2D());
+	return new CTexture2D(texture2DGroup().getTexture2D());
 }
 
-Lib3MF_uint32 CLib3MFTexture2DGroup::GetCount ()
+Lib3MF_uint32 CTexture2DGroup::GetCount ()
 {
 	return texture2DGroup().getCount();
 }
 
-void CLib3MFTexture2DGroup::GetAllPropertyIDs (Lib3MF_uint64 nPropertyIDsBufferSize, Lib3MF_uint64* pPropertyIDsNeededCount, Lib3MF_uint32 * pPropertyIDsBuffer)
+void CTexture2DGroup::GetAllPropertyIDs (Lib3MF_uint64 nPropertyIDsBufferSize, Lib3MF_uint64* pPropertyIDsNeededCount, Lib3MF_uint32 * pPropertyIDsBuffer)
 {
 	Lib3MF_uint32 nCount = texture2DGroup().getCount();
 
@@ -88,18 +88,18 @@ void CLib3MFTexture2DGroup::GetAllPropertyIDs (Lib3MF_uint64 nPropertyIDsBufferS
 	}
 }
 
-Lib3MF_uint32 CLib3MFTexture2DGroup::AddTex2Coord (const sLib3MFTex2Coord UVCoordinate)
+Lib3MF_uint32 CTexture2DGroup::AddTex2Coord (const sLib3MFTex2Coord UVCoordinate)
 {
 	return texture2DGroup().addUVCoordinate(NMR::MODELTEXTURE2DCOORDINATE({ UVCoordinate.m_U, UVCoordinate.m_V }));
 }
 
-sLib3MFTex2Coord CLib3MFTexture2DGroup::GetTex2Coord (const Lib3MF_uint32 nPropertyID)
+sLib3MFTex2Coord CTexture2DGroup::GetTex2Coord (const Lib3MF_uint32 nPropertyID)
 {
 	NMR::MODELTEXTURE2DCOORDINATE coord = texture2DGroup().getUVCoordinate(nPropertyID);
 	return sLib3MFTex2Coord({ coord.m_dU, coord.m_dV});
 }
 
-void CLib3MFTexture2DGroup::RemoveTex2Coord(const Lib3MF_uint32 nPropertyID)
+void CTexture2DGroup::RemoveTex2Coord(const Lib3MF_uint32 nPropertyID)
 {
 	texture2DGroup().removePropertyID(nPropertyID);
 }

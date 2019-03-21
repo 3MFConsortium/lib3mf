@@ -24,7 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CLib3MFBuildItemIterator
+Abstract: This is a stub class definition of CBuildItemIterator
 
 */
 
@@ -38,21 +38,21 @@ Abstract: This is a stub class definition of CLib3MFBuildItemIterator
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CLib3MFBuildItemIterator 
+ Class definition of CBuildItemIterator 
 **************************************************************************************************************************/
 
-CLib3MFBuildItemIterator::CLib3MFBuildItemIterator()
+CBuildItemIterator::CBuildItemIterator()
 {
 	m_nCurrentIndex = -1;
 }
 
 
-void CLib3MFBuildItemIterator::addBuildItem(NMR::PModelBuildItem pBuildItem)
+void CBuildItemIterator::addBuildItem(NMR::PModelBuildItem pBuildItem)
 {
 	m_pBuildItems.push_back(pBuildItem);
 }
 
-bool CLib3MFBuildItemIterator::MoveNext ()
+bool CBuildItemIterator::MoveNext ()
 {
 	// Get Resource Count
 	Lib3MF_int32 nBuildItemCount = (Lib3MF_int32)m_pBuildItems.size();
@@ -68,7 +68,7 @@ bool CLib3MFBuildItemIterator::MoveNext ()
 	}
 }
 
-bool CLib3MFBuildItemIterator::MovePrevious ()
+bool CBuildItemIterator::MovePrevious ()
 {
 	// Get Resource Count
 	m_nCurrentIndex--;
@@ -83,7 +83,7 @@ bool CLib3MFBuildItemIterator::MovePrevious ()
 	}
 }
 
-ILib3MFBuildItem * CLib3MFBuildItemIterator::GetCurrent ()
+IBuildItem * CBuildItemIterator::GetCurrent ()
 {
 	// Get Resource Count
 	Lib3MF_int32 nBuildItemCount = (Lib3MF_int32)m_pBuildItems.size();
@@ -93,12 +93,12 @@ ILib3MFBuildItem * CLib3MFBuildItemIterator::GetCurrent ()
 	// Create specific API class
 	NMR::PModelBuildItem pBuildItem = m_pBuildItems[m_nCurrentIndex];
 	
-	return new CLib3MFBuildItem(pBuildItem);
+	return new CBuildItem(pBuildItem);
 }
 
-ILib3MFBuildItemIterator * CLib3MFBuildItemIterator::Clone ()
+IBuildItemIterator * CBuildItemIterator::Clone ()
 {
-	auto pBuildItems = std::unique_ptr<CLib3MFBuildItemIterator>(new CLib3MFBuildItemIterator());
+	auto pBuildItems = std::unique_ptr<CBuildItemIterator>(new CBuildItemIterator());
 	
 	for (auto iIterator = m_pBuildItems.begin(); iIterator != m_pBuildItems.end(); iIterator++)
 		pBuildItems->addBuildItem(*iIterator);

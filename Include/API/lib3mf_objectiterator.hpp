@@ -24,13 +24,13 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CLib3MFObjectIterator
+Abstract: This is the class declaration of CObjectIterator
 
 */
 
 
-#ifndef __LIB3MF_LIB3MFOBJECTITERATOR
-#define __LIB3MF_LIB3MFOBJECTITERATOR
+#ifndef __LIB3MF_OBJECTITERATOR
+#define __LIB3MF_OBJECTITERATOR
 
 #include "lib3mf_interfaces.hpp"
 
@@ -47,10 +47,10 @@ namespace Impl {
 
 
 /*************************************************************************************************************************
- Class declaration of CLib3MFObjectIterator 
+ Class declaration of CObjectIterator 
 **************************************************************************************************************************/
 
-class CLib3MFObjectIterator : public virtual ILib3MFObjectIterator, public virtual CLib3MFResourceIterator {
+class CObjectIterator : public virtual IObjectIterator, public virtual CResourceIterator {
 private:
 
 	/**
@@ -74,7 +74,7 @@ public:
 	* Public member functions to implement.
 	*/
 
-	ILib3MFObject * GetCurrentObject ();
+	IObject * GetCurrentObject ();
 
 };
 
@@ -82,4 +82,4 @@ public:
 } // namespace Lib3MF
 
 #pragma warning( pop )
-#endif // __LIB3MF_LIB3MFOBJECTITERATOR
+#endif // __LIB3MF_OBJECTITERATOR

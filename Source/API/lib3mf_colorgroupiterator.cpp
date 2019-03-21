@@ -24,7 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CLib3MFColorGroupIterator
+Abstract: This is a stub class definition of CColorGroupIterator
 
 */
 
@@ -37,12 +37,12 @@ Abstract: This is a stub class definition of CLib3MFColorGroupIterator
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CLib3MFColorGroupIterator 
+ Class definition of CColorGroupIterator 
 **************************************************************************************************************************/
 
-ILib3MFColorGroup * CLib3MFColorGroupIterator::GetCurrentColorGroup ()
+IColorGroup * CColorGroupIterator::GetCurrentColorGroup ()
 {
 	// Create specific API class
-	return new CLib3MFColorGroup(std::dynamic_pointer_cast<NMR::CModelColorGroupResource>(GetCurrentResource()));
+	return new CColorGroup(std::dynamic_pointer_cast<NMR::CModelColorGroupResource>(GetCurrentResource()));
 }
 

@@ -24,7 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CLib3MFMultiPropertyGroup
+Abstract: This is a stub class definition of CMultiPropertyGroup
 
 */
 
@@ -37,17 +37,17 @@ Abstract: This is a stub class definition of CLib3MFMultiPropertyGroup
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CLib3MFMultiPropertyGroup 
+ Class definition of CMultiPropertyGroup 
 **************************************************************************************************************************/
 
-CLib3MFMultiPropertyGroup::CLib3MFMultiPropertyGroup(NMR::PModelMultiPropertyGroupResource pResource)
-	: CLib3MFResource(std::static_pointer_cast<NMR::CModelResource>(pResource))
+CMultiPropertyGroup::CMultiPropertyGroup(NMR::PModelMultiPropertyGroupResource pResource)
+	: CResource(std::static_pointer_cast<NMR::CModelResource>(pResource))
 {
 
 }
 
 
-NMR::CModelMultiPropertyGroupResource& CLib3MFMultiPropertyGroup::multiPropertyGroup()
+NMR::CModelMultiPropertyGroupResource& CMultiPropertyGroup::multiPropertyGroup()
 {
 	NMR::CModelMultiPropertyGroupResource* pMultiPropertyGroup = dynamic_cast<NMR::CModelMultiPropertyGroupResource*>(resource().get());
 	if (pMultiPropertyGroup == nullptr)
@@ -55,12 +55,12 @@ NMR::CModelMultiPropertyGroupResource& CLib3MFMultiPropertyGroup::multiPropertyG
 	return *pMultiPropertyGroup;
 }
 
-Lib3MF_uint32 CLib3MFMultiPropertyGroup::GetCount ()
+Lib3MF_uint32 CMultiPropertyGroup::GetCount ()
 {
 	return multiPropertyGroup().getCount();
 }
 
-void CLib3MFMultiPropertyGroup::GetAllPropertyIDs (Lib3MF_uint64 nPropertyIDsBufferSize, Lib3MF_uint64* pPropertyIDsNeededCount, Lib3MF_uint32 * pPropertyIDsBuffer)
+void CMultiPropertyGroup::GetAllPropertyIDs (Lib3MF_uint64 nPropertyIDsBufferSize, Lib3MF_uint64* pPropertyIDsNeededCount, Lib3MF_uint32 * pPropertyIDsBuffer)
 {
 	Lib3MF_uint32 nMultiMaterialCount = multiPropertyGroup().getCount();
 
@@ -84,7 +84,7 @@ void CLib3MFMultiPropertyGroup::GetAllPropertyIDs (Lib3MF_uint64 nPropertyIDsBuf
 	}
 }
 
-Lib3MF_uint32 CLib3MFMultiPropertyGroup::AddMultiProperty (const Lib3MF_uint64 nPropertyIDsBufferSize, const Lib3MF_uint32 * pPropertyIDsBuffer)
+Lib3MF_uint32 CMultiPropertyGroup::AddMultiProperty (const Lib3MF_uint64 nPropertyIDsBufferSize, const Lib3MF_uint32 * pPropertyIDsBuffer)
 {
 	NMR::PModelMultiProperty multiProperty = std::make_shared<NMR::CModelMultiProperty>();
 	multiProperty->resize(nPropertyIDsBufferSize);
@@ -94,7 +94,7 @@ Lib3MF_uint32 CLib3MFMultiPropertyGroup::AddMultiProperty (const Lib3MF_uint64 n
 	return multiPropertyGroup().addMultiProperty(multiProperty);
 }
 
-void CLib3MFMultiPropertyGroup::SetMultiProperty (const Lib3MF_uint32 nPropertyID, const Lib3MF_uint64 nPropertyIDsBufferSize, const Lib3MF_uint32 * pPropertyIDsBuffer)
+void CMultiPropertyGroup::SetMultiProperty (const Lib3MF_uint32 nPropertyID, const Lib3MF_uint64 nPropertyIDsBufferSize, const Lib3MF_uint32 * pPropertyIDsBuffer)
 {
 	NMR::PModelMultiProperty multiProperty = std::make_shared<NMR::CModelMultiProperty>();
 	multiProperty->resize(nPropertyIDsBufferSize);
@@ -104,7 +104,7 @@ void CLib3MFMultiPropertyGroup::SetMultiProperty (const Lib3MF_uint32 nPropertyI
 	multiPropertyGroup().setMultiProperty(nPropertyID, multiProperty);
 }
 
-void CLib3MFMultiPropertyGroup::GetMultiProperty (const Lib3MF_uint32 nPropertyID, Lib3MF_uint64 nPropertyIDsBufferSize, Lib3MF_uint64* pPropertyIDsNeededCount, Lib3MF_uint32 * pPropertyIDsBuffer)
+void CMultiPropertyGroup::GetMultiProperty (const Lib3MF_uint32 nPropertyID, Lib3MF_uint64 nPropertyIDsBufferSize, Lib3MF_uint64* pPropertyIDsNeededCount, Lib3MF_uint32 * pPropertyIDsBuffer)
 {
 	NMR::PModelMultiProperty multiProperty = multiPropertyGroup().getMultiProperty(nPropertyID);
 
@@ -119,22 +119,22 @@ void CLib3MFMultiPropertyGroup::GetMultiProperty (const Lib3MF_uint32 nPropertyI
 	}
 }
 
-void CLib3MFMultiPropertyGroup::RemoveMultiProperty (const Lib3MF_uint32 nPropertyID)
+void CMultiPropertyGroup::RemoveMultiProperty (const Lib3MF_uint32 nPropertyID)
 {
 	multiPropertyGroup().removeMultiProperty(nPropertyID);
 }
 
-Lib3MF_uint32 CLib3MFMultiPropertyGroup::GetLayerCount ()
+Lib3MF_uint32 CMultiPropertyGroup::GetLayerCount ()
 {
 	return multiPropertyGroup().getLayerCount();
 }
 
-Lib3MF_uint32 CLib3MFMultiPropertyGroup::AddLayer (const sLib3MFMultiPropertyLayer TheLayer)
+Lib3MF_uint32 CMultiPropertyGroup::AddLayer (const sLib3MFMultiPropertyLayer TheLayer)
 {
 	return multiPropertyGroup().addLayer(NMR::MODELMULTIPROPERTYLAYER{ TheLayer.m_ResourceID, NMR::eModelBlendMethod(TheLayer.m_TheBlendMethod.m_code)});
 }
 
-sLib3MFMultiPropertyLayer CLib3MFMultiPropertyGroup::GetLayer (const Lib3MF_uint32 nLayerIndex)
+sLib3MFMultiPropertyLayer CMultiPropertyGroup::GetLayer (const Lib3MF_uint32 nLayerIndex)
 {
 	NMR::MODELMULTIPROPERTYLAYER sLayer = multiPropertyGroup().getLayer(nLayerIndex);
 	sLib3MFMultiPropertyLayer outLayer;
@@ -143,7 +143,7 @@ sLib3MFMultiPropertyLayer CLib3MFMultiPropertyGroup::GetLayer (const Lib3MF_uint
 	return outLayer;
 }
 
-void CLib3MFMultiPropertyGroup::RemoveLayer (const Lib3MF_uint32 nLayerIndex)
+void CMultiPropertyGroup::RemoveLayer (const Lib3MF_uint32 nLayerIndex)
 {
 	multiPropertyGroup().removeLayer(nLayerIndex);
 }
