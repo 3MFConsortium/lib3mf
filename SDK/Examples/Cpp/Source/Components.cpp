@@ -42,7 +42,7 @@ using namespace Lib3MF;
 void printVersion() {
 	Lib3MF_uint32 nMajor, nMinor, nMicro;
 	std::string sReleaseInfo, sBuildInfo;
-	CLib3MFWrapper::GetLibraryVersion(nMajor, nMinor, nMicro, sReleaseInfo, sBuildInfo);
+	CWrapper::GetLibraryVersion(nMajor, nMinor, nMicro, sReleaseInfo, sBuildInfo);
 	std::cout << "Lib3MF version = " << nMajor << "." << nMinor << "." << nMicro;
 	if (!sReleaseInfo.empty()) {
 		std::cout << "-" << sReleaseInfo;
@@ -95,9 +95,9 @@ void ComponentsExample() {
 	printVersion();
 	std::cout << "------------------------------------------------------------------" << std::endl;
 
-	PLib3MFModel model = CLib3MFWrapper::CreateModel();
+	PModel model = CWrapper::CreateModel();
 
-	PLib3MFMeshObject meshObject = model->AddMeshObject();
+	PMeshObject meshObject = model->AddMeshObject();
 	meshObject->SetName("Box");
 
 	// Create mesh structure of a cube
@@ -135,7 +135,7 @@ void ComponentsExample() {
 	meshObject->SetGeometry(vertices, triangles);
 
 	// Create Component Object
-	PLib3MFComponentsObject componentsObject = model->AddComponentsObject();
+	PComponentsObject componentsObject = model->AddComponentsObject();
 
 	// Add first component
 	componentsObject->AddComponent(meshObject.get(), createTranslationMatrix(0.0f, 0.0f, 0.0f));
@@ -157,11 +157,11 @@ void ComponentsExample() {
 	model->AddBuildItem(meshObject.get(), createTranslationMatrix(-40.0f, 0.0f, 20.0f));
 
 	// Output scene as STL and 3MF
-	PLib3MFWriter _3mfWriter = model->QueryWriter("3mf");
+	PWriter _3mfWriter = model->QueryWriter("3mf");
 	std::cout << "writing components.3mf..." << std::endl;
 	_3mfWriter->WriteToFile("components.3mf");
 
-	PLib3MFWriter stlWriter = model->QueryWriter("stl");
+	PWriter stlWriter = model->QueryWriter("stl");
 	std::cout << "writing components.stl..." << std::endl;
 	stlWriter->WriteToFile("components.stl");
 

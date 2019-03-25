@@ -41,7 +41,7 @@ using namespace Lib3MF;
 void printVersion() {
 	Lib3MF_uint32 nMajor, nMinor, nMicro;
 	std::string sReleaseInfo, sBuildInfo;
-	CLib3MFWrapper::GetLibraryVersion(nMajor, nMinor, nMicro, sReleaseInfo, sBuildInfo);
+	CWrapper::GetLibraryVersion(nMajor, nMinor, nMicro, sReleaseInfo, sBuildInfo);
 	std::cout << "Lib3MF version = " << nMajor << "." << nMinor << "." << nMicro;
 	if (!sReleaseInfo.empty()) {
 		std::cout << "-" << sReleaseInfo;
@@ -71,23 +71,23 @@ sLib3MFTriangle fnCreateTriangle(int v0, int v1, int v2)
 	return result;
 }
 
-PLib3MFTexture2DGroup fnLoadModelTexture(PLib3MFModel model, const std::string sOPCPath, const std::string sFilePath, eLib3MFTextureType eType, eLib3MFTextureTileStyle eTileStyleU, eLib3MFTextureTileStyle eTileStyleV)
+PTexture2DGroup fnLoadModelTexture(PModel model, const std::string sOPCPath, const std::string sFilePath, eLib3MFTextureType eType, eLib3MFTextureTileStyle eTileStyleU, eLib3MFTextureTileStyle eTileStyleV)
 {
 	std::string sRelationshipType_Texture = "http://schemas.microsoft.com/3dmanufacturing/2013/01/3dtexture";
-	PLib3MFAttachment attachment = model->AddAttachment(sOPCPath, sRelationshipType_Texture);
+	PAttachment attachment = model->AddAttachment(sOPCPath, sRelationshipType_Texture);
 	attachment->ReadFromFile(sFilePath);
 
-	PLib3MFTexture2D texture2D = model->AddTexture2DFromAttachment(attachment.get());
+	PTexture2D texture2D = model->AddTexture2DFromAttachment(attachment.get());
 
 	texture2D->SetContentType(eType);
 	texture2D->SetTileStyleUV(eTileStyleU, eTileStyleV);
 
-	PLib3MFTexture2DGroup textureGroup = model->AddTexture2DGroup(texture2D.get());
+	PTexture2DGroup textureGroup = model->AddTexture2DGroup(texture2D.get());
 	return textureGroup;
 }
 
 
-sLib3MFTriangleProperties fnCreateTexture(PLib3MFTexture2DGroup textureGroup, double u1, double v1, double u2, double v2, double u3, double v3)
+sLib3MFTriangleProperties fnCreateTexture(PTexture2DGroup textureGroup, double u1, double v1, double u2, double v2, double u3, double v3)
 {
 	sLib3MFTriangleProperties property;
 	property.m_ResourceID = textureGroup->GetResourceID();
@@ -103,9 +103,9 @@ void TextureExample() {
 	printVersion();
 	std::cout << "------------------------------------------------------------------" << std::endl;
 
-	PLib3MFModel model = CLib3MFWrapper::CreateModel();
+	PModel model = CWrapper::CreateModel();
 
-	PLib3MFMeshObject meshObject = model->AddMeshObject();
+	PMeshObject meshObject = model->AddMeshObject();
 	meshObject->SetName("Textured Box");
 
 	// Create mesh structure of a cube
@@ -145,12 +145,12 @@ void TextureExample() {
 	std::string sTextureFolder = TEXTURESPATH;
 	// add textures to 3mf package
 	std::cout << "sTextureFolder=\"" << sTextureFolder << "\"\n";
-	auto textureGroup1 = fnLoadModelTexture(model, "/3D/Textures/tex1.png", sTextureFolder + "tex1.png", eLib3MFTextureType::eTextureTypePNG, eLib3MFTextureTileStyle::eTextureTileStyleWrap, eLib3MFTextureTileStyle::eTextureTileStyleWrap);
-	auto textureGroup2 = fnLoadModelTexture(model, "/3D/Textures/tex2.png", sTextureFolder + "tex2.png", eLib3MFTextureType::eTextureTypePNG, eLib3MFTextureTileStyle::eTextureTileStyleMirror, eLib3MFTextureTileStyle::eTextureTileStyleWrap);
-	auto textureGroup3 = fnLoadModelTexture(model, "/3D/Textures/tex3.png", sTextureFolder + "tex3.png", eLib3MFTextureType::eTextureTypePNG, eLib3MFTextureTileStyle::eTextureTileStyleWrap, eLib3MFTextureTileStyle::eTextureTileStyleMirror);
-	auto textureGroup4 = fnLoadModelTexture(model, "/3D/Textures/tex4.png", sTextureFolder + "tex4.png", eLib3MFTextureType::eTextureTypePNG, eLib3MFTextureTileStyle::eTextureTileStyleClamp, eLib3MFTextureTileStyle::eTextureTileStyleWrap);
-	auto textureGroup5 = fnLoadModelTexture(model, "/3D/Textures/tex5.png", sTextureFolder + "tex5.png", eLib3MFTextureType::eTextureTypePNG, eLib3MFTextureTileStyle::eTextureTileStyleWrap, eLib3MFTextureTileStyle::eTextureTileStyleClamp);
-	auto textureGroup6 = fnLoadModelTexture(model, "/3D/Textures/tex6.png", sTextureFolder + "tex6.png", eLib3MFTextureType::eTextureTypePNG, eLib3MFTextureTileStyle::eTextureTileStyleClamp, eLib3MFTextureTileStyle::eTextureTileStyleMirror);
+	auto textureGroup1 = fnLoadModelTexture(model, "/3D/Textures/tex1.png", sTextureFolder + "tex1.png", eTextureType::PNG, eTextureTileStyle::Wrap, eTextureTileStyle::Wrap);
+	auto textureGroup2 = fnLoadModelTexture(model, "/3D/Textures/tex2.png", sTextureFolder + "tex2.png", eTextureType::PNG, eTextureTileStyle::Mirror, eTextureTileStyle::Wrap);
+	auto textureGroup3 = fnLoadModelTexture(model, "/3D/Textures/tex3.png", sTextureFolder + "tex3.png", eTextureType::PNG, eTextureTileStyle::Wrap, eTextureTileStyle::Mirror);
+	auto textureGroup4 = fnLoadModelTexture(model, "/3D/Textures/tex4.png", sTextureFolder + "tex4.png", eTextureType::PNG, eTextureTileStyle::Clamp, eTextureTileStyle::Wrap);
+	auto textureGroup5 = fnLoadModelTexture(model, "/3D/Textures/tex5.png", sTextureFolder + "tex5.png", eTextureType::PNG, eTextureTileStyle::Wrap, eTextureTileStyle::Clamp);
+	auto textureGroup6 = fnLoadModelTexture(model, "/3D/Textures/tex6.png", sTextureFolder + "tex6.png", eTextureType::PNG, eTextureTileStyle::Clamp, eTextureTileStyle::Mirror);
 
 	// Side 1
 	meshObject->SetTriangleProperties(0, fnCreateTexture(textureGroup1, 0.0, 0.0, 1.0, 0.0, 1.0, 1.0));
@@ -178,9 +178,9 @@ void TextureExample() {
 	meshObject->SetTriangleProperties(11, fnCreateTexture(textureGroup6, 1.0, 1.0, 0.0, 1.0, 0.0, 0.0));
 
 	// Add build item
-	model->AddBuildItem(meshObject.get(), CLib3MFWrapper::GetIdentityTransform());
+	model->AddBuildItem(meshObject.get(), CWrapper::GetIdentityTransform());
 
-	PLib3MFWriter writer = model->QueryWriter("3mf");
+	PWriter writer = model->QueryWriter("3mf");
 	writer->WriteToFile("texturegroup.3mf");
 
 	std::cout << "done" << std::endl;

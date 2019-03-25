@@ -45,7 +45,7 @@ using namespace Lib3MF;
 void printVersion() {
 	Lib3MF_uint32 nMajor, nMinor, nMicro;
 	std::string sReleaseInfo, sBuildInfo;
-	CLib3MFWrapper::GetLibraryVersion(nMajor, nMinor, nMicro, sReleaseInfo, sBuildInfo);
+	CWrapper::GetLibraryVersion(nMajor, nMinor, nMicro, sReleaseInfo, sBuildInfo);
 	std::cout << "Lib3MF version = " << nMajor << "." << nMinor << "." << nMicro;
 	if (!sReleaseInfo.empty()) {
 		std::cout << "-" << sReleaseInfo;
@@ -106,8 +106,8 @@ int convert(std::string sFilename) {
 	sOutputFilename.erase(sOutputFilename.length() - sExtension.length());
 	sOutputFilename += sNewExtension;
 
-	PLib3MFModel model = CLib3MFWrapper::CreateModel();
-	PLib3MFReader reader = model->QueryReader(sReaderName);
+	PModel model = CWrapper::CreateModel();
+	PReader reader = model->QueryReader(sReaderName);
 
 	// Import Model from File
 	std::cout << "reading " << sFilename << "..." << std::endl;
@@ -119,7 +119,7 @@ int convert(std::string sFilename) {
 	std::cout << "elapsed time: " << (GetTickCount64() - nStartTicks) << "ms" << std::endl;
 #endif
 
-	PLib3MFWriter writer = model->QueryWriter(sWriterName);
+	PWriter writer = model->QueryWriter(sWriterName);
 	std::cout << "writing " << sOutputFilename << "..." << std::endl;
 #ifndef __GNUC__
 	nStartTicks = GetTickCount64();

@@ -43,7 +43,7 @@ using namespace Lib3MF;
 void printVersion() {
 	Lib3MF_uint32 nMajor, nMinor, nMicro;
 	std::string sReleaseInfo, sBuildInfo;
-	CLib3MFWrapper::GetLibraryVersion(nMajor, nMinor, nMicro, sReleaseInfo, sBuildInfo);
+	CWrapper::GetLibraryVersion(nMajor, nMinor, nMicro, sReleaseInfo, sBuildInfo);
 	std::cout << "Lib3MF version = " << nMajor << "." << nMinor << "." << nMicro;
 	if (!sReleaseInfo.empty()) {
 		std::cout << "-" << sReleaseInfo;
@@ -80,9 +80,9 @@ void SliceExample() {
 	printVersion();
 	std::cout << "------------------------------------------------------------------" << std::endl;
 
-	PLib3MFModel model = CLib3MFWrapper::CreateModel();
+	PModel model = CWrapper::CreateModel();
 
-	PLib3MFMeshObject meshObject = model->AddMeshObject();
+	PMeshObject meshObject = model->AddMeshObject();
 	meshObject->SetName("Sliced Object [outbox]");
 
 	// Create mesh structure of a cube
@@ -121,7 +121,7 @@ void SliceExample() {
 	meshObject->SetGeometry(vertices, triangles);
 
 
-	PLib3MFSliceStack sliceStack = model->AddSliceStack(0.0);
+	PSliceStack sliceStack = model->AddSliceStack(0.0);
 
 
 
@@ -144,7 +144,7 @@ void SliceExample() {
 	Lib3MF_uint32 nSlices = 10;
 
 	for (Lib3MF_uint32 iSlice = 0; iSlice < nSlices; iSlice++) {
-		PLib3MFSlice slice = sliceStack->AddSlice((iSlice + 1.0)*fSizeZ / nSlices);
+		PSlice slice = sliceStack->AddSlice((iSlice + 1.0)*fSizeZ / nSlices);
 
 		// Rotate the ellpise as we move up z
 		double angle = 2 * (const_pi()*iSlice) / nSlices;
@@ -164,14 +164,14 @@ void SliceExample() {
 	// Assign this slice stack to mesh..., the exact geometry of the part
 	meshObject->AssignSliceStack(sliceStack.get());
 	// which is not an exact representation of the sliced geometry
-	meshObject->SetSlicesMeshResolution(eLib3MFSlicesMeshResolution::eSlicesMeshResolutionLowres);
+	meshObject->SetSlicesMeshResolution(eSlicesMeshResolution::Lowres);
 
 
 	// Add build item
-	model->AddBuildItem(meshObject.get(), CLib3MFWrapper::GetIdentityTransform());
+	model->AddBuildItem(meshObject.get(), CWrapper::GetIdentityTransform());
 
 	// Write file
-	PLib3MFWriter writer = model->QueryWriter("3mf");
+	PWriter writer = model->QueryWriter("3mf");
 	writer->WriteToFile("slice.3mf");
 
 	std::cout << "done" << std::endl;

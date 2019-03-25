@@ -41,7 +41,7 @@ using namespace Lib3MF;
 void printVersion() {
 	Lib3MF_uint32 nMajor, nMinor, nMicro;
 	std::string sReleaseInfo, sBuildInfo;
-	CLib3MFWrapper::GetLibraryVersion(nMajor, nMinor, nMicro, sReleaseInfo, sBuildInfo);
+	CWrapper::GetLibraryVersion(nMajor, nMinor, nMicro, sReleaseInfo, sBuildInfo);
 	std::cout << "Lib3MF version = " << nMajor << "." << nMinor << "." << nMicro;
 	if (!sReleaseInfo.empty()) {
 		std::cout << "-" << sReleaseInfo;
@@ -69,8 +69,8 @@ sLib3MFBeam fnCreateBeam(int v0, int v1, double r0, double r1, eLib3MFBeamLattic
 	result.m_Indices[1] = v1;
 	result.m_Radii[0] = r0;
 	result.m_Radii[1] = r1;
-	result.m_CapModes[0].m_enum = c0;
-	result.m_CapModes[1].m_enum = c1;
+	result.m_CapModes[0] = c0;
+	result.m_CapModes[1] = c1;
 	return result;
 }
 
@@ -81,9 +81,9 @@ void BeamLatticeExample() {
 	printVersion();
 	std::cout << "------------------------------------------------------------------" << std::endl;
 
-	PLib3MFModel model = CLib3MFWrapper::CreateModel();
+	PModel model = CWrapper::CreateModel();
 
-	PLib3MFMeshObject meshObject = model->AddMeshObject();
+	PMeshObject meshObject = model->AddMeshObject();
 	meshObject->SetName("Beamlattice");
 
 	// Create mesh structure of a cube
@@ -110,36 +110,36 @@ void BeamLatticeExample() {
 	double r1 = 1.5;
 	double r2 = 2.0;
 	double r3 = 2.5;
-	beams[0] = fnCreateBeam(2, 1, r0, r0, eBeamLatticeCapModeButt, eBeamLatticeCapModeButt);
-	beams[1] = fnCreateBeam(0, 3, r0, r1, eBeamLatticeCapModeSphere, eBeamLatticeCapModeButt);
-	beams[2] = fnCreateBeam(4, 5, r0, r2, eBeamLatticeCapModeSphere, eBeamLatticeCapModeButt);
-	beams[3] = fnCreateBeam(6, 7, r0, r3, eBeamLatticeCapModeHemiSphere, eBeamLatticeCapModeButt);
-	beams[4] = fnCreateBeam(0, 1, r1, r0, eBeamLatticeCapModeHemiSphere, eBeamLatticeCapModeButt);
-	beams[5] = fnCreateBeam(5, 4, r1, r1, eBeamLatticeCapModeSphere, eBeamLatticeCapModeHemiSphere);
-	beams[6] = fnCreateBeam(2, 3, r1, r2, eBeamLatticeCapModeSphere, eBeamLatticeCapModeSphere);
-	beams[7] = fnCreateBeam(7, 6, r1, r3, eBeamLatticeCapModeButt, eBeamLatticeCapModeButt);
-	beams[8] = fnCreateBeam(1, 2, r2, r2, eBeamLatticeCapModeButt, eBeamLatticeCapModeButt);
-	beams[9] = fnCreateBeam(6, 5, r2, r3, eBeamLatticeCapModeHemiSphere, eBeamLatticeCapModeButt);
-	beams[10] = fnCreateBeam(3, 0, r3, r0, eBeamLatticeCapModeButt, eBeamLatticeCapModeSphere);
-	beams[11] = fnCreateBeam(4, 7, r3, r1, eBeamLatticeCapModeHemiSphere, eBeamLatticeCapModeHemiSphere);
+	beams[0] = fnCreateBeam(2, 1, r0, r0, eBeamLatticeCapMode::Butt, eBeamLatticeCapMode::Butt);
+	beams[1] = fnCreateBeam(0, 3, r0, r1, eBeamLatticeCapMode::Sphere, eBeamLatticeCapMode::Butt);
+	beams[2] = fnCreateBeam(4, 5, r0, r2, eBeamLatticeCapMode::Sphere, eBeamLatticeCapMode::Butt);
+	beams[3] = fnCreateBeam(6, 7, r0, r3, eBeamLatticeCapMode::HemiSphere, eBeamLatticeCapMode::Butt);
+	beams[4] = fnCreateBeam(0, 1, r1, r0, eBeamLatticeCapMode::HemiSphere, eBeamLatticeCapMode::Butt);
+	beams[5] = fnCreateBeam(5, 4, r1, r1, eBeamLatticeCapMode::Sphere, eBeamLatticeCapMode::HemiSphere);
+	beams[6] = fnCreateBeam(2, 3, r1, r2, eBeamLatticeCapMode::Sphere, eBeamLatticeCapMode::Sphere);
+	beams[7] = fnCreateBeam(7, 6, r1, r3, eBeamLatticeCapMode::Butt, eBeamLatticeCapMode::Butt);
+	beams[8] = fnCreateBeam(1, 2, r2, r2, eBeamLatticeCapMode::Butt, eBeamLatticeCapMode::Butt);
+	beams[9] = fnCreateBeam(6, 5, r2, r3, eBeamLatticeCapMode::HemiSphere, eBeamLatticeCapMode::Butt);
+	beams[10] = fnCreateBeam(3, 0, r3, r0, eBeamLatticeCapMode::Butt, eBeamLatticeCapMode::Sphere);
+	beams[11] = fnCreateBeam(4, 7, r3, r1, eBeamLatticeCapMode::HemiSphere, eBeamLatticeCapMode::HemiSphere);
 	meshObject->SetGeometry(vertices, triangles);
 
 	// Set beamlattice geometry and metadata
-	PLib3MFBeamLattice beamLattice = meshObject->BeamLattice();
+	PBeamLattice beamLattice = meshObject->BeamLattice();
 	beamLattice->SetBeams(beams);
 	beamLattice->SetMinLength(0.005);
 
-	PLib3MFBeamSet set = beamLattice->AddBeamSet();
+	PBeamSet set = beamLattice->AddBeamSet();
 	set->SetName("Special Beams");
 	set->SetIdentifier("bs1");
 	std::vector<Lib3MF_uint32> references = { 2,0,5 };
 	set->SetReferences(references);
 
 	// Add build item
-	model->AddBuildItem(meshObject.get(), CLib3MFWrapper::GetIdentityTransform());
+	model->AddBuildItem(meshObject.get(), CWrapper::GetIdentityTransform());
 
 	// Write file
-	PLib3MFWriter writer = model->QueryWriter("3mf");
+	PWriter writer = model->QueryWriter("3mf");
 	writer->WriteToFile("beamlattice.3mf");
 
 	std::cout << "done" << std::endl;

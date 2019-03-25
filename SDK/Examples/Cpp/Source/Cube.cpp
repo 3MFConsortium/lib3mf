@@ -41,7 +41,7 @@ using namespace Lib3MF;
 void printVersion() {
 	Lib3MF_uint32 nMajor, nMinor, nMicro;
 	std::string sReleaseInfo, sBuildInfo;
-	CLib3MFWrapper::GetLibraryVersion(nMajor, nMinor, nMicro, sReleaseInfo, sBuildInfo);
+	CWrapper::GetLibraryVersion(nMajor, nMinor, nMicro, sReleaseInfo, sBuildInfo);
 	std::cout << "Lib3MF version = " << nMajor << "." << nMinor << "." << nMicro;
 	if (!sReleaseInfo.empty()) {
 		std::cout << "-" << sReleaseInfo;
@@ -78,9 +78,9 @@ void CubeExample() {
 	printVersion();
 	std::cout << "------------------------------------------------------------------" << std::endl;
 
-	PLib3MFModel model = CLib3MFWrapper::CreateModel();
+	PModel model = CWrapper::CreateModel();
 
-	PLib3MFMeshObject meshObject = model->AddMeshObject();
+	PMeshObject meshObject = model->AddMeshObject();
 	meshObject->SetName("Box");
 
 	// Create mesh structure of a cube
@@ -118,9 +118,9 @@ void CubeExample() {
 	meshObject->SetGeometry(vertices, triangles);
 
 	// Add build item
-	model->AddBuildItem(meshObject.get(), CLib3MFWrapper::GetIdentityTransform());
+	model->AddBuildItem(meshObject.get(), CWrapper::GetIdentityTransform());
 
-	PLib3MFWriter writer = model->QueryWriter("3mf");
+	PWriter writer = model->QueryWriter("3mf");
 	writer->WriteToFile("cube.3mf");
 
 	std::cout << "done" << std::endl;

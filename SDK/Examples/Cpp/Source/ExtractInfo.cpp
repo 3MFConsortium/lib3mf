@@ -41,7 +41,7 @@ using namespace Lib3MF;
 void printVersion() {
 	Lib3MF_uint32 nMajor, nMinor, nMicro;
 	std::string sReleaseInfo, sBuildInfo;
-	CLib3MFWrapper::GetLibraryVersion(nMajor, nMinor, nMicro, sReleaseInfo, sBuildInfo);
+	CWrapper::GetLibraryVersion(nMajor, nMinor, nMicro, sReleaseInfo, sBuildInfo);
 	std::cout << "Lib3MF version = " << nMajor << "." << nMinor << "." << nMicro;
 	if (!sReleaseInfo.empty()) {
 		std::cout << "-" << sReleaseInfo;
@@ -52,7 +52,7 @@ void printVersion() {
 	std::cout << std::endl;
 }
 
-void ShowThumbnailInformation(PLib3MFModel model)
+void ShowThumbnailInformation(PModel model)
 {
 	/*
 	// TODO: this is not yet implemented in Lib3MF
@@ -60,13 +60,13 @@ void ShowThumbnailInformation(PLib3MFModel model)
 }
 
 
-void ShowMetaDataInformation(PLib3MFMetaDataGroup metaDataGroup)
+void ShowMetaDataInformation(PMetaDataGroup metaDataGroup)
 {
 	Lib3MF_uint32 nMetaDataCount = metaDataGroup->GetMetaDataCount();
 
 	for (Lib3MF_uint32 iMeta = 0; iMeta < nMetaDataCount; iMeta++) {
 
-		PLib3MFMetaData metaData = metaDataGroup->GetMetaData(iMeta);
+		PMetaData metaData = metaDataGroup->GetMetaData(iMeta);
 		std::string sMetaDataValue = metaData->GetValue();
 		std::string sMetaDataName = metaData->GetName();
 		std::cout << "Metadatum: " << iMeta << ":" << std::endl;
@@ -75,7 +75,7 @@ void ShowMetaDataInformation(PLib3MFMetaDataGroup metaDataGroup)
 	}
 }
 
-void ShowSliceStack(PLib3MFSliceStack sliceStack, std::string indent)
+void ShowSliceStack(PSliceStack sliceStack, std::string indent)
 {
 	std::cout << indent << "SliceStackID:  " << sliceStack->GetResourceID() << std::endl;
 	if (sliceStack->GetSliceCount() > 0) {
@@ -89,22 +89,22 @@ void ShowSliceStack(PLib3MFSliceStack sliceStack, std::string indent)
 	}
 }
 
-void ShowObjectProperties(PLib3MFObject object)
+void ShowObjectProperties(PObject object)
 {
 	std::cout << "   Name:            \"" << object->GetName() << "\"" << std::endl;
 	std::cout << "   PartNumber:      \"" << object->GetPartNumber() << "\"" << std::endl;
 
 	switch (object->GetType()) {
-	case eObjectTypeModel:
+	case eObjectType::Model:
 		std::cout << "   Object type:     model" << std::endl;
 		break;
-	case eObjectTypeSupport:
+	case eObjectType::Support:
 		std::cout << "   Object type:     support" << std::endl;
 		break;
-	case eObjectTypeSolidSupport:
+	case eObjectType::SolidSupport:
 		std::cout << "   Object type:     solidsupport" << std::endl;
 		break;
-	case eObjectTypeOther:
+	case eObjectType::Other:
 		std::cout << "   Object type:     other" << std::endl;
 		break;
 	default:
@@ -113,7 +113,7 @@ void ShowObjectProperties(PLib3MFObject object)
 	}
 
 	if (object->HasSliceStack()) {
-		PLib3MFSliceStack sliceStack = object->GetSliceStack();
+		PSliceStack sliceStack = object->GetSliceStack();
 		ShowSliceStack(sliceStack, "   ");
 	}
 
@@ -122,7 +122,7 @@ void ShowObjectProperties(PLib3MFObject object)
 	}
 }
 
-void ShowMeshObjectInformation(PLib3MFMeshObject meshObject)
+void ShowMeshObjectInformation(PMeshObject meshObject)
 {
 	std::cout << "mesh object #" << meshObject->GetResourceID() << ": " << std::endl;
 
@@ -130,7 +130,7 @@ void ShowMeshObjectInformation(PLib3MFMeshObject meshObject)
 
 	Lib3MF_uint64 nVertexCount = meshObject->GetVertexCount();
 	Lib3MF_uint64 nTriangleCount = meshObject->GetTriangleCount();
-	PLib3MFBeamLattice beamLattice = meshObject->BeamLattice();
+	PBeamLattice beamLattice = meshObject->BeamLattice();
 
 	// Output data
 	std::cout << "   Vertex count:    " << nVertexCount << std::endl;
@@ -145,8 +145,8 @@ void ShowMeshObjectInformation(PLib3MFMeshObject meshObject)
 		eLib3MFBeamLatticeClipMode eClipMode;
 		Lib3MF_uint32 nClippingMesh;
 		beamLattice->GetClipping(eClipMode, nClippingMesh);
-		if (eClipMode != eLib3MFBeamLatticeClipMode::eBeamLatticeClipModeNoClipMode)
-			std::cout << "   |_Clipping Mesh ID:  " << nClippingMesh << "(mode=" << eClipMode << ")" << std::endl;
+		if (eClipMode != eBeamLatticeClipMode::NoClipMode)
+			std::cout << "   |_Clipping Mesh ID:  " << nClippingMesh << "(mode=" << (int)eClipMode << ")" << std::endl;
 		if (beamLattice->GetBeamSetCount() > 0) {
 			std::cout << "   |_BeamSet count:  " << beamLattice->GetBeamSetCount() << std::endl;
 		}
@@ -160,14 +160,14 @@ void ShowTransform(sLib3MFTransform transform, std::string indent) {
 	std::cout << indent << "                 [ " << transform.m_Fields[0][2] << " " << transform.m_Fields[1][2] << " " << transform.m_Fields[2][2] << " " << transform.m_Fields[3][2] << " ]" << std::endl;
 }
 
-void ShowComponentsObjectInformation(PLib3MFComponentsObject componentsObject)
+void ShowComponentsObjectInformation(PComponentsObject componentsObject)
 {
 	std::cout << "components object #" << componentsObject->GetResourceID() << ": " << std::endl;
 
 	ShowObjectProperties(componentsObject);
 	std::cout << "   Component count:    " << componentsObject->GetComponentCount() << std::endl;
 	for (Lib3MF_uint32 nIndex = 0; nIndex < componentsObject->GetComponentCount(); nIndex++) {
-		PLib3MFComponent component = componentsObject->GetComponent(nIndex);
+		PComponent component = componentsObject->GetComponent(nIndex);
 
 		std::cout << "   Component " << nIndex << ":    Object ID:   " << component->GetObjectResourceID() << std::endl;
 		if (component->HasTransform()) {
@@ -186,11 +186,11 @@ void ExtractInfoExample(std::string sFileName) {
 	printVersion();
 	std::cout << "------------------------------------------------------------------" << std::endl;
 
-	PLib3MFModel model = CLib3MFWrapper::CreateModel();
+	PModel model = CWrapper::CreateModel();
 
 	// Import Model from 3MF File
 	{
-		PLib3MFReader reader = model->QueryReader("3mf");
+		PReader reader = model->QueryReader("3mf");
 		// And deactivate the strict mode (default is "false", anyway. This just demonstrates where/how to use it).
 		reader->SetStrictModeActive(false);
 		reader->ReadFromFile(sFileName);
@@ -205,15 +205,15 @@ void ExtractInfoExample(std::string sFileName) {
 
 	ShowMetaDataInformation(model->GetMetaDataGroup());
 
-	PLib3MFResourceIterator sliceStacks = model->GetSliceStacks();
+	PSliceStackIterator sliceStacks = model->GetSliceStacks();
 	while (sliceStacks->MoveNext()) {
-		PLib3MFSliceStack sliceStack = sliceStacks->GetCurrentSliceStack();
+		PSliceStack sliceStack = sliceStacks->GetCurrentSliceStack();
 		ShowSliceStack(sliceStack, "");
 	}
 
-	PLib3MFObjectIterator objectIterator = model->GetObjects();
+	PObjectIterator objectIterator = model->GetObjects();
 	while (objectIterator->MoveNext()) {
-		PLib3MFObject object = objectIterator->GetCurrentObject();
+		PObject object = objectIterator->GetCurrentObject();
 		if (object->IsMeshObject()) {
 			ShowMeshObjectInformation(model->GetMeshObjectByID(object->GetResourceID()));
 		}
@@ -226,9 +226,9 @@ void ExtractInfoExample(std::string sFileName) {
 	}
 
 
-	PLib3MFBuildItemIterator buildItemIterator = model->GetBuildItems();
+	PBuildItemIterator buildItemIterator = model->GetBuildItems();
 	while (buildItemIterator->MoveNext()) {
-		PLib3MFBuildItem buildItem = buildItemIterator->GetCurrent();
+		PBuildItem buildItem = buildItemIterator->GetCurrent();
 
 		std::cout << "Build item (Object #" << buildItem->GetObjectResourceID() << "): " << std::endl;
 
