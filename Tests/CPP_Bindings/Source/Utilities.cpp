@@ -33,7 +33,7 @@ UnitTest_Utilities.cpp: Implementtion of Utilities for UnitTests
 
 #include "UnitTest_Utilities.h"
 
-void fnCreateBox(std::vector<sLib3MFPosition> &vctVertices, std::vector<sLib3MFTriangle> &vctTriangles) {
+void fnCreateBox(std::vector<Lib3MF::sPosition> &vctVertices, std::vector<Lib3MF::sTriangle> &vctTriangles) {
 	float fSizeX = 100.0f;
 	float fSizeY = 100.0f;
 	float fSizeZ = 100.0f;

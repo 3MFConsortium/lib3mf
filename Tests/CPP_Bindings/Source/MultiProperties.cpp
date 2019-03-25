@@ -39,10 +39,10 @@ namespace Lib3MF
 	protected:
 
 		virtual void SetUp() {
-			model = CLib3MFWrapper::CreateModel();
+			model = CWrapper::CreateModel();
 
-			std::vector<sLib3MFPosition> vctVertices;
-			std::vector<sLib3MFTriangle> vctTriangles;
+			std::vector<sPosition> vctVertices;
+			std::vector<sTriangle> vctTriangles;
 			fnCreateBox(vctVertices, vctTriangles);
 
 			mesh = model->AddMeshObject();
@@ -50,7 +50,7 @@ namespace Lib3MF
 			model->AddBuildItem(mesh.get(), getIdentityTransform());
 
 			baseMaterialGroup = model->AddBaseMaterialGroup();
-			sLib3MFColor tIn;
+			sColor tIn;
 			tIn.m_Red = 20;
 			tIn.m_Blue = 10;
 			tIn.m_Green = 100;
@@ -60,7 +60,7 @@ namespace Lib3MF
 			Lib3MF_uint32 bmPID2 = baseMaterialGroup->AddMaterial("Material2", tIn);
 
 			compositeMaterialGroup = model->AddCompositeMaterials(baseMaterialGroup.get());
-			std::vector<sLib3MFCompositeConstituent> constituents(2);
+			std::vector<sCompositeConstituent> constituents(2);
 			constituents[0].m_MixingRatio = 0.5;
 			constituents[0].m_PropertyID = bmPID1;
 			constituents[1].m_MixingRatio = 0.5;
@@ -80,9 +80,9 @@ namespace Lib3MF
 			textureAttachment->ReadFromFile(sTestFilesPath + "Textures/tex1.png");
 			texture2D = model->AddTexture2DFromAttachment(textureAttachment.get());
 
-			std::vector<sLib3MFTex2Coord> coords(0);
+			std::vector<sTex2Coord> coords(0);
 			texture2DGroup = model->AddTexture2DGroup(texture2D.get());
-			std::vector<sLib3MFTriangleProperties> properties(mesh->GetTriangleCount());
+			std::vector<sTriangleProperties> properties(mesh->GetTriangleCount());
 			for (Lib3MF_uint64 i = 0; i < mesh->GetTriangleCount(); i++) {
 				properties[i].m_ResourceID = texture2DGroup->GetResourceID();
 
@@ -98,21 +98,21 @@ namespace Lib3MF
 			model.reset();
 		}
 
-		PLib3MFModel model;
-		PLib3MFMeshObject mesh;
-		PLib3MFBaseMaterialGroup baseMaterialGroup;
-		PLib3MFCompositeMaterials compositeMaterialGroup;
-		PLib3MFColorGroup colorGroup;
-		PLib3MFTexture2D texture2D;
-		PLib3MFTexture2DGroup texture2DGroup;
+		PModel model;
+		PMeshObject mesh;
+		PBaseMaterialGroup baseMaterialGroup;
+		PCompositeMaterials compositeMaterialGroup;
+		PColorGroup colorGroup;
+		PTexture2D texture2D;
+		PTexture2DGroup texture2DGroup;
 
-		void setupMultiPropertyGroup(PLib3MFMultiPropertyGroup multiPropertyGroup);
+		void setupMultiPropertyGroup(PMultiPropertyGroup multiPropertyGroup);
 	};
 
 	TEST_F(MultiProperties, Create)
 	{
 		auto multiPropertyGroup = model->AddMultiPropertyGroup();
-		ASSERT_EQ(model->GetPropertyTypeByID(multiPropertyGroup->GetResourceID()), eLib3MFPropertyType::ePropertyTypeMulti);
+		ASSERT_EQ(model->GetPropertyTypeByID(multiPropertyGroup->GetResourceID()), ePropertyType::Multi);
 		auto multiPropertyGroup_ReOut = model->GetMultiPropertyGroupByID(multiPropertyGroup->GetResourceID());
 	}
 
@@ -126,32 +126,32 @@ namespace Lib3MF
 		setupMultiPropertyGroup(multiPropertyGroup);
 	}
 
-	void MultiProperties::setupMultiPropertyGroup(PLib3MFMultiPropertyGroup multiPropertyGroup)
+	void MultiProperties::setupMultiPropertyGroup(PMultiPropertyGroup multiPropertyGroup)
 	{
 		multiPropertyGroup->AddLayer(
-			sLib3MFMultiPropertyLayer{ baseMaterialGroup->GetResourceID(), eLib3MFBlendMethod::eBlendMethodMix });
+			sMultiPropertyLayer{ baseMaterialGroup->GetResourceID(), eBlendMethod::Mix });
 		ASSERT_EQ(multiPropertyGroup->GetLayerCount(), 1);
 
 		// cannot add two materials
 		ASSERT_SPECIFIC_THROW(multiPropertyGroup->AddLayer(
-			sLib3MFMultiPropertyLayer{ compositeMaterialGroup->GetResourceID(), eLib3MFBlendMethod::eBlendMethodMix }
+			sMultiPropertyLayer{ compositeMaterialGroup->GetResourceID(), eBlendMethod::Mix }
 		), ELib3MFException);
 
 		multiPropertyGroup->AddLayer(
-			sLib3MFMultiPropertyLayer{ colorGroup->GetResourceID(), eLib3MFBlendMethod::eBlendMethodMultiply });
+			sMultiPropertyLayer{ colorGroup->GetResourceID(), eBlendMethod::Multiply });
 
 		// cannot add two colorgroups
 		ASSERT_SPECIFIC_THROW(multiPropertyGroup->AddLayer(
-			sLib3MFMultiPropertyLayer{ colorGroup->GetResourceID(), eLib3MFBlendMethod::eBlendMethodMix }
+			sMultiPropertyLayer{ colorGroup->GetResourceID(), eBlendMethod::Mix }
 		), ELib3MFException);
 
 		// cannot add resource of incorrect type
 		ASSERT_SPECIFIC_THROW(multiPropertyGroup->AddLayer(
-			sLib3MFMultiPropertyLayer{ texture2D->GetResourceID(), eLib3MFBlendMethod::eBlendMethodMix }
+			sMultiPropertyLayer{ texture2D->GetResourceID(), eBlendMethod::Mix }
 		), ELib3MFException);
 
 		multiPropertyGroup->AddLayer(
-			sLib3MFMultiPropertyLayer{ texture2DGroup->GetResourceID(), eLib3MFBlendMethod::eBlendMethodMix });
+			sMultiPropertyLayer{ texture2DGroup->GetResourceID(), eBlendMethod::Mix });
 
 		ASSERT_EQ(multiPropertyGroup->GetLayerCount(), 3);
 
@@ -193,7 +193,7 @@ namespace Lib3MF
 
 		setupMultiPropertyGroup(multiPropertyGroup);
 
-		std::vector<sLib3MFTriangleProperties> properties(mesh->GetTriangleCount());
+		std::vector<sTriangleProperties> properties(mesh->GetTriangleCount());
 		
 		{
 			std::vector<Lib3MF_uint32> vctPropertyIDs;
@@ -212,7 +212,7 @@ namespace Lib3MF
 		 writer->WriteToBuffer(buffer);
 		 //writer->WriteToFile("MultiProperty_Out.3mf");
 
-		auto readModel = CLib3MFWrapper::CreateModel();
+		auto readModel = CWrapper::CreateModel();
 		auto reader = readModel->QueryReader("3mf");
 		//reader->ReadFromFile("MultiProperty_Out.3mf");
 		reader->ReadFromBuffer(buffer);

@@ -45,7 +45,7 @@ namespace Lib3MF
 		}
 
 		virtual void SetUp() {
-			model = CLib3MFWrapper::CreateModel();
+			model = CWrapper::CreateModel();
 			auto reader = model->QueryReader("3mf");
 			reader->ReadFromFile(InFolder + "Pyramid.3mf");
 			writer3MF = model->QueryWriter("3mf");
@@ -57,17 +57,17 @@ namespace Lib3MF
 			writerSTL.reset();
 		}
 	
-		static PLib3MFModel model;
-		static PLib3MFWriter writer3MF;
-		static PLib3MFWriter writerSTL;
+		static PModel model;
+		static PWriter writer3MF;
+		static PWriter writerSTL;
 
 		static std::string InFolder;
 		static std::string OutFolder;
 	};
 
-	PLib3MFModel Writer::model;
-	PLib3MFWriter Writer::writer3MF;
-	PLib3MFWriter Writer::writerSTL;
+	PModel Writer::model;
+	PWriter Writer::writer3MF;
+	PWriter Writer::writerSTL;
 	std::string Writer::InFolder(sTestFilesPath + "/Writer/");
 	std::string Writer::OutFolder(sOutFilesPath + "/Writer/");
 	

@@ -45,7 +45,7 @@ namespace Lib3MF
 		}
 
 		virtual void SetUp() {
-			model = CLib3MFWrapper::CreateModel();
+			model = CWrapper::CreateModel();
 			reader3MF = model->QueryReader("3mf");
 			readerSTL = model->QueryReader("stl");
 		}
@@ -55,14 +55,14 @@ namespace Lib3MF
 			readerSTL.reset();
 		}
 	
-		static PLib3MFModel model;
-		static PLib3MFReader reader3MF;
-		static PLib3MFReader readerSTL;
+		static PModel model;
+		static PReader reader3MF;
+		static PReader readerSTL;
 	};
 
-	PLib3MFModel Reader::model;
-	PLib3MFReader Reader::reader3MF;
-	PLib3MFReader Reader::readerSTL;
+	PModel Reader::model;
+	PReader Reader::reader3MF;
+	PReader Reader::readerSTL;
 
 	TEST_F(Reader, 3MFReadFromFile)
 	{

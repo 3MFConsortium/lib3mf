@@ -39,10 +39,10 @@ namespace Lib3MF
 	protected:
 
 		virtual void SetUp() {
-			model = CLib3MFWrapper::CreateModel();
+			model = CWrapper::CreateModel();
 
-			std::vector<sLib3MFPosition> vctVertices;
-			std::vector<sLib3MFTriangle> vctTriangles;
+			std::vector<sPosition> vctVertices;
+			std::vector<sTriangle> vctTriangles;
 			fnCreateBox(vctVertices, vctTriangles);
 
 			mesh = model->AddMeshObject();
@@ -60,18 +60,18 @@ namespace Lib3MF
 			model.reset();
 		}
 
-		PLib3MFModel model;
-		PLib3MFMeshObject mesh;
-		PLib3MFAttachment textureAttachment;
-		PLib3MFTexture2D texture2D;
+		PModel model;
+		PMeshObject mesh;
+		PAttachment textureAttachment;
+		PTexture2D texture2D;
 	};
 
 	TEST_F(TextureProperty, SetGet_Texture2DGroup)
 	{
-		std::vector<sLib3MFTex2Coord> coords(0);
+		std::vector<sTex2Coord> coords(0);
 
 		auto texture2DGroup = model->AddTexture2DGroup(texture2D.get());
-		std::vector<sLib3MFTriangleProperties> properties(mesh->GetTriangleCount());
+		std::vector<sTriangleProperties> properties(mesh->GetTriangleCount());
 		for (Lib3MF_uint64 i = 0; i < mesh->GetTriangleCount(); i++) {
 			properties[i].m_ResourceID = texture2DGroup->GetResourceID();
 
@@ -84,7 +84,7 @@ namespace Lib3MF
 		}
 		mesh->SetAllTriangleProperties(properties);
 
-		std::vector<sLib3MFTriangleProperties> obtainedProperties;
+		std::vector<sTriangleProperties> obtainedProperties;
 		mesh->GetAllTriangleProperties(obtainedProperties);
 		int count = 0;
 		for (Lib3MF_uint64 i = 0; i < mesh->GetTriangleCount(); i++) {
@@ -93,13 +93,13 @@ namespace Lib3MF
 				EXPECT_EQ(obtainedProperties[i].m_PropertyIDs[j], properties[i].m_PropertyIDs[j]);
 			}
 
-			sLib3MFTriangleProperties currentProperty;
+			sTriangleProperties currentProperty;
 			mesh->GetTriangleProperties(Lib3MF_uint32(i), currentProperty);
 			auto currentTexture2DGroup = model->GetTexture2DGroupByID(currentProperty.m_ResourceID);
 			EXPECT_EQ(currentProperty.m_ResourceID, properties[i].m_ResourceID);
 			for (Lib3MF_uint64 j = 0; j < 3; j++) {
 				EXPECT_EQ(currentProperty.m_PropertyIDs[j], properties[i].m_PropertyIDs[j]);
-				sLib3MFTex2Coord uvcoord = currentTexture2DGroup->GetTex2Coord(currentProperty.m_PropertyIDs[j]);
+				sTex2Coord uvcoord = currentTexture2DGroup->GetTex2Coord(currentProperty.m_PropertyIDs[j]);
 				EXPECT_DOUBLE_EQ(uvcoord.m_U, coords[count].m_U);
 				EXPECT_DOUBLE_EQ(uvcoord.m_V, coords[count++].m_V);
 			}
@@ -112,7 +112,7 @@ namespace Lib3MF
 	TEST_F(TextureProperty, WriteRead)
 	{
 		auto texture2DGroup = model->AddTexture2DGroup(texture2D.get());
-		std::vector<sLib3MFTriangleProperties> properties(mesh->GetTriangleCount());
+		std::vector<sTriangleProperties> properties(mesh->GetTriangleCount());
 		for (Lib3MF_uint64 i = 0; i < mesh->GetTriangleCount(); i++) {
 			properties[i].m_ResourceID = texture2DGroup->GetResourceID();
 			properties[i].m_PropertyIDs[0] = texture2DGroup->AddTex2Coord({ 1.0*i / mesh->GetTriangleCount(), 1.0 - 1.0*i / mesh->GetTriangleCount() });
@@ -126,7 +126,7 @@ namespace Lib3MF
 		writer->WriteToBuffer(buffer);
 		// writer->WriteToFile("Texture_Out.3mf");
 
-		auto readModel = CLib3MFWrapper::CreateModel();
+		auto readModel = CWrapper::CreateModel();
 		auto reader = readModel->QueryReader("3mf");
 		// reader->ReadFromFile("Texture_Out.3mf");
 		reader->ReadFromBuffer(buffer);

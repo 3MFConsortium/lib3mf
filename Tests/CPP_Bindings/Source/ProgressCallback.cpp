@@ -35,7 +35,7 @@ UnitTest_Writer.cpp: Defines Unittests for the Writer classes
 
 namespace Lib3MF
 {
-	class ProgressCallback : public ::testing::Test {
+	class ProgressCallbackTest : public ::testing::Test {
 	protected:
 
 		static void SetUpTestCase() {
@@ -45,7 +45,7 @@ namespace Lib3MF
 		}
 
 		virtual void SetUp() {
-			model = CLib3MFWrapper::CreateModel();
+			model = CWrapper::CreateModel();
 			auto reader = model->QueryReader("3mf");
 			reader->ReadFromFile(InFolder + "Pyramid.3mf");
 			writer3MF = model->QueryWriter("3mf");
@@ -55,8 +55,8 @@ namespace Lib3MF
 			writer3MF.reset();
 		}
 	
-		static PLib3MFModel model;
-		static PLib3MFWriter writer3MF;
+		static PModel model;
+		static PWriter writer3MF;
 
 		static std::string InFolder;
 		static std::string OutFolder;
@@ -64,51 +64,51 @@ namespace Lib3MF
 		static void* m_spUserData;
 	};
 
-	PLib3MFModel ProgressCallback::model;
-	PLib3MFWriter ProgressCallback::writer3MF;
-	std::string ProgressCallback::InFolder(sTestFilesPath + "/Writer/");
-	std::string ProgressCallback::OutFolder(sOutFilesPath + "/Writer/");
+	PModel ProgressCallbackTest::model;
+	PWriter ProgressCallbackTest::writer3MF;
+	std::string ProgressCallbackTest::InFolder(sTestFilesPath + "/Writer/");
+	std::string ProgressCallbackTest::OutFolder(sOutFilesPath + "/Writer/");
 
-	void* ProgressCallback::m_spUserData = reinterpret_cast<void*>(&ProgressCallback::model);
+	void* ProgressCallbackTest::m_spUserData = reinterpret_cast<void*>(&ProgressCallbackTest::model);
 
-	void Callback_Positive(bool* pAbort, Lib3MF_double dProgress, eLib3MFProgressIdentifier identifier, Lib3MF_pvoid pUserData)
+	void Callback_Positive(bool* pAbort, Lib3MF_double dProgress, eProgressIdentifier identifier, Lib3MF_pvoid pUserData)
 	{
 		std::cout << "Progress " << dProgress*100 << "/100";
-		if (identifier != eLib3MFProgressIdentifier::eProgressIdentifierQUERYCANCELED) {
+		if (identifier != eProgressIdentifier::QUERYCANCELED) {
 			std::string progressMessage;
-			CLib3MFWrapper::RetrieveProgressMessage(identifier, progressMessage);
+			CWrapper::RetrieveProgressMessage(identifier, progressMessage);
 			std::cout << ": info = \"" << progressMessage << "\"";
 		}
 		std::cout << "\n";
-		EXPECT_TRUE(ProgressCallback::m_spUserData == pUserData) << "Userdata does not match.";
+		EXPECT_TRUE(ProgressCallbackTest::m_spUserData == pUserData) << "Userdata does not match.";
 		*pAbort = false;
 	}
 
-	void Callback_Negative(bool* pAbort, Lib3MF_double dProgress, eLib3MFProgressIdentifier identifier, Lib3MF_pvoid pUserData)
+	void Callback_Negative(bool* pAbort, Lib3MF_double dProgress, eProgressIdentifier identifier, Lib3MF_pvoid pUserData)
 	{
 		Callback_Positive(pAbort, dProgress, identifier, pUserData);
 		*pAbort = dProgress > 0.5;
 	}
 
-	TEST_F(ProgressCallback, Write)
+	TEST_F(ProgressCallbackTest, Write)
 	{
-		ProgressCallback::writer3MF->SetProgressCallback(Callback_Positive, reinterpret_cast<Lib3MF_pvoid>(ProgressCallback::m_spUserData));
-		ProgressCallback::writer3MF->WriteToFile(ProgressCallback::OutFolder + "Pyramid.3mf");
+		ProgressCallbackTest::writer3MF->SetProgressCallback(Callback_Positive, reinterpret_cast<Lib3MF_pvoid>(ProgressCallbackTest::m_spUserData));
+		ProgressCallbackTest::writer3MF->WriteToFile(ProgressCallbackTest::OutFolder + "Pyramid.3mf");
 	}
 
-	TEST_F(ProgressCallback, Read)
+	TEST_F(ProgressCallbackTest, Read)
 	{
-		auto localModel = CLib3MFWrapper::CreateModel();
+		auto localModel = CWrapper::CreateModel();
 		auto reader = localModel->QueryReader("3mf");
-		reader->SetProgressCallback(Callback_Positive, ProgressCallback::m_spUserData);
+		reader->SetProgressCallback(Callback_Positive, ProgressCallbackTest::m_spUserData);
 		reader->ReadFromFile(InFolder + "Pyramid.3mf");
 	}
 
-	TEST_F(ProgressCallback, WriteNegative)
+	TEST_F(ProgressCallbackTest, WriteNegative)
 	{
 		try {
-			ProgressCallback::writer3MF->SetProgressCallback(Callback_Negative, ProgressCallback::m_spUserData);
-			ProgressCallback::writer3MF->WriteToFile(ProgressCallback::OutFolder + "Pyramid.3mf");
+			ProgressCallbackTest::writer3MF->SetProgressCallback(Callback_Negative, ProgressCallbackTest::m_spUserData);
+			ProgressCallbackTest::writer3MF->WriteToFile(ProgressCallbackTest::OutFolder + "Pyramid.3mf");
 			EXPECT_TRUE(false);
 		}
 		catch(ELib3MFException& e) {

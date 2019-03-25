@@ -39,15 +39,15 @@ namespace Lib3MF
 	protected:
 
 		virtual void SetUp() {
-			model = CLib3MFWrapper::CreateModel();
+			model = CWrapper::CreateModel();
 			colorGroup = model->AddColorGroup();
 		}
 		virtual void TearDown() {
 			model.reset();
 		}
 
-		PLib3MFModel model;
-		PLib3MFColorGroup colorGroup;
+		PModel model;
+		PColorGroup colorGroup;
 	};
 
 	TEST_F(ColorGroup, GetCount)
@@ -57,43 +57,43 @@ namespace Lib3MF
 
 	TEST_F(ColorGroup, AddGetSetColor)
 	{
-		sLib3MFColor tIn;
+		sColor tIn;
 		tIn.m_Red = 20;
 		tIn.m_Blue = 10;
 		tIn.m_Green = 100;
 		tIn.m_Alpha = 255;
 		Lib3MF_uint32 propertyID = colorGroup->AddColor(tIn);
 
-		colorGroup->AddColor(CLib3MFWrapper::RGBAToColor(0, 10, 20, 30));
+		colorGroup->AddColor(CWrapper::RGBAToColor(0, 10, 20, 30));
 		ASSERT_EQ(colorGroup->GetCount(), 2);
 
 		std::vector<Lib3MF_uint32> propertyIDs;
 		colorGroup->GetAllPropertyIDs(propertyIDs);
 		ASSERT_EQ(propertyIDs.size(), 2);
 		
-		sLib3MFColor tReOut = colorGroup->GetColor(propertyIDs[0]);
+		sColor tReOut = colorGroup->GetColor(propertyIDs[0]);
 		ASSERT_EQ(tIn.m_Red, tReOut.m_Red);
 		ASSERT_EQ(tIn.m_Green, tReOut.m_Green);
 		ASSERT_EQ(tIn.m_Blue, tReOut.m_Blue);
 		ASSERT_EQ(tIn.m_Alpha, tReOut.m_Alpha);
 
-		colorGroup->SetColor(propertyIDs[0], CLib3MFWrapper::RGBAToColor(12, 123, 23, 234));
+		colorGroup->SetColor(propertyIDs[0], CWrapper::RGBAToColor(12, 123, 23, 234));
 	}
 
 	TEST_F(ColorGroup, AddRemoveColor)
 	{
-		colorGroup->AddColor(CLib3MFWrapper::RGBAToColor(0, 10, 20, 30));
-		colorGroup->AddColor(CLib3MFWrapper::RGBAToColor(5, 15, 25, 35));
+		colorGroup->AddColor(CWrapper::RGBAToColor(0, 10, 20, 30));
+		colorGroup->AddColor(CWrapper::RGBAToColor(5, 15, 25, 35));
 
 		std::vector<Lib3MF_uint32> propertyIDs;
 		colorGroup->GetAllPropertyIDs(propertyIDs);
 
 		colorGroup->RemoveColor(propertyIDs[0]);
 		ASSERT_SPECIFIC_THROW(colorGroup->GetColor(propertyIDs[0]), ELib3MFException);
-		ASSERT_EQ(CLib3MFWrapper::RGBAToColor(5, 15, 25, 35).m_Alpha, colorGroup->GetColor(propertyIDs[1]).m_Alpha);
-		ASSERT_EQ(CLib3MFWrapper::RGBAToColor(5, 15, 25, 35).m_Blue, colorGroup->GetColor(propertyIDs[1]).m_Blue);
-		ASSERT_EQ(CLib3MFWrapper::RGBAToColor(5, 15, 25, 35).m_Green, colorGroup->GetColor(propertyIDs[1]).m_Green);
-		ASSERT_EQ(CLib3MFWrapper::RGBAToColor(5, 15, 25, 35).m_Red, colorGroup->GetColor(propertyIDs[1]).m_Red);
+		ASSERT_EQ(CWrapper::RGBAToColor(5, 15, 25, 35).m_Alpha, colorGroup->GetColor(propertyIDs[1]).m_Alpha);
+		ASSERT_EQ(CWrapper::RGBAToColor(5, 15, 25, 35).m_Blue, colorGroup->GetColor(propertyIDs[1]).m_Blue);
+		ASSERT_EQ(CWrapper::RGBAToColor(5, 15, 25, 35).m_Green, colorGroup->GetColor(propertyIDs[1]).m_Green);
+		ASSERT_EQ(CWrapper::RGBAToColor(5, 15, 25, 35).m_Red, colorGroup->GetColor(propertyIDs[1]).m_Red);
 	}
 
 }

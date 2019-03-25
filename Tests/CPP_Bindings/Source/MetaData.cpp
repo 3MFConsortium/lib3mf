@@ -45,7 +45,7 @@ namespace Lib3MF
 		}
 
 		virtual void SetUp() {
-			model = CLib3MFWrapper::CreateModel();
+			model = CWrapper::CreateModel();
 			metaDataGroup = model->GetMetaDataGroup();
 			metaData = metaDataGroup->AddMetaData("", "Title", "TheTitle", "xs:string", true);
 		}
@@ -53,14 +53,14 @@ namespace Lib3MF
 			model.reset();
 		}
 
-		static PLib3MFModel model;
-		static PLib3MFMetaDataGroup metaDataGroup;
-		static PLib3MFMetaData metaData;
+		static PModel model;
+		static PMetaDataGroup metaDataGroup;
+		static PMetaData metaData;
 	};
 
-	PLib3MFModel MetaData::model;
-	PLib3MFMetaDataGroup MetaData::metaDataGroup;
-	PLib3MFMetaData MetaData::metaData;
+	PModel MetaData::model;
+	PMetaDataGroup MetaData::metaDataGroup;
+	PMetaData MetaData::metaData;
 
 	TEST_F(MetaData, DefaultNameSpace)
 	{

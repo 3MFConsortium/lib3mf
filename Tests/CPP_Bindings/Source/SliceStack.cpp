@@ -45,7 +45,7 @@ namespace Lib3MF
 		}
 
 		virtual void SetUp() {
-			model = CLib3MFWrapper::CreateModel();
+			model = CWrapper::CreateModel();
 			sliceStack = model->AddSliceStack(.0);
 			mesh = model->AddMeshObject();
 
@@ -54,9 +54,9 @@ namespace Lib3MF
 			model.reset();
 		}
 
-		PLib3MFModel model;
-		PLib3MFSliceStack sliceStack;
-		PLib3MFMeshObject mesh;
+		PModel model;
+		PSliceStack sliceStack;
+		PMeshObject mesh;
 	};
 
 
@@ -78,14 +78,14 @@ namespace Lib3MF
 	{
 		ASSERT_FALSE(mesh->HasSliceStack());
 
-		eLib3MFSlicesMeshResolution res = mesh->GetSlicesMeshResolution();
-		ASSERT_EQ(res, eLib3MFSlicesMeshResolution::eSlicesMeshResolutionFullres);
+		eSlicesMeshResolution res = mesh->GetSlicesMeshResolution();
+		ASSERT_EQ(res, eSlicesMeshResolution::Fullres);
 
-		mesh->SetSlicesMeshResolution(eLib3MFSlicesMeshResolution::eSlicesMeshResolutionLowres);
-		ASSERT_EQ(mesh->GetSlicesMeshResolution(), eLib3MFSlicesMeshResolution::eSlicesMeshResolutionLowres);
+		mesh->SetSlicesMeshResolution(eSlicesMeshResolution::Lowres);
+		ASSERT_EQ(mesh->GetSlicesMeshResolution(), eSlicesMeshResolution::Lowres);
 
-		mesh->SetSlicesMeshResolution(eLib3MFSlicesMeshResolution::eSlicesMeshResolutionFullres);
-		ASSERT_EQ(mesh->GetSlicesMeshResolution(), eLib3MFSlicesMeshResolution::eSlicesMeshResolutionFullres);
+		mesh->SetSlicesMeshResolution(eSlicesMeshResolution::Fullres);
+		ASSERT_EQ(mesh->GetSlicesMeshResolution(), eSlicesMeshResolution::Fullres);
 	}
 
 	TEST_F(SliceStack, AddSlicesNegative)
@@ -134,7 +134,7 @@ namespace Lib3MF
 		}
 
 		virtual void SetUp() {
-			model = CLib3MFWrapper::CreateModel();
+			model = CWrapper::CreateModel();
 			stackA = model->AddSliceStack(.0);
 			stackB = model->AddSliceStack(0);
 			stackC = model->AddSliceStack(10.0);
@@ -147,9 +147,9 @@ namespace Lib3MF
 			model.reset();
 		}
 
-		PLib3MFModel model;
-		PLib3MFSliceStack stackA, stackB, stackC;
-		PLib3MFMeshObject mesh;
+		PModel model;
+		PSliceStack stackA, stackB, stackC;
+		PMeshObject mesh;
 	};
 
 
@@ -259,14 +259,14 @@ namespace Lib3MF
 		}
 
 		virtual void SetUp() {
-			model = CLib3MFWrapper::CreateModel();
+			model = CWrapper::CreateModel();
 			stackWithSlices = model->AddSliceStack(1.);
 			auto slice = stackWithSlices->AddSlice(2.);
 
 			writer = model->QueryWriter("3mf");
 
-			std::vector<sLib3MFPosition2D> vVertices;
-			sLib3MFPosition2D pos;
+			std::vector<sPosition2D> vVertices;
+			sPosition2D pos;
 			pos.m_Coordinates[0] = 0;
 			pos.m_Coordinates[1] = 0;
 			vVertices.push_back(pos);
@@ -295,12 +295,12 @@ namespace Lib3MF
 			model.reset();
 		}
 
-		PLib3MFModel model;
-		PLib3MFSliceStack stackWithSlices;
-		PLib3MFWriter writer;
+		PModel model;
+		PSliceStack stackWithSlices;
+		PWriter writer;
 	};
 
-	void CompareSliceStacks(PLib3MFSliceStack A, PLib3MFSliceStack B)
+	void CompareSliceStacks(PSliceStack A, PSliceStack B)
 	{
 		EXPECT_TRUE(abs(A->GetBottomZ() - B->GetBottomZ()) < 1e-5);
 		EXPECT_TRUE(A->GetOwnPath() == B->GetOwnPath());
@@ -322,7 +322,7 @@ namespace Lib3MF
 		}
 	}
 
-	void checkSliceModels(PLib3MFModel A, PLib3MFModel B)
+	void checkSliceModels(PModel A, PModel B)
 	{
 		auto stacks = A->GetSliceStacks();
 		auto readStacks = B->GetSliceStacks();
@@ -341,7 +341,7 @@ namespace Lib3MF
 		std::vector<Lib3MF_uint8> buffer;
 		writer->WriteToBuffer(buffer);
 
-		auto readModel = CLib3MFWrapper::CreateModel();
+		auto readModel = CWrapper::CreateModel();
 		auto reader = readModel->QueryReader("3mf");
 		reader->ReadFromBuffer(buffer);
 
@@ -356,7 +356,7 @@ namespace Lib3MF
 		std::vector<Lib3MF_uint8> buffer;
 		writer->WriteToBuffer(buffer);
 
-		auto readModel = CLib3MFWrapper::CreateModel();
+		auto readModel = CWrapper::CreateModel();
 		auto reader = readModel->QueryReader("3mf");
 		reader->ReadFromBuffer(buffer);
 
@@ -377,14 +377,14 @@ namespace Lib3MF
 		std::vector<Lib3MF_uint8> buffer;
 		writer->WriteToBuffer(buffer);
 
-		auto readModel = CLib3MFWrapper::CreateModel();
+		auto readModel = CWrapper::CreateModel();
 		{
 			auto reader = readModel->QueryReader("3mf");
 			reader->ReadFromBuffer(buffer);
 		}
 
 
-		auto readModelAgain = CLib3MFWrapper::CreateModel();
+		auto readModelAgain = CWrapper::CreateModel();
 		{
 			// write write and read again, since a true "fixpoint" is only reached after one more iteration
 			auto writerAgain = readModel->QueryWriter("3mf");
@@ -408,15 +408,15 @@ namespace Lib3MF
 		}
 
 		virtual void SetUp() {
-			model = CLib3MFWrapper::CreateModel();
+			model = CWrapper::CreateModel();
 			reader = model->QueryReader("3mf");
 		}
 		virtual void TearDown() {
 			model.reset();
 		}
 
-		PLib3MFModel model;
-		PLib3MFReader reader;
+		PModel model;
+		PReader reader;
 	};
 
 	TEST_F(SliceStackReading, ReadSlices)
@@ -448,15 +448,15 @@ namespace Lib3MF
 	{
 	public:
 		virtual void SetUp() {
-			model = CLib3MFWrapper::CreateModel();
+			model = CWrapper::CreateModel();
 			reader = model->QueryReader("3mf");
 		}
 		virtual void TearDown() {
 			model.reset();
 		}
 
-		PLib3MFModel model;
-		PLib3MFReader reader;
+		PModel model;
+		PReader reader;
 	};
 
 	INSTANTIATE_TEST_CASE_P(WorkingFiles, SliceStackReadingMultiple,
@@ -478,15 +478,15 @@ namespace Lib3MF
 	{
 	public:
 		virtual void SetUp() {
-			model = CLib3MFWrapper::CreateModel();
+			model = CWrapper::CreateModel();
 			reader = model->QueryReader("3mf");
 		}
 		virtual void TearDown() {
 			model.reset();
 		}
 
-		PLib3MFModel model;
-		PLib3MFReader reader;
+		PModel model;
+		PReader reader;
 	};
 
 	INSTANTIATE_TEST_CASE_P(FailingFiles, SliceStackReadingMultipleFailing,

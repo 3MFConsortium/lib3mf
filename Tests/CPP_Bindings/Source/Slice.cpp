@@ -45,11 +45,11 @@ namespace Lib3MF
 		}
 
 		virtual void SetUp() {
-			model = CLib3MFWrapper::CreateModel();
+			model = CWrapper::CreateModel();
 			sliceStack = model->AddSliceStack(.0);
 			slice = sliceStack->AddSlice(1.0);
 
-			sLib3MFPosition2D pos;
+			sPosition2D pos;
 			pos.m_Coordinates[0] = 0;
 			pos.m_Coordinates[1] = 0;
 			vVertices.push_back(pos);
@@ -82,10 +82,10 @@ namespace Lib3MF
 			model.reset();
 		}
 
-		PLib3MFModel model;
-		PLib3MFSliceStack sliceStack;
-		PLib3MFSlice slice;
-		std::vector<sLib3MFPosition2D> vVertices;
+		PModel model;
+		PSliceStack sliceStack;
+		PSlice slice;
+		std::vector<sPosition2D> vVertices;
 		std::vector<Lib3MF_uint32> vOpenPolygon;
 		std::vector<Lib3MF_uint32> vClosedPolygon;
 		std::vector<Lib3MF_uint32> vEmptyPolygon;
@@ -106,7 +106,7 @@ namespace Lib3MF
 		slice->SetVertices(vVertices);
 		ASSERT_EQ(slice->GetVertexCount(), vVertices.size());
 
-		std::vector<sLib3MFPosition2D> vNewVertices;
+		std::vector<sPosition2D> vNewVertices;
 		slice->GetVertices(vNewVertices);
 		ASSERT_EQ(vVertices.size(), vNewVertices.size());
 		for (int i = 0; i < vVertices.size(); i++) {

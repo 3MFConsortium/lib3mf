@@ -45,13 +45,13 @@ namespace Lib3MF
 		}
 
 		virtual void SetUp() {
-			model = CLib3MFWrapper::CreateModel();
+			model = CWrapper::CreateModel();
 			otherMesh = model->AddMeshObject();
 			mesh = model->AddMeshObject();
 			beamLattice = mesh->BeamLattice();
 			meshAfter = model->AddMeshObject();
 
-			sLib3MFPosition p;
+			sPosition p;
 			p.m_Coordinates[0] = 0;
 			p.m_Coordinates[1] = 0;
 			p.m_Coordinates[2] = 0;
@@ -67,18 +67,18 @@ namespace Lib3MF
 			model.reset();
 		}
 	
-		static PLib3MFModel model;
-		static PLib3MFMeshObject mesh;
-		static PLib3MFMeshObject otherMesh;
-		static PLib3MFMeshObject meshAfter;
-		static PLib3MFBeamLattice beamLattice;
+		static PModel model;
+		static PMeshObject mesh;
+		static PMeshObject otherMesh;
+		static PMeshObject meshAfter;
+		static PBeamLattice beamLattice;
 	};
 
-	PLib3MFModel BeamLattice::model;
-	PLib3MFMeshObject BeamLattice::mesh;
-	PLib3MFMeshObject BeamLattice::otherMesh;
-	PLib3MFMeshObject BeamLattice::meshAfter;
-	PLib3MFBeamLattice BeamLattice::beamLattice;
+	PModel BeamLattice::model;
+	PMeshObject BeamLattice::mesh;
+	PMeshObject BeamLattice::otherMesh;
+	PMeshObject BeamLattice::meshAfter;
+	PBeamLattice BeamLattice::beamLattice;
 	
 
 	TEST_F(BeamLattice, MinLength)
@@ -91,18 +91,18 @@ namespace Lib3MF
 
 	TEST_F(BeamLattice, Clipping)
 	{
-		eLib3MFBeamLatticeClipMode eClipMode;
+		eBeamLatticeClipMode eClipMode;
 		Lib3MF_uint32 nClippingResource;
 		beamLattice->GetClipping(eClipMode, nClippingResource);
-		ASSERT_EQ(eClipMode, eLib3MFBeamLatticeClipMode::eBeamLatticeClipModeNoClipMode);
+		ASSERT_EQ(eClipMode, eBeamLatticeClipMode::NoClipMode);
 
-		beamLattice->SetClipping(eLib3MFBeamLatticeClipMode::eBeamLatticeClipModeInside, otherMesh->GetResourceID());
+		beamLattice->SetClipping(eBeamLatticeClipMode::Inside, otherMesh->GetResourceID());
 		beamLattice->GetClipping(eClipMode, nClippingResource);
-		ASSERT_EQ(eClipMode, eLib3MFBeamLatticeClipMode::eBeamLatticeClipModeInside);
+		ASSERT_EQ(eClipMode, eBeamLatticeClipMode::Inside);
 		ASSERT_EQ(nClippingResource, otherMesh->GetResourceID());
 
 		try {
-			beamLattice->SetClipping(eLib3MFBeamLatticeClipMode::eBeamLatticeClipModeOutside, meshAfter->GetResourceID());
+			beamLattice->SetClipping(eBeamLatticeClipMode::Outside, meshAfter->GetResourceID());
 			ASSERT_FALSE(true);
 		}
 		catch (ELib3MFException& e) {
@@ -131,9 +131,9 @@ namespace Lib3MF
 
 	TEST_F(BeamLattice, GeometryShouldFail)
 	{
-		sLib3MFBeam beam;
-		beam.m_CapModes[0].m_code = eLib3MFBeamLatticeCapMode::eBeamLatticeCapModeHemiSphere;
-		beam.m_CapModes[1].m_code = eLib3MFBeamLatticeCapMode::eBeamLatticeCapModeButt;
+		sBeam beam;
+		beam.m_CapModes[0] = eBeamLatticeCapMode::HemiSphere;
+		beam.m_CapModes[1] = eBeamLatticeCapMode::Butt;
 
 		beam.m_Indices[0] = 0;
 		beam.m_Indices[1] = 0;
@@ -147,8 +147,8 @@ namespace Lib3MF
 			ASSERT_TRUE(true);
 		}
 
-		beam.m_CapModes[0].m_code = eLib3MFBeamLatticeCapMode::eBeamLatticeCapModeHemiSphere;
-		beam.m_CapModes[1].m_code = eLib3MFBeamLatticeCapMode::eBeamLatticeCapModeButt;
+		beam.m_CapModes[0] = eBeamLatticeCapMode::HemiSphere;
+		beam.m_CapModes[1] = eBeamLatticeCapMode::Butt;
 		beam.m_Indices[0] = 0;
 		beam.m_Indices[1] = 1;
 		beam.m_Radii[0] = 1.5;
@@ -170,9 +170,9 @@ namespace Lib3MF
 	TEST_F(BeamLattice, Geometry)
 	{
 		ASSERT_EQ(beamLattice->GetBeamCount(), 0);
-		sLib3MFBeam beam;
-		beam.m_CapModes[0].m_code = eLib3MFBeamLatticeCapMode::eBeamLatticeCapModeHemiSphere;
-		beam.m_CapModes[1].m_code = eLib3MFBeamLatticeCapMode::eBeamLatticeCapModeButt;
+		sBeam beam;
+		beam.m_CapModes[0] = eBeamLatticeCapMode::HemiSphere;
+		beam.m_CapModes[1] = eBeamLatticeCapMode::Butt;
 		beam.m_Indices[0] = 0;
 		beam.m_Indices[1] = 1;
 		beam.m_Radii[0] = 1.5;
@@ -191,7 +191,7 @@ namespace Lib3MF
 
 		auto outBeam = beamLattice->GetBeam(2);
 		for (int i = 0; i < 2; i++) {
-			ASSERT_EQ(outBeam.m_CapModes[i].m_code, beam.m_CapModes[i].m_code);
+			ASSERT_EQ(outBeam.m_CapModes[i], beam.m_CapModes[i]);
 			ASSERT_EQ(outBeam.m_Indices[i], beam.m_Indices[i]);
 			ASSERT_DOUBLE_EQ(outBeam.m_Radii[i], beam.m_Radii[i]);
 		}
@@ -204,12 +204,12 @@ namespace Lib3MF
 	TEST_F(BeamLattice, GeometryBulk)
 	{
 		// Preparations
-		sLib3MFBeam beam;
-		beam.m_CapModes[0].m_code = eLib3MFBeamLatticeCapMode::eBeamLatticeCapModeHemiSphere;
-		beam.m_CapModes[1].m_code = eLib3MFBeamLatticeCapMode::eBeamLatticeCapModeButt;
+		sBeam beam;
+		beam.m_CapModes[0] = eBeamLatticeCapMode::HemiSphere;
+		beam.m_CapModes[1] = eBeamLatticeCapMode::Butt;
 		beam.m_Radii[0] = 1.5;
 		beam.m_Radii[1] = 1.2;
-		std::vector<sLib3MFBeam> beams(3);
+		std::vector<sBeam> beams(3);
 		for (int i = 0; i < 3; i++) {
 			beam.m_Indices[0] = i;
 			beam.m_Indices[1] = (i+1)%3;
@@ -217,12 +217,12 @@ namespace Lib3MF
 		}
 
 		beamLattice->SetBeams(beams);
-		std::vector<sLib3MFBeam> outBeams;
+		std::vector<sBeam> outBeams;
 
 		beamLattice->GetBeams(outBeams);
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 2; j++) {
-				ASSERT_EQ(outBeams[i].m_CapModes[j].m_code, beams[i].m_CapModes[j].m_code);
+				ASSERT_EQ(outBeams[i].m_CapModes[j], beams[i].m_CapModes[j]);
 				ASSERT_EQ(outBeams[i].m_Indices[j], beams[i].m_Indices[j]);
 				ASSERT_DOUBLE_EQ(outBeams[i].m_Radii[j], beams[i].m_Radii[j]);
 			}
@@ -255,28 +255,28 @@ namespace Lib3MF
 
 	TEST_F(BeamLattice, ObjectType1)
 	{
-		sLib3MFBeam beam;
+		sBeam beam;
 		beam.m_Indices[0] = 0;
 		beam.m_Indices[1] = 1;
 		beam.m_Radii[0] = 1.5;
 		beam.m_Radii[1] = 1.2;
-		beam.m_CapModes[0].m_enum = eBeamLatticeCapModeSphere;
-		beam.m_CapModes[1].m_enum = eBeamLatticeCapModeSphere;
+		beam.m_CapModes[0] = eBeamLatticeCapMode::Sphere;
+		beam.m_CapModes[1] = eBeamLatticeCapMode::Sphere;
 
 		mesh->BeamLattice()->AddBeam(beam);
 
-		mesh->SetType(eLib3MFObjectType::eObjectTypeModel);
-		mesh->SetType(eLib3MFObjectType::eObjectTypeSolidSupport);
+		mesh->SetType(eObjectType::Model);
+		mesh->SetType(eObjectType::SolidSupport);
 
 		try {
-			mesh->SetType(eLib3MFObjectType::eObjectTypeSupport);
+			mesh->SetType(eObjectType::Support);
 			ASSERT_FALSE(true) << "Could set eObjectTypeSupport";
 		}
 		catch (ELib3MFException) {
 			ASSERT_TRUE(true);
 		}
 		try {
-			mesh->SetType(eLib3MFObjectType::eObjectTypeOther);
+			mesh->SetType(eObjectType::Other);
 			ASSERT_FALSE(true) << "Could set eObjectTypeOther";
 		}
 		catch (ELib3MFException) {
@@ -286,15 +286,15 @@ namespace Lib3MF
 
 	TEST_F(BeamLattice, ObjectType2)
 	{
-		sLib3MFBeam beam;
+		sBeam beam;
 		beam.m_Indices[0] = 0;
 		beam.m_Indices[1] = 1;
 		beam.m_Radii[0] = 1.5;
 		beam.m_Radii[1] = 1.2;
-		beam.m_CapModes[0].m_enum = eBeamLatticeCapModeSphere;
-		beam.m_CapModes[1].m_enum = eBeamLatticeCapModeSphere;
+		beam.m_CapModes[0] = eBeamLatticeCapMode::Sphere;
+		beam.m_CapModes[1] = eBeamLatticeCapMode::Sphere;
 
-		mesh->SetType(eLib3MFObjectType::eObjectTypeSupport);
+		mesh->SetType(eObjectType::Support);
 
 		auto beamLattice = mesh->BeamLattice();
 		try {
@@ -309,7 +309,7 @@ namespace Lib3MF
 	TEST_F(BeamLattice, Read_Attributes_Positive)
 	{
 		std::string fName("Box_Attributes_Positive.3mf");
-		auto model = CLib3MFWrapper::CreateModel();
+		auto model = CWrapper::CreateModel();
 		{
 			auto reader = model->QueryReader("3mf");
 			reader->ReadFromFile(sTestFilesPath + "/" + "BeamLattice" + "/" + fName);
@@ -320,7 +320,7 @@ namespace Lib3MF
 	TEST_F(BeamLattice, Read_Box_Simple)
 	{
 		std::string fName("Box_Simple.3mf");
-		auto model = CLib3MFWrapper::CreateModel();
+		auto model = CWrapper::CreateModel();
 		{
 			auto reader = model->QueryReader("3mf");
 			reader->ReadFromFile(sTestFilesPath + "/" + "BeamLattice" + "/" + fName);
@@ -337,7 +337,7 @@ namespace Lib3MF
 			{
 				const double dEps = 1e-7;
 				ASSERT_EQ(beamLattice->GetBeamCount(), 12);
-				sLib3MFBeam beam = beamLattice->GetBeam(0);
+				sBeam beam = beamLattice->GetBeam(0);
 				ASSERT_EQ(beam.m_Indices[0], 0);
 				ASSERT_EQ(beam.m_Indices[1], 1);
 				EXPECT_NEAR(beam.m_Radii[0], 1., dEps);
@@ -363,7 +363,7 @@ namespace Lib3MF
 
 	void Read_Attributes_Negative(std::string fName)
 	{
-		auto model = CLib3MFWrapper::CreateModel();
+		auto model = CWrapper::CreateModel();
 
 		{
 			auto reader = model->QueryReader("3mf");
@@ -373,21 +373,21 @@ namespace Lib3MF
 			std::string warning = reader->GetWarning(0, nErrorCode);
 		}
 
-		std::vector<eLib3MFBeamLatticeClipMode> vClipModes;
+		std::vector<eBeamLatticeClipMode> vClipModes;
 		std::vector<Lib3MF_uint32> vClipResourceIDs;
 		std::vector<Lib3MF_uint32> vRepresentationResourceIDs;
 		if (fName == "Box_Attributes_Negative_1.3mf") {
-			vClipModes.push_back(eLib3MFBeamLatticeClipMode::eBeamLatticeClipModeNoClipMode);
-			vClipModes.push_back(eLib3MFBeamLatticeClipMode::eBeamLatticeClipModeNoClipMode);
+			vClipModes.push_back(eBeamLatticeClipMode::NoClipMode);
+			vClipModes.push_back(eBeamLatticeClipMode::NoClipMode);
 			vClipResourceIDs.push_back(0);
 			vClipResourceIDs.push_back(0);
 			vRepresentationResourceIDs.push_back(0);
 			vRepresentationResourceIDs.push_back(0);
 		}
 		if (fName == "Box_Attributes_Negative_2.3mf") {
-			vClipModes.push_back(eLib3MFBeamLatticeClipMode::eBeamLatticeClipModeNoClipMode);
-			vClipModes.push_back(eLib3MFBeamLatticeClipMode::eBeamLatticeClipModeOutside);
-			vClipModes.push_back(eLib3MFBeamLatticeClipMode::eBeamLatticeClipModeInside);
+			vClipModes.push_back(eBeamLatticeClipMode::NoClipMode);
+			vClipModes.push_back(eBeamLatticeClipMode::Outside);
+			vClipModes.push_back(eBeamLatticeClipMode::Inside);
 			vClipResourceIDs.push_back(0);
 			vClipResourceIDs.push_back(1);
 			vClipResourceIDs.push_back(2);
@@ -403,11 +403,11 @@ namespace Lib3MF
 			auto meshObject = model->GetMeshObjectByID(modelResource->GetResourceID());
 			auto beamLattice = meshObject->BeamLattice();
 			
-			eLib3MFBeamLatticeClipMode eClipMode;
+			eBeamLatticeClipMode eClipMode;
 			Lib3MF_uint32 nResourceID;
 			beamLattice->GetClipping(eClipMode, nResourceID);
 			ASSERT_EQ(vClipModes[nIndex], eClipMode) << L"Clip mode does not match";
-			if (eClipMode != eLib3MFBeamLatticeClipMode::eBeamLatticeClipModeNoClipMode) {
+			if (eClipMode != eBeamLatticeClipMode::NoClipMode) {
 				ASSERT_EQ(vClipResourceIDs[nIndex], nResourceID) << L"Clipping Resource ID does not match";
 			}
 

@@ -44,7 +44,7 @@ namespace Lib3MF
 			m_sRelationshipType_Texture = "http://schemas.microsoft.com/3dmanufacturing/2013/01/3dtexture";
 			m_sPath_Texture = "/3D/Textures/MyTexture.png";
 
-			model = CLib3MFWrapper::CreateModel();
+			model = CWrapper::CreateModel();
 			otherAttachment = model->AddAttachment(m_sPath, m_sRelationshipType);
 			textureAttachment = model->AddAttachment(m_sPath_Texture, m_sRelationshipType_Texture);
 		}
@@ -52,9 +52,9 @@ namespace Lib3MF
 			model.reset();
 		}
 
-		PLib3MFModel model;
-		PLib3MFAttachment otherAttachment;
-		PLib3MFAttachment textureAttachment;
+		PModel model;
+		PAttachment otherAttachment;
+		PAttachment textureAttachment;
 		std::string m_sPath;
 		std::string m_sRelationshipType;
 		std::string m_sRelationshipType_Texture;
@@ -85,7 +85,7 @@ namespace Lib3MF
 			std::string m_sRelationshipType_Texture = "http://schemas.microsoft.com/3dmanufacturing/2013/01/3dtexture";
 			m_sPath_Texture = "/3D/Textures/MyTexture_";
 
-			model = CLib3MFWrapper::CreateModel();
+			model = CWrapper::CreateModel();
 			for (int i = 0; i < 3; i++) {
 				auto attachment = model->AddAttachment(m_sPath_Texture+std::to_string(i)+".png", m_sRelationshipType_Texture);
 				model->AddTexture2DFromAttachment(attachment.get());
@@ -96,7 +96,7 @@ namespace Lib3MF
 			model.reset();
 		}
 
-		PLib3MFModel model;
+		PModel model;
 		std::string m_sPath_Texture;
 	};
 
@@ -117,7 +117,7 @@ namespace Lib3MF
 
 	TEST_F(Model_TextureResource, WriteRead)
 	{
-		auto writeModel = CLib3MFWrapper::CreateModel();
+		auto writeModel = CWrapper::CreateModel();
 		std::string sRelationshipType_Texture = "http://schemas.microsoft.com/3dmanufacturing/2013/01/3dtexture";
 		std::string sPath_Texture = "/3D/Textures/MyTexture";
 		std::vector<Lib3MF_uint8> buffer;
@@ -138,7 +138,7 @@ namespace Lib3MF
 			writer->WriteToBuffer(buffer);
 		}
 		
-		auto readModel = CLib3MFWrapper::CreateModel();
+		auto readModel = CWrapper::CreateModel();
 		auto reader = readModel->QueryReader("3mf");
 		reader->ReadFromBuffer(buffer);
 
@@ -160,7 +160,7 @@ namespace Lib3MF
 			m_sRelationshipType_Texture = "http://schemas.microsoft.com/3dmanufacturing/2013/01/3dtexture";
 			m_sPath_Texture = "/3D/Textures/MyTexture.png";
 
-			model = CLib3MFWrapper::CreateModel();
+			model = CWrapper::CreateModel();
 			textureAttachment = model->AddAttachment(m_sPath_Texture, m_sRelationshipType_Texture);
 			texture = model->AddTexture2DFromAttachment(textureAttachment.get());
 		}
@@ -168,36 +168,36 @@ namespace Lib3MF
 			model.reset();
 		}
 
-		PLib3MFModel model;
-		PLib3MFAttachment textureAttachment;
-		PLib3MFTexture2D texture;
+		PModel model;
+		PAttachment textureAttachment;
+		PTexture2D texture;
 		std::string m_sRelationshipType_Texture;
 		std::string m_sPath_Texture;
 	};
 
 	TEST_F(TextureResource, Properties)
 	{
-		EXPECT_EQ(texture->GetContentType(), eLib3MFTextureType::eTextureTypePNG);
-		texture->SetContentType(eLib3MFTextureType::eTextureTypeJPEG);
-		EXPECT_EQ(texture->GetContentType(), eLib3MFTextureType::eTextureTypeJPEG);
+		EXPECT_EQ(texture->GetContentType(), eTextureType::PNG);
+		texture->SetContentType(eTextureType::JPEG);
+		EXPECT_EQ(texture->GetContentType(), eTextureType::JPEG);
 
-		eLib3MFTextureTileStyle u, v, u1, v1;
+		eTextureTileStyle u, v, u1, v1;
 		texture->GetTileStyleUV(u, v);
-		EXPECT_EQ(u, eLib3MFTextureTileStyle::eTextureTileStyleWrap);
-		EXPECT_EQ(v, eLib3MFTextureTileStyle::eTextureTileStyleWrap);
-		u1 = eLib3MFTextureTileStyle::eTextureTileStyleMirror;
-		v1 = eLib3MFTextureTileStyle::eTextureTileStyleNoTileStyle;
+		EXPECT_EQ(u, eTextureTileStyle::Wrap);
+		EXPECT_EQ(v, eTextureTileStyle::Wrap);
+		u1 = eTextureTileStyle::Mirror;
+		v1 = eTextureTileStyle::NoTileStyle;
 		texture->SetTileStyleUV(u1, v1);
 		texture->GetTileStyleUV(u, v);
 		EXPECT_EQ(u, u1);
 		EXPECT_EQ(v, v1);
 
 
-		EXPECT_EQ(texture->GetFilter(), eLib3MFTextureFilter::eTextureFilterAuto);
-		texture->SetFilter(eLib3MFTextureFilter::eTextureFilterNearest);
-		EXPECT_EQ(texture->GetFilter(), eLib3MFTextureFilter::eTextureFilterNearest);
-		texture->SetFilter(eLib3MFTextureFilter::eTextureFilterLinear);
-		EXPECT_EQ(texture->GetFilter(), eLib3MFTextureFilter::eTextureFilterLinear);
+		EXPECT_EQ(texture->GetFilter(), eTextureFilter::Auto);
+		texture->SetFilter(eTextureFilter::Nearest);
+		EXPECT_EQ(texture->GetFilter(), eTextureFilter::Nearest);
+		texture->SetFilter(eTextureFilter::Linear);
+		EXPECT_EQ(texture->GetFilter(), eTextureFilter::Linear);
 	}
 
 }

@@ -33,7 +33,7 @@ Interface version: 2.0.0
 
 */
 
-#include "lib3mf.h"
+#include "lib3mf_abi.hpp"
 #include "lib3mf_interfaces.hpp"
 #include "lib3mf_interfaceexception.hpp"
 

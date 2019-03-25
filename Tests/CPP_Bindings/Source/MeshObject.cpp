@@ -72,22 +72,22 @@ namespace Lib3MF
 		}
 
 		virtual void SetUp() {
-			model = CLib3MFWrapper::CreateModel();
+			model = CWrapper::CreateModel();
 			mesh = model->AddMeshObject();
 		}
 		virtual void TearDown() {
 			model.reset();
 		}
 	
-		static PLib3MFModel model;
-		static PLib3MFMeshObject mesh;
-		static sLib3MFPosition pVertices[8];
-		static sLib3MFTriangle pTriangles[12];
+		static PModel model;
+		static PMeshObject mesh;
+		static sPosition pVertices[8];
+		static sTriangle pTriangles[12];
 	};
-	PLib3MFModel MeshObject::model;
-	PLib3MFMeshObject MeshObject::mesh;
-	sLib3MFPosition MeshObject::pVertices[8];
-	sLib3MFTriangle MeshObject::pTriangles[12];
+	PModel MeshObject::model;
+	PMeshObject MeshObject::mesh;
+	sPosition MeshObject::pVertices[8];
+	sTriangle MeshObject::pTriangles[12];
 
 	TEST_F(MeshObject, CountFunctions)
 	{
@@ -97,7 +97,7 @@ namespace Lib3MF
 
 	TEST_F(MeshObject, SingleVertexOperations)
 	{
-		sLib3MFPosition pos, posOut;
+		sPosition pos, posOut;
 		pos.m_Coordinates[0] = 0.0;
 		pos.m_Coordinates[1] = 0.0;
 		pos.m_Coordinates[2] = 0.0;
@@ -135,16 +135,16 @@ namespace Lib3MF
 		mesh->AddVertex(pVertices[2]);
 		mesh->AddVertex(pVertices[3]);
 
-		sLib3MFTriangle t0 = fnCreateTriangle(2, 1, 0);
+		sTriangle t0 = fnCreateTriangle(2, 1, 0);
 		mesh->AddTriangle(t0);
 		ASSERT_EQ(1, mesh->GetTriangleCount());
 
-		sLib3MFTriangle t1 = fnCreateTriangle(0, 3, 2);
+		sTriangle t1 = fnCreateTriangle(0, 3, 2);
 		Lib3MF_uint32 index = mesh->AddTriangle(t1);
 		ASSERT_EQ(1, index);
 		ASSERT_EQ(2, mesh->GetTriangleCount());
 
-		sLib3MFTriangle t = mesh->GetTriangle(1);
+		sTriangle t = mesh->GetTriangle(1);
 		ASSERT_EQ(t.m_Indices[0], t1.m_Indices[0]);
 		ASSERT_EQ(t.m_Indices[1], t1.m_Indices[1]);
 		ASSERT_EQ(t.m_Indices[2], t1.m_Indices[2]);
@@ -158,19 +158,19 @@ namespace Lib3MF
 
 	TEST_F(MeshObject, EmptyGeometryOperations)
 	{
-		mesh->SetGeometry(CLib3MFInputVector<sLib3MFPosition>(pVertices, 8), CLib3MFInputVector<sLib3MFTriangle>(nullptr, 0));
-		mesh->SetGeometry(CLib3MFInputVector<sLib3MFPosition>(nullptr, 0), CLib3MFInputVector<sLib3MFTriangle>(nullptr, 0));
-		ASSERT_SPECIFIC_THROW(mesh->SetGeometry(CLib3MFInputVector<sLib3MFPosition>(pVertices, 8), CLib3MFInputVector<sLib3MFTriangle>(nullptr, 1)), ELib3MFException);
-		ASSERT_SPECIFIC_THROW(mesh->SetGeometry(CLib3MFInputVector<sLib3MFPosition>(nullptr, 0), CLib3MFInputVector<sLib3MFTriangle>(pTriangles, 12)), ELib3MFException);
+		mesh->SetGeometry(CLib3MFInputVector<sPosition>(pVertices, 8), CLib3MFInputVector<sTriangle>(nullptr, 0));
+		mesh->SetGeometry(CLib3MFInputVector<sPosition>(nullptr, 0), CLib3MFInputVector<sTriangle>(nullptr, 0));
+		ASSERT_SPECIFIC_THROW(mesh->SetGeometry(CLib3MFInputVector<sPosition>(pVertices, 8), CLib3MFInputVector<sTriangle>(nullptr, 1)), ELib3MFException);
+		ASSERT_SPECIFIC_THROW(mesh->SetGeometry(CLib3MFInputVector<sPosition>(nullptr, 0), CLib3MFInputVector<sTriangle>(pTriangles, 12)), ELib3MFException);
 	}
 
 	TEST_F(MeshObject, GeometryOperations)
 	{
-		mesh->SetGeometry(CLib3MFInputVector<sLib3MFPosition>(pVertices, 8), CLib3MFInputVector<sLib3MFTriangle>(pTriangles, 12));
+		mesh->SetGeometry(CLib3MFInputVector<sPosition>(pVertices, 8), CLib3MFInputVector<sTriangle>(pTriangles, 12));
 		ASSERT_EQ(mesh->GetVertexCount(), 8);
 		ASSERT_EQ(mesh->GetTriangleCount(), 12);
 		
-		std::vector<sLib3MFPosition> vctPositions;
+		std::vector<sPosition> vctPositions;
 		mesh->GetVertices(vctPositions);
 		ASSERT_EQ(vctPositions.size(), mesh->GetVertexCount());
 		for (Lib3MF_uint32 i = 0; i < mesh->GetVertexCount(); i++)
@@ -179,7 +179,7 @@ namespace Lib3MF
 				ASSERT_EQ(pVertices[i].m_Coordinates[j], vctPositions[i].m_Coordinates[j]);
 		}
 
-		std::vector<sLib3MFTriangle> vctTriangles;
+		std::vector<sTriangle> vctTriangles;
 		mesh->GetTriangleIndices(vctTriangles);
 		ASSERT_EQ(vctTriangles.size(), mesh->GetTriangleCount());
 		for (Lib3MF_uint32 i = 0; i < mesh->GetTriangleCount(); i++)
@@ -193,20 +193,20 @@ namespace Lib3MF
 	TEST_F(MeshObject, IsManifoldAndOriented)
 	{
 		ASSERT_FALSE(mesh->IsManifoldAndOriented());
-		mesh->SetGeometry(CLib3MFInputVector<sLib3MFPosition>(pVertices, 8), CLib3MFInputVector<sLib3MFTriangle>(pTriangles, 12));
+		mesh->SetGeometry(CLib3MFInputVector<sPosition>(pVertices, 8), CLib3MFInputVector<sTriangle>(pTriangles, 12));
 		ASSERT_TRUE(mesh->IsManifoldAndOriented());
 	}
 
 	TEST_F(MeshObject, IsValid)
 	{
 		ASSERT_FALSE(mesh->IsValid());
-		mesh->SetType(eLib3MFObjectType::eObjectTypeOther);
+		mesh->SetType(eObjectType::Other);
 		ASSERT_FALSE(mesh->IsValid());
-		mesh->SetType(eLib3MFObjectType::eObjectTypeSolidSupport);
+		mesh->SetType(eObjectType::SolidSupport);
 		ASSERT_FALSE(mesh->IsValid());
-		mesh->SetType(eLib3MFObjectType::eObjectTypeSupport);
+		mesh->SetType(eObjectType::Support);
 		ASSERT_TRUE(mesh->IsValid());
-		mesh->SetType(eLib3MFObjectType::eObjectTypeModel);
+		mesh->SetType(eObjectType::Model);
 		ASSERT_FALSE(mesh->IsValid());
 	}
 

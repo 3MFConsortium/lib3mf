@@ -45,7 +45,7 @@ namespace Lib3MF
 		}
 
 		virtual void SetUp() {
-			model = CLib3MFWrapper::CreateModel();
+			model = CWrapper::CreateModel();
 			auto reader3MF= model->QueryReader("3mf");
 			reader3MF->ReadFromFile(InFolder + "WagonWithWheels.3mf");
 		}
@@ -53,11 +53,11 @@ namespace Lib3MF
 			model.reset();
 		}
 	
-		static PLib3MFModel model;
+		static PModel model;
 		static std::string InFolder;
 	};
 
-	PLib3MFModel BuildItems::model;
+	PModel BuildItems::model;
 	std::string BuildItems::InFolder(sTestFilesPath + "/BuildItems/");
 
 	TEST_F(BuildItems, TestIterating)
@@ -116,7 +116,7 @@ namespace Lib3MF
 		ASSERT_TRUE(buildItems->MoveNext());
 		auto buildItem = buildItems->GetCurrent();
 			
-		sLib3MFTransform transformation;
+		sTransform transformation;
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < 3; j++)
 				transformation.m_Fields[i][j] = Lib3MF_single(i - j);

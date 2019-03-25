@@ -156,7 +156,7 @@ inline sLib3MFTriangle fnCreateTriangle(int v0, int v1, int v2)
 void fnCreateBox(std::vector<sLib3MFPosition> &vctVertices, std::vector<sLib3MFTriangle> &vctTriangles);
 
 
-inline void CheckReaderWarnings(Lib3MF::PLib3MFReader reader, Lib3MF_uint32 nWarnings)
+inline void CheckReaderWarnings(Lib3MF::PReader reader, Lib3MF_uint32 nWarnings)
 {
 	EXPECT_EQ(reader->GetWarningCount(), nWarnings);
 	for (Lib3MF_uint32 iWarning = 0; iWarning < reader->GetWarningCount(); iWarning++)

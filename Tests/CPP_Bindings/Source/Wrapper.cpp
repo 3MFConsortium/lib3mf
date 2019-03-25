@@ -44,7 +44,7 @@ namespace Lib3MF
 	{
 		Lib3MF_uint32 nMajor, nMinor, nMicro;
 		std::string sPreReleaseInfo, sBuildInfo;
-		CLib3MFWrapper::GetLibraryVersion(nMajor, nMinor, nMicro, sPreReleaseInfo, sBuildInfo);
+		CWrapper::GetLibraryVersion(nMajor, nMinor, nMicro, sPreReleaseInfo, sBuildInfo);
 
 		ASSERT_EQ(nMajor, LIB3MF_VERSION_MAJOR);
 		ASSERT_EQ(nMinor, LIB3MF_VERSION_MINOR);
@@ -58,34 +58,34 @@ namespace Lib3MF
 		Lib3MF_uint32 nMajor, nMinor, nMicro;
 		bool bIsSupported;
 
-		CLib3MFWrapper::GetSpecificationVersion("BogusSpecification", bIsSupported, nMajor, nMinor, nMicro);
+		CWrapper::GetSpecificationVersion("BogusSpecification", bIsSupported, nMajor, nMinor, nMicro);
 		ASSERT_FALSE(bIsSupported);
 
-		CLib3MFWrapper::GetSpecificationVersion("http://schemas.microsoft.com/3dmanufacturing/core/2015/02", bIsSupported, nMajor, nMinor, nMicro);
+		CWrapper::GetSpecificationVersion("http://schemas.microsoft.com/3dmanufacturing/core/2015/02", bIsSupported, nMajor, nMinor, nMicro);
 		ASSERT_TRUE(bIsSupported);
 		ASSERT_EQ(nMajor, 1);
 		ASSERT_EQ(nMinor, 2);
 		ASSERT_EQ(nMicro, 3);
 
-		CLib3MFWrapper::GetSpecificationVersion("http://schemas.microsoft.com/3dmanufacturing/material/2015/02", bIsSupported, nMajor, nMinor, nMicro);
+		CWrapper::GetSpecificationVersion("http://schemas.microsoft.com/3dmanufacturing/material/2015/02", bIsSupported, nMajor, nMinor, nMicro);
 		ASSERT_TRUE(bIsSupported);
 		ASSERT_EQ(nMajor, 1);
 		ASSERT_EQ(nMinor, 1);
 		ASSERT_EQ(nMicro, 0);
 
-		CLib3MFWrapper::GetSpecificationVersion("http://schemas.microsoft.com/3dmanufacturing/production/2015/06", bIsSupported, nMajor, nMinor, nMicro);
+		CWrapper::GetSpecificationVersion("http://schemas.microsoft.com/3dmanufacturing/production/2015/06", bIsSupported, nMajor, nMinor, nMicro);
 		ASSERT_TRUE(bIsSupported);
 		ASSERT_EQ(nMajor, 1);
 		ASSERT_EQ(nMinor, 1);
 		ASSERT_EQ(nMicro, 2);
 
-		CLib3MFWrapper::GetSpecificationVersion("http://schemas.microsoft.com/3dmanufacturing/beamlattice/2017/02", bIsSupported, nMajor, nMinor, nMicro);
+		CWrapper::GetSpecificationVersion("http://schemas.microsoft.com/3dmanufacturing/beamlattice/2017/02", bIsSupported, nMajor, nMinor, nMicro);
 		ASSERT_TRUE(bIsSupported);
 		ASSERT_EQ(nMajor, 1);
 		ASSERT_EQ(nMinor, 0);
 		ASSERT_EQ(nMicro, 4);
 
-		CLib3MFWrapper::GetSpecificationVersion("http://schemas.microsoft.com/3dmanufacturing/slice/2015/07", bIsSupported, nMajor, nMinor, nMicro);
+		CWrapper::GetSpecificationVersion("http://schemas.microsoft.com/3dmanufacturing/slice/2015/07", bIsSupported, nMajor, nMinor, nMicro);
 		ASSERT_TRUE(bIsSupported);
 		ASSERT_EQ(nMajor, 1);
 		ASSERT_EQ(nMinor, 0);
@@ -94,14 +94,14 @@ namespace Lib3MF
 
 	TEST(Wrapper, CreateModel)
 	{
-		auto model = CLib3MFWrapper::CreateModel();
+		auto model = CWrapper::CreateModel();
 	}
 
 	TEST(Wrapper, CheckError)
 	{
-		CLib3MFWrapper::CheckError(nullptr, 0);
+		CWrapper::CheckError(nullptr, 0);
 		try {
-			CLib3MFWrapper::CheckError(nullptr, 1);
+			CWrapper::CheckError(nullptr, 1);
 			ASSERT_TRUE(false);
 		}
 		catch (ELib3MFException &e) {
@@ -111,7 +111,7 @@ namespace Lib3MF
 
 	TEST(Wrapper, Color)
 	{
-		sLib3MFColor c1, c2;
+		sColor c1, c2;
 		c1.m_Red = 123;
 		c1.m_Green = 0;
 		c1.m_Blue = 255;
@@ -120,25 +120,25 @@ namespace Lib3MF
 		Lib3MF_single fR, fG, fB, fA;
 		Lib3MF_uint8 nR, nG, nB, nA;
 
-		CLib3MFWrapper::ColorToRGBA(c1, nR, nG, nB, nA);
+		CWrapper::ColorToRGBA(c1, nR, nG, nB, nA);
 		ASSERT_EQ(c1.m_Red, nR);
 		ASSERT_EQ(c1.m_Green, nG);
 		ASSERT_EQ(c1.m_Blue, nB);
 		ASSERT_EQ(c1.m_Alpha, nA);
 
-		CLib3MFWrapper::ColorToFloatRGBA(c1, fR, fG, fB, fA);
+		CWrapper::ColorToFloatRGBA(c1, fR, fG, fB, fA);
 		ASSERT_EQ(c1.m_Red, std::round(fR*255));
 		ASSERT_EQ(c1.m_Green, std::round(fG * 255));
 		ASSERT_EQ(c1.m_Blue, std::round(fB * 255));
 		ASSERT_EQ(c1.m_Alpha, std::round(fA * 255));
 
-		c2 = CLib3MFWrapper::RGBAToColor(nR, nG, nB, nA);
+		c2 = CWrapper::RGBAToColor(nR, nG, nB, nA);
 		ASSERT_EQ(c2.m_Red, nR);
 		ASSERT_EQ(c2.m_Green, nG);
 		ASSERT_EQ(c2.m_Blue, nB);
 		ASSERT_EQ(c2.m_Alpha, nA);
 
-		c2 = CLib3MFWrapper::FloatRGBAToColor(fR, fG, fB, fA);
+		c2 = CWrapper::FloatRGBAToColor(fR, fG, fB, fA);
 		ASSERT_EQ(c1.m_Red, c2.m_Red);
 		ASSERT_EQ(c1.m_Green, c2.m_Green);
 		ASSERT_EQ(c1.m_Blue, c2.m_Blue);

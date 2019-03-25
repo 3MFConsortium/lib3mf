@@ -45,11 +45,11 @@ namespace Lib3MF
 		}
 
 		virtual void SetUp() {
-			model = CLib3MFWrapper::CreateModel();
+			model = CWrapper::CreateModel();
 			mesh = model->AddMeshObject();
 			beamLattice = mesh->BeamLattice();
 
-			sLib3MFPosition p;
+			sPosition p;
 			p.m_Coordinates[0] = 0;
 			p.m_Coordinates[1] = 0;
 			p.m_Coordinates[2] = 0;
@@ -62,12 +62,12 @@ namespace Lib3MF
 			mesh->AddVertex(p);
 
 			// Preparations
-			sLib3MFBeam beam;
-			beam.m_CapModes[0].m_code = eLib3MFBeamLatticeCapMode::eBeamLatticeCapModeHemiSphere;
-			beam.m_CapModes[1].m_code = eLib3MFBeamLatticeCapMode::eBeamLatticeCapModeButt;
+			sBeam beam;
+			beam.m_CapModes[0] = eBeamLatticeCapMode::HemiSphere;
+			beam.m_CapModes[1] = eBeamLatticeCapMode::Butt;
 			beam.m_Radii[0] = 1.5;
 			beam.m_Radii[1] = 1.2;
-			std::vector<sLib3MFBeam> beams(3);
+			std::vector<sBeam> beams(3);
 			for (int i = 0; i < 3; i++) {
 				beam.m_Indices[0] = i;
 				beam.m_Indices[1] = (i + 1) % 3;
@@ -80,14 +80,14 @@ namespace Lib3MF
 			model.reset();
 		}
 	
-		static PLib3MFModel model;
-		static PLib3MFMeshObject mesh;
-		static PLib3MFBeamLattice beamLattice;
+		static PModel model;
+		static PMeshObject mesh;
+		static PBeamLattice beamLattice;
 	};
 
-	PLib3MFModel BeamSet::model;
-	PLib3MFMeshObject BeamSet::mesh;
-	PLib3MFBeamLattice BeamSet::beamLattice;
+	PModel BeamSet::model;
+	PMeshObject BeamSet::mesh;
+	PBeamLattice BeamSet::beamLattice;
 	
 	TEST_F(BeamSet, Name)
 	{

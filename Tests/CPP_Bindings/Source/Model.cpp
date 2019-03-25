@@ -45,16 +45,16 @@ namespace Lib3MF
 		}
 
 		virtual void SetUp() {
-			m_model = CLib3MFWrapper::CreateModel();
+			m_model = CWrapper::CreateModel();
 		}
 		virtual void TearDown() {
 			m_model.reset();
 		}
 
-		static PLib3MFModel m_model;
+		static PModel m_model;
 	};
 
-	PLib3MFModel Model::m_model;
+	PModel Model::m_model;
 
 	TEST_F(Model, QueryReader)
 	{
@@ -71,10 +71,10 @@ namespace Lib3MF
 
 	TEST_F(Model, Set_GetUnit)
 	{
-		Model::m_model->SetUnit(eModelUnitInch);
-		ASSERT_EQ(Model::m_model->GetUnit(), eModelUnitInch);
-		Model::m_model->SetUnit(eModelUnitMilliMeter);
-		ASSERT_EQ(Model::m_model->GetUnit(), eModelUnitMilliMeter);
+		Model::m_model->SetUnit(eModelUnit::Inch);
+		ASSERT_EQ(Model::m_model->GetUnit(), eModelUnit::Inch);
+		Model::m_model->SetUnit(eModelUnit::MilliMeter);
+		ASSERT_EQ(Model::m_model->GetUnit(), eModelUnit::MilliMeter);
 	}
 
 	TEST_F(Model, Set_GetLanguage)
@@ -124,7 +124,7 @@ namespace Lib3MF
 	{
 		auto meshObject = m_model->AddMeshObject();
 
-		sLib3MFTransform transform = getIdentityTransform();
+		sTransform transform = getIdentityTransform();
 		auto buildItem = m_model->AddBuildItem(meshObject.get(), transform);
 
 		m_model->RemoveBuildItem(buildItem.get());

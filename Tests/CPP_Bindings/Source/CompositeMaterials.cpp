@@ -39,10 +39,10 @@ namespace Lib3MF
 	protected:
 
 		virtual void SetUp() {
-			model = CLib3MFWrapper::CreateModel();
+			model = CWrapper::CreateModel();
 
-			std::vector<sLib3MFPosition> vctVertices;
-			std::vector<sLib3MFTriangle> vctTriangles;
+			std::vector<sPosition> vctVertices;
+			std::vector<sTriangle> vctTriangles;
 			fnCreateBox(vctVertices, vctTriangles);
 
 			mesh = model->AddMeshObject();
@@ -53,7 +53,7 @@ namespace Lib3MF
 			baseMaterialGroup1 = model->AddBaseMaterialGroup();
 			baseMaterialGroup2 = model->AddBaseMaterialGroup();
 
-			sLib3MFColor tIn;
+			sColor tIn;
 			tIn.m_Red = 20;
 			tIn.m_Blue = 10;
 			tIn.m_Green = 100;
@@ -74,9 +74,9 @@ namespace Lib3MF
 			model.reset();
 		}
 
-		PLib3MFModel model;
-		PLib3MFMeshObject mesh;
-		PLib3MFBaseMaterialGroup baseMaterialGroup1, baseMaterialGroup2;
+		PModel model;
+		PMeshObject mesh;
+		PBaseMaterialGroup baseMaterialGroup1, baseMaterialGroup2;
 	};
 
 	TEST_F(CompositeMaterials, Create)
@@ -87,7 +87,7 @@ namespace Lib3MF
 		ASSERT_EQ(baseMaterialGroup1_Out->GetResourceID(), baseMaterialGroup1->GetResourceID());
 	}
 
-	void compareConstituents(std::vector<sLib3MFCompositeConstituent> constituentsA,  std::vector<sLib3MFCompositeConstituent> constituentsB)
+	void compareConstituents(std::vector<sCompositeConstituent> constituentsA,  std::vector<sCompositeConstituent> constituentsB)
 	{
 		ASSERT_EQ(constituentsA.size(), constituentsB.size());
 		for (int i = 0; i < constituentsA.size(); i++) {
@@ -101,7 +101,7 @@ namespace Lib3MF
 		auto compositeMaterial = model->AddCompositeMaterials(baseMaterialGroup1.get());
 		ASSERT_EQ(compositeMaterial->GetCount(), 0);
 
-		std::vector<sLib3MFCompositeConstituent> constituents(1);
+		std::vector<sCompositeConstituent> constituents(1);
 		constituents[0].m_MixingRatio = 0.5;
 		constituents[0].m_PropertyID = 100;
 
@@ -115,12 +115,12 @@ namespace Lib3MF
 
 		Lib3MF_uint32 propertyID1 = compositeMaterial->AddComposite(constituents);
 
-		constituents.push_back(sLib3MFCompositeConstituent({ 1, 0.2 }));
+		constituents.push_back(sCompositeConstituent({ 1, 0.2 }));
 		Lib3MF_uint32 propertyID2 = compositeMaterial->AddComposite(constituents);
 
 		ASSERT_EQ(compositeMaterial->GetCount(), 2);
 
-		std::vector<sLib3MFCompositeConstituent> outConstituents;
+		std::vector<sCompositeConstituent> outConstituents;
 		compositeMaterial->GetComposite(propertyID2, outConstituents);
 
 		std::vector<Lib3MF_uint32> outPropertyIDs;
@@ -138,15 +138,15 @@ namespace Lib3MF
 		auto compositeMaterial = model->AddCompositeMaterials(baseMaterialGroup1.get());
 		ASSERT_EQ(compositeMaterial->GetCount(), 0);
 
-		std::vector<sLib3MFCompositeConstituent> constituents1(0);
-		constituents1.push_back(sLib3MFCompositeConstituent({ 1, 0.5 }));
+		std::vector<sCompositeConstituent> constituents1(0);
+		constituents1.push_back(sCompositeConstituent({ 1, 0.5 }));
 		Lib3MF_uint32 propertyID1 = compositeMaterial->AddComposite(constituents1);
-		std::vector<sLib3MFCompositeConstituent> constituents2(0);
-		constituents2.push_back(sLib3MFCompositeConstituent({ 1, 0.8 }));
-		constituents2.push_back(sLib3MFCompositeConstituent({ 2, 0.2 }));
+		std::vector<sCompositeConstituent> constituents2(0);
+		constituents2.push_back(sCompositeConstituent({ 1, 0.8 }));
+		constituents2.push_back(sCompositeConstituent({ 2, 0.2 }));
 		Lib3MF_uint32 propertyID2 = compositeMaterial->AddComposite(constituents2);
 
-		std::vector<sLib3MFTriangleProperties> properties(mesh->GetTriangleCount());
+		std::vector<sTriangleProperties> properties(mesh->GetTriangleCount());
 		for (Lib3MF_uint64 i = 0; i < mesh->GetTriangleCount(); i++) {
 			properties[i].m_ResourceID = compositeMaterial->GetResourceID();
 			for (int k = 0; k < 3; k++) {
@@ -160,7 +160,7 @@ namespace Lib3MF
 		writer->WriteToBuffer(buffer);
 		// writer->WriteToFile("Composites_Out.3mf");
 
-		auto readModel = CLib3MFWrapper::CreateModel();
+		auto readModel = CWrapper::CreateModel();
 		auto reader = readModel->QueryReader("3mf");
 		// reader->ReadFromFile("Composites_Out.3mf");
 		reader->ReadFromBuffer(buffer);
@@ -183,7 +183,7 @@ namespace Lib3MF
 		}
 		ASSERT_EQ(compositeMaterialsCount, 1);
 
-		std::vector<sLib3MFTriangleProperties> obtainedProperties;
+		std::vector<sTriangleProperties> obtainedProperties;
 		mesh->GetAllTriangleProperties(obtainedProperties);
 		int count = 0;
 		for (Lib3MF_uint64 i = 0; i < mesh->GetTriangleCount(); i++) {
@@ -192,10 +192,10 @@ namespace Lib3MF
 				EXPECT_EQ(obtainedProperties[i].m_PropertyIDs[j], properties[i].m_PropertyIDs[j]);
 			}
 
-			sLib3MFTriangleProperties currentProperty;
+			sTriangleProperties currentProperty;
 			mesh->GetTriangleProperties(Lib3MF_uint32(i), currentProperty);
 			
-			ASSERT_EQ(model->GetPropertyTypeByID(currentProperty.m_ResourceID), eLib3MFPropertyType::ePropertyTypeComposite);
+			ASSERT_EQ(model->GetPropertyTypeByID(currentProperty.m_ResourceID), ePropertyType::Composite);
 			auto currentCompositeMaterials = model->GetCompositeMaterialsByID(currentProperty.m_ResourceID);
 
 			auto readBaseMaterialGroup = currentCompositeMaterials->GetBaseMaterialGroup();
@@ -203,10 +203,10 @@ namespace Lib3MF
 			for (Lib3MF_uint64 k = 0; k < 3; k++) {
 				EXPECT_EQ(currentProperty.m_PropertyIDs[k], properties[i].m_PropertyIDs[k]);
 
-				std::vector<sLib3MFCompositeConstituent> obtainedConstituents;
+				std::vector<sCompositeConstituent> obtainedConstituents;
 				currentCompositeMaterials->GetComposite(currentProperty.m_PropertyIDs[k], obtainedConstituents);
 
-				std::vector<sLib3MFCompositeConstituent>& testConstituents = ((i + k) % 2) ? constituents1 : constituents2;
+				std::vector<sCompositeConstituent>& testConstituents = ((i + k) % 2) ? constituents1 : constituents2;
 				ASSERT_EQ(obtainedConstituents.size(), testConstituents.size());
 				for (Lib3MF_uint64 cIndex = 0; cIndex < obtainedConstituents.size(); cIndex++) {
 					EXPECT_EQ(readBaseMaterialGroup->GetName(obtainedConstituents[cIndex].m_PropertyID),

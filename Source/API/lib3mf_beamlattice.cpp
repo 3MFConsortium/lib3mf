@@ -59,20 +59,19 @@ void CBeamLattice::SetMinLength (const Lib3MF_double dMinLength)
 
 void CBeamLattice::GetClipping (eLib3MFBeamLatticeClipMode & eClipMode, Lib3MF_uint32 & nResourceID)
 {
-	
 	if (!m_pAttributes->m_bHasClippingMeshID) {
-		eClipMode = eLib3MFBeamLatticeClipMode::eBeamLatticeClipModeNoClipMode;
+		eClipMode = eBeamLatticeClipMode::NoClipMode;
 		nResourceID = 0;
 	}
 	else {
-		eClipMode = eLib3MFBeamLatticeClipMode(m_pAttributes->m_eClipMode);
+		eClipMode = eBeamLatticeClipMode(m_pAttributes->m_eClipMode);
 		nResourceID = m_pAttributes->m_nClippingMeshID->getUniqueID();
 	}
 }
 
 void CBeamLattice::SetClipping (const eLib3MFBeamLatticeClipMode eClipMode, const Lib3MF_uint32 nResourceID)
 {
-	if ( (eClipMode == NMR::eModelBeamLatticeClipMode::MODELBEAMLATTICECLIPMODE_NONE) || (nResourceID == 0) ){
+	if ( ((int)eClipMode == (NMR::eModelBeamLatticeClipMode::MODELBEAMLATTICECLIPMODE_NONE)) || (nResourceID == 0) ){
 		m_pAttributes->m_eClipMode = NMR::eModelBeamLatticeClipMode(eClipMode);
 		m_pAttributes->m_bHasClippingMeshID = false;
 		m_pAttributes->m_nClippingMeshID = nullptr;
@@ -141,8 +140,8 @@ sLib3MFBeam CBeamLattice::GetBeam (const Lib3MF_uint32 nIndex)
 {
 	sLib3MFBeam beam;
 	NMR::MESHBEAM* meshBeam = m_mesh.getBeam(nIndex);
-	beam.m_CapModes[0].m_code = meshBeam->m_capMode[0];
-	beam.m_CapModes[1].m_code = meshBeam->m_capMode[1];
+	beam.m_CapModes[0] = (eLib3MFBeamLatticeCapMode)(meshBeam->m_capMode[0]);
+	beam.m_CapModes[1] = (eLib3MFBeamLatticeCapMode)meshBeam->m_capMode[1];
 
 	beam.m_Indices[0] = meshBeam->m_nodeindices[0];
 	beam.m_Indices[1] = meshBeam->m_nodeindices[1];
@@ -179,7 +178,7 @@ Lib3MF_uint32 CBeamLattice::AddBeam (const sLib3MFBeam BeamInfo)
 	for (int j = 0; j < 2; j++)
 		pNodes[j] = m_mesh.getNode(BeamInfo.m_Indices[j]);
 
-	NMR::MESHBEAM * pMeshBeam = m_mesh.addBeam(pNodes[0], pNodes[1], BeamInfo.m_Radii[0], BeamInfo.m_Radii[1], BeamInfo.m_CapModes[0].m_code, BeamInfo.m_CapModes[1].m_code);
+	NMR::MESHBEAM * pMeshBeam = m_mesh.addBeam(pNodes[0], pNodes[1], BeamInfo.m_Radii[0], BeamInfo.m_Radii[1], (int)BeamInfo.m_CapModes[0], (int)BeamInfo.m_CapModes[1]);
 	return pMeshBeam->m_index;
 }
 
@@ -189,8 +188,8 @@ void CBeamLattice::SetBeam (const Lib3MF_uint32 nIndex, const sLib3MFBeam BeamIn
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
 
 	NMR::MESHBEAM* meshBeam = m_mesh.getBeam(nIndex);
-	meshBeam->m_capMode[0] = BeamInfo.m_CapModes[0].m_code;
-	meshBeam->m_capMode[1] = BeamInfo.m_CapModes[1].m_code;
+	meshBeam->m_capMode[0] = (int)BeamInfo.m_CapModes[0];
+	meshBeam->m_capMode[1] = (int)BeamInfo.m_CapModes[1];
 
 	meshBeam->m_nodeindices[0] = BeamInfo.m_Indices[0];
 	meshBeam->m_nodeindices[1] = BeamInfo.m_Indices[1];
@@ -216,7 +215,7 @@ void CBeamLattice::SetBeams(const Lib3MF_uint64 nBeamInfoBufferSize, const sLib3
 		for (int j = 0; j < 2; j++)
 			pNodes[j] = m_mesh.getNode(pBeamInfoCurrent->m_Indices[j]);
 		
-		NMR::MESHBEAM * pMeshBeam = m_mesh.addBeam(pNodes[0], pNodes[1], pBeamInfoCurrent->m_Radii[0], pBeamInfoCurrent->m_Radii[1], pBeamInfoCurrent->m_CapModes[0].m_code, pBeamInfoCurrent->m_CapModes[1].m_code);
+		NMR::MESHBEAM * pMeshBeam = m_mesh.addBeam(pNodes[0], pNodes[1], pBeamInfoCurrent->m_Radii[0], pBeamInfoCurrent->m_Radii[1], (int)pBeamInfoCurrent->m_CapModes[0], (int)pBeamInfoCurrent->m_CapModes[1]);
 		pBeamInfoCurrent++;
 	}
 
@@ -234,8 +233,8 @@ void CBeamLattice::GetBeams(Lib3MF_uint64 nBeamInfoBufferSize, Lib3MF_uint64* pB
 		for (Lib3MF_uint32 i = 0; i < beamCount; i++)
 		{
 			const NMR::MESHBEAM* meshBeam = m_mesh.getBeam(i);
-			beam->m_CapModes[0].m_code = meshBeam->m_capMode[0];
-			beam->m_CapModes[1].m_code = meshBeam->m_capMode[1];
+			beam->m_CapModes[0] = (eLib3MFBeamLatticeCapMode)meshBeam->m_capMode[0];
+			beam->m_CapModes[1] = (eLib3MFBeamLatticeCapMode)meshBeam->m_capMode[1];
 
 			beam->m_Indices[0] = meshBeam->m_nodeindices[0];
 			beam->m_Indices[1] = meshBeam->m_nodeindices[1];

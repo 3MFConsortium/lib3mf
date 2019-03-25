@@ -63,15 +63,15 @@ namespace Lib3MF
 		}
 
 		virtual void SetUp() {
-			model = CLib3MFWrapper::CreateModel();
+			model = CWrapper::CreateModel();
 		}
 		virtual void TearDown() {
 			model.reset();
 		}
 
-		static PLib3MFModel model;
+		static PModel model;
 	};
-	PLib3MFModel AttachmentsT::model;
+	PModel AttachmentsT::model;
 
 	TEST_F(AttachmentsT, AddRemove)
 	{
@@ -91,7 +91,7 @@ namespace Lib3MF
 	{
 		auto attachment = model->AddAttachment(m_sRelationShipPath + ".xml", m_sAttachmetType);
 
-		attachment->ReadFromBuffer(CLib3MFInputVector<Lib3MF_uint8>((Lib3MF_uint8*)m_sAttachmetPayload.data(), m_sAttachmetPayload.size()));
+		attachment->ReadFromBuffer(CInputVector<Lib3MF_uint8>((Lib3MF_uint8*)m_sAttachmetPayload.data(), m_sAttachmetPayload.size()));
 
 		std::vector<Lib3MF_uint8> buffer;
 		attachment->WriteToBuffer(buffer);
@@ -156,7 +156,7 @@ namespace Lib3MF
 		}
 		
 		{
-			auto readModel = Lib3MF::CLib3MFWrapper::CreateModel();
+			auto readModel = Lib3MF::CWrapper::CreateModel();
 			auto reader = readModel->QueryReader("3mf");
 
 			reader->ReadFromFile(m_sFolderName + "/" + m_sFilenameReadWrite);
@@ -164,7 +164,7 @@ namespace Lib3MF
 			ASSERT_EQ(count, 0);
 		}
 		
-		auto readModel = Lib3MF::CLib3MFWrapper::CreateModel();
+		auto readModel = Lib3MF::CWrapper::CreateModel();
 		auto reader = readModel->QueryReader("3mf");
 		reader->AddRelationToRead(m_sAttachmetType);
 		reader->ReadFromFile(m_sFolderName + "/" + m_sFilenameReadWrite);

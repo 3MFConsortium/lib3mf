@@ -131,7 +131,7 @@ Lib3MF_uint32 CMultiPropertyGroup::GetLayerCount ()
 
 Lib3MF_uint32 CMultiPropertyGroup::AddLayer (const sLib3MFMultiPropertyLayer TheLayer)
 {
-	return multiPropertyGroup().addLayer(NMR::MODELMULTIPROPERTYLAYER{ TheLayer.m_ResourceID, NMR::eModelBlendMethod(TheLayer.m_TheBlendMethod.m_code)});
+	return multiPropertyGroup().addLayer(NMR::MODELMULTIPROPERTYLAYER{ TheLayer.m_ResourceID, NMR::eModelBlendMethod(TheLayer.m_TheBlendMethod)});
 }
 
 sLib3MFMultiPropertyLayer CMultiPropertyGroup::GetLayer (const Lib3MF_uint32 nLayerIndex)
@@ -139,7 +139,7 @@ sLib3MFMultiPropertyLayer CMultiPropertyGroup::GetLayer (const Lib3MF_uint32 nLa
 	NMR::MODELMULTIPROPERTYLAYER sLayer = multiPropertyGroup().getLayer(nLayerIndex);
 	sLib3MFMultiPropertyLayer outLayer;
 	outLayer.m_ResourceID = sLayer.m_nResourceID;
-	outLayer.m_TheBlendMethod.m_code = sLayer.m_nMethod;
+	outLayer.m_TheBlendMethod = (eLib3MFBlendMethod)sLayer.m_nMethod;
 	return outLayer;
 }
 

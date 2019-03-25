@@ -132,22 +132,22 @@ eLib3MFPropertyType CModel::GetPropertyTypeByID(const Lib3MF_uint32 nResourceID)
 	}
 
 	if (dynamic_cast<NMR::CModelBaseMaterialResource*>(pResource.get())) {
-		return eLib3MFPropertyType::ePropertyTypeBaseMaterial;
+		return ePropertyType::BaseMaterial;
 	}
 	else if ((dynamic_cast<NMR::CModelColorGroupResource*>(pResource.get()))) {
-		return eLib3MFPropertyType::ePropertyTypeColors;
+		return ePropertyType::Colors;
 	}
 	else if ((dynamic_cast<NMR::CModelTexture2DGroupResource*>(pResource.get()))) {
-		return eLib3MFPropertyType::ePropertyTypeTexCoord;
+		return ePropertyType::TexCoord;
 	}
 	else if ((dynamic_cast<NMR::CModelCompositeMaterialsResource*>(pResource.get()))) {
-		return eLib3MFPropertyType::ePropertyTypeComposite;
+		return ePropertyType::Composite;
 	}
 	else if ((dynamic_cast<NMR::CModelMultiPropertyGroupResource*>(pResource.get()))) {
-		return eLib3MFPropertyType::ePropertyTypeMulti;
+		return ePropertyType::Multi;
 	}
 	else
-		return eLib3MFPropertyType::ePropertyTypeNoPropertyType;
+		return ePropertyType::NoPropertyType;
 }
 
 IBaseMaterialGroup * CModel::GetBaseMaterialGroupByID (const Lib3MF_uint32 nResourceID)

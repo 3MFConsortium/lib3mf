@@ -45,15 +45,15 @@ namespace Lib3MF
 		}
 
 		virtual void SetUp() {
-			model = CLib3MFWrapper::CreateModel();
+			model = CWrapper::CreateModel();
 		}
 		virtual void TearDown() {
 			model.reset();
 		}
 	
-		static PLib3MFModel model;
+		static PModel model;
 	};
-	PLib3MFModel ObjectT::model;
+	PModel ObjectT::model;
 
 	TEST_F(ObjectT, AddMesh)
 	{
@@ -65,13 +65,13 @@ namespace Lib3MF
 		auto component = model->AddComponentsObject();
 	}
 
-	void AddHierarchy(PLib3MFModel model)
+	void AddHierarchy(PModel model)
 	{
 		auto components = model->AddComponentsObject();
 		auto componentsInner = model->AddComponentsObject();
 
 		auto mesh = model->AddMeshObject();
-		sLib3MFTransform t = getIdentityTransform();
+		sTransform t = getIdentityTransform();
 		auto component1 = components->AddComponent(mesh.get(), t);
 		auto componentInner = componentsInner->AddComponent(mesh.get(), t);
 		t.m_Fields[3][2] = 10;
@@ -110,7 +110,7 @@ namespace Lib3MF
 	}
 
 
-	void TestHierarchy(PLib3MFModel model)
+	void TestHierarchy(PModel model)
 	{
 		{
 			auto meshObjects = model->GetMeshObjects();
@@ -168,16 +168,16 @@ namespace Lib3MF
 		}
 
 		virtual void SetUp() {
-			model = CLib3MFWrapper::CreateModel();
+			model = CWrapper::CreateModel();
 			AddHierarchy(model);
 		}
 		virtual void TearDown() {
 			model.reset();
 		}
 
-		static PLib3MFModel model;
+		static PModel model;
 	};
-	PLib3MFModel ObjectAssembled::model;
+	PModel ObjectAssembled::model;
 
 	TEST_F(ObjectAssembled, TestComponentsHierarchy)
 	{
@@ -222,7 +222,7 @@ namespace Lib3MF
 		}
 
 		virtual void SetUp() {
-			model = CLib3MFWrapper::CreateModel();
+			model = CWrapper::CreateModel();
 			components = model->AddComponentsObject();
 			mesh = model->AddMeshObject();
 			component = components->AddComponent(mesh.get(), getIdentityTransform());
@@ -231,26 +231,26 @@ namespace Lib3MF
 			model.reset();
 		}
 
-		static PLib3MFModel model;
-		static PLib3MFComponentsObject components;
-		static PLib3MFComponent component;
-		static PLib3MFMeshObject mesh;
+		static PModel model;
+		static PComponentsObject components;
+		static PComponent component;
+		static PMeshObject mesh;
 	};
-	PLib3MFModel ObjectSingle::model;
-	PLib3MFComponentsObject ObjectSingle::components;
-	PLib3MFComponent ObjectSingle::component;
-	PLib3MFMeshObject ObjectSingle::mesh;
+	PModel ObjectSingle::model;
+	PComponentsObject ObjectSingle::components;
+	PComponent ObjectSingle::component;
+	PMeshObject ObjectSingle::mesh;
 
 	TEST_F(ObjectSingle, Transform)
 	{
 		ASSERT_FALSE(component->HasTransform());
 
-		sLib3MFTransform t = getIdentityTransform();
+		sTransform t = getIdentityTransform();
 		t.m_Fields[2][1] = 2;
 		component->SetTransform(t);
 
 		ASSERT_TRUE(component->HasTransform());
-		sLib3MFTransform tOut = component->GetTransform();
+		sTransform tOut = component->GetTransform();
 		ASSERT_EQ(t.m_Fields[2][1], tOut.m_Fields[2][1]);
 	}
 

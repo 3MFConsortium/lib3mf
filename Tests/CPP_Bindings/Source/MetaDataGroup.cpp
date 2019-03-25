@@ -45,7 +45,7 @@ namespace Lib3MF
 		}
 
 		virtual void SetUp() {
-			model = CLib3MFWrapper::CreateModel();
+			model = CWrapper::CreateModel();
 			reader = model->QueryReader("3mf");
 			writer = model->QueryWriter("3mf");
 		}
@@ -53,15 +53,15 @@ namespace Lib3MF
 			model.reset();
 		}
 
-		static PLib3MFModel model;
-		static PLib3MFReader reader;
-		static PLib3MFWriter writer;
+		static PModel model;
+		static PReader reader;
+		static PWriter writer;
 		static std::string m_sFolderName;
 	};
 
-	PLib3MFModel MetaDataGroup::model;
-	PLib3MFReader MetaDataGroup::reader;
-	PLib3MFWriter MetaDataGroup::writer;
+	PModel MetaDataGroup::model;
+	PReader MetaDataGroup::reader;
+	PWriter MetaDataGroup::writer;
 	std::string MetaDataGroup::m_sFolderName("TestOutput");
 
 	TEST_F(MetaDataGroup, ModelGet)
@@ -108,7 +108,7 @@ namespace Lib3MF
 		ASSERT_EQ(metaDataGroup->GetMetaDataCount(), 0);
 	}
 
-	void VerifyMetaDataGroup(PLib3MFMetaDataGroup metaDataGroup)
+	void VerifyMetaDataGroup(PMetaDataGroup metaDataGroup)
 	{
 		ASSERT_EQ(metaDataGroup->GetMetaDataCount(), 8);
 
@@ -122,7 +122,7 @@ namespace Lib3MF
 		ASSERT_TRUE(metaDataGroup->GetMetaDataByKey("", "Description")->GetValue() == "Cube");
 	}
 
-	void VerifyVendorMetaDataGroup(PLib3MFMetaDataGroup metaDataGroup)
+	void VerifyVendorMetaDataGroup(PMetaDataGroup metaDataGroup)
 	{
 		ASSERT_EQ(metaDataGroup->GetMetaDataCount(), 1);
 
@@ -130,7 +130,7 @@ namespace Lib3MF
 			== "Value of CustomMetadata1");
 	}
 
-	void VerifyFailedVendorMetaDataGroup(PLib3MFMetaDataGroup metaDataGroup)
+	void VerifyFailedVendorMetaDataGroup(PMetaDataGroup metaDataGroup)
 	{
 		ASSERT_EQ(metaDataGroup->GetMetaDataCount(), 1);
 
@@ -217,7 +217,7 @@ namespace Lib3MF
 		VerifyFailedVendorMetaDataGroup(metaDataGroup);
 	}
 
-	void CompareMetaDataGroups(PLib3MFMetaDataGroup A, PLib3MFMetaDataGroup B)
+	void CompareMetaDataGroups(PMetaDataGroup A, PMetaDataGroup B)
 	{
 		ASSERT_EQ(A->GetMetaDataCount(), B->GetMetaDataCount());
 		
@@ -247,7 +247,7 @@ namespace Lib3MF
 		std::vector<Lib3MF_uint8> buffer;
 		writer->WriteToBuffer(buffer);
 
-		auto newModel = CLib3MFWrapper::CreateModel();
+		auto newModel = CWrapper::CreateModel();
 		{
 			auto newReader = newModel->QueryReader("3mf");
 			newReader->ReadFromBuffer(buffer);
@@ -272,7 +272,7 @@ namespace Lib3MF
 		std::vector<Lib3MF_uint8> buffer;
 		writer->WriteToBuffer(buffer);
 
-		auto newModel = CLib3MFWrapper::CreateModel();
+		auto newModel = CWrapper::CreateModel();
 		{
 			auto newReader = newModel->QueryReader("3mf");
 			newReader->ReadFromBuffer(buffer);
