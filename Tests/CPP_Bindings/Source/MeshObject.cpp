@@ -31,12 +31,24 @@ UnitTest_MeshObject.cpp: Defines Unittests for the mesh object class
 --*/
 
 #include "UnitTest_Utilities.h"
-#include "lib3mf.hpp"
+#include "lib3mf_implicit.hpp"
 
 namespace Lib3MF
 {
 	class MeshObject : public ::testing::Test {
 	protected:
+		virtual void SetUp() {
+			model = wrapper->CreateModel();
+			mesh = model->AddMeshObject();
+		}
+		virtual void TearDown() {
+			model.reset();
+		}
+	
+		static PModel model;
+		static PMeshObject mesh;
+		static sPosition pVertices[8];
+		static sTriangle pTriangles[12];
 
 		static void SetUpTestCase() {
 			float fSizeX = 100.0f;
@@ -66,24 +78,13 @@ namespace Lib3MF
 			pTriangles[9] = fnCreateTriangle(6, 5, 1);
 			pTriangles[10] = fnCreateTriangle(3, 0, 4);
 			pTriangles[11] = fnCreateTriangle(4, 7, 3);
-		}
 
-		static void TearDownTestCase() {
+			wrapper = CWrapper::loadLibrary();
 		}
-
-		virtual void SetUp() {
-			model = CWrapper::CreateModel();
-			mesh = model->AddMeshObject();
-		}
-		virtual void TearDown() {
-			model.reset();
-		}
-	
-		static PModel model;
-		static PMeshObject mesh;
-		static sPosition pVertices[8];
-		static sTriangle pTriangles[12];
+		static PWrapper wrapper;
 	};
+	PWrapper MeshObject::wrapper;
+
 	PModel MeshObject::model;
 	PMeshObject MeshObject::mesh;
 	sPosition MeshObject::pVertices[8];

@@ -31,21 +31,14 @@ UnitTest_BeamSets.cpp: Defines Unittests for the BeamSet class
 --*/
 
 #include "UnitTest_Utilities.h"
-#include "lib3mf.hpp"
+#include "lib3mf_implicit.hpp"
 
 namespace Lib3MF
 {
 	class BeamSet : public ::testing::Test {
 	protected:
-
-		static void SetUpTestCase() {
-		}
-
-		static void TearDownTestCase() {
-		}
-
 		virtual void SetUp() {
-			model = CWrapper::CreateModel();
+			model = wrapper->CreateModel();
 			mesh = model->AddMeshObject();
 			beamLattice = mesh->BeamLattice();
 
@@ -80,14 +73,16 @@ namespace Lib3MF
 			model.reset();
 		}
 	
-		static PModel model;
-		static PMeshObject mesh;
-		static PBeamLattice beamLattice;
-	};
+		PModel model;
+		PMeshObject mesh;
+		PBeamLattice beamLattice;
 
-	PModel BeamSet::model;
-	PMeshObject BeamSet::mesh;
-	PBeamLattice BeamSet::beamLattice;
+		static void SetUpTestCase() {
+			wrapper = CWrapper::loadLibrary();
+		}
+		static PWrapper wrapper;
+	};
+	PWrapper BeamSet::wrapper;
 	
 	TEST_F(BeamSet, Name)
 	{

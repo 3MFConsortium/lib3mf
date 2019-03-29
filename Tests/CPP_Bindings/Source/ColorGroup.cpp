@@ -31,7 +31,7 @@ UnitTest_ColorGroup.cpp: Defines Unittests for the ColorGroup class
 --*/
 
 #include "UnitTest_Utilities.h"
-#include "lib3mf.hpp"
+#include "lib3mf_implicit.hpp"
 
 namespace Lib3MF
 {
@@ -39,7 +39,7 @@ namespace Lib3MF
 	protected:
 
 		virtual void SetUp() {
-			model = CWrapper::CreateModel();
+			model = wrapper->CreateModel();
 			colorGroup = model->AddColorGroup();
 		}
 		virtual void TearDown() {
@@ -48,7 +48,12 @@ namespace Lib3MF
 
 		PModel model;
 		PColorGroup colorGroup;
+		static void SetUpTestCase() {
+			wrapper = CWrapper::loadLibrary();
+		}
+		static PWrapper wrapper;
 	};
+	PWrapper ColorGroup::wrapper;
 
 	TEST_F(ColorGroup, GetCount)
 	{
@@ -64,7 +69,7 @@ namespace Lib3MF
 		tIn.m_Alpha = 255;
 		Lib3MF_uint32 propertyID = colorGroup->AddColor(tIn);
 
-		colorGroup->AddColor(CWrapper::RGBAToColor(0, 10, 20, 30));
+		colorGroup->AddColor(wrapper->RGBAToColor(0, 10, 20, 30));
 		ASSERT_EQ(colorGroup->GetCount(), 2);
 
 		std::vector<Lib3MF_uint32> propertyIDs;
@@ -77,23 +82,23 @@ namespace Lib3MF
 		ASSERT_EQ(tIn.m_Blue, tReOut.m_Blue);
 		ASSERT_EQ(tIn.m_Alpha, tReOut.m_Alpha);
 
-		colorGroup->SetColor(propertyIDs[0], CWrapper::RGBAToColor(12, 123, 23, 234));
+		colorGroup->SetColor(propertyIDs[0], wrapper->RGBAToColor(12, 123, 23, 234));
 	}
 
 	TEST_F(ColorGroup, AddRemoveColor)
 	{
-		colorGroup->AddColor(CWrapper::RGBAToColor(0, 10, 20, 30));
-		colorGroup->AddColor(CWrapper::RGBAToColor(5, 15, 25, 35));
+		colorGroup->AddColor(wrapper->RGBAToColor(0, 10, 20, 30));
+		colorGroup->AddColor(wrapper->RGBAToColor(5, 15, 25, 35));
 
 		std::vector<Lib3MF_uint32> propertyIDs;
 		colorGroup->GetAllPropertyIDs(propertyIDs);
 
 		colorGroup->RemoveColor(propertyIDs[0]);
 		ASSERT_SPECIFIC_THROW(colorGroup->GetColor(propertyIDs[0]), ELib3MFException);
-		ASSERT_EQ(CWrapper::RGBAToColor(5, 15, 25, 35).m_Alpha, colorGroup->GetColor(propertyIDs[1]).m_Alpha);
-		ASSERT_EQ(CWrapper::RGBAToColor(5, 15, 25, 35).m_Blue, colorGroup->GetColor(propertyIDs[1]).m_Blue);
-		ASSERT_EQ(CWrapper::RGBAToColor(5, 15, 25, 35).m_Green, colorGroup->GetColor(propertyIDs[1]).m_Green);
-		ASSERT_EQ(CWrapper::RGBAToColor(5, 15, 25, 35).m_Red, colorGroup->GetColor(propertyIDs[1]).m_Red);
+		ASSERT_EQ(wrapper->RGBAToColor(5, 15, 25, 35).m_Alpha, colorGroup->GetColor(propertyIDs[1]).m_Alpha);
+		ASSERT_EQ(wrapper->RGBAToColor(5, 15, 25, 35).m_Blue, colorGroup->GetColor(propertyIDs[1]).m_Blue);
+		ASSERT_EQ(wrapper->RGBAToColor(5, 15, 25, 35).m_Green, colorGroup->GetColor(propertyIDs[1]).m_Green);
+		ASSERT_EQ(wrapper->RGBAToColor(5, 15, 25, 35).m_Red, colorGroup->GetColor(propertyIDs[1]).m_Red);
 	}
 
 }

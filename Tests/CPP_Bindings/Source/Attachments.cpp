@@ -31,7 +31,7 @@ UnitTest_Attachments.cpp: Defines Unittests for handling of attachments
 --*/
 
 #include "UnitTest_Utilities.h"
-#include "lib3mf.hpp"
+#include "lib3mf_implicit.hpp"
 
 namespace Lib3MF
 {
@@ -56,22 +56,20 @@ namespace Lib3MF
 		{
 		}
 
-		static void SetUpTestCase() {
-		}
-
-		static void TearDownTestCase() {
-		}
-
 		virtual void SetUp() {
-			model = CWrapper::CreateModel();
+			model = wrapper->CreateModel();
 		}
 		virtual void TearDown() {
 			model.reset();
 		}
 
-		static PModel model;
+		PModel model;
+		static void SetUpTestCase() {
+			wrapper = CWrapper::loadLibrary();
+		}
+		static PWrapper wrapper;
 	};
-	PModel AttachmentsT::model;
+	PWrapper AttachmentsT::wrapper;
 
 	TEST_F(AttachmentsT, AddRemove)
 	{
@@ -156,7 +154,7 @@ namespace Lib3MF
 		}
 		
 		{
-			auto readModel = Lib3MF::CWrapper::CreateModel();
+			auto readModel = wrapper->CreateModel();
 			auto reader = readModel->QueryReader("3mf");
 
 			reader->ReadFromFile(m_sFolderName + "/" + m_sFilenameReadWrite);
@@ -164,7 +162,7 @@ namespace Lib3MF
 			ASSERT_EQ(count, 0);
 		}
 		
-		auto readModel = Lib3MF::CWrapper::CreateModel();
+		auto readModel = wrapper->CreateModel();
 		auto reader = readModel->QueryReader("3mf");
 		reader->AddRelationToRead(m_sAttachmetType);
 		reader->ReadFromFile(m_sFolderName + "/" + m_sFilenameReadWrite);

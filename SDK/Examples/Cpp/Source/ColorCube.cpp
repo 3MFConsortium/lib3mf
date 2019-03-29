@@ -33,15 +33,15 @@ ColorCube.cpp : 3MF Color Cube creation example
 #include <string>
 #include <algorithm>
 
-#include "lib3mf.hpp"
+#include "lib3mf_implicit.hpp"
 
 using namespace Lib3MF;
 
 
-void printVersion() {
+void printVersion(PWrapper wrapper) {
 	Lib3MF_uint32 nMajor, nMinor, nMicro;
 	std::string sReleaseInfo, sBuildInfo;
-	CWrapper::GetLibraryVersion(nMajor, nMinor, nMicro, sReleaseInfo, sBuildInfo);
+	wrapper->GetLibraryVersion(nMajor, nMinor, nMicro, sReleaseInfo, sBuildInfo);
 	std::cout << "Lib3MF version = " << nMajor << "." << nMinor << "." << nMicro;
 	if (!sReleaseInfo.empty()) {
 		std::cout << "-" << sReleaseInfo;
@@ -83,12 +83,14 @@ sLib3MFTriangleProperties fnCreateTriangleColor(PColorGroup colorGroup, Lib3MF_u
 
 
 void CubeExample() {
+	PWrapper wrapper = CWrapper::loadLibrary();
+	
 	std::cout << "------------------------------------------------------------------" << std::endl;
 	std::cout << "3MF Color Cube example" << std::endl;
-	printVersion();
+	printVersion(wrapper);
 	std::cout << "------------------------------------------------------------------" << std::endl;
 
-	PModel model = CWrapper::CreateModel();
+	PModel model = wrapper->CreateModel();
 
 	PMeshObject meshObject = model->AddMeshObject();
 	meshObject->SetName("Colored Box");

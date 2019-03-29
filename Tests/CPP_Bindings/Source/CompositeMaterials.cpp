@@ -31,7 +31,7 @@ UnitTest_CompositeMaterials.cpp: Defines Unittests for Composite Materials
 --*/
 
 #include "UnitTest_Utilities.h"
-#include "lib3mf.hpp"
+#include "lib3mf_implicit.hpp"
 
 namespace Lib3MF
 {
@@ -39,7 +39,7 @@ namespace Lib3MF
 	protected:
 
 		virtual void SetUp() {
-			model = CWrapper::CreateModel();
+			model = wrapper->CreateModel();
 
 			std::vector<sPosition> vctVertices;
 			std::vector<sTriangle> vctTriangles;
@@ -77,7 +77,13 @@ namespace Lib3MF
 		PModel model;
 		PMeshObject mesh;
 		PBaseMaterialGroup baseMaterialGroup1, baseMaterialGroup2;
+
+		static void SetUpTestCase() {
+			wrapper = CWrapper::loadLibrary();
+		}
+		static PWrapper wrapper;
 	};
+	PWrapper CompositeMaterials::wrapper;
 
 	TEST_F(CompositeMaterials, Create)
 	{
@@ -160,7 +166,7 @@ namespace Lib3MF
 		writer->WriteToBuffer(buffer);
 		// writer->WriteToFile("Composites_Out.3mf");
 
-		auto readModel = CWrapper::CreateModel();
+		auto readModel = wrapper->CreateModel();
 		auto reader = readModel->QueryReader("3mf");
 		// reader->ReadFromFile("Composites_Out.3mf");
 		reader->ReadFromBuffer(buffer);

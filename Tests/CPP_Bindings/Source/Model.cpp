@@ -31,28 +31,26 @@ UnitTest_Model.cpp: Defines Unittests for the Model classes
 --*/
 
 #include "UnitTest_Utilities.h"
-#include "lib3mf.hpp"
+#include "lib3mf_implicit.hpp"
 
 namespace Lib3MF
 {
 	class Model : public ::testing::Test {
 	protected:
-
-		static void SetUpTestCase() {
-		}
-
-		static void TearDownTestCase() {
-		}
-
 		virtual void SetUp() {
-			m_model = CWrapper::CreateModel();
+			m_model = wrapper->CreateModel();
 		}
 		virtual void TearDown() {
 			m_model.reset();
 		}
 
 		static PModel m_model;
+		static void SetUpTestCase() {
+			wrapper = CWrapper::loadLibrary();
+		}
+		static PWrapper wrapper;
 	};
+	PWrapper Model::wrapper;
 
 	PModel Model::m_model;
 

@@ -31,7 +31,7 @@ UnitTest_BaseMaterialGroup.cpp: Defines Unittests for the BaseMaterialGroup clas
 --*/
 
 #include "UnitTest_Utilities.h"
-#include "lib3mf.hpp"
+#include "lib3mf_implicit.hpp"
 
 namespace Lib3MF
 {
@@ -39,7 +39,7 @@ namespace Lib3MF
 	protected:
 
 		virtual void SetUp() {
-			model = CWrapper::CreateModel();
+			model = wrapper->CreateModel();
 			baseMaterialGroup = model->AddBaseMaterialGroup();
 		}
 		virtual void TearDown() {
@@ -48,7 +48,13 @@ namespace Lib3MF
 
 		PModel model;
 		PBaseMaterialGroup baseMaterialGroup;
+
+		static void SetUpTestCase() {
+			wrapper = CWrapper::loadLibrary();
+		}
+		static PWrapper wrapper;
 	};
+	PWrapper BaseMaterialGroup::wrapper;
 
 	TEST_F(BaseMaterialGroup, GetCount)
 	{
@@ -65,7 +71,7 @@ namespace Lib3MF
 		std::string inName = "MyMaterial";
 		Lib3MF_uint32 propertyID = baseMaterialGroup->AddMaterial(inName, tIn);
 
-		baseMaterialGroup->AddMaterial("OtherMaterial", CWrapper::RGBAToColor(0, 10, 20, 30));
+		baseMaterialGroup->AddMaterial("OtherMaterial", wrapper->RGBAToColor(0, 10, 20, 30));
 		ASSERT_EQ(baseMaterialGroup->GetCount(), 2);
 
 		std::vector<Lib3MF_uint32> propertyIDs;
@@ -78,7 +84,7 @@ namespace Lib3MF
 		ASSERT_EQ(tIn.m_Blue, tReOut.m_Blue);
 		ASSERT_EQ(tIn.m_Alpha, tReOut.m_Alpha);
 
-		baseMaterialGroup->SetDisplayColor(propertyIDs[0], CWrapper::RGBAToColor(12, 123, 23, 234));
+		baseMaterialGroup->SetDisplayColor(propertyIDs[0], wrapper->RGBAToColor(12, 123, 23, 234));
 
 		std::string outName = baseMaterialGroup->GetName(propertyIDs[0]);
 		ASSERT_TRUE(inName == outName);
@@ -90,8 +96,8 @@ namespace Lib3MF
 
 	TEST_F(BaseMaterialGroup, AddRemoveMaterial)
 	{
-		baseMaterialGroup->AddMaterial("1", CWrapper::RGBAToColor(0, 10, 20, 30));
-		baseMaterialGroup->AddMaterial("2", CWrapper::RGBAToColor(0, 10, 20, 30));
+		baseMaterialGroup->AddMaterial("1", wrapper->RGBAToColor(0, 10, 20, 30));
+		baseMaterialGroup->AddMaterial("2", wrapper->RGBAToColor(0, 10, 20, 30));
 
 		std::vector<Lib3MF_uint32> propertyIDs;
 		baseMaterialGroup->GetAllPropertyIDs(propertyIDs);

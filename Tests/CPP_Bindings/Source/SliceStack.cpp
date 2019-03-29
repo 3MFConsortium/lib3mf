@@ -31,21 +31,15 @@ UnitTest_SliceStack.cpp: Defines Unittests for the SliceStack class
 --*/
 
 #include "UnitTest_Utilities.h"
-#include "lib3mf.hpp"
+#include "lib3mf_implicit.hpp"
 
 namespace Lib3MF
 {
 	class SliceStack : public ::testing::Test {
 	protected:
 
-		static void SetUpTestCase() {
-		}
-
-		static void TearDownTestCase() {
-		}
-
 		virtual void SetUp() {
-			model = CWrapper::CreateModel();
+			model = wrapper->CreateModel();
 			sliceStack = model->AddSliceStack(.0);
 			mesh = model->AddMeshObject();
 
@@ -57,7 +51,13 @@ namespace Lib3MF
 		PModel model;
 		PSliceStack sliceStack;
 		PMeshObject mesh;
+
+		static void SetUpTestCase() {
+			wrapper = CWrapper::loadLibrary();
+		}
+		static PWrapper wrapper;
 	};
+	PWrapper SliceStack::wrapper;
 
 
 	TEST_F(SliceStack, HasSetClearSliceStack)
@@ -126,15 +126,8 @@ namespace Lib3MF
 
 	class SliceStackArrangement : public ::testing::Test {
 	protected:
-
-		static void SetUpTestCase() {
-		}
-
-		static void TearDownTestCase() {
-		}
-
 		virtual void SetUp() {
-			model = CWrapper::CreateModel();
+			model = wrapper->CreateModel();
 			stackA = model->AddSliceStack(.0);
 			stackB = model->AddSliceStack(0);
 			stackC = model->AddSliceStack(10.0);
@@ -150,7 +143,12 @@ namespace Lib3MF
 		PModel model;
 		PSliceStack stackA, stackB, stackC;
 		PMeshObject mesh;
+		static void SetUpTestCase() {
+			wrapper = CWrapper::loadLibrary();
+		}
+		static PWrapper wrapper;
 	};
+	PWrapper SliceStackArrangement::wrapper;
 
 
 	TEST_F(SliceStackArrangement, ForbiddenSelfReference)
@@ -251,15 +249,8 @@ namespace Lib3MF
 
 	class SliceStackWriting : public ::testing::Test {
 	protected:
-
-		static void SetUpTestCase() {
-		}
-
-		static void TearDownTestCase() {
-		}
-
 		virtual void SetUp() {
-			model = CWrapper::CreateModel();
+			model = wrapper->CreateModel();
 			stackWithSlices = model->AddSliceStack(1.);
 			auto slice = stackWithSlices->AddSlice(2.);
 
@@ -298,7 +289,13 @@ namespace Lib3MF
 		PModel model;
 		PSliceStack stackWithSlices;
 		PWriter writer;
+
+		static void SetUpTestCase() {
+			wrapper = CWrapper::loadLibrary();
+		}
+		static PWrapper wrapper;
 	};
+	PWrapper SliceStackWriting::wrapper;
 
 	void CompareSliceStacks(PSliceStack A, PSliceStack B)
 	{
@@ -341,7 +338,7 @@ namespace Lib3MF
 		std::vector<Lib3MF_uint8> buffer;
 		writer->WriteToBuffer(buffer);
 
-		auto readModel = CWrapper::CreateModel();
+		auto readModel = wrapper->CreateModel();
 		auto reader = readModel->QueryReader("3mf");
 		reader->ReadFromBuffer(buffer);
 
@@ -356,7 +353,7 @@ namespace Lib3MF
 		std::vector<Lib3MF_uint8> buffer;
 		writer->WriteToBuffer(buffer);
 
-		auto readModel = CWrapper::CreateModel();
+		auto readModel = wrapper->CreateModel();
 		auto reader = readModel->QueryReader("3mf");
 		reader->ReadFromBuffer(buffer);
 
@@ -377,14 +374,14 @@ namespace Lib3MF
 		std::vector<Lib3MF_uint8> buffer;
 		writer->WriteToBuffer(buffer);
 
-		auto readModel = CWrapper::CreateModel();
+		auto readModel = wrapper->CreateModel();
 		{
 			auto reader = readModel->QueryReader("3mf");
 			reader->ReadFromBuffer(buffer);
 		}
 
 
-		auto readModelAgain = CWrapper::CreateModel();
+		auto readModelAgain = wrapper->CreateModel();
 		{
 			// write write and read again, since a true "fixpoint" is only reached after one more iteration
 			auto writerAgain = readModel->QueryWriter("3mf");
@@ -400,15 +397,8 @@ namespace Lib3MF
 
 	class SliceStackReading : public ::testing::Test {
 	protected:
-
-		static void SetUpTestCase() {
-		}
-
-		static void TearDownTestCase() {
-		}
-
 		virtual void SetUp() {
-			model = CWrapper::CreateModel();
+			model = wrapper->CreateModel();
 			reader = model->QueryReader("3mf");
 		}
 		virtual void TearDown() {
@@ -417,7 +407,12 @@ namespace Lib3MF
 
 		PModel model;
 		PReader reader;
+		static void SetUpTestCase() {
+			wrapper = CWrapper::loadLibrary();
+		}
+		static PWrapper wrapper;
 	};
+	PWrapper SliceStackReading::wrapper;
 
 	TEST_F(SliceStackReading, ReadSlices)
 	{
@@ -448,7 +443,7 @@ namespace Lib3MF
 	{
 	public:
 		virtual void SetUp() {
-			model = CWrapper::CreateModel();
+			model = wrapper->CreateModel();
 			reader = model->QueryReader("3mf");
 		}
 		virtual void TearDown() {
@@ -457,7 +452,12 @@ namespace Lib3MF
 
 		PModel model;
 		PReader reader;
+		static void SetUpTestCase() {
+			wrapper = CWrapper::loadLibrary();
+		}
+		static PWrapper wrapper;
 	};
+	PWrapper SliceStackReadingMultiple::wrapper;
 
 	INSTANTIATE_TEST_CASE_P(WorkingFiles, SliceStackReadingMultiple,
 		::testing::Values(
@@ -478,7 +478,7 @@ namespace Lib3MF
 	{
 	public:
 		virtual void SetUp() {
-			model = CWrapper::CreateModel();
+			model = wrapper->CreateModel();
 			reader = model->QueryReader("3mf");
 		}
 		virtual void TearDown() {
@@ -487,7 +487,12 @@ namespace Lib3MF
 
 		PModel model;
 		PReader reader;
+		static void SetUpTestCase() {
+			wrapper = CWrapper::loadLibrary();
+		}
+		static PWrapper wrapper;
 	};
+	PWrapper SliceStackReadingMultipleFailing::wrapper;
 
 	INSTANTIATE_TEST_CASE_P(FailingFiles, SliceStackReadingMultipleFailing,
 		::testing::Values(

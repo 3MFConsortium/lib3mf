@@ -31,21 +31,15 @@ UnitTest_BuildItems.cpp: Defines Unittests for the BuildItems class
 --*/
 
 #include "UnitTest_Utilities.h"
-#include "lib3mf.hpp"
+#include "lib3mf_implicit.hpp"
 
 namespace Lib3MF
 {
 	class BuildItems : public ::testing::Test {
 	protected:
 
-		static void SetUpTestCase() {
-		}
-
-		static void TearDownTestCase() {
-		}
-
 		virtual void SetUp() {
-			model = CWrapper::CreateModel();
+			model = wrapper->CreateModel();
 			auto reader3MF= model->QueryReader("3mf");
 			reader3MF->ReadFromFile(InFolder + "WagonWithWheels.3mf");
 		}
@@ -53,11 +47,16 @@ namespace Lib3MF
 			model.reset();
 		}
 	
-		static PModel model;
+		PModel model;
 		static std::string InFolder;
-	};
 
-	PModel BuildItems::model;
+		static void SetUpTestCase() {
+			wrapper = CWrapper::loadLibrary();
+		}
+		static PWrapper wrapper;
+	};
+	PWrapper BuildItems::wrapper;
+
 	std::string BuildItems::InFolder(sTestFilesPath + "/BuildItems/");
 
 	TEST_F(BuildItems, TestIterating)

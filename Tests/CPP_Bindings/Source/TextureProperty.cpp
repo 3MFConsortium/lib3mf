@@ -31,7 +31,7 @@ UnitTest_TextureProperties.cpp: Defines Unittests for texture properties
 --*/
 
 #include "UnitTest_Utilities.h"
-#include "lib3mf.hpp"
+#include "lib3mf_implicit.hpp"
 
 namespace Lib3MF
 {
@@ -39,7 +39,7 @@ namespace Lib3MF
 	protected:
 
 		virtual void SetUp() {
-			model = CWrapper::CreateModel();
+			model = wrapper->CreateModel();
 
 			std::vector<sPosition> vctVertices;
 			std::vector<sTriangle> vctTriangles;
@@ -64,7 +64,12 @@ namespace Lib3MF
 		PMeshObject mesh;
 		PAttachment textureAttachment;
 		PTexture2D texture2D;
+		static void SetUpTestCase() {
+			wrapper = CWrapper::loadLibrary();
+		}
+		static PWrapper wrapper;
 	};
+	PWrapper TextureProperty::wrapper;
 
 	TEST_F(TextureProperty, SetGet_Texture2DGroup)
 	{
@@ -126,7 +131,7 @@ namespace Lib3MF
 		writer->WriteToBuffer(buffer);
 		// writer->WriteToFile("Texture_Out.3mf");
 
-		auto readModel = CWrapper::CreateModel();
+		auto readModel = wrapper->CreateModel();
 		auto reader = readModel->QueryReader("3mf");
 		// reader->ReadFromFile("Texture_Out.3mf");
 		reader->ReadFromBuffer(buffer);

@@ -31,21 +31,14 @@ UnitTest_Writer.cpp: Defines Unittests for the Writer classes
 --*/
 
 #include "UnitTest_Utilities.h"
-#include "lib3mf.hpp"
+#include "lib3mf_implicit.hpp"
 
 namespace Lib3MF
 {
 	class Writer : public ::testing::Test {
 	protected:
-
-		static void SetUpTestCase() {
-		}
-
-		static void TearDownTestCase() {
-		}
-
 		virtual void SetUp() {
-			model = CWrapper::CreateModel();
+			model = wrapper->CreateModel();
 			auto reader = model->QueryReader("3mf");
 			reader->ReadFromFile(InFolder + "Pyramid.3mf");
 			writer3MF = model->QueryWriter("3mf");
@@ -57,17 +50,19 @@ namespace Lib3MF
 			writerSTL.reset();
 		}
 	
-		static PModel model;
-		static PWriter writer3MF;
-		static PWriter writerSTL;
+		PModel model;
+		PWriter writer3MF;
+		PWriter writerSTL;
 
 		static std::string InFolder;
 		static std::string OutFolder;
-	};
 
-	PModel Writer::model;
-	PWriter Writer::writer3MF;
-	PWriter Writer::writerSTL;
+		static void SetUpTestCase() {
+			wrapper = CWrapper::loadLibrary();
+		}
+		static PWrapper wrapper;
+	};
+	PWrapper Writer::wrapper;
 	std::string Writer::InFolder(sTestFilesPath + "/Writer/");
 	std::string Writer::OutFolder(sOutFilesPath + "/Writer/");
 	

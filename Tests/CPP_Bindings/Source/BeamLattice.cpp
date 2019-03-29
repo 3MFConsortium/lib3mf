@@ -31,21 +31,15 @@ UnitTest_BeamLattice.cpp: Defines Unittests for the BeamLattice class
 --*/
 
 #include "UnitTest_Utilities.h"
-#include "lib3mf.hpp"
+#include "lib3mf_implicit.hpp"
 
 namespace Lib3MF
 {
 	class BeamLattice : public ::testing::Test {
 	protected:
 
-		static void SetUpTestCase() {
-		}
-
-		static void TearDownTestCase() {
-		}
-
 		virtual void SetUp() {
-			model = CWrapper::CreateModel();
+			model = wrapper->CreateModel();
 			otherMesh = model->AddMeshObject();
 			mesh = model->AddMeshObject();
 			beamLattice = mesh->BeamLattice();
@@ -67,18 +61,19 @@ namespace Lib3MF
 			model.reset();
 		}
 	
-		static PModel model;
-		static PMeshObject mesh;
-		static PMeshObject otherMesh;
-		static PMeshObject meshAfter;
-		static PBeamLattice beamLattice;
-	};
+		PModel model;
+		PMeshObject mesh;
+		PMeshObject otherMesh;
+		PMeshObject meshAfter;
+		PBeamLattice beamLattice;
 
-	PModel BeamLattice::model;
-	PMeshObject BeamLattice::mesh;
-	PMeshObject BeamLattice::otherMesh;
-	PMeshObject BeamLattice::meshAfter;
-	PBeamLattice BeamLattice::beamLattice;
+		static void SetUpTestCase() {
+			wrapper = CWrapper::loadLibrary();
+		}
+	public:
+		static PWrapper wrapper;
+	};
+	PWrapper BeamLattice::wrapper;
 	
 
 	TEST_F(BeamLattice, MinLength)
@@ -309,7 +304,7 @@ namespace Lib3MF
 	TEST_F(BeamLattice, Read_Attributes_Positive)
 	{
 		std::string fName("Box_Attributes_Positive.3mf");
-		auto model = CWrapper::CreateModel();
+		auto model = wrapper->CreateModel();
 		{
 			auto reader = model->QueryReader("3mf");
 			reader->ReadFromFile(sTestFilesPath + "/" + "BeamLattice" + "/" + fName);
@@ -320,7 +315,7 @@ namespace Lib3MF
 	TEST_F(BeamLattice, Read_Box_Simple)
 	{
 		std::string fName("Box_Simple.3mf");
-		auto model = CWrapper::CreateModel();
+		auto model = wrapper->CreateModel();
 		{
 			auto reader = model->QueryReader("3mf");
 			reader->ReadFromFile(sTestFilesPath + "/" + "BeamLattice" + "/" + fName);
@@ -363,7 +358,7 @@ namespace Lib3MF
 
 	void Read_Attributes_Negative(std::string fName)
 	{
-		auto model = CWrapper::CreateModel();
+		auto model = BeamLattice::wrapper->CreateModel();
 
 		{
 			auto reader = model->QueryReader("3mf");

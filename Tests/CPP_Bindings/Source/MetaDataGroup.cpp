@@ -31,21 +31,15 @@ UnitTest_MetaDataGroup.cpp: Defines Unittests for the MetaDataGroup class
 --*/
 
 #include "UnitTest_Utilities.h"
-#include "lib3mf.hpp"
+#include "lib3mf_implicit.hpp"
 
 namespace Lib3MF
 {
 	class MetaDataGroup : public ::testing::Test {
 	protected:
 
-		static void SetUpTestCase() {
-		}
-
-		static void TearDownTestCase() {
-		}
-
 		virtual void SetUp() {
-			model = CWrapper::CreateModel();
+			model = wrapper->CreateModel();
 			reader = model->QueryReader("3mf");
 			writer = model->QueryWriter("3mf");
 		}
@@ -53,15 +47,17 @@ namespace Lib3MF
 			model.reset();
 		}
 
-		static PModel model;
-		static PReader reader;
-		static PWriter writer;
+		PModel model;
+		PReader reader;
+		PWriter writer;
 		static std::string m_sFolderName;
+		static void SetUpTestCase() {
+			wrapper = CWrapper::loadLibrary();
+		}
+		static PWrapper wrapper;
 	};
+	PWrapper MetaDataGroup::wrapper;
 
-	PModel MetaDataGroup::model;
-	PReader MetaDataGroup::reader;
-	PWriter MetaDataGroup::writer;
 	std::string MetaDataGroup::m_sFolderName("TestOutput");
 
 	TEST_F(MetaDataGroup, ModelGet)
@@ -247,7 +243,7 @@ namespace Lib3MF
 		std::vector<Lib3MF_uint8> buffer;
 		writer->WriteToBuffer(buffer);
 
-		auto newModel = CWrapper::CreateModel();
+		auto newModel = wrapper->CreateModel();
 		{
 			auto newReader = newModel->QueryReader("3mf");
 			newReader->ReadFromBuffer(buffer);
@@ -272,7 +268,7 @@ namespace Lib3MF
 		std::vector<Lib3MF_uint8> buffer;
 		writer->WriteToBuffer(buffer);
 
-		auto newModel = CWrapper::CreateModel();
+		auto newModel = wrapper->CreateModel();
 		{
 			auto newReader = newModel->QueryReader("3mf");
 			newReader->ReadFromBuffer(buffer);

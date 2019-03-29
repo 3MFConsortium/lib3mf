@@ -31,7 +31,7 @@ UnitTest_TextureResources.cpp: Defines Unittests for the Texture Resource class
 --*/
 
 #include "UnitTest_Utilities.h"
-#include "lib3mf.hpp"
+#include "lib3mf_implicit.hpp"
 
 namespace Lib3MF
 {
@@ -44,7 +44,7 @@ namespace Lib3MF
 			m_sRelationshipType_Texture = "http://schemas.microsoft.com/3dmanufacturing/2013/01/3dtexture";
 			m_sPath_Texture = "/3D/Textures/MyTexture.png";
 
-			model = CWrapper::CreateModel();
+			model = wrapper->CreateModel();
 			otherAttachment = model->AddAttachment(m_sPath, m_sRelationshipType);
 			textureAttachment = model->AddAttachment(m_sPath_Texture, m_sRelationshipType_Texture);
 		}
@@ -59,7 +59,13 @@ namespace Lib3MF
 		std::string m_sRelationshipType;
 		std::string m_sRelationshipType_Texture;
 		std::string m_sPath_Texture;
+
+		static void SetUpTestCase() {
+			wrapper = wrapper->loadLibrary();
+		}
+		static PWrapper wrapper;
 	};
+	PWrapper Model_TextureResource::wrapper;
 
 	TEST_F(Model_TextureResource, AddTexture)
 	{
@@ -85,7 +91,7 @@ namespace Lib3MF
 			std::string m_sRelationshipType_Texture = "http://schemas.microsoft.com/3dmanufacturing/2013/01/3dtexture";
 			m_sPath_Texture = "/3D/Textures/MyTexture_";
 
-			model = CWrapper::CreateModel();
+			model = wrapper->CreateModel();
 			for (int i = 0; i < 3; i++) {
 				auto attachment = model->AddAttachment(m_sPath_Texture+std::to_string(i)+".png", m_sRelationshipType_Texture);
 				model->AddTexture2DFromAttachment(attachment.get());
@@ -98,7 +104,13 @@ namespace Lib3MF
 
 		PModel model;
 		std::string m_sPath_Texture;
+
+		static void SetUpTestCase() {
+			wrapper = CWrapper::loadLibrary();
+		}
+		static PWrapper wrapper;
 	};
+	PWrapper Model_TextureResources::wrapper;
 
 	TEST_F(Model_TextureResources, Iterator)
 	{
@@ -117,7 +129,7 @@ namespace Lib3MF
 
 	TEST_F(Model_TextureResource, WriteRead)
 	{
-		auto writeModel = CWrapper::CreateModel();
+		auto writeModel = wrapper->CreateModel();
 		std::string sRelationshipType_Texture = "http://schemas.microsoft.com/3dmanufacturing/2013/01/3dtexture";
 		std::string sPath_Texture = "/3D/Textures/MyTexture";
 		std::vector<Lib3MF_uint8> buffer;
@@ -138,7 +150,7 @@ namespace Lib3MF
 			writer->WriteToBuffer(buffer);
 		}
 		
-		auto readModel = CWrapper::CreateModel();
+		auto readModel = wrapper->CreateModel();
 		auto reader = readModel->QueryReader("3mf");
 		reader->ReadFromBuffer(buffer);
 
@@ -160,7 +172,7 @@ namespace Lib3MF
 			m_sRelationshipType_Texture = "http://schemas.microsoft.com/3dmanufacturing/2013/01/3dtexture";
 			m_sPath_Texture = "/3D/Textures/MyTexture.png";
 
-			model = CWrapper::CreateModel();
+			model = wrapper->CreateModel();
 			textureAttachment = model->AddAttachment(m_sPath_Texture, m_sRelationshipType_Texture);
 			texture = model->AddTexture2DFromAttachment(textureAttachment.get());
 		}
@@ -173,7 +185,13 @@ namespace Lib3MF
 		PTexture2D texture;
 		std::string m_sRelationshipType_Texture;
 		std::string m_sPath_Texture;
+
+		static void SetUpTestCase() {
+			wrapper = CWrapper::loadLibrary();
+		}
+		static PWrapper wrapper;
 	};
+	PWrapper TextureResource::wrapper;
 
 	TEST_F(TextureResource, Properties)
 	{

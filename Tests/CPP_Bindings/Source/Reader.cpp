@@ -31,21 +31,14 @@ UnitTest_Reader.cpp: Defines Unittests for the Reader classes
 --*/
 
 #include "UnitTest_Utilities.h"
-#include "lib3mf.hpp"
+#include "lib3mf_implicit.hpp"
 
 namespace Lib3MF
 {
 	class Reader : public ::testing::Test {
 	protected:
-
-		static void SetUpTestCase() {
-		}
-
-		static void TearDownTestCase() {
-		}
-
 		virtual void SetUp() {
-			model = CWrapper::CreateModel();
+			model = wrapper->CreateModel();
 			reader3MF = model->QueryReader("3mf");
 			readerSTL = model->QueryReader("stl");
 		}
@@ -55,14 +48,16 @@ namespace Lib3MF
 			readerSTL.reset();
 		}
 	
-		static PModel model;
-		static PReader reader3MF;
-		static PReader readerSTL;
-	};
+		PModel model;
+		PReader reader3MF;
+		PReader readerSTL;
 
-	PModel Reader::model;
-	PReader Reader::reader3MF;
-	PReader Reader::readerSTL;
+		static void SetUpTestCase() {
+			wrapper = CWrapper::loadLibrary();
+		}
+		static PWrapper wrapper;
+	};
+	PWrapper Reader::wrapper;
 
 	TEST_F(Reader, 3MFReadFromFile)
 	{

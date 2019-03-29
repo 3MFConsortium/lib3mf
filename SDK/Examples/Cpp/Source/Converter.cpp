@@ -37,15 +37,15 @@ Converter.cpp : Can convert 3MFs to STL and back
 #include <Windows.h>
 #endif
 
-#include "lib3mf.hpp"
+#include "lib3mf_implicit.hpp"
 
 using namespace Lib3MF;
 
 
-void printVersion() {
+void printVersion(PWrapper wrapper) {
 	Lib3MF_uint32 nMajor, nMinor, nMicro;
 	std::string sReleaseInfo, sBuildInfo;
-	CWrapper::GetLibraryVersion(nMajor, nMinor, nMicro, sReleaseInfo, sBuildInfo);
+	wrapper->GetLibraryVersion(nMajor, nMinor, nMicro, sReleaseInfo, sBuildInfo);
 	std::cout << "Lib3MF version = " << nMajor << "." << nMinor << "." << nMicro;
 	if (!sReleaseInfo.empty()) {
 		std::cout << "-" << sReleaseInfo;
@@ -73,9 +73,11 @@ std::string FindExtension(std::string filename) {
 
 
 int convert(std::string sFilename) {
+	PWrapper wrapper = CWrapper::loadLibrary();
+	
 	std::cout << "------------------------------------------------------------------" << std::endl;
 	std::cout << "3MF Model Converter" << std::endl;
-	printVersion();
+	printVersion(wrapper);
 	std::cout << "------------------------------------------------------------------" << std::endl;
 
 	// Extract Extension of filename
@@ -106,7 +108,7 @@ int convert(std::string sFilename) {
 	sOutputFilename.erase(sOutputFilename.length() - sExtension.length());
 	sOutputFilename += sNewExtension;
 
-	PModel model = CWrapper::CreateModel();
+	PModel model = wrapper->CreateModel();
 	PReader reader = model->QueryReader(sReaderName);
 
 	// Import Model from File

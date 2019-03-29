@@ -31,21 +31,14 @@ UnitTest_Slice.cpp: Defines Unittests for the Slice class
 --*/
 
 #include "UnitTest_Utilities.h"
-#include "lib3mf.hpp"
+#include "lib3mf_implicit.hpp"
 
 namespace Lib3MF
 {
 	class Slice : public ::testing::Test {
 	protected:
-
-		static void SetUpTestCase() {
-		}
-
-		static void TearDownTestCase() {
-		}
-
 		virtual void SetUp() {
-			model = CWrapper::CreateModel();
+			model = wrapper->CreateModel();
 			sliceStack = model->AddSliceStack(.0);
 			slice = sliceStack->AddSlice(1.0);
 
@@ -91,8 +84,13 @@ namespace Lib3MF
 		std::vector<Lib3MF_uint32> vEmptyPolygon;
 
 		std::vector<Lib3MF_uint32> vInvalidPolygon;
-	};
 
+		static void SetUpTestCase() {
+			wrapper = CWrapper::loadLibrary();
+		}
+		static PWrapper wrapper;
+	};
+	PWrapper Slice::wrapper;
 
 	TEST_F(Slice, Properties)
 	{

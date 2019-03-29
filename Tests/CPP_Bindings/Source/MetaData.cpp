@@ -31,21 +31,15 @@ UnitTest_MetaData.cpp: Defines Unittests for the MetaData class
 --*/
 
 #include "UnitTest_Utilities.h"
-#include "lib3mf.hpp"
+#include "lib3mf_implicit.hpp"
 
 namespace Lib3MF
 {
 	class MetaData : public ::testing::Test {
 	protected:
 
-		static void SetUpTestCase() {
-		}
-
-		static void TearDownTestCase() {
-		}
-
 		virtual void SetUp() {
-			model = CWrapper::CreateModel();
+			model = wrapper->CreateModel();
 			metaDataGroup = model->GetMetaDataGroup();
 			metaData = metaDataGroup->AddMetaData("", "Title", "TheTitle", "xs:string", true);
 		}
@@ -53,14 +47,16 @@ namespace Lib3MF
 			model.reset();
 		}
 
-		static PModel model;
-		static PMetaDataGroup metaDataGroup;
-		static PMetaData metaData;
-	};
+		PModel model;
+		PMetaDataGroup metaDataGroup;
+		PMetaData metaData;
 
-	PModel MetaData::model;
-	PMetaDataGroup MetaData::metaDataGroup;
-	PMetaData MetaData::metaData;
+		static void SetUpTestCase() {
+			wrapper = CWrapper::loadLibrary();
+		}
+		static PWrapper wrapper;
+	};
+	PWrapper MetaData::wrapper;
 
 	TEST_F(MetaData, DefaultNameSpace)
 	{

@@ -33,7 +33,7 @@ UnitTest_Utilities.h: Utilities for UnitTests
 #ifndef __NMR_UNITTEST_UTILITIES
 #define __NMR_UNITTEST_UTILITIES
 
-#include "lib3mf.hpp"
+#include "lib3mf_implicit.hpp"
 #include "gtest/gtest.h"
 #include <fstream>
 

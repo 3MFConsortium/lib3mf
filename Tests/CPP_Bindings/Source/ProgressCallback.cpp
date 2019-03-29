@@ -31,21 +31,14 @@ UnitTest_Writer.cpp: Defines Unittests for the Writer classes
 --*/
 
 #include "UnitTest_Utilities.h"
-#include "lib3mf.hpp"
+#include "lib3mf_implicit.hpp"
 
 namespace Lib3MF
 {
 	class ProgressCallbackTest : public ::testing::Test {
 	protected:
-
-		static void SetUpTestCase() {
-		}
-
-		static void TearDownTestCase() {
-		}
-
 		virtual void SetUp() {
-			model = CWrapper::CreateModel();
+			model = wrapper->CreateModel();
 			auto reader = model->QueryReader("3mf");
 			reader->ReadFromFile(InFolder + "Pyramid.3mf");
 			writer3MF = model->QueryWriter("3mf");
@@ -56,16 +49,21 @@ namespace Lib3MF
 		}
 	
 		static PModel model;
-		static PWriter writer3MF;
+		PWriter writer3MF;
 
 		static std::string InFolder;
 		static std::string OutFolder;
 	public:
 		static void* m_spUserData;
+
+		static void SetUpTestCase() {
+			wrapper = CWrapper::loadLibrary();
+		}
+		static PWrapper wrapper;
 	};
+	PWrapper ProgressCallbackTest::wrapper;
 
 	PModel ProgressCallbackTest::model;
-	PWriter ProgressCallbackTest::writer3MF;
 	std::string ProgressCallbackTest::InFolder(sTestFilesPath + "/Writer/");
 	std::string ProgressCallbackTest::OutFolder(sOutFilesPath + "/Writer/");
 
@@ -76,7 +74,7 @@ namespace Lib3MF
 		std::cout << "Progress " << dProgress*100 << "/100";
 		if (identifier != eProgressIdentifier::QUERYCANCELED) {
 			std::string progressMessage;
-			CWrapper::RetrieveProgressMessage(identifier, progressMessage);
+			ProgressCallbackTest::wrapper->RetrieveProgressMessage(identifier, progressMessage);
 			std::cout << ": info = \"" << progressMessage << "\"";
 		}
 		std::cout << "\n";
@@ -98,7 +96,7 @@ namespace Lib3MF
 
 	TEST_F(ProgressCallbackTest, Read)
 	{
-		auto localModel = CWrapper::CreateModel();
+		auto localModel = wrapper->CreateModel();
 		auto reader = localModel->QueryReader("3mf");
 		reader->SetProgressCallback(Callback_Positive, ProgressCallbackTest::m_spUserData);
 		reader->ReadFromFile(InFolder + "Pyramid.3mf");

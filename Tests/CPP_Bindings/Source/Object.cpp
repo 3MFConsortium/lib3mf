@@ -31,29 +31,27 @@ UnitTest_Object.cpp: Defines Unittests for the object class and its descendants
 --*/
 
 #include "UnitTest_Utilities.h"
-#include "lib3mf.hpp"
+#include "lib3mf_implicit.hpp"
 
 namespace Lib3MF
 {
 	class ObjectT : public ::testing::Test {
 	protected:
-
-		static void SetUpTestCase() {
-		}
-
-		static void TearDownTestCase() {
-		}
-
 		virtual void SetUp() {
-			model = CWrapper::CreateModel();
+			model = wrapper->CreateModel();
 		}
 		virtual void TearDown() {
 			model.reset();
 		}
 	
-		static PModel model;
+		PModel model;
+
+		static void SetUpTestCase() {
+			wrapper = CWrapper::loadLibrary();
+		}
+		static PWrapper wrapper;
 	};
-	PModel ObjectT::model;
+	PWrapper ObjectT::wrapper;
 
 	TEST_F(ObjectT, AddMesh)
 	{
@@ -160,24 +158,22 @@ namespace Lib3MF
 
 	class ObjectAssembled : public ::testing::Test {
 	protected:
-
-		static void SetUpTestCase() {
-		}
-
-		static void TearDownTestCase() {
-		}
-
 		virtual void SetUp() {
-			model = CWrapper::CreateModel();
+			model = wrapper->CreateModel();
 			AddHierarchy(model);
 		}
 		virtual void TearDown() {
 			model.reset();
 		}
 
-		static PModel model;
+		PModel model;
+
+		static void SetUpTestCase() {
+			wrapper = CWrapper::loadLibrary();
+		}
+		static PWrapper wrapper;
 	};
-	PModel ObjectAssembled::model;
+	PWrapper ObjectAssembled::wrapper;
 
 	TEST_F(ObjectAssembled, TestComponentsHierarchy)
 	{
@@ -214,15 +210,8 @@ namespace Lib3MF
 
 	class ObjectSingle : public ::testing::Test {
 	protected:
-
-		static void SetUpTestCase() {
-		}
-
-		static void TearDownTestCase() {
-		}
-
 		virtual void SetUp() {
-			model = CWrapper::CreateModel();
+			model = wrapper->CreateModel();
 			components = model->AddComponentsObject();
 			mesh = model->AddMeshObject();
 			component = components->AddComponent(mesh.get(), getIdentityTransform());
@@ -231,15 +220,17 @@ namespace Lib3MF
 			model.reset();
 		}
 
-		static PModel model;
-		static PComponentsObject components;
-		static PComponent component;
-		static PMeshObject mesh;
+		PModel model;
+		PComponentsObject components;
+		PComponent component;
+		PMeshObject mesh;
+
+		static void SetUpTestCase() {
+			wrapper = CWrapper::loadLibrary();
+		}
+		static PWrapper wrapper;
 	};
-	PModel ObjectSingle::model;
-	PComponentsObject ObjectSingle::components;
-	PComponent ObjectSingle::component;
-	PMeshObject ObjectSingle::mesh;
+	PWrapper ObjectSingle::wrapper;
 
 	TEST_F(ObjectSingle, Transform)
 	{

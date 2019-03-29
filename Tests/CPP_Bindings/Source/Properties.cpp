@@ -31,7 +31,7 @@ UnitTest_Properties.cpp: Defines Unittests for the color and basematerial proper
 --*/
 
 #include "UnitTest_Utilities.h"
-#include "lib3mf.hpp"
+#include "lib3mf_implicit.hpp"
 
 namespace Lib3MF
 {
@@ -39,7 +39,7 @@ namespace Lib3MF
 	protected:
 
 		virtual void SetUp() {
-			model = CWrapper::CreateModel();
+			model = wrapper->CreateModel();
 
 			std::vector<sPosition> vctVertices;
 			std::vector<sTriangle> vctTriangles;
@@ -55,7 +55,13 @@ namespace Lib3MF
 
 		PModel model;
 		PMeshObject mesh;
+
+		static void SetUpTestCase() {
+			wrapper = wrapper->loadLibrary();
+		}
+		static PWrapper wrapper;
 	};
+	PWrapper Properties::wrapper;
 
 
 	TEST_F(Properties, GetProperties)
@@ -74,8 +80,8 @@ namespace Lib3MF
 	TEST_F(Properties, DISABLED_Set_BaseMaterial_Fail)
 	{
 		auto baseMaterialGroup = model->AddBaseMaterialGroup();
-		auto someMaterial = baseMaterialGroup->AddMaterial("SomeMaterial", CWrapper::RGBAToColor(100, 200, 150, 255));
-		auto anotherMaterial = baseMaterialGroup->AddMaterial("AnotherMaterial", CWrapper::RGBAToColor(100, 200, 150, 255));
+		auto someMaterial = baseMaterialGroup->AddMaterial("SomeMaterial", wrapper->RGBAToColor(100, 200, 150, 255));
+		auto anotherMaterial = baseMaterialGroup->AddMaterial("AnotherMaterial", wrapper->RGBAToColor(100, 200, 150, 255));
 		sTriangleProperties prop;
 		prop.m_ResourceID = baseMaterialGroup->GetResourceID();
 		prop.m_PropertyIDs[0] = someMaterial;
@@ -88,8 +94,8 @@ namespace Lib3MF
 	TEST_F(Properties, SetGet_BaseMaterial)
 	{
 		auto baseMaterialGroup = model->AddBaseMaterialGroup();
-		auto someMaterial = baseMaterialGroup->AddMaterial("SomeMaterial", CWrapper::RGBAToColor(100, 200, 150, 255));
-		auto anotherMaterial = baseMaterialGroup->AddMaterial("AnotherMaterial", CWrapper::RGBAToColor(100, 200, 150, 255));
+		auto someMaterial = baseMaterialGroup->AddMaterial("SomeMaterial", wrapper->RGBAToColor(100, 200, 150, 255));
+		auto anotherMaterial = baseMaterialGroup->AddMaterial("AnotherMaterial", wrapper->RGBAToColor(100, 200, 150, 255));
 
 		std::vector<sTriangleProperties> properties(mesh->GetTriangleCount());
 		for (Lib3MF_uint64 i = 0; i < mesh->GetTriangleCount(); i++) {
@@ -125,7 +131,7 @@ namespace Lib3MF
 	protected:
 
 		virtual void SetUp() {
-			model = CWrapper::CreateModel();
+			model = wrapper->CreateModel();
 
 			std::vector<sPosition> vctVertices;
 			std::vector<sTriangle> vctTriangles;
@@ -136,8 +142,8 @@ namespace Lib3MF
 			model->AddBuildItem(mesh.get(), getIdentityTransform());
 
 			auto baseMaterialGroup = model->AddBaseMaterialGroup();
-			auto someMaterial = baseMaterialGroup->AddMaterial("SomeMaterial", CWrapper::RGBAToColor(100, 200, 150, 255));
-			auto anotherMaterial = baseMaterialGroup->AddMaterial("AnotherMaterial", CWrapper::RGBAToColor(100, 200, 150, 255));
+			auto someMaterial = baseMaterialGroup->AddMaterial("SomeMaterial", wrapper->RGBAToColor(100, 200, 150, 255));
+			auto anotherMaterial = baseMaterialGroup->AddMaterial("AnotherMaterial", wrapper->RGBAToColor(100, 200, 150, 255));
 
 			std::vector<sTriangleProperties> properties(mesh->GetTriangleCount());
 			for (Lib3MF_uint64 i = 0; i < mesh->GetTriangleCount(); i++) {
@@ -158,7 +164,13 @@ namespace Lib3MF
 
 		PModel model;
 		PMeshObject mesh;
+
+		static void SetUpTestCase() {
+			wrapper = CWrapper::loadLibrary();
+		}
+		static PWrapper wrapper;
 	};
+	PWrapper Properties_BaseMaterial::wrapper;
 
 	TEST_F(Properties_BaseMaterial, WriteRead)
 	{
@@ -167,7 +179,7 @@ namespace Lib3MF
 		writer->WriteToBuffer(buffer);
 		// writer->WriteToFile("BaseMaterial_Out.3mf");
 
-		auto readModel = CWrapper::CreateModel();
+		auto readModel = wrapper->CreateModel();
 		auto reader = readModel->QueryReader("3mf");
 		// reader->ReadFromFile("BaseMaterial_Out.3mf");
 		reader->ReadFromBuffer(buffer);
@@ -186,7 +198,7 @@ namespace Lib3MF
 	protected:
 
 		virtual void SetUp() {
-			model = CWrapper::CreateModel();
+			model = wrapper->CreateModel();
 
 			std::vector<sPosition> vctVertices;
 			std::vector<sTriangle> vctTriangles;
@@ -197,8 +209,8 @@ namespace Lib3MF
 			model->AddBuildItem(mesh.get(), getIdentityTransform());
 			
 			auto colorGroup = model->AddColorGroup();
-			cSomeColor = CWrapper::RGBAToColor(100, 200, 150, 255);
-			cAnotherColor = CWrapper::RGBAToColor(250, 100, 50, 200);
+			cSomeColor = wrapper->RGBAToColor(100, 200, 150, 255);
+			cAnotherColor = wrapper->RGBAToColor(250, 100, 50, 200);
 			auto someColor = colorGroup->AddColor(cSomeColor);
 			auto anotherColor = colorGroup->AddColor(cAnotherColor);
 
@@ -222,7 +234,13 @@ namespace Lib3MF
 		PModel model;
 		PMeshObject mesh;
 		sColor cSomeColor, cAnotherColor;
+
+		static void SetUpTestCase() {
+			wrapper = CWrapper::loadLibrary();
+		}
+		static PWrapper wrapper;
 	};
+	PWrapper Properties_Color::wrapper;
 
 	void CompareColors(sColor c1, sColor c2)
 	{
@@ -239,7 +257,7 @@ namespace Lib3MF
 		writer->WriteToBuffer(buffer);
 		//writer->WriteToFile("Color_Out.3mf");
 
-		auto readModel = CWrapper::CreateModel();
+		auto readModel = wrapper->CreateModel();
 		auto reader = readModel->QueryReader("3mf");
 		reader->ReadFromBuffer(buffer);
 		// reader->ReadFromFile("Color_Out.3mf");
