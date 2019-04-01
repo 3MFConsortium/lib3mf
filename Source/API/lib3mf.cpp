@@ -99,11 +99,6 @@ void CWrapper::Release (IBase* pInstance)
 	delete pInstance;
 }
 
-void CWrapper::SetJournal (const std::string & sJournalPath)
-{
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_SHOULDNOTBECALLED);
-}
-
 
 NMR::ProgressIdentifier convertProgressIdentifier(const eLib3MFProgressIdentifier progressIdentifier) {
 	return NMR::ProgressIdentifier(progressIdentifier);
