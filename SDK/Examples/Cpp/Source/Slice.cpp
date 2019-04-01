@@ -35,7 +35,7 @@ Slice.cpp : 3MF slice extension example
 double const_pi() { return std::atan(1) * 4; }
 #include <algorithm>
 
-#include "lib3mf.hpp"
+#include "lib3mf_implicit.hpp"
 
 using namespace Lib3MF;
 
@@ -170,7 +170,7 @@ void SliceExample() {
 
 
 	// Add build item
-	model->AddBuildItem(meshObject.get(), CWrapper::GetIdentityTransform());
+	model->AddBuildItem(meshObject.get(), wrapper->GetIdentityTransform());
 
 	// Write file
 	PWriter writer = model->QueryWriter("3mf");

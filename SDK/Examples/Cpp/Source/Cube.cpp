@@ -120,7 +120,7 @@ void CubeExample() {
 	meshObject->SetGeometry(vertices, triangles);
 
 	// Add build item
-	model->AddBuildItem(meshObject.get(), CWrapper::GetIdentityTransform());
+	model->AddBuildItem(meshObject.get(), wrapper->GetIdentityTransform());
 
 	PWriter writer = model->QueryWriter("3mf");
 	writer->WriteToFile("cube.3mf");

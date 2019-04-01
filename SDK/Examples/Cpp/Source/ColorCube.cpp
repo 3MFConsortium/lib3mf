@@ -83,7 +83,7 @@ sLib3MFTriangleProperties fnCreateTriangleColor(PColorGroup colorGroup, Lib3MF_u
 
 
 void CubeExample() {
-	PWrapper wrapper = CWrapper::loadLibrary();
+	PWrapper wrapper = wrapper->loadLibrary();
 	
 	std::cout << "------------------------------------------------------------------" << std::endl;
 	std::cout << "3MF Color Cube example" << std::endl;
@@ -131,11 +131,11 @@ void CubeExample() {
 
 	// define colors
 	PColorGroup colorGroup = model->AddColorGroup();
-	Lib3MF_uint32 idRed = colorGroup->AddColor(CWrapper::RGBAToColor(255, 0, 0, 255));
-	Lib3MF_uint32 idGreen = colorGroup->AddColor(CWrapper::RGBAToColor(0, 255, 0, 255));
-	Lib3MF_uint32 idBlue = colorGroup->AddColor(CWrapper::RGBAToColor(0, 0, 255, 255));
-	Lib3MF_uint32 idOrange = colorGroup->AddColor(CWrapper::RGBAToColor(255, 128, 0, 255));
-	Lib3MF_uint32 idYellow = colorGroup->AddColor(CWrapper::RGBAToColor(255, 255, 0, 255));
+	Lib3MF_uint32 idRed = colorGroup->AddColor(wrapper->RGBAToColor(255, 0, 0, 255));
+	Lib3MF_uint32 idGreen = colorGroup->AddColor(wrapper->RGBAToColor(0, 255, 0, 255));
+	Lib3MF_uint32 idBlue = colorGroup->AddColor(wrapper->RGBAToColor(0, 0, 255, 255));
+	Lib3MF_uint32 idOrange = colorGroup->AddColor(wrapper->RGBAToColor(255, 128, 0, 255));
+	Lib3MF_uint32 idYellow = colorGroup->AddColor(wrapper->RGBAToColor(255, 255, 0, 255));
 
 	sLib3MFTriangleProperties sTriangleColorRed = fnCreateTriangleColor(colorGroup, idRed, idRed, idRed);
 	sLib3MFTriangleProperties sTriangleColorGreen = fnCreateTriangleColor(colorGroup, idGreen, idGreen, idGreen);
@@ -160,7 +160,7 @@ void CubeExample() {
 	meshObject->SetTriangleProperties(11, sTriangleColor2);
 
 	// Add build item
-	model->AddBuildItem(meshObject.get(), CWrapper::GetIdentityTransform());
+	model->AddBuildItem(meshObject.get(), wrapper->GetIdentityTransform());
 
 	PWriter writer = model->QueryWriter("3mf");
 	writer->WriteToFile("colorcube.3mf");

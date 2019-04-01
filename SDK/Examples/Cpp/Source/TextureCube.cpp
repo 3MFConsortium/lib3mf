@@ -180,7 +180,7 @@ void TextureExample() {
 	meshObject->SetTriangleProperties(11, fnCreateTexture(textureGroup6, 1.0, 1.0, 0.0, 1.0, 0.0, 0.0));
 
 	// Add build item
-	model->AddBuildItem(meshObject.get(), CWrapper::GetIdentityTransform());
+	model->AddBuildItem(meshObject.get(), wrapper->GetIdentityTransform());
 
 	PWriter writer = model->QueryWriter("3mf");
 	writer->WriteToFile("texturegroup.3mf");

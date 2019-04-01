@@ -138,7 +138,7 @@ void BeamLatticeExample() {
 	set->SetReferences(references);
 
 	// Add build item
-	model->AddBuildItem(meshObject.get(), CWrapper::GetIdentityTransform());
+	model->AddBuildItem(meshObject.get(), wrapper->GetIdentityTransform());
 
 	// Write file
 	PWriter writer = model->QueryWriter("3mf");
