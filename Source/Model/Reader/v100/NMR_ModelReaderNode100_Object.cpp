@@ -294,11 +294,11 @@ namespace NMR {
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
 
 			// In any case (component object or mesh object)
-			if (m_nSliceStackId > 0) {
+			if ( (m_pObject) && (m_nSliceStackId > 0) ) {
 				PPackageResourceID pID = m_pModel->findPackageResourceID(m_pModel->curPath(), m_nSliceStackId);
 				if (!pID.get())
 					throw CNMRException(NMR_ERROR_SLICESTACKRESOURCE_NOT_FOUND);
-				PModelSliceStack pSliceStackResource = std::dynamic_pointer_cast<CModelSliceStack>( m_pModel->findResource(pID->getUniqueID()) );
+				PModelSliceStack pSliceStackResource = std::dynamic_pointer_cast<CModelSliceStack>(m_pModel->findResource(pID->getUniqueID()) );
 				if (pSliceStackResource) {
 					if ((m_pObject->getObjectType() == MODELOBJECTTYPE_MODEL) || (MODELOBJECTTYPE_SOLIDSUPPORT)) {
 						if (!pSliceStackResource->areAllPolygonsClosed()) {

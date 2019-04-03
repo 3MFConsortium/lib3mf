@@ -64,30 +64,31 @@ namespace NMR {
 		if (m_nID == 0)
 			throw CNMRException(NMR_ERROR_MISSINGMODELRESOURCEID);
 
+		std::vector<MODELMULTIPROPERTYLAYER> vctLayers;
 		if (!m_pBlendMethods) {
 			m_pWarnings->addException(CNMRException(NMR_ERROR_MULTIPROPERTIES_MISSING_BLENDMETHODS), mrwInvalidMandatoryValue);
 		}
-
-		std::vector<MODELMULTIPROPERTYLAYER> vctLayers;
-		if (m_pPIDs) {
-			if (m_pBlendMethods->size()-1 != m_pPIDs->size()) {
-				m_pWarnings->addException(CNMRException(NMR_ERROR_MULTIPROPERTIES_DIFFERNT_NUMBER_OF_BLENDMETHODS_AND_PIDS), mrwInvalidMandatoryValue);
-			}
-
-			for (int i = 0; i < m_pPIDs->size(); i++) {
-				PPackageResourceID pID = m_pModel->findPackageResourceID(m_pModel->curPath(), (*m_pPIDs)[i]);
-				if (!pID)
-					throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
-
-				eModelBlendMethod method = eModelBlendMethod::MODELBLENDMETHOD_MIX;
-				if (m_pBlendMethods && (i > 0) && (i < m_pBlendMethods->size() - 1)) {
-					method = (*m_pBlendMethods)[i];
-				}
-				vctLayers.push_back(MODELMULTIPROPERTYLAYER({ pID->getUniqueID() , method }));
-			}
-		}
 		else {
-			m_pWarnings->addException(CNMRException(NMR_ERROR_MULTIPROPERTIES_MISSING_PIDS), mrwInvalidMandatoryValue);
+			if (m_pPIDs) {
+				if (m_pBlendMethods->size() - 1 != m_pPIDs->size()) {
+					m_pWarnings->addException(CNMRException(NMR_ERROR_MULTIPROPERTIES_DIFFERNT_NUMBER_OF_BLENDMETHODS_AND_PIDS), mrwInvalidMandatoryValue);
+				}
+
+				for (int i = 0; i < m_pPIDs->size(); i++) {
+					PPackageResourceID pID = m_pModel->findPackageResourceID(m_pModel->curPath(), (*m_pPIDs)[i]);
+					if (!pID)
+						throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
+
+					eModelBlendMethod method = eModelBlendMethod::MODELBLENDMETHOD_MIX;
+					if (m_pBlendMethods && (i > 0) && (i < m_pBlendMethods->size() - 1)) {
+						method = (*m_pBlendMethods)[i];
+					}
+					vctLayers.push_back(MODELMULTIPROPERTYLAYER({ pID->getUniqueID() , method }));
+				}
+			}
+			else {
+				m_pWarnings->addException(CNMRException(NMR_ERROR_MULTIPROPERTIES_MISSING_PIDS), mrwInvalidMandatoryValue);
+			}
 		}
 
 		m_pMultiPropertyGroup = std::make_shared<CModelMultiPropertyGroupResource>(m_nID, m_pModel);
