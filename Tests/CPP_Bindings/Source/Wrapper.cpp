@@ -44,13 +44,16 @@ namespace Lib3MF
 	TEST(Wrapper, GetLibraryVersion)
 	{
 		Lib3MF_uint32 nMajor, nMinor, nMicro;
-		std::string sPreReleaseInfo, sBuildInfo;
-		wrapper->GetLibraryVersion(nMajor, nMinor, nMicro, sPreReleaseInfo, sBuildInfo);
+		wrapper->GetLibraryVersion(nMajor, nMinor, nMicro);
 
 		ASSERT_EQ(nMajor, LIB3MF_VERSION_MAJOR);
 		ASSERT_EQ(nMinor, LIB3MF_VERSION_MINOR);
 		ASSERT_EQ(nMicro, LIB3MF_VERSION_MICRO);
+
+		std::string sPreReleaseInfo, sBuildInfo;
+		wrapper->GetPrereleaseInformation(sPreReleaseInfo);
 		ASSERT_TRUE(sPreReleaseInfo == LIB3MF_VERSION_PRERELEASEINFO);
+		wrapper->GetBuildInformation(sBuildInfo);
 		ASSERT_TRUE(sBuildInfo == LIB3MF_VERSION_BUILDINFO);
 	}
 	
