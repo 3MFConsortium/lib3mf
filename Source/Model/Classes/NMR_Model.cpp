@@ -1145,9 +1145,16 @@ namespace NMR {
 		}
 
 
+		// sort by (level descending, ResourceID ascending)
 		resultList.sort ([](CModelObject * pObject1, CModelObject * pObject2)
 		{
-			return pObject1->getComponentDepthLevel() > pObject2->getComponentDepthLevel();
+			nfUint32 nLevel1 = pObject1->getComponentDepthLevel();
+			nfUint32 nLevel2 = pObject2->getComponentDepthLevel();
+			
+			if (nLevel1 == nLevel2)
+				return (pObject1->getResourceID()) < (pObject2->getResourceID());
+
+			return nLevel1 > nLevel2;
 		});
 
 		return resultList;
