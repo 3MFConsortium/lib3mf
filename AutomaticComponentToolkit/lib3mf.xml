@@ -39,9 +39,10 @@
 		<binding language="CppDynamic" indentation="tabs" />
 		<binding language="Node" indentation="tabs" />
 		<binding language="Go" indentation="tabs" />
+		<binding language="CSharp" indentation="tabs" />
 	</bindings>
 	<implementations>
-		<implementation language="Cpp" indentation="tabs" stubidentifier="" />
+		<implementation language="Cpp" indentation="tabs" />
 	</implementations>
 
 	<errors>
