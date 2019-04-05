@@ -383,14 +383,13 @@ namespace NMR {
 
 	void CModelWriterNode100_Model::writeObjects()
 	{
-		nfUint32 nObjectCount = m_pModel->getObjectCount();
-		nfUint32 nObjectIndex;
+		std::list <CModelObject *> objectList = m_pModel->getSortedObjectList();
 
-		for (nObjectIndex = 0; nObjectIndex < nObjectCount; nObjectIndex++) {
+		for (auto iIterator = objectList.begin(); iIterator != objectList.end(); iIterator++) {
 			if (m_pProgressMonitor && !m_pProgressMonitor->Progress(-1, ProgressIdentifier::PROGRESS_WRITENOBJECTS))
 				throw CNMRException(NMR_USERABORTED);
 
-			CModelObject * pObject = m_pModel->getObject(nObjectIndex);
+			CModelObject * pObject = *iIterator;
 
 			writeStartElement(XML_3MF_ELEMENT_OBJECT);
 			// Write Object ID (mandatory)
