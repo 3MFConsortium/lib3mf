@@ -117,4 +117,15 @@ namespace NMR {
 		return true;
 	}
 
+	void CModelComponentsObject::calculateComponentDepthLevel(nfUint32 nLevel)
+	{
+		CModelObject::calculateComponentDepthLevel(nLevel);
+		for (auto iIterator = m_Components.begin(); iIterator != m_Components.end(); iIterator++) {
+			CModelObject * pObject = (*iIterator)->getObject();
+			pObject->calculateComponentDepthLevel(nLevel + 1);
+		}
+
+	}
+
+
 }

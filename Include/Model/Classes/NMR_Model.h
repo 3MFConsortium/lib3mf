@@ -292,6 +292,9 @@ namespace NMR {
 		// Convenience functions for slice stacks
 		nfUint32 getSliceStackCount();
 		PModelResource getSliceStackResource(_In_ nfUint32 nIndex);
+
+		// Sorts objects by correct dependency
+		std::list<CModelObject *> getSortedObjectList ();
 	};
 
 	typedef std::shared_ptr <CModel> PModel;

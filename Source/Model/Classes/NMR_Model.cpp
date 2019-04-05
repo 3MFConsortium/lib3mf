@@ -1127,4 +1127,30 @@ namespace NMR {
 		return m_SliceStackLookup[nIndex];
 	}
 
+	std::list<CModelObject *> CModel::getSortedObjectList()
+	{
+		std::list<CModelObject *> resultList;
+
+		for (nfUint32 i = 0; i < m_ObjectLookup.size(); i++) {
+			CModelObject* pObject = dynamic_cast<CModelObject*>(m_ObjectLookup[i].get());
+			if (pObject != nullptr) {
+
+				pObject->clearComponentDepthLevel();
+				resultList.push_back(pObject);
+			}
+		}
+
+		for (auto iIterator = resultList.begin(); iIterator != resultList.end(); iIterator++) {
+			(*iIterator)->calculateComponentDepthLevel(1);
+		}
+
+
+		resultList.sort ([](CModelObject * pObject1, CModelObject * pObject2)
+		{
+			return pObject1->getComponentDepthLevel() > pObject2->getComponentDepthLevel();
+		});
+
+		return resultList;
+	}
+
 }

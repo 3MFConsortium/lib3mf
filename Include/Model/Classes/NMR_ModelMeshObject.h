@@ -77,7 +77,6 @@ namespace NMR {
 		_Ret_notnull_ PModelMeshBeamLatticeAttributes getBeamLatticeAttributes();
 		void setBeamLatticeAttributes(_In_ PModelMeshBeamLatticeAttributes pBeamLatticeAttributes);
 
-		ModelResourceID calculateDefaultPropertyID() const;
 	};
 
 	typedef std::shared_ptr <CModelMeshObject> PModelMeshObject;

@@ -45,6 +45,8 @@ namespace NMR {
 		m_pSliceStack.reset();
 		m_eSlicesMeshResolution = MODELSLICESMESHRESOLUTION_FULL;
 		m_MetaDataGroup = std::make_shared<CModelMetaDataGroup>();
+
+		m_nComponentDepthLevel = 0;
 	}
 
 	void CModelObject::mergeToMesh(_In_ CMesh * pMesh, _In_ const NMATRIX3 mMatrix)
@@ -180,4 +182,22 @@ namespace NMR {
 	{
 		return m_sThumbnail;
 	}
+
+	nfUint32 CModelObject::getComponentDepthLevel()
+	{
+		return m_nComponentDepthLevel;
+	}
+
+	void CModelObject::clearComponentDepthLevel()
+	{
+		m_nComponentDepthLevel = 0;
+	}
+
+	void CModelObject::calculateComponentDepthLevel(nfUint32 nLevel)
+	{
+		if (nLevel >= m_nComponentDepthLevel)
+			m_nComponentDepthLevel = nLevel;
+	}
+
+
 }
