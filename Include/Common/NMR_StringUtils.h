@@ -108,12 +108,13 @@ namespace NMR {
 	std::string fnExtractFileDir(_In_ const std::string sFullPath);
 
 	template<typename T>
-	std::vector<T> fnVctType_fromString(_In_ const std::string sString)
+	std::vector<T> fnVctType_fromString(_In_ const std::string sInString)
 	{
+		std::string sString = sInString;
 		std::vector<T> vctValues;
 
-		const nfChar * pszString = sString.c_str();
-		const nfChar * pCurrent = pszString;
+		nfChar * pszString = &(sString[0]);
+		nfChar * pCurrent = pszString;
 
 		nfBool bFinished = false;
 		while (!bFinished) {
@@ -122,16 +123,22 @@ namespace NMR {
 			while ((*pCurrent != ' ') && (*pCurrent))
 				pCurrent++;
 
+			if (*pCurrent == ' ') {
+				*pCurrent = 0;
+			}
+			else {
+				bFinished = true;
+			}
+
 			// If we have not found a space, convert value to T
 			if (pBegin != pCurrent) {
 				vctValues.push_back(fnStringToType<T>(pBegin));
 			}
 
 			// If we are finished, break, otherwise skip space!
-			if (!*pCurrent)
-				bFinished = true;
-			else
+			if (!bFinished) {
 				pCurrent++;
+			}
 		}
 		return vctValues;
 	}
