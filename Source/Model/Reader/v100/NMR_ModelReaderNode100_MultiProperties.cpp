@@ -177,7 +177,7 @@ namespace NMR {
 						throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
 					}
 					ModelPropertyID nPropertyID;
-					if (!pResource->mapResourceIndexToPropertyID(iLayer, nPropertyID)) {
+					if (!pResource->mapResourceIndexToPropertyID(vctPIndices[iLayer], nPropertyID)) {
 						throw CNMRException(NMR_ERROR_INVALID_RESOURCE_INDEX);
 					}
 					(*pMultiProperty)[iLayer] = nPropertyID;
