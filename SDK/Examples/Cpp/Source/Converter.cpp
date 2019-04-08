@@ -47,10 +47,10 @@ void printVersion(PWrapper wrapper) {
 	wrapper->GetLibraryVersion(nMajor, nMinor, nMicro);
 	std::cout << "Lib3MF version = " << nMajor << "." << nMinor << "." << nMicro;
 	std::string sReleaseInfo, sBuildInfo;
-	if (!wrapper->GetPrereleaseInfo(sReleaseInfo)) {
+	if (wrapper->GetPrereleaseInformation(sReleaseInfo)) {
 		std::cout << "-" << sReleaseInfo;
 	}
-	if (!wrapper->GetBuildInfo(sBuildInfo)) {
+	if (wrapper->GetBuildInformation(sBuildInfo)) {
 		std::cout << "+" << sBuildInfo;
 	}
 	std::cout << std::endl;
