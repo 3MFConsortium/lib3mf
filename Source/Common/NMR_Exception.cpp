@@ -389,7 +389,6 @@ namespace NMR {
 		case NMR_ERROR_MULTIPROPERTIES_INVALID_RESOURCE: return "A resource of invalid type was passed to a MultiPropertyGroup";
 		case NMR_ERROR_MULTIPROPERTIES_NOT_ENOUGH_PROPERTYIDS_SPECIFIED: return "A MultiProperty does not define enough PropertyIDs";
 		case NMR_ERROR_MULTIPROPERTIES_MISSING_PIDS: return "A MultiProperty-element is missing the pids-attribute";
-		case NMR_ERROR_MULTIPROPERTIES_MISSING_BLENDMETHODS: return "A MultiProperty-element is missing the blendmethods-attribute";
 		case NMR_ERROR_MULTIPROPERTIES_DIFFERNT_NUMBER_OF_BLENDMETHODS_AND_PIDS: return "The number of blendmethods and pids does not match";
 		case NMR_ERROR_DUPLICATE_PIDS: return "Multiproperties element has duplicate pids attribute";
 		case NMR_ERROR_DUPLICATE_BLENDMETHOS: return "Multiproperties element has duplicate blendmethods attribute";

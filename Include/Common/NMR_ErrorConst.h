@@ -1082,9 +1082,6 @@ Model error codes (0x8XXX)
 // PIDs-attribute is missing
 #define NMR_ERROR_MULTIPROPERTIES_MISSING_PIDS 0x80DE
 
-// blendmethods-attribute is missing
-#define NMR_ERROR_MULTIPROPERTIES_MISSING_BLENDMETHODS 0x80E0
-
 // The number of blendmethods and pids does not match
 #define NMR_ERROR_MULTIPROPERTIES_DIFFERNT_NUMBER_OF_BLENDMETHODS_AND_PIDS 0x80E1
 
