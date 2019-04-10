@@ -728,7 +728,7 @@
 		</method>
 	</class>
 
-	<class name="BaseMaterialGroup" parent="Resource">
+	<class name="BaseMaterialGroup" parent="Resource" description="The BaseMaterialGroup corresponds to a basematerials-element within a 3MF document">
 		<method name="GetCount" description="Retrieves the count of base materials in the material group.">
 			<param name="Count" type="uint32" pass="return" description="returns the count of base materials." />
 		</method>
