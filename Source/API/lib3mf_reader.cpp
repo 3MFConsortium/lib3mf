@@ -33,7 +33,7 @@ Abstract: This is a stub class definition of CReader
 
 // Include custom headers here.
 #include "Common/Platform/NMR_Platform.h"
-#include "Common/Platform/NMR_ImportStream_Memory.h"
+#include "Common/Platform/NMR_ImportStream_Shared_Memory.h"
 #include "Common/Platform/NMR_ImportStream_Callback.h"
 
 using namespace Lib3MF::Impl;
@@ -81,7 +81,7 @@ void CReader::ReadFromFile (const std::string & sFilename)
 
 void CReader::ReadFromBuffer (const Lib3MF_uint64 nBufferBufferSize, const Lib3MF_uint8 * pBufferBuffer)
 {
-	NMR::PImportStream pImportStream = std::make_shared<NMR::CImportStream_Memory>(pBufferBuffer, nBufferBufferSize);
+	NMR::PImportStream pImportStream = std::make_shared<NMR::CImportStream_Shared_Memory>(pBufferBuffer, nBufferBufferSize);
 
 	try {
 		reader().readStream(pImportStream);

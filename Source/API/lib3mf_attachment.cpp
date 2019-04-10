@@ -32,7 +32,7 @@ Abstract: This is a stub class definition of CAttachment
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
-#include "Common/Platform/NMR_ImportStream_Memory.h"
+#include "Common/Platform/NMR_ImportStream_Shared_Memory.h"
 #include "Common/Platform/NMR_ImportStream.h"
 #include "Common/Platform/NMR_Platform.h"
 #include "Common/NMR_StringUtils.h"
@@ -120,7 +120,7 @@ void CAttachment::WriteToBuffer (Lib3MF_uint64 nBufferBufferSize, Lib3MF_uint64*
 
 void CAttachment::ReadFromBuffer(const Lib3MF_uint64 nBufferBufferSize, const Lib3MF_uint8 * pBufferBuffer)
 {
-	NMR::PImportStream pImportStream = std::make_shared<NMR::CImportStream_Memory>(pBufferBuffer, nBufferBufferSize);
+	NMR::PImportStream pImportStream = std::make_shared<NMR::CImportStream_Shared_Memory>(pBufferBuffer, nBufferBufferSize);
 	m_pModelAttachment->setStream(pImportStream);
 }
 

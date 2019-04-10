@@ -60,7 +60,7 @@ Abstract: This is a stub class definition of CModel
 // Include custom headers here.
 #include "Model/Classes/NMR_ModelMeshObject.h"
 #include "Model/Classes/NMR_ModelComponentsObject.h"
-#include "Common/Platform/NMR_ImportStream_Memory.h"
+#include "Common/Platform/NMR_ImportStream_Unique_Memory.h"
 #include "Model/Classes/NMR_ModelColorGroup.h"
 #include "Model/Classes/NMR_ModelTexture2DGroup.h"
 #include "Model/Classes/NMR_ModelMultiPropertyGroup.h"
@@ -556,7 +556,7 @@ IMetaDataGroup * CModel::GetMetaDataGroup ()
 
 IAttachment * CModel::AddAttachment (const std::string & sURI, const std::string & sRelationShipType)
 {
-	NMR::PImportStream pStream = std::make_shared<NMR::CImportStream_Memory>();
+	NMR::PImportStream pStream = std::make_shared<NMR::CImportStream_Unique_Memory>();
 
 	NMR::PModelAttachment pModelAttachment(model().addAttachment(sURI, sRelationShipType, pStream));
 

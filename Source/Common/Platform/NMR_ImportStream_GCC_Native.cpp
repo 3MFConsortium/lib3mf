@@ -32,7 +32,7 @@ This is an abstract base stream class for importing from streams with with std::
 --*/
 
 #include "Common/Platform/NMR_ImportStream_GCC_Native.h"
-#include "Common/Platform/NMR_ImportStream_Memory.h"
+#include "Common/Platform/NMR_ImportStream_Unique_Memory.h"
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_Exception_Windows.h"
 #include "Common/NMR_StringUtils.h"
@@ -155,7 +155,7 @@ namespace NMR {
 	PImportStream CImportStream_GCC_Native::copyToMemory()
 	{
 		nfUint64 cbStreamSize = retrieveSize();
-		return std::make_shared<CImportStream_Memory>(this, cbStreamSize, false);
+		return std::make_shared<CImportStream_Unique_Memory>(this, cbStreamSize, false);
 	}
 
 }

@@ -1,5 +1,13 @@
 
-file(GLOB LIBZIP_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "Source/Libraries/libzip/*.c")
+if (USE_INCLUDED_LIBZIP)
+	file(GLOB LIBZIP_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "Source/Libraries/libzip/*.c")
+endif()
+
+if (USE_INCLUDED_ZLIB)
+	file(GLOB ZLIB_FILES ./Source/Libraries/zlib/*.c)
+endif()
+
+
 # sources for COM emulation
 set(SRCS_PLATFORM
 	${LIBZIP_FILES}
@@ -13,6 +21,7 @@ set(SRCS_PLATFORM
 
 set(SRCS_COMMON
 ${SRCS_PLATFORM}
+${ZLIB_FILES}
 Source/API/lib3mf.cpp
 Source/API/lib3mf_attachment.cpp
 Source/API/lib3mf_base.cpp
@@ -85,6 +94,8 @@ Source/Common/Platform/NMR_ExportStream_Dummy.cpp
 Source/Common/Platform/NMR_ExportStream_ZIP.cpp
 Source/Common/Platform/NMR_ImportStream_Callback.cpp
 Source/Common/Platform/NMR_ImportStream_Memory.cpp
+Source/Common/Platform/NMR_ImportStream_Shared_Memory.cpp
+Source/Common/Platform/NMR_ImportStream_Unique_Memory.cpp
 Source/Common/Platform/NMR_ImportStream_ZIP.cpp
 Source/Common/Platform/NMR_PortableZIPWriter.cpp
 Source/Common/Platform/NMR_PortableZIPWriterEntry.cpp
@@ -92,17 +103,6 @@ Source/Common/Platform/NMR_Time.cpp
 Source/Common/Platform/NMR_XmlReader.cpp
 Source/Common/Platform/NMR_XmlWriter.cpp
 Source/Common/Platform/NMR_XmlWriter_Native.cpp
-Source/Libraries/zlib/adler32.c
-Source/Libraries/zlib/compress.c
-Source/Libraries/zlib/crc32.c
-Source/Libraries/zlib/deflate.c
-Source/Libraries/zlib/infback.c
-Source/Libraries/zlib/inffast.c
-Source/Libraries/zlib/inflate.c
-Source/Libraries/zlib/inftrees.c
-Source/Libraries/zlib/trees.c
-Source/Libraries/zlib/uncompr.c
-Source/Libraries/zlib/zutil.c
 Source/Model/Classes/NMR_PackageResourceID.cpp
 Source/Model/Classes/NMR_Model.cpp
 Source/Model/Classes/NMR_ModelAttachment.cpp

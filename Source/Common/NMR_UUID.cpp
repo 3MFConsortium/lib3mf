@@ -37,8 +37,8 @@ NMR_UUID.cpp implements a datatype and functions to handle UUIDs
 
 #include <algorithm>
 
-#if defined(_WIN32) && !defined(__MINGW32__)
-#include <Objbase.h>
+#if defined(_WIN32)
+#include <objbase.h>
 #include <iomanip>
 #else
 #include <uuid/uuid.h>
@@ -48,7 +48,7 @@ namespace NMR
 {
 	CUUID::CUUID()
 	{
-#if defined(_WIN32) && !defined(__MINGW32__)
+#if defined(_WIN32)
 		GUID guid;
 		if (CoCreateGuid(&guid) != S_OK)
 			throw CNMRException(NMR_ERROR_UUIDGENERATIONFAILED);

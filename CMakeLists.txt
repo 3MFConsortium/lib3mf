@@ -6,6 +6,9 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 project (lib3MF)
 
+
+include(GNUInstallDirs)
+
 # Define Version
 set(LIB3MF_VERSION_MAJOR 2)        # increase on every backward-compatibility breaking change of the API
 set(LIB3MF_VERSION_MINOR 0)        # increase on every backward compatible change of the API
@@ -15,6 +18,8 @@ set(CMAKE_INSTALL_BINDIR bin CACHE PATH "directory for installing binary files")
 set(CMAKE_INSTALL_LIBDIR lib CACHE PATH "directory for installing library files")
 set(CMAKE_INSTALL_INCLUDEDIR include/lib3mf CACHE PATH "directory for installing header files")
 
+option(USE_INCLUDED_ZLIB "Use included zlib" ON)
+option(USE_INCLUDED_LIBZIP "Use included libzip" ON)
 
 if (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
   # using GCC

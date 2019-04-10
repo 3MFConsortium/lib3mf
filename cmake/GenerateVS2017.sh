@@ -1,8 +1,8 @@
 #!/bin/sh
 
 basepath="$(cd "$(dirname "$0")" && pwd)"
-builddir="$basepath/../build_32bit"
+builddir="$basepath/../build"
 mkdir -p "$builddir"
 cd "$builddir"
-cmake .. -G "Visual Studio 14 2015" "$@"
+cmake .. -G "Visual Studio 15 2017 Win64" "$@"
 cd "$basepath"

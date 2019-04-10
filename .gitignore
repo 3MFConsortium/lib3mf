@@ -1,1 +1,4 @@
 build
+build_32bit
+lib3MF.pc
+Include/Model/COM/NMR_COMVersion.h

@@ -58,7 +58,7 @@ A model is an in memory representation of the 3MF file.
 #include "Model/Reader/Slice1507/NMR_ModelReader_Slice1507_SliceRefModel.h"
 #include "Common/Platform/NMR_XmlReader.h"
 #include "Common/Platform/NMR_Platform.h"
-#include "Common/Platform/NMR_ImportStream_Memory.h"
+#include "Common/Platform/NMR_ImportStream_Unique_Memory.h"
 
 #include "Common/NMR_StringUtils.h" 
 namespace NMR {
@@ -844,7 +844,7 @@ namespace NMR {
 
 	PModelAttachment CModel::addPackageThumbnail()
 	{
-		return addPackageThumbnail(PACKAGE_THUMBNAIL_URI_BASE + std::string("/") + "thumbnail.png", std::make_shared<CImportStream_Memory>());
+		return addPackageThumbnail(PACKAGE_THUMBNAIL_URI_BASE + std::string("/") + "thumbnail.png", std::make_shared<CImportStream_Unique_Memory>());
 	}
 
 	void CModel::removePackageThumbnail()
