@@ -1,22 +1,22 @@
 
 if (USE_INCLUDED_LIBZIP)
-	file(GLOB LIBZIP_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "Source/Libraries/libzip/*.c")
+  file(GLOB LIBZIP_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "Source/Libraries/libzip/*.c")
 endif()
 
 if (USE_INCLUDED_ZLIB)
-	file(GLOB ZLIB_FILES ./Source/Libraries/zlib/*.c)
+  file(GLOB ZLIB_FILES ./Source/Libraries/zlib/*.c)
 endif()
 
 
 # sources for COM emulation
 set(SRCS_PLATFORM
-	${LIBZIP_FILES}
-	Source/Common/Platform/NMR_Platform_GCC.cpp
-	Source/Common/Platform/NMR_ImportStream_GCC_Native.cpp
-	Source/Common/Platform/NMR_ImportStream_GCC_Win32.cpp
-	Source/Common/Platform/NMR_ExportStream_GCC_Native.cpp
-	Source/Common/Platform/NMR_ExportStream_GCC_Win32.cpp
-	Source/Common/Platform/NMR_ExportStream_ZIP.cpp
+  ${LIBZIP_FILES}
+  Source/Common/Platform/NMR_Platform_GCC.cpp
+  Source/Common/Platform/NMR_ImportStream_GCC_Native.cpp
+  Source/Common/Platform/NMR_ImportStream_GCC_Win32.cpp
+  Source/Common/Platform/NMR_ExportStream_GCC_Native.cpp
+  Source/Common/Platform/NMR_ExportStream_GCC_Win32.cpp
+  Source/Common/Platform/NMR_ExportStream_ZIP.cpp
 )
 
 set(SRCS_COMMON
@@ -193,7 +193,7 @@ function(sourceGroupByFolder FILELISTVARIABLE FOLDERNAME FOLDERHOME)
   FOREACH(file ${${FILELISTVARIABLE}})
     file(RELATIVE_PATH relative_file "${FOLDERHOME}" "${CMAKE_CURRENT_SOURCE_DIR}/${file}")
     GET_FILENAME_COMPONENT(dir "${relative_file}" DIRECTORY)
-	IF (NOT "${dir}" STREQUAL "${last_dir}")
+  IF (NOT "${dir}" STREQUAL "${last_dir}")
       IF (files)
         SOURCE_GROUP("${FOLDERNAME}${SOURCE_GROUP_DELIMITER}${last_dir}" FILES ${files})
       ENDIF (files)
