@@ -15,7 +15,4 @@ file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/Writer)
 # Test the CPP-Bindings of the library
 add_subdirectory(CPP_Bindings)
 
-# Test internal classes of the library
-# add_subdirectory(CPP)
-
 set(STARTUPPROJECT ${STARTUPPROJECT} PARENT_SCOPE)
