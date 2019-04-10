@@ -1100,6 +1100,9 @@ Model error codes (0x8XXX)
 // Invalid resource index
 #define NMR_ERROR_INVALID_RESOURCE_INDEX 0x80E6
 
+// Version 093 of the core-specification is not supported
+#define NMR_ERROR_VERSION093_NOT_SUPPORTED 0x80E7
+
 
 /*-------------------------------------------------------------------
 XML Parser Error Constants (0x9XXX)
