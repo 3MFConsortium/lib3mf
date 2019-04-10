@@ -1,7 +1,14 @@
 # lib3mf
 [![Build Status](https://travis-ci.org/3MFConsortium/lib3mf.svg?branch=master)](https://travis-ci.org/3MFConsortium/lib3mf)
+[![Documentation Status](https://readthedocs.org/projects/lib3mf/badge/?version=latest)](https://readthedocs.org/projects/lib3mf)
+[![Supported platforms](https://img.shields.io/static/v1.svg?label=platform&message=windows%20%7C%20macos%20%7C%20linux&color=lightgrey)]()
+[![Simplified BSD License](https://img.shields.io/static/v1.svg?label=license&message=BSD&color=green)](LICENSE)
 
 Lib3MF is a C++ implementation of the 3D Manufacturing Format file standard.
+
+It offers an open source way to integrate 3MF reading and writing capabilities, as well 
+as conversion and validation tools for input and output data.
+clean and easy-to-use API to speed up the development and keep integration costs at a minimum.
 
 As 3MF shall become an universal 3D Printing standard, its quick adoption is very important. 
 This library shall lower all barriers of adoption to any possible user, let it be software 
@@ -9,14 +16,6 @@ providers, hardware providers, service providers or middleware tools.
 The specification can be downloaded at
 [http://3mf.io/specification/](http://3mf.io/specification/)
 
-Its aim is to offer an open source way to integrate 3MF reading and writing capabilities, as well 
-as conversion and validation tools for input and output data. The 3MF Library shall provide a 
-clean and easy-to-use API to speed up the development and keep integration costs at a minimum.
-
-A lot of energy has been put into keeping it as platform independent as far as possible. For
-example, it compiles well with the GCC compiler, but there is some work left to recode a few
-platform specific functionalities, which are now covered by the WinRT platform (like XML parsing
-and ZIP compression). This will come when time passes.
 
 ## Using lib3MF
 The current code runs on Windows, Linux and Mac and has a small number of external dependencies.
@@ -31,7 +30,7 @@ You can download the compiled shared libarary as part of a minimal SDK from the 
 or use the [nightly builds](https://github.com/3MFConsortium/lib3mf-binaries).
 
 ### 3. Examples 
-You are best of starting with on of the examples that are shipped with the binary SDK.
+You are best of starting with one of the examples that are shipped with the binary SDK.
 From there, you should be able to include lib3mf in your host application or service.
 
 ## Contributing
@@ -41,8 +40,4 @@ Contributions are welcome and we are always looking for people that improve the 
 This guide also contains a section about building lib3mf from source.
 
 ## Documentation
-For a more detailed documentation, please take a look into the [PDF](Lib3MF-1.pdf) in the root directory
-of this repository.
-
-## License
-Lib3MF is licensed under the [simplified BSD license](LICENSE).
+Lib3MF's documentation is hosted on https://lib3mf.readthedocs.io.

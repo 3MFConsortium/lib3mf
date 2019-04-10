@@ -6,12 +6,13 @@ Contributions are welcome and we are always looking for people that improve the 
 You can also contribute by reporting bugs in the [Issue tracker](../../issues), helping review pull requests, participate in discussions about issues and more.
 
 ## Filing issues
-1. When filing an issue to report errors or problems, make sure to answer these five questions:
+1. When filing an [issue](../../issues) to report errors or problems, make sure to answer these five questions:
 	1. Which version of lib3mf are you using?
 
-		a) The API call `lib3mf_geinterfaceversion` exports lib3mf version number.
+		a) The API call `lib3mf_getinterfaceversion` exports lib3mf version number.
 
 		b) Windows only: The properties of lib3mfs binary contain version information (e.g. right click on the DLL -> Properties -> Details).
+	
 	2. Which operating system are you using?
 	3. What did you do?
 	4. What did you expect to see?
@@ -44,7 +45,7 @@ If you've established yourself as an impactful contributor to the project, and a
 3. Initialize the [googletest](https://github.com/google/googletest) submodule by running\
 `git submodule update --init`
 4. To generate projects for Visual Studio or Unix Makefiles use the scripts in the folder [cmake](cmake):\
-Call `GenerateVS2015.bat` (Windows) or `GenerateMake.sh` (Linux, Mac), or
+Call `GenerateVS2017.bat` (Windows) or `GenerateMake.sh` (Linux, Mac), or
 define other targets by specifying custom [CMake generators](https://cmake.org/cmake/help/v3.0/manual/cmake-generators.7.html).\
 A new folder `build` is created and contains projects for the IDE/build target you selected.
 5. Build the projects:
@@ -56,3 +57,13 @@ A new folder `build` is created and contains projects for the IDE/build target y
 		1. navigate to the `build`-folder 
 		2. Call `make` to build the projects
 		3. Run/debug a project 
+
+
+## How to develop lib3mf
+
+lib3mf is based on the hourglass pattern for software components and uses the
+[Automatic Component Toolkit (ACT)](https://github.com/Autodesk/AutomaticComponentToolkit/)
+to ease the development of this pattern.
+
+lib3mf's goal is to run on Windows, Linunx and MacOS and most of its code is platform independent.
+

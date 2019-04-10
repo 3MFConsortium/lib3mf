@@ -5,7 +5,7 @@ Lib3MF v2.0.0-alpha documentation
 
 .. image:: https://img.shields.io/static/v1.svg?label=license&message=BSD&color=green
 	:target: source/license.html
-	:alt: License
+	:alt: Simplified BSD License
 	
 .. image:: https://travis-ci.org/3MFConsortium/lib3mf.svg?branch=master
 	:target: https://travis-ci.org/3MFConsortium/lib3mf
@@ -49,10 +49,15 @@ Obtaining Lib3MF
 ----------------------------------
 Simply download the precompiled binary SDK https://github.com/3MFConsortium/lib3mf/releases.
 
+On Unix-systems you have to install `uuid <https://linux.die.net/man/3/uuid>`_
+    - Linux (Ubuntu/Debian/...): <sudo apt-get install uuid-dev>
+    - MAC: <brew install ossp-uuid>
+
 
 Using Lib3MF
 -----------------
-Allthough the different language bindings are kept as similar as possible, the usage of Lib3MF still depends your programming language.
+Allthough the different language bindings are kept as similar as possible,
+the usage of Lib3MF still depends your programming language.
 You are best of starting with one of the examples distributed in the SDK.
 
 In addition, the home pages for each language binding give detailed instructions on how to use them.
