@@ -9,9 +9,11 @@ You can also contribute by reporting bugs in the [Issue tracker](../../issues), 
 1. When filing an [issue](../../issues) to report errors or problems, make sure to answer these five questions:
 	1. Which version of lib3mf are you using?
 
-		a) The API call `lib3mf_getinterfaceversion` exports lib3mf version number.
+		a) The API call `lib3mf_getlibraryversion` reveals lib3mf's version number.
 
-		b) Windows only: The properties of lib3mfs binary contain version information (e.g. right click on the DLL -> Properties -> Details).
+		b) Windows only:
+		
+		The properties of lib3mf's binary contain version information (e.g. right click on the DLL -> Properties -> Details).
 	
 	2. Which operating system are you using?
 	3. What did you do?
@@ -67,3 +69,4 @@ to ease the development of this pattern.
 
 lib3mf's goal is to run on Windows, Linunx and MacOS and most of its code is platform independent.
 
+You can access nightly builds of lib3mf's [develop branch](https://github.com/3MFConsortium/lib3mf/tree/develop) on https://github.com/3MFConsortium/lib3mf-binaries.

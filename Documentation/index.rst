@@ -24,8 +24,16 @@ Lib3MF v2.0.0-alpha documentation
 
 Welcome! This is the documentation for Lib3MF v2.0.0-alpha.
 
-Lib3MF is an implementation of the 3D Manufacturing Format file standard that provides 
-language bindings for a number of programming languages:
+Lib3MF is an implementation of the 3D Manufacturing Format file standard.
+
+It provides 3MF reading and writing capabilities, as well as conversion and validation tools
+for input and output data. Lib3MF runs on Windows, Linux and MacOS and offers a clean and
+easy-to-use API in various programming languages to speed up the development and keep integration
+costs at a minimum.
+
+As 3MF shall become an universal 3D Printing standard, its quick adoption is very important. 
+This library shall lower all barriers of adoption to any possible user, let it be software 
+providers, hardware providers, service providers or middleware tools.
 
 .. _label-api-documentation:
 
@@ -58,15 +66,15 @@ Using Lib3MF
 -----------------
 Allthough the different language bindings are kept as similar as possible,
 the usage of Lib3MF still depends your programming language.
-You are best of starting with one of the examples distributed in the SDK.
+You are best-off starting with one of the examples distributed in the SDK (link!).
 
 In addition, the home pages for each language binding give detailed instructions on how to use them.
 
-	
+
 Meta Information
 -----------------
 
-:doc:`license`
+:doc:`source/license`
 
 `Reporting Bugs <https://github.com/3MFConsortium/lib3mf/blob/master/CONTRIBUTING.md#filing-issues>`_
 
