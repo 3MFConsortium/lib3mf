@@ -54,6 +54,19 @@ API documentation
 - :doc:`NodeJS <source/NodeJS/LandingPage>`
 
 
+.. toctree::
+	:maxdepth: 4
+	:hidden:
+	
+	C++ <source/Cpp/LandingPage>
+	C <source/C/LandingPage>
+	Python <source/Python/LandingPage>
+	Pascal <source/Pascal/LandingPage>
+	C# <source/CSharp/LandingPage>
+	Golang <source/Golang/LandingPage>
+	NodeJS <source/NodeJS/LandingPage>
+	
+
 .. _label-obtaining_lib3mf:
 
 Obtaining lib3mf
@@ -92,15 +105,3 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`search`
 
-
-.. toctree::
-	:maxdepth: 4
-	:hidden:
-	
-	C++ <source/Cpp/LandingPage>
-	C <source/C/LandingPage>
-	Python <source/Python/LandingPage>
-	Pascal <source/Pascal/LandingPage>
-	C# <source/CSharp/LandingPage>
-	Golang <source/Golang/LandingPage>
-	NodeJS <source/NodeJS/LandingPage>
