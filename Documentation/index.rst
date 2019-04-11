@@ -3,10 +3,6 @@
 lib3mf v2.0.0-alpha documentation
 ================================================
 
-.. image:: https://img.shields.io/static/v1.svg?label=license&message=BSD&color=green
-	:target: source/license.html
-	:alt: Simplified BSD License
-	
 .. image:: https://travis-ci.org/3MFConsortium/lib3mf.svg?branch=master
 	:target: https://travis-ci.org/3MFConsortium/lib3mf
 	:alt: Build Status
@@ -20,6 +16,11 @@ lib3mf v2.0.0-alpha documentation
 
 .. image:: https://img.shields.io/static/v1.svg?label=platform&message=windows%20%7C%20macos%20%7C%20linux&color=lightgrey
 	:alt: Supported platforms
+	
+.. image:: https://img.shields.io/static/v1.svg?label=license&message=BSD&color=green
+	:target: source/license.html
+	:alt: Simplified BSD License
+	
 
 .. role:: bash(code)
 	:language: bash
