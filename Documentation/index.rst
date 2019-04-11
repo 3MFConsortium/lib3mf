@@ -1,7 +1,8 @@
 .. lib3mf documentation master file
 
+*********************************************
 lib3mf v2.0.0-alpha documentation
-================================================
+*********************************************
 
 .. image:: https://travis-ci.org/3MFConsortium/lib3mf.svg?branch=master
 	:target: https://travis-ci.org/3MFConsortium/lib3mf
@@ -42,23 +43,21 @@ providers, hardware providers, service providers or middleware tools.
 .. _label-api-documentation:
 
 API documentation
------------------
+=================
 
-.. toctree::
-	:maxdepth: 1
-	
-	source/Cpp/LandingPage
-	source/C/LandingPage
-	source/CSharp/LandingPage
-	source/Python/LandingPage
-	source/Pascal/LandingPage
-	source/Golang/LandingPage
-	source/NodeJS/LandingPage
-	
+- :doc:`source/Cpp/LandingPage`
+- :doc:`source/C/LandingPage`
+- :doc:`source/Python/LandingPage`
+- :doc:`source/Pascal/LandingPage`
+- :doc:`source/CSharp/LandingPage`
+- :doc:`source/Golang/LandingPage`
+- :doc:`source/NodeJS/LandingPage`
 
+
+.. _label-obtaining_lib3mf:
 
 Obtaining lib3mf
-----------------------------------
+====================
 Simply download the precompiled binary SDK https://github.com/3MFConsortium/lib3mf/releases.
 
 On Unix-systems you have to install `uuid <https://linux.die.net/man/3/uuid>`_
@@ -68,7 +67,7 @@ On Unix-systems you have to install `uuid <https://linux.die.net/man/3/uuid>`_
 
 
 Using lib3mf
------------------
+====================
 Allthough the different language bindings are kept as similar as possible,
 the usage of lib3mf still depends your programming language.
 You are best-off starting with one of the examples distributed in the SDK (https://github.com/3MFConsortium/lib3mf/releases).
@@ -77,7 +76,7 @@ In addition, the home pages for each language binding give detailed instructions
 
 
 Meta Information
------------------
+====================
 
 :doc:`source/license`
 
@@ -92,3 +91,16 @@ Indices and tables
 
 * :ref:`genindex`
 * :ref:`search`
+
+
+.. toctree::
+	:maxdepth: 3
+	:hidden:
+	
+	source/Cpp/LandingPage
+	source/C/LandingPage
+	source/Python/LandingPage
+	source/Pascal/LandingPage
+	source/CSharp/LandingPage
+	source/Golang/LandingPage
+	source/NodeJS/LandingPage
