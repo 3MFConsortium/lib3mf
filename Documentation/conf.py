@@ -17,7 +17,7 @@
 
 # -- Project information -----------------------------------------------------
 
-project = 'Lib3MF'
+project = 'lib3mf'
 copyright = '2019, 3MF Consortium'
 author = '3MF Consortium'
 
