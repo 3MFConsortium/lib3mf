@@ -42,7 +42,7 @@ using namespace Lib3MF;
 void printVersion(PWrapper wrapper) {
 	Lib3MF_uint32 nMajor, nMinor, nMicro;
 	wrapper->GetLibraryVersion(nMajor, nMinor, nMicro);
-	std::cout << "Lib3MF version = " << nMajor << "." << nMinor << "." << nMicro;
+	std::cout << "lib3mf version = " << nMajor << "." << nMinor << "." << nMicro;
 	std::string sReleaseInfo, sBuildInfo;
 	if (wrapper->GetPrereleaseInformation(sReleaseInfo)) {
 		std::cout << "-" << sReleaseInfo;

@@ -1,5 +1,5 @@
 # Contributor's Guide
-Lib3MF is an open source project.
+lib3mf is an open source project.
 
 Contributions are welcome and we are always looking for people that improve the implementation of the specification and extensions of 3MF.
 

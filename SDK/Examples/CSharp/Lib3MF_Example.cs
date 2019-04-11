@@ -43,7 +43,7 @@ namespace Lib3MF_Example
         {
             UInt32 nMajor, nMinor, nMicro;
             Lib3MF.Wrapper.GetLibraryVersion(out nMajor, out nMinor, out nMicro);
-            string versionString = string.Format("Lib3MF.version = {0}.{1}.{2}", nMajor, nMinor, nMicro);
+            string versionString = string.Format("lib3mf.version = {0}.{1}.{2}", nMajor, nMinor, nMicro);
             string sPreReleaseInfo;
             if (Lib3MF.Wrapper.GetPrereleaseInformation(out sPreReleaseInfo))
                 versionString = versionString + '-' + sPreReleaseInfo;

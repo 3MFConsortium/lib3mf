@@ -1,4 +1,4 @@
-# Documentation for Lib3MF
+# Documentation for lib3mf
 
 How to build this documentation locally:
 

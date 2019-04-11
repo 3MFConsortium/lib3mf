@@ -4,7 +4,7 @@
 C++-language bindings
 ===================================================================================
 
-This space describes the usage of Lib3MF in a C++ host application.
+This space describes the usage of lib3mf in a C++ host application.
 
 
 The C++-language bindings come in two different flavors:
@@ -13,7 +13,7 @@ The C++-language bindings come in two different flavors:
 	
 	.. group-tab:: Cpp
 	
-		If you include the header ``Cpp/lib3mf_implicit.hpp``, Lib3MF will be loaded dynamically during *load-time*
+		If you include the header ``Cpp/lib3mf_implicit.hpp``, lib3mf will be loaded dynamically during *load-time*
 		of your host application through your operating system's mechanism for loading libraries.
 		
 		.. code-block:: c
@@ -49,7 +49,7 @@ The C++-language bindings come in two different flavors:
 		
 		i.e. you need to explicitly provide the location of the shared library file ``lib3mf.*``.
 
-The ``Lib3MF::PWrapper`` object provides access to all functionality within Lib3MF.
+The ``Lib3MF::PWrapper`` object provides access to all functionality within lib3mf.
 
 Both flavors of the C++-bindings are header-only which makes it extremly easy to include them into existing projects:
 
@@ -92,7 +92,7 @@ CMakeLists.txt for minimal project:
 The examples in the Cpp/CppDynamic-folders of the binary SDK follow exactly this pattern.
 
 
-The remainder of this space is an in-depth API-reference for the functionality of Lib3MF.
+The remainder of this space is an in-depth API-reference for the functionality of lib3mf.
 
 
 General Information

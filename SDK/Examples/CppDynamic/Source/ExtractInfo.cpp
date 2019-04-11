@@ -41,7 +41,7 @@ using namespace Lib3MF;
 void printVersion(PWrapper wrapper) {
 	Lib3MF_uint32 nMajor, nMinor, nMicro;
 	wrapper->GetLibraryVersion(nMajor, nMinor, nMicro);
-	std::cout << "Lib3MF version = " << nMajor << "." << nMinor << "." << nMicro;
+	std::cout << "lib3mf version = " << nMajor << "." << nMinor << "." << nMicro;
 	std::string sReleaseInfo, sBuildInfo;
 	if (wrapper->GetPrereleaseInformation(sReleaseInfo)) {
 		std::cout << "-" << sReleaseInfo;
@@ -55,7 +55,7 @@ void printVersion(PWrapper wrapper) {
 void ShowThumbnailInformation(PModel model)
 {
 	/*
-	// TODO: this is not yet implemented in Lib3MF
+	// TODO: this is not yet implemented in lib3mf
 	*/
 }
 
@@ -185,7 +185,7 @@ void ExtractInfoExample(std::string sFileName) {
 	std::cout << "3MF Read example" << std::endl;
 	
 	std::string libpath = ("."); // TODO: put the location of the Lib3MF-library file here.
-	auto wrapper = Lib3MF::CWrapper::loadLibrary(libpath + "/lib3MF" + LSUFFIXOUT); // TODO: add correct suffix of the library
+	auto wrapper = Lib3MF::CWrapper::loadLibrary(libpath + "/lib3mf" + LSUFFIXOUT); // TODO: add correct suffix of the library
 
 	printVersion(wrapper);
 	std::cout << "------------------------------------------------------------------" << std::endl;

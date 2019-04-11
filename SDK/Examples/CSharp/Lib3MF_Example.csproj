@@ -17,12 +17,12 @@
 		<Compile Include="..\..\Bindings\CSharp\Lib3MF.cs" Link="Lib3MF.cs" />
 	</ItemGroup>
 	<ItemGroup>
-	  <None Include="..\..\Bin\lib3MF.dll" Link="lib3MF.dll">
+	  <None Include="..\..\Bin\lib3mf.dll" Link="lib3mf.dll">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
 	</ItemGroup>
 	<ItemGroup>
-	  <None Update="lib3MF.dll">
+	  <None Update="lib3mf.dll">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
 	</ItemGroup>

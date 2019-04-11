@@ -20,7 +20,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../Bindings/Cpp)
 
 if (WIN32)
 	link_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../Lib)
-	link_libraries(lib3MF)
+	link_libraries(lib3mf)
 else()
 	# Unix prefixes the name of the library with "lib" anyway
 	link_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../Bin)
@@ -31,7 +31,7 @@ else()
 endif()
 
 function(CopySharedLibrary MyTarget)
-	add_custom_command(TARGET ${MyTarget} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_CURRENT_SOURCE_DIR}/../../Bin/lib3MF.${LSUFFIX}" $<TARGET_FILE_DIR:${MyTarget}>/lib3MF${LSUFFIXOUT})
+	add_custom_command(TARGET ${MyTarget} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_CURRENT_SOURCE_DIR}/../../Bin/lib3mf.${LSUFFIX}" $<TARGET_FILE_DIR:${MyTarget}>/lib3mf${LSUFFIXOUT})
 endfunction(CopySharedLibrary)
 
 add_executable(Example_ColorCube Source/ColorCube.cpp)
