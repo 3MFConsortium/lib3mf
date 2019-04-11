@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -65,6 +65,8 @@ namespace NMR {
 		virtual nfBool isValid();
 
 		virtual nfBool isValidForSlices(const NMATRIX3& totalParentMatrix);
+
+		virtual void calculateComponentDepthLevel(nfUint32 nLevel);
 	};
 
 	typedef std::shared_ptr <CModelComponentsObject> PModelComponentsObject;

@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -37,7 +37,7 @@ NMR_ModelReaderNode_slice1507_Segment.h covers the slicestack of the private 3MF
 #include "Model/Classes/NMR_ModelComponent.h"
 #include "Model/Classes/NMR_ModelComponentsObject.h"
 #include "Model/Classes/NMR_ModelObject.h"
-#include "Common/MeshInformation/NMR_MeshInformation_Slices.h"
+#include "Model/Classes/NMR_ModelConstants_Slices.h"
 
 namespace NMR {
 	class CModelReaderNode_Slice1507_SliceStack : public CModelReaderNode {
@@ -47,7 +47,7 @@ namespace NMR {
 		nfFloat  m_BottomZ;
 		nfUint32 m_Id;
 
-		PSliceStack m_pSliceStack;
+		PModelSliceStack m_pSliceStackResource;
 		std::string m_sSlicePath;
 
 		int m_nProgressCounter;

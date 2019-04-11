@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -35,7 +35,6 @@ A mesh reader model node is a parser for the mesh node of an XML Model Stream.
 #define __NMR_MODELREADERNODE100_MESH
 
 #include "Model/Reader/NMR_ModelReaderNode.h"
-#include "Model/Reader/NMR_ModelReader_ColorMapping.h"
 #include "Model/Reader/NMR_ModelReader_TexCoordMapping.h"
 #include "Model/Classes/NMR_ModelComponent.h"
 #include "Model/Classes/NMR_ModelObject.h"
@@ -46,8 +45,6 @@ namespace NMR {
 	private:
 		CMesh * m_pMesh;
 		CModel * m_pModel;
-		PModelReader_ColorMapping m_pColorMapping;
-		PModelReader_TexCoordMapping m_pTexCoordMapping;
 
 		ModelResourceID m_nDefaultPropertyID;
 		ModelResourceIndex m_nDefaultPropertyIndex;
@@ -65,7 +62,7 @@ namespace NMR {
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 	public:
 		CModelReaderNode100_Mesh() = delete;
-		CModelReaderNode100_Mesh(_In_ CModel * pModel, _In_ CMesh * pMesh, _In_ PModelReaderWarnings pWarnings, _In_ CProgressMonitor* pProgressMonitor, _In_ PModelReader_ColorMapping pColorMapping, _In_ PModelReader_TexCoordMapping pTexCoordMapping, _In_ ModelResourceID nDefaultPropertyID, _In_ ModelResourceIndex nDefaultPropertyIndex);
+		CModelReaderNode100_Mesh(_In_ CModel * pModel, _In_ CMesh * pMesh, _In_ PModelReaderWarnings pWarnings, _In_ CProgressMonitor* pProgressMonitor, _In_ ModelResourceID nDefaultPropertyID, _In_ ModelResourceIndex nDefaultPropertyIndex);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 		void retrieveClippingInfo(_Out_ eModelBeamLatticeClipMode &eClipMode, _Out_ nfBool & bHasClippingMode, _Out_ ModelResourceID & nClippingMeshID);

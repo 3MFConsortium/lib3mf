@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -32,8 +32,8 @@ build item.
 
 --*/
 
-#include "Model/Classes/NMR_ModelBuildItem.h" 
-#include "Common/NMR_Exception.h" 
+#include "Model/Classes/NMR_ModelBuildItem.h"
+#include "Common/NMR_Exception.h"
 #include <sstream>
 
 namespace NMR {
@@ -45,6 +45,7 @@ namespace NMR {
 		m_pObject = pObject;
 		m_mTransform = fnMATRIX3_identity ();
 		m_nHandle = nHandle;
+		m_MetaDataGroup = std::make_shared<CModelMetaDataGroup>();
 
 		setUUID(std::make_shared<CUUID>());
 	}
@@ -56,6 +57,7 @@ namespace NMR {
 		m_pObject = pObject;
 		m_mTransform = mTransform;
 		m_nHandle = nHandle;
+		m_MetaDataGroup = std::make_shared<CModelMetaDataGroup>();
 
 		setUUID(std::make_shared<CUUID>());
 	}
@@ -121,6 +123,11 @@ namespace NMR {
 		m_UUID = uuid;
 	}
 
+	PModelMetaDataGroup CModelBuildItem::metaDataGroup()
+	{
+		return m_MetaDataGroup;
+	}
+
 	std::string CModelBuildItem::path()
 	{
 		return m_sPath;
@@ -140,7 +147,6 @@ namespace NMR {
 	nfUint32 CModelBuildItem::getHandle()
 	{
 		return m_nHandle;
-
 	}
 
 	bool CModelBuildItem::isValidForSlices() {

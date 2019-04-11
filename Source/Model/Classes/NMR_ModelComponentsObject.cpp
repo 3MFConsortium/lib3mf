@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -52,11 +52,14 @@ namespace NMR {
 	{
 		if (!pComponent)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
-		
+
 		CModel * pModel = getModel();
 		CModelObject * pModelObject = pComponent->getObject();
 
 		if (pModel != pModelObject->getModel())
+			throw CNMRException(NMR_ERROR_MODELMISMATCH);
+
+		if (pComponent->getObjectID() == this->getResourceID()->getUniqueID() )
 			throw CNMRException(NMR_ERROR_MODELMISMATCH);
 
 		m_Components.push_back(pComponent);
@@ -113,5 +116,16 @@ namespace NMR {
 
 		return true;
 	}
+
+	void CModelComponentsObject::calculateComponentDepthLevel(nfUint32 nLevel)
+	{
+		CModelObject::calculateComponentDepthLevel(nLevel);
+		for (auto iIterator = m_Components.begin(); iIterator != m_Components.end(); iIterator++) {
+			CModelObject * pObject = (*iIterator)->getObject();
+			pObject->calculateComponentDepthLevel(nLevel + 1);
+		}
+
+	}
+
 
 }

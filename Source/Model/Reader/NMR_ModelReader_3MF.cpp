@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -190,8 +190,6 @@ namespace NMR {
 
 		if (!m_pProgressMonitor->Progress(0.95, ProgressIdentifier::PROGRESS_CLEANUP))
 			throw CNMRException(NMR_USERABORTED);
-
-		m_pModel->removeReferencedSliceStackResources();
 
 		// Release Memory of 3MF Package
 		release3MFOPCPackage();

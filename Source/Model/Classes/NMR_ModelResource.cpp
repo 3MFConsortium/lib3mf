@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -44,11 +44,17 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 		m_pModel = pModel;
 		m_sResourceID = m_pModel->generatePackageResourceID(pModel->curPath(), sResourceID);
+		m_bHasResourceIndexMap = false;
 	}
 
 	CModelResource::~CModelResource()
 	{
 		m_pModel = NULL;
+	}
+
+	CModel * CModelResource::Model()
+	{
+		return m_pModel;
 	}
 
 	PPackageResourceID CModelResource::getResourceID()
@@ -59,6 +65,35 @@ namespace NMR {
 	_Ret_notnull_ CModel * CModelResource::getModel()
 	{
 		return m_pModel;
+	}
+
+
+	void CModelResource::clearResourceIndexMap()
+	{
+		m_ResourceIndexMap.clear();
+		m_bHasResourceIndexMap = false;
+	}
+
+	void CModelResource::buildResourceIndexMap()
+	{
+		clearResourceIndexMap();
+		m_bHasResourceIndexMap = true;
+	}
+
+	nfBool CModelResource::hasResourceIndexMap()
+	{
+		return m_bHasResourceIndexMap;
+	}
+
+	bool CModelResource::mapResourceIndexToPropertyID(_In_ ModelResourceIndex nPropertyIndex, _Out_ ModelPropertyID & nPropertyID)
+	{
+		if (nPropertyIndex < m_ResourceIndexMap.size()) {
+			nPropertyID = m_ResourceIndexMap[nPropertyIndex];
+			return true;
+		}
+
+		nPropertyID = 0;
+		return false;
 	}
 
 }

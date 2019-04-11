@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -61,9 +61,7 @@ bool NMR::CProgressMonitor::Progress(double progress, ProgressIdentifier identif
 			else {
 				nProgress = int(100*(Level().first + std::max(std::min(progress, 1.0), 0.0) * (Level().second - Level().first)));
 			}
-			m_lastCallbackResult = m_progressCallback(nProgress, identifier, m_userData);
-			if(m_lastCallbackResult == false)
-				return m_lastCallbackResult;
+			m_lastCallbackResult = !m_progressCallback(nProgress, identifier, m_userData);
 			return m_lastCallbackResult;
 		}
 	}
@@ -114,29 +112,29 @@ bool NMR::CProgressMonitor::WasAborted()
 	return (m_lastCallbackResult == false);
 }
 
-void NMR::CProgressMonitor::GetProgressMessage(NMR::ProgressIdentifier progressIdentifier, const char ** progressString) {
+void NMR::CProgressMonitor::GetProgressMessage(NMR::ProgressIdentifier progressIdentifier, std::string& progressString) {
 	switch (progressIdentifier) {
-		case PROGRESS_QUERYCANCELED: *progressString = ""; break;
-		case PROGRESS_DONE: *progressString = "Done"; break;
-		case PROGRESS_CLEANUP: *progressString = "Cleaning up"; break;
-		case PROGRESS_READSTREAM: *progressString = "Reading stream"; break;
-		case PROGRESS_EXTRACTOPCPACKAGE: *progressString = "Extracting OPC package"; break;
-		case PROGRESS_READNONROOTMODELS: *progressString = "Reading non-root models"; break;
-		case PROGRESS_READROOTMODEL: *progressString = "Reading root model"; break;
-		case PROGRESS_READRESOURCES: *progressString = "Reading resources"; break;
-		case PROGRESS_READMESH: *progressString = "Reading mesh data"; break;
-		case PROGRESS_READSLICES: *progressString = "Reading slice data"; break;
-		case PROGRESS_READBUILD: *progressString = "Reading build definition"; break;
-		case PROGRESS_CREATEOPCPACKAGE: *progressString = "Creating OPC package"; break;
-		case PROGRESS_WRITEMODELSTOSTREAM: *progressString = "Writing models to stream"; break;
-		case PROGRESS_WRITEROOTMODEL: *progressString = "Writing root model"; break;
-		case PROGRESS_WRITENONROOTMODELS: *progressString = "Writing non-root models"; break;
-		case PROGRESS_WRITEATTACHMENTS: *progressString = "Writing attachments"; break;
-		case PROGRESS_WRITECONTENTTYPES: *progressString = "Writing content types"; break;
-		case PROGRESS_WRITENOBJECTS: *progressString = "Writing objects"; break;
-		case PROGRESS_WRITENODES: *progressString = "Writing Nodes"; break;
-		case PROGRESS_WRITETRIANGLES: *progressString = "Writing triangles"; break;
-		case PROGRESS_WRITESLICES: *progressString = "Writing slices"; break;
-		default: *progressString = "Unknown Progress Identifier";
+		case PROGRESS_QUERYCANCELED: progressString = ""; break;
+		case PROGRESS_DONE: progressString = "Done"; break;
+		case PROGRESS_CLEANUP: progressString = "Cleaning up"; break;
+		case PROGRESS_READSTREAM: progressString = "Reading stream"; break;
+		case PROGRESS_EXTRACTOPCPACKAGE: progressString = "Extracting OPC package"; break;
+		case PROGRESS_READNONROOTMODELS: progressString = "Reading non-root models"; break;
+		case PROGRESS_READROOTMODEL: progressString = "Reading root model"; break;
+		case PROGRESS_READRESOURCES: progressString = "Reading resources"; break;
+		case PROGRESS_READMESH: progressString = "Reading mesh data"; break;
+		case PROGRESS_READSLICES: progressString = "Reading slice data"; break;
+		case PROGRESS_READBUILD: progressString = "Reading build definition"; break;
+		case PROGRESS_CREATEOPCPACKAGE: progressString = "Creating OPC package"; break;
+		case PROGRESS_WRITEMODELSTOSTREAM: progressString = "Writing models to stream"; break;
+		case PROGRESS_WRITEROOTMODEL: progressString = "Writing root model"; break;
+		case PROGRESS_WRITENONROOTMODELS: progressString = "Writing non-root models"; break;
+		case PROGRESS_WRITEATTACHMENTS: progressString = "Writing attachments"; break;
+		case PROGRESS_WRITECONTENTTYPES: progressString = "Writing content types"; break;
+		case PROGRESS_WRITENOBJECTS: progressString = "Writing objects"; break;
+		case PROGRESS_WRITENODES: progressString = "Writing Nodes"; break;
+		case PROGRESS_WRITETRIANGLES: progressString = "Writing triangles"; break;
+		case PROGRESS_WRITESLICES: progressString = "Writing slices"; break;
+		default: progressString = "Unknown Progress Identifier";
 	}
 }

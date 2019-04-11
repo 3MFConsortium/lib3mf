@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -35,8 +35,7 @@ A resources reader model node is a parser for the resources node of an XML Model
 #define __NMR_MODELREADERNODE100_RESOURCES
 
 #include "Model/Reader/NMR_ModelReaderNode.h"
-#include "Model/Reader/NMR_ModelReader_ColorMapping.h"
-#include "Model/Reader/NMR_ModelReader_TexCoordMapping.h"
+#include "Model/Classes/NMR_ModelTexture2DGroup.h"
 
 namespace NMR {
 
@@ -44,9 +43,6 @@ namespace NMR {
 	protected:
 		CModel * m_pModel;
 		std::string m_sPath;
-
-		PModelReader_ColorMapping m_pColorMapping;
-		PModelReader_TexCoordMapping m_pTexCoordMapping;
 
 		int m_nProgressCount;
 

@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -34,17 +34,12 @@ Stream.
 
 #include "Model/Reader/v100/NMR_ModelReaderNode100_Object.h"
 #include "Model/Reader/v100/NMR_ModelReaderNode100_Mesh.h"
-#include "Model/Reader/v100/NMR_ModelReaderNode100_MetaData.h"
+#include "Model/Reader/v100/NMR_ModelReaderNode100_MetaDataGroup.h"
 #include "Model/Reader/v100/NMR_ModelReaderNode100_Components.h"
 
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Model/Classes/NMR_ModelMeshObject.h"
 #include "Model/Classes/NMR_ModelAttachment.h"
-
-#include "Model/Classes/NMR_ModelDefaultProperty.h"
-#include "Model/Classes/NMR_ModelDefaultProperty_BaseMaterial.h"
-#include "Model/Classes/NMR_ModelDefaultProperty_Color.h"
-#include "Model/Classes/NMR_ModelDefaultProperty_TexCoord2D.h"
 
 #include "Common/NMR_StringUtils.h"
 #include "Common/NMR_Exception.h"
@@ -52,15 +47,10 @@ Stream.
 
 namespace NMR {
 
-	CModelReaderNode100_Object::CModelReaderNode100_Object(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings, _In_ CProgressMonitor * pProgressMonitor, _In_ PModelReader_ColorMapping pColorMapping, _In_ PModelReader_TexCoordMapping pTexCoordMapping)
+	CModelReaderNode100_Object::CModelReaderNode100_Object(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings, _In_ CProgressMonitor * pProgressMonitor)
 		: CModelReaderNode(pWarnings, pProgressMonitor)
 	{
 		// Initialize variables
-		if (!pColorMapping.get())
-			throw CNMRException(NMR_ERROR_INVALIDPARAM);
-		if (!pTexCoordMapping.get())
-			throw CNMRException(NMR_ERROR_INVALIDPARAM);
-
 		m_nID = 0;
 		m_sType = "";
 		m_bHasType = false;
@@ -77,8 +67,6 @@ namespace NMR {
 		m_nDefaultPropertyID = 0;
 		m_nDefaultPropertyIndex = 0;
 
-		m_pColorMapping = pColorMapping;
-		m_pTexCoordMapping = pTexCoordMapping;
 		m_nSliceStackId = 0;
 		m_eSlicesMeshResolution = MODELSLICESMESHRESOLUTION_FULL;
 		m_bHasMeshResolution = false;
@@ -107,6 +95,10 @@ namespace NMR {
 		m_pObject->setName(m_sName);
 		m_pObject->setPartNumber(m_sPartNumber);
 		
+		if (m_MetaDataGroup.get()) {
+			m_pObject->metaDataGroup()->mergeMetaData(m_MetaDataGroup.get());
+		}
+
 		if (m_bHasThumbnail)
 		{
 			PModelAttachment pAttachment = m_pModel->findModelAttachment(m_sThumbnail);
@@ -250,7 +242,7 @@ namespace NMR {
 				if (m_pProgressMonitor)
 					m_pProgressMonitor->PushLevel(0, 1);
 				// Read Mesh
-				PModelReaderNode100_Mesh pXMLNode = std::make_shared<CModelReaderNode100_Mesh>(m_pModel, pMesh.get(), m_pWarnings, m_pProgressMonitor, m_pColorMapping, m_pTexCoordMapping, m_nDefaultPropertyID, m_nDefaultPropertyIndex);
+				PModelReaderNode100_Mesh pXMLNode = std::make_shared<CModelReaderNode100_Mesh>(m_pModel, pMesh.get(), m_pWarnings, m_pProgressMonitor, m_nDefaultPropertyID, m_nDefaultPropertyIndex);
 				pXMLNode->parseXML(pXMLReader);
 				if (m_pProgressMonitor)
 					m_pProgressMonitor->PopLevel();
@@ -289,27 +281,35 @@ namespace NMR {
 				if (m_nDefaultPropertyID != 0)
 					m_pWarnings->addException(CNMRException(NMR_ERROR_DEFAULTPID_ON_COMPONENTSOBJECT), mrwInvalidOptionalValue);
 			}
+			else if (strcmp(pChildName, XML_3MF_ELEMENT_METADATAGROUP) == 0) {
+				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode100_MetaDataGroup>(m_pWarnings);
+				pXMLNode->parseXML(pXMLReader);
+
+				if (m_MetaDataGroup.get()) {
+					m_pWarnings->addException(CNMRException(NMR_ERROR_DUPLICATEMETADATAGROUP), mrwInvalidOptionalValue);
+				}
+				m_MetaDataGroup = dynamic_cast<CModelReaderNode100_MetaDataGroup*>(pXMLNode.get())->getMetaDataGroup();
+			}
 			else
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
 
 			// In any case (component object or mesh object)
-			if (m_nSliceStackId > 0) {
+			if ( (m_pObject) && (m_nSliceStackId > 0) ) {
 				PPackageResourceID pID = m_pModel->findPackageResourceID(m_pModel->curPath(), m_nSliceStackId);
 				if (!pID.get())
 					throw CNMRException(NMR_ERROR_SLICESTACKRESOURCE_NOT_FOUND);
-				PModelResource pResource = m_pModel->findResource(pID->getUniqueID());
-				CModelSliceStackResource* pSliceStackResource = dynamic_cast<CModelSliceStackResource*>(pResource.get());
+				PModelSliceStack pSliceStackResource = std::dynamic_pointer_cast<CModelSliceStack>(m_pModel->findResource(pID->getUniqueID()) );
 				if (pSliceStackResource) {
 					if ((m_pObject->getObjectType() == MODELOBJECTTYPE_MODEL) || (MODELOBJECTTYPE_SOLIDSUPPORT)) {
-						if (!pSliceStackResource->getSliceStack()->areAllPolygonsClosed()) {
-							throw CNMRException(NMR_ERROR_SLICEPOLYGONNOTCLOSED);
+						if (!pSliceStackResource->areAllPolygonsClosed()) {
+							m_pWarnings->addException(CNMRException(NMR_ERROR_SLICEPOLYGONNOTCLOSED), mrwInvalidMandatoryValue);
 						}
 					}
 				}
 				else
 					throw CNMRException(NMR_ERROR_SLICESTACKRESOURCE_NOT_FOUND);
 				
-				m_pObject->setSliceStackId(pID);
+				m_pObject->assignSliceStack(pSliceStackResource);
 				m_pObject->setSlicesMeshResolution(m_eSlicesMeshResolution);
 			}
 
@@ -328,38 +328,7 @@ namespace NMR {
 			// Assign Default Resource Property
 			PPackageResourceID pRID = m_pModel->findPackageResourceID(m_pModel->curPath(), m_nDefaultPropertyID);
 
-			CModelBaseMaterialResource * pResource = nullptr;
-			if (pRID.get())
-				pResource = m_pModel->findBaseMaterial(pRID->getUniqueID());
-			if (pResource != nullptr) {
-				m_pObject->setDefaultProperty(std::make_shared<CModelDefaultProperty_BaseMaterial>(pRID->getUniqueID(), m_nDefaultPropertyIndex));
-				hasBeenSet = true;
-			}
-
-			// Assign Default ColorResource Property
-			nfColor cColor;
-			if (m_pColorMapping->findColor(m_nDefaultPropertyID, m_nDefaultPropertyIndex, cColor)) {
-				m_pObject->setDefaultProperty(std::make_shared<CModelDefaultProperty_Color>(cColor));
-				hasBeenSet = true;
-			}
-			
-			// Assign Default TextureResource Property
-			ModelResourceID nTextureID;
-			nfFloat fU;
-			nfFloat fV;
-			if (m_pTexCoordMapping->findTexCoords(m_nDefaultPropertyID, m_nDefaultPropertyIndex, nTextureID, fU, fV)) {
-				if (nTextureID != 0) {
-					PPackageResourceID pID = m_pModel->findPackageResourceID(m_pModel->curPath(), nTextureID);
-					if (pID.get()) {
-						m_pObject->setDefaultProperty(std::make_shared<CModelDefaultProperty_TexCoord2D>(pID->getUniqueID(), fU, fV));
-						hasBeenSet = true;
-					}
-				}
-			}
-
-			if (!hasBeenSet) {
-				m_pWarnings->addException(CNMRException(NMR_ERROR_MISSINGDEFAULTPID), mrwMissingMandatoryValue);
-			}
+			// TODO: Default properties
 		}
 	}
 

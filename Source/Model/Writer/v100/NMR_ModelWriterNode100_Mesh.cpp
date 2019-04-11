@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -32,9 +32,7 @@ This is the class for exporting the 3mf mesh node.
 --*/
 
 #include "Model/Writer/v100/NMR_ModelWriterNode100_Mesh.h"
-#include "Common/MeshInformation/NMR_MeshInformation_BaseMaterials.h"
-#include "Common/MeshInformation/NMR_MeshInformation_NodeColors.h"
-#include "Common/MeshInformation/NMR_MeshInformation_TexCoords.h"
+#include "Common/MeshInformation/NMR_MeshInformation_Properties.h"
 
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_Exception_Windows.h"
@@ -54,21 +52,18 @@ namespace NMR {
 	const int CModelWriterNode100_Mesh::m_snPutDoubleFactor = (int)(pow(10, CModelWriterNode100_Mesh::m_snPosAfterDecPoint));
 
 	CModelWriterNode100_Mesh::CModelWriterNode100_Mesh(_In_ CModelMeshObject * pModelMeshObject, _In_ CXmlWriter * pXMLWriter, _In_ CProgressMonitor * pProgressMonitor,
-		_In_ PModelWriter_ColorMapping pColorMapping, _In_ PModelWriter_TexCoordMappingContainer pTextureMappingContainer, _In_ nfBool bWriteMaterialExtension, _In_ nfBool bWriteBeamLatticeExtension)
+		_In_ PMeshInformation_PropertyIndexMapping pPropertyIndexMapping, _In_ nfBool bWriteMaterialExtension, _In_ nfBool bWriteBeamLatticeExtension)
 		:CModelWriterNode(pModelMeshObject->getModel(), pXMLWriter, pProgressMonitor)
 	{
 		__NMRASSERT(pModelMeshObject != nullptr);
-		if (!pColorMapping.get())
-			throw CNMRException(NMR_ERROR_INVALIDPARAM);
-		if (!pTextureMappingContainer.get())
+		if (!pPropertyIndexMapping.get())
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
 		m_bWriteMaterialExtension = bWriteMaterialExtension;
 		m_bWriteBeamLatticeExtension = bWriteBeamLatticeExtension;
 
 		m_pModelMeshObject = pModelMeshObject;
-		m_pColorMapping = pColorMapping;
-		m_pTextureMappingContainer = pTextureMappingContainer;
+		m_pPropertyIndexMapping = pPropertyIndexMapping;
 
 		// Initialize buffer arrays
 		m_nTriangleBufferPos = 0;
@@ -141,39 +136,18 @@ namespace NMR {
 		writeFullEndElement();
 
 		// Retrieve Mesh Informations
-		CMeshInformation_BaseMaterials * pBaseMaterials = NULL;
-		CMeshInformation_NodeColors * pNodeColors = NULL;
-		CMeshInformation_TexCoords * pTexCoords = NULL;
-
+		CMeshInformation_Properties * pProperties = NULL;
+		
 		CMeshInformationHandler * pMeshInformationHandler = pMesh->getMeshInformationHandler();
 		if (pMeshInformationHandler) {
 			CMeshInformation * pInformation;
 
-			// Get Base Materials
-			pInformation = pMeshInformationHandler->getInformationByType(0, emiBaseMaterials);
+			// Get generic property handler
+			pInformation = pMeshInformationHandler->getInformationByType(0, emiProperties);
 			if (pInformation)
-				pBaseMaterials = dynamic_cast<CMeshInformation_BaseMaterials *> (pInformation);
-
-			if (m_bWriteMaterialExtension) {
-				// Get Node Colors
-				pInformation = pMeshInformationHandler->getInformationByType(0, emiNodeColors);
-				if (pInformation)
-					pNodeColors = dynamic_cast<CMeshInformation_NodeColors *> (pInformation);
-
-				// Get Tex Coords
-				pInformation = pMeshInformationHandler->getInformationByType(0, emiTexCoords);
-				if (pInformation)
-					pTexCoords = dynamic_cast<CMeshInformation_TexCoords *> (pInformation);
-			}
+				pProperties = dynamic_cast<CMeshInformation_Properties *> (pInformation);
 		}
-
-		// if there is a PID, but no DefaultProperty
-		if ( (pBaseMaterials) || (pNodeColors) || (pTexCoords) ) {
-			if ( !(m_pModelMeshObject->getDefaultProperty()) ) {
-				throw CNMRException(NMR_ERROR_MISSINGDEFAULTPID);
-			}
-		}
-
+		
 		// Write Triangles
 		writeStartElement(XML_3MF_ELEMENT_TRIANGLES);
 		for (nFaceIndex = 0; nFaceIndex < nFaceCount; nFaceIndex++) {
@@ -191,65 +165,19 @@ namespace NMR {
 			ModelResourceIndex nPropertyIndex3 = 0;
 
 			nfChar * pAdditionalString = nullptr;
-			// Retrieve Base Material
-			if (pBaseMaterials) {
-				MESHINFORMATION_BASEMATERIAL* pFaceData = (MESHINFORMATION_BASEMATERIAL*)pBaseMaterials->getFaceData(nFaceIndex);
-				if (pFaceData->m_nMaterialGroupID) {
-					nPropertyID = pFaceData->m_nMaterialGroupID;
-					nPropertyIndex1 = pFaceData->m_nMaterialIndex;
-					nPropertyIndex2 = pFaceData->m_nMaterialIndex;
-					nPropertyIndex3 = pFaceData->m_nMaterialIndex;
-				}
-			}
-
-			if (m_bWriteMaterialExtension) {
-				// Retrieve Node Colors
-				if (pNodeColors) {
-					MESHINFORMATION_NODECOLOR* pFaceData = (MESHINFORMATION_NODECOLOR*)pNodeColors->getFaceData(nFaceIndex);
-					if ((pFaceData->m_cColors[0] != 0) || (pFaceData->m_cColors[1] != 0) || (pFaceData->m_cColors[2] != 0)) {
-
-						ModelResourceIndex nColorIndex1 = 0;
-						ModelResourceIndex nColorIndex2 = 0;
-						ModelResourceIndex nColorIndex3 = 0;
-						nfBool colorsFound = m_pColorMapping->findColor(pFaceData->m_cColors[0], nColorIndex1) &&
-							m_pColorMapping->findColor(pFaceData->m_cColors[1], nColorIndex2) &&
-							m_pColorMapping->findColor(pFaceData->m_cColors[2], nColorIndex3);
-
-						if (colorsFound) {
-							nPropertyID = m_pColorMapping->getResourceID();
-							nPropertyIndex1 = nColorIndex1;
-							nPropertyIndex2 = nColorIndex2;
-							nPropertyIndex3 = nColorIndex3;
-						}
-					}
-				}
-
-				// Retrieve TexCoords
-				if (pTexCoords) {
-					MESHINFORMATION_TEXCOORDS* pFaceData = (MESHINFORMATION_TEXCOORDS*)pTexCoords->getFaceData(nFaceIndex);
-					if (pFaceData->m_TextureID != 0) {
-						ModelResourceIndex nTextureIndex1 = 0;
-						ModelResourceIndex nTextureIndex2 = 0;
-						ModelResourceIndex nTextureIndex3 = 0;
-
-						PModelWriter_TexCoordMapping pMapping = m_pTextureMappingContainer->findTexture(pFaceData->m_TextureID);
-						if (pMapping.get() != nullptr) {
-							nfBool textureFound = pMapping->findTexCoords(pFaceData->m_vCoords[0].m_fields[0], pFaceData->m_vCoords[0].m_fields[1], nTextureIndex1) &&
-								pMapping->findTexCoords(pFaceData->m_vCoords[1].m_fields[0], pFaceData->m_vCoords[1].m_fields[1], nTextureIndex2) &&
-								pMapping->findTexCoords(pFaceData->m_vCoords[2].m_fields[0], pFaceData->m_vCoords[2].m_fields[1], nTextureIndex3);
-
-							if (textureFound) {
-								nPropertyID = pMapping->getResourceID();
-								nPropertyIndex1 = nTextureIndex1;
-								nPropertyIndex2 = nTextureIndex2;
-								nPropertyIndex3 = nTextureIndex3;
-							}
-
-						}
-
+			// Retrieve Property Indices
+			if (pProperties != nullptr) {
+				MESHINFORMATION_PROPERTIES* pFaceData = (MESHINFORMATION_PROPERTIES*)pProperties->getFaceData(nFaceIndex);
+				if (pFaceData != nullptr) {
+					if (pFaceData->m_nResourceID) {
+						nPropertyID = pFaceData->m_nResourceID;
+						nPropertyIndex1 = m_pPropertyIndexMapping->mapPropertyIDToIndex(nPropertyID, pFaceData->m_nPropertyIDs[0]);
+						nPropertyIndex2 = m_pPropertyIndexMapping->mapPropertyIDToIndex(nPropertyID, pFaceData->m_nPropertyIDs[1]);
+						nPropertyIndex3 = m_pPropertyIndexMapping->mapPropertyIDToIndex(nPropertyID, pFaceData->m_nPropertyIDs[2]);
 					}
 				}
 			}
+
 
 			if (nPropertyID != 0) {
 				if ((nPropertyIndex1 != nPropertyIndex2) || (nPropertyIndex1 != nPropertyIndex3)) {
@@ -290,7 +218,9 @@ namespace NMR {
 			if (nBeamCount > 0) {
 				// write beamlattice
 				writeStartElementWithPrefix(XML_3MF_ELEMENT_BEAMLATTICE, XML_3MF_NAMESPACEPREFIX_BEAMLATTICE);
-				writeFloatAttribute(XML_3MF_ATTRIBUTE_BEAMLATTICE_RADIUS, float(pMesh->getDefaultBeamRadius()));
+				// TODO: find correct default BeamRadius
+				nfDouble dDefaultRadius = 1.0; //  pMesh->getDefaultBeamRadius();
+				writeFloatAttribute(XML_3MF_ATTRIBUTE_BEAMLATTICE_RADIUS, float(dDefaultRadius));
 				writeFloatAttribute(XML_3MF_ATTRIBUTE_BEAMLATTICE_MINLENGTH, float(pMesh->getBeamLatticeMinLength()));
 
 				if (m_pModelMeshObject->getBeamLatticeAttributes()->m_bHasClippingMeshID) {
@@ -298,7 +228,8 @@ namespace NMR {
 					writeIntAttribute(XML_3MF_ATTRIBUTE_BEAMLATTICE_CLIPPINGMESH, m_pModelMeshObject->getBeamLatticeAttributes()->m_nClippingMeshID->getUniqueID());
 				}
 
-				eModelBeamLatticeCapMode eDefaultCapMode = pMesh->getBeamLatticeCapMode();
+				// TODO: calculate default eModelBeamLatticeCapMode
+				eModelBeamLatticeCapMode eDefaultCapMode = eModelBeamLatticeCapMode::MODELBEAMLATTICECAPMODE_SPHERE; //  = pMesh->getBeamLatticeCapMode();
 				writeConstStringAttribute(XML_3MF_ATTRIBUTE_BEAMLATTICE_CAPMODE, capModeToString(eDefaultCapMode).c_str());
 				{
 					// write beamlattice: beams
@@ -306,7 +237,7 @@ namespace NMR {
 					for (nBeamIndex = 0; nBeamIndex < nBeamCount; nBeamIndex++) {
 						// write beamlattice: beam
 						MESHBEAM * pMeshBeam = pMesh->getBeam(nBeamIndex);
-						writeBeamData(pMeshBeam, pMesh->getDefaultBeamRadius(), eDefaultCapMode);
+						writeBeamData(pMeshBeam, dDefaultRadius, eDefaultCapMode);
 					}
 					writeFullEndElement();
 

@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -48,6 +48,11 @@ namespace NMR {
 	private:
 		CModel * m_pModel;
 		PPackageResourceID m_sResourceID;
+
+	protected:
+		std::vector<ModelPropertyID> m_ResourceIndexMap;
+		nfBool m_bHasResourceIndexMap;
+		CModel * Model();
 		
 	public:
 		CModelResource() = delete;
@@ -56,7 +61,12 @@ namespace NMR {
 		~CModelResource();
 		
 		virtual PPackageResourceID getResourceID();
-		
+
+		bool mapResourceIndexToPropertyID (_In_ ModelResourceIndex nPropertyIndex, _Out_ ModelPropertyID & nPropertyID);
+		void clearResourceIndexMap();
+		virtual void buildResourceIndexMap();
+		nfBool hasResourceIndexMap();
+
 		_Ret_notnull_ CModel * getModel();
 	};
 

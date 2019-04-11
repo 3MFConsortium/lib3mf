@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -37,7 +37,7 @@ using LibZ and a native XML writer implementation.
 #include "Model/Classes/NMR_ModelConstants.h" 
 #include "Model/Classes/NMR_ModelAttachment.h" 
 #include "Model/Classes/NMR_ModelTextureAttachment.h" 
-#include "Model/Classes/NMR_ModelSliceResource.h"
+#include "Model/Classes/NMR_ModelSliceStack.h"
 #include "Common/Platform/NMR_ImportStream.h" 
 #include "Common/NMR_Exception.h" 
 #include "Common/Platform/NMR_XmlWriter.h" 
@@ -108,7 +108,7 @@ namespace NMR {
 			throw CNMRException(NMR_USERABORTED);
 		// add slicestacks that reference other files
 		m_pProgressMonitor->PushLevel(0.5, 0.85);
-		addSlicerefAttachments(m_pModel);
+		addSlicerefAttachments();
 		m_pProgressMonitor->PopLevel();
 		
 		// add Attachments
@@ -150,36 +150,42 @@ namespace NMR {
 		return sStream.str();
 	}
 
-	void CModelWriter_3MF_Native::addSlicerefAttachments(_In_ CModel *pModel) {
+	void CModelWriter_3MF_Native::addSlicerefAttachments() {
 		__NMRASSERT(pModel != nullptr);
 
-		nfUint32 nCount = pModel->getSliceStackCount();
+		std::vector<std::string> slicePaths;
+		for (nfUint32 nIndex = 0; nIndex < m_pModel->getSliceStackCount(); nIndex++) {
+			CModelSliceStack* pSliceStackResource = dynamic_cast<CModelSliceStack*>(m_pModel->getSliceStackResource(nIndex).get());
+			if (pSliceStackResource->OwnPath().empty() || pSliceStackResource->OwnPath() == m_pModel->rootPath())
+				continue;
+			slicePaths.push_back(pSliceStackResource->OwnPath());
+		}
+		
+		nfUint64 nCount = slicePaths.size();
+		for (nfUint32 nIndex = 0; nIndex < nCount; nIndex++) {
+			if (!m_pProgressMonitor->Progress(double(nIndex) / nCount, ProgressIdentifier::PROGRESS_WRITENONROOTMODELS))
+				throw CNMRException(NMR_USERABORTED);
+			std::string slicePath = slicePaths[nIndex];
 
-		if (nCount > 0) {
-			nfUint32 nIndex;
-			for (nIndex = 0; nIndex < nCount; nIndex++) {
-				if (!m_pProgressMonitor->Progress(double(nIndex) / nCount, ProgressIdentifier::PROGRESS_WRITENONROOTMODELS))
-					throw CNMRException(NMR_USERABORTED);
-				CModelSliceStackResource* pSliceStackResource = dynamic_cast<CModelSliceStackResource*>(pModel->getSliceStackResource(nIndex).get());
-				CSliceStack* pSliceStack = pSliceStackResource->getSliceStack().get();
-				if (pSliceStack->usesSliceRef()) {
-					PExportStreamMemory p = std::make_shared<CExportStreamMemory>();
+			m_pModel->setCurPath(slicePath);
+			PImportStream pStream;
+			{
+				PExportStreamMemory pExportStream = std::make_shared<CExportStreamMemory>();
+				PXmlWriter_Native pXMLWriter = std::make_shared<CXmlWriter_Native>(pExportStream);
+				writeSlicestackStream(pXMLWriter.get());
 
-					PXmlWriter_Native pXMLWriter = std::make_shared<CXmlWriter_Native>(p);
-					writeSlicestackStream(pXMLWriter.get(), pModel, pSliceStackResource);
-
-					PImportStream pStream = std::make_shared<CImportStream_Unique_Memory>(p->getData(), p->getDataSize());
-					// check, whether that's already in here
-					PModelAttachment pSliceRefAttachment = m_pModel->findModelAttachment(pSliceStackResource->sliceRefPath());
-					if (pSliceRefAttachment.get() != nullptr) {
-						if (pSliceRefAttachment->getRelationShipType() != PACKAGE_START_PART_RELATIONSHIP_TYPE)
-							throw CNMRException(NMR_ERROR_DUPLICATEATTACHMENTPATH);
-						pSliceRefAttachment->setStream(pStream);
-					}
-					else
-						m_pModel->addAttachment(pSliceStackResource->sliceRefPath(), PACKAGE_START_PART_RELATIONSHIP_TYPE, pStream);
-				}
+				pStream = std::make_shared<CImportStream_Unique_Memory>(pExportStream->getData(), pExportStream->getDataSize());
 			}
+			
+			// check, whether that's already in here
+			PModelAttachment pSliceRefAttachment = m_pModel->findModelAttachment(slicePath);
+			if (pSliceRefAttachment.get() != nullptr) {
+				if (pSliceRefAttachment->getRelationShipType() != PACKAGE_START_PART_RELATIONSHIP_TYPE)
+					throw CNMRException(NMR_ERROR_DUPLICATEATTACHMENTPATH);
+				pSliceRefAttachment->setStream(pStream);
+			}
+			else
+				pSliceRefAttachment = m_pModel->addAttachment(slicePath, PACKAGE_START_PART_RELATIONSHIP_TYPE, pStream);
 		}
 	}
 

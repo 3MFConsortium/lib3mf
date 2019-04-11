@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -43,11 +43,7 @@ namespace NMR {
 
 	typedef enum _eMeshInformationType {
 		emiAbstract   = 0x0000,
-		emiBaseMaterials = 0x0001,
-		emiNodeColors = 0x0002,
-		emiTexCoords  = 0x0003,
-		emiCompositeMaterials = 0x0004,
-		emiMultiProperties = 0x0005,
+		emiProperties = 0x0001,
 		emiLastType
 	} eMeshInformationType;
 
@@ -55,26 +51,10 @@ namespace NMR {
 
 #pragma pack (1)
 	typedef struct {
-		nfColor m_cColors[3];
-	} MESHINFORMATION_NODECOLOR;
+		nfUint32 m_nResourceID;
+		nfUint32 m_nPropertyIDs[3];
+	} MESHINFORMATION_PROPERTIES;
 
-	typedef struct {
-		nfUint32 m_TextureID;
-		NVEC2 m_vCoords[3];
-	} MESHINFORMATION_TEXCOORDS;
-
-	typedef struct {
-		nfUint32 m_nMaterialGroupID;
-		nfUint32 m_nMaterialIndex;
-	} MESHINFORMATION_BASEMATERIAL;
-
-	typedef struct {
-		nfUint32 m_nMultiPropertyID;
-	} MESHINFORMATION_MULTIPROPERTIES;
-
-	typedef struct {
-		nfUint32 m_nCompositeID;
-	} MESHINFORMATION_COMPOSITES;
 
 #pragma pack()
 

@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -36,8 +36,6 @@ namespace NMR {
 
 	CBeamLattice::CBeamLattice(_In_ MESHNODES &nodes) : m_Nodes(nodes)
 	{ 
-		m_CapMode = eModelBeamLatticeCapMode::MODELBEAMLATTICECAPMODE_SPHERE;
-		m_dRadius = 1;
 		m_dMinLength = 0.0001;
 	}
 

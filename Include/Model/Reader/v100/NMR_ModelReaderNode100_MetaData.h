@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -40,8 +40,10 @@ namespace NMR {
 
 	class CModelReaderNode100_MetaData : public CModelReaderNode {
 	private:
-		std::string m_sName;
+		std::string m_sKey;
 		std::string m_sValue;
+		std::string m_sType;
+		nfBool m_bPreserve;
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 		virtual void OnText(_In_z_ const nfChar * pText, _In_ CXmlReader * pXMLReader);
@@ -51,8 +53,10 @@ namespace NMR {
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 		
-		std::string getName();
+		std::string getKey();
 		std::string getValue();
+		std::string getType();
+		nfBool getPreserve();
 	};
 
 	typedef std::shared_ptr <CModelReaderNode100_MetaData> PModelReaderNode100_MetaData;

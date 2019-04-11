@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -122,7 +122,7 @@ namespace NMR {
 
 						pBeamNodes[j] = aNewNodes[pBeam->m_nodeindices[j]];
 					}
-					addBeam(pBeamNodes[0], pBeamNodes[1], &pBeam->m_radius[0], &pBeam->m_radius[1], &pBeam->m_capMode[0], &pBeam->m_capMode[1]);
+					addBeam(pBeamNodes[0], pBeamNodes[1], pBeam->m_radius[0], pBeam->m_radius[1], pBeam->m_capMode[0], pBeam->m_capMode[1]);
 				}
 			}
 
@@ -168,6 +168,33 @@ namespace NMR {
 
 		return pNode;
 	}
+	_Ret_notnull_ MESHNODE * CMesh::addNode(_In_ const nfFloat posX, _In_ const nfFloat posY, _In_ const nfFloat posZ)
+	{
+		MESHNODE * pNode;
+
+		// Check Position Validity
+		if (fabs(posX) > NMR_MESH_MAXCOORDINATE)
+			throw CNMRException(NMR_ERROR_INVALIDCOORDINATES);
+		if (fabs(posY) > NMR_MESH_MAXCOORDINATE)
+			throw CNMRException(NMR_ERROR_INVALIDCOORDINATES);
+		if (fabs(posZ) > NMR_MESH_MAXCOORDINATE)
+			throw CNMRException(NMR_ERROR_INVALIDCOORDINATES);
+
+		// Check Node Quota
+		nfUint32 nNodeCount = getNodeCount();
+		if (nNodeCount > NMR_MESH_MAXNODECOUNT)
+			throw CNMRException(NMR_ERROR_TOOMANYNODES);
+
+		// Allocate Data
+		nfUint32 nNewIndex;
+		pNode = m_Nodes.allocData(nNewIndex);
+		pNode->m_index = nNewIndex;
+		pNode->m_position.m_values.x = posX;
+		pNode->m_position.m_values.y = posY;
+		pNode->m_position.m_values.z = posZ;
+
+		return pNode;
+	}
 
 	_Ret_notnull_ MESHFACE * CMesh::addFace(_In_ MESHNODE * pNode1, _In_ MESHNODE * pNode2, _In_ MESHNODE * pNode3)
 	{
@@ -192,16 +219,41 @@ namespace NMR {
 		pFace->m_index = nNewIndex;
 
 		if (m_pMeshInformationHandler)
-			m_pMeshInformationHandler->addFace(getFaceCount ());
+			m_pMeshInformationHandler->addFace(getFaceCount());
+
+		return pFace;
+	}
+	
+	_Ret_notnull_ MESHFACE * CMesh::addFace(_In_ nfInt32 nNodeIndex1, _In_ nfInt32 nNodeIndex2, _In_ nfInt32 nNodeIndex3)
+	{
+		if ((nNodeIndex1 == nNodeIndex2) || (nNodeIndex1 == nNodeIndex3) || (nNodeIndex2 == nNodeIndex3))
+			throw CNMRException(NMR_ERROR_DUPLICATENODE);
+
+		MESHFACE * pFace;
+		nfUint32 nFaceCount = getFaceCount();
+
+		if (nFaceCount > NMR_MESH_MAXFACECOUNT)
+			throw CNMRException(NMR_ERROR_TOOMANYFACES);
+
+		nfUint32 nNewIndex;
+
+		pFace = m_Faces.allocData(nNewIndex);
+		pFace->m_nodeindices[0] = nNodeIndex1;
+		pFace->m_nodeindices[1] = nNodeIndex2;
+		pFace->m_nodeindices[2] = nNodeIndex3;
+		pFace->m_index = nNewIndex;
+
+		if (m_pMeshInformationHandler)
+			m_pMeshInformationHandler->addFace(getFaceCount());
 
 		return pFace;
 	}
 
 	_Ret_notnull_ MESHBEAM * CMesh::addBeam(_In_ MESHNODE * pNode1, _In_ MESHNODE * pNode2,
-		_In_ nfDouble * pRadius1, _In_ nfDouble * pRadius2,
-		_In_ nfInt32 * peCapMode1, _In_ nfInt32 * peCapMode2)
+		_In_ nfDouble dRadius1, _In_ nfDouble dRadius2,
+		_In_ nfInt32 eCapMode1, _In_ nfInt32 eCapMode2)
 	{
-		if ((!pNode1) || (!pNode2) || (!pRadius1) || (!pRadius2) || (!peCapMode1) || (!peCapMode2))
+		if ((!pNode1) || (!pNode2))
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
 		if (pNode1 == pNode2)
@@ -219,11 +271,11 @@ namespace NMR {
 		pBeam->m_nodeindices[0] = pNode1->m_index;
 		pBeam->m_nodeindices[1] = pNode2->m_index;
 		pBeam->m_index = nNewIndex;
-		pBeam->m_radius[0] = *pRadius1;
-		pBeam->m_radius[1] = *pRadius2;
+		pBeam->m_radius[0] = dRadius1;
+		pBeam->m_radius[1] = dRadius2;
 
-		pBeam->m_capMode[0] = *peCapMode1;
-		pBeam->m_capMode[1] = *peCapMode2;
+		pBeam->m_capMode[0] = eCapMode1;
+		pBeam->m_capMode[1] = eCapMode2;
 
 		return pBeam;
 	}
@@ -284,26 +336,6 @@ namespace NMR {
 	nfDouble CMesh::getBeamLatticeMinLength()
 	{
 		return m_BeamLattice.m_dMinLength;
-	}
-
-	void CMesh::setBeamLatticeCapMode(eModelBeamLatticeCapMode eCapMode)
-	{
-		m_BeamLattice.m_CapMode = eCapMode;
-	}
-
-	eModelBeamLatticeCapMode CMesh::getBeamLatticeCapMode()
-	{
-		return m_BeamLattice.m_CapMode;
-	}
-
-	void CMesh::setDefaultBeamRadius(nfDouble dRadius)
-	{
-		m_BeamLattice.m_dRadius = dRadius;
-	}
-
-	nfDouble CMesh::getDefaultBeamRadius()
-	{
-		return m_BeamLattice.m_dRadius;
 	}
 
 	nfBool CMesh::checkSanity()

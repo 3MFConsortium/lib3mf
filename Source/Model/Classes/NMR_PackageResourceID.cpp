@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -52,11 +52,6 @@ namespace NMR {
 	}
 	PackageResourceID CPackageResourceID::getUniqueID() {
 		return m_uniqueID;
-	}
-
-	PPackageResourceID CResourceHandler::getNewRessourceID(std::wstring path, ModelResourceID id)
-	{
-		return getNewRessourceID(fnUTF16toUTF8(path), id);
 	}
 
 	PPackageResourceID CResourceHandler::getNewRessourceID(std::string path, ModelResourceID id)	// this is supposed to be the only way to generate a CPackageResourceID

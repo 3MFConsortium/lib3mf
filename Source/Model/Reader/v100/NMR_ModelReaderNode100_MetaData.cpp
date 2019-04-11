@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -44,7 +44,10 @@ namespace NMR {
 	CModelReaderNode100_MetaData::CModelReaderNode100_MetaData(_In_ PModelReaderWarnings pWarnings)
 		: CModelReaderNode(pWarnings)
 	{
-		// empty on purpose
+		m_sKey = "";
+		m_sValue = "";
+		m_bPreserve = true;
+		m_sType = "xs:string";
 	}
 
 	void CModelReaderNode100_MetaData::parseXML(_In_ CXmlReader * pXMLReader)
@@ -64,7 +67,11 @@ namespace NMR {
 		__NMRASSERT(pAttributeName);
 		__NMRASSERT(pAttributeValue);
 		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_METADATA_NAME) == 0) {
-			m_sName = std::string(pAttributeValue);
+			m_sKey = std::string(pAttributeValue);
+		} else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_METADATA_PRESERVE) == 0) {
+			m_bPreserve = !(std::string(pAttributeValue) == "0");
+		} else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_METADATA_TYPE) == 0) {
+			m_sType = std::string(pAttributeValue);
 		}
 
 	}
@@ -75,14 +82,24 @@ namespace NMR {
 		m_sValue += std::string(pText);
 	}
 
-	std::string CModelReaderNode100_MetaData::getName()
+	std::string CModelReaderNode100_MetaData::getKey()
 	{
-		return m_sName;
+		return m_sKey;
 	}
 
 	std::string CModelReaderNode100_MetaData::getValue()
 	{
 		return m_sValue;
+	}
+
+	std::string CModelReaderNode100_MetaData::getType()
+	{
+		return m_sType;
+	}
+
+	nfBool CModelReaderNode100_MetaData::getPreserve()
+	{
+		return m_bPreserve;
 	}
 
 }

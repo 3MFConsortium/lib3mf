@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -38,10 +38,11 @@ A base material is an in memory representation of the 3MF basematerial node.
 
 namespace NMR {
 
-	CModelBaseMaterial::CModelBaseMaterial(_In_ const std::string sName, _In_ nfColor cDisplayColor)
+	CModelBaseMaterial::CModelBaseMaterial(_In_ const std::string sName, _In_ nfColor cDisplayColor, _In_ ModelPropertyID nPropertyID)
 	{
 		m_sName = sName;
 		m_cDisplayColor = cDisplayColor;
+		m_nPropertyID = nPropertyID;
 	}
 
 	nfColor CModelBaseMaterial::getDisplayColor()
@@ -69,5 +70,9 @@ namespace NMR {
 		return fnColorToString(m_cDisplayColor);
 	}
 
+	nfUint32 CModelBaseMaterial::getPropertyID()
+	{
+		return m_nPropertyID;
+	}
 }
 

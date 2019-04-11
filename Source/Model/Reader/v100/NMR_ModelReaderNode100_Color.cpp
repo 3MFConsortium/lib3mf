@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -44,9 +44,8 @@ namespace NMR {
 	CModelReaderNode100_Color::CModelReaderNode100_Color(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings)
 		: CModelReaderNode(pWarnings)
 	{
-
 		m_pModel = pModel;
-	    m_bHasColor = false;
+		m_bHasColor = false;
 		m_cColor = 0xffffffff;
 	}
 

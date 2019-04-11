@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -68,6 +68,11 @@ namespace NMR
 	CUUID::CUUID(const nfChar* pString)
 	{
 		set(pString);
+	}
+
+	CUUID::CUUID(const std::string &string)
+	{
+		set(string.c_str());
 	}
 	
 	std::string CUUID::toString()

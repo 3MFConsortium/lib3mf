@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -33,13 +33,27 @@ metadata, and can be attached to any 3MF model node.
 --*/
 
 #include "Model/Classes/NMR_ModelMetaData.h" 
+#include "Model/Classes/NMR_ModelConstants.h"
+#include "Common/NMR_Exception.h"
 
 namespace NMR {
 
-	CModelMetaData::CModelMetaData(_In_ std::string sName, _In_ std::string sValue)
+	CModelMetaData::CModelMetaData(_In_ std::string sNameSpace, _In_ std::string sName, _In_ std::string sValue,
+		_In_ std::string sType, _In_ nfBool bPreserve)
 	{
+		if (!isValidNamespaceAndName(sNameSpace, sName))
+			throw CNMRException(NMR_ERROR_INVALIDMETADATA);
+		
+		// TODO: this check MUST be more clever
+		// https://www.ibm.com/support/knowledgecenter/en/SS7J8H/com.ibm.odm.dserver.rules.designer.author/designing_bom_topics/tpc_bom_builtin_simple_types.html
+		if (sType.empty()) 
+			throw CNMRException(NMR_ERROR_INVALIDMETADATA);
+
+		m_sNameSpace = sNameSpace;
 		m_sName = sName;
 		m_sValue = sValue;
+		m_sType = sType;
+		m_bPreserve = bPreserve;
 	}
 
 	std::string CModelMetaData::getName()
@@ -47,9 +61,99 @@ namespace NMR {
 		return m_sName;
 	}
 
+	std::string CModelMetaData::getNameSpace()
+	{
+		return m_sNameSpace;
+	}
+
+	std::string CModelMetaData::getKey()
+	{
+		return calculateKey(m_sNameSpace, m_sName);
+	}
+
 	std::string CModelMetaData::getValue()
 	{
 		return m_sValue;
+	}
+
+	std::string CModelMetaData::getType()
+	{
+		return m_sType;
+	}
+
+	nfBool CModelMetaData::getPreserve() {
+		return m_bPreserve;
+	}
+
+
+	void CModelMetaData::setName(std::string sName)
+	{
+		if (!isValidNamespaceAndName(m_sNameSpace, sName)) {
+			throw CNMRException(NMR_ERROR_INVALIDMETADATA);
+		}
+		m_sName = sName;
+	}
+
+	void CModelMetaData::setNameSpace(std::string sNameSpace)
+	{
+		if (!isValidNamespaceAndName(sNameSpace, m_sName)) {
+			throw CNMRException(NMR_ERROR_INVALIDMETADATA);
+		}
+		m_sNameSpace = sNameSpace;
+	}
+
+	void CModelMetaData::setValue(std::string sValue)
+	{
+		m_sValue = sValue;
+	}
+
+	void CModelMetaData::setType(std::string sType)
+	{
+		if (sType.empty())
+			throw CNMRException(NMR_ERROR_INVALIDMETADATA);
+		m_sType = sType;
+	}
+
+	void CModelMetaData::setPreserve(nfBool bPreserve)
+	{
+		m_bPreserve = bPreserve;
+	}
+
+	void CModelMetaData::decomposeKeyIntoNamespaceAndName(const std::string &sKey, std::string &sNameSpace, std::string &sName) {
+		size_t cInd = sKey.find(":");
+		if (cInd != std::string::npos) {
+			sNameSpace = sKey.substr(0, cInd);
+			sName = sKey.substr(cInd + 1, sKey.length() - cInd);
+		} else{
+			sNameSpace = "";
+			sName = sKey;
+		}
+	}
+
+	std::string CModelMetaData::calculateKey(const std::string &sNameSpace, const std::string &sName)
+	{
+		if (sNameSpace.empty())
+			return sName;
+		else
+			return sNameSpace + ":" + sName;
+	}
+
+	bool CModelMetaData::isValidNamespaceAndName(std::string sNameSpace, std::string sName)
+	{
+		if (sNameSpace.empty()) {
+			return ((sName == XML_3MF_METADATA_VALUE_1) ||
+				(sName == XML_3MF_METADATA_VALUE_2) ||
+				(sName == XML_3MF_METADATA_VALUE_3) ||
+				(sName == XML_3MF_METADATA_VALUE_4) ||
+				(sName == XML_3MF_METADATA_VALUE_5) ||
+				(sName == XML_3MF_METADATA_VALUE_6) ||
+				(sName == XML_3MF_METADATA_VALUE_7) ||
+				(sName == XML_3MF_METADATA_VALUE_8) ||
+				(sName == XML_3MF_METADATA_VALUE_9));
+		}
+		else {
+			return !sName.empty();
+		}
 	}
 
 }

@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -67,9 +67,11 @@ namespace NMR {
 		void addToMesh(_In_opt_ CMesh * pMesh, _In_ NMATRIX3 mMatrix);
 
 		_Ret_notnull_ MESHNODE * addNode(_In_ const NVEC3 vPosition);
+		_Ret_notnull_ MESHNODE * addNode(_In_ const nfFloat posX, _In_ const nfFloat posY, _In_ const nfFloat posZ);
 		_Ret_notnull_ MESHFACE * addFace(_In_ MESHNODE * pNode1, _In_ MESHNODE * pNode2, _In_ MESHNODE * pNode3);
-		_Ret_notnull_ MESHBEAM * addBeam(_In_ MESHNODE * pNode1, _In_ MESHNODE * pNode2, _In_ nfDouble * pRadius1, _In_ nfDouble * pRadius2,
-								_In_ nfInt32 * peCapMode1, _In_ nfInt32 * peCapMode2);
+		_Ret_notnull_ MESHFACE * addFace(_In_ nfInt32 nNodeIndex1, _In_ nfInt32 nNodeIndex2, _In_ nfInt32 nNodeIndex3);
+		_Ret_notnull_ MESHBEAM * addBeam(_In_ MESHNODE * pNode1, _In_ MESHNODE * pNode2, _In_ nfDouble dRadius1, _In_ nfDouble dRadius2,
+			_In_ nfInt32 eCapMode1, _In_ nfInt32 eCapMode2);
 		_Ret_notnull_ PBEAMSET addBeamSet();
 		
 		nfUint32 getNodeCount();

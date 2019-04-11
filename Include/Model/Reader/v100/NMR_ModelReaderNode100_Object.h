@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -36,10 +36,10 @@ A object reader model node is a parser for the object node of an XML Model Strea
 
 #include "Model/Reader/NMR_ModelReaderNode.h"
 #include "Model/Reader/v100/NMR_ModelReaderNode100_Mesh.h"
-#include "Model/Reader/NMR_ModelReader_ColorMapping.h"
 #include "Model/Reader/NMR_ModelReader_TexCoordMapping.h"
 #include "Model/Classes/NMR_ModelComponent.h"
 #include "Model/Classes/NMR_ModelComponentsObject.h"
+#include "Model/Classes/NMR_ModelMetaDataGroup.h"
 #include "Model/Classes/NMR_ModelObject.h"
 
 
@@ -57,8 +57,6 @@ namespace NMR {
 		std::string m_sType;
 		nfBool m_bHasType;
 		PModelObject m_pObject;
-		PModelReader_ColorMapping m_pColorMapping;
-		PModelReader_TexCoordMapping m_pTexCoordMapping;
 		nfBool m_bHasDefaultPropertyID;
 		nfBool m_bHasDefaultPropertyIndex;
 		ModelResourceID m_nDefaultPropertyID;
@@ -68,6 +66,8 @@ namespace NMR {
 		eModelSlicesMeshResolution m_eSlicesMeshResolution;
 		nfBool m_bHasMeshResolution;
 
+		PModelMetaDataGroup m_MetaDataGroup;
+
 		void createDefaultProperties();
 		void handleBeamLatticeExtension(CModelReaderNode100_Mesh* pXMLNode);
 	protected:
@@ -76,7 +76,7 @@ namespace NMR {
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 	public:
 		CModelReaderNode100_Object() = delete;
-		CModelReaderNode100_Object(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings, _In_ CProgressMonitor * pProgressMonitor, _In_ PModelReader_ColorMapping pColorMapping, _In_ PModelReader_TexCoordMapping pTexCoordMapping);
+		CModelReaderNode100_Object(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings, _In_ CProgressMonitor * pProgressMonitor);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 	};

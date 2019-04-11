@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -30,6 +30,7 @@ Abstract: Progress Types
 
 #pragma once
 
+#include <functional>
 
 namespace NMR
 {
@@ -57,8 +58,8 @@ namespace NMR
 		PROGRESS_WRITESLICES
 	};
 	
-	// !!! Matches dll interface type, always modify both
+	// Matches dll interface type, always modify both!
 	// If the first parameter is -1, it does not indicate progress;In that case
 	// it must only be used to stop the execution of the calling function.
-	typedef bool(*Lib3MFProgressCallback)(int, ProgressIdentifier, void*);
+	typedef std::function<bool(int, ProgressIdentifier, void*)> Lib3MFProgressCallback;
 };

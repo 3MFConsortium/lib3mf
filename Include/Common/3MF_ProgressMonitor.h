@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -36,6 +36,7 @@ Abstract: Progress Monitor
 #include <memory>
 #include <mutex>
 #include <stack>
+#include <string>
 
 namespace NMR
 {
@@ -58,7 +59,7 @@ namespace NMR
 		bool QueryCancelled();
 		bool Progress(double progress, ProgressIdentifier identifier);
 
-		static void GetProgressMessage(ProgressIdentifier progressIdentifier, const char ** progressString);
+		static void GetProgressMessage(ProgressIdentifier progressIdentifier, std::string& progressString);
 
 		void PushLevel(double relativeStart, double relativeEnd);
 		std::pair<double, double> PopLevel();

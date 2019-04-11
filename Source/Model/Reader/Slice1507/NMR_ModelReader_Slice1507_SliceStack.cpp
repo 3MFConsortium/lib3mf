@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -50,66 +50,46 @@ namespace NMR {
 		_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
 	{
 		if (strcmp(pChildName, XML_3MF_ELEMENT_SLICE) == 0) {
-			if (m_bHasReadSliceRef)
+			if (!m_pSliceStackResource->AllowsGeometry())
 				throw CNMRException(NMR_ERROR_SLICESTACK_SLICESANDSLICEREF);
-			m_bHasReadSlices = true;
 			PModelReaderNode_Slices1507_Slice pXMLNode = nullptr;
 
-			if (m_pSliceStack->getSliceCount() % PROGRESS_READSLICESUPDATE == PROGRESS_READSLICESUPDATE - 1 ) {
+			if (m_pSliceStackResource->getSliceCount() % PROGRESS_READSLICESUPDATE == PROGRESS_READSLICESUPDATE - 1 ) {
 				if (m_pProgressMonitor && !m_pProgressMonitor->Progress(1 - 2.0 / (++m_nProgressCounter + 2), PROGRESS_READSLICES))
 					throw CNMRException(NMR_USERABORTED);
 			}
 
-			pXMLNode = std::make_shared<CModelReaderNode_Slices1507_Slice>(m_pSliceStack.get(), m_pWarnings);
+			pXMLNode = std::make_shared<CModelReaderNode_Slices1507_Slice>(m_pSliceStackResource.get(), m_pWarnings);
 			pXMLNode->parseXML(pXMLReader);
 		}
 		else if (strcmp(pChildName, XML_3MF_ELEMENT_SLICEREFRESOURCE) == 0) {
-			if (m_bHasReadSlices)
+			if (!m_pSliceStackResource->AllowsReferences())
 				throw CNMRException(NMR_ERROR_SLICESTACK_SLICESANDSLICEREF);
-			m_bHasReadSliceRef = true;
 			PModelReaderNode_Slice1507_SliceRef pXmlNode = std::make_shared<CModelReaderNode_Slice1507_SliceRef>(m_pWarnings);
 			pXmlNode->parseXML(pXMLReader);
-
-			// get slice resource from model
-			std::string sPath = pXmlNode->Path();
-
-			// must reference a different part
-			if (sPath == m_pModel->curPath())
-				throw CNMRException(NMR_ERROR_INVALID_SLICEPATH);
 			
-			PModelResource pResource = m_pModel->findResource(pXmlNode->Path(), pXmlNode->SliceStackId());
-			CModelSliceStackResource* pSliceStackResource = dynamic_cast<CModelSliceStackResource*>(pResource.get());
+			std::string path = pXmlNode->Path();
+			if (path.empty()) {
+				path = m_pModel->curPath();
+			}
+			PModelResource pResource = m_pModel->findResource(path, pXmlNode->SliceStackId());
+			PModelSliceStack pSliceStackResource = std::dynamic_pointer_cast<CModelSliceStack>(pResource);
 			if (!pSliceStackResource)
 				throw CNMRException(NMR_ERROR_SLICESTACKRESOURCE_NOT_FOUND);
-			// can't have slice refs reference slicerefs
-			if (pSliceStackResource->getSliceStack()->usesSliceRef())
+			if (!m_pSliceStackResource->OwnPath().empty())
 				throw CNMRException(NMR_ERROR_SLICEREFSTOODEEP);
-			pSliceStackResource->NumSliceRefsToMe()++;
-			try {
-				m_pSliceStack->mergeSliceStack(pSliceStackResource->getSliceStack());
-			}
-			catch (CNMRException &e) {
-				if (e.getErrorCode() == NMR_ERROR_SLICES_Z_NOTINCREASING) {
-					m_pWarnings->addException(e, mrwInvalidMandatoryValue);
-				}
-				else
-					throw e;
-			}
-			m_pSliceStack->setUsesSliceRef(true);
+			m_pSliceStackResource->AddSliceRef(pSliceStackResource);
 		}
 	}
 
 	CModelReaderNode_Slice1507_SliceStack::CModelReaderNode_Slice1507_SliceStack(
-		_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings, _In_ CProgressMonitor * pProgressMonitor,
-		_In_ const std::string sSlicePath)
+		_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings,
+		_In_ CProgressMonitor * pProgressMonitor,_In_ const std::string sSlicePath)
 		: CModelReaderNode(pWarnings, pProgressMonitor)
 	{
 		m_nProgressCounter = 0;
 		m_sSlicePath = sSlicePath;
-		m_pSliceStack = std::make_shared<CSliceStack>();
 		m_pModel = pModel;
-		m_bHasReadSliceRef = false;
-		m_bHasReadSlices = false;
 	}
 
 	void CModelReaderNode_Slice1507_SliceStack::parseXML(_In_ CXmlReader * pXMLReader)
@@ -119,12 +99,14 @@ namespace NMR {
 
 		// Parse attribute
 		parseAttributes(pXMLReader);
-		m_pSliceStack->setBottomZ(m_BottomZ);
+
+		m_pSliceStackResource = std::make_shared<CModelSliceStack>(m_Id, m_pModel, m_BottomZ);
 
 		// Parse Content
 		parseContent(pXMLReader);
 
-		PModelSliceStackResource pSliceStackResource = std::make_shared<CModelSliceStackResource>(m_Id, m_pModel, m_pSliceStack);
-		m_pModel->addResource(pSliceStackResource);
+		m_pSliceStackResource->SetOwnPath(m_sSlicePath);
+
+		m_pModel->addResource(m_pSliceStackResource);
 	}
 }

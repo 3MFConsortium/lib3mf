@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -32,7 +32,7 @@ A builditem reader model node is a parser for the builditem node of an XML Model
 --*/
 
 #include "Model/Reader/v100/NMR_ModelReaderNode100_BuildItem.h"
-#include "Model/Reader/v100/NMR_ModelReaderNode100_MetaData.h"
+#include "Model/Reader/v100/NMR_ModelReaderNode100_MetaDataGroup.h"
 #include "Model/Classes/NMR_ModelBuildItem.h"
 
 #include "Model/Classes/NMR_ModelConstants.h"
@@ -97,6 +97,10 @@ namespace NMR {
 			m_pWarnings->addException(CNMRException(NMR_ERROR_SLICETRANSFORMATIONPLANAR), mrwInvalidMandatoryValue);
 		}
 		
+		if (m_MetaDataGroup.get()) {
+			pBuildItem->metaDataGroup()->mergeMetaData(m_MetaDataGroup.get());
+		}
+
 		m_pModel->addBuildItem(pBuildItem);
 
 		// Set Item Reference
@@ -156,9 +160,27 @@ namespace NMR {
 		}
 	}
 
-	std::string CModelReaderNode100_BuildItem::getPartNumber()
+	void CModelReaderNode100_BuildItem::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
 	{
-		return m_sPartNumber;
+		__NMRASSERT(pChildName);
+		__NMRASSERT(pXMLReader);
+		__NMRASSERT(pNameSpace);
+
+		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_CORESPEC100) == 0) {
+			// Read a metadatagroup object
+			if (strcmp(pChildName, XML_3MF_ELEMENT_METADATAGROUP) == 0) {
+				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode100_MetaDataGroup>(m_pWarnings);
+				pXMLNode->parseXML(pXMLReader);
+
+				if (m_MetaDataGroup.get()) {
+					m_pWarnings->addException(CNMRException(NMR_ERROR_DUPLICATEMETADATAGROUP), mrwInvalidOptionalValue);
+				}
+				m_MetaDataGroup = dynamic_cast<CModelReaderNode100_MetaDataGroup*>(pXMLNode.get())->getMetaDataGroup();
+			}
+			else {
+				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
+			}
+		}
 	}
 
 }

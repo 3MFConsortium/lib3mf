@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -33,7 +33,7 @@ This is a derived class for Importing the binary STL and color STL Mesh Format.
 
 #include "Common/MeshImport/NMR_MeshImporter_STL.h" 
 #include "Common/MeshInformation/NMR_MeshInformation.h" 
-#include "Common/MeshInformation/NMR_MeshInformation_NodeColors.h" 
+#include "Common/MeshInformation/NMR_MeshInformation_Properties.h" 
 #include "Common/Math/NMR_VectorTree.h" 
 #include "Common/Math/NMR_Matrix.h" 
 #include "Common/NMR_Exception.h" 
@@ -114,11 +114,13 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_NOIMPORTSTREAM);
 
 		CMeshInformationHandler * pMeshInformationHandler = NULL;
-		PMeshInformation_NodeColors pMeshInformation = NULL;
+		/*PMeshInformation_NodeColors pMeshInformation = NULL;
 		if (m_bImportColors) {
 			pMeshInformation = std::make_shared<CMeshInformation_NodeColors>();
 			pMeshInformationHandler->addInformation(pMeshInformation);
-		}
+		} */
+
+		// TODO: Color Handling!
 
 		std::array<nfByte, 80> aSTLHeader;
 		nfUint32 nFaceCount = 0;
@@ -153,8 +155,8 @@ namespace NMR {
 			// Check, if Coordinates are in Valid Space
 			bIsValid = true;
 			for (j = 0; j < 3; j++)
-			for (k = 0; k < 3; k++)
-				bIsValid &= (fabs(Facet.m_vertieces[j].m_fields[k]) < NMR_MESH_MAXCOORDINATE);
+				for (k = 0; k < 3; k++)
+					bIsValid &= (fabs(Facet.m_vertieces[j].m_fields[k]) < NMR_MESH_MAXCOORDINATE);
 
 			// Identify Nodes via Tree
 			if (bIsValid) {
@@ -183,7 +185,7 @@ namespace NMR {
 
 			if (bIsValid) {
 				MESHFACE * pFace = pMesh->addFace(pNodes[0], pNodes[1], pNodes[2]);
-				if (pMeshInformation) {
+				/*if (pMeshInformation) {
 					nfUint32 nRed = (nfUint32) ((nfFloat) (Facet.m_attribute & 0x1f) / (255.0f / 31.0f));
 					nfUint32 nGreen = (nfUint32)((nfFloat)((Facet.m_attribute >> 5) & 0x1f) / (255.0f / 31.0f));
 					nfUint32 nBlue = (nfUint32)((nfFloat)((Facet.m_attribute >> 10) & 0x1f) / (255.0f / 31.0f));;
@@ -198,8 +200,10 @@ namespace NMR {
 					pNodeColorInfo->m_cColors[1] = pNodeColorInfo->m_cColors[0];
 					pNodeColorInfo->m_cColors[2] = pNodeColorInfo->m_cColors[0];
 				}
+			} */
 			}
 		}
+
 	}
 
 }

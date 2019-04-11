@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -103,12 +103,17 @@ namespace NMR {
 
 	nfBool CModelMeshObject::isValidForSlices(const NMATRIX3& totalParentMatrix)
 	{
-		if (this->getSliceStackId() == 0) {
+		if (!this->getSliceStack().get()) {
 			return true;
 		}
 		else {
 			return fnMATRIX3_isplanar(totalParentMatrix);
 		}
+	}
+
+	nfBool CModelMeshObject::isValidForBeamLattices()
+	{
+		return ( (getObjectType() == eModelObjectType::MODELOBJECTTYPE_MODEL) || (getObjectType() == eModelObjectType::MODELOBJECTTYPE_SOLIDSUPPORT) );
 	}
 
 	nfBool CModelMeshObject::isManifoldAndOriented()
@@ -198,9 +203,9 @@ namespace NMR {
 	}
 
 
-	_Ret_notnull_ CModelMeshBeamLatticeAttributes * CModelMeshObject::getBeamLatticeAttributes()
+	_Ret_notnull_ PModelMeshBeamLatticeAttributes CModelMeshObject::getBeamLatticeAttributes()
 	{
-		return m_pBeamLatticeAttributes.get();
+		return m_pBeamLatticeAttributes;
 	}
 
 	void CModelMeshObject::setBeamLatticeAttributes(_In_ PModelMeshBeamLatticeAttributes pBeamLatticeAttributes)

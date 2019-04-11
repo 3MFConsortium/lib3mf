@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -69,13 +69,14 @@ namespace NMR {
 
 		virtual nfBool isValidForSlices(const NMATRIX3& totalParentMatrix);
 
+		virtual nfBool isValidForBeamLattices();
+
 		// check, if the mesh is manifold and oriented
 		virtual nfBool isManifoldAndOriented();
 
-		_Ret_notnull_ CModelMeshBeamLatticeAttributes * getBeamLatticeAttributes();
+		_Ret_notnull_ PModelMeshBeamLatticeAttributes getBeamLatticeAttributes();
 		void setBeamLatticeAttributes(_In_ PModelMeshBeamLatticeAttributes pBeamLatticeAttributes);
 
-		ModelResourceID calculateDefaultPropertyID() const;
 	};
 
 	typedef std::shared_ptr <CModelMeshObject> PModelMeshObject;

@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -41,13 +41,14 @@ custom data writer.
 
 #include <iostream>
 #include <fstream>
+#include <functional>
 
 #define EXPORTSTREAM_CALLBACK_BUFFERSIZE (1024*1024)
 
 namespace NMR {
 
-	typedef nfUint32(LIB3MF_CDECL *ExportStream_WriteCallbackType)(_In_ nfByte * pData, _In_ nfUint32 cbBytes, _In_ void * pUserData);
-	typedef nfUint32(LIB3MF_CDECL *ExportStream_SeekCallbackType)(_In_ nfUint64 nPosition, _In_ void * pUserData);
+	typedef std::function<nfUint32(nfByte * pData, nfUint64, _In_ void *)> ExportStream_WriteCallbackType;
+	typedef std::function<nfUint32(nfUint64, _In_ void *)> ExportStream_SeekCallbackType;
 
 	class CExportStream_Callback : public CExportStream {
 	private:

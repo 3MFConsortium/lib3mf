@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -124,11 +124,7 @@ namespace NMR {
 			// create ZIP objects
 			zip_error_init(&m_ZIPError);
 
-#ifdef NMR_COM_NATIVE
-			bool bUseCallback = false;
-#else
 			bool bUseCallback = true;
-#endif
 			if (bUseCallback) {
 				// read ZIP from callback: faster and requires less memory
 				m_ZIPsource = zip_source_function_create(custom_zip_source_callback, pImportStream.get(), &m_ZIPError);

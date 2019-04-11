@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -34,54 +34,64 @@ This is the class for exporting the 3mf model stream root node.
 #ifndef __NMR_MODELWRITERNODE100_MODEL
 #define __NMR_MODELWRITERNODE100_MODEL
 
+#include "Model/Classes/NMR_Model.h" 
 #include "Model/Writer/NMR_ModelWriterNode.h" 
-#include "Model/Writer/NMR_ModelWriter_ColorMapping.h" 
 #include "Model/Classes/NMR_ModelComponentsObject.h" 
 #include "Model/Classes/NMR_ModelMeshObject.h" 
 #include "Common/Platform/NMR_XmlWriter.h"
-#include "Model/Writer/NMR_ModelWriter_TexCoordMappingContainer.h"
+
+#include "Common/MeshInformation/NMR_MeshInformation_Properties.h"
+
 
 namespace NMR {
 
 	class CModelWriterNode100_Model : public CModelWriterNode {
 	protected:
-		PModelWriter_ColorMapping m_pColorMapping;
-		PModelWriter_TexCoordMappingContainer m_pTexCoordMappingContainer;
 		ModelResourceID m_ResourceCounter;
+		
+		PMeshInformation_PropertyIndexMapping m_pPropertyIndexMapping;
 		
 		nfBool m_bWriteMaterialExtension;
 		nfBool m_bWriteProductionExtension;
 		nfBool m_bWriteBeamLatticeExtension;
+		nfBool m_bWriteNurbsExtension;
 		nfBool m_bWriteSliceExtension;
 		nfBool m_bWriteBaseMaterials;
 		nfBool m_bWriteObjects;
 		nfBool m_bIsRootModel;
+		nfBool m_bWriteCustomNamespaces;
 
-		CModelSliceStackResource* m_pSliceStackResource;	// If this is set, only this slicestack should be exported
+		void writeModelMetaData();
+		void writeMetaData(_In_ PModelMetaData pMetaData);
+		void writeMetaDataGroup(_In_ PModelMetaDataGroup pMetaDataGroup);
 
-		void calculateColors(_In_ CMesh * pMesh);
-		void calculateTexCoords(_In_ CMesh * pMesh);
-
-		void writeMetaData();
 		void writeResources();
 		void writeBaseMaterials();
 		void writeTextures2D();
 		void writeColors();
 		void writeTex2Coords();
+		void writeCompositeMaterials();
+		void writeMultiProperties();
+		void writeMultiPropertyAttributes(_In_ CModelMultiPropertyGroupResource* pMultiPropertyGroup);
+		void writeMultiPropertyMultiElements(_In_ CModelMultiPropertyGroupResource* pMultiPropertyGroup);
+
 		void writeObjects();
 		void writeBuild();
-		void writeSliceStack(_In_ CModelSliceStackResource *pSliceStackResource);
 
 		void writeSliceStacks();
-		void writeSliceStack(_In_ CSliceStack *pSliceStack);
+		void writeSliceStack(_In_ CModelSliceStack *pSliceStack);
 
 		void writeComponentsObject(_In_ CModelComponentsObject * pComponentsObject);
 
 		ModelResourceID generateOutputResourceID();
+
+		void RegisterMetaDataGroupNameSpaces(PModelMetaDataGroup mdg);
+		void RegisterMetaDataNameSpaces();
+
 	public:
 		CModelWriterNode100_Model() = delete;
 		CModelWriterNode100_Model(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter, _In_ CProgressMonitor * pProgressMonitor);
-		CModelWriterNode100_Model(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter, _In_ CProgressMonitor * pProgressMonitor, CModelSliceStackResource *pSliceStackResource);
+		CModelWriterNode100_Model(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter, _In_ CProgressMonitor * pProgressMonitor, nfBool bWritesRootModel);
 		
 		virtual void writeToXML();
 	};
