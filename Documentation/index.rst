@@ -45,13 +45,13 @@ providers, hardware providers, service providers or middleware tools.
 API documentation
 =================
 
-- :doc:`source/Cpp/LandingPage`
-- :doc:`source/C/LandingPage`
-- :doc:`source/Python/LandingPage`
-- :doc:`source/Pascal/LandingPage`
-- :doc:`source/CSharp/LandingPage`
-- :doc:`source/Golang/LandingPage`
-- :doc:`source/NodeJS/LandingPage`
+- :doc:`C++ <source/Cpp/LandingPage>`
+- :doc:`C <source/C/LandingPage>`
+- :doc:`Python <source/Python/LandingPage>`
+- :doc:`Pascal <source/Pascal/LandingPage>`
+- :doc:`C# <source/CSharp/LandingPage>`
+- :doc:`Golang <source/Golang/LandingPage>`
+- :doc:`NodeJS <source/NodeJS/LandingPage>`
 
 
 .. _label-obtaining_lib3mf:
@@ -87,20 +87,20 @@ Meta Information
 `Specification of the 3MF format <https://3mf.io/specification/>`_
 
 Indices and tables
--------------------
+==================
 
 * :ref:`genindex`
 * :ref:`search`
 
 
 .. toctree::
-	:maxdepth: 3
+	:maxdepth: 4
 	:hidden:
 	
-	source/Cpp/LandingPage
-	source/C/LandingPage
-	source/Python/LandingPage
-	source/Pascal/LandingPage
-	source/CSharp/LandingPage
-	source/Golang/LandingPage
-	source/NodeJS/LandingPage
+	C++ <source/Cpp/LandingPage>
+	C <source/C/LandingPage>
+	Python <source/Python/LandingPage>
+	Pascal <source/Pascal/LandingPage>
+	C# <source/CSharp/LandingPage>
+	Golang <source/Golang/LandingPage>
+	NodeJS <source/NodeJS/LandingPage>
