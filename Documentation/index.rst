@@ -11,8 +11,8 @@ lib3mf v2.0.0-alpha documentation
 	:target: https://travis-ci.org/3MFConsortium/lib3mf
 	:alt: Build Status
 
-.. image:: https://readthedocs.org/projects/lib3mf-docs/badge/?version=latest
-	:target: https://readthedocs.org/projects/lib3mf-docs/
+.. image:: https://readthedocs.org/projects/lib3mf/badge/?version=latest
+	:target: https://readthedocs.org/projects/lib3mf/
 	:alt: Documentation Status
 
 .. image:: https://img.shields.io/static/v1.svg?label=lib3mf&message=v2.0.0-alpha&color=orange
