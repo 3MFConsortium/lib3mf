@@ -35,7 +35,5 @@ int main(int argc, char **argv)
 {
 	// testing::GTEST_FLAG(filter) = "*";
 	testing::InitGoogleTest(&argc, argv);
-	RUN_ALL_TESTS();
-	system("pause");
-	return 1;
+	return RUN_ALL_TESTS();
 }
