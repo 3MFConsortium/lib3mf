@@ -299,7 +299,7 @@ namespace Lib3MF
 
 	void CompareSliceStacks(PSliceStack A, PSliceStack B)
 	{
-		EXPECT_TRUE(abs(A->GetBottomZ() - B->GetBottomZ()) < 1e-5);
+		EXPECT_TRUE(fabs(A->GetBottomZ() - B->GetBottomZ()) < 1e-5);
 		EXPECT_TRUE(A->GetOwnPath() == B->GetOwnPath());
 		ASSERT_EQ(A->GetSliceCount(), B->GetSliceCount());
 		for (int i = 0; i < A->GetSliceCount(); i++) {

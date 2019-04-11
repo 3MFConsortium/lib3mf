@@ -24,11 +24,10 @@ matrix:
             - g++-mingw-w64-x86-64
 
 before_script:
-    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then HOMEBREW_NO_AUTO_UPDATE=1 brew install ossp-uuid          ; fi
-    - if [[ "$BUILDMODE" = "cmake-mingw32" ]]; then sh cmake/GenerateMinGW.sh ; else sh cmake/GenerateMake.sh   ; fi
+    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then HOMEBREW_NO_AUTO_UPDATE=1 brew install ossp-uuid ; fi
+    - if [[ "$BUILDMODE" = "cmake-mingw32" ]]; then sh cmake/GenerateMinGW.sh ; else sh cmake/GenerateMake.sh ; fi
     - cd build
 
 script:
     - cmake --build .
-    - if ![[ "$BUILDMODE" = "cmake-mingw32" ]]; then ctest -V    ; fi
-
+    - if [[ "$BUILDMODE" != "cmake-mingw32" ]]; then ctest -V ; fi
