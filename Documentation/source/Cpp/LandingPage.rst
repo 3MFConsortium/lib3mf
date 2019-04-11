@@ -54,8 +54,6 @@ The ``Lib3MF::PWrapper`` object provides access to all functionality within lib3
 Both flavors of the C++-bindings are header-only which makes it extremly easy to include them into existing projects:
 
 
-.. Minimal Example Project
-
 Minimal Example Project
 ============================
 
