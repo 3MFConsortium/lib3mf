@@ -142,7 +142,7 @@ namespace NMR {
 		if (pMeshInformationHandler) {
 			CMeshInformation * pInformation;
 
-			// Get Base Materials
+			// Get generic property handler
 			pInformation = pMeshInformationHandler->getInformationByType(0, emiProperties);
 			if (pInformation)
 				pProperties = dynamic_cast<CMeshInformation_Properties *> (pInformation);
