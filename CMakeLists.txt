@@ -119,8 +119,8 @@ if (WIN32)
   include(generate_product_version)
     generate_product_version(
     VERSION_FILES_OUTPUTLOCATION
-    NAME "lib3MF"
-    FILE_DESCRIPTION "lib3mf is the reference-implementation of the 3D Manufacturing Format file standard"
+    NAME "lib3mf"
+    FILE_DESCRIPTION "lib3mf is an implementation of the 3D Manufacturing Format file standard"
     BUNDLE "3MF Consortium"
     VERSION_MAJOR ${LIB3MF_VERSION_MAJOR}
     VERSION_MINOR ${LIB3MF_VERSION_MINOR}
