@@ -48,11 +48,14 @@ namespace NMR {
 		ModelResourceID m_id;	// combination of those two must be unique
 
 		PackageResourceID m_uniqueID;	// the unique Identifier
+
+		friend class CResourceHandler;
+
+		void setPathAndId(std::string p, ModelResourceID id);
+		void setUniqueID(PackageResourceID id);
 	public:
-		void set(std::string p, ModelResourceID id);
 		void get(std::string& p);
 		void get(ModelResourceID& id);
-		void setUniqueID(PackageResourceID id);
 		PackageResourceID getUniqueID();
 	};
 	typedef std::shared_ptr<CPackageResourceID> PPackageResourceID;
@@ -61,11 +64,11 @@ namespace NMR {
 	private:
 		// unique IDs to CPackageResourceID
 		std::map<PackageResourceID, PPackageResourceID> m_resourceIDs;
+		std::map<std::pair<ModelResourceID, std::string>, PPackageResourceID> m_IdAndPathToResourceIDs;
 	public:
-		PPackageResourceID getNewRessourceID(std::string path, ModelResourceID id);	// this is supposed to be the only way to generate a CPackageResourceID
-		PPackageResourceID findRessourceID(PackageResourceID id);
-		PPackageResourceID findRessourceID(std::wstring path, ModelResourceID id);
-		PPackageResourceID findRessourceID(std::string path, ModelResourceID id);
+		PPackageResourceID getNewResourceID(std::string path, ModelResourceID id);	// this is supposed to be the only way to generate a CPackageResourceID
+		PPackageResourceID findResourceID(PackageResourceID id);
+		PPackageResourceID findResourceID(std::string path, ModelResourceID id);
 
 		void FlattenIDs();
 

@@ -36,7 +36,7 @@ NMR_PackageResourceID.cpp implements the PackageResourceID Class.
 
 namespace NMR {
 
-	void CPackageResourceID::set(std::string p, ModelResourceID id) {
+	void CPackageResourceID::setPathAndId(std::string p, ModelResourceID id) {
 		m_path = p;
 		m_id = id;
 	}
@@ -54,17 +54,18 @@ namespace NMR {
 		return m_uniqueID;
 	}
 
-	PPackageResourceID CResourceHandler::getNewRessourceID(std::string path, ModelResourceID id)	// this is supposed to be the only way to generate a CPackageResourceID
+	PPackageResourceID CResourceHandler::getNewResourceID(std::string path, ModelResourceID id)	// this is supposed to be the only way to generate a CPackageResourceID
 	{
 		PPackageResourceID p = std::make_shared<CPackageResourceID>();
-		if (findRessourceID(path, id))
+		if (findResourceID(path, id))
 			throw CNMRException(NMR_ERROR_DUPLICATERESOURCEID);
-		p->set(path, id);
+		p->setPathAndId(path, id);
 		p->setUniqueID(int(m_resourceIDs.size())+1);
 		m_resourceIDs.insert(std::make_pair(p->getUniqueID(), p));
+		m_IdAndPathToResourceIDs.insert(std::make_pair(std::make_pair(id, path), p));
 		return p;
 	}
-	PPackageResourceID CResourceHandler::findRessourceID(PackageResourceID id)
+	PPackageResourceID CResourceHandler::findResourceID(PackageResourceID id)
 	{
 		auto it = m_resourceIDs.find(id);
 		if (it != m_resourceIDs.end())
@@ -73,22 +74,13 @@ namespace NMR {
 		}
 		return nullptr;
 	}
-	PPackageResourceID CResourceHandler::findRessourceID(std::wstring path, ModelResourceID id)	// 
+	
+	PPackageResourceID CResourceHandler::findResourceID(std::string path, ModelResourceID id)
 	{
-		return findRessourceID(fnUTF16toUTF8(path), id);
-	}
-	PPackageResourceID CResourceHandler::findRessourceID(std::string path, ModelResourceID id)	// 
-	{
-		for (auto it : m_resourceIDs) {
-			std::string tPath;
-			ModelResourceID tID;
-			it.second.get()->get(tID);
-			if (tID == id) {
-				it.second.get()->get(tPath);
-				if (tPath == path) {
-					return it.second;
-				}
-			}
+		auto it = m_IdAndPathToResourceIDs.find(std::make_pair(id, path));
+		if (it != m_IdAndPathToResourceIDs.end())
+		{
+			return it->second;
 		}
 		return nullptr;
 	}
@@ -99,6 +91,7 @@ namespace NMR {
 
 	void CResourceHandler::clear() {
 		m_resourceIDs.clear();
+		m_IdAndPathToResourceIDs.clear();
 	}
 
 }

@@ -172,7 +172,7 @@ namespace NMR {
 	// General Resource Handling
 	PModelResource CModel::findResource(_In_ std::string path, ModelResourceID nID)
 	{
-		PPackageResourceID pID = m_resourceHandler.findRessourceID(path, nID);
+		PPackageResourceID pID = m_resourceHandler.findResourceID(path, nID);
 		if (pID.get())
 			return findResource(pID);
 		else
@@ -181,7 +181,7 @@ namespace NMR {
 
 	PModelResource CModel::findResource(_In_ PackageResourceID nID)
 	{
-		PPackageResourceID pID = m_resourceHandler.findRessourceID(nID);
+		PPackageResourceID pID = m_resourceHandler.findResourceID(nID);
 		if (pID.get())
 			return findResource(pID);
 		else
@@ -201,11 +201,11 @@ namespace NMR {
 
 	PPackageResourceID CModel::findPackageResourceID(_In_ std::string path, ModelResourceID nID)
 	{
-		return m_resourceHandler.findRessourceID(path, nID);
+		return m_resourceHandler.findResourceID(path, nID);
 	}
 	PPackageResourceID CModel::findPackageResourceID(_In_ PackageResourceID nID)
 	{
-		return m_resourceHandler.findRessourceID(nID);
+		return m_resourceHandler.findResourceID(nID);
 	}
 
 	nfUint32 CModel::getResourceCount()
@@ -333,24 +333,28 @@ namespace NMR {
 
 	void CModel::unRegisterUUID(PUUID pUUID)
 	{
-		usedUUIDs.erase(std::remove(usedUUIDs.begin(), usedUUIDs.end(), pUUID), usedUUIDs.end());
+		if (pUUID.get()) {
+			usedUUIDs.erase(pUUID->toString());
+		}
 	}
 
 	void CModel::registerUUID(PUUID pUUID)
 	{
 		if (pUUID.get()) {
-			for (auto iUUID : usedUUIDs) {
-				if (*iUUID.get() == *pUUID.get()) {
-					throw CNMRException(NMR_ERROR_UUID_NOT_UNIQUE);
-				}
+			std::string value = pUUID->toString();
+
+			auto it = usedUUIDs.find(value);
+			if (it != usedUUIDs.end()) {
+				throw CNMRException(NMR_ERROR_UUID_NOT_UNIQUE);
 			}
-			usedUUIDs.push_back(pUUID);
+			else {
+				usedUUIDs[value] = pUUID;
+			}
 		}
 	}
 
 
 	// Retrieve a unique Resource ID
-
 	ModelResourceID CModel::generateResourceID()
 	{
 		// TODO
@@ -363,7 +367,7 @@ namespace NMR {
 
 	PPackageResourceID CModel::generatePackageResourceID(_In_ std::string path, ModelResourceID nID)	// per package
 	{
-		return m_resourceHandler.getNewRessourceID(path, nID);
+		return m_resourceHandler.getNewResourceID(path, nID);
 	}
 
 	// Convenience functions for objects
@@ -1073,7 +1077,7 @@ namespace NMR {
 
 	// returns whether a specific extension has to be marked as required
 	nfBool  CModel::RequireExtension(_In_ const std::string sExtension) {
-		// loop over all ressources to check for slices, beamlattices, production-references,
+		// loop over all resources to check for slices, beamlattices, production-references,
 		// that make it necessary to mark these extensions as required
 		if (sExtension == XML_3MF_NAMESPACE_BEAMLATTICESPEC) {
 			nfBool bRequireBeamLattice = false;

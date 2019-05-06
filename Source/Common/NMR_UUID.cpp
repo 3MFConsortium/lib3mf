@@ -75,7 +75,7 @@ namespace NMR
 		set(string.c_str());
 	}
 	
-	std::string CUUID::toString()
+	std::string CUUID::toString() const
 	{
 		return m_sUUID;
 	}

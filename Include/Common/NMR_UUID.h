@@ -47,7 +47,7 @@ namespace NMR
 		CUUID();
 		CUUID(const nfChar* pString);
 		CUUID(const std::string & string);
-		std::string toString();
+		std::string toString() const;
 
 		bool set(const nfChar* pString);
 
