@@ -94,7 +94,8 @@ namespace NMR {
 		std::string m_sCurPath;
 		std::string m_sRootPath;
 
-		std::vector<PUUID> usedUUIDs;	// datastructure used to ensure that UUIDs within one model (package) are unique
+		std::map<std::string, PUUID> usedUUIDs;	// datastructure used to ensure that UUIDs within one model (package) are unique
+
 
 		// Object Resources of the model
 		std::map<PackageResourceID, PModelResource> m_ResourceMap;
