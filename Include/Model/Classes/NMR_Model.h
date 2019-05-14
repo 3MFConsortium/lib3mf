@@ -94,8 +94,7 @@ namespace NMR {
 		std::string m_sCurPath;
 		std::string m_sRootPath;
 
-		std::map<std::string, PUUID> usedUUIDs;	// datastructure used to ensure that UUIDs within one model (package) are unique
-
+		std::unordered_map<std::string, PUUID> usedUUIDs;	// datastructure used to ensure that UUIDs within one model (package) are unique
 
 		// Object Resources of the model
 		std::map<PackageResourceID, PModelResource> m_ResourceMap;
@@ -121,14 +120,14 @@ namespace NMR {
 
 		// Model Attachments
 		std::vector<PModelAttachment> m_Attachments;
-		std::map<std::string, PModelAttachment> m_AttachmentURIMap;
+		std::unordered_map<std::string, PModelAttachment> m_AttachmentURIMap;
 
 		// Custom Attachment Content Types
 		std::map<std::string, std::string> m_CustomContentTypes;
 
 		// Production Model Attachments
 		std::vector<PModelAttachment> m_ProductionAttachments;
-		std::map<std::string, PModelAttachment> m_ProductionAttachmentURIMap;
+		std::unordered_map<std::string, PModelAttachment> m_ProductionAttachmentURIMap;
 
 		// Indexed lookup lists for standard resource types
 		std::vector<PModelResource> m_ObjectLookup;

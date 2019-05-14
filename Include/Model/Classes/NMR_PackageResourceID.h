@@ -38,6 +38,7 @@ NMR_PackageResourceID.h defines the PackageResourceID Class.
 
 #include <memory>
 #include <map>
+#include <unordered_map>
 #include <vector>
 
 namespace NMR {
@@ -63,7 +64,7 @@ namespace NMR {
 	class CResourceHandler {
 	private:
 		// unique IDs to CPackageResourceID
-		std::map<PackageResourceID, PPackageResourceID> m_resourceIDs;
+		std::unordered_map<PackageResourceID, PPackageResourceID> m_resourceIDs;
 		std::map<std::pair<ModelResourceID, std::string>, PPackageResourceID> m_IdAndPathToResourceIDs;
 	public:
 		PPackageResourceID getNewResourceID(std::string path, ModelResourceID id);	// this is supposed to be the only way to generate a CPackageResourceID
