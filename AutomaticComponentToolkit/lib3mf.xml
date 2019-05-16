@@ -173,16 +173,18 @@
 		<option name="READMESH" value="8" />
 		<option name="READSLICES" value="9" />
 		<option name="READBUILD" value="10" />
-		<option name="CREATEOPCPACKAGE" value="11" />
-		<option name="WRITEMODELSTOSTREAM" value="12" />
-		<option name="WRITEROOTMODEL" value="13" />
-		<option name="WRITENONROOTMODELS" value="14" />
-		<option name="WRITEATTACHMENTS" value="15" />
-		<option name="WRITECONTENTTYPES" value="16" />
-		<option name="WRITENOBJECTS" value="17" />
-		<option name="WRITENODES" value="18" />
-		<option name="WRITETRIANGLES" value="19" />
-		<option name="WRITESLICES" value="20" />
+		<option name="READCUSTOMATTACHMENT" value="11" />
+		<option name="READTEXTURETACHMENTS" value="12" />
+		<option name="CREATEOPCPACKAGE" value="13" />
+		<option name="WRITEMODELSTOSTREAM" value="14" />
+		<option name="WRITEROOTMODEL" value="15" />
+		<option name="WRITENONROOTMODELS" value="16" />
+		<option name="WRITEATTACHMENTS" value="17" />
+		<option name="WRITECONTENTTYPES" value="18" />
+		<option name="WRITENOBJECTS" value="19" />
+		<option name="WRITENODES" value="20" />
+		<option name="WRITETRIANGLES" value="21" />
+		<option name="WRITESLICES" value="22" />
 	</enum>
 	
 	<enum name="BlendMethod">

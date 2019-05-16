@@ -51,7 +51,7 @@ This is the class for exporting the 3mf mesh node.
 namespace NMR {
 	const int CModelWriterNode100_Mesh::m_snPutDoubleFactor = (int)(pow(10, CModelWriterNode100_Mesh::m_snPosAfterDecPoint));
 
-	CModelWriterNode100_Mesh::CModelWriterNode100_Mesh(_In_ CModelMeshObject * pModelMeshObject, _In_ CXmlWriter * pXMLWriter, _In_ CProgressMonitor * pProgressMonitor,
+	CModelWriterNode100_Mesh::CModelWriterNode100_Mesh(_In_ CModelMeshObject * pModelMeshObject, _In_ CXmlWriter * pXMLWriter, _In_ PProgressMonitor pProgressMonitor,
 		_In_ PMeshInformation_PropertyIndexMapping pPropertyIndexMapping, _In_ nfBool bWriteMaterialExtension, _In_ nfBool bWriteBeamLatticeExtension)
 		:CModelWriterNode(pModelMeshObject->getModel(), pXMLWriter, pProgressMonitor)
 	{
@@ -112,6 +112,7 @@ namespace NMR {
 		// Write Mesh Element
 		writeStartElement(XML_3MF_ELEMENT_MESH);
 
+		m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_WRITENODES);
 		// Write Vertices
 		writeStartElement(XML_3MF_ELEMENT_VERTICES);
 		for (nNodeIndex = 0; nNodeIndex < nNodeCount; nNodeIndex++) {
@@ -129,8 +130,7 @@ namespace NMR {
 			writeEndElement(); */
 
 			if (nNodeIndex % PROGRESS_NODEUPDATE == PROGRESS_NODEUPDATE-1) {
-				if (m_pProgressMonitor && !m_pProgressMonitor->Progress(-1, ProgressIdentifier::PROGRESS_WRITENODES) )
-					throw CNMRException(NMR_USERABORTED);
+				m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
 			}
 		}
 		writeFullEndElement();
@@ -148,12 +148,12 @@ namespace NMR {
 				pProperties = dynamic_cast<CMeshInformation_Properties *> (pInformation);
 		}
 		
+		m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_WRITETRIANGLES);
 		// Write Triangles
 		writeStartElement(XML_3MF_ELEMENT_TRIANGLES);
 		for (nFaceIndex = 0; nFaceIndex < nFaceCount; nFaceIndex++) {
 			if (nFaceIndex % PROGRESS_TRIANGLEUPDATE == PROGRESS_TRIANGLEUPDATE - 1) {
-				if (m_pProgressMonitor && !m_pProgressMonitor->Progress(-1, ProgressIdentifier::PROGRESS_WRITETRIANGLES) )
-					throw CNMRException(NMR_USERABORTED);
+				m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
 			}
 
 			// Get Mesh Face

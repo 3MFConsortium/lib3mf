@@ -76,7 +76,7 @@ namespace NMR {
 	class CXmlReader_Native : public CXmlReader {
 	private:
 		nfUint32 m_progressCounter;
-		CProgressMonitor* m_pProgressMonitor;
+		PProgressMonitor m_pProgressMonitor;
 
 		nfUint32 m_cbBufferCapacity;
 		// Allocated memory of current and next chunk
@@ -153,7 +153,7 @@ namespace NMR {
 		void pushEntity(_In_ nfChar * pszwEntityStartChar, _In_ nfChar * pszwEntityEndDelimiter, _In_ nfChar * pszwNextEntityChar, _In_ nfByte nType, _In_ nfBool bParseForNamespaces, _In_ nfBool bEntityIsFinished);
 
 	public:
-		CXmlReader_Native(_In_ PImportStream pImportStream, _In_ nfUint32 cbBufferCapacity, _In_ CProgressMonitor* pProgressMonitor);
+		CXmlReader_Native(_In_ PImportStream pImportStream, _In_ nfUint32 cbBufferCapacity, _In_ PProgressMonitor pProgressMonitor);
 		~CXmlReader_Native();
 
 		virtual void GetValue(_Outptr_result_buffer_maybenull_(*pcwchValue + 1)  const nfChar ** ppwszValue, _Out_opt_  nfUint32 *pcwchValue);
