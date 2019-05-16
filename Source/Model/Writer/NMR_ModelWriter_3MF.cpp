@@ -54,38 +54,38 @@ namespace NMR {
 		if (pStream == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-		m_pProgressMonitor->ResetLevels();
-		if (!m_pProgressMonitor->Progress(0.01, ProgressIdentifier::PROGRESS_CREATEOPCPACKAGE))
-			throw CNMRException(NMR_USERABORTED);
+		m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_CREATEOPCPACKAGE);
+		m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
 
 		// Create new OPC Package
 		createPackage(m_pModel.get());
 
-		if (!m_pProgressMonitor->Progress(0.05, ProgressIdentifier::PROGRESS_WRITEMODELSTOSTREAM))
-			throw CNMRException(NMR_USERABORTED);
+		m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_WRITEMODELSTOSTREAM);
+		m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
 
-		m_pProgressMonitor->PushLevel(0.05, 0.99);
 		// Write Package to Stream
 		writePackageToStream(pStream);
-		m_pProgressMonitor->PopLevel();
 
-		m_pProgressMonitor->Progress(0.99, ProgressIdentifier::PROGRESS_CLEANUP);
-		
+		m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_CLEANUP);
+		m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
+
 		// Release Memory
 		releasePackage();
 
-		if (!m_pProgressMonitor->Progress(1, ProgressIdentifier::PROGRESS_DONE))
-			throw CNMRException(NMR_USERABORTED);
+		m_pProgressMonitor->IncrementProgress(1);
+
+		m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_DONE);
+		m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
 	}
 
-	void CModelWriter_3MF::writeSlicestackStream(_In_ CXmlWriter *pXMLWriter)
+	void CModelWriter_3MF::writeSliceStackStream(_In_ CXmlWriter *pXMLWriter)
 	{
 		__NMRASSERT(pSliceStackResource != nullptr);
 		if (pXMLWriter == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
 		pXMLWriter->WriteStartDocument();
-		CModelWriterNode100_Model ModelNode(m_pModel.get(), pXMLWriter, m_pProgressMonitor.get(), false);
+		CModelWriterNode100_Model ModelNode(m_pModel.get(), pXMLWriter, m_pProgressMonitor, false);
 		ModelNode.writeToXML();
 
 		pXMLWriter->WriteEndDocument();
@@ -100,7 +100,7 @@ namespace NMR {
 
 		pXMLWriter->WriteStartDocument();
 
-		CModelWriterNode100_Model ModelNode(pModel, pXMLWriter, m_pProgressMonitor.get());
+		CModelWriterNode100_Model ModelNode(pModel, pXMLWriter, m_pProgressMonitor);
 		ModelNode.writeToXML();
 
 		pXMLWriter->WriteEndDocument();

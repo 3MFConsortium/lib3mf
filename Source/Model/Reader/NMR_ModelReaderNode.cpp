@@ -40,13 +40,20 @@ A model reader node is an abstract base class for all XML nodes of a
 
 namespace NMR {
 
-	CModelReaderNode::CModelReaderNode(_In_ PModelReaderWarnings pWarnings, _In_ CProgressMonitor* pProgressMonitor):
-		m_pProgressMonitor(pProgressMonitor)
+	CModelReaderNode::CModelReaderNode(_In_ PModelReaderWarnings pWarnings, _In_ PProgressMonitor pProgressMonitor)
 	{
 		m_bParsedAttributes = false;
 		m_bParsedContent = false;
 		m_bIsEmptyElement = false;
-		if (pWarnings.get()) {
+
+		if (pProgressMonitor) {
+			m_pProgressMonitor = pProgressMonitor;
+		}
+		else {
+			m_pProgressMonitor = std::make_shared<CProgressMonitor>();
+		}
+
+		if (pWarnings) {
 			m_pWarnings = pWarnings;
 		}
 		else {

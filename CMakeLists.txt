@@ -14,6 +14,7 @@ include(GNUInstallDirs)
 set(LIB3MF_VERSION_MAJOR 2)        # increase on every backward-compatibility breaking change of the API
 set(LIB3MF_VERSION_MINOR 0)        # increase on every backward compatible change of the API
 set(LIB3MF_VERSION_MICRO 0)        # increase on on every change that does not alter the API
+set(LIB3MF_VERSION_PRERELEASE "alpha") # denotes pre-release information of a version of lib3mf
 
 set(CMAKE_INSTALL_BINDIR bin CACHE PATH "directory for installing binary files")
 set(CMAKE_INSTALL_LIBDIR lib CACHE PATH "directory for installing library files")
@@ -129,6 +130,7 @@ if (WIN32)
     PRODUCT_VERSION_MAJOR ${LIB3MF_VERSION_MAJOR}
     PRODUCT_VERSION_MINOR ${LIB3MF_VERSION_MINOR}
     PRODUCT_VERSION_PATCH ${LIB3MF_VERSION_MICRO}
+    PRODUCT_VERSION_REVISION ${LIB3MF_VERSION_PRERELEASE}
     COMPANY_NAME "3MF Consortium"
   )
   message("VERSION_FILES_OUTPUTLOCATION ... " ${VERSION_FILES_OUTPUTLOCATION})

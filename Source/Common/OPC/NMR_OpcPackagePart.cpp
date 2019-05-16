@@ -83,16 +83,20 @@ namespace NMR {
 	POpcPackageRelationship COpcPackagePart::addRelationship(_In_ std::string sID, _In_ std::string sType, _In_ std::string sURI)
 	{
 		POpcPackageRelationship pRelationship = std::make_shared<COpcPackageRelationship>(sID, sType, sURI);
-		for (auto iRelationShip : m_Relationships) {
-			if ((iRelationShip->getTargetPartURI() == sURI) && (iRelationShip->getType() == sType) ) {
+		auto range = m_Relationships.equal_range(sURI);
+		for (auto foundRelationShip = range.first; foundRelationShip != range.second; foundRelationShip++) {
+			if (foundRelationShip->second->getType() == sType) {
 				throw CNMRException(NMR_ERROR_DUPLICATE_RELATIONSHIP);
 			}
-			// Include this again for 
-			//if (iRelationShip->getType() == sType) {
-			//	throw CNMRException(NMR_ERROR_DUPLICATE_RELATIONSHIP);
-			//}
 		}
-		m_Relationships.push_back(pRelationship);
+
+		// for (auto iRelationShip : m_Relationships) {
+		//	// Include this again for 
+		//	//if (iRelationShip->getType() == sType) {
+		//	//	throw CNMRException(NMR_ERROR_DUPLICATE_RELATIONSHIP);
+		//	//}
+		//}
+		m_Relationships.insert(std::make_pair(sURI, pRelationship));
 		return pRelationship;
 	}
 
@@ -101,7 +105,7 @@ namespace NMR {
 		return m_Relationships.size() > 0;
 	}
 
-	std::list<POpcPackageRelationship> COpcPackagePart::getRelationShips()
+	std::multimap<std::string, POpcPackageRelationship>& COpcPackagePart::getRelationShips()
 	{
 		return m_Relationships;
 	}
@@ -120,7 +124,7 @@ namespace NMR {
 		auto iIterator = m_Relationships.begin();
 
 		while (iIterator != m_Relationships.end()) {
-			POpcPackageRelationship pRelationShip = *iIterator;
+			POpcPackageRelationship pRelationShip = iIterator->second;
 			pRelationShip->writeToXML(pXMLWriter.get());
 			iIterator++;
 		}
