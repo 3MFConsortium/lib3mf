@@ -49,7 +49,7 @@ namespace NMR {
 		nfBool m_bIsEmptyElement;
 
 	protected:
-		CProgressMonitor* m_pProgressMonitor;
+		PProgressMonitor m_pProgressMonitor;
 		PModelReaderWarnings m_pWarnings;
 
 		void parseName(_In_ CXmlReader * pXMLReader);
@@ -64,7 +64,7 @@ namespace NMR {
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 	public:
 		CModelReaderNode() = delete;
-		CModelReaderNode(_In_ PModelReaderWarnings pWarnings, _In_ CProgressMonitor* pProgressMonitor = nullptr);
+		CModelReaderNode(_In_ PModelReaderWarnings pWarnings, _In_ PProgressMonitor pProgressMonitor = nullptr);
 
 		std::string getName();
 		PModelReaderWarnings getWarnings();

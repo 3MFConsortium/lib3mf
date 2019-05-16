@@ -53,12 +53,16 @@ namespace NMR {
 		return nResult;
 	}
 
-	CXmlReader_Native::CXmlReader_Native(_In_ PImportStream pImportStream, _In_ nfUint32 cbBufferCapacity, _In_ CProgressMonitor* pProgressMonitor)
+	CXmlReader_Native::CXmlReader_Native(_In_ PImportStream pImportStream, _In_ nfUint32 cbBufferCapacity, _In_ PProgressMonitor pProgressMonitor)
 		: CXmlReader(pImportStream), m_progressCounter(0), m_pProgressMonitor(pProgressMonitor)
 	{
 		if ((cbBufferCapacity < NMR_NATIVEXMLREADER_MINBUFFERCAPACITY) ||
 			(cbBufferCapacity > NMR_NATIVEXMLREADER_MAXBUFFERCAPACITY))
 			throw CNMRException(NMR_ERROR_INVALIDBUFFERSIZE);
+
+		if (!pProgressMonitor) {
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+		}
 
 		m_cbBufferCapacity = cbBufferCapacity;
 		m_UTF8Buffer1.resize(cbBufferCapacity);
@@ -339,9 +343,7 @@ namespace NMR {
 	void CXmlReader_Native::readNextBufferFromStream()
 	{
 		if (m_progressCounter++ > PROGRESS_READBUFFERUPDATE) {
-			if (m_pProgressMonitor)
-				if (!m_pProgressMonitor->QueryCancelled())
-					throw CNMRException(NMR_USERABORTED);
+			m_pProgressMonitor->QueryCancelled(true);
 			m_progressCounter = 0;
 		}
 		
@@ -377,6 +379,8 @@ namespace NMR {
 		// Read buffer into memory
 		cbBytesRead = m_pImportStream->readBuffer((nfByte*)(&((*m_pNextBuffer)[m_nCurrentBufferSize])), cbReadSize, false);
 		m_nCurrentBufferSize += (nfUint32)cbBytesRead;
+
+		m_pProgressMonitor->IncrementProgress(double(cbBytesRead));
 
 		// Reset Entity parser
 		m_nCurrentEntityCount = 0;
