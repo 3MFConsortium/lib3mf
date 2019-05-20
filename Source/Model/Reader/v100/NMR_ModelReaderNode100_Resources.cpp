@@ -50,7 +50,7 @@ XML Model Stream.
 namespace NMR {
 
 	CModelReaderNode100_Resources::CModelReaderNode100_Resources(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings, _In_z_ const std::string sPath,
-		_In_ CProgressMonitor* pProgressMonitor)
+		_In_ PProgressMonitor pProgressMonitor)
 		: CModelReaderNode(pWarnings, pProgressMonitor)
 	{
 		__NMRASSERT(pModel);
@@ -86,15 +86,12 @@ namespace NMR {
 
 		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_CORESPEC100) == 0) {
 			if (strcmp(pChildName, XML_3MF_ELEMENT_OBJECT) == 0) {
-				if (m_pProgressMonitor) {
-					if (!m_pProgressMonitor->Progress(1.0 - 2.0 / (++m_nProgressCount + 2), ProgressIdentifier::PROGRESS_READRESOURCES))
-						throw CNMRException(NMR_USERABORTED);
-					m_pProgressMonitor->PushLevel(1.0 - 2.0 / (m_nProgressCount + 2), 1.0 - 2.0 / (m_nProgressCount + 1 + 2));
-				}
+				m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_READRESOURCES);
+				m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
+
 				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode100_Object>(m_pModel, m_pWarnings, m_pProgressMonitor);
 				pXMLNode->parseXML(pXMLReader);
-				if (m_pProgressMonitor)
-					m_pProgressMonitor->PopLevel();
+
 			}
 			else if (strcmp(pChildName, XML_3MF_ELEMENT_BASEMATERIALS) == 0) {
 				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode100_BaseMaterials>(m_pModel, m_pWarnings);
@@ -132,16 +129,13 @@ namespace NMR {
 
 		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_SLICESPEC) == 0) {
 			if (strcmp(pChildName, XML_3MF_ELEMENT_SLICESTACKRESOURCE) == 0) {
-				if (m_pProgressMonitor) {
-					if (!m_pProgressMonitor->Progress(1.0 - 2.0 / (++m_nProgressCount + 2), ProgressIdentifier::PROGRESS_READRESOURCES))
-						throw CNMRException(NMR_USERABORTED);
-					m_pProgressMonitor->PushLevel(1.0 - 2.0 / (m_nProgressCount + 2), 1.0 - 2.0 / (m_nProgressCount + 1 + 2));
-				}
+
+				m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_READRESOURCES);
+				m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
 
 				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode_Slice1507_SliceStack>(
 					m_pModel, m_pWarnings, m_pProgressMonitor, m_sPath.c_str());
 				pXMLNode->parseXML(pXMLReader);
-				m_pProgressMonitor->PopLevel();
 			}
 			else
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);

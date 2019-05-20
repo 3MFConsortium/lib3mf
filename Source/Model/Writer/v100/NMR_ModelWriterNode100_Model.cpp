@@ -57,7 +57,7 @@ This is the class for exporting the 3mf model stream root node.
 
 namespace NMR {
 
-	CModelWriterNode100_Model::CModelWriterNode100_Model(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter, _In_ CProgressMonitor * pProgressMonitor)
+	CModelWriterNode100_Model::CModelWriterNode100_Model(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter, _In_ PProgressMonitor pProgressMonitor)
 		:CModelWriterNode(pModel, pXMLWriter, pProgressMonitor)
 	{
 		m_ResourceCounter = pModel->generateResourceID();
@@ -79,7 +79,7 @@ namespace NMR {
 	}
 
 
-	CModelWriterNode100_Model::CModelWriterNode100_Model(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter, _In_ CProgressMonitor * pProgressMonitor,
+	CModelWriterNode100_Model::CModelWriterNode100_Model(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter, _In_ PProgressMonitor pProgressMonitor,
 		nfBool bWritesRootModel) : CModelWriterNode(pModel, pXMLWriter, pProgressMonitor)
 	{
 		if (bWritesRootModel) {
@@ -197,6 +197,8 @@ namespace NMR {
 		nfUint32 nTextureIndex;
 
 		for (nTextureIndex = 0; nTextureIndex < nTextureCount; nTextureIndex++) {
+			m_pProgressMonitor->IncrementProgress(1);
+
 			CModelTexture2DResource * pTexture2D = m_pModel->getTexture2D(nTextureIndex);
 
 			writeStartElementWithPrefix(XML_3MF_ELEMENT_TEXTURE2D, XML_3MF_NAMESPACEPREFIX_MATERIAL);
@@ -244,6 +246,8 @@ namespace NMR {
 		nfUint32 nMaterialCount = m_pModel->getBaseMaterialCount();
 
 		for (nfUint32 nMaterialIndex = 0; nMaterialIndex < nMaterialCount; nMaterialIndex++) {
+			m_pProgressMonitor->IncrementProgress(1);
+
 			CModelBaseMaterialResource * pBaseMaterial = m_pModel->getBaseMaterial(nMaterialIndex);
 
 			pBaseMaterial->buildResourceIndexMap();
@@ -281,6 +285,8 @@ namespace NMR {
 		nfUint32 nSliceStackCount = m_pModel->getSliceStackCount();
 
 		for (nfUint32 nSliceStackIndex = 0; nSliceStackIndex < nSliceStackCount; nSliceStackIndex++) {
+			m_pProgressMonitor->IncrementProgress(1);
+
 			CModelSliceStack *pSliceStackResource = dynamic_cast<CModelSliceStack*>(m_pModel->getSliceStackResource(nSliceStackIndex).get());
 			if (pSliceStackResource != nullptr) {
 				writeSliceStack(pSliceStackResource);
@@ -330,8 +336,9 @@ namespace NMR {
 			if (pSliceStackResource->getSliceCount() > 0) {
 				for (nfUint32 nSliceIndex = 0; nSliceIndex < pSliceStackResource->getSliceCount(); nSliceIndex++) {
 					if (nSliceIndex % PROGRESS_SLICEUPDATE == PROGRESS_SLICEUPDATE - 1) {
-						if (m_pProgressMonitor && !m_pProgressMonitor->Progress(-1, ProgressIdentifier::PROGRESS_WRITESLICES))
-							throw CNMRException(NMR_USERABORTED);
+
+						m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_WRITESLICES);
+						m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
 					}
 					PSlice pSlice = pSliceStackResource->getSlice(nSliceIndex);
 					writeStartElementWithPrefix(XML_3MF_ELEMENT_SLICE, XML_3MF_NAMESPACEPREFIX_SLICE);
@@ -386,8 +393,10 @@ namespace NMR {
 		std::list <CModelObject *> objectList = m_pModel->getSortedObjectList();
 
 		for (auto iIterator = objectList.begin(); iIterator != objectList.end(); iIterator++) {
-			if (m_pProgressMonitor && !m_pProgressMonitor->Progress(-1, ProgressIdentifier::PROGRESS_WRITENOBJECTS))
-				throw CNMRException(NMR_USERABORTED);
+
+			m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_WRITEOBJECTS);
+			m_pProgressMonitor->IncrementProgress(1);
+			m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
 
 			CModelObject * pObject = *iIterator;
 
@@ -519,6 +528,8 @@ namespace NMR {
 		nfUint32 nCount = m_pModel->getColorGroupCount();
 
 		for (nfUint32 nIndex = 0; nIndex < nCount; nIndex++) {
+			m_pProgressMonitor->IncrementProgress(1);
+
 			CModelColorGroupResource * pColorGroup = m_pModel->getColorGroup(nIndex);
 
 			pColorGroup->buildResourceIndexMap();
@@ -554,6 +565,7 @@ namespace NMR {
 		nfUint32 nGroupCount = m_pModel->getTexture2DGroupCount();
 
 		for (nfUint32 nGroupIndex = 0; nGroupIndex < nGroupCount; nGroupIndex++) {
+			m_pProgressMonitor->IncrementProgress(1);
 
 			CModelTexture2DGroupResource * pTexture2DGroup = m_pModel->getTexture2DGroup(nGroupIndex);
 
@@ -593,6 +605,7 @@ namespace NMR {
 		nfUint32 nCount = m_pModel->getCompositeMaterialsCount();
 
 		for (nfUint32 nIndex = 0; nIndex < nCount; nIndex++) {
+			m_pProgressMonitor->IncrementProgress(1);
 
 			CModelCompositeMaterialsResource * pCompositeMaterials = m_pModel->getCompositeMaterials(nIndex);
 
@@ -706,6 +719,7 @@ namespace NMR {
 		nfUint32 nCount = m_pModel->getMultiPropertyGroupCount();
 
 		for (nfUint32 nIndex = 0; nIndex < nCount; nIndex++) {
+			m_pProgressMonitor->IncrementProgress(1);
 
 			CModelMultiPropertyGroupResource * pMultiPropertyGroup = m_pModel->getMultiPropertyGroup(nIndex);
 
@@ -764,6 +778,8 @@ namespace NMR {
 
 		if (m_bIsRootModel)
 		{
+			m_pProgressMonitor->IncrementProgress(1);
+
 			nfUint32 nCount = m_pModel->getBuildItemCount();
 			nfUint32 nIndex;
 			for (nIndex = 0; nIndex < nCount; nIndex++) {

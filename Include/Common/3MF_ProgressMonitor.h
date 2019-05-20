@@ -55,22 +55,23 @@ namespace NMR
 		void ClearProgressCallback();
 		// Returns true if the last callback call returned false
 		bool WasAborted();
-		// If Progress() returns false, the task calling it should try to abort
-		bool QueryCancelled();
-		bool Progress(double progress, ProgressIdentifier identifier);
+		bool QueryCancelled(bool throwIfCancelled);
+		bool ReportProgressAndQueryCancelled(bool throwIfCancelled);
+
+		void IncrementProgress(double dProgressIncrement);
+		void SetProgressIdentifier(ProgressIdentifier identifier);
+		void SetMaxProgress(double);
+		void DecreaseMaxProgress(double);
 
 		static void GetProgressMessage(ProgressIdentifier progressIdentifier, std::string& progressString);
 
-		void PushLevel(double relativeStart, double relativeEnd);
-		std::pair<double, double> PopLevel();
-		void ResetLevels();
 	private:
+		ProgressIdentifier m_eProgressIdentifier;
+		double m_dProgress;
+		double m_dProgressMax;
 		Lib3MFProgressCallback m_progressCallback;
 		void* m_userData;
 		bool m_lastCallbackResult;
-		std::stack<std::pair<double, double>> m_levels;
-
-		std::pair<double, double> Level();
 		std::mutex m_callbackMutex;
 	};
 

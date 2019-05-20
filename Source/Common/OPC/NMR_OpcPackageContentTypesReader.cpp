@@ -39,12 +39,15 @@ NMR_OpcPackageReader.cpp defines an OPC Package reader of .rels files in a porta
 
 namespace NMR {
 
-	COpcPackageContentTypesReader::COpcPackageContentTypesReader(_In_ PImportStream pImportStream)
+	COpcPackageContentTypesReader::COpcPackageContentTypesReader(_In_ PImportStream pImportStream, PProgressMonitor pProgressMonitor)
 	{
 		if (pImportStream.get() == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+		if (pProgressMonitor.get() == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-		PXmlReader pXMLReader = fnCreateXMLReaderInstance(pImportStream, nullptr);
+		pProgressMonitor->ReportProgressAndQueryCancelled(true);
+		PXmlReader pXMLReader = fnCreateXMLReaderInstance(pImportStream, pProgressMonitor);
 
 		eXmlReaderNodeType NodeType;
 		// Read all XML Root Nodes
