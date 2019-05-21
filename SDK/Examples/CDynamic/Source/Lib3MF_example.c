@@ -48,19 +48,19 @@ void releaseWrapper(sLib3MFDynamicWrapperTable* pWrapperTable) {
 int main()
 {
 	// TODO: put the path and ending of the Lib3MF library file here:
-	const char* libpath = "lib3mf.";
+	const char* libpath = "lib3mf.dll";
 	sLib3MFDynamicWrapperTable sWrapperTable;
 	Lib3MFResult eResult = LIB3MF_SUCCESS;
 	
 	eResult = InitLib3MFWrapperTable(&sWrapperTable);
 	if (LIB3MF_SUCCESS != eResult) {
-		printf_s("Failed initializing wrapper table\n");
+		printf_s("Failed to initialize wrapper table\n");
 		return eResult;
 	}
 	
 	eResult = LoadLib3MFWrapperTable(&sWrapperTable, libpath);
 	if (LIB3MF_SUCCESS != eResult) {
-		printf_s("Failed loading lib3mf-binary\n");
+		printf_s("Failed to load lib3mf-binary\n");
 		return eResult;
 	}
 	Lib3MF_uint32 nMajor, nMinor, nMicro;
@@ -81,9 +81,8 @@ int main()
 		return eResult;
 	}
 	if (bHasInfo && (nBufferRequired > 0)) {
-		theString = malloc(sizeof(Lib3MF_uint8)*(nBufferRequired+1));
-		theString[nBufferRequired] = 0;
-		eResult = sWrapperTable.m_GetPrereleaseInformation(&bHasInfo, nBufferRequired+1, &nBufferRequired, theString);
+		theString = malloc(sizeof(Lib3MF_uint8)*(nBufferRequired));
+		eResult = sWrapperTable.m_GetPrereleaseInformation(&bHasInfo, nBufferRequired, &nBufferRequired, theString);
 		if (LIB3MF_SUCCESS != eResult) {
 			printf_s("Failed to get prerelease information\n");
 			releaseWrapper(&sWrapperTable);
@@ -101,9 +100,9 @@ int main()
 		return eResult;
 	}
 	if (bHasInfo && (nBufferRequired > 0)) {
-		theString = malloc(sizeof(Lib3MF_uint8)*(nBufferRequired + 1));
+		theString = malloc(sizeof(Lib3MF_uint8)*(nBufferRequired));
 		theString[nBufferRequired] = 0;
-		eResult = sWrapperTable.m_GetBuildInformation(&bHasInfo, nBufferRequired + 1, &nBufferRequired, theString);
+		eResult = sWrapperTable.m_GetBuildInformation(&bHasInfo, nBufferRequired, &nBufferRequired, theString);
 		if (LIB3MF_SUCCESS != eResult) {
 			printf_s("Failed to get build information\n");
 			releaseWrapper(&sWrapperTable);
