@@ -78,6 +78,8 @@ public:
 
 	IResourceIterator * Clone ();
 
+	Lib3MF_uint64 Count();
+
 };
 
 }
