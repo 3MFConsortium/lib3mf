@@ -380,6 +380,7 @@ namespace NMR {
 		cbBytesRead = m_pImportStream->readBuffer((nfByte*)(&((*m_pNextBuffer)[m_nCurrentBufferSize])), cbReadSize, false);
 		m_nCurrentBufferSize += (nfUint32)cbBytesRead;
 
+		// Update Progress
 		m_pProgressMonitor->IncrementProgress(double(cbBytesRead));
 
 		// Reset Entity parser

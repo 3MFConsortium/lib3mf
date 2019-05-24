@@ -106,3 +106,8 @@ IBuildItemIterator * CBuildItemIterator::Clone ()
 	return pBuildItems.release();
 }
 
+Lib3MF_uint64 CBuildItemIterator::Count()
+{
+	return m_pBuildItems.size();
+}
+

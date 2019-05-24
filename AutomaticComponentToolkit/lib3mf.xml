@@ -349,6 +349,9 @@
 		<method name="Clone" description="Creates a new resource iterator with the same resource list.">
 			<param name="OutResourceIterator" type="handle" class="ResourceIterator" pass="return" description="returns the cloned Iterator instance" />
 		</method>
+		<method name="Count" description="Returns the number of resoucres the iterator captures.">
+			<param name="Count" type="uint64" pass="return" description="returns the number of resoucres the iterator captures." />
+		</method>
 	</class>
 
 	<class name="SliceStackIterator" parent="ResourceIterator">
@@ -996,6 +999,9 @@
 		</method>
 		<method name="Clone" description="Creates a new build item iterator with the same build item list.">
 			<param name="OutBuildItemIterator" type="handle" class="BuildItemIterator" pass="return" description="returns the cloned Iterator instance" />
+		</method>
+		<method name="Count" description="Returns the number of build items the iterator captures.">
+			<param name="Count" type="uint64" pass="return" description="returns the number of build items the iterator captures." />
 		</method>
 	</class>
 

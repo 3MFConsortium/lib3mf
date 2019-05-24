@@ -40,25 +40,28 @@ using namespace Lib3MF::Impl;
  Class definition of CBase 
 **************************************************************************************************************************/
 
-bool CBase::GetLastErrorMessage (std::string & sErrorMessage)
+bool CBase::GetLastErrorMessage(std::string & sErrorMessage)
 {
-	auto iIterator = m_errors.rbegin();
-	if (iIterator != m_errors.rend()) {
-		sErrorMessage = *iIterator;
+	if (m_pErrors && !m_pErrors->empty()) {
+		sErrorMessage = m_pErrors->back();
+		m_pErrors->pop_back();
 		return true;
-	}else {
+	} else {
 		sErrorMessage = "";
 		return false;
 	}
 }
 
-void CBase::ClearErrorMessages ()
+void CBase::ClearErrorMessages()
 {
-	m_errors.clear();
+	m_pErrors.reset();
 }
 
-void CBase::RegisterErrorMessage (const std::string & sErrorMessage)
+void CBase::RegisterErrorMessage(const std::string & sErrorMessage)
 {
-	m_errors.push_back(sErrorMessage);
+	if (!m_pErrors) {
+		m_pErrors.reset(new std::list<std::string>());
+	}
+	m_pErrors->push_back(sErrorMessage);
 }
 

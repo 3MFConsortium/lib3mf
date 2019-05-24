@@ -174,6 +174,7 @@ namespace NMR {
 		}
 
 		m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_CLEANUP);
+		m_pProgressMonitor->ReportProgressAndQueryCancelled(false);
 
 		// Release Memory of 3MF Package
 		release3MFOPCPackage();
@@ -182,6 +183,7 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_NOMODELNODE);
 
 		m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_DONE);
+		m_pProgressMonitor->ReportProgressAndQueryCancelled(false);
 	}
 
 	void CModelReader_3MF::addTextureAttachment(_In_ std::string sPath, _In_ PImportStream pStream)
