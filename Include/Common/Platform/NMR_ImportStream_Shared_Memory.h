@@ -38,20 +38,18 @@ This is a platform independent class for keeping data in a memory stream that do
 #include "Common/NMR_Types.h"
 #include "Common/NMR_Local.h"
 
-#include <vector>
-
 namespace NMR {
+	
+	class CImportStream_Shared_Memory : public CImportStream_Memory {
+		private:
+			const nfByte * m_Buffer;
+		protected:
+			virtual const nfByte * getAt(nfUint64 nPosition);
+		public:
+			CImportStream_Shared_Memory(_In_ const nfByte * pBuffer, _In_ nfUint64 cbBytes);
+			virtual PImportStream copyToMemory();
+	};
 
-    class CImportStream_Shared_Memory : public CImportStream_Memory {
-        private:
-                const nfByte * m_Buffer;
-        protected:
-                virtual const nfByte * getAt(nfUint64 nPosition);
-        public:
-            CImportStream_Shared_Memory(_In_ const nfByte * pBuffer, _In_ nfUint64 cbBytes);
-            virtual PImportStream copyToMemory();
-    };
-    
 } // namespace NMR
 
 #endif // __NMR_IMPORTSTREAM_SHARED_MEMORY
