@@ -473,6 +473,57 @@
 		</method>
 	</class>
 
+  <class name="AnyAttribute">
+    <method name="GetNameSpace" description = "returns the namespace URL of the attribute">
+      <param name="NameSpace" type="string" pass="return" description="the namespace URL of the attribute" />
+    </method>
+    <method name="SetNameSpace" description = "sets a new namespace URL of the attribute">
+      <param name="NameSpace" type="string" pass="in" description="the new namespace URL of the attribute" />
+    </method>
+    <method name="GetName" description = "returns the name of a attribute">
+      <param name="Name" type="string" pass="return" description="the name of the attribute" />
+    </method>
+    <method name="SetName" description = "sets a new name of a attribute">
+      <param name="Name" type="string" pass="in" description="the new name of the attribute" />
+    </method>
+    <method name="GetKey" description = "returns the (namespace+name) of a attribute">
+      <param name="Key" type="string" pass="return" description="the key (namespace+name) of the attribute" />
+    </method>
+    <method name="GetValue" description = "returns the value of the attribute">
+      <param name="Value" type="string" pass="return" description="the value of the attribute" />
+    </method>
+    <method name="SetValue" description = "sets a new value of the attribute">
+      <param name="Value" type="string" pass="in" description="a new value of the attribute" />
+    </method>
+  </class>
+
+  <class name="AnyAttributes">
+    <method name="GetAttributeCount" description = "returns the number of attributes in this element">
+      <param name="Count" type="uint32" pass="return" description="returns the number attribute" />
+    </method>
+    <method name="GetAttribute" description = "returns an attribute value within this element">
+      <param name="Index" type="uint32" pass="in" description="Index of the attribute." />
+      <param name="Attribute" type="handle" class="AnyAttribute" pass="return" description="an instance of the attribute" />
+    </method>
+    <method name="GetAttributeByKey" description = "returns an attribute value within this element">
+      <param name="NameSpace" type="string" pass="in" description="the namespace of the attribute" />
+      <param name="Name" type="string" pass="in" description="the name of the attribute" />
+      <param name="Attribute" type="handle" class="AnyAttribute" pass="return" description="an instance of the attribute" />
+    </method>
+    <method name="RemoveAttributeByIndex" description = "removes attribute by index from the model.">
+      <param name="Index" type="uint32" pass="in" description=" Index of the attribute to remove" />
+    </method>
+    <method name="RemoveAttribute" description = "removes attribute from the model.">
+      <param name="Attribute" type="handle" class="AnyAttribute" pass="in" description="The attribute to remove" />
+    </method>
+    <method name="AddAttribute" description = "adds a new attribute to this element">
+      <param name="NameSpace" type="string" pass="in" description="the namespace of the attribute" />
+      <param name="Name" type="string" pass="in" description="the name of the attribute" />
+      <param name="Value" type="string" pass="in" description="the value of the attribute" />
+      <param name="Attribute" type="handle" class="AnyAttribute" pass="return" description="a new instance of the attribute" />
+    </method>
+  </class>
+
 	<class name="Object" parent="Resource">
 		<method name="GetType" description="Retrieves an object's type">
 			<param name="ObjectType" type="enum" class="ObjectType" pass="return" description="returns object type enum." />
@@ -516,7 +567,7 @@
 			<param name="MetaDataGroup" type="handle" class="MetaDataGroup" pass="return" description="returns an Instance of the metadatagroup of this object" />
 		</method>
 
-		<method name="SetSlicesMeshResolution" description="set the meshresolution of the mesh object">
+    <method name="SetSlicesMeshResolution" description="set the meshresolution of the mesh object">
 			<param name="MeshResolution" type="enum" class="SlicesMeshResolution" pass="in" description="meshresolution of this object" />
 		</method>
 		<method name="GetSlicesMeshResolution" description="get the meshresolution of the mesh object">
@@ -990,6 +1041,9 @@
 		<method name="GetMetaDataGroup" description="Returns the metadatagroup of this build item">
 			<param name="MetaDataGroup" type="handle" class="MetaDataGroup" pass="return" description="returns an Instance of the metadatagroup of this build item" />
 		</method>
+    <method name="GetAnyAttributes" description="Returns the anyattributes of this object">
+      <param name="AnyAttributes" type="handle" class="AnyAttributes" pass="return" description="returns an Instance of the anyattributes of this object" />
+    </method>
 	</class>
 
 
