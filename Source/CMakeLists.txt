@@ -41,6 +41,8 @@ Source/API/lib3mf_meshobject.cpp
 Source/API/lib3mf_meshobjectiterator.cpp
 Source/API/lib3mf_metadata.cpp
 Source/API/lib3mf_metadatagroup.cpp
+Source/API/lib3mf_anyattribute.cpp
+Source/API/lib3mf_anyattributes.cpp
 Source/API/lib3mf_multipropertygroup.cpp
 Source/API/lib3mf_multipropertygroupiterator.cpp
 Source/API/lib3mf_model.cpp
