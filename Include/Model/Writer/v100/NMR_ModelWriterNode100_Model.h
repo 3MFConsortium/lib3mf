@@ -90,6 +90,8 @@ namespace NMR {
 
 		void RegisterMetaDataGroupNameSpaces(PModelMetaDataGroup mdg);
 		void RegisterMetaDataNameSpaces();
+		
+		void RegisterCustomNameSpaces();
 
 	public:
 		CModelWriterNode100_Model() = delete;

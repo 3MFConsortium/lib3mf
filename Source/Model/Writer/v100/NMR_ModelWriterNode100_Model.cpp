@@ -74,6 +74,7 @@ namespace NMR {
 		m_bIsRootModel = true;
 		m_bWriteCustomNamespaces = true;
 
+		RegisterCustomNameSpaces();
 		// register custom NameSpaces from metadata in objects, build items and the model itself
 		RegisterMetaDataNameSpaces();
 	}
@@ -96,6 +97,16 @@ namespace NMR {
 		m_bWriteCustomNamespaces = true;
 	}
 
+	void CModelWriterNode100_Model::RegisterCustomNameSpaces() 
+	{
+		auto pNamespaces = m_pModel->getCustomNameSpaces(); 
+		for (auto it = pNamespaces.begin(); it != pNamespaces.end(); it++) {
+			std::string sDummy;
+			if (!m_pXMLWriter->GetNamespacePrefix(it->first, sDummy)) {
+				m_pXMLWriter->RegisterCustomNameSpace(it->first, it->second);
+			}
+		}
+	}
 
 	void CModelWriterNode100_Model::RegisterMetaDataGroupNameSpaces(PModelMetaDataGroup mdg)
 	{
@@ -525,7 +536,7 @@ namespace NMR {
 
 	void CModelWriterNode100_Model::writeCustomAttributes(_In_ PModelCustomAttributes& pAttributes)
 	{
-		for (nfUint32 index = 0; index<pAttributes->getAttributeCount(); index++) {
+		for (nfUint32 index = 0; index < pAttributes->getAttributeCount(); index++) {
 			PModelCustomAttribute pAttribute = pAttributes->getAttribute(index);
 			std::string sNameSpacePrefix;
 			if (!m_pXMLWriter->GetNamespacePrefix(pAttribute->getNameSpace(), sNameSpacePrefix)) {

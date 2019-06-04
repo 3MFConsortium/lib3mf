@@ -1191,8 +1191,15 @@
 			<param name="Extension" type="string" pass="in" description="File Extension" />
 			<param name="ContentType" type="string" pass="in" description="Content Type Identifier" />
 		</method>
-		<method name="RemoveCustomContentType" description="removes a custom Content Type from the model (UTF8 version).">
+		<method name="RemoveCustomContentType" description="removes a custom Content Type from the model.">
 			<param name="Extension" type="string" pass="in" description="File Extension" />
+		</method>
+		<method name="AddCustomNameSpace" description="adds a new custom namespace to the model.">
+			<param name="NameSpace" type="string" pass="in" description="NameSpace" />
+			<param name="Locale" type="string" pass="in" description="NameSpace locale name" />
+		</method>
+		<method name="RemoveCustomNameSpace" description="removes a custom namespace from the model.">
+			<param name="NameSpace" type="string" pass="in" description="NameSpace" />
 		</method>
 	</class>
 	<global baseclassname="Base" releasemethod="Release" acquiremethod="Acquire" journalmethod="SetJournal" versionmethod="GetLibraryVersion" errormethod="GetLastError"

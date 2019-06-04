@@ -185,6 +185,10 @@ public:
 
 	void RemoveCustomContentType (const std::string & sExtension);
 
+	void AddCustomNameSpace (const std::string & sNameSpace, const std::string & sLocale);
+
+	void RemoveCustomNameSpace (const std::string & sNameSpace);
+
 };
 
 }

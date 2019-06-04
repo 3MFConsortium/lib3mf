@@ -125,6 +125,9 @@ namespace NMR {
 		// Custom Attachment Content Types
 		std::map<std::string, std::string> m_CustomContentTypes;
 
+		// Custom NameSpaces
+		std::map<std::string, std::string> m_CustomNameSpaces;
+
 		// Production Model Attachments
 		std::vector<PModelAttachment> m_ProductionAttachments;
 		std::unordered_map<std::string, PModelAttachment> m_ProductionAttachmentURIMap;
@@ -277,6 +280,11 @@ namespace NMR {
 		void addCustomContentType(_In_ const std::string sExtension, _In_ const std::string sContentType);
 		void removeCustomContentType(_In_ const std::string sExtension);
 		nfBool contentTypeIsDefault(_In_ const std::string sExtension);
+
+		// Custom NameSpaces
+		std::map<std::string, std::string> getCustomNameSpaces();
+		void addCustomNameSpace(_In_ const std::string sNameSpace, _In_ const std::string sLocal);
+		void removeCustomNameSpace(_In_ const std::string sNameSpace);
 
 		// Production Extension Attachments
 		PModelAttachment addProductionAttachment(_In_ const std::string sPath, _In_ const std::string sRelationShipType, PImportStream pCopiedStream, nfBool bForceUnique);

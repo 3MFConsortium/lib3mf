@@ -620,3 +620,12 @@ void CModel::RemoveCustomContentType (const std::string & sExtension)
 	m_model->removeCustomContentType(sExtension);
 }
 
+void CModel::AddCustomNameSpace (const std::string & sNameSpace, const std::string & sLocale)
+{
+	m_model->addCustomNameSpace(sNameSpace, sLocale);
+}
+
+void CModel::RemoveCustomNameSpace (const std::string & sNameSpace)
+{
+	m_model->removeCustomNameSpace(sNameSpace);
+}

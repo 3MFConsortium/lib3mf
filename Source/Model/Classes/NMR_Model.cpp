@@ -1041,6 +1041,20 @@ namespace NMR {
 		}
 	}
 
+	std::map<std::string, std::string> CModel::getCustomNameSpaces()
+	{
+		return m_CustomNameSpaces;
+	}
+
+	void CModel::addCustomNameSpace(_In_ const std::string sNameSpace, _In_ const std::string sLocale)
+	{
+		m_CustomNameSpaces.insert(std::make_pair(sNameSpace, sLocale));
+	}
+
+	void CModel::removeCustomNameSpace(_In_ const std::string sNameSpace)
+	{
+		m_CustomNameSpaces.erase(sNameSpace);
+	}
 
 	std::map<std::string, std::string> CModel::getCustomContentTypes()
 	{
