@@ -523,6 +523,18 @@ namespace NMR {
 		}
 	}
 
+	void CModelWriterNode100_Model::writeAnyAttributes(_In_ PModelAnyAttributes& pAttributes)
+	{
+		for (nfUint32 index = 0; index<pAttributes->getAttributeCount(); index++) {
+			PModelAnyAttribute pAttribute = pAttributes->getAttribute(index);
+			std::string sNameSpacePrefix;
+			if (!m_pXMLWriter->GetNamespacePrefix(pAttribute->getNameSpace(), sNameSpacePrefix)) {
+				throw CNMRException(NMR_ERROR_INVALIDBUFFERSIZE);
+			}
+			writePrefixedStringAttribute(sNameSpacePrefix.c_str(), pAttribute->getName().c_str(), pAttribute->getValue());
+		}
+	}
+
 	void CModelWriterNode100_Model::writeColors()
 	{
 		nfUint32 nCount = m_pModel->getColorGroupCount();
@@ -799,7 +811,7 @@ namespace NMR {
 				if (pBuildItem->hasTransform())
 					writeStringAttribute(XML_3MF_ATTRIBUTE_ITEM_TRANSFORM, pBuildItem->getTransformString());
 
-				
+				writeAnyAttributes(pBuildItem->anyAttributes());
 				writeMetaDataGroup(pBuildItem->metaDataGroup());
 				if (pBuildItem->metaDataGroup()->getMetaDataCount() > 0)
 					writeFullEndElement();

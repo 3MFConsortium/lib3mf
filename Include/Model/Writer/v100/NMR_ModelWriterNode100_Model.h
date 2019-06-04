@@ -38,6 +38,7 @@ This is the class for exporting the 3mf model stream root node.
 #include "Model/Writer/NMR_ModelWriterNode.h" 
 #include "Model/Classes/NMR_ModelComponentsObject.h" 
 #include "Model/Classes/NMR_ModelMeshObject.h" 
+#include "Model/Classes/NMR_ModelAnyAttributes.h" 
 #include "Common/Platform/NMR_XmlWriter.h"
 
 #include "Common/MeshInformation/NMR_MeshInformation_Properties.h"
@@ -74,6 +75,8 @@ namespace NMR {
 		void writeMultiProperties();
 		void writeMultiPropertyAttributes(_In_ CModelMultiPropertyGroupResource* pMultiPropertyGroup);
 		void writeMultiPropertyMultiElements(_In_ CModelMultiPropertyGroupResource* pMultiPropertyGroup);
+
+		void writeAnyAttributes(_In_ PModelAnyAttributes& pAttributes);
 
 		void writeObjects();
 		void writeBuild();
