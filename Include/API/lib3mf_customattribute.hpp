@@ -24,20 +24,20 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CAnyAttribute
+Abstract: This is the class declaration of CCustomAttribute
 
 */
 
 
-#ifndef __LIB3MF_ANYATTRIBUTE
-#define __LIB3MF_ANYATTRIBUTE
+#ifndef __LIB3MF_CUSTOMATTRIBUTE
+#define __LIB3MF_CUSTOMATTRIBUTE
 
 #include "lib3mf_interfaces.hpp"
 #include "lib3mf_base.hpp"
 #pragma warning( push)
 #pragma warning( disable : 4250)
 
-#include "Model/Classes/NMR_ModelAnyAttribute.h"
+#include "Model/Classes/NMR_ModelCustomAttribute.h"
 
 // Include custom headers here.
 
@@ -47,16 +47,16 @@ namespace Impl {
 
 
 /*************************************************************************************************************************
- Class declaration of CAnyAttribute 
+ Class declaration of CCustomAttribute
 **************************************************************************************************************************/
 
-class CAnyAttribute : public virtual IAnyAttribute, public virtual CBase {
+class CCustomAttribute : public virtual ICustomAttribute, public virtual CBase {
 private:
 
 	/**
 	* Put private members here.
 	*/
-	NMR::PModelAnyAttribute m_pAttribute;
+	NMR::PModelCustomAttribute m_pAttribute;
 
 protected:
 
@@ -69,7 +69,7 @@ public:
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-	CAnyAttribute(NMR::PModelAnyAttribute pAttribute);
+	CCustomAttribute(NMR::PModelCustomAttribute pAttribute);
 
 	/**
 	* Public member functions to implement.
@@ -95,4 +95,4 @@ public:
 }
 
 #pragma warning( pop )
-#endif // __LIB3MF_ANYATTRIBUTE
+#endif // __LIB3MF_CUSTOMATTRIBUTE

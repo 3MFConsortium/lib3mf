@@ -523,10 +523,10 @@ namespace NMR {
 		}
 	}
 
-	void CModelWriterNode100_Model::writeAnyAttributes(_In_ PModelAnyAttributes& pAttributes)
+	void CModelWriterNode100_Model::writeCustomAttributes(_In_ PModelCustomAttributes& pAttributes)
 	{
 		for (nfUint32 index = 0; index<pAttributes->getAttributeCount(); index++) {
-			PModelAnyAttribute pAttribute = pAttributes->getAttribute(index);
+			PModelCustomAttribute pAttribute = pAttributes->getAttribute(index);
 			std::string sNameSpacePrefix;
 			if (!m_pXMLWriter->GetNamespacePrefix(pAttribute->getNameSpace(), sNameSpacePrefix)) {
 				throw CNMRException(NMR_ERROR_INVALIDBUFFERSIZE);
@@ -811,7 +811,7 @@ namespace NMR {
 				if (pBuildItem->hasTransform())
 					writeStringAttribute(XML_3MF_ATTRIBUTE_ITEM_TRANSFORM, pBuildItem->getTransformString());
 
-				writeAnyAttributes(pBuildItem->anyAttributes());
+				writeCustomAttributes(pBuildItem->customAttributes());
 				writeMetaDataGroup(pBuildItem->metaDataGroup());
 				if (pBuildItem->metaDataGroup()->getMetaDataCount() > 0)
 					writeFullEndElement();

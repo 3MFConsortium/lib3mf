@@ -24,20 +24,20 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CAnyAttributes
+Abstract: This is the class declaration of CCustomAttributes
 
 */
 
 
-#ifndef __LIB3MF_ANYATTRIBUTES
-#define __LIB3MF_ANYATTRIBUTES
+#ifndef __LIB3MF_CUSTOMATTRIBUTES
+#define __LIB3MF_CUSTOMATTRIBUTES
 
 #include "lib3mf_interfaces.hpp"
 #include "lib3mf_base.hpp"
 #pragma warning( push)
 #pragma warning( disable : 4250)
 
-#include "Model/Classes/NMR_ModelAnyAttributes.h"
+#include "Model/Classes/NMR_ModelCustomAttributes.h"
 
 // Include custom headers here.
 
@@ -47,16 +47,16 @@ namespace Impl {
 
 
 /*************************************************************************************************************************
- Class declaration of CAnyAttributes 
+ Class declaration of CCustomAttributes 
 **************************************************************************************************************************/
 
-class CAnyAttributes : public virtual IAnyAttributes, public virtual CBase {
+class CCustomAttributes : public virtual ICustomAttributes, public virtual CBase {
 private:
 
 	/**
 	* Put private members here.
 	*/
-	NMR::PModelAnyAttributes m_pAttributes;
+	NMR::PModelCustomAttributes m_pAttributes;
 
 protected:
 
@@ -69,7 +69,7 @@ public:
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-	CAnyAttributes(NMR::PModelAnyAttributes pAttributes);
+	CCustomAttributes(NMR::PModelCustomAttributes pAttributes);
 
 	/**
 	* Public member functions to implement.
@@ -77,15 +77,15 @@ public:
 
 	virtual Lib3MF_uint32 GetAttributeCount();
 
-	IAnyAttribute * GetAttribute(const Lib3MF_uint32 nIndex);
+	ICustomAttribute * GetAttribute(const Lib3MF_uint32 nIndex);
 
-	IAnyAttribute * GetAttributeByKey(const std::string & sNameSpace, const std::string & sName);
+	ICustomAttribute * GetAttributeByKey(const std::string & sNameSpace, const std::string & sName);
 
 	void RemoveAttributeByIndex(const Lib3MF_uint32 nIndex);
 
-	void RemoveAttribute(IAnyAttribute* pAttribute);
+	void RemoveAttribute(ICustomAttribute* pAttribute);
 
-	IAnyAttribute * AddAttribute(const std::string & sNameSpace, const std::string & sName, const std::string & sValue);
+	ICustomAttribute * AddAttribute(const std::string & sNameSpace, const std::string & sName, const std::string & sValue);
 
 
 };
@@ -94,4 +94,4 @@ public:
 }
 
 #pragma warning( pop )
-#endif // __LIB3MF_ANYATTRIBUTES
+#endif // __LIB3MF_CUSTOMATTRIBUTES

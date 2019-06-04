@@ -26,56 +26,56 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelAnyAttributes.cpp implements the Model AnyAttribute Class.
+NMR_ModelCustomAttributes.cpp implements the Model CustomAttribute Class.
 
 --*/
 
-#include "Model/Classes/NMR_ModelAnyAttributes.h"
+#include "Model/Classes/NMR_ModelCustomAttributes.h"
 #include "Common/NMR_Exception.h"
 
 namespace NMR {
 
-	CModelAnyAttributes::CModelAnyAttributes()
+	CModelCustomAttributes::CModelCustomAttributes()
 	{
 	}
 
-	void CModelAnyAttributes::clear()
+	void CModelCustomAttributes::clear()
 	{
 		m_Attributes.clear();
 		m_AttributesMap.clear();
 	}
 
 
-	PModelAnyAttribute CModelAnyAttributes::addAttribute(_In_ std::string sNameSpace, _In_ std::string sName, _In_ std::string sValue)
+	PModelCustomAttribute CModelCustomAttributes::addAttribute(_In_ std::string sNameSpace, _In_ std::string sName, _In_ std::string sValue)
 	{
-		if (hasAttribute(CModelAnyAttribute::calculateKey(sNameSpace, sName))) {
-			throw CNMRException(NMR_ERROR_DUPLICATEANYATTRIBUTE);
+		if (hasAttribute(CModelCustomAttribute::calculateKey(sNameSpace, sName))) {
+			throw CNMRException(NMR_ERROR_DUPLICATECUSTOMATTRIBUTE);
 		}
 
-		PModelAnyAttribute pAnyAttribute = std::make_shared<CModelAnyAttribute>(sNameSpace, sName, sValue);
-		m_Attributes.push_back(pAnyAttribute);
-		m_AttributesMap.insert(std::make_pair(pAnyAttribute->getKey(), pAnyAttribute));
-		return pAnyAttribute;
+		PModelCustomAttribute pAttribute = std::make_shared<CModelCustomAttribute>(sNameSpace, sName, sValue);
+		m_Attributes.push_back(pAttribute);
+		m_AttributesMap.insert(std::make_pair(pAttribute->getKey(), pAttribute));
+		return pAttribute;
 	}
 
-	nfUint32 CModelAnyAttributes::getAttributeCount()
+	nfUint32 CModelCustomAttributes::getAttributeCount()
 	{
 		return (nfUint32)m_Attributes.size();
 	}
 
-	PModelAnyAttribute CModelAnyAttributes::getAttribute(_In_ nfUint32 nIndex)
+	PModelCustomAttribute CModelCustomAttributes::getAttribute(_In_ nfUint32 nIndex)
 	{
 		nfUint32 nCount = getAttributeCount();
 		if (nIndex >= nCount)
 			throw CNMRException(NMR_ERROR_INVALIDINDEX);
 
-		PModelAnyAttribute pAnyAttribute = m_Attributes[nIndex];
-		__NMRASSERT(pAnyAttribute.get() != nullptr);
+		PModelCustomAttribute pAttribute = m_Attributes[nIndex];
+		__NMRASSERT(pAttribute.get() != nullptr);
 
-		return pAnyAttribute;
+		return pAttribute;
 	}
 
-	void CModelAnyAttributes::removeAttribute(_In_ nfUint32 nIndex)
+	void CModelCustomAttributes::removeAttribute(_In_ nfUint32 nIndex)
 	{
 		nfUint32 nCount = getAttributeCount();
 		if (nIndex >= nCount)
@@ -87,25 +87,25 @@ namespace NMR {
 		m_Attributes.erase(iIterator);
 	}
 
-	nfBool CModelAnyAttributes::hasAttribute(_In_ std::string sKey)
+	nfBool CModelCustomAttributes::hasAttribute(_In_ std::string sKey)
 	{
-		std::map<std::string, PModelAnyAttribute>::iterator iIterator = m_AttributesMap.find(sKey);
+		std::map<std::string, PModelCustomAttribute>::iterator iIterator = m_AttributesMap.find(sKey);
 		return iIterator != m_AttributesMap.end();
 	}
 
-	void CModelAnyAttributes::mergeAttribute(_In_ CModelAnyAttributes * pSourceAnyAttributes)
+	void CModelCustomAttributes::mergeAttribute(_In_ CModelCustomAttributes * pSourceCustomAttributes)
 	{
-		if (pSourceAnyAttributes == nullptr)
+		if (pSourceCustomAttributes == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-		nfUint32 nCount = pSourceAnyAttributes->getAttributeCount();
+		nfUint32 nCount = pSourceCustomAttributes->getAttributeCount();
 		nfUint32 nIndex;
 
 		for (nIndex = 0; nIndex < nCount; nIndex++) {
 			std::string sName;
 			std::string sValue;
-			PModelAnyAttribute pAnyAttribute = pSourceAnyAttributes->getAttribute(nIndex);
-			addAttribute(pAnyAttribute->getNameSpace(), pAnyAttribute->getName(), pAnyAttribute->getValue());
+			PModelCustomAttribute pAttribute = pSourceCustomAttributes->getAttribute(nIndex);
+			addAttribute(pAttribute->getNameSpace(), pAttribute->getName(), pAttribute->getValue());
 		}
 	}
 }

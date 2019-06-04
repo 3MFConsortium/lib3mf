@@ -26,38 +26,38 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelAnyAttributes.h defines the Model Attributes List.
+NMR_ModelCustomAttributes.h defines the Model Attributes List.
 
 --*/
 
-#ifndef __NMR_MODELANYATTRIBUTES
-#define __NMR_MODELANYATTRIBUTES
+#ifndef __NMR_MODELCUSTOMATTRIBUTES
+#define __NMR_MODELCUSTOMATTRIBUTES
 
-#include "Model/Classes/NMR_ModelAnyAttribute.h" 
+#include "Model/Classes/NMR_ModelCustomAttribute.h" 
 #include "Common/NMR_Types.h"
 
 #include <map>
 #include <vector>
 
 namespace NMR {
-	class CModelAnyAttributes {
+	class CModelCustomAttributes {
 	private:
-		std::vector<PModelAnyAttribute> m_Attributes;
-		std::map<std::string, PModelAnyAttribute> m_AttributesMap;
+		std::vector<PModelCustomAttribute> m_Attributes;
+		std::map<std::string, PModelCustomAttribute> m_AttributesMap;
 	public:
-		CModelAnyAttributes();
+		CModelCustomAttributes();
 		void clear();
 
-		PModelAnyAttribute addAttribute(_In_ const std::string sNameSpace, _In_ const std::string sName, _In_ const std::string sValue);
-		PModelAnyAttribute getAttribute(_In_ nfUint32 nIndex);
+		PModelCustomAttribute addAttribute(_In_ const std::string sNameSpace, _In_ const std::string sName, _In_ const std::string sValue);
+		PModelCustomAttribute getAttribute(_In_ nfUint32 nIndex);
 		nfUint32 getAttributeCount();
 		void removeAttribute(_In_ nfUint32 nIndex);
 		nfBool hasAttribute(_In_ std::string sKey);
-		void mergeAttribute(_In_ CModelAnyAttributes * pSourceAnyAttributes);
+		void mergeAttribute(_In_ CModelCustomAttributes * pSourceCustomAttributes);
 	};
 
-	typedef std::shared_ptr <CModelAnyAttributes> PModelAnyAttributes;
+	typedef std::shared_ptr <CModelCustomAttributes> PModelCustomAttributes;
 
 }
 
-#endif // __NMR_MODELANYATTRIBUTES
+#endif // __NMR_MODELCUSTOMATTRIBUTES

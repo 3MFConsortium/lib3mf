@@ -34,7 +34,7 @@ Abstract: This is a stub class definition of CBuildItem
 #include "lib3mf_utils.hpp"
 #include "lib3mf_object.hpp"
 #include "lib3mf_metadatagroup.hpp"
-#include "lib3mf_anyattributes.hpp"
+#include "lib3mf_customattributes.hpp"
 // Include custom headers here.
 
 using namespace Lib3MF::Impl;
@@ -121,7 +121,7 @@ IMetaDataGroup * CBuildItem::GetMetaDataGroup ()
 	return new CMetaDataGroup(buildItem().metaDataGroup());
 }
 
-IAnyAttributes * CBuildItem::GetAnyAttributes ()
+ICustomAttributes * CBuildItem::GetCustomAttributes ()
 {
-	return new CAnyAttributes(buildItem().anyAttributes());
+	return new CCustomAttributes(buildItem().customAttributes());
 }

@@ -38,7 +38,7 @@ build item.
 #include "Model/Classes/NMR_Model.h" 
 #include "Model/Classes/NMR_ModelObject.h" 
 #include "Model/Classes/NMR_ModelMetaDataGroup.h" 
-#include "Model/Classes/NMR_ModelAnyAttributes.h" 
+#include "Model/Classes/NMR_ModelCustomAttributes.h" 
 #include "Common/NMR_Types.h" 
 #include "Common/Math/NMR_Matrix.h" 
 
@@ -59,7 +59,7 @@ namespace NMR {
 		std::string m_sPath;
 
 		PModelMetaDataGroup m_MetaDataGroup;
-		PModelAnyAttributes m_AnyAttributes;
+		PModelCustomAttributes m_CustomAttributes;
 	public:
 		CModelBuildItem() = delete;
 		CModelBuildItem(_In_ CModelObject * pObject, _In_ nfUint32 nHandle);
@@ -89,8 +89,8 @@ namespace NMR {
 		// MetaDataGroup
 		PModelMetaDataGroup metaDataGroup();
 
-		// CUstom attributes
-		PModelAnyAttributes anyAttributes();
+		// Custom attributes
+		PModelCustomAttributes customAttributes();
 
 		std::string path();
 		void setPath(std::string sPath);

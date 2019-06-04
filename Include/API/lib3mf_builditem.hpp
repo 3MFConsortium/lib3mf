@@ -98,7 +98,7 @@ public:
 	void SetPartNumber (const std::string & sSetPartnumber);
 
 	IMetaDataGroup * GetMetaDataGroup ();
-	IAnyAttributes * GetAnyAttributes ();
+	ICustomAttributes * GetCustomAttributes ();
 };
 
 }

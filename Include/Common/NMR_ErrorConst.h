@@ -1103,8 +1103,8 @@ Model error codes (0x8XXX)
 // Version 093 of the core-specification is not supported
 #define NMR_ERROR_VERSION093_NOT_SUPPORTED 0x80E7
 
-// Duplicate Model Any Attribute
-#define NMR_ERROR_DUPLICATEANYATTRIBUTE 0x80E8
+// Duplicate Model Custom Attribute
+#define NMR_ERROR_DUPLICATECUSTOMATTRIBUTE 0x80E8
 
 
 /*-------------------------------------------------------------------

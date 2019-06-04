@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium
+Copyright (C) 2019 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -24,45 +24,60 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract:
+Abstract: This is a stub class definition of CCustomAttribute
 
-NMR_ModelAnyAttribute.h defines a Model Any Attribute.
+*/
 
---*/
+#include "lib3mf_customattribute.hpp"
+#include "lib3mf_interfaceexception.hpp"
 
-#ifndef __NMR_MODELANYATTRIBUTE
-#define __NMR_MODELANYATTRIBUTE
+// Include custom headers here.
 
-#include "Common/NMR_Types.h" 
-#include "Common/Platform/NMR_SAL.h"
-#include <memory>
-#include <string>
 
-namespace NMR {
+using namespace Lib3MF::Impl;
 
-	class CModelAnyAttribute {
-	private:
-		std::string m_sName;
-		std::string m_sNameSpace;
-		std::string m_sValue;
-	public:
-		CModelAnyAttribute() = delete;
-		CModelAnyAttribute(_In_ std::string sNameSpace, _In_ std::string sName, _In_ std::string sValue);
+/*************************************************************************************************************************
+ Class definition of CMetaData 
+**************************************************************************************************************************/
 
-		std::string getName();
-		std::string getNameSpace();
-		std::string getValue();
-
-		void setName(std::string );
-		void setNameSpace(std::string);
-		void setValue(std::string);
-
-		std::string getKey();
-		static std::string calculateKey(const std::string &sNameSpace, const std::string &sName);
-	};
-
-	typedef std::shared_ptr <CModelAnyAttribute> PModelAnyAttribute;
-
+CCustomAttribute::CCustomAttribute(NMR::PModelCustomAttribute pAttribute)
+	:m_pAttribute(pAttribute)
+{
 }
 
-#endif // __NMR_MODELANYATTRIBUTE
+
+std::string CCustomAttribute::GetNameSpace ()
+{
+	return m_pAttribute->getNameSpace();
+}
+
+void CCustomAttribute::SetNameSpace (const std::string & sNameSpace)
+{
+	m_pAttribute->setNameSpace(sNameSpace);
+}
+
+std::string CCustomAttribute::GetName()
+{
+	return m_pAttribute->getName();
+}
+
+std::string CCustomAttribute::GetKey()
+{
+	return m_pAttribute->getKey();
+}
+
+void CCustomAttribute::SetName (const std::string & sName)
+{
+	m_pAttribute->setName(sName);
+}
+
+std::string CCustomAttribute::GetValue ()
+{
+	return m_pAttribute->getValue();
+}
+
+void CCustomAttribute::SetValue (const std::string & sValue)
+{
+	m_pAttribute->setValue(sValue);
+}
+

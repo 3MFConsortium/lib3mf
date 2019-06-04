@@ -24,66 +24,66 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CAnyAttributes
+Abstract: This is a stub class definition of CCustomAttributes
 
 */
 
-#include "lib3mf_anyattributes.hpp"
+#include "lib3mf_customattributes.hpp"
 #include "lib3mf_interfaceexception.hpp"
 
-#include "lib3mf_anyattribute.hpp"
+#include "lib3mf_customattribute.hpp"
 // Include custom headers here.
 
 
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CAnyAttributes 
+ Class definition of CCustomAttributes 
 **************************************************************************************************************************/
 
-CAnyAttributes::CAnyAttributes(NMR::PModelAnyAttributes pModelAnyAttributes)
-	: m_pAttributes(pModelAnyAttributes)
+CCustomAttributes::CCustomAttributes(NMR::PModelCustomAttributes pModelCustomAttributes)
+	: m_pAttributes(pModelCustomAttributes)
 {
 
 }
 
-Lib3MF_uint32 CAnyAttributes::GetAttributeCount ()
+Lib3MF_uint32 CCustomAttributes::GetAttributeCount ()
 {
 	return m_pAttributes->getAttributeCount();
 }
 
-IAnyAttribute * CAnyAttributes::GetAttribute (const Lib3MF_uint32 nIndex)
+ICustomAttribute * CCustomAttributes::GetAttribute (const Lib3MF_uint32 nIndex)
 {
-	return new CAnyAttribute(m_pAttributes->getAttribute(nIndex));
+	return new CCustomAttribute(m_pAttributes->getAttribute(nIndex));
 }
 
-IAnyAttribute * CAnyAttributes::GetAttributeByKey (const std::string & sNameSpace, const std::string & sName)
+ICustomAttribute * CCustomAttributes::GetAttributeByKey (const std::string & sNameSpace, const std::string & sName)
 {
 	for (NMR::nfUint32 i = 0; i < m_pAttributes->getAttributeCount(); i++) {
-		NMR::PModelAnyAttribute pAttribute = m_pAttributes->getAttribute(i);
+		NMR::PModelCustomAttribute pAttribute = m_pAttributes->getAttribute(i);
 		if (sNameSpace.empty()) {
 			if (pAttribute->getName() == sName) {
-				return new CAnyAttribute(pAttribute);
+				return new CCustomAttribute(pAttribute);
 			}
 		}
 		else {
 			if (pAttribute->getKey() == sNameSpace + ":" + sName) {
-				return new CAnyAttribute(pAttribute);
+				return new CCustomAttribute(pAttribute);
 			}
 		}
 	}
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
 }
 
-void CAnyAttributes::RemoveAttributeByIndex (const Lib3MF_uint32 nIndex)
+void CCustomAttributes::RemoveAttributeByIndex (const Lib3MF_uint32 nIndex)
 {
 	m_pAttributes->removeAttribute(nIndex); 
 }
 
-void CAnyAttributes::RemoveAttribute(IAnyAttribute* pAttribute)
+void CCustomAttributes::RemoveAttribute(ICustomAttribute* pAttribute)
 {
 	for (NMR::nfUint32 i = 0; i < m_pAttributes->getAttributeCount(); i++) {
-		NMR::PModelAnyAttribute pAttr = m_pAttributes->getAttribute(i);
+		NMR::PModelCustomAttribute pAttr = m_pAttributes->getAttribute(i);
 		if (pAttribute->GetName() == pAttr->getName()) {
 			m_pAttributes->removeAttribute(i);
 			return;
@@ -92,9 +92,9 @@ void CAnyAttributes::RemoveAttribute(IAnyAttribute* pAttribute)
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
 }
 
-IAnyAttribute * CAnyAttributes::AddAttribute(const std::string & sNameSpace, const std::string & sName, const std::string & sValue)
+ICustomAttribute * CCustomAttributes::AddAttribute(const std::string & sNameSpace, const std::string & sName, const std::string & sValue)
 {
-	NMR::PModelAnyAttribute pAttribute = m_pAttributes->addAttribute(sNameSpace, sName, sValue);
-	return new CAnyAttribute(pAttribute);
+	NMR::PModelCustomAttribute pAttribute = m_pAttributes->addAttribute(sNameSpace, sName, sValue);
+	return new CCustomAttribute(pAttribute);
 }
 

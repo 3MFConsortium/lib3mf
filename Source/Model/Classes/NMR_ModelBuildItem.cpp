@@ -46,7 +46,7 @@ namespace NMR {
 		m_mTransform = fnMATRIX3_identity ();
 		m_nHandle = nHandle;
 		m_MetaDataGroup = std::make_shared<CModelMetaDataGroup>();
-		m_AnyAttributes = std::make_shared<CModelAnyAttributes>();
+		m_CustomAttributes = std::make_shared<CModelCustomAttributes>();
 
 		setUUID(std::make_shared<CUUID>());
 	}
@@ -59,7 +59,7 @@ namespace NMR {
 		m_mTransform = mTransform;
 		m_nHandle = nHandle;
 		m_MetaDataGroup = std::make_shared<CModelMetaDataGroup>();
-		m_AnyAttributes = std::make_shared<CModelAnyAttributes>();
+		m_CustomAttributes = std::make_shared<CModelCustomAttributes>();
 
 		setUUID(std::make_shared<CUUID>());
 	}
@@ -156,7 +156,7 @@ namespace NMR {
 		return m_pObject->isValidForSlices(mat);
 	}
 	
-	PModelAnyAttributes CModelBuildItem::anyAttributes() {
-		return m_AnyAttributes;
+	PModelCustomAttributes CModelBuildItem::customAttributes() {
+		return m_CustomAttributes;
 	}
 }

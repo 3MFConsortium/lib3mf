@@ -26,57 +26,57 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelAnyAttribute.cpp implements the Model Any Attribute Class.
+NMR_ModelCustomAttribute.cpp implements the Model Any Attribute Class.
 
 --*/
 
-#include "Model/Classes/NMR_ModelAnyAttribute.h" 
+#include "Model/Classes/NMR_ModelCustomAttribute.h" 
 
 namespace NMR {
 
-	CModelAnyAttribute::CModelAnyAttribute(_In_ std::string sNameSpace, _In_ std::string sName, _In_ std::string sValue)
+	CModelCustomAttribute::CModelCustomAttribute(_In_ std::string sNameSpace, _In_ std::string sName, _In_ std::string sValue)
 	{
 		m_sNameSpace = sNameSpace;
 		m_sName = sName;
 		m_sValue = sValue;
 	}
 
-	std::string CModelAnyAttribute::getName()
+	std::string CModelCustomAttribute::getName()
 	{
 		return m_sName;
 	}
 
-	std::string CModelAnyAttribute::getNameSpace()
+	std::string CModelCustomAttribute::getNameSpace()
 	{
 		return m_sNameSpace;
 	}
 
-	std::string CModelAnyAttribute::getKey()
+	std::string CModelCustomAttribute::getKey()
 	{
 		return calculateKey(m_sNameSpace, m_sName);
 	}
 
-	std::string CModelAnyAttribute::getValue()
+	std::string CModelCustomAttribute::getValue()
 	{
 		return m_sValue;
 	}
 
-	void CModelAnyAttribute::setName(std::string sName)
+	void CModelCustomAttribute::setName(std::string sName)
 	{
 		m_sName = sName;
 	}
 
-	void CModelAnyAttribute::setNameSpace(std::string sNameSpace)
+	void CModelCustomAttribute::setNameSpace(std::string sNameSpace)
 	{
 		m_sNameSpace = sNameSpace;
 	}
 
-	void CModelAnyAttribute::setValue(std::string sValue)
+	void CModelCustomAttribute::setValue(std::string sValue)
 	{
 		m_sValue = sValue;
 	}
 
-	std::string CModelAnyAttribute::calculateKey(const std::string &sNameSpace, const std::string &sName)
+	std::string CModelCustomAttribute::calculateKey(const std::string &sNameSpace, const std::string &sName)
 	{
 		if (sNameSpace.empty())
 			return sName;

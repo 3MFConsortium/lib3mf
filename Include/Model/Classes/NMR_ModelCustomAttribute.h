@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -24,60 +24,45 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CAnyAttribute
+Abstract:
 
-*/
+NMR_ModelCustomAttribute.h defines a Model Any Attribute.
 
-#include "lib3mf_anyattribute.hpp"
-#include "lib3mf_interfaceexception.hpp"
+--*/
 
-// Include custom headers here.
+#ifndef __NMR_MODELCUSTOMATTRIBUTE
+#define __NMR_MODELCUSTOMATTRIBUTE
 
+#include "Common/NMR_Types.h" 
+#include "Common/Platform/NMR_SAL.h"
+#include <memory>
+#include <string>
 
-using namespace Lib3MF::Impl;
+namespace NMR {
 
-/*************************************************************************************************************************
- Class definition of CMetaData 
-**************************************************************************************************************************/
+	class CModelCustomAttribute {
+	private:
+		std::string m_sName;
+		std::string m_sNameSpace;
+		std::string m_sValue;
+	public:
+		CModelCustomAttribute() = delete;
+		CModelCustomAttribute(_In_ std::string sNameSpace, _In_ std::string sName, _In_ std::string sValue);
 
-CAnyAttribute::CAnyAttribute(NMR::PModelAnyAttribute pAttribute)
-	:m_pAttribute(pAttribute)
-{
+		std::string getName();
+		std::string getNameSpace();
+		std::string getValue();
+
+		void setName(std::string );
+		void setNameSpace(std::string);
+		void setValue(std::string);
+
+		std::string getKey();
+		static std::string calculateKey(const std::string &sNameSpace, const std::string &sName);
+	};
+
+	typedef std::shared_ptr <CModelCustomAttribute> PModelCustomAttribute;
+
 }
 
-
-std::string CAnyAttribute::GetNameSpace ()
-{
-	return m_pAttribute->getNameSpace();
-}
-
-void CAnyAttribute::SetNameSpace (const std::string & sNameSpace)
-{
-	m_pAttribute->setNameSpace(sNameSpace);
-}
-
-std::string CAnyAttribute::GetName()
-{
-	return m_pAttribute->getName();
-}
-
-std::string CAnyAttribute::GetKey()
-{
-	return m_pAttribute->getKey();
-}
-
-void CAnyAttribute::SetName (const std::string & sName)
-{
-	m_pAttribute->setName(sName);
-}
-
-std::string CAnyAttribute::GetValue ()
-{
-	return m_pAttribute->getValue();
-}
-
-void CAnyAttribute::SetValue (const std::string & sValue)
-{
-	m_pAttribute->setValue(sValue);
-}
-
+#endif // __NMR_MODELCUSTOMATTRIBUTE
