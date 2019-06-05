@@ -57,6 +57,7 @@ Abstract: This is a stub class definition of CModel
 #include "lib3mf_compositematerialsiterator.hpp"
 #include "lib3mf_multipropertygroup.hpp"
 #include "lib3mf_multipropertygroupiterator.hpp"
+#include "lib3mf_customattributes.hpp"
 
 // Include custom headers here.
 #include "Model/Classes/NMR_ModelMeshObject.h"
@@ -628,4 +629,14 @@ void CModel::AddCustomNameSpace (const std::string & sNameSpace, const std::stri
 void CModel::RemoveCustomNameSpace (const std::string & sNameSpace)
 {
 	m_model->removeCustomNameSpace(sNameSpace);
+}
+
+ICustomAttributes * CModel::GetCustomAttributes()
+{
+	return new CCustomAttributes(m_model->customAttributes());
+}
+
+ICustomAttributes * CModel::GetBuildCustomAttributes()
+{
+	return new CCustomAttributes(m_model->buildCustomAttributes());
 }

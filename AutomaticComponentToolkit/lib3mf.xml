@@ -1201,6 +1201,12 @@
 		<method name="RemoveCustomNameSpace" description="removes a custom namespace from the model.">
 			<param name="NameSpace" type="string" pass="in" description="NameSpace" />
 		</method>
+    <method name="GetCustomAttributes" description="Returns the custom attributes of this object">
+      <param name="CustomAttributes" type="handle" class="CustomAttributes" pass="return" description="returns an Instance of the custom attributes of this object" />
+    </method>
+    <method name="GetBuildCustomAttributes" description="Returns the custom attributes of the build object">
+      <param name="CustomAttributes" type="handle" class="CustomAttributes" pass="return" description="returns an Instance of the custom attributes of the buiñd object" />
+    </method>
 	</class>
 	<global baseclassname="Base" releasemethod="Release" acquiremethod="Acquire" journalmethod="SetJournal" versionmethod="GetLibraryVersion" errormethod="GetLastError"
 				prereleasemethod="GetPrereleaseInformation" buildinfomethod="GetBuildInformation">

@@ -72,6 +72,8 @@ namespace NMR {
 
 		setBuildUUID(std::make_shared<CUUID>());
 		m_MetaDataGroup = std::make_shared<CModelMetaDataGroup>();
+		m_CustomAttributes = std::make_shared<CModelCustomAttributes>();
+		m_BuildCustomAttributes = std::make_shared<CModelCustomAttributes>();
 	}
 
 	CModel::~CModel()

@@ -90,7 +90,7 @@ namespace NMR {
 		PModelMetaDataGroup metaDataGroup();
 
 		// Custom attributes
-		PModelCustomAttributes customAttributes();
+		__NMR_INLINE PModelCustomAttributes customAttributes() { return m_CustomAttributes; }
 
 		std::string path();
 		void setPath(std::string sPath);

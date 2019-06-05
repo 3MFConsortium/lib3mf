@@ -188,11 +188,12 @@ namespace NMR {
 			for (nfUint32 iNSCount = 0; iNSCount < nNSCount; iNSCount++) {
 				writeConstPrefixedStringAttribute(XML_3MF_ATTRIBUTE_XMLNS, m_pXMLWriter->GetNamespacePrefix(iNSCount).c_str(), m_pXMLWriter->GetNamespace(iNSCount).c_str());
 			}
+			writeCustomAttributes(m_pModel->customAttributes());
 		}
 
 		if (sRequiredExtensions.size() > 0)
 			writeConstStringAttribute(XML_3MF_ATTRIBUTE_REQUIREDEXTENSIONS, sRequiredExtensions.c_str());
-
+		
 		if (m_bIsRootModel)
 			writeModelMetaData();
 
@@ -799,6 +800,10 @@ namespace NMR {
 			writePrefixedStringAttribute(XML_3MF_NAMESPACEPREFIX_PRODUCTION, XML_3MF_PRODUCTION_UUID, m_pModel->buildUUID()->toString());
 		}
 
+		if (m_bWriteCustomNamespaces) {
+			writeCustomAttributes(m_pModel->buildCustomAttributes());
+		}
+
 		if (m_bIsRootModel)
 		{
 			m_pProgressMonitor->IncrementProgress(1);
@@ -822,7 +827,9 @@ namespace NMR {
 				if (pBuildItem->hasTransform())
 					writeStringAttribute(XML_3MF_ATTRIBUTE_ITEM_TRANSFORM, pBuildItem->getTransformString());
 
-				writeCustomAttributes(pBuildItem->customAttributes());
+				if (m_bWriteCustomNamespaces) {
+					writeCustomAttributes(pBuildItem->customAttributes());
+				}
 				writeMetaDataGroup(pBuildItem->metaDataGroup());
 				if (pBuildItem->metaDataGroup()->getMetaDataCount() > 0)
 					writeFullEndElement();

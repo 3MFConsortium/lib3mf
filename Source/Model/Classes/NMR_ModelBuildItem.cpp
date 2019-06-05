@@ -155,8 +155,4 @@ namespace NMR {
 		NMATRIX3 mat = getTransform();
 		return m_pObject->isValidForSlices(mat);
 	}
-	
-	PModelCustomAttributes CModelBuildItem::customAttributes() {
-		return m_CustomAttributes;
-	}
 }

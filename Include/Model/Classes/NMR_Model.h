@@ -89,6 +89,9 @@ namespace NMR {
 	class CModelSliceStack;
 	typedef std::shared_ptr <CModelSliceStack> PModelSliceStack;
 
+	class CModelCustomAttributes;
+	typedef std::shared_ptr <CModelCustomAttributes> PModelCustomAttributes;
+
 	class CModel {
 	private:
 		std::string m_sCurPath;
@@ -127,6 +130,10 @@ namespace NMR {
 
 		// Custom NameSpaces
 		std::map<std::string, std::string> m_CustomNameSpaces;
+
+		// Custom Attributes
+		PModelCustomAttributes m_CustomAttributes;
+		PModelCustomAttributes m_BuildCustomAttributes;
 
 		// Production Model Attachments
 		std::vector<PModelAttachment> m_ProductionAttachments;
@@ -303,6 +310,10 @@ namespace NMR {
 
 		// Sorts objects by correct dependency
 		std::list<CModelObject *> getSortedObjectList ();
+
+		// Custom Attributes
+		__NMR_INLINE PModelCustomAttributes customAttributes() { return m_CustomAttributes; }
+		__NMR_INLINE PModelCustomAttributes buildCustomAttributes() { return m_BuildCustomAttributes; }
 	};
 
 	typedef std::shared_ptr <CModel> PModel;
