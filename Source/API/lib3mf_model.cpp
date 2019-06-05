@@ -640,3 +640,8 @@ ICustomAttributes * CModel::GetBuildCustomAttributes()
 {
 	return new CCustomAttributes(m_model->buildCustomAttributes());
 }
+
+ICustomAttributes * CModel::GetResourcesCustomAttributes()
+{
+	return new CCustomAttributes(m_model->resourcesCustomAttributes());
+}

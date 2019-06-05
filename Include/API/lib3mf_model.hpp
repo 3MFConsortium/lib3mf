@@ -192,6 +192,8 @@ public:
 	ICustomAttributes * GetCustomAttributes();
 
 	ICustomAttributes * GetBuildCustomAttributes();
+
+	ICustomAttributes * GetResourcesCustomAttributes();
 };
 
 }

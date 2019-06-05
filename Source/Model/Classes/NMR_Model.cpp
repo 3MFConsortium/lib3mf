@@ -74,6 +74,7 @@ namespace NMR {
 		m_MetaDataGroup = std::make_shared<CModelMetaDataGroup>();
 		m_CustomAttributes = std::make_shared<CModelCustomAttributes>();
 		m_BuildCustomAttributes = std::make_shared<CModelCustomAttributes>();
+		m_ResourcesCustomAttributes = std::make_shared<CModelCustomAttributes>();
 	}
 
 	CModel::~CModel()

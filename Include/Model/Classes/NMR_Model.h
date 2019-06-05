@@ -134,6 +134,7 @@ namespace NMR {
 		// Custom Attributes
 		PModelCustomAttributes m_CustomAttributes;
 		PModelCustomAttributes m_BuildCustomAttributes;
+		PModelCustomAttributes m_ResourcesCustomAttributes;
 
 		// Production Model Attachments
 		std::vector<PModelAttachment> m_ProductionAttachments;
@@ -314,6 +315,7 @@ namespace NMR {
 		// Custom Attributes
 		__NMR_INLINE PModelCustomAttributes customAttributes() { return m_CustomAttributes; }
 		__NMR_INLINE PModelCustomAttributes buildCustomAttributes() { return m_BuildCustomAttributes; }
+		__NMR_INLINE PModelCustomAttributes resourcesCustomAttributes() { return m_ResourcesCustomAttributes; }
 	};
 
 	typedef std::shared_ptr <CModel> PModel;

@@ -762,7 +762,9 @@ namespace NMR {
 	void CModelWriterNode100_Model::writeResources()
 	{
 		writeStartElement(XML_3MF_ELEMENT_RESOURCES);
-
+		if (m_bWriteCustomNamespaces) {
+			writeCustomAttributes(m_pModel->resourcesCustomAttributes());
+		}
 		if (m_bIsRootModel)
 		{
 			if (m_bWriteBaseMaterials)

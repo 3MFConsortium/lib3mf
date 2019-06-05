@@ -1205,7 +1205,10 @@
       <param name="CustomAttributes" type="handle" class="CustomAttributes" pass="return" description="returns an Instance of the custom attributes of this object" />
     </method>
     <method name="GetBuildCustomAttributes" description="Returns the custom attributes of the build object">
-      <param name="CustomAttributes" type="handle" class="CustomAttributes" pass="return" description="returns an Instance of the custom attributes of the buiñd object" />
+      <param name="CustomAttributes" type="handle" class="CustomAttributes" pass="return" description="returns an Instance of the custom attributes of the build object" />
+    </method>
+    <method name="GetResourcesCustomAttributes" description="Returns the custom attributes of the resources object">
+      <param name="CustomAttributes" type="handle" class="CustomAttributes" pass="return" description="returns an Instance of the custom attributes of the resources object" />
     </method>
 	</class>
 	<global baseclassname="Base" releasemethod="Release" acquiremethod="Acquire" journalmethod="SetJournal" versionmethod="GetLibraryVersion" errormethod="GetLastError"
