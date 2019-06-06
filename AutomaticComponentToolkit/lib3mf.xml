@@ -364,6 +364,12 @@
 		<method name="GetCurrentObject" description="Returns the Object the iterator points at.">
 			<param name="Resource" type="handle" class="Object" pass="return" description="returns the Object instance." />
 		</method>
+	</class>
+	
+	<class name="MeshObjectIterator" parent="ResourceIterator">
+		<method name="GetCurrentMeshObject" description="Returns the MeshObject the iterator points at.">
+			<param name="Resource" type="handle" class="MeshObject" pass="return" description="returns the MeshObject instance." />
+		</method>
 	</class> 
 	
 	<class name="Texture2DIterator" parent="ResourceIterator">
@@ -1155,7 +1161,7 @@
 			<param name="ResourceIterator" type="handle" class="ObjectIterator" pass="return" description="returns the iterator instance." />
 		</method>
 		<method name="GetMeshObjects" description="creates a resource iterator instance with all mesh object resources.">
-			<param name="ResourceIterator" type="handle" class="ResourceIterator" pass="return" description="returns the iterator instance." />
+			<param name="ResourceIterator" type="handle" class="MeshObjectIterator" pass="return" description="returns the iterator instance." />
 		</method>
 		<method name="GetComponentsObjects" description="creates a resource iterator instance with all components object resources.">
 			<param name="ResourceIterator" type="handle" class="ResourceIterator" pass="return" description="returns the iterator instance." />

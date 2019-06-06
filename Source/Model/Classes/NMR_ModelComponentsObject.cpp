@@ -124,7 +124,6 @@ namespace NMR {
 			CModelObject * pObject = (*iIterator)->getObject();
 			pObject->calculateComponentDepthLevel(nLevel + 1);
 		}
-
 	}
 
 

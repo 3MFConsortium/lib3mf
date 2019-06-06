@@ -119,7 +119,7 @@ public:
 
 	IObjectIterator * GetObjects ();
 
-	IResourceIterator * GetMeshObjects ();
+	IMeshObjectIterator * GetMeshObjects ();
 
 	IResourceIterator * GetComponentsObjects ();
 

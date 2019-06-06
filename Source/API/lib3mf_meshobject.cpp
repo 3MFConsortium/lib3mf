@@ -40,7 +40,23 @@ using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
  Class definition of CMeshObject 
-**************************************************************************************************************************/
+ **************************************************************************************************************************/
+
+IMeshObject* CMeshObject::fnCreateMeshObjectFromModelResource(NMR::PModelResource pResource, bool bFailIfUnkownClass) {
+
+	if (!pResource.get())
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+
+	NMR::CModelMeshObject * pMeshObject = dynamic_cast<NMR::CModelMeshObject *> (pResource.get());
+	if (pMeshObject) {
+		return new CMeshObject(pResource);
+	}
+
+	if (bFailIfUnkownClass)
+		throw ELib3MFInterfaceException(NMR_ERROR_UNKNOWNMODELRESOURCE);
+
+	return nullptr;
+}
 
 CMeshObject::CMeshObject(NMR::PModelResource pResource)
 	: CResource(pResource), CObject(pResource)
