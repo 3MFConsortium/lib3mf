@@ -33,6 +33,8 @@ UnitTest_SliceStack.cpp: Defines Unittests for the SliceStack class
 #include "UnitTest_Utilities.h"
 #include "lib3mf_implicit.hpp"
 
+#include <cmath>
+
 namespace Lib3MF
 {
 	class SliceStack : public ::testing::Test {
@@ -299,7 +301,7 @@ namespace Lib3MF
 
 	void CompareSliceStacks(PSliceStack A, PSliceStack B)
 	{
-		EXPECT_TRUE(abs(A->GetBottomZ() - B->GetBottomZ()) < 1e-5);
+		EXPECT_TRUE(std::fabs(A->GetBottomZ() - B->GetBottomZ()) < 1e-5);
 		EXPECT_TRUE(A->GetOwnPath() == B->GetOwnPath());
 		ASSERT_EQ(A->GetSliceCount(), B->GetSliceCount());
 		for (int i = 0; i < A->GetSliceCount(); i++) {

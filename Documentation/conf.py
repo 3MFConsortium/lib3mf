@@ -22,7 +22,7 @@ copyright = '2019, 3MF Consortium'
 author = '3MF Consortium'
 
 # The full version, including alpha/beta/rc tags
-release = 'v2.0.0-alpha4'
+release = 'v2.0.0-alpha'
 
 master_doc = 'index'
 
@@ -47,9 +47,9 @@ exclude_patterns = []
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'nature'
+# html_theme = 'nature'
 # html_theme = 'alabaster'
-# html_theme = 'sphinx_rtd_theme'
+html_theme = 'sphinx_rtd_theme'
 
 html_logo = 'images/3mf.png'
 

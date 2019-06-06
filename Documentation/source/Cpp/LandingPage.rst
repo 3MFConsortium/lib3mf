@@ -1,8 +1,8 @@
 .. Documentation for the C++-binding of the 3MF library
 
-
+**************************
 C++-language bindings
-===================================================================================
+**************************
 
 This space describes the usage of lib3mf in a C++ host application.
 
@@ -54,9 +54,8 @@ The ``Lib3MF::PWrapper`` object provides access to all functionality within lib3
 Both flavors of the C++-bindings are header-only which makes it extremly easy to include them into existing projects:
 
 
-
 Minimal Example Project
--------------------------
+============================
 
 Minimal application code:
 
@@ -96,7 +95,7 @@ The remainder of this space is an in-depth API-reference for the functionality o
 
 
 General Information
---------------------
+=======================
 .. toctree::
 	:maxdepth: 2
 	
@@ -106,7 +105,7 @@ General Information
 
 
 API-Classes
---------------------
+===============
 .. toctree::
 	:maxdepth: 2
 	:glob:

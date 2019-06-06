@@ -1,6 +1,6 @@
 
 
-Version information of libraries compiled into Lib3MF:
+Version information of libraries compiled into lib3mf:
 -----------------------------------------
 
 libzip 1.2.8

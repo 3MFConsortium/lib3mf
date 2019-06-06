@@ -1,12 +1,19 @@
 # lib3mf
-[![Build Status](https://travis-ci.org/3MFConsortium/lib3mf.svg?branch=master)](https://travis-ci.org/3MFConsortium/lib3mf)
+[![Build Status](https://travis-ci.org/3MFConsortium/lib3mf.svg?branch=lib3mf-v2-develop)](https://travis-ci.org/3MFConsortium/lib3mf)
+[![Documentation Status](https://readthedocs.org/projects/lib3mf/badge/?version=lib3mf-v2-develop)](https://readthedocs.org/projects/lib3mf)
+[![Version 2.0.0-alpha](https://img.shields.io/static/v1.svg?label=lib3mf&message=v2.0.0-alpha&color=orange)]()
+[![Supported platforms](https://img.shields.io/static/v1.svg?label=platform&message=windows%20%7C%20macos%20%7C%20linux&color=lightgrey)]()
+[![Simplified BSD License](https://img.shields.io/static/v1.svg?label=license&message=BSD&color=green)](LICENSE)
 [![Documentation Status](https://readthedocs.org/projects/lib3mf/badge/?version=latest)](https://readthedocs.org/projects/lib3mf)
 ![Supported platforms](https://img.shields.io/static/v1.svg?label=platform&message=windows%20%7C%20macos%20%7C%20linux&color=lightgrey)
 [![Simplified BSD License](https://img.shields.io/static/v1.svg?label=license&message=BSD&color=green)](LICENSE)
 
 lib3mf is a C++ implementation of the 3D Manufacturing Format file standard.
 
-It provides 3MF reading and writing capabilities, as well as conversion and validation tools for input and output data. lib3mf runs on Windows, Linux and MacOS and offers a clean and easy-to-use API in [various programming languages]() to speed up the development and keep integration costs at a minimum.
+It provides 3MF reading and writing capabilities, as well as conversion and validation tools for input and output data.
+lib3mf runs on Windows, Linux and MacOS and offers a clean and easy-to-use API in
+[various programming languages](https://lib3mf.readthedocs.io/en/latest/#api-documentation)
+to speed up the development and keep integration costs at a minimum.
 
 As 3MF shall become an universal 3D Printing standard, its quick adoption is very important. 
 This library shall lower all barriers of adoption to any possible user, let it be software 
