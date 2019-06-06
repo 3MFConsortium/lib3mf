@@ -231,7 +231,9 @@ namespace NMR {
 				writeStringAttribute(XML_3MF_ATTRIBUTE_TEXTURE2D_BOX,
 					std::to_string(fU) + " " + std::to_string(fV) + " " + std::to_string(fWidth) + " " + std::to_string(fHeight));
 			}
-			
+			if (m_bWriteCustomNamespaces) {
+				writeCustomAttributes(pTexture2D->customAttributes());
+			}
 			writeEndElement();
 
 		}
@@ -269,7 +271,9 @@ namespace NMR {
 			writeStartElement(XML_3MF_ELEMENT_BASEMATERIALS);
 			// Write Object ID (mandatory)
 			writeIntAttribute(XML_3MF_ATTRIBUTE_BASEMATERIALS_ID, nResourceID);
-
+			if (m_bWriteCustomNamespaces) {
+				writeCustomAttributes(pBaseMaterial->customAttributes());
+			}
 			nfUint32 nElementCount = pBaseMaterial->getCount();
 
 			for (nfUint32 j = 0; j < nElementCount; j++) {
@@ -322,7 +326,9 @@ namespace NMR {
 
 			writeIntAttribute(XML_3MF_ATTRIBUTE_SLICESTACKID, pSliceStackResource->getResourceID()->getUniqueID());
 			writeFloatAttribute(XML_3MF_ATTRIBUTE_SLICESTACKZBOTTOM, (float)pSliceStackResource->getZBottom());
-
+			if (m_bWriteCustomNamespaces) {
+				writeCustomAttributes(pSliceStackResource->customAttributes());
+			}
 
 			if (pSliceStackResource->getSliceRefCount() > 0) {
 				for (nfUint32 sliceRefIndex = 0; sliceRefIndex < pSliceStackResource->getSliceRefCount(); sliceRefIndex++) {
@@ -460,7 +466,10 @@ namespace NMR {
 			}
 
 			writeMetaDataGroup(pObject->metaDataGroup());
-
+			if (m_bWriteCustomNamespaces) {
+				writeCustomAttributes(pObject->customAttributes());
+			}
+			
 			// Check if object is a mesh Object
 			CModelMeshObject * pMeshObject = dynamic_cast<CModelMeshObject *> (pObject);
 			if (pMeshObject) {
@@ -563,7 +572,9 @@ namespace NMR {
 			writeStartElementWithPrefix(XML_3MF_ELEMENT_COLORGROUP, XML_3MF_NAMESPACEPREFIX_MATERIAL);
 			// Write Object ID (mandatory)
 			writeIntAttribute(XML_3MF_ATTRIBUTE_COLORS_ID, nResourceID);
-
+			if (m_bWriteCustomNamespaces) {
+				writeCustomAttributes(pColorGroup->customAttributes());
+			}
 			nfUint32 nElementCount = pColorGroup->getCount();
 
 			for (nfUint32 j = 0; j < nElementCount; j++) {
@@ -601,7 +612,9 @@ namespace NMR {
 			// Write Object ID (mandatory)
 			writeIntAttribute(XML_3MF_ATTRIBUTE_TEX2DGROUP_ID, nResourceID);
 			writeIntAttribute(XML_3MF_ATTRIBUTE_TEX2DGROUP_TEXTUREID, pTexture2DGroup->getTexture2D()->getResourceID()->getUniqueID());
-
+			if (m_bWriteCustomNamespaces) {
+				writeCustomAttributes(pTexture2DGroup->customAttributes());
+			}
 			nfUint32 nElementCount = pTexture2DGroup->getCount();
 
 			for (nfUint32 j = 0; j < nElementCount; j++) {
@@ -643,7 +656,9 @@ namespace NMR {
 			PModelBaseMaterialResource pBaseMaterialResource = pCompositeMaterials->getBaseMaterialResource();
 			ModelResourceID nBaseMaterialResourceID = pBaseMaterialResource->getResourceID()->getUniqueID();
 			writeIntAttribute(XML_3MF_ATTRIBUTE_COMPOSITEMATERIALS_MATID, nBaseMaterialResourceID);
-
+			if (m_bWriteCustomNamespaces) {
+				writeCustomAttributes(pCompositeMaterials->customAttributes());
+			}
 			std::vector<nfUint32> matIndices;
 			std::set<ModelPropertyID> mapUsedBMPropertyIDs;
 			
@@ -702,6 +717,9 @@ namespace NMR {
 		writeIntAttribute(XML_3MF_ATTRIBUTE_MULTIPROPERTIES_ID, nResourceID);
 		writeStringAttribute(XML_3MF_ATTRIBUTE_MULTIPROPERTIES_PIDS, fnVectorToSpaceDelimitedString(vctPIDs));
 		writeStringAttribute(XML_3MF_ATTRIBUTE_MULTIPROPERTIES_BLENDMETHODS, fnVectorToSpaceDelimitedString(vctBlendMethodString));
+		if (m_bWriteCustomNamespaces) {
+			writeCustomAttributes(pMultiPropertyGroup->customAttributes());
+		}
 	}
 
 	void CModelWriterNode100_Model::writeMultiPropertyMultiElements(_In_ CModelMultiPropertyGroupResource* pMultiPropertyGroup)
