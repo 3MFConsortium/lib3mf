@@ -36,8 +36,10 @@ Abstract: This is the class declaration of CObjectIterator
 
 // Parent classes
 #include "lib3mf_resourceiterator.hpp"
-#pragma warning( push)
-#pragma warning( disable : 4250)
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4250)
+#endif
 
 // Include custom headers here.
 
@@ -81,5 +83,7 @@ public:
 } // namespace Impl
 } // namespace Lib3MF
 
-#pragma warning( pop )
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 #endif // __LIB3MF_OBJECTITERATOR

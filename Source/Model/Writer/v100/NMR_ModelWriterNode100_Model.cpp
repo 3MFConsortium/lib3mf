@@ -457,7 +457,7 @@ namespace NMR {
 				ModelResourceIndex nDefaultPropertyIndex = 0;
 
 				// Write Attributes (only for meshes)
-				if ( nDefaultPropertyID != 0) {
+				if (nDefaultPropertyID != 0) {
 					writeIntAttribute(XML_3MF_ATTRIBUTE_OBJECT_PID, nDefaultPropertyID);
 					writeIntAttribute(XML_3MF_ATTRIBUTE_OBJECT_PINDEX, nDefaultPropertyIndex);
 				}

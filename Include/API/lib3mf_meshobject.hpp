@@ -36,8 +36,10 @@ Abstract: This is the class declaration of CMeshObject
 
 // Parent classes
 #include "lib3mf_object.hpp"
-#pragma warning( push)
-#pragma warning( disable : 4250)
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4250)
+#endif
 
 // Include custom headers here.
 #include "Model/Classes/NMR_ModelMeshObject.h"
@@ -66,6 +68,7 @@ protected:
 	*/
 
 public:
+	static IMeshObject* fnCreateMeshObjectFromModelResource(NMR::PModelResource pResource, bool bFailIfUnkownClass);
 
 	/**
 	* Put additional public members here. They will not be visible in the external API.
@@ -121,5 +124,7 @@ public:
 }
 }
 
-#pragma warning( pop )
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 #endif // __LIB3MF_MESHOBJECT

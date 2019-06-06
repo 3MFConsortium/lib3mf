@@ -38,6 +38,7 @@ Source/API/lib3mf_compositematerials.cpp
 Source/API/lib3mf_compositematerialsiterator.cpp
 Source/API/lib3mf_componentsobject.cpp
 Source/API/lib3mf_meshobject.cpp
+Source/API/lib3mf_meshobjectiterator.cpp
 Source/API/lib3mf_metadata.cpp
 Source/API/lib3mf_metadatagroup.cpp
 Source/API/lib3mf_multipropertygroup.cpp
