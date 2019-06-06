@@ -66,7 +66,6 @@ namespace NMR {
 		// unique IDs to CPackageResourceID
 		std::unordered_map<PackageResourceID, PPackageResourceID> m_resourceIDs;
 		std::map<std::pair<ModelResourceID, std::string>, PPackageResourceID> m_IdAndPathToResourceIDs;
-		std::map<std::pair<ModelResourceID, std::string>, PPackageResourceID> m_IdAndPathToResourceIDs;
 	public:
 		PPackageResourceID getNewResourceID(std::string path, ModelResourceID id);	// this is supposed to be the only way to generate a CPackageResourceID
 		PPackageResourceID findResourceID(PackageResourceID id);
