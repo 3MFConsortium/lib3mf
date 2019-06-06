@@ -279,6 +279,9 @@
 		<method name="GetResourceID" description="Retrieves the resource id of the resource instance.">
 			<param name="Id" type="uint32" pass="return" description="Retrieves the ID of a Model Resource Instance." />
 		</method>
+    <method name="GetCustomAttributes" description="Returns the custom attributes of this object">
+      <param name="CustomAttributes" type="handle" class="CustomAttributes" pass="return" description="returns an Instance of the custom attributes of this object" />
+    </method>
 	</class>
 	<class name="ResourceIterator">
 		<method name="MoveNext" description="Iterates to the next resource in the list.">

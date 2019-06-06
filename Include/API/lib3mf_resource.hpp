@@ -78,6 +78,8 @@ public:
 	Lib3MF_uint32 GetResourceID ();
 
 	virtual IObject * AsObject();
+	
+	ICustomAttributes * GetCustomAttributes ();
 
 };
 

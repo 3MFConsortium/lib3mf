@@ -39,6 +39,7 @@ resource object.
 #include "Common/NMR_Types.h" 
 #include "Model/Classes/NMR_ModelTypes.h" 
 #include "Model/Classes/NMR_Model.h" 
+#include "Model/Classes/NMR_ModelCustomAttributes.h" 
 
 #include <string>
 
@@ -48,6 +49,7 @@ namespace NMR {
 	private:
 		CModel * m_pModel;
 		PPackageResourceID m_sResourceID;
+		PModelCustomAttributes m_CustomAttributes;
 
 	protected:
 		std::vector<ModelPropertyID> m_ResourceIndexMap;
@@ -68,6 +70,9 @@ namespace NMR {
 		nfBool hasResourceIndexMap();
 
 		_Ret_notnull_ CModel * getModel();
+
+		// Custom attributes
+		__NMR_INLINE PModelCustomAttributes customAttributes() { return m_CustomAttributes; }
 	};
 
 	typedef std::shared_ptr <CModelResource> PModelResource;

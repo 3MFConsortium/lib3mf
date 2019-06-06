@@ -45,6 +45,7 @@ namespace NMR {
 		m_pModel = pModel;
 		m_sResourceID = m_pModel->generatePackageResourceID(pModel->curPath(), sResourceID);
 		m_bHasResourceIndexMap = false;
+		m_CustomAttributes = std::make_shared<CModelCustomAttributes>();
 	}
 
 	CModelResource::~CModelResource()

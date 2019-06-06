@@ -34,6 +34,7 @@ Abstract: This is a stub class definition of CResource
 // Include custom headers here.
 #include "Model/Classes/NMR_ModelObject.h"
 #include "lib3mf_object.hpp"
+#include "lib3mf_customattributes.hpp"
 #include <iostream>
 
 using namespace Lib3MF::Impl;
@@ -72,3 +73,7 @@ IObject * CResource::AsObject()
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 }
 
+ICustomAttributes * CResource::GetCustomAttributes ()
+{
+	return new CCustomAttributes(m_pResource->customAttributes());
+}
