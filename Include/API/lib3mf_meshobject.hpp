@@ -68,6 +68,7 @@ protected:
 	*/
 
 public:
+	static IMeshObject* fnCreateMeshObjectFromModelResource(NMR::PModelResource pResource, bool bFailIfUnkownClass);
 
 	/**
 	* Put additional public members here. They will not be visible in the external API.

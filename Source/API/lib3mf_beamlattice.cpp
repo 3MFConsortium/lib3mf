@@ -97,13 +97,13 @@ void CBeamLattice::SetClipping (const eLib3MFBeamLatticeClipMode eClipMode, cons
 
 bool CBeamLattice::GetRepresentation (Lib3MF_uint32 & nResourceID)
 {
-	if (!m_pAttributes->m_bHasRepresentationMeshID) {
-		nResourceID = 0;
-		return false;
-	}
-	else {
+	if (m_pAttributes->m_bHasRepresentationMeshID) {
 		nResourceID = m_pAttributes->m_nRepresentationID->getUniqueID();
 		return true;
+	}
+	else {
+		nResourceID = 0;
+		return false;
 	}
 }
 

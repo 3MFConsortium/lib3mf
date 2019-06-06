@@ -38,6 +38,7 @@ Abstract: This is a stub class definition of CModel
 #include "lib3mf_builditemiterator.hpp"
 #include "lib3mf_meshobject.hpp"
 #include "lib3mf_objectiterator.hpp"
+#include "lib3mf_meshobjectiterator.hpp"
 #include "lib3mf_resourceiterator.hpp"
 #include "lib3mf_componentsobject.hpp"
 #include "lib3mf_basematerialgroup.hpp"
@@ -281,9 +282,9 @@ IObjectIterator * CModel::GetObjects ()
 	return pResult.release();
 }
 
-IResourceIterator * CModel::GetMeshObjects ()
+IMeshObjectIterator * CModel::GetMeshObjects ()
 {
-	auto pResult = std::unique_ptr<CResourceIterator>(new CResourceIterator());
+	auto pResult = std::unique_ptr<CMeshObjectIterator>(new CMeshObjectIterator());
 	Lib3MF_uint32 nObjectsCount = model().getObjectCount();
 
 	for (Lib3MF_uint32 nIdx = 0; nIdx < nObjectsCount; nIdx++) {
