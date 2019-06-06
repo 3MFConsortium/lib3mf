@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium (Original Author)
+Copyright (C) 2019 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -24,7 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CLib3MFModel
+Abstract: This is a stub class definition of CModel
 
 */
 
@@ -37,6 +37,8 @@ Abstract: This is a stub class definition of CLib3MFModel
 #include "lib3mf_builditem.hpp"
 #include "lib3mf_builditemiterator.hpp"
 #include "lib3mf_meshobject.hpp"
+#include "lib3mf_objectiterator.hpp"
+#include "lib3mf_meshobjectiterator.hpp"
 #include "lib3mf_resourceiterator.hpp"
 #include "lib3mf_componentsobject.hpp"
 #include "lib3mf_basematerialgroup.hpp"
@@ -48,6 +50,7 @@ Abstract: This is a stub class definition of CLib3MFModel
 #include "lib3mf_nurbscurve.hpp"
 #include "lib3mf_nurbscurveiterator.hpp"
 
+#include "lib3mf_slicestackiterator.hpp"
 #include "lib3mf_texture2d.hpp"
 #include "lib3mf_texture2diterator.hpp"
 #include "lib3mf_basematerialgroupiterator.hpp"
@@ -55,136 +58,187 @@ Abstract: This is a stub class definition of CLib3MFModel
 #include "lib3mf_colorgroupiterator.hpp"
 #include "lib3mf_texture2dgroup.hpp"
 #include "lib3mf_texture2dgroupiterator.hpp"
-// Include custom headers here.
+#include "lib3mf_compositematerials.hpp"
+#include "lib3mf_compositematerialsiterator.hpp"
+#include "lib3mf_multipropertygroup.hpp"
+#include "lib3mf_multipropertygroupiterator.hpp"
 
+// Include custom headers here.
 #include "Model/Classes/NMR_ModelMeshObject.h"
 #include "Model/Classes/NMR_ModelComponentsObject.h"
+#include "Common/Platform/NMR_ImportStream_Unique_Memory.h"
+#include "Model/Classes/NMR_ModelColorGroup.h"
+#include "Model/Classes/NMR_ModelTexture2DGroup.h"
+#include "Model/Classes/NMR_ModelMultiPropertyGroup.h"
 #include "Model/Classes/NMR_ModelNurbsSurface.h"
 #include "Model/Classes/NMR_ModelNurbsCurve.h"
-#include "Common/Platform/NMR_ImportStream_Memory.h"
-#include "Model/Classes/NMR_ModelColorGroup.h" 
-#include "Model/Classes/NMR_ModelTexture2DGroup.h" 
 
 #include "lib3mf_utils.hpp"
 
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CLib3MFModel 
+ Class definition of CModel 
 **************************************************************************************************************************/
 
 
-CLib3MFModel::CLib3MFModel()
+CModel::CModel()
 {
 	m_model = std::make_shared<NMR::CModel>();
 }
 
-NMR::CModel& CLib3MFModel::model()
+NMR::CModel& CModel::model()
 {
 	return *m_model;
 }
 
-void CLib3MFModel::SetUnit (const eLib3MFModelUnit eUnit)
+void CModel::SetUnit (const eLib3MFModelUnit eUnit)
 {
 	model().setUnit(NMR::eModelUnit(eUnit));
 }
 
-eLib3MFModelUnit CLib3MFModel::GetUnit ()
+eLib3MFModelUnit CModel::GetUnit ()
 {
 	return eLib3MFModelUnit(model().getUnit());
 }
 
-std::string CLib3MFModel::GetLanguage ()
+std::string CModel::GetLanguage ()
 {
 	return model().getLanguage();
 }
 
-void CLib3MFModel::SetLanguage (const std::string & sLanguage)
+void CModel::SetLanguage (const std::string & sLanguage)
 {
 	model().setLanguage(sLanguage);
 }
 
-ILib3MFWriter * CLib3MFModel::QueryWriter (const std::string & sWriterClass)
+IWriter * CModel::QueryWriter (const std::string & sWriterClass)
 {
-	return new CLib3MFWriter(sWriterClass, m_model);
+	return new CWriter(sWriterClass, m_model);
 }
 
-ILib3MFReader * CLib3MFModel::QueryReader (const std::string & sReaderClass)
+IReader * CModel::QueryReader (const std::string & sReaderClass)
 {
-	return new CLib3MFReader(sReaderClass, m_model);
+	return new CReader(sReaderClass, m_model);
 }
 
-ILib3MFTexture2D * CLib3MFModel::GetTexture2DByID (const Lib3MF_uint32 nResourceID)
+ITexture2D * CModel::GetTexture2DByID (const Lib3MF_uint32 nResourceID)
 {
 	NMR::PModelTexture2DResource pTexture2DResource = model().findTexture2D(nResourceID);
 	if (pTexture2DResource) {
-		return new CLib3MFTexture2D(pTexture2DResource);
+		return new CTexture2D(pTexture2DResource);
 	}
 	else
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDTEXTURERESOURCE);
 }
 
-ILib3MFBaseMaterialGroup * CLib3MFModel::GetBaseMaterialGroupByID (const Lib3MF_uint32 nResourceID)
+eLib3MFPropertyType CModel::GetPropertyTypeByID(const Lib3MF_uint32 nResourceID)
+{
+	NMR::PModelResource pResource = model().findResource(nResourceID);
+	if (!pResource) {
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_RESOURCENOTFOUND);
+	}
+
+	if (dynamic_cast<NMR::CModelBaseMaterialResource*>(pResource.get())) {
+		return ePropertyType::BaseMaterial;
+	}
+	else if ((dynamic_cast<NMR::CModelColorGroupResource*>(pResource.get()))) {
+		return ePropertyType::Colors;
+	}
+	else if ((dynamic_cast<NMR::CModelTexture2DGroupResource*>(pResource.get()))) {
+		return ePropertyType::TexCoord;
+	}
+	else if ((dynamic_cast<NMR::CModelCompositeMaterialsResource*>(pResource.get()))) {
+		return ePropertyType::Composite;
+	}
+	else if ((dynamic_cast<NMR::CModelMultiPropertyGroupResource*>(pResource.get()))) {
+		return ePropertyType::Multi;
+	}
+	else
+		return ePropertyType::NoPropertyType;
+}
+
+IBaseMaterialGroup * CModel::GetBaseMaterialGroupByID (const Lib3MF_uint32 nResourceID)
 {
 	NMR::PModelBaseMaterialResource pBaseMaterialResource = model().findBaseMaterial(nResourceID);
 	if (pBaseMaterialResource) {
-		return new CLib3MFBaseMaterialGroup(pBaseMaterialResource);
+		return new CBaseMaterialGroup(pBaseMaterialResource);
 	}
 	else
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDBASEMATERIALGROUP);
 }
 
-ILib3MFMeshObject * CLib3MFModel::GetMeshObjectByID (const Lib3MF_uint32 nResourceID)
+IMeshObject * CModel::GetMeshObjectByID (const Lib3MF_uint32 nResourceID)
 {
 	NMR::PModelResource pObjectResource = model().findResource(nResourceID);
 	if (dynamic_cast<NMR::CModelMeshObject*>(pObjectResource.get())) {
-		return new CLib3MFMeshObject(pObjectResource);
+		return new CMeshObject(pObjectResource);
 	}
 	else 
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDMESHOBJECT);
 }
 
-ILib3MFComponentsObject * CLib3MFModel::GetComponentsObjectByID (const Lib3MF_uint32 nResourceID)
+IComponentsObject * CModel::GetComponentsObjectByID (const Lib3MF_uint32 nResourceID)
 {
 	NMR::PModelResource pObjectResource = model().findResource(nResourceID);
 	if (dynamic_cast<NMR::CModelComponentsObject*>(pObjectResource.get())) {
-		return new CLib3MFComponentsObject(pObjectResource);
+		return new CComponentsObject(pObjectResource);
 	}
 	else
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCOMPONENTSOBJECT);
 }
 
-ILib3MFColorGroup * CLib3MFModel::GetColorGroupByID(const Lib3MF_uint32 nResourceID)
+IColorGroup * CModel::GetColorGroupByID(const Lib3MF_uint32 nResourceID)
 {
 	NMR::PModelResource pResource = model().findResource(nResourceID);
 	if (dynamic_cast<NMR::CModelColorGroupResource*>(pResource.get())) {
-		return new CLib3MFColorGroup(std::dynamic_pointer_cast<NMR::CModelColorGroupResource>(pResource));
+		return new CColorGroup(std::dynamic_pointer_cast<NMR::CModelColorGroupResource>(pResource));
 	}
 	else
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCOLORGROUP);
 }
 
-ILib3MFSliceStack * CLib3MFModel::GetSliceStackByID(const Lib3MF_uint32 nResourceID)
+ISliceStack * CModel::GetSliceStackByID(const Lib3MF_uint32 nResourceID)
 {
 	NMR::PModelResource pResource = model().findResource(nResourceID);
 	if (dynamic_cast<NMR::CModelSliceStack*>(pResource.get())) {
-		return new CLib3MFSliceStack(std::dynamic_pointer_cast<NMR::CModelSliceStack>(pResource));
+		return new CSliceStack(std::dynamic_pointer_cast<NMR::CModelSliceStack>(pResource));
 	}
 	else
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDSLICESTACKRESOURCE);
 }
 
-ILib3MFTexture2DGroup * CLib3MFModel::GetTexture2DGroupByID(const Lib3MF_uint32 nResourceID)
+ITexture2DGroup * CModel::GetTexture2DGroupByID(const Lib3MF_uint32 nResourceID)
 {
 	NMR::PModelResource pResource = model().findResource(nResourceID);
 	if (dynamic_cast<NMR::CModelTexture2DGroupResource*>(pResource.get())) {
-		return new CLib3MFTexture2DGroup(std::dynamic_pointer_cast<NMR::CModelTexture2DGroupResource>(pResource));
+		return new CTexture2DGroup(std::dynamic_pointer_cast<NMR::CModelTexture2DGroupResource>(pResource));
 	}
 	else
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDTEXTURE2DGROUP);
 }
 
-std::string CLib3MFModel::GetBuildUUID (bool & bHasUUID)
+ICompositeMaterials * CModel::GetCompositeMaterialsByID(const Lib3MF_uint32 nResourceID)
+{
+	NMR::PModelResource pResource = model().findResource(nResourceID);
+	if (dynamic_cast<NMR::CModelCompositeMaterialsResource*>(pResource.get())) {
+		return new CCompositeMaterials(std::dynamic_pointer_cast<NMR::CModelCompositeMaterialsResource>(pResource));
+	}
+	else
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCOMPOSITEMATERIALS);
+}
+
+IMultiPropertyGroup * CModel::GetMultiPropertyGroupByID(const Lib3MF_uint32 nResourceID)
+{
+	NMR::PModelResource pResource = model().findResource(nResourceID);
+	if (dynamic_cast<NMR::CModelMultiPropertyGroupResource*>(pResource.get())) {
+		return new CMultiPropertyGroup(std::dynamic_pointer_cast<NMR::CModelMultiPropertyGroupResource>(pResource));
+	}
+	else
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDMULTIPROPERTYGROUP);
+}
+
+std::string CModel::GetBuildUUID (bool & bHasUUID)
 {
 	NMR::PUUID buildUUID = model().buildUUID();
 	bHasUUID = buildUUID.get() != nullptr;
@@ -193,15 +247,15 @@ std::string CLib3MFModel::GetBuildUUID (bool & bHasUUID)
 	return "";
 }
 
-void CLib3MFModel::SetBuildUUID (const std::string & sUUID)
+void CModel::SetBuildUUID (const std::string & sUUID)
 {
 	NMR::PUUID pUUID = std::make_shared<NMR::CUUID>(sUUID);
 	model().setBuildUUID(pUUID);
 }
 
-ILib3MFBuildItemIterator * CLib3MFModel::GetBuildItems ()
+IBuildItemIterator * CModel::GetBuildItems ()
 {
-	auto pResult = std::unique_ptr<CLib3MFBuildItemIterator>(new CLib3MFBuildItemIterator());
+	auto pResult = std::unique_ptr<CBuildItemIterator>(new CBuildItemIterator());
 	Lib3MF_uint32 nBuildItemCount = m_model->getBuildItemCount();
 	Lib3MF_uint32 nIdx;
 
@@ -212,9 +266,9 @@ ILib3MFBuildItemIterator * CLib3MFModel::GetBuildItems ()
 }
 
 
-ILib3MFNurbsSurfaceIterator * CLib3MFModel::GetNurbsSurfaces()
+INurbsSurfaceIterator * CModel::GetNurbsSurfaces()
 {
-	auto pResult = std::make_unique<CLib3MFNurbsSurfaceIterator>();
+	auto pResult = std::make_unique<CNurbsSurfaceIterator>();
 	Lib3MF_uint32 nResourceCount = model().getResourceCount();
 	Lib3MF_uint32 nIdx;
 
@@ -228,9 +282,9 @@ ILib3MFNurbsSurfaceIterator * CLib3MFModel::GetNurbsSurfaces()
 }
 
 
-ILib3MFNurbsCurveIterator * CLib3MFModel::GetNurbsCurves()
+INurbsCurveIterator * CModel::GetNurbsCurves()
 {
-	auto pResult = std::make_unique<CLib3MFNurbsCurveIterator>();
+	auto pResult = std::make_unique<CNurbsCurveIterator>();
 	Lib3MF_uint32 nResourceCount = model().getResourceCount();
 	Lib3MF_uint32 nIdx;
 
@@ -245,9 +299,9 @@ ILib3MFNurbsCurveIterator * CLib3MFModel::GetNurbsCurves()
 }
 
 
-ILib3MFResourceIterator * CLib3MFModel::GetResources ()
+IResourceIterator * CModel::GetResources ()
 {
-	auto pResult = std::unique_ptr<CLib3MFResourceIterator>(new CLib3MFResourceIterator());
+	auto pResult = std::unique_ptr<CResourceIterator>(new CResourceIterator());
 	Lib3MF_uint32 nResourcesCount = model().getResourceCount();
 
 	for (Lib3MF_uint32 nIdx = 0; nIdx < nResourcesCount; nIdx++) {
@@ -257,9 +311,9 @@ ILib3MFResourceIterator * CLib3MFModel::GetResources ()
 	return pResult.release();
 }
 
-ILib3MFResourceIterator * CLib3MFModel::GetObjects ()
+IObjectIterator * CModel::GetObjects ()
 {
-	auto pResult = std::unique_ptr<CLib3MFResourceIterator>(new CLib3MFResourceIterator());
+	auto pResult = std::unique_ptr<CObjectIterator>(new CObjectIterator());
 	Lib3MF_uint32 nObjectsCount = model().getObjectCount();
 
 	for (Lib3MF_uint32 nIdx = 0; nIdx < nObjectsCount; nIdx++) {
@@ -269,9 +323,9 @@ ILib3MFResourceIterator * CLib3MFModel::GetObjects ()
 	return pResult.release();
 }
 
-ILib3MFResourceIterator * CLib3MFModel::GetMeshObjects ()
+IMeshObjectIterator * CModel::GetMeshObjects ()
 {
-	auto pResult = std::unique_ptr<CLib3MFResourceIterator>(new CLib3MFResourceIterator());
+	auto pResult = std::unique_ptr<CMeshObjectIterator>(new CMeshObjectIterator());
 	Lib3MF_uint32 nObjectsCount = model().getObjectCount();
 
 	for (Lib3MF_uint32 nIdx = 0; nIdx < nObjectsCount; nIdx++) {
@@ -282,9 +336,9 @@ ILib3MFResourceIterator * CLib3MFModel::GetMeshObjects ()
 	return pResult.release();
 }
 
-ILib3MFResourceIterator * CLib3MFModel::GetComponentsObjects()
+IResourceIterator * CModel::GetComponentsObjects()
 {
-	auto pResult = std::unique_ptr<CLib3MFResourceIterator>(new CLib3MFResourceIterator());
+	auto pResult = std::unique_ptr<CResourceIterator>(new CResourceIterator());
 	Lib3MF_uint32 nObjectsCount = model().getObjectCount();
 
 	for (Lib3MF_uint32 nIdx = 0; nIdx < nObjectsCount; nIdx++) {
@@ -295,9 +349,9 @@ ILib3MFResourceIterator * CLib3MFModel::GetComponentsObjects()
 	return pResult.release();
 }
 
-ILib3MFTexture2DIterator * CLib3MFModel::GetTexture2Ds()
+ITexture2DIterator * CModel::GetTexture2Ds()
 {
-	auto pResult = std::unique_ptr<CLib3MFTexture2DIterator>(new CLib3MFTexture2DIterator());
+	auto pResult = std::unique_ptr<CTexture2DIterator>(new CTexture2DIterator());
 	Lib3MF_uint32 nCount = model().getTexture2DCount();
 
 	for (Lib3MF_uint32 nIdx = 0; nIdx < nCount; nIdx++) {
@@ -308,9 +362,9 @@ ILib3MFTexture2DIterator * CLib3MFModel::GetTexture2Ds()
 	return pResult.release();
 }
 
-ILib3MFBaseMaterialGroupIterator * CLib3MFModel::GetBaseMaterialGroups()
+IBaseMaterialGroupIterator * CModel::GetBaseMaterialGroups()
 {
-	auto pResult = std::unique_ptr<CLib3MFBaseMaterialGroupIterator>(new CLib3MFBaseMaterialGroupIterator());
+	auto pResult = std::unique_ptr<CBaseMaterialGroupIterator>(new CBaseMaterialGroupIterator());
 	Lib3MF_uint32 nCount = model().getBaseMaterialCount();
 
 	for (Lib3MF_uint32 nIdx = 0; nIdx < nCount; nIdx++) {
@@ -321,9 +375,9 @@ ILib3MFBaseMaterialGroupIterator * CLib3MFModel::GetBaseMaterialGroups()
 	return pResult.release();
 }
 
-ILib3MFColorGroupIterator * CLib3MFModel::GetColorGroups()
+IColorGroupIterator * CModel::GetColorGroups()
 {
-	auto pResult = std::unique_ptr<CLib3MFColorGroupIterator>(new CLib3MFColorGroupIterator());
+	auto pResult = std::unique_ptr<CColorGroupIterator>(new CColorGroupIterator());
 	Lib3MF_uint32 nCount = model().getColorGroupCount();
 
 	for (Lib3MF_uint32 nIdx = 0; nIdx < nCount; nIdx++) {
@@ -334,9 +388,9 @@ ILib3MFColorGroupIterator * CLib3MFModel::GetColorGroups()
 	return pResult.release();
 }
 
-ILib3MFTexture2DGroupIterator * CLib3MFModel::GetTexture2DGroups()
+ITexture2DGroupIterator * CModel::GetTexture2DGroups()
 {
-	auto pResult = std::unique_ptr<CLib3MFTexture2DGroupIterator>(new CLib3MFTexture2DGroupIterator());
+	auto pResult = std::unique_ptr<CTexture2DGroupIterator>(new CTexture2DGroupIterator());
 	Lib3MF_uint32 nCount = model().getTexture2DGroupCount();
 
 	for (Lib3MF_uint32 nIdx = 0; nIdx < nCount; nIdx++) {
@@ -347,9 +401,36 @@ ILib3MFTexture2DGroupIterator * CLib3MFModel::GetTexture2DGroups()
 	return pResult.release();
 }
 
-ILib3MFResourceIterator * CLib3MFModel::GetSliceStacks()
+ICompositeMaterialsIterator * CModel::GetCompositeMaterials()
 {
-	auto pResult = std::unique_ptr<CLib3MFResourceIterator>(new CLib3MFResourceIterator());
+	auto pResult = std::unique_ptr<CCompositeMaterialsIterator>(new CCompositeMaterialsIterator());
+	Lib3MF_uint32 nCount = model().getCompositeMaterialsCount();
+
+	for (Lib3MF_uint32 nIdx = 0; nIdx < nCount; nIdx++) {
+		auto resource = model().getCompositeMaterialsResource(nIdx);
+		if (dynamic_cast<NMR::CModelCompositeMaterialsResource *>(resource.get()))
+			pResult->addResource(resource);
+	}
+	return pResult.release();
+}
+
+IMultiPropertyGroupIterator * CModel::GetMultiPropertyGroups()
+{
+	auto pResult = std::unique_ptr<CMultiPropertyGroupIterator>(new CMultiPropertyGroupIterator());
+	Lib3MF_uint32 nCount = model().getMultiPropertyGroupCount();
+
+	for (Lib3MF_uint32 nIdx = 0; nIdx < nCount; nIdx++) {
+		auto resource = model().getMultiPropertyGroupResource(nIdx);
+		if (dynamic_cast<NMR::CModelMultiPropertyGroupResource *>(resource.get()))
+			pResult->addResource(resource);
+	}
+	return pResult.release();
+}
+
+
+ISliceStackIterator * CModel::GetSliceStacks()
+{
+	auto pResult = std::unique_ptr<CSliceStackIterator>(new CSliceStackIterator());
 	Lib3MF_uint32 nCount = model().getSliceStackCount();
 
 	for (Lib3MF_uint32 nIdx = 0; nIdx < nCount; nIdx++) {
@@ -360,13 +441,13 @@ ILib3MFResourceIterator * CLib3MFModel::GetSliceStacks()
 	return pResult.release();
 }
 
-ILib3MFModel * CLib3MFModel::MergeToModel ()
+IModel * CModel::MergeToModel ()
 {
 	// Create merged mesh
 	NMR::PMesh pMesh = std::make_shared<NMR::CMesh>();
 	model().mergeToMesh(pMesh.get());
 
-	auto pOutModel = std::unique_ptr<CLib3MFModel>(new CLib3MFModel());
+	auto pOutModel = std::unique_ptr<CModel>(new CModel());
 
 	// Copy relevant resources to new model
 	NMR::CModel& newModel = pOutModel->model();
@@ -375,6 +456,8 @@ ILib3MFModel * CLib3MFModel::MergeToModel ()
 	newModel.mergeTextures2D(&model());
 	newModel.mergeBaseMaterials(&model());
 	newModel.mergeColorGroups(&model());
+	newModel.mergeCompositeMaterials(&model());
+	newModel.mergeMultiPropertyGroups(&model());
 	newModel.mergeMetaData(&model());
 
 	newModel.setUnit(model().getUnit());
@@ -389,85 +472,85 @@ ILib3MFModel * CLib3MFModel::MergeToModel ()
 	return pOutModel.release();
 }
 
-ILib3MFMeshObject * CLib3MFModel::AddMeshObject ()
+IMeshObject * CModel::AddMeshObject ()
 {
 	NMR::ModelResourceID NewResourceID = model().generateResourceID();
 	NMR::PMesh pNewMesh = std::make_shared<NMR::CMesh>();
 	NMR::PModelMeshObject pNewResource = std::make_shared<NMR::CModelMeshObject>(NewResourceID, &model(), pNewMesh);
 
 	model().addResource(pNewResource);
-	return new CLib3MFMeshObject(pNewResource);
+	return new CMeshObject(pNewResource);
 }
 
-ILib3MFNurbsSurface * CLib3MFModel::AddNurbsSurface(const Lib3MF_uint32 nDegreeU, const Lib3MF_uint32 nDegreeV, const Lib3MF_uint32 nControlPointsU, const Lib3MF_uint32 nControlPointsV)
+INurbsSurface * CModel::AddNurbsSurface(const Lib3MF_uint32 nDegreeU, const Lib3MF_uint32 nDegreeV, const Lib3MF_uint32 nControlPointsU, const Lib3MF_uint32 nControlPointsV)
 {
 	NMR::ModelResourceID NewResourceID = model().generateResourceID();
 	NMR::PModelNurbsSurface pNewResource = std::make_shared<NMR::CModelNurbsSurface>(NewResourceID, &model(), nDegreeU, nDegreeV, nControlPointsU, nControlPointsV);
 
 	model().addResource(pNewResource);
-	return new CLib3MFNurbsSurface (pNewResource);
+	return new CNurbsSurface (pNewResource);
 	
 }
 
-ILib3MFNurbsCurve * CLib3MFModel::AddNurbsCurve(const Lib3MF_uint32 nDegree, const Lib3MF_uint32 nControlPoints)
+INurbsCurve * CModel::AddNurbsCurve(const Lib3MF_uint32 nDegree, const Lib3MF_uint32 nControlPoints)
 {
 	NMR::ModelResourceID NewResourceID = model().generateResourceID();
 	NMR::PModelNurbsCurve pNewResource = std::make_shared<NMR::CModelNurbsCurve>(NewResourceID, &model(), nDegree, nControlPoints);
 
 	model().addResource(pNewResource);
-	return new CLib3MFNurbsCurve(pNewResource);
+	return new CNurbsCurve(pNewResource);
 
 }
 
 
 
-ILib3MFComponentsObject * CLib3MFModel::AddComponentsObject ()
+IComponentsObject * CModel::AddComponentsObject ()
 {
 	NMR::ModelResourceID NewResourceID = model().generateResourceID();
 	NMR::PModelComponentsObject pNewResource = std::make_shared<NMR::CModelComponentsObject>(NewResourceID, &model());
 
 	model().addResource(pNewResource);
-	return new CLib3MFComponentsObject(pNewResource);
+	return new CComponentsObject(pNewResource);
 }
 
-ILib3MFSliceStack * CLib3MFModel::AddSliceStack(const Lib3MF_double dZBottom)
+ISliceStack * CModel::AddSliceStack(const Lib3MF_double dZBottom)
 {
 	NMR::ModelResourceID NewResourceID = model().generateResourceID();
 	NMR::PModelSliceStack pNewResource = std::make_shared<NMR::CModelSliceStack>(NewResourceID, &model(), dZBottom);
 
 	model().addResource(pNewResource);
 
-	return new CLib3MFSliceStack(pNewResource);
+	return new CSliceStack(pNewResource);
 }
 
 
-ILib3MFTexture2D * CLib3MFModel::AddTexture2DFromAttachment (ILib3MFAttachment* pTextureAttachment)
+ITexture2D * CModel::AddTexture2DFromAttachment (IAttachment* pTextureAttachment)
 {
 	NMR::PModelAttachment attachment = model().findModelAttachment(pTextureAttachment->GetPath());
 
 	NMR::PModelTexture2DResource pResource = NMR::CModelTexture2DResource::make(model().generateResourceID(), &model(), attachment);
 	model().addResource(pResource);
 
-	return new CLib3MFTexture2D(pResource);
+	return new CTexture2D(pResource);
 }
 
-ILib3MFBaseMaterialGroup * CLib3MFModel::AddBaseMaterialGroup ()
+IBaseMaterialGroup * CModel::AddBaseMaterialGroup ()
 {
 	NMR::PModelBaseMaterialResource pResource = std::make_shared<NMR::CModelBaseMaterialResource>(model().generateResourceID(), &model());
 	model().addResource(pResource);
 
-	return new CLib3MFBaseMaterialGroup(pResource);
+	return new CBaseMaterialGroup(pResource);
 }
 
-ILib3MFColorGroup * CLib3MFModel::AddColorGroup()
+IColorGroup * CModel::AddColorGroup()
 {
 	NMR::PModelColorGroupResource pResource = std::make_shared<NMR::CModelColorGroupResource>(model().generateResourceID(), &model());
 	model().addResource(pResource);
 
-	return new CLib3MFColorGroup(pResource);
+	return new CColorGroup(pResource);
 }
 
-ILib3MFTexture2DGroup * CLib3MFModel::AddTexture2DGroup(ILib3MFTexture2D* pTexture2DInstance)
+ITexture2DGroup * CModel::AddTexture2DGroup(ITexture2D* pTexture2DInstance)
 {
 	NMR::PackageResourceID nTexture2DID = pTexture2DInstance->GetResourceID();
 
@@ -479,10 +562,33 @@ ILib3MFTexture2DGroup * CLib3MFModel::AddTexture2DGroup(ILib3MFTexture2D* pTextu
 	NMR::PModelTexture2DGroupResource pResource = std::make_shared<NMR::CModelTexture2DGroupResource>(model().generateResourceID(), &model(), pModelTexture2DObject);
 	model().addResource(pResource);
 
-	return new CLib3MFTexture2DGroup(pResource);
+	return new CTexture2DGroup(pResource);
 }
 
-ILib3MFBuildItem * CLib3MFModel::AddBuildItem (ILib3MFObject* pObject, const sLib3MFTransform Transform)
+ICompositeMaterials * CModel::AddCompositeMaterials(IBaseMaterialGroup* pBaseMaterialGroupInstance)
+{
+	NMR::PackageResourceID nBaseMaterialGroupID = pBaseMaterialGroupInstance->GetResourceID();
+
+	// Find class instance
+	NMR::PModelBaseMaterialResource pModelBaseMaterialGroup = model().findBaseMaterial(nBaseMaterialGroupID);
+	if (pModelBaseMaterialGroup == nullptr)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_RESOURCENOTFOUND);
+
+	NMR::PModelCompositeMaterialsResource pResource = std::make_shared<NMR::CModelCompositeMaterialsResource>(model().generateResourceID(), &model(), pModelBaseMaterialGroup);
+	model().addResource(pResource);
+
+	return new CCompositeMaterials(pResource);
+}
+
+IMultiPropertyGroup * CModel::AddMultiPropertyGroup()
+{
+	NMR::PModelMultiPropertyGroupResource pResource = std::make_shared<NMR::CModelMultiPropertyGroupResource>(model().generateResourceID(), &model());
+	model().addResource(pResource);
+
+	return new CMultiPropertyGroup(pResource);
+}
+
+IBuildItem * CModel::AddBuildItem (IObject* pObject, const sLib3MFTransform Transform)
 {
 	// Get Resource ID
 	NMR::PackageResourceID nObjectID = pObject->GetResourceID();
@@ -496,83 +602,83 @@ ILib3MFBuildItem * CLib3MFModel::AddBuildItem (ILib3MFObject* pObject, const sLi
 	NMR::PModelBuildItem pModelBuildItem = std::make_shared<NMR::CModelBuildItem>(pModelObject, TransformToMatrix(Transform), model().createHandle());
 	model().addBuildItem(pModelBuildItem);
 
-	return new CLib3MFBuildItem(pModelBuildItem);
+	return new CBuildItem(pModelBuildItem);
 }
 
-void CLib3MFModel::RemoveBuildItem (ILib3MFBuildItem* pBuildItemInstance)
+void CModel::RemoveBuildItem (IBuildItem* pBuildItemInstance)
 {
-	CLib3MFBuildItem* pLib3MFBuildItem = dynamic_cast<CLib3MFBuildItem*> (pBuildItemInstance);
+	CBuildItem* pLib3MFBuildItem = dynamic_cast<CBuildItem*> (pBuildItemInstance);
 	if (!pLib3MFBuildItem)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDBUILDITEM);
 	model().removeBuildItem(pLib3MFBuildItem->GetHandle(), true);
 }
 
-ILib3MFMetaDataGroup * CLib3MFModel::GetMetaDataGroup ()
+IMetaDataGroup * CModel::GetMetaDataGroup ()
 {
-	return new CLib3MFMetaDataGroup(model().getMetaDataGroup());
+	return new CMetaDataGroup(model().getMetaDataGroup());
 }
 
-ILib3MFAttachment * CLib3MFModel::AddAttachment (const std::string & sURI, const std::string & sRelationShipType)
+IAttachment * CModel::AddAttachment (const std::string & sURI, const std::string & sRelationShipType)
 {
-	NMR::PImportStream pStream = std::make_shared<NMR::CImportStream_Memory>();
+	NMR::PImportStream pStream = std::make_shared<NMR::CImportStream_Unique_Memory>();
 
 	NMR::PModelAttachment pModelAttachment(model().addAttachment(sURI, sRelationShipType, pStream));
 
-	return new CLib3MFAttachment(pModelAttachment);
+	return new CAttachment(pModelAttachment);
 }
 
-ILib3MFAttachment * CLib3MFModel::GetAttachment (const Lib3MF_uint32 nIndex)
+IAttachment * CModel::GetAttachment (const Lib3MF_uint32 nIndex)
 {
 	NMR::PModelAttachment pAttachment = m_model->getModelAttachment(nIndex);
-	return new CLib3MFAttachment(pAttachment);
+	return new CAttachment(pAttachment);
 }
 
-ILib3MFAttachment * CLib3MFModel::FindAttachment (const std::string & sURI)
+IAttachment * CModel::FindAttachment (const std::string & sURI)
 {
 	NMR::PModelAttachment pAttachment = m_model->findModelAttachment(sURI);
 
 	if (pAttachment.get() == nullptr)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_ATTACHMENTNOTFOUND);
 	
-	return new CLib3MFAttachment(pAttachment);
+	return new CAttachment(pAttachment);
 }
 
-void CLib3MFModel::RemoveAttachment(ILib3MFAttachment* pAttachmentInstance)
+void CModel::RemoveAttachment(IAttachment* pAttachmentInstance)
 {
 	m_model->removeAttachment(pAttachmentInstance->GetPath());
 }
 
-Lib3MF_uint32 CLib3MFModel::GetAttachmentCount ()
+Lib3MF_uint32 CModel::GetAttachmentCount ()
 {
 	return m_model->getAttachmentCount();
 }
 
-bool CLib3MFModel::HasPackageThumbnailAttachment ()
+bool CModel::HasPackageThumbnailAttachment ()
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-ILib3MFAttachment * CLib3MFModel::CreatePackageThumbnailAttachment ()
+IAttachment * CModel::CreatePackageThumbnailAttachment ()
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-ILib3MFAttachment * CLib3MFModel::GetPackageThumbnailAttachment ()
+IAttachment * CModel::GetPackageThumbnailAttachment ()
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CLib3MFModel::RemovePackageThumbnailAttachment ()
+void CModel::RemovePackageThumbnailAttachment ()
 {
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CLib3MFModel::AddCustomContentType (const std::string & sExtension, const std::string & sContentType)
+void CModel::AddCustomContentType (const std::string & sExtension, const std::string & sContentType)
 {
 	m_model->addCustomContentType(sExtension, sContentType);
 }
 
-void CLib3MFModel::RemoveCustomContentType (const std::string & sExtension)
+void CModel::RemoveCustomContentType (const std::string & sExtension)
 {
 	m_model->removeCustomContentType(sExtension);
 }

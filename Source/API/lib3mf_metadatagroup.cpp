@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium (Original Author)
+Copyright (C) 2019 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -24,7 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CLib3MFMetaDataGroup
+Abstract: This is a stub class definition of CMetaDataGroup
 
 */
 
@@ -38,49 +38,49 @@ Abstract: This is a stub class definition of CLib3MFMetaDataGroup
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CLib3MFMetaDataGroup 
+ Class definition of CMetaDataGroup 
 **************************************************************************************************************************/
 
-CLib3MFMetaDataGroup::CLib3MFMetaDataGroup(NMR::PModelMetaDataGroup pMetaDataGroup)
+CMetaDataGroup::CMetaDataGroup(NMR::PModelMetaDataGroup pMetaDataGroup)
 	: m_pModelMetaDataGroup(pMetaDataGroup)
 {
 
 }
 
-Lib3MF_uint32 CLib3MFMetaDataGroup::GetMetaDataCount ()
+Lib3MF_uint32 CMetaDataGroup::GetMetaDataCount ()
 {
 	return m_pModelMetaDataGroup->getMetaDataCount();
 }
 
-ILib3MFMetaData * CLib3MFMetaDataGroup::GetMetaData (const Lib3MF_uint32 nIndex)
+IMetaData * CMetaDataGroup::GetMetaData (const Lib3MF_uint32 nIndex)
 {
-	return new CLib3MFMetaData(m_pModelMetaDataGroup->getMetaData(nIndex));
+	return new CMetaData(m_pModelMetaDataGroup->getMetaData(nIndex));
 }
 
-ILib3MFMetaData * CLib3MFMetaDataGroup::GetMetaDataByKey (const std::string & sNameSpace, const std::string & sName)
+IMetaData * CMetaDataGroup::GetMetaDataByKey (const std::string & sNameSpace, const std::string & sName)
 {
 	for (NMR::nfUint32 i = 0; i < m_pModelMetaDataGroup->getMetaDataCount(); i++) {
 		NMR::PModelMetaData pMetaData = m_pModelMetaDataGroup->getMetaData(i);
 		if (sNameSpace.empty()) {
 			if (pMetaData->getName() == sName) {
-				return new CLib3MFMetaData(pMetaData);
+				return new CMetaData(pMetaData);
 			}
 		}
 		else {
 			if (pMetaData->getKey() == sNameSpace + ":" + sName) {
-				return new CLib3MFMetaData(pMetaData);
+				return new CMetaData(pMetaData);
 			}
 		}
 	}
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
 }
 
-void CLib3MFMetaDataGroup::RemoveMetaDataByIndex (const Lib3MF_uint32 nIndex)
+void CMetaDataGroup::RemoveMetaDataByIndex (const Lib3MF_uint32 nIndex)
 {
 	m_pModelMetaDataGroup->removeMetaData(nIndex); 
 }
 
-void CLib3MFMetaDataGroup::RemoveMetaData(ILib3MFMetaData* pTheMetaData)
+void CMetaDataGroup::RemoveMetaData(IMetaData* pTheMetaData)
 {
 	for (NMR::nfUint32 i = 0; i < m_pModelMetaDataGroup->getMetaDataCount(); i++) {
 		NMR::PModelMetaData pMetaData = m_pModelMetaDataGroup->getMetaData(i);
@@ -92,9 +92,9 @@ void CLib3MFMetaDataGroup::RemoveMetaData(ILib3MFMetaData* pTheMetaData)
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
 }
 
-ILib3MFMetaData * CLib3MFMetaDataGroup::AddMetaData(const std::string & sNameSpace, const std::string & sName, const std::string & sValue, const std::string & sType, const bool bMustPreserve)
+IMetaData * CMetaDataGroup::AddMetaData(const std::string & sNameSpace, const std::string & sName, const std::string & sValue, const std::string & sType, const bool bMustPreserve)
 {
 	NMR::PModelMetaData pModelMetaData = m_pModelMetaDataGroup->addMetaData(sNameSpace, sName, sValue, sType, bMustPreserve);
-	return new CLib3MFMetaData(pModelMetaData);
+	return new CMetaData(pModelMetaData);
 }
 

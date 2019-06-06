@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium (Original Author)
+Copyright (C) 2019 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -24,20 +24,22 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CLib3MFTexture2D
+Abstract: This is the class declaration of CTexture2D
 
 */
 
 
-#ifndef __LIB3MF_LIB3MFTEXTURE2D
-#define __LIB3MF_LIB3MFTEXTURE2D
+#ifndef __LIB3MF_TEXTURE2D
+#define __LIB3MF_TEXTURE2D
 
 #include "lib3mf_interfaces.hpp"
 
 // Parent classes
 #include "lib3mf_resource.hpp"
-#pragma warning( push)
-#pragma warning( disable : 4250)
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4250)
+#endif
 
 // Include custom headers here.
 #include "Model/Classes/NMR_ModelTexture2D.h"
@@ -47,10 +49,10 @@ namespace Impl {
 
 
 /*************************************************************************************************************************
- Class declaration of CLib3MFTexture2D 
+ Class declaration of CTexture2D 
 **************************************************************************************************************************/
 
-class CLib3MFTexture2D : public virtual ILib3MFTexture2D, public virtual CLib3MFResource {
+class CTexture2D : public virtual ITexture2D, public virtual CResource {
 private:
 
 	/**
@@ -70,15 +72,15 @@ public:
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-	CLib3MFTexture2D(NMR::PModelTexture2DResource pResource);
+	CTexture2D(NMR::PModelTexture2DResource pResource);
 
 	/**
 	* Public member functions to implement.
 	*/
 
-	ILib3MFAttachment * GetAttachment ();
+	IAttachment * GetAttachment ();
 
-	void SetAttachment (ILib3MFAttachment* pAttachment);
+	void SetAttachment (IAttachment* pAttachment);
 
 	eLib3MFTextureType GetContentType ();
 
@@ -97,5 +99,7 @@ public:
 }
 }
 
-#pragma warning( pop )
-#endif // __LIB3MF_LIB3MFTEXTURE2D
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
+#endif // __LIB3MF_TEXTURE2D

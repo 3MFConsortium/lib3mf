@@ -1,27 +1,27 @@
-file(GLOB LIBZIP_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "Source/Libraries/libzip/*.c")
-if(NMR_COM_NATIVE)
-	# sources for native COM implementation
-	set(SRCS_COM
-	${LIBZIP_FILES}
-	Source/Common/Platform/NMR_Platform_COM.cpp
-	Source/Common/Platform/NMR_ExportStream_COM.cpp
-	Source/Common/Platform/NMR_ImportStream_COM.cpp
-	)
-else()
-	# sources for COM emulation
-	set(SRCS_COM
-	${LIBZIP_FILES}
-	Source/Common/Platform/NMR_Platform_GCC.cpp
-	Source/Common/Platform/NMR_ImportStream_GCC_Native.cpp
-	Source/Common/Platform/NMR_ImportStream_GCC_Win32.cpp
-	Source/Common/Platform/NMR_ExportStream_GCC_Native.cpp
-	Source/Common/Platform/NMR_ExportStream_GCC_Win32.cpp
-	Source/Common/Platform/NMR_ExportStream_ZIP.cpp
-	)
+
+if (USE_INCLUDED_LIBZIP)
+  file(GLOB LIBZIP_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "Source/Libraries/libzip/*.c")
 endif()
 
+if (USE_INCLUDED_ZLIB)
+  file(GLOB ZLIB_FILES ./Source/Libraries/zlib/*.c)
+endif()
+
+
+# sources for COM emulation
+set(SRCS_PLATFORM
+  ${LIBZIP_FILES}
+  Source/Common/Platform/NMR_Platform_GCC.cpp
+  Source/Common/Platform/NMR_ImportStream_GCC_Native.cpp
+  Source/Common/Platform/NMR_ImportStream_GCC_Win32.cpp
+  Source/Common/Platform/NMR_ExportStream_GCC_Native.cpp
+  Source/Common/Platform/NMR_ExportStream_GCC_Win32.cpp
+  Source/Common/Platform/NMR_ExportStream_ZIP.cpp
+)
+
 set(SRCS_COMMON
-${SRCS_COM}
+${SRCS_PLATFORM}
+${ZLIB_FILES}
 Source/API/lib3mf.cpp
 Source/API/lib3mf_attachment.cpp
 Source/API/lib3mf_base.cpp
@@ -34,21 +34,28 @@ Source/API/lib3mf_builditemiterator.cpp
 Source/API/lib3mf_colorgroup.cpp
 Source/API/lib3mf_colorgroupiterator.cpp
 Source/API/lib3mf_component.cpp
+Source/API/lib3mf_compositematerials.cpp
+Source/API/lib3mf_compositematerialsiterator.cpp
 Source/API/lib3mf_componentsobject.cpp
 Source/API/lib3mf_meshobject.cpp
+Source/API/lib3mf_meshobjectiterator.cpp
 Source/API/lib3mf_metadata.cpp
 Source/API/lib3mf_metadatagroup.cpp
+Source/API/lib3mf_multipropertygroup.cpp
+Source/API/lib3mf_multipropertygroupiterator.cpp
 Source/API/lib3mf_model.cpp
 Source/API/lib3mf_nurbscurve.cpp
 Source/API/lib3mf_nurbscurveiterator.cpp
 Source/API/lib3mf_nurbssurface.cpp
 Source/API/lib3mf_nurbssurfaceiterator.cpp
 Source/API/lib3mf_object.cpp
+Source/API/lib3mf_objectiterator.cpp
 Source/API/lib3mf_reader.cpp
 Source/API/lib3mf_resource.cpp
 Source/API/lib3mf_resourceiterator.cpp
 Source/API/lib3mf_slice.cpp
 Source/API/lib3mf_slicestack.cpp
+Source/API/lib3mf_slicestackiterator.cpp
 Source/API/lib3mf_texture2d.cpp
 Source/API/lib3mf_texture2dgroup.cpp
 Source/API/lib3mf_texture2dgroupiterator.cpp
@@ -93,6 +100,8 @@ Source/Common/Platform/NMR_ExportStream_Dummy.cpp
 Source/Common/Platform/NMR_ExportStream_ZIP.cpp
 Source/Common/Platform/NMR_ImportStream_Callback.cpp
 Source/Common/Platform/NMR_ImportStream_Memory.cpp
+Source/Common/Platform/NMR_ImportStream_Shared_Memory.cpp
+Source/Common/Platform/NMR_ImportStream_Unique_Memory.cpp
 Source/Common/Platform/NMR_ImportStream_ZIP.cpp
 Source/Common/Platform/NMR_PortableZIPWriter.cpp
 Source/Common/Platform/NMR_PortableZIPWriterEntry.cpp
@@ -100,23 +109,13 @@ Source/Common/Platform/NMR_Time.cpp
 Source/Common/Platform/NMR_XmlReader.cpp
 Source/Common/Platform/NMR_XmlWriter.cpp
 Source/Common/Platform/NMR_XmlWriter_Native.cpp
-Source/Libraries/zlib/adler32.c
-Source/Libraries/zlib/compress.c
-Source/Libraries/zlib/crc32.c
-Source/Libraries/zlib/deflate.c
-Source/Libraries/zlib/infback.c
-Source/Libraries/zlib/inffast.c
-Source/Libraries/zlib/inflate.c
-Source/Libraries/zlib/inftrees.c
-Source/Libraries/zlib/trees.c
-Source/Libraries/zlib/uncompr.c
-Source/Libraries/zlib/zutil.c
 Source/Model/Classes/NMR_PackageResourceID.cpp
 Source/Model/Classes/NMR_Model.cpp
 Source/Model/Classes/NMR_ModelAttachment.cpp
 Source/Model/Classes/NMR_ModelBaseMaterial.cpp
 Source/Model/Classes/NMR_ModelBaseMaterials.cpp
 Source/Model/Classes/NMR_ModelColorGroup.cpp
+Source/Model/Classes/NMR_ModelCompositeMaterials.cpp
 Source/Model/Classes/NMR_ModelBuildItem.cpp
 Source/Model/Classes/NMR_ModelComponent.cpp
 Source/Model/Classes/NMR_ModelComponentsObject.cpp
@@ -124,6 +123,7 @@ Source/Model/Classes/NMR_ModelMeshBeamLatticeAttributes.cpp
 Source/Model/Classes/NMR_ModelMeshObject.cpp
 Source/Model/Classes/NMR_ModelMetaData.cpp
 Source/Model/Classes/NMR_ModelMetaDataGroup.cpp
+Source/Model/Classes/NMR_ModelMultiPropertyGroup.cpp
 Source/Model/Classes/NMR_ModelNurbsSurface.cpp
 Source/Model/Classes/NMR_ModelNurbsCurve.cpp
 Source/Model/Classes/NMR_ModelObject.cpp
@@ -160,22 +160,6 @@ Source/Model/Reader/NMR_ModelReader_3MF.cpp
 Source/Model/Reader/NMR_ModelReader_ColorMapping.cpp
 Source/Model/Reader/NMR_ModelReader_STL.cpp
 Source/Model/Reader/NMR_ModelReader_TexCoordMapping.cpp
-Source/Model/Reader/v093/NMR_ModelReaderNode093_Build.cpp
-Source/Model/Reader/v093/NMR_ModelReaderNode093_BuildItem.cpp
-Source/Model/Reader/v093/NMR_ModelReaderNode093_Color.cpp
-Source/Model/Reader/v093/NMR_ModelReaderNode093_Component.cpp
-Source/Model/Reader/v093/NMR_ModelReaderNode093_Components.cpp
-Source/Model/Reader/v093/NMR_ModelReaderNode093_Material.cpp
-Source/Model/Reader/v093/NMR_ModelReaderNode093_Mesh.cpp
-Source/Model/Reader/v093/NMR_ModelReaderNode093_Object.cpp
-Source/Model/Reader/v093/NMR_ModelReaderNode093_Resources.cpp
-Source/Model/Reader/v093/NMR_ModelReaderNode093_Texture.cpp
-Source/Model/Reader/v093/NMR_ModelReaderNode093_TextureVertex.cpp
-Source/Model/Reader/v093/NMR_ModelReaderNode093_TextureVertices.cpp
-Source/Model/Reader/v093/NMR_ModelReaderNode093_Triangle.cpp
-Source/Model/Reader/v093/NMR_ModelReaderNode093_Triangles.cpp
-Source/Model/Reader/v093/NMR_ModelReaderNode093_Vertex.cpp
-Source/Model/Reader/v093/NMR_ModelReaderNode093_Vertices.cpp
 Source/Model/Reader/v100/NMR_ModelReaderNode100_BaseMaterial.cpp
 Source/Model/Reader/v100/NMR_ModelReaderNode100_BaseMaterials.cpp
 Source/Model/Reader/v100/NMR_ModelReaderNode100_Build.cpp
@@ -184,9 +168,13 @@ Source/Model/Reader/v100/NMR_ModelReaderNode100_Color.cpp
 Source/Model/Reader/v100/NMR_ModelReaderNode100_Colors.cpp
 Source/Model/Reader/v100/NMR_ModelReaderNode100_Component.cpp
 Source/Model/Reader/v100/NMR_ModelReaderNode100_Components.cpp
+Source/Model/Reader/v100/NMR_ModelReaderNode100_Composite.cpp
+Source/Model/Reader/v100/NMR_ModelReaderNode100_CompositeMaterials.cpp
 Source/Model/Reader/v100/NMR_ModelReaderNode100_Mesh.cpp
 Source/Model/Reader/v100/NMR_ModelReaderNode100_MetaData.cpp
 Source/Model/Reader/v100/NMR_ModelReaderNode100_MetaDataGroup.cpp
+Source/Model/Reader/v100/NMR_ModelReaderNode100_Multi.cpp
+Source/Model/Reader/v100/NMR_ModelReaderNode100_MultiProperties.cpp
 Source/Model/Reader/v100/NMR_ModelReaderNode100_Object.cpp
 Source/Model/Reader/v100/NMR_ModelReaderNode100_Resources.cpp
 Source/Model/Reader/v100/NMR_ModelReaderNode100_Tex2Coord.cpp
@@ -227,7 +215,7 @@ function(sourceGroupByFolder FILELISTVARIABLE FOLDERNAME FOLDERHOME)
   FOREACH(file ${${FILELISTVARIABLE}})
     file(RELATIVE_PATH relative_file "${FOLDERHOME}" "${CMAKE_CURRENT_SOURCE_DIR}/${file}")
     GET_FILENAME_COMPONENT(dir "${relative_file}" DIRECTORY)
-	IF (NOT "${dir}" STREQUAL "${last_dir}")
+  IF (NOT "${dir}" STREQUAL "${last_dir}")
       IF (files)
         SOURCE_GROUP("${FOLDERNAME}${SOURCE_GROUP_DELIMITER}${last_dir}" FILES ${files})
       ENDIF (files)

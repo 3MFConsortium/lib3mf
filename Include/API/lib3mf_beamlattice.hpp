@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium (Original Author)
+Copyright (C) 2019 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -24,18 +24,20 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CLib3MFBeamLattice
+Abstract: This is the class declaration of CBeamLattice
 
 */
 
 
-#ifndef __LIB3MF_LIB3MFBEAMLATTICE
-#define __LIB3MF_LIB3MFBEAMLATTICE
+#ifndef __LIB3MF_BEAMLATTICE
+#define __LIB3MF_BEAMLATTICE
 
 #include "lib3mf_interfaces.hpp"
 #include "lib3mf_base.hpp"
-#pragma warning( push)
-#pragma warning( disable : 4250)
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4250)
+#endif
 
 #include "Common/Mesh/NMR_Mesh.h"
 #include "Model/Classes/NMR_ModelMeshBeamLatticeAttributes.h"
@@ -48,10 +50,10 @@ namespace Impl {
 
 
 /*************************************************************************************************************************
- Class declaration of CLib3MFBeamLattice 
+ Class declaration of CBeamLattice 
 **************************************************************************************************************************/
 
-class CLib3MFBeamLattice : public virtual ILib3MFBeamLattice, public virtual CLib3MFBase {
+class CBeamLattice : public virtual IBeamLattice, public virtual CBase {
 private:
 
 	/**
@@ -72,7 +74,7 @@ public:
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-	CLib3MFBeamLattice(NMR::PModelMeshObject pMeshObject, NMR::PModelMeshBeamLatticeAttributes pAttributes);
+	CBeamLattice(NMR::PModelMeshObject pMeshObject, NMR::PModelMeshBeamLatticeAttributes pAttributes);
 
 	/**
 	* Public member functions to implement.
@@ -82,9 +84,9 @@ public:
 
 	void SetMinLength (const Lib3MF_double dMinLength);
 
-	void GetClipping (eLib3MFBeamLatticeClipMode & eClipMode, Lib3MF_uint32 & nResourceID);
+	void GetClipping (eBeamLatticeClipMode & eClipMode, Lib3MF_uint32 & nResourceID);
 
-	void SetClipping (const eLib3MFBeamLatticeClipMode eClipMode, const Lib3MF_uint32 nResourceID);
+	void SetClipping (const eBeamLatticeClipMode eClipMode, const Lib3MF_uint32 nResourceID);
 
 	bool GetRepresentation(Lib3MF_uint32 & nResourceID);
 
@@ -104,14 +106,16 @@ public:
 
 	Lib3MF_uint32 GetBeamSetCount ();
 
-	ILib3MFBeamSet * AddBeamSet ();
+	IBeamSet * AddBeamSet ();
 
-	ILib3MFBeamSet * GetBeamSet (const Lib3MF_uint32 nIndex);
+	IBeamSet * GetBeamSet (const Lib3MF_uint32 nIndex);
 
 };
 
 } // namespace Impl
 } // namespace Lib3MF
 
-#pragma warning( pop )
-#endif // __LIB3MF_LIB3MFBEAMLATTICE
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
+#endif // __LIB3MF_BEAMLATTICE

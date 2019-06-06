@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -116,5 +116,15 @@ namespace NMR {
 
 		return true;
 	}
+
+	void CModelComponentsObject::calculateComponentDepthLevel(nfUint32 nLevel)
+	{
+		CModelObject::calculateComponentDepthLevel(nLevel);
+		for (auto iIterator = m_Components.begin(); iIterator != m_Components.end(); iIterator++) {
+			CModelObject * pObject = (*iIterator)->getObject();
+			pObject->calculateComponentDepthLevel(nLevel + 1);
+		}
+	}
+
 
 }

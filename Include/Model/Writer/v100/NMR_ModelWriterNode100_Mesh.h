@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -112,7 +112,7 @@ namespace NMR {
 		__NMR_INLINE void writeRefData(_In_ INT nRefID);
 	public:
 		CModelWriterNode100_Mesh() = delete;
-		CModelWriterNode100_Mesh(_In_ CModelMeshObject * pModelMeshObject, _In_ CXmlWriter * pXMLWriter, _In_ CProgressMonitor * pProgressMonitor,
+		CModelWriterNode100_Mesh(_In_ CModelMeshObject * pModelMeshObject, _In_ CXmlWriter * pXMLWriter, _In_ PProgressMonitor pProgressMonitor,
 			_In_ PMeshInformation_PropertyIndexMapping pPropertyIndexMapping, _In_ nfBool bWriteMaterialExtension, _In_ nfBool m_bWriteBeamLatticeExtension);
 		virtual void writeToXML();
 	};

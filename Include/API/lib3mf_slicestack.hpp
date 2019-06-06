@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium (Original Author)
+Copyright (C) 2019 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -24,20 +24,22 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CLib3MFSliceStack
+Abstract: This is the class declaration of CSliceStack
 
 */
 
 
-#ifndef __LIB3MF_LIB3MFSLICESTACK
-#define __LIB3MF_LIB3MFSLICESTACK
+#ifndef __LIB3MF_SLICESTACK
+#define __LIB3MF_SLICESTACK
 
 #include "lib3mf_interfaces.hpp"
 
 // Parent classes
 #include "lib3mf_resource.hpp"
-#pragma warning( push)
-#pragma warning( disable : 4250)
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4250)
+#endif
 
 // Include custom headers here.
 #include "Model/Classes/NMR_ModelSliceStack.h"
@@ -47,10 +49,10 @@ namespace Impl {
 
 
 /*************************************************************************************************************************
- Class declaration of CLib3MFSliceStack 
+ Class declaration of CSliceStack 
 **************************************************************************************************************************/
 
-class CLib3MFSliceStack : public virtual ILib3MFSliceStack, public virtual CLib3MFResource {
+class CSliceStack : public virtual ISliceStack, public virtual CResource {
 private:
 
 	/**
@@ -69,7 +71,7 @@ public:
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-	CLib3MFSliceStack(NMR::PModelSliceStack pSliceStack);
+	CSliceStack(NMR::PModelSliceStack pSliceStack);
 
 
 	/**
@@ -80,15 +82,15 @@ public:
 
 	Lib3MF_uint64 GetSliceCount ();
 
-	ILib3MFSlice * AddSlice(const double fZTop);
+	ISlice * AddSlice(const double fZTop);
 
-	ILib3MFSlice * GetSlice (const Lib3MF_uint64 nSliceIndex);
+	ISlice * GetSlice (const Lib3MF_uint64 nSliceIndex);
 
 	Lib3MF_uint64 GetSliceRefCount();
 
-	void AddSliceStackReference(ILib3MFSliceStack* pTheSliceStack) ;
+	void AddSliceStackReference(ISliceStack* pTheSliceStack) ;
 
-	ILib3MFSliceStack * GetSliceStackReference(const Lib3MF_uint64 nSliceRefIndex);
+	ISliceStack * GetSliceStackReference(const Lib3MF_uint64 nSliceRefIndex);
 
 	void CollapseSliceReferences();
 
@@ -100,5 +102,7 @@ public:
 } // namespace Impl
 } // namespace Lib3MF
 
-#pragma warning( pop )
-#endif // __LIB3MF_LIB3MFSLICESTACK
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
+#endif // __LIB3MF_SLICESTACK

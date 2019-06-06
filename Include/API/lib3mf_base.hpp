@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium (Original Author)
+Copyright (C) 2019 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -24,17 +24,18 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CLib3MFBase
+Abstract: This is the class declaration of CBase
 
 */
 
 
-#ifndef __LIB3MF_LIB3MFBASE
-#define __LIB3MF_LIB3MFBASE
+#ifndef __LIB3MF_BASE
+#define __LIB3MF_BASE
 
 #include "lib3mf_interfaces.hpp"
 #include <vector>
-
+#include <list>
+#include <memory>
 
 // Include custom headers here.
 
@@ -44,13 +45,14 @@ namespace Impl {
 
 
 /*************************************************************************************************************************
- Class declaration of CLib3MFBase 
+ Class declaration of CBase 
 **************************************************************************************************************************/
 
-class CLib3MFBase : public virtual ILib3MFBase {
+class CBase : public virtual IBase {
 private:
 
-	std::vector<std::string> m_errors;
+	std::unique_ptr<std::list<std::string>> m_pErrors;
+	Lib3MF_uint32 m_nReferenceCount = 1;
 
 	/**
 	* Put private members here.
@@ -68,12 +70,15 @@ public:
 	* Put additional public members here. They will not be visible in the external API.
 	*/
 
-	bool GetLastErrorMessage (std::string & sErrorMessage);
+	bool GetLastErrorMessage(std::string & sErrorMessage);
 
-	void ClearErrorMessages ();
+	void ClearErrorMessages();
 
-	void RegisterErrorMessage (const std::string & sErrorMessage);
+	void RegisterErrorMessage(const std::string & sErrorMessage);
 
+	void IncRefCount();
+
+	bool DecRefCount();
 
 	/**
 	* Public member functions to implement.
@@ -84,4 +89,4 @@ public:
 } // namespace Impl
 } // namespace Lib3MF
 
-#endif // __LIB3MF_LIB3MFBASE
+#endif // __LIB3MF_BASE

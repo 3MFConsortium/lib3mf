@@ -1,7 +1,7 @@
 @echo off
-set startingDir=%CD%
+set startingDir="%CD%"
 
-set basepath=%~dp0
+set basepath="%~dp0"
 set builddir=%basepath%\..\build_32bit
 if not exist %builddir% (mkdir %builddir%)
 cd %builddir%

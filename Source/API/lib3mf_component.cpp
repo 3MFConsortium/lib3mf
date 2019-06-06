@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium (Original Author)
+Copyright (C) 2019 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -24,7 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CLib3MFComponent
+Abstract: This is a stub class definition of CComponent
 
 */
 
@@ -38,10 +38,10 @@ Abstract: This is a stub class definition of CLib3MFComponent
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CLib3MFComponent 
+ Class definition of CComponent 
 **************************************************************************************************************************/
 
-CLib3MFComponent::CLib3MFComponent(NMR::PModelComponent pComponent)
+CComponent::CComponent(NMR::PModelComponent pComponent)
 {
 	if (pComponent.get() == nullptr)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCOMPONENT);
@@ -49,25 +49,25 @@ CLib3MFComponent::CLib3MFComponent(NMR::PModelComponent pComponent)
 }
 
 
-ILib3MFObject * CLib3MFComponent::GetObjectResource ()
+IObject * CComponent::GetObjectResource()
 {
-	NMR::PModelObject pModelObject(m_pComponent->getObject());
+	NMR::PModelResource pModelObject = m_pComponent->getModel()->findResource(m_pComponent->getObjectID());
 	if (!pModelObject.get())
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDMODELRESOURCE);
 
-	std::unique_ptr<ILib3MFObject> pObject(CLib3MFObject::fnCreateObjectFromModelResource(pModelObject, true));
+	std::unique_ptr<IObject> pObject(CObject::fnCreateObjectFromModelResource(pModelObject, true));
 	if (pObject == nullptr)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_RESOURCENOTFOUND);
 
 	return pObject.release();
 }
 
-Lib3MF_uint32 CLib3MFComponent::GetObjectResourceID ()
+Lib3MF_uint32 CComponent::GetObjectResourceID ()
 {
 	return m_pComponent->getObjectID();
 }
 
-std::string CLib3MFComponent::GetUUID(bool & bHasUUID)
+std::string CComponent::GetUUID(bool & bHasUUID)
 {
 	NMR::PUUID pUUID = m_pComponent->uuid();
 	bHasUUID = (pUUID.get() != nullptr);
@@ -77,23 +77,23 @@ std::string CLib3MFComponent::GetUUID(bool & bHasUUID)
 		return "";
 }
 
-void CLib3MFComponent::SetUUID(const std::string & sUUID)
+void CComponent::SetUUID(const std::string & sUUID)
 {
 	NMR::PUUID pUUID = std::make_shared<NMR::CUUID>(sUUID);
 	m_pComponent->setUUID(pUUID);
 }
 
-bool CLib3MFComponent::HasTransform()
+bool CComponent::HasTransform()
 {
 	return m_pComponent->hasTransform();
 }
 
-void CLib3MFComponent::SetTransform (const sLib3MFTransform Transform)
+void CComponent::SetTransform (const sLib3MFTransform Transform)
 {
 	m_pComponent->setTransform(TransformToMatrix(Transform));
 }
 
-sLib3MFTransform CLib3MFComponent::GetTransform()
+sLib3MFTransform CComponent::GetTransform()
 {
 	const NMR::NMATRIX3 matrix = m_pComponent->getTransform();
 	return MatrixToTransform(matrix);

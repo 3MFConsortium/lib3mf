@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -69,7 +69,7 @@ namespace NMR {
 		PModelTexture2DResource getTexture2D();
 	};
 
-	typedef std::shared_ptr <CModelTexture2DGroupResource> PModelTexture2DGroupResource;
+	typedef std::shared_ptr<CModelTexture2DGroupResource> PModelTexture2DGroupResource;
 }
 
 #endif // __NMR_TEXTURE2DGROUP

@@ -24,7 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CLib3MFNurbsSurface
+Abstract: This is a stub class definition of CNurbsSurface
 
 */
 
@@ -41,11 +41,11 @@ Abstract: This is a stub class definition of CLib3MFNurbsSurface
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CLib3MFNurbsSurface 
+ Class definition of CNurbsSurface 
 **************************************************************************************************************************/
 
-CLib3MFNurbsSurface::CLib3MFNurbsSurface(NMR::PModelNurbsSurface pNurbsSurface)
-	: CLib3MFResource(pNurbsSurface)
+CNurbsSurface::CNurbsSurface(NMR::PModelNurbsSurface pNurbsSurface)
+	: CResource(pNurbsSurface)
 {
 	m_pNurbsSurface = pNurbsSurface;
 	if (m_pNurbsSurface == nullptr)
@@ -53,28 +53,28 @@ CLib3MFNurbsSurface::CLib3MFNurbsSurface(NMR::PModelNurbsSurface pNurbsSurface)
 
 }
 
-CLib3MFNurbsSurface::~CLib3MFNurbsSurface()
+CNurbsSurface::~CNurbsSurface()
 {
 
 }
 
 
-Lib3MF_uint32 CLib3MFNurbsSurface::GetDegreeU ()
+Lib3MF_uint32 CNurbsSurface::GetDegreeU ()
 {
 	return m_pNurbsSurface->getDegreeU();
 }
 
-Lib3MF_uint32 CLib3MFNurbsSurface::GetDegreeV ()
+Lib3MF_uint32 CNurbsSurface::GetDegreeV ()
 {
 	return m_pNurbsSurface->getDegreeV();
 }
 
-bool CLib3MFNurbsSurface::CheckValidity ()
+bool CNurbsSurface::CheckValidity ()
 {
 	return m_pNurbsSurface->CheckValidity();
 }
 
-void CLib3MFNurbsSurface::GetKnotsU (Lib3MF_uint64 nKnotsBufferSize, Lib3MF_uint64* pKnotsNeededCount, sLib3MFNURBSKnot * pKnotsBuffer)
+void CNurbsSurface::GetKnotsU (Lib3MF_uint64 nKnotsBufferSize, Lib3MF_uint64* pKnotsNeededCount, sLib3MFNURBSKnot * pKnotsBuffer)
 {
 	Lib3MF_uint64 nKnotCount = m_pNurbsSurface->getKnotCountU();
 
@@ -102,7 +102,7 @@ void CLib3MFNurbsSurface::GetKnotsU (Lib3MF_uint64 nKnotsBufferSize, Lib3MF_uint
 	}
 }
 
-void CLib3MFNurbsSurface::SetKnotsU (const Lib3MF_uint64 nKnotsBufferSize, const sLib3MFNURBSKnot * pKnotsBuffer)
+void CNurbsSurface::SetKnotsU (const Lib3MF_uint64 nKnotsBufferSize, const sLib3MFNURBSKnot * pKnotsBuffer)
 {
 	if (pKnotsBuffer == nullptr) 
 		throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
@@ -116,12 +116,12 @@ void CLib3MFNurbsSurface::SetKnotsU (const Lib3MF_uint64 nKnotsBufferSize, const
 	}
 }
 
-void CLib3MFNurbsSurface::AddKnotU (const Lib3MF_uint32 nMultiplicity, const Lib3MF_double dValue)
+void CNurbsSurface::AddKnotU (const Lib3MF_uint32 nMultiplicity, const Lib3MF_double dValue)
 {
 	m_pNurbsSurface->addKnotU(nMultiplicity, dValue);
 }
 
-void CLib3MFNurbsSurface::GetKnotsV(Lib3MF_uint64 nKnotsBufferSize, Lib3MF_uint64* pKnotsNeededCount, sLib3MFNURBSKnot * pKnotsBuffer)
+void CNurbsSurface::GetKnotsV(Lib3MF_uint64 nKnotsBufferSize, Lib3MF_uint64* pKnotsNeededCount, sLib3MFNURBSKnot * pKnotsBuffer)
 {
 	Lib3MF_uint64 nKnotCount = m_pNurbsSurface->getKnotCountV();
 
@@ -149,7 +149,7 @@ void CLib3MFNurbsSurface::GetKnotsV(Lib3MF_uint64 nKnotsBufferSize, Lib3MF_uint6
 	}
 }
 
-void CLib3MFNurbsSurface::SetKnotsV(const Lib3MF_uint64 nKnotsBufferSize, const sLib3MFNURBSKnot * pKnotsBuffer)
+void CNurbsSurface::SetKnotsV(const Lib3MF_uint64 nKnotsBufferSize, const sLib3MFNURBSKnot * pKnotsBuffer)
 {
 	if (pKnotsBuffer == nullptr)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
@@ -163,12 +163,12 @@ void CLib3MFNurbsSurface::SetKnotsV(const Lib3MF_uint64 nKnotsBufferSize, const 
 	}
 }
 
-void CLib3MFNurbsSurface::AddKnotV(const Lib3MF_uint32 nMultiplicity, const Lib3MF_double dValue)
+void CNurbsSurface::AddKnotV(const Lib3MF_uint32 nMultiplicity, const Lib3MF_double dValue)
 {
 	m_pNurbsSurface->addKnotV(nMultiplicity, dValue);
 }
 
-sLib3MFNURBSUVCoordinate CLib3MFNurbsSurface::GetUVCoordinate(const Lib3MF_uint32 nId)
+sLib3MFNURBSUVCoordinate CNurbsSurface::GetUVCoordinate(const Lib3MF_uint32 nId)
 {
 	sLib3MFNURBSUVCoordinate sUVCoordinate;
 
@@ -187,7 +187,7 @@ sLib3MFNURBSUVCoordinate CLib3MFNurbsSurface::GetUVCoordinate(const Lib3MF_uint3
 	return sUVCoordinate;
 }
 
-void CLib3MFNurbsSurface::GetUVCoordinates(Lib3MF_uint64 nUVCoordinatesBufferSize, Lib3MF_uint64* pUVCoordinatesNeededCount, sLib3MFNURBSUVCoordinate * pUVCoordinatesBuffer)
+void CNurbsSurface::GetUVCoordinates(Lib3MF_uint64 nUVCoordinatesBufferSize, Lib3MF_uint64* pUVCoordinatesNeededCount, sLib3MFNURBSUVCoordinate * pUVCoordinatesBuffer)
 {
 	uint32_t nCoordinateCount = m_pNurbsSurface->getUVCoordinateCount();
 	if (pUVCoordinatesNeededCount != nullptr) {
@@ -211,35 +211,35 @@ void CLib3MFNurbsSurface::GetUVCoordinates(Lib3MF_uint64 nUVCoordinatesBufferSiz
 	
 }
 
-Lib3MF_uint32 CLib3MFNurbsSurface::AddUVCoordinate(const Lib3MF_double dU, const Lib3MF_double dV)
+Lib3MF_uint32 CNurbsSurface::AddUVCoordinate(const Lib3MF_double dU, const Lib3MF_double dV)
 {
 	return m_pNurbsSurface->addUVCoordinate(dU, dV);
 }
 
-void CLib3MFNurbsSurface::RemoveUVCoordinate(const Lib3MF_uint32 nId)
+void CNurbsSurface::RemoveUVCoordinate(const Lib3MF_uint32 nId)
 {
 	m_pNurbsSurface->removeUVCoordinate(nId);
 }
 
-bool CLib3MFNurbsSurface::HasUVCoordinate(const Lib3MF_uint32 nId)
+bool CNurbsSurface::HasUVCoordinate(const Lib3MF_uint32 nId)
 {
 	double dU, dV;
 	return m_pNurbsSurface->getUVCoordinate (nId, dU, dV);
 }
 
 
-void CLib3MFNurbsSurface::SetControlPoint(const Lib3MF_uint32 nIndexU, const Lib3MF_uint32 nIndexV, const Lib3MF_double dX, const Lib3MF_double dY, const Lib3MF_double dZ, const Lib3MF_double dW)
+void CNurbsSurface::SetControlPoint(const Lib3MF_uint32 nIndexU, const Lib3MF_uint32 nIndexV, const Lib3MF_double dX, const Lib3MF_double dY, const Lib3MF_double dZ, const Lib3MF_double dW)
 {
 	m_pNurbsSurface->setControlPoint(nIndexU, nIndexV, dX, dY, dZ, dW);
 }
 
-void CLib3MFNurbsSurface::GetControlPoint(const Lib3MF_uint32 nIndexU, const Lib3MF_uint32 nIndexV, Lib3MF_double & dX, Lib3MF_double & dY, Lib3MF_double & dZ, Lib3MF_double & dW)
+void CNurbsSurface::GetControlPoint(const Lib3MF_uint32 nIndexU, const Lib3MF_uint32 nIndexV, Lib3MF_double & dX, Lib3MF_double & dY, Lib3MF_double & dZ, Lib3MF_double & dW)
 {
 	m_pNurbsSurface->getControlPoint(nIndexU, nIndexV, dX, dY, dZ, dW);
 }
 
 
-sLib3MFNURBSEdgeMapping CLib3MFNurbsSurface::GetEdgeMapping(const Lib3MF_uint32 nId)
+sLib3MFNURBSEdgeMapping CNurbsSurface::GetEdgeMapping(const Lib3MF_uint32 nId)
 {
 	sLib3MFNURBSEdgeMapping sEdgeMapping;
 
@@ -261,7 +261,7 @@ sLib3MFNURBSEdgeMapping CLib3MFNurbsSurface::GetEdgeMapping(const Lib3MF_uint32 
 	return sEdgeMapping;
 }
 
-void CLib3MFNurbsSurface::GetEdgeMappings(Lib3MF_uint64 nEdgeMappingsBufferSize, Lib3MF_uint64* pEdgeMappingsNeededCount, sLib3MFNURBSEdgeMapping * pEdgeMappingsBuffer)
+void CNurbsSurface::GetEdgeMappings(Lib3MF_uint64 nEdgeMappingsBufferSize, Lib3MF_uint64* pEdgeMappingsNeededCount, sLib3MFNURBSEdgeMapping * pEdgeMappingsBuffer)
 {
 	uint32_t nEdgeMappingCount = m_pNurbsSurface->getEdgeMappingCount();
 	if (pEdgeMappingsNeededCount != nullptr) {
@@ -287,17 +287,17 @@ void CLib3MFNurbsSurface::GetEdgeMappings(Lib3MF_uint64 nEdgeMappingsBufferSize,
 
 }
 
-Lib3MF_uint32 CLib3MFNurbsSurface::AddEdgeMapping(const Lib3MF_uint32 nCurveID, const Lib3MF_double dT1, const Lib3MF_double dT2)
+Lib3MF_uint32 CNurbsSurface::AddEdgeMapping(const Lib3MF_uint32 nCurveID, const Lib3MF_double dT1, const Lib3MF_double dT2)
 {
 	return m_pNurbsSurface->addEdgeMapping(nCurveID, dT1, dT2);
 }
 
-void CLib3MFNurbsSurface::RemoveEdgeMapping(const Lib3MF_uint32 nId)
+void CNurbsSurface::RemoveEdgeMapping(const Lib3MF_uint32 nId)
 {
 	m_pNurbsSurface->removeEdgeMapping(nId);
 }
 
-bool CLib3MFNurbsSurface::HasEdgeMapping(const Lib3MF_uint32 nId)
+bool CNurbsSurface::HasEdgeMapping(const Lib3MF_uint32 nId)
 {
 	double dT1, dT2;
 	NMR::ModelResourceID nCurveID;
@@ -305,33 +305,33 @@ bool CLib3MFNurbsSurface::HasEdgeMapping(const Lib3MF_uint32 nId)
 	return m_pNurbsSurface->getEdgeMapping(nId, nCurveID, dT1, dT2);
 }
 
-void CLib3MFNurbsSurface::AddEdgeMappingUVCoordinate(const Lib3MF_uint32 nId, const Lib3MF_double dU, const Lib3MF_double dV)
+void CNurbsSurface::AddEdgeMappingUVCoordinate(const Lib3MF_uint32 nId, const Lib3MF_double dU, const Lib3MF_double dV)
 {
 	m_pNurbsSurface->addEdgeMappingUVCoordinate(nId, dU, dV);
 }
 
-void CLib3MFNurbsSurface::ClearEdgeMappingUVCoordinates(const Lib3MF_uint32 nId)
+void CNurbsSurface::ClearEdgeMappingUVCoordinates(const Lib3MF_uint32 nId)
 {
 	m_pNurbsSurface->clearEdgeMappingUVCoordinate(nId);
 }
 
 
-void CLib3MFNurbsSurface::GetEdgeMappingUVCoordinate(const Lib3MF_uint32 nId, const Lib3MF_uint32 nIndex, Lib3MF_double & dU, Lib3MF_double & dV)
+void CNurbsSurface::GetEdgeMappingUVCoordinate(const Lib3MF_uint32 nId, const Lib3MF_uint32 nIndex, Lib3MF_double & dU, Lib3MF_double & dV)
 {
 	m_pNurbsSurface->getEdgeMappingUVCoordinate(nId, nIndex, dU, dV);
 }
 
-Lib3MF_uint32 CLib3MFNurbsSurface::GetEdgeMappingUVCoordinateCount(const Lib3MF_uint32 nId)
+Lib3MF_uint32 CNurbsSurface::GetEdgeMappingUVCoordinateCount(const Lib3MF_uint32 nId)
 {
 	return m_pNurbsSurface->getEdgeMappingUVCoordinateCount(nId);
 }
 
-void CLib3MFNurbsSurface::SetUVBounds(const Lib3MF_double dMinU, const Lib3MF_double dMinV, const Lib3MF_double dMaxU, const Lib3MF_double dMaxV)
+void CNurbsSurface::SetUVBounds(const Lib3MF_double dMinU, const Lib3MF_double dMinV, const Lib3MF_double dMaxU, const Lib3MF_double dMaxV)
 {
 	m_pNurbsSurface->setUVBounds(dMinU, dMinV, dMaxU, dMaxV);
 }
 
-void CLib3MFNurbsSurface::GetUVBounds(Lib3MF_double & dMinU, Lib3MF_double & dMinV, Lib3MF_double & dMaxU, Lib3MF_double & dMaxV)
+void CNurbsSurface::GetUVBounds(Lib3MF_double & dMinU, Lib3MF_double & dMinV, Lib3MF_double & dMaxU, Lib3MF_double & dMaxV)
 {
 	m_pNurbsSurface->getUVBounds(dMinU, dMinV, dMaxU, dMaxV);
 }

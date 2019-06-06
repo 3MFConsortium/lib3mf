@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium (Original Author)
+Copyright (C) 2019 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -24,7 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CLib3MFAttachment
+Abstract: This is a stub class definition of CAttachment
 
 */
 
@@ -32,7 +32,7 @@ Abstract: This is a stub class definition of CLib3MFAttachment
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
-#include "Common/Platform/NMR_ImportStream_Memory.h"
+#include "Common/Platform/NMR_ImportStream_Unique_Memory.h"
 #include "Common/Platform/NMR_ImportStream.h"
 #include "Common/Platform/NMR_Platform.h"
 #include "Common/NMR_StringUtils.h"
@@ -40,21 +40,21 @@ Abstract: This is a stub class definition of CLib3MFAttachment
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CLib3MFAttachment 
+ Class definition of CAttachment 
 **************************************************************************************************************************/
 
-CLib3MFAttachment::CLib3MFAttachment(NMR::PModelAttachment pModelAttachment)
+CAttachment::CAttachment(NMR::PModelAttachment pModelAttachment)
 	: m_pModelAttachment(pModelAttachment)
 {
 	
 }
 
-std::string CLib3MFAttachment::GetPath ()
+std::string CAttachment::GetPath ()
 {
 	return m_pModelAttachment->getPathURI();
 }
 
-void CLib3MFAttachment::SetPath (const std::string & sPath)
+void CAttachment::SetPath (const std::string & sPath)
 {
 	NMR::CModel * pModel = m_pModelAttachment->getModel();
 	NMR::PImportStream pStream = m_pModelAttachment->getStream();
@@ -70,17 +70,17 @@ void CLib3MFAttachment::SetPath (const std::string & sPath)
 	}
 }
 
-std::string CLib3MFAttachment::GetRelationShipType ()
+std::string CAttachment::GetRelationShipType ()
 {
 	return m_pModelAttachment->getRelationShipType();
 }
 
-void CLib3MFAttachment::SetRelationShipType (const std::string & sPath)
+void CAttachment::SetRelationShipType (const std::string & sPath)
 {
 	m_pModelAttachment->setRelationShipType(sPath);
 }
 
-void CLib3MFAttachment::WriteToFile (const std::string & sFileName)
+void CAttachment::WriteToFile (const std::string & sFileName)
 {
 	NMR::PImportStream pStream = m_pModelAttachment->getStream();
 
@@ -91,20 +91,20 @@ void CLib3MFAttachment::WriteToFile (const std::string & sFileName)
 	}
 }
 
-void CLib3MFAttachment::ReadFromFile (const std::string & sFileName)
+void CAttachment::ReadFromFile (const std::string & sFileName)
 {
 	NMR::PImportStream pImportStream = NMR::fnCreateImportStreamInstance(sFileName.c_str());
 
 	m_pModelAttachment->setStream(pImportStream);
 }
 
-Lib3MF_uint64 CLib3MFAttachment::GetStreamSize ()
+Lib3MF_uint64 CAttachment::GetStreamSize ()
 {
 	NMR::PImportStream pStream = m_pModelAttachment->getStream();
 	return pStream->retrieveSize();
 }
 
-void CLib3MFAttachment::WriteToBuffer (Lib3MF_uint64 nBufferBufferSize, Lib3MF_uint64* pBufferNeededCount, Lib3MF_uint8 * pBufferBuffer)
+void CAttachment::WriteToBuffer (Lib3MF_uint64 nBufferBufferSize, Lib3MF_uint64* pBufferNeededCount, Lib3MF_uint8 * pBufferBuffer)
 {
 	NMR::PImportStream pStream = m_pModelAttachment->getStream();
 
@@ -118,9 +118,9 @@ void CLib3MFAttachment::WriteToBuffer (Lib3MF_uint64 nBufferBufferSize, Lib3MF_u
 	}
 }
 
-void CLib3MFAttachment::ReadFromBuffer(const Lib3MF_uint64 nBufferBufferSize, const Lib3MF_uint8 * pBufferBuffer)
+void CAttachment::ReadFromBuffer(const Lib3MF_uint64 nBufferBufferSize, const Lib3MF_uint8 * pBufferBuffer)
 {
-	NMR::PImportStream pImportStream = std::make_shared<NMR::CImportStream_Memory>(pBufferBuffer, nBufferBufferSize);
+	NMR::PImportStream pImportStream = std::make_shared<NMR::CImportStream_Unique_Memory>(pBufferBuffer, nBufferBufferSize);
 	m_pModelAttachment->setStream(pImportStream);
 }
 

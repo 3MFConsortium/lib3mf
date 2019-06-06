@@ -1,0 +1,8 @@
+cmake_minimum_required(VERSION 3.5)
+
+project(Lib3MFExample_CPPImplicit)
+set(CMAKE_CXX_STANDARD 11)
+add_executable(Lib3MFExample_CPPImplicit "${CMAKE_CURRENT_SOURCE_DIR}/Lib3MF_example.cpp")
+find_library(LIB3MFLOCATION lib3mf "D:/PUBLIC/tmp/Lib3MF_component/Documentations/Cpp/../../Implementations/*/*/*")
+target_link_libraries(Lib3MFExample_CPPImplicit ${LIB3MFLOCATION})
+target_include_directories(Lib3MFExample_CPPImplicit PRIVATE "D:/PUBLIC/tmp/Lib3MF_component/Documentations/Cpp")

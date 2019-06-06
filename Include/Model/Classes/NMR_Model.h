@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -74,6 +74,12 @@ namespace NMR {
 	class CModelColorGroupResource;
 	typedef std::shared_ptr <CModelColorGroupResource> PModelColorGroupResource;
 
+	class CModelCompositeMaterialsResource;
+	typedef std::shared_ptr <CModelCompositeMaterialsResource> PModelCompositeMaterialsResource;
+
+	class CModelMultiPropertyGroupResource;
+	typedef std::shared_ptr <CModelMultiPropertyGroupResource> PModelMultiPropertyGroupResource;
+
 	class CModelTexture2DGroupResource;
 	typedef std::shared_ptr <CModelTexture2DGroupResource> PModelTexture2DGroupResource;
 
@@ -88,7 +94,8 @@ namespace NMR {
 		std::string m_sCurPath;
 		std::string m_sRootPath;
 
-		std::vector<PUUID> usedUUIDs;	// datastructure used to ensure that UUIDs within one model (package) are unique
+		std::unordered_map<std::string, PUUID> usedUUIDs;	// datastructure used to ensure that UUIDs within one model (package) are unique
+
 
 		// Object Resources of the model
 		std::map<PackageResourceID, PModelResource> m_ResourceMap;
@@ -114,14 +121,14 @@ namespace NMR {
 
 		// Model Attachments
 		std::vector<PModelAttachment> m_Attachments;
-		std::map<std::string, PModelAttachment> m_AttachmentURIMap;
+		std::unordered_map<std::string, PModelAttachment> m_AttachmentURIMap;
 
 		// Custom Attachment Content Types
 		std::map<std::string, std::string> m_CustomContentTypes;
 
 		// Production Model Attachments
 		std::vector<PModelAttachment> m_ProductionAttachments;
-		std::map<std::string, PModelAttachment> m_ProductionAttachmentURIMap;
+		std::unordered_map<std::string, PModelAttachment> m_ProductionAttachmentURIMap;
 
 		// Indexed lookup lists for standard resource types
 		std::vector<PModelResource> m_ObjectLookup;
@@ -130,6 +137,8 @@ namespace NMR {
 		std::vector<PModelResource> m_SliceStackLookup;
 		std::vector<PModelResource> m_ColorGroupLookup;
 		std::vector<PModelResource> m_Texture2DGroupLookup;
+		std::vector<PModelResource> m_CompositeMaterialsLookup;
+		std::vector<PModelResource> m_MultiPropertyGroupLookup;
 
 		// Add Resource to resource lookup tables
 		void addResourceToLookupTable(_In_ PModelResource pResource);
@@ -228,6 +237,20 @@ namespace NMR {
 		CModelTexture2DGroupResource * getTexture2DGroup(_In_ nfUint32 nIndex);
 		void mergeTexture2DGroups(_In_ CModel * pSourceModel);
 
+		// Convenience functions for composite materials
+		_Ret_maybenull_ PModelCompositeMaterialsResource findCompositeMaterials(_In_ PackageResourceID nResourceID);
+		nfUint32 getCompositeMaterialsCount();
+		PModelResource getCompositeMaterialsResource(_In_ nfUint32 nIndex);
+		CModelCompositeMaterialsResource * getCompositeMaterials(_In_ nfUint32 nIndex);
+		void mergeCompositeMaterials(_In_ CModel * pSourceModel);
+
+		// Convenience functions for multi property groups
+		_Ret_maybenull_ PModelMultiPropertyGroupResource findMultiPropertyGroup(_In_ PackageResourceID nResourceID);
+		nfUint32 getMultiPropertyGroupCount();
+		PModelResource getMultiPropertyGroupResource(_In_ nfUint32 nIndex);
+		CModelMultiPropertyGroupResource * getMultiPropertyGroup(_In_ nfUint32 nIndex);
+		void mergeMultiPropertyGroups(_In_ CModel * pSourceModel);
+
 		// Convenience functions for 2D Textures
 		_Ret_maybenull_ PModelTexture2DResource findTexture2D(_In_ PackageResourceID nResourceID);
 		nfUint32 getTexture2DCount();
@@ -270,6 +293,9 @@ namespace NMR {
 		// Convenience functions for slice stacks
 		nfUint32 getSliceStackCount();
 		PModelResource getSliceStackResource(_In_ nfUint32 nIndex);
+
+		// Sorts objects by correct dependency
+		std::list<CModelObject *> getSortedObjectList ();
 	};
 
 	typedef std::shared_ptr <CModel> PModel;

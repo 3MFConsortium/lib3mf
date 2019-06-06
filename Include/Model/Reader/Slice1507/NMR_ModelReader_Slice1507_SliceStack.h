@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -60,7 +60,7 @@ namespace NMR {
 
 	public:
 		CModelReaderNode_Slice1507_SliceStack() = delete;
-		CModelReaderNode_Slice1507_SliceStack(_In_ CModel *pModel, _In_ PModelReaderWarnings pWarnings, _In_ CProgressMonitor * pProgressMonitor, _In_ const std::string sSlicePath);
+		CModelReaderNode_Slice1507_SliceStack(_In_ CModel *pModel, _In_ PModelReaderWarnings pWarnings, _In_ PProgressMonitor pProgressMonitor, _In_ const std::string sSlicePath);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 	};

@@ -50,7 +50,7 @@ namespace Impl {
  Class declaration of CLib3MFNurbsCurveIterator 
 **************************************************************************************************************************/
 
-class CLib3MFNurbsCurveIterator : public virtual ILib3MFNurbsCurveIterator, public virtual CLib3MFResourceIterator {
+class CNurbsCurveIterator : public virtual INurbsCurveIterator, public virtual CResourceIterator {
 private:
 
 	/**
@@ -74,7 +74,7 @@ public:
 	* Public member functions to implement.
 	*/
 
-	ILib3MFNurbsCurve * GetCurrentNurbsCurve ();
+	INurbsCurve * GetCurrentNurbsCurve ();
 
 };
 

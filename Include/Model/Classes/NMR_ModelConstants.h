@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -154,6 +154,7 @@ These are given by the 3MF Standard
 #define XML_3MF_ATTRIBUTE_BEAMLATTICE_IDENTIFIER    "identifier"
 #define XML_3MF_ATTRIBUTE_BEAMLATTICE_R1            "r1"
 #define XML_3MF_ATTRIBUTE_BEAMLATTICE_R2            "r2"
+#define XML_3MF_ATTRIBUTE_BEAMLATTICE_CLIPPINGMODE  "clippingmode"
 #define XML_3MF_ATTRIBUTE_BEAMLATTICE_CLIPPING      "clipping"
 #define XML_3MF_ATTRIBUTE_BEAMLATTICE_CLIPPINGMESH  "clippingmesh"
 #define XML_3MF_ATTRIBUTE_BEAMLATTICE_REPRESENTATIONMESH  "representationmesh"
@@ -197,7 +198,7 @@ These are given by the 3MF Standard
 #define XML_3MF_ATTRIBUTE_TEXTURE2D_FILTER_LINEAR   "linear"
 #define XML_3MF_ATTRIBUTE_TEXTURE2D_FILTER_NEAREST  "nearest"
 
-// Compositematerials and composite element (not implemented!)
+// Compositematerials and composite element
 #define XML_3MF_ELEMENT_COMPOSITEMATERIALS          "compositematerials"
 #define XML_3MF_ATTRIBUTE_COMPOSITEMATERIALS_ID     "id"
 #define XML_3MF_ATTRIBUTE_COMPOSITEMATERIALS_MATID  "matid"
@@ -205,8 +206,15 @@ These are given by the 3MF Standard
 #define XML_3MF_ELEMENT_COMPOSITE                   "composite"
 #define XML_3MF_ATTRIBUTE_COMPOSITE_VALUES          "values"
 
-// Multiproperties (not implemented!)
+// Multiproperties
 #define XML_3MF_ELEMENT_MULTIPROPERTIES             "multiproperties"
+#define XML_3MF_ATTRIBUTE_MULTIPROPERTIES_ID        "id"
+#define XML_3MF_ATTRIBUTE_MULTIPROPERTIES_PIDS      "pids"
+#define XML_3MF_ATTRIBUTE_MULTIPROPERTIES_BLENDMETHODS "blendmethods"
+#define XML_3MF_ATTRIBUTE_MULTIPROPERTIES_BLENDMETHOD_MIX "mix"
+#define XML_3MF_ATTRIBUTE_MULTIPROPERTIES_BLENDMETHOD_MULTIPLY "multiply"
+#define XML_3MF_ELEMENT_MULTI                       "multi"
+#define XML_3MF_ATTRIBUTE_MULTI_PINDICES            "pindices"
 
 // Geometry element.
 #define XML_3MF_ELEMENT_GEOMETRY                    "geometry"
@@ -227,12 +235,12 @@ These are given by the 3MF Standard
 #define XML_3MF_ATTRIBUTE_COMPONENT_TRANSFORM       "transform"
 
 // Color resource group
-#define XML_3MF_ELEMENT_COLORGROUP					"colorgroup"
+#define XML_3MF_ELEMENT_COLORGROUP                  "colorgroup"
 #define XML_3MF_ATTRIBUTE_COLORS_COLOR              "color"
 #define XML_3MF_ATTRIBUTE_COLORS_ID                 "id"
 
 // TexCoord resource group
-#define XML_3MF_ELEMENT_TEX2DGROUP					"texture2dgroup"
+#define XML_3MF_ELEMENT_TEX2DGROUP                  "texture2dgroup"
 #define XML_3MF_ATTRIBUTE_TEX2DGROUP_ID             "id"
 #define XML_3MF_ELEMENT_TEX2COORD                   "tex2coord"
 #define XML_3MF_ATTRIBUTE_TEX2DGROUP_TEXTUREID      "texid"

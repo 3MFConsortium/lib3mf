@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium (Original Author)
+Copyright (C) 2019 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -24,19 +24,20 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CLib3MFAttachment
+Abstract: This is the class declaration of CAttachment
 
 */
 
 
-#ifndef __LIB3MF_LIB3MFATTACHMENT
-#define __LIB3MF_LIB3MFATTACHMENT
+#ifndef __LIB3MF_ATTACHMENT
+#define __LIB3MF_ATTACHMENT
 
 #include "lib3mf_interfaces.hpp"
 #include "lib3mf_base.hpp"
-#pragma warning( push)
-#pragma warning( disable : 4250)
-
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4250)
+#endif
 
 // Include custom headers here.
 #include "Model/Classes/NMR_ModelAttachment.h"
@@ -46,10 +47,10 @@ namespace Impl {
 
 
 /*************************************************************************************************************************
- Class declaration of CLib3MFAttachment 
+ Class declaration of CAttachment 
 **************************************************************************************************************************/
 
-class CLib3MFAttachment : public virtual ILib3MFAttachment, public virtual CLib3MFBase {
+class CAttachment : public virtual IAttachment, public virtual CBase {
 private:
 
 	/**
@@ -68,7 +69,7 @@ public:
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-	CLib3MFAttachment(NMR::PModelAttachment pModelAttachment);
+	CAttachment(NMR::PModelAttachment pModelAttachment);
 
 	/**
 	* Public member functions to implement.
@@ -97,5 +98,8 @@ public:
 }
 }
 
-#pragma warning( pop )
-#endif // __LIB3MF_LIB3MFATTACHMENT
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
+
+#endif // __LIB3MF_ATTACHMENT

@@ -24,7 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CLib3MFNurbsCurve
+Abstract: This is the class declaration of CNurbsCurve
 
 */
 
@@ -50,10 +50,10 @@ namespace Impl {
 
 
 /*************************************************************************************************************************
- Class declaration of CLib3MFNurbsCurve 
+ Class declaration of CNurbsCurve 
 **************************************************************************************************************************/
 
-class CLib3MFNurbsCurve : public virtual ILib3MFNurbsCurve, public virtual CLib3MFResource {
+class CNurbsCurve : public virtual INurbsCurve, public virtual CResource {
 private:
 
 	NMR::PModelNurbsCurve m_pNurbsCurve;
@@ -61,9 +61,9 @@ protected:
 
 public:
 
-	CLib3MFNurbsCurve() = delete;
-	CLib3MFNurbsCurve(NMR::PModelNurbsCurve pNurbsCurve);
-	~CLib3MFNurbsCurve();
+	CNurbsCurve() = delete;
+	CNurbsCurve(NMR::PModelNurbsCurve pNurbsCurve);
+	~CNurbsCurve();
 
 	Lib3MF_uint32 GetDegree ();
 

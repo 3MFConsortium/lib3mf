@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -27,7 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 Abstract:
 
 NMR_ImportStream_Memory.h defines the CImportStream_Memory Class.
-This is a platform independent class for keeping data in a memory stream.
+This is an abstract platform independent class for keeping data in a memory stream.
 
 --*/
 
@@ -38,8 +38,6 @@ This is a platform independent class for keeping data in a memory stream.
 #include "Common/NMR_Types.h"
 #include "Common/NMR_Local.h"
 
-#include <vector>
-
 #define NMR_IMPORTSTREAM_READCHUNKSIZE (1024*1024)
 
 #define NMR_IMPORTSTREAM_MAXMEMSTREAMSIZE (1024ULL*1024ULL*1024ULL*1024ULL)
@@ -47,15 +45,13 @@ This is a platform independent class for keeping data in a memory stream.
 namespace NMR {
 
 	class CImportStream_Memory : public CImportStream {
-	private:
-		std::vector<nfByte> m_Buffer;
+	protected:
 		nfUint64 m_cbSize;
 		nfUint64 m_nPosition;
+		
+		virtual const nfByte * getAt(nfUint64 nPosition) = 0;
 	public:
-		CImportStream_Memory();
-		CImportStream_Memory(_In_ CImportStream * pStream, _In_ nfUint64 cbBytesToCopy, _In_ nfBool bNeedsToCopyAllBytes);
-		CImportStream_Memory(_In_ const nfByte * pBuffer, _In_ nfUint64 cbBytes);
-		~CImportStream_Memory();
+		virtual ~CImportStream_Memory();
 
 		virtual nfBool seekPosition(_In_ nfUint64 nPosition, _In_ nfBool bHasToSucceed);
 		virtual nfBool seekForward(_In_ nfUint64 cbBytes, _In_ nfBool bHasToSucceed);
@@ -64,7 +60,7 @@ namespace NMR {
 		virtual nfUint64 readBuffer(_In_ nfByte * pBuffer, _In_ nfUint64 cbTotalBytesToRead, nfBool bNeedsToReadAll);
 		virtual nfUint64 retrieveSize();
 		virtual void writeToFile(_In_ const nfWChar * pwszFileName);
-		virtual PImportStream copyToMemory();
+		virtual PImportStream copyToMemory() = 0;
 	};
 
 }

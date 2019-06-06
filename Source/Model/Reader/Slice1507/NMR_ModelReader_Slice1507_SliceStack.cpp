@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -55,8 +55,8 @@ namespace NMR {
 			PModelReaderNode_Slices1507_Slice pXMLNode = nullptr;
 
 			if (m_pSliceStackResource->getSliceCount() % PROGRESS_READSLICESUPDATE == PROGRESS_READSLICESUPDATE - 1 ) {
-				if (m_pProgressMonitor && !m_pProgressMonitor->Progress(1 - 2.0 / (++m_nProgressCounter + 2), PROGRESS_READSLICES))
-					throw CNMRException(NMR_USERABORTED);
+				m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_READSLICES);
+				m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
 			}
 
 			pXMLNode = std::make_shared<CModelReaderNode_Slices1507_Slice>(m_pSliceStackResource.get(), m_pWarnings);
@@ -84,7 +84,7 @@ namespace NMR {
 
 	CModelReaderNode_Slice1507_SliceStack::CModelReaderNode_Slice1507_SliceStack(
 		_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings,
-		_In_ CProgressMonitor * pProgressMonitor,_In_ const std::string sSlicePath)
+		_In_ PProgressMonitor pProgressMonitor,_In_ const std::string sSlicePath)
 		: CModelReaderNode(pWarnings, pProgressMonitor)
 	{
 		m_nProgressCounter = 0;

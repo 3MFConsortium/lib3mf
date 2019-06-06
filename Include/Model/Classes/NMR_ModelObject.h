@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -56,6 +56,9 @@ namespace NMR {
 		PModelSliceStack m_pSliceStack;
 		eModelSlicesMeshResolution m_eSlicesMeshResolution;
 		PModelMetaDataGroup m_MetaDataGroup;
+
+		nfUint32 m_nComponentDepthLevel;
+
 	private:
 		PUUID m_UUID;
 		std::string m_sThumbnail;
@@ -105,6 +108,12 @@ namespace NMR {
 		// Set/Get Thumbnail
 		void setThumbnail(_In_ std::string sThumbnail);
 		std::string getThumbnail();
+
+		// Calculates the component Depths
+		nfUint32 getComponentDepthLevel ();
+		void clearComponentDepthLevel();
+		virtual void calculateComponentDepthLevel (nfUint32 nLevel);
+
 	};
 
 	typedef std::shared_ptr <CModelObject> PModelObject;

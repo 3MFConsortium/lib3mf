@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -26,7 +26,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelReaderNode100_Color.cpp implements the Model Reader Color Node Class.
+NMR_ModelReaderNode100_Tex2Coord.cpp implements the Model Reader Tex2Coord Node Class.
 
 --*/
 

@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -66,7 +66,7 @@ namespace NMR {
 		case NMR_ERROR_ABSTRACT: return "The function called is abstract and should not have been called";
 		case NMR_ERROR_INVALIDHEADBLOCK: return "The current block is not assigned";
 		case NMR_ERROR_COMINITIALIZATIONFAILED: return "COM CoInitialize failed";
-		case NMR_ERROR_STANDARDCPPEXCEPTION: return "A Standard C++ Exception occured";
+		case NMR_ERROR_STANDARDCPPEXCEPTION: return "A Standard C++ Exception occurred";
 		case NMR_ERROR_INVALIDMESH: return "No mesh has been given";
 		case NMR_ERROR_COULDNOTCREATECONTEXT: return "Context could not be created";
 		case NMR_ERROR_EMPTYSTRINGTOINTCONVERSION: return "Wanted to convert empty string to integer";
@@ -378,6 +378,24 @@ namespace NMR {
 		case NMR_ERROR_PROPERTYIDALREADYREGISTERED: return "Property already registered";
 		case NMR_ERROR_INVALIDPROPERTYRESOURCEID: return "Invalid Property Resource ID";
 		case NMR_ERROR_PROPERTYIDNOTFOUND: return "Property ID not found";
+		case NMR_ERROR_TOOMANYCOLORS: return "Too many colors.";
+		case NMR_ERROR_TOOMANYCOMPOSITES: return "Too many composites.";
+		case NMR_ERROR_MIXINGRATIO_OUTOFRANGE: return "Mixing ratio of composite out of range.";
+		case NMR_ERROR_MIXINGRATIO_MISSING: return "A composite mixing ratio is missing.";
+		case NMR_ERROR_MIXINGRATIO_TOOMANY: return "Too many composite mixing ratio in the list of values";
+		case NMR_ERROR_MULTIPROPERTIES_MUST_NOT_CONTAIN_MULTIPROPERTIES: return "A multiproperties must not contain another multiproperties";
+		case NMR_ERROR_MULTIPROPERTIES_MUST_NOT_CONTAIN_MULTIPLE_MATERIALS: return "A multiproperties must not contain multiple materials";
+		case NMR_ERROR_MULTIPROPERTIES_MUST_NOT_CONTAIN_MULTIPLE_COLORGOURPS: return "A multiproperties must not contain multiple colorgroups";
+		case NMR_ERROR_MULTIPROPERTIES_INVALID_RESOURCE: return "A resource of invalid type was passed to a MultiPropertyGroup";
+		case NMR_ERROR_MULTIPROPERTIES_NOT_ENOUGH_PROPERTYIDS_SPECIFIED: return "A MultiProperty does not define enough PropertyIDs";
+		case NMR_ERROR_MULTIPROPERTIES_MISSING_PIDS: return "A MultiProperty-element is missing the pids-attribute";
+		case NMR_ERROR_MULTIPROPERTIES_DIFFERNT_NUMBER_OF_BLENDMETHODS_AND_PIDS: return "The number of blendmethods and pids does not match";
+		case NMR_ERROR_DUPLICATE_PIDS: return "Multiproperties element has duplicate pids attribute";
+		case NMR_ERROR_DUPLICATE_BLENDMETHOS: return "Multiproperties element has duplicate blendmethods attribute";
+		case NMR_ERROR_INVALID_BLENDMETHOD_ATTRIBUTE: return "A blendmethods attribute is invalid";
+		case NMR_ERROR_MULTIPROPERTIES_INVALID_MULTI_ELEMENT: return "A multi-element is invalid";
+		case NMR_ERROR_INVALID_RESOURCE_INDEX: return "A Resource Index is invalid";
+		case NMR_ERROR_VERSION093_NOT_SUPPORTED: return "This document contains content from Version 093 of the core-specification. This is not supported by Lib3MF version 2 or later.";
 
 
 
@@ -406,7 +424,7 @@ namespace NMR {
 		case NMR_ERROR_CONTENTTYPE_EMPTY_PARTNAME: return "An override content type does not have a partname.";
 		case NMR_ERROR_XMLPARSER_INVALID_ESCAPESTRING: return "XML contains an invalid escape character.";
 		case NMR_ERROR_DUPLICATE_BOX_ATTRIBUTE: return "A box attribute is duplicated.";
-		case NMR_ERROR_TOOMANYCOLORS: return "Too many materials.";
+		case NMR_ERROR_DUPLICATE_MATINDICES_ATTRIBUTE: return "A matindices attribute is duplicated.";
 
 		// Library errors (0xAXXX)
 		case NMR_ERROR_COULDNOTGETINTERFACEVERSION: return "Could not get interface version";

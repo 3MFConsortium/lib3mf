@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium (Original Author)
+Copyright (C) 2019 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -24,7 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CLib3MFBeamSet
+Abstract: This is a stub class definition of CBeamSet
 
 */
 
@@ -37,41 +37,41 @@ Abstract: This is a stub class definition of CLib3MFBeamSet
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CLib3MFBeamSet 
+ Class definition of CBeamSet 
 **************************************************************************************************************************/
 
-CLib3MFBeamSet::CLib3MFBeamSet(NMR::PBEAMSET pBeamSet, NMR::PModelMeshObject pMeshObject):
+CBeamSet::CBeamSet(NMR::PBEAMSET pBeamSet, NMR::PModelMeshObject pMeshObject):
 	m_pBeamSet(pBeamSet), m_mesh(*pMeshObject->getMesh())
 {
 
 }
 
-void CLib3MFBeamSet::SetName(const std::string & sName)
+void CBeamSet::SetName(const std::string & sName)
 {
 	m_pBeamSet->m_sName = sName;
 }
 
-std::string CLib3MFBeamSet::GetName()
+std::string CBeamSet::GetName()
 {
 	return m_pBeamSet->m_sName;
 }
 
-void CLib3MFBeamSet::SetIdentifier(const std::string & sIdentifier)
+void CBeamSet::SetIdentifier(const std::string & sIdentifier)
 {
 	m_pBeamSet->m_sIdentifier = sIdentifier;
 }
 
-std::string CLib3MFBeamSet::GetIdentifier()
+std::string CBeamSet::GetIdentifier()
 {
 	return m_pBeamSet->m_sIdentifier;
 }
 
-Lib3MF_uint32 CLib3MFBeamSet::GetReferenceCount()
+Lib3MF_uint32 CBeamSet::GetReferenceCount()
 {
 	return (Lib3MF_uint32)m_pBeamSet->m_Refs.size();
 }
 
-void CLib3MFBeamSet::SetReferences(const Lib3MF_uint64 nReferencesBufferSize, const Lib3MF_uint32 * pReferencesBuffer)
+void CBeamSet::SetReferences(const Lib3MF_uint64 nReferencesBufferSize, const Lib3MF_uint32 * pReferencesBuffer)
 {
 	m_pBeamSet->m_Refs.resize(nReferencesBufferSize);
 	const Lib3MF_uint32 beamCount = m_mesh.getBeamCount();
@@ -83,7 +83,7 @@ void CLib3MFBeamSet::SetReferences(const Lib3MF_uint64 nReferencesBufferSize, co
 
 }
 
-void CLib3MFBeamSet::GetReferences(Lib3MF_uint64 nReferencesBufferSize, Lib3MF_uint64* pReferencesNeededCount, Lib3MF_uint32 * pReferencesBuffer)
+void CBeamSet::GetReferences(Lib3MF_uint64 nReferencesBufferSize, Lib3MF_uint64* pReferencesNeededCount, Lib3MF_uint32 * pReferencesBuffer)
 {
 	Lib3MF_uint32 referenceCount = (Lib3MF_uint32)m_pBeamSet->m_Refs.size();
 	if (pReferencesNeededCount)

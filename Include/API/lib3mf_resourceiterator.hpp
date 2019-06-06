@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium (Original Author)
+Copyright (C) 2019 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -24,18 +24,20 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CLib3MFResourceIterator
+Abstract: This is the class declaration of CResourceIterator
 
 */
 
 
-#ifndef __LIB3MF_LIB3MFRESOURCEITERATOR
-#define __LIB3MF_LIB3MFRESOURCEITERATOR
+#ifndef __LIB3MF_RESOURCEITERATOR
+#define __LIB3MF_RESOURCEITERATOR
 
 #include "lib3mf_interfaces.hpp"
 #include "lib3mf_base.hpp"
-#pragma warning( push)
-#pragma warning( disable : 4250)
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4250)
+#endif
 
 
 // Include custom headers here.
@@ -46,10 +48,10 @@ namespace Impl {
 
 
 /*************************************************************************************************************************
- Class declaration of CLib3MFResourceIterator 
+ Class declaration of CResourceIterator 
 **************************************************************************************************************************/
 
-class CLib3MFResourceIterator : public virtual ILib3MFResourceIterator, public virtual CLib3MFBase {
+class CResourceIterator : public virtual IResourceIterator, public virtual CBase {
 
 protected:
 	std::vector<NMR::PModelResource> m_pResources;
@@ -61,7 +63,7 @@ public:
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-	CLib3MFResourceIterator();
+	CResourceIterator();
 
 	void addResource(NMR::PModelResource pResource);
 
@@ -73,14 +75,18 @@ public:
 
 	bool MovePrevious ();
 
-	ILib3MFResource * GetCurrent ();
+	IResource * GetCurrent ();
 
-	ILib3MFResourceIterator * Clone ();
+	IResourceIterator * Clone ();
+
+	Lib3MF_uint64 Count();
 
 };
 
 }
 }
 
-#pragma warning( pop )
-#endif // __LIB3MF_LIB3MFRESOURCEITERATOR
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
+#endif // __LIB3MF_RESOURCEITERATOR

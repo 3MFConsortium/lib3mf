@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium (Original Author)
+Copyright (C) 2019 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -24,7 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CLib3MFTexture2DIterator
+Abstract: This is a stub class definition of CTexture2DIterator
 
 */
 
@@ -38,12 +38,12 @@ Abstract: This is a stub class definition of CLib3MFTexture2DIterator
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CLib3MFTexture2DIterator 
+ Class definition of CTexture2DIterator 
 **************************************************************************************************************************/
 
-ILib3MFTexture2D * CLib3MFTexture2DIterator::GetCurrentTexture2D ()
+ITexture2D * CTexture2DIterator::GetCurrentTexture2D ()
 {
 	// Create specific API class
-	return new CLib3MFTexture2D(std::dynamic_pointer_cast<NMR::CModelTexture2DResource>(GetCurrentResource()));
+	return new CTexture2D(std::dynamic_pointer_cast<NMR::CModelTexture2DResource>(GetCurrentResource()));
 }
 

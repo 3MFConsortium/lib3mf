@@ -24,7 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CLib3MFNurbsCurve
+Abstract: This is a stub class definition of CNurbsCurve
 
 */
 
@@ -37,11 +37,11 @@ Abstract: This is a stub class definition of CLib3MFNurbsCurve
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CLib3MFNurbsCurve 
+ Class definition of CNurbsCurve 
 **************************************************************************************************************************/
 
-CLib3MFNurbsCurve::CLib3MFNurbsCurve(NMR::PModelNurbsCurve pNurbsCurve)
-	: CLib3MFResource(pNurbsCurve)
+CNurbsCurve::CNurbsCurve(NMR::PModelNurbsCurve pNurbsCurve)
+	: CResource(pNurbsCurve)
 {
 	m_pNurbsCurve = pNurbsCurve;
 	if (m_pNurbsCurve == nullptr)
@@ -49,23 +49,23 @@ CLib3MFNurbsCurve::CLib3MFNurbsCurve(NMR::PModelNurbsCurve pNurbsCurve)
 
 }
 
-CLib3MFNurbsCurve::~CLib3MFNurbsCurve()
+CNurbsCurve::~CNurbsCurve()
 {
 
 }
 
 
-Lib3MF_uint32 CLib3MFNurbsCurve::GetDegree ()
+Lib3MF_uint32 CNurbsCurve::GetDegree ()
 {
 	return m_pNurbsCurve->getDegree();
 }
 
-bool CLib3MFNurbsCurve::CheckValidity ()
+bool CNurbsCurve::CheckValidity ()
 {
 	return m_pNurbsCurve->CheckValidity();
 }
 
-void CLib3MFNurbsCurve::GetKnots (Lib3MF_uint64 nKnotsBufferSize, Lib3MF_uint64* pKnotsNeededCount, sLib3MFNURBSKnot * pKnotsBuffer)
+void CNurbsCurve::GetKnots (Lib3MF_uint64 nKnotsBufferSize, Lib3MF_uint64* pKnotsNeededCount, sLib3MFNURBSKnot * pKnotsBuffer)
 {
 	Lib3MF_uint64 nKnotCount = m_pNurbsCurve->getKnotCount();
 
@@ -93,7 +93,7 @@ void CLib3MFNurbsCurve::GetKnots (Lib3MF_uint64 nKnotsBufferSize, Lib3MF_uint64*
 	}
 }
 
-void CLib3MFNurbsCurve::SetKnots (const Lib3MF_uint64 nKnotsBufferSize, const sLib3MFNURBSKnot * pKnotsBuffer)
+void CNurbsCurve::SetKnots (const Lib3MF_uint64 nKnotsBufferSize, const sLib3MFNURBSKnot * pKnotsBuffer)
 {
 	if (pKnotsBuffer == nullptr)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
@@ -107,17 +107,17 @@ void CLib3MFNurbsCurve::SetKnots (const Lib3MF_uint64 nKnotsBufferSize, const sL
 	}
 }
 
-void CLib3MFNurbsCurve::AddKnot (const Lib3MF_uint32 nMultiplicity, const Lib3MF_double dValue)
+void CNurbsCurve::AddKnot (const Lib3MF_uint32 nMultiplicity, const Lib3MF_double dValue)
 {
 	m_pNurbsCurve->addKnot(nMultiplicity, dValue);
 }
 
-void CLib3MFNurbsCurve::SetControlPoint (const Lib3MF_uint32 nIndex, const Lib3MF_double dX, const Lib3MF_double dY, const Lib3MF_double dZ, const Lib3MF_double dW)
+void CNurbsCurve::SetControlPoint (const Lib3MF_uint32 nIndex, const Lib3MF_double dX, const Lib3MF_double dY, const Lib3MF_double dZ, const Lib3MF_double dW)
 {
 	m_pNurbsCurve->setControlPoint(nIndex, dX, dY, dZ, dW);
 }
 
-void CLib3MFNurbsCurve::GetControlPoint (const Lib3MF_uint32 nIndex, Lib3MF_double & dX, Lib3MF_double & dY, Lib3MF_double & dZ, Lib3MF_double & dW)
+void CNurbsCurve::GetControlPoint (const Lib3MF_uint32 nIndex, Lib3MF_double & dX, Lib3MF_double & dY, Lib3MF_double & dZ, Lib3MF_double & dW)
 {
 	m_pNurbsCurve->getControlPoint(nIndex, dX, dY, dZ, dW);
 }

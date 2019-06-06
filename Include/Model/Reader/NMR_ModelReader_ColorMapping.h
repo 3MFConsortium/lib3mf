@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -71,7 +71,7 @@ namespace NMR {
 		nfBool hasMaterialReference(_In_ ModelResourceID nResourceID);
 		nfBool getMaterialReference(_In_ ModelResourceID nResourceID, _Out_ ModelResourceIndex & nMaterialIndex);
 
-		nfBool retrieveARessource(_Out_ ModelResourceID& nResourceID);
+		nfBool retrieveAResource(_Out_ ModelResourceID& nResourceID);
 	};
 
 	typedef std::shared_ptr <CModelReader_ColorMapping> PModelReader_ColorMapping;

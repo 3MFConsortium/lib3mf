@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -142,7 +142,7 @@ namespace NMR {
 					MESHNODE * pNode3 = m_pMesh->getNode(nIndex3);
 					MESHFACE * pFace = m_pMesh->addFace(pNode1, pNode2, pNode3);
 
-					ModelResourceID nResourceID = m_nDefaultResourceIndex;
+					ModelResourceID nResourceID = m_nDefaultResourceID;
 					ModelResourceIndex nResourceIndex1 = m_nDefaultResourceIndex;
 					ModelResourceIndex nResourceIndex2 = m_nDefaultResourceIndex;
 					ModelResourceIndex nResourceIndex3 = m_nDefaultResourceIndex;

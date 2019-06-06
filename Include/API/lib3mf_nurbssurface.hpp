@@ -24,7 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CLib3MFNurbsSurface
+Abstract: This is the class declaration of CNurbsSurface
 
 */
 
@@ -49,10 +49,10 @@ namespace Lib3MF {
 namespace Impl {
 
 /*************************************************************************************************************************
- Class declaration of CLib3MFNurbsSurface 
+ Class declaration of CNurbsSurface 
 **************************************************************************************************************************/
 
-class CLib3MFNurbsSurface : public virtual ILib3MFNurbsSurface, public virtual CLib3MFResource {
+class CNurbsSurface : public virtual INurbsSurface, public virtual CResource {
 private:
 
 	/**
@@ -78,9 +78,9 @@ public:
 	* Public member functions to implement.
 	*/
 
-	CLib3MFNurbsSurface() = delete;
-	CLib3MFNurbsSurface (NMR::PModelNurbsSurface pNurbsSurface);
-	~CLib3MFNurbsSurface ();
+	CNurbsSurface() = delete;
+	CNurbsSurface (NMR::PModelNurbsSurface pNurbsSurface);
+	~CNurbsSurface ();
 
 	Lib3MF_uint32 GetDegreeU ();
 

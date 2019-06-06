@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -104,7 +104,7 @@ NMR_ErrorConst.h defines all error code constants.
 // COM CoInitialize failed
 #define NMR_ERROR_COMINITIALIZATIONFAILED 0x1011
 
-// A Standard C++ Exception occured
+// A Standard C++ Exception occurred
 #define NMR_ERROR_STANDARDCPPEXCEPTION 0x1012
 
 // No mesh has been given
@@ -1049,6 +1049,60 @@ Model error codes (0x8XXX)
 // Property ID not found
 #define NMR_ERROR_PROPERTYIDNOTFOUND 0x80D2
 
+// Too many colors
+#define NMR_ERROR_TOOMANYCOLORS 0x80D3
+
+// Too many composites
+#define NMR_ERROR_TOOMANYCOMPOSITES 0x80D4
+
+// Composite mixing ratio out of range
+#define NMR_ERROR_MIXINGRATIO_OUTOFRANGE 0x80D5
+
+// A composite mixing ratio is missing
+#define NMR_ERROR_MIXINGRATIO_MISSING 0x80D6
+
+// Too many composite mixing ratio in the list of values
+#define NMR_ERROR_MIXINGRATIO_TOOMANY 0x80D7
+
+// A multiproperties must not contain another multiproperties
+#define NMR_ERROR_MULTIPROPERTIES_MUST_NOT_CONTAIN_MULTIPROPERTIES 0x80D8
+
+// A multiproperties must not contain multiple materials
+#define NMR_ERROR_MULTIPROPERTIES_MUST_NOT_CONTAIN_MULTIPLE_MATERIALS 0x80DA
+
+// A multiproperties must not contain multiple colorgroups
+#define NMR_ERROR_MULTIPROPERTIES_MUST_NOT_CONTAIN_MULTIPLE_COLORGOURPS 0x80DB
+
+// A resource of invalid type was passed to a MultiPropertyGroup
+#define NMR_ERROR_MULTIPROPERTIES_INVALID_RESOURCE 0x80DC
+
+// A MultiMaterial does not define enough PropertyIDs
+#define NMR_ERROR_MULTIPROPERTIES_NOT_ENOUGH_PROPERTYIDS_SPECIFIED 0x80DD
+
+// PIDs-attribute is missing
+#define NMR_ERROR_MULTIPROPERTIES_MISSING_PIDS 0x80DE
+
+// The number of blendmethods and pids does not match
+#define NMR_ERROR_MULTIPROPERTIES_DIFFERNT_NUMBER_OF_BLENDMETHODS_AND_PIDS 0x80E1
+
+// Multiproperties element has duplicate pids attribute
+#define NMR_ERROR_DUPLICATE_PIDS 0x80E2
+
+// Multiproperties element has duplicate blendmethods attribute
+#define NMR_ERROR_DUPLICATE_BLENDMETHOS 0x80E3
+
+// A blendmethods attribute is invalid
+#define NMR_ERROR_INVALID_BLENDMETHOD_ATTRIBUTE 0x80E4
+
+// multi-element is invalid
+#define NMR_ERROR_MULTIPROPERTIES_INVALID_MULTI_ELEMENT 0x80E5
+
+// Invalid resource index
+#define NMR_ERROR_INVALID_RESOURCE_INDEX 0x80E6
+
+// Version 093 of the core-specification is not supported
+#define NMR_ERROR_VERSION093_NOT_SUPPORTED 0x80E7
+
 
 /*-------------------------------------------------------------------
 XML Parser Error Constants (0x9XXX)
@@ -1126,8 +1180,9 @@ XML Parser Error Constants (0x9XXX)
 // A box attribute is duplicated
 #define NMR_ERROR_DUPLICATE_BOX_ATTRIBUTE 0x9018
 
-// Too many colors
-#define NMR_ERROR_TOOMANYCOLORS 0x9019
+// A matindices attribute is duplicated
+#define NMR_ERROR_DUPLICATE_MATINDICES_ATTRIBUTE 0x9019
+
 
 /*-------------------------------------------------------------------
 Library errors (0xAXXX)

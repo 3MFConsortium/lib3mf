@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -69,6 +69,11 @@ namespace NMR {
 		void writeTextures2D();
 		void writeColors();
 		void writeTex2Coords();
+		void writeCompositeMaterials();
+		void writeMultiProperties();
+		void writeMultiPropertyAttributes(_In_ CModelMultiPropertyGroupResource* pMultiPropertyGroup);
+		void writeMultiPropertyMultiElements(_In_ CModelMultiPropertyGroupResource* pMultiPropertyGroup);
+
 		void writeObjects();
 		void writeBuild();
 		void writeNurbsCurves();
@@ -86,8 +91,8 @@ namespace NMR {
 
 	public:
 		CModelWriterNode100_Model() = delete;
-		CModelWriterNode100_Model(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter, _In_ CProgressMonitor * pProgressMonitor);
-		CModelWriterNode100_Model(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter, _In_ CProgressMonitor * pProgressMonitor, nfBool bWritesRootModel);
+		CModelWriterNode100_Model(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter, _In_ PProgressMonitor pProgressMonitor);
+		CModelWriterNode100_Model(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter, _In_ PProgressMonitor pProgressMonitor, nfBool bWritesRootModel);
 		
 		virtual void writeToXML();
 	};

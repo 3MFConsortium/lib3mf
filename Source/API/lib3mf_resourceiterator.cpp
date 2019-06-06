@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium (Original Author)
+Copyright (C) 2019 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -24,7 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CLib3MFResourceIterator
+Abstract: This is a stub class definition of CResourceIterator
 
 */
 
@@ -38,15 +38,15 @@ Abstract: This is a stub class definition of CLib3MFResourceIterator
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CLib3MFResourceIterator 
+ Class definition of CResourceIterator 
 **************************************************************************************************************************/
 
-CLib3MFResourceIterator::CLib3MFResourceIterator()
+CResourceIterator::CResourceIterator()
 {
 	m_nCurrentIndex = -1;
 }
 
-void CLib3MFResourceIterator::addResource(NMR::PModelResource pResource)
+void CResourceIterator::addResource(NMR::PModelResource pResource)
 {
 	if (pResource.get() == nullptr)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
@@ -54,7 +54,7 @@ void CLib3MFResourceIterator::addResource(NMR::PModelResource pResource)
 	m_pResources.push_back(pResource);
 }
 
-bool CLib3MFResourceIterator::MoveNext ()
+bool CResourceIterator::MoveNext ()
 {
 	// Get Resource Count
 	Lib3MF_int32 nBuildItemCount = (Lib3MF_int32)m_pResources.size();
@@ -70,7 +70,7 @@ bool CLib3MFResourceIterator::MoveNext ()
 	}
 }
 
-bool CLib3MFResourceIterator::MovePrevious ()
+bool CResourceIterator::MovePrevious ()
 {
 	// Get Resource Count
 	m_nCurrentIndex--;
@@ -85,7 +85,7 @@ bool CLib3MFResourceIterator::MovePrevious ()
 	}
 }
 
-NMR::PModelResource CLib3MFResourceIterator::GetCurrentResource()
+NMR::PModelResource CResourceIterator::GetCurrentResource()
 {
 	// Get Resource Count
 	Lib3MF_int32 nBuildItemCount = (Lib3MF_int32)m_pResources.size();
@@ -95,19 +95,24 @@ NMR::PModelResource CLib3MFResourceIterator::GetCurrentResource()
 	return m_pResources[m_nCurrentIndex];
 }
 
-ILib3MFResource * CLib3MFResourceIterator::GetCurrent ()
+IResource * CResourceIterator::GetCurrent ()
 {
 	// Create specific API class
-	return new CLib3MFResource(GetCurrentResource());
+	return new CResource(GetCurrentResource());
 }
 
-ILib3MFResourceIterator * CLib3MFResourceIterator::Clone ()
+IResourceIterator * CResourceIterator::Clone ()
 {
-	auto pResources = std::unique_ptr<CLib3MFResourceIterator>(new CLib3MFResourceIterator());
+	auto pResources = std::unique_ptr<CResourceIterator>(new CResourceIterator());
 
 	for (auto iIterator = m_pResources.begin(); iIterator != m_pResources.end(); iIterator++)
 		pResources->addResource(*iIterator);
 
 	return pResources.release();
+}
+
+Lib3MF_uint64 CResourceIterator::Count()
+{
+	return m_pResources.size();
 }
 

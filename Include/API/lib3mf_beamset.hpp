@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium (Original Author)
+Copyright (C) 2019 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -24,18 +24,20 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CLib3MFBeamSet
+Abstract: This is the class declaration of CBeamSet
 
 */
 
 
-#ifndef __LIB3MF_LIB3MFBEAMSET
-#define __LIB3MF_LIB3MFBEAMSET
+#ifndef __LIB3MF_BEAMSET
+#define __LIB3MF_BEAMSET
 
 #include "lib3mf_interfaces.hpp"
 #include "lib3mf_base.hpp"
-#pragma warning( push)
-#pragma warning( disable : 4250)
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4250)
+#endif
 
 #include "Common/Mesh/NMR_MeshTypes.h" 
 #include "Common/Mesh/NMR_Mesh.h"
@@ -48,10 +50,10 @@ namespace Impl {
 
 
 /*************************************************************************************************************************
- Class declaration of CLib3MFBeamSet 
+ Class declaration of CBeamSet 
 **************************************************************************************************************************/
 
-class CLib3MFBeamSet : public virtual ILib3MFBeamSet, public virtual CLib3MFBase {
+class CBeamSet : public virtual IBeamSet, public virtual CBase {
 private:
 
 	/**
@@ -71,7 +73,7 @@ public:
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-	CLib3MFBeamSet(NMR::PBEAMSET pBeamSet, NMR::PModelMeshObject pMeshObject);
+	CBeamSet(NMR::PBEAMSET pBeamSet, NMR::PModelMeshObject pMeshObject);
 
 	/**
 	* Public member functions to implement.
@@ -96,5 +98,7 @@ public:
 }
 }
 
-#pragma warning( pop )
-#endif // __LIB3MF_LIB3MFBEAMSET
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
+#endif // __LIB3MF_BEAMSET

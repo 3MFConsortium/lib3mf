@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium (Original Author)
+Copyright (C) 2019 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -24,18 +24,20 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CLib3MFBuildItem
+Abstract: This is the class declaration of CBuildItem
 
 */
 
 
-#ifndef __LIB3MF_LIB3MFBUILDITEM
-#define __LIB3MF_LIB3MFBUILDITEM
+#ifndef __LIB3MF_BUILDITEM
+#define __LIB3MF_BUILDITEM
 
 #include "lib3mf_interfaces.hpp"
 #include "lib3mf_base.hpp"
-#pragma warning( push)
-#pragma warning( disable : 4250)
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4250)
+#endif
 
 
 // Include custom headers here.
@@ -46,10 +48,10 @@ namespace Impl {
 
 
 /*************************************************************************************************************************
- Class declaration of CLib3MFBuildItem 
+ Class declaration of CBuildItem 
 **************************************************************************************************************************/
 
-class CLib3MFBuildItem : public virtual ILib3MFBuildItem, public virtual CLib3MFBase {
+class CBuildItem : public virtual IBuildItem, public virtual CBase {
 private:
 
 	/**
@@ -69,7 +71,7 @@ public:
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-	CLib3MFBuildItem(NMR::PModelBuildItem pBuildItem);
+	CBuildItem(NMR::PModelBuildItem pBuildItem);
 
 	Lib3MF_uint32 GetHandle();
 
@@ -77,7 +79,7 @@ public:
 	* Public member functions to implement.
 	*/
 
-	ILib3MFObject * GetObjectResource ();
+	IObject * GetObjectResource ();
 
 	std::string GetUUID (bool & bHasUUID);
 
@@ -95,11 +97,13 @@ public:
 
 	void SetPartNumber (const std::string & sSetPartnumber);
 
-	ILib3MFMetaDataGroup * GetMetaDataGroup ();
+	IMetaDataGroup * GetMetaDataGroup ();
 };
 
 }
 }
 
-#pragma warning( pop )
-#endif // __LIB3MF_LIB3MFBUILDITEM
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
+#endif // __LIB3MF_BUILDITEM

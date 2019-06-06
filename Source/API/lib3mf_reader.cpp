@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium (Original Author)
+Copyright (C) 2019 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -24,7 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CLib3MFReader
+Abstract: This is a stub class definition of CReader
 
 */
 
@@ -33,16 +33,16 @@ Abstract: This is a stub class definition of CLib3MFReader
 
 // Include custom headers here.
 #include "Common/Platform/NMR_Platform.h"
-#include "Common/Platform/NMR_ImportStream_Memory.h"
+#include "Common/Platform/NMR_ImportStream_Shared_Memory.h"
 #include "Common/Platform/NMR_ImportStream_Callback.h"
 
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CLib3MFReader 
+ Class definition of CReader 
 **************************************************************************************************************************/
 
-CLib3MFReader::CLib3MFReader(std::string sReaderClass, NMR::PModel model)
+CReader::CReader(std::string sReaderClass, NMR::PModel model)
 {
 	m_pReader = nullptr;
 
@@ -59,12 +59,12 @@ CLib3MFReader::CLib3MFReader(std::string sReaderClass, NMR::PModel model)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_READERCLASSUNKNOWN);
 }
 
-NMR::CModelReader& CLib3MFReader::reader()
+NMR::CModelReader& CReader::reader()
 {
 	return *m_pReader;
 }
 
-void CLib3MFReader::ReadFromFile (const std::string & sFilename)
+void CReader::ReadFromFile (const std::string & sFilename)
 {
 	NMR::PImportStream pImportStream = NMR::fnCreateImportStreamInstance(sFilename.c_str());
 
@@ -79,9 +79,9 @@ void CLib3MFReader::ReadFromFile (const std::string & sFilename)
 	}
 }
 
-void CLib3MFReader::ReadFromBuffer (const Lib3MF_uint64 nBufferBufferSize, const Lib3MF_uint8 * pBufferBuffer)
+void CReader::ReadFromBuffer (const Lib3MF_uint64 nBufferBufferSize, const Lib3MF_uint8 * pBufferBuffer)
 {
-	NMR::PImportStream pImportStream = std::make_shared<NMR::CImportStream_Memory>(pBufferBuffer, nBufferBufferSize);
+	NMR::PImportStream pImportStream = std::make_shared<NMR::CImportStream_Shared_Memory>(pBufferBuffer, nBufferBufferSize);
 
 	try {
 		reader().readStream(pImportStream);
@@ -94,7 +94,7 @@ void CLib3MFReader::ReadFromBuffer (const Lib3MF_uint64 nBufferBufferSize, const
 	}
 }
 
-void CLib3MFReader::ReadFromCallback(const Lib3MFReadCallback pTheReadCallback, const Lib3MF_uint64 nStreamSize, const Lib3MFSeekCallback pTheSeekCallback, const Lib3MF_pvoid pUserData)
+void CReader::ReadFromCallback(const Lib3MFReadCallback pTheReadCallback, const Lib3MF_uint64 nStreamSize, const Lib3MFSeekCallback pTheSeekCallback, const Lib3MF_pvoid pUserData)
 {
 	
 	NMR::ImportStream_ReadCallbackType lambdaReadCallback =
@@ -125,7 +125,7 @@ void CLib3MFReader::ReadFromCallback(const Lib3MFReadCallback pTheReadCallback, 
 	}
 }
 
-void CLib3MFReader::SetProgressCallback(const Lib3MFProgressCallback pProgressCallback, const Lib3MF_pvoid pUserData)
+void CReader::SetProgressCallback(const Lib3MFProgressCallback pProgressCallback, const Lib3MF_pvoid pUserData)
 {
 	NMR::Lib3MFProgressCallback lambdaCallback =
 		[pProgressCallback](int progressStep, NMR::ProgressIdentifier identifier, void* pUserData)
@@ -137,17 +137,17 @@ void CLib3MFReader::SetProgressCallback(const Lib3MFProgressCallback pProgressCa
 	m_pReader->SetProgressCallback(lambdaCallback, pUserData);
 }
 
-void CLib3MFReader::AddRelationToRead (const std::string & sRelationShipType)
+void CReader::AddRelationToRead (const std::string & sRelationShipType)
 {
 	reader().addRelationToRead(sRelationShipType);
 }
 
-void CLib3MFReader::RemoveRelationToRead (const std::string & sRelationShipType)
+void CReader::RemoveRelationToRead (const std::string & sRelationShipType)
 {
 	reader().removeRelationToRead(sRelationShipType);
 }
 
-void CLib3MFReader::SetStrictModeActive (const bool bStrictModeActive)
+void CReader::SetStrictModeActive (const bool bStrictModeActive)
 {
 	if (bStrictModeActive)
 		reader().getWarnings()->setCriticalWarningLevel(NMR::mrwInvalidOptionalValue);
@@ -155,19 +155,19 @@ void CLib3MFReader::SetStrictModeActive (const bool bStrictModeActive)
 		reader().getWarnings()->setCriticalWarningLevel(NMR::mrwFatal);
 }
 
-bool CLib3MFReader::GetStrictModeActive ()
+bool CReader::GetStrictModeActive ()
 {
 	return reader().getWarnings()->getCriticalWarningLevel() == NMR::mrwInvalidOptionalValue;
 }
 
-std::string CLib3MFReader::GetWarning (const Lib3MF_uint32 nIndex, Lib3MF_uint32 & nErrorCode)
+std::string CReader::GetWarning (const Lib3MF_uint32 nIndex, Lib3MF_uint32 & nErrorCode)
 {
 	auto warning = reader().getWarnings()->getWarning(nIndex);
 	nErrorCode = warning->getErrorCode();
 	return warning->getMessage();
 }
 
-Lib3MF_uint32 CLib3MFReader::GetWarningCount ()
+Lib3MF_uint32 CReader::GetWarningCount ()
 {
 	return reader().getWarnings()->getWarningCount();
 }

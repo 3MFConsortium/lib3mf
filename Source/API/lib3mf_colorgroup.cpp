@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium (Original Author)
+Copyright (C) 2019 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -24,7 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CLib3MFColorGroup
+Abstract: This is a stub class definition of CColorGroup
 
 */
 
@@ -37,17 +37,17 @@ Abstract: This is a stub class definition of CLib3MFColorGroup
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CLib3MFColorGroup 
+ Class definition of CColorGroup 
 **************************************************************************************************************************/
 
-CLib3MFColorGroup::CLib3MFColorGroup(NMR::PModelColorGroupResource pResource)
-	: CLib3MFResource(std::static_pointer_cast<NMR::CModelResource>(pResource))
+CColorGroup::CColorGroup(NMR::PModelColorGroupResource pResource)
+	: CResource(std::static_pointer_cast<NMR::CModelResource>(pResource))
 {
 
 }
 
 
-NMR::CModelColorGroupResource& CLib3MFColorGroup::colorGroup()
+NMR::CModelColorGroupResource& CColorGroup::colorGroup()
 {
 	NMR::CModelColorGroupResource* pColorGroup = dynamic_cast<NMR::CModelColorGroupResource*>(resource().get());
 	if (pColorGroup == nullptr)
@@ -56,12 +56,12 @@ NMR::CModelColorGroupResource& CLib3MFColorGroup::colorGroup()
 }
 
 
-Lib3MF_uint32 CLib3MFColorGroup::GetCount ()
+Lib3MF_uint32 CColorGroup::GetCount ()
 {
 	return colorGroup().getCount();
 }
 
-void CLib3MFColorGroup::GetAllPropertyIDs (Lib3MF_uint64 nPropertyIDsBufferSize, Lib3MF_uint64* pPropertyIDsNeededCount, Lib3MF_uint32 * pPropertyIDsBuffer)
+void CColorGroup::GetAllPropertyIDs (Lib3MF_uint64 nPropertyIDsBufferSize, Lib3MF_uint64* pPropertyIDsNeededCount, Lib3MF_uint32 * pPropertyIDsBuffer)
 {
 	Lib3MF_uint32 nCount = colorGroup().getCount();
 
@@ -85,20 +85,20 @@ void CLib3MFColorGroup::GetAllPropertyIDs (Lib3MF_uint64 nPropertyIDsBufferSize,
 	}
 }
 
-Lib3MF_uint32 CLib3MFColorGroup::AddColor (const sLib3MFColor TheColor)
+Lib3MF_uint32 CColorGroup::AddColor (const sLib3MFColor TheColor)
 {
 	NMR::nfColor cColor = TheColor.m_Red | (TheColor.m_Green << 8) | (TheColor.m_Blue << 16) | (TheColor.m_Alpha << 24);
 
 	return colorGroup().addColor(cColor);
 }
 
-void CLib3MFColorGroup::SetColor (const Lib3MF_uint32 nPropertyID, const sLib3MFColor TheColor)
+void CColorGroup::SetColor (const Lib3MF_uint32 nPropertyID, const sLib3MFColor TheColor)
 {
 	NMR::nfColor cColor = TheColor.m_Red | (TheColor.m_Green << 8) | (TheColor.m_Blue << 16) | (TheColor.m_Alpha << 24);
 	colorGroup().getColor(nPropertyID);
 }
 
-sLib3MFColor CLib3MFColorGroup::GetColor (const Lib3MF_uint32 nPropertyID)
+sLib3MFColor CColorGroup::GetColor (const Lib3MF_uint32 nPropertyID)
 {
 	NMR::nfColor cColor = colorGroup().getColor(nPropertyID);
 	sLib3MFColor c;
@@ -109,7 +109,7 @@ sLib3MFColor CLib3MFColorGroup::GetColor (const Lib3MF_uint32 nPropertyID)
 	return c;
 }
 
-void CLib3MFColorGroup::RemoveColor(const Lib3MF_uint32 nPropertyID)
+void CColorGroup::RemoveColor(const Lib3MF_uint32 nPropertyID)
 {
 	colorGroup().removeColor(nPropertyID);
 }

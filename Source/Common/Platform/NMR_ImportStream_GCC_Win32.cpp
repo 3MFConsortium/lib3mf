@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -32,7 +32,7 @@ This is an abstract base stream class for importing from streams with GCC on Win
 --*/
 
 #include "Common/Platform/NMR_ImportStream_GCC_Win32.h"
-#include "Common/Platform/NMR_ImportStream_Memory.h"
+#include "Common/Platform/NMR_ImportStream_Unique_Memory.h"
 #include "Common/NMR_Exception.h"
 
 #ifdef __GCC_WIN32
@@ -214,7 +214,7 @@ namespace NMR {
     {
 		nfUint64 cbStreamSize = retrieveSize();
 
-		return std::make_shared<CImportStream_Memory>(this, cbStreamSize, false);
+		return std::make_shared<CImportStream_Unique_Memory>(this, cbStreamSize, false);
 	}
 
 #endif // __GCC_WIN32

@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium (Original Author)
+Copyright (C) 2019 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -24,7 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CLib3MFMetaData
+Abstract: This is a stub class definition of CMetaData
 
 */
 
@@ -37,66 +37,66 @@ Abstract: This is a stub class definition of CLib3MFMetaData
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CLib3MFMetaData 
+ Class definition of CMetaData 
 **************************************************************************************************************************/
 
-CLib3MFMetaData::CLib3MFMetaData(NMR::PModelMetaData pMetaData)
+CMetaData::CMetaData(NMR::PModelMetaData pMetaData)
 	:m_pMetaData(pMetaData)
 {
 }
 
 
-std::string CLib3MFMetaData::GetNameSpace ()
+std::string CMetaData::GetNameSpace ()
 {
 	return m_pMetaData->getNameSpace();
 }
 
-void CLib3MFMetaData::SetNameSpace (const std::string & sNameSpace)
+void CMetaData::SetNameSpace (const std::string & sNameSpace)
 {
 	m_pMetaData->setNameSpace(sNameSpace);
 }
 
-std::string CLib3MFMetaData::GetName()
+std::string CMetaData::GetName()
 {
 	return m_pMetaData->getName();
 }
 
-std::string CLib3MFMetaData::GetKey()
+std::string CMetaData::GetKey()
 {
 	return m_pMetaData->getKey();
 }
 
-void CLib3MFMetaData::SetName (const std::string & sName)
+void CMetaData::SetName (const std::string & sName)
 {
 	m_pMetaData->setName(sName);
 }
 
-bool CLib3MFMetaData::GetMustPreserve ()
+bool CMetaData::GetMustPreserve ()
 {
 	return m_pMetaData->getPreserve();
 }
 
-void CLib3MFMetaData::SetMustPreserve (const bool bMustPreserve)
+void CMetaData::SetMustPreserve (const bool bMustPreserve)
 {
 	m_pMetaData->setPreserve(bMustPreserve);
 }
 
-std::string CLib3MFMetaData::GetType ()
+std::string CMetaData::GetType ()
 {
 	return m_pMetaData->getType();
 }
 
-void CLib3MFMetaData::SetType (const std::string & sType)
+void CMetaData::SetType (const std::string & sType)
 {
 	m_pMetaData->setType(sType);
 }
 
-std::string CLib3MFMetaData::GetValue ()
+std::string CMetaData::GetValue ()
 {
 	return m_pMetaData->getValue();
 }
 
-void CLib3MFMetaData::SetValue (const std::string & sValue)
+void CMetaData::SetValue (const std::string & sValue)
 {
 	m_pMetaData->setValue(sValue);
 }

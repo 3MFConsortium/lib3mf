@@ -24,7 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CLib3MFNurbsSurfaceIterator
+Abstract: This is the class declaration of CNurbsSurfaceIterator
 
 */
 
@@ -47,10 +47,10 @@ namespace Impl {
 
 
 /*************************************************************************************************************************
- Class declaration of CLib3MFNurbsSurfaceIterator 
+ Class declaration of CNurbsSurfaceIterator 
 **************************************************************************************************************************/
 
-class CLib3MFNurbsSurfaceIterator : public virtual ILib3MFNurbsSurfaceIterator, public virtual CLib3MFResourceIterator {
+class CNurbsSurfaceIterator : public virtual INurbsSurfaceIterator, public virtual CResourceIterator {
 private:
 
 	/**
@@ -74,7 +74,7 @@ public:
 	* Public member functions to implement.
 	*/
 
-	ILib3MFNurbsSurface * GetCurrentNurbsSurface();
+	INurbsSurface * GetCurrentNurbsSurface();
 
 };
 

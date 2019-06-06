@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -44,11 +44,22 @@ and Exception-safe
 
 namespace NMR {
 
+	template <typename T>
+	T fnStringToType(_In_z_ const nfChar * pszValue);
+
+	
+	template<> float fnStringToType(_In_z_ const nfChar * pszValue);
+	template<> double fnStringToType(_In_z_ const nfChar * pszValue);
+	template<> nfInt32 fnStringToType(_In_z_ const nfChar * pszValue);
+	template<> nfUint32 fnStringToType(_In_z_ const nfChar * pszValue);
+	template<> unsigned long fnStringToType(_In_z_ const nfChar * pszValue);
+	template<> std::string fnStringToType(_In_z_ const nfChar * pszValue);
+
 	nfInt32 fnStringToInt32(_In_z_ const nfChar * pszValue);
 	nfUint32 fnStringToUint32(_In_z_ const nfChar * pszValue);
 	nfFloat fnStringToFloat(_In_z_ const nfChar * pszValue);
 	nfDouble fnStringToDouble(_In_z_ const nfChar * pszValue);
-	nfBool	fnStringToSRGBColor(_In_z_ const nfChar * pszValue, _Out_ nfColor & cResult);
+	nfBool fnStringToSRGBColor(_In_z_ const nfChar * pszValue, _Out_ nfColor & cResult);
 	nfUint32 fnHexStringToUint32(_In_z_ const nfChar * pszValue);
 
 	std::string fnInt32ToString(_In_ nfInt32 nValue);
@@ -58,6 +69,18 @@ namespace NMR {
 	std::string fnColorToString(_In_ nfColor cColor);
 
 	void fnStringToCommaSeparatedIntegerTriplet(_In_z_ const nfChar * pszValue, _Out_ nfInt32 & nValue1, _Out_ nfInt32 & nValue2, _Out_ nfInt32 & nValue3);
+	
+	template<typename T>
+	std::string fnVectorToSpaceDelimitedString(_In_ const std::vector<T> v) {
+		std::string result = "";
+		for (auto i = v.begin(); i != v.end(); i++) {
+			if (i != v.begin())
+				result += " ";
+			result += std::to_string(*i);
+		}
+		return result;
+	};
+	template<> std::string fnVectorToSpaceDelimitedString(_In_ const std::vector<std::string> v);
 
 	void fnStringToBufferSafe(_In_ const std::string sString, _Out_opt_ nfChar * pszBuffer, nfUint32 cbBufferSize, _Out_opt_ nfUint32 * pcbNeededChars);
 	void fnWStringToBufferSafe(_In_ const std::wstring sString, _Out_opt_ nfWChar * pwszBuffer, nfUint32 cbBufferSize, _Out_opt_ nfUint32 * pcbNeededChars);
@@ -84,7 +107,41 @@ namespace NMR {
 	std::string fnExtractFileName(_In_ const std::string sFullPath);
 	std::string fnExtractFileDir(_In_ const std::string sFullPath);
 
-	std::vector<double> fnVctDouble_fromString(_In_ const std::string sString);
+	template<typename T>
+	std::vector<T> fnVctType_fromString(_In_ const std::string sInString)
+	{
+		std::string sString = sInString;
+		std::vector<T> vctValues;
+
+		nfChar * pszString = &(sString[0]);
+		nfChar * pCurrent = pszString;
+
+		nfBool bFinished = false;
+		while (!bFinished) {
+			// Find next space
+			const nfChar * pBegin = pCurrent;
+			while ((*pCurrent != ' ') && (*pCurrent))
+				pCurrent++;
+
+			if (*pCurrent == ' ') {
+				*pCurrent = 0;
+			}
+			else {
+				bFinished = true;
+			}
+
+			// If we have not found a space, convert value to T
+			if (pBegin != pCurrent) {
+				vctValues.push_back(fnStringToType<T>(pBegin));
+			}
+
+			// If we are finished, break, otherwise skip space!
+			if (!bFinished) {
+				pCurrent++;
+			}
+		}
+		return vctValues;
+	}
 }
 
 #endif // __NMR_STRINGUTILS

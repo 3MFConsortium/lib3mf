@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -99,10 +99,12 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 		
 		nfUint32 nCount = pSourceColorGroup->getCount();
-		nfUint32 nIndex;
 
-		for (nIndex = 0; nIndex < nCount; nIndex++) {
-			nfColor color = pSourceColorGroup->getColor(nIndex);
+		pSourceColorGroup->buildResourceIndexMap();
+		for (nfUint32 nIndex = 0; nIndex < nCount; nIndex++) {
+			ModelPropertyID nPropertyID;
+			pSourceColorGroup->mapResourceIndexToPropertyID(nIndex, nPropertyID);
+			nfColor color = pSourceColorGroup->getColor(nPropertyID);
 			addColor(color);
 		}
 		clearResourceIndexMap();

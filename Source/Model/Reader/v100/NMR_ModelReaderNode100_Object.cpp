@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -47,7 +47,7 @@ Stream.
 
 namespace NMR {
 
-	CModelReaderNode100_Object::CModelReaderNode100_Object(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings, _In_ CProgressMonitor * pProgressMonitor)
+	CModelReaderNode100_Object::CModelReaderNode100_Object(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings, _In_ PProgressMonitor pProgressMonitor)
 		: CModelReaderNode(pWarnings, pProgressMonitor)
 	{
 		// Initialize variables
@@ -238,14 +238,9 @@ namespace NMR {
 						m_pWarnings->addWarning(MODELREADERWARNING_INVALIDMODELOBJECTTYPE, NMR_ERROR_INVALIDMODELOBJECTTYPE, mrwInvalidOptionalValue);
 				}
 				
-
-				if (m_pProgressMonitor)
-					m_pProgressMonitor->PushLevel(0, 1);
 				// Read Mesh
 				PModelReaderNode100_Mesh pXMLNode = std::make_shared<CModelReaderNode100_Mesh>(m_pModel, pMesh.get(), m_pWarnings, m_pProgressMonitor, m_nDefaultPropertyID, m_nDefaultPropertyIndex);
 				pXMLNode->parseXML(pXMLReader);
-				if (m_pProgressMonitor)
-					m_pProgressMonitor->PopLevel();
 
 				// Add Object to Parent
 				m_pModel->addResource(m_pObject);
@@ -294,11 +289,11 @@ namespace NMR {
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
 
 			// In any case (component object or mesh object)
-			if (m_nSliceStackId > 0) {
+			if ( (m_pObject) && (m_nSliceStackId > 0) ) {
 				PPackageResourceID pID = m_pModel->findPackageResourceID(m_pModel->curPath(), m_nSliceStackId);
 				if (!pID.get())
 					throw CNMRException(NMR_ERROR_SLICESTACKRESOURCE_NOT_FOUND);
-				PModelSliceStack pSliceStackResource = std::dynamic_pointer_cast<CModelSliceStack>( m_pModel->findResource(pID->getUniqueID()) );
+				PModelSliceStack pSliceStackResource = std::dynamic_pointer_cast<CModelSliceStack>(m_pModel->findResource(pID->getUniqueID()) );
 				if (pSliceStackResource) {
 					if ((m_pObject->getObjectType() == MODELOBJECTTYPE_MODEL) || (MODELOBJECTTYPE_SOLIDSUPPORT)) {
 						if (!pSliceStackResource->areAllPolygonsClosed()) {

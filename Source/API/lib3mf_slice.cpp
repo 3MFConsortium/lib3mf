@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium (Original Author)
+Copyright (C) 2019 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -24,7 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CLib3MFSlice
+Abstract: This is a stub class definition of CSlice
 
 */
 
@@ -37,25 +37,25 @@ Abstract: This is a stub class definition of CLib3MFSlice
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CLib3MFSlice 
+ Class definition of CSlice 
 **************************************************************************************************************************/
 
-CLib3MFSlice::CLib3MFSlice(NMR::PSlice pSlice)
+CSlice::CSlice(NMR::PSlice pSlice)
 	:m_pSlice(pSlice)
 {
 	
 }
 
-void CLib3MFSlice::SetVertices (const Lib3MF_uint64 nVerticesBufferSize, const sLib3MFPosition2D * pVerticesBuffer)
+void CSlice::SetVertices (const Lib3MF_uint64 nVerticesBufferSize, const sLib3MFPosition2D * pVerticesBuffer)
 {
 	m_pSlice->Clear();
 	for (Lib3MF_uint64 index = 0; index < nVerticesBufferSize; index++) {
-		m_pSlice->addVertex(pVerticesBuffer->m_coordinates[0], pVerticesBuffer->m_coordinates[1]);
+		m_pSlice->addVertex(pVerticesBuffer->m_Coordinates[0], pVerticesBuffer->m_Coordinates[1]);
 		pVerticesBuffer++;
 	}
 }
 
-void CLib3MFSlice::GetVertices (Lib3MF_uint64 nVerticesBufferSize, Lib3MF_uint64* pVerticesNeededCount, sLib3MFPosition2D * pVerticesBuffer)
+void CSlice::GetVertices (Lib3MF_uint64 nVerticesBufferSize, Lib3MF_uint64* pVerticesNeededCount, sLib3MFPosition2D * pVerticesBuffer)
 {
 	Lib3MF_uint64 vertexCount = m_pSlice->getVertexCount();
 	if (pVerticesNeededCount)
@@ -66,30 +66,30 @@ void CLib3MFSlice::GetVertices (Lib3MF_uint64 nVerticesBufferSize, Lib3MF_uint64
 		for (Lib3MF_uint32 i = 0; i < vertexCount; i++)
 		{
 			const NMR::SLICENODE* node = m_pSlice->getNode(i);
-			pVerticesBuffer[i].m_coordinates[0] = node->m_position.m_fields[0];
-			pVerticesBuffer[i].m_coordinates[1] = node->m_position.m_fields[1];
+			pVerticesBuffer[i].m_Coordinates[0] = node->m_position.m_fields[0];
+			pVerticesBuffer[i].m_Coordinates[1] = node->m_position.m_fields[1];
 		}
 	}
 }
 
-Lib3MF_uint64 CLib3MFSlice::GetVertexCount ()
+Lib3MF_uint64 CSlice::GetVertexCount ()
 {
 	return m_pSlice->getVertexCount();
 }
 
-Lib3MF_uint64 CLib3MFSlice::AddPolygon(const Lib3MF_uint64 nIndicesBufferSize, const Lib3MF_uint32 * pIndicesBuffer)
+Lib3MF_uint64 CSlice::AddPolygon(const Lib3MF_uint64 nIndicesBufferSize, const Lib3MF_uint32 * pIndicesBuffer)
 {
 	Lib3MF_uint32 index = m_pSlice->beginPolygon();
 	SetPolygonIndices(index, nIndicesBufferSize, pIndicesBuffer);
 	return index;
 }
 
-Lib3MF_uint64 CLib3MFSlice::GetPolygonCount ()
+Lib3MF_uint64 CSlice::GetPolygonCount ()
 {
 	return m_pSlice->getPolygonCount();
 }
 
-void CLib3MFSlice::SetPolygonIndices (const Lib3MF_uint64 nIndex, const Lib3MF_uint64 nIndicesBufferSize, const Lib3MF_uint32 * pIndicesBuffer)
+void CSlice::SetPolygonIndices (const Lib3MF_uint64 nIndex, const Lib3MF_uint64 nIndicesBufferSize, const Lib3MF_uint32 * pIndicesBuffer)
 {
 	m_pSlice->clearPolygon(NMR::nfUint32(nIndex));
 
@@ -97,7 +97,7 @@ void CLib3MFSlice::SetPolygonIndices (const Lib3MF_uint64 nIndex, const Lib3MF_u
 		m_pSlice->addPolygonIndex(NMR::nfUint32(nIndex), pIndicesBuffer[i]);
 }
 
-void CLib3MFSlice::GetPolygonIndices (const Lib3MF_uint64 nIndex, Lib3MF_uint64 nIndicesBufferSize, Lib3MF_uint64* pIndicesNeededCount, Lib3MF_uint32 * pIndicesBuffer)
+void CSlice::GetPolygonIndices (const Lib3MF_uint64 nIndex, Lib3MF_uint64 nIndicesBufferSize, Lib3MF_uint64* pIndicesNeededCount, Lib3MF_uint32 * pIndicesBuffer)
 {
 	Lib3MF_uint64 indexCount = m_pSlice->getPolygonIndexCount(NMR::nfUint32(nIndex));
 	if (pIndicesNeededCount)
@@ -113,12 +113,12 @@ void CLib3MFSlice::GetPolygonIndices (const Lib3MF_uint64 nIndex, Lib3MF_uint64 
 
 }
 
-Lib3MF_uint64 CLib3MFSlice::GetPolygonIndexCount (const Lib3MF_uint64 nIndex)
+Lib3MF_uint64 CSlice::GetPolygonIndexCount (const Lib3MF_uint64 nIndex)
 {
 	return m_pSlice->getPolygonIndexCount(NMR::nfUint32(nIndex));
 }
 
-double CLib3MFSlice::GetZTop()
+double CSlice::GetZTop()
 {
 	return m_pSlice->getTopZ();
 }

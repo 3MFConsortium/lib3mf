@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -158,9 +158,25 @@ namespace NMR {
 		MODELTEXTUREFILTER_NEAREST = 2
 	};
 
+	enum eModelBlendMethod {
+		MODELBLENDMETHOD_NONE = 0,
+		MODELBLENDMETHOD_MIX = 1,
+		MODELBLENDMETHOD_MULTIPLY = 2
+	};
+
 	typedef struct {
 		FLOAT m_fPosition[2];
 	} MODELSLICEVERTEX;
+
+	typedef struct {
+		DOUBLE m_dMixingRatio;
+		ModelPropertyID m_nPropertyID;
+	} MODELCOMPOSITECONSTITUENT;
+
+	typedef struct {
+		ModelResourceID m_nResourceID;
+		eModelBlendMethod m_nMethod;
+	} MODELMULTIPROPERTYLAYER;
 }
 
 #endif // __NMR_MODELTYPES

@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -66,6 +66,18 @@ namespace NMR {
 		return nResourceIndex;
 	}
 
+
+	nfUint32 CMeshInformation_PropertyIndexMapping::mapPropertyIDToIndex(nfUint32 nResourceID, ModelPropertyID nPropertyID)
+	{
+		if (nResourceID == 0)
+			throw CNMRException(NMR_ERROR_INVALIDPROPERTYRESOURCEID);
+
+		auto iIterator = m_IDMap.find(std::make_pair(nResourceID, nPropertyID));
+		if (iIterator == m_IDMap.end())
+			throw CNMRException(NMR_ERROR_PROPERTYIDNOTFOUND);
+
+		return iIterator->second;
+	}
 
 	nfUint32 CMeshInformation_PropertyIndexMapping::mapPropertyIDToIndex(nfUint32 nResourceID, ModelPropertyID nPropertyID, ModelPropertyID nDefaultPropertyID)
 	{

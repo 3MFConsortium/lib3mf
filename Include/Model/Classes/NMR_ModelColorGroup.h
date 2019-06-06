@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -35,7 +35,6 @@ color group resource object.
 #ifndef __NMR_MODELCOLORGROUP
 #define __NMR_MODELCOLORGROUP
 
-#include "Model/Classes/NMR_ModelBaseMaterial.h"
 #include "Model/Classes/NMR_ModelResource.h"
 #include "Model/Classes/NMR_ModelTypes.h"
 #include "Model/Classes/NMR_Model.h"

@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium (Original Author)
+Copyright (C) 2019 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -24,20 +24,22 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CLib3MFMeshObject
+Abstract: This is the class declaration of CMeshObject
 
 */
 
 
-#ifndef __LIB3MF_LIB3MFMESHOBJECT
-#define __LIB3MF_LIB3MFMESHOBJECT
+#ifndef __LIB3MF_MESHOBJECT
+#define __LIB3MF_MESHOBJECT
 
 #include "lib3mf_interfaces.hpp"
 
 // Parent classes
 #include "lib3mf_object.hpp"
-#pragma warning( push)
-#pragma warning( disable : 4250)
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4250)
+#endif
 
 // Include custom headers here.
 #include "Model/Classes/NMR_ModelMeshObject.h"
@@ -47,10 +49,10 @@ namespace Impl {
 
 
 /*************************************************************************************************************************
- Class declaration of CLib3MFMeshObject 
+ Class declaration of CMeshObject 
 **************************************************************************************************************************/
 
-class CLib3MFMeshObject : public virtual ILib3MFMeshObject, public virtual CLib3MFObject {
+class CMeshObject : public virtual IMeshObject, public virtual CObject {
 private:
 
 	/**
@@ -66,11 +68,12 @@ protected:
 	*/
 
 public:
+	static IMeshObject* fnCreateMeshObjectFromModelResource(NMR::PModelResource pResource, bool bFailIfUnkownClass);
 
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-	CLib3MFMeshObject(NMR::PModelResource pResource);
+	CMeshObject(NMR::PModelResource pResource);
 
 	/**
 	* Public member functions to implement.
@@ -106,7 +109,7 @@ public:
 
 	bool IsValid();
 
-	virtual ILib3MFBeamLattice * BeamLattice();
+	virtual IBeamLattice * BeamLattice();
 
 	void SetTriangleProperties(const Lib3MF_uint32 nIndex, const sLib3MFTriangleProperties Properties);
 
@@ -126,5 +129,7 @@ public:
 }
 }
 
-#pragma warning( pop )
-#endif // __LIB3MF_LIB3MFMESHOBJECT
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
+#endif // __LIB3MF_MESHOBJECT

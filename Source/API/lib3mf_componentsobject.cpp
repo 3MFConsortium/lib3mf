@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium (Original Author)
+Copyright (C) 2019 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -24,7 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CLib3MFComponentsObject
+Abstract: This is a stub class definition of CComponentsObject
 
 */
 
@@ -39,15 +39,15 @@ Abstract: This is a stub class definition of CLib3MFComponentsObject
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CLib3MFComponentsObject 
+ Class definition of CComponentsObject 
 **************************************************************************************************************************/
 
-CLib3MFComponentsObject::CLib3MFComponentsObject(NMR::PModelResource pResource)
-	: CLib3MFResource(pResource), CLib3MFObject(pResource)
+CComponentsObject::CComponentsObject(NMR::PModelResource pResource)
+	: CResource(pResource), CObject(pResource)
 {
 }
 
-NMR::CModelComponentsObject * CLib3MFComponentsObject::getComponentsObject()
+NMR::CModelComponentsObject * CComponentsObject::getComponentsObject()
 {
 	NMR::CModelComponentsObject * pComponentsObject = dynamic_cast<NMR::CModelComponentsObject *> (resource().get());
 	if (pComponentsObject == nullptr)
@@ -56,7 +56,7 @@ NMR::CModelComponentsObject * CLib3MFComponentsObject::getComponentsObject()
 	return pComponentsObject;
 }
 
-ILib3MFComponent * CLib3MFComponentsObject::AddComponent (ILib3MFObject* pObjectResource, const sLib3MFTransform Transform)
+IComponent * CComponentsObject::AddComponent (IObject* pObjectResource, const sLib3MFTransform Transform)
 {
 	NMR::CModelComponentsObject * pComponentsObject = getComponentsObject();
 	NMR::CModel * pModel = pComponentsObject->getModel();
@@ -83,27 +83,27 @@ ILib3MFComponent * CLib3MFComponentsObject::AddComponent (ILib3MFObject* pObject
 	NMR::PModelComponent pNewComponent = std::make_shared<NMR::CModelComponent>(pObject, mMatrix);
 	pComponentsObject->addComponent(pNewComponent);
 
-	return new CLib3MFComponent(pNewComponent);
+	return new CComponent(pNewComponent);
 }
 
-ILib3MFComponent * CLib3MFComponentsObject::GetComponent (const Lib3MF_uint32 nIndex)
+IComponent * CComponentsObject::GetComponent (const Lib3MF_uint32 nIndex)
 {
 	NMR::CModelComponentsObject * pComponentsObject = getComponentsObject();
 	NMR::PModelComponent pNewComponent = pComponentsObject->getComponent(nIndex);
-	return new CLib3MFComponent(pNewComponent);
+	return new CComponent(pNewComponent);
 }
 
-Lib3MF_uint32 CLib3MFComponentsObject::GetComponentCount ()
+Lib3MF_uint32 CComponentsObject::GetComponentCount ()
 {
 	return getComponentsObject()->getComponentCount();
 }
 
-bool CLib3MFComponentsObject::IsMeshObject()
+bool CComponentsObject::IsMeshObject()
 {
 	return false;
 }
 
-bool CLib3MFComponentsObject::IsComponentsObject()
+bool CComponentsObject::IsComponentsObject()
 {
 	return true;
 }

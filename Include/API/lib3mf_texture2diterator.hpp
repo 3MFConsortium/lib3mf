@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium (Original Author)
+Copyright (C) 2019 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -24,20 +24,22 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CLib3MFTexture2DIterator
+Abstract: This is the class declaration of CTexture2DIterator
 
 */
 
 
-#ifndef __LIB3MF_LIB3MFTEXTURE2DITERATOR
-#define __LIB3MF_LIB3MFTEXTURE2DITERATOR
+#ifndef __LIB3MF_TEXTURE2DITERATOR
+#define __LIB3MF_TEXTURE2DITERATOR
 
 #include "lib3mf_interfaces.hpp"
 
 // Parent classes
 #include "lib3mf_resourceiterator.hpp"
-#pragma warning( push)
-#pragma warning( disable : 4250)
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4250)
+#endif
 
 // Include custom headers here.
 
@@ -47,10 +49,10 @@ namespace Impl {
 
 
 /*************************************************************************************************************************
- Class declaration of CLib3MFTexture2DIterator 
+ Class declaration of CTexture2DIterator 
 **************************************************************************************************************************/
 
-class CLib3MFTexture2DIterator : public virtual ILib3MFTexture2DIterator, public virtual CLib3MFResourceIterator {
+class CTexture2DIterator : public virtual ITexture2DIterator, public virtual CResourceIterator {
 private:
 
 	/**
@@ -74,12 +76,14 @@ public:
 	* Public member functions to implement.
 	*/
 
-	ILib3MFTexture2D * GetCurrentTexture2D ();
+	ITexture2D * GetCurrentTexture2D ();
 
 };
 
 } // namespace Impl
 } // namespace Lib3MF
 
-#pragma warning( pop )
-#endif // __LIB3MF_LIB3MFTEXTURE2DITERATOR
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
+#endif // __LIB3MF_TEXTURE2DITERATOR

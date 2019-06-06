@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium (Original Author)
+Copyright (C) 2019 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -24,7 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CLib3MFBuildItem
+Abstract: This is a stub class definition of CBuildItem
 
 */
 
@@ -39,38 +39,38 @@ Abstract: This is a stub class definition of CLib3MFBuildItem
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CLib3MFBuildItem 
+ Class definition of CBuildItem 
 **************************************************************************************************************************/
 
-NMR::CModelBuildItem& CLib3MFBuildItem::buildItem()
+NMR::CModelBuildItem& CBuildItem::buildItem()
 {
 	return *m_pBuildItem.get();
 }
 
-CLib3MFBuildItem::CLib3MFBuildItem(NMR::PModelBuildItem pBuildItem)
+CBuildItem::CBuildItem(NMR::PModelBuildItem pBuildItem)
 {
 	m_pBuildItem = pBuildItem;
 }
 
-Lib3MF_uint32 CLib3MFBuildItem::GetHandle()
+Lib3MF_uint32 CBuildItem::GetHandle()
 {
 	return buildItem().getHandle();
 }
 
-ILib3MFObject * CLib3MFBuildItem::GetObjectResource ()
+IObject * CBuildItem::GetObjectResource ()
 {
 	NMR::PModelResource pResource = buildItem().getModel()->findResource(buildItem().getObjectID());
 	if (!pResource.get())
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDMODELRESOURCE);
 	
-	std::unique_ptr<ILib3MFObject> pResourceInterface(CLib3MFObject::fnCreateObjectFromModelResource(pResource, true));
+	std::unique_ptr<IObject> pResourceInterface(CObject::fnCreateObjectFromModelResource(pResource, true));
 	if (pResourceInterface == nullptr)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_RESOURCENOTFOUND);
 
 	return pResourceInterface.release();
 }
 
-std::string CLib3MFBuildItem::GetUUID (bool & bHasUUID)
+std::string CBuildItem::GetUUID (bool & bHasUUID)
 {
 	bHasUUID = buildItem().uuid() != nullptr;
 	if (bHasUUID)
@@ -78,45 +78,45 @@ std::string CLib3MFBuildItem::GetUUID (bool & bHasUUID)
 	return "";
 }
 
-void CLib3MFBuildItem::SetUUID (const std::string & sUUID)
+void CBuildItem::SetUUID (const std::string & sUUID)
 {
 	NMR::PUUID pUUID = std::make_shared<NMR::CUUID>(sUUID);
 	buildItem().setUUID(pUUID);
 }
 
-Lib3MF_uint32 CLib3MFBuildItem::GetObjectResourceID ()
+Lib3MF_uint32 CBuildItem::GetObjectResourceID ()
 {
 	return buildItem().getObjectID();
 }
 
-bool CLib3MFBuildItem::HasObjectTransform ()
+bool CBuildItem::HasObjectTransform ()
 {
 	return buildItem().hasTransform();
 }
 
-sLib3MFTransform CLib3MFBuildItem::GetObjectTransform ()
+sLib3MFTransform CBuildItem::GetObjectTransform ()
 {
 	const NMR::NMATRIX3 matrix = buildItem().getTransform();
 	return MatrixToTransform(matrix);
 }
 
-void CLib3MFBuildItem::SetObjectTransform (const sLib3MFTransform Transform)
+void CBuildItem::SetObjectTransform (const sLib3MFTransform Transform)
 {
 	buildItem().setTransform(TransformToMatrix(Transform));
 }
 
-std::string CLib3MFBuildItem::GetPartNumber ()
+std::string CBuildItem::GetPartNumber ()
 {
 	return buildItem().getPartNumber();
 }
 
-void CLib3MFBuildItem::SetPartNumber (const std::string & sSetPartnumber)
+void CBuildItem::SetPartNumber (const std::string & sSetPartnumber)
 {
 	buildItem().setPartNumber(sSetPartnumber);
 }
 
-ILib3MFMetaDataGroup * CLib3MFBuildItem::GetMetaDataGroup ()
+IMetaDataGroup * CBuildItem::GetMetaDataGroup ()
 {
-	return new CLib3MFMetaDataGroup(buildItem().metaDataGroup());
+	return new CMetaDataGroup(buildItem().metaDataGroup());
 }
 

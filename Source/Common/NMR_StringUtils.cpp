@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -63,6 +63,39 @@ namespace NMR {
 
 	// Masks to decode highest UTF8 sequence byte
 	const nfByte UTF8DecodeMask[7] = {0, 0x7f, 0x1f, 0x0f, 0x07, 0x03, 0x01};
+
+
+	template<>
+	float fnStringToType(_In_z_ const nfChar * pszValue)
+	{
+		return fnStringToFloat(pszValue);
+	}
+	template<>
+	double fnStringToType(_In_z_ const nfChar * pszValue)
+	{
+		return fnStringToDouble(pszValue);
+	}
+	template<>
+	nfInt32 fnStringToType(_In_z_ const nfChar * pszValue)
+	{
+		return fnStringToInt32(pszValue);
+	}
+	template<>
+	nfUint32 fnStringToType(_In_z_ const nfChar * pszValue)
+	{
+		return fnStringToUint32(pszValue);
+	}
+	template<>
+	unsigned long fnStringToType(_In_z_ const nfChar * pszValue)
+	{
+		return fnStringToUint32(pszValue);
+	}
+	template<>
+	std::string fnStringToType(_In_z_ const nfChar * pszValue)
+	{
+		return std::string(pszValue);
+	}
+
 
 	nfInt32 fnStringToInt32(_In_z_ const nfChar * pszValue)
 	{
@@ -327,6 +360,19 @@ namespace NMR {
 #endif
 		}
 	}
+
+
+	template<> std::string fnVectorToSpaceDelimitedString(_In_ const std::vector<std::string> v)
+	{
+		std::string result = "";
+		for (auto i = v.begin(); i != v.end(); i++) {
+			if (i != v.begin())
+				result += " ";
+			result += (*i);
+		}
+		return result;
+	};
+	
 
 
 	void fnStringToBufferSafe(_In_ const std::string sString, _Out_opt_ nfChar * pszBuffer, nfUint32 cbBufferSize, _Out_opt_ nfUint32 * pcbNeededChars)
@@ -777,33 +823,6 @@ namespace NMR {
 		}
 	}
 
-
-	std::vector<double> fnVctDouble_fromString(_In_ const std::string sString)
-	{
-		std::vector<double> vctValues;
-
-		const nfChar * pszString = sString.c_str();
-		const nfChar * pCurrent = pszString;
-
-		nfBool bFinished = false;
-		while (!bFinished) {
-			// Find next space
-			const nfChar * pBegin = pCurrent;
-			while ((*pCurrent != ' ') && (*pCurrent))
-				pCurrent++;
-
-			// If we have not found a space, convert value to double
-			if (pBegin != pCurrent) {
-				vctValues.push_back(fnStringToFloat(pBegin));
-			}
-
-			// If we are finished, break, otherwise skip space!
-			if (!*pCurrent)
-				bFinished = true;
-			else
-				pCurrent++;
-		}
-		return vctValues;
-	}
+	
 
 }

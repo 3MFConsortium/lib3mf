@@ -24,7 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CLib3MFNurbsSurfaceIterator
+Abstract: This is a stub class definition of CNurbsSurfaceIterator
 
 */
 
@@ -38,10 +38,10 @@ Abstract: This is a stub class definition of CLib3MFNurbsSurfaceIterator
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CLib3MFNurbsSurfaceIterator 
+ Class definition of CNurbsSurfaceIterator 
 **************************************************************************************************************************/
 
-ILib3MFNurbsSurface * CLib3MFNurbsSurfaceIterator::GetCurrentNurbsSurface()
+INurbsSurface * CNurbsSurfaceIterator::GetCurrentNurbsSurface()
 {
 	// Get Resource Count
 	Lib3MF_int32 nNurbsCount = (Lib3MF_int32)m_pResources.size();
@@ -53,7 +53,7 @@ ILib3MFNurbsSurface * CLib3MFNurbsSurfaceIterator::GetCurrentNurbsSurface()
 
 	auto pNurbsSurface = std::dynamic_pointer_cast<NMR::CModelNurbsSurface> (pResource);
 
-	auto pACTNurbsSurface = std::make_unique<CLib3MFNurbsSurface>(pNurbsSurface);
+	auto pACTNurbsSurface = std::make_unique<CNurbsSurface>(pNurbsSurface);
 
 	return pACTNurbsSurface.release();
 

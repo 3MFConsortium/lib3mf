@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -100,11 +100,13 @@ namespace NMR {
 		return -1;
 	}
 
-	COpcPackageReader::COpcPackageReader(_In_ PImportStream pImportStream, _In_ PModelReaderWarnings pWarnings)
+	COpcPackageReader::COpcPackageReader(_In_ PImportStream pImportStream, _In_ PModelReaderWarnings pWarnings, _In_ PProgressMonitor pProgressMonitor)
+		: m_pProgressMonitor(pProgressMonitor), m_pWarnings(pWarnings)
 	{
-		m_pWarnings = pWarnings;
-		
-		if (pImportStream.get() == nullptr)
+		if (!pImportStream)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		if (!pProgressMonitor)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
 		m_ZIPError.str = nullptr;
@@ -124,11 +126,7 @@ namespace NMR {
 			// create ZIP objects
 			zip_error_init(&m_ZIPError);
 
-#ifdef NMR_COM_NATIVE
-			bool bUseCallback = false;
-#else
 			bool bUseCallback = true;
-#endif
 			if (bUseCallback) {
 				// read ZIP from callback: faster and requires less memory
 				m_ZIPsource = zip_source_function_create(custom_zip_source_callback, pImportStream.get(), &m_ZIPError);
@@ -156,16 +154,25 @@ namespace NMR {
 			if (nEntryCount < 0)
 				throw CNMRException(NMR_ERROR_COULDNOTREADZIPFILE);
 
-			// List Entries
-			nfInt64 nIndex;
-			for (nIndex = 0; nIndex < nEntryCount; nIndex++) {
+			// List and stat Entries
+			nfUint64 nUnzippedFileSize = 0;
+			for (nfInt64 nIndex = 0; nIndex < nEntryCount; nIndex++) {
 				const char * pszName = zip_get_name(m_ZIParchive, (nfUint64) nIndex, ZIP_FL_ENC_GUESS);
 				m_ZIPEntries.insert(std::make_pair(pszName, nIndex));
+
+				zip_stat_t Stat;
+				nfInt32 nResult = zip_stat_index(m_ZIParchive, nIndex, ZIP_FL_UNCHANGED, &Stat);
+				if (nResult != 0)
+					throw CNMRException(NMR_ERROR_COULDNOTSTATZIPENTRY);
+
+				nUnzippedFileSize += Stat.size;
 			}
+
+			m_pProgressMonitor->SetMaxProgress(double(nUnzippedFileSize));
+			m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
 
 			readContentTypes();
 			readRootRelationships();
-
 		}
 		catch (...)
 		{
@@ -226,13 +233,10 @@ namespace NMR {
 		}
 
 		return openZIPEntryIndexed(iIterator->second);
-
-
 	}
 
 	PImportStream COpcPackageReader::openZIPEntryIndexed(_In_ nfUint64 nIndex)
 	{
-
 		zip_stat_t Stat;
 		nfInt32 nResult = zip_stat_index(m_ZIParchive, nIndex, ZIP_FL_UNCHANGED, &Stat);
 		if (nResult != 0)
@@ -245,7 +249,6 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_COULDNOTOPENZIPENTRY);
 
 		return std::make_shared<CImportStream_ZIP>(pFile, nSize);
-
 	}
 
 
@@ -253,7 +256,7 @@ namespace NMR {
 	{
 		PImportStream pContentStream = openZIPEntry(OPCPACKAGE_PATH_CONTENTTYPES);
 
-		POpcPackageContentTypesReader pReader = std::make_shared<COpcPackageContentTypesReader>(pContentStream);
+		POpcPackageContentTypesReader pReader = std::make_shared<COpcPackageContentTypesReader>(pContentStream, m_pProgressMonitor);
 
 		nfUint32 nCount = pReader->getCount();
 		nfUint32 nIndex;
@@ -289,7 +292,7 @@ namespace NMR {
 	{
 		PImportStream pRelStream = openZIPEntry(OPCPACKAGE_PATH_ROOTRELATIONSHIPS);
 
-		POpcPackageRelationshipReader pReader = std::make_shared<COpcPackageRelationshipReader>(pRelStream);
+		POpcPackageRelationshipReader pReader = std::make_shared<COpcPackageRelationshipReader>(pRelStream, m_pProgressMonitor);
 
 		nfUint32 nCount = pReader->getCount();
 		nfUint32 nIndex;
@@ -297,6 +300,22 @@ namespace NMR {
 		for (nIndex = 0; nIndex < nCount; nIndex++) {
 			m_RootRelationships.push_back(pReader->getRelationShip(nIndex));
 		}
+	}
+
+	nfUint64 COpcPackageReader::GetPartSize(_In_ std::string sPath)
+	{
+		std::string sRealPath = fnRemoveLeadingPathDelimiter(sPath);
+		auto iIterator = m_ZIPEntries.find(sRealPath);
+		if (iIterator == m_ZIPEntries.end()) {
+			return 0;
+		}
+
+		zip_stat_t Stat;
+		nfInt32 nResult = zip_stat_index(m_ZIParchive, iIterator->second, ZIP_FL_UNCHANGED, &Stat);
+		if (nResult != 0)
+			throw CNMRException(NMR_ERROR_COULDNOTSTATZIPENTRY);
+
+		return Stat.size;
 	}
 
 	POpcPackagePart COpcPackageReader::createPart(_In_ std::string sPath)
@@ -323,17 +342,16 @@ namespace NMR {
 		PImportStream pRelStream = openZIPEntry(sRelationShipPath);
 
 		if (pRelStream.get() != nullptr) {
-		    POpcPackageRelationshipReader pReader = std::make_shared<COpcPackageRelationshipReader>(pRelStream);
+			POpcPackageRelationshipReader pReader = std::make_shared<COpcPackageRelationshipReader>(pRelStream, m_pProgressMonitor);
 
-		    nfUint32 nCount = pReader->getCount();
-		    nfUint32 nIndex;
+			nfUint32 nCount = pReader->getCount();
+			nfUint32 nIndex;
 
-		    for (nIndex = 0; nIndex < nCount; nIndex++) {
-		    	POpcPackageRelationship pRelationShip = pReader->getRelationShip(nIndex);
-		    	pPart->addRelationship(pRelationShip->getID(), pRelationShip->getType(), pRelationShip->getTargetPartURI());
-		    }
+			for (nIndex = 0; nIndex < nCount; nIndex++) {
+				POpcPackageRelationship pRelationShip = pReader->getRelationShip(nIndex);
+				pPart->addRelationship(pRelationShip->getID(), pRelationShip->getType(), pRelationShip->getTargetPartURI());
+			}
 		}
-
 
 		return pPart;
 	}

@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -106,6 +106,7 @@ namespace NMR {
 				Buffer.resize((nLength + 1) * 6);
 				nfChar * pszAttribBuffer = &Buffer[0];
 				escapeXMLString(pszValue, pszAttribBuffer);
+				writeUTF8(pszAttribBuffer, false);
 			}
 
 			writeUTF8("\"", false);
@@ -184,7 +185,25 @@ namespace NMR {
 		if (pszContent == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 		closeCurrentElement(false);
-		writeUTF8(pszContent, false);
+
+		size_t nLength = strlen(pszContent);
+		if (nLength < NATIVEXMLFIXEDENCODINGLENGTH) {
+			// for small attribute lengths, use fixed size buffer
+			nfChar * pszAttribBuffer = &m_FixedEncodingBuffer[0];
+			escapeXMLString(pszContent, pszAttribBuffer);
+			writeUTF8(pszAttribBuffer, false);
+		}
+		else {
+			if (nLength > NATIVEXMLMAXSTRINGLENGTH)
+				throw CNMRException(NMR_ERROR_INVALIDBUFFERSIZE);
+
+			// for large attribute lengths, use dynamic buffer
+			std::vector<nfChar> Buffer;
+			Buffer.resize((nLength + 1) * 6);
+			nfChar * pszAttribBuffer = &Buffer[0];
+			escapeXMLString(pszContent, pszAttribBuffer);
+			writeUTF8(pszAttribBuffer, false);
+		}
 	}
 
 	void CXmlWriter_Native::writeData(_In_ const void * pData, _In_ nfUint32 cbLength)

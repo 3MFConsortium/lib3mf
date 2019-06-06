@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -29,69 +29,90 @@ Abstract: Progress Monitor
 --*/
 
 #include "Common/3MF_ProgressMonitor.h"
+#include "Common/NMR_Exception.h"
 
 #include <cmath>
 #include <algorithm>
 #include <limits>
-
-
 
 NMR::CProgressMonitor::CProgressMonitor()
 {
 	m_progressCallback = nullptr;
 	m_userData = nullptr;
 	m_lastCallbackResult = true;
+	m_dProgress = 0;
+	m_dProgressMax = 1;
+	m_eProgressIdentifier = ProgressIdentifier::PROGRESS_QUERYCANCELED;
 }
 
-bool NMR::CProgressMonitor::QueryCancelled()
-{
-	return Progress(-1, ProgressIdentifier::PROGRESS_QUERYCANCELED);
-}
-
-bool NMR::CProgressMonitor::Progress(double progress, ProgressIdentifier identifier)
+bool NMR::CProgressMonitor::QueryCancelled(bool throwIfCancelled)
 {
 	if (m_progressCallback)
 	{
 		std::unique_lock<std::mutex> lock(m_callbackMutex, std::try_to_lock);
 		if (lock) // If another progress callback is happening right _now_, just drop this one
 		{
-			int nProgress;
-			if (progress == -1)
-				nProgress = -1;
-			else {
-				nProgress = int(100*(Level().first + std::max(std::min(progress, 1.0), 0.0) * (Level().second - Level().first)));
-			}
-			m_lastCallbackResult = !m_progressCallback(nProgress, identifier, m_userData);
+			int nProgress = (int)(100 * m_dProgress / m_dProgressMax);
+			m_lastCallbackResult = m_progressCallback(nProgress, ProgressIdentifier::PROGRESS_QUERYCANCELED, m_userData);
+
+			if (throwIfCancelled && m_lastCallbackResult)
+				throw CNMRException(NMR_USERABORTED);
+
 			return m_lastCallbackResult;
 		}
 	}
-	return true;
+	return false;
 }
 
-void NMR::CProgressMonitor::PushLevel(double relativeStart, double relativeEnd) {
-	std::pair<double, double> curLevel = Level();
-	double curRange = curLevel.second - curLevel.first;
-	m_levels.push(std::pair<double, double>(curLevel.first + curRange*relativeStart, curLevel.first + curRange*relativeEnd));
-}
+bool NMR::CProgressMonitor::ReportProgressAndQueryCancelled(bool throwIfCancelled)
+{
+	if (m_progressCallback)
+	{
+		std::unique_lock<std::mutex> lock(m_callbackMutex, std::try_to_lock);
+		if (lock) // If another progress callback is happening right _now_, just drop this one
+		{
+			int nProgress = (int)(100 * m_dProgress / m_dProgressMax);
+			m_lastCallbackResult = m_progressCallback(nProgress, m_eProgressIdentifier, m_userData);
 
-std::pair<double, double> NMR::CProgressMonitor::PopLevel() {
-	std::pair<double, double> ret = Level();
-	if (!m_levels.empty()) {
-		m_levels.pop();
+			if (throwIfCancelled && m_lastCallbackResult)
+				throw CNMRException(NMR_USERABORTED);
+
+			return m_lastCallbackResult;
+		}
 	}
-	return ret;
+	return false;
 }
 
-void NMR::CProgressMonitor::ResetLevels() {
-	while (!m_levels.empty())
-		m_levels.pop();
+bool NMR::CProgressMonitor::WasAborted()
+{
+	return (m_lastCallbackResult == false);
 }
 
-std::pair<double, double> NMR::CProgressMonitor::Level() {
-	if (m_levels.empty()) {
-		m_levels.push(std::pair<double, double>(0., 1.));
+void NMR::CProgressMonitor::SetProgressIdentifier(ProgressIdentifier identifier)
+{
+	m_eProgressIdentifier = identifier;
+}
+
+void NMR::CProgressMonitor::SetMaxProgress(double dProgressMax)
+{
+	m_dProgressMax = dProgressMax;
+}
+
+void NMR::CProgressMonitor::DecreaseMaxProgress(double dMaxProgressDecrement)
+{
+	m_dProgressMax = std::max(m_dProgressMax - dMaxProgressDecrement, 1.0);
+	m_dProgress = std::min(m_dProgressMax, m_dProgress);
+}
+
+void NMR::CProgressMonitor::IncrementProgress(double dProgressIncrement)
+{
+	if (m_progressCallback)
+	{
+		{
+			std::unique_lock<std::mutex> lock(m_callbackMutex, std::try_to_lock);
+			m_dProgress = std::min(m_dProgressMax, m_dProgress + dProgressIncrement);
+		}
 	}
-	return m_levels.top();
 }
 
 void NMR::CProgressMonitor::SetProgressCallback(Lib3MFProgressCallback callback, void * userData)
@@ -99,17 +120,11 @@ void NMR::CProgressMonitor::SetProgressCallback(Lib3MFProgressCallback callback,
 	m_progressCallback = callback;
 	m_userData = userData;
 	m_lastCallbackResult = true;
-	ResetLevels();
 }
 
 void NMR::CProgressMonitor::ClearProgressCallback()
 {
 	SetProgressCallback(nullptr, nullptr);
-}
-
-bool NMR::CProgressMonitor::WasAborted()
-{
-	return (m_lastCallbackResult == false);
 }
 
 void NMR::CProgressMonitor::GetProgressMessage(NMR::ProgressIdentifier progressIdentifier, std::string& progressString) {
@@ -125,13 +140,15 @@ void NMR::CProgressMonitor::GetProgressMessage(NMR::ProgressIdentifier progressI
 		case PROGRESS_READMESH: progressString = "Reading mesh data"; break;
 		case PROGRESS_READSLICES: progressString = "Reading slice data"; break;
 		case PROGRESS_READBUILD: progressString = "Reading build definition"; break;
+		case PROGRESS_READCUSTOMATTACHMENTS: progressString = "Reading custom attachments"; break;
+		case PROGRESS_READTEXTURETACHMENTS: progressString = "Reading texture attachments"; break;
 		case PROGRESS_CREATEOPCPACKAGE: progressString = "Creating OPC package"; break;
 		case PROGRESS_WRITEMODELSTOSTREAM: progressString = "Writing models to stream"; break;
 		case PROGRESS_WRITEROOTMODEL: progressString = "Writing root model"; break;
 		case PROGRESS_WRITENONROOTMODELS: progressString = "Writing non-root models"; break;
 		case PROGRESS_WRITEATTACHMENTS: progressString = "Writing attachments"; break;
 		case PROGRESS_WRITECONTENTTYPES: progressString = "Writing content types"; break;
-		case PROGRESS_WRITENOBJECTS: progressString = "Writing objects"; break;
+		case PROGRESS_WRITEOBJECTS: progressString = "Writing objects"; break;
 		case PROGRESS_WRITENODES: progressString = "Writing Nodes"; break;
 		case PROGRESS_WRITETRIANGLES: progressString = "Writing triangles"; break;
 		case PROGRESS_WRITESLICES: progressString = "Writing slices"; break;

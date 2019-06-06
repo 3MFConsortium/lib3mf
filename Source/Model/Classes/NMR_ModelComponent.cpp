@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -64,6 +64,11 @@ namespace NMR {
 	CModelObject * CModelComponent::getObject()
 	{
 		return m_pObject;
+	}
+
+	CModel* CModelComponent::getModel()
+	{
+		return m_pObject->getModel();
 	}
 
 	NMATRIX3 CModelComponent::getTransform()

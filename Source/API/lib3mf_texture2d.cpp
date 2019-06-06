@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium (Original Author)
+Copyright (C) 2019 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -24,7 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CLib3MFTexture2D
+Abstract: This is a stub class definition of CTexture2D
 
 */
 
@@ -38,16 +38,16 @@ Abstract: This is a stub class definition of CLib3MFTexture2D
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CLib3MFTexture2D 
+ Class definition of CTexture2D 
 **************************************************************************************************************************/
 
 
-CLib3MFTexture2D::CLib3MFTexture2D(NMR::PModelTexture2DResource pResource)
-	:CLib3MFResource(pResource)
+CTexture2D::CTexture2D(NMR::PModelTexture2DResource pResource)
+	:CResource(pResource)
 {
 }
 
-NMR::PModelTexture2DResource CLib3MFTexture2D::texture()
+NMR::PModelTexture2DResource CTexture2D::texture()
 {
 	NMR::PModelTexture2DResource pTexture = std::dynamic_pointer_cast<NMR::CModelTexture2DResource>(resource());
 	if (!pTexture)
@@ -56,45 +56,45 @@ NMR::PModelTexture2DResource CLib3MFTexture2D::texture()
 }
 
 
-ILib3MFAttachment * CLib3MFTexture2D::GetAttachment ()
+IAttachment * CTexture2D::GetAttachment ()
 {
-	return new CLib3MFAttachment(texture()->getAttachment());
+	return new CAttachment(texture()->getAttachment());
 }
 
-void CLib3MFTexture2D::SetAttachment (ILib3MFAttachment* pAttachment)
+void CTexture2D::SetAttachment (IAttachment* pAttachment)
 {
 	NMR::PModelAttachment attachment = texture()->getModel()->findModelAttachment(pAttachment->GetPath());
 	texture()->setAttachment(attachment);
 }
 
-eLib3MFTextureType CLib3MFTexture2D::GetContentType ()
+eLib3MFTextureType CTexture2D::GetContentType ()
 {
 	return (eLib3MFTextureType)(texture()->getContentType());
 }
 
-void CLib3MFTexture2D::SetContentType (const eLib3MFTextureType eContentType)
+void CTexture2D::SetContentType (const eLib3MFTextureType eContentType)
 {
 	texture()->setContentType(NMR::eModelTexture2DType(eContentType));
 }
 
-void CLib3MFTexture2D::GetTileStyleUV (eLib3MFTextureTileStyle & eTileStyleU, eLib3MFTextureTileStyle & eTileStyleV)
+void CTexture2D::GetTileStyleUV (eLib3MFTextureTileStyle & eTileStyleU, eLib3MFTextureTileStyle & eTileStyleV)
 {
 	eTileStyleU = eLib3MFTextureTileStyle(texture()->getTileStyleU());
 	eTileStyleV = eLib3MFTextureTileStyle(texture()->getTileStyleV());
 }
 
-void CLib3MFTexture2D::SetTileStyleUV (const eLib3MFTextureTileStyle eTileStyleU, const eLib3MFTextureTileStyle eTileStyleV)
+void CTexture2D::SetTileStyleUV (const eLib3MFTextureTileStyle eTileStyleU, const eLib3MFTextureTileStyle eTileStyleV)
 {
 	texture()->setTileStyleU(NMR::eModelTextureTileStyle(eTileStyleU));
 	texture()->setTileStyleV(NMR::eModelTextureTileStyle(eTileStyleV));
 }
 
-eLib3MFTextureFilter CLib3MFTexture2D::GetFilter ()
+eLib3MFTextureFilter CTexture2D::GetFilter ()
 {
 	return eLib3MFTextureFilter(texture()->getFilter());
 }
 
-void CLib3MFTexture2D::SetFilter (const eLib3MFTextureFilter eFilter)
+void CTexture2D::SetFilter (const eLib3MFTextureFilter eFilter)
 {
 	texture()->setFilter(NMR::eModelTextureFilter(eFilter));
 }

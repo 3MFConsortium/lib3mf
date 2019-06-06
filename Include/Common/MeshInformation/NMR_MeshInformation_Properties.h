@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -50,11 +50,13 @@ namespace NMR {
 		CMeshInformation_PropertyIndexMapping();
 
 		nfUint32 mapPropertyIDToIndex(nfUint32 nResourceID, ModelPropertyID nPropertyID, ModelPropertyID nDefaultPropertyID);
+
+		nfUint32 mapPropertyIDToIndex(nfUint32 nResourceID, ModelPropertyID nPropertyID);
 		
 		nfUint32 getDefaultResourceID ();
 		nfUint32 getDefaultResourceIndex ();
 
-		nfUint32 registerPropertyID (nfUint32 nResourceID, ModelPropertyID nPropertyID, nfUint32 nResourceIndex);
+		nfUint32 registerPropertyID(nfUint32 nResourceID, ModelPropertyID nPropertyID, nfUint32 nResourceIndex);
 
 	};
 

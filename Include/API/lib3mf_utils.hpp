@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium (Original Author)
+Copyright (C) 2019 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -29,8 +29,8 @@ Abstract: This file contains utilties used in the API of lib3mf
 */
 
 
-#ifndef __LIB3MF_LIB3MFUTILS
-#define __LIB3MF_LIB3MFUTILS
+#ifndef __LIB3MF_UTILS
+#define __LIB3MF_UTILS
 
 #include "lib3mf_interfaces.hpp"
 
@@ -45,4 +45,4 @@ sLib3MFTransform MatrixToTransform(const NMR::NMATRIX3 matrix);
 
 }
 
-#endif // __LIB3MF_LIB3MFUTILS
+#endif // __LIB3MF_UTILS

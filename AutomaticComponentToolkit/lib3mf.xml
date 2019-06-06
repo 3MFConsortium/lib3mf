@@ -3,9 +3,9 @@
 	libraryname="the 3MF Library"
 	namespace="Lib3MF" 
 	copyright="3MF Consortium (Original Author)" 
-	year="2018"
+	year="2019"
 	basename="lib3mf"
-	version="2.0.0"
+	version="2.0.0-alpha"
 	>
 
 	<license>
@@ -33,15 +33,18 @@
 	</license>
 
 	<bindings>
+		<binding language="C" indentation="tabs" />
+		<binding language="CDynamic" indentation="tabs" />
 		<binding language="Cpp" indentation="tabs" />
+		<binding language="CppDynamic" indentation="tabs" />
 		<binding language="Pascal" indentation="tabs" />
 		<binding language="Python" indentation="tabs" />
-		<binding language="CppDynamic" indentation="tabs" />
 		<binding language="Node" indentation="tabs" />
 		<binding language="Go" indentation="tabs" />
+		<binding language="CSharp" indentation="tabs" />
 	</bindings>
 	<implementations>
-		<implementation language="Cpp" indentation="tabs" stubidentifier="" />
+		<implementation language="Cpp" indentation="tabs" />
 	</implementations>
 
 	<errors>
@@ -76,9 +79,12 @@
 		<error name="INVALIDTEXTURERESOURCE" code="113" description="A texture resource is invalid" />
 		<error name="INVALIDCOLORGROUP" code="114" description="A color group resource is invalid" />
 		<error name="INVALIDTEXTURE2DGROUP" code="115" description="A texture2d group resource is invalid" />
+		<error name="INVALIDCOMPOSITEMATERIALS" code="116" description="A composite materials resource is invalid" />
+		<error name="INVALIDMULTIPROPERTYGROUP" code="117" description="A MultiPropertyGroup resource is invalid" />
+		
 
 
-		<error name="INVALIDRESOURCEINDEX" code="116" description="A resource index is invalid" />
+		<error name="INVALIDRESOURCEINDEX" code="120" description="A resource index is invalid" />
 
 		<error name="ATTACHMENTNOTFOUND" code="121" description="Attachment not found" />
 
@@ -95,14 +101,13 @@
 	</errors>
 
 	<enum name="PropertyType">
-		<option name="None" value="0" />
+		<option name="NoPropertyType" value="0" />
 		<option name="BaseMaterial" value="1" />
 		<option name="TexCoord" value="2" />
 		<option name="Colors" value="3" />
 		<option name="Composite" value="4" />
-		<option name="Multi" value="1024" />
+		<option name="Multi" value="5" />
 	</enum>
-
 
 	<enum name="SlicesMeshResolution">
 		<option name="Fullres" value="0" />
@@ -168,20 +173,28 @@
 		<option name="READMESH" value="8" />
 		<option name="READSLICES" value="9" />
 		<option name="READBUILD" value="10" />
-		<option name="CREATEOPCPACKAGE" value="11" />
-		<option name="WRITEMODELSTOSTREAM" value="12" />
-		<option name="WRITEROOTMODEL" value="13" />
-		<option name="WRITENONROOTMODELS" value="14" />
-		<option name="WRITEATTACHMENTS" value="15" />
-		<option name="WRITECONTENTTYPES" value="16" />
-		<option name="WRITENOBJECTS" value="17" />
-		<option name="WRITENODES" value="18" />
-		<option name="WRITETRIANGLES" value="19" />
-		<option name="WRITESLICES" value="20" />
+		<option name="READCUSTOMATTACHMENT" value="11" />
+		<option name="READTEXTURETACHMENTS" value="12" />
+		<option name="CREATEOPCPACKAGE" value="13" />
+		<option name="WRITEMODELSTOSTREAM" value="14" />
+		<option name="WRITEROOTMODEL" value="15" />
+		<option name="WRITENONROOTMODELS" value="16" />
+		<option name="WRITEATTACHMENTS" value="17" />
+		<option name="WRITECONTENTTYPES" value="18" />
+		<option name="WRITENOBJECTS" value="19" />
+		<option name="WRITENODES" value="20" />
+		<option name="WRITETRIANGLES" value="21" />
+		<option name="WRITESLICES" value="22" />
+	</enum>
+	
+	<enum name="BlendMethod">
+		<option name="NoBlendMethod" value="0"/>
+		<option name="Mix" value="1"/>
+		<option name="Multiply" value="2"/>
 	</enum>
 
 	<struct name="Triangle">
-		<member name="indices" type="uint32" rows="3" />
+		<member name="Indices" type="uint32" rows="3" />
 	</struct>
 
 	<struct name="TriangleProperties">
@@ -196,20 +209,30 @@
   </struct>
 
 	<struct name="Position">
-		<member name="coordinates" type="single" rows="3" />
+		<member name="Coordinates" type="single" rows="3" />
 	</struct>
 
 	<struct name="Position2D">
-		<member name="coordinates" type="single" rows="2" />
+		<member name="Coordinates" type="single" rows="2" />
 	</struct>
-
+	
+	<struct name="CompositeConstituent">
+		<member name="PropertyID" type="uint32"/>
+		<member name="MixingRatio" type="double"/>
+	</struct>
+	
+	<struct name="MultiPropertyLayer">
+		<member name="ResourceID" type="uint32"/>
+		<member name="TheBlendMethod" type="enum" class="BlendMethod"/>
+	</struct>
+	
 	<struct name="Tex2Coord">
 		<member name="U" type="double"/>
 		<member name="V" type="double"/>
 	</struct>
 	
 	<struct name="Transform">
-		<member name="Fields" type="single" rows="3" columns="4" />
+		<member name="Fields" type="single" columns="4" rows="3"/>
 	</struct>
 
   <struct name="NURBSKnot">
@@ -273,7 +296,7 @@
 	</class>
 	
 	<class name="Writer">
-		<method name="WriteToFile" dllsuffix="utf8" description = "Writes out the model as file. The file type is specified by the Model Writer class.">
+		<method name="WriteToFile" description = "Writes out the model as file. The file type is specified by the Model Writer class.">
 			<param name="Filename" type="string" pass="in" description="Filename to write into" />
 		</method>
 		<method name="GetStreamSize" description = "Retrieves the size of the full 3MF file stream.">
@@ -294,7 +317,7 @@
 	</class>
 
 	<class name="Reader">
-		<method name="ReadFromFile" dllsuffix="utf8" description = "Reads a model from a file. The file type is specified by the Model Reader class">
+		<method name="ReadFromFile" description = "Reads a model from a file. The file type is specified by the Model Reader class">
 			<param name="Filename" type="string" pass="in" description="Filename to read from" />				
 		</method>
 		<method name="ReadFromBuffer" description = "Reads a model from a memory buffer.">
@@ -310,10 +333,10 @@
 			<param name="ProgressCallback" type="functiontype" class="ProgressCallback" pass="in" description="pointer to the callback function."/>
 			<param name="UserData" type="pointer" pass="in" description="pointer to arbitrary user data that is passed without modification to the callback."/>
 		</method>
-		<method name="AddRelationToRead" dllsuffix="utf8" description = "Adds a relationship type which shall be read as attachment in memory while loading">
+		<method name="AddRelationToRead" description = "Adds a relationship type which shall be read as attachment in memory while loading">
 			<param name="RelationShipType" type="string" pass="in" description="String of the relationship type" />				
 		</method>
-		<method name="RemoveRelationToRead" dllsuffix="utf8" description = "Removes a relationship type which shall be read as attachment in memory while loading">
+		<method name="RemoveRelationToRead" description = "Removes a relationship type which shall be read as attachment in memory while loading">
 			<param name="RelationShipType" type="string" pass="in" description="String of the relationship type" />				
 		</method>
 		<method name="SetStrictModeActive" description="Activates (deactivates) the strict mode of the reader.">
@@ -322,7 +345,7 @@
 		<method name="GetStrictModeActive" description="Queries whether the strict mode of the reader is active or not">
 			<param name="StrictModeActive" type="bool" pass="return" description="returns flag whether strict mode is active or not." />				
 		</method>
-		<method name="GetWarning" dllsuffix="utf8" description="Returns Warning and Error Information of the read process">
+		<method name="GetWarning" description="Returns Warning and Error Information of the read process">
 			<param name="Index" type="uint32" pass="in" description="Index of the Warning. Valid values are 0 to WarningCount - 1"/>
 			<param name="ErrorCode" type="uint32" pass="out" description="filled with the error code of the warning" />
 			<param name="Warning" type="string" pass="return" description="the message of the warning" />
@@ -351,20 +374,41 @@
 		<method name="Clone" description="Creates a new resource iterator with the same resource list.">
 			<param name="OutResourceIterator" type="handle" class="ResourceIterator" pass="return" description="returns the cloned Iterator instance" />
 		</method>
+		<method name="Count" description="Returns the number of resoucres the iterator captures.">
+			<param name="Count" type="uint64" pass="return" description="returns the number of resoucres the iterator captures." />
+		</method>
 	</class>
 
+	<class name="SliceStackIterator" parent="ResourceIterator">
+		<method name="GetCurrentSliceStack" description="Returns the SliceStack the iterator points at.">
+			<param name="Resource" type="handle" class="SliceStack" pass="return" description="returns the SliceStack instance." />
+		</method>
+	</class>
+
+	<class name="ObjectIterator" parent="ResourceIterator">
+		<method name="GetCurrentObject" description="Returns the Object the iterator points at.">
+			<param name="Resource" type="handle" class="Object" pass="return" description="returns the Object instance." />
+		</method>
+	</class>
+	
+	<class name="MeshObjectIterator" parent="ResourceIterator">
+		<method name="GetCurrentMeshObject" description="Returns the MeshObject the iterator points at.">
+			<param name="Resource" type="handle" class="MeshObject" pass="return" description="returns the MeshObject instance." />
+		</method>
+	</class> 
+	
 	<class name="Texture2DIterator" parent="ResourceIterator">
 		<method name="GetCurrentTexture2D" description="Returns the Texture2D the iterator points at.">
 			<param name="Resource" type="handle" class="Texture2D" pass="return" description="returns the Texture2D instance." />
 		</method>
 	</class>
-
+	
 	<class name="BaseMaterialGroupIterator" parent="ResourceIterator">
 		<method name="GetCurrentBaseMaterialGroup" description="Returns the MaterialGroup the iterator points at.">
 			<param name="Resource" type="handle" class="BaseMaterialGroup" pass="return" description="returns the BaseMaterialGroup instance." />
 		</method>
 	</class>
-
+	
 	<class name="ColorGroupIterator" parent="ResourceIterator">
 		<method name="GetCurrentColorGroup" description="Returns the ColorGroup the iterator points at.">
 			<param name="Resource" type="handle" class="ColorGroup" pass="return" description="returns the ColorGroup instance." />
@@ -374,6 +418,18 @@
 	<class name="Texture2DGroupIterator" parent="ResourceIterator">
 		<method name="GetCurrentTexture2DGroup" description="Returns the Texture2DGroup the iterator points at.">
 			<param name="Resource" type="handle" class="Texture2DGroup" pass="return" description="returns the Texture2DGroup instance." />
+		</method>
+	</class>
+	
+	<class name="CompositeMaterialsIterator" parent="ResourceIterator">
+		<method name="GetCurrentCompositeMaterials" description="Returns the CompositeMaterials the iterator points at.">
+			<param name="Resource" type="handle" class="CompositeMaterials" pass="return" description="returns the CompositeMaterials instance." />
+		</method>
+	</class>
+	
+	<class name="MultiPropertyGroupIterator" parent="ResourceIterator">
+		<method name="GetCurrentMultiPropertyGroup" description="Returns the MultiPropertyGroup the iterator points at.">
+			<param name="Resource" type="handle" class="MultiPropertyGroup" pass="return" description="returns the MultiPropertyGroup instance." />
 		</method>
 	</class>
 	
@@ -390,37 +446,37 @@
 	</class>
 	
 	<class name="MetaData">
-		<method name="GetNameSpace" dllsuffix="utf8" description = "returns the namespace URL of the metadata">
+		<method name="GetNameSpace" description = "returns the namespace URL of the metadata">
 			<param name="NameSpace" type="string" pass="return" description="the namespace URL of the metadata" />
 		</method>
-		<method name="SetNameSpace" dllsuffix="utf8" description = "sets a new namespace URL of the metadata">
+		<method name="SetNameSpace" description = "sets a new namespace URL of the metadata">
 			<param name="NameSpace" type="string" pass="in" description="the new namespace URL of the metadata" />
 		</method>
-		<method name="GetName" dllsuffix="utf8" description = "returns the name of a metadata">
+		<method name="GetName" description = "returns the name of a metadata">
 			<param name="Name" type="string" pass="return" description="the name of the metadata" />
 		</method>
-		<method name="SetName" dllsuffix="utf8" description = "sets a new name of a metadata">
+		<method name="SetName" description = "sets a new name of a metadata">
 			<param name="Name" type="string" pass="in" description="the new name of the metadata" />
 		</method>
-		<method name="GetKey" dllsuffix="utf8" description = "returns the (namespace+name) of a metadata">
+		<method name="GetKey" description = "returns the (namespace+name) of a metadata">
 			<param name="Key" type="string" pass="return" description="the key (namespace+name) of the metadata" />
 		</method>
-		<method name="GetMustPreserve" dllsuffix="utf8" description = "returns, whether a metadata must be preserved">
+		<method name="GetMustPreserve" description = "returns, whether a metadata must be preserved">
 			<param name="MustPreserve" type="bool" pass="return" description="returns, whether a metadata must be preserved" />
 		</method>
-		<method name="SetMustPreserve" dllsuffix="utf8" description = "sets whether a metadata must be preserved">
+		<method name="SetMustPreserve" description = "sets whether a metadata must be preserved">
 			<param name="MustPreserve" type="bool" pass="in" description="a new value whether a metadata must be preserved" />
 		</method>
-		<method name="GetType" dllsuffix="utf8" description = "returns the type of a metadata">
+		<method name="GetType" description = "returns the type of a metadata">
 			<param name="Type" type="string" pass="return" description="the type of the metadata" />
 		</method>
-		<method name="SetType" dllsuffix="utf8" description = "sets a new type of a metadata. This must be a simple XML type">
+		<method name="SetType" description = "sets a new type of a metadata. This must be a simple XML type">
 			<param name="Type" type="string" pass="in" description="a new type of the metadata" />
 		</method>
-		<method name="GetValue" dllsuffix="utf8" description = "returns the value of the metadata">
+		<method name="GetValue" description = "returns the value of the metadata">
 			<param name="Value" type="string" pass="return" description="the value of the metadata" />
 		</method>
-		<method name="SetValue" dllsuffix="utf8" description = "sets a new value of the metadata">
+		<method name="SetValue" description = "sets a new value of the metadata">
 			<param name="Value" type="string" pass="in" description="a new value of the metadata" />
 		</method>
 	</class>
@@ -429,11 +485,11 @@
 		<method name="GetMetaDataCount" description = "returns the number of metadata in this metadatagroup">
 			<param name="Count" type="uint32" pass="return" description="returns the number metadata" />
 		</method>
-		<method name="GetMetaData" dllsuffix="utf8" description = "returns a metadata value within this metadatagroup">
+		<method name="GetMetaData" description = "returns a metadata value within this metadatagroup">
 			<param name="Index" type="uint32" pass="in" description="Index of the Metadata." />
 			<param name="MetaData" type="handle" class="MetaData" pass="return" description="an instance of the metadata" />
 		</method>
-		<method name="GetMetaDataByKey" dllsuffix="utf8" description = "returns a metadata value within this metadatagroup">
+		<method name="GetMetaDataByKey" description = "returns a metadata value within this metadatagroup">
 			<param name="NameSpace" type="string" pass="in" description="the namespace of the metadata" />
 			<param name="Name" type="string" pass="in" description="the name of the Metadata" />
 			<param name="MetaData" type="handle" class="MetaData" pass="return" description="an instance of the metadata" />
@@ -444,7 +500,7 @@
 		<method name="RemoveMetaData" description = "removes metadata from the model.">
 			<param name="TheMetaData" type="handle" class="MetaData" pass="in" description="The metadata to remove" />
 		</method>
-		<method name="AddMetaData" dllsuffix="utf8" description = "adds a new metadata to this metadatagroup">
+		<method name="AddMetaData" description = "adds a new metadata to this metadatagroup">
 			<param name="NameSpace" type="string" pass="in" description="the namespace of the metadata" />
 			<param name="Name" type="string" pass="in" description="the name of the metadata" />
 			<param name="Value" type="string" pass="in" description="the value of the metadata" />
@@ -461,16 +517,16 @@
 		<method name="SetType" description="Sets an object's type">
 			<param name="ObjectType" type="enum" class="ObjectType" pass="in" description="object type enum." />
 		</method>
-		<method name="GetName" dllsuffix="utf8" description="Retrieves an object's name">
+		<method name="GetName" description="Retrieves an object's name">
 			<param name="Name" type="string" pass="return" description="returns object name." />
 		</method>
-		<method name="SetName" dllsuffix="utf8" description="Sets an object's name string">
+		<method name="SetName" description="Sets an object's name string">
 			<param name="Name" type="string" pass="in" description="new object name." />
 		</method>
-		<method name="GetPartNumber" dllsuffix="utf8" description="Retrieves an object's part number">
+		<method name="GetPartNumber" description="Retrieves an object's part number">
 			<param name="PartNumber" type="string" pass="return" description="returns object part number." />
 		</method>
-		<method name="SetPartNumber" dllsuffix="utf8" description="Sets an objects partnumber string">
+		<method name="SetPartNumber" description="Sets an objects partnumber string">
 			<param name="PartNumber" type="string" pass="in" description="new object part number." />
 		</method>
 		<method name="IsMeshObject" description="Retrieves, if an object is a mesh object">
@@ -486,11 +542,11 @@
 		<!-- property handling -->
 		<!-- object thumbnails -->
 
-		<method name="GetUUID" dllsuffix="utf8" description="Retrieves an object's uuid string (see production extension specification)">
+		<method name="GetUUID" description="Retrieves an object's uuid string (see production extension specification)">
 			<param name="HasUUID" type="bool" pass="out" description="flag whether the build item has a UUID"/>
 			<param name="UUID" type="string" pass="return" description="returns object uuid." />
 		</method>
-		<method name="SetUUID" dllsuffix="utf8" description="Sets a build object's uuid string (see production extension specification)">
+		<method name="SetUUID" description="Sets a build object's uuid string (see production extension specification)">
 			<param name="UUID" type="string" pass="in" description="new object uuid string." />
 		</method>
 		<method name="GetMetaDataGroup" description="Returns the metadatagroup of this object">
@@ -508,7 +564,7 @@
 		</method>
 		<method name="ClearSliceStack" description="unlinks the attached slicestack from this object. If no slice stack is attached, do noting.">
 		</method>
-		<method name="GetSliceStack" description="set the meshresolution of the mesh object">
+		<method name="GetSliceStack" description="get the Slicestack attached to the object">
 			<param name="SliceStackInstance" type="handle" class="SliceStack" pass="return" description="returns the slicestack instance" />
 		</method>
 		<method name="AssignSliceStack" description="assigns a slicestack to the object">
@@ -672,11 +728,11 @@
 		<method name="GetObjectResourceID" description="Returns the Resource ID of the component.">
 			<param name="ObjectResourceID" type="uint32" pass="return" description="returns the Resource ID." />
 		</method>
-		<method name="GetUUID" dllsuffix="utf8" description="returns, whether a component has a UUID and, if true, the component's UUID">
+		<method name="GetUUID" description="returns, whether a component has a UUID and, if true, the component's UUID">
 			<param name="HasUUID" type="bool" pass="out" description="flag whether the component has a UUID"/>
 			<param name="UUID" type="string" pass="return" description="the UUID as string of the form 'xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx'"/>
 		</method>
-		<method name="SetUUID" dllsuffix="utf8" description="sets the component's UUID">
+		<method name="SetUUID" description="sets the component's UUID">
 			<param name="UUID" type="string" pass="in" description="the UUID as string of the form 'xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx'"/>
 		</method>
 		<method name="HasTransform" description="Returns, if the component has a different transformation than the identity matrix">
@@ -709,19 +765,19 @@
 	</class>
 
 	<class name="BeamSet">
-		<method name="SetName" dllsuffix="utf8" description="Sets a beamset's name string">
+		<method name="SetName" description="Sets a beamset's name string">
 			<param name="Name" type="string" pass="in" description="new name of the beamset." />
 		</method>
 
-		<method name="GetName" dllsuffix="utf8" description="Retrieves a beamset's name string">
+		<method name="GetName" description="Retrieves a beamset's name string">
 			<param name="Name" type="string" pass="return" description="returns the name of the beamset." />
 		</method>
 
-		<method name="SetIdentifier" dllsuffix="utf8" description="Sets a beamset's identifier string">
+		<method name="SetIdentifier" description="Sets a beamset's identifier string">
 			<param name="Identifier" type="string" pass="in" description="new name of the beamset." />
 		</method>
 
-		<method name="GetIdentifier" dllsuffix="utf8" description="Retrieves a beamset's identifier string">
+		<method name="GetIdentifier" description="Retrieves a beamset's identifier string">
 			<param name="Identifier" type="string" pass="return" description="returns the identifier of the beamset." />
 		</method>
 
@@ -738,39 +794,33 @@
 		</method>
 	</class>
 
-	<class name="BaseMaterialGroup" parent="Resource">
+	<class name="BaseMaterialGroup" parent="Resource" description="The BaseMaterialGroup corresponds to a basematerials-element within a 3MF document">
 		<method name="GetCount" description="Retrieves the count of base materials in the material group.">
 			<param name="Count" type="uint32" pass="return" description="returns the count of base materials." />
 		</method>
-		<method name="GetAllPropertyIDs" dllsuffix="utf8" description="returns all the PropertyIDs of all materials in this group">
+		<method name="GetAllPropertyIDs" description="returns all the PropertyIDs of all materials in this group">
 			<param name="PropertyIDs" type="basicarray" class="uint32" pass="out" description="PropertyID of the material in the material group." />
 		</method>
-
-		<method name="AddMaterial" dllsuffix="utf8" description="Adds a new material to the material group">
+		<method name="AddMaterial" description="Adds a new material to the material group">
 			<param name="Name" type="string" pass="in" description="new name of the base material." />
 			<param name="DisplayColor" type="struct" class="Color" pass="in" description="Display color of the material" />
 			<param name="PropertyID" type="uint32" pass="return" description="returns new PropertyID of the new material in the material group." />			
 		</method>
-
 		<method name="RemoveMaterial" description="Removes a material from the material group.">
 			<param name="PropertyID" type="uint32" pass="in" description="PropertyID of the material in the material group." />
 		</method>
-
-		<method name="GetName" dllsuffix="utf8" description="Returns the base material's name">
+		<method name="GetName" description="Returns the base material's name">
 			<param name="PropertyID" type="uint32" pass="in" description="PropertyID of the material in the material group." />
 			<param name="Name" type="string" pass="return" description="returns the name of the base material." />
 		</method>
-
-		<method name="SetName" dllsuffix="utf8" description="Sets a base material's name">
+		<method name="SetName" description="Sets a base material's name">
 			<param name="PropertyID" type="uint32" pass="in" description="PropertyID of the material in the material group." />
 			<param name="Name" type="string" pass="in" description="new name of the base material." />
 		</method>
-
 		<method name="SetDisplayColor" description="Sets a base material's display color.">
 			<param name="PropertyID" type="uint32" pass="in" description="PropertyID of the material in the material group." />
 			<param name="TheColor" type="struct" class="Color" pass="in" description="The base material's display color" />
 		</method>
-
 		<method name="GetDisplayColor" description="Returns a base material's display color.">
 			<param name="PropertyID" type="uint32" pass="in" description="PropertyID of the material in the material group." />
 			<param name="TheColor" type="struct" class="Color" pass="return" description="The base material's display color" />
@@ -781,10 +831,9 @@
 		<method name="GetCount" description="Retrieves the count of base materials in this Color Group.">
 			<param name="Count" type="uint32" pass="return" description="returns the count of colors within this color group." />
 		</method>
-		<method name="GetAllPropertyIDs" dllsuffix="utf8" description="returns all the PropertyIDs of all colors within this group">
+		<method name="GetAllPropertyIDs" description="returns all the PropertyIDs of all colors within this group">
 			<param name="PropertyIDs" type="basicarray" class="uint32" pass="out" description="PropertyID of the color in the color group." />
 		</method>
-
 		<method name="AddColor" description="Adds a new value.">
 			<param name="TheColor" type="struct" class="Color" pass="in" description="The new color" />
 			<param name="PropertyID" type="uint32" pass="return" description="PropertyID of the new color within this color group." />
@@ -792,6 +841,7 @@
 		<method name="RemoveColor" description="Removes a color from the color group.">
 			<param name="PropertyID" type="uint32" pass="in" description="PropertyID of the color to be removed from the color group." />
 		</method>
+		
 		<method name="SetColor" description="Sets a color value.">
 			<param name="PropertyID" type="uint32" pass="in" description="PropertyID of a color within this color group." />
 			<param name="TheColor" type="struct" class="Color" pass="in" description="The color" />
@@ -803,13 +853,10 @@
 	</class>
 
 	<class name="Texture2DGroup" parent="Resource">
-		<method name="GetTexture2D" description="Obtains the texture2D instance of this group.">
-			<param name="Texture2DInstance" type="handle" class="Texture2D" pass="return" description="the texture2D instance of this group." />
-		</method>
 		<method name="GetCount" description="Retrieves the count of tex2coords in the Texture2DGroup.">
 			<param name="Count" type="uint32" pass="return" description="returns the count of tex2coords." />
 		</method>
-		<method name="GetAllPropertyIDs" dllsuffix="utf8" description="returns all the PropertyIDs of all tex2coords in this Texture2DGroup">
+		<method name="GetAllPropertyIDs" description="returns all the PropertyIDs of all tex2coords in this Texture2DGroup">
 			<param name="PropertyIDs" type="basicarray" class="uint32" pass="out" description="PropertyID of the tex2coords in the Texture2DGroup." />
 		</method>
 		<method name="AddTex2Coord" description="Adds a new tex2coord to the Texture2DGroup">
@@ -823,45 +870,102 @@
 		<method name="RemoveTex2Coord" description="Removes a tex2coords from the Texture2DGroup.">
 			<param name="PropertyID" type="uint32" pass="in" description="PropertyID of the tex2coords in the Texture2DGroup." />
 		</method>
+		<method name="GetTexture2D" description="Obtains the texture2D instance of this group.">
+			<param name="Texture2DInstance" type="handle" class="Texture2D" pass="return" description="the texture2D instance of this group." />
+		</method>
+	</class>
+
+	<class name="CompositeMaterials" parent="Resource">
+		<method name="GetCount" description="Retrieves the count of Composite-s in the CompositeMaterials.">
+			<param name="Count" type="uint32" pass="return" description="returns the count of Composite-s" />
+		</method>
+		<method name="GetAllPropertyIDs" description="returns all the PropertyIDs of all Composite-Mixing Values in this CompositeMaterials">
+			<param name="PropertyIDs" type="basicarray" class="uint32" pass="out" description="PropertyID of the Composite-Mixing Values in the CompositeMaterials." />
+		</method>
+		<method name="GetBaseMaterialGroup" description="Obtains the BaseMaterialGroup instance of this CompositeMaterials.">
+			<param name="BaseMaterialGroupInstance" type="handle" class="BaseMaterialGroup" pass="return" description="returns the BaseMaterialGroup instance of this CompositeMaterials" />
+		</method>
+		<method name="AddComposite" description="Adds a new Composite-Mixing Values to the CompositeMaterials.">
+			<param name="Composite" type="structarray" class="CompositeConstituent" pass="in" description="The Composite Constituents to be added as composite" />
+			<param name="PropertyID" type="uint32" pass="return" description="returns new PropertyID of the new Composite in the CompositeMaterials." />
+		</method>
+		<method name="RemoveComposite" description="Removes a Composite-Maxing Ratio from the CompositeMaterials.">
+			<param name="PropertyID" type="uint32" pass="in" description="PropertyID of the  Composite-Mixing Values in the CompositeMaterials to be removed." />
+		</method>
+		<method name="GetComposite" description="Obtains a Composite-Maxing Ratio of this CompositeMaterials.">
+			<param name="PropertyID" type="uint32" pass="in" description="the PropertyID of the Composite-Maxing Ratio in the CompositeMaterials." />
+			<param name="Composite" type="structarray" class="CompositeConstituent" pass="out" description="The Composite-Mixing Values with the given PropertyID" />
+		</method>
+	</class>
+	
+	<class name="MultiPropertyGroup" parent="Resource">
+		<method name="GetCount" description="Retrieves the count of MultiProperty-s in the MultiPropertyGroup.">
+			<param name="Count" type="uint32" pass="return" description="returns the count of MultiProperty-s" />
+		</method>
+		<method name="GetAllPropertyIDs" description="returns all the PropertyIDs of all MultiProperty-s in this MultiPropertyGroup">
+			<param name="PropertyIDs" type="basicarray" class="uint32" pass="out" description="PropertyID of the MultiProperty-s in the MultiPropertyGroup." />
+		</method>
+
+		<method name="AddMultiProperty" description="Adds a new MultiProperty to the MultiPropertyGroup.">
+			<param name="PropertyIDs" type="basicarray" class="uint32" pass="in" description="The PropertyIDs of the new MultiProperty." />
+			<param name="PropertyID" type="uint32" pass="return" description="returns the PropertyID of the new MultiProperty in the MultiPropertyGroup." />
+		</method>
+		<method name="SetMultiProperty" description="Sets the PropertyIDs of a MultiProperty.">
+			<param name="PropertyID" type="uint32" pass="in" description="the PropertyID of the MultiProperty to be changed." />
+			<param name="PropertyIDs" type="basicarray" class="uint32" pass="in" description="The new PropertyIDs of the MultiProperty" />
+		</method>
+		<method name="GetMultiProperty" description="Obtains the PropertyIDs of a MultiProperty.">
+			<param name="PropertyID" type="uint32" pass="in" description="the PropertyID of the MultiProperty to be queried." />
+			<param name="PropertyIDs" type="basicarray" class="uint32" pass="out" description="The PropertyIDs of the MultiProperty" />
+		</method>
+		<method name="RemoveMultiProperty" description="Removes a MultiProperty from this MultiPropertyGroup.">
+			<param name="PropertyID" type="uint32" pass="in" description="the PropertyID of the MultiProperty to be removed." />
+		</method>
+		
+		<method name="GetLayerCount" description="Retrieves the number of layers of this MultiPropertyGroup.">
+			<param name="Count" type="uint32" pass="return" description="returns the number of layers" />
+		</method>
+		<method name="AddLayer" description="Adds a MultiPropertyLayer to this MultiPropertyGroup.">
+			<param name="TheLayer" type="struct" class="MultiPropertyLayer" pass="in" description="The MultiPropertyLayer to add to this MultiPropertyGroup" />
+			<param name="LayerIndex" type="uint32" pass="return" description="returns the index of this MultiPropertyLayer" />
+		</method>
+		<method name="GetLayer" description="Obtains a MultiPropertyLayer of this MultiPropertyGroup.">
+			<param name="LayerIndex" type="uint32" pass="in" description="The Index of the MultiPropertyLayer queried" />
+			<param name="TheLayer" type="struct" class="MultiPropertyLayer" pass="return" description="The MultiPropertyLayer with index LayerIndex within MultiPropertyGroup" />
+		</method>
+		<method name="RemoveLayer" description="Removes a MultiPropertyLayer from this MultiPropertyGroup.">
+			<param name="LayerIndex" type="uint32" pass="in" description="The Index of the MultiPropertyLayer to be removed" />
+		</method>
 	</class>
 	
 	<class name="Attachment">
-		<method name="GetPath" dllsuffix="utf8" description = "Retrieves an attachment's package path.">
+		<method name="GetPath" description = "Retrieves an attachment's package path.">
 			<param name="Path" type="string" pass="return" description="returns the attachment's package path string" />
 		</method>
-
-		<method name="SetPath" dllsuffix="utf8" description = "Sets an attachment's package path.">
+		<method name="SetPath" description = "Sets an attachment's package path.">
 			<param name="Path" type="string" pass="in" description="new path of the attachment." />
 		</method>
-
-		<method name="GetRelationShipType" dllsuffix="utf8" description = "Retrieves an attachment's relationship type">
+		<method name="GetRelationShipType" description = "Retrieves an attachment's relationship type">
 			<param name="Path" type="string" pass="return" description="returns the attachment's package relationship type string" />
 		</method>
-
-		<method name="SetRelationShipType" dllsuffix="utf8" description = "Sets an attachment's relationship type.">
+		<method name="SetRelationShipType" description = "Sets an attachment's relationship type.">
 			<param name="Path" type="string" pass="in" description="new relationship type string." />
 		</method>
-
-		<method name="WriteToFile" dllsuffix="utf8" description = "Writes out the attachment as file.">
+		<method name="WriteToFile" description = "Writes out the attachment as file.">
 			<param name="FileName" type="string" pass="in" description="file to write into." />
 		</method>
-
-		<method name="ReadFromFile" dllsuffix="utf8" description = "Reads an attachment from a file.">
+		<method name="ReadFromFile" description = "Reads an attachment from a file.">
 			<param name="FileName" type="string" pass="in" description="file to read from." />
 		</method>
-
 		<method name="GetStreamSize" description = "Retrieves the size of the attachment stream">
 			<param name="StreamSize" type="uint64" pass="return" description="the stream size" />
 		</method>
-
 		<method name="WriteToBuffer" description = "Writes out the attachment into a buffer">
 			<param name="Buffer" type="basicarray" class="uint8" pass="out" description="Buffer to write into" />
 		</method>
-
 		<method name="ReadFromBuffer" description = "Reads an attachment from a memory buffer">
 			<param name="Buffer" type="basicarray" class="uint8" pass="in" description="Buffer to read from" />
 		</method>
-
 		<!--
 		<method name="WriteToCallback" description = "Writes out the attachment and passes the data to a provided callback function. The file type is specified by the type (and potentially path) of the attachment">
 			<param name="WriteCallback" type="callback" pass="in" description="Callback to call for writing a data chunk" />
@@ -1102,11 +1206,11 @@
 		<method name="GetObjectResource" description="Retrieves the object resource associated to a build item">
 			<param name="ObjectResource" type="handle" class="Object" pass="return" description="returns the associated resource instance"/>
 		</method>
-		<method name="GetUUID" dllsuffix="utf8" description="returns, whether a build item has a UUID and, if true, the build item's UUID">
+		<method name="GetUUID" description="returns, whether a build item has a UUID and, if true, the build item's UUID">
 			<param name="HasUUID" type="bool" pass="out" description="flag whether the build item has a UUID"/>
 			<param name="UUID" type="string" pass="return" description="the UUID as string of the form 'xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx'"/>
 		</method>
-		<method name="SetUUID" dllsuffix="utf8" description="sets the build item's UUID">
+		<method name="SetUUID" description="sets the build item's UUID">
 			<param name="UUID" type="string" pass="in" description="the UUID as string of the form 'xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx'"/>
 		</method>
 		<method name="GetObjectResourceID" description="Retrieves the object resource id associated to a build item">
@@ -1121,10 +1225,10 @@
 		<method name="SetObjectTransform" description="Sets a build item's transformation matrix.">
 			<param name="Transform" type="struct" class="Transform" pass="in" description="new transformation matrix"/>
 		</method>
-		<method name="GetPartNumber" dllsuffix="utf8" description="Retrieves a build item's part number string">
+		<method name="GetPartNumber" description="Retrieves a build item's part number string">
 			<param name="PartNumber" type="string" pass="return" description="Returns a build item's part number string"/>
 		</method>
-		<method name="SetPartNumber" dllsuffix="utf8" description="Sets a build item's part number string">
+		<method name="SetPartNumber" description="Sets a build item's part number string">
 			<param name="SetPartnumber" type="string" pass="in" description="new part number string for referencing parts from the outside world" />
 		</method>
 		<method name="GetMetaDataGroup" description="Returns the metadatagroup of this build item">
@@ -1145,6 +1249,9 @@
 		</method>
 		<method name="Clone" description="Creates a new build item iterator with the same build item list.">
 			<param name="OutBuildItemIterator" type="handle" class="BuildItemIterator" pass="return" description="returns the cloned Iterator instance" />
+		</method>
+		<method name="Count" description="Returns the number of build items the iterator captures.">
+			<param name="Count" type="uint64" pass="return" description="returns the number of build items the iterator captures." />
 		</method>
 	</class>
 
@@ -1227,10 +1334,10 @@
 		<method name="GetUnit" description = "returns the units of a model.">
 			<param name="Unit" type="enum" class="ModelUnit" pass="return" description="Unit enum value for the model unit" />
 		</method> 
-		<method name="GetLanguage" dllsuffix="utf8" description="retrieves the language of a model">
+		<method name="GetLanguage" description="retrieves the language of a model">
 			<param name="Language" type="string" pass="return" description="language identifier"/>
 		</method>
-		<method name="SetLanguage" dllsuffix="utf8" description="sets the language of a model">
+		<method name="SetLanguage" description="sets the language of a model">
 			<param name="Language" type="string" pass="in" description="language identifier" />
 		</method>
 		<method name="QueryWriter" description="creates a model writer instance for a specific file type">
@@ -1245,13 +1352,25 @@
 			<param name="ResourceID" type="uint32" pass="in" description="Resource ID" />
 			<param name="TextureInstance" type="handle" class="Texture2D" pass="return" description="returns the texture2d instance" />
 		</method>
+		<method name="GetPropertyTypeByID" description="returns a Property's type">
+			<param name="ResourceID" type="uint32" pass="in" description="Resource ID of the Property to Query" />
+			<param name="ThePropertyType" type="enum" class="PropertyType" pass="return" description="returns a Property's type" />
+		</method>
 		<method name="GetBaseMaterialGroupByID" description="finds a model base material group by its id">
 			<param name="ResourceID" type="uint32" pass="in" description="Resource ID" />
 			<param name="BaseMaterialGroupInstance" type="handle" class="BaseMaterialGroup" pass="return" description="returns the BaseMaterialGroup instance" />
 		</method>
 		<method name="GetTexture2DGroupByID" description="finds a model texture2d group by its id">
 			<param name="ResourceID" type="uint32" pass="in" description="Resource ID" />
-			<param name="BaseMaterialGroupInstance" type="handle" class="Texture2DGroup" pass="return" description="returns the Texture2DGroup instance" />
+			<param name="Texture2DGroupInstance" type="handle" class="Texture2DGroup" pass="return" description="returns the Texture2DGroup instance" />
+		</method>
+		<method name="GetCompositeMaterialsByID" description="finds a model CompositeMaterials by its id">
+			<param name="ResourceID" type="uint32" pass="in" description="Resource ID" />
+			<param name="CompositeMaterialsInstance" type="handle" class="CompositeMaterials" pass="return" description="returns the CompositeMaterials instance" />
+		</method>
+		<method name="GetMultiPropertyGroupByID" description="finds a model MultiPropertyGroup by its id">
+			<param name="ResourceID" type="uint32" pass="in" description="Resource ID" />
+			<param name="MultiPropertyGroupInstance" type="handle" class="MultiPropertyGroup" pass="return" description="returns the MultiPropertyGroup instance" />
 		</method>
 		<method name="GetMeshObjectByID" description="finds a mesh object by its id">
 			<param name="ResourceID" type="uint32" pass="in" description="Resource ID" />
@@ -1269,11 +1388,11 @@
 			<param name="ResourceID" type="uint32" pass="in" description="Resource ID" />
 			<param name="SliceStacInstance" type="handle" class="SliceStack" pass="return" description="returns the slicestack instance" />
 		</method>
-		<method name="GetBuildUUID" dllsuffix="utf8" description="returns, whether a build has a UUID and, if true, the build's UUID">
+		<method name="GetBuildUUID" description="returns, whether a build has a UUID and, if true, the build's UUID">
 			<param name="HasUUID" type="bool" pass="out" description="flag whether the build has a UUID"/>
 			<param name="UUID" type="string" pass="return" description="the UUID as string of the form 'xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx'"/>
 		</method>
-		<method name="SetBuildUUID" dllsuffix="utf8" description="sets the build's UUID">
+		<method name="SetBuildUUID" description="sets the build's UUID">
 			<param name="UUID" type="string" pass="in" description="the UUID as string of the form 'xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx'"/>
 		</method>
 		<method name="GetBuildItems" description="creates a build item iterator instance with all build items.">
@@ -1283,10 +1402,10 @@
 			<param name="ResourceIterator" type="handle" class="ResourceIterator" pass="return" description="returns the iterator instance." />
 		</method>
 		<method name="GetObjects" description="creates a resource iterator instance with all object resources.">
-			<param name="ResourceIterator" type="handle" class="ResourceIterator" pass="return" description="returns the iterator instance." />
+			<param name="ResourceIterator" type="handle" class="ObjectIterator" pass="return" description="returns the iterator instance." />
 		</method>
 		<method name="GetMeshObjects" description="creates a resource iterator instance with all mesh object resources.">
-			<param name="ResourceIterator" type="handle" class="ResourceIterator" pass="return" description="returns the iterator instance." />
+			<param name="ResourceIterator" type="handle" class="MeshObjectIterator" pass="return" description="returns the iterator instance." />
 		</method>
 		<method name="GetComponentsObjects" description="creates a resource iterator instance with all components object resources.">
 			<param name="ResourceIterator" type="handle" class="ResourceIterator" pass="return" description="returns the iterator instance." />
@@ -1303,8 +1422,15 @@
 		<method name="GetTexture2DGroups" description="creates a Texture2DGroupIterator instance with all base material resources.">
 			<param name="ResourceIterator" type="handle" class="Texture2DGroupIterator" pass="return" description="returns the iterator instance." />
 		</method>
+		<method name="GetCompositeMaterials" description="creates a CompositeMaterialsIterator instance with all CompositeMaterials resources.">
+			<param name="ResourceIterator" type="handle" class="CompositeMaterialsIterator" pass="return" description="returns the iterator instance." />
+		</method>
+		<method name="GetMultiPropertyGroups" description="creates a MultiPropertyGroupsIterator instance with all MultiPropertyGroup resources.">
+			<param name="ResourceIterator" type="handle" class="MultiPropertyGroupIterator" pass="return" description="returns the iterator instance." />
+		</method>
+		
 		<method name="GetSliceStacks" description="creates a resource iterator instance with all slice stack resources.">
-			<param name="ResourceIterator" type="handle" class="ResourceIterator" pass="return" description="returns the iterator instance." />
+			<param name="ResourceIterator" type="handle" class="SliceStackIterator" pass="return" description="returns the iterator instance." />
 		</method>
 
 		<method name="GetNurbsCurves" description="creates a resource iterator instance with all nurbs curve resources.">
@@ -1357,6 +1483,13 @@
 			<param name="Texture2DInstance" type="handle" class="Texture2D" pass="in" description="The texture2D instance of the created Texture2DGroup." />
 			<param name="Texture2DGroupInstance" type="handle" class="Texture2DGroup" pass="return" description="returns the new Texture2DGroup instance." />
 		</method>
+		<method name="AddCompositeMaterials" description = "adds an empty CompositeMaterials resource to the model.">
+			<param name="BaseMaterialGroupInstance" type="handle" class="BaseMaterialGroup" pass="in" description="The BaseMaterialGroup instance of the created CompositeMaterials." />
+			<param name="CompositeMaterialsInstance" type="handle" class="CompositeMaterials" pass="return" description="returns the new CompositeMaterials instance." />
+		</method>
+		<method name="AddMultiPropertyGroup" description = "adds an empty MultiPropertyGroup resource to the model.">
+			<param name="MultiPropertyGroupInstance" type="handle" class="MultiPropertyGroup" pass="return" description="returns the new MultiPropertyGroup instance." />
+		</method>
 		<method name="AddBuildItem" description = "adds a build item to the model.">
 			<param name="Object" type="handle" class="Object" pass="in" description="Object instance." />
 			<param name="Transform" type="struct" class="Transform" pass="in" description="Transformation matrix." />
@@ -1368,19 +1501,19 @@
 		<method name="GetMetaDataGroup" description="Returns the metadata of the model as MetaDataGroup">
 			<param name="TheMetaDataGroup" type="handle" class="MetaDataGroup" pass="return" description="returns an Instance of the metadatagroup of the model" />
 		</method>
-		<method name="AddAttachment" dllsuffix="utf8" description = "adds an attachment stream to the model. The OPC part will be related to the model stream with a certain relationship type..">
+		<method name="AddAttachment" description = "adds an attachment stream to the model. The OPC part will be related to the model stream with a certain relationship type..">
 			<param name="URI" type="string" pass="in" description="Path of the attachment" />
 			<param name="RelationShipType" type="string" pass="in" description="Relationship type of the attachment" />
 			<param name="AttachmentInstance" type="handle" class="Attachment" pass="return" description="Instance of the attachment object" />
 		</method>
-		<method name="RemoveAttachment" dllsuffix="utf8" description = "Removes attachment from the model.">
+		<method name="RemoveAttachment" description = "Removes attachment from the model.">
 			<param name="AttachmentInstance" type="handle" class="Attachment" pass="in" description="Attachment instance to remov" />
 		</method>
 		<method name="GetAttachment" description = "retrieves an attachment stream object from the model..">
 			<param name="Index" type="uint32" pass="in" description="Index of the attachment stream" />
 			<param name="AttachmentInstance" type="handle" class="Attachment" pass="return" description="Instance of the attachment object" />
 		</method>
-		<method name="FindAttachment" dllsuffix="utf8" description = "retrieves an attachment stream object from the model.">
+		<method name="FindAttachment" description = "retrieves an attachment stream object from the model.">
 			<param name="URI" type="string" pass="in" description="Path URI in the package" />
 			<param name="AttachmentInstance" type="handle" class="Attachment" pass="return" description="Instance of the attachment object" />
 		</method>
@@ -1398,20 +1531,29 @@
 		</method>
 		<method name="RemovePackageThumbnailAttachment" description = "Remove the attachment to the OPC package containing the package thumbnail.">
 		</method>
-		<method name="AddCustomContentType" dllsuffix="utf8" description = "adds a new Content Type to the model.">
+		<method name="AddCustomContentType" description = "adds a new Content Type to the model.">
 			<param name="Extension" type="string" pass="in" description="File Extension" />
 			<param name="ContentType" type="string" pass="in" description="Content Type Identifier" />
 		</method>
-		<method name="RemoveCustomContentType" dllsuffix="utf8" description = "removes a custom Content Type from the model (UTF8 version).">
+		<method name="RemoveCustomContentType" description = "removes a custom Content Type from the model (UTF8 version).">
 			<param name="Extension" type="string" pass="in" description="File Extension" />
 		</method>
 	</class>
 
-	<global baseclassname="Base" releasemethod="Release" journalmethod="SetJournal" versionmethod="GetLibraryVersion" errormethod="GetLastError" >
-		<method name="GetLibraryVersion" description = "retrieves the current version of the library.">
-			<param name="Major" type="uint32" pass="out" description="returns the major version of the library" />
-			<param name="Minor" type="uint32" pass="out" description="returns the minor version of the library" />
-			<param name="Micro" type="uint32" pass="out" description="returns the micro version of the library" />
+	<global baseclassname="Base" releasemethod="Release" acquiremethod="Acquire" journalmethod="SetJournal" versionmethod="GetLibraryVersion" errormethod="GetLastError"
+				prereleasemethod="GetPrereleaseInformation" buildinfomethod="GetBuildInformation">
+		<method name="GetLibraryVersion" description = "retrieves the binary version of this library.">
+			<param name="Major" type="uint32" pass="out" description="returns the major version of this library" />
+			<param name="Minor" type="uint32" pass="out" description="returns the minor version of this library" />
+			<param name="Micro" type="uint32" pass="out" description="returns the micro version of this library" />
+		</method>
+		<method name="GetPrereleaseInformation" description = "retrieves prerelease information of this library.">
+			<param name="HasPrereleaseInfo" type="bool" pass="return" description="Does the library provide prerelease version?"/>
+			<param name="PrereleaseInfo" type="string" pass="out" description="retrieves prerelease information of this library."/>
+		</method>
+		<method name="GetBuildInformation" description = "retrieves build information of this library.">
+			<param name="HasBuildInfo" type="bool" pass="return" description="Does the library provide build version?"/>
+			<param name="BuildInformation" type="string" pass="out" description="retrieves build information of this library."/>
 		</method>
 		<method name="GetSpecificationVersion" description = "retrieves whether a specification is supported, and if so, which version.">
 			<param name="SpecificationURL" type="string" pass="in" description="URL of extension to check" />
@@ -1423,8 +1565,11 @@
 		<method name="CreateModel" description = "creates an empty model instance.">
 			<param name="Model" type="handle" class="Model" pass="return" description="returns an empty model instance" />
 		</method>
-		<method name="Release" description = "releases an object instance">
-			<param name="Instance" type="handle" class="Base" pass="in" description="releases the memory of the passed object." />
+		<method name="Release" description = "releases shared ownership of an object instance">
+			<param name="Instance" type="handle" class="Base" pass="in" description="the object instance to release" />
+		</method>
+		<method name="Acquire" description = "acquires shared ownership of an object instance">
+			<param name="Instance" type="handle" class="Base" pass="in" description="the object instance to acquire" />
 		</method>
 		<method name="SetJournal" description = "Sets the journal file path">
 			<param name="JournalPath" type="string" pass="in" description="File name of the journal file" />
@@ -1435,7 +1580,7 @@
 			<param name="HasLastError" type="bool" pass="return" description="Returns if the instance has a last error." />
 		</method>
 		<method name="RetrieveProgressMessage" description = "Return an English text for a progress identifier.|Note: this is the only function you can call from your callback function.">
-			<param name="ProrgessIdentifier" type="enum" class="ProgressIdentifier" pass="in" description="the progress identifier that is passed to the callback function" />
+			<param name="TheProgressIdentifier" type="enum" class="ProgressIdentifier" pass="in" description="the progress identifier that is passed to the callback function" />
 			<param name="ProgressMessage" type="string" pass="out" description="English text for the progress identifier" />
 		</method>
 		<method name="RGBAToColor" description = "Creates a Color from uint8 RGBA values">

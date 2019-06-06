@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -50,6 +50,11 @@ namespace NMR {
 	CModelResource::~CModelResource()
 	{
 		m_pModel = NULL;
+	}
+
+	CModel * CModelResource::Model()
+	{
+		return m_pModel;
 	}
 
 	PPackageResourceID CModelResource::getResourceID()

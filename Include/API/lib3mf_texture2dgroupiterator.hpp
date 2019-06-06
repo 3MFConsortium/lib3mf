@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium (Original Author)
+Copyright (C) 2019 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -24,20 +24,22 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CLib3MFTexture2DGroupIterator
+Abstract: This is the class declaration of CTexture2DGroupIterator
 
 */
 
 
-#ifndef __LIB3MF_LIB3MFTEXTURE2DGROUPITERATOR
-#define __LIB3MF_LIB3MFTEXTURE2DGROUPITERATOR
+#ifndef __LIB3MF_TEXTURE2DGROUPITERATOR
+#define __LIB3MF_TEXTURE2DGROUPITERATOR
 
 #include "lib3mf_interfaces.hpp"
 
 // Parent classes
 #include "lib3mf_resourceiterator.hpp"
-#pragma warning( push)
-#pragma warning( disable : 4250)
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4250)
+#endif
 
 // Include custom headers here.
 
@@ -47,10 +49,10 @@ namespace Impl {
 
 
 /*************************************************************************************************************************
- Class declaration of CLib3MFTexture2DGroupIterator 
+ Class declaration of CTexture2DGroupIterator 
 **************************************************************************************************************************/
 
-class CLib3MFTexture2DGroupIterator : public virtual ILib3MFTexture2DGroupIterator, public virtual CLib3MFResourceIterator {
+class CTexture2DGroupIterator : public virtual ITexture2DGroupIterator, public virtual CResourceIterator {
 private:
 
 	/**
@@ -74,12 +76,14 @@ public:
 	* Public member functions to implement.
 	*/
 
-	ILib3MFTexture2DGroup * GetCurrentTexture2DGroup ();
+	ITexture2DGroup * GetCurrentTexture2DGroup ();
 
 };
 
 } // namespace Impl
 } // namespace Lib3MF
 
-#pragma warning( pop )
-#endif // __LIB3MF_LIB3MFTEXTURE2DGROUPITERATOR
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
+#endif // __LIB3MF_TEXTURE2DGROUPITERATOR
