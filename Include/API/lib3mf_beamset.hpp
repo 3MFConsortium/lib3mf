@@ -34,8 +34,10 @@ Abstract: This is the class declaration of CBeamSet
 
 #include "lib3mf_interfaces.hpp"
 #include "lib3mf_base.hpp"
-#pragma warning( push)
-#pragma warning( disable : 4250)
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4250)
+#endif
 
 #include "Common/Mesh/NMR_MeshTypes.h" 
 #include "Common/Mesh/NMR_Mesh.h"
@@ -96,5 +98,7 @@ public:
 }
 }
 
-#pragma warning( pop )
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 #endif // __LIB3MF_BEAMSET

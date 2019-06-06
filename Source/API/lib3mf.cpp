@@ -107,9 +107,13 @@ IModel * CWrapper::CreateModel ()
 
 void CWrapper::Release (IBase* pInstance)
 {
-	delete pInstance;
+	IBase::ReleaseBaseClassInterface(pInstance);
 }
 
+void CWrapper::Acquire(IBase* pInstance)
+{
+	IBase::AcquireBaseClassInterface(pInstance);
+}
 
 NMR::ProgressIdentifier convertProgressIdentifier(const eLib3MFProgressIdentifier progressIdentifier) {
 	return NMR::ProgressIdentifier(progressIdentifier);

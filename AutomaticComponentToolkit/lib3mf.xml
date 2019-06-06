@@ -1266,7 +1266,7 @@
 		</method>
 	</class>
 
-	<global baseclassname="Base" releasemethod="Release" journalmethod="SetJournal" versionmethod="GetLibraryVersion" errormethod="GetLastError"
+	<global baseclassname="Base" releasemethod="Release" acquiremethod="Acquire" journalmethod="SetJournal" versionmethod="GetLibraryVersion" errormethod="GetLastError"
 				prereleasemethod="GetPrereleaseInformation" buildinfomethod="GetBuildInformation">
 		<method name="GetLibraryVersion" description = "retrieves the binary version of this library.">
 			<param name="Major" type="uint32" pass="out" description="returns the major version of this library" />
@@ -1291,8 +1291,11 @@
 		<method name="CreateModel" description = "creates an empty model instance.">
 			<param name="Model" type="handle" class="Model" pass="return" description="returns an empty model instance" />
 		</method>
-		<method name="Release" description = "releases an object instance">
-			<param name="Instance" type="handle" class="Base" pass="in" description="releases the memory of the passed object." />
+		<method name="Release" description = "releases shared ownership of an object instance">
+			<param name="Instance" type="handle" class="Base" pass="in" description="the object instance to release" />
+		</method>
+		<method name="Acquire" description = "acquires shared ownership of an object instance">
+			<param name="Instance" type="handle" class="Base" pass="in" description="the object instance to acquire" />
 		</method>
 		<method name="SetJournal" description = "Sets the journal file path">
 			<param name="JournalPath" type="string" pass="in" description="File name of the journal file" />
@@ -1303,7 +1306,7 @@
 			<param name="HasLastError" type="bool" pass="return" description="Returns if the instance has a last error." />
 		</method>
 		<method name="RetrieveProgressMessage" description = "Return an English text for a progress identifier.|Note: this is the only function you can call from your callback function.">
-			<param name="ProrgessIdentifier" type="enum" class="ProgressIdentifier" pass="in" description="the progress identifier that is passed to the callback function" />
+			<param name="TheProgressIdentifier" type="enum" class="ProgressIdentifier" pass="in" description="the progress identifier that is passed to the callback function" />
 			<param name="ProgressMessage" type="string" pass="out" description="English text for the progress identifier" />
 		</method>
 		<method name="RGBAToColor" description = "Creates a Color from uint8 RGBA values">

@@ -34,8 +34,10 @@ Abstract: This is the class declaration of CBeamLattice
 
 #include "lib3mf_interfaces.hpp"
 #include "lib3mf_base.hpp"
-#pragma warning( push)
-#pragma warning( disable : 4250)
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4250)
+#endif
 
 #include "Common/Mesh/NMR_Mesh.h"
 #include "Model/Classes/NMR_ModelMeshBeamLatticeAttributes.h"
@@ -113,5 +115,7 @@ public:
 } // namespace Impl
 } // namespace Lib3MF
 
-#pragma warning( pop )
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 #endif // __LIB3MF_BEAMLATTICE
