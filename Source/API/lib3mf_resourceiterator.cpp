@@ -111,3 +111,8 @@ IResourceIterator * CResourceIterator::Clone ()
 	return pResources.release();
 }
 
+Lib3MF_uint64 CResourceIterator::Count()
+{
+	return m_pResources.size();
+}
+

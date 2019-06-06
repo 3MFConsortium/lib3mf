@@ -30,7 +30,7 @@ BEGIN
             VALUE "LegalCopyright", PRODUCT_COMPANY_COPYRIGHT
             VALUE "OriginalFilename", PRODUCT_ORIGINAL_FILENAME
             VALUE "ProductName", PRODUCT_BUNDLE
-            VALUE "ProductVersion", PRODUCT_VERSION_MAJOR_MINOR_PATCH_STR
+            VALUE "ProductVersion", PRODUCT_VERSION_MAJOR_MINOR_PATCH_PRERELEASE_STR
         END
     END
     BLOCK "VarFileInfo"

@@ -49,7 +49,7 @@ A model reader node is an abstract base class for all XML nodes of a 3MF Model S
 namespace NMR {
 
 	CModelReaderNode_Model::CModelReaderNode_Model(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings, const std::string sPath,
-		_In_ CProgressMonitor* pProgressMonitor)
+		_In_ PProgressMonitor pProgressMonitor)
 		: CModelReaderNode(pWarnings, pProgressMonitor), m_bIgnoreBuild(false), m_bIgnoreMetaData(false)
 	{
 		__NMRASSERT(pModel);
@@ -146,14 +146,14 @@ namespace NMR {
 		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_CORESPEC100) == 0) {
 			if (strcmp(pChildName, XML_3MF_ELEMENT_RESOURCES) == 0) {
 				m_bWithinIgnoredElement = false;
-				if (m_pProgressMonitor && !m_pProgressMonitor->Progress(0.2, ProgressIdentifier::PROGRESS_READRESOURCES))
-					throw CNMRException(NMR_USERABORTED);
-				if (m_pProgressMonitor) m_pProgressMonitor->PushLevel(0.2, 0.9);
+
+				m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_READRESOURCES);
+				m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
+				
 				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode100_Resources>(m_pModel, m_pWarnings, m_sPath.c_str(), m_pProgressMonitor);
 				if (m_bHasResources)
 					throw CNMRException(NMR_ERROR_DUPLICATERESOURCES);
 				pXMLNode->parseXML(pXMLReader);
-				if (m_pProgressMonitor) m_pProgressMonitor->PopLevel();
 				m_bHasResources = true;
 			}
 			else if (strcmp(pChildName, XML_3MF_ELEMENT_BUILD) == 0) {
@@ -164,8 +164,9 @@ namespace NMR {
 				}
 				else {
 					m_bWithinIgnoredElement = false;
-					if (m_pProgressMonitor && !m_pProgressMonitor->Progress(0.9, ProgressIdentifier::PROGRESS_READBUILD))
-						throw CNMRException(NMR_USERABORTED);
+					m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_READBUILD);
+					m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
+
 					PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode100_Build>(m_pModel, m_pWarnings);
 					pXMLNode->parseXML(pXMLReader);
 				}

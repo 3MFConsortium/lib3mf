@@ -47,7 +47,7 @@ Stream.
 
 namespace NMR {
 
-	CModelReaderNode100_Object::CModelReaderNode100_Object(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings, _In_ CProgressMonitor * pProgressMonitor)
+	CModelReaderNode100_Object::CModelReaderNode100_Object(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings, _In_ PProgressMonitor pProgressMonitor)
 		: CModelReaderNode(pWarnings, pProgressMonitor)
 	{
 		// Initialize variables
@@ -238,14 +238,9 @@ namespace NMR {
 						m_pWarnings->addWarning(MODELREADERWARNING_INVALIDMODELOBJECTTYPE, NMR_ERROR_INVALIDMODELOBJECTTYPE, mrwInvalidOptionalValue);
 				}
 				
-
-				if (m_pProgressMonitor)
-					m_pProgressMonitor->PushLevel(0, 1);
 				// Read Mesh
 				PModelReaderNode100_Mesh pXMLNode = std::make_shared<CModelReaderNode100_Mesh>(m_pModel, pMesh.get(), m_pWarnings, m_pProgressMonitor, m_nDefaultPropertyID, m_nDefaultPropertyIndex);
 				pXMLNode->parseXML(pXMLReader);
-				if (m_pProgressMonitor)
-					m_pProgressMonitor->PopLevel();
 
 				// Add Object to Parent
 				m_pModel->addResource(m_pObject);
