@@ -40,6 +40,61 @@ NMR_XMLReader_Native.cpp implements a XML reader class with a native XML parsing
 
 namespace NMR {
 
+	inline void decodeXMLEscapeXMLStrings(nfChar* pChar) {
+		if (strpbrk(pChar, "&") == nullptr) {
+			return;
+		}
+		nfChar *pIterChar = pChar;
+		nfChar *pWriteChar = pChar;
+
+		nfChar *pAmp = nullptr;
+		nfChar *pColon = nullptr;
+		while (*pIterChar != 0) {
+			if (*pIterChar == '&') {
+				pAmp = pIterChar;
+				pColon = nullptr;
+			}
+			else if (pAmp == nullptr) {
+				*pWriteChar = *pIterChar;
+				pWriteChar++;
+			}
+			else if (*pIterChar == ';') {
+				if (pAmp != nullptr) {
+					pColon = pIterChar;
+					long long compareLen = pColon - pAmp + 1;
+					if (strncmp(pAmp, "&quot;", static_cast<size_t>(std::min((long long)(6), compareLen))) == 0) {
+						*pWriteChar = '\"';
+						pWriteChar++;
+					}
+					else if (strncmp(pAmp, "&apos;", static_cast<size_t>(std::min((long long)(6), compareLen))) == 0) {
+						*pWriteChar = '\'';
+						pWriteChar++;
+					}
+					else if (strncmp(pAmp, "&lt;", static_cast<size_t>(std::min((long long)(4), compareLen))) == 0) {
+						*pWriteChar = '<';
+						pWriteChar++;
+					}
+					else if (strncmp(pAmp, "&gt;", static_cast<size_t>(std::min((long long)(4), compareLen))) == 0) {
+						*pWriteChar = '>';
+						pWriteChar++;
+					}
+					else if (strncmp(pAmp, "&amp;", static_cast<size_t>(std::min((long long)(5), compareLen))) == 0) {
+						*pWriteChar = '&';
+						pWriteChar++;
+					}
+					else {
+						throw CNMRException(NMR_ERROR_XMLPARSER_INVALID_ESCAPESTRING);
+					}
+					pAmp = nullptr;
+				}
+			}
+			pIterChar++;
+		};
+		if (pAmp != nullptr)
+			throw CNMRException(NMR_ERROR_XMLPARSER_INVALID_ESCAPESTRING);
+		*pWriteChar = 0;
+	}
+
 	nfUint32 nfStrLen(_In_ const nfChar * pszString)
 	{
 		nfUint32 nResult = 0;
@@ -212,6 +267,7 @@ namespace NMR {
 		case NMR_NATIVEXMLTYPE_TEXT:
 			NodeType = XMLREADERNODETYPE_TEXT;
 			m_pCurrentValue = m_CurrentEntityList[m_nCurrentEntityIndex];
+			decodeXMLEscapeXMLStrings(m_pCurrentValue);
 			m_pCurrentPrefix = &m_cNullString;
 			m_pCurrentName = &m_cNullString;
 			m_bNameSpaceIsAttribute = false;
@@ -884,60 +940,6 @@ namespace NMR {
 		m_nZeroInsertIndex++;
 	}
 	
-	inline void decodeXMLEscapeXMLStrings(nfChar* pChar) {
-		if (strpbrk(pChar, "&") == nullptr) {
-			return;
-		}
-		nfChar *pIterChar = pChar;
-		nfChar *pWriteChar = pChar;
-
-		nfChar *pAmp = nullptr;
-		nfChar *pColon = nullptr;
-		while (*pIterChar != 0) {
-			if (*pIterChar == '&') {
-				pAmp = pIterChar;
-				pColon = nullptr;
-			}
-			else if (pAmp == nullptr) {
-				*pWriteChar = *pIterChar;
-				pWriteChar++;
-			} else if (*pIterChar == ';') {
-				if (pAmp != nullptr) {
-					pColon = pIterChar;
-					long long compareLen = pColon - pAmp + 1;
-					if (strncmp(pAmp, "&quot;", static_cast<size_t>(std::min((long long)(6), compareLen))) == 0) {
-						*pWriteChar = '\"';
-						pWriteChar++;
-					}
-					else if (strncmp(pAmp, "&apos;", static_cast<size_t>(std::min((long long)(6), compareLen))) == 0) {
-						*pWriteChar = '\'';
-						pWriteChar++;
-					}
-					else if (strncmp(pAmp, "&lt;", static_cast<size_t>(std::min((long long)(4), compareLen))) == 0) {
-						*pWriteChar = '<';
-						pWriteChar++;
-					}
-					else if (strncmp(pAmp, "&gt;", static_cast<size_t>(std::min((long long)(4), compareLen))) == 0) {
-						*pWriteChar = '>';
-						pWriteChar++;
-					}
-					else if (strncmp(pAmp, "&amp;", static_cast<size_t>(std::min((long long)(5), compareLen))) == 0) {
-						*pWriteChar = '&';
-						pWriteChar++;
-					}
-					else {
-						throw CNMRException(NMR_ERROR_XMLPARSER_INVALID_ESCAPESTRING);
-					}
-					pAmp = nullptr;
-				}
-			}
-			pIterChar++;
-		};
-		if (pAmp != nullptr)
-			throw CNMRException(NMR_ERROR_XMLPARSER_INVALID_ESCAPESTRING);
-		*pWriteChar = 0;
-	}
-
 	void CXmlReader_Native::performEscapeStringDecoding()
 	{
 		for (nfUint32 nIndex  = m_nCurrentVerifiedEntityCount; nIndex < m_nCurrentEntityCount-1; nIndex++) {

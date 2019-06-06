@@ -231,9 +231,9 @@ namespace Lib3MF
 	TEST_F(MetaDataGroup, Write_DefaultNS_Model)
 	{
 		std::string nameSpace = "ANameSpace";
-		std::string name = "AName";
+		std::string name = "Title with \"<> escape characters";
 		std::string key = nameSpace + ":" + name;
-		std::string value = "AValue";
+		std::string value = "TheValue with \n \\ all sorts of \n crazy characters\\t  >	<Ti/!:\r\n  h  ' \"\" ";
 		std::string type = "AType";
 		bool mustPreserve = true;
 
