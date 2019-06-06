@@ -66,6 +66,11 @@ namespace NMR {
 		return m_pObject;
 	}
 
+	CModel* CModelComponent::getModel()
+	{
+		return m_pObject->getModel();
+	}
+
 	NMATRIX3 CModelComponent::getTransform()
 	{
 		return m_mTransform;

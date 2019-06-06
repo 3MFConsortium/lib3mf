@@ -49,9 +49,9 @@ CComponent::CComponent(NMR::PModelComponent pComponent)
 }
 
 
-IObject * CComponent::GetObjectResource ()
+IObject * CComponent::GetObjectResource()
 {
-	NMR::PModelObject pModelObject(m_pComponent->getObject());
+	NMR::PModelResource pModelObject = m_pComponent->getModel()->findResource(m_pComponent->getObjectID());
 	if (!pModelObject.get())
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDMODELRESOURCE);
 

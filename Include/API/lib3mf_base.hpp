@@ -52,6 +52,7 @@ class CBase : public virtual IBase {
 private:
 
 	std::unique_ptr<std::list<std::string>> m_pErrors;
+	Lib3MF_uint32 m_nReferenceCount = 1;
 
 	/**
 	* Put private members here.
@@ -75,6 +76,9 @@ public:
 
 	void RegisterErrorMessage(const std::string & sErrorMessage);
 
+	void IncRefCount();
+
+	bool DecRefCount();
 
 	/**
 	* Public member functions to implement.

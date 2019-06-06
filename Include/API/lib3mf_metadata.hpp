@@ -34,8 +34,10 @@ Abstract: This is the class declaration of CMetaData
 
 #include "lib3mf_interfaces.hpp"
 #include "lib3mf_base.hpp"
-#pragma warning( push)
-#pragma warning( disable : 4250)
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4250)
+#endif
 
 #include "Model/Classes/NMR_ModelMetaData.h"
 
@@ -102,5 +104,7 @@ public:
 }
 }
 
-#pragma warning( pop )
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 #endif // __LIB3MF_METADATA

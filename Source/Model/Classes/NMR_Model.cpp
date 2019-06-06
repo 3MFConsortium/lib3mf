@@ -1138,7 +1138,6 @@ namespace NMR {
 		for (nfUint32 i = 0; i < m_ObjectLookup.size(); i++) {
 			CModelObject* pObject = dynamic_cast<CModelObject*>(m_ObjectLookup[i].get());
 			if (pObject != nullptr) {
-
 				pObject->clearComponentDepthLevel();
 				resultList.push_back(pObject);
 			}
@@ -1150,13 +1149,13 @@ namespace NMR {
 
 
 		// sort by (level descending, ResourceID ascending)
-		resultList.sort ([](CModelObject * pObject1, CModelObject * pObject2)
+		resultList.sort( [](CModelObject * pObject1, CModelObject * pObject2)
 		{
 			nfUint32 nLevel1 = pObject1->getComponentDepthLevel();
 			nfUint32 nLevel2 = pObject2->getComponentDepthLevel();
 			
 			if (nLevel1 == nLevel2)
-				return (pObject1->getResourceID()) < (pObject2->getResourceID());
+				return (pObject1->getResourceID()->getUniqueID()) < (pObject2->getResourceID()->getUniqueID());
 
 			return nLevel1 > nLevel2;
 		});

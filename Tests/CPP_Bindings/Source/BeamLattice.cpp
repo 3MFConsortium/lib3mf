@@ -121,6 +121,41 @@ namespace Lib3MF
 		catch (ELib3MFException& e) {
 			ASSERT_EQ(e.getErrorCode(), LIB3MF_ERROR_INVALIDPARAM);
 		}
+
+
+		sBeam beam;
+		beam.m_Radii[0] = 1.0;
+		beam.m_Radii[1] = 1.0;
+		beam.m_Indices[0] = 0;
+		beam.m_Indices[1] = 1;
+		beamLattice->AddBeam(beam);
+
+		auto writer = model->QueryWriter("3mf");
+		std::vector<Lib3MF_uint8> buffer;
+		writer->WriteToBuffer(buffer);
+
+		auto readModel = wrapper->CreateModel();
+		auto reader = readModel->QueryReader("3mf");
+		reader->SetStrictModeActive(true);
+		reader->ReadFromBuffer(buffer);
+
+		auto meshObjects = readModel->GetMeshObjects();
+		PLib3MFMeshObject firstMesh;
+		while (meshObjects->MoveNext()) {
+			if (!firstMesh.get()) {
+				firstMesh = meshObjects->GetCurrentMeshObject();
+			}
+			else {
+				auto meshObject = meshObjects->GetCurrentMeshObject();
+				auto readBeamLattice = meshObject->BeamLattice();
+				Lib3MF_uint32 nRepID = 0;
+				if (readBeamLattice->GetRepresentation(nRepID)) {
+					ASSERT_EQ(firstMesh->GetResourceID(), nRepID);
+					return;
+				}
+			}
+		}
+		ASSERT_FALSE(true);
 	}
 
 

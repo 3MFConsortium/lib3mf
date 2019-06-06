@@ -54,8 +54,9 @@ namespace NMR {
 		CModelComponent(_In_ CModelObject * pObject, _In_ const NMATRIX3 mTransform);
 		~CModelComponent();
 		
-		CModelObject * getObject ();
-		
+		CModelObject * getObject();
+		CModel * getModel();
+
 		NMATRIX3 getTransform ();
 		void setTransform(_In_ const NMATRIX3 mTransform);
 		

@@ -65,3 +65,17 @@ void CBase::RegisterErrorMessage(const std::string & sErrorMessage)
 	m_pErrors->push_back(sErrorMessage);
 }
 
+void CBase::IncRefCount()
+{
+	++m_nReferenceCount;
+}
+
+bool CBase::DecRefCount()
+{
+	m_nReferenceCount--;
+	if (!m_nReferenceCount) {
+		delete this;
+		return true;
+	}
+	return false;
+}
