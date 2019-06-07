@@ -137,8 +137,8 @@ namespace NMR {
 		// Core framework error codes (0x2XXX)
 		case NMR_ERROR_NOPROGRESSINTERVAL: return "No Progress Interval has been specified in the progress handler";
 		case NMR_ERROR_DUPLICATENODE: return "An Edge with two identical nodes has been tried to added to a mesh";
-		case NMR_ERROR_TOOMANYNODES: return "The mesh exceeds more than NMR_MESH_MAXEDGECOUNT (around two billion) nodes";
-		case NMR_ERROR_TOOMANYFACES: return "The mesh exceeds more than NMR_MESH_MAXFACECOUNT (around two billion) faces";
+		case NMR_ERROR_TOOMANYNODES: return "The mesh exceeds more than NMR_MESH_MAXEDGECOUNT (2^31-1, around two billion) nodes";
+		case NMR_ERROR_TOOMANYFACES: return "The mesh exceeds more than NMR_MESH_MAXFACECOUNT (2^31-1, around two billion) faces";
 		case NMR_ERROR_INVALIDNODEINDEX: return "The index provided for the node is invalid";
 		case NMR_ERROR_INVALIDFACEINDEX: return "The index provided for the face is invalid";
 		case NMR_ERROR_INVALIDMESHTOPOLOGY: return "The mesh topology structure is corrupt";
@@ -155,7 +155,7 @@ namespace NMR {
 		case NMR_ERROR_INVALIDFACECOUNT: return "The specified facecount in the file was not valid";
 		case NMR_ERROR_INVALIDUNITS: return "The specified units of the file was not valid";
 		case NMR_ERROR_COULDNOTSETUNITS: return "The specified units could not be set (for example, the CVectorTree already had some entries)";
-		case NMR_ERROR_TOOMANYEDGES: return "The mesh exceeds more than NMR_MESH_MAXEDGECOUNT (around two billion) edges";
+		case NMR_ERROR_TOOMANYEDGES: return "The mesh exceeds more than NMR_MESH_MAXEDGECOUNT (2^31-1, around two billion) edges";
 		case NMR_ERROR_INVALIDEDGEINDEX: return "The index provided for the edge is invalid";
 		case NMR_ERROR_DUPLICATEEDGE: return "The mesh has an face with two identical edges";
 		case NMR_ERROR_MANIFOLDEDGES: return "Could not add face to an edge, because it was already two-manifold";
@@ -194,7 +194,7 @@ namespace NMR {
 		case NMR_ERROR_DUPLICATECOLORID: return "Color ID is already existing";
 		case NMR_ERROR_INVALIDMESHINFORMATIONDATA: return "Mesh Information Block was not assigned";
 		case NMR_ERROR_INVALIDMESHINFORMATION: return "Mesh Information Object was not assigned";
-		case NMR_ERROR_TOOMANYBEAMS: return "The mesh exceeds more than NMR_MESH_MAXBEAMCOUNT (around two billion) beams";
+		case NMR_ERROR_TOOMANYBEAMS: return "The mesh exceeds more than NMR_MESH_MAXBEAMCOUNT (2^31-1, around two billion) beams";
 
 		// Model error codes (0x8XXX)
 		case NMR_ERROR_OPCREADFAILED: return "3MF Loading - OPC could not be loaded";
