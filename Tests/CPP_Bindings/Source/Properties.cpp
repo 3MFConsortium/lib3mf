@@ -77,6 +77,35 @@ namespace Lib3MF
 		}
 	}
 
+	TEST_F(Properties, ClearProperties)
+	{
+		auto baseMaterialGroup = model->AddBaseMaterialGroup();
+		auto someMaterial = baseMaterialGroup->AddMaterial("SomeMaterial", wrapper->RGBAToColor(100, 200, 150, 255));
+		auto anotherMaterial = baseMaterialGroup->AddMaterial("AnotherMaterial", wrapper->RGBAToColor(100, 200, 150, 255));
+
+		std::vector<sTriangleProperties> properties(mesh->GetTriangleCount());
+		for (Lib3MF_uint64 i = 0; i < mesh->GetTriangleCount(); i++) {
+			properties[i].m_ResourceID = baseMaterialGroup->GetResourceID();
+			auto material = someMaterial;
+			if (i % 2 == 0) {
+				material = anotherMaterial;
+			}
+			properties[i].m_PropertyIDs[0] = material;
+			properties[i].m_PropertyIDs[1] = material;
+			properties[i].m_PropertyIDs[2] = material;
+		}
+		mesh->SetAllTriangleProperties(properties);
+
+		mesh->ClearAllTriangleProperties();
+		mesh->GetAllTriangleProperties(properties);
+		for (Lib3MF_uint64 i = 0; i < mesh->GetTriangleCount(); i++) {
+			EXPECT_EQ(properties[i].m_ResourceID, 0);
+			for (Lib3MF_uint64 j = 0; j < 3; j++) {
+				EXPECT_EQ(properties[i].m_PropertyIDs[j], 0);
+			}
+		}
+	}
+
 	TEST_F(Properties, DISABLED_Set_BaseMaterial_Fail)
 	{
 		auto baseMaterialGroup = model->AddBaseMaterialGroup();

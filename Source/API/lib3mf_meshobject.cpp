@@ -300,6 +300,10 @@ void CMeshObject::GetAllTriangleProperties(Lib3MF_uint64 nPropertiesArrayBufferS
 	}
 }
 
+void CMeshObject::ClearAllTriangleProperties()
+{
+	mesh()->clearMeshInformationHandler();
+}
 
 void CMeshObject::SetGeometry(const Lib3MF_uint64 nVerticesBufferSize, const sLib3MFPosition * pVerticesBuffer, const Lib3MF_uint64 nIndicesBufferSize, const sLib3MFTriangle * pIndicesBuffer)
 {

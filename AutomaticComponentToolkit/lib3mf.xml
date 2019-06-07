@@ -586,7 +586,8 @@
 		<method name="GetAllTriangleProperties" description="Gets the properties of all triangles of a mesh object.">
 			<param name="PropertiesArray" type="structarray" class="TriangleProperties" pass="out" description="returns the triangle properties array. Must have trianglecount elements." />
 		</method>
-
+		<method name="ClearAllTriangleProperties" description="Clears all properties of this mesh object.">
+		</method>
 		<method name="SetGeometry" description="Set all triangles of a mesh object">
 			<param name="Vertices" type="structarray" class="Position" pass="in" description="contains the positions." />
 			<param name="Indices" type="structarray" class="Triangle" pass="in" description="contains the triangle indices." />
