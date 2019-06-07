@@ -96,7 +96,7 @@ namespace Lib3MF
 		}
 		mesh->SetAllTriangleProperties(properties);
 
-		mesh->ClearAllTriangleProperties();
+		mesh->ClearAllProperties();
 		mesh->GetAllTriangleProperties(properties);
 		for (Lib3MF_uint64 i = 0; i < mesh->GetTriangleCount(); i++) {
 			EXPECT_EQ(properties[i].m_ResourceID, 0);

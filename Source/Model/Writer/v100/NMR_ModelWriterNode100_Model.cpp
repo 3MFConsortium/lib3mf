@@ -62,7 +62,7 @@ namespace NMR {
 	{
 		m_ResourceCounter = pModel->generateResourceID();
 
-		m_pPropertyIndexMapping = std::make_shared<CMeshInformation_PropertyIndexMapping> ();
+		m_pPropertyIndexMapping = std::make_shared<CMeshInformation_PropertyIndexMapping>();
 
 		m_bWriteMaterialExtension = true;
 		m_bWriteProductionExtension = true;

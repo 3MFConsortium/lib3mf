@@ -43,10 +43,10 @@ Abstract: This is the class declaration of CMeshObject
 
 // Include custom headers here.
 #include "Model/Classes/NMR_ModelMeshObject.h"
+#include "Common/MeshInformation/NMR_MeshInformation_Properties.h"
 
 namespace Lib3MF {
 namespace Impl {
-
 
 /*************************************************************************************************************************
  Class declaration of CMeshObject 
@@ -60,6 +60,8 @@ private:
 	*/
 	NMR::PModelMeshObject meshObject();
 	NMR::CMesh* mesh();
+
+	NMR::CMeshInformation_Properties* getMeshInformationProperties();
 
 protected:
 
@@ -111,6 +113,10 @@ public:
 
 	virtual IBeamLattice * BeamLattice();
 
+	void SetObjectLevelProperty(const Lib3MF_uint32 nResourceID, const Lib3MF_uint32 nPropertyID);
+
+	bool GetObjectLevelProperty(Lib3MF_uint32 & nResourceID, Lib3MF_uint32 & nPropertyID);
+
 	void SetTriangleProperties(const Lib3MF_uint32 nIndex, const sLib3MFTriangleProperties Properties);
 
 	void GetTriangleProperties(const Lib3MF_uint32 nIndex, sLib3MFTriangleProperties & sProperty);
@@ -119,7 +125,7 @@ public:
 
 	void GetAllTriangleProperties(Lib3MF_uint64 nPropertiesArrayBufferSize, Lib3MF_uint64* pPropertiesArrayNeededCount, sLib3MFTriangleProperties * pPropertiesArrayBuffer);
 
-	void ClearAllTriangleProperties();
+	void ClearAllProperties();
 };
 
 }

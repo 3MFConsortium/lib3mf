@@ -572,6 +572,15 @@
 		<method name="GetTriangleIndices" description="Get all triangles of a mesh object">
 			<param name="Indices" type="structarray" class="Triangle" pass="out" description="contains the triangle indices." />
 		</method>
+		<method name="SetObjectLevelProperty" description="Sets the property at the object-level of the mesh object.">
+			<param name="ResourceID" type="uint32" pass="in" description="the object-level Property Resource ID." />
+			<param name="PropertyID" type="uint32" pass="in" description="the object-level PropertyID." />
+		</method>
+		<method name="GetObjectLevelProperty" description="Gets the property at the object-level of the mesh object.">
+			<param name="ResourceID" type="uint32" pass="out" description="the object-level Property Resource ID." />
+			<param name="PropertyID" type="uint32" pass="out" description="the object-level PropertyID." />
+			<param name="HasObjectLevelProperty" type="bool" pass="return" description="Has an object-level property been specified?" />
+		</method>
 		<method name="SetTriangleProperties" description="Sets the properties of a single triangle of a mesh object.">
 			<param name="Index" type="uint32" pass="in" description="Index of the triangle (0 to trianglecount - 1)" />
 			<param name="Properties" type="struct" class="TriangleProperties" pass="in" description="contains the triangle properties." />
@@ -586,7 +595,7 @@
 		<method name="GetAllTriangleProperties" description="Gets the properties of all triangles of a mesh object.">
 			<param name="PropertiesArray" type="structarray" class="TriangleProperties" pass="out" description="returns the triangle properties array. Must have trianglecount elements." />
 		</method>
-		<method name="ClearAllTriangleProperties" description="Clears all properties of this mesh object.">
+		<method name="ClearAllProperties" description="Clears all properties of this mesh object (triangle and object-level).">
 		</method>
 		<method name="SetGeometry" description="Set all triangles of a mesh object">
 			<param name="Vertices" type="structarray" class="Position" pass="in" description="contains the positions." />

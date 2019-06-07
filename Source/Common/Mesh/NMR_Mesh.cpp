@@ -389,7 +389,7 @@ namespace NMR {
 
 	void CMesh::clear()
 	{
-		m_pMeshInformationHandler = NULL;
+		m_pMeshInformationHandler.reset();
 		m_Faces.clearAllData();
 		m_Nodes.clearAllData();
 		clearBeamLattice();
@@ -401,7 +401,7 @@ namespace NMR {
 
 	void CMesh::clearMeshInformationHandler()
 	{
-		m_pMeshInformationHandler = NULL;
+		m_pMeshInformationHandler.reset();
 	}
 
 	_Ret_maybenull_ CMeshInformationHandler * CMesh::getMeshInformationHandler()
