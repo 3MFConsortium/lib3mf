@@ -157,7 +157,7 @@ namespace NMR {
 
 		// Check Node Quota
 		nfUint32 nNodeCount = getNodeCount();
-		if (nNodeCount > NMR_MESH_MAXNODECOUNT)
+		if (nNodeCount >= NMR_MESH_MAXNODECOUNT)
 			throw CNMRException(NMR_ERROR_TOOMANYNODES);
 
 		// Allocate Data
@@ -182,7 +182,7 @@ namespace NMR {
 
 		// Check Node Quota
 		nfUint32 nNodeCount = getNodeCount();
-		if (nNodeCount > NMR_MESH_MAXNODECOUNT)
+		if (nNodeCount >= NMR_MESH_MAXNODECOUNT)
 			throw CNMRException(NMR_ERROR_TOOMANYNODES);
 
 		// Allocate Data
@@ -207,7 +207,7 @@ namespace NMR {
 		MESHFACE * pFace;
 		nfUint32 nFaceCount = getFaceCount ();
 
-		if (nFaceCount > NMR_MESH_MAXFACECOUNT)
+		if (nFaceCount >= NMR_MESH_MAXFACECOUNT)
 			throw CNMRException(NMR_ERROR_TOOMANYFACES);
 
 		nfUint32 nNewIndex;
@@ -232,7 +232,7 @@ namespace NMR {
 		MESHFACE * pFace;
 		nfUint32 nFaceCount = getFaceCount();
 
-		if (nFaceCount > NMR_MESH_MAXFACECOUNT)
+		if (nFaceCount >= NMR_MESH_MAXFACECOUNT)
 			throw CNMRException(NMR_ERROR_TOOMANYFACES);
 
 		nfUint32 nNewIndex;
@@ -262,7 +262,7 @@ namespace NMR {
 		MESHBEAM * pBeam;
 		nfUint32 nBeamCount = getBeamCount();
 
-		if (nBeamCount > NMR_MESH_MAXBEAMCOUNT)
+		if (nBeamCount >= NMR_MESH_MAXBEAMCOUNT)
 			throw CNMRException(NMR_ERROR_TOOMANYBEAMS);
 
 		nfUint32 nNewIndex;
@@ -346,7 +346,7 @@ namespace NMR {
 		nfUint32 nFaceCount = getFaceCount();
 		nfUint32 nBeamCount = getBeamCount();
 
-		// max 2 billion Nodes/Faces
+		// max 2^31-1 billion Nodes/Faces
 		if (nNodeCount > NMR_MESH_MAXNODECOUNT)
 			return false;
 		if (nFaceCount > NMR_MESH_MAXFACECOUNT)

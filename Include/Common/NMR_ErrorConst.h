@@ -300,10 +300,10 @@ Core framework error codes (0x2XXX)
 // An Edge with two identical nodes has been tried to added to a mesh
 #define NMR_ERROR_DUPLICATENODE 0x2002
 
-// The mesh exceeds more than NMR_MESH_MAXEDGECOUNT (around two billion) nodes
+// The mesh exceeds more than NMR_MESH_MAXNODECOUNT (2^31-1, around two billion) nodes
 #define NMR_ERROR_TOOMANYNODES 0x2003
 
-// The mesh exceeds more than NMR_MESH_MAXFACECOUNT (around two billion) faces
+// The mesh exceeds more than NMR_MESH_MAXFACECOUNT (2^31-1, around two billion) faces
 #define NMR_ERROR_TOOMANYFACES 0x2004
 
 // The index provided for the node is invalid
@@ -354,7 +354,7 @@ Core framework error codes (0x2XXX)
 // The specified units could not be set (for example, the CVectorTree already had some entries)
 #define NMR_ERROR_COULDNOTSETUNITS 0x2014
 
-// The mesh exceeds more than NMR_MESH_MAXEDGECOUNT (around two billion) edges
+// The mesh exceeds more than NMR_MESH_MAXEDGECOUNT (2^31-1, around two billion) edges
 #define NMR_ERROR_TOOMANYEDGES 0x2015
 
 // The index provided for the edge is invalid
