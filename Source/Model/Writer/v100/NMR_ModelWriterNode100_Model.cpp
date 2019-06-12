@@ -452,15 +452,32 @@ namespace NMR {
 			// Check if object is a mesh Object
 			CModelMeshObject * pMeshObject = dynamic_cast<CModelMeshObject *> (pObject);
 			if (pMeshObject) {
-				// Write Default Property Indices
-				ModelResourceID nDefaultPropertyID = 0;
-				ModelResourceIndex nDefaultPropertyIndex = 0;
+				
+                // Retrieve Mesh Informations
+                CMesh* pMesh = pMeshObject->getMesh();
+                if (pMesh != nullptr) {
+                    CMeshInformationHandler * pMeshInformationHandler = pMesh->getMeshInformationHandler();
+                    if (pMeshInformationHandler != nullptr) {
+                        // Get generic property handler
+                         CMeshInformation* pInformation = pMeshInformationHandler->getInformationByType(0, emiProperties);
+                        if (pInformation != nullptr) {
+                            CMeshInformation_Properties* pProperties = dynamic_cast<CMeshInformation_Properties *> (pInformation);
 
-				// Write Attributes (only for meshes)
-				if (nDefaultPropertyID != 0) {
-					writeIntAttribute(XML_3MF_ATTRIBUTE_OBJECT_PID, nDefaultPropertyID);
-					writeIntAttribute(XML_3MF_ATTRIBUTE_OBJECT_PINDEX, nDefaultPropertyIndex);
-				}
+                            NMR::MESHINFORMATION_PROPERTIES * pDefaultData = (NMR::MESHINFORMATION_PROPERTIES*)pProperties->getDefaultData();
+
+                            // Write Attributes (only for meshes)
+                            if (pDefaultData != nullptr && pDefaultData->m_nResourceID != 0) {
+
+                                // Write Default Property Indices
+                                ModelResourceID nDefaultPropertyID = pDefaultData->m_nResourceID;
+                                ModelResourceIndex nDefaultPropertyIndex = m_pPropertyIndexMapping->mapPropertyIDToIndex(nDefaultPropertyID, pDefaultData->m_nPropertyIDs[0]);
+
+                                writeIntAttribute(XML_3MF_ATTRIBUTE_OBJECT_PID, nDefaultPropertyID);
+                                writeIntAttribute(XML_3MF_ATTRIBUTE_OBJECT_PINDEX, nDefaultPropertyIndex);
+                            }
+                        }
+                    }
+                }
 
 				CModelWriterNode100_Mesh ModelWriter_Mesh(pMeshObject, m_pXMLWriter, m_pProgressMonitor,
 					m_pPropertyIndexMapping, m_bWriteMaterialExtension, m_bWriteBeamLatticeExtension);
