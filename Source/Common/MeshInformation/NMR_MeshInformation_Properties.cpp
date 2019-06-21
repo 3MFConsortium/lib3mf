@@ -42,20 +42,6 @@ namespace NMR {
 	{
 	}
 
-
-	nfUint32 CMeshInformation_PropertyIndexMapping::getDefaultResourceID()
-	{
-		return m_nDefaultResourceID;
-	}
-	
-	nfUint32 CMeshInformation_PropertyIndexMapping::getDefaultResourceIndex()
-	{
-		return m_nDefaultResourceIndex;
-	}
-
-
-
-
 	nfUint32 CMeshInformation_PropertyIndexMapping::registerPropertyID(nfUint32 nResourceID, ModelPropertyID nPropertyID, nfUint32 nResourceIndex)
 	{
 		if (nResourceID == 0)
@@ -115,11 +101,11 @@ namespace NMR {
 	{
 		nfUint32 j;
 
-		MESHINFORMATION_PROPERTIES * pTexCoordData = (MESHINFORMATION_PROPERTIES *)pData;
-		if (pTexCoordData) {
-			pTexCoordData->m_nResourceID = 0;
+		MESHINFORMATION_PROPERTIES * pProperties = (MESHINFORMATION_PROPERTIES *)pData;
+		if (pProperties) {
+			pProperties->m_nResourceID = 0;
 			for (j = 0; j < 3; j++) {
-				pTexCoordData->m_nPropertyIDs[j] = 0;
+				pProperties->m_nPropertyIDs[j] = 0;
 			}
 		}
 	}
@@ -183,5 +169,15 @@ namespace NMR {
 		return false;
 	}
 
+	void CMeshInformation_Properties::setDefaultData(MESHINFORMATIONFACEDATA* pData)
+	{
+		MESHINFORMATION_PROPERTIES * pProperties = (MESHINFORMATION_PROPERTIES *)pData;
 
+		m_pDefaultProperty.reset(pProperties);
+	}
+
+	MESHINFORMATIONFACEDATA* CMeshInformation_Properties::getDefaultData()
+	{
+		return (MESHINFORMATIONFACEDATA*)m_pDefaultProperty.get();
+	}
 }
