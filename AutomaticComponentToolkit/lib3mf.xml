@@ -589,7 +589,7 @@
 			<param name="Index" type="uint32" pass="in" description="Index of the triangle (0 to trianglecount - 1)" />
 			<param name="Property" type="struct" class="TriangleProperties" pass="out" description="returns the triangle properties." />
 		</method>
-		<method name="SetAllTriangleProperties" description="Sets the properties of all triangles of a mesh object.">
+		<method name="SetAllTriangleProperties" description="Sets the properties of all triangles of a mesh object. Sets the object level property to the first entry of the passed triangle properties, if not yet specified.">
 			<param name="PropertiesArray" type="structarray" class="TriangleProperties" pass="in" description="contains the triangle properties array. Must have trianglecount elements." />
 		</method>
 		<method name="GetAllTriangleProperties" description="Gets the properties of all triangles of a mesh object.">

@@ -192,6 +192,14 @@ namespace Lib3MF
 		//ASSERT_SPECIFIC_THROW(multiPropertyGroup->AddMultiProperty(propertyIDs), ELib3MFException);
 	}
 
+	TEST_F(MultiProperties, IncorrectNumberOfBlendMethods)
+	{
+		auto readModel = wrapper->CreateModel();
+		auto reader = readModel->QueryReader("3mf");
+		reader->SetStrictModeActive(true);
+		ASSERT_SPECIFIC_THROW(reader->ReadFromFile(sTestFilesPath + "Properties/MultiProperty_Out_incorrect.3mf"), ELib3MFException);
+	}
+
 	TEST_F(MultiProperties, WriteRead)
 	{
 		auto multiPropertyGroup = model->AddMultiPropertyGroup();
@@ -214,12 +222,10 @@ namespace Lib3MF
 	
 		auto writer = model->QueryWriter("3mf");
 		std::vector<Lib3MF_uint8> buffer;
-		 writer->WriteToBuffer(buffer);
-		 //writer->WriteToFile("MultiProperty_Out.3mf");
+		writer->WriteToBuffer(buffer);
 
 		auto readModel = wrapper->CreateModel();
 		auto reader = readModel->QueryReader("3mf");
-		//reader->ReadFromFile("MultiProperty_Out.3mf");
 		reader->ReadFromBuffer(buffer);
 
 		int multiPropertyCount = 0;
@@ -233,6 +239,5 @@ namespace Lib3MF
 		}
 		ASSERT_EQ(multiPropertyCount, 1);
 	}
-
 
 }

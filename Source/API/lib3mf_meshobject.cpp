@@ -262,9 +262,7 @@ void CMeshObject::SetAllTriangleProperties(const Lib3MF_uint64 nPropertiesArrayB
 
 	const sLib3MFTriangleProperties * pProperty = pPropertiesArrayBuffer;
 
-	uint32_t nIndex;
-	for (nIndex = 0; nIndex < nFaceCount; nIndex++) {
-
+	for (uint32_t nIndex = 0; nIndex < nFaceCount; nIndex++) {
 		NMR::MESHINFORMATION_PROPERTIES * pFaceData = (NMR::MESHINFORMATION_PROPERTIES*)pInformation->getFaceData(nIndex);
 		if (pFaceData != nullptr) {
 			pFaceData->m_nResourceID = pProperty->m_ResourceID;
@@ -272,9 +270,20 @@ void CMeshObject::SetAllTriangleProperties(const Lib3MF_uint64 nPropertiesArrayB
 				pFaceData->m_nPropertyIDs[j] = pProperty->m_PropertyIDs[j];
 			}
 		}
-
 		pProperty++;
 	}
+
+	// Prepare a default property, if it makes sense to do so
+	if ((nFaceCount > 0) && (pInformation->getDefaultData() == nullptr)) {
+		NMR::MESHINFORMATION_PROPERTIES * pFaceData = (NMR::MESHINFORMATION_PROPERTIES*)pInformation->getFaceData(0);
+		std::unique_ptr<NMR::MESHINFORMATION_PROPERTIES> pDefaultFaceData(new NMR::MESHINFORMATION_PROPERTIES);
+		pDefaultFaceData->m_nResourceID = pFaceData->m_nResourceID;
+		for (unsigned j = 0; j < 3; j++) {
+			pDefaultFaceData->m_nPropertyIDs[j] = pFaceData->m_nPropertyIDs[j];
+		}
+		pInformation->setDefaultData((NMR::MESHINFORMATIONFACEDATA*)pDefaultFaceData.release());
+	}
+
 }
 
 void CMeshObject::GetAllTriangleProperties(Lib3MF_uint64 nPropertiesArrayBufferSize, Lib3MF_uint64* pPropertiesArrayNeededCount, sLib3MFTriangleProperties * pPropertiesArrayBuffer)
