@@ -569,7 +569,7 @@ namespace NMR {
 		}
 	}
 
-	void CModelWriterNode100_Model::writeCustomAttributes(_In_ PModelCustomAttributes& pAttributes)
+	void CModelWriterNode100_Model::writeCustomAttributes(_In_ PModelCustomAttributes pAttributes)
 	{
 		for (nfUint32 index = 0; index < pAttributes->getAttributeCount(); index++) {
 			PModelCustomAttribute pAttribute = pAttributes->getAttribute(index);

@@ -76,7 +76,7 @@ namespace NMR {
 		void writeMultiPropertyAttributes(_In_ CModelMultiPropertyGroupResource* pMultiPropertyGroup);
 		void writeMultiPropertyMultiElements(_In_ CModelMultiPropertyGroupResource* pMultiPropertyGroup);
 
-		void writeCustomAttributes(_In_ PModelCustomAttributes& pAttributes);
+		void writeCustomAttributes(_In_ PModelCustomAttributes pAttributes);
 
 		void writeObjects();
 		void writeBuild();
