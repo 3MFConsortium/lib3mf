@@ -38,6 +38,13 @@ CResourceIterator
 		:returns: returns the cloned Iterator instance
 
 
+	.. cpp:function:: Lib3MF_uint64 Count()
+
+		Returns the number of resoucres the iterator captures.
+
+		:returns: returns the number of resoucres the iterator captures.
+
+
 .. cpp:type:: std::shared_ptr<CResourceIterator> Lib3MF::PResourceIterator
 
 	Shared pointer to CResourceIterator to easily allow reference counting.

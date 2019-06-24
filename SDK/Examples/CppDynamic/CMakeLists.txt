@@ -37,7 +37,7 @@ Interface version: 2.0.0
 cmake_minimum_required(VERSION 3.5)
 
 project(Example_ExtractInfo)
-set (CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 11)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../Bindings/CppDynamic)
 
 if (WIN32)
@@ -56,7 +56,7 @@ endif()
 function(PrepareExample MyTarget)
 	add_custom_command(TARGET ${MyTarget} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_CURRENT_SOURCE_DIR}/../../Bin/lib3mf.${LSUFFIX}" $<TARGET_FILE_DIR:${MyTarget}>/lib3mf${LSUFFIXOUT})
 	if (UNIX)
-		target_link_libraries(MyTarget ${CMAKE_DL_LIBS})
+		target_link_libraries(${MyTarget} ${CMAKE_DL_LIBS})
 	endif (UNIX)
 	target_compile_options(${MyTarget} PRIVATE "-DLSUFFIXOUT=\"${LSUFFIXOUT}\"")
 endfunction(PrepareExample)

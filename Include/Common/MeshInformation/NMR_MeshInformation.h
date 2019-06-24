@@ -72,6 +72,8 @@ namespace NMR {
 		virtual void setInternalID(nfUint64 nInternalID);
 		virtual nfUint64 getInternalID();
 
+		virtual void setDefaultData(MESHINFORMATIONFACEDATA* pData) = 0;
+		virtual MESHINFORMATIONFACEDATA* getDefaultData() = 0;
 	};
 
 }

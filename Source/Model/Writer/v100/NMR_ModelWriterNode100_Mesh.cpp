@@ -137,15 +137,26 @@ namespace NMR {
 
 		// Retrieve Mesh Informations
 		CMeshInformation_Properties * pProperties = NULL;
-		
+
+		ModelResourceID nObjectLevelPropertyID = 0;
+		ModelResourceIndex nObjectLevelPropertyIndex = 0;
+
 		CMeshInformationHandler * pMeshInformationHandler = pMesh->getMeshInformationHandler();
 		if (pMeshInformationHandler) {
 			CMeshInformation * pInformation;
 
 			// Get generic property handler
 			pInformation = pMeshInformationHandler->getInformationByType(0, emiProperties);
-			if (pInformation)
+			if (pInformation) {
 				pProperties = dynamic_cast<CMeshInformation_Properties *> (pInformation);
+				NMR::MESHINFORMATION_PROPERTIES * pDefaultData = (NMR::MESHINFORMATION_PROPERTIES*)pProperties->getDefaultData();
+
+				if (pDefaultData && pDefaultData->m_nResourceID != 0) {
+					nObjectLevelPropertyID = pDefaultData->m_nResourceID;
+					nObjectLevelPropertyIndex = m_pPropertyIndexMapping->mapPropertyIDToIndex(nObjectLevelPropertyID, pDefaultData->m_nPropertyIDs[0]);
+				}
+			}
+				
 		}
 		
 		m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_WRITETRIANGLES);
@@ -184,7 +195,11 @@ namespace NMR {
 					writeFaceData_ThreeProperties(pMeshFace, nPropertyID, nPropertyIndex1, nPropertyIndex2, nPropertyIndex3, pAdditionalString);
 				}
 				else {
-					writeFaceData_OneProperty(pMeshFace, nPropertyID, nPropertyIndex1, pAdditionalString);
+					if ((nPropertyID == nObjectLevelPropertyID) && (nPropertyIndex1 == nObjectLevelPropertyIndex)){
+						writeFaceData_Plain(pMeshFace, pAdditionalString);
+					} else {
+						writeFaceData_OneProperty(pMeshFace, nPropertyID, nPropertyIndex1, pAdditionalString);
+					}
 				}
 			}
 			else

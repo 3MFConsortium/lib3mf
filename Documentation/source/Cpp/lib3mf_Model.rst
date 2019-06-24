@@ -170,7 +170,7 @@ CModel
 		:returns: returns the iterator instance.
 
 
-	.. cpp:function:: PResourceIterator GetMeshObjects()
+	.. cpp:function:: PMeshObjectIterator GetMeshObjects()
 
 		creates a resource iterator instance with all mesh object resources.
 
