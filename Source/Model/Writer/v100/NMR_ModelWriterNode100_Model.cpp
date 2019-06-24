@@ -472,6 +472,8 @@ namespace NMR {
 							if (pDefaultData && pDefaultData->m_nResourceID != 0) {
 								nObjectLevelPropertyID = pDefaultData->m_nResourceID;
 								nObjectLevelPropertyIndex = m_pPropertyIndexMapping->mapPropertyIDToIndex(nObjectLevelPropertyID, pDefaultData->m_nPropertyIDs[0]);
+							} else {
+								throw CNMRException(NMR_ERROR_MISSINGDEFAULTPID);
 							}
 						}
 
@@ -695,7 +697,9 @@ namespace NMR {
 		for (nfUint32 iLayer = 0; iLayer < nLayerCount; iLayer++) {
 			MODELMULTIPROPERTYLAYER layer = pMultiPropertyGroup->getLayer(iLayer);
 			vctPIDs.push_back(layer.m_nResourceID);
-			vctBlendMethodString.push_back(CModelMultiPropertyGroupResource::blendMethodToString(layer.m_nMethod));
+			if (iLayer > 0) {
+				vctBlendMethodString.push_back(CModelMultiPropertyGroupResource::blendMethodToString(layer.m_nMethod));
+			}
 		}
 		ModelResourceID nResourceID = pMultiPropertyGroup->getResourceID()->getUniqueID();
 		writeIntAttribute(XML_3MF_ATTRIBUTE_MULTIPROPERTIES_ID, nResourceID);
