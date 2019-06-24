@@ -34,8 +34,10 @@ Abstract: This is the class declaration of CCustomAttributes
 
 #include "lib3mf_interfaces.hpp"
 #include "lib3mf_base.hpp"
+#ifdef _MSC_VER
 #pragma warning( push)
 #pragma warning( disable : 4250)
+#endif
 
 #include "Model/Classes/NMR_ModelCustomAttributes.h"
 
