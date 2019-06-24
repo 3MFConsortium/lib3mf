@@ -95,5 +95,7 @@ public:
 }
 }
 
-#pragma warning( pop )
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 #endif // __LIB3MF_CUSTOMATTRIBUTES
