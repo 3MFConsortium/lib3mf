@@ -37,6 +37,7 @@ NMR_ModelReaderNode100_BaseMaterials.h defines the Model Reader Base Materials C
 #include "Model/Classes/NMR_ModelComponent.h"
 #include "Model/Classes/NMR_ModelComponentsObject.h"
 #include "Model/Classes/NMR_ModelObject.h"
+#include "Model/Classes/NMR_ModelCustomAttributes.h"
 
 namespace NMR {
 
@@ -46,8 +47,10 @@ namespace NMR {
 		ModelResourceID m_nID;
 
 		PModelBaseMaterialResource m_pBaseMaterialResource;
+		PModelCustomAttributes m_CustomAttributes;
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
+		virtual void OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace);
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 	public:
 		CModelReaderNode100_BaseMaterials() = delete;

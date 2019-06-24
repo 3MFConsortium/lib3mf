@@ -99,6 +99,10 @@ namespace NMR {
 			m_pObject->metaDataGroup()->mergeMetaData(m_MetaDataGroup.get());
 		}
 
+		if (m_CustomAttributes.get()) {
+			m_pObject->customAttributes()->mergeAttribute(m_CustomAttributes.get());
+		}
+
 		if (m_bHasThumbnail)
 		{
 			PModelAttachment pAttachment = m_pModel->findModelAttachment(m_sThumbnail);
@@ -202,9 +206,7 @@ namespace NMR {
 			else
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE), mrwInvalidOptionalValue);
 		}
-		
-
-		if (strcmp(XML_3MF_NAMESPACE_PRODUCTIONSPEC, pNameSpace) == 0) {
+		else if (strcmp(XML_3MF_NAMESPACE_PRODUCTIONSPEC, pNameSpace) == 0) {
 			if (strcmp(XML_3MF_PRODUCTION_UUID, pAttributeName) == 0) {
 				if (m_UUID.get())
 					m_pWarnings->addException(CNMRException(NMR_ERROR_DUPLICATEUUID), eModelReaderWarningLevel::mrwInvalidMandatoryValue);
@@ -212,6 +214,12 @@ namespace NMR {
 			}
 			else
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE), mrwInvalidOptionalValue);
+		}
+		else {
+			if (!m_CustomAttributes.get()) {
+				m_CustomAttributes = std::make_shared<CModelCustomAttributes>();
+			}
+			m_CustomAttributes->addAttribute(pNameSpace, pAttributeName, pAttributeValue);
 		}
 	}
 

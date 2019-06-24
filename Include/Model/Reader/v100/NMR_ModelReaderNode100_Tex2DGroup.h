@@ -38,6 +38,7 @@ NMR_ModelReaderNode100_Tex2DGroup.h defines the Model Reader Tex2DGroup Class.
 #include "Model/Classes/NMR_ModelComponentsObject.h"
 #include "Model/Classes/NMR_ModelObject.h"
 #include "Model/Classes/NMR_ModelTexture2DGroup.h"
+#include "Model/Classes/NMR_ModelCustomAttributes.h"
 
 namespace NMR {
 
@@ -48,8 +49,10 @@ namespace NMR {
 		ModelResourceID m_nTextureID;
 
 		PModelTexture2DGroupResource m_pTexture2DGroup;
+		PModelCustomAttributes m_CustomAttributes;
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
+		virtual void OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace);
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 	public:
 		CModelReaderNode100_Tex2DGroup() = delete;

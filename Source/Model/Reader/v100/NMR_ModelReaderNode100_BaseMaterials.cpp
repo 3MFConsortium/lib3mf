@@ -68,6 +68,9 @@ namespace NMR {
 
 		// Create Resource
 		m_pBaseMaterialResource = std::make_shared<CModelBaseMaterialResource> (m_nID, m_pModel);
+		if (m_CustomAttributes.get()) {
+			m_pBaseMaterialResource->customAttributes()->mergeAttribute(m_CustomAttributes.get());
+		}
 
 		m_pModel->addResource(m_pBaseMaterialResource);
 
@@ -89,6 +92,18 @@ namespace NMR {
 			m_nID = fnStringToUint32(pAttributeValue);
 		}
 
+	}
+
+	void CModelReaderNode100_BaseMaterials::OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace)
+	{
+		__NMRASSERT(pAttributeName);
+		__NMRASSERT(pAttributeValue);
+		__NMRASSERT(pNameSpace);
+
+		if (!m_CustomAttributes.get()) {
+			m_CustomAttributes = std::make_shared<CModelCustomAttributes>();
+		}
+		m_CustomAttributes->addAttribute(pNameSpace, pAttributeName, pAttributeValue);
 	}
 
 	void CModelReaderNode100_BaseMaterials::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)

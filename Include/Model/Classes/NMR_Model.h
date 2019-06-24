@@ -316,6 +316,7 @@ namespace NMR {
 		__NMR_INLINE PModelCustomAttributes customAttributes() { return m_CustomAttributes; }
 		__NMR_INLINE PModelCustomAttributes buildCustomAttributes() { return m_BuildCustomAttributes; }
 		__NMR_INLINE PModelCustomAttributes resourcesCustomAttributes() { return m_ResourcesCustomAttributes; }
+		void mergeCustomAttributes(_In_ CModel * pSourceModel);
 	};
 
 	typedef std::shared_ptr <CModel> PModel;

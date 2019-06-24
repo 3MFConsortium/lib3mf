@@ -38,6 +38,7 @@ NMR_ModelReaderNode100_CompositeMaterials.h defines the Model Reader CompositeMa
 #include "Model/Classes/NMR_ModelComponentsObject.h"
 #include "Model/Classes/NMR_ModelObject.h"
 #include "Model/Classes/NMR_ModelCompositeMaterials.h"
+#include "Model/Classes/NMR_ModelCustomAttributes.h"
 
 namespace NMR {
 
@@ -50,8 +51,10 @@ namespace NMR {
 		std::vector<ModelPropertyID> m_vctMaterialPropertyIDs;
 
 		PModelCompositeMaterialsResource m_pCompositeMaterials;
+		PModelCustomAttributes m_CustomAttributes;
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
+		virtual void OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace);
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 	public:
 		CModelReaderNode100_CompositeMaterials() = delete;

@@ -69,6 +69,10 @@ namespace NMR {
 		// Create Resource
 		m_pColorGroup = std::make_shared<CModelColorGroupResource>(m_nID, m_pModel);
 
+		if (m_CustomAttributes.get()) {
+			m_pColorGroup->customAttributes()->mergeAttribute(m_CustomAttributes.get());
+		}
+
 		m_pModel->addResource(m_pColorGroup);
 
 
@@ -91,6 +95,18 @@ namespace NMR {
 		}
 		else
 			m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE), mrwInvalidOptionalValue);
+	}
+
+	void CModelReaderNode100_Colors::OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace)
+	{
+		__NMRASSERT(pAttributeName);
+		__NMRASSERT(pAttributeValue);
+		__NMRASSERT(pNameSpace);
+
+		if (!m_CustomAttributes.get()) {
+			m_CustomAttributes = std::make_shared<CModelCustomAttributes>();
+		}
+		m_CustomAttributes->addAttribute(pNameSpace, pAttributeName, pAttributeValue);
 	}
 
 	void CModelReaderNode100_Colors::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)

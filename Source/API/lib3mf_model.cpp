@@ -419,6 +419,7 @@ IModel * CModel::MergeToModel ()
 	newModel.mergeCompositeMaterials(&model());
 	newModel.mergeMultiPropertyGroups(&model());
 	newModel.mergeMetaData(&model());
+	newModel.mergeCustomAttributes(&model());
 
 	newModel.setUnit(model().getUnit());
 	newModel.setLanguage(model().getLanguage());

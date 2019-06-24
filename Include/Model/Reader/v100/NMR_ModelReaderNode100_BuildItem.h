@@ -36,6 +36,7 @@ A builditem reader model node is a parser for the builditem node of an XML Model
 
 #include "Model/Reader/NMR_ModelReaderNode.h"
 #include "Model/Classes/NMR_ModelMetaDataGroup.h"
+#include "Model/Classes/NMR_ModelCustomAttributes.h"
 
 namespace NMR {
 
@@ -53,6 +54,7 @@ namespace NMR {
 
 		bool m_hasPath;
 		PModelMetaDataGroup m_MetaDataGroup;
+		PModelCustomAttributes m_CustomAttributes;
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 		virtual void OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace);

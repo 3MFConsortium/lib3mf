@@ -91,6 +91,9 @@ namespace NMR {
 			else
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE), mrwInvalidOptionalValue);
 		}
+		else {
+			m_pModel->buildCustomAttributes()->addAttribute(pNameSpace, pAttributeName, pAttributeValue);
+		}
 	}
 
 	void CModelReaderNode100_Build::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)

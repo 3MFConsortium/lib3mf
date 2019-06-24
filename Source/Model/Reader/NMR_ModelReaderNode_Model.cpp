@@ -34,7 +34,7 @@ A model reader node is an abstract base class for all XML nodes of a 3MF Model S
 #include "Model/Reader/NMR_ModelReaderNode_Model.h" 
 #include "Model/Reader/v100/NMR_ModelReaderNode100_Resources.h" 
 #include "Model/Reader/v100/NMR_ModelReaderNode100_Build.h" 
-#include "Model/Reader/v100/NMR_ModelReaderNode100_MetaData.h" 
+#include "Model/Reader/v100/NMR_ModelReaderNode100_MetaData.h"
 
 #include "Model/Classes/NMR_ModelConstants.h" 
 #include "Common/3MF_ProgressMonitor.h"
@@ -138,6 +138,9 @@ namespace NMR {
 		}
 		else if (strcmp(pNameSpace, XML_3MF_NAMESPACE_XMLNS) == 0) {
 			m_ListedExtensions.insert(std::pair<std::string, std::string>(std::string(pAttributeName), std::string(pAttributeValue)));
+		} 
+		else {
+			m_pModel->customAttributes()->addAttribute(pNameSpace, pAttributeName, pAttributeValue);
 		}
 	}
 

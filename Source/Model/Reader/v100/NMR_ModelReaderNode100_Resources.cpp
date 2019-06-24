@@ -78,6 +78,15 @@ namespace NMR {
 		__NMRASSERT(pAttributeValue);
 	}
 
+		void CModelReaderNode100_Resources::OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace)
+	{
+		__NMRASSERT(pAttributeName);
+		__NMRASSERT(pAttributeValue);
+		__NMRASSERT(pNameSpace);
+
+		m_pModel->buildCustomAttributes()->addAttribute(pNameSpace, pAttributeName, pAttributeValue);
+	}
+
 	void CModelReaderNode100_Resources::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
 	{
 		

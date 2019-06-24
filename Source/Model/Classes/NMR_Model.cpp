@@ -280,6 +280,13 @@ namespace NMR {
 		m_MetaDataGroup->mergeMetaData(pSourceModel->m_MetaDataGroup.get());
 	}
 
+	void CModel::mergeCustomAttributes(_In_ CModel * pSourceModel)
+	{
+		if (!pSourceModel)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+		m_CustomAttributes->mergeAttribute(pSourceModel->m_CustomAttributes.get());
+	}
+
 	PModelMetaDataGroup CModel::getMetaDataGroup()
 	{
 		return m_MetaDataGroup;

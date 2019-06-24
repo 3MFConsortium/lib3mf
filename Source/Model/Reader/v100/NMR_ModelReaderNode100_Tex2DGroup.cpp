@@ -80,9 +80,25 @@ namespace NMR {
 
 		m_pModel->addResource(m_pTexture2DGroup);
 
+		if (m_CustomAttributes.get()) {
+			m_pTexture2DGroup->customAttributes()->mergeAttribute(m_CustomAttributes.get());
+		}
+
 		// Parse Content
 		parseContent(pXMLReader);
 
+	}
+
+	void CModelReaderNode100_Tex2DGroup::OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace)
+	{
+		__NMRASSERT(pAttributeName);
+		__NMRASSERT(pAttributeValue);
+		__NMRASSERT(pNameSpace);
+
+		if (!m_CustomAttributes.get()) {
+			m_CustomAttributes = std::make_shared<CModelCustomAttributes>();
+		}
+		m_CustomAttributes->addAttribute(pNameSpace, pAttributeName, pAttributeValue);
 	}
 
 	void CModelReaderNode100_Tex2DGroup::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)

@@ -101,6 +101,10 @@ namespace NMR {
 			pBuildItem->metaDataGroup()->mergeMetaData(m_MetaDataGroup.get());
 		}
 
+		if (m_CustomAttributes.get()) {
+			pBuildItem->customAttributes()->mergeAttribute(m_CustomAttributes.get());
+		}
+
 		m_pModel->addBuildItem(pBuildItem);
 
 		// Set Item Reference
@@ -157,6 +161,12 @@ namespace NMR {
 				m_sPath = std::string(pAttributeValue);
 				m_hasPath = true;
 			}
+		} 
+		else {
+			if (!m_CustomAttributes.get()) {
+				m_CustomAttributes = std::make_shared<CModelCustomAttributes>();
+			}
+			m_CustomAttributes->addAttribute(pNameSpace, pAttributeName, pAttributeValue);
 		}
 	}
 

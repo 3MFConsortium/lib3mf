@@ -35,6 +35,7 @@ NMR_ModelReaderNode100_MultiProperties.h defines the Model Reader MultiPropertie
 
 #include "Model/Reader/NMR_ModelReaderNode.h"
 #include "Model/Classes/NMR_ModelMultiPropertyGroup.h"
+#include "Model/Classes/NMR_ModelCustomAttributes.h"
 
 namespace NMR {
 
@@ -45,9 +46,11 @@ namespace NMR {
 		std::shared_ptr<std::vector<ModelResourceID>> m_pPIDs;
 		std::shared_ptr<std::vector<eModelBlendMethod>> m_pBlendMethods;
 		PModelMultiPropertyGroupResource m_pMultiPropertyGroup;
+		PModelCustomAttributes m_CustomAttributes;
 
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
+		virtual void OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace);
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 	public:
 		CModelReaderNode100_MultiProperties() = delete;
