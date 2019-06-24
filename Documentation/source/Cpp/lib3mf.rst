@@ -55,9 +55,16 @@ The wrapper class CWrapper
 	
 	.. cpp:function:: void Release(CBase * pInstance)
 	
-		releases an object instance
+		releases shared ownership of an object instance
 	
-		:param pInstance: releases the memory of the passed object. 
+		:param pInstance: the object instance to release 
+
+	
+	.. cpp:function:: void Acquire(CBase * pInstance)
+	
+		acquires shared ownership of an object instance
+	
+		:param pInstance: the object instance to acquire 
 
 	
 	.. cpp:function:: void SetJournal(const std::string & sJournalPath)
@@ -76,11 +83,11 @@ The wrapper class CWrapper
 		:returns: Returns if the instance has a last error.
 
 	
-	.. cpp:function:: void RetrieveProgressMessage(const eProgressIdentifier eProrgessIdentifier, std::string & sProgressMessage)
+	.. cpp:function:: void RetrieveProgressMessage(const eProgressIdentifier eTheProgressIdentifier, std::string & sProgressMessage)
 	
 		Return an English text for a progress identifier.|Note: this is the only function you can call from your callback function.
 	
-		:param eProrgessIdentifier: the progress identifier that is passed to the callback function 
+		:param eTheProgressIdentifier: the progress identifier that is passed to the callback function 
 		:param sProgressMessage: English text for the progress identifier 
 
 	

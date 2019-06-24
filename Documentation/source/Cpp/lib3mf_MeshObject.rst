@@ -86,6 +86,23 @@ CMeshObject
 		:param IndicesBuffer: contains the triangle indices. 
 
 
+	.. cpp:function:: void SetObjectLevelProperty(const Lib3MF_uint32 nResourceID, const Lib3MF_uint32 nPropertyID)
+
+		Sets the property at the object-level of the mesh object.
+
+		:param nResourceID: the object-level Property Resource ID. 
+		:param nPropertyID: the object-level PropertyID. 
+
+
+	.. cpp:function:: bool GetObjectLevelProperty(Lib3MF_uint32 & nResourceID, Lib3MF_uint32 & nPropertyID)
+
+		Gets the property at the object-level of the mesh object.
+
+		:param nResourceID: the object-level Property Resource ID. 
+		:param nPropertyID: the object-level PropertyID. 
+		:returns: Has an object-level property been specified?
+
+
 	.. cpp:function:: void SetTriangleProperties(const Lib3MF_uint32 nIndex, const sTriangleProperties & Properties)
 
 		Sets the properties of a single triangle of a mesh object.
@@ -104,7 +121,7 @@ CMeshObject
 
 	.. cpp:function:: void SetAllTriangleProperties(const CInputVector<sTriangleProperties> & PropertiesArrayBuffer)
 
-		Sets the properties of all triangles of a mesh object.
+		Sets the properties of all triangles of a mesh object. Sets the object level property to the first entry of the passed triangle properties, if not yet specified.
 
 		:param PropertiesArrayBuffer: contains the triangle properties array. Must have trianglecount elements. 
 
@@ -114,6 +131,12 @@ CMeshObject
 		Gets the properties of all triangles of a mesh object.
 
 		:param PropertiesArrayBuffer: returns the triangle properties array. Must have trianglecount elements. 
+
+
+	.. cpp:function:: void ClearAllProperties()
+
+		Clears all properties of this mesh object (triangle and object-level).
+
 
 
 	.. cpp:function:: void SetGeometry(const CInputVector<sPosition> & VerticesBuffer, const CInputVector<sTriangle> & IndicesBuffer)

@@ -38,6 +38,13 @@ CBuildItemIterator
 		:returns: returns the cloned Iterator instance
 
 
+	.. cpp:function:: Lib3MF_uint64 Count()
+
+		Returns the number of build items the iterator captures.
+
+		:returns: returns the number of build items the iterator captures.
+
+
 .. cpp:type:: std::shared_ptr<CBuildItemIterator> Lib3MF::PBuildItemIterator
 
 	Shared pointer to CBuildItemIterator to easily allow reference counting.
