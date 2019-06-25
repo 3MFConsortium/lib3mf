@@ -54,6 +54,7 @@ A large number of software or hardware products and projects [support 3MF](https
 | --- | --- |
 | [Element](https://www.ntopology.com/element-pro/) | [nTopology](https://www.ntopology.com/) |
 | [Netfabb](https://www.autodesk.com/products/netfabb/overview/) | [Autodesk](https://www.autodesk.com/) |
+| [Meshmixer](http://www.meshmixer.com/) | [Autodesk](https://www.autodesk.com/) |
 | [OpenSCAD](https://www.openscad.org/) | [OpenSCAD developers](https://github.com/orgs/openscad/people) |
 | [Rhino3D](https://www.rhino3d.com/) | [Robert McNeel & Associates](https://www.mcneel.com/) |
 
