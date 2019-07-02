@@ -273,7 +273,7 @@ void CMeshObject::SetAllTriangleProperties(const Lib3MF_uint64 nPropertiesArrayB
 		pProperty++;
 	}
 
-	// Prepare a default property, if it makes sense to do so
+	// Prepare an object-level property, if it makes sense to do so
 	if ((nFaceCount > 0) && (pInformation->getDefaultData() == nullptr)) {
 		NMR::MESHINFORMATION_PROPERTIES * pFaceData = (NMR::MESHINFORMATION_PROPERTIES*)pInformation->getFaceData(0);
 		std::unique_ptr<NMR::MESHINFORMATION_PROPERTIES> pDefaultFaceData(new NMR::MESHINFORMATION_PROPERTIES);
