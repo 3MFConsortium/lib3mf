@@ -52,8 +52,8 @@ namespace NMR {
 		m_nProgressCounterNodes = 0;
 		m_nProgressCounterTriangles = 0;
 
-		m_nDefaultPropertyID = nDefaultPropertyID;
-		m_nDefaultPropertyIndex = nDefaultPropertyIndex;
+		m_nObjectLevelPropertyID = nDefaultPropertyID;
+		m_nObjectLevelPropertyIndex = nDefaultPropertyIndex;
 
 		m_pMesh = pMesh;
 		m_pModel = pModel;
@@ -119,16 +119,16 @@ namespace NMR {
 					m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_READMESH);
 					m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
 				}
-				PModelReaderNode100_Triangles pXMLNode = std::make_shared<CModelReaderNode100_Triangles>(m_pModel, m_pMesh, m_pWarnings, m_nDefaultPropertyID, m_nDefaultPropertyIndex);
+				PModelReaderNode100_Triangles pXMLNode = std::make_shared<CModelReaderNode100_Triangles>(m_pModel, m_pMesh, m_pWarnings, m_nObjectLevelPropertyID, m_nObjectLevelPropertyIndex);
 				pXMLNode->parseXML(pXMLReader);
-				if (m_nDefaultPropertyID == 0) {
-					// warn, if object does not have a default property, but a triangle has one
+				if (m_nObjectLevelPropertyID == 0) {
+					// warn, if object does not have an object-level property, but a triangle has one
 					if (pXMLNode->getUsedPropertyID() != 0) {
-						m_pWarnings->addException(CNMRException(NMR_ERROR_MISSINGDEFAULTPID), mrwMissingMandatoryValue);
+						m_pWarnings->addException(CNMRException(NMR_ERROR_MISSINGOBJECTLEVELPID), mrwMissingMandatoryValue);
 					}
-					// Try and define a default property as some PropertyID used by a triangle in the meshobject
-					m_nDefaultPropertyID = pXMLNode->getUsedPropertyID();
-					m_nDefaultPropertyIndex = 0;
+					// Try and define an object-level property as some PropertyID used by a triangle in the meshobject
+					m_nObjectLevelPropertyID = pXMLNode->getUsedPropertyID();
+					m_nObjectLevelPropertyIndex = 0;
 				}
 			}
 			else

@@ -232,7 +232,7 @@ namespace NMR {
 		writeFullEndElement();
 
 		if (bMeshHasAProperty && !(nObjectLevelPropertyID != 0)) {
-			throw CNMRException(NMR_ERROR_MISSINGDEFAULTPID);
+			throw CNMRException(NMR_ERROR_MISSINGOBJECTLEVELPID);
 		}
 
 		if (m_bWriteBeamLatticeExtension) {
