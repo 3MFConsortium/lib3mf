@@ -251,6 +251,39 @@ namespace Lib3MF
 		}
 	}
 
+	TEST_F(Properties, WriteMeshWithoutProperties)
+	{
+		auto writer = model->QueryWriter("3mf");
+
+		std::vector<sTriangleProperties> properties;
+		mesh->GetAllTriangleProperties(properties);
+
+		std::vector<Lib3MF_uint8> buffer;
+		writer->WriteToBuffer(buffer);
+	}
+
+	TEST_F(Properties, WriteMeshWithMissingProperties)
+	{
+		auto writer = model->QueryWriter("3mf");
+
+		auto baseMaterialGroup = model->AddBaseMaterialGroup();
+		auto someMaterial = baseMaterialGroup->AddMaterial("SomeMaterial", wrapper->RGBAToColor(100, 200, 150, 255));
+
+		sTriangleProperties singleProperties;
+		singleProperties.m_ResourceID = baseMaterialGroup->GetResourceID();
+		singleProperties.m_PropertyIDs[0] = someMaterial;
+		singleProperties.m_PropertyIDs[1] = someMaterial;
+		singleProperties.m_PropertyIDs[2] = someMaterial;
+
+		mesh->SetTriangleProperties(0, singleProperties);
+
+		std::vector<Lib3MF_uint8> buffer;
+		ASSERT_SPECIFIC_THROW(writer->WriteToBuffer(buffer), ELib3MFException);
+
+		mesh->SetObjectLevelProperty(singleProperties.m_ResourceID, singleProperties.m_PropertyIDs[0]);
+		writer->WriteToBuffer(buffer);
+	}
+
 	class Properties_BaseMaterial : public ::testing::Test {
 	protected:
 
