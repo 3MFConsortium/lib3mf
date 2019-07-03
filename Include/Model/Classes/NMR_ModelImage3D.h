@@ -26,48 +26,60 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelAttachment.h defines the Model Attachment Class.
+NMR_ModelImage3D.h defines a 3D image stack for the volumetric extension
 
 --*/
 
-#ifndef __NMR_MODELATTACHMENT
-#define __NMR_MODELATTACHMENT
+#ifndef __NMR_MODELIMAGE3D
+#define __NMR_MODELIMAGE3D
 
-#include "Model/Classes/NMR_Model.h" 
-#include "Model/Classes/NMR_ModelMetaData.h" 
 #include "Common/NMR_Types.h" 
-#include "Model/Classes/NMR_ModelTypes.h" 
 
+
+#include "Model/Classes/NMR_ModelResource.h" 
+#include "Model/Classes/NMR_Model.h"  
+#include <vector>
+#include "Common/Platform/NMR_ImportStream.h"  
+#include <memory>
+#include <map>
 #include <string>
+
+#define MAX_IMAGE3D_SIZE (1024 * 1024 * 1024)
 
 namespace NMR {
 
-	typedef std::shared_ptr <CModelAttachment> PModelAttachment;
+	class CModel;
+	typedef std::shared_ptr <CModel> PModel;
 
-	class CModelAttachment {
+	class CModelImage3D : public CModelResource {
 	private:
-		CModel * m_pModel;
-		PImportStream m_pStream;
-		std::string m_sPathURI;
-		std::string m_sRelationShipType;
+		std::string m_sName;
+		nfUint32 m_nSizeX;
+		nfUint32 m_nSizeY;
+		nfUint32 m_nSheetCount;		
+		
+		std::vector <PModelAttachment> m_Sheets;
+	
+	protected:
+		CModelImage3D(_In_ const ModelResourceID sID, _In_ CModel * pModel, _In_ nfUint32 nSizeX, _In_ nfUint32 nSizeY, nfUint32 nSheetCount);
 
 	public:
-		CModelAttachment() = delete;
-		CModelAttachment(_In_ CModel * pModel, _In_ const std::string sPathURI, _In_ const std::string sRelationShipType, _In_ PImportStream pStream);
-		~CModelAttachment();
+		CModelImage3D() = delete;
 		
-		_Ret_notnull_ CModel * getModel();
-		std::string getPathURI();
-		std::string getRelationShipType();
-		PImportStream getStream ();
+		static PModelImage3D make(_In_ const ModelResourceID sID, _In_ CModel * pModel, _In_ nfUint32 nSizeX, _In_ nfUint32 nSizeY, nfUint32 nSheetCount);
+		
+		nfUint32 getSizeX ();
+		nfUint32 getSizeY ();
+		nfUint32 getSheetCount ();
+		
+		void setSheet (nfUint32 nSheetIndex, PModelAttachment pAttachment);
+		PModelAttachment getSheet (nfUint32 nSheetIndex);		
 
-		void setStream(_In_ PImportStream pStream);
-		void setRelationShipType(_In_ const std::string sRelationShipType);
-
-		PModelAttachment cloneIntoNewModel (_In_ CModel * pModel, _In_ nfBool bCloneMemory);
 	};
 
+	typedef std::shared_ptr <CModelImage3D> PModelImage3D;
 
 }
 
-#endif // __NMR_MODELATTACHMENT
+#endif // __NMR_MODELIMAGE3D
+

@@ -89,6 +89,12 @@ namespace NMR {
 	class CModelSliceStack;
 	typedef std::shared_ptr <CModelSliceStack> PModelSliceStack;
 
+	class CModelImage3D;
+	typedef std::shared_ptr <CModelImage3D> PModelImage3D;
+
+	class CModelVolumetricStack;
+	typedef std::shared_ptr <CModelVolumetricStack> PModelVolumetricStack;
+
 	class CModel {
 	private:
 		std::string m_sCurPath;
@@ -138,6 +144,7 @@ namespace NMR {
 		std::vector<PModelResource> m_Texture2DGroupLookup;
 		std::vector<PModelResource> m_CompositeMaterialsLookup;
 		std::vector<PModelResource> m_MultiPropertyGroupLookup;
+		std::vector<PModelResource> m_Image3DLookup;
 
 		// Add Resource to resource lookup tables
 		void addResourceToLookupTable(_In_ PModelResource pResource);
@@ -256,6 +263,13 @@ namespace NMR {
 		PModelResource getTexture2DResource(_In_ nfUint32 nIndex);
 		CModelTexture2DResource * getTexture2D(_In_ nfUint32 nIndex);
 		void mergeTextures2D(_In_ CModel * pSourceModel);
+
+		// Convenience functions for 2D Textures
+		_Ret_maybenull_ PModelImage3D findImage3D(_In_ PackageResourceID nResourceID);
+		nfUint32 getImage3DCount();
+		PModelResource getImage3DResource(_In_ nfUint32 nIndex);
+		CModelImage3D * getImage3D(_In_ nfUint32 nIndex);
+		void mergeImages3D(_In_ CModel * pSourceModel);
 
 		// Clear all build items and Resources
 		void clearAll ();

@@ -45,6 +45,7 @@ A model is an in memory representation of the 3MF file.
 #include "Model/Classes/NMR_ModelCompositeMaterials.h"
 #include "Model/Classes/NMR_ModelMultiPropertyGroup.h"
 #include "Model/Classes/NMR_ModelTexture2D.h"
+#include "Model/Classes/NMR_ModelImage3D.h"
 #include "Model/Classes/NMR_ModelSliceStack.h"
 #include "Model/Classes/NMR_ModelMetaDataGroup.h"
 
@@ -817,12 +818,93 @@ namespace NMR {
 			if (pTextureResource == nullptr)
 				throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-			PModelTexture2DResource pNewTextureResource = CModelTexture2DResource::make(generateResourceID(), this, pTextureResource->getAttachment());
+			PModelAttachment pSourceAttachment = pTextureResource->getAttachment();
+			PModelAttachment pNewAttachment;
+			if (pSourceAttachment.get()) {
+				pNewAttachment = findModelAttachment(pSourceAttachment->getPathURI());
+				if (pNewAttachment.get() == nullptr)
+					throw CNMRException(NMR_ERROR_ATTACHMENTNOTFOUND);
+			}
+
+			PModelTexture2DResource pNewTextureResource = CModelTexture2DResource::make(generateResourceID(), this, pNewAttachment);
 			pNewTextureResource->copyFrom(pTextureResource);
 
 			addResource(pNewTextureResource);
 		}
 	}
+
+	// Convenience functions for 2D Textures
+	PModelImage3D CModel::findImage3D(_In_ PackageResourceID nResourceID)
+	{
+		PModelResource pResource = findResource(nResourceID);
+		if (pResource != nullptr) {
+			PModelImage3D pImage3DResource = std::dynamic_pointer_cast<CModelImage3D>(pResource);
+			if (pImage3DResource.get() == nullptr)
+				throw CNMRException(NMR_ERROR_RESOURCETYPEMISMATCH);
+			return pImage3DResource;
+		}
+		return nullptr;
+	}
+
+	nfUint32 CModel::getImage3DCount()
+	{
+		return (nfUint32)m_Image3DLookup.size();
+	}
+
+	PModelResource CModel::getImage3DResource(_In_ nfUint32 nIndex)
+	{
+		nfUint32 nCount = getImage3DCount();
+		if (nIndex >= nCount)
+			throw CNMRException(NMR_ERROR_INVALIDINDEX);
+
+		return m_Image3DLookup[nIndex];
+
+	}
+
+	CModelImage3D * CModel::getImage3D(_In_ nfUint32 nIndex)
+	{
+		CModelImage3D * pImage3D = dynamic_cast<CModelImage3D *> (getImage3DResource(nIndex).get());
+		if (pImage3D == nullptr)
+			throw CNMRException(NMR_ERROR_RESOURCETYPEMISMATCH);
+
+		return pImage3D;
+
+	}
+
+	void CModel::mergeImages3D(_In_ CModel * pSourceModel)
+	{
+		if (pSourceModel == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		nfUint32 nCount = pSourceModel->getImage3DCount();
+		nfUint32 nIndex;
+
+		for (nIndex = 0; nIndex < nCount; nIndex++)
+		{
+			CModelImage3D * pImage3D = pSourceModel->getImage3D(nIndex);
+			if (pImage3D == nullptr)
+				throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+			nfUint32 nSheetCount = pImage3D->getSheetCount();;
+			nfUint32 nIndex;
+			PModelImage3D pNewImage3D = CModelImage3D::make(generateResourceID(), this, pImage3D->getSizeX(), pImage3D->getSizeY(), nSheetCount);
+
+			for (nIndex = 0; nIndex < nSheetCount; nIndex++) {
+				PModelAttachment pSheet = pImage3D->getSheet(nIndex);
+				if (pSheet.get() != nullptr) {
+					PModelAttachment pNewSheet = findModelAttachment(pSheet->getPathURI());
+					if (pNewSheet.get() == nullptr)
+						throw CNMRException(NMR_ERROR_ATTACHMENTNOTFOUND);
+
+					pNewImage3D->setSheet(nIndex, pNewSheet);
+				}
+			}
+
+			addResource(pNewImage3D);
+		}
+
+	}
+
 	
 	nfUint32 CModel::createHandle()
 	{
@@ -947,8 +1029,7 @@ namespace NMR {
 			if (pModelAttachment == nullptr)
 				throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-			// TODO: probably need to copy stream
-			addAttachment(pModelAttachment->getPathURI(), pModelAttachment->getRelationShipType(), pModelAttachment->getStream());
+			pModelAttachment->cloneIntoNewModel(this, true);
 		}
 	}
 

@@ -161,8 +161,10 @@ namespace NMR {
 	enum eModelBlendMethod {
 		MODELBLENDMETHOD_NONE = 0,
 		MODELBLENDMETHOD_MIX = 1,
-		MODELBLENDMETHOD_MULTIPLY = 2
+		MODELBLENDMETHOD_MULTIPLY = 2,
+		MODELBLENDMETHOD_MASK = 3
 	};
+
 
 	typedef struct {
 		FLOAT m_fPosition[2];

@@ -114,6 +114,8 @@ Source/Model/Classes/NMR_ModelCompositeMaterials.cpp
 Source/Model/Classes/NMR_ModelBuildItem.cpp
 Source/Model/Classes/NMR_ModelComponent.cpp
 Source/Model/Classes/NMR_ModelComponentsObject.cpp
+Source/Model/Classes/NMR_ModelImage3D.cpp
+Source/Model/Classes/NMR_ModelImage3DChannelSelector.cpp
 Source/Model/Classes/NMR_ModelMeshBeamLatticeAttributes.cpp
 Source/Model/Classes/NMR_ModelMeshObject.cpp
 Source/Model/Classes/NMR_ModelMetaData.cpp
@@ -125,6 +127,9 @@ Source/Model/Classes/NMR_ModelTexture2D.cpp
 Source/Model/Classes/NMR_ModelTexture2DGroup.cpp
 Source/Model/Classes/NMR_ModelSlice.cpp
 Source/Model/Classes/NMR_ModelSliceStack.cpp
+Source/Model/Classes/NMR_ModelVolumetricDstChannel.cpp
+Source/Model/Classes/NMR_ModelVolumetricLayer.cpp
+Source/Model/Classes/NMR_ModelVolumetricStack.cpp
 Source/Model/Reader/BeamLattice1702/NMR_ModelReaderNode_BeamLattice1702_Beam.cpp
 Source/Model/Reader/BeamLattice1702/NMR_ModelReaderNode_BeamLattice1702_Beams.cpp
 Source/Model/Reader/BeamLattice1702/NMR_ModelReaderNode_BeamLattice1702_BeamLattice.cpp

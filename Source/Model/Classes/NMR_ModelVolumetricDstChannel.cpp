@@ -26,48 +26,54 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelAttachment.h defines the Model Attachment Class.
+NMR_ModelVoLayer.cpp implements the Model Texture Class.
 
 --*/
 
-#ifndef __NMR_MODELATTACHMENT
-#define __NMR_MODELATTACHMENT
+#include "Model/Classes/NMR_ModelConstants.h"
+#include "Model/Classes/NMR_ModelVolumetricDstChannel.h"
 
-#include "Model/Classes/NMR_Model.h" 
-#include "Model/Classes/NMR_ModelMetaData.h" 
-#include "Common/NMR_Types.h" 
-#include "Model/Classes/NMR_ModelTypes.h" 
 
-#include <string>
+#include "Common/NMR_Exception.h"
+#include "Common/NMR_StringUtils.h"
+#include <sstream>
+#include <algorithm>
 
 namespace NMR {
 
-	typedef std::shared_ptr <CModelAttachment> PModelAttachment;
+	CModelVolumetricDstChannel::CModelVolumetricDstChannel(std::string & sName, nfDouble dBackground)
+		: m_sName (sName), m_dBackground (dBackground)
+	{
 
-	class CModelAttachment {
-	private:
-		CModel * m_pModel;
-		PImportStream m_pStream;
-		std::string m_sPathURI;
-		std::string m_sRelationShipType;
+	}
 
-	public:
-		CModelAttachment() = delete;
-		CModelAttachment(_In_ CModel * pModel, _In_ const std::string sPathURI, _In_ const std::string sRelationShipType, _In_ PImportStream pStream);
-		~CModelAttachment();
-		
-		_Ret_notnull_ CModel * getModel();
-		std::string getPathURI();
-		std::string getRelationShipType();
-		PImportStream getStream ();
 
-		void setStream(_In_ PImportStream pStream);
-		void setRelationShipType(_In_ const std::string sRelationShipType);
+	CModelVolumetricDstChannel::~CModelVolumetricDstChannel()
+	{
 
-		PModelAttachment cloneIntoNewModel (_In_ CModel * pModel, _In_ nfBool bCloneMemory);
-	};
+	}
+
+
+	std::string CModelVolumetricDstChannel::getName()
+	{
+		return m_sName;
+	}
+
+	nfDouble CModelVolumetricDstChannel::getBackground()
+	{
+		return m_dBackground;
+	}
+
+	void CModelVolumetricDstChannel::setName(const std::string & sName)
+	{
+		m_sName = sName;
+	}
+
+	void CModelVolumetricDstChannel::setBackground(const nfDouble dBackground)
+	{
+		m_dBackground = dBackground;
+	}
 
 
 }
 
-#endif // __NMR_MODELATTACHMENT

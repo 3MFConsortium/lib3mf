@@ -396,7 +396,10 @@ namespace NMR {
 		case NMR_ERROR_MULTIPROPERTIES_INVALID_MULTI_ELEMENT: return "A multi-element is invalid";
 		case NMR_ERROR_INVALID_RESOURCE_INDEX: return "A Resource Index is invalid";
 		case NMR_ERROR_VERSION093_NOT_SUPPORTED: return "This document contains content from Version 093 of the core-specification. This is not supported by Lib3MF version 2 or later.";
-
+		case NMR_ERROR_INVALIDIMAGE3DSIZE: return "Invalid Image3D Size";
+		case NMR_ERROR_ATTACHMENTMODELMISMATCH: return "Attachment Model Mismatch";
+		case NMR_ERROR_TOOMANYCHANNELSELECTORS: return "Too many channel selectors";
+		case NMR_ERROR_TOOMANYVOLUMETRICCHANNELS: return "Too many volumetric channels";
 
 		// XML Parser Error Constants(0x9XXX)
 		case NMR_ERROR_XMLPARSER_INVALIDATTRIBVALUE: return "Invalid XML attribute value";

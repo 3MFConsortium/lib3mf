@@ -26,48 +26,45 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelAttachment.h defines the Model Attachment Class.
+NMR_ModelVolumetricDstChannel.h defines a destination channel for the volumetric extension
 
 --*/
 
-#ifndef __NMR_MODELATTACHMENT
-#define __NMR_MODELATTACHMENT
+#ifndef __NMR_MODELVOLUMETRICDSTCHANNEL
+#define __NMR_MODELVOLUMETRICDSTCHANNEL
 
-#include "Model/Classes/NMR_Model.h" 
-#include "Model/Classes/NMR_ModelMetaData.h" 
+
 #include "Common/NMR_Types.h" 
 #include "Model/Classes/NMR_ModelTypes.h" 
 
+#include <vector>
+#include <memory>
+#include <map>
 #include <string>
 
 namespace NMR {
 
-	typedef std::shared_ptr <CModelAttachment> PModelAttachment;
-
-	class CModelAttachment {
+	class CModelVolumetricDstChannel {
 	private:
-		CModel * m_pModel;
-		PImportStream m_pStream;
-		std::string m_sPathURI;
-		std::string m_sRelationShipType;
+	
+		std::string m_sName;
+		nfDouble m_dBackground;
+	
+	public:	
+		CModelVolumetricDstChannel (std::string & sName, nfDouble dBackground);
+		~CModelVolumetricDstChannel();
 
-	public:
-		CModelAttachment() = delete;
-		CModelAttachment(_In_ CModel * pModel, _In_ const std::string sPathURI, _In_ const std::string sRelationShipType, _In_ PImportStream pStream);
-		~CModelAttachment();
-		
-		_Ret_notnull_ CModel * getModel();
-		std::string getPathURI();
-		std::string getRelationShipType();
-		PImportStream getStream ();
+		std::string getName ();
+		nfDouble getBackground ();
 
-		void setStream(_In_ PImportStream pStream);
-		void setRelationShipType(_In_ const std::string sRelationShipType);
+		void setName(const std::string & sName);
+		void setBackground(const nfDouble dBackground);
 
-		PModelAttachment cloneIntoNewModel (_In_ CModel * pModel, _In_ nfBool bCloneMemory);
 	};
 
+	typedef std::shared_ptr <CModelVolumetricDstChannel> PModelVolumetricDstChannel;
 
 }
 
-#endif // __NMR_MODELATTACHMENT
+#endif // __NMR_MODELVOLUMETRICDSTCHANNEL
+
