@@ -24,15 +24,17 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CAttachment
+Abstract: This is the class declaration of CImage3DChannelSelector
 
 */
 
 
-#ifndef __LIB3MF_ATTACHMENT
-#define __LIB3MF_ATTACHMENT
+#ifndef __LIB3MF_IMAGE3DCHANNELSELECTOR
+#define __LIB3MF_IMAGE3DCHANNELSELECTOR
 
 #include "lib3mf_interfaces.hpp"
+
+// Parent classes
 #include "lib3mf_base.hpp"
 #ifdef _MSC_VER
 #pragma warning(push)
@@ -40,68 +42,60 @@ Abstract: This is the class declaration of CAttachment
 #endif
 
 // Include custom headers here.
-#include "Model/Classes/NMR_ModelAttachment.h"
+
+#include "Model/Classes/NMR_ModelImage3DChannelSelector.h"
 
 namespace Lib3MF {
 namespace Impl {
 
 
 /*************************************************************************************************************************
- Class declaration of CAttachment 
+ Class declaration of CImage3DChannelSelector 
 **************************************************************************************************************************/
 
-class CAttachment : public virtual IAttachment, public virtual CBase {
+class CImage3DChannelSelector : public virtual IImage3DChannelSelector, public virtual CBase {
 private:
-
-	/**
-	* Put private members here.
-	*/
-	NMR::PModelAttachment m_pModelAttachment;
 
 protected:
 
-	/**
-	* Put protected members here.
-	*/
+	NMR::PModelImage3DChannelSelector m_pSelector;
+	NMR::PModel m_pModel;
+
 
 public:
 
-	/**
-	* Put additional public members here. They will not be visible in the external API.
-	*/
-	CAttachment(NMR::PModelAttachment pModelAttachment);
+	CImage3DChannelSelector (NMR::PModel pModel, NMR::PModelImage3DChannelSelector pSelector);
 
-	/**
-	* Public member functions to implement.
-	*/
+	IImage3D * GetImage();
 
-	std::string GetPath ();
+	void SetImage(IImage3D* pImage3D);
 
-	void SetPath (const std::string & sPath);
+	void SetSourceChannel(const std::string & sChannelName);
 
-	std::string GetRelationShipType ();
+	std::string GetSourceChannel();
 
-	void SetRelationShipType (const std::string & sPath);
+	void SetDestinationChannel(const std::string & sChannelName);
 
-	void WriteToFile (const std::string & sFileName);
+	std::string GetDestinationChannel();
 
-	void ReadFromFile (const std::string & sFileName);
+	void SetFilter(const Lib3MF::eTextureFilter eFilter);
 
-	Lib3MF_uint64 GetStreamSize ();
+	Lib3MF::eTextureFilter GetFilter();
 
-	void WriteToBuffer (Lib3MF_uint64 nBufferBufferSize, Lib3MF_uint64* pBufferNeededCount, Lib3MF_uint8 * pBufferBuffer);
+	void SetTileStyles(const Lib3MF::eTextureTileStyle eTileStyleU, const Lib3MF::eTextureTileStyle eTileStyleV, const Lib3MF::eTextureTileStyle eTileStyleW);
 
-	void ReadFromBuffer(const Lib3MF_uint64 nBufferBufferSize, const Lib3MF_uint8 * pBufferBuffer);
+	void GetTileStyles(Lib3MF::eTextureTileStyle & eTileStyleU, Lib3MF::eTextureTileStyle & eTileStyleV, Lib3MF::eTextureTileStyle & eTileStyleW);
 
-	NMR::PModelAttachment getModelAttachment ();
+	void SetValueRange(const Lib3MF_double dMin, const Lib3MF_double dMax);
+
+	void GetValueRange(Lib3MF_double & dMin, Lib3MF_double & dMax);
 
 };
 
-}
-}
+} // namespace Impl
+} // namespace Lib3MF
 
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif
-
-#endif // __LIB3MF_ATTACHMENT
+#endif // __LIB3MF_IMAGE3DCHANNELSELECTOR

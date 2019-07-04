@@ -60,22 +60,23 @@ namespace NMR {
 	protected:
 		CModelVolumetricStack(_In_ const ModelResourceID sID, _In_ CModel * pModel);
 
+	public:
+		CModelVolumetricStack() = delete;
+		
+		static PModelVolumetricStack make(_In_ const ModelResourceID sID, _In_ CModel * pModel);
+		static PModelVolumetricStack make_from(_In_ CModelVolumetricStack * pVolumetricStack, _In_ const ModelResourceID sID, _In_ CModel * pNewModel, _In_ const std::map<PPackageResourceID, PPackageResourceID> & PackageIDMap);
+
 		nfUint32 getDstChannelCount();
-		PModelVolumetricDstChannel getDstChannel (nfUint32 nIndex);
-		PModelVolumetricDstChannel addDstChannel (std::string & sName, nfDouble dBackground);
+		PModelVolumetricDstChannel getDstChannel(nfUint32 nIndex);
+		PModelVolumetricDstChannel addDstChannel(std::string & sName, nfDouble dBackground);
 		void removeDstChannel(nfUint32 nIndex);
 
 		nfUint32 getLayerCount();
 		PModelVolumetricLayer getLayer(nfUint32 nIndex);
 		PModelVolumetricLayer addLayer(MODELTRANSFORM Transform, eModelBlendMethod BlendMethod);
+		PModelVolumetricLayer addLayerFrom(CModelVolumetricLayer * pSourceLayer, const std::map<PPackageResourceID, PPackageResourceID> & PackageIDMap);
 		void removeLayer(nfUint32 nIndex);
 
-
-	public:
-		CModelVolumetricStack() = delete;
-		
-		static PModelVolumetricStack make(_In_ const ModelResourceID sID, _In_ CModel * pModel);
-		
 	};
 
 }

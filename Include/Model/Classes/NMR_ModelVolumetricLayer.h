@@ -49,6 +49,9 @@ NMR_ModelVolumetricLayer.h defines a volumetric 3D layer for the volumetric exte
 
 namespace NMR {
 
+	class CModelVolumetricLayer;
+	typedef std::shared_ptr <CModelVolumetricLayer> PModelVolumetricLayer;
+
 	class CModelVolumetricLayer {
 	private:
 		MODELTRANSFORM m_Transform;
@@ -59,10 +62,15 @@ namespace NMR {
 		std::vector<PModelImage3DChannelSelector> m_ChannelSelectors;
 		PModelImage3DChannelSelector m_MaskChannelSelector;
 
-	public:
-	
+	protected:
 		CModelVolumetricLayer(MODELTRANSFORM Transform, eModelBlendMethod BlendMethod);
+
+	public:
+
 		~CModelVolumetricLayer();
+
+		static PModelVolumetricLayer make(MODELTRANSFORM Transform, eModelBlendMethod BlendMethod);
+		static PModelVolumetricLayer make_from(CModelVolumetricLayer * pVolumetricLayer, const std::map<PPackageResourceID, PPackageResourceID> & PackageIDMap);
 
 		MODELTRANSFORM getTransform ();
 		eModelBlendMethod getBlendMethod ();
@@ -86,7 +94,6 @@ namespace NMR {
 
 	};
 
-	typedef std::shared_ptr <CModelVolumetricLayer> PModelVolumetricLayer;
 
 }
 

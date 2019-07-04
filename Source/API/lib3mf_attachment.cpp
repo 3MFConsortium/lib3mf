@@ -124,3 +124,8 @@ void CAttachment::ReadFromBuffer(const Lib3MF_uint64 nBufferBufferSize, const Li
 	m_pModelAttachment->setStream(pImportStream);
 }
 
+
+NMR::PModelAttachment CAttachment::getModelAttachment()
+{
+	return m_pModelAttachment;
+}

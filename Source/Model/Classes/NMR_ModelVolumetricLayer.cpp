@@ -53,6 +53,32 @@ namespace NMR {
 		
 	}
 
+	PModelVolumetricLayer CModelVolumetricLayer::make(MODELTRANSFORM Transform, eModelBlendMethod BlendMethod)
+	{
+		return std::make_shared<CModelVolumetricLayer>(CModelVolumetricLayer(Transform, BlendMethod));
+	}
+
+	PModelVolumetricLayer CModelVolumetricLayer::make_from(CModelVolumetricLayer * pVolumetricLayer, const std::map<PPackageResourceID, PPackageResourceID> & PackageIDMap)
+	{
+		if (pVolumetricLayer == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		PModelVolumetricLayer pNewLayer = std::make_shared<CModelVolumetricLayer>(CModelVolumetricLayer (pVolumetricLayer->getTransform(), pVolumetricLayer->getBlendMethod()));
+		pNewLayer->setSourceAlpha (pVolumetricLayer->getSourceAlpha());
+		pNewLayer->setDstAlpha(pVolumetricLayer->getDstAlpha());		
+
+		auto pMaskSelector = pVolumetricLayer->getMaskChannelSelector();
+		if (pMaskSelector.get() != nullptr)
+			pNewLayer->setMaskChannelSelector (CModelImage3DChannelSelector::make_from (pMaskSelector.get(), PackageIDMap));
+
+		for (auto iChannelSelector : pVolumetricLayer->m_ChannelSelectors) {
+			pNewLayer->addChannelSelector(CModelImage3DChannelSelector::make_from(iChannelSelector.get(), PackageIDMap));
+
+		}
+		
+		return pNewLayer;
+	}
+
 
 	MODELTRANSFORM CModelVolumetricLayer::getTransform()
 	{

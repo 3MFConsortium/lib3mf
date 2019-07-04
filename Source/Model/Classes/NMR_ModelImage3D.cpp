@@ -33,6 +33,9 @@ NMR_ModelImage3D.cpp implements a 3D image stack for the volumetric extension
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Model/Classes/NMR_ModelImage3D.h"
 #include "Model/Classes/NMR_ModelAttachment.h"
+
+#include "Common/Platform/NMR_ImportStream_Memory.h"
+
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_StringUtils.h"
 #include <sstream>
@@ -98,6 +101,15 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_INVALIDINDEX);
 		return m_Sheets [nSheetIndex];
 
+	}
+
+	PModelAttachment CModelImage3D::createSheet(nfUint32 nSheetIndex, const std::string & sPath, PImportStream pCopiedStream)
+	{
+
+		PModelAttachment pAttachment = getModel()->addAttachment(sPath, PACKAGE_TEXTURE_RELATIONSHIP_TYPE, pCopiedStream);
+		setSheet(nSheetIndex, pAttachment);
+
+		return pAttachment;
 	}
 
 }

@@ -45,10 +45,13 @@ NMR_ModelImage3DChannelSelector.h defines a 3D channel selector for the volumetr
 
 namespace NMR {
 
+	class CModelImage3DChannelSelector;
+	typedef std::shared_ptr <CModelImage3DChannelSelector> PModelImage3DChannelSelector;
+
 	class CModelImage3DChannelSelector {
 	private:
 	
-		std::string m_sImage3DID;
+		PPackageResourceID m_sImage3DID;
 		std::string m_sSourceChannel;
 		std::string m_sDstChannel;
 		
@@ -60,13 +63,19 @@ namespace NMR {
 		eModelTextureTileStyle m_eTileStyleW;
 		
 		eModelTextureFilter m_eFilter;
-	
+
+	protected:
+
+		CModelImage3DChannelSelector(PPackageResourceID sImage3DId, std::string sSourceChannel, std::string sDstChannel);
+
 	public:
-		
-		CModelImage3DChannelSelector (std::string sImage3DId, std::string sSourceChannel, std::string sDstChannel);
+
 		~CModelImage3DChannelSelector();
 
-		std::string getImage3DID ();
+		static PModelImage3DChannelSelector make (PPackageResourceID sImage3DId, std::string sSourceChannel, std::string sDstChannel);
+		static PModelImage3DChannelSelector make_from (CModelImage3DChannelSelector * pChannelSelector, const std::map<PPackageResourceID, PPackageResourceID> & PackageIDMap);
+
+		PPackageResourceID getImage3DID ();
 		std::string getSourceChannel ();
 		std::string getDstChannel ();
 
@@ -80,7 +89,7 @@ namespace NMR {
 		eModelTextureFilter getFilter ();
 
 
-		void setImage3DID(std::string sValue);
+		void setImage3DID(PPackageResourceID sValue);
 		void setSourceChannel(std::string sValue);
 		void setDstChannel(std::string sValue);
 
@@ -94,8 +103,6 @@ namespace NMR {
 		void setFilter(eModelTextureFilter eValue);
 
 	};
-
-	typedef std::shared_ptr <CModelImage3DChannelSelector> PModelImage3DChannelSelector;
 
 }
 

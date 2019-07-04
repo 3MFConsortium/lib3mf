@@ -894,6 +894,113 @@
 			<param name="LayerIndex" type="uint32" pass="in" description="The Index of the MultiPropertyLayer to be removed" />
 		</method>
 	</class>
+
+	<class name="Image3D" parent="Resource">
+		<method name="GetSizeX" description="Retrieves the extensions of the image stack in X direction.">
+			<param name="SizeX" type="uint32" pass="return" description="size in X" />
+		</method>
+	
+		<method name="GetSizeY" description="Retrieves the extensions of the image stack in Y direction.">
+			<param name="SizeY" type="uint32" pass="return" description="size in Y" />
+		</method>
+
+		<method name="GetSheetCount" description="Retrieves the number of images in the stack.">
+			<param name="SheetCount" type="uint32" pass="return" description="number of images" />
+		</method>
+
+		<method name="GetSheet" description="Retrieves a sheet of the stack. Raises an error if sheet is not set.">
+			<param name="Index" type="uint32" pass="in" description="index of the image (0-based)" />
+			<param name="Sheet" type="class" class="Attachment" pass="return" description="attachment containing the image" />
+		</method>
+
+		<method name="CreateEmptySheet" description="Creates a new sheet attachment with empty data.">
+			<param name="Index" type="uint32" pass="in" description="index of the image (0-based)" />
+			<param name="Path" type="string" pass="in" description="path name of package" />
+			<param name="Sheet" type="class" class="Attachment" pass="return" description="attachment containing the image" />
+		</method>
+		
+		
+		<method name="CreateSheetFromBuffer" description="Creates a new sheet attachment from a memory buffer.">
+			<param name="Index" type="uint32" pass="in" description="index of the image (0-based)" />
+			<param name="Path" type="string" pass="in" description="path name of package" />
+			<param name="Data" type="basicarray" class="uint8" pass="in" description="binary image data" />
+			<param name="Sheet" type="class" class="Attachment" pass="return" description="attachment containing the image" />
+		</method>
+
+		<method name="CreateSheetFromFile" description="Creates a new sheet attachment from a file on disk.">
+			<param name="Index" type="uint32" pass="in" description="index of the image (0-based)" />
+			<param name="Path" type="string" pass="in" description="path name of package" />
+			<param name="FileName" type="string" pass="in" description="file name to read from" />
+			<param name="Sheet" type="class" class="Attachment" pass="return" description="attachment containing the image" />
+		</method>
+		
+		<method name="SetSheet" description="Sets a sheet to an existing attachment.">
+			<param name="Index" type="uint32" pass="in" description="index of the image (0-based)" />
+			<param name="Sheet" type="class" class="Attachment" pass="in" description="attachment containing the image" />
+		</method>
+		
+	</class>
+	
+
+	<class name="Image3DChannelSelector">
+
+		<method name="GetImage" description="Returns the selected 3D image.">
+			<param name="Image3D" type="class" class="Image3D" pass="return" description="image instance" />
+		</method>
+
+		<method name="SetImage" description="Sets the 3D image of the selector.">
+			<param name="Image3D" type="class" class="Image3D" pass="in" description="image instance" />
+		</method>
+
+		<method name="SetSourceChannel" description="Sets the source channel of the selector.">
+			<param name="ChannelName" type="string" pass="in" description="name of the channel" />
+		</method>
+
+		<method name="GetSourceChannel" description="Returns the source channel of the selector.">
+			<param name="ChannelName" type="string" pass="return" description="name of the channel" />
+		</method>
+		
+		<method name="SetDestinationChannel" description="Sets the destination channel of the selector.">
+			<param name="ChannelName" type="string" pass="in" description="name of the channel" />
+		</method>
+
+		<method name="GetDestinationChannel" description="Returns the destination channel of the selector.">
+			<param name="ChannelName" type="string" pass="return" description="name of the channel" />
+		</method>
+
+		<method name="SetFilter" description="Sets the texture filter of the selector.">
+			<param name="Filter" type="enum" class="TextureFilter" pass="in" description="texture filter" />
+		</method>
+
+		<method name="GetFilter" description="Returns the texture filter of the selector.">
+			<param name="Filter" type="enum" class="TextureFilter" pass="return" description="texture filter" />
+		</method>
+
+		<method name="SetTileStyles" description="Sets the tile styles of the selector.">
+			<param name="TileStyleU" type="enum" class="TextureTileStyle" pass="in" description="tile style in U" />
+			<param name="TileStyleV" type="enum" class="TextureTileStyle" pass="in" description="tile style in V" />
+			<param name="TileStyleW" type="enum" class="TextureTileStyle" pass="in" description="tile style in W" />
+		</method>
+
+		<method name="GetTileStyles" description="Retrieves the tile styles of the selector.">
+			<param name="TileStyleU" type="enum" class="TextureTileStyle" pass="out" description="tile style in U" />
+			<param name="TileStyleV" type="enum" class="TextureTileStyle" pass="out" description="tile style in V" />
+			<param name="TileStyleW" type="enum" class="TextureTileStyle" pass="out" description="tile style in W" />
+		</method>
+		
+		<method name="SetValueRange" description="Sets the value range of the selector.">
+			<param name="Min" type="double" pass="in" description="Mapped value of the minimal (e.g. 0) image3D pixel values." />
+			<param name="Max" type="double" pass="in" description="Mapped value of the maximal (e.g. 255) image3D pixel values." />
+		</method>
+
+		<method name="GetValueRange" description="Retrieves the value range of the selector.">
+			<param name="Min" type="double" pass="out" description="Mapped value of the minimal (e.g. 0) image3D pixel values." />
+			<param name="Max" type="double" pass="out" description="Mapped value of the maximal (e.g. 255) image3D pixel values." />
+		</method>
+		
+		
+	</class>
+	
 	
 	<class name="Attachment">
 		<method name="GetPath" description = "Retrieves an attachment's package path.">

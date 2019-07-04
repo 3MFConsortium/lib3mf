@@ -53,6 +53,27 @@ namespace NMR {
 		return std::make_shared <CModelVolumetricStack> (CModelVolumetricStack (sID, pModel));
 	}
 
+	PModelVolumetricStack CModelVolumetricStack::make_from(_In_ CModelVolumetricStack * pVolumetricStack, _In_ const ModelResourceID sID, _In_ CModel * pNewModel, const std::map<PPackageResourceID, PPackageResourceID> & PackageIDMap)
+	{
+		if (pNewModel == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+		if (pVolumetricStack == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		PModelVolumetricStack pNewStack = make (pNewModel->generateResourceID (), pNewModel);
+		for (auto iDstChannel : pVolumetricStack->m_DstChannels)
+			pNewStack->addDstChannel(iDstChannel->getName(), iDstChannel->getBackground());
+		
+		for (auto iLayer : pVolumetricStack->m_Layers) {
+			auto pLayer = pNewStack->addLayerFrom(iLayer.get (), PackageIDMap);
+
+		}
+
+		return pNewStack;
+
+	}
+
+
 	nfUint32 CModelVolumetricStack::getDstChannelCount()
 	{
 		return (nfUint32)m_DstChannels.size();
@@ -105,7 +126,18 @@ namespace NMR {
 		if (m_Layers.size() >= MAX_VOLUMETRIC_CHANNELS)
 			throw CNMRException(NMR_ERROR_TOOMANYVOLUMETRICCHANNELS);
 
-		PModelVolumetricLayer pLayer = std::make_shared<CModelVolumetricLayer> (Transform, BlendMethod);
+		PModelVolumetricLayer pLayer = CModelVolumetricLayer::make (Transform, BlendMethod);
+		m_Layers.push_back(pLayer);
+
+		return pLayer;
+	}
+
+	PModelVolumetricLayer CModelVolumetricStack::addLayerFrom(CModelVolumetricLayer * pSourceLayer, const std::map<PPackageResourceID, PPackageResourceID> & PackageIDMap)
+	{
+		if (m_Layers.size() >= MAX_VOLUMETRIC_CHANNELS)
+			throw CNMRException(NMR_ERROR_TOOMANYVOLUMETRICCHANNELS);
+
+		PModelVolumetricLayer pLayer = CModelVolumetricLayer::make_from(pSourceLayer, PackageIDMap);
 		m_Layers.push_back(pLayer);
 
 		return pLayer;

@@ -1115,6 +1115,9 @@ Model error codes (0x8XXX)
 // Too many volumetric channels
 #define NMR_ERROR_TOOMANYVOLUMETRICCHANNELS 0x80EB
 
+// Could not map package ID
+#define NMR_ERROR_COULDNOTMAPPACKAGEID 0x80EC
+
 /*-------------------------------------------------------------------
 XML Parser Error Constants (0x9XXX)
 -------------------------------------------------------------------*/

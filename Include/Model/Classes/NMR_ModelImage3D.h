@@ -74,6 +74,7 @@ namespace NMR {
 		
 		void setSheet (nfUint32 nSheetIndex, PModelAttachment pAttachment);
 		PModelAttachment getSheet (nfUint32 nSheetIndex);		
+		PModelAttachment createSheet(nfUint32 nSheetIndex, const std::string & sPath, PImportStream pCopiedStream);
 
 	};
 

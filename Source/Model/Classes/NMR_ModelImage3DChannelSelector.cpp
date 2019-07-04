@@ -39,7 +39,7 @@ NMR_ModelImage3DChannelSelector.cpp implements a 3D channel selector for the vol
 namespace NMR {
 
 
-	CModelImage3DChannelSelector::CModelImage3DChannelSelector(std::string sImage3DId, std::string sSourceChannel, std::string sDstChannel)
+	CModelImage3DChannelSelector::CModelImage3DChannelSelector(PPackageResourceID sImage3DId, std::string sSourceChannel, std::string sDstChannel)
 		: m_sImage3DID (sImage3DId), 
 		  m_sSourceChannel (sSourceChannel), 
 		  m_sDstChannel (sDstChannel),
@@ -58,7 +58,33 @@ namespace NMR {
 
 	}
 
-	std::string CModelImage3DChannelSelector::getImage3DID()
+	PModelImage3DChannelSelector CModelImage3DChannelSelector::make(PPackageResourceID sImage3DId, std::string sSourceChannel, std::string sDstChannel)
+	{
+		return std::make_shared<CModelImage3DChannelSelector>(CModelImage3DChannelSelector (sImage3DId, sSourceChannel, sDstChannel));
+	}
+
+	PModelImage3DChannelSelector CModelImage3DChannelSelector::make_from(CModelImage3DChannelSelector * pChannelSelector, const std::map<PPackageResourceID, PPackageResourceID> & PackageIDMap)
+	{
+		if (pChannelSelector == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		auto iIterator = PackageIDMap.find (pChannelSelector->getImage3DID ());
+		if (iIterator == PackageIDMap.end ())
+			throw CNMRException(NMR_ERROR_COULDNOTMAPPACKAGEID);
+
+		PPackageResourceID pNewImage3DID = iIterator->second;
+
+		PModelImage3DChannelSelector pNewSelector = std::make_shared<CModelImage3DChannelSelector>(CModelImage3DChannelSelector (pNewImage3DID, pChannelSelector->getSourceChannel (), pChannelSelector->getDstChannel()));
+		pNewSelector->setFilter(pChannelSelector->getFilter());
+		pNewSelector->setMinValue(pChannelSelector->getMinValue());
+		pNewSelector->setTileStyleU(pChannelSelector->getTileStyleU());
+		pNewSelector->setTileStyleV(pChannelSelector->getTileStyleV());
+		pNewSelector->setTileStyleW(pChannelSelector->getTileStyleW());
+		return pNewSelector;
+	}
+
+
+	PPackageResourceID CModelImage3DChannelSelector::getImage3DID()
 	{
 		return m_sImage3DID;
 	}
@@ -105,7 +131,7 @@ namespace NMR {
 	}
 
 
-	void CModelImage3DChannelSelector::setImage3DID(std::string sValue)
+	void CModelImage3DChannelSelector::setImage3DID(PPackageResourceID sValue)
 	{
 		m_sImage3DID = sValue;
 	}

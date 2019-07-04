@@ -400,6 +400,7 @@ namespace NMR {
 		case NMR_ERROR_ATTACHMENTMODELMISMATCH: return "Attachment Model Mismatch";
 		case NMR_ERROR_TOOMANYCHANNELSELECTORS: return "Too many channel selectors";
 		case NMR_ERROR_TOOMANYVOLUMETRICCHANNELS: return "Too many volumetric channels";
+		case NMR_ERROR_COULDNOTMAPPACKAGEID: return "Could not map package ID";
 
 		// XML Parser Error Constants(0x9XXX)
 		case NMR_ERROR_XMLPARSER_INVALIDATTRIBVALUE: return "Invalid XML attribute value";

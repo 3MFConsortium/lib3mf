@@ -24,84 +24,70 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CAttachment
+Abstract: This is the class declaration of CImage3D
 
 */
 
 
-#ifndef __LIB3MF_ATTACHMENT
-#define __LIB3MF_ATTACHMENT
+#ifndef __LIB3MF_IMAGE3D
+#define __LIB3MF_IMAGE3D
 
 #include "lib3mf_interfaces.hpp"
-#include "lib3mf_base.hpp"
+
+// Parent classes
+#include "lib3mf_resource.hpp"
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable : 4250)
 #endif
 
 // Include custom headers here.
-#include "Model/Classes/NMR_ModelAttachment.h"
+#include "Model/Classes/NMR_ModelImage3D.h"
+#include "Model/Classes/NMR_Model.h"
 
 namespace Lib3MF {
 namespace Impl {
 
 
 /*************************************************************************************************************************
- Class declaration of CAttachment 
+ Class declaration of CImage3D 
 **************************************************************************************************************************/
 
-class CAttachment : public virtual IAttachment, public virtual CBase {
+class CImage3D : public virtual IImage3D, public virtual CResource {
 private:
-
-	/**
-	* Put private members here.
-	*/
-	NMR::PModelAttachment m_pModelAttachment;
 
 protected:
 
-	/**
-	* Put protected members here.
-	*/
+	NMR::PModelImage3D m_pImage3D;
 
 public:
 
-	/**
-	* Put additional public members here. They will not be visible in the external API.
-	*/
-	CAttachment(NMR::PModelAttachment pModelAttachment);
+	CImage3D (NMR::PModelImage3D pModelImage3D);
+	
+	Lib3MF_uint32 GetSizeX();
 
-	/**
-	* Public member functions to implement.
-	*/
+	Lib3MF_uint32 GetSizeY();
 
-	std::string GetPath ();
+	Lib3MF_uint32 GetSheetCount();
 
-	void SetPath (const std::string & sPath);
+	IAttachment * GetSheet(const Lib3MF_uint32 nIndex);
 
-	std::string GetRelationShipType ();
+	IAttachment * CreateEmptySheet(const Lib3MF_uint32 nIndex, const std::string & sPath);
 
-	void SetRelationShipType (const std::string & sPath);
+	IAttachment * CreateSheetFromBuffer(const Lib3MF_uint32 nIndex, const std::string & sPath, const Lib3MF_uint64 nDataBufferSize, const Lib3MF_uint8 * pDataBuffer);
 
-	void WriteToFile (const std::string & sFileName);
+	IAttachment * CreateSheetFromFile(const Lib3MF_uint32 nIndex, const std::string & sPath, const std::string & sFileName);
 
-	void ReadFromFile (const std::string & sFileName);
+	void SetSheet(const Lib3MF_uint32 nIndex, IAttachment* pSheet);
 
-	Lib3MF_uint64 GetStreamSize ();
-
-	void WriteToBuffer (Lib3MF_uint64 nBufferBufferSize, Lib3MF_uint64* pBufferNeededCount, Lib3MF_uint8 * pBufferBuffer);
-
-	void ReadFromBuffer(const Lib3MF_uint64 nBufferBufferSize, const Lib3MF_uint8 * pBufferBuffer);
-
-	NMR::PModelAttachment getModelAttachment ();
+	NMR::PModelImage3D getModelImage3D ();
 
 };
 
-}
-}
+} // namespace Impl
+} // namespace Lib3MF
 
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif
-
-#endif // __LIB3MF_ATTACHMENT
+#endif // __LIB3MF_IMAGE3D

@@ -145,6 +145,7 @@ namespace NMR {
 		std::vector<PModelResource> m_CompositeMaterialsLookup;
 		std::vector<PModelResource> m_MultiPropertyGroupLookup;
 		std::vector<PModelResource> m_Image3DLookup;
+		std::vector<PModelResource> m_VolumetricStackLookup;
 
 		// Add Resource to resource lookup tables
 		void addResourceToLookupTable(_In_ PModelResource pResource);
@@ -264,12 +265,19 @@ namespace NMR {
 		CModelTexture2DResource * getTexture2D(_In_ nfUint32 nIndex);
 		void mergeTextures2D(_In_ CModel * pSourceModel);
 
-		// Convenience functions for 2D Textures
-		_Ret_maybenull_ PModelImage3D findImage3D(_In_ PackageResourceID nResourceID);
+		// Convenience functions for 3D Images
+		_Ret_maybenull_ PModelImage3D findImage3D(_In_ PPackageResourceID ResourceID);
 		nfUint32 getImage3DCount();
 		PModelResource getImage3DResource(_In_ nfUint32 nIndex);
 		CModelImage3D * getImage3D(_In_ nfUint32 nIndex);
-		void mergeImages3D(_In_ CModel * pSourceModel);
+		void mergeImages3D(_In_ CModel * pSourceModel, _In_ std::map<PPackageResourceID, PPackageResourceID> & PackageIDMap);
+
+		// Convenience functions for Volumetric Stacks
+		_Ret_maybenull_ PModelVolumetricStack findVolumetricStack(_In_ PackageResourceID nResourceID);
+		nfUint32 getVolumetricStackCount();
+		PModelResource getVolumetricStackResource(_In_ nfUint32 nIndex);
+		CModelVolumetricStack * getVolumetricStack(_In_ nfUint32 nIndex);
+		void mergeVolumetricStacks(_In_ CModel * pSourceModel, _In_ const std::map<PPackageResourceID, PPackageResourceID> & PackageIDMap);
 
 		// Clear all build items and Resources
 		void clearAll ();
