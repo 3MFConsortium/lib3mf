@@ -58,11 +58,12 @@ private:
 protected:
 
 	NMR::PModelVolumetricLayer m_pLayer;
+	NMR::PModel m_pModel;
 
 public:
 
 
-	CVolumetricLayer (NMR::PModelVolumetricLayer pLayer);
+	CVolumetricLayer (NMR::PModelVolumetricLayer pLayer, NMR::PModel pModel);
 
 	Lib3MF::sTransform GetTransform();
 
@@ -83,6 +84,28 @@ public:
 	void GetInformation(Lib3MF::sTransform & sTransform, Lib3MF::eBlendMethod & eBlendMethod, Lib3MF_double & dSourceAlpha, Lib3MF_double & dDestinationAlpha);
 
 	void SetInformation(const Lib3MF::sTransform Transform, const Lib3MF::eBlendMethod eBlendMethod, const Lib3MF_double dSourceAlpha, const Lib3MF_double dDestinationAlpha);
+
+	IImage3DChannelSelector * CreateMaskChannelSelector(IImage3D* pImage3D, const std::string & sSourceChannel, const std::string & sDestinationChannel);
+
+	bool HasMaskChannelSelector();
+	
+	void ClearMaskChannelSelector();
+
+	IImage3DChannelSelector * GetMaskChannelSelector();
+
+	Lib3MF_uint32 GetChannelSelectorCount();
+
+	IImage3DChannelSelector * GetChannelSelector(const Lib3MF_uint32 nIndex);
+
+	IImage3DChannelSelector * AddChannelSelector(IImage3D* pImage3D, const std::string & sSourceChannel, const std::string & sDestinationChannel);
+
+	void ClearChannelSelectors();
+
+	void ReindexChannelSelector(IImage3DChannelSelector* pChannelSelector, const Lib3MF_uint32 nIndex);
+
+	void RemoveChannelSelector(IImage3DChannelSelector* pChannelSelector);
+
+	void RemoveChannelSelectorByIndex(const Lib3MF_uint32 nIndex);
 
 	NMR::PModelVolumetricLayer getModelLayer ();
 

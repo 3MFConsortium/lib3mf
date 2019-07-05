@@ -48,7 +48,8 @@ namespace NMR {
 		  m_eTileStyleV (MODELTEXTURETILESTYLE_WRAP),
 		  m_eTileStyleW (MODELTEXTURETILESTYLE_WRAP),
 		  m_dMinValue (0.0),
-		  m_dMaxValue (1.0)
+		  m_dMaxValue (1.0),
+		  m_nInternalIndex (0)
 	{
 	}
 
@@ -176,6 +177,15 @@ namespace NMR {
 		m_eFilter = eValue;
 	}
 
+	void CModelImage3DChannelSelector::setInternalIndex(nfUint32 nIndex)
+	{
+		m_nInternalIndex = nIndex;
+	}
+
+	nfUint32 CModelImage3DChannelSelector::getInternalIndex()
+	{
+		return m_nInternalIndex;
+	}
 
 }
 

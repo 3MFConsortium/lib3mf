@@ -86,12 +86,16 @@ namespace NMR {
 
 		PModelImage3DChannelSelector getMaskChannelSelector ();
 		void setMaskChannelSelector (PModelImage3DChannelSelector ChannelSelector);
+		nfBool hasMaskChannelSelector();
 
 		void addChannelSelector (PModelImage3DChannelSelector ChannelSelector);
 		nfUint32 getChannelSelectorCount ();
 		PModelImage3DChannelSelector getChannelSelector (nfUint32 nIndex);
-		void removeChannelSelector (nfUint32 nIndex);
+		void removeChannelSelectorByIndex (nfUint32 nIndex);
+		void removeChannelSelector (CModelImage3DChannelSelector * pChannelSelector);
 		void clearChannelSelectors();
+
+		void reIndexChannelSelector(CModelImage3DChannelSelector * pChannelSelector, nfUint32 nNewIndex);
 
 		void setInternalIndex (nfUint32 nIndex);
 		nfUint32 getInternalIndex();

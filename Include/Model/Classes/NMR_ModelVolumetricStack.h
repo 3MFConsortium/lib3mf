@@ -74,7 +74,10 @@ namespace NMR {
 		nfUint32 addDstChannel(const std::string & sName, nfDouble dBackground);
 		void removeDstChannel(nfUint32 nIndex);
 		nfUint32 findDstChannel(const std::string & sName);
+		bool hasDstChannel(const std::string & sName);
 		void clearDstChannels();
+		void clearUnusedDstChannels();
+
 
 		nfUint32 getLayerCount();
 		PModelVolumetricLayer getLayer(nfUint32 nIndex);
@@ -85,6 +88,7 @@ namespace NMR {
 
 		void reIndexLayer(CModelVolumetricLayer * pLayer, nfUint32 nNewIndex);
 
+		void clear();
 	};
 
 }

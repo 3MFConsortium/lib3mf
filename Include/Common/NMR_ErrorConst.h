@@ -1127,6 +1127,9 @@ Model error codes (0x8XXX)
 // Could not reindex volumetric layer
 #define NMR_ERROR_COULDNOTREINDEXVOLUMETRICLAYER 0x80EF
 
+// Could not reindex channel selector
+#define NMR_ERROR_COULDNOTREINDEXCHANNELSELECTOR 0x80F0
+
 /*-------------------------------------------------------------------
 XML Parser Error Constants (0x9XXX)
 -------------------------------------------------------------------*/

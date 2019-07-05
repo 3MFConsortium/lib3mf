@@ -24,73 +24,59 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CVolumetricStack
+Abstract: This is the class declaration of CVolumetricStackIterator
 
 */
 
 
-#ifndef __LIB3MF_VOLUMETRICSTACK
-#define __LIB3MF_VOLUMETRICSTACK
+#ifndef __LIB3MF_VOLUMETRICSTACKITERATOR
+#define __LIB3MF_VOLUMETRICSTACKITERATOR
 
 #include "lib3mf_interfaces.hpp"
 
 // Parent classes
-#include "lib3mf_resource.hpp"
+#include "lib3mf_resourceiterator.hpp"
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable : 4250)
 #endif
 
 // Include custom headers here.
-#include "Model/Classes/NMR_ModelVolumetricStack.h"
+
 
 namespace Lib3MF {
 namespace Impl {
 
 
 /*************************************************************************************************************************
- Class declaration of CVolumetricStack 
+ Class declaration of CVolumetricStackIterator 
 **************************************************************************************************************************/
 
-class CVolumetricStack : public virtual IVolumetricStack, public virtual CResource {
+class CVolumetricStackIterator : public virtual IVolumetricStackIterator, public virtual CResourceIterator {
 private:
 
+	/**
+	* Put private members here.
+	*/
 
 protected:
-	NMR::PModelVolumetricStack m_pVolumetricStack;
-	NMR::PModel m_pModel;
+
+	/**
+	* Put protected members here.
+	*/
 
 public:
 
-	CVolumetricStack(NMR::PModelVolumetricStack pVolumetricStack, NMR::PModel pModel);
+	/**
+	* Put additional public members here. They will not be visible in the external API.
+	*/
 
-	Lib3MF_uint32 GetDestinationChannelCount();
 
-	Lib3MF_uint32 AddDestinationChannel(const std::string & sName, const Lib3MF_double dBackground);
+	/**
+	* Public member functions to implement.
+	*/
 
-	void UpdateDestinationChannel(const Lib3MF_uint32 nIndex, const Lib3MF_double dBackground);
-
-	void UpdateDestinationChannelByName(const std::string & sName, const Lib3MF_double dBackground);
-
-	void RemoveDestinationChannel(const Lib3MF_uint32 nIndex);
-
-	void RemoveDestinationChannelByName(const std::string & sName);
-
-	Lib3MF_uint32 GetLayerCount();
-
-	IVolumetricLayer * GetLayer(const Lib3MF_uint32 nIndex);
-
-	IVolumetricLayer * AddLayer(const Lib3MF::sTransform Transform, const Lib3MF::eBlendMethod eBlendMethod);
-
-	void ReindexLayer(IVolumetricLayer* pLayer, const Lib3MF_uint32 nIndex);
-
-	void RemoveLayer(IVolumetricLayer* pLayer);
-
-	void RemoveLayerByIndex(const Lib3MF_uint32 nIndex);
-
-	void Clear();
-
-	void ClearUnusedDestinationChannels();
+	IVolumetricStack * GetCurrentVolumetricStack();
 
 };
 
@@ -100,4 +86,4 @@ public:
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif
-#endif // __LIB3MF_VOLUMETRICSTACK
+#endif // __LIB3MF_VOLUMETRICSTACKITERATOR

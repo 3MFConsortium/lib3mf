@@ -38,6 +38,7 @@ Source/API/lib3mf_compositematerials.cpp
 Source/API/lib3mf_compositematerialsiterator.cpp
 Source/API/lib3mf_componentsobject.cpp
 Source/API/lib3mf_image3d.cpp
+Source/API/lib3mf_image3diterator.cpp
 Source/API/lib3mf_image3dchannelselector.cpp
 Source/API/lib3mf_meshobject.cpp
 Source/API/lib3mf_meshobjectiterator.cpp
@@ -60,6 +61,7 @@ Source/API/lib3mf_texture2dgroupiterator.cpp
 Source/API/lib3mf_texture2diterator.cpp
 Source/API/lib3mf_volumetriclayer.cpp
 Source/API/lib3mf_volumetricstack.cpp
+Source/API/lib3mf_volumetricstackiterator.cpp
 Source/API/lib3mf_writer.cpp
 Source/API/lib3mf_utils.cpp
 Source/Common/3MF_ProgressMonitor.cpp

@@ -90,6 +90,8 @@ public:
 
 	void GetValueRange(Lib3MF_double & dMin, Lib3MF_double & dMax);
 
+	NMR::PModelImage3DChannelSelector getModelSelector ();
+
 };
 
 } // namespace Impl

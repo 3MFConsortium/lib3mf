@@ -31,6 +31,8 @@ Abstract: This is a stub class definition of CVolumetricLayer
 #include "lib3mf_volumetriclayer.hpp"
 #include "lib3mf_interfaceexception.hpp"
 #include "lib3mf_utils.hpp"
+#include "lib3mf_image3d.hpp"
+#include "lib3mf_image3dchannelselector.hpp"
 
 // Include custom headers here.
 
@@ -41,10 +43,12 @@ using namespace Lib3MF::Impl;
  Class definition of CVolumetricLayer 
 **************************************************************************************************************************/
 
-CVolumetricLayer::CVolumetricLayer(NMR::PModelVolumetricLayer pLayer)
-	: m_pLayer (pLayer)
+CVolumetricLayer::CVolumetricLayer(NMR::PModelVolumetricLayer pLayer, NMR::PModel pModel)
+	: m_pLayer (pLayer), m_pModel (pModel)
 {
 	if (pLayer.get() == nullptr)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+	if (pModel.get() == nullptr)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
 
 }
@@ -105,6 +109,102 @@ void CVolumetricLayer::SetInformation(const Lib3MF::sTransform Transform, const 
 	m_pLayer->setSourceAlpha(dSourceAlpha);
 	m_pLayer->setDstAlpha(dDestinationAlpha);
 }
+
+IImage3DChannelSelector * CVolumetricLayer::CreateMaskChannelSelector(IImage3D* pImage3D, const std::string & sSourceChannel, const std::string & sDestinationChannel)
+{
+	if (pImage3D == nullptr)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+
+	CImage3D * pImage3DClass = dynamic_cast<CImage3D *> (pImage3D);
+	if (pImage3DClass == nullptr)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+	
+	NMR::PModelImage3DChannelSelector pChannelSelector = NMR::CModelImage3DChannelSelector::make (pImage3DClass->getModelImage3D ()->getResourceID(), sSourceChannel, sDestinationChannel );
+	m_pLayer->setMaskChannelSelector(pChannelSelector);
+	return new CImage3DChannelSelector(m_pModel, pChannelSelector);
+}
+
+bool CVolumetricLayer::HasMaskChannelSelector()
+{
+	return m_pLayer->hasMaskChannelSelector();
+}
+
+void CVolumetricLayer::ClearMaskChannelSelector()
+{
+	m_pLayer->setMaskChannelSelector (nullptr);
+}
+
+IImage3DChannelSelector * CVolumetricLayer::GetMaskChannelSelector()
+{
+	if (!m_pLayer->hasMaskChannelSelector())
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_NOMASKCHANNELSELECTOR);
+
+	NMR::PModelImage3DChannelSelector pChannelSelector = m_pLayer->getMaskChannelSelector();
+	return new CImage3DChannelSelector(m_pModel, pChannelSelector);
+}
+
+Lib3MF_uint32 CVolumetricLayer::GetChannelSelectorCount()
+{
+	return m_pLayer->getChannelSelectorCount();
+}
+
+IImage3DChannelSelector * CVolumetricLayer::GetChannelSelector(const Lib3MF_uint32 nIndex)
+{
+	NMR::PModelImage3DChannelSelector pChannelSelector = m_pLayer->getChannelSelector(nIndex);
+	return new CImage3DChannelSelector(m_pModel, pChannelSelector);
+}
+
+IImage3DChannelSelector * CVolumetricLayer::AddChannelSelector(IImage3D* pImage3D, const std::string & sSourceChannel, const std::string & sDestinationChannel)
+{
+	if (pImage3D == nullptr)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+
+	CImage3D * pImage3DClass = dynamic_cast<CImage3D *> (pImage3D);
+	if (pImage3DClass == nullptr)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+
+	NMR::PModelImage3DChannelSelector pChannelSelector = NMR::CModelImage3DChannelSelector::make(pImage3DClass->getModelImage3D()->getResourceID(), sSourceChannel, sDestinationChannel);
+	m_pLayer->addChannelSelector(pChannelSelector);
+	return new CImage3DChannelSelector(m_pModel, pChannelSelector);
+
+}
+
+void CVolumetricLayer::ClearChannelSelectors()
+{
+	m_pLayer->clearChannelSelectors();
+}
+
+void CVolumetricLayer::ReindexChannelSelector(IImage3DChannelSelector* pChannelSelector, const Lib3MF_uint32 nIndex)
+{
+	if (pChannelSelector == nullptr)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+
+	CImage3DChannelSelector * pChannelSelectorClass = dynamic_cast<CImage3DChannelSelector *> (pChannelSelector);
+	if (pChannelSelectorClass == nullptr)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+
+	m_pLayer->reIndexChannelSelector(pChannelSelectorClass->getModelSelector().get(), nIndex);
+
+}
+
+void CVolumetricLayer::RemoveChannelSelector(IImage3DChannelSelector* pChannelSelector)
+{
+	if (pChannelSelector == nullptr)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+
+	CImage3DChannelSelector * pChannelSelectorClass = dynamic_cast<CImage3DChannelSelector *> (pChannelSelector);
+	if (pChannelSelectorClass == nullptr)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+
+	m_pLayer->removeChannelSelector(pChannelSelectorClass->getModelSelector ().get());
+
+}
+
+void CVolumetricLayer::RemoveChannelSelectorByIndex(const Lib3MF_uint32 nIndex)
+{
+	m_pLayer->removeChannelSelectorByIndex(nIndex);
+}
+
 
 NMR::PModelVolumetricLayer CVolumetricLayer::getModelLayer()
 {

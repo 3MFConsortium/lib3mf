@@ -95,6 +95,10 @@
 		<error name="INVALIDPROPERTYCOUNT" code="132" description="Invalid property count." />
 
 		<error name="UNKOWNPROGRESSIDENTIFIER" code="140" description="A progress identifier is unknown" />
+		
+		<error name="NOMASKCHANNELSELECTOR" code="141" description="No mask channel selector." />
+		
+		
 
 
 		<error name="BEAMLATTICE_INVALID_OBJECTTYPE" code="2000" description="This object type is not valid for beamlattices" />
@@ -406,6 +410,18 @@
 	<class name="MultiPropertyGroupIterator" parent="ResourceIterator">
 		<method name="GetCurrentMultiPropertyGroup" description="Returns the MultiPropertyGroup the iterator points at.">
 			<param name="Resource" type="handle" class="MultiPropertyGroup" pass="return" description="returns the MultiPropertyGroup instance." />
+		</method>
+	</class>
+
+	<class name="Image3DIterator" parent="ResourceIterator">
+		<method name="GetCurrentImage3D" description="Returns the Image3D the iterator points at.">
+			<param name="Resource" type="handle" class="Image3D" pass="return" description="returns the Image3D instance." />
+		</method>
+	</class>
+
+	<class name="VolumetricStackIterator" parent="ResourceIterator">
+		<method name="GetCurrentVolumetricStack" description="Returns the VolumetricStack the iterator points at.">
+			<param name="Resource" type="handle" class="VolumetricStack" pass="return" description="returns the VolumetricStack instance." />
 		</method>
 	</class>
 	
@@ -1050,6 +1066,56 @@
 			<param name="SourceAlpha" type="double" pass="in" description="the source alpha value" />
 			<param name="DestinationAlpha" type="double" pass="in" description="the destination alpha value" />
 		</method>
+
+		<method name="CreateMaskChannelSelector" description="Creates a new mask channel selector.">
+			<param name="Image3D" type="class" class="Image3D" pass="in" description="Image3D Class to reference" />
+			<param name="SourceChannel" type="string" pass="in" description="Name of source channel." />
+			<param name="DestinationChannel" type="string" pass="in" description="Name of destination channel." />
+			<param name="ChannelSelector" type="class" class="Image3DChannelSelector" pass="return" description="Channel Selector Instance" />
+		</method>
+		
+		<method name="HasMaskChannelSelector" description="Returns if a mask channel selector exists.">
+			<param name="SelectorExists" type="bool" pass="return" description="true if a mask channel selector exists." />
+		</method>
+		
+		<method name="ClearMaskChannelSelector" description="Removes a mask channel selector, if it exists.">
+		</method>
+
+		<method name="GetMaskChannelSelector" description="Returns a new mask channel selector. Fails if none exists.">
+			<param name="ChannelSelector" type="class" class="Image3DChannelSelector" pass="return" description="Channel Selector Instance" />
+		</method>
+
+		<method name="GetChannelSelectorCount" description="Returns the channel selector.">
+			<param name="Count" type="uint32" pass="return" description="Count of channel selectors" />
+		</method>
+
+		<method name="GetChannelSelector" description="Returns a channel selector.">
+			<param name="Index" type="uint32" pass="in" description="Index of the channel selector" />
+			<param name="ChannelSelector" type="class" class="Image3DChannelSelector" pass="return" description="Channel Selector Instance" />
+		</method>
+		
+		<method name="AddChannelSelector" description="Adds a new channel selector.">
+			<param name="Image3D" type="class" class="Image3D" pass="in" description="Image3D Class to reference" />
+			<param name="SourceChannel" type="string" pass="in" description="Name of source channel." />
+			<param name="DestinationChannel" type="string" pass="in" description="Name of destination channel." />
+			<param name="ChannelSelector" type="class" class="Image3DChannelSelector" pass="return" description="Channel Selector Instance" />
+		</method>
+		
+		<method name="ClearChannelSelectors" description="Removes all channel selectors.">
+		</method>
+		
+		<method name="ReindexChannelSelector" description="Moves a channel selector to a different position in the list.">
+			<param name="ChannelSelector" type="class" class="Image3DChannelSelector" pass="in" description="ChannelSelector instance" />
+			<param name="Index" type="uint32" pass="in" description="new index of the channel selector. All layers with higher indices will increase by one." />
+		</method>
+
+		<method name="RemoveChannelSelector" description="Removes a channel selector from the stack. Fails if the channel selector does not exist.">
+			<param name="ChannelSelector" type="class" class="Image3DChannelSelector" pass="in" description="channel selector instance." />
+		</method>
+
+		<method name="RemoveChannelSelectorByIndex" description="Removes a channel selector from the stack. Fails if the channel selector does not exist.">
+			<param name="Index" type="uint32" pass="in" description="index of the channel selector" />
+		</method>
 		
 	</class>
 	
@@ -1420,9 +1486,14 @@
 		<method name="GetMultiPropertyGroups" description="creates a MultiPropertyGroupsIterator instance with all MultiPropertyGroup resources.">
 			<param name="ResourceIterator" type="handle" class="MultiPropertyGroupIterator" pass="return" description="returns the iterator instance." />
 		</method>
-		
 		<method name="GetSliceStacks" description="creates a resource iterator instance with all slice stack resources.">
 			<param name="ResourceIterator" type="handle" class="SliceStackIterator" pass="return" description="returns the iterator instance." />
+		</method>
+		<method name="GetVolumetricStacks" description="creates a resource iterator instance with all volumetric stack resources.">
+			<param name="ResourceIterator" type="handle" class="VolumetricStackIterator" pass="return" description="returns the iterator instance." />
+		</method>
+		<method name="GetImage3Ds" description="creates a resource iterator instance with all image3d resources.">
+			<param name="ResourceIterator" type="handle" class="Image3DIterator" pass="return" description="returns the iterator instance." />
 		</method>
 		<method name="MergeToModel" description = "Merges all components and objects which are referenced by a build item into a mesh. The memory is duplicated and a new model is created.">
 			<param name="MergedModelInstance" type="handle" class="Model" pass="return" description="returns the merged model instance" />
@@ -1458,6 +1529,18 @@
 		<method name="AddMultiPropertyGroup" description = "adds an empty MultiPropertyGroup resource to the model.">
 			<param name="MultiPropertyGroupInstance" type="handle" class="MultiPropertyGroup" pass="return" description="returns the new MultiPropertyGroup instance." />
 		</method>
+		
+		<method name="AddImage3D" description="creates a new 3D Image Resource">
+			<param name="SizeX" type="uint32" pass="in" description="the extensions of the image stack in X direction."/>
+			<param name="SizeY" type="uint32" pass="in" description="the extensions of the image stack in Y direction."/>
+			<param name="SheetCount" type="uint32" pass="in" description="the number of sheets in the image stack."/>
+			<param name="Instance" type="handle" class="Image3D" pass="return" description="returns the new Image3D instance" />
+		</method>
+
+		<method name="AddVolumetricStack" description="creates a new Volumetric Stack Resource">
+			<param name="Instance" type="handle" class="VolumetricStack" pass="return" description="returns the new VolumetricStack instance" />
+		</method>
+		
 		<method name="AddBuildItem" description = "adds a build item to the model.">
 			<param name="Object" type="handle" class="Object" pass="in" description="Object instance." />
 			<param name="Transform" type="struct" class="Transform" pass="in" description="Transformation matrix." />

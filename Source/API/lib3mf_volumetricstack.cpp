@@ -42,10 +42,11 @@ using namespace Lib3MF::Impl;
  Class definition of CVolumetricStack 
 **************************************************************************************************************************/
 
-CVolumetricStack::CVolumetricStack(NMR::PModelVolumetricStack pVolumetricStack)
-	:	CResource (pVolumetricStack), m_pVolumetricStack (pVolumetricStack)
+CVolumetricStack::CVolumetricStack(NMR::PModelVolumetricStack pVolumetricStack, NMR::PModel pModel)
+	:	CResource (pVolumetricStack), m_pVolumetricStack (pVolumetricStack), m_pModel (pModel)
 {
-	
+	if (pModel.get() != pVolumetricStack->getModel())
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
 }
 
 
@@ -96,17 +97,25 @@ Lib3MF_uint32 CVolumetricStack::GetLayerCount()
 
 IVolumetricLayer * CVolumetricStack::GetLayer(const Lib3MF_uint32 nIndex)
 {
-	return new CVolumetricLayer (m_pVolumetricStack->getLayer (nIndex));
+	return new CVolumetricLayer (m_pVolumetricStack->getLayer (nIndex), m_pModel);
 }
 
 IVolumetricLayer * CVolumetricStack::AddLayer(const Lib3MF::sTransform Transform, const Lib3MF::eBlendMethod eBlendMethod)
 {
-	return new CVolumetricLayer(m_pVolumetricStack->addLayer (Lib3MF::TransformToModelTransform (Transform), NMR::eModelBlendMethod (eBlendMethod)));
+	return new CVolumetricLayer(m_pVolumetricStack->addLayer (Lib3MF::TransformToModelTransform (Transform), NMR::eModelBlendMethod (eBlendMethod)), m_pModel);
 }
 
 void CVolumetricStack::ReindexLayer(IVolumetricLayer* pLayer, const Lib3MF_uint32 nIndex)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	if (pLayer == nullptr)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+
+	CVolumetricLayer * pLayerClass = dynamic_cast<CVolumetricLayer *> (pLayer);
+
+	if (pLayerClass == nullptr)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+
+	m_pVolumetricStack->reIndexLayer(pLayerClass->getModelLayer().get(), nIndex);
 }
 
 void CVolumetricStack::RemoveLayer(IVolumetricLayer* pLayer)
@@ -127,3 +136,12 @@ void CVolumetricStack::RemoveLayerByIndex(const Lib3MF_uint32 nIndex)
 	m_pVolumetricStack->removeLayerByIndex(nIndex);
 }
 
+void CVolumetricStack::Clear()
+{
+	m_pVolumetricStack->clear();
+}
+
+void CVolumetricStack::ClearUnusedDestinationChannels()
+{
+	m_pVolumetricStack->clearUnusedDstChannels();
+}

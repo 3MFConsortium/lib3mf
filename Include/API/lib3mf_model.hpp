@@ -185,6 +185,15 @@ public:
 
 	void RemoveCustomContentType (const std::string & sExtension);
 
+	IImage3D * AddImage3D(const Lib3MF_uint32 nSizeX, const Lib3MF_uint32 nSizeY, const Lib3MF_uint32 nSheetCount);
+
+	IImage3DIterator * GetImage3Ds();
+
+	IVolumetricStack * AddVolumetricStack();
+
+	IVolumetricStackIterator * GetVolumetricStacks();
+
+
 };
 
 }

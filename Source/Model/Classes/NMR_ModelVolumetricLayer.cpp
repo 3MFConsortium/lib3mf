@@ -126,6 +126,12 @@ namespace NMR {
 		return m_MaskChannelSelector;
 	}
 
+	nfBool CModelVolumetricLayer::hasMaskChannelSelector()
+	{
+		return (m_MaskChannelSelector.get() != nullptr);
+	}
+
+
 	void CModelVolumetricLayer::setMaskChannelSelector(PModelImage3DChannelSelector ChannelSelector)
 	{
 		m_MaskChannelSelector = ChannelSelector;
@@ -133,9 +139,12 @@ namespace NMR {
 
 	void CModelVolumetricLayer::addChannelSelector(PModelImage3DChannelSelector ChannelSelector)
 	{
+		if (ChannelSelector.get() == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 		if (m_ChannelSelectors.size() >= MAX_VOLUMETRIC_CHANNELS)
 			throw CNMRException(NMR_ERROR_TOOMANYCHANNELSELECTORS);
 
+		ChannelSelector->setInternalIndex(getChannelSelectorCount ());
 		m_ChannelSelectors.push_back(ChannelSelector);
 	}
 
@@ -147,20 +156,70 @@ namespace NMR {
 	PModelImage3DChannelSelector CModelVolumetricLayer::getChannelSelector(nfUint32 nIndex)
 	{
 		if (nIndex >= m_ChannelSelectors.size())
-			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+			throw CNMRException(NMR_ERROR_INVALIDINDEX);
 
 		return m_ChannelSelectors[nIndex];
 	}
 
-	void CModelVolumetricLayer::removeChannelSelector(nfUint32 nIndex)
+	void CModelVolumetricLayer::removeChannelSelector(CModelImage3DChannelSelector * pChannelSelector)
+	{
+		if (pChannelSelector == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		nfUint32 nNewIndex = pChannelSelector->getInternalIndex();
+		if (m_ChannelSelectors[nNewIndex].get() != pChannelSelector)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		removeChannelSelectorByIndex(nNewIndex);
+	}
+
+	void CModelVolumetricLayer::removeChannelSelectorByIndex(nfUint32 nIndex)
 	{
 		if (nIndex >= m_ChannelSelectors.size())
-			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+			throw CNMRException(NMR_ERROR_INVALIDINDEX);
 
 		auto iIter = m_ChannelSelectors.begin();
 		iIter += nIndex;
 		m_ChannelSelectors.erase (iIter);
 	}
+
+	void CModelVolumetricLayer::reIndexChannelSelector(CModelImage3DChannelSelector * pChannelSelector, nfUint32 nNewIndex)
+	{
+		nfUint32 nCount = getChannelSelectorCount();
+		if (nNewIndex >= nCount)
+			throw CNMRException(NMR_ERROR_INVALIDINDEX);
+		if (pChannelSelector == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+		__NMRASSERT(nCount > 0);
+
+		nfUint32 nOldIndex = pChannelSelector->getInternalIndex();
+		PModelImage3DChannelSelector pOldSelector = m_ChannelSelectors[nOldIndex];
+		if (pOldSelector.get() != pChannelSelector)
+			throw CNMRException(NMR_ERROR_COULDNOTREINDEXCHANNELSELECTOR);
+
+		if (nOldIndex < nNewIndex) {
+			for (nfUint32 nIndex = nOldIndex; nIndex < nNewIndex; nIndex++) {
+				auto pReindexSelector = m_ChannelSelectors[nIndex + 1];
+				m_ChannelSelectors[nIndex] = pReindexSelector;
+				pReindexSelector->setInternalIndex(nIndex);
+			}
+			m_ChannelSelectors[nNewIndex] = pOldSelector;
+			pOldSelector->setInternalIndex(nNewIndex);
+
+
+		}
+		else if (nOldIndex > nNewIndex) {
+			for (nfUint32 nIndex = nOldIndex; nIndex > nNewIndex; nIndex--) {
+				auto pReindexSelector = m_ChannelSelectors[nIndex - 1];
+				m_ChannelSelectors[nIndex] = pReindexSelector;
+				pReindexSelector->setInternalIndex(nIndex);
+			}
+			m_ChannelSelectors[nNewIndex] = pOldSelector;
+			pOldSelector->setInternalIndex(nNewIndex);
+
+		}
+	}
+
 
 	void CModelVolumetricLayer::clearChannelSelectors()
 	{

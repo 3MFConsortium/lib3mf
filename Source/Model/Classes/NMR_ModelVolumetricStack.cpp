@@ -123,11 +123,48 @@ namespace NMR {
 		return 0xfffffff;
 	}
 
+	bool CModelVolumetricStack::hasDstChannel(const std::string & sName)
+	{
+		auto iIter = m_DstChannelNameMap.find(sName);
+		if (iIter != m_DstChannelNameMap.end())
+			return true;
+
+		return false;
+
+	}
+
+
 	void CModelVolumetricStack::clearDstChannels()
 	{
 		m_DstChannelNameMap.clear();
 		m_DstChannels.clear();
 	}
+
+	void CModelVolumetricStack::clearUnusedDstChannels()
+	{
+		nfUint32 nChannelCount = getDstChannelCount();
+		if (nChannelCount > 0) {
+			std::set <std::string> m_Channels;
+
+			for (auto iLayer : m_Layers) {
+				nfUint32 nSelectorCount = iLayer->getChannelSelectorCount();
+				for (nfUint32 nIndex = 0; nIndex < nSelectorCount; nIndex++) {
+					auto pSelector = iLayer->getChannelSelector(nIndex);
+					m_Channels.insert(pSelector->getSourceChannel());
+					m_Channels.insert(pSelector->getDstChannel());
+				}
+			}
+
+			for (nfUint32 nIndex = nChannelCount - 1; nIndex >= 0; nIndex--) {
+				auto pDstChannel = getDstChannel(nIndex);
+				auto iIter = m_Channels.find(pDstChannel->getName());
+				if (iIter == m_Channels.end())
+					removeDstChannel(nIndex);
+			}
+		}
+
+	}
+
 
 	nfUint32 CModelVolumetricStack::getLayerCount()
 	{
@@ -222,6 +259,12 @@ namespace NMR {
 			pOldLayer->setInternalIndex(nNewIndex);
 
 		}
+	}
+
+	void CModelVolumetricStack::clear()
+	{
+		m_Layers.clear();
+		clearDstChannels();
 	}
 
 }

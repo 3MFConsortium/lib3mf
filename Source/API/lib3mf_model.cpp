@@ -57,6 +57,10 @@ Abstract: This is a stub class definition of CModel
 #include "lib3mf_compositematerialsiterator.hpp"
 #include "lib3mf_multipropertygroup.hpp"
 #include "lib3mf_multipropertygroupiterator.hpp"
+#include "lib3mf_image3d.hpp"
+#include "lib3mf_volumetricstack.hpp"
+#include "lib3mf_image3diterator.hpp"
+#include "lib3mf_volumetricstackiterator.hpp"
 
 // Include custom headers here.
 #include "Model/Classes/NMR_ModelMeshObject.h"
@@ -618,5 +622,47 @@ void CModel::AddCustomContentType (const std::string & sExtension, const std::st
 void CModel::RemoveCustomContentType (const std::string & sExtension)
 {
 	m_model->removeCustomContentType(sExtension);
+}
+
+IImage3D * CModel::AddImage3D(const Lib3MF_uint32 nSizeX, const Lib3MF_uint32 nSizeY, const Lib3MF_uint32 nSheetCount)
+{
+	NMR::PModelImage3D pResource = NMR::CModelImage3D::make(model().generateResourceID(), &model(), nSizeX, nSizeY, nSheetCount);
+	model().addResource(pResource);
+
+	return new CImage3D(pResource);
+
+}
+
+IImage3DIterator * CModel::GetImage3Ds()
+{
+	auto pResult = std::unique_ptr<CImage3DIterator>(new CImage3DIterator());
+	Lib3MF_uint32 nImage3DCount = model().getImage3DCount();
+
+	for (Lib3MF_uint32 nIdx = 0; nIdx < nImage3DCount; nIdx++) {
+		auto resource = model().getImage3DResource(nIdx);
+		pResult->addResource(resource);
+	}
+	return pResult.release();
+}
+
+IVolumetricStack * CModel::AddVolumetricStack()
+{
+	NMR::PModelVolumetricStack pResource = NMR::CModelVolumetricStack::make(model().generateResourceID(), &model());
+	model().addResource(pResource);
+
+	return new CVolumetricStack (pResource, m_model);
+}
+
+IVolumetricStackIterator * CModel::GetVolumetricStacks()
+{
+	auto pResult = std::unique_ptr<CVolumetricStackIterator>(new CVolumetricStackIterator());
+	Lib3MF_uint32 nVolumeStackCount = model().getVolumetricStackCount();
+
+	for (Lib3MF_uint32 nIdx = 0; nIdx < nVolumeStackCount; nIdx++) {
+		auto resource = model().getVolumetricStackResource(nIdx);
+		pResult->addResource(resource);
+	}
+	return pResult.release();
+
 }
 

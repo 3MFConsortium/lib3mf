@@ -136,3 +136,9 @@ void CImage3DChannelSelector::GetValueRange(Lib3MF_double & dMin, Lib3MF_double 
 	dMax = m_pSelector->getMaxValue();
 }
 
+
+NMR::PModelImage3DChannelSelector CImage3DChannelSelector::getModelSelector()
+{
+	return m_pSelector;
+}
+

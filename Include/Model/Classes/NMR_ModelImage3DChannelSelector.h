@@ -64,6 +64,8 @@ namespace NMR {
 		
 		eModelTextureFilter m_eFilter;
 
+		nfUint32 m_nInternalIndex;
+
 	protected:
 
 		CModelImage3DChannelSelector(PPackageResourceID sImage3DId, std::string sSourceChannel, std::string sDstChannel);
@@ -101,6 +103,9 @@ namespace NMR {
 		void setTileStyleW(eModelTextureTileStyle eValue);
 
 		void setFilter(eModelTextureFilter eValue);
+
+		void setInternalIndex(nfUint32 nIndex);
+		nfUint32 getInternalIndex();
 
 	};
 
