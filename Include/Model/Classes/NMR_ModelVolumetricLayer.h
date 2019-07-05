@@ -54,6 +54,8 @@ namespace NMR {
 
 	class CModelVolumetricLayer {
 	private:
+		nfUint32 m_nInternalIndex;
+
 		MODELTRANSFORM m_Transform;
 		eModelBlendMethod m_BlendMethod;
 		nfDouble m_dSourceAlpha;
@@ -91,6 +93,8 @@ namespace NMR {
 		void removeChannelSelector (nfUint32 nIndex);
 		void clearChannelSelectors();
 
+		void setInternalIndex (nfUint32 nIndex);
+		nfUint32 getInternalIndex();
 
 	};
 

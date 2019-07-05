@@ -42,7 +42,7 @@ NMR_ModelVolumetricLayer.cpp implements a volumetric 3D layer for the volumetric
 namespace NMR {
 
 	CModelVolumetricStack::CModelVolumetricStack(_In_ const ModelResourceID sID, _In_ CModel * pModel)
-		: CModelResource (sID, pModel)
+		: CModelResource(sID, pModel)
 	{
 
 	}
@@ -87,15 +87,20 @@ namespace NMR {
 		return m_DstChannels[nIndex];
 	}
 
-	PModelVolumetricDstChannel CModelVolumetricStack::addDstChannel(std::string & sName, nfDouble dBackground)
+	nfUint32 CModelVolumetricStack::addDstChannel(const std::string & sName, nfDouble dBackground)
 	{
 		if (m_DstChannels.size() >= MAX_VOLUMETRIC_CHANNELS)
 			throw CNMRException(NMR_ERROR_TOOMANYVOLUMETRICCHANNELS);
+		if (findDstChannel (sName) < m_DstChannels.size())
+			throw CNMRException(NMR_ERROR_DUPLICATEVOLUMETRICCHANNEL);
+
+		nfUint32 nNewIndex = (nfUint32) m_DstChannels.size();
 
 		PModelVolumetricDstChannel pDstChannel = std::make_shared<CModelVolumetricDstChannel>(sName, dBackground);
 		m_DstChannels.push_back(pDstChannel);
 
-		return pDstChannel;
+		m_DstChannelNameMap.insert(std::make_pair(sName, nNewIndex));
+		return nNewIndex;
 	}
 
 	void CModelVolumetricStack::removeDstChannel(nfUint32 nIndex)
@@ -105,7 +110,23 @@ namespace NMR {
 		auto iIterator = m_DstChannels.begin();
 		iIterator += nIndex;
 		
+		m_DstChannelNameMap.erase((*iIterator)->getName ());
 		m_DstChannels.erase(iIterator);
+	}
+
+	nfUint32 CModelVolumetricStack::findDstChannel(const std::string & sName)
+	{
+		auto iIter = m_DstChannelNameMap.find(sName);
+		if (iIter != m_DstChannelNameMap.end())
+			return iIter->second;
+
+		return 0xfffffff;
+	}
+
+	void CModelVolumetricStack::clearDstChannels()
+	{
+		m_DstChannelNameMap.clear();
+		m_DstChannels.clear();
 	}
 
 	nfUint32 CModelVolumetricStack::getLayerCount()
@@ -127,6 +148,7 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_TOOMANYVOLUMETRICCHANNELS);
 
 		PModelVolumetricLayer pLayer = CModelVolumetricLayer::make (Transform, BlendMethod);
+		pLayer->setInternalIndex(getLayerCount());
 		m_Layers.push_back(pLayer);
 
 		return pLayer;
@@ -138,21 +160,69 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_TOOMANYVOLUMETRICCHANNELS);
 
 		PModelVolumetricLayer pLayer = CModelVolumetricLayer::make_from(pSourceLayer, PackageIDMap);
+		pLayer->setInternalIndex (getLayerCount ());
 		m_Layers.push_back(pLayer);
 
 		return pLayer;
 	}
 
-	void CModelVolumetricStack::removeLayer(nfUint32 nIndex)
-	{
-		if (nIndex >= m_Layers.size())
-			throw CNMRException(NMR_ERROR_INVALIDINDEX);
-		auto iIterator = m_Layers.begin();
-		iIterator += nIndex;
 
-		m_Layers.erase(iIterator);
+	void CModelVolumetricStack::removeLayerByIndex(nfUint32 nIndex)
+	{
+		nfUint32 nCount = getLayerCount();
+		if (nIndex >= nCount)
+			throw CNMRException(NMR_ERROR_INVALIDINDEX);
+
+		m_Layers.erase(m_Layers.begin () + nIndex);		
 	}
 
+	void CModelVolumetricStack::removeLayer(CModelVolumetricLayer * pLayer)
+	{
+		if (pLayer == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		nfUint32 nIndex = pLayer->getInternalIndex();
+		if (m_Layers[nIndex].get() != pLayer)
+			throw CNMRException(NMR_ERROR_COULDNOTREMOVEVOLUMETRICLAYER);
+
+		removeLayerByIndex (nIndex);
+	}
+
+	void CModelVolumetricStack::reIndexLayer(CModelVolumetricLayer * pLayer, nfUint32 nNewIndex)
+	{
+		nfUint32 nCount = getLayerCount();
+		if (nNewIndex >= nCount)
+			throw CNMRException(NMR_ERROR_INVALIDINDEX);
+		if (pLayer == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+		__NMRASSERT (nCount > 0);
+
+		nfUint32 nOldIndex = pLayer->getInternalIndex();
+		PModelVolumetricLayer pOldLayer = m_Layers[nOldIndex];
+		if (pOldLayer.get () != pLayer)
+			throw CNMRException(NMR_ERROR_COULDNOTREINDEXVOLUMETRICLAYER);
+
+		if (nOldIndex < nNewIndex) {
+			for (nfUint32 nIndex = nOldIndex; nIndex < nNewIndex; nIndex++) {
+				auto pReindexLayer = m_Layers[nIndex + 1];
+				m_Layers[nIndex] = pReindexLayer;
+				pReindexLayer->setInternalIndex(nIndex);
+			}
+			m_Layers[nNewIndex] = pOldLayer;
+			pOldLayer->setInternalIndex(nNewIndex);
+
+
+		} else if (nOldIndex > nNewIndex) {
+			for (nfUint32 nIndex = nOldIndex; nIndex > nNewIndex; nIndex--) {
+				auto pReindexLayer = m_Layers[nIndex - 1];
+				m_Layers[nIndex] = pReindexLayer;
+				pReindexLayer->setInternalIndex(nIndex);
+			}
+			m_Layers[nNewIndex] = pOldLayer;
+			pOldLayer->setInternalIndex(nNewIndex);
+
+		}
+	}
 
 }
 

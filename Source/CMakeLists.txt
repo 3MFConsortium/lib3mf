@@ -58,6 +58,8 @@ Source/API/lib3mf_texture2d.cpp
 Source/API/lib3mf_texture2dgroup.cpp
 Source/API/lib3mf_texture2dgroupiterator.cpp
 Source/API/lib3mf_texture2diterator.cpp
+Source/API/lib3mf_volumetriclayer.cpp
+Source/API/lib3mf_volumetricstack.cpp
 Source/API/lib3mf_writer.cpp
 Source/API/lib3mf_utils.cpp
 Source/Common/3MF_ProgressMonitor.cpp

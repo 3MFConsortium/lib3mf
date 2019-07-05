@@ -41,7 +41,7 @@ NMR_ModelVoLayer.cpp implements the Model Texture Class.
 
 namespace NMR {
 
-	CModelVolumetricDstChannel::CModelVolumetricDstChannel(std::string & sName, nfDouble dBackground)
+	CModelVolumetricDstChannel::CModelVolumetricDstChannel(const std::string & sName, nfDouble dBackground)
 		: m_sName (sName), m_dBackground (dBackground)
 	{
 
@@ -64,10 +64,6 @@ namespace NMR {
 		return m_dBackground;
 	}
 
-	void CModelVolumetricDstChannel::setName(const std::string & sName)
-	{
-		m_sName = sName;
-	}
 
 	void CModelVolumetricDstChannel::setBackground(const nfDouble dBackground)
 	{

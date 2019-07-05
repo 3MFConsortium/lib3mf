@@ -401,6 +401,9 @@ namespace NMR {
 		case NMR_ERROR_TOOMANYCHANNELSELECTORS: return "Too many channel selectors";
 		case NMR_ERROR_TOOMANYVOLUMETRICCHANNELS: return "Too many volumetric channels";
 		case NMR_ERROR_COULDNOTMAPPACKAGEID: return "Could not map package ID";
+		case NMR_ERROR_DUPLICATEVOLUMETRICCHANNEL: return "Duplicate volumetric channel";
+		case NMR_ERROR_COULDNOTREMOVEVOLUMETRICLAYER: return "Could not remove volumetric layer";
+		case NMR_ERROR_COULDNOTREINDEXVOLUMETRICLAYER: return "Could not reindex volumetric layer";
 
 		// XML Parser Error Constants(0x9XXX)
 		case NMR_ERROR_XMLPARSER_INVALIDATTRIBVALUE: return "Invalid XML attribute value";

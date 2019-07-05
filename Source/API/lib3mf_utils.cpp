@@ -57,3 +57,24 @@ sLib3MFTransform Lib3MF::MatrixToTransform(const NMR::NMATRIX3 matrix)
 	return transform;
 }
 
+NMR::MODELTRANSFORM TransformToModelTransform(const sLib3MFTransform Transform)
+{
+	NMR::MODELTRANSFORM ModelTransform;
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 3; j++)
+			ModelTransform.m_fFields[j][i] = Transform.m_Fields[i][j];
+	}
+	return ModelTransform;
+
+}
+
+sLib3MFTransform ModelTransformToTransform(const NMR::MODELTRANSFORM ModelTransform)
+{
+	sLib3MFTransform transform;
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 3; j++)
+			transform.m_Fields[i][j] = ModelTransform.m_fFields[j][i];
+	}
+	return transform;
+}
+

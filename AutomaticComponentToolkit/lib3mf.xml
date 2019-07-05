@@ -191,6 +191,7 @@
 		<option name="NoBlendMethod" value="0"/>
 		<option name="Mix" value="1"/>
 		<option name="Multiply" value="2"/>
+		<option name="Mask" value="3"/>
 	</enum>
 
 	<struct name="Triangle">
@@ -1001,6 +1002,124 @@
 		
 	</class>
 	
+
+	<class name="VolumetricLayer">
+
+		<method name="GetTransform" description="Retrieves the transform of the layer.">
+			<param name="Transform" type="struct" class="Transform" pass="return" description="The transform matrix" />
+		</method>
+	
+		<method name="SetTransform" description="Sets the transform of the layer.">
+			<param name="Transform" type="struct" class="Transform" pass="in" description="The transform matrix" />
+		</method>
+
+		<method name="GetBlendMethod" description="Retrieves the transform of the layer.">
+			<param name="BlendMethod" type="enum" class="BlendMethod" pass="return" description="The blend method" />
+		</method>
+	
+		<method name="SetBlendMethod" description="Sets the transform of the layer.">
+			<param name="BlendMethod" type="enum" class="BlendMethod" pass="in" description="The blend method" />
+		</method>
+
+		<method name="GetSourceAlpha" description="Retrieves the source alpha value of the layer.">
+			<param name="SourceAlpha" type="double" pass="return" description="the source alpha value" />
+		</method>
+	
+		<method name="SetSourceAlpha" description="Sets the source alpha value of the layer.">
+			<param name="SourceAlpha" type="double" pass="in" description="the source alpha value" />
+		</method>
+		
+		<method name="GetDestinationAlpha" description="Retrieves the destination alpha value of the layer.">
+			<param name="DestinationAlpha" type="double" pass="return" description="the destination alpha value" />
+		</method>
+	
+		<method name="SetDestinationAlpha" description="Sets the destination alpha value of the layer.">
+			<param name="DestinationAlpha" type="double" pass="in" description="the destination alpha value" />
+		</method>
+
+		<method name="GetInformation" description="Retrieves all properties of the layer.">
+			<param name="Transform" type="struct" class="Transform" pass="out" description="The transform matrix" />
+			<param name="BlendMethod" type="enum" class="BlendMethod" pass="out" description="The blend method" />
+			<param name="SourceAlpha" type="double" pass="out" description="the source alpha value" />
+			<param name="DestinationAlpha" type="double" pass="out" description="the destination alpha value" />
+		</method>
+	
+		<method name="SetInformation" description="Sets all properties of the layer.">
+			<param name="Transform" type="struct" class="Transform" pass="in" description="The transform matrix" />
+			<param name="BlendMethod" type="enum" class="BlendMethod" pass="in" description="The blend method" />
+			<param name="SourceAlpha" type="double" pass="in" description="the source alpha value" />
+			<param name="DestinationAlpha" type="double" pass="in" description="the destination alpha value" />
+		</method>
+		
+	</class>
+	
+	
+	<class name="VolumetricStack" parent="Resource">
+
+		<method name="Clear" description="Clears all destination channels and layers of the stack.">
+		</method>
+
+		<method name="ClearUnusedDestinationChannels" description="Clears all unused destination channels of the stack.">
+		</method>
+		
+		<method name="GetDestinationChannelCount" description="Retrieves the number of Destination Channels.">
+			<param name="Count" type="uint32" pass="return" description="number of destination channels" />
+		</method>
+	
+		<method name="AddDestinationChannel" description="Adds a new destination channel.">
+			<param name="Name" type="string" pass="in" description="Name of Destination Channel. Must be unique in the stack." />
+			<param name="Background" type="double" pass="in" description="Background of Destination Channel" />
+			<param name="Index" type="uint32" pass="return" description="Index of Destination Channel" />
+		</method>
+		
+		<method name="UpdateDestinationChannel" description="Changes a destination channels background.">
+			<param name="Index" type="uint32" pass="in" description="Index of Destination Channel" />
+			<param name="Background" type="double" pass="in" description="Background of Destination Channel" />
+		</method>
+
+		<method name="UpdateDestinationChannelByName" description="Changes a destination channels background.">
+			<param name="Name" type="string" pass="in" description="Name of Destination Channel" />
+			<param name="Background" type="double" pass="in" description="Background of Destination Channel" />
+		</method>
+
+		<method name="RemoveDestinationChannel" description="Removes a destination channel. Fails if channel is still referenced in the stack.">
+			<param name="Index" type="uint32" pass="in" description="Index of Destination Channel" />
+		</method>
+
+		<method name="RemoveDestinationChannelByName" description="Removes a destination channel. Fails if channel is still referenced in the stack.">
+			<param name="Name" type="string" pass="in" description="Name of Destination Channel" />
+		</method>
+		
+		<method name="GetLayerCount" description="Retrieves the number of Layers.">
+			<param name="Count" type="uint32" pass="return" description="number of layers." />
+		</method>
+		
+		<method name="GetLayer" description="Retrieves a layer.">
+			<param name="Index" type="uint32" pass="in" description="index of the layer" />
+			<param name="Layer" type="class" class="VolumetricLayer" pass="return" description="index of the layer" />
+		</method>
+
+		<method name="AddLayer" description="Adds a new layer.">
+			<param name="Transform" type="struct" class="Transform" pass="in" description="transform of the layer" />
+			<param name="BlendMethod" type="enum" class="BlendMethod" pass="in" description="BlendMethod of the layer" />
+			<param name="Layer" type="class" class="VolumetricLayer" pass="return" description="Layer instance" />
+		</method>
+
+		<method name="ReindexLayer" description="Moves a layer to a different position in the stack.">
+			<param name="Layer" type="class" class="VolumetricLayer" pass="in" description="layer instance" />
+			<param name="Index" type="uint32" pass="in" description="new index of the layer. All layers with higher indices will increase by one." />
+		</method>
+
+		<method name="RemoveLayer" description="Removes a layer from the stack. Fails if the layer does not exist.">
+			<param name="Layer" type="class" class="VolumetricLayer" pass="in" description="layer instance." />
+		</method>
+
+		<method name="RemoveLayerByIndex" description="Removes a layer from the stack. Fails if the layer does not exist.">
+			<param name="Index" type="uint32" pass="in" description="index of the layer" />
+		</method>
+		
+	</class>
+
 	
 	<class name="Attachment">
 		<method name="GetPath" description = "Retrieves an attachment's package path.">

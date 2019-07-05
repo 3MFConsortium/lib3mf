@@ -1118,6 +1118,15 @@ Model error codes (0x8XXX)
 // Could not map package ID
 #define NMR_ERROR_COULDNOTMAPPACKAGEID 0x80EC
 
+// Duplicate volumetric channel
+#define NMR_ERROR_DUPLICATEVOLUMETRICCHANNEL 0x80ED
+
+// Could not remove volumetric layer
+#define NMR_ERROR_COULDNOTREMOVEVOLUMETRICLAYER 0x80EE
+
+// Could not reindex volumetric layer
+#define NMR_ERROR_COULDNOTREINDEXVOLUMETRICLAYER 0x80EF
+
 /*-------------------------------------------------------------------
 XML Parser Error Constants (0x9XXX)
 -------------------------------------------------------------------*/

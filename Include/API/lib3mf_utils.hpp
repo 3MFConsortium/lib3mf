@@ -36,12 +36,17 @@ Abstract: This file contains utilties used in the API of lib3mf
 
 // Include custom headers here.
 #include "Common/Math/NMR_Matrix.h" 
+#include "Model/Classes/NMR_ModelTypes.h" 
 
 namespace Lib3MF {
 
 NMR::NMATRIX3 TransformToMatrix(const sLib3MFTransform Transform);
 
 sLib3MFTransform MatrixToTransform(const NMR::NMATRIX3 matrix);
+
+NMR::MODELTRANSFORM TransformToModelTransform(const sLib3MFTransform Transform);
+
+sLib3MFTransform ModelTransformToTransform(const NMR::MODELTRANSFORM matrix);
 
 }
 

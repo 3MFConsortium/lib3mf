@@ -43,7 +43,7 @@ namespace NMR {
 
 
 	CModelVolumetricLayer::CModelVolumetricLayer(MODELTRANSFORM Transform, eModelBlendMethod BlendMethod)
-		: m_Transform (Transform), m_BlendMethod (BlendMethod), m_dSourceAlpha (0.0), m_dDstAlpha (0.0)
+		: m_Transform (Transform), m_BlendMethod (BlendMethod), m_dSourceAlpha (0.0), m_dDstAlpha (0.0), m_nInternalID (0)
 	{
 
 	}
@@ -166,6 +166,18 @@ namespace NMR {
 	{
 		m_ChannelSelectors.clear();
 	}
+
+	void CModelVolumetricLayer::setInternalIndex(nfUint32 nIndex)
+	{
+		m_nInternalIndex = nIndex;
+	}
+
+	nfUint32 CModelVolumetricLayer::getInternalIndex()
+	{
+		return m_nInternalIndex;
+	}
+
+
 
 }
 

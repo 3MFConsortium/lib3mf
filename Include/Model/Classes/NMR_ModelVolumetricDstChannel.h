@@ -51,13 +51,12 @@ namespace NMR {
 		nfDouble m_dBackground;
 	
 	public:	
-		CModelVolumetricDstChannel (std::string & sName, nfDouble dBackground);
+		CModelVolumetricDstChannel (const std::string & sName, nfDouble dBackground);
 		~CModelVolumetricDstChannel();
 
-		std::string getName ();
+		std::string getName (); // Name should be readonly!
 		nfDouble getBackground ();
 
-		void setName(const std::string & sName);
 		void setBackground(const nfDouble dBackground);
 
 	};
