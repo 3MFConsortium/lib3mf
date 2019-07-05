@@ -43,7 +43,7 @@ namespace NMR {
 
 
 	CModelVolumetricLayer::CModelVolumetricLayer(MODELTRANSFORM Transform, eModelBlendMethod BlendMethod)
-		: m_Transform (Transform), m_BlendMethod (BlendMethod), m_dSourceAlpha (0.0), m_dDstAlpha (0.0), m_nInternalID (0)
+		: m_Transform (Transform), m_BlendMethod (BlendMethod), m_dSourceAlpha (0.0), m_dDstAlpha (0.0), m_nInternalIndex (0)
 	{
 
 	}

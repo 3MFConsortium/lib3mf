@@ -101,7 +101,7 @@ IVolumetricLayer * CVolumetricStack::GetLayer(const Lib3MF_uint32 nIndex)
 
 IVolumetricLayer * CVolumetricStack::AddLayer(const Lib3MF::sTransform Transform, const Lib3MF::eBlendMethod eBlendMethod)
 {
-	return new CVolumetricLayer(m_pVolumetricStack->addLayer (TransformToModelTransform (Transform), NMR::eModelBlendMethod (eBlendMethod)));
+	return new CVolumetricLayer(m_pVolumetricStack->addLayer (Lib3MF::TransformToModelTransform (Transform), NMR::eModelBlendMethod (eBlendMethod)));
 }
 
 void CVolumetricStack::ReindexLayer(IVolumetricLayer* pLayer, const Lib3MF_uint32 nIndex)
