@@ -404,6 +404,13 @@ namespace NMR {
 		case NMR_ERROR_DUPLICATEVOLUMETRICCHANNEL: return "Duplicate volumetric channel";
 		case NMR_ERROR_COULDNOTREMOVEVOLUMETRICLAYER: return "Could not remove volumetric layer";
 		case NMR_ERROR_COULDNOTREINDEXVOLUMETRICLAYER: return "Could not reindex volumetric layer";
+		case NMR_ERROR_COULDNOTREINDEXCHANNELSELECTOR: return "Could not reindex channel selector";
+		case NMR_ERROR_DUPLICATEIMAGE3DNAME: return "Duplicate Image3D Name";
+		case NMR_ERROR_DUPLICATEIMAGE3DSIZE: return "Duplicate Image3D Size";			
+		case NMR_ERROR_DUPLICATEIMAGE3DSHEETCOUNT: return "Duplicate Image3D Sheet count";
+		case NMR_ERROR_MISSINGIMAGE3DSIZE: return "Missing 3D Image Size";
+		case NMR_ERROR_MISSINGIMAGE3DSHEETCOUNT: return "Missing 3D Image Sheetcount";
+		case NMR_ERROR_MISSINGIMAGE3DNAME: return "Missing 3D Image Name";
 
 		// XML Parser Error Constants(0x9XXX)
 		case NMR_ERROR_XMLPARSER_INVALIDATTRIBVALUE: return "Invalid XML attribute value";

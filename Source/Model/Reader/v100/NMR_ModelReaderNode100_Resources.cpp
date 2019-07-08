@@ -40,6 +40,8 @@ XML Model Stream.
 #include "Model/Reader/v100/NMR_ModelReaderNode100_CompositeMaterials.h"
 #include "Model/Reader/v100/NMR_ModelReaderNode100_MultiProperties.h"
 #include "Model/Reader/Slice1507/NMR_ModelReader_Slice1507_SliceStack.h"
+#include "Model/Reader/Volumetric1907/NMR_ModelReaderNode_Volumetric1907_Image3D.h"
+#include "Model/Reader/Volumetric1907/NMR_ModelReaderNode_Volumetric1907_VolumetricStack.h"
 
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Common/NMR_StringUtils.h"
@@ -141,6 +143,22 @@ namespace NMR {
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
 		}
 
+		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_VOLUMETRICSPEC) == 0) {
+			if (strcmp(pChildName, XML_3MF_ELEMENT_IMAGE3D) == 0) {
+
+				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode_Volumetric1907_Image3D>(
+					m_pModel, m_pWarnings);
+				pXMLNode->parseXML(pXMLReader);
+			}
+			else if (strcmp(pChildName, XML_3MF_ELEMENT_VOLUMETRICSTACK) == 0) {
+
+				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode_Volumetric1907_VolumetricStack>(
+					m_pModel, m_pWarnings);
+				pXMLNode->parseXML(pXMLReader);
+			}
+			else
+				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
+		}
 
 	}
 

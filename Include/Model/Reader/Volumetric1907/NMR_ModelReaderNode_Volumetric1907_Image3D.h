@@ -36,14 +36,31 @@ NMR_ModelReaderNode_Volumetric1907_Image3D.h covers the official 3MF volumetric 
 #include "Model/Classes/NMR_ModelComponent.h"
 #include "Model/Classes/NMR_ModelComponentsObject.h"
 #include "Model/Classes/NMR_ModelObject.h"
+#include "Model/Classes/NMR_ModelImage3D.h"
 
 namespace NMR {
 
 	class CModelReaderNode_Volumetric1907_Image3D : public CModelReaderNode {
 	private:
 	protected:
+
+		CModel * m_pModel;
+
+		ModelResourceID m_nID;
+
+		nfBool m_bHasName;
+		std::string m_sName;
+
+		nfUint32 m_nSizeX;
+		nfUint32 m_nSizeY;
+		nfUint32 m_nSheetCount;		
+
+		PModelImage3D m_pImage3D;
+
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 		virtual void OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace);
+		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
+
 	public:
 		CModelReaderNode_Volumetric1907_Image3D() = delete;
 		CModelReaderNode_Volumetric1907_Image3D(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings);

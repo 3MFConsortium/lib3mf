@@ -30,9 +30,10 @@ NMR_ModelReaderNode_Volumetric1907_Image3D.cpp covers the official 3MF volumetri
 --*/
 
 #include "Model/Reader/Volumetric1907/NMR_ModelReaderNode_Volumetric1907_Image3D.h"
+#include "Model/Reader/Volumetric1907/NMR_ModelReaderNode_Volumetric1907_Image3DSheet.h"
 
 #include "Model/Classes/NMR_ModelConstants.h"
-#include "Model/Classes/NMR_ModelMeshObject.h"
+#include "Model/Classes/NMR_ModelImage3D.h"
 #include "Model/Classes/NMR_ModelResource.h"
 #include "Model/Classes/NMR_Model.h"
 
@@ -44,9 +45,17 @@ namespace NMR {
 
 
 	CModelReaderNode_Volumetric1907_Image3D::CModelReaderNode_Volumetric1907_Image3D(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings)
-		: CModelReaderNode(pWarnings)		
-		
+		: CModelReaderNode(pWarnings),
+			m_pModel (pModel),
+			m_nID (0),
+			m_bHasName (false),
+			m_nSizeX (0),
+			m_nSizeY (0),
+			m_nSheetCount (0)
+
 	{
+		if (pModel == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 	}
 
 	void CModelReaderNode_Volumetric1907_Image3D::parseXML(_In_ CXmlReader * pXMLReader)
@@ -57,13 +66,63 @@ namespace NMR {
 		// Parse attribute
 		parseAttributes(pXMLReader);
 
+		if (!m_bHasName)
+			throw CNMRException(NMR_ERROR_MISSINGIMAGE3DNAME);
+		if (m_nID == 0)
+			throw CNMRException(NMR_ERROR_MISSINGMODELRESOURCEID);
+		if (m_nSizeX == 0)
+			throw CNMRException(NMR_ERROR_MISSINGIMAGE3DSIZE);
+		if (m_nSizeY == 0)
+			throw CNMRException(NMR_ERROR_MISSINGIMAGE3DSIZE);
+		if (m_nSheetCount == 0)
+			throw CNMRException(NMR_ERROR_MISSINGIMAGE3DSHEETCOUNT);
+
+		m_pImage3D = CModelImage3D::make(m_nID, m_pModel, m_nSizeX, m_nSizeY, m_nSheetCount);
+
 		// Parse Content
 		parseContent(pXMLReader);
+
+		m_pModel->addResource(m_pImage3D);
 	}
 	
 	
 	void CModelReaderNode_Volumetric1907_Image3D::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
 	{
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_IMAGE3D_ID) == 0) {
+			if (m_nID != 0)
+				throw CNMRException(NMR_ERROR_DUPLICATERESOURCEID);
+
+			// Convert to integer and make a input and range check!
+			m_nID = fnStringToUint32(pAttributeValue);
+		}
+		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_IMAGE3D_NAME) == 0) {
+			if (m_bHasName)
+				throw CNMRException(NMR_ERROR_DUPLICATEIMAGE3DNAME);
+
+			m_bHasName = true;
+			m_sName = pAttributeName;
+		}
+		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_IMAGE3D_SIZEX) == 0) {
+			if (m_nSizeX != 0)
+				throw CNMRException(NMR_ERROR_DUPLICATEIMAGE3DSIZE);
+
+			// Convert to integer and make a input and range check!
+			m_nSizeX = fnStringToUint32(pAttributeValue);
+		}
+		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_IMAGE3D_SIZEY) == 0) {
+			if (m_nSizeY != 0)
+				throw CNMRException(NMR_ERROR_DUPLICATEIMAGE3DSIZE);
+
+			// Convert to integer and make a input and range check!
+			m_nSizeY = fnStringToUint32(pAttributeValue);
+		}
+		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_IMAGE3D_SHEETCOUNT) == 0) {
+			if (m_nSheetCount != 0)
+				throw CNMRException(NMR_ERROR_DUPLICATEIMAGE3DSHEETCOUNT);
+
+			// Convert to integer and make a input and range check!
+			m_nSheetCount = fnStringToUint32(pAttributeValue);
+		}
 	}
 	
 	
@@ -72,6 +131,23 @@ namespace NMR {
 	}
 
 
+	void CModelReaderNode_Volumetric1907_Image3D::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
+	{
+		__NMRASSERT(pChildName);
+		__NMRASSERT(pXMLReader);
+		__NMRASSERT(pNameSpace);
+
+		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_VOLUMETRICSPEC) == 0) {
+			if (strcmp(pChildName, XML_3MF_ELEMENT_IMAGE3DSHEET) == 0)
+			{
+				PModelReaderNode_Volumetric1907_Image3DSheet pXMLNode = std::make_shared<CModelReaderNode_Volumetric1907_Image3DSheet>(m_pWarnings);
+				pXMLNode->parseXML(pXMLReader);
+
+			}
+			else
+				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
+		}
+	}
 
 
 }

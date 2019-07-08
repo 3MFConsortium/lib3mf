@@ -1130,6 +1130,24 @@ Model error codes (0x8XXX)
 // Could not reindex channel selector
 #define NMR_ERROR_COULDNOTREINDEXCHANNELSELECTOR 0x80F0
 
+// Duplicate Image3D Name
+#define NMR_ERROR_DUPLICATEIMAGE3DNAME 0x80F1
+
+// Duplicate Image3D Size
+#define NMR_ERROR_DUPLICATEIMAGE3DSIZE 0x80F2
+
+// Duplicate Image3D Sheet count
+#define NMR_ERROR_DUPLICATEIMAGE3DSHEETCOUNT 0x80F3
+
+// Missing 3D Image Size
+#define NMR_ERROR_MISSINGIMAGE3DSIZE 0x80F4
+
+// Missing 3D Image Sheetcount
+#define NMR_ERROR_MISSINGIMAGE3DSHEETCOUNT 0x80F5
+
+// Missing 3D Image Name
+#define NMR_ERROR_MISSINGIMAGE3DNAME 0x80F6
+
 /*-------------------------------------------------------------------
 XML Parser Error Constants (0x9XXX)
 -------------------------------------------------------------------*/
