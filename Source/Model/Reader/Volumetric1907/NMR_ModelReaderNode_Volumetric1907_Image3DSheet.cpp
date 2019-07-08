@@ -43,7 +43,7 @@ NMR_ModelReaderNode_Volumetric1907_Image3DSheet.cpp covers the official 3MF volu
 namespace NMR {
 
 
-	CModelReaderNode_Volumetric1907_Image3DSheet::CModelReaderNode_Volumetric1907_Image3DSheet(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings)
+	CModelReaderNode_Volumetric1907_Image3DSheet::CModelReaderNode_Volumetric1907_Image3DSheet(_In_ PModelReaderWarnings pWarnings)
 		: CModelReaderNode(pWarnings)		
 		
 	{

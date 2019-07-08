@@ -46,7 +46,7 @@ namespace NMR {
 		virtual void OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace);
 	public:
 		CModelReaderNode_Volumetric1907_Image3DSheet() = delete;
-		CModelReaderNode_Volumetric1907_Image3DSheet(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings);
+		CModelReaderNode_Volumetric1907_Image3DSheet(_In_ PModelReaderWarnings pWarnings);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 
