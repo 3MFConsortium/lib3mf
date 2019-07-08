@@ -236,6 +236,18 @@ namespace NMR {
 		return m_nInternalIndex;
 	}
 
+	std::string CModelVolumetricLayer::getTransformString()
+	{
+		NMATRIX3 Matrix = fnMATRIX3_identity ();
+		int i, j;
+		for (i = 0; i < 4; i++)
+			for (j = 0; j < 3; j++)
+				Matrix.m_fields[j][i] = m_Transform.m_fFields[j][i];
+
+		return fnMATRIX3_toString(Matrix);
+	}
+
+
 
 
 }

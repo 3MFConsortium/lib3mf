@@ -40,6 +40,8 @@ This is the class for exporting the 3mf model stream root node.
 #include "Model/Classes/NMR_ModelMeshObject.h" 
 #include "Common/Platform/NMR_XmlWriter.h"
 
+#include "Model/Classes/NMR_ModelImage3DChannelSelector.h" 
+
 #include "Common/MeshInformation/NMR_MeshInformation_Properties.h"
 
 
@@ -60,6 +62,7 @@ namespace NMR {
 		nfBool m_bWriteObjects;
 		nfBool m_bIsRootModel;
 		nfBool m_bWriteCustomNamespaces;
+		nfBool m_bWriteVolumetricExtension;
 
 		void writeModelMetaData();
 		void writeMetaData(_In_ PModelMetaData pMetaData);
@@ -74,6 +77,9 @@ namespace NMR {
 		void writeMultiProperties();
 		void writeMultiPropertyAttributes(_In_ CModelMultiPropertyGroupResource* pMultiPropertyGroup);
 		void writeMultiPropertyMultiElements(_In_ CModelMultiPropertyGroupResource* pMultiPropertyGroup);
+		void writeImages3D();
+		void writeVolumetricStacks();
+		void writeImage3DChannelSelector(CModelImage3DChannelSelector * pSelector, std::string sElementName);
 
 		void writeObjects();
 		void writeBuild();

@@ -75,11 +75,13 @@ These are given by the 3MF Standard
 #define XML_3MF_NAMESPACE_PRODUCTIONSPEC "http://schemas.microsoft.com/3dmanufacturing/production/2015/06"
 #define XML_3MF_NAMESPACE_BEAMLATTICESPEC "http://schemas.microsoft.com/3dmanufacturing/beamlattice/2017/02"
 #define XML_3MF_NAMESPACE_SLICESPEC "http://schemas.microsoft.com/3dmanufacturing/slice/2015/07"
+#define XML_3MF_NAMESPACE_VOLUMETRICSPEC "http://schemas.microsoft.com/3dmanufacturing/volumetric/2019/07"
 
 #define XML_3MF_NAMESPACEPREFIX_MATERIAL "m"
 #define XML_3MF_NAMESPACEPREFIX_PRODUCTION "p"
 #define XML_3MF_NAMESPACEPREFIX_BEAMLATTICE "b"
 #define XML_3MF_NAMESPACEPREFIX_SLICE "s"
+#define XML_3MF_NAMESPACEPREFIX_VOLUMETRIC "v"
 
 #define XML_3MF_ATTRIBUTE_XMLNS                     "xmlns"
 #define XML_3MF_ATTRIBUTE_PREFIX_XML                "xml"
@@ -203,6 +205,44 @@ These are given by the 3MF Standard
 #define XML_3MF_ATTRIBUTE_COMPOSITEMATERIALS_MATINDICES "matindices"
 #define XML_3MF_ELEMENT_COMPOSITE                   "composite"
 #define XML_3MF_ATTRIBUTE_COMPOSITE_VALUES          "values"
+
+
+// Volumetric Extension
+#define XML_3MF_ELEMENT_IMAGE3D                "image3d"
+#define XML_3MF_ATTRIBUTE_IMAGE3D_ID           "id"
+#define XML_3MF_ATTRIBUTE_IMAGE3D_NAME         "name"
+#define XML_3MF_ATTRIBUTE_IMAGE3D_SIZEX        "sizex"
+#define XML_3MF_ATTRIBUTE_IMAGE3D_SIZEY        "sizey"
+#define XML_3MF_ATTRIBUTE_IMAGE3D_SHEETCOUNT   "sheetcount"
+
+#define XML_3MF_ELEMENT_IMAGE3DSHEET           "image3dsheet"
+#define XML_3MF_ATTRIBUTE_IMAGE3DSHEET_PATH    "path"
+
+#define XML_3MF_ELEMENT_VOLUMETRICSTACK        "volumetricstack"
+#define XML_3MF_ATTRIBUTE_VOLUMETRICSTACK_ID   "id"
+
+#define XML_3MF_ELEMENT_DSTCHANNEL              "dstchannel"
+#define XML_3MF_ATTRIBUTE_DSTCHANNEL_NAME       "name"
+#define XML_3MF_ATTRIBUTE_DSTCHANNEL_BACKGROUND "background"
+
+#define XML_3MF_ELEMENT_VOLUMETRICLAYER               "volumetriclayer"
+#define XML_3MF_ATTRIBUTE_VOLUMETRICLAYER_TRANSFORM   "transform"
+#define XML_3MF_ATTRIBUTE_VOLUMETRICLAYER_SRCALPHA    "srcalpha"
+#define XML_3MF_ATTRIBUTE_VOLUMETRICLAYER_DSTALPHA    "dstalpha"
+#define XML_3MF_ATTRIBUTE_VOLUMETRICLAYER_BLENDMETHOD "blendmethod"
+
+#define XML_3MF_ELEMENT_MASKINGCHANNELSELECTOR  "maskingchannelselector"
+#define XML_3MF_ELEMENT_SOURCECHANNELSELECTOR  "sourcechannelselector"
+
+#define XML_3MF_ATTRIBUTE_CHANNELSELECTOR_IMAGE3DID     "image3dID"
+#define XML_3MF_ATTRIBUTE_CHANNELSELECTOR_SRCCHANNEL    "srcchannel"
+#define XML_3MF_ATTRIBUTE_CHANNELSELECTOR_DSTCHANNEL    "dstchannel"
+#define XML_3MF_ATTRIBUTE_CHANNELSELECTOR_MINVALUE      "minvalue"
+#define XML_3MF_ATTRIBUTE_CHANNELSELECTOR_MAXVALUE      "maxvalue"
+#define XML_3MF_ATTRIBUTE_CHANNELSELECTOR_FILTER        "filter"
+#define XML_3MF_ATTRIBUTE_CHANNELSELECTOR_TILESTYLEU    "tilestyleu"
+#define XML_3MF_ATTRIBUTE_CHANNELSELECTOR_TILESTYLEV    "tilestylev"
+#define XML_3MF_ATTRIBUTE_CHANNELSELECTOR_TILESTYLEW    "tilestylew"
 
 // Multiproperties
 #define XML_3MF_ELEMENT_MULTIPROPERTIES             "multiproperties"

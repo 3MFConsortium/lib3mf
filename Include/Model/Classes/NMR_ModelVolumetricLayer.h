@@ -100,6 +100,8 @@ namespace NMR {
 		void setInternalIndex (nfUint32 nIndex);
 		nfUint32 getInternalIndex();
 
+		std::string getTransformString();
+
 	};
 
 
