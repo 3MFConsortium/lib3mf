@@ -44,10 +44,6 @@ NMR::NMATRIX3 TransformToMatrix(const sLib3MFTransform Transform);
 
 sLib3MFTransform MatrixToTransform(const NMR::NMATRIX3 matrix);
 
-NMR::MODELTRANSFORM TransformToModelTransform(const sLib3MFTransform Transform);
-
-sLib3MFTransform ModelTransformToTransform(const NMR::MODELTRANSFORM matrix);
-
 }
 
 #endif // __LIB3MF_UTILS

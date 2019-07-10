@@ -82,10 +82,6 @@ namespace NMR {
 	} MODELMESHBEAM;
 
 	typedef struct {
-		FLOAT m_fFields[3][4];
-	} MODELTRANSFORM;
-
-	typedef struct {
 		BYTE m_Red;
 		BYTE m_Green;
 		BYTE m_Blue;

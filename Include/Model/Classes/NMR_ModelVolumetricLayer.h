@@ -56,7 +56,7 @@ namespace NMR {
 	private:
 		nfUint32 m_nInternalIndex;
 
-		MODELTRANSFORM m_Transform;
+		NMATRIX3 m_Transform;
 		eModelBlendMethod m_BlendMethod;
 		nfDouble m_dSourceAlpha;
 		nfDouble m_dDstAlpha;
@@ -65,21 +65,21 @@ namespace NMR {
 		PModelImage3DChannelSelector m_MaskChannelSelector;
 
 	protected:
-		CModelVolumetricLayer(MODELTRANSFORM Transform, eModelBlendMethod BlendMethod);
+		CModelVolumetricLayer(NMATRIX3 Transform, eModelBlendMethod BlendMethod);
 
 	public:
 
 		~CModelVolumetricLayer();
 
-		static PModelVolumetricLayer make(MODELTRANSFORM Transform, eModelBlendMethod BlendMethod);
+		static PModelVolumetricLayer make(NMATRIX3 Transform, eModelBlendMethod BlendMethod);
 		static PModelVolumetricLayer make_from(CModelVolumetricLayer * pVolumetricLayer, const std::map<PPackageResourceID, PPackageResourceID> & PackageIDMap);
 
-		MODELTRANSFORM getTransform ();
+		NMATRIX3 getTransform ();
 		eModelBlendMethod getBlendMethod ();
 		nfDouble getSourceAlpha ();
 		nfDouble getDstAlpha ();
 
-		void setTransform(MODELTRANSFORM Transform);
+		void setTransform(NMATRIX3 Transform);
 		void setBlendMethod(eModelBlendMethod BlendMethod);
 		void setSourceAlpha(nfDouble srcAlpha);
 		void setDstAlpha(nfDouble dstAlpha);

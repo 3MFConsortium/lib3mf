@@ -64,14 +64,18 @@ namespace NMR {
 	
 	void CModelReaderNode_Volumetric1907_Image3DSheet::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
 	{
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_IMAGE3DSHEET_PATH) == 0) {
+			m_sPath = pAttributeValue;
+		}
 	}
 	
 	
-	void CModelReaderNode_Volumetric1907_Image3DSheet::OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace)
-	{
+
+	std::string CModelReaderNode_Volumetric1907_Image3DSheet::getPath()
+	{	
+		return m_sPath;
+
 	}
-
-
 
 
 }

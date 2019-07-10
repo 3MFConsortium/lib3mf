@@ -36,19 +36,26 @@ NMR_ModelReaderNode_Volumetric1907_VolumetricStack.h covers the official 3MF vol
 #include "Model/Classes/NMR_ModelComponent.h"
 #include "Model/Classes/NMR_ModelComponentsObject.h"
 #include "Model/Classes/NMR_ModelObject.h"
+#include "Model/Classes/NMR_ModelVolumetricStack.h"
 
 namespace NMR {
 
 	class CModelReaderNode_Volumetric1907_VolumetricStack : public CModelReaderNode {
 	private:
+
+		CModel * m_pModel;
+		ModelResourceID m_nID;
+		PModelVolumetricStack m_pVolumetricStack;
+
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
-		virtual void OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace);
 	public:
 		CModelReaderNode_Volumetric1907_VolumetricStack() = delete;
 		CModelReaderNode_Volumetric1907_VolumetricStack(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
+
+		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 
 	};
 

@@ -54,11 +54,11 @@ namespace NMR {
 		nfUint32 m_nSizeX;
 		nfUint32 m_nSizeY;
 		nfUint32 m_nSheetCount;		
+		nfUint32 m_nSheetIndex;
 
 		PModelImage3D m_pImage3D;
 
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
-		virtual void OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace);
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 
 	public:

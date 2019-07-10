@@ -36,17 +36,35 @@ NMR_ModelReaderNode_Volumetric1907_VolumetricLayer.h covers the official 3MF vol
 #include "Model/Classes/NMR_ModelComponent.h"
 #include "Model/Classes/NMR_ModelComponentsObject.h"
 #include "Model/Classes/NMR_ModelObject.h"
+#include "Model/Classes/NMR_ModelVolumetricStack.h"
 
 namespace NMR {
 
 	class CModelReaderNode_Volumetric1907_VolumetricLayer : public CModelReaderNode {
 	private:
+		CModelVolumetricStack * m_pVolumetricStack;
+
+		PModelVolumetricLayer m_pVolumetricLayer;
+
+		NMATRIX3 m_Transform;
+		eModelBlendMethod m_BlendMethod;
+	
+		nfBool m_bHasTransform;
+		nfBool m_bHasBlendMethod;
+
+		nfDouble m_dSourceAlpha;
+		nfBool m_bHasSourceAlpha;
+		nfDouble m_dDstAlpha;
+		nfBool m_bHasDstAlpha;
+
+
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
-		virtual void OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace);
+		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
+
 	public:
 		CModelReaderNode_Volumetric1907_VolumetricLayer() = delete;
-		CModelReaderNode_Volumetric1907_VolumetricLayer(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings);
+		CModelReaderNode_Volumetric1907_VolumetricLayer(CModelVolumetricStack * pVolumetricStack, _In_ PModelReaderWarnings pWarnings);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 

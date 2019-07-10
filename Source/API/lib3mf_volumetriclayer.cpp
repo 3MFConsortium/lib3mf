@@ -56,12 +56,12 @@ CVolumetricLayer::CVolumetricLayer(NMR::PModelVolumetricLayer pLayer, NMR::PMode
 
 Lib3MF::sTransform CVolumetricLayer::GetTransform()
 {
-	return Lib3MF::ModelTransformToTransform(m_pLayer->getTransform());
+	return Lib3MF::MatrixToTransform(m_pLayer->getTransform());
 }
 
 void CVolumetricLayer::SetTransform(const Lib3MF::sTransform Transform)
 {
-	m_pLayer->setTransform(Lib3MF::TransformToModelTransform (Transform));
+	m_pLayer->setTransform(Lib3MF::TransformToMatrix (Transform));
 }
 
 Lib3MF::eBlendMethod CVolumetricLayer::GetBlendMethod()
@@ -96,7 +96,7 @@ void CVolumetricLayer::SetDestinationAlpha(const Lib3MF_double dDestinationAlpha
 
 void CVolumetricLayer::GetInformation(Lib3MF::sTransform & sTransform, Lib3MF::eBlendMethod & eBlendMethod, Lib3MF_double & dSourceAlpha, Lib3MF_double & dDestinationAlpha)
 {
-	sTransform = Lib3MF::ModelTransformToTransform(m_pLayer->getTransform());
+	sTransform = Lib3MF::MatrixToTransform(m_pLayer->getTransform());
 	eBlendMethod =(Lib3MF::eBlendMethod) m_pLayer->getBlendMethod();
 	dSourceAlpha = m_pLayer->getSourceAlpha();
 	dDestinationAlpha = m_pLayer->getDstAlpha();
@@ -104,7 +104,7 @@ void CVolumetricLayer::GetInformation(Lib3MF::sTransform & sTransform, Lib3MF::e
 
 void CVolumetricLayer::SetInformation(const Lib3MF::sTransform Transform, const Lib3MF::eBlendMethod eBlendMethod, const Lib3MF_double dSourceAlpha, const Lib3MF_double dDestinationAlpha)
 {
-	m_pLayer->setTransform(Lib3MF::TransformToModelTransform(Transform));
+	m_pLayer->setTransform(Lib3MF::TransformToMatrix(Transform));
 	m_pLayer->setBlendMethod((NMR::eModelBlendMethod) eBlendMethod);
 	m_pLayer->setSourceAlpha(dSourceAlpha);
 	m_pLayer->setDstAlpha(dDestinationAlpha);

@@ -41,14 +41,17 @@ namespace NMR {
 
 	class CModelReaderNode_Volumetric1907_Image3DSheet : public CModelReaderNode {
 	private:
+		std::string m_sPath;
+
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
-		virtual void OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace);
 	public:
 		CModelReaderNode_Volumetric1907_Image3DSheet() = delete;
 		CModelReaderNode_Volumetric1907_Image3DSheet(_In_ PModelReaderWarnings pWarnings);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
+
+		std::string getPath();
 
 	};
 

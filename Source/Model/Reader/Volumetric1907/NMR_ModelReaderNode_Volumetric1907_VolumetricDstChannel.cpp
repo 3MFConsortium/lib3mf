@@ -43,9 +43,11 @@ NMR_ModelReaderNode_Volumetric1907_VolumetricDstChannel.cpp covers the official 
 namespace NMR {
 
 
-	CModelReaderNode_Volumetric1907_VolumetricDstChannel::CModelReaderNode_Volumetric1907_VolumetricDstChannel(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings)
-		: CModelReaderNode(pWarnings)		
-		
+	CModelReaderNode_Volumetric1907_VolumetricDstChannel::CModelReaderNode_Volumetric1907_VolumetricDstChannel(_In_ PModelReaderWarnings pWarnings)
+		: CModelReaderNode(pWarnings) ,
+			m_bHasBackground (false),
+			m_dBackground (0.0)		
+
 	{
 	}
 
@@ -64,13 +66,35 @@ namespace NMR {
 	
 	void CModelReaderNode_Volumetric1907_VolumetricDstChannel::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
 	{
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_DSTCHANNEL_NAME) == 0) {
+			m_sName = pAttributeValue;
+		} else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_DSTCHANNEL_BACKGROUND) == 0) {
+			if (m_bHasBackground)
+				throw CNMRException(NMR_ERROR_DUPLICATEVOLUMETRICBACKGROUND);
+
+			m_dBackground = strtod(pAttributeValue, nullptr);
+			if (std::isnan(m_dBackground))
+				throw CNMRException(NMR_ERROR_INVALIDVOLUMETRICBACKGROUND);
+
+			m_bHasBackground = true;
+		}
 	}
 	
 	
-	void CModelReaderNode_Volumetric1907_VolumetricDstChannel::OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace)
+	std::string CModelReaderNode_Volumetric1907_VolumetricDstChannel::getName()
 	{
+		return m_sName;
 	}
 
+	nfDouble CModelReaderNode_Volumetric1907_VolumetricDstChannel::getBackground()
+	{
+		return m_dBackground;
+	}
+
+	nfBool CModelReaderNode_Volumetric1907_VolumetricDstChannel::hasBackground()
+	{
+		return m_bHasBackground;
+	}
 
 
 

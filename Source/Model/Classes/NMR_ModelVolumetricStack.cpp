@@ -179,7 +179,7 @@ namespace NMR {
 		return m_Layers[nIndex];
 	}
 
-	PModelVolumetricLayer CModelVolumetricStack::addLayer(MODELTRANSFORM Transform, eModelBlendMethod BlendMethod)
+	PModelVolumetricLayer CModelVolumetricStack::addLayer(NMATRIX3 Transform, eModelBlendMethod BlendMethod)
 	{
 		if (m_Layers.size() >= MAX_VOLUMETRIC_CHANNELS)
 			throw CNMRException(NMR_ERROR_TOOMANYVOLUMETRICCHANNELS);

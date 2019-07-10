@@ -51,7 +51,9 @@ namespace NMR {
 			m_bHasName (false),
 			m_nSizeX (0),
 			m_nSizeY (0),
-			m_nSheetCount (0)
+			m_nSheetCount (0),
+			m_nSheetIndex (0)
+
 
 	{
 		if (pModel == nullptr)
@@ -67,7 +69,8 @@ namespace NMR {
 		parseAttributes(pXMLReader);
 
 		if (!m_bHasName)
-			throw CNMRException(NMR_ERROR_MISSINGIMAGE3DNAME);
+			m_pWarnings->addException(CNMRException(NMR_ERROR_MISSINGIMAGE3DNAME), mrwMissingMandatoryValue);
+
 		if (m_nID == 0)
 			throw CNMRException(NMR_ERROR_MISSINGMODELRESOURCEID);
 		if (m_nSizeX == 0)
@@ -78,11 +81,15 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_MISSINGIMAGE3DSHEETCOUNT);
 
 		m_pImage3D = CModelImage3D::make(m_nID, m_pModel, m_nSizeX, m_nSizeY, m_nSheetCount);
+		m_nSheetIndex = 0;
 
 		// Parse Content
 		parseContent(pXMLReader);
 
 		m_pModel->addResource(m_pImage3D);
+
+		if (m_nSheetCount != m_nSheetIndex)
+			m_pWarnings->addException(CNMRException(NMR_ERROR_INVALIDIMAGE3DSHEETCOUNT), mrwMissingMandatoryValue);
 	}
 	
 	
@@ -126,10 +133,6 @@ namespace NMR {
 	}
 	
 	
-	void CModelReaderNode_Volumetric1907_Image3D::OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace)
-	{
-	}
-
 
 	void CModelReaderNode_Volumetric1907_Image3D::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
 	{
@@ -142,6 +145,24 @@ namespace NMR {
 			{
 				PModelReaderNode_Volumetric1907_Image3DSheet pXMLNode = std::make_shared<CModelReaderNode_Volumetric1907_Image3DSheet>(m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
+
+				std::string sPath = pXMLNode->getPath();
+				if (sPath != "") {
+
+					PModelAttachment pAttachment = m_pModel->findModelAttachment(sPath);
+					if (pAttachment.get() == nullptr)
+						m_pWarnings->addException(CNMRException(NMR_ERROR_IMAGE3DSHEETNOTFOUND), mrwFatal);
+
+					if (m_nSheetIndex >= m_nSheetCount)
+						m_pWarnings->addException(CNMRException(NMR_ERROR_TOOMANYIMAGE3DSHEETS), mrwFatal);
+
+					__NMRASSERT(m_pImage3D.get() != nullptr);
+					m_pImage3D->setSheet(m_nSheetIndex, pAttachment);
+					m_nSheetIndex++;
+
+
+				} else
+					m_pWarnings->addException(CNMRException(NMR_ERROR_MISSINGIMAGE3DSHEETPATH), mrwMissingMandatoryValue);
 
 			}
 			else

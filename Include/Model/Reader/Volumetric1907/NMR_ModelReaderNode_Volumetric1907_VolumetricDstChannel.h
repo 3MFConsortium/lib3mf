@@ -41,14 +41,22 @@ namespace NMR {
 
 	class CModelReaderNode_Volumetric1907_VolumetricDstChannel : public CModelReaderNode {
 	private:
+		nfBool m_bHasBackground;
+		nfDouble m_dBackground;
+
+		std::string m_sName;
+
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
-		virtual void OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace);
 	public:
 		CModelReaderNode_Volumetric1907_VolumetricDstChannel() = delete;
-		CModelReaderNode_Volumetric1907_VolumetricDstChannel(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings);
+		CModelReaderNode_Volumetric1907_VolumetricDstChannel(_In_ PModelReaderWarnings pWarnings);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
+
+		std::string getName();
+		nfDouble getBackground();
+		nfBool hasBackground();
 
 	};
 

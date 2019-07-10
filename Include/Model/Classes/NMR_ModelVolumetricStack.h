@@ -81,7 +81,7 @@ namespace NMR {
 
 		nfUint32 getLayerCount();
 		PModelVolumetricLayer getLayer(nfUint32 nIndex);
-		PModelVolumetricLayer addLayer(MODELTRANSFORM Transform, eModelBlendMethod BlendMethod);
+		PModelVolumetricLayer addLayer(NMATRIX3 Transform, eModelBlendMethod BlendMethod);
 		PModelVolumetricLayer addLayerFrom(CModelVolumetricLayer * pSourceLayer, const std::map<PPackageResourceID, PPackageResourceID> & PackageIDMap);
 		void removeLayerByIndex(nfUint32 nIndex);
  		void removeLayer(CModelVolumetricLayer * pLayer);

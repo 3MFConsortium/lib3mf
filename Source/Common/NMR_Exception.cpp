@@ -411,6 +411,31 @@ namespace NMR {
 		case NMR_ERROR_MISSINGIMAGE3DSIZE: return "Missing 3D Image Size";
 		case NMR_ERROR_MISSINGIMAGE3DSHEETCOUNT: return "Missing 3D Image Sheetcount";
 		case NMR_ERROR_MISSINGIMAGE3DNAME: return "Missing 3D Image Name";
+		case NMR_ERROR_INVALIDIMAGE3DSHEETCOUNT: return "Invalid Image3D Sheet Count";
+		case NMR_ERROR_IMAGE3DSHEETNOTFOUND: return "Image 3D Sheet not found";
+		case NMR_ERROR_TOOMANYIMAGE3DSHEETS: return "Too many Image3D sheets";
+		case NMR_ERROR_MISSINGIMAGE3DSHEETPATH: return "Missing Image3D sheet path";
+		case NMR_ERROR_DUPLICATEVOLUMETRICBACKGROUND: return "Duplicate Volumetric Background";
+		case NMR_ERROR_INVALIDVOLUMETRICBACKGROUND: return "Invalid Volumetric Background";
+		case NMR_ERROR_MISSINGVOLUMETRICDSTCHANNELNAME: return "Missing Volumetric DstChannel Name";
+		case NMR_ERROR_MISSINGVOLUMETRICLAYERBLENDMETHOD: return "Missing Volumetric Layer Blend Method";
+		case NMR_ERROR_DUPLICATEVOLUMETRICBLENDMETHOD: return "Duplicate Volumetric Blend Method";
+		case NMR_ERROR_MISSINGVOLUMETRICLAYERTRANSFORM: return "Missing Volumetric Layer Transform";
+		case NMR_ERROR_DUPLICATEVOLUMETRICTRANSFORM: return "Duplicate Volumetric Transform";
+		case NMR_ERROR_DUPLICATEVOLUMETRICSRCALPHA: return "Duplicate Volumetric Src Alpha";
+		case NMR_ERROR_INVALIDVOLUMETRICSRCALPHA: return "Invalid Volumetric Src Alpha";
+		case NMR_ERROR_DUPLICATEVOLUMETRICDSTALPHA: return "Duplicate Volumetric Dst Alpha";
+		case NMR_ERROR_INVALIDVOLUMETRICDSTALPHA: return "Invalid Volumetric Dst Alpha";
+		case NMR_ERROR_DUPLICATEMASKCHANNELSELECTOR: return "Duplicate Mask Channel Selector";
+		case NMR_ERROR_DUPLICATEVOLUMETRICMINVALUE: return "Duplicate Volumetric Min Value";
+		case NMR_ERROR_INVALIDVOLUMETRICMINVALUE: return "Invalid Volumetric Min Value";
+		case NMR_ERROR_DUPLICATEVOLUMETRICMAXVALUE: return "Duplicate Volumetric Max Value"; 
+		case NMR_ERROR_INVALIDVOLUMETRICMAXVALUE: return "Invalid Volumetric Max Value";
+		case NMR_ERROR_MISSINGCHANNELSELECTORID: return "Missing Channel Selector ID";
+		case NMR_ERROR_MISSINGCHANNELSELECTORTILESTYLE: return "Missing Channel Selector TileStyle";
+		case NMR_ERROR_DUPLICATEVOLUMETRICTILESTYLE: return "Duplicate Volumetric TileStyle";
+		case NMR_ERROR_DUPLICATEVOLUMETRICFILTER: return "Duplicate Volumetric Filter";
+
 
 		// XML Parser Error Constants(0x9XXX)
 		case NMR_ERROR_XMLPARSER_INVALIDATTRIBVALUE: return "Invalid XML attribute value";

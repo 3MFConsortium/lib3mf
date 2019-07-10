@@ -42,7 +42,7 @@ NMR_ModelVolumetricLayer.cpp implements the Model Volumetric Layer Class.
 namespace NMR {
 
 
-	CModelVolumetricLayer::CModelVolumetricLayer(MODELTRANSFORM Transform, eModelBlendMethod BlendMethod)
+	CModelVolumetricLayer::CModelVolumetricLayer(NMATRIX3 Transform, eModelBlendMethod BlendMethod)
 		: m_Transform (Transform), m_BlendMethod (BlendMethod), m_dSourceAlpha (0.0), m_dDstAlpha (0.0), m_nInternalIndex (0)
 	{
 
@@ -53,7 +53,7 @@ namespace NMR {
 		
 	}
 
-	PModelVolumetricLayer CModelVolumetricLayer::make(MODELTRANSFORM Transform, eModelBlendMethod BlendMethod)
+	PModelVolumetricLayer CModelVolumetricLayer::make(NMATRIX3 Transform, eModelBlendMethod BlendMethod)
 	{
 		return std::make_shared<CModelVolumetricLayer>(CModelVolumetricLayer(Transform, BlendMethod));
 	}
@@ -80,7 +80,7 @@ namespace NMR {
 	}
 
 
-	MODELTRANSFORM CModelVolumetricLayer::getTransform()
+	NMATRIX3 CModelVolumetricLayer::getTransform()
 	{
 		return m_Transform;
 	}
@@ -100,7 +100,7 @@ namespace NMR {
 		return m_dDstAlpha;
 	}
 
-	void CModelVolumetricLayer::setTransform(MODELTRANSFORM Transform)
+	void CModelVolumetricLayer::setTransform(NMATRIX3 Transform)
 	{
 		m_Transform = Transform;
 	}
@@ -238,13 +238,8 @@ namespace NMR {
 
 	std::string CModelVolumetricLayer::getTransformString()
 	{
-		NMATRIX3 Matrix = fnMATRIX3_identity ();
-		int i, j;
-		for (i = 0; i < 4; i++)
-			for (j = 0; j < 3; j++)
-				Matrix.m_fields[j][i] = m_Transform.m_fFields[j][i];
 
-		return fnMATRIX3_toString(Matrix);
+		return fnMATRIX3_toString(m_Transform);
 	}
 
 

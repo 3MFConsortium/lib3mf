@@ -1148,6 +1148,78 @@ Model error codes (0x8XXX)
 // Missing 3D Image Name
 #define NMR_ERROR_MISSINGIMAGE3DNAME 0x80F6
 
+// Invalid Image3D Sheet Count
+#define NMR_ERROR_INVALIDIMAGE3DSHEETCOUNT 0x80F7
+
+// Image 3D Sheet not found
+#define NMR_ERROR_IMAGE3DSHEETNOTFOUND 0x80F8
+
+// Too many Image3D sheets
+#define NMR_ERROR_TOOMANYIMAGE3DSHEETS 0x80F9
+
+// Missing Image3D sheet path
+#define NMR_ERROR_MISSINGIMAGE3DSHEETPATH 0x80FA
+
+// Duplicate Volumetric Background
+#define NMR_ERROR_DUPLICATEVOLUMETRICBACKGROUND 0x80FB
+
+// Invalid Volumetric Background
+#define NMR_ERROR_INVALIDVOLUMETRICBACKGROUND 0x80FC
+
+// Missing Volumetric DstChannel Name
+#define NMR_ERROR_MISSINGVOLUMETRICDSTCHANNELNAME 0x80FD
+
+// Missing Volumetric Layer Blend Method
+#define NMR_ERROR_MISSINGVOLUMETRICLAYERBLENDMETHOD 0x80FE
+
+// Duplicate Volumetric Blend Method
+#define NMR_ERROR_DUPLICATEVOLUMETRICBLENDMETHOD 0x80FF
+
+// Missing Volumetric Layer Transform
+#define NMR_ERROR_MISSINGVOLUMETRICLAYERTRANSFORM 0x8100
+
+// Duplicate Volumetric Transform
+#define NMR_ERROR_DUPLICATEVOLUMETRICTRANSFORM 0x8101
+
+// Duplicate Volumetric Src Alpha
+#define NMR_ERROR_DUPLICATEVOLUMETRICSRCALPHA 0x8102
+
+// Invalid Volumetric Src Alpha
+#define NMR_ERROR_INVALIDVOLUMETRICSRCALPHA 0x8103
+
+// Duplicate Volumetric Dst Alpha
+#define NMR_ERROR_DUPLICATEVOLUMETRICDSTALPHA 0x8104
+
+// Invalid Volumetric Dst Alpha
+#define NMR_ERROR_INVALIDVOLUMETRICDSTALPHA 0x8105
+
+// Duplicate Mask Channel Selector
+#define NMR_ERROR_DUPLICATEMASKCHANNELSELECTOR 0x8106
+
+// Duplicate Volumetric Min Value
+#define NMR_ERROR_DUPLICATEVOLUMETRICMINVALUE 0x8107
+
+// Invalid Volumetric Min Value
+#define NMR_ERROR_INVALIDVOLUMETRICMINVALUE 0x8108
+
+// Duplicate Volumetric Max Value
+#define NMR_ERROR_DUPLICATEVOLUMETRICMAXVALUE 0x8109
+
+// Invalid Volumetric Max Value
+#define NMR_ERROR_INVALIDVOLUMETRICMAXVALUE 0x810A
+
+// Missing Channel Selector ID
+#define NMR_ERROR_MISSINGCHANNELSELECTORID 0x810B
+
+// Missing Channel Selector TileStyle
+#define NMR_ERROR_MISSINGCHANNELSELECTORTILESTYLE 0x810C
+
+// Duplicate Volumetric TileStyle
+#define NMR_ERROR_DUPLICATEVOLUMETRICTILESTYLE 0x810D
+
+// Duplicate Volumetric Filter
+#define NMR_ERROR_DUPLICATEVOLUMETRICFILTER 0x810E
+
 /*-------------------------------------------------------------------
 XML Parser Error Constants (0x9XXX)
 -------------------------------------------------------------------*/

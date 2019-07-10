@@ -37,18 +37,43 @@ NMR_ModelReaderNode_Volumetric1907_Image3DChannelSelector.h covers the official 
 #include "Model/Classes/NMR_ModelComponentsObject.h"
 #include "Model/Classes/NMR_ModelObject.h"
 
+#include "Model/Classes/NMR_Model.h"
+
+#include "Model/Classes/NMR_ModelImage3DChannelSelector.h"
+
 namespace NMR {
 
 	class CModelReaderNode_Volumetric1907_Image3DChannelSelector : public CModelReaderNode {
 	private:
+
+		nfUint32 m_nID;
+		std::string m_sSourceChannel;
+		std::string m_sDstChannel;
+
+		nfBool m_bHasMinValue;
+		nfBool m_bHasMaxValue;
+		nfDouble m_dMinValue;
+		nfDouble m_dMaxValue;
+
+		nfBool m_bHasTileStyleU;
+		nfBool m_bHasTileStyleV;
+		nfBool m_bHasTileStyleW;
+		eModelTextureTileStyle m_eTileStyleU;
+		eModelTextureTileStyle m_eTileStyleV;
+		eModelTextureTileStyle m_eTileStyleW;
+
+		nfBool m_bHasFilter;
+		eModelTextureFilter m_eFilter;
+
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
-		virtual void OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace);
 	public:
 		CModelReaderNode_Volumetric1907_Image3DChannelSelector() = delete;
-		CModelReaderNode_Volumetric1907_Image3DChannelSelector(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings);
+		CModelReaderNode_Volumetric1907_Image3DChannelSelector(_In_ PModelReaderWarnings pWarnings);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
+
+		PModelImage3DChannelSelector createSelector(CModel * pModel);
 
 	};
 
