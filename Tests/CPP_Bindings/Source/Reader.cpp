@@ -110,6 +110,15 @@ namespace Lib3MF
 		ASSERT_EQ(pImage3D->GetSizeX(), 10);
 		ASSERT_EQ(pImage3D->GetSizeY(), 10);
 		ASSERT_EQ(pImage3D->GetSheetCount(), 3);
+
+		ASSERT_EQ(pIterator->MoveNext(), false);
+
+		auto pVolumeIterator = model->GetVolumetricStacks();
+		ASSERT_EQ(pVolumeIterator->MoveNext(), true);
+		auto pVolumetricStack = pVolumeIterator->GetCurrentVolumetricStack();
+
+		ASSERT_EQ(pVolumeIterator->MoveNext(), true);
+
 	}
 
 }

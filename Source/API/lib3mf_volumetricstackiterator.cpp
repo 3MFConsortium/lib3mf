@@ -45,7 +45,7 @@ using namespace Lib3MF::Impl;
 CVolumetricStackIterator::CVolumetricStackIterator(NMR::PModel pModel)
 	: CResourceIterator (), m_pModel (pModel)
 {
-	if (pModel.get())
+	if (pModel.get() == nullptr)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
 }
 
