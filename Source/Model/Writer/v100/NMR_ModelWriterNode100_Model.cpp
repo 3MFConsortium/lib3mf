@@ -785,7 +785,8 @@ namespace NMR {
 		for (nfUint32 nIndex = 0; nIndex < nCount; nIndex++) {
 			CModelVolumetricStack * pStackResource = m_pModel->getVolumetricStack(nIndex);
 
-			writeStartElementWithPrefix(XML_3MF_ELEMENT_IMAGE3D, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
+			writeStartElementWithPrefix(XML_3MF_ELEMENT_VOLUMETRICSTACK, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
+			writeIntAttribute(XML_3MF_ATTRIBUTE_VOLUMETRICSTACK_ID, pStackResource->getResourceID()->getUniqueID());
 
 			nfUint32 nChannelCount = pStackResource->getDstChannelCount();
 			for (nfUint32 nChannelIdx = 0; nChannelIdx < nChannelCount; nChannelIdx++) {

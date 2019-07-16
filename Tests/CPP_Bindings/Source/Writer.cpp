@@ -143,7 +143,13 @@ namespace Lib3MF
 	TEST_F(Writer, VolumetricWriter)
 	{
 
+		std::vector<unsigned char> Buffer;
+		Buffer.push_back(5);
+
 		auto pImage3D = model->AddImage3D (10, 10, 3);
+		pImage3D->CreateSheetFromBuffer(0, "/volume/layer1.png", Buffer);
+		pImage3D->CreateSheetFromBuffer(1, "/volume/layer2.png", Buffer);
+		pImage3D->CreateSheetFromBuffer(2, "/volume/layer3.png", Buffer);
 
 		auto pVolumetricStack = model->AddVolumetricStack();
 		pVolumetricStack->AddDestinationChannel("channel", 0.0);

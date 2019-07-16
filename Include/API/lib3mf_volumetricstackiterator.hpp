@@ -59,6 +59,8 @@ private:
 	* Put private members here.
 	*/
 
+	NMR::PModel m_pModel;
+
 protected:
 
 	/**
@@ -75,6 +77,8 @@ public:
 	/**
 	* Public member functions to implement.
 	*/
+
+	CVolumetricStackIterator(NMR::PModel pModel);
 
 	IVolumetricStack * GetCurrentVolumetricStack();
 

@@ -32,6 +32,8 @@ Abstract: This is the class declaration of CResourceIterator
 #ifndef __LIB3MF_RESOURCEITERATOR
 #define __LIB3MF_RESOURCEITERATOR
 
+#include "Model\Classes\NMR_Model.h"
+
 #include "lib3mf_interfaces.hpp"
 #include "lib3mf_base.hpp"
 #ifdef _MSC_VER
@@ -54,6 +56,8 @@ namespace Impl {
 class CResourceIterator : public virtual IResourceIterator, public virtual CBase {
 
 private:
+	NMR::PModel m_pModel;
+
 	std::vector<NMR::PModelResource> m_pResources;
 	Lib3MF_int32 m_nCurrentIndex;
 

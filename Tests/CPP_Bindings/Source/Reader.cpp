@@ -99,4 +99,17 @@ namespace Lib3MF
 		CheckReaderWarnings(Reader::reader3MF, 0);
 	}
 
+	TEST_F(Reader, 3MFReadVolumetric)
+	{
+		Reader::reader3MF->ReadFromFile(sTestFilesPath + "/Reader/" + "PyramidVolume.3mf");
+		CheckReaderWarnings(Reader::reader3MF, 0);
+
+		auto pIterator = model->GetImage3Ds();
+		ASSERT_EQ (pIterator->MoveNext (), true);
+		auto pImage3D = pIterator->GetCurrentImage3D();
+		ASSERT_EQ(pImage3D->GetSizeX(), 10);
+		ASSERT_EQ(pImage3D->GetSizeY(), 10);
+		ASSERT_EQ(pImage3D->GetSheetCount(), 3);
+	}
+
 }

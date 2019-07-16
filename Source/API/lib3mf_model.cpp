@@ -655,7 +655,7 @@ IVolumetricStack * CModel::AddVolumetricStack()
 
 IVolumetricStackIterator * CModel::GetVolumetricStacks()
 {
-	auto pResult = std::unique_ptr<CVolumetricStackIterator>(new CVolumetricStackIterator());
+	auto pResult = std::unique_ptr<CVolumetricStackIterator>(new CVolumetricStackIterator(m_model));
 	Lib3MF_uint32 nVolumeStackCount = model().getVolumetricStackCount();
 
 	for (Lib3MF_uint32 nIdx = 0; nIdx < nVolumeStackCount; nIdx++) {

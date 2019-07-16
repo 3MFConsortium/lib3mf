@@ -32,6 +32,7 @@ Abstract: This is a stub class definition of CVolumetricStackIterator
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
+#include "lib3mf_volumetricstack.hpp"
 
 
 using namespace Lib3MF::Impl;
@@ -40,8 +41,16 @@ using namespace Lib3MF::Impl;
  Class definition of CVolumetricStackIterator 
 **************************************************************************************************************************/
 
+
+CVolumetricStackIterator::CVolumetricStackIterator(NMR::PModel pModel)
+	: CResourceIterator (), m_pModel (pModel)
+{
+	if (pModel.get())
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+}
+
 IVolumetricStack * CVolumetricStackIterator::GetCurrentVolumetricStack()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return new CVolumetricStack(std::dynamic_pointer_cast<NMR::CModelVolumetricStack>(GetCurrentResource()), m_pModel);
 }
 
