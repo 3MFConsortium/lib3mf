@@ -176,6 +176,10 @@ namespace NMR {
 			}
 		}
 
+		if (m_bWriteVolumetricExtension) {
+			writeConstPrefixedStringAttribute(XML_3MF_ATTRIBUTE_XMLNS, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC, XML_3MF_NAMESPACE_VOLUMETRICSPEC);
+		}
+
 		if (m_bWriteCustomNamespaces) {
 			nfUint32 nNSCount = m_pXMLWriter->GetNamespaceCount();
 			for (nfUint32 iNSCount = 0; iNSCount < nNSCount; iNSCount++) {
@@ -752,7 +756,7 @@ namespace NMR {
 			CModelImage3D * pImage3DResource = m_pModel->getImage3D(nIndex);
 			nfUint32 nSheetCount = pImage3DResource->getSheetCount();
 
-			writeStartElementWithPrefix(XML_3MF_ELEMENT_IMAGE3D, XML_3MF_NAMESPACE_VOLUMETRICSPEC);
+			writeStartElementWithPrefix(XML_3MF_ELEMENT_IMAGE3D, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
 
 			writeIntAttribute(XML_3MF_ATTRIBUTE_IMAGE3D_ID, pImage3DResource->getResourceID()->getUniqueID());
 			writeIntAttribute(XML_3MF_ATTRIBUTE_IMAGE3D_SIZEX, pImage3DResource->getSizeX());
@@ -761,7 +765,7 @@ namespace NMR {
 
 			for (nfUint32 nSheetIndex = 0; nSheetIndex < nSheetCount; nSheetIndex++) {
 				auto pSheet = pImage3DResource->getSheet(nSheetIndex);
-				writeStartElementWithPrefix(XML_3MF_ELEMENT_IMAGE3DSHEET, XML_3MF_NAMESPACE_VOLUMETRICSPEC);
+				writeStartElementWithPrefix(XML_3MF_ELEMENT_IMAGE3DSHEET, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
 				if (pSheet.get() != nullptr) {
 					writeStringAttribute(XML_3MF_ATTRIBUTE_IMAGE3DSHEET_PATH, pSheet->getPathURI());
 				}
@@ -781,12 +785,12 @@ namespace NMR {
 		for (nfUint32 nIndex = 0; nIndex < nCount; nIndex++) {
 			CModelVolumetricStack * pStackResource = m_pModel->getVolumetricStack(nIndex);
 
-			writeStartElementWithPrefix(XML_3MF_ELEMENT_IMAGE3D, XML_3MF_NAMESPACE_VOLUMETRICSPEC);
+			writeStartElementWithPrefix(XML_3MF_ELEMENT_IMAGE3D, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
 
 			nfUint32 nChannelCount = pStackResource->getDstChannelCount();
 			for (nfUint32 nChannelIdx = 0; nChannelIdx < nChannelCount; nChannelIdx++) {
 				auto pChannel = pStackResource->getDstChannel(nChannelIdx);
-				writeStartElementWithPrefix(XML_3MF_ELEMENT_DSTCHANNEL, XML_3MF_NAMESPACE_VOLUMETRICSPEC);
+				writeStartElementWithPrefix(XML_3MF_ELEMENT_DSTCHANNEL, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
 				writeStringAttribute(XML_3MF_ATTRIBUTE_DSTCHANNEL_NAME, pChannel->getName());
 				writeFloatAttribute(XML_3MF_ATTRIBUTE_DSTCHANNEL_BACKGROUND, (nfFloat) pChannel->getBackground());
 				writeEndElement();
@@ -795,7 +799,7 @@ namespace NMR {
 			nfUint32 nLayerCount = pStackResource->getLayerCount();
 			for (nfUint32 nLayerIdx = 0; nLayerIdx < nLayerCount; nLayerIdx++) {
 				auto pLayer = pStackResource->getLayer(nLayerIdx);
-				writeStartElementWithPrefix(XML_3MF_ELEMENT_VOLUMETRICLAYER, XML_3MF_NAMESPACE_VOLUMETRICSPEC);
+				writeStartElementWithPrefix(XML_3MF_ELEMENT_VOLUMETRICLAYER, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
 				writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMETRICLAYER_TRANSFORM, pLayer->getTransformString ());
 				if (pLayer->getBlendMethod() == MODELBLENDMETHOD_MIX) {
 					writeFloatAttribute(XML_3MF_ATTRIBUTE_VOLUMETRICLAYER_SRCALPHA, (nfFloat)pLayer->getSourceAlpha());
@@ -830,7 +834,7 @@ namespace NMR {
 		if (pSelector == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-		writeStartElementWithPrefix(sElementName.c_str(), XML_3MF_NAMESPACE_VOLUMETRICSPEC);
+		writeStartElementWithPrefix(sElementName.c_str(), XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
 		writeIntAttribute(XML_3MF_ATTRIBUTE_CHANNELSELECTOR_IMAGE3DID, pSelector->getImage3DID()->getUniqueID());
 		writeStringAttribute(XML_3MF_ATTRIBUTE_CHANNELSELECTOR_SRCCHANNEL, pSelector->getSourceChannel ());
 		writeStringAttribute(XML_3MF_ATTRIBUTE_CHANNELSELECTOR_DSTCHANNEL, pSelector->getSourceChannel());

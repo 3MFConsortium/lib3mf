@@ -139,4 +139,20 @@ namespace Lib3MF
 		ASSERT_TRUE(std::equal(buffer.begin(), buffer.end(), callbackBuffer.vec.begin()));
 	}
 
+
+	TEST_F(Writer, VolumetricWriter)
+	{
+
+		auto pImage3D = model->AddImage3D (10, 10, 3);
+
+		auto pVolumetricStack = model->AddVolumetricStack();
+		pVolumetricStack->AddDestinationChannel("channel", 0.0);
+		auto pLayer = pVolumetricStack->AddLayer(wrapper->GetIdentityTransform(), Lib3MF::eBlendMethod::NoBlendMethod);
+
+		auto pChannelSelector = pLayer->AddChannelSelector(pImage3D.get(), "channel", "channel");			   	
+
+		Writer::writer3MF->WriteToFile(Writer::OutFolder + "PyramidVolume.3mf");
+
+	}
+
 }
