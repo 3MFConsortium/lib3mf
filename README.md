@@ -1,5 +1,6 @@
 # lib3mf
 [![Build Status](https://travis-ci.org/3MFConsortium/lib3mf.svg?branch=master)](https://travis-ci.org/3MFConsortium/lib3mf)
+[![Fuzzit Status](https://app.fuzzit.dev/badge?org_id=Bx6gSYcE8iMM5nhWY7iB&branch=master)](https://fuzzit.dev)
 
 Lib3MF is a C++ implementation of the 3D Manufacturing Format file standard.
 
