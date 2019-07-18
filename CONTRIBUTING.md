@@ -56,3 +56,12 @@ A new folder `build` is created and contains projects for the IDE/build target y
 		1. navigate to the `build`-folder 
 		2. Call `make` to build the projects
 		3. Run/debug a project 
+
+## Building Fuzzers for lib3mf
+```bash
+mkdir build
+cd build
+cmake -DLIB3MF_FUZZ=on  -DCMAKE_BUILD_TYPE=AddressSanitizer ..
+make -j4
+./Fuzz/Fuzz_ReadFromBuffer
+```

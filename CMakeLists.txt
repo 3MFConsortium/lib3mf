@@ -1,5 +1,14 @@
 cmake_minimum_required (VERSION 3.0.2)
 
+# Specify search path for CMake modules to be loaded by include()
+# and find_package()
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+
+# Add defaults for cmake
+# Those need to be set before the project() call.
+include(DefineCompilerFlags REQUIRED)
+
+
 IF (NOT ${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION} LESS 3.1)
   cmake_policy(SET CMP0054 OLD)
 ENDIF ()
@@ -10,6 +19,7 @@ ENDIF ()
 # increase patch version on every change that does not alter the API
 project (lib3MF
 	VERSION 1.8.1
+	LANGUAGES CXX C
 	DESCRIPTION "Lib3MF is a C++ implementation of the 3D Manufacturing Format file standard.")
 
 include(GNUInstallDirs)
@@ -156,6 +166,16 @@ message("LIB3MF_TESTS ... " ${LIB3MF_TESTS})
 if(LIB3MF_TESTS)
 	include(CTest)
 	add_subdirectory(UnitTests)
+endif()
+
+option(LIB3MF_FUZZ "Switch whether the fuzzers of Lib3MF should be build" OFF)
+message("LIB3MF_FUZZ ... " ${LIB3MF_FUZZ})
+if(LIB3MF_FUZZ)
+	if (NOT (CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND CMAKE_BUILD_TYPE MATCHES "AddressSanitizer"))
+			message(FATAL_ERROR "You need to build with Clang and AddressSanitizer for fuzzers to compile"
+					"Use export CC=clang; export CXX=clang++; and -DCMAKE_BUILD_TYPE=AddressSanitizer")
+	endif()
+	add_subdirectory(Fuzz)
 endif()
 
 
