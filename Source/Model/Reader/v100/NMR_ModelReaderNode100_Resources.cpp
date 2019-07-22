@@ -84,7 +84,7 @@ namespace NMR {
 		__NMRASSERT(pAttributeValue);
 		__NMRASSERT(pNameSpace);
 
-		m_pModel->buildCustomAttributes()->addAttribute(pNameSpace, pAttributeName, pAttributeValue);
+		m_pModel->resourcesCustomAttributes()->addAttribute(pNameSpace, pAttributeName, pAttributeValue);
 	}
 
 	void CModelReaderNode100_Resources::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
