@@ -16,6 +16,7 @@ set(SRCS_UNITTEST
 	./Source/MetaData.cpp
 	./Source/MetaDataGroup.cpp
 	./Source/CustomAttribute.cpp
+	./Source/CustomAttributes.cpp
 	./Source/Model.cpp
 	./Source/MultiProperties.cpp
 	./Source/Object.cpp
