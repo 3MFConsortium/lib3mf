@@ -123,6 +123,26 @@ namespace Lib3MF
 		VerifyAttributes(customAttributes);
 	}
 
+	TEST_F(CustomAttributes, Read_Resources)
+	{
+		reader->ReadFromFile(sTestFilesPath + "/CustomAttribute/" + "CustomAttribute_Resources.3mf");
+		CheckReaderWarnings(reader, 0);
+
+		auto customAttributes = model->GetResourcesCustomAttributes();
+
+		VerifyAttributes(customAttributes);
+	}
+
+	TEST_F(CustomAttributes, Read_Build)
+	{
+		reader->ReadFromFile(sTestFilesPath + "/CustomAttribute/" + "CustomAttribute_Build.3mf");
+		CheckReaderWarnings(reader, 0);
+
+		auto customAttributes = model->GetBuildCustomAttributes();
+
+		VerifyAttributes(customAttributes);
+	}
+
 	TEST_F(CustomAttributes, Read_BuildItem)
 	{
 		reader->ReadFromFile(sTestFilesPath + "/CustomAttribute/" + "CustomAttribute_BuildItem.3mf");
@@ -144,6 +164,16 @@ namespace Lib3MF
 		CheckReaderWarnings(reader, 0);
 
 		auto customAttributes = model->GetMeshObjectByID(2)->GetCustomAttributes();
+
+		VerifyAttributes(customAttributes);
+	}
+
+	TEST_F(CustomAttributes, Read_BaseMaterials)
+	{
+		reader->ReadFromFile(sTestFilesPath + "/CustomAttribute/" + "CustomAttribute_BaseMaterials.3mf");
+		CheckReaderWarnings(reader, 0);
+
+		auto customAttributes = model->GetBaseMaterialGroupByID(1)->GetCustomAttributes();
 
 		VerifyAttributes(customAttributes);
 	}
