@@ -493,8 +493,6 @@ namespace NMR {
 							if (pDefaultData && pDefaultData->m_nResourceID != 0) {
 								nObjectLevelPropertyID = pDefaultData->m_nResourceID;
 								nObjectLevelPropertyIndex = m_pPropertyIndexMapping->mapPropertyIDToIndex(nObjectLevelPropertyID, pDefaultData->m_nPropertyIDs[0]);
-							} else {
-								throw CNMRException(NMR_ERROR_MISSINGDEFAULTPID);
 							}
 						}
 

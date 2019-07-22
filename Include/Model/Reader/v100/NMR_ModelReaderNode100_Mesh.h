@@ -46,8 +46,8 @@ namespace NMR {
 		CMesh * m_pMesh;
 		CModel * m_pModel;
 
-		ModelResourceID m_nDefaultPropertyID;
-		ModelResourceIndex m_nDefaultPropertyIndex;
+		ModelResourceID m_nObjectLevelPropertyID;
+		ModelResourceIndex m_nObjectLevelPropertyIndex;
 
 		eModelBeamLatticeClipMode m_eClipMode;
 		nfBool m_bHasClippingMeshID;

@@ -992,17 +992,17 @@ Model error codes (0x8XXX)
 // Duplicate Property Index
 #define NMR_ERROR_DUPLICATEPINDEX 0x80BA
 
-// Missing Default Property ID
-#define NMR_ERROR_MISSINGDEFAULTPID 0x80BB
+// Missing Object-Level Property ID
+#define NMR_ERROR_MISSINGOBJECTLEVELPID 0x80BB
 
-// Invalid Default Property
-#define NMR_ERROR_INVALIDDEFAULTPID 0x80BC
+// Invalid Object-Level Property
+#define NMR_ERROR_INVALIDOBJECTLEVELPID 0x80BC
 
 // Build-item must not point to object of type MODELOBJECTTYPE_OTHER
 #define NMR_ERROR_BUILDITEMOBJECT_MUSTNOTBE_OTHER 0x80BD
 
-// Components-object must not have a default PID
-#define NMR_ERROR_DEFAULTPID_ON_COMPONENTSOBJECT 0x80BE
+// Components-object must not have an Object-Level PID
+#define NMR_ERROR_OBJECTLEVELPID_ON_COMPONENTSOBJECT 0x80BE
 
 // Nodes used for a beam are too close
 #define NMR_ERROR_BEAMLATTICENODESTOOCLOSE 0x80BF
