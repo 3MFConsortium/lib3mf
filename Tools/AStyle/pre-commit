@@ -1,0 +1,30 @@
+#!/bin/sh
+#
+# An example hook script to verify what is about to be committed.
+# Called by "git commit" with no arguments.  The hook should
+# exit with non-zero status after issuing an appropriate message if
+# it wants to stop the commit.
+#
+# To enable this hook, rename this file to "pre-commit".
+
+
+files=$(git diff --cached --name-only | grep ".cpp\|.hpp\|.h")
+STYLE="--recursive --style=mozilla --indent=tab=2 -n"
+PASS=1
+if [ "$files" != "" ]; then 
+	echo "Auto-formatting files"
+fi
+for file in ${files}; do
+	echo " $file"
+	output=$(./Tools/AStyle/AStyle.exe -n $file | grep "Formatted *")
+	if [ "$output" != "" ]; then 
+		echo $output
+		PASS=0
+	fi
+done
+if [ $PASS -eq 0 ]; then 
+	echo "Please review the auto-formatted files, stage and recommit them"
+	exit 1
+fi
+
+exit 0
