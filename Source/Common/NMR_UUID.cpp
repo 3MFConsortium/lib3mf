@@ -37,18 +37,19 @@ NMR_UUID.cpp implements a datatype and functions to handle UUIDs
 
 #include <algorithm>
 
-#if defined(_WIN32)
+#ifdef _WIN32
 #include <objbase.h>
 #include <iomanip>
 #else
-#include <uuid/uuid.h>
+#include <random>
+#include <ctime>
 #endif
 
 namespace NMR
 {
 	CUUID::CUUID()
 	{
-#if defined(_WIN32)
+#ifdef _WIN32
 		GUID guid;
 		if (CoCreateGuid(&guid) != S_OK)
 			throw CNMRException(NMR_ERROR_UUIDGENERATIONFAILED);
@@ -57,11 +58,22 @@ namespace NMR
 			throw CNMRException(NMR_ERROR_UUIDGENERATIONFAILED);
 		set(fnUTF16toUTF8(str).c_str());
 #else
-		uuid_t uuid;
-		uuid_generate_random(uuid);
-		char s[37];
-		uuid_unparse(uuid, s);
-		set(std::string(s).c_str());
+		// generation of a v4 UUID according to https://tools.ietf.org/html/rfc4122#section-4.4
+
+		static std::random_device rd;
+		std::mt19937 rng;
+		rng.seed(rd() ^ (unsigned int)(time(nullptr)));
+		std::uniform_int_distribution<std::mt19937::result_type> distHexaDec(0, 15);
+		std::uniform_int_distribution<std::mt19937::result_type> dist4(0, 4);
+		const nfChar* hexaDec = "0123456789abcdef";
+		nfChar string[33];
+		for (int i = 0; i < 32; i++)
+			string[i] = hexaDec[distHexaDec(rng)];
+		string[12] = hexaDec[4]; // set version 4
+		string[16] = hexaDec[4 + dist4(rng)];
+		string[32] = 0;
+
+		set(string);
 #endif
 	}
 

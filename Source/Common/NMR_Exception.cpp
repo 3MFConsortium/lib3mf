@@ -359,10 +359,10 @@ namespace NMR {
 		case NMR_ERROR_DUPLICATETHUMBNAIL: return "Duplicate thumbnail.";
 		case NMR_ERROR_DUPLICATEPID: return "Duplicate Property ID.";
 		case NMR_ERROR_DUPLICATEPINDEX: return "Duplicate Property Index.";
-		case NMR_ERROR_MISSINGDEFAULTPID: return "A MeshObject with triangle-properties is missing a default property.";
-		case NMR_ERROR_INVALIDDEFAULTPID: return "A MeshObject with triangle-properties has an invalid default property.";
+		case NMR_ERROR_MISSINGOBJECTLEVELPID: return "A MeshObject with triangle-properties is missing an object-level property.";
+		case NMR_ERROR_INVALIDOBJECTLEVELPID: return "A MeshObject with triangle-properties has an invalid object-level property.";
 		case NMR_ERROR_BUILDITEMOBJECT_MUSTNOTBE_OTHER: return "Build-item must not reference object of type OTHER.";
-		case NMR_ERROR_DEFAULTPID_ON_COMPONENTSOBJECT: return "A components object must not have a default PID.";
+		case NMR_ERROR_OBJECTLEVELPID_ON_COMPONENTSOBJECT: return "A components object must not have an object-level PID.";
 		case NMR_ERROR_BEAMLATTICENODESTOOCLOSE: return "Nodes used for a beam are closer then the specified minimal length.";
 		case NMR_ERROR_BEAMLATTICE_INVALID_REPRESENTATIONRESOURCE: return "The resource defined as representationmesh is invalid.";
 		case NMR_ERROR_BEAMLATTICE_INVALID_OBJECTTYPE: return "Beamlattice is defined on wrong object type.";

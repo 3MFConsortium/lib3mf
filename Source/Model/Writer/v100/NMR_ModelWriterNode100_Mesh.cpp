@@ -156,9 +156,10 @@ namespace NMR {
 					nObjectLevelPropertyIndex = m_pPropertyIndexMapping->mapPropertyIDToIndex(nObjectLevelPropertyID, pDefaultData->m_nPropertyIDs[0]);
 				}
 			}
-				
 		}
 		
+		bool bMeshHasAProperty = false;
+
 		m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_WRITETRIANGLES);
 		// Write Triangles
 		writeStartElement(XML_3MF_ELEMENT_TRIANGLES);
@@ -191,6 +192,7 @@ namespace NMR {
 
 
 			if (nPropertyID != 0) {
+				bMeshHasAProperty = true;
 				if ((nPropertyIndex1 != nPropertyIndex2) || (nPropertyIndex1 != nPropertyIndex3)) {
 					writeFaceData_ThreeProperties(pMeshFace, nPropertyID, nPropertyIndex1, nPropertyIndex2, nPropertyIndex3, pAdditionalString);
 				}
@@ -228,6 +230,10 @@ namespace NMR {
 			writeEndElement();  */
 		}
 		writeFullEndElement();
+
+		if (bMeshHasAProperty && !(nObjectLevelPropertyID != 0)) {
+			throw CNMRException(NMR_ERROR_MISSINGOBJECTLEVELPID);
+		}
 
 		if (m_bWriteBeamLatticeExtension) {
 			if (nBeamCount > 0) {
