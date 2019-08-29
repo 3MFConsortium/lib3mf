@@ -232,7 +232,7 @@ These are given by the 3MF Standard
 #define XML_3MF_ATTRIBUTE_VOLUMETRICLAYER_BLENDMETHOD "blendmethod"
 
 #define XML_3MF_ELEMENT_MASKINGCHANNELSELECTOR  "maskingchannelselector"
-#define XML_3MF_ELEMENT_SOURCECHANNELSELECTOR  "sourcechannelselector"
+#define XML_3MF_ELEMENT_SOURCECHANNELSELECTOR  "sourceimage3dchannelselector"
 
 #define XML_3MF_ATTRIBUTE_CHANNELSELECTOR_IMAGE3DID     "image3dID"
 #define XML_3MF_ATTRIBUTE_CHANNELSELECTOR_SRCCHANNEL    "srcchannel"

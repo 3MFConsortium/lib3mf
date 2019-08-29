@@ -32,8 +32,6 @@ Abstract: This is the class declaration of CResourceIterator
 #ifndef __LIB3MF_RESOURCEITERATOR
 #define __LIB3MF_RESOURCEITERATOR
 
-#include "Model\Classes\NMR_Model.h"
-
 #include "lib3mf_interfaces.hpp"
 #include "lib3mf_base.hpp"
 #ifdef _MSC_VER

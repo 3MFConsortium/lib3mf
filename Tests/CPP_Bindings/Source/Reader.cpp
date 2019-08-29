@@ -117,8 +117,7 @@ namespace Lib3MF
 		ASSERT_EQ(pVolumeIterator->MoveNext(), true);
 		auto pVolumetricStack = pVolumeIterator->GetCurrentVolumetricStack();
 
-		ASSERT_EQ(pVolumeIterator->MoveNext(), true);
-
+		ASSERT_EQ(pVolumeIterator->MoveNext(), false);
 	}
 
 }
