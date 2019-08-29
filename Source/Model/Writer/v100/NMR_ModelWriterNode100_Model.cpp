@@ -836,7 +836,7 @@ namespace NMR {
 		writeStartElementWithPrefix(sElementName.c_str(), XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
 		writeIntAttribute(XML_3MF_ATTRIBUTE_CHANNELSELECTOR_IMAGE3DID, pSelector->getImage3DID()->getUniqueID());
 		writeStringAttribute(XML_3MF_ATTRIBUTE_CHANNELSELECTOR_SRCCHANNEL, pSelector->getSourceChannel ());
-		writeStringAttribute(XML_3MF_ATTRIBUTE_CHANNELSELECTOR_DSTCHANNEL, pSelector->getSourceChannel());
+		writeStringAttribute(XML_3MF_ATTRIBUTE_CHANNELSELECTOR_DSTCHANNEL, pSelector->getDstChannel());
 		writeStringAttribute(XML_3MF_ATTRIBUTE_CHANNELSELECTOR_FILTER, CModelTexture2DResource::filterToString(pSelector->getFilter()));
 		writeFloatAttribute(XML_3MF_ATTRIBUTE_CHANNELSELECTOR_MINVALUE, (nfFloat) pSelector->getMinValue());
 		writeFloatAttribute(XML_3MF_ATTRIBUTE_CHANNELSELECTOR_MAXVALUE, (nfFloat)pSelector->getMaxValue());
