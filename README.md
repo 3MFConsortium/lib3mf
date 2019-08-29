@@ -26,11 +26,6 @@ lib3mf's documentation is available on https://lib3mf.readthedocs.io.
 ## Obtaining lib3mf
 Simply download the precompiled binary SDK https://github.com/3MFConsortium/lib3mf/releases.
 
-### Dependencies:
-On Unix-systems you have to install [uuid](https://linux.die.net/man/3/uuid)
-  * Linux (Ubuntu/Debian): `sudo apt-get install uuid-dev`
-  * MAC: `brew install ossp-uuid`
-
 ## Using lib3mf
 Allthough the different language bindings are kept as similar as possible,
 the usage of lib3mf still depends your programming language.
