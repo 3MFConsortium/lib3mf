@@ -1265,11 +1265,11 @@
 		<method name="HasPackageThumbnailAttachment" description = "Retrieve whether the OPC package contains a package thumbnail.">
 			<param name="HasThumbnail" type="bool" pass="return" description="returns whether the OPC package contains a package thumbnail" />
 		</method>
-		<method name="CreatePackageThumbnailAttachment" description = "Create a new a package thumbnail for the OPC package.">
-			<param name="Attachment" type="handle" class="Attachment" pass="return" description="Instance of a new thumbnailattachment object." />
+		<method name="CreatePackageThumbnailAttachment" description = "Create a new or the existing package thumbnail for the OPC package.">
+			<param name="Attachment" type="handle" class="Attachment" pass="return" description="Instance of a new or the existing thumbnailattachment object." />
 		</method>
 		<method name="GetPackageThumbnailAttachment" description = "Get the attachment to the OPC package containing the package thumbnail.">
-			<param name="Attachment" type="handle" class="Attachment" pass="return" description="Instance of the thumbnailattachment object." />
+			<param name="Attachment" type="optionalclass" class="Attachment" pass="return" description="Instance of the thumbnailattachment object or NULL." />
 		</method>
 		<method name="RemovePackageThumbnailAttachment" description = "Remove the attachment to the OPC package containing the package thumbnail.">
 		</method>

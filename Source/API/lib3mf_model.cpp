@@ -590,24 +590,43 @@ Lib3MF_uint32 CModel::GetAttachmentCount ()
 	return m_model->getAttachmentCount();
 }
 
-bool CModel::HasPackageThumbnailAttachment ()
+bool CModel::HasPackageThumbnailAttachment()
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	return m_model->getPackageThumbnail() != nullptr;
 }
 
-IAttachment * CModel::CreatePackageThumbnailAttachment ()
+IAttachment * CModel::CreatePackageThumbnailAttachment()
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	NMR::PModelAttachment pModelAttachment;
+	if (HasPackageThumbnailAttachment())
+	{
+		pModelAttachment = m_model->getPackageThumbnail();
+	}
+	else {
+		pModelAttachment = m_model->addPackageThumbnail();
+	}
+	if (pModelAttachment) {
+		return new CAttachment(pModelAttachment);
+	}
+	else {
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_ATTACHMENTNOTFOUND);
+	}
 }
 
-IAttachment * CModel::GetPackageThumbnailAttachment ()
+IAttachment * CModel::GetPackageThumbnailAttachment()
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	if (HasPackageThumbnailAttachment())
+	{
+		return new CAttachment(m_model->getPackageThumbnail());
+	}
+	else {
+		return nullptr;
+	}
 }
 
-void CModel::RemovePackageThumbnailAttachment ()
+void CModel::RemovePackageThumbnailAttachment()
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	m_model->removePackageThumbnail();
 }
 
 void CModel::AddCustomContentType (const std::string & sExtension, const std::string & sContentType)
