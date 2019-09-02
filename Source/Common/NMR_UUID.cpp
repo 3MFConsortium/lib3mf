@@ -70,7 +70,7 @@ namespace NMR
 		for (int i = 0; i < 32; i++)
 			string[i] = hexaDec[distHexaDec(rng)];
 		string[12] = hexaDec[4]; // set version 4
-		string[16] = hexaDec[4 + dist4(rng)];
+		string[16] = hexaDec[8 + dist4(rng)];
 		string[32] = 0;
 
 		set(string);
