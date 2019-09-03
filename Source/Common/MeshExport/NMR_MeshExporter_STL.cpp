@@ -103,15 +103,18 @@ namespace NMR {
 		pStream->writeBuffer(&nFacetCount, sizeof (nFacetCount));
 
 		std::list<MESHFORMAT_STL_FACET>::iterator iter;
-		for (iter = facetdata.begin(); iter != facetdata.end(); iter++) {
-			if (isBigEndian()) {
-				MESHFORMAT_STL_FACET tmpFacet = *iter;
+		if (isBigEndian()) {
+			MESHFORMAT_STL_FACET tmpFacet;
+			for (iter = facetdata.begin(); iter != facetdata.end(); iter++) {
+				tmpFacet = *iter;
 				tmpFacet.swapByteOrder();
 				pStream->writeBuffer(&tmpFacet, sizeof(MESHFORMAT_STL_FACET));
-			} else {
+			}
+		}
+		else {
+			for (iter = facetdata.begin(); iter != facetdata.end(); iter++) {
 				pStream->writeBuffer(&(*iter), sizeof(MESHFORMAT_STL_FACET));
 			}
-			
 		}
 	}
 
