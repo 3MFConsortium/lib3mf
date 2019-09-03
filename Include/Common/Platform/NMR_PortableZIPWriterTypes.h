@@ -34,6 +34,7 @@ NMR_PortableZIPWriterTypes.h defines a portable and fast writer of ZIP files
 #define __NMR_PORTABLEZIPWRITERTYPES
 
 #include "Common/NMR_Types.h"
+#include "Common/NMR_Architecture_Utils.h"
 
 #define ZIPFILEHEADERSIGNATURE 0x04034b50
 #define ZIPFILECENTRALHEADERSIGNATURE 0x02014b50
@@ -58,36 +59,7 @@ NMR_PortableZIPWriterTypes.h defines a portable and fast writer of ZIP files
 
 namespace NMR {
 
-	// helper functions for big-endian architecture
-
-	template<int N>
-	void swapBytesArray(unsigned char(&bytes)[N]) {
-		// Optimize this with a platform-specific API as desired.
-		for (unsigned char *p = bytes, *end = bytes + N - 1; p < end; ++p, --end) {
-			unsigned char tmp = *p;
-			*p = *end;
-			*end = tmp;
-		}
-	}
-	template<typename T>
-	T swapBytes(T value) {
-		swapBytesArray(*reinterpret_cast<unsigned char(*)[sizeof(value)]>(&value));
-		return value;
-	}
-
-	inline bool isBigEndian(void)
-	{
-		union {
-			uint32_t i;
-			char c[4];
-		} bint = { 0x01020304 };
-
-		return bint.c[0] == 1;
-	}
-
 #pragma pack (1)
-	
-
 	typedef struct {
 		nfUint32 m_nSignature;
 		nfUint16 m_nVersion;

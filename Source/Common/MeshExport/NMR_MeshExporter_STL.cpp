@@ -74,13 +74,13 @@ namespace NMR {
 			for (j = 0; j < 3; j++) {
 				node = pMesh->getNode (face->m_nodeindices[j]);
 				if (pmMatrix)
-					facet.m_vertieces[j] = fnMATRIX3_apply(*pmMatrix, node->m_position);
+					facet.m_vertices[j] = fnMATRIX3_apply(*pmMatrix, node->m_position);
 				else
-					facet.m_vertieces[j] = node->m_position;
+					facet.m_vertices[j] = node->m_position;
 			}	
 
 			// Calculate Triangle Normals
-			facet.m_normal = fnVEC3_calcTriangleNormal(facet.m_vertieces[0], facet.m_vertieces[1], facet.m_vertieces[2]);
+			facet.m_normal = fnVEC3_calcTriangleNormal(facet.m_vertices[0], facet.m_vertices[1], facet.m_vertices[2]);
 			facet.m_attribute = 0;
 
 			facetdata.push_back(facet);
@@ -98,11 +98,20 @@ namespace NMR {
 
 		// Write Header
 		pStream->writeBuffer(&stlheader[0], 80);
+		if (isBigEndian())
+			nFacetCount = swapBytes(nFacetCount);
 		pStream->writeBuffer(&nFacetCount, sizeof (nFacetCount));
 
 		std::list<MESHFORMAT_STL_FACET>::iterator iter;
 		for (iter = facetdata.begin(); iter != facetdata.end(); iter++) {
-			pStream->writeBuffer(&(*iter), sizeof (MESHFORMAT_STL_FACET));
+			if (isBigEndian()) {
+				MESHFORMAT_STL_FACET tmpFacet = *iter;
+				tmpFacet.swapByteOrder();
+				pStream->writeBuffer(&tmpFacet, sizeof(MESHFORMAT_STL_FACET));
+			} else {
+				pStream->writeBuffer(&(*iter), sizeof(MESHFORMAT_STL_FACET));
+			}
+			
 		}
 	}
 
