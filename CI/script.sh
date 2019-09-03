@@ -3,5 +3,5 @@
 cd lib3mf-repo
 sh cmake/GenerateMake.sh
 cd build
-cmake --build .
+make -j2
 ctest -V .
