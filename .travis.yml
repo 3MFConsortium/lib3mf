@@ -38,7 +38,7 @@ before_script:
       docker pull multiarch/qemu-user-static ;
       docker pull multiarch/ubuntu-debootstrap:powerpc-xenial ;
       docker run --rm --privileged multiarch/qemu-user-static --reset -p y ;
-      docker build -t ppc-xenial CI ;
+      docker build -t ppc-xenial -f CI/Dockerfile . ;
       fi
 
 script:
