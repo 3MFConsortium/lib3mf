@@ -106,6 +106,12 @@ namespace NMR {
 		if (m_Components.size() == 0)
 			return true;
 
+		if (this->getSliceStack().get()) {
+			if (!fnMATRIX3_isplanar(totalParentMatrix)) {
+				return false;
+			}
+		}
+
 		for (auto iIterator = m_Components.begin(); iIterator != m_Components.end(); iIterator++) {
 			CModelObject * pObject = (*iIterator)->getObject();
 			__NMRASSERT(pObject);

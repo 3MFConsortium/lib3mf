@@ -824,7 +824,10 @@ namespace NMR {
 				if (pBuildItem->hasTransform())
 					writeStringAttribute(XML_3MF_ATTRIBUTE_ITEM_TRANSFORM, pBuildItem->getTransformString());
 
-				
+				if (m_bWriteSliceExtension && !pBuildItem->isValidForSlices()) {
+					throw CNMRException(NMR_ERROR_SLICETRANSFORMATIONPLANAR);
+				}
+
 				writeMetaDataGroup(pBuildItem->metaDataGroup());
 				if (pBuildItem->metaDataGroup()->getMetaDataCount() > 0)
 					writeFullEndElement();
