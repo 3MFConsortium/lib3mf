@@ -128,6 +128,9 @@ namespace NMR {
 
 		pStream->readBuffer(&aSTLHeader[0], 80, true);
 		pStream->readBuffer((nfByte*)&nFaceCount, sizeof(nFaceCount), true);
+		if (isBigEndian()) {
+			nFaceCount = swapBytes(nFaceCount);
+		}
 
 		if (nFaceCount > NMR_MESH_MAXFACECOUNT)
 			throw CNMRException(NMR_ERROR_INVALIDFACECOUNT);
@@ -141,7 +144,7 @@ namespace NMR {
 			}
 		}
 
-		nfUint32 nIdx, j, k, nNodeIdx;
+		nfUint32 nNodeIdx;
 		MESHNODE * pNodes[3];
 		MESHFORMAT_STL_FACET Facet;
 		CVectorTree VectorTree;
@@ -149,20 +152,23 @@ namespace NMR {
 
 		VectorTree.setUnits(m_fUnits);
 
-		for (nIdx = 0; nIdx < nFaceCount; nIdx++) {
+		for (nfUint32 nIdx = 0; nIdx < nFaceCount; nIdx++) {
 			pStream->readBuffer((nfByte*)&Facet, sizeof(Facet), true);
+			if (isBigEndian()) {
+				Facet.swapByteOrder();
+			}
 
 			// Check, if Coordinates are in Valid Space
 			bIsValid = true;
-			for (j = 0; j < 3; j++)
-				for (k = 0; k < 3; k++)
-					bIsValid &= (fabs(Facet.m_vertieces[j].m_fields[k]) < NMR_MESH_MAXCOORDINATE);
+			for (nfUint32 j = 0; j < 3; j++)
+				for (nfUint32 k = 0; k < 3; k++)
+					bIsValid &= (fabs(Facet.m_vertices[j].m_fields[k]) < NMR_MESH_MAXCOORDINATE);
 
 			// Identify Nodes via Tree
 			if (bIsValid) {
 
-				for (j = 0; j < 3; j++) {
-					NVEC3 vPosition = Facet.m_vertieces[j];
+				for (nfUint32 j = 0; j < 3; j++) {
+					NVEC3 vPosition = Facet.m_vertices[j];
 					if (pmMatrix)
 						vPosition = fnMATRIX3_apply(*pmMatrix, vPosition);
 
