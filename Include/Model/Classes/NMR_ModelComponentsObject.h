@@ -64,6 +64,7 @@ namespace NMR {
 		// check, if the object is a valid object description
 		virtual nfBool isValid();
 
+		nfBool hasSlices(nfBool bRecursive) override;
 		virtual nfBool isValidForSlices(const NMATRIX3& totalParentMatrix);
 
 		virtual void calculateComponentDepthLevel(nfUint32 nLevel);

@@ -178,9 +178,9 @@ eLib3MFSlicesMeshResolution CObject::GetSlicesMeshResolution()
 	return eLib3MFSlicesMeshResolution(object()->slicesMeshResolution());
 }
 
-bool CObject::HasSliceStack()
+bool CObject::HasSlices(bool bRecursive)
 {
-	return (object()->getSliceStack().get() != nullptr);
+	return object()->hasSlices(bRecursive);
 }
 
 void CObject::ClearSliceStack()

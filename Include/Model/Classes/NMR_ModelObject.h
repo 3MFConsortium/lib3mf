@@ -97,6 +97,7 @@ namespace NMR {
 		// check, if the object is a valid object description
 		virtual nfBool isValid() = 0;
 
+		virtual nfBool hasSlices(nfBool bRecursive) = 0;
 		virtual nfBool isValidForSlices(const NMATRIX3& totalParentMatrix) = 0;
 
 		void assignSliceStack(PModelSliceStack pSliceStackId);

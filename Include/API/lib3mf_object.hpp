@@ -108,7 +108,7 @@ public:
 
 	virtual eLib3MFSlicesMeshResolution GetSlicesMeshResolution();
 
-	virtual bool HasSliceStack();
+	virtual bool HasSlices(bool bRecursive);
 
 	virtual void ClearSliceStack();
 

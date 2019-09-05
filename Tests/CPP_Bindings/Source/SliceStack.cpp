@@ -64,21 +64,21 @@ namespace Lib3MF
 
 	TEST_F(SliceStack, HasSetClearSliceStack)
 	{
-		ASSERT_FALSE(mesh->HasSliceStack());
+		ASSERT_FALSE(mesh->HasSlices(false));
 
 		mesh->AssignSliceStack(sliceStack.get());
-		ASSERT_TRUE(mesh->HasSliceStack());
+		ASSERT_TRUE(mesh->HasSlices(false));
 
 		auto copySliceStack = mesh->GetSliceStack();
 		ASSERT_EQ(copySliceStack->GetResourceID(), sliceStack->GetResourceID());
 
 		mesh->ClearSliceStack();
-		ASSERT_FALSE(mesh->HasSliceStack());
+		ASSERT_FALSE(mesh->HasSlices(false));
 	}
 
 	TEST_F(SliceStack, SliceResolution)
 	{
-		ASSERT_FALSE(mesh->HasSliceStack());
+		ASSERT_FALSE(mesh->HasSlices(false));
 
 		eSlicesMeshResolution res = mesh->GetSlicesMeshResolution();
 		ASSERT_EQ(res, eSlicesMeshResolution::Fullres);

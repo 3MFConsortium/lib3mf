@@ -101,6 +101,24 @@ namespace NMR {
 		return true;
 	}
 
+	nfBool CModelComponentsObject::hasSlices(nfBool bRecursive)
+	{
+		if (bRecursive) {
+			if (this->getSliceStack().get())
+				return true;
+			for (auto iIterator = m_Components.begin(); iIterator != m_Components.end(); iIterator++) {
+				CModelObject * pObject = (*iIterator)->getObject();
+				__NMRASSERT(pObject);
+				if (pObject->hasSlices(bRecursive))
+					return true;
+			}
+			return false;
+		}
+		else {
+			return (this->getSliceStack().get() != nullptr);
+		}
+	}
+
 	nfBool CModelComponentsObject::isValidForSlices(const NMATRIX3& totalParentMatrix)
 	{
 		if (this->getSliceStack().get()) {
