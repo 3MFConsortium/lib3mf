@@ -103,9 +103,6 @@ namespace NMR {
 
 	nfBool CModelComponentsObject::isValidForSlices(const NMATRIX3& totalParentMatrix)
 	{
-		if (m_Components.size() == 0)
-			return true;
-
 		if (this->getSliceStack().get()) {
 			if (!fnMATRIX3_isplanar(totalParentMatrix)) {
 				return false;
