@@ -50,7 +50,7 @@ namespace NMR {
 		CModel * m_pModel;
 		ModelResourceID m_nID;
 		nfBool m_bHasThumbnail;
-		std::string m_sThumbnail;
+		std::string m_sThumbnailPath;
 		std::string m_sPartNumber;
 		std::string m_sName;
 		PUUID m_UUID;

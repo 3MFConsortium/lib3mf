@@ -418,15 +418,15 @@ namespace NMR {
 			writeStringAttribute(XML_3MF_ATTRIBUTE_OBJECT_TYPE, pObject->getObjectTypeString());
 
 			// Write Object Thumbnail (optional)
-			std::string sThumbnailPath = pObject->getThumbnail();
-			if (!sThumbnailPath.empty()) {
-				PModelAttachment pAttachment = m_pModel->findModelAttachment(sThumbnailPath);
-				if (!pAttachment)
+			PModelAttachment pThumbnail = pObject->getThumbnailAttachment();
+			if (pThumbnail) {
+				PModelAttachment pModelAttachment = m_pModel->findModelAttachment(pThumbnail->getPathURI());
+				if (!pModelAttachment)
 					throw CNMRException(NMR_ERROR_NOTEXTURESTREAM);
-				if (! (pAttachment->getRelationShipType() == PACKAGE_TEXTURE_RELATIONSHIP_TYPE))
+				if (!((pModelAttachment->getRelationShipType() == PACKAGE_TEXTURE_RELATIONSHIP_TYPE) || (pModelAttachment->getRelationShipType() == PACKAGE_THUMBNAIL_RELATIONSHIP_TYPE)))
 					throw CNMRException(NMR_ERROR_NOTEXTURESTREAM);
 
-				writeStringAttribute(XML_3MF_ATTRIBUTE_OBJECT_THUMBNAIL, sThumbnailPath);
+				writeStringAttribute(XML_3MF_ATTRIBUTE_OBJECT_THUMBNAIL, pThumbnail->getPathURI());
 			}
 
 			if (m_bWriteProductionExtension) {

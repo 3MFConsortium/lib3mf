@@ -98,6 +98,12 @@ public:
 
 	bool IsValid ();
 
+	void SetAttachmentAsThumbnail(IAttachment* pAttachment);
+
+	IAttachment * GetThumbnailAttachment();
+
+	void ClearThumbnailAttachment();
+
 	IMetaDataGroup * GetMetaDataGroup ();
 
 	std::string GetUUID(bool & bHasUUID);

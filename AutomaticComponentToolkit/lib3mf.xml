@@ -501,10 +501,14 @@
 		<method name="IsValid" description="Retrieves, if the object is valid according to the core spec. For mesh objects, we distinguish between the type attribute of the object:In case of object type other, this always means false.In case of object type model or solidsupport, this means, if the mesh suffices all requirements of the core spec chapter 4.1.In case of object type support or surface, this always means true.A component objects is valid if and only if it contains at least one component and all child components are valid objects.">
 			<param name="IsValid" type="bool" pass="return" description="returns whether the object is a valid object description" />
 		</method>
-
-		<!-- property handling -->
-		<!-- object thumbnails -->
-
+		<method name="SetAttachmentAsThumbnail" description = "Use an existing attachment as thumbnail for this object">
+			<param name="Attachment" type="handle" class="Attachment" pass="in" description="Instance of a new or the existing thumbnailattachment object." />
+		</method>
+		<method name="GetThumbnailAttachment" description = "Get the attachment containing the object thumbnail.">
+			<param name="Attachment" type="optionalclass" class="Attachment" pass="return" description="Instance of the thumbnailattachment object or NULL." />
+		</method>
+		<method name="ClearThumbnailAttachment" description = "Clears the attachment. The attachment instance is not removed from the package.">
+		</method>
 		<method name="GetUUID" description="Retrieves an object's uuid string (see production extension specification)">
 			<param name="HasUUID" type="bool" pass="out" description="flag whether the build item has a UUID"/>
 			<param name="UUID" type="string" pass="return" description="returns object uuid." />
@@ -1250,7 +1254,7 @@
 			<param name="AttachmentInstance" type="handle" class="Attachment" pass="return" description="Instance of the attachment object" />
 		</method>
 		<method name="RemoveAttachment" description = "Removes attachment from the model.">
-			<param name="AttachmentInstance" type="handle" class="Attachment" pass="in" description="Attachment instance to remov" />
+			<param name="AttachmentInstance" type="handle" class="Attachment" pass="in" description="Attachment instance to remove" />
 		</method>
 		<method name="GetAttachment" description = "retrieves an attachment stream object from the model..">
 			<param name="Index" type="uint32" pass="in" description="Index of the attachment stream" />
