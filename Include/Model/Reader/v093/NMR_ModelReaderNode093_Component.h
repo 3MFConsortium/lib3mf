@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium
+Copyright (C) 2018 3MF Consortium
 
 All rights reserved.
 
@@ -26,58 +26,38 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelReaderNode_Model.h defines the Model Reader Model Node Class.
-A model reader model node is a parser for the root node of an XML Model Stream.
+NMR_ModelReader093_Component.h defines the Model Component Reader Node Class.
 
 --*/
 
-#ifndef __NMR_MODELREADERNODE_MODEL
-#define __NMR_MODELREADERNODE_MODEL
+#ifndef __NMR_MODELREADERNODE093_COMPONENT
+#define __NMR_MODELREADERNODE093_COMPONENT
 
 #include "Model/Reader/NMR_ModelReaderNode.h"
 
 namespace NMR {
 
-	class CModelReaderNode_Model : public CModelReaderNode {
+	class CModelReaderNode093_Component : public CModelReaderNode {
 	protected:
 		CModel * m_pModel;
-		std::string m_sRequiredExtensions;
-		std::map<std::string, std::string> m_ListedExtensions;
+		ModelResourceID m_ObjectID;
+		nfBool m_bHasID;
+		NMATRIX3 m_mTransform;
 
-		std::string m_sPath;
-		nfBool m_bHasResources;
-		nfBool m_bHasBuild;
-
-		nfBool m_bWithinIgnoredElement;
-		nfBool m_bIgnoreBuild;
-		nfBool m_bIgnoreMetaData;
-
-		nfBool m_bHaveWarnedAboutV093;
-
-		void ReadMetaDataNode(_In_ CXmlReader * pXMLReader);
-
-		virtual void CheckRequiredExtensions();
-
-		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
-		virtual void OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace);
 	public:
-		CModelReaderNode_Model() = delete;
-		CModelReaderNode_Model(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings, const std::string sPath, _In_ PProgressMonitor pProgressMonitor);
+		CModelReaderNode093_Component() = delete;
+		CModelReaderNode093_Component(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 
-		nfBool getHasResources();
-		nfBool getHasBuild();
+		CModelObject * getObject();
+		NMATRIX3 getTransform();
 
-		nfBool ignoreBuild();
-		void setIgnoreBuild(bool bIgnoreBuild);
-		nfBool ignoreMetaData();
-		void setIgnoreMetaData(bool bIgnoreMetaData);
 	};
 
-	typedef std::shared_ptr <CModelReaderNode_Model> PModelReaderNode_Model;
+	typedef std::shared_ptr <CModelReaderNode093_Component> PModelReaderNode093_Component;
 
 }
 
-#endif // __NMR_MODELREADERNODE_MODEL
+#endif // __NMR_MODELREADERNODE093_COMPONENT

@@ -27,6 +27,7 @@ set(SRCS_UNITTEST
 	./Source/Writer.cpp
 	./Source/TextureProperty.cpp
 	./Source/TextureResources.cpp
+	./Source/v093.cpp
 	./Source/Wrapper.cpp
 )
 

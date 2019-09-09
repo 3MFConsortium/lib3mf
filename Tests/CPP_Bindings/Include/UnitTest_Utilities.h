@@ -87,6 +87,14 @@ inline sLib3MFTransform getIdentityTransform()
 	return t;
 }
 
+inline void CompareColors(Lib3MF::sColor c1, Lib3MF::sColor c2)
+{
+	EXPECT_EQ(c1.m_Alpha, c2.m_Alpha);
+	EXPECT_EQ(c1.m_Red, c2.m_Red);
+	EXPECT_EQ(c1.m_Green, c2.m_Green);
+	EXPECT_EQ(c1.m_Blue, c2.m_Blue);
+}
+
 template<typename T>
 struct PositionedVector
 {
