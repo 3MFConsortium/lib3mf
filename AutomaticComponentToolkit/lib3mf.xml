@@ -522,8 +522,9 @@
 		<method name="GetSlicesMeshResolution" description="get the meshresolution of the mesh object">
 			<param name="MeshResolution" type="enum" class="SlicesMeshResolution" pass="return" description="meshresolution of this object" />
 		</method>
-		<method name="HasSliceStack" description="returns whether the Object has a slice stack">
-			<param name="HasStack" type="bool" pass="return" description="does the object have a slice stack" />
+		<method name="HasSlices" description="returns whether the Object has a slice stack. If Recursive is true, also checks whether any references object has a slice stack">
+			<param name="Recursive" type="bool" pass="in" description="check also all referenced objects?" />
+			<param name="HasSlices" type="bool" pass="return" description="does the object have a slice stack?" />
 		</method>
 		<method name="ClearSliceStack" description="unlinks the attached slicestack from this object. If no slice stack is attached, do noting.">
 		</method>
