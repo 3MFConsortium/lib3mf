@@ -57,8 +57,8 @@ This is the class for exporting the 3mf model stream root node.
 
 namespace NMR {
 
-	CModelWriterNode100_Model::CModelWriterNode100_Model(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter, _In_ PProgressMonitor pProgressMonitor)
-		:CModelWriterNode(pModel, pXMLWriter, pProgressMonitor)
+	CModelWriterNode100_Model::CModelWriterNode100_Model(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter, _In_ PProgressMonitor pProgressMonitor, _In_ nfUint32 nDecimalPrecision)
+		:CModelWriterNode(pModel, pXMLWriter, pProgressMonitor), m_nDecimalPrecision(nDecimalPrecision)
 	{
 		m_ResourceCounter = pModel->generateResourceID();
 
@@ -80,7 +80,7 @@ namespace NMR {
 
 
 	CModelWriterNode100_Model::CModelWriterNode100_Model(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter, _In_ PProgressMonitor pProgressMonitor,
-		nfBool bWritesRootModel) : CModelWriterNode(pModel, pXMLWriter, pProgressMonitor)
+		_In_ nfUint32 nDecimalPrecision, nfBool bWritesRootModel) : CModelWriterNode(pModel, pXMLWriter, pProgressMonitor), m_nDecimalPrecision(nDecimalPrecision)
 	{
 		if (bWritesRootModel) {
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
@@ -485,7 +485,7 @@ namespace NMR {
 				}
 
 				CModelWriterNode100_Mesh ModelWriter_Mesh(pMeshObject, m_pXMLWriter, m_pProgressMonitor,
-					m_pPropertyIndexMapping, m_bWriteMaterialExtension, m_bWriteBeamLatticeExtension);
+					m_pPropertyIndexMapping, m_nDecimalPrecision, m_bWriteMaterialExtension, m_bWriteBeamLatticeExtension);
 
 				ModelWriter_Mesh.writeToXML();
 			}

@@ -163,3 +163,13 @@ void CWriter::SetProgressCallback(const Lib3MFProgressCallback callback, const L
 	m_pWriter->SetProgressCallback(lambdaCallback, reinterpret_cast<void*>(pUserData));
 }
 
+Lib3MF_uint32 CWriter::GetDecimalPrecision()
+{
+	return m_pWriter->GetDecimalPrecision();
+}
+
+void CWriter::SetDecimalPrecision(const Lib3MF_uint32 nDecimalPrecision)
+{
+	m_pWriter->SetDecimalPrecision(nDecimalPrecision);
+}
+
