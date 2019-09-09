@@ -57,11 +57,7 @@ namespace NMR {
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 
-		//_Ret_notnull_ CMeshInformation_TexCoords * createTexCoordInformation();
-		//_Ret_notnull_ CMeshInformation_NodeColors * createNodeColorInformation();
-		//_Ret_notnull_ CMeshInformation_BaseMaterials * createBaseMaterialInformation();
-
-		_Ret_notnull_ CMeshInformation_Properties * CModelReaderNode093_Triangles::createPropertiesInformation();
+		_Ret_notnull_ CMeshInformation_Properties * createPropertiesInformation();
 	public:
 		CModelReaderNode093_Triangles() = delete;
 		CModelReaderNode093_Triangles(_In_ CModel * pModel, _In_ CMesh * pMesh, _In_ PModelReader_ColorMapping pColorMapping, _In_ PModelReader_TexCoordMapping pTexCoordMapping, PModelBaseMaterialResource pMaterialResource, _In_ PModelReaderWarnings pWarnings);

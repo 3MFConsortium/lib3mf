@@ -144,7 +144,10 @@ namespace NMR {
 							}
 							if (!pTextureGroup) {
 								// Create Resource
-								PModelTexture2DGroupResource pSharedTextureGroup = std::make_shared<CModelTexture2DGroupResource>(10000+m_pModel->getTexture2DGroupCount(), m_pModel, pTexture2dResource);
+								// This is pretty bad way to set a new Model ResourceID, but we do not have read all resources yet...
+								ModelResourceID nNewModelResourceID = (ModelResourceID)((long)XML_3MF_MAXRESOURCEINDEX - 1 - (long)m_pModel->getTexture2DGroupCount());
+								
+								PModelTexture2DGroupResource pSharedTextureGroup = std::make_shared<CModelTexture2DGroupResource>(nNewModelResourceID, m_pModel, pTexture2dResource);
 								m_pModel->addResource(pSharedTextureGroup);
 								pTextureGroup = pSharedTextureGroup.get();
 							}
