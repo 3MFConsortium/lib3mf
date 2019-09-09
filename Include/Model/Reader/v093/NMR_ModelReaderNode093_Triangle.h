@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium
+Copyright (C) 2018 3MF Consortium
 
 All rights reserved.
 
@@ -26,58 +26,50 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelReaderNode_Model.h defines the Model Reader Model Node Class.
-A model reader model node is a parser for the root node of an XML Model Stream.
+NMR_ModelReaderNode093_Triangle.h defines the Model Reader Triangle Node Class.
+A triangle reader model node is a parser for the triangle node of an XML Model Stream.
 
 --*/
 
-#ifndef __NMR_MODELREADERNODE_MODEL
-#define __NMR_MODELREADERNODE_MODEL
+#ifndef __NMR_MODELREADERNODE093_TRIANGLE
+#define __NMR_MODELREADERNODE093_TRIANGLE
 
 #include "Model/Reader/NMR_ModelReaderNode.h"
+#include "Model/Classes/NMR_ModelComponent.h"
+#include "Model/Classes/NMR_ModelObject.h"
 
 namespace NMR {
 
-	class CModelReaderNode_Model : public CModelReaderNode {
+	class CModelReaderNode093_Triangle : public CModelReaderNode {
 	protected:
-		CModel * m_pModel;
-		std::string m_sRequiredExtensions;
-		std::map<std::string, std::string> m_ListedExtensions;
+		nfInt32 m_nIndex1;
+		nfInt32 m_nIndex2;
+		nfInt32 m_nIndex3;
+		nfInt32 m_nTextureIndex1;
+		nfInt32 m_nTextureIndex2;
+		nfInt32 m_nTextureIndex3;
+		nfInt32 m_nColorID1;
+		nfInt32 m_nColorID2;
+		nfInt32 m_nColorID3;
+		nfInt32 m_nMaterialID;
+		nfInt32 m_nTextureID;
 
-		std::string m_sPath;
-		nfBool m_bHasResources;
-		nfBool m_bHasBuild;
-
-		nfBool m_bWithinIgnoredElement;
-		nfBool m_bIgnoreBuild;
-		nfBool m_bIgnoreMetaData;
-
-		nfBool m_bHaveWarnedAboutV093;
-
-		void ReadMetaDataNode(_In_ CXmlReader * pXMLReader);
-
-		virtual void CheckRequiredExtensions();
-
-		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
-		virtual void OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace);
 	public:
-		CModelReaderNode_Model() = delete;
-		CModelReaderNode_Model(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings, const std::string sPath, _In_ PProgressMonitor pProgressMonitor);
+		CModelReaderNode093_Triangle() = delete;
+		CModelReaderNode093_Triangle(_In_ PModelReaderWarnings pWarnings);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
+		void retrieveIndices(_Out_ nfInt32 & nIndex1, _Out_ nfInt32 & nIndex2, _Out_ nfInt32 & nIndex3, nfInt32 nNodeCount);
+		nfBool retrieveTextureIndices(_Out_ nfInt32 & nIndex1, _Out_ nfInt32 & nIndex2, _Out_ nfInt32 & nIndex3);
 
-		nfBool getHasResources();
-		nfBool getHasBuild();
-
-		nfBool ignoreBuild();
-		void setIgnoreBuild(bool bIgnoreBuild);
-		nfBool ignoreMetaData();
-		void setIgnoreMetaData(bool bIgnoreMetaData);
+		nfBool retrieveColorIDs(_Out_ nfInt32 & nColorID1, _Out_ nfInt32 & nColorID2, _Out_ nfInt32 & nColorID3);
+		nfInt32 retrieveTextureID();
+		nfInt32 retrieveMaterialID();
 	};
 
-	typedef std::shared_ptr <CModelReaderNode_Model> PModelReaderNode_Model;
+	typedef std::shared_ptr <CModelReaderNode093_Triangle> PModelReaderNode093_Triangle;
 
 }
 
-#endif // __NMR_MODELREADERNODE_MODEL
+#endif // __NMR_MODELREADERNODE093_TRIANGLE

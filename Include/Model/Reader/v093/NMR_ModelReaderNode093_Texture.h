@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium
+Copyright (C) 2018 3MF Consortium
 
 All rights reserved.
 
@@ -26,58 +26,52 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelReaderNode_Model.h defines the Model Reader Model Node Class.
-A model reader model node is a parser for the root node of an XML Model Stream.
+NMR_ModelReaderNode093_Texture.h defines the Model Reader Texture Class.
 
 --*/
 
-#ifndef __NMR_MODELREADERNODE_MODEL
-#define __NMR_MODELREADERNODE_MODEL
+#ifndef __NMR_MODELREADERNODE093_TEXTURE
+#define __NMR_MODELREADERNODE093_TEXTURE
 
 #include "Model/Reader/NMR_ModelReaderNode.h"
+#include "Model/Classes/NMR_ModelComponent.h"
+#include "Model/Classes/NMR_ModelComponentsObject.h"
+#include "Model/Classes/NMR_ModelObject.h"
 
 namespace NMR {
 
-	class CModelReaderNode_Model : public CModelReaderNode {
-	protected:
+	class CModelReaderNode093_Texture : public CModelReaderNode {
+	private:
 		CModel * m_pModel;
-		std::string m_sRequiredExtensions;
-		std::map<std::string, std::string> m_ListedExtensions;
+		ModelResourceID m_nID;
 
 		std::string m_sPath;
-		nfBool m_bHasResources;
-		nfBool m_bHasBuild;
+		std::string m_sContentType;
+		std::string m_sTileStyleU;
+		std::string m_sTileStyleV;
+		std::string m_sFilter;
 
-		nfBool m_bWithinIgnoredElement;
-		nfBool m_bIgnoreBuild;
-		nfBool m_bIgnoreMetaData;
-
-		nfBool m_bHaveWarnedAboutV093;
-
-		void ReadMetaDataNode(_In_ CXmlReader * pXMLReader);
-
-		virtual void CheckRequiredExtensions();
-
-		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
+		PModelTexture2DResource m_pTexture2DResource;
+	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
-		virtual void OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace);
 	public:
-		CModelReaderNode_Model() = delete;
-		CModelReaderNode_Model(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings, const std::string sPath, _In_ PProgressMonitor pProgressMonitor);
+		CModelReaderNode093_Texture() = delete;
+		CModelReaderNode093_Texture(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 
-		nfBool getHasResources();
-		nfBool getHasBuild();
+		ModelResourceID getID ();
 
-		nfBool ignoreBuild();
-		void setIgnoreBuild(bool bIgnoreBuild);
-		nfBool ignoreMetaData();
-		void setIgnoreMetaData(bool bIgnoreMetaData);
+		std::string getPath();
+		std::string getContentType();
+		std::string getTileStyleU();
+		std::string getTileStyleV();
 	};
 
-	typedef std::shared_ptr <CModelReaderNode_Model> PModelReaderNode_Model;
+	typedef std::shared_ptr <CModelReaderNode093_Texture> PModelReaderNode093_Texture;
+
 
 }
 
-#endif // __NMR_MODELREADERNODE_MODEL
+#endif // __NMR_MODELREADERNODE093_TEXTURE
+
