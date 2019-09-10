@@ -43,7 +43,7 @@ namespace NMR {
 
 	class CModelWriter {
 	private:
-			
+		nfUint32 m_nDecimalPrecision;
 	protected:
 		PModel m_pModel;
 		PProgressMonitor m_pProgressMonitor;
@@ -56,6 +56,9 @@ namespace NMR {
  		void removeCustomContentType(_In_ std::wstring sExtension);
 
 		void SetProgressCallback(Lib3MFProgressCallback callback, void* userData);
+
+		void SetDecimalPrecision(nfUint32);
+		nfUint32 GetDecimalPrecision();
 	};
 
 	typedef std::shared_ptr <CModelWriter> PModelWriter;

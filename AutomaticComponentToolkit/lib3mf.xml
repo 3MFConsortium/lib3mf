@@ -289,6 +289,12 @@
 			<param name="ProgressCallback" type="functiontype" class="ProgressCallback" pass="in" description="pointer to the callback function."/>
 			<param name="UserData" type="pointer" pass="in" description="pointer to arbitrary user data that is passed without modification to the callback."/>
 		</method>
+		<method name="GetDecimalPrecision" description = "Returns the number of digits after the decimal point to be written in each vertex coordinate-value.">
+			<param name="DecimalPrecision" type="uint32" pass="return" description="The number of digits to be written in each vertex coordinate-value after the decimal point." />
+		</method>
+		<method name="SetDecimalPrecision" description = "Sets the number of digits after the decimal point to be written in each vertex coordinate-value.">
+			<param name="DecimalPrecision" type="uint32" pass="in" description="The number of digits to be written in each vertex coordinate-value after the decimal point." />
+		</method>
 	</class>
 
 	<class name="Reader">
