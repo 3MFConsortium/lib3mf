@@ -44,7 +44,6 @@ bool CBase::GetLastErrorMessage(std::string & sErrorMessage)
 {
 	if (m_pErrors && !m_pErrors->empty()) {
 		sErrorMessage = m_pErrors->back();
-		m_pErrors->pop_back();
 		return true;
 	} else {
 		sErrorMessage = "";
@@ -62,6 +61,7 @@ void CBase::RegisterErrorMessage(const std::string & sErrorMessage)
 	if (!m_pErrors) {
 		m_pErrors.reset(new std::list<std::string>());
 	}
+	m_pErrors->clear();
 	m_pErrors->push_back(sErrorMessage);
 }
 
