@@ -202,7 +202,7 @@ eLib3MFSlicesMeshResolution CObject::GetSlicesMeshResolution()
 	return eLib3MFSlicesMeshResolution(object()->slicesMeshResolution());
 }
 
-bool CObject::HasSlices(bool bRecursive)
+bool CObject::HasSlices(const bool bRecursive)
 {
 	return object()->hasSlices(bRecursive);
 }
