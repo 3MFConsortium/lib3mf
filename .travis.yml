@@ -44,4 +44,4 @@ before_script:
 script:
     - if [[ "$BUILDMODE" != "ppcxenial" ]]; then cmake --build . ; fi
     - if [[ "$BUILDMODE" == "cmake-make" ]]; then ctest -V ; fi
-    - if [[ "$BUILDMODE" == "ppcxenial" ]]; then docker run ppc-xenial; fi
+    - if [[ "$BUILDMODE" == "ppcxenial-DISABLED" ]]; then docker run ppc-xenial; fi
