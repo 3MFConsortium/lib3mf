@@ -35,6 +35,7 @@ Abstract: This is a stub class definition of CObject
 #include "lib3mf_componentsobject.hpp"
 #include "lib3mf_metadatagroup.hpp"
 #include "lib3mf_slicestack.hpp"
+#include "lib3mf_attachment.hpp"
 
 // Include custom headers here.
 #include "Model/Classes/NMR_ModelMeshObject.h" 
@@ -147,6 +148,29 @@ bool CObject::IsValid ()
 	throw ELib3MFInterfaceException (LIB3MF_ERROR_SHOULDNOTBECALLED);
 }
 
+void CObject::SetAttachmentAsThumbnail(IAttachment* pAttachment)
+{
+	auto pModelAttachment = object()->getModel()->findModelAttachment(pAttachment->GetPath());
+	if (!pModelAttachment) {
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_ATTACHMENTNOTFOUND);
+	}
+	object()->setThumbnailAttachment(pModelAttachment, true);
+}
+
+IAttachment * CObject::GetThumbnailAttachment()
+{
+	if (object()->getThumbnailAttachment()) {
+		return new CAttachment(object()->getThumbnailAttachment());
+	}
+	return nullptr;
+}
+
+void CObject::ClearThumbnailAttachment()
+{
+	object()->clearThumbnailAttachment();
+}
+
+
 IMetaDataGroup * CObject::GetMetaDataGroup ()
 {
 	return new CMetaDataGroup(object()->metaDataGroup());
@@ -178,9 +202,9 @@ eLib3MFSlicesMeshResolution CObject::GetSlicesMeshResolution()
 	return eLib3MFSlicesMeshResolution(object()->slicesMeshResolution());
 }
 
-bool CObject::HasSliceStack()
+bool CObject::HasSlices(const bool bRecursive)
 {
-	return (object()->getSliceStack().get() != nullptr);
+	return object()->hasSlices(bRecursive);
 }
 
 void CObject::ClearSliceStack()

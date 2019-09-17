@@ -49,11 +49,10 @@ This is the class for exporting the 3mf mesh node.
 #define MAX(a,b) (((a)>(b))?(a):(b))
 
 namespace NMR {
-	const int CModelWriterNode100_Mesh::m_snPutDoubleFactor = (int)(pow(10, CModelWriterNode100_Mesh::m_snPosAfterDecPoint));
 
 	CModelWriterNode100_Mesh::CModelWriterNode100_Mesh(_In_ CModelMeshObject * pModelMeshObject, _In_ CXmlWriter * pXMLWriter, _In_ PProgressMonitor pProgressMonitor,
-		_In_ PMeshInformation_PropertyIndexMapping pPropertyIndexMapping, _In_ nfBool bWriteMaterialExtension, _In_ nfBool bWriteBeamLatticeExtension)
-		:CModelWriterNode(pModelMeshObject->getModel(), pXMLWriter, pProgressMonitor)
+		_In_ PMeshInformation_PropertyIndexMapping pPropertyIndexMapping, _In_ int nPosAfterDecPoint, _In_ nfBool bWriteMaterialExtension, _In_ nfBool bWriteBeamLatticeExtension)
+		:CModelWriterNode(pModelMeshObject->getModel(), pXMLWriter, pProgressMonitor), m_nPosAfterDecPoint(nPosAfterDecPoint), m_nPutDoubleFactor((int)(pow(10, CModelWriterNode100_Mesh::m_nPosAfterDecPoint)))
 	{
 		__NMRASSERT(pModelMeshObject != nullptr);
 		if (!pPropertyIndexMapping.get())
@@ -315,7 +314,7 @@ namespace NMR {
 
 	void CModelWriterNode100_Mesh::putFloat(_In_ const nfFloat fValue, _In_ std::array<nfChar, MODELWRITERMESH100_LINEBUFFERSIZE> & line, _In_ nfUint32 & nBufferPos) {
 		// Format float with "%.$ACCf" syntax where $ACC = m_snPosAfterDecPoint
-		nfInt64 nAbsValue = (nfInt64)(fValue * m_snPutDoubleFactor);
+		nfInt64 nAbsValue = (nfInt64)(fValue * m_nPutDoubleFactor);
 		nAbsValue = MAX(nAbsValue, -nAbsValue);
 		nfBool bIsNegative = fValue < 0;
 
@@ -327,11 +326,11 @@ namespace NMR {
 		}
 		else {
 			// Write the string in reverse order
-			while (nAbsValue || nCount < m_snPosAfterDecPoint) {
+			while (nAbsValue || nCount < m_nPosAfterDecPoint) {
 				line[nBufferPos++] = '0' + (nAbsValue % 10);
 				nAbsValue /= 10;
 				nCount++;
-				if (nCount == m_snPosAfterDecPoint) {
+				if (nCount == m_nPosAfterDecPoint) {
 					line[nBufferPos++] = '.';
 					if (!nAbsValue) {
 						line[nBufferPos++] = '0';
@@ -358,7 +357,7 @@ namespace NMR {
 
 	void CModelWriterNode100_Mesh::putDouble(_In_ const nfDouble dValue, _In_ std::array<nfChar, MODELWRITERMESH100_LINEBUFFERSIZE> & line, _In_ nfUint32 & nBufferPos) {
 		// Format float with "%.$ACCf" syntax where $ACC = m_snPosAfterDecPoint
-		nfInt64 nAbsValue = (nfInt64)(dValue * m_snPutDoubleFactor);
+		nfInt64 nAbsValue = (nfInt64)(dValue * m_nPutDoubleFactor);
 		nAbsValue = MAX(nAbsValue, -nAbsValue);
 		nfBool bIsNegative = dValue < 0;
 
@@ -370,11 +369,11 @@ namespace NMR {
 		}
 		else {
 			// Write the string in reverse order
-			while (nAbsValue || nCount < m_snPosAfterDecPoint) {
+			while (nAbsValue || nCount < m_nPosAfterDecPoint) {
 				line[nBufferPos++] = '0' + (nAbsValue % 10);
 				nAbsValue /= 10;
 				nCount++;
-				if (nCount == m_snPosAfterDecPoint) {
+				if (nCount == m_nPosAfterDecPoint) {
 					line[nBufferPos++] = '.';
 					if (!nAbsValue) {
 						line[nBufferPos++] = '0';
@@ -589,8 +588,8 @@ namespace NMR {
 		putBeamString(sV2.c_str());
 		putBeamUInt32(pBeam->m_nodeindices[1]);
 
-		nfBool bWriteR2 = stringRepresentationsDiffer(pBeam->m_radius[0], pBeam->m_radius[1], m_snPutDoubleFactor);
-		nfBool bWriteR1 = bWriteR2 || stringRepresentationsDiffer(pBeam->m_radius[0], dRadius, m_snPutDoubleFactor);
+		nfBool bWriteR2 = stringRepresentationsDiffer(pBeam->m_radius[0], pBeam->m_radius[1], m_nPutDoubleFactor);
+		nfBool bWriteR1 = bWriteR2 || stringRepresentationsDiffer(pBeam->m_radius[0], dRadius, m_nPutDoubleFactor);
 		if (bWriteR1) {
 			const std::string sR1 = "\" " + std::string(XML_3MF_ATTRIBUTE_BEAMLATTICE_R1) + "=\"";
 			putBeamString(sR1.c_str());

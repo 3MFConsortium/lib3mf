@@ -37,6 +37,7 @@ model object.
 
 #include "Model/Classes/NMR_Model.h" 
 #include "Model/Classes/NMR_ModelResource.h" 
+#include "Model/Classes/NMR_ModelAttachment.h"
 #include "Model/Classes/NMR_ModelMetaDataGroup.h" 
 #include "Model/Classes/NMR_ModelSliceStack.h"
 #include "Common/NMR_Types.h" 
@@ -61,7 +62,7 @@ namespace NMR {
 
 	private:
 		PUUID m_UUID;
-		std::string m_sThumbnail;
+		PModelAttachment m_pThumbnailAttachment;
 		eModelObjectType m_ObjectType;
 	public:
 		CModelObject() = delete;
@@ -97,6 +98,7 @@ namespace NMR {
 		// check, if the object is a valid object description
 		virtual nfBool isValid() = 0;
 
+		virtual nfBool hasSlices(nfBool bRecursive) = 0;
 		virtual nfBool isValidForSlices(const NMATRIX3& totalParentMatrix) = 0;
 
 		void assignSliceStack(PModelSliceStack pSliceStackId);
@@ -106,8 +108,9 @@ namespace NMR {
 		eModelSlicesMeshResolution slicesMeshResolution() const;
 
 		// Set/Get Thumbnail
-		void setThumbnail(_In_ std::string sThumbnail);
-		std::string getThumbnail();
+		void clearThumbnailAttachment();
+		void setThumbnailAttachment(_In_ PModelAttachment pThumbnailAttachment, bool bThrowIfIncorrect);
+		PModelAttachment getThumbnailAttachment();
 
 		// Calculates the component Depths
 		nfUint32 getComponentDepthLevel ();

@@ -85,7 +85,7 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
 		pXMLWriter->WriteStartDocument();
-		CModelWriterNode100_Model ModelNode(m_pModel.get(), pXMLWriter, m_pProgressMonitor, false);
+		CModelWriterNode100_Model ModelNode(m_pModel.get(), pXMLWriter, m_pProgressMonitor, GetDecimalPrecision(), false);
 		ModelNode.writeToXML();
 
 		pXMLWriter->WriteEndDocument();
@@ -100,7 +100,7 @@ namespace NMR {
 
 		pXMLWriter->WriteStartDocument();
 
-		CModelWriterNode100_Model ModelNode(pModel, pXMLWriter, m_pProgressMonitor);
+		CModelWriterNode100_Model ModelNode(pModel, pXMLWriter, m_pProgressMonitor, GetDecimalPrecision());
 		ModelNode.writeToXML();
 
 		pXMLWriter->WriteEndDocument();

@@ -59,8 +59,8 @@ This is the class for exporting the 3mf model stream root node.
 
 namespace NMR {
 
-	CModelWriterNode100_Model::CModelWriterNode100_Model(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter, _In_ PProgressMonitor pProgressMonitor)
-		:CModelWriterNode(pModel, pXMLWriter, pProgressMonitor)
+	CModelWriterNode100_Model::CModelWriterNode100_Model(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter, _In_ PProgressMonitor pProgressMonitor, _In_ nfUint32 nDecimalPrecision)
+		:CModelWriterNode(pModel, pXMLWriter, pProgressMonitor), m_nDecimalPrecision(nDecimalPrecision)
 	{
 		m_ResourceCounter = pModel->generateResourceID();
 
@@ -83,7 +83,7 @@ namespace NMR {
 
 
 	CModelWriterNode100_Model::CModelWriterNode100_Model(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter, _In_ PProgressMonitor pProgressMonitor,
-		nfBool bWritesRootModel) : CModelWriterNode(pModel, pXMLWriter, pProgressMonitor)
+		_In_ nfUint32 nDecimalPrecision, nfBool bWritesRootModel) : CModelWriterNode(pModel, pXMLWriter, pProgressMonitor), m_nDecimalPrecision(nDecimalPrecision)
 	{
 		if (bWritesRootModel) {
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
@@ -426,15 +426,15 @@ namespace NMR {
 			writeStringAttribute(XML_3MF_ATTRIBUTE_OBJECT_TYPE, pObject->getObjectTypeString());
 
 			// Write Object Thumbnail (optional)
-			std::string sThumbnailPath = pObject->getThumbnail();
-			if (!sThumbnailPath.empty()) {
-				PModelAttachment pAttachment = m_pModel->findModelAttachment(sThumbnailPath);
-				if (!pAttachment)
+			PModelAttachment pThumbnail = pObject->getThumbnailAttachment();
+			if (pThumbnail) {
+				PModelAttachment pModelAttachment = m_pModel->findModelAttachment(pThumbnail->getPathURI());
+				if (!pModelAttachment)
 					throw CNMRException(NMR_ERROR_NOTEXTURESTREAM);
-				if (! (pAttachment->getRelationShipType() == PACKAGE_TEXTURE_RELATIONSHIP_TYPE))
+				if (!((pModelAttachment->getRelationShipType() == PACKAGE_TEXTURE_RELATIONSHIP_TYPE) || (pModelAttachment->getRelationShipType() == PACKAGE_THUMBNAIL_RELATIONSHIP_TYPE)))
 					throw CNMRException(NMR_ERROR_NOTEXTURESTREAM);
 
-				writeStringAttribute(XML_3MF_ATTRIBUTE_OBJECT_THUMBNAIL, sThumbnailPath);
+				writeStringAttribute(XML_3MF_ATTRIBUTE_OBJECT_THUMBNAIL, pThumbnail->getPathURI());
 			}
 
 			if (m_bWriteProductionExtension) {
@@ -493,7 +493,7 @@ namespace NMR {
 				}
 
 				CModelWriterNode100_Mesh ModelWriter_Mesh(pMeshObject, m_pXMLWriter, m_pProgressMonitor,
-					m_pPropertyIndexMapping, m_bWriteMaterialExtension, m_bWriteBeamLatticeExtension);
+					m_pPropertyIndexMapping, m_nDecimalPrecision, m_bWriteMaterialExtension, m_bWriteBeamLatticeExtension);
 
 				ModelWriter_Mesh.writeToXML();
 			}
@@ -936,7 +936,10 @@ namespace NMR {
 				if (pBuildItem->hasTransform())
 					writeStringAttribute(XML_3MF_ATTRIBUTE_ITEM_TRANSFORM, pBuildItem->getTransformString());
 
-				
+				if (m_bWriteSliceExtension && !pBuildItem->isValidForSlices()) {
+					throw CNMRException(NMR_ERROR_SLICETRANSFORMATIONPLANAR);
+				}
+
 				writeMetaDataGroup(pBuildItem->metaDataGroup());
 				if (pBuildItem->metaDataGroup()->getMetaDataCount() > 0)
 					writeFullEndElement();

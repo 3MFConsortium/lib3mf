@@ -71,6 +71,18 @@ namespace Lib3MF
 		CheckReaderWarnings(Reader::readerSTL, 0);
 	}
 
+	TEST_F(Reader, STLReadWriteRead)
+	{
+		Reader::readerSTL->ReadFromFile(sTestFilesPath + "/Reader/" + "Pyramid.stl");
+		CheckReaderWarnings(Reader::readerSTL, 0);
+		auto stlWriter = model->QueryWriter("stl");
+		std::vector<Lib3MF_uint8> stlBuffer;
+		stlWriter->WriteToBuffer(stlBuffer);
+		auto tmpModel = wrapper->CreateModel();
+		auto tmpReader = tmpModel->QueryReader("stl");
+		tmpReader->ReadFromBuffer(stlBuffer);
+	}
+
 	TEST_F(Reader, 3MFReadFromBuffer)
 	{
 		auto buffer = ReadFileIntoBuffer(sTestFilesPath + "/Reader/" + "Pyramid.3mf");

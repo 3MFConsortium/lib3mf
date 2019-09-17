@@ -120,15 +120,6 @@ namespace Lib3MF
 		EXPECT_EQ(nObjectPropertyID, someMaterial);
 	}
 
-
-	void CompareColors(sColor c1, sColor c2)
-	{
-		EXPECT_EQ(c1.m_Alpha, c2.m_Alpha);
-		EXPECT_EQ(c1.m_Red, c2.m_Red);
-		EXPECT_EQ(c1.m_Green, c2.m_Green);
-		EXPECT_EQ(c1.m_Blue, c2.m_Blue);
-	}
-
 	TEST_F(Properties, ObjectLevelPropertiesWriteRead)
 	{
 		auto baseMaterialGroup = model->AddBaseMaterialGroup();

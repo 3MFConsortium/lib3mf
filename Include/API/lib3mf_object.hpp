@@ -98,6 +98,12 @@ public:
 
 	bool IsValid ();
 
+	void SetAttachmentAsThumbnail(IAttachment* pAttachment);
+
+	IAttachment * GetThumbnailAttachment();
+
+	void ClearThumbnailAttachment();
+
 	IMetaDataGroup * GetMetaDataGroup ();
 
 	std::string GetUUID(bool & bHasUUID);
@@ -108,7 +114,7 @@ public:
 
 	virtual eLib3MFSlicesMeshResolution GetSlicesMeshResolution();
 
-	virtual bool HasSliceStack();
+	virtual bool HasSlices(const bool bRecursive);
 
 	virtual void ClearSliceStack();
 

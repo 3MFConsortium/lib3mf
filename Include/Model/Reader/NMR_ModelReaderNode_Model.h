@@ -52,6 +52,10 @@ namespace NMR {
 		nfBool m_bIgnoreBuild;
 		nfBool m_bIgnoreMetaData;
 
+		nfBool m_bHaveWarnedAboutV093;
+
+		void ReadMetaDataNode(_In_ CXmlReader * pXMLReader);
+
 		virtual void CheckRequiredExtensions();
 
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);

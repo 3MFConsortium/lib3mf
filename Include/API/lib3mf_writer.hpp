@@ -87,6 +87,10 @@ public:
 	void WriteToCallback(const Lib3MFWriteCallback pTheWriteCallback, const Lib3MFSeekCallback pTheSeekCallback, const Lib3MF_pvoid pUserData);
 
 	void SetProgressCallback(const Lib3MFProgressCallback pProgressCallback, const Lib3MF_pvoid pUserData);
+
+	Lib3MF_uint32 GetDecimalPrecision() override;
+
+	void SetDecimalPrecision(const Lib3MF_uint32 nDecimalPrecision) override;
 };
 
 }

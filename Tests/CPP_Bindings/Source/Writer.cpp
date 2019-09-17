@@ -103,6 +103,26 @@ namespace Lib3MF
 		ASSERT_TRUE(std::equal(buffer.begin(), buffer.end(), bufferFromFile.begin()));
 	}
 
+	TEST_F(Writer, 3MFPrecision)
+	{
+		std::vector<sPosition> vctVertices;
+		std::vector<sTriangle> vctTriangles;
+		fnCreateBox(vctVertices, vctTriangles);
+		auto mesh = model->AddMeshObject();
+		mesh->SetGeometry(vctVertices, vctTriangles);
+
+		// This test is atleast functional
+		std::vector<Lib3MF_uint8> buffer;
+		Writer::writer3MF->WriteToBuffer(buffer);
+
+		Lib3MF_uint32 nPrecission = writer3MF->GetDecimalPrecision();
+		writer3MF->SetDecimalPrecision(nPrecission+2);
+		std::vector<Lib3MF_uint8> bufferLargr;
+		Writer::writer3MF->WriteToBuffer(bufferLargr);
+
+		ASSERT_TRUE(buffer.size() < bufferLargr.size());
+	}
+
 	TEST_F(Writer, STLCompare)
 	{
 		// This test is atleast functional

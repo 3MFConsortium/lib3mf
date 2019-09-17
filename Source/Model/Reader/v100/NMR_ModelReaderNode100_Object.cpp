@@ -58,7 +58,7 @@ namespace NMR {
 
 		m_pModel = pModel;
 		m_pObject = NULL; 
-		m_sThumbnail = "";
+		m_sThumbnailPath = "";
 		m_sPartNumber = "";
 		m_sName = "";
 
@@ -102,15 +102,15 @@ namespace NMR {
 
 		if (m_bHasThumbnail)
 		{
-			PModelAttachment pAttachment = m_pModel->findModelAttachment(m_sThumbnail);
-			if (pAttachment) {
-				if (!(pAttachment->getRelationShipType() == PACKAGE_TEXTURE_RELATIONSHIP_TYPE))
+			PModelAttachment pModelAttachment = m_pModel->findModelAttachment(m_sThumbnailPath);
+			if (pModelAttachment) {
+				if (!((pModelAttachment->getRelationShipType() == PACKAGE_TEXTURE_RELATIONSHIP_TYPE) || (pModelAttachment->getRelationShipType() == PACKAGE_THUMBNAIL_RELATIONSHIP_TYPE)))
 					m_pWarnings->addException(CNMRException(NMR_ERROR_NOTEXTURESTREAM), mrwInvalidMandatoryValue);
 			}
 			else
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NOTEXTURESTREAM), mrwInvalidMandatoryValue);
 
-			m_pObject->setThumbnail(m_sThumbnail);
+			m_pObject->setThumbnailAttachment(pModelAttachment, false);
 		}
 
 		// Set Production references
@@ -148,7 +148,7 @@ namespace NMR {
 		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_OBJECT_THUMBNAIL) == 0) {
 			if (m_bHasThumbnail)
 				throw CNMRException(NMR_ERROR_DUPLICATEOBJECTTHUMBNAIL);
-			m_sThumbnail = pAttributeValue;
+			m_sThumbnailPath = pAttributeValue;
 			m_bHasThumbnail = true;
 		}
 
