@@ -162,22 +162,28 @@ namespace Lib3MF
 
 	TEST_F(Writer, VolumetricWriter)
 	{
+		auto pImage3D = model->AddImage3D(821, 819, 11);
+		for (int i = 0; i < 11; i++) {
+			std::string sNumber = "_";
+			int k = i + 1;
+			if (k < 10) {
+				sNumber = sNumber + "0";
+			}
+			sNumber = sNumber + std::to_string(k);
 
-		std::vector<unsigned char> Buffer;
-		Buffer.push_back(5);
-
-		auto pImage3D = model->AddImage3D (10, 10, 3);
-		pImage3D->CreateSheetFromBuffer(0, "/volume/layer1.png", Buffer);
-		pImage3D->CreateSheetFromBuffer(1, "/volume/layer2.png", Buffer);
-		pImage3D->CreateSheetFromBuffer(2, "/volume/layer3.png", Buffer);
-
+			pImage3D->CreateSheetFromFile(i, "/volume/layer" + sNumber + ".png", sTestFilesPath + "/Volumetric/img" +sNumber + ".png");
+		}
 		auto pVolumetricStack = model->AddVolumetricStack();
 		pVolumetricStack->AddDestinationChannel("channel", 0.0);
 		auto pLayer = pVolumetricStack->AddLayer(wrapper->GetIdentityTransform(), Lib3MF::eBlendMethod::NoBlendMethod);
 
-		auto pChannelSelector = pLayer->AddChannelSelector(pImage3D.get(), "channel", "channel");			   	
+		auto pChannelSelector = pLayer->AddChannelSelector(pImage3D.get(), "R", "channel");
 
-		Writer::writer3MF->WriteToFile(Writer::OutFolder + "PyramidVolume.3mf");
+		//auto meshes = model->GetMeshObjects();
+		//meshes->MoveNext();
+		//auto theMesh = meshes->GetCurrentMeshObject();
+
+		Writer::writer3MF->WriteToFile(Writer::OutFolder + "ColoredVolume.3mf");
 
 	}
 
