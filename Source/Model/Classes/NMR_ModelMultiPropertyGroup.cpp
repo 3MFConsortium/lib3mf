@@ -58,11 +58,10 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_TOOMANYCOMPOSITES);
 		}
 		
-		// TODO check for valid PropertyID
-		for (ModelPropertyID constituent : *pMultiProperty) {
-
-		}
-		
+		//// TODO check for valid PropertyID
+		//for (ModelPropertyID constituent : *pMultiProperty) {
+		//	
+		//}
 
 		m_vctMultiProperties.insert(std::make_pair(nID, pMultiProperty));
 

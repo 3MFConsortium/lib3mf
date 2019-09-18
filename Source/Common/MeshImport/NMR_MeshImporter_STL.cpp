@@ -113,8 +113,9 @@ namespace NMR {
 		if (!pStream)
 			throw CNMRException(NMR_ERROR_NOIMPORTSTREAM);
 
+		/*
 		CMeshInformationHandler * pMeshInformationHandler = NULL;
-		/*PMeshInformation_NodeColors pMeshInformation = NULL;
+		PMeshInformation_NodeColors pMeshInformation = NULL;
 		if (m_bImportColors) {
 			pMeshInformation = std::make_shared<CMeshInformation_NodeColors>();
 			pMeshInformationHandler->addInformation(pMeshInformation);
