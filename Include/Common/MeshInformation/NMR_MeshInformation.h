@@ -53,6 +53,7 @@ namespace NMR {
 
 	public:
 		CMeshInformation();
+		virtual ~CMeshInformation() = default;
 
 		_Ret_notnull_ MESHINFORMATIONFACEDATA * getFaceData(nfUint32 nFaceIndex);
 		_Ret_notnull_ MESHINFORMATIONFACEDATA * addFaceData(_In_ nfUint32 nNewFaceCount);
