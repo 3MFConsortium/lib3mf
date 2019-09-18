@@ -461,7 +461,7 @@ namespace Lib3MF
 	};
 	PWrapper SliceStackReadingMultiple::wrapper;
 
-	INSTANTIATE_TEST_CASE_P(WorkingFiles, SliceStackReadingMultiple,
+	INSTANTIATE_TEST_SUITE_P(WorkingFiles, SliceStackReadingMultiple,
 		::testing::Values(
 			"MultiSliceStack_TwoFiles.3mf",
 			"MultiSliceStack_OneFile.3mf",
@@ -496,7 +496,7 @@ namespace Lib3MF
 	};
 	PWrapper SliceStackReadingMultipleFailing::wrapper;
 
-	INSTANTIATE_TEST_CASE_P(FailingFiles, SliceStackReadingMultipleFailing,
+	INSTANTIATE_TEST_SUITE_P(FailingFiles, SliceStackReadingMultipleFailing,
 		::testing::Values(
 			"Slice_MustFail_TooRefsTooDeep.3mf"
 		));

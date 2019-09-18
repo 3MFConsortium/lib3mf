@@ -132,12 +132,12 @@ namespace Lib3MF
 		}
 
 		auto foundAttachment1 = model->FindAttachment(sRelationShipPath1);
-		foundAttachment1->GetPath() == attachment1->GetPath();
-		foundAttachment1->GetRelationShipType() == attachment1->GetRelationShipType();
+		EXPECT_TRUE(foundAttachment1->GetPath() == attachment1->GetPath());
+		EXPECT_TRUE(foundAttachment1->GetRelationShipType() == attachment1->GetRelationShipType());
 
 		auto foundAttachment2 = model->FindAttachment(sRelationShipPath2);
-		foundAttachment2->GetPath() == attachment2->GetPath();
-		foundAttachment2->GetRelationShipType() == attachment1->GetRelationShipType();
+		EXPECT_TRUE(foundAttachment2->GetPath() == attachment2->GetPath());
+		EXPECT_TRUE(foundAttachment2->GetRelationShipType() == attachment2->GetRelationShipType());
 	}
 
 	TEST_F(AttachmentsT, WriteReadAttachment)

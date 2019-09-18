@@ -60,15 +60,15 @@ namespace NMR {
 		_Ret_notnull_ CMesh * getMesh ();
 		void setMesh (_In_ PMesh pMesh);
 
-		virtual void mergeToMesh(_In_ CMesh * pMesh, _In_ const NMATRIX3 mMatrix);
+		void mergeToMesh(_In_ CMesh * pMesh, _In_ const NMATRIX3 mMatrix) override;
 
-		void setObjectType(_In_ eModelObjectType ObjectType);
+		void setObjectType(_In_ eModelObjectType ObjectType) override;
 
 		// check, if the object is a valid object description
-		virtual nfBool isValid();
+		nfBool isValid() override;
 
 		nfBool hasSlices(nfBool bRecursive) override;
-		virtual nfBool isValidForSlices(const NMATRIX3& totalParentMatrix);
+		nfBool isValidForSlices(const NMATRIX3& totalParentMatrix) override;
 
 		virtual nfBool isValidForBeamLattices();
 

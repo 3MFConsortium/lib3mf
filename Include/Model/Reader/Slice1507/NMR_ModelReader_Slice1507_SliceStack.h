@@ -49,11 +49,6 @@ namespace NMR {
 
 		PModelSliceStack m_pSliceStackResource;
 		std::string m_sSlicePath;
-
-		int m_nProgressCounter;
-
-		bool m_bHasReadSliceRef;
-		bool m_bHasReadSlices;
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);

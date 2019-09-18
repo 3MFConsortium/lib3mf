@@ -78,15 +78,15 @@ public:
 	* Public member functions to implement.
 	*/
 
-	void WriteToFile (const std::string & sFilename);
+	void WriteToFile(const std::string & sFilename) override;
 
-	Lib3MF_uint64 GetStreamSize ();
+	Lib3MF_uint64 GetStreamSize() override;
 
-	void WriteToBuffer (Lib3MF_uint64 nBufferBufferSize, Lib3MF_uint64* pBufferNeededCount, Lib3MF_uint8 * pBufferBuffer);
+	void WriteToBuffer(Lib3MF_uint64 nBufferBufferSize, Lib3MF_uint64* pBufferNeededCount, Lib3MF_uint8 * pBufferBuffer) override;
 
-	void WriteToCallback(const Lib3MFWriteCallback pTheWriteCallback, const Lib3MFSeekCallback pTheSeekCallback, const Lib3MF_pvoid pUserData);
+	void WriteToCallback(const Lib3MFWriteCallback pTheWriteCallback, const Lib3MFSeekCallback pTheSeekCallback, const Lib3MF_pvoid pUserData) override;
 
-	void SetProgressCallback(const Lib3MFProgressCallback pProgressCallback, const Lib3MF_pvoid pUserData);
+	void SetProgressCallback(const Lib3MFProgressCallback pProgressCallback, const Lib3MF_pvoid pUserData) override;
 
 	Lib3MF_uint32 GetDecimalPrecision() override;
 

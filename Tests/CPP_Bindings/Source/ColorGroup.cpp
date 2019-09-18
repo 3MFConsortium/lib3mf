@@ -67,7 +67,7 @@ namespace Lib3MF
 		tIn.m_Blue = 10;
 		tIn.m_Green = 100;
 		tIn.m_Alpha = 255;
-		Lib3MF_uint32 propertyID = colorGroup->AddColor(tIn);
+		colorGroup->AddColor(tIn);
 
 		colorGroup->AddColor(wrapper->RGBAToColor(0, 10, 20, 30));
 		ASSERT_EQ(colorGroup->GetCount(), 2);

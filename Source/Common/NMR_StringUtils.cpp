@@ -100,7 +100,7 @@ namespace NMR {
 	nfInt32 fnStringToInt32(_In_z_ const nfChar * pszValue)
 	{
 		__NMRASSERT(pszValue);
-		nfInt32 nResult = 0;
+		nfInt64 nResult = 0;
 
 		// Convert to integer and make a input and range check!
 		nfChar * pEndPtr;
@@ -114,16 +114,16 @@ namespace NMR {
 		if ((*pEndPtr != '\0') && (*pEndPtr != ' '))
 			throw CNMRException(NMR_ERROR_INVALIDSTRINGTOINTCONVERSION);
 
-		if ((nResult == LONG_MAX) || (nResult == LONG_MIN))
+		if ((nResult >= LONG_MAX) || (nResult <= LONG_MIN))
 			throw CNMRException(NMR_ERROR_STRINGTOINTCONVERSIONOUTOFRANGE);
 
-		return nResult;
+		return (nfInt32)nResult;
 	}
 
 	nfUint32 fnStringToUint32(_In_z_ const nfChar * pszValue)
 	{
 		__NMRASSERT(pszValue);
-		nfUint32 nResult = 0;
+		nfUint64 nResult = 0;
 
 		// Convert to integer and make a input and range check!
 		nfChar * pEndPtr;
@@ -137,10 +137,10 @@ namespace NMR {
 		if ((*pEndPtr != '\0') && (*pEndPtr != ' '))
 			throw CNMRException(NMR_ERROR_INVALIDSTRINGTOINTCONVERSION);
 
-		if (nResult == ULONG_MAX)
+		if (nResult >= ULONG_MAX)
 			throw CNMRException(NMR_ERROR_STRINGTOINTCONVERSIONOUTOFRANGE);
 
-		return nResult;
+		return (nfUint32)nResult;
 	}
 
 	nfFloat fnStringToFloat(_In_z_ const nfChar * pszValue)
@@ -274,19 +274,19 @@ namespace NMR {
 		if (!pszValue)
 			return 0;
 		nfChar * p;
-		nfUint32 nResult = strtoul(pszValue, &p, 16);
+		nfUint64 nResult = strtoul(pszValue, &p, 16);
 		if (*p != 0)
 			throw CNMRException(NMR_ERROR_INVALIDHEXVALUE);
-		if (nResult == ULONG_MAX)
+		if (nResult >= ULONG_MAX)
 			throw CNMRException(NMR_ERROR_RANGEERROR);
 
-		return nResult;
+		return (nfUint32)nResult;
 	}
 
 	nfInt32 fnStringToInt32Comma(_In_z_ const nfChar * pszValue)
 	{
 		__NMRASSERT(pwszValue);
-		nfInt32 nResult = 0;
+		nfInt64 nResult = 0;
 
 		// Convert to integer and make a input and range check!
 		nfChar * pEndPtr;
@@ -300,10 +300,10 @@ namespace NMR {
 		if ((*pEndPtr != '\0') && (*pEndPtr != ' ') && (*pEndPtr != ','))
 			throw CNMRException(NMR_ERROR_INVALIDSTRINGTOINTCONVERSION);
 
-		if ((nResult == LONG_MAX) || (nResult == LONG_MIN))
+		if ((nResult >= LONG_MAX) || (nResult <= LONG_MIN))
 			throw CNMRException(NMR_ERROR_STRINGTOINTCONVERSIONOUTOFRANGE);
 
-		return nResult;
+		return (nfUint32)nResult;
 	}
 
 

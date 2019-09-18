@@ -54,9 +54,6 @@ namespace NMR {
 		ModelResourceID m_nClippingMeshID;
 		nfBool m_bHasRepresentationMeshID;
 		ModelResourceID m_nRepresentationMeshID;
-
-		int m_nProgressCounterNodes;
-		int m_nProgressCounterTriangles;
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);

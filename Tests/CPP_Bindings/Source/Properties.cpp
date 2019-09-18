@@ -106,7 +106,7 @@ namespace Lib3MF
 	{
 		auto baseMaterialGroup = model->AddBaseMaterialGroup();
 		auto someMaterial = baseMaterialGroup->AddMaterial("SomeMaterial", wrapper->RGBAToColor(100, 200, 150, 255));
-		auto anotherMaterial = baseMaterialGroup->AddMaterial("AnotherMaterial", wrapper->RGBAToColor(100, 200, 150, 255));
+		baseMaterialGroup->AddMaterial("AnotherMaterial", wrapper->RGBAToColor(100, 200, 150, 255));
 
 		Lib3MF_uint32 nObjectResourceID = 0;
 		Lib3MF_uint32 nObjectPropertyID = 0;

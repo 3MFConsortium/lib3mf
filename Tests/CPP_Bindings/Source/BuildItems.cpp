@@ -73,7 +73,6 @@ namespace Lib3MF
 	TEST_F(BuildItems, TestObjectID)
 	{
 		auto buildItems = BuildItems::model->GetBuildItems();
-		Lib3MF_uint64 nBuildItems = 0;
 		while (buildItems->MoveNext()) {
 			auto buildItem = buildItems->GetCurrent();
 			Lib3MF_uint32 objectID = buildItem->GetObjectResource()->GetResourceID();
