@@ -44,7 +44,7 @@ namespace NMR {
 		if (!isValidNamespaceAndName(sNameSpace, sName))
 			throw CNMRException(NMR_ERROR_INVALIDMETADATA);
 		
-		// TODO: this check MUST be more clever
+		// TODO: this check SHOULD be more clever
 		// https://www.ibm.com/support/knowledgecenter/en/SS7J8H/com.ibm.odm.dserver.rules.designer.author/designing_bom_topics/tpc_bom_builtin_simple_types.html
 		if (sType.empty()) 
 			throw CNMRException(NMR_ERROR_INVALIDMETADATA);

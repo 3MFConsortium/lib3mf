@@ -69,7 +69,7 @@ IComponent * CComponentsObject::AddComponent (IObject* pObjectResource, const sL
 	if (GetResourceID() == nObjectID)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_FORBIDDENCYCLICREFERENCE);
 
-	// TODO: check all ancestors
+	// TODO: check all ancestors to avoid circular references
 
 	// Find class instance
 	NMR::CModelObject * pObject = pModel->findObject(nObjectID);

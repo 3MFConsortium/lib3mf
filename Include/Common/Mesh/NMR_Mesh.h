@@ -86,10 +86,12 @@ namespace NMR {
 
 		void setBeamLatticeMinLength(nfDouble dMinLength);
 		nfDouble getBeamLatticeMinLength();
+
+		// TODO: make these return sensible values
 		void setDefaultBeamRadius(nfDouble dRadius);
 		nfDouble getDefaultBeamRadius();
 		void setBeamLatticeAccuracy(nfDouble dAccuracy);
-		nfBool getBeamLatticeAccuracy(nfDouble * pdAccuracy);
+		nfBool getBeamLatticeAccuracy(nfDouble& dAccuracy);
 		void setBeamLatticeCapMode(eModelBeamLatticeCapMode dRadius);
 		eModelBeamLatticeCapMode getBeamLatticeCapMode();
 

@@ -338,6 +338,22 @@ namespace NMR {
 		return m_BeamLattice.m_dMinLength;
 	}
 
+	nfDouble CMesh::getDefaultBeamRadius()
+	{
+		return 1.0;
+	}
+
+	nfBool CMesh::getBeamLatticeAccuracy(nfDouble& dAccuracy)
+	{
+		dAccuracy = 1.0;
+		return false;
+	}
+
+	eModelBeamLatticeCapMode CMesh::getBeamLatticeCapMode()
+	{
+		return eModelBeamLatticeCapMode::MODELBEAMLATTICECAPMODE_SPHERE;
+	}
+
 	nfBool CMesh::checkSanity()
 	{
 		nfUint32 nIdx, j;
