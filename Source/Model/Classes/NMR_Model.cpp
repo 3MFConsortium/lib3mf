@@ -649,9 +649,12 @@ namespace NMR {
 		nfUint32 nCount = pSourceModel->getTexture2DGroupCount();
 		for (nfUint32 nIndex = 0; nIndex < nCount; nIndex++) {
 			CModelTexture2DGroupResource * pOldTexture2DGroup = pSourceModel->getTexture2DGroup(nIndex);
-			__NMRASSERT(pNewTexture2DGroup != nullptr);
 
-			PModelTexture2DGroupResource pNewTexture2DGroup = std::make_shared<CModelTexture2DGroupResource>(generateResourceID(), this, pNewTexture2DGroup->getTexture2D());
+			if (!pOldTexture2DGroup) {
+				throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
+			}
+
+			PModelTexture2DGroupResource pNewTexture2DGroup = std::make_shared<CModelTexture2DGroupResource>(generateResourceID(), this, pOldTexture2DGroup->getTexture2D());
 			pNewTexture2DGroup->mergeFrom(pOldTexture2DGroup);
 
 			addResource(pNewTexture2DGroup);
@@ -703,11 +706,14 @@ namespace NMR {
 		nfUint32 nCount = pSourceModel->getCompositeMaterialsCount();
 		for (nfUint32 nIndex = 0; nIndex < nCount; nIndex++) {
 			CModelCompositeMaterialsResource * pOldCompositeMaterials = pSourceModel->getCompositeMaterials(nIndex);
-			__NMRASSERT(pNewTexture2DGroup != nullptr);
+
+			if (!pOldCompositeMaterials) {
+				throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
+			}
 
 			// TODO: this does not work
 			PModelCompositeMaterialsResource pNewCompositeMaterials = std::make_shared<CModelCompositeMaterialsResource>(generateResourceID(), this,
-				pNewCompositeMaterials->getBaseMaterialResource());
+				pOldCompositeMaterials->getBaseMaterialResource());
 			pNewCompositeMaterials->mergeFrom(pOldCompositeMaterials);
 
 			addResource(pNewCompositeMaterials);
@@ -1081,7 +1087,7 @@ namespace NMR {
 		// that make it necessary to mark these extensions as required
 		if (sExtension == XML_3MF_NAMESPACE_BEAMLATTICESPEC) {
 			nfBool bRequireBeamLattice = false;
-			for (nfUint32 i = 0; i < m_ObjectLookup.size(); i++) {
+			for (size_t i = 0; i < m_ObjectLookup.size(); i++) {
 				CModelMeshObject* pMeshObject = dynamic_cast<CModelMeshObject*>(m_ObjectLookup[i].get());
 				if (pMeshObject == nullptr || pMeshObject->getMesh() == nullptr)
 					continue;
@@ -1095,7 +1101,7 @@ namespace NMR {
 
 		if (sExtension == XML_3MF_NAMESPACE_SLICESPEC) {
 			nfBool bRequireSliceExtension = false;
-			for (nfUint32 i = 0; i < m_ObjectLookup.size(); i++) {
+			for (size_t i = 0; i < m_ObjectLookup.size(); i++) {
 				CModelMeshObject* pMeshObject = dynamic_cast<CModelMeshObject*>(m_ObjectLookup[i].get());
 				if (pMeshObject == nullptr || pMeshObject->getMesh() == nullptr)
 					continue;
@@ -1135,7 +1141,7 @@ namespace NMR {
 	{
 		std::list<CModelObject *> resultList;
 
-		for (nfUint32 i = 0; i < m_ObjectLookup.size(); i++) {
+		for (size_t i = 0; i < m_ObjectLookup.size(); i++) {
 			CModelObject* pObject = dynamic_cast<CModelObject*>(m_ObjectLookup[i].get());
 			if (pObject != nullptr) {
 				pObject->clearComponentDepthLevel();

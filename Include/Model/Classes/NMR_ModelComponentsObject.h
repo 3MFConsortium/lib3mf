@@ -59,15 +59,15 @@ namespace NMR {
 		nfUint32 getComponentCount();
 		PModelComponent getComponent(_In_ nfUint32 nIdx);
 
-		virtual void mergeToMesh(_In_ CMesh * pMesh, _In_ const NMATRIX3 mMatrix);
+		void mergeToMesh(_In_ CMesh * pMesh, _In_ const NMATRIX3 mMatrix) override;
 
 		// check, if the object is a valid object description
-		virtual nfBool isValid();
+		nfBool isValid() override;
 
 		nfBool hasSlices(nfBool bRecursive) override;
-		virtual nfBool isValidForSlices(const NMATRIX3& totalParentMatrix);
+		nfBool isValidForSlices(const NMATRIX3& totalParentMatrix) override;
 
-		virtual void calculateComponentDepthLevel(nfUint32 nLevel);
+		void calculateComponentDepthLevel(nfUint32 nLevel) override;
 	};
 
 	typedef std::shared_ptr <CModelComponentsObject> PModelComponentsObject;

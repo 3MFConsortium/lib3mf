@@ -95,7 +95,7 @@ Lib3MF_uint32 CColorGroup::AddColor (const sLib3MFColor TheColor)
 void CColorGroup::SetColor (const Lib3MF_uint32 nPropertyID, const sLib3MFColor TheColor)
 {
 	NMR::nfColor cColor = TheColor.m_Red | (TheColor.m_Green << 8) | (TheColor.m_Blue << 16) | (TheColor.m_Alpha << 24);
-	colorGroup().getColor(nPropertyID);
+	colorGroup().setColor(nPropertyID, cColor);
 }
 
 sLib3MFColor CColorGroup::GetColor (const Lib3MF_uint32 nPropertyID)

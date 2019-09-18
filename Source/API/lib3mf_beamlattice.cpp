@@ -42,7 +42,7 @@ using namespace Lib3MF::Impl;
 **************************************************************************************************************************/
 
 CBeamLattice::CBeamLattice(NMR::PModelMeshObject pMeshObject, NMR::PModelMeshBeamLatticeAttributes pAttributes):
-	m_pMeshObject(pMeshObject),m_mesh(*pMeshObject->getMesh()), m_pAttributes(pAttributes)
+	m_mesh(*pMeshObject->getMesh()), m_pAttributes(pAttributes), m_pMeshObject(pMeshObject)
 {
 	
 }
@@ -215,7 +215,7 @@ void CBeamLattice::SetBeams(const Lib3MF_uint64 nBeamInfoBufferSize, const sLib3
 		for (int j = 0; j < 2; j++)
 			pNodes[j] = m_mesh.getNode(pBeamInfoCurrent->m_Indices[j]);
 		
-		NMR::MESHBEAM * pMeshBeam = m_mesh.addBeam(pNodes[0], pNodes[1], pBeamInfoCurrent->m_Radii[0], pBeamInfoCurrent->m_Radii[1], (int)pBeamInfoCurrent->m_CapModes[0], (int)pBeamInfoCurrent->m_CapModes[1]);
+		m_mesh.addBeam(pNodes[0], pNodes[1], pBeamInfoCurrent->m_Radii[0], pBeamInfoCurrent->m_Radii[1], (int)pBeamInfoCurrent->m_CapModes[0], (int)pBeamInfoCurrent->m_CapModes[1]);
 		pBeamInfoCurrent++;
 	}
 

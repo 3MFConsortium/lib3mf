@@ -127,7 +127,7 @@ namespace Lib3MF
 		std::vector<Lib3MF_uint32> referencesOut;
 		beamSet->GetReferences(referencesOut);
 		ASSERT_EQ(beamSet->GetReferenceCount(), referencesOut.size());
-		for (int i = 0; i < referencesOut.size(); i++) {
+		for (size_t i = 0; i < referencesOut.size(); i++) {
 			ASSERT_EQ(referencesOut[i], references[i]);
 		}
 

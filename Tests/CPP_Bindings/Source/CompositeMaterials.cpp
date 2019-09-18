@@ -96,7 +96,7 @@ namespace Lib3MF
 	void compareConstituents(std::vector<sCompositeConstituent> constituentsA,  std::vector<sCompositeConstituent> constituentsB)
 	{
 		ASSERT_EQ(constituentsA.size(), constituentsB.size());
-		for (int i = 0; i < constituentsA.size(); i++) {
+		for (size_t i = 0; i < constituentsA.size(); i++) {
 			ASSERT_EQ(constituentsA[i].m_PropertyID, constituentsB[i].m_PropertyID);
 			ASSERT_DOUBLE_EQ(constituentsA[i].m_MixingRatio, constituentsB[i].m_MixingRatio);
 		}
@@ -214,7 +214,7 @@ namespace Lib3MF
 
 				std::vector<sCompositeConstituent>& testConstituents = ((i + k) % 2) ? constituents1 : constituents2;
 				ASSERT_EQ(obtainedConstituents.size(), testConstituents.size());
-				for (Lib3MF_uint64 cIndex = 0; cIndex < obtainedConstituents.size(); cIndex++) {
+				for (size_t cIndex = 0; cIndex < obtainedConstituents.size(); cIndex++) {
 					EXPECT_EQ(readBaseMaterialGroup->GetName(obtainedConstituents[cIndex].m_PropertyID),
 						baseMaterialGroup1->GetName(testConstituents[cIndex].m_PropertyID));
  					EXPECT_DOUBLE_EQ(obtainedConstituents[cIndex].m_MixingRatio,

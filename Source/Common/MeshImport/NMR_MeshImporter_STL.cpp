@@ -189,9 +189,10 @@ namespace NMR {
 			if ((!bIsValid) && !m_bIgnoreInvalidFaces)
 				throw CNMRException(NMR_ERROR_INVALIDCOORDINATES);
 
+			/*
 			if (bIsValid) {
 				MESHFACE * pFace = pMesh->addFace(pNodes[0], pNodes[1], pNodes[2]);
-				/*if (pMeshInformation) {
+				if (pMeshInformation) {
 					nfUint32 nRed = (nfUint32) ((nfFloat) (Facet.m_attribute & 0x1f) / (255.0f / 31.0f));
 					nfUint32 nGreen = (nfUint32)((nfFloat)((Facet.m_attribute >> 5) & 0x1f) / (255.0f / 31.0f));
 					nfUint32 nBlue = (nfUint32)((nfFloat)((Facet.m_attribute >> 10) & 0x1f) / (255.0f / 31.0f));;
@@ -206,8 +207,9 @@ namespace NMR {
 					pNodeColorInfo->m_cColors[1] = pNodeColorInfo->m_cColors[0];
 					pNodeColorInfo->m_cColors[2] = pNodeColorInfo->m_cColors[0];
 				}
-			} */
+			} 
 			}
+			*/
 		}
 
 	}
