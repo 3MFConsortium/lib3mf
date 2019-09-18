@@ -69,7 +69,7 @@ namespace Lib3MF
 		tIn.m_Green = 100;
 		tIn.m_Alpha = 255;
 		std::string inName = "MyMaterial";
-		Lib3MF_uint32 propertyID = baseMaterialGroup->AddMaterial(inName, tIn);
+		baseMaterialGroup->AddMaterial(inName, tIn);
 
 		baseMaterialGroup->AddMaterial("OtherMaterial", wrapper->RGBAToColor(0, 10, 20, 30));
 		ASSERT_EQ(baseMaterialGroup->GetCount(), 2);

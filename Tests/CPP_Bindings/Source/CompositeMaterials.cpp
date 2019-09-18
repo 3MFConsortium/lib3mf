@@ -191,7 +191,6 @@ namespace Lib3MF
 
 		std::vector<sTriangleProperties> obtainedProperties;
 		mesh->GetAllTriangleProperties(obtainedProperties);
-		int count = 0;
 		for (Lib3MF_uint64 i = 0; i < mesh->GetTriangleCount(); i++) {
 			EXPECT_EQ(obtainedProperties[i].m_ResourceID, properties[i].m_ResourceID);
 			for (Lib3MF_uint64 j = 0; j < 3; j++) {
