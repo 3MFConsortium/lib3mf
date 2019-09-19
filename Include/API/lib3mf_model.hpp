@@ -121,7 +121,7 @@ public:
 
 	IMeshObjectIterator * GetMeshObjects ();
 
-	IResourceIterator * GetComponentsObjects ();
+	IComponentsObjectIterator * GetComponentsObjects ();
 
 	ITexture2DIterator * GetTexture2Ds ();
 

@@ -122,5 +122,18 @@ IMetaDataGroup * CBuildItem::GetMetaDataGroup ()
 
 Lib3MF::sBox CBuildItem::GetOutbox()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	NMR::NOUTBOX3 sOutbox;
+	NMR::fnOutboxInitialize(sOutbox);
+
+	buildItem().getObject()->calculateOutbox(sOutbox, buildItem().getTransform());
+
+	sBox s;
+	s.m_MinCoordinate[0] = sOutbox.m_min.m_fields[0];
+	s.m_MinCoordinate[1] = sOutbox.m_min.m_fields[1];
+	s.m_MinCoordinate[2] = sOutbox.m_min.m_fields[2];
+
+	s.m_MaxCoordinate[0] = sOutbox.m_max.m_fields[0];
+	s.m_MaxCoordinate[1] = sOutbox.m_max.m_fields[1];
+	s.m_MaxCoordinate[2] = sOutbox.m_max.m_fields[2];
+	return s;
 }

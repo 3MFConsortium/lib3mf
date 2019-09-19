@@ -101,6 +101,8 @@ namespace NMR {
 		_Ret_maybenull_ CMeshInformationHandler * getMeshInformationHandler();
 		_Ret_notnull_ CMeshInformationHandler * createMeshInformationHandler();
 		void clearMeshInformationHandler();
+
+		void calculateOutbox(_Out_ NOUTBOX3& vOutBox, _In_ const NMATRIX3 mAccumulatedMatrix);
 	};
 
 	typedef std::shared_ptr <CMesh> PMesh;

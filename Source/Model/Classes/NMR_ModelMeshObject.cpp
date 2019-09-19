@@ -220,6 +220,11 @@ namespace NMR {
 
 		m_pBeamLatticeAttributes = pBeamLatticeAttributes;
 	}
+
+	void CModelMeshObject::calculateOutbox(_Out_ NOUTBOX3& vOutBox, _In_ const NMATRIX3 mAccumulatedMatrix)
+	{
+		m_pMesh->calculateOutbox(vOutBox, mAccumulatedMatrix);
+	}
 }
 
 

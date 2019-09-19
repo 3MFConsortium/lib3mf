@@ -235,6 +235,20 @@ void CObject::AssignSliceStack(ISliceStack* pSliceStackInstance)
 
 Lib3MF::sBox CObject::GetOutbox()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	NMR::NOUTBOX3 oOutbox;
+	NMR::fnOutboxInitialize(oOutbox);
+
+	object()->calculateOutbox(oOutbox, NMR::fnMATRIX3_identity());
+
+	sBox s;
+	s.m_MinCoordinate[0] = oOutbox.m_min.m_fields[0];
+	s.m_MinCoordinate[1] = oOutbox.m_min.m_fields[1];
+	s.m_MinCoordinate[2] = oOutbox.m_min.m_fields[2];
+
+	s.m_MaxCoordinate[0] = oOutbox.m_max.m_fields[0];
+	s.m_MaxCoordinate[1] = oOutbox.m_max.m_fields[1];
+	s.m_MaxCoordinate[2] = oOutbox.m_max.m_fields[2];
+	
+	return s;
 }
 
