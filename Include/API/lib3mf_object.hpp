@@ -110,17 +110,19 @@ public:
 
 	void SetUUID(const std::string & sUUID);
 
-	virtual void SetSlicesMeshResolution(const eLib3MFSlicesMeshResolution eMeshResolution);
+	void SetSlicesMeshResolution(const eLib3MFSlicesMeshResolution eMeshResolution);
 
-	virtual eLib3MFSlicesMeshResolution GetSlicesMeshResolution();
+	eLib3MFSlicesMeshResolution GetSlicesMeshResolution();
 
-	virtual bool HasSlices(const bool bRecursive);
+	bool HasSlices(const bool bRecursive);
 
-	virtual void ClearSliceStack();
+	void ClearSliceStack();
 
-	virtual ISliceStack * GetSliceStack();
+	ISliceStack * GetSliceStack();
 
-	virtual void AssignSliceStack(ISliceStack* pSliceStackInstance);
+	void AssignSliceStack(ISliceStack* pSliceStackInstance);
+
+	Lib3MF::sBox GetOutbox();
 
 };
 

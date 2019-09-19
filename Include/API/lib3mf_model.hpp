@@ -185,6 +185,8 @@ public:
 
 	void RemoveCustomContentType (const std::string & sExtension);
 
+	Lib3MF::sBox GetOutbox();
+
 };
 
 }

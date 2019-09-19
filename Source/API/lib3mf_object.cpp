@@ -233,3 +233,8 @@ void CObject::AssignSliceStack(ISliceStack* pSliceStackInstance)
 	object()->assignSliceStack(pSliceStackResource);
 }
 
+Lib3MF::sBox CObject::GetOutbox()
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
+

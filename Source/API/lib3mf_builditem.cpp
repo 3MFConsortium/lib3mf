@@ -120,3 +120,7 @@ IMetaDataGroup * CBuildItem::GetMetaDataGroup ()
 	return new CMetaDataGroup(buildItem().metaDataGroup());
 }
 
+Lib3MF::sBox CBuildItem::GetOutbox()
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}

@@ -639,3 +639,8 @@ void CModel::RemoveCustomContentType (const std::string & sExtension)
 	m_model->removeCustomContentType(sExtension);
 }
 
+Lib3MF::sBox CModel::GetOutbox()
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
+
