@@ -55,6 +55,13 @@ Lib3MF_uint32 CVolumetricStack::GetDestinationChannelCount()
 	return m_pVolumetricStack->getDstChannelCount();
 }
 
+void CVolumetricStack::GetDestinationChannel(const Lib3MF_uint32 nIndex, std::string & sName, Lib3MF_double & dBackground)
+{
+	auto pChannel = m_pVolumetricStack->getDstChannel(nIndex);
+	sName = pChannel->getName();
+	dBackground = pChannel->getBackground();
+}
+
 Lib3MF_uint32 CVolumetricStack::AddDestinationChannel(const std::string & sName, const Lib3MF_double dBackground)
 {
 	return m_pVolumetricStack->addDstChannel(sName, dBackground);

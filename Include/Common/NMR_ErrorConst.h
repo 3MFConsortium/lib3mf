@@ -1220,6 +1220,12 @@ Model error codes (0x8XXX)
 // Duplicate Volumetric Filter
 #define NMR_ERROR_DUPLICATEVOLUMETRICFILTER 0x810E
 
+// Duplicate Volumetric Source Channel
+#define NMR_ERROR_DUPLICATEVOLUMETRICSOURCECHANNEL 0x810F
+
+// Duplicate Volumetric Destination Channel
+#define NMR_ERROR_DUPLICATEVOLUMETRICDESTINATIONCHANNEL 0x8110
+
 /*-------------------------------------------------------------------
 XML Parser Error Constants (0x9XXX)
 -------------------------------------------------------------------*/

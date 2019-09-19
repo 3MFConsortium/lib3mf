@@ -1090,6 +1090,12 @@
 			<param name="Count" type="uint32" pass="return" description="number of destination channels" />
 		</method>
 	
+		<method name="GetDestinationChannel" description="Adds a new destination channel.">
+			<param name="Index" type="uint32" pass="in" description="Index of Destination Channel" />
+			<param name="Name" type="string" pass="out" description="Name of Destination Channel." />
+			<param name="Background" type="double" pass="out" description="Background of Destination Channel" />
+		</method>
+
 		<method name="AddDestinationChannel" description="Adds a new destination channel.">
 			<param name="Name" type="string" pass="in" description="Name of Destination Channel. Must be unique in the stack." />
 			<param name="Background" type="double" pass="in" description="Background of Destination Channel" />

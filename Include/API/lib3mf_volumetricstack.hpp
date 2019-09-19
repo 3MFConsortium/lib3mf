@@ -66,6 +66,8 @@ public:
 
 	Lib3MF_uint32 GetDestinationChannelCount();
 
+	void GetDestinationChannel(const Lib3MF_uint32 nIndex, std::string & sName, Lib3MF_double & dBackground);
+
 	Lib3MF_uint32 AddDestinationChannel(const std::string & sName, const Lib3MF_double dBackground);
 
 	void UpdateDestinationChannel(const Lib3MF_uint32 nIndex, const Lib3MF_double dBackground);

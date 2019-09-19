@@ -435,7 +435,8 @@ namespace NMR {
 		case NMR_ERROR_MISSINGCHANNELSELECTORTILESTYLE: return "Missing Channel Selector TileStyle";
 		case NMR_ERROR_DUPLICATEVOLUMETRICTILESTYLE: return "Duplicate Volumetric TileStyle";
 		case NMR_ERROR_DUPLICATEVOLUMETRICFILTER: return "Duplicate Volumetric Filter";
-
+		case NMR_ERROR_DUPLICATEVOLUMETRICSOURCECHANNEL: return "Duplicate Volumetric Source Channel";
+		case NMR_ERROR_DUPLICATEVOLUMETRICDESTINATIONCHANNEL: return "Duplicate Volumetric Destination Channel";
 
 		// XML Parser Error Constants(0x9XXX)
 		case NMR_ERROR_XMLPARSER_INVALIDATTRIBVALUE: return "Invalid XML attribute value";

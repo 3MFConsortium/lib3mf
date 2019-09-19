@@ -45,20 +45,21 @@ namespace NMR {
 
 	CModelReaderNode_Volumetric1907_Image3DChannelSelector::CModelReaderNode_Volumetric1907_Image3DChannelSelector(_In_ PModelReaderWarnings pWarnings)
 		: CModelReaderNode(pWarnings),
-		m_nID (0),
-		m_dMinValue (0.0),
-		m_dMaxValue (1.0),
-		m_eTileStyleU (MODELTEXTURETILESTYLE_WRAP),
-		m_eTileStyleV (MODELTEXTURETILESTYLE_WRAP),
-		m_eTileStyleW (MODELTEXTURETILESTYLE_WRAP),
-		m_eFilter (MODELTEXTUREFILTER_LINEAR),
-		m_bHasMinValue (false),
-		m_bHasMaxValue (false),
-		m_bHasTileStyleU (false),
-		m_bHasTileStyleV (false),
-		m_bHasTileStyleW (false),
-		m_bHasFilter (false)
-
+		m_nID(0),
+		m_dMinValue(0.0),
+		m_dMaxValue(1.0),
+		m_eTileStyleU(MODELTEXTURETILESTYLE_WRAP),
+		m_eTileStyleV(MODELTEXTURETILESTYLE_WRAP),
+		m_eTileStyleW(MODELTEXTURETILESTYLE_WRAP),
+		m_eFilter(MODELTEXTUREFILTER_LINEAR),
+		m_bHasSourceChannel(false),
+		m_bHasDestinationChannel(false),
+		m_bHasMinValue(false),
+		m_bHasMaxValue(false),
+		m_bHasTileStyleU(false),
+		m_bHasTileStyleV(false),
+		m_bHasTileStyleW(false),
+		m_bHasFilter(false)
 	{
 	}
 
@@ -95,7 +96,7 @@ namespace NMR {
 			m_bHasMinValue = true;
 		}
 
-		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_CHANNELSELECTOR_MINVALUE) == 0) {
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_CHANNELSELECTOR_MAXVALUE) == 0) {
 			if (m_bHasMaxValue)
 				throw CNMRException(NMR_ERROR_DUPLICATEVOLUMETRICMAXVALUE);
 
@@ -141,6 +142,24 @@ namespace NMR {
 
 			m_bHasTileStyleW = true;
 		}
+
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_CHANNELSELECTOR_SRCCHANNEL) == 0) {
+			if (m_bHasSourceChannel)
+				throw CNMRException(NMR_ERROR_DUPLICATEVOLUMETRICTILESTYLE);
+
+			m_sSourceChannel = pAttributeValue;
+			m_bHasSourceChannel = true;
+		}
+
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_CHANNELSELECTOR_DSTCHANNEL) == 0) {
+			if (m_bHasDestinationChannel)
+				throw CNMRException(NMR_ERROR_DUPLICATEVOLUMETRICTILESTYLE);
+
+			m_sDestinationChannel = pAttributeValue;
+
+			m_bHasDestinationChannel = true;
+		}
+
 	}
 	
 	
@@ -156,7 +175,7 @@ namespace NMR {
 		if (pImage3DID.get() == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDMODELRESOURCE);
 
-		PModelImage3DChannelSelector pSelector = CModelImage3DChannelSelector::make(pImage3DID, m_sSourceChannel, m_sDstChannel);
+		PModelImage3DChannelSelector pSelector = CModelImage3DChannelSelector::make(pImage3DID, m_sSourceChannel, m_sDestinationChannel);
 
 		pSelector->setMinValue(m_dMinValue);
 		pSelector->setMaxValue(m_dMaxValue);

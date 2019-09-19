@@ -47,8 +47,10 @@ namespace NMR {
 	private:
 
 		nfUint32 m_nID;
+		nfBool m_bHasSourceChannel;
+		nfBool m_bHasDestinationChannel;
 		std::string m_sSourceChannel;
-		std::string m_sDstChannel;
+		std::string m_sDestinationChannel;
 
 		nfBool m_bHasMinValue;
 		nfBool m_bHasMaxValue;
