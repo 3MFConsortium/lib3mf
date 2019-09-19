@@ -142,10 +142,8 @@ namespace NMR {
 
 		CMeshInformationHandler * pMeshInformationHandler = pMesh->getMeshInformationHandler();
 		if (pMeshInformationHandler) {
-			CMeshInformation * pInformation;
-
 			// Get generic property handler
-			pInformation = pMeshInformationHandler->getInformationByType(0, emiProperties);
+			 CMeshInformation *pInformation = pMeshInformationHandler->getInformationByType(0, emiProperties);
 			if (pInformation) {
 				pProperties = dynamic_cast<CMeshInformation_Properties *> (pInformation);
 				NMR::MESHINFORMATION_PROPERTIES * pDefaultData = (NMR::MESHINFORMATION_PROPERTIES*)pProperties->getDefaultData();

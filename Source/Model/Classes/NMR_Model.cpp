@@ -659,8 +659,8 @@ namespace NMR {
 			if (!pOldTexture2D) {
 				throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
 			}
-			PackageResourceID oldTexturePackageID = oldToNewMapping[pOldTexture2D->getResourceID()->getUniqueID()];
-			PModelTexture2DResource pNewTexture2D = findTexture2D(oldTexturePackageID);
+			PackageResourceID packageIDOfOldTexture = oldToNewMapping[pOldTexture2D->getResourceID()->getUniqueID()];
+			PModelTexture2DResource pNewTexture2D = findTexture2D(packageIDOfOldTexture);
 			if (!pNewTexture2D) {
 				throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
 			}
@@ -723,8 +723,8 @@ namespace NMR {
 			if (!pOldCompositeMaterials || !pOldBaseMaterial) {
 				throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
 			}
-			PackageResourceID oldMaterialPackageID = oldToNewMapping[pOldBaseMaterial->getResourceID()->getUniqueID()];
-			PModelBaseMaterialResource pNewBaseMaterialResource = findBaseMaterial(oldMaterialPackageID);
+			PackageResourceID packageIDOfOldMaterial = oldToNewMapping[pOldBaseMaterial->getResourceID()->getUniqueID()];
+			PModelBaseMaterialResource pNewBaseMaterialResource = findBaseMaterial(packageIDOfOldMaterial);
 			if (!pNewBaseMaterialResource) {
 				throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
 			}

@@ -47,6 +47,8 @@ You can only add nodes and faces to mesh. You cannot remove the existing structu
 #include "Common/NMR_Types.h"
 #include "Common/Mesh/NMR_BeamLattice.h"
 
+#include <map>
+
 namespace NMR {
 
 	class CMesh {
@@ -103,6 +105,7 @@ namespace NMR {
 		_Ret_maybenull_ CMeshInformationHandler * getMeshInformationHandler();
 		_Ret_notnull_ CMeshInformationHandler * createMeshInformationHandler();
 		void clearMeshInformationHandler();
+		void patchMeshInformationResources(_In_ std::map<PackageResourceID, PackageResourceID> &oldToNewMapping);
 	};
 
 	typedef std::shared_ptr <CMesh> PMesh;

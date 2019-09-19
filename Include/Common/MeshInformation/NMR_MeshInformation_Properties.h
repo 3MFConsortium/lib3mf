@@ -66,18 +66,19 @@ namespace NMR {
 		CMeshInformation_Properties();
 		CMeshInformation_Properties(nfUint32 nCurrentFaceCount);
 
-		virtual void invalidateFace(_In_ MESHINFORMATIONFACEDATA * pData);
+		void invalidateFace(_In_ MESHINFORMATIONFACEDATA * pData) override;
 
-		virtual eMeshInformationType getType();
-		virtual void cloneFaceInfosFrom(_In_ nfUint32 nFaceIndex, _In_ CMeshInformation * pOtherInformation, _In_ nfUint32 nOtherFaceIndex);
-		virtual PMeshInformation cloneInstance(_In_ nfUint32 nCurrentFaceCount);
-		virtual void permuteNodeInformation(_In_ nfUint32 nFaceIndex, _In_ nfUint32 nNodeIndex1, _In_ nfUint32 nNodeIndex2, _In_ nfUint32 nNodeIndex3);
-		virtual nfUint32 getBackupSize();
-		virtual void mergeInformationFrom(_In_ CMeshInformation * pInformation);
-		virtual nfBool faceHasData(_In_ nfUint32 nFaceIndex);
+		eMeshInformationType getType() override;
+		void cloneDefaultInfosFrom(_In_ CMeshInformation * pOtherInformation) override;
+		void cloneFaceInfosFrom(_In_ nfUint32 nFaceIndex, _In_ CMeshInformation * pOtherInformation, _In_ nfUint32 nOtherFaceIndex) override;
+		PMeshInformation cloneInstance(_In_ nfUint32 nCurrentFaceCount) override;
+		void permuteNodeInformation(_In_ nfUint32 nFaceIndex, _In_ nfUint32 nNodeIndex1, _In_ nfUint32 nNodeIndex2, _In_ nfUint32 nNodeIndex3) override;
+		nfUint32 getBackupSize() override;
+		void mergeInformationFrom(_In_ CMeshInformation * pInformation) override;
+		nfBool faceHasData(_In_ nfUint32 nFaceIndex) override;
 
-		virtual void setDefaultData(MESHINFORMATIONFACEDATA* pData);
-		virtual MESHINFORMATIONFACEDATA* getDefaultData();
+		void setDefaultData(MESHINFORMATIONFACEDATA* pData) override;
+		MESHINFORMATIONFACEDATA* getDefaultData() override;
 	};
 
 	typedef std::shared_ptr <CMeshInformation_Properties> PMeshInformation_Properties;
