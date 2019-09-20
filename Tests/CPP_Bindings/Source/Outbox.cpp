@@ -55,6 +55,14 @@ namespace Lib3MF
 	};
 	PWrapper Outbox::wrapper;
 
+	void CompareBoxes(Lib3MF::sBox boxA, Lib3MF::sBox boxB) {
+		for (int i = 0; i < 3; i++) {
+			EXPECT_FLOAT_EQ(boxA.m_MinCoordinate[i], boxB.m_MinCoordinate[i]);
+			EXPECT_FLOAT_EQ(boxA.m_MaxCoordinate[i], boxB.m_MaxCoordinate[i]);
+		}
+	}
+
+
 	TEST_F(Outbox, CheckMesh)
 	{
 		auto meshes = model->GetMeshObjects();
@@ -63,16 +71,34 @@ namespace Lib3MF
 
 		Lib3MF::sBox sOutbox = mesh->GetOutbox();
 
-		//ASSERT_FLOAT_EQ();
+		Lib3MF::sBox sExpectedOutbox;
+		sExpectedOutbox.m_MinCoordinate[0] = 15.2786398f;
+		sExpectedOutbox.m_MinCoordinate[1] = 3.91547990f;
+		sExpectedOutbox.m_MinCoordinate[2] = 0.f;
+		sExpectedOutbox.m_MaxCoordinate[0] = 160.000000f;
+		sExpectedOutbox.m_MaxCoordinate[1] = 156.084518f;
+		sExpectedOutbox.m_MaxCoordinate[2] = 100.000000f;
+
+		CompareBoxes(sOutbox, sExpectedOutbox);
 	}
 
 	TEST_F(Outbox, CheckComponent)
 	{
 		auto components = model->GetComponentsObjects();
 		components->MoveNext();
-		auto mesh = components->GetCurrentComponentsObject();
+		auto component = components->GetCurrentComponentsObject();
 
-		Lib3MF::sBox sOutbox = mesh->GetOutbox();
+		Lib3MF::sBox sOutbox = component->GetOutbox();
+
+		Lib3MF::sBox sExpectedOutbox;
+		sExpectedOutbox.m_MinCoordinate[0] = 64.9831238f;
+		sExpectedOutbox.m_MinCoordinate[1] = -103.887222f;
+		sExpectedOutbox.m_MinCoordinate[2] = -39.4011765f;
+		sExpectedOutbox.m_MaxCoordinate[0] = 307.725159f;
+		sExpectedOutbox.m_MaxCoordinate[1] = 101.911346f;
+		sExpectedOutbox.m_MaxCoordinate[2] = 279.938263f;
+
+		CompareBoxes(sOutbox, sExpectedOutbox);
 	}
 
 	TEST_F(Outbox, CheckBuildItemWithMesh)
@@ -81,6 +107,16 @@ namespace Lib3MF
 		buildItems->MoveNext();
 		auto buildItem = buildItems->GetCurrent();
 		Lib3MF::sBox sOutbox = buildItem->GetOutbox();
+		
+		Lib3MF::sBox sExpectedOutbox;
+		sExpectedOutbox.m_MinCoordinate[0] = 64.9831238f;
+		sExpectedOutbox.m_MinCoordinate[1] = -103.887222f;
+		sExpectedOutbox.m_MinCoordinate[2] = -39.4011765f;
+		sExpectedOutbox.m_MaxCoordinate[0] = 307.725159f;
+		sExpectedOutbox.m_MaxCoordinate[1] = 101.911346f;
+		sExpectedOutbox.m_MaxCoordinate[2] = 279.938263f;
+
+		CompareBoxes(sOutbox, sExpectedOutbox);
 	}
 
 	TEST_F(Outbox, CheckBuildItemWithComponent)
@@ -90,11 +126,31 @@ namespace Lib3MF
 		buildItems->MoveNext();
 		auto buildItem = buildItems->GetCurrent();
 		Lib3MF::sBox sOutbox = buildItem->GetOutbox();
+
+		Lib3MF::sBox sExpectedOutbox;
+		sExpectedOutbox.m_MinCoordinate[0] = 1.25774193f;
+		sExpectedOutbox.m_MinCoordinate[1] = -7.59726334f;
+		sExpectedOutbox.m_MinCoordinate[2] = -21.2018776f;
+		sExpectedOutbox.m_MaxCoordinate[0] = 146.953094f;
+		sExpectedOutbox.m_MaxCoordinate[1] = 139.430359f;
+		sExpectedOutbox.m_MaxCoordinate[2] = 95.4953918f;
+
+		CompareBoxes(sOutbox, sExpectedOutbox);
 	}
 
 	TEST_F(Outbox, CheckModel)
 	{
 		Lib3MF::sBox sOutbox = model->GetOutbox();
+
+		Lib3MF::sBox sExpectedOutbox;
+		sExpectedOutbox.m_MinCoordinate[0] = 1.25774193f;
+		sExpectedOutbox.m_MinCoordinate[1] = -103.887222f;
+		sExpectedOutbox.m_MinCoordinate[2] = -39.4011765f;
+		sExpectedOutbox.m_MaxCoordinate[0] = 307.725159f;
+		sExpectedOutbox.m_MaxCoordinate[1] = 139.430359f;
+		sExpectedOutbox.m_MaxCoordinate[2] = 279.938263f;
+
+		CompareBoxes(sOutbox, sExpectedOutbox);
 	}
 }
 

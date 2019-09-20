@@ -117,7 +117,7 @@ namespace NMR {
 		void clearComponentDepthLevel();
 		virtual void calculateComponentDepthLevel (nfUint32 nLevel);
 
-		virtual void calculateOutbox(_Out_ NOUTBOX3& vOutBox, _In_ const NMATRIX3 mAccumulatedMatrix) = 0;
+		virtual void extendOutbox(_Out_ NOUTBOX3& vOutBox, _In_ const NMATRIX3 mAccumulatedMatrix) = 0;
 
 	};
 

@@ -125,7 +125,7 @@ Lib3MF::sBox CBuildItem::GetOutbox()
 	NMR::NOUTBOX3 sOutbox;
 	NMR::fnOutboxInitialize(sOutbox);
 
-	buildItem().getObject()->calculateOutbox(sOutbox, buildItem().getTransform());
+	buildItem().getObject()->extendOutbox(sOutbox, buildItem().getTransform());
 
 	sBox s;
 	s.m_MinCoordinate[0] = sOutbox.m_min.m_fields[0];

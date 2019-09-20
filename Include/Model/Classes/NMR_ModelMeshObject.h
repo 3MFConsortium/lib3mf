@@ -78,7 +78,7 @@ namespace NMR {
 		_Ret_notnull_ PModelMeshBeamLatticeAttributes getBeamLatticeAttributes();
 		void setBeamLatticeAttributes(_In_ PModelMeshBeamLatticeAttributes pBeamLatticeAttributes);
 
-		void calculateOutbox(_Out_ NOUTBOX3& vOutBox, _In_ const NMATRIX3 mAccumulatedMatrix);
+		void extendOutbox(_Out_ NOUTBOX3& vOutBox, _In_ const NMATRIX3 mAccumulatedMatrix);
 
 	};
 

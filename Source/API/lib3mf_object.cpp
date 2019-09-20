@@ -238,7 +238,7 @@ Lib3MF::sBox CObject::GetOutbox()
 	NMR::NOUTBOX3 oOutbox;
 	NMR::fnOutboxInitialize(oOutbox);
 
-	object()->calculateOutbox(oOutbox, NMR::fnMATRIX3_identity());
+	object()->extendOutbox(oOutbox, NMR::fnMATRIX3_identity());
 
 	sBox s;
 	s.m_MinCoordinate[0] = oOutbox.m_min.m_fields[0];

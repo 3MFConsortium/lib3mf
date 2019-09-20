@@ -647,7 +647,7 @@ Lib3MF::sBox CModel::GetOutbox()
 
 	for (NMR::nfUint32 iBuildItem = 0; iBuildItem < model().getBuildItemCount(); iBuildItem++) {
 		auto pBuildItem = model().getBuildItem(iBuildItem);
-		pBuildItem->getObject()->calculateOutbox(sOutbox, pBuildItem->getTransform());
+		pBuildItem->getObject()->extendOutbox(sOutbox, pBuildItem->getTransform());
 	}
 
 	sBox s;

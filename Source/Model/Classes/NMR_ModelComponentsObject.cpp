@@ -147,10 +147,10 @@ namespace NMR {
 		}
 	}
 
-	void CModelComponentsObject::calculateOutbox(_Out_ NOUTBOX3& vOutBox, _In_ const NMATRIX3 mAccumulatedMatrix)
+	void CModelComponentsObject::extendOutbox(_Out_ NOUTBOX3& vOutBox, _In_ const NMATRIX3 mAccumulatedMatrix)
 	{
 		for (auto iIterator = m_Components.begin(); iIterator != m_Components.end(); iIterator++) {
-			(*iIterator)->getObject()->calculateOutbox(vOutBox, fnMATRIX3_multiply(mAccumulatedMatrix, (*iIterator)->getTransform()));
+			(*iIterator)->getObject()->extendOutbox(vOutBox, fnMATRIX3_multiply(mAccumulatedMatrix, (*iIterator)->getTransform()));
 		}
 	}
 }
