@@ -65,11 +65,12 @@ protected:
 	NMR::CModelComponentsObject * getComponentsObject();
 
 public:
-
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
 	CComponentsObject(NMR::PModelResource pResource);
+
+	static IComponentsObject* fnCreateComponentsObjectFromModelResource(NMR::PModelResource pResource, bool bFailIfUnkownClass);
 
 	/**
 	* Public member functions to implement.

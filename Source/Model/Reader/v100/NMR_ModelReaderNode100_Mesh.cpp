@@ -49,9 +49,6 @@ namespace NMR {
 		__NMRASSERT(pMesh);
 		__NMRASSERT(pModel);
 
-		m_nProgressCounterNodes = 0;
-		m_nProgressCounterTriangles = 0;
-
 		m_nObjectLevelPropertyID = nDefaultPropertyID;
 		m_nObjectLevelPropertyIndex = nDefaultPropertyIndex;
 

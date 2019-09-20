@@ -26,42 +26,40 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_MeshExporter.h defines the Mesh Exporter Class.
-This is an abstract base class for exporting different Mesh Formats.
+UnitTest_Model.cpp: Defines Unittests for the functionality to merge models
 
 --*/
 
-#ifndef __NMR_MESHEXPORTER
-#define __NMR_MESHEXPORTER
+#include "UnitTest_Utilities.h"
+#include "lib3mf_implicit.hpp"
 
-#include "Common/NMR_Types.h" 
-#include "Common/Math/NMR_Geometry.h" 
-#include "Common/Mesh/NMR_Mesh.h" 
-#include "Common/MeshExport/NMR_MeshExportEdgeMap.h"
-#include "Common/Platform/NMR_ExportStream.h" 
+namespace Lib3MF
+{
+	class MergeModels : public ::testing::Test {
+	protected:
+		virtual void SetUp() {
+			m_pModel = wrapper->CreateModel();
+			auto reader3MF = m_pModel->QueryReader("3mf");
+			reader3MF->ReadFromFile(sTestFilesPath + "/Models/" + "WithSomeResources.3mf");
+		}
+		virtual void TearDown() {
+			m_pModel.reset();
+		}
 
-#include <vector>
-
-namespace NMR {
-
-	class CMeshExporter {
-	private:
-		PExportStream m_stream;
-	public:
-		CMeshExporter();
-		CMeshExporter(_In_ PExportStream pStream);
-		virtual ~CMeshExporter() = default;
-
-		void setStream(_In_ PExportStream pStream);
-		CExportStream * getStream();
-
-		virtual void exportMeshEx(_In_ CMesh * pMesh, _In_opt_ NMATRIX3 * pmMatrix, _In_opt_ CMeshExportEdgeMap * pExportEdgeMap) = 0;
-
-		void exportMesh(_In_ CMesh * pMesh, _In_opt_ NMATRIX3 * pmMatrix);
+		PModel m_pModel;
+		static void SetUpTestCase() {
+			wrapper = CWrapper::loadLibrary();
+		}
+		static PWrapper wrapper;
 	};
+	PWrapper MergeModels::wrapper;
 
-	typedef std::shared_ptr <CMeshExporter> PMeshExporter;
+	TEST_F(MergeModels, MergeModel)
+	{
+		auto pMergedModel = m_pModel->MergeToModel();
+		
+		auto writer3MF = pMergedModel->QueryWriter("3mf");
+		writer3MF->WriteToFile(sTestFilesPath + "/Models/" + "WithSomeResources_out.3mf");
+	}
 
 }
-
-#endif // __NMR_MESHEXPORTER

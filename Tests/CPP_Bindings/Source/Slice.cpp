@@ -107,7 +107,7 @@ namespace Lib3MF
 		std::vector<sPosition2D> vNewVertices;
 		slice->GetVertices(vNewVertices);
 		ASSERT_EQ(vVertices.size(), vNewVertices.size());
-		for (int i = 0; i < vVertices.size(); i++) {
+		for (size_t i = 0; i < vVertices.size(); i++) {
 			ASSERT_FLOAT_EQ(vVertices[i].m_Coordinates[0], vNewVertices[i].m_Coordinates[0]);
 			ASSERT_FLOAT_EQ(vVertices[i].m_Coordinates[1], vNewVertices[i].m_Coordinates[1]);
 		}

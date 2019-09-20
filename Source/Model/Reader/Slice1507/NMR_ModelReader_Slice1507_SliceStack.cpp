@@ -87,7 +87,6 @@ namespace NMR {
 		_In_ PProgressMonitor pProgressMonitor,_In_ const std::string sSlicePath)
 		: CModelReaderNode(pWarnings, pProgressMonitor)
 	{
-		m_nProgressCounter = 0;
 		m_sSlicePath = sSlicePath;
 		m_pModel = pModel;
 	}

@@ -49,6 +49,7 @@ namespace NMR {
 	public:
 		CMeshImporter();
 		CMeshImporter(_In_ PImportStream pStream);
+		virtual ~CMeshImporter() = default;
 
 		void setStream(_In_ PImportStream pStream);
 		CImportStream * getStream();

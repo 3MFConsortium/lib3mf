@@ -209,6 +209,11 @@
 		<member name="Fields" type="single" columns="4" rows="3"/>
 	</struct>
 
+	<struct name="Box">
+		<member name="MinCoordinate" type="single" rows="3"/>
+		<member name="MaxCoordinate" type="single" rows="3"/>
+	</struct>
+
 	<struct name="Color">
 		<member name="Red" type="uint8"/>
 		<member name="Green" type="uint8"/>
@@ -354,6 +359,12 @@
 	<class name="MeshObjectIterator" parent="ResourceIterator">
 		<method name="GetCurrentMeshObject" description="Returns the MeshObject the iterator points at.">
 			<param name="Resource" type="handle" class="MeshObject" pass="return" description="returns the MeshObject instance."/>
+		</method>
+	</class>
+
+	<class name="ComponentsObjectIterator" parent="ResourceIterator">
+		<method name="GetCurrentComponentsObject" description="Returns the ComponentsObject the iterator points at.">
+			<param name="Resource" type="handle" class="ComponentsObject" pass="return" description="returns the ComponentsObject instance."/>
 		</method>
 	</class> 
 
@@ -505,6 +516,9 @@
 			<param name="Attachment" type="optionalclass" class="Attachment" pass="return" description="Instance of the thumbnailattachment object or NULL."/>
 		</method>
 		<method name="ClearThumbnailAttachment" description="Clears the attachment. The attachment instance is not removed from the package.">
+		</method>
+		<method name="GetOutbox" description="Returns the outbox of a build item">
+			<param name="Outbox" type="struct" class="Box" pass="return" description="Outbox of this build item"/>
 		</method>
 		<method name="GetUUID" description="Retrieves an object's uuid string (see production extension specification)">
 			<param name="HasUUID" type="bool" pass="out" description="flag whether the build item has a UUID"/>
@@ -1254,6 +1268,9 @@
 		<method name="GetMetaDataGroup" description="Returns the metadatagroup of this build item">
 			<param name="MetaDataGroup" type="handle" class="MetaDataGroup" pass="return" description="returns an Instance of the metadatagroup of this build item"/>
 		</method>
+		<method name="GetOutbox" description="Returns the outbox of a build item">
+			<param name="Outbox" type="struct" class="Box" pass="return" description="Outbox of this build item"/>
+		</method>
 	</class>
 
 
@@ -1415,6 +1432,9 @@
 		<method name="GetBuildItems" description="creates a build item iterator instance with all build items.">
 			<param name="BuildItemIterator" type="handle" class="BuildItemIterator" pass="return" description="returns the iterator instance."/>
 		</method>
+		<method name="GetOutbox" description="Returns the outbox of a Model">
+			<param name="Outbox" type="struct" class="Box" pass="return" description="Outbox of this Model"/>
+		</method>
 		<method name="GetResources" description="creates a resource iterator instance with all resources.">
 			<param name="ResourceIterator" type="handle" class="ResourceIterator" pass="return" description="returns the iterator instance."/>
 		</method>
@@ -1425,7 +1445,7 @@
 			<param name="ResourceIterator" type="handle" class="MeshObjectIterator" pass="return" description="returns the iterator instance."/>
 		</method>
 		<method name="GetComponentsObjects" description="creates a resource iterator instance with all components object resources.">
-			<param name="ResourceIterator" type="handle" class="ResourceIterator" pass="return" description="returns the iterator instance."/>
+			<param name="ResourceIterator" type="handle" class="ComponentsObjectIterator" pass="return" description="returns the iterator instance."/>
 		</method>
 		<method name="GetTexture2Ds" description="creates a Texture2DIterator instance with all texture2d resources.">
 			<param name="ResourceIterator" type="handle" class="Texture2DIterator" pass="return" description="returns the iterator instance."/>

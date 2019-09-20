@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium
+Copyright (C) 2019 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -24,44 +24,24 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract:
+Abstract: This is a stub class definition of CComponentsObjectIterator
 
-NMR_MeshExporter.h defines the Mesh Exporter Class.
-This is an abstract base class for exporting different Mesh Formats.
+*/
 
---*/
+#include "lib3mf_componentsobjectiterator.hpp"
+#include "lib3mf_interfaceexception.hpp"
 
-#ifndef __NMR_MESHEXPORTER
-#define __NMR_MESHEXPORTER
+// Include custom headers here.
+#include "lib3mf_componentsobject.hpp"
 
-#include "Common/NMR_Types.h" 
-#include "Common/Math/NMR_Geometry.h" 
-#include "Common/Mesh/NMR_Mesh.h" 
-#include "Common/MeshExport/NMR_MeshExportEdgeMap.h"
-#include "Common/Platform/NMR_ExportStream.h" 
+using namespace Lib3MF::Impl;
 
-#include <vector>
+/*************************************************************************************************************************
+ Class definition of CComponentsObjectIterator 
+**************************************************************************************************************************/
 
-namespace NMR {
-
-	class CMeshExporter {
-	private:
-		PExportStream m_stream;
-	public:
-		CMeshExporter();
-		CMeshExporter(_In_ PExportStream pStream);
-		virtual ~CMeshExporter() = default;
-
-		void setStream(_In_ PExportStream pStream);
-		CExportStream * getStream();
-
-		virtual void exportMeshEx(_In_ CMesh * pMesh, _In_opt_ NMATRIX3 * pmMatrix, _In_opt_ CMeshExportEdgeMap * pExportEdgeMap) = 0;
-
-		void exportMesh(_In_ CMesh * pMesh, _In_opt_ NMATRIX3 * pmMatrix);
-	};
-
-	typedef std::shared_ptr <CMeshExporter> PMeshExporter;
-
+IComponentsObject * CComponentsObjectIterator::GetCurrentComponentsObject ()
+{
+	return CComponentsObject::fnCreateComponentsObjectFromModelResource(GetCurrentResource(), true);
 }
 
-#endif // __NMR_MESHEXPORTER

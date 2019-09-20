@@ -74,7 +74,7 @@ namespace NMR {
 		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_COMPOSITE_VALUES) == 0) {
 			m_pModelComposite = std::make_shared<CModelComposite>();
 			std::vector<nfDouble> vctMixingRatios = fnVctType_fromString<nfDouble>(pAttributeValue);
-			for (int i = 0; i < m_vctBaseMaterialPropertyIds.size(); i++) {
+			for (size_t i = 0; i < m_vctBaseMaterialPropertyIds.size(); i++) {
 				MODELCOMPOSITECONSTITUENT constituent;
 				constituent.m_nPropertyID = m_vctBaseMaterialPropertyIds[i];
 				if (i < vctMixingRatios.size()) {

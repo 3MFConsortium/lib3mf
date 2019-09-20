@@ -121,7 +121,7 @@ public:
 
 	IMeshObjectIterator * GetMeshObjects ();
 
-	IResourceIterator * GetComponentsObjects ();
+	IComponentsObjectIterator * GetComponentsObjects ();
 
 	ITexture2DIterator * GetTexture2Ds ();
 
@@ -185,6 +185,8 @@ public:
 
 	void RemoveCustomContentType (const std::string & sExtension);
 
+	Lib3MF::sBox GetOutbox();
+
 	IImage3D * AddImage3D(const Lib3MF_uint32 nSizeX, const Lib3MF_uint32 nSizeY, const Lib3MF_uint32 nSheetCount);
 
 	IImage3DIterator * GetImage3Ds();
@@ -192,7 +194,6 @@ public:
 	IVolumetricStack * AddVolumetricStack();
 
 	IVolumetricStackIterator * GetVolumetricStacks();
-
 
 };
 
