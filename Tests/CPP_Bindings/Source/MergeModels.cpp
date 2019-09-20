@@ -26,14 +26,40 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-UnitTest_AllTests.cpp: Defines Entry point for the UnitTests of all exposed classes
+UnitTest_Model.cpp: Defines Unittests for the functionality to merge models
 
 --*/
-#include "gtest/gtest.h"
 
-int main(int argc, char **argv)
+#include "UnitTest_Utilities.h"
+#include "lib3mf_implicit.hpp"
+
+namespace Lib3MF
 {
-	//testing::GTEST_FLAG(filter) = "*";
-	testing::InitGoogleTest(&argc, argv);
-	return RUN_ALL_TESTS();
+	class MergeModels : public ::testing::Test {
+	protected:
+		virtual void SetUp() {
+			m_pModel = wrapper->CreateModel();
+			auto reader3MF = m_pModel->QueryReader("3mf");
+			reader3MF->ReadFromFile(sTestFilesPath + "/Models/" + "WithSomeResources.3mf");
+		}
+		virtual void TearDown() {
+			m_pModel.reset();
+		}
+
+		PModel m_pModel;
+		static void SetUpTestCase() {
+			wrapper = CWrapper::loadLibrary();
+		}
+		static PWrapper wrapper;
+	};
+	PWrapper MergeModels::wrapper;
+
+	TEST_F(MergeModels, MergeModel)
+	{
+		auto pMergedModel = m_pModel->MergeToModel();
+		
+		auto writer3MF = pMergedModel->QueryWriter("3mf");
+		writer3MF->WriteToFile(sTestFilesPath + "/Models/" + "WithSomeResources_out.3mf");
+	}
+
 }
