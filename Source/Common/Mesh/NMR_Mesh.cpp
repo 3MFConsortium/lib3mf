@@ -464,4 +464,17 @@ namespace NMR {
 		return m_pMeshInformationHandler.get();
 	}
 
+	void CMesh::extendOutbox(_Out_ NOUTBOX3& vOutBox, _In_ const NMATRIX3 mAccumulatedMatrix)
+	{
+		if (fnMATRIX3_isIdentity(mAccumulatedMatrix)) {
+			for (nfUint32 iNode = 0; iNode < getNodeCount(); iNode++) {
+				fnOutboxMergeVector(vOutBox, getNode(iNode)->m_position);
+			}
+		}
+		else {
+			for (nfUint32 iNode = 0; iNode < getNodeCount(); iNode++) {
+				fnOutboxMergeVector(vOutBox, fnMATRIX3_apply(mAccumulatedMatrix, getNode(iNode)->m_position));
+			}
+		}
+	}
 }

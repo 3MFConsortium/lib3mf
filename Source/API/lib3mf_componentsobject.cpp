@@ -42,6 +42,24 @@ using namespace Lib3MF::Impl;
  Class definition of CComponentsObject 
 **************************************************************************************************************************/
 
+
+IComponentsObject* CComponentsObject::fnCreateComponentsObjectFromModelResource(NMR::PModelResource pResource, bool bFailIfUnkownClass)
+{
+
+	if (!pResource.get())
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+
+	NMR::CModelComponentsObject * pMeshObject = dynamic_cast<NMR::CModelComponentsObject *> (pResource.get());
+	if (pMeshObject) {
+		return new CComponentsObject(pResource);
+	}
+
+	if (bFailIfUnkownClass)
+		throw ELib3MFInterfaceException(NMR_ERROR_UNKNOWNMODELRESOURCE);
+
+	return nullptr;
+}
+
 CComponentsObject::CComponentsObject(NMR::PModelResource pResource)
 	: CResource(pResource), CObject(pResource)
 {

@@ -24,88 +24,24 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CBuildItem
+Abstract: This is a stub class definition of CComponentsObjectIterator
 
 */
 
-
-#ifndef __LIB3MF_BUILDITEM
-#define __LIB3MF_BUILDITEM
-
-#include "lib3mf_interfaces.hpp"
-#include "lib3mf_base.hpp"
-#ifdef _MSC_VER
-#pragma warning(push)
-#pragma warning(disable : 4250)
-#endif
-
+#include "lib3mf_componentsobjectiterator.hpp"
+#include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
-#include "Model/Classes/NMR_ModelBuildItem.h"
+#include "lib3mf_componentsobject.hpp"
 
-namespace Lib3MF {
-namespace Impl {
-
+using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class declaration of CBuildItem 
+ Class definition of CComponentsObjectIterator 
 **************************************************************************************************************************/
 
-class CBuildItem : public virtual IBuildItem, public virtual CBase {
-private:
-
-	/**
-	* Put private members here.
-	*/
-	NMR::PModelBuildItem m_pBuildItem;
-
-protected:
-
-	/**
-	* Put protected members here.
-	*/
-	NMR::CModelBuildItem& buildItem();
-
-public:
-
-	/**
-	* Put additional public members here. They will not be visible in the external API.
-	*/
-	CBuildItem(NMR::PModelBuildItem pBuildItem);
-
-	Lib3MF_uint32 GetHandle();
-
-	/**
-	* Public member functions to implement.
-	*/
-
-	IObject * GetObjectResource ();
-
-	std::string GetUUID (bool & bHasUUID);
-
-	void SetUUID (const std::string & sUUID);
-
-	Lib3MF_uint32 GetObjectResourceID ();
-
-	bool HasObjectTransform ();
-
-	sLib3MFTransform GetObjectTransform ();
-
-	void SetObjectTransform (const sLib3MFTransform Transform);
-
-	std::string GetPartNumber ();
-
-	void SetPartNumber (const std::string & sSetPartnumber);
-
-	IMetaDataGroup * GetMetaDataGroup ();
-
-	Lib3MF::sBox GetOutbox();
-};
-
-}
+IComponentsObject * CComponentsObjectIterator::GetCurrentComponentsObject ()
+{
+	return CComponentsObject::fnCreateComponentsObjectFromModelResource(GetCurrentResource(), true);
 }
 
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
-#endif // __LIB3MF_BUILDITEM
