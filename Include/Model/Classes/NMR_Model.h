@@ -89,6 +89,8 @@ namespace NMR {
 	class CModelSliceStack;
 	typedef std::shared_ptr <CModelSliceStack> PModelSliceStack;
 
+	typedef std::map<NMR::PackageResourceID, NMR::PackageResourceID> UniqueResourceIDMapping;
+
 	class CModel {
 	private:
 		std::string m_sCurPath;
@@ -220,42 +222,42 @@ namespace NMR {
 		nfUint32 getBaseMaterialCount();
 		PModelResource getBaseMaterialResource(_In_ nfUint32 nIndex);
 		CModelBaseMaterialResource * getBaseMaterial(_In_ nfUint32 nIndex);
-		void mergeBaseMaterials(_In_ CModel * pSourceModel);
+		void mergeBaseMaterials(_In_ CModel * pSourceModel, _In_ UniqueResourceIDMapping &oldToNewMapping);
 
 		// Convenience functions for color groups
 		_Ret_maybenull_ PModelColorGroupResource findColorGroup(_In_ PackageResourceID nResourceID);
 		nfUint32 getColorGroupCount();
 		PModelResource getColorGroupResource(_In_ nfUint32 nIndex);
 		CModelColorGroupResource * getColorGroup(_In_ nfUint32 nIndex);
-		void mergeColorGroups(_In_ CModel * pSourceModel);
+		void mergeColorGroups(_In_ CModel * pSourceModel, _In_ UniqueResourceIDMapping &oldToNewMapping);
 
 		// Convenience functions for texture2d groups
 		_Ret_maybenull_ PModelTexture2DGroupResource findTexture2DGroup(_In_ PackageResourceID nResourceID);
 		nfUint32 getTexture2DGroupCount();
 		PModelResource getTexture2DGroupResource(_In_ nfUint32 nIndex);
 		CModelTexture2DGroupResource * getTexture2DGroup(_In_ nfUint32 nIndex);
-		void mergeTexture2DGroups(_In_ CModel * pSourceModel);
+		void mergeTexture2DGroups(_In_ CModel * pSourceModel, _In_ UniqueResourceIDMapping &oldToNewMapping);
 
 		// Convenience functions for composite materials
 		_Ret_maybenull_ PModelCompositeMaterialsResource findCompositeMaterials(_In_ PackageResourceID nResourceID);
 		nfUint32 getCompositeMaterialsCount();
 		PModelResource getCompositeMaterialsResource(_In_ nfUint32 nIndex);
 		CModelCompositeMaterialsResource * getCompositeMaterials(_In_ nfUint32 nIndex);
-		void mergeCompositeMaterials(_In_ CModel * pSourceModel);
+		void mergeCompositeMaterials(_In_ CModel * pSourceModel, _In_ UniqueResourceIDMapping &oldToNewMapping);
 
 		// Convenience functions for multi property groups
 		_Ret_maybenull_ PModelMultiPropertyGroupResource findMultiPropertyGroup(_In_ PackageResourceID nResourceID);
 		nfUint32 getMultiPropertyGroupCount();
 		PModelResource getMultiPropertyGroupResource(_In_ nfUint32 nIndex);
 		CModelMultiPropertyGroupResource * getMultiPropertyGroup(_In_ nfUint32 nIndex);
-		void mergeMultiPropertyGroups(_In_ CModel * pSourceModel);
+		void mergeMultiPropertyGroups(_In_ CModel * pSourceModel, _In_ UniqueResourceIDMapping &oldToNewMapping);
 
 		// Convenience functions for 2D Textures
 		_Ret_maybenull_ PModelTexture2DResource findTexture2D(_In_ PackageResourceID nResourceID);
 		nfUint32 getTexture2DCount();
 		PModelResource getTexture2DResource(_In_ nfUint32 nIndex);
 		CModelTexture2DResource * getTexture2D(_In_ nfUint32 nIndex);
-		void mergeTextures2D(_In_ CModel * pSourceModel);
+		void mergeTextures2D(_In_ CModel * pSourceModel, _In_ UniqueResourceIDMapping &oldToNewMapping);
 
 		// Clear all build items and Resources
 		void clearAll ();

@@ -186,7 +186,7 @@ namespace Lib3MF
 		nPropertyID = multiPropertyGroup->AddMultiProperty(propertyIDs);
 		ASSERT_EQ(multiPropertyGroup->GetCount(), 3);
 
-		//// TODO: invalid property ids must not be used
+		// TODO: invalid property ids must not be used
 		//propertyIDs[0] = 20;
 		//ASSERT_SPECIFIC_THROW(multiPropertyGroup->SetMultiProperty(nPropertyID, propertyIDs), ELib3MFException);
 		//ASSERT_SPECIFIC_THROW(multiPropertyGroup->AddMultiProperty(propertyIDs), ELib3MFException);

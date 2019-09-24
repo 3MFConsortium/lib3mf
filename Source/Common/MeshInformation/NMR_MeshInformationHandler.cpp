@@ -112,7 +112,15 @@ namespace NMR {
 				addInformation(pOtherInfoHandler->m_pLookup[eType]->cloneInstance(nCurrentFaceCount));
 			if ((pOtherInfoHandler->m_pLookup[eType]) && (m_pLookup[eType]))
 				m_pLookup[eType]->mergeInformationFrom(pOtherInfoHandler->m_pLookup[eType]);
+		}
+	}
 
+	void CMeshInformationHandler::cloneDefaultInfosFrom(_In_ CMeshInformationHandler * pOtherInfoHandler)
+	{
+		nfInt32 eType;
+		for (eType = emiAbstract; eType < emiLastType; eType++) {
+			if ((pOtherInfoHandler->m_pLookup[eType]) && (m_pLookup[eType]))
+				m_pLookup[eType]->cloneDefaultInfosFrom(pOtherInfoHandler->m_pLookup[eType]);
 		}
 	}
 
@@ -189,10 +197,6 @@ namespace NMR {
 		}
 		m_pInformations[nCount - 1] = nullptr;
 		m_pInformations.pop_back();
-
-
-
 	}
-
 
 }

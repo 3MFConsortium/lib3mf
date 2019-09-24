@@ -54,12 +54,38 @@ namespace Lib3MF
 	};
 	PWrapper MergeModels::wrapper;
 
+	void ExpectEqModels(PModel p1, PModel p2)
+	{
+		EXPECT_EQ(p1->GetAttachmentCount(), p2->GetAttachmentCount());
+		EXPECT_EQ(p1->GetBaseMaterialGroups()->Count(), p2->GetBaseMaterialGroups()->Count());
+		EXPECT_EQ(p1->GetColorGroups()->Count(), p2->GetColorGroups()->Count());
+		EXPECT_EQ(p1->GetCompositeMaterials()->Count(), p2->GetCompositeMaterials()->Count());
+		EXPECT_EQ(p1->GetTexture2DGroups()->Count(), p2->GetTexture2DGroups()->Count());
+		EXPECT_EQ(p1->GetTexture2Ds()->Count(), p2->GetTexture2Ds()->Count());
+		EXPECT_EQ(p1->GetMultiPropertyGroups()->Count(), p2->GetMultiPropertyGroups()->Count());
+	}
+
 	TEST_F(MergeModels, MergeModel)
 	{
+		std::vector<Lib3MF_uint8> buffer;
 		auto pMergedModel = m_pModel->MergeToModel();
-		
-		auto writer3MF = pMergedModel->QueryWriter("3mf");
-		writer3MF->WriteToFile(sTestFilesPath + "/Models/" + "WithSomeResources_out.3mf");
+		{
+			auto writer3MF = pMergedModel->QueryWriter("3mf");
+			writer3MF->WriteToBuffer(buffer);
+			// writer3MF->WriteToFile(sTestFilesPath + "/Models/" + "WithSomeResources_out.3mf");
+		}
+
+		ExpectEqModels(m_pModel, pMergedModel);
+		EXPECT_EQ(pMergedModel->GetMeshObjects()->Count(), 1);
+		EXPECT_EQ(pMergedModel->GetComponentsObjects()->Count(), 0);
+		EXPECT_EQ(pMergedModel->GetBuildItems()->Count(), 1);
+
+		auto pReadModel = wrapper->CreateModel();
+		{
+			auto reader3MF = pReadModel->QueryReader("3mf");
+			reader3MF->ReadFromBuffer(buffer);
+		}
+		ExpectEqModels(m_pModel, pReadModel);
 	}
 
 }
