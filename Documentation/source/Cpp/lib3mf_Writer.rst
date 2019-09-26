@@ -48,6 +48,20 @@ CWriter
 		:param pUserData: pointer to arbitrary user data that is passed without modification to the callback. 
 
 
+	.. cpp:function:: Lib3MF_uint32 GetDecimalPrecision()
+
+		Returns the number of digits after the decimal point to be written in each vertex coordinate-value.
+
+		:returns: The number of digits to be written in each vertex coordinate-value after the decimal point.
+
+
+	.. cpp:function:: void SetDecimalPrecision(const Lib3MF_uint32 nDecimalPrecision)
+
+		Sets the number of digits after the decimal point to be written in each vertex coordinate-value.
+
+		:param nDecimalPrecision: The number of digits to be written in each vertex coordinate-value after the decimal point. 
+
+
 .. cpp:type:: std::shared_ptr<CWriter> Lib3MF::PWriter
 
 	Shared pointer to CWriter to easily allow reference counting.

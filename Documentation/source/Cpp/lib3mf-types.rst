@@ -186,6 +186,13 @@ Structs
 		.. cpp:member:: Lib3MF_single m_Fields[4][3]
 	
 
+	.. cpp:struct:: sBox
+	
+		.. cpp:member:: Lib3MF_single m_MinCoordinate[3]
+	
+		.. cpp:member:: Lib3MF_single m_MaxCoordinate[3]
+	
+
 	.. cpp:struct:: sColor
 	
 		.. cpp:member:: Lib3MF_uint8 m_Red

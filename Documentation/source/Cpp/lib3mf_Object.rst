@@ -73,6 +73,33 @@ CObject
 		:returns: returns whether the object is a valid object description
 
 
+	.. cpp:function:: void SetAttachmentAsThumbnail(CAttachment * pAttachment)
+
+		Use an existing attachment as thumbnail for this object
+
+		:param pAttachment: Instance of a new or the existing thumbnailattachment object. 
+
+
+	.. cpp:function:: PAttachment GetThumbnailAttachment()
+
+		Get the attachment containing the object thumbnail.
+
+		:returns: Instance of the thumbnailattachment object or NULL.
+
+
+	.. cpp:function:: void ClearThumbnailAttachment()
+
+		Clears the attachment. The attachment instance is not removed from the package.
+
+
+
+	.. cpp:function:: sBox GetOutbox()
+
+		Returns the outbox of a build item
+
+		:returns: Outbox of this build item
+
+
 	.. cpp:function:: std::string GetUUID(bool & bHasUUID)
 
 		Retrieves an object's uuid string (see production extension specification)
@@ -109,11 +136,12 @@ CObject
 		:returns: meshresolution of this object
 
 
-	.. cpp:function:: bool HasSliceStack()
+	.. cpp:function:: bool HasSlices(const bool bRecursive)
 
-		returns whether the Object has a slice stack
+		returns whether the Object has a slice stack. If Recursive is true, also checks whether any references object has a slice stack
 
-		:returns: does the object have a slice stack
+		:param bRecursive: check also all referenced objects? 
+		:returns: does the object have a slice stack?
 
 
 	.. cpp:function:: void ClearSliceStack()
