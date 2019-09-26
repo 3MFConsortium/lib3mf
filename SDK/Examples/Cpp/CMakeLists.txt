@@ -26,7 +26,7 @@ if (WIN32)
 else()
 	# Unix prefixes the name of the library with "lib" anyway
 	link_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../Bin)
-	link_libraries(3MF)
+	link_libraries(3mf)
 	if(APPLE)
 		link_directories(${CMAKE_CURRENT_BINARY_DIR})
 	endif()
