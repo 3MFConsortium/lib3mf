@@ -159,6 +159,9 @@ void CubeExample() {
 	meshObject->SetTriangleProperties(10, sTriangleColor1);
 	meshObject->SetTriangleProperties(11, sTriangleColor2);
 
+	// Object Level Property
+	meshObject->SetObjectLevelProperty(sTriangleColorRed.m_ResourceID, sTriangleColorRed.m_PropertyIDs[0]);
+
 	// Add build item
 	model->AddBuildItem(meshObject.get(), wrapper->GetIdentityTransform());
 
