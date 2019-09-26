@@ -1,7 +1,6 @@
 # lib3mf
 
-# Disclaimer:
-# lib3mf Version 2.0.0-beta - This version is not meant for production!
+https://github.com/3MFConsortium/lib3mf
 
 lib3mf is a C++ implementation of the 3D Manufacturing Format file standard.
 
@@ -19,4 +18,4 @@ The specification can be downloaded at
 
 
 ## Documentation
-lib3mf's documentation is available on https://lib3mf.readthedocs.io or as PDF in [Documentation/lib3mf_v2.0.0-beta.pdf](Documentation/lib3mf_v2.0.0-beta.pdf). 
+lib3mf's documentation is available on https://lib3mf.readthedocs.io or as PDF in [Documentation/lib3mf_v2.0.0.pdf](Documentation/lib3mf_v2.0.0.pdf).
