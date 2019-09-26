@@ -1,5 +1,5 @@
 # lib3mf
-[![Build Status](https://travis-ci.org/3MFConsortium/lib3mf.svg?branch=master)](https://travis-ci.org/3MFConsortium/lib3mf)
+[![Build Status](https://travis-ci.org/3MFConsortium/lib3mf.svg?branch=release%2F2.0.0)](https://travis-ci.org/3MFConsortium/lib3mf)
 [![Documentation Status](https://readthedocs.org/projects/lib3mf/badge/?version=master)](https://readthedocs.org/projects/lib3mf)
 [![Version 2.0.0](https://img.shields.io/static/v1.svg?label=lib3mf&message=v2.0.0&color=green)]()
 [![Supported platforms](https://img.shields.io/static/v1.svg?label=platform&message=windows%20%7C%20macos%20%7C%20linux&color=lightgrey)]()
