@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -41,12 +41,15 @@ NMR_OpcPackageReader.cpp defines an OPC Package reader of .rels files in a porta
 
 namespace NMR {
 
-	COpcPackageRelationshipReader::COpcPackageRelationshipReader(_In_ PImportStream pImportStream)
+	COpcPackageRelationshipReader::COpcPackageRelationshipReader(_In_ PImportStream pImportStream, _In_ PProgressMonitor pProgressMonitor)
 	{
 		if (pImportStream.get() == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-		PXmlReader pXMLReader = fnCreateXMLReaderInstance(pImportStream, nullptr);
+		if (pProgressMonitor) {
+			pProgressMonitor->ReportProgressAndQueryCancelled(true);
+		}
+		PXmlReader pXMLReader = fnCreateXMLReaderInstance(pImportStream, pProgressMonitor);
 
 		eXmlReaderNodeType NodeType;
 		// Read all XML Root Nodes
@@ -187,37 +190,37 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_INVALIDOPCPARTURI);
 
 		if (sType == PACKAGE_PRINT_TICKET_RELATIONSHIP_TYPE) {
-			for (auto itRel : m_RelationShips) {
-				if (itRel->getType() == sType) {
+			for (auto itRel : m_IDToRelationShips) {
+				if (itRel.second->getType() == sType) {
 					throw CNMRException(NMR_ERROR_DUPLICATE_PRINTTICKET);
 				}
 			}
 		}
 		
-		for (auto itRel : m_RelationShips) {
-			if (itRel->getID() == sID) {
-				throw CNMRException(NMR_ERROR_OPC_DUPLICATE_RELATIONSHIP_ID);
-			}
+		auto found = m_IDToRelationShips.find(sID);
+		if (found != m_IDToRelationShips.end()) {
+			throw CNMRException(NMR_ERROR_OPC_DUPLICATE_RELATIONSHIP_ID);
 		}
-
 		POpcPackageRelationship pRelationShip = std::make_shared<COpcPackageRelationship> (sID, sType, sTarget);
-		m_RelationShips.push_back(pRelationShip);
+		m_IDToRelationShips.insert(std::make_pair(sID, pRelationShip));
 
 		pXMLReader->CloseElement();
 	}
 
 	nfUint32 COpcPackageRelationshipReader::getCount()
 	{
-		return (nfUint32)m_RelationShips.size();
+		return (nfUint32)m_IDToRelationShips.size();
 	}
 
 	POpcPackageRelationship COpcPackageRelationshipReader::getRelationShip(_In_ nfUint32 nIndex)
 	{
-		nfUint32 nCount = (nfUint32)m_RelationShips.size();
+		nfUint32 nCount = (nfUint32)m_IDToRelationShips.size();
 		if (nIndex >= nCount)
 			throw CNMRException(NMR_ERROR_INVALIDINDEX);
 
-		return m_RelationShips[nIndex];
+		auto it = m_IDToRelationShips.begin();
+		std::advance(it, nIndex);
+		return it->second;
 	}
 
 	void COpcPackageRelationshipReader::parseAttributes(_In_ CXmlReader * pXMLReader)

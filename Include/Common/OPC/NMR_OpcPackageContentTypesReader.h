@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -33,6 +33,7 @@ NMR_OpcPackageContentTypeReader.h defines a reader for the OPC Package Content T
 #ifndef __NMR_OPCPACKAGECONTENTTYPESREADER
 #define __NMR_OPCPACKAGECONTENTTYPESREADER
 
+#include "Common/3MF_ProgressMonitor.h"
 #include "Common/Platform/NMR_ImportStream.h"
 #include "Common/Platform/NMR_XmlReader.h"
 #include <string>
@@ -70,7 +71,7 @@ namespace NMR {
 		void parseChildNode(_In_ CXmlReader * pXMLReader, _In_ bool bOverride);
 		void parseAttributes(_In_ CXmlReader * pXMLReader);
 	public:
-		COpcPackageContentTypesReader(_In_ PImportStream pImportStream);
+		COpcPackageContentTypesReader(_In_ PImportStream pImportStream, PProgressMonitor pProgressMonitor);
 		~COpcPackageContentTypesReader();
 
 		nfUint32 getCount();

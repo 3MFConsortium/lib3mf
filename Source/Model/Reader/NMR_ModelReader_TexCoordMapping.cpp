@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -94,7 +94,7 @@ namespace NMR {
 		return (iIterator != m_ResourceIDs.end());
 	}
 
-	nfBool CModelReader_TexCoordMapping::retrieveARessource(_Out_ ModelResourceID& nResourceID)
+	nfBool CModelReader_TexCoordMapping::retrieveAResource(_Out_ ModelResourceID& nResourceID)
 	{
 		std::map <ModelResourceID, nfInt32>::iterator it;
 		for (it = m_ResourceIDs.begin(); it != m_ResourceIDs.end(); it++)

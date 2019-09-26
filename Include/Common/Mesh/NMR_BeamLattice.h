@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -49,8 +49,6 @@ namespace NMR {
 		std::vector<PBEAMSET> m_pBeamSets;
 		
 		nfDouble m_dMinLength;
-		nfDouble m_dRadius;
-		eModelBeamLatticeCapMode m_CapMode;
 	public:
 		CBeamLattice(_In_ MESHNODES &nodes);
 

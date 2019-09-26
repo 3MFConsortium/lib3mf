@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -50,7 +50,7 @@ namespace NMR {
 
 	PImportStream CModelReader_3MF_Native::extract3MFOPCPackage(_In_ PImportStream pPackageStream)
 	{
-		m_pPackageReader = std::make_shared<COpcPackageReader>(pPackageStream, m_pWarnings);
+		m_pPackageReader = std::make_shared<COpcPackageReader>(pPackageStream, m_pWarnings, m_pProgressMonitor);
 
 		COpcPackageRelationship * pModelRelation = m_pPackageReader->findRootRelation(PACKAGE_START_PART_RELATIONSHIP_TYPE, true);
 		if (pModelRelation == nullptr)
@@ -88,6 +88,8 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_OPCCOULDNOTGETTHUMBNAILSTREAM);
 			PImportStream pThumbnailStream = pThumbnailPart->getImportStream()->copyToMemory();
 			m_pModel->addPackageThumbnail()->setStream(pThumbnailStream);
+			m_pProgressMonitor->IncrementProgress((double)pThumbnailStream->retrieveSize());
+			m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
 		}
 		
 		return pModelPart->getImportStream();
@@ -103,18 +105,23 @@ namespace NMR {
 		if (pModelPart == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-		std::list<POpcPackageRelationship> RelationShips = pModelPart->getRelationShips();
-		std::list<POpcPackageRelationship>::iterator iIterator;
+		m_pProgressMonitor->SetProgressIdentifier(PROGRESS_READTEXTURETACHMENTS);
+
+		std::multimap<std::string, POpcPackageRelationship>& RelationShips = pModelPart->getRelationShips();
 		
-		for (iIterator = RelationShips.begin(); iIterator != RelationShips.end(); iIterator++) {
-			std::string sType = (*iIterator)->getType();
-			if ( (strcmp(sType.c_str(), PACKAGE_TEXTURE_RELATIONSHIP_TYPE) == 0) || 
-				 (strcmp(sType.c_str(), PACKAGE_THUMBNAIL_RELATIONSHIP_TYPE) == 0) ) // TODO: remove this
-				 // this is to allow object thumbnails to come from the OPC Thumbnail relationship type
+		for (auto iIterator = RelationShips.begin(); iIterator != RelationShips.end(); iIterator++) {
+			auto theRelationShip = iIterator->second;
+			std::string sType = theRelationShip->getType();
+
+			if ( (sType == PACKAGE_TEXTURE_RELATIONSHIP_TYPE) || 
+				 (sType == PACKAGE_THUMBNAIL_RELATIONSHIP_TYPE) )
+				 // this is to allow object thumbnails to come from both
+				 // the Texture or the OPC Thumbnail relationship type
+				 // to comply with older versions of the 3mf specification
 			{
-				std::string sURI = (*iIterator)->getTargetPartURI();
+				std::string sURI = theRelationShip->getTargetPartURI();
 				// TODO: this logic might not be correct yet
-				if (!fnStartsWithPathDelimiter(sURI)) 
+				if (!fnStartsWithPathDelimiter(sURI))
 					sURI = sTargetPartURIDir + sURI;
 
 				PModelAttachment pModelAttachment = m_pModel->findModelAttachment(sURI);
@@ -128,6 +135,9 @@ namespace NMR {
 
 					// Add Texture Attachment to Model
 					addTextureAttachment(sURI, pMemoryStream);
+
+					m_pProgressMonitor->IncrementProgress((double)pMemoryStream->retrieveSize());
+					m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
 				}
 			}
 		}
@@ -139,16 +149,21 @@ namespace NMR {
 		if (pModelPart == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-		std::list<POpcPackageRelationship> RelationShips = pModelPart->getRelationShips();
-		std::list<POpcPackageRelationship>::iterator iIterator;
+		m_pProgressMonitor->SetProgressIdentifier(PROGRESS_READCUSTOMATTACHMENTS);
 
-		for (iIterator = RelationShips.begin(); iIterator != RelationShips.end(); iIterator++) {
-			std::string sRelationShipType = (*iIterator)->getType();
+		std::multimap<std::string, POpcPackageRelationship>& RelationShips = pModelPart->getRelationShips();
+
+		for (auto iIterator = RelationShips.begin(); iIterator != RelationShips.end(); iIterator++) {
+			auto theRelationShip = iIterator->second;
+
+			std::string sRelationShipType = theRelationShip->getType();
+			std::string sURI = theRelationShip->getTargetPartURI();
+
+			if (!fnStartsWithPathDelimiter(sURI))
+				sURI = sTargetPartURIDir + sURI;
+
 			auto iRelationIterator = m_RelationsToRead.find(sRelationShipType);
 			if (iRelationIterator != m_RelationsToRead.end()) {
-				std::string sURI = (*iIterator)->getTargetPartURI();
-				if (!fnStartsWithPathDelimiter(sURI))
-					sURI = sTargetPartURIDir + sURI;
 				POpcPackagePart pPart = m_pPackageReader->createPart(sURI);
 				PImportStream pAttachmentStream = pPart->getImportStream();
 				try {
@@ -159,12 +174,24 @@ namespace NMR {
 
 					// Add Attachment Stream to Model
 					m_pModel->addAttachment(sURI, sRelationShipType, pMemoryStream);
+
+					m_pProgressMonitor->IncrementProgress((double)pMemoryStream->retrieveSize());
+					m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
 				}
 				catch (CNMRException &e) {
 					if (e.getErrorCode() == NMR_ERROR_INVALIDBUFFERSIZE)
 						m_pWarnings->addException(CNMRException(NMR_ERROR_ATTACHMENTTOOLARGE), mrwMissingMandatoryValue);
 					else
 						throw;
+				}
+			}
+			else {
+				if (   (sRelationShipType != PACKAGE_START_PART_RELATIONSHIP_TYPE)
+					&& (sRelationShipType != PACKAGE_TEXTURE_RELATIONSHIP_TYPE)
+					&& (sRelationShipType != PACKAGE_THUMBNAIL_RELATIONSHIP_TYPE) )
+				{
+					m_pProgressMonitor->DecreaseMaxProgress((double)m_pPackageReader->GetPartSize(sURI));
+					m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
 				}
 			}
 		}
@@ -175,18 +202,20 @@ namespace NMR {
 		if (pModelPart == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-		std::list<POpcPackageRelationship> RelationShips = pModelPart->getRelationShips();
-		std::list<POpcPackageRelationship>::iterator iIterator;
+		std::multimap<std::string, POpcPackageRelationship>& RelationShips = pModelPart->getRelationShips();
 
-		for (iIterator = RelationShips.begin(); iIterator != RelationShips.end(); iIterator++) {
-			std::string sRelationShipType = (*iIterator)->getType();
-			if (strcmp(sRelationShipType.c_str(), PACKAGE_START_PART_RELATIONSHIP_TYPE) == 0) {
-				std::string sURI = (*iIterator)->getTargetPartURI();
+		for (auto iIterator = RelationShips.begin(); iIterator != RelationShips.end(); iIterator++) {
+			auto theRelationShip = iIterator->second;
+
+			std::string sRelationShipType = theRelationShip->getType();
+			
+			if (sRelationShipType == PACKAGE_START_PART_RELATIONSHIP_TYPE) {
+				std::string sURI = theRelationShip->getTargetPartURI();
 				if (!fnStartsWithPathDelimiter(sURI))
 					sURI = sTargetPartURIDir + sURI;
+
 				POpcPackagePart pPart = m_pPackageReader->createPart(sURI);
-				
-				
+
 				// first, check if this attachment already is in model
 				PModelAttachment pModelAttachment = m_pModel->findProductionModelAttachment(sURI);
 				if (pModelAttachment) {

@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -32,7 +32,7 @@ This is a stream class for importing from a libZIP object.
 --*/
 
 #include "Common/Platform/NMR_ImportStream_ZIP.h"
-#include "Common/Platform/NMR_ImportStream_Memory.h"
+#include "Common/Platform/NMR_ImportStream_Unique_Memory.h"
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_Exception_Windows.h"
 #include <math.h>
@@ -126,7 +126,7 @@ namespace NMR {
 	{
 		nfUint64 cbStreamSize = retrieveSize();
 
-		return std::make_shared<CImportStream_Memory>(this, cbStreamSize, false);
+		return std::make_shared<CImportStream_Unique_Memory>(this, cbStreamSize, false);
 	}
 
 

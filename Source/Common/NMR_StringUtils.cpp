@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -64,10 +64,43 @@ namespace NMR {
 	// Masks to decode highest UTF8 sequence byte
 	const nfByte UTF8DecodeMask[7] = {0, 0x7f, 0x1f, 0x0f, 0x07, 0x03, 0x01};
 
+
+	template<>
+	float fnStringToType(_In_z_ const nfChar * pszValue)
+	{
+		return fnStringToFloat(pszValue);
+	}
+	template<>
+	double fnStringToType(_In_z_ const nfChar * pszValue)
+	{
+		return fnStringToDouble(pszValue);
+	}
+	template<>
+	nfInt32 fnStringToType(_In_z_ const nfChar * pszValue)
+	{
+		return fnStringToInt32(pszValue);
+	}
+	template<>
+	nfUint32 fnStringToType(_In_z_ const nfChar * pszValue)
+	{
+		return fnStringToUint32(pszValue);
+	}
+	template<>
+	unsigned long fnStringToType(_In_z_ const nfChar * pszValue)
+	{
+		return fnStringToUint32(pszValue);
+	}
+	template<>
+	std::string fnStringToType(_In_z_ const nfChar * pszValue)
+	{
+		return std::string(pszValue);
+	}
+
+
 	nfInt32 fnStringToInt32(_In_z_ const nfChar * pszValue)
 	{
 		__NMRASSERT(pszValue);
-		nfInt32 nResult = 0;
+		nfInt64 nResult = 0;
 
 		// Convert to integer and make a input and range check!
 		nfChar * pEndPtr;
@@ -81,16 +114,16 @@ namespace NMR {
 		if ((*pEndPtr != '\0') && (*pEndPtr != ' '))
 			throw CNMRException(NMR_ERROR_INVALIDSTRINGTOINTCONVERSION);
 
-		if ((nResult == LONG_MAX) || (nResult == LONG_MIN))
+		if ((nResult >= LONG_MAX) || (nResult <= LONG_MIN))
 			throw CNMRException(NMR_ERROR_STRINGTOINTCONVERSIONOUTOFRANGE);
 
-		return nResult;
+		return (nfInt32)nResult;
 	}
 
 	nfUint32 fnStringToUint32(_In_z_ const nfChar * pszValue)
 	{
 		__NMRASSERT(pszValue);
-		nfUint32 nResult = 0;
+		nfUint64 nResult = 0;
 
 		// Convert to integer and make a input and range check!
 		nfChar * pEndPtr;
@@ -104,10 +137,10 @@ namespace NMR {
 		if ((*pEndPtr != '\0') && (*pEndPtr != ' '))
 			throw CNMRException(NMR_ERROR_INVALIDSTRINGTOINTCONVERSION);
 
-		if (nResult == ULONG_MAX)
+		if (nResult >= ULONG_MAX)
 			throw CNMRException(NMR_ERROR_STRINGTOINTCONVERSIONOUTOFRANGE);
 
-		return nResult;
+		return (nfUint32)nResult;
 	}
 
 	nfFloat fnStringToFloat(_In_z_ const nfChar * pszValue)
@@ -241,19 +274,19 @@ namespace NMR {
 		if (!pszValue)
 			return 0;
 		nfChar * p;
-		nfUint32 nResult = strtoul(pszValue, &p, 16);
+		nfUint64 nResult = strtoul(pszValue, &p, 16);
 		if (*p != 0)
 			throw CNMRException(NMR_ERROR_INVALIDHEXVALUE);
-		if (nResult == ULONG_MAX)
+		if (nResult >= ULONG_MAX)
 			throw CNMRException(NMR_ERROR_RANGEERROR);
 
-		return nResult;
+		return (nfUint32)nResult;
 	}
 
 	nfInt32 fnStringToInt32Comma(_In_z_ const nfChar * pszValue)
 	{
 		__NMRASSERT(pwszValue);
-		nfInt32 nResult = 0;
+		nfInt64 nResult = 0;
 
 		// Convert to integer and make a input and range check!
 		nfChar * pEndPtr;
@@ -267,10 +300,10 @@ namespace NMR {
 		if ((*pEndPtr != '\0') && (*pEndPtr != ' ') && (*pEndPtr != ','))
 			throw CNMRException(NMR_ERROR_INVALIDSTRINGTOINTCONVERSION);
 
-		if ((nResult == LONG_MAX) || (nResult == LONG_MIN))
+		if ((nResult >= LONG_MAX) || (nResult <= LONG_MIN))
 			throw CNMRException(NMR_ERROR_STRINGTOINTCONVERSIONOUTOFRANGE);
 
-		return nResult;
+		return (nfUint32)nResult;
 	}
 
 
@@ -327,6 +360,19 @@ namespace NMR {
 #endif
 		}
 	}
+
+
+	template<> std::string fnVectorToSpaceDelimitedString(_In_ const std::vector<std::string> v)
+	{
+		std::string result = "";
+		for (auto i = v.begin(); i != v.end(); i++) {
+			if (i != v.begin())
+				result += " ";
+			result += (*i);
+		}
+		return result;
+	};
+	
 
 
 	void fnStringToBufferSafe(_In_ const std::string sString, _Out_opt_ nfChar * pszBuffer, nfUint32 cbBufferSize, _Out_opt_ nfUint32 * pcbNeededChars)
@@ -777,33 +823,6 @@ namespace NMR {
 		}
 	}
 
-
-	std::vector<double> fnVctDouble_fromString(_In_ const std::string sString)
-	{
-		std::vector<double> vctValues;
-
-		const nfChar * pszString = sString.c_str();
-		const nfChar * pCurrent = pszString;
-
-		nfBool bFinished = false;
-		while (!bFinished) {
-			// Find next space
-			const nfChar * pBegin = pCurrent;
-			while ((*pCurrent != ' ') && (*pCurrent))
-				pCurrent++;
-
-			// If we have not found a space, convert value to double
-			if (pBegin != pCurrent) {
-				vctValues.push_back(fnStringToFloat(pBegin));
-			}
-
-			// If we are finished, break, otherwise skip space!
-			if (!*pCurrent)
-				bFinished = true;
-			else
-				pCurrent++;
-		}
-		return vctValues;
-	}
+	
 
 }

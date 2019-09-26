@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -31,7 +31,6 @@ Abstract:
 #include "Model/Reader/Slice1507/NMR_ModelReader_Slice1507_Polygon.h"
 #include "Model/Reader/Slice1507/NMR_ModelReader_Slice1507_Segment.h"
 
-#include "Model/COM/NMR_COMInterface_ModelReader.h"
 #include "Model/Classes/NMR_ModelAttachment.h"
 
 #include "Common/NMR_StringUtils.h"

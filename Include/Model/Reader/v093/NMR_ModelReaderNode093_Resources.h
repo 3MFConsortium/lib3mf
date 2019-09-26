@@ -47,7 +47,6 @@ namespace NMR {
 	class CModelReaderNode093_Resources : public CModelReaderNode {
 	protected:
 		PModelReader_ColorMapping m_pColorMapping;
-		PModelBaseMaterialResource m_pMaterialResource;
 
 		CModel * m_pModel;
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar *  pAttributeValue);

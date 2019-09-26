@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -57,6 +57,8 @@ namespace NMR {
 		m_bHasRepresentationMeshID = false;
 		m_nRepresentationMeshID = 0;
 		m_eClipMode = eModelBeamLatticeClipMode::MODELBEAMLATTICECLIPMODE_NONE;
+		m_dDefaultRadius = 0.0001;
+		m_eDefaultCapMode = eModelBeamLatticeCapMode::MODELBEAMLATTICECAPMODE_SPHERE;
 	}
 
 	void CModelReaderNode_BeamLattice1702_BeamLattice::parseXML(_In_ CXmlReader * pXMLReader)
@@ -94,7 +96,7 @@ namespace NMR {
 			nfDouble dValue = fnStringToDouble(pAttributeValue);
 			if ( std::isnan(dValue) || (dValue <= 0) || (dValue > XML_3MF_MAXIMUMCOORDINATEVALUE) )
 				throw CNMRException(NMR_ERROR_BEAMLATTICEINVALIDATTRIBUTE);
-			m_pMesh->setDefaultBeamRadius(dValue);
+			m_dDefaultRadius = dValue;
 		}
 		else if ( (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_BEAMLATTICE_MINLENGTH) == 0) ||
 			(strcmp(pAttributeName, XML_3MF_ATTRIBUTE_BEAMLATTICE_PRECISION) == 0) )	// legacy
@@ -104,7 +106,9 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_BEAMLATTICEINVALIDATTRIBUTE);
 			m_pMesh->setBeamLatticeMinLength(dValue);
 		}
-		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_BEAMLATTICE_CLIPPING) == 0) {
+		else if ((strcmp(pAttributeName, XML_3MF_ATTRIBUTE_BEAMLATTICE_CLIPPINGMODE) == 0) ||
+			(strcmp(pAttributeName, XML_3MF_ATTRIBUTE_BEAMLATTICE_CLIPPING) == 0)) // legacy
+		{
 			if (strcmp(pAttributeValue, XML_3MF_BEAMLATTICE_CLIPMODE_INSIDE) == 0) {
 				m_eClipMode = MODELBEAMLATTICECLIPMODE_INSIDE;
 			}
@@ -127,7 +131,7 @@ namespace NMR {
 			// legacy, ignore it
 		}
 		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_BEAMLATTICE_CAPMODE) == 0) {
-			m_pMesh->setBeamLatticeCapMode(stringToCapMode(pAttributeValue));
+			m_eDefaultCapMode = stringToCapMode(pAttributeValue);
 		}
 		else
 			m_pWarnings->addException(CNMRException(NMR_ERROR_BEAMLATTICEINVALIDATTRIBUTE), mrwInvalidOptionalValue);
@@ -148,7 +152,7 @@ namespace NMR {
 		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_BEAMLATTICESPEC) == 0) {
 			if (strcmp(pChildName, XML_3MF_ELEMENT_BEAMS) == 0)
 			{
-				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode_BeamLattice1702_Beams>(m_pModel, m_pMesh, m_pWarnings);
+				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode_BeamLattice1702_Beams>(m_pModel, m_pMesh, m_dDefaultRadius, m_eDefaultCapMode, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 			}
 			else if (strcmp(pChildName, XML_3MF_ELEMENT_BEAMSETS) == 0)

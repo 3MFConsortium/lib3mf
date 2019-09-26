@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -50,6 +50,7 @@ namespace NMR {
 	public:
 		CMeshExporter();
 		CMeshExporter(_In_ PExportStream pStream);
+		virtual ~CMeshExporter() = default;
 
 		void setStream(_In_ PExportStream pStream);
 		CExportStream * getStream();

@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -37,7 +37,7 @@ NMR_ModelReaderNode_slice1507_Segment.h covers the slicestack of the private 3MF
 #include "Model/Classes/NMR_ModelComponent.h"
 #include "Model/Classes/NMR_ModelComponentsObject.h"
 #include "Model/Classes/NMR_ModelObject.h"
-#include "Common/MeshInformation/NMR_MeshInformation_Slices.h"
+#include "Model/Classes/NMR_ModelConstants_Slices.h"
 
 namespace NMR {
 	class CModelReaderNode_Slice1507_SliceStack : public CModelReaderNode {
@@ -47,20 +47,15 @@ namespace NMR {
 		nfFloat  m_BottomZ;
 		nfUint32 m_Id;
 
-		PSliceStack m_pSliceStack;
+		PModelSliceStack m_pSliceStackResource;
 		std::string m_sSlicePath;
-
-		int m_nProgressCounter;
-
-		bool m_bHasReadSliceRef;
-		bool m_bHasReadSlices;
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 
 	public:
 		CModelReaderNode_Slice1507_SliceStack() = delete;
-		CModelReaderNode_Slice1507_SliceStack(_In_ CModel *pModel, _In_ PModelReaderWarnings pWarnings, _In_ CProgressMonitor * pProgressMonitor, _In_ const std::string sSlicePath);
+		CModelReaderNode_Slice1507_SliceStack(_In_ CModel *pModel, _In_ PModelReaderWarnings pWarnings, _In_ PProgressMonitor pProgressMonitor, _In_ const std::string sSlicePath);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 	};

@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -99,11 +99,17 @@ namespace NMR {
 	} MODELMESHTEXTURE2D;
 
 	typedef struct {
+		DOUBLE m_dU;
+		DOUBLE m_dV;
+	} MODELTEXTURE2DCOORDINATE;
+
+	typedef struct {
 		MODELMESHCOLOR_SRGB m_Colors[3];
 	} MODELMESH_TRIANGLECOLOR_SRGB;
 
 #pragma pack()
 
+	typedef DWORD ModelPropertyID;
 	typedef DWORD ModelResourceID;
 	typedef DWORD PackageResourceID;
 	typedef DWORD ModelResourceIndex;
@@ -115,14 +121,6 @@ namespace NMR {
 		MODELUNIT_INCH = 3,
 		MODELUNIT_FOOT = 4,
 		MODELUNIT_METER = 5
-	};
-
-	enum eModelExtension {
-		MODELEXTENSION_CUSTOM = 0,
-		MODELEXTENSION_PROPERTIES = 1,
-		MODELEXTENSION_SLICES = 2,
-		MODELEXTENSION_MULTIPART = 3,
-		MODELEXTENSION_VOLUMETRIC = 4
 	};
 
 	enum eModelObjectType {
@@ -160,9 +158,26 @@ namespace NMR {
 		MODELTEXTUREFILTER_NEAREST = 2
 	};
 
+	enum eModelBlendMethod {
+		MODELBLENDMETHOD_NONE = 0,
+		MODELBLENDMETHOD_MIX = 1,
+		MODELBLENDMETHOD_MULTIPLY = 2
+	};
+
 	typedef struct {
 		FLOAT m_fPosition[2];
 	} MODELSLICEVERTEX;
+
+	typedef struct {
+		DOUBLE m_dMixingRatio;
+		ModelPropertyID m_nPropertyID;
+	} MODELCOMPOSITECONSTITUENT;
+
+	typedef struct {
+		ModelResourceID m_nResourceID;
+		eModelBlendMethod m_nMethod;
+	} MODELMULTIPROPERTYLAYER;
+
 }
 
 #endif // __NMR_MODELTYPES

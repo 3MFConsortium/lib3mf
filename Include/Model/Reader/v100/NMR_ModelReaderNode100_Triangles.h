@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -34,11 +34,8 @@ A triangles reader model node is a parser for the triangles node of an XML Model
 #ifndef __NMR_MODELREADERNODE100_TRIANGLES
 #define __NMR_MODELREADERNODE100_TRIANGLES
 
-#include "Common/MeshInformation/NMR_MeshInformation_TexCoords.h"
-#include "Common/MeshInformation/NMR_MeshInformation_NodeColors.h"
-#include "Common/MeshInformation/NMR_MeshInformation_BaseMaterials.h"
+#include "Common/MeshInformation/NMR_MeshInformation_Properties.h"
 #include "Model/Reader/NMR_ModelReaderNode.h"
-#include "Model/Reader/NMR_ModelReader_ColorMapping.h"
 #include "Model/Reader/NMR_ModelReader_TexCoordMapping.h"
 #include "Model/Classes/NMR_ModelComponent.h"
 #include "Model/Classes/NMR_ModelObject.h"
@@ -49,22 +46,18 @@ namespace NMR {
 	protected:
 		CMesh * m_pMesh;
 		CModel * m_pModel;
-		PModelReader_ColorMapping m_pColorMapping;
-		PModelReader_TexCoordMapping m_pTexCoordMapping;
 
-		ModelResourceID m_nDefaultPropertyID;
-		ModelResourceIndex m_nDefaultPropertyIndex;
-		ModelResourceID m_nUsedPropertyID;
+		ModelResourceID m_nDefaultResourceID;
+		ModelResourceIndex m_nDefaultResourceIndex;
+		ModelResourceID m_nUsedResourceID;
 
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 
-		_Ret_notnull_ CMeshInformation_TexCoords * createTexCoordInformation();
-		_Ret_notnull_ CMeshInformation_NodeColors * createNodeColorInformation();
-		_Ret_notnull_ CMeshInformation_BaseMaterials * createBaseMaterialInformation();
+		_Ret_notnull_ CMeshInformation_Properties * createPropertiesInformation();
 	public:
 		CModelReaderNode100_Triangles() = delete;
-		CModelReaderNode100_Triangles(_In_ CModel * pModel, _In_ CMesh * pMesh, _In_ PModelReaderWarnings pWarnings, _In_ PModelReader_ColorMapping pColorMapping, _In_ PModelReader_TexCoordMapping pTexCoordMapping, _In_ ModelResourceID nDefaultPropertyID, _In_ ModelResourceIndex nDefaultPropertyIndex);
+		CModelReaderNode100_Triangles(_In_ CModel * pModel, _In_ CMesh * pMesh, _In_ PModelReaderWarnings pWarnings, _In_ ModelResourceID nDefaultPropertyID, _In_ ModelResourceIndex nDefaultPropertyIndex);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 		ModelResourceID getUsedPropertyID() const;

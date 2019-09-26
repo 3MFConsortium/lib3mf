@@ -90,7 +90,7 @@ namespace NMR {
 		if ((strcmp(pNameSpace, XML_3MF_NAMESPACE_CORESPEC093) == 0) || (strcmp(pNameSpace, "") == 0)) {
 
 			if (strcmp(pChildName, XML_3MF_ELEMENT_OBJECT) == 0) {
-				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode093_Object>(m_pModel, m_pColorMapping, m_pMaterialResource, m_pWarnings);
+				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode093_Object>(m_pModel, m_pColorMapping, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 			}
 			else if (strcmp(pChildName, XML_3MF_ELEMENT_COLOR) == 0) {
@@ -115,11 +115,9 @@ namespace NMR {
 				PModelReaderNode093_Material pXMLNode = std::make_shared<CModelReaderNode093_Material>(m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 
-				if (m_pMaterialResource.get() == nullptr) {
-					ModelResourceID nResourceID = pXMLNode->retrieveID();
-					m_pMaterialResource = std::make_shared<CModelBaseMaterialResource>(nResourceID, m_pModel);
-					m_pModel->addResource(m_pMaterialResource);
-				}
+				ModelResourceID nResourceID = pXMLNode->retrieveID();
+				auto pMaterialResource = std::make_shared<CModelBaseMaterialResource>(nResourceID, m_pModel);
+				m_pModel->addResource(pMaterialResource);
 
 				nfColor cColor;
 				if (!m_pColorMapping->findColor(pXMLNode->retrieveColorID(), 0, cColor)) {
@@ -127,7 +125,7 @@ namespace NMR {
 				}
 
 				ModelResourceIndex nMaterialIndex;
-				nMaterialIndex = m_pMaterialResource->addBaseMaterial(pXMLNode->retrieveName(), cColor);
+				nMaterialIndex = pMaterialResource->addBaseMaterial(pXMLNode->retrieveName(), cColor);
 				m_pColorMapping->registerMaterialReference(pXMLNode->retrieveID(), nMaterialIndex);
 			}
 			else

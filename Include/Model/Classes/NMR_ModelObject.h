@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -37,9 +37,9 @@ model object.
 
 #include "Model/Classes/NMR_Model.h" 
 #include "Model/Classes/NMR_ModelResource.h" 
-#include "Model/Classes/NMR_ModelMetaData.h" 
-#include "Model/Classes/NMR_ModelDefaultProperty.h"
-#include "Model/Classes/NMR_ModelSliceResource.h"
+#include "Model/Classes/NMR_ModelAttachment.h"
+#include "Model/Classes/NMR_ModelMetaDataGroup.h" 
+#include "Model/Classes/NMR_ModelSliceStack.h"
 #include "Common/NMR_Types.h" 
 #include "Common/Math/NMR_Matrix.h" 
 
@@ -54,12 +54,15 @@ namespace NMR {
 	private:
 		std::string m_sName;
 		std::string m_sPartNumber;
-		PPackageResourceID m_pSliceStackId;
+		PModelSliceStack m_pSliceStack;
 		eModelSlicesMeshResolution m_eSlicesMeshResolution;
+		PModelMetaDataGroup m_MetaDataGroup;
+
+		nfUint32 m_nComponentDepthLevel;
+
 	private:
 		PUUID m_UUID;
-		std::string m_sThumbnail;
-		PModelDefaultProperty m_pModelDefaultProperty;
+		PModelAttachment m_pThumbnailAttachment;
 		eModelObjectType m_ObjectType;
 	public:
 		CModelObject() = delete;
@@ -79,6 +82,9 @@ namespace NMR {
 		PUUID uuid();
 		void setUUID(PUUID uuid);
 
+		// MetaDataGroup
+		PModelMetaDataGroup metaDataGroup();
+
 		// setter/getter for the object type
 		eModelObjectType getObjectType();
 		virtual void setObjectType(_In_ eModelObjectType ObjectType);
@@ -92,21 +98,27 @@ namespace NMR {
 		// check, if the object is a valid object description
 		virtual nfBool isValid() = 0;
 
+		virtual nfBool hasSlices(nfBool bRecursive) = 0;
 		virtual nfBool isValidForSlices(const NMATRIX3& totalParentMatrix) = 0;
 
-		void setSliceStackId(PPackageResourceID nSliceStackId);
-		PPackageResourceID getSliceStackId();
+		void assignSliceStack(PModelSliceStack pSliceStackId);
+		PModelSliceStack getSliceStack();
 
 		void setSlicesMeshResolution(eModelSlicesMeshResolution eMeshResolution);
 		eModelSlicesMeshResolution slicesMeshResolution() const;
 
-		// Set/Get Default Property
-		void setDefaultProperty (_In_ PModelDefaultProperty pModelDefaultProperty);
-		PModelDefaultProperty getDefaultProperty();
-
 		// Set/Get Thumbnail
-		void setThumbnail(_In_ std::string sThumbnail);
-		std::string getThumbnail();
+		void clearThumbnailAttachment();
+		void setThumbnailAttachment(_In_ PModelAttachment pThumbnailAttachment, bool bThrowIfIncorrect);
+		PModelAttachment getThumbnailAttachment();
+
+		// Calculates the component Depths
+		nfUint32 getComponentDepthLevel ();
+		void clearComponentDepthLevel();
+		virtual void calculateComponentDepthLevel (nfUint32 nLevel);
+
+		virtual void extendOutbox(_Out_ NOUTBOX3& vOutBox, _In_ const NMATRIX3 mAccumulatedMatrix) = 0;
+
 	};
 
 	typedef std::shared_ptr <CModelObject> PModelObject;

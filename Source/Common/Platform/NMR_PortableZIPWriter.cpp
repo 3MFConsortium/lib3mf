@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -120,11 +120,21 @@ namespace NMR {
 
 		// Write data to ZIP stream
 		nfUint64 nFilePosition = m_pExportStream->getPosition();
+		
+		// prepare byte-buffer for big-endian machines
+		if (isBigEndian()) {
+			LocalHeader.swapByteOrder();
+		}
 		m_pExportStream->writeBuffer(&LocalHeader, sizeof(LocalHeader));
 		m_pExportStream->writeBuffer(sUTF8Name.c_str(), nNameLength);
 		nfUint64 nExtInfoPosition = m_pExportStream->getPosition();
-		if (m_bWriteZIP64)
+		if (m_bWriteZIP64) {
+			// prepare byte-buffer for big-endian machines
+			if (isBigEndian()) {
+				zip64ExtraInformation.swapByteOrder();
+			}
 			m_pExportStream->writeBuffer(&zip64ExtraInformation, sizeof(zip64ExtraInformation));
+		}
 
 		nfUint64 nDataPosition = m_pExportStream->getPosition();
 
@@ -172,11 +182,21 @@ namespace NMR {
 			
 			// Write File Descriptor to file
 			m_pExportStream->seekPosition(m_pCurrentEntry->getFilePosition() + ZIPFILEDESCRIPTOROFFSET, true);
+			
+			// prepare byte-buffer for big-endian machines
+			if (isBigEndian()) {
+				FileDescriptor.swapByteOrder();
+			}
 			m_pExportStream->writeBuffer(&FileDescriptor, sizeof(FileDescriptor));
 
 			if (m_bWriteZIP64) {
 				// Write Extra Information to file
 				m_pExportStream->seekPosition(m_pCurrentEntry->getExtInfoPosition(), true);
+
+				// prepare byte-buffer for big-endian machines
+				if (isBigEndian()) {
+					zip64ExtraInformation.swapByteOrder();
+				}
 				m_pExportStream->writeBuffer(&zip64ExtraInformation, sizeof(zip64ExtraInformation));
 			}
 
@@ -280,6 +300,10 @@ namespace NMR {
 				DirectoryHeader.m_nUnCompressedSize = (nfUint32)pEntry->getUncompressedSize();
 			}
 
+			// prepare byte-buffer for big-endian machines
+			if (isBigEndian()) {
+				DirectoryHeader.swapByteOrder();
+			}
 			m_pExportStream->writeBuffer(&DirectoryHeader, (nfUint64) sizeof(DirectoryHeader));
 			m_pExportStream->writeBuffer(sUTF8Name.c_str(), nNameLength);
 			
@@ -290,6 +314,11 @@ namespace NMR {
 				zip64ExtraInformation.m_nCompressedSize = pEntry->getCompressedSize();
 				zip64ExtraInformation.m_nUncompressedSize = pEntry->getUncompressedSize();
 
+				// prepare byte-buffer for big-endian machines
+				if (isBigEndian()) {
+					zip64ExtraInformation.swapByteOrder();
+					nRelativeOffsetOfLocalHeader = swapBytes(nRelativeOffsetOfLocalHeader);
+				}
 				m_pExportStream->writeBuffer(&zip64ExtraInformation, sizeof(zip64ExtraInformation));
 				m_pExportStream->writeBuffer(&nRelativeOffsetOfLocalHeader, sizeof(nRelativeOffsetOfLocalHeader));
 			}
@@ -331,8 +360,17 @@ namespace NMR {
 
 		if (m_bWriteZIP64) {
 			EndHeader.m_nOffsetOfCentralDirectory = 0xFFFFFFFF;
+			// prepare byte-buffer for big-endian machines
+			if (isBigEndian()) {
+				EndHeader64.swapByteOrder();
+				EndLocator64.swapByteOrder();
+			}
 			m_pExportStream->writeBuffer(&EndHeader64, sizeof(EndHeader64));
 			m_pExportStream->writeBuffer(&EndLocator64, sizeof(EndLocator64));
+		}
+		// prepare byte-buffer for big-endian machines
+		if (isBigEndian()) {
+			EndHeader.swapByteOrder();
 		}
 		m_pExportStream->writeBuffer(&EndHeader, (nfUint64) sizeof(EndHeader));
 

@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -52,6 +52,10 @@ namespace NMR {
 		nfBool m_bIgnoreBuild;
 		nfBool m_bIgnoreMetaData;
 
+		nfBool m_bHaveWarnedAboutV093;
+
+		void ReadMetaDataNode(_In_ CXmlReader * pXMLReader);
+
 		virtual void CheckRequiredExtensions();
 
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
@@ -59,7 +63,7 @@ namespace NMR {
 		virtual void OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace);
 	public:
 		CModelReaderNode_Model() = delete;
-		CModelReaderNode_Model(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings, const std::string sPath, _In_ CProgressMonitor* pProgressMonitor);
+		CModelReaderNode_Model(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings, const std::string sPath, _In_ PProgressMonitor pProgressMonitor);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 

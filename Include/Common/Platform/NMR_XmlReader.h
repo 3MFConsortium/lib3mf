@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -50,6 +50,7 @@ namespace NMR {
 		PImportStream m_pImportStream;
 	public:
 		CXmlReader(_In_ PImportStream pImportStream);
+		virtual ~CXmlReader() = default;
 
 		virtual void GetLocalName(_Outptr_result_buffer_maybenull_(*pcchLocalName + 1) const nfChar ** ppszLocalName, _Out_opt_ nfUint32 *pcchLocalName) = 0;
 		virtual void GetValue(_Outptr_result_buffer_maybenull_(*pcchValue + 1)  const nfChar ** ppszValue, _Out_opt_  nfUint32 *pcwchValue) = 0;

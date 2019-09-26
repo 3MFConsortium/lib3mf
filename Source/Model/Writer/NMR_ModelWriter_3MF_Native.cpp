@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -37,12 +37,12 @@ using LibZ and a native XML writer implementation.
 #include "Model/Classes/NMR_ModelConstants.h" 
 #include "Model/Classes/NMR_ModelAttachment.h" 
 #include "Model/Classes/NMR_ModelTextureAttachment.h" 
-#include "Model/Classes/NMR_ModelSliceResource.h"
+#include "Model/Classes/NMR_ModelSliceStack.h"
 #include "Common/Platform/NMR_ImportStream.h" 
 #include "Common/NMR_Exception.h" 
 #include "Common/Platform/NMR_XmlWriter.h" 
 #include "Common/Platform/NMR_XmlWriter_Native.h" 
-#include "Common/Platform/NMR_ImportStream_Memory.h"
+#include "Common/Platform/NMR_ImportStream_Unique_Memory.h"
 #include "Common/Platform/NMR_ExportStream_Memory.h"
 #include "Common/NMR_StringUtils.h" 
 #include "Common/3MF_ProgressMonitor.h"
@@ -78,12 +78,17 @@ namespace NMR {
 		if (m_pModel == nullptr)
 			throw CNMRException(NMR_ERROR_NOMODELTOWRITE);
 
+		// Maximal progress = NrResources + NrAttachments + Build + Cleanup
+		m_pProgressMonitor->SetMaxProgress(m_pModel->getResourceCount() + m_pModel->getAttachmentCount() + 1 + 1);
+
 		// Write Model Stream
 		POpcPackageWriter pPackageWriter = std::make_shared<COpcPackageWriter>(pStream);
 		POpcPackagePart pModelPart = pPackageWriter->addPart(PACKAGE_3D_MODEL_URI);
 		PXmlWriter_Native pXMLWriter = std::make_shared<CXmlWriter_Native>(pModelPart->getExportStream());
-		if (!m_pProgressMonitor->Progress(0.01, ProgressIdentifier::PROGRESS_WRITEROOTMODEL))
-			throw CNMRException(NMR_USERABORTED);
+
+		m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_WRITEROOTMODEL);
+		m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
+
 		writeModelStream(pXMLWriter.get(), m_pModel);
 
 		// add Root relationships
@@ -103,23 +108,20 @@ namespace NMR {
 			pPackageWriter->addRootRelationship(generateRelationShipID(), pPackageThumbnail->getRelationShipType(), pThumbnailPart.get());
 		}
 
+		m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_WRITENONROOTMODELS);
+		m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
 
-		if (!m_pProgressMonitor->Progress(0.5, ProgressIdentifier::PROGRESS_WRITENONROOTMODELS))
-			throw CNMRException(NMR_USERABORTED);
 		// add slicestacks that reference other files
-		m_pProgressMonitor->PushLevel(0.5, 0.85);
-		addSlicerefAttachments(m_pModel);
-		m_pProgressMonitor->PopLevel();
+		addSlicerefAttachments();
 		
 		// add Attachments
-		if (!m_pProgressMonitor->Progress(0.85, ProgressIdentifier::PROGRESS_WRITEATTACHMENTS))
-			throw CNMRException(NMR_USERABORTED);
-		m_pProgressMonitor->PushLevel(0.85, 0.99);
-		addAttachments(m_pModel, pPackageWriter, pModelPart);
-		m_pProgressMonitor->PopLevel();
+		m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_WRITEATTACHMENTS);
+		m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
 
-		if (!m_pProgressMonitor->Progress(0.99, ProgressIdentifier::PROGRESS_WRITECONTENTTYPES))
-			throw CNMRException(NMR_USERABORTED);
+		addAttachments(m_pModel, pPackageWriter, pModelPart);
+
+		m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_WRITECONTENTTYPES);
+		m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
 
 		// add Content Types
 		pPackageWriter->addContentType(PACKAGE_3D_RELS_EXTENSION, PACKAGE_3D_RELS_CONTENT_TYPE);
@@ -150,36 +152,44 @@ namespace NMR {
 		return sStream.str();
 	}
 
-	void CModelWriter_3MF_Native::addSlicerefAttachments(_In_ CModel *pModel) {
+	void CModelWriter_3MF_Native::addSlicerefAttachments() {
 		__NMRASSERT(pModel != nullptr);
 
-		nfUint32 nCount = pModel->getSliceStackCount();
+		std::vector<std::string> slicePaths;
+		for (nfUint32 nIndex = 0; nIndex < m_pModel->getSliceStackCount(); nIndex++) {
+			CModelSliceStack* pSliceStackResource = dynamic_cast<CModelSliceStack*>(m_pModel->getSliceStackResource(nIndex).get());
+			if (pSliceStackResource->OwnPath().empty() || pSliceStackResource->OwnPath() == m_pModel->rootPath())
+				continue;
+			slicePaths.push_back(pSliceStackResource->OwnPath());
+		}
+		
+		nfUint64 nCount = slicePaths.size();
+		for (nfUint32 nIndex = 0; nIndex < nCount; nIndex++) {
 
-		if (nCount > 0) {
-			nfUint32 nIndex;
-			for (nIndex = 0; nIndex < nCount; nIndex++) {
-				if (!m_pProgressMonitor->Progress(double(nIndex) / nCount, ProgressIdentifier::PROGRESS_WRITENONROOTMODELS))
-					throw CNMRException(NMR_USERABORTED);
-				CModelSliceStackResource* pSliceStackResource = dynamic_cast<CModelSliceStackResource*>(pModel->getSliceStackResource(nIndex).get());
-				CSliceStack* pSliceStack = pSliceStackResource->getSliceStack().get();
-				if (pSliceStack->usesSliceRef()) {
-					PExportStreamMemory p = std::make_shared<CExportStreamMemory>();
+			m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_WRITENONROOTMODELS);
+			m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
 
-					PXmlWriter_Native pXMLWriter = std::make_shared<CXmlWriter_Native>(p);
-					writeSlicestackStream(pXMLWriter.get(), pModel, pSliceStackResource);
+			std::string slicePath = slicePaths[nIndex];
 
-					PImportStream pStream = std::make_shared<CImportStream_Memory>(p->getData(), p->getDataSize());
-					// check, whether that's already in here
-					PModelAttachment pSliceRefAttachment = m_pModel->findModelAttachment(pSliceStackResource->sliceRefPath());
-					if (pSliceRefAttachment.get() != nullptr) {
-						if (pSliceRefAttachment->getRelationShipType() != PACKAGE_START_PART_RELATIONSHIP_TYPE)
-							throw CNMRException(NMR_ERROR_DUPLICATEATTACHMENTPATH);
-						pSliceRefAttachment->setStream(pStream);
-					}
-					else
-						m_pModel->addAttachment(pSliceStackResource->sliceRefPath(), PACKAGE_START_PART_RELATIONSHIP_TYPE, pStream);
-				}
+			m_pModel->setCurPath(slicePath);
+			PImportStream pStream;
+			{
+				PExportStreamMemory pExportStream = std::make_shared<CExportStreamMemory>();
+				PXmlWriter_Native pXMLWriter = std::make_shared<CXmlWriter_Native>(pExportStream);
+				writeSliceStackStream(pXMLWriter.get());
+
+				pStream = std::make_shared<CImportStream_Unique_Memory>(pExportStream->getData(), pExportStream->getDataSize());
 			}
+			
+			// check, whether that's already in here
+			PModelAttachment pSliceRefAttachment = m_pModel->findModelAttachment(slicePath);
+			if (pSliceRefAttachment.get() != nullptr) {
+				if (pSliceRefAttachment->getRelationShipType() != PACKAGE_START_PART_RELATIONSHIP_TYPE)
+					throw CNMRException(NMR_ERROR_DUPLICATEATTACHMENTPATH);
+				pSliceRefAttachment->setStream(pStream);
+			}
+			else
+				pSliceRefAttachment = m_pModel->addAttachment(slicePath, PACKAGE_START_PART_RELATIONSHIP_TYPE, pStream);
 		}
 	}
 
@@ -194,8 +204,9 @@ namespace NMR {
 
 		if (nCount > 0) {
 			for (nIndex = 0; nIndex < nCount; nIndex++) {
-				if (!m_pProgressMonitor->Progress(double(nIndex) / nCount, ProgressIdentifier::PROGRESS_WRITEATTACHMENTS))
-					throw CNMRException(NMR_USERABORTED);
+
+				m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_WRITEATTACHMENTS);
+				m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
 
 				PModelAttachment pAttachment = pModel->getModelAttachment(nIndex);
 				PImportStream pStream = pAttachment->getStream();
@@ -216,6 +227,8 @@ namespace NMR {
 
 				// add relationships
 				pModelPart->addRelationship(generateRelationShipID(), sRelationShipType.c_str(), pAttachmentPart->getURI());
+
+				m_pProgressMonitor->IncrementProgress(1);
 			}
 		}
 	}

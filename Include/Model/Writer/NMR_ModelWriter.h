@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -43,19 +43,23 @@ namespace NMR {
 
 	class CModelWriter {
 	private:
-			
+		nfUint32 m_nDecimalPrecision;
 	protected:
 		PModel m_pModel;
 		PProgressMonitor m_pProgressMonitor;
 	public:
 		CModelWriter() = delete;
 		CModelWriter(_In_ PModel pModel);
+		virtual ~CModelWriter() = default;
 
 		virtual void exportToStream(_In_ PExportStream pStream) = 0;
 		void addCustomContentType(_In_ std::wstring sExtension, _In_ std::wstring sContentType);
  		void removeCustomContentType(_In_ std::wstring sExtension);
 
 		void SetProgressCallback(Lib3MFProgressCallback callback, void* userData);
+
+		void SetDecimalPrecision(nfUint32);
+		nfUint32 GetDecimalPrecision();
 	};
 
 	typedef std::shared_ptr <CModelWriter> PModelWriter;

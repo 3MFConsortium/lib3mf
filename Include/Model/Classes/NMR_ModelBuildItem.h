@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -37,7 +37,7 @@ build item.
 
 #include "Model/Classes/NMR_Model.h" 
 #include "Model/Classes/NMR_ModelObject.h" 
-#include "Model/Classes/NMR_ModelMetaData.h" 
+#include "Model/Classes/NMR_ModelMetaDataGroup.h" 
 #include "Common/NMR_Types.h" 
 #include "Common/Math/NMR_Matrix.h" 
 
@@ -56,6 +56,8 @@ namespace NMR {
 		
 		PUUID m_UUID;
 		std::string m_sPath;
+
+		PModelMetaDataGroup m_MetaDataGroup;
 	public:
 		CModelBuildItem() = delete;
 		CModelBuildItem(_In_ CModelObject * pObject, _In_ nfUint32 nHandle);
@@ -81,6 +83,9 @@ namespace NMR {
 		// Production extension UUID
 		PUUID uuid();
 		void setUUID(PUUID uuid);
+
+		// MetaDataGroup
+		PModelMetaDataGroup metaDataGroup();
 
 		std::string path();
 		void setPath(std::string sPath);

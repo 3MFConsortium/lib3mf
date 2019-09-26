@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -35,8 +35,7 @@ A resources reader model node is a parser for the resources node of an XML Model
 #define __NMR_MODELREADERNODE100_RESOURCES
 
 #include "Model/Reader/NMR_ModelReaderNode.h"
-#include "Model/Reader/NMR_ModelReader_ColorMapping.h"
-#include "Model/Reader/NMR_ModelReader_TexCoordMapping.h"
+#include "Model/Classes/NMR_ModelTexture2DGroup.h"
 
 namespace NMR {
 
@@ -45,16 +44,13 @@ namespace NMR {
 		CModel * m_pModel;
 		std::string m_sPath;
 
-		PModelReader_ColorMapping m_pColorMapping;
-		PModelReader_TexCoordMapping m_pTexCoordMapping;
-
 		int m_nProgressCount;
 
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar *  pAttributeValue);
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 	public:
 		CModelReaderNode100_Resources() = delete;
-		CModelReaderNode100_Resources(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings, _In_z_ const std::string sPath, _In_ CProgressMonitor* pProgressMonitor);
+		CModelReaderNode100_Resources(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings, _In_z_ const std::string sPath, _In_ PProgressMonitor pProgressMonitor);
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 	};
 

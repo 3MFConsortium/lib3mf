@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -34,6 +34,7 @@ NMR_XMLWriter.h defines the XML Writer Class in a portable way.
 #define __NMR_XMLWRITER
 
 #include "Common/Platform/NMR_ExportStream.h"
+#include <string>
 
 namespace NMR {
 
@@ -42,6 +43,7 @@ namespace NMR {
 		PExportStream m_pExportStream;
 	public:
 		CXmlWriter(_In_ PExportStream pExportStream);
+		virtual ~CXmlWriter() = default;
 
 		virtual void WriteStartDocument() = 0;
 		virtual void WriteEndDocument() = 0;
@@ -54,6 +56,12 @@ namespace NMR {
 		virtual void WriteRawLine(_In_ const nfChar * pszRawData, _In_ nfUint32 cbCount) = 0;
 
 		virtual void WriteText(_In_ const nfChar * pszContent, _In_ const nfUint32 cbLength) = 0;
+
+		virtual bool GetNamespacePrefix(const std::string &sNameSpaceURI, std::string &sNameSpacePrefix) = 0;
+		virtual void RegisterCustomNameSpace(const std::string &sNameSpace, const std::string &sNameSpacePrefix) = 0;
+		virtual nfUint32 GetNamespaceCount() = 0;
+		virtual std::string GetNamespacePrefix(nfUint32 nIndex) = 0;
+		virtual std::string GetNamespace(nfUint32 nIndex) = 0;
 	};
 
 	typedef std::shared_ptr<CXmlWriter> PXmlWriter;

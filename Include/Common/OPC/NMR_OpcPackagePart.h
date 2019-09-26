@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -39,7 +39,7 @@ NMR_OpcPackagePart.h defines an OPC Package Part in a portable way.
 #include "Common/Platform/NMR_ImportStream.h"
 
 #include <string>
-#include <list>
+#include <map>
 
 namespace NMR {
 
@@ -52,7 +52,7 @@ namespace NMR {
 		PExportStream m_pExportStream;
 		PImportStream m_pImportStream;
 
-		std::list<POpcPackageRelationship> m_Relationships;
+		std::multimap<std::string, POpcPackageRelationship> m_Relationships;
 	public:
 		COpcPackagePart(_In_ std::string sURI, _In_ PExportStream pExportStream);
 		COpcPackagePart(_In_ std::string sURI, _In_ PImportStream pImportStream);
@@ -63,7 +63,7 @@ namespace NMR {
 
 		POpcPackageRelationship addRelationship(_In_ std::string sID, _In_ std::string sType, _In_ std::string sURI);
 		nfBool hasRelationships();
-		std::list<POpcPackageRelationship> getRelationShips();
+		std::multimap<std::string, POpcPackageRelationship>& getRelationShips();
 
 		void writeRelationships(_In_ PExportStream pExportStream);
 	};

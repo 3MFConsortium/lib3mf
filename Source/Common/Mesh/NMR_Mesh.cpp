@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -42,6 +42,7 @@ structure.
 #include "Common/Mesh/NMR_Mesh.h"
 #include "Common/Math/NMR_Matrix.h" 
 #include "Common/NMR_Exception.h" 
+#include "Common/MeshInformation/NMR_MeshInformation_Properties.h"
 #include <cmath>
 
 namespace NMR {
@@ -98,6 +99,10 @@ namespace NMR {
 			}
 
 			if (nFaceCount > 0) {
+				if (m_pMeshInformationHandler && pOtherMeshInformationHandler) {
+					m_pMeshInformationHandler->cloneDefaultInfosFrom(pOtherMeshInformationHandler);
+				}
+
 				for (nIdx = 0; nIdx < nFaceCount; nIdx++) {
 					pFace = pMesh->getFace(nIdx);
 					for (j = 0; j < 3; j++) {
@@ -122,7 +127,7 @@ namespace NMR {
 
 						pBeamNodes[j] = aNewNodes[pBeam->m_nodeindices[j]];
 					}
-					addBeam(pBeamNodes[0], pBeamNodes[1], &pBeam->m_radius[0], &pBeam->m_radius[1], &pBeam->m_capMode[0], &pBeam->m_capMode[1]);
+					addBeam(pBeamNodes[0], pBeamNodes[1], pBeam->m_radius[0], pBeam->m_radius[1], pBeam->m_capMode[0], pBeam->m_capMode[1]);
 				}
 			}
 
@@ -157,7 +162,7 @@ namespace NMR {
 
 		// Check Node Quota
 		nfUint32 nNodeCount = getNodeCount();
-		if (nNodeCount > NMR_MESH_MAXNODECOUNT)
+		if (nNodeCount >= NMR_MESH_MAXNODECOUNT)
 			throw CNMRException(NMR_ERROR_TOOMANYNODES);
 
 		// Allocate Data
@@ -165,6 +170,33 @@ namespace NMR {
 		pNode = m_Nodes.allocData(nNewIndex);
 		pNode->m_index = nNewIndex;
 		pNode->m_position = vPosition;
+
+		return pNode;
+	}
+	_Ret_notnull_ MESHNODE * CMesh::addNode(_In_ const nfFloat posX, _In_ const nfFloat posY, _In_ const nfFloat posZ)
+	{
+		MESHNODE * pNode;
+
+		// Check Position Validity
+		if (fabs(posX) > NMR_MESH_MAXCOORDINATE)
+			throw CNMRException(NMR_ERROR_INVALIDCOORDINATES);
+		if (fabs(posY) > NMR_MESH_MAXCOORDINATE)
+			throw CNMRException(NMR_ERROR_INVALIDCOORDINATES);
+		if (fabs(posZ) > NMR_MESH_MAXCOORDINATE)
+			throw CNMRException(NMR_ERROR_INVALIDCOORDINATES);
+
+		// Check Node Quota
+		nfUint32 nNodeCount = getNodeCount();
+		if (nNodeCount >= NMR_MESH_MAXNODECOUNT)
+			throw CNMRException(NMR_ERROR_TOOMANYNODES);
+
+		// Allocate Data
+		nfUint32 nNewIndex;
+		pNode = m_Nodes.allocData(nNewIndex);
+		pNode->m_index = nNewIndex;
+		pNode->m_position.m_values.x = posX;
+		pNode->m_position.m_values.y = posY;
+		pNode->m_position.m_values.z = posZ;
 
 		return pNode;
 	}
@@ -180,7 +212,7 @@ namespace NMR {
 		MESHFACE * pFace;
 		nfUint32 nFaceCount = getFaceCount ();
 
-		if (nFaceCount > NMR_MESH_MAXFACECOUNT)
+		if (nFaceCount >= NMR_MESH_MAXFACECOUNT)
 			throw CNMRException(NMR_ERROR_TOOMANYFACES);
 
 		nfUint32 nNewIndex;
@@ -192,16 +224,41 @@ namespace NMR {
 		pFace->m_index = nNewIndex;
 
 		if (m_pMeshInformationHandler)
-			m_pMeshInformationHandler->addFace(getFaceCount ());
+			m_pMeshInformationHandler->addFace(getFaceCount());
+
+		return pFace;
+	}
+	
+	_Ret_notnull_ MESHFACE * CMesh::addFace(_In_ nfInt32 nNodeIndex1, _In_ nfInt32 nNodeIndex2, _In_ nfInt32 nNodeIndex3)
+	{
+		if ((nNodeIndex1 == nNodeIndex2) || (nNodeIndex1 == nNodeIndex3) || (nNodeIndex2 == nNodeIndex3))
+			throw CNMRException(NMR_ERROR_DUPLICATENODE);
+
+		MESHFACE * pFace;
+		nfUint32 nFaceCount = getFaceCount();
+
+		if (nFaceCount >= NMR_MESH_MAXFACECOUNT)
+			throw CNMRException(NMR_ERROR_TOOMANYFACES);
+
+		nfUint32 nNewIndex;
+
+		pFace = m_Faces.allocData(nNewIndex);
+		pFace->m_nodeindices[0] = nNodeIndex1;
+		pFace->m_nodeindices[1] = nNodeIndex2;
+		pFace->m_nodeindices[2] = nNodeIndex3;
+		pFace->m_index = nNewIndex;
+
+		if (m_pMeshInformationHandler)
+			m_pMeshInformationHandler->addFace(getFaceCount());
 
 		return pFace;
 	}
 
 	_Ret_notnull_ MESHBEAM * CMesh::addBeam(_In_ MESHNODE * pNode1, _In_ MESHNODE * pNode2,
-		_In_ nfDouble * pRadius1, _In_ nfDouble * pRadius2,
-		_In_ nfInt32 * peCapMode1, _In_ nfInt32 * peCapMode2)
+		_In_ nfDouble dRadius1, _In_ nfDouble dRadius2,
+		_In_ nfInt32 eCapMode1, _In_ nfInt32 eCapMode2)
 	{
-		if ((!pNode1) || (!pNode2) || (!pRadius1) || (!pRadius2) || (!peCapMode1) || (!peCapMode2))
+		if ((!pNode1) || (!pNode2))
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
 		if (pNode1 == pNode2)
@@ -210,7 +267,7 @@ namespace NMR {
 		MESHBEAM * pBeam;
 		nfUint32 nBeamCount = getBeamCount();
 
-		if (nBeamCount > NMR_MESH_MAXBEAMCOUNT)
+		if (nBeamCount >= NMR_MESH_MAXBEAMCOUNT)
 			throw CNMRException(NMR_ERROR_TOOMANYBEAMS);
 
 		nfUint32 nNewIndex;
@@ -219,11 +276,11 @@ namespace NMR {
 		pBeam->m_nodeindices[0] = pNode1->m_index;
 		pBeam->m_nodeindices[1] = pNode2->m_index;
 		pBeam->m_index = nNewIndex;
-		pBeam->m_radius[0] = *pRadius1;
-		pBeam->m_radius[1] = *pRadius2;
+		pBeam->m_radius[0] = dRadius1;
+		pBeam->m_radius[1] = dRadius2;
 
-		pBeam->m_capMode[0] = *peCapMode1;
-		pBeam->m_capMode[1] = *peCapMode2;
+		pBeam->m_capMode[0] = eCapMode1;
+		pBeam->m_capMode[1] = eCapMode2;
 
 		return pBeam;
 	}
@@ -286,24 +343,20 @@ namespace NMR {
 		return m_BeamLattice.m_dMinLength;
 	}
 
-	void CMesh::setBeamLatticeCapMode(eModelBeamLatticeCapMode eCapMode)
+	nfDouble CMesh::getDefaultBeamRadius()
 	{
-		m_BeamLattice.m_CapMode = eCapMode;
+		return 1.0;
+	}
+
+	nfBool CMesh::getBeamLatticeAccuracy(nfDouble& dAccuracy)
+	{
+		dAccuracy = 1.0;
+		return false;
 	}
 
 	eModelBeamLatticeCapMode CMesh::getBeamLatticeCapMode()
 	{
-		return m_BeamLattice.m_CapMode;
-	}
-
-	void CMesh::setDefaultBeamRadius(nfDouble dRadius)
-	{
-		m_BeamLattice.m_dRadius = dRadius;
-	}
-
-	nfDouble CMesh::getDefaultBeamRadius()
-	{
-		return m_BeamLattice.m_dRadius;
+		return eModelBeamLatticeCapMode::MODELBEAMLATTICECAPMODE_SPHERE;
 	}
 
 	nfBool CMesh::checkSanity()
@@ -314,7 +367,7 @@ namespace NMR {
 		nfUint32 nFaceCount = getFaceCount();
 		nfUint32 nBeamCount = getBeamCount();
 
-		// max 2 billion Nodes/Faces
+		// max 2^31-1 billion Nodes/Faces
 		if (nNodeCount > NMR_MESH_MAXNODECOUNT)
 			return false;
 		if (nFaceCount > NMR_MESH_MAXFACECOUNT)
@@ -357,7 +410,7 @@ namespace NMR {
 
 	void CMesh::clear()
 	{
-		m_pMeshInformationHandler = NULL;
+		m_pMeshInformationHandler.reset();
 		m_Faces.clearAllData();
 		m_Nodes.clearAllData();
 		clearBeamLattice();
@@ -369,7 +422,33 @@ namespace NMR {
 
 	void CMesh::clearMeshInformationHandler()
 	{
-		m_pMeshInformationHandler = NULL;
+		m_pMeshInformationHandler.reset();
+	}
+
+	void CMesh::patchMeshInformationResources(_In_ std::map<PackageResourceID, PackageResourceID> &oldToNewMapping)
+	{
+		NMR::CMeshInformationHandler *pMeshInformationHandler = this->getMeshInformationHandler();
+		if (pMeshInformationHandler) {
+			NMR::CMeshInformation *pProperties = dynamic_cast<NMR::CMeshInformation_Properties *>(pMeshInformationHandler->getInformationByType(0, NMR::emiProperties));
+			if (pProperties) {
+				NMR::MESHINFORMATION_PROPERTIES * pDefaultData = (NMR::MESHINFORMATION_PROPERTIES*)pProperties->getDefaultData();
+				if (pDefaultData && pDefaultData->m_nResourceID != 0) {
+					NMR::PackageResourceID nNewResourceID = oldToNewMapping[pDefaultData->m_nResourceID];
+					if (nNewResourceID == 0)
+						throw CNMRException(NMR_ERROR_UNKNOWNMODELRESOURCE);
+					pDefaultData->m_nResourceID = nNewResourceID;
+				}
+				for (NMR::nfUint32 nFaceIndex = 0; nFaceIndex < this->getFaceCount(); nFaceIndex++) {
+					NMR::MESHINFORMATION_PROPERTIES * pFaceData = (NMR::MESHINFORMATION_PROPERTIES*)pProperties->getFaceData(nFaceIndex);
+					if (pFaceData && pFaceData->m_nResourceID != 0) {
+						NMR::PackageResourceID nNewResourceID = oldToNewMapping[pFaceData->m_nResourceID];
+						if (nNewResourceID == 0)
+							throw CNMRException(NMR_ERROR_UNKNOWNMODELRESOURCE);
+						pFaceData->m_nResourceID = nNewResourceID;
+					}
+				}
+			}
+		}
 	}
 
 	_Ret_maybenull_ CMeshInformationHandler * CMesh::getMeshInformationHandler()
@@ -385,4 +464,17 @@ namespace NMR {
 		return m_pMeshInformationHandler.get();
 	}
 
+	void CMesh::extendOutbox(_Out_ NOUTBOX3& vOutBox, _In_ const NMATRIX3 mAccumulatedMatrix)
+	{
+		if (fnMATRIX3_isIdentity(mAccumulatedMatrix)) {
+			for (nfUint32 iNode = 0; iNode < getNodeCount(); iNode++) {
+				fnOutboxMergeVector(vOutBox, getNode(iNode)->m_position);
+			}
+		}
+		else {
+			for (nfUint32 iNode = 0; iNode < getNodeCount(); iNode++) {
+				fnOutboxMergeVector(vOutBox, fnMATRIX3_apply(mAccumulatedMatrix, getNode(iNode)->m_position));
+			}
+		}
+	}
 }

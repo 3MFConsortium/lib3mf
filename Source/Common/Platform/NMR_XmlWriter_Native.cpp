@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -105,7 +105,8 @@ namespace NMR {
 				std::vector<nfChar> Buffer;
 				Buffer.resize((nLength + 1) * 6);
 				nfChar * pszAttribBuffer = &Buffer[0];
-				escapeXMLString(pszValue, pszAttribBuffer);	
+				escapeXMLString(pszValue, pszAttribBuffer);
+				writeUTF8(pszAttribBuffer, false);
 			}
 
 			writeUTF8("\"", false);
@@ -133,7 +134,7 @@ namespace NMR {
 
 		writeUTF8(pszLocalName, false);
 
-		std::string sNodeName (pszLocalName);
+		std::string sNodeName(pszLocalName);
 		m_NodeStack.push_back(sNodePrefix + sNodeName);
 		m_nLayer++;
 
@@ -149,7 +150,7 @@ namespace NMR {
 	void CXmlWriter_Native::WriteEndElement()
 	{
 		if (m_bElementIsOpen) {
-			writeUTF8(" />", true);
+			writeUTF8("/>", true);
 			m_bElementIsOpen = false;
 
 			if ((m_NodeStack.size() == 0) || (m_nLayer == 0))
@@ -184,7 +185,25 @@ namespace NMR {
 		if (pszContent == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 		closeCurrentElement(false);
-		writeUTF8(pszContent, false);
+
+		size_t nLength = strlen(pszContent);
+		if (nLength < NATIVEXMLFIXEDENCODINGLENGTH) {
+			// for small attribute lengths, use fixed size buffer
+			nfChar * pszAttribBuffer = &m_FixedEncodingBuffer[0];
+			escapeXMLString(pszContent, pszAttribBuffer);
+			writeUTF8(pszAttribBuffer, false);
+		}
+		else {
+			if (nLength > NATIVEXMLMAXSTRINGLENGTH)
+				throw CNMRException(NMR_ERROR_INVALIDBUFFERSIZE);
+
+			// for large attribute lengths, use dynamic buffer
+			std::vector<nfChar> Buffer;
+			Buffer.resize((nLength + 1) * 6);
+			nfChar * pszAttribBuffer = &Buffer[0];
+			escapeXMLString(pszContent, pszAttribBuffer);
+			writeUTF8(pszAttribBuffer, false);
+		}
 	}
 
 	void CXmlWriter_Native::writeData(_In_ const void * pData, _In_ nfUint32 cbLength)
@@ -274,7 +293,7 @@ namespace NMR {
 			case 34: // "
 				pszReplacement = "&quot;";
 				nReplaceLength = 6;
-				break; 
+				break;
 			case 38: // &
 				pszReplacement = "&amp;";
 				nReplaceLength = 5;
@@ -311,8 +330,52 @@ namespace NMR {
 		}
 
 		*pDstChar = 0;
-
 	}
 
+	bool CXmlWriter_Native::GetNamespacePrefix(const std::string &sNameSpaceURI, std::string &sNameSpacePrefix)
+	{
+		auto iIterator = m_sNameSpaces.find(sNameSpaceURI);
+		if (iIterator != m_sNameSpaces.end()) {
+			sNameSpacePrefix = iIterator->second.c_str();
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
 
+	void CXmlWriter_Native::RegisterCustomNameSpace(const std::string &sNameSpace, const std::string &sNameSpacePrefix)
+	{
+		std::string sDummy;
+		if (GetNamespacePrefix(sNameSpace, sDummy))
+		{
+			throw CNMRException(NMR_ERROR_XMLNAMESPACEALREADYREGISTERED);
+		}
+		for (auto it = m_sNameSpaces.begin(); it != m_sNameSpaces.end(); ++it)
+			if (it->second == sNameSpacePrefix)
+				throw CNMRException(NMR_ERROR_XMLPREFIXALREADYREGISTERED);
+
+		m_sNameSpaces.insert(std::make_pair(sNameSpace, sNameSpacePrefix));
+	}
+
+	nfUint32 CXmlWriter_Native::GetNamespaceCount()
+	{
+		return nfUint32(m_sNameSpaces.size());
+	}
+
+	std::string CXmlWriter_Native::GetNamespacePrefix(nfUint32 nIndex)
+	{
+		auto iter = m_sNameSpaces.begin();
+		for (nfUint32 i = 0; i < nIndex; i++)
+			iter++;
+		return iter->second;
+	}
+
+	std::string CXmlWriter_Native::GetNamespace(nfUint32 nIndex)
+	{
+		auto iter = m_sNameSpaces.begin();
+		for (nfUint32 i = 0; i < nIndex; i++)
+			iter++;
+		return iter->first;
+	}
 }

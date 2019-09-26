@@ -36,13 +36,10 @@ Stream.
 #include "Model/Reader/v093/NMR_ModelReaderNode093_Mesh.h"
 #include "Model/Reader/v093/NMR_ModelReaderNode093_Components.h"
 
+#include "Common/MeshInformation/NMR_MeshInformation_Properties.h"
+
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Model/Classes/NMR_ModelMeshObject.h"
-
-#include "Model/Classes/NMR_ModelDefaultProperty.h"
-#include "Model/Classes/NMR_ModelDefaultProperty_BaseMaterial.h"
-#include "Model/Classes/NMR_ModelDefaultProperty_Color.h"
-#include "Model/Classes/NMR_ModelDefaultProperty_TexCoord2D.h"
 
 #include "Common/NMR_StringUtils.h"
 #include "Common/NMR_Exception.h"
@@ -50,7 +47,7 @@ Stream.
 
 namespace NMR {
 
-	CModelReaderNode093_Object::CModelReaderNode093_Object(_In_ CModel * pModel, _In_ PModelReader_ColorMapping pColorMapping, _In_ PModelBaseMaterialResource pMaterialResource, _In_ PModelReaderWarnings pWarnings)
+	CModelReaderNode093_Object::CModelReaderNode093_Object(_In_ CModel * pModel, _In_ PModelReader_ColorMapping pColorMapping, _In_ PModelReaderWarnings pWarnings)
 		: CModelReaderNode(pWarnings)
 	{
 		__NMRASSERT(pColorMapping.get() != nullptr);
@@ -64,12 +61,10 @@ namespace NMR {
 		m_sThumbnail = "";
 		m_sName = "";
 
-		m_nColorID = 0;
-		m_nMaterialID = 0;
+		m_nObjectLevelColorID = 0;
+		m_nObjectLevelMaterialID = 0;
 
 		m_pColorMapping = pColorMapping;
-		m_pMaterialResource = pMaterialResource;
-
 	}
 
 	void CModelReaderNode093_Object::parseXML(_In_ CXmlReader * pXMLReader)
@@ -93,43 +88,6 @@ namespace NMR {
 
 		// Set Object Parameters
 		m_pObject->setName(m_sName);
-
-
-		// Set Default Parameters
-		if (m_nColorID > 0) {
-
-			nfColor cColor = 0;
-			if (m_pColorMapping->findColor(m_nColorID, 0, cColor)) {
-				m_pObject->setDefaultProperty(std::make_shared<CModelDefaultProperty_Color>(cColor));
-			}
-			else {
-				if (m_pColorMapping->hasTextureReference(m_nColorID)) {
-					m_pObject->setDefaultProperty(std::make_shared<CModelDefaultProperty_TexCoord2D>(m_nColorID, 0.0f, 0.0f));
-				}
-			}
-
-		}
-		else {
-
-			if (m_nMaterialID > 0) {
-				ModelResourceID nMaterialGroupID = 0;
-				ModelResourceIndex nMaterialIndex = 0;
-
-				if (m_pMaterialResource.get() != nullptr) {
-					ModelResourceIndex nIndex;
-					if (m_pColorMapping->getMaterialReference(m_nMaterialID, nIndex)) {
-						nMaterialGroupID = m_pMaterialResource->getResourceID()->getUniqueID();
-						nMaterialIndex = nIndex;
-					}
-				}
-
-				if (nMaterialGroupID > 0) {
-					m_pObject->setDefaultProperty(std::make_shared<CModelDefaultProperty_BaseMaterial>(nMaterialGroupID, nMaterialIndex));
-				}
-			}
-
-		}
-
 
 		// Set Object Type (might fail, if string is invalid)
 		if (m_sType.length() > 0) {
@@ -171,14 +129,14 @@ namespace NMR {
 
 			nfInt32 nValue = fnStringToInt32(pAttributeValue);
 			if ((nValue >= 0) && (nValue < XML_3MF_MAXRESOURCEINDEX)) {
-				m_nColorID = nValue + 1;
+				m_nObjectLevelColorID = nValue + 1;
 			}
 		}
 
 		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_OBJECT_MATERIALID) == 0) {
 			nfInt32 nValue = fnStringToInt32(pAttributeValue);
 			if ((nValue >= 0) && (nValue < XML_3MF_MAXRESOURCEINDEX))
-				m_nMaterialID = nValue + 1;
+				m_nObjectLevelMaterialID = nValue + 1;
 		}
 
 
@@ -203,8 +161,17 @@ namespace NMR {
 				// Create Mesh Object
 				m_pObject = std::make_shared<CModelMeshObject>(m_nID, m_pModel, pMesh);
 
+				PModelBaseMaterialResource pBaseMaterialResource;
+				if (m_nObjectLevelMaterialID > 0) {
+					// every v93 material becomes its own v100 base material group resource
+					pBaseMaterialResource = std::dynamic_pointer_cast<NMR::CModelBaseMaterialResource>(m_pModel->findResource(m_pModel->curPath(), m_nObjectLevelMaterialID));
+					if (pBaseMaterialResource.get() == nullptr) {
+						m_pWarnings->addException(CNMRException(NMR_ERROR_INVALIDMODELRESOURCE), mrwInvalidOptionalValue);
+					}
+				}
+
 				// Read Mesh
-				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode093_Mesh>(m_pModel, pMesh.get(), m_pColorMapping, m_pMaterialResource, m_pWarnings);
+				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode093_Mesh>(m_pModel, pMesh.get(), m_pColorMapping, pBaseMaterialResource, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 
 				// Add Object to Parent

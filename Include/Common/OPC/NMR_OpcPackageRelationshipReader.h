@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -33,6 +33,7 @@ NMR_OpcPackageRelationship.h defines an OPC Package Relationship Object.
 #ifndef __NMR_OPCPACKAGERELATIONSHIPREADER
 #define __NMR_OPCPACKAGERELATIONSHIPREADER
 
+#include "Common/3MF_ProgressMonitor.h"
 #include "Common/Platform/NMR_ImportStream.h"
 #include "Common/Platform/NMR_XmlReader.h"
 #include "Common/OPC/NMR_OpcPackageRelationship.h"
@@ -45,13 +46,13 @@ namespace NMR {
 
 	class COpcPackageRelationshipReader {
 	private:
-		std::vector<POpcPackageRelationship> m_RelationShips;
+		std::map<std::string, POpcPackageRelationship> m_IDToRelationShips;
 
 		void parseRootNode(_In_ CXmlReader * pXMLReader);
 		void parseChildNode(_In_ CXmlReader * pXMLReader);
 		void parseAttributes(_In_ CXmlReader * pXMLReader);
 	public:
-		COpcPackageRelationshipReader(_In_ PImportStream pImportStream);
+		COpcPackageRelationshipReader(_In_ PImportStream pImportStream, _In_ PProgressMonitor);
 		~COpcPackageRelationshipReader();
 
 		nfUint32 getCount();

@@ -55,17 +55,15 @@ namespace NMR {
 		nfBool m_bHasType;
 		PModelObject m_pObject;
 		PModelReader_ColorMapping m_pColorMapping;
-		PModelBaseMaterialResource m_pMaterialResource;
-		nfInt32 m_nColorID;
-		nfInt32 m_nMaterialID;
+		nfInt32 m_nObjectLevelColorID;
+		nfInt32 m_nObjectLevelMaterialID;
 
-		void createDefaultProperties();
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 	public:
 		CModelReaderNode093_Object() = delete;
-		CModelReaderNode093_Object(_In_ CModel * pModel, _In_ PModelReader_ColorMapping pColorMapping, _In_ PModelBaseMaterialResource pMaterialResource, _In_ PModelReaderWarnings pWarnings);
+		CModelReaderNode093_Object(_In_ CModel * pModel, _In_ PModelReader_ColorMapping pColorMapping, _In_ PModelReaderWarnings pWarnings);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 	};

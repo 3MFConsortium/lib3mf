@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -42,8 +42,11 @@ namespace NMR {
 	{
 		m_ObjectType = MODELOBJECTTYPE_MODEL;
 		setUUID(std::make_shared<CUUID>());
-		m_pSliceStackId = 0;
+		m_pSliceStack.reset();
 		m_eSlicesMeshResolution = MODELSLICESMESHRESOLUTION_FULL;
+		m_MetaDataGroup = std::make_shared<CModelMetaDataGroup>();
+
+		m_nComponentDepthLevel = 0;
 	}
 
 	void CModelObject::mergeToMesh(_In_ CMesh * pMesh, _In_ const NMATRIX3 mMatrix)
@@ -98,6 +101,11 @@ namespace NMR {
 		m_UUID = uuid;
 	}
 
+	PModelMetaDataGroup CModelObject::metaDataGroup()
+	{
+		return m_MetaDataGroup;
+	}
+
 	nfBool CModelObject::setObjectTypeString(_In_ std::string sTypeString, _In_ nfBool bRaiseException)
 	{
 		if (sTypeString == XML_3MF_OBJECTTYPE_OTHER) {
@@ -145,12 +153,16 @@ namespace NMR {
 		}
 	}
 
-	void CModelObject::setSliceStackId(PPackageResourceID nSliceStackId) {
-		m_pSliceStackId = nSliceStackId;
+	void CModelObject::assignSliceStack(PModelSliceStack pSliceStack) {
+		if (pSliceStack == nullptr)
+			m_pSliceStack.reset();
+		else {
+			m_pSliceStack = pSliceStack;
+		}
 	}
 
-	PPackageResourceID CModelObject::getSliceStackId() {
-		return m_pSliceStackId;
+	PModelSliceStack CModelObject::getSliceStack() {
+		return m_pSliceStack;
 	}
 
 	void CModelObject::setSlicesMeshResolution(eModelSlicesMeshResolution eMeshResolution) {
@@ -161,23 +173,41 @@ namespace NMR {
 		return m_eSlicesMeshResolution;
 	}
 
-	void CModelObject::setDefaultProperty(_In_ PModelDefaultProperty pModelDefaultProperty)
-	{
-		m_pModelDefaultProperty = pModelDefaultProperty;
+	void CModelObject::clearThumbnailAttachment() {
+		m_pThumbnailAttachment.reset();
 	}
 
-	PModelDefaultProperty CModelObject::getDefaultProperty()
+	void CModelObject::setThumbnailAttachment(_In_ PModelAttachment pThumbnailAttachment, bool bThrowIfIncorrect)
 	{
-		return m_pModelDefaultProperty;
+		if (!pThumbnailAttachment) {
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+		}
+		if ((pThumbnailAttachment->getRelationShipType() != PACKAGE_THUMBNAIL_RELATIONSHIP_TYPE) && (bThrowIfIncorrect)) {
+			throw CNMRException(NMR_ERROR_NOTEXTURESTREAM);
+		}
+		m_pThumbnailAttachment = pThumbnailAttachment;
 	}
 
-	void CModelObject::setThumbnail(_In_ std::string sThumbnail)
+	PModelAttachment CModelObject::getThumbnailAttachment()
 	{
-		m_sThumbnail = sThumbnail;
+		return m_pThumbnailAttachment;
 	}
 
-	std::string CModelObject::getThumbnail()
+	nfUint32 CModelObject::getComponentDepthLevel()
 	{
-		return m_sThumbnail;
+		return m_nComponentDepthLevel;
 	}
+
+	void CModelObject::clearComponentDepthLevel()
+	{
+		m_nComponentDepthLevel = 0;
+	}
+
+	void CModelObject::calculateComponentDepthLevel(nfUint32 nLevel)
+	{
+		if (nLevel >= m_nComponentDepthLevel)
+			m_nComponentDepthLevel = nLevel;
+	}
+
+
 }

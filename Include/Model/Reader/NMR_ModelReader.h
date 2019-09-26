@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -57,6 +57,7 @@ namespace NMR {
 	public:
 		CModelReader() = delete;
 		CModelReader(_In_ PModel pModel);
+		virtual ~CModelReader() = default;
 
 		virtual void readStream(_In_ PImportStream pStream) = 0;
 		PImportStream retrievePrintTicket(_Out_ std::string & sContentType);

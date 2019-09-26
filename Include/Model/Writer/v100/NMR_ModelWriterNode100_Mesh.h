@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -35,10 +35,11 @@ This is the class for exporting the 3mf mesh node.
 #define __NMR_MODELWRITERNODE100_MESH
 
 #include "Model/Writer/NMR_ModelWriterNode.h" 
-#include "Model/Writer/NMR_ModelWriter_ColorMapping.h" 
-#include "Model/Writer/NMR_ModelWriter_TexCoordMappingContainer.h" 
 #include "Model/Classes/NMR_ModelObject.h" 
 #include "Model/Classes/NMR_ModelMeshObject.h" 
+
+#include "Common/MeshInformation/NMR_MeshInformation_Properties.h"
+
 #include "Common/Platform/NMR_XmlWriter.h"
 #include <array>
 
@@ -58,8 +59,8 @@ namespace NMR {
 	class CModelWriterNode100_Mesh : public CModelWriterNode {
 	protected:
 		CModelMeshObject * m_pModelMeshObject;
-		PModelWriter_ColorMapping m_pColorMapping;
-		PModelWriter_TexCoordMappingContainer m_pTextureMappingContainer;
+
+		PMeshInformation_PropertyIndexMapping m_pPropertyIndexMapping;
 
 		nfBool m_bWriteMaterialExtension;
 		nfBool m_bWriteBeamLatticeExtension;
@@ -74,10 +75,10 @@ namespace NMR {
 		nfUint32 m_nBeamBufferPos;
 		nfUint32 m_nBeamRefBufferPos;
 	private:
-		static const int m_snPosAfterDecPoint = 6;
-		static const int m_snPutDoubleFactor;
-		static __NMR_INLINE void putFloat(_In_ const nfFloat fValue, _In_ std::array<nfChar, MODELWRITERMESH100_LINEBUFFERSIZE> & line, _In_ nfUint32 & nBufferPos);
-		static __NMR_INLINE void putDouble(_In_ const nfDouble dValue, _In_ std::array<nfChar, MODELWRITERMESH100_LINEBUFFERSIZE> & line, _In_ nfUint32 & nBufferPos);
+		const int m_nPosAfterDecPoint;
+		const int m_nPutDoubleFactor;
+		__NMR_INLINE void putFloat(_In_ const nfFloat fValue, _In_ std::array<nfChar, MODELWRITERMESH100_LINEBUFFERSIZE> & line, _In_ nfUint32 & nBufferPos);
+		__NMR_INLINE void putDouble(_In_ const nfDouble dValue, _In_ std::array<nfChar, MODELWRITERMESH100_LINEBUFFERSIZE> & line, _In_ nfUint32 & nBufferPos);
 
 	protected:
 		__NMR_INLINE void putVertexString(_In_ const nfChar * pszString);
@@ -101,8 +102,8 @@ namespace NMR {
 		__NMR_INLINE void writeRefData(_In_ INT nRefID);
 	public:
 		CModelWriterNode100_Mesh() = delete;
-		CModelWriterNode100_Mesh(_In_ CModelMeshObject * pModelMeshObject, _In_ CXmlWriter * pXMLWriter, _In_ CProgressMonitor * pProgressMonitor,
-			_In_ PModelWriter_ColorMapping pColorMapping, _In_ PModelWriter_TexCoordMappingContainer pTextureMappingContainer, _In_ nfBool bWriteMaterialExtension, _In_ nfBool m_bWriteBeamLatticeExtension);
+		CModelWriterNode100_Mesh(_In_ CModelMeshObject * pModelMeshObject, _In_ CXmlWriter * pXMLWriter, _In_ PProgressMonitor pProgressMonitor,
+			_In_ PMeshInformation_PropertyIndexMapping pPropertyIndexMapping, _In_ int nPosAfterDecPoint, _In_ nfBool bWriteMaterialExtension, _In_ nfBool m_bWriteBeamLatticeExtension);
 		virtual void writeToXML();
 	};
 

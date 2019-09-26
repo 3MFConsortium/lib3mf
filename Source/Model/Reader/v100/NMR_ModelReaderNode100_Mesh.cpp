@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -43,25 +43,14 @@ A mesh reader model node is a parser for the mesh node of an XML Model Stream.
 
 namespace NMR {
 
-	CModelReaderNode100_Mesh::CModelReaderNode100_Mesh(_In_ CModel * pModel, _In_ CMesh * pMesh, _In_ PModelReaderWarnings pWarnings, _In_ CProgressMonitor* pProgressMonitor, _In_ PModelReader_ColorMapping pColorMapping, _In_ PModelReader_TexCoordMapping pTexCoordMapping, _In_ ModelResourceID nDefaultPropertyID, _In_ ModelResourceIndex nDefaultPropertyIndex)
+	CModelReaderNode100_Mesh::CModelReaderNode100_Mesh(_In_ CModel * pModel, _In_ CMesh * pMesh, _In_ PModelReaderWarnings pWarnings, _In_ PProgressMonitor pProgressMonitor, _In_ ModelResourceID nDefaultPropertyID, _In_ ModelResourceIndex nDefaultPropertyIndex)
 		: CModelReaderNode(pWarnings, pProgressMonitor)
 	{
 		__NMRASSERT(pMesh);
 		__NMRASSERT(pModel);
 
-		m_nProgressCounterNodes = 0;
-		m_nProgressCounterTriangles = 0;
-
-		if (!pColorMapping.get())
-			throw CNMRException(NMR_ERROR_INVALIDPARAM);
-		if (!pTexCoordMapping.get())
-			throw CNMRException(NMR_ERROR_INVALIDPARAM);
-
-		m_pColorMapping = pColorMapping;
-		m_pTexCoordMapping = pTexCoordMapping;
-
-		m_nDefaultPropertyID = nDefaultPropertyID;
-		m_nDefaultPropertyIndex = nDefaultPropertyIndex;
+		m_nObjectLevelPropertyID = nDefaultPropertyID;
+		m_nObjectLevelPropertyIndex = nDefaultPropertyIndex;
 
 		m_pMesh = pMesh;
 		m_pModel = pModel;
@@ -114,29 +103,29 @@ namespace NMR {
 
 			if (strcmp(pChildName, XML_3MF_ELEMENT_VERTICES) == 0)
 			{
-				if (m_pMesh->getNodeCount() % PROGRESS_READUPDATE == PROGRESS_READUPDATE -1)
-					if (m_pProgressMonitor && !m_pProgressMonitor->Progress(0.5 -1./ (2 + ++m_nProgressCounterNodes), PROGRESS_READMESH)) {
-						throw CNMRException(NMR_USERABORTED);
-					}
+				if (m_pMesh->getNodeCount() % PROGRESS_READUPDATE == PROGRESS_READUPDATE - 1) {
+					m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_READMESH);
+					m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
+				}
 				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode100_Vertices>(m_pMesh, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 			}
 			else if (strcmp(pChildName, XML_3MF_ELEMENT_TRIANGLES) == 0)
 			{
-				if (m_pMesh->getFaceCount() % PROGRESS_READUPDATE == PROGRESS_READUPDATE - 1)
-					if (m_pProgressMonitor && !m_pProgressMonitor->Progress(1 -1. / (2 + ++m_nProgressCounterTriangles), PROGRESS_READMESH)) {
-						throw CNMRException(NMR_USERABORTED);
-					}
-				PModelReaderNode100_Triangles pXMLNode = std::make_shared<CModelReaderNode100_Triangles>(m_pModel, m_pMesh, m_pWarnings, m_pColorMapping, m_pTexCoordMapping, m_nDefaultPropertyID, m_nDefaultPropertyIndex);
+				if (m_pMesh->getFaceCount() % PROGRESS_READUPDATE == PROGRESS_READUPDATE - 1) {
+					m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_READMESH);
+					m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
+				}
+				PModelReaderNode100_Triangles pXMLNode = std::make_shared<CModelReaderNode100_Triangles>(m_pModel, m_pMesh, m_pWarnings, m_nObjectLevelPropertyID, m_nObjectLevelPropertyIndex);
 				pXMLNode->parseXML(pXMLReader);
-				if (m_nDefaultPropertyID == 0) {
-					// warn, if object does not have a default property, but a triangle has one
+				if (m_nObjectLevelPropertyID == 0) {
+					// warn, if object does not have an object-level property, but a triangle has one
 					if (pXMLNode->getUsedPropertyID() != 0) {
-						m_pWarnings->addException(CNMRException(NMR_ERROR_MISSINGDEFAULTPID), mrwMissingMandatoryValue);
+						m_pWarnings->addException(CNMRException(NMR_ERROR_MISSINGOBJECTLEVELPID), mrwMissingMandatoryValue);
 					}
-					// Try and define a default property as some PropertyID used by a triangle in the meshobject
-					m_nDefaultPropertyID = pXMLNode->getUsedPropertyID();
-					m_nDefaultPropertyIndex = 0;
+					// Try and define an object-level property as some PropertyID used by a triangle in the meshobject
+					m_nObjectLevelPropertyID = pXMLNode->getUsedPropertyID();
+					m_nObjectLevelPropertyIndex = 0;
 				}
 			}
 			else

@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -62,27 +62,41 @@ namespace NMR {
 	class CModelMetaData;
 	typedef std::shared_ptr <CModelMetaData> PModelMetaData;
 
+	class CModelMetaDataGroup;
+	typedef std::shared_ptr <CModelMetaDataGroup> PModelMetaDataGroup;
+
 	class CModelAttachment;
 	typedef std::shared_ptr <CModelAttachment> PModelAttachment;
 
 	class CModelBaseMaterialResource;
 	typedef std::shared_ptr <CModelBaseMaterialResource> PModelBaseMaterialResource;
 
+	class CModelColorGroupResource;
+	typedef std::shared_ptr <CModelColorGroupResource> PModelColorGroupResource;
+
+	class CModelCompositeMaterialsResource;
+	typedef std::shared_ptr <CModelCompositeMaterialsResource> PModelCompositeMaterialsResource;
+
+	class CModelMultiPropertyGroupResource;
+	typedef std::shared_ptr <CModelMultiPropertyGroupResource> PModelMultiPropertyGroupResource;
+
+	class CModelTexture2DGroupResource;
+	typedef std::shared_ptr <CModelTexture2DGroupResource> PModelTexture2DGroupResource;
+
 	class CModelTexture2DResource;
 	typedef std::shared_ptr <CModelTexture2DResource> PModelTexture2DResource;
 
-	class CModelSliceStackResource;
-	typedef std::shared_ptr <CModelSliceStackResource> PModelSliceStackResource;
+	class CModelSliceStack;
+	typedef std::shared_ptr <CModelSliceStack> PModelSliceStack;
 
-	class CSliceStack;
-	typedef std::shared_ptr <CSliceStack> PSliceStack;
+	typedef std::map<NMR::PackageResourceID, NMR::PackageResourceID> UniqueResourceIDMapping;
 
 	class CModel {
 	private:
 		std::string m_sCurPath;
 		std::string m_sRootPath;
 
-		std::vector<PUUID> usedUUIDs;	// datastructure used to ensure that UUIDs within one model (package) are unique
+		std::unordered_map<std::string, PUUID> usedUUIDs;	// datastructure used to ensure that UUIDs within one model (package) are unique
 
 		// Object Resources of the model
 		std::map<PackageResourceID, PModelResource> m_ResourceMap;
@@ -104,25 +118,28 @@ namespace NMR {
 		PModelAttachment m_pPackageThumbnailAttachment;
 
 		// Model Metadata
-		std::vector<PModelMetaData> m_MetaData;
-		std::map<std::string, PModelMetaData> m_MetaDataMap;
+		PModelMetaDataGroup m_MetaDataGroup;
 
 		// Model Attachments
 		std::vector<PModelAttachment> m_Attachments;
-		std::map<std::string, PModelAttachment> m_AttachmentURIMap;
+		std::unordered_map<std::string, PModelAttachment> m_AttachmentURIMap;
 
 		// Custom Attachment Content Types
 		std::map<std::string, std::string> m_CustomContentTypes;
 
 		// Production Model Attachments
 		std::vector<PModelAttachment> m_ProductionAttachments;
-		std::map<std::string, PModelAttachment> m_ProductionAttachmentURIMap;
+		std::unordered_map<std::string, PModelAttachment> m_ProductionAttachmentURIMap;
 
 		// Indexed lookup lists for standard resource types
 		std::vector<PModelResource> m_ObjectLookup;
 		std::vector<PModelResource> m_BaseMaterialLookup;
 		std::vector<PModelResource> m_TextureLookup;
 		std::vector<PModelResource> m_SliceStackLookup;
+		std::vector<PModelResource> m_ColorGroupLookup;
+		std::vector<PModelResource> m_Texture2DGroupLookup;
+		std::vector<PModelResource> m_CompositeMaterialsLookup;
+		std::vector<PModelResource> m_MultiPropertyGroupLookup;
 
 		// Add Resource to resource lookup tables
 		void addResourceToLookupTable(_In_ PModelResource pResource);
@@ -162,6 +179,15 @@ namespace NMR {
 		PModelResource getResource(_In_ nfUint32 nIndex);
 		void addResource(_In_ PModelResource pResource);
 
+		// Metadata setter/getter
+		PModelMetaData addMetaData(_In_ std::string sNameSpace, _In_ std::string sName, _In_ std::string sValue, _In_ std::string sType, _In_ nfBool bPreserve);
+		nfUint32 getMetaDataCount();
+		PModelMetaData getMetaData(_In_ nfUint32 nIndex);
+		void removeMetaData(_In_ nfUint32 nIndex);
+		nfBool hasMetaData(_In_ std::string sKey);
+		void mergeMetaData(_In_ CModel * pSourceModel);
+		PModelMetaDataGroup getMetaDataGroup();
+
 		// Build Handling
 		void addBuildItem(_In_ PModelBuildItem pBuildItem);
 		nfUint32 getBuildItemCount();
@@ -180,14 +206,6 @@ namespace NMR {
 		void removePackageThumbnail();
 		PModelAttachment getPackageThumbnail();
 
-		// Metadata setter/getter
-		void addMetaData(_In_ std::string sName, _In_ std::string sValue);
-		nfUint32 getMetaDataCount();
-		void getMetaData(_In_ nfUint32 nIndex, _Out_ std::string & sName, _Out_ std::string & sValue);
-		void removeMetaData(_In_ nfUint32 nIndex);
-		nfBool hasMetaData(_In_ std::string sName);
-		void mergeMetaData(_In_ CModel * pSourceModel);
-
 		// Retrieve a unique Resource ID
 		PackageResourceID generateResourceID();	// unique per model
 		PPackageResourceID generatePackageResourceID(_In_ std::string path, ModelResourceID nID);	// unique per package
@@ -200,18 +218,46 @@ namespace NMR {
 		CModelObject * getObject(_In_ nfUint32 nIndex);
 
 		// Convenience functions for base materials
-		_Ret_maybenull_ CModelBaseMaterialResource * findBaseMaterial(_In_ PackageResourceID nResourceID);
+		_Ret_maybenull_ PModelBaseMaterialResource findBaseMaterial(_In_ PackageResourceID nResourceID);
 		nfUint32 getBaseMaterialCount();
 		PModelResource getBaseMaterialResource(_In_ nfUint32 nIndex);
 		CModelBaseMaterialResource * getBaseMaterial(_In_ nfUint32 nIndex);
-		void mergeBaseMaterials(_In_ CModel * pSourceModel);
+		void mergeBaseMaterials(_In_ CModel * pSourceModel, _In_ UniqueResourceIDMapping &oldToNewMapping);
+
+		// Convenience functions for color groups
+		_Ret_maybenull_ PModelColorGroupResource findColorGroup(_In_ PackageResourceID nResourceID);
+		nfUint32 getColorGroupCount();
+		PModelResource getColorGroupResource(_In_ nfUint32 nIndex);
+		CModelColorGroupResource * getColorGroup(_In_ nfUint32 nIndex);
+		void mergeColorGroups(_In_ CModel * pSourceModel, _In_ UniqueResourceIDMapping &oldToNewMapping);
+
+		// Convenience functions for texture2d groups
+		_Ret_maybenull_ PModelTexture2DGroupResource findTexture2DGroup(_In_ PackageResourceID nResourceID);
+		nfUint32 getTexture2DGroupCount();
+		PModelResource getTexture2DGroupResource(_In_ nfUint32 nIndex);
+		CModelTexture2DGroupResource * getTexture2DGroup(_In_ nfUint32 nIndex);
+		void mergeTexture2DGroups(_In_ CModel * pSourceModel, _In_ UniqueResourceIDMapping &oldToNewMapping);
+
+		// Convenience functions for composite materials
+		_Ret_maybenull_ PModelCompositeMaterialsResource findCompositeMaterials(_In_ PackageResourceID nResourceID);
+		nfUint32 getCompositeMaterialsCount();
+		PModelResource getCompositeMaterialsResource(_In_ nfUint32 nIndex);
+		CModelCompositeMaterialsResource * getCompositeMaterials(_In_ nfUint32 nIndex);
+		void mergeCompositeMaterials(_In_ CModel * pSourceModel, _In_ UniqueResourceIDMapping &oldToNewMapping);
+
+		// Convenience functions for multi property groups
+		_Ret_maybenull_ PModelMultiPropertyGroupResource findMultiPropertyGroup(_In_ PackageResourceID nResourceID);
+		nfUint32 getMultiPropertyGroupCount();
+		PModelResource getMultiPropertyGroupResource(_In_ nfUint32 nIndex);
+		CModelMultiPropertyGroupResource * getMultiPropertyGroup(_In_ nfUint32 nIndex);
+		void mergeMultiPropertyGroups(_In_ CModel * pSourceModel, _In_ UniqueResourceIDMapping &oldToNewMapping);
 
 		// Convenience functions for 2D Textures
-		_Ret_maybenull_ CModelTexture2DResource * findTexture2D(_In_ PackageResourceID nResourceID);
+		_Ret_maybenull_ PModelTexture2DResource findTexture2D(_In_ PackageResourceID nResourceID);
 		nfUint32 getTexture2DCount();
 		PModelResource getTexture2DResource(_In_ nfUint32 nIndex);
 		CModelTexture2DResource * getTexture2D(_In_ nfUint32 nIndex);
-		void mergeTextures2D(_In_ CModel * pSourceModel);
+		void mergeTextures2D(_In_ CModel * pSourceModel, _In_ UniqueResourceIDMapping &oldToNewMapping);
 
 		// Clear all build items and Resources
 		void clearAll ();
@@ -248,9 +294,9 @@ namespace NMR {
 		// Convenience functions for slice stacks
 		nfUint32 getSliceStackCount();
 		PModelResource getSliceStackResource(_In_ nfUint32 nIndex);
-		CSliceStack * getSliceStack(_In_ nfUint32 nIndex);
 
-		void removeReferencedSliceStackResources();
+		// Sorts objects by correct dependency
+		std::list<CModelObject *> getSortedObjectList ();
 	};
 
 	typedef std::shared_ptr <CModel> PModel;

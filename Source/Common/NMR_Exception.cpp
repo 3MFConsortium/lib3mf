@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -66,7 +66,7 @@ namespace NMR {
 		case NMR_ERROR_ABSTRACT: return "The function called is abstract and should not have been called";
 		case NMR_ERROR_INVALIDHEADBLOCK: return "The current block is not assigned";
 		case NMR_ERROR_COMINITIALIZATIONFAILED: return "COM CoInitialize failed";
-		case NMR_ERROR_STANDARDCPPEXCEPTION: return "A Standard C++ Exception occured";
+		case NMR_ERROR_STANDARDCPPEXCEPTION: return "A Standard C++ Exception occurred";
 		case NMR_ERROR_INVALIDMESH: return "No mesh has been given";
 		case NMR_ERROR_COULDNOTCREATECONTEXT: return "Context could not be created";
 		case NMR_ERROR_EMPTYSTRINGTOINTCONVERSION: return "Wanted to convert empty string to integer";
@@ -126,6 +126,8 @@ namespace NMR {
 		case NMR_ERROR_ATTACHMENTTOOLARGE: return "An individual custom attachment is too large.";
 		case NMR_ERROR_ZIPCALLBACK: return "Error in libzip callback.";
 		case NMR_ERROR_ZIPCONTAINSINCONSISTENCIES: return "ZIP file contains inconsistencies. It might load with errors or incorrectly.";
+		case NMR_ERROR_XMLNAMESPACEALREADYREGISTERED: return "An XML namespace is already registered.";
+		case NMR_ERROR_XMLPREFIXALREADYREGISTERED: return "An XML prefix is already registered.";
 
 
 		// Unhandled exception
@@ -135,8 +137,8 @@ namespace NMR {
 		// Core framework error codes (0x2XXX)
 		case NMR_ERROR_NOPROGRESSINTERVAL: return "No Progress Interval has been specified in the progress handler";
 		case NMR_ERROR_DUPLICATENODE: return "An Edge with two identical nodes has been tried to added to a mesh";
-		case NMR_ERROR_TOOMANYNODES: return "The mesh exceeds more than NMR_MESH_MAXEDGECOUNT (around two billion) nodes";
-		case NMR_ERROR_TOOMANYFACES: return "The mesh exceeds more than NMR_MESH_MAXFACECOUNT (around two billion) faces";
+		case NMR_ERROR_TOOMANYNODES: return "The mesh exceeds more than NMR_MESH_MAXEDGECOUNT (2^31-1, around two billion) nodes";
+		case NMR_ERROR_TOOMANYFACES: return "The mesh exceeds more than NMR_MESH_MAXFACECOUNT (2^31-1, around two billion) faces";
 		case NMR_ERROR_INVALIDNODEINDEX: return "The index provided for the node is invalid";
 		case NMR_ERROR_INVALIDFACEINDEX: return "The index provided for the face is invalid";
 		case NMR_ERROR_INVALIDMESHTOPOLOGY: return "The mesh topology structure is corrupt";
@@ -153,7 +155,7 @@ namespace NMR {
 		case NMR_ERROR_INVALIDFACECOUNT: return "The specified facecount in the file was not valid";
 		case NMR_ERROR_INVALIDUNITS: return "The specified units of the file was not valid";
 		case NMR_ERROR_COULDNOTSETUNITS: return "The specified units could not be set (for example, the CVectorTree already had some entries)";
-		case NMR_ERROR_TOOMANYEDGES: return "The mesh exceeds more than NMR_MESH_MAXEDGECOUNT (around two billion) edges";
+		case NMR_ERROR_TOOMANYEDGES: return "The mesh exceeds more than NMR_MESH_MAXEDGECOUNT (2^31-1, around two billion) edges";
 		case NMR_ERROR_INVALIDEDGEINDEX: return "The index provided for the edge is invalid";
 		case NMR_ERROR_DUPLICATEEDGE: return "The mesh has an face with two identical edges";
 		case NMR_ERROR_MANIFOLDEDGES: return "Could not add face to an edge, because it was already two-manifold";
@@ -192,7 +194,7 @@ namespace NMR {
 		case NMR_ERROR_DUPLICATECOLORID: return "Color ID is already existing";
 		case NMR_ERROR_INVALIDMESHINFORMATIONDATA: return "Mesh Information Block was not assigned";
 		case NMR_ERROR_INVALIDMESHINFORMATION: return "Mesh Information Object was not assigned";
-		case NMR_ERROR_TOOMANYBEAMS: return "The mesh exceeds more than NMR_MESH_MAXBEAMCOUNT (around two billion) beams";
+		case NMR_ERROR_TOOMANYBEAMS: return "The mesh exceeds more than NMR_MESH_MAXBEAMCOUNT (2^31-1, around two billion) beams";
 
 		// Model error codes (0x8XXX)
 		case NMR_ERROR_OPCREADFAILED: return "3MF Loading - OPC could not be loaded";
@@ -306,7 +308,6 @@ namespace NMR {
 		case NMR_ERROR_COULDNOTGETHANDLE: return "Could not get handle";
 		case NMR_ERROR_BUILDITEMNOTFOUND: return "Build item not found";
 		case NMR_ERROR_OPCCOULDNOTGETTEXTUREURI: return "Could not get texture URI";
-		case NMR_ERROR_OPCCOULDNOTGETTEXTURESTREAM: return "Could not get texture stream";
 		case NMR_ERROR_MODELRELATIONSHIPSETREADFAILED: return "Model Relationship read failed";
 		case NMR_ERROR_NOTEXTURESTREAM: return "Texture stream is not available";
 		case NMR_ERROR_COULDNOTCREATESTREAM: return "Could not create stream";
@@ -358,10 +359,10 @@ namespace NMR {
 		case NMR_ERROR_DUPLICATETHUMBNAIL: return "Duplicate thumbnail.";
 		case NMR_ERROR_DUPLICATEPID: return "Duplicate Property ID.";
 		case NMR_ERROR_DUPLICATEPINDEX: return "Duplicate Property Index.";
-		case NMR_ERROR_MISSINGDEFAULTPID: return "A MeshObject with triangle-properties is missing a default property.";
-		case NMR_ERROR_INVALIDDEFAULTPID: return "A MeshObject with triangle-properties has an invalid default property.";
+		case NMR_ERROR_MISSINGOBJECTLEVELPID: return "A MeshObject with triangle-properties is missing an object-level property.";
+		case NMR_ERROR_INVALIDOBJECTLEVELPID: return "A MeshObject with triangle-properties has an invalid object-level property.";
 		case NMR_ERROR_BUILDITEMOBJECT_MUSTNOTBE_OTHER: return "Build-item must not reference object of type OTHER.";
-		case NMR_ERROR_DEFAULTPID_ON_COMPONENTSOBJECT: return "A components object must not have a default PID.";
+		case NMR_ERROR_OBJECTLEVELPID_ON_COMPONENTSOBJECT: return "A components object must not have an object-level PID.";
 		case NMR_ERROR_BEAMLATTICENODESTOOCLOSE: return "Nodes used for a beam are closer then the specified minimal length.";
 		case NMR_ERROR_BEAMLATTICE_INVALID_REPRESENTATIONRESOURCE: return "The resource defined as representationmesh is invalid.";
 		case NMR_ERROR_BEAMLATTICE_INVALID_OBJECTTYPE: return "Beamlattice is defined on wrong object type.";
@@ -369,7 +370,33 @@ namespace NMR {
 		case NMR_ERROR_SLICE_ONEPOINT: return "Slice contains only one point within a polygon";
 		case NMR_ERROR_INVALIDTILESTYLE: return "Invalid Tile Style";
 		case NMR_ERROR_INVALIDFILTER: return "Invalid Filter";
-			
+		case NMR_ERROR_DUPLICATEMETADATAGROUP: return "Duplicate MetaDataGroup";
+		case NMR_ERROR_SLICES_MIXING_SLICES_WITH_SLICEREFS: return "A SliceStack must not contain slices and slicerefs";
+		case NMR_ERROR_SLICES_SLICEREF_CIRCULAR: return "SliceStack references must not be circular";
+		case NMR_ERROR_SLICES_REFS_Z_NOTINCREASING: return "z-position of slicerefs is not increasing";
+		case NMR_ERROR_SLICES_REFS_LEVELTOODEEP: return "level of slicereferences is too deep";
+		case NMR_ERROR_PROPERTYIDALREADYREGISTERED: return "Property already registered";
+		case NMR_ERROR_INVALIDPROPERTYRESOURCEID: return "Invalid Property Resource ID";
+		case NMR_ERROR_PROPERTYIDNOTFOUND: return "Property ID not found";
+		case NMR_ERROR_TOOMANYCOLORS: return "Too many colors.";
+		case NMR_ERROR_TOOMANYCOMPOSITES: return "Too many composites.";
+		case NMR_ERROR_MIXINGRATIO_OUTOFRANGE: return "Mixing ratio of composite out of range.";
+		case NMR_ERROR_MIXINGRATIO_MISSING: return "A composite mixing ratio is missing.";
+		case NMR_ERROR_MIXINGRATIO_TOOMANY: return "Too many composite mixing ratio in the list of values";
+		case NMR_ERROR_MULTIPROPERTIES_MUST_NOT_CONTAIN_MULTIPROPERTIES: return "A multiproperties must not contain another multiproperties";
+		case NMR_ERROR_MULTIPROPERTIES_MUST_NOT_CONTAIN_MULTIPLE_MATERIALS: return "A multiproperties must not contain multiple materials";
+		case NMR_ERROR_MULTIPROPERTIES_MUST_NOT_CONTAIN_MULTIPLE_COLORGOURPS: return "A multiproperties must not contain multiple colorgroups";
+		case NMR_ERROR_MULTIPROPERTIES_INVALID_RESOURCE: return "A resource of invalid type was passed to a MultiPropertyGroup";
+		case NMR_ERROR_MULTIPROPERTIES_NOT_ENOUGH_PROPERTYIDS_SPECIFIED: return "A MultiProperty does not define enough PropertyIDs";
+		case NMR_ERROR_MULTIPROPERTIES_MISSING_PIDS: return "A MultiProperty-element is missing the pids-attribute";
+		case NMR_ERROR_MULTIPROPERTIES_DIFFERNT_NUMBER_OF_BLENDMETHODS_AND_PIDS: return "The number of blendmethods and pids does not match";
+		case NMR_ERROR_DUPLICATE_PIDS: return "Multiproperties element has duplicate pids attribute";
+		case NMR_ERROR_DUPLICATE_BLENDMETHOS: return "Multiproperties element has duplicate blendmethods attribute";
+		case NMR_ERROR_INVALID_BLENDMETHOD_ATTRIBUTE: return "A blendmethods attribute is invalid";
+		case NMR_ERROR_MULTIPROPERTIES_INVALID_MULTI_ELEMENT: return "A multi-element is invalid";
+		case NMR_ERROR_INVALID_RESOURCE_INDEX: return "A Resource Index is invalid";
+		case NMR_ERROR_VERSION093_NOT_SUPPORTED: return "This document contains content from Version 093 of the core-specification. This is not fully supported by Lib3MF version 2 or later.";
+
 
 		// XML Parser Error Constants(0x9XXX)
 		case NMR_ERROR_XMLPARSER_INVALIDATTRIBVALUE: return "Invalid XML attribute value";
@@ -396,6 +423,7 @@ namespace NMR {
 		case NMR_ERROR_CONTENTTYPE_EMPTY_PARTNAME: return "An override content type does not have a partname.";
 		case NMR_ERROR_XMLPARSER_INVALID_ESCAPESTRING: return "XML contains an invalid escape character.";
 		case NMR_ERROR_DUPLICATE_BOX_ATTRIBUTE: return "A box attribute is duplicated.";
+		case NMR_ERROR_DUPLICATE_MATINDICES_ATTRIBUTE: return "A matindices attribute is duplicated.";
 
 		// Library errors (0xAXXX)
 		case NMR_ERROR_COULDNOTGETINTERFACEVERSION: return "Could not get interface version";

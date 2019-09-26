@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -47,6 +47,8 @@ You can only add nodes and faces to mesh. You cannot remove the existing structu
 #include "Common/NMR_Types.h"
 #include "Common/Mesh/NMR_BeamLattice.h"
 
+#include <map>
+
 namespace NMR {
 
 	class CMesh {
@@ -67,9 +69,11 @@ namespace NMR {
 		void addToMesh(_In_opt_ CMesh * pMesh, _In_ NMATRIX3 mMatrix);
 
 		_Ret_notnull_ MESHNODE * addNode(_In_ const NVEC3 vPosition);
+		_Ret_notnull_ MESHNODE * addNode(_In_ const nfFloat posX, _In_ const nfFloat posY, _In_ const nfFloat posZ);
 		_Ret_notnull_ MESHFACE * addFace(_In_ MESHNODE * pNode1, _In_ MESHNODE * pNode2, _In_ MESHNODE * pNode3);
-		_Ret_notnull_ MESHBEAM * addBeam(_In_ MESHNODE * pNode1, _In_ MESHNODE * pNode2, _In_ nfDouble * pRadius1, _In_ nfDouble * pRadius2,
-								_In_ nfInt32 * peCapMode1, _In_ nfInt32 * peCapMode2);
+		_Ret_notnull_ MESHFACE * addFace(_In_ nfInt32 nNodeIndex1, _In_ nfInt32 nNodeIndex2, _In_ nfInt32 nNodeIndex3);
+		_Ret_notnull_ MESHBEAM * addBeam(_In_ MESHNODE * pNode1, _In_ MESHNODE * pNode2, _In_ nfDouble dRadius1, _In_ nfDouble dRadius2,
+			_In_ nfInt32 eCapMode1, _In_ nfInt32 eCapMode2);
 		_Ret_notnull_ PBEAMSET addBeamSet();
 		
 		nfUint32 getNodeCount();
@@ -84,10 +88,12 @@ namespace NMR {
 
 		void setBeamLatticeMinLength(nfDouble dMinLength);
 		nfDouble getBeamLatticeMinLength();
+
+		// TODO: make these return sensible values
 		void setDefaultBeamRadius(nfDouble dRadius);
 		nfDouble getDefaultBeamRadius();
 		void setBeamLatticeAccuracy(nfDouble dAccuracy);
-		nfBool getBeamLatticeAccuracy(nfDouble * pdAccuracy);
+		nfBool getBeamLatticeAccuracy(nfDouble& dAccuracy);
 		void setBeamLatticeCapMode(eModelBeamLatticeCapMode dRadius);
 		eModelBeamLatticeCapMode getBeamLatticeCapMode();
 
@@ -99,6 +105,8 @@ namespace NMR {
 		_Ret_maybenull_ CMeshInformationHandler * getMeshInformationHandler();
 		_Ret_notnull_ CMeshInformationHandler * createMeshInformationHandler();
 		void clearMeshInformationHandler();
+		void patchMeshInformationResources(_In_ std::map<PackageResourceID, PackageResourceID> &oldToNewMapping);
+		void extendOutbox(_Out_ NOUTBOX3& vOutBox, _In_ const NMATRIX3 mAccumulatedMatrix);
 	};
 
 	typedef std::shared_ptr <CMesh> PMesh;

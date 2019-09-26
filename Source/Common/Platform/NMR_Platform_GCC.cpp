@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -59,7 +59,7 @@ namespace NMR {
 		return std::make_shared<CExportStream_GCC_Native> (sFileName.c_str());
 	}
 
-	PXmlReader fnCreateXMLReaderInstance (_In_ PImportStream pImportStream, CProgressMonitor * pProgressMonitor)
+	PXmlReader fnCreateXMLReaderInstance (_In_ PImportStream pImportStream, PProgressMonitor pProgressMonitor)
 	{
 		return std::make_shared<CXmlReader_Native> (pImportStream, NMR_PLATFORM_XMLREADER_BUFFERSIZE, pProgressMonitor);
 	}

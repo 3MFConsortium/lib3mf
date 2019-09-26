@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -37,16 +37,28 @@ NMR_UUID.h defines a datatype and functions to handle UUIDs
 #include "Common/NMR_Local.h"
 #include <string>
 
+#ifndef _WIN32
+#include <random>
+#include <mutex>
+#endif
+
 
 namespace NMR
 {
 	class CUUID {
 	private:
+#ifndef _WIN32
+		static bool S_mtwister_initialised;
+		static std::mutex S_uuid_gen_mutex;
+		static std::random_device S_rand_dev;
+		static std::mt19937 S_mtwister;
+#endif
 		std::string m_sUUID;
 	public:
 		CUUID();
 		CUUID(const nfChar* pString);
-		std::string toString();
+		CUUID(const std::string & string);
+		std::string toString() const;
 
 		bool set(const nfChar* pString);
 

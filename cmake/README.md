@@ -1,4 +1,4 @@
-## Building Lib3MF
+## Building lib3mf
 
 Call GenerateVS2015.bat (Windows) or GenerateMake.sh (Linux, Mac), or
 define other targets by specifying custom [CMake generators](https://cmake.org/cmake/help/v3.0/manual/cmake-generators.7.html).

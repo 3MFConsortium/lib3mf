@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -33,7 +33,7 @@ This is a derived class for Importing the binary STL and color STL Mesh Format.
 
 #include "Common/MeshImport/NMR_MeshImporter_STL.h" 
 #include "Common/MeshInformation/NMR_MeshInformation.h" 
-#include "Common/MeshInformation/NMR_MeshInformation_NodeColors.h" 
+#include "Common/MeshInformation/NMR_MeshInformation_Properties.h" 
 #include "Common/Math/NMR_VectorTree.h" 
 #include "Common/Math/NMR_Matrix.h" 
 #include "Common/NMR_Exception.h" 
@@ -113,12 +113,15 @@ namespace NMR {
 		if (!pStream)
 			throw CNMRException(NMR_ERROR_NOIMPORTSTREAM);
 
+		/*
 		CMeshInformationHandler * pMeshInformationHandler = NULL;
 		PMeshInformation_NodeColors pMeshInformation = NULL;
 		if (m_bImportColors) {
 			pMeshInformation = std::make_shared<CMeshInformation_NodeColors>();
 			pMeshInformationHandler->addInformation(pMeshInformation);
-		}
+		} */
+
+		// TODO: Color Handling!
 
 		std::array<nfByte, 80> aSTLHeader;
 		nfUint32 nFaceCount = 0;
@@ -126,6 +129,9 @@ namespace NMR {
 
 		pStream->readBuffer(&aSTLHeader[0], 80, true);
 		pStream->readBuffer((nfByte*)&nFaceCount, sizeof(nFaceCount), true);
+		if (isBigEndian()) {
+			nFaceCount = swapBytes(nFaceCount);
+		}
 
 		if (nFaceCount > NMR_MESH_MAXFACECOUNT)
 			throw CNMRException(NMR_ERROR_INVALIDFACECOUNT);
@@ -139,7 +145,7 @@ namespace NMR {
 			}
 		}
 
-		nfUint32 nIdx, j, k, nNodeIdx;
+		nfUint32 nNodeIdx;
 		MESHNODE * pNodes[3];
 		MESHFORMAT_STL_FACET Facet;
 		CVectorTree VectorTree;
@@ -147,20 +153,23 @@ namespace NMR {
 
 		VectorTree.setUnits(m_fUnits);
 
-		for (nIdx = 0; nIdx < nFaceCount; nIdx++) {
+		for (nfUint32 nIdx = 0; nIdx < nFaceCount; nIdx++) {
 			pStream->readBuffer((nfByte*)&Facet, sizeof(Facet), true);
+			if (isBigEndian()) {
+				Facet.swapByteOrder();
+			}
 
 			// Check, if Coordinates are in Valid Space
 			bIsValid = true;
-			for (j = 0; j < 3; j++)
-			for (k = 0; k < 3; k++)
-				bIsValid &= (fabs(Facet.m_vertieces[j].m_fields[k]) < NMR_MESH_MAXCOORDINATE);
+			for (nfUint32 j = 0; j < 3; j++)
+				for (nfUint32 k = 0; k < 3; k++)
+					bIsValid &= (fabs(Facet.m_vertices[j].m_fields[k]) < NMR_MESH_MAXCOORDINATE);
 
 			// Identify Nodes via Tree
 			if (bIsValid) {
 
-				for (j = 0; j < 3; j++) {
-					NVEC3 vPosition = Facet.m_vertieces[j];
+				for (nfUint32 j = 0; j < 3; j++) {
+					NVEC3 vPosition = Facet.m_vertices[j];
 					if (pmMatrix)
 						vPosition = fnMATRIX3_apply(*pmMatrix, vPosition);
 
@@ -181,6 +190,7 @@ namespace NMR {
 			if ((!bIsValid) && !m_bIgnoreInvalidFaces)
 				throw CNMRException(NMR_ERROR_INVALIDCOORDINATES);
 
+			/*
 			if (bIsValid) {
 				MESHFACE * pFace = pMesh->addFace(pNodes[0], pNodes[1], pNodes[2]);
 				if (pMeshInformation) {
@@ -198,8 +208,11 @@ namespace NMR {
 					pNodeColorInfo->m_cColors[1] = pNodeColorInfo->m_cColors[0];
 					pNodeColorInfo->m_cColors[2] = pNodeColorInfo->m_cColors[0];
 				}
+			} 
 			}
+			*/
 		}
+
 	}
 
 }

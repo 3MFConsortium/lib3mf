@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -54,17 +54,22 @@ namespace NMR {
 		CModelComponentsObject() = delete;
 		CModelComponentsObject(_In_ const ModelResourceID sID, _In_ CModel * pModel);
 		~CModelComponentsObject();
-		
-		void addComponent (_In_ PModelComponent pComponent);		
+
+		void addComponent(_In_ PModelComponent pComponent);
 		nfUint32 getComponentCount();
 		PModelComponent getComponent(_In_ nfUint32 nIdx);
 
-		virtual void mergeToMesh(_In_ CMesh * pMesh, _In_ const NMATRIX3 mMatrix);
+		void mergeToMesh(_In_ CMesh * pMesh, _In_ const NMATRIX3 mMatrix) override;
 
 		// check, if the object is a valid object description
-		virtual nfBool isValid();
+		nfBool isValid() override;
 
-		virtual nfBool isValidForSlices(const NMATRIX3& totalParentMatrix);
+		nfBool hasSlices(nfBool bRecursive) override;
+		nfBool isValidForSlices(const NMATRIX3& totalParentMatrix) override;
+
+		void calculateComponentDepthLevel(nfUint32 nLevel) override;
+
+		void extendOutbox(_Out_ NOUTBOX3& vOutBox, _In_ const NMATRIX3 mAccumulatedMatrix) override;
 	};
 
 	typedef std::shared_ptr <CModelComponentsObject> PModelComponentsObject;

@@ -35,7 +35,6 @@ NMR_ModelReaderNode100_Components.h defines the Model Components Reader Node Cla
 
 #include "Model/Reader/NMR_ModelReaderNode.h"
 #include "Model/Classes/NMR_ModelComponentsObject.h"
-#include "Model/Classes/NMR_ModelMetaData.h"
 
 namespace NMR {
 

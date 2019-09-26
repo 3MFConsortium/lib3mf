@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -52,6 +52,8 @@ namespace NMR {
 		ModelResourceID m_nClippingMeshID;
 		nfBool m_bHasRepresentationMeshID;
 		ModelResourceID m_nRepresentationMeshID;
+		nfDouble m_dDefaultRadius;
+		eModelBeamLatticeCapMode m_eDefaultCapMode;
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 		virtual void OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace);

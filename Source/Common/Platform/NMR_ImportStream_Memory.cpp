@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2018 3MF Consortium
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -27,7 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 Abstract:
 
 NMR_ImportStream_Memory.cpp implements the CImportStream_Memory Class.
-This is a platform independent class for keeping data in a memory stream.
+This is an abstract platform independent class for keeping data in a memory stream.
 
 --*/
 
@@ -40,88 +40,6 @@ This is a platform independent class for keeping data in a memory stream.
 #include <string>
 
 namespace NMR {
-
-	CImportStream_Memory::CImportStream_Memory()
-	{
-		m_cbSize = 0;
-		m_nPosition = 0;
-	}
-
-
-	CImportStream_Memory::CImportStream_Memory(_In_ CImportStream * pStream, _In_ nfUint64 cbBytesToCopy, _In_ nfBool bNeedsToCopyAllBytes)
-	{
-		if (pStream == nullptr)
-			throw CNMRException(NMR_ERROR_INVALIDPARAM);
-
-		if (cbBytesToCopy > NMR_IMPORTSTREAM_MAXMEMSTREAMSIZE)
-			throw CNMRException(NMR_ERROR_INVALIDBUFFERSIZE);
-
-
-		// Retrieve Capacity and allocate buffer.
-		nfUint64 cbCapacity = cbBytesToCopy;
-		try {
-			m_Buffer.resize((size_t)cbCapacity);
-		}
-		catch (std::bad_alloc) {
-			throw CNMRException(NMR_ERROR_INVALIDBUFFERSIZE);
-		}
-
-		m_cbSize = 0;
-		m_nPosition = 0;
-
-		while (m_cbSize < cbCapacity) {
-
-			// Only read in chunks
-			nfUint64 cbBytesToRead = cbCapacity - m_cbSize;
-			if (cbBytesToRead > NMR_IMPORTSTREAM_READCHUNKSIZE)
-				cbBytesToRead = NMR_IMPORTSTREAM_READCHUNKSIZE;
-
-			// Read bytes into memory
-			nfUint64 cbBytesRead;
-			cbBytesRead = pStream->readBuffer(&m_Buffer[(size_t) m_cbSize], cbBytesToRead, false);
-
-			// increase size
-			m_cbSize += cbBytesRead;
-
-			if (cbBytesRead != cbBytesToRead)
-				break;
-		}
-
-		if ((m_cbSize != cbCapacity) && (bNeedsToCopyAllBytes))
-			throw CNMRException(NMR_ERROR_COULDNOTREADFULLDATA);
-
-
-	}
-
-	CImportStream_Memory::CImportStream_Memory(_In_ const nfByte * pBuffer, _In_ nfUint64 cbBytes)
-	{
-		if (pBuffer == nullptr)
-			throw CNMRException(NMR_ERROR_INVALIDPARAM);
-
-		if (cbBytes > NMR_IMPORTSTREAM_MAXMEMSTREAMSIZE)
-			throw CNMRException(NMR_ERROR_INVALIDBUFFERSIZE);
-
-		// Retrieve Capacity and allocate buffer.
-		m_Buffer.resize((size_t) cbBytes);
-
-		m_cbSize = cbBytes;
-		m_nPosition = 0;
-
-		const nfByte * pSource = pBuffer;
-		nfByte * pTarget = &m_Buffer[0];
-
-		nfUint64 nIndex = cbBytes;
-		while (nIndex > 0) {
-			*pTarget = *pSource;
-
-			pSource++;
-			pTarget++;
-			nIndex--;
-		}		
-
-
-	}
-
 
 	CImportStream_Memory::~CImportStream_Memory()
 	{
@@ -182,7 +100,7 @@ namespace NMR {
 
 		if (cbBytesToRead > 0) {
 			nfUint64 nIndex = cbBytesToRead;
-			nfByte * pSource = &m_Buffer[(size_t)m_nPosition];
+			const nfByte * pSource = getAt(m_nPosition);
 			nfByte * pTarget = pBuffer;
 
 			while (nIndex > 0) {
@@ -215,15 +133,7 @@ namespace NMR {
 		std::string sUTF8FileName = fnUTF16toUTF8(pwszFileName);
 		PExportStream pExportStream = fnCreateExportStreamInstance(sUTF8FileName.c_str());
 		if (m_cbSize > 0) {
-			pExportStream->writeBuffer(&m_Buffer[0], m_cbSize);
+			pExportStream->writeBuffer(getAt(0), m_cbSize);
 		}
 	}
-
-	PImportStream CImportStream_Memory::copyToMemory()
-	{
-		__NMRASSERT(m_nPosition <= m_cbSize);
-
-		return std::make_shared<CImportStream_Memory>(this, m_cbSize - m_nPosition, true);
-	}
-
 }
