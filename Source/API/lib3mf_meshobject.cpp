@@ -344,7 +344,7 @@ void CMeshObject::SetGeometry(const Lib3MF_uint64 nVerticesBufferSize, const sLi
 
 	// Rebuild Mesh Faces
 	const sLib3MFTriangle * pTriangle = pIndicesBuffer;
-	for (int nIndex = 0; nIndex < nIndicesBufferSize; nIndex++) {
+	for (Lib3MF_uint64 nIndex = 0; nIndex < nIndicesBufferSize; nIndex++) {
 		NMR::MESHNODE * pNodes[3];
 
 		for (int j = 0; j < 3; j++) {
