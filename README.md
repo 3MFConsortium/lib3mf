@@ -30,7 +30,7 @@ Simply download the precompiled binary SDK https://github.com/3MFConsortium/lib3
 Allthough the different language bindings are kept as similar as possible,
 the usage of lib3mf still depends your programming language.
 
-You are best-off starting with one of the examples distributed in the [SDK](https://github.com/3MFConsortium/lib3mf/releases) or with this [minimal example in C++](SDK/Examples/Source/ExtractInfo.cpp).
+You are best-off starting with one of the examples distributed in the [SDK](https://github.com/3MFConsortium/lib3mf/releases) or with this [minimal example in C++](SDK/Examples/CppDynamic/Source/ExtractInfo.cpp).
 
 ## Contributing
 lib3mf is an open source project and supported by the [3MF Consortium](https://3mf.io/).
