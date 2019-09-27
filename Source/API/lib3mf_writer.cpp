@@ -100,7 +100,7 @@ Lib3MF_uint64 CWriter::GetStreamSize ()
 	return pStream->getDataSize();
 }
 
-void CWriter::WriteToBuffer (Lib3MF_uint64 nBufferBufferSize, Lib3MF_uint64* pBufferNeededCount, Lib3MF_uint8 * pBufferBuffer)
+void CWriter::WriteToBuffer(Lib3MF_uint64 nBufferBufferSize, Lib3MF_uint64* pBufferNeededCount, Lib3MF_uint8 * pBufferBuffer)
 {
 	NMR::PExportStreamMemory pStream = std::make_shared<NMR::CExportStreamMemory>();
 	try {

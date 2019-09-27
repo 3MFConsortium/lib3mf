@@ -54,8 +54,8 @@ namespace NMR {
 		CModelComponentsObject() = delete;
 		CModelComponentsObject(_In_ const ModelResourceID sID, _In_ CModel * pModel);
 		~CModelComponentsObject();
-		
-		void addComponent (_In_ PModelComponent pComponent);		
+
+		void addComponent(_In_ PModelComponent pComponent);
 		nfUint32 getComponentCount();
 		PModelComponent getComponent(_In_ nfUint32 nIdx);
 
@@ -69,7 +69,7 @@ namespace NMR {
 
 		void calculateComponentDepthLevel(nfUint32 nLevel) override;
 
-		void extendOutbox(_Out_ NOUTBOX3& vOutBox, _In_ const NMATRIX3 mAccumulatedMatrix);
+		void extendOutbox(_Out_ NOUTBOX3& vOutBox, _In_ const NMATRIX3 mAccumulatedMatrix) override;
 	};
 
 	typedef std::shared_ptr <CModelComponentsObject> PModelComponentsObject;

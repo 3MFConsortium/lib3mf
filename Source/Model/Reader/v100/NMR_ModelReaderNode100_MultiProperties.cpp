@@ -70,7 +70,7 @@ namespace NMR {
 			if (!m_pBlendMethods) {
 				m_pBlendMethods = std::make_shared<std::vector<eModelBlendMethod>>();
 				m_pBlendMethods->resize(m_pPIDs->size() - 1);
-				for (int i = 0; i < m_pBlendMethods->size(); i++) {
+				for (size_t i = 0; i < m_pBlendMethods->size(); i++) {
 					(*m_pBlendMethods)[i] = eModelBlendMethod::MODELBLENDMETHOD_MIX;
 				}
 			}

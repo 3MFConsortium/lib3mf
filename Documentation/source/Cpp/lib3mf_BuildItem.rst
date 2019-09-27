@@ -81,6 +81,13 @@ CBuildItem
 		:returns: returns an Instance of the metadatagroup of this build item
 
 
+	.. cpp:function:: sBox GetOutbox()
+
+		Returns the outbox of a build item
+
+		:returns: Outbox of this build item
+
+
 .. cpp:type:: std::shared_ptr<CBuildItem> Lib3MF::PBuildItem
 
 	Shared pointer to CBuildItem to easily allow reference counting.

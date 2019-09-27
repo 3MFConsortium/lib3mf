@@ -175,6 +175,7 @@ namespace NMR {
 		ModelResourceID m_nResourceID;
 		eModelBlendMethod m_nMethod;
 	} MODELMULTIPROPERTYLAYER;
+
 }
 
 #endif // __NMR_MODELTYPES

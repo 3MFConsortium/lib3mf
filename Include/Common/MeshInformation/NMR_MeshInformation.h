@@ -63,6 +63,7 @@ namespace NMR {
 		virtual void invalidateFace(_In_ MESHINFORMATIONFACEDATA * pData) = 0;
 
 		virtual eMeshInformationType getType() = 0;
+		virtual void cloneDefaultInfosFrom(_In_ CMeshInformation * pOtherInformation) = 0;
 		virtual void cloneFaceInfosFrom(_In_ nfUint32 nFaceIndex, _In_ CMeshInformation * pOtherInformation, _In_ nfUint32 nOtherFaceIndex) = 0;
 		virtual PMeshInformation cloneInstance(_In_ nfUint32 nCurrentFaceCount) = 0;
 		virtual void permuteNodeInformation(_In_ nfUint32 nFaceIndex, _In_ nfUint32 nNodeIndex1, _In_ nfUint32 nNodeIndex2, _In_ nfUint32 nNodeIndex3) = 0;

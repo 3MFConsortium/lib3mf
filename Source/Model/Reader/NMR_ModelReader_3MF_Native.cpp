@@ -114,8 +114,10 @@ namespace NMR {
 			std::string sType = theRelationShip->getType();
 
 			if ( (sType == PACKAGE_TEXTURE_RELATIONSHIP_TYPE) || 
-				 (sType == PACKAGE_THUMBNAIL_RELATIONSHIP_TYPE) ) // TODO: remove PACKAGE_THUMBNAIL_RELATIONSHIP_TYPE
-				 // this is to allow object thumbnails to come from the OPC Thumbnail relationship type
+				 (sType == PACKAGE_THUMBNAIL_RELATIONSHIP_TYPE) )
+				 // this is to allow object thumbnails to come from both
+				 // the Texture or the OPC Thumbnail relationship type
+				 // to comply with older versions of the 3mf specification
 			{
 				std::string sURI = theRelationShip->getTargetPartURI();
 				// TODO: this logic might not be correct yet

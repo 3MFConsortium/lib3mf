@@ -1,7 +1,7 @@
 # lib3mf
-[![Build Status](https://travis-ci.org/3MFConsortium/lib3mf.svg?branch=lib3mf-v2-develop)](https://travis-ci.org/3MFConsortium/lib3mf)
-[![Documentation Status](https://readthedocs.org/projects/lib3mf/badge/?version=lib3mf-v2-develop)](https://readthedocs.org/projects/lib3mf)
-[![Version 2.0.0-beta](https://img.shields.io/static/v1.svg?label=lib3mf&message=v2.0.0-beta&color=orange)]()
+[![Build Status](https://travis-ci.org/3MFConsortium/lib3mf.svg?branch=release%2F2.0.0)](https://travis-ci.org/3MFConsortium/lib3mf)
+[![Documentation Status](https://readthedocs.org/projects/lib3mf/badge/?version=master)](https://readthedocs.org/projects/lib3mf)
+[![Version 2.0.0](https://img.shields.io/static/v1.svg?label=lib3mf&message=v2.0.0&color=green)]()
 [![Supported platforms](https://img.shields.io/static/v1.svg?label=platform&message=windows%20%7C%20macos%20%7C%20linux&color=lightgrey)]()
 [![Simplified BSD License](https://img.shields.io/static/v1.svg?label=license&message=BSD&color=green)](LICENSE)
 
@@ -30,7 +30,7 @@ Simply download the precompiled binary SDK https://github.com/3MFConsortium/lib3
 Allthough the different language bindings are kept as similar as possible,
 the usage of lib3mf still depends your programming language.
 
-You are best-off starting with one of the examples distributed in the [SDK](https://github.com/3MFConsortium/lib3mf/releases) or with this [minimal example in C++](https://link-to-C++-minimal).
+You are best-off starting with one of the examples distributed in the [SDK](https://github.com/3MFConsortium/lib3mf/releases) or with this [minimal example in C++](SDK/Examples/CppDynamic/Source/ExtractInfo.cpp).
 
 ## Contributing
 lib3mf is an open source project and supported by the [3MF Consortium](https://3mf.io/).

@@ -42,6 +42,7 @@ structure.
 #include "Common/Mesh/NMR_Mesh.h"
 #include "Common/Math/NMR_Matrix.h" 
 #include "Common/NMR_Exception.h" 
+#include "Common/MeshInformation/NMR_MeshInformation_Properties.h"
 #include <cmath>
 
 namespace NMR {
@@ -98,6 +99,10 @@ namespace NMR {
 			}
 
 			if (nFaceCount > 0) {
+				if (m_pMeshInformationHandler && pOtherMeshInformationHandler) {
+					m_pMeshInformationHandler->cloneDefaultInfosFrom(pOtherMeshInformationHandler);
+				}
+
 				for (nIdx = 0; nIdx < nFaceCount; nIdx++) {
 					pFace = pMesh->getFace(nIdx);
 					for (j = 0; j < 3; j++) {
@@ -339,6 +344,22 @@ namespace NMR {
 		return m_BeamLattice.m_dMinLength;
 	}
 
+	nfDouble CMesh::getDefaultBeamRadius()
+	{
+		return 1.0;
+	}
+
+	nfBool CMesh::getBeamLatticeAccuracy(nfDouble& dAccuracy)
+	{
+		dAccuracy = 1.0;
+		return false;
+	}
+
+	eModelBeamLatticeCapMode CMesh::getBeamLatticeCapMode()
+	{
+		return eModelBeamLatticeCapMode::MODELBEAMLATTICECAPMODE_SPHERE;
+	}
+
 	nfBool CMesh::checkSanity()
 	{
 		nfUint32 nIdx, j;
@@ -403,6 +424,32 @@ namespace NMR {
 	void CMesh::clearMeshInformationHandler()
 	{
 		m_pMeshInformationHandler.reset();
+	}
+
+	void CMesh::patchMeshInformationResources(_In_ std::map<PackageResourceID, PackageResourceID> &oldToNewMapping)
+	{
+		NMR::CMeshInformationHandler *pMeshInformationHandler = this->getMeshInformationHandler();
+		if (pMeshInformationHandler) {
+			NMR::CMeshInformation *pProperties = dynamic_cast<NMR::CMeshInformation_Properties *>(pMeshInformationHandler->getInformationByType(0, NMR::emiProperties));
+			if (pProperties) {
+				NMR::MESHINFORMATION_PROPERTIES * pDefaultData = (NMR::MESHINFORMATION_PROPERTIES*)pProperties->getDefaultData();
+				if (pDefaultData && pDefaultData->m_nResourceID != 0) {
+					NMR::PackageResourceID nNewResourceID = oldToNewMapping[pDefaultData->m_nResourceID];
+					if (nNewResourceID == 0)
+						throw CNMRException(NMR_ERROR_UNKNOWNMODELRESOURCE);
+					pDefaultData->m_nResourceID = nNewResourceID;
+				}
+				for (NMR::nfUint32 nFaceIndex = 0; nFaceIndex < this->getFaceCount(); nFaceIndex++) {
+					NMR::MESHINFORMATION_PROPERTIES * pFaceData = (NMR::MESHINFORMATION_PROPERTIES*)pProperties->getFaceData(nFaceIndex);
+					if (pFaceData && pFaceData->m_nResourceID != 0) {
+						NMR::PackageResourceID nNewResourceID = oldToNewMapping[pFaceData->m_nResourceID];
+						if (nNewResourceID == 0)
+							throw CNMRException(NMR_ERROR_UNKNOWNMODELRESOURCE);
+						pFaceData->m_nResourceID = nNewResourceID;
+					}
+				}
+			}
+		}
 	}
 
 	_Ret_maybenull_ CMeshInformationHandler * CMesh::getMeshInformationHandler()

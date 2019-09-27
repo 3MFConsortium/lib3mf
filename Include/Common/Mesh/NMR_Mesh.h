@@ -48,6 +48,8 @@ You can only add nodes and faces to mesh. You cannot remove the existing structu
 #include "Common/Mesh/NMR_BeamLattice.h"
 #include "Common/Mesh/NMR_VolumeData.h"
 
+#include <map>
+
 namespace NMR {
 
 	class CMesh {
@@ -88,10 +90,12 @@ namespace NMR {
 
 		void setBeamLatticeMinLength(nfDouble dMinLength);
 		nfDouble getBeamLatticeMinLength();
+
+		// TODO: make these return sensible values
 		void setDefaultBeamRadius(nfDouble dRadius);
 		nfDouble getDefaultBeamRadius();
 		void setBeamLatticeAccuracy(nfDouble dAccuracy);
-		nfBool getBeamLatticeAccuracy(nfDouble * pdAccuracy);
+		nfBool getBeamLatticeAccuracy(nfDouble& dAccuracy);
 		void setBeamLatticeCapMode(eModelBeamLatticeCapMode dRadius);
 		eModelBeamLatticeCapMode getBeamLatticeCapMode();
 
@@ -103,7 +107,7 @@ namespace NMR {
 		_Ret_maybenull_ CMeshInformationHandler * getMeshInformationHandler();
 		_Ret_notnull_ CMeshInformationHandler * createMeshInformationHandler();
 		void clearMeshInformationHandler();
-
+		void patchMeshInformationResources(_In_ std::map<PackageResourceID, PackageResourceID> &oldToNewMapping);
 		void extendOutbox(_Out_ NOUTBOX3& vOutBox, _In_ const NMATRIX3 mAccumulatedMatrix);
 	};
 

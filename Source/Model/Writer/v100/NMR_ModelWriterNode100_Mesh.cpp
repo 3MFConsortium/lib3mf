@@ -142,10 +142,8 @@ namespace NMR {
 
 		CMeshInformationHandler * pMeshInformationHandler = pMesh->getMeshInformationHandler();
 		if (pMeshInformationHandler) {
-			CMeshInformation * pInformation;
-
 			// Get generic property handler
-			pInformation = pMeshInformationHandler->getInformationByType(0, emiProperties);
+			CMeshInformation *pInformation = pMeshInformationHandler->getInformationByType(0, emiProperties);
 			if (pInformation) {
 				pProperties = dynamic_cast<CMeshInformation_Properties *> (pInformation);
 				NMR::MESHINFORMATION_PROPERTIES * pDefaultData = (NMR::MESHINFORMATION_PROPERTIES*)pProperties->getDefaultData();
@@ -238,8 +236,7 @@ namespace NMR {
 			if (nBeamCount > 0) {
 				// write beamlattice
 				writeStartElementWithPrefix(XML_3MF_ELEMENT_BEAMLATTICE, XML_3MF_NAMESPACEPREFIX_BEAMLATTICE);
-				// TODO: find correct default BeamRadius
-				nfDouble dDefaultRadius = 1.0; //  pMesh->getDefaultBeamRadius();
+				nfDouble dDefaultRadius = pMesh->getDefaultBeamRadius();
 				writeFloatAttribute(XML_3MF_ATTRIBUTE_BEAMLATTICE_RADIUS, float(dDefaultRadius));
 				writeFloatAttribute(XML_3MF_ATTRIBUTE_BEAMLATTICE_MINLENGTH, float(pMesh->getBeamLatticeMinLength()));
 
@@ -252,8 +249,7 @@ namespace NMR {
 					writeIntAttribute(XML_3MF_ATTRIBUTE_BEAMLATTICE_REPRESENTATIONMESH, m_pModelMeshObject->getBeamLatticeAttributes()->m_nRepresentationID->getUniqueID());
 				}
 
-				// TODO: calculate default eModelBeamLatticeCapMode
-				eModelBeamLatticeCapMode eDefaultCapMode = eModelBeamLatticeCapMode::MODELBEAMLATTICECAPMODE_SPHERE; //  = pMesh->getBeamLatticeCapMode();
+				eModelBeamLatticeCapMode eDefaultCapMode = pMesh->getBeamLatticeCapMode();
 				writeConstStringAttribute(XML_3MF_ATTRIBUTE_BEAMLATTICE_CAPMODE, capModeToString(eDefaultCapMode).c_str());
 				{
 					// write beamlattice: beams

@@ -416,13 +416,18 @@ IModel * CModel::MergeToModel ()
 	// Copy relevant resources to new model
 	NMR::CModel& newModel = pOutModel->model();
 
+	NMR::UniqueResourceIDMapping oldToNewUniqueResourceIDs;
+
 	newModel.mergeModelAttachments(&model());
-	newModel.mergeTextures2D(&model());
-	newModel.mergeBaseMaterials(&model());
-	newModel.mergeColorGroups(&model());
-	newModel.mergeCompositeMaterials(&model());
-	newModel.mergeMultiPropertyGroups(&model());
+	newModel.mergeTextures2D(&model(), oldToNewUniqueResourceIDs);
+	newModel.mergeBaseMaterials(&model(), oldToNewUniqueResourceIDs);
+	newModel.mergeColorGroups(&model(), oldToNewUniqueResourceIDs);
+	newModel.mergeTexture2DGroups(&model(), oldToNewUniqueResourceIDs);
+	newModel.mergeCompositeMaterials(&model(), oldToNewUniqueResourceIDs);
+	newModel.mergeMultiPropertyGroups(&model(), oldToNewUniqueResourceIDs);
 	newModel.mergeMetaData(&model());
+
+	pMesh->patchMeshInformationResources(oldToNewUniqueResourceIDs);
 
 	newModel.setUnit(model().getUnit());
 	newModel.setLanguage(model().getLanguage());

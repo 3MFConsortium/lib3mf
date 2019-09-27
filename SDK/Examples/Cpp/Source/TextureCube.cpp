@@ -179,6 +179,9 @@ void TextureExample() {
 	meshObject->SetTriangleProperties(10, fnCreateTexture(textureGroup6, 0.0, 0.0, 1.0, 0.0, 1.0, 1.0));
 	meshObject->SetTriangleProperties(11, fnCreateTexture(textureGroup6, 1.0, 1.0, 0.0, 1.0, 0.0, 0.0));
 
+	// Object Level Property
+	meshObject->SetObjectLevelProperty(textureGroup1->GetResourceID(), 1);
+
 	// Add build item
 	model->AddBuildItem(meshObject.get(), wrapper->GetIdentityTransform());
 
