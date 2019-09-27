@@ -26,22 +26,40 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_MeshBeamLattice.cpp implements the class CMeshBeamLattice.
+NMR_VolumeData.h defines the class CVolumeData.
 
 --*/
 
-#include "Common/Mesh/NMR_BeamLattice.h" 
+#ifndef __NMR_VOLUMEDATA
+#define __NMR_VOLUMEDATA
+
+#include "Common/Math/NMR_Geometry.h"
+#include "Common/Mesh/NMR_MeshTypes.h"
+#include "Common/NMR_Types.h"
+#include "Model/Classes/NMR_ModelTypes.h"
+#include "Common/Mesh/NMR_VolumeColor.h"
+#include "Common/Mesh/NMR_VolumeProperty.h"
+#include "Common/Mesh/NMR_VolumeLevelset.h"
+#include "Common/Mesh/NMR_VolumeComposite.h"
 
 namespace NMR {
 
-	CBeamLattice::CBeamLattice(_In_ MESHNODES &nodes) : m_Nodes(nodes)
-	{ 
-		m_dMinLength = 0.0001;
-	}
+	class CVolumeData {
+	private:
+		friend class CMesh;
 
-	void CBeamLattice::clear() {
-		m_Beams.clearAllData();
-		m_pBeamSets.clear();
-	}
+		PVolumeLevelset m_pLevelset;
+		PVolumeComposite m_pComposite;
+		PVolumeColor m_pColor;
+		std::vector<PVolumeProperty> m_vctProperties;
+	public:
+		CVolumeData();
+
+		void clear();
+	};
+
+	typedef std::shared_ptr <CVolumeData> PVolumeData;
 
 }
+
+#endif // __NMR_BEAMLATTICE

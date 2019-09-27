@@ -83,6 +83,12 @@ Source/Common/MeshInformation/NMR_MeshInformation_Properties.cpp
 Source/Common/Mesh/NMR_Mesh.cpp
 Source/Common/Mesh/NMR_BeamLattice.cpp
 Source/Common/Mesh/NMR_MeshBuilder.cpp
+Source/Common/Mesh/NMR_VolumeData.cpp
+Source/Common/Mesh/NMR_VolumeBase.cpp
+Source/Common/Mesh/NMR_VolumeProperty.cpp
+Source/Common/Mesh/NMR_VolumeLevelset.cpp
+Source/Common/Mesh/NMR_VolumeColor.cpp
+Source/Common/Mesh/NMR_VolumeComposite.cpp
 Source/Common/NMR_Exception.cpp
 Source/Common/NMR_Exception_Windows.cpp
 Source/Common/NMR_StringUtils.cpp

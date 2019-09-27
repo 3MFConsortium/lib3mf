@@ -125,8 +125,9 @@ namespace NMR {
 					addBeam(pBeamNodes[0], pBeamNodes[1], pBeam->m_radius[0], pBeam->m_radius[1], pBeam->m_capMode[0], pBeam->m_capMode[1]);
 				}
 			}
-
 		}
+
+		// TODO: Merge Volumedata (if possible)
 	}
 
 	void CMesh::addToMesh(_In_opt_ CMesh * pMesh)

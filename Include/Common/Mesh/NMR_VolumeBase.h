@@ -26,22 +26,32 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_MeshBeamLattice.cpp implements the class CMeshBeamLattice.
+NMR_VolumeBase.h defines the class CVolumeBase.
 
 --*/
 
-#include "Common/Mesh/NMR_BeamLattice.h" 
+#ifndef __NMR_VOLUMEBASE
+#define __NMR_VOLUMEBASE
+
+#include "Common/NMR_Types.h"
+#include "Model/Classes/NMR_ModelTypes.h"
+#include <memory>
 
 namespace NMR {
 
-	CBeamLattice::CBeamLattice(_In_ MESHNODES &nodes) : m_Nodes(nodes)
-	{ 
-		m_dMinLength = 0.0001;
-	}
+	class CVolumeBase {
+	private:
+		friend class CMesh;
 
-	void CBeamLattice::clear() {
-		m_Beams.clearAllData();
-		m_pBeamSets.clear();
-	}
+	public:
+		CVolumeBase();
+		~CVolumeBase() = default;
+
+		virtual void clear() = 0;
+	};
+
+	typedef std::shared_ptr<CVolumeBase> PVolumeBase;
 
 }
+
+#endif // __NMR_VOLUMEBASE

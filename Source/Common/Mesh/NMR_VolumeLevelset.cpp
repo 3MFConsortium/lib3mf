@@ -26,22 +26,22 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_MeshBeamLattice.cpp implements the class CMeshBeamLattice.
+NMR_VolumeLevelset.cpp implements the class CVolumeLevelset.
 
 --*/
 
-#include "Common/Mesh/NMR_BeamLattice.h" 
+#include "Common/Mesh/NMR_VolumeLevelset.h"
 
 namespace NMR {
 
-	CBeamLattice::CBeamLattice(_In_ MESHNODES &nodes) : m_Nodes(nodes)
-	{ 
-		m_dMinLength = 0.0001;
+	CVolumeLevelset::CVolumeLevelset()
+	{
+
 	}
 
-	void CBeamLattice::clear() {
-		m_Beams.clearAllData();
-		m_pBeamSets.clear();
+	void CVolumeLevelset::clear()
+	{
+
 	}
 
 }

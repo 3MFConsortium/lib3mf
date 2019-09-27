@@ -26,22 +26,22 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_MeshBeamLattice.cpp implements the class CMeshBeamLattice.
+NMR_VolumeColor.cpp implements the class CVolumeColor.
 
 --*/
 
-#include "Common/Mesh/NMR_BeamLattice.h" 
+#include "Common/Mesh/NMR_VolumeColor.h" 
 
 namespace NMR {
 
-	CBeamLattice::CBeamLattice(_In_ MESHNODES &nodes) : m_Nodes(nodes)
-	{ 
-		m_dMinLength = 0.0001;
+	CVolumeColor::CVolumeColor()
+	{
+
 	}
 
-	void CBeamLattice::clear() {
-		m_Beams.clearAllData();
-		m_pBeamSets.clear();
+	void CVolumeColor::clear()
+	{
+
 	}
 
 }
