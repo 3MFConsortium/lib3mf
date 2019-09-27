@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<component xmlns="http://schemas.autodesk.com/netfabb/automaticcomponenttoolkit/2018" libraryname="the 3MF Library" namespace="Lib3MF" copyright="3MF Consortium (Original Author)" year="2019" basename="lib3mf" version="2.0.0">
+<component xmlns="http://schemas.autodesk.com/netfabb/automaticcomponenttoolkit/2018" libraryname="the 3MF Library" namespace="Lib3MF" copyright="3MF Consortium (Original Author)" year="2019" basename="lib3mf" version="2.0.0-volumetric">
 
 	<license>
 		<line value="All rights reserved."/>
