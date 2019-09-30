@@ -1103,11 +1103,11 @@ Model error codes (0x8XXX)
 // Version 093 of the core-specification is not fully supported
 #define NMR_ERROR_VERSION093_NOT_SUPPORTED 0x80E7
 
-// Invalid Image3D Size
-#define NMR_ERROR_INVALIDIMAGE3DSIZE 0x80E8
-
 // Attachment Model Mismatch
-#define NMR_ERROR_ATTACHMENTMODELMISMATCH 0x80E9
+#define NMR_ERROR_ATTACHMENTMODELMISMATCH 0x80E8
+
+// Invalid Image3D Size
+#define NMR_ERROR_INVALIDIMAGE3DSIZE 0x80E9
 
 // Too many channel selectors
 #define NMR_ERROR_TOOMANYCHANNELSELECTORS 0x80EA
