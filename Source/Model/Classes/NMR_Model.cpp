@@ -842,8 +842,15 @@ namespace NMR {
 			if (pTextureResource == nullptr)
 				throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-			PModelTexture2DResource pNewTextureResource = CModelTexture2DResource::make(generateResourceID(), this, pTextureResource->getAttachment());
-			pNewTextureResource->copyFrom(pTextureResource);
+			PModelAttachment pSourceAttachment = pTextureResource->getAttachment();
+			PModelAttachment pNewAttachment;
+			if (pSourceAttachment.get()) {
+				pNewAttachment = findModelAttachment(pSourceAttachment->getPathURI());
+				if (pNewAttachment.get() == nullptr)
+					throw CNMRException(NMR_ERROR_ATTACHMENTNOTFOUND);
+			}
+			PModelTexture2DResource pNewTextureResource = CModelTexture2DResource::make(generateResourceID(), this, pNewAttachment);
+			pNewTextureResource->copyFrom(pTextureResource, false);
 
 			addResource(pNewTextureResource);
 			oldToNewMapping[pTextureResource->getResourceID()->getUniqueID()] = pNewTextureResource->getResourceID()->getUniqueID();

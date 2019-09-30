@@ -101,7 +101,7 @@ namespace NMR {
 		void setFilter(_In_ eModelTextureFilter eFilter);
 		
 		// copy all parameters from source
-		void copyFrom(_In_ CModelTexture2DResource * pSourceTexture);
+		void copyFrom(_In_ CModelTexture2DResource * pSourceTexture, _In_ nfBool bCopyAttachment);
 
 		static eModelTextureTileStyle tileStyleFromString(_In_ std::string sValue);
 		static std::string tileStyleToString(_In_ eModelTextureTileStyle eTileStyle);
