@@ -238,7 +238,6 @@ namespace NMR {
 
 	std::string CModelVolumetricLayer::getTransformString()
 	{
-
 		return fnMATRIX3_toString(m_Transform);
 	}
 

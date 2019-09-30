@@ -491,7 +491,7 @@ namespace NMR {
 				}
 
 				CModelWriterNode100_Mesh ModelWriter_Mesh(pMeshObject, m_pXMLWriter, m_pProgressMonitor,
-					m_pPropertyIndexMapping, m_nDecimalPrecision, m_bWriteMaterialExtension, m_bWriteBeamLatticeExtension);
+					m_pPropertyIndexMapping, m_nDecimalPrecision, m_bWriteMaterialExtension, m_bWriteBeamLatticeExtension, m_bWriteVolumetricExtension);
 
 				ModelWriter_Mesh.writeToXML();
 			}
@@ -797,7 +797,7 @@ namespace NMR {
 			for (nfUint32 nLayerIdx = 0; nLayerIdx < nLayerCount; nLayerIdx++) {
 				auto pLayer = pStackResource->getLayer(nLayerIdx);
 				writeStartElementWithPrefix(XML_3MF_ELEMENT_VOLUMETRICLAYER, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
-				writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMETRICLAYER_TRANSFORM, pLayer->getTransformString ());
+				writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMETRICLAYER_TRANSFORM, pLayer->getTransformString());
 				if (pLayer->getBlendMethod() == MODELBLENDMETHOD_MIX) {
 					writeFloatAttribute(XML_3MF_ATTRIBUTE_VOLUMETRICLAYER_SRCALPHA, (nfFloat)pLayer->getSourceAlpha());
 					writeFloatAttribute(XML_3MF_ATTRIBUTE_VOLUMETRICLAYER_DSTALPHA, (nfFloat)pLayer->getDstAlpha());

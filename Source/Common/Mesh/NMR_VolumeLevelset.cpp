@@ -62,6 +62,9 @@ namespace NMR {
 
 	void CVolumeLevelset::SetChannel(std::string sChannelName)
 	{
+		if (!GetVolumetricStack()->hasDstChannel(sChannelName)) {
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+		}
 		m_sChannelName = sChannelName;
 	}
 

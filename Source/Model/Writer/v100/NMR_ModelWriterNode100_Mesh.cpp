@@ -51,7 +51,8 @@ This is the class for exporting the 3mf mesh node.
 namespace NMR {
 
 	CModelWriterNode100_Mesh::CModelWriterNode100_Mesh(_In_ CModelMeshObject * pModelMeshObject, _In_ CXmlWriter * pXMLWriter, _In_ PProgressMonitor pProgressMonitor,
-		_In_ PMeshInformation_PropertyIndexMapping pPropertyIndexMapping, _In_ int nPosAfterDecPoint, _In_ nfBool bWriteMaterialExtension, _In_ nfBool bWriteBeamLatticeExtension)
+		_In_ PMeshInformation_PropertyIndexMapping pPropertyIndexMapping, _In_ int nPosAfterDecPoint, _In_ nfBool bWriteMaterialExtension, _In_ nfBool bWriteBeamLatticeExtension,
+		_In_ nfBool bWriteVolumetricExtension)
 		:CModelWriterNode(pModelMeshObject->getModel(), pXMLWriter, pProgressMonitor), m_nPosAfterDecPoint(nPosAfterDecPoint), m_nPutDoubleFactor((int)(pow(10, CModelWriterNode100_Mesh::m_nPosAfterDecPoint)))
 	{
 		__NMRASSERT(pModelMeshObject != nullptr);
@@ -60,6 +61,7 @@ namespace NMR {
 
 		m_bWriteMaterialExtension = bWriteMaterialExtension;
 		m_bWriteBeamLatticeExtension = bWriteBeamLatticeExtension;
+		m_bWriteVolumetricExtension = bWriteVolumetricExtension;
 
 		m_pModelMeshObject = pModelMeshObject;
 		m_pPropertyIndexMapping = pPropertyIndexMapping;
@@ -285,6 +287,28 @@ namespace NMR {
 						writeFullEndElement();
 					}
 				}
+				writeFullEndElement();
+			}
+		}
+
+		if (m_bWriteVolumetricExtension)
+		{
+			// TODO: different logic
+			if (m_pModelMeshObject->getVolumeData()->HasLevelset()) {
+				writeStartElementWithPrefix(XML_3MF_ELEMENT_VOLUMEDATA, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
+
+				if (m_pModelMeshObject->getVolumeData()->HasLevelset()) {
+					writeStartElementWithPrefix(XML_3MF_ELEMENT_VOLUMETRIC_LEVELSET, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
+					PVolumeLevelset pLevelset = m_pModelMeshObject->getVolumeData()->GetLevelset();
+					writeIntAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_VOLUMETRICSTACKID, pLevelset->GetVolumetricStack()->getResourceID()->getUniqueID());
+					writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_CHANNEL, pLevelset->GetChannel());
+					writeFloatAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_SOLIDTHRESHOLD, float(pLevelset->GetSolidThreshold()));
+					if (!fnMATRIX3_isIdentity(pLevelset->GetTransform())) {
+						writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_TRANSFORM, fnMATRIX3_toString(pLevelset->GetTransform()));
+					}
+					writeEndElement();
+				}
+
 				writeFullEndElement();
 			}
 		}

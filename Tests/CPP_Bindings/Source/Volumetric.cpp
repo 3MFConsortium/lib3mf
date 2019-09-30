@@ -84,10 +84,7 @@ namespace Lib3MF
 		auto pVolumetricStack = model->AddVolumetricStack();
 		pVolumetricStack->AddDestinationChannel("channel", 0.0);
 		auto pLayer = pVolumetricStack->AddLayer(wrapper->GetIdentityTransform(), Lib3MF::eBlendMethod::NoBlendMethod);
-
 		auto pChannelSelector = pLayer->AddChannelSelector(pImage3D.get(), "R", "channel");
-
-
 
 		auto meshes = model->GetMeshObjects();
 		ASSERT_EQ(meshes->MoveNext(), true);
@@ -109,7 +106,10 @@ namespace Lib3MF
 		levelset->SetSolidThreshold(dVal);
 		ASSERT_EQ(dVal, levelset->GetSolidThreshold());
 
-		std::string sChannelName("TheChannel");
+		std::string sChannelName("DoesNtWork");
+		ASSERT_SPECIFIC_THROW(levelset->SetChannel(sChannelName), ELib3MFException);
+		double dBackground = 0.0;
+		pVolumetricStack->GetDestinationChannel(0, sChannelName, dBackground);
 		levelset->SetChannel(sChannelName);
 		ASSERT_TRUE(levelset->GetChannel() == sChannelName);
 

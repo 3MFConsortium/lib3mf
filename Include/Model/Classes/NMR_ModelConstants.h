@@ -244,6 +244,17 @@ These are given by the 3MF Standard
 #define XML_3MF_ATTRIBUTE_CHANNELSELECTOR_TILESTYLEV    "tilestylev"
 #define XML_3MF_ATTRIBUTE_CHANNELSELECTOR_TILESTYLEW    "tilestylew"
 
+#define XML_3MF_ELEMENT_VOLUMEDATA                      "volumedata"
+#define XML_3MF_ELEMENT_VOLUMETRIC_LEVELSET             "levelset"
+#define XML_3MF_ELEMENT_VOLUMETRIC_COMPOSITE            "composite"
+#define XML_3MF_ELEMENT_VOLUMETRIC_COLOR                "color"
+#define XML_3MF_ELEMENT_VOLUMETRIC_PROPERTY             "property"
+
+#define XML_3MF_ATTRIBUTE_VOLUMEDATA_VOLUMETRICSTACKID  "volumetricstackid"
+#define XML_3MF_ATTRIBUTE_VOLUMEDATA_TRANSFORM          "transform"
+#define XML_3MF_ATTRIBUTE_VOLUMEDATA_CHANNEL            "channel"
+#define XML_3MF_ATTRIBUTE_VOLUMEDATA_SOLIDTHRESHOLD     "solidthreshold"
+
 // Multiproperties
 #define XML_3MF_ELEMENT_MULTIPROPERTIES             "multiproperties"
 #define XML_3MF_ATTRIBUTE_MULTIPROPERTIES_ID        "id"
