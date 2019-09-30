@@ -1103,6 +1103,8 @@ Model error codes (0x8XXX)
 // Version 093 of the core-specification is not fully supported
 #define NMR_ERROR_VERSION093_NOT_SUPPORTED 0x80E7
 
+// Attachment Model Mismatch
+#define NMR_ERROR_ATTACHMENTMODELMISMATCH 0x80E8
 
 /*-------------------------------------------------------------------
 XML Parser Error Constants (0x9XXX)
