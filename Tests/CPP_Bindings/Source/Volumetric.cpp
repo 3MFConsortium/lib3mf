@@ -38,6 +38,7 @@ namespace Lib3MF
 	class Volumetric : public ::testing::Test {
 	protected:
 		virtual void SetUp() {
+			ASSERT_TRUE(CreateDir(OutFolder.c_str())) << L"Could not create folder.";
 			model = wrapper->CreateModel();
 			auto reader = model->QueryReader("3mf");
 			reader->ReadFromFile(InFolder + "Pyramid.3mf");
@@ -78,7 +79,7 @@ namespace Lib3MF
 			}
 			sNumber = sNumber + std::to_string(k);
 
-			pImage3D->CreateSheetFromFile(i, "/volume/layer" + sNumber + ".png", sTestFilesPath + "/Volumetric/img" +sNumber + ".png");
+			pImage3D->CreateSheetFromFile(i, "/volume/layer" + sNumber + ".png", InFolder+"img" +sNumber + ".png");
 		}
 		auto pVolumetricStack = model->AddVolumetricStack();
 		pVolumetricStack->AddDestinationChannel("channel", 0.0);
