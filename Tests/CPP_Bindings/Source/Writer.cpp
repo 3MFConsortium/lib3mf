@@ -158,33 +158,4 @@ namespace Lib3MF
 
 		ASSERT_TRUE(std::equal(buffer.begin(), buffer.end(), callbackBuffer.vec.begin()));
 	}
-
-
-	TEST_F(Writer, VolumetricWriter)
-	{
-		auto pImage3D = model->AddImage3D(821, 819, 11);
-		for (int i = 0; i < 11; i++) {
-			std::string sNumber = "_";
-			int k = i + 1;
-			if (k < 10) {
-				sNumber = sNumber + "0";
-			}
-			sNumber = sNumber + std::to_string(k);
-
-			pImage3D->CreateSheetFromFile(i, "/volume/layer" + sNumber + ".png", sTestFilesPath + "/Volumetric/img" +sNumber + ".png");
-		}
-		auto pVolumetricStack = model->AddVolumetricStack();
-		pVolumetricStack->AddDestinationChannel("channel", 0.0);
-		auto pLayer = pVolumetricStack->AddLayer(wrapper->GetIdentityTransform(), Lib3MF::eBlendMethod::NoBlendMethod);
-
-		auto pChannelSelector = pLayer->AddChannelSelector(pImage3D.get(), "R", "channel");
-
-		//auto meshes = model->GetMeshObjects();
-		//meshes->MoveNext();
-		//auto theMesh = meshes->GetCurrentMeshObject();
-
-		Writer::writer3MF->WriteToFile(Writer::OutFolder + "ColoredVolume.3mf");
-
-	}
-
 }

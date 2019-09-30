@@ -25,12 +25,13 @@ set(SRCS_UNITTEST
 	./Source/Reader.cpp
 	./Source/Slice.cpp
 	./Source/SliceStack.cpp
-	./Source/Utilities.cpp
-	./Source/Writer.cpp
 	./Source/TextureProperty.cpp
 	./Source/TextureResources.cpp
+	./Source/Utilities.cpp
 	./Source/v093.cpp
+	./Source/Volumetric.cpp
 	./Source/Wrapper.cpp
+	./Source/Writer.cpp
 )
 
 set(CMAKE_CURRENT_BINARY_DIR ${CMAKE_BINARY_DIR})
