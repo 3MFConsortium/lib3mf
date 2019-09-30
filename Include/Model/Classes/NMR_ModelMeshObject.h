@@ -35,7 +35,8 @@ mesh object.
 #ifndef __NMR_MODELMESHOBJECT
 #define __NMR_MODELMESHOBJECT
 
-#include "Common/Mesh/NMR_Mesh.h" 
+#include "Common/Mesh/NMR_Mesh.h"
+#include "Model/Classes/NMR_ModelVolumeData.h"
 #include "Model/Classes/NMR_ModelObject.h"
 #include "Model/Classes/NMR_ModelMeshBeamLatticeAttributes.h"
 
@@ -50,6 +51,8 @@ namespace NMR {
 	class CModelMeshObject : public CModelObject {
 	private:
 		PMesh m_pMesh; 
+
+		PModelVolumeData m_pVolumeData;
 		PModelMeshBeamLatticeAttributes m_pBeamLatticeAttributes;
 	public:
 		CModelMeshObject() = delete;
@@ -80,6 +83,8 @@ namespace NMR {
 
 		void extendOutbox(_Out_ NOUTBOX3& vOutBox, _In_ const NMATRIX3 mAccumulatedMatrix) override;
 
+		_Ret_notnull_ PModelVolumeData getVolumeData();
+		void setVolumeData(_In_ PModelVolumeData pVolumeData);
 	};
 
 	typedef std::shared_ptr <CModelMeshObject> PModelMeshObject;

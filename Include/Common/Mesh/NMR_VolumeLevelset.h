@@ -36,16 +36,23 @@ NMR_VolumeLevelset.h defines the class CVolumeLevelset.
 #include "Common/NMR_Types.h"
 #include "Model/Classes/NMR_ModelTypes.h"
 #include "Common/Mesh/NMR_VolumeBase.h"
+#include <string>
 
 namespace NMR {
 
 	class CVolumeLevelset : public CVolumeBase {
 	private:
-		friend class CMesh;
-
+		nfDouble m_dSolidThreshold;
+		std::string m_sChannelName;
 	public:
-		CVolumeLevelset();
+		CVolumeLevelset(PModelVolumetricStack pVolumetricStack);
 
+		nfDouble GetSolidThreshold();
+		void SetSolidThreshold(nfDouble dSolidThreshold);
+
+		std::string GetChannel();
+		void SetChannel(std::string sChannelName);
+		
 		void clear();
 	};
 

@@ -43,14 +43,13 @@ using namespace Lib3MF::Impl;
  Class definition of CVolumetricLayer 
 **************************************************************************************************************************/
 
-CVolumetricLayer::CVolumetricLayer(NMR::PModelVolumetricLayer pLayer, NMR::PModel pModel)
-	: m_pLayer (pLayer), m_pModel (pModel)
+CVolumetricLayer::CVolumetricLayer(NMR::PModelVolumetricLayer pLayer, NMR::CModel *pModel)
+	: m_pLayer(pLayer), m_pModel(pModel)
 {
 	if (pLayer.get() == nullptr)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
-	if (pModel.get() == nullptr)
+	if (pModel == nullptr)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
-
 }
 
 

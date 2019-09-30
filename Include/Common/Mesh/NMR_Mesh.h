@@ -46,7 +46,6 @@ You can only add nodes and faces to mesh. You cannot remove the existing structu
 #include "Common/MeshInformation/NMR_MeshInformationHandler.h"
 #include "Common/NMR_Types.h"
 #include "Common/Mesh/NMR_BeamLattice.h"
-#include "Common/Mesh/NMR_VolumeData.h"
 
 #include <map>
 
@@ -57,10 +56,8 @@ namespace NMR {
 		MESHNODES m_Nodes;
 		MESHFACES m_Faces;
 		CBeamLattice m_BeamLattice;
-		CVolumeData m_VolumeData;
 
 		PMeshInformationHandler m_pMeshInformationHandler;
-
 	public:
 		CMesh();
 		CMesh(_In_opt_ CMesh * pMesh);

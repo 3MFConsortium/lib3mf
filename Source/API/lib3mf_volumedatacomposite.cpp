@@ -24,33 +24,54 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CVolumetricStackIterator
+Abstract: This is a stub class definition of CVolumeDataComposite
 
 */
 
-#include "lib3mf_volumetricstackiterator.hpp"
+#include "lib3mf_volumedatacomposite.hpp"
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
-#include "lib3mf_volumetricstack.hpp"
 
 
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CVolumetricStackIterator 
+ Class definition of CVolumeDataComposite 
 **************************************************************************************************************************/
 
-
-CVolumetricStackIterator::CVolumetricStackIterator(NMR::PModel pModel)
-	: CResourceIterator (), m_pModel(pModel)
+IBaseMaterialGroup * CVolumeDataComposite::GetBaseMaterialGroup()
 {
-	if (pModel.get() == nullptr)
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-IVolumetricStack * CVolumetricStackIterator::GetCurrentVolumetricStack()
+void CVolumeDataComposite::SetBaseMaterialGroup(IBaseMaterialGroup* pBaseMaterialGroupInstance)
 {
-	return new CVolumetricStack(std::dynamic_pointer_cast<NMR::CModelVolumetricStack>(GetCurrentResource()), m_pModel.get());
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
+
+Lib3MF_uint32 CVolumeDataComposite::GetMaterialMappingCount()
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
+
+void CVolumeDataComposite::GetMaterialMapping(const Lib3MF_uint32 nIndex, Lib3MF_uint32 & nPropertyID, std::string & sChannelName)
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
+
+void CVolumeDataComposite::SetMaterialMapping(const Lib3MF_uint32 nIndex, Lib3MF_uint32 & nPropertyID, std::string & sChannelName)
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
+
+void CVolumeDataComposite::AddMaterialMapping(const Lib3MF_uint32 nPropertyID, const std::string & sChannelName)
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
+
+void CVolumeDataComposite::RemoveMaterialMapping(const Lib3MF_uint32 nIndex)
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 

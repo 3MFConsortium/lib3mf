@@ -24,33 +24,56 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CVolumetricStackIterator
+Abstract: This is a stub class definition of CVolumeDataLevelset
 
 */
 
-#include "lib3mf_volumetricstackiterator.hpp"
+#include "lib3mf_volumedatalevelset.hpp"
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
-#include "lib3mf_volumetricstack.hpp"
 
 
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CVolumetricStackIterator 
+ Class definition of CVolumeDataLevelset 
 **************************************************************************************************************************/
 
-
-CVolumetricStackIterator::CVolumetricStackIterator(NMR::PModel pModel)
-	: CResourceIterator (), m_pModel(pModel)
+CVolumeDataLevelset::CVolumeDataLevelset(NMR::PVolumeLevelset pVolumeLevelset, NMR::CModel* pModel)
+	: CVolumeDataItem(pVolumeLevelset, pModel)
 {
-	if (pModel.get() == nullptr)
+	if (pVolumeLevelset == nullptr)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
 }
 
-IVolumetricStack * CVolumetricStackIterator::GetCurrentVolumetricStack()
+NMR::CVolumeLevelset* CVolumeDataLevelset::VolumeLevelset()
 {
-	return new CVolumetricStack(std::dynamic_pointer_cast<NMR::CModelVolumetricStack>(GetCurrentResource()), m_pModel.get());
+	auto pLevelset = std::dynamic_pointer_cast<NMR::CVolumeLevelset>(m_pVolumeBase);
+	if (!pLevelset)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+
+	return pLevelset.get();
+}
+
+
+Lib3MF_double CVolumeDataLevelset::GetSolidThreshold()
+{
+	return VolumeLevelset()->GetSolidThreshold();
+}
+
+void CVolumeDataLevelset::SetSolidThreshold(const Lib3MF_double dTheSolidThreshold)
+{
+	VolumeLevelset()->SetSolidThreshold(dTheSolidThreshold);
+}
+
+void CVolumeDataLevelset::SetChannel(const std::string & sChannelName)
+{
+	VolumeLevelset()->SetChannel(sChannelName);
+}
+
+std::string CVolumeDataLevelset::GetChannel()
+{
+	return VolumeLevelset()->GetChannel();
 }
 

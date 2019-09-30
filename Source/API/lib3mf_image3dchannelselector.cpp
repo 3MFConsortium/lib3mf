@@ -43,10 +43,10 @@ using namespace Lib3MF::Impl;
  Class definition of CImage3DChannelSelector 
 **************************************************************************************************************************/
 
-CImage3DChannelSelector::CImage3DChannelSelector(NMR::PModel pModel, NMR::PModelImage3DChannelSelector pSelector)
-	:  m_pSelector (pSelector), m_pModel (pModel)
+CImage3DChannelSelector::CImage3DChannelSelector(NMR::CModel* pModel, NMR::PModelImage3DChannelSelector pSelector)
+	:  m_pSelector (pSelector), m_pModel(pModel)
 {
-	if (pModel.get () == nullptr)
+	if (pModel == nullptr)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
 	if (pSelector.get() == nullptr)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
@@ -56,7 +56,7 @@ CImage3DChannelSelector::CImage3DChannelSelector(NMR::PModel pModel, NMR::PModel
 
 IImage3D * CImage3DChannelSelector::GetImage()
 {
-	auto pImage3D = m_pModel->findImage3D (m_pSelector->getImage3DID());
+	auto pImage3D = m_pModel->findImage3D(m_pSelector->getImage3DID());
 	if (pImage3D.get() == nullptr)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_RESOURCENOTFOUND);
 

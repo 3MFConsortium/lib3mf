@@ -35,17 +35,26 @@ NMR_VolumeBase.h defines the class CVolumeBase.
 
 #include "Common/NMR_Types.h"
 #include "Model/Classes/NMR_ModelTypes.h"
+#include "Model/Classes/NMR_ModelVolumetricStack.h"
+#include "Common/Math/NMR_Matrix.h" 
 #include <memory>
 
 namespace NMR {
 
 	class CVolumeBase {
 	private:
-		friend class CMesh;
+		PModelVolumetricStack m_pVolumetricStack;
+		NMATRIX3 m_mTransform;
 
 	public:
-		CVolumeBase();
+		CVolumeBase(PModelVolumetricStack pVolumetricStack);
 		~CVolumeBase() = default;
+
+		PModelVolumetricStack GetVolumetricStack();
+		void SetVolumetricStack(PModelVolumetricStack pVolumetricStack);
+
+		NMATRIX3 GetTransform();
+		void SetTransform(NMATRIX3 sTransform);
 
 		virtual void clear() = 0;
 	};

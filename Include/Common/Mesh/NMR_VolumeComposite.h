@@ -41,10 +41,9 @@ namespace NMR {
 
 	class CVolumeComposite : public CVolumeBase {
 	private:
-		friend class CMesh;
 
 	public:
-		CVolumeComposite();
+		CVolumeComposite(PModelVolumetricStack pVolumetricStack);
 
 		void clear();
 	};

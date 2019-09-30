@@ -173,6 +173,12 @@
 		<option name="Mask" value="3"/>
 	</enum>
 
+	<enum name="ColorChannel">
+		<option name="Red" value="0"/>
+		<option name="Green" value="1"/>
+		<option name="Blue" value="2"/>
+	</enum>
+	
 	<struct name="Triangle">
 		<member name="Indices" type="uint32" rows="3"/>
 	</struct>
@@ -622,6 +628,9 @@
 		<method name="BeamLattice" description="Retrieves the BeamLattice within this MeshObject.">
 			<param name="TheBeamLattice" type="handle" class="BeamLattice" pass="return" description="the BeamLattice within this MeshObject"/>
 		</method>
+		<method name="VolumeData" description="Retrieves the VolumeData of this MeshObject.">
+			<param name="TheVolumeData" type="handle" class="VolumeData" pass="return" description="the VolumeData of this MeshObject"/>
+		</method>
 	</class>
 
 	<class name="BeamLattice">
@@ -679,6 +688,135 @@
 		</method>
 	</class>
 
+	<class name="VolumeDataItem">
+		<method name="GetVolumetricStack" description="Returns the VolumetricStack used within this volume data item">
+			<param name="TheVolumetricStack" type="class" class="VolumetricStack" pass="return" description="VolumetricStack used within this volume data item"/>
+		</method>
+		<method name="SetVolumetricStack" description="Sets the VolumetricStack to use within this volume data item.">
+			<param name="TheVolumetricStack" type="class" class="VolumetricStack" pass="in" description="VolumetricStack to use within this volume data item"/>
+		</method>
+		<method name="GetTransform" description="Returns the transformation matrix of the volume data item.">
+			<param name="Transform" type="struct" class="Transform" pass="return" description="filled with the volume data item transformation matrix"/>
+		</method>
+		<method name="SetTransform" description="Sets the transformation matrix of the volume data item.">
+			<param name="Transform" type="struct" class="Transform" pass="in" description="new transformation matrix"/>
+		</method>
+	</class>
+	
+	<class name="VolumeDataLevelset" parent="VolumeDataItem">
+		<method name="GetSolidThreshold" description="Returns the solidthreshold for the levelset function encoded in this VolumeDataLevelset">
+			<param name="TheSolidThreshold" type="double" pass="return" description="The solidthreshold for the levelset function encoded in this VolumeDataLevelset"/>
+		</method>
+		<method name="SetSolidThreshold" description="Sets the solidthreshold for the levelset function encoded in this VolumeDataLevelset">
+			<param name="TheSolidThreshold" type="double" pass="in" description="The solidthreshold for the levelset function encoded in this VolumeDataLevelset"/>
+		</method>
+		<method name="SetChannel" description="Sets the name of the channel that holds the levelset function.">
+			<param name="ChannelName" type="string" pass="in" description="The name of the channel that holds the levelset function" />
+		</method>
+		<method name="GetChannel" description="Returns the name of the channel that holds the levelset function.">
+			<param name="ChannelName" type="string" pass="return" description="The name of the channel that holds the levelset function" />
+		</method>
+	</class>
+	
+	<class name="VolumeDataColor" parent="VolumeDataItem">
+		<method name="SetChannel" description="Sets the name of the channel that holds the levelset function.">
+			<param name="TheColorChannel" type="enum" class="ColorChannel" pass="in" description="The color in question" />
+			<param name="ChannelName" type="string" pass="in" description="The new name of the channel that holds the scalar function of this ColorChannel" />
+		</method>
+		<method name="GetChannel" description="Returns the name of the channel that holds the levelset function.">
+			<param name="TheColorChannel" type="enum" class="ColorChannel" pass="in" description="The color in question" />
+			<param name="ChannelName" type="string" pass="return" description="The name of the channel that holds the scalar function of this ColorChannel" />
+		</method>
+	</class>
+	
+	<class name="VolumeDataComposite" parent="VolumeDataItem">
+		<method name="GetBaseMaterialGroup" description="Returns the BaseMaterialGroup used within this volume data item">
+			<param name="BaseMaterialGroupInstance" type="handle" class="BaseMaterialGroup" pass="return" description="The BaseMaterialGroup instance of this VolumeDataComposite"/>
+		</method>
+		<method name="SetBaseMaterialGroup" description="Sets the BaseMaterialGroup to use within this volume data item.">
+			<param name="BaseMaterialGroupInstance" type="handle" class="BaseMaterialGroup" pass="in" description="The new BaseMaterialGroup instance of this VolumeDataComposite"/>
+		</method>
+		<method name="GetMaterialMappingCount" description="Returns the number of material mappings of this VolumeDataComposite">
+			<param name="Count" type="uint32" pass="return" description="the number of material mappings."/>
+		</method>
+		<method name="GetMaterialMapping" description="Returns PropertyID and ChannelName of the MaterialMapping with given index">
+			<param name="Index" type="uint32" pass="in" description="Index of the MaterialMapping in question."/>
+			<param name="PropertyID" type="uint32" class="uint32" pass="out" description="PropertyID of the material."/>
+			<param name="ChannelName" type="string" pass="out" description="The name of the channel that holds the intensity function of this Material within the Composite" />
+		</method>
+		<method name="SetMaterialMapping" description="Sets PropertyID and ChannelName of the MaterialMapping with given index">
+			<param name="Index" type="uint32" pass="in" description="Index of the MaterialMapping in question."/>
+			<param name="PropertyID" type="uint32" class="uint32" pass="out" description="New PropertyID of the material."/>
+			<param name="ChannelName" type="string" pass="out" description="The new name of the channel that holds the intensity function of this Material within the Composite" />
+		</method>
+		<method name="AddMaterialMapping" description="Returns the levelset data">
+			<param name="PropertyID" type="uint32" class="uint32" pass="in" description="PropertyID of the new MaterialMapping"/>
+			<param name="ChannelName" type="string" pass="in" description="The name of the channel that holds the intensity function of the new Material within the Composite" />
+		</method>
+		<method name="RemoveMaterialMapping" description="Removes the MaterialMapping with given index">
+			<param name="Index" type="uint32" pass="in" description="The index of the MaterialMapping to be removed."/>
+		</method>
+	</class>
+	
+	<class name="VolumeDataProperty" parent="VolumeDataItem">
+		<method name="SetChannel" description="Sets the channel name to be used for this property">
+			<param name="ChannelName" type="string" pass="in" description="The mew channel name to be used for this property." />
+		</method>
+		<method name="GetChannel" description="Gets the channel name to be used for this property.">
+			<param name="ChannelName" type="string" pass="return" description="The channel name to be used for this property." />
+		</method>
+		<method name="SetName" description="Sets the qualified name of this property.">
+			<param name="PropertyName" type="string" pass="in" description="The new qualified name of this property" />
+		</method>
+		<method name="GetName" description="Gets the qualified name of this property.">
+			<param name="PropertyName" type="string" pass="return" description="The qualified name of this property." />
+		</method>
+		<method name="SetIsRequired" description="Sets whether this property is required to process this 3MF document instance.">
+			<param name="IsRequired" type="bool" pass="in" description="New value for whether this property is required to process this 3MF document instance." />
+		</method>
+		<method name="IsRequired" description="Returns whether this property is required to process this 3MF document instance.">
+			<param name="IsRequired" type="bool" pass="return" description="Is this property required to process this 3MF document instance?" />
+		</method>
+	</class>
+	
+	<class name="VolumeData">
+		<method name="GetLevelset" description="Returns the VolumeDataLevelset of this VolumeData instance">
+			<param name="TheLevelsetData" type="optionalclass" class="VolumeDataLevelset" pass="return" description="filled with the VolumeDataLevelset of this VolumeData instance."/>
+		</method>
+		<method name="CreateNewLevelset" description="Creates a new VolumeDataLevelset for this VolumeData instance">
+			<param name="TheVolumetricStack" type="class" class="VolumetricStack" pass="in" description="The VolumetricStack for the new VolumeDataLevelset."/>
+			<param name="TheLevelsetData" type="class" class="VolumeDataLevelset" pass="return" description="The new VolumeDataLevelset of this VolumeData instance."/>
+		</method>
+		<method name="GetComposite" description="Returns the VolumeDataComposite of this VolumeData instance">
+			<param name="TheCompositeData" type="optionalclass" class="VolumeDataComposite" pass="return" description="filled with the VolumeDataComposite of this VolumeData instance."/>
+		</method>
+		<method name="CreateNewComposite" description="Creates a new VolumeDataComposite for this VolumeData instance">
+			<param name="TheVolumetricStack" type="class" class="VolumetricStack" pass="in" description="The VolumetricStack for the new VolumeDataComposite."/>
+			<param name="TheCompositeData" type="class" class="VolumeDataComposite" pass="return" description="The new VolumeDataComposite of this VolumeData instance."/>
+		</method>
+		<method name="GetColor" description="Returns the VolumeDataColor of this VolumeData instance">
+			<param name="TheColorData" type="optionalclass" class="VolumeDataColor" pass="return" description="filled with the VolumeDataColor of this VolumeData instance."/>
+		</method>
+		<method name="CreateNewColor" description="Creates a new VolumeDataColor for this VolumeData instance">
+			<param name="TheVolumetricStack" type="class" class="VolumetricStack" pass="in" description="The VolumetricStack for the new VolumeDataComposite."/>
+			<param name="TheColorData" type="class" class="VolumeDataColor" pass="return" description="The new VolumeDataColor of this VolumeData instance."/>
+		</method>
+		<method name="GetPropertyCount" description="Returns the number of VolumeDataProperty">
+			<param name="Count" type="uint32" pass="return" description="the number of VolumeDataProperty-elements within this VolumdeData"/>
+		</method>
+		<method name="GetProperty" description="Returns the VolumeDataProperty at a given Index">
+			<param name="Index" type="uint32" pass="in" description="the index of the VolumeDataProperty to be returned."/>
+			<param name="ThePropertyData" type="class" class="VolumeDataProperty" pass="return" description="the VolumeDataProperty at the given index."/>
+		</method>
+		<method name="AddProperty" description="Adds a new VolumeDataProperty">
+			<param name="TheVolumetricStack" type="class" class="VolumetricStack" pass="in" description="The VolumetricStack for the new VolumeDataProperty."/>
+			<param name="ThePropertyData" type="class" class="VolumeDataProperty" pass="return" description="the new VolumeDataProperty."/>
+		</method>
+		<method name="RemoveProperty" description="Removes the VolumeDataProperty at a given Index">
+			<param name="Index" type="uint32" pass="in" description="the index of the VolumeDataProperty to be removed."/>
+		</method>
+	</class>
+	
 	<class name="Component">
 		<method name="GetObjectResource" description="Returns the Resource Instance of the component..">
 			<param name="ObjectResource" type="handle" class="Object" pass="return" description="filled with the Resource Instance."/>

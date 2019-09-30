@@ -43,6 +43,7 @@ namespace NMR {
 	{
 		m_pMesh = std::make_shared<CMesh>();
 		m_pBeamLatticeAttributes = std::make_shared<CModelMeshBeamLatticeAttributes>();
+		m_pVolumeData = std::make_shared<CModelVolumeData>();
 	}
 
 	CModelMeshObject::CModelMeshObject(_In_ const ModelResourceID sID, _In_ CModel * pModel, _In_ PMesh pMesh)
@@ -52,6 +53,7 @@ namespace NMR {
 		if (m_pMesh.get() == nullptr)
 			m_pMesh = std::make_shared<CMesh>();
 		m_pBeamLatticeAttributes = std::make_shared<CModelMeshBeamLatticeAttributes>();
+		m_pVolumeData = std::make_shared<CModelVolumeData>();
 	}
 
 	CModelMeshObject::~CModelMeshObject()
@@ -219,6 +221,19 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
 		m_pBeamLatticeAttributes = pBeamLatticeAttributes;
+	}
+
+	_Ret_notnull_ PModelVolumeData CModelMeshObject::getVolumeData()
+	{
+		return m_pVolumeData;
+	}
+
+	void CModelMeshObject::setVolumeData(_In_ PModelVolumeData pVolumeData)
+	{
+		if (!pVolumeData)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		m_pVolumeData = pVolumeData;
 	}
 
 	void CModelMeshObject::extendOutbox(_Out_ NOUTBOX3& vOutBox, _In_ const NMATRIX3 mAccumulatedMatrix)

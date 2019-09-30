@@ -34,9 +34,33 @@ NMR_VolumeBase.cpp implements the class CVolumeBase.
 
 namespace NMR {
 
-	CVolumeBase::CVolumeBase()
+	CVolumeBase::CVolumeBase(PModelVolumetricStack pVolumetricStack)
+		: m_mTransform(NMR::fnMATRIX3_identity()), m_pVolumetricStack(pVolumetricStack)
 	{
+		if (!pVolumetricStack)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+	}
 
+	PModelVolumetricStack CVolumeBase::GetVolumetricStack()
+	{
+		return m_pVolumetricStack;
+	}
+
+	void CVolumeBase::SetVolumetricStack(PModelVolumetricStack pVolumetricStack)
+	{
+		if (!pVolumetricStack)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+		m_pVolumetricStack = pVolumetricStack;
+	}
+
+	NMATRIX3 CVolumeBase::GetTransform()
+	{
+		return m_mTransform;
+	}
+
+	void CVolumeBase::SetTransform(NMATRIX3 sTransform)
+	{
+		m_mTransform = sTransform;
 	}
 
 }

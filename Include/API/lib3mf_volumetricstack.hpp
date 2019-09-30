@@ -58,11 +58,10 @@ private:
 
 protected:
 	NMR::PModelVolumetricStack m_pVolumetricStack;
-	NMR::PModel m_pModel;
-
+	NMR::CModel* m_pModel;
 public:
 
-	CVolumetricStack(NMR::PModelVolumetricStack pVolumetricStack, NMR::PModel pModel);
+	CVolumetricStack(NMR::PModelVolumetricStack pVolumetricStack, NMR::CModel* pModel);
 
 	Lib3MF_uint32 GetDestinationChannelCount();
 

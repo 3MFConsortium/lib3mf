@@ -26,23 +26,39 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_VolumeColor.cpp implements the class CVolumeColor.
+NMR_ModelVolumeData.cpp implements the class CModelVolumeData.
 
 --*/
 
-#include "Common/Mesh/NMR_VolumeColor.h" 
+#include "Model/Classes/NMR_ModelVolumeData.h" 
 
 namespace NMR {
 
-	CVolumeColor::CVolumeColor(PModelVolumetricStack pVolumetricStack)
-		: CVolumeBase(pVolumetricStack)
+	CModelVolumeData::CModelVolumeData()
+		:m_pLevelset(nullptr), m_pComposite(nullptr), m_pColor(nullptr), m_vctProperties(0)
 	{
 
 	}
 
-	void CVolumeColor::clear()
+	void CModelVolumeData::clear()
 	{
 
+	}
+
+	bool CModelVolumeData::HasLevelset()
+	{
+		return m_pLevelset.get() != nullptr;
+	}
+
+	PVolumeLevelset CModelVolumeData::CreateLevelset(PModelVolumetricStack pVolumetricStack)
+	{
+		m_pLevelset = std::make_shared<CVolumeLevelset>(pVolumetricStack);
+		return m_pLevelset;
+	}
+
+	PVolumeLevelset CModelVolumeData::GetLevelset()
+	{
+		return m_pLevelset;
 	}
 
 }

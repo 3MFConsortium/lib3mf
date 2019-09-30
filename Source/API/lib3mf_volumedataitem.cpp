@@ -24,33 +24,47 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CVolumetricStackIterator
+Abstract: This is a stub class definition of CVolumeDataItem
 
 */
 
-#include "lib3mf_volumetricstackiterator.hpp"
+#include "lib3mf_volumedataitem.hpp"
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
 #include "lib3mf_volumetricstack.hpp"
-
+#include "lib3mf_utils.hpp"
 
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CVolumetricStackIterator 
+ Class definition of CVolumeDataItem 
 **************************************************************************************************************************/
 
-
-CVolumetricStackIterator::CVolumetricStackIterator(NMR::PModel pModel)
-	: CResourceIterator (), m_pModel(pModel)
+CVolumeDataItem::CVolumeDataItem(NMR::PVolumeBase pVolumeBase, NMR::CModel* pModel)
+	: m_pVolumeBase(pVolumeBase), m_pModel(pModel)
 {
-	if (pModel.get() == nullptr)
+	if ((!pVolumeBase) || (!m_pModel))
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
 }
 
-IVolumetricStack * CVolumetricStackIterator::GetCurrentVolumetricStack()
+IVolumetricStack * CVolumeDataItem::GetVolumetricStack()
 {
-	return new CVolumetricStack(std::dynamic_pointer_cast<NMR::CModelVolumetricStack>(GetCurrentResource()), m_pModel.get());
+	return new CVolumetricStack(m_pVolumeBase->GetVolumetricStack(), m_pModel);
+}
+
+void CVolumeDataItem::SetVolumetricStack(IVolumetricStack* pTheVolumetricStack)
+{
+	m_pVolumeBase->SetVolumetricStack(m_pVolumeBase->GetVolumetricStack());
+}
+
+Lib3MF::sTransform CVolumeDataItem::GetTransform()
+{
+	return MatrixToTransform(m_pVolumeBase->GetTransform());
+}
+
+void CVolumeDataItem::SetTransform(const Lib3MF::sTransform Transform)
+{
+	m_pVolumeBase->SetTransform(TransformToMatrix(Transform));
 }
 

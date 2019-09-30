@@ -31,6 +31,7 @@ Abstract: This is a stub class definition of CMeshObject
 #include "lib3mf_interfaceexception.hpp"
 
 #include "lib3mf_beamlattice.hpp"
+#include "lib3mf_volumedata.hpp"
 // Include custom headers here.
 
 #include "Common/MeshInformation/NMR_MeshInformation_Properties.h"
@@ -388,3 +389,9 @@ IBeamLattice* CMeshObject::BeamLattice()
 {
 	return new CBeamLattice(meshObject(), meshObject()->getBeamLatticeAttributes());
 }
+
+IVolumeData * CMeshObject::VolumeData()
+{
+	return new CVolumeData(meshObject(), meshObject()->getVolumeData(), meshObject()->getModel());
+}
+

@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium
+Copyright (C) 2019 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -24,25 +24,29 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract:
+Abstract: This is a stub class definition of CVolumeDataColor
 
-NMR_VolumeColor.cpp implements the class CVolumeColor.
+*/
 
---*/
+#include "lib3mf_volumedatacolor.hpp"
+#include "lib3mf_interfaceexception.hpp"
 
-#include "Common/Mesh/NMR_VolumeColor.h" 
+// Include custom headers here.
 
-namespace NMR {
 
-	CVolumeColor::CVolumeColor(PModelVolumetricStack pVolumetricStack)
-		: CVolumeBase(pVolumetricStack)
-	{
+using namespace Lib3MF::Impl;
 
-	}
+/*************************************************************************************************************************
+ Class definition of CVolumeDataColor 
+**************************************************************************************************************************/
 
-	void CVolumeColor::clear()
-	{
-
-	}
-
+void CVolumeDataColor::SetChannel(const Lib3MF::eColorChannel eTheColorChannel, const std::string & sChannelName)
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
+
+std::string CVolumeDataColor::GetChannel(const Lib3MF::eColorChannel eTheColorChannel)
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
+

@@ -44,21 +44,22 @@ NMR_VolumeData.h defines the class CVolumeData.
 
 namespace NMR {
 
-	class CVolumeData {
+	class CModelVolumeData {
 	private:
-		friend class CMesh;
-
 		PVolumeLevelset m_pLevelset;
 		PVolumeComposite m_pComposite;
 		PVolumeColor m_pColor;
 		std::vector<PVolumeProperty> m_vctProperties;
 	public:
-		CVolumeData();
+		CModelVolumeData();
 
 		void clear();
+		bool HasLevelset();
+		PVolumeLevelset GetLevelset();
+		PVolumeLevelset CreateLevelset(PModelVolumetricStack pVolumetricStack);
 	};
 
-	typedef std::shared_ptr <CVolumeData> PVolumeData;
+	typedef std::shared_ptr <CModelVolumeData> PModelVolumeData;
 
 }
 

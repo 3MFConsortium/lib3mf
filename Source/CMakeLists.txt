@@ -60,6 +60,12 @@ Source/API/lib3mf_texture2d.cpp
 Source/API/lib3mf_texture2dgroup.cpp
 Source/API/lib3mf_texture2dgroupiterator.cpp
 Source/API/lib3mf_texture2diterator.cpp
+Source/API/lib3mf_volumedata.cpp
+Source/API/lib3mf_volumedatacolor.cpp
+Source/API/lib3mf_volumedatacomposite.cpp
+Source/API/lib3mf_volumedataitem.cpp
+Source/API/lib3mf_volumedatalevelset.cpp
+Source/API/lib3mf_volumedataproperty.cpp
 Source/API/lib3mf_volumetriclayer.cpp
 Source/API/lib3mf_volumetricstack.cpp
 Source/API/lib3mf_volumetricstackiterator.cpp
@@ -83,7 +89,6 @@ Source/Common/MeshInformation/NMR_MeshInformation_Properties.cpp
 Source/Common/Mesh/NMR_Mesh.cpp
 Source/Common/Mesh/NMR_BeamLattice.cpp
 Source/Common/Mesh/NMR_MeshBuilder.cpp
-Source/Common/Mesh/NMR_VolumeData.cpp
 Source/Common/Mesh/NMR_VolumeBase.cpp
 Source/Common/Mesh/NMR_VolumeProperty.cpp
 Source/Common/Mesh/NMR_VolumeLevelset.cpp
@@ -140,6 +145,7 @@ Source/Model/Classes/NMR_ModelTexture2D.cpp
 Source/Model/Classes/NMR_ModelTexture2DGroup.cpp
 Source/Model/Classes/NMR_ModelSlice.cpp
 Source/Model/Classes/NMR_ModelSliceStack.cpp
+Source/Model/Classes/NMR_ModelVolumeData.cpp
 Source/Model/Classes/NMR_ModelVolumetricDstChannel.cpp
 Source/Model/Classes/NMR_ModelVolumetricLayer.cpp
 Source/Model/Classes/NMR_ModelVolumetricStack.cpp

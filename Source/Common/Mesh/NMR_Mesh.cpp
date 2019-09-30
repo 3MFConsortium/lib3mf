@@ -131,8 +131,6 @@ namespace NMR {
 				}
 			}
 		}
-
-		// TODO: Merge Volumedata (if possible)
 	}
 
 	void CMesh::addToMesh(_In_opt_ CMesh * pMesh)

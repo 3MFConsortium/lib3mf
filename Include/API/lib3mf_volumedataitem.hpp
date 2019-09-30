@@ -24,13 +24,13 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CImage3DChannelSelector
+Abstract: This is the class declaration of CVolumeDataItem
 
 */
 
 
-#ifndef __LIB3MF_IMAGE3DCHANNELSELECTOR
-#define __LIB3MF_IMAGE3DCHANNELSELECTOR
+#ifndef __LIB3MF_VOLUMEDATAITEM
+#define __LIB3MF_VOLUMEDATAITEM
 
 #include "lib3mf_interfaces.hpp"
 
@@ -42,55 +42,50 @@ Abstract: This is the class declaration of CImage3DChannelSelector
 #endif
 
 // Include custom headers here.
-
-#include "Model/Classes/NMR_ModelImage3DChannelSelector.h"
+#include "Common/Mesh/NMR_VolumeBase.h"
 
 namespace Lib3MF {
 namespace Impl {
 
 
 /*************************************************************************************************************************
- Class declaration of CImage3DChannelSelector 
+ Class declaration of CVolumeDataItem 
 **************************************************************************************************************************/
 
-class CImage3DChannelSelector : public virtual IImage3DChannelSelector, public virtual CBase {
+class CVolumeDataItem : public virtual IVolumeDataItem, public virtual CBase {
 private:
+
+	/**
+	* Put private members here.
+	*/
 
 protected:
 
-	NMR::PModelImage3DChannelSelector m_pSelector;
+	/**
+	* Put protected members here.
+	*/
+	NMR::PVolumeBase m_pVolumeBase;
 	NMR::CModel* m_pModel;
-
 
 public:
 
-	CImage3DChannelSelector (NMR::CModel* pModel, NMR::PModelImage3DChannelSelector pSelector);
+	/**
+	* Put additional public members here. They will not be visible in the external API.
+	*/
 
-	IImage3D * GetImage();
+	CVolumeDataItem(NMR::PVolumeBase m_pVolumeBase, NMR::CModel* pModel);
 
-	void SetImage(IImage3D* pImage3D);
+	/**
+	* Public member functions to implement.
+	*/
 
-	void SetSourceChannel(const std::string & sChannelName);
+	IVolumetricStack * GetVolumetricStack() override;
 
-	std::string GetSourceChannel();
+	void SetVolumetricStack(IVolumetricStack* pTheVolumetricStack) override;
 
-	void SetDestinationChannel(const std::string & sChannelName);
+	Lib3MF::sTransform GetTransform() override;
 
-	std::string GetDestinationChannel();
-
-	void SetFilter(const Lib3MF::eTextureFilter eFilter);
-
-	Lib3MF::eTextureFilter GetFilter();
-
-	void SetTileStyles(const Lib3MF::eTextureTileStyle eTileStyleU, const Lib3MF::eTextureTileStyle eTileStyleV, const Lib3MF::eTextureTileStyle eTileStyleW);
-
-	void GetTileStyles(Lib3MF::eTextureTileStyle & eTileStyleU, Lib3MF::eTextureTileStyle & eTileStyleV, Lib3MF::eTextureTileStyle & eTileStyleW);
-
-	void SetValueRange(const Lib3MF_double dMin, const Lib3MF_double dMax);
-
-	void GetValueRange(Lib3MF_double & dMin, Lib3MF_double & dMax);
-
-	NMR::PModelImage3DChannelSelector getModelSelector ();
+	void SetTransform(const Lib3MF::sTransform Transform) override;
 
 };
 
@@ -100,4 +95,4 @@ public:
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif
-#endif // __LIB3MF_IMAGE3DCHANNELSELECTOR
+#endif // __LIB3MF_VOLUMEDATAITEM

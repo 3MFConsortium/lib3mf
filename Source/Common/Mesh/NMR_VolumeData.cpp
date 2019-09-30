@@ -34,12 +34,12 @@ NMR_VolumeData.cpp implements the class CVolumeData.
 
 namespace NMR {
 
-	CVolumeData::CVolumeData()
+	CModelVolumeData::CModelVolumeData()
 	{
 
 	}
 
-	void CVolumeData::clear()
+	void CModelVolumeData::clear()
 	{
 
 	}

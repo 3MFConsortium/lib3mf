@@ -58,12 +58,12 @@ private:
 protected:
 
 	NMR::PModelVolumetricLayer m_pLayer;
-	NMR::PModel m_pModel;
+	NMR::CModel* m_pModel;
 
 public:
 
 
-	CVolumetricLayer (NMR::PModelVolumetricLayer pLayer, NMR::PModel pModel);
+	CVolumetricLayer(NMR::PModelVolumetricLayer pLayer, NMR::CModel *pModel);
 
 	Lib3MF::sTransform GetTransform();
 

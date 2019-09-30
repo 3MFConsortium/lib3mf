@@ -696,7 +696,7 @@ IVolumetricStack * CModel::AddVolumetricStack()
 	NMR::PModelVolumetricStack pResource = NMR::CModelVolumetricStack::make(model().generateResourceID(), &model());
 	model().addResource(pResource);
 
-	return new CVolumetricStack (pResource, m_model);
+	return new CVolumetricStack(pResource, pResource->getModel());
 }
 
 IVolumetricStackIterator * CModel::GetVolumetricStacks()

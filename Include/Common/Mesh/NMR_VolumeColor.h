@@ -41,10 +41,9 @@ namespace NMR {
 
 	class CVolumeColor : public CVolumeBase {
 	private:
-		friend class CMesh;
 
 	public:
-		CVolumeColor();
+		CVolumeColor(PModelVolumetricStack pVolumetricStack);
 
 		void clear();
 	};

@@ -34,7 +34,8 @@ NMR_VolumeComposite.cpp implements the class CVolumeComposite.
 
 namespace NMR {
 
-	CVolumeComposite::CVolumeComposite()
+	CVolumeComposite::CVolumeComposite(PModelVolumetricStack pVolumetricStack)
+		: CVolumeBase(pVolumetricStack)
 	{
 
 	}

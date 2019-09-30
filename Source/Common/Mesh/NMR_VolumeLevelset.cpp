@@ -34,14 +34,37 @@ NMR_VolumeLevelset.cpp implements the class CVolumeLevelset.
 
 namespace NMR {
 
-	CVolumeLevelset::CVolumeLevelset()
+	CVolumeLevelset::CVolumeLevelset(PModelVolumetricStack pVolumetricStack)
+		:CVolumeBase(pVolumetricStack), m_dSolidThreshold(0.0), m_sChannelName("")
 	{
-
+		
 	}
 
 	void CVolumeLevelset::clear()
 	{
 
 	}
+
+	nfDouble CVolumeLevelset::GetSolidThreshold()
+	{
+		return m_dSolidThreshold;
+	}
+
+	void CVolumeLevelset::SetSolidThreshold(nfDouble dSolidThreshold)
+	{
+		m_dSolidThreshold = dSolidThreshold;
+	}
+
+	std::string CVolumeLevelset::GetChannel()
+	{
+		return m_sChannelName;
+	}
+
+	void CVolumeLevelset::SetChannel(std::string sChannelName)
+	{
+		m_sChannelName = sChannelName;
+	}
+
+	
 
 }

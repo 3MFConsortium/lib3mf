@@ -87,9 +87,31 @@ namespace Lib3MF
 
 		auto pChannelSelector = pLayer->AddChannelSelector(pImage3D.get(), "R", "channel");
 
-		//auto meshes = model->GetMeshObjects();
-		//meshes->MoveNext();
-		//auto theMesh = meshes->GetCurrentMeshObject();
+
+
+		auto meshes = model->GetMeshObjects();
+		ASSERT_EQ(meshes->MoveNext(), true);
+		auto theMesh = meshes->GetCurrentMeshObject();
+		auto volumeData = theMesh->VolumeData();
+
+		ASSERT_TRUE(volumeData->GetLevelset() == nullptr);
+		auto levelset = volumeData->CreateNewLevelset(pVolumetricStack.get());
+
+		Lib3MF::sTransform sTransform = wrapper->GetIdentityTransform();
+		Lib3MF::sTransform sGotTransform = levelset->GetTransform();
+		ASSERT_FLOAT_EQ(sGotTransform.m_Fields[1][1], 1.0f);
+		sTransform.m_Fields[1][1] = 2.0;
+		levelset->SetTransform(sTransform);
+		sGotTransform = levelset->GetTransform();
+		ASSERT_FLOAT_EQ(sGotTransform.m_Fields[1][1], sTransform.m_Fields[1][1]);
+
+		double dVal = 0.4;
+		levelset->SetSolidThreshold(dVal);
+		ASSERT_EQ(dVal, levelset->GetSolidThreshold());
+
+		std::string sChannelName("TheChannel");
+		levelset->SetChannel(sChannelName);
+		ASSERT_TRUE(levelset->GetChannel() == sChannelName);
 
 		Volumetric::writer3MF->WriteToFile(Volumetric::OutFolder + "ColoredVolume.3mf");
 	}
