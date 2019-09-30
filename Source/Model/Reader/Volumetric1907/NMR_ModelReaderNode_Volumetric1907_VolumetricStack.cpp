@@ -114,7 +114,7 @@ namespace NMR {
 				__NMRASSERT(m_pVolumetricStack.get() != nullptr);
 
 				PModelReaderNode_Volumetric1907_VolumetricLayer pXMLNode = std::make_shared<CModelReaderNode_Volumetric1907_VolumetricLayer>(m_pVolumetricStack.get(), m_pWarnings);
-				pXMLNode->parseXML(pXMLReader);				
+				pXMLNode->parseXML(pXMLReader);
 			}
 			else
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);

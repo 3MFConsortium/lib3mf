@@ -1226,6 +1226,31 @@ Model error codes (0x8XXX)
 // Duplicate Volumetric Destination Channel
 #define NMR_ERROR_DUPLICATEVOLUMETRICDESTINATIONCHANNEL 0x8110
 
+// Duplicate VolumeData Levelset
+#define NMR_ERROR_DUPLICATEVOLUMEDATALEVELSET 0x8111
+
+// Duplicate VolumeData Transform
+#define NMR_ERROR_DUPLICATEVOLUMEDATATRANSFORM 0x8112
+
+// Duplicate VolumeData Channel
+#define NMR_ERROR_DUPLICATEVOLUMEDATACHANNEL 0x8113
+
+// Duplicate VolumeData VolumetricStackID
+#define NMR_ERROR_DUPLICATEVOLUMEDATASTACKID 0x8114
+
+// Duplicate VolumeData Solid Threshold
+#define NMR_ERROR_DUPLICATEVOLUMEDATASOLIDTHRESHOLD 0x8115
+
+// Missing VolumeData Channel
+#define NMR_ERROR_MISSINGVOLUMEDATACHANNEL 0x8116
+
+// Missing VolumeData VolumetricStackID
+#define NMR_ERROR_MISSINGVOLUMEDATASTACKID 0x8117
+
+// Invalid VolumeData Solid Threshold
+#define NMR_ERROR_INVALIDVOLUMEDATASOLIDTHRESHOLD 0x8118
+
+
 /*-------------------------------------------------------------------
 XML Parser Error Constants (0x9XXX)
 -------------------------------------------------------------------*/

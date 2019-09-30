@@ -35,8 +35,10 @@ A mesh reader model node is a parser for the mesh node of an XML Model Stream.
 #include "Model/Reader/v100/NMR_ModelReaderNode100_Vertices.h"
 #include "Model/Reader/v100/NMR_ModelReaderNode100_Triangles.h"
 #include "Model/Reader/BeamLattice1702/NMR_ModelReaderNode_BeamLattice1702_BeamLattice.h"
+#include "Model/Reader/Volumetric1907/NMR_ModelReaderNode_Volumetric1907_VolumeData.h"
 
 #include "Model/Classes/NMR_ModelConstants.h"
+#include "Model/Classes/NMR_ModelVolumeData.h"
 #include "Common/NMR_StringUtils.h"
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_Exception_Windows.h"
@@ -54,6 +56,8 @@ namespace NMR {
 
 		m_pMesh = pMesh;
 		m_pModel = pModel;
+
+		m_pVolumeData = std::make_shared<CModelVolumeData>();
 
 		m_bHasClippingMeshID = false;
 		m_nClippingMeshID = 0;
@@ -146,6 +150,21 @@ namespace NMR {
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
 		}
 
+
+		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_VOLUMETRICSPEC) == 0) {
+			if (strcmp(pChildName, XML_3MF_ELEMENT_VOLUMEDATA) == 0)
+			{
+				PModelReaderNode_Volumetric1907_VolumeData pXMLNode = std::make_shared<CModelReaderNode_Volumetric1907_VolumeData>(m_pModel, m_pVolumeData.get(), m_pWarnings);
+				pXMLNode->parseXML(pXMLReader);
+			}
+			else
+				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
+		}
+
 	}
 
+	PModelVolumeData CModelReaderNode100_Mesh::getVolumeData()
+	{
+		return m_pVolumeData;
+	}
 }

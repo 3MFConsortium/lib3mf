@@ -95,12 +95,12 @@ namespace Lib3MF
 		auto levelset = volumeData->CreateNewLevelset(pVolumetricStack.get());
 
 		Lib3MF::sTransform sTransform = wrapper->GetIdentityTransform();
-		Lib3MF::sTransform sGotTransform = levelset->GetTransform();
-		ASSERT_FLOAT_EQ(sGotTransform.m_Fields[1][1], 1.0f);
+		Lib3MF::sTransform sObtainedTransform = levelset->GetTransform();
+		ASSERT_FLOAT_EQ(sObtainedTransform.m_Fields[1][1], 1.0f);
 		sTransform.m_Fields[1][1] = 2.0;
 		levelset->SetTransform(sTransform);
-		sGotTransform = levelset->GetTransform();
-		ASSERT_FLOAT_EQ(sGotTransform.m_Fields[1][1], sTransform.m_Fields[1][1]);
+		sObtainedTransform = levelset->GetTransform();
+		ASSERT_FLOAT_EQ(sObtainedTransform.m_Fields[1][1], sTransform.m_Fields[1][1]);
 
 		double dVal = 0.4;
 		levelset->SetSolidThreshold(dVal);

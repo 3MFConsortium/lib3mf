@@ -25,43 +25,47 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
-
-NMR_VolumeData.h defines the class CVolumeData.
+NMR_ModelReaderNode_Volumetric1907_Levelset.h covers the official 3MF volumetric extension.
 
 --*/
 
-#ifndef __NMR_VOLUMEDATA
-#define __NMR_VOLUMEDATA
+#ifndef __NMR_MODELREADERNODE_VOLUMETRIC1907_LEVLSET
+#define __NMR_MODELREADERNODE_VOLUMETRIC1907_LEVLSET
 
-#include "Common/Math/NMR_Geometry.h"
-#include "Common/Mesh/NMR_MeshTypes.h"
-#include "Common/NMR_Types.h"
-#include "Model/Classes/NMR_ModelTypes.h"
-#include "Common/Mesh/NMR_VolumeColor.h"
-#include "Common/Mesh/NMR_VolumeProperty.h"
-#include "Common/Mesh/NMR_VolumeLevelset.h"
-#include "Common/Mesh/NMR_VolumeComposite.h"
+#include "Model/Reader/NMR_ModelReaderNode.h"
+#include "Model/Classes/NMR_ModelComponent.h"
+#include "Model/Classes/NMR_ModelVolumeData.h"
+#include "Common/Math/NMR_Matrix.h"
 
 namespace NMR {
 
-	class CModelVolumeData {
+	class CModelReaderNode_Volumetric1907_Levelset : public CModelReaderNode {
 	private:
-		PVolumeLevelset m_pLevelset;
-		PVolumeComposite m_pComposite;
-		PVolumeColor m_pColor;
-		std::vector<PVolumeProperty> m_vctProperties;
-	public:
-		CModelVolumeData();
+		nfBool m_bHasStackId;
+		nfBool m_bHasChannel;
+		nfBool m_bHasSolidThreshold;
+		nfBool m_bHasTransform;
 
-		void clear();
-		bool HasLevelset();
-		PVolumeLevelset GetLevelset();
-		PVolumeLevelset CreateLevelset(PModelVolumetricStack pVolumetricStack);
-		void SetLevelset(PVolumeLevelset pLevelset);
+		ModelResourceID m_nStackID;
+		std::string m_sChannel;
+		double m_dSolidThreshold;
+		NMATRIX3 m_Transform;
+	protected:
+		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
+	public:
+		CModelReaderNode_Volumetric1907_Levelset() = delete;
+		CModelReaderNode_Volumetric1907_Levelset(_In_ PModelReaderWarnings pWarnings);
+
+		virtual void parseXML(_In_ CXmlReader * pXMLReader);
+
+		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
+
+		PVolumeLevelset MakeLevelset(_In_ CModel* pModel);
 	};
 
-	typedef std::shared_ptr <CModelVolumeData> PModelVolumeData;
+	typedef std::shared_ptr <CModelReaderNode_Volumetric1907_Levelset> PModelReaderNode_Volumetric1907_Levelset;
 
 }
 
-#endif // __NMR_BEAMLATTICE
+#endif // __NMR_MODELREADERNODE_VOLUMETRIC1907_LEVLSET
+

@@ -50,6 +50,14 @@ namespace NMR {
 		return m_pLevelset.get() != nullptr;
 	}
 
+	void CModelVolumeData::SetLevelset(PVolumeLevelset pLevelset)
+	{
+		if (!pLevelset)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		m_pLevelset = pLevelset;
+	}
+
 	PVolumeLevelset CModelVolumeData::CreateLevelset(PModelVolumetricStack pVolumetricStack)
 	{
 		m_pLevelset = std::make_shared<CVolumeLevelset>(pVolumetricStack);

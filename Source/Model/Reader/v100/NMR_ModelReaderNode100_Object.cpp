@@ -249,6 +249,9 @@ namespace NMR {
 				// Handle BeamLattice Data
 				handleBeamLatticeExtension(pXMLNode.get());
 
+				// Handle VolumeData Data
+				handleVolumetricExtension(pXMLNode.get());
+
 				// Create Default Properties
 				createDefaultProperties();
 			}
@@ -415,6 +418,14 @@ namespace NMR {
 					m_pWarnings->addWarning(MODELREADERWARNING_BEAMLATTICEREPRESENTATIONRESOURCENOTDEFINED, NMR_ERROR_BEAMLATTICE_INVALID_REPRESENTATIONRESOURCE, mrwInvalidMandatoryValue);
 				}
 			}
+		}
+	}
+
+	void CModelReaderNode100_Object::handleVolumetricExtension(CModelReaderNode100_Mesh* pXMLNode)
+	{
+		CModelMeshObject* pMeshObject = dynamic_cast<CModelMeshObject*>(m_pObject.get());
+		if (pMeshObject) {
+			pMeshObject->setVolumeData(pXMLNode->getVolumeData());
 		}
 	}
 

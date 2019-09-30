@@ -803,7 +803,6 @@ namespace NMR {
 					writeFloatAttribute(XML_3MF_ATTRIBUTE_VOLUMETRICLAYER_DSTALPHA, (nfFloat)pLayer->getDstAlpha());
 				}
 				writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMETRICLAYER_BLENDMETHOD, CModelMultiPropertyGroupResource::blendMethodToString(pLayer->getBlendMethod ()));
-				writeEndElement();
 
 				auto pMaskSelector = pLayer->getMaskChannelSelector();
 				if (pMaskSelector.get() != nullptr) {
@@ -816,6 +815,7 @@ namespace NMR {
 					writeImage3DChannelSelector(pChannelSelector.get(), XML_3MF_ELEMENT_SOURCECHANNELSELECTOR);
 				}
 
+				writeFullEndElement();
 			}
 
 
