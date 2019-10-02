@@ -456,7 +456,7 @@ namespace Lib3MF
 		virtual void TearDown() {}
 	};
 
-	INSTANTIATE_TEST_CASE_P(InstantiationName,
+	INSTANTIATE_TEST_SUITE_P(InstantiationName,
 		BeamLattice_Attributes_Negative,
 		::testing::Values("Box_Attributes_Negative_1.3mf",
 			"Box_Attributes_Negative_2.3mf"));

@@ -98,6 +98,8 @@ public:
 	void SetPartNumber (const std::string & sSetPartnumber);
 
 	IMetaDataGroup * GetMetaDataGroup ();
+
+	Lib3MF::sBox GetOutbox();
 };
 
 }

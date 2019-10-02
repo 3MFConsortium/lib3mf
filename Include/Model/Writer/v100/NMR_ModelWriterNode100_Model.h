@@ -46,6 +46,7 @@ namespace NMR {
 
 	class CModelWriterNode100_Model : public CModelWriterNode {
 	protected:
+		nfUint32 m_nDecimalPrecision;
 		ModelResourceID m_ResourceCounter;
 		
 		PMeshInformation_PropertyIndexMapping m_pPropertyIndexMapping;
@@ -91,8 +92,8 @@ namespace NMR {
 
 	public:
 		CModelWriterNode100_Model() = delete;
-		CModelWriterNode100_Model(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter, _In_ PProgressMonitor pProgressMonitor);
-		CModelWriterNode100_Model(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter, _In_ PProgressMonitor pProgressMonitor, nfBool bWritesRootModel);
+		CModelWriterNode100_Model(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter, _In_ PProgressMonitor pProgressMonitor, _In_ nfUint32 nDecimalPrecision);
+		CModelWriterNode100_Model(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter, _In_ PProgressMonitor pProgressMonitor, _In_ nfUint32 nDecimalPrecision, _In_ nfBool bWritesRootModel);
 		
 		virtual void writeToXML();
 	};

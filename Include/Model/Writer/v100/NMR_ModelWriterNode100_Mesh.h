@@ -82,10 +82,10 @@ namespace NMR {
 		nfUint32 m_nNurbsBufferPos;
 
 	private:
-		static const int m_snPosAfterDecPoint = 6;
-		static const int m_snPutDoubleFactor;
-		static __NMR_INLINE void putFloat(_In_ const nfFloat fValue, _In_ std::array<nfChar, MODELWRITERMESH100_LINEBUFFERSIZE> & line, _In_ nfUint32 & nBufferPos);
-		static __NMR_INLINE void putDouble(_In_ const nfDouble dValue, _In_ std::array<nfChar, MODELWRITERMESH100_LINEBUFFERSIZE> & line, _In_ nfUint32 & nBufferPos);
+		const int m_nPosAfterDecPoint;
+		const int m_nPutDoubleFactor;
+		__NMR_INLINE void putFloat(_In_ const nfFloat fValue, _In_ std::array<nfChar, MODELWRITERMESH100_LINEBUFFERSIZE> & line, _In_ nfUint32 & nBufferPos);
+		__NMR_INLINE void putDouble(_In_ const nfDouble dValue, _In_ std::array<nfChar, MODELWRITERMESH100_LINEBUFFERSIZE> & line, _In_ nfUint32 & nBufferPos);
 
 	protected:
 		__NMR_INLINE void putVertexString(_In_ const nfChar * pszString);
@@ -113,7 +113,7 @@ namespace NMR {
 	public:
 		CModelWriterNode100_Mesh() = delete;
 		CModelWriterNode100_Mesh(_In_ CModelMeshObject * pModelMeshObject, _In_ CXmlWriter * pXMLWriter, _In_ PProgressMonitor pProgressMonitor,
-			_In_ PMeshInformation_PropertyIndexMapping pPropertyIndexMapping, _In_ nfBool bWriteMaterialExtension, _In_ nfBool m_bWriteBeamLatticeExtension);
+			_In_ PMeshInformation_PropertyIndexMapping pPropertyIndexMapping, _In_ int nPosAfterDecPoint, _In_ nfBool bWriteMaterialExtension, _In_ nfBool m_bWriteBeamLatticeExtension);
 		virtual void writeToXML();
 	};
 

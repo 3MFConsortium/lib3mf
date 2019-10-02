@@ -173,14 +173,24 @@ namespace NMR {
 		return m_eSlicesMeshResolution;
 	}
 
-	void CModelObject::setThumbnail(_In_ std::string sThumbnail)
-	{
-		m_sThumbnail = sThumbnail;
+	void CModelObject::clearThumbnailAttachment() {
+		m_pThumbnailAttachment.reset();
 	}
 
-	std::string CModelObject::getThumbnail()
+	void CModelObject::setThumbnailAttachment(_In_ PModelAttachment pThumbnailAttachment, bool bThrowIfIncorrect)
 	{
-		return m_sThumbnail;
+		if (!pThumbnailAttachment) {
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+		}
+		if ((pThumbnailAttachment->getRelationShipType() != PACKAGE_THUMBNAIL_RELATIONSHIP_TYPE) && (bThrowIfIncorrect)) {
+			throw CNMRException(NMR_ERROR_NOTEXTURESTREAM);
+		}
+		m_pThumbnailAttachment = pThumbnailAttachment;
+	}
+
+	PModelAttachment CModelObject::getThumbnailAttachment()
+	{
+		return m_pThumbnailAttachment;
 	}
 
 	nfUint32 CModelObject::getComponentDepthLevel()

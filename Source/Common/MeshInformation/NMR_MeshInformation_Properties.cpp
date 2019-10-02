@@ -42,20 +42,6 @@ namespace NMR {
 	{
 	}
 
-
-	nfUint32 CMeshInformation_PropertyIndexMapping::getDefaultResourceID()
-	{
-		return m_nDefaultResourceID;
-	}
-	
-	nfUint32 CMeshInformation_PropertyIndexMapping::getDefaultResourceIndex()
-	{
-		return m_nDefaultResourceIndex;
-	}
-
-
-
-
 	nfUint32 CMeshInformation_PropertyIndexMapping::registerPropertyID(nfUint32 nResourceID, ModelPropertyID nPropertyID, nfUint32 nResourceIndex)
 	{
 		if (nResourceID == 0)
@@ -127,11 +113,11 @@ namespace NMR {
 	{
 		nfUint32 j;
 
-		MESHINFORMATION_PROPERTIES * pTexCoordData = (MESHINFORMATION_PROPERTIES *)pData;
-		if (pTexCoordData) {
-			pTexCoordData->m_nResourceID = 0;
+		MESHINFORMATION_PROPERTIES * pProperties = (MESHINFORMATION_PROPERTIES *)pData;
+		if (pProperties) {
+			pProperties->m_nResourceID = 0;
 			for (j = 0; j < 3; j++) {
-				pTexCoordData->m_nPropertyIDs[j] = 0;
+				pProperties->m_nPropertyIDs[j] = 0;
 			}
 		}
 	}
@@ -141,17 +127,32 @@ namespace NMR {
 		return emiProperties;
 	}
 
+	void CMeshInformation_Properties::cloneDefaultInfosFrom(_In_ CMeshInformation * pOtherInformation)
+	{
+		MESHINFORMATION_PROPERTIES * pTargetDefaultData = (MESHINFORMATION_PROPERTIES*)getDefaultData();
+		if (!pTargetDefaultData) {
+			setDefaultData((MESHINFORMATIONFACEDATA*)new MESHINFORMATION_PROPERTIES);
+			pTargetDefaultData = (MESHINFORMATION_PROPERTIES*)getDefaultData();
+		}
+		MESHINFORMATION_PROPERTIES * pSourceDefaultData = (MESHINFORMATION_PROPERTIES*)pOtherInformation->getDefaultData();
+		if (pTargetDefaultData && pSourceDefaultData) {
+			for (nfUint32 j = 0; j < 3; j++)
+				pTargetDefaultData->m_nPropertyIDs[j] = pSourceDefaultData->m_nPropertyIDs[j];
+
+			pTargetDefaultData->m_nResourceID = pSourceDefaultData->m_nResourceID;
+		}
+	}
+	
+
 	void CMeshInformation_Properties::cloneFaceInfosFrom(_In_ nfUint32 nFaceIndex, _In_ CMeshInformation * pOtherInformation, _In_ nfUint32 nOtherFaceIndex)
 	{
-		nfUint32 j;
-
 		__NMRASSERT(pOtherInformation);
 
 		MESHINFORMATION_PROPERTIES * pTargetFaceData = (MESHINFORMATION_PROPERTIES*)getFaceData(nFaceIndex);
 		MESHINFORMATION_PROPERTIES * pSourceFaceData = (MESHINFORMATION_PROPERTIES*)pOtherInformation->getFaceData(nOtherFaceIndex);
 
 		if (pTargetFaceData && pSourceFaceData) {
-			for (j = 0; j < 3; j++)
+			for (nfUint32 j = 0; j < 3; j++)
 				pTargetFaceData->m_nPropertyIDs[j] = pSourceFaceData->m_nPropertyIDs[j];
 
 			pTargetFaceData->m_nResourceID = pSourceFaceData->m_nResourceID;
@@ -195,5 +196,15 @@ namespace NMR {
 		return false;
 	}
 
+	void CMeshInformation_Properties::setDefaultData(MESHINFORMATIONFACEDATA* pData)
+	{
+		MESHINFORMATION_PROPERTIES * pProperties = (MESHINFORMATION_PROPERTIES *)pData;
 
+		m_pDefaultProperty.reset(pProperties);
+	}
+
+	MESHINFORMATIONFACEDATA* CMeshInformation_Properties::getDefaultData()
+	{
+		return (MESHINFORMATIONFACEDATA*)m_pDefaultProperty.get();
+	}
 }

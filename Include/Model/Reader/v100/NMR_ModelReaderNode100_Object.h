@@ -50,7 +50,7 @@ namespace NMR {
 		CModel * m_pModel;
 		ModelResourceID m_nID;
 		nfBool m_bHasThumbnail;
-		std::string m_sThumbnail;
+		std::string m_sThumbnailPath;
 		std::string m_sPartNumber;
 		std::string m_sName;
 		PUUID m_UUID;
@@ -59,8 +59,8 @@ namespace NMR {
 		PModelObject m_pObject;
 		nfBool m_bHasDefaultPropertyID;
 		nfBool m_bHasDefaultPropertyIndex;
-		ModelResourceID m_nDefaultPropertyID;
-		ModelResourceIndex m_nDefaultPropertyIndex;
+		ModelResourceID m_nObjectLevelPropertyID;
+		ModelResourceIndex m_nObjectLevelPropertyIndex;
 
 		nfUint32 m_nSliceStackId;
 		eModelSlicesMeshResolution m_eSlicesMeshResolution;

@@ -15,9 +15,11 @@ set(SRCS_UNITTEST
 	./Source/MeshObject.cpp
 	./Source/MetaData.cpp
 	./Source/MetaDataGroup.cpp
+	./Source/MergeModels.cpp
 	./Source/Model.cpp
 	./Source/MultiProperties.cpp
 	./Source/Object.cpp
+	./Source/Outbox.cpp
 	./Source/ProgressCallback.cpp
 	./Source/Properties.cpp
 	./Source/Reader.cpp
@@ -27,6 +29,7 @@ set(SRCS_UNITTEST
 	./Source/Writer.cpp
 	./Source/TextureProperty.cpp
 	./Source/TextureResources.cpp
+	./Source/v093.cpp
 	./Source/Wrapper.cpp
 )
 

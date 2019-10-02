@@ -59,13 +59,13 @@ namespace NMR {
 		nfUint32 getInformationCount();
 
 		void addInfoTableFrom(_In_ CMeshInformationHandler * pOtherInfoHandler, _In_ nfUint32 nCurrentFaceCount);
+		void cloneDefaultInfosFrom(_In_ CMeshInformationHandler * pOtherInfoHandler);
 		void cloneFaceInfosFrom(_In_ nfUint32 nFaceIdx, _In_ CMeshInformationHandler * pOtherInfoHandler, _In_ nfUint32 nOtherFaceIndex);
 		void permuteNodeInformation(_In_ nfUint32 nFaceIdx, _In_ nfUint32 nNodeIndex1, _In_ nfUint32 nNodeIndex2, _In_ nfUint32 nNodeIndex3);
 		void resetFaceInformation(_In_ nfUint32 nFaceIdx);
 
 		void removeInformation(_In_ eMeshInformationType eType);
 		void removeInformationIndexed(_In_ nfUint32 nIndex);
-
 	};
 
 	typedef std::shared_ptr <CMeshInformationHandler> PMeshInformationHandler;

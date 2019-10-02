@@ -100,7 +100,7 @@ Lib3MF_uint64 CWriter::GetStreamSize ()
 	return pStream->getDataSize();
 }
 
-void CWriter::WriteToBuffer (Lib3MF_uint64 nBufferBufferSize, Lib3MF_uint64* pBufferNeededCount, Lib3MF_uint8 * pBufferBuffer)
+void CWriter::WriteToBuffer(Lib3MF_uint64 nBufferBufferSize, Lib3MF_uint64* pBufferNeededCount, Lib3MF_uint8 * pBufferBuffer)
 {
 	NMR::PExportStreamMemory pStream = std::make_shared<NMR::CExportStreamMemory>();
 	try {
@@ -161,5 +161,15 @@ void CWriter::SetProgressCallback(const Lib3MFProgressCallback callback, const L
 			return ret;
 		};
 	m_pWriter->SetProgressCallback(lambdaCallback, reinterpret_cast<void*>(pUserData));
+}
+
+Lib3MF_uint32 CWriter::GetDecimalPrecision()
+{
+	return m_pWriter->GetDecimalPrecision();
+}
+
+void CWriter::SetDecimalPrecision(const Lib3MF_uint32 nDecimalPrecision)
+{
+	m_pWriter->SetDecimalPrecision(nDecimalPrecision);
 }
 

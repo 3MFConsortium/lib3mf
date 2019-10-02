@@ -1,7 +1,7 @@
 .. lib3mf documentation master file
 
 *********************************************
-lib3mf v2.0.0-alpha documentation
+lib3mf v2.0.0 documentation
 *********************************************
 
 .. image:: https://travis-ci.org/3MFConsortium/lib3mf.svg?branch=master
@@ -12,7 +12,7 @@ lib3mf v2.0.0-alpha documentation
 	:target: https://readthedocs.org/projects/lib3mf/
 	:alt: Documentation Status
 
-.. image:: https://img.shields.io/static/v1.svg?label=lib3mf&message=v2.0.0-alpha&color=orange
+.. image:: https://img.shields.io/static/v1.svg?label=lib3mf&message=v2.0.0&color=green
 	:alt: Version
 
 .. image:: https://img.shields.io/static/v1.svg?label=platform&message=windows%20%7C%20macos%20%7C%20linux&color=lightgrey
@@ -27,7 +27,7 @@ lib3mf v2.0.0-alpha documentation
 	:language: bash
 
 
-Welcome! This is the documentation for lib3mf v2.0.0-alpha.
+Welcome! This is the documentation for lib3mf v2.0.0.
 
 lib3mf is an implementation of the 3D Manufacturing Format file standard.
 
@@ -72,11 +72,6 @@ API documentation
 Obtaining lib3mf
 ====================
 Simply download the precompiled binary SDK https://github.com/3MFConsortium/lib3mf/releases.
-
-On Unix-systems you have to install `uuid <https://linux.die.net/man/3/uuid>`_
-
-    - Linux (Ubuntu/Debian/...): :bash:`sudo apt-get install uuid-dev`
-    - MAC: :bash:`brew install ossp-uuid`
 
 
 Using lib3mf

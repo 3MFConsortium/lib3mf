@@ -357,7 +357,7 @@ namespace NMR {
 	// Retrieve a unique Resource ID
 	ModelResourceID CModel::generateResourceID()
 	{
-		// TODO
+		// TODO: is this truly safe?
 		auto iIterator = m_ResourceMap.rbegin();
 		if (iIterator != m_ResourceMap.rend())
 			return iIterator->first + 1;
@@ -529,7 +529,7 @@ namespace NMR {
 		return pBaseMaterial;
 	}
 
-	void CModel::mergeBaseMaterials(_In_ CModel * pSourceModel)
+	void CModel::mergeBaseMaterials(_In_ CModel * pSourceModel, _In_ UniqueResourceIDMapping &oldToNewMapping)
 	{
 		if (pSourceModel == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
@@ -545,6 +545,7 @@ namespace NMR {
 			pNewMaterial->mergeFrom(pOldMaterial);
 
 			addResource(pNewMaterial);
+			oldToNewMapping[pOldMaterial->getResourceID()->getUniqueID()] = pNewMaterial->getResourceID()->getUniqueID();
 		}
 
 	}
@@ -585,7 +586,7 @@ namespace NMR {
 		return pColorGroup;
 	}
 
-	void CModel::mergeColorGroups(_In_ CModel * pSourceModel)
+	void CModel::mergeColorGroups(_In_ CModel * pSourceModel, _In_ UniqueResourceIDMapping &oldToNewMapping)
 	{
 		if (pSourceModel == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
@@ -601,6 +602,7 @@ namespace NMR {
 			pNewColor->mergeFrom(pOldColor);
 
 			addResource(pNewColor);
+			oldToNewMapping[pOldColor->getResourceID()->getUniqueID()] = pNewColor->getResourceID()->getUniqueID();
 		}
 	}
 
@@ -641,7 +643,7 @@ namespace NMR {
 		return pTexture2DGroup;
 	}
 
-	void CModel::mergeTexture2DGroups(_In_ CModel * pSourceModel)
+	void CModel::mergeTexture2DGroups(_In_ CModel * pSourceModel, _In_ UniqueResourceIDMapping &oldToNewMapping)
 	{
 		if (pSourceModel == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
@@ -649,12 +651,25 @@ namespace NMR {
 		nfUint32 nCount = pSourceModel->getTexture2DGroupCount();
 		for (nfUint32 nIndex = 0; nIndex < nCount; nIndex++) {
 			CModelTexture2DGroupResource * pOldTexture2DGroup = pSourceModel->getTexture2DGroup(nIndex);
-			__NMRASSERT(pNewTexture2DGroup != nullptr);
 
-			PModelTexture2DGroupResource pNewTexture2DGroup = std::make_shared<CModelTexture2DGroupResource>(generateResourceID(), this, pNewTexture2DGroup->getTexture2D());
+			if (!pOldTexture2DGroup) {
+				throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
+			}
+			PModelTexture2DResource pOldTexture2D = pOldTexture2DGroup->getTexture2D();
+			if (!pOldTexture2D) {
+				throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
+			}
+			PackageResourceID packageIDOfOldTexture = oldToNewMapping[pOldTexture2D->getResourceID()->getUniqueID()];
+			PModelTexture2DResource pNewTexture2D = findTexture2D(packageIDOfOldTexture);
+			if (!pNewTexture2D) {
+				throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
+			}
+
+			PModelTexture2DGroupResource pNewTexture2DGroup = std::make_shared<CModelTexture2DGroupResource>(generateResourceID(), this, pNewTexture2D);
 			pNewTexture2DGroup->mergeFrom(pOldTexture2DGroup);
 
 			addResource(pNewTexture2DGroup);
+			oldToNewMapping[pOldTexture2DGroup->getResourceID()->getUniqueID()] = pNewTexture2DGroup->getResourceID()->getUniqueID();
 		}
 	}
 
@@ -695,7 +710,7 @@ namespace NMR {
 		return pCompositeMaterialsGroup;
 	}
 
-	void CModel::mergeCompositeMaterials(_In_ CModel * pSourceModel)
+	void CModel::mergeCompositeMaterials(_In_ CModel * pSourceModel, _In_ UniqueResourceIDMapping &oldToNewMapping)
 	{
 		if (pSourceModel == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
@@ -703,14 +718,23 @@ namespace NMR {
 		nfUint32 nCount = pSourceModel->getCompositeMaterialsCount();
 		for (nfUint32 nIndex = 0; nIndex < nCount; nIndex++) {
 			CModelCompositeMaterialsResource * pOldCompositeMaterials = pSourceModel->getCompositeMaterials(nIndex);
-			__NMRASSERT(pNewTexture2DGroup != nullptr);
 
-			// TODO: this does not work
-			PModelCompositeMaterialsResource pNewCompositeMaterials = std::make_shared<CModelCompositeMaterialsResource>(generateResourceID(), this,
-				pNewCompositeMaterials->getBaseMaterialResource());
+			PModelBaseMaterialResource pOldBaseMaterial = pOldCompositeMaterials->getBaseMaterialResource();
+			if (!pOldCompositeMaterials || !pOldBaseMaterial) {
+				throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
+			}
+			PackageResourceID packageIDOfOldMaterial = oldToNewMapping[pOldBaseMaterial->getResourceID()->getUniqueID()];
+			PModelBaseMaterialResource pNewBaseMaterialResource = findBaseMaterial(packageIDOfOldMaterial);
+			if (!pNewBaseMaterialResource) {
+				throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
+			}
+
+			PModelCompositeMaterialsResource pNewCompositeMaterials =
+				std::make_shared<CModelCompositeMaterialsResource>(generateResourceID(), this, pNewBaseMaterialResource);
 			pNewCompositeMaterials->mergeFrom(pOldCompositeMaterials);
 
 			addResource(pNewCompositeMaterials);
+			oldToNewMapping[pOldCompositeMaterials->getResourceID()->getUniqueID()] = pNewCompositeMaterials->getResourceID()->getUniqueID();
 		}
 	}
 
@@ -750,7 +774,7 @@ namespace NMR {
 		return pMultiPropertyGroupGroup;
 	}
 
-	void CModel::mergeMultiPropertyGroups(_In_ CModel * pSourceModel)
+	void CModel::mergeMultiPropertyGroups(_In_ CModel * pSourceModel, _In_ UniqueResourceIDMapping &oldToNewMapping)
 	{
 		if (pSourceModel == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
@@ -764,6 +788,7 @@ namespace NMR {
 			pNewMultiPropertyGroup->mergeFrom(pOldMultiPropertyGroup);
 
 			addResource(pNewMultiPropertyGroup);
+			oldToNewMapping[pOldMultiPropertyGroup->getResourceID()->getUniqueID()] = pNewMultiPropertyGroup->getResourceID()->getUniqueID();
 		}
 	}
 
@@ -803,7 +828,7 @@ namespace NMR {
 		return pTexture2D;
 	}
 
-	void CModel::mergeTextures2D(_In_ CModel * pSourceModel)
+	void CModel::mergeTextures2D(_In_ CModel * pSourceModel, _In_ UniqueResourceIDMapping &oldToNewMapping)
 	{
 		if (pSourceModel == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
@@ -821,6 +846,7 @@ namespace NMR {
 			pNewTextureResource->copyFrom(pTextureResource);
 
 			addResource(pNewTextureResource);
+			oldToNewMapping[pTextureResource->getResourceID()->getUniqueID()] = pNewTextureResource->getResourceID()->getUniqueID();
 		}
 	}
 	
@@ -947,8 +973,15 @@ namespace NMR {
 			if (pModelAttachment == nullptr)
 				throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-			// TODO: probably need to copy stream
-			addAttachment(pModelAttachment->getPathURI(), pModelAttachment->getRelationShipType(), pModelAttachment->getStream());
+			PImportStream pInStream = pModelAttachment->getStream();
+			if (!pInStream)
+				throw CNMRException(NMR_ERROR_INVALIDPARAM);
+			nfUint64 nPos = pInStream->getPosition();
+			pInStream->seekPosition(0, true);
+			PImportStream pCopiedStream = std::make_shared<CImportStream_Unique_Memory>(pInStream.get(), pInStream->retrieveSize(), true);
+			pInStream->seekPosition(nPos, true);
+
+			addAttachment(pModelAttachment->getPathURI(), pModelAttachment->getRelationShipType(), pCopiedStream);
 		}
 	}
 
@@ -1081,7 +1114,7 @@ namespace NMR {
 		// that make it necessary to mark these extensions as required
 		if (sExtension == XML_3MF_NAMESPACE_BEAMLATTICESPEC) {
 			nfBool bRequireBeamLattice = false;
-			for (nfUint32 i = 0; i < m_ObjectLookup.size(); i++) {
+			for (size_t i = 0; i < m_ObjectLookup.size(); i++) {
 				CModelMeshObject* pMeshObject = dynamic_cast<CModelMeshObject*>(m_ObjectLookup[i].get());
 				if (pMeshObject == nullptr || pMeshObject->getMesh() == nullptr)
 					continue;
@@ -1095,7 +1128,7 @@ namespace NMR {
 
 		if (sExtension == XML_3MF_NAMESPACE_SLICESPEC) {
 			nfBool bRequireSliceExtension = false;
-			for (nfUint32 i = 0; i < m_ObjectLookup.size(); i++) {
+			for (size_t i = 0; i < m_ObjectLookup.size(); i++) {
 				CModelMeshObject* pMeshObject = dynamic_cast<CModelMeshObject*>(m_ObjectLookup[i].get());
 				if (pMeshObject == nullptr || pMeshObject->getMesh() == nullptr)
 					continue;
@@ -1135,7 +1168,7 @@ namespace NMR {
 	{
 		std::list<CModelObject *> resultList;
 
-		for (nfUint32 i = 0; i < m_ObjectLookup.size(); i++) {
+		for (size_t i = 0; i < m_ObjectLookup.size(); i++) {
 			CModelObject* pObject = dynamic_cast<CModelObject*>(m_ObjectLookup[i].get());
 			if (pObject != nullptr) {
 				pObject->clearComponentDepthLevel();

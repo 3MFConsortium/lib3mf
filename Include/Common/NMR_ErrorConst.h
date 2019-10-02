@@ -300,10 +300,10 @@ Core framework error codes (0x2XXX)
 // An Edge with two identical nodes has been tried to added to a mesh
 #define NMR_ERROR_DUPLICATENODE 0x2002
 
-// The mesh exceeds more than NMR_MESH_MAXEDGECOUNT (around two billion) nodes
+// The mesh exceeds more than NMR_MESH_MAXNODECOUNT (2^31-1, around two billion) nodes
 #define NMR_ERROR_TOOMANYNODES 0x2003
 
-// The mesh exceeds more than NMR_MESH_MAXFACECOUNT (around two billion) faces
+// The mesh exceeds more than NMR_MESH_MAXFACECOUNT (2^31-1, around two billion) faces
 #define NMR_ERROR_TOOMANYFACES 0x2004
 
 // The index provided for the node is invalid
@@ -354,7 +354,7 @@ Core framework error codes (0x2XXX)
 // The specified units could not be set (for example, the CVectorTree already had some entries)
 #define NMR_ERROR_COULDNOTSETUNITS 0x2014
 
-// The mesh exceeds more than NMR_MESH_MAXEDGECOUNT (around two billion) edges
+// The mesh exceeds more than NMR_MESH_MAXEDGECOUNT (2^31-1, around two billion) edges
 #define NMR_ERROR_TOOMANYEDGES 0x2015
 
 // The index provided for the edge is invalid
@@ -992,17 +992,17 @@ Model error codes (0x8XXX)
 // Duplicate Property Index
 #define NMR_ERROR_DUPLICATEPINDEX 0x80BA
 
-// Missing Default Property ID
-#define NMR_ERROR_MISSINGDEFAULTPID 0x80BB
+// Missing Object-Level Property ID
+#define NMR_ERROR_MISSINGOBJECTLEVELPID 0x80BB
 
-// Invalid Default Property
-#define NMR_ERROR_INVALIDDEFAULTPID 0x80BC
+// Invalid Object-Level Property
+#define NMR_ERROR_INVALIDOBJECTLEVELPID 0x80BC
 
 // Build-item must not point to object of type MODELOBJECTTYPE_OTHER
 #define NMR_ERROR_BUILDITEMOBJECT_MUSTNOTBE_OTHER 0x80BD
 
-// Components-object must not have a default PID
-#define NMR_ERROR_DEFAULTPID_ON_COMPONENTSOBJECT 0x80BE
+// Components-object must not have an Object-Level PID
+#define NMR_ERROR_OBJECTLEVELPID_ON_COMPONENTSOBJECT 0x80BE
 
 // Nodes used for a beam are too close
 #define NMR_ERROR_BEAMLATTICENODESTOOCLOSE 0x80BF
@@ -1100,7 +1100,7 @@ Model error codes (0x8XXX)
 // Invalid resource index
 #define NMR_ERROR_INVALID_RESOURCE_INDEX 0x80E6
 
-// Version 093 of the core-specification is not supported
+// Version 093 of the core-specification is not fully supported
 #define NMR_ERROR_VERSION093_NOT_SUPPORTED 0x80E7
 
 

@@ -121,7 +121,7 @@ public:
 
 	IMeshObjectIterator * GetMeshObjects ();
 
-	IResourceIterator * GetComponentsObjects ();
+	IComponentsObjectIterator * GetComponentsObjects ();
 
 	ITexture2DIterator * GetTexture2Ds ();
 
@@ -192,6 +192,8 @@ public:
 	void AddCustomContentType (const std::string & sExtension, const std::string & sContentType);
 
 	void RemoveCustomContentType (const std::string & sExtension);
+
+	Lib3MF::sBox GetOutbox();
 
 };
 

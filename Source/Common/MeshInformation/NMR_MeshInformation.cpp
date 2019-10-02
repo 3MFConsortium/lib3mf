@@ -83,6 +83,4 @@ namespace NMR {
 		return m_nInternalID;
 	}
 
-
-
 }

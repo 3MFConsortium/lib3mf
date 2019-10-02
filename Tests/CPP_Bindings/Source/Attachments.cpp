@@ -44,6 +44,7 @@ namespace Lib3MF
 		const std::string m_sAttachmetType;
 		const std::string m_sAttachmetPayload;
 		const std::string m_sAttachmentPath;
+		const std::string m_sThumbnailPath;
 	protected:
 		AttachmentsT() :
 			m_sFolderName("TestOutput"), m_sFilenameReadWrite("output_attachment.3mf"),
@@ -52,7 +53,8 @@ namespace Lib3MF
 			m_sRelationShipPath_file("/Attachments/test fromfile.xml"),
 			m_sAttachmetType("http://schemas.autodesk.com/dmg/testattachment/2017/08"),
 			m_sAttachmetPayload("PAYLOAD"),
-			m_sAttachmentPath(std::string (TESTFILESPATH)+"/Resources/attachment.xml")
+			m_sAttachmentPath(std::string(TESTFILESPATH) + "/Resources/attachment.xml"),
+			m_sThumbnailPath(std::string(TESTFILESPATH) + "/Attachments/thumbnail.png")
 		{
 		}
 
@@ -130,12 +132,12 @@ namespace Lib3MF
 		}
 
 		auto foundAttachment1 = model->FindAttachment(sRelationShipPath1);
-		foundAttachment1->GetPath() == attachment1->GetPath();
-		foundAttachment1->GetRelationShipType() == attachment1->GetRelationShipType();
+		EXPECT_TRUE(foundAttachment1->GetPath() == attachment1->GetPath());
+		EXPECT_TRUE(foundAttachment1->GetRelationShipType() == attachment1->GetRelationShipType());
 
 		auto foundAttachment2 = model->FindAttachment(sRelationShipPath2);
-		foundAttachment2->GetPath() == attachment2->GetPath();
-		foundAttachment2->GetRelationShipType() == attachment1->GetRelationShipType();
+		EXPECT_TRUE(foundAttachment2->GetPath() == attachment2->GetPath());
+		EXPECT_TRUE(foundAttachment2->GetRelationShipType() == attachment2->GetRelationShipType());
 	}
 
 	TEST_F(AttachmentsT, WriteReadAttachment)
@@ -152,7 +154,7 @@ namespace Lib3MF
 			ASSERT_TRUE(CreateDir(m_sFolderName.c_str())) << L"Could not create folder.";
 			writer->WriteToFile(m_sFolderName + "/" + m_sFilenameReadWrite);
 		}
-		
+
 		{
 			auto readModel = wrapper->CreateModel();
 			auto reader = readModel->QueryReader("3mf");
@@ -161,7 +163,7 @@ namespace Lib3MF
 			Lib3MF_uint32 count = readModel->GetAttachmentCount();
 			ASSERT_EQ(count, 0);
 		}
-		
+
 		auto readModel = wrapper->CreateModel();
 		auto reader = readModel->QueryReader("3mf");
 		reader->AddRelationToRead(m_sAttachmetType);
@@ -169,7 +171,7 @@ namespace Lib3MF
 		Lib3MF_uint32 count = readModel->GetAttachmentCount();
 
 		ASSERT_EQ(count, 2);
-		for (Lib3MF_uint32 i = 0; i<count; i++) {
+		for (Lib3MF_uint32 i = 0; i < count; i++) {
 			auto attachment = readModel->GetAttachment(i);
 			ASSERT_EQ(m_sAttachmetType.compare(attachment->GetRelationShipType()), 0);
 			ASSERT_EQ((m_sRelationShipPath + std::to_string(i) + ".xml").compare(attachment->GetPath()), 0);
@@ -180,6 +182,75 @@ namespace Lib3MF
 			bool bAreEqual = std::equal(buffer.begin(), buffer.end(), m_sAttachmetPayload.begin());
 			ASSERT_TRUE(bAreEqual);
 		}
+	}
+
+	void CheckPackageThumbnailAreEqual(PModel pModel1, PModel pModel2)
+	{
+		ASSERT_EQ(pModel1->HasPackageThumbnailAttachment(), pModel2->HasPackageThumbnailAttachment());
+		if (pModel1->HasPackageThumbnailAttachment()) {
+			auto attachment1 = pModel1->GetPackageThumbnailAttachment();
+
+			ASSERT_TRUE(pModel2->HasPackageThumbnailAttachment());
+			auto attachment2 = pModel2->GetPackageThumbnailAttachment();
+
+			std::vector<Lib3MF_uint8> vctAttachmentBufferIn, vctAttachmentBufferOut;
+			attachment1->WriteToBuffer(vctAttachmentBufferIn);
+			attachment2->WriteToBuffer(vctAttachmentBufferOut);
+
+			bool bAreEqual = std::equal(vctAttachmentBufferIn.begin(), vctAttachmentBufferIn.end(), vctAttachmentBufferOut.begin());
+			ASSERT_TRUE(bAreEqual);
+		}
+	}
+
+	TEST_F(AttachmentsT, WriteReadPackageThumbnail)
+	{
+		auto attachment = model->CreatePackageThumbnailAttachment();
+		attachment->ReadFromFile(m_sThumbnailPath);
+
+		std::vector<Lib3MF_uint8> vctFileBuffer;
+		{
+			auto writer = model->QueryWriter("3mf");
+			writer->WriteToBuffer(vctFileBuffer);
+		}
+		auto readModel = wrapper->CreateModel();
+		{
+			auto reader = readModel->QueryReader("3mf");
+			reader->ReadFromBuffer(vctFileBuffer);
+		}
+		CheckPackageThumbnailAreEqual(model, readModel);
+	}
+
+	TEST_F(AttachmentsT, ManipulatePackageThumbnail)
+	{
+		ASSERT_FALSE(model->HasPackageThumbnailAttachment());
+
+		auto attachment = model->CreatePackageThumbnailAttachment();
+		ASSERT_TRUE(model->HasPackageThumbnailAttachment());
+
+		model->RemovePackageThumbnailAttachment();
+		ASSERT_FALSE(model->HasPackageThumbnailAttachment());
+		ASSERT_TRUE(model->GetPackageThumbnailAttachment() == nullptr);
+
+		attachment = model->CreatePackageThumbnailAttachment();
+		ASSERT_TRUE(model->HasPackageThumbnailAttachment());
+	}
+
+	TEST_F(AttachmentsT, ReadPackageThumbnail)
+	{
+		auto reader = model->QueryReader("3mf");
+		reader->ReadFromFile(std::string(TESTFILESPATH) + "/Attachments/withPackageThumbnail.3mf");
+
+		ASSERT_TRUE(model->HasPackageThumbnailAttachment());
+		auto attachment = model->GetPackageThumbnailAttachment();
+		
+		std::vector<Lib3MF_uint8> vctThumbnailBuffer, vctFileBuffer;
+		attachment->WriteToBuffer(vctThumbnailBuffer);
+		
+		attachment->ReadFromFile(m_sThumbnailPath);
+		attachment->WriteToBuffer(vctFileBuffer);
+
+		bool bAreEqual = std::equal(vctThumbnailBuffer.begin(), vctThumbnailBuffer.end(), vctFileBuffer.begin());
+		ASSERT_TRUE(bAreEqual);
 	}
 
 }

@@ -41,6 +41,7 @@ Abstract: This is a stub class definition of CModel
 #include "lib3mf_meshobjectiterator.hpp"
 #include "lib3mf_resourceiterator.hpp"
 #include "lib3mf_componentsobject.hpp"
+#include "lib3mf_componentsobjectiterator.hpp"
 #include "lib3mf_basematerialgroup.hpp"
 #include "lib3mf_metadatagroup.hpp"
 #include "lib3mf_attachment.hpp"
@@ -336,9 +337,9 @@ IMeshObjectIterator * CModel::GetMeshObjects ()
 	return pResult.release();
 }
 
-IResourceIterator * CModel::GetComponentsObjects()
+IComponentsObjectIterator * CModel::GetComponentsObjects()
 {
-	auto pResult = std::unique_ptr<CResourceIterator>(new CResourceIterator());
+	auto pResult = std::unique_ptr<CComponentsObjectIterator>(new CComponentsObjectIterator());
 	Lib3MF_uint32 nObjectsCount = model().getObjectCount();
 
 	for (Lib3MF_uint32 nIdx = 0; nIdx < nObjectsCount; nIdx++) {
@@ -452,13 +453,18 @@ IModel * CModel::MergeToModel ()
 	// Copy relevant resources to new model
 	NMR::CModel& newModel = pOutModel->model();
 
+	NMR::UniqueResourceIDMapping oldToNewUniqueResourceIDs;
+
 	newModel.mergeModelAttachments(&model());
-	newModel.mergeTextures2D(&model());
-	newModel.mergeBaseMaterials(&model());
-	newModel.mergeColorGroups(&model());
-	newModel.mergeCompositeMaterials(&model());
-	newModel.mergeMultiPropertyGroups(&model());
+	newModel.mergeTextures2D(&model(), oldToNewUniqueResourceIDs);
+	newModel.mergeBaseMaterials(&model(), oldToNewUniqueResourceIDs);
+	newModel.mergeColorGroups(&model(), oldToNewUniqueResourceIDs);
+	newModel.mergeTexture2DGroups(&model(), oldToNewUniqueResourceIDs);
+	newModel.mergeCompositeMaterials(&model(), oldToNewUniqueResourceIDs);
+	newModel.mergeMultiPropertyGroups(&model(), oldToNewUniqueResourceIDs);
 	newModel.mergeMetaData(&model());
+
+	pMesh->patchMeshInformationResources(oldToNewUniqueResourceIDs);
 
 	newModel.setUnit(model().getUnit());
 	newModel.setLanguage(model().getLanguage());
@@ -653,24 +659,43 @@ Lib3MF_uint32 CModel::GetAttachmentCount ()
 	return m_model->getAttachmentCount();
 }
 
-bool CModel::HasPackageThumbnailAttachment ()
+bool CModel::HasPackageThumbnailAttachment()
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	return m_model->getPackageThumbnail() != nullptr;
 }
 
-IAttachment * CModel::CreatePackageThumbnailAttachment ()
+IAttachment * CModel::CreatePackageThumbnailAttachment()
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	NMR::PModelAttachment pModelAttachment;
+	if (HasPackageThumbnailAttachment())
+	{
+		pModelAttachment = m_model->getPackageThumbnail();
+	}
+	else {
+		pModelAttachment = m_model->addPackageThumbnail();
+	}
+	if (pModelAttachment) {
+		return new CAttachment(pModelAttachment);
+	}
+	else {
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_ATTACHMENTNOTFOUND);
+	}
 }
 
-IAttachment * CModel::GetPackageThumbnailAttachment ()
+IAttachment * CModel::GetPackageThumbnailAttachment()
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	if (HasPackageThumbnailAttachment())
+	{
+		return new CAttachment(m_model->getPackageThumbnail());
+	}
+	else {
+		return nullptr;
+	}
 }
 
-void CModel::RemovePackageThumbnailAttachment ()
+void CModel::RemovePackageThumbnailAttachment()
 {
-	throw ELib3MFInterfaceException (LIB3MF_ERROR_NOTIMPLEMENTED);
+	m_model->removePackageThumbnail();
 }
 
 void CModel::AddCustomContentType (const std::string & sExtension, const std::string & sContentType)
@@ -681,5 +706,26 @@ void CModel::AddCustomContentType (const std::string & sExtension, const std::st
 void CModel::RemoveCustomContentType (const std::string & sExtension)
 {
 	m_model->removeCustomContentType(sExtension);
+}
+
+Lib3MF::sBox CModel::GetOutbox()
+{
+	NMR::NOUTBOX3 sOutbox;
+	NMR::fnOutboxInitialize(sOutbox);
+
+	for (NMR::nfUint32 iBuildItem = 0; iBuildItem < model().getBuildItemCount(); iBuildItem++) {
+		auto pBuildItem = model().getBuildItem(iBuildItem);
+		pBuildItem->getObject()->extendOutbox(sOutbox, pBuildItem->getTransform());
+	}
+
+	sBox s;
+	s.m_MinCoordinate[0] = sOutbox.m_min.m_fields[0];
+	s.m_MinCoordinate[1] = sOutbox.m_min.m_fields[1];
+	s.m_MinCoordinate[2] = sOutbox.m_min.m_fields[2];
+
+	s.m_MaxCoordinate[0] = sOutbox.m_max.m_fields[0];
+	s.m_MaxCoordinate[1] = sOutbox.m_max.m_fields[1];
+	s.m_MaxCoordinate[2] = sOutbox.m_max.m_fields[2];
+	return s;
 }
 

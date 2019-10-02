@@ -101,6 +101,11 @@ namespace NMR {
 		}
 	}
 
+	nfBool CModelMeshObject::hasSlices(nfBool bRecursive)
+	{
+		return (this->getSliceStack().get() != nullptr);
+	}
+
 	nfBool CModelMeshObject::isValidForSlices(const NMATRIX3& totalParentMatrix)
 	{
 		if (!this->getSliceStack().get()) {
@@ -214,6 +219,11 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
 		m_pBeamLatticeAttributes = pBeamLatticeAttributes;
+	}
+
+	void CModelMeshObject::extendOutbox(_Out_ NOUTBOX3& vOutBox, _In_ const NMATRIX3 mAccumulatedMatrix)
+	{
+		m_pMesh->extendOutbox(vOutBox, mAccumulatedMatrix);
 	}
 }
 

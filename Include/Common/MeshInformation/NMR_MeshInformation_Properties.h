@@ -42,9 +42,6 @@ namespace NMR {
 
 	class CMeshInformation_PropertyIndexMapping {
 	private:
-		nfUint32 m_nDefaultResourceID;
-		nfUint32 m_nDefaultResourceIndex;
-
 		std::map<std::pair <nfUint32, ModelPropertyID>, nfUint32> m_IDMap;
 	public:
 		CMeshInformation_PropertyIndexMapping();
@@ -64,22 +61,26 @@ namespace NMR {
 
 
 	class CMeshInformation_Properties : public CMeshInformation {
+	private:
+		std::shared_ptr<MESHINFORMATION_PROPERTIES> m_pDefaultProperty;
 	protected:
 	public:
 		CMeshInformation_Properties();
 		CMeshInformation_Properties(nfUint32 nCurrentFaceCount);
 
-		virtual void invalidateFace(_In_ MESHINFORMATIONFACEDATA * pData);
+		void invalidateFace(_In_ MESHINFORMATIONFACEDATA * pData) override;
 
-		virtual eMeshInformationType getType();
-		virtual void cloneFaceInfosFrom(_In_ nfUint32 nFaceIndex, _In_ CMeshInformation * pOtherInformation, _In_ nfUint32 nOtherFaceIndex);
-		virtual PMeshInformation cloneInstance(_In_ nfUint32 nCurrentFaceCount);
-		virtual void permuteNodeInformation(_In_ nfUint32 nFaceIndex, _In_ nfUint32 nNodeIndex1, _In_ nfUint32 nNodeIndex2, _In_ nfUint32 nNodeIndex3);
-		virtual nfUint32 getBackupSize();
-		virtual void mergeInformationFrom(_In_ CMeshInformation * pInformation);
-		virtual nfBool faceHasData(_In_ nfUint32 nFaceIndex);
+		eMeshInformationType getType() override;
+		void cloneDefaultInfosFrom(_In_ CMeshInformation * pOtherInformation) override;
+		void cloneFaceInfosFrom(_In_ nfUint32 nFaceIndex, _In_ CMeshInformation * pOtherInformation, _In_ nfUint32 nOtherFaceIndex) override;
+		PMeshInformation cloneInstance(_In_ nfUint32 nCurrentFaceCount) override;
+		void permuteNodeInformation(_In_ nfUint32 nFaceIndex, _In_ nfUint32 nNodeIndex1, _In_ nfUint32 nNodeIndex2, _In_ nfUint32 nNodeIndex3) override;
+		nfUint32 getBackupSize() override;
+		void mergeInformationFrom(_In_ CMeshInformation * pInformation) override;
+		nfBool faceHasData(_In_ nfUint32 nFaceIndex) override;
 
-
+		void setDefaultData(MESHINFORMATIONFACEDATA* pData) override;
+		MESHINFORMATIONFACEDATA* getDefaultData() override;
 	};
 
 	typedef std::shared_ptr <CMeshInformation_Properties> PMeshInformation_Properties;

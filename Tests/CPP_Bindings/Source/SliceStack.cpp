@@ -64,21 +64,21 @@ namespace Lib3MF
 
 	TEST_F(SliceStack, HasSetClearSliceStack)
 	{
-		ASSERT_FALSE(mesh->HasSliceStack());
+		ASSERT_FALSE(mesh->HasSlices(false));
 
 		mesh->AssignSliceStack(sliceStack.get());
-		ASSERT_TRUE(mesh->HasSliceStack());
+		ASSERT_TRUE(mesh->HasSlices(false));
 
 		auto copySliceStack = mesh->GetSliceStack();
 		ASSERT_EQ(copySliceStack->GetResourceID(), sliceStack->GetResourceID());
 
 		mesh->ClearSliceStack();
-		ASSERT_FALSE(mesh->HasSliceStack());
+		ASSERT_FALSE(mesh->HasSlices(false));
 	}
 
 	TEST_F(SliceStack, SliceResolution)
 	{
-		ASSERT_FALSE(mesh->HasSliceStack());
+		ASSERT_FALSE(mesh->HasSlices(false));
 
 		eSlicesMeshResolution res = mesh->GetSlicesMeshResolution();
 		ASSERT_EQ(res, eSlicesMeshResolution::Fullres);
@@ -461,7 +461,7 @@ namespace Lib3MF
 	};
 	PWrapper SliceStackReadingMultiple::wrapper;
 
-	INSTANTIATE_TEST_CASE_P(WorkingFiles, SliceStackReadingMultiple,
+	INSTANTIATE_TEST_SUITE_P(WorkingFiles, SliceStackReadingMultiple,
 		::testing::Values(
 			"MultiSliceStack_TwoFiles.3mf",
 			"MultiSliceStack_OneFile.3mf",
@@ -496,7 +496,7 @@ namespace Lib3MF
 	};
 	PWrapper SliceStackReadingMultipleFailing::wrapper;
 
-	INSTANTIATE_TEST_CASE_P(FailingFiles, SliceStackReadingMultipleFailing,
+	INSTANTIATE_TEST_SUITE_P(FailingFiles, SliceStackReadingMultipleFailing,
 		::testing::Values(
 			"Slice_MustFail_TooRefsTooDeep.3mf"
 		));
@@ -507,5 +507,35 @@ namespace Lib3MF
 		ASSERT_SPECIFIC_THROW(reader->ReadFromFile(sTestFilesPath + "/Slice/" + fileName), ELib3MFException);
 	}
 
+
+	class SliceStackTransform : public ::testing::Test {
+	protected:
+		virtual void SetUp() {
+			model = wrapper->CreateModel();
+			reader = model->QueryReader("3mf");
+		}
+		virtual void TearDown() {
+			model.reset();
+		}
+
+		PModel model;
+		PReader reader;
+		static void SetUpTestCase() {
+			wrapper = CWrapper::loadLibrary();
+		}
+		static PWrapper wrapper;
+	};
+	PWrapper SliceStackTransform::wrapper;
+
+	TEST_F(SliceStackTransform, ReadSlices)
+	{
+		reader->ReadFromFile(sTestFilesPath + "/Slice/PS_505_02_non_planar_transform.3mf");
+		EXPECT_EQ(reader->GetWarningCount(), 1);
+
+		auto writer = model->QueryWriter("3mf");
+
+		std::vector<Lib3MF_uint8> vctBuffer;
+		ASSERT_SPECIFIC_THROW(writer->WriteToBuffer(vctBuffer), ELib3MFException);
+	}
 }
 

@@ -14,7 +14,7 @@ include(GNUInstallDirs)
 set(LIB3MF_VERSION_MAJOR 2)        # increase on every backward-compatibility breaking change of the API
 set(LIB3MF_VERSION_MINOR 0)        # increase on every backward compatible change of the API
 set(LIB3MF_VERSION_MICRO 0)        # increase on on every change that does not alter the API
-set(LIB3MF_VERSION_PRERELEASE "alpha") # denotes pre-release information of a version of lib3mf
+set(LIB3MF_VERSION_PRERELEASE "")  # denotes pre-release information of a version of lib3mf
 
 set(CMAKE_INSTALL_BINDIR bin CACHE PATH "directory for installing binary files")
 set(CMAKE_INSTALL_LIBDIR lib CACHE PATH "directory for installing library files")
@@ -169,13 +169,6 @@ if (UNIX OR MINGW)
   set_target_properties(${PROJECT_NAME} PROPERTIES SOVERSION "${LIB3MF_VERSION_MAJOR}")
   if (NOT APPLE)
     set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS -s)
-  endif()
-  if (NOT WIN32)
-    find_library(LIBUUID_PATH uuid)
-    if(NOT LIBUUID_PATH)
-      message(FATAL_ERROR "libuuid not found")
-    endif()
-    target_link_libraries(${PROJECT_NAME} ${LIBUUID_PATH})
   endif()
 else()
   # wd4996 masks the deprecated-warning

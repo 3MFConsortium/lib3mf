@@ -66,7 +66,7 @@ target_include_directories(Lib3MFExample_CDynamic PRIVATE "${CMAKE_CURRENT_BINDI
 function(PrepareExample MyTarget)
 	add_custom_command(TARGET ${MyTarget} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_CURRENT_SOURCE_DIR}/../../Bin/lib3mf.${LSUFFIX}" $<TARGET_FILE_DIR:${MyTarget}>/lib3mf${LSUFFIXOUT})
 	if (UNIX)
-		target_link_libraries(MyTarget ${CMAKE_DL_LIBS})
+		target_link_libraries(${MyTarget} ${CMAKE_DL_LIBS})
 	endif (UNIX)
 	target_compile_options(${MyTarget} PRIVATE "-DLSUFFIXOUT=\"${LSUFFIXOUT}\"")
 endfunction(PrepareExample)

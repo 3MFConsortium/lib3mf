@@ -38,13 +38,13 @@ namespace Lib3MF
 	class Model : public ::testing::Test {
 	protected:
 		virtual void SetUp() {
-			m_model = wrapper->CreateModel();
+			m_pModel = wrapper->CreateModel();
 		}
 		virtual void TearDown() {
-			m_model.reset();
+			m_pModel.reset();
 		}
 
-		static PModel m_model;
+		PModel m_pModel;
 		static void SetUpTestCase() {
 			wrapper = CWrapper::loadLibrary();
 		}
@@ -52,111 +52,101 @@ namespace Lib3MF
 	};
 	PWrapper Model::wrapper;
 
-	PModel Model::m_model;
-
 	TEST_F(Model, QueryReader)
 	{
-		auto reader3MF = Model::m_model->QueryReader("3mf");
-		auto readerSTL = Model::m_model->QueryReader("stl");
+		auto reader3MF = m_pModel->QueryReader("3mf");
+		auto readerSTL = m_pModel->QueryReader("stl");
 	}
 
 	TEST_F(Model, QueryWriter)
 	{
-		auto writer3MF = Model::m_model->QueryWriter("3mf");
-		auto writerSTL = Model::m_model->QueryWriter("stl");
+		auto writer3MF = m_pModel->QueryWriter("3mf");
+		auto writerSTL = m_pModel->QueryWriter("stl");
 	}
 
 
 	TEST_F(Model, Set_GetUnit)
 	{
-		Model::m_model->SetUnit(eModelUnit::Inch);
-		ASSERT_EQ(Model::m_model->GetUnit(), eModelUnit::Inch);
-		Model::m_model->SetUnit(eModelUnit::MilliMeter);
-		ASSERT_EQ(Model::m_model->GetUnit(), eModelUnit::MilliMeter);
+		m_pModel->SetUnit(eModelUnit::Inch);
+		ASSERT_EQ(m_pModel->GetUnit(), eModelUnit::Inch);
+		m_pModel->SetUnit(eModelUnit::MilliMeter);
+		ASSERT_EQ(m_pModel->GetUnit(), eModelUnit::MilliMeter);
 	}
 
 	TEST_F(Model, Set_GetLanguage)
 	{
 		std::string otherLanguage = "other";
-		Model::m_model->SetLanguage(otherLanguage);
-		ASSERT_FALSE(Model::m_model->GetLanguage().compare(otherLanguage));
+		m_pModel->SetLanguage(otherLanguage);
+		ASSERT_FALSE(m_pModel->GetLanguage().compare(otherLanguage));
 	}
 
 
 	TEST_F(Model, GetBuildItems)
 	{
-		auto iterator = Model::m_model->GetBuildItems();
+		auto iterator = m_pModel->GetBuildItems();
 	}
 
 	TEST_F(Model, GetBuildUUID)
 	{
 		bool bHasUUID = true;
 		// by default everything has an UUID
-		std::string uuid = m_model->GetBuildUUID(bHasUUID);
+		std::string uuid = m_pModel->GetBuildUUID(bHasUUID);
 		ASSERT_TRUE(bHasUUID);
 		ASSERT_FALSE(uuid.empty());
 
 		try {
-			m_model->SetBuildUUID("NOUUID");
+			m_pModel->SetBuildUUID("NOUUID");
 			ASSERT_TRUE(false);
 		}
 		catch (...) {
 			ASSERT_TRUE(true);
 		}
 		std::string inUUID("2b0f37c2-812c-46e7-a6e5-91460c6dbc09");
-		m_model->SetBuildUUID(inUUID);
-		uuid = m_model->GetBuildUUID(bHasUUID);
+		m_pModel->SetBuildUUID(inUUID);
+		uuid = m_pModel->GetBuildUUID(bHasUUID);
 		ASSERT_TRUE(bHasUUID);
 		ASSERT_TRUE(uuid.compare(inUUID) == 0);
 	}
 
-	TEST_F(Model, MergeToModel)
-	{
-		// this is not a functional test but only confirms
-		// that the API handles the call without error
-		auto outModel = m_model->MergeToModel();
-	}
-
-
 	TEST_F(Model, AddRemoveBuildItems)
 	{
-		auto meshObject = m_model->AddMeshObject();
+		auto meshObject = m_pModel->AddMeshObject();
 
 		sTransform transform = getIdentityTransform();
-		auto buildItem = m_model->AddBuildItem(meshObject.get(), transform);
+		auto buildItem = m_pModel->AddBuildItem(meshObject.get(), transform);
 
-		m_model->RemoveBuildItem(buildItem.get());
+		m_pModel->RemoveBuildItem(buildItem.get());
 	}
 
 	TEST_F(Model, GetBaseMaterials)
 	{
-		auto iterator = m_model->GetBaseMaterialGroups();
+		auto iterator = m_pModel->GetBaseMaterialGroups();
 	}
 
 	TEST_F(Model, GetColorGroups)
 	{
-		auto iterator = m_model->GetColorGroups();
+		auto iterator = m_pModel->GetColorGroups();
 	}
 
 	TEST_F(Model, GetResources)
 	{
-		auto iterator = m_model->GetResources();
+		auto iterator = m_pModel->GetResources();
 	}
 
 	TEST_F(Model, GetTexture2DGroups)
 	{
-		auto iterator = m_model->GetTexture2DGroups();
+		auto iterator = m_pModel->GetTexture2DGroups();
 	}
 
 	TEST_F(Model, GetCompositeMaterials)
 	{
-		auto iterator = m_model->GetCompositeMaterials();
+		auto iterator = m_pModel->GetCompositeMaterials();
 	}
 
 	TEST_F(Model, GetBaseMaterialByID)
 	{
 		try {
-			auto baseMaterial = m_model->GetBaseMaterialGroupByID(0);
+			auto baseMaterial = m_pModel->GetBaseMaterialGroupByID(0);
 			ASSERT_FALSE(true);
 		}
 		catch (ELib3MFException &e) {
@@ -166,25 +156,23 @@ namespace Lib3MF
 
 	TEST_F(Model, AddBaseMaterialGroup)
 	{
-		auto baseMaterial = m_model->AddBaseMaterialGroup();
+		auto baseMaterial = m_pModel->AddBaseMaterialGroup();
 		baseMaterial->GetResourceID();
-		auto foundBaseMaterial = m_model->GetBaseMaterialGroupByID(baseMaterial->GetResourceID());
+		auto foundBaseMaterial = m_pModel->GetBaseMaterialGroupByID(baseMaterial->GetResourceID());
 	}
 
 	TEST_F(Model, AddSliceStack)
 	{
-		auto sliceStack = m_model->AddSliceStack(0.);
+		auto sliceStack = m_pModel->AddSliceStack(0.);
 	}
 
 	TEST_F(Model, GetSliceStack)
 	{
-		auto sliceStack = m_model->AddSliceStack(0.);
+		auto sliceStack = m_pModel->AddSliceStack(0.);
 		Lib3MF_uint32 oldID = sliceStack->GetResourceID();
-		auto newSliceStack = m_model->GetSliceStackByID(oldID);
+		auto newSliceStack = m_pModel->GetSliceStackByID(oldID);
 		Lib3MF_uint32 newId = newSliceStack->GetResourceID();
 		ASSERT_EQ(oldID, newId);
 	}
 
-	
-	
 }

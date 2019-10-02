@@ -71,6 +71,36 @@ namespace NMR {
 		return emiNurbs;
 	}
 
+	void CMeshInformation_Nurbs::cloneDefaultInfosFrom(_In_ CMeshInformation * pOtherInformation)
+	{
+		MESHINFORMATION_NURBS * pTargetDefaultData = (MESHINFORMATION_NURBS*)getDefaultData();
+		if (!pTargetDefaultData) {
+			setDefaultData((MESHINFORMATIONFACEDATA*)new MESHINFORMATION_NURBS);
+			pTargetDefaultData = (MESHINFORMATION_NURBS*)getDefaultData();
+		}
+		MESHINFORMATION_NURBS * pSourceDefaultData = (MESHINFORMATION_NURBS*)pOtherInformation->getDefaultData();
+		if (pTargetDefaultData && pSourceDefaultData) {
+			for (nfUint32 j = 0; j < 3; j++) {
+				pTargetDefaultData->m_nEdgeIDs[j] = pSourceDefaultData->m_nEdgeIDs[j];
+				pTargetDefaultData->m_nUVIDs[j] = pSourceDefaultData->m_nUVIDs[j];
+			}
+
+			pTargetDefaultData->m_nResourceID = pSourceDefaultData->m_nResourceID;
+		}
+	}
+
+	void CMeshInformation_Nurbs::setDefaultData(MESHINFORMATIONFACEDATA* pData)
+	{
+		MESHINFORMATION_NURBS * pProperties = (MESHINFORMATION_NURBS *)pData;
+
+		m_pDefaultProperty.reset(pProperties);
+	}
+
+	MESHINFORMATIONFACEDATA* CMeshInformation_Nurbs::getDefaultData()
+	{
+		return (MESHINFORMATIONFACEDATA*)m_pDefaultProperty.get();
+	}
+
 	void CMeshInformation_Nurbs::cloneFaceInfosFrom(_In_ nfUint32 nFaceIndex, _In_ CMeshInformation * pOtherInformation, _In_ nfUint32 nOtherFaceIndex)
 	{
 		nfUint32 j;

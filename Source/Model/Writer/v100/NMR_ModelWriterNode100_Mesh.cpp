@@ -50,11 +50,10 @@ This is the class for exporting the 3mf mesh node.
 #define MAX(a,b) (((a)>(b))?(a):(b))
 
 namespace NMR {
-	const int CModelWriterNode100_Mesh::m_snPutDoubleFactor = (int)(pow(10, CModelWriterNode100_Mesh::m_snPosAfterDecPoint));
 
 	CModelWriterNode100_Mesh::CModelWriterNode100_Mesh(_In_ CModelMeshObject * pModelMeshObject, _In_ CXmlWriter * pXMLWriter, _In_ PProgressMonitor pProgressMonitor,
-		_In_ PMeshInformation_PropertyIndexMapping pPropertyIndexMapping, _In_ nfBool bWriteMaterialExtension, _In_ nfBool bWriteBeamLatticeExtension)
-		:CModelWriterNode(pModelMeshObject->getModel(), pXMLWriter, pProgressMonitor)
+		_In_ PMeshInformation_PropertyIndexMapping pPropertyIndexMapping, _In_ int nPosAfterDecPoint, _In_ nfBool bWriteMaterialExtension, _In_ nfBool bWriteBeamLatticeExtension)
+		:CModelWriterNode(pModelMeshObject->getModel(), pXMLWriter, pProgressMonitor), m_nPosAfterDecPoint(nPosAfterDecPoint), m_nPutDoubleFactor((int)(pow(10, CModelWriterNode100_Mesh::m_nPosAfterDecPoint)))
 	{
 		__NMRASSERT(pModelMeshObject != nullptr);
 		if (!pPropertyIndexMapping.get())
@@ -141,23 +140,34 @@ namespace NMR {
 
 		// Retrieve Mesh Informations
 		CMeshInformation_Properties * pProperties = NULL;
+
+		ModelResourceID nObjectLevelPropertyID = 0;
+		ModelResourceIndex nObjectLevelPropertyIndex = 0;
+
 		CMeshInformation_Nurbs * pNurbs = NULL;
 		
 		CMeshInformationHandler * pMeshInformationHandler = pMesh->getMeshInformationHandler();
 		if (pMeshInformationHandler) {
-			CMeshInformation * pInformation;
-
 			// Get generic property handler
-			pInformation = pMeshInformationHandler->getInformationByType(0, emiProperties);
-			if (pInformation)
+			CMeshInformation *pInformation = pMeshInformationHandler->getInformationByType(0, emiProperties);
+			if (pInformation) {
 				pProperties = dynamic_cast<CMeshInformation_Properties *> (pInformation);
+				NMR::MESHINFORMATION_PROPERTIES * pDefaultData = (NMR::MESHINFORMATION_PROPERTIES*)pProperties->getDefaultData();
+
+				if (pDefaultData && pDefaultData->m_nResourceID != 0) {
+					nObjectLevelPropertyID = pDefaultData->m_nResourceID;
+					nObjectLevelPropertyIndex = m_pPropertyIndexMapping->mapPropertyIDToIndex(nObjectLevelPropertyID, pDefaultData->m_nPropertyIDs[0]);
+				}
+			}
+
 			// Get Nurbs
 			pInformation = pMeshInformationHandler->getInformationByType(0, emiNurbs);
 			if (pInformation)
 				pNurbs = dynamic_cast<CMeshInformation_Nurbs *> (pInformation);
-
 		}
 		
+		bool bMeshHasAProperty = false;
+
 		m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_WRITETRIANGLES);
 		// Write Triangles
 		writeStartElement(XML_3MF_ELEMENT_TRIANGLES);
@@ -230,11 +240,16 @@ namespace NMR {
 
 
 			if (nPropertyID != 0) {
+				bMeshHasAProperty = true;
 				if ((nPropertyIndex1 != nPropertyIndex2) || (nPropertyIndex1 != nPropertyIndex3)) {
 					writeFaceData_ThreeProperties(pMeshFace, nPropertyID, nPropertyIndex1, nPropertyIndex2, nPropertyIndex3, pAdditionalString);
 				}
 				else {
-					writeFaceData_OneProperty(pMeshFace, nPropertyID, nPropertyIndex1, pAdditionalString);
+					if ((nPropertyID == nObjectLevelPropertyID) && (nPropertyIndex1 == nObjectLevelPropertyIndex)){
+						writeFaceData_Plain(pMeshFace, pAdditionalString);
+					} else {
+						writeFaceData_OneProperty(pMeshFace, nPropertyID, nPropertyIndex1, pAdditionalString);
+					}
 				}
 			}
 			else
@@ -264,12 +279,15 @@ namespace NMR {
 		}
 		writeFullEndElement();
 
+		if (bMeshHasAProperty && !(nObjectLevelPropertyID != 0)) {
+			throw CNMRException(NMR_ERROR_MISSINGOBJECTLEVELPID);
+		}
+
 		if (m_bWriteBeamLatticeExtension) {
 			if (nBeamCount > 0) {
 				// write beamlattice
 				writeStartElementWithPrefix(XML_3MF_ELEMENT_BEAMLATTICE, XML_3MF_NAMESPACEPREFIX_BEAMLATTICE);
-				// TODO: find correct default BeamRadius
-				nfDouble dDefaultRadius = 1.0; //  pMesh->getDefaultBeamRadius();
+				nfDouble dDefaultRadius = pMesh->getDefaultBeamRadius();
 				writeFloatAttribute(XML_3MF_ATTRIBUTE_BEAMLATTICE_RADIUS, float(dDefaultRadius));
 				writeFloatAttribute(XML_3MF_ATTRIBUTE_BEAMLATTICE_MINLENGTH, float(pMesh->getBeamLatticeMinLength()));
 
@@ -282,8 +300,7 @@ namespace NMR {
 					writeIntAttribute(XML_3MF_ATTRIBUTE_BEAMLATTICE_REPRESENTATIONMESH, m_pModelMeshObject->getBeamLatticeAttributes()->m_nRepresentationID->getUniqueID());
 				}
 
-				// TODO: calculate default eModelBeamLatticeCapMode
-				eModelBeamLatticeCapMode eDefaultCapMode = eModelBeamLatticeCapMode::MODELBEAMLATTICECAPMODE_SPHERE; //  = pMesh->getBeamLatticeCapMode();
+				eModelBeamLatticeCapMode eDefaultCapMode = pMesh->getBeamLatticeCapMode();
 				writeConstStringAttribute(XML_3MF_ATTRIBUTE_BEAMLATTICE_CAPMODE, capModeToString(eDefaultCapMode).c_str());
 				{
 					// write beamlattice: beams
@@ -344,7 +361,7 @@ namespace NMR {
 
 	void CModelWriterNode100_Mesh::putFloat(_In_ const nfFloat fValue, _In_ std::array<nfChar, MODELWRITERMESH100_LINEBUFFERSIZE> & line, _In_ nfUint32 & nBufferPos) {
 		// Format float with "%.$ACCf" syntax where $ACC = m_snPosAfterDecPoint
-		nfInt64 nAbsValue = (nfInt64)(fValue * m_snPutDoubleFactor);
+		nfInt64 nAbsValue = (nfInt64)(fValue * m_nPutDoubleFactor);
 		nAbsValue = MAX(nAbsValue, -nAbsValue);
 		nfBool bIsNegative = fValue < 0;
 
@@ -356,11 +373,11 @@ namespace NMR {
 		}
 		else {
 			// Write the string in reverse order
-			while (nAbsValue || nCount < m_snPosAfterDecPoint) {
+			while (nAbsValue || nCount < m_nPosAfterDecPoint) {
 				line[nBufferPos++] = '0' + (nAbsValue % 10);
 				nAbsValue /= 10;
 				nCount++;
-				if (nCount == m_snPosAfterDecPoint) {
+				if (nCount == m_nPosAfterDecPoint) {
 					line[nBufferPos++] = '.';
 					if (!nAbsValue) {
 						line[nBufferPos++] = '0';
@@ -387,7 +404,7 @@ namespace NMR {
 
 	void CModelWriterNode100_Mesh::putDouble(_In_ const nfDouble dValue, _In_ std::array<nfChar, MODELWRITERMESH100_LINEBUFFERSIZE> & line, _In_ nfUint32 & nBufferPos) {
 		// Format float with "%.$ACCf" syntax where $ACC = m_snPosAfterDecPoint
-		nfInt64 nAbsValue = (nfInt64)(dValue * m_snPutDoubleFactor);
+		nfInt64 nAbsValue = (nfInt64)(dValue * m_nPutDoubleFactor);
 		nAbsValue = MAX(nAbsValue, -nAbsValue);
 		nfBool bIsNegative = dValue < 0;
 
@@ -399,11 +416,11 @@ namespace NMR {
 		}
 		else {
 			// Write the string in reverse order
-			while (nAbsValue || nCount < m_snPosAfterDecPoint) {
+			while (nAbsValue || nCount < m_nPosAfterDecPoint) {
 				line[nBufferPos++] = '0' + (nAbsValue % 10);
 				nAbsValue /= 10;
 				nCount++;
-				if (nCount == m_snPosAfterDecPoint) {
+				if (nCount == m_nPosAfterDecPoint) {
 					line[nBufferPos++] = '.';
 					if (!nAbsValue) {
 						line[nBufferPos++] = '0';
@@ -647,8 +664,8 @@ namespace NMR {
 		putBeamString(sV2.c_str());
 		putBeamUInt32(pBeam->m_nodeindices[1]);
 
-		nfBool bWriteR2 = stringRepresentationsDiffer(pBeam->m_radius[0], pBeam->m_radius[1], m_snPutDoubleFactor);
-		nfBool bWriteR1 = bWriteR2 || stringRepresentationsDiffer(pBeam->m_radius[0], dRadius, m_snPutDoubleFactor);
+		nfBool bWriteR2 = stringRepresentationsDiffer(pBeam->m_radius[0], pBeam->m_radius[1], m_nPutDoubleFactor);
+		nfBool bWriteR1 = bWriteR2 || stringRepresentationsDiffer(pBeam->m_radius[0], dRadius, m_nPutDoubleFactor);
 		if (bWriteR1) {
 			const std::string sR1 = "\" " + std::string(XML_3MF_ATTRIBUTE_BEAMLATTICE_R1) + "=\"";
 			putBeamString(sR1.c_str());

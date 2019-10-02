@@ -45,7 +45,7 @@ namespace NMR {
 	class CExportStream {
 	private:
 	public:
-		virtual ~CExportStream() {};
+		virtual ~CExportStream() = default;
 
 		virtual nfBool seekPosition(_In_ nfUint64 position, _In_ nfBool bHasToSucceed) = 0;
 		virtual nfBool seekForward(_In_ nfUint64 bytes, _In_ nfBool bHasToSucceed) = 0;

@@ -93,7 +93,6 @@ namespace NMR {
 		// Create Build Item
 		PModelBuildItem pBuildItem = std::make_shared<CModelBuildItem>(pObject, m_mTransform, m_pModel->createHandle());
 		if (!pBuildItem->isValidForSlices()) {
-			// throw CNMRException(NMR_ERROR_SLICETRANSFORMATIONPLANAR);
 			m_pWarnings->addException(CNMRException(NMR_ERROR_SLICETRANSFORMATIONPLANAR), mrwInvalidMandatoryValue);
 		}
 		

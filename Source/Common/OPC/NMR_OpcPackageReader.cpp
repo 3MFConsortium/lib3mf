@@ -101,7 +101,7 @@ namespace NMR {
 	}
 
 	COpcPackageReader::COpcPackageReader(_In_ PImportStream pImportStream, _In_ PModelReaderWarnings pWarnings, _In_ PProgressMonitor pProgressMonitor)
-		: m_pProgressMonitor(pProgressMonitor), m_pWarnings(pWarnings)
+		: m_pWarnings(pWarnings), m_pProgressMonitor(pProgressMonitor)
 	{
 		if (!pImportStream)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);

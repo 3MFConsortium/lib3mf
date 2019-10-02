@@ -59,12 +59,12 @@ This is the class for exporting the 3mf model stream root node.
 
 namespace NMR {
 
-	CModelWriterNode100_Model::CModelWriterNode100_Model(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter, _In_ PProgressMonitor pProgressMonitor)
-		:CModelWriterNode(pModel, pXMLWriter, pProgressMonitor)
+	CModelWriterNode100_Model::CModelWriterNode100_Model(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter, _In_ PProgressMonitor pProgressMonitor, _In_ nfUint32 nDecimalPrecision)
+		:CModelWriterNode(pModel, pXMLWriter, pProgressMonitor), m_nDecimalPrecision(nDecimalPrecision)
 	{
 		m_ResourceCounter = pModel->generateResourceID();
 
-		m_pPropertyIndexMapping = std::make_shared<CMeshInformation_PropertyIndexMapping> ();
+		m_pPropertyIndexMapping = std::make_shared<CMeshInformation_PropertyIndexMapping>();
 
 		m_bWriteMaterialExtension = true;
 		m_bWriteProductionExtension = true;
@@ -83,7 +83,7 @@ namespace NMR {
 
 
 	CModelWriterNode100_Model::CModelWriterNode100_Model(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter, _In_ PProgressMonitor pProgressMonitor,
-		nfBool bWritesRootModel) : CModelWriterNode(pModel, pXMLWriter, pProgressMonitor)
+		_In_ nfUint32 nDecimalPrecision, nfBool bWritesRootModel) : CModelWriterNode(pModel, pXMLWriter, pProgressMonitor), m_nDecimalPrecision(nDecimalPrecision)
 	{
 		if (bWritesRootModel) {
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
@@ -617,15 +617,15 @@ namespace NMR {
 			writeStringAttribute(XML_3MF_ATTRIBUTE_OBJECT_TYPE, pObject->getObjectTypeString());
 
 			// Write Object Thumbnail (optional)
-			std::string sThumbnailPath = pObject->getThumbnail();
-			if (!sThumbnailPath.empty()) {
-				PModelAttachment pAttachment = m_pModel->findModelAttachment(sThumbnailPath);
-				if (!pAttachment)
+			PModelAttachment pThumbnail = pObject->getThumbnailAttachment();
+			if (pThumbnail) {
+				PModelAttachment pModelAttachment = m_pModel->findModelAttachment(pThumbnail->getPathURI());
+				if (!pModelAttachment)
 					throw CNMRException(NMR_ERROR_NOTEXTURESTREAM);
-				if (! (pAttachment->getRelationShipType() == PACKAGE_TEXTURE_RELATIONSHIP_TYPE))
+				if (!((pModelAttachment->getRelationShipType() == PACKAGE_TEXTURE_RELATIONSHIP_TYPE) || (pModelAttachment->getRelationShipType() == PACKAGE_THUMBNAIL_RELATIONSHIP_TYPE)))
 					throw CNMRException(NMR_ERROR_NOTEXTURESTREAM);
 
-				writeStringAttribute(XML_3MF_ATTRIBUTE_OBJECT_THUMBNAIL, sThumbnailPath);
+				writeStringAttribute(XML_3MF_ATTRIBUTE_OBJECT_THUMBNAIL, pThumbnail->getPathURI());
 			}
 
 			if (m_bWriteProductionExtension) {
@@ -651,18 +651,39 @@ namespace NMR {
 			// Check if object is a mesh Object
 			CModelMeshObject * pMeshObject = dynamic_cast<CModelMeshObject *> (pObject);
 			if (pMeshObject) {
-				// Write Default Property Indices
-				ModelResourceID nDefaultPropertyID = 0;
-				ModelResourceIndex nDefaultPropertyIndex = 0;
+				// Prepare Object Level Property ID and Index
+				ModelResourceID nObjectLevelPropertyID = 0;
+				ModelResourceIndex nObjectLevelPropertyIndex = 0;
 
-				// Write Attributes (only for meshes)
-				if (nDefaultPropertyID != 0) {
-					writeIntAttribute(XML_3MF_ATTRIBUTE_OBJECT_PID, nDefaultPropertyID);
-					writeIntAttribute(XML_3MF_ATTRIBUTE_OBJECT_PINDEX, nDefaultPropertyIndex);
+				CMesh* pMesh = pMeshObject->getMesh();
+				
+				if (pMesh) {
+					CMeshInformationHandler * pMeshInformationHandler = pMesh->getMeshInformationHandler();
+					if (pMeshInformationHandler) {
+						// Get generic property handler
+						CMeshInformation *pInformation = pMeshInformationHandler->getInformationByType(0, emiProperties);
+						if (pInformation) {
+							auto pProperties = dynamic_cast<CMeshInformation_Properties *> (pInformation);
+							NMR::MESHINFORMATION_PROPERTIES * pDefaultData = (NMR::MESHINFORMATION_PROPERTIES*)pProperties->getDefaultData();
+							
+							if (pDefaultData && pDefaultData->m_nResourceID != 0) {
+								nObjectLevelPropertyID = pDefaultData->m_nResourceID;
+								nObjectLevelPropertyIndex = m_pPropertyIndexMapping->mapPropertyIDToIndex(nObjectLevelPropertyID, pDefaultData->m_nPropertyIDs[0]);
+							}
+						}
+
+					}
+				}
+
+				// Write Object Level Attributes (only for meshes)
+				if (nObjectLevelPropertyID != 0) {
+					writeIntAttribute(XML_3MF_ATTRIBUTE_OBJECT_PID, nObjectLevelPropertyID);
+					writeIntAttribute(XML_3MF_ATTRIBUTE_OBJECT_PINDEX, nObjectLevelPropertyIndex);
 				}
 
 				CModelWriterNode100_Mesh ModelWriter_Mesh(pMeshObject, m_pXMLWriter, m_pProgressMonitor,
-					m_pPropertyIndexMapping, m_bWriteMaterialExtension, m_bWriteBeamLatticeExtension);
+					m_pPropertyIndexMapping, m_nDecimalPrecision, m_bWriteMaterialExtension, m_bWriteBeamLatticeExtension);
+
 				ModelWriter_Mesh.writeToXML();
 			}
 
@@ -871,7 +892,9 @@ namespace NMR {
 		for (nfUint32 iLayer = 0; iLayer < nLayerCount; iLayer++) {
 			MODELMULTIPROPERTYLAYER layer = pMultiPropertyGroup->getLayer(iLayer);
 			vctPIDs.push_back(layer.m_nResourceID);
-			vctBlendMethodString.push_back(CModelMultiPropertyGroupResource::blendMethodToString(layer.m_nMethod));
+			if (iLayer > 0) {
+				vctBlendMethodString.push_back(CModelMultiPropertyGroupResource::blendMethodToString(layer.m_nMethod));
+			}
 		}
 		ModelResourceID nResourceID = pMultiPropertyGroup->getResourceID()->getUniqueID();
 		writeIntAttribute(XML_3MF_ATTRIBUTE_MULTIPROPERTIES_ID, nResourceID);
@@ -1003,7 +1026,10 @@ namespace NMR {
 				if (pBuildItem->hasTransform())
 					writeStringAttribute(XML_3MF_ATTRIBUTE_ITEM_TRANSFORM, pBuildItem->getTransformString());
 
-				
+				if (m_bWriteSliceExtension && !pBuildItem->isValidForSlices()) {
+					throw CNMRException(NMR_ERROR_SLICETRANSFORMATIONPLANAR);
+				}
+
 				writeMetaDataGroup(pBuildItem->metaDataGroup());
 				if (pBuildItem->metaDataGroup()->getMetaDataCount() > 0)
 					writeFullEndElement();

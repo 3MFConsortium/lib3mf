@@ -41,6 +41,8 @@ namespace NMR {
 
 
 	class CMeshInformation_Nurbs : public CMeshInformation {
+	private:
+		std::shared_ptr<MESHINFORMATION_NURBS> m_pDefaultProperty;
 	protected:
 	public:
 		CMeshInformation_Nurbs();
@@ -49,6 +51,7 @@ namespace NMR {
 		virtual void invalidateFace(_In_ MESHINFORMATIONFACEDATA * pData);
 
 		virtual eMeshInformationType getType();
+		virtual void cloneDefaultInfosFrom(_In_ CMeshInformation * pOtherInformation);
 		virtual void cloneFaceInfosFrom(_In_ nfUint32 nFaceIndex, _In_ CMeshInformation * pOtherInformation, _In_ nfUint32 nOtherFaceIndex);
 		virtual PMeshInformation cloneInstance(_In_ nfUint32 nCurrentFaceCount);
 		virtual void permuteNodeInformation(_In_ nfUint32 nFaceIndex, _In_ nfUint32 nNodeIndex1, _In_ nfUint32 nNodeIndex2, _In_ nfUint32 nNodeIndex3);
@@ -56,6 +59,8 @@ namespace NMR {
 		virtual void mergeInformationFrom(_In_ CMeshInformation * pInformation);
 		virtual nfBool faceHasData(_In_ nfUint32 nFaceIndex);
 
+		virtual void setDefaultData(MESHINFORMATIONFACEDATA* pData);
+		virtual MESHINFORMATIONFACEDATA* getDefaultData();
 
 	};
 

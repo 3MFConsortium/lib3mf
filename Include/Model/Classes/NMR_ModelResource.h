@@ -58,7 +58,7 @@ namespace NMR {
 		CModelResource() = delete;
 		// CModelResource(_In_ const PPackageResourceID sResourceID, _In_ CModel * pModel);
 		CModelResource(_In_ const ModelResourceID sResourceID, _In_ CModel * pModel);
-		~CModelResource();
+		virtual ~CModelResource();
 		
 		virtual PPackageResourceID getResourceID();
 

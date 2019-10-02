@@ -4,13 +4,20 @@
 # to generate the build-status-icon in the main README.md-file.
 
 language: cpp
+sudo: required
+services:
+  - docker
 
 matrix:
   include:
     - os: linux
       compiler: gcc
+      env: BUILDMODE=cmake-make
     - os: osx
       osx_image: xcode7.2
+      env: BUILDMODE=cmake-make
+    - os: linux
+      env: BUILDMODE=ppcxenial
     - os: linux
       dist: trusty
       compiler: x86_64-w64-mingw32-g++
@@ -25,10 +32,16 @@ matrix:
             - g++-mingw-w64-x86-64
 
 before_script:
-    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then HOMEBREW_NO_AUTO_UPDATE=1 brew install ossp-uuid ; fi
-    - if [[ "$BUILDMODE" = "cmake-mingw32" ]]; then sh cmake/GenerateMinGW.sh ; else sh cmake/GenerateMake.sh ; fi
-    - cd build
+    - if [[ "$BUILDMODE" = "cmake-mingw32" ]]; then sh cmake/GenerateMinGW.sh; cd build; fi
+    - if [[ "$BUILDMODE" = "cmake-make" ]]; then sh cmake/GenerateMake.sh; cd build; fi
+    - if [[ "$BUILDMODE" = "ppcxenial" ]]; then
+      docker pull multiarch/qemu-user-static ;
+      docker pull multiarch/ubuntu-debootstrap:powerpc-xenial ;
+      docker run --rm --privileged multiarch/qemu-user-static --reset -p y ;
+      docker build -t ppc-xenial -f CI/Dockerfile . ;
+      fi
 
 script:
-    - cmake --build .
-    - if [[ "$BUILDMODE" != "cmake-mingw32" ]]; then ctest -V ; fi
+    - if [[ "$BUILDMODE" != "ppcxenial" ]]; then cmake --build . ; fi
+    - if [[ "$BUILDMODE" == "cmake-make" ]]; then ctest -V ; fi
+    - if [[ "$BUILDMODE" == "ppcxenial" ]]; then docker run ppc-xenial; fi

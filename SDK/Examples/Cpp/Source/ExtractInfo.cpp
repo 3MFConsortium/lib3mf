@@ -112,7 +112,7 @@ void ShowObjectProperties(PObject object)
 		break;
 	}
 
-	if (object->HasSliceStack()) {
+	if (object->HasSlices(false)) {
 		PSliceStack sliceStack = object->GetSliceStack();
 		ShowSliceStack(sliceStack, "   ");
 	}

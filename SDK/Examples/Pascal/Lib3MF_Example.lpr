@@ -70,9 +70,9 @@ begin
 		writeln ('loading DLL Done');
 		ALib3MFWrapper.GetLibraryVersion(AMajor, AMinor, AMicro);
 		AVersionString := Format('Lib3MF.version = %d.%d.%d', [AMajor, AMinor, AMicro]);
-		if (ALib3MFWrapper.GetPrereleaseInformation(APreReleaseInfo) then
+		if (ALib3MFWrapper.GetPrereleaseInformation(APreReleaseInfo)) then
 			AVersionString := AVersionString + '-' + APreReleaseInfo;
-		if (ALib3MFWrapper.GetBuildInformation(ABuildInfo) then
+		if (ALib3MFWrapper.GetBuildInformation(ABuildInfo)) then
 			AVersionString := AVersionString + '-' + ABuildInfo;
 		writeln(AVersionString);
 	finally

@@ -308,6 +308,106 @@ namespace Lib3MF
 		ASSERT_TRUE(bHasUUID);
 		ASSERT_TRUE(uuid.compare(inUUID) == 0);
 	}
+
+
+	class ObjectThumbnail : public ::testing::Test {
+	protected:
+		virtual void SetUp() {
+			model = wrapper->CreateModel();
+			components = model->AddComponentsObject();
+			mesh = model->AddMeshObject();
+			component = components->AddComponent(mesh.get(), getIdentityTransform());
+		}
+		virtual void TearDown() {
+			model.reset();
+		}
+
+		PModel model;
+		PComponentsObject components;
+		PComponent component;
+		PMeshObject mesh;
+
+		static void SetUpTestCase() {
+			wrapper = CWrapper::loadLibrary();
+		}
+		static PWrapper wrapper;
+	};
+	PWrapper ObjectThumbnail::wrapper;
+
+
+	TEST_F(ObjectThumbnail, ObjectThumbnail)
+	{
+		std::string sRelationShipPath("/Metadata/thumbnail.png");
+		auto attachment = model->AddAttachment(sRelationShipPath, "http://schemas.openxmlformats.org/package/2006/relationships/metadata/thumbnail");
+		components->SetAttachmentAsThumbnail(attachment.get());
+
+		ASSERT_TRUE(mesh->GetThumbnailAttachment() == nullptr);
+
+		ASSERT_TRUE(components->GetThumbnailAttachment()->GetPath() == attachment->GetPath());
+
+		attachment->SetRelationShipType("otherschema");
+		ASSERT_SPECIFIC_THROW(mesh->SetAttachmentAsThumbnail(attachment.get()), ELib3MFException);
+
+		auto writer = model->QueryWriter("3mf");
+		std::vector<Lib3MF_uint8> vctBuffer;
+		ASSERT_SPECIFIC_THROW(writer->WriteToBuffer(vctBuffer), ELib3MFException);
+	}
+
+	TEST_F(ObjectThumbnail, ReadObjectThumbnail)
+	{
+		auto reader = model->QueryReader("3mf");
+		reader->ReadFromFile(sTestFilesPath+"/Objects/HelixWithThumbnail.3mf");
+
+		ASSERT_EQ(model->GetAttachmentCount(), 1);
+		auto meshObjects = model->GetMeshObjects();
+		ASSERT_EQ(meshObjects->MoveNext(), true);
+		auto mesh = meshObjects->GetCurrentMeshObject();
+		auto thumbnail = mesh->GetThumbnailAttachment();
+		ASSERT_TRUE(thumbnail != nullptr);
+		EXPECT_EQ(thumbnail->GetStreamSize(), 105627);
+	}
+
+	TEST_F(ObjectThumbnail, ReadInvalidObjectThumbnail)
+	{
+		auto reader = model->QueryReader("3mf");
+		reader->AddRelationToRead("otherrelationship");
+		reader->ReadFromFile(sTestFilesPath + "/Objects/HelixWithThumbnail_IncorrectRelationship.3mf");
+		CheckReaderWarnings(reader, 1);
+	}
+
+	TEST_F(ObjectThumbnail, WriteReadObjectThumbnail)
+	{
+		std::string sRelationShipPath("/Metadata/thumbnail.png");
+		auto attachment = model->AddAttachment(sRelationShipPath, "http://schemas.openxmlformats.org/package/2006/relationships/metadata/thumbnail");
+		mesh->SetAttachmentAsThumbnail(attachment.get());
+
+		attachment->ReadFromFile(sTestFilesPath + "/Attachments/thumbnail.png");
+
+		std::vector<Lib3MF::sPosition> vctVertices;
+		std::vector<Lib3MF::sTriangle> vctTriangles;
+		fnCreateBox(vctVertices, vctTriangles);
+		mesh->SetGeometry(vctVertices, vctTriangles);
+
+		auto writer = model->QueryWriter("3mf");
+		std::vector<Lib3MF_uint8> vctBuffer;
+		writer->WriteToBuffer(vctBuffer);
+
+		auto readModel = wrapper->CreateModel();
+		auto reader = readModel->QueryReader("3mf");
+		reader->ReadFromBuffer(vctBuffer);
+
+		auto readAttachment = readModel->FindAttachment(sRelationShipPath);
+		ASSERT_EQ(readAttachment->GetStreamSize(), attachment->GetStreamSize());
+
+		auto meshObjects = model->GetMeshObjects();
+		ASSERT_EQ(meshObjects->MoveNext(), true);
+		auto readMesh = meshObjects->GetCurrentMeshObject();
+
+		auto meshAttachment = readMesh->GetThumbnailAttachment();
+		ASSERT_TRUE(meshAttachment.get() != nullptr);
+		ASSERT_EQ(readAttachment->GetStreamSize(), meshAttachment->GetStreamSize());
+	}
+
 }
 
 

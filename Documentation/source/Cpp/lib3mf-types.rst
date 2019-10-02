@@ -109,16 +109,18 @@ Enumerations
 		.. cpp:enumerator:: READMESH = 8
 		.. cpp:enumerator:: READSLICES = 9
 		.. cpp:enumerator:: READBUILD = 10
-		.. cpp:enumerator:: CREATEOPCPACKAGE = 11
-		.. cpp:enumerator:: WRITEMODELSTOSTREAM = 12
-		.. cpp:enumerator:: WRITEROOTMODEL = 13
-		.. cpp:enumerator:: WRITENONROOTMODELS = 14
-		.. cpp:enumerator:: WRITEATTACHMENTS = 15
-		.. cpp:enumerator:: WRITECONTENTTYPES = 16
-		.. cpp:enumerator:: WRITENOBJECTS = 17
-		.. cpp:enumerator:: WRITENODES = 18
-		.. cpp:enumerator:: WRITETRIANGLES = 19
-		.. cpp:enumerator:: WRITESLICES = 20
+		.. cpp:enumerator:: READCUSTOMATTACHMENT = 11
+		.. cpp:enumerator:: READTEXTURETACHMENTS = 12
+		.. cpp:enumerator:: CREATEOPCPACKAGE = 13
+		.. cpp:enumerator:: WRITEMODELSTOSTREAM = 14
+		.. cpp:enumerator:: WRITEROOTMODEL = 15
+		.. cpp:enumerator:: WRITENONROOTMODELS = 16
+		.. cpp:enumerator:: WRITEATTACHMENTS = 17
+		.. cpp:enumerator:: WRITECONTENTTYPES = 18
+		.. cpp:enumerator:: WRITENOBJECTS = 19
+		.. cpp:enumerator:: WRITENODES = 20
+		.. cpp:enumerator:: WRITETRIANGLES = 21
+		.. cpp:enumerator:: WRITESLICES = 22
 	
 	.. cpp:enum-class:: eBlendMethod : Lib3MF_int32
 	
@@ -182,6 +184,13 @@ Structs
 	.. cpp:struct:: sTransform
 	
 		.. cpp:member:: Lib3MF_single m_Fields[4][3]
+	
+
+	.. cpp:struct:: sBox
+	
+		.. cpp:member:: Lib3MF_single m_MinCoordinate[3]
+	
+		.. cpp:member:: Lib3MF_single m_MaxCoordinate[3]
 	
 
 	.. cpp:struct:: sColor

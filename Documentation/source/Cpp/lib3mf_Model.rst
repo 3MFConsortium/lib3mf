@@ -156,6 +156,13 @@ CModel
 		:returns: returns the iterator instance.
 
 
+	.. cpp:function:: sBox GetOutbox()
+
+		Returns the outbox of a Model
+
+		:returns: Outbox of this Model
+
+
 	.. cpp:function:: PResourceIterator GetResources()
 
 		creates a resource iterator instance with all resources.
@@ -170,14 +177,14 @@ CModel
 		:returns: returns the iterator instance.
 
 
-	.. cpp:function:: PResourceIterator GetMeshObjects()
+	.. cpp:function:: PMeshObjectIterator GetMeshObjects()
 
 		creates a resource iterator instance with all mesh object resources.
 
 		:returns: returns the iterator instance.
 
 
-	.. cpp:function:: PResourceIterator GetComponentsObjects()
+	.. cpp:function:: PComponentsObjectIterator GetComponentsObjects()
 
 		creates a resource iterator instance with all components object resources.
 
@@ -343,7 +350,7 @@ CModel
 
 		Removes attachment from the model.
 
-		:param pAttachmentInstance: Attachment instance to remov 
+		:param pAttachmentInstance: Attachment instance to remove 
 
 
 	.. cpp:function:: PAttachment GetAttachment(const Lib3MF_uint32 nIndex)
@@ -378,16 +385,16 @@ CModel
 
 	.. cpp:function:: PAttachment CreatePackageThumbnailAttachment()
 
-		Create a new a package thumbnail for the OPC package.
+		Create a new or the existing package thumbnail for the OPC package.
 
-		:returns: Instance of a new thumbnailattachment object.
+		:returns: Instance of a new or the existing thumbnailattachment object.
 
 
 	.. cpp:function:: PAttachment GetPackageThumbnailAttachment()
 
 		Get the attachment to the OPC package containing the package thumbnail.
 
-		:returns: Instance of the thumbnailattachment object.
+		:returns: Instance of the thumbnailattachment object or NULL.
 
 
 	.. cpp:function:: void RemovePackageThumbnailAttachment()
