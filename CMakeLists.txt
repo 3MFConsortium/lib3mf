@@ -120,6 +120,17 @@ else()
 	target_compile_options(${PROJECT_NAME}_s PUBLIC "$<$<CONFIG:RELEASE>:/O2;/sdl;/WX;/Oi;/Gy;/FC;/wd4996>")
 endif()
 
+if (NOT USE_INCLUDED_LIBZIP)
+	find_package(PkgConfig REQUIRED)
+	pkg_check_modules(LIBZIP REQUIRED libzip)
+	target_link_libraries(${PROJECT_NAME}_s ${LIBZIP_LIBRARIES})
+endif()
+if (NOT USE_INCLUDED_ZLIB)
+	find_package(PkgConfig REQUIRED)
+	pkg_check_modules(ZLIB REQUIRED zlib)
+	target_link_libraries(${PROJECT_NAME}_s ${ZLIB_LIBRARIES})
+endif()
+
 
 #########################################################
 # Shared library
