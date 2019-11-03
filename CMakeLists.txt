@@ -152,6 +152,17 @@ target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_BINARY_DIR_AU
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/Include/API)
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/Include)
 
+if (NOT USE_INCLUDED_LIBZIP)
+	find_package(PkgConfig REQUIRED)
+	pkg_check_modules(LIBZIP REQUIRED libzip)
+	target_link_libraries(${PROJECT_NAME} ${LIBZIP_LIBRARIES})
+endif()
+if (NOT USE_INCLUDED_ZLIB)
+	find_package(PkgConfig REQUIRED)
+	pkg_check_modules(ZLIB REQUIRED zlib)
+	target_link_libraries(${PROJECT_NAME} ${ZLIB_LIBRARIES})
+endif()
+
 set_target_properties(${PROJECT_NAME} PROPERTIES PREFIX "" IMPORT_PREFIX "" )
 # This makes sure symbols are exported
 target_compile_options(${PROJECT_NAME} PRIVATE "-D__LIB3MF_EXPORTS")
