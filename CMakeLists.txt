@@ -22,6 +22,7 @@ set(CMAKE_INSTALL_INCLUDEDIR include/lib3mf CACHE PATH "directory for installing
 
 option(USE_INCLUDED_ZLIB "Use included zlib" ON)
 option(USE_INCLUDED_LIBZIP "Use included libzip" ON)
+option(USE_INCLUDED_GTEST "Used included gtest" ON)
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
   # using GCC
