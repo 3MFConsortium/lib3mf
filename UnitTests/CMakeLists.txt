@@ -1,7 +1,10 @@
-ADD_SUBDIRECTORY (googletest EXCLUDE_FROM_ALL)
 enable_testing()
-	
-SET(gtest_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/googletest/googletest")
+
+if (USE_INCLUDED_GTEST)
+	ADD_SUBDIRECTORY (googletest EXCLUDE_FROM_ALL)
+	SET(gtest_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/googletest/googletest")
+endif()
+
 add_definitions( -DTESTFILESPATH="${CMAKE_CURRENT_SOURCE_DIR}/../TestFiles")
 add_definitions( -DLTESTFILESPATH=L"${CMAKE_CURRENT_SOURCE_DIR}/../TestFiles")
 add_definitions( -DLOUTFILESPATH=L"${CMAKE_BINARY_DIR}/")
