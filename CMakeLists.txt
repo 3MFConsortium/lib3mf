@@ -20,6 +20,7 @@ option(NMR_COM_NATIVE "Implement a COM interface" OFF)
 
 option(USE_INCLUDED_ZLIB "Use included zlib" ON)
 option(USE_INCLUDED_LIBZIP "Use included libzip" ON)
+option(USE_INCLUDED_GTEST "Used included gtest" ON)
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
   # using GCC
