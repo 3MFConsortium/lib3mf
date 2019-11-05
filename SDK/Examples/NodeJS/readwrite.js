@@ -1,6 +1,6 @@
 console.log("Loading Lib3MF");
 
-var wrapper = require('../../Bindings/NodeJS/build/Release/lib3mf_nodeaddon')('lib3mf.dll');
+var wrapper = require('../../Bindings/NodeJS/build/Release/lib3mf_nodeaddon')('../../Bin/lib3mf.dll');
 
 console.log("creating Model");
 model = wrapper.CreateModel();

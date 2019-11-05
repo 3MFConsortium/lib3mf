@@ -12,7 +12,7 @@ Note that the NodeJS bindings are experimental. The _should_ work with Node v12.
    
    ```node-gyp rebuild --verbose binding.gyp```
 
-5. modify `readwrite.js` to point to the generated node-addon, e.g. in `../../Bindings/NodeJS/build/Release` and copy the `lib3mf`-binary next to `readwrite.js`.
+5. modify `readwrite.js` to point to the generated node-addon, e.g. in `../../Bindings/NodeJS/build/Release`, and to the `lib3mf`-binary, e.g. `'../../Bin/lib3mf.dll'`.
 
 6. run the example
    
