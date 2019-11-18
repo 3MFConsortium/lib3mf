@@ -525,7 +525,7 @@ namespace NMR {
 			if (!m_pXMLWriter->GetNamespacePrefix(sNameSpace, sNameSpacePrefix)) {
 				throw CNMRException(NMR_ERROR_INVALIDBUFFERSIZE);
 			}
-			writeStringAttribute(XML_3MF_ATTRIBUTE_METADATA_NAME, CModelMetaData::calculateKey(sNameSpacePrefix, sName));
+			writeStringAttribute(XML_3MF_ATTRIBUTE_METADATA_NAME, composeNamespaceAndNameIntoKey(sNameSpacePrefix, sName));
 		}
 
 		if (sType != "xs:string") {
