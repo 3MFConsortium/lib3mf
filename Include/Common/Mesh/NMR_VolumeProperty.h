@@ -41,9 +41,20 @@ namespace NMR {
 
 	class CVolumeProperty : public CVolumeBase {
 	private:
-
+		std::string m_sChannelName;
+		std::string m_sPropertyName;
+		bool m_bIsRequired;
 	public:
-		CVolumeProperty(PModelVolumetricStack pVolumetricStack);
+		CVolumeProperty(std::string sName, PModelVolumetricStack pVolumetricStack);
+
+		std::string GetChannel();
+		void SetChannel(std::string sChannelName);
+
+		std::string GetName();
+		void SetName(std::string sPropertyName);
+
+		bool IsRequired();
+		void SetIsRequired(bool bIsRequired);
 
 		void clear();
 	};

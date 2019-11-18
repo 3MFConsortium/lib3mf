@@ -34,10 +34,10 @@ NMR_VolumeProperty.cpp implements the class CVolumeProperty.
 
 namespace NMR {
 
-	CVolumeProperty::CVolumeProperty(PModelVolumetricStack pVolumetricStack)
+	CVolumeProperty::CVolumeProperty(std::string sName, PModelVolumetricStack pVolumetricStack)
 		: CVolumeBase(pVolumetricStack)
 	{
-
+		m_sPropertyName = sName;
 	}
 
 	void CVolumeProperty::clear()
@@ -45,4 +45,35 @@ namespace NMR {
 
 	}
 
+	std::string CVolumeProperty::GetChannel()
+	{
+		return m_sChannelName;
+	}
+
+	void CVolumeProperty::SetChannel(std::string sChannelName)
+	{
+		if (!GetVolumetricStack()->hasDstChannel(sChannelName)) {
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+		}
+		m_sChannelName = sChannelName;
+	}
+
+	std::string CVolumeProperty::GetName()
+	{
+		return m_sPropertyName;
+	}
+	void CVolumeProperty::SetName(std::string sPropertyName)
+	{
+		m_sPropertyName = sPropertyName;
+	}
+
+	bool CVolumeProperty::IsRequired()
+	{
+		return m_bIsRequired;
+	}
+
+	void CVolumeProperty::SetIsRequired(bool bIsRequired)
+	{
+		m_bIsRequired = bIsRequired;
+	}
 }

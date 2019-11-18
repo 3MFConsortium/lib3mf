@@ -49,7 +49,7 @@ namespace NMR {
 		PVolumeLevelset m_pLevelset;
 		PVolumeComposite m_pComposite;
 		PVolumeColor m_pColor;
-		std::vector<PVolumeProperty> m_vctProperties;
+		std::map<std::string, PVolumeProperty> m_mapProperties;
 	public:
 		CModelVolumeData();
 
@@ -58,6 +58,13 @@ namespace NMR {
 		PVolumeLevelset GetLevelset();
 		PVolumeLevelset CreateLevelset(PModelVolumetricStack pVolumetricStack);
 		void SetLevelset(PVolumeLevelset pLevelset);
+
+		nfBool hasProperty(std::string sName);
+		nfUint32 GetPropertyCount();
+		PVolumeProperty GetProperty(nfUint32 nIndex);
+		PVolumeProperty FindProperty(std::string sName);
+		PVolumeProperty CreateProperty(std::string sName, PModelVolumetricStack pVolumetricStack);
+		void RemoveProperty(std::string sName);
 	};
 
 	typedef std::shared_ptr <CModelVolumeData> PModelVolumeData;

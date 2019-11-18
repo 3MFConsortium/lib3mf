@@ -98,10 +98,11 @@ public:
 
 	IVolumeDataProperty * GetProperty(const Lib3MF_uint32 nIndex) override;
 
-	IVolumeDataProperty * AddProperty(IVolumetricStack* pTheVolumetricStack) override;
+	IVolumeDataProperty * AddProperty(const std::string & sName, IVolumetricStack* pTheVolumetricStack) override;
 
-	void RemoveProperty(const Lib3MF_uint32 nIndex) override;
+	IVolumeDataProperty * FindProperty(const std::string & sName) override;
 
+	void RemoveProperty(const std::string & sName) override;
 };
 
 } // namespace Impl

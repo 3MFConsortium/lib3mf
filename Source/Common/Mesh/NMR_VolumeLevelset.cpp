@@ -68,6 +68,4 @@ namespace NMR {
 		m_sChannelName = sChannelName;
 	}
 
-	
-
 }

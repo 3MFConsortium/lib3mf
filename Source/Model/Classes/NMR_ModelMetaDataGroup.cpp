@@ -47,7 +47,6 @@ namespace NMR {
 		m_MetaDataMap.clear();
 	}
 
-
 	PModelMetaData CModelMetaDataGroup::addMetaData(_In_ std::string sNameSpace, _In_ std::string sName, _In_ std::string sValue, _In_ std::string sType, _In_ nfBool bPreserve)
 	{
 		if (hasMetaData(composeNamespaceAndNameIntoKey(sNameSpace, sName))) {

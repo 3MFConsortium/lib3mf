@@ -749,7 +749,7 @@
 			<param name="PropertyID" type="uint32" class="uint32" pass="out" description="New PropertyID of the material."/>
 			<param name="ChannelName" type="string" pass="out" description="The new name of the channel that holds the intensity function of this Material within the Composite" />
 		</method>
-		<method name="AddMaterialMapping" description="Returns the levelset data">
+		<method name="AddMaterialMapping" description="Adds a the MaterialMapping">
 			<param name="PropertyID" type="uint32" class="uint32" pass="in" description="PropertyID of the new MaterialMapping"/>
 			<param name="ChannelName" type="string" pass="in" description="The name of the channel that holds the intensity function of the new Material within the Composite" />
 		</method>
@@ -808,12 +808,17 @@
 			<param name="Index" type="uint32" pass="in" description="the index of the VolumeDataProperty to be returned."/>
 			<param name="ThePropertyData" type="class" class="VolumeDataProperty" pass="return" description="the VolumeDataProperty at the given index."/>
 		</method>
+		<method name="FindProperty" description="Returns the VolumeDataProperty at a given Index">
+			<param name="Name" type="string" pass="in" description="the qualified name of the VolumeDataProperty to be returned."/>
+			<param name="ThePropertyData" type="optionalclass" class="VolumeDataProperty" pass="return" description="the VolumeDataProperty at the given index."/>
+		</method>
 		<method name="AddProperty" description="Adds a new VolumeDataProperty">
+			<param name="Name" type="string" pass="in" description="the qualified name (namespace+name) of the Property"/>
 			<param name="TheVolumetricStack" type="class" class="VolumetricStack" pass="in" description="The VolumetricStack for the new VolumeDataProperty."/>
 			<param name="ThePropertyData" type="class" class="VolumeDataProperty" pass="return" description="the new VolumeDataProperty."/>
 		</method>
-		<method name="RemoveProperty" description="Removes the VolumeDataProperty at a given Index">
-			<param name="Index" type="uint32" pass="in" description="the index of the VolumeDataProperty to be removed."/>
+		<method name="RemoveProperty" description="Removes the VolumeDataProperty with a given name">
+			<param name="Name" type="string" pass="in" description="the qualified name of the VolumeDataProperty to be removed."/>
 		</method>
 	</class>
 	

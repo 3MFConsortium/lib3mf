@@ -33,6 +33,7 @@ Abstract: This is a stub class definition of CVolumeData
 
 // Include custom headers here.
 #include "lib3mf_volumedatalevelset.hpp"
+#include "lib3mf_volumedataproperty.hpp"
 
 using namespace Lib3MF::Impl;
 
@@ -86,21 +87,38 @@ IVolumeDataColor * CVolumeData::CreateNewColor(IVolumetricStack* pTheVolumetricS
 
 Lib3MF_uint32 CVolumeData::GetPropertyCount()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return m_pVolumeData->GetPropertyCount();
 }
 
 IVolumeDataProperty * CVolumeData::GetProperty(const Lib3MF_uint32 nIndex)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	auto pProperty = m_pVolumeData->GetProperty(nIndex);
+	return new CVolumeDataProperty(pProperty, m_pModel);
 }
 
-IVolumeDataProperty * CVolumeData::AddProperty(IVolumetricStack* pTheVolumetricStack)
+IVolumeDataProperty * CVolumeData::AddProperty(const std::string & sName, IVolumetricStack* pTheVolumetricStack)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	NMR::PModelVolumetricStack pVolStack = m_pModel->findVolumetricStack(pTheVolumetricStack->GetResourceID());
+	if (!pVolStack) {
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_RESOURCENOTFOUND);
+	}
+	m_pVolumeData->CreateProperty(sName, pVolStack);
+
+	auto pProperty = m_pVolumeData->CreateProperty(sName, pVolStack);
+	return new CVolumeDataProperty(pProperty, m_pModel);
 }
 
-void CVolumeData::RemoveProperty(const Lib3MF_uint32 nIndex)
+IVolumeDataProperty* CVolumeData::FindProperty(const std::string & sName)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	auto pProperty = m_pVolumeData->FindProperty(sName);
+	if (pProperty) {
+		return new CVolumeDataProperty(pProperty, m_pModel);
+	}
+	return nullptr;
+}
+
+void CVolumeData::RemoveProperty(const std::string & sName)
+{
+	m_pVolumeData->RemoveProperty(sName);
 }
 

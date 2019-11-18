@@ -73,7 +73,7 @@ public:
 	* Put additional public members here. They will not be visible in the external API.
 	*/
 
-	CVolumeDataItem(NMR::PVolumeBase m_pVolumeBase, NMR::CModel* pModel);
+	CVolumeDataItem(NMR::PVolumeBase pVolumeBase, NMR::CModel* pModel);
 
 	/**
 	* Public member functions to implement.

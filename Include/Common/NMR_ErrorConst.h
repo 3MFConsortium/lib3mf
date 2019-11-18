@@ -1250,6 +1250,9 @@ Model error codes (0x8XXX)
 // Invalid VolumeData Solid Threshold
 #define NMR_ERROR_INVALIDVOLUMEDATASOLIDTHRESHOLD 0x8118
 
+// Duplicate VolumeData Property
+#define NMR_ERROR_DUPLICATEVOLUMEDATAPROPERTY 0x8119
+
 
 /*-------------------------------------------------------------------
 XML Parser Error Constants (0x9XXX)
