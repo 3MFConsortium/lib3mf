@@ -33,6 +33,7 @@ NMR_ModelMetaDataGroup.cpp implements the Model MetaData Group Class.
 #include "Model/Classes/NMR_ModelMetaDataGroup.h"
 #include "Common/NMR_Exception.h"
 #include "Model/Classes/NMR_ModelConstants.h"
+#include "Common/NMR_StringUtils.h"
 
 namespace NMR {
 
@@ -49,7 +50,7 @@ namespace NMR {
 
 	PModelMetaData CModelMetaDataGroup::addMetaData(_In_ std::string sNameSpace, _In_ std::string sName, _In_ std::string sValue, _In_ std::string sType, _In_ nfBool bPreserve)
 	{
-		if (hasMetaData(CModelMetaData::calculateKey(sNameSpace, sName))) {
+		if (hasMetaData(composeNamespaceAndNameIntoKey(sNameSpace, sName))) {
 			throw CNMRException(NMR_ERROR_DUPLICATEMETADATA);
 		}
 		

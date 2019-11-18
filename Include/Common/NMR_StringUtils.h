@@ -142,6 +142,9 @@ namespace NMR {
 		}
 		return vctValues;
 	}
+
+	void decomposeKeyIntoNamespaceAndName(const std::string &sKey, std::string &sNameSpace, std::string &sName);
+	std::string composeNamespaceAndNameIntoKey(const std::string &sNameSpace, const std::string &sName);
 }
 
 #endif // __NMR_STRINGUTILS

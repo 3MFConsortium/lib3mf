@@ -823,6 +823,24 @@ namespace NMR {
 		}
 	}
 
-	
+	void decomposeKeyIntoNamespaceAndName(const std::string &sKey, std::string &sNameSpace, std::string &sName) {
+		size_t cInd = sKey.find(":");
+		if (cInd != std::string::npos) {
+			sNameSpace = sKey.substr(0, cInd);
+			sName = sKey.substr(cInd + 1, sKey.length() - cInd);
+		}
+		else {
+			sNameSpace = "";
+			sName = sKey;
+		}
+	}
+
+	std::string composeNamespaceAndNameIntoKey(const std::string &sNameSpace, const std::string &sName)
+	{
+		if (sNameSpace.empty())
+			return sName;
+		else
+			return sNameSpace + ":" + sName;
+	}
 
 }

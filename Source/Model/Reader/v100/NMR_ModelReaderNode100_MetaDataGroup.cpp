@@ -77,7 +77,7 @@ namespace NMR {
 						m_pWarnings->addWarning(MODELREADERWARNING_DUPLICATEMETADATA, NMR_ERROR_DUPLICATEMETADATA, mrwInvalidOptionalValue);
 					}
 					std::string sNameSpace, sName;
-					CModelMetaData::decomposeKeyIntoNamespaceAndName(sKey, sNameSpace, sName);
+					decomposeKeyIntoNamespaceAndName(sKey, sNameSpace, sName);
 					if (!sNameSpace.empty()) {
 						std::string sNameSpaceURI;
 						if (!pXMLReader->GetNamespaceURI(sNameSpace, sNameSpaceURI)) {
