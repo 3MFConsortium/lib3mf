@@ -3,3 +3,5 @@ Lib
 Include
 Bin
 Bindings
+Examples/*/*.dll
+Examples/*/*.stl
