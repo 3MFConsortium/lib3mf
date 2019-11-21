@@ -53,5 +53,10 @@ set_target_properties(${TESTNAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_C
 
 add_test(${TESTNAME} ${CMAKE_CURRENT_BINARY_DIR}/${TESTNAME})
 
-set(STARTUPPROJECT ${STARTUPPROJECT} PARENT_SCOPE)
+find_program(VALGRIND "valgrind")
+if(VALGRIND)
+        add_custom_target(lib3mf_memcheck
+                COMMAND "${VALGRIND}" --tool=memcheck --leak-check=full --error-exitcode=1 --suppressions=${CMAKE_SOURCE_DIR}/Tests/memcheck/conditional.valgrind.supp  $<TARGET_FILE:${TESTNAME}>)
+endif()
 
+set(STARTUPPROJECT ${STARTUPPROJECT} PARENT_SCOPE)
