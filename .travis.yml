@@ -13,14 +13,14 @@ matrix:
     - os: linux
       dist: bionic
       compiler: gcc
-      env: BUILDMODE=cmake-make
+      env: BUILDMODE=cmake-make-linux
       addons:
         apt:
           packages:
             - valgrind
     - os: osx
       osx_image: xcode7.2
-      env: BUILDMODE=cmake-make
+      env: BUILDMODE=cmake-make-osx
     - os: linux
       env: BUILDMODE=ppcxenial
     - os: linux
@@ -38,7 +38,8 @@ matrix:
 
 before_script:
     - if [[ "$BUILDMODE" = "cmake-mingw32" ]]; then sh cmake/GenerateMinGW.sh; cd build; fi
-    - if [[ "$BUILDMODE" = "cmake-make" ]]; then sh cmake/GenerateMake.sh; cd build; fi
+    - if [[ "$BUILDMODE" = "cmake-make-linux" ]]; then sh cmake/GenerateMake.sh; cd build; fi
+    - if [[ "$BUILDMODE" = "cmake-make-osx" ]]; then sh cmake/GenerateMake.sh; cd build; fi
     - if [[ "$BUILDMODE" = "ppcxenial" ]]; then
       docker pull multiarch/qemu-user-static ;
       docker pull multiarch/ubuntu-debootstrap:powerpc-xenial ;
@@ -48,5 +49,6 @@ before_script:
 
 script:
     - if [[ "$BUILDMODE" != "ppcxenial" ]]; then cmake --build .; fi
-    - if [[ "$BUILDMODE" == "cmake-make" ]]; then ctest -V; cmake --build . --target lib3mf_memcheck; fi
+    - if [[ "$BUILDMODE" == "cmake-make-linux" ]]; then ctest -V; cmake --build . --target lib3mf_memcheck; fi
+    - if [[ "$BUILDMODE" == "cmake-make-osx" ]]; then ctest -V; fi
     - if [[ "$BUILDMODE" == "ppcxenial" ]]; then docker run ppc-xenial; fi
