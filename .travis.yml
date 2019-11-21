@@ -11,6 +11,7 @@ services:
 matrix:
   include:
     - os: linux
+      dist: bionic
       compiler: gcc
       env: BUILDMODE=cmake-make
       addons:
