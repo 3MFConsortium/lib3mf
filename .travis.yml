@@ -13,9 +13,17 @@ matrix:
     - os: linux
       compiler: gcc
       env: BUILDMODE=cmake-make
+      addons:
+        apt:
+          packages:
+            - valgrind
     - os: osx
       osx_image: xcode7.2
       env: BUILDMODE=cmake-make
+      addons:
+        homebrew:
+          packages:
+            - valgrind
     - os: linux
       env: BUILDMODE=ppcxenial
     - os: linux
@@ -42,6 +50,6 @@ before_script:
       fi
 
 script:
-    - if [[ "$BUILDMODE" != "ppcxenial" ]]; then cmake --build . ; fi
-    - if [[ "$BUILDMODE" == "cmake-make" ]]; then ctest -V ; fi
+    - if [[ "$BUILDMODE" != "ppcxenial" ]]; then cmake --build .; fi
+    - if [[ "$BUILDMODE" == "cmake-make" ]]; then ctest -V; cmake --build . --target lib3mf_memcheck; fi
     - if [[ "$BUILDMODE" == "ppcxenial" ]]; then docker run ppc-xenial; fi
