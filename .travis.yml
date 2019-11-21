@@ -18,6 +18,8 @@ matrix:
       env: BUILDMODE=cmake-make
     - os: linux
       env: BUILDMODE=ppcxenial
+    - os: windows
+      env: BUILDMODE=windows
     - os: linux
       dist: trusty
       compiler: x86_64-w64-mingw32-g++
@@ -34,14 +36,16 @@ matrix:
 before_script:
     - if [[ "$BUILDMODE" = "cmake-mingw32" ]]; then sh cmake/GenerateMinGW.sh; cd build; fi
     - if [[ "$BUILDMODE" = "cmake-make" ]]; then sh cmake/GenerateMake.sh; cd build; fi
-    - if [[ "$BUILDMODE" = "ppcxenial" ]]; then
-      docker pull multiarch/qemu-user-static ;
-      docker pull multiarch/ubuntu-debootstrap:powerpc-xenial ;
-      docker run --rm --privileged multiarch/qemu-user-static --reset -p y ;
-      docker build -t ppc-xenial -f CI/Dockerfile . ;
-      fi
+    - if [[ "$BUILDMODE" = "windows" ]]; then sh cmake/GenerateVS2017.bat; cd build; fi
+    #- if [[ "$BUILDMODE" = "ppcxenial" ]]; then
+    #  docker pull multiarch/qemu-user-static ;
+    #  docker pull multiarch/ubuntu-debootstrap:powerpc-xenial ;
+    #  docker run --rm --privileged multiarch/qemu-user-static --reset -p y ;
+    #  docker build -t ppc-xenial -f CI/Dockerfile . ;
+    #  fi
 
 script:
     - if [[ "$BUILDMODE" != "ppcxenial" ]]; then cmake --build . ; fi
     - if [[ "$BUILDMODE" == "cmake-make" ]]; then ctest -V ; fi
-    - if [[ "$BUILDMODE" == "ppcxenial" ]]; then docker run ppc-xenial; fi
+    - if [[ "$BUILDMODE" == "windows" ]]; then ctest -V ; fi
+    #- if [[ "$BUILDMODE" == "ppcxenial" ]]; then docker run ppc-xenial; fi
