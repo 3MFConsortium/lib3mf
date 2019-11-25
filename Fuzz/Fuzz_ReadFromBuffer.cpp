@@ -28,565 +28,264 @@ Abstract:
 ExtractInfo.cpp : 3MF Read Example
 
 --*/
-
-#ifndef __GNUC__
-#include <tchar.h>
-#include <Windows.h>
-#endif // __GNUC__
+/*++
+ 
+ Copyright (C) 2019 3MF Consortium
+ 
+ All rights reserved.
+ 
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions are met:
+ * Redistributions of source code must retain the above copyright
+ notice, this list of conditions and the following disclaimer.
+ * Redistributions in binary form must reproduce the above copyright
+ notice, this list of conditions and the following disclaimer in the
+ documentation and/or other materials provided with the distribution.
+ 
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ DISCLAIMED. IN NO EVENT SHALL MICROSOFT AND/OR NETFABB BE LIABLE FOR ANY
+ DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ 
+ Abstract:
+ 
+ ExtractInfo.cpp : 3MF Read Example
+ 
+ --*/
 
 #include <iostream>
 #include <string>
-#include <vector>
 #include <algorithm>
 
-// Plain C Includes of 3MF Library
-#include "Model/COM/NMR_DLLInterfaces.h"
+#include "lib3mf_implicit.hpp"
 
-// Use NMR namespace for the interfaces
-using namespace NMR;
+using namespace Lib3MF;
 
 
-HRESULT ShowObjectProperties(_In_ PLib3MFModelObjectResource * pObject)
+void printVersion(PWrapper wrapper) {
+  Lib3MF_uint32 nMajor, nMinor, nMicro;
+  wrapper->GetLibraryVersion(nMajor, nMinor, nMicro);
+  std::cout << "lib3mf version = " << nMajor << "." << nMinor << "." << nMicro;
+  std::string sReleaseInfo, sBuildInfo;
+  if (wrapper->GetPrereleaseInformation(sReleaseInfo)) {
+    std::cout << "-" << sReleaseInfo;
+  }
+  if (wrapper->GetBuildInformation(sBuildInfo)) {
+    std::cout << "+" << sBuildInfo;
+  }
+  std::cout << std::endl;
+}
+
+void ShowThumbnailInformation(PModel model)
 {
-    HRESULT hResult;
-    DWORD nNeededChars;
-    std::vector<char> pBuffer;
-    std::string sName;
-    std::string sPartNumber;
-
-    // Retrieve Mesh Name Length
-    hResult = lib3mf_object_getnameutf8(pObject, NULL, 0, &nNeededChars);
-    if (hResult != LIB3MF_OK)
-        return hResult;
-
-    // Retrieve Mesh Name
-    if (nNeededChars > 0) {
-        pBuffer.resize(nNeededChars + 1);
-        hResult = lib3mf_object_getnameutf8(pObject, &pBuffer[0], nNeededChars + 1, NULL);
-        pBuffer[nNeededChars] = 0;
-        sName = std::string(&pBuffer[0]);
-    }
-
-    // Retrieve Mesh Part Number Length
-    hResult = lib3mf_object_getpartnumberutf8(pObject, NULL, 0, &nNeededChars);
-    if (hResult != LIB3MF_OK)
-        return hResult;
-
-    // Retrieve Mesh Name
-    if (nNeededChars > 0) {
-        pBuffer.resize(nNeededChars + 1);
-        hResult = lib3mf_object_getpartnumberutf8(pObject, &pBuffer[0], nNeededChars + 1, NULL);
-        pBuffer[nNeededChars] = 0;
-        sPartNumber = std::string(&pBuffer[0]);
-    }
-
-    // Output Object type
-    DWORD ObjectType;
-    hResult = lib3mf_object_gettype(pObject, &ObjectType);
-    if (hResult != LIB3MF_OK)
-        return hResult;
-
-    switch (ObjectType) {
-        case MODELOBJECTTYPE_MODEL:
-            break;
-        case MODELOBJECTTYPE_SUPPORT:
-            break;
-        case MODELOBJECTTYPE_SOLIDSUPPORT:
-            break;
-        case MODELOBJECTTYPE_OTHER:
-            break;
-        default:
-            break;
-
-    }
-
-
-    return LIB3MF_OK;
+  /*
+   // TODO: this is not yet implemented in Lib3MF
+   */
 }
 
 
-
-HRESULT ShowMeshObjectInformation(_In_ PLib3MFModelMeshObject * pMeshObject, _In_ PLib3MFModel * pModel)
+void ShowMetaDataInformation(PMetaDataGroup metaDataGroup)
 {
-    HRESULT hResult;
-    DWORD nVertexCount, nTriangleCount, nBeamCount, nSliceCount = 0;
-    DWORD nBeamSetCount;
-    BOOL bHasRepresentation;
-    DWORD nRepresentationMesh, nClippingMesh;
-    eModelBeamLatticeClipMode nClipMode;
-
-    hResult = ShowObjectProperties(pMeshObject);
-    if (hResult != LIB3MF_OK)
-        return hResult;
-
-    // Retrieve Mesh Vertex Count
-    hResult = lib3mf_meshobject_getvertexcount(pMeshObject, &nVertexCount);
-    if (hResult != LIB3MF_OK)
-        return hResult;
-
-    // Retrieve Mesh Triangle Count
-    hResult = lib3mf_meshobject_gettrianglecount(pMeshObject, &nTriangleCount);
-    if (hResult != LIB3MF_OK)
-        return hResult;
-
-    // Retrieve Mesh Beam Count
-    hResult = lib3mf_meshobject_getbeamcount(pMeshObject, &nBeamCount);
-    if (hResult != LIB3MF_OK)
-        return hResult;
-
-    if (nBeamCount > 0) {
-        hResult = lib3mf_meshobject_getbeamsetcount(pMeshObject, &nBeamSetCount);
-        if (hResult != LIB3MF_OK)
-            return hResult;
-        hResult = lib3mf_meshobject_getbeamlattice_representation(pMeshObject, &bHasRepresentation, &nRepresentationMesh);
-        if (hResult != LIB3MF_OK)
-            return hResult;
-        hResult = lib3mf_meshobject_getbeamlattice_clipping(pMeshObject, &nClipMode, &nClippingMesh);
-        if (hResult != LIB3MF_OK)
-            return hResult;
-    }
-
-
-    DWORD nSliceStackId;
-    hResult = lib3mf_meshobject_getslicestackid(pMeshObject, &nSliceStackId);
-    if (hResult != LIB3MF_OK)
-        return hResult;
-
-    DWORD nTotalPolygons = 0;
-    if (nSliceStackId > 0) {
-        PLib3MFSliceStack *pSliceStack;
-        hResult = lib3mf_model_getslicestackById(pModel, nSliceStackId, &pSliceStack);
-        if (hResult != LIB3MF_OK)
-            return hResult;
-        hResult = lib3mf_slicestack_getslicecount(pSliceStack, &nSliceCount);
-        if (hResult != LIB3MF_OK)
-            return hResult;
-        for (DWORD iSlice = 0; iSlice < nSliceCount; iSlice++) {
-            PLib3MFSlice *pSlice;
-            hResult = lib3mf_slicestack_getslice(pSliceStack, iSlice, &pSlice);
-            if (hResult != LIB3MF_OK)
-                return hResult;
-            DWORD nPolygonCount;
-            hResult = lib3mf_slice_getpolygoncount(pSlice, &nPolygonCount);
-            if (hResult != LIB3MF_OK)
-                return hResult;
-            for (DWORD polInd = 0; polInd < nPolygonCount; polInd++) {
-                DWORD nPolygonIndexCount;
-                hResult = lib3mf_slice_getpolygonindexcount(pSlice, polInd, &nPolygonIndexCount);
-                if (hResult != LIB3MF_OK)
-                    return hResult;
-                nTotalPolygons += nPolygonIndexCount;
-                std::vector<DWORD> vctPoldIndices(nPolygonIndexCount);
-                hResult = lib3mf_slice_getpolygonindices(pSlice, polInd, &vctPoldIndices[0], nPolygonIndexCount);
-                if (hResult != LIB3MF_OK)
-                    return hResult;
-            }
-        }
-    }
-
-    return LIB3MF_OK;
+  Lib3MF_uint32 nMetaDataCount = metaDataGroup->GetMetaDataCount();
+  
+  for (Lib3MF_uint32 iMeta = 0; iMeta < nMetaDataCount; iMeta++) {
+    
+    PMetaData metaData = metaDataGroup->GetMetaData(iMeta);
+    std::string sMetaDataValue = metaData->GetValue();
+    std::string sMetaDataName = metaData->GetName();
+    std::cout << "Metadatum: " << iMeta << ":" << std::endl;
+    std::cout << "Name  = \"" << sMetaDataName << "\"" << std::endl;
+    std::cout << "Value = \"" << sMetaDataValue << "\"" << std::endl;
+  }
 }
 
-HRESULT ShowComponentsObjectInformation(_In_ PLib3MFModelComponentsObject * pComponentsObject)
+void ShowSliceStack(PSliceStack sliceStack, std::string indent)
 {
-    HRESULT hResult;
-    hResult = ShowObjectProperties(pComponentsObject);
-    if (hResult != LIB3MF_OK)
-        return hResult;
-
-    // Retrieve Component
-    DWORD nComponentCount;
-    DWORD nIndex;
-    hResult = lib3mf_componentsobject_getcomponentcount(pComponentsObject, &nComponentCount);
-    if (hResult != LIB3MF_OK)
-        return hResult;
-
-
-    for (nIndex = 0; nIndex < nComponentCount; nIndex++) {
-        DWORD nResourceID;
-        PLib3MFModelComponent * pComponent;
-        hResult = lib3mf_componentsobject_getcomponent(pComponentsObject, nIndex, &pComponent);
-        if (hResult != LIB3MF_OK) {
-            return hResult;
-        }
-
-        hResult = lib3mf_component_getobjectresourceid(pComponent, &nResourceID);
-        if (hResult != LIB3MF_OK) {
-            lib3mf_release(pComponent);
-            return hResult;
-        }
-
-        BOOL bHasTransform;
-        hResult = lib3mf_component_hastransform(pComponent, &bHasTransform);
-        if (hResult != LIB3MF_OK) {
-            lib3mf_release(pComponent);
-            return hResult;
-        }
-
-        if (bHasTransform) {
-            MODELTRANSFORM Transform;
-
-            // Retrieve Transform
-            hResult = lib3mf_component_gettransform(pComponent, &Transform);
-            if (hResult != LIB3MF_OK) {
-                lib3mf_release(pComponent);
-                return hResult;
-            }
-
-        }
-
+  std::cout << indent << "SliceStackID:  " << sliceStack->GetResourceID() << std::endl;
+  if (sliceStack->GetSliceCount() > 0) {
+    std::cout << indent << "  Slice count:  " << sliceStack->GetSliceCount() << std::endl;
+  }
+  if (sliceStack->GetSliceRefCount() > 0) {
+    std::cout << indent << "  Slice ref count:  " << sliceStack->GetSliceRefCount() << std::endl;
+    for (Lib3MF_uint64 iSliceRef = 0; iSliceRef < sliceStack->GetSliceRefCount(); iSliceRef++) {
+      std::cout << indent << "  Slice ref :  " << sliceStack->GetSliceStackReference(iSliceRef)->GetResourceID() << std::endl;
     }
+  }
+}
 
-    return LIB3MF_OK;
+void ShowObjectProperties(PObject object)
+{
+  std::cout << "   Name:            \"" << object->GetName() << "\"" << std::endl;
+  std::cout << "   PartNumber:      \"" << object->GetPartNumber() << "\"" << std::endl;
+  
+  switch (object->GetType()) {
+    case eObjectType::Model:
+      std::cout << "   Object type:     model" << std::endl;
+      break;
+    case eObjectType::Support:
+      std::cout << "   Object type:     support" << std::endl;
+      break;
+    case eObjectType::SolidSupport:
+      std::cout << "   Object type:     solidsupport" << std::endl;
+      break;
+    case eObjectType::Other:
+      std::cout << "   Object type:     other" << std::endl;
+      break;
+    default:
+      std::cout << "   Object type:     invalid" << std::endl;
+      break;
+  }
+  
+  if (object->HasSlices(false)) {
+    PSliceStack sliceStack = object->GetSliceStack();
+    ShowSliceStack(sliceStack, "   ");
+  }
+  
+  if (object->GetMetaDataGroup()->GetMetaDataCount() > 0) {
+    ShowMetaDataInformation(object->GetMetaDataGroup());
+  }
+}
+
+void ShowMeshObjectInformation(PMeshObject meshObject)
+{
+  std::cout << "mesh object #" << meshObject->GetResourceID() << ": " << std::endl;
+  
+  ShowObjectProperties(meshObject);
+  
+  Lib3MF_uint64 nVertexCount = meshObject->GetVertexCount();
+  Lib3MF_uint64 nTriangleCount = meshObject->GetTriangleCount();
+  PBeamLattice beamLattice = meshObject->BeamLattice();
+  
+  // Output data
+  std::cout << "   Vertex count:    " << nVertexCount << std::endl;
+  std::cout << "   Triangle count:  " << nTriangleCount << std::endl;
+  
+  Lib3MF_uint64 nBeamCount = beamLattice->GetBeamCount();
+  if (nBeamCount > 0) {
+    std::cout << "   Beam count:  " << nBeamCount << std::endl;
+    Lib3MF_uint32 nRepresentationMesh;
+    if (beamLattice->GetRepresentation(nRepresentationMesh))
+      std::cout << "   |_Representation Mesh ID:  " << nRepresentationMesh << std::endl;
+    eLib3MFBeamLatticeClipMode eClipMode;
+    Lib3MF_uint32 nClippingMesh;
+    beamLattice->GetClipping(eClipMode, nClippingMesh);
+    if (eClipMode != eBeamLatticeClipMode::NoClipMode)
+      std::cout << "   |_Clipping Mesh ID:  " << nClippingMesh << "(mode=" << (int)eClipMode << ")" << std::endl;
+    if (beamLattice->GetBeamSetCount() > 0) {
+      std::cout << "   |_BeamSet count:  " << beamLattice->GetBeamSetCount() << std::endl;
+    }
+  }
+  
+}
+
+void ShowTransform(sLib3MFTransform transform, std::string indent) {
+  std::cout << indent << "Transformation:  [ " << transform.m_Fields[0][0] << " " << transform.m_Fields[1][0] << " " << transform.m_Fields[2][0] << " " << transform.m_Fields[3][0] << " ]" << std::endl;
+  std::cout << indent << "                 [ " << transform.m_Fields[0][1] << " " << transform.m_Fields[1][1] << " " << transform.m_Fields[2][1] << " " << transform.m_Fields[3][1] << " ]" << std::endl;
+  std::cout << indent << "                 [ " << transform.m_Fields[0][2] << " " << transform.m_Fields[1][2] << " " << transform.m_Fields[2][2] << " " << transform.m_Fields[3][2] << " ]" << std::endl;
+}
+
+void ShowComponentsObjectInformation(PComponentsObject componentsObject)
+{
+  std::cout << "components object #" << componentsObject->GetResourceID() << ": " << std::endl;
+  
+  ShowObjectProperties(componentsObject);
+  std::cout << "   Component count:    " << componentsObject->GetComponentCount() << std::endl;
+  for (Lib3MF_uint32 nIndex = 0; nIndex < componentsObject->GetComponentCount(); nIndex++) {
+    PComponent component = componentsObject->GetComponent(nIndex);
+    
+    std::cout << "   Component " << nIndex << ":    Object ID:   " << component->GetObjectResourceID() << std::endl;
+    if (component->HasTransform()) {
+      ShowTransform(component->GetTransform(), "                   ");
+    }
+    else {
+      std::cout << "                   Transformation:  none" << std::endl;
+    }
+  }
 }
 
 
-HRESULT ShowMetaDataInformation(_In_ PLib3MFModel * pModel)
-{
-    HRESULT hResult;
-    DWORD nMetaCount;
-
-    hResult = lib3mf_model_getmetadatacount(pModel, &nMetaCount);
-    if (hResult != LIB3MF_OK) {
-        return -1;
-    }
-
-    for (DWORD iMeta = 0; iMeta < nMetaCount; iMeta++) {
-        std::string sMetaDataKey;
-        std::string sMetaDataValue;
-        DWORD nNeededChars;
-        hResult = lib3mf_model_getmetadatakeyutf8(pModel, iMeta, NULL, 0, &nNeededChars);
-        if (hResult != LIB3MF_OK) {
-            return hResult;
-        }
-        // Retrieve Mesh Name
-        if (nNeededChars > 0) {
-            std::vector<char> pBuffer;
-            pBuffer.resize(nNeededChars + 1);
-            hResult = lib3mf_model_getmetadatakeyutf8(pModel, iMeta, &pBuffer[0], nNeededChars + 1, NULL);
-            if (hResult != LIB3MF_OK) {
-                return hResult;
-            }
-            pBuffer[nNeededChars] = 0;
-            sMetaDataKey = std::string(&pBuffer[0]);
-        }
-
-        hResult = lib3mf_model_getmetadatavalueutf8(pModel, iMeta, NULL, 0, &nNeededChars);
-        if (hResult != LIB3MF_OK) {
-            return hResult;
-        }
-        // Retrieve Mesh Name
-        if (nNeededChars > 0) {
-            std::vector<char> pBuffer;
-            pBuffer.resize(nNeededChars + 1);
-            hResult = lib3mf_model_getmetadatavalueutf8(pModel, iMeta, &pBuffer[0], nNeededChars + 1, NULL);
-            if (hResult != LIB3MF_OK) {
-                return hResult;
-            }
-            pBuffer[nNeededChars] = 0;
-            sMetaDataValue = std::string(&pBuffer[0]);
-        }
-    }
-    return LIB3MF_OK;
-}
-
-extern "C" int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size)
-{
-    // General Variables
-    HRESULT hResult;
-    DWORD nInterfaceVersionMajor, nInterfaceVersionMinor, nInterfaceVersionMicro;
-    BOOL pbHasNext;
-    DWORD nWarningCount, nErrorCode, nNeededChars;
-    LPCSTR pszErrorMessage;
-
-    // Objects
-    PLib3MFModel * pModel;
-    PLib3MFModelReader * p3MFReader;
-    PLib3MFModelBuildItemIterator * pBuildItemIterator;
-    PLib3MFModelResourceIterator * pResourceIterator;
-
-
-
-    // Check 3MF Library Version
-    hResult = lib3mf_getinterfaceversion(&nInterfaceVersionMajor, &nInterfaceVersionMinor, &nInterfaceVersionMicro);
-    if (hResult != LIB3MF_OK) {
-        return -1;
-    }
-
-    if ((nInterfaceVersionMajor != NMR_APIVERSION_INTERFACE_MAJOR)) {
-        return -1;
-    }
-    if (!(nInterfaceVersionMinor >= NMR_APIVERSION_INTERFACE_MINOR)) {
-        return -1;
-    }
-
-    // Create Model Instance
-    hResult = lib3mf_createmodel(&pModel);
-    if (hResult != LIB3MF_OK) {
-        return -1;
-    }
-
-    // Create Model Reader
-    hResult = lib3mf_model_queryreader(pModel, "3mf", &p3MFReader);
-    if (hResult != LIB3MF_OK) {
-        lib3mf_getlasterror(pModel, &nErrorCode, &pszErrorMessage);
-        lib3mf_release(pModel);
-        return -1;
-    }
-
+void ExtractInfoExample(const uint8_t *Data, size_t Size) {
+  PWrapper wrapper = CWrapper::loadLibrary();
+  
+  std::cout << "------------------------------------------------------------------" << std::endl;
+  std::cout << "3MF Read example" << std::endl;
+  printVersion(wrapper);
+  std::cout << "------------------------------------------------------------------" << std::endl;
+  
+  PModel model = wrapper->CreateModel();
+  
+  // Import Model from 3MF File
+  {
+    PReader reader = model->QueryReader("3mf");
     // And deactivate the strict mode (default is "false", anyway. This just demonstrates where/how to use it).
-    hResult = lib3mf_reader_setstrictmodeactive(p3MFReader, false);
-
-    // Import Model from 3MF File
-    bool bErrorOnRead = false;
-    hResult = lib3mf_reader_readfrombuffer(p3MFReader, (BYTE*) Data, Size);
-    if (hResult != LIB3MF_OK) {
-        lib3mf_getlasterror(p3MFReader, &nErrorCode, &pszErrorMessage);
-        // don't abort right away
-        bErrorOnRead = true;
+    reader->SetStrictModeActive(false);
+    reader->ReadFromBuffer(CInputVector<Lib3MF_uint8>(Data, Size));
+    
+    for (Lib3MF_uint32 iWarning = 0; iWarning < reader->GetWarningCount(); iWarning++) {
+      Lib3MF_uint32 nErrorCode;
+      std::string sWarningMessage = reader->GetWarning(iWarning, nErrorCode);
+      std::cout << "Encountered warning #" << nErrorCode << " : " << sWarningMessage << std::endl;
     }
-
-    // Check warnings in any case:
-    hResult = lib3mf_reader_getwarningcount(p3MFReader, &nWarningCount);
-    if (hResult != LIB3MF_OK) {
-        lib3mf_release(p3MFReader);
-        lib3mf_release(pModel);
-        return -1;
+  }
+  ShowThumbnailInformation(model);
+  
+  ShowMetaDataInformation(model->GetMetaDataGroup());
+  
+  PSliceStackIterator sliceStacks = model->GetSliceStacks();
+  while (sliceStacks->MoveNext()) {
+    PSliceStack sliceStack = sliceStacks->GetCurrentSliceStack();
+    ShowSliceStack(sliceStack, "");
+  }
+  
+  PObjectIterator objectIterator = model->GetObjects();
+  while (objectIterator->MoveNext()) {
+    PObject object = objectIterator->GetCurrentObject();
+    if (object->IsMeshObject()) {
+      ShowMeshObjectInformation(model->GetMeshObjectByID(object->GetResourceID()));
     }
-
-    for (DWORD iWarning = 0; iWarning < nWarningCount; iWarning++) {
-        hResult = lib3mf_reader_getwarningutf8(p3MFReader, iWarning, &nErrorCode, NULL, 0, &nNeededChars);
-        if (hResult != LIB3MF_OK) {
-            lib3mf_release(p3MFReader);
-            lib3mf_release(pModel);
-            return hResult;
-        }
-
-        std::string sWarning;
-        sWarning.resize(nNeededChars + 1);
-        hResult = lib3mf_reader_getwarningutf8(p3MFReader, iWarning, &nErrorCode, &sWarning[0], nNeededChars + 1, NULL);
-        if (hResult != LIB3MF_OK) {
-            lib3mf_release(p3MFReader);
-            lib3mf_release(pModel);
-            return hResult;
-        }
-        // Insert custom warning handling here
+    else if (object->IsComponentsObject()) {
+      ShowComponentsObjectInformation(model->GetComponentsObjectByID(object->GetResourceID()));
     }
-
-    // Finally stop if we had an error on read
-    if (bErrorOnRead) {
-        lib3mf_release(p3MFReader);
-        lib3mf_release(pModel);
-        return -1;
+    else {
+      std::cout << "unknown object #" << object->GetResourceID() << ": " << std::endl;
     }
-
-    // Release model reader
-    lib3mf_release(p3MFReader);
-
-
-    // get metadata
-    hResult = ShowMetaDataInformation(pModel);
-    if (hResult != LIB3MF_OK) {
-        lib3mf_release(pModel);
-        return -1;
+  }
+  
+  
+  PBuildItemIterator buildItemIterator = model->GetBuildItems();
+  while (buildItemIterator->MoveNext()) {
+    PBuildItem buildItem = buildItemIterator->GetCurrent();
+    
+    std::cout << "Build item (Object #" << buildItem->GetObjectResourceID() << "): " << std::endl;
+    
+    if (buildItem->HasObjectTransform()) {
+      ShowTransform(buildItem->GetObjectTransform(), "   ");
     }
-
-    // Iterate through all the Objects
-    hResult = lib3mf_model_getobjects(pModel, &pResourceIterator);
-    if (hResult != LIB3MF_OK) {
-        lib3mf_release(pModel);
-        return -1;
+    else {
+      std::cout << "   Transformation:  none" << std::endl;
     }
-
-    hResult = lib3mf_resourceiterator_movenext(pResourceIterator, &pbHasNext);
-    if (hResult != LIB3MF_OK) {
-        lib3mf_release(pResourceIterator);
-        lib3mf_release(pModel);
-        return -1;
+    std::cout << "   Part number:     \"" << buildItem->GetPartNumber() << "\"" << std::endl;
+    if (buildItem->GetMetaDataGroup()->GetMetaDataCount() > 0) {
+      ShowMetaDataInformation(buildItem->GetMetaDataGroup());
     }
+  }
+  
+  std::cout << "done" << std::endl;
+}
 
-    while (pbHasNext) {
-        PLib3MFModelResource * pResource;
-        PLib3MFModelMeshObject * pMeshObject;
-        PLib3MFModelComponentsObject * pComponentsObject;
-        ModelResourceID ResourceID;
-
-        // get current resource
-        hResult = lib3mf_resourceiterator_getcurrent(pResourceIterator, &pResource);
-        if (hResult != LIB3MF_OK) {
-            lib3mf_release(pResourceIterator);
-            lib3mf_release(pModel);
-            return -1;
-        }
-
-        // get resource ID
-        hResult = lib3mf_resource_getresourceid(pResource, &ResourceID);
-        if (hResult != LIB3MF_OK) {
-            lib3mf_release(pResource);
-            lib3mf_release(pResourceIterator);
-            lib3mf_release(pModel);
-            return -1;
-        }
-
-        // Query mesh interface
-        BOOL bIsMeshObject;
-        hResult = lib3mf_object_ismeshobject(pResource, &bIsMeshObject);
-        if ((hResult == LIB3MF_OK) && (bIsMeshObject)) {
-
-            pMeshObject = pResource;
-
-            // Show Mesh Object Information
-            hResult = ShowMeshObjectInformation(pMeshObject, pModel);
-            if (hResult != LIB3MF_OK) {
-                lib3mf_release(pResource);
-                lib3mf_release(pResourceIterator);
-                lib3mf_release(pModel);
-                return -1;
-            }
-        }
-
-
-        // Query component interface
-        BOOL bIsComponentsObject;
-        hResult = lib3mf_object_iscomponentsobject(pResource, &bIsComponentsObject);
-        if ((hResult == LIB3MF_OK) && (bIsComponentsObject)) {
-
-            pComponentsObject = (PLib3MFModelComponentsObject*)pResource;
-
-            // Show Component Object Information
-            hResult = ShowComponentsObjectInformation(pComponentsObject);
-            if (hResult != LIB3MF_OK) {
-                lib3mf_release(pResource);
-                lib3mf_release(pResourceIterator);
-                lib3mf_release(pModel);
-                return -1;
-            }
-        }
-
-        // free instances
-        lib3mf_release(pResource);
-
-        hResult = lib3mf_resourceiterator_movenext(pResourceIterator, &pbHasNext);
-        if (hResult != LIB3MF_OK) {
-            return -1;
-        }
-    }
-
-    // Release Resource Iterator
-    lib3mf_release(pResourceIterator);
-
-
-    // Iterate through all the Build items
-    hResult = lib3mf_model_getbuilditems(pModel, &pBuildItemIterator);
-    if (hResult != LIB3MF_OK) {
-        lib3mf_release(pBuildItemIterator);
-        lib3mf_release(pModel);
-        return -1;
-    }
-
-    hResult = lib3mf_builditemiterator_movenext(pBuildItemIterator, &pbHasNext);
-    if (hResult != LIB3MF_OK) {
-        lib3mf_release(pBuildItemIterator);
-        lib3mf_release(pModel);
-        return -1;
-    }
-
-    while (pbHasNext) {
-
-        DWORD ResourceID;
-        MODELTRANSFORM Transform;
-        PLib3MFModelBuildItem * pBuildItem;
-        // Retrieve Build Item
-        hResult = lib3mf_builditemiterator_getcurrent(pBuildItemIterator, &pBuildItem);
-        if (hResult != LIB3MF_OK) {
-            lib3mf_release(pBuildItemIterator);
-            lib3mf_release(pModel);
-            return -1;
-        }
-
-        // Retrieve Resource
-        PLib3MFModelObjectResource * pObjectResource;
-        hResult = lib3mf_builditem_getobjectresource(pBuildItem, &pObjectResource);
-        if (hResult != LIB3MF_OK) {
-            lib3mf_release(pBuildItem);
-            lib3mf_release(pBuildItemIterator);
-            lib3mf_release(pModel);
-            return -1;
-        }
-
-        // Retrieve Resource ID
-        hResult = lib3mf_resource_getresourceid(pObjectResource, &ResourceID);
-        if (hResult != LIB3MF_OK) {
-            lib3mf_release(pObjectResource);
-            lib3mf_release(pBuildItem);
-            lib3mf_release(pBuildItemIterator);
-            lib3mf_release(pModel);
-            return -1;
-        }
-
-        // Release Object Resource ID
-        lib3mf_release(pObjectResource);
-
-
-        // Check Object Transform
-        BOOL bHasTransform;
-        hResult = lib3mf_builditem_hasobjecttransform(pBuildItem, &bHasTransform);
-        if (hResult != LIB3MF_OK) {
-            lib3mf_release(pBuildItem);
-            lib3mf_release(pBuildItemIterator);
-            lib3mf_release(pModel);
-            return -1;
-        }
-
-        if (bHasTransform) {
-            // Retrieve Transform
-            hResult = lib3mf_builditem_getobjecttransform(pBuildItem, &Transform);
-            if (hResult != LIB3MF_OK) {
-                lib3mf_release(pBuildItem);
-                lib3mf_release(pBuildItemIterator);
-                lib3mf_release(pModel);
-                return -1;
-            }
-
-        }
-
-
-        // Retrieve Mesh Part Number Length
-        std::string sPartNumber;
-        DWORD nNeededChars;
-        hResult = lib3mf_builditem_getpartnumberutf8(pBuildItem, NULL, 0, &nNeededChars);
-        if (hResult != LIB3MF_OK) {
-            lib3mf_release(pBuildItem);
-            lib3mf_release(pBuildItemIterator);
-            lib3mf_release(pModel);
-            return hResult;
-        }
-
-        // Retrieve Mesh Name
-        if (nNeededChars > 0) {
-            std::vector<char> pBuffer;
-            pBuffer.resize(nNeededChars + 1);
-            hResult = lib3mf_builditem_getpartnumberutf8(pBuildItem, &pBuffer[0], nNeededChars + 1, NULL);
-            pBuffer[nNeededChars] = 0;
-            sPartNumber = std::string(&pBuffer[0]);
-        }
-
-        // Release Build Item
-        lib3mf_release(pBuildItem);
-
-        // Move to next Item
-        hResult = lib3mf_builditemiterator_movenext(pBuildItemIterator, &pbHasNext);
-        if (hResult != LIB3MF_OK) {
-            return -1;
-        }
-    }
-
-
-    // Release Build Item Iterator
-    lib3mf_release(pBuildItemIterator);
-
-    // Release Model
-    lib3mf_release(pModel);
-
-    return 0;
+extern "C" int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
+  try {
+    ExtractInfoExample(Data, Size);
+  }
+  catch (ELib3MFException &e) {
+    std::cout << e.what() << std::endl;
+    return e.getErrorCode();
+  }
+  return 0;
 }
