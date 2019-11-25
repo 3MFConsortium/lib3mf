@@ -4,6 +4,7 @@
 [![Version 2.0.0](https://img.shields.io/static/v1.svg?label=lib3mf&message=v2.0.0&color=green)]()
 [![Supported platforms](https://img.shields.io/static/v1.svg?label=platform&message=windows%20%7C%20macos%20%7C%20linux&color=lightgrey)]()
 [![Simplified BSD License](https://img.shields.io/static/v1.svg?label=license&message=BSD&color=green)](LICENSE)
+[![Fuzzit Status](https://app.fuzzit.dev/badge?org_id=Bx6gSYcE8iMM5nhWY7iB&branch=master)](https://fuzzit.dev)
 
 lib3mf is a C++ implementation of the 3D Manufacturing Format file standard.
 

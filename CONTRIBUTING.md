@@ -60,7 +60,6 @@ A new folder `build` is created and contains projects for the IDE/build target y
 		2. Call `make` to build the projects
 		3. Run/debug a project 
 
-
 ## How to develop lib3mf
 
 lib3mf is based on the hourglass pattern for software components and uses the
@@ -70,3 +69,12 @@ to ease the development of this pattern.
 lib3mf's goal is to run on Windows, Linunx and MacOS and most of its code is platform independent.
 
 You can access nightly builds of lib3mf's [develop branch](https://github.com/3MFConsortium/lib3mf/tree/develop) on https://github.com/3MFConsortium/lib3mf-binaries.
+
+## Building Fuzzers for lib3mf
+```bash
+mkdir build
+cd build
+cmake -DLIB3MF_FUZZ=on  -DCMAKE_BUILD_TYPE=AddressSanitizer ..
+make -j4
+./Fuzz/Fuzz_ReadFromBuffer
+```

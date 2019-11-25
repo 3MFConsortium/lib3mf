@@ -3,3 +3,7 @@ build_32bit
 lib3MF.pc
 Include/Model/COM/NMR_COMVersion.h
 debug
+
+# Clion
+.idea
+cmake-build*
