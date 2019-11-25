@@ -23,6 +23,8 @@ matrix:
       env: BUILDMODE=cmake-make-osx
     - os: linux
       env: BUILDMODE=ppcxenial
+    - os: windows
+      env: BUILDMODE=windows
     - os: linux
       dist: trusty
       compiler: x86_64-w64-mingw32-g++
@@ -40,6 +42,7 @@ before_script:
     - if [[ "$BUILDMODE" = "cmake-mingw32" ]]; then sh cmake/GenerateMinGW.sh; cd build; fi
     - if [[ "$BUILDMODE" = "cmake-make-linux" ]]; then sh cmake/GenerateMake.sh; cd build; fi
     - if [[ "$BUILDMODE" = "cmake-make-osx" ]]; then sh cmake/GenerateMake.sh; cd build; fi
+    - if [[ "$BUILDMODE" = "windows" ]]; then cmake/GenerateVS2017.bat; cd build; fi
     - if [[ "$BUILDMODE" = "ppcxenial" ]]; then
       docker pull multiarch/qemu-user-static ;
       docker pull multiarch/ubuntu-debootstrap:powerpc-xenial ;
@@ -51,4 +54,5 @@ script:
     - if [[ "$BUILDMODE" != "ppcxenial" ]]; then cmake --build .; fi
     - if [[ "$BUILDMODE" == "cmake-make-linux" ]]; then ctest -V; cmake --build . --target lib3mf_memcheck; fi
     - if [[ "$BUILDMODE" == "cmake-make-osx" ]]; then ctest -V; fi
+    - if [[ "$BUILDMODE" == "windows" ]]; then ctest -V ; fi
     - if [[ "$BUILDMODE" == "ppcxenial" ]]; then docker run ppc-xenial; fi
