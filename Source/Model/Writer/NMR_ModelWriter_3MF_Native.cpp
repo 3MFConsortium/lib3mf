@@ -37,7 +37,6 @@ using LibZ and a native XML writer implementation.
 #include "Model/Classes/NMR_ModelConstants.h" 
 #include "Model/Classes/NMR_ModelAttachment.h" 
 #include "Model/Classes/NMR_ModelTextureAttachment.h" 
-#include "Model/Classes/NMR_ModelSliceStack.h"
 #include "Common/Platform/NMR_ImportStream.h" 
 #include "Common/NMR_Exception.h" 
 #include "Common/Platform/NMR_XmlWriter.h" 
@@ -111,8 +110,7 @@ namespace NMR {
 		m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_WRITENONROOTMODELS);
 		m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
 
-		// add slicestacks that reference other files
-		addSlicerefAttachments();
+		addNonRootModels();
 		
 		// add Attachments
 		m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_WRITEATTACHMENTS);
@@ -152,44 +150,39 @@ namespace NMR {
 		return sStream.str();
 	}
 
-	void CModelWriter_3MF_Native::addSlicerefAttachments() {
-		__NMRASSERT(pModel != nullptr);
+	void CModelWriter_3MF_Native::addNonRootModels() {
 
-		std::vector<std::string> slicePaths;
-		for (nfUint32 nIndex = 0; nIndex < m_pModel->getSliceStackCount(); nIndex++) {
-			CModelSliceStack* pSliceStackResource = dynamic_cast<CModelSliceStack*>(m_pModel->getSliceStackResource(nIndex).get());
-			if (pSliceStackResource->OwnPath().empty() || pSliceStackResource->OwnPath() == m_pModel->rootPath())
-				continue;
-			slicePaths.push_back(pSliceStackResource->OwnPath());
-		}
-		
-		nfUint64 nCount = slicePaths.size();
+		// do this based on resource-paths
+		std::vector<PPackageModelPath> vctPPaths = m_pModel->retrieveAllModelPaths();
+		nfUint64 nCount = vctPPaths.size();
+
 		for (nfUint32 nIndex = 0; nIndex < nCount; nIndex++) {
-
 			m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_WRITENONROOTMODELS);
 			m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
 
-			std::string slicePath = slicePaths[nIndex];
+			std::string sNonRootModelPath = vctPPaths[nIndex]->getPath();
+			if (sNonRootModelPath == m_pModel->rootPath())
+				continue;
 
-			m_pModel->setCurrentPath(slicePath);
+			m_pModel->setCurrentPath(sNonRootModelPath);
 			PImportStream pStream;
 			{
 				PExportStreamMemory pExportStream = std::make_shared<CExportStreamMemory>();
 				PXmlWriter_Native pXMLWriter = std::make_shared<CXmlWriter_Native>(pExportStream);
-				writeSliceStackStream(pXMLWriter.get());
+				writeNonRootModelStream(pXMLWriter.get());
 
 				pStream = std::make_shared<CImportStream_Unique_Memory>(pExportStream->getData(), pExportStream->getDataSize());
 			}
 			
-			// check, whether that's already in here
-			PModelAttachment pSliceRefAttachment = m_pModel->findModelAttachment(slicePath);
-			if (pSliceRefAttachment.get() != nullptr) {
-				if (pSliceRefAttachment->getRelationShipType() != PACKAGE_START_PART_RELATIONSHIP_TYPE)
+			// check, whether this non-root model is already in here
+			PModelAttachment pNonRootModelAttachment = m_pModel->findModelAttachment(sNonRootModelPath);
+			if (pNonRootModelAttachment.get() != nullptr) {
+				if (pNonRootModelAttachment->getRelationShipType() != PACKAGE_START_PART_RELATIONSHIP_TYPE)
 					throw CNMRException(NMR_ERROR_DUPLICATEATTACHMENTPATH);
-				pSliceRefAttachment->setStream(pStream);
+				pNonRootModelAttachment->setStream(pStream);
 			}
 			else
-				pSliceRefAttachment = m_pModel->addAttachment(slicePath, PACKAGE_START_PART_RELATIONSHIP_TYPE, pStream);
+				pNonRootModelAttachment = m_pModel->addAttachment(sNonRootModelPath, PACKAGE_START_PART_RELATIONSHIP_TYPE, pStream);
 		}
 	}
 

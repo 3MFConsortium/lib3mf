@@ -95,6 +95,16 @@ namespace NMR {
 		return pModelPath;
 	}
 
+	std::vector<PPackageModelPath> CResourceHandler::retrieveAllModelPaths()
+	{
+		std::vector<PPackageModelPath> vctPModelPaths;
+		vctPModelPaths.reserve(m_PathToModelPath.size());
+		for (auto pModelPathPair : m_PathToModelPath) {
+			vctPModelPaths.push_back(pModelPathPair.second);
+		}
+		return vctPModelPaths;
+	}
+
 	PPackageModelPath CResourceHandler::findPackageModelPath(std::string sPath)
 	{
 		auto it = m_PathToModelPath.find(sPath);

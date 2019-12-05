@@ -123,6 +123,11 @@ namespace NMR {
 		return m_resourceHandler.makePackageModelPath(sPath);
 	}
 
+	std::vector<PPackageModelPath> CModel::retrieveAllModelPaths()
+	{
+		return m_resourceHandler.retrieveAllModelPaths();
+	}
+
 	// Merge all build items into one mesh
 	void CModel::mergeToMesh(_In_ CMesh * pMesh)
 	{

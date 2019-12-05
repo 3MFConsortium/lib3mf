@@ -78,7 +78,7 @@ namespace NMR {
 		m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
 	}
 
-	void CModelWriter_3MF::writeSliceStackStream(_In_ CXmlWriter *pXMLWriter)
+	void CModelWriter_3MF::writeNonRootModelStream(_In_ CXmlWriter *pXMLWriter)
 	{
 		__NMRASSERT(pSliceStackResource != nullptr);
 		if (pXMLWriter == nullptr)

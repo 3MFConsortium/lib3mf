@@ -315,15 +315,8 @@ namespace NMR {
 
 					writeStartElementWithPrefix(XML_3MF_ELEMENT_SLICEREFRESOURCE, XML_3MF_NAMESPACEPREFIX_SLICE);
 					writeIntAttribute(XML_3MF_ATTRIBUTE_SLICEREF_ID, sliceRef->getPackageResourceID()->getUniqueID());
-					if (m_bIsRootModel) {
-						if (sliceRef->OwnPath() != m_pModel->rootPath()) {
-							writeStringAttribute(XML_3MF_ATTRIBUTE_SLICEREF_PATH, sliceRef->OwnPath());
-						}
-					}
-					else {
-						if (sliceRef->OwnPath() != m_pModel->currentPath()) {
-							writeStringAttribute(XML_3MF_ATTRIBUTE_SLICEREF_PATH, sliceRef->OwnPath());
-						}
+					if (sliceRef->OwnPath() != m_pModel->currentPath()) {
+						writeStringAttribute(XML_3MF_ATTRIBUTE_SLICEREF_PATH, sliceRef->OwnPath());
 					}
 					writeEndElement();
 				}
