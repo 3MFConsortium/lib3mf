@@ -120,7 +120,7 @@ namespace NMR {
 				PModelReaderNode100_Triangles pXMLNode = std::make_shared<CModelReaderNode100_Triangles>(m_pModel, m_pMesh, m_pWarnings,
 					m_pObjectLevelPropertyID, m_nObjectLevelPropertyIndex);
 				pXMLNode->parseXML(pXMLReader);
-				if (m_pObjectLevelPropertyID->getPackageModelPath() == 0) {
+				if (m_pObjectLevelPropertyID && m_pObjectLevelPropertyID->getPackageModelPath() == 0) {
 					// warn, if object does not have an object-level property, but a triangle has one
 					if (pXMLNode->getUsedPropertyID() != 0) {
 						m_pWarnings->addException(CNMRException(NMR_ERROR_MISSINGOBJECTLEVELPID), mrwMissingMandatoryValue);

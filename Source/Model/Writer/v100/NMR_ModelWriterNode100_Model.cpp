@@ -696,21 +696,21 @@ namespace NMR {
 	void CModelWriterNode100_Model::writeMultiPropertyAttributes(_In_ CModelMultiPropertyGroupResource* pMultiPropertyGroup)
 	{
 		// assemble and write pids and blendmethods
-		std::vector<ModelResourceID> vctPIDs;
+		std::vector<UniqueResourceID> vctUniqueIDs;
 		std::vector<std::string> vctBlendMethodString;
 
 		nfUint32 nLayerCount = pMultiPropertyGroup->getLayerCount();
 		for (nfUint32 iLayer = 0; iLayer < nLayerCount; iLayer++) {
 			MODELMULTIPROPERTYLAYER layer = pMultiPropertyGroup->getLayer(iLayer);
-			vctPIDs.push_back(layer.m_nResourceID);
+			vctUniqueIDs.push_back(layer.m_nUniqueResourceID);
 			if (iLayer > 0) {
 				vctBlendMethodString.push_back(CModelMultiPropertyGroupResource::blendMethodToString(layer.m_nMethod));
 			}
 		}
 		// TODO: verify that this resource is in the same model
-		ModelResourceID nResourceID = pMultiPropertyGroup->getPackageResourceID()->getModelResourceID();
-		writeIntAttribute(XML_3MF_ATTRIBUTE_MULTIPROPERTIES_ID, nResourceID);
-		writeStringAttribute(XML_3MF_ATTRIBUTE_MULTIPROPERTIES_PIDS, fnVectorToSpaceDelimitedString(vctPIDs));
+		ModelResourceID nModelResourceID = pMultiPropertyGroup->getPackageResourceID()->getModelResourceID();
+		writeIntAttribute(XML_3MF_ATTRIBUTE_MULTIPROPERTIES_ID, nModelResourceID);
+		writeStringAttribute(XML_3MF_ATTRIBUTE_MULTIPROPERTIES_PIDS, fnVectorToSpaceDelimitedString(vctUniqueIDs));
 		writeStringAttribute(XML_3MF_ATTRIBUTE_MULTIPROPERTIES_BLENDMETHODS, fnVectorToSpaceDelimitedString(vctBlendMethodString));
 	}
 
@@ -734,7 +734,7 @@ namespace NMR {
 			for (nfUint32 iLayer = 0; iLayer < nLayerCount; iLayer++) {
 				MODELMULTIPROPERTYLAYER layer = pMultiPropertyGroup->getLayer(iLayer);
 				if (iLayer < pMultiProperty->size()) {
-					nfUint32 pIndex = m_pPropertyIndexMapping->mapPropertyIDToIndex(layer.m_nResourceID, (*pMultiProperty)[iLayer]);
+					nfUint32 pIndex = m_pPropertyIndexMapping->mapPropertyIDToIndex(layer.m_nUniqueResourceID, (*pMultiProperty)[iLayer]);
 					vctPIndices.push_back(pIndex);
 				} else {
 					throw CNMRException(NMR_ERROR_MULTIPROPERTIES_NOT_ENOUGH_PROPERTYIDS_SPECIFIED);

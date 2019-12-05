@@ -174,7 +174,7 @@ namespace NMR {
 	} MODELCOMPOSITECONSTITUENT;
 
 	typedef struct {
-		ModelResourceID m_nResourceID;
+		UniqueResourceID m_nUniqueResourceID;
 		eModelBlendMethod m_nMethod;
 	} MODELMULTIPROPERTYLAYER;
 

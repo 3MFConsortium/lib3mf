@@ -138,7 +138,7 @@ sLib3MFMultiPropertyLayer CMultiPropertyGroup::GetLayer (const Lib3MF_uint32 nLa
 {
 	NMR::MODELMULTIPROPERTYLAYER sLayer = multiPropertyGroup().getLayer(nLayerIndex);
 	sLib3MFMultiPropertyLayer outLayer;
-	outLayer.m_ResourceID = sLayer.m_nResourceID;
+	outLayer.m_ResourceID = sLayer.m_nUniqueResourceID;
 	outLayer.m_TheBlendMethod = (eLib3MFBlendMethod)sLayer.m_nMethod;
 	return outLayer;
 }

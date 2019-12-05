@@ -88,7 +88,7 @@ namespace NMR {
 				if (m_pBlendMethods && (i > 0) && (i < m_pBlendMethods->size() + 1 )) {
 					method = (*m_pBlendMethods)[i-1];
 				}
-				vctLayers.push_back(MODELMULTIPROPERTYLAYER({ pID->getModelResourceID() , method }));
+				vctLayers.push_back(MODELMULTIPROPERTYLAYER({ pID->getUniqueID() , method }));
 			}
 		}
 		else {
@@ -101,7 +101,7 @@ namespace NMR {
 		m_pModel->addResource(m_pMultiPropertyGroup);
 		
 		for (auto layer : vctLayers) {
-			PModelResource pResource = m_pModel->findResource(layer.m_nResourceID);
+			PModelResource pResource = m_pModel->findResource(layer.m_nUniqueResourceID);
 			if (!pResource) {
 				throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
 			}
@@ -172,7 +172,7 @@ namespace NMR {
 				PModelMultiProperty pMultiProperty = std::make_shared<CModelMultiProperty>(nLayers);
 
 				for (nfUint32 iLayer=0; iLayer < nLayers; iLayer++) {
-					PModelResource pResource = m_pModel->findResource(m_pMultiPropertyGroup->getLayer(iLayer).m_nResourceID);
+					PModelResource pResource = m_pModel->findResource(m_pMultiPropertyGroup->getLayer(iLayer).m_nUniqueResourceID);
 					if (!pResource) {
 						throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
 					}

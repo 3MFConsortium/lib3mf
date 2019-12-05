@@ -122,7 +122,9 @@ namespace NMR {
 					MESHNODE * pNode3 = m_pMesh->getNode(nIndex3);
 					MESHFACE * pFace = m_pMesh->addFace(pNode1, pNode2, pNode3);
 
-					ModelResourceID nModelResourceID = m_pObjectLevelPropertyID->getModelResourceID();
+					ModelResourceID nModelResourceID = 0;
+					if (m_pObjectLevelPropertyID)
+						nModelResourceID = m_pObjectLevelPropertyID->getModelResourceID();
 					ModelResourceIndex nResourceIndex1 = m_nDefaultResourceIndex;
 					ModelResourceIndex nResourceIndex2 = m_nDefaultResourceIndex;
 					ModelResourceIndex nResourceIndex3 = m_nDefaultResourceIndex;
@@ -142,7 +144,7 @@ namespace NMR {
 								ModelPropertyID pPropertyID1;
 								ModelPropertyID pPropertyID2;
 								ModelPropertyID pPropertyID3;
-								if (pResource->mapResourceIndexToPropertyID (nResourceIndex1, pPropertyID1)
+								if (pResource->mapResourceIndexToPropertyID(nResourceIndex1, pPropertyID1)
 									&& pResource->mapResourceIndexToPropertyID(nResourceIndex2, pPropertyID2) 
 									&& pResource->mapResourceIndexToPropertyID(nResourceIndex3, pPropertyID3)) {
 
