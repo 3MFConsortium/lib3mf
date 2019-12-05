@@ -69,7 +69,9 @@ namespace NMR {
 		PPackageModelPath m_pModelPath;
 		ModelResourceID m_id;
 
-		UniqueResourceID m_uniqueID;	// the unique Identifier
+		// the unique Identifier that MUST not be persistent into a .3mf-file.
+		// it is only valid thoughout the lifetime of a NMR::CModel
+		UniqueResourceID m_uniqueID;
 
 		void setUniqueID(UniqueResourceID id);
 

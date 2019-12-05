@@ -57,7 +57,7 @@ void CBeamLattice::SetMinLength (const Lib3MF_double dMinLength)
 	return m_mesh.setBeamLatticeMinLength(dMinLength);
 }
 
-void CBeamLattice::GetClipping (eLib3MFBeamLatticeClipMode & eClipMode, Lib3MF_uint32 & nResourceID)
+void CBeamLattice::GetClipping(eLib3MFBeamLatticeClipMode & eClipMode, Lib3MF_uint32 & nResourceID)
 {
 	if (!m_pAttributes->m_bHasClippingMeshID) {
 		eClipMode = eBeamLatticeClipMode::NoClipMode;
@@ -69,7 +69,7 @@ void CBeamLattice::GetClipping (eLib3MFBeamLatticeClipMode & eClipMode, Lib3MF_u
 	}
 }
 
-void CBeamLattice::SetClipping (const eLib3MFBeamLatticeClipMode eClipMode, const Lib3MF_uint32 nResourceID)
+void CBeamLattice::SetClipping(const eLib3MFBeamLatticeClipMode eClipMode, const Lib3MF_uint32 nResourceID)
 {
 	if ( ((int)eClipMode == (NMR::eModelBeamLatticeClipMode::MODELBEAMLATTICECLIPMODE_NONE)) || (nResourceID == 0) ){
 		m_pAttributes->m_eClipMode = NMR::eModelBeamLatticeClipMode(eClipMode);

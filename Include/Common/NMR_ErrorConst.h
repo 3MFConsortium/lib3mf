@@ -1109,6 +1109,9 @@ Model error codes (0x8XXX)
 // Duplicate ModelPath
 #define NMR_ERROR_DUPLICATEMODELPATH 0x80E9
 
+// Serialization of this Model requires the production extension 
+#define NMR_ERROR_PRODUCTIONEXTENSION_REQUIRED 0x80EA
+
 /*-------------------------------------------------------------------
 XML Parser Error Constants (0x9XXX)
 -------------------------------------------------------------------*/

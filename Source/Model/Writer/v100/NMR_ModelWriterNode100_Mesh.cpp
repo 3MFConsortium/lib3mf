@@ -242,11 +242,13 @@ namespace NMR {
 
 				if (m_pModelMeshObject->getBeamLatticeAttributes()->m_bHasClippingMeshID) {
 					writeStringAttribute(XML_3MF_ATTRIBUTE_BEAMLATTICE_CLIPPINGMODE, clipModeToString(m_pModelMeshObject->getBeamLatticeAttributes()->m_eClipMode));
-					writeIntAttribute(XML_3MF_ATTRIBUTE_BEAMLATTICE_CLIPPINGMESH, m_pModelMeshObject->getBeamLatticeAttributes()->m_nClippingMeshID->getUniqueID());
+					// TODO: verify that this object is in the same model
+					writeIntAttribute(XML_3MF_ATTRIBUTE_BEAMLATTICE_CLIPPINGMESH, m_pModelMeshObject->getBeamLatticeAttributes()->m_nClippingMeshID->getModelResourceID());
 				}
 
 				if (m_pModelMeshObject->getBeamLatticeAttributes()->m_bHasRepresentationMeshID) {
-					writeIntAttribute(XML_3MF_ATTRIBUTE_BEAMLATTICE_REPRESENTATIONMESH, m_pModelMeshObject->getBeamLatticeAttributes()->m_nRepresentationID->getUniqueID());
+					// TODO: verify that this object is in the same model
+					writeIntAttribute(XML_3MF_ATTRIBUTE_BEAMLATTICE_REPRESENTATIONMESH, m_pModelMeshObject->getBeamLatticeAttributes()->m_nRepresentationID->getModelResourceID());
 				}
 
 				eModelBeamLatticeCapMode eDefaultCapMode = pMesh->getBeamLatticeCapMode();
