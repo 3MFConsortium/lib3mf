@@ -65,7 +65,7 @@ void CBeamLattice::GetClipping(eLib3MFBeamLatticeClipMode & eClipMode, Lib3MF_ui
 	}
 	else {
 		eClipMode = eBeamLatticeClipMode(m_pAttributes->m_eClipMode);
-		nUniqueResourceID = m_pAttributes->m_nClippingMeshID->getUniqueID();
+		nUniqueResourceID = m_pAttributes->m_pClippingMeshUniqueID->getUniqueID();
 	}
 }
 
@@ -74,7 +74,7 @@ void CBeamLattice::SetClipping(const eLib3MFBeamLatticeClipMode eClipMode, const
 	if ( ((int)eClipMode == (NMR::eModelBeamLatticeClipMode::MODELBEAMLATTICECLIPMODE_NONE)) || (nUniqueResourceID == 0) ){
 		m_pAttributes->m_eClipMode = NMR::eModelBeamLatticeClipMode(eClipMode);
 		m_pAttributes->m_bHasClippingMeshID = false;
-		m_pAttributes->m_nClippingMeshID = nullptr;
+		m_pAttributes->m_pClippingMeshUniqueID = nullptr;
 	}
 	else {
 		NMR::CModel* pModel = m_pMeshObject->getModel();
@@ -91,14 +91,14 @@ void CBeamLattice::SetClipping(const eLib3MFBeamLatticeClipMode eClipMode, const
 
 		m_pAttributes->m_eClipMode = NMR::eModelBeamLatticeClipMode(eClipMode);;
 		m_pAttributes->m_bHasClippingMeshID = true;
-		m_pAttributes->m_nClippingMeshID = pClippingObject->getPackageResourceID();
+		m_pAttributes->m_pClippingMeshUniqueID = pClippingObject->getPackageResourceID();
 	}
 }
 
 bool CBeamLattice::GetRepresentation (Lib3MF_uint32 & nUniqueResourceID)
 {
 	if (m_pAttributes->m_bHasRepresentationMeshID) {
-		nUniqueResourceID = m_pAttributes->m_nRepresentationID->getUniqueID();
+		nUniqueResourceID = m_pAttributes->m_pRepresentationUniqueID->getUniqueID();
 		return true;
 	}
 	else {
@@ -111,7 +111,7 @@ void CBeamLattice::SetRepresentation (const Lib3MF_uint32 nUniqueResourceID)
 {
 	if (nUniqueResourceID == 0) {
 		m_pAttributes->m_bHasRepresentationMeshID = false;
-		m_pAttributes->m_nRepresentationID = nullptr;
+		m_pAttributes->m_pRepresentationUniqueID = nullptr;
 	}
 	else {
 		NMR::CModel* pModel = m_pMeshObject->getModel();
@@ -127,7 +127,7 @@ void CBeamLattice::SetRepresentation (const Lib3MF_uint32 nUniqueResourceID)
 		}
 
 		m_pAttributes->m_bHasRepresentationMeshID = true;
-		m_pAttributes->m_nRepresentationID = pRepresentationObject->getPackageResourceID();
+		m_pAttributes->m_pRepresentationUniqueID = pRepresentationObject->getPackageResourceID();
 	}
 }
 

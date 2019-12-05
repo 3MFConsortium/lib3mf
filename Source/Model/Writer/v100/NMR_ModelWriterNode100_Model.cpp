@@ -204,7 +204,8 @@ namespace NMR {
 			CModelTexture2DResource * pTexture2D = m_pModel->getTexture2D(nTextureIndex);
 
 			writeStartElementWithPrefix(XML_3MF_ELEMENT_TEXTURE2D, XML_3MF_NAMESPACEPREFIX_MATERIAL);
-			// TODO: verify that this resource is in the same model
+
+			assertResourceIsInCurrentPath(pTexture2D->getPackageResourceID());
 			writeIntAttribute(XML_3MF_ATTRIBUTE_TEXTURE2D_ID, pTexture2D->getPackageResourceID()->getModelResourceID());
 			writeStringAttribute(XML_3MF_ATTRIBUTE_TEXTURE2D_PATH, pTexture2D->getAttachment()->getPathURI());
 			writeStringAttribute(XML_3MF_ATTRIBUTE_TEXTURE2D_CONTENTTYPE, pTexture2D->getContentTypeString());
@@ -255,7 +256,7 @@ namespace NMR {
 
 			pBaseMaterial->buildResourceIndexMap();
 
-			// TODO: verify that this resource is in the same model
+			assertResourceIsInCurrentPath(pBaseMaterial->getPackageResourceID());
 			ModelResourceID nResourceID = pBaseMaterial->getPackageResourceID()->getModelResourceID();
 
 			writeStartElement(XML_3MF_ELEMENT_BASEMATERIALS);
@@ -311,7 +312,7 @@ namespace NMR {
 		{
 			writeStartElementWithPrefix(XML_3MF_ELEMENT_SLICESTACKRESOURCE, XML_3MF_NAMESPACEPREFIX_SLICE);
 
-			// TODO: verify that this resource is in the same model
+			assertResourceIsInCurrentPath(pSliceStackResource->getPackageResourceID());
 			writeIntAttribute(XML_3MF_ATTRIBUTE_SLICESTACKID, pSliceStackResource->getPackageResourceID()->getModelResourceID());
 			writeFloatAttribute(XML_3MF_ATTRIBUTE_SLICESTACKZBOTTOM, (float)pSliceStackResource->getZBottom());
 
@@ -439,8 +440,8 @@ namespace NMR {
 			// Slice extension content
 			if (m_bWriteSliceExtension) {
 				if (pObject->getSliceStack().get()) {
+					assertResourceIsInCurrentPath(pObject->getSliceStack()->getPackageResourceID());
 					writePrefixedStringAttribute(XML_3MF_NAMESPACEPREFIX_SLICE, XML_3MF_ATTRIBUTE_OBJECT_SLICESTACKID,
-						// TODO: verify that this resource is in the same model
 						fnUint32ToString(pObject->getSliceStack()->getPackageResourceID()->getModelResourceID()));
 				}
 				if (pObject->slicesMeshResolution() != MODELSLICESMESHRESOLUTION_FULL) {
@@ -558,7 +559,7 @@ namespace NMR {
 
 			pColorGroup->buildResourceIndexMap();
 
-			// TODO: verify that this resource is in the same model
+			assertResourceIsInCurrentPath(pColorGroup->getPackageResourceID());
 			ModelResourceID nResourceID = pColorGroup->getPackageResourceID()->getModelResourceID();
 
 			writeStartElementWithPrefix(XML_3MF_ELEMENT_COLORGROUP, XML_3MF_NAMESPACEPREFIX_MATERIAL);
@@ -597,13 +598,13 @@ namespace NMR {
 
 			pTexture2DGroup->buildResourceIndexMap();
 
-			// TODO: verify that this resource is in the same model
+			assertResourceIsInCurrentPath(pTexture2DGroup->getPackageResourceID());
 			ModelResourceID nResourceID = pTexture2DGroup->getPackageResourceID()->getModelResourceID();
 
 			writeStartElementWithPrefix(XML_3MF_ELEMENT_TEX2DGROUP, XML_3MF_NAMESPACEPREFIX_MATERIAL);
 			// Write Object ID (mandatory)
 			writeIntAttribute(XML_3MF_ATTRIBUTE_TEX2DGROUP_ID, nResourceID);
-			// TODO: verify that this resource is in the same model
+			assertResourceIsInCurrentPath(pTexture2DGroup->getTexture2D()->getPackageResourceID());
 			writeIntAttribute(XML_3MF_ATTRIBUTE_TEX2DGROUP_TEXTUREID, pTexture2DGroup->getTexture2D()->getPackageResourceID()->getModelResourceID());
 
 			nfUint32 nElementCount = pTexture2DGroup->getCount();
@@ -639,7 +640,7 @@ namespace NMR {
 
 			pCompositeMaterials->buildResourceIndexMap();
 
-			// TODO: verify that this resource is in the same model
+			assertResourceIsInCurrentPath(pCompositeMaterials->getPackageResourceID());
 			ModelResourceID nResourceID = pCompositeMaterials->getPackageResourceID()->getModelResourceID();
 			UniqueResourceID nUniqueResourceID = pCompositeMaterials->getPackageResourceID()->getUniqueID();
 
@@ -647,7 +648,7 @@ namespace NMR {
 			// Write Object ID (mandatory)
 			writeIntAttribute(XML_3MF_ATTRIBUTE_COMPOSITEMATERIALS_ID, nResourceID);
 			PModelBaseMaterialResource pBaseMaterialResource = pCompositeMaterials->getBaseMaterialResource();
-			// TODO: verify that this resource is in the same model
+			assertResourceIsInCurrentPath(pBaseMaterialResource->getPackageResourceID());
 			ModelResourceID nBaseMaterialResourceID = pBaseMaterialResource->getPackageResourceID()->getModelResourceID();
 			writeIntAttribute(XML_3MF_ATTRIBUTE_COMPOSITEMATERIALS_MATID, nBaseMaterialResourceID);
 
@@ -707,7 +708,7 @@ namespace NMR {
 				vctBlendMethodString.push_back(CModelMultiPropertyGroupResource::blendMethodToString(layer.m_nMethod));
 			}
 		}
-		// TODO: verify that this resource is in the same model
+		assertResourceIsInCurrentPath(pMultiPropertyGroup->getPackageResourceID());
 		ModelResourceID nModelResourceID = pMultiPropertyGroup->getPackageResourceID()->getModelResourceID();
 		writeIntAttribute(XML_3MF_ATTRIBUTE_MULTIPROPERTIES_ID, nModelResourceID);
 		writeStringAttribute(XML_3MF_ATTRIBUTE_MULTIPROPERTIES_PIDS, fnVectorToSpaceDelimitedString(vctUniqueIDs));
@@ -717,7 +718,7 @@ namespace NMR {
 	void CModelWriterNode100_Model::writeMultiPropertyMultiElements(_In_ CModelMultiPropertyGroupResource* pMultiPropertyGroup)
 	{
 		// assemble and write MultiPropertyElements
-		// TODO: verify that this resource is in the same model
+		assertResourceIsInCurrentPath(pMultiPropertyGroup->getPackageResourceID());
 		UniqueResourceID nUniqueResourceID = pMultiPropertyGroup->getPackageResourceID()->getUniqueID();
 
 		nfUint32 nMultiCount = pMultiPropertyGroup->getCount();

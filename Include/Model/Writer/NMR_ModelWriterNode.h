@@ -63,7 +63,8 @@ namespace NMR {
 		void writeEndElement();
 		void writeFullEndElement();
 		void writeText(_In_z_ const nfChar * pwszText, _In_ nfUint32 cbLength);
-
+	
+		void assertResourceIsInCurrentPath(PPackageResourceID pID);
 	public:
 		CModelWriterNode() = delete;
 		CModelWriterNode(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter, _In_ PProgressMonitor pProgressMonitor);

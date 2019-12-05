@@ -391,7 +391,7 @@ namespace NMR {
 				CModelObject * pModelObject = m_pModel->findObject(pID->getUniqueID());
 				if (pModelObject) {
 					pMeshObject->getBeamLatticeAttributes()->m_bHasClippingMeshID = bHasClippingMeshID;
-					pMeshObject->getBeamLatticeAttributes()->m_nClippingMeshID = pID;
+					pMeshObject->getBeamLatticeAttributes()->m_pClippingMeshUniqueID = pID;
 					pMeshObject->getBeamLatticeAttributes()->m_eClipMode = eClipMode;
 				}
 				else {
@@ -413,7 +413,7 @@ namespace NMR {
 				CModelObject * pModelObject = m_pModel->findObject(pID->getUniqueID());
 				if (pModelObject) {
 					pMeshObject->getBeamLatticeAttributes()->m_bHasRepresentationMeshID = bHasRepresentationMeshID;
-					pMeshObject->getBeamLatticeAttributes()->m_nRepresentationID = pID;
+					pMeshObject->getBeamLatticeAttributes()->m_pRepresentationUniqueID = pID;
 				}
 				else {
 					pMeshObject->getBeamLatticeAttributes()->m_bHasRepresentationMeshID = false;

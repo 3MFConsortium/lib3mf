@@ -129,5 +129,10 @@ namespace NMR {
 		m_pXMLWriter->WriteText(pwszText, cbLength);
 	}
 
+	void CModelWriterNode::assertResourceIsInCurrentPath(PPackageResourceID pID)
+	{
+		if (pID->getPath() != m_pModel->currentPath())
+			throw CNMRException(NMR_ERROR_MODELRESOURCE_IN_DIFFERENT_MODEL);
+	}
 
 }

@@ -244,13 +244,17 @@ namespace NMR {
 
 				if (m_pModelMeshObject->getBeamLatticeAttributes()->m_bHasClippingMeshID) {
 					writeStringAttribute(XML_3MF_ATTRIBUTE_BEAMLATTICE_CLIPPINGMODE, clipModeToString(m_pModelMeshObject->getBeamLatticeAttributes()->m_eClipMode));
-					// TODO: verify that this object is in the same model
-					writeIntAttribute(XML_3MF_ATTRIBUTE_BEAMLATTICE_CLIPPINGMESH, m_pModelMeshObject->getBeamLatticeAttributes()->m_nClippingMeshID->getModelResourceID());
+					PPackageResourceID pID = m_pModelMeshObject->getBeamLatticeAttributes()->m_pClippingMeshUniqueID;
+					if (pID->getPath() != m_pModel->currentPath())
+						throw CNMRException(NMR_ERROR_MODELRESOURCE_IN_DIFFERENT_MODEL);
+					writeIntAttribute(XML_3MF_ATTRIBUTE_BEAMLATTICE_CLIPPINGMESH, pID->getModelResourceID());
 				}
 
 				if (m_pModelMeshObject->getBeamLatticeAttributes()->m_bHasRepresentationMeshID) {
-					// TODO: verify that this object is in the same model
-					writeIntAttribute(XML_3MF_ATTRIBUTE_BEAMLATTICE_REPRESENTATIONMESH, m_pModelMeshObject->getBeamLatticeAttributes()->m_nRepresentationID->getModelResourceID());
+					PPackageResourceID pID = m_pModelMeshObject->getBeamLatticeAttributes()->m_pRepresentationUniqueID;
+					if (pID->getPath() != m_pModel->currentPath())
+						throw CNMRException(NMR_ERROR_MODELRESOURCE_IN_DIFFERENT_MODEL);
+					writeIntAttribute(XML_3MF_ATTRIBUTE_BEAMLATTICE_REPRESENTATIONMESH, pID->getModelResourceID());
 				}
 
 				eModelBeamLatticeCapMode eDefaultCapMode = pMesh->getBeamLatticeCapMode();
