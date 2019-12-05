@@ -152,7 +152,7 @@ namespace NMR {
 								pTextureGroup = pSharedTextureGroup.get();
 							}
 
-							pFaceData->m_nResourceID = pTextureGroup->getPackageResourceID()->getUniqueID();
+							pFaceData->m_nUniqueResourceID = pTextureGroup->getPackageResourceID()->getUniqueID();
 							ModelResourceIndex nResourceIndex;
 							MODELTEXTURE2DCOORDINATE sUV;
 							nfFloat fU;
@@ -188,7 +188,7 @@ namespace NMR {
 									CMeshInformation_Properties * pProperties = createPropertiesInformation();
 									MESHINFORMATION_PROPERTIES* pFaceData = (MESHINFORMATION_PROPERTIES*)pProperties->getFaceData(pFace->m_index);
 									if (pFaceData) {
-										pFaceData->m_nResourceID = pBaseMaterialResource->getPackageResourceID()->getUniqueID();
+										pFaceData->m_nUniqueResourceID = pBaseMaterialResource->getPackageResourceID()->getUniqueID();
 										pFaceData->m_nPropertyIDs[0] = 1;
 										pFaceData->m_nPropertyIDs[1] = 1;
 										pFaceData->m_nPropertyIDs[2] = 1;
@@ -198,14 +198,14 @@ namespace NMR {
 									if (m_pDefaultMaterialResource != nullptr) {
 										if (!pDefaultData) {
 											pDefaultData = new MESHINFORMATION_PROPERTIES;
-											pDefaultData->m_nResourceID = 0;
+											pDefaultData->m_nUniqueResourceID = 0;
 											pDefaultData->m_nPropertyIDs[0] = 1;
 											pDefaultData->m_nPropertyIDs[1] = 1;
 											pDefaultData->m_nPropertyIDs[2] = 1;
 											pProperties->setDefaultData((MESHINFORMATIONFACEDATA*)pDefaultData);
 										}
-										if (pDefaultData->m_nResourceID == 0) {
-											pDefaultData->m_nResourceID = m_pDefaultMaterialResource->getPackageResourceID()->getModelResourceID();
+										if (pDefaultData->m_nUniqueResourceID == 0) {
+											pDefaultData->m_nUniqueResourceID = m_pDefaultMaterialResource->getPackageResourceID()->getUniqueID();
 										}
 									}
 								}

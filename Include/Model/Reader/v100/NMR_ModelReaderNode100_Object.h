@@ -59,7 +59,8 @@ namespace NMR {
 		PModelObject m_pObject;
 		nfBool m_bHasDefaultPropertyID;
 		nfBool m_bHasDefaultPropertyIndex;
-		ModelResourceID m_nObjectLevelPropertyID;
+		ModelResourceID m_nObjectLevelPropertyModelID;
+		PPackageResourceID m_pObjectLevelPropertyID;
 		ModelResourceIndex m_nObjectLevelPropertyIndex;
 
 		nfUint32 m_nSliceStackId;

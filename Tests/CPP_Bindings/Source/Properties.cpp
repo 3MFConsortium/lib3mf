@@ -137,6 +137,8 @@ namespace Lib3MF
 		mesh->SetObjectLevelProperty(baseMaterialGroup->GetResourceID(), someMaterial);
 
 		auto writer = model->QueryWriter("3mf");
+		writer->WriteToFile("out.3mf");
+
 		std::vector<Lib3MF_uint8> buffer;
 		writer->WriteToBuffer(buffer);
 

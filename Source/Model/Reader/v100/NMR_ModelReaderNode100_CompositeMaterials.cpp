@@ -73,7 +73,7 @@ namespace NMR {
 		if (!pID)
 			throw CNMRException(NMR_ERROR_INVALIDMODELRESOURCE);
 
-		PModelBaseMaterialResource pBaseMaterial = m_pModel->findBaseMaterial(pID->getUniqueID());
+		PModelBaseMaterialResource pBaseMaterial = m_pModel->findBaseMaterial(pID);
 
 		// Create Resource
  		m_pCompositeMaterials = std::make_shared<CModelCompositeMaterialsResource>(m_nID, m_pModel, pBaseMaterial);

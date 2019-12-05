@@ -133,6 +133,7 @@ namespace NMR {
 		m_IdAndPathToPackageResourceIDs.insert(std::make_pair(std::make_pair(id, pModelPath), pPackageResourceID));
 		return pPackageResourceID;
 	}
+
 	PPackageResourceID CResourceHandler::findResourceIDByUniqueID(UniqueResourceID id)
 	{
 		auto it = m_resourceIDs.find(id);

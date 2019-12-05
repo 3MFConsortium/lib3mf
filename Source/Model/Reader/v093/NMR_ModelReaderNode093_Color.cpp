@@ -130,7 +130,7 @@ namespace NMR {
 	ModelResourceID CModelReaderNode093_Color::retrieveID()
 	{
 		try {
-			//if (m_nResourceID == 0)
+			//if (m_nUniqueResourceID == 0)
 				//throw CNMRException(NMR_ERROR_MISSINGMODELCOLORID);
 		}
 		catch (CNMRException & Exception) {

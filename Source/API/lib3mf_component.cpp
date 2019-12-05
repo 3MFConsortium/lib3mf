@@ -51,7 +51,7 @@ CComponent::CComponent(NMR::PModelComponent pComponent)
 
 IObject * CComponent::GetObjectResource()
 {
-	NMR::PModelResource pModelObject = m_pComponent->getModel()->findResource(m_pComponent->getObjectID());
+	NMR::PModelResource pModelObject = m_pComponent->getModel()->findResource(m_pComponent->getObject()->getPackageResourceID());
 	if (!pModelObject.get())
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDMODELRESOURCE);
 
@@ -62,9 +62,9 @@ IObject * CComponent::GetObjectResource()
 	return pObject.release();
 }
 
-Lib3MF_uint32 CComponent::GetObjectResourceID ()
+Lib3MF_uint32 CComponent::GetObjectResourceID()
 {
-	return m_pComponent->getObjectID();
+	return m_pComponent->getObject()->getPackageResourceID()->getUniqueID();
 }
 
 std::string CComponent::GetUUID(bool & bHasUUID)

@@ -65,7 +65,7 @@ namespace NMR {
 		m_bHasThumbnail = false;
 		m_bHasDefaultPropertyID = false;
 		m_bHasDefaultPropertyIndex = false;
-		m_nObjectLevelPropertyID = 0;
+		m_nObjectLevelPropertyModelID = 0;
 		m_nObjectLevelPropertyIndex = 0;
 
 		m_nSliceStackId = 0;
@@ -84,6 +84,10 @@ namespace NMR {
 		// Use parameter and assign to model Object
 		if (m_nID == 0)
 			throw CNMRException(NMR_ERROR_MISSINGMODELOBJECTID);
+
+		if (m_nObjectLevelPropertyModelID != 0) {
+			m_pObjectLevelPropertyID = m_pModel->findPackageResourceID(m_pModel->currentPath(), m_nObjectLevelPropertyModelID);
+		}
 
 		// Parse Content
 		parseContent(pXMLReader);
@@ -164,7 +168,7 @@ namespace NMR {
 			if (m_bHasDefaultPropertyID)
 				throw CNMRException(NMR_ERROR_DUPLICATEPID);
 			m_bHasDefaultPropertyID = true;
-			m_nObjectLevelPropertyID = fnStringToUint32(pAttributeValue);
+			m_nObjectLevelPropertyModelID = fnStringToUint32(pAttributeValue);
 		}
 
 		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_OBJECT_PINDEX) == 0) {
@@ -240,7 +244,8 @@ namespace NMR {
 				}
 				
 				// Read Mesh
-				PModelReaderNode100_Mesh pXMLNode = std::make_shared<CModelReaderNode100_Mesh>(m_pModel, pMesh.get(), m_pWarnings, m_pProgressMonitor, m_nObjectLevelPropertyID, m_nObjectLevelPropertyIndex);
+				PModelReaderNode100_Mesh pXMLNode = std::make_shared<CModelReaderNode100_Mesh>(m_pModel, pMesh.get(),
+					m_pWarnings, m_pProgressMonitor, m_pObjectLevelPropertyID, m_nObjectLevelPropertyIndex);
 				pXMLNode->parseXML(pXMLReader);
 
 				// Add Object to Parent
@@ -274,7 +279,7 @@ namespace NMR {
 				// Add Object to Parent
 				m_pModel->addResource(m_pObject);
 				
-				if (m_nObjectLevelPropertyID != 0)
+				if (m_nObjectLevelPropertyIndex != 0)
 					m_pWarnings->addException(CNMRException(NMR_ERROR_OBJECTLEVELPID_ON_COMPONENTSOBJECT), mrwInvalidOptionalValue);
 			}
 			else if (strcmp(pChildName, XML_3MF_ELEMENT_METADATAGROUP) == 0) {
@@ -319,14 +324,14 @@ namespace NMR {
 		if (m_pObject.get() == nullptr)
 			return;
 
-		if (m_nObjectLevelPropertyID != 0) {
+		if (m_bHasDefaultPropertyIndex && m_bHasDefaultPropertyID) {
 			CModelMeshObject* pMeshObject = dynamic_cast<CModelMeshObject*>(m_pObject.get());
 			if (pMeshObject) {
 				CMesh * pMesh = pMeshObject->getMesh();
 				if (pMesh) {
 
 					// Assign Default Resource Property
-					PModelResource pResource = m_pModel->findResource(m_pModel->currentPath(), m_nObjectLevelPropertyID);
+					PModelResource pResource = m_pModel->findResource(m_pModel->currentPath(), m_nObjectLevelPropertyModelID);
 					if (pResource.get() == nullptr) {
 						throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
 					}
@@ -345,7 +350,7 @@ namespace NMR {
 					ModelResourceID pPropertyID;
 					if (pResource->mapResourceIndexToPropertyID(m_nObjectLevelPropertyIndex, pPropertyID)) {
 						NMR::MESHINFORMATION_PROPERTIES * pDefaultData = new NMR::MESHINFORMATION_PROPERTIES;
-						pDefaultData->m_nResourceID = pResource->getPackageResourceID()->getModelResourceID();
+						pDefaultData->m_nUniqueResourceID = pResource->getPackageResourceID()->getUniqueID();
 						pDefaultData->m_nPropertyIDs[0] = pPropertyID;
 						pDefaultData->m_nPropertyIDs[1] = pPropertyID;
 						pDefaultData->m_nPropertyIDs[2] = pPropertyID;

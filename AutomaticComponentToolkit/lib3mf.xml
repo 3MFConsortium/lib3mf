@@ -328,11 +328,17 @@
 	</class>
 	
 	<class name="Resource">
-		<method name="GetResourceID" description="Retrieves the id of this resource within a model.">
-			<param name="Id" type="uint32" pass="return" description="Retrieves the id of this resource within a model."/>
+		<method name="GetResourceID" description="Retrieves the unique id of this resource within a package. This function will be removed in a later release in favor of GetUniqueResourceID">
+			<param name="UniqueResourceID" type="uint32" pass="return" description="Retrieves the unique id of this resource within a package."/>
+		</method>
+		<method name="GetUniqueResourceID" description="Retrieves the unique id of this resource within a package.">
+			<param name="UniqueResourceID" type="uint32" pass="return" description="Retrieves the unique id of this resource within a package."/>
 		</method>
 		<method name="ModelPath" description="Returns the ModelPath (path of the model-file) within which this resource resides">
 			<param name="ModelPath" type="class" class="ModelPath" pass="return" description="the ModelPath (path of the model-file) within which this resource resides."/>
+		</method>
+		<method name="GetModelResourceID" description="Retrieves the id of this resource within a model.">
+			<param name="ModelResourceId" type="uint32" pass="return" description="Retrieves the id of this resource within a model."/>
 		</method>
 	</class>
 
@@ -586,11 +592,11 @@
 			<param name="Indices" type="structarray" class="Triangle" pass="out" description="contains the triangle indices."/>
 		</method>
 		<method name="SetObjectLevelProperty" description="Sets the property at the object-level of the mesh object.">
-			<param name="ResourceID" type="uint32" pass="in" description="the object-level Property Resource ID."/>
+			<param name="UniqueResourceID" type="uint32" pass="in" description="the object-level Property UniqueResourceID."/>
 			<param name="PropertyID" type="uint32" pass="in" description="the object-level PropertyID."/>
 		</method>
 		<method name="GetObjectLevelProperty" description="Gets the property at the object-level of the mesh object.">
-			<param name="ResourceID" type="uint32" pass="out" description="the object-level Property Resource ID."/>
+			<param name="UniqueResourceID" type="uint32" pass="out" description="the object-level Property UniqueResourceID."/>
 			<param name="PropertyID" type="uint32" pass="out" description="the object-level PropertyID."/>
 			<param name="HasObjectLevelProperty" type="bool" pass="return" description="Has an object-level property been specified?"/>
 		</method>
@@ -631,18 +637,18 @@
 		</method>
 		<method name="GetClipping" description="Returns the clipping mode and the clipping-mesh for the beamlattice of this mesh.">
 			<param name="ClipMode" type="enum" class="BeamLatticeClipMode" pass="out" description="contains the clip mode of this mesh"/>
-			<param name="ResourceID" type="uint32" pass="out" description="filled with the resourceID of the clipping mesh-object or an undefined value if pClipMode is MODELBEAMLATTICECLIPMODE_NONE"/>
+			<param name="UniqueResourceID" type="uint32" pass="out" description="filled with the UniqueResourceID of the clipping mesh-object or an undefined value if pClipMode is MODELBEAMLATTICECLIPMODE_NONE"/>
 		</method>
 		<method name="SetClipping" description="Sets the clipping mode and the clipping-mesh for the beamlattice of this mesh.">
 			<param name="ClipMode" type="enum" class="BeamLatticeClipMode" pass="in" description="contains the clip mode of this mesh"/>
-			<param name="ResourceID" type="uint32" pass="in" description="the resourceID of the clipping mesh-object. This mesh-object has to be defined before setting the Clipping."/>
+			<param name="UniqueResourceID" type="uint32" pass="in" description="the UniqueResourceID of the clipping mesh-object. This mesh-object has to be defined before setting the Clipping."/>
 		</method>
 		<method name="GetRepresentation" description="Returns the representation-mesh for the beamlattice of this mesh.">
 			<param name="HasRepresentation" type="bool" pass="return" description="flag whether the beamlattice has a representation mesh."/>
-			<param name="ResourceID" type="uint32" pass="out" description="filled with the resourceID of the clipping mesh-object."/>
+			<param name="UniqueResourceID" type="uint32" pass="out" description="filled with the UniqueResourceID of the clipping mesh-object."/>
 		</method>
 		<method name="SetRepresentation" description="Sets the representation-mesh for the beamlattice of this mesh.">
-			<param name="ResourceID" type="uint32" pass="in" description="the resourceID of the representation mesh-object. This mesh-object has to be defined before setting the representation."/>
+			<param name="UniqueResourceID" type="uint32" pass="in" description="the UniqueResourceID of the representation mesh-object. This mesh-object has to be defined before setting the representation."/>
 		</method>
 		<method name="GetBeamCount" description="Returns the beam count of a mesh object.">
 			<param name="Count" type="uint32" pass="return" description="filled with the beam count."/>
@@ -678,11 +684,11 @@
 	</class>
 
 	<class name="Component">
-		<method name="GetObjectResource" description="Returns the Resource Instance of the component..">
+		<method name="GetObjectResource" description="Returns the Resource Instance of the component.">
 			<param name="ObjectResource" type="handle" class="Object" pass="return" description="filled with the Resource Instance."/>
 		</method>
-		<method name="GetObjectResourceID" description="Returns the Resource ID of the component.">
-			<param name="ObjectResourceID" type="uint32" pass="return" description="returns the Resource ID."/>
+		<method name="GetObjectResourceID" description="Returns the UniqueResourceID of the component.">
+			<param name="UniqueResourceID" type="uint32" pass="return" description="returns the UniqueResourceID."/>
 		</method>
 		<method name="GetUUID" description="returns, whether a component has a UUID and, if true, the component's UUID">
 			<param name="HasUUID" type="bool" pass="out" description="flag whether the component has a UUID"/>
@@ -964,8 +970,8 @@
 		<method name="SetUUID" description="sets the build item's UUID">
 			<param name="UUID" type="string" pass="in" description="the UUID as string of the form 'xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx'"/>
 		</method>
-		<method name="GetObjectResourceID" description="Retrieves the object resource id associated to a build item">
-			<param name="Id" type="uint32" pass="return" description=" eturns the ID of the object"/>
+		<method name="GetObjectResourceID" description="Retrieves the object UniqueResourceID associated to a build item">
+			<param name="UniqueResourceID" type="uint32" pass="return" description="returns the UniqueResourceID of the object"/>
 		</method>
 		<method name="HasObjectTransform" description="Checks, if a build item has a non-identity transformation matrix">
 			<param name="HasTransform" type="bool" pass="return" description="returns true, if the transformation matrix is not the identity"/>
@@ -1102,44 +1108,44 @@
 			<param name="ReaderClass" type="string" pass="in" description=" string identifier for the file type"/>
 			<param name="ReaderInstance" type="handle" class="Reader" pass="return" description=" string identifier for the file type"/>
 		</method>
-		<method name="GetTexture2DByID" description="finds a model texture by its id">
-			<param name="ResourceID" type="uint32" pass="in" description="Resource ID"/>
+		<method name="GetTexture2DByID" description="finds a model texture by its UniqueResourceID">
+			<param name="UniqueResourceID" type="uint32" pass="in" description="UniqueResourceID"/>
 			<param name="TextureInstance" type="handle" class="Texture2D" pass="return" description="returns the texture2d instance"/>
 		</method>
 		<method name="GetPropertyTypeByID" description="returns a Property's type">
-			<param name="ResourceID" type="uint32" pass="in" description="Resource ID of the Property to Query"/>
+			<param name="UniqueResourceID" type="uint32" pass="in" description="Resource ID of the Property to Query"/>
 			<param name="ThePropertyType" type="enum" class="PropertyType" pass="return" description="returns a Property's type"/>
 		</method>
-		<method name="GetBaseMaterialGroupByID" description="finds a model base material group by its id">
-			<param name="ResourceID" type="uint32" pass="in" description="Resource ID"/>
+		<method name="GetBaseMaterialGroupByID" description="finds a model base material group by its UniqueResourceID">
+			<param name="UniqueResourceID" type="uint32" pass="in" description="UniqueResourceID"/>
 			<param name="BaseMaterialGroupInstance" type="handle" class="BaseMaterialGroup" pass="return" description="returns the BaseMaterialGroup instance"/>
 		</method>
-		<method name="GetTexture2DGroupByID" description="finds a model texture2d group by its id">
-			<param name="ResourceID" type="uint32" pass="in" description="Resource ID"/>
+		<method name="GetTexture2DGroupByID" description="finds a model texture2d group by its UniqueResourceID">
+			<param name="UniqueResourceID" type="uint32" pass="in" description="UniqueResourceID"/>
 			<param name="Texture2DGroupInstance" type="handle" class="Texture2DGroup" pass="return" description="returns the Texture2DGroup instance"/>
 		</method>
-		<method name="GetCompositeMaterialsByID" description="finds a model CompositeMaterials by its id">
-			<param name="ResourceID" type="uint32" pass="in" description="Resource ID"/>
+		<method name="GetCompositeMaterialsByID" description="finds a model CompositeMaterials by its UniqueResourceID">
+			<param name="UniqueResourceID" type="uint32" pass="in" description="UniqueResourceID"/>
 			<param name="CompositeMaterialsInstance" type="handle" class="CompositeMaterials" pass="return" description="returns the CompositeMaterials instance"/>
 		</method>
-		<method name="GetMultiPropertyGroupByID" description="finds a model MultiPropertyGroup by its id">
-			<param name="ResourceID" type="uint32" pass="in" description="Resource ID"/>
+		<method name="GetMultiPropertyGroupByID" description="finds a model MultiPropertyGroup by its UniqueResourceID">
+			<param name="UniqueResourceID" type="uint32" pass="in" description="UniqueResourceID"/>
 			<param name="MultiPropertyGroupInstance" type="handle" class="MultiPropertyGroup" pass="return" description="returns the MultiPropertyGroup instance"/>
 		</method>
-		<method name="GetMeshObjectByID" description="finds a mesh object by its id">
-			<param name="ResourceID" type="uint32" pass="in" description="Resource ID"/>
+		<method name="GetMeshObjectByID" description="finds a mesh object by its UniqueResourceID">
+			<param name="UniqueResourceID" type="uint32" pass="in" description="UniqueResourceID"/>
 			<param name="MeshObjectInstance" type="handle" class="MeshObject" pass="return" description="returns the mesh object instance"/>
 		</method>
-		<method name="GetComponentsObjectByID" description="finds a components object by its id">
-			<param name="ResourceID" type="uint32" pass="in" description="Resource ID"/>
+		<method name="GetComponentsObjectByID" description="finds a components object by its UniqueResourceID">
+			<param name="UniqueResourceID" type="uint32" pass="in" description="UniqueResourceID"/>
 			<param name="ComponentsObjectInstance" type="handle" class="ComponentsObject" pass="return" description="returns the components object instance"/>
 		</method>
-		<method name="GetColorGroupByID" description="finds a model color group by its id">
-			<param name="ResourceID" type="uint32" pass="in" description="Resource ID"/>
+		<method name="GetColorGroupByID" description="finds a model color group by its UniqueResourceID">
+			<param name="UniqueResourceID" type="uint32" pass="in" description="UniqueResourceID"/>
 			<param name="ColorGroupInstance" type="handle" class="ColorGroup" pass="return" description="returns the ColorGroup instance"/>
 		</method>
-		<method name="GetSliceStackByID" description="finds a model slicestack by its id">
-			<param name="ResourceID" type="uint32" pass="in" description="Resource ID"/>
+		<method name="GetSliceStackByID" description="finds a model slicestack by its UniqueResourceID">
+			<param name="UniqueResourceID" type="uint32" pass="in" description="UniqueResourceID"/>
 			<param name="SliceStacInstance" type="handle" class="SliceStack" pass="return" description="returns the slicestack instance"/>
 		</method>
 		<method name="GetBuildUUID" description="returns, whether a build has a UUID and, if true, the build's UUID">

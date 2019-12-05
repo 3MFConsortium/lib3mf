@@ -91,25 +91,25 @@ public:
 
 	IReader * QueryReader (const std::string & sReaderClass);
 
-	ITexture2D * GetTexture2DByID (const Lib3MF_uint32 nResourceID);
+	ITexture2D * GetTexture2DByID (const Lib3MF_uint32 nUniqueResourceID);
 
-	eLib3MFPropertyType GetPropertyTypeByID(const Lib3MF_uint32 nResourceID);
+	eLib3MFPropertyType GetPropertyTypeByID(const Lib3MF_uint32 nUniqueResourceID);
 
-	IBaseMaterialGroup * GetBaseMaterialGroupByID (const Lib3MF_uint32 nResourceID);
+	IBaseMaterialGroup * GetBaseMaterialGroupByID(const Lib3MF_uint32 nUniqueResourceID);
 
-	IMeshObject * GetMeshObjectByID (const Lib3MF_uint32 nResourceID);
+	IMeshObject * GetMeshObjectByID(const Lib3MF_uint32 nUniqueResourceID);
 
-	IComponentsObject * GetComponentsObjectByID (const Lib3MF_uint32 nResourceID);
+	IComponentsObject * GetComponentsObjectByID(const Lib3MF_uint32 nUniqueResourceID);
 
-	IColorGroup * GetColorGroupByID(const Lib3MF_uint32 nResourceID);
+	IColorGroup * GetColorGroupByID(const Lib3MF_uint32 nUniqueResourceID);
 
-	ITexture2DGroup * GetTexture2DGroupByID(const Lib3MF_uint32 nResourceID);
+	ITexture2DGroup * GetTexture2DGroupByID(const Lib3MF_uint32 nUniqueResourceID);
 
-	ICompositeMaterials * GetCompositeMaterialsByID(const Lib3MF_uint32 nResourceID);
+	ICompositeMaterials * GetCompositeMaterialsByID(const Lib3MF_uint32 nUniqueResourceID);
 
-	IMultiPropertyGroup * GetMultiPropertyGroupByID(const Lib3MF_uint32 nResourceID);
+	IMultiPropertyGroup * GetMultiPropertyGroupByID(const Lib3MF_uint32 nUniqueResourceID);
 
-	ISliceStack * GetSliceStackByID(const Lib3MF_uint32 nResourceID);
+	ISliceStack * GetSliceStackByID(const Lib3MF_uint32 nUniqueResourceID);
 
 	std::string GetBuildUUID (bool & bHasUUID);
 

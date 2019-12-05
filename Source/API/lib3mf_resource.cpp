@@ -61,6 +61,16 @@ CResource::CResource(NMR::PModelResource pResource)
 
 Lib3MF_uint32 CResource::GetResourceID()
 {
+	return m_pResource->getPackageResourceID()->getUniqueID();
+}
+
+Lib3MF_uint32 CResource::GetUniqueResourceID()
+{
+	return m_pResource->getPackageResourceID()->getUniqueID();
+}
+
+Lib3MF_uint32 CResource::GetModelResourceID() 
+{
 	return m_pResource->getPackageResourceID()->getModelResourceID();
 }
 

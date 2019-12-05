@@ -42,23 +42,23 @@ namespace NMR {
 	{
 	}
 
-	nfUint32 CMeshInformation_PropertyIndexMapping::registerPropertyID(nfUint32 nResourceID, ModelPropertyID nPropertyID, nfUint32 nResourceIndex)
+	nfUint32 CMeshInformation_PropertyIndexMapping::registerPropertyID(UniqueResourceID nUniqueResourceID, ModelPropertyID nPropertyID, nfUint32 nResourceIndex)
 	{
-		if (nResourceID == 0)
+		if (nUniqueResourceID == 0)
 			throw CNMRException(NMR_ERROR_INVALIDPROPERTYRESOURCEID);
 
-		m_IDMap.insert(std::make_pair(std::make_pair(nResourceID, nPropertyID), nResourceIndex));
+		m_IDMap.insert(std::make_pair(std::make_pair(nUniqueResourceID, nPropertyID), nResourceIndex));
 
 		return nResourceIndex;
 	}
 
 
-	nfUint32 CMeshInformation_PropertyIndexMapping::mapPropertyIDToIndex(nfUint32 nResourceID, ModelPropertyID nPropertyID)
+	nfUint32 CMeshInformation_PropertyIndexMapping::mapPropertyIDToIndex(UniqueResourceID nUniqueResourceID, ModelPropertyID nPropertyID)
 	{
-		if (nResourceID == 0)
+		if (nUniqueResourceID == 0)
 			throw CNMRException(NMR_ERROR_INVALIDPROPERTYRESOURCEID);
 
-		auto iIterator = m_IDMap.find(std::make_pair(nResourceID, nPropertyID));
+		auto iIterator = m_IDMap.find(std::make_pair(nUniqueResourceID, nPropertyID));
 		if (iIterator == m_IDMap.end())
 			throw CNMRException(NMR_ERROR_PROPERTYIDNOTFOUND);
 
@@ -103,7 +103,7 @@ namespace NMR {
 
 		MESHINFORMATION_PROPERTIES * pProperties = (MESHINFORMATION_PROPERTIES *)pData;
 		if (pProperties) {
-			pProperties->m_nResourceID = 0;
+			pProperties->m_nUniqueResourceID = 0;
 			for (j = 0; j < 3; j++) {
 				pProperties->m_nPropertyIDs[j] = 0;
 			}
@@ -127,7 +127,7 @@ namespace NMR {
 			for (nfUint32 j = 0; j < 3; j++)
 				pTargetDefaultData->m_nPropertyIDs[j] = pSourceDefaultData->m_nPropertyIDs[j];
 
-			pTargetDefaultData->m_nResourceID = pSourceDefaultData->m_nResourceID;
+			pTargetDefaultData->m_nUniqueResourceID = pSourceDefaultData->m_nUniqueResourceID;
 		}
 	}
 	
@@ -143,7 +143,7 @@ namespace NMR {
 			for (nfUint32 j = 0; j < 3; j++)
 				pTargetFaceData->m_nPropertyIDs[j] = pSourceFaceData->m_nPropertyIDs[j];
 
-			pTargetFaceData->m_nResourceID = pSourceFaceData->m_nResourceID;
+			pTargetFaceData->m_nUniqueResourceID = pSourceFaceData->m_nUniqueResourceID;
 		}
 	}
 
@@ -179,7 +179,7 @@ namespace NMR {
 	{
 		MESHINFORMATION_PROPERTIES * pFaceData = (MESHINFORMATION_PROPERTIES*)getFaceData(nFaceIndex);
 		if (pFaceData)
-			return (pFaceData->m_nResourceID != 0);
+			return (pFaceData->m_nUniqueResourceID != 0);
 
 		return false;
 	}

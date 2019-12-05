@@ -59,7 +59,6 @@ namespace NMR {
 		NMATRIX3 getTransform ();
 		void setTransform(_In_ const NMATRIX3 mTransform);
 		
-		UniqueResourceID getObjectID();
 		nfBool hasTransform();
 		std::string getTransformString();
 

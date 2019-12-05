@@ -84,13 +84,13 @@ public:
 
 	void SetMinLength (const Lib3MF_double dMinLength);
 
-	void GetClipping (eBeamLatticeClipMode & eClipMode, Lib3MF_uint32 & nResourceID);
+	void GetClipping (eBeamLatticeClipMode & eClipMode, Lib3MF_uint32 & nUniqueResourceID);
 
-	void SetClipping (const eBeamLatticeClipMode eClipMode, const Lib3MF_uint32 nResourceID);
+	void SetClipping (const eBeamLatticeClipMode eClipMode, const Lib3MF_uint32 nUniqueResourceID);
 
-	bool GetRepresentation(Lib3MF_uint32 & nResourceID);
+	bool GetRepresentation(Lib3MF_uint32 & nUniqueResourceID);
 
-	void SetRepresentation(const Lib3MF_uint32 nResourceID);
+	void SetRepresentation(const Lib3MF_uint32 nUniqueResourceID);
 
 	Lib3MF_uint32 GetBeamCount ();
 

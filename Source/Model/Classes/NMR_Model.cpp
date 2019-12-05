@@ -523,9 +523,9 @@ namespace NMR {
 		m_MetaDataGroup->clear();
 	}
 
-	_Ret_maybenull_ PModelBaseMaterialResource CModel::findBaseMaterial(_In_ UniqueResourceID nResourceID)
+	_Ret_maybenull_ PModelBaseMaterialResource CModel::findBaseMaterial(_In_ PPackageResourceID pID)
 	{
-		PModelResource pResource = findResource(nResourceID);
+		PModelResource pResource = findResource(pID);
 		if (pResource != nullptr) {
 			PModelBaseMaterialResource pBaseMaterialResource = std::dynamic_pointer_cast<CModelBaseMaterialResource>(pResource);
 			if (pBaseMaterialResource.get() == nullptr)
@@ -753,7 +753,9 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
 			}
 			UniqueResourceID packageIDOfOldMaterial = oldToNewMapping[pOldBaseMaterial->getPackageResourceID()->getUniqueID()];
-			PModelBaseMaterialResource pNewBaseMaterialResource = findBaseMaterial(packageIDOfOldMaterial);
+			
+			PPackageResourceID pNewIDOfOldMaterial = findPackageResourceID(packageIDOfOldMaterial);
+			PModelBaseMaterialResource pNewBaseMaterialResource = findBaseMaterial(pNewIDOfOldMaterial);
 			if (!pNewBaseMaterialResource) {
 				throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
 			}

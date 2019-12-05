@@ -264,6 +264,8 @@ namespace NMR {
 
 			nfUint32 nElementCount = pBaseMaterial->getCount();
 
+			UniqueResourceID nUniqueResourceID = pBaseMaterial->getPackageResourceID()->getUniqueID();
+
 			for (nfUint32 j = 0; j < nElementCount; j++) {
 				ModelPropertyID nPropertyID;
 				if (!pBaseMaterial->mapResourceIndexToPropertyID(j, nPropertyID)) {
@@ -271,7 +273,7 @@ namespace NMR {
 				}
 				PModelBaseMaterial pElement = pBaseMaterial->getBaseMaterial(nPropertyID);
 				
-				m_pPropertyIndexMapping->registerPropertyID(nResourceID, pElement->getPropertyID(), j);
+				m_pPropertyIndexMapping->registerPropertyID(nUniqueResourceID, pElement->getPropertyID(), j);
 
 				writeStartElement(XML_3MF_ELEMENT_BASE);
 				writeStringAttribute(XML_3MF_ATTRIBUTE_BASEMATERIAL_NAME, pElement->getName());
@@ -453,7 +455,7 @@ namespace NMR {
 			CModelMeshObject * pMeshObject = dynamic_cast<CModelMeshObject *> (pObject);
 			if (pMeshObject) {
 				// Prepare Object Level Property ID and Index
-				ModelResourceID nObjectLevelPropertyID = 0;
+				UniqueResourceID nObjectLevelPropertyID = 0;
 				ModelResourceIndex nObjectLevelPropertyIndex = 0;
 
 				CMesh* pMesh = pMeshObject->getMesh();
@@ -467,8 +469,8 @@ namespace NMR {
 							auto pProperties = dynamic_cast<CMeshInformation_Properties *> (pInformation);
 							NMR::MESHINFORMATION_PROPERTIES * pDefaultData = (NMR::MESHINFORMATION_PROPERTIES*)pProperties->getDefaultData();
 							
-							if (pDefaultData && pDefaultData->m_nResourceID != 0) {
-								nObjectLevelPropertyID = pDefaultData->m_nResourceID;
+							if (pDefaultData && pDefaultData->m_nUniqueResourceID != 0) {
+								nObjectLevelPropertyID = pDefaultData->m_nUniqueResourceID;
 								nObjectLevelPropertyIndex = m_pPropertyIndexMapping->mapPropertyIDToIndex(nObjectLevelPropertyID, pDefaultData->m_nPropertyIDs[0]);
 							}
 						}
@@ -478,7 +480,8 @@ namespace NMR {
 
 				// Write Object Level Attributes (only for meshes)
 				if (nObjectLevelPropertyID != 0) {
-					writeIntAttribute(XML_3MF_ATTRIBUTE_OBJECT_PID, nObjectLevelPropertyID);
+					ModelResourceID nPropertyModelResourceID = m_pModel->findPackageResourceID(nObjectLevelPropertyID)->getModelResourceID();
+					writeIntAttribute(XML_3MF_ATTRIBUTE_OBJECT_PID, nPropertyModelResourceID);
 					writeIntAttribute(XML_3MF_ATTRIBUTE_OBJECT_PINDEX, nObjectLevelPropertyIndex);
 				}
 
@@ -564,6 +567,7 @@ namespace NMR {
 
 			nfUint32 nElementCount = pColorGroup->getCount();
 
+			UniqueResourceID nUniqueResourceID = pColorGroup->getPackageResourceID()->getUniqueID();
 			for (nfUint32 j = 0; j < nElementCount; j++) {
 				ModelPropertyID nPropertyID;
 				if (!pColorGroup->mapResourceIndexToPropertyID(j, nPropertyID)) {
@@ -571,7 +575,7 @@ namespace NMR {
 				}
 				nfColor pElement = pColorGroup->getColor(nPropertyID);
 
-				m_pPropertyIndexMapping->registerPropertyID(nResourceID, nPropertyID, j);
+				m_pPropertyIndexMapping->registerPropertyID(nUniqueResourceID, nPropertyID, j);
 
 				writeStartElementWithPrefix(XML_3MF_ELEMENT_COLOR, XML_3MF_NAMESPACEPREFIX_MATERIAL);
 				writeStringAttribute(XML_3MF_ATTRIBUTE_COLORS_COLOR, fnColorToString(pElement));
@@ -603,7 +607,7 @@ namespace NMR {
 			writeIntAttribute(XML_3MF_ATTRIBUTE_TEX2DGROUP_TEXTUREID, pTexture2DGroup->getTexture2D()->getPackageResourceID()->getModelResourceID());
 
 			nfUint32 nElementCount = pTexture2DGroup->getCount();
-
+			UniqueResourceID nUniqueResourceID = pTexture2DGroup->getPackageResourceID()->getUniqueID();
 			for (nfUint32 j = 0; j < nElementCount; j++) {
 				ModelPropertyID nPropertyID;
 				if (!pTexture2DGroup->mapResourceIndexToPropertyID(j, nPropertyID)) {
@@ -611,7 +615,7 @@ namespace NMR {
 				}
 				MODELTEXTURE2DCOORDINATE uvCoordinate = pTexture2DGroup->getUVCoordinate(nPropertyID);
 
-				m_pPropertyIndexMapping->registerPropertyID(nResourceID, nPropertyID, j);
+				m_pPropertyIndexMapping->registerPropertyID(nUniqueResourceID, nPropertyID, j);
 
 				writeStartElementWithPrefix(XML_3MF_ELEMENT_TEX2COORD, XML_3MF_NAMESPACEPREFIX_MATERIAL);
 				writeFloatAttribute(XML_3MF_ATTRIBUTE_TEXTURE_U, (float)uvCoordinate.m_dU);
@@ -637,6 +641,7 @@ namespace NMR {
 
 			// TODO: verify that this resource is in the same model
 			ModelResourceID nResourceID = pCompositeMaterials->getPackageResourceID()->getModelResourceID();
+			UniqueResourceID nUniqueResourceID = pCompositeMaterials->getPackageResourceID()->getUniqueID();
 
 			writeStartElementWithPrefix(XML_3MF_ELEMENT_COMPOSITEMATERIALS, XML_3MF_NAMESPACEPREFIX_MATERIAL);
 			// Write Object ID (mandatory)
@@ -655,7 +660,7 @@ namespace NMR {
 				if (!pCompositeMaterials->mapResourceIndexToPropertyID(j, nPropertyID)) {
 					throw CNMRException(NMR_ERROR_INVALIDPROPERTYRESOURCEID);
 				}
-				m_pPropertyIndexMapping->registerPropertyID(nResourceID, nPropertyID, j);
+				m_pPropertyIndexMapping->registerPropertyID(nUniqueResourceID, nPropertyID, j);
 				PModelComposite pModelComposite = pCompositeMaterials->getComposite(nPropertyID);
 
 				for (auto constituents : (*pModelComposite)) {
@@ -713,7 +718,7 @@ namespace NMR {
 	{
 		// assemble and write MultiPropertyElements
 		// TODO: verify that this resource is in the same model
-		ModelResourceID nResourceID = pMultiPropertyGroup->getPackageResourceID()->getModelResourceID();
+		UniqueResourceID nUniqueResourceID = pMultiPropertyGroup->getPackageResourceID()->getUniqueID();
 
 		nfUint32 nMultiCount = pMultiPropertyGroup->getCount();
 		nfUint32 nLayerCount = pMultiPropertyGroup->getLayerCount();
@@ -722,7 +727,7 @@ namespace NMR {
 			if (!pMultiPropertyGroup->mapResourceIndexToPropertyID(iMulti, nPropertyID)) {
 				throw CNMRException(NMR_ERROR_INVALIDPROPERTYRESOURCEID);
 			}
-			m_pPropertyIndexMapping->registerPropertyID(nResourceID, nPropertyID, iMulti);
+			m_pPropertyIndexMapping->registerPropertyID(nUniqueResourceID, nPropertyID, iMulti);
 
 			PModelMultiProperty pMultiProperty = pMultiPropertyGroup->getMultiProperty(nPropertyID);
 			std::vector<nfUint32> vctPIndices;

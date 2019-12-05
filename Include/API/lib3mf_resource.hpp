@@ -75,11 +75,15 @@ public:
 	* Public member functions to implement.
 	*/
 
-	Lib3MF_uint32 GetResourceID ();
+	Lib3MF_uint32 GetResourceID();
+
+	Lib3MF_uint32 GetUniqueResourceID();
 
 	virtual IObject * AsObject();
 
 	IModelPath * ModelPath() override;
+
+	Lib3MF_uint32 GetModelResourceID();
 };
 
 }
