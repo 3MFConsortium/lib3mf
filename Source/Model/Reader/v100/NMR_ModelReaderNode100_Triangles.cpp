@@ -148,7 +148,7 @@ namespace NMR {
 									CMeshInformation_Properties * pProperties = createPropertiesInformation();
 									MESHINFORMATION_PROPERTIES* pFaceData = (MESHINFORMATION_PROPERTIES*)pProperties->getFaceData(pFace->m_index);
 									if (pFaceData) {
-										pFaceData->m_nResourceID = pID->getUniqueID();
+										pFaceData->m_nResourceID = pID->getModelResourceID();
 										pFaceData->m_nPropertyIDs[0] = pPropertyID1;
 										pFaceData->m_nPropertyIDs[1] = pPropertyID2;
 										pFaceData->m_nPropertyIDs[2] = pPropertyID3;

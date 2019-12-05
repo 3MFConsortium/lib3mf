@@ -88,7 +88,7 @@ namespace NMR {
 				if (m_pBlendMethods && (i > 0) && (i < m_pBlendMethods->size() + 1 )) {
 					method = (*m_pBlendMethods)[i-1];
 				}
-				vctLayers.push_back(MODELMULTIPROPERTYLAYER({ pID->getUniqueID() , method }));
+				vctLayers.push_back(MODELMULTIPROPERTYLAYER({ pID->getModelResourceID() , method }));
 			}
 		}
 		else {

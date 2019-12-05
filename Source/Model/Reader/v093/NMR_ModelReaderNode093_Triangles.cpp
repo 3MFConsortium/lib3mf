@@ -205,7 +205,7 @@ namespace NMR {
 											pProperties->setDefaultData((MESHINFORMATIONFACEDATA*)pDefaultData);
 										}
 										if (pDefaultData->m_nResourceID == 0) {
-											pDefaultData->m_nResourceID = m_pDefaultMaterialResource->getPackageResourceID()->getUniqueID();
+											pDefaultData->m_nResourceID = m_pDefaultMaterialResource->getPackageResourceID()->getModelResourceID();
 										}
 									}
 								}

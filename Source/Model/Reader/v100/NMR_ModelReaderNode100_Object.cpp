@@ -345,7 +345,7 @@ namespace NMR {
 					ModelResourceID pPropertyID;
 					if (pResource->mapResourceIndexToPropertyID(m_nObjectLevelPropertyIndex, pPropertyID)) {
 						NMR::MESHINFORMATION_PROPERTIES * pDefaultData = new NMR::MESHINFORMATION_PROPERTIES;
-						pDefaultData->m_nResourceID = pResource->getPackageResourceID()->getUniqueID();
+						pDefaultData->m_nResourceID = pResource->getPackageResourceID()->getModelResourceID();
 						pDefaultData->m_nPropertyIDs[0] = pPropertyID;
 						pDefaultData->m_nPropertyIDs[1] = pPropertyID;
 						pDefaultData->m_nPropertyIDs[2] = pPropertyID;
