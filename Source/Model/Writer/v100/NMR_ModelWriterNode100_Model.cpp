@@ -301,10 +301,7 @@ namespace NMR {
 
 		std::string sNameSpacePrefix = XML_3MF_NAMESPACEPREFIX_SLICE;
 
-		if (
-			(!m_bIsRootModel && pSliceStackResource->OwnPath() == m_pModel->currentPath()) ||
-			(m_bIsRootModel && (pSliceStackResource->OwnPath() == m_pModel->rootPath() || pSliceStackResource->OwnPath().empty() ) ) 
-		)
+		if (pSliceStackResource->OwnPath() == m_pModel->currentPath())
 		{
 			writeStartElementWithPrefix(XML_3MF_ELEMENT_SLICESTACKRESOURCE, XML_3MF_NAMESPACEPREFIX_SLICE);
 
@@ -319,12 +316,12 @@ namespace NMR {
 					writeStartElementWithPrefix(XML_3MF_ELEMENT_SLICEREFRESOURCE, XML_3MF_NAMESPACEPREFIX_SLICE);
 					writeIntAttribute(XML_3MF_ATTRIBUTE_SLICEREF_ID, sliceRef->getPackageResourceID()->getUniqueID());
 					if (m_bIsRootModel) {
-						if (!sliceRef->OwnPath().empty() && (sliceRef->OwnPath() != m_pModel->rootPath())) {
+						if (sliceRef->OwnPath() != m_pModel->rootPath()) {
 							writeStringAttribute(XML_3MF_ATTRIBUTE_SLICEREF_PATH, sliceRef->OwnPath());
 						}
 					}
 					else {
-						if (!sliceRef->OwnPath().empty() && (sliceRef->OwnPath() != m_pModel->currentPath())) {
+						if (sliceRef->OwnPath() != m_pModel->currentPath()) {
 							writeStringAttribute(XML_3MF_ATTRIBUTE_SLICEREF_PATH, sliceRef->OwnPath());
 						}
 					}

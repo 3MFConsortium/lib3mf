@@ -142,6 +142,9 @@ namespace NMR {
 	{
 		std::string sPath;
 		m_pPackageResourceID->get(sPath);
+		if (sPath.empty()) {
+			throw CNMRException(NMR_ERROR_INVALID_SLICEPATH);
+		}
 		return sPath;
 	}
 
@@ -155,6 +158,7 @@ namespace NMR {
 	{
 		return m_dZBottom;
 	}
+
 	void CModelSliceStack::setZBottom(nfDouble dZBottom)
 	{
 		if (!m_pSlices.empty()) {
@@ -167,7 +171,6 @@ namespace NMR {
 		}
 		m_dZBottom = dZBottom;
 	}
-
 
 	nfDouble CModelSliceStack::getHighestZ() const
 	{
@@ -196,47 +199,5 @@ namespace NMR {
 		return true;
 	}
 
-
-	//nfUint32 CSliceStackGeometry::addSlice(PSlice pSlice)
-	//{
-	//	if (pSlice->getTopZ() < m_BottomZ)
-	//		throw CNMRException(NMR_ERROR_SLICES_Z_NOTINCREASING);
-	//	if (!m_Slices.empty()) {
-	//		if (pSlice->getTopZ() < m_Slices.rbegin()->get()->getTopZ() ) {
-	//			throw CNMRException(NMR_ERROR_SLICES_Z_NOTINCREASING);
-	//		}
-	//	}
-	//	m_Slices.push_back(pSlice);
-	//	return (nfUint32)m_Slices.size() - 1;
-	//}
-
-	//nfUint32 CSliceStackGeometry::getSliceCount()
-	//{
-	//	return (nfUint32)m_Slices.size();
-	//}
-
-	//nfFloat CSliceStackGeometry::getBottomZ()
-	//{
-	//	return m_BottomZ;
-	//}
-
-	//void CSliceStackGeometry::setBottomZ(nfFloat nBottomZ)
-	//{
-	//	m_BottomZ = nBottomZ;
-	//}
-
-	//void CSliceStackGeometry::setUsesSliceRef(nfBool bUsesSliceRef)
-	//{
-	//	m_bUsesSliceRef = bUsesSliceRef;
-	//}
-
-	//nfBool CSliceStackGeometry::usesSliceRef()
-	//{
-	//	return m_bUsesSliceRef;
-	//}
-
-	
-
-	
 }
 
