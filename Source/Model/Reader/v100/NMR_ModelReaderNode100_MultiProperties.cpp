@@ -80,7 +80,7 @@ namespace NMR {
 			}
 
 			for (int i = 0; i < m_pPIDs->size(); i++) {
-				PPackageResourceID pID = m_pModel->findPackageResourceID(m_pModel->curPath(), (*m_pPIDs)[i]);
+				PPackageResourceID pID = m_pModel->findPackageResourceID(m_pModel->currentPath(), (*m_pPIDs)[i]);
 				if (!pID)
 					throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
 

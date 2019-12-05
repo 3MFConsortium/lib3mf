@@ -45,6 +45,7 @@ Source/API/lib3mf_metadatagroup.cpp
 Source/API/lib3mf_multipropertygroup.cpp
 Source/API/lib3mf_multipropertygroupiterator.cpp
 Source/API/lib3mf_model.cpp
+Source/API/lib3mf_modelpath.cpp
 Source/API/lib3mf_object.cpp
 Source/API/lib3mf_objectiterator.cpp
 Source/API/lib3mf_reader.cpp

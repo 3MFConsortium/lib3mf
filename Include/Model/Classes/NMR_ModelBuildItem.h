@@ -74,7 +74,7 @@ namespace NMR {
 		std::string getTransformString();
 
 		// Associated object getter/setter
-		PackageResourceID getObjectID();
+		UniqueResourceID getObjectID();
 
 		// Item reference getter/setter
 		std::string getPartNumber();

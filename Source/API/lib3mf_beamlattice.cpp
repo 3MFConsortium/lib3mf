@@ -91,7 +91,7 @@ void CBeamLattice::SetClipping (const eLib3MFBeamLatticeClipMode eClipMode, cons
 
 		m_pAttributes->m_eClipMode = NMR::eModelBeamLatticeClipMode(eClipMode);;
 		m_pAttributes->m_bHasClippingMeshID = true;
-		m_pAttributes->m_nClippingMeshID = pClippingObject->getResourceID();
+		m_pAttributes->m_nClippingMeshID = pClippingObject->getPackageResourceID();
 	}
 }
 
@@ -127,7 +127,7 @@ void CBeamLattice::SetRepresentation (const Lib3MF_uint32 nResourceID)
 		}
 
 		m_pAttributes->m_bHasRepresentationMeshID = true;
-		m_pAttributes->m_nRepresentationID = pRepresentationObject->getResourceID();
+		m_pAttributes->m_nRepresentationID = pRepresentationObject->getPackageResourceID();
 	}
 }
 

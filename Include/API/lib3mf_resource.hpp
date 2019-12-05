@@ -79,6 +79,7 @@ public:
 
 	virtual IObject * AsObject();
 
+	IModelPath * ModelPath() override;
 };
 
 }

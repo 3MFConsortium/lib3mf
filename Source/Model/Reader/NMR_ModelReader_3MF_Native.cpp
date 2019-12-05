@@ -57,7 +57,7 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_OPCRELATIONSHIPSETREADFAILED);
 
 		std::string sTargetPartURI = pModelRelation->getTargetPartURI();
-		POpcPackagePart pModelPart = m_pPackageReader->createPart (sTargetPartURI);
+		POpcPackagePart pModelPart = m_pPackageReader->createPart(sTargetPartURI);
 		if (pModelPart == nullptr)
 			throw CNMRException(NMR_ERROR_OPCCOULDNOTGETMODELSTREAM);
 

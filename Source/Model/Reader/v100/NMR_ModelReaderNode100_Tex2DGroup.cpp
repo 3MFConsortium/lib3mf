@@ -69,7 +69,7 @@ namespace NMR {
 		if (m_nTextureID == 0)
 			throw CNMRException(NMR_ERROR_MISSINGMODELRESOURCEID);
 
-		PPackageResourceID pID = m_pModel->findPackageResourceID(m_pModel->curPath(), m_nTextureID);
+		PPackageResourceID pID = m_pModel->findPackageResourceID(m_pModel->currentPath(), m_nTextureID);
 		if (!pID)
 			throw CNMRException(NMR_ERROR_INVALIDMODELRESOURCE);
 

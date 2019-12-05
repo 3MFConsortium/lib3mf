@@ -164,7 +164,7 @@ namespace NMR {
 				PModelBaseMaterialResource pBaseMaterialResource;
 				if (m_nObjectLevelMaterialID > 0) {
 					// every v93 material becomes its own v100 base material group resource
-					pBaseMaterialResource = std::dynamic_pointer_cast<NMR::CModelBaseMaterialResource>(m_pModel->findResource(m_pModel->curPath(), m_nObjectLevelMaterialID));
+					pBaseMaterialResource = std::dynamic_pointer_cast<NMR::CModelBaseMaterialResource>(m_pModel->findResource(m_pModel->currentPath(), m_nObjectLevelMaterialID));
 					if (pBaseMaterialResource.get() == nullptr) {
 						m_pWarnings->addException(CNMRException(NMR_ERROR_INVALIDMODELRESOURCE), mrwInvalidOptionalValue);
 					}

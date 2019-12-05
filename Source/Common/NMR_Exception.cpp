@@ -178,7 +178,7 @@ namespace NMR {
 		case NMR_ERROR_DUPLICATETEXTURE: return "Texture is already existing";
 		case NMR_ERROR_DUPLICATETEXTUREID: return "Texture ID is already existing";
 		case NMR_ERROR_PARTTOOLARGE: return "Part is too large";
-		case NMR_ERROR_DUPLICATETEXTUREPATH: return "Texture path is already existing";
+		case NMR_ERROR_DUPLICATETEXTUREPATH: return "Texture getPath is already existing";
 		case NMR_ERROR_DUPLICATETEXTUREWIDTH: return "Texture width is already existing";
 		case NMR_ERROR_DUPLICATETEXTUREHEIGHT: return "Texture height is already existing";
 		case NMR_ERROR_DUPLICATETEXTUREDEPTH: return "Texture depth is already existing";
@@ -332,7 +332,7 @@ namespace NMR {
 		case NMR_ERROR_SLICESTACK_SLICESANDSLICEREF: return "Slicestack contains slices and slicerefs";
 		case NMR_ERROR_ILLFORMATUUID: return "A UUID is ill formatted";
 		case NMR_ERROR_INVALIDSLICESTACK: return "A slice stack resource is invalid";
-		case NMR_ERROR_DUPLICATEPATH: return "Duplicate path attribute";
+		case NMR_ERROR_DUPLICATEPATH: return "Duplicate getPath attribute";
 		case NMR_ERROR_DUPLICATEUUID: return "Duplicate UUID attribute";
 		case NMR_ERROR_REFERENCESTOODEEP: return "References in production extension go deeper than one level.";
 		case NMR_ERROR_SLICEREFSTOODEEP: return "A slicestack referenced via a slicepath cannot reference another slicestack.";
@@ -397,6 +397,7 @@ namespace NMR {
 		case NMR_ERROR_INVALID_RESOURCE_INDEX: return "A Resource Index is invalid";
 		case NMR_ERROR_VERSION093_NOT_SUPPORTED: return "This document contains content from Version 093 of the core-specification. This is not fully supported by Lib3MF version 2 or later.";
 		case NMR_ERROR_ATTACHMENTMODELMISMATCH: return "The model of an attachment does not match the model of a resource.";
+		case NMR_ERROR_DUPLICATEMODELPATH: return "The getPath of a model is not unique.";
 
 		// XML Parser Error Constants(0x9XXX)
 		case NMR_ERROR_XMLPARSER_INVALIDATTRIBVALUE: return "Invalid XML attribute value";

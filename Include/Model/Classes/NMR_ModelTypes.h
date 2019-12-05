@@ -111,7 +111,7 @@ namespace NMR {
 
 	typedef DWORD ModelPropertyID;
 	typedef DWORD ModelResourceID;
-	typedef DWORD PackageResourceID;
+	typedef DWORD UniqueResourceID;
 	typedef DWORD ModelResourceIndex;
 
 	enum eModelUnit {

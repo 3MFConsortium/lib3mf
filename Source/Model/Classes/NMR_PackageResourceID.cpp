@@ -26,46 +26,98 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_PackageResourceID.cpp implements the PackageResourceID Class.
+NMR_PackageResourceID.cpp implements the UniqueResourceID Class.
 
 --*/
 
-#include "Model/Classes/NMR_PackageResourceID.h" 
+#include "Model/Classes/NMR_PackageResourceID.h"
 #include "Common/NMR_StringUtils.h" 
 #include "Common/NMR_Exception.h" 
 
 namespace NMR {
 
-	void CPackageResourceID::setPathAndId(std::string p, ModelResourceID id) {
-		m_path = p;
-		m_id = id;
+	CPackageModelPath::CPackageModelPath(CResourceHandler* pResourceHandler, std::string sPath)
+	  : m_pResourceHandler(pResourceHandler), m_sPath(sPath)
+	{
+		if (pResourceHandler == nullptr) {
+			throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+		}
+	}
+
+	std::string CPackageModelPath::getPath()
+	{
+		return m_sPath;
+	}
+
+	void CPackageModelPath::setPath(std::string sPath)
+	{
+		// TODO: changing this getPath MUST go through the CResourceHandler to update the maps there
+		m_sPath = sPath;
+	}
+
+	CPackageResourceID::CPackageResourceID(CResourceHandler* pResourceHandler, PPackageModelPath pModelPath, ModelResourceID nID)
+	  : m_pResourceHandler(pResourceHandler), m_pModelPath(pModelPath), m_id(nID)
+	{
+		if (pResourceHandler == nullptr || pModelPath == nullptr) {
+			throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+		}
+	}
+
+	void CPackageResourceID::get(PPackageModelPath& p) {
+		p = m_pModelPath;
 	}
 	void CPackageResourceID::get(std::string& p) {
-		p = m_path;
+		p = m_pModelPath->getPath();
 	}
 	void CPackageResourceID::get(ModelResourceID& id) {
 		id = m_id;
 	}
 
-	void CPackageResourceID::setUniqueID(PackageResourceID id) {
+	void CPackageResourceID::setUniqueID(UniqueResourceID id) {
 		m_uniqueID = id;
 	}
-	PackageResourceID CPackageResourceID::getUniqueID() {
+	UniqueResourceID CPackageResourceID::getUniqueID() {
 		return m_uniqueID;
 	}
 
-	PPackageResourceID CResourceHandler::getNewResourceID(std::string path, ModelResourceID id)	// this is supposed to be the only way to generate a CPackageResourceID
+	PPackageModelPath CResourceHandler::makePackageModelPath(std::string sPath)
 	{
-		PPackageResourceID p = std::make_shared<CPackageResourceID>();
-		if (findResourceID(path, id))
+		if (findPackageModelPath(sPath)) {
+			throw CNMRException(NMR_ERROR_DUPLICATEMODELPATH);
+		}
+		PPackageModelPath pModelPath = std::make_shared<CPackageModelPath>(this, sPath);
+		m_PathToModelPath.insert(std::make_pair(sPath, pModelPath));
+		return pModelPath;
+	}
+
+	PPackageModelPath CResourceHandler::findPackageModelPath(std::string sPath)
+	{
+		auto it = m_PathToModelPath.find(sPath);
+		if (it != m_PathToModelPath.end())
+		{
+			return it->second;
+		}
+		return nullptr;
+	}
+
+	// this is supposed to be the only way to generate a CPackageResourceID
+	PPackageResourceID CResourceHandler::makePackageResourceID(std::string path, ModelResourceID id)
+	{
+		PPackageModelPath pModelPath = findPackageModelPath(path);
+		if (!pModelPath) {
+			pModelPath = makePackageModelPath(path);
+		}
+		if (findResourceIDByPair(pModelPath->getPath(), id))
 			throw CNMRException(NMR_ERROR_DUPLICATERESOURCEID);
-		p->setPathAndId(path, id);
+
+		PPackageResourceID p = std::make_shared<CPackageResourceID>(this, pModelPath, id);
 		p->setUniqueID(int(m_resourceIDs.size())+1);
+
 		m_resourceIDs.insert(std::make_pair(p->getUniqueID(), p));
-		m_IdAndPathToResourceIDs.insert(std::make_pair(std::make_pair(id, path), p));
+		m_IdAndPathToPackageResourceIDs.insert(std::make_pair(std::make_pair(id, path), p));
 		return p;
 	}
-	PPackageResourceID CResourceHandler::findResourceID(PackageResourceID id)
+	PPackageResourceID CResourceHandler::findResourceIDByUniqueID(UniqueResourceID id)
 	{
 		auto it = m_resourceIDs.find(id);
 		if (it != m_resourceIDs.end())
@@ -75,23 +127,19 @@ namespace NMR {
 		return nullptr;
 	}
 	
-	PPackageResourceID CResourceHandler::findResourceID(std::string path, ModelResourceID id)
+	PPackageResourceID CResourceHandler::findResourceIDByPair(std::string path, ModelResourceID id)
 	{
-		auto it = m_IdAndPathToResourceIDs.find(std::make_pair(id, path));
-		if (it != m_IdAndPathToResourceIDs.end())
+		auto it = m_IdAndPathToPackageResourceIDs.find(std::make_pair(id, path));
+		if (it != m_IdAndPathToPackageResourceIDs.end())
 		{
 			return it->second;
 		}
 		return nullptr;
 	}
 
-	void CResourceHandler::FlattenIDs() {
-
-	}
-
 	void CResourceHandler::clear() {
 		m_resourceIDs.clear();
-		m_IdAndPathToResourceIDs.clear();
+		m_IdAndPathToPackageResourceIDs.clear();
 	}
 
 }

@@ -73,12 +73,12 @@ namespace NMR {
 		CModelObject * pObject;
 		PPackageResourceID pID;
 		if (m_hasPath) {
-			if (m_pModel->curPath() != m_pModel->rootPath() )
+			if (m_pModel->currentPath() != m_pModel->rootPath() )
 				throw CNMRException(NMR_ERROR_REFERENCESTOODEEP);
 			pID = m_pModel->findPackageResourceID(m_sPath, m_ObjectID);
 		}
 		else
-			pID = m_pModel->findPackageResourceID(m_pModel->curPath(), m_ObjectID);
+			pID = m_pModel->findPackageResourceID(m_pModel->currentPath(), m_ObjectID);
 		if (!pID)
 			throw CNMRException(NMR_ERROR_COULDNOTFINDBUILDITEMOBJECT);
 

@@ -24,59 +24,37 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CResource
+Abstract: This is a stub class definition of CModelPath
 
 */
 
-#include "lib3mf_resource.hpp"
+#include "lib3mf_modelpath.hpp"
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
-#include "lib3mf_modelpath.hpp"
-#include "Model/Classes/NMR_ModelObject.h"
-#include "lib3mf_object.hpp"
-#include <iostream>
+
+
 
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CResource 
+ Class definition of CModelPath 
 **************************************************************************************************************************/
 
-
-NMR::PModelResource CResource::resource()
+CModelPath::CModelPath(NMR::PPackageModelPath pPath)
+  : m_pPath(pPath)
 {
-	if (m_pResource.get()==nullptr)
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDOBJECT);
-
-	return m_pResource;
+	if (!pPath.get())
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
 }
 
-CResource::CResource(NMR::PModelResource pResource)
+std::string CModelPath::Get()
 {
-	if (pResource.get() == nullptr)
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDMODELRESOURCE);
-	m_pResource = pResource;
+	return m_pPath->getPath();
 }
 
-Lib3MF_uint32 CResource::GetResourceID()
+void CModelPath::Set(const std::string & sPath)
 {
-	return m_pResource->getPackageResourceID()->getUniqueID();
-}
-
-IObject * CResource::AsObject()
-{
-	if (dynamic_cast<NMR::CModelObject*>(m_pResource.get()))
-	{
-		return new CObject(m_pResource);
-	}
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-}
-
-IModelPath * CResource::ModelPath()
-{
-	NMR::PPackageModelPath pPath;
-	m_pResource->getPackageResourceID()->get(pPath);
-	return new CModelPath(pPath);
+	m_pPath->setPath(sPath);
 }
 

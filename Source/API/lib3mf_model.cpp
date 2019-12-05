@@ -58,6 +58,8 @@ Abstract: This is a stub class definition of CModel
 #include "lib3mf_compositematerialsiterator.hpp"
 #include "lib3mf_multipropertygroup.hpp"
 #include "lib3mf_multipropertygroupiterator.hpp"
+#include "lib3mf_modelpath.hpp"
+
 
 // Include custom headers here.
 #include "Model/Classes/NMR_ModelMeshObject.h"
@@ -84,6 +86,11 @@ CModel::CModel()
 NMR::CModel& CModel::model()
 {
 	return *m_model;
+}
+
+IModelPath * CModel::RootModel()
+{
+	return new CModelPath(model().rootModelPath());
 }
 
 void CModel::SetUnit (const eLib3MFModelUnit eUnit)
@@ -495,7 +502,7 @@ IColorGroup * CModel::AddColorGroup()
 
 ITexture2DGroup * CModel::AddTexture2DGroup(ITexture2D* pTexture2DInstance)
 {
-	NMR::PackageResourceID nTexture2DID = pTexture2DInstance->GetResourceID();
+	NMR::UniqueResourceID nTexture2DID = pTexture2DInstance->GetResourceID();
 
 	// Find class instance
 	NMR::PModelTexture2DResource pModelTexture2DObject = model().findTexture2D(nTexture2DID);
@@ -510,7 +517,7 @@ ITexture2DGroup * CModel::AddTexture2DGroup(ITexture2D* pTexture2DInstance)
 
 ICompositeMaterials * CModel::AddCompositeMaterials(IBaseMaterialGroup* pBaseMaterialGroupInstance)
 {
-	NMR::PackageResourceID nBaseMaterialGroupID = pBaseMaterialGroupInstance->GetResourceID();
+	NMR::UniqueResourceID nBaseMaterialGroupID = pBaseMaterialGroupInstance->GetResourceID();
 
 	// Find class instance
 	NMR::PModelBaseMaterialResource pModelBaseMaterialGroup = model().findBaseMaterial(nBaseMaterialGroupID);
@@ -534,7 +541,7 @@ IMultiPropertyGroup * CModel::AddMultiPropertyGroup()
 IBuildItem * CModel::AddBuildItem (IObject* pObject, const sLib3MFTransform Transform)
 {
 	// Get Resource ID
-	NMR::PackageResourceID nObjectID = pObject->GetResourceID();
+	NMR::UniqueResourceID nObjectID = pObject->GetResourceID();
 	
 	// Find class instance
 	NMR::CModelObject * pModelObject = model().findObject(nObjectID);

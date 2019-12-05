@@ -83,7 +83,7 @@ namespace NMR {
 
 		// Write Model Stream
 		POpcPackageWriter pPackageWriter = std::make_shared<COpcPackageWriter>(pStream);
-		POpcPackagePart pModelPart = pPackageWriter->addPart(PACKAGE_3D_MODEL_URI);
+		POpcPackagePart pModelPart = pPackageWriter->addPart(m_pModel->rootModelPath()->getPath());
 		PXmlWriter_Native pXMLWriter = std::make_shared<CXmlWriter_Native>(pModelPart->getExportStream());
 
 		m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_WRITEROOTMODEL);
@@ -171,7 +171,7 @@ namespace NMR {
 
 			std::string slicePath = slicePaths[nIndex];
 
-			m_pModel->setCurPath(slicePath);
+			m_pModel->setCurrentPath(slicePath);
 			PImportStream pStream;
 			{
 				PExportStreamMemory pExportStream = std::make_shared<CExportStreamMemory>();

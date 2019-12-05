@@ -68,7 +68,7 @@ namespace NMR {
 			}
 
 			PModelAttachment pProdAttachment = pModel->getProductionModelAttachment(i);
-			std::string path = pProdAttachment->getPathURI();
+			std::string sPath = pProdAttachment->getPathURI();
 			PImportStream pSubModelStream = pProdAttachment->getStream();
 
 			// Create XML Reader
@@ -99,9 +99,9 @@ namespace NMR {
 					bHasModel = true;
 
 					PModelReaderNode_Model pXMLNode;
-					pModel->setCurPath(path.c_str());
+					pModel->setCurrentPath(sPath);
 
-					pXMLNode = std::make_shared<CModelReaderNode_Model>(pModel.get(), pWarnings, path.c_str(), pProgressMonitor);
+					pXMLNode = std::make_shared<CModelReaderNode_Model>(pModel.get(), pWarnings, sPath, pProgressMonitor);
 					pXMLNode->setIgnoreBuild(true);
 					pXMLNode->setIgnoreMetaData(true);
 					pXMLNode->parseXML(pXMLReader.get());
@@ -161,8 +161,8 @@ namespace NMR {
 					throw CNMRException(NMR_ERROR_DUPLICATEMODELNODE);
 				bHasModel = true;
 
-				m_pModel->setCurPath(m_pModel->rootPath().c_str());
-				PModelReaderNode_Model pXMLNode = std::make_shared<CModelReaderNode_Model>(m_pModel.get(), m_pWarnings, m_pModel->rootPath().c_str(), m_pProgressMonitor);
+				m_pModel->setCurrentPath(m_pModel->rootPath());
+				PModelReaderNode_Model pXMLNode = std::make_shared<CModelReaderNode_Model>(m_pModel.get(), m_pWarnings, m_pModel->rootPath(), m_pProgressMonitor);
 				pXMLNode->parseXML(pXMLReader.get());
 
 				if (!pXMLNode->getHasResources())

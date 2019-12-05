@@ -66,7 +66,7 @@ namespace NMR {
 		if (!m_bHasID)
 			throw CNMRException(NMR_ERROR_MISSINGBUILDITEMOBJECTID);
 
-		PPackageResourceID pID = m_pModel->findPackageResourceID(m_pModel->curPath(), m_ObjectID);
+		PPackageResourceID pID = m_pModel->findPackageResourceID(m_pModel->currentPath(), m_ObjectID);
 		if (!pID.get())
 			throw CNMRException(NMR_ERROR_COULDNOTFINDBUILDITEMOBJECT);
 		CModelObject * pObject = m_pModel->findObject(pID->getUniqueID());

@@ -130,7 +130,7 @@ namespace NMR {
 						// set potential default properties (i.e. used pid)
 						m_nUsedResourceID = nResourceID;
 
-						PPackageResourceID pID = m_pModel->findPackageResourceID(m_pModel->curPath(), nResourceID);
+						PPackageResourceID pID = m_pModel->findPackageResourceID(m_pModel->currentPath(), nResourceID);
 						if (pID.get()) {
 							// Find and Assign Resource of this Property
 							PModelResource pResource = m_pModel->findResource(pID->getUniqueID());

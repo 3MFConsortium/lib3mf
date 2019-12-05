@@ -89,17 +89,19 @@ namespace NMR {
 	class CModelSliceStack;
 	typedef std::shared_ptr <CModelSliceStack> PModelSliceStack;
 
-	typedef std::map<NMR::PackageResourceID, NMR::PackageResourceID> UniqueResourceIDMapping;
+	typedef std::map<NMR::UniqueResourceID, NMR::UniqueResourceID> UniqueResourceIDMapping;
 
+	// The Model class implements the unification of all model-file in a 3MF package
+	// It should be understood as a "MultiModel"
 	class CModel {
 	private:
-		std::string m_sCurPath;
-		std::string m_sRootPath;
+		PPackageModelPath m_pCurPath;
+		PPackageModelPath m_pPath;
 
 		std::unordered_map<std::string, PUUID> usedUUIDs;	// datastructure used to ensure that UUIDs within one model (package) are unique
 
-		// Object Resources of the model
-		std::map<PackageResourceID, PModelResource> m_ResourceMap;
+		// map of all UniqueResourceIDs to actual object resources of the model
+		std::map<UniqueResourceID, PModelResource> m_ResourceMap;
 		CResourceHandler m_resourceHandler;
 	private:
 		std::vector<PModelResource> m_Resources;
@@ -148,9 +150,11 @@ namespace NMR {
 		CModel();
 		~CModel();
 
-		const std::string curPath();
-		void setCurPath(const std::string sPath);
+		const std::string currentPath();
+		PPackageModelPath currentModelPath();
+		void setCurrentPath(const std::string sPath);
 
+		PPackageModelPath rootModelPath();
 		const std::string rootPath();
 		void setRootPath(const std::string sPath);
 
@@ -169,11 +173,11 @@ namespace NMR {
 
 		// General Resource Handling
 		PModelResource findResource(_In_ std::string path, ModelResourceID nID);
-		PModelResource findResource(_In_ PackageResourceID nID);
+		PModelResource findResource(_In_ UniqueResourceID nID);
 		PModelResource findResource(_In_ PPackageResourceID pID);
 
 		PPackageResourceID findPackageResourceID(_In_ std::string path, ModelResourceID nID);
-		PPackageResourceID findPackageResourceID(_In_ PackageResourceID nID);
+		PPackageResourceID findPackageResourceID(_In_ UniqueResourceID nID);
 		
 		nfUint32 getResourceCount();
 		PModelResource getResource(_In_ nfUint32 nIndex);
@@ -207,53 +211,53 @@ namespace NMR {
 		PModelAttachment getPackageThumbnail();
 
 		// Retrieve a unique Resource ID
-		PackageResourceID generateResourceID();	// unique per model
+		UniqueResourceID generateResourceID();	// unique per model
 		PPackageResourceID generatePackageResourceID(_In_ std::string path, ModelResourceID nID);	// unique per package
 
 		// Convenience functions for objects
-		_Ret_maybenull_ CModelObject * findObject(_In_ PackageResourceID nResourceID);
+		_Ret_maybenull_ CModelObject * findObject(_In_ UniqueResourceID nResourceID);
 		nfUint32 getObjectCount();
 		PModelResource getObjectResource(_In_ nfUint32 nIndex);
 		nfInt32 compareObjectsByResourceID(CModelResource* pObjectResourceA, CModelResource* pObjectResourceB);
 		CModelObject * getObject(_In_ nfUint32 nIndex);
 
 		// Convenience functions for base materials
-		_Ret_maybenull_ PModelBaseMaterialResource findBaseMaterial(_In_ PackageResourceID nResourceID);
+		_Ret_maybenull_ PModelBaseMaterialResource findBaseMaterial(_In_ UniqueResourceID nResourceID);
 		nfUint32 getBaseMaterialCount();
 		PModelResource getBaseMaterialResource(_In_ nfUint32 nIndex);
 		CModelBaseMaterialResource * getBaseMaterial(_In_ nfUint32 nIndex);
 		void mergeBaseMaterials(_In_ CModel * pSourceModel, _In_ UniqueResourceIDMapping &oldToNewMapping);
 
 		// Convenience functions for color groups
-		_Ret_maybenull_ PModelColorGroupResource findColorGroup(_In_ PackageResourceID nResourceID);
+		_Ret_maybenull_ PModelColorGroupResource findColorGroup(_In_ UniqueResourceID nResourceID);
 		nfUint32 getColorGroupCount();
 		PModelResource getColorGroupResource(_In_ nfUint32 nIndex);
 		CModelColorGroupResource * getColorGroup(_In_ nfUint32 nIndex);
 		void mergeColorGroups(_In_ CModel * pSourceModel, _In_ UniqueResourceIDMapping &oldToNewMapping);
 
 		// Convenience functions for texture2d groups
-		_Ret_maybenull_ PModelTexture2DGroupResource findTexture2DGroup(_In_ PackageResourceID nResourceID);
+		_Ret_maybenull_ PModelTexture2DGroupResource findTexture2DGroup(_In_ UniqueResourceID nResourceID);
 		nfUint32 getTexture2DGroupCount();
 		PModelResource getTexture2DGroupResource(_In_ nfUint32 nIndex);
 		CModelTexture2DGroupResource * getTexture2DGroup(_In_ nfUint32 nIndex);
 		void mergeTexture2DGroups(_In_ CModel * pSourceModel, _In_ UniqueResourceIDMapping &oldToNewMapping);
 
 		// Convenience functions for composite materials
-		_Ret_maybenull_ PModelCompositeMaterialsResource findCompositeMaterials(_In_ PackageResourceID nResourceID);
+		_Ret_maybenull_ PModelCompositeMaterialsResource findCompositeMaterials(_In_ UniqueResourceID nResourceID);
 		nfUint32 getCompositeMaterialsCount();
 		PModelResource getCompositeMaterialsResource(_In_ nfUint32 nIndex);
 		CModelCompositeMaterialsResource * getCompositeMaterials(_In_ nfUint32 nIndex);
 		void mergeCompositeMaterials(_In_ CModel * pSourceModel, _In_ UniqueResourceIDMapping &oldToNewMapping);
 
 		// Convenience functions for multi property groups
-		_Ret_maybenull_ PModelMultiPropertyGroupResource findMultiPropertyGroup(_In_ PackageResourceID nResourceID);
+		_Ret_maybenull_ PModelMultiPropertyGroupResource findMultiPropertyGroup(_In_ UniqueResourceID nResourceID);
 		nfUint32 getMultiPropertyGroupCount();
 		PModelResource getMultiPropertyGroupResource(_In_ nfUint32 nIndex);
 		CModelMultiPropertyGroupResource * getMultiPropertyGroup(_In_ nfUint32 nIndex);
 		void mergeMultiPropertyGroups(_In_ CModel * pSourceModel, _In_ UniqueResourceIDMapping &oldToNewMapping);
 
 		// Convenience functions for 2D Textures
-		_Ret_maybenull_ PModelTexture2DResource findTexture2D(_In_ PackageResourceID nResourceID);
+		_Ret_maybenull_ PModelTexture2DResource findTexture2D(_In_ UniqueResourceID nResourceID);
 		nfUint32 getTexture2DCount();
 		PModelResource getTexture2DResource(_In_ nfUint32 nIndex);
 		CModelTexture2DResource * getTexture2D(_In_ nfUint32 nIndex);

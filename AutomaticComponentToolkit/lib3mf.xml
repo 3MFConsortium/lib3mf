@@ -318,9 +318,21 @@
 		</method>
 	</class>
 
+	<class name="ModelPath">
+		<method name="Get" description="Returns the absolute path of this ModelPath.">
+			<param name="Path" type="string" pass="return" description="Returns the absolute path of this ModelPath"/>
+		</method>
+		<method name="Set" description="Sets the absolute path of this ModelPath.">
+			<param name="Path" type="string" pass="in" description="Sets the absolute path of this ModelPath."/>
+		</method>
+	</class>
+	
 	<class name="Resource">
-		<method name="GetResourceID" description="Retrieves the resource id of the resource instance.">
-			<param name="Id" type="uint32" pass="return" description="Retrieves the ID of a Model Resource Instance."/>
+		<method name="GetResourceID" description="Retrieves the id of this resource within a model.">
+			<param name="Id" type="uint32" pass="return" description="Retrieves the id of this resource within a model."/>
+		</method>
+		<method name="ModelPath" description="Returns the ModelPath (path of the model-file) within which this resource resides">
+			<param name="ModelPath" type="class" class="ModelPath" pass="return" description="the ModelPath (path of the model-file) within which this resource resides."/>
 		</method>
 	</class>
 
@@ -1067,6 +1079,9 @@
 	</class>
 
 	<class name="Model">
+		<method name="RootModel" description="Returns the Model Path of the root model-file within the OPC package.">
+			<param name="RootModelPath" type="class" class="ModelPath" pass="return" description="the Model Path of the root model-file within the OPC package"/>
+		</method>
 		<method name="SetUnit" description="sets the units of a model.">
 			<param name="Unit" type="enum" class="ModelUnit" pass="in" description="Unit enum value for the model unit"/>
 		</method>

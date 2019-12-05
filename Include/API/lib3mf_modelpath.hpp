@@ -24,59 +24,69 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CResource
+Abstract: This is the class declaration of CModelPath
 
 */
 
-#include "lib3mf_resource.hpp"
-#include "lib3mf_interfaceexception.hpp"
+
+#ifndef __LIB3MF_MODELPATH
+#define __LIB3MF_MODELPATH
+
+#include "lib3mf_interfaces.hpp"
+
+// Parent classes
+#include "lib3mf_base.hpp"
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4250)
+#endif
 
 // Include custom headers here.
-#include "lib3mf_modelpath.hpp"
-#include "Model/Classes/NMR_ModelObject.h"
-#include "lib3mf_object.hpp"
-#include <iostream>
+#include "Model/Classes/NMR_PackageResourceID.h"
 
-using namespace Lib3MF::Impl;
+namespace Lib3MF {
+namespace Impl {
+
 
 /*************************************************************************************************************************
- Class definition of CResource 
+ Class declaration of CModelPath 
 **************************************************************************************************************************/
 
+class CModelPath : public virtual IModelPath, public virtual CBase {
+private:
 
-NMR::PModelResource CResource::resource()
-{
-	if (m_pResource.get()==nullptr)
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDOBJECT);
+	/**
+	* Put private members here.
+	*/
+	NMR::PPackageModelPath m_pPath;
 
-	return m_pResource;
-}
+protected:
 
-CResource::CResource(NMR::PModelResource pResource)
-{
-	if (pResource.get() == nullptr)
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDMODELRESOURCE);
-	m_pResource = pResource;
-}
+	/**
+	* Put protected members here.
+	*/
 
-Lib3MF_uint32 CResource::GetResourceID()
-{
-	return m_pResource->getPackageResourceID()->getUniqueID();
-}
+public:
 
-IObject * CResource::AsObject()
-{
-	if (dynamic_cast<NMR::CModelObject*>(m_pResource.get()))
-	{
-		return new CObject(m_pResource);
-	}
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-}
+	/**
+	* Put additional public members here. They will not be visible in the external API.
+	*/
+	CModelPath(NMR::PPackageModelPath pPath);
 
-IModelPath * CResource::ModelPath()
-{
-	NMR::PPackageModelPath pPath;
-	m_pResource->getPackageResourceID()->get(pPath);
-	return new CModelPath(pPath);
-}
+	/**
+	* Public member functions to implement.
+	*/
 
+	std::string Get() override;
+
+	void Set(const std::string & sPath) override;
+
+};
+
+} // namespace Impl
+} // namespace Lib3MF
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
+#endif // __LIB3MF_MODELPATH

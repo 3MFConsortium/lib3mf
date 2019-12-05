@@ -291,7 +291,7 @@ namespace NMR {
 
 			// In any case (component object or mesh object)
 			if ( (m_pObject) && (m_nSliceStackId > 0) ) {
-				PPackageResourceID pID = m_pModel->findPackageResourceID(m_pModel->curPath(), m_nSliceStackId);
+				PPackageResourceID pID = m_pModel->findPackageResourceID(m_pModel->currentPath(), m_nSliceStackId);
 				if (!pID.get())
 					throw CNMRException(NMR_ERROR_SLICESTACKRESOURCE_NOT_FOUND);
 				PModelSliceStack pSliceStackResource = std::dynamic_pointer_cast<CModelSliceStack>(m_pModel->findResource(pID->getUniqueID()) );
@@ -326,7 +326,7 @@ namespace NMR {
 				if (pMesh) {
 
 					// Assign Default Resource Property
-					PModelResource pResource = m_pModel->findResource(m_pModel->curPath(), m_nObjectLevelPropertyID);
+					PModelResource pResource = m_pModel->findResource(m_pModel->currentPath(), m_nObjectLevelPropertyID);
 					if (pResource.get() == nullptr) {
 						throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
 					}
@@ -345,7 +345,7 @@ namespace NMR {
 					ModelResourceID pPropertyID;
 					if (pResource->mapResourceIndexToPropertyID(m_nObjectLevelPropertyIndex, pPropertyID)) {
 						NMR::MESHINFORMATION_PROPERTIES * pDefaultData = new NMR::MESHINFORMATION_PROPERTIES;
-						pDefaultData->m_nResourceID = pResource->getResourceID()->getUniqueID();
+						pDefaultData->m_nResourceID = pResource->getPackageResourceID()->getUniqueID();
 						pDefaultData->m_nPropertyIDs[0] = pPropertyID;
 						pDefaultData->m_nPropertyIDs[1] = pPropertyID;
 						pDefaultData->m_nPropertyIDs[2] = pPropertyID;
@@ -378,7 +378,7 @@ namespace NMR {
 
 		pXMLNode->retrieveClippingInfo(eClipMode, bHasClippingMeshID, nClippingMeshID);
 		if (bHasClippingMeshID) {
-			PPackageResourceID pID = m_pModel->findPackageResourceID(m_pModel->curPath(), nClippingMeshID);
+			PPackageResourceID pID = m_pModel->findPackageResourceID(m_pModel->currentPath(), nClippingMeshID);
 			if (!pID.get()) {
 				m_pWarnings->addWarning(MODELREADERWARNING_BEAMLATTICECLIPPINGRESOURCENOTDEFINED, NMR_ERROR_BEAMLATTICECLIPPINGRESOURCENOTDEFINED, mrwInvalidMandatoryValue);
 			}
@@ -400,7 +400,7 @@ namespace NMR {
 		ModelResourceID nRepresentationMeshID;
 		pXMLNode->retrieveRepresentationInfo(bHasRepresentationMeshID, nRepresentationMeshID);
 		if (nRepresentationMeshID) {
-			PPackageResourceID pID = m_pModel->findPackageResourceID(m_pModel->curPath(), nRepresentationMeshID);
+			PPackageResourceID pID = m_pModel->findPackageResourceID(m_pModel->currentPath(), nRepresentationMeshID);
 			if (!pID.get()) {
 				m_pWarnings->addWarning(MODELREADERWARNING_BEAMLATTICEREPRESENTATIONRESOURCENOTDEFINED, NMR_ERROR_BEAMLATTICE_INVALID_REPRESENTATIONRESOURCE, mrwInvalidMandatoryValue);
 			}

@@ -119,12 +119,12 @@ namespace NMR {
 		
 		PPackageResourceID pRID; 
 		if (m_bHasPath) {
-			if (m_pModel->curPath() != m_pModel->rootPath())
+			if (m_pModel->currentPath() != m_pModel->rootPath())
 				throw CNMRException(NMR_ERROR_REFERENCESTOODEEP);
 			pRID = m_pModel->findPackageResourceID(m_sPath, m_ObjectID);
 		}
 		else {
-			pRID = m_pModel->findPackageResourceID(m_pModel->curPath(), m_ObjectID);
+			pRID = m_pModel->findPackageResourceID(m_pModel->currentPath(), m_ObjectID);
 		}
 		if (pRID.get())
 			return m_pModel->findObject(pRID->getUniqueID());

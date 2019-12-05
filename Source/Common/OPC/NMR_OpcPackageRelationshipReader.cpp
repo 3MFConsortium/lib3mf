@@ -185,7 +185,7 @@ namespace NMR {
 			bContinue = pXMLReader->MoveToNextAttribute();
 		}
 		
-		// must be non-empty and absolute path
+		// must be non-empty and absolute getPath
 		if (sTarget.empty()) // || (sTarget[0] != L'/') )
 			throw CNMRException(NMR_ERROR_INVALIDOPCPARTURI);
 

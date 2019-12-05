@@ -70,7 +70,7 @@ namespace NMR {
 			
 			std::string path = pXmlNode->Path();
 			if (path.empty()) {
-				path = m_pModel->curPath();
+				path = m_pModel->currentPath();
 			}
 			PModelResource pResource = m_pModel->findResource(path, pXmlNode->SliceStackId());
 			PModelSliceStack pSliceStackResource = std::dynamic_pointer_cast<CModelSliceStack>(pResource);

@@ -423,7 +423,7 @@ Core framework error codes (0x2XXX)
 // Part is too large
 #define NMR_ERROR_PARTTOOLARGE 0x202B
 
-// Texture path is already existing
+// Texture getPath is already existing
 #define NMR_ERROR_DUPLICATETEXTUREPATH 0x202C
 
 // Texture width is already existing
@@ -911,7 +911,7 @@ Model error codes (0x8XXX)
 // a slice stack resource is invalid
 #define  NMR_ERROR_INVALIDSLICESTACK 0x809D
 
-// Duplicate path
+// Duplicate getPath
 #define NMR_ERROR_DUPLICATEPATH 0x809E
 
 // Duplicate UUID
@@ -1105,6 +1105,9 @@ Model error codes (0x8XXX)
 
 // Attachment Model Mismatch
 #define NMR_ERROR_ATTACHMENTMODELMISMATCH 0x80E8
+
+// Duplicate ModelPath
+#define NMR_ERROR_DUPLICATEMODELPATH 0x80E9
 
 /*-------------------------------------------------------------------
 XML Parser Error Constants (0x9XXX)

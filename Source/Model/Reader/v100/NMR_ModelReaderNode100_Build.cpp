@@ -60,7 +60,7 @@ namespace NMR {
 		parseContent(pXMLReader);
 
 		if (!m_UUID.get()) {
-			if (   (m_pModel->rootPath() == m_pModel->curPath()) 
+			if (   (m_pModel->rootPath() == m_pModel->currentPath()) 
 				&& (pXMLReader->NamespaceRegistered(XML_3MF_NAMESPACE_PRODUCTIONSPEC)) )
 			{
 				m_pWarnings->addException(CNMRException(NMR_ERROR_MISSINGUUID), mrwMissingMandatoryValue);
