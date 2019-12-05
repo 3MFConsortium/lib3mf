@@ -99,7 +99,7 @@ namespace NMR {
 
 		pXMLWriter->WriteStartDocument();
 
-		CModelWriterNode100_Model ModelNode(pModel, pXMLWriter, m_pProgressMonitor, GetDecimalPrecision());
+		CModelWriterNode100_Model ModelNode(pModel, pXMLWriter, m_pProgressMonitor, GetDecimalPrecision(), true);
 		ModelNode.writeToXML();
 
 		pXMLWriter->WriteEndDocument();

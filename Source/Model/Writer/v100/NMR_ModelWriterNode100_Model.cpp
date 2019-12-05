@@ -57,10 +57,11 @@ This is the class for exporting the 3mf model stream root node.
 
 namespace NMR {
 
-	CModelWriterNode100_Model::CModelWriterNode100_Model(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter, _In_ PProgressMonitor pProgressMonitor, _In_ nfUint32 nDecimalPrecision)
-		:CModelWriterNode(pModel, pXMLWriter, pProgressMonitor), m_nDecimalPrecision(nDecimalPrecision)
+	CModelWriterNode100_Model::CModelWriterNode100_Model(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter, _In_ PProgressMonitor pProgressMonitor,
+		_In_ nfUint32 nDecimalPrecision, nfBool bWritesRootModel) : CModelWriterNode(pModel, pXMLWriter, pProgressMonitor), m_nDecimalPrecision(nDecimalPrecision)
 	{
 		m_pPropertyIndexMapping = std::make_shared<CMeshInformation_PropertyIndexMapping>();
+		m_bIsRootModel = bWritesRootModel;
 
 		m_bWriteMaterialExtension = true;
 		m_bWriteProductionExtension = true;
@@ -69,35 +70,11 @@ namespace NMR {
 		m_bWriteBaseMaterials = true;
 		m_bWriteObjects = true;
 
-		m_bIsRootModel = true;
 		m_bWriteCustomNamespaces = true;
 
 		// register custom NameSpaces from metadata in objects, build items and the model itself
 		RegisterMetaDataNameSpaces();
 	}
-
-
-	CModelWriterNode100_Model::CModelWriterNode100_Model(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter, _In_ PProgressMonitor pProgressMonitor,
-		_In_ nfUint32 nDecimalPrecision, nfBool bWritesRootModel) : CModelWriterNode(pModel, pXMLWriter, pProgressMonitor), m_nDecimalPrecision(nDecimalPrecision)
-	{
-		if (bWritesRootModel) {
-			throw CNMRException(NMR_ERROR_INVALIDPARAM);
-		}
-		m_pPropertyIndexMapping = std::make_shared<CMeshInformation_PropertyIndexMapping>();
-
-		m_bWriteMaterialExtension = false;
-		m_bWriteBaseMaterials = false;
-		m_bIsRootModel = false;
-
-		m_bWriteObjects = true;
-		m_bWriteBeamLatticeExtension = true;
-		m_bWriteProductionExtension = true;
-		m_bWriteSliceExtension = true;
-		m_bWriteCustomNamespaces = true;
-
-		RegisterMetaDataNameSpaces();
-	}
-
 
 	void CModelWriterNode100_Model::RegisterMetaDataGroupNameSpaces(PModelMetaDataGroup mdg)
 	{
