@@ -107,15 +107,16 @@ namespace NMR {
 		if (!pModelPath) {
 			pModelPath = makePackageModelPath(path);
 		}
+		// This can be optimized
 		if (findResourceIDByPair(pModelPath->getPath(), id))
 			throw CNMRException(NMR_ERROR_DUPLICATERESOURCEID);
 
-		PPackageResourceID p = std::make_shared<CPackageResourceID>(this, pModelPath, id);
-		p->setUniqueID(int(m_resourceIDs.size())+1);
+		PPackageResourceID pPackageResourceID = std::make_shared<CPackageResourceID>(this, pModelPath, id);
+		pPackageResourceID->setUniqueID(int(m_resourceIDs.size())+1);
 
-		m_resourceIDs.insert(std::make_pair(p->getUniqueID(), p));
-		m_IdAndPathToPackageResourceIDs.insert(std::make_pair(std::make_pair(id, path), p));
-		return p;
+		m_resourceIDs.insert(std::make_pair(pPackageResourceID->getUniqueID(), pPackageResourceID));
+		m_IdAndPathToPackageResourceIDs.insert(std::make_pair(std::make_pair(id, pModelPath), pPackageResourceID));
+		return pPackageResourceID;
 	}
 	PPackageResourceID CResourceHandler::findResourceIDByUniqueID(UniqueResourceID id)
 	{
@@ -129,10 +130,13 @@ namespace NMR {
 	
 	PPackageResourceID CResourceHandler::findResourceIDByPair(std::string path, ModelResourceID id)
 	{
-		auto it = m_IdAndPathToPackageResourceIDs.find(std::make_pair(id, path));
-		if (it != m_IdAndPathToPackageResourceIDs.end())
-		{
-			return it->second;
+		PPackageModelPath pModelPath = findPackageModelPath(path);
+		if (pModelPath) {
+			auto it = m_IdAndPathToPackageResourceIDs.find(std::make_pair(id, pModelPath));
+			if (it != m_IdAndPathToPackageResourceIDs.end())
+			{
+				return it->second;
+			}
 		}
 		return nullptr;
 	}

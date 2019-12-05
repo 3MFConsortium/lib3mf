@@ -381,7 +381,7 @@ namespace NMR {
 			return 1;
 	}
 
-	PPackageResourceID CModel::generatePackageResourceID(_In_ std::string path, ModelResourceID nID)	// per package
+	PPackageResourceID CModel::generatePackageResourceID(_In_ std::string path, ModelResourceID nID)
 	{
 		return m_resourceHandler.makePackageResourceID(path, nID);
 	}
