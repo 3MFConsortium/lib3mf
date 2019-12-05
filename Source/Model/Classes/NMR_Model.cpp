@@ -1216,7 +1216,6 @@ namespace NMR {
 			(*iIterator)->calculateComponentDepthLevel(1);
 		}
 
-
 		// sort by (level descending, ResourceID ascending)
 		resultList.sort( [](CModelObject * pObject1, CModelObject * pObject2)
 		{

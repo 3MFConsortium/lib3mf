@@ -60,8 +60,6 @@ namespace NMR {
 	CModelWriterNode100_Model::CModelWriterNode100_Model(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter, _In_ PProgressMonitor pProgressMonitor, _In_ nfUint32 nDecimalPrecision)
 		:CModelWriterNode(pModel, pXMLWriter, pProgressMonitor), m_nDecimalPrecision(nDecimalPrecision)
 	{
-		m_ResourceCounter = pModel->generateResourceID();
-
 		m_pPropertyIndexMapping = std::make_shared<CMeshInformation_PropertyIndexMapping>();
 
 		m_bWriteMaterialExtension = true;
@@ -85,15 +83,19 @@ namespace NMR {
 		if (bWritesRootModel) {
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 		}
+		m_pPropertyIndexMapping = std::make_shared<CMeshInformation_PropertyIndexMapping>();
 
 		m_bWriteMaterialExtension = false;
-		m_bWriteMaterialExtension = false;
-		m_bWriteBeamLatticeExtension = false;
 		m_bWriteBaseMaterials = false;
-		m_bWriteObjects = false;
 		m_bIsRootModel = false;
+
+		m_bWriteObjects = true;
+		m_bWriteBeamLatticeExtension = true;
+		m_bWriteProductionExtension = true;
 		m_bWriteSliceExtension = true;
 		m_bWriteCustomNamespaces = true;
+
+		RegisterMetaDataNameSpaces();
 	}
 
 
@@ -322,7 +324,6 @@ namespace NMR {
 				}
 			}
 
-
 			if (pSliceStackResource->getSliceCount() > 0) {
 				for (nfUint32 nSliceIndex = 0; nSliceIndex < pSliceStackResource->getSliceCount(); nSliceIndex++) {
 					if (nSliceIndex % PROGRESS_SLICEUPDATE == PROGRESS_SLICEUPDATE - 1) {
@@ -383,12 +384,17 @@ namespace NMR {
 		std::list <CModelObject *> objectList = m_pModel->getSortedObjectList();
 
 		for (auto iIterator = objectList.begin(); iIterator != objectList.end(); iIterator++) {
+			CModelObject * pObject = *iIterator;
+
+			PPackageModelPath pPath = pObject->getPackageResourceID()->getPackageModelPath();
+			if (m_pModel->currentModelPath() != pPath)
+			{
+				continue;
+			}
 
 			m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_WRITEOBJECTS);
 			m_pProgressMonitor->IncrementProgress(1);
 			m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
-
-			CModelObject * pObject = *iIterator;
 
 			writeStartElement(XML_3MF_ELEMENT_OBJECT);
 			// Write Object ID (mandatory)
@@ -774,6 +780,9 @@ namespace NMR {
 			if (m_bWriteSliceExtension) {
 				writeSliceStacks();
 			}
+			if (m_bWriteObjects) {
+				writeObjects();
+			}
 		}
 		
 		writeFullEndElement();
@@ -799,9 +808,17 @@ namespace NMR {
 				PModelBuildItem pBuildItem = m_pModel->getBuildItem(nIndex);
 
 				writeStartElement(XML_3MF_ELEMENT_ITEM);
-				writeIntAttribute(XML_3MF_ATTRIBUTE_ITEM_OBJECTID, pBuildItem->getObjectID());
+
+				CModelObject* pObject = pBuildItem->getObject();
+				PPackageResourceID pID = pObject->getPackageResourceID();
+
+				writeIntAttribute(XML_3MF_ATTRIBUTE_ITEM_OBJECTID, pID->getModelResourceID());
+				if (pID->getPath() != m_pModel->currentPath())
+					writeStringAttribute(XML_3MF_PRODUCTION_PATH, pID->getPath());
+
 				if (!pBuildItem->getPartNumber().empty())
 					writeStringAttribute(XML_3MF_ATTRIBUTE_ITEM_PARTNUMBER, pBuildItem->getPartNumber());
+
 
 				if (m_bWriteProductionExtension) {
 					if (!pBuildItem->uuid().get()) {
@@ -851,19 +868,6 @@ namespace NMR {
 		}
 
 		writeFullEndElement();
-	}
-
-
-	ModelResourceID CModelWriterNode100_Model::generateOutputResourceID()
-	{
-		ModelResourceID nResourceID = m_ResourceCounter;
-		if (nResourceID >= XML_3MF_MAXRESOURCECOUNT)
-			throw CNMRException(NMR_ERROR_INVALIDRESOURCECOUNT);
-			
-		m_ResourceCounter++;
-
-		return nResourceID;
-
 	}
 
 }

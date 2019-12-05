@@ -80,7 +80,6 @@ namespace NMR {
 
 	void CModelWriter_3MF::writeNonRootModelStream(_In_ CXmlWriter *pXMLWriter)
 	{
-		__NMRASSERT(pSliceStackResource != nullptr);
 		if (pXMLWriter == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 

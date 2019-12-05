@@ -62,9 +62,7 @@ CResource::CResource(NMR::PModelResource pResource)
 Lib3MF_uint32 CResource::GetResourceID()
 {
 	return m_pResource->getPackageResourceID()->getUniqueID();
-	//NMR::ModelResourceID id;
-	//m_pResource->getPackageResourceID()->get(id);
-	//return id;
+	//return m_pResource->getPackageResourceID()->getModelResourceID();
 }
 
 IObject * CResource::AsObject()
@@ -78,8 +76,6 @@ IObject * CResource::AsObject()
 
 IModelPath * CResource::ModelPath()
 {
-	NMR::PPackageModelPath pPath;
-	m_pResource->getPackageResourceID()->get(pPath);
-	return new CModelPath(pPath);
+	return new CModelPath(m_pResource->getPackageResourceID()->getPackageModelPath());
 }
 

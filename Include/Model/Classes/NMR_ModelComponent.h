@@ -47,7 +47,6 @@ namespace NMR {
 		NMATRIX3 m_mTransform;
 
 		PUUID m_UUID;
-		std::wstring m_sPath;
 	public:
 		CModelComponent() = delete;
 		CModelComponent(_In_ CModelObject * pObject);

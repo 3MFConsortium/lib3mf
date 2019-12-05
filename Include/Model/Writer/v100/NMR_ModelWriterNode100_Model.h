@@ -48,7 +48,6 @@ namespace NMR {
 	class CModelWriterNode100_Model : public CModelWriterNode {
 	protected:
 		nfUint32 m_nDecimalPrecision;
-		ModelResourceID m_ResourceCounter;
 		
 		PMeshInformation_PropertyIndexMapping m_pPropertyIndexMapping;
 		
@@ -83,8 +82,6 @@ namespace NMR {
 		void writeSliceStack(_In_ CModelSliceStack *pSliceStack);
 
 		void writeComponentsObject(_In_ CModelComponentsObject * pComponentsObject);
-
-		ModelResourceID generateOutputResourceID();
 
 		void RegisterMetaDataGroupNameSpaces(PModelMetaDataGroup mdg);
 		void RegisterMetaDataNameSpaces();

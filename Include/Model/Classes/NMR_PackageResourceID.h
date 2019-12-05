@@ -78,9 +78,9 @@ namespace NMR {
 
 		friend class CResourceHandler;
 
-		void get(std::string& p);
-		void get(PPackageModelPath& p);
-		void get(ModelResourceID& id);
+		std::string getPath();
+		PPackageModelPath getPackageModelPath();
+		ModelResourceID getModelResourceID();
 		UniqueResourceID getUniqueID();
 
 		static void setModelPath(std::shared_ptr<CPackageResourceID> pPackageResourceID, PPackageModelPath pPath);

@@ -63,14 +63,14 @@ namespace NMR {
 		}
 	}
 
-	void CPackageResourceID::get(PPackageModelPath& p) {
-		p = m_pModelPath;
+	PPackageModelPath CPackageResourceID::getPackageModelPath() {
+		return m_pModelPath;
 	}
-	void CPackageResourceID::get(std::string& p) {
-		p = m_pModelPath->getPath();
+	std::string CPackageResourceID::getPath() {
+		return m_pModelPath->getPath();
 	}
-	void CPackageResourceID::get(ModelResourceID& id) {
-		id = m_id;
+	ModelResourceID CPackageResourceID::getModelResourceID() {
+		return m_id;
 	}
 
 	void CPackageResourceID::setModelPath(std::shared_ptr<CPackageResourceID> pPackageResourceID, PPackageModelPath pPath)
