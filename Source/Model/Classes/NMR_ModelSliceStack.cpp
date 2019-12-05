@@ -42,7 +42,6 @@ namespace NMR {
 		: CModelResource(sID, pModel)
 	{
 		m_dZBottom = dZBottom;
-		m_sOwnPath = "";
 	}
 
 	CModelSliceStack::~CModelSliceStack()
@@ -141,15 +140,15 @@ namespace NMR {
 
 	std::string CModelSliceStack::OwnPath()
 	{
-		return m_sOwnPath;
+		std::string sPath;
+		m_pPackageResourceID->get(sPath);
+		return sPath;
 	}
 
 	void CModelSliceStack::SetOwnPath(std::string sOwnPath)
 	{
-		if (sOwnPath == getModel()->rootPath())
-			m_sOwnPath = "";
-		else
-			m_sOwnPath = sOwnPath;
+		PPackageModelPath pModelPath = getModel()->findOrCreateModelPath(sOwnPath);
+		CPackageResourceID::setModelPath(m_pPackageResourceID, pModelPath);
 	}
 
 	nfDouble CModelSliceStack::getZBottom()

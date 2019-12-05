@@ -73,6 +73,11 @@ namespace NMR {
 		id = m_id;
 	}
 
+	void CPackageResourceID::setModelPath(std::shared_ptr<CPackageResourceID> pPackageResourceID, PPackageModelPath pPath)
+	{
+		pPackageResourceID->m_pResourceHandler->updateModelPath(pPackageResourceID, pPath);
+	}
+
 	void CPackageResourceID::setUniqueID(UniqueResourceID id) {
 		m_uniqueID = id;
 	}
@@ -139,6 +144,36 @@ namespace NMR {
 			}
 		}
 		return nullptr;
+	}
+
+	void CResourceHandler::updateModelPath(PPackageResourceID pPackageResourceID, PPackageModelPath pNewPath)
+	{
+		if (pPackageResourceID == nullptr || pNewPath == nullptr) {
+			throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+		}
+
+		PPackageModelPath pOldPath = pPackageResourceID->m_pModelPath;
+
+		if (pNewPath == pOldPath) {
+			return;
+		}
+
+		auto itOld = m_IdAndPathToPackageResourceIDs.find(std::make_pair(pPackageResourceID->m_id, pOldPath));
+		if (itOld == m_IdAndPathToPackageResourceIDs.end())
+		{
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+		}
+
+		auto itNew = m_IdAndPathToPackageResourceIDs.find(std::make_pair(pPackageResourceID->m_id, pNewPath));
+		if (itNew != m_IdAndPathToPackageResourceIDs.end())
+		{
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+		}
+
+		m_IdAndPathToPackageResourceIDs.erase(itOld);
+		
+		pPackageResourceID->m_pModelPath = pNewPath;
+		m_IdAndPathToPackageResourceIDs.insert(std::make_pair(std::make_pair(pPackageResourceID->m_id, pNewPath), pPackageResourceID));
 	}
 
 	void CResourceHandler::clear() {

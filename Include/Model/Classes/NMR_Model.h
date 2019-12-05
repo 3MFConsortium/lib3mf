@@ -158,6 +158,8 @@ namespace NMR {
 		const std::string rootPath();
 		void setRootPath(const std::string sPath);
 
+		PPackageModelPath findOrCreateModelPath(std::string sPath);
+
 		// Merge all build items into one mesh
 		void mergeToMesh(_In_ CMesh * pMesh);
 

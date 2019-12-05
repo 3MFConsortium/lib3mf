@@ -82,6 +82,8 @@ namespace NMR {
 		void get(PPackageModelPath& p);
 		void get(ModelResourceID& id);
 		UniqueResourceID getUniqueID();
+
+		static void setModelPath(std::shared_ptr<CPackageResourceID> pPackageResourceID, PPackageModelPath pPath);
 	};
 	typedef std::shared_ptr<CPackageResourceID> PPackageResourceID;
 
@@ -102,6 +104,8 @@ namespace NMR {
 
 		PPackageModelPath findPackageModelPath(std::string sPath);
 		PPackageModelPath makePackageModelPath(std::string sPath);
+
+		void updateModelPath(PPackageResourceID pPackageResourceID, PPackageModelPath pNewPath);
 
 		void clear();
 	};

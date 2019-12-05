@@ -47,6 +47,7 @@ namespace NMR {
 	class CModelResource {
 	private:
 		CModel * m_pModel;
+	protected:
 		PPackageResourceID m_pPackageResourceID;
 
 	protected:

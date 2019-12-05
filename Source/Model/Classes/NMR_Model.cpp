@@ -115,6 +115,14 @@ namespace NMR {
 		m_pPath->setPath(sPath);
 	}
 
+	PPackageModelPath CModel::findOrCreateModelPath(std::string sPath)
+	{
+		if (PPackageModelPath pModelPath = m_resourceHandler.findPackageModelPath(sPath)) {
+			return pModelPath;
+		}
+		return m_resourceHandler.makePackageModelPath(sPath);
+	}
+
 	// Merge all build items into one mesh
 	void CModel::mergeToMesh(_In_ CMesh * pMesh)
 	{
