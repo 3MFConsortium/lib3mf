@@ -24,11 +24,11 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CModelPath
+Abstract: This is a stub class definition of CPackagePath
 
 */
 
-#include "lib3mf_modelpath.hpp"
+#include "lib3mf_packagepath.hpp"
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
@@ -38,22 +38,22 @@ Abstract: This is a stub class definition of CModelPath
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CModelPath 
+ Class definition of CPackagePath 
 **************************************************************************************************************************/
 
-CModelPath::CModelPath(NMR::PPackageModelPath pPath)
+CPackagePath::CPackagePath(NMR::PPackageModelPath pPath)
   : m_pPath(pPath)
 {
 	if (!pPath.get())
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
 }
 
-std::string CModelPath::Get()
+std::string CPackagePath::Get()
 {
 	return m_pPath->getPath();
 }
 
-void CModelPath::Set(const std::string & sPath)
+void CPackagePath::Set(const std::string & sPath)
 {
 	m_pPath->setPath(sPath);
 }

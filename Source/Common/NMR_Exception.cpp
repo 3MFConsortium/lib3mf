@@ -397,7 +397,7 @@ namespace NMR {
 		case NMR_ERROR_INVALID_RESOURCE_INDEX: return "A Resource Index is invalid";
 		case NMR_ERROR_VERSION093_NOT_SUPPORTED: return "This document contains content from Version 093 of the core-specification. This is not fully supported by Lib3MF version 2 or later.";
 		case NMR_ERROR_ATTACHMENTMODELMISMATCH: return "The model of an attachment does not match the model of a resource.";
-		case NMR_ERROR_DUPLICATEMODELPATH: return "The ModelPath of a model is not unique.";
+		case NMR_ERROR_DUPLICATEPACKAGEPATH: return "The PackagePath of a model is not unique.";
 		case NMR_ERROR_PRODUCTIONEXTENSION_REQUIRED: return "Serialization of this Model requires the production extension.";
 		case NMR_ERROR_MODELRESOURCE_IN_DIFFERENT_MODEL: return "Referenced model resource must not be in a different model.";
 

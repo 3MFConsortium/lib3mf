@@ -322,12 +322,12 @@
 		</method>
 	</class>
 
-	<class name="ModelPath">
-		<method name="Get" description="Returns the absolute path of this ModelPath.">
-			<param name="Path" type="string" pass="return" description="Returns the absolute path of this ModelPath"/>
+	<class name="PackagePath">
+		<method name="Get" description="Returns the absolute path of this PackagePath.">
+			<param name="Path" type="string" pass="return" description="Returns the absolute path of this PackagePath"/>
 		</method>
-		<method name="Set" description="Sets the absolute path of this ModelPath.">
-			<param name="Path" type="string" pass="in" description="Sets the absolute path of this ModelPath."/>
+		<method name="Set" description="Sets the absolute path of this PackagePath.">
+			<param name="Path" type="string" pass="in" description="Sets the absolute path of this PackagePath."/>
 		</method>
 	</class>
 	
@@ -338,8 +338,8 @@
 		<method name="GetUniqueResourceID" description="Retrieves the unique id of this resource within a package.">
 			<param name="UniqueResourceID" type="uint32" pass="return" description="Retrieves the unique id of this resource within a package."/>
 		</method>
-		<method name="ModelPath" description="Returns the ModelPath (path of the model-file) within which this resource resides">
-			<param name="ModelPath" type="class" class="ModelPath" pass="return" description="the ModelPath (path of the model-file) within which this resource resides."/>
+		<method name="PackagePath" description="Returns the PackagePath (path of the model-file) within which this resource resides">
+			<param name="PackagePath" type="class" class="PackagePath" pass="return" description="the PackagePath (path of the model-file) within which this resource resides."/>
 		</method>
 		<method name="GetModelResourceID" description="Retrieves the id of this resource within a model.">
 			<param name="ModelResourceId" type="uint32" pass="return" description="Retrieves the id of this resource within a model."/>
@@ -893,11 +893,14 @@
 	</class>
 
 	<class name="Attachment">
-		<method name="GetPath" description="Retrieves an attachment's package path.">
+		<method name="GetPath" description="Retrieves an attachment's package path. This function will be removed in a later release.">
 			<param name="Path" type="string" pass="return" description="returns the attachment's package path string"/>
 		</method>
-		<method name="SetPath" description="Sets an attachment's package path.">
+		<method name="SetPath" description="Sets an attachment's package path. This function will be removed in a later release.">
 			<param name="Path" type="string" pass="in" description="new path of the attachment."/>
+		</method>
+		<method name="PackagePath" description="Returns the attachment's PackagePath.">
+			<param name="Path" type="class" class="PackagePath" pass="return" description="The PackagePath of this attachment."/>
 		</method>
 		<method name="GetRelationShipType" description="Retrieves an attachment's relationship type">
 			<param name="Path" type="string" pass="return" description="returns the attachment's package relationship type string"/>
@@ -1090,7 +1093,7 @@
 
 	<class name="Model">
 		<method name="RootModel" description="Returns the Model Path of the root model-file within the OPC package.">
-			<param name="RootModelPath" type="class" class="ModelPath" pass="return" description="the Model Path of the root model-file within the OPC package"/>
+			<param name="RootModelPath" type="class" class="PackagePath" pass="return" description="the PackagePath of the root model-file within the OPC package"/>
 		</method>
 		<method name="SetUnit" description="sets the units of a model.">
 			<param name="Unit" type="enum" class="ModelUnit" pass="in" description="Unit enum value for the model unit"/>
@@ -1243,7 +1246,7 @@
 		<method name="GetMetaDataGroup" description="Returns the metadata of the model as MetaDataGroup">
 			<param name="TheMetaDataGroup" type="handle" class="MetaDataGroup" pass="return" description="returns an Instance of the metadatagroup of the model"/>
 		</method>
-		<method name="AddAttachment" description="adds an attachment stream to the model. The OPC part will be related to the model stream with a certain relationship type..">
+		<method name="AddAttachment" description="adds an attachment stream to the model. The OPC part will be related to the model stream with a certain relationship type.">
 			<param name="URI" type="string" pass="in" description="Path of the attachment"/>
 			<param name="RelationShipType" type="string" pass="in" description="Relationship type of the attachment"/>
 			<param name="AttachmentInstance" type="handle" class="Attachment" pass="return" description="Instance of the attachment object"/>

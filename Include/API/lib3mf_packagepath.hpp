@@ -24,7 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CModelPath
+Abstract: This is the class declaration of CPackagePath
 
 */
 
@@ -49,10 +49,10 @@ namespace Impl {
 
 
 /*************************************************************************************************************************
- Class declaration of CModelPath 
+ Class declaration of CPackagePath 
 **************************************************************************************************************************/
 
-class CModelPath : public virtual IModelPath, public virtual CBase {
+class CPackagePath : public virtual IPackagePath, public virtual CBase {
 private:
 
 	/**
@@ -71,7 +71,7 @@ public:
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-	CModelPath(NMR::PPackageModelPath pPath);
+	CPackagePath(NMR::PPackageModelPath pPath);
 
 	/**
 	* Public member functions to implement.

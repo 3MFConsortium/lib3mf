@@ -81,7 +81,7 @@ public:
 
 	virtual IObject * AsObject();
 
-	IModelPath * ModelPath() override;
+	IPackagePath * PackagePath() override;
 
 	Lib3MF_uint32 GetModelResourceID();
 };

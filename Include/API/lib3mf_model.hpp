@@ -77,7 +77,7 @@ public:
 	* Public member functions to implement.
 	*/
 
-	IModelPath * RootModel() override;
+	IPackagePath * RootModel() override;
 
 	void SetUnit (const eLib3MFModelUnit eUnit);
 

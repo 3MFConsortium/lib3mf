@@ -1106,8 +1106,8 @@ Model error codes (0x8XXX)
 // Attachment Model Mismatch
 #define NMR_ERROR_ATTACHMENTMODELMISMATCH 0x80E8
 
-// Duplicate ModelPath
-#define NMR_ERROR_DUPLICATEMODELPATH 0x80E9
+// Duplicate PackagePath
+#define NMR_ERROR_DUPLICATEPACKAGEPATH 0x80E9
 
 // Serialization of this Model requires the production extension
 #define NMR_ERROR_PRODUCTIONEXTENSION_REQUIRED 0x80EA

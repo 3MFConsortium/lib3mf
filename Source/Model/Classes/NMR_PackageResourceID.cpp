@@ -88,7 +88,7 @@ namespace NMR {
 	PPackageModelPath CResourceHandler::makePackageModelPath(std::string sPath)
 	{
 		if (findPackageModelPath(sPath)) {
-			throw CNMRException(NMR_ERROR_DUPLICATEMODELPATH);
+			throw CNMRException(NMR_ERROR_DUPLICATEPACKAGEPATH);
 		}
 		PPackageModelPath pModelPath = std::make_shared<CPackageModelPath>(this, sPath);
 		m_PathToModelPath.insert(std::make_pair(sPath, pModelPath));

@@ -32,7 +32,7 @@ Abstract: This is a stub class definition of CResource
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
-#include "lib3mf_modelpath.hpp"
+#include "lib3mf_packagepath.hpp"
 #include "Model/Classes/NMR_ModelObject.h"
 #include "lib3mf_object.hpp"
 #include <iostream>
@@ -83,8 +83,8 @@ IObject * CResource::AsObject()
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 }
 
-IModelPath * CResource::ModelPath()
+IPackagePath * CResource::PackagePath()
 {
-	return new CModelPath(m_pResource->getPackageResourceID()->getPackageModelPath());
+	return new CPackagePath(m_pResource->getPackageResourceID()->getPackageModelPath());
 }
 
