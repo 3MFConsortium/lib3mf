@@ -246,7 +246,20 @@ namespace Lib3MF {
 		writer->WriteToBuffer(buffer);
 	}
 
-
+	TEST_F(SecureContentT, 3MFReadExternalModel) {
+		auto reader = model->QueryReader("3mf");
+		try {
+			reader->ReadFromFile("F:\\input\\detachedmodel.3mf");
+		} catch (const std::exception & e) {
+			std::cout << e.what();
+		}
+		auto iter = model->GetBuildItems();
+		while (iter->MoveNext()) {
+			auto bi = iter->GetCurrent();
+			bool hasUUID;
+			std::cout << "BuildItem: " << bi->GetUUID(hasUUID) << ", hasTransform: " << bi->HasObjectTransform() << std::endl;
+		}
+	}
 
 
 	TEST_F(SecureContentT, 3MFReadSecureAttachment) {
