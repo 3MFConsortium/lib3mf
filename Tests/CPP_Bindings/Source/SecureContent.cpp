@@ -74,53 +74,101 @@ namespace Lib3MF {
 	};
 	PWrapper SecureContentT::wrapper;
 
+	using Lib3MF_buffer = std::vector<Lib3MF_uint8>;
+
 	struct EncryptionData {
-		
-		//Lib3MF_Consumer, Lib3MF_DecryptRight, Lib3MF_uint64, const Lib3MF_uint8 *, Lib3MF_pvoid
-		static void encryptionCallback(Lib3MF_Consumer c, Lib3MF_DecryptRight d, Lib3MF_uint64 keyNumBytes, Lib3MF_uint8 const * key, Lib3MF_pvoid userData) {
-			//this is just copying data from a buffer to another, not integrated to libressl just yet
-			//CConsumer * consumer = (CConsumer *)c;
-			//CDecryptRight * decryptRight = (CDecryptRight *)d;
-			//eEncryptionAlgorithm algorithm = decryptRight->GetEncryptionAlgorithm();
-			////assert algorithm
-			//std::vector<Lib3MF_uint8> cipher;
-			//std::copy(key, key+keyNumBytes, cipher.begin());
-			//decryptRight->SetCipherValue(cipher);
+		/**
+		* KeyEncryptionCallback - A callback to provide lib3mf with the encrypted/decrypted data encryption key
+		*
+		* @param[in] pConsumer - Informatino about the consumer and key used in the encryption process
+		* @param[in] eEncryptionAlgorithm - The encryption algorithm to be used. Cipher data should not be encoded.
+		* @param[in] nPlainKeyBufferSize - Number of elements in buffer
+		* @param[in] pPlainKeyBuffer - uint8 buffer of A description
+		* @param[in] nCipherKeyBufferSize - Number of elements in buffer
+		* @param[out] pCipherKeyNeededCount - will be filled with the count of the written elements, or needed buffer size.
+		* @param[out] pCipherKeyBuffer - uint8  buffer of A description
+		* @param[in] pUserData - Userdata that is passed to the callback function
+		*/
+		static void keyEncryptionCallback(
+			Lib3MF_Consumer consumer,
+			Lib3MF::eEncryptionAlgorithm algorithm,
+			Lib3MF_uint64 plainKeySize,
+			const Lib3MF_uint8 * plainKeyBuffer,
+			const Lib3MF_uint64 cipherKeySize,
+			Lib3MF_uint64* cipherKeyNeededCount,
+			Lib3MF_uint8 * cipherKeyBuffer,
+			Lib3MF_pvoid userData) {
 		}
 
-
-		static void decryptionCallback(Lib3MF_Consumer c, Lib3MF_DecryptRight d, Lib3MF_uint64 keyNumBytes, Lib3MF_uint8 const * key, Lib3MF_pvoid userData) {
-			//this is just copying data from a buffer to another, not integrated to libressl just yet
-			//CConsumer * consumer = (CConsumer *)c;
-			//CDecryptRight * decryptRight = (CDecryptRight *)d;
-			//eEncryptionAlgorithm algorithm = decryptRight->GetEncryptionAlgorithm();
-			////assert algorithm
-			//std::vector<Lib3MF_uint8> cipher;
-			//decryptRight->GetCipherValue(cipher);
-			//if (cipher.size() > keyNumBytes)
-			//	throw std::runtime_error("key size does not match");
-			//std::copy(cipher.begin(), cipher.end(), key);
+		/**
+		* KeyDecryptionCallback - A callback to provide lib3mf with the encrypted/decrypted data encryption key
+		*
+		* @param[in] pConsumer - Informatino about the consumer and key used in the encryption process
+		* @param[in] eEncryptionAlgorithm - The encryption algorithm to be used. Cipher data should not be encoded.
+		* @param[in] nPlainKeyBufferSize - Number of elements in buffer
+		* @param[out] pPlainKeyNeededCount - will be filled with the count of the written elements, or needed buffer size.
+		* @param[out] pPlainKeyBuffer - uint8  buffer of A description
+		* @param[in] nCipherKeyBufferSize - Number of elements in buffer
+		* @param[in] pCipherKeyBuffer - uint8 buffer of A description
+		* @param[in] pUserData - Userdata that is passed to the callback function
+		*/
+		static void keyDecryptionCallback(
+			Lib3MF_Consumer consumer,
+			Lib3MF::eEncryptionAlgorithm algorithm,
+			const Lib3MF_uint64 plainKeyBufferSize,
+			Lib3MF_uint64* plainKeyNeededCount,
+			Lib3MF_uint8 * plainKeyBuffer,
+			Lib3MF_uint64 cipherKeyBufferSize,
+			const Lib3MF_uint8 * cipherKeyBuffer,
+			Lib3MF_pvoid userdata) {
 		}
 
-		//*@param[in] pResourceData - Information about the ResourceData which is being encrypted
-		//* @param[in] nKeyBufferSize - Number of elements in buffer
-		//* @param[in] pKeyBuffer - uint8 buffer of The plain data encryption key properly decrypted.Buffer will have same size as CipherValue in decryptright
-		//* @param[in] nPlainDataBufferSize - Number of elements in buffer
-		//* @param[in] pPlainDataBuffer - uint8 buffer of Pointer to the data to be written
-		//* @param[in] nCipherDataBufferSize - Number of elements in buffer
-		//* @param[out] pCipherDataNeededCount - will be filled with the count of the written elements, or needed buffer size.
-		//* @param[out] pCipherDataBuffer - uint8  buffer of Pointer to the data to be written
-		//* @param[in] pUserData - Userdata that is passed to the callback function
-		//Lib3MF_ResourceData, Lib3MF_uint64, const Lib3MF_uint8 *, Lib3MF_uint64, const Lib3MF_uint8 *, const Lib3MF_uint64, Lib3MF_uint64*, Lib3MF_uint8 *, Lib3MF_pvoid
+		/**
+		* DataEncryptionCallback - A description
+		*
+		* @param[in] pResourceData - Information about the ResourceData which is being encrypted
+		* @param[in] nKeyBufferSize - Number of elements in buffer
+		* @param[in] pKeyBuffer - uint8 buffer of The plain data encryption key properly decrypted. Buffer will have same size as CipherValue in decryptright
+		* @param[in] nPlainDataBufferSize - Number of elements in buffer
+		* @param[in] pPlainDataBuffer - uint8 buffer of Pointer to the data to be written
+		* @param[in] nCipherDataBufferSize - Number of elements in buffer
+		* @param[out] pCipherDataNeededCount - will be filled with the count of the written elements, or needed buffer size.
+		* @param[out] pCipherDataBuffer - uint8  buffer of Pointer to the data to be written
+		* @param[in] pUserData - Userdata that is passed to the callback function
+		*/
 		static void dataEncryptionCallback(
-			Lib3MF_ResourceData resourceData, 
-			Lib3MF_uint64 keyBufferSize, 
-			const Lib3MF_uint8 * keyBuffer, 
-			Lib3MF_uint64 plainDataBufferSize, 
-			const Lib3MF_uint8 * plainDataBuffer, 
-			const Lib3MF_uint64 cipherDataBufferSize, 
+			Lib3MF_ResourceData resourceData,
+			Lib3MF_uint64 keyBufferSize,
+			const Lib3MF_uint8 * keyBuffer,
+			Lib3MF_uint64 plainDataBufferSize,
+			const Lib3MF_uint8 * plainDataBuffer,
+			const Lib3MF_uint64 cipherDataBufferSize,
 			Lib3MF_uint64 * cipherDataNeededCount,
-			Lib3MF_uint8 * cipherDataBuffer, 
+			Lib3MF_uint8 * cipherDataBuffer,
+			Lib3MF_pvoid userData) {}
+
+		/**
+		* DataDecryptionCallback - A description
+		*
+		* @param[in] pResourceData - Information about the ResourceData which is being encrypted
+		* @param[in] nKeyBufferSize - Number of elements in buffer
+		* @param[in] pKeyBuffer - uint8 buffer of The plain data encryption key properly decrypted. Buffer will have same size as CipherValue in decryptright
+		* @param[in] nPlainDataBufferSize - Number of elements in buffer
+		* @param[out] pPlainDataNeededCount - will be filled with the count of the written elements, or needed buffer size.
+		* @param[out] pPlainDataBuffer - uint8  buffer of Pointer to the data to be written
+		* @param[in] nCipherDataBufferSize - Number of elements in buffer
+		* @param[in] pCipherDataBuffer - uint8 buffer of Pointer to the data to be written
+		* @param[in] pUserData - Userdata that is passed to the callback function
+		*/
+		static void dataDecryptionCallback(
+			Lib3MF_ResourceData resourceData,
+			Lib3MF_uint64 keyBufferSize,
+			const Lib3MF_uint8 * keyBuffer,
+			const Lib3MF_uint64 plainDataBufferSize,
+			Lib3MF_uint64 * plainDataNeededCount,
+			Lib3MF_uint8 * plainDataBuffer,
+			Lib3MF_uint64 cipherDataBufferSize,
+			const Lib3MF_uint8 * cipherDataBuffer,
 			Lib3MF_pvoid userData) {
 
 		}
@@ -167,7 +215,7 @@ namespace Lib3MF {
 		auto meshObject = model->AddMeshObject();
 		meshObject->SetGeometry(CLib3MFInputVector<sPosition>(pVertices, 8), CLib3MFInputVector<sTriangle>(pTriangles, 12));
 		//set the mesh apart of the main root model
-		auto modelPath = meshObject->ModelPath();
+		auto modelPath = meshObject->PackagePath();
 		modelPath->Set(path);
 
 		sTransform transformation;
@@ -178,23 +226,24 @@ namespace Lib3MF {
 
 		model->AddBuildItem(meshObject.get(), transformation);
 
-		//auto keyStore = model->GetKeyStore();
-		////create a consumer (optional)
-		//auto consumer = keyStore->AddConsumer("LIB3MF#TEST", "", NULL);
-		////create a resource data
-		//auto resourceData = keyStore->AddResourceData(modelPath.get(), Lib3MF::eEncryptionAlgorithm::Aes256Gcm, Lib3MF::eCompression::Deflate);
-		////add decryptright for the consumer (optional)
-		//auto decryptRight = resourceData->AddDecryptRight(consumer.get(), Lib3MF::eEncryptionAlgorithm::RsaOaepMgf1p);
-		//
+		auto keyStore = model->GetKeyStore();
+		//create a consumer (optional)
+		auto consumer = keyStore->AddConsumer("LIB3MF#TEST", "", NULL);
+		//create a resource data
+		auto resourceData = keyStore->AddResourceData(modelPath.get(), Lib3MF::eEncryptionAlgorithm::Aes256Gcm, Lib3MF::eCompression::Deflate);
+		//add decryptright for the consumer (optional)
+		auto decryptRight = resourceData->AddDecryptRight(consumer.get(), Lib3MF::eEncryptionAlgorithm::RsaOaepMgf1p);
+
 		//Query writer
 		auto writer = model->QueryWriter("3mf");
 		//register the consumer key encryption callback (optional)
-		//writer->RegisterConsumer("LIB3MF#TEST", EncryptionData::keyEncryptionCallback);
-		////register the data encryption callback
-		//writer->RegisterEncryption(EncryptionData::dataEncryptionCallback);
+		writer->RegisterConsumer("LIB3MF#TEST", EncryptionData::keyEncryptionCallback);
+		//register the data encryption callback
+		writer->RegisterEncryption(EncryptionData::dataEncryptionCallback);
 
 		//write content
-		writer->WriteToFile("F:\\temp\\sample.3mf");
+		Lib3MF_buffer buffer;
+		writer->WriteToBuffer(buffer);
 	}
 
 

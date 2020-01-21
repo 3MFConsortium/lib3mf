@@ -680,3 +680,7 @@ Lib3MF::sBox CModel::GetOutbox()
 	return s;
 }
 
+IKeyStore * Lib3MF::Impl::CModel::GetKeyStore() {
+	return nullptr;
+}
+

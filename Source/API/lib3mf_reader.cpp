@@ -172,3 +172,7 @@ Lib3MF_uint32 CReader::GetWarningCount ()
 	return reader().getWarnings()->getWarningCount();
 }
 
+void Lib3MF::Impl::CReader::RegisterConsumer(const std::string & sConsumerID, const Lib3MF::KeyDecryptionCallback pDecryptionCallback) {}
+
+void Lib3MF::Impl::CReader::RegisterDecryption(const Lib3MF::DataDecryptionCallback pDecryptionCallback) {}
+

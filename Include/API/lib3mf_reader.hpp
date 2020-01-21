@@ -99,6 +99,10 @@ public:
 
 	Lib3MF_uint32 GetWarningCount ();
 
+	void RegisterConsumer(const std::string & sConsumerID, const Lib3MF::KeyDecryptionCallback pDecryptionCallback) override;
+
+	void RegisterDecryption(const Lib3MF::DataDecryptionCallback pDecryptionCallback) override;
+
 };
 
 }

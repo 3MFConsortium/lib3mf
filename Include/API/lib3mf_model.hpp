@@ -189,6 +189,8 @@ public:
 
 	Lib3MF::sBox GetOutbox();
 
+	IKeyStore * GetKeyStore() override;
+
 };
 
 }
