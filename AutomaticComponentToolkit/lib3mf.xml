@@ -281,6 +281,13 @@
 		<method name="SetDecimalPrecision" description="Sets the number of digits after the decimal point to be written in each vertex coordinate-value.">
 			<param name="DecimalPrecision" type="uint32" pass="in" description="The number of digits to be written in each vertex coordinate-value after the decimal point."/>
 		</method>
+		<method name="RegisterConsumer" description="Registers a callback to deal with data key encryption/decryption from keystore">
+			<param name="ConsumerID" type="string" pass="in" description="The ConsumerID to register for"/>
+			<param name="EncryptionCallback" type="functiontype" class="KeyEncryptionCallback" pass="in" description="The callback used to encrypt data key encryption"/>
+		</method>
+		<method name="RegisterEncryption" description="Registers a callback to deal with encryption of content">
+			<param name="EncryptionCallback" type="functiontype" class="DataEncryptionCallback" pass="in" description="The callback used to encrypt content"/>
+		</method>
 	</class>
 
 	<class name="Reader">
@@ -320,6 +327,13 @@
 		<method name="GetWarningCount" description="Returns Warning and Error Count of the read process">
 			<param name="Count" type="uint32" pass="return" description="filled with the count of the occurred warnings."/>
 		</method>
+		<method name="RegisterConsumer" description="Registers a callback to deal with data key encryption/decryption from keystore">
+			<param name="ConsumerID" type="string" pass="in" description="The ConsumerID to register for"/>
+			<param name="DecryptionCallback" type="functiontype" class="KeyDecryptionCallback" pass="in" description="The callback used to encrypt data key encryption"/>
+		</method>
+		<method name="RegisterDecryption" description="Registers a callback to deal with encryption of content">
+			<param name="DecryptionCallback" type="functiontype" class="DataDecryptionCallback" pass="in" description="The callback used to encrypt content"/>
+		</method>		
 	</class>
 
 	<class name="PackagePath">
@@ -1091,6 +1105,151 @@
 		</method>
 	</class>
 
+	<class name="BasicKeyValue">
+	</class>
+	<class name="RSAKeyValue" parent="BasicKeyValue">
+		<method name="GetModulus" description="A description">
+			<param name="Modulus" type="basicarray" class="uint8" pass="out" description="A description"/>
+		</method>
+		<method name="SetModulus" description="A description">
+			<param name="Modulus" type="basicarray" class="uint8" pass="in" description="A description"/>
+		</method>
+		<method name="GetExponent" description="A description">
+			<param name="Exponent" type="basicarray" class="uint8" pass="out" description="A description"/>
+		</method>
+		<method name="SetExponent" description="A description">
+			<param name="Exponent" type="basicarray" class="uint8" pass="in" description="A description"/>
+		</method>
+	</class>
+	<class name="Consumer">
+		<method name="GetConsumerID" description="A description">
+			<param name="ConsumerID" type="string" pass="return" description="A description"/>
+		</method>
+		<method name="GetKeyID" description="A description">
+			<param name="KeyID" type="string" pass="return" description="A description"/>
+		</method>
+		<method name="GetKeyValue" description="A description">
+			<param name="KeyValue" type="optionalclass" class="BasicKeyValue" pass="return" description="A description"/>
+		</method>
+	</class>
+	<enum name="EncryptionAlgorithm">
+		<option name="RsaOaepMgf1p" value="0" description="A description"/>
+		<option name="Aes256Gcm" value="1" description="A description"/>
+	</enum>
+	<class name="BasicCipherData">
+		<method name="GetCipherValue" description="A description">
+			<param name="CipherValue" type="basicarray" class="uint8" pass="out" description="A description"/>
+		</method>
+		<method name="SetCipherValue" description="A description">
+			<param name="CipherValue" type="basicarray" class="uint8" pass="in" description="A description"/>
+		</method>
+	</class>
+	<class name="DecryptRight">
+		<method name="GetConsumerIndex" description="A description">
+			<param name="ConsumerIndex" type="uint32" pass="return" description="A description"/>
+		</method>
+		<method name="GetEncryptionAlgorithm" description="A description">
+			<param name="EncryptionAlgorithm" type="enum" class="EncryptionAlgorithm" pass="return" description="A description"/>
+		</method>
+		<method name="SetEncryptionAlgorithm" description="A description">
+			<param name="EncryptionAlgorithm" type="enum" class="EncryptionAlgorithm" pass="in" description="A description"/>
+		</method>
+		<method name="GetCipherData" description="A description">
+			<param name="CipherData" type="class" class="BasicCipherData" pass="return" description="A description"/>
+		</method>
+		<method name="SetCipherData" description="A description">
+			<param name="CipherData" type="class" class="BasicCipherData" pass="in" description="A description"/>
+		</method>
+	</class>
+	<functiontype name="KeyEncryptionCallback" description="A callback to provide lib3mf with the encrypted/decrypted data encryption key">
+		<param name="Consumer" type="class" class="Consumer" pass="in" description="Informatino about the consumer and key used in the encryption process"/>
+		<param name="EncryptionAlgorithm" type="enum" class="EncryptionAlgorithm" pass="in" description="The encryption algorithm to be used. Cipher data should not be encoded."/>
+		<param name="PlainKey" type="basicarray" class="uint8" pass="in" description="A description"/>
+		<param name="CipherKey" type="basicarray" class="uint8" pass="out" description="A description"/>
+		<param name="UserData" type="pointer" pass="in" description="Userdata that is passed to the callback function"/>
+	</functiontype>
+	<functiontype name="KeyDecryptionCallback" description="A callback to provide lib3mf with the encrypted/decrypted data encryption key">
+		<param name="Consumer" type="class" class="Consumer" pass="in" description="Informatino about the consumer and key used in the encryption process"/>
+		<param name="EncryptionAlgorithm" type="enum" class="EncryptionAlgorithm" pass="in" description="The encryption algorithm to be used. Cipher data should not be encoded."/>
+		<param name="PlainKey" type="basicarray" class="uint8" pass="out" description="A description"/>
+		<param name="CipherKey" type="basicarray" class="uint8" pass="in" description="A description"/>
+		<param name="UserData" type="pointer" pass="in" description="Userdata that is passed to the callback function"/>
+	</functiontype>
+	<functiontype name="DataEncryptionCallback" description="A description">
+		<param name="ResourceData" type="class" class="ResourceData" pass="in" description="Information about the ResourceData which is being encrypted"/>
+		<param name="Key" type="basicarray" class="uint8" pass="in" description="The plain data encryption key properly decrypted. Buffer will have same size as CipherValue in decryptright"/>
+		<param name="PlainData" type="basicarray" class="uint8" pass="in" description="Pointer to the data to be written"/>
+		<param name="CipherData" type="basicarray" class="uint8" pass="out" description="Pointer to the data to be written"/>
+		<param name="UserData" type="pointer" pass="in" description="Userdata that is passed to the callback function"/>
+	</functiontype>
+	<functiontype name="DataDecryptionCallback" description="A description">
+		<param name="ResourceData" type="class" class="ResourceData" pass="in" description="Information about the ResourceData which is being encrypted"/>
+		<param name="Key" type="basicarray" class="uint8" pass="in" description="The plain data encryption key properly decrypted. Buffer will have same size as CipherValue in decryptright"/>
+		<param name="PlainData" type="basicarray" class="uint8" pass="out" description="Pointer to the data to be written"/>
+		<param name="CipherData" type="basicarray" class="uint8" pass="in" description="Pointer to the data to be written"/>
+		<param name="UserData" type="pointer" pass="in" description="Userdata that is passed to the callback function"/>
+	</functiontype>
+	<enum name="Compression">
+		<option name="None" value="0" description="A description"/>
+		<option name="Deflate" value="1" description="A description"/>
+	</enum>
+	<class name="ResourceData">
+		<method name="AddDecryptRight" description="A description">
+			<param name="Consumer" type="handle" class="Consumer" pass="in" description="A description"/>
+			<param name="EncryptionAlgorithm" type="enum" class="EncryptionAlgorithm" pass="in" description="A description"/>
+			<param name="TheDecryptRight" type="handle" class="DecryptRight" pass="return" description="A description"/>
+		</method>
+		<method name="GetDecryptRightCount" description="A description">
+			<param name="Count" type="uint32" pass="return" description="A description"/>
+		</method>
+		<method name="GetDecryptRight" description="A description">
+			<param name="DecryptRightIndex" type="uint64" pass="in" description="A description"/>
+			<param name="TheDecryptRight" type="handle" class="DecryptRight" pass="return" description="A description"/>
+		</method>
+		<method name="GetEncryptionAlgorithm" description="A description">
+			<param name="EncryptionAlgorithm" type="enum" class="EncryptionAlgorithm" pass="return" description="A description"/>
+		</method>
+		<method name="GetCompression" description="A description">
+			<param name="Compression" type="enum" class="Compression" pass="return" description="A description"/>
+		</method>
+	</class>
+	<class name="KeyStore">
+		<method name="AddConsumer" description="A description">
+			<param name="ConsumerID" type="string" pass="in" description="A description"/>
+			<param name="KeyID" type="string" pass="in" description="A description"/>
+			<param name="KeyValue" type="optionalclass" class="BasicKeyValue" pass="in" description="A description"/>
+			<param name="Consumer" type="handle" class="Consumer" pass="return" description="A description"/>
+		</method>
+		<method name="GetConsumerCount" description="A description">
+			<param name="Count" type="uint32" pass="return" description="A description"/>
+		</method>
+		<method name="GetConsumer" description="A description">
+			<param name="ConsumerIndex" type="uint64" pass="in" description="the index of the consumer"/>
+			<param name="TheConsumer" type="handle" class="Consumer" pass="return" description="the consumer instance"/>
+		</method>
+		<method name="FindConsumer" description="A description">
+			<param name="ConsumerID" type="string" pass="in" description="A description"/>
+			<param name="TheConsumer" type="handle" class="Consumer" pass="return" description="the consumer instance"/>
+		</method>
+		<method name="GetResourceDataCount" description="A description">
+			<param name="Count" type="uint32" pass="return" description="the number of resource data available"/>
+		</method>
+		<method name="GetResourceData" description="A description">
+			<param name="ResourceDataIndex" type="uint64" pass="in" description="the index of the resource data"/>
+			<param name="TheResourceData" type="handle" class="ResourceData" pass="return" description="the data resource instance"/>
+		</method>
+		<method name="AddResourceData" description="A description">
+			<param name="PackagePath" type="handle" class="PackagePath" pass="in" description="A description"/>
+			<param name="EncryptionAlgorithm" type="enum" class="EncryptionAlgorithm" pass="in" description="A description"/>
+			<param name="Compression" type="enum" class="Compression" pass="in" description="A description"/>
+			<param name="TheResourceData" type="handle" class="ResourceData" pass="return" description="the data resource instance"/>
+		</method>
+		<method name="FindResourceData" description="A description">
+			<param name="Path" type="string" pass="in" description="A description"/>
+			<param name="TheResourceData" type="handle" class="ResourceData" pass="return" description="the data resource instance"/>
+		</method>
+	</class>
+
 	<class name="Model">
 		<method name="RootModel" description="Returns the Model Path of the root model-file within the OPC package.">
 			<param name="RootModelPath" type="class" class="PackagePath" pass="return" description="the PackagePath of the root model-file within the OPC package"/>
@@ -1282,6 +1441,9 @@
 		</method>
 		<method name="RemoveCustomContentType" description="removes a custom Content Type from the model (UTF8 version).">
 			<param name="Extension" type="string" pass="in" description="File Extension"/>
+		</method>
+		<method name="GetKeyStore" description="A description">
+			<param name="KeyStore" type="handle" class="KeyStore" pass="return" description="A description"/>
 		</method>
 	</class>
 
