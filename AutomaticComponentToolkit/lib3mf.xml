@@ -1234,7 +1234,7 @@
 			<param name="ResourceIterator" type="handle" class="DecryptRightIterator" pass="return" description="returns the iterator instance."/>
 		</method>
 		<method name="GetPath" description="A description">
-			<param name="Path" type="string" pass="return" description="A description"/>
+			<param name="Path" type="class" class="PackagePath" pass="return" description="A description"/>
 		</method>
 	</class>
 	<class name="KeyStore">
@@ -1501,11 +1501,6 @@
 		<method name="CreateModel" description="creates an empty model instance.">
 			<param name="Model" type="handle" class="Model" pass="return" description="returns an empty model instance"/>
 		</method>
-		<!-- <method name="CreateRSAKeyValue" description="creates an empty RSAKeyValue instance.">
-			<param name="Modulus" type="basicarray" pass="in" description=""/>
-			<param name="Exponent" type="basicarray" pass="in" description=""/>
-			<param name="RSAKeyValue" type="handle" class="RSAKeyValue" pass="return" description="returns an empty RSAKeyValue instance"/>
-		</method> -->
 		<method name="Release" description="releases shared ownership of an object instance">
 			<param name="Instance" type="handle" class="Base" pass="in" description="the object instance to release"/>
 		</method>
