@@ -205,8 +205,99 @@ namespace Lib3MF {
 		//writer->WriteToBuffer(buffer);
 	}
 
+	TEST_F(SecureContentT, 3MFReadKeyStore) {
+		PReader reader3MF = model->QueryReader("3mf");
+		reader3MF->ReadFromFile(sTestFilesPath + "/SecureContent/" + "keystore_encrypted.3mf");
+		auto keyStore = model->GetKeyStore();
+		PConsumerIterator consumerIterator = keyStore->GetConsumers();
+		while (consumerIterator->MoveNext()) {
+			PConsumer consumer = consumerIterator->GetCurrentConsumer();
+			/*
+			<consumer consumerid="LIB3MF#TEST" keyid="contentKey">
+				<keyvalue>
+					<ds:RSAKeyValue>
+						<ds:Modulus>w53...</ds:Modulus>
+						<ds:Exponent>AQAB</ds:Exponent>
+					</ds:RSAKeyValue>
+				</keyvalue>
+			</consumer>
+			*/
+			ASSERT_EQ("LIB3MF#TEST", consumer->GetConsumerID());
+			ASSERT_EQ("contentKey", consumer->GetKeyID());
 
+			PConsumer consumerNotFound = keyStore->FindConsumer("does not exist");
+			ASSERT_EQ(nullptr, consumerNotFound);
+			PConsumer consumerFound = keyStore->FindConsumer(consumer->GetConsumerID());
+			ASSERT_EQ(consumer->GetConsumerID(), consumerFound->GetConsumerID());
+			
+			PRSAKeyValue keyValue = std::dynamic_pointer_cast<CRSAKeyValue>(consumer->GetKeyValue());
+			
+			std::vector<Lib3MF_uint8> exponentBuffer;
+			keyValue->GetExponent(exponentBuffer);
+			ASSERT_EQ('A', exponentBuffer.at(0));
+			ASSERT_EQ('Q', exponentBuffer.at(1));
+			ASSERT_EQ('A', exponentBuffer.at(2));
+			ASSERT_EQ('B', exponentBuffer.at(3));
 
+			std::vector<Lib3MF_uint8> modulusBuffer;
+			keyValue->GetModulus(modulusBuffer);
+			ASSERT_EQ('w', modulusBuffer.at(0));
+			ASSERT_EQ('5', modulusBuffer.at(1));
+			ASSERT_EQ('3', modulusBuffer.at(2));
+		}
+
+		PResourceDataIterator resourceDataIterator = keyStore->GetResourcesData();
+		while (resourceDataIterator->MoveNext()) {
+			PResourceData resourceData = resourceDataIterator->GetCurrentResourceData();
+
+			PResourceData resourceDataNotFound = keyStore->FindResourceData("does not exist");
+			ASSERT_EQ(nullptr, resourceDataNotFound);
+			PResourceData resourceDataFound = keyStore->FindResourceData(resourceData->GetPath());
+			ASSERT_EQ(resourceData->GetPath(), resourceDataFound->GetPath());
+			/*
+			<resourcedata path="/3D/3dexternal.model" encryptionalgorithm="http://www.w3.org/2009/xmlenc11#aes256-gcm">
+				<decryptright consumerindex="0" encryptionalgorithm="http://www.w3.org/2001/04/xmlenc#rsa-oaep-mgf1p">
+					<cipherdata>
+						<xenc:CipherValue>
+							Ao6tg4qOlIfRscGdYkAI/48xT3S6In5TQatVslcAPcpcn5oC5wxKNgghplIxjuw6
+							4SICHLfOuUZjLT3/LlP1E6MqhOhyxjBjAYsLhHBxcqlAynHyDJoKk27WYCQV+jCs
+							4z6h78YXzVNto3uOlCghN2m5/XG0yqxaqhERtSfbrWJAIANUD1Rwkhmlg1Bemx2A
+							i2lzIajZwaWERYt3srNFORAVbR1CXONybXE6BXHnclzTbOV7AtTAOWcBrw1q38mD
+							rnHkWwSu6qoD0yc4FCvEStDH1BvIMN28n7jaz7LAlRhwZTYvv95NdYLgJ0izXdHx
+							ApKl8T8u6z1ZjMUAGdn8SGLZajJhyTgqH3GhLYqtnnGw0JYYwEj7Dphdxqg=
+						</xenc:CipherValue>
+					</cipherdata>
+				</decryptright>
+			</resourcedata>
+			*/
+			ASSERT_EQ(Lib3MF::eEncryptionAlgorithm::Aes256Gcm, resourceData->GetEncryptionAlgorithm());
+			ASSERT_EQ(Lib3MF::eCompression::None, resourceData->GetCompression());
+			ASSERT_EQ("/3D/3dexternal.model", resourceData->GetPath());
+
+			int inexistantDecrypt = 9999;
+			ASSERT_EQ(nullptr, resourceData->GetDecryptRight(inexistantDecrypt));
+			PDecryptRightIterator decryptRightIterator = resourceData->GetDecryptRights();
+			while (decryptRightIterator->MoveNext()) {
+				PDecryptRight decryptRight = decryptRightIterator->GetCurrentDecryptRight();
+				ASSERT_EQ(0, decryptRight->GetConsumerIndex());
+				ASSERT_EQ(Lib3MF::eEncryptionAlgorithm::RsaOaepMgf1p, decryptRight->GetEncryptionAlgorithm());
+				
+				PBasicCipherData cipherData = decryptRight->GetCipherData();
+
+				std::vector<Lib3MF_uint8> cipherValueBuffer;
+				cipherData->GetCipherValue(cipherValueBuffer);
+				ASSERT_EQ('A', cipherValueBuffer.at(0));
+				ASSERT_EQ('o', cipherValueBuffer.at(1));
+				ASSERT_EQ('6', cipherValueBuffer.at(2));
+			}
+		}
+	}
+
+	TEST_F(SecureContentT, 3MFCreateKeyStore) {
+		//PKeyStore keyStore;
+		//	CRSAKeyValue keyValue = new CRSAKeyValue();
+		//keyStore->AddConsumer("consumerID", "keyID", &keyValue);
+	}
 
 	TEST_F(SecureContentT, 3MFWriteSecureMesh) {
 		//create the attachment to be secured
