@@ -1115,6 +1115,9 @@ Model error codes (0x8XXX)
 // Referenced model resource must not be in a different model
 #define NMR_ERROR_MODELRESOURCE_IN_DIFFERENT_MODEL 0x80EB
 
+// Duplicate KeyStore consumer
+#define NMR_ERROR_DUPLICATE_KEYSTORECONSUMER 0x80EC
+
 /*-------------------------------------------------------------------
 XML Parser Error Constants (0x9XXX)
 -------------------------------------------------------------------*/
@@ -1193,6 +1196,8 @@ XML Parser Error Constants (0x9XXX)
 
 // A matindices attribute is duplicated
 #define NMR_ERROR_DUPLICATE_MATINDICES_ATTRIBUTE 0x9019
+
+//
 
 
 /*-------------------------------------------------------------------

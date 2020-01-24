@@ -43,7 +43,7 @@ Abstract: This is the class declaration of CModel
 
 // Include custom headers here.
 #include "Model/Classes/NMR_Model.h" 
-
+#include "Model/Classes/NMR_KeyStore.h"
 
 namespace Lib3MF {
 namespace Impl {
@@ -72,6 +72,8 @@ public:
 	CModel();
 
 	NMR::CModel& model();
+
+	NMR::CKeyStore & keyStore();
 
 	/**
 	* Public member functions to implement.

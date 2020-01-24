@@ -137,7 +137,7 @@ namespace Lib3MF {
 		* @param[in] pUserData - Userdata that is passed to the callback function
 		*/
 		static void dataEncryptionCallback(
-			Lib3MF_ResourceData resourceData,
+			Lib3MF::eEncryptionAlgorithm encryptionAlgorithm,
 			Lib3MF_uint64 keyBufferSize,
 			const Lib3MF_uint8 * keyBuffer,
 			Lib3MF_uint64 plainDataBufferSize,
@@ -354,7 +354,7 @@ namespace Lib3MF {
 		//register the consumer key encryption callback (optional)
 		writer->RegisterConsumer("LIB3MF#TEST", EncryptionData::keyEncryptionCallback);
 		//register the data encryption callback
-		writer->RegisterEncryption(EncryptionData::dataEncryptionCallback);
+		//writer->RegisterEncryption(EncryptionData::dataEncryptionCallback);
 
 		//write content
 		Lib3MF_buffer buffer;
@@ -364,7 +364,7 @@ namespace Lib3MF {
 	TEST_F(SecureContentT, 3MFReadExternalModel) {
 		auto reader = model->QueryReader("3mf");
 		try {
-			reader->ReadFromFile("F:\\input\\detachedmodel.3mf");
+			reader->ReadFromFile(sTestFilesPath + "SecureContent/detachedmodel.3mf");
 		} catch (const std::exception & e) {
 			std::cout << e.what();
 		}
