@@ -35,7 +35,7 @@ This is the class for exporting the 3mf model stream root node.
 #define __NMR_MODELWRITERNODE100_MODEL
 
 #include "Model/Classes/NMR_Model.h" 
-#include "Model/Writer/NMR_ModelWriterNode.h" 
+#include "Model/Writer/NMR_ModelWriterNode_ModelBase.h" 
 #include "Model/Classes/NMR_ModelComponentsObject.h" 
 #include "Model/Classes/NMR_ModelMeshObject.h" 
 #include "Common/Platform/NMR_XmlWriter.h"
@@ -45,7 +45,7 @@ This is the class for exporting the 3mf model stream root node.
 
 namespace NMR {
 
-	class CModelWriterNode100_Model : public CModelWriterNode {
+	class CModelWriterNode100_Model : public CModelWriterNode_ModelBase {
 	protected:
 		nfUint32 m_nDecimalPrecision;
 		
