@@ -449,13 +449,7 @@
 			<param name="Resource" type="handle" class="ResourceData" pass="return" description="returns the ResourceData instance."/>
 		</method>
 	</class>
-  
-	<class name="DecryptRightIterator" parent="ResourceIterator">
-		<method name="GetCurrentDecryptRight" description="Returns the DecryptRight the iterator points at.">
-			<param name="Resource" type="handle" class="DecryptRight" pass="return" description="returns the DecryptRight instance."/>
-		</method>
-	</class>
-  
+    
 	<class name="MetaData">
 		<method name="GetNameSpace" description="returns the namespace URL of the metadata">
 			<param name="NameSpace" type="string" pass="return" description="the namespace URL of the metadata"/>
@@ -1233,9 +1227,6 @@
 		</method>
 		<method name="GetCompression" description="A description">
 			<param name="Compression" type="enum" class="Compression" pass="return" description="A description"/>
-		</method>
-    <method name="GetDecryptRights" description="creates a resource iterator instance with all decrypt right resources.">
-			<param name="ResourceIterator" type="handle" class="DecryptRightIterator" pass="return" description="returns the iterator instance."/>
 		</method>
 		<method name="GetPath" description="A description">
 			<param name="Path" type="class" class="PackagePath" pass="return" description="A description"/>

@@ -2,6 +2,8 @@
 #include "lib3mf_interfaceexception.hpp"
 #include "lib3mf_consumer.hpp"
 #include "lib3mf_decryptright.hpp"
+#include "lib3mf_packagepath.hpp"
+
 namespace Lib3MF {
 	namespace Impl {
 		Lib3MF::Impl::CResourceData::CResourceData(NMR::PKeyStoreResourceData resourceData) {
@@ -9,17 +11,16 @@ namespace Lib3MF {
 		}
 
 		IDecryptRight * Lib3MF::Impl::CResourceData::AddDecryptRight(IConsumer * pConsumerInstance, const Lib3MF::eEncryptionAlgorithm eaInstance) {
-			if (Lib3MF::eEncryptionAlgorithm::RsaOaepMgf1p != eaInstance) {
+			if (Lib3MF::eEncryptionAlgorithm::RsaOaepMgf1p == eaInstance) {
 				throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 			}
 			CConsumer * consumer = reinterpret_cast<CConsumer *>(pConsumerInstance);
-			NMR::PKeyStoreDecryptRight dR = m_ResourceData->addDecryptRight(consumer->consumer(), NMR::eKeyStoreEncryptAlgorithm::RsaOaepMgf1p);
+			NMR::PKeyStoreDecryptRight dR = m_ResourceData->addDecryptRight(consumer->consumer(), NMR::eKeyStoreEncryptAlgorithm::Aes256Gcm);
 			return new CDecryptRight(dR);
 		}
 
 		Lib3MF_uint32 Lib3MF::Impl::CResourceData::GetDecryptRightCount() {
-			Lib3MF_uint32 count = m_ResourceData->getDecryptRightCount();
-			return count;
+			return  m_ResourceData->getDecryptRightCount();
 		}
 
 		IDecryptRight * Lib3MF::Impl::CResourceData::GetDecryptRight(const Lib3MF_uint32 nDecryptRightIndex) {
@@ -52,6 +53,11 @@ namespace Lib3MF {
 				return Lib3MF::eCompression::Deflate;
 			}
 			return Lib3MF::eCompression::None;
+		}
+
+		IPackagePath * CResourceData::GetPath()
+		{	
+			return new CPackagePath(m_ResourceData->getPath());
 		}
 
 	}

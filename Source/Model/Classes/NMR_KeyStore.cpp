@@ -33,12 +33,77 @@ A KeyStore is an in memory representation of the 3MF file.
 
 #include "Model/Classes/NMR_KeyStore.h"
 #include "Common/NMR_StringUtils.h" 
+#include "Model/Classes/NMR_KeyStoreConsumer.h"
+#include "Model/Classes/NMR_KeyStoreResourceData.h"
+#include <memory>
 namespace NMR {
 	CKeyStore::CKeyStore() {
 	}
 
 	CKeyStore::~CKeyStore() {
 		clearAll();
+	}
+
+	PKeyStoreConsumer CKeyStore::addConsumer(std::string id, std::string keyId, RSAKEYVALUE keyValue)
+	{
+		PKeyStoreConsumer consumer = std::make_shared<CKeyStoreConsumer>(id, keyId, keyValue);
+		m_Consumers.push_back(consumer);
+		if (m_ConsumerRefs.find(id) != m_ConsumerRefs.end()) {
+			m_ConsumerRefs[id] = consumer;
+		}
+		return consumer;
+	}
+
+	nfUint32 CKeyStore::getConsumerCount() const
+	{
+		return (uint32_t)m_Consumers.size();
+	}
+
+	PKeyStoreConsumer CKeyStore::getConsumerByIndex(nfUint64 index) const
+	{	
+		return m_Consumers[index];;
+	}
+
+	PKeyStoreConsumer CKeyStore::findConsumerById(std::string id)
+	{	
+		return m_ConsumerRefs[id];
+	}
+
+	void CKeyStore::removeConsumer(NMR::PKeyStoreConsumer consumer)
+	{
+		size_t n = m_ConsumerRefs.erase(consumer->getConsumerID());
+		if (n > 0) {
+			for (auto it = m_Consumers.begin(); it != m_Consumers.end(); it++) {
+				if ((*it) == consumer) {
+					m_Consumers.erase(it);
+				}
+			}
+		}
+	}
+
+	nfUint32 CKeyStore::resourceDataCount() const
+	{
+		return (uint32_t)m_ResourceDatas.size();
+	}
+
+	PKeyStoreResourceData CKeyStore::getResourceDataByIndex(nfUint64 index) const
+	{	
+		return m_ResourceDatas[index];
+	}
+
+	PKeyStoreResourceData CKeyStore::addResourceData(std::string path, eKeyStoreEncryptAlgorithm ea, nfBool compression)
+	{
+		PKeyStoreResourceData resourceData = std::make_shared<CKeyStoreResourceData>(path, ea, compression);
+		m_ResourceDatas.push_back(resourceData);
+		if (m_ResourceDataRefs.find(path) != m_ResourceDataRefs.end()) {
+			m_ResourceDataRefs[path] = resourceData;
+		}
+		return resourceData;
+	}
+
+	PKeyStoreResourceData CKeyStore::findResourceDataByPath(std::string path)
+	{
+		return m_ResourceDataRefs[path];
 	}
 
 	void CKeyStore::clearAll() {

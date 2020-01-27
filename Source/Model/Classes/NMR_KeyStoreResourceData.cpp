@@ -8,6 +8,13 @@ namespace NMR {
 		m_EncryptionAlgorithm = eKeyStoreEncryptAlgorithm::Aes256Gcm;
 	}
 
+	CKeyStoreResourceData::CKeyStoreResourceData(std::string const & path, eKeyStoreEncryptAlgorithm const & ea, nfBool const & compression)
+	{
+		m_sPath = path;
+		m_EncryptionAlgorithm = ea;
+		m_bCompression = compression;
+	}
+
 	PKeyStoreDecryptRight CKeyStoreResourceData::addDecryptRight(NMR::PKeyStoreConsumer consumer, eKeyStoreEncryptAlgorithm ea)
 	{	
 		NMR::AES256GCMCIPHERVALUE value;
@@ -54,5 +61,10 @@ namespace NMR {
 	nfBool CKeyStoreResourceData::getCompression() const
 	{
 		return m_bCompression;
+	}
+	NMR::PPackageModelPath CKeyStoreResourceData::getPath() const
+	{
+		NMR::CResourceHandler * pResourceHandler = new NMR::CResourceHandler();
+		return pResourceHandler->makePackageModelPath(m_sPath);
 	}
 }

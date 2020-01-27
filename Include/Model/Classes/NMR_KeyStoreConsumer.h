@@ -47,7 +47,7 @@ namespace NMR {
 		nfBool m_bHasKeyValue;
 	public:
 		CKeyStoreConsumer(std::string const & consumerID);
-
+		CKeyStoreConsumer(std::string const & consumerID, std::string const & keyID, RSAKEYVALUE keyValue);
 		std::string getConsumerID() const;
 		std::string getKeyID() const;
 		void setKeyID(std::string const & keyID);

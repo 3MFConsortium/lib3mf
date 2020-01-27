@@ -39,6 +39,7 @@ NMR_KeyStoreResourceData.h defines the KeyStoreResourceData Class. A ResourceDat
 #include "Common/NMR_Types.h"
 #include "Common/NMR_KeyStoreTypes.h"
 #include "Model/Classes/NMR_KeyStoreDecryptRight.h"
+#include "Model/Classes/NMR_PackageResourceID.h"
 namespace NMR {
 
 	class CKeyStoreResourceData {
@@ -49,14 +50,16 @@ namespace NMR {
 		std::map<PKeyStoreConsumer, PKeyStoreDecryptRight> m_ConsumerDecryptRight;
 	public:
 		CKeyStoreResourceData(std::string const & path);
+		CKeyStoreResourceData(std::string const & path, eKeyStoreEncryptAlgorithm const & ea, nfBool const & compression);
 		//TODO Secure Content: expose properties
-		PKeyStoreDecryptRight addDecryptRight(NMR::PKeyStoreConsumer consumer, eKeyStoreEncryptAlgorithm);
+		PKeyStoreDecryptRight addDecryptRight(NMR::PKeyStoreConsumer consumer, eKeyStoreEncryptAlgorithm ea);
 		nfUint32 getDecryptRightCount();
 		PKeyStoreDecryptRight getDecryptRight(nfUint32 index) const;
 		PKeyStoreDecryptRight findDecryptRightByConsumer(NMR::PKeyStoreConsumer consumer);
 		void removeDecryptRight(NMR::PKeyStoreConsumer consumer);
 		eKeyStoreEncryptAlgorithm getEncryptionAlgorithm() const;
 		nfBool getCompression() const;
+		NMR::PPackageModelPath getPath() const;
 	
 	};
 

@@ -5,6 +5,13 @@ namespace NMR {
 		m_sConsumerID = consumerID;
 	}
 
+	CKeyStoreConsumer::CKeyStoreConsumer(std::string const & consumerID, std::string const & keyID, RSAKEYVALUE keyValue)
+	{
+		m_sConsumerID = consumerID;
+		m_sKeyID = keyID;
+		m_keyValue = keyValue;
+	}
+
 	std::string CKeyStoreConsumer::getConsumerID() const {
 		return m_sConsumerID;
 	}
