@@ -78,6 +78,9 @@ namespace NMR {
 				if (m_bHasPath)
 					throw CNMRException(NMR_ERROR_DUPLICATEPATH);
 				m_sPath = pAttributeValue;
+				if (!fnStartsWithPathDelimiter(m_sPath)) {
+					m_pWarnings->addException(CNMRException(NMR_ERROR_PATH_NOT_ABSOLUTE), mrwInvalidOptionalValue);
+				}
 				m_bHasPath = true;
 			}
 			else if (strcmp(pAttributeName, XML_3MF_PRODUCTION_UUID) == 0) {

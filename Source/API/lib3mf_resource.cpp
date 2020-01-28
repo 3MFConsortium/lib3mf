@@ -85,6 +85,6 @@ IObject * CResource::AsObject()
 
 IPackagePath * CResource::PackagePath()
 {
-	return new CPackagePath(m_pResource->getPackageResourceID()->getPackageModelPath());
+	return new CPackageResourcePath(m_pResource->getPackageResourceID());
 }
 

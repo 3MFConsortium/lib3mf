@@ -86,6 +86,7 @@ namespace NMR {
 		UniqueResourceID getUniqueID();
 
 		static void setModelPath(std::shared_ptr<CPackageResourceID> pPackageResourceID, PPackageModelPath pPath);
+		CResourceHandler * getResourceHandler();
 	};
 	typedef std::shared_ptr<CPackageResourceID> PPackageResourceID;
 

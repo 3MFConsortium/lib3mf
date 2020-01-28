@@ -1115,11 +1115,14 @@ Model error codes (0x8XXX)
 // Referenced model resource must not be in a different model
 #define NMR_ERROR_MODELRESOURCE_IN_DIFFERENT_MODEL 0x80EB
 
+// Path attribute is not absolute
+#define NMR_ERROR_PATH_NOT_ABSOLUTE 0x80EC
+
 // Duplicate KeyStore consumer
-#define NMR_ERROR_DUPLICATE_KEYSTORECONSUMER 0x80EC
+#define NMR_ERROR_DUPLICATE_KEYSTORECONSUMER 0x80ED
 
 // Could not get OPC KeyStore Stream
-#define NMR_ERROR_OPCCOULDNOTGETKEYSTORESTREAM 0x80ED
+#define NMR_ERROR_OPCCOULDNOTGETKEYSTORESTREAM 0x80EE
 
 /*-------------------------------------------------------------------
 XML Parser Error Constants (0x9XXX)

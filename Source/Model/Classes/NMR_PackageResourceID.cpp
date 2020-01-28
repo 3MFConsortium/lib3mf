@@ -51,7 +51,6 @@ namespace NMR {
 
 	void CPackageModelPath::setPath(std::string sPath)
 	{
-		// TODO: changing this getPath MUST go through the CResourceHandler to update the maps there
 		m_sPath = sPath;
 	}
 
@@ -69,6 +68,7 @@ namespace NMR {
 	std::string CPackageResourceID::getPath() {
 		return m_pModelPath->getPath();
 	}
+
 	ModelResourceID CPackageResourceID::getModelResourceID() {
 		return m_id;
 	}
@@ -76,6 +76,10 @@ namespace NMR {
 	void CPackageResourceID::setModelPath(std::shared_ptr<CPackageResourceID> pPackageResourceID, PPackageModelPath pPath)
 	{
 		pPackageResourceID->m_pResourceHandler->updateModelPath(pPackageResourceID, pPath);
+	}
+
+	CResourceHandler * CPackageResourceID::getResourceHandler() {
+		return m_pResourceHandler;
 	}
 
 	void CPackageResourceID::setUniqueID(UniqueResourceID id) {
@@ -181,7 +185,8 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 		}
 
-		m_IdAndPathToPackageResourceIDs.erase(itOld);
+		m_IdAndPathToPackageResourceIDs.erase(itOld); 
+		//what if idOld was the last one standing pointint to PackageModelPath?
 		
 		pPackageResourceID->m_pModelPath = pNewPath;
 		m_IdAndPathToPackageResourceIDs.insert(std::make_pair(std::make_pair(pPackageResourceID->m_id, pNewPath), pPackageResourceID));

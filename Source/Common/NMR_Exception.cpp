@@ -400,7 +400,8 @@ namespace NMR {
 		case NMR_ERROR_DUPLICATEPACKAGEPATH: return "The PackagePath of a model is not unique.";
 		case NMR_ERROR_PRODUCTIONEXTENSION_REQUIRED: return "Serialization of this Model requires the production extension.";
 		case NMR_ERROR_MODELRESOURCE_IN_DIFFERENT_MODEL: return "Referenced model resource must not be in a different model.";
-		case NMR_ERROR_DUPLICATE_KEYSTORECONSUMER: return "The KeyStore consumer is not unique";
+		case NMR_ERROR_PATH_NOT_ABSOLUTE: return "A path attribute element is not absolute.";
+		case NMR_ERROR_DUPLICATE_KEYSTORECONSUMER: return "The KeyStore consumer is not unique.";
 
 		// XML Parser Error Constants(0x9XXX)
 		case NMR_ERROR_XMLPARSER_INVALIDATTRIBVALUE: return "Invalid XML attribute value";

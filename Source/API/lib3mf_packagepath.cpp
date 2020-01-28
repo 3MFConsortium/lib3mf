@@ -30,8 +30,9 @@ Abstract: This is a stub class definition of CPackagePath
 
 #include "lib3mf_packagepath.hpp"
 #include "lib3mf_interfaceexception.hpp"
-
 // Include custom headers here.
+
+#include "Model/Classes/NMR_PackageResourceID.h"
 
 
 
@@ -41,20 +42,40 @@ using namespace Lib3MF::Impl;
  Class definition of CPackagePath 
 **************************************************************************************************************************/
 
-CPackagePath::CPackagePath(NMR::PPackageModelPath pPath)
-  : m_pPath(pPath)
+Lib3MF::Impl::CPackagePath::CPackagePath(NMR::PPackageModelPath pPath) 
+	:m_pPath(pPath)
 {
 	if (!pPath.get())
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
 }
 
-std::string CPackagePath::Get()
-{
+std::string Lib3MF::Impl::CPackagePath::Get() {
 	return m_pPath->getPath();
 }
 
-void CPackagePath::Set(const std::string & sPath)
-{
+void Lib3MF::Impl::CPackagePath::Set(const std::string & sPath) {
 	m_pPath->setPath(sPath);
 }
+
+
+CPackageResourcePath::CPackageResourcePath(NMR::PPackageResourceID pPath)
+	: m_pResource(pPath) {
+	if (!pPath.get())
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+}
+
+std::string CPackageResourcePath::Get() {
+	return m_pResource->getPath();
+}
+
+void CPackageResourcePath::Set(const std::string & sPath) {
+	NMR::CResourceHandler * pRH = m_pResource->getResourceHandler();
+
+	NMR::PPackageModelPath pPath = pRH->findPackageModelPath(sPath);
+	if (nullptr == pPath) {
+		pPath = pRH->makePackageModelPath(sPath);
+	}
+	NMR::CPackageResourceID::setModelPath(m_pResource, pPath);
+}
+
 
