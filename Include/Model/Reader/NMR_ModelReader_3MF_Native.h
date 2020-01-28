@@ -47,6 +47,7 @@ namespace NMR {
 
 	class CModelReader_3MF_Native : public CModelReader_3MF {
 	private:
+		//TODO SecureContent: this will become a "KeyStoreProxy", composed of a POpcPackageReader
 		POpcPackageReader m_pPackageReader;
 
 	protected:
