@@ -32,7 +32,7 @@ NMR_ModelReader_3MF.cpp implements the Model Reader Class for
 --*/
 
 #include "Model/Reader/NMR_ModelReader_3MF.h"
-#include "Model/Reader/NMR_ModelReaderNode_Model.h"
+#include "Model/Reader/NMR_ModelReaderNode_ModelBase.h"
 #include "Model/Classes/NMR_ModelObject.h"
 #include "Model/Classes/NMR_ModelMeshObject.h"
 #include "Model/Classes/NMR_ModelConstants.h"
@@ -98,10 +98,10 @@ namespace NMR {
 						throw CNMRException(NMR_ERROR_DUPLICATEMODELNODE);
 					bHasModel = true;
 
-					PModelReaderNode_Model pXMLNode;
+					PModelReaderNode_ModelBase pXMLNode;
 					pModel->setCurrentPath(sPath);
 
-					pXMLNode = std::make_shared<CModelReaderNode_Model>(pModel.get(), pWarnings, sPath, pProgressMonitor);
+					pXMLNode = std::make_shared<CModelReaderNode_ModelBase>(pModel.get(), pWarnings, sPath, pProgressMonitor);
 					pXMLNode->setIgnoreBuild(true);
 					pXMLNode->setIgnoreMetaData(true);
 					pXMLNode->parseXML(pXMLReader.get());
@@ -162,7 +162,7 @@ namespace NMR {
 				bHasModel = true;
 
 				m_pModel->setCurrentPath(m_pModel->rootPath());
-				PModelReaderNode_Model pXMLNode = std::make_shared<CModelReaderNode_Model>(m_pModel.get(), m_pWarnings, m_pModel->rootPath(), m_pProgressMonitor);
+				PModelReaderNode_ModelBase pXMLNode = std::make_shared<CModelReaderNode_ModelBase>(m_pModel.get(), m_pWarnings, m_pModel->rootPath(), m_pProgressMonitor);
 				pXMLNode->parseXML(pXMLReader.get());
 
 				if (!pXMLNode->getHasResources())

@@ -273,9 +273,9 @@ namespace Lib3MF {
 
 			int inexistantDecrypt = 9999;
 			ASSERT_EQ(nullptr, resourceData->GetDecryptRight(inexistantDecrypt));
-			PDecryptRightIterator decryptRightIterator = resourceData->GetDecryptRights();
-			while (decryptRightIterator->MoveNext()) {
-				PDecryptRight decryptRight = decryptRightIterator->GetCurrentDecryptRight();
+			//PDecryptRightIterator decryptRightIterator = resourceData->GetDecryptRights();
+			//while (decryptRightIterator->MoveNext()) {
+				//PDecryptRight decryptRight = decryptRightIterator->GetCurrentDecryptRight();
 				//ASSERT_EQ(0, decryptRight->GetConsumerIndex());
 				//ASSERT_EQ(Lib3MF::eEncryptionAlgorithm::RsaOaepMgf1p, decryptRight->GetEncryptionAlgorithm());
 				
@@ -289,12 +289,12 @@ namespace Lib3MF {
 				//for (std::string::size_type i = 0; i < expectedCipher.size(); ++i) {
 				//	ASSERT_EQ(expectedCipher[i], cipherValueBuffer.at(i));
 				//}
-			}
+			//}
 		}
 	}
 
-	TEST_F(SecureContentT, 3MFCreateKeyStore) {
-		/*PKeyStore keyStore;
+	/*TEST_F(SecureContentT, 3MFCreateKeyStore) {
+		PKeyStore keyStore;
 
 		PRSAKeyValue keyValue;
 		const Lib3MF_uint8 expectedModulus[345] = "w53q4y2KB2WcoOBUE9OEXI0OCzUf4SI1J6fDx6XeDJ8PzqxN4pPRtXgtKfp/RiSL0invf7ASfkBMcXuhD8XP0uki3JIzvsxTH+Jnnz/PrYnS9DFa6c9MYciTIV8vC4u03vkZH6OuGq4rWeSZuNCTCgT59q67Ly6OytNsQgsDHL2QO8xhpYdQ4bx7F0uNn5LAxFyA0ymsFsgSSLONJWzaVtsq9jvkIOEdTzYq52PAXMUIpegbyqSheNlmedcss8teqiZGnCOxpBxL3z+ogcFenX1S8kq2UhzOjXLEjPs9B0SchwXSadephL89shJwra+30NS3R3frwfCz+a3H6wTVBw==";
@@ -314,8 +314,8 @@ namespace Lib3MF {
 		const Lib3MF_uint8 expectedCipher[381] = "Ao6tg4qOlIfRscGdYkAI/48xT3S6In5TQatVslcAPcpcn5oC5wxKNgghplIxjuw64SICHLfOuUZjLT3/LlP1E6MqhOhyxjBjAYsLhHBxcqlAynHyDJoKk27WYCQV+jCs4z6h78YXzVNto3uOlCghN2m5/XG0yqxaqhERtSfbrWJAIANUD1Rwkhmlg1Bemx2Ai2lzIajZwaWERYt3srNFORAVbR1CXONybXE6BXHnclzTbOV7AtTAOWcBrw1q38mDrnHkWwSu6qoD0yc4FCvEStDH1BvIMN28n7jaz7LAlRhwZTYvv95NdYLgJ0izXdHxApKl8T8u6z1ZjMUAGdn8SGLZajJhyTgqH3GhLYqtnnGw0JYYwEj7Dphdxqg=";
 		std::vector<Lib3MF_uint8> cipherData(expectedCipher, expectedCipher + strlen((const char *)expectedCipher));
 		CBasicCipherData d = CBasicCipherData();
-		decryptRight->SetCipherData(cipherData);*/
-	}
+		decryptRight->SetCipherData(cipherData);
+	}*/
 
 	TEST_F(SecureContentT, 3MFWriteSecureMesh) {
 		//create the attachment to be secured

@@ -1118,6 +1118,9 @@ Model error codes (0x8XXX)
 // Duplicate KeyStore consumer
 #define NMR_ERROR_DUPLICATE_KEYSTORECONSUMER 0x80EC
 
+// Could not get OPC KeyStore Stream
+#define NMR_ERROR_OPCCOULDNOTGETKEYSTORESTREAM 0x80ED
+
 /*-------------------------------------------------------------------
 XML Parser Error Constants (0x9XXX)
 -------------------------------------------------------------------*/

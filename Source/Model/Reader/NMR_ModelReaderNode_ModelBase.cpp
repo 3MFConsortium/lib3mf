@@ -26,12 +26,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelReaderNode_Model.cpp implements the Model Reader Node Class.
+NMR_ModelReaderNode_ModelBase.cpp implements the Model Reader Node Class.
 A model reader node is an abstract base class for all XML nodes of a 3MF Model Stream.
 
 --*/
 
-#include "Model/Reader/NMR_ModelReaderNode_Model.h" 
+#include "Model/Reader/NMR_ModelReaderNode_ModelBase.h" 
 #include "Model/Reader/v100/NMR_ModelReaderNode100_Resources.h" 
 #include "Model/Reader/v100/NMR_ModelReaderNode100_Build.h" 
 #include "Model/Reader/v100/NMR_ModelReaderNode100_MetaData.h" 
@@ -51,7 +51,7 @@ A model reader node is an abstract base class for all XML nodes of a 3MF Model S
 
 namespace NMR {
 
-	CModelReaderNode_Model::CModelReaderNode_Model(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings, const std::string sPath,
+	CModelReaderNode_ModelBase::CModelReaderNode_ModelBase(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings, const std::string sPath,
 		_In_ PProgressMonitor pProgressMonitor)
 		: CModelReaderNode(pWarnings, pProgressMonitor), m_bIgnoreBuild(false), m_bIgnoreMetaData(false), m_bHaveWarnedAboutV093(false)
 	{
@@ -68,7 +68,7 @@ namespace NMR {
 		m_sPath = sPath;
 	}
 	
-	void CModelReaderNode_Model::CheckRequiredExtensions() {
+	void CModelReaderNode_ModelBase::CheckRequiredExtensions() {
 		// check, whether all required extensions are available in this implementation before actually parsing the file
 		std::istringstream iss(m_sRequiredExtensions);
 		std::vector<std::string> tokens{ std::istream_iterator<std::string,  char>{iss},
@@ -91,7 +91,7 @@ namespace NMR {
 		}
 	}
 
-	void CModelReaderNode_Model::parseXML(_In_ CXmlReader * pXMLReader)
+	void CModelReaderNode_ModelBase::parseXML(_In_ CXmlReader * pXMLReader)
 	{
 		// Parse name
 		parseName(pXMLReader);
@@ -107,7 +107,7 @@ namespace NMR {
 
 	}
 
-	void CModelReaderNode_Model::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
+	void CModelReaderNode_ModelBase::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
 	{
 		__NMRASSERT(pAttributeName);
 		__NMRASSERT(pAttributeValue);
@@ -127,7 +127,7 @@ namespace NMR {
 		}
 	}
 
-	void CModelReaderNode_Model::OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace)
+	void CModelReaderNode_ModelBase::OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace)
 	{
 		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_XML) == 0) {
 			if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_MODEL_LANG) == 0) {
@@ -144,7 +144,7 @@ namespace NMR {
 		}
 	}
 
-	void CModelReaderNode_Model::ReadMetaDataNode(_In_ CXmlReader * pXMLReader)
+	void CModelReaderNode_ModelBase::ReadMetaDataNode(_In_ CXmlReader * pXMLReader)
 	{
 		PModelReaderNode100_MetaData pXMLNode = std::make_shared<CModelReaderNode100_MetaData>(m_pWarnings);
 		pXMLNode->parseXML(pXMLReader);
@@ -182,7 +182,7 @@ namespace NMR {
 		}
 	}
 
-	void CModelReaderNode_Model::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
+	void CModelReaderNode_ModelBase::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
 	{
 		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_CORESPEC100) == 0) {
 			if (strcmp(pChildName, XML_3MF_ELEMENT_RESOURCES) == 0) {
@@ -261,30 +261,30 @@ namespace NMR {
 		}
 	}
 
-	nfBool CModelReaderNode_Model::getHasResources()
+	nfBool CModelReaderNode_ModelBase::getHasResources()
 	{
 		return m_bHasResources;
 	}
 
-	nfBool CModelReaderNode_Model::getHasBuild()
+	nfBool CModelReaderNode_ModelBase::getHasBuild()
 	{
 		return m_bHasBuild;
 	}
 
-	nfBool CModelReaderNode_Model::ignoreBuild()
+	nfBool CModelReaderNode_ModelBase::ignoreBuild()
 	{
 		return m_bIgnoreBuild;
 	}
-	void CModelReaderNode_Model::setIgnoreBuild(bool bIgnoreBuild)
+	void CModelReaderNode_ModelBase::setIgnoreBuild(bool bIgnoreBuild)
 	{
 		m_bIgnoreBuild = bIgnoreBuild;
 	}
 
-	nfBool CModelReaderNode_Model::ignoreMetaData()
+	nfBool CModelReaderNode_ModelBase::ignoreMetaData()
 	{
 		return m_bIgnoreMetaData;
 	}
-	void CModelReaderNode_Model::setIgnoreMetaData(bool bIgnoreMetaData)
+	void CModelReaderNode_ModelBase::setIgnoreMetaData(bool bIgnoreMetaData)
 	{
 		m_bIgnoreMetaData = bIgnoreMetaData;
 	}

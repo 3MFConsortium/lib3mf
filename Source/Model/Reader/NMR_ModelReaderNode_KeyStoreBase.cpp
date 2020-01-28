@@ -1,3 +1,4 @@
+
 /*++
 
 Copyright (C) 2019 3MF Consortium
@@ -26,37 +27,20 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelReaderNode_slice1507.h covers the private 3MF slice extension.
+NMR_ModelReaderNode_KeyStoreBase.h defines the base class for all Model Reader Node classes that are related to <keystore>.
 
 --*/
 
-#ifndef __NMR_MODELREADERNODE_SLICE1507_SLICEREFMODEL
-#define __NMR_MODELREADERNODE_SLICE1507_SLICEREFMODEL
-
-#include "Model/Reader/NMR_ModelReaderNode_ModelBase.h"
-#include "Model/Classes/NMR_ModelComponent.h"
-#include "Model/Classes/NMR_ModelComponentsObject.h"
-#include "Model/Classes/NMR_ModelObject.h"
-#include "Model/Classes/NMR_ModelConstants_Slices.h"
+#include "Model/Reader/NMR_ModelReaderNode_KeyStoreBase.h"
 
 namespace NMR {
 
-	class CModelReader_Slice1507_SliceRefModel : public CModelReaderNode_ModelBase {
-	private:
-		std::string m_sSliceRefPath;
+	CModelReaderNode_KeyStoreBase::CModelReaderNode_KeyStoreBase(_In_ CKeyStore * pKeyStore, _In_ PModelReaderWarnings pWarnings)
+		: CModelReaderNode(pWarnings)
+	{
+		__NMRASSERT(pModel);
 
-	protected:
-		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
-
-	public:
-		CModelReader_Slice1507_SliceRefModel() = delete;
-		CModelReader_Slice1507_SliceRefModel(_In_ CModel *pModel, _In_ PModelReaderWarnings pWarnings, _In_z_ const std::string sSliceRefPath);
-
-		virtual void parseXML(_In_ CXmlReader * pXMLReader);
-	};
-
-	typedef std::shared_ptr<CModelReader_Slice1507_SliceRefModel> PModelReader_Slice1507_SliceRefModel;
+		m_pKeyStore = pKeyStore;
+	}
 
 }
-
-#endif
