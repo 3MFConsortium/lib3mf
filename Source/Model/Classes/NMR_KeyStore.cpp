@@ -44,6 +44,16 @@ namespace NMR {
 		clearAll();
 	}
 
+	PUUID CKeyStore::uuid()
+	{
+		return m_UUID;
+	}
+
+	void CKeyStore::setUUID(PUUID uuid)
+	{
+		m_UUID = uuid;
+	}
+
 	PKeyStoreConsumer CKeyStore::addConsumer(std::string id, std::string keyId, RSAKEYVALUE keyValue)
 	{
 		PKeyStoreConsumer consumer = std::make_shared<CKeyStoreConsumer>(id, keyId, keyValue);

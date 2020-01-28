@@ -27,8 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelReaderNode100_BuildItem.cpp implements the Model Reader BuildItem Node Class.
-A builditem reader model node is a parser for the builditem node of an XML Model Stream.
+NMR_ModelReaderNode_KeyStore.h defines the Model Reader Node class that is related to <keystore>.
 
 --*/
 
@@ -96,14 +95,13 @@ namespace NMR {
 		// Set Item Reference
 		pBuildItem->setPartNumber(m_sPartNumber);
 		*/
-		// Set Production references
-/*		if (!m_UUID.get()) {
-			if (pXMLReader->NamespaceRegistered(XML_3MF_NAMESPACE_PRODUCTIONSPEC)) {
-				m_pWarnings->addException(CNMRException(NMR_ERROR_MISSINGUUID), mrwMissingMandatoryValue);
-			}
+		// Set references
+		if (!m_UUID.get()) {
+			// We do not have to check for secure content spec, because it is the base spec of a keystore
+			m_pWarnings->addException(CNMRException(NMR_ERROR_MISSINGUUID), mrwMissingMandatoryValue);
 			m_UUID = std::make_shared<CUUID>();
 		}
-		m_pKeyStore->setUUID(m_UUID);*/
+		m_pKeyStore->setUUID(m_UUID);
 		//pBuildItem->setPath(m_sPath);
 	}
 
@@ -112,21 +110,11 @@ namespace NMR {
 		__NMRASSERT(pAttributeName);
 		__NMRASSERT(pAttributeValue);
 
-		/*if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_ITEM_OBJECTID) == 0) {
-			if (m_bHasID)
-				throw CNMRException(NMR_ERROR_DUPLICATEBUILDITEMOBJECTID);
-
-			m_ObjectID = fnStringToUint32(pAttributeValue);
-			m_bHasID = true;
+		if (strcmp(XML_3MF_SECURE_CONTENT_UUID, pAttributeName) == 0) {
+			if (m_UUID.get())
+				m_pWarnings->addException(CNMRException(NMR_ERROR_DUPLICATEUUID), eModelReaderWarningLevel::mrwInvalidMandatoryValue);
+			m_UUID = std::make_shared<CUUID>(pAttributeValue);
 		}
-		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_ITEM_TRANSFORM) == 0) {
-			m_mTransform = fnMATRIX3_fromString(pAttributeValue);
-		}
-		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_ITEM_PARTNUMBER) == 0) {
-			m_sPartNumber = std::string(pAttributeValue);
-		}
-		else
-			m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE), mrwInvalidOptionalValue);*/
 	}
 
 	void CModelReaderNode_KeyStore::OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace)

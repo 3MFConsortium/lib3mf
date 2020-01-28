@@ -77,6 +77,7 @@ These are given by the 3MF Standard
 #define XML_3MF_NAMESPACE_PRODUCTIONSPEC "http://schemas.microsoft.com/3dmanufacturing/production/2015/06"
 #define XML_3MF_NAMESPACE_BEAMLATTICESPEC "http://schemas.microsoft.com/3dmanufacturing/beamlattice/2017/02"
 #define XML_3MF_NAMESPACE_SLICESPEC "http://schemas.microsoft.com/3dmanufacturing/slice/2015/07"
+#define XML_3MF_NAMESPACE_SECURECONTENTSPEC "http://schemas.microsoft.com/3dmanufacturing/securecontent/2019/04"
 
 #define XML_3MF_NAMESPACEPREFIX_MATERIAL "m"
 #define XML_3MF_NAMESPACEPREFIX_PRODUCTION "p"
@@ -341,6 +342,7 @@ These are given by the 3MF Standard
 
 // KeyStore element.
 #define XML_3MF_ELEMENT_KEYSTORE					"keystore"
+#define XML_3MF_SECURE_CONTENT_UUID					"UUID"
 
 #define XML_3MF_PRODUCTION_PATH                     "path"
 #define XML_3MF_PRODUCTION_UUID                     "UUID"

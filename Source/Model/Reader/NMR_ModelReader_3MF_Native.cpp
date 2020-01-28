@@ -53,6 +53,7 @@ namespace NMR {
 		// empty on purpose
 	}
 
+	// TODO: move to proxy constructor
 	void parseKeyStore(NMR::PImportStream keyStoreStream, NMR::CKeyStore * keyStore, NMR::PProgressMonitor m_pProgressMonitor) {
 
 		PXmlReader pXMLReader = fnCreateXMLReaderInstance(keyStoreStream, m_pProgressMonitor);

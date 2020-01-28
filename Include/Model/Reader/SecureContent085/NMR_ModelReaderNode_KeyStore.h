@@ -26,8 +26,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelReaderNode100_BuildItem.h defines the Model Reader BuildItem Node Class.
-A builditem reader model node is a parser for the builditem node of an XML Model Stream.
+NMR_ModelReaderNode_KeyStore.h defines the Model Reader Node class that is related to <keystore>.
 
 --*/
 
@@ -41,6 +40,8 @@ A builditem reader model node is a parser for the builditem node of an XML Model
 namespace NMR {
 
 	class CModelReaderNode_KeyStore: public CModelReaderNode_KeyStoreBase {
+	private:
+		PUUID m_UUID;
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 		virtual void OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace);
