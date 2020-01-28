@@ -207,7 +207,7 @@ namespace Lib3MF {
 
 	TEST_F(SecureContentT, 3MFReadKeyStore) {
 		PReader reader3MF = model->QueryReader("3mf");
-		reader3MF->ReadFromFile(sTestFilesPath + "/SecureContent/" + "keystore_encrypted.3mf");
+		reader3MF->ReadFromFile(sTestFilesPath + "/SecureContent/keystore.3mf");
 		auto keyStore = model->GetKeyStore();
 		PConsumerIterator consumerIterator = keyStore->GetConsumers();
 		while (consumerIterator->MoveNext()) {
@@ -319,7 +319,7 @@ namespace Lib3MF {
 
 	TEST_F(SecureContentT, 3MFWriteSecureMesh) {
 		//create the attachment to be secured
-		std::string path = "3D/securemesh.xml";
+		std::string path = "/3D/securemesh.xml";
 		//add a mesh
 		auto meshObject = model->AddMeshObject();
 		meshObject->SetGeometry(CLib3MFInputVector<sPosition>(pVertices, 8), CLib3MFInputVector<sTriangle>(pTriangles, 12));
