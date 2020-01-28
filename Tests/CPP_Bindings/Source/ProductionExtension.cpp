@@ -44,7 +44,7 @@ namespace Lib3MF
 		virtual void TearDown() {
 			model.reset();
 		}
-	
+
 		PModel model;
 
 		static void SetUpTestCase() {
@@ -70,9 +70,29 @@ namespace Lib3MF
 	//{
 	//}
 
-	//TEST_F(ProductionExtension, ReadModifyWrite)
-	//{
-	//}
+	TEST_F(ProductionExtension, ReadModifyWrite)
+	{
+		auto buffer = ReadFileIntoBuffer(sTestFilesPath + "/Production/" + "2ProductionBoxes.3mf");
+		auto reader3MF = model->QueryReader("3mf");
+		reader3MF->ReadFromBuffer(buffer);
+		CheckReaderWarnings(reader3MF, 0);
+
+		auto resources = model->GetResources();
+		auto pathToChange = model->FindOrCreatePackagePath("/3D/box2.model");
+		pathToChange->Set("/3D/boxPathChanged.model");
+
+		auto newPath = model->FindOrCreatePackagePath("/3D/boxPathNew.model");
+
+		while (resources->MoveNext()) {
+			auto resource = resources->GetCurrent();
+			std::cout << resource->PackagePath()->Get() << ":" << resource->GetModelResourceID() << std::endl;
+			if (resource->PackagePath()->Get() == "/3D/box1.model") {
+				resource->SetPackagePath(newPath.get());
+			}
+		}
+		auto writer = model->QueryWriter("3mf");
+		writer->WriteToFile("outProduction.3mf");
+	}
 
 	//TEST_F(ProductionExtension, ReadModifySplitWriteReadInspect)
 	//{

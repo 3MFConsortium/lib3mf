@@ -83,6 +83,8 @@ public:
 
 	IPackagePath * PackagePath() override;
 
+	void SetPackagePath(IPackagePath* pPackagePath) override;
+
 	Lib3MF_uint32 GetModelResourceID();
 };
 

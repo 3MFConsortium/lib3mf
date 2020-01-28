@@ -341,6 +341,9 @@
 		<method name="PackagePath" description="Returns the PackagePath (path of the model-file) within which this resource resides">
 			<param name="PackagePath" type="class" class="PackagePath" pass="return" description="the PackagePath (path of the model-file) within which this resource resides."/>
 		</method>
+		<method name="SetPackagePath" description="Sets the new PackagePath (path of the model-file) within which this resource resides">
+			<param name="PackagePath" type="class" class="PackagePath" pass="in" description="the PackagePath (path of the model-file) within which this resource resides."/>
+		</method>
 		<method name="GetModelResourceID" description="Retrieves the id of this resource within a model.">
 			<param name="ModelResourceId" type="uint32" pass="return" description="Retrieves the id of this resource within a model."/>
 		</method>
@@ -1092,8 +1095,12 @@
 	</class>
 
 	<class name="Model">
-		<method name="RootModel" description="Returns the Model Path of the root model-file within the OPC package.">
+		<method name="RootModelPath" description="Returns the Model Path of the root model-file within the OPC package.">
 			<param name="RootModelPath" type="class" class="PackagePath" pass="return" description="the PackagePath of the root model-file within the OPC package"/>
+		</method>
+		<method name="FindOrCreatePackagePath" description="Returns a new PackagePath for use within the OPC package.">
+			<param name="AbsolutePath" type="string" pass="in" description="the absolute Path (physical location) within the OPC package"/>
+			<param name="RootModelPath" type="class" class="PackagePath" pass="return" description="the new PackagePath within the OPC package"/>
 		</method>
 		<method name="SetUnit" description="sets the units of a model.">
 			<param name="Unit" type="enum" class="ModelUnit" pass="in" description="Unit enum value for the model unit"/>

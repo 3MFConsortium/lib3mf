@@ -370,7 +370,7 @@ namespace NMR {
 			CModelObject * pObject = *iIterator;
 
 			PPackageModelPath pPath = pObject->getPackageResourceID()->getPackageModelPath();
-			if (m_pModel->currentModelPath() != pPath)
+			if (m_pModel->currentModelPath()->getPath() != pPath->getPath())
 			{
 				continue;
 			}

@@ -88,3 +88,17 @@ IPackagePath * CResource::PackagePath()
 	return new CPackagePath(m_pResource->getPackageResourceID()->getPackageModelPath());
 }
 
+void CResource::SetPackagePath(IPackagePath* pPackagePath)
+{
+	std::string sPath = pPackagePath->Get();
+	NMR::ModelResourceID nID = m_pResource->getPackageResourceID()->getModelResourceID();
+	NMR::PPackageResourceID pTargetPackageResourceID = m_pResource->getModel()->findPackageResourceID(sPath, nID);
+	if (pTargetPackageResourceID) {
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDMODELRESOURCE);
+	}
+	NMR::PPackageResourceID pID = m_pResource->getModel()->generatePackageResourceID(sPath, nID);
+	m_pResource->setPackageResourceID(pID);
+	//m_pPackageResourceID = m_pModel->generatePackageResourceID(pModel->currentPath(), sResourceID);
+	//m_pResource->getPackageResourceID()->
+}
+

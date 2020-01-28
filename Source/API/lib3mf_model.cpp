@@ -88,9 +88,14 @@ NMR::CModel& CModel::model()
 	return *m_model;
 }
 
-IPackagePath* CModel::RootModel()
+IPackagePath* CModel::RootModelPath()
 {
 	return new CPackagePath(model().rootModelPath());
+}
+
+IPackagePath * CModel::FindOrCreatePackagePath(const std::string & sAbsolutePath)
+{
+	return new CPackagePath(model().findOrCreateModelPath(sAbsolutePath));
 }
 
 void CModel::SetUnit (const eLib3MFModelUnit eUnit)
