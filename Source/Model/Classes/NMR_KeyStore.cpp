@@ -44,7 +44,7 @@ namespace NMR {
 		clearAll();
 	}
 
-	PUUID CKeyStore::uuid()
+	PUUID CKeyStore::getUUID()
 	{
 		return m_UUID;
 	}

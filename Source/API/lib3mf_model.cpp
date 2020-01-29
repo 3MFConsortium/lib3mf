@@ -59,6 +59,7 @@ Abstract: This is a stub class definition of CModel
 #include "lib3mf_multipropertygroup.hpp"
 #include "lib3mf_multipropertygroupiterator.hpp"
 #include "lib3mf_packagepath.hpp"
+#include "lib3mf_keystore.hpp"
 
 
 // Include custom headers here.
@@ -681,6 +682,6 @@ Lib3MF::sBox CModel::GetOutbox()
 }
 
 IKeyStore * Lib3MF::Impl::CModel::GetKeyStore() {
-	return nullptr;
+	return new CKeyStore(m_model->getKeyStore());
 }
 

@@ -61,6 +61,9 @@ namespace Lib3MF {
 			pTriangles[11] = fnCreateTriangle(4, 7, 3);
 
 			model = wrapper->CreateModel();
+			PReader reader3MF = model->QueryReader("3mf");
+			reader3MF->ReadFromFile(sTestFilesPath + "/SecureContent/keystore.3mf");
+
 		}
 		virtual void TearDown() {
 			model.reset();
@@ -174,44 +177,23 @@ namespace Lib3MF {
 		}
 	};
 
-
-	//read (model with) existing resource and make some existing resource encrypted
-	//read (model with and further write) existing encrypted resource and add another consumer to it
-	//write (model with) encrypted resource from scratch.
-	//read (model with) existing encrypted resource, add another resource to the same consumers
-	//nothing to prevent we read encrypted meshes and move them around to plain text resources
-	//add remove consumer/resourcedata
-
-	TEST_F(SecureContentT, 3MFWriteSecureAttachment) {
-		//We want to add a secure attachment to the model
-		//auto attachment = model->AddAttachment(m_sRelationShipPath + ".xml", m_sAttachmetType);
-		//attachment->ReadFromFile(m_sAttachmentPath);
-		////Before writing, we need to establish the consumer
-		//std::vector<Lib3MF_uint8> empty;
-		//PConsumer consumer = model->AddConsumer("LIB3MF#TEST", "", empty, empty);
-
-		////Then, we need to establish that the attachment will be encrypted, by adding it as resource data;
-		//PResourceData resourceData = model->AddResourceData(attachment.get() , Lib3MF::eEncryptionAlgorithm::Aes256Gcm, Lib3MF::eCompression::Deflate);
-
-		////Further, we need to define that the consumer we created has decryptrights on this resource;
-		//resourceData->AddDecryptRight(consumer.get(), Lib3MF::eEncryptionAlgorithm::RsaOaepMgf1p);
-
-		////Then we need to register for this consumer data encryption key callback
-		//PWriter writer = model->QueryWriter("3mf");
-		//writer->RegisterConsumer("LIB3MF#TEST", EncryptionData::encryptionCallback);
-
-		////Then we can write to whatever. Callback will be called on that callstack
-		//std::vector<Lib3MF_uint8> buffer;
-		//writer->WriteToBuffer(buffer);
+	TEST_F(SecureContentT, ModelKeyStoreUUID) {
+		std::string uuid = "df81fc77-cfd1-4266-a432-9759a0d26c2a";
+		auto ks = model->GetKeyStore();
+		ASSERT_TRUE(ks != nullptr);
+		ks->SetUUID(uuid);
+		bool hasUUID;
+		std::string uuid2 = ks->GetUUID(hasUUID);
+		ASSERT_TRUE(hasUUID);
+		ASSERT_EQ(uuid2, uuid);
 	}
 
-	TEST_F(SecureContentT, 3MFReadKeyStore) {
-		PReader reader3MF = model->QueryReader("3mf");
-		reader3MF->ReadFromFile(sTestFilesPath + "/SecureContent/keystore.3mf");
+	TEST_F(SecureContentT, CheckKeyStoreConsumers) {
 		auto keyStore = model->GetKeyStore();
-		PConsumerIterator consumerIterator = keyStore->GetConsumers();
-		while (consumerIterator->MoveNext()) {
-			PConsumer consumer = consumerIterator->GetCurrentConsumer();
+		ASSERT_TRUE(keyStore != nullptr);
+		const int consumerCount = keyStore->GetConsumerCount();
+		for (int i = 0; i > consumerCount; ++i) {
+			PConsumer consumer = keyStore->GetConsumer(i);
 			/*
 			<consumer consumerid="LIB3MF#TEST" keyid="contentKey">
 				<keyvalue>
@@ -229,9 +211,9 @@ namespace Lib3MF {
 			ASSERT_EQ(nullptr, consumerNotFound);
 			PConsumer consumerFound = keyStore->FindConsumer(consumer->GetConsumerID());
 			ASSERT_EQ(consumer->GetConsumerID(), consumerFound->GetConsumerID());
-			
+
 			PKeyValue keyValue = consumer->GetKeyValue();
-			
+
 			// Values available here https://github.azc.ext.hp.com/3DSoftware/cencryptionsample/blob/master/testdata/sample.txt#L6
 			ASSERT_EQ(1, keyValue->GetRSA().m_Exponent[2]);
 			ASSERT_EQ(0, keyValue->GetRSA().m_Exponent[3]);
@@ -243,10 +225,13 @@ namespace Lib3MF {
 				ASSERT_EQ(expectedModulus[i], keyValue->GetRSA().m_Modulus[i]);
 			}
 		}
-
-		PResourceDataIterator resourceDataIterator = keyStore->GetResourcesData();
-		while (resourceDataIterator->MoveNext()) {
-			PResourceData resourceData = resourceDataIterator->GetCurrentResourceData();
+	}
+	TEST_F(SecureContentT, CheckKeyStoreResourceData) {
+		auto keyStore = model->GetKeyStore();
+		ASSERT_TRUE(keyStore != nullptr);
+		const int resourceDataCount = keyStore->GetResourceDataCount();
+		for (int i = 0; i < resourceDataCount; ++i) {
+			PResourceData resourceData = keyStore->GetResourceData(i);
 
 			PResourceData resourceDataNotFound = keyStore->FindResourceData("does not exist");
 			ASSERT_EQ(nullptr, resourceDataNotFound);
@@ -293,31 +278,7 @@ namespace Lib3MF {
 		}
 	}
 
-	TEST_F(SecureContentT, 3MFCreateKeyStore) {
-		/*PKeyStore keyStore;
-
-		PRSAKeyValue keyValue;
-		const Lib3MF_uint8 expectedModulus[345] = "w53q4y2KB2WcoOBUE9OEXI0OCzUf4SI1J6fDx6XeDJ8PzqxN4pPRtXgtKfp/RiSL0invf7ASfkBMcXuhD8XP0uki3JIzvsxTH+Jnnz/PrYnS9DFa6c9MYciTIV8vC4u03vkZH6OuGq4rWeSZuNCTCgT59q67Ly6OytNsQgsDHL2QO8xhpYdQ4bx7F0uNn5LAxFyA0ymsFsgSSLONJWzaVtsq9jvkIOEdTzYq52PAXMUIpegbyqSheNlmedcss8teqiZGnCOxpBxL3z+ogcFenX1S8kq2UhzOjXLEjPs9B0SchwXSadephL89shJwra+30NS3R3frwfCz+a3H6wTVBw==";
-		std::vector<Lib3MF_uint8> exponentBuffer(expectedModulus, expectedModulus + strlen((const char *)expectedModulus));
-		keyValue->SetExponent(exponentBuffer);
-		std::vector<Lib3MF_uint8> modulusBuffer = { 'A', 'Q', 'A', 'B' };
-		keyValue->SetModulus(modulusBuffer);
-
-		PConsumer consumer = keyStore->AddConsumer("LIB3MF#TEST", "contentKey", keyValue.get());
-
-		auto meshObject = model->AddMeshObject();
-		auto path = meshObject->PackagePath();
-		PResourceData resourceData = keyStore->AddResourceData(path.get(), Lib3MF::eEncryptionAlgorithm::Aes256Gcm, Lib3MF::eCompression::None);
-
-		PDecryptRight decryptRight = resourceData->AddDecryptRight(consumer.get(), Lib3MF::eEncryptionAlgorithm::RsaOaepMgf1p);
-		 
-		const Lib3MF_uint8 expectedCipher[381] = "Ao6tg4qOlIfRscGdYkAI/48xT3S6In5TQatVslcAPcpcn5oC5wxKNgghplIxjuw64SICHLfOuUZjLT3/LlP1E6MqhOhyxjBjAYsLhHBxcqlAynHyDJoKk27WYCQV+jCs4z6h78YXzVNto3uOlCghN2m5/XG0yqxaqhERtSfbrWJAIANUD1Rwkhmlg1Bemx2Ai2lzIajZwaWERYt3srNFORAVbR1CXONybXE6BXHnclzTbOV7AtTAOWcBrw1q38mDrnHkWwSu6qoD0yc4FCvEStDH1BvIMN28n7jaz7LAlRhwZTYvv95NdYLgJ0izXdHxApKl8T8u6z1ZjMUAGdn8SGLZajJhyTgqH3GhLYqtnnGw0JYYwEj7Dphdxqg=";
-		std::vector<Lib3MF_uint8> cipherData(expectedCipher, expectedCipher + strlen((const char *)expectedCipher));
-		CBasicCipherData d = CBasicCipherData();
-		decryptRight->SetCipherData(cipherData);*/
-	}
-
-	TEST_F(SecureContentT, 3MFWriteSecureMesh) {
+	TEST_F(SecureContentT, End2EndSecureContent) {
 		//create the attachment to be secured
 		std::string path = "/3D/securemesh.xml";
 		//add a mesh
@@ -354,32 +315,4 @@ namespace Lib3MF {
 		Lib3MF_buffer buffer;
 		writer->WriteToBuffer(buffer);
 	}
-
-
-	TEST_F(SecureContentT, 3MFReadSecureAttachment) {
-		//auto buffer = ReadFileIntoBuffer(sTestFilesPath + "/SecureContent/" + m_sFilenameReadWrite);
-		////We want to read a 3mf that could be secured
-		//PReader reader = model->QueryReader("3mf");
-		////We register for our known ConsumerID
-		//reader->RegisterConsumer("LIB3MF#TEST", EncryptionData::decryptionCallback);//if cannot read, add warning and let it fails
-		////We read the content. data key encryption callback will be called on the read callstack
-		//reader->ReadFromBuffer(buffer);
-
-		////find a mesh
-		////get path
-
-		////find consumer
-		//PConsumer consumer = model->FindConsumer("LIB3MF#2");
-		//if (nullptr == consumer) {
-		//	consumer = model->AddConsumer("LIB3MF#2", "", std::vector<unsigned char>(), std::vector<unsigned char>());
-		//}
-		////find resource data
-		//PResourceData resourceData = model->FindResourceData("/SecureContent/model2.xml");
-		////add consumer to resource data
-		//resourceData->AddDecryptRight(consumer.get(), eEncryptionAlgorithm::RsaOaepMgf1p);
-		////query writer
-		////register consumer
-		////save
-	}
-
 }

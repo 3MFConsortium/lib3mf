@@ -80,6 +80,7 @@
 		<error name="INVALIDPROPERTYCOUNT" code="132" description="Invalid property count."/>
 		<error name="UNKOWNPROGRESSIDENTIFIER" code="140" description="A progress identifier is unknown"/>
 		<error name="BEAMLATTICE_INVALID_OBJECTTYPE" code="2000" description="This object type is not valid for beamlattices"/>
+		<error name="INVALIDKEYSTORE" code="3000" description="The keystore object is invalid"/>
 	</errors>
 
 	<enum name="PropertyType">
@@ -438,18 +439,6 @@
 		</method>
 	</class>
 
-	<class name="ConsumerIterator" parent="ResourceIterator">
-		<method name="GetCurrentConsumer" description="Returns the Consumer the iterator points at.">
-			<param name="Resource" type="handle" class="Consumer" pass="return" description="returns the Consumer instance."/>
-		</method>
-	</class>
-  
-	<class name="ResourceDataIterator" parent="ResourceIterator">
-		<method name="GetCurrentResourceData" description="Returns the ResourceData the iterator points at.">
-			<param name="Resource" type="handle" class="ResourceData" pass="return" description="returns the ResourceData instance."/>
-		</method>
-	</class>
-    
 	<class name="MetaData">
 		<method name="GetNameSpace" description="returns the namespace URL of the metadata">
 			<param name="NameSpace" type="string" pass="return" description="the namespace URL of the metadata"/>
@@ -1242,9 +1231,6 @@
 			<param name="KeyValue" type="optionalclass" class="KeyValue" pass="in" description="A description"/>
 			<param name="Consumer" type="handle" class="Consumer" pass="return" description="A description"/>
 		</method> 
-		<method name="GetConsumers" description="creates a resource iterator instance with all consumer resources.">
-			<param name="ResourceIterator" type="handle" class="ConsumerIterator" pass="return" description="returns the iterator instance."/>
-		</method>
 		<method name="GetConsumerCount" description="A description">
 			<param name="Count" type="uint32" pass="return" description="A description"/>
 		</method>
@@ -1266,9 +1252,6 @@
 			<param name="ResourceDataIndex" type="uint64" pass="in" description="the index of the resource data"/>
 			<param name="TheResourceData" type="handle" class="ResourceData" pass="return" description="the data resource instance"/>
 		</method>
-		<method name="GetResourcesData" description="creates a resource iterator instance with all resources data.">
-			<param name="ResourceIterator" type="handle" class="ResourceDataIterator" pass="return" description="returns the iterator instance."/>
-		</method>
 		<method name="AddResourceData" description="A description">
 			<param name="PackagePath" type="handle" class="PackagePath" pass="in" description="A description"/>
 			<param name="EncryptionAlgorithm" type="enum" class="EncryptionAlgorithm" pass="in" description="A description"/>
@@ -1281,7 +1264,7 @@
 		</method>
 		<method name="GetUUID" description="A description">
 			<param name="HasUUID" type="bool" pass="out" description="flag whether the build has a UUID"/>
-			<param name="UUID" type="string" pass="out" description="the UUID as string of the form 'xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx'"/>
+			<param name="UUID" type="string" pass="return" description="the UUID as string of the form 'xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx'"/>
 		</method>
 		<method name="SetUUID" description="sets the keystore UUID">
 			<param name="UUID" type="string" pass="in" description="the UUID as string of the form 'xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx'"/>

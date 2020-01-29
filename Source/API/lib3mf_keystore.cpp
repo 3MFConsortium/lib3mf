@@ -1,3 +1,4 @@
+#include "lib3mf_types.hpp"
 #include "lib3mf_keystore.hpp"
 #include "lib3mf_interfaceexception.hpp"
 #include "lib3mf_consumer.hpp"
@@ -6,6 +7,13 @@
 #include "lib3mf_packagepath.hpp"
 
 using namespace Lib3MF::Impl;
+
+Lib3MF::Impl::CKeyStore::CKeyStore(NMR::PKeyStore pKeyStore) 
+	:m_KeyStore(pKeyStore)
+{
+	if (nullptr == pKeyStore)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDKEYSTORE);
+}
 
 IKeyValue * Lib3MF::Impl::CKeyStore::CreateKeyValue() {
 	return new CKeyValue();
@@ -75,15 +83,14 @@ IResourceData * Lib3MF::Impl::CKeyStore::FindResourceData(const std::string & sP
 	return new CResourceData(rd);
 }
 
-std::string CKeyStore::GetUUID(bool & bHasUUID)
-{
-	bHasUUID =  m_KeyStore->uuid() != nullptr;
+std::string Lib3MF::Impl::CKeyStore::GetUUID(bool & bHasUUID) {
+	bHasUUID = m_KeyStore->getUUID() != nullptr;
 	if (bHasUUID)
-		return m_KeyStore->uuid()->toString();
+		return m_KeyStore->getUUID()->toString();
 	return "";
 }
 
-void CKeyStore::SetUUID(const std::string & sUUID)
+void Lib3MF::Impl::CKeyStore::SetUUID(const std::string & sUUID)
 {
 	NMR::PUUID pUUID = std::make_shared<NMR::CUUID>(sUUID);
 	m_KeyStore->setUUID(pUUID);

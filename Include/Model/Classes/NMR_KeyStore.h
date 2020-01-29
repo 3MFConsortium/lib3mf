@@ -61,7 +61,7 @@ namespace NMR {
 	public:
 		CKeyStore();
 		~CKeyStore();
-		PUUID uuid();
+		PUUID getUUID();
 		void setUUID(PUUID uuid);
 		PKeyStoreConsumer addConsumer(std::string id, std::string keyId, RSAKEYVALUE keyValue);
 		nfUint32 getConsumerCount() const;

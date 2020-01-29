@@ -67,7 +67,7 @@ namespace Lib3MF {
 			/**
 			* Put additional public members here. They will not be visible in the external API.
 			*/
-
+			CKeyStore(NMR::PKeyStore pKeyStore);
 		
 			/**
 			* Public member functions to implement.
@@ -95,9 +95,10 @@ namespace Lib3MF {
 
 			IResourceData * FindResourceData(const std::string & sPath) override;
 
-			void SetUUID(const std::string &  uuid);
+			std::string GetUUID(bool & bHasUUID) override;
+			
+			void SetUUID(const std::string & sUUID) override;
 
-			std::string GetUUID(bool & bHasUUID);
 		};
 
 	} // namespace Impl
