@@ -152,6 +152,7 @@ Source/Model/Reader/NMR_ModelReader_3MF.cpp
 Source/Model/Reader/NMR_ModelReader_ColorMapping.cpp
 Source/Model/Reader/NMR_ModelReader_STL.cpp
 Source/Model/Reader/NMR_ModelReader_TexCoordMapping.cpp
+Source/Model/Reader/NMR_KeyStoreOpcPackageReader.cpp
 Source/Model/Reader/v100/NMR_ModelReaderNode100_BaseMaterial.cpp
 Source/Model/Reader/v100/NMR_ModelReaderNode100_BaseMaterials.cpp
 Source/Model/Reader/v100/NMR_ModelReaderNode100_Build.cpp

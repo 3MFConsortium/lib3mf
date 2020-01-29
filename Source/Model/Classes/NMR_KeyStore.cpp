@@ -116,6 +116,10 @@ namespace NMR {
 		return m_ResourceDataRefs[path];
 	}
 
+	bool CKeyStore::empty() const {
+		return m_Consumers.empty() && m_ResourceDatas.empty();
+	}
+
 	void CKeyStore::clearAll() {
 		m_ConsumerRefs.clear();
 		m_Consumers.clear();

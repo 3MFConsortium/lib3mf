@@ -305,7 +305,7 @@ namespace NMR {
 		}
 	}
 
-	nfUint64 COpcPackageReader::GetPartSize(_In_ std::string sPath)
+	nfUint64 COpcPackageReader::getPartSize(_In_ std::string sPath)
 	{
 		std::string sRealPath = fnRemoveLeadingPathDelimiter(sPath);
 		auto iIterator = m_ZIPEntries.find(sRealPath);
