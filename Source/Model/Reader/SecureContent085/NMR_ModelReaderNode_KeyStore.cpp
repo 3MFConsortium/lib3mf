@@ -32,6 +32,8 @@ NMR_ModelReaderNode_KeyStore.h defines the Model Reader Node class that is relat
 --*/
 
 #include "Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStore.h"
+#include "Model/Reader/SecureContent085/NMR_ModelReaderNode_Consumer.h"
+#include "Model/Reader/SecureContent085/NMR_ModelReaderNode_ResourceData.h"
 
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Common/NMR_Exception.h"
@@ -144,9 +146,19 @@ namespace NMR {
 		__NMRASSERT(pXMLReader);
 		__NMRASSERT(pNameSpace);
 
-		/*if (strcmp(pNameSpace, XML_3MF_NAMESPACE_CORESPEC100) == 0) {
-			// Read a metadatagroup object
-			if (strcmp(pChildName, XML_3MF_ELEMENT_METADATAGROUP) == 0) {
+		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_SECURECONTENTSPEC) == 0) {
+			// Read a consumer
+			if (strcmp(pChildName, XML_3MF_ELEMENT_CONSUMER) == 0) {
+				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode_Consumer>(m_pKeyStore, m_pWarnings);
+				pXMLNode->parseXML(pXMLReader);
+			} else if (strcmp(pChildName, XML_3MF_ELEMENT_RESOURCEDATA) == 0) {
+				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode_ResourceData>(m_pKeyStore, m_pWarnings);
+				pXMLNode->parseXML(pXMLReader);
+			} else {
+				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
+			}
+			// Read a resource data
+			/*if (strcmp(pChildName, XML_3MF_ELEMENT_METADATAGROUP) == 0) {
 				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode100_MetaDataGroup>(m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 
@@ -157,8 +169,8 @@ namespace NMR {
 			}
 			else {
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
-			}
-		}*/
+			}*/
+		}
 	}
 
 }

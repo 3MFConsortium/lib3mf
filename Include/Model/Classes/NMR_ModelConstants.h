@@ -345,6 +345,7 @@ These are given by the 3MF Standard
 // KeyStore element.
 #define XML_3MF_ELEMENT_KEYSTORE					"keystore"
 #define XML_3MF_ELEMENT_CONSUMER					"consumer"
+#define XML_3MF_ELEMENT_RESOURCEDATA				"resourcedata"
 #define XML_3MF_SECURE_CONTENT_UUID					"UUID"
 
 #define XML_3MF_PRODUCTION_PATH                     "path"
