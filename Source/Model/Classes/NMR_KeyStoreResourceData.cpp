@@ -1,7 +1,7 @@
 #include "Model/Classes/NMR_KeyStoreResourceData.h"
 #include "Common/NMR_Exception.h"
-
 #include <memory>
+
 namespace NMR {
 	CKeyStoreResourceData::CKeyStoreResourceData(std::string const & path) {
 		m_sPath = path;
@@ -15,15 +15,23 @@ namespace NMR {
 		m_bCompression = compression;
 	}
 
-	PKeyStoreDecryptRight CKeyStoreResourceData::addDecryptRight(NMR::PKeyStoreConsumer consumer, eKeyStoreEncryptAlgorithm ea)
+	PKeyStoreDecryptRight CKeyStoreResourceData::addDecryptRight(NMR::PKeyStoreConsumer const& consumer, eKeyStoreEncryptAlgorithm const& encryptAlgorithm) {
+		NMR::AES256GCMCIPHERVALUE value = { 0, 0, 0 };
+		return this->addDecryptRight(consumer, encryptAlgorithm, value);
+	}
+
+	PKeyStoreDecryptRight CKeyStoreResourceData::addDecryptRight(NMR::PKeyStoreConsumer const& consumer, eKeyStoreEncryptAlgorithm const& encryptAlgorithm, AES256GCMCIPHERVALUE const& cipherValue)
 	{	
-		NMR::AES256GCMCIPHERVALUE value;
-		PKeyStoreDecryptRight dR = std::make_shared<CKeyStoreDecryptRight>(consumer, ea, value);
-		m_DecryptRights.push_back(dR);
-		if(m_ConsumerDecryptRight.find(consumer) != m_ConsumerDecryptRight.end())
-			m_ConsumerDecryptRight[consumer] = dR;
-		else throw CNMRException(NMR_ERROR_DUPLICATE_KEYSTORECONSUMER);
-		return dR;
+		if (!consumer.get())
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+		if (m_ConsumerDecryptRight.find(consumer->getConsumerID()) != m_ConsumerDecryptRight.end()) {
+			throw CNMRException(NMR_ERROR_DUPLICATE_KEYSTORECONSUMER);
+		}
+
+		PKeyStoreDecryptRight decryptRight = std::make_shared<CKeyStoreDecryptRight>(consumer, encryptAlgorithm, cipherValue);
+		m_DecryptRights.push_back(decryptRight);
+		m_ConsumerDecryptRight[consumer->getConsumerID()] = decryptRight;
+		return decryptRight;
 	}
 
 	nfUint32 CKeyStoreResourceData::getDecryptRightCount()
@@ -36,17 +44,21 @@ namespace NMR {
 		return m_DecryptRights[index];
 	}
 
-	PKeyStoreDecryptRight CKeyStoreResourceData::findDecryptRightByConsumer(NMR::PKeyStoreConsumer consumer) 
+	PKeyStoreDecryptRight CKeyStoreResourceData::findDecryptRightByConsumer(NMR::PKeyStoreConsumer const& consumer) 
 	{
-		return m_ConsumerDecryptRight[consumer];
+		if (!consumer.get())
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+		return m_ConsumerDecryptRight[consumer->getConsumerID()];
 	}
 
-	void CKeyStoreResourceData::removeDecryptRight(NMR::PKeyStoreConsumer consumer)
+	void CKeyStoreResourceData::removeDecryptRight(NMR::PKeyStoreConsumer const& consumer)
 	{
-		size_t n = m_ConsumerDecryptRight.erase(consumer);
+		if (!consumer.get())
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+		size_t n = m_ConsumerDecryptRight.erase(consumer->getConsumerID());
 		if (n > 0) {
 			for (auto it = m_DecryptRights.begin(); it != m_DecryptRights.end(); it++) {
-				if ((*it)->getConsumer() == consumer) {
+				if ((*it)->getConsumer()->getConsumerID() == consumer->getConsumerID()) {
 					m_DecryptRights.erase(it);
 				}
 			}

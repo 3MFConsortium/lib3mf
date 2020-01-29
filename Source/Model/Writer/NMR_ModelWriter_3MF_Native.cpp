@@ -33,6 +33,7 @@ using LibZ and a native XML writer implementation.
 
 --*/
 
+#include "Model/Classes/NMR_KeyStoreResourceData.h"
 #include "Model/Writer/NMR_ModelWriter_3MF_Native.h" 
 #include "Model/Classes/NMR_ModelConstants.h" 
 #include "Model/Classes/NMR_ModelAttachment.h" 
@@ -140,9 +141,16 @@ namespace NMR {
 
 		POpcPackagePart pKeyStorePart = pPackageWriter->addPart(PACKAGE_3D_KEYSTORE_URI);
 		PXmlWriter_Native pXMLWriter4KeyStore = std::make_shared<CXmlWriter_Native>(pKeyStorePart->getExportStream());
-		PKeyStore keystore = std::make_shared<CKeyStore>(); // TODO: remove this implementation
+		// TODO: should use real data instead of this code
+		// --------------------------------------------------------------------------------------------------------------------------------------
+		PKeyStore keystore = std::make_shared<CKeyStore>();
+		auto consumer1 = keystore->addConsumer("TESTEADDConsumer1", "KEY1", {{}, {}});
+		auto consumer2 = keystore->addConsumer("TESTEADDConsumer2", "KEY2", {{}, {}});
+		auto resourcedata = keystore->addResourceData("/3D/SecurityContent/ResourceData", NMR::eKeyStoreEncryptAlgorithm::RsaOaepMgf1p, true);
+		resourcedata->addDecryptRight(consumer1, NMR::eKeyStoreEncryptAlgorithm::Aes256Gcm);
 		PUUID puuid = std::make_shared<CUUID>("64c27d98-7555-484f-b5a3-08063ec18834");
 		keystore->setUUID(puuid);
+		// --------------------------------------------------------------------------------------------------------------------------------------
 		writeKeyStoreStream(pXMLWriter4KeyStore.get(), keystore.get());
 	}
 
@@ -231,6 +239,4 @@ namespace NMR {
 			}
 		}
 	}
-
-
 }
