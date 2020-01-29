@@ -124,20 +124,6 @@ namespace NMR {
 		__NMRASSERT(pAttributeName);
 		__NMRASSERT(pAttributeValue);
 		__NMRASSERT(pNameSpace);
-
-		/*if (strcmp(pNameSpace, XML_3MF_NAMESPACE_PRODUCTIONSPEC) == 0) {
-			if (strcmp(pAttributeName, XML_3MF_PRODUCTION_UUID) == 0) {
-				if (m_UUID.get())
-					throw CNMRException(NMR_ERROR_DUPLICATEUUID);
-				m_UUID = std::make_shared<CUUID>(pAttributeValue);
-			}
-			if (strcmp(pAttributeName, XML_3MF_PRODUCTION_PATH) == 0) {
-				if (m_hasPath)
-					throw CNMRException(NMR_ERROR_DUPLICATEPATH);
-				m_sPath = std::string(pAttributeValue);
-				m_hasPath = true;
-			}
-		}*/
 	}
 
 	void CModelReaderNode_KeyStore::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
@@ -157,19 +143,6 @@ namespace NMR {
 			} else {
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
 			}
-			// Read a resource data
-			/*if (strcmp(pChildName, XML_3MF_ELEMENT_METADATAGROUP) == 0) {
-				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode100_MetaDataGroup>(m_pWarnings);
-				pXMLNode->parseXML(pXMLReader);
-
-				if (m_MetaDataGroup.get()) {
-					m_pWarnings->addException(CNMRException(NMR_ERROR_DUPLICATEMETADATAGROUP), mrwInvalidOptionalValue);
-				}
-				m_MetaDataGroup = dynamic_cast<CModelReaderNode100_MetaDataGroup*>(pXMLNode.get())->getMetaDataGroup();
-			}
-			else {
-				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
-			}*/
 		}
 	}
 

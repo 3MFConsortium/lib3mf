@@ -41,7 +41,6 @@ namespace NMR {
 
 	class CModelReaderNode_ResourceData: public CModelReaderNode_KeyStoreBase {
 	private:
-		PUUID m_UUID;
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 		virtual void OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace);

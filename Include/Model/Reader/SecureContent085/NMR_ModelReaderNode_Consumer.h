@@ -41,7 +41,8 @@ namespace NMR {
 
 	class CModelReaderNode_Consumer: public CModelReaderNode_KeyStoreBase {
 	private:
-		PUUID m_UUID;
+		std::string m_sConsumerID;
+		std::string m_sKeyID;
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 		virtual void OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace);
