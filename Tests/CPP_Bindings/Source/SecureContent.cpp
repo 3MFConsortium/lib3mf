@@ -315,4 +315,49 @@ namespace Lib3MF {
 		Lib3MF_buffer buffer;
 		writer->WriteToBuffer(buffer);
 	}
+
+	TEST_F(SecureContentT, 3MFCreateMultipleConsumersKeyStore) {
+		Lib3MF::PKeyStore keyStore = model->GetKeyStore();
+		
+		std::string firstId = "firstId";
+		std::string secondId = "secondId";
+
+		std::string firstKeyId = "firstKeyId";
+		std::string secondKeyId = "secondKeyId";
+
+		Lib3MF::CKeyValue * keyValue = NULL;
+
+
+		Lib3MF::PConsumer consumer1 = keyStore->AddConsumer(firstId, firstKeyId, keyValue);
+		Lib3MF::PConsumer consumer2 = keyStore->AddConsumer(secondId, secondKeyId, keyValue);
+
+		ASSERT_EQ(2, keyStore->GetConsumerCount());
+		ASSERT_EQ(firstId, keyStore->GetConsumer(0)->GetConsumerID());
+		ASSERT_EQ(secondId, keyStore->GetConsumer(1)->GetConsumerID());
+	}
+
+	TEST_F(SecureContentT, 3MFCreateMultipleResourceDataKeyStore) {
+		auto lModel = wrapper->CreateModel();
+
+		Lib3MF::PKeyStore keyStore = lModel->GetKeyStore();
+		ASSERT_TRUE(nullptr != keyStore);
+
+		std::string path1 = "/3D/nonrootmodel1.model";
+		auto meshObject = lModel->AddMeshObject();
+		meshObject->SetGeometry(CLib3MFInputVector<sPosition>(pVertices, 8), CLib3MFInputVector<sTriangle>(pTriangles, 12));
+		meshObject->PackagePath()->Set(path1);
+		
+		keyStore->AddResourceData(meshObject->PackagePath().get(), Lib3MF::eEncryptionAlgorithm::Aes256Gcm, Lib3MF::eCompression::Deflate);
+
+		std::string path2 = "/3D/nonrootmodel2.model";
+		meshObject = lModel->AddMeshObject();
+		meshObject->SetGeometry(CLib3MFInputVector<sPosition>(pVertices, 8), CLib3MFInputVector<sTriangle>(pTriangles, 12));
+		meshObject->PackagePath()->Set(path2);
+
+		keyStore->AddResourceData(meshObject->PackagePath().get(), Lib3MF::eEncryptionAlgorithm::Aes256Gcm, Lib3MF::eCompression::None);
+
+		ASSERT_EQ(2, keyStore->GetResourceDataCount());
+		ASSERT_EQ(path1, keyStore->GetResourceData(0)->GetPath()->Get());
+		ASSERT_EQ(path2, keyStore->GetResourceData(1)->GetPath()->Get());
+	}
 }
