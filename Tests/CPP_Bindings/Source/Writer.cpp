@@ -37,12 +37,43 @@ namespace Lib3MF
 {
 	class Writer : public ::testing::Test {
 	protected:
+		sPosition pVertices[8];
+		sTriangle pTriangles[12];
+
 		virtual void SetUp() {
 			model = wrapper->CreateModel();
 			auto reader = model->QueryReader("3mf");
 			reader->ReadFromFile(InFolder + "Pyramid.3mf");
 			writer3MF = model->QueryWriter("3mf");
 			writerSTL = model->QueryWriter("stl");
+
+			float fSizeX = 100.0f;
+			float fSizeY = 200.0f;
+			float fSizeZ = 300.0f;
+
+			// Manually create vertices
+			pVertices[0] = fnCreateVertex(0.0f, 0.0f, 0.0f);
+			pVertices[1] = fnCreateVertex(fSizeX, 0.0f, 0.0f);
+			pVertices[2] = fnCreateVertex(fSizeX, fSizeY, 0.0f);
+			pVertices[3] = fnCreateVertex(0.0f, fSizeY, 0.0f);
+			pVertices[4] = fnCreateVertex(0.0f, 0.0f, fSizeZ);
+			pVertices[5] = fnCreateVertex(fSizeX, 0.0f, fSizeZ);
+			pVertices[6] = fnCreateVertex(fSizeX, fSizeY, fSizeZ);
+			pVertices[7] = fnCreateVertex(0.0f, fSizeY, fSizeZ);
+
+			// Manually create triangles
+			pTriangles[0] = fnCreateTriangle(2, 1, 0);
+			pTriangles[1] = fnCreateTriangle(0, 3, 2);
+			pTriangles[2] = fnCreateTriangle(4, 5, 6);
+			pTriangles[3] = fnCreateTriangle(6, 7, 4);
+			pTriangles[4] = fnCreateTriangle(0, 1, 5);
+			pTriangles[5] = fnCreateTriangle(5, 4, 0);
+			pTriangles[6] = fnCreateTriangle(2, 3, 7);
+			pTriangles[7] = fnCreateTriangle(7, 6, 2);
+			pTriangles[8] = fnCreateTriangle(1, 2, 6);
+			pTriangles[9] = fnCreateTriangle(6, 5, 1);
+			pTriangles[10] = fnCreateTriangle(3, 0, 4);
+			pTriangles[11] = fnCreateTriangle(4, 7, 3);
 		}
 		virtual void TearDown() {
 			model.reset();
@@ -159,4 +190,36 @@ namespace Lib3MF
 		ASSERT_TRUE(std::equal(buffer.begin(), buffer.end(), callbackBuffer.vec.begin()));
 	}
 
+	TEST_F(Writer, ProductionWriteExternalModel) {
+		//create the attachment to be secured
+		std::string path = "/3D/nonrootmodel1.model";
+
+		auto meshObject = model->AddMeshObject();
+		meshObject->SetGeometry(CLib3MFInputVector<sPosition>(pVertices, 8), CLib3MFInputVector<sTriangle>(pTriangles, 12));
+		sTransform transformation = wrapper->GetIdentityTransform();
+		meshObject->PackagePath()->Set(path);
+		model->AddBuildItem(meshObject.get(), transformation);
+
+		meshObject = model->AddMeshObject();
+		meshObject->SetGeometry(CLib3MFInputVector<sPosition>(pVertices, 8), CLib3MFInputVector<sTriangle>(pTriangles, 12));
+		meshObject->PackagePath()->Set(path);
+		transformation = wrapper->GetTranslationTransform(0.0, 250.0, 0.0);
+		model->AddBuildItem(meshObject.get(), transformation);
+
+		std::string path2 = "/3D/nonrootmodel2.model";
+		meshObject = model->AddMeshObject();
+		meshObject->SetGeometry(CLib3MFInputVector<sPosition>(pVertices, 8), CLib3MFInputVector<sTriangle>(pTriangles, 12));
+		meshObject->PackagePath()->Set(path2);
+		transformation = wrapper->GetTranslationTransform(0.0, 250.0, 0.0);
+		model->AddBuildItem(meshObject.get(), transformation);
+
+		auto writer = model->QueryWriter("3mf");
+		writer->WriteToFile(sTestFilesPath + "Production/nonrootmodels.3mf");
+
+		auto modelAssert = wrapper->CreateModel();
+		auto reader = modelAssert->QueryReader("3mf");
+		reader->ReadFromFile(sTestFilesPath + "Prodution/nonrootmodels.3mf");
+		ASSERT_EQ(3, modelAssert->GetObjects()->Count());
+		ASSERT_EQ(3, modelAssert->GetBuildItems()->Count());
+	}
 }

@@ -355,53 +355,6 @@ namespace Lib3MF {
 		writer->WriteToBuffer(buffer);
 	}
 
-	TEST_F(SecureContentT, 3MFReadExternalModel) {
-		auto reader = model->QueryReader("3mf");
-		try {
-			reader->ReadFromFile(sTestFilesPath + "SecureContent/detachedmodel.3mf");
-		} catch (const std::exception & e) {
-			std::cout << e.what();
-		}
-		auto iter = model->GetBuildItems();
-		while (iter->MoveNext()) {
-			auto bi = iter->GetCurrent();
-			bool hasUUID;
-			std::cout << "BuildItem: " << bi->GetUUID(hasUUID) << ", hasTransform: " << bi->HasObjectTransform() << std::endl;
-		}
-	}
-
-	TEST_F(SecureContentT, 3MFWriteExternalModel) {
-		//create the attachment to be secured
-		std::string path = "/3D/nonrootmodel1.model";
-
-		auto meshObject = model->AddMeshObject();
-		meshObject->SetGeometry(CLib3MFInputVector<sPosition>(pVertices, 8), CLib3MFInputVector<sTriangle>(pTriangles, 12));
-		sTransform transformation = wrapper->GetIdentityTransform();
-		meshObject->PackagePath()->Set(path);
-		model->AddBuildItem(meshObject.get(), transformation);
-
-		meshObject = model->AddMeshObject();
-		meshObject->SetGeometry(CLib3MFInputVector<sPosition>(pVertices, 8), CLib3MFInputVector<sTriangle>(pTriangles, 12));
-		meshObject->PackagePath()->Set(path);
-		transformation = wrapper->GetTranslationTransform(0.0, 250.0, 0.0);
-		model->AddBuildItem(meshObject.get(), transformation);
-
-		std::string path2 = "/3D/nonrootmodel2.model";
-		meshObject = model->AddMeshObject();
-		meshObject->SetGeometry(CLib3MFInputVector<sPosition>(pVertices, 8), CLib3MFInputVector<sTriangle>(pTriangles, 12));
-		meshObject->PackagePath()->Set(path2);
-		transformation = wrapper->GetTranslationTransform(0.0, 250.0, 0.0);
-		model->AddBuildItem(meshObject.get(), transformation);
-
-		auto writer = model->QueryWriter("3mf");
-		writer->WriteToFile(sTestFilesPath + "SecureContent/nonrootmodels.3mf");
-
-		auto modelAssert = wrapper->CreateModel();
-		auto reader = modelAssert->QueryReader("3mf");
-		reader->ReadFromFile(sTestFilesPath + "SecureContent/nonrootmodels.3mf");
-		ASSERT_EQ(3, modelAssert->GetObjects()->Count());
-	}
-
 
 	TEST_F(SecureContentT, 3MFReadSecureAttachment) {
 		//auto buffer = ReadFileIntoBuffer(sTestFilesPath + "/SecureContent/" + m_sFilenameReadWrite);
