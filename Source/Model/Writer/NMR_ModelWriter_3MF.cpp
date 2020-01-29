@@ -31,6 +31,7 @@ A model writer exports the in memory represenation into a 3MF file.
 
 --*/
 
+#include "Model/Writer/SecureContent085/NMR_ModelWriterNode_KeyStore.h"
 #include "Model/Writer/NMR_ModelWriter_3MF.h"
 #include "Model/Writer/v100/NMR_ModelWriterNode100_Model.h"
 #include "Model/Classes/NMR_ModelConstants.h"
@@ -107,4 +108,19 @@ namespace NMR {
 		pXMLWriter->Flush();
 	}
 
+	void CModelWriter_3MF::writeKeyStoreStream(_In_ CXmlWriter * pXMLWriter, _In_ CKeyStore * pKeyStore)
+	{
+		__NMRASSERT(pKeyStore != nullptr);
+		if (pXMLWriter == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		pXMLWriter->WriteStartDocument();
+
+		CModelWriterNode_KeyStore XMLNode4KeyStore(pKeyStore, pXMLWriter, m_pProgressMonitor);
+		XMLNode4KeyStore.writeToXML();
+
+		pXMLWriter->WriteEndDocument();
+
+		pXMLWriter->Flush();
+	}
 }

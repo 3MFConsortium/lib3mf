@@ -138,6 +138,12 @@ namespace NMR {
 			}
 		}
 
+		POpcPackagePart pKeyStorePart = pPackageWriter->addPart("/SecureContent/keystore_temp.xml");
+		PXmlWriter_Native pXMLWriter4KeyStore = std::make_shared<CXmlWriter_Native>(pKeyStorePart->getExportStream());
+		PKeyStore keystore = std::make_shared<CKeyStore>(); // TODO: remove this implementation
+		PUUID puuid = std::make_shared<CUUID>("64c27d98-7555-484f-b5a3-08063ec18834");
+		keystore->setUUID(puuid);
+		writeKeyStoreStream(pXMLWriter4KeyStore.get(), keystore.get());
 	}
 
 

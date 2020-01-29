@@ -29,12 +29,14 @@ Abstract:
 NMR_ModelWriterNode_KeyStoreBase.h defines the base class for all Model Writer Node classes that are related to <keystore>.
 
 --*/
+
 #ifndef __NMR_MODELWRITERNODE_KEYSTOREBASE
 #define __NMR_MODELWRITERNODE_KEYSTOREBASE
 
 #include "Common/Platform/NMR_XmlWriter.h"
 #include "Common/3MF_ProgressMonitor.h"
 #include "Model/Classes/NMR_KeyStore.h"
+#include "Model/Classes/NMR_ModelConstants.h"
 #include "Model/Writer/NMR_ModelWriterNode.h"
 
 namespace NMR {

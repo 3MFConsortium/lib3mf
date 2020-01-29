@@ -43,4 +43,8 @@ NMR::CModelWriterNode_KeyStore::CModelWriterNode_KeyStore(CKeyStore * pKeyStore,
 		
 }
 
-void NMR::CModelWriterNode_KeyStore::writeToXML() {}
+void NMR::CModelWriterNode_KeyStore::writeToXML() {
+	writeStartElementWithNamespace(XML_3MF_ELEMENT_KEYSTORE, XML_3MF_NAMESPACE_SECURECONTENTSPEC);
+	writeConstStringAttribute(XML_3MF_SECURE_CONTENT_UUID, m_pKeyStore->uuid()->toString().c_str());
+	writeFullEndElement();
+}
