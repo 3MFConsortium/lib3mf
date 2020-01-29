@@ -44,7 +44,7 @@ namespace NMR {
 		clearAll();
 	}
 
-	PUUID CKeyStore::uuid()
+	PUUID CKeyStore::getUUID()
 	{
 		return m_UUID;
 	}
@@ -114,6 +114,10 @@ namespace NMR {
 	PKeyStoreResourceData CKeyStore::findResourceDataByPath(std::string path)
 	{
 		return m_ResourceDataRefs[path];
+	}
+
+	bool CKeyStore::empty() const {
+		return m_Consumers.empty() && m_ResourceDatas.empty();
 	}
 
 	void CKeyStore::clearAll() {

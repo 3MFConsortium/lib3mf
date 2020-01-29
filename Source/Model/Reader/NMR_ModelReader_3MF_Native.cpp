@@ -40,10 +40,8 @@ It uses libzip and irrxml to parse the OPC package.
 #include "Common/NMR_Exception.h" 
 #include "Common/NMR_Exception_Windows.h"
 #include "Common/NMR_StringUtils.h"
-
 #include "Common/Platform/NMR_Platform.h"
 #include "Model/Reader/NMR_ModelReader_InstructionElement.h"
-#include "Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStore.h"
 
 namespace NMR {
 
@@ -53,63 +51,13 @@ namespace NMR {
 		// empty on purpose
 	}
 
-	// TODO: move to proxy constructor
-	void parseKeyStore(NMR::PImportStream keyStoreStream, NMR::CKeyStore * keyStore, NMR::PProgressMonitor m_pProgressMonitor) {
 
-		PXmlReader pXMLReader = fnCreateXMLReaderInstance(keyStoreStream, m_pProgressMonitor);
-		nfBool bHasModel = false;
-		NMR::PModelReaderWarnings m_pWarnings;
-		eXmlReaderNodeType NodeType;
-		// Read all XML Root Nodes
-		while (!pXMLReader->IsEOF()) {
-			if (!pXMLReader->Read(NodeType))
-				break;
-
-			// Get Node Name
-			LPCSTR pszLocalName = nullptr;
-			pXMLReader->GetLocalName(&pszLocalName, nullptr);
-			if (!pszLocalName)
-				throw CNMRException(NMR_ERROR_COULDNOTGETLOCALXMLNAME);
-
-			if (strcmp(pszLocalName, XML_3MF_ATTRIBUTE_PREFIX_XML) == 0) {
-				PModelReader_InstructionElement pXMLNode = std::make_shared<CModelReader_InstructionElement>(m_pWarnings);
-				pXMLNode->parseXML(pXMLReader.get());
-			}
-
-			// Compare with Model Node Name
-			if (strcmp(pszLocalName, XML_3MF_ELEMENT_KEYSTORE) == 0) {
-				if (bHasModel)
-					throw CNMRException(NMR_ERROR_DUPLICATEMODELNODE);
-				bHasModel = true;
-
-//				m_pModel->setCurrentPath(m_pModel->rootPath());
-				PModelReaderNode_KeyStore pXMLNode = std::make_shared<CModelReaderNode_KeyStore>(keyStore, m_pWarnings);
-				pXMLNode->parseXML(pXMLReader.get());
-				/*
-				if (!pXMLNode->getHasResources())
-					throw CNMRException(NMR_ERROR_NORESOURCES);
-				if (!pXMLNode->getHasBuild())
-					throw CNMRException(NMR_ERROR_NOBUILD);*/
-			}
-
-		}
-	}
 
 	PImportStream CModelReader_3MF_Native::extract3MFOPCPackage(_In_ PImportStream pPackageStream)
 	{
-		m_pPackageReader = std::make_shared<COpcPackageReader>(pPackageStream, m_pWarnings, m_pProgressMonitor);
+		m_pPackageReader = std::make_shared<CKeyStoreOpcPackageReader>(pPackageStream, m_pWarnings, m_pProgressMonitor);
 
-		COpcPackageRelationship * pKeyStoreRelation = m_pPackageReader->findRootRelation(PACKAGE_KEYSTORE_RELATIONSHIP_TYPE, true);
-		if (pKeyStoreRelation != nullptr) {
-			std::string sTargetPartURI = pKeyStoreRelation->getTargetPartURI();
-			POpcPackagePart pKeystorePart = m_pPackageReader->createPart(sTargetPartURI);
-			if (pKeystorePart == nullptr)
-				throw CNMRException(NMR_ERROR_OPCCOULDNOTGETKEYSTORESTREAM);
-			NMR::PImportStream stream = pKeystorePart->getImportStream();
-			CKeyStore keyStore;
-			parseKeyStore(stream, &keyStore, m_pProgressMonitor);
-			// m_pModel->setKeyStore(keyStore);
-		}
+		m_pModel->setKeyStore(m_pPackageReader->getKeyStore());
 
 		COpcPackageRelationship * pModelRelation = m_pPackageReader->findRootRelation(PACKAGE_START_PART_RELATIONSHIP_TYPE, true);
 		if (pModelRelation == nullptr)
@@ -249,7 +197,7 @@ namespace NMR {
 					&& (sRelationShipType != PACKAGE_TEXTURE_RELATIONSHIP_TYPE)
 					&& (sRelationShipType != PACKAGE_THUMBNAIL_RELATIONSHIP_TYPE) )
 				{
-					m_pProgressMonitor->DecreaseMaxProgress((double)m_pPackageReader->GetPartSize(sURI));
+					m_pProgressMonitor->DecreaseMaxProgress((double)m_pPackageReader->getPartSize(sURI));
 					m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
 				}
 			}

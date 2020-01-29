@@ -1233,4 +1233,12 @@ namespace NMR {
 		return resultList;
 	}
 
+	PKeyStore CModel::getKeyStore() {
+		return m_pKeyStore;
+	}
+
+	void CModel::setKeyStore(PKeyStore keyStore) {
+		m_pKeyStore = keyStore;
+	}
+
 }

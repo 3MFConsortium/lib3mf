@@ -61,7 +61,7 @@ namespace NMR {
 	public:
 		CKeyStore();
 		~CKeyStore();
-		PUUID uuid();
+		PUUID getUUID();
 		void setUUID(PUUID uuid);
 		PKeyStoreConsumer addConsumer(std::string id, std::string keyId, RSAKEYVALUE keyValue);
 		nfUint32 getConsumerCount() const;
@@ -72,6 +72,7 @@ namespace NMR {
 		PKeyStoreResourceData getResourceDataByIndex(nfUint64 index) const;
 		PKeyStoreResourceData addResourceData(std::string path, eKeyStoreEncryptAlgorithm ea, nfBool compression);
 		PKeyStoreResourceData findResourceDataByPath(std::string path);
+		bool empty() const;
 	protected:
 		void clearAll();
 	};

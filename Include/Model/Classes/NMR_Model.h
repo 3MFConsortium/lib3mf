@@ -89,6 +89,10 @@ namespace NMR {
 	class CModelSliceStack;
 	typedef std::shared_ptr <CModelSliceStack> PModelSliceStack;
 
+	class CKeyStore;
+	typedef std::shared_ptr <CKeyStore> PKeyStore;
+
+
 	typedef std::map<NMR::UniqueResourceID, NMR::UniqueResourceID> UniqueResourceIDMapping;
 
 	// The Model class implements the unification of all model-file in a 3MF package
@@ -142,6 +146,9 @@ namespace NMR {
 		std::vector<PModelResource> m_Texture2DGroupLookup;
 		std::vector<PModelResource> m_CompositeMaterialsLookup;
 		std::vector<PModelResource> m_MultiPropertyGroupLookup;
+
+		// The KeyStore reference
+		PKeyStore m_pKeyStore;
 
 		// Add Resource to resource lookup tables
 		void addResourceToLookupTable(_In_ PModelResource pResource);
@@ -304,6 +311,11 @@ namespace NMR {
 
 		// Sorts objects by correct dependency
 		std::list<CModelObject *> getSortedObjectList ();
+
+
+		// Gets the KeyStore
+		PKeyStore getKeyStore();
+		void setKeyStore(PKeyStore keyStore);
 	};
 
 	typedef std::shared_ptr <CModel> PModel;
