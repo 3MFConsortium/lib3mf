@@ -34,13 +34,16 @@ NMR_KeyStoreTypes.h defines portable aliases for all keystore data types.
 #ifndef __NMR_KEYSTORETYPES
 #define __NMR_KEYSTORETYPES
 
+#define KEYSTORE_TYPES_MODULUSBUFFERSIZE 257
+#define KEYSTORE_TYPES_EXPONENTBUFFERSIZE 5
+
 #include "Common/NMR_Types.h"
 
 namespace NMR {
 
 	struct RSAKEYVALUE {
-		nfByte m_modulus[257];
-		nfByte m_exponent[5];
+		nfByte m_modulus[KEYSTORE_TYPES_MODULUSBUFFERSIZE];
+		nfByte m_exponent[KEYSTORE_TYPES_EXPONENTBUFFERSIZE];
 	};
 
 	struct AES256GCMCIPHERVALUE {

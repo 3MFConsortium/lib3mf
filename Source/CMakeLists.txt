@@ -205,6 +205,9 @@ Source/Model/Reader/Slice1507/NMR_ModelReader_Slice1507_Vertices.cpp
 Source/Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStore.cpp
 Source/Model/Reader/SecureContent085/NMR_ModelReaderNode_Consumer.cpp
 Source/Model/Reader/SecureContent085/NMR_ModelReaderNode_ResourceData.cpp
+Source/Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreKeyValue.cpp
+Source/Model/Reader/SecureContent085/NMR_ModelReaderNode_Modulus.cpp
+Source/Model/Reader/SecureContent085/NMR_ModelReaderNode_Exponent.cpp
 Source/Model/Writer/NMR_ModelWriter.cpp
 Source/Model/Writer/NMR_ModelWriterNode.cpp
 Source/Model/Writer/NMR_ModelWriterNode_ModelBase.cpp

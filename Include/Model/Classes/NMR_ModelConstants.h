@@ -80,6 +80,7 @@ These are given by the 3MF Standard
 #define XML_3MF_NAMESPACE_BEAMLATTICESPEC "http://schemas.microsoft.com/3dmanufacturing/beamlattice/2017/02"
 #define XML_3MF_NAMESPACE_SLICESPEC "http://schemas.microsoft.com/3dmanufacturing/slice/2015/07"
 #define XML_3MF_NAMESPACE_SECURECONTENTSPEC "http://schemas.microsoft.com/3dmanufacturing/securecontent/2019/04"
+#define XML_3MF_NAMESPACE_DIGITALSIGNATURESPEC "http://www.w3.org/2000/09/xmldsig#"
 
 #define XML_3MF_NAMESPACEPREFIX_MATERIAL "m"
 #define XML_3MF_NAMESPACEPREFIX_PRODUCTION "p"
@@ -346,6 +347,10 @@ These are given by the 3MF Standard
 #define XML_3MF_ELEMENT_KEYSTORE					"keystore"
 #define XML_3MF_ELEMENT_CONSUMER					"consumer"
 #define XML_3MF_ELEMENT_RESOURCEDATA				"resourcedata"
+#define XML_3MF_ELEMENT_KEYVALUE					"keyvalue"
+#define XML_3MF_ELEMENT_RSAKEYVALUE					"RSAKeyValue"
+#define XML_3MF_ELEMENT_MODULUS						"Modulus"
+#define XML_3MF_ELEMENT_EXPONENT					"Exponent"
 #define XML_3MF_SECURE_CONTENT_UUID					"UUID"
 #define XML_3MF_SECURE_CONTENT_CONSUMER_ID			"consumerid"
 #define XML_3MF_SECURE_CONTENT_KEY_ID				"keyid"
