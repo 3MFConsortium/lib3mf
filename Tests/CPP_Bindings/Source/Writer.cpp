@@ -193,32 +193,35 @@ namespace Lib3MF
 	TEST_F(Writer, ProductionWriteExternalModel) {
 		//create the attachment to be secured
 		std::string path = "/3D/nonrootmodel1.model";
-
-		auto meshObject = model->AddMeshObject();
+		auto lModel = wrapper->CreateModel();
+		auto meshObject = lModel->AddMeshObject();
 		meshObject->SetGeometry(CLib3MFInputVector<sPosition>(pVertices, 8), CLib3MFInputVector<sTriangle>(pTriangles, 12));
 		sTransform transformation = wrapper->GetIdentityTransform();
 		meshObject->PackagePath()->Set(path);
-		model->AddBuildItem(meshObject.get(), transformation);
+		lModel->AddBuildItem(meshObject.get(), transformation);
 
-		meshObject = model->AddMeshObject();
+		meshObject = lModel->AddMeshObject();
 		meshObject->SetGeometry(CLib3MFInputVector<sPosition>(pVertices, 8), CLib3MFInputVector<sTriangle>(pTriangles, 12));
 		meshObject->PackagePath()->Set(path);
 		transformation = wrapper->GetTranslationTransform(0.0, 250.0, 0.0);
-		model->AddBuildItem(meshObject.get(), transformation);
+		lModel->AddBuildItem(meshObject.get(), transformation);
 
 		std::string path2 = "/3D/nonrootmodel2.model";
-		meshObject = model->AddMeshObject();
+		meshObject = lModel->AddMeshObject();
 		meshObject->SetGeometry(CLib3MFInputVector<sPosition>(pVertices, 8), CLib3MFInputVector<sTriangle>(pTriangles, 12));
 		meshObject->PackagePath()->Set(path2);
 		transformation = wrapper->GetTranslationTransform(0.0, 250.0, 0.0);
-		model->AddBuildItem(meshObject.get(), transformation);
+		lModel->AddBuildItem(meshObject.get(), transformation);
 
-		auto writer = model->QueryWriter("3mf");
-		writer->WriteToFile(sTestFilesPath + "Production/nonrootmodels.3mf");
+		auto writer = lModel->QueryWriter("3mf");
+		//std::vector<Lib3MF_uint8> buffer;
+		writer->WriteToFile(sTestFilesPath + "/Production/" + "nonrootmodels.3mf");
+		//writer->WriteToBuffer(buffer);
 
 		auto modelAssert = wrapper->CreateModel();
 		auto reader = modelAssert->QueryReader("3mf");
-		reader->ReadFromFile(sTestFilesPath + "Prodution/nonrootmodels.3mf");
+		reader->ReadFromFile(sTestFilesPath + "/Production/" + "nonrootmodels.3mf");
+		//reader->ReadFromBuffer(buffer);
 		ASSERT_EQ(3, modelAssert->GetObjects()->Count());
 		ASSERT_EQ(3, modelAssert->GetBuildItems()->Count());
 	}

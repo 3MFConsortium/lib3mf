@@ -56,6 +56,8 @@ These are given by the 3MF Standard
 #define PACKAGE_CORE_PROPERTIES_URI "/Metadata/CoreProperties.prop"
 #define PACKAGE_THUMBNAIL_URI_BASE "/Metadata"
 
+#define PACKAGE_3D_KEYSTORE_URI "/Secure/keystore.xml"
+
 #define NMR_MAXHANDLE 0xfffffffe
 
 #define PACKAGE_XMLNS_093 "http://schemas.microsoft.com/3dmanufacturing/2013/01"
