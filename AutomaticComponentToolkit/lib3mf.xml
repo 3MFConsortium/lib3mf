@@ -1266,7 +1266,7 @@
 			<param name="ResourceDataIndex" type="uint64" pass="in" description="the index of the resource data"/>
 			<param name="TheResourceData" type="handle" class="ResourceData" pass="return" description="the data resource instance"/>
 		</method>
-    <method name="GetResourcesData" description="creates a resource iterator instance with all resources data.">
+		<method name="GetResourcesData" description="creates a resource iterator instance with all resources data.">
 			<param name="ResourceIterator" type="handle" class="ResourceDataIterator" pass="return" description="returns the iterator instance."/>
 		</method>
 		<method name="AddResourceData" description="A description">
@@ -1278,6 +1278,13 @@
 		<method name="FindResourceData" description="A description">
 			<param name="Path" type="string" pass="in" description="A description"/>
 			<param name="TheResourceData" type="handle" class="ResourceData" pass="return" description="the data resource instance"/>
+		</method>
+		<method name="GetUUID" description="A description">
+			<param name="HasUUID" type="bool" pass="out" description="flag whether the build has a UUID"/>
+			<param name="UUID" type="string" pass="out" description="the UUID as string of the form 'xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx'"/>
+		</method>
+		<method name="SetUUID" description="sets the keystore UUID">
+			<param name="UUID" type="string" pass="in" description="the UUID as string of the form 'xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx'"/>
 		</method>
 	</class>
 
