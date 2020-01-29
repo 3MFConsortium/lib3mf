@@ -94,6 +94,10 @@ namespace Lib3MF {
 			IResourceData * AddResourceData(IPackagePath * pPackagePath, const Lib3MF::eEncryptionAlgorithm eEncryptionAlgorithm, const Lib3MF::eCompression eCompression) override;
 
 			IResourceData * FindResourceData(const std::string & sPath) override;
+
+			void SetUUID(const std::string &  uuid);
+
+			std::string GetUUID(bool & bHasUUID);
 		};
 
 	} // namespace Impl

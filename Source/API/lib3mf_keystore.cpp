@@ -74,3 +74,17 @@ IResourceData * Lib3MF::Impl::CKeyStore::FindResourceData(const std::string & sP
 	NMR::PKeyStoreResourceData rd = m_KeyStore->findResourceDataByPath(sPath);
 	return new CResourceData(rd);
 }
+
+std::string CKeyStore::GetUUID(bool & bHasUUID)
+{
+	bHasUUID =  m_KeyStore->uuid() != nullptr;
+	if (bHasUUID)
+		return m_KeyStore->uuid()->toString();
+	return "";
+}
+
+void CKeyStore::SetUUID(const std::string & sUUID)
+{
+	NMR::PUUID pUUID = std::make_shared<NMR::CUUID>(sUUID);
+	m_KeyStore->setUUID(pUUID);
+}
