@@ -26,12 +26,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelReaderNode_Modulus.h defines the Model Reader Node class that is related to <ds:Modulus>.
+NMR_ModelReaderNode_KeyStoreConsumer.h defines the Model Reader Node class that is related to <consumer>.
 
 --*/
 
-#ifndef __NMR_MODELREADERNODE_KEYSTOREMODULUS
-#define __NMR_MODELREADERNODE_KEYSTOREMODULUS
+#ifndef __NMR_MODELREADERNODE_KEYSTORECONSUMER
+#define __NMR_MODELREADERNODE_KEYSTORECONSUMER
 
 #include "Model/Reader/NMR_ModelReaderNode_KeyStoreBase.h"
 #include "Model/Reader/NMR_ModelReaderNode.h"
@@ -39,21 +39,22 @@ NMR_ModelReaderNode_Modulus.h defines the Model Reader Node class that is relate
 
 namespace NMR {
 
-	class CModelReaderNode_KeyStoreModulus: public CModelReaderNode_KeyStoreBase {
+	class CModelReaderNode_KeyStoreConsumer: public CModelReaderNode_KeyStoreBase {
 	private:
-		nfByte m_modulus[KEYSTORE_TYPES_MODULUSBUFFERSIZE];
+		std::string m_sConsumerID;
+		std::string m_sKeyID;
+		RSAKEYVALUE m_keyValue;
 	protected:
-		virtual void OnText(_In_z_ const nfChar * pText, _In_ CXmlReader * pXMLReader);
+		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
+		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 	public:
-		CModelReaderNode_KeyStoreModulus() = delete;
-		CModelReaderNode_KeyStoreModulus(_In_ CKeyStore * pKeyStore, _In_ PModelReaderWarnings pWarnings);
-
-		nfByte * GetModulus();
+		CModelReaderNode_KeyStoreConsumer() = delete;
+		CModelReaderNode_KeyStoreConsumer(_In_ CKeyStore * pKeyStore, _In_ PModelReaderWarnings pWarnings);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 	};
 
-	typedef std::shared_ptr <CModelReaderNode_KeyStoreModulus> PModelReaderNode_KeyStoreModulus;
+	typedef std::shared_ptr <CModelReaderNode_KeyStoreConsumer> PModelReaderNode_KeyStoreConsumer;
 }
 
-#endif // __NMR_MODELREADERNODE_KEYSTOREMODULUS
+#endif // __NMR_MODELREADERNODE_KEYSTORECONSUMER

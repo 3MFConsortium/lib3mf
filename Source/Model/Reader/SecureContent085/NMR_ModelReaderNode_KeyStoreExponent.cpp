@@ -27,11 +27,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelReaderNode_KeyStore.h defines the Model Reader Node class that is related to <keystore>.
+NMR_ModelReaderNode_KeyStoreExponent.h defines the Model Reader Node class that is related to <ds:Exponent>.
 
 --*/
 
-#include "Model/Reader/SecureContent085/NMR_ModelReaderNode_ResourceData.h"
+#include "Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStore.h"
+#include "Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreExponent.h"
 
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Common/NMR_Exception.h"
@@ -40,13 +41,18 @@ NMR_ModelReaderNode_KeyStore.h defines the Model Reader Node class that is relat
 
 namespace NMR {
 
-	CModelReaderNode_ResourceData::CModelReaderNode_ResourceData(CKeyStore * pKeyStore, PModelReaderWarnings pWarnings)
+	CModelReaderNode_KeyStoreExponent::CModelReaderNode_KeyStoreExponent(CKeyStore * pKeyStore, PModelReaderWarnings pWarnings)
 		: CModelReaderNode_KeyStoreBase(pKeyStore, pWarnings)
 	{
 
 	}
 
-	void CModelReaderNode_ResourceData::parseXML(_In_ CXmlReader * pXMLReader)
+	nfByte * CModelReaderNode_KeyStoreExponent::GetExponent()
+	{
+		return m_exponent;
+	}
+
+	void CModelReaderNode_KeyStoreExponent::parseXML(_In_ CXmlReader * pXMLReader)
 	{
 		// Parse name
 		parseName(pXMLReader);
@@ -59,27 +65,22 @@ namespace NMR {
 
 	}
 
-	void CModelReaderNode_ResourceData::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
+	void CModelReaderNode_KeyStoreExponent::OnText(_In_z_ const nfChar * pText, _In_ CXmlReader * pXMLReader)
 	{
 		__NMRASSERT(pAttributeName);
 		__NMRASSERT(pAttributeValue);
 
-	}
+		std::string pTextString = std::string(pText);
+		std::remove(pTextString.begin(), pTextString.end(), '\r');
+		std::remove(pTextString.begin(), pTextString.end(), '\n');
 
-	void CModelReaderNode_ResourceData::OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace)
-	{
-		__NMRASSERT(pAttributeName);
-		__NMRASSERT(pAttributeValue);
-		__NMRASSERT(pNameSpace);
-
-	}
-
-	void CModelReaderNode_ResourceData::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
-	{
-		__NMRASSERT(pChildName);
-		__NMRASSERT(pXMLReader);
-		__NMRASSERT(pNameSpace);
-
+		size_t copySize = KEYSTORE_TYPES_EXPONENTBUFFERSIZE > pTextString.size() ? pTextString.size() : KEYSTORE_TYPES_EXPONENTBUFFERSIZE;
+		memcpy(m_exponent, pTextString.c_str(), copySize);
+		m_exponent[copySize - 1] = '\0';
+		// TODO: decide whether or not to throw
+		//if (KEYSTORE_TYPES_EXPONENTBUFFERSIZE < strlen(pText)) {
+		//	m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
+		//}
 	}
 
 }

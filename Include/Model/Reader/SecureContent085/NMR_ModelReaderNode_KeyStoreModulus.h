@@ -26,12 +26,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelReaderNode_ResourceData.h defines the Model Reader Node class that is related to <resourcedata>.
+NMR_ModelReaderNode_KeyStoreModulus.h defines the Model Reader Node class that is related to <ds:Modulus>.
 
 --*/
 
-#ifndef __NMR_MODELREADERNODE_RESOURCEDATA
-#define __NMR_MODELREADERNODE_RESOURCEDATA
+#ifndef __NMR_MODELREADERNODE_KEYSTOREMODULUS
+#define __NMR_MODELREADERNODE_KEYSTOREMODULUS
 
 #include "Model/Reader/NMR_ModelReaderNode_KeyStoreBase.h"
 #include "Model/Reader/NMR_ModelReaderNode.h"
@@ -39,20 +39,21 @@ NMR_ModelReaderNode_ResourceData.h defines the Model Reader Node class that is r
 
 namespace NMR {
 
-	class CModelReaderNode_ResourceData: public CModelReaderNode_KeyStoreBase {
+	class CModelReaderNode_KeyStoreModulus: public CModelReaderNode_KeyStoreBase {
 	private:
+		nfByte m_modulus[KEYSTORE_TYPES_MODULUSBUFFERSIZE];
 	protected:
-		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
-		virtual void OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace);
-		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
+		virtual void OnText(_In_z_ const nfChar * pText, _In_ CXmlReader * pXMLReader);
 	public:
-		CModelReaderNode_ResourceData() = delete;
-		CModelReaderNode_ResourceData(_In_ CKeyStore * pKeyStore, _In_ PModelReaderWarnings pWarnings);
+		CModelReaderNode_KeyStoreModulus() = delete;
+		CModelReaderNode_KeyStoreModulus(_In_ CKeyStore * pKeyStore, _In_ PModelReaderWarnings pWarnings);
+
+		nfByte * GetModulus();
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 	};
 
-	typedef std::shared_ptr <CModelReaderNode_ResourceData> PModelReaderNode_ResourceData;
+	typedef std::shared_ptr <CModelReaderNode_KeyStoreModulus> PModelReaderNode_KeyStoreModulus;
 }
 
-#endif // __NMR_MODELREADERNODE_RESOURCEDATA
+#endif // __NMR_MODELREADERNODE_KEYSTOREMODULUS

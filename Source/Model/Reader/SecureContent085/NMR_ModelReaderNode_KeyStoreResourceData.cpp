@@ -27,12 +27,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelReaderNode_KeyStore.h defines the Model Reader Node class that is related to <keystore>.
+NMR_ModelReaderNode_KeyStoreResourceData.h defines the Model Reader Node class that is related to <resourcedata>.
 
 --*/
 
-#include "Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStore.h"
-#include "Model/Reader/SecureContent085/NMR_ModelReaderNode_Exponent.h"
+#include "Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreResourceData.h"
 
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Common/NMR_Exception.h"
@@ -41,18 +40,13 @@ NMR_ModelReaderNode_KeyStore.h defines the Model Reader Node class that is relat
 
 namespace NMR {
 
-	CModelReaderNode_KeyStoreExponent::CModelReaderNode_KeyStoreExponent(CKeyStore * pKeyStore, PModelReaderWarnings pWarnings)
+	CModelReaderNode_KeyStoreResourceData::CModelReaderNode_KeyStoreResourceData(CKeyStore * pKeyStore, PModelReaderWarnings pWarnings)
 		: CModelReaderNode_KeyStoreBase(pKeyStore, pWarnings)
 	{
 
 	}
 
-	nfByte * CModelReaderNode_KeyStoreExponent::GetExponent()
-	{
-		return m_exponent;
-	}
-
-	void CModelReaderNode_KeyStoreExponent::parseXML(_In_ CXmlReader * pXMLReader)
+	void CModelReaderNode_KeyStoreResourceData::parseXML(_In_ CXmlReader * pXMLReader)
 	{
 		// Parse name
 		parseName(pXMLReader);
@@ -65,22 +59,27 @@ namespace NMR {
 
 	}
 
-	void CModelReaderNode_KeyStoreExponent::OnText(_In_z_ const nfChar * pText, _In_ CXmlReader * pXMLReader)
+	void CModelReaderNode_KeyStoreResourceData::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
 	{
 		__NMRASSERT(pAttributeName);
 		__NMRASSERT(pAttributeValue);
 
-		std::string pTextString = std::string(pText);
-		std::remove(pTextString.begin(), pTextString.end(), '\r');
-		std::remove(pTextString.begin(), pTextString.end(), '\n');
+	}
 
-		size_t copySize = KEYSTORE_TYPES_EXPONENTBUFFERSIZE > pTextString.size() ? pTextString.size() : KEYSTORE_TYPES_EXPONENTBUFFERSIZE;
-		memcpy(m_exponent, pTextString.c_str(), copySize);
-		m_exponent[copySize - 1] = '\0';
-		// TODO: decide whether or not to throw
-		//if (KEYSTORE_TYPES_EXPONENTBUFFERSIZE < strlen(pText)) {
-		//	m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
-		//}
+	void CModelReaderNode_KeyStoreResourceData::OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace)
+	{
+		__NMRASSERT(pAttributeName);
+		__NMRASSERT(pAttributeValue);
+		__NMRASSERT(pNameSpace);
+
+	}
+
+	void CModelReaderNode_KeyStoreResourceData::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
+	{
+		__NMRASSERT(pChildName);
+		__NMRASSERT(pXMLReader);
+		__NMRASSERT(pNameSpace);
+
 	}
 
 }

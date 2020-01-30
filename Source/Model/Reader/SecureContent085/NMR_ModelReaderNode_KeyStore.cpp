@@ -32,8 +32,8 @@ NMR_ModelReaderNode_KeyStore.h defines the Model Reader Node class that is relat
 --*/
 
 #include "Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStore.h"
-#include "Model/Reader/SecureContent085/NMR_ModelReaderNode_Consumer.h"
-#include "Model/Reader/SecureContent085/NMR_ModelReaderNode_ResourceData.h"
+#include "Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreConsumer.h"
+#include "Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreResourceData.h"
 
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Common/NMR_Exception.h"
@@ -135,10 +135,10 @@ namespace NMR {
 		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_SECURECONTENTSPEC) == 0) {
 			// Read a consumer
 			if (strcmp(pChildName, XML_3MF_ELEMENT_CONSUMER) == 0) {
-				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode_Consumer>(m_pKeyStore, m_pWarnings);
+				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode_KeyStoreConsumer>(m_pKeyStore, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 			} else if (strcmp(pChildName, XML_3MF_ELEMENT_RESOURCEDATA) == 0) {
-				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode_ResourceData>(m_pKeyStore, m_pWarnings);
+				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode_KeyStoreResourceData>(m_pKeyStore, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 			} else {
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);

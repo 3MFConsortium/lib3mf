@@ -27,11 +27,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelReaderNode_KeyStore.h defines the Model Reader Node class that is related to <keystore>.
+NMR_ModelReaderNode_KeyStoreConsumer.h defines the Model Reader Node class that is related to <consumer>.
 
 --*/
 
-#include "Model/Reader/SecureContent085/NMR_ModelReaderNode_Consumer.h"
+#include "Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreConsumer.h"
 #include "Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreKeyValue.h"
 
 #include "Model/Classes/NMR_ModelConstants.h"
@@ -41,13 +41,13 @@ NMR_ModelReaderNode_KeyStore.h defines the Model Reader Node class that is relat
 
 namespace NMR {
 
-	CModelReaderNode_Consumer::CModelReaderNode_Consumer(CKeyStore * pKeyStore, PModelReaderWarnings pWarnings)
+	CModelReaderNode_KeyStoreConsumer::CModelReaderNode_KeyStoreConsumer(CKeyStore * pKeyStore, PModelReaderWarnings pWarnings)
 		: CModelReaderNode_KeyStoreBase(pKeyStore, pWarnings)
 	{
 
 	}
 
-	void CModelReaderNode_Consumer::parseXML(_In_ CXmlReader * pXMLReader)
+	void CModelReaderNode_KeyStoreConsumer::parseXML(_In_ CXmlReader * pXMLReader)
 	{
 		// Parse name
 		parseName(pXMLReader);
@@ -63,13 +63,12 @@ namespace NMR {
 			m_pWarnings->addException(CNMRException(NMR_ERROR_MISSINGCONSUMERID), mrwMissingMandatoryValue);
 		}
 
-		// check key id
-
-		// check key value
+		// TODO: check key id
+		// TODO: check key value
 		m_pKeyStore->addConsumer(m_sConsumerID, m_sKeyID, m_keyValue);
 	}
 
-	void CModelReaderNode_Consumer::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
+	void CModelReaderNode_KeyStoreConsumer::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
 	{
 		__NMRASSERT(pAttributeName);
 		__NMRASSERT(pAttributeValue);
@@ -85,15 +84,7 @@ namespace NMR {
 		}
 	}
 
-	void CModelReaderNode_Consumer::OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace)
-	{
-		__NMRASSERT(pAttributeName);
-		__NMRASSERT(pAttributeValue);
-		__NMRASSERT(pNameSpace);
-
-	}
-
-	void CModelReaderNode_Consumer::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
+	void CModelReaderNode_KeyStoreConsumer::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
 	{
 		__NMRASSERT(pChildName);
 		__NMRASSERT(pXMLReader);

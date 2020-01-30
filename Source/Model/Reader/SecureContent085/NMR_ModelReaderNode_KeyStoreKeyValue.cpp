@@ -32,8 +32,8 @@ NMR_ModelReaderNode_KeyStoreKeyValue.h defines the Model Reader Node class that 
 --*/
 
 #include "Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreKeyValue.h"
-#include "Model/Reader/SecureContent085/NMR_ModelReaderNode_Modulus.h"
-#include "Model/Reader/SecureContent085/NMR_ModelReaderNode_Exponent.h"
+#include "Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreModulus.h"
+#include "Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreExponent.h"
 
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Common/NMR_Exception.h"
@@ -69,6 +69,7 @@ namespace NMR {
 		// Parse Content
 		parseContent(pXMLReader);
 
+		// TODO: check modulus and exponent
 	}
 
 	void CModelReaderNode_KeyStoreKeyValue::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)

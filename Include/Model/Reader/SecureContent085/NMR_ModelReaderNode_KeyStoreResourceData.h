@@ -26,12 +26,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelReaderNode_Consumer.h defines the Model Reader Node class that is related to <consumer>.
+NMR_ModelReaderNode_KeyStoreResourceData.h defines the Model Reader Node class that is related to <resourcedata>.
 
 --*/
 
-#ifndef __NMR_MODELREADERNODE_CONSUMER
-#define __NMR_MODELREADERNODE_CONSUMER
+#ifndef __NMR_MODELREADERNODE_KEYSTORERESOURCEDATA
+#define __NMR_MODELREADERNODE_KEYSTORERESOURCEDATA
 
 #include "Model/Reader/NMR_ModelReaderNode_KeyStoreBase.h"
 #include "Model/Reader/NMR_ModelReaderNode.h"
@@ -39,23 +39,20 @@ NMR_ModelReaderNode_Consumer.h defines the Model Reader Node class that is relat
 
 namespace NMR {
 
-	class CModelReaderNode_Consumer: public CModelReaderNode_KeyStoreBase {
+	class CModelReaderNode_KeyStoreResourceData: public CModelReaderNode_KeyStoreBase {
 	private:
-		std::string m_sConsumerID;
-		std::string m_sKeyID;
-		RSAKEYVALUE m_keyValue;
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 		virtual void OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace);
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 	public:
-		CModelReaderNode_Consumer() = delete;
-		CModelReaderNode_Consumer(_In_ CKeyStore * pKeyStore, _In_ PModelReaderWarnings pWarnings);
+		CModelReaderNode_KeyStoreResourceData() = delete;
+		CModelReaderNode_KeyStoreResourceData(_In_ CKeyStore * pKeyStore, _In_ PModelReaderWarnings pWarnings);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 	};
 
-	typedef std::shared_ptr <CModelReaderNode_Consumer> PModelReaderNode_Consumer;
+	typedef std::shared_ptr <CModelReaderNode_KeyStoreResourceData> PModelReaderNode_KeyStoreResourceData;
 }
 
-#endif // __NMR_MODELREADERNODE_CONSUMER
+#endif // __NMR_MODELREADERNODE_KEYSTORERESOURCEDATA

@@ -26,7 +26,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelReaderNode_Exponent.h defines the Model Reader Node class that is related to <ds:Exponent>.
+NMR_ModelReaderNode_KeyStoreExponent.h defines the Model Reader Node class that is related to <ds:Exponent>.
 
 --*/
 

@@ -27,11 +27,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelReaderNode_Modulus.h defines the Model Reader Node class that is related to <ds:Modulus>.
+NMR_ModelReaderNode_KeyStoreModulus.h defines the Model Reader Node class that is related to <ds:Modulus>.
 
 --*/
 
-#include "Model/Reader/SecureContent085/NMR_ModelReaderNode_Modulus.h"
+#include "Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreModulus.h"
 
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Common/NMR_Exception.h"
