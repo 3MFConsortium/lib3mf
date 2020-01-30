@@ -62,6 +62,7 @@ namespace NMR {
 		eKeyStoreEncryptAlgorithm getEncryptionAlgorithm() const;
 		nfBool getCompression() const;
 		NMR::PPackageModelPath getPath() const;
+		nfBool empty() const;
 	
 	};
 

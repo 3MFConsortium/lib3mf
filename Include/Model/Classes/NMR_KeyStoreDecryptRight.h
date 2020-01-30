@@ -52,6 +52,7 @@ namespace NMR {
 			eKeyStoreEncryptAlgorithm const & encryptionAlgorithm, 
 			CIPHERVALUE const & cipherValue);
 		PKeyStoreConsumer getConsumer();
+		CIPHERVALUE getCipherValue() const;
 	};
 
 	typedef std::shared_ptr<CKeyStoreDecryptRight> PKeyStoreDecryptRight;

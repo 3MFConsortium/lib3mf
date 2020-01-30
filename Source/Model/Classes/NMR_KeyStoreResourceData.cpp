@@ -91,4 +91,7 @@ namespace NMR {
 		NMR::CResourceHandler * pResourceHandler = new NMR::CResourceHandler();
 		return pResourceHandler->makePackageModelPath(m_sPath);
 	}
+	nfBool CKeyStoreResourceData::empty() const {
+		return m_DecryptRights.empty();
+	}
 }
