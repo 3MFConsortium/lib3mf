@@ -43,7 +43,8 @@ namespace NMR {
 	CModelReaderNode_KeyStoreResourceData::CModelReaderNode_KeyStoreResourceData(CKeyStore * pKeyStore, PModelReaderWarnings pWarnings)
 		: CModelReaderNode_KeyStoreBase(pKeyStore, pWarnings)
 	{
-
+		// default is none
+		m_compression = false;
 	}
 
 	void CModelReaderNode_KeyStoreResourceData::parseXML(_In_ CXmlReader * pXMLReader)
@@ -57,13 +58,35 @@ namespace NMR {
 		// Parse Content
 		parseContent(pXMLReader);
 
+		m_pKeyStore->addResourceData(m_path, m_encryptionAlgorithm, m_compression);
 	}
 
 	void CModelReaderNode_KeyStoreResourceData::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
 	{
 		__NMRASSERT(pAttributeName);
 		__NMRASSERT(pAttributeValue);
-
+		
+		if (strcmp(XML_3MF_SECURE_CONTENT_PATH, pAttributeName) == 0) {
+			if (!m_path.empty())
+				m_pWarnings->addException(CNMRException(NMR_ERROR_DUPLICATE_KEYSTORERESOURCEDATAPATH), eModelReaderWarningLevel::mrwInvalidMandatoryValue);
+			m_path = pAttributeValue;
+		}
+		else if (strcmp(XML_3MF_SECURE_ENCRYPTION_ALGORITHM, pAttributeName) == 0) {
+			if (strcmp(XML_3MF_SECURE_CONTENT_ENCRYPTION_AES256, pAttributeValue) == 0) {
+				m_encryptionAlgorithm = eKeyStoreEncryptAlgorithm::Aes256Gcm;
+			} else if (strcmp(XML_3MF_SECURE_CONTENT_ENCRYPTION_RSA, pAttributeValue) == 0) {
+				m_encryptionAlgorithm = eKeyStoreEncryptAlgorithm::RsaOaepMgf1p;
+			} else {
+			// TODO: what to do now?
+			}
+		}
+		else if (strcmp(XML_3MF_SECURE_CONTENT_COMPRESSION, pAttributeName) == 0) {
+			if (strcmp(XML_3MF_SECURE_CONTENT_COMPRESSION_DEFLATE, pAttributeValue) == 0) {
+				m_compression = true;
+			} else {
+				// TODO: what to do now?
+			}
+		}
 	}
 
 	void CModelReaderNode_KeyStoreResourceData::OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace)

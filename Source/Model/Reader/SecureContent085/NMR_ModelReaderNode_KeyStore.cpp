@@ -97,6 +97,11 @@ namespace NMR {
 		// Set Item Reference
 		pBuildItem->setPartNumber(m_sPartNumber);
 		*/
+
+		// TODO: check consumerindex
+
+		// TODO: a path must not show up in more than one resourcedata element
+
 		// Set references
 		if (!m_UUID.get()) {
 			// We do not have to check for secure content spec, because it is the base spec of a keystore

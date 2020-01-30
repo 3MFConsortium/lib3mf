@@ -41,6 +41,9 @@ namespace NMR {
 
 	class CModelReaderNode_KeyStoreResourceData: public CModelReaderNode_KeyStoreBase {
 	private:
+		std::string m_path;
+		eKeyStoreEncryptAlgorithm m_encryptionAlgorithm;
+		nfBool m_compression;
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 		virtual void OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace);
