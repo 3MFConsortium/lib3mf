@@ -229,8 +229,8 @@ namespace Lib3MF {
 	TEST_F(SecureContentT, CheckKeyStoreResourceData) {
 		auto keyStore = model->GetKeyStore();
 		ASSERT_TRUE(keyStore != nullptr);
-		const int resourceDataCount = keyStore->GetResourceDataCount();
-		for (int i = 0; i < resourceDataCount; ++i) {
+		const int getResourceDataCount = keyStore->GetResourceDataCount();
+		for (int i = 0; i < getResourceDataCount; ++i) {
 			PResourceData resourceData = keyStore->GetResourceData(i);
 
 			PResourceData resourceDataNotFound = keyStore->FindResourceData("does not exist");

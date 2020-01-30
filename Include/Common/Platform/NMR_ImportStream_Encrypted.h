@@ -26,49 +26,44 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_KeyStoreOpcPackageReader.h defines an OPC Package reader in a portable way.
+NMR_ImportStream_Encrypted.h defines the CImportStream_Encrypted Class.
+This is a stream class for importing encrypted resources from the underlying stream and handing them
+to the proper callbacks that will decrypt the content before returning back to the consumer.
 
 --*/
 
-#ifndef NMR_KEYSTOREOPCPACKAGEREADER
-#define NMR_KEYSTOREOPCPACKAGEREADER
+#ifndef NMR_IMPORTSTREAM_ENCRYPTED
+#define NMR_IMPORTSTREAM_ENCRYPTED
 
-#include <memory>
-
+#include "Common/NMR_Types.h"
 #include "Common/NMR_SecureContentTypes.h"
-#include "Common/OPC/NMR_IOpcPackageReader.h"
 #include "Common/Platform/NMR_ImportStream.h"
-#include "Common/3MF_ProgressMonitor.h"
-#include "Model/Reader/NMR_ModelReaderWarnings.h"
+
+#include <functional>
 
 namespace NMR {
 
-	class COpcPackageReader;
-	using POpcPackageReader = std::shared_ptr<COpcPackageReader>;
-	class CKeyStore;
-	using PKeyStore = std::shared_ptr<CKeyStore>;
+	
 
-	class CKeyStoreOpcPackageReader: public IOpcPackageReader {
-	private:
-		POpcPackageReader m_pPackageReader;
-		PKeyStore m_KeyStore;
-	protected:
-		NMR::PImportStream findKeyStoreStream();
-		void parseKeyStore(NMR::PImportStream keyStoreStream, NMR::PProgressMonitor pProgressMonitor);
+	class CImportStream_Encrypted : public CImportStream {
+		PImportStream m_pEncryptedStream;
+		DECRYPTCONTEXT * m_pDecryptContext;
 	public:
-		CKeyStoreOpcPackageReader(_In_ PImportStream pImportStream, _In_ PModelReaderWarnings pWarnings, _In_ PProgressMonitor pProgressMonitor);
+		CImportStream_Encrypted(PImportStream pEncryptedStream, DECRYPTCONTEXT * context);
 
-		// Inherited via IOpcPackageReader
-		virtual COpcPackageRelationship * findRootRelation(std::string sRelationType, nfBool bMustBeUnique) override;
-		virtual POpcPackagePart createPart(std::string sPath) override;
-		virtual nfUint64 getPartSize(std::string sPath) override;
-
-		// get Keystore
-		PKeyStore getKeyStore() const;
+		// Inherited via CImportStream
+		virtual nfBool seekPosition(nfUint64 position, nfBool bHasToSucceed) override;
+		virtual nfBool seekForward(nfUint64 bytes, nfBool bHasToSucceed) override;
+		virtual nfBool seekFromEnd(nfUint64 bytes, nfBool bHasToSucceed) override;
+		virtual nfUint64 readBuffer(nfByte * pBuffer, nfUint64 cbTotalBytesToRead, nfBool bNeedsToReadAll) override;
+		virtual nfUint64 retrieveSize() override;
+		virtual void writeToFile(const nfWChar * pwszFileName) override;
+		virtual PImportStream copyToMemory() override;
+		virtual nfUint64 getPosition() override;
 	};
-
-	using PKeyStoreOpcPackageReader = std::shared_ptr<CKeyStoreOpcPackageReader>;
-
 }
 
-#endif // !NMR_KEYSTOREOPCPACKAGEREADER
+
+#endif // !NMR_IMPORTSTREAM_ENCRYPTED
+
+

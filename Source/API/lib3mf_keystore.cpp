@@ -57,7 +57,7 @@ void Lib3MF::Impl::CKeyStore::RemoveConsumer(IConsumer * pConsumerInstance)
 
 Lib3MF_uint32 Lib3MF::Impl::CKeyStore::GetResourceDataCount()
 {
-	return m_KeyStore->resourceDataCount();;
+	return m_KeyStore->getResourceDataCount();;
 }
 
 IResourceData * Lib3MF::Impl::CKeyStore::GetResourceData(const Lib3MF_uint64 nResourceDataIndex)

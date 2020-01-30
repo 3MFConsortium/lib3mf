@@ -1,4 +1,3 @@
-
 /*++
 
 Copyright (C) 2019 3MF Consortium
@@ -25,14 +24,12 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract:
-
-NMR_KeyStoreTypes.h defines portable aliases for all keystore data types.
 
 --*/
 
-#ifndef __NMR_KEYSTORETYPES
-#define __NMR_KEYSTORETYPES
+
+#ifndef NMR_SECURECONTENTTYPES
+#define NMR_SECURECONTENTTYPES
 
 #define KEYSTORE_TYPES_MODULUSBUFFERSIZE 257
 #define KEYSTORE_TYPES_EXPONENTBUFFERSIZE 5
@@ -41,7 +38,10 @@ NMR_KeyStoreTypes.h defines portable aliases for all keystore data types.
 #define KEYSTORE_TYPES_TAGSIZE 16
 
 #include "Common/NMR_Types.h"
+#include "Common/NMR_Local.h"
 
+#include <vector>
+#include <functional>
 namespace NMR {
 
 	struct RSAKEYVALUE {
@@ -49,10 +49,10 @@ namespace NMR {
 		nfByte m_exponent[KEYSTORE_TYPES_EXPONENTBUFFERSIZE];
 	};
 
-	struct AES256GCMCIPHERVALUE {
-		nfByte m_iv[12];
-		nfByte m_key[32];
-		nfByte m_tag[16];
+	struct CIPHERVALUE {
+		std::vector<nfByte> m_iv;
+		std::vector<nfByte> m_key;
+		std::vector<nfByte> m_tag;
 	};
 
 	typedef std::shared_ptr <AES256GCMCIPHERVALUE> PAES256GCMCIPHERVALUE;
@@ -62,6 +62,13 @@ namespace NMR {
 		Aes256Gcm = 1
 	};
 
+	typedef std::function<nfUint32(nfByte*, nfUint64, nfByte*, CIPHERVALUE, _In_ void *)> ImportStream_DecryptCallbackType;
 
+
+	struct DECRYPTCONTEXT {
+		ImportStream_DecryptCallbackType m_fnDecryptCallback;
+		void * m_pUserData;
+	};
 }
-#endif
+
+#endif // !NMR_SECURECONTENTTYPES

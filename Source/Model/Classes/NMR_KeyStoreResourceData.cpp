@@ -28,11 +28,11 @@ namespace NMR {
 	}
 
 	PKeyStoreDecryptRight CKeyStoreResourceData::addDecryptRight(NMR::PKeyStoreConsumer const& consumer, eKeyStoreEncryptAlgorithm const& encryptAlgorithm) {
-		NMR::AES256GCMCIPHERVALUE value = { 0, 0, 0 };
+		NMR::CIPHERVALUE value = { 0, 0, 0 };
 		return this->addDecryptRight(consumer, encryptAlgorithm, value);
 	}
 
-	PKeyStoreDecryptRight CKeyStoreResourceData::addDecryptRight(NMR::PKeyStoreConsumer const& consumer, eKeyStoreEncryptAlgorithm const& encryptAlgorithm, AES256GCMCIPHERVALUE const& cipherValue)
+	PKeyStoreDecryptRight CKeyStoreResourceData::addDecryptRight(NMR::PKeyStoreConsumer const& consumer, eKeyStoreEncryptAlgorithm const& encryptAlgorithm, NMR::CIPHERVALUE const& cipherValue)
 	{	
 		if (!consumer.get())
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);

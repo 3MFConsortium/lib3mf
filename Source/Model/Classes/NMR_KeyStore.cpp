@@ -101,7 +101,7 @@ namespace NMR {
 		}
 	}
 
-	nfUint32 CKeyStore::resourceDataCount() const
+	nfUint32 CKeyStore::getResourceDataCount() const
 	{
 		return (uint32_t)m_ResourceDatas.size();
 	}

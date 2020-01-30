@@ -37,7 +37,7 @@ NMR_KeyStoreResourceData.h defines the KeyStoreResourceData Class. A ResourceDat
 #include <memory>
 #include <vector>
 #include "Common/NMR_Types.h"
-#include "Common/NMR_KeyStoreTypes.h"
+#include "Common/NMR_SecureContentTypes.h"
 #include "Model/Classes/NMR_KeyStoreDecryptRight.h"
 #include "Model/Classes/NMR_PackageResourceID.h"
 namespace NMR {
