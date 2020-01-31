@@ -49,6 +49,11 @@ NMR_KeyStoreOpcPackageReader.cpp defines an OPC Package reader in a portable way
 
 
 namespace NMR {
+
+	bool fnDecryptKey() {
+
+	}
+
 	CKeyStoreOpcPackageReader::CKeyStoreOpcPackageReader(PImportStream pImportStream, PModelReaderWarnings pWarnings, PProgressMonitor pProgressMonitor)
 	{
 		m_pPackageReader = std::make_shared<COpcPackageReader>(pImportStream, pWarnings, pProgressMonitor);
@@ -57,18 +62,45 @@ namespace NMR {
 		PImportStream keyStoreStream = findKeyStoreStream();
 		if (nullptr != keyStoreStream) {
 			parseKeyStore(keyStoreStream, pProgressMonitor);
-			for (int i = m_KeyStore->getResourceDataCount())
-			//for each resource data
-			//	if (there are no decrypt rights)
-			//		do nothing
-			//	if (there are no registered consumers)
-			//		do nothing
-			//	for each registered consumer
-			//		find decryptright
-			//			succeed = consumercallback(cipherkey, plainkey, consumer keyvalue, encryption algorithm)
-			//			if succeed 
-			//				set ciphervalue into resource data (resource data is open)
-			//	
+			if (!m_KeyStore->empty()) {
+				//for each resource data
+				//	if (there are no decrypt rights)
+				//		do nothing
+				//	if (there are no registered consumers)
+				//		do nothing
+				//	for each registered consumer
+				//		find decryptright
+				//			succeed = consumercallback(cipherkey, plainkey, consumer keyvalue, encryption algorithm)
+				//			if succeed 
+				//				set ciphervalue into resource data (resource data is open)
+				//	
+				//TODO, chain this up to here from CReader -> ModelReader
+				std::vector<std::pair<std::string, CONSUMERDECRYPTCONTEXT>> registeredConsumers;
+
+				for (int i = 0; i < m_KeyStore->getResourceDataCount() && !registeredConsumers.empty(); ++i) {
+					PKeyStoreResourceData rd = m_KeyStore->getResourceDataByIndex(i);
+					for (auto it = registeredConsumers.begin(); it != registeredConsumers.end() && !rd->empty(); ++it) {
+						PKeyStoreConsumer consumer = m_KeyStore->findConsumerById((*it).first);
+						if (consumer) {
+							PKeyStoreDecryptRight decryptRight = rd->findDecryptRightByConsumer(consumer);
+							if (decryptRight) {
+								CIPHERVALUE cv = decryptRight->getCipherValue();
+								CIPHERVALUE resCv = cv;
+								//fnDecryptKey(
+								//	cv.m_iv.data(),
+								//	cv.m_iv.size(),
+								//	cv.m_tag.data(),
+								//	cv.m_tag.size(),
+								//	cv.m_key.data(),
+								//	cv.m_key.size(),
+								//	resCv.m_key.data()
+								//	//
+								//);
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 
@@ -84,7 +116,7 @@ namespace NMR {
 			//	create encrypted stream with ciphervalue and decryptcontext (function and userdata)
 			//else
 			//	create encrypted stream with null ciphervalue and decryptcontext (function and userdata)
-			PImportStream encryptedStream = std::make_shared<CImportStream_Encrypted>(pPart->getImportStream(), rd->getCipherValue(), m_sDecryptContext);
+			//PImportStream encryptedStream = std::make_shared<CImportStream_Encrypted>(pPart->getImportStream(), rd->getCipherValue(), m_sDecryptContext);
 		}
 		return pPart;
 	}

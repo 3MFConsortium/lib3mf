@@ -62,11 +62,17 @@ namespace NMR {
 		Aes256Gcm = 1
 	};
 
-	typedef std::function<nfUint32(nfByte*, nfUint64, nfByte*, CIPHERVALUE, _In_ void *)> ImportStream_DecryptCallbackType;
+	using ImportStream_DecryptDataCallbackType = std::function<nfUint32(nfByte*, nfUint64, nfByte*, CIPHERVALUE, _In_ void *)>;
+	using ImportStream_DecryptKeyCallbackType = std::function<nfUint32(nfByte*, nfUint64, nfByte*, CIPHERVALUE, _In_ void *)>;
 
 
 	struct DECRYPTCONTEXT {
-		ImportStream_DecryptCallbackType m_fnDecryptCallback;
+		ImportStream_DecryptDataCallbackType m_fnDecryptCallback;
+		void * m_pUserData;
+	};
+
+	struct CONSUMERDECRYPTCONTEXT {
+		ImportStream_DecryptKeyCallbackType m_fnDecryptKeyCallback;
 		void * m_pUserData;
 	};
 }
