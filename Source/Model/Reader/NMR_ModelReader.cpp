@@ -34,6 +34,7 @@ A model reader reads in a model file and generates an in-memory representation o
 #include "Common/NMR_Exception.h" 
 #include "Common/NMR_Exception_Windows.h" 
 #include "Common/Platform/NMR_ImportStream.h" 
+#include "Common/NMR_SecureContext.h"
 
 #include "Model/Classes/NMR_ModelObject.h" 
 #include "Model/Classes/NMR_ModelMeshObject.h" 
