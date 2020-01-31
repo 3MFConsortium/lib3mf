@@ -91,7 +91,21 @@ namespace NMR {
 		NMR::CResourceHandler * pResourceHandler = new NMR::CResourceHandler();
 		return pResourceHandler->makePackageModelPath(m_sPath);
 	}
+
 	nfBool CKeyStoreResourceData::empty() const {
 		return m_DecryptRights.empty();
+
+	CIPHERVALUE CKeyStoreResourceData::getCipherValue() const {
+		return m_sCipherValue;
 	}
+
+	void CKeyStoreResourceData::setCipherValue(CIPHERVALUE const & cv) {
+		m_sCipherValue = cv;
+		m_bOpen = true;
+	}
+
+	bool CKeyStoreResourceData::isOpen() const {
+		return m_bOpen;
+	}
+
 }

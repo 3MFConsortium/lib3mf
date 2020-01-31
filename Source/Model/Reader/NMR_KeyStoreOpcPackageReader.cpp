@@ -49,12 +49,8 @@ NMR_KeyStoreOpcPackageReader.cpp defines an OPC Package reader in a portable way
 
 
 namespace NMR {
-
-	bool fnDecryptKey() {
-
-	}
-
-	CKeyStoreOpcPackageReader::CKeyStoreOpcPackageReader(PImportStream pImportStream, PModelReaderWarnings pWarnings, PProgressMonitor pProgressMonitor)
+	CKeyStoreOpcPackageReader::CKeyStoreOpcPackageReader(PImportStream pImportStream, DECRYPTCONTEXT const & sDecryptContext, PModelReaderWarnings pWarnings, PProgressMonitor pProgressMonitor)
+		:m_sDecryptContext(sDecryptContext)
 	{
 		m_pPackageReader = std::make_shared<COpcPackageReader>(pImportStream, pWarnings, pProgressMonitor);
 		m_KeyStore = std::make_shared<CKeyStore>();
@@ -116,7 +112,7 @@ namespace NMR {
 			//	create encrypted stream with ciphervalue and decryptcontext (function and userdata)
 			//else
 			//	create encrypted stream with null ciphervalue and decryptcontext (function and userdata)
-			//PImportStream encryptedStream = std::make_shared<CImportStream_Encrypted>(pPart->getImportStream(), rd->getCipherValue(), m_sDecryptContext);
+			PImportStream encryptedStream = std::make_shared<CImportStream_Encrypted>(pPart->getImportStream(), rd->getCipherValue(), m_sDecryptContext);
 		}
 		return pPart;
 	}
