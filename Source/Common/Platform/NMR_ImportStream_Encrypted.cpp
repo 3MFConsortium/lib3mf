@@ -2,7 +2,7 @@
 #include "Common/NMR_Exception.h"
 #include <vector>
 namespace NMR {
-	CImportStream_Encrypted::CImportStream_Encrypted(PImportStream pEncryptedStream, DECRYPTCONTEXT * pDecryptContext)
+	CImportStream_Encrypted::CImportStream_Encrypted(PImportStream pEncryptedStream, DEKDECRYPTCONTEXT * pDecryptContext)
 		:m_pEncryptedStream(pEncryptedStream), m_pDecryptContext(pDecryptContext)
 	{
 		if (nullptr == pEncryptedStream)
@@ -24,25 +24,27 @@ namespace NMR {
 	}
 
 	nfUint64 CImportStream_Encrypted::readBuffer(nfByte * pBuffer, nfUint64 cbTotalBytesToRead, nfBool bNeedsToReadAll) {
-		int n = m_pEncryptedStream->readBuffer(pBuffer, cbTotalBytesToRead, bNeedsToReadAll);
+		nfUint64 n = m_pEncryptedStream->readBuffer(pBuffer, cbTotalBytesToRead, bNeedsToReadAll);
 		std::vector<nfByte> decBuffer(cbTotalBytesToRead, 0);
-		m_pDecryptContext->m_fnDecryptCallback(pBuffer, cbTotalBytesToRead, decBuffer.data(), m_pDecryptContext->m_sCipherValue, m_pDecryptContext->m_pUserData);
+		m_pDecryptContext->m_fnDecrypt(pBuffer, cbTotalBytesToRead, decBuffer.data(), m_pDecryptContext->m_sCipherValue, m_pDecryptContext->m_pUserData);
 		std::copy(decBuffer.begin(), decBuffer.end(), pBuffer);
 		return n;
 	}
 
 	nfUint64 CImportStream_Encrypted::retrieveSize() {
-		return nfUint64();
+		return m_pEncryptedStream->retrieveSize();
 	}
 
-	void CImportStream_Encrypted::writeToFile(const nfWChar * pwszFileName) {}
+	void CImportStream_Encrypted::writeToFile(const nfWChar * pwszFileName) {
+		m_pEncryptedStream->writeToFile(pwszFileName);
+	}
 
 	PImportStream CImportStream_Encrypted::copyToMemory() {
-		return PImportStream();
+		return m_pEncryptedStream->copyToMemory();
 	}
 
 	nfUint64 CImportStream_Encrypted::getPosition() {
-		return nfUint64();
+		return m_pEncryptedStream->getPosition();
 	}
 
 

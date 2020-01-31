@@ -176,6 +176,5 @@ void Lib3MF::Impl::CReader::RegisterConsumer(const std::string & sConsumerID, co
 }
 
 void Lib3MF::Impl::CReader::RegisterDecryption(const Lib3MF::DataDecryptionCallback pDecryptionCallback, const Lib3MF_pvoid pUserData) {
-	reader().setDecryptionCallback();
 }
 

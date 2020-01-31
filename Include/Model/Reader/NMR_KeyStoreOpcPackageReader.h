@@ -52,12 +52,11 @@ namespace NMR {
 	private:
 		POpcPackageReader m_pPackageReader;
 		PKeyStore m_KeyStore;
-		DECRYPTCONTEXT m_sDecryptContext;
 	protected:
 		NMR::PImportStream findKeyStoreStream();
 		void parseKeyStore(NMR::PImportStream keyStoreStream, NMR::PProgressMonitor pProgressMonitor);
 	public:
-		CKeyStoreOpcPackageReader(_In_ PImportStream pImportStream, _In_ DECRYPTCONTEXT const & sDecryptContext, _In_ PModelReaderWarnings pWarnings, _In_ PProgressMonitor pProgressMonitor);
+		CKeyStoreOpcPackageReader(_In_ PImportStream pImportStream, _In_ PModelReaderWarnings pWarnings, _In_ PProgressMonitor pProgressMonitor);
 
 		// Inherited via IOpcPackageReader
 		virtual COpcPackageRelationship * findRootRelation(std::string sRelationType, nfBool bMustBeUnique) override;

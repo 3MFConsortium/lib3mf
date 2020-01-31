@@ -47,10 +47,8 @@ NMR_KeyStoreOpcPackageReader.cpp defines an OPC Package reader in a portable way
 #include "Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStore.h"
 
 
-
 namespace NMR {
-	CKeyStoreOpcPackageReader::CKeyStoreOpcPackageReader(PImportStream pImportStream, DECRYPTCONTEXT const & sDecryptContext, PModelReaderWarnings pWarnings, PProgressMonitor pProgressMonitor)
-		:m_sDecryptContext(sDecryptContext)
+	CKeyStoreOpcPackageReader::CKeyStoreOpcPackageReader(PImportStream pImportStream, PModelReaderWarnings pWarnings, PProgressMonitor pProgressMonitor)
 	{
 		m_pPackageReader = std::make_shared<COpcPackageReader>(pImportStream, pWarnings, pProgressMonitor);
 		m_KeyStore = std::make_shared<CKeyStore>();
@@ -71,9 +69,9 @@ namespace NMR {
 				//				set ciphervalue into resource data (resource data is open)
 				//	
 				//TODO, chain this up to here from CReader -> ModelReader
-				std::vector<std::pair<std::string, CONSUMERDECRYPTCONTEXT>> registeredConsumers;
+				std::vector<std::pair<std::string, KEKDECRYPTCONTEXT>> registeredConsumers;
 
-				for (int i = 0; i < m_KeyStore->getResourceDataCount() && !registeredConsumers.empty(); ++i) {
+				for (nfUint32 i = 0; i < m_KeyStore->getResourceDataCount() && !registeredConsumers.empty(); ++i) {
 					PKeyStoreResourceData rd = m_KeyStore->getResourceDataByIndex(i);
 					for (auto it = registeredConsumers.begin(); it != registeredConsumers.end() && !rd->empty(); ++it) {
 						PKeyStoreConsumer consumer = m_KeyStore->findConsumerById((*it).first);
@@ -106,13 +104,16 @@ namespace NMR {
 
 	POpcPackagePart CKeyStoreOpcPackageReader::createPart(std::string sPath) {
 		auto pPart = m_pPackageReader->createPart(sPath);
+		//if DEK context registered
 		NMR::PKeyStoreResourceData rd = m_KeyStore->findResourceDataByPath(sPath);
 		if (nullptr != rd) {
 			//if resource data is open
+			//	find 
 			//	create encrypted stream with ciphervalue and decryptcontext (function and userdata)
 			//else
 			//	create encrypted stream with null ciphervalue and decryptcontext (function and userdata)
-			PImportStream encryptedStream = std::make_shared<CImportStream_Encrypted>(pPart->getImportStream(), rd->getCipherValue(), m_sDecryptContext);
+			//DEKDECRYPTCONTEXT context;
+			//PImportStream encryptedStream = std::make_shared<CImportStream_Encrypted>(pPart->getImportStream(), rd->getCipherValue(), context);
 		}
 		return pPart;
 	}
