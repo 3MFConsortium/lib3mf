@@ -36,23 +36,24 @@ This is the class for exporting the 3mf keystore stream root node.
 #include "Model/Classes/NMR_KeyStoreResourceData.h"
 
 void NMR::CModelWriterNode_KeyStore::writeConsumers() {
-	 auto count = m_pKeyStore->getConsumerCount();
-	 for (uint32_t index = 0; index < count; ++index) {
-		 PKeyStoreConsumer consumer = m_pKeyStore->getConsumerByIndex(index);
-		 writeStartElement(XML_3MF_ELEMENT_CONSUMER);
-		 writeConstStringAttribute(XML_3MF_SECURE_CONTENT_CONSUMER_ID, consumer->getConsumerID().c_str());
-		 writeConstStringAttribute(XML_3MF_SECURE_CONTENT_KEY_ID, consumer->getKeyID().c_str());
-			writeStartElement(XML_3MF_ELEMENT_KEYVALUE);
-				 writeStartElement(XML_3MF_ELEMENT_RSAKEYVALUE);
-					 writeStartElement(XML_3MF_ELEMENT_MODULUS);
-					 // TODO: put the RSAKeyvalue::Modulus
-					 writeFullEndElement();
-					 writeStartElement(XML_3MF_ELEMENT_EXPONENT);
-					 // TODO: put the RSAKeyvalue::Exponent
-					 writeFullEndElement();
-				 writeFullEndElement();
-			 writeFullEndElement();
-		 writeFullEndElement();
+	const auto count = m_pKeyStore->getConsumerCount();
+	for (uint32_t index = 0; index < count; ++index) {
+		const PKeyStoreConsumer consumer = m_pKeyStore->getConsumerByIndex(index);
+
+		// <consumer>
+		writeStartElement(XML_3MF_ELEMENT_CONSUMER);
+		writeConstStringAttribute(XML_3MF_SECURE_CONTENT_CONSUMER_ID, consumer->getConsumerID().c_str());
+		writeConstStringAttribute(XML_3MF_SECURE_CONTENT_KEY_ID, consumer->getKeyID().c_str());
+
+		// <keyvalue>
+		writeStartElement(XML_3MF_ELEMENT_KEY_VALUE);
+		std::string keyvalueStr = consumer->getKeyValueString();
+		writeText(keyvalueStr.c_str(), sizeof(keyvalueStr));
+		// </keyvalue>
+		writeFullEndElement();
+
+		// </consumer>
+	    writeFullEndElement();
 	 }
 }
 
@@ -85,6 +86,8 @@ NMR::CModelWriterNode_KeyStore::CModelWriterNode_KeyStore(CKeyStore * pKeyStore,
 
 void NMR::CModelWriterNode_KeyStore::writeToXML() {
 	writeStartElementWithNamespace(XML_3MF_ELEMENT_KEYSTORE, XML_3MF_NAMESPACE_SECURECONTENTSPEC);
+	writeConstPrefixedStringAttribute(XML_3MF_ATTRIBUTE_XMLNS, XML_3MF_NAMESPACEPREFIX_XENC, XML_3MF_NAMESPACE_CIPHERVALUESPEC);
+	writeConstPrefixedStringAttribute(XML_3MF_ATTRIBUTE_XMLNS, XML_3MF_NAMESPACEPREFIX_DS, XML_3MF_NAMESPACE_DIGITALSIGNATURESPEC);
 	writeConstStringAttribute(XML_3MF_SECURE_CONTENT_UUID, m_pKeyStore->getUUID()->toString().c_str());
 	writeConsumers();
 	writeResourceDatas();
