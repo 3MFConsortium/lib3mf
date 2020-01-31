@@ -59,19 +59,25 @@ namespace NMR {
 		Aes256Gcm = 1
 	};
 
-	using ImportStream_DEKDecryptCallbackType = std::function<nfUint32(nfByte*, nfUint64, nfByte*, CIPHERVALUE, _In_ void *)>;
-	using ImportStream_KEKDecryptCallbackType = std::function<nfUint32(nfByte*, nfUint64, nfByte*, CIPHERVALUE, _In_ void *)>;
+	using ImportStream_DEKDecryptCallbackType = std::function<nfUint32(nfByte*, nfUint64, nfByte*, DEKDECRYPTCTX)>;
+	using ImportStream_KEKDecryptCallbackType = std::function<nfUint32(nfByte*, nfUint64, nfByte*, KEKDECRYPTCTX)>;
 
-
-	struct DEKDECRYPTCONTEXT {
-		ImportStream_DEKDecryptCallbackType m_fnDecrypt;
-		void * m_pUserData;
+	struct DEKDECRYPTCTX {
+		nfUint64 m_nfHandler;
 		CIPHERVALUE m_sCipherValue;
+		void * m_pUserData;
+	};
+	struct DEKDESCRIPTOR {
+		ImportStream_DEKDecryptCallbackType m_fnDecrypt;
+		DEKDECRYPTCTX m_sDekDecryptData;
 	};
 
-	struct KEKDECRYPTCONTEXT {
-		ImportStream_KEKDecryptCallbackType m_fnDecrypt;
+	struct KEKDECRYPTCTX {
 		void * m_pUserData;
+	};
+	struct KEKDESCRIPTOR {
+		ImportStream_KEKDecryptCallbackType m_fnDecrypt;
+		KEKDECRYPTCTX m_sKekDecryptData;
 	};
 }
 
