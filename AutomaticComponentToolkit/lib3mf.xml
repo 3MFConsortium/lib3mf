@@ -1228,7 +1228,7 @@
 		<method name="AddConsumer" description="A description">
 			<param name="ConsumerID" type="string" pass="in" description="A description"/>
 			<param name="KeyID" type="string" pass="in" description="A description"/>
-			<param name="KeyValue" type="optionalclass" class="KeyValue" pass="in" description="A description"/>
+			<param name="KeyValue" type="string" class="KeyValue" pass="in" description="A description"/>
 			<param name="Consumer" type="handle" class="Consumer" pass="return" description="A description"/>
 		</method> 
 		<method name="GetConsumerCount" description="A description">

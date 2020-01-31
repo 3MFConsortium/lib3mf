@@ -57,16 +57,6 @@ namespace NMR {
 
 	PKeyStoreConsumer CKeyStore::addConsumer(std::string id, std::string keyId, std::string keyValue)
 	{
-		PKeyStoreConsumer consumer = std::make_shared<CKeyStoreConsumer>(id, keyId, keyValue);
-		m_Consumers.push_back(consumer);
-		if (m_ConsumerRefs.find(id) != m_ConsumerRefs.end()) {
-			m_ConsumerRefs[id] = consumer;
-		}
-		return consumer;
-	}
-	// TODO: remove
-	PKeyStoreConsumer CKeyStore::addConsumer(std::string id, std::string keyId, RSAKEYVALUE keyValue)
-	{
 		if (m_ConsumerRefs.find(id) != m_ConsumerRefs.end()) {
 			throw CNMRException(NMR_ERROR_DUPLICATE_KEYSTORECONSUMER);
 		}

@@ -19,15 +19,9 @@ IKeyValue * Lib3MF::Impl::CKeyStore::CreateKeyValue() {
 	return new CKeyValue();
 }
 
-IConsumer * Lib3MF::Impl::CKeyStore::AddConsumer(const std::string & sConsumerID, const std::string & sKeyID, IKeyValue * pKeyValue)
+IConsumer * Lib3MF::Impl::CKeyStore::AddConsumer(const std::string & sConsumerID, const std::string & sKeyID, const std::string & sKeyValue)
 {
-	NMR::RSAKEYVALUE keyValue = {0,0};
-	if (pKeyValue != nullptr) {
-		Lib3MF::sRSAKeyValue sKeyValue = pKeyValue->GetRSA();
-		std::copy(sKeyValue.m_Modulus, sKeyValue.m_Modulus + sizeof(sKeyValue.m_Modulus), keyValue.m_modulus);
-		std::copy(sKeyValue.m_Exponent, sKeyValue.m_Exponent + sizeof(sKeyValue.m_Exponent), keyValue.m_exponent);
-	}
-	NMR::PKeyStoreConsumer consumer = m_KeyStore->addConsumer(sConsumerID, sKeyID, keyValue);
+	NMR::PKeyStoreConsumer consumer = m_KeyStore->addConsumer(sConsumerID, sKeyID, sKeyValue);
 	return new CConsumer(consumer);
 }
 
