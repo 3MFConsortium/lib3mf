@@ -81,7 +81,7 @@ namespace NMR {
 
 	PKeyStoreConsumer CKeyStore::getConsumerByIndex(nfUint64 index) const
 	{	
-		return m_Consumers[index];;
+		return m_Consumers[index];
 	}
 
 	PKeyStoreConsumer CKeyStore::findConsumerById(std::string id)

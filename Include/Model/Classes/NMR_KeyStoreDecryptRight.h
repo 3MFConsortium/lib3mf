@@ -45,6 +45,9 @@ namespace NMR {
 		eKeyStoreEncryptAlgorithm m_EncryptionAlgorithm;
 		AES256GCMCIPHERVALUE m_cipherValue;
 	public:
+		CKeyStoreDecryptRight(PKeyStoreConsumer const & consumer,
+			eKeyStoreEncryptAlgorithm const & encryptionAlgorithm);
+
 		CKeyStoreDecryptRight(PKeyStoreConsumer const & consumer, 
 			eKeyStoreEncryptAlgorithm const & encryptionAlgorithm, 
 			AES256GCMCIPHERVALUE const & cipherValue);

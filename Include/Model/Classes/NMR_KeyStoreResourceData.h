@@ -47,17 +47,18 @@ namespace NMR {
 		eKeyStoreEncryptAlgorithm m_EncryptionAlgorithm;
 		nfBool m_bCompression;
 		std::vector<PKeyStoreDecryptRight> m_DecryptRights;
-		std::map<PKeyStoreConsumer, PKeyStoreDecryptRight> m_ConsumerDecryptRight;
+		std::map<std::string, PKeyStoreDecryptRight> m_ConsumerDecryptRight;
 	public:
-		CKeyStoreResourceData(std::string const & path);
-		CKeyStoreResourceData(std::string const & path, eKeyStoreEncryptAlgorithm const & ea, nfBool const & compression);
+		CKeyStoreResourceData(std::string const& path);
+		CKeyStoreResourceData(std::string const& path, eKeyStoreEncryptAlgorithm const& ea, nfBool const& compression);
 		//TODO Secure Content: expose properties
 		PKeyStoreDecryptRight addDecryptRight(PKeyStoreDecryptRight decryptRight);
-		PKeyStoreDecryptRight addDecryptRight(NMR::PKeyStoreConsumer consumer, eKeyStoreEncryptAlgorithm ea);
+		PKeyStoreDecryptRight addDecryptRight(NMR::PKeyStoreConsumer const& consumer, eKeyStoreEncryptAlgorithm const& encryptAlgorithm);
+		PKeyStoreDecryptRight addDecryptRight(NMR::PKeyStoreConsumer const& consumer, eKeyStoreEncryptAlgorithm const& encryptAlgorithm, AES256GCMCIPHERVALUE const& cipherValue);
 		nfUint32 getDecryptRightCount();
 		PKeyStoreDecryptRight getDecryptRight(nfUint32 index) const;
-		PKeyStoreDecryptRight findDecryptRightByConsumer(NMR::PKeyStoreConsumer consumer);
-		void removeDecryptRight(NMR::PKeyStoreConsumer consumer);
+		PKeyStoreDecryptRight findDecryptRightByConsumer(NMR::PKeyStoreConsumer const& consumer);
+		void removeDecryptRight(NMR::PKeyStoreConsumer const& consumer);
 		eKeyStoreEncryptAlgorithm getEncryptionAlgorithm() const;
 		nfBool getCompression() const;
 		NMR::PPackageModelPath getPath() const;

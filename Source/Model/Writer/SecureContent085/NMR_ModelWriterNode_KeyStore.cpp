@@ -32,10 +32,50 @@ This is the class for exporting the 3mf keystore stream root node.
 --*/
 
 #include "Model/Writer/SecureContent085/NMR_ModelWriterNode_KeyStore.h"
+#include "Model/Classes/NMR_KeyStoreConsumer.h"
+#include "Model/Classes/NMR_KeyStoreResourceData.h"
 
-void NMR::CModelWriterNode_KeyStore::writeConsumers() {}
+void NMR::CModelWriterNode_KeyStore::writeConsumers() {
+	 auto count = m_pKeyStore->getConsumerCount();
+	 for (uint32_t index = 0; index < count; ++index) {
+		 PKeyStoreConsumer consumer = m_pKeyStore->getConsumerByIndex(index);
+		 writeStartElement(XML_3MF_ELEMENT_CONSUMER);
+		 writeConstStringAttribute(XML_3MF_SECURE_CONTENT_CONSUMER_ID, consumer->getConsumerID().c_str());
+		 writeConstStringAttribute(XML_3MF_SECURE_CONTENT_KEY_ID, consumer->getKeyID().c_str());
+			writeStartElement(XML_3MF_ELEMENT_KEYVALUE);
+				 writeStartElement(XML_3MF_ELEMENT_RSAKEYVALUE);
+					 writeStartElement(XML_3MF_ELEMENT_MODULUS);
+					 // TODO: put the RSAKeyvalue::Modulus
+					 writeFullEndElement();
+					 writeStartElement(XML_3MF_ELEMENT_EXPONENT);
+					 // TODO: put the RSAKeyvalue::Exponent
+					 writeFullEndElement();
+				 writeFullEndElement();
+			 writeFullEndElement();
+		 writeFullEndElement();
+	 }
+}
 
-void NMR::CModelWriterNode_KeyStore::writeResourceDatas() {}
+void NMR::CModelWriterNode_KeyStore::writeResourceDatas() {
+	auto count = m_pKeyStore->resourceDataCount();
+	for (uint32_t index = 0; index < count; ++index) {
+		PKeyStoreResourceData resourcedata = m_pKeyStore->getResourceDataByIndex(index);
+		writeStartElement(XML_3MF_ELEMENT_RESOURCEDATA);
+			writeConstStringAttribute(XML_3MF_SECURE_CONTENT_PATH, resourcedata->getPath()->getPath().c_str());
+			writeStartElement(XML_3MF_ELEMENT_DECRYPTRIGHT);
+
+				writeStartElement(XML_3MF_ELEMENT_CIPHERDATA);
+
+					writeStartElement(XML_3MF_ELEMENT_CIPHERVALUE);
+					writeFullEndElement();
+
+				writeFullEndElement();
+
+			writeFullEndElement();
+
+		writeFullEndElement();
+	}
+}
 
 NMR::CModelWriterNode_KeyStore::CModelWriterNode_KeyStore(CKeyStore * pKeyStore, CXmlWriter * pXMLWriter, PProgressMonitor pProgressMonitor)
 : CModelWriterNode_KeyStoreBase(pKeyStore, pXMLWriter, pProgressMonitor) 
@@ -46,5 +86,7 @@ NMR::CModelWriterNode_KeyStore::CModelWriterNode_KeyStore(CKeyStore * pKeyStore,
 void NMR::CModelWriterNode_KeyStore::writeToXML() {
 	writeStartElementWithNamespace(XML_3MF_ELEMENT_KEYSTORE, XML_3MF_NAMESPACE_SECURECONTENTSPEC);
 	writeConstStringAttribute(XML_3MF_SECURE_CONTENT_UUID, m_pKeyStore->getUUID()->toString().c_str());
+	writeConsumers();
+	writeResourceDatas();
 	writeFullEndElement();
 }
