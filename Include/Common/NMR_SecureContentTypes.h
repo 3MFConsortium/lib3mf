@@ -64,7 +64,7 @@ namespace NMR {
 		CIPHERVALUE m_sCipherValue;
 		void * m_pUserData;
 	};
-	using ImportStream_DEKDecryptCallbackType = std::function<nfUint32(std::vector<nfByte> const &, std::vector<nfByte> &, DEKDECRYPTCTX)>;
+	using ImportStream_DEKDecryptCallbackType = std::function<nfUint32(std::vector<nfByte> const &, nfByte *, DEKDECRYPTCTX)>;
 
 	struct KEKDECRYPTCTX {
 		void * m_pUserData;

@@ -55,7 +55,7 @@ namespace Lib3MF {
 			/**
 			* Put private members here.
 			*/
-			NMR::PKeyStore m_KeyStore;
+			NMR::PKeyStore m_pKeyStore;
 		protected:
 
 			/**
