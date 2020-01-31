@@ -47,9 +47,9 @@ namespace NMR {
 
 	class CImportStream_Encrypted : public CImportStream {
 		PImportStream m_pEncryptedStream;
-		DEKDECRYPTCONTEXT * m_pDecryptContext;
+		DEKDESCRIPTOR m_pDecryptContext;
 	public:
-		CImportStream_Encrypted(PImportStream pEncryptedStream, DEKDECRYPTCONTEXT * context);
+		CImportStream_Encrypted(PImportStream pEncryptedStream, DEKDESCRIPTOR context);
 
 		// Inherited via CImportStream
 		virtual nfBool seekPosition(nfUint64 position, nfBool bHasToSucceed) override;

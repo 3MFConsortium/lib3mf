@@ -10,19 +10,24 @@
 
 namespace NMR {
 
-	using RegisteredConsumerMap = std::map<std::string, KEKDESCRIPTOR>;
+	using ClientConsumerMap = std::map<std::string, KEKDESCRIPTOR>;
 	class CSecureContext {
 	private:
-		RegisteredConsumerMap m_ConsumerMap;
+		 ClientConsumerMap m_ConsumerMap;
+		 DEKDESCRIPTOR m_sDekDescriptor;
+		 bool m_bHasDek;
 	public:
-		bool hasClientContext() const;
-		bool hasClientContextForConsumer(std::string const & consumerId) const;
+		bool hasDekCtx() const;
+		DEKDESCRIPTOR getDekCtx() const;
+		void setDekCtx(DEKDESCRIPTOR const & descriptor);
 
-		DEKDESCRIPTOR getDEKClientContext() const;
-		KEKDESCRIPTOR getKEKClientContext(std::string const & consumerId);
+		ClientConsumerMap::const_iterator kekCtxBegin() const;
+		ClientConsumerMap::const_iterator kekCtxEnd() const;
+		void addKekCtx(std::string const & consumerId, KEKDESCRIPTOR const & descriptor);
+		KEKDESCRIPTOR getKekCtx(std::string const & consumerId) const;
+		bool emptyKekCtx() const;
 
-		void setDEKClientDescriptor(DEKDESCRIPTOR const & descriptor);
-		void addClientDescriptor(std::string const & consumerId, KEKDESCRIPTOR const & descriptor);
+
 	};
 
 

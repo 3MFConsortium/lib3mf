@@ -64,13 +64,13 @@ namespace NMR {
 		CIPHERVALUE m_sCipherValue;
 		void * m_pUserData;
 	};
-	using ImportStream_DEKDecryptCallbackType = std::function<nfUint32(nfByte*, nfUint64, nfByte*, DEKDECRYPTCTX)>;
+	using ImportStream_DEKDecryptCallbackType = std::function<nfUint32(std::vector<nfByte> const &, std::vector<nfByte> &, DEKDECRYPTCTX)>;
 
 	struct KEKDECRYPTCTX {
 		void * m_pUserData;
 	};
 
-	using ImportStream_KEKDecryptCallbackType = std::function<nfUint32(nfByte*, nfUint64, nfByte*, KEKDECRYPTCTX)>;
+	using ImportStream_KEKDecryptCallbackType = std::function<nfUint32(std::vector<nfByte>, std::vector<nfByte>, KEKDECRYPTCTX)>;
 
 	struct DEKDESCRIPTOR {
 		ImportStream_DEKDecryptCallbackType m_fnDecrypt;

@@ -2,27 +2,24 @@
 #include "Common/NMR_SecureContext.h"
 
 namespace NMR {
-
-
-
-	bool CSecureContext::hasClientContext() const {
+	bool CSecureContext::hasDekCtx() const {
 		return false;
 	}
-
-	bool CSecureContext::hasClientContextForConsumer(std::string const & consumerId) const {
-		return false;
-	}
-
-	DEKDESCRIPTOR CSecureContext::getDEKClientContext() const {
+	DEKDESCRIPTOR CSecureContext::getDekCtx() const {
 		return DEKDESCRIPTOR();
 	}
-
-	KEKDESCRIPTOR CSecureContext::getKEKClientContext(std::string const & consumerId) {
+	void CSecureContext::setDekCtx(DEKDESCRIPTOR const & descriptor) {}
+	ClientConsumerMap::const_iterator CSecureContext::kekCtxBegin() const {
+		return ClientConsumerMap::const_iterator();
+	}
+	ClientConsumerMap::const_iterator CSecureContext::kekCtxEnd() const {
+		return ClientConsumerMap::const_iterator();
+	}
+	void CSecureContext::addKekCtx(std::string const & consumerId, KEKDESCRIPTOR const & descriptor) {}
+	KEKDESCRIPTOR CSecureContext::getKekCtx(std::string const & consumerId) const {
 		return KEKDESCRIPTOR();
 	}
-
-	void CSecureContext::setDEKClientDescriptor(DEKDESCRIPTOR const & descriptor) {}
-
-	void CSecureContext::addClientDescriptor(std::string const & consumerId, KEKDESCRIPTOR const & descriptor) {}
-
+	bool CSecureContext::emptyKekCtx() const {
+		return false;
+	}
 }
