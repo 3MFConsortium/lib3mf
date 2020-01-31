@@ -52,7 +52,7 @@ void NMR::CModelWriterNode_KeyStore::writeConsumers() {
 		std::string kvStr = consumer->getKeyValue();
 		if (!kvStr.empty()) {
 			// <keyvalue>
-			writeStartElement(XML_3MF_ELEMENT_KEY_VALUE);
+			writeStartElement(XML_3MF_ELEMENT_KEYVALUE);
 			writeText(kvStr.c_str(), (nfUint32)kvStr.length());
 			// </keyvalue>
 			writeFullEndElement();
@@ -64,22 +64,49 @@ void NMR::CModelWriterNode_KeyStore::writeConsumers() {
 }
 
 void NMR::CModelWriterNode_KeyStore::writeResourceDatas() {
-	auto count = m_pKeyStore->getResourceDataCount();
-	for (uint32_t index = 0; index < count; ++index) {
-		PKeyStoreResourceData resourcedata = m_pKeyStore->getResourceDataByIndex(index);
+	auto const& count = m_pKeyStore->getResourceDataCount();
+	for (uint32_t resourceIndex = 0; resourceIndex < count; ++resourceIndex) {
+		PKeyStoreResourceData const& resourcedata = m_pKeyStore->getResourceDataByIndex(resourceIndex);
+		// <resourcedata>
 		writeStartElement(XML_3MF_ELEMENT_RESOURCEDATA);
-			writeConstStringAttribute(XML_3MF_SECURE_CONTENT_PATH, resourcedata->getPath()->getPath().c_str());
-			//TODO navigate decryptrights
-			writeStartElement(XML_3MF_ELEMENT_DECRYPTRIGHT);
-				writeStartElement(XML_3MF_ELEMENT_CIPHERDATA);
-					//TODO throw if no ciphervalue
-					writeStartElement(XML_3MF_ELEMENT_CIPHERVALUE);
-					writeFullEndElement();
+		writeConstStringAttribute(XML_3MF_SECURE_CONTENT_PATH, resourcedata->getPath()->getPath().c_str());
+		// TODO: should know where is the information about compression
+		writeConstStringAttribute(XML_3MF_SECURE_CONTENT_COMPRESSION, XML_3MF_SECURE_CONTENT_COMPRESSION_DEFLATE);
+		// <encryptionmethod>
+		writeStartElementWithPrefix(XML_3MF_ELEMENT_ENCRYPTIONMETHOD, XML_3MF_NAMESPACEPREFIX_XENC);
+		writeConstPrefixedStringAttribute(XML_3MF_NAMESPACEPREFIX_XENC, XML_3MF_SECURE_CONTENT_ALGORITHM, XML_3MF_SECURE_CONTENT_ENCRYPTION_AES256);
 
-				writeFullEndElement();
+		//TODO navigate decryptrights
+		auto const& accessCount = resourcedata->getDecryptRightCount();
+		for (uint32_t accessIndex = 0; accessIndex < accessCount; ++accessIndex) {
+			// <accessright>
+			writeStartElement(XML_3MF_ELEMENT_ACCESSRIGHT);
+			writeConstStringAttribute(XML_3MF_SECURE_CONTENT_CONSUMER_INDEX, std::to_string(accessIndex).c_str());
+			// <encryptedkey>
+			writeStartElement(XML_3MF_ELEMENT_ENCRYPTEDKEY);
+
+			// <encryptionmethod>
+			writeStartElementWithPrefix(XML_3MF_ELEMENT_ENCRYPTIONMETHOD, XML_3MF_NAMESPACEPREFIX_XENC);
+			writeConstPrefixedStringAttribute(XML_3MF_NAMESPACEPREFIX_XENC, XML_3MF_SECURE_CONTENT_ALGORITHM, XML_3MF_SECURE_CONTENT_ENCRYPTION_RSA);
+
+			// <xenc:CipherData>
+			writeStartElementWithPrefix(XML_3MF_ELEMENT_CIPHERDATA, XML_3MF_NAMESPACEPREFIX_XENC);
+			// <xenc:CipherValue>
+			writeStartElementWithPrefix(XML_3MF_ELEMENT_CIPHERVALUE, XML_3MF_NAMESPACEPREFIX_XENC);
+			// TODO: where is the base64 key value?
+			// CIPHERVALUE cipher = resourcedata->getCipherValue();
+			//TODO throw if no ciphervalue
+			const std::string key = "base64(RSA2048_OAEP encrypted Data Encryption Key)";
+			writeText(key.c_str(), sizeof(key));
 
 			writeFullEndElement();
+			writeFullEndElement();
+			writeFullEndElement();
+			writeFullEndElement();
+			writeFullEndElement();
+		}
 
+		writeFullEndElement();
 		writeFullEndElement();
 	}
 }

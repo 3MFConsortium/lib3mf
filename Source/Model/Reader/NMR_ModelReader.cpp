@@ -99,4 +99,7 @@ namespace NMR {
 	{
 		m_pProgressMonitor->SetProgressCallback(callback, userData);
 	}
+	PSecureContext CModelReader::getSecureContext() const {
+		return m_pSecureContext;
+	}
 }

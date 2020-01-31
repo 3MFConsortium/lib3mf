@@ -43,8 +43,6 @@ Abstract: This is the class declaration of CCipherData
 namespace Lib3MF {
 	namespace Impl {
 
-		class CDecryptRight;
-		typedef std::shared_ptr<CDecryptRight> PDecryptRight;
 		/*************************************************************************************************************************
 		Class declaration of CCipherData
 		**************************************************************************************************************************/
@@ -52,12 +50,15 @@ namespace Lib3MF {
 		class CCipherData : public virtual ICipherData, public virtual CBase {
 		private:
 			Lib3MF::sAes256CipherData m_CipherValue;
+			Lib3MF_uint64 m_handle;
 		public:
-			CCipherData(Lib3MF::sAes256CipherData const & CipherValue);
+			CCipherData(Lib3MF::sAes256CipherData const & CipherValue, Lib3MF_uint64 handle);
 
 			// Inherited via ICipherData
 			Lib3MF::sAes256CipherData GetAes256Gcm();
 			void SetAes256Gcm(const Lib3MF::sAes256CipherData CipherValue);
+			Lib3MF_uint64 GetDescriptor();
+
 		};
 	}
 }

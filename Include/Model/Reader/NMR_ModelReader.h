@@ -70,6 +70,8 @@ namespace NMR {
 		void removeRelationToRead(_In_ std::string sRelationShipType);
 
 		void SetProgressCallback(Lib3MFProgressCallback callback, void* userData);
+
+		PSecureContext getSecureContext() const;
 	};
 
 	typedef std::shared_ptr <CModelReader> PModelReader;

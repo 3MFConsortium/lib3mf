@@ -306,7 +306,6 @@ These are given by the 3MF Standard
 #define XML_3MF_ATTRIBUTE_COLOR_ID                  "id"
 #define XML_3MF_ATTRIBUTE_COLOR_VALUE               "value"
 
-
 // Base Material element.
 #define XML_3MF_ELEMENT_BASEMATERIALS                    "basematerials"
 #define XML_3MF_ELEMENT_BASE                             "base"
@@ -353,12 +352,11 @@ These are given by the 3MF Standard
 #define XML_3MF_ELEMENT_MODULUS						"Modulus"
 #define XML_3MF_ELEMENT_EXPONENT					"Exponent"
 #define XML_3MF_ELEMENT_DECRYPTRIGHT				"decryptright"
-#define XML_3MF_ELEMENT_CIPHERDATA					"cipherdata"
+#define XML_3MF_ELEMENT_CIPHERDATA					"CipherData"
 #define XML_3MF_ELEMENT_CIPHERVALUE					"CipherValue"
-#define XML_3MF_ELEMENT_KEY_VALUE					"keyvalue"
-#define XML_3MF_ELEMENT_RSA_KEY_VALUE				"RSAKeyValue"
-#define XML_3MF_ELEMENT_MODULUS						"Modulus"
-#define XML_3MF_ELEMENT_EXPONENT					"Exponent"
+#define XML_3MF_ELEMENT_ACCESSRIGHT					"accessright"
+#define XML_3MF_ELEMENT_ENCRYPTEDKEY				"encryptedkey"
+#define XML_3MF_ELEMENT_ENCRYPTIONMETHOD			"EncryptionMethod"
 #define XML_3MF_SECURE_CONTENT_UUID					"UUID"
 #define XML_3MF_SECURE_CONTENT_CONSUMER_ID			"consumerid"
 #define XML_3MF_SECURE_CONTENT_KEY_ID				"keyid"
@@ -369,6 +367,8 @@ These are given by the 3MF Standard
 #define XML_3MF_SECURE_CONTENT_ENCRYPTION_RSA		"http://www.w3.org/2001/04/xmlenc#rsa-oaep-mgf1p"
 #define XML_3MF_SECURE_CONTENT_COMPRESSION_DEFLATE	"deflate"
 #define XML_3MF_SECURE_CONTENT_CONSUMER_INDEX		"consumerindex"
+#define XML_3MF_SECURE_CONTENT_ALGORITHM			"Algorithm"
+
 #define XML_3MF_NAMESPACEPREFIX_DS					"ds"
 #define XML_3MF_NAMESPACEPREFIX_XENC				"xenc"
 
