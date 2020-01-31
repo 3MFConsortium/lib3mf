@@ -41,24 +41,18 @@ NMR_ModelReaderNode_KeyStoreResourceData.h defines the Model Reader Node class t
 
 namespace NMR {
 
-	struct PARSEDRESOURCEDATA {
+	class CModelReaderNode_KeyStoreResourceData: public CModelReaderNode_KeyStoreBase {
+	private:
 		std::string m_path;
 		eKeyStoreEncryptAlgorithm m_encryptionAlgorithm;
 		nfBool m_compression;
-		std::vector<PARSEDDECRYPTRIGHT> m_parsedDecryptRights;
-	};
-
-	class CModelReaderNode_KeyStoreResourceData: public CModelReaderNode_KeyStoreBase {
-	private:
-		PARSEDRESOURCEDATA m_parsedResourceData;
+		std::vector<PKeyStoreDecryptRight> m_decryptRights;
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 	public:
 		CModelReaderNode_KeyStoreResourceData() = delete;
 		CModelReaderNode_KeyStoreResourceData(_In_ CKeyStore * pKeyStore, _In_ PModelReaderWarnings pWarnings);
-
-		PARSEDRESOURCEDATA GetParsedResourceData();
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 	};

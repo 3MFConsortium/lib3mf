@@ -54,7 +54,6 @@ namespace NMR {
 		CKeyStoreResourceData(std::string const& path);
 		CKeyStoreResourceData(std::string const& path, eKeyStoreEncryptAlgorithm const& ea, nfBool const& compression);
 		//TODO Secure Content: expose properties
-		PKeyStoreDecryptRight addDecryptRight(PKeyStoreDecryptRight decryptRight);
 		PKeyStoreDecryptRight addDecryptRight(NMR::PKeyStoreConsumer const& consumer, eKeyStoreEncryptAlgorithm const& encryptAlgorithm);
 		PKeyStoreDecryptRight addDecryptRight(NMR::PKeyStoreConsumer const& consumer, eKeyStoreEncryptAlgorithm const& encryptAlgorithm, CIPHERVALUE const& cipherValue);
 		nfUint32 getDecryptRightCount();

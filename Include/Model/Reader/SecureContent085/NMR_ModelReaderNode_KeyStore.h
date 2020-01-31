@@ -44,7 +44,6 @@ namespace NMR {
 	class CModelReaderNode_KeyStore: public CModelReaderNode_KeyStoreBase {
 	private:
 		PUUID m_UUID;
-		std::vector<PARSEDRESOURCEDATA> m_parsedResourceDatas;
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);

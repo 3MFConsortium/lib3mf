@@ -23,6 +23,10 @@ namespace NMR {
 	{
 		return m_pConsumer;
 	}
+	eKeyStoreEncryptAlgorithm CKeyStoreDecryptRight::getEncryptionAlgorithm()
+	{
+		return m_EncryptionAlgorithm;
+	}
 	CIPHERVALUE CKeyStoreDecryptRight::getCipherValue() const {
 		return m_sCipherValue;
 	}

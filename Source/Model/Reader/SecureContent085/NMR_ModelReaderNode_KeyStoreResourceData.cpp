@@ -47,12 +47,7 @@ namespace NMR {
 		: CModelReaderNode_KeyStoreBase(pKeyStore, pWarnings)
 	{
 		// default is none
-		m_parsedResourceData.m_compression = false;
-	}
-
-	PARSEDRESOURCEDATA CModelReaderNode_KeyStoreResourceData::GetParsedResourceData()
-	{
-		return m_parsedResourceData;
+		m_compression = false;
 	}
 
 	void CModelReaderNode_KeyStoreResourceData::parseXML(_In_ CXmlReader * pXMLReader)
@@ -66,6 +61,10 @@ namespace NMR {
 		// Parse Content
 		parseContent(pXMLReader);
 
+		PKeyStoreResourceData rd = m_pKeyStore->addResourceData(m_path, m_encryptionAlgorithm, m_compression);
+		for (PKeyStoreDecryptRight pdr : m_decryptRights) {
+			rd->addDecryptRight(pdr->getConsumer(), pdr->getEncryptionAlgorithm(), pdr->getCipherValue());
+		}
 	}
 
 	void CModelReaderNode_KeyStoreResourceData::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
@@ -74,22 +73,22 @@ namespace NMR {
 		__NMRASSERT(pAttributeValue);
 		
 		if (strcmp(XML_3MF_SECURE_CONTENT_PATH, pAttributeName) == 0) {
-			if (!m_parsedResourceData.m_path.empty())
+			if (!m_path.empty())
 				m_pWarnings->addException(CNMRException(NMR_ERROR_DUPLICATE_KEYSTORERESOURCEDATAPATH), eModelReaderWarningLevel::mrwInvalidMandatoryValue);
-			m_parsedResourceData.m_path = pAttributeValue;
+			m_path = pAttributeValue;
 		}
 		else if (strcmp(XML_3MF_SECURE_CONTENT_ENCRYPTION_ALGORITHM, pAttributeName) == 0) {
 			if (strcmp(XML_3MF_SECURE_CONTENT_ENCRYPTION_AES256, pAttributeValue) == 0) {
-				m_parsedResourceData.m_encryptionAlgorithm = eKeyStoreEncryptAlgorithm::Aes256Gcm;
+				m_encryptionAlgorithm = eKeyStoreEncryptAlgorithm::Aes256Gcm;
 			} else if (strcmp(XML_3MF_SECURE_CONTENT_ENCRYPTION_RSA, pAttributeValue) == 0) {
-				m_parsedResourceData.m_encryptionAlgorithm = eKeyStoreEncryptAlgorithm::RsaOaepMgf1p;
+				m_encryptionAlgorithm = eKeyStoreEncryptAlgorithm::RsaOaepMgf1p;
 			} else {
 				// TODO: what to do now?
 			}
 		}
 		else if (strcmp(XML_3MF_SECURE_CONTENT_COMPRESSION, pAttributeName) == 0) {
 			if (strcmp(XML_3MF_SECURE_CONTENT_COMPRESSION_DEFLATE, pAttributeValue) == 0) {
-				m_parsedResourceData.m_compression = true;
+				m_compression = true;
 			} else {
 				// TODO: what to do now?
 			}
@@ -106,7 +105,7 @@ namespace NMR {
 			if (strcmp(pChildName, XML_3MF_ELEMENT_DECRYPTRIGHT) == 0) {
 				PModelReaderNode_KeyStoreDecryptRight pXMLNode = std::make_shared<CModelReaderNode_KeyStoreDecryptRight>(m_pKeyStore, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
-				m_parsedResourceData.m_parsedDecryptRights.push_back(pXMLNode->getParsedDecryptRight());
+				m_decryptRights.push_back(pXMLNode->getDecryptRight());
 			}
 			else {
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);

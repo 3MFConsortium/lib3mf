@@ -52,6 +52,7 @@ namespace NMR {
 			eKeyStoreEncryptAlgorithm const & encryptionAlgorithm, 
 			CIPHERVALUE const & cipherValue);
 		PKeyStoreConsumer getConsumer();
+		eKeyStoreEncryptAlgorithm getEncryptionAlgorithm();
 		CIPHERVALUE getCipherValue() const;
 	};
 
