@@ -43,6 +43,7 @@ namespace NMR {
 	class CModelReaderNode_KeyStoreCipherValue: public CModelReaderNode_KeyStoreBase {
 	private:
 		CIPHERVALUE m_sCipherValue;
+		std::string m_sCipherValueAccumulator;
 	protected:
 		virtual void OnText(_In_z_ const nfChar * pText, _In_ CXmlReader * pXMLReader);
 	public:

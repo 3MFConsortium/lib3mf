@@ -59,6 +59,7 @@ namespace NMR {
 	CModelReaderNode_KeyStoreCipherValue::CModelReaderNode_KeyStoreCipherValue(CKeyStore * pKeyStore, PModelReaderWarnings pWarnings)
 		: CModelReaderNode_KeyStoreBase(pKeyStore, pWarnings)
 	{
+		m_sCipherValueAccumulator = "";
 	}
 
 	CIPHERVALUE CModelReaderNode_KeyStoreCipherValue::getCipherValue()
@@ -77,18 +78,10 @@ namespace NMR {
 		// Parse Content
 		parseContent(pXMLReader);
 
-	}
+		std::remove(m_sCipherValueAccumulator.begin(), m_sCipherValueAccumulator.end(), '\r');
+		std::remove(m_sCipherValueAccumulator.begin(), m_sCipherValueAccumulator.end(), '\n');
 
-	void CModelReaderNode_KeyStoreCipherValue::OnText(_In_z_ const nfChar * pText, _In_ CXmlReader * pXMLReader)
-	{
-		__NMRASSERT(pAttributeName);
-		__NMRASSERT(pAttributeValue);
-
-		std::string pTextString = std::string(pText);
-		std::remove(pTextString.begin(), pTextString.end(), '\r');
-		std::remove(pTextString.begin(), pTextString.end(), '\n');
-
-		std::vector<nfByte> decoded = decode(pTextString);
+		std::vector<nfByte> decoded = decode(m_sCipherValueAccumulator);
 		auto decodedIvBegin = decoded.begin();
 		auto decodedKeyBegin = decodedIvBegin + KEYSTORE_TYPES_IVSIZE;
 		auto decodedTagBegin = decoded.end() - KEYSTORE_TYPES_TAGSIZE;
@@ -96,6 +89,14 @@ namespace NMR {
 		m_sCipherValue.m_iv = std::vector<nfByte>(decodedIvBegin, decodedKeyBegin);
 		m_sCipherValue.m_key = std::vector<nfByte>(decodedKeyBegin, decodedTagBegin);
 		m_sCipherValue.m_tag = std::vector<nfByte>(decodedTagBegin, decoded.end());
+	}
+
+	void CModelReaderNode_KeyStoreCipherValue::OnText(_In_z_ const nfChar * pText, _In_ CXmlReader * pXMLReader)
+	{
+		__NMRASSERT(pAttributeName);
+		__NMRASSERT(pAttributeValue);
+
+		m_sCipherValueAccumulator += std::string(pText);
 	}
 
 }
