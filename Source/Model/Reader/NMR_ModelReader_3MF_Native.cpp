@@ -37,6 +37,7 @@ It uses libzip and irrxml to parse the OPC package.
 #include "Model/Classes/NMR_ModelConstants.h" 
 #include "Model/Classes/NMR_ModelAttachment.h" 
 #include "Model/Classes/NMR_KeyStore.h" 
+#include "Common/NMR_SecureContext.h" 
 #include "Common/NMR_Exception.h" 
 #include "Common/NMR_Exception_Windows.h"
 #include "Common/NMR_StringUtils.h"
@@ -56,6 +57,7 @@ namespace NMR {
 	PImportStream CModelReader_3MF_Native::extract3MFOPCPackage(_In_ PImportStream pPackageStream)
 	{
 		//TODO: get proper decrypt contextmap
+		m_pSecureContext = std::make_shared<CSecureContext>();
 		m_pPackageReader = std::make_shared<CKeyStoreOpcPackageReader>(pPackageStream, m_pSecureContext, m_pWarnings, m_pProgressMonitor);
 
 		m_pModel->setKeyStore(m_pPackageReader->getKeyStore());
