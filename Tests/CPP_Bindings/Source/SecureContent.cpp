@@ -63,7 +63,6 @@ namespace Lib3MF {
 			model = wrapper->CreateModel();
 			PReader reader3MF = model->QueryReader("3mf");
 			reader3MF->ReadFromFile(sTestFilesPath + "/SecureContent/keystore.3mf");
-
 		}
 		virtual void TearDown() {
 			model.reset();
@@ -176,6 +175,14 @@ namespace Lib3MF {
 
 		}
 	};
+
+	TEST_F(SecureContentT, ModelReaderKeyStoreNoWarnings) {
+		model.reset();
+		model = wrapper->CreateModel();
+		PReader reader3MF = model->QueryReader("3mf");
+		reader3MF->ReadFromFile(sTestFilesPath + "/SecureContent/keystore.3mf");
+		CheckReaderWarnings(reader3MF, 0);
+	}
 
 	TEST_F(SecureContentT, ModelKeyStoreUUID) {
 		std::string uuid = "df81fc77-cfd1-4266-a432-9759a0d26c2a";
