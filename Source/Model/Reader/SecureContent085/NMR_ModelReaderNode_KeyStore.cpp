@@ -65,18 +65,6 @@ namespace NMR {
 
 		// TODO: add checks similar to build item reader
 
-		// check consumerindex
-		for (PARSEDRESOURCEDATA prd : m_parsedResourceDatas) {
-			PKeyStoreResourceData rd = m_pKeyStore->addResourceData(prd.m_path, prd.m_encryptionAlgorithm, prd.m_compression);
-			for (PARSEDDECRYPTRIGHT pdr : prd.m_parsedDecryptRights) {
-				nfUint64 index = fnStringToInt32(pdr.m_consumerIndex.c_str());
-				PKeyStoreConsumer c = m_pKeyStore->getConsumerByIndex(index);
-				//TODO: create dr in the context of rd, pass the arguments you need to it.
-				PKeyStoreDecryptRight dr = std::make_shared<CKeyStoreDecryptRight>(c, pdr.m_encryptionAlgorithm, pdr.m_sCipherValue);
-				rd->addDecryptRight(dr);
-			}
-		}
-
 		// TODO: a path must not show up in more than one resourcedata element
 
 		// Set references
@@ -116,7 +104,7 @@ namespace NMR {
 			} else if (strcmp(pChildName, XML_3MF_ELEMENT_RESOURCEDATA) == 0) {
 				PModelReaderNode_KeyStoreResourceData pXMLNode = std::make_shared<CModelReaderNode_KeyStoreResourceData>(m_pKeyStore, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
-				m_parsedResourceDatas.push_back(pXMLNode->GetParsedResourceData());
+				// resource data adds itself to m_pKeyStore, nothing else to do here
 			} else {
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
 			}

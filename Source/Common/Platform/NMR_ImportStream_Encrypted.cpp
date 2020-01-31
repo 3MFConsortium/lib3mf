@@ -2,12 +2,10 @@
 #include "Common/NMR_Exception.h"
 #include <vector>
 namespace NMR {
-	CImportStream_Encrypted::CImportStream_Encrypted(PImportStream pEncryptedStream, DEKDECRYPTCONTEXT * pDecryptContext)
+	CImportStream_Encrypted::CImportStream_Encrypted(PImportStream pEncryptedStream, DEKDESCRIPTOR pDecryptContext)
 		:m_pEncryptedStream(pEncryptedStream), m_pDecryptContext(pDecryptContext)
 	{
 		if (nullptr == pEncryptedStream)
-			throw CNMRException(NMR_ERROR_INVALIDPOINTER);
-		if (nullptr == pDecryptContext)
 			throw CNMRException(NMR_ERROR_INVALIDPOINTER);
 	}
 
@@ -24,10 +22,9 @@ namespace NMR {
 	}
 
 	nfUint64 CImportStream_Encrypted::readBuffer(nfByte * pBuffer, nfUint64 cbTotalBytesToRead, nfBool bNeedsToReadAll) {
-		nfUint64 n = m_pEncryptedStream->readBuffer(pBuffer, cbTotalBytesToRead, bNeedsToReadAll);
 		std::vector<nfByte> decBuffer(cbTotalBytesToRead, 0);
-		m_pDecryptContext->m_fnDecrypt(pBuffer, cbTotalBytesToRead, decBuffer.data(), m_pDecryptContext->m_sCipherValue, m_pDecryptContext->m_pUserData);
-		std::copy(decBuffer.begin(), decBuffer.end(), pBuffer);
+		nfUint64 n = m_pEncryptedStream->readBuffer(decBuffer.data(), cbTotalBytesToRead, bNeedsToReadAll);
+		m_pDecryptContext.m_fnDecrypt(decBuffer, pBuffer, m_pDecryptContext.m_sDekDecryptData);
 		return n;
 	}
 

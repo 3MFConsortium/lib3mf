@@ -40,17 +40,13 @@ NMR_ModelReaderNode_KeyStoreDecryptRight.h defines the Model Reader Node class t
 
 namespace NMR {
 
-	//TODO: expose those directly on reader node
-	struct PARSEDDECRYPTRIGHT {
-		std::string m_consumerIndex;
-		eKeyStoreEncryptAlgorithm m_encryptionAlgorithm;
-		CIPHERVALUE m_sCipherValue;
-	};
-
 	class CModelReaderNode_KeyStoreDecryptRight: public CModelReaderNode_KeyStoreBase {
 	private:
 		nfBool m_bHasCipherData;
-		PARSEDDECRYPTRIGHT m_parsedDecryptRight;
+		std::string m_consumerIndex;
+		eKeyStoreEncryptAlgorithm m_encryptionAlgorithm;
+		CIPHERVALUE m_sCipherValue;
+		PKeyStoreDecryptRight m_decryptRight;
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 		virtual void OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace);
@@ -59,7 +55,7 @@ namespace NMR {
 		CModelReaderNode_KeyStoreDecryptRight() = delete;
 		CModelReaderNode_KeyStoreDecryptRight(_In_ CKeyStore * pKeyStore, _In_ PModelReaderWarnings pWarnings);
 
-		PARSEDDECRYPTRIGHT getParsedDecryptRight();
+		PKeyStoreDecryptRight getDecryptRight();
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 	};

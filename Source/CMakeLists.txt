@@ -67,7 +67,6 @@ Source/API/lib3mf_texture2diterator.cpp
 Source/API/lib3mf_writer.cpp
 Source/API/lib3mf_utils.cpp
 Source/Common/3MF_ProgressMonitor.cpp
-Source/Model/Reader/NMR_ModelReader_InstructionElement.cpp
 Source/Common/Math/NMR_Matrix.cpp
 Source/Common/Math/NMR_PairMatchingTree.cpp
 Source/Common/Math/NMR_Vector.cpp
@@ -87,6 +86,7 @@ Source/Common/Mesh/NMR_MeshBuilder.cpp
 Source/Common/NMR_Exception.cpp
 Source/Common/NMR_Exception_Windows.cpp
 Source/Common/NMR_StringUtils.cpp
+Source/Common/NMR_SecureContext.cpp
 Source/Common/NMR_UUID.cpp
 Source/Common/OPC/NMR_OpcPackagePart.cpp
 Source/Common/OPC/NMR_OpcPackageRelationship.cpp
@@ -95,7 +95,6 @@ Source/Common/OPC/NMR_OpcPackageContentTypesReader.cpp
 Source/Common/OPC/NMR_OpcPackageRelationshipReader.cpp
 Source/Common/OPC/NMR_OpcPackageWriter.cpp
 Source/Common/Platform/NMR_XmlReader_Native.cpp
-Source/Model/Reader/NMR_ModelReader_3MF_Native.cpp
 Source/Common/Platform/NMR_ExportStream.cpp
 Source/Common/Platform/NMR_ExportStream_Callback.cpp
 Source/Common/Platform/NMR_ExportStream_Memory.cpp
@@ -150,7 +149,9 @@ Source/Model/Reader/NMR_ModelReaderNode_ModelBase.cpp
 Source/Model/Reader/NMR_ModelReaderNode_KeyStoreBase.cpp
 Source/Model/Reader/NMR_ModelReaderWarnings.cpp
 Source/Model/Reader/NMR_ModelReader_3MF.cpp
+Source/Model/Reader/NMR_ModelReader_3MF_Native.cpp
 Source/Model/Reader/NMR_ModelReader_ColorMapping.cpp
+Source/Model/Reader/NMR_ModelReader_InstructionElement.cpp
 Source/Model/Reader/NMR_ModelReader_STL.cpp
 Source/Model/Reader/NMR_ModelReader_TexCoordMapping.cpp
 Source/Model/Reader/NMR_KeyStoreOpcPackageReader.cpp

@@ -34,7 +34,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define KEYSTORE_TYPES_MODULUSBUFFERSIZE 257
 #define KEYSTORE_TYPES_EXPONENTBUFFERSIZE 5
 #define KEYSTORE_TYPES_IVSIZE 12
-#define KEYSTORE_TYPES_KEYSIZE 32
 #define KEYSTORE_TYPES_TAGSIZE 16
 
 #include "Common/NMR_Types.h"
@@ -60,19 +59,27 @@ namespace NMR {
 		Aes256Gcm = 1
 	};
 
-	using ImportStream_DEKDecryptCallbackType = std::function<nfUint32(nfByte*, nfUint64, nfByte*, CIPHERVALUE, _In_ void *)>;
-	using ImportStream_KEKDecryptCallbackType = std::function<nfUint32(nfByte*, nfUint64, nfByte*, CIPHERVALUE, _In_ void *)>;
-
-
-	struct DEKDECRYPTCONTEXT {
-		ImportStream_DEKDecryptCallbackType m_fnDecrypt;
-		void * m_pUserData;
+	struct DEKDECRYPTCTX {
+		nfUint64 m_nfHandler;
 		CIPHERVALUE m_sCipherValue;
+		void * m_pUserData;
+	};
+	using ImportStream_DEKDecryptCallbackType = std::function<nfUint32(std::vector<nfByte> const &, nfByte *, DEKDECRYPTCTX)>;
+
+	struct KEKDECRYPTCTX {
+		void * m_pUserData;
 	};
 
-	struct KEKDECRYPTCONTEXT {
+	using ImportStream_KEKDecryptCallbackType = std::function<nfUint32(std::vector<nfByte>, std::vector<nfByte>, KEKDECRYPTCTX)>;
+
+	struct DEKDESCRIPTOR {
+		ImportStream_DEKDecryptCallbackType m_fnDecrypt;
+		DEKDECRYPTCTX m_sDekDecryptData;
+	};
+
+	struct KEKDESCRIPTOR {
 		ImportStream_KEKDecryptCallbackType m_fnDecrypt;
-		void * m_pUserData;
+		KEKDECRYPTCTX m_sKekDecryptData;
 	};
 }
 

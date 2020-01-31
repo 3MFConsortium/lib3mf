@@ -15,19 +15,12 @@ namespace NMR {
 		m_bCompression = compression;
 	}
 
-	PKeyStoreDecryptRight CKeyStoreResourceData::addDecryptRight(PKeyStoreDecryptRight decryptRight)
-	{
-		if (!decryptRight->getConsumer().get())
+	PKeyStoreDecryptRight CKeyStoreResourceData::addDecryptRight(NMR::PKeyStoreConsumer const& consumer, eKeyStoreEncryptAlgorithm const& encryptAlgorithm) {
+		if (!consumer.get())
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
-		if (m_ConsumerDecryptRight.find(decryptRight->getConsumer()->getConsumerID()) != m_ConsumerDecryptRight.end()) {
+		if (m_ConsumerDecryptRight.find(consumer->getConsumerID()) != m_ConsumerDecryptRight.end()) {
 			throw CNMRException(NMR_ERROR_DUPLICATE_KEYSTORECONSUMER);
 		}
-		m_DecryptRights.push_back(decryptRight);
-		m_ConsumerDecryptRight[decryptRight->getConsumer()->getConsumerID()] = decryptRight;
-		return decryptRight;
-	}
-
-	PKeyStoreDecryptRight CKeyStoreResourceData::addDecryptRight(NMR::PKeyStoreConsumer const& consumer, eKeyStoreEncryptAlgorithm const& encryptAlgorithm) {
 		NMR::CIPHERVALUE value;
 		return this->addDecryptRight(consumer, encryptAlgorithm, value);
 	}

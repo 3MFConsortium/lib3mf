@@ -35,6 +35,7 @@ A KeyStore is an in memory representation of the 3MF file.
 #include "Common/NMR_StringUtils.h" 
 #include "Model/Classes/NMR_KeyStoreConsumer.h"
 #include "Model/Classes/NMR_KeyStoreResourceData.h"
+#include "Common/NMR_Exception.h"
 #include <memory>
 namespace NMR {
 	CKeyStore::CKeyStore() {
@@ -56,21 +57,12 @@ namespace NMR {
 
 	PKeyStoreConsumer CKeyStore::addConsumer(std::string id, std::string keyId, std::string keyValue)
 	{
+		if (m_ConsumerRefs.find(id) != m_ConsumerRefs.end()) {
+			throw CNMRException(NMR_ERROR_DUPLICATE_KEYSTORECONSUMER);
+		}
 		PKeyStoreConsumer consumer = std::make_shared<CKeyStoreConsumer>(id, keyId, keyValue);
 		m_Consumers.push_back(consumer);
-		if (m_ConsumerRefs.find(id) != m_ConsumerRefs.end()) {
-			m_ConsumerRefs[id] = consumer;
-		}
-		return consumer;
-	}
-	// TODO: remove
-	PKeyStoreConsumer CKeyStore::addConsumer(std::string id, std::string keyId, RSAKEYVALUE keyValue)
-	{
-		PKeyStoreConsumer consumer = std::make_shared<CKeyStoreConsumer>(id, keyId, keyValue);
-		m_Consumers.push_back(consumer);
-		if (m_ConsumerRefs.find(id) != m_ConsumerRefs.end()) {
-			m_ConsumerRefs[id] = consumer;
-		}
+		m_ConsumerRefs[id] = consumer;
 		return consumer;
 	}
 
@@ -96,6 +88,7 @@ namespace NMR {
 			for (auto it = m_Consumers.begin(); it != m_Consumers.end(); it++) {
 				if ((*it) == consumer) {
 					m_Consumers.erase(it);
+					break;
 				}
 			}
 		}
@@ -113,11 +106,12 @@ namespace NMR {
 
 	PKeyStoreResourceData CKeyStore::addResourceData(std::string path, eKeyStoreEncryptAlgorithm ea, nfBool compression)
 	{
+		if (m_ResourceDataRefs.find(path) != m_ResourceDataRefs.end()) {
+			throw CNMRException(NMR_ERROR_DUPLICATE_KEYSTORERESOURCEDATA);
+		}
 		PKeyStoreResourceData resourceData = std::make_shared<CKeyStoreResourceData>(path, ea, compression);
 		m_ResourceDatas.push_back(resourceData);
-		if (m_ResourceDataRefs.find(path) != m_ResourceDataRefs.end()) {
-			m_ResourceDataRefs[path] = resourceData;
-		}
+		m_ResourceDataRefs[path] = resourceData;
 		return resourceData;
 	}
 

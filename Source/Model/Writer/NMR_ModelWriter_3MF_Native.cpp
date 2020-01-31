@@ -144,8 +144,8 @@ namespace NMR {
 		// TODO: should use real data instead of this code
 		// --------------------------------------------------------------------------------------------------------------------------------------
 		PKeyStore keystore = std::make_shared<CKeyStore>();
-		auto consumer1 = keystore->addConsumer("TESTEADDConsumer1", "KEY1", RSAKEYVALUE {{}, {}});
-		auto consumer2 = keystore->addConsumer("TESTEADDConsumer2", "KEY2", RSAKEYVALUE {{}, {}});
+		auto consumer1 = keystore->addConsumer("TESTEADDConsumer1", "KEY1", "RSAKEYVALUE1");
+		auto consumer2 = keystore->addConsumer("TESTEADDConsumer2", "KEY2", "RSAKEYVALUE1");
 		auto resourcedata = keystore->addResourceData("/3D/SecurityContent/ResourceData", NMR::eKeyStoreEncryptAlgorithm::RsaOaepMgf1p, true);
 		resourcedata->addDecryptRight(consumer1, NMR::eKeyStoreEncryptAlgorithm::Aes256Gcm);
 		PUUID puuid = std::make_shared<CUUID>("64c27d98-7555-484f-b5a3-08063ec18834");

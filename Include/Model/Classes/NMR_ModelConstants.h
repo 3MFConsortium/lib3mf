@@ -306,7 +306,6 @@ These are given by the 3MF Standard
 #define XML_3MF_ATTRIBUTE_COLOR_ID                  "id"
 #define XML_3MF_ATTRIBUTE_COLOR_VALUE               "value"
 
-
 // Base Material element.
 #define XML_3MF_ELEMENT_BASEMATERIALS                    "basematerials"
 #define XML_3MF_ELEMENT_BASE                             "base"
@@ -369,9 +368,9 @@ These are given by the 3MF Standard
 #define XML_3MF_SECURE_CONTENT_COMPRESSION_DEFLATE	"deflate"
 #define XML_3MF_SECURE_CONTENT_CONSUMER_INDEX		"consumerindex"
 #define XML_3MF_SECURE_CONTENT_ALGORITHM			"Algorithm"
-#define XML_3MF_SECURE_CONTENT_PREFIX_XENC          "xenc"
 
-
+#define XML_3MF_NAMESPACEPREFIX_DS					"ds"
+#define XML_3MF_NAMESPACEPREFIX_XENC				"xenc"
 
 #define XML_3MF_PRODUCTION_PATH                     "path"
 #define XML_3MF_PRODUCTION_UUID                     "UUID"

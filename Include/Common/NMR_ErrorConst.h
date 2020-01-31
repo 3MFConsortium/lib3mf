@@ -1124,11 +1124,11 @@ Model error codes (0x8XXX)
 // Could not get OPC KeyStore Stream
 #define NMR_ERROR_OPCCOULDNOTGETKEYSTORESTREAM 0x80EE
 
-// Duplicate KeyStore Consumer id
-#define NMR_ERROR_DUPLICATEKEYSTORECONSUMERID 0x80EF
+// Duplicate KeyStore Consumer id attribute on xml
+#define NMR_ERROR_DUPLICATE_KEYSTORECONSUMERID 0x80EF
 
-// Duplicate KeyStore Consumer keyId
-#define NMR_ERROR_DUPLICATEKEYSTORECONSUMERKEYID 0x80F0
+// Duplicate KeyStore Consumer keyId attribute on xml
+#define NMR_ERROR_DUPLICATE_KEYSTORECONSUMERKEYID 0x80F0
 
 // Missing KeyStore Consumer id
 #define NMR_ERROR_MISSINGCONSUMERID 0x80F1
@@ -1138,6 +1138,12 @@ Model error codes (0x8XXX)
 
 // Duplicate KeyStore DecryptRight consumerindex
 #define NMR_ERROR_DUPLICATEKEYSTORECONSUMERINDEX 0x80F3
+
+//Duplicate KeyStore ResourceData object
+#define NMR_ERROR_DUPLICATE_KEYSTORERESOURCEDATA 0x80F4
+
+//Duplicate KeyStore DecryptRight object
+#define NMR_ERROR_DUPLICATE_KEYSTOREDECRYPTRIGHT 0x80F5
 
 /*-------------------------------------------------------------------
 XML Parser Error Constants (0x9XXX)

@@ -316,27 +316,25 @@ namespace Lib3MF {
 		writer->WriteToBuffer(buffer);
 	}
 
-	TEST_F(SecureContentT, 3MFCreateMultipleConsumersKeyStore) {
-		Lib3MF::PKeyStore keyStore = model->GetKeyStore();
-		
-		std::string firstId = "firstId";
-		std::string secondId = "secondId";
+	TEST_F(SecureContentT, CreateMultipleConsumersKeyStore) {
+		auto lModel = wrapper->CreateModel();
 
-		std::string firstKeyId = "firstKeyId";
-		std::string secondKeyId = "secondKeyId";
+		Lib3MF::PKeyStore keyStore = lModel->GetKeyStore();
 
-		Lib3MF::CKeyValue * keyValue = NULL;
-
-
-		Lib3MF::PConsumer consumer1 = keyStore->AddConsumer(firstId, firstKeyId, keyValue);
-		Lib3MF::PConsumer consumer2 = keyStore->AddConsumer(secondId, secondKeyId, keyValue);
+		Lib3MF::PConsumer consumer1 = keyStore->AddConsumer("firstId", "firstKeyId", "keyValue1");
+		Lib3MF::PConsumer consumer2 = keyStore->AddConsumer("secondId", "secondKeyId", "keyValue2");
 
 		ASSERT_EQ(2, keyStore->GetConsumerCount());
-		ASSERT_EQ(firstId, keyStore->GetConsumer(0)->GetConsumerID());
-		ASSERT_EQ(secondId, keyStore->GetConsumer(1)->GetConsumerID());
+		ASSERT_EQ("firstId", keyStore->GetConsumer(0)->GetConsumerID());
+		ASSERT_EQ("secondId", keyStore->GetConsumer(1)->GetConsumerID());
+		ASSERT_EQ("firstKeyId", keyStore->GetConsumer(0)->GetKeyID());
+		ASSERT_EQ("secondKeyId", keyStore->GetConsumer(1)->GetKeyID());
+		
+		keyStore->RemoveConsumer(consumer1.get());
+		ASSERT_EQ(1, keyStore->GetConsumerCount());
 	}
 
-	TEST_F(SecureContentT, 3MFCreateMultipleResourceDataKeyStore) {
+	TEST_F(SecureContentT, CreateMultipleResourceDataKeyStore) {
 		auto lModel = wrapper->CreateModel();
 
 		Lib3MF::PKeyStore keyStore = lModel->GetKeyStore();
@@ -359,5 +357,7 @@ namespace Lib3MF {
 		ASSERT_EQ(2, keyStore->GetResourceDataCount());
 		ASSERT_EQ(path1, keyStore->GetResourceData(0)->GetPath()->Get());
 		ASSERT_EQ(path2, keyStore->GetResourceData(1)->GetPath()->Get());
+		ASSERT_EQ(Lib3MF::eCompression::Deflate, keyStore->GetResourceData(0)->GetCompression());
+		ASSERT_EQ(Lib3MF::eCompression::None, keyStore->GetResourceData(1)->GetCompression());
 	}
 }

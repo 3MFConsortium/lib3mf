@@ -88,15 +88,14 @@ namespace NMR {
 		std::remove(pTextString.begin(), pTextString.end(), '\r');
 		std::remove(pTextString.begin(), pTextString.end(), '\n');
 
-		//TODO: key has variable size. Only fixed sizes are IV(12) and TAG(16).
 		std::vector<nfByte> decoded = decode(pTextString);
 		auto decodedIvBegin = decoded.begin();
 		auto decodedKeyBegin = decodedIvBegin + KEYSTORE_TYPES_IVSIZE;
-		auto decodedTagBegin = decodedKeyBegin + KEYSTORE_TYPES_KEYSIZE;
+		auto decodedTagBegin = decoded.end() - KEYSTORE_TYPES_TAGSIZE;
 
-		std::copy(decodedIvBegin, decodedKeyBegin, m_sCipherValue.m_iv.begin());
-		std::copy(decodedKeyBegin, decodedTagBegin, m_sCipherValue.m_key.begin());
-		std::copy(decodedTagBegin, decodedTagBegin + KEYSTORE_TYPES_TAGSIZE, m_sCipherValue.m_tag.begin());
+		m_sCipherValue.m_iv = std::vector<nfByte>(decodedIvBegin, decodedKeyBegin);
+		m_sCipherValue.m_key = std::vector<nfByte>(decodedKeyBegin, decodedTagBegin);
+		m_sCipherValue.m_tag = std::vector<nfByte>(decodedTagBegin, decoded.end());
 	}
 
 }

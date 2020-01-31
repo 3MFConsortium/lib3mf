@@ -48,9 +48,9 @@ namespace NMR {
 		m_bHasCipherData = false;
 	}
 
-	PARSEDDECRYPTRIGHT CModelReaderNode_KeyStoreDecryptRight::getParsedDecryptRight()
+	PKeyStoreDecryptRight CModelReaderNode_KeyStoreDecryptRight::getDecryptRight()
 	{
-		return m_parsedDecryptRight;
+		return m_decryptRight;
 	}
 
 	void CModelReaderNode_KeyStoreDecryptRight::parseXML(_In_ CXmlReader * pXMLReader)
@@ -65,6 +65,10 @@ namespace NMR {
 		parseContent(pXMLReader);
 
 		// TODO: check that all m_parsedDecryptRight properties are set
+		nfUint64 index = fnStringToInt32(m_consumerIndex.c_str());
+		// TODO: register warning
+		PKeyStoreConsumer c = m_pKeyStore->getConsumerByIndex(index);
+		m_decryptRight = std::make_shared<CKeyStoreDecryptRight>(c, m_encryptionAlgorithm, m_sCipherValue);
 	}
 
 	void CModelReaderNode_KeyStoreDecryptRight::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
@@ -74,16 +78,16 @@ namespace NMR {
 		
 
 		if (strcmp(XML_3MF_SECURE_CONTENT_CONSUMER_INDEX, pAttributeName) == 0) {
-			if (!m_parsedDecryptRight.m_consumerIndex.empty())
+			if (!m_consumerIndex.empty())
 				m_pWarnings->addException(CNMRException(NMR_ERROR_DUPLICATEKEYSTORECONSUMERINDEX), eModelReaderWarningLevel::mrwInvalidMandatoryValue);
-			m_parsedDecryptRight.m_consumerIndex = pAttributeValue;
+			m_consumerIndex = pAttributeValue;
 		}
 		else if (strcmp(XML_3MF_SECURE_CONTENT_ENCRYPTION_ALGORITHM, pAttributeName) == 0) {
 			if (strcmp(XML_3MF_SECURE_CONTENT_ENCRYPTION_AES256, pAttributeValue) == 0) {
-				m_parsedDecryptRight.m_encryptionAlgorithm = eKeyStoreEncryptAlgorithm::Aes256Gcm;
+				m_encryptionAlgorithm = eKeyStoreEncryptAlgorithm::Aes256Gcm;
 			}
 			else if (strcmp(XML_3MF_SECURE_CONTENT_ENCRYPTION_RSA, pAttributeValue) == 0) {
-				m_parsedDecryptRight.m_encryptionAlgorithm = eKeyStoreEncryptAlgorithm::RsaOaepMgf1p;
+				m_encryptionAlgorithm = eKeyStoreEncryptAlgorithm::RsaOaepMgf1p;
 			}
 			else {
 				// TODO: what to do now?
@@ -114,7 +118,7 @@ namespace NMR {
 				if (m_bHasCipherData) {
 					PModelReaderNode_KeyStoreCipherValue pXMLNode = std::make_shared<CModelReaderNode_KeyStoreCipherValue>(m_pKeyStore, m_pWarnings);
 					pXMLNode->parseXML(pXMLReader);
-					m_parsedDecryptRight.m_sCipherValue = pXMLNode->getCipherValue();
+					m_sCipherValue = pXMLNode->getCipherValue();
 				}
 			}
 			else {

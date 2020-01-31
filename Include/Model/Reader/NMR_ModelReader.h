@@ -42,10 +42,13 @@ A model reader reads in a model file and generates an in-memory representation o
 #include <list>
 
 namespace NMR {
+	class CSecureContext;
+	using PSecureContext = std::shared_ptr<CSecureContext>;
 
 	class CModelReader {
 	protected:
 		PModel m_pModel;
+		PSecureContext m_pSecureContext;
 		PImportStream m_pPrintTicketStream;
 		std::string m_sPrintTicketContentType;
 		std::set<std::string> m_RelationsToRead;

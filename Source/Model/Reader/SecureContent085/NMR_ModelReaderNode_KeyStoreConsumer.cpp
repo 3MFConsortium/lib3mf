@@ -75,11 +75,11 @@ namespace NMR {
 
 		if (strcmp(XML_3MF_SECURE_CONTENT_CONSUMER_ID, pAttributeName) == 0) {
 			if (!m_sConsumerID.empty())
-				m_pWarnings->addException(CNMRException(NMR_ERROR_DUPLICATEKEYSTORECONSUMERID), eModelReaderWarningLevel::mrwInvalidMandatoryValue);
+				m_pWarnings->addException(CNMRException(NMR_ERROR_DUPLICATE_KEYSTORECONSUMERID), eModelReaderWarningLevel::mrwInvalidMandatoryValue);
 			m_sConsumerID = pAttributeValue;
 		} else if (strcmp(XML_3MF_SECURE_CONTENT_KEY_ID, pAttributeName) == 0) {
 			if (!m_sKeyID.empty())
-				m_pWarnings->addException(CNMRException(NMR_ERROR_DUPLICATEKEYSTORECONSUMERKEYID), eModelReaderWarningLevel::mrwInvalidOptionalValue);
+				m_pWarnings->addException(CNMRException(NMR_ERROR_DUPLICATE_KEYSTORECONSUMERKEYID), eModelReaderWarningLevel::mrwInvalidOptionalValue);
 			m_sKeyID = pAttributeValue;
 		}
 	}
