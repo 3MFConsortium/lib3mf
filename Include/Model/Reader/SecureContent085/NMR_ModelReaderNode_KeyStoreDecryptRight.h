@@ -26,14 +26,13 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelReaderNode_KeyStoreResourceData.h defines the Model Reader Node class that is related to <resourcedata>.
+NMR_ModelReaderNode_KeyStoreDecryptRight.h defines the Model Reader Node class that is related to <decryptright>.
 
 --*/
 
-#ifndef __NMR_MODELREADERNODE_KEYSTORERESOURCEDATA
-#define __NMR_MODELREADERNODE_KEYSTORERESOURCEDATA
+#ifndef __NMR_MODELREADERNODE_KEYSTODECRYPTRIGHT
+#define __NMR_MODELREADERNODE_KEYSTODECRYPTRIGHT
 
-#include "Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreDecryptRight.h"
 #include "Model/Reader/NMR_ModelReaderNode_KeyStoreBase.h"
 #include "Model/Reader/NMR_ModelReaderNode.h"
 #include "Model/Classes/NMR_KeyStore.h"
@@ -41,29 +40,30 @@ NMR_ModelReaderNode_KeyStoreResourceData.h defines the Model Reader Node class t
 
 namespace NMR {
 
-	struct PARSEDRESOURCEDATA {
-		std::string m_path;
+	struct PARSEDDECRYPTRIGHT {
+		std::string m_consumerIndex;
 		eKeyStoreEncryptAlgorithm m_encryptionAlgorithm;
-		nfBool m_compression;
-		std::vector<PARSEDDECRYPTRIGHT> m_parsedDecryptRights;
+		PAES256GCMCIPHERVALUE m_cipherValue;
 	};
 
-	class CModelReaderNode_KeyStoreResourceData: public CModelReaderNode_KeyStoreBase {
+	class CModelReaderNode_KeyStoreDecryptRight: public CModelReaderNode_KeyStoreBase {
 	private:
-		PARSEDRESOURCEDATA m_parsedResourceData;
+		nfBool m_bHasCipherData;
+		PARSEDDECRYPTRIGHT m_parsedDecryptRight;
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
+		virtual void OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace);
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 	public:
-		CModelReaderNode_KeyStoreResourceData() = delete;
-		CModelReaderNode_KeyStoreResourceData(_In_ CKeyStore * pKeyStore, _In_ PModelReaderWarnings pWarnings);
+		CModelReaderNode_KeyStoreDecryptRight() = delete;
+		CModelReaderNode_KeyStoreDecryptRight(_In_ CKeyStore * pKeyStore, _In_ PModelReaderWarnings pWarnings);
 
-		PARSEDRESOURCEDATA GetParsedResourceData();
+		PARSEDDECRYPTRIGHT GetParsedDecryptRight();
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 	};
 
-	typedef std::shared_ptr <CModelReaderNode_KeyStoreResourceData> PModelReaderNode_KeyStoreResourceData;
+	typedef std::shared_ptr <CModelReaderNode_KeyStoreDecryptRight> PModelReaderNode_KeyStoreDecryptRight;
 }
 
-#endif // __NMR_MODELREADERNODE_KEYSTORERESOURCEDATA
+#endif // __NMR_MODELREADERNODE_KEYSTODECRYPTRIGHT

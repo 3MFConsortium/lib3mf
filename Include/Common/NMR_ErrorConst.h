@@ -1136,6 +1136,9 @@ Model error codes (0x8XXX)
 // Duplicate KeyStore ResourceData path
 #define NMR_ERROR_DUPLICATE_KEYSTORERESOURCEDATAPATH 0x80F2
 
+// Duplicate KeyStore DecryptRight consumerindex
+#define NMR_ERROR_DUPLICATEKEYSTORECONSUMERINDEX 0x80F3
+
 /*-------------------------------------------------------------------
 XML Parser Error Constants (0x9XXX)
 -------------------------------------------------------------------*/

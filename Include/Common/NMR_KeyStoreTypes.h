@@ -36,6 +36,9 @@ NMR_KeyStoreTypes.h defines portable aliases for all keystore data types.
 
 #define KEYSTORE_TYPES_MODULUSBUFFERSIZE 257
 #define KEYSTORE_TYPES_EXPONENTBUFFERSIZE 5
+#define KEYSTORE_TYPES_IVSIZE 12
+#define KEYSTORE_TYPES_KEYSIZE 32
+#define KEYSTORE_TYPES_TAGSIZE 16
 
 #include "Common/NMR_Types.h"
 
@@ -51,6 +54,8 @@ namespace NMR {
 		nfByte m_key[32];
 		nfByte m_tag[16];
 	};
+
+	typedef std::shared_ptr <AES256GCMCIPHERVALUE> PAES256GCMCIPHERVALUE;
 
 	enum eKeyStoreEncryptAlgorithm {
 		RsaOaepMgf1p = 0,

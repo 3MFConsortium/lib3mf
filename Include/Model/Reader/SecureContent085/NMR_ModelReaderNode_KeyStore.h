@@ -33,6 +33,8 @@ NMR_ModelReaderNode_KeyStore.h defines the Model Reader Node class that is relat
 #ifndef __NMR_MODELREADERNODE_KEYSTORE
 #define __NMR_MODELREADERNODE_KEYSTORE
 
+#include "Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreResourceData.h"
+
 #include "Model/Reader/NMR_ModelReaderNode_KeyStoreBase.h"
 #include "Model/Reader/NMR_ModelReaderNode.h"
 #include "Model/Classes/NMR_KeyStore.h"
@@ -42,9 +44,9 @@ namespace NMR {
 	class CModelReaderNode_KeyStore: public CModelReaderNode_KeyStoreBase {
 	private:
 		PUUID m_UUID;
+		std::vector<PARSEDRESOURCEDATA> m_parsedResourceDatas;
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
-		virtual void OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace);
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 	public:
 		CModelReaderNode_KeyStore() = delete;

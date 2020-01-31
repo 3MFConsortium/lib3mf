@@ -192,7 +192,7 @@ namespace Lib3MF {
 		auto keyStore = model->GetKeyStore();
 		ASSERT_TRUE(keyStore != nullptr);
 		const int consumerCount = keyStore->GetConsumerCount();
-		for (int i = 0; i > consumerCount; ++i) {
+		for (int i = 0; i < consumerCount; ++i) {
 			PConsumer consumer = keyStore->GetConsumer(i);
 			/*
 			<consumer consumerid="LIB3MF#TEST" keyid="contentKey">

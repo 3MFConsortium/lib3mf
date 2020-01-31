@@ -26,14 +26,13 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelReaderNode_KeyStoreResourceData.h defines the Model Reader Node class that is related to <resourcedata>.
+NMR_ModelReaderNode_KeyStoreCipherValue.h defines the Model Reader Node class that is related to <xenc:CipherValue>.
 
 --*/
 
-#ifndef __NMR_MODELREADERNODE_KEYSTORERESOURCEDATA
-#define __NMR_MODELREADERNODE_KEYSTORERESOURCEDATA
+#ifndef __NMR_MODELREADERNODE_KEYSTORECIPHERVALUE
+#define __NMR_MODELREADERNODE_KEYSTORECIPHERVALUE
 
-#include "Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreDecryptRight.h"
 #include "Model/Reader/NMR_ModelReaderNode_KeyStoreBase.h"
 #include "Model/Reader/NMR_ModelReaderNode.h"
 #include "Model/Classes/NMR_KeyStore.h"
@@ -41,29 +40,21 @@ NMR_ModelReaderNode_KeyStoreResourceData.h defines the Model Reader Node class t
 
 namespace NMR {
 
-	struct PARSEDRESOURCEDATA {
-		std::string m_path;
-		eKeyStoreEncryptAlgorithm m_encryptionAlgorithm;
-		nfBool m_compression;
-		std::vector<PARSEDDECRYPTRIGHT> m_parsedDecryptRights;
-	};
-
-	class CModelReaderNode_KeyStoreResourceData: public CModelReaderNode_KeyStoreBase {
+	class CModelReaderNode_KeyStoreCipherValue: public CModelReaderNode_KeyStoreBase {
 	private:
-		PARSEDRESOURCEDATA m_parsedResourceData;
+		PAES256GCMCIPHERVALUE m_cipherValue;
 	protected:
-		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
-		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
+		virtual void OnText(_In_z_ const nfChar * pText, _In_ CXmlReader * pXMLReader);
 	public:
-		CModelReaderNode_KeyStoreResourceData() = delete;
-		CModelReaderNode_KeyStoreResourceData(_In_ CKeyStore * pKeyStore, _In_ PModelReaderWarnings pWarnings);
+		CModelReaderNode_KeyStoreCipherValue() = delete;
+		CModelReaderNode_KeyStoreCipherValue(_In_ CKeyStore * pKeyStore, _In_ PModelReaderWarnings pWarnings);
 
-		PARSEDRESOURCEDATA GetParsedResourceData();
+		PAES256GCMCIPHERVALUE GetCipherValue();
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 	};
 
-	typedef std::shared_ptr <CModelReaderNode_KeyStoreResourceData> PModelReaderNode_KeyStoreResourceData;
+	typedef std::shared_ptr <CModelReaderNode_KeyStoreCipherValue> PModelReaderNode_KeyStoreCipherValue;
 }
 
-#endif // __NMR_MODELREADERNODE_KEYSTORERESOURCEDATA
+#endif // __NMR_MODELREADERNODE_KEYSTORECIPHERVALUE

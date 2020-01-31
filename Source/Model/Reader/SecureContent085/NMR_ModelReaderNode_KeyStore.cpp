@@ -31,11 +31,15 @@ NMR_ModelReaderNode_KeyStore.h defines the Model Reader Node class that is relat
 
 --*/
 
+// TODO: check if needs #include <stdlib.h>
+// https://stackoverflow.com/questions/1646031/strtoull-and-long-long-arithmetic
+
 #include "Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStore.h"
 #include "Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreConsumer.h"
 #include "Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreResourceData.h"
 
 #include "Model/Classes/NMR_ModelConstants.h"
+#include "Model/Classes/NMR_KeyStoreResourceData.h"
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_Exception_Windows.h"
 #include "Common/NMR_StringUtils.h"
@@ -59,46 +63,19 @@ namespace NMR {
 		// Parse Content
 		parseContent(pXMLReader);
 
-		/*if (!m_bHasID)
-			throw CNMRException(NMR_ERROR_MISSINGBUILDITEMOBJECTID);
+		// TODO: add checks similar to build item reader
 
-		CModelObject * pObject;
-		PPackageResourceID pID;
-		if (m_hasPath) {
-			if (m_pModel->currentPath() != m_pModel->rootPath() )
-				throw CNMRException(NMR_ERROR_REFERENCESTOODEEP);
-			pID = m_pModel->findPackageResourceID(m_sPath, m_ObjectID);
+		// check consumerindex
+		for (PARSEDRESOURCEDATA prd : m_parsedResourceDatas) {
+			PKeyStoreResourceData rd = m_pKeyStore->addResourceData(prd.m_path, prd.m_encryptionAlgorithm, prd.m_compression);
+			for (PARSEDDECRYPTRIGHT pdr : prd.m_parsedDecryptRights) {
+				const char * consumerIndex = pdr.m_consumerIndex.c_str();
+				nfUint64 index = strtoull(consumerIndex, (char **) NULL, 10);
+				PKeyStoreConsumer c = m_pKeyStore->getConsumerByIndex(index);
+				PKeyStoreDecryptRight dr = std::make_shared<CKeyStoreDecryptRight>(c, pdr.m_encryptionAlgorithm, * pdr.m_cipherValue.get());
+				rd->addDecryptRight(dr);
+			}
 		}
-		else
-			pID = m_pModel->findPackageResourceID(m_pModel->currentPath(), m_ObjectID);
-		if (!pID)
-			throw CNMRException(NMR_ERROR_COULDNOTFINDBUILDITEMOBJECT);
-
-		pObject = m_pModel->findObject(pID->getUniqueID());
-		if (!pObject)
-			throw CNMRException(NMR_ERROR_COULDNOTFINDBUILDITEMOBJECT);
-
-		if (MODELOBJECTTYPE_OTHER == pObject->getObjectType()) {
-			m_pWarnings->addException(CNMRException(NMR_ERROR_BUILDITEMOBJECT_MUSTNOTBE_OTHER), mrwInvalidMandatoryValue);
-		}
-
-		// Create Build Item
-		PModelBuildItem pBuildItem = std::make_shared<CModelBuildItem>(pObject, m_mTransform, m_pModel->createHandle());
-		if (!pBuildItem->isValidForSlices()) {
-			m_pWarnings->addException(CNMRException(NMR_ERROR_SLICETRANSFORMATIONPLANAR), mrwInvalidMandatoryValue);
-		}
-		
-		if (m_MetaDataGroup.get()) {
-			pBuildItem->metaDataGroup()->mergeMetaData(m_MetaDataGroup.get());
-		}
-
-		m_pModel->addBuildItem(pBuildItem);
-
-		// Set Item Reference
-		pBuildItem->setPartNumber(m_sPartNumber);
-		*/
-
-		// TODO: check consumerindex
 
 		// TODO: a path must not show up in more than one resourcedata element
 
@@ -124,13 +101,6 @@ namespace NMR {
 		}
 	}
 
-	void CModelReaderNode_KeyStore::OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace)
-	{
-		__NMRASSERT(pAttributeName);
-		__NMRASSERT(pAttributeValue);
-		__NMRASSERT(pNameSpace);
-	}
-
 	void CModelReaderNode_KeyStore::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
 	{
 		__NMRASSERT(pChildName);
@@ -140,11 +110,13 @@ namespace NMR {
 		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_SECURECONTENTSPEC) == 0) {
 			// Read a consumer
 			if (strcmp(pChildName, XML_3MF_ELEMENT_CONSUMER) == 0) {
-				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode_KeyStoreConsumer>(m_pKeyStore, m_pWarnings);
+				PModelReaderNode_KeyStoreConsumer pXMLNode = std::make_shared<CModelReaderNode_KeyStoreConsumer>(m_pKeyStore, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
+				// consumer adds itself to m_pKeyStore, nothing else to do here
 			} else if (strcmp(pChildName, XML_3MF_ELEMENT_RESOURCEDATA) == 0) {
-				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode_KeyStoreResourceData>(m_pKeyStore, m_pWarnings);
+				PModelReaderNode_KeyStoreResourceData pXMLNode = std::make_shared<CModelReaderNode_KeyStoreResourceData>(m_pKeyStore, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
+				m_parsedResourceDatas.push_back(pXMLNode->GetParsedResourceData());
 			} else {
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
 			}

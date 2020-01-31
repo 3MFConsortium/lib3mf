@@ -15,6 +15,15 @@ namespace NMR {
 		m_bCompression = compression;
 	}
 
+	PKeyStoreDecryptRight CKeyStoreResourceData::addDecryptRight(PKeyStoreDecryptRight decryptRight)
+	{
+		m_DecryptRights.push_back(decryptRight);
+		if (m_ConsumerDecryptRight.find(decryptRight->getConsumer()) != m_ConsumerDecryptRight.end())
+			m_ConsumerDecryptRight[decryptRight->getConsumer()] = decryptRight;
+		//else throw CNMRException(NMR_ERROR_DUPLICATE_KEYSTORECONSUMER); // buggy code
+		return decryptRight;
+	}
+
 	PKeyStoreDecryptRight CKeyStoreResourceData::addDecryptRight(NMR::PKeyStoreConsumer consumer, eKeyStoreEncryptAlgorithm ea)
 	{	
 		NMR::AES256GCMCIPHERVALUE value;

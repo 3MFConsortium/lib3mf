@@ -3,9 +3,10 @@
 namespace NMR {
 	CKeyStoreDecryptRight::CKeyStoreDecryptRight(PKeyStoreConsumer const & consumer, eKeyStoreEncryptAlgorithm const & encryptionAlgorithm, AES256GCMCIPHERVALUE const & cipherValue) {
 		m_pConsumer= consumer;
-		if (encryptionAlgorithm != eKeyStoreEncryptAlgorithm::Aes256Gcm) {
-			throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
-		}
+		//TODO: this is different from the sample file, what should we do?
+		//if (encryptionAlgorithm != eKeyStoreEncryptAlgorithm::Aes256Gcm) {
+		//	throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
+		//}
 		m_EncryptionAlgorithm = encryptionAlgorithm;
 		m_cipherValue = cipherValue;
 	}
