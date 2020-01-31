@@ -106,7 +106,7 @@ namespace NMR {
 			if (strcmp(pChildName, XML_3MF_ELEMENT_DECRYPTRIGHT) == 0) {
 				PModelReaderNode_KeyStoreDecryptRight pXMLNode = std::make_shared<CModelReaderNode_KeyStoreDecryptRight>(m_pKeyStore, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
-				m_parsedResourceData.m_parsedDecryptRights.push_back(pXMLNode->GetParsedDecryptRight());
+				m_parsedResourceData.m_parsedDecryptRights.push_back(pXMLNode->getParsedDecryptRight());
 			}
 			else {
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);

@@ -269,7 +269,7 @@ namespace Lib3MF {
 				//std::vector<Lib3MF_uint8> cipherValueBuffer;
 				//const Lib3MF_uint8 expectedCipher[381] = "Ao6tg4qOlIfRscGdYkAI/48xT3S6In5TQatVslcAPcpcn5oC5wxKNgghplIxjuw64SICHLfOuUZjLT3/LlP1E6MqhOhyxjBjAYsLhHBxcqlAynHyDJoKk27WYCQV+jCs4z6h78YXzVNto3uOlCghN2m5/XG0yqxaqhERtSfbrWJAIANUD1Rwkhmlg1Bemx2Ai2lzIajZwaWERYt3srNFORAVbR1CXONybXE6BXHnclzTbOV7AtTAOWcBrw1q38mDrnHkWwSu6qoD0yc4FCvEStDH1BvIMN28n7jaz7LAlRhwZTYvv95NdYLgJ0izXdHxApKl8T8u6z1ZjMUAGdn8SGLZajJhyTgqH3GhLYqtnnGw0JYYwEj7Dphdxqg=";
 				//std::vector<Lib3MF_uint8> expected(expectedCipher, expectedCipher + strlen((const char *)expectedCipher));
-				//cipherData->GetCipherValue(cipherValueBuffer);
+				//cipherData->getCipherValue(cipherValueBuffer);
 				//ASSERT_EQ(cipherValueBuffer, expected);
 				//for (std::string::size_type i = 0; i < expectedCipher.size(); ++i) {
 				//	ASSERT_EQ(expectedCipher[i], cipherValueBuffer.at(i));
@@ -307,7 +307,7 @@ namespace Lib3MF {
 		//Query writer
 		auto writer = model->QueryWriter("3mf");
 		//register the consumer key encryption callback (optional)
-		writer->RegisterConsumer("LIB3MF#TEST", EncryptionData::keyEncryptionCallback);
+		writer->RegisterConsumer("LIB3MF#TEST", EncryptionData::keyEncryptionCallback, nullptr);
 		//register the data encryption callback
 		//writer->RegisterEncryption(EncryptionData::dataEncryptionCallback);
 

@@ -8,7 +8,7 @@ namespace NMR {
 		//	throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
 		//}
 		m_EncryptionAlgorithm = encryptionAlgorithm;
-		m_cipherValue = cipherValue;
+		m_sCipherValue = cipherValue;
 	}
 
 	CKeyStoreDecryptRight::CKeyStoreDecryptRight(PKeyStoreConsumer const& consumer, eKeyStoreEncryptAlgorithm const& encryptionAlgorithm) {
@@ -24,6 +24,6 @@ namespace NMR {
 		return m_pConsumer;
 	}
 	CIPHERVALUE CKeyStoreDecryptRight::getCipherValue() const {
-		return m_cipherValue;
+		return m_sCipherValue;
 	}
 }

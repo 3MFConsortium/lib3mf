@@ -28,7 +28,7 @@ namespace NMR {
 	}
 
 	PKeyStoreDecryptRight CKeyStoreResourceData::addDecryptRight(NMR::PKeyStoreConsumer const& consumer, eKeyStoreEncryptAlgorithm const& encryptAlgorithm) {
-		NMR::CIPHERVALUE value = { 0, 0, 0 };
+		NMR::CIPHERVALUE value;
 		return this->addDecryptRight(consumer, encryptAlgorithm, value);
 	}
 

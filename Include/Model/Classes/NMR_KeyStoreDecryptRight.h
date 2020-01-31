@@ -43,7 +43,7 @@ namespace NMR {
 	private:
 		PKeyStoreConsumer m_pConsumer;
 		eKeyStoreEncryptAlgorithm m_EncryptionAlgorithm;
-		CIPHERVALUE m_cipherValue;
+		CIPHERVALUE m_sCipherValue;
 	public:
 		CKeyStoreDecryptRight(PKeyStoreConsumer const & consumer,
 			eKeyStoreEncryptAlgorithm const & encryptionAlgorithm);

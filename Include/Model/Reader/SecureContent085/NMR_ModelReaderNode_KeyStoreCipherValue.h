@@ -42,14 +42,14 @@ namespace NMR {
 
 	class CModelReaderNode_KeyStoreCipherValue: public CModelReaderNode_KeyStoreBase {
 	private:
-		PAES256GCMCIPHERVALUE m_cipherValue;
+		CIPHERVALUE m_sCipherValue;
 	protected:
 		virtual void OnText(_In_z_ const nfChar * pText, _In_ CXmlReader * pXMLReader);
 	public:
 		CModelReaderNode_KeyStoreCipherValue() = delete;
 		CModelReaderNode_KeyStoreCipherValue(_In_ CKeyStore * pKeyStore, _In_ PModelReaderWarnings pWarnings);
 
-		PAES256GCMCIPHERVALUE GetCipherValue();
+		CIPHERVALUE getCipherValue();
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 	};

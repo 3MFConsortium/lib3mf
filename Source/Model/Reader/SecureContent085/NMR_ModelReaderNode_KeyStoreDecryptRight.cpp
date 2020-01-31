@@ -48,7 +48,7 @@ namespace NMR {
 		m_bHasCipherData = false;
 	}
 
-	PARSEDDECRYPTRIGHT CModelReaderNode_KeyStoreDecryptRight::GetParsedDecryptRight()
+	PARSEDDECRYPTRIGHT CModelReaderNode_KeyStoreDecryptRight::getParsedDecryptRight()
 	{
 		return m_parsedDecryptRight;
 	}
@@ -114,7 +114,7 @@ namespace NMR {
 				if (m_bHasCipherData) {
 					PModelReaderNode_KeyStoreCipherValue pXMLNode = std::make_shared<CModelReaderNode_KeyStoreCipherValue>(m_pKeyStore, m_pWarnings);
 					pXMLNode->parseXML(pXMLReader);
-					m_parsedDecryptRight.m_cipherValue = pXMLNode->GetCipherValue();
+					m_parsedDecryptRight.m_sCipherValue = pXMLNode->getCipherValue();
 				}
 			}
 			else {

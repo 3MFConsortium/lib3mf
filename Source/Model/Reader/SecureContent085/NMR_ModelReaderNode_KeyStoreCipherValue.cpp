@@ -61,9 +61,9 @@ namespace NMR {
 	{
 	}
 
-	PAES256GCMCIPHERVALUE CModelReaderNode_KeyStoreCipherValue::GetCipherValue()
+	CIPHERVALUE CModelReaderNode_KeyStoreCipherValue::getCipherValue()
 	{
-		return m_cipherValue;
+		return m_sCipherValue;
 	}
 
 	void CModelReaderNode_KeyStoreCipherValue::parseXML(_In_ CXmlReader * pXMLReader)
@@ -88,15 +88,15 @@ namespace NMR {
 		std::remove(pTextString.begin(), pTextString.end(), '\r');
 		std::remove(pTextString.begin(), pTextString.end(), '\n');
 
+		//TODO: key has variable size. Only fixed sizes are IV(12) and TAG(16).
 		std::vector<nfByte> decoded = decode(pTextString);
 		auto decodedIvBegin = decoded.begin();
 		auto decodedKeyBegin = decodedIvBegin + KEYSTORE_TYPES_IVSIZE;
 		auto decodedTagBegin = decodedKeyBegin + KEYSTORE_TYPES_KEYSIZE;
 
-		m_cipherValue = std::make_shared<AES256GCMCIPHERVALUE>();
-		std::copy(decodedIvBegin, decodedKeyBegin, m_cipherValue->m_iv);
-		std::copy(decodedKeyBegin, decodedTagBegin, m_cipherValue->m_key);
-		std::copy(decodedTagBegin, decodedTagBegin + KEYSTORE_TYPES_TAGSIZE, m_cipherValue->m_tag);
+		std::copy(decodedIvBegin, decodedKeyBegin, m_sCipherValue.m_iv.begin());
+		std::copy(decodedKeyBegin, decodedTagBegin, m_sCipherValue.m_key.begin());
+		std::copy(decodedTagBegin, decodedTagBegin + KEYSTORE_TYPES_TAGSIZE, m_sCipherValue.m_tag.begin());
 	}
 
 }

@@ -55,8 +55,6 @@ namespace NMR {
 		std::vector<nfByte> m_tag;
 	};
 
-	typedef std::shared_ptr <AES256GCMCIPHERVALUE> PAES256GCMCIPHERVALUE;
-
 	enum eKeyStoreEncryptAlgorithm {
 		RsaOaepMgf1p = 0,
 		Aes256Gcm = 1
