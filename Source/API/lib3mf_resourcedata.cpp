@@ -14,8 +14,11 @@ namespace Lib3MF {
 			if (Lib3MF::eEncryptionAlgorithm::RsaOaepMgf1p == eaInstance) {
 				throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 			}
-			CConsumer * consumer = reinterpret_cast<CConsumer *>(pConsumerInstance);
-			NMR::PKeyStoreDecryptRight dR = m_ResourceData->addDecryptRight(consumer->consumer(), NMR::eKeyStoreEncryptAlgorithm::Aes256Gcm);
+			CConsumer * pConsumer = dynamic_cast<CConsumer *>(pConsumerInstance);
+			if (!pConsumer) {
+				throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDKEYSTORECONSUMER);
+			}
+			NMR::PKeyStoreDecryptRight dR = m_ResourceData->addDecryptRight(pConsumer->consumer(), NMR::eKeyStoreEncryptAlgorithm::Aes256Gcm);
 			return new CDecryptRight(dR);
 		}
 
@@ -29,14 +32,20 @@ namespace Lib3MF {
 		}
 
 		IDecryptRight * Lib3MF::Impl::CResourceData::FindDecryptRightByConsumer(IConsumer * pConsumerInstance) {
-			CConsumer * consumer = reinterpret_cast<CConsumer *>(pConsumerInstance);
-			NMR::PKeyStoreDecryptRight dR = m_ResourceData->findDecryptRightByConsumer(consumer->consumer());
+			CConsumer * pConsumer = dynamic_cast<CConsumer *>(pConsumerInstance);
+			if (!pConsumer) {
+				throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDKEYSTORECONSUMER);
+			}
+			NMR::PKeyStoreDecryptRight dR = m_ResourceData->findDecryptRightByConsumer(pConsumer->consumer());
 			return new CDecryptRight(dR);
 		}
 
 		void Lib3MF::Impl::CResourceData::RemoveDecrypt(IConsumer * pConsumerInstance) {
-			CConsumer * consumer = reinterpret_cast<CConsumer *>(pConsumerInstance);
-			m_ResourceData->removeDecryptRight(consumer->consumer());
+			CConsumer * pConsumer = dynamic_cast<CConsumer *>(pConsumerInstance);
+			if (!pConsumer) {
+				throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDKEYSTORECONSUMER);
+			}
+			m_ResourceData->removeDecryptRight(pConsumer->consumer());
 		}
 
 		Lib3MF::eEncryptionAlgorithm Lib3MF::Impl::CResourceData::GetEncryptionAlgorithm() {

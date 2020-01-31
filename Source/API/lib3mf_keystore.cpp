@@ -50,8 +50,11 @@ IConsumer * Lib3MF::Impl::CKeyStore::FindConsumer(const std::string & sConsumerI
 
 void Lib3MF::Impl::CKeyStore::RemoveConsumer(IConsumer * pConsumerInstance) 
 {
-	CConsumer * consumer = reinterpret_cast<CConsumer *>(pConsumerInstance);
-	m_KeyStore->removeConsumer(consumer->consumer());
+	CConsumer * pConsumer = dynamic_cast<CConsumer *>(pConsumerInstance);
+	if (!pConsumer) {
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDKEYSTORECONSUMER);
+	}
+	m_KeyStore->removeConsumer(pConsumer->consumer());
 }
 
 
