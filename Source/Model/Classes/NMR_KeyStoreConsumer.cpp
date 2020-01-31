@@ -11,13 +11,6 @@ namespace NMR {
 		m_sKeyID = keyID;
 		m_sKeyValue = keyValue;
 	}
-	// TODO: remove
-	CKeyStoreConsumer::CKeyStoreConsumer(std::string const & consumerID, std::string const & keyID, RSAKEYVALUE keyValue)
-	{
-		m_sConsumerID = consumerID;
-		m_sKeyID = keyID;
-		m_keyValue = keyValue;
-	}
 
 	std::string CKeyStoreConsumer::getConsumerID() const {
 		return m_sConsumerID;
@@ -31,7 +24,11 @@ namespace NMR {
 		m_sKeyID = keyID;
 	}
 
-	std::string CKeyStoreConsumer::getKeyValueString() const
+	nfBool CKeyStoreConsumer::hasKeyID() const {
+		return !m_sKeyID.empty()
+	}
+
+	std::string CKeyStoreConsumer::getKeyValue() const
 	{
 		return m_sKeyValue;
 	}
@@ -41,17 +38,8 @@ namespace NMR {
 		m_sKeyValue = keyValue;
 	}
 
-	RSAKEYVALUE CKeyStoreConsumer::getKeyValue() const {
-		return m_keyValue;
-	}
-
-	void CKeyStoreConsumer::setKeyValue(RSAKEYVALUE const & keyValue) {
-		m_keyValue = keyValue;
-		m_bHasKeyValue = true;
-	}
-
 	nfBool CKeyStoreConsumer::hasKeyValue() const {
-		return m_bHasKeyValue;
+		return !m_sKeyValue.empty();
 	}
 
 }

@@ -1,6 +1,5 @@
 #include "lib3mf_consumer.hpp"
 #include "lib3mf_interfaceexception.hpp"
-#include "lib3mf_keyvalue.hpp"
 #include "Model/Classes/NMR_KeyStoreConsumer.h"
 
 
@@ -23,12 +22,6 @@ std::string Lib3MF::Impl::CConsumer::GetKeyID() {
 	return m_Consumer->getKeyID();
 }
 
-IKeyValue * Lib3MF::Impl::CConsumer::GetKeyValue() {
-	Lib3MF::sRSAKeyValue theKeyValue;
-	NMR::RSAKEYVALUE value = m_Consumer->getKeyValue();
-	std::copy(value.m_modulus, value.m_modulus + sizeof(value.m_modulus), theKeyValue.m_Modulus);
-	std::copy(value.m_exponent, value.m_exponent+ sizeof(value.m_exponent), theKeyValue.m_Exponent);
-	CKeyValue * kv = new CKeyValue();
-	kv->SetRSA(theKeyValue);
-	return kv;
+std::string Lib3MF::Impl::CConsumer::GetKeyValue() {
+	return m_Consumer->getKeyValue();
 }
