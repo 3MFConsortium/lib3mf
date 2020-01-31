@@ -57,6 +57,7 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_INVALIDPOINTER);
 		m_pPackageReader = std::make_shared<COpcPackageReader>(pImportStream, pWarnings, pProgressMonitor);
 		m_pKeyStore = std::make_shared<CKeyStore>();
+		m_pWarnings = pWarnings;
 
 		PImportStream keyStoreStream = findKeyStoreStream();
 		if (nullptr != keyStoreStream) {
@@ -125,7 +126,6 @@ namespace NMR {
 
 		PXmlReader pXMLReader = fnCreateXMLReaderInstance(keyStoreStream, pProgressMonitor);
 		nfBool bHasModel = false;
-		NMR::PModelReaderWarnings m_pWarnings;
 		eXmlReaderNodeType NodeType;
 		// Read all XML Root Nodes
 		while (!pXMLReader->IsEOF()) {

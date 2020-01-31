@@ -56,6 +56,7 @@ namespace NMR {
 		PKeyStore m_pKeyStore;
 		PSecureContext m_pSecureContext;
 		nfUint64 m_nfHandler;
+		NMR::PModelReaderWarnings m_pWarnings;
 	protected:
 		NMR::PImportStream findKeyStoreStream();
 		void parseKeyStore(NMR::PImportStream keyStoreStream, NMR::PProgressMonitor pProgressMonitor);
