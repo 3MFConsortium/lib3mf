@@ -21,10 +21,12 @@ IKeyValue * Lib3MF::Impl::CKeyStore::CreateKeyValue() {
 
 IConsumer * Lib3MF::Impl::CKeyStore::AddConsumer(const std::string & sConsumerID, const std::string & sKeyID, IKeyValue * pKeyValue)
 {
-	NMR::RSAKEYVALUE keyValue;
-	Lib3MF::sRSAKeyValue sKeyValue = pKeyValue->GetRSA();
-	std::copy(sKeyValue.m_Modulus, sKeyValue.m_Modulus + sizeof(sKeyValue.m_Modulus), keyValue.m_modulus);
-	
+	NMR::RSAKEYVALUE keyValue = {0,0};
+	if (pKeyValue != nullptr) {
+		Lib3MF::sRSAKeyValue sKeyValue = pKeyValue->GetRSA();
+		std::copy(sKeyValue.m_Modulus, sKeyValue.m_Modulus + sizeof(sKeyValue.m_Modulus), keyValue.m_modulus);
+		std::copy(sKeyValue.m_Exponent, sKeyValue.m_Exponent + sizeof(sKeyValue.m_Exponent), keyValue.m_exponent);
+	}
 	NMR::PKeyStoreConsumer consumer = m_KeyStore->addConsumer(sConsumerID, sKeyID, keyValue);
 	return new CConsumer(consumer);
 }
@@ -72,8 +74,7 @@ IResourceData * Lib3MF::Impl::CKeyStore::AddResourceData(IPackagePath * pPackage
 
 	bool compression = (eCompression != Lib3MF::eCompression::None);
 
-	CPackagePath * packagePath = reinterpret_cast<CPackagePath *>(pPackagePath);
-	NMR::PKeyStoreResourceData rd = m_KeyStore->addResourceData(packagePath->Get(), NMR::eKeyStoreEncryptAlgorithm::Aes256Gcm, compression);
+	NMR::PKeyStoreResourceData rd = m_KeyStore->addResourceData(pPackagePath->Get(), NMR::eKeyStoreEncryptAlgorithm::Aes256Gcm, compression);
 	return new CResourceData(rd);
 }
 

@@ -1133,6 +1133,9 @@ Model error codes (0x8XXX)
 // Missing KeyStore Consumer id
 #define NMR_ERROR_MISSINGCONSUMERID 0x80F1
 
+// Duplicate KeyStore ResourceData path
+#define NMR_ERROR_DUPLICATE_KEYSTORERESOURCEDATAPATH 0x80F2
+
 /*-------------------------------------------------------------------
 XML Parser Error Constants (0x9XXX)
 -------------------------------------------------------------------*/

@@ -1,4 +1,3 @@
-
 /*++
 
 Copyright (C) 2019 3MF Consortium
@@ -27,36 +26,34 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_KeyStoreTypes.h defines portable aliases for all keystore data types.
+NMR_ModelReaderNode_KeyStoreExponent.h defines the Model Reader Node class that is related to <ds:Exponent>.
 
 --*/
 
-#ifndef __NMR_KEYSTORETYPES
-#define __NMR_KEYSTORETYPES
+#ifndef __NMR_MODELREADERNODE_KEYSTOREEXPONENT
+#define __NMR_MODELREADERNODE_KEYSTOREEXPONENT
 
-#define KEYSTORE_TYPES_MODULUSBUFFERSIZE 257
-#define KEYSTORE_TYPES_EXPONENTBUFFERSIZE 5
-
-#include "Common/NMR_Types.h"
+#include "Model/Reader/NMR_ModelReaderNode_KeyStoreBase.h"
+#include "Model/Reader/NMR_ModelReaderNode.h"
+#include "Model/Classes/NMR_KeyStore.h"
 
 namespace NMR {
 
-	struct RSAKEYVALUE {
-		nfByte m_modulus[KEYSTORE_TYPES_MODULUSBUFFERSIZE];
+	class CModelReaderNode_KeyStoreExponent: public CModelReaderNode_KeyStoreBase {
+	private:
 		nfByte m_exponent[KEYSTORE_TYPES_EXPONENTBUFFERSIZE];
+	protected:
+		virtual void OnText(_In_z_ const nfChar * pText, _In_ CXmlReader * pXMLReader);
+	public:
+		CModelReaderNode_KeyStoreExponent() = delete;
+		CModelReaderNode_KeyStoreExponent(_In_ CKeyStore * pKeyStore, _In_ PModelReaderWarnings pWarnings);
+
+		nfByte * GetExponent();
+
+		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 	};
 
-	struct AES256GCMCIPHERVALUE {
-		nfByte m_iv[12];
-		nfByte m_key[32];
-		nfByte m_tag[16];
-	};
-
-	enum eKeyStoreEncryptAlgorithm {
-		RsaOaepMgf1p = 0,
-		Aes256Gcm = 1
-	};
-
-
+	typedef std::shared_ptr <CModelReaderNode_KeyStoreExponent> PModelReaderNode_KeyStoreExponent;
 }
-#endif
+
+#endif // __NMR_MODELREADERNODE_KEYSTOREEXPONENT

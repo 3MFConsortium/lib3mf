@@ -27,11 +27,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelReaderNode_KeyStore.h defines the Model Reader Node class that is related to <keystore>.
+NMR_ModelReaderNode_KeyStoreResourceData.h defines the Model Reader Node class that is related to <resourcedata>.
 
 --*/
 
-#include "Model/Reader/SecureContent085/NMR_ModelReaderNode_ResourceData.h"
+#include "Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreResourceData.h"
 
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Common/NMR_Exception.h"
@@ -40,13 +40,14 @@ NMR_ModelReaderNode_KeyStore.h defines the Model Reader Node class that is relat
 
 namespace NMR {
 
-	CModelReaderNode_ResourceData::CModelReaderNode_ResourceData(CKeyStore * pKeyStore, PModelReaderWarnings pWarnings)
+	CModelReaderNode_KeyStoreResourceData::CModelReaderNode_KeyStoreResourceData(CKeyStore * pKeyStore, PModelReaderWarnings pWarnings)
 		: CModelReaderNode_KeyStoreBase(pKeyStore, pWarnings)
 	{
-
+		// default is none
+		m_compression = false;
 	}
 
-	void CModelReaderNode_ResourceData::parseXML(_In_ CXmlReader * pXMLReader)
+	void CModelReaderNode_KeyStoreResourceData::parseXML(_In_ CXmlReader * pXMLReader)
 	{
 		// Parse name
 		parseName(pXMLReader);
@@ -57,16 +58,38 @@ namespace NMR {
 		// Parse Content
 		parseContent(pXMLReader);
 
+		m_pKeyStore->addResourceData(m_path, m_encryptionAlgorithm, m_compression);
 	}
 
-	void CModelReaderNode_ResourceData::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
+	void CModelReaderNode_KeyStoreResourceData::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
 	{
 		__NMRASSERT(pAttributeName);
 		__NMRASSERT(pAttributeValue);
-
+		
+		if (strcmp(XML_3MF_SECURE_CONTENT_PATH, pAttributeName) == 0) {
+			if (!m_path.empty())
+				m_pWarnings->addException(CNMRException(NMR_ERROR_DUPLICATE_KEYSTORERESOURCEDATAPATH), eModelReaderWarningLevel::mrwInvalidMandatoryValue);
+			m_path = pAttributeValue;
+		}
+		else if (strcmp(XML_3MF_SECURE_ENCRYPTION_ALGORITHM, pAttributeName) == 0) {
+			if (strcmp(XML_3MF_SECURE_CONTENT_ENCRYPTION_AES256, pAttributeValue) == 0) {
+				m_encryptionAlgorithm = eKeyStoreEncryptAlgorithm::Aes256Gcm;
+			} else if (strcmp(XML_3MF_SECURE_CONTENT_ENCRYPTION_RSA, pAttributeValue) == 0) {
+				m_encryptionAlgorithm = eKeyStoreEncryptAlgorithm::RsaOaepMgf1p;
+			} else {
+			// TODO: what to do now?
+			}
+		}
+		else if (strcmp(XML_3MF_SECURE_CONTENT_COMPRESSION, pAttributeName) == 0) {
+			if (strcmp(XML_3MF_SECURE_CONTENT_COMPRESSION_DEFLATE, pAttributeValue) == 0) {
+				m_compression = true;
+			} else {
+				// TODO: what to do now?
+			}
+		}
 	}
 
-	void CModelReaderNode_ResourceData::OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace)
+	void CModelReaderNode_KeyStoreResourceData::OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace)
 	{
 		__NMRASSERT(pAttributeName);
 		__NMRASSERT(pAttributeValue);
@@ -74,7 +97,7 @@ namespace NMR {
 
 	}
 
-	void CModelReaderNode_ResourceData::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
+	void CModelReaderNode_KeyStoreResourceData::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
 	{
 		__NMRASSERT(pChildName);
 		__NMRASSERT(pXMLReader);

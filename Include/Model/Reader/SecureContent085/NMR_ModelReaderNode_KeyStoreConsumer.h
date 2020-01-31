@@ -1,4 +1,3 @@
-
 /*++
 
 Copyright (C) 2019 3MF Consortium
@@ -27,36 +26,35 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_KeyStoreTypes.h defines portable aliases for all keystore data types.
+NMR_ModelReaderNode_KeyStoreConsumer.h defines the Model Reader Node class that is related to <consumer>.
 
 --*/
 
-#ifndef __NMR_KEYSTORETYPES
-#define __NMR_KEYSTORETYPES
+#ifndef __NMR_MODELREADERNODE_KEYSTORECONSUMER
+#define __NMR_MODELREADERNODE_KEYSTORECONSUMER
 
-#define KEYSTORE_TYPES_MODULUSBUFFERSIZE 257
-#define KEYSTORE_TYPES_EXPONENTBUFFERSIZE 5
-
-#include "Common/NMR_Types.h"
+#include "Model/Reader/NMR_ModelReaderNode_KeyStoreBase.h"
+#include "Model/Reader/NMR_ModelReaderNode.h"
+#include "Model/Classes/NMR_KeyStore.h"
 
 namespace NMR {
 
-	struct RSAKEYVALUE {
-		nfByte m_modulus[KEYSTORE_TYPES_MODULUSBUFFERSIZE];
-		nfByte m_exponent[KEYSTORE_TYPES_EXPONENTBUFFERSIZE];
+	class CModelReaderNode_KeyStoreConsumer: public CModelReaderNode_KeyStoreBase {
+	private:
+		std::string m_sConsumerID;
+		std::string m_sKeyID;
+		RSAKEYVALUE m_keyValue;
+	protected:
+		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
+		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
+	public:
+		CModelReaderNode_KeyStoreConsumer() = delete;
+		CModelReaderNode_KeyStoreConsumer(_In_ CKeyStore * pKeyStore, _In_ PModelReaderWarnings pWarnings);
+
+		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 	};
 
-	struct AES256GCMCIPHERVALUE {
-		nfByte m_iv[12];
-		nfByte m_key[32];
-		nfByte m_tag[16];
-	};
-
-	enum eKeyStoreEncryptAlgorithm {
-		RsaOaepMgf1p = 0,
-		Aes256Gcm = 1
-	};
-
-
+	typedef std::shared_ptr <CModelReaderNode_KeyStoreConsumer> PModelReaderNode_KeyStoreConsumer;
 }
-#endif
+
+#endif // __NMR_MODELREADERNODE_KEYSTORECONSUMER

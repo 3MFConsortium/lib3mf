@@ -47,6 +47,7 @@ A model is an in memory representation of the 3MF file.
 #include "Model/Classes/NMR_ModelTexture2D.h"
 #include "Model/Classes/NMR_ModelSliceStack.h"
 #include "Model/Classes/NMR_ModelMetaDataGroup.h"
+#include "Model/Classes/NMR_KeyStore.h"
 
 #include "Common/Mesh/NMR_Mesh.h"
 #include "Common/MeshInformation/NMR_MeshInformation.h"
@@ -70,7 +71,7 @@ namespace NMR {
 		m_nHandleCounter = 1;
 		m_pPath = m_resourceHandler.makePackageModelPath(PACKAGE_3D_MODEL_URI);
 		m_pCurPath = m_pPath;
-
+		m_pKeyStore = std::make_shared<NMR::CKeyStore>();
 		setBuildUUID(std::make_shared<CUUID>());
 		m_MetaDataGroup = std::make_shared<CModelMetaDataGroup>();
 	}
