@@ -172,8 +172,3 @@ void CWriter::SetDecimalPrecision(const Lib3MF_uint32 nDecimalPrecision)
 {
 	m_pWriter->SetDecimalPrecision(nDecimalPrecision);
 }
-
-void Lib3MF::Impl::CWriter::RegisterConsumer(const std::string & sConsumerID, const Lib3MF::KeyEncryptionCallback pEncryptionCallback, const Lib3MF_pvoid pUserData) {}
-
-void Lib3MF::Impl::CWriter::RegisterEncryption(const Lib3MF::DataEncryptionCallback pEncryptionCallback, const Lib3MF_pvoid pUserData) {}
-

@@ -212,18 +212,10 @@ namespace Lib3MF {
 			PConsumer consumerFound = keyStore->FindConsumer(consumer->GetConsumerID());
 			ASSERT_EQ(consumer->GetConsumerID(), consumerFound->GetConsumerID());
 
-			PKeyValue keyValue = consumer->GetKeyValue();
+			std::string expected = "";
+			std::string keyValue = consumer->GetKeyValue();
+			ASSERT_EQ(expected, keyValue);
 
-			// Values available here https://github.azc.ext.hp.com/3DSoftware/cencryptionsample/blob/master/testdata/sample.txt#L6
-			ASSERT_EQ(1, keyValue->GetRSA().m_Exponent[2]);
-			ASSERT_EQ(0, keyValue->GetRSA().m_Exponent[3]);
-			ASSERT_EQ(1, keyValue->GetRSA().m_Exponent[4]);
-
-			const Lib3MF_uint8 expectedModulus[257] = { 0xc3, 0x9d, 0xea, 0xe3, 0x2d, 0x8a, 0x7, 0x65, 0x9c, 0xa0, 0xe0, 0x54, 0x13, 0xd3, 0x84, 0x5c, 0x8d, 0xe, 0xb, 0x35, 0x1f, 0xe1, 0x22, 0x35, 0x27, 0xa7, 0xc3, 0xc7, 0xa5, 0xde, 0xc, 0x9f, 0xf, 0xce, 0xac, 0x4d, 0xe2, 0x93, 0xd1, 0xb5, 0x78, 0x2d, 0x29, 0xfa, 0x7f, 0x46, 0x24, 0x8b, 0xd2, 0x29, 0xef, 0x7f, 0xb0, 0x12, 0x7e, 0x40, 0x4c, 0x71, 0x7b, 0xa1, 0xf, 0xc5, 0xcf, 0xd2, 0xe9, 0x22, 0xdc, 0x92, 0x33, 0xbe, 0xcc, 0x53, 0x1f, 0xe2, 0x67, 0x9f, 0x3f, 0xcf, 0xad, 0x89, 0xd2, 0xf4, 0x31, 0x5a, 0xe9, 0xcf, 0x4c, 0x61, 0xc8, 0x93, 0x21, 0x5f, 0x2f, 0xb, 0x8b, 0xb4, 0xde, 0xf9, 0x19, 0x1f, 0xa3, 0xae, 0x1a, 0xae, 0x2b, 0x59, 0xe4, 0x99, 0xb8, 0xd0, 0x93, 0xa, 0x4, 0xf9, 0xf6, 0xae, 0xbb, 0x2f, 0x2e, 0x8e, 0xca, 0xd3, 0x6c, 0x42, 0xb, 0x3, 0x1c, 0xbd, 0x90, 0x3b, 0xcc, 0x61, 0xa5, 0x87, 0x50, 0xe1, 0xbc, 0x7b, 0x17, 0x4b, 0x8d, 0x9f, 0x92, 0xc0, 0xc4, 0x5c, 0x80, 0xd3, 0x29, 0xac, 0x16, 0xc8, 0x12, 0x48, 0xb3, 0x8d, 0x25, 0x6c, 0xda, 0x56, 0xdb, 0x2a, 0xf6, 0x3b, 0xe4, 0x20, 0xe1, 0x1d, 0x4f, 0x36, 0x2a, 0xe7, 0x63, 0xc0, 0x5c, 0xc5, 0x8, 0xa5, 0xe8, 0x1b, 0xca, 0xa4, 0xa1, 0x78, 0xd9, 0x66, 0x79, 0xd7, 0x2c, 0xb3, 0xcb, 0x5e, 0xaa, 0x26, 0x46, 0x9c, 0x23, 0xb1, 0xa4, 0x1c, 0x4b, 0xdf, 0x3f, 0xa8, 0x81, 0xc1, 0x5e, 0x9d, 0x7d, 0x52, 0xf2, 0x4a, 0xb6, 0x52, 0x1c, 0xce, 0x8d, 0x72, 0xc4, 0x8c, 0xfb, 0x3d, 0x7, 0x44, 0x9c, 0x87, 0x5, 0xd2, 0x69, 0xd7, 0xa9, 0x84, 0xbf, 0x3d, 0xb2, 0x12, 0x70, 0xad, 0xaf, 0xb7, 0xd0, 0xd4, 0xb7, 0x47, 0x77, 0xeb, 0xc1, 0xf0, 0xb3, 0xf9, 0xad, 0xc7, 0xeb, 0x4, 0xd5, 0x7 };
-			std::vector<Lib3MF_uint8> expected(expectedModulus, expectedModulus + strlen((const char *)expectedModulus));
-			for (std::string::size_type i = 0; i <= 257; ++i) {
-				ASSERT_EQ(expectedModulus[i], keyValue->GetRSA().m_Modulus[i]);
-			}
 		}
 	}
 	TEST_F(SecureContentT, CheckKeyStoreResourceData) {
@@ -307,7 +299,7 @@ namespace Lib3MF {
 		//Query writer
 		auto writer = model->QueryWriter("3mf");
 		//register the consumer key encryption callback (optional)
-		writer->RegisterConsumer("LIB3MF#TEST", EncryptionData::keyEncryptionCallback, nullptr);
+		//writer->RegisterKEKClient("LIB3MF#TEST", EncryptionData::keyEncryptionCallback, nullptr);
 		//register the data encryption callback
 		//writer->RegisterEncryption(EncryptionData::dataEncryptionCallback);
 
@@ -316,25 +308,26 @@ namespace Lib3MF {
 		writer->WriteToBuffer(buffer);
 	}
 
-	TEST_F(SecureContentT, CreateMultipleConsumersKeyStore) {
-		auto lModel = wrapper->CreateModel();
+	TEST_F(SecureContentT, 3MFCreateMultipleConsumersKeyStore) {
+		Lib3MF::PKeyStore keyStore = model->GetKeyStore();
+		
+		std::string firstId = "firstId";
+		std::string secondId = "secondId";
 
-		Lib3MF::PKeyStore keyStore = lModel->GetKeyStore();
+		std::string firstKeyId = "firstKeyId";
+		std::string secondKeyId = "secondKeyId";
+		std::string firstKeyValue = "firstKeyValue";
+		std::string secondKeyValue = "secondKeyValue";
 
-		Lib3MF::PConsumer consumer1 = keyStore->AddConsumer("firstId", "firstKeyId", "keyValue1");
-		Lib3MF::PConsumer consumer2 = keyStore->AddConsumer("secondId", "secondKeyId", "keyValue2");
+		Lib3MF::PConsumer consumer1 = keyStore->AddConsumer(firstId, firstKeyId, firstKeyValue);
+		Lib3MF::PConsumer consumer2 = keyStore->AddConsumer(secondId, secondKeyId, secondKeyValue);
 
 		ASSERT_EQ(2, keyStore->GetConsumerCount());
-		ASSERT_EQ("firstId", keyStore->GetConsumer(0)->GetConsumerID());
-		ASSERT_EQ("secondId", keyStore->GetConsumer(1)->GetConsumerID());
-		ASSERT_EQ("firstKeyId", keyStore->GetConsumer(0)->GetKeyID());
-		ASSERT_EQ("secondKeyId", keyStore->GetConsumer(1)->GetKeyID());
-		
-		keyStore->RemoveConsumer(consumer1.get());
-		ASSERT_EQ(1, keyStore->GetConsumerCount());
+		ASSERT_EQ(firstId, keyStore->GetConsumer(0)->GetConsumerID());
+		ASSERT_EQ(secondId, keyStore->GetConsumer(1)->GetConsumerID());
 	}
 
-	TEST_F(SecureContentT, CreateMultipleResourceDataKeyStore) {
+	TEST_F(SecureContentT, 3MFCreateMultipleResourceDataKeyStore) {
 		auto lModel = wrapper->CreateModel();
 
 		Lib3MF::PKeyStore keyStore = lModel->GetKeyStore();
@@ -357,7 +350,5 @@ namespace Lib3MF {
 		ASSERT_EQ(2, keyStore->GetResourceDataCount());
 		ASSERT_EQ(path1, keyStore->GetResourceData(0)->GetPath()->Get());
 		ASSERT_EQ(path2, keyStore->GetResourceData(1)->GetPath()->Get());
-		ASSERT_EQ(Lib3MF::eCompression::Deflate, keyStore->GetResourceData(0)->GetCompression());
-		ASSERT_EQ(Lib3MF::eCompression::None, keyStore->GetResourceData(1)->GetCompression());
 	}
 }

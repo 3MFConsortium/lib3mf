@@ -75,8 +75,6 @@ namespace Lib3MF {
 
 
 			// Inherited via IKeyStore
-			virtual IKeyValue * CreateKeyValue() override;
-
 			IConsumer * AddConsumer(const std::string & sConsumerID, const std::string & sKeyID, const std::string & sKeyValue) override;
 
 			Lib3MF_uint32 GetConsumerCount() override;

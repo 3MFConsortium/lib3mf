@@ -2,7 +2,6 @@
 #include "lib3mf_keystore.hpp"
 #include "lib3mf_interfaceexception.hpp"
 #include "lib3mf_consumer.hpp"
-#include "lib3mf_keyvalue.hpp"
 #include "lib3mf_resourcedata.hpp"
 #include "lib3mf_packagepath.hpp"
 
@@ -13,10 +12,6 @@ Lib3MF::Impl::CKeyStore::CKeyStore(NMR::PKeyStore pKeyStore)
 {
 	if (nullptr == pKeyStore)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDKEYSTORE);
-}
-
-IKeyValue * Lib3MF::Impl::CKeyStore::CreateKeyValue() {
-	return new CKeyValue();
 }
 
 IConsumer * Lib3MF::Impl::CKeyStore::AddConsumer(const std::string & sConsumerID, const std::string & sKeyID, const std::string & sKeyValue)

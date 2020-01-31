@@ -57,7 +57,7 @@ namespace Lib3MF {
 			// Inherited via IConsumer
 			std::string GetConsumerID() override;
 			std::string GetKeyID() override;
-			IKeyValue * GetKeyValue() override;
+			std::string GetKeyValue() override;
 		};
 	}
 }
