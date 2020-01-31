@@ -25,7 +25,7 @@ namespace NMR {
 	}
 
 	nfBool CKeyStoreConsumer::hasKeyID() const {
-		return !m_sKeyID.empty()
+		return !m_sKeyID.empty();
 	}
 
 	std::string CKeyStoreConsumer::getKeyValue() const

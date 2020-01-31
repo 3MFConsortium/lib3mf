@@ -42,15 +42,21 @@ void NMR::CModelWriterNode_KeyStore::writeConsumers() {
 
 		// <consumer>
 		writeStartElement(XML_3MF_ELEMENT_CONSUMER);
+		//@consumerid
+		//TODO throw if doesn't exists
 		writeConstStringAttribute(XML_3MF_SECURE_CONTENT_CONSUMER_ID, consumer->getConsumerID().c_str());
+		//TODO optional value, don't write if empty
+		//@keyid
 		writeConstStringAttribute(XML_3MF_SECURE_CONTENT_KEY_ID, consumer->getKeyID().c_str());
 
-		// <keyvalue>
-		writeStartElement(XML_3MF_ELEMENT_KEY_VALUE);
-		std::string keyvalueStr = consumer->getKeyValueString();
-		writeText(keyvalueStr.c_str(), sizeof(keyvalueStr));
-		// </keyvalue>
-		writeFullEndElement();
+		std::string kvStr = consumer->getKeyValue();
+		if (!kvStr.empty()) {
+			// <keyvalue>
+			writeStartElement(XML_3MF_ELEMENT_KEY_VALUE);
+			writeText(kvStr.c_str(), (nfUint32)kvStr.length());
+			// </keyvalue>
+			writeFullEndElement();
+		}
 
 		// </consumer>
 	    writeFullEndElement();
@@ -63,10 +69,10 @@ void NMR::CModelWriterNode_KeyStore::writeResourceDatas() {
 		PKeyStoreResourceData resourcedata = m_pKeyStore->getResourceDataByIndex(index);
 		writeStartElement(XML_3MF_ELEMENT_RESOURCEDATA);
 			writeConstStringAttribute(XML_3MF_SECURE_CONTENT_PATH, resourcedata->getPath()->getPath().c_str());
+			//TODO navigate decryptrights
 			writeStartElement(XML_3MF_ELEMENT_DECRYPTRIGHT);
-
 				writeStartElement(XML_3MF_ELEMENT_CIPHERDATA);
-
+					//TODO throw if no ciphervalue
 					writeStartElement(XML_3MF_ELEMENT_CIPHERVALUE);
 					writeFullEndElement();
 

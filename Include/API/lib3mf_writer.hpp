@@ -91,10 +91,6 @@ public:
 	Lib3MF_uint32 GetDecimalPrecision() override;
 
 	void SetDecimalPrecision(const Lib3MF_uint32 nDecimalPrecision) override;
-
-	// Inherited via IWriter
-	virtual void RegisterConsumer(const std::string & sConsumerID, const Lib3MF::KeyEncryptionCallback pEncryptionCallback, const Lib3MF_pvoid pUserData) override;
-	virtual void RegisterEncryption(const Lib3MF::DataEncryptionCallback pEncryptionCallback, const Lib3MF_pvoid pUserData) override;
 };
 
 }
