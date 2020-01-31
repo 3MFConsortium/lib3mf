@@ -53,6 +53,8 @@ namespace NMR {
 
 		// Clear all legacy settings
 		m_pModel->clearAll();
+
+		m_pSecureContext = std::make_shared<CSecureContext>();
 	}
 
 	void CModelReader::readFromMeshImporter(_In_ CMeshImporter * pImporter)
