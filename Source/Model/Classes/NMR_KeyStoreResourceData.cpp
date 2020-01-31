@@ -94,6 +94,7 @@ namespace NMR {
 
 	nfBool CKeyStoreResourceData::empty() const {
 		return m_DecryptRights.empty();
+	}
 
 	CIPHERVALUE CKeyStoreResourceData::getCipherValue() const {
 		return m_sCipherValue;
