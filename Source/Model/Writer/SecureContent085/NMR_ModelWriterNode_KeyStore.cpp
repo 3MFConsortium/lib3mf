@@ -42,8 +42,8 @@ void NMR::CModelWriterNode_KeyStore::writeConsumers() {
 		 writeStartElement(XML_3MF_ELEMENT_CONSUMER);
 		 writeConstStringAttribute(XML_3MF_SECURE_CONTENT_CONSUMER_ID, consumer->getConsumerID().c_str());
 		 writeConstStringAttribute(XML_3MF_SECURE_CONTENT_KEY_ID, consumer->getKeyID().c_str());
-			writeStartElement(XML_3MF_ELEMENT_KEY_VALUE);
-				 writeStartElement(XML_3MF_ELEMENT_RSA_KEY_VALUE);
+			writeStartElement(XML_3MF_ELEMENT_KEYVALUE);
+				 writeStartElement(XML_3MF_ELEMENT_RSAKEYVALUE);
 					 writeStartElement(XML_3MF_ELEMENT_MODULUS);
 					 // TODO: put the RSAKeyvalue::Modulus
 					 writeFullEndElement();
