@@ -1143,6 +1143,7 @@
 		<param name="PlainKey" type="basicarray" class="uint8" pass="in" description="A description"/>
 		<param name="CipherKey" type="basicarray" class="uint8" pass="out" description="A description"/>
 		<param name="UserData" type="pointer" pass="in" description="Userdata that is passed to the callback function"/>
+		<param name="Result" type="uint64" pass="return" description="amount of bytes decrypted"/>
 	</functiontype>
 	<functiontype name="KeyDecryptionCallback" description="A callback to provide lib3mf with the encrypted/decrypted data encryption key">
 		<param name="Consumer" type="class" class="Consumer" pass="in" description="Information about the consumer and key used in the encryption process"/>
@@ -1150,6 +1151,7 @@
 		<param name="CipherKey" type="basicarray" class="uint8" pass="in" description="A description"/>
 		<param name="PlainKey" type="basicarray" class="uint8" pass="out" description="A description"/>
 		<param name="UserData" type="pointer" pass="in" description="Userdata that is passed to the callback function"/>
+		<param name="Result" type="uint64" pass="return" description="amount of bytes decrypted"/>
 	</functiontype>
 	<struct name="Aes256CipherData">
 		<member name="IV" type="uint8" rows="12"/>
@@ -1164,21 +1166,21 @@
 			<param name="CipherValue" type="struct" class="Aes256CipherData" pass="in" description="A description"/>
 		</method>
 		<method name="GetDescriptor" description="A handler descriptor that uniquely identifies the context of the resource. Each resource will be assigned a different value">
-			<param name="Handler" type="uint64" pass="in" description="A handler descriptor that uniquely identifies the context of the operation. Each resource will have a different handler."/>
+			<param name="Descriptor" type="uint64" pass="return" description="the cipher data descriptor"/>
 		</method>
 	</class>
 	<functiontype name="DataEncryptionCallback" description="A description">
 		<param name="EncryptionAlgorithm" type="enum" class="EncryptionAlgorithm" pass="in" description="The encryption algorithm to be used"/>
 		<param name="CipherData" type="class" class="CipherData" pass="in" description="The plain data encryption key properly decrypted. Buffer will have same size as CipherValue in decryptright"/>
 		<param name="Plain" type="basicarray" class="uint8" pass="in" description="Pointer to the plain data buffer"/>
-		<param name="Cipher" type="basicarray" class="uint8" pass="out" description="Pointer to the cipher data buffer"/>
+		<param name="Cipher" type="basicarray" class="uint8" pass="in" description="Pointer to the cipher data buffer"/>
 		<param name="UserData" type="pointer" pass="in" description="Userdata that is passed to the callback function"/>
 	</functiontype>
 	<functiontype name="DataDecryptionCallback" description="A description">
 		<param name="EncryptionAlgorithm" type="enum" class="EncryptionAlgorithm" pass="in" description="The encryption algorithm to be used"/>
 		<param name="CipherData" type="class" class="CipherData" pass="in" description="The plain data encryption key properly decrypted. Buffer will have same size as CipherValue in decryptright"/>
 		<param name="Cipher" type="basicarray" class="uint8" pass="in" description="Pointer to the cipher data buffer"/>
-		<param name="Plain" type="basicarray" class="uint8" pass="out" description="Pointer to the plain data buffer"/>
+		<param name="Plain" type="basicarray" class="uint8" pass="in" description="Pointer to the plain data buffer"/>
 		<param name="UserData" type="pointer" pass="in" description="Userdata that is passed to the callback function"/>
 	</functiontype>
 	<enum name="Compression">
