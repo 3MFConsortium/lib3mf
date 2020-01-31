@@ -69,10 +69,10 @@ namespace NMR {
 		for (PARSEDRESOURCEDATA prd : m_parsedResourceDatas) {
 			PKeyStoreResourceData rd = m_pKeyStore->addResourceData(prd.m_path, prd.m_encryptionAlgorithm, prd.m_compression);
 			for (PARSEDDECRYPTRIGHT pdr : prd.m_parsedDecryptRights) {
-				const char * consumerIndex = pdr.m_consumerIndex.c_str();
-				nfUint64 index = strtoull(consumerIndex, (char **) NULL, 10);
+				nfUint64 index = fnStringToInt32(pdr.m_consumerIndex.c_str());
 				PKeyStoreConsumer c = m_pKeyStore->getConsumerByIndex(index);
-				PKeyStoreDecryptRight dr = std::make_shared<CKeyStoreDecryptRight>(c, pdr.m_encryptionAlgorithm, * pdr.m_cipherValue.get());
+				//TODO: create dr in the context of rd, pass the arguments you need to it.
+				PKeyStoreDecryptRight dr = std::make_shared<CKeyStoreDecryptRight>(c, pdr.m_encryptionAlgorithm, pdr.m_sCipherValue);
 				rd->addDecryptRight(dr);
 			}
 		}

@@ -33,11 +33,11 @@ namespace NMR {
 		if (m_ConsumerDecryptRight.find(consumer->getConsumerID()) != m_ConsumerDecryptRight.end()) {
 			throw CNMRException(NMR_ERROR_DUPLICATE_KEYSTORECONSUMER);
 		}
-		NMR::AES256GCMCIPHERVALUE value = { 0, 0, 0 };
+		NMR::CIPHERVALUE value;
 		return this->addDecryptRight(consumer, encryptAlgorithm, value);
 	}
 
-	PKeyStoreDecryptRight CKeyStoreResourceData::addDecryptRight(NMR::PKeyStoreConsumer const& consumer, eKeyStoreEncryptAlgorithm const& encryptAlgorithm, AES256GCMCIPHERVALUE const& cipherValue)
+	PKeyStoreDecryptRight CKeyStoreResourceData::addDecryptRight(NMR::PKeyStoreConsumer const& consumer, eKeyStoreEncryptAlgorithm const& encryptAlgorithm, NMR::CIPHERVALUE const& cipherValue)
 	{	
 		if (!consumer.get())
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
@@ -96,4 +96,22 @@ namespace NMR {
 		NMR::CResourceHandler * pResourceHandler = new NMR::CResourceHandler();
 		return pResourceHandler->makePackageModelPath(m_sPath);
 	}
+
+	nfBool CKeyStoreResourceData::empty() const {
+		return m_DecryptRights.empty();
+	}
+
+	CIPHERVALUE CKeyStoreResourceData::getCipherValue() const {
+		return m_sCipherValue;
+	}
+
+	void CKeyStoreResourceData::setCipherValue(CIPHERVALUE const & cv) {
+		m_sCipherValue = cv;
+		m_bOpen = true;
+	}
+
+	bool CKeyStoreResourceData::isOpen() const {
+		return m_bOpen;
+	}
+
 }

@@ -55,6 +55,7 @@ namespace NMR {
 
 	PImportStream CModelReader_3MF_Native::extract3MFOPCPackage(_In_ PImportStream pPackageStream)
 	{
+		//TODO: get proper decrypt contextmap
 		m_pPackageReader = std::make_shared<CKeyStoreOpcPackageReader>(pPackageStream, m_pWarnings, m_pProgressMonitor);
 
 		m_pModel->setKeyStore(m_pPackageReader->getKeyStore());

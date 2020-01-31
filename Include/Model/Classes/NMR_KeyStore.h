@@ -38,7 +38,7 @@ NMR_KeyStore.h defines the KeyStore Class. A keystore is an in memory representa
 #include <memory>
 #include <vector>
 #include "Common/NMR_Types.h"
-#include "Common/NMR_KeyStoreTypes.h"
+#include "Common/NMR_SecureContentTypes.h"
 #include "Common/NMR_UUID.h"
 
 namespace NMR {
@@ -68,7 +68,7 @@ namespace NMR {
 		PKeyStoreConsumer getConsumerByIndex(nfUint64 index) const;
 		PKeyStoreConsumer findConsumerById(std::string id);
 		void removeConsumer(NMR::PKeyStoreConsumer consumer);
-		nfUint32 resourceDataCount() const;
+		nfUint32 getResourceDataCount() const;
 		PKeyStoreResourceData getResourceDataByIndex(nfUint64 index) const;
 		PKeyStoreResourceData addResourceData(std::string path, eKeyStoreEncryptAlgorithm ea, nfBool compression);
 		PKeyStoreResourceData findResourceDataByPath(std::string path);

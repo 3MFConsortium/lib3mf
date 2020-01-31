@@ -24,37 +24,56 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract:
-
-NMR_ModelReaderNode_KeyStoreCipherValue.h defines the Model Reader Node class that is related to <xenc:CipherValue>.
 
 --*/
 
-#ifndef __NMR_MODELREADERNODE_KEYSTORECIPHERVALUE
-#define __NMR_MODELREADERNODE_KEYSTORECIPHERVALUE
 
-#include "Model/Reader/NMR_ModelReaderNode_KeyStoreBase.h"
-#include "Model/Reader/NMR_ModelReaderNode.h"
-#include "Model/Classes/NMR_KeyStore.h"
-#include "Model/Classes/NMR_KeyStoreDecryptRight.h"
+#ifndef NMR_SECURECONTENTTYPES
+#define NMR_SECURECONTENTTYPES
 
+#define KEYSTORE_TYPES_MODULUSBUFFERSIZE 257
+#define KEYSTORE_TYPES_EXPONENTBUFFERSIZE 5
+#define KEYSTORE_TYPES_IVSIZE 12
+#define KEYSTORE_TYPES_KEYSIZE 32
+#define KEYSTORE_TYPES_TAGSIZE 16
+
+#include "Common/NMR_Types.h"
+#include "Common/NMR_Local.h"
+
+#include <vector>
+#include <functional>
 namespace NMR {
 
-	class CModelReaderNode_KeyStoreCipherValue: public CModelReaderNode_KeyStoreBase {
-	private:
-		CIPHERVALUE m_sCipherValue;
-	protected:
-		virtual void OnText(_In_z_ const nfChar * pText, _In_ CXmlReader * pXMLReader);
-	public:
-		CModelReaderNode_KeyStoreCipherValue() = delete;
-		CModelReaderNode_KeyStoreCipherValue(_In_ CKeyStore * pKeyStore, _In_ PModelReaderWarnings pWarnings);
-
-		CIPHERVALUE getCipherValue();
-
-		virtual void parseXML(_In_ CXmlReader * pXMLReader);
+	struct RSAKEYVALUE {
+		nfByte m_modulus[KEYSTORE_TYPES_MODULUSBUFFERSIZE];
+		nfByte m_exponent[KEYSTORE_TYPES_EXPONENTBUFFERSIZE];
 	};
 
-	typedef std::shared_ptr <CModelReaderNode_KeyStoreCipherValue> PModelReaderNode_KeyStoreCipherValue;
+	struct CIPHERVALUE {
+		std::vector<nfByte> m_iv;
+		std::vector<nfByte> m_key;
+		std::vector<nfByte> m_tag;
+	};
+
+	enum eKeyStoreEncryptAlgorithm {
+		RsaOaepMgf1p = 0,
+		Aes256Gcm = 1
+	};
+
+	using ImportStream_DEKDecryptCallbackType = std::function<nfUint32(nfByte*, nfUint64, nfByte*, CIPHERVALUE, _In_ void *)>;
+	using ImportStream_KEKDecryptCallbackType = std::function<nfUint32(nfByte*, nfUint64, nfByte*, CIPHERVALUE, _In_ void *)>;
+
+
+	struct DEKDECRYPTCONTEXT {
+		ImportStream_DEKDecryptCallbackType m_fnDecrypt;
+		void * m_pUserData;
+		CIPHERVALUE m_sCipherValue;
+	};
+
+	struct KEKDECRYPTCONTEXT {
+		ImportStream_KEKDecryptCallbackType m_fnDecrypt;
+		void * m_pUserData;
+	};
 }
 
-#endif // __NMR_MODELREADERNODE_KEYSTORECIPHERVALUE
+#endif // !NMR_SECURECONTENTTYPES

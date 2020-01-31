@@ -1,4 +1,3 @@
-
 /*++
 
 Copyright (C) 2019 3MF Consortium
@@ -27,41 +26,44 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_KeyStoreTypes.h defines portable aliases for all keystore data types.
+NMR_ImportStream_Encrypted.h defines the CImportStream_Encrypted Class.
+This is a stream class for importing encrypted resources from the underlying stream and handing them
+to the proper callbacks that will decrypt the content before returning back to the consumer.
 
 --*/
 
-#ifndef __NMR_KEYSTORETYPES
-#define __NMR_KEYSTORETYPES
-
-#define KEYSTORE_TYPES_MODULUSBUFFERSIZE 257
-#define KEYSTORE_TYPES_EXPONENTBUFFERSIZE 5
-#define KEYSTORE_TYPES_IVSIZE 12
-#define KEYSTORE_TYPES_KEYSIZE 32
-#define KEYSTORE_TYPES_TAGSIZE 16
+#ifndef NMR_IMPORTSTREAM_ENCRYPTED
+#define NMR_IMPORTSTREAM_ENCRYPTED
 
 #include "Common/NMR_Types.h"
+#include "Common/NMR_SecureContentTypes.h"
+#include "Common/Platform/NMR_ImportStream.h"
+
+#include <functional>
 
 namespace NMR {
 
-	struct RSAKEYVALUE {
-		nfByte m_modulus[KEYSTORE_TYPES_MODULUSBUFFERSIZE];
-		nfByte m_exponent[KEYSTORE_TYPES_EXPONENTBUFFERSIZE];
+	
+
+	class CImportStream_Encrypted : public CImportStream {
+		PImportStream m_pEncryptedStream;
+		DEKDECRYPTCONTEXT * m_pDecryptContext;
+	public:
+		CImportStream_Encrypted(PImportStream pEncryptedStream, DEKDECRYPTCONTEXT * context);
+
+		// Inherited via CImportStream
+		virtual nfBool seekPosition(nfUint64 position, nfBool bHasToSucceed) override;
+		virtual nfBool seekForward(nfUint64 bytes, nfBool bHasToSucceed) override;
+		virtual nfBool seekFromEnd(nfUint64 bytes, nfBool bHasToSucceed) override;
+		virtual nfUint64 readBuffer(nfByte * pBuffer, nfUint64 cbTotalBytesToRead, nfBool bNeedsToReadAll) override;
+		virtual nfUint64 retrieveSize() override;
+		virtual void writeToFile(const nfWChar * pwszFileName) override;
+		virtual PImportStream copyToMemory() override;
+		virtual nfUint64 getPosition() override;
 	};
-
-	struct AES256GCMCIPHERVALUE {
-		nfByte m_iv[12];
-		nfByte m_key[32];
-		nfByte m_tag[16];
-	};
-
-	typedef std::shared_ptr <AES256GCMCIPHERVALUE> PAES256GCMCIPHERVALUE;
-
-	enum eKeyStoreEncryptAlgorithm {
-		RsaOaepMgf1p = 0,
-		Aes256Gcm = 1
-	};
-
-
 }
-#endif
+
+
+#endif // !NMR_IMPORTSTREAM_ENCRYPTED
+
+

@@ -43,15 +43,16 @@ namespace NMR {
 	private:
 		PKeyStoreConsumer m_pConsumer;
 		eKeyStoreEncryptAlgorithm m_EncryptionAlgorithm;
-		AES256GCMCIPHERVALUE m_cipherValue;
+		CIPHERVALUE m_sCipherValue;
 	public:
 		CKeyStoreDecryptRight(PKeyStoreConsumer const & consumer,
 			eKeyStoreEncryptAlgorithm const & encryptionAlgorithm);
 
 		CKeyStoreDecryptRight(PKeyStoreConsumer const & consumer, 
 			eKeyStoreEncryptAlgorithm const & encryptionAlgorithm, 
-			AES256GCMCIPHERVALUE const & cipherValue);
+			CIPHERVALUE const & cipherValue);
 		PKeyStoreConsumer getConsumer();
+		CIPHERVALUE getCipherValue() const;
 	};
 
 	typedef std::shared_ptr<CKeyStoreDecryptRight> PKeyStoreDecryptRight;

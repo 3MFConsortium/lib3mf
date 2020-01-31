@@ -57,7 +57,7 @@ void NMR::CModelWriterNode_KeyStore::writeConsumers() {
 }
 
 void NMR::CModelWriterNode_KeyStore::writeResourceDatas() {
-	auto count = m_pKeyStore->resourceDataCount();
+	auto count = m_pKeyStore->getResourceDataCount();
 	for (uint32_t index = 0; index < count; ++index) {
 		PKeyStoreResourceData resourcedata = m_pKeyStore->getResourceDataByIndex(index);
 		writeStartElement(XML_3MF_ELEMENT_RESOURCEDATA);

@@ -30,22 +30,21 @@ NMR_KeyStoreOpcPackageReader.cpp defines an OPC Package reader in a portable way
 
 --*/
 
-#include "Common/NMR_Types.h"
-#ifndef __GNUC__
-#include <Windows.h>
-#else
-#include "Common/Platform/NMR_WinTypes.h"
-#endif
-
 #include "Model/Reader/NMR_KeyStoreOpcPackageReader.h"
+
+#include "Common/NMR_Types.h"
+#include "Common/NMR_Local.h"
+#include "Common/NMR_SecureContentTypes.h"
 #include "Common/Platform/NMR_Platform.h"
-#include "Model/Classes/NMR_ModelConstants.h"
-#include "Model/Classes/NMR_KeyStore.h"
+#include "Common/Platform/NMR_ImportStream.h"
+#include "Common/Platform/NMR_ImportStream_Encrypted.h"
 #include "Common/OPC/NMR_OpcPackageReader.h"
 #include "Common/OPC/NMR_OpcPackagePart.h"
+#include "Model/Classes/NMR_ModelConstants.h"
+#include "Model/Classes/NMR_KeyStore.h"
+#include "Model/Classes/NMR_KeyStoreResourceData.h"
 #include "Model/Reader/NMR_ModelReader_InstructionElement.h"
 #include "Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStore.h"
-
 
 
 namespace NMR {
@@ -55,8 +54,48 @@ namespace NMR {
 		m_KeyStore = std::make_shared<CKeyStore>();
 
 		PImportStream keyStoreStream = findKeyStoreStream();
-		if (nullptr != keyStoreStream)
+		if (nullptr != keyStoreStream) {
 			parseKeyStore(keyStoreStream, pProgressMonitor);
+			if (!m_KeyStore->empty()) {
+				//for each resource data
+				//	if (there are no decrypt rights)
+				//		do nothing
+				//	if (there are no registered consumers)
+				//		do nothing
+				//	for each registered consumer
+				//		find decryptright
+				//			succeed = consumercallback(cipherkey, plainkey, consumer keyvalue, encryption algorithm)
+				//			if succeed 
+				//				set ciphervalue into resource data (resource data is open)
+				//	
+				//TODO, chain this up to here from CReader -> ModelReader
+				std::vector<std::pair<std::string, KEKDECRYPTCONTEXT>> registeredConsumers;
+
+				for (nfUint32 i = 0; i < m_KeyStore->getResourceDataCount() && !registeredConsumers.empty(); ++i) {
+					PKeyStoreResourceData rd = m_KeyStore->getResourceDataByIndex(i);
+					for (auto it = registeredConsumers.begin(); it != registeredConsumers.end() && !rd->empty(); ++it) {
+						PKeyStoreConsumer consumer = m_KeyStore->findConsumerById((*it).first);
+						if (consumer) {
+							PKeyStoreDecryptRight decryptRight = rd->findDecryptRightByConsumer(consumer);
+							if (decryptRight) {
+								CIPHERVALUE cv = decryptRight->getCipherValue();
+								CIPHERVALUE resCv = cv;
+								//fnDecryptKey(
+								//	cv.m_iv.data(),
+								//	cv.m_iv.size(),
+								//	cv.m_tag.data(),
+								//	cv.m_tag.size(),
+								//	cv.m_key.data(),
+								//	cv.m_key.size(),
+								//	resCv.m_key.data()
+								//	//
+								//);
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 
 	COpcPackageRelationship * CKeyStoreOpcPackageReader::findRootRelation(std::string sRelationType, nfBool bMustBeUnique) {
@@ -64,7 +103,19 @@ namespace NMR {
 	}
 
 	POpcPackagePart CKeyStoreOpcPackageReader::createPart(std::string sPath) {
-		return m_pPackageReader->createPart(sPath);
+		auto pPart = m_pPackageReader->createPart(sPath);
+		//if DEK context registered
+		NMR::PKeyStoreResourceData rd = m_KeyStore->findResourceDataByPath(sPath);
+		if (nullptr != rd) {
+			//if resource data is open
+			//	find 
+			//	create encrypted stream with ciphervalue and decryptcontext (function and userdata)
+			//else
+			//	create encrypted stream with null ciphervalue and decryptcontext (function and userdata)
+			//DEKDECRYPTCONTEXT context;
+			//PImportStream encryptedStream = std::make_shared<CImportStream_Encrypted>(pPart->getImportStream(), rd->getCipherValue(), context);
+		}
+		return pPart;
 	}
 
 	nfUint64 CKeyStoreOpcPackageReader::getPartSize(std::string sPath) {

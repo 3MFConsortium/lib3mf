@@ -37,7 +37,7 @@ NMR_KeyStoreResourceData.h defines the KeyStoreResourceData Class. A ResourceDat
 #include <memory>
 #include <vector>
 #include "Common/NMR_Types.h"
-#include "Common/NMR_KeyStoreTypes.h"
+#include "Common/NMR_SecureContentTypes.h"
 #include "Model/Classes/NMR_KeyStoreDecryptRight.h"
 #include "Model/Classes/NMR_PackageResourceID.h"
 namespace NMR {
@@ -48,13 +48,15 @@ namespace NMR {
 		nfBool m_bCompression;
 		std::vector<PKeyStoreDecryptRight> m_DecryptRights;
 		std::map<std::string, PKeyStoreDecryptRight> m_ConsumerDecryptRight;
+		CIPHERVALUE m_sCipherValue;
+		nfBool m_bOpen;
 	public:
 		CKeyStoreResourceData(std::string const& path);
 		CKeyStoreResourceData(std::string const& path, eKeyStoreEncryptAlgorithm const& ea, nfBool const& compression);
 		//TODO Secure Content: expose properties
 		PKeyStoreDecryptRight addDecryptRight(PKeyStoreDecryptRight decryptRight);
 		PKeyStoreDecryptRight addDecryptRight(NMR::PKeyStoreConsumer const& consumer, eKeyStoreEncryptAlgorithm const& encryptAlgorithm);
-		PKeyStoreDecryptRight addDecryptRight(NMR::PKeyStoreConsumer const& consumer, eKeyStoreEncryptAlgorithm const& encryptAlgorithm, AES256GCMCIPHERVALUE const& cipherValue);
+		PKeyStoreDecryptRight addDecryptRight(NMR::PKeyStoreConsumer const& consumer, eKeyStoreEncryptAlgorithm const& encryptAlgorithm, CIPHERVALUE const& cipherValue);
 		nfUint32 getDecryptRightCount();
 		PKeyStoreDecryptRight getDecryptRight(nfUint32 index) const;
 		PKeyStoreDecryptRight findDecryptRightByConsumer(NMR::PKeyStoreConsumer const& consumer);
@@ -62,7 +64,11 @@ namespace NMR {
 		eKeyStoreEncryptAlgorithm getEncryptionAlgorithm() const;
 		nfBool getCompression() const;
 		NMR::PPackageModelPath getPath() const;
-	
+
+		nfBool empty() const;	
+		CIPHERVALUE getCipherValue() const;
+		void setCipherValue(CIPHERVALUE const & cv);
+		bool isOpen() const;
 	};
 
 	typedef std::shared_ptr<CKeyStoreResourceData> PKeyStoreResourceData;

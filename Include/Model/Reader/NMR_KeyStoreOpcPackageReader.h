@@ -35,6 +35,7 @@ NMR_KeyStoreOpcPackageReader.h defines an OPC Package reader in a portable way.
 
 #include <memory>
 
+#include "Common/NMR_SecureContentTypes.h"
 #include "Common/OPC/NMR_IOpcPackageReader.h"
 #include "Common/Platform/NMR_ImportStream.h"
 #include "Common/3MF_ProgressMonitor.h"

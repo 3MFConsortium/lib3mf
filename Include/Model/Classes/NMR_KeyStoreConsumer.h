@@ -37,7 +37,7 @@ NMR_KeyStoreConsumer.h defines the KeyStore Consumer Class. A consumer is an in 
 #include <map>
 #include <memory>
 #include "Common/NMR_Types.h"
-#include "Common/NMR_KeyStoreTypes.h"
+#include "Common/NMR_SecureContentTypes.h"
 
 namespace NMR {
 	class CKeyStoreConsumer {
