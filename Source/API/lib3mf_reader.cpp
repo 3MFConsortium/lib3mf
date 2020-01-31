@@ -30,12 +30,13 @@ Abstract: This is a stub class definition of CReader
 
 #include "lib3mf_reader.hpp"
 #include "lib3mf_interfaceexception.hpp"
-
+#include "lib3mf_cipherdata.hpp"
 // Include custom headers here.
 #include "Common/Platform/NMR_Platform.h"
 #include "Common/Platform/NMR_ImportStream_Shared_Memory.h"
 #include "Common/Platform/NMR_ImportStream_Callback.h"
-
+#include "Common/NMR_SecureContentTypes.h"
+#include "Common/NMR_SecureContext.h"
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
@@ -172,7 +173,40 @@ Lib3MF_uint32 CReader::GetWarningCount ()
 	return reader().getWarnings()->getWarningCount();
 }
 
-void Lib3MF::Impl::CReader::RegisterKEKClient(const std::string &sConsumerID, Lib3MF::KeyDecryptionCallback pDecryptionCallback, Lib3MF_pvoid pUserData) {}
+void Lib3MF::Impl::CReader::RegisterKEKClient(const std::string &sConsumerID, Lib3MF::KeyDecryptionCallback pDecryptionCallback, Lib3MF_pvoid pUserData) {
+	//TODO: this needs to be improved - looks like too much code to be handled here
+	NMR::KEKDESCRIPTOR descriptor;
+	descriptor.m_sKekDecryptData.m_pUserData = pUserData;
+	descriptor.m_fnDecrypt = 
+		[this, pDecryptionCallback](
+			std::vector<NMR::nfByte> const & cipher, 
+			std::vector<NMR::nfByte> & plain, 
+			NMR::KEKDECRYPTCTX ctx) {
+		//TODO find out consumer and resource data encryption algorithm
+		NMR::nfUint64 neededBytes = 0;
+		NMR::nfUint64 result = -1;
+		(*pDecryptionCallback)(0, eEncryptionAlgorithm::RsaOaepMgf1p, cipher.size(), cipher.data(), 0, &neededBytes, nullptr, ctx.m_pUserData, &result);
+		if (neededBytes > 0) {
+			plain.resize(neededBytes, 0);
+			(*pDecryptionCallback)(0, eEncryptionAlgorithm::RsaOaepMgf1p, cipher.size(), cipher.data(), plain.size(), nullptr, plain.data(), ctx.m_pUserData, &result);
+		}
+		return result;
+	};
+	m_pReader->getSecureContext()->addKekCtx(sConsumerID, descriptor);
+}
 
-void Lib3MF::Impl::CReader::RegisterDEKClient(Lib3MF::DataDecryptionCallback pDecryptionCallback, Lib3MF_pvoid pUserData) {}
+void Lib3MF::Impl::CReader::RegisterDEKClient(Lib3MF::DataDecryptionCallback pDecryptionCallback, Lib3MF_pvoid pUserData) {
+	NMR::DEKDESCRIPTOR descriptor;
+	descriptor.m_sDekDecryptData.m_pUserData = pUserData;
+	descriptor.m_fnDecrypt = [this, pDecryptionCallback](std::vector<NMR::nfByte> const & cipher, NMR::nfByte * plain, NMR::DEKDECRYPTCTX ctx) {
+		Lib3MF::sAes256CipherData cipherDataValue;
+		std::copy(ctx.m_sCipherValue.m_iv.begin(), ctx.m_sCipherValue.m_iv.end(), cipherDataValue.m_IV);
+		std::copy(ctx.m_sCipherValue.m_key.begin(), ctx.m_sCipherValue.m_key.end(), cipherDataValue.m_Key);
+		std::copy(ctx.m_sCipherValue.m_tag.begin(), ctx.m_sCipherValue.m_tag.end(), cipherDataValue.m_Tag);
+		CCipherData cipherData(cipherDataValue, ctx.m_nfHandler);
+		(*pDecryptionCallback)(eEncryptionAlgorithm::Aes256Gcm, reinterpret_cast<Lib3MF_CipherData>(&cipherData), cipher.size(), cipher.data(), cipher.size(), plain, ctx.m_pUserData);
+		return 0;
+	};
+	m_pReader->getSecureContext()->setDekCtx(descriptor);
+}
 
