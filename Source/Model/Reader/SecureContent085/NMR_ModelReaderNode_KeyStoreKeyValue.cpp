@@ -32,8 +32,6 @@ NMR_ModelReaderNode_KeyStoreKeyValue.h defines the Model Reader Node class that 
 --*/
 
 #include "Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreKeyValue.h"
-#include "Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreModulus.h"
-#include "Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreExponent.h"
 
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Common/NMR_Exception.h"
@@ -45,17 +43,12 @@ namespace NMR {
 	CModelReaderNode_KeyStoreKeyValue::CModelReaderNode_KeyStoreKeyValue(CKeyStore * pKeyStore, PModelReaderWarnings pWarnings)
 		: CModelReaderNode_KeyStoreBase(pKeyStore, pWarnings)
 	{
-		m_bHasKeyValue = false;
+		m_sKeyValue = "";
 	}
 
-	RSAKEYVALUE CModelReaderNode_KeyStoreKeyValue::GetKeyValue()
+	std::string CModelReaderNode_KeyStoreKeyValue::GetKeyValue()
 	{
-		return m_keyValue;
-	}
-
-	nfBool CModelReaderNode_KeyStoreKeyValue::HasKeyValue()
-	{
-		return m_bHasKeyValue;
+		return m_sKeyValue;
 	}
 
 	void CModelReaderNode_KeyStoreKeyValue::parseXML(_In_ CXmlReader * pXMLReader)
@@ -69,37 +62,14 @@ namespace NMR {
 		// Parse Content
 		parseContent(pXMLReader);
 
-		// TODO: check modulus and exponent
+		// TODO: check key value
 	}
 
-	void CModelReaderNode_KeyStoreKeyValue::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
+	void CModelReaderNode_KeyStoreKeyValue::OnText(_In_z_ const nfChar * pText, _In_ CXmlReader * pXMLReader)
 	{
-		__NMRASSERT(pChildName);
-		__NMRASSERT(pXMLReader);
-		__NMRASSERT(pNameSpace);
+		__NMRASSERT(pText);
 
-		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_DIGITALSIGNATURESPEC) == 0) {
-			if (strcmp(pChildName, XML_3MF_ELEMENT_RSAKEYVALUE) == 0) {
-				m_bHasKeyValue = true;
-			}
-			else if (strcmp(pChildName, XML_3MF_ELEMENT_MODULUS) == 0) {
-				if (m_bHasKeyValue) {
-					PModelReaderNode_KeyStoreModulus pXMLNode = std::make_shared<CModelReaderNode_KeyStoreModulus>(m_pKeyStore, m_pWarnings);
-					pXMLNode->parseXML(pXMLReader);
-					memcpy(m_keyValue.m_modulus, pXMLNode->GetModulus(), KEYSTORE_TYPES_MODULUSBUFFERSIZE * sizeof(nfByte));
-				}
-			}
-			else if (strcmp(pChildName, XML_3MF_ELEMENT_EXPONENT) == 0) {
-				if (m_bHasKeyValue) {
-					PModelReaderNode_KeyStoreExponent pXMLNode = std::make_shared<CModelReaderNode_KeyStoreExponent>(m_pKeyStore, m_pWarnings);
-					pXMLNode->parseXML(pXMLReader);
-					memcpy(m_keyValue.m_exponent, pXMLNode->GetExponent(), KEYSTORE_TYPES_EXPONENTBUFFERSIZE * sizeof(nfByte));
-				}
-			}
-			else {
-				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
-			}
-		}
+		m_sKeyValue += std::string(pText);
 	}
 
 }

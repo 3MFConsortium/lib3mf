@@ -43,15 +43,24 @@ namespace NMR {
 	class CKeyStoreConsumer {
 		std::string m_sConsumerID;
 		std::string m_sKeyID;
+		std::string m_sKeyValue;
+		// TODO: remove
 		RSAKEYVALUE m_keyValue;
 		nfBool m_bHasKeyValue;
 	public:
 		CKeyStoreConsumer(std::string const & consumerID);
+		CKeyStoreConsumer(std::string const & consumerID, std::string const & keyID, std::string keyValue);
+		// TODO: remove
 		CKeyStoreConsumer(std::string const & consumerID, std::string const & keyID, RSAKEYVALUE keyValue);
 		std::string getConsumerID() const;
 		std::string getKeyID() const;
 		void setKeyID(std::string const & keyID);
+		// TODO: rename to getKeyValue
+		std::string getKeyValueString() const;
+		void setKeyValue(std::string const & keyValue);
+		// TODO: remove
 		RSAKEYVALUE getKeyValue() const;
+		// TODO: remove
 		void setKeyValue(RSAKEYVALUE const & keyValue);
 		nfBool hasKeyValue() const;
 	};

@@ -41,16 +41,14 @@ namespace NMR {
 
 	class CModelReaderNode_KeyStoreKeyValue: public CModelReaderNode_KeyStoreBase {
 	private:
-		RSAKEYVALUE m_keyValue;
-		nfBool m_bHasKeyValue;
+		std::string m_sKeyValue;
 	protected:
-		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
+		void CModelReaderNode_KeyStoreKeyValue::OnText(_In_z_ const nfChar * pText, _In_ CXmlReader * pXMLReader);
 	public:
 		CModelReaderNode_KeyStoreKeyValue() = delete;
 		CModelReaderNode_KeyStoreKeyValue(_In_ CKeyStore * pKeyStore, _In_ PModelReaderWarnings pWarnings);
 
-		RSAKEYVALUE GetKeyValue();
-		nfBool HasKeyValue();
+		std::string GetKeyValue();
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 	};

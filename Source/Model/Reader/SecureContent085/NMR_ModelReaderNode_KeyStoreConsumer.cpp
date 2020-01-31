@@ -65,7 +65,7 @@ namespace NMR {
 
 		// TODO: check key id
 		// TODO: check key value
-		m_pKeyStore->addConsumer(m_sConsumerID, m_sKeyID, m_keyValue);
+		m_pKeyStore->addConsumer(m_sConsumerID, m_sKeyID, m_sKeyValue);
 	}
 
 	void CModelReaderNode_KeyStoreConsumer::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
@@ -95,7 +95,7 @@ namespace NMR {
 			if (strcmp(pChildName, XML_3MF_ELEMENT_KEYVALUE) == 0) {
 				PModelReaderNode_KeyStoreKeyValue pXMLNode = std::make_shared<CModelReaderNode_KeyStoreKeyValue>(m_pKeyStore, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
-				m_keyValue = pXMLNode->GetKeyValue();
+				m_sKeyValue = pXMLNode->GetKeyValue();
 			}
 			else {
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);

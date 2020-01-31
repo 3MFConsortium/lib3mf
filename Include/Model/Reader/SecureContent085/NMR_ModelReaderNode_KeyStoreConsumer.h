@@ -43,7 +43,7 @@ namespace NMR {
 	private:
 		std::string m_sConsumerID;
 		std::string m_sKeyID;
-		RSAKEYVALUE m_keyValue;
+		std::string m_sKeyValue;
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
