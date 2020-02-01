@@ -26,8 +26,6 @@ namespace NMR {
 		void addKekCtx(std::string const & consumerId, KEKDESCRIPTOR const & descriptor);
 		KEKDESCRIPTOR getKekCtx(std::string const & consumerId) const;
 		bool emptyKekCtx() const;
-
-
 	};
 
 
