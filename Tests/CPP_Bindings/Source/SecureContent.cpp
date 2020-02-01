@@ -15,7 +15,6 @@ namespace Lib3MF {
 		sTriangle pTriangles[12];
 
 		PModel model;
-		static PWrapper wrapper;
 
 		const std::string UNENCRYPTEDKEYSTORE = "/SecureContent/keystore.3mf";
 	protected:
@@ -65,6 +64,8 @@ namespace Lib3MF {
 			reader->ReadFromFile(sTestFilesPath + UNENCRYPTEDKEYSTORE);
 			return reader;
 		}
+	public:
+		static PWrapper wrapper;
 	};
 	PWrapper SecureContentT::wrapper;
 
@@ -223,37 +224,31 @@ namespace Lib3MF {
 	struct CallbackData {
 		int value;
 		std::vector<Lib3MF_uint64> context;
-		/**
-		* DataDecryptionCallback - A description
-		*
-		* @param[in] eEncryptionAlgorithm - The encryption algorithm to be used
-		* @param[in] pCipherData - The plain data encryption key properly decrypted. Buffer will have same size as CipherValue in decryptright
-		* @param[in] nCipherBufferSize - Number of elements in buffer
-		* @param[in] pCipherBuffer - uint8 buffer of Pointer to the cipher data buffer
-		* @param[in] nPlainBufferSize - Number of elements in buffer
-		* @param[in] pPlainBuffer - uint8 buffer of Pointer to the plain data buffer
-		* @param[in] pUserData - Userdata that is passed to the callback function
-		*/
+		//Lib3MF::eEncryptionAlgorithm, Lib3MF_CipherData, Lib3MF_uint64, const Lib3MF_uint8 *, const Lib3MF_uint64, Lib3MF_uint64*, Lib3MF_uint8 *, Lib3MF_pvoid
 		static void testDEKCallback(
 			Lib3MF::eEncryptionAlgorithm algorithm, 
 			Lib3MF_CipherData cipherData, 
 			Lib3MF_uint64 cipherSize, 
 			const Lib3MF_uint8 * cipherBuffer, 
-			Lib3MF_uint64 plainSize, 
-			const Lib3MF_uint8 * plainBuffer, 
+			const Lib3MF_uint64 plainSize, 
+			Lib3MF_uint64 * plainNeededSize,
+			Lib3MF_uint8 * plainBuffer, 
 			Lib3MF_pvoid userData) {
 
 			CallbackData * cb = reinterpret_cast<CallbackData *>(userData);
 			ASSERT_EQ(cb->value, 1);
 			
-			CCipherData * c = reinterpret_cast<CCipherData *>(cipherData);
-			Lib3MF_uint64 descriptor = c->GetDescriptor();
+			Lib3MF_uint64 descriptor = 0;
+			lib3mf_cipherdata_getdescriptor(cipherData, &descriptor);
 			ASSERT_EQ(descriptor, 1);
 			
-			sAes256CipherData cipher = c->GetAes256Gcm();
+			sAes256CipherData cipher;
+			lib3mf_cipherdata_getaes256gcm(cipherData, &cipher);
 			//TODO assert cipher somehow
 			
 			cb->context.push_back(descriptor);
+
+			std::copy(cipherBuffer, cipherBuffer + plainSize, plainBuffer);
 		}
 	};
 

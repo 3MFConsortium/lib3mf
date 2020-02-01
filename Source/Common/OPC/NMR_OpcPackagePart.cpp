@@ -133,4 +133,8 @@ namespace NMR {
 		pXMLWriter->WriteEndDocument();
 	}
 
+	void COpcPackagePart::setImportStream(_In_ PImportStream pImportStream) {
+		m_pImportStream = pImportStream;
+	}
+
 }

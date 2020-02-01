@@ -15,7 +15,7 @@ namespace NMR {
 	private:
 		 ClientConsumerMap m_ConsumerMap;
 		 DEKDESCRIPTOR m_sDekDescriptor;
-		 bool m_bHasDek;
+		 bool m_bHasDek = false;
 	public:
 		bool hasDekCtx() const;
 		DEKDESCRIPTOR getDekCtx() const;

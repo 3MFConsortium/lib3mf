@@ -66,6 +66,8 @@ namespace NMR {
 		std::multimap<std::string, POpcPackageRelationship>& getRelationShips();
 
 		void writeRelationships(_In_ PExportStream pExportStream);
+
+		void setImportStream(_In_ PImportStream pImportStream);
 	};
 
 	typedef std::shared_ptr<COpcPackagePart> POpcPackagePart;

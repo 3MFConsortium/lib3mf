@@ -52,9 +52,10 @@ namespace NMR {
 	CKeyStoreOpcPackageReader::CKeyStoreOpcPackageReader(PImportStream pImportStream, PSecureContext pSecureContext, PModelReaderWarnings pWarnings, PProgressMonitor pProgressMonitor)
 		:m_pSecureContext(pSecureContext)
 	{
-
 		if (nullptr == pSecureContext)
 			throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
+		m_nfHandler = 0;
 		m_pPackageReader = std::make_shared<COpcPackageReader>(pImportStream, pWarnings, pProgressMonitor);
 		m_pKeyStore = std::make_shared<CKeyStore>();
 		m_pWarnings = pWarnings;
@@ -96,7 +97,7 @@ namespace NMR {
 				DEKDESCRIPTOR p = m_pSecureContext->getDekCtx();
 				p.m_sDekDecryptData.m_nfHandler = ++m_nfHandler;
 				PImportStream decryptStream = std::make_shared<CImportStream_Encrypted>(pPart->getImportStream(), p);
-				//TODO pPart.importStream = decryptStream;
+				pPart->setImportStream(decryptStream);
 			}
 		}
 		return pPart;

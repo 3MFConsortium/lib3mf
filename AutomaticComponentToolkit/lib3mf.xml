@@ -1180,7 +1180,7 @@
 		<param name="EncryptionAlgorithm" type="enum" class="EncryptionAlgorithm" pass="in" description="The encryption algorithm to be used"/>
 		<param name="CipherData" type="class" class="CipherData" pass="in" description="The plain data encryption key properly decrypted. Buffer will have same size as CipherValue in decryptright"/>
 		<param name="Cipher" type="basicarray" class="uint8" pass="in" description="Pointer to the cipher data buffer"/>
-		<param name="Plain" type="basicarray" class="uint8" pass="in" description="Pointer to the plain data buffer"/>
+		<param name="Plain" type="basicarray" class="uint8" pass="out" description="Pointer to the plain data buffer"/>
 		<param name="UserData" type="pointer" pass="in" description="Userdata that is passed to the callback function"/>
 	</functiontype>
 	<enum name="Compression">

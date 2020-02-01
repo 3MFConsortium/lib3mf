@@ -1,4 +1,5 @@
 #include "Common/Platform/NMR_ImportStream_Encrypted.h"
+#include "Common/Platform/NMR_ImportStream_Unique_Memory.h"
 #include "Common/NMR_Exception.h"
 #include <vector>
 namespace NMR {
@@ -37,7 +38,8 @@ namespace NMR {
 	}
 
 	PImportStream CImportStream_Encrypted::copyToMemory() {
-		return m_pEncryptedStream->copyToMemory();
+		nfUint64 cbStreamSize = retrieveSize();
+		return std::make_shared<CImportStream_Unique_Memory>(this, cbStreamSize, false);
 	}
 
 	nfUint64 CImportStream_Encrypted::getPosition() {

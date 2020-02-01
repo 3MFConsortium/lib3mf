@@ -203,8 +203,11 @@ void Lib3MF::Impl::CReader::RegisterDEKClient(Lib3MF::DataDecryptionCallback pDe
 		std::copy(ctx.m_sCipherValue.m_iv.begin(), ctx.m_sCipherValue.m_iv.end(), cipherDataValue.m_IV);
 		std::copy(ctx.m_sCipherValue.m_key.begin(), ctx.m_sCipherValue.m_key.end(), cipherDataValue.m_Key);
 		std::copy(ctx.m_sCipherValue.m_tag.begin(), ctx.m_sCipherValue.m_tag.end(), cipherDataValue.m_Tag);
-		CCipherData cipherData(cipherDataValue, ctx.m_nfHandler);
-		(*pDecryptionCallback)(eEncryptionAlgorithm::Aes256Gcm, reinterpret_cast<Lib3MF_CipherData>(&cipherData), cipher.size(), cipher.data(), cipher.size(), plain, ctx.m_pUserData);
+		std::shared_ptr<CCipherData> pdata = std::make_shared<CCipherData>(cipherDataValue, ctx.m_nfHandler);
+		IBase * pBaseCipherData(nullptr);
+		pBaseCipherData = pdata.get();
+		Lib3MF_CipherData cdhandle = (IBase *)pBaseCipherData;
+		(*pDecryptionCallback)(eEncryptionAlgorithm::Aes256Gcm, cdhandle, cipher.size(), cipher.data(), cipher.size(), nullptr, plain, ctx.m_pUserData);
 		return 0;
 	};
 	m_pReader->getSecureContext()->setDekCtx(descriptor);

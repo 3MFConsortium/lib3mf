@@ -8,7 +8,10 @@ namespace NMR {
 	DEKDESCRIPTOR CSecureContext::getDekCtx() const {
 		return m_sDekDescriptor;
 	}
-	void CSecureContext::setDekCtx(DEKDESCRIPTOR const & descriptor) {}
+	void CSecureContext::setDekCtx(DEKDESCRIPTOR const & descriptor) {
+		m_sDekDescriptor = descriptor;
+		m_bHasDek = true;
+	}
 	ClientConsumerMap::const_iterator CSecureContext::kekCtxBegin() const {
 		return m_ConsumerMap.cbegin();
 	}
