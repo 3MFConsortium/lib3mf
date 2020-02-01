@@ -215,12 +215,12 @@ namespace Lib3MF
 
 		auto writer = lModel->QueryWriter("3mf");
 		//std::vector<Lib3MF_uint8> buffer;
-		writer->WriteToFile(sTestFilesPath + "/Production/" + "nonrootmodels.3mf");
+		writer->WriteToFile(Writer::OutFolder + "nonrootmodels.3mf");
 		//writer->WriteToBuffer(buffer);
 
 		auto modelAssert = wrapper->CreateModel();
 		auto reader = modelAssert->QueryReader("3mf");
-		reader->ReadFromFile(sTestFilesPath + "/Production/" + "nonrootmodels.3mf");
+		reader->ReadFromFile(Writer::OutFolder + "nonrootmodels.3mf");
 		//reader->ReadFromBuffer(buffer);
 		ASSERT_EQ(3, modelAssert->GetObjects()->Count());
 		ASSERT_EQ(3, modelAssert->GetBuildItems()->Count());
