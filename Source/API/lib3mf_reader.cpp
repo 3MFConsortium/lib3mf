@@ -173,6 +173,11 @@ Lib3MF_uint32 CReader::GetWarningCount ()
 	return reader().getWarnings()->getWarningCount();
 }
 
+#include "Model/Classes/NMR_KeyStore.h"
+#include "Model/Classes/NMR_KeyStoreConsumer.h"
+#include "Model/Classes/NMR_KeyStoreResourceData.h"
+#include "lib3mf_consumer.hpp"
+
 void Lib3MF::Impl::CReader::RegisterKEKClient(const std::string &sConsumerID, Lib3MF::KeyDecryptionCallback pDecryptionCallback, Lib3MF_pvoid pUserData) {
 	//TODO: this needs to be improved - looks like too much code to be handled here
 	NMR::KEKDESCRIPTOR descriptor;
@@ -182,13 +187,27 @@ void Lib3MF::Impl::CReader::RegisterKEKClient(const std::string &sConsumerID, Li
 			std::vector<NMR::nfByte> const & cipher, 
 			std::vector<NMR::nfByte> & plain, 
 			NMR::KEKDECRYPTCTX ctx) {
-		//TODO find out consumer and resource data encryption algorithm
+		NMR::PKeyStore keystore = this->reader().getKeyStore();
+		NMR::PKeyStoreConsumer consumer = keystore->findConsumerById(ctx.m_sConsumerId);
+		__NMRASSERT(nullptr != consumer);
+		NMR::PKeyStoreResourceData resourceData = keystore->findResourceDataByPath(ctx.m_sResourcePath);
+		__NMRASSERT(nullptr != resourceData);
+		NMR::PKeyStoreDecryptRight decryptRight = resourceData->findDecryptRightByConsumer(consumer);
+		__NMRASSERT(nullptr != decryptRight);
+
+		eEncryptionAlgorithm algorithm = (decryptRight->getEncryptionAlgorithm() == NMR::eKeyStoreEncryptAlgorithm::RsaOaepMgf1p) 
+			? eEncryptionAlgorithm::RsaOaepMgf1p : eEncryptionAlgorithm::Aes256Gcm;
+
 		NMR::nfUint64 neededBytes = 0;
 		NMR::nfUint64 result = -1;
-		(*pDecryptionCallback)(0, eEncryptionAlgorithm::RsaOaepMgf1p, cipher.size(), cipher.data(), 0, &neededBytes, nullptr, ctx.m_pUserData, &result);
-		if (neededBytes > 0) {
+		std::shared_ptr<IConsumer> pConsumer = std::make_shared<CConsumer>(consumer);
+		IBase * pBaseConsumer(nullptr);
+		pBaseConsumer = pConsumer.get();
+		Lib3MF_Consumer handle = pBaseConsumer;
+		(*pDecryptionCallback)(handle, algorithm, cipher.size(), cipher.data(), 0, &neededBytes, nullptr, ctx.m_pUserData, &result);
+		if (result == 0 && neededBytes > 0) {
 			plain.resize(neededBytes, 0);
-			(*pDecryptionCallback)(0, eEncryptionAlgorithm::RsaOaepMgf1p, cipher.size(), cipher.data(), plain.size(), nullptr, plain.data(), ctx.m_pUserData, &result);
+			(*pDecryptionCallback)(handle, algorithm, cipher.size(), cipher.data(), plain.size(), nullptr, plain.data(), ctx.m_pUserData, &result);
 		}
 		return result;
 	};
@@ -203,11 +222,11 @@ void Lib3MF::Impl::CReader::RegisterDEKClient(Lib3MF::DataDecryptionCallback pDe
 		std::copy(ctx.m_sCipherValue.m_iv.begin(), ctx.m_sCipherValue.m_iv.end(), cipherDataValue.m_IV);
 		std::copy(ctx.m_sCipherValue.m_key.begin(), ctx.m_sCipherValue.m_key.end(), cipherDataValue.m_Key);
 		std::copy(ctx.m_sCipherValue.m_tag.begin(), ctx.m_sCipherValue.m_tag.end(), cipherDataValue.m_Tag);
-		std::shared_ptr<CCipherData> pdata = std::make_shared<CCipherData>(cipherDataValue, ctx.m_nfHandler);
+		std::shared_ptr<CCipherData> pCipherData = std::make_shared<CCipherData>(cipherDataValue, ctx.m_nfHandler);
 		IBase * pBaseCipherData(nullptr);
-		pBaseCipherData = pdata.get();
-		Lib3MF_CipherData cdhandle = (IBase *)pBaseCipherData;
-		(*pDecryptionCallback)(eEncryptionAlgorithm::Aes256Gcm, cdhandle, cipher.size(), cipher.data(), cipher.size(), nullptr, plain, ctx.m_pUserData);
+		pBaseCipherData = pCipherData.get();
+		Lib3MF_CipherData handle = pBaseCipherData;
+		(*pDecryptionCallback)(eEncryptionAlgorithm::Aes256Gcm, handle, cipher.size(), cipher.data(), cipher.size(), nullptr, plain, ctx.m_pUserData);
 		return 0;
 	};
 	m_pReader->getSecureContext()->setDekCtx(descriptor);

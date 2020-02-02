@@ -72,6 +72,7 @@ namespace NMR {
 		void SetProgressCallback(Lib3MFProgressCallback callback, void* userData);
 
 		PSecureContext getSecureContext() const;
+		PKeyStore getKeyStore() const;
 	};
 
 	typedef std::shared_ptr <CModelReader> PModelReader;

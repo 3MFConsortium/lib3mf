@@ -49,20 +49,22 @@ NMR_KeyStoreOpcPackageReader.cpp defines an OPC Package reader in a portable way
 
 
 namespace NMR {
-	CKeyStoreOpcPackageReader::CKeyStoreOpcPackageReader(PImportStream pImportStream, PSecureContext pSecureContext, PModelReaderWarnings pWarnings, PProgressMonitor pProgressMonitor)
-		:m_pSecureContext(pSecureContext)
+	CKeyStoreOpcPackageReader::CKeyStoreOpcPackageReader(PImportStream pImportStream, PKeyStore pKeyStore, PSecureContext pSecureContext, PModelReaderWarnings pWarnings, PProgressMonitor pProgressMonitor)
+		:m_pSecureContext(pSecureContext), m_pKeyStore(pKeyStore)
 	{
 		if (nullptr == pSecureContext)
 			throw CNMRException(NMR_ERROR_INVALIDPOINTER);
 
 		m_nfHandler = 0;
 		m_pPackageReader = std::make_shared<COpcPackageReader>(pImportStream, pWarnings, pProgressMonitor);
-		m_pKeyStore = std::make_shared<CKeyStore>();
 		m_pWarnings = pWarnings;
 
 		PImportStream keyStoreStream = findKeyStoreStream();
 		if (nullptr != keyStoreStream) {
+
 			parseKeyStore(keyStoreStream, pProgressMonitor);
+
+
 			if (!m_pKeyStore->empty()) {
 				for (nfUint32 i = 0; i < m_pKeyStore->getResourceDataCount() && !m_pSecureContext->emptyKekCtx(); ++i) {
 					PKeyStoreResourceData rd = m_pKeyStore->getResourceDataByIndex(i);
@@ -72,6 +74,8 @@ namespace NMR {
 							PKeyStoreDecryptRight decryptRight = rd->findDecryptRightByConsumer(consumer);
 							if (decryptRight) {
 								KEKDESCRIPTOR ctx = (*it).second;
+								ctx.m_sKekDecryptData.m_sConsumerId = consumer->getConsumerID();
+								ctx.m_sKekDecryptData.m_sResourcePath = rd->getPath()->getPath();
 								CIPHERVALUE open = decryptRight->getCipherValue();
 								if (ctx.m_fnDecrypt(open.m_key, open.m_key, ctx.m_sKekDecryptData)) {
 									rd->setCipherValue(open);

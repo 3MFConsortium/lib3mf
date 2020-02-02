@@ -49,6 +49,8 @@ namespace NMR {
 	using PKeyStore = std::shared_ptr<CKeyStore>;
 	class CSecureContext;
 	using PSecureContext = std::shared_ptr<CSecureContext>;
+	class CKeyStore;
+	using PKeyStore = std::shared_ptr<CKeyStore>;
 
 	class CKeyStoreOpcPackageReader: public IOpcPackageReader {
 	private:
@@ -61,7 +63,7 @@ namespace NMR {
 		NMR::PImportStream findKeyStoreStream();
 		void parseKeyStore(NMR::PImportStream keyStoreStream, NMR::PProgressMonitor pProgressMonitor);
 	public:
-		CKeyStoreOpcPackageReader(_In_ PImportStream pImportStream, _In_ PSecureContext pSecureContext, _In_ PModelReaderWarnings pWarnings, _In_ PProgressMonitor pProgressMonitor);
+		CKeyStoreOpcPackageReader(_In_ PImportStream pImportStream, _In_ PKeyStore pKeyStore, _In_ PSecureContext pSecureContext, _In_ PModelReaderWarnings pWarnings, _In_ PProgressMonitor pProgressMonitor);
 
 		// Inherited via IOpcPackageReader
 		virtual COpcPackageRelationship * findRootRelation(std::string sRelationType, nfBool bMustBeUnique) override;

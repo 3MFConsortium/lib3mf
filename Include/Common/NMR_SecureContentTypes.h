@@ -73,8 +73,8 @@ namespace NMR {
 
 	struct KEKDECRYPTCTX {
 		void * m_pUserData;
-		std::string consumerId;
-		std::string resourcePath;
+		std::string m_sConsumerId;
+		std::string m_sResourcePath;
 	};
 
 	using ImportStream_KEKDecryptCallbackType = std::function<nfUint64(std::vector<nfByte> const &, std::vector<nfByte> &, KEKDECRYPTCTX)>;

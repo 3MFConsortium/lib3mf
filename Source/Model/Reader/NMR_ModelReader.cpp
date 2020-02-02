@@ -105,4 +105,7 @@ namespace NMR {
 	PSecureContext CModelReader::getSecureContext() const {
 		return m_pSecureContext;
 	}
+	PKeyStore CModelReader::getKeyStore() const {
+		return m_pModel->getKeyStore();
+	}
 }
