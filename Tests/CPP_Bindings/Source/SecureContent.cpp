@@ -249,7 +249,7 @@ namespace Lib3MF {
 			lib3mf_cipherdata_getdescriptor(cipherData, &descriptor);
 			ASSERT_EQ(descriptor, 1);
 			
-			sAes256CipherData cipher;
+			sAes256CipherValue cipher;
 			lib3mf_cipherdata_getaes256gcm(cipherData, &cipher);
 			
 			cb->context.push_back(descriptor);
