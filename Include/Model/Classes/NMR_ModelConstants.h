@@ -352,7 +352,7 @@ These are given by the 3MF Standard
 #define XML_3MF_ELEMENT_MODULUS						"Modulus"
 #define XML_3MF_ELEMENT_EXPONENT					"Exponent"
 #define XML_3MF_ELEMENT_DECRYPTRIGHT				"decryptright"
-#define XML_3MF_ELEMENT_CIPHERDATA					"CipherData"
+#define XML_3MF_ELEMENT_CIPHERDATA					"cipherdata"
 #define XML_3MF_ELEMENT_CIPHERVALUE					"CipherValue"
 #define XML_3MF_ELEMENT_ACCESSRIGHT					"accessright"
 #define XML_3MF_ELEMENT_ENCRYPTEDKEY				"encryptedkey"
