@@ -3,16 +3,16 @@
 
 using namespace Lib3MF::Impl;
 
-Lib3MF::Impl::CCipherData::CCipherData(Lib3MF::sAes256CipherData const & CipherValue, Lib3MF_uint64 handle) {
+Lib3MF::Impl::CCipherData::CCipherData(Lib3MF::sAes256CipherValue const & CipherValue, Lib3MF_uint64 handle) {
 	m_CipherValue = CipherValue;
 	m_handle = handle;
 }
 
-Lib3MF::sAes256CipherData Lib3MF::Impl::CCipherData::GetAes256Gcm() {
+Lib3MF::sAes256CipherValue Lib3MF::Impl::CCipherData::GetAes256Gcm() {
 	return m_CipherValue;
 }
 
-void Lib3MF::Impl::CCipherData::SetAes256Gcm(const Lib3MF::sAes256CipherData CipherValue) {
+void Lib3MF::Impl::CCipherData::SetAes256Gcm(const Lib3MF::sAes256CipherValue CipherValue) {
 	m_CipherValue = CipherValue;
 }
 

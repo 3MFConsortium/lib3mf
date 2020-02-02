@@ -1155,22 +1155,23 @@
 		<param name="UserData" type="pointer" pass="in" description="Userdata that is passed to the callback function"/>
 		<param name="Result" type="uint64" pass="return" description="amount of bytes decrypted"/>
 	</functiontype>
-	<struct name="Aes256CipherData">
+	<struct name="Aes256CipherValue">
 		<member name="IV" type="uint8" rows="12"/>
 		<member name="Key" type="uint8" rows="32"/>
 		<member name="Tag" type="uint8" rows="16"/>
 	</struct>
 	<class name="CipherData">
 		<method name="GetAes256Gcm" description="A description">
-			<param name="CipherValue" type="struct" class="Aes256CipherData" pass="return" description="A description"/>
+			<param name="CipherValue" type="struct" class="Aes256CipherValue" pass="return" description="A description"/>
 		</method>
 		<method name="SetAes256Gcm" description="A description">
-			<param name="CipherValue" type="struct" class="Aes256CipherData" pass="in" description="A description"/>
+			<param name="CipherValue" type="struct" class="Aes256CipherValue" pass="in" description="A description"/>
 		</method>
 		<method name="GetDescriptor" description="A handler descriptor that uniquely identifies the context of the resource. Each resource will be assigned a different value">
 			<param name="Descriptor" type="uint64" pass="return" description="the cipher data descriptor"/>
 		</method>
 	</class>
+
 	<functiontype name="DataEncryptionCallback" description="A description">
 		<param name="EncryptionAlgorithm" type="enum" class="EncryptionAlgorithm" pass="in" description="The encryption algorithm to be used"/>
 		<param name="CipherData" type="class" class="CipherData" pass="in" description="The plain data encryption key properly decrypted. Buffer will have same size as CipherValue in decryptright"/>

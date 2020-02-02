@@ -49,14 +49,14 @@ namespace Lib3MF {
 
 		class CCipherData : public virtual ICipherData, public virtual CBase {
 		private:
-			Lib3MF::sAes256CipherData m_CipherValue;
+			Lib3MF::sAes256CipherValue m_CipherValue;
 			Lib3MF_uint64 m_handle;
 		public:
-			CCipherData(Lib3MF::sAes256CipherData const & CipherValue, Lib3MF_uint64 handle);
+			CCipherData(Lib3MF::sAes256CipherValue const & CipherValue, Lib3MF_uint64 handle);
 
 			// Inherited via ICipherData
-			Lib3MF::sAes256CipherData GetAes256Gcm();
-			void SetAes256Gcm(const Lib3MF::sAes256CipherData CipherValue);
+			Lib3MF::sAes256CipherValue GetAes256Gcm();
+			void SetAes256Gcm(const Lib3MF::sAes256CipherValue CipherValue);
 			Lib3MF_uint64 GetDescriptor();
 
 		};

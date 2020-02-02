@@ -218,7 +218,7 @@ void Lib3MF::Impl::CReader::RegisterDEKClient(Lib3MF::DataDecryptionCallback pDe
 	NMR::DEKDESCRIPTOR descriptor;
 	descriptor.m_sDekDecryptData.m_pUserData = pUserData;
 	descriptor.m_fnDecrypt = [this, pDecryptionCallback](std::vector<NMR::nfByte> const & cipher, NMR::nfByte * plain, NMR::DEKDECRYPTCTX ctx) {
-		Lib3MF::sAes256CipherData cipherDataValue;
+		Lib3MF::sAes256CipherValue cipherDataValue;
 		std::copy(ctx.m_sCipherValue.m_iv.begin(), ctx.m_sCipherValue.m_iv.end(), cipherDataValue.m_IV);
 		std::copy(ctx.m_sCipherValue.m_key.begin(), ctx.m_sCipherValue.m_key.end(), cipherDataValue.m_Key);
 		std::copy(ctx.m_sCipherValue.m_tag.begin(), ctx.m_sCipherValue.m_tag.end(), cipherDataValue.m_Tag);
