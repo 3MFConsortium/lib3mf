@@ -78,7 +78,10 @@ namespace NMR {
 
 	PKeyStoreConsumer CKeyStore::findConsumerById(std::string id)
 	{	
-		return m_ConsumerRefs[id];
+		auto ref = m_ConsumerRefs.find(id);
+		if ( ref != m_ConsumerRefs.end())
+			return (*ref).second;
+		return nullptr;
 	}
 
 	void CKeyStore::removeConsumer(NMR::PKeyStoreConsumer consumer)
@@ -117,7 +120,10 @@ namespace NMR {
 
 	PKeyStoreResourceData CKeyStore::findResourceDataByPath(std::string path)
 	{
-		return m_ResourceDataRefs[path];
+		auto ref = m_ResourceDataRefs.find(path);
+		if (ref != m_ResourceDataRefs.end())
+			return (*ref).second;
+		return nullptr;
 	}
 
 	bool CKeyStore::empty() const {

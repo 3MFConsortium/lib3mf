@@ -170,12 +170,16 @@ namespace Lib3MF {
 			ASSERT_EQ("LIB3MF#TEST", consumer->GetConsumerID());
 			ASSERT_EQ("contentKey", consumer->GetKeyID());
 
-			PConsumer consumerNotFound = keyStore->FindConsumer("does not exist");
-			ASSERT_EQ(nullptr, consumerNotFound);
+			try {
+				PConsumer consumerNotFound = keyStore->FindConsumer("does not exist");
+				ASSERT_FALSE(true);
+			} catch (ELib3MFException const & e) {
+				ASSERT_EQ(e.getErrorCode(), LIB3MF_ERROR_KEYSTORECONSUMERNOTFOUND);
+			}
 			PConsumer consumerFound = keyStore->FindConsumer(consumer->GetConsumerID());
 			ASSERT_EQ(consumer->GetConsumerID(), consumerFound->GetConsumerID());
 
-			std::string expected = "";
+			std::string expected = "-----BEGIN PUBLIC KEY-----\r\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAw53q4y2KB2WcoOBUE9OE\r\nXI0OCzUf4SI1J6fDx6XeDJ8PzqxN4pPRtXgtKfp/RiSL0invf7ASfkBMcXuhD8XP\r\n0uki3JIzvsxTH+Jnnz/PrYnS9DFa6c9MYciTIV8vC4u03vkZH6OuGq4rWeSZuNCT\r\nCgT59q67Ly6OytNsQgsDHL2QO8xhpYdQ4bx7F0uNn5LAxFyA0ymsFsgSSLONJWza\r\nVtsq9jvkIOEdTzYq52PAXMUIpegbyqSheNlmedcss8teqiZGnCOxpBxL3z+ogcFe\r\nnX1S8kq2UhzOjXLEjPs9B0SchwXSadephL89shJwra+30NS3R3frwfCz+a3H6wTV\r\nBwIDAQAB\r\n-----END PUBLIC KEY-----\r\n\t\t";
 			std::string keyValue = consumer->GetKeyValue();
 			ASSERT_EQ(expected, keyValue);
 
@@ -189,8 +193,12 @@ namespace Lib3MF {
 
 		ASSERT_TRUE(resourceDataCount > 0);
 
-		PResourceData resourceDataNotFound = keyStore->FindResourceData("does not exist");
-		ASSERT_EQ(nullptr, resourceDataNotFound);
+		try {
+			PResourceData resourceDataNotFound = keyStore->FindResourceData("does not exist");
+			ASSERT_FALSE(true);
+		} catch (ELib3MFException const & e) {
+			ASSERT_EQ(e.getErrorCode(), LIB3MF_ERROR_KEYSTORERESOURCEDATANOTFOUND);
+		}
 
 		for (int i = 0; i < resourceDataCount; ++i) {
 			PResourceData resourceData = keyStore->GetResourceData(i);
@@ -199,7 +207,7 @@ namespace Lib3MF {
 			PResourceData resourceDataFound = keyStore->FindResourceData(resourceData->GetPath()->Get());
 			ASSERT_TRUE(resourceDataFound != nullptr);
 
-			ASSERT_EQ(resourceData->GetPath(), resourceDataFound->GetPath());
+			ASSERT_EQ(resourceData->GetPath()->Get(), resourceDataFound->GetPath()->Get());
 
 			ASSERT_EQ(Lib3MF::eEncryptionAlgorithm::Aes256Gcm, resourceData->GetEncryptionAlgorithm());
 			ASSERT_EQ(Lib3MF::eCompression::None, resourceData->GetCompression());

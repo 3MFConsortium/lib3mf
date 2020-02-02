@@ -34,6 +34,8 @@ IConsumer * Lib3MF::Impl::CKeyStore::GetConsumer(const Lib3MF_uint64 nConsumerIn
 IConsumer * Lib3MF::Impl::CKeyStore::FindConsumer(const std::string & sConsumerID)
 {
 	NMR::PKeyStoreConsumer consumer = m_pKeyStore->findConsumerById(sConsumerID);
+	if (!consumer)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_KEYSTORECONSUMERNOTFOUND);
 	return new CConsumer(consumer);
 }
 
@@ -73,6 +75,8 @@ IResourceData * Lib3MF::Impl::CKeyStore::AddResourceData(IPackagePath * pPackage
 IResourceData * Lib3MF::Impl::CKeyStore::FindResourceData(const std::string & sPath)
 {
 	NMR::PKeyStoreResourceData rd = m_pKeyStore->findResourceDataByPath(sPath);
+	if (!rd)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_KEYSTORERESOURCEDATANOTFOUND);
 	return new CResourceData(rd);
 }
 
