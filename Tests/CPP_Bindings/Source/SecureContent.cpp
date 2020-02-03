@@ -111,6 +111,10 @@ namespace Lib3MF {
 		ASSERT_EQ(2, keyStore->GetConsumerCount());
 		ASSERT_EQ(firstId, keyStore->GetConsumer(0)->GetConsumerID());
 		ASSERT_EQ(secondId, keyStore->GetConsumer(1)->GetConsumerID());
+
+		keyStore->RemoveConsumer(consumer1.get());
+		ASSERT_EQ(1, keyStore->GetConsumerCount());
+		ASSERT_EQ(secondId, keyStore->GetConsumer(0)->GetConsumerID());
 	}
 
 	TEST_F(SecureContentT, CreateMultipleResourceDataKeyStore) {
