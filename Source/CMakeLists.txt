@@ -7,7 +7,6 @@ if (USE_INCLUDED_ZLIB)
   file(GLOB ZLIB_FILES ./Source/Libraries/zlib/*.c)
 endif()
 
-
 # sources for COM emulation
 set(SRCS_PLATFORM
   ${LIBZIP_FILES}

@@ -1,11 +1,6 @@
 #include "UnitTest_Utilities.h"
 #include "lib3mf_implicit.hpp"
-//#include <openssl/conf.h>
-//#include <openssl/evp.h>
-//#include <openssl/bio.h>
-//#include <openssl/pem.h>
-//#include <openssl/rsa.h>
-//#include <openssl/err.h>
+#include <openssl/rand.h>
 
 namespace Lib3MF {
 
@@ -75,6 +70,17 @@ namespace Lib3MF {
 			return readKeyStore(UNENCRYPTEDKEYSTORE);
 		}
 	public:
+
+
+		std::vector<Lib3MF_uint8> create_key() {
+			std::vector<Lib3MF_uint8> key(32, 0);
+			int rc = RAND_bytes(key.data(), (Lib3MF_uint32)key.size());
+			if (rc != 1)
+				throw std::runtime_error("RAND_bytes key failed");
+			return key;
+		}
+
+
 		static PWrapper wrapper;
 	};
 	PWrapper SecureContentT::wrapper;
@@ -396,6 +402,7 @@ namespace Lib3MF {
 		auto reader = model->QueryReader("3mf");
 		DEKCallbackData data;
 		data.value = 1;
+		std::vector<Lib3MF_uint8> any = create_key();
 		reader->RegisterDEKClient(DEKCallbackData::testDEKCallback, reinterpret_cast<Lib3MF_pvoid>(&data));
 		reader->ReadFromFile(sTestFilesPath + UNENCRYPTEDKEYSTORE);
 		ASSERT_EQ(data.context.size(), 1);

@@ -39,6 +39,9 @@ correctly and Exception-safe
 #include <string.h>
 #include <vector>
 
+#include <openssl/evp.h>
+
+
 namespace NMR {
 
 	// Lookup table to convert UTF8 bytes to sequence length
@@ -841,6 +844,22 @@ namespace NMR {
 			return sName;
 		else
 			return sNameSpace + ":" + sName;
+	}
+
+	std::string fnBase64Encode(std::vector<nfByte> const & input) {
+		std::vector<nfByte> buffer(EVP_ENCODE_LENGTH(input.size()), 0);
+		int encoded = EVP_EncodeBlock(buffer.data(), input.data(), (nfUint32) input.size());
+		return std::string(buffer.begin(), buffer.begin() + encoded);
+	}
+
+	std::vector<nfByte> fnBase64Decode(std::string const & input) {
+		std::vector<nfByte> buffer(EVP_DECODE_LENGTH(input.length()), 0);
+		int decoded = EVP_DecodeBlock(buffer.data(), (const nfByte *)input.data(), (nfUint32)input.length());
+		if (decoded <= 0)
+			return std::vector<nfByte>();
+		int actualSize = decoded - (decoded % 4);
+		buffer.resize(actualSize);
+		return buffer;
 	}
 
 }

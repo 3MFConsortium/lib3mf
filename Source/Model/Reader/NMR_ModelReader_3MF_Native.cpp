@@ -58,8 +58,6 @@ namespace NMR {
 	{
 		m_pPackageReader = std::make_shared<CKeyStoreOpcPackageReader>(pPackageStream, m_pModel->getKeyStore(), m_pSecureContext, m_pWarnings, m_pProgressMonitor);
 
-		m_pModel->setKeyStore(m_pPackageReader->getKeyStore());
-
 		COpcPackageRelationship * pModelRelation = m_pPackageReader->findRootRelation(PACKAGE_START_PART_RELATIONSHIP_TYPE, true);
 		if (pModelRelation == nullptr)
 			throw CNMRException(NMR_ERROR_OPCRELATIONSHIPSETREADFAILED);
