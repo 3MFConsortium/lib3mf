@@ -857,8 +857,7 @@ namespace NMR {
 		int decoded = EVP_DecodeBlock(buffer.data(), (const nfByte *)input.data(), (nfUint32)input.length());
 		if (decoded <= 0)
 			return std::vector<nfByte>();
-		int actualSize = decoded - (decoded % 4);
-		buffer.resize(actualSize);
+		buffer.resize(decoded);
 		return buffer;
 	}
 
