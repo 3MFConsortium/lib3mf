@@ -92,6 +92,8 @@ namespace NMR {
 			m_sCipherValue.m_iv = std::vector<nfByte>(decodedIvBegin, decodedKeyBegin);
 			m_sCipherValue.m_key = std::vector<nfByte>(decodedKeyBegin, decodedTagBegin);
 			m_sCipherValue.m_tag = std::vector<nfByte>(decodedTagBegin, decoded.end());
+		} else {
+			m_pWarnings->addException(CNMRException(NMR_ERROR_INVALID_KEYSTORECIPHERVALUE), eModelReaderWarningLevel::mrwInvalidMandatoryValue);
 		}
 	}
 

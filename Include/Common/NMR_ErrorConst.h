@@ -1154,6 +1154,9 @@ Model error codes (0x8XXX)
 // Invalid KeyStore compression
 #define NMR_ERROR_INVALIDCOMPRESSION 0x80F8
 
+// Invlaid KeyStore CipherValue
+#define NMR_ERROR_INVALID_KEYSTORECIPHERVALUE 0x80F9
+
 /*-------------------------------------------------------------------
 XML Parser Error Constants (0x9XXX)
 -------------------------------------------------------------------*/
