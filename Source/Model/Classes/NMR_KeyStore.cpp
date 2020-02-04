@@ -88,6 +88,9 @@ namespace NMR {
 	{
 		size_t n = m_ConsumerRefs.erase(consumer->getConsumerID());
 		if (n > 0) {
+			for (auto it : m_ResourceDatas) {
+				it->removeDecryptRight(consumer);
+			}
 			for (auto it = m_Consumers.begin(); it != m_Consumers.end(); it++) {
 				if ((*it) == consumer) {
 					m_Consumers.erase(it);

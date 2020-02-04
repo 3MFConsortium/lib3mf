@@ -1,5 +1,6 @@
 #include "lib3mf_decryptright.hpp"
 #include "lib3mf_interfaceexception.hpp"
+#include "lib3mf_consumer.hpp"
 
 using namespace Lib3MF::Impl;
 
@@ -14,9 +15,13 @@ Lib3MF::Impl::CDecryptRight::CDecryptRight(NMR::PKeyStoreDecryptRight dR)
 }
 
 IConsumer * Lib3MF::Impl::CDecryptRight::GetConsumer() {
-	return nullptr;
+	return new CConsumer(m_DecryptRight->getConsumer());
 }
 
 Lib3MF::eEncryptionAlgorithm Lib3MF::Impl::CDecryptRight::GetEncryptionAlgorithm() {
-	return Lib3MF::eEncryptionAlgorithm();
+	NMR::eKeyStoreEncryptAlgorithm ea = m_DecryptRight->getEncryptionAlgorithm();
+	if (ea == NMR::eKeyStoreEncryptAlgorithm::RsaOaepMgf1p) {
+		return Lib3MF::eEncryptionAlgorithm::RsaOaepMgf1p;
+	}
+	return Lib3MF::eEncryptionAlgorithm::Aes256Gcm;
 }

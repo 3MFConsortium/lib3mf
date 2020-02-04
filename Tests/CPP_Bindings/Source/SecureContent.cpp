@@ -142,12 +142,59 @@ namespace Lib3MF {
 
 
 	//TODO
-	// add multiple consumers, remove one and assert the remaining consumer is correct
-	// add multiple resource data, remove one and assert the remaining resource data is correct
 	// add multiple decryptright, remove one and make assert the remaining decryptright is correct
 	// add consumer, add resource data, add decrypright for consumer. Remove consumer. Assert decryptright has been removed for consumer.
 	TEST_F(SecureContentT, ManageDecryptRight) {
 		Lib3MF::PKeyStore keyStore = model->GetKeyStore();
+		ASSERT_TRUE(nullptr != keyStore);
+
+		std::string path1 = "/3D/nonrootmodel1.model";
+		auto meshObject = model->AddMeshObject();
+		meshObject->SetGeometry(CLib3MFInputVector<sPosition>(pVertices, 8), CLib3MFInputVector<sTriangle>(pTriangles, 12));
+		meshObject->PackagePath()->Set(path1);
+
+		keyStore->AddResourceData(meshObject->PackagePath().get(), Lib3MF::eEncryptionAlgorithm::Aes256Gcm, Lib3MF::eCompression::Deflate);
+
+		std::string path2 = "/3D/nonrootmodel2.model";
+		meshObject = model->AddMeshObject();
+		meshObject->SetGeometry(CLib3MFInputVector<sPosition>(pVertices, 8), CLib3MFInputVector<sTriangle>(pTriangles, 12));
+		meshObject->PackagePath()->Set(path2);
+
+		keyStore->AddResourceData(meshObject->PackagePath().get(), Lib3MF::eEncryptionAlgorithm::Aes256Gcm, Lib3MF::eCompression::None);
+
+		ASSERT_EQ(2, keyStore->GetResourceDataCount());
+		ASSERT_EQ(path1, keyStore->GetResourceData(0)->GetPath()->Get());
+		ASSERT_EQ(path2, keyStore->GetResourceData(1)->GetPath()->Get());
+		
+		Lib3MF::PConsumer consumer1 = keyStore->AddConsumer("consumerId1", "consumerKeyId1", "consumerKeyValue1");
+		Lib3MF::PConsumer consumer2 = keyStore->AddConsumer("consumerId2", "consumerKeyId2", "consumerKeyValue2");
+
+		ASSERT_EQ(2, keyStore->GetConsumerCount());
+		ASSERT_EQ("consumerId1", keyStore->GetConsumer(0)->GetConsumerID());
+		ASSERT_EQ("consumerId2", keyStore->GetConsumer(1)->GetConsumerID());
+
+		//Test add decrypt right to different resource data
+
+		keyStore->GetResourceData(0)->AddDecryptRight(consumer1.get(), Lib3MF::eEncryptionAlgorithm::Aes256Gcm);
+		keyStore->GetResourceData(1)->AddDecryptRight(consumer2.get(), Lib3MF::eEncryptionAlgorithm::Aes256Gcm);
+				
+		ASSERT_EQ(1, keyStore->GetResourceData(0)->GetDecryptRightCount());
+		ASSERT_EQ(consumer1->GetConsumerID(), keyStore->GetResourceData(0)->GetDecryptRight(0)->GetConsumer()->GetConsumerID());
+		ASSERT_EQ(Lib3MF::eEncryptionAlgorithm::Aes256Gcm, keyStore->GetResourceData(0)->GetDecryptRight(0)->GetEncryptionAlgorithm());
+		
+		ASSERT_EQ(1, keyStore->GetResourceData(1)->GetDecryptRightCount());
+		ASSERT_EQ(consumer2->GetConsumerID(), keyStore->GetResourceData(1)->GetDecryptRight(0)->GetConsumer()->GetConsumerID());
+		ASSERT_EQ(Lib3MF::eEncryptionAlgorithm::Aes256Gcm, keyStore->GetResourceData(1)->GetDecryptRight(0)->GetEncryptionAlgorithm());
+
+		//Test remove decrypt right from resource data using a consumer
+		keyStore->GetResourceData(0)->RemoveDecrypt(consumer1.get());
+
+		ASSERT_EQ(0, keyStore->GetResourceData(0)->GetDecryptRightCount());
+		
+		//Test remove consumer that should also delete every decrypt right associated 
+		keyStore->RemoveConsumer(consumer2.get());
+		ASSERT_EQ(1, keyStore->GetConsumerCount());
+		ASSERT_EQ(0, keyStore->GetResourceData(1)->GetDecryptRightCount());
 	}
 
 

@@ -62,9 +62,10 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 		size_t n = m_ConsumerDecryptRight.erase(consumer->getConsumerID());
 		if (n > 0) {
-			for (auto it = m_DecryptRights.begin(); it != m_DecryptRights.end(); it++) {
+			auto it = m_DecryptRights.begin();
+			while (it != m_DecryptRights.end()) {
 				if ((*it)->getConsumer()->getConsumerID() == consumer->getConsumerID()) {
-					m_DecryptRights.erase(it);
+					it = m_DecryptRights.erase(it);
 				}
 			}
 		}
