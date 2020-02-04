@@ -100,7 +100,7 @@ namespace NMR {
 			if (nullptr != rd) {
 				DEKDESCRIPTOR p = m_pSecureContext->getDekCtx();
 				p.m_sDekDecryptData.m_sCipherValue = rd->getCipherValue();
-				p.m_sDekDecryptData.m_nfHandler = ++m_nfHandler;
+				p.m_sDekDecryptData.m_nfHandler = rd->getHandle();
 				PImportStream decryptStream = std::make_shared<CImportStream_Encrypted>(pPart->getImportStream(), p);
 				pPart->setImportStream(decryptStream);
 			}

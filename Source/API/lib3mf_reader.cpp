@@ -204,9 +204,11 @@ void Lib3MF::Impl::CReader::RegisterKEKClient(const std::string &sConsumerID, Li
 		IBase * pBaseConsumer(nullptr);
 		pBaseConsumer = pConsumer.get();
 		Lib3MF_Consumer handle = pBaseConsumer;
+		pConsumer->IncRefCount();
 		(*pDecryptionCallback)(handle, algorithm, cipher.size(), cipher.data(), 0, &neededBytes, nullptr, ctx.m_pUserData, &result);
 		if (result == 0 && neededBytes > 0) {
 			plain.resize(neededBytes, 0);
+			pConsumer->IncRefCount();
 			(*pDecryptionCallback)(handle, algorithm, cipher.size(), cipher.data(), plain.size(), nullptr, plain.data(), ctx.m_pUserData, &result);
 		}
 		return result;
@@ -226,6 +228,7 @@ void Lib3MF::Impl::CReader::RegisterDEKClient(Lib3MF::DataDecryptionCallback pDe
 		IBase * pBaseCipherData(nullptr);
 		pBaseCipherData = pCipherData.get();
 		Lib3MF_CipherData handle = pBaseCipherData;
+		pCipherData->IncRefCount();
 		(*pDecryptionCallback)(eEncryptionAlgorithm::Aes256Gcm, handle, cipher.size(), cipher.data(), cipher.size(), nullptr, plain, ctx.m_pUserData);
 		return 0;
 	};

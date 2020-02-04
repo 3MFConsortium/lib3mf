@@ -3,9 +3,13 @@
 #include <memory>
 
 namespace NMR {
+
+	nfUint64 CKeyStoreResourceData::s_nfHandleCount = 0;
+
 	CKeyStoreResourceData::CKeyStoreResourceData(std::string const & path) {
 		m_sPath = path;
 		m_EncryptionAlgorithm = eKeyStoreEncryptAlgorithm::Aes256Gcm;
+		m_nfHandle = ++s_nfHandleCount;
 	}
 
 	CKeyStoreResourceData::CKeyStoreResourceData(std::string const & path, eKeyStoreEncryptAlgorithm const & ea, nfBool const & compression)
@@ -13,6 +17,7 @@ namespace NMR {
 		m_sPath = path;
 		m_EncryptionAlgorithm = ea;
 		m_bCompression = compression;
+		m_nfHandle = ++s_nfHandleCount;
 	}
 
 	PKeyStoreDecryptRight CKeyStoreResourceData::addDecryptRight(NMR::PKeyStoreConsumer const& consumer, eKeyStoreEncryptAlgorithm const& encryptAlgorithm) {
@@ -84,6 +89,10 @@ namespace NMR {
 	{
 		NMR::CResourceHandler * pResourceHandler = new NMR::CResourceHandler();
 		return pResourceHandler->makePackageModelPath(m_sPath);
+	}
+
+	nfUint64 CKeyStoreResourceData::getHandle() const {
+		return m_nfHandle;
 	}
 
 	nfBool CKeyStoreResourceData::empty() const {
