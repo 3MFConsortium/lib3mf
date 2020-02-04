@@ -341,7 +341,14 @@ namespace Lib3MF {
 			ASSERT_EQ("/3D/3dexternal.model", resourceData->GetPath()->Get());
 
 			int inexistantDecrypt = 9999;
-			ASSERT_EQ(nullptr, resourceData->GetDecryptRight(inexistantDecrypt));
+			try {
+				PDecryptRight invalidDecryptRight = resourceData->GetDecryptRight(inexistantDecrypt);
+				ASSERT_FALSE(true);
+			}
+			catch (ELib3MFException const & e) {
+				ASSERT_EQ(e.getErrorCode(), LIB3MF_ERROR_INVALIDPARAM);
+			}
+			
 
 			int decryptRightCount = resourceData->GetDecryptRightCount();
 			ASSERT_TRUE(decryptRightCount > 0);

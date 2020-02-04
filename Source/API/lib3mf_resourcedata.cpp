@@ -27,6 +27,9 @@ namespace Lib3MF {
 		}
 
 		IDecryptRight * Lib3MF::Impl::CResourceData::GetDecryptRight(const Lib3MF_uint32 nDecryptRightIndex) {
+			if (nDecryptRightIndex > m_ResourceData->getDecryptRightCount()) {
+				throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+			}
 			NMR::PKeyStoreDecryptRight dR = m_ResourceData->getDecryptRight(nDecryptRightIndex);
 			return new CDecryptRight(dR);
 		}
