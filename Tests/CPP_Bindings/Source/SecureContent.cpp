@@ -141,9 +141,6 @@ namespace Lib3MF {
 	}
 
 
-	//TODO
-	// add multiple decryptright, remove one and make assert the remaining decryptright is correct
-	// add consumer, add resource data, add decrypright for consumer. Remove consumer. Assert decryptright has been removed for consumer.
 	TEST_F(SecureContentT, ManageDecryptRight) {
 		Lib3MF::PKeyStore keyStore = model->GetKeyStore();
 		ASSERT_TRUE(nullptr != keyStore);
