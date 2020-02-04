@@ -102,12 +102,40 @@ namespace Lib3MF
 	//{
 	//}
 
-	//TEST_F(ProductionExtension, SetupWrite)
-	//{
-	//}
+	TEST_F(ProductionExtension, SetupWrite)
+	{
+		std::vector<Lib3MF::sPosition> vctVertices;
+		std::vector<Lib3MF::sTriangle> vctTriangles;
+
+		auto mesh1 = model->AddMeshObject();
+		fnCreateBox(vctVertices, vctTriangles);
+		mesh1->SetGeometry(vctVertices, vctTriangles);
+
+		auto component1 = model->AddComponentsObject();
+		component1->AddComponent(mesh1.get(), wrapper->GetIdentityTransform());
+
+		model->AddBuildItem(component1.get(), wrapper->GetIdentityTransform());
+		auto writer = model->QueryWriter("3mf");
+		writer->WriteToFile("SetupWriteRead1.3mf");
+
+		auto newPart = model->FindOrCreatePackagePart("/3D/outsourced.model");
+		mesh1->SetPackagePart(newPart.get());
+		writer->WriteToFile("SetupWriteRead2.3mf");
+
+		component1->SetPackagePart(newPart.get());
+		writer->WriteToFile("SetupWriteRead3.3mf");
+
+		mesh1->SetPackagePart(model->RootModelPart().get());
+		ASSERT_SPECIFIC_THROW(writer->WriteToFile("SetupWriteRead4.3mf"), ELib3MFException);
+
+		auto newPart2 = model->FindOrCreatePackagePart("/3D/outsourced2.model");
+		mesh1->SetPackagePart(newPart2.get());
+		ASSERT_SPECIFIC_THROW(writer->WriteToFile("SetupWriteRead5.3mf"), ELib3MFException);
+	}
 
 	//TEST_F(ProductionExtension, SetupWriteReadInspect)
 	//{
+
 	//}
 
 }

@@ -110,6 +110,8 @@ namespace NMR {
 		void updateModelPath(PPackageResourceID pPackageResourceID, PPackageModelPath pNewPath);
 		std::vector<PPackageModelPath> retrieveAllModelPaths();
 
+		void removePackageResourceID(PPackageResourceID pPackageResourceID);
+
 		void clear();
 	};
 

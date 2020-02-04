@@ -399,6 +399,11 @@ namespace NMR {
 		return m_resourceHandler.makePackageResourceID(path, nID);
 	}
 
+	void CModel::removePackageResourceID(PPackageResourceID pID)
+	{
+		m_resourceHandler.removePackageResourceID(pID);
+	}
+
 	// Convenience functions for objects
 	_Ret_maybenull_ CModelObject * CModel::findObject(_In_ UniqueResourceID nResourceID)
 	{

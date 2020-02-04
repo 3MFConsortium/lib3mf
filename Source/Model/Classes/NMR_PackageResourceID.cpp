@@ -187,6 +187,23 @@ namespace NMR {
 		m_IdAndPathToPackageResourceIDs.insert(std::make_pair(std::make_pair(pPackageResourceID->m_id, pNewPath), pPackageResourceID));
 	}
 
+	void CResourceHandler::removePackageResourceID(PPackageResourceID pPackageResourceID)
+	{
+		auto it = m_IdAndPathToPackageResourceIDs.find(std::make_pair(pPackageResourceID->m_id, pPackageResourceID->getPackageModelPath()));
+		if (it == m_IdAndPathToPackageResourceIDs.end())
+		{
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+		}
+
+		auto itID = m_resourceIDs.find(pPackageResourceID->m_uniqueID);
+		if (itID == m_resourceIDs.end())
+		{
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+		}
+		m_IdAndPathToPackageResourceIDs.erase(it);
+		m_resourceIDs.erase(itID);
+	}
+
 	void CResourceHandler::clear() {
 		m_resourceIDs.clear();
 		m_IdAndPathToPackageResourceIDs.clear();

@@ -96,8 +96,12 @@ void CResource::SetPackagePart(IPackagePart* pPackagePart)
 	if (pTargetPackageResourceID) {
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDMODELRESOURCE);
 	}
+	NMR::PPackageResourceID pIDOld = m_pResource->getPackageResourceID();
 	NMR::PPackageResourceID pID = m_pResource->getModel()->generatePackageResourceID(sPath, nID);
 	m_pResource->setPackageResourceID(pID);
+
+	m_pResource->getModel()->removePackageResourceID(pIDOld);
+	
 	//m_pPackageResourceID = m_pModel->generatePackageResourceID(pModel->currentPath(), sResourceID);
 	//m_pResource->getPackageResourceID()->
 }
