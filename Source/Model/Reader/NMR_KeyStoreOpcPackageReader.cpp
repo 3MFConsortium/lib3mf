@@ -99,6 +99,7 @@ namespace NMR {
 			NMR::PKeyStoreResourceData rd = m_pKeyStore->findResourceDataByPath(sPath);
 			if (nullptr != rd) {
 				DEKDESCRIPTOR p = m_pSecureContext->getDekCtx();
+				p.m_sDekDecryptData.m_sCipherValue = rd->getCipherValue();
 				p.m_sDekDecryptData.m_nfHandler = ++m_nfHandler;
 				PImportStream decryptStream = std::make_shared<CImportStream_Encrypted>(pPart->getImportStream(), p);
 				pPart->setImportStream(decryptStream);

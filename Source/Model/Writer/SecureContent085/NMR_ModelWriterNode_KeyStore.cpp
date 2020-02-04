@@ -34,22 +34,28 @@ This is the class for exporting the 3mf keystore stream root node.
 #include "Model/Writer/SecureContent085/NMR_ModelWriterNode_KeyStore.h"
 #include "Model/Classes/NMR_KeyStoreConsumer.h"
 #include "Model/Classes/NMR_KeyStoreResourceData.h"
+#include "Common/NMR_Exception.h"
 
 void NMR::CModelWriterNode_KeyStore::writeConsumers() {
 	const auto count = m_pKeyStore->getConsumerCount();
-	for (uint32_t index = 0; index < count; ++index) {
-		const PKeyStoreConsumer consumer = m_pKeyStore->getConsumerByIndex(index);
-
+	for (uint32_t nIndex = 0; nIndex < count; ++nIndex) {
+		PKeyStoreConsumer const& consumer = m_pKeyStore->getConsumerByIndex(nIndex);
+		consumer->setIndex(nIndex);
 		// <consumer>
 		writeStartElement(XML_3MF_ELEMENT_CONSUMER);
 		//@consumerid
-		//TODO throw if doesn't exists
-		writeConstStringAttribute(XML_3MF_SECURE_CONTENT_CONSUMER_ID, consumer->getConsumerID().c_str());
-		//TODO optional value, don't write if empty
+		const auto consumerId = consumer->getConsumerID();
+		if (consumerId.empty()) {
+			throw CNMRException(NMR_ERROR_MISSINGCONSUMERID);
+		}
+		writeConstStringAttribute(XML_3MF_SECURE_CONTENT_CONSUMER_ID, consumerId.c_str());
 		//@keyid
-		writeConstStringAttribute(XML_3MF_SECURE_CONTENT_KEY_ID, consumer->getKeyID().c_str());
+		const auto keyId = consumer->getKeyID();
+		if (!keyId.empty()) {
+			writeConstStringAttribute(XML_3MF_SECURE_CONTENT_KEY_ID, keyId.c_str());
+		}
 
-		std::string kvStr = consumer->getKeyValue();
+		std::string const& kvStr = consumer->getKeyValue();
 		if (!kvStr.empty()) {
 			// <keyvalue>
 			writeStartElement(XML_3MF_ELEMENT_KEYVALUE);
@@ -69,25 +75,23 @@ void NMR::CModelWriterNode_KeyStore::writeResourceDatas() {
 		PKeyStoreResourceData const& resourcedata = m_pKeyStore->getResourceDataByIndex(resourceIndex);
 		// <resourcedata>
 		writeStartElement(XML_3MF_ELEMENT_RESOURCEDATA);
+		// path - attribute
 		writeConstStringAttribute(XML_3MF_SECURE_CONTENT_PATH, resourcedata->getPath()->getPath().c_str());
-		// TODO: should know where is the information about compression
-		writeConstStringAttribute(XML_3MF_SECURE_CONTENT_COMPRESSION, XML_3MF_SECURE_CONTENT_COMPRESSION_DEFLATE);
-		// <encryptionmethod>
-		writeStartElementWithPrefix(XML_3MF_ELEMENT_ENCRYPTIONMETHOD, XML_3MF_NAMESPACEPREFIX_XENC);
-		writeConstPrefixedStringAttribute(XML_3MF_NAMESPACEPREFIX_XENC, XML_3MF_SECURE_CONTENT_ALGORITHM, XML_3MF_SECURE_CONTENT_ENCRYPTION_AES256);
-
-		//TODO navigate decryptrights
+		// encryptionalgorithm AES256 - attribute
+		writeConstStringAttribute(XML_3MF_SECURE_CONTENT_ENCRYPTION_ALGORITHM, XML_3MF_SECURE_CONTENT_ENCRYPTION_AES256);
+		// compression - attribute
+		if (resourcedata->getCompression()) {
+			writeConstStringAttribute(XML_3MF_SECURE_CONTENT_COMPRESSION, XML_3MF_SECURE_CONTENT_COMPRESSION_DEFLATE);
+		}
 		auto const& accessCount = resourcedata->getDecryptRightCount();
 		for (uint32_t accessIndex = 0; accessIndex < accessCount; ++accessIndex) {
-			// <accessright>
-			writeStartElement(XML_3MF_ELEMENT_ACCESSRIGHT);
-			writeConstStringAttribute(XML_3MF_SECURE_CONTENT_CONSUMER_INDEX, std::to_string(accessIndex).c_str());
-			// <encryptedkey>
-			writeStartElement(XML_3MF_ELEMENT_ENCRYPTEDKEY);
-
-			// <encryptionmethod>
-			writeStartElementWithPrefix(XML_3MF_ELEMENT_ENCRYPTIONMETHOD, XML_3MF_NAMESPACEPREFIX_XENC);
-			writeConstPrefixedStringAttribute(XML_3MF_NAMESPACEPREFIX_XENC, XML_3MF_SECURE_CONTENT_ALGORITHM, XML_3MF_SECURE_CONTENT_ENCRYPTION_RSA);
+			// <decryptright>
+			writeStartElement(XML_3MF_ELEMENT_DECRYPTRIGHT);
+			const auto nIndex = resourcedata->getDecryptRight(accessIndex)->getConsumer()->getIndex();
+			// consumerIndex - attribute
+			writeConstStringAttribute(XML_3MF_SECURE_CONTENT_CONSUMER_INDEX, std::to_string(nIndex).c_str());
+			// encryptionalgorithm RSA - attribute
+			writeConstStringAttribute(XML_3MF_SECURE_CONTENT_ENCRYPTION_ALGORITHM, XML_3MF_SECURE_CONTENT_ENCRYPTION_RSA);
 
 			// <xenc:CipherData>
 			writeStartElementWithPrefix(XML_3MF_ELEMENT_CIPHERDATA, XML_3MF_NAMESPACEPREFIX_XENC);
@@ -97,16 +101,12 @@ void NMR::CModelWriterNode_KeyStore::writeResourceDatas() {
 			// CIPHERVALUE cipher = resourcedata->getCipherValue();
 			//TODO throw if no ciphervalue
 			const std::string key = "base64(RSA2048_OAEP encrypted Data Encryption Key)";
-			writeText(key.c_str(), sizeof(key));
+			writeText(key.c_str(), (nfUint32)key.length());
 
-			writeFullEndElement();
-			writeFullEndElement();
 			writeFullEndElement();
 			writeFullEndElement();
 			writeFullEndElement();
 		}
-
-		writeFullEndElement();
 		writeFullEndElement();
 	}
 }

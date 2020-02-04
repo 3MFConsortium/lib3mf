@@ -140,12 +140,12 @@ namespace Lib3MF {
 		ASSERT_EQ(path2, keyStore->GetResourceData(1)->GetPath()->Get());
 	}
 
-	//TODO add multiple consumers
-	// add multiple resource datas
-	// add one decryptright for each consumer on each resource data
-	// remove one consumer
-	// assert the remaining consumer is correct
-	// assert that decryptrights for the removed consumer are also gone
+
+	//TODO
+	// add multiple consumers, remove one and assert the remaining consumer is correct
+	// add multiple resource data, remove one and assert the remaining resource data is correct
+	// add multiple decryptright, remove one and make assert the remaining decryptright is correct
+	// add consumer, add resource data, add decrypright for consumer. Remove consumer. Assert decryptright has been removed for consumer.
 	TEST_F(SecureContentT, ManageDecryptRight) {
 		Lib3MF::PKeyStore keyStore = model->GetKeyStore();
 	}
@@ -236,6 +236,7 @@ namespace Lib3MF {
 	struct DEKCallbackData {
 		int value;
 		std::vector<Lib3MF_uint64> context;
+
 		static void testDEKCallback(
 			Lib3MF::eEncryptionAlgorithm algorithm, 
 			Lib3MF_CipherData cipherData, 
@@ -249,14 +250,13 @@ namespace Lib3MF {
 			DEKCallbackData * cb = reinterpret_cast<DEKCallbackData *>(userData);
 			ASSERT_EQ(cb->value, 1);
 			
-			Lib3MF_uint64 descriptor = 0;
-			lib3mf_cipherdata_getdescriptor(cipherData, &descriptor);
-			ASSERT_EQ(descriptor, 1);
-			
-			sAes256CipherValue cipher;
-			lib3mf_cipherdata_getaes256gcm(cipherData, &cipher);
-			
-			cb->context.push_back(descriptor);
+			CCipherData cd(SecureContentT::wrapper.get(), cipherData);
+
+			ASSERT_EQ(cd.GetDescriptor(), 1);
+			cb->context.push_back(cd.GetDescriptor());
+
+			sAes256CipherValue cipher = cd.GetAes256Gcm();
+		
 
 			std::copy(cipherBuffer, cipherBuffer + plainSize, plainBuffer);
 		}
@@ -291,26 +291,12 @@ namespace Lib3MF {
 			Lib3MF_uint32 needed = 0;
 			std::vector<char> buffer;
 
-			lib3mf_consumer_getconsumerid(pConsumer, 0, &needed, nullptr);
-			buffer.resize(needed, 0);
-			lib3mf_consumer_getconsumerid(pConsumer, (Lib3MF_uint32)buffer.size(), nullptr, buffer.data());
-			std::string consumerId(buffer.begin(), buffer.end() - 1);
-
-			ASSERT_EQ(consumerId, "LIB3MF#TEST");
+			CConsumer c(SecureContentT::wrapper.get(), pConsumer);
+			ASSERT_EQ(c.GetConsumerID(), "LIB3MF#TEST");
 		
-			lib3mf_consumer_getkeyid(pConsumer, 0, &needed, nullptr);
-			buffer.resize(needed, 0);
-			lib3mf_consumer_getkeyid(pConsumer, (Lib3MF_uint32)buffer.size(), nullptr, buffer.data());
-			std::string keyId(buffer.begin(), buffer.end() - 1);
+			ASSERT_EQ(c.GetKeyID(), "contentKey");
 
-			ASSERT_EQ(keyId, "contentKey");
-
-			lib3mf_consumer_getkeyvalue(pConsumer, 0, &needed, nullptr);
-			buffer.resize(needed, 0);
-			lib3mf_consumer_getkeyvalue(pConsumer, (Lib3MF_uint32)buffer.size(), nullptr, buffer.data());
-			std::string keyvalue(buffer.begin(), buffer.end() - 1);
-
-			//ASSERT_EQ(keyvalue, "");
+			ASSERT_FALSE(c.GetKeyValue().empty());
 
 			if (plainSize == 0) {
 				*plainNeeded = cipherSize;
@@ -340,7 +326,7 @@ namespace Lib3MF {
 	// End to end tests
 	//
 
-	TEST_F(SecureContentT, End2EndSecureContent) {
+	TEST_F(SecureContentT, CreateSecureContentReadAndAddNewConsumer) {
 		auto secureModel = wrapper->CreateModel();
 		//create the attachment to be secured
 		std::string path = "/3D/securemesh.xml";
@@ -377,7 +363,10 @@ namespace Lib3MF {
 		//write content
 		Lib3MF_buffer buffer;
 		writer->WriteToBuffer(buffer);
+
 	}
 
+	//TODO Read Unencrypted content, encrypt root model, save, read and assert
+	//keyStore->AddResourceData(model->RootModel().get(), ..)
 
 }
