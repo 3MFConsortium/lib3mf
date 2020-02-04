@@ -24,69 +24,37 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CPackagePath
+Abstract: This is a stub class definition of CPackagePart
 
 */
 
-
-#ifndef __LIB3MF_MODELPATH
-#define __LIB3MF_MODELPATH
-
-#include "lib3mf_interfaces.hpp"
-
-// Parent classes
-#include "lib3mf_base.hpp"
-#ifdef _MSC_VER
-#pragma warning(push)
-#pragma warning(disable : 4250)
-#endif
+#include "lib3mf_packagepart.hpp"
+#include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
-#include "Model/Classes/NMR_PackageResourceID.h"
 
-namespace Lib3MF {
-namespace Impl {
 
+
+using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class declaration of CPackagePath 
+ Class definition of CPackagePart 
 **************************************************************************************************************************/
 
-class CPackagePath : public virtual IPackagePath, public virtual CBase {
-private:
+CPackagePart::CPackagePart(NMR::PPackageModelPath pPath)
+  : m_pPath(pPath)
+{
+	if (!pPath.get())
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+}
 
-	/**
-	* Put private members here.
-	*/
-	NMR::PPackageModelPath m_pPath;
+std::string CPackagePart::Get()
+{
+	return m_pPath->getPath();
+}
 
-protected:
+void CPackagePart::Set(const std::string & sPath)
+{
+	m_pPath->setPath(sPath);
+}
 
-	/**
-	* Put protected members here.
-	*/
-
-public:
-
-	/**
-	* Put additional public members here. They will not be visible in the external API.
-	*/
-	CPackagePath(NMR::PPackageModelPath pPath);
-
-	/**
-	* Public member functions to implement.
-	*/
-
-	std::string Get() override;
-
-	void Set(const std::string & sPath) override;
-
-};
-
-} // namespace Impl
-} // namespace Lib3MF
-
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
-#endif // __LIB3MF_MODELPATH

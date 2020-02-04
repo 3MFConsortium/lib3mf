@@ -78,16 +78,16 @@ namespace Lib3MF
 		CheckReaderWarnings(reader3MF, 0);
 
 		auto resources = model->GetResources();
-		auto pathToChange = model->FindOrCreatePackagePath("/3D/box2.model");
-		pathToChange->Set("/3D/boxPathChanged.model");
+		auto partToChange = model->FindOrCreatePackagePart("/3D/box2.model");
+		partToChange->Set("/3D/boxPathChanged.model");
 
-		auto newPath = model->FindOrCreatePackagePath("/3D/boxPathNew.model");
+		auto newPart = model->FindOrCreatePackagePart("/3D/boxPathNew.model");
 
 		while (resources->MoveNext()) {
 			auto resource = resources->GetCurrent();
-			std::cout << resource->PackagePath()->Get() << ":" << resource->GetModelResourceID() << std::endl;
-			if (resource->PackagePath()->Get() == "/3D/box1.model") {
-				resource->SetPackagePath(newPath.get());
+			std::cout << resource->PackagePart()->Get() << ":" << resource->GetModelResourceID() << std::endl;
+			if (resource->PackagePart()->Get() == "/3D/box1.model") {
+				resource->SetPackagePart(newPart.get());
 			}
 		}
 		auto writer = model->QueryWriter("3mf");

@@ -73,9 +73,9 @@ public:
 
 	NMR::CModel& model();
 
-	IPackagePath * RootModelPath() override;
+	IPackagePart * RootModelPart() override;
 
-	IPackagePath * FindOrCreatePackagePath(const std::string & sAbsolutePath) override;
+	IPackagePart * FindOrCreatePackagePart(const std::string & sAbsolutePath) override;
 
 	void SetUnit (const eLib3MFModelUnit eUnit);
 
