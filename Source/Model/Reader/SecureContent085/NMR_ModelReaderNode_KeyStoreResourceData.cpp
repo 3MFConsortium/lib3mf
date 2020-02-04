@@ -61,6 +61,8 @@ namespace NMR {
 		// Parse Content
 		parseContent(pXMLReader);
 
+		// TODO: check path
+
 		PKeyStoreResourceData rd = m_pKeyStore->addResourceData(m_path, m_encryptionAlgorithm, m_compression);
 		for (PKeyStoreDecryptRight pdr : m_decryptRights) {
 			rd->addDecryptRight(pdr->getConsumer(), pdr->getEncryptionAlgorithm(), pdr->getCipherValue());
@@ -83,16 +85,18 @@ namespace NMR {
 			} else if (strcmp(XML_3MF_SECURE_CONTENT_ENCRYPTION_RSA, pAttributeValue) == 0) {
 				m_encryptionAlgorithm = eKeyStoreEncryptAlgorithm::RsaOaepMgf1p;
 			} else {
-				// TODO: what to do now?
+				m_pWarnings->addException(CNMRException(NMR_ERROR_INVALIDENCRIPTIONALGORITHM), eModelReaderWarningLevel::mrwInvalidOptionalValue);
 			}
 		}
 		else if (strcmp(XML_3MF_SECURE_CONTENT_COMPRESSION, pAttributeName) == 0) {
 			if (strcmp(XML_3MF_SECURE_CONTENT_COMPRESSION_DEFLATE, pAttributeValue) == 0) {
 				m_compression = true;
 			} else {
-				// TODO: what to do now?
+				m_pWarnings->addException(CNMRException(NMR_ERROR_INVALIDCOMPRESSION), eModelReaderWarningLevel::mrwInvalidOptionalValue);
 			}
 		}
+		else
+			m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE), mrwInvalidOptionalValue);
 	}
 
 	void CModelReaderNode_KeyStoreResourceData::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
@@ -105,11 +109,13 @@ namespace NMR {
 			if (strcmp(pChildName, XML_3MF_ELEMENT_DECRYPTRIGHT) == 0) {
 				PModelReaderNode_KeyStoreDecryptRight pXMLNode = std::make_shared<CModelReaderNode_KeyStoreDecryptRight>(m_pKeyStore, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
-				m_decryptRights.push_back(pXMLNode->getDecryptRight());
+				PKeyStoreDecryptRight dr = pXMLNode->getDecryptRight();
+				if (nullptr != dr.get()) {
+					m_decryptRights.push_back(pXMLNode->getDecryptRight());
+				}
 			}
-			else {
+			else
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
-			}
 		}
 	}
 

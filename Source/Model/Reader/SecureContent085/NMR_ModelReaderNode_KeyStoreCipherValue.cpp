@@ -78,6 +78,8 @@ namespace NMR {
 		// Parse Content
 		parseContent(pXMLReader);
 
+		// TODO: check key cipher value
+
 		std::remove(m_sCipherValueAccumulator.begin(), m_sCipherValueAccumulator.end(), '\r');
 		std::remove(m_sCipherValueAccumulator.begin(), m_sCipherValueAccumulator.end(), '\n');
 

@@ -63,8 +63,6 @@ namespace NMR {
 			m_pWarnings->addException(CNMRException(NMR_ERROR_MISSINGCONSUMERID), mrwMissingMandatoryValue);
 		}
 
-		// TODO: check key id
-		// TODO: check key value
 		m_pKeyStore->addConsumer(m_sConsumerID, m_sKeyID, m_sKeyValue);
 	}
 
@@ -77,11 +75,14 @@ namespace NMR {
 			if (!m_sConsumerID.empty())
 				m_pWarnings->addException(CNMRException(NMR_ERROR_DUPLICATE_KEYSTORECONSUMERID), eModelReaderWarningLevel::mrwInvalidMandatoryValue);
 			m_sConsumerID = pAttributeValue;
-		} else if (strcmp(XML_3MF_SECURE_CONTENT_KEY_ID, pAttributeName) == 0) {
+		}
+		else if (strcmp(XML_3MF_SECURE_CONTENT_KEY_ID, pAttributeName) == 0) {
 			if (!m_sKeyID.empty())
 				m_pWarnings->addException(CNMRException(NMR_ERROR_DUPLICATE_KEYSTORECONSUMERKEYID), eModelReaderWarningLevel::mrwInvalidOptionalValue);
 			m_sKeyID = pAttributeValue;
 		}
+		else
+			m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE), mrwInvalidOptionalValue);
 	}
 
 	void CModelReaderNode_KeyStoreConsumer::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
@@ -97,9 +98,8 @@ namespace NMR {
 				pXMLNode->parseXML(pXMLReader);
 				m_sKeyValue = pXMLNode->GetKeyValue();
 			}
-			else {
+			else
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
-			}
 		}
 	}
 

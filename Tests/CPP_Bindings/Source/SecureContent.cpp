@@ -17,6 +17,12 @@ namespace Lib3MF {
 		PModel model;
 
 		const std::string UNENCRYPTEDKEYSTORE = "/SecureContent/keystore.3mf";
+		const std::string NEGATIVEKEYSTOREENCRYPTEDEMPTY = "/SecureContent/negative_keystore_encrypted_empty.3mf";
+		const std::string NEGATIVEKEYSTOREENCRYPTEDMISSINGATTRIBUTES = "/SecureContent/negative_keystore_encrypted_missing_attributes.3mf";
+		const std::string NEGATIVEKEYSTOREENCRYPTEDINVALIDATTRIBUTES = "/SecureContent/negative_keystore_encrypted_invalid_attributes.3mf";
+		const std::string NEGATIVEUNENCRYPTEDKEYSTOREEMPTY = "/SecureContent/negative_keystore_empty.3mf";
+		const std::string NEGATIVEUNENCRYPTEDKEYSTOREMISSINGATTRIBUTES = "/SecureContent/negative_keystore_missing_attributes.3mf";
+		const std::string NEGATIVEUNENCRYPTEDKEYSTOREINVALIDATTRIBUTES = "/SecureContent/negative_keystore_invalid_attributes.3mf";
 	protected:
 		SecureContentT()
 		{}
@@ -59,10 +65,14 @@ namespace Lib3MF {
 			wrapper = CWrapper::loadLibrary();
 		}
 
-		PReader readUnencryptedKeyStore() {
+		PReader readKeyStore(std::string filename) {
 			auto reader = model->QueryReader("3mf");
-			reader->ReadFromFile(sTestFilesPath + UNENCRYPTEDKEYSTORE);
+			reader->ReadFromFile(sTestFilesPath + filename);
 			return reader;
+		}
+
+		PReader readUnencryptedKeyStore() {
+			return readKeyStore(UNENCRYPTEDKEYSTORE);
 		}
 	public:
 		static PWrapper wrapper;
@@ -207,6 +217,75 @@ namespace Lib3MF {
 		CheckReaderWarnings(reader3MF, 0);
 	}
 
+	TEST_F(SecureContentT, ModelReaderEmptyKeyStoreWarnings) {
+		// TODO: change to encrypted when implementation is ready
+		PReader reader3MF = readKeyStore(NEGATIVEUNENCRYPTEDKEYSTOREEMPTY);
+		CheckReaderWarnings(reader3MF, 1);
+		Lib3MF_uint32 iWarning = 0;
+		
+		// NMR_ERROR_INVALIDCONSUMERINDEX
+		// consumer index is higher than consumer count
+		reader3MF->GetWarning(0, iWarning);
+		ASSERT_EQ(0x80F6, iWarning);
+	}
+
+	TEST_F(SecureContentT, ModelReaderKeyStoreNoAttributesWarnings) {
+		// TODO: change to encrypted when implementation is ready
+		PReader reader3MF = readKeyStore(NEGATIVEUNENCRYPTEDKEYSTOREMISSINGATTRIBUTES);
+		CheckReaderWarnings(reader3MF, 3);
+		Lib3MF_uint32 iWarning = 0;
+
+		// NMR_ERROR_MISSINGCONSUMERID
+		// consumer id is not defined
+		reader3MF->GetWarning(0, iWarning);
+		ASSERT_EQ(0x80F1, iWarning);
+
+		// NMR_ERROR_INVALIDCONSUMERINDEX
+		// consumer index is not defined
+		reader3MF->GetWarning(1, iWarning);
+		ASSERT_EQ(0x80F6, iWarning);
+
+		// NMR_ERROR_MISSINGUUID
+		// no UUID attribute in <keystore>
+		reader3MF->GetWarning(2, iWarning);
+		ASSERT_EQ(0x80B0, iWarning);
+	}
+
+	TEST_F(SecureContentT, ModelReaderKeyStoreInvalidAttributesWarnings) {
+		// TODO: change to encrypted when implementation is ready
+		PReader reader3MF = readKeyStore(NEGATIVEUNENCRYPTEDKEYSTOREINVALIDATTRIBUTES);
+		CheckReaderWarnings(reader3MF, 4);
+		Lib3MF_uint32 iWarning = 0;
+
+		// NMR_ERROR_DUPLICATE_KEYSTORECONSUMERID
+		// consumer has multiple consumerid attributes
+		reader3MF->GetWarning(0, iWarning);
+		ASSERT_EQ(0x80EF, iWarning);
+
+		// NMR_ERROR_INVALIDENCRIPTIONALGORITHM 
+		// invalid encryptionalgorithm attribute in ResourceData
+		reader3MF->GetWarning(1, iWarning);
+		ASSERT_EQ(0x80F7, iWarning);
+
+		// NMR_ERROR_INVALIDCOMPRESSION 
+		// invalid compression attribute in ResourceData
+		reader3MF->GetWarning(2, iWarning);
+		ASSERT_EQ(0x80F8, iWarning);
+
+		// NMR_ERROR_INVALIDENCRIPTIONALGORITHM
+		// invalid encryptionalgorithm attribute in DecryptRight
+		reader3MF->GetWarning(3, iWarning);
+		ASSERT_EQ(0x80F7, iWarning);
+
+		// TODO: check path is invalid
+		// TODO: check path is unique among resource data elements
+
+		// TODO: check key value is invalid = PEM format
+
+		// TODO: check cipher value is invalid
+
+	}
+	
 	TEST_F(SecureContentT, CheckKeyStoreConsumers) {
 		readUnencryptedKeyStore();
 		auto keyStore = model->GetKeyStore();

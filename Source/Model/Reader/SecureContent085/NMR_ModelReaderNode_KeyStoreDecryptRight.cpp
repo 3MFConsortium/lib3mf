@@ -64,11 +64,18 @@ namespace NMR {
 		// Parse Content
 		parseContent(pXMLReader);
 
-		// TODO: check that all m_parsedDecryptRight properties are set
-		nfUint64 index = fnStringToInt32(m_consumerIndex.c_str());
-		// TODO: register warning
-		PKeyStoreConsumer c = m_pKeyStore->getConsumerByIndex(index);
-		m_decryptRight = std::make_shared<CKeyStoreDecryptRight>(c, m_encryptionAlgorithm, m_sCipherValue);
+		if (m_consumerIndex.empty()) {
+			m_pWarnings->addException(CNMRException(NMR_ERROR_INVALIDCONSUMERINDEX), eModelReaderWarningLevel::mrwInvalidMandatoryValue);
+		} else {
+			// this can throw for values that are not numbers and it's ok so according to other reader nodes
+			nfUint64 index = fnStringToInt32(m_consumerIndex.c_str());
+			if (0 <= index && index < m_pKeyStore->getConsumerCount()) {
+				PKeyStoreConsumer c = m_pKeyStore->getConsumerByIndex(index);
+				m_decryptRight = std::make_shared<CKeyStoreDecryptRight>(c, m_encryptionAlgorithm, m_sCipherValue);
+			} else {
+				m_pWarnings->addException(CNMRException(NMR_ERROR_INVALIDCONSUMERINDEX), eModelReaderWarningLevel::mrwInvalidMandatoryValue);
+			}
+		}
 	}
 
 	void CModelReaderNode_KeyStoreDecryptRight::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
@@ -89,18 +96,11 @@ namespace NMR {
 			else if (strcmp(XML_3MF_SECURE_CONTENT_ENCRYPTION_RSA, pAttributeValue) == 0) {
 				m_encryptionAlgorithm = eKeyStoreEncryptAlgorithm::RsaOaepMgf1p;
 			}
-			else {
-				// TODO: what to do now?
-			}
+			else
+				m_pWarnings->addException(CNMRException(NMR_ERROR_INVALIDENCRIPTIONALGORITHM), eModelReaderWarningLevel::mrwInvalidOptionalValue);
 		}
-	}
-
-	void CModelReaderNode_KeyStoreDecryptRight::OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace)
-	{
-		__NMRASSERT(pAttributeName);
-		__NMRASSERT(pAttributeValue);
-		__NMRASSERT(pNameSpace);
-
+		else
+			m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE), mrwInvalidOptionalValue);
 	}
 
 	void CModelReaderNode_KeyStoreDecryptRight::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
@@ -121,9 +121,8 @@ namespace NMR {
 					m_sCipherValue = pXMLNode->getCipherValue();
 				}
 			}
-			else {
+			else
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
-			}
 		}
 	}
 

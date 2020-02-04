@@ -85,8 +85,11 @@ namespace NMR {
 		if (strcmp(XML_3MF_SECURE_CONTENT_UUID, pAttributeName) == 0) {
 			if (m_UUID.get())
 				m_pWarnings->addException(CNMRException(NMR_ERROR_DUPLICATEUUID), eModelReaderWarningLevel::mrwInvalidMandatoryValue);
+			// this can throw for invalid UUIDs and it's ok so according to other reader nodes
 			m_UUID = std::make_shared<CUUID>(pAttributeValue);
 		}
+		else if (strcmp(XML_3MF_ATTRIBUTE_XMLNS, pAttributeName) != 0)
+			m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE), mrwInvalidOptionalValue);
 	}
 
 	void CModelReaderNode_KeyStore::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
@@ -101,13 +104,14 @@ namespace NMR {
 				PModelReaderNode_KeyStoreConsumer pXMLNode = std::make_shared<CModelReaderNode_KeyStoreConsumer>(m_pKeyStore, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 				// consumer adds itself to m_pKeyStore, nothing else to do here
-			} else if (strcmp(pChildName, XML_3MF_ELEMENT_RESOURCEDATA) == 0) {
+			}
+			else if (strcmp(pChildName, XML_3MF_ELEMENT_RESOURCEDATA) == 0) {
 				PModelReaderNode_KeyStoreResourceData pXMLNode = std::make_shared<CModelReaderNode_KeyStoreResourceData>(m_pKeyStore, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 				// resource data adds itself to m_pKeyStore, nothing else to do here
-			} else {
-				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
 			}
+			else
+				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
 		}
 	}
 

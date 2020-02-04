@@ -405,9 +405,14 @@ namespace NMR {
 		case NMR_ERROR_DUPLICATE_KEYSTORECONSUMERID: return "The KeyStore Consumer id is not unique";
 		case NMR_ERROR_DUPLICATE_KEYSTORECONSUMERKEYID: return "The KeyStore Consumer key id is not unique ";
 		case NMR_ERROR_MISSINGCONSUMERID: return "No Consumer id found";
+		case NMR_ERROR_DUPLICATE_KEYSTORERESOURCEDATAPATH: return "Duplicate KeyStore ResourceData path";
+		case NMR_ERROR_DUPLICATEKEYSTORECONSUMERINDEX: return "Duplicate KeyStore consumer index";
 		case NMR_ERROR_DUPLICATE_KEYSTORERESOURCEDATA: return "The KeyStore ResourceData is not unique";
 		case NMR_ERROR_DUPLICATE_KEYSTOREDECRYPTRIGHT: return "The KeyStore DecryptRight is not unique";
-
+		case NMR_ERROR_INVALIDCONSUMERINDEX: return "The KeyStore DecryptRight consumer index is invalid";
+		case NMR_ERROR_INVALIDENCRIPTIONALGORITHM: return "The KeyStore encryption algorithm is invalid";
+		case NMR_ERROR_INVALIDCOMPRESSION: return "The KeyStore ResourceData compression is invalid";
+		case NMR_ERROR_OPCCOULDNOTGETKEYSTORESTREAM: return "Could not get KeyStore stream";
 
 		// XML Parser Error Constants(0x9XXX)
 		case NMR_ERROR_XMLPARSER_INVALIDATTRIBVALUE: return "Invalid XML attribute value";

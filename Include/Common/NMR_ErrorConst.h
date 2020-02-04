@@ -1139,11 +1139,20 @@ Model error codes (0x8XXX)
 // Duplicate KeyStore DecryptRight consumerindex
 #define NMR_ERROR_DUPLICATEKEYSTORECONSUMERINDEX 0x80F3
 
-//Duplicate KeyStore ResourceData object
+// Duplicate KeyStore ResourceData object
 #define NMR_ERROR_DUPLICATE_KEYSTORERESOURCEDATA 0x80F4
 
-//Duplicate KeyStore DecryptRight object
+// Duplicate KeyStore DecryptRight object
 #define NMR_ERROR_DUPLICATE_KEYSTOREDECRYPTRIGHT 0x80F5
+
+// Invalid KeyStore Consumer id
+#define NMR_ERROR_INVALIDCONSUMERINDEX 0x80F6
+
+// Invalid KeyStore encryption algorithm
+#define NMR_ERROR_INVALIDENCRIPTIONALGORITHM 0x80F7
+
+// Invalid KeyStore compression
+#define NMR_ERROR_INVALIDCOMPRESSION 0x80F8
 
 /*-------------------------------------------------------------------
 XML Parser Error Constants (0x9XXX)
