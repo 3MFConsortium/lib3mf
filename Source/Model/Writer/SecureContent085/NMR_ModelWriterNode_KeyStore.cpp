@@ -102,9 +102,10 @@ void NMR::CModelWriterNode_KeyStore::writeResourceDatas() {
 			writeStartElementWithPrefix(XML_3MF_ELEMENT_CIPHERVALUE, XML_3MF_NAMESPACEPREFIX_XENC);
 			
 			CIPHERVALUE cv = resourcedata->getDecryptRight(accessIndex)->getCipherValue();
-			if (cv.m_iv.size() < 1 && cv.m_key.size() < 1 && cv.m_tag.size() < 1) {
+			//TODO throw when missing cipher value, pending because of callbacks implementation
+			/*if (cv.m_iv.size() < 1 && cv.m_key.size() < 1 && cv.m_tag.size() < 1) {
 				throw CNMRException(NMR_ERROR_MISSINGCIPHERVALUE);
-			}
+			}*/
 			std::vector<unsigned char> cvVector;
 			std::copy(cv.m_iv.begin(), cv.m_iv.end(), std::back_inserter(cvVector));
 			std::copy(cv.m_key.begin(), cv.m_key.end(), std::back_inserter(cvVector));

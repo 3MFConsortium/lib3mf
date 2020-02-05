@@ -306,6 +306,7 @@ namespace Lib3MF {
 
 		}
 	}
+
 	TEST_F(SecureContentT, CheckKeyStoreResourceData) {
 		readUnencryptedKeyStore();
 		auto keyStore = model->GetKeyStore();
@@ -467,7 +468,10 @@ namespace Lib3MF {
 		
 		keyStore->SetUUID("b7aa9c75-5fbd-48c1-a893-40289e45ab8f");
 		//create a consumer (optional)
-		Lib3MF::PConsumer consumer = keyStore->AddConsumer("LIB3MF#TEST", "", "");
+		std::string keyValue = "-----BEGIN PUBLIC KEY-----\r\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAw53q4y2KB2WcoOBUE9OE\r\nXI0OCzUf4SI1J6fDx6XeDJ8PzqxN4pPRtXgtKfp/RiSL0invf7ASfkBMcXuhD8XP\r\n0uki3JIzvsxTH+Jnnz/PrYnS9DFa6c9MYciTIV8vC4u03vkZH6OuGq4rWeSZuNCT\r\nCgT59q67Ly6OytNsQgsDHL2QO8xhpYdQ4bx7F0uNn5LAxFyA0ymsFsgSSLONJWza\r\nVtsq9jvkIOEdTzYq52PAXMUIpegbyqSheNlmedcss8teqiZGnCOxpBxL3z+ogcFe\r\nnX1S8kq2UhzOjXLEjPs9B0SchwXSadephL89shJwra+30NS3R3frwfCz+a3H6wTV\r\nBwIDAQAB\r\n-----END PUBLIC KEY-----\r\n\t\t";
+		std::string keyId = "KEK_xxx";
+		std::string consumerId = "HP#MOP44B#SG5693454";
+		Lib3MF::PConsumer consumer = keyStore->AddConsumer(consumerId, keyId, keyValue);
 		//create a resource data
 		Lib3MF::PResourceData resourceData = keyStore->AddResourceData(modelPath.get(), Lib3MF::eEncryptionAlgorithm::Aes256Gcm, Lib3MF::eCompression::Deflate);
 		//add decryptright for the consumer (optional)
