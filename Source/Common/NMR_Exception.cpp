@@ -414,6 +414,7 @@ namespace NMR {
 		case NMR_ERROR_INVALIDCOMPRESSION: return "The KeyStore ResourceData compression is invalid";
 		case NMR_ERROR_OPCCOULDNOTGETKEYSTORESTREAM: return "Could not get KeyStore stream";
 		case NMR_ERROR_INVALID_KEYSTORECIPHERVALUE: return "Invalid keystore CipherValue value";
+		case NMR_ERROR_MISSINGCIPHERVALUE: return "Missing cipher data";
 
 		// XML Parser Error Constants(0x9XXX)
 		case NMR_ERROR_XMLPARSER_INVALIDATTRIBVALUE: return "Invalid XML attribute value";

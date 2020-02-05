@@ -35,27 +35,31 @@ This is the class for exporting the 3mf keystore stream root node.
 #include "Model/Classes/NMR_KeyStoreConsumer.h"
 #include "Model/Classes/NMR_KeyStoreResourceData.h"
 #include "Common/NMR_Exception.h"
+#include "Common/NMR_StringUtils.h"
+#include <vector>
+#include <array>
+
 
 void NMR::CModelWriterNode_KeyStore::writeConsumers() {
-	const auto count = m_pKeyStore->getConsumerCount();
+	size_t count = m_pKeyStore->getConsumerCount();
 	for (uint32_t nIndex = 0; nIndex < count; ++nIndex) {
-		PKeyStoreConsumer const& consumer = m_pKeyStore->getConsumerByIndex(nIndex);
+		PKeyStoreConsumer consumer = m_pKeyStore->getConsumerByIndex(nIndex);
 		consumer->setIndex(nIndex);
 		// <consumer>
 		writeStartElement(XML_3MF_ELEMENT_CONSUMER);
 		//@consumerid
-		const auto consumerId = consumer->getConsumerID();
+		std::string consumerId = consumer->getConsumerID();
 		if (consumerId.empty()) {
 			throw CNMRException(NMR_ERROR_MISSINGCONSUMERID);
 		}
 		writeConstStringAttribute(XML_3MF_SECURE_CONTENT_CONSUMER_ID, consumerId.c_str());
 		//@keyid
-		const auto keyId = consumer->getKeyID();
+		std::string keyId = consumer->getKeyID();
 		if (!keyId.empty()) {
 			writeConstStringAttribute(XML_3MF_SECURE_CONTENT_KEY_ID, keyId.c_str());
 		}
 
-		std::string const& kvStr = consumer->getKeyValue();
+		std::string kvStr = consumer->getKeyValue();
 		if (!kvStr.empty()) {
 			// <keyvalue>
 			writeStartElement(XML_3MF_ELEMENT_KEYVALUE);
@@ -70,9 +74,9 @@ void NMR::CModelWriterNode_KeyStore::writeConsumers() {
 }
 
 void NMR::CModelWriterNode_KeyStore::writeResourceDatas() {
-	auto const& count = m_pKeyStore->getResourceDataCount();
+	size_t count = m_pKeyStore->getResourceDataCount();
 	for (uint32_t resourceIndex = 0; resourceIndex < count; ++resourceIndex) {
-		PKeyStoreResourceData const& resourcedata = m_pKeyStore->getResourceDataByIndex(resourceIndex);
+		PKeyStoreResourceData resourcedata = m_pKeyStore->getResourceDataByIndex(resourceIndex);
 		// <resourcedata>
 		writeStartElement(XML_3MF_ELEMENT_RESOURCEDATA);
 		// path - attribute
@@ -83,25 +87,31 @@ void NMR::CModelWriterNode_KeyStore::writeResourceDatas() {
 		if (resourcedata->getCompression()) {
 			writeConstStringAttribute(XML_3MF_SECURE_CONTENT_COMPRESSION, XML_3MF_SECURE_CONTENT_COMPRESSION_DEFLATE);
 		}
-		auto const& accessCount = resourcedata->getDecryptRightCount();
+		size_t accessCount = resourcedata->getDecryptRightCount();
 		for (uint32_t accessIndex = 0; accessIndex < accessCount; ++accessIndex) {
 			// <decryptright>
 			writeStartElement(XML_3MF_ELEMENT_DECRYPTRIGHT);
-			const auto nIndex = resourcedata->getDecryptRight(accessIndex)->getConsumer()->getIndex();
+			uint32_t nIndex = resourcedata->getDecryptRight(accessIndex)->getConsumer()->getIndex();
 			// consumerIndex - attribute
 			writeConstStringAttribute(XML_3MF_SECURE_CONTENT_CONSUMER_INDEX, std::to_string(nIndex).c_str());
 			// encryptionalgorithm RSA - attribute
 			writeConstStringAttribute(XML_3MF_SECURE_CONTENT_ENCRYPTION_ALGORITHM, XML_3MF_SECURE_CONTENT_ENCRYPTION_RSA);
-
-			// <xenc:CipherData>
-			writeStartElementWithPrefix(XML_3MF_ELEMENT_CIPHERDATA, XML_3MF_NAMESPACEPREFIX_XENC);
+			// <CipherData>
+			writeStartElement(XML_3MF_ELEMENT_CIPHERDATA);
 			// <xenc:CipherValue>
 			writeStartElementWithPrefix(XML_3MF_ELEMENT_CIPHERVALUE, XML_3MF_NAMESPACEPREFIX_XENC);
-			// TODO: where is the base64 key value?
-			// CIPHERVALUE cipher = resourcedata->getCipherValue();
-			//TODO throw if no ciphervalue
-			const std::string key = "base64(RSA2048_OAEP encrypted Data Encryption Key)";
-			writeText(key.c_str(), (nfUint32)key.length());
+			
+			CIPHERVALUE cv = resourcedata->getDecryptRight(accessIndex)->getCipherValue();
+			if (cv.m_iv.size() < 1 && cv.m_key.size() < 1 && cv.m_tag.size() < 1) {
+				throw CNMRException(NMR_ERROR_MISSINGCIPHERVALUE);
+			}
+			std::vector<unsigned char> cvVector;
+			std::copy(cv.m_iv.begin(), cv.m_iv.end(), std::back_inserter(cvVector));
+			std::copy(cv.m_key.begin(), cv.m_key.end(), std::back_inserter(cvVector));
+			std::copy(cv.m_tag.begin(), cv.m_tag.end(), std::back_inserter(cvVector));
+
+			std::string encodedCv = fnBase64Encode(cvVector);
+			writeText(encodedCv.c_str(), (nfUint32)encodedCv.length());
 
 			writeFullEndElement();
 			writeFullEndElement();

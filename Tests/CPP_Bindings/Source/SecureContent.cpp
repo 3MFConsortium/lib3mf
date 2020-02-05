@@ -453,25 +453,19 @@ namespace Lib3MF {
 		reader->ReadFromFile(sTestFilesPath + UNENCRYPTEDKEYSTORE);
 	}
 
-
-
-
-
-
-
 	//
 	// End to end tests
 	//
 
-	TEST_F(SecureContentT, CreateSecureContentReadAndAddNewConsumer) {
-		auto secureModel = wrapper->CreateModel();
+	TEST_F(SecureContentT, WriteSecureContent) {
+		Lib3MF::PModel secureModel = wrapper->CreateModel();
 		//create the attachment to be secured
 		std::string path = "/3D/securemesh.xml";
 		//add a mesh
-		auto meshObject = secureModel->AddMeshObject();
+		Lib3MF::PMeshObject meshObject = secureModel->AddMeshObject();
 		meshObject->SetGeometry(CLib3MFInputVector<sPosition>(pVertices, 8), CLib3MFInputVector<sTriangle>(pTriangles, 12));
 		//set the mesh apart of the main root model
-		auto modelPath = meshObject->PackagePath();
+		Lib3MF::PPackagePath modelPath = meshObject->PackagePath();
 		modelPath->Set(path);
 
 		sTransform transformation;
@@ -482,24 +476,26 @@ namespace Lib3MF {
 
 		secureModel->AddBuildItem(meshObject.get(), transformation);
 
-		auto keyStore = secureModel->GetKeyStore();
+		Lib3MF::PKeyStore keyStore = secureModel->GetKeyStore();
+		
+		keyStore->SetUUID("b7aa9c75-5fbd-48c1-a893-40289e45ab8f");
 		//create a consumer (optional)
-		auto consumer = keyStore->AddConsumer("LIB3MF#TEST", "", NULL);
+		Lib3MF::PConsumer consumer = keyStore->AddConsumer("LIB3MF#TEST", "", "");
 		//create a resource data
-		auto resourceData = keyStore->AddResourceData(modelPath.get(), Lib3MF::eEncryptionAlgorithm::Aes256Gcm, Lib3MF::eCompression::Deflate);
+		Lib3MF::PResourceData resourceData = keyStore->AddResourceData(modelPath.get(), Lib3MF::eEncryptionAlgorithm::Aes256Gcm, Lib3MF::eCompression::Deflate);
 		//add decryptright for the consumer (optional)
-		auto decryptRight = resourceData->AddDecryptRight(consumer.get(), Lib3MF::eEncryptionAlgorithm::RsaOaepMgf1p);
-
+		Lib3MF::PDecryptRight decryptRight = resourceData->AddDecryptRight(consumer.get(), Lib3MF::eEncryptionAlgorithm::Aes256Gcm);
+		
 		//Query writer
-		auto writer = secureModel->QueryWriter("3mf");
+		PWriter writer = secureModel->QueryWriter("3mf");
 		//register the consumer key encryption callback (optional)
 		//writer->RegisterKEKClient("LIB3MF#TEST", EncryptionData::keyEncryptionCallback, nullptr);
 		//register the data encryption callback
 		//writer->RegisterEncryption(EncryptionData::dataEncryptionCallback);
 
 		//write content
-		Lib3MF_buffer buffer;
-		writer->WriteToBuffer(buffer);
+		
+		writer->WriteToFile(sTestFilesPath + "/SecureContent/WriteSecureContent.3mf");
 
 	}
 

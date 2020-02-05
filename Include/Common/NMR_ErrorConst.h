@@ -1157,6 +1157,9 @@ Model error codes (0x8XXX)
 // Invlaid KeyStore CipherValue
 #define NMR_ERROR_INVALID_KEYSTORECIPHERVALUE 0x80F9
 
+//Missing decrypt right
+#define NMR_ERROR_MISSINGCIPHERVALUE 0x90FA
+
 /*-------------------------------------------------------------------
 XML Parser Error Constants (0x9XXX)
 -------------------------------------------------------------------*/
