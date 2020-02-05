@@ -5,6 +5,7 @@ if (USE_INCLUDED_GTEST)
 	SET_TARGET_PROPERTIES (gtest PROPERTIES FOLDER gtest)
 	SET_TARGET_PROPERTIES (gtest_main PROPERTIES FOLDER gtest)
 	SET(gtest_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/googletest/googletest")
+	SET(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 endif()
 
 add_definitions( -DTESTFILESPATH="${CMAKE_CURRENT_SOURCE_DIR}/TestFiles/")
