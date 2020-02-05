@@ -855,6 +855,11 @@ namespace NMR {
 	std::vector<nfByte> fnBase64Decode(std::string const & input) {
 		std::vector<nfByte> buffer(EVP_DECODE_LENGTH(input.length()), 0);
 		int decoded = EVP_DecodeBlock(buffer.data(), (const nfByte *)input.data(), (nfUint32)input.length());
+		if (*(input.end() - 1) == '=')
+			decoded--;
+		if (*(input.end() - 2) == '=')
+			decoded--;
+
 		if (decoded <= 0)
 			return std::vector<nfByte>();
 		buffer.resize(decoded);
