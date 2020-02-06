@@ -76,8 +76,12 @@ namespace NMR {
 								KEKDESCRIPTOR ctx = (*it).second;
 								ctx.m_sKekDecryptData.m_sConsumerId = consumer->getConsumerID();
 								ctx.m_sKekDecryptData.m_sResourcePath = rd->getPath()->getPath();
-								CIPHERVALUE open = decryptRight->getCipherValue();
-								if (ctx.m_fnDecrypt(open.m_key, open.m_key, ctx.m_sKekDecryptData)) {
+								CIPHERVALUE closed = decryptRight->getCipherValue();
+								size_t decrypted = ctx.m_fnDecrypt(closed.m_key, ctx.m_sKekDecryptData);
+								if (decrypted) {
+									CIPHERVALUE open = closed;
+									open.m_key = ctx.m_sKekDecryptData.m_KeyBuffer;
+									open.m_key.resize(decrypted, 0);
 									rd->setCipherValue(open);
 									break;
 								}

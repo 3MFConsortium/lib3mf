@@ -370,12 +370,14 @@ namespace Lib3MF {
 			const Lib3MF_uint64 plainSize, 
 			Lib3MF_uint64 * plainNeededSize,
 			Lib3MF_uint8 * plainBuffer, 
-			Lib3MF_pvoid userData) {
+			Lib3MF_pvoid userData,
+			Lib3MF_uint64 * result) {
 
 			DEKCallbackData * cb = reinterpret_cast<DEKCallbackData *>(userData);
 			ASSERT_EQ(cb->value, 1);
 			
 			CCipherData cd(SecureContentT::wrapper.get(), cipherData);
+			SecureContentT::wrapper->Acquire(&cd);
 
 			ASSERT_EQ(cd.GetDescriptor(), 1);
 			cb->context.push_back(cd.GetDescriptor());
@@ -384,6 +386,7 @@ namespace Lib3MF {
 		
 
 			std::copy(cipherBuffer, cipherBuffer + plainSize, plainBuffer);
+			*result = plainSize;
 		}
 	};
 
@@ -409,6 +412,9 @@ namespace Lib3MF {
 			Lib3MF_pvoid userData,
 			Lib3MF_uint64 *result) {
 
+
+			ASSERT_GE(plainSize, 256);
+
 			KEKCallbackData * cb = reinterpret_cast<KEKCallbackData *>(userData);
 			ASSERT_EQ(cb->value, 1);
 
@@ -417,11 +423,14 @@ namespace Lib3MF {
 			std::vector<char> buffer;
 
 			CConsumer c(SecureContentT::wrapper.get(), pConsumer);
+			SecureContentT::wrapper->Acquire(&c);
+
 			ASSERT_EQ(c.GetConsumerID(), "LIB3MF#TEST");
 		
 			ASSERT_EQ(c.GetKeyID(), "contentKey");
 
 			ASSERT_FALSE(c.GetKeyValue().empty());
+
 
 			if (plainSize == 0) {
 				*plainNeeded = cipherSize;
@@ -437,7 +446,7 @@ namespace Lib3MF {
 		auto reader = model->QueryReader("3mf");
 		KEKCallbackData data;
 		data.value = 1;
-		reader->RegisterKEKClient("LIB3MF#TEST", KEKCallbackData::testKEKCallback, reinterpret_cast<Lib3MF_pvoid>(&data));
+		reader->RegisterKEKClient("LIB3MF#TEST", KEKCallbackData::testKEKCallback, 256, reinterpret_cast<Lib3MF_pvoid>(&data));
 		reader->ReadFromFile(sTestFilesPath + UNENCRYPTEDKEYSTORE);
 	}
 
