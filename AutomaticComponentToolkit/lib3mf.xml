@@ -1203,49 +1203,49 @@
 		</method>
 	</class>
 	<class name="KeyStore">
-		<method name="AddConsumer" description="A description">
-			<param name="ConsumerID" type="string" pass="in" description="A description"/>
-			<param name="KeyID" type="string" pass="in" description="A description"/>
-			<param name="KeyValue" type="string" pass="in" description="A description"/>
-			<param name="Consumer" type="handle" class="Consumer" pass="return" description="A description"/>
+		<method name="AddConsumer" description="Adds a consumer to the keystore">
+			<param name="ConsumerID" type="string" pass="in" description="A unique identifier for the consumer"/>
+			<param name="KeyID" type="string" pass="in" description="The id of the key of the consumer"/>
+			<param name="KeyValue" type="string" pass="in" description="The public key for this consumer in PEM format"/>
+			<param name="Consumer" type="handle" class="Consumer" pass="return" description="The consumer instance"/>
 		</method> 
-		<method name="GetConsumerCount" description="A description">
-			<param name="Count" type="uint32" pass="return" description="A description"/>
+		<method name="GetConsumerCount" description="Gets the number of consumers in the keystore">
+			<param name="Count" type="uint32" pass="return" description="The consumer count"/>
 		</method>
-		<method name="GetConsumer" description="A description">
-			<param name="ConsumerIndex" type="uint64" pass="in" description="the index of the consumer"/>
-			<param name="TheConsumer" type="handle" class="Consumer" pass="return" description="the consumer instance"/>
+		<method name="GetConsumer" description="Get a consumer from the keystore">
+			<param name="ConsumerIndex" type="uint64" pass="in" description="The index of the consumer"/>
+			<param name="TheConsumer" type="handle" class="Consumer" pass="return" description="The consumer instance"/>
 		</method>
-		<method name="RemoveConsumer" description="A description">
-			<param name="ConsumerInstance" type="handle" class="Consumer" pass="in" description="Build item to remove."/>
+		<method name="RemoveConsumer" description="Removes a consumer from the keystore">
+			<param name="ConsumerInstance" type="handle" class="Consumer" pass="in" description="The consumer instance to remove"/>
 		</method>
-		<method name="FindConsumer" description="A description">
-			<param name="ConsumerID" type="string" pass="in" description="A description"/>
-			<param name="TheConsumer" type="handle" class="Consumer" pass="return" description="the consumer instance"/>
+		<method name="FindConsumer" description="Finds a consumer by ID">
+			<param name="ConsumerID" type="string" pass="in" description="The ID of the consumer"/>
+			<param name="TheConsumer" type="handle" class="Consumer" pass="return" description="The consumer instance"/>
 		</method>
-		<method name="GetResourceDataCount" description="A description">
-			<param name="Count" type="uint32" pass="return" description="the number of resource data available"/>
+		<method name="GetResourceDataCount" description="Gets the number of resource data in the keysore">
+			<param name="Count" type="uint32" pass="return" description="The number of resource data available"/>
 		</method>
-		<method name="GetResourceData" description="A description">
-			<param name="ResourceDataIndex" type="uint64" pass="in" description="the index of the resource data"/>
-			<param name="TheResourceData" type="handle" class="ResourceData" pass="return" description="the data resource instance"/>
+		<method name="GetResourceData" description="Gets a resource data">
+			<param name="ResourceDataIndex" type="uint64" pass="in" description="The index of the resource data"/>
+			<param name="TheResourceData" type="handle" class="ResourceData" pass="return" description="The data resource instance"/>
 		</method>
-		<method name="AddResourceData" description="A description">
-			<param name="PackagePath" type="handle" class="PackagePath" pass="in" description="A description"/>
-			<param name="EncryptionAlgorithm" type="enum" class="EncryptionAlgorithm" pass="in" description="A description"/>
-			<param name="Compression" type="enum" class="Compression" pass="in" description="A description"/>
-			<param name="TheResourceData" type="handle" class="ResourceData" pass="return" description="the data resource instance"/>
+		<method name="AddResourceData" description="Adds a resource data into the keystore. This flags the package part for encryption">
+			<param name="PartPath" type="handle" class="PackagePath" pass="in" description="The path of the part to be encrypted"/>
+			<param name="EncryptionAlgorithm" type="enum" class="EncryptionAlgorithm" pass="in" description="The encryption algorithm to be used to encrypt this resource"/>
+			<param name="Compression" type="enum" class="Compression" pass="in" description="Whether compression should be used prior to encryption"/>
+			<param name="TheResourceData" type="handle" class="ResourceData" pass="return" description="The data resource instance"/>
 		</method>
-		<method name="FindResourceData" description="A description">
-			<param name="Path" type="string" pass="in" description="A description"/>
-			<param name="TheResourceData" type="handle" class="ResourceData" pass="return" description="the data resource instance"/>
+		<method name="FindResourceData" description="Finds a resource data by its path">
+			<param name="Path" type="string" pass="in" description="The resource data path to find"/>
+			<param name="TheResourceData" type="handle" class="ResourceData" pass="return" description="The data resource instance"/>
 		</method>
-		<method name="GetUUID" description="A description">
-			<param name="HasUUID" type="bool" pass="out" description="flag whether the build has a UUID"/>
-			<param name="UUID" type="string" pass="return" description="the UUID as string of the form 'xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx'"/>
+		<method name="GetUUID" description="Gets the keystore UUID">
+			<param name="HasUUID" type="bool" pass="out" description="flag whether the keystore has a UUID"/>
+			<param name="UUID" type="string" pass="return" description="returns the keystore uuid."/>
 		</method>
-		<method name="SetUUID" description="sets the keystore UUID">
-			<param name="UUID" type="string" pass="in" description="the UUID as string of the form 'xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx'"/>
+		<method name="SetUUID" description="Sets the keystore UUID">
+			<param name="UUID" type="string" pass="in" description="The new keystore uuid."/>
 		</method>
 	</class>
 
@@ -1441,8 +1441,8 @@
 		<method name="RemoveCustomContentType" description="removes a custom Content Type from the model (UTF8 version).">
 			<param name="Extension" type="string" pass="in" description="File Extension"/>
 		</method>
-		<method name="GetKeyStore" description="A description">
-			<param name="KeyStore" type="handle" class="KeyStore" pass="return" description="A description"/>
+		<method name="GetKeyStore" description="Gets the keystore associated with this model">
+			<param name="KeyStore" type="handle" class="KeyStore" pass="return" description="The package keystore"/>
 		</method>
 	</class>
 
