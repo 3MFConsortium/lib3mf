@@ -129,16 +129,16 @@ namespace Lib3MF {
 		std::string path1 = "/3D/nonrootmodel1.model";
 		auto meshObject = model->AddMeshObject();
 		meshObject->SetGeometry(CLib3MFInputVector<sPosition>(pVertices, 8), CLib3MFInputVector<sTriangle>(pTriangles, 12));
-		meshObject->PackagePath()->Set(path1);
+		meshObject->PackagePart()->Set(path1);
 
-		keyStore->AddResourceData(meshObject->PackagePath().get(), Lib3MF::eEncryptionAlgorithm::Aes256Gcm, Lib3MF::eCompression::Deflate);
+		keyStore->AddResourceData(meshObject->PackagePart().get(), Lib3MF::eEncryptionAlgorithm::Aes256Gcm, Lib3MF::eCompression::Deflate);
 
 		std::string path2 = "/3D/nonrootmodel2.model";
 		meshObject = model->AddMeshObject();
 		meshObject->SetGeometry(CLib3MFInputVector<sPosition>(pVertices, 8), CLib3MFInputVector<sTriangle>(pTriangles, 12));
-		meshObject->PackagePath()->Set(path2);
+		meshObject->PackagePart()->Set(path2);
 
-		keyStore->AddResourceData(meshObject->PackagePath().get(), Lib3MF::eEncryptionAlgorithm::Aes256Gcm, Lib3MF::eCompression::None);
+		keyStore->AddResourceData(meshObject->PackagePart().get(), Lib3MF::eEncryptionAlgorithm::Aes256Gcm, Lib3MF::eCompression::None);
 
 		ASSERT_EQ(2, keyStore->GetResourceDataCount());
 		ASSERT_EQ(path1, keyStore->GetResourceData(0)->GetPath()->Get());
@@ -153,16 +153,16 @@ namespace Lib3MF {
 		std::string path1 = "/3D/nonrootmodel1.model";
 		auto meshObject = model->AddMeshObject();
 		meshObject->SetGeometry(CLib3MFInputVector<sPosition>(pVertices, 8), CLib3MFInputVector<sTriangle>(pTriangles, 12));
-		meshObject->PackagePath()->Set(path1);
+		meshObject->PackagePart()->Set(path1);
 
-		keyStore->AddResourceData(meshObject->PackagePath().get(), Lib3MF::eEncryptionAlgorithm::Aes256Gcm, Lib3MF::eCompression::Deflate);
+		keyStore->AddResourceData(meshObject->PackagePart().get(), Lib3MF::eEncryptionAlgorithm::Aes256Gcm, Lib3MF::eCompression::Deflate);
 
 		std::string path2 = "/3D/nonrootmodel2.model";
 		meshObject = model->AddMeshObject();
 		meshObject->SetGeometry(CLib3MFInputVector<sPosition>(pVertices, 8), CLib3MFInputVector<sTriangle>(pTriangles, 12));
-		meshObject->PackagePath()->Set(path2);
+		meshObject->PackagePart()->Set(path2);
 
-		keyStore->AddResourceData(meshObject->PackagePath().get(), Lib3MF::eEncryptionAlgorithm::Aes256Gcm, Lib3MF::eCompression::None);
+		keyStore->AddResourceData(meshObject->PackagePart().get(), Lib3MF::eEncryptionAlgorithm::Aes256Gcm, Lib3MF::eCompression::None);
 
 		ASSERT_EQ(2, keyStore->GetResourceDataCount());
 		ASSERT_EQ(path1, keyStore->GetResourceData(0)->GetPath()->Get());
@@ -429,8 +429,8 @@ namespace Lib3MF {
 
 			CCipherData cd(SecureContentT::wrapper.get(), cipherData);
 			SecureContentT::wrapper->Acquire(&cd);
-
-			cb->context.push_back(cd.GetDescriptor());
+			if (0 != cipherSize)
+				cb->context.push_back(cd.GetDescriptor());
 
 			sAes256CipherValue cipher = cd.GetAes256Gcm();
 

@@ -89,7 +89,7 @@ namespace Lib3MF {
 
 			IResourceData * GetResourceData(const Lib3MF_uint64 nResourceDataIndex) override;
 
-			IResourceData * AddResourceData(IPackagePath * pPackagePath, const Lib3MF::eEncryptionAlgorithm eEncryptionAlgorithm, const Lib3MF::eCompression eCompression) override;
+			IResourceData * AddResourceData(IPackagePart * pPackagePath, const Lib3MF::eEncryptionAlgorithm eEncryptionAlgorithm, const Lib3MF::eCompression eCompression) override;
 
 			IResourceData * FindResourceData(const std::string & sPath) override;
 

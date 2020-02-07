@@ -2,7 +2,7 @@
 #include "lib3mf_interfaceexception.hpp"
 #include "lib3mf_consumer.hpp"
 #include "lib3mf_decryptright.hpp"
-#include "lib3mf_packagepath.hpp"
+#include "lib3mf_packagepart.hpp"
 
 namespace Lib3MF {
 	namespace Impl {
@@ -67,9 +67,9 @@ namespace Lib3MF {
 			return Lib3MF::eCompression::None;
 		}
 
-		IPackagePath * CResourceData::GetPath()
+		IPackagePart * CResourceData::GetPath()
 		{	
-			return new CPackagePath(m_ResourceData->getPath());
+			return new CPackagePart(m_ResourceData->getPath());
 		}
 
 	}

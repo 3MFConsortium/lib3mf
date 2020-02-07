@@ -197,19 +197,19 @@ namespace Lib3MF
 		auto meshObject = lModel->AddMeshObject();
 		meshObject->SetGeometry(CLib3MFInputVector<sPosition>(pVertices, 8), CLib3MFInputVector<sTriangle>(pTriangles, 12));
 		sTransform transformation = wrapper->GetIdentityTransform();
-		meshObject->PackagePath()->Set(path);
+		meshObject->PackagePart()->Set(path);
 		lModel->AddBuildItem(meshObject.get(), transformation);
 
 		meshObject = lModel->AddMeshObject();
 		meshObject->SetGeometry(CLib3MFInputVector<sPosition>(pVertices, 8), CLib3MFInputVector<sTriangle>(pTriangles, 12));
-		meshObject->PackagePath()->Set(path);
+		meshObject->PackagePart()->Set(path);
 		transformation = wrapper->GetTranslationTransform(0.0, 250.0, 0.0);
 		lModel->AddBuildItem(meshObject.get(), transformation);
 
 		std::string path2 = "/3D/nonrootmodel2.model";
 		meshObject = lModel->AddMeshObject();
 		meshObject->SetGeometry(CLib3MFInputVector<sPosition>(pVertices, 8), CLib3MFInputVector<sTriangle>(pTriangles, 12));
-		meshObject->PackagePath()->Set(path2);
+		meshObject->PackagePart()->Set(path2);
 		transformation = wrapper->GetTranslationTransform(0.0, 250.0, 0.0);
 		lModel->AddBuildItem(meshObject.get(), transformation);
 

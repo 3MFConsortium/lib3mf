@@ -1202,7 +1202,7 @@
 			<param name="Compression" type="enum" class="Compression" pass="return" description="The compression method"/>
 		</method>
 		<method name="GetPath" description="Gets the encrypted part path">
-			<param name="Path" type="class" class="PackagePath" pass="return" description="The part path"/>
+			<param name="Path" type="class" class="PackagePart" pass="return" description="The part path"/>
 		</method>
 	</class>
 	<class name="KeyStore">
@@ -1234,7 +1234,7 @@
 			<param name="TheResourceData" type="handle" class="ResourceData" pass="return" description="The data resource instance"/>
 		</method>
 		<method name="AddResourceData" description="Adds a resource data into the keystore. This flags the package part for encryption">
-			<param name="PartPath" type="handle" class="PackagePath" pass="in" description="The path of the part to be encrypted"/>
+			<param name="PartPath" type="handle" class="PackagePart" pass="in" description="The path of the part to be encrypted"/>
 			<param name="EncryptionAlgorithm" type="enum" class="EncryptionAlgorithm" pass="in" description="The encryption algorithm to be used to encrypt this resource"/>
 			<param name="Compression" type="enum" class="Compression" pass="in" description="Whether compression should be used prior to encryption"/>
 			<param name="TheResourceData" type="handle" class="ResourceData" pass="return" description="The data resource instance"/>

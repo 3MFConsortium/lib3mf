@@ -3,7 +3,7 @@
 #include "lib3mf_interfaceexception.hpp"
 #include "lib3mf_consumer.hpp"
 #include "lib3mf_resourcedata.hpp"
-#include "lib3mf_packagepath.hpp"
+#include "lib3mf_packagepart.hpp"
 
 using namespace Lib3MF::Impl;
 
@@ -60,7 +60,7 @@ IResourceData * Lib3MF::Impl::CKeyStore::GetResourceData(const Lib3MF_uint64 nRe
 	return new CResourceData(rd);
 }
 
-IResourceData * Lib3MF::Impl::CKeyStore::AddResourceData(IPackagePath * pPackagePath, const Lib3MF::eEncryptionAlgorithm eEncryptionAlgorithm, const Lib3MF::eCompression eCompression)
+IResourceData * Lib3MF::Impl::CKeyStore::AddResourceData(IPackagePart * pPackagePath, const Lib3MF::eEncryptionAlgorithm eEncryptionAlgorithm, const Lib3MF::eCompression eCompression)
 {
 	if (eEncryptionAlgorithm == Lib3MF::eEncryptionAlgorithm::RsaOaepMgf1p) {
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);

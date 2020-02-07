@@ -63,7 +63,7 @@ namespace Lib3MF {
 			virtual void RemoveDecrypt(IConsumer * pConsumertInstance) override;
 			virtual Lib3MF::eEncryptionAlgorithm GetEncryptionAlgorithm() override;
 			virtual Lib3MF::eCompression GetCompression() override;
-			virtual IPackagePath * GetPath() override;
+			virtual IPackagePart * GetPath() override;
 		};
 	}
 }
