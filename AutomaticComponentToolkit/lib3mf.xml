@@ -1137,7 +1137,7 @@
 		<param name="CipherKey" type="basicarray" class="uint8" pass="in" description="Buffer to the ciphered key available in the decrypright"/>
 		<param name="PlainKey" type="basicarray" class="uint8" pass="out" description="Buffer where the plain data should be placed"/>
 		<param name="UserData" type="pointer" pass="in" description="Userdata that is passed to the callback function"/>
-		<param name="Result" type="uint64" pass="return" description="Amount of bytes decrypted for the key"/>
+		<param name="Result" type="uint64" pass="return" description="Amount of bytes decrypted if succeed. If error, a negative value"/>
 	</functiontype>
 	
 	<struct name="Aes256CipherValue">
@@ -1158,13 +1158,13 @@
 		</method>
 	</class>
 
-	<functiontype name="DataDecryptionCallback" description="A callback to decrypt content called on each resourcedata encrypted. This might be called several times depending on content size. Cipher and Plain are guaranteed to have same size on each call">
+	<functiontype name="DataDecryptionCallback" description="A callback to decrypt content called on each resourcedata encrypted. This might be called several times depending on content size. Cipher and Plain are guaranteed to have same size on each call. If cipher size is zero, clients must return the result of authenticated tag validation">
 		<param name="EncryptionAlgorithm" type="enum" class="EncryptionAlgorithm" pass="in" description="The encryption algorithm to be used"/>
 		<param name="CipherData" type="class" class="CipherData" pass="in" description="The cipherData instance containing the key information."/>
 		<param name="Cipher" type="basicarray" class="uint8" pass="in" description="Buffer to the cipher data buffer"/>
 		<param name="Plain" type="basicarray" class="uint8" pass="out" description="Buffer to hold plain buffer"/>
 		<param name="UserData" type="pointer" pass="in" description="Userdata that is passed to the callback function"/>
-		<param name="Result" type="uint64" pass="return" description="Amount of bytes decrypted"/>
+		<param name="Result" type="uint64" pass="return" description="Amount of bytes decrypted if succeed. If error, a negative value"/>
 	</functiontype>
 	
 	<enum name="Compression">

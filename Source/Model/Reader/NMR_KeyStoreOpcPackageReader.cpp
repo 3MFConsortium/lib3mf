@@ -130,6 +130,10 @@ namespace NMR {
 		return m_pKeyStore;
 	}
 
+	void CKeyStoreOpcPackageReader::close() {
+		checkAuthenticatedTags();
+	}
+
 	NMR::PImportStream CKeyStoreOpcPackageReader::findKeyStoreStream() {
 		COpcPackageRelationship * pKeyStoreRelation = m_pPackageReader->findRootRelation(PACKAGE_KEYSTORE_RELATIONSHIP_TYPE, true);
 		if (pKeyStoreRelation != nullptr) {
@@ -171,6 +175,18 @@ namespace NMR {
 
 				PModelReaderNode_KeyStore pXMLNode = std::make_shared<CModelReaderNode_KeyStore>(m_pKeyStore.get(), m_pWarnings);
 				pXMLNode->parseXML(pXMLReader.get());
+			}
+		}
+	}
+	void CKeyStoreOpcPackageReader::checkAuthenticatedTags() {
+		if (m_pSecureContext->hasDekCtx()) {
+			int count = m_pKeyStore->getResourceDataCount();
+			for (int i = 0; i < count; ++i) {
+				NMR::PKeyStoreResourceData rd = m_pKeyStore->getResourceDataByIndex(i);
+				DEKDESCRIPTOR descriptor = m_pSecureContext->getDekCtx();
+				descriptor.m_sDekDecryptData.m_sCipherValue = rd->getCipherValue();
+				descriptor.m_sDekDecryptData.m_nfHandler = rd->getHandle();
+				descriptor.m_fnDecrypt(std::vector<nfByte>(), nullptr, descriptor.m_sDekDecryptData);
 			}
 		}
 	}
