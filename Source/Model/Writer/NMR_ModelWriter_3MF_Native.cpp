@@ -138,12 +138,6 @@ namespace NMR {
 				pPackageWriter->addContentType(iContentTypeIterator->first, iContentTypeIterator->second);
 			}
 		}
-
-		POpcPackagePart pKeyStorePart = pPackageWriter->addPart(PACKAGE_3D_KEYSTORE_URI);
-		PXmlWriter_Native pXMLWriter4KeyStore = std::make_shared<CXmlWriter_Native>(pKeyStorePart->getExportStream());
-		PKeyStore keyStore = m_pModel->getKeyStore();
-		writeKeyStoreStream(pXMLWriter4KeyStore.get(), keyStore.get());
-
 	}
 
 
