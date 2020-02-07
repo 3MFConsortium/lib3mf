@@ -35,6 +35,7 @@ using LibZ and a native XML writer implementation.
 
 #include "Model/Classes/NMR_KeyStoreResourceData.h"
 #include "Model/Writer/NMR_ModelWriter_3MF_Native.h" 
+#include "Model/Writer/NMR_KeyStoreOpcPackageWriter.h"
 #include "Model/Classes/NMR_ModelConstants.h" 
 #include "Model/Classes/NMR_ModelAttachment.h" 
 #include "Model/Classes/NMR_ModelTextureAttachment.h" 
@@ -139,11 +140,11 @@ namespace NMR {
 			}
 		}
 
-		POpcPackagePart pKeyStorePart = pPackageWriter->addPart(PACKAGE_3D_KEYSTORE_URI);
+		auto pKeyStorePackageWriter = std::make_shared<CKeyStoreOpcPackageWriter>(pStream);
+		POpcPackagePart pKeyStorePart = pKeyStorePackageWriter->addPart(PACKAGE_3D_KEYSTORE_URI);
 		PXmlWriter_Native pXMLWriter4KeyStore = std::make_shared<CXmlWriter_Native>(pKeyStorePart->getExportStream());
 		PKeyStore keyStore = m_pModel->getKeyStore();
 		writeKeyStoreStream(pXMLWriter4KeyStore.get(), keyStore.get());
-
 	}
 
 

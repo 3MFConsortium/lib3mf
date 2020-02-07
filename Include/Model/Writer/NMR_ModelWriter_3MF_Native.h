@@ -37,6 +37,7 @@ using LibZ and a native XML writer implementation.
 
 #include "Common/OPC/NMR_OpcPackageWriter.h" 
 #include "Model/Writer/NMR_ModelWriter_3MF.h" 
+#include "Model/Writer/NMR_KeyStoreOpcPackageWriter.h"
 
 #define MODELWRITER_NATIVE_BUFFERSIZE 65536
 

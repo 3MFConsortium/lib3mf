@@ -1,8 +1,3 @@
-
-
-
-
-
 #ifndef NMR_IOPCPACKAGEREADER
 #define NMR_IOPCPACKAGEREADER
 

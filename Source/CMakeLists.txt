@@ -208,6 +208,7 @@ Source/Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreConsumer.cpp
 Source/Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreDecryptRight.cpp
 Source/Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreKeyValue.cpp
 Source/Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreResourceData.cpp
+Source/Model/Writer/NMR_KeyStoreOpcPackageWriter.cpp
 Source/Model/Writer/NMR_ModelWriter.cpp
 Source/Model/Writer/NMR_ModelWriterNode.cpp
 Source/Model/Writer/NMR_ModelWriterNode_ModelBase.cpp
