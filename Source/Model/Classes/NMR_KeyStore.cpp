@@ -73,6 +73,8 @@ namespace NMR {
 
 	PKeyStoreConsumer CKeyStore::getConsumerByIndex(nfUint64 index) const
 	{	
+		if (index >= m_Consumers.size())
+			throw CNMRException(NMR_ERROR_INVALIDINDEX);
 		return m_Consumers[index];
 	}
 
@@ -107,6 +109,8 @@ namespace NMR {
 
 	PKeyStoreResourceData CKeyStore::getResourceDataByIndex(nfUint64 index) const
 	{	
+		if (index >= m_ResourceDatas.size())
+			throw CNMRException(NMR_ERROR_INVALIDINDEX);
 		return m_ResourceDatas[index];
 	}
 

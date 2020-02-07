@@ -193,8 +193,10 @@ namespace Lib3MF {
 
 	TEST_F(EncryptionMethods, ReadEncrypted3MF) {
 		auto reader = model->QueryReader("3mf");
+
 		DekContext dekUserData;
 		reader->RegisterDEKClient(ClientCallbacks::dekClientCallback, reinterpret_cast<Lib3MF_pvoid>(&dekUserData));
+
 		KekContext kekUserData;
 		kekUserData.key = privateKey.get();
 		kekUserData.size = RsaMethods::getSize(privateKey);
@@ -203,6 +205,5 @@ namespace Lib3MF {
 
 		auto resources = model->GetResources();
 		ASSERT_EQ(28, resources->Count());
-
 	}
 }
