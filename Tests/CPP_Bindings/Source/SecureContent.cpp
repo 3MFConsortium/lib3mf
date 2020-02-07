@@ -226,7 +226,7 @@ namespace Lib3MF {
 	TEST_F(SecureContentT, ModelReaderKeyStoreNoAttributesWarnings) {
 		// TODO: change to encrypted when implementation is ready
 		PReader reader3MF = readKeyStore(NEGATIVEUNENCRYPTEDKEYSTOREMISSINGATTRIBUTES);
-		CheckReaderWarnings(reader3MF, 3);
+		CheckReaderWarnings(reader3MF, 4);
 		Lib3MF_uint32 iWarning = 0;
 
 		// NMR_ERROR_MISSINGCONSUMERID
@@ -234,21 +234,26 @@ namespace Lib3MF {
 		reader3MF->GetWarning(0, iWarning);
 		ASSERT_EQ(0x80F1, iWarning);
 
+		// NMR_ERROR_INVALID_KEYSTORECIPHERVALUE 
+		// cipher value is not there
+		reader3MF->GetWarning(1, iWarning);
+		ASSERT_EQ(0x80F9, iWarning);
+
 		// NMR_ERROR_INVALIDCONSUMERINDEX
 		// consumer index is not defined
-		reader3MF->GetWarning(1, iWarning);
+		reader3MF->GetWarning(2, iWarning);
 		ASSERT_EQ(0x80F6, iWarning);
 
 		// NMR_ERROR_MISSINGUUID
 		// no UUID attribute in <keystore>
-		reader3MF->GetWarning(2, iWarning);
+		reader3MF->GetWarning(3, iWarning);
 		ASSERT_EQ(0x80B0, iWarning);
 	}
 
 	TEST_F(SecureContentT, ModelReaderKeyStoreInvalidAttributesWarnings) {
 		// TODO: change to encrypted when implementation is ready
 		PReader reader3MF = readKeyStore(NEGATIVEUNENCRYPTEDKEYSTOREINVALIDATTRIBUTES);
-		CheckReaderWarnings(reader3MF, 4);
+		CheckReaderWarnings(reader3MF, 5);
 		Lib3MF_uint32 iWarning = 0;
 
 		// NMR_ERROR_DUPLICATE_KEYSTORECONSUMERID
@@ -271,12 +276,16 @@ namespace Lib3MF {
 		reader3MF->GetWarning(3, iWarning);
 		ASSERT_EQ(0x80F7, iWarning);
 
+		// NMR_ERROR_INVALID_KEYSTORECIPHERVALUE 
+		// cipher value is not there
+		reader3MF->GetWarning(4, iWarning);
+		ASSERT_EQ(0x80F9, iWarning);
+
 		// TODO: check path is invalid
 		// TODO: check path is unique among resource data elements
 
 		// TODO: check key value is invalid = PEM format
 
-		// TODO: check cipher value is invalid
 
 	}
 	
