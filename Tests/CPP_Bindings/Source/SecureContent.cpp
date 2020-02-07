@@ -390,7 +390,8 @@ namespace Lib3MF {
 			SecureContentT::wrapper->Acquire(&cd);
 
 			ASSERT_EQ(cd.GetDescriptor(), 11);
-			cb->context.push_back(cd.GetDescriptor());
+			if (0 != cipherSize)
+				cb->context.push_back(cd.GetDescriptor());
 
 			sAes256CipherValue cipher = cd.GetAes256Gcm();
 		
@@ -429,7 +430,8 @@ namespace Lib3MF {
 			CCipherData cd(SecureContentT::wrapper.get(), cipherData);
 			SecureContentT::wrapper->Acquire(&cd);
 
-			cb->context.push_back(cd.GetDescriptor());
+			if (0 != cipherSize)
+				cb->context.push_back(cd.GetDescriptor());
 
 			sAes256CipherValue cipher = cd.GetAes256Gcm();
 
