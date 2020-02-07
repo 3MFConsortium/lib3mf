@@ -99,6 +99,7 @@ Source/Common/Platform/NMR_ExportStream_Memory.cpp
 Source/Common/Platform/NMR_ExportStream_Dummy.cpp
 Source/Common/Platform/NMR_ExportStream_ZIP.cpp
 Source/Common/Platform/NMR_ImportStream_Callback.cpp
+Source/Common/Platform/NMR_ImportStream_Compressed.cpp
 Source/Common/Platform/NMR_ImportStream_Memory.cpp
 Source/Common/Platform/NMR_ImportStream_Shared_Memory.cpp
 Source/Common/Platform/NMR_ImportStream_Unique_Memory.cpp

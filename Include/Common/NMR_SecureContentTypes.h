@@ -63,6 +63,7 @@ namespace NMR {
 		nfUint64 m_nfHandler;
 		CIPHERVALUE m_sCipherValue;
 		void * m_pUserData;
+		nfBool m_bCompression;
 	};
 	using ImportStream_DEKDecryptCallbackType = std::function<nfUint64(std::vector<nfByte> const &, nfByte *, DEKDECRYPTCTX)>;
 

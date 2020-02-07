@@ -38,6 +38,7 @@ NMR_KeyStoreOpcPackageReader.cpp defines an OPC Package reader in a portable way
 #include "Common/NMR_SecureContext.h"
 #include "Common/Platform/NMR_Platform.h"
 #include "Common/Platform/NMR_ImportStream.h"
+#include "Common/Platform/NMR_ImportStream_Compressed.h"
 #include "Common/Platform/NMR_ImportStream_Encrypted.h"
 #include "Common/OPC/NMR_OpcPackageReader.h"
 #include "Common/OPC/NMR_OpcPackagePart.h"
@@ -105,8 +106,17 @@ namespace NMR {
 				DEKDESCRIPTOR p = m_pSecureContext->getDekCtx();
 				p.m_sDekDecryptData.m_sCipherValue = rd->getCipherValue();
 				p.m_sDekDecryptData.m_nfHandler = rd->getHandle();
+				p.m_sDekDecryptData.m_bCompression = rd->getCompression();
+				PImportStream stream;
 				PImportStream decryptStream = std::make_shared<CImportStream_Encrypted>(pPart->getImportStream(), p);
-				pPart->setImportStream(decryptStream);
+				if (rd->getCompression()) {
+					PImportStream decompressStream = std::make_shared<CImportStream_Compressed>(decryptStream);
+					stream = decompressStream;
+				}
+				else {
+					stream = decryptStream;
+				}
+				pPart->setImportStream(stream);
 			}
 		}
 		return pPart;

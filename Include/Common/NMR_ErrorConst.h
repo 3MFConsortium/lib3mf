@@ -290,6 +290,12 @@ NMR_ErrorConst.h defines all error code constants.
 // XML prefix is already registered.
 #define NMR_ERROR_XMLPREFIXALREADYREGISTERED 0x104F
 
+// Failed to initialize a zlib buffer
+#define NMR_ERROR_COULDNOTINITINFLATE 0x1050
+
+// Failed to decompress part
+#define NMR_ERROR_COULDNOTINFLATE 0x1051
+
 /*-------------------------------------------------------------------
 Core framework error codes (0x2XXX)
 -------------------------------------------------------------------*/
