@@ -502,10 +502,10 @@ namespace Lib3MF {
 	// End to end tests
 	//
 
-	TEST_F(SecureContentT, WriteSecureContent) {
+	TEST_F(SecureContentT, WriteKeyStore) {
 		Lib3MF::PModel secureModel = wrapper->CreateModel();
 		//create the attachment to be secured
-		std::string path = "/3D/securemesh.xml";
+		std::string path = "/3D/securemesh.model";
 		//add a mesh
 		Lib3MF::PMeshObject meshObject = secureModel->AddMeshObject();
 		meshObject->SetGeometry(CLib3MFInputVector<sPosition>(pVertices, 8), CLib3MFInputVector<sTriangle>(pTriangles, 12));
@@ -536,15 +536,8 @@ namespace Lib3MF {
 		
 		//Query writer
 		PWriter writer = secureModel->QueryWriter("3mf");
-		//register the consumer key encryption callback (optional)
-		//writer->RegisterKEKClient("LIB3MF#TEST", EncryptionData::keyEncryptionCallback, nullptr);
-		//register the data encryption callback
-		//writer->RegisterEncryption(EncryptionData::dataEncryptionCallback);
-
-		//write content
-		
+		//Write content
 		writer->WriteToFile(sTestFilesPath + "/SecureContent/WriteSecureContent.3mf");
-
 	}
 
 	//TODO Read Unencrypted content, encrypt root model, save, read and assert
