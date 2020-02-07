@@ -11,6 +11,7 @@ namespace Lib3MF {
 		PModel model;
 
 		const std::string UNENCRYPTEDKEYSTORE = "/SecureContent/keystore.3mf";
+		const std::string UNENCRYPTEDCOMPRESSEDKEYSTORE = "/SecureContent/keystore_compressed.3mf";
 		const std::string NEGATIVEKEYSTOREENCRYPTEDEMPTY = "/SecureContent/negative_keystore_encrypted_empty.3mf";
 		const std::string NEGATIVEKEYSTOREENCRYPTEDMISSINGATTRIBUTES = "/SecureContent/negative_keystore_encrypted_missing_attributes.3mf";
 		const std::string NEGATIVEKEYSTOREENCRYPTEDINVALIDATTRIBUTES = "/SecureContent/negative_keystore_encrypted_invalid_attributes.3mf";
@@ -405,6 +406,44 @@ namespace Lib3MF {
 		data.value = 1;
 		reader->RegisterDEKClient(DEKCallbackData::testDEKCallback, reinterpret_cast<Lib3MF_pvoid>(&data));
 		reader->ReadFromFile(sTestFilesPath + UNENCRYPTEDKEYSTORE);
+		ASSERT_EQ(data.context.size(), 1);
+	}
+	
+	struct ReadCompressedCallbackData {
+		int value;
+		std::vector<Lib3MF_uint64> context;
+
+		static void testCompressedCallback(
+			Lib3MF::eEncryptionAlgorithm algorithm,
+			Lib3MF_CipherData cipherData,
+			Lib3MF_uint64 cipherSize,
+			const Lib3MF_uint8 * cipherBuffer,
+			const Lib3MF_uint64 plainSize,
+			Lib3MF_uint64 * plainNeededSize,
+			Lib3MF_uint8 * plainBuffer,
+			Lib3MF_pvoid userData,
+			Lib3MF_uint64 * result) {
+
+			DEKCallbackData * cb = reinterpret_cast<DEKCallbackData *>(userData);
+
+			CCipherData cd(SecureContentT::wrapper.get(), cipherData);
+			SecureContentT::wrapper->Acquire(&cd);
+
+			cb->context.push_back(cd.GetDescriptor());
+
+			sAes256CipherValue cipher = cd.GetAes256Gcm();
+
+			std::copy(cipherBuffer, cipherBuffer + plainSize, plainBuffer);
+			*result = plainSize;
+		}
+	};
+
+	TEST_F(SecureContentT, ReadCompressedTest) {
+		auto reader = model->QueryReader("3mf");
+		ReadCompressedCallbackData data;
+		data.value = 1;
+		reader->RegisterDEKClient(ReadCompressedCallbackData::testCompressedCallback, reinterpret_cast<Lib3MF_pvoid>(&data));
+		reader->ReadFromFile(sTestFilesPath + UNENCRYPTEDCOMPRESSEDKEYSTORE);
 		ASSERT_EQ(data.context.size(), 1);
 	}
 
