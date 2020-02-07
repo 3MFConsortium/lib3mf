@@ -12,9 +12,6 @@ namespace Lib3MF {
 
 		const std::string UNENCRYPTEDKEYSTORE = "/SecureContent/keystore.3mf";
 		const std::string UNENCRYPTEDCOMPRESSEDKEYSTORE = "/SecureContent/keystore_compressed.3mf";
-		const std::string NEGATIVEKEYSTOREENCRYPTEDEMPTY = "/SecureContent/negative_keystore_encrypted_empty.3mf";
-		const std::string NEGATIVEKEYSTOREENCRYPTEDMISSINGATTRIBUTES = "/SecureContent/negative_keystore_encrypted_missing_attributes.3mf";
-		const std::string NEGATIVEKEYSTOREENCRYPTEDINVALIDATTRIBUTES = "/SecureContent/negative_keystore_encrypted_invalid_attributes.3mf";
 		const std::string NEGATIVEUNENCRYPTEDKEYSTOREEMPTY = "/SecureContent/negative_keystore_empty.3mf";
 		const std::string NEGATIVEUNENCRYPTEDKEYSTOREMISSINGATTRIBUTES = "/SecureContent/negative_keystore_missing_attributes.3mf";
 		const std::string NEGATIVEUNENCRYPTEDKEYSTOREINVALIDATTRIBUTES = "/SecureContent/negative_keystore_invalid_attributes.3mf";
@@ -213,7 +210,6 @@ namespace Lib3MF {
 	}
 
 	TEST_F(SecureContentT, ModelReaderEmptyKeyStoreWarnings) {
-		// TODO: change to encrypted when implementation is ready
 		PReader reader3MF = readKeyStore(NEGATIVEUNENCRYPTEDKEYSTOREEMPTY);
 		CheckReaderWarnings(reader3MF, 1);
 		Lib3MF_uint32 iWarning = 0;
@@ -225,7 +221,6 @@ namespace Lib3MF {
 	}
 
 	TEST_F(SecureContentT, ModelReaderKeyStoreNoAttributesWarnings) {
-		// TODO: change to encrypted when implementation is ready
 		PReader reader3MF = readKeyStore(NEGATIVEUNENCRYPTEDKEYSTOREMISSINGATTRIBUTES);
 		CheckReaderWarnings(reader3MF, 4);
 		Lib3MF_uint32 iWarning = 0;
@@ -252,7 +247,6 @@ namespace Lib3MF {
 	}
 
 	TEST_F(SecureContentT, ModelReaderKeyStoreInvalidAttributesWarnings) {
-		// TODO: change to encrypted when implementation is ready
 		PReader reader3MF = readKeyStore(NEGATIVEUNENCRYPTEDKEYSTOREINVALIDATTRIBUTES);
 		CheckReaderWarnings(reader3MF, 5);
 		Lib3MF_uint32 iWarning = 0;
@@ -281,13 +275,6 @@ namespace Lib3MF {
 		// cipher value is not there
 		reader3MF->GetWarning(4, iWarning);
 		ASSERT_EQ(0x80F9, iWarning);
-
-		// TODO: check path is invalid
-		// TODO: check path is unique among resource data elements
-
-		// TODO: check key value is invalid = PEM format
-
-
 	}
 	
 	TEST_F(SecureContentT, CheckKeyStoreConsumers) {
@@ -389,7 +376,7 @@ namespace Lib3MF {
 			CCipherData cd(SecureContentT::wrapper.get(), cipherData);
 			SecureContentT::wrapper->Acquire(&cd);
 
-			ASSERT_EQ(cd.GetDescriptor(), 11);
+			ASSERT_EQ(cd.GetDescriptor(), 13);
 			if (0 != cipherSize)
 				cb->context.push_back(cd.GetDescriptor());
 
