@@ -81,7 +81,7 @@ Lib3MF_uint64 CSliceStack::GetSliceRefCount()
 void CSliceStack::AddSliceStackReference(ISliceStack* pTheSliceStack)
 {
 	NMR::ModelResourceID nID = pTheSliceStack->GetResourceID();
-	std::string sPath = pTheSliceStack->PackagePath()->Get();
+	std::string sPath = pTheSliceStack->PackagePart()->Get();
 
 	NMR::PModelResource pResource = sliceStack()->getModel()->findResource(sPath, nID);
 	NMR::PModelSliceStack pModelSliceStack = std::dynamic_pointer_cast<NMR::CModelSliceStack>(pResource);

@@ -125,6 +125,4 @@ namespace Lib3MF
 		ASSERT_EQ(28, model->GetObjects()->Count());
 	}
 
-
-
 }

@@ -61,6 +61,7 @@ namespace NMR {
 		virtual ~CModelResource();
 		
 		virtual PPackageResourceID getPackageResourceID();
+		void setPackageResourceID(PPackageResourceID pID);
 
 		bool mapResourceIndexToPropertyID (_In_ ModelResourceIndex nPropertyIndex, _Out_ ModelPropertyID & nPropertyID);
 		void clearResourceIndexMap();

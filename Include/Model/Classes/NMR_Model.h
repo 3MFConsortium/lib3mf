@@ -223,6 +223,7 @@ namespace NMR {
 		// Retrieve a unique Resource ID
 		UniqueResourceID generateResourceID();	// unique per model
 		PPackageResourceID generatePackageResourceID(_In_ std::string path, ModelResourceID nID);	// unique per package
+		void removePackageResourceID(PPackageResourceID pID);
 
 		// Convenience functions for objects
 		_Ret_maybenull_ CModelObject * findObject(_In_ UniqueResourceID nResourceID);

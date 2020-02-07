@@ -24,94 +24,61 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CPackagePath
+Abstract: This is a stub class definition of CPackagePart
 
 */
 
-
-#ifndef __LIB3MF_MODELPATH
-#define __LIB3MF_MODELPATH
-
-#include "lib3mf_interfaces.hpp"
-
-// Parent classes
-#include "lib3mf_base.hpp"
-#ifdef _MSC_VER
-#pragma warning(push)
-#pragma warning(disable : 4250)
-#endif
+#include "lib3mf_packagepart.hpp"
+#include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
+
 #include "Model/Classes/NMR_PackageResourceID.h"
 
-namespace Lib3MF {
-namespace Impl {
 
+
+using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class declaration of CPackagePath 
+ Class definition of CPackagePart 
 **************************************************************************************************************************/
-//TODO: could this be a template instead?
-class CPackagePath : public virtual IPackagePath, public virtual CBase {
-private:
 
-	/**
-	* Put private members here.
-	*/
-	NMR::PPackageModelPath m_pPath;
-protected:
+CPackagePart::CPackagePart(NMR::PPackageModelPath pPath)
+  : m_pPath(pPath)
+{
+	if (!pPath.get())
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+}
 
-	/**
-	* Put protected members here.
-	*/
+std::string CPackagePart::Get()
+{
+	return m_pPath->getPath();
+}
 
-public:
+void CPackagePart::Set(const std::string & sPath)
+{
+	m_pPath->setPath(sPath);
+}
 
-	/**
-	* Put additional public members here. They will not be visible in the external API.
-	*/
-	CPackagePath(NMR::PPackageModelPath pPath);
 
-	// Inherited via IPackagePath
-	std::string Get() override;
-	void Set(const std::string & sPath) override;
-};
+CPackageResourcePath::CPackageResourcePath(NMR::PPackageResourceID pPath)
+	: m_pResource(pPath) {
+	if (!pPath.get())
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+}
 
-class CPackageResourcePath : public virtual IPackagePath, public virtual CBase {
-private:
+std::string CPackageResourcePath::Get() {
+	return m_pResource->getPath();
+}
 
-	/**
-	* Put private members here.
-	*/
-	NMR::PPackageResourceID m_pResource;
+void CPackageResourcePath::Set(const std::string & sPath) {
+	NMR::CResourceHandler * pRH = m_pResource->getResourceHandler();
 
-protected:
+	NMR::PPackageModelPath pPath = pRH->findPackageModelPath(sPath);
+	if (nullptr == pPath) {
+		pPath = pRH->makePackageModelPath(sPath);
+	}
+	NMR::CPackageResourceID::setModelPath(m_pResource, pPath);
+}
 
-	/**
-	* Put protected members here.
-	*/
 
-public:
-
-	/**
-	* Put additional public members here. They will not be visible in the external API.
-	*/
-	CPackageResourcePath(NMR::PPackageResourceID pPath);
-
-	/**
-	* Public member functions to implement.
-	*/
-
-	std::string Get() override;
-
-	void Set(const std::string & sPath) override;
-
-};
-
-} // namespace Impl
-} // namespace Lib3MF
-
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
-#endif // __LIB3MF_MODELPATH

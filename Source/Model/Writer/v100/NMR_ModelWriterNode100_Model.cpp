@@ -370,7 +370,7 @@ namespace NMR {
 			CModelObject * pObject = *iIterator;
 
 			PPackageModelPath pPath = pObject->getPackageResourceID()->getPackageModelPath();
-			if (m_pModel->currentModelPath() != pPath)
+			if (m_pModel->currentModelPath()->getPath() != pPath->getPath())
 			{
 				continue;
 			}
@@ -852,6 +852,9 @@ namespace NMR {
 			PPackageResourceID pObjectID = pComponent->getObject()->getPackageResourceID();
 			writeIntAttribute(XML_3MF_ATTRIBUTE_COMPONENT_OBJECTID, pObjectID->getModelResourceID());
 			if (pObjectID->getPath() != m_pModel->currentPath()) {
+				if (m_pModel->currentPath() != m_pModel->rootPath()) {
+					throw CNMRException(NMR_ERROR_REFERENCESTOODEEP);
+				}
 				if (m_bWriteProductionExtension) {
 					writePrefixedStringAttribute(XML_3MF_NAMESPACEPREFIX_PRODUCTION, XML_3MF_PRODUCTION_PATH, pObjectID->getPath());
 				}

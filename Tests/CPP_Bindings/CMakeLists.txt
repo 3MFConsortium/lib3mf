@@ -21,6 +21,7 @@ set(SRCS_UNITTEST
 	./Source/MultiProperties.cpp
 	./Source/Object.cpp
 	./Source/Outbox.cpp
+	./Source/ProductionExtension.cpp
 	./Source/ProgressCallback.cpp
 	./Source/Properties.cpp
 	./Source/Reader.cpp

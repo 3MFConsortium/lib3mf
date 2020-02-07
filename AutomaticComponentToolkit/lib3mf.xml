@@ -336,12 +336,12 @@
 		</method>		
 	</class>
 
-	<class name="PackagePath">
-		<method name="Get" description="Returns the absolute path of this PackagePath.">
-			<param name="Path" type="string" pass="return" description="Returns the absolute path of this PackagePath"/>
+	<class name="PackagePart">
+		<method name="Get" description="Returns the absolute path of this PackagePart.">
+			<param name="Path" type="string" pass="return" description="Returns the absolute path of this PackagePart"/>
 		</method>
-		<method name="Set" description="Sets the absolute path of this PackagePath.">
-			<param name="Path" type="string" pass="in" description="Sets the absolute path of this PackagePath."/>
+		<method name="Set" description="Sets the absolute path of this PackagePart.">
+			<param name="Path" type="string" pass="in" description="Sets the absolute path of this PackagePart."/>
 		</method>
 	</class>
 	
@@ -352,8 +352,11 @@
 		<method name="GetUniqueResourceID" description="Retrieves the unique id of this resource within a package.">
 			<param name="UniqueResourceID" type="uint32" pass="return" description="Retrieves the unique id of this resource within a package."/>
 		</method>
-		<method name="PackagePath" description="Returns the PackagePath (path of the model-file) within which this resource resides">
-			<param name="PackagePath" type="class" class="PackagePath" pass="return" description="the PackagePath (path of the model-file) within which this resource resides."/>
+		<method name="PackagePart" description="Returns the PackagePart within which this resource resides">
+			<param name="PackagePart" type="class" class="PackagePart" pass="return" description="the PackagePart within which this resource resides."/>
+		</method>
+		<method name="SetPackagePart" description="Sets the new PackagePart within which this resource resides">
+			<param name="PackagePart" type="class" class="PackagePart" pass="in" description="the new PackagePart within which this resource resides."/>
 		</method>
 		<method name="GetModelResourceID" description="Retrieves the id of this resource within a model.">
 			<param name="ModelResourceId" type="uint32" pass="return" description="Retrieves the id of this resource within a model."/>
@@ -913,8 +916,8 @@
 		<method name="SetPath" description="Sets an attachment's package path. This function will be removed in a later release.">
 			<param name="Path" type="string" pass="in" description="new path of the attachment."/>
 		</method>
-		<method name="PackagePath" description="Returns the attachment's PackagePath.">
-			<param name="Path" type="class" class="PackagePath" pass="return" description="The PackagePath of this attachment."/>
+		<method name="PackagePart" description="Returns the PackagePart that is this attachment.">
+			<param name="PackagePart" type="class" class="PackagePart" pass="return" description="The PackagePart of this attachment."/>
 		</method>
 		<method name="GetRelationShipType" description="Retrieves an attachment's relationship type">
 			<param name="Path" type="string" pass="return" description="returns the attachment's package relationship type string"/>
@@ -1250,8 +1253,12 @@
 	</class>
 
 	<class name="Model">
-		<method name="RootModel" description="Returns the Model Path of the root model-file within the OPC package.">
-			<param name="RootModelPath" type="class" class="PackagePath" pass="return" description="the PackagePath of the root model-file within the OPC package"/>
+		<method name="RootModelPart" description="Returns the PackagePart within the OPC package that holds the root model.">
+			<param name="RootModelPart" type="class" class="PackagePart" pass="return" description="the PackagePart within the OPC package that holds the model-file"/>
+		</method>
+		<method name="FindOrCreatePackagePart" description="Returns a new PackagePart for use within the OPC package.">
+			<param name="AbsolutePath" type="string" pass="in" description="the absolute Path (physical location) within the OPC package"/>
+			<param name="ModelPart" type="class" class="PackagePart" pass="return" description="the new PackagePart within the OPC package"/>
 		</method>
 		<method name="SetUnit" description="sets the units of a model.">
 			<param name="Unit" type="enum" class="ModelUnit" pass="in" description="Unit enum value for the model unit"/>

@@ -58,7 +58,7 @@ Abstract: This is a stub class definition of CModel
 #include "lib3mf_compositematerialsiterator.hpp"
 #include "lib3mf_multipropertygroup.hpp"
 #include "lib3mf_multipropertygroupiterator.hpp"
-#include "lib3mf_packagepath.hpp"
+#include "lib3mf_packagepart.hpp"
 #include "lib3mf_keystore.hpp"
 
 
@@ -89,9 +89,14 @@ NMR::CModel& CModel::model()
 	return *m_model;
 }
 
-IPackagePath* CModel::RootModel()
+IPackagePart* CModel::RootModelPart()
 {
-	return new CPackagePath(model().rootModelPath());
+	return new CPackagePart(model().rootModelPath());
+}
+
+IPackagePart * CModel::FindOrCreatePackagePart(const std::string & sAbsolutePath)
+{
+	return new CPackagePart(model().findOrCreateModelPath(sAbsolutePath));
 }
 
 void CModel::SetUnit (const eLib3MFModelUnit eUnit)

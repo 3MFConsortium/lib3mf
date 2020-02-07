@@ -70,7 +70,7 @@ void CAttachment::SetPath (const std::string & sPath)
 	}
 }
 
-IPackagePath * CAttachment::PackagePath()
+IPackagePart * CAttachment::PackagePart()
 {
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }

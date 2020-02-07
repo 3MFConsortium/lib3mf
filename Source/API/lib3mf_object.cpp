@@ -224,7 +224,7 @@ ISliceStack * CObject::GetSliceStack()
 void CObject::AssignSliceStack(ISliceStack* pSliceStackInstance)
 {
 	NMR::ModelResourceID nID = pSliceStackInstance->GetResourceID();
-	std::string sPath = pSliceStackInstance->PackagePath()->Get();
+	std::string sPath = pSliceStackInstance->PackagePart()->Get();
 	
 	NMR::PModelSliceStack pSliceStackResource = std::dynamic_pointer_cast<NMR::CModelSliceStack>
 		( object()->getModel()->findResource(sPath, nID) );

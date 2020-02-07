@@ -32,7 +32,7 @@ Abstract: This is a stub class definition of CResource
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
-#include "lib3mf_packagepath.hpp"
+#include "lib3mf_packagepart.hpp"
 #include "Model/Classes/NMR_ModelObject.h"
 #include "lib3mf_object.hpp"
 #include <iostream>
@@ -83,8 +83,26 @@ IObject * CResource::AsObject()
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 }
 
-IPackagePath * CResource::PackagePath()
+IPackagePart * CResource::PackagePart()
 {
-	return new CPackageResourcePath(m_pResource->getPackageResourceID());
+	return new CPackagePart(m_pResource->getPackageResourceID()->getPackageModelPath());
+}
+
+void CResource::SetPackagePart(IPackagePart* pPackagePart)
+{
+	std::string sPath = pPackagePart->Get();
+	NMR::ModelResourceID nID = m_pResource->getPackageResourceID()->getModelResourceID();
+	NMR::PPackageResourceID pTargetPackageResourceID = m_pResource->getModel()->findPackageResourceID(sPath, nID);
+	if (pTargetPackageResourceID) {
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDMODELRESOURCE);
+	}
+	NMR::PPackageResourceID pIDOld = m_pResource->getPackageResourceID();
+	NMR::PPackageResourceID pID = m_pResource->getModel()->generatePackageResourceID(sPath, nID);
+	m_pResource->setPackageResourceID(pID);
+
+	m_pResource->getModel()->removePackageResourceID(pIDOld);
+	
+	//m_pPackageResourceID = m_pModel->generatePackageResourceID(pModel->currentPath(), sResourceID);
+	//m_pResource->getPackageResourceID()->
 }
 
