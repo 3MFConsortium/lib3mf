@@ -107,20 +107,4 @@ namespace NMR {
 
 		pXMLWriter->Flush();
 	}
-
-	void CModelWriter_3MF::writeKeyStoreStream(_In_ CXmlWriter * pXMLWriter, _In_ CKeyStore * pKeyStore)
-	{
-		__NMRASSERT(pKeyStore != nullptr);
-		if (pXMLWriter == nullptr)
-			throw CNMRException(NMR_ERROR_INVALIDPARAM);
-
-		pXMLWriter->WriteStartDocument();
-
-		CModelWriterNode_KeyStore XMLNode4KeyStore(pKeyStore, pXMLWriter, m_pProgressMonitor);
-		XMLNode4KeyStore.writeToXML();
-
-		pXMLWriter->WriteEndDocument();
-
-		pXMLWriter->Flush();
-	}
 }

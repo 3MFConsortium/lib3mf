@@ -44,7 +44,6 @@ namespace NMR {
 	protected:
 		// Creates a model stream
 		void writeModelStream(_In_ CXmlWriter * pXMLWriter, _In_ CModel * pModel);
-		void writeKeyStoreStream(_In_ CXmlWriter * pXMLWriter, _In_ CKeyStore * pKeyStore);
 
 		// Creates a slicestack attachment stream
 		void writeNonRootModelStream(_In_ CXmlWriter *pXMLWriter);
