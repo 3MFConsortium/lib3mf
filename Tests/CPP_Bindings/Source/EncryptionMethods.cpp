@@ -155,12 +155,11 @@ namespace Lib3MF {
 					dek->m_Context[cd.GetDescriptor()] = ctx;
 				}
 
-				size_t decrypted = AesMethods::decrypt(ctx, (Lib3MF_uint32)cipherSize, cipherBuffer, plainBuffer);
-				*result = decrypted;
-
-				bool finish = true;
-				if (finish) {
-					if (!AesMethods::finish(ctx, plainBuffer + decrypted, cv.m_Tag))
+				if (0 != cipherSize) {
+					size_t decrypted = AesMethods::decrypt(ctx, (Lib3MF_uint32)cipherSize, cipherBuffer, plainBuffer);
+					*result = decrypted;
+				} else {
+					if (!AesMethods::finish(ctx, plainBuffer, cv.m_Tag))
 						*result = -2;
 				}
 			}
