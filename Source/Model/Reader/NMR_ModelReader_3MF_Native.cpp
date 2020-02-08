@@ -104,6 +104,7 @@ namespace NMR {
 	void CModelReader_3MF_Native::release3MFOPCPackage()
 	{
 		//foreach part, finalize encryption contexts
+		m_pPackageReader->close();
 		m_pPackageReader = nullptr;
 	}
 

@@ -178,15 +178,14 @@ Lib3MF_uint32 CReader::GetWarningCount ()
 #include "Model/Classes/NMR_KeyStoreResourceData.h"
 #include "lib3mf_consumer.hpp"
 
-void Lib3MF::Impl::CReader::RegisterKEKClient(const std::string &sConsumerID, Lib3MF::KeyDecryptionCallback pDecryptionCallback, Lib3MF_pvoid pUserData) {
-	//TODO: this needs to be improved - looks like too much code to be handled here
+void Lib3MF::Impl::CReader::RegisterKEKClient(const std::string &sConsumerID, Lib3MF::KeyDecryptionCallback pDecryptionCallback, const Lib3MF_uint32 nKeySize, Lib3MF_pvoid pUserData) {
 	NMR::KEKDESCRIPTOR descriptor;
 	descriptor.m_sKekDecryptData.m_pUserData = pUserData;
+	descriptor.m_sKekDecryptData.m_KeyBuffer.resize(nKeySize, 0);
 	descriptor.m_fnDecrypt = 
 		[this, pDecryptionCallback](
 			std::vector<NMR::nfByte> const & cipher, 
-			std::vector<NMR::nfByte> & plain, 
-			NMR::KEKDECRYPTCTX ctx) {
+			NMR::KEKDECRYPTCTX & ctx) {
 		NMR::PKeyStore keystore = this->reader().getKeyStore();
 		NMR::PKeyStoreConsumer consumer = keystore->findConsumerById(ctx.m_sConsumerId);
 		__NMRASSERT(nullptr != consumer);
@@ -198,19 +197,18 @@ void Lib3MF::Impl::CReader::RegisterKEKClient(const std::string &sConsumerID, Li
 		eEncryptionAlgorithm algorithm = (decryptRight->getEncryptionAlgorithm() == NMR::eKeyStoreEncryptAlgorithm::RsaOaepMgf1p) 
 			? eEncryptionAlgorithm::RsaOaepMgf1p : eEncryptionAlgorithm::Aes256Gcm;
 
-		NMR::nfUint64 neededBytes = 0;
-		NMR::nfUint64 result = -1;
+		NMR::nfUint64 result = 0;
 		std::shared_ptr<IConsumer> pConsumer = std::make_shared<CConsumer>(consumer);
 		IBase * pBaseConsumer(nullptr);
 		pBaseConsumer = pConsumer.get();
 		Lib3MF_Consumer handle = pBaseConsumer;
-		pConsumer->IncRefCount();
-		(*pDecryptionCallback)(handle, algorithm, cipher.size(), cipher.data(), 0, &neededBytes, nullptr, ctx.m_pUserData, &result);
-		if (result == 0 && neededBytes > 0) {
-			plain.resize(neededBytes, 0);
-			pConsumer->IncRefCount();
-			(*pDecryptionCallback)(handle, algorithm, cipher.size(), cipher.data(), plain.size(), nullptr, plain.data(), ctx.m_pUserData, &result);
-		}
+		(*pDecryptionCallback)(handle, algorithm, cipher.size(), cipher.data(), 
+			ctx.m_KeyBuffer.size(), nullptr, ctx.m_KeyBuffer.data(), 
+			ctx.m_pUserData, &result);
+
+		if (result < 0)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_CALCULATIONABORTED);
+
 		return result;
 	};
 	m_pReader->getSecureContext()->addKekCtx(sConsumerID, descriptor);
@@ -221,16 +219,24 @@ void Lib3MF::Impl::CReader::RegisterDEKClient(Lib3MF::DataDecryptionCallback pDe
 	descriptor.m_sDekDecryptData.m_pUserData = pUserData;
 	descriptor.m_fnDecrypt = [this, pDecryptionCallback](std::vector<NMR::nfByte> const & cipher, NMR::nfByte * plain, NMR::DEKDECRYPTCTX ctx) {
 		Lib3MF::sAes256CipherValue cipherDataValue;
+		__NMRASSERT(ctx.m_sCipherValue.m_iv.size() == sizeof(cipherDataValue.m_IV));
 		std::copy(ctx.m_sCipherValue.m_iv.begin(), ctx.m_sCipherValue.m_iv.end(), cipherDataValue.m_IV);
+
+		__NMRASSERT(ctx.m_sCipherValue.m_key.size() == sizeof(cipherDataValue.m_Key));
 		std::copy(ctx.m_sCipherValue.m_key.begin(), ctx.m_sCipherValue.m_key.end(), cipherDataValue.m_Key);
+
+		__NMRASSERT(ctx.m_sCipherValue.m_tag.size() == sizeof(cipherDataValue.m_Tag));
 		std::copy(ctx.m_sCipherValue.m_tag.begin(), ctx.m_sCipherValue.m_tag.end(), cipherDataValue.m_Tag);
+
 		std::shared_ptr<CCipherData> pCipherData = std::make_shared<CCipherData>(cipherDataValue, ctx.m_nfHandler);
 		IBase * pBaseCipherData(nullptr);
 		pBaseCipherData = pCipherData.get();
 		Lib3MF_CipherData handle = pBaseCipherData;
-		pCipherData->IncRefCount();
-		(*pDecryptionCallback)(eEncryptionAlgorithm::Aes256Gcm, handle, cipher.size(), cipher.data(), cipher.size(), nullptr, plain, ctx.m_pUserData);
-		return 0;
+		NMR::nfUint64 result = 0;
+		(*pDecryptionCallback)(eEncryptionAlgorithm::Aes256Gcm, handle, cipher.size(), cipher.data(), cipher.size(), nullptr, plain, ctx.m_pUserData, &result);
+		if (result < 0)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_CALCULATIONABORTED);
+		return result;
 	};
 	m_pReader->getSecureContext()->setDekCtx(descriptor);
 }

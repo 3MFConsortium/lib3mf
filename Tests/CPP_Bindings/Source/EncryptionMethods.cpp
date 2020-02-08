@@ -13,13 +13,24 @@ namespace Lib3MF {
 
 	using PEVP_ENCODE_CTX = std::unique_ptr<EVP_ENCODE_CTX, decltype(&::EVP_ENCODE_CTX_free)>;
 	using PBIO = std::unique_ptr<BIO, decltype(&::BIO_free)>;
-	using PEVP_CIPHER_CTX = std::unique_ptr<EVP_CIPHER_CTX, decltype(&::EVP_CIPHER_CTX_free)>;
+	using PEVP_CIPHER_CTX = std::shared_ptr<EVP_CIPHER_CTX>;
 	using PEVP_PKEY = std::unique_ptr<EVP_PKEY, decltype(&::EVP_PKEY_free)>;
+
+
+	std::shared_ptr<EVP_CIPHER_CTX> make_shared(EVP_CIPHER_CTX * ctx) {
+		return std::shared_ptr<EVP_CIPHER_CTX>(ctx, ::EVP_CIPHER_CTX_free);
+	}
 
 	struct RsaMethods {
 		static PEVP_PKEY loadKey(ByteVector const & privKey);
 		static size_t decrypt(EVP_PKEY * evpKey, size_t cipherSize, uint8_t const * cipher, uint8_t * plain);
 		static size_t getSize(PEVP_PKEY const & evpKey);
+	};
+
+	struct AesMethods {
+		static PEVP_CIPHER_CTX init(Lib3MF_uint8 const * key, Lib3MF_uint8 const * iv);
+		static size_t decrypt(PEVP_CIPHER_CTX ctx, Lib3MF_uint32 size, Lib3MF_uint8 const * cipher, Lib3MF_uint8 * plain);
+		static bool finish(PEVP_CIPHER_CTX ctx, Lib3MF_uint8 * plain, Lib3MF_uint8 * tag);
 	};
 
 	class EncryptionMethods : public ::testing::Test {
@@ -74,28 +85,84 @@ namespace Lib3MF {
 		return result;
 	}
 
+
+	PEVP_CIPHER_CTX AesMethods::init(Lib3MF_uint8 const * key, Lib3MF_uint8 const * iv) {
+		PEVP_CIPHER_CTX ctx = make_shared(EVP_CIPHER_CTX_new());
+		if (!ctx)
+			throw std::runtime_error("unable to initialize context");
+
+		if (!EVP_DecryptInit_ex(ctx.get(), EVP_aes_256_gcm(), NULL, NULL, NULL))
+			throw std::runtime_error("unable to initialize cipher");
+
+		if (!EVP_DecryptInit_ex(ctx.get(), NULL, NULL, key, iv))
+			throw std::runtime_error("unable to initialize key and iv");
+		return ctx;
+	}
+
+	size_t AesMethods::decrypt(PEVP_CIPHER_CTX ctx, Lib3MF_uint32 size, Lib3MF_uint8 const * cipher, Lib3MF_uint8 * plain) {
+		int len = 0;
+		if (!EVP_DecryptUpdate(ctx.get(), plain, &len, cipher, size))
+			throw std::runtime_error("unable to decrypt");
+		return len;
+	}
+
+	bool AesMethods::finish(PEVP_CIPHER_CTX ctx, Lib3MF_uint8 * plain, Lib3MF_uint8 * tag) {
+		if (1 != EVP_CIPHER_CTX_ctrl(ctx.get(), EVP_CTRL_GCM_SET_TAG, 16, tag))
+			throw std::runtime_error("unable to set tag");
+		int len = 0;
+		int ret = EVP_DecryptFinal_ex(ctx.get(), plain, &len);
+		return ret > 0;
+	}
+
 	struct KekContext {
 		EVP_PKEY * key;
 		size_t size;
 	};
 
-
 	struct DekContext {
-
+		std::map<Lib3MF_uint64, PEVP_CIPHER_CTX> m_Context;
 	};
 
-	struct Dek {
-		std::map<Lib3MF_uint64, DekContext> m_Context;
+	struct ClientCallbacks {
 		static void dekClientCallback(
 			Lib3MF::eEncryptionAlgorithm algorithm, 
 			Lib3MF_CipherData cipherData, 
 			Lib3MF_uint64 cipherSize, 
 			const Lib3MF_uint8 * cipherBuffer, 
 			const Lib3MF_uint64 plainSize, 
-			Lib3MF_uint64* plainNeeded, 
+			Lib3MF_uint64 * plainNeeded, 
 			Lib3MF_uint8 * plainBuffer, 
-			Lib3MF_pvoid userData) {
+			Lib3MF_pvoid userData,
+			Lib3MF_uint64 * result) {
 
+			if (algorithm != eEncryptionAlgorithm::Aes256Gcm)
+				*result = -1;
+			else {
+				CCipherData cd(EncryptionMethods::wrapper.get(), cipherData);
+				EncryptionMethods::wrapper->Acquire(&cd);
+
+				sAes256CipherValue cv = cd.GetAes256Gcm();
+
+				DekContext * dek = (DekContext *)userData;
+				PEVP_CIPHER_CTX ctx;
+
+				auto it = dek->m_Context.find(cd.GetDescriptor());
+
+				if (it != dek->m_Context.end()) {
+					ctx = it->second;
+				} else {
+					ctx = AesMethods::init(cv.m_Key, cv.m_IV);
+					dek->m_Context[cd.GetDescriptor()] = ctx;
+				}
+
+				if (0 != cipherSize) {
+					size_t decrypted = AesMethods::decrypt(ctx, (Lib3MF_uint32)cipherSize, cipherBuffer, plainBuffer);
+					*result = decrypted;
+				} else {
+					if (!AesMethods::finish(ctx, plainBuffer, cv.m_Tag))
+						*result = -2;
+				}
+			}
 		}
 
 		static void kekClientCallback(
@@ -109,33 +176,34 @@ namespace Lib3MF {
 			Lib3MF_pvoid userData, 
 			Lib3MF_uint64 * result) {
 
-			if (algorithm != eEncryptionAlgorithm::RsaOaepMgf1p)
-				throw std::runtime_error("Not implemented");
 
-			KekContext const * context = (KekContext const *)userData;
-			*result = 0;
-			if (nullptr == plainBuffer || 0 == plainSize || plainSize < context->size) {
-				if (nullptr == plainNeeded)
-					throw std::runtime_error("invalid size");
-				*plainNeeded = context->size;
-			} else {
-				*result = RsaMethods::decrypt(context->key, context->size, cipherBuffer, plainBuffer);
+			if (algorithm != eEncryptionAlgorithm::RsaOaepMgf1p)
+				*result = -1;
+			else {
+
+				KekContext const * context = (KekContext const *)userData;
+
+				ASSERT_EQ(cipherSize, context->size);
+				ASSERT_GE(plainSize, context->size);
+
+				*result = RsaMethods::decrypt(context->key, cipherSize, cipherBuffer, plainBuffer);
 			}
 		}
 	};
 
 	TEST_F(EncryptionMethods, ReadEncrypted3MF) {
 		auto reader = model->QueryReader("3mf");
-		//Dek dekUserData;
-		//reader->RegisterDEKClient(Dek::dekClientCallback, reinterpret_cast<Lib3MF_pvoid>(&dekUserData));
+
+		DekContext dekUserData;
+		reader->RegisterDEKClient(ClientCallbacks::dekClientCallback, reinterpret_cast<Lib3MF_pvoid>(&dekUserData));
+
 		KekContext kekUserData;
 		kekUserData.key = privateKey.get();
 		kekUserData.size = RsaMethods::getSize(privateKey);
-		reader->RegisterKEKClient("LIB3MF#TEST", Dek::kekClientCallback, &kekUserData);
+		reader->RegisterKEKClient("LIB3MF#TEST", ClientCallbacks::kekClientCallback, (Lib3MF_uint32)kekUserData.size, &kekUserData);
 		reader->ReadFromFile(sTestFilesPath + "/SecureContent/keystore_encrypted.3mf");
 
 		auto resources = model->GetResources();
-		ASSERT_EQ(1, resources->Count());
-
+		ASSERT_EQ(28, resources->Count());
 	}
 }

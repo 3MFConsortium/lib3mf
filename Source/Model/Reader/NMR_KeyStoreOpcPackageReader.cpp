@@ -38,6 +38,7 @@ NMR_KeyStoreOpcPackageReader.cpp defines an OPC Package reader in a portable way
 #include "Common/NMR_SecureContext.h"
 #include "Common/Platform/NMR_Platform.h"
 #include "Common/Platform/NMR_ImportStream.h"
+#include "Common/Platform/NMR_ImportStream_Compressed.h"
 #include "Common/Platform/NMR_ImportStream_Encrypted.h"
 #include "Common/OPC/NMR_OpcPackageReader.h"
 #include "Common/OPC/NMR_OpcPackagePart.h"
@@ -76,8 +77,12 @@ namespace NMR {
 								KEKDESCRIPTOR ctx = (*it).second;
 								ctx.m_sKekDecryptData.m_sConsumerId = consumer->getConsumerID();
 								ctx.m_sKekDecryptData.m_sResourcePath = rd->getPath()->getPath();
-								CIPHERVALUE open = decryptRight->getCipherValue();
-								if (ctx.m_fnDecrypt(open.m_key, open.m_key, ctx.m_sKekDecryptData)) {
+								CIPHERVALUE closed = decryptRight->getCipherValue();
+								size_t decrypted = ctx.m_fnDecrypt(closed.m_key, ctx.m_sKekDecryptData);
+								if (decrypted) {
+									CIPHERVALUE open = closed;
+									open.m_key = ctx.m_sKekDecryptData.m_KeyBuffer;
+									open.m_key.resize(decrypted, 0);
 									rd->setCipherValue(open);
 									break;
 								}
@@ -101,8 +106,17 @@ namespace NMR {
 				DEKDESCRIPTOR p = m_pSecureContext->getDekCtx();
 				p.m_sDekDecryptData.m_sCipherValue = rd->getCipherValue();
 				p.m_sDekDecryptData.m_nfHandler = rd->getHandle();
+				p.m_sDekDecryptData.m_bCompression = rd->getCompression();
+				PImportStream stream;
 				PImportStream decryptStream = std::make_shared<CImportStream_Encrypted>(pPart->getImportStream(), p);
-				pPart->setImportStream(decryptStream);
+				if (rd->getCompression()) {
+					PImportStream decompressStream = std::make_shared<CImportStream_Compressed>(decryptStream);
+					stream = decompressStream;
+				}
+				else {
+					stream = decryptStream;
+				}
+				pPart->setImportStream(stream);
 			}
 		}
 		return pPart;
@@ -114,6 +128,10 @@ namespace NMR {
 
 	PKeyStore CKeyStoreOpcPackageReader::getKeyStore() const {
 		return m_pKeyStore;
+	}
+
+	void CKeyStoreOpcPackageReader::close() {
+		checkAuthenticatedTags();
 	}
 
 	NMR::PImportStream CKeyStoreOpcPackageReader::findKeyStoreStream() {
@@ -157,6 +175,18 @@ namespace NMR {
 
 				PModelReaderNode_KeyStore pXMLNode = std::make_shared<CModelReaderNode_KeyStore>(m_pKeyStore.get(), m_pWarnings);
 				pXMLNode->parseXML(pXMLReader.get());
+			}
+		}
+	}
+	void CKeyStoreOpcPackageReader::checkAuthenticatedTags() {
+		if (m_pSecureContext->hasDekCtx()) {
+			int count = m_pKeyStore->getResourceDataCount();
+			for (int i = 0; i < count; ++i) {
+				NMR::PKeyStoreResourceData rd = m_pKeyStore->getResourceDataByIndex(i);
+				DEKDESCRIPTOR descriptor = m_pSecureContext->getDekCtx();
+				descriptor.m_sDekDecryptData.m_sCipherValue = rd->getCipherValue();
+				descriptor.m_sDekDecryptData.m_nfHandler = rd->getHandle();
+				descriptor.m_fnDecrypt(std::vector<nfByte>(), nullptr, descriptor.m_sDekDecryptData);
 			}
 		}
 	}

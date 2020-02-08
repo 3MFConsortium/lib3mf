@@ -285,15 +285,6 @@
 		<method name="SetDecimalPrecision" description="Sets the number of digits after the decimal point to be written in each vertex coordinate-value.">
 			<param name="DecimalPrecision" type="uint32" pass="in" description="The number of digits to be written in each vertex coordinate-value after the decimal point."/>
 		</method>
-		<!--<method name="RegisterKEKClient" description="Registers a callback to deal with data key encryption/decryption from keystore">
-			<param name="ConsumerID" type="string" pass="in" description="The ConsumerID to register for"/>
-			<param name="EncryptionCallback" type="functiontype" class="KeyEncryptionCallback" pass="in" description="The callback used to encrypt data key encryption"/>
-			<param name="UserData" type="pointer" pass="in" description="Userdata that is passed to the callback function"/>
-		</method>
-		<method name="RegisterDEKClient" description="Registers a callback to deal with encryption of content">
-			<param name="EncryptionCallback" type="functiontype" class="DataEncryptionCallback" pass="in" description="The callback used to encrypt content"/>
-			<param name="UserData" type="pointer" pass="in" description="Userdata that is passed to the callback function"/>
-		</method>-->
 	</class>
 
 	<class name="Reader">
@@ -335,7 +326,8 @@
 		</method>
 		<method name="RegisterKEKClient" description="Registers a callback to deal with data key encryption/decryption from keystore">
 			<param name="ConsumerID" type="string" pass="in" description="The ConsumerID to register for"/>
-			<param name="DecryptionCallback" type="functiontype" class="KeyDecryptionCallback" pass="in" description="The callback used to encrypt data key encryption"/>
+			<param name="DecryptionCallback" type="functiontype" class="KeyDecryptionCallback" pass="in" description="The callback used to encrypt data key"/>
+			<param name="KeySize" type="uint32" pass="in" description="The expected size of the key"/>
 			<param name="UserData" type="pointer" pass="in" description="Userdata that is passed to the callback function"/>
 		</method>
 		<method name="RegisterDEKClient" description="Registers a callback to deal with encryption of content">
@@ -1114,156 +1106,146 @@
 	</class>
 
 	<class name="Consumer">
-		<method name="GetConsumerID" description="A description">
-			<param name="ConsumerID" type="string" pass="return" description="A description"/>
+		<method name="GetConsumerID" description="Gets the consumerid">
+			<param name="ConsumerID" type="string" pass="return" description="A unique identifier for the consumers"/>
 		</method>
-		<method name="GetKeyID" description="A description">
-			<param name="KeyID" type="string" pass="return" description="A description"/>
+		<method name="GetKeyID" description="Getts the keyid">
+			<param name="KeyID" type="string" pass="return" description="The identifier for the key of this consumer"/>
 		</method>
-		<method name="GetKeyValue" description="A description">
-			<param name="KeyValue" type="string" pass="return" description="A description"/>
+		<method name="GetKeyValue" description="Gets the keyvalue associated with this consumer">
+			<param name="KeyValue" type="string" pass="return" description="The public key, when available, of this consumer"/>
 		</method>
 	</class>
 	
 	<enum name="EncryptionAlgorithm">
-		<option name="RsaOaepMgf1p" value="0" description="A description"/>
-		<option name="Aes256Gcm" value="1" description="A description"/>
+		<option name="RsaOaepMgf1p" value="0" description="Represents RSA OEAP MGF1 encryption algorithm as defined in http://www.w3.org/2001/04/xmlenc#rsa-oaep-mgf1p"/>
+		<option name="Aes256Gcm" value="1" description="Represents AES GCM encryption algorithm using 256 bit key size as defined in http://www.w3.org/2009/xmlenc11#aes256-gcm"/>
 	</enum>
 	
 	<class name="DecryptRight">
-		<method name="GetConsumer" description="A description">
-			<param name="TheConsumer" type="handle" class="Consumer" pass="return" description="the consumer instance"/>
+		<method name="GetConsumer" description="Gets the consumer associated with this decryptright">
+			<param name="TheConsumer" type="handle" class="Consumer" pass="return" description="The consumer instance"/>
 		</method>
-		<method name="GetEncryptionAlgorithm" description="A description">
-			<param name="EncryptionAlgorithm" type="enum" class="EncryptionAlgorithm" pass="return" description="A description"/>
+		<method name="GetEncryptionAlgorithm" description="Gets the associated encryption algorithm">
+			<param name="EncryptionAlgorithm" type="enum" class="EncryptionAlgorithm" pass="return" description="The algorithm used for the key in this decryptright"/>
 		</method>
 	</class>
 
-	<functiontype name="KeyEncryptionCallback" description="A callback to provide lib3mf with the encrypted/decrypted data encryption key">
-		<param name="Consumer" type="class" class="Consumer" pass="in" description="Informatino about the consumer and key used in the encryption process"/>
-		<param name="EncryptionAlgorithm" type="enum" class="EncryptionAlgorithm" pass="in" description="The encryption algorithm to be used. Cipher data should not be encoded."/>
-		<param name="PlainKey" type="basicarray" class="uint8" pass="in" description="A description"/>
-		<param name="CipherKey" type="basicarray" class="uint8" pass="out" description="A description"/>
+	<functiontype name="KeyDecryptionCallback" description="A callback used to decrypt the contents of the key available in keystore resourcedata decryptrigth. CipherKey and PlainKey are guaranteed to have same size on each call.">
+		<param name="Consumer" type="class" class="Consumer" pass="in" description="The consumer instance associated with the decryptright holder of the key"/>
+		<param name="EncryptionAlgorithm" type="enum" class="EncryptionAlgorithm" pass="in" description="The encryption algorithm used for encrypting the key"/>
+		<param name="CipherKey" type="basicarray" class="uint8" pass="in" description="Buffer to the ciphered key available in the decrypright"/>
+		<param name="PlainKey" type="basicarray" class="uint8" pass="out" description="Buffer where the plain data should be placed"/>
 		<param name="UserData" type="pointer" pass="in" description="Userdata that is passed to the callback function"/>
-		<param name="Result" type="uint64" pass="return" description="amount of bytes decrypted"/>
+		<param name="Result" type="uint64" pass="return" description="Amount of bytes decrypted if succeed. If error, a negative value"/>
 	</functiontype>
-	<functiontype name="KeyDecryptionCallback" description="A callback to provide lib3mf with the encrypted/decrypted data encryption key">
-		<param name="Consumer" type="class" class="Consumer" pass="in" description="Information about the consumer and key used in the encryption process"/>
-		<param name="EncryptionAlgorithm" type="enum" class="EncryptionAlgorithm" pass="in" description="The encryption algorithm to be used. Cipher data should not be encoded."/>
-		<param name="CipherKey" type="basicarray" class="uint8" pass="in" description="A description"/>
-		<param name="PlainKey" type="basicarray" class="uint8" pass="out" description="A description"/>
-		<param name="UserData" type="pointer" pass="in" description="Userdata that is passed to the callback function"/>
-		<param name="Result" type="uint64" pass="return" description="amount of bytes decrypted"/>
-	</functiontype>
+	
 	<struct name="Aes256CipherValue">
-		<member name="IV" type="uint8" rows="12"/>
-		<member name="Key" type="uint8" rows="32"/>
-		<member name="Tag" type="uint8" rows="16"/>
+		<member name="IV" type="uint8" rows="12" description="The IV for AES 256 GCM"/>
+		<member name="Key" type="uint8" rows="32" description="The Key for AES 256 GCM"/>
+		<member name="Tag" type="uint8" rows="16" description="The authentication tag for AES 256 GCM"/>
 	</struct>
+	
 	<class name="CipherData">
-		<method name="GetAes256Gcm" description="A description">
-			<param name="CipherValue" type="struct" class="Aes256CipherValue" pass="return" description="A description"/>
+		<method name="GetAes256Gcm" description="Gets the AES 256 GCM ciphervalue. Available if encryption algorithm is Aes256Gcm">
+			<param name="CipherValue" type="struct" class="Aes256CipherValue" pass="return" description="The ciphervalue"/>
 		</method>
-		<method name="SetAes256Gcm" description="A description">
-			<param name="CipherValue" type="struct" class="Aes256CipherValue" pass="in" description="A description"/>
+		<method name="SetAes256Gcm" description="Sets the AES 256 GCM ciphervalue. Use if encryption algorithm is Aes256Gcm">
+			<param name="CipherValue" type="struct" class="Aes256CipherValue" pass="in" description="The ciphervalue"/>
 		</method>
 		<method name="GetDescriptor" description="A handler descriptor that uniquely identifies the context of the resource. Each resource will be assigned a different value">
 			<param name="Descriptor" type="uint64" pass="return" description="the cipher data descriptor"/>
 		</method>
 	</class>
 
-	<functiontype name="DataEncryptionCallback" description="A description">
+	<functiontype name="DataDecryptionCallback" description="A callback to decrypt content called on each resourcedata encrypted. This might be called several times depending on content size. Cipher and Plain are guaranteed to have same size on each call. If cipher size is zero, clients must return the result of authenticated tag validation">
 		<param name="EncryptionAlgorithm" type="enum" class="EncryptionAlgorithm" pass="in" description="The encryption algorithm to be used"/>
-		<param name="CipherData" type="class" class="CipherData" pass="in" description="The plain data encryption key properly decrypted. Buffer will have same size as CipherValue in decryptright"/>
-		<param name="Plain" type="basicarray" class="uint8" pass="in" description="Pointer to the plain data buffer"/>
-		<param name="Cipher" type="basicarray" class="uint8" pass="in" description="Pointer to the cipher data buffer"/>
+		<param name="CipherData" type="class" class="CipherData" pass="in" description="The cipherData instance containing the key information."/>
+		<param name="Cipher" type="basicarray" class="uint8" pass="in" description="Buffer to the cipher data buffer"/>
+		<param name="Plain" type="basicarray" class="uint8" pass="out" description="Buffer to hold plain buffer"/>
 		<param name="UserData" type="pointer" pass="in" description="Userdata that is passed to the callback function"/>
+		<param name="Result" type="uint64" pass="return" description="Amount of bytes decrypted if succeed. If error, a negative value"/>
 	</functiontype>
-	<functiontype name="DataDecryptionCallback" description="A description">
-		<param name="EncryptionAlgorithm" type="enum" class="EncryptionAlgorithm" pass="in" description="The encryption algorithm to be used"/>
-		<param name="CipherData" type="class" class="CipherData" pass="in" description="The plain data encryption key properly decrypted. Buffer will have same size as CipherValue in decryptright"/>
-		<param name="Cipher" type="basicarray" class="uint8" pass="in" description="Pointer to the cipher data buffer"/>
-		<param name="Plain" type="basicarray" class="uint8" pass="out" description="Pointer to the plain data buffer"/>
-		<param name="UserData" type="pointer" pass="in" description="Userdata that is passed to the callback function"/>
-	</functiontype>
+	
 	<enum name="Compression">
-		<option name="None" value="0" description="A description"/>
-		<option name="Deflate" value="1" description="A description"/>
+		<option name="None" value="0" description="No compression applied"/>
+		<option name="Deflate" value="1" description="Deflate compression applied"/>
 	</enum>
+	
 	<class name="ResourceData">
-		<method name="AddDecryptRight" description="A description">
-			<param name="Consumer" type="handle" class="Consumer" pass="in" description="A description"/>
-			<param name="EncryptionAlgorithm" type="enum" class="EncryptionAlgorithm" pass="in" description="A description"/>
-			<param name="TheDecryptRight" type="handle" class="DecryptRight" pass="return" description="A description"/>
+		<method name="AddDecryptRight" description="Adds a DecryptRight for a Consumer in this ResourceData">
+			<param name="Consumer" type="handle" class="Consumer" pass="in" description="The Consumer reference"/>
+			<param name="EncryptionAlgorithm" type="enum" class="EncryptionAlgorithm" pass="in" description="The algorithm to be used when encrypting the key for this consumer"/>
+			<param name="TheDecryptRight" type="handle" class="DecryptRight" pass="return" description="The DecryptRight instance"/>
 		</method>
-		<method name="GetDecryptRightCount" description="A description">
-			<param name="Count" type="uint32" pass="return" description="A description"/>
+		<method name="GetDecryptRightCount" description="Gets the number of DecryptRights for this ResourceData">
+			<param name="Count" type="uint32" pass="return" description="The count"/>
 		</method>
-		<method name="GetDecryptRight" description="A description">
-			<param name="DecryptRightIndex" type="uint32" pass="in" description="A description"/>
-			<param name="TheDecryptRight" type="handle" class="DecryptRight" pass="return" description="A description"/>
+		<method name="GetDecryptRight" description="Gets an instance of DecryptRight">
+			<param name="DecryptRightIndex" type="uint32" pass="in" description="The index of the target DecryptRight"/>
+			<param name="TheDecryptRight" type="handle" class="DecryptRight" pass="return" description="The DecryptRight instance"/>
 		</method>
-		<method name="FindDecryptRightByConsumer" description="A description">
-			<param name="ConsumerInstance" type="handle" class="Consumer" pass="in" description="A description"/>
-			<param name="TheDecryptRight" type="handle" class="DecryptRight" pass="return" description="A description"/>
+		<method name="FindDecryptRightByConsumer" description="Finds the DecryptRight associated with a Consumer">
+			<param name="ConsumerInstance" type="handle" class="Consumer" pass="in" description="The Consumer instance"/>
+			<param name="TheDecryptRight" type="handle" class="DecryptRight" pass="return" description="The DecryptRight instance"/>
 		</method>
-		<method name="RemoveDecrypt" description="A description">
-			<param name="RemoveDecryptInstance" type="handle" class="Consumer" pass="in" description="A description"/>
+		<method name="RemoveDecrypt" description="Removes a DecryptRight for a Consumer">
+			<param name="ConsumerInstance" type="handle" class="Consumer" pass="in" description="The Consumer instance"/>
 		</method>
-		<method name="GetEncryptionAlgorithm" description="A description">
-			<param name="EncryptionAlgorithm" type="enum" class="EncryptionAlgorithm" pass="return" description="A description"/>
+		<method name="GetEncryptionAlgorithm" description="Gets the encryption algorithm used to encrypt this ResourceData">
+			<param name="EncryptionAlgorithm" type="enum" class="EncryptionAlgorithm" pass="return" description="The encryption algorithm"/>
 		</method>
-		<method name="GetCompression" description="A description">
-			<param name="Compression" type="enum" class="Compression" pass="return" description="A description"/>
+		<method name="GetCompression" description="Tells whether this ResourceData is compressed or not">
+			<param name="Compression" type="enum" class="Compression" pass="return" description="The compression method"/>
 		</method>
-		<method name="GetPath" description="A description">
-			<param name="Path" type="class" class="PackagePath" pass="return" description="A description"/>
+		<method name="GetPath" description="Gets the encrypted part path">
+			<param name="Path" type="class" class="PackagePath" pass="return" description="The part path"/>
 		</method>
 	</class>
 	<class name="KeyStore">
-		<method name="AddConsumer" description="A description">
-			<param name="ConsumerID" type="string" pass="in" description="A description"/>
-			<param name="KeyID" type="string" pass="in" description="A description"/>
-			<param name="KeyValue" type="string" pass="in" description="A description"/>
-			<param name="Consumer" type="handle" class="Consumer" pass="return" description="A description"/>
+		<method name="AddConsumer" description="Adds a consumer to the keystore">
+			<param name="ConsumerID" type="string" pass="in" description="A unique identifier for the consumer"/>
+			<param name="KeyID" type="string" pass="in" description="The id of the key of the consumer"/>
+			<param name="KeyValue" type="string" pass="in" description="The public key for this consumer in PEM format"/>
+			<param name="Consumer" type="handle" class="Consumer" pass="return" description="The consumer instance"/>
 		</method> 
-		<method name="GetConsumerCount" description="A description">
-			<param name="Count" type="uint32" pass="return" description="A description"/>
+		<method name="GetConsumerCount" description="Gets the number of consumers in the keystore">
+			<param name="Count" type="uint32" pass="return" description="The consumer count"/>
 		</method>
-		<method name="GetConsumer" description="A description">
-			<param name="ConsumerIndex" type="uint64" pass="in" description="the index of the consumer"/>
-			<param name="TheConsumer" type="handle" class="Consumer" pass="return" description="the consumer instance"/>
+		<method name="GetConsumer" description="Get a consumer from the keystore">
+			<param name="ConsumerIndex" type="uint64" pass="in" description="The index of the consumer"/>
+			<param name="TheConsumer" type="handle" class="Consumer" pass="return" description="The consumer instance"/>
 		</method>
-		<method name="RemoveConsumer" description="A description">
-			<param name="ConsumerInstance" type="handle" class="Consumer" pass="in" description="Build item to remove."/>
+		<method name="RemoveConsumer" description="Removes a consumer from the keystore">
+			<param name="ConsumerInstance" type="handle" class="Consumer" pass="in" description="The consumer instance to remove"/>
 		</method>
-		<method name="FindConsumer" description="A description">
-			<param name="ConsumerID" type="string" pass="in" description="A description"/>
-			<param name="TheConsumer" type="handle" class="Consumer" pass="return" description="the consumer instance"/>
+		<method name="FindConsumer" description="Finds a consumer by ID">
+			<param name="ConsumerID" type="string" pass="in" description="The ID of the consumer"/>
+			<param name="TheConsumer" type="handle" class="Consumer" pass="return" description="The consumer instance"/>
 		</method>
-		<method name="GetResourceDataCount" description="A description">
-			<param name="Count" type="uint32" pass="return" description="the number of resource data available"/>
+		<method name="GetResourceDataCount" description="Gets the number of resource data in the keysore">
+			<param name="Count" type="uint32" pass="return" description="The number of resource data available"/>
 		</method>
-		<method name="GetResourceData" description="A description">
-			<param name="ResourceDataIndex" type="uint64" pass="in" description="the index of the resource data"/>
-			<param name="TheResourceData" type="handle" class="ResourceData" pass="return" description="the data resource instance"/>
+		<method name="GetResourceData" description="Gets a resource data">
+			<param name="ResourceDataIndex" type="uint64" pass="in" description="The index of the resource data"/>
+			<param name="TheResourceData" type="handle" class="ResourceData" pass="return" description="The data resource instance"/>
 		</method>
-		<method name="AddResourceData" description="A description">
-			<param name="PackagePath" type="handle" class="PackagePath" pass="in" description="A description"/>
-			<param name="EncryptionAlgorithm" type="enum" class="EncryptionAlgorithm" pass="in" description="A description"/>
-			<param name="Compression" type="enum" class="Compression" pass="in" description="A description"/>
-			<param name="TheResourceData" type="handle" class="ResourceData" pass="return" description="the data resource instance"/>
+		<method name="AddResourceData" description="Adds a resource data into the keystore. This flags the package part for encryption">
+			<param name="PartPath" type="handle" class="PackagePath" pass="in" description="The path of the part to be encrypted"/>
+			<param name="EncryptionAlgorithm" type="enum" class="EncryptionAlgorithm" pass="in" description="The encryption algorithm to be used to encrypt this resource"/>
+			<param name="Compression" type="enum" class="Compression" pass="in" description="Whether compression should be used prior to encryption"/>
+			<param name="TheResourceData" type="handle" class="ResourceData" pass="return" description="The data resource instance"/>
 		</method>
-		<method name="FindResourceData" description="A description">
-			<param name="Path" type="string" pass="in" description="A description"/>
-			<param name="TheResourceData" type="handle" class="ResourceData" pass="return" description="the data resource instance"/>
+		<method name="FindResourceData" description="Finds a resource data by its path">
+			<param name="Path" type="string" pass="in" description="The resource data path to find"/>
+			<param name="TheResourceData" type="handle" class="ResourceData" pass="return" description="The data resource instance"/>
 		</method>
-		<method name="GetUUID" description="A description">
-			<param name="HasUUID" type="bool" pass="out" description="flag whether the build has a UUID"/>
-			<param name="UUID" type="string" pass="return" description="the UUID as string of the form 'xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx'"/>
+		<method name="GetUUID" description="Gets the keystore UUID">
+			<param name="HasUUID" type="bool" pass="out" description="flag whether the keystore has a UUID"/>
+			<param name="UUID" type="string" pass="return" description="returns the keystore uuid."/>
 		</method>
-		<method name="SetUUID" description="sets the keystore UUID">
-			<param name="UUID" type="string" pass="in" description="the UUID as string of the form 'xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx'"/>
+		<method name="SetUUID" description="Sets the keystore UUID">
+			<param name="UUID" type="string" pass="in" description="The new keystore uuid."/>
 		</method>
 	</class>
 
@@ -1459,8 +1441,8 @@
 		<method name="RemoveCustomContentType" description="removes a custom Content Type from the model (UTF8 version).">
 			<param name="Extension" type="string" pass="in" description="File Extension"/>
 		</method>
-		<method name="GetKeyStore" description="A description">
-			<param name="KeyStore" type="handle" class="KeyStore" pass="return" description="A description"/>
+		<method name="GetKeyStore" description="Gets the keystore associated with this model">
+			<param name="KeyStore" type="handle" class="KeyStore" pass="return" description="The package keystore"/>
 		</method>
 	</class>
 

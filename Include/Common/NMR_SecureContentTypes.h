@@ -63,6 +63,7 @@ namespace NMR {
 		nfUint64 m_nfHandler;
 		CIPHERVALUE m_sCipherValue;
 		void * m_pUserData;
+		nfBool m_bCompression;
 	};
 	using ImportStream_DEKDecryptCallbackType = std::function<nfUint64(std::vector<nfByte> const &, nfByte *, DEKDECRYPTCTX)>;
 
@@ -75,9 +76,10 @@ namespace NMR {
 		void * m_pUserData;
 		std::string m_sConsumerId;
 		std::string m_sResourcePath;
+		std::vector<nfByte> m_KeyBuffer;
 	};
 
-	using ImportStream_KEKDecryptCallbackType = std::function<nfUint64(std::vector<nfByte> const &, std::vector<nfByte> &, KEKDECRYPTCTX)>;
+	using ImportStream_KEKDecryptCallbackType = std::function<nfUint64(std::vector<nfByte> const &, KEKDECRYPTCTX &)>;
 
 	struct KEKDESCRIPTOR {
 		ImportStream_KEKDecryptCallbackType m_fnDecrypt;
