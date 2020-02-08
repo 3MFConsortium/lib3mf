@@ -41,12 +41,16 @@ A model writer exports the in memory represenation into the 3MF file.
 
 namespace NMR {
 
+	class CSecureContext;
+	using PSecureContext = std::shared_ptr<CSecureContext>;
+
 	class CModelWriter {
 	private:
 		nfUint32 m_nDecimalPrecision;
 	protected:
 		PModel m_pModel;
 		PProgressMonitor m_pProgressMonitor;
+		PSecureContext m_pSecureContext;
 	public:
 		CModelWriter() = delete;
 		CModelWriter(_In_ PModel pModel);

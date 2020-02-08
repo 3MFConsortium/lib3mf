@@ -69,6 +69,8 @@ namespace NMR {
 
 	void CModelWriter_3MF_Native::releasePackage()
 	{
+		m_pPackageWriter->close();
+		m_pPackageWriter = nullptr;
 		m_pModel = nullptr;
 	}
 
@@ -83,8 +85,8 @@ namespace NMR {
 		m_pProgressMonitor->SetMaxProgress(m_pModel->getResourceCount() + m_pModel->getAttachmentCount() + 1 + 1);
 
 		// Write Model Stream
-		POpcPackageWriter pPackageWriter = std::make_shared<COpcPackageWriter>(pStream);
-		POpcPackagePart pModelPart = pPackageWriter->addPart(m_pModel->rootModelPath()->getPath());
+		m_pPackageWriter = std::make_shared<CKeyStoreOpcPackageWriter>(pStream, m_pModel->getKeyStore(), m_pSecureContext, m_pProgressMonitor);
+		POpcPackagePart pModelPart = m_pPackageWriter->addPart(m_pModel->rootModelPath()->getPath());
 		PXmlWriter_Native pXMLWriter = std::make_shared<CXmlWriter_Native>(pModelPart->getExportStream());
 
 		m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_WRITEROOTMODEL);
@@ -93,20 +95,20 @@ namespace NMR {
 		writeModelStream(pXMLWriter.get(), m_pModel);
 
 		// add Root relationships
-		pPackageWriter->addRootRelationship(generateRelationShipID(), PACKAGE_START_PART_RELATIONSHIP_TYPE, pModelPart.get());
+		m_pPackageWriter->addRootRelationship(generateRelationShipID(), PACKAGE_START_PART_RELATIONSHIP_TYPE, pModelPart.get());
 
 		PModelAttachment pPackageThumbnail = m_pModel->getPackageThumbnail();
 		if (pPackageThumbnail.get() != nullptr)
 		{
 			// create Package Thumbnail Part
-			POpcPackagePart pThumbnailPart = pPackageWriter->addPart(pPackageThumbnail->getPathURI());
+			POpcPackagePart pThumbnailPart = m_pPackageWriter->addPart(pPackageThumbnail->getPathURI());
 			PExportStream pExportStream = pThumbnailPart->getExportStream();
 			// Copy data
 			PImportStream pPackageThumbnailStream = pPackageThumbnail->getStream();
 			pPackageThumbnailStream->seekPosition(0, true);
 			pExportStream->copyFrom(pPackageThumbnailStream.get(), pPackageThumbnailStream->retrieveSize(), MODELWRITER_NATIVE_BUFFERSIZE);
 			// add root relationship
-			pPackageWriter->addRootRelationship(generateRelationShipID(), pPackageThumbnail->getRelationShipType(), pThumbnailPart.get());
+			m_pPackageWriter->addRootRelationship(generateRelationShipID(), pPackageThumbnail->getRelationShipType(), pThumbnailPart.get());
 		}
 
 		m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_WRITENONROOTMODELS);
@@ -118,33 +120,27 @@ namespace NMR {
 		m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_WRITEATTACHMENTS);
 		m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
 
-		addAttachments(m_pModel, pPackageWriter, pModelPart);
+		addAttachments(m_pModel, pModelPart);
 
 		m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_WRITECONTENTTYPES);
 		m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
 
 		// add Content Types
-		pPackageWriter->addContentType(PACKAGE_3D_RELS_EXTENSION, PACKAGE_3D_RELS_CONTENT_TYPE);
-		pPackageWriter->addContentType(PACKAGE_3D_MODEL_EXTENSION, PACKAGE_3D_MODEL_CONTENT_TYPE);
-		pPackageWriter->addContentType(PACKAGE_3D_TEXTURE_EXTENSION, PACKAGE_TEXTURE_CONTENT_TYPE);
-		pPackageWriter->addContentType(PACKAGE_3D_PNG_EXTENSION, PACKAGE_PNG_CONTENT_TYPE);
-		pPackageWriter->addContentType(PACKAGE_3D_JPEG_EXTENSION, PACKAGE_JPG_CONTENT_TYPE);
-		pPackageWriter->addContentType(PACKAGE_3D_JPG_EXTENSION, PACKAGE_JPG_CONTENT_TYPE);
+		m_pPackageWriter->addContentType(PACKAGE_3D_RELS_EXTENSION, PACKAGE_3D_RELS_CONTENT_TYPE);
+		m_pPackageWriter->addContentType(PACKAGE_3D_MODEL_EXTENSION, PACKAGE_3D_MODEL_CONTENT_TYPE);
+		m_pPackageWriter->addContentType(PACKAGE_3D_TEXTURE_EXTENSION, PACKAGE_TEXTURE_CONTENT_TYPE);
+		m_pPackageWriter->addContentType(PACKAGE_3D_PNG_EXTENSION, PACKAGE_PNG_CONTENT_TYPE);
+		m_pPackageWriter->addContentType(PACKAGE_3D_JPEG_EXTENSION, PACKAGE_JPG_CONTENT_TYPE);
+		m_pPackageWriter->addContentType(PACKAGE_3D_JPG_EXTENSION, PACKAGE_JPG_CONTENT_TYPE);
 
 		std::map<std::string, std::string> CustomContentTypes = m_pModel->getCustomContentTypes();
 		std::map<std::string, std::string>::iterator iContentTypeIterator;
 
 		for (iContentTypeIterator = CustomContentTypes.begin(); iContentTypeIterator != CustomContentTypes.end(); iContentTypeIterator++) {
 			if (!m_pModel->contentTypeIsDefault(iContentTypeIterator->first)) {
-				pPackageWriter->addContentType(iContentTypeIterator->first, iContentTypeIterator->second);
+				m_pPackageWriter->addContentType(iContentTypeIterator->first, iContentTypeIterator->second);
 			}
 		}
-
-		auto pKeyStorePackageWriter = std::make_shared<CKeyStoreOpcPackageWriter>(pStream);
-		POpcPackagePart pKeyStorePart = pKeyStorePackageWriter->addPart(PACKAGE_3D_KEYSTORE_URI);
-		PXmlWriter_Native pXMLWriter4KeyStore = std::make_shared<CXmlWriter_Native>(pKeyStorePart->getExportStream());
-		PKeyStore keyStore = m_pModel->getKeyStore();
-		writeKeyStoreStream(pXMLWriter4KeyStore.get(), keyStore.get());
 	}
 
 
@@ -193,7 +189,7 @@ namespace NMR {
 		}
 	}
 
-	void CModelWriter_3MF_Native::addAttachments(_In_ CModel * pModel, _In_ POpcPackageWriter pPackageWriter, _In_ POpcPackagePart pModelPart)
+	void CModelWriter_3MF_Native::addAttachments(_In_ CModel * pModel, _In_ POpcPackagePart pModelPart)
 	{
 		__NMRASSERT(pModel != nullptr);
 		__NMRASSERT(pModelPart.get() != nullptr);
@@ -218,7 +214,7 @@ namespace NMR {
 					throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
 				// create Texture Part
-				POpcPackagePart pAttachmentPart = pPackageWriter->addPart(sPath);
+				POpcPackagePart pAttachmentPart = m_pPackageWriter->addPart(sPath);
 				PExportStream pExportStream = pAttachmentPart->getExportStream();
 
 				// Copy data

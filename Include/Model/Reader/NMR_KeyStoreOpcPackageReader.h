@@ -43,10 +43,6 @@ NMR_KeyStoreOpcPackageReader.h defines an OPC Package reader in a portable way.
 
 namespace NMR {
 
-	class COpcPackageReader;
-	using POpcPackageReader = std::shared_ptr<COpcPackageReader>;
-	class CKeyStore;
-	using PKeyStore = std::shared_ptr<CKeyStore>;
 	class CSecureContext;
 	using PSecureContext = std::shared_ptr<CSecureContext>;
 	class CKeyStore;
@@ -54,7 +50,7 @@ namespace NMR {
 
 	class CKeyStoreOpcPackageReader: public IOpcPackageReader {
 	private:
-		POpcPackageReader m_pPackageReader;
+		PIOpcPackageReader m_pPackageReader;
 		PKeyStore m_pKeyStore;
 		PSecureContext m_pSecureContext;
 		nfUint64 m_nfHandler;
@@ -74,7 +70,7 @@ namespace NMR {
 		// get Keystore
 		PKeyStore getKeyStore() const;
 
-		void close();
+		void close() override;
 	};
 
 	using PKeyStoreOpcPackageReader = std::shared_ptr<CKeyStoreOpcPackageReader>;

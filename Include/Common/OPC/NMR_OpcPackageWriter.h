@@ -36,6 +36,7 @@ NMR_OpcPackageWriter.h defines an OPC Package writer in a portable way.
 #include "Common/Platform/NMR_ExportStream.h"
 #include "Common/Platform/NMR_ExportStream_ZIP.h"
 #include "Common/Platform/NMR_PortableZIPWriter.h"
+#include "Common/OPC/NMR_IOpcPackageWriter.h"
 #include "Common/OPC/NMR_OpcPackagePart.h"
 #include "Common/OPC/NMR_OpcPackageTypes.h"
 #include "Common/OPC/NMR_OpcPackageRelationship.h"
@@ -44,7 +45,7 @@ NMR_OpcPackageWriter.h defines an OPC Package writer in a portable way.
 
 namespace NMR {
 
-	class COpcPackageWriter {
+	class COpcPackageWriter: public IOpcPackageWriter {
 	protected:
 		PExportStream m_pExportStream;
 		std::list <POpcPackagePart> m_Parts;
@@ -60,10 +61,10 @@ namespace NMR {
 		COpcPackageWriter(_In_ PExportStream pExportStream);
 		~COpcPackageWriter();
 
-		POpcPackagePart addPart(_In_ std::string sPath);
+		POpcPackagePart addPart(_In_ std::string sPath) override;
 
-		void addContentType(_In_ std::string sExtension, _In_ std::string sContentType);
-		POpcPackageRelationship addRootRelationship(_In_ std::string sID, _In_ std::string sType, _In_ COpcPackagePart * pTargetPart);
+		void addContentType(_In_ std::string sExtension, _In_ std::string sContentType) override;
+		POpcPackageRelationship addRootRelationship(_In_ std::string sID, _In_ std::string sType, _In_ COpcPackagePart * pTargetPart) override;
 
 	};
 

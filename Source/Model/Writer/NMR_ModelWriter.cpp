@@ -37,6 +37,8 @@ A model writer exports the in memory represenation into a model file.
 #include "Common/Platform/NMR_XmlWriter.h" 
 #include "Common/NMR_Exception.h" 
 #include "Common/NMR_Exception_Windows.h" 
+#include "Common/NMR_SecureContext.h"
+
 
 #include <sstream>
 
@@ -53,6 +55,7 @@ namespace NMR {
 
 		m_pModel = pModel;
 		m_pProgressMonitor = std::make_shared<CProgressMonitor>();
+		m_pSecureContext = std::make_shared<CSecureContext>();
 	}
 
 	void CModelWriter::SetProgressCallback(Lib3MFProgressCallback callback, void* userData)

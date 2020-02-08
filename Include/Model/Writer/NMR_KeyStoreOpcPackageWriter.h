@@ -38,16 +38,35 @@ NMR_KeyStoreOpcPackageWriter.h defines an OPC Package writer in a portable way.
 #include "Common/NMR_SecureContentTypes.h"
 #include "Common/OPC/NMR_IOpcPackageWriter.h"
 #include "Common/Platform/NMR_ExportStream.h"
+#include "Common/3MF_ProgressMonitor.h"
 
 namespace NMR {
 
+	class CSecureContext;
+	using PSecureContext = std::shared_ptr<CSecureContext>;
+	class CKeyStore;
+	using PKeyStore = std::shared_ptr<CKeyStore>;
+	class CXmlWriter;
+
 	class CKeyStoreOpcPackageWriter : public IOpcPackageWriter {
-	private:
+	protected:
+		PIOpcPackageWriter m_pPackageWriter;
+		PProgressMonitor m_pProgressMonitor;
+		PSecureContext m_pSecureContext;
+		PKeyStore m_pKeyStore;
 
+		void writeKeyStoreStream(_In_ CXmlWriter * pXMLWriter);
 	public:
-		CKeyStoreOpcPackageWriter(_In_ PExportStream pImportStream);
-		virtual POpcPackagePart addPart(_In_ std::string sPath) override;
+		CKeyStoreOpcPackageWriter(
+			_In_ PExportStream pImportStream, 
+			_In_ PKeyStore pKeyStore, 
+			_In_ PSecureContext pSecureContext, 
+			_In_ PProgressMonitor pProgressMonitor);
 
+		POpcPackagePart addPart(_In_ std::string sPath) override;
+		void close() override;
+		void addContentType(std::string sExtension, std::string sContentType) override;
+		POpcPackageRelationship addRootRelationship(std::string sID, std::string sType, COpcPackagePart * pTargetPart) override;
 	};
 
 	using PKeyStoreOpcPackageWriter = std::shared_ptr<CKeyStoreOpcPackageWriter>;

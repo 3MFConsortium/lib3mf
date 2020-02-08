@@ -45,6 +45,7 @@ namespace NMR {
 
 	class CModelWriter_3MF_Native : public CModelWriter_3MF {
 	protected:
+		std::shared_ptr<IOpcPackageWriter> m_pPackageWriter;
 		nfInt32 m_nRelationIDCounter;
 		CModel * m_pModel;
 
@@ -54,7 +55,7 @@ namespace NMR {
 		virtual void releasePackage();
 
 		std::string generateRelationShipID();
-		void addAttachments(_In_ CModel * pModel, _In_ POpcPackageWriter pPackageWriter, _In_ POpcPackagePart pModelPart);
+		void addAttachments(_In_ CModel * pModel, _In_ POpcPackagePart pModelPart);
 
 		void addNonRootModels();
 

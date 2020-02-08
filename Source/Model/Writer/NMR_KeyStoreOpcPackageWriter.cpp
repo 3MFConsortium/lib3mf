@@ -30,24 +30,62 @@ NMR_OpcPackageWriter.cpp defines an OPC Package writer in a portable way.
 
 --*/
 
-#include "Model/Writer/NMR_KeyStoreOpcPackageWriter.h" 
-#include "Common/OPC/NMR_OpcPackageWriter.h"
-#include "Common/Platform/NMR_Time.h" 
 #include "Common/NMR_Exception.h" 
 #include "Common/NMR_StringUtils.h" 
 
 #include "Model/Classes/NMR_ModelConstants.h"
 
+#include "Model/Writer/NMR_KeyStoreOpcPackageWriter.h" 
+#include "Model/Writer/SecureContent085/NMR_ModelWriterNode_KeyStore.h"
+#include "Common/Platform/NMR_XmlWriter_Native.h"
+#include "Common/OPC/NMR_OpcPackageWriter.h"
+
 namespace NMR {
 
 
-	CKeyStoreOpcPackageWriter::CKeyStoreOpcPackageWriter(_In_ PExportStream pExportStream)
+	CKeyStoreOpcPackageWriter::CKeyStoreOpcPackageWriter(_In_ PExportStream pImportStream,
+		_In_ PKeyStore pKeyStore,
+		_In_ PSecureContext pSecureContext,
+		_In_ PProgressMonitor pProgressMonitor)
+		:m_pSecureContext(pSecureContext), m_pProgressMonitor(pProgressMonitor)
 	{
-		
+		m_pPackageWriter = std::make_shared<COpcPackageWriter>(pImportStream);
 	}
 
 	POpcPackagePart CKeyStoreOpcPackageWriter::addPart(_In_ std::string sPath)
 	{
-		return POpcPackagePart();
+		//TODO: if path is in keystore, wrap part stream in an encrypted stream
+		//TODO: if resource data for path is compressed, wrap encrypted stream in a compressed stream
+		return m_pPackageWriter->addPart(sPath);
 	}
+
+	void CKeyStoreOpcPackageWriter::close() {
+		POpcPackagePart pKeyStorePart = m_pPackageWriter->addPart(PACKAGE_3D_KEYSTORE_URI);
+		PXmlWriter_Native pXMLWriter4KeyStore = std::make_shared<CXmlWriter_Native>(pKeyStorePart->getExportStream());
+		writeKeyStoreStream(pXMLWriter4KeyStore.get());
+	}
+
+	void CKeyStoreOpcPackageWriter::addContentType(std::string sExtension, std::string sContentType) {
+		m_pPackageWriter->addContentType(sExtension, sContentType);
+	}
+
+	POpcPackageRelationship CKeyStoreOpcPackageWriter::addRootRelationship(std::string sID, std::string sType, COpcPackagePart * pTargetPart) {
+		return m_pPackageWriter->addRootRelationship(sID, sType, pTargetPart);
+	}
+
+	void CKeyStoreOpcPackageWriter::writeKeyStoreStream(_In_ CXmlWriter * pXMLWriter) {
+		__NMRASSERT(pKeyStore != nullptr);
+		if (pXMLWriter == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		pXMLWriter->WriteStartDocument();
+
+		CModelWriterNode_KeyStore XMLNode4KeyStore(m_pKeyStore.get(), pXMLWriter, m_pProgressMonitor);
+		XMLNode4KeyStore.writeToXML();
+
+		pXMLWriter->WriteEndDocument();
+
+		pXMLWriter->Flush();
+	}
+
 }
