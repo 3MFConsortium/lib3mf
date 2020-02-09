@@ -385,6 +385,8 @@ namespace Lib3MF {
 
 			DEKCallbackData * cb = reinterpret_cast<DEKCallbackData *>(userData);
 			ASSERT_EQ(cb->value, 1);
+
+			cb->value = 2;
 			
 			CCipherData cd(SecureContentT::wrapper.get(), cipherData);
 			SecureContentT::wrapper->Acquire(&cd);
@@ -467,6 +469,7 @@ namespace Lib3MF {
 
 			KEKCallbackData * cb = reinterpret_cast<KEKCallbackData *>(userData);
 			ASSERT_EQ(cb->value, 1);
+			cb->value = 2;
 
 
 			Lib3MF_uint32 needed = 0;
@@ -491,12 +494,23 @@ namespace Lib3MF {
 		}
 	};
 
-	TEST_F(SecureContentT, KEKCallbackTest) {
+	TEST_F(SecureContentT, KEKReadTest) {
 		auto reader = model->QueryReader("3mf");
 		KEKCallbackData data;
 		data.value = 1;
 		reader->RegisterKEKClient("LIB3MF#TEST", KEKCallbackData::testKEKCallback, 256, reinterpret_cast<Lib3MF_pvoid>(&data));
 		reader->ReadFromFile(sTestFilesPath + UNENCRYPTEDKEYSTORE);
+		ASSERT_EQ(2, data.value);
+	}
+
+
+	TEST_F(SecureContentT, KEKWriteTest) {
+		auto writer = model->QueryWriter("3mf");
+		KEKCallbackData data;
+		data.value = 1;
+		writer->RegisterKEKClient("LIB3MF#TEST", KEKCallbackData::testKEKCallback, 256, reinterpret_cast<Lib3MF_pvoid>(&data));
+		writer->WriteToFile(sOutFilesPath + UNENCRYPTEDKEYSTORE);
+		ASSERT_EQ(2, data.value);
 	}
 
 	//
