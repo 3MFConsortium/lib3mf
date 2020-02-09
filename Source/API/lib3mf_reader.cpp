@@ -182,10 +182,10 @@ void Lib3MF::Impl::CReader::RegisterKEKClient(const std::string &sConsumerID, Li
 	NMR::KEKDESCRIPTOR descriptor;
 	descriptor.m_sKekDecryptData.m_pUserData = pUserData;
 	descriptor.m_sKekDecryptData.m_KeyBuffer.resize(nKeySize, 0);
-	descriptor.m_fnDecrypt = 
+	descriptor.m_fnCrypt = 
 		[this, pDecryptionCallback](
 			std::vector<NMR::nfByte> const & cipher, 
-			NMR::KEKDECRYPTCTX & ctx) {
+			NMR::KEKCTX & ctx) {
 		NMR::PKeyStore keystore = this->reader().getKeyStore();
 		NMR::PKeyStoreConsumer consumer = keystore->findConsumerById(ctx.m_sConsumerId);
 		__NMRASSERT(nullptr != consumer);
@@ -217,7 +217,7 @@ void Lib3MF::Impl::CReader::RegisterKEKClient(const std::string &sConsumerID, Li
 void Lib3MF::Impl::CReader::RegisterDEKClient(Lib3MF::DataDecryptionCallback pDecryptionCallback, Lib3MF_pvoid pUserData) {
 	NMR::DEKDESCRIPTOR descriptor;
 	descriptor.m_sDekDecryptData.m_pUserData = pUserData;
-	descriptor.m_fnDecrypt = [this, pDecryptionCallback](std::vector<NMR::nfByte> const & cipher, NMR::nfByte * plain, NMR::DEKDECRYPTCTX ctx) {
+	descriptor.m_fnCrypt = [this, pDecryptionCallback](std::vector<NMR::nfByte> const & cipher, NMR::nfByte * plain, NMR::DEKCTX ctx) {
 		Lib3MF::sAes256CipherValue cipherDataValue;
 		__NMRASSERT(ctx.m_sCipherValue.m_iv.size() == sizeof(cipherDataValue.m_IV));
 		std::copy(ctx.m_sCipherValue.m_iv.begin(), ctx.m_sCipherValue.m_iv.end(), cipherDataValue.m_IV);

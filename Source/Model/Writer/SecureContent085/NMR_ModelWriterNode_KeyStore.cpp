@@ -36,6 +36,7 @@ This is the class for exporting the 3mf keystore stream root node.
 #include "Model/Classes/NMR_KeyStoreResourceData.h"
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_StringUtils.h"
+#include "Common/NMR_UUID.h"
 #include <vector>
 #include <array>
 

@@ -389,7 +389,7 @@ namespace Lib3MF {
 			CCipherData cd(SecureContentT::wrapper.get(), cipherData);
 			SecureContentT::wrapper->Acquire(&cd);
 
-			ASSERT_EQ(cd.GetDescriptor(), 11);
+			ASSERT_EQ(cd.GetDescriptor(), 12);
 			if (0 != cipherSize)
 				cb->context.push_back(cd.GetDescriptor());
 

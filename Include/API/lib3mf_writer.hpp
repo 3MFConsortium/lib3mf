@@ -91,6 +91,8 @@ public:
 	Lib3MF_uint32 GetDecimalPrecision() override;
 
 	void SetDecimalPrecision(const Lib3MF_uint32 nDecimalPrecision) override;
+
+	void RegisterKEKClient(const std::string & sConsumerID, const Lib3MF::KeyEncryptionCallback pEncryptionCallback, const Lib3MF_uint32 nKeySize, const Lib3MF_pvoid pUserData);
 };
 
 }

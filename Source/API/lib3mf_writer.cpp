@@ -32,14 +32,16 @@ Abstract: This is a stub class definition of CWriter
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
-// Include custom headers here.
 #include "Common/Platform/NMR_Platform.h"
 #include "Common/Platform/NMR_ExportStream_Callback.h"
 #include "Common/Platform/NMR_ExportStream_Memory.h"
 #include "Common/Platform/NMR_ExportStream_Dummy.h"
-
-// for memcpy
-#include <cstring>
+#include "Common/NMR_SecureContentTypes.h"
+#include "Common/NMR_SecureContext.h"
+#include "Model/Classes/NMR_KeyStore.h"
+#include "Model/Classes/NMR_KeyStoreConsumer.h"
+#include "Model/Classes/NMR_KeyStoreResourceData.h"
+#include "API/lib3mf_consumer.hpp"
 
 using namespace Lib3MF::Impl;
 
@@ -171,4 +173,40 @@ Lib3MF_uint32 CWriter::GetDecimalPrecision()
 void CWriter::SetDecimalPrecision(const Lib3MF_uint32 nDecimalPrecision)
 {
 	m_pWriter->SetDecimalPrecision(nDecimalPrecision);
+}
+
+void Lib3MF::Impl::CWriter::RegisterKEKClient(const std::string & sConsumerID, const Lib3MF::KeyEncryptionCallback pEncryptionCallback, const Lib3MF_uint32 nKeySize, const Lib3MF_pvoid pUserData) {
+	NMR::KEKDESCRIPTOR descriptor;
+	descriptor.m_sKekDecryptData.m_pUserData = pUserData;
+	descriptor.m_sKekDecryptData.m_KeyBuffer.resize(nKeySize, 0);
+	descriptor.m_fnCrypt =
+		[this, pEncryptionCallback](
+			std::vector<NMR::nfByte> const & plain,
+			NMR::KEKCTX & ctx) {
+		NMR::PKeyStore keystore = this->writer().getKeyStore();
+		NMR::PKeyStoreConsumer consumer = keystore->findConsumerById(ctx.m_sConsumerId);
+		__NMRASSERT(nullptr != consumer);
+		NMR::PKeyStoreResourceData resourceData = keystore->findResourceDataByPath(ctx.m_sResourcePath);
+		__NMRASSERT(nullptr != resourceData);
+		NMR::PKeyStoreDecryptRight decryptRight = resourceData->findDecryptRightByConsumer(consumer);
+		__NMRASSERT(nullptr != decryptRight);
+
+		eEncryptionAlgorithm algorithm = (decryptRight->getEncryptionAlgorithm() == NMR::eKeyStoreEncryptAlgorithm::RsaOaepMgf1p)
+			? eEncryptionAlgorithm::RsaOaepMgf1p : eEncryptionAlgorithm::Aes256Gcm;
+
+		NMR::nfUint64 result = 0;
+		std::shared_ptr<IConsumer> pConsumer = std::make_shared<CConsumer>(consumer);
+		IBase * pBaseConsumer(nullptr);
+		pBaseConsumer = pConsumer.get();
+		Lib3MF_Consumer handle = pBaseConsumer;
+		(*pEncryptionCallback)(handle, algorithm, plain.size(), plain.data(),
+			ctx.m_KeyBuffer.size(), nullptr, ctx.m_KeyBuffer.data(),
+			ctx.m_pUserData, &result);
+
+		if (result < 0)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_CALCULATIONABORTED);
+
+		return result;
+	};
+	writer().getSecureContext()->addKekCtx(sConsumerID, descriptor);
 }

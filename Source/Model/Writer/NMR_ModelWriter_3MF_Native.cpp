@@ -82,15 +82,15 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_NOMODELTOWRITE);
 
 		// Maximal progress = NrResources + NrAttachments + Build + Cleanup
-		m_pProgressMonitor->SetMaxProgress(m_pModel->getResourceCount() + m_pModel->getAttachmentCount() + 1 + 1);
+		monitor()->SetMaxProgress(m_pModel->getResourceCount() + m_pModel->getAttachmentCount() + 1 + 1);
 
 		// Write Model Stream
-		m_pPackageWriter = std::make_shared<CKeyStoreOpcPackageWriter>(pStream, m_pModel->getKeyStore(), m_pSecureContext, m_pProgressMonitor);
+		m_pPackageWriter = std::make_shared<CKeyStoreOpcPackageWriter>(pStream, m_pModel->getKeyStore(), getSecureContext(), monitor());
 		POpcPackagePart pModelPart = m_pPackageWriter->addPart(m_pModel->rootModelPath()->getPath());
 		PXmlWriter_Native pXMLWriter = std::make_shared<CXmlWriter_Native>(pModelPart->getExportStream());
 
-		m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_WRITEROOTMODEL);
-		m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
+		monitor()->SetProgressIdentifier(ProgressIdentifier::PROGRESS_WRITEROOTMODEL);
+		monitor()->ReportProgressAndQueryCancelled(true);
 
 		writeModelStream(pXMLWriter.get(), m_pModel);
 
@@ -111,19 +111,19 @@ namespace NMR {
 			m_pPackageWriter->addRootRelationship(generateRelationShipID(), pPackageThumbnail->getRelationShipType(), pThumbnailPart.get());
 		}
 
-		m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_WRITENONROOTMODELS);
-		m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
+		monitor()->SetProgressIdentifier(ProgressIdentifier::PROGRESS_WRITENONROOTMODELS);
+		monitor()->ReportProgressAndQueryCancelled(true);
 
 		addNonRootModels();
 		
 		// add Attachments
-		m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_WRITEATTACHMENTS);
-		m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
+		monitor()->SetProgressIdentifier(ProgressIdentifier::PROGRESS_WRITEATTACHMENTS);
+		monitor()->ReportProgressAndQueryCancelled(true);
 
 		addAttachments(m_pModel, pModelPart);
 
-		m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_WRITECONTENTTYPES);
-		m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
+		monitor()->SetProgressIdentifier(ProgressIdentifier::PROGRESS_WRITECONTENTTYPES);
+		monitor()->ReportProgressAndQueryCancelled(true);
 
 		// add Content Types
 		m_pPackageWriter->addContentType(PACKAGE_3D_RELS_EXTENSION, PACKAGE_3D_RELS_CONTENT_TYPE);
@@ -160,8 +160,8 @@ namespace NMR {
 		nfUint64 nCount = vctPPaths.size();
 
 		for (nfUint32 nIndex = 0; nIndex < nCount; nIndex++) {
-			m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_WRITENONROOTMODELS);
-			m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
+			monitor()->SetProgressIdentifier(ProgressIdentifier::PROGRESS_WRITENONROOTMODELS);
+			monitor()->ReportProgressAndQueryCancelled(true);
 
 			std::string sNonRootModelPath = vctPPaths[nIndex]->getPath();
 			if (sNonRootModelPath == m_pModel->rootPath())
@@ -201,8 +201,8 @@ namespace NMR {
 		if (nCount > 0) {
 			for (nIndex = 0; nIndex < nCount; nIndex++) {
 
-				m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_WRITEATTACHMENTS);
-				m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
+				monitor()->SetProgressIdentifier(ProgressIdentifier::PROGRESS_WRITEATTACHMENTS);
+				monitor()->ReportProgressAndQueryCancelled(true);
 
 				PModelAttachment pAttachment = pModel->getModelAttachment(nIndex);
 				PImportStream pStream = pAttachment->getStream();
@@ -224,7 +224,7 @@ namespace NMR {
 				// add relationships
 				pModelPart->addRelationship(generateRelationShipID(), sRelationShipType.c_str(), pAttachmentPart->getURI());
 
-				m_pProgressMonitor->IncrementProgress(1);
+				monitor()->IncrementProgress(1);
 			}
 		}
 	}

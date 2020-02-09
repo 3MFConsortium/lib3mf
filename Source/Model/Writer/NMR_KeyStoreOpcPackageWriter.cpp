@@ -47,8 +47,15 @@ namespace NMR {
 		_In_ PKeyStore pKeyStore,
 		_In_ PSecureContext pSecureContext,
 		_In_ PProgressMonitor pProgressMonitor)
-		:m_pSecureContext(pSecureContext), m_pProgressMonitor(pProgressMonitor)
+		:m_pKeyStore(pKeyStore), m_pSecureContext(pSecureContext), m_pProgressMonitor(pProgressMonitor)
 	{
+		if (nullptr == pKeyStore)
+			throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+		if (nullptr == pSecureContext)
+			throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+		if (nullptr == pProgressMonitor)
+			throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+
 		m_pPackageWriter = std::make_shared<COpcPackageWriter>(pImportStream);
 	}
 
@@ -74,7 +81,6 @@ namespace NMR {
 	}
 
 	void CKeyStoreOpcPackageWriter::writeKeyStoreStream(_In_ CXmlWriter * pXMLWriter) {
-		__NMRASSERT(pKeyStore != nullptr);
 		if (pXMLWriter == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 

@@ -24,45 +24,42 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract:
-
-NMR_ModelWriter.cpp implements the Model Writer Class.
-A model writer exports the in memory represenation into a model file.
 
 --*/
 
-#include "Model/Writer/NMR_ModelWriter.h" 
+#include "Model/Classes/NMR_ModelContext.h"
 
-#include "Model/Classes/NMR_ModelConstants.h" 
-#include "Common/Platform/NMR_XmlWriter.h" 
-#include "Common/NMR_Exception.h" 
-#include "Common/NMR_Exception_Windows.h" 
+#include "Model/Classes/NMR_Model.h"
+#include "Model/Classes/NMR_KeyStore.h"
 #include "Common/NMR_SecureContext.h"
-
-
-#include <sstream>
+#include "Common/3MF_ProgressMonitor.h"
 
 namespace NMR {
 
-	const int MIN_DECIMAL_PRECISION = 1;
-	const int MAX_DECIMAL_PRECISION = 16;
 
-	CModelWriter::CModelWriter(_In_ PModel pModel):
-		CModelContext(pModel),
-		m_nDecimalPrecision(6)
-	{
-	}
 
-	void CModelWriter::SetDecimalPrecision(nfUint32 nDecimalPrecision)
-	{
-		if ((nDecimalPrecision < MIN_DECIMAL_PRECISION) || (nDecimalPrecision > MAX_DECIMAL_PRECISION))
+	CModelContext::CModelContext(_In_ PModel pModel) {
+		if (!pModel.get())
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
-		m_nDecimalPrecision = nDecimalPrecision;
+
+		m_pModel = pModel;
+
+		m_pProgressMonitor = std::make_shared<CProgressMonitor>();
+
+		m_pSecureContext = std::make_shared<CSecureContext>();
 	}
 
-	nfUint32 CModelWriter::GetDecimalPrecision()
-	{
-		return m_nDecimalPrecision;
+	PSecureContext CModelContext::getSecureContext() const {
+		return m_pSecureContext;
 	}
+
+	PKeyStore CModelContext::getKeyStore() const {
+		return m_pModel->getKeyStore();
+	}
+
+	void CModelContext::SetProgressCallback(Lib3MFProgressCallback callback, void* userData) {
+		m_pProgressMonitor->SetProgressCallback(callback, userData);
+	}
+
 
 }

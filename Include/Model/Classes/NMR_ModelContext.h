@@ -24,45 +24,50 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract:
-
-NMR_ModelWriter.cpp implements the Model Writer Class.
-A model writer exports the in memory represenation into a model file.
 
 --*/
 
-#include "Model/Writer/NMR_ModelWriter.h" 
+#ifndef NMR_MODELCONTEXT
+#define NMR_MODELCONTEXT
 
-#include "Model/Classes/NMR_ModelConstants.h" 
-#include "Common/Platform/NMR_XmlWriter.h" 
-#include "Common/NMR_Exception.h" 
-#include "Common/NMR_Exception_Windows.h" 
-#include "Common/NMR_SecureContext.h"
+#include <memory>
 
-
-#include <sstream>
+#include "Common/3MF_ProgressTypes.h"
 
 namespace NMR {
 
-	const int MIN_DECIMAL_PRECISION = 1;
-	const int MAX_DECIMAL_PRECISION = 16;
+	class CModel;
+	class CKeyStore;
+	class CSecureContext;
+	class CProgressMonitor;
 
-	CModelWriter::CModelWriter(_In_ PModel pModel):
-		CModelContext(pModel),
-		m_nDecimalPrecision(6)
-	{
-	}
+	using PModel = std::shared_ptr<CModel>;
+	using PKeyStore = std::shared_ptr<CKeyStore>;
+	using PSecureContext = std::shared_ptr<CSecureContext>;
+	using PProgressMonitor = std::shared_ptr<CProgressMonitor>;
 
-	void CModelWriter::SetDecimalPrecision(nfUint32 nDecimalPrecision)
-	{
-		if ((nDecimalPrecision < MIN_DECIMAL_PRECISION) || (nDecimalPrecision > MAX_DECIMAL_PRECISION))
-			throw CNMRException(NMR_ERROR_INVALIDPARAM);
-		m_nDecimalPrecision = nDecimalPrecision;
-	}
+	class CModelContext {
+	private:
+		PModel m_pModel;
+		PSecureContext m_pSecureContext;
+		PProgressMonitor m_pProgressMonitor;
+	protected:
+		PModel & model() {
+			return m_pModel;
+		}
+		PProgressMonitor  & monitor() {
+			return m_pProgressMonitor;
+		}
+	public:
+		CModelContext() = delete;
+		CModelContext(_In_ PModel pModel);
+		virtual ~CModelContext() = default;
 
-	nfUint32 CModelWriter::GetDecimalPrecision()
-	{
-		return m_nDecimalPrecision;
-	}
+		PSecureContext getSecureContext() const;
+		PKeyStore getKeyStore() const;
 
+		void SetProgressCallback(Lib3MFProgressCallback callback, void* userData);
+	};
 }
+#endif // !NMR_MODELCONTEXT
+
