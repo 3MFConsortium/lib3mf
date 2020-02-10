@@ -52,6 +52,10 @@ namespace NMR {
 		nfBool m_bOpen;
 		nfUint64 m_nfHandle;
 		static nfUint64 s_nfHandleCount;
+	protected:
+		void initializeCipher();
+		void initializeKey();
+		void initializeIV();
 	public:
 		CKeyStoreResourceData(std::string const& path);
 		CKeyStoreResourceData(std::string const& path, eKeyStoreEncryptAlgorithm const& ea, nfBool const& compression);
@@ -70,6 +74,8 @@ namespace NMR {
 		CIPHERVALUE getCipherValue() const;
 		void setCipherValue(CIPHERVALUE const & cv);
 		bool isOpen() const;
+
+		void randomIV();
 	};
 	typedef std::shared_ptr<CKeyStoreResourceData> PKeyStoreResourceData;
 }
