@@ -206,4 +206,21 @@ namespace Lib3MF {
 		auto resources = model->GetResources();
 		ASSERT_EQ(28, resources->Count());
 	}
+	
+	TEST_F(EncryptionMethods, ReadEncryptedCompressed3MF) {
+		auto reader = model->QueryReader("3mf");
+
+		DekContext dekUserData;
+		reader->RegisterDEKClient(ClientCallbacks::dekClientCallback, reinterpret_cast<Lib3MF_pvoid>(&dekUserData));
+
+		KekContext kekUserData;
+		kekUserData.key = privateKey.get();
+		kekUserData.size = RsaMethods::getSize(privateKey);
+		reader->RegisterKEKClient("LIB3MF#TEST", ClientCallbacks::kekClientCallback, (Lib3MF_uint32)kekUserData.size, &kekUserData);
+		reader->ReadFromFile(sTestFilesPath + "/SecureContent/keystore_encrypted_compressed.3mf");
+
+		auto resources = model->GetResources();
+		ASSERT_EQ(28, resources->Count());
+	}
+
 }
