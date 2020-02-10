@@ -21,13 +21,13 @@ namespace NMR {
 	}
 
 	void CKeyStoreResourceData::initializeKey() {
-		int rc = RAND_bytes(m_sCipherValue.m_key.data(), m_sCipherValue.m_key.size());
+		int rc = RAND_bytes(m_sCipherValue.m_key.data(), (int)m_sCipherValue.m_key.size());
 		if (rc != 1)
 			throw CNMRException(NMR_ERROR_CALCULATIONTERMINATED);
 	}
 
 	void CKeyStoreResourceData::initializeIV() {
-		int rc = RAND_bytes(m_sCipherValue.m_iv.data(), m_sCipherValue.m_iv.size());
+		int rc = RAND_bytes(m_sCipherValue.m_iv.data(), (int)m_sCipherValue.m_iv.size());
 		if (rc != 1)
 			throw CNMRException(NMR_ERROR_CALCULATIONTERMINATED);
 	}

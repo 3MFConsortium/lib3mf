@@ -370,17 +370,18 @@ namespace Lib3MF {
 			Lib3MF_pvoid userData,
 			Lib3MF_uint64 * result) {
 
-			DEKCallbackData * cb = reinterpret_cast<DEKCallbackData *>(userData);
-			ASSERT_EQ(cb->value, 1);
-
-			cb->value = 2;
-			
 			CCipherData cd(SecureContentT::wrapper.get(), cipherData);
 			SecureContentT::wrapper->Acquire(&cd);
 
-			ASSERT_EQ(cd.GetDescriptor(), 13);
-			if (0 != cipherSize)
+			if (0 != cipherSize) {
+				DEKCallbackData * cb = reinterpret_cast<DEKCallbackData *>(userData);
+				ASSERT_EQ(cb->value, 1);
+
 				cb->context.push_back(cd.GetDescriptor());
+				ASSERT_EQ(cd.GetDescriptor(), 13);
+
+				cb->value = 2;
+			}
 
 			sAes256CipherValue cipher = cd.GetAes256Gcm();
 		
@@ -397,6 +398,7 @@ namespace Lib3MF {
 		reader->RegisterDEKClient(DEKCallbackData::testDEKCallback, reinterpret_cast<Lib3MF_pvoid>(&data));
 		reader->ReadFromFile(sTestFilesPath + UNENCRYPTEDKEYSTORE);
 		ASSERT_EQ(data.context.size(), 1);
+		ASSERT_EQ(data.value, 2);
 	}
 	
 	struct ReadCompressedCallbackData {
