@@ -47,6 +47,21 @@ namespace NMR {
 		if (nullptr == pCompressedStream)
 			throw CNMRException(NMR_ERROR_INVALIDPOINTER);
 		m_pCompressedStream = pCompressedStream;
+
+		// Source: http://zlib.net/zpipe.c
+		m_strm.zalloc = Z_NULL;
+		m_strm.zfree = Z_NULL;
+		m_strm.opaque = Z_NULL;
+		m_strm.avail_in = 0;
+		m_strm.next_in = Z_NULL;
+
+		if (inflateInit(&m_strm) != Z_OK)
+			throw CNMRException(NMR_ERROR_COULDNOTINITINFLATE);
+	}
+
+	CImportStream_Compressed::~CImportStream_Compressed()
+	{
+		(void)inflateEnd(&m_strm);
 	}
 
 	nfBool CImportStream_Compressed::seekPosition(_In_ nfUint64 position, _In_ nfBool bHasToSucceed)
@@ -71,57 +86,38 @@ namespace NMR {
 
 	nfUint64 CImportStream_Compressed::readBuffer(nfByte * pBuffer, nfUint64 cbTotalBytesToRead, nfBool bNeedsToReadAll)
 	{
-		return m_pCompressedStream->readBuffer(pBuffer, cbTotalBytesToRead, bNeedsToReadAll);
-	}
-
-	void CImportStream_Compressed::decompress()
-	{
-		// Source: http://zlib.net/zpipe.c
-		m_strm.zalloc = Z_NULL;
-		m_strm.zfree = Z_NULL;
-		m_strm.opaque = Z_NULL;
-		m_strm.avail_in = 0;
-		m_strm.next_in = Z_NULL;
-
-		int ret = inflateInit(&m_strm);
-		if (ret != Z_OK)
-			throw CNMRException(NMR_ERROR_COULDNOTINITINFLATE);
-
-		nfUint64 totalBytesDecompressed = 0;
-		nfByte in[IMPORTSTREAM_COMPRESSED_CHUNKSIZE];
-		nfByte out[IMPORTSTREAM_COMPRESSED_CHUNKSIZE];
-		do {
-			m_strm.avail_in = (nfUint32) readBuffer(in, IMPORTSTREAM_COMPRESSED_CHUNKSIZE, false);
+		nfBool firstRead = m_strm.next_in == Z_NULL;
+		nfBool hasDecompressLeftovers = m_strm.avail_out == 0;
+		if (firstRead || !hasDecompressLeftovers) {
+			m_strm.avail_in = (nfUint32) m_pCompressedStream->readBuffer(in, IMPORTSTREAM_COMPRESSED_CHUNKSIZE, bNeedsToReadAll);
 			if (m_strm.avail_in == 0)
-				break;
+				return 0;
 			m_strm.next_in = in;
-			do {
-				m_strm.avail_out = IMPORTSTREAM_COMPRESSED_CHUNKSIZE;
-				m_strm.next_out = out;
-				ret = inflate(&m_strm, Z_NO_FLUSH);
-				assert(ret != Z_STREAM_ERROR);
-				switch (ret) {
-				case Z_NEED_DICT:
-				case Z_DATA_ERROR:
-				case Z_MEM_ERROR:
-					(void)inflateEnd(&m_strm);
-					throw CNMRException(NMR_ERROR_COULDNOTINFLATE);
-				}
-				nfUint64 bytesDecompressed = IMPORTSTREAM_COMPRESSED_CHUNKSIZE - m_strm.avail_out;
-				if (0 < bytesDecompressed) {
-					totalBytesDecompressed += bytesDecompressed;
-					m_decompressedBuffer.resize(totalBytesDecompressed);
-					m_decompressedBuffer.insert(m_decompressedBuffer.end() - bytesDecompressed, &out[0], &out[bytesDecompressed]);
-				}
-			} while (m_strm.avail_out == 0);
-		} while (ret != Z_STREAM_END);
+		}
 
-		(void) inflateEnd(&m_strm);
-		if (ret != Z_STREAM_END) {
+		m_strm.avail_out = (nfUint32) cbTotalBytesToRead;
+		m_strm.next_out = pBuffer;
+		nfUint32 ret = inflate(&m_strm, Z_NO_FLUSH);
+		assert(ret != Z_STREAM_ERROR);
+		switch (ret) {
+		case Z_NEED_DICT:
+		case Z_DATA_ERROR:
+		case Z_MEM_ERROR:
+			(void)inflateEnd(&m_strm);
 			throw CNMRException(NMR_ERROR_COULDNOTINFLATE);
 		}
-	}
+		if (m_strm.avail_out == 0) {
+			nfBool reachedEndOfBuffer = m_strm.avail_in == 0;
+			if (reachedEndOfBuffer && ret != Z_STREAM_END) {
+				throw CNMRException(NMR_ERROR_COULDNOTINFLATE);
+			}
+			return cbTotalBytesToRead;
+		}
 
+		nfUint64 bytesDecompressed = cbTotalBytesToRead - m_strm.avail_out;
+		return readBuffer(pBuffer + bytesDecompressed, m_strm.avail_out, bNeedsToReadAll) + bytesDecompressed;
+	}
+	
 	nfUint64 CImportStream_Compressed::retrieveSize()
 	{
 		return m_decompressedBuffer.size();
@@ -134,7 +130,14 @@ namespace NMR {
 
 	PImportStream CImportStream_Compressed::copyToMemory()
 	{
-		decompress();
+		nfUint64 bytesRead;
+		nfUint64 currentPosition = 0;
+		nfUint64 chunkSize = IMPORTSTREAM_READ_BUFFER_CHUNKSIZE;
+		do {
+			m_decompressedBuffer.resize(m_decompressedBuffer.size() + chunkSize);
+			bytesRead = readBuffer(&m_decompressedBuffer[currentPosition], chunkSize, false);
+			currentPosition += bytesRead;
+		} while (chunkSize == bytesRead);
 		return std::make_shared<CImportStream_Shared_Memory>(m_decompressedBuffer.data(), m_decompressedBuffer.size());
 	}
 
