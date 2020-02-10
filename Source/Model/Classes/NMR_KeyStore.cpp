@@ -39,6 +39,7 @@ A KeyStore is an in memory representation of the 3MF file.
 #include <memory>
 namespace NMR {
 	CKeyStore::CKeyStore() {
+		m_UUID = std::make_shared<CUUID>();
 	}
 
 	CKeyStore::~CKeyStore() {
