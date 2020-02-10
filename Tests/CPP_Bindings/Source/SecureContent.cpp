@@ -474,13 +474,43 @@ namespace Lib3MF {
 
 			ASSERT_FALSE(c.GetKeyValue().empty());
 
-			if (plainSize == 0) {
-				*plainNeeded = cipherSize;
-				*result = 0;
-			} else {
-				std::copy(cipherBuffer, cipherBuffer + plainSize, plainBuffer);
-				*result = plainSize;
-			}
+			std::copy(cipherBuffer, cipherBuffer + plainSize, plainBuffer);
+			*result = plainSize;
+		}
+
+		static void testAddConsumerKEKCallback(
+			Lib3MF_Consumer pConsumer,
+			Lib3MF::eEncryptionAlgorithm algorithm,
+			Lib3MF_uint64 cipherSize,
+			const Lib3MF_uint8 * cipherBuffer,
+			const Lib3MF_uint64 plainSize,
+			Lib3MF_uint64 * plainNeeded,
+			Lib3MF_uint8 * plainBuffer,
+			Lib3MF_pvoid userData,
+			Lib3MF_uint64 *result) {
+
+
+			ASSERT_GE(plainSize, 256);
+
+			KEKCallbackData * cb = reinterpret_cast<KEKCallbackData *>(userData);
+			ASSERT_EQ(cb->value, 1);
+			cb->value = 2;
+
+
+			Lib3MF_uint32 needed = 0;
+			std::vector<char> buffer;
+
+			CConsumer c(SecureContentT::wrapper.get(), pConsumer);
+			SecureContentT::wrapper->Acquire(&c);
+
+			ASSERT_EQ(c.GetConsumerID(), "consumerId");
+
+			ASSERT_EQ(c.GetKeyID(), "contentKey");
+
+			ASSERT_FALSE(c.GetKeyValue().empty());
+
+			std::copy(cipherBuffer, cipherBuffer + plainSize, plainBuffer);
+			*result = plainSize;
 		}
 	};
 
@@ -495,13 +525,24 @@ namespace Lib3MF {
 
 
 	TEST_F(SecureContentT, KEKWriteTest) {
+		readUnencryptedKeyStore();
+		Lib3MF::PKeyStore keyStore = model->GetKeyStore();
+		ASSERT_TRUE(nullptr != keyStore);
+
+		Lib3MF::PResourceData rd = keyStore->AddResourceData(model->RootModel().get(), Lib3MF::eEncryptionAlgorithm::Aes256Gcm, Lib3MF::eCompression::Deflate);
+		Lib3MF::PConsumer consumer1 = keyStore->AddConsumer("consumerId", "contentKey", "consumerKeyValue");
+		Lib3MF::PDecryptRight dr = rd->AddDecryptRight(consumer1.get(), Lib3MF::eEncryptionAlgorithm::RsaOaepMgf1p);
+		
+
+
 		auto writer = model->QueryWriter("3mf");
 		KEKCallbackData data;
 		data.value = 1;
-		writer->RegisterKEKClient("LIB3MF#TEST", KEKCallbackData::testKEKCallback, 256, reinterpret_cast<Lib3MF_pvoid>(&data));
+		writer->RegisterKEKClient("consumerId", KEKCallbackData::testAddConsumerKEKCallback, 256, reinterpret_cast<Lib3MF_pvoid>(&data));
 		writer->WriteToFile(sOutFilesPath + UNENCRYPTEDKEYSTORE);
 		ASSERT_EQ(2, data.value);
 	}
+
 
 	//
 	// End to end tests

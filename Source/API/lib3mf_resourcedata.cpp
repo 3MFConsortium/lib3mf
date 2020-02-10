@@ -11,14 +11,14 @@ namespace Lib3MF {
 		}
 
 		IDecryptRight * Lib3MF::Impl::CResourceData::AddDecryptRight(IConsumer * pConsumerInstance, const Lib3MF::eEncryptionAlgorithm eaInstance) {
-			if (Lib3MF::eEncryptionAlgorithm::RsaOaepMgf1p == eaInstance) {
+			if (Lib3MF::eEncryptionAlgorithm::RsaOaepMgf1p != eaInstance) {
 				throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 			}
 			CConsumer * pConsumer = dynamic_cast<CConsumer *>(pConsumerInstance);
 			if (!pConsumer) {
 				throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDKEYSTORECONSUMER);
 			}
-			NMR::PKeyStoreDecryptRight dR = m_ResourceData->addDecryptRight(pConsumer->consumer(), NMR::eKeyStoreEncryptAlgorithm::Aes256Gcm);
+			NMR::PKeyStoreDecryptRight dR = m_ResourceData->addDecryptRight(pConsumer->consumer(), NMR::eKeyStoreEncryptAlgorithm::RsaOaepMgf1p);
 			return new CDecryptRight(dR);
 		}
 

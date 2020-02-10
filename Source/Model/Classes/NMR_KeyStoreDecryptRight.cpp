@@ -30,4 +30,8 @@ namespace NMR {
 	CIPHERVALUE CKeyStoreDecryptRight::getCipherValue() const {
 		return m_sCipherValue;
 	}
+	void CKeyStoreDecryptRight::setCipherValue(CIPHERVALUE const & cipherValue)
+	{
+		m_sCipherValue = cipherValue;
+	}
 }

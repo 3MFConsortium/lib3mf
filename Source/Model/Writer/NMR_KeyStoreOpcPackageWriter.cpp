@@ -39,6 +39,10 @@ NMR_OpcPackageWriter.cpp defines an OPC Package writer in a portable way.
 #include "Model/Writer/SecureContent085/NMR_ModelWriterNode_KeyStore.h"
 #include "Common/Platform/NMR_XmlWriter_Native.h"
 #include "Common/OPC/NMR_OpcPackageWriter.h"
+#include "Model/Classes/NMR_KeyStoreResourceData.h"
+#include "Common/NMR_SecureContext.h"
+
+
 
 namespace NMR {
 
@@ -57,16 +61,54 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_INVALIDPOINTER);
 
 		m_pPackageWriter = std::make_shared<COpcPackageWriter>(pImportStream);
+
 	}
 
 	POpcPackagePart CKeyStoreOpcPackageWriter::addPart(_In_ std::string sPath)
 	{
 		//TODO: if path is in keystore, wrap part stream in an encrypted stream
-		//TODO: if resource data for path is compressed, wrap encrypted stream in a compressed stream
+		//TODO: if resource data for path is compressed, wrap encrypted stream in a compressed stream using ciphervalue in resourcedata
 		return m_pPackageWriter->addPart(sPath);
 	}
 
 	void CKeyStoreOpcPackageWriter::close() {
+		for (nfUint32 i = 0; i < m_pKeyStore->getResourceDataCount(); i++) {
+			PKeyStoreResourceData rd = m_pKeyStore->getResourceDataByIndex(i);
+			if(m_pSecureContext->hasDekCtx()){
+				DEKDESCRIPTOR dekCtx = m_pSecureContext->getDekCtx();
+				dekCtx.m_sDekDecryptData.m_nfHandler = rd->getHandle();
+				dekCtx.m_sDekDecryptData.m_sCipherValue = rd->getCipherValue();
+				dekCtx.m_fnCrypt(std::vector<nfByte>(), nullptr, dekCtx.m_sDekDecryptData);
+				rd->setCipherValue(dekCtx.m_sDekDecryptData.m_sCipherValue);
+			}
+			for (nfUint32 j = 0; j < rd->getDecryptRightCount(); j++) {
+				PKeyStoreDecryptRight dr = rd->getDecryptRight(j);
+				try {
+					KEKDESCRIPTOR ctx = m_pSecureContext->getKekCtx(dr->getConsumer()->getConsumerID());
+					ctx.m_sKekDecryptData.m_sConsumerId = dr->getConsumer()->getConsumerID();
+					ctx.m_sKekDecryptData.m_sResourcePath = rd->getPath()->getPath();
+					nfUint64 encrypted = ctx.m_fnCrypt(rd->getCipherValue().m_key, ctx.m_sKekDecryptData);
+					if (encrypted > 0) {
+						CIPHERVALUE cipherValue = rd->getCipherValue();
+						cipherValue.m_key = ctx.m_sKekDecryptData.m_KeyBuffer;
+						dr->setCipherValue(cipherValue);
+					}
+				}
+				catch (CNMRException const e){
+					if (e.getErrorCode() == NMR_ERROR_INVALIDPARAM) {
+						CIPHERVALUE drCipherValue = dr->getCipherValue();
+						CIPHERVALUE rdCipherValue = rd->getCipherValue();
+						drCipherValue.m_iv = rdCipherValue.m_iv;
+						drCipherValue.m_tag = rdCipherValue.m_tag;
+						dr->setCipherValue(drCipherValue);
+					}
+					else {
+						throw e;
+					}
+				}
+			}
+		}
+
 		POpcPackagePart pKeyStorePart = m_pPackageWriter->addPart(PACKAGE_3D_KEYSTORE_URI);
 		PXmlWriter_Native pXMLWriter4KeyStore = std::make_shared<CXmlWriter_Native>(pKeyStorePart->getExportStream());
 		writeKeyStoreStream(pXMLWriter4KeyStore.get());

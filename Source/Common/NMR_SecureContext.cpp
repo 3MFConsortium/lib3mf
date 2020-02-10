@@ -27,7 +27,7 @@ namespace NMR {
 		auto it = m_ConsumerMap.find(consumerId);
 		if (it != m_ConsumerMap.end())
 			return (*it).second;
-		throw CNMRException(NMR_ERROR_RANGEERROR);
+		throw CNMRException(NMR_ERROR_INVALIDPARAM);
 	}
 	bool CSecureContext::emptyKekCtx() const {
 		return m_ConsumerMap.empty();
