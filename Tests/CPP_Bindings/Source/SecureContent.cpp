@@ -433,7 +433,8 @@ namespace Lib3MF {
 		data.value = 1;
 		reader->RegisterDEKClient(ReadCompressedCallbackData::testCompressedCallback, reinterpret_cast<Lib3MF_pvoid>(&data));
 		reader->ReadFromFile(sTestFilesPath + UNENCRYPTEDCOMPRESSEDKEYSTORE);
-		ASSERT_EQ(data.context.size(), 1);
+		// testCompressedCallback is called once for each time readBuffer is called
+		ASSERT_EQ(data.context.size(), 2); 
 	}
 
 	struct KEKCallbackData {

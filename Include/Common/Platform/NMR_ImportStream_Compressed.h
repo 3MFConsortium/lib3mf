@@ -37,7 +37,8 @@ This is a stream class for importing from a compressed object.
 #include "Common/Platform/NMR_ImportStream.h"
 #include "Libraries/zlib/zlib.h"
 
-#define IMPORTSTREAM_COMPRESSED_CHUNKSIZE (5 * 1024)
+#define IMPORTSTREAM_READ_BUFFER_CHUNKSIZE 1024
+#define IMPORTSTREAM_COMPRESSED_CHUNKSIZE 1024
 
 namespace NMR {
 
@@ -46,9 +47,10 @@ namespace NMR {
 		PImportStream m_pCompressedStream;
 		z_stream m_strm;
 		std::vector<nfByte> m_decompressedBuffer;
-		void decompress();
+		nfByte in[IMPORTSTREAM_COMPRESSED_CHUNKSIZE];
 	public:
 		CImportStream_Compressed(PImportStream pCompressedStream);
+		~CImportStream_Compressed();
 
 		virtual nfBool seekPosition(_In_ nfUint64 position, _In_ nfBool bHasToSucceed);
 		virtual nfBool seekForward(_In_ nfUint64 bytes, _In_ nfBool bHasToSucceed);
