@@ -35,11 +35,6 @@ This is a stream class for importing from a compressed object.
 #include "Common/Platform/NMR_ImportStream_Compressed.h"
 #include "Common/NMR_Exception.h"
 
-#include <stdio.h>
-#include <string.h>
-#include <assert.h>
-#include <fstream>
-
 namespace NMR {
 
 	CImportStream_Compressed::CImportStream_Compressed(PImportStream pCompressedStream)
@@ -98,7 +93,6 @@ namespace NMR {
 		m_strm.avail_out = (nfUint32) cbTotalBytesToRead;
 		m_strm.next_out = pBuffer;
 		nfUint32 ret = inflate(&m_strm, Z_NO_FLUSH);
-		assert(ret != Z_STREAM_ERROR);
 		switch (ret) {
 		case Z_NEED_DICT:
 		case Z_DATA_ERROR:
