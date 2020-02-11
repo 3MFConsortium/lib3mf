@@ -30,6 +30,7 @@ Abstract: This is a stub class definition of CWriter
 
 #include "lib3mf_writer.hpp"
 #include "lib3mf_interfaceexception.hpp"
+#include <memory>
 
 // Include custom headers here.
 #include "Common/Platform/NMR_Platform.h"
@@ -42,6 +43,8 @@ Abstract: This is a stub class definition of CWriter
 #include "Model/Classes/NMR_KeyStoreConsumer.h"
 #include "Model/Classes/NMR_KeyStoreResourceData.h"
 #include "API/lib3mf_consumer.hpp"
+#include "lib3mf_cipherdata.hpp"
+
 
 using namespace Lib3MF::Impl;
 
@@ -209,4 +212,35 @@ void Lib3MF::Impl::CWriter::RegisterKEKClient(const std::string & sConsumerID, c
 		return result;
 	};
 	writer().getSecureContext()->addKekCtx(sConsumerID, descriptor);
+}
+
+void Lib3MF::Impl::CWriter::RegisterDEKClient(const Lib3MF::DataEncryptionCallback pEncryptionCallback, const Lib3MF_pvoid pUserData)
+{
+	NMR::DEKDESCRIPTOR descriptor;
+	descriptor.m_sDekDecryptData.m_pUserData = pUserData;
+	descriptor.m_fnCrypt = [this, pEncryptionCallback](
+			std::vector<NMR::nfByte> const & cipher,
+			NMR::nfByte * plain,
+			NMR::DEKCTX ctx) {
+		Lib3MF::sAes256CipherValue cipherDataValue;
+		__NMRASSERT(ctx.m_sCipherValue.m_iv.size() == sizeof(cipherDataValue.m_IV));
+		std::copy(ctx.m_sCipherValue.m_iv.begin(), ctx.m_sCipherValue.m_iv.end(), cipherDataValue.m_IV);
+
+		__NMRASSERT(ctx.m_sCipherValue.m_key.size() == sizeof(cipherDataValue.m_Key));
+		std::copy(ctx.m_sCipherValue.m_key.begin(), ctx.m_sCipherValue.m_key.end(), cipherDataValue.m_Key);
+
+		__NMRASSERT(ctx.m_sCipherValue.m_tag.size() == sizeof(cipherDataValue.m_Tag));
+		std::copy(ctx.m_sCipherValue.m_tag.begin(), ctx.m_sCipherValue.m_tag.end(), cipherDataValue.m_Tag);
+
+		std::shared_ptr<CCipherData> pCipherData = std::make_shared<CCipherData>(cipherDataValue, ctx.m_nfHandler);
+		IBase * pBaseCipherData(nullptr);
+		pBaseCipherData = pCipherData.get();
+		Lib3MF_CipherData handle = pBaseCipherData;
+		NMR::nfUint64 result = 0;
+		(*pEncryptionCallback)(eEncryptionAlgorithm::Aes256Gcm, handle, cipher.size(), cipher.data(), cipher.size(), nullptr, plain, ctx.m_pUserData, &result);
+		if (result < 0)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_CALCULATIONABORTED);
+		return result;
+	};
+	m_pWriter->getSecureContext()->setDekCtx(descriptor);
 }

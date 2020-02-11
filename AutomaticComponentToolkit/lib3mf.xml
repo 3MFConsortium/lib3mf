@@ -292,7 +292,10 @@
 			<param name="KeySize" type="uint32" pass="in" description="The expected size of the key"/>
 			<param name="UserData" type="pointer" pass="in" description="Userdata that is passed to the callback function"/>
 		</method>
-
+    <method name="RegisterDEKClient" description="Registers a callback to deal with encryption of content">
+      <param name="DecryptionCallback" type="functiontype" class="DataEncryptionCallback" pass="in" description="The callback used to encrypt content"/>
+      <param name="UserData" type="pointer" pass="in" description="Userdata that is passed to the callback function"/>
+    </method>
 	</class>
 
 	<class name="Reader">
@@ -341,8 +344,8 @@
 		<method name="RegisterDEKClient" description="Registers a callback to deal with encryption of content">
 			<param name="DecryptionCallback" type="functiontype" class="DataDecryptionCallback" pass="in" description="The callback used to encrypt content"/>
 			<param name="UserData" type="pointer" pass="in" description="Userdata that is passed to the callback function"/>
-		</method>		
-	</class>
+		</method>
+  </class>
 
 	<class name="PackagePath">
 		<method name="Get" description="Returns the absolute path of this PackagePath.">
@@ -1183,7 +1186,16 @@
 		<param name="UserData" type="pointer" pass="in" description="Userdata that is passed to the callback function"/>
 		<param name="Result" type="uint64" pass="return" description="Amount of bytes decrypted if succeed. If error, a negative value"/>
 	</functiontype>
-	
+
+  <functiontype name="DataEncryptionCallback" description="A callback to encrypt content called on each resourcedata decrypted. This might be called several times depending on content size. Cipher and Plain are guaranteed to have same size on each call. If cipher size is zero, clients must return the result of authenticated tag validation">
+    <param name="EncryptionAlgorithm" type="enum" class="EncryptionAlgorithm" pass="in" description="The encryption algorithm to be used"/>
+    <param name="CipherData" type="class" class="CipherData" pass="in" description="The cipherData instance containing the key information."/>
+    <param name="Plain" type="basicarray" class="uint8" pass="in" description="Buffer to the plain buffer"/>
+    <param name="Cipher" type="basicarray" class="uint8" pass="out" description="Buffer to hold cipher data buffer"/>
+    <param name="UserData" type="pointer" pass="in" description="Userdata that is passed to the callback function"/>
+    <param name="Result" type="uint64" pass="return" description="Amount of bytes decrypted if succeed. If error, a negative value"/>
+  </functiontype>
+  
 	<enum name="Compression">
 		<option name="None" value="0" description="No compression applied"/>
 		<option name="Deflate" value="1" description="Deflate compression applied"/>
