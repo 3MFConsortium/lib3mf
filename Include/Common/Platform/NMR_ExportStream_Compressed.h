@@ -26,53 +26,41 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_OpcPackagePart.h defines an OPC Package Part in a portable way.
+NMR_ExportStream_Compressed.h defines a stream to write compressed files
 
 --*/
 
-#ifndef __NMR_OPCPACKAGEPART
-#define __NMR_OPCPACKAGEPART
+#ifndef __NMR_EXPORTSTREAM_COMPRESSED
+#define __NMR_EXPORTSTREAM_COMPRESSED
 
-#include "Common/OPC/NMR_OpcPackageRelationship.h"
-#include "Common/OPC/NMR_OpcPackageTypes.h"
+#include "Common/NMR_Types.h"
 #include "Common/Platform/NMR_ExportStream.h"
-#include "Common/Platform/NMR_ImportStream.h"
+#include "Common/Platform/NMR_PortableZIPWriter.h"
+#include "Libraries/zlib/zlib.h"
 
-#include <string>
-#include <map>
+#define EXPORTSTREAM_WRITE_BUFFER_CHUNKSIZE 1024
 
 namespace NMR {
 
-	class COpcPackageRelationship;
-	typedef std::shared_ptr<COpcPackageRelationship> POpcPackageRelationship;
-
-	class COpcPackagePart {
-	protected:
-		std::string m_sURI;
-		PExportStream m_pExportStream;
-		PImportStream m_pImportStream;
-
-		std::multimap<std::string, POpcPackageRelationship> m_Relationships;
+	class CExportStream_Compressed: public CExportStream {
+	private:
+		z_stream m_strm;
+		PExportStream m_pUncompressedStream;
+		nfByte out[EXPORTSTREAM_WRITE_BUFFER_CHUNKSIZE];
 	public:
-		COpcPackagePart(_In_ std::string sURI, _In_ PExportStream pExportStream);
-		COpcPackagePart(_In_ std::string sURI, _In_ PImportStream pImportStream);
+		CExportStream_Compressed() = delete;
+		CExportStream_Compressed(PExportStream pUncompressedStream);
+		~CExportStream_Compressed();
 
-		std::string getURI ();
-		PExportStream getExportStream ();
-		PImportStream getImportStream();
-
-		POpcPackageRelationship addRelationship(_In_ std::string sID, _In_ std::string sType, _In_ std::string sURI);
-		nfBool hasRelationships();
-		std::multimap<std::string, POpcPackageRelationship>& getRelationShips();
-
-		void writeRelationships(_In_ PExportStream pExportStream);
-
-		void setImportStream(_In_ PImportStream pImportStream);
-		void setExportStream(_In_ PExportStream pExportStream);
+		virtual nfBool seekPosition(_In_ nfUint64 position, _In_ nfBool bHasToSucceed);
+		virtual nfBool seekForward(_In_ nfUint64 bytes, _In_ nfBool bHasToSucceed);
+		virtual nfBool seekFromEnd(_In_ nfUint64 bytes, _In_ nfBool bHasToSucceed);
+		virtual nfUint64 getPosition();
+		virtual nfUint64 writeBuffer(_In_ const void * pBuffer, _In_ nfUint64 cbTotalBytesToWrite);
 	};
 
-	typedef std::shared_ptr<COpcPackagePart> POpcPackagePart;
+	typedef std::shared_ptr <CExportStream_Compressed> PExportStream_Compressed;
 
 }
 
-#endif // __NMR_OPCPACKAGEPART
+#endif // __NMR_EXPORTSTREAM_COMPRESSED

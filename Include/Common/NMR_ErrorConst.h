@@ -296,6 +296,9 @@ NMR_ErrorConst.h defines all error code constants.
 // Failed to decompress part
 #define NMR_ERROR_COULDNOTINFLATE 0x1051
 
+// Failed to initialize a zlib buffer
+#define NMR_ERROR_COULDNOTINITDEFLATE 0x1052
+
 /*-------------------------------------------------------------------
 Core framework error codes (0x2XXX)
 -------------------------------------------------------------------*/

@@ -136,5 +136,8 @@ namespace NMR {
 	void COpcPackagePart::setImportStream(_In_ PImportStream pImportStream) {
 		m_pImportStream = pImportStream;
 	}
+	void COpcPackagePart::setExportStream(_In_ PExportStream pExportStream) {
+		m_pExportStream = pExportStream;
+	}
 
 }

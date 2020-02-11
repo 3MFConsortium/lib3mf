@@ -37,12 +37,13 @@ NMR_OpcPackageWriter.cpp defines an OPC Package writer in a portable way.
 
 #include "Model/Writer/NMR_KeyStoreOpcPackageWriter.h" 
 #include "Model/Writer/SecureContent085/NMR_ModelWriterNode_KeyStore.h"
+#include "Model/Classes/NMR_KeyStoreResourceData.h"
+#include "Common/Platform/NMR_ExportStream_Compressed.h"
 #include "Common/Platform/NMR_XmlWriter_Native.h"
 #include "Common/OPC/NMR_OpcPackageWriter.h"
 #include "Model/Classes/NMR_KeyStoreResourceData.h"
 #include "Common/NMR_SecureContext.h"
-
-
+#include "Common/NMR_SecureContentTypes.h"
 
 namespace NMR {
 
@@ -67,8 +68,34 @@ namespace NMR {
 	POpcPackagePart CKeyStoreOpcPackageWriter::addPart(_In_ std::string sPath)
 	{
 		//TODO: if path is in keystore, wrap part stream in an encrypted stream
-		//TODO: if resource data for path is compressed, wrap encrypted stream in a compressed stream using ciphervalue in resourcedata
-		return m_pPackageWriter->addPart(sPath);
+		//TODO: if resource data for path is compressed, wrap encrypted stream in a compressed stream
+		auto pPart = m_pPackageWriter->addPart(sPath);
+		NMR::PKeyStoreResourceData rd = m_pKeyStore->findResourceDataByPath(sPath);
+		if (nullptr != rd) {
+			DEKDESCRIPTOR p = m_pSecureContext->getDekCtx();
+			p.m_sDekDecryptData.m_sCipherValue = rd->getCipherValue();
+			p.m_sDekDecryptData.m_nfHandler = rd->getHandle();
+			p.m_sDekDecryptData.m_bCompression = rd->getCompression();
+			
+			// TODO remove me when encryption is in place
+			PExportStream decompressStream = std::make_shared<CExportStream_Compressed>(pPart->getExportStream());
+			pPart->setExportStream(decompressStream);
+			// END TODO
+
+			// TODO uncomment when encryption is in place
+			/*PExportStream stream;
+			PImportStream decryptStream = std::make_shared<CImportStream_Encrypted>(pPart->getImportStream(), p);
+			if (rd->getCompression()) {
+				PExportStream decompressStream = std::make_shared<CExportStream_Compressed>(decryptStream);
+				stream = decompressStream;
+			}
+			else {
+				//stream = decryptStream;
+			}
+			pPart->setExportStream(stream);*/
+			// END TODO
+		}
+		return pPart;
 	}
 
 	void CKeyStoreOpcPackageWriter::close() {
