@@ -47,6 +47,8 @@ namespace NMR {
 		z_stream m_strm;
 		PExportStream m_pUncompressedStream;
 		nfByte out[EXPORTSTREAM_WRITE_BUFFER_CHUNKSIZE];
+
+		nfInt32 compress(nfInt32 flush);
 	public:
 		CExportStream_Compressed() = delete;
 		CExportStream_Compressed(PExportStream pUncompressedStream);
@@ -57,6 +59,7 @@ namespace NMR {
 		virtual nfBool seekFromEnd(_In_ nfUint64 bytes, _In_ nfBool bHasToSucceed);
 		virtual nfUint64 getPosition();
 		virtual nfUint64 writeBuffer(_In_ const void * pBuffer, _In_ nfUint64 cbTotalBytesToWrite);
+		virtual void close();
 	};
 
 	typedef std::shared_ptr <CExportStream_Compressed> PExportStream_Compressed;

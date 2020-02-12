@@ -615,7 +615,7 @@ namespace Lib3MF {
 		//Query writer
 		PWriter writer = secureModel->QueryWriter("3mf");
 		//Write content
-		writer->WriteToFile(sTestFilesPath + "/SecureContent/WriteSecureContent.3mf");
+		writer->WriteToFile(sOutFilesPath + "/SecureContent/WriteSecureContent.3mf");
 	}
 
 	TEST_F(SecureContentT, WriteMultipleSecureContent) {
@@ -669,7 +669,7 @@ namespace Lib3MF {
 
 		//write content
 
-		writer->WriteToFile(sTestFilesPath + "/SecureContent/WriteMultipleSecureContent.3mf");
+		writer->WriteToFile(sOutFilesPath + "/SecureContent/WriteMultipleSecureContent.3mf");
 
 	}
 	//TODO Read Unencrypted content, encrypt root model, save, read and assert

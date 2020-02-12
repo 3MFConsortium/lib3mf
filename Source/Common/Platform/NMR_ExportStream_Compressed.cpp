@@ -73,33 +73,42 @@ namespace NMR {
 		throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
 	}
 
+	nfInt32 CExportStream_Compressed::compress(nfInt32 flush) {
+		nfInt32 ret;
+		do {
+			m_strm.avail_out = (nfUint32) EXPORTSTREAM_WRITE_BUFFER_CHUNKSIZE;
+			m_strm.next_out = out;
+			ret = deflate(&m_strm, flush);
+			switch (ret) {
+			case Z_NEED_DICT:
+			case Z_DATA_ERROR:
+			case Z_MEM_ERROR:
+				(void)deflateEnd(&m_strm);
+				throw CNMRException(NMR_ERROR_COULDNOTDEFLATE);
+			}
+			int toWrite = EXPORTSTREAM_WRITE_BUFFER_CHUNKSIZE - m_strm.avail_out;
+			m_pUncompressedStream->writeBuffer(out, toWrite);
+		} while (m_strm.avail_out == 0);
+		return ret;
+	}
+
 	nfUint64 CExportStream_Compressed::writeBuffer(_In_ const void * pBuffer, _In_ nfUint64 cbTotalBytesToWrite)
 	{
 		if (nullptr == pBuffer)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-		nfUint64 ret;
 		m_strm.avail_in = (nfUint32) cbTotalBytesToWrite;
 		m_strm.next_in = (Bytef *) pBuffer;
-		do {
-			m_strm.avail_out = (nfUint32) EXPORTSTREAM_WRITE_BUFFER_CHUNKSIZE;
-			m_strm.next_out = out;
-			ret = deflate(&m_strm, Z_NO_FLUSH);
-			switch (ret) {
-			case Z_NEED_DICT:
-			case Z_DATA_ERROR:
-			case Z_MEM_ERROR:
-				(void) deflateEnd(&m_strm);
-				throw CNMRException(NMR_ERROR_COULDNOTDEFLATE);
-			}
-			m_pUncompressedStream->writeBuffer(out, EXPORTSTREAM_WRITE_BUFFER_CHUNKSIZE);
-		} while (m_strm.avail_out == 0);
-		// TODO: need to set Z_FINISH, otherwise ret will be Z_OK
-		// TODO: should only set Z_FINISH when processing final chunk
-		// if (ret != Z_STREAM_END) {
-		// 	throw CNMRException(NMR_ERROR_COULDNOTDEFLATE);
-		// }
+		compress(Z_NO_FLUSH);
+		
 		return cbTotalBytesToWrite;
+	}
+
+	void CExportStream_Compressed::close()
+	{
+		if (compress(Z_FINISH) != Z_STREAM_END) {
+		 	throw CNMRException(NMR_ERROR_COULDNOTDEFLATE);
+		}
 	}
 
 }
