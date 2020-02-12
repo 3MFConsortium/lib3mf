@@ -75,7 +75,8 @@ namespace NMR {
 		POpcPackagePart addPart(_In_ std::string sPath) override;
 		void close() override;
 		void addContentType(std::string sExtension, std::string sContentType) override;
-		POpcPackageRelationship addRootRelationship(std::string sID, std::string sType, COpcPackagePart * pTargetPart) override;
+		POpcPackageRelationship addRootRelationship(std::string sType, COpcPackagePart * pTargetPart) override;
+		POpcPackageRelationship addPartRelationship(_In_ POpcPackagePart pOpcPackagePart, _In_ std::string sType, _In_ COpcPackagePart * pTargetPart) override;
 	};
 
 	using PKeyStoreOpcPackageWriter = std::shared_ptr<CKeyStoreOpcPackageWriter>;

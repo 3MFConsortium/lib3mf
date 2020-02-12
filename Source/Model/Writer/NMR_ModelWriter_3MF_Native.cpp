@@ -54,7 +54,6 @@ namespace NMR {
 	
 	CModelWriter_3MF_Native::CModelWriter_3MF_Native(_In_ PModel pModel) : CModelWriter_3MF(pModel)
 	{
-		m_nRelationIDCounter = 0;
 		m_pModel = nullptr;
 	}
 
@@ -63,8 +62,6 @@ namespace NMR {
 	{
 		__NMRASSERT(pModel != nullptr);
 		m_pModel = pModel;
-
-		m_nRelationIDCounter = 0;
 	}
 
 	void CModelWriter_3MF_Native::releasePackage()
@@ -95,7 +92,7 @@ namespace NMR {
 		writeModelStream(pXMLWriter.get(), m_pModel);
 
 		// add Root relationships
-		m_pPackageWriter->addRootRelationship(generateRelationShipID(), PACKAGE_START_PART_RELATIONSHIP_TYPE, pModelPart.get());
+		m_pPackageWriter->addRootRelationship(PACKAGE_START_PART_RELATIONSHIP_TYPE, pModelPart.get());
 
 		PModelAttachment pPackageThumbnail = m_pModel->getPackageThumbnail();
 		if (pPackageThumbnail.get() != nullptr)
@@ -108,7 +105,7 @@ namespace NMR {
 			pPackageThumbnailStream->seekPosition(0, true);
 			pExportStream->copyFrom(pPackageThumbnailStream.get(), pPackageThumbnailStream->retrieveSize(), MODELWRITER_NATIVE_BUFFERSIZE);
 			// add root relationship
-			m_pPackageWriter->addRootRelationship(generateRelationShipID(), pPackageThumbnail->getRelationShipType(), pThumbnailPart.get());
+			m_pPackageWriter->addRootRelationship(pPackageThumbnail->getRelationShipType(), pThumbnailPart.get());
 		}
 
 		monitor()->SetProgressIdentifier(ProgressIdentifier::PROGRESS_WRITENONROOTMODELS);
@@ -141,16 +138,6 @@ namespace NMR {
 				m_pPackageWriter->addContentType(iContentTypeIterator->first, iContentTypeIterator->second);
 			}
 		}
-	}
-
-
-	std::string CModelWriter_3MF_Native::generateRelationShipID()
-	{
-		// Create Unique ID String
-		std::stringstream sStream;
-		sStream << "rel" << m_nRelationIDCounter;
-		m_nRelationIDCounter++;
-		return sStream.str();
 	}
 
 	void CModelWriter_3MF_Native::addNonRootModels() {
@@ -222,7 +209,7 @@ namespace NMR {
 				pExportStream->copyFrom(pStream.get(), pStream->retrieveSize(), MODELWRITER_NATIVE_BUFFERSIZE);
 
 				// add relationships
-				pModelPart->addRelationship(generateRelationShipID(), sRelationShipType.c_str(), pAttachmentPart->getURI());
+				m_pPackageWriter->addPartRelationship(pModelPart, sRelationShipType.c_str(), pAttachmentPart.get());
 
 				monitor()->IncrementProgress(1);
 			}

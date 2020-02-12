@@ -156,17 +156,28 @@ namespace NMR {
 			}
 		}
 
-		POpcPackagePart pKeyStorePart = m_pPackageWriter->addPart(PACKAGE_3D_KEYSTORE_URI);
-		PXmlWriter_Native pXMLWriter4KeyStore = std::make_shared<CXmlWriter_Native>(pKeyStorePart->getExportStream());
-		writeKeyStoreStream(pXMLWriter4KeyStore.get());
+		if (!m_pKeyStore->empty()) {
+			POpcPackagePart pKeyStorePart = m_pPackageWriter->addPart(PACKAGE_3D_KEYSTORE_URI);
+			m_pPackageWriter->addRootRelationship(PACKAGE_KEYSTORE_RELATIONSHIP_TYPE, pKeyStorePart.get());
+			m_pPackageWriter->addRootRelationship(PACKAGE_MUST_PRESERVE_RELATIONSHIP_TYPE, pKeyStorePart.get());
+			PXmlWriter_Native pXMLWriter4KeyStore = std::make_shared<CXmlWriter_Native>(pKeyStorePart->getExportStream());
+			writeKeyStoreStream(pXMLWriter4KeyStore.get());
+		}
 	}
 
-	void CKeyStoreOpcPackageWriter::addContentType(std::string sExtension, std::string sContentType) {
+	void CKeyStoreOpcPackageWriter::addContentType(std::string sExtension, std::string sContentType)
+	{
 		m_pPackageWriter->addContentType(sExtension, sContentType);
 	}
 
-	POpcPackageRelationship CKeyStoreOpcPackageWriter::addRootRelationship(std::string sID, std::string sType, COpcPackagePart * pTargetPart) {
-		return m_pPackageWriter->addRootRelationship(sID, sType, pTargetPart);
+	POpcPackageRelationship CKeyStoreOpcPackageWriter::addRootRelationship(std::string sType, COpcPackagePart * pTargetPart)
+	{
+		return m_pPackageWriter->addRootRelationship(sType, pTargetPart);
+	}
+
+	POpcPackageRelationship CKeyStoreOpcPackageWriter::addPartRelationship(POpcPackagePart pOpcPackagePart, std::string sType, COpcPackagePart * pTargetPart)
+	{
+		return m_pPackageWriter->addPartRelationship(pOpcPackagePart, sType, pTargetPart);
 	}
 
 	void CKeyStoreOpcPackageWriter::writeKeyStoreStream(_In_ CXmlWriter * pXMLWriter) {

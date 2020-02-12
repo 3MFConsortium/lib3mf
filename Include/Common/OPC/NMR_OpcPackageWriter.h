@@ -50,6 +50,7 @@ namespace NMR {
 		PExportStream m_pExportStream;
 		std::list <POpcPackagePart> m_Parts;
 		PPortableZIPWriter m_pZIPWriter;
+		nfInt32 m_nRelationIDCounter;
 
 		std::map<std::string, std::string> m_ContentTypes;
 		std::list<POpcPackageRelationship> m_RootRelationships;
@@ -57,6 +58,7 @@ namespace NMR {
 		void finishPackage();
 		void writeContentTypes();
 		void writeRootRelationships();
+		std::string generateRelationShipID();
 	public:
 		COpcPackageWriter(_In_ PExportStream pExportStream);
 		~COpcPackageWriter();
@@ -64,8 +66,8 @@ namespace NMR {
 		POpcPackagePart addPart(_In_ std::string sPath) override;
 
 		void addContentType(_In_ std::string sExtension, _In_ std::string sContentType) override;
-		POpcPackageRelationship addRootRelationship(_In_ std::string sID, _In_ std::string sType, _In_ COpcPackagePart * pTargetPart) override;
-
+		POpcPackageRelationship addRootRelationship(_In_ std::string sType, _In_ COpcPackagePart * pTargetPart) override;
+		POpcPackageRelationship addPartRelationship(_In_ POpcPackagePart pOpcPackagePart, _In_ std::string sType, _In_ COpcPackagePart * pTargetPart) override;
 	};
 
 	typedef std::shared_ptr<COpcPackageWriter> POpcPackageWriter;

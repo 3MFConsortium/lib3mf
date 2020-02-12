@@ -68,7 +68,7 @@ These are given by the 3MF Standard
 #define PACKAGE_TEXTURE_RELATIONSHIP_TYPE "http://schemas.microsoft.com/3dmanufacturing/2013/01/3dtexture"
 #define PACKAGE_CORE_PROPERTIES_RELATIONSHIP_TYPE "http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties"
 #define PACKAGE_THUMBNAIL_RELATIONSHIP_TYPE "http://schemas.openxmlformats.org/package/2006/relationships/metadata/thumbnail"
-#define PACKAGE_MUST_PRESERVE_RELATIONSHIP_TYPE http://schemas.openxmlformats.org/package/2006/relationships/mustpreserve"
+#define PACKAGE_MUST_PRESERVE_RELATIONSHIP_TYPE "http://schemas.openxmlformats.org/package/2006/relationships/mustpreserve"
 #define PACKAGE_KEYSTORE_RELATIONSHIP_TYPE "http://schemas.microsoft.com/3dmanufacturing/2019/04/keystore"
 
 #define XML_3MF_NAMESPACE_XML "http://www.w3.org/XML/1998/namespace"

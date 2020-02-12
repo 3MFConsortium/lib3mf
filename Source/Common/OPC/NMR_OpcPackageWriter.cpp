@@ -38,6 +38,8 @@ NMR_OpcPackageWriter.cpp defines an OPC Package writer in a portable way.
 
 #include "Model/Classes/NMR_ModelConstants.h"
 
+#include <sstream>
+
 namespace NMR {
 
 
@@ -48,6 +50,8 @@ namespace NMR {
 
 		m_pExportStream = pExportStream;
 		m_pZIPWriter = std::make_shared<CPortableZIPWriter>(m_pExportStream, true);
+
+		m_nRelationIDCounter = 0;
 	}
 
 	COpcPackageWriter::~COpcPackageWriter()
@@ -71,14 +75,19 @@ namespace NMR {
 		m_ContentTypes.insert(std::make_pair(sExtension, sContentType));
 	}
 
-	POpcPackageRelationship COpcPackageWriter::addRootRelationship(_In_ std::string sID, _In_ std::string sType, _In_ COpcPackagePart * pTargetPart)
+	POpcPackageRelationship COpcPackageWriter::addRootRelationship(_In_ std::string sType, _In_ COpcPackagePart * pTargetPart)
 	{
 		if (pTargetPart == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-		POpcPackageRelationship pRelationship = std::make_shared<COpcPackageRelationship>(sID, sType, pTargetPart->getURI());
+		POpcPackageRelationship pRelationship = std::make_shared<COpcPackageRelationship>(generateRelationShipID(), sType, pTargetPart->getURI());
 		m_RootRelationships.push_back(pRelationship);
 		return pRelationship;
+	}
+
+	POpcPackageRelationship COpcPackageWriter::addPartRelationship(POpcPackagePart pOpcPackagePart, std::string sType, COpcPackagePart * pTargetPart)
+	{
+		return pOpcPackagePart->addRelationship(generateRelationShipID(), sType, pTargetPart->getURI());
 	}
 
 	void COpcPackageWriter::finishPackage()
@@ -153,4 +162,12 @@ namespace NMR {
 
 	}
 
+	std::string COpcPackageWriter::generateRelationShipID()
+	{
+		// Create Unique ID String
+		std::stringstream sStream;
+		sStream << "rel" << m_nRelationIDCounter;
+		m_nRelationIDCounter++;
+		return sStream.str();
+	}
 }
