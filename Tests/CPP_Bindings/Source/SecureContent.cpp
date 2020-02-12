@@ -405,12 +405,14 @@ namespace Lib3MF {
 
 			CCipherData cd(SecureContentT::wrapper.get(), cipherData);
 			SecureContentT::wrapper->Acquire(&cd);
-			cb->value = 2;
+			cb->value++;
 
 			if (0 != cipherSize)
 				cb->context.push_back(cd.GetDescriptor());
 
 			sAes256CipherValue cipher = cd.GetAes256Gcm();
+			//cipher.m_Tag = ???
+			cd.SetAes256Gcm(cipher);
 
 			std::copy(plainBuffer, plainBuffer + plainSize, cipherBuffer);
 			*result = cipherSize;
@@ -460,7 +462,7 @@ namespace Lib3MF {
 		data.value = 1;
 		writer->RegisterDEKClient(DEKCallbackData::testDEKWriteCallback, reinterpret_cast<Lib3MF_pvoid>(&data));
 		writer->WriteToFile(sOutFilesPath + UNENCRYPTEDCOMPRESSEDKEYSTORE);
-		ASSERT_EQ(data.value, 2);
+		ASSERT_EQ(data.value, 3);
 	}
 
 	TEST_F(SecureContentT, ReadCompressedTest) {

@@ -56,6 +56,7 @@ namespace NMR {
 		PKeyStore m_pKeyStore;
 
 		void writeKeyStoreStream(_In_ CXmlWriter * pXMLWriter);
+		void updateResourceDataIV();
 	public:
 		CKeyStoreOpcPackageWriter(
 			_In_ PExportStream pImportStream, 

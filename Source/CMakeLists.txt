@@ -96,6 +96,7 @@ Source/Common/Platform/NMR_XmlReader_Native.cpp
 Source/Common/Platform/NMR_ExportStream.cpp
 Source/Common/Platform/NMR_ExportStream_Callback.cpp
 Source/Common/Platform/NMR_ExportStream_Compressed.cpp
+Source/Common/Platform/NMR_ExportStream_Encrypted.cpp
 Source/Common/Platform/NMR_ExportStream_Memory.cpp
 Source/Common/Platform/NMR_ExportStream_Dummy.cpp
 Source/Common/Platform/NMR_ExportStream_ZIP.cpp

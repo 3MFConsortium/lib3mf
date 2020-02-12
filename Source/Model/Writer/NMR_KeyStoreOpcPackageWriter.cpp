@@ -44,6 +44,9 @@ NMR_OpcPackageWriter.cpp defines an OPC Package writer in a portable way.
 #include "Model/Classes/NMR_KeyStoreResourceData.h"
 #include "Common/NMR_SecureContext.h"
 #include "Common/NMR_SecureContentTypes.h"
+#include "Common/Platform/NMR_ExportStream_Encrypted.h"
+#include "Common/Platform/NMR_ImportStream_Encrypted.h"
+#include "Common/Platform/NMR_ExportStream.h"
 
 namespace NMR {
 
@@ -62,38 +65,39 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_INVALIDPOINTER);
 
 		m_pPackageWriter = std::make_shared<COpcPackageWriter>(pImportStream);
+		updateResourceDataIV();
 
+	}
+
+	void CKeyStoreOpcPackageWriter::updateResourceDataIV() {
+		for (nfUint32 i = 0; i < m_pKeyStore->getResourceDataCount(); i++) {
+			NMR::PKeyStoreResourceData rd = m_pKeyStore->getResourceDataByIndex(i);
+			rd->randomizeIV();
+		}
 	}
 
 	POpcPackagePart CKeyStoreOpcPackageWriter::addPart(_In_ std::string sPath)
 	{
-		//TODO: if path is in keystore, wrap part stream in an encrypted stream
-		//TODO: if resource data for path is compressed, wrap encrypted stream in a compressed stream
 		auto pPart = m_pPackageWriter->addPart(sPath);
-		NMR::PKeyStoreResourceData rd = m_pKeyStore->findResourceDataByPath(sPath);
-		if (nullptr != rd) {
-			DEKDESCRIPTOR p = m_pSecureContext->getDekCtx();
-			p.m_sDekDecryptData.m_sCipherValue = rd->getCipherValue();
-			p.m_sDekDecryptData.m_nfHandler = rd->getHandle();
-			p.m_sDekDecryptData.m_bCompression = rd->getCompression();
-			
-			// TODO remove me when encryption is in place
-			PExportStream decompressStream = std::make_shared<CExportStream_Compressed>(pPart->getExportStream());
-			pPart->setExportStream(decompressStream);
-			// END TODO
+		if (m_pSecureContext->hasDekCtx()) {
+			NMR::PKeyStoreResourceData rd = m_pKeyStore->findResourceDataByPath(sPath);
+			if (nullptr != rd) {
+				DEKDESCRIPTOR p = m_pSecureContext->getDekCtx();
+				p.m_sDekDecryptData.m_sCipherValue = rd->getCipherValue();
+				p.m_sDekDecryptData.m_nfHandler = rd->getHandle();
+				p.m_sDekDecryptData.m_bCompression = rd->getCompression();
 
-			// TODO uncomment when encryption is in place
-			/*PExportStream stream;
-			PImportStream decryptStream = std::make_shared<CImportStream_Encrypted>(pPart->getImportStream(), p);
-			if (rd->getCompression()) {
-				PExportStream decompressStream = std::make_shared<CExportStream_Compressed>(decryptStream);
-				stream = decompressStream;
+				PExportStream stream;
+				PExportStream encryptStream = std::make_shared<CExportStream_Encrypted>(pPart->getExportStream(), p);
+				if (rd->getCompression()) {
+					PExportStream compressStream = std::make_shared<CExportStream_Compressed>(encryptStream);
+					stream = compressStream;
+				}
+				else {
+					stream = encryptStream;
+				}
+				pPart->setExportStream(stream);
 			}
-			else {
-				//stream = decryptStream;
-			}
-			pPart->setExportStream(stream);*/
-			// END TODO
 		}
 		return pPart;
 	}
@@ -105,7 +109,7 @@ namespace NMR {
 				DEKDESCRIPTOR dekCtx = m_pSecureContext->getDekCtx();
 				dekCtx.m_sDekDecryptData.m_nfHandler = rd->getHandle();
 				dekCtx.m_sDekDecryptData.m_sCipherValue = rd->getCipherValue();
-				dekCtx.m_fnCrypt(std::vector<nfByte>(), nullptr, dekCtx.m_sDekDecryptData);
+				dekCtx.m_fnCrypt(0, nullptr, nullptr, dekCtx.m_sDekDecryptData);
 				rd->setCipherValue(dekCtx.m_sDekDecryptData.m_sCipherValue);
 			}
 			for (nfUint32 j = 0; j < rd->getDecryptRightCount(); j++) {

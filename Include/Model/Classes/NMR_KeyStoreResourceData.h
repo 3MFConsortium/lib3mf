@@ -75,7 +75,7 @@ namespace NMR {
 		void setCipherValue(CIPHERVALUE const & cv);
 		bool isOpen() const;
 
-		void randomIV();
+		void randomizeIV();
 	};
 	typedef std::shared_ptr<CKeyStoreResourceData> PKeyStoreResourceData;
 }

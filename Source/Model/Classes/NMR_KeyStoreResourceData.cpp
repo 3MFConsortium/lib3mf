@@ -144,7 +144,7 @@ namespace NMR {
 		return m_bOpen;
 	}
 
-	void CKeyStoreResourceData::randomIV() {
+	void CKeyStoreResourceData::randomizeIV() {
 		initializeIV();
 	}
 

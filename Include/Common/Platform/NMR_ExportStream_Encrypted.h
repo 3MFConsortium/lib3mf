@@ -24,67 +24,45 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+Abstract:
+
+NMR_ImportStream_Encrypted.h defines the CImportStream_Encrypted Class.
+This is a stream class for importing encrypted resources from the underlying stream and handing them
+to the proper callbacks that will decrypt the content before returning back to the consumer.
 
 --*/
 
-
-#ifndef NMR_SECURECONTENTTYPES
-#define NMR_SECURECONTENTTYPES
-
-#define KEYSTORE_TYPES_MODULUSBUFFERSIZE 257
-#define KEYSTORE_TYPES_EXPONENTBUFFERSIZE 5
-#define KEYSTORE_TYPES_IVSIZE 12
-#define KEYSTORE_TYPES_TAGSIZE 16
+#ifndef NMR_EXPORTSTREAM_ENCRYPTED
+#define NMR_EXPORTSTREAM_ENCRYPTED
 
 #include "Common/NMR_Types.h"
-#include "Common/NMR_Local.h"
+#include "Common/NMR_SecureContentTypes.h"
+#include "Common/Platform/NMR_ExportStream.h"
 
-#include <vector>
 #include <functional>
+
 namespace NMR {
 
-	struct RSAKEYVALUE {
-		nfByte m_modulus[KEYSTORE_TYPES_MODULUSBUFFERSIZE];
-		nfByte m_exponent[KEYSTORE_TYPES_EXPONENTBUFFERSIZE];
-	};
 
-	struct CIPHERVALUE {
-		std::vector<nfByte> m_iv;
-		std::vector<nfByte> m_key;
-		std::vector<nfByte> m_tag;
-	};
 
-	enum eKeyStoreEncryptAlgorithm {
-		RsaOaepMgf1p = 0,
-		Aes256Gcm = 1
-	};
+	class CExportStream_Encrypted : public CExportStream {
+		PExportStream m_pEncryptedStream;
+		DEKDESCRIPTOR m_pDecryptContext;
+	public:
+		CExportStream_Encrypted(PExportStream pEncryptedStream, DEKDESCRIPTOR context);
 
-	struct DEKCTX {
-		nfUint64 m_nfHandler;
-		CIPHERVALUE m_sCipherValue;
-		void * m_pUserData;
-		nfBool m_bCompression;
-	};
-	using ImportStream_DEKCallbackType = std::function<nfUint64(nfUint64, nfByte const *, nfByte *, DEKCTX &)>;
+		
+		// Inherited via CExportStream
+		virtual nfBool seekPosition(nfUint64 position, nfBool bHasToSucceed) override;
+		virtual nfBool seekForward(nfUint64 bytes, nfBool bHasToSucceed) override;
+		virtual nfBool seekFromEnd(nfUint64 bytes, nfBool bHasToSucceed) override;
+		virtual nfUint64 getPosition() override;
+		virtual nfUint64 writeBuffer(const void * pBuffer, nfUint64 cbTotalBytesToWrite) override;
 
-	struct DEKDESCRIPTOR {
-		ImportStream_DEKCallbackType m_fnCrypt;
-		DEKCTX m_sDekDecryptData;
-	};
-
-	struct KEKCTX {
-		void * m_pUserData;
-		std::string m_sConsumerId;
-		std::string m_sResourcePath;
-		std::vector<nfByte> m_KeyBuffer;
-	};
-
-	using ImportStream_KEKCallbackType = std::function<nfUint64(std::vector<nfByte> const &, KEKCTX &)>;
-
-	struct KEKDESCRIPTOR {
-		ImportStream_KEKCallbackType m_fnCrypt;
-		KEKCTX m_sKekDecryptData;
 	};
 }
 
-#endif // !NMR_SECURECONTENTTYPES
+
+#endif // !NMR_EXPORTSTREAM_ENCRYPTED
+
+

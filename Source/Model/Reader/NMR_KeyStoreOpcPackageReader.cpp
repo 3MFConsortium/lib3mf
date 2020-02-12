@@ -186,7 +186,7 @@ namespace NMR {
 				DEKDESCRIPTOR descriptor = m_pSecureContext->getDekCtx();
 				descriptor.m_sDekDecryptData.m_sCipherValue = rd->getCipherValue();
 				descriptor.m_sDekDecryptData.m_nfHandler = rd->getHandle();
-				descriptor.m_fnCrypt(std::vector<nfByte>(), nullptr, descriptor.m_sDekDecryptData);
+				descriptor.m_fnCrypt(0, nullptr, nullptr, descriptor.m_sDekDecryptData);
 			}
 		}
 	}

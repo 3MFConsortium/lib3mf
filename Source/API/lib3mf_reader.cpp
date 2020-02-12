@@ -213,11 +213,10 @@ void Lib3MF::Impl::CReader::RegisterKEKClient(const std::string &sConsumerID, Li
 	};
 	m_pReader->getSecureContext()->addKekCtx(sConsumerID, descriptor);
 }
-
 void Lib3MF::Impl::CReader::RegisterDEKClient(Lib3MF::DataDecryptionCallback pDecryptionCallback, Lib3MF_pvoid pUserData) {
 	NMR::DEKDESCRIPTOR descriptor;
 	descriptor.m_sDekDecryptData.m_pUserData = pUserData;
-	descriptor.m_fnCrypt = [this, pDecryptionCallback](std::vector<NMR::nfByte> const & cipher, NMR::nfByte * plain, NMR::DEKCTX ctx) {
+	descriptor.m_fnCrypt = [this, pDecryptionCallback](NMR::nfUint64 size, NMR::nfByte const * cipher, NMR::nfByte * plain, NMR::DEKCTX & ctx) {
 		Lib3MF::sAes256CipherValue cipherDataValue;
 		__NMRASSERT(ctx.m_sCipherValue.m_iv.size() == sizeof(cipherDataValue.m_IV));
 		std::copy(ctx.m_sCipherValue.m_iv.begin(), ctx.m_sCipherValue.m_iv.end(), cipherDataValue.m_IV);
@@ -233,7 +232,7 @@ void Lib3MF::Impl::CReader::RegisterDEKClient(Lib3MF::DataDecryptionCallback pDe
 		pBaseCipherData = pCipherData.get();
 		Lib3MF_CipherData handle = pBaseCipherData;
 		NMR::nfUint64 result = 0;
-		(*pDecryptionCallback)(eEncryptionAlgorithm::Aes256Gcm, handle, cipher.size(), cipher.data(), cipher.size(), nullptr, plain, ctx.m_pUserData, &result);
+		(*pDecryptionCallback)(eEncryptionAlgorithm::Aes256Gcm, handle, size, cipher, size, nullptr, plain, ctx.m_pUserData, &result);
 		if (result < 0)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_CALCULATIONABORTED);
 		return result;
