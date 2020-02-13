@@ -356,8 +356,7 @@ namespace Lib3MF {
 	}
 
 	struct DEKCallbackData {
-		int value;
-		std::vector<Lib3MF_uint64> context;
+		std::map<Lib3MF_uint64, Lib3MF_uint64> context;
 
 		static void testDEKCallback(
 			Lib3MF::eEncryptionAlgorithm algorithm, 
@@ -374,22 +373,22 @@ namespace Lib3MF {
 			SecureContentT::wrapper->Acquire(&cd);
 
 			ASSERT_GE(cd.GetDescriptor(), 1);
-
 			DEKCallbackData * cb = reinterpret_cast<DEKCallbackData *>(userData);
-			if (0 != inSize) {
-				//first call, for our tests it is called only once
-				ASSERT_EQ(cb->value, 1);
-				cb->context.push_back(cd.GetDescriptor());
-				cb->value++;
-			} else {
-				//then one last call for the tag
-				cb->value++;
-			}
+			auto localDescriptor = cb->context.find(cd.GetDescriptor());
+			if (localDescriptor != cb->context.end())
+				localDescriptor->second++;
+			else
+				cb->context[cd.GetDescriptor()] = 0;
 
 			sAes256CipherValue cipher = cd.GetAes256Gcm();
-		
+			if (0 != inSize) {
+				std::copy(inBuffer, inBuffer + outSize, outBuffer);
+			} else {
+				Lib3MF_uint8 fakeTag[16] = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F, 0x10};
+				std::copy(fakeTag, fakeTag + 16, cipher.m_Tag);
+				cd.SetAes256Gcm(cipher);
+			}
 
-			std::copy(inBuffer, inBuffer + outSize, outBuffer);
 			*result = outSize;
 		}
 	};
@@ -397,32 +396,30 @@ namespace Lib3MF {
 	TEST_F(SecureContentT, DEKReadTest) {
 		auto reader = model->QueryReader("3mf");
 		DEKCallbackData data;
-		data.value = 1;
 		reader->RegisterDEKClient(DEKCallbackData::testDEKCallback, reinterpret_cast<Lib3MF_pvoid>(&data));
 		reader->ReadFromFile(sTestFilesPath + UNENCRYPTEDKEYSTORE);
 		ASSERT_EQ(data.context.size(), 1);
-		ASSERT_EQ(data.value, 3);
+		ASSERT_GE(data.context.begin()->second, 1);
 	}
 	
 
 	TEST_F(SecureContentT, ReadCompressedTest) {
 		auto reader = model->QueryReader("3mf");
 		DEKCallbackData data;
-		data.value = 1;
 		reader->RegisterDEKClient(DEKCallbackData::testDEKCallback, reinterpret_cast<Lib3MF_pvoid>(&data));
 		reader->ReadFromFile(sTestFilesPath + UNENCRYPTEDCOMPRESSEDKEYSTORE);
 		ASSERT_EQ(data.context.size(), 1);
-		ASSERT_EQ(data.value, 3);
+		ASSERT_GE(data.context.begin()->second, 1);
 	}
 
 	TEST_F(SecureContentT, DEKWriteTest) {
 		readUnencryptedKeyStore();
 		auto writer = model->QueryWriter("3mf");
 		DEKCallbackData data;
-		data.value = 1;
 		writer->RegisterDEKClient(DEKCallbackData::testDEKCallback, reinterpret_cast<Lib3MF_pvoid>(&data));
 		writer->WriteToFile(sOutFilesPath + UNENCRYPTEDCOMPRESSEDKEYSTORE);
-		ASSERT_EQ(data.value, 3);
+		ASSERT_EQ(data.context.size(), 1);
+		ASSERT_GE(data.context.begin()->second, 1);
 	}
 
 
@@ -491,7 +488,6 @@ namespace Lib3MF {
 		auto writer = model->QueryWriter("3mf");
 		
 		DEKCallbackData contentData;
-		contentData.value = 1;
 		writer->RegisterDEKClient(DEKCallbackData::testDEKCallback, reinterpret_cast<Lib3MF_pvoid>(&contentData));
 
 		KEKCallbackData wrappingData;
@@ -516,7 +512,6 @@ namespace Lib3MF {
 
 		auto writer = model->QueryWriter("3mf");
 		DEKCallbackData contentData;
-		contentData.value = 1;
 		writer->RegisterDEKClient(DEKCallbackData::testDEKCallback, reinterpret_cast<Lib3MF_pvoid>(&contentData));
 
 		try {
