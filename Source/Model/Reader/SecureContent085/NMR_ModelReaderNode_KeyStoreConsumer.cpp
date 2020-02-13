@@ -60,7 +60,7 @@ namespace NMR {
 
 		// check consumer id
 		if (m_sConsumerID.empty()) {
-			m_pWarnings->addException(CNMRException(NMR_ERROR_MISSINGCONSUMERID), mrwMissingMandatoryValue);
+			m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREMISSINGCONSUMERID), mrwMissingMandatoryValue);
 		}
 
 		m_pKeyStore->addConsumer(m_sConsumerID, m_sKeyID, m_sKeyValue);
@@ -73,12 +73,12 @@ namespace NMR {
 
 		if (strcmp(XML_3MF_SECURE_CONTENT_CONSUMER_ID, pAttributeName) == 0) {
 			if (!m_sConsumerID.empty())
-				m_pWarnings->addException(CNMRException(NMR_ERROR_DUPLICATE_KEYSTORECONSUMERID), eModelReaderWarningLevel::mrwInvalidMandatoryValue);
+				m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREDUPLICATECONSUMERID), eModelReaderWarningLevel::mrwInvalidMandatoryValue);
 			m_sConsumerID = pAttributeValue;
 		}
 		else if (strcmp(XML_3MF_SECURE_CONTENT_KEY_ID, pAttributeName) == 0) {
 			if (!m_sKeyID.empty())
-				m_pWarnings->addException(CNMRException(NMR_ERROR_DUPLICATE_KEYSTORECONSUMERKEYID), eModelReaderWarningLevel::mrwInvalidOptionalValue);
+				m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREDUPLICATECONSUMERKEYID), eModelReaderWarningLevel::mrwInvalidOptionalValue);
 			m_sKeyID = pAttributeValue;
 		}
 		else

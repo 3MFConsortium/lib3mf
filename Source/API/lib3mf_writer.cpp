@@ -83,8 +83,10 @@ void CWriter::WriteToFile (const std::string & sFilename)
 	catch (NMR::CNMRException&e) {
 		if (e.getErrorCode() == NMR_USERABORTED) {
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_CALCULATIONABORTED);
-		}
-		else throw e;
+		} else if (e.getErrorCode() == NMR_ERROR_DEKDESCRIPTORNOTFOUND
+				|| e.getErrorCode() == NMR_ERROR_KEKDESCRIPTORNOTFOUND) {
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_SECURECONTEXTNOTREGISTERED);
+		} else throw e;
 	}
 }
 

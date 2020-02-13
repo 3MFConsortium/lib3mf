@@ -65,7 +65,7 @@ namespace NMR {
 		parseContent(pXMLReader);
 
 		if (m_consumerIndex.empty()) {
-			m_pWarnings->addException(CNMRException(NMR_ERROR_INVALIDCONSUMERINDEX), eModelReaderWarningLevel::mrwInvalidMandatoryValue);
+			m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREINVALIDCONSUMERINDEX), eModelReaderWarningLevel::mrwInvalidMandatoryValue);
 		} else {
 			// this can throw for values that are not numbers and it's ok so according to other reader nodes
 			nfUint64 index = fnStringToInt32(m_consumerIndex.c_str());
@@ -73,7 +73,7 @@ namespace NMR {
 				PKeyStoreConsumer c = m_pKeyStore->getConsumerByIndex(index);
 				m_decryptRight = std::make_shared<CKeyStoreDecryptRight>(c, m_encryptionAlgorithm, m_sCipherValue);
 			} else {
-				m_pWarnings->addException(CNMRException(NMR_ERROR_INVALIDCONSUMERINDEX), eModelReaderWarningLevel::mrwInvalidMandatoryValue);
+				m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREINVALIDCONSUMERINDEX), eModelReaderWarningLevel::mrwInvalidMandatoryValue);
 			}
 		}
 	}
@@ -86,7 +86,7 @@ namespace NMR {
 
 		if (strcmp(XML_3MF_SECURE_CONTENT_CONSUMER_INDEX, pAttributeName) == 0) {
 			if (!m_consumerIndex.empty())
-				m_pWarnings->addException(CNMRException(NMR_ERROR_DUPLICATEKEYSTORECONSUMERINDEX), eModelReaderWarningLevel::mrwInvalidMandatoryValue);
+				m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREDUPLICATECONSUMERINDEX), eModelReaderWarningLevel::mrwInvalidMandatoryValue);
 			m_consumerIndex = pAttributeValue;
 		}
 		else if (strcmp(XML_3MF_SECURE_CONTENT_ENCRYPTION_ALGORITHM, pAttributeName) == 0) {
@@ -97,7 +97,7 @@ namespace NMR {
 				m_encryptionAlgorithm = eKeyStoreEncryptAlgorithm::RsaOaepMgf1p;
 			}
 			else
-				m_pWarnings->addException(CNMRException(NMR_ERROR_INVALIDENCRIPTIONALGORITHM), eModelReaderWarningLevel::mrwInvalidOptionalValue);
+				m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREINVALIDENCRYPTIONALGORITHM), eModelReaderWarningLevel::mrwInvalidOptionalValue);
 		}
 		else
 			m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE), mrwInvalidOptionalValue);

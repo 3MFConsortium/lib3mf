@@ -84,6 +84,7 @@
 		<error name="INVALIDKEYSTORECONSUMER" code="3001" description="The consumer keystore object is invalid"/>
 		<error name="KEYSTORECONSUMERNOTFOUND" code="3002" description="A consumer has not been found"/>
 		<error name="KEYSTORERESOURCEDATANOTFOUND" code="3003" description="A resource data has not been found"/>
+		<error name="SECURECONTEXTNOTREGISTERED" code="3004" description="A Key or Conentent encryption callback has not been registered"/>
 	</errors>
 
 	<enum name="PropertyType">

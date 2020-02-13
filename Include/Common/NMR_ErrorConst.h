@@ -1127,47 +1127,51 @@ Model error codes (0x8XXX)
 // Path attribute is not absolute
 #define NMR_ERROR_PATH_NOT_ABSOLUTE 0x80EC
 
-// Duplicate KeyStore consumer
-#define NMR_ERROR_DUPLICATE_KEYSTORECONSUMER 0x80ED
 
 // Could not get OPC KeyStore Stream
-#define NMR_ERROR_OPCCOULDNOTGETKEYSTORESTREAM 0x80EE
+#define NMR_ERROR_KEYSTOREOPCCOULDNOTGETSTREAM 0x80F0
 
 // Duplicate KeyStore Consumer id attribute on xml
-#define NMR_ERROR_DUPLICATE_KEYSTORECONSUMERID 0x80EF
+#define NMR_ERROR_KEYSTOREDUPLICATECONSUMERID 0x80F1
 
 // Duplicate KeyStore Consumer keyId attribute on xml
-#define NMR_ERROR_DUPLICATE_KEYSTORECONSUMERKEYID 0x80F0
+#define NMR_ERROR_KEYSTOREDUPLICATECONSUMERKEYID 0x80F2
 
 // Missing KeyStore Consumer id
-#define NMR_ERROR_MISSINGCONSUMERID 0x80F1
+#define NMR_ERROR_KEYSTOREMISSINGCONSUMERID 0x80F3
 
 // Duplicate KeyStore ResourceData path
-#define NMR_ERROR_DUPLICATE_KEYSTORERESOURCEDATAPATH 0x80F2
+#define NMR_ERROR_KEYSTOREDUPLICATERESOURCEDATAPATH 0x80F4
 
 // Duplicate KeyStore DecryptRight consumerindex
-#define NMR_ERROR_DUPLICATEKEYSTORECONSUMERINDEX 0x80F3
+#define NMR_ERROR_KEYSTOREDUPLICATECONSUMERINDEX 0x80F5
 
-// Duplicate KeyStore ResourceData object
-#define NMR_ERROR_DUPLICATE_KEYSTORERESOURCEDATA 0x80F4
-
-// Duplicate KeyStore DecryptRight object
-#define NMR_ERROR_DUPLICATE_KEYSTOREDECRYPTRIGHT 0x80F5
-
-// Invalid KeyStore Consumer id
-#define NMR_ERROR_INVALIDCONSUMERINDEX 0x80F6
+// Invalid KeyStore Consumer Index
+#define NMR_ERROR_KEYSTOREINVALIDCONSUMERINDEX 0x80F6
 
 // Invalid KeyStore encryption algorithm
-#define NMR_ERROR_INVALIDENCRIPTIONALGORITHM 0x80F7
+#define NMR_ERROR_KEYSTOREINVALIDENCRYPTIONALGORITHM 0x80F7
 
 // Invalid KeyStore compression
-#define NMR_ERROR_INVALIDCOMPRESSION 0x80F8
+#define NMR_ERROR_KEYSTOREINVALIDCOMPRESSION 0x80F8
 
 // Invlaid KeyStore CipherValue
-#define NMR_ERROR_INVALID_KEYSTORECIPHERVALUE 0x80F9
+#define NMR_ERROR_KEYSTOREINVALIDCIPHERVALUE 0x80F9
 
 //Missing decrypt right
-#define NMR_ERROR_MISSINGCIPHERVALUE 0x90FA
+#define NMR_ERROR_KEYSTOREMISSINGCIPHERVALUE 0x80FA
+
+// Duplicate KeyStore consumer
+#define NMR_ERROR_KEYSTOREDUPLICATECONSUMER 0x80FB
+
+// Duplicate KeyStore ResourceData object
+#define NMR_ERROR_KEYSTOREDUPLICATERESOURCEDATA 0x80FC
+
+// Duplicate KeyStore DecryptRight object
+#define NMR_ERROR_KEYSTOREDUPLICATEDECRYPTRIGHT 0x80FD
+
+
+
 
 /*-------------------------------------------------------------------
 XML Parser Error Constants (0x9XXX)
@@ -1272,5 +1276,12 @@ Library errors (0xAXXX)
 
 // Invalid Texture type
 #define NMR_ERROR_INVALIDTEXTURETYPE 0xA006
+
+// Key Encryption Descriptor not found
+#define NMR_ERROR_KEKDESCRIPTORNOTFOUND 0xA00A
+
+// Content encryption descritor not found
+#define NMR_ERROR_DEKDESCRIPTORNOTFOUND 0xA00B
+
 
 #endif // __NMR_ERRORCONST

@@ -164,6 +164,33 @@ namespace Lib3MF {
 	};
 
 	struct ClientCallbacks {
+
+		static void dataEncryptClientCallbac(
+			Lib3MF::eEncryptionAlgorithm algorithm,
+			Lib3MF_CipherData cipherData,
+			Lib3MF_uint64 plainSize,
+			const Lib3MF_uint8 * plainBuffer,
+			const Lib3MF_uint64 cipherSize,
+			Lib3MF_uint64 * cipherNeeded,
+			Lib3MF_uint8 * cipherBuffer,
+			Lib3MF_pvoid userData,
+			Lib3MF_uint64 * result
+		) {
+
+		}
+
+		static void keyEncryptClientCallback(
+			Lib3MF_Consumer consumer,
+			Lib3MF::eEncryptionAlgorithm algorithm,
+			Lib3MF_uint64 cipherSize,
+			const Lib3MF_uint8 * cipherBuffer,
+			const Lib3MF_uint64 plainSize,
+			Lib3MF_uint64* plainNeeded,
+			Lib3MF_uint8 * plainBuffer,
+			Lib3MF_pvoid userData,
+			Lib3MF_uint64 * result) {
+		}
+
 		static void dataDecryptClientCallback(
 			Lib3MF::eEncryptionAlgorithm algorithm, 
 			Lib3MF_CipherData cipherData, 

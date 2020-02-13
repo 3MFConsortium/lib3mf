@@ -140,7 +140,7 @@ namespace NMR {
 			std::string sTargetPartURI = pKeyStoreRelation->getTargetPartURI();
 			POpcPackagePart pKeystorePart = m_pPackageReader->createPart(sTargetPartURI);
 			if (pKeystorePart == nullptr)
-				throw CNMRException(NMR_ERROR_OPCCOULDNOTGETKEYSTORESTREAM);
+				throw CNMRException(NMR_ERROR_KEYSTOREOPCCOULDNOTGETSTREAM);
 			return pKeystorePart->getImportStream();
 		}
 		return nullptr;

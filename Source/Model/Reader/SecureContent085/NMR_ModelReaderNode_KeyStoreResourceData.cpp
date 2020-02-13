@@ -76,7 +76,7 @@ namespace NMR {
 		
 		if (strcmp(XML_3MF_SECURE_CONTENT_PATH, pAttributeName) == 0) {
 			if (!m_path.empty())
-				m_pWarnings->addException(CNMRException(NMR_ERROR_DUPLICATE_KEYSTORERESOURCEDATAPATH), eModelReaderWarningLevel::mrwInvalidMandatoryValue);
+				m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREDUPLICATERESOURCEDATAPATH), eModelReaderWarningLevel::mrwInvalidMandatoryValue);
 			m_path = pAttributeValue;
 		}
 		else if (strcmp(XML_3MF_SECURE_CONTENT_ENCRYPTION_ALGORITHM, pAttributeName) == 0) {
@@ -85,14 +85,14 @@ namespace NMR {
 			} else if (strcmp(XML_3MF_SECURE_CONTENT_ENCRYPTION_RSA, pAttributeValue) == 0) {
 				m_encryptionAlgorithm = eKeyStoreEncryptAlgorithm::RsaOaepMgf1p;
 			} else {
-				m_pWarnings->addException(CNMRException(NMR_ERROR_INVALIDENCRIPTIONALGORITHM), eModelReaderWarningLevel::mrwInvalidOptionalValue);
+				m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREINVALIDENCRYPTIONALGORITHM), eModelReaderWarningLevel::mrwInvalidOptionalValue);
 			}
 		}
 		else if (strcmp(XML_3MF_SECURE_CONTENT_COMPRESSION, pAttributeName) == 0) {
 			if (strcmp(XML_3MF_SECURE_CONTENT_COMPRESSION_DEFLATE, pAttributeValue) == 0) {
 				m_compression = true;
 			} else {
-				m_pWarnings->addException(CNMRException(NMR_ERROR_INVALIDCOMPRESSION), eModelReaderWarningLevel::mrwInvalidOptionalValue);
+				m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREINVALIDCOMPRESSION), eModelReaderWarningLevel::mrwInvalidOptionalValue);
 			}
 		}
 		else

@@ -51,7 +51,7 @@ void NMR::CModelWriterNode_KeyStore::writeConsumers() {
 		//@consumerid
 		std::string consumerId = consumer->getConsumerID();
 		if (consumerId.empty()) {
-			throw CNMRException(NMR_ERROR_MISSINGCONSUMERID);
+			throw CNMRException(NMR_ERROR_KEYSTOREMISSINGCONSUMERID);
 		}
 		writeConstStringAttribute(XML_3MF_SECURE_CONTENT_CONSUMER_ID, consumerId.c_str());
 		//@keyid
@@ -105,7 +105,7 @@ void NMR::CModelWriterNode_KeyStore::writeResourceDatas() {
 			CIPHERVALUE cv = resourcedata->getDecryptRight(accessIndex)->getCipherValue();
 			//TODO throw when missing cipher value, pending because of callbacks implementation
 			/*if (cv.m_iv.size() < 1 && cv.m_key.size() < 1 && cv.m_tag.size() < 1) {
-				throw CNMRException(NMR_ERROR_MISSINGCIPHERVALUE);
+				throw CNMRException(NMR_ERROR_KEYSTOREMISSINGCIPHERVALUE);
 			}*/
 			std::vector<unsigned char> cvVector;
 			std::copy(cv.m_iv.begin(), cv.m_iv.end(), std::back_inserter(cvVector));
