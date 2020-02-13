@@ -52,7 +52,10 @@ namespace NMR {
 		PPortableZIPWriter m_pZIPWriter;
 		nfInt32 m_nRelationIDCounter;
 
-		std::map<std::string, std::string> m_ContentTypes;
+		// Extension -> ContentType
+		std::map<std::string, std::string> m_DefaultContentTypes;
+		// PartName -> ContentType
+		std::map<std::string, std::string> m_OverrideContentTypes;
 		std::list<POpcPackageRelationship> m_RootRelationships;
 
 		void finishPackage();
@@ -66,6 +69,7 @@ namespace NMR {
 		POpcPackagePart addPart(_In_ std::string sPath) override;
 
 		void addContentType(_In_ std::string sExtension, _In_ std::string sContentType) override;
+		void addContentType(_In_ POpcPackagePart pOpcPackagePart, _In_ std::string sContentType) override;
 		POpcPackageRelationship addRootRelationship(_In_ std::string sType, _In_ COpcPackagePart * pTargetPart) override;
 		POpcPackageRelationship addPartRelationship(_In_ POpcPackagePart pOpcPackagePart, _In_ std::string sType, _In_ COpcPackagePart * pTargetPart) override;
 	};
