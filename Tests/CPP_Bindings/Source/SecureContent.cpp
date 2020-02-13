@@ -373,7 +373,7 @@ namespace Lib3MF {
 			CCipherData cd(SecureContentT::wrapper.get(), cipherData);
 			SecureContentT::wrapper->Acquire(&cd);
 
-			ASSERT_GT(cd.GetDescriptor(), 1);
+			ASSERT_GE(cd.GetDescriptor(), 1);
 
 			DEKCallbackData * cb = reinterpret_cast<DEKCallbackData *>(userData);
 			if (0 != inSize) {
