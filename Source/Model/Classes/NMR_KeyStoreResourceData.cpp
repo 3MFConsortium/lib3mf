@@ -49,22 +49,19 @@ namespace NMR {
 	}
 
 	PKeyStoreDecryptRight CKeyStoreResourceData::addDecryptRight(NMR::PKeyStoreConsumer const& consumer, eKeyStoreEncryptAlgorithm const& encryptAlgorithm) {
-		NMR::CIPHERVALUE value;
-		return this->addDecryptRight(consumer, encryptAlgorithm, value);
+		PKeyStoreDecryptRight dr = std::make_shared<CKeyStoreDecryptRight>(consumer, encryptAlgorithm);
+		return addDecryptRight(dr);
 	}
 
-	PKeyStoreDecryptRight CKeyStoreResourceData::addDecryptRight(NMR::PKeyStoreConsumer const& consumer, eKeyStoreEncryptAlgorithm const& encryptAlgorithm, NMR::CIPHERVALUE const& cipherValue)
+	PKeyStoreDecryptRight CKeyStoreResourceData::addDecryptRight(PKeyStoreDecryptRight const &dr)
 	{	
-		if (!consumer.get())
-			throw CNMRException(NMR_ERROR_INVALIDPARAM);
-		if (m_ConsumerDecryptRight.find(consumer->getConsumerID()) != m_ConsumerDecryptRight.end()) {
+		if (m_ConsumerDecryptRight.find(dr->getConsumer()->getConsumerID()) != m_ConsumerDecryptRight.end()) {
 			throw CNMRException(NMR_ERROR_KEYSTOREDUPLICATEDECRYPTRIGHT);
 		}
 
-		PKeyStoreDecryptRight decryptRight = std::make_shared<CKeyStoreDecryptRight>(consumer, encryptAlgorithm, cipherValue);
-		m_DecryptRights.push_back(decryptRight);
-		m_ConsumerDecryptRight[consumer->getConsumerID()] = decryptRight;
-		return decryptRight;
+		m_DecryptRights.push_back(dr);
+		m_ConsumerDecryptRight[dr->getConsumer()->getConsumerID()] = dr;
+		return dr;
 	}
 
 	nfUint32 CKeyStoreResourceData::getDecryptRightCount()

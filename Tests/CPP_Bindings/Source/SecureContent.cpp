@@ -359,13 +359,13 @@ namespace Lib3MF {
 		std::map<Lib3MF_uint64, Lib3MF_uint64> context;
 
 		static void testDEKCallback(
-			Lib3MF::eEncryptionAlgorithm algorithm, 
-			Lib3MF_CipherData cipherData, 
-			Lib3MF_uint64 inSize, 
-			const Lib3MF_uint8 * inBuffer, 
-			const Lib3MF_uint64 outSize, 
+			Lib3MF::eEncryptionAlgorithm algorithm,
+			Lib3MF_CipherData cipherData,
+			Lib3MF_uint64 inSize,
+			const Lib3MF_uint8 * inBuffer,
+			const Lib3MF_uint64 outSize,
 			Lib3MF_uint64 * outNeededSize,
-			Lib3MF_uint8 * outBuffer, 
+			Lib3MF_uint8 * outBuffer,
 			Lib3MF_pvoid userData,
 			Lib3MF_uint64 * result) {
 
@@ -373,12 +373,14 @@ namespace Lib3MF {
 			SecureContentT::wrapper->Acquire(&cd);
 
 			ASSERT_GE(cd.GetDescriptor(), 1);
-			DEKCallbackData * cb = reinterpret_cast<DEKCallbackData *>(userData);
-			auto localDescriptor = cb->context.find(cd.GetDescriptor());
-			if (localDescriptor != cb->context.end())
-				localDescriptor->second++;
-			else
-				cb->context[cd.GetDescriptor()] = 0;
+			if (nullptr != userData) {
+				DEKCallbackData * cb = reinterpret_cast<DEKCallbackData *>(userData);
+				auto localDescriptor = cb->context.find(cd.GetDescriptor());
+				if (localDescriptor != cb->context.end())
+					localDescriptor->second++;
+				else
+					cb->context[cd.GetDescriptor()] = 0;
+			}
 
 			sAes256CipherValue cipher = cd.GetAes256Gcm();
 			if (0 != inSize) {
@@ -442,22 +444,23 @@ namespace Lib3MF {
 
 			ASSERT_GE(outSize, 256);
 
-			KEKCallbackData * cb = reinterpret_cast<KEKCallbackData *>(userData);
-			ASSERT_EQ(cb->value, 1);
-			cb->value = 2;
-
-
-			Lib3MF_uint32 needed = 0;
-			std::vector<char> buffer;
-
 			CConsumer c(SecureContentT::wrapper.get(), pConsumer);
 			SecureContentT::wrapper->Acquire(&c);
 
-			ASSERT_EQ(c.GetConsumerID(), cb->consumerId);
-		
-			ASSERT_EQ(c.GetKeyID(), cb->keyId);
+			if (nullptr != userData) {
+				KEKCallbackData * cb = reinterpret_cast<KEKCallbackData *>(userData);
+				ASSERT_EQ(cb->value, 1);
+				cb->value = 2;
+
+				ASSERT_EQ(c.GetConsumerID(), cb->consumerId);
+
+				ASSERT_EQ(c.GetKeyID(), cb->keyId);
+			}
 
 			ASSERT_FALSE(c.GetKeyValue().empty());
+
+			Lib3MF_uint32 needed = 0;
+			std::vector<char> buffer;
 
 			std::copy(inBuffer, inBuffer + outSize, outBuffer);
 			*result = outSize;
@@ -561,14 +564,18 @@ namespace Lib3MF {
 		
 		//Query writer
 		PWriter writer = secureModel->QueryWriter("3mf");
+
+		writer->RegisterDEKClient(DEKCallbackData::testDEKCallback, nullptr);
+		writer->RegisterKEKClient("HP#MOP44B#SG5693454", KEKCallbackData::testKEKCallback, 256, nullptr);
+
 		//Write content
 		writer->WriteToFile(sOutFilesPath + "/SecureContent/WriteSecureContent.3mf");
 	}
 
-	TEST_F(SecureContentT, WriteMultipleSecureContent) {
+	TEST_F(SecureContentT, WriteMultipleConsumersSecureContent) {
 		Lib3MF::PModel secureModel = wrapper->CreateModel();
 		//create the attachment to be secured
-		std::string path = "/3D/securemesh.xml";
+		std::string path = "/3D/securemesh.model";
 		//add a mesh
 		Lib3MF::PMeshObject meshObject = secureModel->AddMeshObject();
 		meshObject->SetGeometry(CLib3MFInputVector<sPosition>(pVertices, 8), CLib3MFInputVector<sTriangle>(pTriangles, 12));
@@ -608,15 +615,14 @@ namespace Lib3MF {
 
 		//Query writer
 		PWriter writer = secureModel->QueryWriter("3mf");
-		//TODO
-		//register the consumer key encryption callback (optional)
-		//writer->RegisterKEKClient("LIB3MF#TEST", EncryptionData::keyEncryptionCallback, nullptr);
-		//register the data encryption callback
-		//writer->RegisterEncryption(EncryptionData::dataEncryptionCallback);
 
-		//write content
-
+		writer->RegisterDEKClient(DEKCallbackData::testDEKCallback, nullptr);
+		writer->RegisterKEKClient("HP#MOP44B#SG5693454", KEKCallbackData::testKEKCallback, 256, nullptr);
+		writer->RegisterKEKClient("HP#MOP44B#SG5693455", KEKCallbackData::testKEKCallback, 256, nullptr);
+		
 		writer->WriteToFile(sOutFilesPath + "/SecureContent/WriteMultipleSecureContent.3mf");
+
+		//TODO read back and assert
 
 	}
 	//TODO Read Unencrypted content, encrypt root model, save, read and assert

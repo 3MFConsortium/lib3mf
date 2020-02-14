@@ -65,7 +65,7 @@ namespace NMR {
 
 		PKeyStoreResourceData rd = m_pKeyStore->addResourceData(m_path, m_encryptionAlgorithm, m_compression);
 		for (PKeyStoreDecryptRight pdr : m_decryptRights) {
-			rd->addDecryptRight(pdr->getConsumer(), pdr->getEncryptionAlgorithm(), pdr->getCipherValue());
+			rd->addDecryptRight(pdr);
 		}
 	}
 
