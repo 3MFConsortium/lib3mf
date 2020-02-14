@@ -174,16 +174,16 @@ namespace Lib3MF {
 
 		//Test add decrypt right to different resource data
 
-		keyStore->GetResourceData(0)->AddDecryptRight(consumer1.get(), Lib3MF::eEncryptionAlgorithm::Aes256Gcm);
-		keyStore->GetResourceData(1)->AddDecryptRight(consumer2.get(), Lib3MF::eEncryptionAlgorithm::Aes256Gcm);
+		keyStore->GetResourceData(0)->AddDecryptRight(consumer1.get(), Lib3MF::eEncryptionAlgorithm::RsaOaepMgf1p);
+		keyStore->GetResourceData(1)->AddDecryptRight(consumer2.get(), Lib3MF::eEncryptionAlgorithm::RsaOaepMgf1p);
 				
 		ASSERT_EQ(1, keyStore->GetResourceData(0)->GetDecryptRightCount());
 		ASSERT_EQ(consumer1->GetConsumerID(), keyStore->GetResourceData(0)->GetDecryptRight(0)->GetConsumer()->GetConsumerID());
-		ASSERT_EQ(Lib3MF::eEncryptionAlgorithm::Aes256Gcm, keyStore->GetResourceData(0)->GetDecryptRight(0)->GetEncryptionAlgorithm());
+		ASSERT_EQ(Lib3MF::eEncryptionAlgorithm::RsaOaepMgf1p, keyStore->GetResourceData(0)->GetDecryptRight(0)->GetEncryptionAlgorithm());
 		
 		ASSERT_EQ(1, keyStore->GetResourceData(1)->GetDecryptRightCount());
 		ASSERT_EQ(consumer2->GetConsumerID(), keyStore->GetResourceData(1)->GetDecryptRight(0)->GetConsumer()->GetConsumerID());
-		ASSERT_EQ(Lib3MF::eEncryptionAlgorithm::Aes256Gcm, keyStore->GetResourceData(1)->GetDecryptRight(0)->GetEncryptionAlgorithm());
+		ASSERT_EQ(Lib3MF::eEncryptionAlgorithm::RsaOaepMgf1p, keyStore->GetResourceData(1)->GetDecryptRight(0)->GetEncryptionAlgorithm());
 
 		//Test remove decrypt right from resource data using a consumer
 		keyStore->GetResourceData(0)->RemoveDecrypt(consumer1.get());
@@ -607,11 +607,11 @@ namespace Lib3MF {
 		Lib3MF::PConsumer consumer2 = keyStore->AddConsumer(consumerId2, keyId2, keyValue2);
 
 		//create a resource data
-		Lib3MF::PResourceData resourceData = keyStore->AddResourceData(modelPath.get(), Lib3MF::eEncryptionAlgorithm::Aes256Gcm, Lib3MF::eCompression::Deflate);
+		Lib3MF::PResourceData resourceData = keyStore->AddResourceData(modelPath.get(), Lib3MF::eEncryptionAlgorithm::Aes256Gcm, Lib3MF::eCompression::None);
 
 		//add decryptright for the consumer (optional)
-		Lib3MF::PDecryptRight decryptRight = resourceData->AddDecryptRight(consumer.get(), Lib3MF::eEncryptionAlgorithm::Aes256Gcm);
-		Lib3MF::PDecryptRight decryptRight2 = resourceData->AddDecryptRight(consumer2.get(), Lib3MF::eEncryptionAlgorithm::Aes256Gcm);
+		Lib3MF::PDecryptRight decryptRight = resourceData->AddDecryptRight(consumer.get(), Lib3MF::eEncryptionAlgorithm::RsaOaepMgf1p);
+		Lib3MF::PDecryptRight decryptRight2 = resourceData->AddDecryptRight(consumer2.get(), Lib3MF::eEncryptionAlgorithm::RsaOaepMgf1p);
 
 		//Query writer
 		PWriter writer = secureModel->QueryWriter("3mf");
