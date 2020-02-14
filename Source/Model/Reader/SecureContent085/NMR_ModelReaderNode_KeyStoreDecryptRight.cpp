@@ -64,10 +64,8 @@ namespace NMR {
 		// Parse Content
 		parseContent(pXMLReader);
 
-		if (m_consumerIndex.empty()) {
-			m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREINVALIDCONSUMERINDEX), eModelReaderWarningLevel::mrwInvalidMandatoryValue);
-		} else {
-			// this can throw for values that are not numbers and it's ok so according to other reader nodes
+		// this can throw for values that are not numbers and it's ok so according to other reader nodes
+		try {
 			nfUint64 index = fnStringToInt32(m_consumerIndex.c_str());
 			if (0 <= index && index < m_pKeyStore->getConsumerCount()) {
 				PKeyStoreConsumer c = m_pKeyStore->getConsumerByIndex(index);
@@ -75,6 +73,8 @@ namespace NMR {
 			} else {
 				m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREINVALIDCONSUMERINDEX), eModelReaderWarningLevel::mrwInvalidMandatoryValue);
 			}
+		} catch (CNMRException const &) {
+			m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREINVALIDCONSUMERINDEX), eModelReaderWarningLevel::mrwInvalidMandatoryValue);
 		}
 	}
 
@@ -96,8 +96,10 @@ namespace NMR {
 			else if (strcmp(XML_3MF_SECURE_CONTENT_ENCRYPTION_RSA, pAttributeValue) == 0) {
 				m_encryptionAlgorithm = eKeyStoreEncryptAlgorithm::RsaOaepMgf1p;
 			}
-			else
+			else {
 				m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREINVALIDENCRYPTIONALGORITHM), eModelReaderWarningLevel::mrwInvalidOptionalValue);
+				m_encryptionAlgorithm = eKeyStoreEncryptAlgorithm::RsaOaepMgf1p;
+			}
 		}
 		else
 			m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE), mrwInvalidOptionalValue);

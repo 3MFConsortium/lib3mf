@@ -366,6 +366,7 @@ These are given by the 3MF Standard
 #define XML_3MF_SECURE_CONTENT_ENCRYPTION_AES256	"http://www.w3.org/2009/xmlenc11#aes256-gcm"
 #define XML_3MF_SECURE_CONTENT_ENCRYPTION_RSA		"http://www.w3.org/2001/04/xmlenc#rsa-oaep-mgf1p"
 #define XML_3MF_SECURE_CONTENT_COMPRESSION_DEFLATE	"deflate"
+#define XML_3MF_SECURE_CONTENT_COMPRESSION_NONE		"none"
 #define XML_3MF_SECURE_CONTENT_CONSUMER_INDEX		"consumerindex"
 #define XML_3MF_SECURE_CONTENT_ALGORITHM			"Algorithm"
 

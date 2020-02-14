@@ -61,6 +61,8 @@ namespace NMR {
 		// check consumer id
 		if (m_sConsumerID.empty()) {
 			m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREMISSINGCONSUMERID), mrwMissingMandatoryValue);
+			//add some default value
+			m_sConsumerID = "ConsumerID" + fnInt32ToString(m_pWarnings->getWarningCount());
 		}
 
 		m_pKeyStore->addConsumer(m_sConsumerID, m_sKeyID, m_sKeyValue);

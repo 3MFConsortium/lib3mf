@@ -228,7 +228,7 @@ namespace Lib3MF {
 		// NMR_ERROR_KEYSTOREMISSINGCONSUMERID
 		// consumer id is not defined
 		reader3MF->GetWarning(0, iWarning);
-		ASSERT_EQ(0x80F1, iWarning);
+		ASSERT_EQ(0x80F3, iWarning);
 
 		// NMR_ERROR_KEYSTOREINVALIDCIPHERVALUE 
 		// cipher value is not there
@@ -254,7 +254,7 @@ namespace Lib3MF {
 		// NMR_ERROR_KEYSTOREDUPLICATECONSUMERID
 		// consumer has multiple consumerid attributes
 		reader3MF->GetWarning(0, iWarning);
-		ASSERT_EQ(0x80EF, iWarning);
+		ASSERT_EQ(0x80F1, iWarning);
 
 		// NMR_ERROR_KEYSTOREINVALIDENCRYPTIONALGORITHM 
 		// invalid encryptionalgorithm attribute in ResourceData
