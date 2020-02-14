@@ -72,9 +72,9 @@ namespace Lib3MF {
 				return len;
 			}
 
-			Lib3MF_uint32 finish(PEVP_CIPHER_CTX ctx, Lib3MF_uint8 * plain, Lib3MF_uint32 tagSize, Lib3MF_uint8 * tag) {
+			Lib3MF_uint32 finish(PEVP_CIPHER_CTX ctx, Lib3MF_uint8 * cipher, Lib3MF_uint32 tagSize, Lib3MF_uint8 * tag) {
 				int len = 0;
-				if (1 != EVP_EncryptFinal_ex(ctx.get(), plain, &len))
+				if (1 != EVP_EncryptFinal_ex(ctx.get(), cipher, &len))
 					throw std::runtime_error("unable to finalize encryption");
 
 				if (1 != EVP_CIPHER_CTX_ctrl(ctx.get(), EVP_CTRL_GCM_GET_TAG, tagSize, tag))
@@ -130,6 +130,9 @@ namespace Lib3MF {
 	protected:
 		PModel model;
 		PEVP_PKEY privateKey;
+		sPosition pVertices[8];
+		sTriangle pTriangles[12];
+		
 	public:
 		EncryptionMethods(): privateKey(nullptr, ::EVP_PKEY_free) {
 			ByteVector key = ReadFileIntoBuffer(sTestFilesPath + "/SecureContent/sample.pem");
@@ -143,6 +146,31 @@ namespace Lib3MF {
 		}
 
 		virtual void SetUp() {
+			float fSizeX = 100.0f;
+			float fSizeY = 200.0f;
+			float fSizeZ = 300.0f;
+			pVertices[0] = fnCreateVertex(0.0f, 0.0f, 0.0f);
+			pVertices[1] = fnCreateVertex(fSizeX, 0.0f, 0.0f);
+			pVertices[2] = fnCreateVertex(fSizeX, fSizeY, 0.0f);
+			pVertices[3] = fnCreateVertex(0.0f, fSizeY, 0.0f);
+			pVertices[4] = fnCreateVertex(0.0f, 0.0f, fSizeZ);
+			pVertices[5] = fnCreateVertex(fSizeX, 0.0f, fSizeZ);
+			pVertices[6] = fnCreateVertex(fSizeX, fSizeY, fSizeZ);
+			pVertices[7] = fnCreateVertex(0.0f, fSizeY, fSizeZ);
+
+			// Manually create triangles
+			pTriangles[0] = fnCreateTriangle(2, 1, 0);
+			pTriangles[1] = fnCreateTriangle(0, 3, 2);
+			pTriangles[2] = fnCreateTriangle(4, 5, 6);
+			pTriangles[3] = fnCreateTriangle(6, 7, 4);
+			pTriangles[4] = fnCreateTriangle(0, 1, 5);
+			pTriangles[5] = fnCreateTriangle(5, 4, 0);
+			pTriangles[6] = fnCreateTriangle(2, 3, 7);
+			pTriangles[7] = fnCreateTriangle(7, 6, 2);
+			pTriangles[8] = fnCreateTriangle(1, 2, 6);
+			pTriangles[9] = fnCreateTriangle(6, 5, 1);
+			pTriangles[10] = fnCreateTriangle(3, 0, 4);
+			pTriangles[11] = fnCreateTriangle(4, 7, 3);
 			model = wrapper->CreateModel();
 		}
 
@@ -165,7 +193,7 @@ namespace Lib3MF {
 
 	struct ClientCallbacks {
 
-		static void dataEncryptClientCallbac(
+		static void dataEncryptClientCallback(
 			Lib3MF::eEncryptionAlgorithm algorithm,
 			Lib3MF_CipherData cipherData,
 			Lib3MF_uint64 plainSize,
@@ -176,19 +204,63 @@ namespace Lib3MF {
 			Lib3MF_pvoid userData,
 			Lib3MF_uint64 * result
 		) {
+			if (algorithm != eEncryptionAlgorithm::Aes256Gcm)
+				*result = -1;
+			else {
+				CCipherData cd(EncryptionMethods::wrapper.get(), cipherData);
+				EncryptionMethods::wrapper->Acquire(&cd);
 
+				sAes256CipherValue cv = cd.GetAes256Gcm();
+
+				DekContext * dek = (DekContext *)userData;
+				PEVP_CIPHER_CTX ctx;
+
+				auto it = dek->m_Context.find(cd.GetDescriptor());
+
+				if (it != dek->m_Context.end()) {
+					ctx = it->second;
+				}
+				else {
+					ctx = AesMethods::Encrypt::init(cv.m_Key, cv.m_IV);
+					dek->m_Context[cd.GetDescriptor()] = ctx;
+				}
+
+				if (0 != cipherSize) {
+					size_t encrypted = AesMethods::Encrypt::encrypt(ctx, (Lib3MF_uint32)plainSize, plainBuffer, cipherBuffer);
+					if (encrypted > 0) {
+						cd.SetAes256Gcm(cv);
+					}
+					*result = encrypted;
+				}
+				else {
+					if (!AesMethods::Encrypt::finish(ctx, cipherBuffer,sizeof(cv.m_Tag), cv.m_Tag))
+						*result = -2;
+				}
+			}
 		}
 
 		static void keyEncryptClientCallback(
 			Lib3MF_Consumer consumer,
 			Lib3MF::eEncryptionAlgorithm algorithm,
 			Lib3MF_uint64 cipherSize,
-			const Lib3MF_uint8 * cipherBuffer,
+			Lib3MF_uint8 * cipherBuffer,
 			const Lib3MF_uint64 plainSize,
 			Lib3MF_uint64* plainNeeded,
 			Lib3MF_uint8 * plainBuffer,
 			Lib3MF_pvoid userData,
 			Lib3MF_uint64 * result) {
+
+			if (algorithm != eEncryptionAlgorithm::RsaOaepMgf1p)
+				*result = -1;
+			else {
+
+				KekContext const * context = (KekContext const *)userData;
+
+				ASSERT_EQ(cipherSize, context->size);
+				ASSERT_GE(plainSize, context->size);
+
+				*result = RsaMethods::encrypt(context->key, plainSize, plainBuffer, cipherBuffer);
+			}
 		}
 
 		static void dataDecryptClientCallback(
@@ -289,5 +361,42 @@ namespace Lib3MF {
 		auto resources = model->GetResources();
 		ASSERT_EQ(28, resources->Count());
 	}
+	
+	//TODO: create new encrypted model with a mesh, save it. Read, and do asserts
+	TEST_F(EncryptionMethods, WriteEncrypted3MF) {
+		Lib3MF::PModel secureModel = wrapper->CreateModel();
+		std::string path = "/3D/securemesh.model";
+		Lib3MF::PMeshObject meshObject = secureModel->AddMeshObject();
+		meshObject->SetGeometry(CLib3MFInputVector<sPosition>(pVertices, 8), CLib3MFInputVector<sTriangle>(pTriangles, 12));
+		Lib3MF::PPackagePath modelPath = meshObject->PackagePath();
+		modelPath->Set(path);
+		sTransform transformation;
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 3; j++)
+				transformation.m_Fields[i][j] = Lib3MF_single(i - j);
+		}
+		secureModel->AddBuildItem(meshObject.get(), transformation);
+		
+		Lib3MF::PKeyStore keyStore = secureModel->GetKeyStore();
+		keyStore->SetUUID("b7aa9c75-5fbd-48c1-a893-40289e45ab8f");
+		std::string keyValue = "-----BEGIN PUBLIC KEY-----\r\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAw53q4y2KB2WcoOBUE9OE\r\nXI0OCzUf4SI1J6fDx6XeDJ8PzqxN4pPRtXgtKfp/RiSL0invf7ASfkBMcXuhD8XP\r\n0uki3JIzvsxTH+Jnnz/PrYnS9DFa6c9MYciTIV8vC4u03vkZH6OuGq4rWeSZuNCT\r\nCgT59q67Ly6OytNsQgsDHL2QO8xhpYdQ4bx7F0uNn5LAxFyA0ymsFsgSSLONJWza\r\nVtsq9jvkIOEdTzYq52PAXMUIpegbyqSheNlmedcss8teqiZGnCOxpBxL3z+ogcFe\r\nnX1S8kq2UhzOjXLEjPs9B0SchwXSadephL89shJwra+30NS3R3frwfCz+a3H6wTV\r\nBwIDAQAB\r\n-----END PUBLIC KEY-----\r\n\t\t";
+		std::string keyId = "KEK_xxx";
+		std::string consumerId = "HP#MOP44B#SG5693454";
+		Lib3MF::PConsumer consumer = keyStore->AddConsumer(consumerId, keyId, keyValue);
+		Lib3MF::PResourceData resourceData = keyStore->AddResourceData(modelPath.get(), Lib3MF::eEncryptionAlgorithm::Aes256Gcm, Lib3MF::eCompression::Deflate);
+		Lib3MF::PDecryptRight decryptRight = resourceData->AddDecryptRight(consumer.get(), Lib3MF::eEncryptionAlgorithm::RsaOaepMgf1p);
+		
+		auto writer = model->QueryWriter("3mf");
 
+		ClientCallbacks data;
+		writer->RegisterDEKClient(ClientCallbacks::dataEncryptClientCallback, reinterpret_cast<Lib3MF_pvoid>(&data));
+		writer->WriteToFile(sTestFilesPath + "/SecureContent/write_encrypted_keystore.3mf");
+	}
+
+
+
+	//TODO: read keystore encrypted model and add new consumer and new decryptright for encrypted resource data and save.
+	TEST_F(EncryptionMethods, WriteNewConsumer) {
+
+	}
 }

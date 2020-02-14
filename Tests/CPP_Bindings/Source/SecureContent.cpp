@@ -557,7 +557,7 @@ namespace Lib3MF {
 		//create a resource data
 		Lib3MF::PResourceData resourceData = keyStore->AddResourceData(modelPath.get(), Lib3MF::eEncryptionAlgorithm::Aes256Gcm, Lib3MF::eCompression::Deflate);
 		//add decryptright for the consumer (optional)
-		Lib3MF::PDecryptRight decryptRight = resourceData->AddDecryptRight(consumer.get(), Lib3MF::eEncryptionAlgorithm::Aes256Gcm);
+		Lib3MF::PDecryptRight decryptRight = resourceData->AddDecryptRight(consumer.get(), Lib3MF::eEncryptionAlgorithm::RsaOaepMgf1p);
 		
 		//Query writer
 		PWriter writer = secureModel->QueryWriter("3mf");
