@@ -72,7 +72,38 @@ namespace NMR {
 
 	void COpcPackageWriter::addContentType(_In_ std::string sExtension, _In_ std::string sContentType)
 	{
-		m_ContentTypes.insert(std::make_pair(sExtension, sContentType));
+		m_DefaultContentTypes.insert(std::make_pair(sExtension, sContentType));
+	}
+
+	void COpcPackageWriter::addContentType(POpcPackagePart pOpcPackagePart, std::string sContentType)
+	{
+		// Follows section 10.1.2.3 of "Ecma Office Open XML Part 2 - Open Packaging Conventions"
+		nfBool isOverride = false;
+
+		// Step 1 - Get extension
+		std::size_t extensionPosition = pOpcPackagePart->getURI().find_last_of('.');
+		if (std::string::npos == extensionPosition) // Step 2 - No extension available, use Override Content Type
+			isOverride = true;
+		else {
+			// Step 3 - Compare extensions with Default Content Types
+			std::string extension = pOpcPackagePart->getURI().substr(extensionPosition + 1);
+			std::map<std::string, std::string>::iterator defaultSameExtension = m_DefaultContentTypes.find(extension);
+			if (m_DefaultContentTypes.end() != defaultSameExtension) {
+				// Step 4 - An extension assigned to a Default Content Type matches
+				if (defaultSameExtension->second.compare(sContentType) == 0) {
+					// Step 4.a - Content Types match, nothing else to do
+					isOverride = false;
+					addContentType(extension, sContentType);
+				}
+				else // Step 4.b - Content Types do not match, use Override Content Type
+					isOverride = true;
+			}
+			else // Step 5 - No Default Content Type that matches, use Override Content Type
+				isOverride = true;
+		}
+
+		if (isOverride)
+			m_OverrideContentTypes.insert(std::make_pair(pOpcPackagePart->getURI(), sContentType));
 	}
 
 	POpcPackageRelationship COpcPackageWriter::addRootRelationship(_In_ std::string sType, _In_ COpcPackagePart * pTargetPart)
@@ -122,14 +153,24 @@ namespace NMR {
 		pXMLWriter->WriteStartElement(nullptr, OPC_CONTENTTYPES_CONTAINER, nullptr);
 		pXMLWriter->WriteAttributeString(nullptr, "xmlns", nullptr, OPCPACKAGE_SCHEMA_CONTENTTYPES);
 
-		auto iIterator = m_ContentTypes.begin();
-		while (iIterator != m_ContentTypes.end()) {
+		auto iDefaultIterator = m_DefaultContentTypes.begin();
+		while (iDefaultIterator != m_DefaultContentTypes.end()) {
 			pXMLWriter->WriteStartElement(nullptr, OPC_CONTENTTYPES_NODE, nullptr);
-			pXMLWriter->WriteAttributeString(nullptr, OPC_CONTENTTYPES_ATTRIB_EXTENSION, nullptr, iIterator->first.c_str());
-			pXMLWriter->WriteAttributeString(nullptr, OPC_CONTENTTYPES_ATTRIB_CONTENTTYPE, nullptr, iIterator->second.c_str());
+			pXMLWriter->WriteAttributeString(nullptr, OPC_CONTENTTYPES_ATTRIB_EXTENSION, nullptr, iDefaultIterator->first.c_str());
+			pXMLWriter->WriteAttributeString(nullptr, OPC_CONTENTTYPES_ATTRIB_CONTENTTYPE, nullptr, iDefaultIterator->second.c_str());
 			pXMLWriter->WriteEndElement();
 
-			iIterator++;
+			iDefaultIterator++;
+		}
+
+		auto iOverrideIterator = m_OverrideContentTypes.begin();
+		while (iOverrideIterator != m_OverrideContentTypes.end()) {
+			pXMLWriter->WriteStartElement(nullptr, OPC_CONTENTTYPES_NODE_OVERRIDE, nullptr);
+			pXMLWriter->WriteAttributeString(nullptr, OPC_CONTENTTYPES_ATTRIB_PARTNAME, nullptr, iOverrideIterator->first.c_str());
+			pXMLWriter->WriteAttributeString(nullptr, OPC_CONTENTTYPES_ATTRIB_CONTENTTYPE, nullptr, iOverrideIterator->second.c_str());
+			pXMLWriter->WriteEndElement();
+
+			iOverrideIterator++;
 		}
 
 		pXMLWriter->WriteFullEndElement();

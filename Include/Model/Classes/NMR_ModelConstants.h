@@ -39,6 +39,7 @@ These are given by the 3MF Standard
 #define PACKAGE_TEXTURE_CONTENT_TYPE "application/vnd.ms-package.3dmanufacturing-3dmodeltexture"
 #define PACKAGE_PRINT_TICKET_CONTENT_TYPE "application/vnd.ms-printing.printticket+xml"
 #define PACKAGE_CORE_PROPERTIES_CONTENT_TYPE "application/vnd.openxmlformats-package.core-properties+xml"
+#define PACKAGE_KEYSTORE_CONTENT_TYPE "application/vnd.ms-package.3dmanufacturing-keystore+xml"
 #define PACKAGE_GIF_CONTENT_TYPE "image/gif"
 #define PACKAGE_JPG_CONTENT_TYPE "image/jpeg"
 #define PACKAGE_PNG_CONTENT_TYPE "image/png"

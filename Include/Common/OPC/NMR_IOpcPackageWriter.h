@@ -15,6 +15,7 @@ namespace NMR {
 	public:
 		virtual POpcPackagePart addPart(_In_ std::string sPath) = 0;
 		virtual void addContentType(_In_ std::string sExtension, _In_ std::string sContentType) = 0;
+		virtual void addContentType(_In_ POpcPackagePart pOpcPackagePart, _In_ std::string sContentType) = 0;
 		virtual POpcPackageRelationship addRootRelationship(_In_ std::string sType, _In_ COpcPackagePart * pTargetPart) = 0;
 		virtual POpcPackageRelationship addPartRelationship(_In_ POpcPackagePart pOpcPackagePart, _In_ std::string sType, _In_ COpcPackagePart * pTargetPart) = 0;
 		virtual void close() {}
