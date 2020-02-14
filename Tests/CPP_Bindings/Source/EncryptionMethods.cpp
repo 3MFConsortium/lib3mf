@@ -227,14 +227,15 @@ namespace Lib3MF {
 
 				if (0 != cipherSize) {
 					size_t encrypted = AesMethods::Encrypt::encrypt(ctx, (Lib3MF_uint32)plainSize, plainBuffer, cipherBuffer);
-					if (encrypted > 0) {
-						cd.SetAes256Gcm(cv);
-					}
 					*result = encrypted;
 				}
 				else {
-					if (!AesMethods::Encrypt::finish(ctx, cipherBuffer,sizeof(cv.m_Tag), cv.m_Tag))
+					if (!AesMethods::Encrypt::finish(ctx, cipherBuffer, sizeof(cv.m_Tag), cv.m_Tag)) {
 						*result = -2;
+					}
+					else {
+						cd.SetAes256Gcm(cv);
+					}
 				}
 			}
 		}
@@ -242,11 +243,11 @@ namespace Lib3MF {
 		static void keyEncryptClientCallback(
 			Lib3MF_Consumer consumer,
 			Lib3MF::eEncryptionAlgorithm algorithm,
-			Lib3MF_uint64 cipherSize,
+			Lib3MF_uint64 plainSize,
+			const Lib3MF_uint8 * plainBuffer,
+			const Lib3MF_uint64 cipherSize,
+			Lib3MF_uint64* cipherNeeded,
 			Lib3MF_uint8 * cipherBuffer,
-			const Lib3MF_uint64 plainSize,
-			Lib3MF_uint64* plainNeeded,
-			Lib3MF_uint8 * plainBuffer,
 			Lib3MF_pvoid userData,
 			Lib3MF_uint64 * result) {
 
@@ -384,12 +385,18 @@ namespace Lib3MF {
 		std::string consumerId = "HP#MOP44B#SG5693454";
 		Lib3MF::PConsumer consumer = keyStore->AddConsumer(consumerId, keyId, keyValue);
 		Lib3MF::PResourceData resourceData = keyStore->AddResourceData(modelPath.get(), Lib3MF::eEncryptionAlgorithm::Aes256Gcm, Lib3MF::eCompression::Deflate);
-		Lib3MF::PDecryptRight decryptRight = resourceData->AddDecryptRight(consumer.get(), Lib3MF::eEncryptionAlgorithm::RsaOaepMgf1p);
-		
-		auto writer = model->QueryWriter("3mf");
+		Lib3MF::PDecryptRight decryptRight = resourceData->AddDecryptRight(consumer.get(), Lib3MF::eEncryptionAlgorithm::RsaOaepMgf1p);		
 
-		ClientCallbacks data;
-		writer->RegisterDEKClient(ClientCallbacks::dataEncryptClientCallback, reinterpret_cast<Lib3MF_pvoid>(&data));
+		PWriter writer = secureModel->QueryWriter("3mf");
+
+		DekContext data;
+		writer->RegisterDEKClient(ClientCallbacks::dataEncryptClientCallback, (Lib3MF_pvoid)(&data));
+		
+		KekContext kekUserData;
+		kekUserData.key = privateKey.get();
+		kekUserData.size = RsaMethods::getSize(privateKey);
+		writer->RegisterKEKClient(consumerId, ClientCallbacks::keyEncryptClientCallback, (Lib3MF_uint32)kekUserData.size, &kekUserData);
+
 		writer->WriteToFile(sOutFilesPath + "/SecureContent/write_encrypted_keystore.3mf");
 	}
 
