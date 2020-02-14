@@ -390,7 +390,7 @@ namespace Lib3MF {
 
 		ClientCallbacks data;
 		writer->RegisterDEKClient(ClientCallbacks::dataEncryptClientCallback, reinterpret_cast<Lib3MF_pvoid>(&data));
-		writer->WriteToFile(sTestFilesPath + "/SecureContent/write_encrypted_keystore.3mf");
+		writer->WriteToFile(sOutFilesPath + "/SecureContent/write_encrypted_keystore.3mf");
 	}
 
 
