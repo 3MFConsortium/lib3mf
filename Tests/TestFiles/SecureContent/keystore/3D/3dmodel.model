@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<model unit="millimeter" xml:lang="en-US" xmlns="http://schemas.microsoft.com/3dmanufacturing/core/2015/02" xmlns:p="http://schemas.microsoft.com/3dmanufacturing/production/2015/06">
+<model unit="millimeter" xml:lang="en-US" xmlns="http://schemas.microsoft.com/3dmanufacturing/core/2015/02" xmlns:p="http://schemas.microsoft.com/3dmanufacturing/production/2015/06" xmlns:sc="http://schemas.microsoft.com/3dmanufacturing/securecontent/2019/04" requiredextensions="sc">
   <resources>
     <object id="2" name="Cube_01" p:UUID="c4e5633d-7466-46dc-b8f6-18ca144155d5">
       <components>
