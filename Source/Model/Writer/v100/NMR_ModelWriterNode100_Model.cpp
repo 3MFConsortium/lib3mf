@@ -67,6 +67,7 @@ namespace NMR {
 		m_bWriteProductionExtension = true;
 		m_bWriteBeamLatticeExtension = true;
 		m_bWriteSliceExtension = true;
+		m_bWriteSecureContentExtension = true;
 		m_bWriteBaseMaterials = true;
 		m_bWriteObjects = true;
 
@@ -148,6 +149,15 @@ namespace NMR {
 				if (sRequiredExtensions.size() > 0)
 					sRequiredExtensions = sRequiredExtensions + " ";
 				sRequiredExtensions = sRequiredExtensions + XML_3MF_NAMESPACEPREFIX_SLICE;
+			}
+		}
+
+		if (m_bWriteSecureContentExtension) {
+			writeConstPrefixedStringAttribute(XML_3MF_ATTRIBUTE_XMLNS, XML_3MF_NAMESPACEPREFIX_SECURECONTENT, XML_3MF_NAMESPACE_SECURECONTENTSPEC);
+			if (m_pModel->RequireExtension(XML_3MF_NAMESPACE_SECURECONTENTSPEC)) {
+				if (sRequiredExtensions.size() > 0)
+					sRequiredExtensions = sRequiredExtensions + " ";
+				sRequiredExtensions = sRequiredExtensions + XML_3MF_NAMESPACEPREFIX_SECURECONTENT;
 			}
 		}
 
