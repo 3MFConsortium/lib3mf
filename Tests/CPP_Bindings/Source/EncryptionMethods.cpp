@@ -257,9 +257,6 @@ namespace Lib3MF {
 
 				KekContext const * context = (KekContext const *)userData;
 
-				ASSERT_EQ(cipherSize, context->size);
-				ASSERT_GE(plainSize, context->size);
-
 				*result = RsaMethods::encrypt(context->key, plainSize, plainBuffer, cipherBuffer);
 			}
 		}
@@ -365,6 +362,8 @@ namespace Lib3MF {
 	
 	//TODO: create new encrypted model with a mesh, save it. Read, and do asserts
 	TEST_F(EncryptionMethods, WriteEncrypted3MF) {
+		std::string filePath = sOutFilesPath + "/SecureContent/write_encrypted_keystore.3mf";
+
 		Lib3MF::PModel secureModel = wrapper->CreateModel();
 		std::string path = "/3D/securemesh.model";
 		Lib3MF::PMeshObject meshObject = secureModel->AddMeshObject();
@@ -389,15 +388,29 @@ namespace Lib3MF {
 
 		PWriter writer = secureModel->QueryWriter("3mf");
 
-		DekContext data;
-		writer->RegisterDEKClient(ClientCallbacks::dataEncryptClientCallback, (Lib3MF_pvoid)(&data));
+		DekContext writeDekUserData;
+		writer->RegisterDEKClient(ClientCallbacks::dataEncryptClientCallback, (Lib3MF_pvoid)(&writeDekUserData));
 		
-		KekContext kekUserData;
-		kekUserData.key = privateKey.get();
-		kekUserData.size = RsaMethods::getSize(privateKey);
-		writer->RegisterKEKClient(consumerId, ClientCallbacks::keyEncryptClientCallback, (Lib3MF_uint32)kekUserData.size, &kekUserData);
+		KekContext writeKekUserData;
+		writeKekUserData.key = privateKey.get();
+		writeKekUserData.size = RsaMethods::getSize(privateKey);
+		writer->RegisterKEKClient(consumerId, ClientCallbacks::keyEncryptClientCallback, (Lib3MF_uint32)writeKekUserData.size, &writeKekUserData);
 
-		writer->WriteToFile(sOutFilesPath + "/SecureContent/write_encrypted_keystore.3mf");
+		writer->WriteToFile(filePath);
+
+		//READ PART
+		auto reader = model->QueryReader("3mf");
+
+		DekContext readDekUserData;
+		reader->RegisterDEKClient(ClientCallbacks::dataDecryptClientCallback, reinterpret_cast<Lib3MF_pvoid>(&readDekUserData));
+
+		KekContext readKekUserData;
+		readKekUserData.key = privateKey.get();
+		readKekUserData.size = RsaMethods::getSize(privateKey);
+		reader->RegisterKEKClient(consumerId, ClientCallbacks::keyDecryptClientCallback, (Lib3MF_uint32)readKekUserData.size, &readKekUserData);
+		reader->ReadFromFile(filePath);
+		auto meshObj = model->GetMeshObjects();
+		ASSERT_EQ(1, meshObj->Count());
 	}
 
 
