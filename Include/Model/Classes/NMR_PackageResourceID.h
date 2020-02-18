@@ -91,13 +91,16 @@ namespace NMR {
 	typedef std::shared_ptr<CPackageResourceID> PPackageResourceID;
 
 
+	using UniqueIDPackageIdMap = std::unordered_map<UniqueResourceID, PPackageResourceID>;
+	using UniqueIdPackageIdPair = std::pair<UniqueResourceID, PPackageResourceID>;
+
 	class CResourceHandler {
 	private:
 		// getPath-strings to ModelPaths
 		std::unordered_map<std::string, PPackageModelPath> m_PathToModelPath;
 
 		// unique IDs to CPackageResourceID
-		std::unordered_map<UniqueResourceID, PPackageResourceID> m_resourceIDs;
+		UniqueIDPackageIdMap m_resourceIDs;
 		std::map<std::pair<ModelResourceID, PPackageModelPath>, PPackageResourceID> m_IdAndPathToPackageResourceIDs;
 	public:
 		PPackageResourceID makePackageResourceID(std::string path, ModelResourceID id);	// this is supposed to be the only way to generate a CPackageResourceID

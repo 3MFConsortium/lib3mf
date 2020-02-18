@@ -34,6 +34,8 @@ NMR_PackageResourceID.cpp implements the UniqueResourceID Class.
 #include "Common/NMR_StringUtils.h" 
 #include "Common/NMR_Exception.h" 
 
+#include <algorithm>
+
 namespace NMR {
 
 	CPackageModelPath::CPackageModelPath(CResourceHandler* pResourceHandler, std::string sPath)
@@ -131,7 +133,15 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_DUPLICATERESOURCEID);
 
 		PPackageResourceID pPackageResourceID = std::make_shared<CPackageResourceID>(this, pModelPath, id);
-		pPackageResourceID->setUniqueID(int(m_resourceIDs.size())+1);
+		UniqueIDPackageIdMap::const_iterator biggestId = std::max_element(m_resourceIDs.begin(), m_resourceIDs.end(), [](const UniqueIdPackageIdPair & v1, const UniqueIdPackageIdPair v2) {
+			return v1.first < v2.first;
+		});
+		if (biggestId != m_resourceIDs.end()) {
+			pPackageResourceID->setUniqueID(int(biggestId->first) + 1);
+		} else {
+			pPackageResourceID->setUniqueID(1);
+		}
+
 
 		m_resourceIDs.insert(std::make_pair(pPackageResourceID->getUniqueID(), pPackageResourceID));
 		m_IdAndPathToPackageResourceIDs.insert(std::make_pair(std::make_pair(id, pModelPath), pPackageResourceID));
