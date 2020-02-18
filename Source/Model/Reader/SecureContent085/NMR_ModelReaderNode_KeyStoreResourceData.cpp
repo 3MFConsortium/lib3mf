@@ -65,7 +65,7 @@ namespace NMR {
 
 		PKeyStoreResourceData rd = m_pKeyStore->addResourceData(m_path, m_encryptionAlgorithm, m_compression);
 		for (PKeyStoreDecryptRight pdr : m_decryptRights) {
-			rd->addDecryptRight(pdr->getConsumer(), pdr->getEncryptionAlgorithm(), pdr->getCipherValue());
+			rd->addDecryptRight(pdr);
 		}
 	}
 
@@ -76,7 +76,7 @@ namespace NMR {
 		
 		if (strcmp(XML_3MF_SECURE_CONTENT_PATH, pAttributeName) == 0) {
 			if (!m_path.empty())
-				m_pWarnings->addException(CNMRException(NMR_ERROR_DUPLICATE_KEYSTORERESOURCEDATAPATH), eModelReaderWarningLevel::mrwInvalidMandatoryValue);
+				m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREDUPLICATERESOURCEDATAPATH), eModelReaderWarningLevel::mrwInvalidMandatoryValue);
 			m_path = pAttributeValue;
 		}
 		else if (strcmp(XML_3MF_SECURE_CONTENT_ENCRYPTION_ALGORITHM, pAttributeName) == 0) {
@@ -85,14 +85,18 @@ namespace NMR {
 			} else if (strcmp(XML_3MF_SECURE_CONTENT_ENCRYPTION_RSA, pAttributeValue) == 0) {
 				m_encryptionAlgorithm = eKeyStoreEncryptAlgorithm::RsaOaepMgf1p;
 			} else {
-				m_pWarnings->addException(CNMRException(NMR_ERROR_INVALIDENCRIPTIONALGORITHM), eModelReaderWarningLevel::mrwInvalidOptionalValue);
+				m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREINVALIDENCRYPTIONALGORITHM), eModelReaderWarningLevel::mrwInvalidOptionalValue);
+				m_encryptionAlgorithm = eKeyStoreEncryptAlgorithm::Aes256Gcm;
 			}
 		}
 		else if (strcmp(XML_3MF_SECURE_CONTENT_COMPRESSION, pAttributeName) == 0) {
 			if (strcmp(XML_3MF_SECURE_CONTENT_COMPRESSION_DEFLATE, pAttributeValue) == 0) {
 				m_compression = true;
+			} else if (strcmp(XML_3MF_SECURE_CONTENT_COMPRESSION_NONE, pAttributeValue) == 0) {
+				m_compression = false;
 			} else {
-				m_pWarnings->addException(CNMRException(NMR_ERROR_INVALIDCOMPRESSION), eModelReaderWarningLevel::mrwInvalidOptionalValue);
+				m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREINVALIDCOMPRESSION), eModelReaderWarningLevel::mrwInvalidOptionalValue);
+				m_compression = false;
 			}
 		}
 		else
@@ -110,7 +114,7 @@ namespace NMR {
 				PModelReaderNode_KeyStoreDecryptRight pXMLNode = std::make_shared<CModelReaderNode_KeyStoreDecryptRight>(m_pKeyStore, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 				PKeyStoreDecryptRight dr = pXMLNode->getDecryptRight();
-				if (nullptr != dr.get()) {
+				if (nullptr != dr) {
 					m_decryptRights.push_back(pXMLNode->getDecryptRight());
 				}
 			}

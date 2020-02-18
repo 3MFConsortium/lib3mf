@@ -52,6 +52,7 @@ namespace NMR {
 		virtual nfBool seekFromEnd(_In_ nfUint64 bytes, _In_ nfBool bHasToSucceed) = 0;
 		virtual nfUint64 getPosition () = 0;
 		virtual nfUint64 writeBuffer(_In_ const void * pBuffer, _In_ nfUint64 cbTotalBytesToWrite) = 0;
+		virtual void close();
 		void copyFrom(_In_ CImportStream * pImportStream, _In_ nfUint64 cbCount, _In_ nfUint32 cbBufferSize);
 	};
 

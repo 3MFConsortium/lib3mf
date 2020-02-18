@@ -38,6 +38,11 @@ This is an abstract base stream class for exporting from various data sources.
 
 namespace NMR {
 
+	void CExportStream::close()
+	{
+		// do nothing
+	}
+
 	void CExportStream::copyFrom(_In_ CImportStream * pImportStream, _In_ nfUint64 cbCount, _In_ nfUint32 cbBufferSize)
 	{
 		if (pImportStream == nullptr)
@@ -64,6 +69,8 @@ namespace NMR {
 
 			cbCount -= cbBytesToCopy;
 		}
+
+		close();
 	}
 
 

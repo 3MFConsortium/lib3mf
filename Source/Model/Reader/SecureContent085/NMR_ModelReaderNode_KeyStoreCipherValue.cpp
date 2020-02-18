@@ -42,20 +42,6 @@ NMR_ModelReaderNode_KeyStoreCipherValue.h defines the Model Reader Node class th
 
 namespace NMR {
 
-	// BEGIN PLACEHOLDER
-	// this is placeholder code until we have proper decoding
-	std::vector<nfByte> decode(std::string cipherValue) {
-		std::vector<nfByte> iv = { 0xa4, 0xfc, 0xa, 0xe8, 0x4, 0x9, 0x6f, 0x29, 0xb3, 0xe6, 0x4b, 0x31 };
-		std::vector<nfByte> key = { 0x55, 0x71, 0x20, 0x42, 0xd5, 0xee, 0x8b, 0x72, 0xf8, 0xb0, 0x70, 0x8e, 0x3a, 0xe1, 0x66, 0xda, 0x8c, 0xd0, 0x8d, 0x16, 0xc5, 0xea, 0xb4, 0x96, 0x6d, 0x44, 0x23, 0xc2, 0x65, 0xcb, 0xc0, 0x2f };
-		std::vector<nfByte> tag = { 0xaa, 0x2e, 0x9a, 0x20, 0x30, 0x5, 0x30, 0xe3, 0xf5, 0xc9, 0x72, 0xb8, 0xd0, 0x98, 0x3, 0x74 };
-		std::vector<nfByte> decoded = {};
-		decoded.insert(decoded.end(), iv.begin(), iv.end());
-		decoded.insert(decoded.end(), key.begin(), key.end());
-		decoded.insert(decoded.end(), tag.begin(), tag.end());
-		return decoded;
-	}
-	// END PLACEHOLDER
-
 	CModelReaderNode_KeyStoreCipherValue::CModelReaderNode_KeyStoreCipherValue(CKeyStore * pKeyStore, PModelReaderWarnings pWarnings)
 		: CModelReaderNode_KeyStoreBase(pKeyStore, pWarnings)
 	{
@@ -78,11 +64,6 @@ namespace NMR {
 		// Parse Content
 		parseContent(pXMLReader);
 
-		// TODO: check key cipher value
-
-		std::remove(m_sCipherValueAccumulator.begin(), m_sCipherValueAccumulator.end(), '\r');
-		std::remove(m_sCipherValueAccumulator.begin(), m_sCipherValueAccumulator.end(), '\n');
-
 		std::vector<nfByte> decoded = fnBase64Decode(m_sCipherValueAccumulator);
 		if (!decoded.empty()) {
 			auto decodedIvBegin = decoded.begin();
@@ -93,7 +74,7 @@ namespace NMR {
 			m_sCipherValue.m_key = std::vector<nfByte>(decodedKeyBegin, decodedTagBegin);
 			m_sCipherValue.m_tag = std::vector<nfByte>(decodedTagBegin, decoded.end());
 		} else {
-			m_pWarnings->addException(CNMRException(NMR_ERROR_INVALID_KEYSTORECIPHERVALUE), eModelReaderWarningLevel::mrwInvalidMandatoryValue);
+			m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREINVALIDCIPHERVALUE), eModelReaderWarningLevel::mrwInvalidMandatoryValue);
 		}
 	}
 

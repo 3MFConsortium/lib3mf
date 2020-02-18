@@ -30,16 +30,21 @@ Abstract: This is a stub class definition of CWriter
 
 #include "lib3mf_writer.hpp"
 #include "lib3mf_interfaceexception.hpp"
+#include <memory>
 
-// Include custom headers here.
 // Include custom headers here.
 #include "Common/Platform/NMR_Platform.h"
 #include "Common/Platform/NMR_ExportStream_Callback.h"
 #include "Common/Platform/NMR_ExportStream_Memory.h"
 #include "Common/Platform/NMR_ExportStream_Dummy.h"
+#include "Common/NMR_SecureContentTypes.h"
+#include "Common/NMR_SecureContext.h"
+#include "Model/Classes/NMR_KeyStore.h"
+#include "Model/Classes/NMR_KeyStoreConsumer.h"
+#include "Model/Classes/NMR_KeyStoreResourceData.h"
+#include "API/lib3mf_consumer.hpp"
+#include "lib3mf_cipherdata.hpp"
 
-// for memcpy
-#include <cstring>
 
 using namespace Lib3MF::Impl;
 
@@ -78,8 +83,10 @@ void CWriter::WriteToFile (const std::string & sFilename)
 	catch (NMR::CNMRException&e) {
 		if (e.getErrorCode() == NMR_USERABORTED) {
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_CALCULATIONABORTED);
-		}
-		else throw e;
+		} else if (e.getErrorCode() == NMR_ERROR_DEKDESCRIPTORNOTFOUND
+				|| e.getErrorCode() == NMR_ERROR_KEKDESCRIPTORNOTFOUND) {
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_SECURECONTEXTNOTREGISTERED);
+		} else throw e;
 	}
 }
 
@@ -93,8 +100,10 @@ Lib3MF_uint64 CWriter::GetStreamSize ()
 	catch (NMR::CNMRException&e) {
 		if (e.getErrorCode() == NMR_USERABORTED) {
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_CALCULATIONABORTED);
-		}
-		else throw e;
+		} else if (e.getErrorCode() == NMR_ERROR_DEKDESCRIPTORNOTFOUND
+			|| e.getErrorCode() == NMR_ERROR_KEKDESCRIPTORNOTFOUND) {
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_SECURECONTEXTNOTREGISTERED);
+		} else throw e;
 	}
 
 	return pStream->getDataSize();
@@ -102,15 +111,21 @@ Lib3MF_uint64 CWriter::GetStreamSize ()
 
 void CWriter::WriteToBuffer(Lib3MF_uint64 nBufferBufferSize, Lib3MF_uint64* pBufferNeededCount, Lib3MF_uint8 * pBufferBuffer)
 {
-	NMR::PExportStreamMemory pStream = std::make_shared<NMR::CExportStreamMemory>();
-	try {
-		writer().exportToStream(pStream);
-	}
-	catch (NMR::CNMRException&e) {
-		if (e.getErrorCode() == NMR_USERABORTED) {
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_CALCULATIONABORTED);
+	NMR::PExportStreamMemory pStream;
+	if (!momentBuffer || momentBuffer->getDataSize() > nBufferBufferSize) {
+		pStream = std::make_shared<NMR::CExportStreamMemory>();
+		try {
+			writer().exportToStream(pStream);
+		} catch (NMR::CNMRException&e) {
+			if (e.getErrorCode() == NMR_USERABORTED) {
+				throw ELib3MFInterfaceException(LIB3MF_ERROR_CALCULATIONABORTED);
+			} else if (e.getErrorCode() == NMR_ERROR_DEKDESCRIPTORNOTFOUND
+				|| e.getErrorCode() == NMR_ERROR_KEKDESCRIPTORNOTFOUND) {
+				throw ELib3MFInterfaceException(LIB3MF_ERROR_SECURECONTEXTNOTREGISTERED);
+			} else throw e;
 		}
-		else throw e;
+	} else {
+		pStream = momentBuffer;
 	}
 
 	Lib3MF_uint64 cbStreamSize = pStream->getDataSize();
@@ -120,6 +135,9 @@ void CWriter::WriteToBuffer(Lib3MF_uint64 nBufferBufferSize, Lib3MF_uint64* pBuf
 	if (nBufferBufferSize >= cbStreamSize) {
 		// TODO eliminate this copy, perhaps by allowing CExportStreamMemory to use existing buffers
 		std::memcpy(pBufferBuffer, pStream->getData(), static_cast<size_t>(cbStreamSize));
+		momentBuffer.reset();
+	} else {
+		momentBuffer = pStream;
 	}
 }
 
@@ -171,4 +189,75 @@ Lib3MF_uint32 CWriter::GetDecimalPrecision()
 void CWriter::SetDecimalPrecision(const Lib3MF_uint32 nDecimalPrecision)
 {
 	m_pWriter->SetDecimalPrecision(nDecimalPrecision);
+}
+
+void Lib3MF::Impl::CWriter::RegisterKEKClient(const std::string & sConsumerID, const Lib3MF::KeyEncryptionCallback pEncryptionCallback, const Lib3MF_uint32 nKeySize, const Lib3MF_pvoid pUserData) {
+	NMR::KEKDESCRIPTOR descriptor;
+	descriptor.m_sKekDecryptData.m_pUserData = pUserData;
+	descriptor.m_sKekDecryptData.m_KeyBuffer.resize(nKeySize, 0);
+	descriptor.m_fnCrypt =
+		[this, pEncryptionCallback](
+			std::vector<NMR::nfByte> const & plain,
+			NMR::KEKCTX & ctx) {
+		NMR::PKeyStore keystore = this->writer().getKeyStore();
+		NMR::PKeyStoreConsumer consumer = keystore->findConsumerById(ctx.m_sConsumerId);
+		__NMRASSERT(nullptr != consumer);
+		NMR::PKeyStoreResourceData resourceData = keystore->findResourceDataByPath(ctx.m_sResourcePath);
+		__NMRASSERT(nullptr != resourceData);
+		NMR::PKeyStoreDecryptRight decryptRight = resourceData->findDecryptRightByConsumer(consumer);
+		__NMRASSERT(nullptr != decryptRight);
+
+		eEncryptionAlgorithm algorithm = (decryptRight->getEncryptionAlgorithm() == NMR::eKeyStoreEncryptAlgorithm::RsaOaepMgf1p)
+			? eEncryptionAlgorithm::RsaOaepMgf1p : eEncryptionAlgorithm::Aes256Gcm;
+
+		NMR::nfUint64 result = 0;
+		std::shared_ptr<IConsumer> pConsumer = std::make_shared<CConsumer>(consumer);
+		IBase * pBaseConsumer(nullptr);
+		pBaseConsumer = pConsumer.get();
+		Lib3MF_Consumer handle = pBaseConsumer;
+		(*pEncryptionCallback)(handle, algorithm, plain.size(), plain.data(),
+			ctx.m_KeyBuffer.size(), nullptr, ctx.m_KeyBuffer.data(),
+			ctx.m_pUserData, &result);
+
+		if (result < 0)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_CALCULATIONABORTED);
+
+		return result;
+	};
+	writer().getSecureContext()->addKekCtx(sConsumerID, descriptor);
+}
+
+void Lib3MF::Impl::CWriter::RegisterDEKClient(const Lib3MF::DataEncryptionCallback pEncryptionCallback, const Lib3MF_pvoid pUserData)
+{
+	NMR::DEKDESCRIPTOR descriptor;
+	descriptor.m_sDekDecryptData.m_pUserData = pUserData;
+	descriptor.m_fnCrypt = [this, pEncryptionCallback](
+			NMR::nfUint64 size,
+			NMR::nfByte const * plain,
+			NMR::nfByte * cipher,
+			NMR::DEKCTX & ctx) {
+		Lib3MF::sAes256CipherValue cipherDataValue;
+		__NMRASSERT(ctx.m_sCipherValue.m_iv.size() == sizeof(cipherDataValue.m_IV));
+		std::copy(ctx.m_sCipherValue.m_iv.begin(), ctx.m_sCipherValue.m_iv.end(), cipherDataValue.m_IV);
+
+		__NMRASSERT(ctx.m_sCipherValue.m_key.size() == sizeof(cipherDataValue.m_Key));
+		std::copy(ctx.m_sCipherValue.m_key.begin(), ctx.m_sCipherValue.m_key.end(), cipherDataValue.m_Key);
+
+		__NMRASSERT(ctx.m_sCipherValue.m_tag.size() == sizeof(cipherDataValue.m_Tag));
+		std::copy(ctx.m_sCipherValue.m_tag.begin(), ctx.m_sCipherValue.m_tag.end(), cipherDataValue.m_Tag);
+
+		std::shared_ptr<CCipherData> pCipherData = std::make_shared<CCipherData>(cipherDataValue, ctx.m_nfHandler);
+		IBase * pBaseCipherData(nullptr);
+		pBaseCipherData = pCipherData.get();
+		Lib3MF_CipherData handle = pBaseCipherData;
+		NMR::nfUint64 result = 0;
+		(*pEncryptionCallback)(eEncryptionAlgorithm::Aes256Gcm, handle, size, plain, size, nullptr, cipher, ctx.m_pUserData, &result);
+		if (result < 0)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_CALCULATIONABORTED);
+		else if (result == 0) {
+			std::copy(&cipherDataValue.m_Tag[0], &cipherDataValue.m_Tag[16], ctx.m_sCipherValue.m_tag.begin());
+		}
+		return result;
+	};
+	m_pWriter->getSecureContext()->setDekCtx(descriptor);
 }

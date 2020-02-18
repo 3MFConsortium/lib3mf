@@ -68,6 +68,7 @@ namespace NMR {
 		void writeRelationships(_In_ PExportStream pExportStream);
 
 		void setImportStream(_In_ PImportStream pImportStream);
+		void setExportStream(_In_ PExportStream pExportStream);
 	};
 
 	typedef std::shared_ptr<COpcPackagePart> POpcPackagePart;

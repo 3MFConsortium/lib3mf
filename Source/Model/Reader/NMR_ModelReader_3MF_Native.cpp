@@ -56,7 +56,7 @@ namespace NMR {
 
 	PImportStream CModelReader_3MF_Native::extract3MFOPCPackage(_In_ PImportStream pPackageStream)
 	{
-		m_pPackageReader = std::make_shared<CKeyStoreOpcPackageReader>(pPackageStream, m_pModel->getKeyStore(), m_pSecureContext, m_pWarnings, m_pProgressMonitor);
+		m_pPackageReader = std::make_shared<CKeyStoreOpcPackageReader>(pPackageStream, model()->getKeyStore(), getSecureContext(), m_pWarnings, monitor());
 
 		COpcPackageRelationship * pModelRelation = m_pPackageReader->findRootRelation(PACKAGE_START_PART_RELATIONSHIP_TYPE, true);
 		if (pModelRelation == nullptr)
@@ -67,7 +67,7 @@ namespace NMR {
 		if (pModelPart == nullptr)
 			throw CNMRException(NMR_ERROR_OPCCOULDNOTGETMODELSTREAM);
 
-		m_pModel->setRootPath(sTargetPartURI.c_str());
+		model()->setRootPath(sTargetPartURI.c_str());
 
 		// calculate current level at this stage
 		std::string sTargetPartURIDir = fnExtractFileDir(sTargetPartURI);
@@ -76,10 +76,10 @@ namespace NMR {
 		extractCustomDataFromRelationships(sTargetPartURIDir, pModelPart.get());
 		extractModelDataFromRelationships(sTargetPartURIDir, pModelPart.get());
 		
-		nfUint32 prodAttCount = m_pModel->getProductionAttachmentCount();
+		nfUint32 prodAttCount = model()->getProductionAttachmentCount();
 		for (nfUint32 i = 0; i < prodAttCount; i++)
 		{
-			PModelAttachment pProdAttachment = m_pModel->getProductionModelAttachment(i);
+			PModelAttachment pProdAttachment = model()->getProductionModelAttachment(i);
 			std::string pathURI = pProdAttachment->getPathURI();
 			POpcPackagePart pSubModelPart = m_pPackageReader->createPart(pathURI);
 			extractModelDataFromRelationships(sTargetPartURIDir, pSubModelPart.get());
@@ -93,9 +93,9 @@ namespace NMR {
 			if (pThumbnailPart == nullptr)
 				throw CNMRException(NMR_ERROR_OPCCOULDNOTGETTHUMBNAILSTREAM);
 			PImportStream pThumbnailStream = pThumbnailPart->getImportStream()->copyToMemory();
-			m_pModel->addPackageThumbnail()->setStream(pThumbnailStream);
-			m_pProgressMonitor->IncrementProgress((double)pThumbnailStream->retrieveSize());
-			m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
+			model()->addPackageThumbnail()->setStream(pThumbnailStream);
+			monitor()->IncrementProgress((double)pThumbnailStream->retrieveSize());
+			monitor()->ReportProgressAndQueryCancelled(true);
 		}
 		
 		return pModelPart->getImportStream();
@@ -113,7 +113,7 @@ namespace NMR {
 		if (pModelPart == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-		m_pProgressMonitor->SetProgressIdentifier(PROGRESS_READTEXTURETACHMENTS);
+		monitor()->SetProgressIdentifier(PROGRESS_READTEXTURETACHMENTS);
 
 		std::multimap<std::string, POpcPackageRelationship>& RelationShips = pModelPart->getRelationShips();
 		
@@ -132,7 +132,7 @@ namespace NMR {
 				if (!fnStartsWithPathDelimiter(sURI))
 					sURI = sTargetPartURIDir + sURI;
 
-				PModelAttachment pModelAttachment = m_pModel->findModelAttachment(sURI);
+				PModelAttachment pModelAttachment = model()->findModelAttachment(sURI);
 				if (!pModelAttachment) {
 					POpcPackagePart pTexturePart = m_pPackageReader->createPart(sURI);
 					PImportStream pTextureAttachmentStream = pTexturePart->getImportStream();
@@ -144,8 +144,8 @@ namespace NMR {
 					// Add Texture Attachment to Model
 					addTextureAttachment(sURI, pMemoryStream);
 
-					m_pProgressMonitor->IncrementProgress((double)pMemoryStream->retrieveSize());
-					m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
+					monitor()->IncrementProgress((double)pMemoryStream->retrieveSize());
+					monitor()->ReportProgressAndQueryCancelled(true);
 				}
 			}
 		}
@@ -157,7 +157,7 @@ namespace NMR {
 		if (pModelPart == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-		m_pProgressMonitor->SetProgressIdentifier(PROGRESS_READCUSTOMATTACHMENTS);
+		monitor()->SetProgressIdentifier(PROGRESS_READCUSTOMATTACHMENTS);
 
 		std::multimap<std::string, POpcPackageRelationship>& RelationShips = pModelPart->getRelationShips();
 
@@ -181,10 +181,10 @@ namespace NMR {
 						m_pWarnings->addException(CNMRException(NMR_ERROR_IMPORTSTREAMISEMPTY), mrwMissingMandatoryValue);
 
 					// Add Attachment Stream to Model
-					m_pModel->addAttachment(sURI, sRelationShipType, pMemoryStream);
+					model()->addAttachment(sURI, sRelationShipType, pMemoryStream);
 
-					m_pProgressMonitor->IncrementProgress((double)pMemoryStream->retrieveSize());
-					m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
+					monitor()->IncrementProgress((double)pMemoryStream->retrieveSize());
+					monitor()->ReportProgressAndQueryCancelled(true);
 				}
 				catch (CNMRException &e) {
 					if (e.getErrorCode() == NMR_ERROR_INVALIDBUFFERSIZE)
@@ -198,8 +198,8 @@ namespace NMR {
 					&& (sRelationShipType != PACKAGE_TEXTURE_RELATIONSHIP_TYPE)
 					&& (sRelationShipType != PACKAGE_THUMBNAIL_RELATIONSHIP_TYPE) )
 				{
-					m_pProgressMonitor->DecreaseMaxProgress((double)m_pPackageReader->getPartSize(sURI));
-					m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
+					monitor()->DecreaseMaxProgress((double)m_pPackageReader->getPartSize(sURI));
+					monitor()->ReportProgressAndQueryCancelled(true);
 				}
 			}
 		}
@@ -225,10 +225,10 @@ namespace NMR {
 				POpcPackagePart pPart = m_pPackageReader->createPart(sURI);
 
 				// first, check if this attachment already is in model
-				PModelAttachment pModelAttachment = m_pModel->findProductionModelAttachment(sURI);
+				PModelAttachment pModelAttachment = model()->findProductionModelAttachment(sURI);
 				if (pModelAttachment) {
 					// this attachment is already read
-					m_pModel->addProductionAttachment(sURI, sRelationShipType, pModelAttachment->getStream(), false);
+					model()->addProductionAttachment(sURI, sRelationShipType, pModelAttachment->getStream(), false);
 				}
 				else {
 					// this is the first time this attachment is read
@@ -236,7 +236,7 @@ namespace NMR {
 					PImportStream pMemoryStream = pAttachmentStream->copyToMemory();
 					if (pMemoryStream->retrieveSize() == 0)
 						m_pWarnings->addException(CNMRException(NMR_ERROR_IMPORTSTREAMISEMPTY), mrwMissingMandatoryValue);
-					m_pModel->addProductionAttachment(sURI, sRelationShipType, pMemoryStream, true);
+					model()->addProductionAttachment(sURI, sRelationShipType, pMemoryStream, true);
 				}
 			}
 		}

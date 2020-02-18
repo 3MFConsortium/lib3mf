@@ -1186,6 +1186,12 @@ namespace NMR {
 			return bRequireSliceExtension;
 		}
 
+		if (sExtension == XML_3MF_NAMESPACE_SECURECONTENTSPEC) {
+			if (m_pKeyStore.get() != nullptr) {
+				return true;
+			}
+		}
+
 		if (sExtension == XML_3MF_NAMESPACE_PRODUCTIONSPEC) {
 			// We do not write out models that require the production specification
 			// i.e. we do not make use of the "getPath"-redirection.

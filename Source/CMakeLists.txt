@@ -95,6 +95,8 @@ Source/Common/OPC/NMR_OpcPackageWriter.cpp
 Source/Common/Platform/NMR_XmlReader_Native.cpp
 Source/Common/Platform/NMR_ExportStream.cpp
 Source/Common/Platform/NMR_ExportStream_Callback.cpp
+Source/Common/Platform/NMR_ExportStream_Compressed.cpp
+Source/Common/Platform/NMR_ExportStream_Encrypted.cpp
 Source/Common/Platform/NMR_ExportStream_Memory.cpp
 Source/Common/Platform/NMR_ExportStream_Dummy.cpp
 Source/Common/Platform/NMR_ExportStream_ZIP.cpp
@@ -116,6 +118,7 @@ Source/Model/Classes/NMR_Model.cpp
 Source/Model/Classes/NMR_ModelAttachment.cpp
 Source/Model/Classes/NMR_ModelBaseMaterial.cpp
 Source/Model/Classes/NMR_ModelBaseMaterials.cpp
+Source/Model/Classes/NMR_ModelContext.cpp
 Source/Model/Classes/NMR_ModelColorGroup.cpp
 Source/Model/Classes/NMR_ModelCompositeMaterials.cpp
 Source/Model/Classes/NMR_ModelBuildItem.cpp
@@ -209,6 +212,7 @@ Source/Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreConsumer.cpp
 Source/Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreDecryptRight.cpp
 Source/Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreKeyValue.cpp
 Source/Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreResourceData.cpp
+Source/Model/Writer/NMR_KeyStoreOpcPackageWriter.cpp
 Source/Model/Writer/NMR_ModelWriter.cpp
 Source/Model/Writer/NMR_ModelWriterNode.cpp
 Source/Model/Writer/NMR_ModelWriterNode_ModelBase.cpp

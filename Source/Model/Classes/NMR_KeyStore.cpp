@@ -39,6 +39,7 @@ A KeyStore is an in memory representation of the 3MF file.
 #include <memory>
 namespace NMR {
 	CKeyStore::CKeyStore() {
+		m_UUID = std::make_shared<CUUID>();
 	}
 
 	CKeyStore::~CKeyStore() {
@@ -58,7 +59,7 @@ namespace NMR {
 	PKeyStoreConsumer CKeyStore::addConsumer(std::string id, std::string keyId, std::string keyValue)
 	{
 		if (m_ConsumerRefs.find(id) != m_ConsumerRefs.end()) {
-			throw CNMRException(NMR_ERROR_DUPLICATE_KEYSTORECONSUMER);
+			throw CNMRException(NMR_ERROR_KEYSTOREDUPLICATECONSUMER);
 		}
 		PKeyStoreConsumer consumer = std::make_shared<CKeyStoreConsumer>(id, keyId, keyValue);
 		m_Consumers.push_back(consumer);
@@ -117,7 +118,7 @@ namespace NMR {
 	PKeyStoreResourceData CKeyStore::addResourceData(std::string path, eKeyStoreEncryptAlgorithm ea, nfBool compression)
 	{
 		if (m_ResourceDataRefs.find(path) != m_ResourceDataRefs.end()) {
-			throw CNMRException(NMR_ERROR_DUPLICATE_KEYSTORERESOURCEDATA);
+			throw CNMRException(NMR_ERROR_KEYSTOREDUPLICATERESOURCEDATA);
 		}
 		PKeyStoreResourceData resourceData = std::make_shared<CKeyStoreResourceData>(path, ea, compression);
 		m_ResourceDatas.push_back(resourceData);

@@ -39,6 +39,7 @@ These are given by the 3MF Standard
 #define PACKAGE_TEXTURE_CONTENT_TYPE "application/vnd.ms-package.3dmanufacturing-3dmodeltexture"
 #define PACKAGE_PRINT_TICKET_CONTENT_TYPE "application/vnd.ms-printing.printticket+xml"
 #define PACKAGE_CORE_PROPERTIES_CONTENT_TYPE "application/vnd.openxmlformats-package.core-properties+xml"
+#define PACKAGE_KEYSTORE_CONTENT_TYPE "application/vnd.ms-package.3dmanufacturing-keystore+xml"
 #define PACKAGE_GIF_CONTENT_TYPE "image/gif"
 #define PACKAGE_JPG_CONTENT_TYPE "image/jpeg"
 #define PACKAGE_PNG_CONTENT_TYPE "image/png"
@@ -68,7 +69,7 @@ These are given by the 3MF Standard
 #define PACKAGE_TEXTURE_RELATIONSHIP_TYPE "http://schemas.microsoft.com/3dmanufacturing/2013/01/3dtexture"
 #define PACKAGE_CORE_PROPERTIES_RELATIONSHIP_TYPE "http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties"
 #define PACKAGE_THUMBNAIL_RELATIONSHIP_TYPE "http://schemas.openxmlformats.org/package/2006/relationships/metadata/thumbnail"
-#define PACKAGE_MUST_PRESERVE_RELATIONSHIP_TYPE http://schemas.openxmlformats.org/package/2006/relationships/mustpreserve"
+#define PACKAGE_MUST_PRESERVE_RELATIONSHIP_TYPE "http://schemas.openxmlformats.org/package/2006/relationships/mustpreserve"
 #define PACKAGE_KEYSTORE_RELATIONSHIP_TYPE "http://schemas.microsoft.com/3dmanufacturing/2019/04/keystore"
 
 #define XML_3MF_NAMESPACE_XML "http://www.w3.org/XML/1998/namespace"
@@ -87,6 +88,7 @@ These are given by the 3MF Standard
 #define XML_3MF_NAMESPACEPREFIX_PRODUCTION "p"
 #define XML_3MF_NAMESPACEPREFIX_BEAMLATTICE "b"
 #define XML_3MF_NAMESPACEPREFIX_SLICE "s"
+#define XML_3MF_NAMESPACEPREFIX_SECURECONTENT "sc"
 
 #define XML_3MF_ATTRIBUTE_XMLNS                     "xmlns"
 #define XML_3MF_ATTRIBUTE_PREFIX_XML                "xml"
@@ -366,6 +368,7 @@ These are given by the 3MF Standard
 #define XML_3MF_SECURE_CONTENT_ENCRYPTION_AES256	"http://www.w3.org/2009/xmlenc11#aes256-gcm"
 #define XML_3MF_SECURE_CONTENT_ENCRYPTION_RSA		"http://www.w3.org/2001/04/xmlenc#rsa-oaep-mgf1p"
 #define XML_3MF_SECURE_CONTENT_COMPRESSION_DEFLATE	"deflate"
+#define XML_3MF_SECURE_CONTENT_COMPRESSION_NONE		"none"
 #define XML_3MF_SECURE_CONTENT_CONSUMER_INDEX		"consumerindex"
 #define XML_3MF_SECURE_CONTENT_ALGORITHM			"Algorithm"
 

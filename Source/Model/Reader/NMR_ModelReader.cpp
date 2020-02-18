@@ -35,7 +35,7 @@ A model reader reads in a model file and generates an in-memory representation o
 #include "Common/NMR_Exception_Windows.h" 
 #include "Common/Platform/NMR_ImportStream.h" 
 #include "Common/NMR_SecureContext.h"
-
+#include "Common/3MF_ProgressMonitor.h"
 #include "Model/Classes/NMR_ModelObject.h" 
 #include "Model/Classes/NMR_ModelMeshObject.h" 
 #include "Model/Classes/NMR_ModelBuildItem.h" 
@@ -43,19 +43,9 @@ A model reader reads in a model file and generates an in-memory representation o
 namespace NMR {
 
 	CModelReader::CModelReader(_In_ PModel pModel)
+		:CModelContext(pModel)
 	{
-		if (!pModel.get())
-			throw CNMRException(NMR_ERROR_INVALIDPARAM);
-
-		m_pModel = pModel;
 		m_pWarnings = std::make_shared<CModelReaderWarnings>();
-
-		m_pProgressMonitor = std::make_shared<CProgressMonitor>();
-
-		// Clear all legacy settings
-		m_pModel->clearAll();
-
-		m_pSecureContext = std::make_shared<CSecureContext>();
 	}
 
 	void CModelReader::readFromMeshImporter(_In_ CMeshImporter * pImporter)
@@ -69,12 +59,12 @@ namespace NMR {
 		pImporter->loadMesh(pMesh.get(), nullptr);
 
 		// Add Single Mesh to Model 
-		PModelMeshObject pMeshObject = std::make_shared<CModelMeshObject>(m_pModel->generateResourceID(), m_pModel.get(), pMesh);
-		m_pModel->addResource(pMeshObject);
+		PModelMeshObject pMeshObject = std::make_shared<CModelMeshObject>(model()->generateResourceID(), model().get(), pMesh);
+		model()->addResource(pMeshObject);
 
 		// Add Build Item to Model 
-		PModelBuildItem pBuildItem = std::make_shared<CModelBuildItem>(pMeshObject.get(), m_pModel->createHandle());
-		m_pModel->addBuildItem(pBuildItem);
+		PModelBuildItem pBuildItem = std::make_shared<CModelBuildItem>(pMeshObject.get(), model()->createHandle());
+		model()->addBuildItem(pBuildItem);
 	}
 
 	PImportStream CModelReader::retrievePrintTicket(_Out_ std::string & sContentType)
@@ -98,14 +88,4 @@ namespace NMR {
 		m_RelationsToRead.erase(sRelationShipType);
 	}
 
-	void CModelReader::SetProgressCallback(Lib3MFProgressCallback callback, void* userData)
-	{
-		m_pProgressMonitor->SetProgressCallback(callback, userData);
-	}
-	PSecureContext CModelReader::getSecureContext() const {
-		return m_pSecureContext;
-	}
-	PKeyStore CModelReader::getKeyStore() const {
-		return m_pModel->getKeyStore();
-	}
 }

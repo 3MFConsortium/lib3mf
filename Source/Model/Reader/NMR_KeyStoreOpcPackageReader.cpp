@@ -78,7 +78,7 @@ namespace NMR {
 								ctx.m_sKekDecryptData.m_sConsumerId = consumer->getConsumerID();
 								ctx.m_sKekDecryptData.m_sResourcePath = rd->getPath()->getPath();
 								CIPHERVALUE closed = decryptRight->getCipherValue();
-								size_t decrypted = ctx.m_fnDecrypt(closed.m_key, ctx.m_sKekDecryptData);
+								size_t decrypted = ctx.m_fnCrypt(closed.m_key, ctx.m_sKekDecryptData);
 								if (decrypted) {
 									CIPHERVALUE open = closed;
 									open.m_key = ctx.m_sKekDecryptData.m_KeyBuffer;
@@ -140,7 +140,7 @@ namespace NMR {
 			std::string sTargetPartURI = pKeyStoreRelation->getTargetPartURI();
 			POpcPackagePart pKeystorePart = m_pPackageReader->createPart(sTargetPartURI);
 			if (pKeystorePart == nullptr)
-				throw CNMRException(NMR_ERROR_OPCCOULDNOTGETKEYSTORESTREAM);
+				throw CNMRException(NMR_ERROR_KEYSTOREOPCCOULDNOTGETSTREAM);
 			return pKeystorePart->getImportStream();
 		}
 		return nullptr;
@@ -186,7 +186,7 @@ namespace NMR {
 				DEKDESCRIPTOR descriptor = m_pSecureContext->getDekCtx();
 				descriptor.m_sDekDecryptData.m_sCipherValue = rd->getCipherValue();
 				descriptor.m_sDekDecryptData.m_nfHandler = rd->getHandle();
-				descriptor.m_fnDecrypt(std::vector<nfByte>(), nullptr, descriptor.m_sDekDecryptData);
+				descriptor.m_fnCrypt(0, nullptr, nullptr, descriptor.m_sDekDecryptData);
 			}
 		}
 	}

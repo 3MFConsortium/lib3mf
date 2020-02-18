@@ -55,28 +55,28 @@ namespace NMR {
 		if (pStream == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-		m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_CREATEOPCPACKAGE);
-		m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
+		monitor()->SetProgressIdentifier(ProgressIdentifier::PROGRESS_CREATEOPCPACKAGE);
+		monitor()->ReportProgressAndQueryCancelled(true);
 
 		// Create new OPC Package
-		createPackage(m_pModel.get());
+		createPackage(model().get());
 
-		m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_WRITEMODELSTOSTREAM);
-		m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
+		monitor()->SetProgressIdentifier(ProgressIdentifier::PROGRESS_WRITEMODELSTOSTREAM);
+		monitor()->ReportProgressAndQueryCancelled(true);
 
 		// Write Package to Stream
 		writePackageToStream(pStream);
 
-		m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_CLEANUP);
-		m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
+		monitor()->SetProgressIdentifier(ProgressIdentifier::PROGRESS_CLEANUP);
+		monitor()->ReportProgressAndQueryCancelled(true);
 
 		// Release Memory
 		releasePackage();
 
-		m_pProgressMonitor->IncrementProgress(1);
+		monitor()->IncrementProgress(1);
 
-		m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_DONE);
-		m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
+		monitor()->SetProgressIdentifier(ProgressIdentifier::PROGRESS_DONE);
+		monitor()->ReportProgressAndQueryCancelled(true);
 	}
 
 	void CModelWriter_3MF::writeNonRootModelStream(_In_ CXmlWriter *pXMLWriter)
@@ -85,7 +85,7 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
 		pXMLWriter->WriteStartDocument();
-		CModelWriterNode100_Model ModelNode(m_pModel.get(), pXMLWriter, m_pProgressMonitor, GetDecimalPrecision(), false);
+		CModelWriterNode100_Model ModelNode(model().get(), pXMLWriter, monitor(), GetDecimalPrecision(), false);
 		ModelNode.writeToXML();
 
 		pXMLWriter->WriteEndDocument();
@@ -98,9 +98,11 @@ namespace NMR {
 		if (pXMLWriter == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
+		model()->setCurrentPath(model()->rootPath());
+
 		pXMLWriter->WriteStartDocument();
 
-		CModelWriterNode100_Model ModelNode(pModel, pXMLWriter, m_pProgressMonitor, GetDecimalPrecision(), true);
+		CModelWriterNode100_Model ModelNode(pModel, pXMLWriter, monitor(), GetDecimalPrecision(), true);
 		ModelNode.writeToXML();
 
 		pXMLWriter->WriteEndDocument();

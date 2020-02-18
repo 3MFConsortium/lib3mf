@@ -34,27 +34,22 @@ A model reader reads in a model file and generates an in-memory representation o
 #ifndef __NMR_MODELREADER
 #define __NMR_MODELREADER
 
-#include "Model/Classes/NMR_Model.h" 
+#include "Model/Classes/NMR_ModelContext.h"
 #include "Model/Reader/NMR_ModelReaderWarnings.h" 
 #include "Common/MeshImport/NMR_MeshImporter.h" 
-#include "Common/3MF_ProgressMonitor.h" 
 
 #include <list>
+#include <set>
 
 namespace NMR {
-	class CSecureContext;
-	using PSecureContext = std::shared_ptr<CSecureContext>;
 
-	class CModelReader {
+	class CModelReader : public CModelContext {
 	protected:
-		PModel m_pModel;
-		PSecureContext m_pSecureContext;
 		PImportStream m_pPrintTicketStream;
 		std::string m_sPrintTicketContentType;
 		std::set<std::string> m_RelationsToRead;
 
 		PModelReaderWarnings m_pWarnings;
-		PProgressMonitor m_pProgressMonitor;
 
 		void readFromMeshImporter(_In_ CMeshImporter * pImporter);
 	public:
@@ -68,11 +63,6 @@ namespace NMR {
 
 		void addRelationToRead(_In_ std::string sRelationShipType);
 		void removeRelationToRead(_In_ std::string sRelationShipType);
-
-		void SetProgressCallback(Lib3MFProgressCallback callback, void* userData);
-
-		PSecureContext getSecureContext() const;
-		PKeyStore getKeyStore() const;
 	};
 
 	typedef std::shared_ptr <CModelReader> PModelReader;

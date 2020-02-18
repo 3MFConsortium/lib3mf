@@ -84,6 +84,7 @@
 		<error name="INVALIDKEYSTORECONSUMER" code="3001" description="The consumer keystore object is invalid"/>
 		<error name="KEYSTORECONSUMERNOTFOUND" code="3002" description="A consumer has not been found"/>
 		<error name="KEYSTORERESOURCEDATANOTFOUND" code="3003" description="A resource data has not been found"/>
+		<error name="SECURECONTEXTNOTREGISTERED" code="3004" description="A Key or Conentent encryption callback has not been registered"/>
 	</errors>
 
 	<enum name="PropertyType">
@@ -171,6 +172,7 @@
 		<option name="WRITENODES" value="20"/>
 		<option name="WRITETRIANGLES" value="21"/>
 		<option name="WRITESLICES" value="22"/>
+		<option name="WRITEKEYSTORE" value="23"/>
 	</enum>
 
 	<enum name="BlendMethod">
@@ -285,6 +287,16 @@
 		<method name="SetDecimalPrecision" description="Sets the number of digits after the decimal point to be written in each vertex coordinate-value.">
 			<param name="DecimalPrecision" type="uint32" pass="in" description="The number of digits to be written in each vertex coordinate-value after the decimal point."/>
 		</method>
+		<method name="RegisterKEKClient" description="Registers a callback to deal with data key encryption/decryption from keystore">
+			<param name="ConsumerID" type="string" pass="in" description="The ConsumerID to register for"/>
+			<param name="EncryptionCallback" type="functiontype" class="KeyEncryptionCallback" pass="in" description="The callback used to encrypt data key"/>
+			<param name="KeySize" type="uint32" pass="in" description="The expected size of the key"/>
+			<param name="UserData" type="pointer" pass="in" description="Userdata that is passed to the callback function"/>
+		</method>
+    <method name="RegisterDEKClient" description="Registers a callback to deal with encryption of content">
+      <param name="DecryptionCallback" type="functiontype" class="DataEncryptionCallback" pass="in" description="The callback used to encrypt content"/>
+      <param name="UserData" type="pointer" pass="in" description="Userdata that is passed to the callback function"/>
+    </method>
 	</class>
 
 	<class name="Reader">
@@ -326,15 +338,15 @@
 		</method>
 		<method name="RegisterKEKClient" description="Registers a callback to deal with data key encryption/decryption from keystore">
 			<param name="ConsumerID" type="string" pass="in" description="The ConsumerID to register for"/>
-			<param name="DecryptionCallback" type="functiontype" class="KeyDecryptionCallback" pass="in" description="The callback used to encrypt data key"/>
+			<param name="DecryptionCallback" type="functiontype" class="KeyDecryptionCallback" pass="in" description="The callback used to decrypt data key"/>
 			<param name="KeySize" type="uint32" pass="in" description="The expected size of the key"/>
 			<param name="UserData" type="pointer" pass="in" description="Userdata that is passed to the callback function"/>
 		</method>
 		<method name="RegisterDEKClient" description="Registers a callback to deal with encryption of content">
 			<param name="DecryptionCallback" type="functiontype" class="DataDecryptionCallback" pass="in" description="The callback used to encrypt content"/>
 			<param name="UserData" type="pointer" pass="in" description="Userdata that is passed to the callback function"/>
-		</method>		
-	</class>
+		</method>
+  </class>
 
 	<class name="PackagePart">
 		<method name="Get" description="Returns the absolute path of this PackagePart.">
@@ -1134,6 +1146,15 @@
 		</method>
 	</class>
 
+	<functiontype name="KeyEncryptionCallback" description="A callback used to encrypt the contents of the key for a resource data. CipherKey and PlainKey are guaranteed to have same size on each call.">
+		<param name="Consumer" type="class" class="Consumer" pass="in" description="The consumer instance associated with the decryptright holder of the key"/>
+		<param name="EncryptionAlgorithm" type="enum" class="EncryptionAlgorithm" pass="in" description="The encryption algorithm used for encrypting the key"/>
+		<param name="PlainKey" type="basicarray" class="uint8" pass="in" description="Buffer to the plain key if the resource data"/>
+		<param name="CipherKey" type="basicarray" class="uint8" pass="out" description="Buffer where the cipher key should be placed"/>
+		<param name="UserData" type="pointer" pass="in" description="Userdata that is passed to the callback function"/>
+		<param name="Result" type="uint64" pass="return" description="Amount of bytes encrypted if succeed. If error, a negative value"/>
+	</functiontype>
+
 	<functiontype name="KeyDecryptionCallback" description="A callback used to decrypt the contents of the key available in keystore resourcedata decryptrigth. CipherKey and PlainKey are guaranteed to have same size on each call.">
 		<param name="Consumer" type="class" class="Consumer" pass="in" description="The consumer instance associated with the decryptright holder of the key"/>
 		<param name="EncryptionAlgorithm" type="enum" class="EncryptionAlgorithm" pass="in" description="The encryption algorithm used for encrypting the key"/>
@@ -1169,7 +1190,16 @@
 		<param name="UserData" type="pointer" pass="in" description="Userdata that is passed to the callback function"/>
 		<param name="Result" type="uint64" pass="return" description="Amount of bytes decrypted if succeed. If error, a negative value"/>
 	</functiontype>
-	
+
+  <functiontype name="DataEncryptionCallback" description="A callback to encrypt content called on each resourcedata decrypted. This might be called several times depending on content size. Cipher and Plain are guaranteed to have same size on each call. If cipher size is zero, clients must return the result of authenticated tag validation">
+    <param name="EncryptionAlgorithm" type="enum" class="EncryptionAlgorithm" pass="in" description="The encryption algorithm to be used"/>
+    <param name="CipherData" type="class" class="CipherData" pass="in" description="The cipherData instance containing the key information."/>
+    <param name="Plain" type="basicarray" class="uint8" pass="in" description="Buffer to the plain buffer"/>
+    <param name="Cipher" type="basicarray" class="uint8" pass="out" description="Buffer to hold cipher data buffer"/>
+    <param name="UserData" type="pointer" pass="in" description="Userdata that is passed to the callback function"/>
+    <param name="Result" type="uint64" pass="return" description="Amount of bytes decrypted if succeed. If error, a negative value"/>
+  </functiontype>
+  
 	<enum name="Compression">
 		<option name="None" value="0" description="No compression applied"/>
 		<option name="Deflate" value="1" description="Deflate compression applied"/>
