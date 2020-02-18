@@ -442,8 +442,6 @@ namespace Lib3MF {
 			Lib3MF_uint64 *result) {
 
 
-			ASSERT_GE(inSize, 256);
-
 			CConsumer c(SecureContentT::wrapper.get(), pConsumer);
 			SecureContentT::wrapper->Acquire(&c);
 
