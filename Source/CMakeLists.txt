@@ -216,12 +216,14 @@ Source/Model/Writer/NMR_KeyStoreOpcPackageWriter.cpp
 Source/Model/Writer/NMR_ModelWriter.cpp
 Source/Model/Writer/NMR_ModelWriterNode.cpp
 Source/Model/Writer/NMR_ModelWriterNode_ModelBase.cpp
+Source/Model/Writer/NMR_ModelWriterNode_KeyStoreBase.cpp
 Source/Model/Writer/NMR_ModelWriter_3MF.cpp
 Source/Model/Writer/NMR_ModelWriter_3MF_Native.cpp
 Source/Model/Writer/NMR_ModelWriter_ColorMapping.cpp
 Source/Model/Writer/NMR_ModelWriter_STL.cpp
 Source/Model/Writer/NMR_ModelWriter_TexCoordMapping.cpp
 Source/Model/Writer/NMR_ModelWriter_TexCoordMappingContainer.cpp
+Source/Model/Writer/SecureContent085/NMR_ModelWriterNode_KeyStore.cpp
 Source/Model/Writer/v100/NMR_ModelWriterNode100_Mesh.cpp
 Source/Model/Writer/v100/NMR_ModelWriterNode100_Model.cpp
 )

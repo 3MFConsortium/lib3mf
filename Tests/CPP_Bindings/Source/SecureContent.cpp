@@ -127,18 +127,14 @@ namespace Lib3MF {
 		ASSERT_TRUE(nullptr != keyStore);
 
 		std::string path1 = "/3D/nonrootmodel1.model";
-		auto meshObject = model->AddMeshObject();
-		meshObject->SetGeometry(CLib3MFInputVector<sPosition>(pVertices, 8), CLib3MFInputVector<sTriangle>(pTriangles, 12));
-		meshObject->PackagePart()->Set(path1);
+		auto part1 = model->FindOrCreatePackagePart(path1);
 
-		keyStore->AddResourceData(meshObject->PackagePart().get(), Lib3MF::eEncryptionAlgorithm::Aes256Gcm, Lib3MF::eCompression::Deflate);
+		keyStore->AddResourceData(part1.get(), Lib3MF::eEncryptionAlgorithm::Aes256Gcm, Lib3MF::eCompression::Deflate);
 
 		std::string path2 = "/3D/nonrootmodel2.model";
-		meshObject = model->AddMeshObject();
-		meshObject->SetGeometry(CLib3MFInputVector<sPosition>(pVertices, 8), CLib3MFInputVector<sTriangle>(pTriangles, 12));
-		meshObject->PackagePart()->Set(path2);
+		auto part2 = model->FindOrCreatePackagePart(path2);
 
-		keyStore->AddResourceData(meshObject->PackagePart().get(), Lib3MF::eEncryptionAlgorithm::Aes256Gcm, Lib3MF::eCompression::None);
+		keyStore->AddResourceData(part2.get(), Lib3MF::eEncryptionAlgorithm::Aes256Gcm, Lib3MF::eCompression::None);
 
 		ASSERT_EQ(2, keyStore->GetResourceDataCount());
 		ASSERT_EQ(path1, keyStore->GetResourceData(0)->GetPath()->Get());
@@ -151,23 +147,15 @@ namespace Lib3MF {
 		ASSERT_TRUE(nullptr != keyStore);
 
 		std::string path1 = "/3D/nonrootmodel1.model";
-		auto meshObject = model->AddMeshObject();
-		meshObject->SetGeometry(CLib3MFInputVector<sPosition>(pVertices, 8), CLib3MFInputVector<sTriangle>(pTriangles, 12));
-		meshObject->PackagePart()->Set(path1);
+		auto part1 = model->FindOrCreatePackagePart(path1);
 
-		keyStore->AddResourceData(meshObject->PackagePart().get(), Lib3MF::eEncryptionAlgorithm::Aes256Gcm, Lib3MF::eCompression::Deflate);
+		keyStore->AddResourceData(part1.get(), Lib3MF::eEncryptionAlgorithm::Aes256Gcm, Lib3MF::eCompression::Deflate);
 
 		std::string path2 = "/3D/nonrootmodel2.model";
-		meshObject = model->AddMeshObject();
-		meshObject->SetGeometry(CLib3MFInputVector<sPosition>(pVertices, 8), CLib3MFInputVector<sTriangle>(pTriangles, 12));
-		meshObject->PackagePart()->Set(path2);
+		auto part2 = model->FindOrCreatePackagePart(path2);
 
-		keyStore->AddResourceData(meshObject->PackagePart().get(), Lib3MF::eEncryptionAlgorithm::Aes256Gcm, Lib3MF::eCompression::None);
+		keyStore->AddResourceData(part2.get(), Lib3MF::eEncryptionAlgorithm::Aes256Gcm, Lib3MF::eCompression::None);
 
-		ASSERT_EQ(2, keyStore->GetResourceDataCount());
-		ASSERT_EQ(path1, keyStore->GetResourceData(0)->GetPath()->Get());
-		ASSERT_EQ(path2, keyStore->GetResourceData(1)->GetPath()->Get());
-		
 		Lib3MF::PConsumer consumer1 = keyStore->AddConsumer("consumerId1", "consumerKeyId1", "consumerKeyValue1");
 		Lib3MF::PConsumer consumer2 = keyStore->AddConsumer("consumerId2", "consumerKeyId2", "consumerKeyValue2");
 
@@ -536,14 +524,9 @@ namespace Lib3MF {
 	TEST_F(SecureContentT, WriteKeyStore) {
 		Lib3MF::PModel secureModel = wrapper->CreateModel();
 		//create the attachment to be secured
-		std::string path = "/3D/securemesh.model";
 		//add a mesh
 		Lib3MF::PMeshObject meshObject = secureModel->AddMeshObject();
 		meshObject->SetGeometry(CLib3MFInputVector<sPosition>(pVertices, 8), CLib3MFInputVector<sTriangle>(pTriangles, 12));
-		//set the mesh apart of the main root model
-		auto modelPath = meshObject->PackagePart();
-		modelPath->Set(path);
-
 		sTransform transformation;
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < 3; j++)
@@ -551,6 +534,11 @@ namespace Lib3MF {
 		}
 
 		secureModel->AddBuildItem(meshObject.get(), transformation);
+
+		//set the mesh apart of the main root model
+		std::string path = "/3D/securemesh.model";
+		auto secureMeshPart = secureModel->FindOrCreatePackagePart(path);
+		meshObject->SetPackagePart(secureMeshPart.get());
 
 		Lib3MF::PKeyStore keyStore = secureModel->GetKeyStore();
 		
@@ -561,7 +549,7 @@ namespace Lib3MF {
 		std::string consumerId = "HP#MOP44B#SG5693454";
 		Lib3MF::PConsumer consumer = keyStore->AddConsumer(consumerId, keyId, keyValue);
 		//create a resource data
-		Lib3MF::PResourceData resourceData = keyStore->AddResourceData(modelPath.get(), Lib3MF::eEncryptionAlgorithm::Aes256Gcm, Lib3MF::eCompression::Deflate);
+		Lib3MF::PResourceData resourceData = keyStore->AddResourceData(secureMeshPart.get(), Lib3MF::eEncryptionAlgorithm::Aes256Gcm, Lib3MF::eCompression::Deflate);
 		//add decryptright for the consumer (optional)
 		Lib3MF::PDecryptRight decryptRight = resourceData->AddDecryptRight(consumer.get(), Lib3MF::eEncryptionAlgorithm::RsaOaepMgf1p);
 		
@@ -579,13 +567,9 @@ namespace Lib3MF {
 	TEST_F(SecureContentT, WriteMultipleConsumersSecureContent) {
 		Lib3MF::PModel secureModel = wrapper->CreateModel();
 		//create the attachment to be secured
-		std::string path = "/3D/securemesh.model";
 		//add a mesh
 		Lib3MF::PMeshObject meshObject = secureModel->AddMeshObject();
 		meshObject->SetGeometry(CLib3MFInputVector<sPosition>(pVertices, 8), CLib3MFInputVector<sTriangle>(pTriangles, 12));
-		//set the mesh apart of the main root model
-		auto modelPath = meshObject->PackagePart();
-		modelPath->Set(path);
 
 		sTransform transformation;
 		for (int i = 0; i < 4; i++) {
@@ -594,6 +578,11 @@ namespace Lib3MF {
 		}
 
 		secureModel->AddBuildItem(meshObject.get(), transformation);
+
+		//set the mesh apart of the main root model
+		std::string path = "/3D/securemesh.model";
+		auto secureMeshPart = secureModel->FindOrCreatePackagePart(path);
+		meshObject->SetPackagePart(secureMeshPart.get());
 
 		Lib3MF::PKeyStore keyStore = secureModel->GetKeyStore();
 
@@ -611,7 +600,7 @@ namespace Lib3MF {
 		Lib3MF::PConsumer consumer2 = keyStore->AddConsumer(consumerId2, keyId2, keyValue2);
 
 		//create a resource data
-		Lib3MF::PResourceData resourceData = keyStore->AddResourceData(modelPath.get(), Lib3MF::eEncryptionAlgorithm::Aes256Gcm, Lib3MF::eCompression::None);
+		Lib3MF::PResourceData resourceData = keyStore->AddResourceData(secureMeshPart.get(), Lib3MF::eEncryptionAlgorithm::Aes256Gcm, Lib3MF::eCompression::None);
 
 		//add decryptright for the consumer (optional)
 		Lib3MF::PDecryptRight decryptRight = resourceData->AddDecryptRight(consumer.get(), Lib3MF::eEncryptionAlgorithm::RsaOaepMgf1p);

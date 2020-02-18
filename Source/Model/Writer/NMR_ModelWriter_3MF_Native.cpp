@@ -134,7 +134,7 @@ namespace NMR {
 
 		for (iContentTypeIterator = CustomContentTypes.begin(); iContentTypeIterator != CustomContentTypes.end(); iContentTypeIterator++) {
 			if (!m_pModel->contentTypeIsDefault(iContentTypeIterator->first)) {
-				pPackageWriter->addContentType(iContentTypeIterator->first, iContentTypeIterator->second);
+				m_pPackageWriter->addContentType(iContentTypeIterator->first, iContentTypeIterator->second);
 			}
 		}
 	}

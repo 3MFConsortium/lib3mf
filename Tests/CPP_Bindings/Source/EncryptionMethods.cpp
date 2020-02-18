@@ -378,25 +378,26 @@ namespace Lib3MF {
 	//TODO: create new encrypted model with a mesh, save it. Read, and do asserts
 	TEST_F(EncryptionMethods, WriteEncryptedProductionModel) {
 		Lib3MF::PModel secureModel = wrapper->CreateModel();
-		std::string path = "/3D/securemesh.model";
 		Lib3MF::PMeshObject meshObject = secureModel->AddMeshObject();
 		meshObject->SetGeometry(CLib3MFInputVector<sPosition>(pVertices, 8), CLib3MFInputVector<sTriangle>(pTriangles, 12));
-		Lib3MF::PPackagePath modelPath = meshObject->PackagePath();
-		modelPath->Set(path);
 		sTransform transformation;
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < 3; j++)
 				transformation.m_Fields[i][j] = Lib3MF_single(i - j);
 		}
 		secureModel->AddBuildItem(meshObject.get(), transformation);
-		
+
+		std::string path = "/3D/securemesh.model";
+		auto secureMeshPart = secureModel->FindOrCreatePackagePart(path);
+		meshObject->SetPackagePart(secureMeshPart.get());
+
 		Lib3MF::PKeyStore keyStore = secureModel->GetKeyStore();
 		keyStore->SetUUID("b7aa9c75-5fbd-48c1-a893-40289e45ab8f");
 		std::string keyValue = "-----BEGIN PUBLIC KEY-----\r\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAw53q4y2KB2WcoOBUE9OE\r\nXI0OCzUf4SI1J6fDx6XeDJ8PzqxN4pPRtXgtKfp/RiSL0invf7ASfkBMcXuhD8XP\r\n0uki3JIzvsxTH+Jnnz/PrYnS9DFa6c9MYciTIV8vC4u03vkZH6OuGq4rWeSZuNCT\r\nCgT59q67Ly6OytNsQgsDHL2QO8xhpYdQ4bx7F0uNn5LAxFyA0ymsFsgSSLONJWza\r\nVtsq9jvkIOEdTzYq52PAXMUIpegbyqSheNlmedcss8teqiZGnCOxpBxL3z+ogcFe\r\nnX1S8kq2UhzOjXLEjPs9B0SchwXSadephL89shJwra+30NS3R3frwfCz+a3H6wTV\r\nBwIDAQAB\r\n-----END PUBLIC KEY-----\r\n\t\t";
 		std::string keyId = "KEK_xxx";
 		std::string consumerId = "HP#MOP44B#SG5693454";
 		Lib3MF::PConsumer consumer = keyStore->AddConsumer(consumerId, keyId, keyValue);
-		Lib3MF::PResourceData resourceData = keyStore->AddResourceData(modelPath.get(), Lib3MF::eEncryptionAlgorithm::Aes256Gcm, Lib3MF::eCompression::Deflate);
+		Lib3MF::PResourceData resourceData = keyStore->AddResourceData(secureMeshPart.get(), Lib3MF::eEncryptionAlgorithm::Aes256Gcm, Lib3MF::eCompression::Deflate);
 		Lib3MF::PDecryptRight decryptRight = resourceData->AddDecryptRight(consumer.get(), Lib3MF::eEncryptionAlgorithm::RsaOaepMgf1p);		
 
 		PWriter writer = secureModel->QueryWriter("3mf");
