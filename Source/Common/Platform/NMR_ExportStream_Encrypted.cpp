@@ -33,7 +33,8 @@ namespace NMR {
 	{
 		std::vector<nfByte> encryptBuffer(cbTotalBytesToWrite, 0);
 		auto encryptedBytes = m_pDecryptContext.m_fnCrypt(cbTotalBytesToWrite, (const nfByte *)pBuffer, encryptBuffer.data(), m_pDecryptContext.m_sDekDecryptData);
-		__NMRASSERT(encryptedBytes == cbTotalBytesToWrite)
+		if (encryptedBytes != cbTotalBytesToWrite)
+			throw CNMRException(NMR_ERROR_CALCULATIONTERMINATED);
 		auto writtenBytes = m_pEncryptedStream->writeBuffer(encryptBuffer.data(), encryptedBytes);
 		return writtenBytes;
 	}

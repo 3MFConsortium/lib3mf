@@ -76,6 +76,14 @@ inline std::vector<Lib3MF_uint8> ReadFileIntoBuffer(std::string sFileName)
 	return buffer;
 }
 
+inline void WriteBufferToFile(std::vector<Lib3MF_uint8> const & buffer, std::string sFileName) 
+{
+	std::ofstream file(sFileName, std::ios::binary);
+	for (Lib3MF_uint8 cByte: buffer) {
+		file.put(cByte);
+	}
+	file.close();
+}
 
 inline sLib3MFTransform getIdentityTransform()
 {

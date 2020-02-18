@@ -98,6 +98,8 @@ namespace NMR {
 		if (pXMLWriter == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
+		model()->setCurrentPath(model()->rootPath());
+
 		pXMLWriter->WriteStartDocument();
 
 		CModelWriterNode100_Model ModelNode(pModel, pXMLWriter, monitor(), GetDecimalPrecision(), true);

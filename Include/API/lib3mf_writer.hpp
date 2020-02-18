@@ -45,6 +45,11 @@ Abstract: This is the class declaration of CWriter
 #include "Model/Writer/NMR_ModelWriter_3MF_Native.h"
 #include "Model/Writer/NMR_ModelWriter_STL.h"
 
+namespace NMR {
+	class CExportStreamMemory;
+	using PExportStreamMemory = std::shared_ptr<CExportStreamMemory>;
+}
+
 namespace Lib3MF {
 namespace Impl {
 
@@ -60,6 +65,7 @@ private:
 	*/
 	NMR::PModelWriter m_pWriter;
 
+	NMR::PExportStreamMemory momentBuffer;
 protected:
 
 	/**

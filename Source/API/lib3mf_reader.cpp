@@ -218,13 +218,17 @@ void Lib3MF::Impl::CReader::RegisterDEKClient(Lib3MF::DataDecryptionCallback pDe
 	descriptor.m_sDekDecryptData.m_pUserData = pUserData;
 	descriptor.m_fnCrypt = [this, pDecryptionCallback](NMR::nfUint64 size, NMR::nfByte const * cipher, NMR::nfByte * plain, NMR::DEKCTX & ctx) {
 		Lib3MF::sAes256CipherValue cipherDataValue;
-		__NMRASSERT(ctx.m_sCipherValue.m_iv.size() == sizeof(cipherDataValue.m_IV));
+
+		if (ctx.m_sCipherValue.m_iv.size() != sizeof(cipherDataValue.m_IV))
+			throw NMR::CNMRException(NMR_ERROR_INVALIDBUFFERSIZE);
 		std::copy(ctx.m_sCipherValue.m_iv.begin(), ctx.m_sCipherValue.m_iv.end(), cipherDataValue.m_IV);
 
-		__NMRASSERT(ctx.m_sCipherValue.m_key.size() == sizeof(cipherDataValue.m_Key));
+		if (ctx.m_sCipherValue.m_key.size() != sizeof(cipherDataValue.m_Key))
+			throw NMR::CNMRException(NMR_ERROR_INVALIDBUFFERSIZE);
 		std::copy(ctx.m_sCipherValue.m_key.begin(), ctx.m_sCipherValue.m_key.end(), cipherDataValue.m_Key);
 
-		__NMRASSERT(ctx.m_sCipherValue.m_tag.size() == sizeof(cipherDataValue.m_Tag));
+		if (ctx.m_sCipherValue.m_tag.size() != sizeof(cipherDataValue.m_Tag))
+			throw NMR::CNMRException(NMR_ERROR_INVALIDBUFFERSIZE);
 		std::copy(ctx.m_sCipherValue.m_tag.begin(), ctx.m_sCipherValue.m_tag.end(), cipherDataValue.m_Tag);
 
 		std::shared_ptr<CCipherData> pCipherData = std::make_shared<CCipherData>(cipherDataValue, ctx.m_nfHandler);
