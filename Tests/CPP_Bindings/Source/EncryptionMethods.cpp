@@ -377,8 +377,6 @@ namespace Lib3MF {
 	
 	//TODO: create new encrypted model with a mesh, save it. Read, and do asserts
 	TEST_F(EncryptionMethods, WriteEncryptedProductionModel) {
-		std::string filePath = sOutFilesPath + "/SecureContent/write_encrypted_keystore.3mf";
-
 		Lib3MF::PModel secureModel = wrapper->CreateModel();
 		std::string path = "/3D/securemesh.model";
 		Lib3MF::PMeshObject meshObject = secureModel->AddMeshObject();
@@ -411,7 +409,8 @@ namespace Lib3MF {
 		writeKekUserData.size = RsaMethods::getSize(privateKey);
 		writer->RegisterKEKClient(consumerId, ClientCallbacks::keyEncryptClientCallback, (Lib3MF_uint32)writeKekUserData.size, &writeKekUserData);
 
-		writer->WriteToFile(filePath);
+		ByteVector buffer;
+		writer->WriteToBuffer(buffer);
 
 		//READ PART
 		auto reader = model->QueryReader("3mf");
@@ -423,7 +422,7 @@ namespace Lib3MF {
 		readKekUserData.key = privateKey.get();
 		readKekUserData.size = RsaMethods::getSize(privateKey);
 		reader->RegisterKEKClient(consumerId, ClientCallbacks::keyDecryptClientCallback, (Lib3MF_uint32)readKekUserData.size, &readKekUserData);
-		reader->ReadFromFile(filePath);
+		reader->ReadFromBuffer(buffer);
 		auto meshObj = model->GetMeshObjects();
 		ASSERT_EQ(1, meshObj->Count());
 	}

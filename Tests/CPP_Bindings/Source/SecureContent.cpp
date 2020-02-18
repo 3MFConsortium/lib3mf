@@ -496,7 +496,8 @@ namespace Lib3MF {
 		wrappingData.consumerId = "consumerId";
 		wrappingData.keyId = "contentKey";
 		writer->RegisterKEKClient(wrappingData.consumerId, KEKCallbackData::testKEKCallback, 256, reinterpret_cast<Lib3MF_pvoid>(&wrappingData));
-		writer->WriteToFile(sOutFilesPath + UNENCRYPTEDKEYSTORE);
+		std::vector<Lib3MF_uint8> buffer;
+		writer->WriteToBuffer(buffer);
 		ASSERT_EQ(2, wrappingData.value);
 	}
 
@@ -515,8 +516,9 @@ namespace Lib3MF {
 		DEKCallbackData contentData;
 		writer->RegisterDEKClient(DEKCallbackData::testDEKCallback, reinterpret_cast<Lib3MF_pvoid>(&contentData));
 
+		std::vector<Lib3MF_uint8> buffer;
 		try {
-			writer->WriteToFile(sOutFilesPath + UNENCRYPTEDKEYSTORE);
+			writer->WriteToBuffer(buffer);
 			ASSERT_FALSE(true);
 		} catch (Lib3MF::ELib3MFException const &e) {
 			ASSERT_EQ(e.getErrorCode(), LIB3MF_ERROR_SECURECONTEXTNOTREGISTERED);
@@ -566,8 +568,9 @@ namespace Lib3MF {
 		writer->RegisterDEKClient(DEKCallbackData::testDEKCallback, nullptr);
 		writer->RegisterKEKClient("HP#MOP44B#SG5693454", KEKCallbackData::testKEKCallback, 256, nullptr);
 
+		std::vector<Lib3MF_uint8> buffer;
 		//Write content
-		writer->WriteToFile(sOutFilesPath + "/SecureContent/WriteSecureContent.3mf");
+		writer->WriteToBuffer(buffer);
 	}
 
 	TEST_F(SecureContentT, WriteMultipleConsumersSecureContent) {
@@ -618,12 +621,8 @@ namespace Lib3MF {
 		writer->RegisterKEKClient("HP#MOP44B#SG5693454", KEKCallbackData::testKEKCallback, 256, nullptr);
 		writer->RegisterKEKClient("HP#MOP44B#SG5693455", KEKCallbackData::testKEKCallback, 256, nullptr);
 		
-		writer->WriteToFile(sOutFilesPath + "/SecureContent/WriteMultipleSecureContent.3mf");
-
-		//TODO read back and assert
-
+		std::vector<Lib3MF_uint8> buffer;
+		writer->WriteToBuffer(buffer);
 	}
-	//TODO Read Unencrypted content, encrypt root model, save, read and assert
-	//keyStore->AddResourceData(model->RootModel().get(), ..)
 
 }

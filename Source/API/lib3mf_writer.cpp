@@ -100,8 +100,10 @@ Lib3MF_uint64 CWriter::GetStreamSize ()
 	catch (NMR::CNMRException&e) {
 		if (e.getErrorCode() == NMR_USERABORTED) {
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_CALCULATIONABORTED);
-		}
-		else throw e;
+		} else if (e.getErrorCode() == NMR_ERROR_DEKDESCRIPTORNOTFOUND
+			|| e.getErrorCode() == NMR_ERROR_KEKDESCRIPTORNOTFOUND) {
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_SECURECONTEXTNOTREGISTERED);
+		} else throw e;
 	}
 
 	return pStream->getDataSize();
@@ -110,13 +112,16 @@ Lib3MF_uint64 CWriter::GetStreamSize ()
 void CWriter::WriteToBuffer(Lib3MF_uint64 nBufferBufferSize, Lib3MF_uint64* pBufferNeededCount, Lib3MF_uint8 * pBufferBuffer)
 {
 	NMR::PExportStreamMemory pStream;
-	if (!momentBuffer || momentBuffer->getDataSize() < nBufferBufferSize) {
+	if (!momentBuffer || momentBuffer->getDataSize() > nBufferBufferSize) {
 		pStream = std::make_shared<NMR::CExportStreamMemory>();
 		try {
 			writer().exportToStream(pStream);
 		} catch (NMR::CNMRException&e) {
 			if (e.getErrorCode() == NMR_USERABORTED) {
 				throw ELib3MFInterfaceException(LIB3MF_ERROR_CALCULATIONABORTED);
+			} else if (e.getErrorCode() == NMR_ERROR_DEKDESCRIPTORNOTFOUND
+				|| e.getErrorCode() == NMR_ERROR_KEKDESCRIPTORNOTFOUND) {
+				throw ELib3MFInterfaceException(LIB3MF_ERROR_SECURECONTEXTNOTREGISTERED);
 			} else throw e;
 		}
 	} else {
