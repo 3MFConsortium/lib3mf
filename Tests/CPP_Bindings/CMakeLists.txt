@@ -29,6 +29,7 @@ set(SRCS_UNITTEST
 	./Source/Slice.cpp
 	./Source/SliceStack.cpp
 	./Source/Utilities.cpp
+	./Source/UnitTest_EncryptionUtils.cpp
 	./Source/Writer.cpp
 	./Source/TextureProperty.cpp
 	./Source/TextureResources.cpp
