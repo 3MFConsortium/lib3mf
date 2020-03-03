@@ -1,5 +1,7 @@
 #include "UnitTest_EncryptionUtils.h"
 
+#include "gtest/gtest.h"
+
 namespace AesMethods {
 
 	namespace Decrypt {
