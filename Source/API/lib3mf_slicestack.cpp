@@ -82,7 +82,7 @@ void CSliceStack::AddSliceStackReference(ISliceStack* pTheSliceStack)
 {
 	NMR::ModelResourceID nID = pTheSliceStack->GetResourceID();
 	
-	PIPackagePart pPackagePart(pTheSliceStack->PackagePart());
+	std::shared_ptr<IPackagePart> pPackagePart(pTheSliceStack->PackagePart());
 	std::string sPath = pPackagePart->Get();
 
 	NMR::PModelResource pResource = sliceStack()->getModel()->findResource(sPath, nID);
