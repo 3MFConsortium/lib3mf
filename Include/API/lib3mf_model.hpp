@@ -77,115 +77,115 @@ public:
 
 	IPackagePart * FindOrCreatePackagePart(const std::string & sAbsolutePath) override;
 
-	void SetUnit (const eLib3MFModelUnit eUnit);
+	void SetUnit (const eLib3MFModelUnit eUnit) override;
 
-	eLib3MFModelUnit GetUnit ();
+	eLib3MFModelUnit GetUnit() override;
 
-	std::string GetLanguage ();
+	std::string GetLanguage() override;
 
-	void SetLanguage (const std::string & sLanguage);
+	void SetLanguage(const std::string & sLanguage) override;
 
-	IWriter * QueryWriter (const std::string & sWriterClass);
+	IWriter * QueryWriter(const std::string & sWriterClass) override;
 
-	IReader * QueryReader (const std::string & sReaderClass);
+	IReader * QueryReader(const std::string & sReaderClass) override;
 
-	ITexture2D * GetTexture2DByID (const Lib3MF_uint32 nUniqueResourceID);
+	ITexture2D * GetTexture2DByID(const Lib3MF_uint32 nUniqueResourceID) override;
 
-	eLib3MFPropertyType GetPropertyTypeByID(const Lib3MF_uint32 nUniqueResourceID);
+	eLib3MFPropertyType GetPropertyTypeByID(const Lib3MF_uint32 nUniqueResourceID) override;
 
-	IBaseMaterialGroup * GetBaseMaterialGroupByID(const Lib3MF_uint32 nUniqueResourceID);
+	IBaseMaterialGroup * GetBaseMaterialGroupByID(const Lib3MF_uint32 nUniqueResourceID) override;
 
-	IMeshObject * GetMeshObjectByID(const Lib3MF_uint32 nUniqueResourceID);
+	IMeshObject * GetMeshObjectByID(const Lib3MF_uint32 nUniqueResourceID) override;
 
-	IComponentsObject * GetComponentsObjectByID(const Lib3MF_uint32 nUniqueResourceID);
+	IComponentsObject * GetComponentsObjectByID(const Lib3MF_uint32 nUniqueResourceID) override;
 
-	IColorGroup * GetColorGroupByID(const Lib3MF_uint32 nUniqueResourceID);
+	IColorGroup * GetColorGroupByID(const Lib3MF_uint32 nUniqueResourceID) override;
 
-	ITexture2DGroup * GetTexture2DGroupByID(const Lib3MF_uint32 nUniqueResourceID);
+	ITexture2DGroup * GetTexture2DGroupByID(const Lib3MF_uint32 nUniqueResourceID) override;
 
-	ICompositeMaterials * GetCompositeMaterialsByID(const Lib3MF_uint32 nUniqueResourceID);
+	ICompositeMaterials * GetCompositeMaterialsByID(const Lib3MF_uint32 nUniqueResourceID) override;
 
-	IMultiPropertyGroup * GetMultiPropertyGroupByID(const Lib3MF_uint32 nUniqueResourceID);
+	IMultiPropertyGroup * GetMultiPropertyGroupByID(const Lib3MF_uint32 nUniqueResourceID) override;
 
-	ISliceStack * GetSliceStackByID(const Lib3MF_uint32 nUniqueResourceID);
+	ISliceStack * GetSliceStackByID(const Lib3MF_uint32 nUniqueResourceID) override;
 
-	std::string GetBuildUUID (bool & bHasUUID);
+	std::string GetBuildUUID (bool & bHasUUID) override;
 
-	void SetBuildUUID (const std::string & sUUID);
+	void SetBuildUUID (const std::string & sUUID) override;
 
-	IBuildItemIterator * GetBuildItems ();
+	IBuildItemIterator * GetBuildItems() override;
 
-	IResourceIterator * GetResources ();
+	IResourceIterator * GetResources() override;
 
-	IObjectIterator * GetObjects ();
+	IObjectIterator * GetObjects() override;
 
-	IMeshObjectIterator * GetMeshObjects ();
+	IMeshObjectIterator * GetMeshObjects() override;
 
-	IComponentsObjectIterator * GetComponentsObjects ();
+	IComponentsObjectIterator * GetComponentsObjects() override;
 
-	ITexture2DIterator * GetTexture2Ds ();
+	ITexture2DIterator * GetTexture2Ds() override;
 
-	IBaseMaterialGroupIterator * GetBaseMaterialGroups ();
+	IBaseMaterialGroupIterator * GetBaseMaterialGroups() override;
 
-	IColorGroupIterator * GetColorGroups();
+	IColorGroupIterator * GetColorGroups() override;
 
-	ITexture2DGroupIterator * GetTexture2DGroups();
+	ITexture2DGroupIterator * GetTexture2DGroups() override;
 
-	ICompositeMaterialsIterator * GetCompositeMaterials();
+	ICompositeMaterialsIterator * GetCompositeMaterials() override;
 
-	IMultiPropertyGroupIterator * GetMultiPropertyGroups();
+	IMultiPropertyGroupIterator * GetMultiPropertyGroups() override;
 
-	ISliceStackIterator * GetSliceStacks();
+	ISliceStackIterator * GetSliceStacks() override;
 
-	IModel * MergeToModel ();
+	IModel * MergeToModel() override;
 
-	IMeshObject * AddMeshObject ();
+	IMeshObject * AddMeshObject() override;
 
-	IComponentsObject * AddComponentsObject ();
+	IComponentsObject * AddComponentsObject() override;
 
-	ISliceStack * AddSliceStack(const Lib3MF_double dZBottom);
+	ISliceStack * AddSliceStack(const Lib3MF_double dZBottom) override;
 
-	ITexture2D * AddTexture2DFromAttachment (IAttachment* pTextureAttachment);
+	ITexture2D * AddTexture2DFromAttachment(IAttachment* pTextureAttachment) override;
 
-	IBaseMaterialGroup * AddBaseMaterialGroup ();
+	IBaseMaterialGroup * AddBaseMaterialGroup() override;
 
-	IColorGroup * AddColorGroup();
+	IColorGroup * AddColorGroup() override;
 
-	ITexture2DGroup * AddTexture2DGroup(ITexture2D* pTexture2DInstance);
+	ITexture2DGroup * AddTexture2DGroup(ITexture2D* pTexture2DInstance) override;
 
-	ICompositeMaterials * AddCompositeMaterials(IBaseMaterialGroup* pBaseMaterialGroupInstance);
+	ICompositeMaterials * AddCompositeMaterials(IBaseMaterialGroup* pBaseMaterialGroupInstance) override;
 
-	IMultiPropertyGroup * AddMultiPropertyGroup();
+	IMultiPropertyGroup * AddMultiPropertyGroup() override;
 
-	IBuildItem * AddBuildItem (IObject* pObject, const sLib3MFTransform Transform);
+	IBuildItem * AddBuildItem(IObject* pObject, const sLib3MFTransform Transform) override;
 
-	void RemoveBuildItem (IBuildItem* pBuildItemInstance);
+	void RemoveBuildItem(IBuildItem* pBuildItemInstance) override;
 
-	IMetaDataGroup * GetMetaDataGroup ();
+	IMetaDataGroup * GetMetaDataGroup() override;
 
-	IAttachment * AddAttachment (const std::string & sURI, const std::string & sRelationShipType);
+	IAttachment * AddAttachment(const std::string & sURI, const std::string & sRelationShipType) override;
 
-	void RemoveAttachment(IAttachment* pAttachmentInstance);
+	void RemoveAttachment(IAttachment* pAttachmentInstance) override;
 
-	IAttachment * GetAttachment (const Lib3MF_uint32 nIndex);
+	IAttachment * GetAttachment(const Lib3MF_uint32 nIndex) override;
 
-	IAttachment * FindAttachment (const std::string & sURI);
+	IAttachment * FindAttachment(const std::string & sURI) override;
 
-	Lib3MF_uint32 GetAttachmentCount ();
+	Lib3MF_uint32 GetAttachmentCount() override;
 
-	bool HasPackageThumbnailAttachment ();
+	bool HasPackageThumbnailAttachment() override;
 
-	IAttachment * CreatePackageThumbnailAttachment ();
+	IAttachment * CreatePackageThumbnailAttachment() override;
 
-	IAttachment * GetPackageThumbnailAttachment ();
+	IAttachment * GetPackageThumbnailAttachment() override;
 
-	void RemovePackageThumbnailAttachment ();
+	void RemovePackageThumbnailAttachment() override;
 
-	void AddCustomContentType (const std::string & sExtension, const std::string & sContentType);
+	void AddCustomContentType(const std::string & sExtension, const std::string & sContentType) override;
 
-	void RemoveCustomContentType (const std::string & sExtension);
+	void RemoveCustomContentType(const std::string & sExtension) override;
 
-	Lib3MF::sBox GetOutbox();
+	Lib3MF::sBox GetOutbox() override;
 
 };
 

@@ -85,7 +85,7 @@ public:
 
 	void SetPackagePart(IPackagePart* pPackagePath) override;
 
-	Lib3MF_uint32 GetModelResourceID();
+	Lib3MF_uint32 GetModelResourceID() override;
 };
 
 }
