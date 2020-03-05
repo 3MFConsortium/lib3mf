@@ -39,7 +39,7 @@ NMR_OpcPackageReader.h defines an OPC Package reader in a portable way.
 #include "Common/OPC/NMR_OpcPackageTypes.h"
 #include "Common/OPC/NMR_OpcPackageRelationship.h"
 #include "Common/3MF_ProgressMonitor.h"
-#include "Common/NMR_ModelWarnings.h"
+#include "Model/Reader/NMR_ModelReaderWarnings.h"
 #include "zip.h"
 #include <list>
 #include <vector>
