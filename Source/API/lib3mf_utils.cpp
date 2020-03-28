@@ -57,3 +57,30 @@ sLib3MFTransform Lib3MF::MatrixToTransform(const NMR::NMATRIX3 matrix)
 	return transform;
 }
 
+
+eLib3MFEncryptionAlgorithm Lib3MF::translateEncryptionAlgorithm(const NMR::eKeyStoreEncryptAlgorithm algorithm) {
+	if (NMR::eKeyStoreEncryptAlgorithm::Aes256Gcm == algorithm)
+		return eLib3MFEncryptionAlgorithm::Aes256Gcm;
+	else if (NMR::eKeyStoreEncryptAlgorithm::RsaOaepMgf1p == algorithm)
+		return eLib3MFEncryptionAlgorithm::RsaOaepMgf1p;
+	else
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
+NMR::eKeyStoreEncryptAlgorithm Lib3MF::translateEncryptionAlgorithm(const eLib3MFEncryptionAlgorithm algorithm) {
+	if (eLib3MFEncryptionAlgorithm::Aes256Gcm == algorithm)
+		return NMR::eKeyStoreEncryptAlgorithm::Aes256Gcm;
+	else if (eLib3MFEncryptionAlgorithm::RsaOaepMgf1p == algorithm)
+		return NMR::eKeyStoreEncryptAlgorithm::RsaOaepMgf1p;
+	else
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
+
+eLib3MFCompression Lib3MF::translateCompression(bool compression) {
+	if (compression)
+		return eLib3MFCompression::Deflate;
+	return eLib3MFCompression::None;
+}
+bool Lib3MF::translateCompression(const eLib3MFCompression compression) {
+	return eLib3MFCompression::Deflate == compression;
+}
+

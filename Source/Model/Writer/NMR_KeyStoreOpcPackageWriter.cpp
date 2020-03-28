@@ -115,7 +115,7 @@ namespace NMR {
 		} catch (CNMRException const e) {
 			if (e.getErrorCode() == NMR_ERROR_KEKDESCRIPTORNOTFOUND) {
 				if (dr->isNew())
-					throw CNMRException(NMR_ERROR_KEKDESCRIPTORNOTFOUND);
+					throw;
 				CIPHERVALUE drCipherValue = dr->getCipherValue();
 				CIPHERVALUE rdCipherValue = rd->getCipherValue();
 				drCipherValue.m_iv = rdCipherValue.m_iv;
