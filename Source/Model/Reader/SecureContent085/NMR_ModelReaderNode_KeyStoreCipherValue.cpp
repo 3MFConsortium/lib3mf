@@ -40,6 +40,8 @@ NMR_ModelReaderNode_KeyStoreCipherValue.h defines the Model Reader Node class th
 #include "Common/NMR_Exception_Windows.h"
 #include "Common/NMR_StringUtils.h"
 
+#include "Libraries/cpp-base64/base64.h"
+
 namespace NMR {
 
 	CModelReaderNode_KeyStoreCipherValue::CModelReaderNode_KeyStoreCipherValue(CKeyStore * pKeyStore, PModelReaderWarnings pWarnings)
@@ -64,8 +66,8 @@ namespace NMR {
 		// Parse Content
 		parseContent(pXMLReader);
 
-		std::vector<nfByte> decoded = fnBase64Decode(m_sCipherValueAccumulator);
-		if (!decoded.empty()) {
+		std::vector<nfByte> decoded = base64_decode(m_sCipherValueAccumulator);
+		if (decoded.size() >= KEYSTORE_TYPES_TAGSIZE + KEYSTORE_TYPES_IVSIZE) {
 			auto decodedIvBegin = decoded.begin();
 			auto decodedKeyBegin = decodedIvBegin + KEYSTORE_TYPES_IVSIZE;
 			auto decodedTagBegin = decoded.end() - KEYSTORE_TYPES_TAGSIZE;

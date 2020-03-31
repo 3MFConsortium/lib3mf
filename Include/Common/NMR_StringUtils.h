@@ -145,10 +145,6 @@ namespace NMR {
 
 	void decomposeKeyIntoNamespaceAndName(const std::string &sKey, std::string &sNameSpace, std::string &sName);
 	std::string composeNamespaceAndNameIntoKey(const std::string &sNameSpace, const std::string &sName);
-
-
-	std::string fnBase64Encode(std::vector<nfByte> const & input);
-	std::vector<nfByte> fnBase64Decode(std::string const & input);
 }
 
 #endif // __NMR_STRINGUTILS

@@ -7,6 +7,8 @@ if (USE_INCLUDED_ZLIB)
   file(GLOB ZLIB_FILES ./Source/Libraries/zlib/*.c)
 endif()
 
+file (GLOB CPPBASE64_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "Source/Libraries/cpp-base64/*.cpp")
+
 # sources for COM emulation
 set(SRCS_PLATFORM
   ${LIBZIP_FILES}
@@ -21,6 +23,7 @@ set(SRCS_PLATFORM
 set(SRCS_COMMON
 ${SRCS_PLATFORM}
 ${ZLIB_FILES}
+${CPPBASE64_FILES}
 Source/API/lib3mf.cpp
 Source/API/lib3mf_attachment.cpp
 Source/API/lib3mf_base.cpp

@@ -37,6 +37,7 @@ This is the class for exporting the 3mf keystore stream root node.
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_StringUtils.h"
 #include "Common/NMR_UUID.h"
+#include "Libraries/cpp-base64/base64.h"
 #include <vector>
 #include <array>
 
@@ -112,7 +113,7 @@ void NMR::CModelWriterNode_KeyStore::writeResourceDatas() {
 			std::copy(cv.m_key.begin(), cv.m_key.end(), std::back_inserter(cvVector));
 			std::copy(cv.m_tag.begin(), cv.m_tag.end(), std::back_inserter(cvVector));
 
-			std::string encodedCv = fnBase64Encode(cvVector);
+			std::string encodedCv = base64_encode(cvVector);
 			writeText(encodedCv.c_str(), (nfUint32)encodedCv.length());
 
 			writeFullEndElement();
