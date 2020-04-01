@@ -1137,17 +1137,17 @@
 		<option name="Aes256Gcm" value="1" description="Represents AES GCM encryption algorithm using 256 bit key size as defined in http://www.w3.org/2009/xmlenc11#aes256-gcm"/>
 	</enum>
 	
-	<class name="DecryptRight">
-		<method name="GetConsumer" description="Gets the consumer associated with this decryptright">
+	<class name="AccessRight">
+		<method name="GetConsumer" description="Gets the consumer associated with this access right">
 			<param name="TheConsumer" type="handle" class="Consumer" pass="return" description="The consumer instance"/>
 		</method>
 		<method name="GetEncryptionAlgorithm" description="Gets the associated encryption algorithm">
-			<param name="EncryptionAlgorithm" type="enum" class="EncryptionAlgorithm" pass="return" description="The algorithm used for the key in this decryptright"/>
+			<param name="EncryptionAlgorithm" type="enum" class="EncryptionAlgorithm" pass="return" description="The algorithm used for the key in this accessright"/>
 		</method>
 	</class>
 
 	<functiontype name="KeyEncryptionCallback" description="A callback used to encrypt the contents of the key for a resource data. CipherKey and PlainKey are guaranteed to have same size on each call.">
-		<param name="Consumer" type="class" class="Consumer" pass="in" description="The consumer instance associated with the decryptright holder of the key"/>
+		<param name="Consumer" type="class" class="Consumer" pass="in" description="The consumer instance associated with the access right holder of the key"/>
 		<param name="EncryptionAlgorithm" type="enum" class="EncryptionAlgorithm" pass="in" description="The encryption algorithm used for encrypting the key"/>
 		<param name="PlainKey" type="basicarray" class="uint8" pass="in" description="Buffer to the plain key if the resource data"/>
 		<param name="CipherKey" type="basicarray" class="uint8" pass="out" description="Buffer where the cipher key should be placed"/>
@@ -1205,7 +1205,7 @@
 		<option name="Deflate" value="1" description="Deflate compression applied"/>
 	</enum>
 	
-	<class name="ResourceData">
+	<!--<class name="ResourceData">
 		<method name="AddDecryptRight" description="Adds a DecryptRight for a Consumer in this ResourceData">
 			<param name="Consumer" type="handle" class="Consumer" pass="in" description="The Consumer reference"/>
 			<param name="EncryptionAlgorithm" type="enum" class="EncryptionAlgorithm" pass="in" description="The algorithm to be used when encrypting the key for this consumer"/>
@@ -1234,7 +1234,53 @@
 		<method name="GetPath" description="Gets the encrypted part path">
 			<param name="Path" type="class" class="PackagePart" pass="return" description="The part path"/>
 		</method>
-	</class>
+	</class>-->
+  <class name="ResourceData">
+    <method name="GetEncryptionAlgorithm" description="Gets the encryption algorithm used to encrypt this ResourceData">
+      <param name="EncryptionAlgorithm" type="enum" class="EncryptionAlgorithm" pass="return" description="The encryption algorithm"/>
+    </method>
+    <method name="GetCompression" description="Tells whether this ResourceData is compressed or not">
+      <param name="Compression" type="enum" class="Compression" pass="return" description="The compression method"/>
+    </method>
+    <method name="GetPath" description="Gets the encrypted part path">
+      <param name="Path" type="class" class="PackagePart" pass="return" description="The part path"/>
+    </method>
+  </class>
+  <class name="ResourceDataGroup">
+    <method name="SetKeyUUID" description="Sets the resourcedatagroup keyuuid">
+      <param name="UUID" type="string" pass="in" description="The new resourcedatagroup keyuuid."/>
+    </method>
+    <method name="AddResourceData" description="Add resourcedata to resourcedatagroup element">
+      <param name="Path" type="string" pass="in" description="The resourcedata path"/>
+      <param name="TheResourceData" type="handle" class="ResourceData" pass="return" description="The data resource instance"/>
+    </method>
+    <method name="AddAccessRight" description="Add accessright to resourcedatagroup element">
+      <param name="ConsumerIndex" type="string" pass="in" description="The id of the related consumer"/>
+      <param name="TheAccessRight" type="handle" class="AccessRight" pass="return" description="The acess right instance"/>
+    </method>
+    <method name="GetAccessRight" description="Gets an instance of AccessRight">
+      <param name="AccessRightIndex" type="uint32" pass="in" description="The index of the target AccessRight"/>
+      <param name="TheAccessRight" type="handle" class="AccessRight" pass="return" description="The AccessRight instance"/>
+    </method>
+    <method name="FindAccessRightByConsumer" description="Finds the AccessRight associated with a Consumer">
+      <param name="ConsumerInstance" type="handle" class="Consumer" pass="in" description="The Consumer instance"/>
+      <param name="TheAccessRight" type="handle" class="AccessRight" pass="return" description="The AcessRight instance"/>
+    </method>
+    <method name="RemoveAcessRight" description="Removes a AccessRight for a Consumer">
+      <param name="ConsumerInstance" type="handle" class="Consumer" pass="in" description="The Consumer instance"/>
+    </method>
+    <method name="GetResourceDataCount" description="Gets the number of resource data in the keysore">
+      <param name="Count" type="uint32" pass="return" description="The number of resource data available"/>
+    </method>
+    <method name="GetResourceData" description="Gets a resource data">
+      <param name="ResourceDataIndex" type="uint64" pass="in" description="The index of the resource data"/>
+      <param name="TheResourceData" type="handle" class="ResourceData" pass="return" description="The data resource instance"/>
+    </method>
+    <method name="FindResourceData" description="Finds a resource data by its path">
+      <param name="Path" type="string" pass="in" description="The resource data path to find"/>
+      <param name="TheResourceData" type="handle" class="ResourceData" pass="return" description="The data resource instance"/>
+    </method>
+  </class>
 	<class name="KeyStore">
 		<method name="AddConsumer" description="Adds a consumer to the keystore">
 			<param name="ConsumerID" type="string" pass="in" description="A unique identifier for the consumer"/>
@@ -1256,22 +1302,22 @@
 			<param name="ConsumerID" type="string" pass="in" description="The ID of the consumer"/>
 			<param name="TheConsumer" type="handle" class="Consumer" pass="return" description="The consumer instance"/>
 		</method>
-		<method name="GetResourceDataCount" description="Gets the number of resource data in the keysore">
+		<method name="GetResourceDataGroupCount" description="Gets the number of resource data in the keysore">
 			<param name="Count" type="uint32" pass="return" description="The number of resource data available"/>
 		</method>
-		<method name="GetResourceData" description="Gets a resource data">
+		<method name="GetResourceDataGroup" description="Gets a resource data">
 			<param name="ResourceDataIndex" type="uint64" pass="in" description="The index of the resource data"/>
 			<param name="TheResourceData" type="handle" class="ResourceData" pass="return" description="The data resource instance"/>
 		</method>
-		<method name="AddResourceData" description="Adds a resource data into the keystore. This flags the package part for encryption">
+		<method name="AddResourceDataGroup" description="Adds a resource data into the keystore. This flags the package part for encryption">
 			<param name="PartPath" type="handle" class="PackagePart" pass="in" description="The path of the part to be encrypted"/>
 			<param name="EncryptionAlgorithm" type="enum" class="EncryptionAlgorithm" pass="in" description="The encryption algorithm to be used to encrypt this resource"/>
 			<param name="Compression" type="enum" class="Compression" pass="in" description="Whether compression should be used prior to encryption"/>
 			<param name="TheResourceData" type="handle" class="ResourceData" pass="return" description="The data resource instance"/>
 		</method>
-		<method name="FindResourceData" description="Finds a resource data by its path">
-			<param name="Path" type="string" pass="in" description="The resource data path to find"/>
-			<param name="TheResourceData" type="handle" class="ResourceData" pass="return" description="The data resource instance"/>
+		<method name="FindResourceDataGroupByUUID" description="Finds a resource data by its uuid">
+			<param name="UUID" type="string" pass="in" description="The resource data path to find"/>
+			<param name="TheResourceDataGroup" type="handle" class="ResourceDataGroup" pass="return" description="The data resource instance"/>
 		</method>
 		<method name="GetUUID" description="Gets the keystore UUID">
 			<param name="HasUUID" type="bool" pass="out" description="flag whether the keystore has a UUID"/>
