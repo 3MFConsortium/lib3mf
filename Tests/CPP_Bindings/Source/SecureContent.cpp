@@ -12,9 +12,6 @@ namespace Lib3MF {
 
 		const std::string UNENCRYPTEDKEYSTORE = "/SecureContent/keystore.3mf";
 		const std::string UNENCRYPTEDCOMPRESSEDKEYSTORE = "/SecureContent/keystore_compressed.3mf";
-		const std::string NEGATIVEKEYSTOREENCRYPTEDEMPTY = "/SecureContent/negative_keystore_encrypted_empty.3mf";
-		const std::string NEGATIVEKEYSTOREENCRYPTEDMISSINGATTRIBUTES = "/SecureContent/negative_keystore_encrypted_missing_attributes.3mf";
-		const std::string NEGATIVEKEYSTOREENCRYPTEDINVALIDATTRIBUTES = "/SecureContent/negative_keystore_encrypted_invalid_attributes.3mf";
 		const std::string NEGATIVEUNENCRYPTEDKEYSTOREEMPTY = "/SecureContent/negative_keystore_empty.3mf";
 		const std::string NEGATIVEUNENCRYPTEDKEYSTOREMISSINGATTRIBUTES = "/SecureContent/negative_keystore_missing_attributes.3mf";
 		const std::string NEGATIVEUNENCRYPTEDKEYSTOREINVALIDATTRIBUTES = "/SecureContent/negative_keystore_invalid_attributes.3mf";
