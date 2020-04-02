@@ -26,39 +26,35 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_KeyStoreDecryptRight.h defines the KeyStoreDecryptRight Class. A decryptright is an in memory representation of the 3MF keystore resource data decrypright.
+NMR_ModelReaderNode_KeyStoreCipherValue.h defines the Model Reader Node class that is related to <xenc:CipherValue>.
 
 --*/
 
-#ifndef __NMR_KEYSTOREDECRYPTRIGHT
-#define __NMR_KEYSTOREDECRYPTRIGHT
+#ifndef __NMR_MODELREADERNODE_KEYSTOREKEKPARAMS
+#define __NMR_MODELREADERNODE_KEYSTOREKEKPARAMS
 
-#include <list>
-#include <map>
-#include <memory>
-#include "Common/NMR_Types.h"
-#include "Model/Classes/NMR_KeyStoreConsumer.h"
+#include "Model/Reader/NMR_ModelReaderNode_KeyStoreBase.h"
+#include "Model/Reader/NMR_ModelReaderNode.h"
+#include "Model/Classes/NMR_KeyStore.h"
+#include "Model/Classes/NMR_KeyStoreAccessRight.h"
+
 namespace NMR {
-	class CKeyStoreDecryptRight {
-	private:
-		PKeyStoreConsumer m_pConsumer;
-		eKeyStoreEncryptAlgorithm m_EncryptionAlgorithm;
-		CIPHERVALUE m_sCipherValue;
-		nfBool m_bNew;
-	public:
-		CKeyStoreDecryptRight(PKeyStoreConsumer const & consumer,
-			eKeyStoreEncryptAlgorithm const & encryptionAlgorithm);
 
-		CKeyStoreDecryptRight(PKeyStoreConsumer const & consumer, 
-			eKeyStoreEncryptAlgorithm const & encryptionAlgorithm, 
-			CIPHERVALUE const & cipherValue);
-		PKeyStoreConsumer getConsumer();
-		eKeyStoreEncryptAlgorithm getEncryptionAlgorithm();
-		CIPHERVALUE getCipherValue() const;
-		void setCipherValue(CIPHERVALUE const & cipherValue);
-		bool isNew();
+	class CModelReaderNode_KeyStoreKEKParams: public CModelReaderNode_KeyStoreBase {
+	private:
+		KEKPARAMS m_sKekParams;
+	protected:
+		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
+	public:
+		CModelReaderNode_KeyStoreKEKParams() = delete;
+		CModelReaderNode_KeyStoreKEKParams(_In_ CKeyStore * pKeyStore, _In_ PModelReaderWarnings pWarnings);
+
+		KEKPARAMS getKekParams();
+
+		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 	};
 
-	typedef std::shared_ptr<CKeyStoreDecryptRight> PKeyStoreDecryptRight;
+	typedef std::shared_ptr <CModelReaderNode_KeyStoreKEKParams> PModelReaderNode_KeyStoreKEKParams;
 }
-#endif
+
+#endif // __NMR_MODELREADERNODE_KEYSTOREKEKPARAMS

@@ -44,8 +44,8 @@ NMR_KeyStore.h defines the KeyStore Class. A keystore is an in memory representa
 namespace NMR {
 	class CKeyStoreConsumer;
 	typedef std::shared_ptr<CKeyStoreConsumer> PKeyStoreConsumer;
-	class CKeyStoreResourceData;
-	typedef std::shared_ptr<CKeyStoreResourceData> PKeyStoreResourceData;
+	class CKeyStoreResourceDataGroup;
+	typedef std::shared_ptr<CKeyStoreResourceDataGroup> PKeyStoreResourceDataGroup;
 
 
 

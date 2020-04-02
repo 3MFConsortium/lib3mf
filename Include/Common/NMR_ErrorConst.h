@@ -1170,6 +1170,9 @@ Model error codes (0x8XXX)
 // Duplicate KeyStore DecryptRight object
 #define NMR_ERROR_KEYSTOREDUPLICATEDECRYPTRIGHT 0x80FD
 
+// Invalid KEK Param
+#define NMR_ERROR_KEYSTOREINVALIDKEKPARAM 0x80FE
+
 
 
 

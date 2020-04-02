@@ -54,6 +54,12 @@ namespace NMR {
 		std::vector<nfByte> m_tag;
 	};
 
+	struct KEKPARAMS {
+		std::string wrappingalgorithm;
+		std::string mgfalgorithm;
+		std::string digestmethod;
+	};
+
 	enum eKeyStoreEncryptAlgorithm {
 		RsaOaepMgf1p = 0,
 		Aes256Gcm = 1

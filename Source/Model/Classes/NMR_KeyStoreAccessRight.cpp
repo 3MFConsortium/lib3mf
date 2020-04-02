@@ -1,7 +1,7 @@
-#include "Model/Classes/NMR_KeyStoreDecryptRight.h"
+#include "Model/Classes/NMR_KeyStoreAccessRight.h"
 #include "Common/NMR_Exception.h"
 namespace NMR {
-	CKeyStoreDecryptRight::CKeyStoreDecryptRight(PKeyStoreConsumer const & consumer, eKeyStoreEncryptAlgorithm const & encryptionAlgorithm, CIPHERVALUE const & cipherValue) 
+	CKeyStoreAccessRight::CKeyStoreAccessRight(PKeyStoreConsumer const & consumer, eKeyStoreEncryptAlgorithm const & encryptionAlgorithm, CIPHERVALUE const & cipherValue)
 		:m_pConsumer(consumer), m_EncryptionAlgorithm(encryptionAlgorithm), m_sCipherValue(cipherValue), m_bNew(false)
 	{
 		if (encryptionAlgorithm != eKeyStoreEncryptAlgorithm::RsaOaepMgf1p) {
@@ -11,7 +11,7 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 	}
 
-	CKeyStoreDecryptRight::CKeyStoreDecryptRight(PKeyStoreConsumer const& consumer, eKeyStoreEncryptAlgorithm const& encryptionAlgorithm) 
+	CKeyStoreAccessRight::CKeyStoreAccessRight(PKeyStoreConsumer const& consumer, eKeyStoreEncryptAlgorithm const& encryptionAlgorithm)
 		:m_pConsumer(consumer), m_EncryptionAlgorithm(encryptionAlgorithm), m_bNew(true)
 	{
 		if (encryptionAlgorithm != eKeyStoreEncryptAlgorithm::RsaOaepMgf1p) {
@@ -21,22 +21,22 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 	}
 
-	PKeyStoreConsumer CKeyStoreDecryptRight::getConsumer()
+	PKeyStoreConsumer CKeyStoreAccessRight::getConsumer()
 	{
 		return m_pConsumer;
 	}
-	eKeyStoreEncryptAlgorithm CKeyStoreDecryptRight::getEncryptionAlgorithm()
+	eKeyStoreEncryptAlgorithm CKeyStoreAccessRight::getEncryptionAlgorithm()
 	{
 		return m_EncryptionAlgorithm;
 	}
-	CIPHERVALUE CKeyStoreDecryptRight::getCipherValue() const {
+	CIPHERVALUE CKeyStoreAccessRight::getCipherValue() const {
 		return m_sCipherValue;
 	}
-	void CKeyStoreDecryptRight::setCipherValue(CIPHERVALUE const & cipherValue)
+	void CKeyStoreAccessRight::setCipherValue(CIPHERVALUE const & cipherValue)
 	{
 		m_sCipherValue = cipherValue;
 	}
-	bool CKeyStoreDecryptRight::isNew() {
+	bool CKeyStoreAccessRight::isNew() {
 		return m_bNew;
 	}
 }

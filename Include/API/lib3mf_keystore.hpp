@@ -85,17 +85,19 @@ namespace Lib3MF {
 
 			virtual void RemoveConsumer(IConsumer * pConsumerInstance) override;
 
-			Lib3MF_uint32 GetResourceDataCount() override;
-
-			IResourceData * GetResourceData(const Lib3MF_uint64 nResourceDataIndex) override;
-
-			IResourceData * AddResourceData(IPackagePart * pPackagePath, const Lib3MF::eEncryptionAlgorithm eEncryptionAlgorithm, const Lib3MF::eCompression eCompression) override;
-
-			IResourceData * FindResourceData(const std::string & sPath) override;
-
 			std::string GetUUID(bool & bHasUUID) override;
 			
 			void SetUUID(const std::string & sUUID) override;
+
+
+			// Inherited via IKeyStore
+			virtual Lib3MF_uint32 GetResourceDataGroupCount() override;
+
+			virtual IResourceDataGroup * GetResourceDataGroup(const Lib3MF_uint64 nResourceDataIndex) override;
+
+			virtual IResourceDataGroup * AddResourceDataGroup(IPackagePart * pPartPath, const Lib3MF::eEncryptionAlgorithm eEncryptionAlgorithm, const Lib3MF::eCompression eCompression) override;
+
+			virtual IResourceDataGroup * FindResourceDataGroupByUUID(const std::string & sUUID) override;
 
 		};
 
