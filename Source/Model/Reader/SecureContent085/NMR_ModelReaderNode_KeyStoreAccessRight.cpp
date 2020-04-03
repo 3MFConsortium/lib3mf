@@ -90,18 +90,6 @@ namespace NMR {
 				m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREDUPLICATECONSUMERINDEX), eModelReaderWarningLevel::mrwInvalidMandatoryValue);
 			m_consumerIndex = pAttributeValue;
 		}
-		else if (strcmp(XML_3MF_SECURE_CONTENT_ENCRYPTION_ALGORITHM, pAttributeName) == 0) {
-			if (strcmp(XML_3MF_SECURE_CONTENT_ENCRYPTION_AES256, pAttributeValue) == 0) {
-				m_encryptionAlgorithm = eKeyStoreEncryptAlgorithm::Aes256Gcm;
-			}
-			else if (strcmp(XML_3MF_SECURE_CONTENT_ENCRYPTION_RSA, pAttributeValue) == 0) {
-				m_encryptionAlgorithm = eKeyStoreEncryptAlgorithm::RsaOaepMgf1p;
-			}
-			else {
-				m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREINVALIDENCRYPTIONALGORITHM), eModelReaderWarningLevel::mrwInvalidOptionalValue);
-				m_encryptionAlgorithm = eKeyStoreEncryptAlgorithm::RsaOaepMgf1p;
-			}
-		}
 		else
 			m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE), mrwInvalidOptionalValue);
 	}
@@ -116,6 +104,9 @@ namespace NMR {
 		if (strcmp(pChildName, XML_3MF_ELEMENT_CIPHERDATA) == 0) {
 			m_bHasCipherData = true;
 		}
+		else if (strcmp(pChildName, XML_3MF_ELEMENT_CIPHERDATA) == 0) {
+			m_bHasKEKParams = true;
+		}
 		else if (strcmp(pNameSpace, XML_3MF_NAMESPACE_CIPHERVALUESPEC) == 0) {
 			if (strcmp(pChildName, XML_3MF_ELEMENT_CIPHERVALUE) == 0) {
 				if (m_bHasCipherData) {
@@ -127,10 +118,16 @@ namespace NMR {
 			else
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
 		}
-		else if (strcmp(pChildName, XML_3MF_SECURE_CONTENT_KEKPARAMS) == 0) {
-			PModelReaderNode_KeyStoreKEKParams pXMLNode = std::make_shared<CModelReaderNode_KeyStoreKEKParams>(m_pKeyStore, m_pWarnings);
-			pXMLNode->parseXML(pXMLReader); 
-			m_sKekParams = pXMLNode->getKekParams();
+		else if (strcmp(pChildName, XML_3MF_ELEMENT_KEKPARAMS) == 0) {
+			if (m_bHasKEKParams) {
+				PModelReaderNode_KeyStoreKEKParams pXMLNode = std::make_shared<CModelReaderNode_KeyStoreKEKParams>(m_pKeyStore, m_pWarnings);
+				pXMLNode->parseXML(pXMLReader);
+				m_sKekParams = pXMLNode->getKekParams();
+			}
+			else {
+				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
+
+			}
 		}
 	}
 

@@ -42,7 +42,6 @@ namespace NMR {
 	class CKeyStoreAccessRight {
 	private:
 		PKeyStoreConsumer m_pConsumer;
-		eKeyStoreEncryptAlgorithm m_EncryptionAlgorithm;
 		CIPHERVALUE m_sCipherValue;
 		KEKPARAMS m_sKekParams;
 		nfBool m_bNew;
