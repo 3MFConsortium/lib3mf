@@ -191,14 +191,13 @@ void CWriter::SetDecimalPrecision(const Lib3MF_uint32 nDecimalPrecision)
 	m_pWriter->SetDecimalPrecision(nDecimalPrecision);
 }
 
-void Lib3MF::Impl::CWriter::RegisterKEKClient(const std::string & sConsumerID, const Lib3MF::KeyEncryptionCallback pEncryptionCallback, const Lib3MF_uint32 nKeySize, const Lib3MF_pvoid pUserData) {
-	NMR::KEKDESCRIPTOR descriptor;
+void Lib3MF::Impl::CWriter::AddKeyWrappingCallback(const Lib3MF::KeyWrappingCallback pTheCallback, const std::string &sConsumerID, const Lib3MF_pvoid pUserData) {
+	NMR::KeyWrappingDescriptor descriptor;
 	descriptor.m_sKekDecryptData.m_pUserData = pUserData;
-	descriptor.m_sKekDecryptData.m_KeyBuffer.resize(nKeySize, 0);
-	descriptor.m_fnCrypt =
-		[this, pEncryptionCallback](
+	descriptor.m_fnWrap =
+		[this, pTheCallback](
 			std::vector<NMR::nfByte> const & plain,
-			NMR::KEKCTX & ctx) {
+			NMR::KeyWrappingContext & ctx) {
 		NMR::PKeyStore keystore = this->writer().getKeyStore();
 		NMR::PKeyStoreConsumer consumer = keystore->findConsumerById(ctx.m_sConsumerId);
 		__NMRASSERT(nullptr != consumer);
@@ -215,7 +214,7 @@ void Lib3MF::Impl::CWriter::RegisterKEKClient(const std::string & sConsumerID, c
 		IBase * pBaseConsumer(nullptr);
 		pBaseConsumer = pConsumer.get();
 		Lib3MF_Consumer handle = pBaseConsumer;
-		(*pEncryptionCallback)(handle, algorithm, plain.size(), plain.data(),
+		(*pTheCallback)(handle, algorithm, plain.size(), plain.data(),
 			ctx.m_KeyBuffer.size(), nullptr, ctx.m_KeyBuffer.data(),
 			ctx.m_pUserData, &result);
 
@@ -227,15 +226,15 @@ void Lib3MF::Impl::CWriter::RegisterKEKClient(const std::string & sConsumerID, c
 	writer().getSecureContext()->addKekCtx(sConsumerID, descriptor);
 }
 
-void Lib3MF::Impl::CWriter::RegisterDEKClient(const Lib3MF::DataEncryptionCallback pEncryptionCallback, const Lib3MF_pvoid pUserData)
+void Lib3MF::Impl::CWriter::SetContentEncryptionCallback(const Lib3MF::ContentEncryptionCallback pTheCallback, const Lib3MF_pvoid pUserData)
 {
-	NMR::DEKDESCRIPTOR descriptor;
+	NMR::ContentEncryptionDescriptor descriptor;
 	descriptor.m_sDekDecryptData.m_pUserData = pUserData;
-	descriptor.m_fnCrypt = [this, pEncryptionCallback](
+	descriptor.m_fnCrypt = [this, pTheCallback](
 			NMR::nfUint64 size,
 			NMR::nfByte const * plain,
 			NMR::nfByte * cipher,
-			NMR::DEKCTX & ctx) {
+			NMR::ContentEncryptionContext & ctx) {
 		Lib3MF::sAes256CipherValue cipherDataValue;
 		__NMRASSERT(ctx.m_sCipherValue.m_iv.size() == sizeof(cipherDataValue.m_IV));
 		std::copy(ctx.m_sCipherValue.m_iv.begin(), ctx.m_sCipherValue.m_iv.end(), cipherDataValue.m_IV);
@@ -251,7 +250,7 @@ void Lib3MF::Impl::CWriter::RegisterDEKClient(const Lib3MF::DataEncryptionCallba
 		pBaseCipherData = pCipherData.get();
 		Lib3MF_CipherData handle = pBaseCipherData;
 		NMR::nfUint64 result = 0;
-		(*pEncryptionCallback)(eEncryptionAlgorithm::Aes256Gcm, handle, size, plain, size, nullptr, cipher, ctx.m_pUserData, &result);
+		(*pTheCallback)(eEncryptionAlgorithm::Aes256Gcm, handle, size, plain, size, nullptr, cipher, ctx.m_pUserData, &result);
 		if (result < 0)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_CALCULATIONABORTED);
 		else if (result == 0) {

@@ -52,13 +52,14 @@ namespace NMR {
 		nfBool m_bOpen;
 		nfUint64 m_nfHandle;
 		static nfUint64 s_nfHandleCount;
+		CryptoRandCbType m_fnRandCall;
 	protected:
 		void initializeCipher();
 		void initializeKey();
 		void initializeIV();
 	public:
-		CKeyStoreResourceData(std::string const& path);
-		CKeyStoreResourceData(std::string const& path, eKeyStoreEncryptAlgorithm const& ea, nfBool const& compression);
+		CKeyStoreResourceData(std::string const& path, CryptoRandCbType & randCall);
+		CKeyStoreResourceData(std::string const& path, eKeyStoreEncryptAlgorithm const& ea, nfBool const& compression, CryptoRandCbType & randCall);
 		PKeyStoreDecryptRight addDecryptRight(NMR::PKeyStoreConsumer const& consumer, eKeyStoreEncryptAlgorithm const& encryptAlgorithm);
 		PKeyStoreDecryptRight addDecryptRight(PKeyStoreDecryptRight const & dr);
 		nfUint32 getDecryptRightCount();

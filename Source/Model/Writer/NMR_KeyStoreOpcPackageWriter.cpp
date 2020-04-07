@@ -77,7 +77,7 @@ namespace NMR {
 	}
 
 	void CKeyStoreOpcPackageWriter::wrapPartStream(PKeyStoreResourceData rd, POpcPackagePart part) {
-		DEKDESCRIPTOR p = m_pSecureContext->getDekCtx();
+		ContentEncryptionDescriptor p = m_pSecureContext->getDekCtx();
 		p.m_sDekDecryptData.m_sCipherValue = rd->getCipherValue();
 		p.m_sDekDecryptData.m_nfHandler = rd->getHandle();
 		p.m_sDekDecryptData.m_bCompression = rd->getCompression();
@@ -94,7 +94,7 @@ namespace NMR {
 	}
 
 	void CKeyStoreOpcPackageWriter::updateResourceDataTag(PKeyStoreResourceData rd) {
-		DEKDESCRIPTOR dekCtx = m_pSecureContext->getDekCtx();
+		ContentEncryptionDescriptor dekCtx = m_pSecureContext->getDekCtx();
 		dekCtx.m_sDekDecryptData.m_nfHandler = rd->getHandle();
 		dekCtx.m_sDekDecryptData.m_sCipherValue = rd->getCipherValue();
 		dekCtx.m_fnCrypt(0, nullptr, nullptr, dekCtx.m_sDekDecryptData);
@@ -103,10 +103,10 @@ namespace NMR {
 
 	void CKeyStoreOpcPackageWriter::updateDecryptRightCipher(PKeyStoreDecryptRight dr, PKeyStoreResourceData rd) {
 		try {
-			KEKDESCRIPTOR ctx = m_pSecureContext->getKekCtx(dr->getConsumer()->getConsumerID());
+			KeyWrappingDescriptor ctx = m_pSecureContext->getKekCtx(dr->getConsumer()->getConsumerID());
 			ctx.m_sKekDecryptData.m_sConsumerId = dr->getConsumer()->getConsumerID();
 			ctx.m_sKekDecryptData.m_sResourcePath = rd->getPath()->getPath();
-			nfUint64 encrypted = ctx.m_fnCrypt(rd->getCipherValue().m_key, ctx.m_sKekDecryptData);
+			nfUint64 encrypted = ctx.m_fnWrap(rd->getCipherValue().m_key, ctx.m_sKekDecryptData);
 			if (encrypted > 0) {
 				CIPHERVALUE cipherValue = rd->getCipherValue();
 				cipherValue.m_key = ctx.m_sKekDecryptData.m_KeyBuffer;

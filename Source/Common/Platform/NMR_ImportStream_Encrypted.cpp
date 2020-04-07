@@ -3,7 +3,7 @@
 #include "Common/NMR_Exception.h"
 #include <vector>
 namespace NMR {
-	CImportStream_Encrypted::CImportStream_Encrypted(PImportStream pEncryptedStream, DEKDESCRIPTOR pDecryptContext)
+	CImportStream_Encrypted::CImportStream_Encrypted(PImportStream pEncryptedStream, ContentEncryptionDescriptor pDecryptContext)
 		:m_pEncryptedStream(pEncryptedStream), m_pDecryptContext(pDecryptContext)
 	{
 		if (nullptr == pEncryptedStream)

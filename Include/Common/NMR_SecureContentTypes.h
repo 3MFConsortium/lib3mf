@@ -59,32 +59,35 @@ namespace NMR {
 		Aes256Gcm = 1
 	};
 
-	struct DEKCTX {
+	struct ContentEncryptionContext {
 		nfUint64 m_nfHandler;
 		CIPHERVALUE m_sCipherValue;
 		void * m_pUserData;
 		nfBool m_bCompression;
 	};
-	using ImportStream_DEKCallbackType = std::function<nfUint64(nfUint64, nfByte const *, nfByte *, DEKCTX &)>;
+	using ContentEncryptionCbType = std::function<nfUint64(nfUint64, nfByte const *, nfByte *, ContentEncryptionContext &)>;
 
-	struct DEKDESCRIPTOR {
-		ImportStream_DEKCallbackType m_fnCrypt;
-		DEKCTX m_sDekDecryptData;
+	struct ContentEncryptionDescriptor {
+		ContentEncryptionCbType m_fnCrypt;
+		ContentEncryptionContext m_sDekDecryptData;
 	};
 
-	struct KEKCTX {
+	struct KeyWrappingContext {
 		void * m_pUserData;
 		std::string m_sConsumerId;
 		std::string m_sResourcePath;
 		std::vector<nfByte> m_KeyBuffer;
 	};
 
-	using ImportStream_KEKCallbackType = std::function<nfUint64(std::vector<nfByte> const &, KEKCTX &)>;
+	using KeyWrappingCbType = std::function<nfUint64(std::vector<nfByte> const &, KeyWrappingContext &)>;
 
-	struct KEKDESCRIPTOR {
-		ImportStream_KEKCallbackType m_fnCrypt;
-		KEKCTX m_sKekDecryptData;
+	struct KeyWrappingDescriptor {
+		KeyWrappingCbType m_fnWrap;
+		KeyWrappingContext m_sKekDecryptData;
 	};
+
+	using CryptoRandCbType = std::function<nfUint64(nfByte *, nfUint64)>;
+
 }
 
 #endif // !NMR_SECURECONTENTTYPES

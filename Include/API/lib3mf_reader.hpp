@@ -99,9 +99,10 @@ public:
 
 	Lib3MF_uint32 GetWarningCount ();
 
-	void RegisterKEKClient(const std::string &sConsumerID, const Lib3MF::KeyDecryptionCallback pDecryptionCallback, const Lib3MF_uint32 nKeySize, const Lib3MF_pvoid pUserData);
 
-	void RegisterDEKClient(const Lib3MF::DataDecryptionCallback pDecryptionCallback, const Lib3MF_pvoid pUserData);
+	void AddKeyWrappingCallback(const Lib3MF::KeyWrappingCallback pTheCallback, const std::string &sConsumerID, const Lib3MF_pvoid pUserData);
+
+	void SetContentEncryptionCallback(const Lib3MF::ContentEncryptionCallback pTheCallback, const Lib3MF_pvoid pUserData);
 
 };
 

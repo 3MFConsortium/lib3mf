@@ -5,10 +5,10 @@ namespace NMR {
 	bool CSecureContext::hasDekCtx() const {
 		return m_bHasDek;
 	}
-	DEKDESCRIPTOR CSecureContext::getDekCtx() const {
+	ContentEncryptionDescriptor CSecureContext::getDekCtx() const {
 		return m_sDekDescriptor;
 	}
-	void CSecureContext::setDekCtx(DEKDESCRIPTOR const & descriptor) {
+	void CSecureContext::setDekCtx(ContentEncryptionDescriptor const & descriptor) {
 		m_sDekDescriptor = descriptor;
 		m_bHasDek = true;
 	}
@@ -18,12 +18,12 @@ namespace NMR {
 	ClientConsumerMap::const_iterator CSecureContext::kekCtxEnd() const {
 		return m_ConsumerMap.cend();
 	}
-	void CSecureContext::addKekCtx(std::string const & consumerId, KEKDESCRIPTOR const & descriptor) {
+	void CSecureContext::addKekCtx(std::string const & consumerId, KeyWrappingDescriptor const & descriptor) {
 		if (m_ConsumerMap.find(consumerId) != m_ConsumerMap.end())
 			throw CNMRException(NMR_ERROR_KEYSTOREDUPLICATECONSUMERID);
 		m_ConsumerMap[consumerId] = descriptor;
 	}
-	KEKDESCRIPTOR CSecureContext::getKekCtx(std::string const & consumerId) const {
+	KeyWrappingDescriptor CSecureContext::getKekCtx(std::string const & consumerId) const {
 		auto it = m_ConsumerMap.find(consumerId);
 		if (it != m_ConsumerMap.end())
 			return (*it).second;

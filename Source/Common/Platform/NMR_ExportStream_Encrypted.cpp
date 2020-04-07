@@ -2,7 +2,7 @@
 #include "Common/NMR_Exception.h"
 
 namespace NMR {
-	CExportStream_Encrypted::CExportStream_Encrypted(PExportStream pEncryptedStream, DEKDESCRIPTOR context)
+	CExportStream_Encrypted::CExportStream_Encrypted(PExportStream pEncryptedStream, ContentEncryptionDescriptor context)
 		:m_pEncryptedStream(pEncryptedStream), m_pDecryptContext(context)
 	{
 		if (nullptr == pEncryptedStream)

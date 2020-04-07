@@ -79,7 +79,7 @@ namespace NMR {
 		if (m_pSecureContext->hasDekCtx()) {
 			NMR::PKeyStoreResourceData rd = m_pKeyStore->findResourceDataByPath(sPath);
 			if (nullptr != rd) {
-				DEKDESCRIPTOR p = m_pSecureContext->getDekCtx();
+				ContentEncryptionDescriptor p = m_pSecureContext->getDekCtx();
 				p.m_sDekDecryptData.m_sCipherValue = rd->getCipherValue();
 				p.m_sDekDecryptData.m_nfHandler = rd->getHandle();
 				p.m_sDekDecryptData.m_bCompression = rd->getCompression();
@@ -163,11 +163,11 @@ namespace NMR {
 				if (consumer) {
 					PKeyStoreDecryptRight decryptRight = rd->findDecryptRightByConsumer(consumer);
 					if (decryptRight) {
-						KEKDESCRIPTOR ctx = (*it).second;
+						KeyWrappingDescriptor ctx = (*it).second;
 						ctx.m_sKekDecryptData.m_sConsumerId = consumer->getConsumerID();
 						ctx.m_sKekDecryptData.m_sResourcePath = rd->getPath()->getPath();
 						CIPHERVALUE closed = decryptRight->getCipherValue();
-						size_t decrypted = ctx.m_fnCrypt(closed.m_key, ctx.m_sKekDecryptData);
+						size_t decrypted = ctx.m_fnWrap(closed.m_key, ctx.m_sKekDecryptData);
 						if (decrypted) {
 							CIPHERVALUE open = closed;
 							open.m_key = ctx.m_sKekDecryptData.m_KeyBuffer;
@@ -185,7 +185,7 @@ namespace NMR {
 			int count = m_pKeyStore->getResourceDataCount();
 			for (int i = 0; i < count; ++i) {
 				NMR::PKeyStoreResourceData rd = m_pKeyStore->getResourceDataByIndex(i);
-				DEKDESCRIPTOR descriptor = m_pSecureContext->getDekCtx();
+				ContentEncryptionDescriptor descriptor = m_pSecureContext->getDekCtx();
 				descriptor.m_sDekDecryptData.m_sCipherValue = rd->getCipherValue();
 				descriptor.m_sDekDecryptData.m_nfHandler = rd->getHandle();
 				descriptor.m_fnCrypt(0, nullptr, nullptr, descriptor.m_sDekDecryptData);

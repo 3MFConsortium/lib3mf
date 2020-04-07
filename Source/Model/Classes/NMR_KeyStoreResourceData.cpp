@@ -1,7 +1,6 @@
 #include "Model/Classes/NMR_KeyStoreResourceData.h"
 #include "Common/NMR_Exception.h"
 #include <memory>
-#include <openssl/rand.h>
 
 #define IV_SIZE 12
 #define TAG_SIZE 16
@@ -21,26 +20,38 @@ namespace NMR {
 	}
 
 	void CKeyStoreResourceData::initializeKey() {
-		int rc = RAND_bytes(m_sCipherValue.m_key.data(), (int)m_sCipherValue.m_key.size());
+		nfUint64 rc = m_fnRandCall(m_sCipherValue.m_key.data(), (int)m_sCipherValue.m_key.size());
 		if (rc != 1)
 			throw CNMRException(NMR_ERROR_CALCULATIONTERMINATED);
 	}
 
 	void CKeyStoreResourceData::initializeIV() {
-		int rc = RAND_bytes(m_sCipherValue.m_iv.data(), (int)m_sCipherValue.m_iv.size());
+		nfUint64 rc = m_fnRandCall(m_sCipherValue.m_iv.data(), (int)m_sCipherValue.m_iv.size());
 		if (rc != 1)
 			throw CNMRException(NMR_ERROR_CALCULATIONTERMINATED);
 	}
 
-	CKeyStoreResourceData::CKeyStoreResourceData(std::string const & path) {
+	CKeyStoreResourceData::CKeyStoreResourceData(std::string const & path, CryptoRandCbType & randCall) {
+		if (randCall)
+			m_fnRandCall = randCall;
+		else {
+			//TODO: need to use internal call
+			throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
+		}
 		m_sPath = path;
 		m_EncryptionAlgorithm = eKeyStoreEncryptAlgorithm::Aes256Gcm;
 		m_nfHandle = ++s_nfHandleCount;
 		initializeCipher();
 	}
 
-	CKeyStoreResourceData::CKeyStoreResourceData(std::string const & path, eKeyStoreEncryptAlgorithm const & ea, nfBool const & compression)
+	CKeyStoreResourceData::CKeyStoreResourceData(std::string const & path, eKeyStoreEncryptAlgorithm const & ea, nfBool const & compression, CryptoRandCbType & randCall)
 	{
+		if (randCall)
+			m_fnRandCall = randCall;
+		else {
+			//TODO: need to use internal call
+			throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
+		}
 		m_sPath = path;
 		m_EncryptionAlgorithm = ea;
 		m_bCompression = compression;

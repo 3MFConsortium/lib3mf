@@ -47,9 +47,9 @@ namespace NMR {
 
 	class CExportStream_Encrypted : public CExportStream {
 		PExportStream m_pEncryptedStream;
-		DEKDESCRIPTOR m_pDecryptContext;
+		ContentEncryptionDescriptor m_pDecryptContext;
 	public:
-		CExportStream_Encrypted(PExportStream pEncryptedStream, DEKDESCRIPTOR context);
+		CExportStream_Encrypted(PExportStream pEncryptedStream, ContentEncryptionDescriptor context);
 
 		
 		// Inherited via CExportStream

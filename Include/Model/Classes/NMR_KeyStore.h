@@ -73,6 +73,7 @@ namespace NMR {
 		PKeyStoreResourceData addResourceData(std::string path, eKeyStoreEncryptAlgorithm ea, nfBool compression);
 		PKeyStoreResourceData findResourceDataByPath(std::string path);
 		bool empty() const;
+
 	protected:
 		void clearAll();
 	};
