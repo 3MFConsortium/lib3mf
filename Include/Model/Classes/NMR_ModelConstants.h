@@ -357,6 +357,7 @@ These are given by the 3MF Standard
 #define XML_3MF_ELEMENT_CIPHERDATA					"cipherdata"
 #define XML_3MF_ELEMENT_CIPHERVALUE					"CipherValue"
 #define XML_3MF_ELEMENT_KEKPARAMS					"kekparams"
+#define XML_3MF_ELEMENT_CEKPARAMS					"cekparams"
 #define XML_3MF_ELEMENT_ACCESSRIGHT					"accessright"
 #define XML_3MF_ELEMENT_ENCRYPTEDKEY				"encryptedkey"
 #define XML_3MF_ELEMENT_ENCRYPTIONMETHOD			"EncryptionMethod"
@@ -375,6 +376,10 @@ These are given by the 3MF Standard
 #define XML_3MF_SECURE_CONTENT_WRAPPINGALGORITHM	"wrappingalgorithm"
 #define XML_3MF_SECURE_CONTENT_MGFALGORITHM			"mgfalgorithm"
 #define XML_3MF_SECURE_CONTENT_DIGESTMETHOD			"digestmethod"
+#define XML_3MF_SECURE_CONTENT_IV					"iv"
+#define XML_3MF_SECURE_CONTENT_TAG					"tag"
+#define XML_3MF_SECURE_CONTENT_AAD					"aad"
+
 
 #define XML_3MF_NAMESPACEPREFIX_DS					"ds"
 #define XML_3MF_NAMESPACEPREFIX_XENC				"xenc"

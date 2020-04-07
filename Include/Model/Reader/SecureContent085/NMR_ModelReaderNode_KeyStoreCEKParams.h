@@ -24,73 +24,46 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+Abstract:
+
+NMR_ModelReaderNode_KeyStoreCipherValue.h defines the Model Reader Node class that is related to <xenc:CipherValue>.
 
 --*/
 
+#ifndef __NMR_MODELREADERNODE_KEYSTORECEKPARAMS
+#define __NMR_MODELREADERNODE_KEYSTORECEKPARAMS
 
-#ifndef NMR_SECURECONTENTTYPES
-#define NMR_SECURECONTENTTYPES
+#include "Model/Reader/NMR_ModelReaderNode_KeyStoreBase.h"
+#include "Model/Reader/NMR_ModelReaderNode.h"
+#include "Model/Classes/NMR_KeyStore.h"
+#include "Model/Classes/NMR_KeyStoreAccessRight.h"
+#include "Model/Classes/NMR_KeyStoreCEKParams.h"
 
-#define KEYSTORE_TYPES_MODULUSBUFFERSIZE 257
-#define KEYSTORE_TYPES_EXPONENTBUFFERSIZE 5
-#define KEYSTORE_TYPES_IVSIZE 12
-#define KEYSTORE_TYPES_TAGSIZE 16
-
-#include "Common/NMR_Types.h"
-#include "Common/NMR_Local.h"
-
-#include <vector>
-#include <functional>
 namespace NMR {
 
-	struct RSAKEYVALUE {
-		nfByte m_modulus[KEYSTORE_TYPES_MODULUSBUFFERSIZE];
-		nfByte m_exponent[KEYSTORE_TYPES_EXPONENTBUFFERSIZE];
-	};
-
-	struct CIPHERVALUE {
+	class CModelReaderNode_KeyStoreCEKParams: public CModelReaderNode_KeyStoreBase {
+	private:
+		nfBool m_compression;
+		eKeyStoreEncryptAlgorithm m_encryptionAlgorithm;
 		std::vector<nfByte> m_iv;
 		std::vector<nfByte> m_tag;
 		std::vector<nfByte> m_aad;
-	};
+		CIPHERVALUE m_CipherValue;
+		PKeyStoreCEKParams m_CEKParams;
+	protected:
+		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
+		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 
-	struct KEKPARAMS {
-		eKeyStoreEncryptAlgorithm wrappingalgorithm;
-		std::string mgfalgorithm;
-		std::string digestmethod;
-	};
+	public:
+		CModelReaderNode_KeyStoreCEKParams() = delete;
+		CModelReaderNode_KeyStoreCEKParams(_In_ CKeyStore * pKeyStore, _In_ PModelReaderWarnings pWarnings);
 
-	enum eKeyStoreEncryptAlgorithm {
-		RsaOaepMgf1p = 0,
-		Aes256Gcm = 1
-	};
+		PKeyStoreCEKParams getCEKParams();
 
-	struct DEKCTX {
-		nfUint64 m_nfHandler;
-		CIPHERVALUE m_sCipherValue;
-		void * m_pUserData;
-		nfBool m_bCompression;
+		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 	};
-	using ImportStream_DEKCallbackType = std::function<nfUint64(nfUint64, nfByte const *, nfByte *, DEKCTX &)>;
+	typedef std::shared_ptr <CModelReaderNode_KeyStoreCEKParams> PModelReaderNode_KeyStoreCEKParams;
 
-	struct DEKDESCRIPTOR {
-		ImportStream_DEKCallbackType m_fnCrypt;
-		DEKCTX m_sDekDecryptData;
-	};
-
-	struct KEKCTX {
-		void * m_pUserData;
-		std::string m_sConsumerId;
-		std::string m_sResourcePath;
-		std::vector<nfByte> m_KeyBuffer;
-	};
-
-	using ImportStream_KEKCallbackType = std::function<nfUint64(std::vector<nfByte> const &, KEKCTX &)>;
-
-	struct KEKDESCRIPTOR {
-		ImportStream_KEKCallbackType m_fnCrypt;
-		KEKCTX m_sKekDecryptData;
-	};
 }
 
-#endif // !NMR_SECURECONTENTTYPES
+#endif // __NMR_MODELREADERNODE_KEYSTORECEKPARAMS

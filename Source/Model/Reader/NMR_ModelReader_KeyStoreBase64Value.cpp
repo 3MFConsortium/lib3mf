@@ -1,3 +1,4 @@
+
 /*++
 
 Copyright (C) 2019 3MF Consortium
@@ -26,39 +27,55 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelReaderNode_KeyStoreResourceData.h defines the Model Reader Node class that is related to <resourcedata>.
+NMR_ModelReaderNode_KeyStoreCipherValue.h defines the Model Reader Node class that is related to <xenc:CipherValue>.
 
 --*/
 
-#ifndef __NMR_MODELREADERNODE_KEYSTORERESOURCEDATA
-#define __NMR_MODELREADERNODE_KEYSTORERESOURCEDATA
+#include "Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreBase64Value.h"
 
+#include "Model/Classes/NMR_ModelConstants.h"
 #include "Model/Classes/NMR_KeyStoreResourceData.h"
-#include "Model/Classes/NMR_KeyStoreCEKParams.h"
-#include "Model/Reader/NMR_ModelReaderNode_KeyStoreBase.h"
-#include "Model/Reader/NMR_ModelReaderNode.h"
-#include "Model/Classes/NMR_KeyStore.h"
+#include "Model/Classes/NMR_KeyStoreAccessRight.h"
+#include "Common/NMR_Exception.h"
+#include "Common/NMR_Exception_Windows.h"
+#include "Common/NMR_StringUtils.h"
 
-
+#include "Libraries/cpp-base64/base64.h"
+#include "..\..\..\Include\Model\Reader\NMR_ModelReader_KeyStoreBase64Value.h"
 
 namespace NMR {
 
-	class CModelReaderNode_KeyStoreResourceData : public CModelReaderNode_KeyStoreBase {
-	private:
-		std::string m_path;
-		PKeyStoreCEKParams m_sCekParams;
-		PKeyStoreResourceData m_pResourceData;
-	protected:
-		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
-		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
-	public:
-		CModelReaderNode_KeyStoreResourceData() = delete;
-		CModelReaderNode_KeyStoreResourceData(_In_ CKeyStore * pKeyStore, _In_ PModelReaderWarnings pWarnings);
+	CModelReaderNode_KeyStoreBase64Value::CModelReaderNode_KeyStoreBase64Value(CKeyStore * pKeyStore, PModelReaderWarnings pWarnings)
+		: CModelReaderNode_KeyStoreBase(pKeyStore, pWarnings)
+	{
+		m_sCodedValue = "";
+	}
 
-		virtual void parseXML(_In_ CXmlReader * pXMLReader);
-	};
+	std::vector<nfByte> CModelReaderNode_KeyStoreBase64Value::getValue()
+	{
+		return m_decodedValue;
+	}
 
-	typedef std::shared_ptr <CModelReaderNode_KeyStoreResourceData> PModelReaderNode_KeyStoreResourceData;
+	void CModelReaderNode_KeyStoreBase64Value::parseXML(_In_ CXmlReader * pXMLReader)
+	{
+		// Parse name
+		parseName(pXMLReader);
+
+		// Parse attribute
+		parseAttributes(pXMLReader);
+
+		// Parse Content
+		parseContent(pXMLReader);
+
+		m_decodedValue = base64_decode(m_sCodedValue);
+	}
+
+	void CModelReaderNode_KeyStoreBase64Value::OnText(_In_z_ const nfChar * pText, _In_ CXmlReader * pXMLReader)
+	{
+		__NMRASSERT(pAttributeName);
+		__NMRASSERT(pAttributeValue);
+
+		m_sCodedValue += std::string(pText);
+	}
+
 }
-
-#endif // __NMR_MODELREADERNODE_KEYSTORERESOURCEDATA

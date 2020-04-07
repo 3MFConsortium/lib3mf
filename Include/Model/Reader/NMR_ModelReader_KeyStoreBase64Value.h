@@ -26,39 +26,36 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelReaderNode_KeyStoreResourceData.h defines the Model Reader Node class that is related to <resourcedata>.
+NMR_ModelReaderNode_KeyStoreCipherValue.h defines the Model Reader Node class that is related to <xenc:CipherValue>.
 
 --*/
 
-#ifndef __NMR_MODELREADERNODE_KEYSTORERESOURCEDATA
-#define __NMR_MODELREADERNODE_KEYSTORERESOURCEDATA
+#ifndef __NMR_MODELREADERNODE_KEYSTOREBASE64VALUE
+#define __NMR_MODELREADERNODE_KEYSTOREBASE64VALUE
 
-#include "Model/Classes/NMR_KeyStoreResourceData.h"
-#include "Model/Classes/NMR_KeyStoreCEKParams.h"
 #include "Model/Reader/NMR_ModelReaderNode_KeyStoreBase.h"
 #include "Model/Reader/NMR_ModelReaderNode.h"
 #include "Model/Classes/NMR_KeyStore.h"
 
-
-
 namespace NMR {
 
-	class CModelReaderNode_KeyStoreResourceData : public CModelReaderNode_KeyStoreBase {
+	class CModelReaderNode_KeyStoreBase64Value : public CModelReaderNode_KeyStoreBase {
 	private:
-		std::string m_path;
-		PKeyStoreCEKParams m_sCekParams;
-		PKeyStoreResourceData m_pResourceData;
+		std::vector<nfByte> m_decodedValue;
+		std::string m_sCodedValue;
+
 	protected:
-		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
-		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
+		virtual void OnText(_In_z_ const nfChar * pText, _In_ CXmlReader * pXMLReader);
 	public:
-		CModelReaderNode_KeyStoreResourceData() = delete;
-		CModelReaderNode_KeyStoreResourceData(_In_ CKeyStore * pKeyStore, _In_ PModelReaderWarnings pWarnings);
+		CModelReaderNode_KeyStoreBase64Value() = delete;
+		CModelReaderNode_KeyStoreBase64Value(_In_ CKeyStore * pKeyStore, _In_ PModelReaderWarnings pWarnings);
+
+		std::vector<nfByte> getValue();
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 	};
 
-	typedef std::shared_ptr <CModelReaderNode_KeyStoreResourceData> PModelReaderNode_KeyStoreResourceData;
+	typedef std::shared_ptr <CModelReaderNode_KeyStoreBase64Value> PModelReaderNode_KeyStoreBase64Value;
 }
 
-#endif // __NMR_MODELREADERNODE_KEYSTORERESOURCEDATA
+#endif // __NMR_MODELREADERNODE_KEYSTOREBASE64VALUE
