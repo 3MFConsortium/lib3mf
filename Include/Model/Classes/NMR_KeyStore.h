@@ -56,8 +56,8 @@ namespace NMR {
 		std::vector<PKeyStoreConsumer> m_Consumers;
 		std::map<std::string, PKeyStoreConsumer> m_ConsumerRefs;
 
-		std::vector<PKeyStoreResourceData> m_ResourceDatas;
-		std::map<std::string, PKeyStoreResourceData> m_ResourceDataRefs;
+		std::vector<PKeyStoreResourceDataGroup> m_ResourceDataGroups;
+		std::map<std::string, PKeyStoreResourceDataGroup> m_ResourceDataGroupsRefs;
 	public:
 		CKeyStore();
 		~CKeyStore();

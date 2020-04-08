@@ -72,7 +72,7 @@ namespace NMR {
 		__NMRASSERT(pAttributeValue);
 
 		if (strcmp(XML_3MF_SECURE_CONTENT_WRAPPINGALGORITHM, pAttributeName)) {
-			m_sKekParams.wrappingalgorithm = pAttributeValue;
+			m_sKekParams.wrappingalgorithm = std::make_shared<eKeyStoreEncryptAlgorithm>(pAttributeValue);
 			if (strcmp(XML_3MF_SECURE_CONTENT_MGFALGORITHM, pAttributeName)) {
 				m_sKekParams.mgfalgorithm = pAttributeValue;
 			}

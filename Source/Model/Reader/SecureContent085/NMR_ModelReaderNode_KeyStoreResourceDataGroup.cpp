@@ -33,6 +33,7 @@ NMR_ModelReaderNode_KeyStoreResourceDataGroup.h defines the Model Reader Node cl
 
 #include "Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreResourceDataGroup.h"
 #include "Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreAccessRight.h"
+#include "Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreResourceData.h"
 
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Model/Classes/NMR_KeyStoreResourceData.h"
@@ -43,14 +44,15 @@ NMR_ModelReaderNode_KeyStoreResourceDataGroup.h defines the Model Reader Node cl
 
 namespace NMR {
 
-	CModelReaderNode_KeyStoreResourceData::CModelReaderNode_KeyStoreResourceData(CKeyStore * pKeyStore, PModelReaderWarnings pWarnings)
-		: CModelReaderNode_KeyStoreBase(pKeyStore, pWarnings)
+	CModelReaderNode_KeyStoreResourceDataGroup::CModelReaderNode_KeyStoreResourceDataGroup(CKeyStore * pKeyStore, PModelReaderWarnings pWarnings)
+		: CModelReaderNode_KeyStoreBase(pKeyStore, pWarnings) {}
+
+	PKeyStoreResourceDataGroup CModelReaderNode_KeyStoreResourceDataGroup::getResourceDataGroup()
 	{
-		// default is none
-		m_compression = false;
+		return m_pResourceDataGroup;
 	}
 
-	void CModelReaderNode_KeyStoreResourceData::parseXML(_In_ CXmlReader * pXMLReader)
+	void CModelReaderNode_KeyStoreResourceDataGroup::parseXML(_In_ CXmlReader * pXMLReader)
 	{
 		// Parse name
 		parseName(pXMLReader);
@@ -61,65 +63,45 @@ namespace NMR {
 		// Parse Content
 		parseContent(pXMLReader);
 
-		// TODO: check path
+		m_pResourceDataGroup = std::make_shared<CKeyStoreResourceDataGroup>(m_keyUUID, m_accessRights, m_resourcesData);
 
-		PKeyStoreResourceData rd = m_pKeyStore->addResourceData(m_path, m_encryptionAlgorithm, m_compression);
-		for (PKeyStoreDecryptRight pdr : m_decryptRights) {
-			rd->addDecryptRight(pdr);
-		}
 	}
 
-	void CModelReaderNode_KeyStoreResourceData::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
+	void CModelReaderNode_KeyStoreResourceDataGroup::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
 	{
 		__NMRASSERT(pAttributeName);
 		__NMRASSERT(pAttributeValue);
 
-		if (strcmp(XML_3MF_SECURE_CONTENT_PATH, pAttributeName) == 0) {
-			if (!m_path.empty())
-				m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREDUPLICATERESOURCEDATAPATH), eModelReaderWarningLevel::mrwInvalidMandatoryValue);
-			m_path = pAttributeValue;
-		}
-		else if (strcmp(XML_3MF_SECURE_CONTENT_ENCRYPTION_ALGORITHM, pAttributeName) == 0) {
-			if (strcmp(XML_3MF_SECURE_CONTENT_ENCRYPTION_AES256, pAttributeValue) == 0) {
-				m_encryptionAlgorithm = eKeyStoreEncryptAlgorithm::Aes256Gcm;
-			}
-			else if (strcmp(XML_3MF_SECURE_CONTENT_ENCRYPTION_RSA, pAttributeValue) == 0) {
-				m_encryptionAlgorithm = eKeyStoreEncryptAlgorithm::RsaOaepMgf1p;
-			}
-			else {
-				m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREINVALIDENCRYPTIONALGORITHM), eModelReaderWarningLevel::mrwInvalidOptionalValue);
-				m_encryptionAlgorithm = eKeyStoreEncryptAlgorithm::Aes256Gcm;
-			}
-		}
-		else if (strcmp(XML_3MF_SECURE_CONTENT_COMPRESSION, pAttributeName) == 0) {
-			if (strcmp(XML_3MF_SECURE_CONTENT_COMPRESSION_DEFLATE, pAttributeValue) == 0) {
-				m_compression = true;
-			}
-			else if (strcmp(XML_3MF_SECURE_CONTENT_COMPRESSION_NONE, pAttributeValue) == 0) {
-				m_compression = false;
-			}
-			else {
-				m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREINVALIDCOMPRESSION), eModelReaderWarningLevel::mrwInvalidOptionalValue);
-				m_compression = false;
-			}
+		if (strcmp(XML_3MF_SECURE_CONTENT_KEY_UUID, pAttributeName) == 0) {
+			if (!m_keyUUID)
+				m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREINVALIDKEYUUID), eModelReaderWarningLevel::mrwInvalidMandatoryValue);
+			m_keyUUID = std::make_shared<CUUID>(pAttributeValue);
 		}
 		else
 			m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE), mrwInvalidOptionalValue);
 	}
 
-	void CModelReaderNode_KeyStoreResourceData::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
+	void CModelReaderNode_KeyStoreResourceDataGroup::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
 	{
 		__NMRASSERT(pChildName);
 		__NMRASSERT(pXMLReader);
 		__NMRASSERT(pNameSpace);
 
 		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_SECURECONTENTSPEC) == 0) {
-			if (strcmp(pChildName, XML_3MF_ELEMENT_DECRYPTRIGHT) == 0) {
-				PModelReaderNode_KeyStoreDecryptRight pXMLNode = std::make_shared<CModelReaderNode_KeyStoreDecryptRight>(m_pKeyStore, m_pWarnings);
+			if (strcmp(pChildName, XML_3MF_ELEMENT_RESOURCEDATA) == 0) {
+				PModelReaderNode_KeyStoreResourceData pXMLNode = std::make_shared<CModelReaderNode_KeyStoreResourceData>(m_pKeyStore, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
-				PKeyStoreDecryptRight dr = pXMLNode->getDecryptRight();
-				if (nullptr != dr) {
-					m_decryptRights.push_back(pXMLNode->getDecryptRight());
+				PKeyStoreResourceData rd = pXMLNode->getResourceData();
+				if (nullptr != rd) {
+					m_resourcesData.push_back(rd);
+				}
+			}
+			else if (strcmp(pChildName, XML_3MF_ELEMENT_ACCESSRIGHT) == 0) {
+				PModelReaderNode_KeyStoreAccessRight pXMLNode = std::make_shared<CModelReaderNode_KeyStoreAccessRight>(m_pKeyStore, m_pWarnings);
+				pXMLNode->parseXML(pXMLReader);
+				PKeyStoreAccessRight ar = pXMLNode->getAccessRight();
+				if (nullptr != ar) {
+					m_accessRights.push_back(ar);
 				}
 			}
 			else

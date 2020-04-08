@@ -39,27 +39,24 @@ NMR_KeyStoreResourceData.h defines the KeyStoreResourceData Class. A ResourceDat
 #include "Common/NMR_Types.h"
 #include "Common/NMR_SecureContentTypes.h"
 #include "Model/Classes/NMR_KeyStoreAccessRight.h"
+#include "Model/Classes/NMR_KeyStoreResourceData.h"
 #include "Model/Classes/NMR_PackageResourceID.h"
+#include "Common/NMR_UUID.h"
+
 namespace NMR {
 
 	class CKeyStoreResourceDataGroup {
-		std::string m_sPath;
-		eKeyStoreEncryptAlgorithm m_EncryptionAlgorithm;
-		nfBool m_bCompression;
-		std::vector<PKeyStoreAccessRight> m_DecryptRights;
-		std::map<std::string, PKeyStoreAccessRight> m_ConsumerDecryptRight;
-		CIPHERVALUE m_sCipherValue;
-		nfBool m_bOpen;
-		nfUint64 m_nfHandle;
-		static nfUint64 s_nfHandleCount;
+		PUUID m_sKeyUUID;
+		std::vector<PKeyStoreAccessRight> m_accessRights;
+		std::vector<PKeyStoreResourceData> m_resourcesData;
 	protected:
-		void initializeCipher();
+		/*void initializeCipher();
 		void initializeKey();
-		void initializeIV();
+		void initializeIV();*/
 	public:
-		/*CKeyStoreResourceData(std::string const& path);
-		CKeyStoreResourceData(std::string const& path, eKeyStoreEncryptAlgorithm const& ea, nfBool const& compression);
-		PKeyStoreDecryptRight addDecryptRight(NMR::PKeyStoreConsumer const& consumer, eKeyStoreEncryptAlgorithm const& encryptAlgorithm);
+		CKeyStoreResourceDataGroup(PUUID const& keyUUID);
+		CKeyStoreResourceDataGroup(PUUID const& keyUUID, std::vector<PKeyStoreAccessRight> const& ar, std::vector<PKeyStoreResourceData> const& rd);
+		/*PKeyStoreDecryptRight addDecryptRight(NMR::PKeyStoreConsumer const& consumer, eKeyStoreEncryptAlgorithm const& encryptAlgorithm);
 		PKeyStoreDecryptRight addDecryptRight(PKeyStoreDecryptRight const & dr);
 		nfUint32 getDecryptRightCount();
 		PKeyStoreDecryptRight getDecryptRight(nfUint32 index) const;

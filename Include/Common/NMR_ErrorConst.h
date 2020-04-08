@@ -1173,6 +1173,9 @@ Model error codes (0x8XXX)
 // Invalid KEK Param
 #define NMR_ERROR_KEYSTOREINVALIDKEKPARAM 0x80FE
 
+//Invalid key uuid param
+#define NMR_ERROR_KEYSTOREINVALIDKEYUUID 0x80FF
+
 
 
 

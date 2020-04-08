@@ -40,14 +40,17 @@ NMR_ModelReaderNode_KeyStoreResourceData.h defines the Model Reader Node class t
 #include "Model/Classes/NMR_KeyStore.h"
 #include "Model/Classes/NMR_KeyStoreAccessRight.h"
 #include "Model/Classes/NMR_KeyStoreResourceData.h"
+#include "Model/Classes/NMR_KeyStoreResourceDataGroup.h"
+
 
 namespace NMR {
 
 	class CModelReaderNode_KeyStoreResourceDataGroup : public CModelReaderNode_KeyStoreBase {
 	private:
-		PUUID keyUUID;
+		PUUID m_keyUUID;
 		std::vector<PKeyStoreAccessRight> m_accessRights;
 		std::vector<PKeyStoreResourceData> m_resourcesData;
+		PKeyStoreResourceDataGroup m_pResourceDataGroup;
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
@@ -55,6 +58,7 @@ namespace NMR {
 		CModelReaderNode_KeyStoreResourceDataGroup() = delete;
 		CModelReaderNode_KeyStoreResourceDataGroup(_In_ CKeyStore * pKeyStore, _In_ PModelReaderWarnings pWarnings);
 
+		PKeyStoreResourceDataGroup getResourceDataGroup();
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 	};
 

@@ -379,6 +379,7 @@ These are given by the 3MF Standard
 #define XML_3MF_SECURE_CONTENT_IV					"iv"
 #define XML_3MF_SECURE_CONTENT_TAG					"tag"
 #define XML_3MF_SECURE_CONTENT_AAD					"aad"
+#define XML_3MF_SECURE_CONTENT_KEY_UUID				"keyuuid"
 
 
 #define XML_3MF_NAMESPACEPREFIX_DS					"ds"
