@@ -36,7 +36,7 @@ NMR_ModelReaderNode_KeyStore.h defines the Model Reader Node class that is relat
 
 #include "Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStore.h"
 #include "Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreConsumer.h"
-#include "Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreResourceData.h"
+#include "Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreResourceDataGroup.h"
 
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Model/Classes/NMR_KeyStoreResourceData.h"
@@ -105,8 +105,8 @@ namespace NMR {
 				pXMLNode->parseXML(pXMLReader);
 				// consumer adds itself to m_pKeyStore, nothing else to do here
 			}
-			else if (strcmp(pChildName, XML_3MF_ELEMENT_RESOURCEDATA) == 0) {
-				PModelReaderNode_KeyStoreResourceData pXMLNode = std::make_shared<CModelReaderNode_KeyStoreResourceData>(m_pKeyStore, m_pWarnings);
+			else if (strcmp(pChildName, XML_3MF_ELEMENT_RESOURCEDATAGROUP) == 0) {
+				PModelReaderNode_KeyStoreResourceDataGroup pXMLNode = std::make_shared<CModelReaderNode_KeyStoreResourceDataGroup>(m_pKeyStore, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 				// resource data adds itself to m_pKeyStore, nothing else to do here
 			}

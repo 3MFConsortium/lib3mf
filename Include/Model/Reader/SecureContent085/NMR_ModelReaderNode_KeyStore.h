@@ -33,8 +33,6 @@ NMR_ModelReaderNode_KeyStore.h defines the Model Reader Node class that is relat
 #ifndef __NMR_MODELREADERNODE_KEYSTORE
 #define __NMR_MODELREADERNODE_KEYSTORE
 
-#include "Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreResourceData.h"
-
 #include "Model/Reader/NMR_ModelReaderNode_KeyStoreBase.h"
 #include "Model/Reader/NMR_ModelReaderNode.h"
 #include "Model/Classes/NMR_KeyStore.h"

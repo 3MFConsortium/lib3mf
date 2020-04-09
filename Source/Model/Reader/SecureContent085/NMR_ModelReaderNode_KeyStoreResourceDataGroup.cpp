@@ -47,11 +47,6 @@ namespace NMR {
 	CModelReaderNode_KeyStoreResourceDataGroup::CModelReaderNode_KeyStoreResourceDataGroup(CKeyStore * pKeyStore, PModelReaderWarnings pWarnings)
 		: CModelReaderNode_KeyStoreBase(pKeyStore, pWarnings) {}
 
-	PKeyStoreResourceDataGroup CModelReaderNode_KeyStoreResourceDataGroup::getResourceDataGroup()
-	{
-		return m_pResourceDataGroup;
-	}
-
 	void CModelReaderNode_KeyStoreResourceDataGroup::parseXML(_In_ CXmlReader * pXMLReader)
 	{
 		// Parse name
@@ -62,8 +57,8 @@ namespace NMR {
 
 		// Parse Content
 		parseContent(pXMLReader);
-
-		m_pResourceDataGroup = std::make_shared<CKeyStoreResourceDataGroup>(m_keyUUID, m_accessRights, m_resourcesData);
+		//TODO check if there is some check to do
+		m_pKeyStore->addResourceDataGroup(m_keyUUID, m_accessRights, m_resourcesData);
 
 	}
 

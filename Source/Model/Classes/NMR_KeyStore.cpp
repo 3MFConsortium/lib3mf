@@ -34,7 +34,7 @@ A KeyStore is an in memory representation of the 3MF file.
 #include "Model/Classes/NMR_KeyStore.h"
 #include "Common/NMR_StringUtils.h" 
 #include "Model/Classes/NMR_KeyStoreConsumer.h"
-#include "Model/Classes/NMR_KeyStoreResourceData.h"
+#include "Model/Classes/NMR_KeyStoreResourceDataGroup.h"
 #include "Common/NMR_Exception.h"
 #include <memory>
 namespace NMR {
@@ -91,8 +91,8 @@ namespace NMR {
 	{
 		size_t n = m_ConsumerRefs.erase(consumer->getConsumerID());
 		if (n > 0) {
-			for (auto it : m_ResourceDatas) {
-				it->removeDecryptRight(consumer);
+			for (auto it : m_ResourceDataGroups) {
+				it->removeAccessRight(consumer);
 			}
 			for (auto it = m_Consumers.begin(); it != m_Consumers.end(); it++) {
 				if ((*it) == consumer) {
@@ -103,46 +103,32 @@ namespace NMR {
 		}
 	}
 
-	nfUint32 CKeyStore::getResourceDataCount() const
+	nfUint32 CKeyStore::getResourceDataGroupCount() const
 	{
-		return (uint32_t)m_ResourceDatas.size();
+		return (uint32_t)m_ResourceDataGroups.size();
 	}
 
-	PKeyStoreResourceData CKeyStore::getResourceDataByIndex(nfUint64 index) const
-	{	
-		if (index >= m_ResourceDatas.size())
-			throw CNMRException(NMR_ERROR_INVALIDINDEX);
-		return m_ResourceDatas[index];
-	}
-
-	PKeyStoreResourceData CKeyStore::addResourceData(std::string path, eKeyStoreEncryptAlgorithm ea, nfBool compression)
+	PKeyStoreResourceDataGroup CKeyStore::addResourceDataGroup(PUUID keyUUID, std::vector<PKeyStoreAccessRight> ar, std::vector<PKeyStoreResourceData> rd)
 	{
-		if (m_ResourceDataRefs.find(path) != m_ResourceDataRefs.end()) {
+		if (m_ResourceDataGroupsRefs.find(keyUUID) != m_ResourceDataGroupsRefs.end()) {
 			throw CNMRException(NMR_ERROR_KEYSTOREDUPLICATERESOURCEDATA);
 		}
-		PKeyStoreResourceData resourceData = std::make_shared<CKeyStoreResourceData>(path, ea, compression);
-		m_ResourceDatas.push_back(resourceData);
-		m_ResourceDataRefs[path] = resourceData;
-		return resourceData;
-	}
+		PKeyStoreResourceDataGroup resourceDataGroup = std::make_shared<CKeyStoreResourceDataGroup>(keyUUID, ar, rd);
+		m_ResourceDataGroups.push_back(resourceDataGroup);
+		m_ResourceDataGroupsRefs[keyUUID] = resourceDataGroup;
+		return resourceDataGroup;
 
-	PKeyStoreResourceData CKeyStore::findResourceDataByPath(std::string path)
-	{
-		auto ref = m_ResourceDataRefs.find(path);
-		if (ref != m_ResourceDataRefs.end())
-			return (*ref).second;
-		return nullptr;
 	}
 
 	bool CKeyStore::empty() const {
-		return m_Consumers.empty() && m_ResourceDatas.empty();
+		return m_Consumers.empty() && m_ResourceDataGroups.empty();
 	}
 
 	void CKeyStore::clearAll() {
 		m_ConsumerRefs.clear();
 		m_Consumers.clear();
-		m_ResourceDataRefs.clear();
-		m_ResourceDatas.clear();
+		m_ResourceDataGroupsRefs.clear();
+		m_ResourceDataGroups.clear();
 	}
 
 }

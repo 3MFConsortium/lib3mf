@@ -50,7 +50,6 @@ namespace NMR {
 		PUUID m_keyUUID;
 		std::vector<PKeyStoreAccessRight> m_accessRights;
 		std::vector<PKeyStoreResourceData> m_resourcesData;
-		PKeyStoreResourceDataGroup m_pResourceDataGroup;
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
@@ -58,7 +57,6 @@ namespace NMR {
 		CModelReaderNode_KeyStoreResourceDataGroup() = delete;
 		CModelReaderNode_KeyStoreResourceDataGroup(_In_ CKeyStore * pKeyStore, _In_ PModelReaderWarnings pWarnings);
 
-		PKeyStoreResourceDataGroup getResourceDataGroup();
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 	};
 

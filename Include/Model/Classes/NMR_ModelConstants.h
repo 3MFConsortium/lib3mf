@@ -349,6 +349,7 @@ These are given by the 3MF Standard
 #define XML_3MF_ELEMENT_KEYSTORE					"keystore"
 #define XML_3MF_ELEMENT_CONSUMER					"consumer"
 #define XML_3MF_ELEMENT_RESOURCEDATA				"resourcedata"
+#define XML_3MF_ELEMENT_RESOURCEDATAGROUP			"resourcedatagroup"
 #define XML_3MF_ELEMENT_KEYVALUE					"keyvalue"
 #define XML_3MF_ELEMENT_RSAKEYVALUE					"RSAKeyValue"
 #define XML_3MF_ELEMENT_MODULUS						"Modulus"

@@ -47,8 +47,9 @@ namespace NMR {
 
 	class CKeyStoreResourceDataGroup {
 		PUUID m_sKeyUUID;
-		std::vector<PKeyStoreAccessRight> m_accessRights;
-		std::vector<PKeyStoreResourceData> m_resourcesData;
+		std::vector<PKeyStoreAccessRight> m_AccessRights;
+		std::map<std::string, PKeyStoreAccessRight> m_ConsumerAccesstRight;
+		std::vector<PKeyStoreResourceData> m_ResourcesData;
 	protected:
 		/*void initializeCipher();
 		void initializeKey();
@@ -56,12 +57,18 @@ namespace NMR {
 	public:
 		CKeyStoreResourceDataGroup(PUUID const& keyUUID);
 		CKeyStoreResourceDataGroup(PUUID const& keyUUID, std::vector<PKeyStoreAccessRight> const& ar, std::vector<PKeyStoreResourceData> const& rd);
+		void removeAccessRight(NMR::PKeyStoreConsumer const& consumer);
+		PKeyStoreAccessRight addAccessRight(NMR::PKeyStoreConsumer const& consumer, eKeyStoreEncryptAlgorithm const& encryptAlgorithm);
+		PKeyStoreAccessRight addAccessRight(PKeyStoreAccessRight const & ar);
+		nfUint32 getAccessRightCount();
+		PKeyStoreAccessRight getAccessRight(nfUint32 index) const;
+		PKeyStoreAccessRight findAccessRightByConsumer(NMR::PKeyStoreConsumer const& consumer);
 		/*PKeyStoreDecryptRight addDecryptRight(NMR::PKeyStoreConsumer const& consumer, eKeyStoreEncryptAlgorithm const& encryptAlgorithm);
 		PKeyStoreDecryptRight addDecryptRight(PKeyStoreDecryptRight const & dr);
 		nfUint32 getDecryptRightCount();
 		PKeyStoreDecryptRight getDecryptRight(nfUint32 index) const;
 		PKeyStoreDecryptRight findDecryptRightByConsumer(NMR::PKeyStoreConsumer const& consumer);
-		void removeDecryptRight(NMR::PKeyStoreConsumer const& consumer);
+		
 		eKeyStoreEncryptAlgorithm getEncryptionAlgorithm() const;
 		nfBool getCompression() const;
 		NMR::PPackageModelPath getPath() const;
