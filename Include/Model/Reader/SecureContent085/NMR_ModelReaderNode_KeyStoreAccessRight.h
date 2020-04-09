@@ -42,11 +42,9 @@ namespace NMR {
 
 	class CModelReaderNode_KeyStoreAccessRight : public CModelReaderNode_KeyStoreBase {
 	private:
-		nfBool m_bHasCipherData;
 		nfBool m_bHasKEKParams;
 		std::string m_consumerIndex;
 		eKeyStoreEncryptAlgorithm m_encryptionAlgorithm;
-		CIPHERVALUE m_sCipherValue;
 		KEKPARAMS m_sKekParams;
 		PKeyStoreAccessRight m_accessRight;
 		

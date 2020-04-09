@@ -42,7 +42,6 @@ namespace NMR {
 	class CKeyStoreAccessRight {
 	private:
 		PKeyStoreConsumer m_pConsumer;
-		CIPHERVALUE m_sCipherValue;
 		KEKPARAMS m_sKekParams;
 		nfBool m_bNew;
 	public:
@@ -51,13 +50,11 @@ namespace NMR {
 
 		CKeyStoreAccessRight(PKeyStoreConsumer const & consumer,
 			eKeyStoreEncryptAlgorithm const & encryptionAlgorithm, 
-			CIPHERVALUE const & cipherValue);
+			KEKPARAMS const & kekParams);
 		
 		KEKPARAMS getKEKParams();
 		PKeyStoreConsumer getConsumer();
 		eKeyStoreEncryptAlgorithm getEncryptionAlgorithm();
-		CIPHERVALUE getCipherValue() const;
-		void setCipherValue(CIPHERVALUE const & cipherValue);
 		bool isNew();
 	};
 

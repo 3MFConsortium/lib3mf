@@ -66,15 +66,8 @@ namespace NMR {
 
 		// Parse Content
 		parseContent(pXMLReader);
-		PModelReaderNode_KeyStoreCipherValue pXMLNode = std::make_shared<CModelReaderNode_KeyStoreCipherValue>(m_pKeyStore, m_pWarnings);
-		pXMLNode->parseXML(pXMLReader);
-		m_CipherValue = pXMLNode->getCipherValue();
-		m_CipherValue.m_iv = m_iv;
-		m_CipherValue.m_tag = m_tag;
-		m_CipherValue.m_aad = m_aad;
 
-		PKeyStoreCEKParams cekParams = std::make_shared<CKeyStoreCEKParams>(m_compression, m_encryptionAlgorithm, m_CipherValue);
-
+		m_CEKParams = std::make_shared<CKeyStoreCEKParams>(m_compression, m_encryptionAlgorithm, m_iv, m_tag, m_aad);
 	}
 
 	void CModelReaderNode_KeyStoreCEKParams::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)

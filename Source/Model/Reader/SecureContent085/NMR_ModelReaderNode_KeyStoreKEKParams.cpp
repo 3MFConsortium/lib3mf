@@ -72,13 +72,13 @@ namespace NMR {
 		__NMRASSERT(pAttributeValue);
 
 		if (strcmp(XML_3MF_SECURE_CONTENT_WRAPPINGALGORITHM, pAttributeName)) {
-			m_sKekParams.wrappingalgorithm = std::make_shared<eKeyStoreEncryptAlgorithm>(pAttributeValue);
-			if (strcmp(XML_3MF_SECURE_CONTENT_MGFALGORITHM, pAttributeName)) {
-				m_sKekParams.mgfalgorithm = pAttributeValue;
-			}
-			if (strcmp(XML_3MF_SECURE_CONTENT_DIGESTMETHOD, pAttributeName)) {
-				m_sKekParams.digestmethod = pAttributeValue;
-			}
+			m_sKekParams.wrappingalgorithm = pAttributeValue;
+		}
+		else if (strcmp(XML_3MF_SECURE_CONTENT_MGFALGORITHM, pAttributeName)) {
+			m_sKekParams.mgfalgorithm = pAttributeValue;
+		}
+		else if (strcmp(XML_3MF_SECURE_CONTENT_DIGESTMETHOD, pAttributeName)) {
+			m_sKekParams.digestmethod = pAttributeValue;
 		}
 		else {
 			m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREINVALIDKEKPARAM), eModelReaderWarningLevel::mrwInvalidMandatoryValue);

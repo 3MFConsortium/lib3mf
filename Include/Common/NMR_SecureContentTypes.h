@@ -55,7 +55,7 @@ namespace NMR {
 	};
 
 	struct KEKPARAMS {
-		eKeyStoreEncryptAlgorithm wrappingalgorithm;
+		std::string wrappingalgorithm;
 		std::string mgfalgorithm;
 		std::string digestmethod;
 	};

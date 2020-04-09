@@ -38,7 +38,6 @@ NMR_KeyStoreResourceData.h defines the KeyStoreResourceData Class. A ResourceDat
 #include <vector>
 #include "Common/NMR_Types.h"
 #include "Common/NMR_SecureContentTypes.h"
-#include "Model/Classes/NMR_KeyStoreDecryptRight.h"
 #include "Model/Classes/NMR_PackageResourceID.h"
 namespace NMR {
 
@@ -46,8 +45,6 @@ namespace NMR {
 		std::string m_sPath;
 		eKeyStoreEncryptAlgorithm m_EncryptionAlgorithm;
 		nfBool m_bCompression;
-		std::vector<PKeyStoreDecryptRight> m_DecryptRights;
-		std::map<std::string, PKeyStoreDecryptRight> m_ConsumerDecryptRight;
 		CIPHERVALUE m_sCipherValue;
 		nfBool m_bOpen;
 		nfUint64 m_nfHandle;
@@ -59,12 +56,6 @@ namespace NMR {
 	public:
 		CKeyStoreResourceData(std::string const& path);
 		CKeyStoreResourceData(std::string const& path, eKeyStoreEncryptAlgorithm const& ea, nfBool const& compression);
-		PKeyStoreDecryptRight addDecryptRight(NMR::PKeyStoreConsumer const& consumer, eKeyStoreEncryptAlgorithm const& encryptAlgorithm);
-		PKeyStoreDecryptRight addDecryptRight(PKeyStoreDecryptRight const & dr);
-		nfUint32 getDecryptRightCount();
-		PKeyStoreDecryptRight getDecryptRight(nfUint32 index) const;
-		PKeyStoreDecryptRight findDecryptRightByConsumer(NMR::PKeyStoreConsumer const& consumer);
-		void removeDecryptRight(NMR::PKeyStoreConsumer const& consumer);
 		eKeyStoreEncryptAlgorithm getEncryptionAlgorithm() const;
 		nfBool getCompression() const;
 		NMR::PPackageModelPath getPath() const;

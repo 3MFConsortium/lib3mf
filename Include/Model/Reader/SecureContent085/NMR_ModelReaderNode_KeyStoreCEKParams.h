@@ -48,7 +48,6 @@ namespace NMR {
 		std::vector<nfByte> m_iv;
 		std::vector<nfByte> m_tag;
 		std::vector<nfByte> m_aad;
-		CIPHERVALUE m_CipherValue;
 		PKeyStoreCEKParams m_CEKParams;
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);

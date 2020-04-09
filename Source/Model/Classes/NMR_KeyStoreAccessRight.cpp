@@ -27,6 +27,10 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 	}
 
+	CKeyStoreAccessRight::CKeyStoreAccessRight(PKeyStoreConsumer const & consumer, eKeyStoreEncryptAlgorithm const & encryptionAlgorithm, KEKPARAMS const & kekParams)
+	{
+	}
+
 	KEKPARAMS CKeyStoreAccessRight::getKEKParams()
 	{
 		return m_sKekParams;
