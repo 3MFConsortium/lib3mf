@@ -48,58 +48,6 @@ namespace NMR {
 		initializeCipher();
 	}
 
-	PKeyStoreDecryptRight CKeyStoreResourceData::addDecryptRight(NMR::PKeyStoreConsumer const& consumer, eKeyStoreEncryptAlgorithm const& encryptAlgorithm) {
-		PKeyStoreDecryptRight dr = std::make_shared<CKeyStoreDecryptRight>(consumer, encryptAlgorithm);
-		return addDecryptRight(dr);
-	}
-
-	PKeyStoreDecryptRight CKeyStoreResourceData::addDecryptRight(PKeyStoreDecryptRight const &dr)
-	{	
-		if (m_ConsumerDecryptRight.find(dr->getConsumer()->getConsumerID()) != m_ConsumerDecryptRight.end()) {
-			throw CNMRException(NMR_ERROR_KEYSTOREDUPLICATEDECRYPTRIGHT);
-		}
-
-		m_DecryptRights.push_back(dr);
-		m_ConsumerDecryptRight[dr->getConsumer()->getConsumerID()] = dr;
-		return dr;
-	}
-
-	nfUint32 CKeyStoreResourceData::getDecryptRightCount()
-	{	
-		return (uint32_t)m_DecryptRights.size();
-	}
-
-	PKeyStoreDecryptRight CKeyStoreResourceData::getDecryptRight(nfUint32 index) const 
-	{	
-		if (index >= m_DecryptRights.size())
-			throw CNMRException(NMR_ERROR_INVALIDPARAM);
-		return m_DecryptRights[index];
-	}
-
-	PKeyStoreDecryptRight CKeyStoreResourceData::findDecryptRightByConsumer(NMR::PKeyStoreConsumer const& consumer) 
-	{
-		if (!consumer.get())
-			throw CNMRException(NMR_ERROR_INVALIDPARAM);
-		if (m_ConsumerDecryptRight.find(consumer->getConsumerID()) != m_ConsumerDecryptRight.end())
-			return m_ConsumerDecryptRight[consumer->getConsumerID()];
-		return nullptr;
-	}
-
-	void CKeyStoreResourceData::removeDecryptRight(NMR::PKeyStoreConsumer const& consumer)
-	{
-		if (!consumer.get())
-			throw CNMRException(NMR_ERROR_INVALIDPARAM);
-		size_t n = m_ConsumerDecryptRight.erase(consumer->getConsumerID());
-		if (n > 0) {
-			auto it = m_DecryptRights.begin();
-			while (it != m_DecryptRights.end()) {
-				if ((*it)->getConsumer()->getConsumerID() == consumer->getConsumerID()) {
-					it = m_DecryptRights.erase(it);
-				}
-			}
-		}
-	}
-
 	eKeyStoreEncryptAlgorithm CKeyStoreResourceData::getEncryptionAlgorithm() const
 	{	
 		return m_EncryptionAlgorithm;

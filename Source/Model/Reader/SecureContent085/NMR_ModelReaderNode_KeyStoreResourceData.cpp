@@ -48,6 +48,11 @@ namespace NMR {
 		m_sCekParams = std::make_shared<PKeyStoreCEKParams>();
 	}
 
+	PKeyStoreResourceData CModelReaderNode_KeyStoreResourceData::getResourceData()
+	{
+		return m_pResourceData;
+	}
+
 	void CModelReaderNode_KeyStoreResourceData::parseXML(_In_ CXmlReader * pXMLReader)
 	{
 		// Parse name

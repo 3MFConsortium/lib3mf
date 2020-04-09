@@ -51,7 +51,7 @@ namespace NMR {
 	struct CIPHERVALUE {
 		std::vector<nfByte> m_iv;
 		std::vector<nfByte> m_tag;
-		std::vector<nfByte> m_aad;
+		std::vector<nfByte> m_key;
 	};
 
 	struct KEKPARAMS {
