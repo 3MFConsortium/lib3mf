@@ -364,6 +364,7 @@ These are given by the 3MF Standard
 #define XML_3MF_SECURE_CONTENT_UUID					"UUID"
 #define XML_3MF_SECURE_CONTENT_CONSUMER_ID			"consumerid"
 #define XML_3MF_SECURE_CONTENT_KEY_ID				"keyid"
+#define XML_3MF_SECURE_CONTENT_KEY_UUID				"keyuuid"
 #define XML_3MF_SECURE_CONTENT_PATH					"path"
 #define XML_3MF_SECURE_CONTENT_ENCRYPTION_ALGORITHM	"encryptionalgorithm"
 #define XML_3MF_SECURE_CONTENT_COMPRESSION			"compression"
