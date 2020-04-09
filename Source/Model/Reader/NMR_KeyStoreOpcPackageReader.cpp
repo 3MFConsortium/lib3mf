@@ -65,7 +65,7 @@ namespace NMR {
 			parseKeyStore(keyStoreStream, pProgressMonitor);
 
 			if (!m_pKeyStore->empty()) {
-				openResourceDatas();
+				openAllResourceData();
 			}
 		}
 	}
@@ -155,7 +155,7 @@ namespace NMR {
 		}
 	}
 
-	void CKeyStoreOpcPackageReader::openResourceDatas() {
+	void CKeyStoreOpcPackageReader::openAllResourceData() {
 		for (nfUint32 i = 0; i < m_pKeyStore->getResourceDataCount() && !m_pSecureContext->emptyKekCtx(); ++i) {
 			PKeyStoreResourceData rd = m_pKeyStore->getResourceDataByIndex(i);
 			for (auto it = m_pSecureContext->kekCtxBegin(); it != m_pSecureContext->kekCtxEnd() && !rd->empty(); ++it) {
@@ -167,12 +167,11 @@ namespace NMR {
 						ctx.m_sKekDecryptData.m_sConsumerId = consumer->getConsumerID();
 						ctx.m_sKekDecryptData.m_sResourcePath = rd->getPath()->getPath();
 						CIPHERVALUE closed = decryptRight->getCipherValue();
+						rd->setCipherValue(closed);
 						size_t decrypted = ctx.m_fnWrap(closed.m_key, ctx.m_sKekDecryptData);
 						if (decrypted) {
-							CIPHERVALUE open = closed;
-							open.m_key = ctx.m_sKekDecryptData.m_KeyBuffer;
-							open.m_key.resize(decrypted, 0);
-							rd->setCipherValue(open);
+							ctx.m_sKekDecryptData.m_KeyBuffer.resize(decrypted, 0);
+							rd->open(ctx.m_sKekDecryptData.m_KeyBuffer);
 							break;
 						}
 					}

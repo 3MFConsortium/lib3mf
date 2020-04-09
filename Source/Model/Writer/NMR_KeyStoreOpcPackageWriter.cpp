@@ -64,18 +64,22 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_INVALIDPOINTER);
 
 		m_pPackageWriter = std::make_shared<COpcPackageWriter>(pImportStream);
-		updateAllResourceDataIV();
+		refreshAllResourceData();
 	}
 
-	void CKeyStoreOpcPackageWriter::updateAllResourceDataIV() {
+	void CKeyStoreOpcPackageWriter::refreshAllResourceData() {
+		PModel model = m_pContext->getModel();
 		PKeyStore keyStore = m_pContext->getKeyStore();
 		for (nfUint32 i = 0; i < keyStore->getResourceDataCount(); i++) {
 			NMR::PKeyStoreResourceData rd = keyStore->getResourceDataByIndex(i);
+			CIPHERVALUE cv = rd->getCipherValue();
 			if (!rd->isClosed()){
 				if (rd->isNew()) {
-					refreshKey(rd);
+					model->generateRandomBytes(cv.m_key.data(), cv.m_key.size());
+					rd->open(cv.m_key);
 				}
-				refreshIV(rd);
+				model->generateRandomBytes(cv.m_iv.data(), cv.m_iv.size());
+				rd->refreshIV(cv.m_iv);
 			}
 		}
 	}
@@ -98,13 +102,13 @@ namespace NMR {
 		part->setExportStream(stream);
 	}
 
-	void CKeyStoreOpcPackageWriter::updateResourceDataTag(PKeyStoreResourceData rd) {
+	void CKeyStoreOpcPackageWriter::refreshResourceDataTag(PKeyStoreResourceData rd) {
 		PSecureContext secureContext = m_pContext->getSecureContext();
 		ContentEncryptionDescriptor dekCtx = secureContext->getDekCtx();
 		dekCtx.m_sDekDecryptData.m_nfHandler = rd->getHandle();
 		dekCtx.m_sDekDecryptData.m_sCipherValue = rd->getCipherValue();
 		dekCtx.m_fnCrypt(0, nullptr, nullptr, dekCtx.m_sDekDecryptData);
-		rd->open(dekCtx.m_sDekDecryptData.m_sCipherValue);
+		rd->refreshTag(dekCtx.m_sDekDecryptData.m_sCipherValue.m_tag);
 	}
 
 	void CKeyStoreOpcPackageWriter::updateDecryptRightCipher(PKeyStoreDecryptRight dr, PKeyStoreResourceData rd) {
@@ -134,15 +138,6 @@ namespace NMR {
 		}
 	}
 
-	void CKeyStoreOpcPackageWriter::refreshIV(PKeyStoreResourceData rd) {
-		PModel model = m_pContext->getModel();
-		CIPHERVALUE cv = rd->getCipherValue();
-		if (cv.m_iv.empty() || cv.m_iv.size() != 32) {
-			cv.m_iv.resize(32);
-		}
-		model->generateRandomBytes(cv.m_iv.data(), cv.m_iv.size());
-	}
-
 	POpcPackagePart CKeyStoreOpcPackageWriter::addPart(_In_ std::string sPath)
 	{
 		PSecureContext secureContext = m_pContext->getSecureContext();
@@ -167,7 +162,7 @@ namespace NMR {
 		for (nfUint32 i = 0; i < keyStore->getResourceDataCount(); i++) {
 			PKeyStoreResourceData rd = keyStore->getResourceDataByIndex(i);
 			if(secureContext->hasDekCtx()){
-				updateResourceDataTag(rd);
+				refreshResourceDataTag(rd);
 			}
 			for (nfUint32 j = 0; j < rd->getDecryptRightCount(); j++) {
 				PKeyStoreDecryptRight dr = rd->getDecryptRight(j);

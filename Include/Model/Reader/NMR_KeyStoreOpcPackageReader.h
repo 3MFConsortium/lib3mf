@@ -58,7 +58,7 @@ namespace NMR {
 	protected:
 		NMR::PImportStream findKeyStoreStream();
 		void parseKeyStore(NMR::PImportStream keyStoreStream, NMR::PProgressMonitor pProgressMonitor);
-		void openResourceDatas();
+		void openAllResourceData();
 		void checkAuthenticatedTags();
 	public:
 		CKeyStoreOpcPackageReader(_In_ PImportStream pImportStream, _In_ PKeyStore pKeyStore, _In_ PSecureContext pSecureContext, _In_ PModelReaderWarnings pWarnings, _In_ PProgressMonitor pProgressMonitor);

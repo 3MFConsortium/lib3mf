@@ -57,6 +57,8 @@ namespace NMR {
 		nfUint64 m_nfHandle;
 		static nfUint64 s_nfHandleCount;
 		eResourceDataState m_eState;
+	
+		void initializeCipherValue();
 	public:
 		CKeyStoreResourceData(std::string const& path);
 		CKeyStoreResourceData(std::string const& path, eKeyStoreEncryptAlgorithm const& ea, nfBool const& compression);
@@ -73,13 +75,11 @@ namespace NMR {
 
 		nfBool empty() const;
 		CIPHERVALUE getCipherValue() const;
-
-		void open(CIPHERVALUE const & cv);
-		void close();
+		void setCipherValue(CIPHERVALUE const & cv);
+		void open(std::vector<nfByte> const & newKey);
 
 		void refreshIV(std::vector<nfByte> const &newIV);
-		void refreshKey(std::vector<nfByte> const & newKey);
-
+		void refreshTag(std::vector<nfByte> const & newTag);
 
 		bool isClosed() const;
 		bool isNew() const;
