@@ -124,11 +124,6 @@ void NMR::CModelWriterNode_KeyStore::writeResourceDatas() {
 	}
 }
 
-NMR::CModelWriterNode_KeyStore::CModelWriterNode_KeyStore(CKeyStore * pKeyStore, CXmlWriter * pXMLWriter, PProgressMonitor pProgressMonitor)
-: CModelWriterNode_KeyStoreBase(pKeyStore, pXMLWriter, pProgressMonitor) 
-{
-		
-}
 
 void NMR::CModelWriterNode_KeyStore::writeToXML() {
 	writeStartElementWithNamespace(XML_3MF_ELEMENT_KEYSTORE, XML_3MF_NAMESPACE_SECURECONTENTSPEC);

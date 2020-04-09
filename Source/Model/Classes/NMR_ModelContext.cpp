@@ -49,6 +49,14 @@ namespace NMR {
 		m_pSecureContext = std::make_shared<CSecureContext>();
 	}
 
+	PModel CModelContext::getModel() const {
+		return m_pModel;
+	}
+
+	PProgressMonitor CModelContext::getProgressMonitor() const {
+		return m_pProgressMonitor;
+	}
+
 	PSecureContext CModelContext::getSecureContext() const {
 		return m_pSecureContext;
 	}

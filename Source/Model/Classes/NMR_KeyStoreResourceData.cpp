@@ -11,52 +11,20 @@ namespace NMR {
 
 	nfUint64 CKeyStoreResourceData::s_nfHandleCount = 0;
 
-	void CKeyStoreResourceData::initializeCipher() {
-		m_sCipherValue.m_iv.resize(IV_SIZE, 0);
-		m_sCipherValue.m_tag.resize(TAG_SIZE, 0);
-		m_sCipherValue.m_key.resize(KEY_SIZE, 0);
-		initializeKey();
-		initializeIV();
-	}
-
-	void CKeyStoreResourceData::initializeKey() {
-		nfUint64 rc = m_fnRandCall(m_sCipherValue.m_key.data(), (int)m_sCipherValue.m_key.size());
-		if (rc != 1)
-			throw CNMRException(NMR_ERROR_CALCULATIONTERMINATED);
-	}
-
-	void CKeyStoreResourceData::initializeIV() {
-		nfUint64 rc = m_fnRandCall(m_sCipherValue.m_iv.data(), (int)m_sCipherValue.m_iv.size());
-		if (rc != 1)
-			throw CNMRException(NMR_ERROR_CALCULATIONTERMINATED);
-	}
-
-	CKeyStoreResourceData::CKeyStoreResourceData(std::string const & path, CryptoRandCbType & randCall) {
-		if (randCall)
-			m_fnRandCall = randCall;
-		else {
-			//TODO: need to use internal call
-			throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
-		}
+	CKeyStoreResourceData::CKeyStoreResourceData(std::string const & path) {
 		m_sPath = path;
 		m_EncryptionAlgorithm = eKeyStoreEncryptAlgorithm::Aes256Gcm;
 		m_nfHandle = ++s_nfHandleCount;
-		initializeCipher();
+		m_eState = eResourceDataState::NEW;
 	}
 
-	CKeyStoreResourceData::CKeyStoreResourceData(std::string const & path, eKeyStoreEncryptAlgorithm const & ea, nfBool const & compression, CryptoRandCbType & randCall)
+	CKeyStoreResourceData::CKeyStoreResourceData(std::string const & path, eKeyStoreEncryptAlgorithm const & ea, nfBool const & compression)
 	{
-		if (randCall)
-			m_fnRandCall = randCall;
-		else {
-			//TODO: need to use internal call
-			throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
-		}
 		m_sPath = path;
 		m_EncryptionAlgorithm = ea;
 		m_bCompression = compression;
 		m_nfHandle = ++s_nfHandleCount;
-		initializeCipher();
+		m_eState = eResourceDataState::CLOSED;
 	}
 
 	PKeyStoreDecryptRight CKeyStoreResourceData::addDecryptRight(NMR::PKeyStoreConsumer const& consumer, eKeyStoreEncryptAlgorithm const& encryptAlgorithm) {
@@ -138,17 +106,33 @@ namespace NMR {
 		return m_sCipherValue;
 	}
 
-	void CKeyStoreResourceData::setCipherValue(CIPHERVALUE const & cv) {
+	void CKeyStoreResourceData::open(CIPHERVALUE const & cv) {
 		m_sCipherValue = cv;
-		m_bOpen = true;
+		m_eState = eResourceDataState::OPEN;
 	}
 
-	bool CKeyStoreResourceData::isOpen() const {
-		return m_bOpen;
+	void CKeyStoreResourceData::close() {
+		m_eState = eResourceDataState::CLOSED;
 	}
 
-	void CKeyStoreResourceData::randomizeIV() {
-		initializeIV();
+	void CKeyStoreResourceData::refreshIV(std::vector<nfByte> const & newIV) {
+		if (newIV.size() != IV_SIZE)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+		m_sCipherValue.m_iv = newIV;
+	}
+
+	void CKeyStoreResourceData::refreshKey(std::vector<nfByte> const & newKey) {
+		if (newKey.size() != KEY_SIZE)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+		m_sCipherValue.m_key = newKey;
+	}
+
+	bool CKeyStoreResourceData::isClosed() const {
+		return m_eState == eResourceDataState::CLOSED;
+	}
+
+	bool CKeyStoreResourceData::isNew() const {
+		return m_eState == eResourceDataState::NEW;
 	}
 
 }

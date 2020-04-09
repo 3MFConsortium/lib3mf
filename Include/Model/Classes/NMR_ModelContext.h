@@ -63,6 +63,8 @@ namespace NMR {
 		CModelContext(_In_ PModel pModel);
 		virtual ~CModelContext() = default;
 
+		PModel getModel() const;
+		PProgressMonitor getProgressMonitor() const;
 		PSecureContext getSecureContext() const;
 		PKeyStore getKeyStore() const;
 

@@ -41,6 +41,8 @@ NMR_OpcPackageWriter.cpp defines an OPC Package writer in a portable way.
 #include "Common/Platform/NMR_ExportStream_Compressed.h"
 #include "Common/Platform/NMR_XmlWriter_Native.h"
 #include "Common/OPC/NMR_OpcPackageWriter.h"
+#include "Model/Classes/NMR_Model.h"
+#include "Model/Classes/NMR_ModelContext.h"
 #include "Model/Classes/NMR_KeyStoreResourceData.h"
 #include "Common/NMR_SecureContext.h"
 #include "Common/NMR_SecureContentTypes.h"
@@ -51,33 +53,36 @@ NMR_OpcPackageWriter.cpp defines an OPC Package writer in a portable way.
 namespace NMR {
 
 
-	CKeyStoreOpcPackageWriter::CKeyStoreOpcPackageWriter(_In_ PExportStream pImportStream,
-		_In_ PKeyStore pKeyStore,
-		_In_ PSecureContext pSecureContext,
-		_In_ PProgressMonitor pProgressMonitor)
-		:m_pKeyStore(pKeyStore), m_pSecureContext(pSecureContext), m_pProgressMonitor(pProgressMonitor)
+	CKeyStoreOpcPackageWriter::CKeyStoreOpcPackageWriter(_In_ PExportStream pImportStream, _In_ CModelContext * context)
+		:m_pContext(context)
 	{
-		if (nullptr == pKeyStore)
-			throw CNMRException(NMR_ERROR_INVALIDPOINTER);
-		if (nullptr == pSecureContext)
-			throw CNMRException(NMR_ERROR_INVALIDPOINTER);
-		if (nullptr == pProgressMonitor)
+		if (nullptr == m_pContext
+		 || nullptr == m_pContext->getKeyStore()
+		 || nullptr == m_pContext->getSecureContext()
+		 || nullptr == m_pContext->getProgressMonitor()
+		 || nullptr == m_pContext->getModel())
 			throw CNMRException(NMR_ERROR_INVALIDPOINTER);
 
 		m_pPackageWriter = std::make_shared<COpcPackageWriter>(pImportStream);
 		updateAllResourceDataIV();
-
 	}
 
 	void CKeyStoreOpcPackageWriter::updateAllResourceDataIV() {
-		for (nfUint32 i = 0; i < m_pKeyStore->getResourceDataCount(); i++) {
-			NMR::PKeyStoreResourceData rd = m_pKeyStore->getResourceDataByIndex(i);
-			rd->randomizeIV();
+		PKeyStore keyStore = m_pContext->getKeyStore();
+		for (nfUint32 i = 0; i < keyStore->getResourceDataCount(); i++) {
+			NMR::PKeyStoreResourceData rd = keyStore->getResourceDataByIndex(i);
+			if (!rd->isClosed()){
+				if (rd->isNew()) {
+					refreshKey(rd);
+				}
+				refreshIV(rd);
+			}
 		}
 	}
 
 	void CKeyStoreOpcPackageWriter::wrapPartStream(PKeyStoreResourceData rd, POpcPackagePart part) {
-		ContentEncryptionDescriptor p = m_pSecureContext->getDekCtx();
+		PSecureContext secureContext = m_pContext->getSecureContext();
+		ContentEncryptionDescriptor p = secureContext->getDekCtx();
 		p.m_sDekDecryptData.m_sCipherValue = rd->getCipherValue();
 		p.m_sDekDecryptData.m_nfHandler = rd->getHandle();
 		p.m_sDekDecryptData.m_bCompression = rd->getCompression();
@@ -94,23 +99,25 @@ namespace NMR {
 	}
 
 	void CKeyStoreOpcPackageWriter::updateResourceDataTag(PKeyStoreResourceData rd) {
-		ContentEncryptionDescriptor dekCtx = m_pSecureContext->getDekCtx();
+		PSecureContext secureContext = m_pContext->getSecureContext();
+		ContentEncryptionDescriptor dekCtx = secureContext->getDekCtx();
 		dekCtx.m_sDekDecryptData.m_nfHandler = rd->getHandle();
 		dekCtx.m_sDekDecryptData.m_sCipherValue = rd->getCipherValue();
 		dekCtx.m_fnCrypt(0, nullptr, nullptr, dekCtx.m_sDekDecryptData);
-		rd->setCipherValue(dekCtx.m_sDekDecryptData.m_sCipherValue);
+		rd->open(dekCtx.m_sDekDecryptData.m_sCipherValue);
 	}
 
 	void CKeyStoreOpcPackageWriter::updateDecryptRightCipher(PKeyStoreDecryptRight dr, PKeyStoreResourceData rd) {
+		PSecureContext secureContext = m_pContext->getSecureContext();
 		try {
-			KeyWrappingDescriptor ctx = m_pSecureContext->getKekCtx(dr->getConsumer()->getConsumerID());
+			KeyWrappingDescriptor ctx = secureContext->getKekCtx(dr->getConsumer()->getConsumerID());
 			ctx.m_sKekDecryptData.m_sConsumerId = dr->getConsumer()->getConsumerID();
 			ctx.m_sKekDecryptData.m_sResourcePath = rd->getPath()->getPath();
 			nfUint64 encrypted = ctx.m_fnWrap(rd->getCipherValue().m_key, ctx.m_sKekDecryptData);
 			if (encrypted > 0) {
 				CIPHERVALUE cipherValue = rd->getCipherValue();
 				cipherValue.m_key = ctx.m_sKekDecryptData.m_KeyBuffer;
-				dr->setCipherValue(cipherValue);
+				dr->open(cipherValue);
 			}
 		} catch (CNMRException const e) {
 			if (e.getErrorCode() == NMR_ERROR_KEKDESCRIPTORNOTFOUND) {
@@ -120,19 +127,31 @@ namespace NMR {
 				CIPHERVALUE rdCipherValue = rd->getCipherValue();
 				drCipherValue.m_iv = rdCipherValue.m_iv;
 				drCipherValue.m_tag = rdCipherValue.m_tag;
-				dr->setCipherValue(drCipherValue);
+				dr->open(drCipherValue);
 			} else {
 				throw e;
 			}
 		}
 	}
 
+	void CKeyStoreOpcPackageWriter::refreshIV(PKeyStoreResourceData rd) {
+		PModel model = m_pContext->getModel();
+		CIPHERVALUE cv = rd->getCipherValue();
+		if (cv.m_iv.empty() || cv.m_iv.size() != 32) {
+			cv.m_iv.resize(32);
+		}
+		model->generateRandomBytes(cv.m_iv.data(), cv.m_iv.size());
+	}
+
 	POpcPackagePart CKeyStoreOpcPackageWriter::addPart(_In_ std::string sPath)
 	{
+		PSecureContext secureContext = m_pContext->getSecureContext();
+		PKeyStore keyStore = m_pContext->getKeyStore();
+
 		auto pPart = m_pPackageWriter->addPart(sPath);
-		NMR::PKeyStoreResourceData rd = m_pKeyStore->findResourceDataByPath(sPath);
+		NMR::PKeyStoreResourceData rd = keyStore->findResourceDataByPath(sPath);
 		if (nullptr != rd) {
-			if (m_pSecureContext->hasDekCtx()) {
+			if (secureContext->hasDekCtx()) {
 				wrapPartStream(rd, pPart);
 			} else {
 				throw CNMRException(NMR_ERROR_DEKDESCRIPTORNOTFOUND);
@@ -142,9 +161,12 @@ namespace NMR {
 	}
 
 	void CKeyStoreOpcPackageWriter::close() {
-		for (nfUint32 i = 0; i < m_pKeyStore->getResourceDataCount(); i++) {
-			PKeyStoreResourceData rd = m_pKeyStore->getResourceDataByIndex(i);
-			if(m_pSecureContext->hasDekCtx()){
+		PSecureContext secureContext = m_pContext->getSecureContext();
+		PKeyStore keyStore = m_pContext->getKeyStore();
+
+		for (nfUint32 i = 0; i < keyStore->getResourceDataCount(); i++) {
+			PKeyStoreResourceData rd = keyStore->getResourceDataByIndex(i);
+			if(secureContext->hasDekCtx()){
 				updateResourceDataTag(rd);
 			}
 			for (nfUint32 j = 0; j < rd->getDecryptRightCount(); j++) {
@@ -153,7 +175,7 @@ namespace NMR {
 			}
 		}
 
-		if (!m_pKeyStore->empty()) {
+		if (!keyStore->empty()) {
 			POpcPackagePart pKeyStorePart = m_pPackageWriter->addPart(PACKAGE_3D_KEYSTORE_URI);
 			m_pPackageWriter->addContentType(pKeyStorePart, PACKAGE_KEYSTORE_CONTENT_TYPE);
 			m_pPackageWriter->addRootRelationship(PACKAGE_KEYSTORE_RELATIONSHIP_TYPE, pKeyStorePart.get());
@@ -189,7 +211,7 @@ namespace NMR {
 
 		pXMLWriter->WriteStartDocument();
 
-		CModelWriterNode_KeyStore XMLNode4KeyStore(m_pKeyStore.get(), pXMLWriter, m_pProgressMonitor);
+		CModelWriterNode_KeyStore XMLNode4KeyStore(pXMLWriter, m_pContext->getProgressMonitor(), m_pContext->getKeyStore());
 		XMLNode4KeyStore.writeToXML();
 
 		pXMLWriter->WriteEndDocument();

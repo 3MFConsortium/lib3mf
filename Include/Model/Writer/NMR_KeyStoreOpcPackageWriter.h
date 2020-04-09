@@ -35,30 +35,23 @@ NMR_KeyStoreOpcPackageWriter.h defines an OPC Package writer in a portable way.
 
 #include <memory>
 
-#include "Common/NMR_SecureContentTypes.h"
 #include "Common/OPC/NMR_IOpcPackageWriter.h"
 #include "Common/Platform/NMR_ExportStream.h"
-#include "Common/3MF_ProgressMonitor.h"
 
 namespace NMR {
 
-	class CSecureContext;
-	class CKeyStore;
+	class CModelContext;
 	class CKeyStoreResourceData;
 	class CKeyStoreDecryptRight;
 	class CXmlWriter;
 
-	using PSecureContext = std::shared_ptr<CSecureContext>;
-	using PKeyStore = std::shared_ptr<CKeyStore>;
 	using PKeyStoreResourceData = std::shared_ptr<CKeyStoreResourceData>;
 	using PKeyStoreDecryptRight = std::shared_ptr<CKeyStoreDecryptRight>;
 
 	class CKeyStoreOpcPackageWriter : public IOpcPackageWriter {
 	protected:
 		PIOpcPackageWriter m_pPackageWriter;
-		PProgressMonitor m_pProgressMonitor;
-		PSecureContext m_pSecureContext;
-		PKeyStore m_pKeyStore;
+		CModelContext * m_pContext;
 
 		void writeKeyStoreStream(_In_ CXmlWriter * pXMLWriter);
 		void updateAllResourceDataIV();
@@ -68,9 +61,7 @@ namespace NMR {
 	public:
 		CKeyStoreOpcPackageWriter(
 			_In_ PExportStream pImportStream, 
-			_In_ PKeyStore pKeyStore, 
-			_In_ PSecureContext pSecureContext, 
-			_In_ PProgressMonitor pProgressMonitor);
+			_In_ CModelContext * context);
 
 		POpcPackagePart addPart(_In_ std::string sPath) override;
 		void close() override;

@@ -44,9 +44,8 @@ namespace NMR {
 		void writeConsumers();
 		void writeResourceDatas();
 	public:
+		using CModelWriterNode_KeyStoreBase::CModelWriterNode_KeyStoreBase;
 		CModelWriterNode_KeyStore() = delete;
-		CModelWriterNode_KeyStore(_In_ CKeyStore * pKeyStore, _In_ CXmlWriter * pXMLWriter, _In_ PProgressMonitor pProgressMonitor);
-
 		virtual void writeToXML();
 	};
 

@@ -30,11 +30,12 @@ Abstract:
 NMR_ModelWriterNode_KeyStoreBase.cpp implements the base class for all Model Writer Node classes that are related to <keystore>.
 
 --*/
+#include "Common/NMR_Exception.h"
 
-NMR::CModelWriterNode_KeyStoreBase::CModelWriterNode_KeyStoreBase(CKeyStore * pKeyStore, CXmlWriter * pXMLWriter, PProgressMonitor pProgressMonitor) 
-: CModelWriterNode(pXMLWriter, pProgressMonitor) 
+
+NMR::CModelWriterNode_KeyStoreBase::CModelWriterNode_KeyStoreBase(CXmlWriter * pXMLWriter, PProgressMonitor pProgressMonitor, PKeyStore pKeyStore)
+: CModelWriterNode(pXMLWriter, pProgressMonitor), m_pKeyStore(pKeyStore)
 {
-	__NMRASSERT(pKeyStore);
-	m_pKeyStore = pKeyStore;
-
+	if (!pKeyStore)
+		throw CNMRException(NMR_ERROR_INVALIDPOINTER);
 }

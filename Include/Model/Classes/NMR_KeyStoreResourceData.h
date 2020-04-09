@@ -41,7 +41,11 @@ NMR_KeyStoreResourceData.h defines the KeyStoreResourceData Class. A ResourceDat
 #include "Model/Classes/NMR_KeyStoreDecryptRight.h"
 #include "Model/Classes/NMR_PackageResourceID.h"
 namespace NMR {
-
+	enum eResourceDataState {
+		NEW = 0,
+		CLOSED,
+		OPEN
+	};
 	class CKeyStoreResourceData {
 		std::string m_sPath;
 		eKeyStoreEncryptAlgorithm m_EncryptionAlgorithm;
@@ -52,14 +56,10 @@ namespace NMR {
 		nfBool m_bOpen;
 		nfUint64 m_nfHandle;
 		static nfUint64 s_nfHandleCount;
-		CryptoRandCbType m_fnRandCall;
-	protected:
-		void initializeCipher();
-		void initializeKey();
-		void initializeIV();
+		eResourceDataState m_eState;
 	public:
-		CKeyStoreResourceData(std::string const& path, CryptoRandCbType & randCall);
-		CKeyStoreResourceData(std::string const& path, eKeyStoreEncryptAlgorithm const& ea, nfBool const& compression, CryptoRandCbType & randCall);
+		CKeyStoreResourceData(std::string const& path);
+		CKeyStoreResourceData(std::string const& path, eKeyStoreEncryptAlgorithm const& ea, nfBool const& compression);
 		PKeyStoreDecryptRight addDecryptRight(NMR::PKeyStoreConsumer const& consumer, eKeyStoreEncryptAlgorithm const& encryptAlgorithm);
 		PKeyStoreDecryptRight addDecryptRight(PKeyStoreDecryptRight const & dr);
 		nfUint32 getDecryptRightCount();
@@ -71,12 +71,18 @@ namespace NMR {
 		NMR::PPackageModelPath getPath() const;
 		nfUint64 getHandle() const;
 
-		nfBool empty() const;	
+		nfBool empty() const;
 		CIPHERVALUE getCipherValue() const;
-		void setCipherValue(CIPHERVALUE const & cv);
-		bool isOpen() const;
 
-		void randomizeIV();
+		void open(CIPHERVALUE const & cv);
+		void close();
+
+		void refreshIV(std::vector<nfByte> const &newIV);
+		void refreshKey(std::vector<nfByte> const & newKey);
+
+
+		bool isClosed() const;
+		bool isNew() const;
 	};
 	typedef std::shared_ptr<CKeyStoreResourceData> PKeyStoreResourceData;
 }

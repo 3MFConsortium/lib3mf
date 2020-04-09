@@ -48,6 +48,8 @@ NMR_Model.h defines the Model Class. A model is an in memory representation of t
 
 #include "Common/NMR_UUID.h"
 
+#include "Common/NMR_SecureContentTypes.h"
+
 namespace NMR {
 
 	class CModelBuildItem;
@@ -91,7 +93,6 @@ namespace NMR {
 
 	class CKeyStore;
 	typedef std::shared_ptr <CKeyStore> PKeyStore;
-
 
 	typedef std::map<NMR::UniqueResourceID, NMR::UniqueResourceID> UniqueResourceIDMapping;
 
@@ -149,6 +150,8 @@ namespace NMR {
 
 		// The KeyStore reference
 		PKeyStore m_pKeyStore;
+
+		CryptoRandCbType m_fnCryptoRand;
 
 		// Add Resource to resource lookup tables
 		void addResourceToLookupTable(_In_ PModelResource pResource);
@@ -317,6 +320,11 @@ namespace NMR {
 		// Gets the KeyStore
 		PKeyStore getKeyStore();
 		void setKeyStore(PKeyStore keyStore);
+
+		void setCryptoRandCallback(CryptoRandCbType const & cb);
+		nfBool hasCryptoRandCallbak() const;
+		nfUint64 generateRandomBytes(nfByte *, nfUint64);
+
 	};
 
 	typedef std::shared_ptr <CModel> PModel;

@@ -43,11 +43,11 @@ namespace NMR {
 
 	class CModelWriterNode_KeyStoreBase : public CModelWriterNode {
 	protected:
-		CKeyStore * m_pKeyStore;
+		PKeyStore m_pKeyStore;
 
 	public:
 		CModelWriterNode_KeyStoreBase() = delete;
-		CModelWriterNode_KeyStoreBase(_In_ CKeyStore * pKeyStore, _In_ CXmlWriter * pXMLWriter, _In_ PProgressMonitor pProgressMonitor);
+		CModelWriterNode_KeyStoreBase(_In_ CXmlWriter * pXMLWriter, _In_ PProgressMonitor pProgressMonitor, _In_ PKeyStore pKeyStore);
 	};
 
 }

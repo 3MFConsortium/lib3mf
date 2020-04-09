@@ -1253,4 +1253,18 @@ namespace NMR {
 		m_pKeyStore = keyStore;
 	}
 
+	void CModel::setCryptoRandCallback(CryptoRandCbType const & cb) {
+		m_fnCryptoRand = cb;
+	}
+
+	nfBool CModel::hasCryptoRandCallbak() const {
+		return (bool)m_fnCryptoRand;
+	}
+
+	nfUint64 CModel::generateRandomBytes(nfByte * bytes, nfUint64 size) {
+		if (m_fnCryptoRand)
+			return m_fnCryptoRand(bytes, size);
+		throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
+	}
+
 }
