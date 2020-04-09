@@ -40,9 +40,11 @@ This is the class for exporting the 3mf keystore stream root node.
 namespace NMR {
 
 	class CModelWriterNode_KeyStore : public CModelWriterNode_KeyStoreBase {
+	private:
+		void writeEncryptionAlgorithmAttribute(eKeyStoreEncryptAlgorithm ea);
 	protected:
 		void writeConsumers();
-		void writeResourceDatas();
+		void writeResourceDatagroup();
 	public:
 		CModelWriterNode_KeyStore() = delete;
 		CModelWriterNode_KeyStore(_In_ CKeyStore * pKeyStore, _In_ CXmlWriter * pXMLWriter, _In_ PProgressMonitor pProgressMonitor);
