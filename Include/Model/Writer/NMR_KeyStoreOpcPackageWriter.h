@@ -54,9 +54,9 @@ namespace NMR {
 		CModelContext * m_pContext;
 
 		void writeKeyStoreStream(_In_ CXmlWriter * pXMLWriter);
-		void updateAllResourceDataIV();
+		void refreshAllResourceData();
 		void wrapPartStream(PKeyStoreResourceData rd, POpcPackagePart part);
-		void updateResourceDataTag(PKeyStoreResourceData rd);
+		void refreshResourceDataTag(PKeyStoreResourceData rd);
 		void updateDecryptRightCipher(PKeyStoreDecryptRight dr, PKeyStoreResourceData rd);
 	public:
 		CKeyStoreOpcPackageWriter(
