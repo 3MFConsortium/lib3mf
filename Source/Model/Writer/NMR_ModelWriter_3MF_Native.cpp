@@ -81,7 +81,7 @@ namespace NMR {
 		monitor()->SetMaxProgress(m_pModel->getResourceCount() + m_pModel->getAttachmentCount() + 1 + 1);
 
 		// Write Model Stream
-		m_pPackageWriter = std::make_shared<CKeyStoreOpcPackageWriter>(pStream, m_pModel->getKeyStore(), getSecureContext(), monitor());
+		m_pPackageWriter = std::make_shared<CKeyStoreOpcPackageWriter>(pStream, this);
 		POpcPackagePart pModelPart = m_pPackageWriter->addPart(m_pModel->rootPath());
 		PXmlWriter_Native pXMLWriter = std::make_shared<CXmlWriter_Native>(pModelPart->getExportStream());
 

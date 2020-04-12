@@ -69,7 +69,7 @@ Abstract: This is a stub class definition of CModel
 #include "Model/Classes/NMR_ModelColorGroup.h"
 #include "Model/Classes/NMR_ModelTexture2DGroup.h"
 #include "Model/Classes/NMR_ModelMultiPropertyGroup.h"
-
+#include "Common/NMR_SecureContentTypes.h"
 #include "lib3mf_utils.hpp"
 
 using namespace Lib3MF::Impl;
@@ -688,5 +688,21 @@ Lib3MF::sBox CModel::GetOutbox()
 
 IKeyStore * Lib3MF::Impl::CModel::GetKeyStore() {
 	return new CKeyStore(m_model->getKeyStore());
+}
+
+void Lib3MF::Impl::CModel::SetRandomNumberCallback(Lib3MF::RandomNumberCallback pTheCallback, Lib3MF_pvoid pUserData) {
+	if (nullptr == pTheCallback)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+	NMR::CryptoRandGenDescriptor descriptor;
+	descriptor.m_pUserData = pUserData;
+	descriptor.m_fnRNG = [pTheCallback](NMR::nfByte * buffer, NMR::nfUint64 size, void * userData) {
+		Lib3MF_uint64 generated = 0;
+		(*pTheCallback)(reinterpret_cast<Lib3MF_uint64>(buffer), size, userData, &generated);
+		if (generated > 0)
+			return generated;
+		throw NMR::CNMRException(NMR_ERROR_CALCULATIONTERMINATED);
+	};
+
+	m_model->setCryptoRandCallback(descriptor);
 }
 

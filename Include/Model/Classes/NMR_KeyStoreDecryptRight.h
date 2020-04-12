@@ -55,7 +55,7 @@ namespace NMR {
 		PKeyStoreConsumer getConsumer();
 		eKeyStoreEncryptAlgorithm getEncryptionAlgorithm();
 		CIPHERVALUE getCipherValue() const;
-		void setCipherValue(CIPHERVALUE const & cipherValue);
+		void open(CIPHERVALUE const & cipherValue);
 		bool isNew();
 	};
 

@@ -151,7 +151,7 @@ namespace NMR {
 		// The KeyStore reference
 		PKeyStore m_pKeyStore;
 
-		CryptoRandCbType m_fnCryptoRand;
+		CryptoRandGenDescriptor m_sRandDescriptor;
 
 		// Add Resource to resource lookup tables
 		void addResourceToLookupTable(_In_ PModelResource pResource);
@@ -321,7 +321,7 @@ namespace NMR {
 		PKeyStore getKeyStore();
 		void setKeyStore(PKeyStore keyStore);
 
-		void setCryptoRandCallback(CryptoRandCbType const & cb);
+		void setCryptoRandCallback(CryptoRandGenDescriptor const & randDescriptor);
 		nfBool hasCryptoRandCallbak() const;
 		nfUint64 generateRandomBytes(nfByte *, nfUint64);
 

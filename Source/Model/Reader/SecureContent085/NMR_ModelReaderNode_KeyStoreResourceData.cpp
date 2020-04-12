@@ -67,8 +67,6 @@ namespace NMR {
 		for (PKeyStoreDecryptRight pdr : m_decryptRights) {
 			rd->addDecryptRight(pdr);
 		}
-		//so to be able to tell apart instances added by the user or by the parser
-		rd->close();
 	}
 
 	void CModelReaderNode_KeyStoreResourceData::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)

@@ -258,6 +258,13 @@
 		<param name="Position" type="uint64" pass="in" description="Position in the stream to move to"/>
 		<param name="UserData" type="pointer" pass="in" description="Userdata that is passed to the callback function"/>
 	</functiontype>
+	
+	<functiontype name="RandomNumberCallback" description="Callback to generate random numbers">
+		<param name="ByteData" type="uint64" pass="in" description="Point to a buffer where to store the data"/>
+		<param name="NumBytes" type="uint64" pass="in" description="Size of available bytes in the buffer" />
+		<param name="UserData" type="pointer" pass="in" description="Userdata that is passed to the callback function"/>
+		<param name="Result" type="uint64" pass="return" description="Number of bytes generated when succeed. 0 or less if failed." />
+	</functiontype>
 
 	<class name="Base">
 	</class>
@@ -1451,12 +1458,16 @@
 		</method>
 		<method name="RemovePackageThumbnailAttachment" description="Remove the attachment to the OPC package containing the package thumbnail.">
 		</method>
-		<method name="AddCustomContentType" description="adds a new Content Type to the model.">
+		<method name="AddCustomContentType" description="Adds a new Content Type to the model.">
 			<param name="Extension" type="string" pass="in" description="File Extension"/>
 			<param name="ContentType" type="string" pass="in" description="Content Type Identifier"/>
 		</method>
-		<method name="RemoveCustomContentType" description="removes a custom Content Type from the model (UTF8 version).">
+		<method name="RemoveCustomContentType" description="Removes a custom Content Type from the model (UTF8 version).">
 			<param name="Extension" type="string" pass="in" description="File Extension"/>
+		</method>
+		<method name="SetRandomNumberCallback" description="Sets the random number generator callback for use in the library">
+			<param name="TheCallback" type="functiontype" class="RandomNumberCallback" pass="in" description="The callback used to generate random numbers"/>
+			<param name="UserData" type="pointer" pass="in" description="Userdata to be passed to the callback function"/>
 		</method>
 		<method name="GetKeyStore" description="Gets the keystore associated with this model">
 			<param name="KeyStore" type="handle" class="KeyStore" pass="return" description="The package keystore"/>

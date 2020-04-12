@@ -86,7 +86,12 @@ namespace NMR {
 		KeyWrappingContext m_sKekDecryptData;
 	};
 
-	using CryptoRandCbType = std::function<nfUint64(nfByte *, nfUint64)>;
+	using CryptoRandCbType = std::function<nfUint64(nfByte *, nfUint64, void *)>;
+
+	struct CryptoRandGenDescriptor {
+		CryptoRandCbType m_fnRNG;
+		void * m_pUserData;
+	};
 
 }
 
