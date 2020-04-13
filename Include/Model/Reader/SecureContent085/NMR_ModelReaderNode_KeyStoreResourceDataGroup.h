@@ -26,33 +26,41 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelReaderNode_KeyStore.h defines the Model Reader Node class that is related to <keystore>.
+NMR_ModelReaderNode_KeyStoreResourceData.h defines the Model Reader Node class that is related to <resourcedata>.
 
 --*/
 
-#ifndef __NMR_MODELREADERNODE_KEYSTORE
-#define __NMR_MODELREADERNODE_KEYSTORE
+#ifndef __NMR_MODELREADERNODE_KEYSTORERESOURCEDATAGROUP
+#define __NMR_MODELREADERNODE_KEYSTORERESOURCEDATAGROUP
 
+#include "Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreAccessRight.h"
+#include "Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreResourceData.h"
 #include "Model/Reader/NMR_ModelReaderNode_KeyStoreBase.h"
 #include "Model/Reader/NMR_ModelReaderNode.h"
 #include "Model/Classes/NMR_KeyStore.h"
+#include "Model/Classes/NMR_KeyStoreAccessRight.h"
+#include "Model/Classes/NMR_KeyStoreResourceData.h"
+#include "Model/Classes/NMR_KeyStoreResourceDataGroup.h"
+
 
 namespace NMR {
 
-	class CModelReaderNode_KeyStore: public CModelReaderNode_KeyStoreBase {
+	class CModelReaderNode_KeyStoreResourceDataGroup : public CModelReaderNode_KeyStoreBase {
 	private:
-		PUUID m_UUID;
+		PUUID m_keyUUID;
+		std::vector<PKeyStoreAccessRight> m_accessRights;
+		std::vector<PKeyStoreResourceData> m_resourcesData;
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 	public:
-		CModelReaderNode_KeyStore() = delete;
-		CModelReaderNode_KeyStore(_In_ CKeyStore * pKeyStore, _In_ PModelReaderWarnings pWarnings);
+		CModelReaderNode_KeyStoreResourceDataGroup() = delete;
+		CModelReaderNode_KeyStoreResourceDataGroup(_In_ CKeyStore * pKeyStore, _In_ PModelReaderWarnings pWarnings);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 	};
 
-	typedef std::shared_ptr <CModelReaderNode_KeyStore> PModelReaderNode_KeyStore;
+	typedef std::shared_ptr <CModelReaderNode_KeyStoreResourceDataGroup> PModelReaderNode_KeyStoreResourceDataGroup;
 }
 
-#endif // __NMR_MODELREADERNODE_KEYSTORE
+#endif // __NMR_MODELREADERNODE_KEYSTORERESOURCEDATAGROUP

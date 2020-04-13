@@ -140,8 +140,10 @@ Source/Model/Classes/NMR_ModelSlice.cpp
 Source/Model/Classes/NMR_ModelSliceStack.cpp
 Source/Model/Classes/NMR_KeyStore.cpp
 Source/Model/Classes/NMR_KeyStoreConsumer.cpp
-Source/Model/Classes/NMR_KeyStoreDecryptRight.cpp
+Source/Model/Classes/NMR_KeyStoreAccessRight.cpp
 Source/Model/Classes/NMR_KeyStoreResourceData.cpp
+Source/Model/Classes/NMR_KeyStoreResourceDataGroup.cpp
+Source/Model/Classes/NMR_KeyStoreCEKParams.cpp
 Source/Model/Reader/BeamLattice1702/NMR_ModelReaderNode_BeamLattice1702_Beam.cpp
 Source/Model/Reader/BeamLattice1702/NMR_ModelReaderNode_BeamLattice1702_Beams.cpp
 Source/Model/Reader/BeamLattice1702/NMR_ModelReaderNode_BeamLattice1702_BeamLattice.cpp
@@ -152,6 +154,7 @@ Source/Model/Reader/NMR_ModelReader.cpp
 Source/Model/Reader/NMR_ModelReaderNode.cpp
 Source/Model/Reader/NMR_ModelReaderNode_ModelBase.cpp
 Source/Model/Reader/NMR_ModelReaderNode_KeyStoreBase.cpp
+Source/Model/Reader/NMR_ModelReader_KeyStoreBase64Value.cpp
 Source/Model/Reader/NMR_ModelReaderWarnings.cpp
 Source/Model/Reader/NMR_ModelReader_3MF.cpp
 Source/Model/Reader/NMR_ModelReader_3MF_Native.cpp
@@ -211,10 +214,13 @@ Source/Model/Reader/Slice1507/NMR_ModelReader_Slice1507_Vertex.cpp
 Source/Model/Reader/Slice1507/NMR_ModelReader_Slice1507_Vertices.cpp
 Source/Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStore.cpp
 Source/Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreCipherValue.cpp
+Source/Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreKEKParams.cpp
+Source/Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreCEKParams.cpp
 Source/Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreConsumer.cpp
-Source/Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreDecryptRight.cpp
+Source/Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreAccessRight.cpp
 Source/Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreKeyValue.cpp
 Source/Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreResourceData.cpp
+Source/Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreResourceDataGroup.cpp
 Source/Model/Writer/NMR_KeyStoreOpcPackageWriter.cpp
 Source/Model/Writer/NMR_ModelWriter.cpp
 Source/Model/Writer/NMR_ModelWriterNode.cpp

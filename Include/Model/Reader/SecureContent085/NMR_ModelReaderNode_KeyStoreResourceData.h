@@ -33,27 +33,31 @@ NMR_ModelReaderNode_KeyStoreResourceData.h defines the Model Reader Node class t
 #ifndef __NMR_MODELREADERNODE_KEYSTORERESOURCEDATA
 #define __NMR_MODELREADERNODE_KEYSTORERESOURCEDATA
 
-#include "Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreDecryptRight.h"
+#include "Model/Classes/NMR_KeyStoreResourceData.h"
+#include "Model/Classes/NMR_KeyStoreCEKParams.h"
 #include "Model/Reader/NMR_ModelReaderNode_KeyStoreBase.h"
 #include "Model/Reader/NMR_ModelReaderNode.h"
 #include "Model/Classes/NMR_KeyStore.h"
-#include "Model/Classes/NMR_KeyStoreDecryptRight.h"
+#include "Model/Classes/NMR_KeyStoreResourceDataGroup.h"
+
+
 
 namespace NMR {
 
-	class CModelReaderNode_KeyStoreResourceData: public CModelReaderNode_KeyStoreBase {
+	class CModelReaderNode_KeyStoreResourceData : public CModelReaderNode_KeyStoreBase {
 	private:
 		std::string m_path;
-		eKeyStoreEncryptAlgorithm m_encryptionAlgorithm;
-		nfBool m_compression;
-		std::vector<PKeyStoreDecryptRight> m_decryptRights;
+		PKeyStoreCEKParams m_sCekParams;
+		PKeyStoreResourceData m_pResourceData;
+		CKeyStoreResourceDataGroup * m_pResourceDataGroup;
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 	public:
 		CModelReaderNode_KeyStoreResourceData() = delete;
-		CModelReaderNode_KeyStoreResourceData(_In_ CKeyStore * pKeyStore, _In_ PModelReaderWarnings pWarnings);
-
+		CModelReaderNode_KeyStoreResourceData(_In_ CKeyStore * pKeyStore, _In_ PModelReaderWarnings pWarnings, _In_ CKeyStoreResourceDataGroup * pResourceDataGroup);
+		
+		PKeyStoreResourceData getResourceData();
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 	};
 

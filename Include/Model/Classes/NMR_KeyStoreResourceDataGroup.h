@@ -30,35 +30,45 @@ NMR_KeyStoreResourceData.h defines the KeyStoreResourceData Class. A ResourceDat
 
 --*/
 
-#ifndef __NMR_KEYSTORERESOURCEDATA
-#define __NMR_KEYSTORERESOURCEDATA
+#ifndef __NMR_KEYSTORERESOURCEDATAGROUP
+#define __NMR_KEYSTORERESOURCEDATAGROUP
 
 #include <map>
 #include <memory>
 #include <vector>
 #include "Common/NMR_Types.h"
 #include "Common/NMR_SecureContentTypes.h"
+#include "Model/Classes/NMR_KeyStoreAccessRight.h"
+#include "Model/Classes/NMR_KeyStoreResourceData.h"
 #include "Model/Classes/NMR_PackageResourceID.h"
+#include "Common/NMR_UUID.h"
+
 namespace NMR {
-	enum eResourceDataState {
-		NEW = 0,
-		CLOSED,
-		OPEN
-	};
-	class CKeyStoreResourceData {
-		std::string m_sPath;
-		eKeyStoreEncryptAlgorithm m_EncryptionAlgorithm;
-		nfBool m_bCompression;
-		CIPHERVALUE m_sCipherValue;
-		nfBool m_bOpen;
-		nfUint64 m_nfHandle;
-		static nfUint64 s_nfHandleCount;
-		eResourceDataState m_eState;
-	
-		void initializeCipherValue();
+
+	class CKeyStoreResourceDataGroup {
+		PUUID m_sKeyUUID;
+		std::vector<PKeyStoreAccessRight> m_AccessRights;
+		std::map<std::string, PKeyStoreAccessRight> m_ConsumerAccesstRight;
+		std::vector<PKeyStoreResourceData> m_ResourcesData;
+	protected:
+		/*void initializeCipher();
+		void initializeKey();
+		void initializeIV();*/
 	public:
-		CKeyStoreResourceData(std::string const& path);
-		CKeyStoreResourceData(std::string const& path, eKeyStoreEncryptAlgorithm const& ea, nfBool const& compression);
+		CKeyStoreResourceDataGroup(PUUID const& keyUUID);
+		CKeyStoreResourceDataGroup(PUUID const& keyUUID, std::vector<PKeyStoreAccessRight> const& ar, std::vector<PKeyStoreResourceData> const& rd);
+		void removeAccessRight(NMR::PKeyStoreConsumer const& consumer);
+		PKeyStoreAccessRight addAccessRight(NMR::PKeyStoreConsumer const& consumer, eKeyStoreEncryptAlgorithm const& encryptAlgorithm);
+		PKeyStoreAccessRight addAccessRight(PKeyStoreAccessRight const & ar);
+		nfUint32 getAccessRightCount();
+		PKeyStoreAccessRight getAccessRight(nfUint32 index) const;
+		PKeyStoreAccessRight findAccessRightByConsumer(NMR::PKeyStoreConsumer const& consumer);
+		/*PKeyStoreDecryptRight addDecryptRight(NMR::PKeyStoreConsumer const& consumer, eKeyStoreEncryptAlgorithm const& encryptAlgorithm);
+		PKeyStoreDecryptRight addDecryptRight(PKeyStoreDecryptRight const & dr);
+		nfUint32 getDecryptRightCount();
+		PKeyStoreDecryptRight getDecryptRight(nfUint32 index) const;
+		PKeyStoreDecryptRight findDecryptRightByConsumer(NMR::PKeyStoreConsumer const& consumer);
+		
 		eKeyStoreEncryptAlgorithm getEncryptionAlgorithm() const;
 		nfBool getCompression() const;
 		NMR::PPackageModelPath getPath() const;
@@ -67,15 +77,11 @@ namespace NMR {
 		nfBool empty() const;
 		CIPHERVALUE getCipherValue() const;
 		void setCipherValue(CIPHERVALUE const & cv);
-		void open(std::vector<nfByte> const & newKey);
+		bool isOpen() const;
 
-		void refreshIV(std::vector<nfByte> const &newIV);
-		void refreshTag(std::vector<nfByte> const & newTag);
-
-		bool isClosed() const;
-		bool isNew() const;
+		void randomizeIV();*/
 	};
-	typedef std::shared_ptr<CKeyStoreResourceData> PKeyStoreResourceData;
+	typedef std::shared_ptr<CKeyStoreResourceDataGroup> PKeyStoreResourceDataGroup;
 }
 
 #endif

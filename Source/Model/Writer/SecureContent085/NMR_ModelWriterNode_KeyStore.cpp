@@ -34,6 +34,7 @@ This is the class for exporting the 3mf keystore stream root node.
 #include "Model/Writer/SecureContent085/NMR_ModelWriterNode_KeyStore.h"
 #include "Model/Classes/NMR_KeyStoreConsumer.h"
 #include "Model/Classes/NMR_KeyStoreResourceData.h"
+#include "Model/Classes/NMR_KeyStoreCEKParams.h"
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_StringUtils.h"
 #include "Common/NMR_UUID.h"
@@ -75,51 +76,108 @@ void NMR::CModelWriterNode_KeyStore::writeConsumers() {
 	 }
 }
 
-void NMR::CModelWriterNode_KeyStore::writeResourceDatas() {
-	size_t count = m_pKeyStore->getResourceDataCount();
+void NMR::CModelWriterNode_KeyStore::writeEncryptionAlgorithmAttribute(eKeyStoreEncryptAlgorithm ea) {
+	if (ea == eKeyStoreEncryptAlgorithm::RsaOaepMgf1p) {
+		writeConstStringAttribute(XML_3MF_SECURE_CONTENT_WRAPPINGALGORITHM, XML_3MF_SECURE_CONTENT_ENCRYPTION_RSA);
+	}
+	else if (ea == eKeyStoreEncryptAlgorithm::Aes256Gcm) {
+		writeConstStringAttribute(XML_3MF_SECURE_CONTENT_WRAPPINGALGORITHM, XML_3MF_SECURE_CONTENT_ENCRYPTION_AES256);
+	}
+}
+
+void NMR::CModelWriterNode_KeyStore::writeResourceDatagroup() {
+	size_t count = m_pKeyStore->getResourceDataGroupCount();
 	for (uint32_t resourceIndex = 0; resourceIndex < count; ++resourceIndex) {
-		PKeyStoreResourceData resourcedata = m_pKeyStore->getResourceDataByIndex(resourceIndex);
-		// <resourcedata>
-		writeStartElement(XML_3MF_ELEMENT_RESOURCEDATA);
-		// path - attribute
-		writeConstStringAttribute(XML_3MF_SECURE_CONTENT_PATH, resourcedata->getPath()->getPath().c_str());
-		// encryptionalgorithm AES256 - attribute
-		writeConstStringAttribute(XML_3MF_SECURE_CONTENT_ENCRYPTION_ALGORITHM, XML_3MF_SECURE_CONTENT_ENCRYPTION_AES256);
-		// compression - attribute
-		if (resourcedata->getCompression()) {
-			writeConstStringAttribute(XML_3MF_SECURE_CONTENT_COMPRESSION, XML_3MF_SECURE_CONTENT_COMPRESSION_DEFLATE);
-		}
-		size_t accessCount = resourcedata->getDecryptRightCount();
+		PKeyStoreResourceDataGroup resourcedatagroup = m_pKeyStore->getResourceDataGroupByIndex(resourceIndex);
+		// <resourcedatagroup>
+		writeStartElement(XML_3MF_ELEMENT_RESOURCEDATAGROUP);
+		// keyuuid - attribute
+		writeConstStringAttribute(XML_3MF_SECURE_CONTENT_KEY_UUID, resourcedatagroup->getKeyUuid().c_str());
+
+		size_t accessCount = resourcedatagroup->getAccessRightCount();
 		for (uint32_t accessIndex = 0; accessIndex < accessCount; ++accessIndex) {
-			// <decryptright>
-			writeStartElement(XML_3MF_ELEMENT_DECRYPTRIGHT);
-			uint32_t nIndex = resourcedata->getDecryptRight(accessIndex)->getConsumer()->getIndex();
+			// <accessright>
+			writeStartElement(XML_3MF_ELEMENT_ACCESSRIGHT);
+			uint32_t nIndex = resourcedatagroup->getAccessRight(accessIndex)->getConsumer()->getIndex();
 			// consumerIndex - attribute
 			writeConstStringAttribute(XML_3MF_SECURE_CONTENT_CONSUMER_INDEX, std::to_string(nIndex).c_str());
-			// encryptionalgorithm RSA - attribute
-			writeConstStringAttribute(XML_3MF_SECURE_CONTENT_ENCRYPTION_ALGORITHM, XML_3MF_SECURE_CONTENT_ENCRYPTION_RSA);
+			// TODO: accessright does not have wrappingalgorithm attribute, the sample from secure content spec 0.93 is wrong
+
+			// <kekparams>
+			KEKPARAMS kp = resourcedatagroup->getAccessRight(accessIndex)->getKEKParams();
+			writeStartElement(XML_3MF_ELEMENT_KEKPARAMS);
+			// wrappingalgorithm - attribute
+			writeEncryptionAlgorithmAttribute(kp.wrappingalgorithm);
+			// mgfalgorithm - attribute
+			writeConstStringAttribute(XML_3MF_SECURE_CONTENT_MGFALGORITHM, kp.mgfalgorithm.c_str());
+			// digestmethod - attribute
+			writeConstStringAttribute(XML_3MF_SECURE_CONTENT_DIGESTMETHOD, kp.digestmethod.c_str());
+			writeFullEndElement();
+
 			// <CipherData>
 			writeStartElement(XML_3MF_ELEMENT_CIPHERDATA);
 			// <xenc:CipherValue>
 			writeStartElementWithPrefix(XML_3MF_ELEMENT_CIPHERVALUE, XML_3MF_NAMESPACEPREFIX_XENC);
 			
-			CIPHERVALUE cv = resourcedata->getDecryptRight(accessIndex)->getCipherValue();
+			CIPHERVALUE cv = resourcedatagroup->getAccessRight(accessIndex)->getCipherValue();
 			//TODO throw when missing cipher value, pending because of callbacks implementation
 			/*if (cv.m_iv.size() < 1 && cv.m_key.size() < 1 && cv.m_tag.size() < 1) {
 				throw CNMRException(NMR_ERROR_KEYSTOREMISSINGCIPHERVALUE);
 			}*/
 			std::vector<unsigned char> cvVector;
-			std::copy(cv.m_iv.begin(), cv.m_iv.end(), std::back_inserter(cvVector));
-			std::copy(cv.m_key.begin(), cv.m_key.end(), std::back_inserter(cvVector));
-			std::copy(cv.m_tag.begin(), cv.m_tag.end(), std::back_inserter(cvVector));
+			std::copy(cv.begin(), cv.end(), std::back_inserter(cvVector));
 
 			std::string encodedCv = base64_encode(cvVector);
 			writeText(encodedCv.c_str(), (nfUint32)encodedCv.length());
-
 			writeFullEndElement();
 			writeFullEndElement();
+			
 			writeFullEndElement();
 		}
+
+		size_t resourceDataCount = resourcedatagroup->getResourceDataCount();
+		for (uint32_t resourceIndex = 0; resourceIndex < resourceDataCount; ++resourceIndex) {
+			// <resourcedata>
+			writeStartElement(XML_3MF_ELEMENT_RESOURCEDATA);
+			// path - attribute
+			writeConstStringAttribute(XML_3MF_SECURE_CONTENT_PATH, resourcedata->getPath().c_str());
+
+			PKeyStoreCEKParams cekParams = resourcedatagroup->getResourceData(resourceIndex)->getCEKParams();
+			eKeyStoreEncryptAlgorithm ea = cekParams->getEncryptionAlgorithm();
+			// encryptionalgorithm - attribute
+			writeEncryptionAlgorithmAttribute(ea);
+			// compression - attribute
+			if (cekParams->isCompressed()) {
+				writeConstStringAttribute(XML_3MF_SECURE_CONTENT_COMPRESSION, XML_3MF_SECURE_CONTENT_COMPRESSION_DEFLATE);
+			}
+			
+			std::vector<nfByte> iv = cekParams->getIv();
+			if (!iv.empty()) {
+				writeStartElement(XML_3MF_SECURE_CONTENT_IV);
+				std::string encodedIv = base64_encode(iv);
+				writeText(encodedIv.c_str(), (nfUint32) encodedIv.length());
+				writeFullEndElement();
+			}
+
+			std::vector<nfByte> tag = cekParams->getTag();
+			if (!tag.empty()) {
+				writeStartElement(XML_3MF_SECURE_CONTENT_TAG);
+				std::string encodedTag = base64_encode(tag);
+				writeText(encodedTag.c_str(), (nfUint32)encodedTag.length());
+				writeFullEndElement();
+			}
+
+			std::vector<nfByte> aad = cekParams->getAad();
+			if (!aad.empty()) {
+				writeStartElement(XML_3MF_SECURE_CONTENT_AAD);
+				std::string encodedAad = base64_encode(aad);
+				writeText(encodedAad.c_str(), (nfUint32)encodedAad.length());
+				writeFullEndElement();
+			}
+
+			writeFullEndElement();
+		}
+
 		writeFullEndElement();
 	}
 }
@@ -131,6 +189,6 @@ void NMR::CModelWriterNode_KeyStore::writeToXML() {
 	writeConstPrefixedStringAttribute(XML_3MF_ATTRIBUTE_XMLNS, XML_3MF_NAMESPACEPREFIX_DS, XML_3MF_NAMESPACE_DIGITALSIGNATURESPEC);
 	writeConstStringAttribute(XML_3MF_SECURE_CONTENT_UUID, m_pKeyStore->getUUID()->toString().c_str());
 	writeConsumers();
-	writeResourceDatas();
+	writeResourceDatagroup();
 	writeFullEndElement();
 }

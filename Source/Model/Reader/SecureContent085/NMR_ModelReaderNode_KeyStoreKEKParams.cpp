@@ -31,7 +31,7 @@ NMR_ModelReaderNode_KeyStoreCipherValue.h defines the Model Reader Node class th
 
 --*/
 
-#include "Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreCipherValue.h"
+#include "Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreKEKParams.h"
 
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Model/Classes/NMR_KeyStoreResourceData.h"
@@ -44,18 +44,17 @@ NMR_ModelReaderNode_KeyStoreCipherValue.h defines the Model Reader Node class th
 
 namespace NMR {
 
-	CModelReaderNode_KeyStoreCipherValue::CModelReaderNode_KeyStoreCipherValue(CKeyStore * pKeyStore, PModelReaderWarnings pWarnings)
+	CModelReaderNode_KeyStoreKEKParams::CModelReaderNode_KeyStoreKEKParams(CKeyStore * pKeyStore, PModelReaderWarnings pWarnings)
 		: CModelReaderNode_KeyStoreBase(pKeyStore, pWarnings)
 	{
-		m_sCipherValueAccumulator = "";
 	}
 
-	CIPHERVALUE CModelReaderNode_KeyStoreCipherValue::getCipherValue()
+	KEKPARAMS CModelReaderNode_KeyStoreKEKParams::getKekParams()
 	{
-		return m_sCipherValue;
+		return m_sKekParams;
 	}
 
-	void CModelReaderNode_KeyStoreCipherValue::parseXML(_In_ CXmlReader * pXMLReader)
+	void CModelReaderNode_KeyStoreKEKParams::parseXML(_In_ CXmlReader * pXMLReader)
 	{
 		// Parse name
 		parseName(pXMLReader);
@@ -65,27 +64,25 @@ namespace NMR {
 
 		// Parse Content
 		parseContent(pXMLReader);
-
-		std::vector<nfByte> decoded = base64_decode(m_sCipherValueAccumulator);
-		if (decoded.size() >= KEYSTORE_TYPES_TAGSIZE + KEYSTORE_TYPES_IVSIZE) {
-			auto decodedIvBegin = decoded.begin();
-			auto decodedKeyBegin = decodedIvBegin + KEYSTORE_TYPES_IVSIZE;
-			auto decodedTagBegin = decoded.end() - KEYSTORE_TYPES_TAGSIZE;
-
-			m_sCipherValue.m_iv = std::vector<nfByte>(decodedIvBegin, decodedKeyBegin);
-			m_sCipherValue.m_key = std::vector<nfByte>(decodedKeyBegin, decodedTagBegin);
-			m_sCipherValue.m_tag = std::vector<nfByte>(decodedTagBegin, decoded.end());
-		} else {
-			m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREINVALIDCIPHERVALUE), eModelReaderWarningLevel::mrwInvalidMandatoryValue);
-		}
 	}
 
-	void CModelReaderNode_KeyStoreCipherValue::OnText(_In_z_ const nfChar * pText, _In_ CXmlReader * pXMLReader)
+	void CModelReaderNode_KeyStoreKEKParams::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
 	{
 		__NMRASSERT(pAttributeName);
 		__NMRASSERT(pAttributeValue);
 
-		m_sCipherValueAccumulator += std::string(pText);
+		if (strcmp(XML_3MF_SECURE_CONTENT_WRAPPINGALGORITHM, pAttributeName)) {
+			m_sKekParams.wrappingalgorithm = pAttributeValue;
+		}
+		else if (strcmp(XML_3MF_SECURE_CONTENT_MGFALGORITHM, pAttributeName)) {
+			m_sKekParams.mgfalgorithm = pAttributeValue;
+		}
+		else if (strcmp(XML_3MF_SECURE_CONTENT_DIGESTMETHOD, pAttributeName)) {
+			m_sKekParams.digestmethod = pAttributeValue;
+		}
+		else {
+			m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREINVALIDKEKPARAM), eModelReaderWarningLevel::mrwInvalidMandatoryValue);
+		}
 	}
 
 }

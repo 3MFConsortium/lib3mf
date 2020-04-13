@@ -31,7 +31,7 @@ NMR_ModelReaderNode_KeyStoreCipherValue.h defines the Model Reader Node class th
 
 --*/
 
-#include "Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreCipherValue.h"
+#include "Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreBase64Value.h"
 
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Model/Classes/NMR_KeyStoreResourceData.h"
@@ -41,21 +41,22 @@ NMR_ModelReaderNode_KeyStoreCipherValue.h defines the Model Reader Node class th
 #include "Common/NMR_StringUtils.h"
 
 #include "Libraries/cpp-base64/base64.h"
+#include "..\..\..\Include\Model\Reader\NMR_ModelReader_KeyStoreBase64Value.h"
 
 namespace NMR {
 
-	CModelReaderNode_KeyStoreCipherValue::CModelReaderNode_KeyStoreCipherValue(CKeyStore * pKeyStore, PModelReaderWarnings pWarnings)
+	CModelReaderNode_KeyStoreBase64Value::CModelReaderNode_KeyStoreBase64Value(CKeyStore * pKeyStore, PModelReaderWarnings pWarnings)
 		: CModelReaderNode_KeyStoreBase(pKeyStore, pWarnings)
 	{
-		m_sCipherValueAccumulator = "";
+		m_sCodedValue = "";
 	}
 
-	CIPHERVALUE CModelReaderNode_KeyStoreCipherValue::getCipherValue()
+	std::vector<nfByte> CModelReaderNode_KeyStoreBase64Value::getValue()
 	{
-		return m_sCipherValue;
+		return m_decodedValue;
 	}
 
-	void CModelReaderNode_KeyStoreCipherValue::parseXML(_In_ CXmlReader * pXMLReader)
+	void CModelReaderNode_KeyStoreBase64Value::parseXML(_In_ CXmlReader * pXMLReader)
 	{
 		// Parse name
 		parseName(pXMLReader);
@@ -66,26 +67,15 @@ namespace NMR {
 		// Parse Content
 		parseContent(pXMLReader);
 
-		std::vector<nfByte> decoded = base64_decode(m_sCipherValueAccumulator);
-		if (decoded.size() >= KEYSTORE_TYPES_TAGSIZE + KEYSTORE_TYPES_IVSIZE) {
-			auto decodedIvBegin = decoded.begin();
-			auto decodedKeyBegin = decodedIvBegin + KEYSTORE_TYPES_IVSIZE;
-			auto decodedTagBegin = decoded.end() - KEYSTORE_TYPES_TAGSIZE;
-
-			m_sCipherValue.m_iv = std::vector<nfByte>(decodedIvBegin, decodedKeyBegin);
-			m_sCipherValue.m_key = std::vector<nfByte>(decodedKeyBegin, decodedTagBegin);
-			m_sCipherValue.m_tag = std::vector<nfByte>(decodedTagBegin, decoded.end());
-		} else {
-			m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREINVALIDCIPHERVALUE), eModelReaderWarningLevel::mrwInvalidMandatoryValue);
-		}
+		m_decodedValue = base64_decode(m_sCodedValue);
 	}
 
-	void CModelReaderNode_KeyStoreCipherValue::OnText(_In_z_ const nfChar * pText, _In_ CXmlReader * pXMLReader)
+	void CModelReaderNode_KeyStoreBase64Value::OnText(_In_z_ const nfChar * pText, _In_ CXmlReader * pXMLReader)
 	{
 		__NMRASSERT(pAttributeName);
 		__NMRASSERT(pAttributeValue);
 
-		m_sCipherValueAccumulator += std::string(pText);
+		m_sCodedValue += std::string(pText);
 	}
 
 }

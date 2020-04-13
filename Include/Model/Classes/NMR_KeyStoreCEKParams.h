@@ -26,33 +26,32 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelReaderNode_KeyStore.h defines the Model Reader Node class that is related to <keystore>.
+NMR_KeyStoreDecryptRight.h defines the KeyStoreDecryptRight Class. A decryptright is an in memory representation of the 3MF keystore resource data decrypright.
 
 --*/
 
-#ifndef __NMR_MODELREADERNODE_KEYSTORE
-#define __NMR_MODELREADERNODE_KEYSTORE
+#ifndef __NMR_KEYSTORECEKPARAMS
+#define __NMR_KEYSTORECEKPARAMS
 
-#include "Model/Reader/NMR_ModelReaderNode_KeyStoreBase.h"
-#include "Model/Reader/NMR_ModelReaderNode.h"
-#include "Model/Classes/NMR_KeyStore.h"
-
+#include <list>
+#include <map>
+#include <memory>
+#include "Common/NMR_Types.h"
+#include "Model/Classes/NMR_KeyStoreConsumer.h"
 namespace NMR {
-
-	class CModelReaderNode_KeyStore: public CModelReaderNode_KeyStoreBase {
+	class CKeyStoreCEKParams {
 	private:
-		PUUID m_UUID;
-	protected:
-		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
-		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
+		eKeyStoreEncryptAlgorithm m_encryptionAlgorithm;
+		nfBool m_bCompression;
+		std::vector<nfByte> m_iv, m_tag, m_aad;
 	public:
-		CModelReaderNode_KeyStore() = delete;
-		CModelReaderNode_KeyStore(_In_ CKeyStore * pKeyStore, _In_ PModelReaderWarnings pWarnings);
+		CKeyStoreCEKParams();
+		CKeyStoreCEKParams(nfBool const & compression,
+			eKeyStoreEncryptAlgorithm const & encryptionAlgorithm,
+			std::vector<nfByte> const & iv, std::vector<nfByte> const & tag, std::vector<nfByte> const & aad);
 
-		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 	};
 
-	typedef std::shared_ptr <CModelReaderNode_KeyStore> PModelReaderNode_KeyStore;
+	typedef std::shared_ptr<CKeyStoreCEKParams> PKeyStoreCEKParams;
 }
-
-#endif // __NMR_MODELREADERNODE_KEYSTORE
+#endif

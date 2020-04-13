@@ -27,32 +27,27 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelReaderNode_KeyStoreResourceData.h defines the Model Reader Node class that is related to <resourcedata>.
+NMR_ModelReaderNode_KeyStoreResourceDataGroup.h defines the Model Reader Node class that is related to <resourcedatagroup>.
 
 --*/
 
+#include "Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreResourceDataGroup.h"
+#include "Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreAccessRight.h"
 #include "Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreResourceData.h"
-#include "Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreCEKParams.h"
+
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Model/Classes/NMR_KeyStoreResourceData.h"
+#include "Model/Classes/NMR_KeyStoreAccessRight.h"
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_Exception_Windows.h"
 #include "Common/NMR_StringUtils.h"
 
 namespace NMR {
 
-	CModelReaderNode_KeyStoreResourceData::CModelReaderNode_KeyStoreResourceData(CKeyStore * pKeyStore, PModelReaderWarnings pWarnings, CKeyStoreResourceDataGroup * pResourceDataGroup)
-		: CModelReaderNode_KeyStoreBase(pKeyStore, pWarnings)
-	{
-		m_pResourceDataGroup = pResourceDataGroup;
-	}
+	CModelReaderNode_KeyStoreResourceDataGroup::CModelReaderNode_KeyStoreResourceDataGroup(CKeyStore * pKeyStore, PModelReaderWarnings pWarnings)
+		: CModelReaderNode_KeyStoreBase(pKeyStore, pWarnings) {}
 
-	PKeyStoreResourceData CModelReaderNode_KeyStoreResourceData::getResourceData()
-	{
-		return m_pResourceData;
-	}
-
-	void CModelReaderNode_KeyStoreResourceData::parseXML(_In_ CXmlReader * pXMLReader)
+	void CModelReaderNode_KeyStoreResourceDataGroup::parseXML(_In_ CXmlReader * pXMLReader)
 	{
 		// Parse name
 		parseName(pXMLReader);
@@ -62,36 +57,47 @@ namespace NMR {
 
 		// Parse Content
 		parseContent(pXMLReader);
+		//TODO check if there is some check to do
+		m_pKeyStore->addResourceDataGroup(m_keyUUID, m_accessRights, m_resourcesData);
 
-		// TODO: add resource data on resource data group
-		m_pResourceData = m_pResourceDataGroup->addResourceData(m_path, m_sCekParams.encryptionAlgorithm, m_sCekParams.compression);
 	}
 
-	void CModelReaderNode_KeyStoreResourceData::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
+	void CModelReaderNode_KeyStoreResourceDataGroup::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
 	{
 		__NMRASSERT(pAttributeName);
 		__NMRASSERT(pAttributeValue);
-		
-		if (strcmp(XML_3MF_SECURE_CONTENT_PATH, pAttributeName) == 0) {
-			if (!m_path.empty())
-				m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREDUPLICATERESOURCEDATAPATH), eModelReaderWarningLevel::mrwInvalidMandatoryValue);
-			m_path = pAttributeValue;
+
+		if (strcmp(XML_3MF_SECURE_CONTENT_KEY_UUID, pAttributeName) == 0) {
+			if (!m_keyUUID)
+				m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREINVALIDKEYUUID), eModelReaderWarningLevel::mrwInvalidMandatoryValue);
+			m_keyUUID = std::make_shared<CUUID>(pAttributeValue);
 		}
 		else
 			m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE), mrwInvalidOptionalValue);
 	}
 
-	void CModelReaderNode_KeyStoreResourceData::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
+	void CModelReaderNode_KeyStoreResourceDataGroup::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
 	{
 		__NMRASSERT(pChildName);
 		__NMRASSERT(pXMLReader);
 		__NMRASSERT(pNameSpace);
 
 		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_SECURECONTENTSPEC) == 0) {
-			if (strcmp(pChildName, XML_3MF_ELEMENT_CEKPARAMS) == 0) {
-				PModelReaderNode_KeyStoreCEKParams pXMLNode = std::make_shared<CModelReaderNode_KeyStoreCEKParams>(m_pResourceData, m_pWarnings);
+			if (strcmp(pChildName, XML_3MF_ELEMENT_RESOURCEDATA) == 0) {
+				PModelReaderNode_KeyStoreResourceData pXMLNode = std::make_shared<CModelReaderNode_KeyStoreResourceData>(m_pKeyStore, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
-				m_sCekParams = pXMLNode->getCEKParams();
+				PKeyStoreResourceData rd = pXMLNode->getResourceData();
+				if (nullptr != rd) {
+					m_resourcesData.push_back(rd);
+				}
+			}
+			else if (strcmp(pChildName, XML_3MF_ELEMENT_ACCESSRIGHT) == 0) {
+				PModelReaderNode_KeyStoreAccessRight pXMLNode = std::make_shared<CModelReaderNode_KeyStoreAccessRight>(m_pKeyStore, m_pWarnings);
+				pXMLNode->parseXML(pXMLReader);
+				PKeyStoreAccessRight ar = pXMLNode->getAccessRight();
+				if (nullptr != ar) {
+					m_accessRights.push_back(ar);
+				}
 			}
 			else
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);

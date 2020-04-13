@@ -26,12 +26,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelReaderNode_KeyStore.h defines the Model Reader Node class that is related to <keystore>.
+NMR_ModelReaderNode_KeyStoreCipherValue.h defines the Model Reader Node class that is related to <xenc:CipherValue>.
 
 --*/
 
-#ifndef __NMR_MODELREADERNODE_KEYSTORE
-#define __NMR_MODELREADERNODE_KEYSTORE
+#ifndef __NMR_MODELREADERNODE_KEYSTOREBASE64VALUE
+#define __NMR_MODELREADERNODE_KEYSTOREBASE64VALUE
 
 #include "Model/Reader/NMR_ModelReaderNode_KeyStoreBase.h"
 #include "Model/Reader/NMR_ModelReaderNode.h"
@@ -39,20 +39,23 @@ NMR_ModelReaderNode_KeyStore.h defines the Model Reader Node class that is relat
 
 namespace NMR {
 
-	class CModelReaderNode_KeyStore: public CModelReaderNode_KeyStoreBase {
+	class CModelReaderNode_KeyStoreBase64Value : public CModelReaderNode_KeyStoreBase {
 	private:
-		PUUID m_UUID;
+		std::vector<nfByte> m_decodedValue;
+		std::string m_sCodedValue;
+
 	protected:
-		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
-		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
+		virtual void OnText(_In_z_ const nfChar * pText, _In_ CXmlReader * pXMLReader);
 	public:
-		CModelReaderNode_KeyStore() = delete;
-		CModelReaderNode_KeyStore(_In_ CKeyStore * pKeyStore, _In_ PModelReaderWarnings pWarnings);
+		CModelReaderNode_KeyStoreBase64Value() = delete;
+		CModelReaderNode_KeyStoreBase64Value(_In_ CKeyStore * pKeyStore, _In_ PModelReaderWarnings pWarnings);
+
+		std::vector<nfByte> getValue();
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 	};
 
-	typedef std::shared_ptr <CModelReaderNode_KeyStore> PModelReaderNode_KeyStore;
+	typedef std::shared_ptr <CModelReaderNode_KeyStoreBase64Value> PModelReaderNode_KeyStoreBase64Value;
 }
 
-#endif // __NMR_MODELREADERNODE_KEYSTORE
+#endif // __NMR_MODELREADERNODE_KEYSTOREBASE64VALUE

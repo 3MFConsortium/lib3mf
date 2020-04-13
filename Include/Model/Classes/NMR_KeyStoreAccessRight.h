@@ -26,33 +26,38 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelReaderNode_KeyStore.h defines the Model Reader Node class that is related to <keystore>.
+NMR_KeyStoreDecryptRight.h defines the KeyStoreDecryptRight Class. A decryptright is an in memory representation of the 3MF keystore resource data decrypright.
 
 --*/
 
-#ifndef __NMR_MODELREADERNODE_KEYSTORE
-#define __NMR_MODELREADERNODE_KEYSTORE
+#ifndef __NMR_KEYSTOREACCESSRIGHT
+#define __NMR_KEYSTOREACCESSRIGHT
 
-#include "Model/Reader/NMR_ModelReaderNode_KeyStoreBase.h"
-#include "Model/Reader/NMR_ModelReaderNode.h"
-#include "Model/Classes/NMR_KeyStore.h"
-
+#include <list>
+#include <map>
+#include <memory>
+#include "Common/NMR_Types.h"
+#include "Model/Classes/NMR_KeyStoreConsumer.h"
 namespace NMR {
-
-	class CModelReaderNode_KeyStore: public CModelReaderNode_KeyStoreBase {
+	class CKeyStoreAccessRight {
 	private:
-		PUUID m_UUID;
-	protected:
-		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
-		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
+		PKeyStoreConsumer m_pConsumer;
+		KEKPARAMS m_sKekParams;
+		nfBool m_bNew;
 	public:
-		CModelReaderNode_KeyStore() = delete;
-		CModelReaderNode_KeyStore(_In_ CKeyStore * pKeyStore, _In_ PModelReaderWarnings pWarnings);
+		CKeyStoreAccessRight(PKeyStoreConsumer const & consumer,
+			eKeyStoreEncryptAlgorithm const & encryptionAlgorithm);
 
-		virtual void parseXML(_In_ CXmlReader * pXMLReader);
+		CKeyStoreAccessRight(PKeyStoreConsumer const & consumer,
+			eKeyStoreEncryptAlgorithm const & encryptionAlgorithm, 
+			KEKPARAMS const & kekParams);
+		
+		KEKPARAMS getKEKParams();
+		PKeyStoreConsumer getConsumer();
+		eKeyStoreEncryptAlgorithm getEncryptionAlgorithm();
+		bool isNew();
 	};
 
-	typedef std::shared_ptr <CModelReaderNode_KeyStore> PModelReaderNode_KeyStore;
+	typedef std::shared_ptr<CKeyStoreAccessRight> PKeyStoreAccessRight;
 }
-
-#endif // __NMR_MODELREADERNODE_KEYSTORE
+#endif

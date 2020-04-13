@@ -50,8 +50,14 @@ namespace NMR {
 
 	struct CIPHERVALUE {
 		std::vector<nfByte> m_iv;
-		std::vector<nfByte> m_key;
 		std::vector<nfByte> m_tag;
+		std::vector<nfByte> m_key;
+	};
+
+	struct KEKPARAMS {
+		std::string wrappingalgorithm;
+		std::string mgfalgorithm;
+		std::string digestmethod;
 	};
 
 	enum eKeyStoreEncryptAlgorithm {

@@ -27,12 +27,13 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelReaderNode_KeyStoreDecryptRight.h defines the Model Reader Node class that is related to <decryptright>.
+NMR_ModelReaderNode_KeyStoreAccessRight.h defines the Model Reader Node class that is related to <Accessright>.
 
 --*/
 
-#include "Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreDecryptRight.h"
+#include "Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreAccessRight.h"
 #include "Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreCipherValue.h"
+#include "Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreKEKParams.h"
 
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Common/NMR_Exception.h"
@@ -42,18 +43,17 @@ NMR_ModelReaderNode_KeyStoreDecryptRight.h defines the Model Reader Node class t
 namespace NMR {
 
 
-	CModelReaderNode_KeyStoreDecryptRight::CModelReaderNode_KeyStoreDecryptRight(CKeyStore * pKeyStore, PModelReaderWarnings pWarnings)
+	CModelReaderNode_KeyStoreAccessRight::CModelReaderNode_KeyStoreAccessRight(CKeyStore * pKeyStore, PModelReaderWarnings pWarnings)
 		: CModelReaderNode_KeyStoreBase(pKeyStore, pWarnings)
 	{
-		m_bHasCipherData = false;
 	}
 
-	PKeyStoreDecryptRight CModelReaderNode_KeyStoreDecryptRight::getDecryptRight()
+	PKeyStoreAccessRight CModelReaderNode_KeyStoreAccessRight::getAccessRight()
 	{
-		return m_decryptRight;
+		return m_accessRight;
 	}
 
-	void CModelReaderNode_KeyStoreDecryptRight::parseXML(_In_ CXmlReader * pXMLReader)
+	void CModelReaderNode_KeyStoreAccessRight::parseXML(_In_ CXmlReader * pXMLReader)
 	{
 		// Parse name
 		parseName(pXMLReader);
@@ -69,7 +69,8 @@ namespace NMR {
 			nfUint64 index = fnStringToInt32(m_consumerIndex.c_str());
 			if (0 <= index && index < m_pKeyStore->getConsumerCount()) {
 				PKeyStoreConsumer c = m_pKeyStore->getConsumerByIndex(index);
-				m_decryptRight = std::make_shared<CKeyStoreDecryptRight>(c, m_encryptionAlgorithm, m_sCipherValue);
+				//TODO create accessright with kekparam
+				m_accessRight = std::make_shared<CKeyStoreAccessRight>(c, m_encryptionAlgorithm, m_sCipherValue);
 			} else {
 				m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREINVALIDCONSUMERINDEX), eModelReaderWarningLevel::mrwInvalidMandatoryValue);
 			}
@@ -78,7 +79,7 @@ namespace NMR {
 		}
 	}
 
-	void CModelReaderNode_KeyStoreDecryptRight::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
+	void CModelReaderNode_KeyStoreAccessRight::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
 	{
 		__NMRASSERT(pAttributeName);
 		__NMRASSERT(pAttributeValue);
@@ -89,42 +90,29 @@ namespace NMR {
 				m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREDUPLICATECONSUMERINDEX), eModelReaderWarningLevel::mrwInvalidMandatoryValue);
 			m_consumerIndex = pAttributeValue;
 		}
-		else if (strcmp(XML_3MF_SECURE_CONTENT_ENCRYPTION_ALGORITHM, pAttributeName) == 0) {
-			if (strcmp(XML_3MF_SECURE_CONTENT_ENCRYPTION_AES256, pAttributeValue) == 0) {
-				m_encryptionAlgorithm = eKeyStoreEncryptAlgorithm::Aes256Gcm;
-			}
-			else if (strcmp(XML_3MF_SECURE_CONTENT_ENCRYPTION_RSA, pAttributeValue) == 0) {
-				m_encryptionAlgorithm = eKeyStoreEncryptAlgorithm::RsaOaepMgf1p;
-			}
-			else {
-				m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREINVALIDENCRYPTIONALGORITHM), eModelReaderWarningLevel::mrwInvalidOptionalValue);
-				m_encryptionAlgorithm = eKeyStoreEncryptAlgorithm::RsaOaepMgf1p;
-			}
-		}
 		else
 			m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE), mrwInvalidOptionalValue);
 	}
 
-	void CModelReaderNode_KeyStoreDecryptRight::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
+	void CModelReaderNode_KeyStoreAccessRight::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
 	{
 		__NMRASSERT(pChildName);
 		__NMRASSERT(pXMLReader);
 		__NMRASSERT(pNameSpace);
 
+		//TODO Parse CipherData child element
 
-		if (strcmp(pChildName, XML_3MF_ELEMENT_CIPHERDATA) == 0) {
-			m_bHasCipherData = true;
-		}
-		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_CIPHERVALUESPEC) == 0) {
-			if (strcmp(pChildName, XML_3MF_ELEMENT_CIPHERVALUE) == 0) {
-				if (m_bHasCipherData) {
-					PModelReaderNode_KeyStoreCipherValue pXMLNode = std::make_shared<CModelReaderNode_KeyStoreCipherValue>(m_pKeyStore, m_pWarnings);
-					pXMLNode->parseXML(pXMLReader);
-					m_sCipherValue = pXMLNode->getCipherValue();
-				}
+		if (strcmp(pChildName, XML_3MF_ELEMENT_KEKPARAMS) == 0) {
+			if (!m_bHasKEKParams) {
+				PModelReaderNode_KeyStoreKEKParams pXMLNode = std::make_shared<CModelReaderNode_KeyStoreKEKParams>(m_pKeyStore, m_pWarnings);
+				pXMLNode->parseXML(pXMLReader);
+				m_sKekParams = pXMLNode->getKekParams();
+				m_bHasKEKParams = true;
 			}
-			else
+			else {
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
+
+			}
 		}
 	}
 

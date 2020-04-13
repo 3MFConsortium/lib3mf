@@ -26,40 +26,43 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelReaderNode_KeyStoreDecryptRight.h defines the Model Reader Node class that is related to <decryptright>.
+NMR_ModelReaderNode_KeyStoreCipherValue.h defines the Model Reader Node class that is related to <xenc:CipherValue>.
 
 --*/
 
-#ifndef __NMR_MODELREADERNODE_KEYSTODECRYPTRIGHT
-#define __NMR_MODELREADERNODE_KEYSTODECRYPTRIGHT
+#ifndef __NMR_MODELREADERNODE_KEYSTORECEKPARAMS
+#define __NMR_MODELREADERNODE_KEYSTORECEKPARAMS
 
 #include "Model/Reader/NMR_ModelReaderNode_KeyStoreBase.h"
 #include "Model/Reader/NMR_ModelReaderNode.h"
 #include "Model/Classes/NMR_KeyStore.h"
-#include "Model/Classes/NMR_KeyStoreDecryptRight.h"
+#include "Model/Classes/NMR_KeyStoreAccessRight.h"
+#include "Model/Classes/NMR_KeyStoreCEKParams.h"
 
 namespace NMR {
 
-	class CModelReaderNode_KeyStoreDecryptRight: public CModelReaderNode_KeyStoreBase {
+	class CModelReaderNode_KeyStoreCEKParams: public CModelReaderNode_KeyStoreBase {
 	private:
-		nfBool m_bHasCipherData;
-		std::string m_consumerIndex;
+		nfBool m_compression;
 		eKeyStoreEncryptAlgorithm m_encryptionAlgorithm;
-		CIPHERVALUE m_sCipherValue;
-		PKeyStoreDecryptRight m_decryptRight;
+		std::vector<nfByte> m_iv;
+		std::vector<nfByte> m_tag;
+		std::vector<nfByte> m_aad;
+		PKeyStoreCEKParams m_CEKParams;
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
-	public:
-		CModelReaderNode_KeyStoreDecryptRight() = delete;
-		CModelReaderNode_KeyStoreDecryptRight(_In_ CKeyStore * pKeyStore, _In_ PModelReaderWarnings pWarnings);
 
-		PKeyStoreDecryptRight getDecryptRight();
+	public:
+		CModelReaderNode_KeyStoreCEKParams() = delete;
+		CModelReaderNode_KeyStoreCEKParams(_In_ CKeyStore * pKeyStore, _In_ PModelReaderWarnings pWarnings);
+
+		PKeyStoreCEKParams getCEKParams();
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 	};
+	typedef std::shared_ptr <CModelReaderNode_KeyStoreCEKParams> PModelReaderNode_KeyStoreCEKParams;
 
-	typedef std::shared_ptr <CModelReaderNode_KeyStoreDecryptRight> PModelReaderNode_KeyStoreDecryptRight;
 }
 
-#endif // __NMR_MODELREADERNODE_KEYSTODECRYPTRIGHT
+#endif // __NMR_MODELREADERNODE_KEYSTORECEKPARAMS
