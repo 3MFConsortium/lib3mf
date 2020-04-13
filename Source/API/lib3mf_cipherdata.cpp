@@ -3,19 +3,27 @@
 
 using namespace Lib3MF::Impl;
 
-Lib3MF::Impl::CCipherData::CCipherData(Lib3MF::sAes256CipherValue const & CipherValue, Lib3MF_uint64 handle) {
-	m_CipherValue = CipherValue;
-	m_handle = handle;
+
+Lib3MF_uint64 Lib3MF::Impl::CContentEncryptionParams::GetDescriptor() {
+	return 0;
 }
 
-Lib3MF::sAes256CipherValue Lib3MF::Impl::CCipherData::GetAes256Gcm() {
-	return m_CipherValue;
+Lib3MF::eEncryptionAlgorithm Lib3MF::Impl::CContentEncryptionParams::GetEncryptionAlgorithm() {
+	return Lib3MF::eEncryptionAlgorithm();
 }
 
-void Lib3MF::Impl::CCipherData::SetAes256Gcm(const Lib3MF::sAes256CipherValue CipherValue) {
-	m_CipherValue = CipherValue;
-}
+void Lib3MF::Impl::CContentEncryptionParams::GetKey(Lib3MF_uint64 nByteDataBufferSize, Lib3MF_uint64 *pByteDataNeededCount, Lib3MF_uint8 *pByteDataBuffer) {}
 
-Lib3MF_uint64 Lib3MF::Impl::CCipherData::GetDescriptor() {
-	return m_handle;
+void Lib3MF::Impl::CContentEncryptionParams::GetInitializationVector(Lib3MF_uint64 nByteDataBufferSize, Lib3MF_uint64 *pByteDataNeededCount, Lib3MF_uint8 *pByteDataBuffer) {}
+
+void Lib3MF::Impl::CContentEncryptionParams::GetAuthenticationTag(Lib3MF_uint64 nByteDataBufferSize, Lib3MF_uint64 *pByteDataNeededCount, Lib3MF_uint8 *pByteDataBuffer) {}
+
+void Lib3MF::Impl::CContentEncryptionParams::SetAuthenticationTag(Lib3MF_uint64 nByteDataBufferSize, const Lib3MF_uint8 *pByteDataBuffer) {}
+
+void Lib3MF::Impl::CContentEncryptionParams::GetAdditionalAuthenticationData(Lib3MF_uint64 nByteDataBufferSize, Lib3MF_uint64 *pByteDataNeededCount, Lib3MF_uint8 *pByteDataBuffer) {}
+
+void Lib3MF::Impl::CContentEncryptionParams::SetAdditionalAuthenticationData(Lib3MF_uint64 nByteDataBufferSize, const Lib3MF_uint8 *pByteDataBuffer) {}
+
+std::string Lib3MF::Impl::CContentEncryptionParams::GetKeyUUID() {
+	return std::string();
 }

@@ -24,7 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CCipherData
+Abstract: This is the class declaration of CContentEncryptionParams
 
 */
 
@@ -44,21 +44,23 @@ namespace Lib3MF {
 	namespace Impl {
 
 		/*************************************************************************************************************************
-		Class declaration of CCipherData
+		Class declaration of CContentEncryptionParams
 		**************************************************************************************************************************/
 
-		class CCipherData : public virtual ICipherData, public virtual CBase {
+		class CContentEncryptionParams : public virtual IContentEncryptionParams, public virtual CBase {
 		private:
-			Lib3MF::sAes256CipherValue m_CipherValue;
-			Lib3MF_uint64 m_handle;
+
 		public:
-			CCipherData(Lib3MF::sAes256CipherValue const & CipherValue, Lib3MF_uint64 handle);
-
-			// Inherited via ICipherData
-			Lib3MF::sAes256CipherValue GetAes256Gcm();
-			void SetAes256Gcm(const Lib3MF::sAes256CipherValue CipherValue);
+			// Inherited via IContentEncryptionParams
 			Lib3MF_uint64 GetDescriptor();
-
+			Lib3MF::eEncryptionAlgorithm GetEncryptionAlgorithm();
+			void GetKey(Lib3MF_uint64 nByteDataBufferSize, Lib3MF_uint64 *pByteDataNeededCount, Lib3MF_uint8 *pByteDataBuffer);
+			void GetInitializationVector(Lib3MF_uint64 nByteDataBufferSize, Lib3MF_uint64 *pByteDataNeededCount, Lib3MF_uint8 *pByteDataBuffer);
+			void GetAuthenticationTag(Lib3MF_uint64 nByteDataBufferSize, Lib3MF_uint64 *pByteDataNeededCount, Lib3MF_uint8 *pByteDataBuffer);
+			void SetAuthenticationTag(Lib3MF_uint64 nByteDataBufferSize, const Lib3MF_uint8 *pByteDataBuffer);
+			void GetAdditionalAuthenticationData(Lib3MF_uint64 nByteDataBufferSize, Lib3MF_uint64 *pByteDataNeededCount, Lib3MF_uint8 *pByteDataBuffer);
+			void SetAdditionalAuthenticationData(Lib3MF_uint64 nByteDataBufferSize, const Lib3MF_uint8 *pByteDataBuffer);
+			std::string GetKeyUUID();
 		};
 	}
 }
