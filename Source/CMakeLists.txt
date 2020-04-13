@@ -46,7 +46,7 @@ Source/API/lib3mf_metadata.cpp
 Source/API/lib3mf_metadatagroup.cpp
 Source/API/lib3mf_multipropertygroup.cpp
 Source/API/lib3mf_multipropertygroupiterator.cpp
-Source/API/lib3mf_cipherdata.cpp
+Source/API/lib3mf_contentencryptionparams.cpp
 Source/API/lib3mf_decryptright.cpp
 Source/API/lib3mf_consumer.cpp
 Source/API/lib3mf_resourcedata.cpp
