@@ -1137,53 +1137,83 @@
 	</class>
 	
 	<enum name="EncryptionAlgorithm">
-		<option name="RsaOaepMgf1p" value="0" description="Represents RSA OEAP MGF1 encryption algorithm as defined in http://www.w3.org/2001/04/xmlenc#rsa-oaep-mgf1p"/>
-		<option name="Aes256Gcm" value="1" description="Represents AES GCM encryption algorithm using 256 bit key size as defined in http://www.w3.org/2009/xmlenc11#aes256-gcm"/>
+		<option name="AES256_GCM" value="1" description="http://www.w3.org/2009/xmlenc11#aes256-gcm"/>
+	</enum>
+
+	<enum name="WrappingAlgorithm">
+		<option name="RSA_OAEP" value="0" description="http://www.w3.org/2009/xmlenc11#rsa-oaep"/>
+	</enum>
+
+	<enum name="MgfAlgorithm">
+		<option name="MGF1_SHA1" value="1" description="http://www.w3.org/2009/xmlenc11#mgf1sha1"/>
+		<option name="MGF1_SHA224" value="224" description="http://www.w3.org/2009/xmlenc11#mgf1sha224"/>
+		<option name="MGF1_SHA256" value="256" description="http://www.w3.org/2009/xmlenc11#mgf1sha256"/>
+		<option name="MGF1_SHA384" value="384" description="http://www.w3.org/2009/xmlenc11#mgf1sha384"/>
+		<option name="MGF1_SHA512" value="512" description="http://www.w3.org/2009/xmlenc11#mgf1sha512"/>
+	</enum>
+
+	<enum name="DigestMethod">
+		<option name="SHA1" value="1" description="http://www.w3.org/2000/09/xmldsig#sha1"/>
+		<option name="SHA256" value="256" description="http://www.w3.org/2001/04/xmlenc#sha256"/>
 	</enum>
 	
 	<class name="AccessRight">
 		<method name="GetConsumer" description="Gets the consumer associated with this access right">
 			<param name="TheConsumer" type="handle" class="Consumer" pass="return" description="The consumer instance"/>
 		</method>
-		<method name="GetEncryptionAlgorithm" description="Gets the associated encryption algorithm">
-			<param name="EncryptionAlgorithm" type="enum" class="EncryptionAlgorithm" pass="return" description="The algorithm used for the key in this accessright"/>
+		<method name="GetWrappingAlgorithm" description="Gets the associated encryption algorithm">
+			<param name="Algorithm" type="enum" class="WrappingAlgorithm" pass="return" description="The algorithm used for the key in this accessright"/>
+		</method>
+		<method name="GetMgfAlgorithm" description="Gets the associated mask generation function algorithm">
+			<param name="Algorithm" type="enum" class="MgfAlgorithm" pass="return" description="The MFG1 algorithm" />
+		</method>
+		<method name="GetDigestMethod" description="Gets the digest method assoicated">
+			<param name="Algorithm" type="enum" class="DigestMethod" pass="return" description="The digest method for this accessright" />
 		</method>
 	</class>
-
+	
 	<functiontype name="KeyWrappingCallback" description="A callback used to wrap (encrypt) the content key available in keystore resource group">
-		<param name="Consumer" type="class" class="Consumer" pass="in" description="The consumer instance associated with the decryptright holder of the key"/>
-		<param name="EncryptionAlgorithm" type="enum" class="EncryptionAlgorithm" pass="in" description="The encryption algorithm used for encrypting the key"/>
+		<param name="KEKParams" type="class" class="AccessRight" pass="in" description="The information about the parameters used used to wrap the key to the contents"/>
 		<param name="InBuffer" type="basicarray" class="uint8" pass="in" description="Buffer to the input value. When encrypting, this should be the plain key. When decrypting, this should be the key cipher."/>
-		<param name="OutBuffer" type="basicarray" class="uint8" pass="out" description="Buffer where the data will be placed. When encrypting, this will be the key cipher. When decrypting, this will be the plain key."/>
+		<param name="OutBuffer" type="basicarray" class="uint8" pass="out" description="Buffer where the data will be placed. When encrypting, this will be the key cipher. When decrypting, this will be the plain key. When buffer is null, neededBytes contains the required bytes to run. When not, Amount it reflects the encrypted/decrypted bytes when succeed or zero when error"/>
 		<param name="UserData" type="pointer" pass="in" description="Userdata that is passed to the callback function"/>
-		<param name="Result" type="uint64" pass="return" description="Amount of bytes encrypted/decripted, when succeed. A negative value on error"/>
 	</functiontype>
-	
-	<struct name="Aes256CipherValue">
-		<member name="IV" type="uint8" rows="12" description="The IV for AES 256 GCM"/>
-		<member name="Key" type="uint8" rows="32" description="The Key for AES 256 GCM"/>
-		<member name="Tag" type="uint8" rows="16" description="The authentication tag for AES 256 GCM"/>
-	</struct>
-	
-	<class name="CipherData">
-		<method name="GetAes256Gcm" description="Gets the AES 256 GCM ciphervalue. Available if encryption algorithm is Aes256Gcm">
-			<param name="CipherValue" type="struct" class="Aes256CipherValue" pass="return" description="The ciphervalue"/>
+
+	<class name="ContentEncryptionParams">
+		<method name="GetEncryptionAlgorithm" description="Returns the encryption method to be used in this encryption process">
+			<param name="Algorithm" type="enum" class="EncryptionAlgorithm" pass="return" descripton="The encryption algorith"/>
 		</method>
-		<method name="SetAes256Gcm" description="Sets the AES 256 GCM ciphervalue. Use if encryption algorithm is Aes256Gcm">
-			<param name="CipherValue" type="struct" class="Aes256CipherValue" pass="in" description="The ciphervalue"/>
+		<method name="GetKey" description="Gets the key for the resource associated">
+			<param name="ByteData" type="basicarray" class="uint8" pass="out" description="Pointer to a buffer where to place the key."/>
+		</method>
+		<method name="GetInitializationVector" description="Gets the IV data">
+			<param name="ByteData" type="basicarray" class="uint8" pass="out" description="Pointer to a buffer where to place the data."/>
+		</method>
+		<method name="GetAuthenticationTag" description="A handler descriptor that uniquely identifies the context of the resource. Each resource will be assigned a different value">
+			<param name="ByteData" type="basicarray" class="uint8" pass="out" description="Pointer to a buffer where to place the data."/>
+		</method>
+		<method name="SetAuthenticationTag" description="Sets the authentication tag">
+			<param name="ByteData" type="basicarray" class="uint8" pass="in" description="The authentication tag size"/>
+		</method>
+		<method name="GetAdditionalAuthenticationData" description="A handler descriptor that uniquely identifies the context of the resource. Each resource will be assigned a different value">
+			<param name="ByteData" type="basicarray" class="uint8" pass="out" description="Buffer where the data will be placed"/>
+		</method>
+		<method name="SetAdditionalAuthenticationData" description="A handler descriptor that uniquely identifies the context of the resource. Each resource will be assigned a different value">
+			<param name="ByteData" type="basicarray" class="uint8" pass="in" description="Buffer from where the data will be read"/>
 		</method>
 		<method name="GetDescriptor" description="A handler descriptor that uniquely identifies the context of the resource. Each resource will be assigned a different value">
-			<param name="Descriptor" type="uint64" pass="return" description="the cipher data descriptor"/>
+			<param name="Descriptor" type="uint64" pass="return" descrption="The resource descriptor" />
 		</method>
+		<method name="GetKeyUUID" description="Gets the resourcedatagroup keyuuid">
+			<param name="UUID" type="string" pass="return" description="The resourcedatagroup keyuuid that may be use to reference an external key"/>
+		</method>		
 	</class>
 
 	<functiontype name="ContentEncryptionCallback" description="A callback to encrypt/decrypt content called on each resource encrypted. This might be called several times depending on content size. If cipher size is zero, clients must return the result of authenticated tag validation">
-		<param name="EncryptionAlgorithm" type="enum" class="EncryptionAlgorithm" pass="in" description="The encryption algorithm to be used"/>
-		<param name="CipherData" type="class" class="CipherData" pass="in" description="The cipherData instance containing the key information."/>
+		<param name="CEKParams" type="class" class="ContentEncryptionParams" pass="in" description="The params of the encryption process."/>
 		<param name="Input" type="basicarray" class="uint8" pass="in" description="Buffer to the original data. In encrypting, this will be the plain data. If derypting, this will be the cipher data"/>
-		<param name="Output" type="basicarray" class="uint8" pass="out" description="Buffer to hold the transformed data. When encrypting, this will be the cipher data. When decrypting, this shall be the plain data."/>
+		<param name="Output" type="basicarray" class="uint8" pass="out" description="Buffer to hold the transformed data. When encrypting, this will be the cipher data. When decrypting, this shall be the plain data. If buffer is null, neededBytes return the necessary amount of bytes. Otherwise, amount of bytes decrypted if succeed or zero on error"/>
 		<param name="UserData" type="pointer" pass="in" description="Userdata that is passed to the callback function"/>
-		<param name="Result" type="uint64" pass="return" description="Amount of bytes decrypted if succeed. A negative value on error"/>
 	</functiontype>
 
 	<enum name="Compression">
@@ -1192,39 +1222,44 @@
 	</enum>
 	
 	<class name="ResourceData">
+		<method name="GetPath" description="Gets the encrypted part path">
+			<param name="Path" type="class" class="PackagePart" pass="return" description="The part path"/>
+		</method>
 		<method name="GetEncryptionAlgorithm" description="Gets the encryption algorithm used to encrypt this ResourceData">
 			<param name="EncryptionAlgorithm" type="enum" class="EncryptionAlgorithm" pass="return" description="The encryption algorithm"/>
 		</method>
 		<method name="GetCompression" description="Tells whether this ResourceData is compressed or not">
 			<param name="Compression" type="enum" class="Compression" pass="return" description="The compression method"/>
 		</method>
-		<method name="GetPath" description="Gets the encrypted part path">
-			<param name="Path" type="class" class="PackagePart" pass="return" description="The part path"/>
+		<method name="GetAdditionalAuthenticationData" description="Tells whether this ResourceData is compressed or not">
+			<param name="ByteData" type="basicarray" class="uint8" pass="out" description="The compression method"/>
 		</method>
 	</class>
 
 	<class name="ResourceDataGroup">
-		<method name="SetKeyUUID" description="Sets the resourcedatagroup keyuuid">
+		<method name="GetKeyUUID" description="Sets the resourcedatagroup keyuuid">
 			<param name="UUID" type="string" pass="in" description="The new resourcedatagroup keyuuid."/>
 		</method>
-		<method name="AddResourceData" description="Add resourcedata to resourcedatagroup element">
-			<param name="Path" type="string" pass="in" description="The resourcedata path"/>
-			<param name="TheResourceData" type="handle" class="ResourceData" pass="return" description="The data resource instance"/>
-		</method>
 		<method name="AddAccessRight" description="Add accessright to resourcedatagroup element">
-			<param name="ConsumerIndex" type="string" pass="in" description="The id of the related consumer"/>
+			<param name="Consumer" type="handle" class="Consumer" pass="in" description="The Consumer reference"/>
+			<param name="WrappingAlgorithm" type="enum" class="WrappingAlgorithm" pass="in" description="The key wrapping algorithm to be used" />
+			<param name="MgfAlgorithm" type="enum" class="MgfAlgorithm" pass="in" description="The mask generation function to be used" />
+			<param name="DigestMethod" type="enum" class="DigestMethod" pass="in" description="The digest mechanism to be used"/>
 			<param name="TheAccessRight" type="handle" class="AccessRight" pass="return" description="The acess right instance"/>
-		</method>
-		<method name="GetAccessRight" description="Gets an instance of AccessRight">
-			<param name="AccessRightIndex" type="uint32" pass="in" description="The index of the target AccessRight"/>
-			<param name="TheAccessRight" type="handle" class="AccessRight" pass="return" description="The AccessRight instance"/>
 		</method>
 		<method name="FindAccessRightByConsumer" description="Finds the AccessRight associated with a Consumer">
 			<param name="ConsumerInstance" type="handle" class="Consumer" pass="in" description="The Consumer instance"/>
 			<param name="TheAccessRight" type="handle" class="AccessRight" pass="return" description="The AcessRight instance"/>
 		</method>
-		<method name="RemoveAcessRight" description="Removes a AccessRight for a Consumer">
+		<method name="RemoveAccessRight" description="Removes access from a Consumer on this resource data group">
 			<param name="ConsumerInstance" type="handle" class="Consumer" pass="in" description="The Consumer instance"/>
+		</method>
+		<method name="AddResourceData" description="Add resourcedata to resourcedatagroup element">
+			<param name="PartPath" type="handle" class="PackagePart" pass="in" description="The path of the part to be encrypted"/>
+			<param name="Algorithm" type="enum" class="EncryptionAlgorithm" pass="in" description="The encryption algorithm to be used to encrypt this resource"/>
+			<param name="Compression" type="enum" class="Compression" pass="in" description="Whether compression should be used prior to encryption"/>
+			<param name="AdditionalAuthenticationData" type="basicarray" class="uint8" pass="in" description="Additional data to be encrypted along the contents for better security" />
+			<param name="TheResourceData" type="handle" class="ResourceData" pass="return" description="The data resource instance"/>
 		</method>
 		<method name="GetResourceDataCount" description="Gets the number of resource data in the keysore">
 			<param name="Count" type="uint32" pass="return" description="The number of resource data available"/>
@@ -1267,13 +1302,6 @@
 			<param name="TheResourceDataGroup" type="handle" class="ResourceDataGroup" pass="return" description="The data resource instance"/>
 		</method>
 		<method name="AddResourceDataGroup" description="Adds a resource data into the keystore. This flags the package part for encryption">
-			<param name="PartPath" type="handle" class="PackagePart" pass="in" description="The path of the part to be encrypted"/>
-			<param name="EncryptionAlgorithm" type="enum" class="EncryptionAlgorithm" pass="in" description="The encryption algorithm to be used to encrypt this resource"/>
-			<param name="Compression" type="enum" class="Compression" pass="in" description="Whether compression should be used prior to encryption"/>
-			<param name="TheResourceDataGroup" type="handle" class="ResourceDataGroup" pass="return" description="The data resource instance"/>
-		</method>
-		<method name="FindResourceDataGroupByUUID" description="Finds a resource data by its uuid">
-			<param name="UUID" type="string" pass="in" description="The resource data path to find"/>
 			<param name="TheResourceDataGroup" type="handle" class="ResourceDataGroup" pass="return" description="The data resource instance"/>
 		</method>
 		<method name="GetUUID" description="Gets the keystore UUID">
