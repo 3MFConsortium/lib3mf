@@ -24,7 +24,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CDecryptRight
+Abstract: This is the class declaration of CAccessRight
 
 */
 
@@ -40,24 +40,34 @@ Abstract: This is the class declaration of CDecryptRight
 #endif
 
 // Include custom headers here.
-#include "Model/Classes/NMR_KeyStoreDecryptRight.h"
+#include "Model/Classes/NMR_KeyStoreAccessRight.h"
 namespace Lib3MF {
 	namespace Impl {
 
 
 		/*************************************************************************************************************************
-		Class declaration of CDecryptRight
+		Class declaration of CAccessRight
 		**************************************************************************************************************************/
 
-		class CDecryptRight : public virtual IDecryptRight, public virtual CBase {
+		class CAccessRight : public virtual IAccessRight, public virtual CBase {
 		private:
-			NMR::PKeyStoreDecryptRight m_DecryptRight;
+			NMR::PKeyStoreAccessRight m_pAccessRight;
 		public:
-			NMR::PKeyStoreDecryptRight decryptRight() const;
-			CDecryptRight(NMR::PKeyStoreDecryptRight dR);
-			// Inherited via IDecryptRight
+			CAccessRight(NMR::PKeyStoreAccessRight ar);
+
+			// Inherited via IAccessRight
 			virtual IConsumer * GetConsumer() override;
-			virtual Lib3MF::eEncryptionAlgorithm GetEncryptionAlgorithm() override;
+
+			virtual Lib3MF::eWrappingAlgorithm GetWrappingAlgorithm();
+
+			virtual Lib3MF::eMgfAlgorithm GetMgfAlgorithm();
+
+			virtual Lib3MF::eDigestMethod GetDigestMethod();
+
+			// Other access methods
+			NMR::PKeyStoreAccessRight accessRight() const;
+
+
 		};
 	}
 }

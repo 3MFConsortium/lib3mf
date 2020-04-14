@@ -26,7 +26,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_KeyStoreDecryptRight.h defines the KeyStoreDecryptRight Class. A decryptright is an in memory representation of the 3MF keystore resource data decrypright.
+NMR_KeyStoreAccessRight.h defines the KeyStoreAccessRight Class. A accessright is an in memory representation of the 3MF keystore resource data accessright.
 
 --*/
 
@@ -43,19 +43,12 @@ namespace NMR {
 	private:
 		PKeyStoreConsumer m_pConsumer;
 		KEKPARAMS m_sKekParams;
-		nfBool m_bNew;
 	public:
 		CKeyStoreAccessRight(PKeyStoreConsumer const & consumer,
-			eKeyStoreEncryptAlgorithm const & encryptionAlgorithm);
-
-		CKeyStoreAccessRight(PKeyStoreConsumer const & consumer,
-			eKeyStoreEncryptAlgorithm const & encryptionAlgorithm, 
 			KEKPARAMS const & kekParams);
 		
 		KEKPARAMS getKEKParams();
 		PKeyStoreConsumer getConsumer();
-		eKeyStoreEncryptAlgorithm getEncryptionAlgorithm();
-		bool isNew();
 	};
 
 	typedef std::shared_ptr<CKeyStoreAccessRight> PKeyStoreAccessRight;

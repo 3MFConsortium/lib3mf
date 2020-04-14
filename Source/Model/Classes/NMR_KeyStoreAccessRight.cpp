@@ -1,34 +1,24 @@
 #include "Model/Classes/NMR_KeyStoreAccessRight.h"
 #include "Common/NMR_Exception.h"
 namespace NMR {
-	CKeyStoreAccessRight::CKeyStoreAccessRight(PKeyStoreConsumer const & consumer, eKeyStoreEncryptAlgorithm const & encryptionAlgorithm, CIPHERVALUE const & cipherValue)
-		:m_pConsumer(consumer), m_sCipherValue(cipherValue), m_bNew(false)
+	CKeyStoreAccessRight::CKeyStoreAccessRight(PKeyStoreConsumer const & consumer, KEKPARAMS const & params)
+		:m_pConsumer(consumer), m_sKekParams(params)
 	{
-		if (encryptionAlgorithm != eKeyStoreEncryptAlgorithm::RsaOaepMgf1p) {
-			throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
-		}
-		else {
-			m_sKekParams.wrappingalgorithm = encryptionAlgorithm;
-		}
 		if (nullptr == m_pConsumer)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
-	}
 
-	CKeyStoreAccessRight::CKeyStoreAccessRight(PKeyStoreConsumer const& consumer, eKeyStoreEncryptAlgorithm const& encryptionAlgorithm)
-		:m_pConsumer(consumer), m_bNew(true)
-	{
-		if (encryptionAlgorithm != eKeyStoreEncryptAlgorithm::RsaOaepMgf1p) {
-			throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
-		} 
-		else{
-			m_sKekParams.wrappingalgorithm = encryptionAlgorithm;
+		if (params.m_eAlgorithm != eKeyStoreWrapAlgorithm::RSA_OAEP) {
+			throw CNMRException(NMR_ERROR_KEYSTOREUNSUPPORTEDALGORITHM);
 		}
-		if (nullptr == m_pConsumer)
-			throw CNMRException(NMR_ERROR_INVALIDPARAM);
-	}
 
-	CKeyStoreAccessRight::CKeyStoreAccessRight(PKeyStoreConsumer const & consumer, eKeyStoreEncryptAlgorithm const & encryptionAlgorithm, KEKPARAMS const & kekParams)
-	{
+		if (params.m_eMask != eKeyStoreMaskGenerationFunction::MGF1_SHA1
+			|| params.m_eMask != eKeyStoreMaskGenerationFunction::MGF1_SHA256) {
+			throw CNMRException(NMR_ERROR_KEYSTOREUNSUPPORTEDALGORITHM);
+		}
+
+		if (params.m_eDigest != eKeyStoreMessageDigest::SHA1
+			|| params.m_eDigest != eKeyStoreMessageDigest::SHA256)
+			throw CNMRException(NMR_ERROR_KEYSTOREUNSUPPORTEDALGORITHM);
 	}
 
 	KEKPARAMS CKeyStoreAccessRight::getKEKParams()
@@ -39,19 +29,5 @@ namespace NMR {
 	PKeyStoreConsumer CKeyStoreAccessRight::getConsumer()
 	{
 		return m_pConsumer;
-	}
-	eKeyStoreEncryptAlgorithm CKeyStoreAccessRight::getEncryptionAlgorithm()
-	{
-		return m_sKekParams.wrappingalgorithm;
-	}
-	CIPHERVALUE CKeyStoreAccessRight::getCipherValue() const {
-		return m_sCipherValue;
-	}
-	void CKeyStoreAccessRight::setCipherValue(CIPHERVALUE const & cipherValue)
-	{
-		m_sCipherValue = cipherValue;
-	}
-	bool CKeyStoreAccessRight::isNew() {
-		return m_bNew;
 	}
 }

@@ -4,24 +4,29 @@
 
 using namespace Lib3MF::Impl;
 
-NMR::PKeyStoreDecryptRight Lib3MF::Impl::CDecryptRight::decryptRight() const
-{
-	return m_DecryptRight;
+Lib3MF::Impl::CAccessRight::CAccessRight(NMR::PKeyStoreAccessRight ar) {
+	m_pAccessRight = ar;
 }
 
-Lib3MF::Impl::CDecryptRight::CDecryptRight(NMR::PKeyStoreDecryptRight dR)
-{
-	m_DecryptRight = dR;
+IConsumer * Lib3MF::Impl::CAccessRight::GetConsumer() {
+	return new CConsumer(m_pAccessRight->getConsumer());
 }
 
-IConsumer * Lib3MF::Impl::CDecryptRight::GetConsumer() {
-	return new CConsumer(m_DecryptRight->getConsumer());
+Lib3MF::eWrappingAlgorithm Lib3MF::Impl::CAccessRight::GetWrappingAlgorithm() {
+	NMR::eKeyStoreWrapAlgorithm ea = m_pAccessRight->getKEKParams().m_eAlgorithm;
+	return static_cast<Lib3MF::eWrappingAlgorithm>(ea);
 }
 
-Lib3MF::eEncryptionAlgorithm Lib3MF::Impl::CDecryptRight::GetEncryptionAlgorithm() {
-	NMR::eKeyStoreEncryptAlgorithm ea = m_DecryptRight->getEncryptionAlgorithm();
-	if (ea == NMR::eKeyStoreEncryptAlgorithm::RsaOaepMgf1p) {
-		return Lib3MF::eEncryptionAlgorithm::RsaOaepMgf1p;
-	}
-	return Lib3MF::eEncryptionAlgorithm::Aes256Gcm;
+Lib3MF::eMgfAlgorithm Lib3MF::Impl::CAccessRight::GetMgfAlgorithm() {
+	NMR::eKeyStoreMaskGenerationFunction mgf = m_pAccessRight->getKEKParams().m_eMask;
+	return static_cast<Lib3MF::eMgfAlgorithm>(mgf);
+}
+
+Lib3MF::eDigestMethod Lib3MF::Impl::CAccessRight::GetDigestMethod() {
+	NMR::eKeyStoreMessageDigest digest = m_pAccessRight->getKEKParams().m_eDigest;
+	return static_cast<Lib3MF::eDigestMethod>(digest);
+}
+
+NMR::PKeyStoreAccessRight Lib3MF::Impl::CAccessRight::accessRight() const {
+	return m_pAccessRight;
 }
