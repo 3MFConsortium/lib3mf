@@ -1,4 +1,4 @@
-#include "lib3mf_decryptright.hpp"
+#include "lib3mf_accessright.hpp"
 #include "lib3mf_interfaceexception.hpp"
 #include "lib3mf_consumer.hpp"
 
