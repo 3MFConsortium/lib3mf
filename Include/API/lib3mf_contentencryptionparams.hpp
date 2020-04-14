@@ -57,9 +57,9 @@ namespace Lib3MF {
 			void GetKey(Lib3MF_uint64 nByteDataBufferSize, Lib3MF_uint64 *pByteDataNeededCount, Lib3MF_uint8 *pByteDataBuffer);
 			void GetInitializationVector(Lib3MF_uint64 nByteDataBufferSize, Lib3MF_uint64 *pByteDataNeededCount, Lib3MF_uint8 *pByteDataBuffer);
 			void GetAuthenticationTag(Lib3MF_uint64 nByteDataBufferSize, Lib3MF_uint64 *pByteDataNeededCount, Lib3MF_uint8 *pByteDataBuffer);
-			void SetAuthenticationTag(Lib3MF_uint64 nByteDataBufferSize, const Lib3MF_uint8 *pByteDataBuffer);
+			void SetAuthenticationTag(Lib3MF_uint64 const nByteDataBufferSize, const Lib3MF_uint8 *pByteDataBuffer);
 			void GetAdditionalAuthenticationData(Lib3MF_uint64 nByteDataBufferSize, Lib3MF_uint64 *pByteDataNeededCount, Lib3MF_uint8 *pByteDataBuffer);
-			void SetAdditionalAuthenticationData(Lib3MF_uint64 nByteDataBufferSize, const Lib3MF_uint8 *pByteDataBuffer);
+			void SetAdditionalAuthenticationData(Lib3MF_uint64 const nByteDataBufferSize, const Lib3MF_uint8 *pByteDataBuffer);
 			std::string GetKeyUUID();
 		};
 	}
