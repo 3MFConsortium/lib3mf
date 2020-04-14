@@ -47,33 +47,35 @@ namespace NMR {
 	};
 	class CKeyStoreResourceData {
 		std::string m_sPath;
-		eKeyStoreEncryptAlgorithm m_EncryptionAlgorithm;
+		
+		eKeyStoreEncryptAlgorithm m_eAlgorithm;
 		nfBool m_bCompression;
-		CIPHERVALUE m_sCipherValue;
-		nfBool m_bOpen;
+		
+		std::vector<nfByte> m_iv;
+		std::vector<nfByte> m_tag;
+		std::vector<nfByte> m_aad;
+
 		nfUint64 m_nfHandle;
+
 		static nfUint64 s_nfHandleCount;
-		eResourceDataState m_eState;
-	
-		void initializeCipherValue();
+
 	public:
-		CKeyStoreResourceData(std::string const& path);
-		CKeyStoreResourceData(std::string const& path, eKeyStoreEncryptAlgorithm const& ea, nfBool const& compression);
+		CKeyStoreResourceData(std::string const& path, 
+			eKeyStoreEncryptAlgorithm alg,
+			bool compression,
+			std::vector<nfByte> const & iv,
+			std::vector<nfByte> const & tag,
+			std::vector<nfByte> const & aad);
+
 		eKeyStoreEncryptAlgorithm getEncryptionAlgorithm() const;
 		nfBool getCompression() const;
 		NMR::PPackageModelPath getPath() const;
 		nfUint64 getHandle() const;
 
 		nfBool empty() const;
-		CIPHERVALUE getCipherValue() const;
-		void setCipherValue(CIPHERVALUE const & cv);
-		void open(std::vector<nfByte> const & newKey);
 
-		void refreshIV(std::vector<nfByte> const &newIV);
-		void refreshTag(std::vector<nfByte> const & newTag);
-
-		bool isClosed() const;
-		bool isNew() const;
+		void setIv(std::vector<nfByte> const &newIV);
+		void setTag(std::vector<nfByte> const & newTag);
 	};
 	typedef std::shared_ptr<CKeyStoreResourceData> PKeyStoreResourceData;
 }

@@ -51,19 +51,19 @@ namespace Lib3MF {
 
 		class CResourceData : public virtual IResourceData, public virtual CBase {
 		private:
-			NMR::PKeyStoreResourceData m_ResourceData;
+			NMR::PKeyStoreResourceData m_pResourceData;
 		public:
 			CResourceData(NMR::PKeyStoreResourceData resourceData);
 
+
 			// Inherited via IResourceData
-			virtual IDecryptRight * AddDecryptRight(IConsumer * pConsumerInstance, const Lib3MF::eEncryptionAlgorithm eaInstance) override;
-			virtual Lib3MF_uint32 GetDecryptRightCount() override;
-			virtual IDecryptRight * GetDecryptRight(const Lib3MF_uint32 nDecryptRightIndex) override;
-			virtual IDecryptRight * FindDecryptRightByConsumer(IConsumer * pConsumerInstance) override;
-			virtual void RemoveDecrypt(IConsumer * pConsumertInstance) override;
-			virtual Lib3MF::eEncryptionAlgorithm GetEncryptionAlgorithm() override;
-			virtual Lib3MF::eCompression GetCompression() override;
-			virtual IPackagePart * GetPath() override;
+			IPackagePart * GetPath() override;
+
+			Lib3MF::eEncryptionAlgorithm GetEncryptionAlgorithm() override;
+
+			Lib3MF::eCompression GetCompression() override;
+
+			void GetAdditionalAuthenticationData(Lib3MF_uint64 nByteDataBufferSize, Lib3MF_uint64 * pByteDataNeededCount, Lib3MF_uint8 * pByteDataBuffer) override;
 		};
 	}
 }

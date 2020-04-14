@@ -11,20 +11,6 @@ namespace NMR {
 
 	nfUint64 CKeyStoreResourceData::s_nfHandleCount = 0;
 
-	void CKeyStoreResourceData::initializeCipherValue() {
-		m_sCipherValue.m_iv.resize(IV_SIZE);
-		m_sCipherValue.m_key.resize(KEY_SIZE);
-		m_sCipherValue.m_tag.resize(TAG_SIZE);
-	}
-
-	CKeyStoreResourceData::CKeyStoreResourceData(std::string const & path) {
-		m_sPath = path;
-		m_EncryptionAlgorithm = eKeyStoreEncryptAlgorithm::Aes256Gcm;
-		m_nfHandle = ++s_nfHandleCount;
-		m_eState = eResourceDataState::NEW;
-		initializeCipherValue();
-	}
-
 	CKeyStoreResourceData::CKeyStoreResourceData(std::string const & path, eKeyStoreEncryptAlgorithm const & ea, nfBool const & compression)
 	{
 		m_sPath = path;
@@ -58,11 +44,11 @@ namespace NMR {
 		return m_DecryptRights.empty();
 	}
 
-	CIPHERVALUE CKeyStoreResourceData::getCipherValue() const {
+	CEKPARAMS CKeyStoreResourceData::getCipherValue() const {
 		return m_sCipherValue;
 	}
 
-	void CKeyStoreResourceData::setCipherValue(CIPHERVALUE const & cv) {
+	void CKeyStoreResourceData::setCipherValue(CEKPARAMS const & cv) {
 		m_sCipherValue = cv;
 		m_eState = eResourceDataState::CLOSED;
 	}
