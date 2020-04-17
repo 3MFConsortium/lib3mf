@@ -1239,7 +1239,7 @@
 
 	<class name="ResourceDataGroup">
 		<method name="GetKeyUUID" description="Sets the resourcedatagroup keyuuid">
-			<param name="UUID" type="string" pass="in" description="The new resourcedatagroup keyuuid."/>
+			<param name="UUID" type="string" pass="return" description="The new resourcedatagroup keyuuid."/>
 		</method>
 		<method name="AddAccessRight" description="Add accessright to resourcedatagroup element">
 			<param name="Consumer" type="class" class="Consumer" pass="in" description="The Consumer reference"/>

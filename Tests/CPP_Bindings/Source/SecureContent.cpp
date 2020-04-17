@@ -131,6 +131,9 @@ namespace Lib3MF {
 
 		auto dataGroup = keyStore->AddResourceDataGroup();
 
+		std::string dguuid = dataGroup->GetKeyUUID();
+		ASSERT_FALSE(dguuid.empty());
+
 		keyStore->AddResourceData(dataGroup.get(), part1.get(), Lib3MF::eEncryptionAlgorithm::AES256_GCM, Lib3MF::eCompression::Deflate, std::vector<Lib3MF_uint8>());
 
 		std::string path2 = "/3D/nonrootmodel2.model";
