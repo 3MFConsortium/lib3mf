@@ -5,11 +5,6 @@
 
 using namespace Lib3MF::Impl;
 
-NMR::PKeyStoreConsumer Lib3MF::Impl::CConsumer::consumer() const
-{
-	return m_Consumer;
-}
-
 Lib3MF::Impl::CConsumer::CConsumer(NMR::PKeyStoreConsumer const & consumer) {
 	m_Consumer = consumer;
 }

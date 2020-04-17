@@ -52,7 +52,9 @@ namespace Lib3MF {
 		private:
 			NMR::PKeyStoreConsumer m_Consumer;
 		public:
-			NMR::PKeyStoreConsumer consumer() const;
+			inline NMR::PKeyStoreConsumer consumer() const {
+				return m_Consumer;
+			}
 			CConsumer(NMR::PKeyStoreConsumer const & consumer);
 			// Inherited via IConsumer
 			std::string GetConsumerID() override;

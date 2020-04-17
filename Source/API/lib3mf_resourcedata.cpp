@@ -28,7 +28,10 @@ namespace Lib3MF {
 
 
 		void CResourceData::GetAdditionalAuthenticationData(Lib3MF_uint64 nByteDataBufferSize, Lib3MF_uint64 * pByteDataNeededCount, Lib3MF_uint8 * pByteDataBuffer) {
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+			NMR::nfUint64 bytesNeeded = m_pResourceData->getAad(nByteDataBufferSize, pByteDataBuffer);
+			if (nByteDataBufferSize < bytesNeeded) {
+				*pByteDataNeededCount = bytesNeeded;
+			}
 		}
 	}
 }

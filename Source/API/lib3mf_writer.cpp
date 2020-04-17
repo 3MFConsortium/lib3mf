@@ -43,7 +43,6 @@ Abstract: This is a stub class definition of CWriter
 #include "Model/Classes/NMR_KeyStoreConsumer.h"
 #include "Model/Classes/NMR_KeyStoreResourceData.h"
 #include "API/lib3mf_consumer.hpp"
-#include "lib3mf_cipherdata.hpp"
 
 
 using namespace Lib3MF::Impl;
@@ -191,7 +190,7 @@ void CWriter::SetDecimalPrecision(const Lib3MF_uint32 nDecimalPrecision)
 	m_pWriter->SetDecimalPrecision(nDecimalPrecision);
 }
 
-void Lib3MF::Impl::CWriter::AddKeyWrappingCallback(const Lib3MF::KeyWrappingCallback pTheCallback, const std::string &sConsumerID, const Lib3MF_pvoid pUserData) {
+void Lib3MF::Impl::CWriter::AddKeyWrappingCallback(const std::string & sConsumerID, const Lib3MF::KeyWrappingCallback pTheCallback, const Lib3MF_pvoid pUserData){
 	NMR::KeyWrappingDescriptor descriptor;
 	descriptor.m_sKekDecryptData.m_pUserData = pUserData;
 	descriptor.m_fnWrap =
@@ -203,10 +202,10 @@ void Lib3MF::Impl::CWriter::AddKeyWrappingCallback(const Lib3MF::KeyWrappingCall
 		__NMRASSERT(nullptr != consumer);
 		NMR::PKeyStoreResourceData resourceData = keystore->findResourceDataByPath(ctx.m_sResourcePath);
 		__NMRASSERT(nullptr != resourceData);
-		NMR::PKeyStoreDecryptRight decryptRight = resourceData->findDecryptRightByConsumer(consumer);
-		__NMRASSERT(nullptr != decryptRight);
+		NMR::PKeyStoreDecryptRight accessRight = resourceData->findDecryptRightByConsumer(consumer);
+		__NMRASSERT(nullptr != accessRight);
 
-		eEncryptionAlgorithm algorithm = (decryptRight->getEncryptionAlgorithm() == NMR::eKeyStoreEncryptAlgorithm::RsaOaepMgf1p)
+		eEncryptionAlgorithm algorithm = (accessRight->getEncryptionAlgorithm() == NMR::eKeyStoreEncryptAlgorithm::RsaOaepMgf1p)
 			? eEncryptionAlgorithm::RsaOaepMgf1p : eEncryptionAlgorithm::Aes256Gcm;
 
 		NMR::nfUint64 result = 0;
@@ -245,7 +244,7 @@ void Lib3MF::Impl::CWriter::SetContentEncryptionCallback(const Lib3MF::ContentEn
 		__NMRASSERT(ctx.m_sCipherValue.m_tag.size() == sizeof(cipherDataValue.m_Tag));
 		std::copy(ctx.m_sCipherValue.m_tag.begin(), ctx.m_sCipherValue.m_tag.end(), cipherDataValue.m_Tag);
 
-		std::shared_ptr<CCipherData> pCipherData = std::make_shared<CCipherData>(cipherDataValue, ctx.m_nfHandler);
+		std::shared_ptr<CContentEncryptionParams> pCipherData = std::make_shared<CContentEncryptionParams>(cipherDataValue, ctx.m_nfHandler);
 		IBase * pBaseCipherData(nullptr);
 		pBaseCipherData = pCipherData.get();
 		Lib3MF_CipherData handle = pBaseCipherData;

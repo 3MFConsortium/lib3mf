@@ -64,6 +64,10 @@ namespace Lib3MF {
 			Lib3MF::eCompression GetCompression() override;
 
 			void GetAdditionalAuthenticationData(Lib3MF_uint64 nByteDataBufferSize, Lib3MF_uint64 * pByteDataNeededCount, Lib3MF_uint8 * pByteDataBuffer) override;
+
+			inline NMR::PKeyStoreResourceData resourceData() const {
+				return m_pResourceData;
+			}
 		};
 	}
 }

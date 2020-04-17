@@ -48,6 +48,10 @@ eLib3MFEncryptionAlgorithm translateEncryptionAlgorithm(const NMR::eKeyStoreEncr
 
 NMR::eKeyStoreEncryptAlgorithm translateEncryptionAlgorithm(const eLib3MFEncryptionAlgorithm algorithm);
 
+eLib3MFWrappingAlgorithm translateWrappingAlgorithm(const NMR::eKeyStoreWrapAlgorithm algorithm);
+
+NMR::eKeyStoreWrapAlgorithm translateWrappingAlgorithm(const eLib3MFWrappingAlgorithm algorithm);
+
 eLib3MFCompression translateCompression(bool compression);
 
 bool translateCompression(const eLib3MFCompression compression);

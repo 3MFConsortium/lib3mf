@@ -24,13 +24,14 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CContentEncryptionParams
+Abstract: This is the class declaration of CResourceDataGroup
 
 */
 
 
-#ifndef __LIB3MF_CIPHERDATA
-#define __LIB3MF_CIPHERDATA
+#ifndef __LIB3MF_RESOURCEDATAGROUP
+#define __LIB3MF_RESOURCEDATAGROUP
+
 
 #include "lib3mf_interfaces.hpp"
 #include "lib3mf_base.hpp"
@@ -39,36 +40,35 @@ Abstract: This is the class declaration of CContentEncryptionParams
 #pragma warning(disable : 4250)
 #endif
 
+#include "Model/Classes/NMR_KeyStoreResourceDataGroup.h"
+#include "Model/Classes/NMR_KeyStore.h"
 
-#include "Model/Classes/NMR_KeyStoreCEKParams.h"
-// Include custom headers here.
 namespace Lib3MF {
 	namespace Impl {
 
 		/*************************************************************************************************************************
-		Class declaration of CContentEncryptionParams
+		Class declaration of CResourceData
 		**************************************************************************************************************************/
 
-		class CContentEncryptionParams : public virtual IContentEncryptionParams, public virtual CBase {
-		private:
-			NMR::PKeyStoreCEKParams m_pParams;
+		class CResourceDataGroup : public virtual IResourceDataGroup, public virtual CBase {
+			NMR::PKeyStoreResourceDataGroup m_pDataGroup;
 		public:
-			CContentEncryptionParams(NMR::PKeyStoreCEKParams const & p);
-			// Inherited via IContentEncryptionParams
-			Lib3MF_uint64 GetDescriptor();
-			Lib3MF::eEncryptionAlgorithm GetEncryptionAlgorithm();
-			void GetKey(Lib3MF_uint64 nByteDataBufferSize, Lib3MF_uint64 *pByteDataNeededCount, Lib3MF_uint8 *pByteDataBuffer);
-			void GetInitializationVector(Lib3MF_uint64 nByteDataBufferSize, Lib3MF_uint64 *pByteDataNeededCount, Lib3MF_uint8 *pByteDataBuffer);
-			void GetAuthenticationTag(Lib3MF_uint64 nByteDataBufferSize, Lib3MF_uint64 *pByteDataNeededCount, Lib3MF_uint8 *pByteDataBuffer);
-			void SetAuthenticationTag(Lib3MF_uint64 const nByteDataBufferSize, const Lib3MF_uint8 *pByteDataBuffer);
-			void GetAdditionalAuthenticationData(Lib3MF_uint64 nByteDataBufferSize, Lib3MF_uint64 *pByteDataNeededCount, Lib3MF_uint8 *pByteDataBuffer);
-			void SetAdditionalAuthenticationData(Lib3MF_uint64 const nByteDataBufferSize, const Lib3MF_uint8 *pByteDataBuffer);
-			std::string GetKeyUUID();
+			CResourceDataGroup(NMR::PKeyStoreResourceDataGroup const & dg);
 
-			inline NMR::PKeyStoreCEKParams params() const {
-				return m_pParams;
+			// Inherited via IResourceDataGroup
+			virtual IAccessRight * AddAccessRight(IConsumer * pConsumer, const Lib3MF::eWrappingAlgorithm eWrappingAlgorithm, const Lib3MF::eMgfAlgorithm eMgfAlgorithm, const Lib3MF::eDigestMethod eDigestMethod) override;
+			virtual IAccessRight * FindAccessRightByConsumer(IConsumer * pConsumerInstance) override;
+			virtual void RemoveAccessRight(IConsumer * pConsumerInstance) override;
+			virtual std::string GetKeyUUID() override;
+
+
+			inline NMR::PKeyStoreResourceDataGroup resourceDataGroup() const {
+				return m_pDataGroup;
 			}
+
 		};
 	}
 }
-#endif
+
+
+#endif // !__LIB3MF_RESOURCEDATAGROUP

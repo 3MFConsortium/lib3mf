@@ -1160,7 +1160,7 @@
 	
 	<class name="AccessRight">
 		<method name="GetConsumer" description="Gets the consumer associated with this access right">
-			<param name="COnsumer" type="class" class="Consumer" pass="return" description="The consumer instance"/>
+			<param name="Consumer" type="class" class="Consumer" pass="return" description="The consumer instance"/>
 		</method>
 		<method name="GetWrappingAlgorithm" description="Gets the associated encryption algorithm">
 			<param name="Algorithm" type="enum" class="WrappingAlgorithm" pass="return" description="The algorithm used for the key in this accessright"/>
@@ -1264,7 +1264,7 @@
 			<param name="Consumer" type="class" class="Consumer" pass="return" description="The consumer instance"/>
 		</method> 
 		<method name="GetConsumerCount" description="Gets the number of consumers in the keystore">
-			<param name="Count" type="uint32" pass="return" description="The consumer count"/>
+			<param name="Count" type="uint64" pass="return" description="The consumer count"/>
 		</method>
 		<method name="GetConsumer" description="Get a consumer from the keystore">
 			<param name="ConsumerIndex" type="uint64" pass="in" description="The index of the consumer"/>
@@ -1278,7 +1278,7 @@
 			<param name="Consumer" type="optionalclass" class="Consumer" pass="return" description="The consumer instance"/>
 		</method>
 		<method name="GetResourceDataGroupCount" description="Gets the number of resource data group in the keysore">
-			<param name="Count" type="uint32" pass="return" description="The number of resource data available"/>
+			<param name="Count" type="uint64" pass="return" description="The number of resource data available"/>
 		</method>
 		<method name="AddResourceDataGroup" description="Adds a resource data group into the keystore.">
 			<param name="ResourceDataGroup" type="class" class="ResourceDataGroup" pass="return" description="The resource data group instance"/>
@@ -1310,7 +1310,7 @@
 			<param name="ResourceData" type="optionalclass" class="ResourceData" pass="return" description="The resource data instance"/>
 		</method>
 		<method name="GetResourceDataCount" description="Gets the number of resource data in the keysore">
-			<param name="Count" type="uint32" pass="return" description="The number of resource data available"/>
+			<param name="Count" type="uint64" pass="return" description="The number of resource data available"/>
 		</method>
 		<method name="GetResourceData" description="Gets a resource data">
 			<param name="ResourceDataIndex" type="uint64" pass="in" description="The index of the resource data"/>

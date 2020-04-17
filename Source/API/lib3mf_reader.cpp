@@ -30,7 +30,7 @@ Abstract: This is a stub class definition of CReader
 
 #include "lib3mf_reader.hpp"
 #include "lib3mf_interfaceexception.hpp"
-#include "lib3mf_cipherdata.hpp"
+
 // Include custom headers here.
 #include "Common/Platform/NMR_Platform.h"
 #include "Common/Platform/NMR_ImportStream_Shared_Memory.h"
@@ -190,10 +190,10 @@ void Lib3MF::Impl::CReader::AddKeyWrappingCallback(const Lib3MF::KeyWrappingCall
 		__NMRASSERT(nullptr != consumer);
 		NMR::PKeyStoreResourceData resourceData = keystore->findResourceDataByPath(ctx.m_sResourcePath);
 		__NMRASSERT(nullptr != resourceData);
-		NMR::PKeyStoreDecryptRight decryptRight = resourceData->findDecryptRightByConsumer(consumer);
-		__NMRASSERT(nullptr != decryptRight);
+		NMR::PKeyStoreDecryptRight accessRight = resourceData->findDecryptRightByConsumer(consumer);
+		__NMRASSERT(nullptr != accessRight);
 
-		eEncryptionAlgorithm algorithm = (decryptRight->getEncryptionAlgorithm() == NMR::eKeyStoreEncryptAlgorithm::RsaOaepMgf1p) 
+		eEncryptionAlgorithm algorithm = (accessRight->getEncryptionAlgorithm() == NMR::eKeyStoreEncryptAlgorithm::RsaOaepMgf1p) 
 			? eEncryptionAlgorithm::RsaOaepMgf1p : eEncryptionAlgorithm::Aes256Gcm;
 
 		NMR::nfUint64 result = 0;
@@ -230,7 +230,7 @@ void Lib3MF::Impl::CReader::SetContentEncryptionCallback(const Lib3MF::ContentEn
 			throw NMR::CNMRException(NMR_ERROR_INVALIDBUFFERSIZE);
 		std::copy(ctx.m_sCipherValue.m_tag.begin(), ctx.m_sCipherValue.m_tag.end(), cipherDataValue.m_Tag);
 
-		std::shared_ptr<CCipherData> pCipherData = std::make_shared<CCipherData>(cipherDataValue, ctx.m_nfHandler);
+		std::shared_ptr<CContentEncryptionParams> pCipherData = std::make_shared<CContentEncryptionParams>(cipherDataValue, ctx.m_nfHandler);
 		IBase * pBaseCipherData(nullptr);
 		pBaseCipherData = pCipherData.get();
 		Lib3MF_CipherData handle = pBaseCipherData;

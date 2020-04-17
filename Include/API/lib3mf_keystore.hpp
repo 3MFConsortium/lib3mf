@@ -77,7 +77,7 @@ namespace Lib3MF {
 			// Inherited via IKeyStore
 			IConsumer * AddConsumer(const std::string & sConsumerID, const std::string & sKeyID, const std::string & sKeyValue) override;
 
-			Lib3MF_uint32 GetConsumerCount() override;
+			Lib3MF_uint64 GetConsumerCount() override;
 
 			IConsumer * GetConsumer(const Lib3MF_uint64 nConsumerIndex) override;
 
@@ -89,15 +89,25 @@ namespace Lib3MF {
 			
 			void SetUUID(const std::string & sUUID) override;
 
-
-			// Inherited via IKeyStore
-			virtual Lib3MF_uint32 GetResourceDataGroupCount() override;
+			virtual Lib3MF_uint64 GetResourceDataGroupCount() override;
 
 			virtual IResourceDataGroup * GetResourceDataGroup(const Lib3MF_uint64 nResourceDataIndex) override;
 
-			virtual IResourceDataGroup * AddResourceDataGroup(IPackagePart * pPartPath, const Lib3MF::eEncryptionAlgorithm eEncryptionAlgorithm, const Lib3MF::eCompression eCompression) override;
+			virtual IResourceDataGroup * AddResourceDataGroup() override;
 
-			virtual IResourceDataGroup * FindResourceDataGroupByUUID(const std::string & sUUID) override;
+			virtual void RemoveResourceDataGroup(IResourceDataGroup * pTheResourceDataGroup) override;
+
+			virtual Lib3MF::Impl::IResourceDataGroup * FindResourceDataGroup(Lib3MF::Impl::IPackagePart *pPartPath);
+
+			virtual IResourceData * AddResourceData(IResourceDataGroup* pResourceDataGroup, IPackagePart* pPartPath, const Lib3MF::eEncryptionAlgorithm eAlgorithm, const Lib3MF::eCompression eCompression, const Lib3MF_uint64 nAdditionalAuthenticationDataBufferSize, const Lib3MF_uint8 * pAdditionalAuthenticationDataBuffer);
+
+			virtual void RemoveResourceData(Lib3MF::Impl::IResourceData *pResourceData);
+
+			virtual Lib3MF_uint64 GetResourceDataCount();
+
+			virtual Lib3MF::Impl::IResourceData * GetResourceData(const Lib3MF_uint64 nResourceDataIndex);
+
+			virtual IResourceData * FindResourceData(IPackagePart * pResourcePath) override;
 
 		};
 

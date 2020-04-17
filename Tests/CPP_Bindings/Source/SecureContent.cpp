@@ -147,7 +147,7 @@ namespace Lib3MF {
 	}
 
 
-	TEST_F(SecureContentT, ManageDecryptRight) {
+	TEST_F(SecureContentT, ManageAccessRight) {
 		Lib3MF::PKeyStore keyStore = model->GetKeyStore();
 		ASSERT_TRUE(nullptr != keyStore);
 
@@ -283,7 +283,7 @@ namespace Lib3MF {
 		readUnencryptedKeyStore();
 		auto keyStore = model->GetKeyStore();
 		ASSERT_TRUE(keyStore != nullptr);
-		const int consumerCount = keyStore->GetConsumerCount();
+		const size_t consumerCount = keyStore->GetConsumerCount();
 		for (int i = 0; i < consumerCount; ++i) {
 			PConsumer consumer = keyStore->GetConsumer(i);
 
@@ -310,7 +310,7 @@ namespace Lib3MF {
 		readUnencryptedKeyStore();
 		auto keyStore = model->GetKeyStore();
 		ASSERT_TRUE(keyStore != nullptr);
-		const int resourceDataCount = keyStore->GetResourceDataCount();
+		const size_t resourceDataCount = keyStore->GetResourceDataCount();
 
 		ASSERT_TRUE(resourceDataCount > 0);
 

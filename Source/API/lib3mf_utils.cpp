@@ -59,21 +59,28 @@ sLib3MFTransform Lib3MF::MatrixToTransform(const NMR::NMATRIX3 matrix)
 
 
 eLib3MFEncryptionAlgorithm Lib3MF::translateEncryptionAlgorithm(const NMR::eKeyStoreEncryptAlgorithm algorithm) {
-	if (NMR::eKeyStoreEncryptAlgorithm::Aes256Gcm == algorithm)
-		return eLib3MFEncryptionAlgorithm::Aes256Gcm;
-	else if (NMR::eKeyStoreEncryptAlgorithm::RsaOaepMgf1p == algorithm)
-		return eLib3MFEncryptionAlgorithm::RsaOaepMgf1p;
-	else
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	if (NMR::eKeyStoreEncryptAlgorithm::AES256_GCM == algorithm)
+		return eLib3MFEncryptionAlgorithm::AES256_GCM;
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 NMR::eKeyStoreEncryptAlgorithm Lib3MF::translateEncryptionAlgorithm(const eLib3MFEncryptionAlgorithm algorithm) {
-	if (eLib3MFEncryptionAlgorithm::Aes256Gcm == algorithm)
-		return NMR::eKeyStoreEncryptAlgorithm::Aes256Gcm;
-	else if (eLib3MFEncryptionAlgorithm::RsaOaepMgf1p == algorithm)
-		return NMR::eKeyStoreEncryptAlgorithm::RsaOaepMgf1p;
-	else
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	if (eLib3MFEncryptionAlgorithm::AES256_GCM == algorithm)
+		return NMR::eKeyStoreEncryptAlgorithm::AES256_GCM;
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
+
+eLib3MFWrappingAlgorithm Lib3MF::translateWrappingAlgorithm(const NMR::eKeyStoreWrapAlgorithm algorithm) {
+	if (NMR::eKeyStoreWrapAlgorithm::RSA_OAEP == algorithm)
+		return eLib3MFWrappingAlgorithm::RSA_OAEP;
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
+NMR::eKeyStoreWrapAlgorithm Lib3MF::translateWrappingAlgorithm(const eLib3MFWrappingAlgorithm algorithm) {
+	if (eLib3MFWrappingAlgorithm::RSA_OAEP == algorithm)
+		return NMR::eKeyStoreWrapAlgorithm::RSA_OAEP;
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
+
+
 
 eLib3MFCompression Lib3MF::translateCompression(bool compression) {
 	if (compression)
