@@ -50,6 +50,7 @@ Source/API/lib3mf_contentencryptionparams.cpp
 Source/API/lib3mf_accessright.cpp
 Source/API/lib3mf_consumer.cpp
 Source/API/lib3mf_resourcedata.cpp
+Source/API/lib3mf_resourcedatagroup.cpp
 Source/API/lib3mf_keystore.cpp
 Source/API/lib3mf_model.cpp
 Source/API/lib3mf_object.cpp
@@ -141,6 +142,7 @@ Source/Model/Classes/NMR_ModelSliceStack.cpp
 Source/Model/Classes/NMR_KeyStore.cpp
 Source/Model/Classes/NMR_KeyStoreConsumer.cpp
 Source/Model/Classes/NMR_KeyStoreAccessRight.cpp
+Source/Model/Classes/NMR_KeyStoreFactory.cpp
 Source/Model/Classes/NMR_KeyStoreResourceData.cpp
 Source/Model/Classes/NMR_KeyStoreResourceDataGroup.cpp
 Source/Model/Classes/NMR_KeyStoreCEKParams.cpp
