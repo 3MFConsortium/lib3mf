@@ -129,12 +129,14 @@ namespace Lib3MF {
 		std::string path1 = "/3D/nonrootmodel1.model";
 		auto part1 = model->FindOrCreatePackagePart(path1);
 
-		keyStore->AddResourceData(part1.get(), Lib3MF::eEncryptionAlgorithm::Aes256Gcm, Lib3MF::eCompression::Deflate);
+		auto dataGroup = keyStore->AddResourceDataGroup();
+
+		keyStore->AddResourceData(dataGroup.get(), part1.get(), Lib3MF::eEncryptionAlgorithm::AES256_GCM, Lib3MF::eCompression::Deflate, std::vector<Lib3MF_uint8>());
 
 		std::string path2 = "/3D/nonrootmodel2.model";
 		auto part2 = model->FindOrCreatePackagePart(path2);
 
-		keyStore->AddResourceData(part2.get(), Lib3MF::eEncryptionAlgorithm::Aes256Gcm, Lib3MF::eCompression::None);
+		keyStore->AddResourceData(dataGroup.get(), part2.get(), Lib3MF::eEncryptionAlgorithm::AES256_GCM, Lib3MF::eCompression::Deflate, std::vector<Lib3MF_uint8>());
 
 		ASSERT_EQ(2, keyStore->GetResourceDataCount());
 		ASSERT_EQ(path1, keyStore->GetResourceData(0)->GetPath()->Get());
@@ -149,42 +151,48 @@ namespace Lib3MF {
 		std::string path1 = "/3D/nonrootmodel1.model";
 		auto part1 = model->FindOrCreatePackagePart(path1);
 
-		keyStore->AddResourceData(part1.get(), Lib3MF::eEncryptionAlgorithm::Aes256Gcm, Lib3MF::eCompression::Deflate);
+		auto dataGroup1 = keyStore->AddResourceDataGroup();
+
+		keyStore->AddResourceData(dataGroup1.get(), part1.get(), Lib3MF::eEncryptionAlgorithm::AES256_GCM, Lib3MF::eCompression::Deflate, std::vector<Lib3MF_uint8>());
 
 		std::string path2 = "/3D/nonrootmodel2.model";
 		auto part2 = model->FindOrCreatePackagePart(path2);
 
-		keyStore->AddResourceData(part2.get(), Lib3MF::eEncryptionAlgorithm::Aes256Gcm, Lib3MF::eCompression::None);
+		auto dataGroup2 = keyStore->AddResourceDataGroup();
+
+		keyStore->AddResourceData(dataGroup2.get(), part2.get(), Lib3MF::eEncryptionAlgorithm::AES256_GCM, Lib3MF::eCompression::Deflate, std::vector<Lib3MF_uint8>());
 
 		Lib3MF::PConsumer consumer1 = keyStore->AddConsumer("consumerId1", "consumerKeyId1", "consumerKeyValue1");
 		Lib3MF::PConsumer consumer2 = keyStore->AddConsumer("consumerId2", "consumerKeyId2", "consumerKeyValue2");
 
-		ASSERT_EQ(2, keyStore->GetConsumerCount());
-		ASSERT_EQ("consumerId1", keyStore->GetConsumer(0)->GetConsumerID());
-		ASSERT_EQ("consumerId2", keyStore->GetConsumer(1)->GetConsumerID());
-
 		//Test add decrypt right to different resource data
 
-		keyStore->GetResourceData(0)->AddDecryptRight(consumer1.get(), Lib3MF::eEncryptionAlgorithm::RsaOaepMgf1p);
-		keyStore->GetResourceData(1)->AddDecryptRight(consumer2.get(), Lib3MF::eEncryptionAlgorithm::RsaOaepMgf1p);
-				
-		ASSERT_EQ(1, keyStore->GetResourceData(0)->GetDecryptRightCount());
-		ASSERT_EQ(consumer1->GetConsumerID(), keyStore->GetResourceData(0)->GetDecryptRight(0)->GetConsumer()->GetConsumerID());
-		ASSERT_EQ(Lib3MF::eEncryptionAlgorithm::RsaOaepMgf1p, keyStore->GetResourceData(0)->GetDecryptRight(0)->GetEncryptionAlgorithm());
-		
-		ASSERT_EQ(1, keyStore->GetResourceData(1)->GetDecryptRightCount());
-		ASSERT_EQ(consumer2->GetConsumerID(), keyStore->GetResourceData(1)->GetDecryptRight(0)->GetConsumer()->GetConsumerID());
-		ASSERT_EQ(Lib3MF::eEncryptionAlgorithm::RsaOaepMgf1p, keyStore->GetResourceData(1)->GetDecryptRight(0)->GetEncryptionAlgorithm());
+		dataGroup1->AddAccessRight(consumer1.get(), eWrappingAlgorithm::RSA_OAEP, eMgfAlgorithm::MGF1_SHA1, eDigestMethod::SHA1);
+		dataGroup2->AddAccessRight(consumer2.get(), eWrappingAlgorithm::RSA_OAEP, eMgfAlgorithm::MGF1_SHA256, eDigestMethod::SHA256);
+
+		auto accessRight1 = keyStore->GetResourceDataGroup(0)->FindAccessRightByConsumer(consumer1.get());
+		ASSERT_NE(accessRight1, nullptr);
+		ASSERT_EQ(consumer1->GetConsumerID(), accessRight1->GetConsumer()->GetConsumerID());
+		ASSERT_EQ(Lib3MF::eWrappingAlgorithm::RSA_OAEP, accessRight1->GetWrappingAlgorithm());
+		ASSERT_EQ(Lib3MF::eMgfAlgorithm::MGF1_SHA1, accessRight1->GetMgfAlgorithm());
+		ASSERT_EQ(Lib3MF::eDigestMethod::SHA1, accessRight1->GetDigestMethod());
+
+		auto accessRight2 = keyStore->GetResourceDataGroup(1)->FindAccessRightByConsumer(consumer2.get());
+		ASSERT_NE(accessRight2, nullptr);
+		ASSERT_EQ(consumer1->GetConsumerID(), accessRight2->GetConsumer()->GetConsumerID());
+		ASSERT_EQ(Lib3MF::eWrappingAlgorithm::RSA_OAEP, accessRight2->GetWrappingAlgorithm());
+		ASSERT_EQ(Lib3MF::eMgfAlgorithm::MGF1_SHA256, accessRight2->GetMgfAlgorithm());
+		ASSERT_EQ(Lib3MF::eDigestMethod::SHA256, accessRight2->GetDigestMethod());
+
+		//we can't find access right for consumer 1 on the second resource data group
+		auto notFound = keyStore->GetResourceDataGroup(1)->FindAccessRightByConsumer(consumer1.get());
+		ASSERT_EQ(notFound, nullptr);
 
 		//Test remove decrypt right from resource data using a consumer
-		keyStore->GetResourceData(0)->RemoveDecrypt(consumer1.get());
+		keyStore->GetResourceDataGroup(0)->RemoveAccessRight(consumer1.get());
 
-		ASSERT_EQ(0, keyStore->GetResourceData(0)->GetDecryptRightCount());
-		
-		//Test remove consumer that should also delete every decrypt right associated 
-		keyStore->RemoveConsumer(consumer2.get());
-		ASSERT_EQ(1, keyStore->GetConsumerCount());
-		ASSERT_EQ(0, keyStore->GetResourceData(1)->GetDecryptRightCount());
+		notFound = keyStore->GetResourceDataGroup(0)->FindAccessRightByConsumer(consumer1.get());
+		ASSERT_EQ(notFound, nullptr);
 	}
 
 
@@ -247,8 +255,8 @@ namespace Lib3MF {
 		reader3MF->GetWarning(0, iWarning);
 		ASSERT_EQ(0x80F1, iWarning);
 
-		// NMR_ERROR_KEYSTOREINVALIDENCRYPTIONALGORITHM 
-		// invalid encryptionalgorithm attribute in ResourceData
+		// NMR_ERROR_KEYSTOREINVALIDALGORITHM 
+		// invalid encryptionalgorithm attribute in kekparams
 		reader3MF->GetWarning(1, iWarning);
 		ASSERT_EQ(0x80F7, iWarning);
 
@@ -257,8 +265,8 @@ namespace Lib3MF {
 		reader3MF->GetWarning(2, iWarning);
 		ASSERT_EQ(0x80F8, iWarning);
 
-		// NMR_ERROR_KEYSTOREINVALIDENCRYPTIONALGORITHM
-		// invalid encryptionalgorithm attribute in DecryptRight
+		// NMR_ERROR_KEYSTOREINVALIDALGORITHM
+		// invalid encryptionalgorithm attribute in cekparams
 		reader3MF->GetWarning(3, iWarning);
 		ASSERT_EQ(0x80F7, iWarning);
 
@@ -303,46 +311,22 @@ namespace Lib3MF {
 
 		ASSERT_TRUE(resourceDataCount > 0);
 
-		try {
-			PResourceData resourceDataNotFound = keyStore->FindResourceData("does not exist");
-			ASSERT_FALSE(true);
-		} catch (ELib3MFException const & e) {
-			ASSERT_EQ(e.getErrorCode(), LIB3MF_ERROR_KEYSTORERESOURCEDATANOTFOUND);
-		}
+		PPackagePart newPart = model->FindOrCreatePackagePart("/3D/newpart.model");
+		PResourceData resourceDataNotFound = keyStore->FindResourceData(newPart.get());
+		ASSERT_TRUE(nullptr == resourceDataNotFound);
 
 		for (int i = 0; i < resourceDataCount; ++i) {
 			PResourceData resourceData = keyStore->GetResourceData(i);
 			ASSERT_TRUE(resourceData != nullptr);
 
-			PResourceData resourceDataFound = keyStore->FindResourceData(resourceData->GetPath()->Get());
+			PResourceData resourceDataFound = keyStore->FindResourceData(resourceData->GetPath().get());
 			ASSERT_TRUE(resourceDataFound != nullptr);
 
 			ASSERT_EQ(resourceData->GetPath()->Get(), resourceDataFound->GetPath()->Get());
 
-			ASSERT_EQ(Lib3MF::eEncryptionAlgorithm::Aes256Gcm, resourceData->GetEncryptionAlgorithm());
+			ASSERT_EQ(Lib3MF::eEncryptionAlgorithm::AES256_GCM, resourceData->GetEncryptionAlgorithm());
 			ASSERT_EQ(Lib3MF::eCompression::None, resourceData->GetCompression());
 			ASSERT_EQ("/3D/3dexternal.model", resourceData->GetPath()->Get());
-
-			int inexistantDecrypt = 9999;
-			try {
-				PDecryptRight invalidDecryptRight = resourceData->GetDecryptRight(inexistantDecrypt);
-				ASSERT_FALSE(true);
-			}
-			catch (ELib3MFException const & e) {
-				ASSERT_EQ(e.getErrorCode(), LIB3MF_ERROR_INVALIDPARAM);
-			}
-			
-
-			int decryptRightCount = resourceData->GetDecryptRightCount();
-			ASSERT_TRUE(decryptRightCount > 0);
-			for (int i = 0; i < decryptRightCount; ++i) {
-				PDecryptRight decryptRight = resourceData->GetDecryptRight(i);
-				ASSERT_TRUE(decryptRight != nullptr);
-				PConsumer consumer = decryptRight->GetConsumer();
-				ASSERT_TRUE(consumer != nullptr);
-				
-				ASSERT_EQ(Lib3MF::eEncryptionAlgorithm::RsaOaepMgf1p, decryptRight->GetEncryptionAlgorithm());
-			}
 		}
 	}
 
@@ -350,17 +334,15 @@ namespace Lib3MF {
 		std::map<Lib3MF_uint64, Lib3MF_uint64> context;
 
 		static void testDEKCallback(
-			Lib3MF::eEncryptionAlgorithm algorithm,
-			Lib3MF_CipherData cipherData,
+			Lib3MF_ContentEncryptionParams params,
 			Lib3MF_uint64 inSize,
 			const Lib3MF_uint8 * inBuffer,
 			const Lib3MF_uint64 outSize,
 			Lib3MF_uint64 * outNeededSize,
 			Lib3MF_uint8 * outBuffer,
-			Lib3MF_pvoid userData,
-			Lib3MF_uint64 * result) {
+			Lib3MF_pvoid userData) {
 
-			CCipherData cd(SecureContentT::wrapper.get(), cipherData);
+			CContentEncryptionParams cd(SecureContentT::wrapper.get(), params);
 			SecureContentT::wrapper->Acquire(&cd);
 
 			ASSERT_GE(cd.GetDescriptor(), 1);
@@ -373,23 +355,21 @@ namespace Lib3MF {
 					cb->context[cd.GetDescriptor()] = 0;
 			}
 
-			sAes256CipherValue cipher = cd.GetAes256Gcm();
 			if (0 != inSize) {
 				std::copy(inBuffer, inBuffer + outSize, outBuffer);
 			} else {
-				Lib3MF_uint8 fakeTag[16] = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F, 0x10};
-				std::copy(fakeTag, fakeTag + 16, cipher.m_Tag);
-				cd.SetAes256Gcm(cipher);
+				std::vector<Lib3MF_uint8> fakeTag = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F, 0x10};
+				cd.SetAuthenticationTag(fakeTag);
 			}
 
-			*result = outSize;
+			*outNeededSize = outSize;
 		}
 	};
 
 	TEST_F(SecureContentT, DEKReadTest) {
 		auto reader = model->QueryReader("3mf");
 		DEKCallbackData data;
-		reader->RegisterDEKClient(DEKCallbackData::testDEKCallback, reinterpret_cast<Lib3MF_pvoid>(&data));
+		reader->SetContentEncryptionCallback(DEKCallbackData::testDEKCallback, reinterpret_cast<Lib3MF_pvoid>(&data));
 		reader->ReadFromFile(sTestFilesPath + UNENCRYPTEDKEYSTORE);
 		ASSERT_EQ(data.context.size(), 1);
 		ASSERT_GE(data.context.begin()->second, 1);
@@ -399,7 +379,7 @@ namespace Lib3MF {
 	TEST_F(SecureContentT, ReadCompressedTest) {
 		auto reader = model->QueryReader("3mf");
 		DEKCallbackData data;
-		reader->RegisterDEKClient(DEKCallbackData::testDEKCallback, reinterpret_cast<Lib3MF_pvoid>(&data));
+		reader->SetContentEncryptionCallback(DEKCallbackData::testDEKCallback, reinterpret_cast<Lib3MF_pvoid>(&data));
 		reader->ReadFromFile(sTestFilesPath + UNENCRYPTEDCOMPRESSEDKEYSTORE);
 		ASSERT_EQ(data.context.size(), 1);
 		ASSERT_GE(data.context.begin()->second, 1);
@@ -409,7 +389,7 @@ namespace Lib3MF {
 		readUnencryptedKeyStore();
 		auto writer = model->QueryWriter("3mf");
 		DEKCallbackData data;
-		writer->RegisterDEKClient(DEKCallbackData::testDEKCallback, reinterpret_cast<Lib3MF_pvoid>(&data));
+		writer->SetContentEncryptionCallback(DEKCallbackData::testDEKCallback, reinterpret_cast<Lib3MF_pvoid>(&data));
 		writer->WriteToFile(sOutFilesPath + UNENCRYPTEDCOMPRESSEDKEYSTORE);
 		ASSERT_EQ(data.context.size(), 1);
 		ASSERT_GE(data.context.begin()->second, 1);
@@ -422,37 +402,38 @@ namespace Lib3MF {
 		std::string keyId;
 
 		static void testKEKCallback(
-			Lib3MF_Consumer pConsumer,
-			Lib3MF::eEncryptionAlgorithm algorithm,
+			Lib3MF_AccessRight access,
 			Lib3MF_uint64 inSize,
 			const Lib3MF_uint8 * inBuffer,
 			const Lib3MF_uint64 outSize,
 			Lib3MF_uint64 * outNeeded,
 			Lib3MF_uint8 * outBuffer,
-			Lib3MF_pvoid userData,
-			Lib3MF_uint64 *result) {
+			Lib3MF_pvoid userData) {
 
 
-			CConsumer c(SecureContentT::wrapper.get(), pConsumer);
-			SecureContentT::wrapper->Acquire(&c);
+			CAccessRight a(SecureContentT::wrapper.get(), access);
+			SecureContentT::wrapper->Acquire(&a);
+
+			PConsumer c = a.GetConsumer();
 
 			if (nullptr != userData) {
 				KEKCallbackData * cb = reinterpret_cast<KEKCallbackData *>(userData);
 				ASSERT_EQ(cb->value, 1);
 				cb->value = 2;
 
-				ASSERT_EQ(c.GetConsumerID(), cb->consumerId);
 
-				ASSERT_EQ(c.GetKeyID(), cb->keyId);
+				ASSERT_EQ(c->GetConsumerID(), cb->consumerId);
+
+				ASSERT_EQ(c->GetKeyID(), cb->keyId);
 			}
 
-			ASSERT_FALSE(c.GetKeyValue().empty());
+			ASSERT_FALSE(c->GetKeyValue().empty());
 
 			Lib3MF_uint32 needed = 0;
 			std::vector<char> buffer;
 
 			std::copy(inBuffer, inBuffer + outSize, outBuffer);
-			*result = outSize;
+			*outNeeded = outSize;
 		}
 	};
 
@@ -462,7 +443,7 @@ namespace Lib3MF {
 		data.value = 1;
 		data.consumerId = "LIB3MF#TEST";
 		data.keyId = "contentKey";
-		reader->RegisterKEKClient(data.consumerId, KEKCallbackData::testKEKCallback, 256, reinterpret_cast<Lib3MF_pvoid>(&data));
+		reader->AddKeyWrappingCallback(data.consumerId, KEKCallbackData::testKEKCallback, (Lib3MF_pvoid)&data);
 		reader->ReadFromFile(sTestFilesPath + UNENCRYPTEDKEYSTORE);
 		ASSERT_EQ(2, data.value);
 	}
@@ -475,18 +456,19 @@ namespace Lib3MF {
 		ASSERT_EQ(keyStore->GetConsumerCount(), 1);
 		Lib3MF::PConsumer consumer1 = keyStore->AddConsumer("consumerId", "contentKey", "consumerKeyValue");
 		Lib3MF::PResourceData rd = keyStore->GetResourceData(0);
-		Lib3MF::PDecryptRight dr = rd->AddDecryptRight(consumer1.get(), Lib3MF::eEncryptionAlgorithm::RsaOaepMgf1p);
-		
+		Lib3MF::PLib3MFResourceDataGroup dg = keyStore->FindResourceDataGroup(rd->GetPath().get());
+		Lib3MF::PAccessRight ar = dg->AddAccessRight(consumer1.get(), eWrappingAlgorithm::RSA_OAEP, eMgfAlgorithm::MGF1_SHA1, eDigestMethod::SHA1);
+
 		auto writer = model->QueryWriter("3mf");
 		
 		DEKCallbackData contentData;
-		writer->RegisterDEKClient(DEKCallbackData::testDEKCallback, reinterpret_cast<Lib3MF_pvoid>(&contentData));
+		writer->SetContentEncryptionCallback(DEKCallbackData::testDEKCallback, (Lib3MF_pvoid)&contentData);
 
 		KEKCallbackData wrappingData;
 		wrappingData.value = 1;
 		wrappingData.consumerId = "consumerId";
 		wrappingData.keyId = "contentKey";
-		writer->RegisterKEKClient(wrappingData.consumerId, KEKCallbackData::testKEKCallback, 256, reinterpret_cast<Lib3MF_pvoid>(&wrappingData));
+		writer->AddKeyWrappingCallback(wrappingData.consumerId, KEKCallbackData::testKEKCallback, (Lib3MF_pvoid)&wrappingData);
 		std::vector<Lib3MF_uint8> buffer;
 		writer->WriteToBuffer(buffer);
 		ASSERT_EQ(2, wrappingData.value);
@@ -499,13 +481,14 @@ namespace Lib3MF {
 		
 		ASSERT_TRUE(keyStore->GetResourceDataCount() >= 1);
 
+		Lib3MF::PConsumer consumer1 = keyStore->AddConsumer("UnregisteredConsumer", "contentKey", "");
 		Lib3MF::PResourceData rd = keyStore->GetResourceData(0);
-		Lib3MF::PConsumer consumer1 = keyStore->AddConsumer("UnregisteredConsumer", "UnregisteredKey", "");
-		Lib3MF::PDecryptRight dr = rd->AddDecryptRight(consumer1.get(), Lib3MF::eEncryptionAlgorithm::RsaOaepMgf1p);
+		Lib3MF::PLib3MFResourceDataGroup dg = keyStore->FindResourceDataGroup(rd->GetPath().get());
+		Lib3MF::PAccessRight ar = dg->AddAccessRight(consumer1.get(), eWrappingAlgorithm::RSA_OAEP, eMgfAlgorithm::MGF1_SHA1, eDigestMethod::SHA1);
 
 		auto writer = model->QueryWriter("3mf");
 		DEKCallbackData contentData;
-		writer->RegisterDEKClient(DEKCallbackData::testDEKCallback, reinterpret_cast<Lib3MF_pvoid>(&contentData));
+		writer->SetContentEncryptionCallback(DEKCallbackData::testDEKCallback, reinterpret_cast<Lib3MF_pvoid>(&contentData));
 
 		std::vector<Lib3MF_uint8> buffer;
 		try {
@@ -515,106 +498,4 @@ namespace Lib3MF {
 			ASSERT_EQ(e.getErrorCode(), LIB3MF_ERROR_SECURECONTEXTNOTREGISTERED);
 		}
 	}
-
-
-	//
-	// End to end tests
-	//
-
-	TEST_F(SecureContentT, WriteKeyStore) {
-		Lib3MF::PModel secureModel = wrapper->CreateModel();
-		//create the attachment to be secured
-		//add a mesh
-		Lib3MF::PMeshObject meshObject = secureModel->AddMeshObject();
-		meshObject->SetGeometry(CLib3MFInputVector<sPosition>(pVertices, 8), CLib3MFInputVector<sTriangle>(pTriangles, 12));
-		sTransform transformation;
-		for (int i = 0; i < 4; i++) {
-			for (int j = 0; j < 3; j++)
-				transformation.m_Fields[i][j] = Lib3MF_single(i - j);
-		}
-
-		secureModel->AddBuildItem(meshObject.get(), transformation);
-
-		//set the mesh apart of the main root model
-		std::string path = "/3D/securemesh.model";
-		auto secureMeshPart = secureModel->FindOrCreatePackagePart(path);
-		meshObject->SetPackagePart(secureMeshPart.get());
-
-		Lib3MF::PKeyStore keyStore = secureModel->GetKeyStore();
-		
-		keyStore->SetUUID("b7aa9c75-5fbd-48c1-a893-40289e45ab8f");
-		//create a consumer (optional)
-		std::string keyValue = "-----BEGIN PUBLIC KEY-----\r\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAw53q4y2KB2WcoOBUE9OE\r\nXI0OCzUf4SI1J6fDx6XeDJ8PzqxN4pPRtXgtKfp/RiSL0invf7ASfkBMcXuhD8XP\r\n0uki3JIzvsxTH+Jnnz/PrYnS9DFa6c9MYciTIV8vC4u03vkZH6OuGq4rWeSZuNCT\r\nCgT59q67Ly6OytNsQgsDHL2QO8xhpYdQ4bx7F0uNn5LAxFyA0ymsFsgSSLONJWza\r\nVtsq9jvkIOEdTzYq52PAXMUIpegbyqSheNlmedcss8teqiZGnCOxpBxL3z+ogcFe\r\nnX1S8kq2UhzOjXLEjPs9B0SchwXSadephL89shJwra+30NS3R3frwfCz+a3H6wTV\r\nBwIDAQAB\r\n-----END PUBLIC KEY-----\r\n\t\t";
-		std::string keyId = "KEK_xxx";
-		std::string consumerId = "HP#MOP44B#SG5693454";
-		Lib3MF::PConsumer consumer = keyStore->AddConsumer(consumerId, keyId, keyValue);
-		//create a resource data
-		Lib3MF::PResourceData resourceData = keyStore->AddResourceData(secureMeshPart.get(), Lib3MF::eEncryptionAlgorithm::Aes256Gcm, Lib3MF::eCompression::Deflate);
-		//add decryptright for the consumer (optional)
-		Lib3MF::PDecryptRight decryptRight = resourceData->AddDecryptRight(consumer.get(), Lib3MF::eEncryptionAlgorithm::RsaOaepMgf1p);
-		
-		//Query writer
-		PWriter writer = secureModel->QueryWriter("3mf");
-
-		writer->RegisterDEKClient(DEKCallbackData::testDEKCallback, nullptr);
-		writer->RegisterKEKClient("HP#MOP44B#SG5693454", KEKCallbackData::testKEKCallback, 256, nullptr);
-
-		std::vector<Lib3MF_uint8> buffer;
-		//Write content
-		writer->WriteToBuffer(buffer);
-	}
-
-	TEST_F(SecureContentT, WriteMultipleConsumersSecureContent) {
-		Lib3MF::PModel secureModel = wrapper->CreateModel();
-		//create the attachment to be secured
-		//add a mesh
-		Lib3MF::PMeshObject meshObject = secureModel->AddMeshObject();
-		meshObject->SetGeometry(CLib3MFInputVector<sPosition>(pVertices, 8), CLib3MFInputVector<sTriangle>(pTriangles, 12));
-
-		sTransform transformation;
-		for (int i = 0; i < 4; i++) {
-			for (int j = 0; j < 3; j++)
-				transformation.m_Fields[i][j] = Lib3MF_single(i - j);
-		}
-
-		secureModel->AddBuildItem(meshObject.get(), transformation);
-
-		//set the mesh apart of the main root model
-		std::string path = "/3D/securemesh.model";
-		auto secureMeshPart = secureModel->FindOrCreatePackagePart(path);
-		meshObject->SetPackagePart(secureMeshPart.get());
-
-		Lib3MF::PKeyStore keyStore = secureModel->GetKeyStore();
-
-		keyStore->SetUUID("b7aa9c75-5fbd-48c1-a893-40289e45ab8f");
-		//create the first consumer
-		std::string keyValue = "-----BEGIN PUBLIC KEY-----\r\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAw53q4y2KB2WcoOBUE9OE\r\nXI0OCzUf4SI1J6fDx6XeDJ8PzqxN4pPRtXgtKfp/RiSL0invf7ASfkBMcXuhD8XP\r\n0uki3JIzvsxTH+Jnnz/PrYnS9DFa6c9MYciTIV8vC4u03vkZH6OuGq4rWeSZuNCT\r\nCgT59q67Ly6OytNsQgsDHL2QO8xhpYdQ4bx7F0uNn5LAxFyA0ymsFsgSSLONJWza\r\nVtsq9jvkIOEdTzYq52PAXMUIpegbyqSheNlmedcss8teqiZGnCOxpBxL3z+ogcFe\r\nnX1S8kq2UhzOjXLEjPs9B0SchwXSadephL89shJwra+30NS3R3frwfCz+a3H6wTV\r\nBwIDAQAB\r\n-----END PUBLIC KEY-----\r\n\t\t";
-		std::string keyId = "KEK_xxx";
-		std::string consumerId = "HP#MOP44B#SG5693454";
-		Lib3MF::PConsumer consumer = keyStore->AddConsumer(consumerId, keyId, keyValue);
-
-		//create the second consumer
-		std::string keyValue2 = "-----BEGIN PUBLIC KEY-----\r\nPIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAw53q4y2KB2WcoOBUE9OE\r\nXI0OCzUf4SI1J6fDx6XeDJ8PzqxN4pPRtXgtKfp/RiSL0invf7ASfkBMcXuhD8XP\r\n0uki3JIzvsxTH+Jnnz/PrYnS9DFa6c9MYciTIV8vC4u03vkZH6OuGq4rWeSZuNCT\r\nCgT59q67Ly6OytNsQgsDHL2QO8xhpYdQ4bx7F0uNn5LAxFyA0ymsFsgSSLONJWza\r\nVtsq9jvkIOEdTzYq52PAXMUIpegbyqSheNlmedcss8teqiZGnCOxpBxL3z+ogcFe\r\nnX1S8kq2UhzOjXLEjPs9B0SchwXSadephL89shJwra+30NS3R3frwfCz+a3H6wTV\r\nBwIDAQAB\r\n-----END PUBLIC KEY-----\r\n\t\t";
-		std::string keyId2 = "KEK_xxx";
-		std::string consumerId2 = "HP#MOP44B#SG5693455";
-		Lib3MF::PConsumer consumer2 = keyStore->AddConsumer(consumerId2, keyId2, keyValue2);
-
-		//create a resource data
-		Lib3MF::PResourceData resourceData = keyStore->AddResourceData(secureMeshPart.get(), Lib3MF::eEncryptionAlgorithm::Aes256Gcm, Lib3MF::eCompression::None);
-
-		//add decryptright for the consumer (optional)
-		Lib3MF::PDecryptRight decryptRight = resourceData->AddDecryptRight(consumer.get(), Lib3MF::eEncryptionAlgorithm::RsaOaepMgf1p);
-		Lib3MF::PDecryptRight decryptRight2 = resourceData->AddDecryptRight(consumer2.get(), Lib3MF::eEncryptionAlgorithm::RsaOaepMgf1p);
-
-		//Query writer
-		PWriter writer = secureModel->QueryWriter("3mf");
-
-		writer->RegisterDEKClient(DEKCallbackData::testDEKCallback, nullptr);
-		writer->RegisterKEKClient("HP#MOP44B#SG5693454", KEKCallbackData::testKEKCallback, 256, nullptr);
-		writer->RegisterKEKClient("HP#MOP44B#SG5693455", KEKCallbackData::testKEKCallback, 256, nullptr);
-		
-		std::vector<Lib3MF_uint8> buffer;
-		writer->WriteToBuffer(buffer);
-	}
-
 }

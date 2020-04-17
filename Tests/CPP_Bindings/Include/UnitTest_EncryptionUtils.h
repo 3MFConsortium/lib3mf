@@ -51,10 +51,11 @@ using PEVP_PKEY = std::unique_ptr<EVP_PKEY, decltype(&::EVP_PKEY_free)>;
 struct KekContext {
 	EVP_PKEY * key;
 	size_t size;
+	Lib3MF::CWrapper * wrapper;
 };
 
 struct DekContext {
-	std::map<Lib3MF_uint64, PEVP_CIPHER_CTX> m_Context;
+	std::map<Lib3MF_uint64, PEVP_CIPHER_CTX> ciphers;
 	Lib3MF::CWrapper * wrapper;
 };
 
@@ -94,48 +95,78 @@ namespace RsaMethods {
 
 struct EncryptionCallbacks {
 
+	/**
+	* ContentEncryptionCallback - A callback to encrypt/decrypt content called on each resource encrypted. This might be called several times depending on content size. If cipher size is zero, clients must return the result of authenticated tag validation
+	*
+	* @param[in] pCEKParams - The params of the encryption process.
+	* @param[in] nInputBufferSize - Number of elements in buffer
+	* @param[in] pInputBuffer - uint8 buffer of Buffer to the original data. In encrypting, this will be the plain data. If derypting, this will be the cipher data
+	* @param[in] nOutputBufferSize - Number of elements in buffer
+	* @param[out] pOutputNeededCount - will be filled with the count of the written elements, or needed buffer size.
+	* @param[out] pOutputBuffer - uint8  buffer of Buffer to hold the transformed data. When encrypting, this will be the cipher data. When decrypting, this shall be the plain data. If buffer is null, neededBytes return the necessary amount of bytes. Otherwise, amount of bytes decrypted if succeed or zero on error
+	* @param[in] pUserData - Userdata that is passed to the callback function
+	*/
+
 	static void dataEncryptClientCallback(
-		Lib3MF::eEncryptionAlgorithm algorithm,
-		Lib3MF_CipherData cipherData,
+		Lib3MF_ContentEncryptionParams params,
 		Lib3MF_uint64 plainSize,
 		const Lib3MF_uint8 * plainBuffer,
 		const Lib3MF_uint64 cipherSize,
 		Lib3MF_uint64 * cipherNeeded,
 		Lib3MF_uint8 * cipherBuffer,
-		Lib3MF_pvoid userData,
-		Lib3MF_uint64 * result);
+		Lib3MF_pvoid userData);
 
+
+	/**
+	* KeyWrappingCallback - A callback used to wrap (encrypt) the content key available in keystore resource group
+	*
+	* @param[in] accessRight - The information about the parameters used used to wrap the key to the contents
+	* @param[in] plainSize - Number of elements in buffer
+	* @param[in] plainBuffer - uint8 buffer of Buffer to the input value. When encrypting, this should be the plain key. When decrypting, this should be the key cipher.
+	* @param[in] cipherSize - Number of elements in buffer
+	* @param[out] cipherNeeded - will be filled with the count of the written elements, or needed buffer size.
+	* @param[out] cipherBuffer - uint8  buffer of Buffer where the data will be placed. When encrypting, this will be the key cipher. When decrypting, this will be the plain key. When buffer is null, neededBytes contains the required bytes to run. When not, Amount it reflects the encrypted/decrypted bytes when succeed or zero when error
+	* @param[in] userData - Userdata that is passed to the callback function
+	*/
 	static void keyEncryptClientCallback(
-		Lib3MF_Consumer consumer,
-		Lib3MF::eEncryptionAlgorithm algorithm,
+		Lib3MF_AccessRight accessRight,
 		Lib3MF_uint64 plainSize,
 		const Lib3MF_uint8 * plainBuffer,
 		const Lib3MF_uint64 cipherSize,
 		Lib3MF_uint64* cipherNeeded,
 		Lib3MF_uint8 * cipherBuffer,
-		Lib3MF_pvoid userData,
-		Lib3MF_uint64 * result);
+		Lib3MF_pvoid userData);
 
 	static void dataDecryptClientCallback(
-		Lib3MF::eEncryptionAlgorithm algorithm,
-		Lib3MF_CipherData cipherData,
+		Lib3MF_ContentEncryptionParams params,
 		Lib3MF_uint64 cipherSize,
 		const Lib3MF_uint8 * cipherBuffer,
 		const Lib3MF_uint64 plainSize,
 		Lib3MF_uint64 * plainNeeded,
 		Lib3MF_uint8 * plainBuffer,
-		Lib3MF_pvoid userData,
-		Lib3MF_uint64 * result);
+		Lib3MF_pvoid userData);
 
 	static void keyDecryptClientCallback(
-		Lib3MF_Consumer consumer,
-		Lib3MF::eEncryptionAlgorithm algorithm,
+		Lib3MF_AccessRight accessRight,
 		Lib3MF_uint64 cipherSize,
 		const Lib3MF_uint8 * cipherBuffer,
 		const Lib3MF_uint64 plainSize,
 		Lib3MF_uint64* plainNeeded,
 		Lib3MF_uint8 * plainBuffer,
-		Lib3MF_pvoid userData,
-		Lib3MF_uint64 * result);
+		Lib3MF_pvoid userData);
+
+	/**
+	* RandomNumberCallback - Callback to generate random numbers
+	*
+	* @param[in] nByteData - Point to a buffer where to store the data
+	* @param[in] nNumBytes - Size of available bytes in the buffer
+	* @param[in] pUserData - Userdata that is passed to the callback function
+	* @param[out] pBytesWritten - Number of bytes generated when succeed. 0 or less if failed.
+	*/
+	static void randomNumberCallback(
+		Lib3MF_uint64 nByteData, 
+		Lib3MF_uint64 nNumBytes, 
+		Lib3MF_pvoid pUserData, 
+		Lib3MF_uint64 * pBytesWritten);
 };
 #endif

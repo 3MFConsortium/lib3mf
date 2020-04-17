@@ -260,10 +260,10 @@
 	</functiontype>
 	
 	<functiontype name="RandomNumberCallback" description="Callback to generate random numbers">
-		<param name="ByteData" type="uint64" pass="in" description="Point to a buffer where to store the data"/>
+		<param name="ByteData" type="uint64" pass="in" description="Pointer to a buffer to read data into"/>
 		<param name="NumBytes" type="uint64" pass="in" description="Size of available bytes in the buffer" />
 		<param name="UserData" type="pointer" pass="in" description="Userdata that is passed to the callback function"/>
-		<param name="Result" type="uint64" pass="return" description="Number of bytes generated when succeed. 0 or less if failed." />
+		<param name="BytesWritten" type="uint64" pass="return" description="Number of bytes generated when succeed. 0 or less if failed." />
 	</functiontype>
 
 	<class name="Base">
@@ -294,8 +294,9 @@
 		<method name="SetDecimalPrecision" description="Sets the number of digits after the decimal point to be written in each vertex coordinate-value.">
 			<param name="DecimalPrecision" type="uint32" pass="in" description="The number of digits to be written in each vertex coordinate-value after the decimal point."/>
 		</method>
-		<method name="RegisterKEKClient" description="Registers a callback to deal with data key encryption/decryption from keystore">
+		<method name="AddKeyWrappingCallback" description="Registers a callback to deal with data key encryption/decryption from keystore">
 			<param name="ConsumerID" type="string" pass="in" description="The ConsumerID to register for"/>
+			<param name="TheCallback" type="functiontype" class="KeyWrappingCallback" pass="in" description="The callback to be callede for wrapping and encryption key" />
 			<param name="UserData" type="pointer" pass="in" description="Userdata that is passed to the callback function"/>
 		</method>
 		<method name="SetContentEncryptionCallback" description="Registers a callback to deal with encryption of content">
@@ -342,8 +343,8 @@
 			<param name="Count" type="uint32" pass="return" description="filled with the count of the occurred warnings."/>
 		</method>
 		<method name="AddKeyWrappingCallback" description="Registers a callback to deal with key wrapping mechanism from keystore">
-			<param name="TheCallback" type="functiontype" class="KeyWrappingCallback" pass="in" description="The callback used to decrypt data key"/>
 			<param name="ConsumerID" type="string" pass="in" description="The ConsumerID to register for"/>
+			<param name="TheCallback" type="functiontype" class="KeyWrappingCallback" pass="in" description="The callback used to decrypt data key"/>
 			<param name="UserData" type="pointer" pass="in" description="Userdata that is passed to the callback function"/>
 		</method>
 		<method name="SetContentEncryptionCallback" description="Registers a callback to deal with encryption of content">
@@ -1159,7 +1160,7 @@
 	
 	<class name="AccessRight">
 		<method name="GetConsumer" description="Gets the consumer associated with this access right">
-			<param name="TheConsumer" type="handle" class="Consumer" pass="return" description="The consumer instance"/>
+			<param name="COnsumer" type="class" class="Consumer" pass="return" description="The consumer instance"/>
 		</method>
 		<method name="GetWrappingAlgorithm" description="Gets the associated encryption algorithm">
 			<param name="Algorithm" type="enum" class="WrappingAlgorithm" pass="return" description="The algorithm used for the key in this accessright"/>
@@ -1175,7 +1176,7 @@
 	<functiontype name="KeyWrappingCallback" description="A callback used to wrap (encrypt) the content key available in keystore resource group">
 		<param name="KEKParams" type="class" class="AccessRight" pass="in" description="The information about the parameters used used to wrap the key to the contents"/>
 		<param name="InBuffer" type="basicarray" class="uint8" pass="in" description="Buffer to the input value. When encrypting, this should be the plain key. When decrypting, this should be the key cipher."/>
-		<param name="OutBuffer" type="basicarray" class="uint8" pass="out" description="Buffer where the data will be placed. When encrypting, this will be the key cipher. When decrypting, this will be the plain key. When buffer is null, neededBytes contains the required bytes to run. When not, Amount it reflects the encrypted/decrypted bytes when succeed or zero when error"/>
+		<param name="OutBuffer" type="basicarray" class="uint8" pass="out" description="Buffer where the data will be placed. When encrypting, this will be the key cipher. When decrypting, this will be the plain key. When buffer is null, neededBytes contains the required bytes to run. When not, amount it reflects the encrypted/decrypted/verified bytes when succeed or zero when error"/>
 		<param name="UserData" type="pointer" pass="in" description="Userdata that is passed to the callback function"/>
 	</functiontype>
 
@@ -1241,36 +1242,18 @@
 			<param name="UUID" type="string" pass="in" description="The new resourcedatagroup keyuuid."/>
 		</method>
 		<method name="AddAccessRight" description="Add accessright to resourcedatagroup element">
-			<param name="Consumer" type="handle" class="Consumer" pass="in" description="The Consumer reference"/>
+			<param name="Consumer" type="class" class="Consumer" pass="in" description="The Consumer reference"/>
 			<param name="WrappingAlgorithm" type="enum" class="WrappingAlgorithm" pass="in" description="The key wrapping algorithm to be used" />
 			<param name="MgfAlgorithm" type="enum" class="MgfAlgorithm" pass="in" description="The mask generation function to be used" />
 			<param name="DigestMethod" type="enum" class="DigestMethod" pass="in" description="The digest mechanism to be used"/>
 			<param name="TheAccessRight" type="handle" class="AccessRight" pass="return" description="The acess right instance"/>
 		</method>
 		<method name="FindAccessRightByConsumer" description="Finds the AccessRight associated with a Consumer">
-			<param name="ConsumerInstance" type="handle" class="Consumer" pass="in" description="The Consumer instance"/>
-			<param name="TheAccessRight" type="handle" class="AccessRight" pass="return" description="The AcessRight instance"/>
+			<param name="Consumer" type="class" class="Consumer" pass="in" description="The Consumer instance"/>
+			<param name="TheAccessRight" type="optionalclass" class="AccessRight" pass="return" description="The AcessRight instance"/>
 		</method>
 		<method name="RemoveAccessRight" description="Removes access from a Consumer on this resource data group">
-			<param name="ConsumerInstance" type="handle" class="Consumer" pass="in" description="The Consumer instance"/>
-		</method>
-		<method name="AddResourceData" description="Add resourcedata to resourcedatagroup element">
-			<param name="PartPath" type="handle" class="PackagePart" pass="in" description="The path of the part to be encrypted"/>
-			<param name="Algorithm" type="enum" class="EncryptionAlgorithm" pass="in" description="The encryption algorithm to be used to encrypt this resource"/>
-			<param name="Compression" type="enum" class="Compression" pass="in" description="Whether compression should be used prior to encryption"/>
-			<param name="AdditionalAuthenticationData" type="basicarray" class="uint8" pass="in" description="Additional data to be encrypted along the contents for better security" />
-			<param name="TheResourceData" type="handle" class="ResourceData" pass="return" description="The data resource instance"/>
-		</method>
-		<method name="GetResourceDataCount" description="Gets the number of resource data in the keysore">
-			<param name="Count" type="uint32" pass="return" description="The number of resource data available"/>
-		</method>
-		<method name="GetResourceData" description="Gets a resource data">
-			<param name="ResourceDataIndex" type="uint64" pass="in" description="The index of the resource data"/>
-			<param name="TheResourceData" type="handle" class="ResourceData" pass="return" description="The data resource instance"/>
-		</method>
-		<method name="FindResourceData" description="Finds a resource data by its path">
-			<param name="Path" type="string" pass="in" description="The resource data path to find"/>
-			<param name="TheResourceData" type="handle" class="ResourceData" pass="return" description="The data resource instance"/>
+			<param name="Consumer" type="class" class="Consumer" pass="in" description="The Consumer instance"/>
 		</method>
 	</class>
 	<class name="KeyStore">
@@ -1278,31 +1261,60 @@
 			<param name="ConsumerID" type="string" pass="in" description="A unique identifier for the consumer"/>
 			<param name="KeyID" type="string" pass="in" description="The id of the key of the consumer"/>
 			<param name="KeyValue" type="string" pass="in" description="The public key for this consumer in PEM format"/>
-			<param name="Consumer" type="handle" class="Consumer" pass="return" description="The consumer instance"/>
+			<param name="Consumer" type="class" class="Consumer" pass="return" description="The consumer instance"/>
 		</method> 
 		<method name="GetConsumerCount" description="Gets the number of consumers in the keystore">
 			<param name="Count" type="uint32" pass="return" description="The consumer count"/>
 		</method>
 		<method name="GetConsumer" description="Get a consumer from the keystore">
 			<param name="ConsumerIndex" type="uint64" pass="in" description="The index of the consumer"/>
-			<param name="TheConsumer" type="handle" class="Consumer" pass="return" description="The consumer instance"/>
+			<param name="Consumer" type="class" class="Consumer" pass="return" description="The consumer instance"/>
 		</method>
 		<method name="RemoveConsumer" description="Removes a consumer from the keystore">
-			<param name="ConsumerInstance" type="handle" class="Consumer" pass="in" description="The consumer instance to remove"/>
+			<param name="Consumer" type="class" class="Consumer" pass="in" description="The consumer instance to remove"/>
 		</method>
 		<method name="FindConsumer" description="Finds a consumer by ID">
 			<param name="ConsumerID" type="string" pass="in" description="The ID of the consumer"/>
-			<param name="TheConsumer" type="handle" class="Consumer" pass="return" description="The consumer instance"/>
+			<param name="Consumer" type="optionalclass" class="Consumer" pass="return" description="The consumer instance"/>
 		</method>
-		<method name="GetResourceDataGroupCount" description="Gets the number of resource data in the keysore">
+		<method name="GetResourceDataGroupCount" description="Gets the number of resource data group in the keysore">
 			<param name="Count" type="uint32" pass="return" description="The number of resource data available"/>
 		</method>
-		<method name="GetResourceDataGroup" description="Gets a resource data">
-			<param name="ResourceDataIndex" type="uint64" pass="in" description="The index of the resource data"/>
-			<param name="TheResourceDataGroup" type="handle" class="ResourceDataGroup" pass="return" description="The data resource instance"/>
+		<method name="AddResourceDataGroup" description="Adds a resource data group into the keystore.">
+			<param name="ResourceDataGroup" type="class" class="ResourceDataGroup" pass="return" description="The resource data group instance"/>
 		</method>
-		<method name="AddResourceDataGroup" description="Adds a resource data into the keystore. This flags the package part for encryption">
-			<param name="TheResourceDataGroup" type="handle" class="ResourceDataGroup" pass="return" description="The data resource instance"/>
+		<method name="GetResourceDataGroup" description="Gets a resource data group">
+			<param name="ResourceDataIndex" type="uint64" pass="in" description="The index of the resource data"/>
+			<param name="ResourceDataGroup" type="class" class="ResourceDataGroup" pass="return" description="The resource data group instance"/>
+		</method>
+		<method name="RemoveResourceDataGroup" description="Removes a resource data group">
+			<param name="ResourceDataGroup" type="class" class="ResourceDataGroup" pass="in" description="The resource data group instance"/>
+		</method>
+		<method name="FindResourceDataGroup" description="Finds a resource data group that contains a particular resourcedata">
+			<param name="PartPath" type="class" class="PackagePart" pass="in" description="The target path for the resourcedata hold by the resource data group"/>
+			<param name="ResourceDataGroup" type="optionalclass" class="ResourceDataGroup" pass="return" description="The data resource instance"/>
+		</method>
+		<method name="AddResourceData" description="Add resourcedata to resourcedatagroup element">
+			<param name="ResourceDataGroup" type="class" class="ResourceDataGroup" pass="in" description="The resource data group where to add this resource data"/>
+			<param name="PartPath" type="class" class="PackagePart" pass="in" description="The path of the part to be encrypted"/>
+			<param name="Algorithm" type="enum" class="EncryptionAlgorithm" pass="in" description="The encryption algorithm to be used to encrypt this resource"/>
+			<param name="Compression" type="enum" class="Compression" pass="in" description="Whether compression should be used prior to encryption"/>
+			<param name="AdditionalAuthenticationData" type="basicarray" class="uint8" pass="in" description="Additional data to be encrypted along the contents for better security" />
+			<param name="ResourceData" type="class" class="ResourceData" pass="return" description="The data resource instance"/>
+		</method>
+		<method name="RemoveResourceData" description="Removes a resource data">
+			<param name="ResourceData" type="class" class="ResourceData" pass="in" description="The resource data to be removed"/>
+		</method>
+		<method name="FindResourceData" description="Finds a resource data on this resource group">
+			<param name="ResourcePath" type="class" class="PackagePart" pass="in" description="The target path for the resourcedata"/>
+			<param name="ResourceData" type="optionalclass" class="ResourceData" pass="return" description="The resource data instance"/>
+		</method>
+		<method name="GetResourceDataCount" description="Gets the number of resource data in the keysore">
+			<param name="Count" type="uint32" pass="return" description="The number of resource data available"/>
+		</method>
+		<method name="GetResourceData" description="Gets a resource data">
+			<param name="ResourceDataIndex" type="uint64" pass="in" description="The index of the resource data"/>
+			<param name="ResourceData" type="class" class="ResourceData" pass="return" description="The data resource instance"/>
 		</method>
 		<method name="GetUUID" description="Gets the keystore UUID">
 			<param name="HasUUID" type="bool" pass="out" description="flag whether the keystore has a UUID"/>

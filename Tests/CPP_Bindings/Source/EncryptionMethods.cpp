@@ -52,62 +52,69 @@ namespace Lib3MF {
 			pTriangles[10] = fnCreateTriangle(3, 0, 4);
 			pTriangles[11] = fnCreateTriangle(4, 7, 3);
 			model = wrapper->CreateModel();
+
+			model->SetRandomNumberCallback(EncryptionCallbacks::randomNumberCallback, nullptr);
+
 		}
 
 		virtual void TearDown() {
 			model.reset();
 		}
 
-		void cleanup(DekContext & context) {
-			context.m_Context.clear();
+		void reset(DekContext & context) {
+			context.ciphers.clear();
+			context.wrapper = wrapper.get();
 		}
 
-		void cleanup(KekContext & context) {
-			context.key = nullptr;
-			context.size = 0;
+		void reset(KekContext & context) {
+			context.key = privateKey.get();
+			context.size = RsaMethods::getSize(privateKey);
+			context.wrapper = wrapper.get();
 		}
 
 	};
 
 	PWrapper EncryptionMethods::wrapper;
-
-	TEST_F(EncryptionMethods, ReadEncrypted3MF) {
-		auto reader = model->QueryReader("3mf");
-
-		DekContext dekUserData;
-		dekUserData.wrapper = wrapper.get();
-		reader->RegisterDEKClient(EncryptionCallbacks::dataDecryptClientCallback, reinterpret_cast<Lib3MF_pvoid>(&dekUserData));
-
-		KekContext kekUserData;
-		kekUserData.key = privateKey.get();
-		kekUserData.size = RsaMethods::getSize(privateKey);
-		reader->RegisterKEKClient("LIB3MF#TEST", EncryptionCallbacks::keyDecryptClientCallback, (Lib3MF_uint32)kekUserData.size, &kekUserData);
-		reader->ReadFromFile(sTestFilesPath + "/SecureContent/keystore_encrypted.3mf");
-
-		auto resources = model->GetResources();
-		ASSERT_EQ(28, resources->Count());
-	}
 	
-	TEST_F(EncryptionMethods, ReadEncryptedCompressed3MF) {
-		auto reader = model->QueryReader("3mf");
+	TEST_F(EncryptionMethods, RemoveEncryptionFromResource) {
 
+		auto reader = model->QueryReader("3mf");
+		//set descryption callbacks in the reader
 		DekContext dekUserData;
-		dekUserData.wrapper = wrapper.get();
-		reader->RegisterDEKClient(EncryptionCallbacks::dataDecryptClientCallback, reinterpret_cast<Lib3MF_pvoid>(&dekUserData));
+		reset(dekUserData);
+		reader->SetContentEncryptionCallback(EncryptionCallbacks::dataDecryptClientCallback, (Lib3MF_pvoid)(&dekUserData));
 
 		KekContext kekUserData;
-		kekUserData.key = privateKey.get();
-		kekUserData.size = RsaMethods::getSize(privateKey);
-		reader->RegisterKEKClient("LIB3MF#TEST", EncryptionCallbacks::keyDecryptClientCallback, (Lib3MF_uint32)kekUserData.size, &kekUserData);
+		reset(kekUserData);
+		reader->AddKeyWrappingCallback("LIB3MF#TEST", EncryptionCallbacks::keyDecryptClientCallback, &kekUserData);
+
+		//do the actual reading
 		reader->ReadFromFile(sTestFilesPath + "/SecureContent/keystore_encrypted_compressed.3mf");
 
+		//assert model assumptions
 		auto resources = model->GetResources();
 		ASSERT_EQ(28, resources->Count());
+		
+		auto keyStore = model->GetKeyStore();
+		ASSERT_EQ(1, keyStore->GetResourceDataGroupCount());
+		ASSERT_EQ(1, keyStore->GetResourceDataCount());
+
+		//find the target resource data and remove it from keystore
+		Lib3MF::PPackagePart part = model->FindOrCreatePackagePart("3D/3dexternal.model");
+		auto resourceData = keyStore->FindResourceData(part.get());
+		keyStore->RemoveResourceData(resourceData.get());
+
+		//write model again
+		PWriter writer = model->QueryWriter("3mf");
+		ByteVector buffer;
+		writer->WriteToBuffer(buffer);
 	}
 	
-	//TODO: create new encrypted model with a mesh, save it. Read, and do asserts
 	TEST_F(EncryptionMethods, WriteEncryptedProductionModel) {
 		Lib3MF::PModel secureModel = wrapper->CreateModel();
+		secureModel->SetRandomNumberCallback(EncryptionCallbacks::randomNumberCallback, nullptr);
+
+		//create a mesh and add to the model
 		Lib3MF::PMeshObject meshObject = secureModel->AddMeshObject();
 		meshObject->SetGeometry(CLib3MFInputVector<sPosition>(pVertices, 8), CLib3MFInputVector<sTriangle>(pTriangles, 12));
 		sTransform transformation;
@@ -117,45 +124,70 @@ namespace Lib3MF {
 		}
 		secureModel->AddBuildItem(meshObject.get(), transformation);
 
+		//set the mesh in a non root model
 		std::string path = "/3D/securemesh.model";
 		auto secureMeshPart = secureModel->FindOrCreatePackagePart(path);
 		meshObject->SetPackagePart(secureMeshPart.get());
 
 		Lib3MF::PKeyStore keyStore = secureModel->GetKeyStore();
 		keyStore->SetUUID("b7aa9c75-5fbd-48c1-a893-40289e45ab8f");
+
+		//add a consumer
 		std::string keyValue = "-----BEGIN PUBLIC KEY-----\r\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAw53q4y2KB2WcoOBUE9OE\r\nXI0OCzUf4SI1J6fDx6XeDJ8PzqxN4pPRtXgtKfp/RiSL0invf7ASfkBMcXuhD8XP\r\n0uki3JIzvsxTH+Jnnz/PrYnS9DFa6c9MYciTIV8vC4u03vkZH6OuGq4rWeSZuNCT\r\nCgT59q67Ly6OytNsQgsDHL2QO8xhpYdQ4bx7F0uNn5LAxFyA0ymsFsgSSLONJWza\r\nVtsq9jvkIOEdTzYq52PAXMUIpegbyqSheNlmedcss8teqiZGnCOxpBxL3z+ogcFe\r\nnX1S8kq2UhzOjXLEjPs9B0SchwXSadephL89shJwra+30NS3R3frwfCz+a3H6wTV\r\nBwIDAQAB\r\n-----END PUBLIC KEY-----\r\n\t\t";
 		std::string keyId = "KEK_xxx";
 		std::string consumerId = "HP#MOP44B#SG5693454";
 		Lib3MF::PConsumer consumer = keyStore->AddConsumer(consumerId, keyId, keyValue);
-		Lib3MF::PResourceData resourceData = keyStore->AddResourceData(secureMeshPart.get(), Lib3MF::eEncryptionAlgorithm::Aes256Gcm, Lib3MF::eCompression::Deflate);
-		Lib3MF::PDecryptRight decryptRight = resourceData->AddDecryptRight(consumer.get(), Lib3MF::eEncryptionAlgorithm::RsaOaepMgf1p);		
+
+		//add a resource data group
+		Lib3MF::PResourceDataGroup dataGroup = keyStore->AddResourceDataGroup();
+
+		//establish consumer access to the datagroup
+		Lib3MF::PAccessRight accessRight = dataGroup->AddAccessRight(
+			consumer.get(),
+			Lib3MF::eWrappingAlgorithm::RSA_OAEP,
+			Lib3MF::eMgfAlgorithm::MGF1_SHA1,
+			Lib3MF::eDigestMethod::SHA1); 
+		
+		
+		ByteVector aad = { 1, 2 , 3, 4, 5, 6, 7, 8, 9, 10 };
+		//add resource data as part of the datagroup
+		Lib3MF::PResourceData resourceData = keyStore->AddResourceData(
+			dataGroup.get(),
+			secureMeshPart.get(), 
+			Lib3MF::eEncryptionAlgorithm::AES256_GCM, 
+			Lib3MF::eCompression::Deflate, 
+			aad);
+
 
 		PWriter writer = secureModel->QueryWriter("3mf");
-
+		//set encryption callbacks
 		DekContext writeDekUserData;
-		writeDekUserData.wrapper = wrapper.get();
-		writer->RegisterDEKClient(EncryptionCallbacks::dataEncryptClientCallback, (Lib3MF_pvoid)(&writeDekUserData));
+		reset(writeDekUserData);
+		writer->SetContentEncryptionCallback(EncryptionCallbacks::dataEncryptClientCallback, (Lib3MF_pvoid)(&writeDekUserData));
 		
 		KekContext writeKekUserData;
-		writeKekUserData.key = privateKey.get();
-		writeKekUserData.size = RsaMethods::getSize(privateKey);
-		writer->RegisterKEKClient(consumerId, EncryptionCallbacks::keyEncryptClientCallback, (Lib3MF_uint32)writeKekUserData.size, &writeKekUserData);
+		reset(writeKekUserData);
+		writer->AddKeyWrappingCallback(consumerId, EncryptionCallbacks::keyEncryptClientCallback, &writeKekUserData);
 
+		//do the actual writing
 		ByteVector buffer;
 		writer->WriteToBuffer(buffer);
 
-		//READ PART
+		//re-read the model
 		auto reader = model->QueryReader("3mf");
-
+		//sets decryption callbacks
 		DekContext readDekUserData;
-		readDekUserData.wrapper = wrapper.get();
-		reader->RegisterDEKClient(EncryptionCallbacks::dataDecryptClientCallback, reinterpret_cast<Lib3MF_pvoid>(&readDekUserData));
+		reset(readDekUserData);
+		reader->SetContentEncryptionCallback(EncryptionCallbacks::dataDecryptClientCallback, (Lib3MF_pvoid)(&readDekUserData));
 
 		KekContext readKekUserData;
-		readKekUserData.key = privateKey.get();
-		readKekUserData.size = RsaMethods::getSize(privateKey);
-		reader->RegisterKEKClient(consumerId, EncryptionCallbacks::keyDecryptClientCallback, (Lib3MF_uint32)readKekUserData.size, &readKekUserData);
+		reset(readKekUserData);
+		reader->AddKeyWrappingCallback(consumerId, EncryptionCallbacks::keyDecryptClientCallback, &readKekUserData);
+
+		//do the actual reading
 		reader->ReadFromBuffer(buffer);
+
+		//assert assumptions
 		auto meshObj = model->GetMeshObjects();
 		ASSERT_EQ(1, meshObj->Count());
 	}
@@ -168,63 +200,81 @@ namespace Lib3MF {
 			//read existing model
 			auto reader = model->QueryReader("3mf");
 			DekContext dekUserData;
-			dekUserData.wrapper = wrapper.get();
-			reader->RegisterDEKClient(EncryptionCallbacks::dataDecryptClientCallback, reinterpret_cast<Lib3MF_pvoid>(&dekUserData));
+			reset(dekUserData);
+			reader->SetContentEncryptionCallback(EncryptionCallbacks::dataDecryptClientCallback, (Lib3MF_pvoid)(&dekUserData));
 
 			KekContext kekUserData;
-			kekUserData.key = privateKey.get();
-			kekUserData.size = RsaMethods::getSize(privateKey);
-			reader->RegisterKEKClient("LIB3MF#TEST", EncryptionCallbacks::keyDecryptClientCallback, (Lib3MF_uint32)kekUserData.size, &kekUserData);
+			reset(kekUserData);
+			reader->AddKeyWrappingCallback("LIB3MF#TEST", EncryptionCallbacks::keyDecryptClientCallback, &kekUserData);
+
+			//do the actual reading
 			reader->ReadFromFile(sTestFilesPath + "/SecureContent/keystore_encrypted.3mf");
 
+			//assert model assumptions
 			auto meshObjIt = model->GetMeshObjects();
 			ASSERT_EQ(meshObjIt->Count(), 1);
 
 			auto keyStore = model->GetKeyStore();
 			ASSERT_EQ(keyStore->GetConsumerCount(), 1);
 			ASSERT_EQ(keyStore->GetResourceDataCount(), 1);
+			ASSERT_EQ(keyStore->GetResourceDataGroupCount(), 1);
+
+			auto exConsumer = keyStore->GetConsumer(0);
+			auto dataGroup = keyStore->GetResourceDataGroup(0);
+			auto exAccess = dataGroup->FindAccessRightByConsumer(exConsumer.get());
+
+			ASSERT_NE(exAccess, nullptr);
 
 			//add new consumer
 			auto consumer = keyStore->AddConsumer("LIB3MF#TEST2", "", "");
-			auto resourceData = keyStore->GetResourceData(0);
-			resourceData->AddDecryptRight(consumer.get(), eEncryptionAlgorithm::RsaOaepMgf1p);
 
-			cleanup(dekUserData);
-			cleanup(kekUserData);
 
+			//add rights for the consumer to the existing datagroup
+			Lib3MF::PAccessRight accessRight = dataGroup->AddAccessRight(
+				consumer.get(),
+				Lib3MF::eWrappingAlgorithm::RSA_OAEP,
+				Lib3MF::eMgfAlgorithm::MGF1_SHA1,
+				Lib3MF::eDigestMethod::SHA1);
 			//write new model
 			auto writer = model->QueryWriter("3mf");
-
-			writer->RegisterDEKClient(EncryptionCallbacks::dataEncryptClientCallback, &dekUserData);
-
-			kekUserData.key = privateKey.get();
-			kekUserData.size = RsaMethods::getSize(privateKey);
-
-			writer->RegisterKEKClient("LIB3MF#TEST2", EncryptionCallbacks::keyEncryptClientCallback, (Lib3MF_uint32)kekUserData.size, &kekUserData);
+			reset(dekUserData);
+			writer->SetContentEncryptionCallback(EncryptionCallbacks::dataEncryptClientCallback, &dekUserData);
+			reset(kekUserData);
+			writer->AddKeyWrappingCallback("LIB3MF#TEST2", EncryptionCallbacks::keyEncryptClientCallback, &kekUserData);
+			//do the actual writing
 			writer->WriteToBuffer(buffer);
 		}
-		//reset model
+
+		//reset model for assertion of assumption
 		model.reset();
+
 		model = wrapper->CreateModel();
+		model->SetRandomNumberCallback(EncryptionCallbacks::randomNumberCallback, nullptr);
 		{
-			//read generated model
+			//read generated model 
 			auto reader = model->QueryReader("3mf");
 			DekContext dekUserData;
-			dekUserData.wrapper = wrapper.get();
-			reader->RegisterDEKClient(EncryptionCallbacks::dataDecryptClientCallback, reinterpret_cast<Lib3MF_pvoid>(&dekUserData));
+			reset(dekUserData);
+			reader->SetContentEncryptionCallback(EncryptionCallbacks::dataDecryptClientCallback, (Lib3MF_pvoid)(&dekUserData));
 
 			KekContext kekUserData;
-			kekUserData.key = privateKey.get();
-			kekUserData.size = RsaMethods::getSize(privateKey);
-			reader->RegisterKEKClient("LIB3MF#TEST2", EncryptionCallbacks::keyDecryptClientCallback, (Lib3MF_uint32)kekUserData.size, &kekUserData);
+			reset(kekUserData);
+			reader->AddKeyWrappingCallback("LIB3MF#TEST2", EncryptionCallbacks::keyDecryptClientCallback, &kekUserData);
 			reader->ReadFromBuffer(buffer);
 
+			//assert assumptions
 			auto meshObjIt = model->GetMeshObjects();
 			ASSERT_EQ(meshObjIt->Count(), 1);
 
 			auto keyStore = model->GetKeyStore();
 			ASSERT_EQ(keyStore->GetConsumerCount(), 2);
-			ASSERT_EQ(keyStore->GetResourceDataCount(), 1);
+			ASSERT_EQ(keyStore->GetResourceDataGroupCount(), 1);
+			auto dataGroup = keyStore->GetResourceDataGroup(0);
+			for (Lib3MF_uint32 i = 0; i < keyStore->GetConsumerCount(); ++i) {
+				auto c = keyStore->GetConsumer(i);
+				auto a = dataGroup->FindAccessRightByConsumer(c.get());
+				ASSERT_NE(a, nullptr);
+			}
 		}
 	}
 }

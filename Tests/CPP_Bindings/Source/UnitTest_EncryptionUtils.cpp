@@ -2,19 +2,27 @@
 
 #include "gtest/gtest.h"
 
+#include <openssl/rand.h>
+
 namespace AesMethods {
 
 	namespace Decrypt {
-		PEVP_CIPHER_CTX init(Lib3MF_uint8 const * key, Lib3MF_uint8 const * iv) {
+		PEVP_CIPHER_CTX init(Lib3MF_uint8 const * key, Lib3MF_uint8 const * iv, Lib3MF_uint64 aadSize, Lib3MF_uint8 const * aad) {
 			PEVP_CIPHER_CTX ctx = make_shared(EVP_CIPHER_CTX_new());
 			if (!ctx)
 				throw std::runtime_error("unable to initialize context");
 
-			if (!EVP_DecryptInit_ex(ctx.get(), EVP_aes_256_gcm(), NULL, NULL, NULL))
+			if (!EVP_DecryptInit_ex(ctx.get(), EVP_aes_256_gcm(), nullptr, nullptr, nullptr))
 				throw std::runtime_error("unable to initialize cipher");
 
-			if (!EVP_DecryptInit_ex(ctx.get(), NULL, NULL, key, iv))
+			if (!EVP_DecryptInit_ex(ctx.get(), nullptr, nullptr, key, iv))
 				throw std::runtime_error("unable to initialize key and iv");
+
+			if (aadSize > 0) {
+				int len;
+				if (!EVP_DecryptUpdate(ctx.get(), nullptr, &len, aad, (int)aadSize))
+					throw std::runtime_error("aad failed");
+			}
 			return ctx;
 		}
 
@@ -34,16 +42,21 @@ namespace AesMethods {
 		}
 	}
 	namespace Encrypt {
-		PEVP_CIPHER_CTX init(Lib3MF_uint8 const * key, Lib3MF_uint8 const * iv) {
+		PEVP_CIPHER_CTX init(Lib3MF_uint8 const * key, Lib3MF_uint8 const * iv, Lib3MF_uint64 aadSize, Lib3MF_uint8 const * aad) {
 			PEVP_CIPHER_CTX ctx = make_shared(EVP_CIPHER_CTX_new());
 			if (!ctx)
 				throw std::runtime_error("unable to intialize cipher context");
 
-			if (1 != EVP_EncryptInit_ex(ctx.get(), EVP_aes_256_gcm(), NULL, NULL, NULL))
+			if (1 != EVP_EncryptInit_ex(ctx.get(), EVP_aes_256_gcm(), nullptr, nullptr, nullptr))
 				throw std::runtime_error("unable to initialize encryption mechanism");
 
-			if (1 != EVP_EncryptInit_ex(ctx.get(), NULL, NULL, key, iv))
+			if (1 != EVP_EncryptInit_ex(ctx.get(), nullptr, nullptr, key, iv))
 				throw std::runtime_error("unable to init key and iv");
+			if (aadSize > 0) {
+				int len;
+				if (1 != EVP_EncryptUpdate(ctx.get(), nullptr, &len, aad, (int)aadSize))
+					throw std::runtime_error("aad failed");
+			}
 			return ctx;
 		}
 
@@ -109,137 +122,171 @@ namespace RsaMethods {
 }
 
 void EncryptionCallbacks::dataEncryptClientCallback(
-	Lib3MF::eEncryptionAlgorithm algorithm,
-	Lib3MF_CipherData cipherData,
+	Lib3MF_ContentEncryptionParams params,
 	Lib3MF_uint64 plainSize,
 	const Lib3MF_uint8 * plainBuffer,
 	const Lib3MF_uint64 cipherSize,
 	Lib3MF_uint64 * cipherNeeded,
 	Lib3MF_uint8 * cipherBuffer,
-	Lib3MF_pvoid userData,
-	Lib3MF_uint64 * result
-) {
-	if (algorithm != Lib3MF::eEncryptionAlgorithm::Aes256Gcm)
-		*result = -1;
+	Lib3MF_pvoid userData) {
+
+	DekContext * dek = (DekContext *)userData;
+
+	Lib3MF::CContentEncryptionParams p(dek->wrapper, params);
+	dek->wrapper->Acquire(&p);
+
+
+	if (Lib3MF::eEncryptionAlgorithm::AES256_GCM != p.GetEncryptionAlgorithm())
+		*cipherNeeded = 0;
 	else {
-		DekContext * dek = (DekContext *)userData;
-
-		Lib3MF::CCipherData cd(dek->wrapper, cipherData);
-		dek->wrapper->Acquire(&cd);
-
-		Lib3MF::sAes256CipherValue cv = cd.GetAes256Gcm();
-
 		PEVP_CIPHER_CTX ctx;
 
-		auto it = dek->m_Context.find(cd.GetDescriptor());
+		auto it = dek->ciphers.find(p.GetDescriptor());
 
-		if (it != dek->m_Context.end()) {
+		if (it != dek->ciphers.end()) {
 			ctx = it->second;
 		} else {
-			ctx = AesMethods::Encrypt::init(cv.m_Key, cv.m_IV);
-			dek->m_Context[cd.GetDescriptor()] = ctx;
+			ByteVector key(32, 0), iv(12, 0), aad;
+			p.GetKey(key);
+			p.GetInitializationVector(iv);
+			p.GetAdditionalAuthenticationData(aad);
+			ctx = AesMethods::Encrypt::init(key.data(), iv.data(), aad.size(), aad.data());
+			dek->ciphers[p.GetDescriptor()] = ctx;
 		}
 
 		if (0 != cipherSize) {
 			size_t encrypted = AesMethods::Encrypt::encrypt(ctx, (Lib3MF_uint32)plainSize, plainBuffer, cipherBuffer);
-			*result = encrypted;
+			*cipherNeeded = encrypted;
 		} else {
-			if (!AesMethods::Encrypt::finish(ctx, cipherBuffer, sizeof(cv.m_Tag), cv.m_Tag)) {
-				*result = -2;
+			ByteVector tag(16, 0);
+			p.GetAuthenticationTag(tag);
+
+			if (!AesMethods::Encrypt::finish(ctx, cipherBuffer, (Lib3MF_uint32)tag.size(), tag.data())) {
+				*cipherNeeded = -2;
 			} else {
-				cd.SetAes256Gcm(cv);
-				dek->m_Context.erase(it);
+				p.SetAuthenticationTag(tag);
+				dek->ciphers.erase(it);
 			}
 		}
 	}
 }
 
 void EncryptionCallbacks::keyEncryptClientCallback(
-	Lib3MF_Consumer consumer,
-	Lib3MF::eEncryptionAlgorithm algorithm,
+	Lib3MF_AccessRight accessRight,
 	Lib3MF_uint64 plainSize,
 	const Lib3MF_uint8 * plainBuffer,
 	const Lib3MF_uint64 cipherSize,
 	Lib3MF_uint64* cipherNeeded,
 	Lib3MF_uint8 * cipherBuffer,
-	Lib3MF_pvoid userData,
-	Lib3MF_uint64 * result) {
+	Lib3MF_pvoid userData) {
 
-	if (algorithm != Lib3MF::eEncryptionAlgorithm::RsaOaepMgf1p)
-		*result = -1;
-	else {
+	KekContext const * context = (KekContext const *)userData;
+	Lib3MF::CAccessRight ar(context->wrapper, accessRight);
+	context->wrapper->Acquire(&ar);
+
+	if (Lib3MF::eWrappingAlgorithm::RSA_OAEP != ar.GetWrappingAlgorithm()
+		|| Lib3MF::eMgfAlgorithm::MGF1_SHA1 != ar.GetMgfAlgorithm()
+		|| Lib3MF::eDigestMethod::SHA1 != ar.GetDigestMethod())
+		*cipherNeeded = 0;
+	else if (nullptr == plainBuffer) {
+		*cipherNeeded = 256;
+	} else {
 
 		KekContext const * context = (KekContext const *)userData;
-		*result = RsaMethods::encrypt(context->key, plainSize, plainBuffer, cipherBuffer);
+		*cipherNeeded = RsaMethods::encrypt(context->key, plainSize, plainBuffer, cipherBuffer);
 	}
 }
 
 void EncryptionCallbacks::dataDecryptClientCallback(
-	Lib3MF::eEncryptionAlgorithm algorithm,
-	Lib3MF_CipherData cipherData,
+	Lib3MF_ContentEncryptionParams params,
 	Lib3MF_uint64 cipherSize,
 	const Lib3MF_uint8 * cipherBuffer,
 	const Lib3MF_uint64 plainSize,
 	Lib3MF_uint64 * plainNeeded,
 	Lib3MF_uint8 * plainBuffer,
-	Lib3MF_pvoid userData,
-	Lib3MF_uint64 * result) {
+	Lib3MF_pvoid userData) {
 
-	if (algorithm != Lib3MF::eEncryptionAlgorithm::Aes256Gcm)
-		*result = -1;
+	DekContext * dek = (DekContext *)userData;
+
+	Lib3MF::CContentEncryptionParams p(dek->wrapper, params);
+	dek->wrapper->Acquire(&p);
+
+
+	if (Lib3MF::eEncryptionAlgorithm::AES256_GCM != p.GetEncryptionAlgorithm())
+		*plainNeeded = 0;
 	else {
-		DekContext * dek = (DekContext *)userData;
-		Lib3MF::CCipherData cd(dek->wrapper, cipherData);
-		dek->wrapper->Acquire(&cd);
-
-		Lib3MF::sAes256CipherValue cv = cd.GetAes256Gcm();
-
 		PEVP_CIPHER_CTX ctx;
 
-		auto it = dek->m_Context.find(cd.GetDescriptor());
+		auto it = dek->ciphers.find(p.GetDescriptor());
 
-		if (it != dek->m_Context.end()) {
+		if (it != dek->ciphers.end()) {
 			ctx = it->second;
 		} else {
-			ctx = AesMethods::Decrypt::init(cv.m_Key, cv.m_IV);
-			dek->m_Context[cd.GetDescriptor()] = ctx;
+			ByteVector key(32, 0), iv(12, 0), aad;
+			p.GetKey(key);
+			p.GetInitializationVector(iv);
+			p.GetAdditionalAuthenticationData(aad);
+			ctx = AesMethods::Decrypt::init(key.data(), iv.data(), aad.size(), aad.data());
+			dek->ciphers[p.GetDescriptor()] = ctx;
 		}
 
-		if (0 != cipherSize) {
+		if (nullptr == plainBuffer) {
+			*plainNeeded = cipherSize;
+		} else if (0 != cipherSize) {
+
 			size_t decrypted = AesMethods::Decrypt::decrypt(ctx, (Lib3MF_uint32)cipherSize, cipherBuffer, plainBuffer);
-			*result = decrypted;
+			*plainNeeded = decrypted;
 		} else {
-			if (!AesMethods::Decrypt::finish(ctx, plainBuffer, cv.m_Tag)) {
-				*result = -2;
+			ByteVector tag(16, 0);
+			p.GetAuthenticationTag(tag);
+			if (!AesMethods::Decrypt::finish(ctx, plainBuffer, tag.data())) {
+				*plainNeeded = 0;
 			} else {
-				dek->m_Context.erase(it);
+				*plainNeeded = tag.size();
+				dek->ciphers.erase(it);
 			}
 		}
 	}
 }
 
 void EncryptionCallbacks::keyDecryptClientCallback(
-	Lib3MF_Consumer consumer,
-	Lib3MF::eEncryptionAlgorithm algorithm,
+	Lib3MF_AccessRight accessRight,
 	Lib3MF_uint64 cipherSize,
 	const Lib3MF_uint8 * cipherBuffer,
 	const Lib3MF_uint64 plainSize,
 	Lib3MF_uint64* plainNeeded,
 	Lib3MF_uint8 * plainBuffer,
-	Lib3MF_pvoid userData,
-	Lib3MF_uint64 * result) {
+	Lib3MF_pvoid userData) {
 
+	KekContext const * context = (KekContext const *)userData;
+	Lib3MF::CAccessRight ar(context->wrapper, accessRight);
+	context->wrapper->Acquire(&ar);
 
-	if (algorithm != Lib3MF::eEncryptionAlgorithm::RsaOaepMgf1p)
-		*result = -1;
+	if (Lib3MF::eWrappingAlgorithm::RSA_OAEP != ar.GetWrappingAlgorithm()
+		|| Lib3MF::eMgfAlgorithm::MGF1_SHA1 != ar.GetMgfAlgorithm()
+		|| Lib3MF::eDigestMethod::SHA1 != ar.GetDigestMethod())
+		*plainNeeded = 0;
+	else if (nullptr == plainBuffer) {
+		*plainNeeded = 32;
+	}
 	else {
-
-		KekContext const * context = (KekContext const *)userData;
-
 		ASSERT_EQ(cipherSize, context->size);
 		ASSERT_GE(plainSize, context->size);
 
-		*result = RsaMethods::decrypt(context->key, cipherSize, cipherBuffer, plainBuffer);
+		*plainNeeded = RsaMethods::decrypt(context->key, cipherSize, cipherBuffer, plainBuffer);
 	}
+}
+
+void EncryptionCallbacks::randomNumberCallback(
+	Lib3MF_uint64 nByteData,
+	Lib3MF_uint64 nNumBytes,
+	Lib3MF_pvoid pUserData,
+	Lib3MF_uint64 * pBytesWritten) {
+
+	int rc = RAND_bytes((unsigned char *)nByteData,  (int)nNumBytes);
+	if (rc != 1)
+		*pBytesWritten = 0;
+	else 
+		*pBytesWritten = nNumBytes;
 }
 
