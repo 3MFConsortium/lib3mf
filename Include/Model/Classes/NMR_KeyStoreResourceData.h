@@ -39,43 +39,28 @@ NMR_KeyStoreResourceData.h defines the KeyStoreResourceData Class. A ResourceDat
 #include "Common/NMR_Types.h"
 #include "Common/NMR_SecureContentTypes.h"
 #include "Model/Classes/NMR_PackageResourceID.h"
+#include "Model/Classes/NMR_KeyStoreCEKParams.h"
 namespace NMR {
 	enum eResourceDataState {
 		NEW = 0,
 		CLOSED,
 		OPEN
 	};
-	class CKeyStoreResourceData {
+	class CKeyStoreResourceData: public CKeyStoreCEKParams {
 		std::string m_sPath;
-		
-		eKeyStoreEncryptAlgorithm m_eAlgorithm;
-		nfBool m_bCompression;
-		
-		std::vector<nfByte> m_iv;
-		std::vector<nfByte> m_tag;
-		std::vector<nfByte> m_aad;
-
-		nfUint64 m_nfHandle;
-
 		static nfUint64 s_nfHandleCount;
-
 	public:
 		CKeyStoreResourceData(std::string const& path, 
-			eKeyStoreEncryptAlgorithm alg,
 			bool compression,
+			eKeyStoreEncryptAlgorithm alg,
 			std::vector<nfByte> const & iv,
 			std::vector<nfByte> const & tag,
 			std::vector<nfByte> const & aad);
 
-		eKeyStoreEncryptAlgorithm getEncryptionAlgorithm() const;
-		nfBool getCompression() const;
 		NMR::PPackageModelPath getPath() const;
-		nfUint64 getHandle() const;
 
-		nfBool empty() const;
-
-		void setIv(std::vector<nfByte> const &newIV);
-		void setTag(std::vector<nfByte> const & newTag);
+		void setInitVector(std::vector<nfByte> const &newIV);
+		void setAuthTag(std::vector<nfByte> const & newTag);
 	};
 	typedef std::shared_ptr<CKeyStoreResourceData> PKeyStoreResourceData;
 }

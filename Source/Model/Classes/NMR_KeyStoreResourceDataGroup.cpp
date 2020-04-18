@@ -3,47 +3,44 @@
 #include <memory>
 
 namespace NMR {
-	CKeyStoreResourceDataGroup::CKeyStoreResourceDataGroup(PUUID const & keyUUID)
-	{
-		m_sKeyUUID = keyUUID;
-	}
-	CKeyStoreResourceDataGroup::CKeyStoreResourceDataGroup(PUUID const & keyUUID, std::vector<PKeyStoreAccessRight> const & ar, std::vector<PKeyStoreResourceData> const & rd)
+
+	CKeyStoreResourceDataGroup::CKeyStoreResourceDataGroup(PUUID const & keyUUID, std::vector<PKeyStoreAccessRight> const & ar)
 	{
 		m_sKeyUUID = keyUUID;
 		m_AccessRights = ar;
-		m_ResourcesData = rd;
 	}
 
-	void CKeyStoreResourceDataGroup::removeAccessRight(NMR::PKeyStoreConsumer const & consumer)
+	void CKeyStoreResourceDataGroup::removeAccessRight(std::string const & consumerId)
 	{
-		if (!consumer.get())
+		if (consumerId.empty())
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
-		size_t n = m_ConsumerAccesstRight.erase(consumer->getConsumerID());
+		size_t n = m_ConsumerAccesstRight.erase(consumerId);
 		if (n > 0) {
 			auto it = m_AccessRights.begin();
 			while (it != m_AccessRights.end()) {
-				if ((*it)->getConsumer()->getConsumerID() == consumer->getConsumerID()) {
+				if ((*it)->getConsumer()->getConsumerID() == consumerId) {
 					it = m_AccessRights.erase(it);
 				}
 			}
 		}
 	}
 
-	PKeyStoreAccessRight CKeyStoreResourceDataGroup::addAccessRight(NMR::PKeyStoreConsumer const & consumer, eKeyStoreEncryptAlgorithm const & encryptAlgorithm)
-	{
-		PKeyStoreAccessRight ar = std::make_shared<CKeyStoreAccessRight>(consumer, encryptAlgorithm);
-		return addAccessRight(ar);
+	PUUID CKeyStoreResourceDataGroup::getKeyUUID() const {
+		return m_sKeyUUID;
 	}
 
-	PKeyStoreAccessRight CKeyStoreResourceDataGroup::addAccessRight(PKeyStoreAccessRight const & ar)
+	nfUint32 CKeyStoreResourceDataGroup::addAccessRight(PKeyStoreAccessRight const & ar)
 	{
-		if (m_ConsumerAccesstRight.find(ar->getConsumer()->getConsumerID()) != m_ConsumerAccesstRight.end()) {
+		std::string consumerId = ar->getConsumer()->getConsumerID();
+		if (m_ConsumerAccesstRight.find(consumerId) != m_ConsumerAccesstRight.end()) {
 			throw CNMRException(NMR_ERROR_KEYSTOREDUPLICATEACCESSRIGHT);
 		}
-
+		mtx.lock();
 		m_AccessRights.push_back(ar);
-		m_ConsumerAccesstRight[ar->getConsumer()->getConsumerID()] = ar;
-		return ar;
+		nfUint32 elIdx = (nfUint32)m_AccessRights.size() - 1;
+		m_ConsumerAccesstRight[consumerId] = ar;
+		mtx.unlock();
+		return elIdx;
 	}
 
 	nfUint32 CKeyStoreResourceDataGroup::getAccessRightCount()
@@ -58,13 +55,22 @@ namespace NMR {
 		return m_AccessRights[index];
 	}
 
-	PKeyStoreAccessRight CKeyStoreResourceDataGroup::findAccessRightByConsumer(NMR::PKeyStoreConsumer const & consumer)
+	PKeyStoreAccessRight CKeyStoreResourceDataGroup::findAccessRightByConsumerID(std::string const & consumerId) const
 	{
-		if (!consumer.get())
+		if (consumerId.empty())
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
-		if (m_ConsumerAccesstRight.find(consumer->getConsumerID()) != m_ConsumerAccesstRight.end())
-			return m_ConsumerAccesstRight[consumer->getConsumerID()];
+		auto found = m_ConsumerAccesstRight.find(consumerId);
+		if (found != m_ConsumerAccesstRight.end())
+			return (*found).second;
 		return nullptr;
+	}
+
+	std::vector<nfByte> const & CKeyStoreResourceDataGroup::getKey() const {
+		return m_rgKey;
+	}
+
+	void CKeyStoreResourceDataGroup::setKey(std::vector<nfByte> const & key) {
+		m_rgKey = key;
 	}
 
 }

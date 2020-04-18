@@ -1,10 +1,6 @@
 #include "Model/Classes/NMR_KeyStoreConsumer.h"
 namespace NMR {
 
-	CKeyStoreConsumer::CKeyStoreConsumer(std::string const & consumerID) {
-		m_sConsumerID = consumerID;
-	}
-
 	CKeyStoreConsumer::CKeyStoreConsumer(std::string const & consumerID, std::string const & keyID, std::string keyValue)
 	{
 		m_sConsumerID = consumerID;

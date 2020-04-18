@@ -87,7 +87,7 @@ eLib3MFCompression Lib3MF::translateCompression(bool compression) {
 		return eLib3MFCompression::Deflate;
 	return eLib3MFCompression::None;
 }
+
 bool Lib3MF::translateCompression(const eLib3MFCompression compression) {
 	return eLib3MFCompression::Deflate == compression;
 }
-

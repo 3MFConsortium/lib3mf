@@ -1,33 +1,44 @@
 #include "Model/Classes/NMR_KeyStoreAccessRight.h"
 #include "Common/NMR_Exception.h"
 namespace NMR {
-	CKeyStoreAccessRight::CKeyStoreAccessRight(PKeyStoreConsumer const & consumer, KEKPARAMS const & params)
-		:m_pConsumer(consumer), m_sKekParams(params)
+	CKeyStoreAccessRight::CKeyStoreAccessRight(
+		PKeyStoreConsumer const & consumer, 
+		eKeyStoreWrapAlgorithm const algorithm, 
+		eKeyStoreMaskGenerationFunction const mgf, 
+		eKeyStoreMessageDigest const digest, 
+		std::vector<nfByte> const & cipherValue)
+		:m_pConsumer(consumer), m_eAlgorithm(algorithm), m_eMgf(mgf), m_eDigest(digest), m_rgCipherValue(cipherValue)
 	{
 		if (nullptr == m_pConsumer)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-		if (params.m_eAlgorithm != eKeyStoreWrapAlgorithm::RSA_OAEP) {
+		if (algorithm != eKeyStoreWrapAlgorithm::RSA_OAEP) {
 			throw CNMRException(NMR_ERROR_KEYSTOREUNSUPPORTEDALGORITHM);
 		}
 
-		if (params.m_eMask != eKeyStoreMaskGenerationFunction::MGF1_SHA1
-			|| params.m_eMask != eKeyStoreMaskGenerationFunction::MGF1_SHA256) {
+		if (mgf != eKeyStoreMaskGenerationFunction::MGF1_SHA1
+			|| mgf != eKeyStoreMaskGenerationFunction::MGF1_SHA256) {
 			throw CNMRException(NMR_ERROR_KEYSTOREUNSUPPORTEDALGORITHM);
 		}
 
-		if (params.m_eDigest != eKeyStoreMessageDigest::SHA1
-			|| params.m_eDigest != eKeyStoreMessageDigest::SHA256)
+		if (digest != eKeyStoreMessageDigest::SHA1
+			|| digest != eKeyStoreMessageDigest::SHA256)
 			throw CNMRException(NMR_ERROR_KEYSTOREUNSUPPORTEDALGORITHM);
 	}
-
-	KEKPARAMS CKeyStoreAccessRight::getKEKParams()
-	{
-		return m_sKekParams;
-	}
-
 	PKeyStoreConsumer CKeyStoreAccessRight::getConsumer()
 	{
 		return m_pConsumer;
+	}
+	eKeyStoreWrapAlgorithm CKeyStoreAccessRight::getAlgorithm() const {
+		return m_eAlgorithm;
+	}
+	eKeyStoreMaskGenerationFunction CKeyStoreAccessRight::getMgf() const {
+		return m_eMgf;
+	}
+	eKeyStoreMessageDigest CKeyStoreAccessRight::getDigest() const {
+		return m_eDigest;
+	}
+	std::vector<nfByte> const & CKeyStoreAccessRight::getCipherValue() const {
+		return m_rgCipherValue;
 	}
 }

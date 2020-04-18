@@ -51,9 +51,9 @@ namespace Lib3MF {
 
 		class CContentEncryptionParams : public virtual IContentEncryptionParams, public virtual CBase {
 		private:
-			NMR::PKeyStoreCEKParams m_pParams;
+			NMR::PCKeyStoreContentEncryptionParams m_pParams;
 		public:
-			CContentEncryptionParams(NMR::PKeyStoreCEKParams const & p);
+			CContentEncryptionParams(NMR::PCKeyStoreContentEncryptionParams const & p);
 			// Inherited via IContentEncryptionParams
 			Lib3MF_uint64 GetDescriptor();
 			Lib3MF::eEncryptionAlgorithm GetEncryptionAlgorithm();

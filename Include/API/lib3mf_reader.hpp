@@ -99,8 +99,7 @@ public:
 
 	Lib3MF_uint32 GetWarningCount ();
 
-
-	void AddKeyWrappingCallback(const Lib3MF::KeyWrappingCallback pTheCallback, const std::string &sConsumerID, const Lib3MF_pvoid pUserData);
+	void AddKeyWrappingCallback(const std::string &sConsumerID, const Lib3MF::KeyWrappingCallback pTheCallback,  const Lib3MF_pvoid pUserData);
 
 	void SetContentEncryptionCallback(const Lib3MF::ContentEncryptionCallback pTheCallback, const Lib3MF_pvoid pUserData);
 

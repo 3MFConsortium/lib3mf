@@ -39,19 +39,48 @@ NMR_KeyStoreDecryptRight.h defines the KeyStoreDecryptRight Class. A decryptrigh
 #include "Common/NMR_Types.h"
 #include "Model/Classes/NMR_KeyStoreConsumer.h"
 namespace NMR {
+
 	class CKeyStoreCEKParams {
-	private:
-		eKeyStoreEncryptAlgorithm m_encryptionAlgorithm;
+	protected:
+		eKeyStoreEncryptAlgorithm m_eAlgorithm;
 		nfBool m_bCompression;
-		std::vector<nfByte> m_iv, m_tag, m_aad;
+		std::vector<nfByte> m_rgIv, m_rgTag, m_rgAad;
+		nfUint64 m_nDescriptor;
 	public:
-		CKeyStoreCEKParams();
 		CKeyStoreCEKParams(nfBool const & compression,
 			eKeyStoreEncryptAlgorithm const & encryptionAlgorithm,
-			std::vector<nfByte> const & iv, std::vector<nfByte> const & tag, std::vector<nfByte> const & aad);
+			std::vector<nfByte> const & iv,
+			std::vector<nfByte> const & tag, 
+			std::vector<nfByte> const & aad, 
+			nfUint64 descriptor);
 
+		eKeyStoreEncryptAlgorithm getEncryptionAlgorithm() const;
+		nfBool isCompressed() const;
+		std::vector<nfByte> const & getInitVector() const;
+		std::vector<nfByte> const & getAuthTag() const;
+		std::vector<nfByte> const & getAddAuthData() const;
+		nfUint64 getDescriptor() const;
+
+		void setAuthTag(std::vector<nfByte> const & buf);
+		void setAddAuthData(std::vector<nfByte> const & buf);
 	};
 
 	typedef std::shared_ptr<CKeyStoreCEKParams> PKeyStoreCEKParams;
+
+	class CKeyStoreContentEncryptionParams: public CKeyStoreCEKParams {
+		std::vector<nfByte> m_rgKey;
+	public:
+		CKeyStoreContentEncryptionParams(nfBool const & compression,
+			eKeyStoreEncryptAlgorithm const & encryptionAlgorithm,
+			std::vector<nfByte> const & key,
+			std::vector<nfByte> const & iv,
+			std::vector<nfByte> const & tag,
+			std::vector<nfByte> const & aad,
+			nfUint64 descriptor);
+
+		std::vector<nfByte> const & getKey() const;
+	};
+
+	typedef std::shared_ptr<CKeyStoreContentEncryptionParams> PCKeyStoreContentEncryptionParams;
 }
 #endif

@@ -401,22 +401,22 @@ namespace NMR {
 		case NMR_ERROR_PRODUCTIONEXTENSION_REQUIRED: return "Serialization of this Model requires the production extension.";
 		case NMR_ERROR_MODELRESOURCE_IN_DIFFERENT_MODEL: return "Referenced model resource must not be in a different model.";
 		case NMR_ERROR_PATH_NOT_ABSOLUTE: return "A path attribute element is not absolute.";
-		case NMR_ERROR_KEYSTOREDUPLICATECONSUMER: return "The KeyStore Consumer is not unique.";
-		case NMR_ERROR_KEYSTOREDUPLICATECONSUMERID: return "The KeyStore Consumer id is not unique";
+		case NMR_ERROR_KEYSTOREDUPLICATECONSUMER: return "A consumer already exists for this consumerid";
+		case NMR_ERROR_KEYSTOREDUPLICATECONSUMERID: return "The attribute consumerid is duplicated";
 		case NMR_ERROR_KEYSTOREDUPLICATECONSUMERKEYID: return "The KeyStore Consumer key id is not unique ";
 		case NMR_ERROR_KEYSTOREMISSINGCONSUMERID: return "No Consumer id found";
-		case NMR_ERROR_KEYSTOREDUPLICATERESOURCEDATAPATH: return "Duplicate KeyStore ResourceData path";
-		case NMR_ERROR_KEYSTOREDUPLICATECONSUMERINDEX: return "Duplicate KeyStore consumer index";
-		case NMR_ERROR_KEYSTOREDUPLICATERESOURCEDATA: return "The KeyStore ResourceData is not unique";
-		case NMR_ERROR_KEYSTOREDUPLICATEDECRYPTRIGHT: return "The KeyStore DecryptRight is not unique";
-		case NMR_ERROR_KEYSTOREINVALIDCONSUMERINDEX: return "The KeyStore DecryptRight consumer index is invalid";
-		case NMR_ERROR_KEYSTOREINVALIDENCRYPTIONALGORITHM: return "The KeyStore encryption algorithm is invalid";
+		case NMR_ERROR_KEYSTOREDUPLICATERESOURCEDATAPATH: return "The attribute path is duplicated";
+		case NMR_ERROR_KEYSTOREDUPLICATECONSUMERINDEX: return "The attribute consumerindex is duplicated";
+		case NMR_ERROR_KEYSTOREDUPLICATERESOURCEDATA: return "A ResourceData already exists for this path in the KeyStore";
+		case NMR_ERROR_KEYSTOREDUPLICATEACCESSRIGHT: return "An AccessRight already exists for this consumer in a ResourceDataGroup";
+		case NMR_ERROR_KEYSTOREINVALIDCONSUMERINDEX: return "The attribute consumerindex is invalid";
+		case NMR_ERROR_KEYSTOREINVALIDALGORITHM: return "The algorithm attribute is invalid";
 		case NMR_ERROR_KEYSTOREINVALIDCOMPRESSION: return "The KeyStore ResourceData compression is invalid";
 		case NMR_ERROR_KEYSTOREOPCCOULDNOTGETSTREAM: return "Could not get KeyStore stream";
 		case NMR_ERROR_KEYSTOREINVALIDCIPHERVALUE: return "Invalid keystore CipherValue value";
 		case NMR_ERROR_KEYSTOREMISSINGCIPHERVALUE: return "Missing cipher data";
-		case NMR_ERROR_KEKDESCRIPTORNOTFOUND: return "Required key encryption client was not registered for a consumer";
-		case NMR_ERROR_DEKDESCRIPTORNOTFOUND: return "Required data encryption client was not registered";
+		case NMR_ERROR_KEYSTOREUNSUPPORTEDALGORITHM: return "The algorithm attribute is unsupported";
+		case NMR_ERROR_KEYSTOREDUPLICATERESOURCEDATAGROUP: return "A resource data group already exist for this keyuuid";
 
 		// XML Parser Error Constants(0x9XXX)
 		case NMR_ERROR_XMLPARSER_INVALIDATTRIBVALUE: return "Invalid XML attribute value";
@@ -452,6 +452,8 @@ namespace NMR {
 		case NMR_ERROR_INVALIDNAMELENGTH: return "Invalid name length";
 		case NMR_ERROR_COULDNOTCREATEMODEL: return "Could not create model";
 		case NMR_ERROR_INVALIDTEXTURETYPE: return "Invalid Texture type";
+		case NMR_ERROR_KEKDESCRIPTORNOTFOUND: return "Required key encryption client was not registered for a consumer";
+		case NMR_ERROR_DEKDESCRIPTORNOTFOUND: return "Required data encryption client was not registered";
 
 		default:
 			return "unknown error";

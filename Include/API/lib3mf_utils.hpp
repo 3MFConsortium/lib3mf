@@ -53,9 +53,7 @@ eLib3MFWrappingAlgorithm translateWrappingAlgorithm(const NMR::eKeyStoreWrapAlgo
 NMR::eKeyStoreWrapAlgorithm translateWrappingAlgorithm(const eLib3MFWrappingAlgorithm algorithm);
 
 eLib3MFCompression translateCompression(bool compression);
-
 bool translateCompression(const eLib3MFCompression compression);
-
 
 }
 

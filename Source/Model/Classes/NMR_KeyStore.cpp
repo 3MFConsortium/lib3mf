@@ -56,23 +56,22 @@ namespace NMR {
 		m_UUID = uuid;
 	}
 
-	PKeyStoreConsumer CKeyStore::addConsumer(std::string id, std::string keyId, std::string keyValue)
+	void CKeyStore::addConsumer(PKeyStoreConsumer const & consumer)
 	{
+		std::string const id = consumer->getConsumerID();
 		if (m_ConsumerRefs.find(id) != m_ConsumerRefs.end()) {
 			throw CNMRException(NMR_ERROR_KEYSTOREDUPLICATECONSUMER);
 		}
-		PKeyStoreConsumer consumer = std::make_shared<CKeyStoreConsumer>(id, keyId, keyValue);
 		m_Consumers.push_back(consumer);
 		m_ConsumerRefs[id] = consumer;
-		return consumer;
 	}
 
-	nfUint32 CKeyStore::getConsumerCount() const
+	nfUint64 CKeyStore::getConsumerCount() const
 	{
 		return (uint32_t)m_Consumers.size();
 	}
 
-	PKeyStoreConsumer CKeyStore::getConsumerByIndex(nfUint64 index) const
+	PKeyStoreConsumer CKeyStore::getConsumer(nfUint64 index) const
 	{	
 		if (index >= m_Consumers.size())
 			throw CNMRException(NMR_ERROR_INVALIDINDEX);
@@ -92,7 +91,7 @@ namespace NMR {
 		size_t n = m_ConsumerRefs.erase(consumer->getConsumerID());
 		if (n > 0) {
 			for (auto it : m_ResourceDataGroups) {
-				it->removeAccessRight(consumer);
+				it->removeAccessRight(consumer->getConsumerID());
 			}
 			for (auto it = m_Consumers.begin(); it != m_Consumers.end(); it++) {
 				if ((*it) == consumer) {
@@ -103,21 +102,19 @@ namespace NMR {
 		}
 	}
 
-	nfUint32 CKeyStore::getResourceDataGroupCount() const
+	nfUint64 CKeyStore::getResourceDataGroupCount() const
 	{
-		return (uint32_t)m_ResourceDataGroups.size();
+		return m_ResourceDataGroups.size();
 	}
 
-	PKeyStoreResourceDataGroup CKeyStore::addResourceDataGroup(PUUID keyUUID, std::vector<PKeyStoreAccessRight> ar, std::vector<PKeyStoreResourceData> rd)
+	void CKeyStore::addResourceDataGroup(PKeyStoreResourceDataGroup const & dataGroup)
 	{
+		PUUID const keyUUID = dataGroup->getKeyUUID();
 		if (m_ResourceDataGroupsRefs.find(keyUUID) != m_ResourceDataGroupsRefs.end()) {
-			throw CNMRException(NMR_ERROR_KEYSTOREDUPLICATERESOURCEDATA);
+			throw CNMRException(NMR_ERROR_KEYSTOREDUPLICATERESOURCEDATAGROUP);
 		}
-		PKeyStoreResourceDataGroup resourceDataGroup = std::make_shared<CKeyStoreResourceDataGroup>(keyUUID, ar, rd);
-		m_ResourceDataGroups.push_back(resourceDataGroup);
-		m_ResourceDataGroupsRefs[keyUUID] = resourceDataGroup;
-		return resourceDataGroup;
-
+		m_ResourceDataGroups.push_back(dataGroup);
+		m_ResourceDataGroupsRefs[keyUUID] = dataGroup;
 	}
 
 	bool CKeyStore::empty() const {

@@ -33,22 +33,25 @@ NMR_KeyStoreAccessRight.h defines the KeyStoreAccessRight Class. A accessright i
 #ifndef __NMR_KEYSTOREACCESSRIGHT
 #define __NMR_KEYSTOREACCESSRIGHT
 
-#include <list>
-#include <map>
 #include <memory>
+#include <vector>
 #include "Common/NMR_Types.h"
 #include "Model/Classes/NMR_KeyStoreConsumer.h"
 namespace NMR {
 	class CKeyStoreAccessRight {
 	private:
 		PKeyStoreConsumer m_pConsumer;
-		KEKPARAMS m_sKekParams;
+		eKeyStoreWrapAlgorithm m_eAlgorithm;
+		eKeyStoreMaskGenerationFunction m_eMgf;
+		eKeyStoreMessageDigest m_eDigest; 
+		std::vector<nfByte> m_rgCipherValue;
 	public:
-		CKeyStoreAccessRight(PKeyStoreConsumer const & consumer,
-			KEKPARAMS const & kekParams);
-		
-		KEKPARAMS getKEKParams();
+		CKeyStoreAccessRight(PKeyStoreConsumer const & consumer, eKeyStoreWrapAlgorithm const algorithm, eKeyStoreMaskGenerationFunction const mgf, eKeyStoreMessageDigest const digest, std::vector<nfByte> const & cipherValue);
 		PKeyStoreConsumer getConsumer();
+		eKeyStoreWrapAlgorithm getAlgorithm() const;
+		eKeyStoreMaskGenerationFunction getMgf() const;
+		eKeyStoreMessageDigest getDigest() const;
+		std::vector<nfByte> const & getCipherValue() const;
 	};
 
 	typedef std::shared_ptr<CKeyStoreAccessRight> PKeyStoreAccessRight;

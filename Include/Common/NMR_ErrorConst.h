@@ -1150,7 +1150,7 @@ Model error codes (0x8XXX)
 #define NMR_ERROR_KEYSTOREINVALIDCONSUMERINDEX 0x80F6
 
 // Invalid KeyStore encryption algorithm
-#define NMR_ERROR_KEYSTOREINVALIDENCRYPTIONALGORITHM 0x80F7
+#define NMR_ERROR_KEYSTOREINVALIDALGORITHM 0x80F7
 
 // Invalid KeyStore compression
 #define NMR_ERROR_KEYSTOREINVALIDCOMPRESSION 0x80F8
@@ -1173,8 +1173,14 @@ Model error codes (0x8XXX)
 // Invalid KEK Param
 #define NMR_ERROR_KEYSTOREINVALIDKEKPARAM 0x80FE
 
-//Invalid key uuid param
+// Invalid key uuid param
 #define NMR_ERROR_KEYSTOREINVALIDKEYUUID 0x80FF
+
+// Unsupported algorithm
+#define NMR_ERROR_KEYSTOREUNSUPPORTEDALGORITHM 0x8100
+
+// Dupliaced KeySore ResourceDataGroup
+#define NMR_ERROR_KEYSTOREDUPLICATERESOURCEDATAGROUP 0x8101
 
 
 

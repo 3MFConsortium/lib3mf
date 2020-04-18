@@ -19,18 +19,19 @@ namespace Lib3MF {
 		}
 
 		Lib3MF::eCompression Lib3MF::Impl::CResourceData::GetCompression() {
-			return translateCompression(m_pResourceData->getCompression());
+			return translateCompression(m_pResourceData->isCompressed());
 		}
 
 		IPackagePart * CResourceData::GetPath() {
 			return new CPackagePart(m_pResourceData->getPath());
 		}
 
-
 		void CResourceData::GetAdditionalAuthenticationData(Lib3MF_uint64 nByteDataBufferSize, Lib3MF_uint64 * pByteDataNeededCount, Lib3MF_uint8 * pByteDataBuffer) {
-			NMR::nfUint64 bytesNeeded = m_pResourceData->getAad(nByteDataBufferSize, pByteDataBuffer);
-			if (nByteDataBufferSize < bytesNeeded) {
-				*pByteDataNeededCount = bytesNeeded;
+			std::vector<NMR::nfByte> const & aad = m_pResourceData->getAddAuthData();
+			if (nByteDataBufferSize < aad.size()) {
+				*pByteDataNeededCount = aad.size();
+			} else {
+				std::copy(aad.begin(), aad.end(), pByteDataBuffer);
 			}
 		}
 	}

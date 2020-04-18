@@ -6,7 +6,7 @@ using namespace Lib3MF::Impl;
 
 namespace Lib3MF {
 	namespace Impl {
-		CContentEncryptionParams::CContentEncryptionParams(NMR::PKeyStoreCEKParams const & p): m_pParams(p) {
+		CContentEncryptionParams::CContentEncryptionParams(NMR::PCKeyStoreContentEncryptionParams const & p): m_pParams(p) {
 			if (!p)
 				throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
 		}

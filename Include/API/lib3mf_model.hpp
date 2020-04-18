@@ -73,8 +73,6 @@ public:
 
 	NMR::CModel& model();
 
-	NMR::CKeyStore & keyStore();
-
 	/**
 	* Public member functions to implement.
 	*/

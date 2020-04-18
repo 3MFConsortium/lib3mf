@@ -46,7 +46,6 @@ namespace NMR {
 		std::string m_sKeyValue;
 		uint32_t	m_nIndex;
 	public:
-		CKeyStoreConsumer(std::string const & consumerID);
 		CKeyStoreConsumer(std::string const & consumerID, std::string const & keyID, std::string keyValue);
 
 		std::string getConsumerID() const;

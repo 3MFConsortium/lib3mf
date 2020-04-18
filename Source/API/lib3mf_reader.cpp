@@ -29,14 +29,19 @@ Abstract: This is a stub class definition of CReader
 */
 
 #include "lib3mf_reader.hpp"
-#include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
+#include "lib3mf_interfaceexception.hpp"
+#include "lib3mf_accessright.hpp"
+#include "lib3mf_contentencryptionparams.hpp"
 #include "Common/Platform/NMR_Platform.h"
 #include "Common/Platform/NMR_ImportStream_Shared_Memory.h"
 #include "Common/Platform/NMR_ImportStream_Callback.h"
 #include "Common/NMR_SecureContentTypes.h"
 #include "Common/NMR_SecureContext.h"
+#include "Model/Classes/NMR_KeyStore.h"
+
+
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
@@ -173,73 +178,44 @@ Lib3MF_uint32 CReader::GetWarningCount ()
 	return reader().getWarnings()->getWarningCount();
 }
 
-#include "Model/Classes/NMR_KeyStore.h"
-#include "Model/Classes/NMR_KeyStoreConsumer.h"
-#include "Model/Classes/NMR_KeyStoreResourceData.h"
-#include "lib3mf_consumer.hpp"
-
-void Lib3MF::Impl::CReader::AddKeyWrappingCallback(const Lib3MF::KeyWrappingCallback pTheCallback, const std::string &sConsumerID, const Lib3MF_pvoid pUserData) {
+void Lib3MF::Impl::CReader::AddKeyWrappingCallback(const std::string &sConsumerID, const Lib3MF::KeyWrappingCallback pTheCallback, const Lib3MF_pvoid pUserData) {
 	NMR::KeyWrappingDescriptor descriptor;
 	descriptor.m_sKekDecryptData.m_pUserData = pUserData;
-	descriptor.m_fnWrap = 
+	descriptor.m_fnWrap =
 		[this, pTheCallback](
-			std::vector<NMR::nfByte> const & cipher, 
+			std::vector<NMR::nfByte> const & cipher,
+			std::vector<NMR::nfByte> & plain,
 			NMR::KeyWrappingContext & ctx) {
-		NMR::PKeyStore keystore = this->reader().getKeyStore();
-		NMR::PKeyStoreConsumer consumer = keystore->findConsumerById(ctx.m_sConsumerId);
-		__NMRASSERT(nullptr != consumer);
-		NMR::PKeyStoreResourceData resourceData = keystore->findResourceDataByPath(ctx.m_sResourcePath);
-		__NMRASSERT(nullptr != resourceData);
-		NMR::PKeyStoreDecryptRight accessRight = resourceData->findDecryptRightByConsumer(consumer);
-		__NMRASSERT(nullptr != accessRight);
 
-		eEncryptionAlgorithm algorithm = (accessRight->getEncryptionAlgorithm() == NMR::eKeyStoreEncryptAlgorithm::RsaOaepMgf1p) 
-			? eEncryptionAlgorithm::RsaOaepMgf1p : eEncryptionAlgorithm::Aes256Gcm;
+		std::shared_ptr<IAccessRight> pAccessRight = std::make_shared<CAccessRight>(ctx.m_pAccessRight);
+		IBase * pBaseEntity(nullptr);
+		pBaseEntity = pAccessRight.get();
+		Lib3MF_AccessRight entityHandle = pBaseEntity;
 
+		plain.resize(ctx.m_keySize, 0);
 		NMR::nfUint64 result = 0;
-		std::shared_ptr<IConsumer> pConsumer = std::make_shared<CConsumer>(consumer);
-		IBase * pBaseConsumer(nullptr);
-		pBaseConsumer = pConsumer.get();
-		Lib3MF_Consumer handle = pBaseConsumer;
-		(*pTheCallback)(handle, algorithm, cipher.size(), cipher.data(),
-			ctx.m_KeyBuffer.size(), nullptr, ctx.m_KeyBuffer.data(), 
-			ctx.m_pUserData, &result);
-
-		if (result < 0)
+		(*pTheCallback)(entityHandle, cipher.size(), cipher.data(),
+			plain.size(), &result, plain.data(), ctx.m_pUserData);
+		if (result == 0)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_CALCULATIONABORTED);
-
 		return result;
 	};
-	m_pReader->getSecureContext()->addKekCtx(sConsumerID, descriptor);
+	reader().getSecureContext()->addKekCtx(sConsumerID, descriptor);
 }
 void Lib3MF::Impl::CReader::SetContentEncryptionCallback(const Lib3MF::ContentEncryptionCallback pTheCallback, const Lib3MF_pvoid pUserData) {
 	NMR::ContentEncryptionDescriptor descriptor;
 	descriptor.m_sDekDecryptData.m_pUserData = pUserData;
 	descriptor.m_fnCrypt = [this, pTheCallback](NMR::nfUint64 size, NMR::nfByte const * cipher, NMR::nfByte * plain, NMR::ContentEncryptionContext & ctx) {
-		Lib3MF::sAes256CipherValue cipherDataValue;
-
-		if (ctx.m_sCipherValue.m_iv.size() != sizeof(cipherDataValue.m_IV))
-			throw NMR::CNMRException(NMR_ERROR_INVALIDBUFFERSIZE);
-		std::copy(ctx.m_sCipherValue.m_iv.begin(), ctx.m_sCipherValue.m_iv.end(), cipherDataValue.m_IV);
-
-		if (ctx.m_sCipherValue.m_key.size() != sizeof(cipherDataValue.m_Key))
-			throw NMR::CNMRException(NMR_ERROR_INVALIDBUFFERSIZE);
-		std::copy(ctx.m_sCipherValue.m_key.begin(), ctx.m_sCipherValue.m_key.end(), cipherDataValue.m_Key);
-
-		if (ctx.m_sCipherValue.m_tag.size() != sizeof(cipherDataValue.m_Tag))
-			throw NMR::CNMRException(NMR_ERROR_INVALIDBUFFERSIZE);
-		std::copy(ctx.m_sCipherValue.m_tag.begin(), ctx.m_sCipherValue.m_tag.end(), cipherDataValue.m_Tag);
-
-		std::shared_ptr<CContentEncryptionParams> pCipherData = std::make_shared<CContentEncryptionParams>(cipherDataValue, ctx.m_nfHandler);
-		IBase * pBaseCipherData(nullptr);
-		pBaseCipherData = pCipherData.get();
-		Lib3MF_CipherData handle = pBaseCipherData;
+		std::shared_ptr<CContentEncryptionParams> pCekParams = std::make_shared<CContentEncryptionParams>(ctx.m_sParams);
+		IBase * pBaseEntity(nullptr);
+		pBaseEntity = pCekParams.get();
+		Lib3MF_ContentEncryptionParams entityHandle = pBaseEntity;
 		NMR::nfUint64 result = 0;
-		(*pTheCallback)(eEncryptionAlgorithm::Aes256Gcm, handle, size, cipher, size, nullptr, plain, ctx.m_pUserData, &result);
-		if (result < 0)
+		(*pTheCallback)(entityHandle, size, cipher, size, &result, plain, ctx.m_pUserData);
+		if (result == 0)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_CALCULATIONABORTED);
 		return result;
 	};
-	m_pReader->getSecureContext()->setDekCtx(descriptor);
+	reader().getSecureContext()->setDekCtx(descriptor);
 }
 

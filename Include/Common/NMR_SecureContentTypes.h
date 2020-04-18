@@ -48,28 +48,33 @@ namespace NMR {
 		nfByte m_exponent[KEYSTORE_TYPES_EXPONENTBUFFERSIZE];
 	};
 
-	struct CIPHERVALUE {
-		std::vector<nfByte> m_iv;
-		std::vector<nfByte> m_tag;
-		std::vector<nfByte> m_key;
+	enum eKeyStoreWrapAlgorithm {
+		RSA_OAEP = 0,	// http://www.w3.org/2001/04/xmlenc#rsa-oaep
 	};
 
-	struct KEKPARAMS {
-		std::string wrappingalgorithm;
-		std::string mgfalgorithm;
-		std::string digestmethod;
+	enum eKeyStoreMaskGenerationFunction {
+		MGF1_SHA1,		// http://www.w3.org/2009/xmlenc11#mgf1sha1
+		MGF1_SHA224,	// http://www.w3.org/2009/xmlenc11#mgf1sha224
+		MGF1_SHA256,	// http://www.w3.org/2009/xmlenc11#mgf1sha256
+		MGF1_SHA384,	// http://www.w3.org/2009/xmlenc11#mgf1sha384
+		MGF1_SHA512		// http://www.w3.org/2009/xmlenc11#mgf1sha512
+	};
+
+	enum eKeyStoreMessageDigest {
+		SHA1,			// http://www.w3.org/2000/09/xmldsig#sha1
+		SHA256			//http://www.w3.org/2001/04/xmlenc#sha256
 	};
 
 	enum eKeyStoreEncryptAlgorithm {
-		RsaOaepMgf1p = 0,
-		Aes256Gcm = 1
+		AES256_GCM = 1	// http://www.w3.org/2009/xmlenc11#aes256-gcm
 	};
 
+	class CKeyStoreContentEncryptionParams;
+	using PKeyStoreContentEncryptionParams = std::shared_ptr<CKeyStoreContentEncryptionParams>;
+
 	struct ContentEncryptionContext {
-		nfUint64 m_nfHandler;
-		CIPHERVALUE m_sCipherValue;
 		void * m_pUserData;
-		nfBool m_bCompression;
+		PKeyStoreContentEncryptionParams m_sParams;
 	};
 	using ContentEncryptionCbType = std::function<nfUint64(nfUint64, nfByte const *, nfByte *, ContentEncryptionContext &)>;
 
@@ -78,14 +83,16 @@ namespace NMR {
 		ContentEncryptionContext m_sDekDecryptData;
 	};
 
+	class CKeyStoreAccessRight;
+	using PKeyStoreAccessRight = std::shared_ptr<CKeyStoreAccessRight>;
+
 	struct KeyWrappingContext {
 		void * m_pUserData;
-		std::string m_sConsumerId;
-		std::string m_sResourcePath;
-		std::vector<nfByte> m_KeyBuffer;
+		PKeyStoreAccessRight m_pAccessRight;
+		nfUint64 m_keySize;
 	};
 
-	using KeyWrappingCbType = std::function<nfUint64(std::vector<nfByte> const &, KeyWrappingContext &)>;
+	using KeyWrappingCbType = std::function<nfUint64(std::vector<nfByte> const &, std::vector<nfByte> &, KeyWrappingContext &)>;
 
 	struct KeyWrappingDescriptor {
 		KeyWrappingCbType m_fnWrap;

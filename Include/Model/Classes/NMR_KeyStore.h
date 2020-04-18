@@ -33,10 +33,10 @@ NMR_KeyStore.h defines the KeyStore Class. A keystore is an in memory representa
 #ifndef __NMR_KEYSTORE
 #define __NMR_KEYSTORE
 
-#include <list>
-#include <map>
 #include <memory>
 #include <vector>
+#include <map>
+#include <set>
 #include "Common/NMR_Types.h"
 #include "Common/NMR_SecureContentTypes.h"
 #include "Common/NMR_UUID.h"
@@ -46,6 +46,8 @@ namespace NMR {
 	using PKeyStoreConsumer = std::shared_ptr<CKeyStoreConsumer>;
 	class CKeyStoreResourceDataGroup;
 	using PKeyStoreResourceDataGroup = std::shared_ptr<CKeyStoreResourceDataGroup>;
+	class CKeyStoreResourceData;
+	using PKeyStoreResourceData = std::shared_ptr<CKeyStoreResourceData>;
 	class CKeyStoreAccessRight;
 	using PKeyStoreAccessRight = std::shared_ptr<CKeyStoreAccessRight>;
 
@@ -60,18 +62,31 @@ namespace NMR {
 
 		std::vector<PKeyStoreResourceDataGroup> m_ResourceDataGroups;
 		std::map<PUUID, PKeyStoreResourceDataGroup> m_ResourceDataGroupsRefs;
+
+		std::vector<PKeyStoreResourceData> m_ResourceDatas;
+		std::set<std::string> m_RegisteredResourceDatas;
 	public:
 		CKeyStore();
 		~CKeyStore();
 		PUUID getUUID();
 		void setUUID(PUUID uuid);
-		PKeyStoreConsumer addConsumer(std::string id, std::string keyId, std::string keyValue);
-		nfUint32 getConsumerCount() const;
-		PKeyStoreConsumer getConsumerByIndex(nfUint64 index) const;
+		void addConsumer(PKeyStoreConsumer const &consumer);
+		nfUint64 getConsumerCount() const;
+		PKeyStoreConsumer getConsumer(nfUint64 index) const;
 		PKeyStoreConsumer findConsumerById(std::string id);
 		void removeConsumer(NMR::PKeyStoreConsumer consumer);
-		nfUint32 getResourceDataGroupCount() const;
-		PKeyStoreResourceDataGroup addResourceDataGroup(PUUID keyUUID, std::vector<PKeyStoreAccessRight> ar, std::vector<PKeyStoreResourceData> rd);
+		
+		nfUint64 getResourceDataGroupCount() const;
+		PKeyStoreResourceDataGroup getResourceDataGroup(nfUint64 index) const;
+		void addResourceDataGroup(PKeyStoreResourceDataGroup const &dataGroup);
+		PKeyStoreResourceDataGroup findResourceDataGroupByResourceDataPath(std::string const & rdPath);
+
+		nfUint64 addResourceData(PKeyStoreResourceDataGroup const & dg, PKeyStoreResourceData const & rd);
+		void removeResourceData(NMR::PKeyStoreResourceData const & rd);
+		nfUint64 getResourceDataCount();
+		PKeyStoreResourceData getResourceData(nfUint64 index) const;
+		PKeyStoreResourceData findResourceData(std::string const & path);
+
 		bool empty() const;
 	protected:
 		void clearAll();
