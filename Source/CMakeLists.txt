@@ -220,7 +220,7 @@ Source/Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreKEKParams.cpp
 Source/Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreCEKParams.cpp
 Source/Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreConsumer.cpp
 Source/Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreAccessRight.cpp
-Source/Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreKeyValue.cpp
+Source/Model/Reader/NMR_ModelReaderNode_StringValue.cpp
 Source/Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreResourceData.cpp
 Source/Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreResourceDataGroup.cpp
 Source/Model/Writer/NMR_KeyStoreOpcPackageWriter.cpp
