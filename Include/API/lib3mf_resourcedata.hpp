@@ -52,7 +52,9 @@ namespace Lib3MF {
 		class CResourceData : public virtual IResourceData, public virtual CBase {
 		private:
 			NMR::PKeyStoreResourceData m_pResourceData;
+			//NMR::PPackageModelPath m_pPath;
 		public:
+			//CResourceData(NMR::PKeyStoreResourceData resourceData, NMR::PPackageModelPath path);
 			CResourceData(NMR::PKeyStoreResourceData resourceData);
 
 

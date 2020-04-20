@@ -61,11 +61,12 @@ namespace NMR {
 		parseContent(pXMLReader);
 		
 		PKeyStoreResourceDataGroup rdg = CKeyStoreFactory::makeResourceDataGroup(m_keyUUID);
-		for (auto ar = m_accessRights.begin(); m_accessRights.end() != ar; ++ar)
+		for (auto ar = m_accessRights.begin(); ar != m_accessRights.end(); ++ar)
 			rdg->addAccessRight(*ar);
+
 		m_pKeyStore->addResourceDataGroup(rdg);
 
-		for (auto rd = m_resourcesData.begin(); rd != m_resourcesData.end; ++rd)
+		for (auto rd = m_resourcesData.begin(); rd != m_resourcesData.end(); ++rd)
 			m_pKeyStore->addResourceData(rdg, *rd);
 	}
 

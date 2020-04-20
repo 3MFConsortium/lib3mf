@@ -57,7 +57,9 @@ namespace NMR {
 			std::vector<nfByte> const & tag,
 			std::vector<nfByte> const & aad);
 
-		NMR::PPackageModelPath getPath() const;
+		inline std::string const & getPath() const {
+			return m_sPath;
+		}
 
 		void setInitVector(std::vector<nfByte> const &newIV);
 		void setAuthTag(std::vector<nfByte> const & newTag);

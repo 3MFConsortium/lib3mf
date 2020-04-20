@@ -33,11 +33,12 @@ NMR_ModelReaderNode_KeyStoreCipherValue.h defines the Model Reader Node class th
 
 #include "Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreCEKParams.h"
 #include "Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreCipherValue.h"
-#include "Model/Reader/NMR_ModelReader_KeyStoreBase64Value.h"
+#include "Model/Reader/NMR_ModelReaderNode_StringValue.h"
 
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Model/Classes/NMR_KeyStoreResourceData.h"
 #include "Model/Classes/NMR_KeyStoreAccessRight.h"
+#include "Model/Classes/NMR_KeyStoreFactory.h"
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_Exception_Windows.h"
 #include "Common/NMR_StringUtils.h"
@@ -45,6 +46,14 @@ NMR_ModelReaderNode_KeyStoreCipherValue.h defines the Model Reader Node class th
 #include "Libraries/cpp-base64/base64.h"
 
 namespace NMR {
+	namespace ParserUtils {
+		eKeyStoreEncryptAlgorithm parseEncryptionAlgorithm(std::string const & value) {
+			if (XML_3MF_SECURE_CONTENT_ENCRYPTION_AES256 == value) {
+				return eKeyStoreEncryptAlgorithm::AES256_GCM;
+			}
+			throw CNMRException(NMR_ERROR_KEYSTOREINVALIDALGORITHM);
+		}
+	}
 
 	CModelReaderNode_KeyStoreCEKParams::CModelReaderNode_KeyStoreCEKParams(CKeyStore * pKeyStore, PModelReaderWarnings pWarnings)
 		: CModelReaderNode_KeyStoreBase(pKeyStore, pWarnings)
@@ -53,7 +62,7 @@ namespace NMR {
 
 	PKeyStoreCEKParams CModelReaderNode_KeyStoreCEKParams::getCEKParams()
 	{
-		return m_CEKParams;
+		return CKeyStoreFactory::makeCEKParams(m_compression, m_encryptionAlgorithm, m_aad, m_iv, m_tag);
 	}
 
 	void CModelReaderNode_KeyStoreCEKParams::parseXML(_In_ CXmlReader * pXMLReader)
@@ -67,7 +76,6 @@ namespace NMR {
 		// Parse Content
 		parseContent(pXMLReader);
 
-		m_CEKParams = std::make_shared<CKeyStoreCEKParams>(m_compression, m_encryptionAlgorithm, m_iv, m_tag, m_aad);
 	}
 
 	void CModelReaderNode_KeyStoreCEKParams::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
@@ -76,16 +84,7 @@ namespace NMR {
 		__NMRASSERT(pAttributeValue);
 
 		if (strcmp(XML_3MF_SECURE_CONTENT_ENCRYPTION_ALGORITHM, pAttributeName) == 0) {
-			if (strcmp(XML_3MF_SECURE_CONTENT_ENCRYPTION_AES256, pAttributeValue) == 0) {
-				m_encryptionAlgorithm = eKeyStoreEncryptAlgorithm::Aes256Gcm;
-			}
-			else if (strcmp(XML_3MF_SECURE_CONTENT_ENCRYPTION_RSA, pAttributeValue) == 0) {
-				m_encryptionAlgorithm = eKeyStoreEncryptAlgorithm::RsaOaepMgf1p;
-			}
-			else {
-				m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREINVALIDALGORITHM), eModelReaderWarningLevel::mrwInvalidOptionalValue);
-				m_encryptionAlgorithm = eKeyStoreEncryptAlgorithm::Aes256Gcm;
-			}
+			m_encryptionAlgorithm = ParserUtils::parseEncryptionAlgorithm(pAttributeValue);
 		}
 		else if (strcmp(XML_3MF_SECURE_CONTENT_COMPRESSION, pAttributeName) == 0) {
 			if (strcmp(XML_3MF_SECURE_CONTENT_COMPRESSION_DEFLATE, pAttributeValue) == 0) {
@@ -93,10 +92,12 @@ namespace NMR {
 			}
 			else if (strcmp(XML_3MF_SECURE_CONTENT_COMPRESSION_NONE, pAttributeValue) == 0) {
 				m_compression = false;
+			} else {
+				m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREINVALIDCOMPRESSION), mrwInvalidOptionalValue);
 			}
 		}
 		else
-		m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE), mrwInvalidOptionalValue);
+			m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE), mrwInvalidOptionalValue);
 	}
 
 	void CModelReaderNode_KeyStoreCEKParams::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
@@ -106,19 +107,21 @@ namespace NMR {
 		__NMRASSERT(pNameSpace);
 
 		if (strcmp(pChildName, XML_3MF_SECURE_CONTENT_IV) == 0) {
-			PModelReaderNode_KeyStoreBase64Value pXMLNode = std::make_shared<CModelReaderNode_KeyStoreBase64Value>(m_pKeyStore, m_pWarnings);
+			PModelReaderNode_StringValue pXMLNode = std::make_shared<CModelReaderNode_StringValue>(m_pWarnings);
 			pXMLNode->parseXML(pXMLReader);
-			m_iv = pXMLNode->getValue();
+			m_iv = base64_decode(pXMLNode->getValue());
 		}
 		else if (strcmp(pChildName, XML_3MF_SECURE_CONTENT_TAG) == 0) {
-			PModelReaderNode_KeyStoreBase64Value pXMLNode = std::make_shared<CModelReaderNode_KeyStoreBase64Value>(m_pKeyStore, m_pWarnings);
+			PModelReaderNode_StringValue pXMLNode = std::make_shared<CModelReaderNode_StringValue>(m_pWarnings);
 			pXMLNode->parseXML(pXMLReader);
-			m_tag = pXMLNode->getValue();
+			m_tag = base64_decode(pXMLNode->getValue());
 		}
 		else if (strcmp(pChildName, XML_3MF_SECURE_CONTENT_AAD) == 0) {
-			PModelReaderNode_KeyStoreBase64Value pXMLNode = std::make_shared<CModelReaderNode_KeyStoreBase64Value>(m_pKeyStore, m_pWarnings);
+			PModelReaderNode_StringValue pXMLNode = std::make_shared<CModelReaderNode_StringValue>(m_pWarnings);
 			pXMLNode->parseXML(pXMLReader);
-			m_aad = pXMLNode->getValue();
+			m_aad = base64_decode(pXMLNode->getValue());
+		} else {
+			m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
 		}
 	}
 }

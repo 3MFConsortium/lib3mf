@@ -31,7 +31,7 @@ NMR_ModelReaderNode_KeyStoreKeyValue.h defines the Model Reader Node class that 
 
 --*/
 
-#include "Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreKeyValue.h"
+#include "Model/Reader/NMR_ModelReaderNode_StringValue.h"
 
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Common/NMR_Exception.h"
@@ -40,18 +40,12 @@ NMR_ModelReaderNode_KeyStoreKeyValue.h defines the Model Reader Node class that 
 
 namespace NMR {
 
-	CModelReaderNode_KeyStoreKeyValue::CModelReaderNode_KeyStoreKeyValue(CKeyStore * pKeyStore, PModelReaderWarnings pWarnings)
-		: CModelReaderNode_KeyStoreBase(pKeyStore, pWarnings)
-	{
-		m_sKeyValue = "";
-	}
-
-	std::string CModelReaderNode_KeyStoreKeyValue::GetKeyValue()
+	std::string const & CModelReaderNode_StringValue::getValue() const
 	{
 		return m_sKeyValue;
 	}
 
-	void CModelReaderNode_KeyStoreKeyValue::parseXML(_In_ CXmlReader * pXMLReader)
+	void CModelReaderNode_StringValue::parseXML(_In_ CXmlReader * pXMLReader)
 	{
 		// Parse name
 		parseName(pXMLReader);
@@ -63,7 +57,7 @@ namespace NMR {
 		parseContent(pXMLReader);
 	}
 
-	void CModelReaderNode_KeyStoreKeyValue::OnText(_In_z_ const nfChar * pText, _In_ CXmlReader * pXMLReader)
+	void CModelReaderNode_StringValue::OnText(_In_z_ const nfChar * pText, _In_ CXmlReader * pXMLReader)
 	{
 		__NMRASSERT(pText);
 

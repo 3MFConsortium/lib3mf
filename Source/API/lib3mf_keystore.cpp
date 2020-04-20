@@ -8,6 +8,7 @@
 #include "lib3mf_utils.hpp"
 
 #include "Model/Classes/NMR_KeyStoreFactory.h"
+#include "Model/Classes/NMR_PackageResourceID.h"
 
 using namespace Lib3MF::Impl;
 
@@ -100,8 +101,14 @@ Lib3MF::Impl::IResourceData * Lib3MF::Impl::CKeyStore::AddResourceData(Lib3MF::I
 	CResourceDataGroup * dg = dynamic_cast<CResourceDataGroup *>(pResourceDataGroup);
 	if (!dg)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+	
+	CPackagePart * modelPath = dynamic_cast<CPackagePart *>(pPartPath);
+	if (!dg)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+
 	std::vector<NMR::nfByte> aad(pAdditionalAuthenticationDataBuffer, pAdditionalAuthenticationDataBuffer + nAdditionalAuthenticationDataBufferSize);
-	NMR::PKeyStoreResourceData rd = NMR::CKeyStoreFactory::makeResourceData(pPartPath->Get(), algorithm, compression, aad);
+	NMR::PKeyStoreCEKParams params = NMR::CKeyStoreFactory::makeCEKParams(compression, algorithm, aad);
+	NMR::PKeyStoreResourceData rd = NMR::CKeyStoreFactory::makeResourceData(pPartPath->Get(), params);
 	m_pKeyStore->addResourceData(dg->resourceDataGroup(), rd);
 	return new CResourceData(rd);
 }

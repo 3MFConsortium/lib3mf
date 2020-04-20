@@ -87,6 +87,8 @@ namespace NMR {
 		PKeyStoreResourceData getResourceData(nfUint64 index) const;
 		PKeyStoreResourceData findResourceData(std::string const & path);
 
+		std::vector<PKeyStoreResourceData> getResourceDataByGroup(PKeyStoreResourceDataGroup const & rdg) const;
+
 		bool empty() const;
 	protected:
 		void clearAll();

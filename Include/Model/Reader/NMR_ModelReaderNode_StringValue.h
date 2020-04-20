@@ -46,14 +46,14 @@ namespace NMR {
 		void CModelReaderNode_StringValue::OnText(_In_z_ const nfChar * pText, _In_ CXmlReader * pXMLReader);
 	public:
 		CModelReaderNode_StringValue() = delete;
-		CModelReaderNode_StringValue(_In_ CKeyStore * pKeyStore, _In_ PModelReaderWarnings pWarnings);
+		using CModelReaderNode::CModelReaderNode;
 
-		std::string GetKeyValue();
+		std::string const & getValue() const;
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 	};
 
-	typedef std::shared_ptr <CModelReaderNode_StringValue> PModelReaderNode_KeyStoreKeyValue;
+	typedef std::shared_ptr <CModelReaderNode_StringValue> PModelReaderNode_StringValue;
 }
 
 #endif // __NMR_MODELREADERNODE_KEYSTOREKEYVALUE

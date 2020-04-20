@@ -35,6 +35,7 @@ NMR_ModelReaderNode_KeyStoreResourceData.h defines the Model Reader Node class t
 #include "Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreCEKParams.h"
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Model/Classes/NMR_KeyStoreResourceData.h"
+#include "Model/Classes/NMR_KeyStoreFactory.h"
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_Exception_Windows.h"
 #include "Common/NMR_StringUtils.h"
@@ -49,7 +50,7 @@ namespace NMR {
 
 	PKeyStoreResourceData CModelReaderNode_KeyStoreResourceData::getResourceData()
 	{
-		return m_pResourceData;
+		return CKeyStoreFactory::makeResourceData(m_path, m_sCekParams);
 	}
 
 	void CModelReaderNode_KeyStoreResourceData::parseXML(_In_ CXmlReader * pXMLReader)
@@ -62,9 +63,6 @@ namespace NMR {
 
 		// Parse Content
 		parseContent(pXMLReader);
-
-		// TODO: add resource data on resource data group
-		m_pResourceData = m_pResourceDataGroup->addResourceData(m_path, m_sCekParams.encryptionAlgorithm, m_sCekParams.compression);
 	}
 
 	void CModelReaderNode_KeyStoreResourceData::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
@@ -89,7 +87,7 @@ namespace NMR {
 
 		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_SECURECONTENTSPEC) == 0) {
 			if (strcmp(pChildName, XML_3MF_ELEMENT_CEKPARAMS) == 0) {
-				PModelReaderNode_KeyStoreCEKParams pXMLNode = std::make_shared<CModelReaderNode_KeyStoreCEKParams>(m_pResourceData, m_pWarnings);
+				PModelReaderNode_KeyStoreCEKParams pXMLNode = std::make_shared<CModelReaderNode_KeyStoreCEKParams>(m_pKeyStore, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 				m_sCekParams = pXMLNode->getCEKParams();
 			}

@@ -186,7 +186,7 @@ namespace NMR {
 		if (m_pSecureContext->hasDekCtx()) {
 			for (nfUint64 i = 0; i < m_pKeyStore->getResourceDataCount(); ++i) {
 				NMR::PKeyStoreResourceData rd = m_pKeyStore->getResourceData(i);
-				NMR::PKeyStoreResourceDataGroup rdg = m_pKeyStore->findResourceDataGroupByResourceDataPath(rd->getPath()->getPath());
+				NMR::PKeyStoreResourceDataGroup rdg = m_pKeyStore->findResourceDataGroupByResourceDataPath(rd->getPath());
 				PKeyStoreContentEncryptionParams params = CKeyStoreFactory::makeContentEncryptionParams(rd, rdg);
 				ContentEncryptionDescriptor descriptor = m_pSecureContext->getDekCtx();
 				descriptor.m_sDekDecryptData.m_sParams= params;

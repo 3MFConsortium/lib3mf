@@ -127,7 +127,7 @@ namespace NMR {
 			} else if (strcmp(XML_3MF_SECURE_CONTENT_DIGESTMETHOD, pAttributeName)) {
 				m_sKekParams.m_eDigest = ParserUtils::parseMessageDigest(pAttributeValue);
 			} else {
-				m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREINVALIDKEKPARAM), eModelReaderWarningLevel::mrwInvalidOptionalValue);
+				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE), mrwInvalidOptionalValue);
 			}
 		}
 		catch (CNMRException const & e) {

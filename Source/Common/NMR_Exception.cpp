@@ -401,6 +401,7 @@ namespace NMR {
 		case NMR_ERROR_PRODUCTIONEXTENSION_REQUIRED: return "Serialization of this Model requires the production extension.";
 		case NMR_ERROR_MODELRESOURCE_IN_DIFFERENT_MODEL: return "Referenced model resource must not be in a different model.";
 		case NMR_ERROR_PATH_NOT_ABSOLUTE: return "A path attribute element is not absolute.";
+			//keystore error codes
 		case NMR_ERROR_KEYSTOREDUPLICATECONSUMER: return "A consumer already exists for this consumerid";
 		case NMR_ERROR_KEYSTOREDUPLICATECONSUMERID: return "The attribute consumerid is duplicated";
 		case NMR_ERROR_KEYSTOREDUPLICATECONSUMERKEYID: return "The KeyStore Consumer key id is not unique ";
@@ -413,10 +414,15 @@ namespace NMR {
 		case NMR_ERROR_KEYSTOREINVALIDALGORITHM: return "The algorithm attribute is invalid";
 		case NMR_ERROR_KEYSTOREINVALIDCOMPRESSION: return "The KeyStore ResourceData compression is invalid";
 		case NMR_ERROR_KEYSTOREOPCCOULDNOTGETSTREAM: return "Could not get KeyStore stream";
-		case NMR_ERROR_KEYSTOREINVALIDCIPHERVALUE: return "Invalid keystore CipherValue value";
-		case NMR_ERROR_KEYSTOREMISSINGCIPHERVALUE: return "Missing cipher data";
+		case NMR_ERROR_KEYSTOREINVALIDCIPHERVALUE: return "Invalid CipherValue elment value";
+		case NMR_ERROR_KEYSTOREMISSINGCIPHERDATA: return "Element cipherdata is missing";
 		case NMR_ERROR_KEYSTOREUNSUPPORTEDALGORITHM: return "The algorithm attribute is unsupported";
 		case NMR_ERROR_KEYSTOREDUPLICATERESOURCEDATAGROUP: return "A resource data group already exist for this keyuuid";
+		case NMR_ERROR_KEYSTOREINVALIDMGF: return "The mfgalgorithm attribute has invalid value";
+		case NMR_ERROR_KEYSTOREINVALIDDIGEST: return "The digestmethod attribute has invalid value";
+		case NMR_ERROR_KEYSTOREINCONSISTENTKEKPARAMS: return "Element kekparams ha invalid configuration";
+		case NMR_ERROR_KEYSTOREMISSINGCONSUMERINDEX: return "Attribute consumerindex is missing";
+		case NMR_ERROR_KEYSTOREMISSINGKEKPARAMS: return "Element kekparams is missing";
 
 		// XML Parser Error Constants(0x9XXX)
 		case NMR_ERROR_XMLPARSER_INVALIDATTRIBVALUE: return "Invalid XML attribute value";

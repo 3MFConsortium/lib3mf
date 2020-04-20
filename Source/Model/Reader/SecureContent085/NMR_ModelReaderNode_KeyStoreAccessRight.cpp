@@ -77,7 +77,7 @@ namespace NMR {
 		if (!m_bHasParams)
 			m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREMISSINGKEKPARAMS), eModelReaderWarningLevel::mrwFatal);
 		if (!m_bHasCipherData)
-			m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREMISSINGCIPHERVALUE), eModelReaderWarningLevel::mrwFatal);
+			m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREMISSINGCIPHERDATA), eModelReaderWarningLevel::mrwFatal);
 	}
 
 	void CModelReaderNode_KeyStoreAccessRight::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
