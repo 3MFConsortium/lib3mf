@@ -156,7 +156,6 @@ Source/Model/Reader/NMR_ModelReader.cpp
 Source/Model/Reader/NMR_ModelReaderNode.cpp
 Source/Model/Reader/NMR_ModelReaderNode_ModelBase.cpp
 Source/Model/Reader/NMR_ModelReaderNode_KeyStoreBase.cpp
-Source/Model/Reader/NMR_ModelReader_KeyStoreBase64Value.cpp
 Source/Model/Reader/NMR_ModelReaderWarnings.cpp
 Source/Model/Reader/NMR_ModelReader_3MF.cpp
 Source/Model/Reader/NMR_ModelReader_3MF_Native.cpp
