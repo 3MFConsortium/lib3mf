@@ -41,8 +41,8 @@ namespace NMR {
 
 	class CModelReaderNode_KeyStoreBase64Value : public CModelReaderNode_KeyStoreBase {
 	private:
-		std::vector<nfByte> m_decodedValue;
-		std::string m_sCodedValue;
+		std::vector<nfByte> m_rgDecodedBuffer;
+		std::string m_sEncodedValue;
 
 	protected:
 		virtual void OnText(_In_z_ const nfChar * pText, _In_ CXmlReader * pXMLReader);
@@ -50,7 +50,7 @@ namespace NMR {
 		CModelReaderNode_KeyStoreBase64Value() = delete;
 		CModelReaderNode_KeyStoreBase64Value(_In_ CKeyStore * pKeyStore, _In_ PModelReaderWarnings pWarnings);
 
-		std::vector<nfByte> getValue();
+		std::vector<nfByte> const & getValue() const;
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 	};

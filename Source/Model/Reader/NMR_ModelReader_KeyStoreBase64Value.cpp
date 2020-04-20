@@ -31,7 +31,7 @@ NMR_ModelReaderNode_KeyStoreCipherValue.h defines the Model Reader Node class th
 
 --*/
 
-#include "Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreBase64Value.h"
+#include "Model/Reader/NMR_ModelReader_KeyStoreBase64Value.h"
 
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Model/Classes/NMR_KeyStoreResourceData.h"
@@ -41,19 +41,17 @@ NMR_ModelReaderNode_KeyStoreCipherValue.h defines the Model Reader Node class th
 #include "Common/NMR_StringUtils.h"
 
 #include "Libraries/cpp-base64/base64.h"
-#include "..\..\..\Include\Model\Reader\NMR_ModelReader_KeyStoreBase64Value.h"
 
 namespace NMR {
 
 	CModelReaderNode_KeyStoreBase64Value::CModelReaderNode_KeyStoreBase64Value(CKeyStore * pKeyStore, PModelReaderWarnings pWarnings)
 		: CModelReaderNode_KeyStoreBase(pKeyStore, pWarnings)
 	{
-		m_sCodedValue = "";
 	}
 
-	std::vector<nfByte> CModelReaderNode_KeyStoreBase64Value::getValue()
+	std::vector<nfByte> const & CModelReaderNode_KeyStoreBase64Value::getValue() const
 	{
-		return m_decodedValue;
+		return m_rgDecodedBuffer;
 	}
 
 	void CModelReaderNode_KeyStoreBase64Value::parseXML(_In_ CXmlReader * pXMLReader)
@@ -67,7 +65,7 @@ namespace NMR {
 		// Parse Content
 		parseContent(pXMLReader);
 
-		m_decodedValue = base64_decode(m_sCodedValue);
+		m_rgDecodedBuffer = base64_decode(m_sEncodedValue);
 	}
 
 	void CModelReaderNode_KeyStoreBase64Value::OnText(_In_z_ const nfChar * pText, _In_ CXmlReader * pXMLReader)
@@ -75,7 +73,7 @@ namespace NMR {
 		__NMRASSERT(pAttributeName);
 		__NMRASSERT(pAttributeValue);
 
-		m_sCodedValue += std::string(pText);
+		m_sEncodedValue += std::string(pText);
 	}
 
 }

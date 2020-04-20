@@ -83,7 +83,7 @@ namespace NMR {
 				m_encryptionAlgorithm = eKeyStoreEncryptAlgorithm::RsaOaepMgf1p;
 			}
 			else {
-				m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREINVALIDENCRYPTIONALGORITHM), eModelReaderWarningLevel::mrwInvalidOptionalValue);
+				m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREINVALIDALGORITHM), eModelReaderWarningLevel::mrwInvalidOptionalValue);
 				m_encryptionAlgorithm = eKeyStoreEncryptAlgorithm::Aes256Gcm;
 			}
 		}

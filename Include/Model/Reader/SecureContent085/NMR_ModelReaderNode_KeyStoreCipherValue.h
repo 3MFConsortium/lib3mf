@@ -36,21 +36,20 @@ NMR_ModelReaderNode_KeyStoreCipherValue.h defines the Model Reader Node class th
 #include "Model/Reader/NMR_ModelReaderNode_KeyStoreBase.h"
 #include "Model/Reader/NMR_ModelReaderNode.h"
 #include "Model/Classes/NMR_KeyStore.h"
-#include "Model/Classes/NMR_KeyStoreDecryptRight.h"
+#include "Model/Classes/NMR_KeyStoreAccessRight.h"
 
 namespace NMR {
 
 	class CModelReaderNode_KeyStoreCipherValue: public CModelReaderNode_KeyStoreBase {
 	private:
-		CIPHERVALUE m_sCipherValue;
-		std::string m_sCipherValueAccumulator;
+		std::vector<nfByte> m_sCipherValue;
 	protected:
-		virtual void OnText(_In_z_ const nfChar * pText, _In_ CXmlReader * pXMLReader);
+		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 	public:
 		CModelReaderNode_KeyStoreCipherValue() = delete;
 		CModelReaderNode_KeyStoreCipherValue(_In_ CKeyStore * pKeyStore, _In_ PModelReaderWarnings pWarnings);
 
-		CIPHERVALUE getCipherValue();
+		std::vector<nfByte> const & getCipherValue() const;
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 	};

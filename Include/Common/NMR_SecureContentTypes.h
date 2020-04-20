@@ -43,26 +43,23 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <functional>
 namespace NMR {
 
-	struct RSAKEYVALUE {
-		nfByte m_modulus[KEYSTORE_TYPES_MODULUSBUFFERSIZE];
-		nfByte m_exponent[KEYSTORE_TYPES_EXPONENTBUFFERSIZE];
-	};
-
 	enum eKeyStoreWrapAlgorithm {
-		RSA_OAEP = 0,	// http://www.w3.org/2001/04/xmlenc#rsa-oaep
+		RSA_OAEP = 1,	// http://www.w3.org/2009/xmlenc11#rsa-oaep, http://www.w3.org/2001/04/xmlenc#rsa-oaep-mgf1p
 	};
 
 	enum eKeyStoreMaskGenerationFunction {
-		MGF1_SHA1,		// http://www.w3.org/2009/xmlenc11#mgf1sha1
-		MGF1_SHA224,	// http://www.w3.org/2009/xmlenc11#mgf1sha224
-		MGF1_SHA256,	// http://www.w3.org/2009/xmlenc11#mgf1sha256
-		MGF1_SHA384,	// http://www.w3.org/2009/xmlenc11#mgf1sha384
-		MGF1_SHA512		// http://www.w3.org/2009/xmlenc11#mgf1sha512
+		MGF1_SHA1 = 160,	// http://www.w3.org/2009/xmlenc11#mgf1sha1
+		MGF1_SHA224 = 224,	// http://www.w3.org/2009/xmlenc11#mgf1sha224
+		MGF1_SHA256 = 256,	// http://www.w3.org/2009/xmlenc11#mgf1sha256
+		MGF1_SHA384 = 384,	// http://www.w3.org/2009/xmlenc11#mgf1sha384
+		MGF1_SHA512 = 512	// http://www.w3.org/2009/xmlenc11#mgf1sha512
 	};
 
 	enum eKeyStoreMessageDigest {
-		SHA1,			// http://www.w3.org/2000/09/xmldsig#sha1
-		SHA256			//http://www.w3.org/2001/04/xmlenc#sha256
+		SHA1 = 160,			// http://www.w3.org/2000/09/xmldsig#sha1
+		SHA256 = 256,		// http://www.w3.org/2001/04/xmlenc#sha256
+		SHA384 = 384,		// http://www.w3.org/2001/04/xmlenc#sha384
+		SHA512 = 512,		// http://www.w3.org/2001/04/xmlenc#sha512
 	};
 
 	enum eKeyStoreEncryptAlgorithm {
@@ -89,7 +86,6 @@ namespace NMR {
 	struct KeyWrappingContext {
 		void * m_pUserData;
 		PKeyStoreAccessRight m_pAccessRight;
-		nfUint64 m_keySize;
 	};
 
 	using KeyWrappingCbType = std::function<nfUint64(std::vector<nfByte> const &, std::vector<nfByte> &, KeyWrappingContext &)>;

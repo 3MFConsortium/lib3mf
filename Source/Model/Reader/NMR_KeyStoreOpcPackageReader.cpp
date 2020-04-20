@@ -42,9 +42,11 @@ NMR_KeyStoreOpcPackageReader.cpp defines an OPC Package reader in a portable way
 #include "Common/Platform/NMR_ImportStream_Encrypted.h"
 #include "Common/OPC/NMR_OpcPackageReader.h"
 #include "Common/OPC/NMR_OpcPackagePart.h"
+#include "Model/Classes/NMR_KeyStoreFactory.h"
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Model/Classes/NMR_KeyStore.h"
 #include "Model/Classes/NMR_KeyStoreResourceData.h"
+#include "Model/Classes/NMR_KeyStoreResourceDataGroup.h"
 #include "Model/Reader/NMR_ModelReader_InstructionElement.h"
 #include "Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStore.h"
 
@@ -77,15 +79,18 @@ namespace NMR {
 	POpcPackagePart CKeyStoreOpcPackageReader::createPart(std::string sPath) {
 		auto pPart = m_pPackageReader->createPart(sPath);
 		if (m_pSecureContext->hasDekCtx()) {
-			NMR::PKeyStoreResourceData rd = m_pKeyStore->findResourceDataByPath(sPath);
-			if (nullptr != rd) {
+			//TODO find resourcedatagroup, find resource data, create contentencryptionparams, set on the context
+			NMR::PKeyStoreResourceDataGroup rdg = m_pKeyStore->findResourceDataGroupByResourceDataPath(sPath);
+			if (nullptr != rdg) {
+				NMR::PKeyStoreResourceData rd = m_pKeyStore->findResourceData(sPath);
+				PKeyStoreContentEncryptionParams params = CKeyStoreFactory::makeContentEncryptionParams(rd, rdg);
+
 				ContentEncryptionDescriptor p = m_pSecureContext->getDekCtx();
-				p.m_sDekDecryptData.m_sCipherValue = rd->getCipherValue();
-				p.m_sDekDecryptData.m_nfHandler = rd->getHandle();
-				p.m_sDekDecryptData.m_bCompression = rd->getCompression();
+				p.m_sDekDecryptData.m_sParams = params;
+
 				PImportStream stream;
 				PImportStream decryptStream = std::make_shared<CImportStream_Encrypted>(pPart->getImportStream(), p);
-				if (rd->getCompression()) {
+				if (params->isCompressed()) {
 					PImportStream decompressStream = std::make_shared<CImportStream_Compressed>(decryptStream);
 					stream = decompressStream;
 				}
@@ -156,22 +161,20 @@ namespace NMR {
 	}
 
 	void CKeyStoreOpcPackageReader::openAllResourceData() {
-		for (nfUint32 i = 0; i < m_pKeyStore->getResourceDataCount() && !m_pSecureContext->emptyKekCtx(); ++i) {
-			PKeyStoreResourceData rd = m_pKeyStore->getResourceDataByIndex(i);
-			for (auto it = m_pSecureContext->kekCtxBegin(); it != m_pSecureContext->kekCtxEnd() && !rd->empty(); ++it) {
+		for (nfUint64 i = 0; i < m_pKeyStore->getResourceDataGroupCount() && !m_pSecureContext->emptyKekCtx(); ++i) {
+			PKeyStoreResourceDataGroup rdg = m_pKeyStore->getResourceDataGroup(i);
+			for (auto it = m_pSecureContext->kekCtxBegin(); it != m_pSecureContext->kekCtxEnd(); ++it) {
 				PKeyStoreConsumer consumer = m_pKeyStore->findConsumerById((*it).first);
 				if (consumer) {
-					PKeyStoreDecryptRight decryptRight = rd->findDecryptRightByConsumer(consumer);
-					if (decryptRight) {
+					PKeyStoreAccessRight accessRight = rdg->findAccessRightByConsumerID(consumer->getConsumerID());
+					if (accessRight) {
 						KeyWrappingDescriptor ctx = (*it).second;
-						ctx.m_sKekDecryptData.m_sConsumerId = consumer->getConsumerID();
-						ctx.m_sKekDecryptData.m_sResourcePath = rd->getPath()->getPath();
-						CIPHERVALUE closed = decryptRight->getCipherValue();
-						rd->setCipherValue(closed);
-						size_t decrypted = ctx.m_fnWrap(closed.m_key, ctx.m_sKekDecryptData);
+						ctx.m_sKekDecryptData.m_pAccessRight = accessRight;
+						std::vector<nfByte> const & closedKey = accessRight->getCipherValue();
+						std::vector<nfByte> openedKey;
+						size_t decrypted = ctx.m_fnWrap(closedKey, openedKey, ctx.m_sKekDecryptData);
 						if (decrypted) {
-							ctx.m_sKekDecryptData.m_KeyBuffer.resize(decrypted, 0);
-							rd->open(ctx.m_sKekDecryptData.m_KeyBuffer);
+							rdg->setKey(openedKey);
 							break;
 						}
 					}
@@ -181,12 +184,12 @@ namespace NMR {
 	}
 	void CKeyStoreOpcPackageReader::checkAuthenticatedTags() {
 		if (m_pSecureContext->hasDekCtx()) {
-			int count = m_pKeyStore->getResourceDataCount();
-			for (int i = 0; i < count; ++i) {
-				NMR::PKeyStoreResourceData rd = m_pKeyStore->getResourceDataByIndex(i);
+			for (nfUint64 i = 0; i < m_pKeyStore->getResourceDataCount(); ++i) {
+				NMR::PKeyStoreResourceData rd = m_pKeyStore->getResourceData(i);
+				NMR::PKeyStoreResourceDataGroup rdg = m_pKeyStore->findResourceDataGroupByResourceDataPath(rd->getPath()->getPath());
+				PKeyStoreContentEncryptionParams params = CKeyStoreFactory::makeContentEncryptionParams(rd, rdg);
 				ContentEncryptionDescriptor descriptor = m_pSecureContext->getDekCtx();
-				descriptor.m_sDekDecryptData.m_sCipherValue = rd->getCipherValue();
-				descriptor.m_sDekDecryptData.m_nfHandler = rd->getHandle();
+				descriptor.m_sDekDecryptData.m_sParams= params;
 				descriptor.m_fnCrypt(0, nullptr, nullptr, descriptor.m_sDekDecryptData);
 			}
 		}

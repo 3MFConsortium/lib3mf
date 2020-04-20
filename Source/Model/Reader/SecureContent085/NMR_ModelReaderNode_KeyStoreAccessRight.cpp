@@ -36,6 +36,7 @@ NMR_ModelReaderNode_KeyStoreAccessRight.h defines the Model Reader Node class th
 #include "Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreKEKParams.h"
 
 #include "Model/Classes/NMR_ModelConstants.h"
+#include "Model/Classes/NMR_KeyStoreFactory.h"
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_Exception_Windows.h"
 #include "Common/NMR_StringUtils.h"
@@ -50,7 +51,11 @@ namespace NMR {
 
 	PKeyStoreAccessRight CModelReaderNode_KeyStoreAccessRight::getAccessRight()
 	{
-		return m_accessRight;
+		return CKeyStoreFactory::makeAccessRight(
+			m_pKeyStore->getConsumer(m_nConsumerIndex), 
+			m_sParams.m_eAlgorithm,
+			m_sParams.m_eMgf,
+			m_sParams.m_eDigest);
 	}
 
 	void CModelReaderNode_KeyStoreAccessRight::parseXML(_In_ CXmlReader * pXMLReader)
@@ -65,30 +70,26 @@ namespace NMR {
 		parseContent(pXMLReader);
 
 		// this can throw for values that are not numbers and it's ok so according to other reader nodes
-		try {
-			nfUint64 index = fnStringToInt32(m_consumerIndex.c_str());
-			if (0 <= index && index < m_pKeyStore->getConsumerCount()) {
-				PKeyStoreConsumer c = m_pKeyStore->getConsumerByIndex(index);
-				//TODO create accessright with kekparam
-				m_accessRight = std::make_shared<CKeyStoreAccessRight>(c, m_encryptionAlgorithm, m_sCipherValue);
-			} else {
-				m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREINVALIDCONSUMERINDEX), eModelReaderWarningLevel::mrwInvalidMandatoryValue);
-			}
-		} catch (CNMRException const &) {
+		if (m_nConsumerIndex >= m_pKeyStore->getConsumerCount())
 			m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREINVALIDCONSUMERINDEX), eModelReaderWarningLevel::mrwInvalidMandatoryValue);
-		}
+		if (!m_bHasConsumerIndex)
+			m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREMISSINGCONSUMERINDEX), eModelReaderWarningLevel::mrwMissingMandatoryValue);
+		if (!m_bHasParams)
+			m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREMISSINGKEKPARAMS), eModelReaderWarningLevel::mrwFatal);
+		if (!m_bHasCipherData)
+			m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREMISSINGCIPHERVALUE), eModelReaderWarningLevel::mrwFatal);
 	}
 
 	void CModelReaderNode_KeyStoreAccessRight::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
 	{
 		__NMRASSERT(pAttributeName);
 		__NMRASSERT(pAttributeValue);
-		
 
 		if (strcmp(XML_3MF_SECURE_CONTENT_CONSUMER_INDEX, pAttributeName) == 0) {
-			if (!m_consumerIndex.empty())
+			if (m_bHasConsumerIndex)
 				m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREDUPLICATECONSUMERINDEX), eModelReaderWarningLevel::mrwInvalidMandatoryValue);
-			m_consumerIndex = pAttributeValue;
+			m_bHasConsumerIndex = true;
+			m_nConsumerIndex = fnStringToUint32(pAttributeValue);
 		}
 		else
 			m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE), mrwInvalidOptionalValue);
@@ -100,19 +101,22 @@ namespace NMR {
 		__NMRASSERT(pXMLReader);
 		__NMRASSERT(pNameSpace);
 
-		//TODO Parse CipherData child element
-
 		if (strcmp(pChildName, XML_3MF_ELEMENT_KEKPARAMS) == 0) {
-			if (!m_bHasKEKParams) {
+			if (!m_bHasParams) {
+				m_bHasParams = true;
 				PModelReaderNode_KeyStoreKEKParams pXMLNode = std::make_shared<CModelReaderNode_KeyStoreKEKParams>(m_pKeyStore, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
-				m_sKekParams = pXMLNode->getKekParams();
-				m_bHasKEKParams = true;
+				m_sParams = pXMLNode->getKekParams();
 			}
-			else {
-				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
-
+		} if (strcmp(pChildName, XML_3MF_ELEMENT_CIPHERDATA) == 0) {
+			if (!m_bHasCipherData) {
+				m_bHasCipherData = true;
+				PModelReaderNode_KeyStoreCipherValue pXMLNode = std::make_shared<CModelReaderNode_KeyStoreCipherValue>(m_pKeyStore, m_pWarnings);
+				pXMLNode->parseXML(pXMLReader);
+				m_rgCipherValue = pXMLNode->getCipherValue();
 			}
+		} else {
+			m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
 		}
 	}
 

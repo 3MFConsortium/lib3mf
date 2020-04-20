@@ -192,8 +192,16 @@ void Lib3MF::Impl::CReader::AddKeyWrappingCallback(const std::string &sConsumerI
 		pBaseEntity = pAccessRight.get();
 		Lib3MF_AccessRight entityHandle = pBaseEntity;
 
-		plain.resize(ctx.m_keySize, 0);
+		//figure out the size of the key.
 		NMR::nfUint64 result = 0;
+		(*pTheCallback)(entityHandle, cipher.size(), cipher.data(),
+			0, &result, nullptr, ctx.m_pUserData);
+		if (result == 0)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_CALCULATIONABORTED);
+
+		plain.resize(result, 0);
+
+		result = 0;
 		(*pTheCallback)(entityHandle, cipher.size(), cipher.data(),
 			plain.size(), &result, plain.data(), ctx.m_pUserData);
 		if (result == 0)

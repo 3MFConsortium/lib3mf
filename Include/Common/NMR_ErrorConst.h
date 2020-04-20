@@ -1182,6 +1182,20 @@ Model error codes (0x8XXX)
 // Dupliaced KeySore ResourceDataGroup
 #define NMR_ERROR_KEYSTOREDUPLICATERESOURCEDATAGROUP 0x8101
 
+// Invalid KeyStore Mask Generation Function
+#define NMR_ERROR_KEYSTOREINVALIDMGF 0x8102
+
+// Invalid KeyStore Digest Method
+#define NMR_ERROR_KEYSTOREINVALIDDIGEST 0x8103
+
+// Invalid Keystore kekparams configuration
+#define NMR_ERROR_KEYSTOREINCONSISTENTKEKPARAMS 0x8104
+
+// No Consumer Index
+#define NMR_ERROR_KEYSTOREMISSINGCONSUMERINDEX 0x8105
+
+// No kekparams
+#define NMR_ERROR_KEYSTOREMISSINGKEKPARAMS 0x8106
 
 
 

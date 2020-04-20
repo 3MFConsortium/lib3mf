@@ -4,6 +4,12 @@
 
 #include <openssl/rand.h>
 
+#define AES256GCM_KEYSIZE 32
+#define AES256GCM_IVSIZE 12
+#define AES256GCM_TAGSIZE 16
+#define RSAOEAP_KEYSIZE 256
+
+
 namespace AesMethods {
 
 	namespace Decrypt {
@@ -146,7 +152,7 @@ void EncryptionCallbacks::dataEncryptClientCallback(
 		if (it != dek->ciphers.end()) {
 			ctx = it->second;
 		} else {
-			ByteVector key(32, 0), iv(12, 0), aad;
+			ByteVector key, iv, aad;
 			p.GetKey(key);
 			p.GetInitializationVector(iv);
 			p.GetAdditionalAuthenticationData(aad);
@@ -233,8 +239,7 @@ void EncryptionCallbacks::dataDecryptClientCallback(
 		if (nullptr == plainBuffer) {
 			*plainNeeded = cipherSize;
 		} else if (0 != cipherSize) {
-
-			size_t decrypted = AesMethods::Decrypt::decrypt(ctx, (Lib3MF_uint32)cipherSize, cipherBuffer, plainBuffer);
+			size_t decrypted = AesMethods::Decrypt::decrypt(ctx, (Lib3MF_uint32)plainSize, cipherBuffer, plainBuffer);
 			*plainNeeded = decrypted;
 		} else {
 			ByteVector tag(16, 0);

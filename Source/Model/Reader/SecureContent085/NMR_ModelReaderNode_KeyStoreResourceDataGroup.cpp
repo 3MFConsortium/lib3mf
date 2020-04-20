@@ -38,6 +38,8 @@ NMR_ModelReaderNode_KeyStoreResourceDataGroup.h defines the Model Reader Node cl
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Model/Classes/NMR_KeyStoreResourceData.h"
 #include "Model/Classes/NMR_KeyStoreAccessRight.h"
+
+#include "Model/Classes/NMR_KeyStoreFactory.h"
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_Exception_Windows.h"
 #include "Common/NMR_StringUtils.h"
@@ -57,9 +59,14 @@ namespace NMR {
 
 		// Parse Content
 		parseContent(pXMLReader);
-		//TODO check if there is some check to do
-		m_pKeyStore->addResourceDataGroup(m_keyUUID, m_accessRights, m_resourcesData);
+		
+		PKeyStoreResourceDataGroup rdg = CKeyStoreFactory::makeResourceDataGroup(m_keyUUID);
+		for (auto ar = m_accessRights.begin(); m_accessRights.end() != ar; ++ar)
+			rdg->addAccessRight(*ar);
+		m_pKeyStore->addResourceDataGroup(rdg);
 
+		for (auto rd = m_resourcesData.begin(); rd != m_resourcesData.end; ++rd)
+			m_pKeyStore->addResourceData(rdg, *rd);
 	}
 
 	void CModelReaderNode_KeyStoreResourceDataGroup::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)

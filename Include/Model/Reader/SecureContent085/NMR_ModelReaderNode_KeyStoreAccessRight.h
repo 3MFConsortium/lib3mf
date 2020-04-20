@@ -37,17 +37,18 @@ NMR_ModelReaderNode_KeyStoreDecryptRight.h defines the Model Reader Node class t
 #include "Model/Reader/NMR_ModelReaderNode.h"
 #include "Model/Classes/NMR_KeyStore.h"
 #include "Model/Classes/NMR_KeyStoreAccessRight.h"
+#include "Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreKEKParams.h"
 
 namespace NMR {
 
 	class CModelReaderNode_KeyStoreAccessRight : public CModelReaderNode_KeyStoreBase {
 	private:
-		nfBool m_bHasKEKParams;
-		std::string m_consumerIndex;
-		eKeyStoreEncryptAlgorithm m_encryptionAlgorithm;
-		KEKPARAMS m_sKekParams;
-		PKeyStoreAccessRight m_accessRight;
-		
+		nfBool m_bHasParams;
+		nfBool m_bHasConsumerIndex;
+		nfBool m_bHasCipherData;
+		nfUint64 m_nConsumerIndex;
+		KEKPARAMS m_sParams;
+		std::vector<nfByte> m_rgCipherValue;
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);

@@ -40,17 +40,16 @@ NMR_ModelReaderNode_KeyStoreCipherValue.h defines the Model Reader Node class th
 #include "Common/NMR_Exception_Windows.h"
 #include "Common/NMR_StringUtils.h"
 
-#include "Libraries/cpp-base64/base64.h"
+#include "Model/Reader/NMR_ModelReader_KeyStoreBase64Value.h"
 
 namespace NMR {
 
 	CModelReaderNode_KeyStoreCipherValue::CModelReaderNode_KeyStoreCipherValue(CKeyStore * pKeyStore, PModelReaderWarnings pWarnings)
 		: CModelReaderNode_KeyStoreBase(pKeyStore, pWarnings)
 	{
-		m_sCipherValueAccumulator = "";
 	}
 
-	CIPHERVALUE CModelReaderNode_KeyStoreCipherValue::getCipherValue()
+	std::vector<nfByte> const & CModelReaderNode_KeyStoreCipherValue::getCipherValue() const
 	{
 		return m_sCipherValue;
 	}
@@ -65,27 +64,15 @@ namespace NMR {
 
 		// Parse Content
 		parseContent(pXMLReader);
-
-		std::vector<nfByte> decoded = base64_decode(m_sCipherValueAccumulator);
-		if (decoded.size() >= KEYSTORE_TYPES_TAGSIZE + KEYSTORE_TYPES_IVSIZE) {
-			auto decodedIvBegin = decoded.begin();
-			auto decodedKeyBegin = decodedIvBegin + KEYSTORE_TYPES_IVSIZE;
-			auto decodedTagBegin = decoded.end() - KEYSTORE_TYPES_TAGSIZE;
-
-			m_sCipherValue.m_iv = std::vector<nfByte>(decodedIvBegin, decodedKeyBegin);
-			m_sCipherValue.m_key = std::vector<nfByte>(decodedKeyBegin, decodedTagBegin);
-			m_sCipherValue.m_tag = std::vector<nfByte>(decodedTagBegin, decoded.end());
-		} else {
-			m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREINVALIDCIPHERVALUE), eModelReaderWarningLevel::mrwInvalidMandatoryValue);
-		}
 	}
 
-	void CModelReaderNode_KeyStoreCipherValue::OnText(_In_z_ const nfChar * pText, _In_ CXmlReader * pXMLReader)
-	{
-		__NMRASSERT(pAttributeName);
-		__NMRASSERT(pAttributeValue);
-
-		m_sCipherValueAccumulator += std::string(pText);
+	void CModelReaderNode_KeyStoreCipherValue::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader) {
+		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_CIPHERVALUESPEC) == 0
+			&& strcmp(pChildName, XML_3MF_ELEMENT_CIPHERVALUE) == 0) {
+			PModelReaderNode_KeyStoreBase64Value pNode = std::make_shared<CModelReaderNode_KeyStoreBase64Value>(m_pKeyStore, m_pProgressMonitor);
+			pNode->parseXML(pXMLReader);
+			m_sCipherValue = pNode->getValue();
+		}
 	}
 
 }

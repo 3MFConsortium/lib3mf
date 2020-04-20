@@ -48,8 +48,8 @@ namespace NMR {
 	class CModelReaderNode_KeyStoreResourceDataGroup : public CModelReaderNode_KeyStoreBase {
 	private:
 		PUUID m_keyUUID;
-		std::vector<PKeyStoreAccessRight> m_accessRights;
-		std::vector<PKeyStoreResourceData> m_resourcesData;
+		std::list<PKeyStoreAccessRight> m_accessRights;
+		std::list<PKeyStoreResourceData> m_resourcesData;
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);

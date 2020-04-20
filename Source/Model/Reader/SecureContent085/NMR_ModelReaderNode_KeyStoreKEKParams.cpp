@@ -44,9 +44,49 @@ NMR_ModelReaderNode_KeyStoreCipherValue.h defines the Model Reader Node class th
 
 namespace NMR {
 
+	namespace ParserUtils {
+		eKeyStoreWrapAlgorithm parseWrapAlgorithm(std::string const & value, bool & hasMgf1) {
+			if (XML_3MF_SECURE_CONTENT_KEYWRAPPING_RSA == value) {
+				hasMgf1 = true;
+				return eKeyStoreWrapAlgorithm::RSA_OAEP;
+			} else if (XML_3MF_SECURE_CONTENT_KEYWRAPPING_RSASHORT == value) {
+				return eKeyStoreWrapAlgorithm::RSA_OAEP;
+			}
+			throw CNMRException(NMR_ERROR_KEYSTOREINVALIDALGORITHM);
+		}
+
+		eKeyStoreMaskGenerationFunction parseMgf(std::string const & value) {
+			if (XML_3MF_SECURE_CONTENT_MGF1_SHA1 == value)
+				return eKeyStoreMaskGenerationFunction::MGF1_SHA1;
+			else if (XML_3MF_SECURE_CONTENT_MGF1_SHA224)
+				return eKeyStoreMaskGenerationFunction::MGF1_SHA224;
+			else if (XML_3MF_SECURE_CONTENT_MGF1_SHA256)
+				return eKeyStoreMaskGenerationFunction::MGF1_SHA256;
+			else if (XML_3MF_SECURE_CONTENT_MGF1_SHA384)
+				return eKeyStoreMaskGenerationFunction::MGF1_SHA384;
+			else if (XML_3MF_SECURE_CONTENT_MGF1_SHA512)
+				return eKeyStoreMaskGenerationFunction::MGF1_SHA512;
+			throw CNMRException(NMR_ERROR_KEYSTOREINVALIDMGF);
+		}
+
+		eKeyStoreMessageDigest parseMessageDigest(std::string const & value) {
+			if (XML_3MF_SECURE_CONTENT_MD_SHA1 == value)
+				return eKeyStoreMessageDigest::SHA1;
+			else if (XML_3MF_SECURE_CONTENT_MD_SHA256 == value)
+				return eKeyStoreMessageDigest::SHA256;
+			else if (XML_3MF_SECURE_CONTENT_MD_SHA384 == value)
+				return eKeyStoreMessageDigest::SHA384;
+			else if (XML_3MF_SECURE_CONTENT_MD_SHA512 == value)
+				return eKeyStoreMessageDigest::SHA512;
+			throw CNMRException(NMR_ERROR_KEYSTOREINVALIDDIGEST);
+		}
+	}
+
+
 	CModelReaderNode_KeyStoreKEKParams::CModelReaderNode_KeyStoreKEKParams(CKeyStore * pKeyStore, PModelReaderWarnings pWarnings)
 		: CModelReaderNode_KeyStoreBase(pKeyStore, pWarnings)
 	{
+
 	}
 
 	KEKPARAMS CModelReaderNode_KeyStoreKEKParams::getKekParams()
@@ -64,6 +104,14 @@ namespace NMR {
 
 		// Parse Content
 		parseContent(pXMLReader);
+		if (m_sKekParams.m_eAlgorithm == 0)
+			m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREINVALIDALGORITHM), eModelReaderWarningLevel::mrwFatal);
+		if (m_bAlgHasMgf && m_sKekParams.m_eMgf != 0)
+			m_pWarnings->addWarning(MODELREADERWARNING_KEYSTOREKEKPARAMSINCONSISTENT, NMR_ERROR_KEYSTOREINCONSISTENTKEKPARAMS, eModelReaderWarningLevel::mrwInvalidOptionalValue);
+		if (m_sKekParams.m_eMgf == 0)
+			m_sKekParams.m_eMgf = eKeyStoreMaskGenerationFunction::MGF1_SHA1;
+		if (m_sKekParams.m_eDigest == 0)
+			m_sKekParams.m_eDigest = eKeyStoreMessageDigest::SHA1;
 	}
 
 	void CModelReaderNode_KeyStoreKEKParams::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
@@ -71,17 +119,19 @@ namespace NMR {
 		__NMRASSERT(pAttributeName);
 		__NMRASSERT(pAttributeValue);
 
-		if (strcmp(XML_3MF_SECURE_CONTENT_WRAPPINGALGORITHM, pAttributeName)) {
-			m_sKekParams.wrappingalgorithm = pAttributeValue;
+		try {
+			if (strcmp(XML_3MF_SECURE_CONTENT_WRAPPINGALGORITHM, pAttributeName)) {
+				m_sKekParams.m_eAlgorithm = ParserUtils::parseWrapAlgorithm(pAttributeValue, m_bAlgHasMgf);
+			} else if (strcmp(XML_3MF_SECURE_CONTENT_MGFALGORITHM, pAttributeName)) {
+				m_sKekParams.m_eMgf = ParserUtils::parseMgf(pAttributeValue);
+			} else if (strcmp(XML_3MF_SECURE_CONTENT_DIGESTMETHOD, pAttributeName)) {
+				m_sKekParams.m_eDigest = ParserUtils::parseMessageDigest(pAttributeValue);
+			} else {
+				m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREINVALIDKEKPARAM), eModelReaderWarningLevel::mrwInvalidOptionalValue);
+			}
 		}
-		else if (strcmp(XML_3MF_SECURE_CONTENT_MGFALGORITHM, pAttributeName)) {
-			m_sKekParams.mgfalgorithm = pAttributeValue;
-		}
-		else if (strcmp(XML_3MF_SECURE_CONTENT_DIGESTMETHOD, pAttributeName)) {
-			m_sKekParams.digestmethod = pAttributeValue;
-		}
-		else {
-			m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREINVALIDKEKPARAM), eModelReaderWarningLevel::mrwInvalidMandatoryValue);
+		catch (CNMRException const & e) {
+			m_pWarnings->addException(e, eModelReaderWarningLevel::mrwInvalidMandatoryValue);
 		}
 	}
 

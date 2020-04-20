@@ -36,13 +36,26 @@ NMR_ModelReaderNode_KeyStoreCipherValue.h defines the Model Reader Node class th
 #include "Model/Reader/NMR_ModelReaderNode_KeyStoreBase.h"
 #include "Model/Reader/NMR_ModelReaderNode.h"
 #include "Model/Classes/NMR_KeyStore.h"
-#include "Model/Classes/NMR_KeyStoreAccessRight.h"
+#include "Common/NMR_SecureContentTypes.h"
 
 namespace NMR {
+
+	namespace ParserUtils {
+		eKeyStoreWrapAlgorithm parseWrapAlgorithm(std::string const & value, bool & hasMgf1);
+		eKeyStoreMaskGenerationFunction parseMgf(std::string const & value);
+		eKeyStoreMessageDigest parseMessageDigest(std::string const & value);
+	}
+
+	struct KEKPARAMS {
+		eKeyStoreWrapAlgorithm m_eAlgorithm;
+		eKeyStoreMaskGenerationFunction m_eMgf;
+		eKeyStoreMessageDigest m_eDigest;
+	};
 
 	class CModelReaderNode_KeyStoreKEKParams: public CModelReaderNode_KeyStoreBase {
 	private:
 		KEKPARAMS m_sKekParams;
+		nfBool m_bAlgHasMgf;
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 	public:
