@@ -61,8 +61,6 @@ namespace NMR {
 
 		// Parse Content
 		parseContent(pXMLReader);
-
-		// TODO: check key value
 	}
 
 	void CModelReaderNode_KeyStoreKeyValue::OnText(_In_z_ const nfChar * pText, _In_ CXmlReader * pXMLReader)

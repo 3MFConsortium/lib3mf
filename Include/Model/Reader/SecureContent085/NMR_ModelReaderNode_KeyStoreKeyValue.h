@@ -39,21 +39,21 @@ NMR_ModelReaderNode_KeyStoreKeyValue.h defines the Model Reader Node class that 
 
 namespace NMR {
 
-	class CModelReaderNode_KeyStoreKeyValue: public CModelReaderNode_KeyStoreBase {
+	class CModelReaderNode_StringValue: public CModelReaderNode {
 	private:
 		std::string m_sKeyValue;
 	protected:
-		void CModelReaderNode_KeyStoreKeyValue::OnText(_In_z_ const nfChar * pText, _In_ CXmlReader * pXMLReader);
+		void CModelReaderNode_StringValue::OnText(_In_z_ const nfChar * pText, _In_ CXmlReader * pXMLReader);
 	public:
-		CModelReaderNode_KeyStoreKeyValue() = delete;
-		CModelReaderNode_KeyStoreKeyValue(_In_ CKeyStore * pKeyStore, _In_ PModelReaderWarnings pWarnings);
+		CModelReaderNode_StringValue() = delete;
+		CModelReaderNode_StringValue(_In_ CKeyStore * pKeyStore, _In_ PModelReaderWarnings pWarnings);
 
 		std::string GetKeyValue();
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 	};
 
-	typedef std::shared_ptr <CModelReaderNode_KeyStoreKeyValue> PModelReaderNode_KeyStoreKeyValue;
+	typedef std::shared_ptr <CModelReaderNode_StringValue> PModelReaderNode_KeyStoreKeyValue;
 }
 
 #endif // __NMR_MODELREADERNODE_KEYSTOREKEYVALUE
