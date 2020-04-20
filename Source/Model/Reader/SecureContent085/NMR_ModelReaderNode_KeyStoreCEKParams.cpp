@@ -105,23 +105,22 @@ namespace NMR {
 		__NMRASSERT(pChildName);
 		__NMRASSERT(pXMLReader);
 		__NMRASSERT(pNameSpace);
-
-		if (strcmp(pChildName, XML_3MF_SECURE_CONTENT_IV) == 0) {
-			PModelReaderNode_StringValue pXMLNode = std::make_shared<CModelReaderNode_StringValue>(m_pWarnings);
-			pXMLNode->parseXML(pXMLReader);
-			m_iv = base64_decode(pXMLNode->getValue());
-		}
-		else if (strcmp(pChildName, XML_3MF_SECURE_CONTENT_TAG) == 0) {
-			PModelReaderNode_StringValue pXMLNode = std::make_shared<CModelReaderNode_StringValue>(m_pWarnings);
-			pXMLNode->parseXML(pXMLReader);
-			m_tag = base64_decode(pXMLNode->getValue());
-		}
-		else if (strcmp(pChildName, XML_3MF_SECURE_CONTENT_AAD) == 0) {
-			PModelReaderNode_StringValue pXMLNode = std::make_shared<CModelReaderNode_StringValue>(m_pWarnings);
-			pXMLNode->parseXML(pXMLReader);
-			m_aad = base64_decode(pXMLNode->getValue());
-		} else {
-			m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
+		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_SECURECONTENTSPEC) == 0) {
+			if (strcmp(pChildName, XML_3MF_SECURE_CONTENT_IV) == 0) {
+				PModelReaderNode_StringValue pXMLNode = std::make_shared<CModelReaderNode_StringValue>(m_pWarnings);
+				pXMLNode->parseXML(pXMLReader);
+				m_iv = base64_decode(pXMLNode->getValue());
+			} else if (strcmp(pChildName, XML_3MF_SECURE_CONTENT_TAG) == 0) {
+				PModelReaderNode_StringValue pXMLNode = std::make_shared<CModelReaderNode_StringValue>(m_pWarnings);
+				pXMLNode->parseXML(pXMLReader);
+				m_tag = base64_decode(pXMLNode->getValue());
+			} else if (strcmp(pChildName, XML_3MF_SECURE_CONTENT_AAD) == 0) {
+				PModelReaderNode_StringValue pXMLNode = std::make_shared<CModelReaderNode_StringValue>(m_pWarnings);
+				pXMLNode->parseXML(pXMLReader);
+				m_aad = base64_decode(pXMLNode->getValue());
+			} else {
+				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
+			}
 		}
 	}
 }

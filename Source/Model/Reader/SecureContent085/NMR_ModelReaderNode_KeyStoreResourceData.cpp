@@ -42,12 +42,6 @@ NMR_ModelReaderNode_KeyStoreResourceData.h defines the Model Reader Node class t
 
 namespace NMR {
 
-	CModelReaderNode_KeyStoreResourceData::CModelReaderNode_KeyStoreResourceData(CKeyStore * pKeyStore, PModelReaderWarnings pWarnings, CKeyStoreResourceDataGroup * pResourceDataGroup)
-		: CModelReaderNode_KeyStoreBase(pKeyStore, pWarnings)
-	{
-		m_pResourceDataGroup = pResourceDataGroup;
-	}
-
 	PKeyStoreResourceData CModelReaderNode_KeyStoreResourceData::getResourceData()
 	{
 		return CKeyStoreFactory::makeResourceData(m_path, m_sCekParams);
@@ -87,9 +81,12 @@ namespace NMR {
 
 		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_SECURECONTENTSPEC) == 0) {
 			if (strcmp(pChildName, XML_3MF_ELEMENT_CEKPARAMS) == 0) {
-				PModelReaderNode_KeyStoreCEKParams pXMLNode = std::make_shared<CModelReaderNode_KeyStoreCEKParams>(m_pKeyStore, m_pWarnings);
-				pXMLNode->parseXML(pXMLReader);
-				m_sCekParams = pXMLNode->getCEKParams();
+				if (!m_bHasCEKParams) {
+					m_bHasCEKParams = true;
+					PModelReaderNode_KeyStoreCEKParams pXMLNode = std::make_shared<CModelReaderNode_KeyStoreCEKParams>(m_pKeyStore, m_pWarnings);
+					pXMLNode->parseXML(pXMLReader);
+					m_sCekParams = pXMLNode->getCEKParams();
+				}
 			}
 			else
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);

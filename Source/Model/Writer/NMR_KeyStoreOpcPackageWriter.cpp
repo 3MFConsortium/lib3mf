@@ -50,6 +50,8 @@ NMR_OpcPackageWriter.cpp defines an OPC Package writer in a portable way.
 #include "Common/Platform/NMR_ImportStream_Encrypted.h"
 #include "Common/Platform/NMR_ExportStream.h"
 
+#include "Model/Classes/NMR_KeyStoreFactory.h"
+
 namespace NMR {
 
 
@@ -71,29 +73,29 @@ namespace NMR {
 		PModel model = m_pContext->getModel();
 		PKeyStore keyStore = m_pContext->getKeyStore();
 		for (nfUint32 i = 0; i < keyStore->getResourceDataCount(); i++) {
-			NMR::PKeyStoreResourceData rd = keyStore->getResourceDataByIndex(i);
-			CIPHERVALUE cv = rd->getCipherValue();
-			if (!rd->isClosed()){
-				if (rd->isNew()) {
-					model->generateRandomBytes(cv.m_key.data(), cv.m_key.size());
-					rd->open(cv.m_key);
-				}
-				model->generateRandomBytes(cv.m_iv.data(), cv.m_iv.size());
-				rd->refreshIV(cv.m_iv);
-			}
+			NMR::PKeyStoreResourceData rd = keyStore->getResourceData(i);
+			//TODO: refresh iv and key on all resource datas from all resourcedatagroups
+			//CEKPARAMS cv = rd->getCipherValue();
+			//if (!rd->isClosed()){
+			//	if (rd->isNew()) {
+			//		model->generateRandomBytes(cv.m_key.data(), cv.m_key.size());
+			//		rd->open(cv.m_key);
+			//	}
+			//	model->generateRandomBytes(cv.m_iv.data(), cv.m_iv.size());
+			//	rd->refreshIV(cv.m_iv);
+			//}
 		}
 	}
 
 	void CKeyStoreOpcPackageWriter::wrapPartStream(PKeyStoreResourceData rd, POpcPackagePart part) {
 		PSecureContext secureContext = m_pContext->getSecureContext();
 		ContentEncryptionDescriptor p = secureContext->getDekCtx();
-		p.m_sDekDecryptData.m_sCipherValue = rd->getCipherValue();
-		p.m_sDekDecryptData.m_nfHandler = rd->getHandle();
-		p.m_sDekDecryptData.m_bCompression = rd->getCompression();
+		PKeyStoreResourceDataGroup rdg = m_pContext->getKeyStore()->findResourceDataGroupByResourceDataPath(rd->getPath());
+		p.m_sDekDecryptData.m_sParams = CKeyStoreFactory::makeContentEncryptionParams(rd, rdg);
 
 		PExportStream stream;
 		PExportStream encryptStream = std::make_shared<CExportStream_Encrypted>(part->getExportStream(), p);
-		if (rd->getCompression()) {
+		if (rd->isCompressed()) {
 			PExportStream compressStream = std::make_shared<CExportStream_Compressed>(encryptStream);
 			stream = compressStream;
 		} else {
@@ -105,38 +107,39 @@ namespace NMR {
 	void CKeyStoreOpcPackageWriter::refreshResourceDataTag(PKeyStoreResourceData rd) {
 		PSecureContext secureContext = m_pContext->getSecureContext();
 		ContentEncryptionDescriptor dekCtx = secureContext->getDekCtx();
-		dekCtx.m_sDekDecryptData.m_nfHandler = rd->getHandle();
-		dekCtx.m_sDekDecryptData.m_sCipherValue = rd->getCipherValue();
+		PKeyStoreResourceDataGroup rdg = m_pContext->getKeyStore()->findResourceDataGroupByResourceDataPath(rd->getPath());
+		dekCtx.m_sDekDecryptData.m_sParams = CKeyStoreFactory::makeContentEncryptionParams(rd, rdg);
 		dekCtx.m_fnCrypt(0, nullptr, nullptr, dekCtx.m_sDekDecryptData);
-		rd->refreshTag(dekCtx.m_sDekDecryptData.m_sCipherValue.m_tag);
+		rd->setAuthTag(dekCtx.m_sDekDecryptData.m_sParams->getAuthTag());
 	}
 
-	void CKeyStoreOpcPackageWriter::updateDecryptRightCipher(PKeyStoreDecryptRight dr, PKeyStoreResourceData rd) {
-		PSecureContext secureContext = m_pContext->getSecureContext();
-		try {
-			KeyWrappingDescriptor ctx = secureContext->getKekCtx(dr->getConsumer()->getConsumerID());
-			ctx.m_sKekDecryptData.m_sConsumerId = dr->getConsumer()->getConsumerID();
-			ctx.m_sKekDecryptData.m_sResourcePath = rd->getPath()->getPath();
-			nfUint64 encrypted = ctx.m_fnWrap(rd->getCipherValue().m_key, ctx.m_sKekDecryptData);
-			if (encrypted > 0) {
-				CIPHERVALUE cipherValue = rd->getCipherValue();
-				cipherValue.m_key = ctx.m_sKekDecryptData.m_KeyBuffer;
-				dr->open(cipherValue);
-			}
-		} catch (CNMRException const e) {
-			if (e.getErrorCode() == NMR_ERROR_KEKDESCRIPTORNOTFOUND) {
-				if (dr->isNew())
-					throw;
-				CIPHERVALUE drCipherValue = dr->getCipherValue();
-				CIPHERVALUE rdCipherValue = rd->getCipherValue();
-				drCipherValue.m_iv = rdCipherValue.m_iv;
-				drCipherValue.m_tag = rdCipherValue.m_tag;
-				dr->open(drCipherValue);
-			} else {
-				throw e;
-			}
-		}
-	}
+	//TODO: fix access right refresh
+	//void CKeyStoreOpcPackageWriter::updateDecryptRightCipher(PKeyStoreDecryptRight dr, PKeyStoreResourceData rd) {
+	//	PSecureContext secureContext = m_pContext->getSecureContext();
+	//	try {
+	//		KeyWrappingDescriptor ctx = secureContext->getKekCtx(dr->getConsumer()->getConsumerID());
+	//		ctx.m_sKekDecryptData.m_sConsumerId = dr->getConsumer()->getConsumerID();
+	//		ctx.m_sKekDecryptData.m_sResourcePath = rd->getPath()->getPath();
+	//		nfUint64 encrypted = ctx.m_fnWrap(rd->getCipherValue().m_key, ctx.m_sKekDecryptData);
+	//		if (encrypted > 0) {
+	//			CEKPARAMS cipherValue = rd->getCipherValue();
+	//			cipherValue.m_key = ctx.m_sKekDecryptData.m_KeyBuffer;
+	//			dr->open(cipherValue);
+	//		}
+	//	} catch (CNMRException const e) {
+	//		if (e.getErrorCode() == NMR_ERROR_KEKDESCRIPTORNOTFOUND) {
+	//			if (dr->isNew())
+	//				throw;
+	//			CEKPARAMS drCipherValue = dr->getCipherValue();
+	//			CEKPARAMS rdCipherValue = rd->getCipherValue();
+	//			drCipherValue.m_iv = rdCipherValue.m_iv;
+	//			drCipherValue.m_tag = rdCipherValue.m_tag;
+	//			dr->open(drCipherValue);
+	//		} else {
+	//			throw e;
+	//		}
+	//	}
+	//}
 
 	POpcPackagePart CKeyStoreOpcPackageWriter::addPart(_In_ std::string sPath)
 	{
@@ -144,7 +147,7 @@ namespace NMR {
 		PKeyStore keyStore = m_pContext->getKeyStore();
 
 		auto pPart = m_pPackageWriter->addPart(sPath);
-		NMR::PKeyStoreResourceData rd = keyStore->findResourceDataByPath(sPath);
+		NMR::PKeyStoreResourceData rd = keyStore->findResourceData(sPath);
 		if (nullptr != rd) {
 			if (secureContext->hasDekCtx()) {
 				wrapPartStream(rd, pPart);
@@ -160,14 +163,15 @@ namespace NMR {
 		PKeyStore keyStore = m_pContext->getKeyStore();
 
 		for (nfUint32 i = 0; i < keyStore->getResourceDataCount(); i++) {
-			PKeyStoreResourceData rd = keyStore->getResourceDataByIndex(i);
+			PKeyStoreResourceData rd = keyStore->getResourceData(i);
 			if(secureContext->hasDekCtx()){
 				refreshResourceDataTag(rd);
 			}
-			for (nfUint32 j = 0; j < rd->getDecryptRightCount(); j++) {
-				PKeyStoreDecryptRight dr = rd->getDecryptRight(j);
-				updateDecryptRightCipher(dr, rd);
-			}
+			//TODO update accessrights
+			//for (nfUint32 j = 0; j < rd->getDecryptRightCount(); j++) {
+			//	PKeyStoreDecryptRight dr = rd->getDecryptRight(j);
+			//	updateDecryptRightCipher(dr, rd);
+			//}
 		}
 
 		if (!keyStore->empty()) {

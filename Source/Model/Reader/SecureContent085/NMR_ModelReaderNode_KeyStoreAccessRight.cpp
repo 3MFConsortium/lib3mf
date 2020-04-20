@@ -100,23 +100,24 @@ namespace NMR {
 		__NMRASSERT(pChildName);
 		__NMRASSERT(pXMLReader);
 		__NMRASSERT(pNameSpace);
-
-		if (strcmp(pChildName, XML_3MF_ELEMENT_KEKPARAMS) == 0) {
-			if (!m_bHasParams) {
-				m_bHasParams = true;
-				PModelReaderNode_KeyStoreKEKParams pXMLNode = std::make_shared<CModelReaderNode_KeyStoreKEKParams>(m_pKeyStore, m_pWarnings);
-				pXMLNode->parseXML(pXMLReader);
-				m_sParams = pXMLNode->getKekParams();
+		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_SECURECONTENTSPEC) == 0) {
+			if (strcmp(pChildName, XML_3MF_ELEMENT_KEKPARAMS) == 0) {
+				if (!m_bHasParams) {
+					m_bHasParams = true;
+					PModelReaderNode_KeyStoreKEKParams pXMLNode = std::make_shared<CModelReaderNode_KeyStoreKEKParams>(m_pKeyStore, m_pWarnings);
+					pXMLNode->parseXML(pXMLReader);
+					m_sParams = pXMLNode->getKekParams();
+				}
+			} if (strcmp(pChildName, XML_3MF_ELEMENT_CIPHERDATA) == 0) {
+				if (!m_bHasCipherData) {
+					m_bHasCipherData = true;
+					PModelReaderNode_KeyStoreCipherValue pXMLNode = std::make_shared<CModelReaderNode_KeyStoreCipherValue>(m_pKeyStore, m_pWarnings);
+					pXMLNode->parseXML(pXMLReader);
+					m_rgCipherValue = pXMLNode->getCipherValue();
+				}
+			} else {
+				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
 			}
-		} if (strcmp(pChildName, XML_3MF_ELEMENT_CIPHERDATA) == 0) {
-			if (!m_bHasCipherData) {
-				m_bHasCipherData = true;
-				PModelReaderNode_KeyStoreCipherValue pXMLNode = std::make_shared<CModelReaderNode_KeyStoreCipherValue>(m_pKeyStore, m_pWarnings);
-				pXMLNode->parseXML(pXMLReader);
-				m_rgCipherValue = pXMLNode->getCipherValue();
-			}
-		} else {
-			m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
 		}
 	}
 

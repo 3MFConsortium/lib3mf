@@ -46,7 +46,7 @@ namespace NMR {
 	class CXmlWriter;
 
 	using PKeyStoreResourceData = std::shared_ptr<CKeyStoreResourceData>;
-	using PKeyStoreDecryptRight = std::shared_ptr<CKeyStoreDecryptRight>;
+	//using PKeyStoreDecryptRight = std::shared_ptr<CKeyStoreDecryptRight>;
 
 	class CKeyStoreOpcPackageWriter : public IOpcPackageWriter {
 	protected:
@@ -57,7 +57,7 @@ namespace NMR {
 		void refreshAllResourceData();
 		void wrapPartStream(PKeyStoreResourceData rd, POpcPackagePart part);
 		void refreshResourceDataTag(PKeyStoreResourceData rd);
-		void updateDecryptRightCipher(PKeyStoreDecryptRight dr, PKeyStoreResourceData rd);
+		//void updateDecryptRightCipher(PKeyStoreDecryptRight dr, PKeyStoreResourceData rd);
 	public:
 		CKeyStoreOpcPackageWriter(
 			_In_ PExportStream pImportStream, 

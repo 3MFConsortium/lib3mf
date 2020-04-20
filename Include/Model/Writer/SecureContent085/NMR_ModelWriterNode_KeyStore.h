@@ -41,6 +41,9 @@ namespace NMR {
 
 	class CModelWriterNode_KeyStore : public CModelWriterNode_KeyStoreBase {
 	private:
+		void writeWrapAlgorithmAttribute(eKeyStoreWrapAlgorithm ea);
+		void writeMgf(eKeyStoreMaskGenerationFunction mgf);
+		void writeDigest(eKeyStoreMessageDigest md);
 		void writeEncryptionAlgorithmAttribute(eKeyStoreEncryptAlgorithm ea);
 	protected:
 		void writeConsumers();
