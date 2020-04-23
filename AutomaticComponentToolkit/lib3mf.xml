@@ -35,6 +35,7 @@
 		<binding language="Node" indentation="tabs"/>
 		<binding language="Go" indentation="tabs"/>
 		<binding language="CSharp" indentation="tabs"/>
+		<binding language="Java" indentation="tabs"/>
 	</bindings>
 	<implementations>
 		<implementation language="Cpp" indentation="tabs"/>
