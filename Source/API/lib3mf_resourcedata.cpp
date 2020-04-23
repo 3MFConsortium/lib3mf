@@ -6,14 +6,13 @@
 
 namespace Lib3MF {
 	namespace Impl {
-		//Lib3MF::Impl::CResourceData::CResourceData(NMR::PKeyStoreResourceData resourceData, NMR::PPackageModelPath path) 
-		Lib3MF::Impl::CResourceData::CResourceData(NMR::PKeyStoreResourceData resourceData)
-			:m_pResourceData(resourceData)
+		Lib3MF::Impl::CResourceData::CResourceData(NMR::PKeyStoreResourceData resourceData, NMR::PPackageModelPath path) 
+			:m_pResourceData(resourceData), m_pPath(path)
 		{
 			if (!resourceData)
 				throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
-			//if (!path)
-			//	throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+			if (!path)
+				throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
 		}
 
 		Lib3MF::eEncryptionAlgorithm Lib3MF::Impl::CResourceData::GetEncryptionAlgorithm() {
@@ -26,8 +25,7 @@ namespace Lib3MF {
 		}
 
 		IPackagePart * CResourceData::GetPath() {
-			//return new CPackagePart(m_pPath);
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+			return new CPackagePart(m_pPath);
 		}
 
 		void CResourceData::GetAdditionalAuthenticationData(Lib3MF_uint64 nByteDataBufferSize, Lib3MF_uint64 * pByteDataNeededCount, Lib3MF_uint8 * pByteDataBuffer) {

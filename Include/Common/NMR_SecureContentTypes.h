@@ -44,7 +44,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace NMR {
 
 	enum eKeyStoreWrapAlgorithm {
-		RSA_OAEP = 1,	// http://www.w3.org/2009/xmlenc11#rsa-oaep, http://www.w3.org/2001/04/xmlenc#rsa-oaep-mgf1p
+		RSA_OAEP = 0,	// http://www.w3.org/2009/xmlenc11#rsa-oaep, http://www.w3.org/2001/04/xmlenc#rsa-oaep-mgf1p
 	};
 
 	enum eKeyStoreMaskGenerationFunction {

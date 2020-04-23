@@ -51,7 +51,9 @@ namespace Lib3MF {
 			pTriangles[10] = fnCreateTriangle(3, 0, 4);
 			pTriangles[11] = fnCreateTriangle(4, 7, 3);
 			model = wrapper->CreateModel();
+			model->SetRandomNumberCallback(generateRandomBytes, nullptr);
 		}
+
 		virtual void TearDown() {
 			model.reset();
 		}
@@ -71,8 +73,18 @@ namespace Lib3MF {
 		}
 	public:
 		static PWrapper wrapper;
+
+		static void generateRandomBytes(Lib3MF_uint64 byteData, Lib3MF_uint64 size, Lib3MF_pvoid userData, Lib3MF_uint64 * bytesWritten) {
+			static Lib3MF_uint8 random = 0;
+			Lib3MF_uint8 * buffer = (Lib3MF_uint8 *)byteData;
+			*bytesWritten = size;
+			while (size > 0)
+				*(buffer + (--size)) = ++random;
+		}
 	};
 	PWrapper SecureContentT::wrapper;
+
+	
 
 	using Lib3MF_buffer = std::vector<Lib3MF_uint8>;
 

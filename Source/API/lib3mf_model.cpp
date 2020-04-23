@@ -697,7 +697,7 @@ void Lib3MF::Impl::CModel::SetRandomNumberCallback(Lib3MF::RandomNumberCallback 
 	descriptor.m_pUserData = pUserData;
 	descriptor.m_fnRNG = [pTheCallback](NMR::nfByte * buffer, NMR::nfUint64 size, void * userData) {
 		Lib3MF_uint64 generated = 0;
-		(*pTheCallback)(reinterpret_cast<Lib3MF_uint64>(buffer), size, userData, &generated);
+		(*pTheCallback)((Lib3MF_uint64)buffer, size, userData, &generated);
 		if (generated > 0)
 			return generated;
 		throw NMR::CNMRException(NMR_ERROR_CALCULATIONTERMINATED);

@@ -54,7 +54,6 @@ namespace NMR {
 		std::map<std::string, PKeyStoreAccessRight> m_ConsumerAccesstRight;
 		std::vector<nfByte> m_rgKey;
 		std::mutex mtx;
-		nfBool m_bIsNew;
 	public:
 		CKeyStoreResourceDataGroup(PUUID const& keyUUID, std::vector<nfByte> const & key);
 
