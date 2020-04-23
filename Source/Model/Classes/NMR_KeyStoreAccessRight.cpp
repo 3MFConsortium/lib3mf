@@ -17,12 +17,12 @@ namespace NMR {
 		}
 
 		if (mgf != eKeyStoreMaskGenerationFunction::MGF1_SHA1
-			|| mgf != eKeyStoreMaskGenerationFunction::MGF1_SHA256) {
+			&& mgf != eKeyStoreMaskGenerationFunction::MGF1_SHA256) {
 			throw CNMRException(NMR_ERROR_KEYSTOREUNSUPPORTEDALGORITHM);
 		}
 
 		if (digest != eKeyStoreMessageDigest::SHA1
-			|| digest != eKeyStoreMessageDigest::SHA256)
+			&& digest != eKeyStoreMessageDigest::SHA256)
 			throw CNMRException(NMR_ERROR_KEYSTOREUNSUPPORTEDALGORITHM);
 	}
 	PKeyStoreConsumer CKeyStoreAccessRight::getConsumer() const {

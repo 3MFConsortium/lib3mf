@@ -194,7 +194,7 @@ namespace Lib3MF {
 
 		auto accessRight2 = keyStore->GetResourceDataGroup(1)->FindAccessRightByConsumer(consumer2.get());
 		ASSERT_NE(accessRight2, nullptr);
-		ASSERT_EQ(consumer1->GetConsumerID(), accessRight2->GetConsumer()->GetConsumerID());
+		ASSERT_EQ(consumer2->GetConsumerID(), accessRight2->GetConsumer()->GetConsumerID());
 		ASSERT_EQ(Lib3MF::eWrappingAlgorithm::RSA_OAEP, accessRight2->GetWrappingAlgorithm());
 		ASSERT_EQ(Lib3MF::eMgfAlgorithm::MGF1_SHA256, accessRight2->GetMgfAlgorithm());
 		ASSERT_EQ(Lib3MF::eDigestMethod::SHA256, accessRight2->GetDigestMethod());
