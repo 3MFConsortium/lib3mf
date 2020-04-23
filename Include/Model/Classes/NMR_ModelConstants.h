@@ -390,6 +390,8 @@ These are given by the 3MF Standard
 #define XML_3MF_SECURE_CONTENT_MD_SHA384			"http://www.w3.org/2001/04/xmlenc#sha384"
 #define XML_3MF_SECURE_CONTENT_MD_SHA512			"http://www.w3.org/2001/04/xmlenc#sha512"
 
+#define XML_3MF_SECURE_CONTENT_MAXELEMENTCOUNT		2147483647
+
 #define XML_3MF_NAMESPACEPREFIX_DS					"ds"
 #define XML_3MF_NAMESPACEPREFIX_XENC				"xenc"
 

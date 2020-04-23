@@ -25,8 +25,7 @@ namespace NMR {
 			|| digest != eKeyStoreMessageDigest::SHA256)
 			throw CNMRException(NMR_ERROR_KEYSTOREUNSUPPORTEDALGORITHM);
 	}
-	PKeyStoreConsumer CKeyStoreAccessRight::getConsumer()
-	{
+	PKeyStoreConsumer CKeyStoreAccessRight::getConsumer() const {
 		return m_pConsumer;
 	}
 	eKeyStoreWrapAlgorithm CKeyStoreAccessRight::getAlgorithm() const {
@@ -40,5 +39,11 @@ namespace NMR {
 	}
 	std::vector<nfByte> const & CKeyStoreAccessRight::getCipherValue() const {
 		return m_rgCipherValue;
+	}
+	void CKeyStoreAccessRight::setCipherValue(std::vector<nfByte> const & cv) {
+		m_rgCipherValue = cv;
+	}
+	nfBool CKeyStoreAccessRight::isNew() const {
+		return m_rgCipherValue.empty();
 	}
 }

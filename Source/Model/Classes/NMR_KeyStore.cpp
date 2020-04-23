@@ -32,11 +32,14 @@ A KeyStore is an in memory representation of the 3MF file.
 --*/
 
 #include "Model/Classes/NMR_KeyStore.h"
-#include "Common/NMR_StringUtils.h" 
 #include "Model/Classes/NMR_KeyStoreConsumer.h"
 #include "Model/Classes/NMR_KeyStoreResourceDataGroup.h"
+#include "Model/Classes/NMR_ModelConstants.h"
 #include "Common/NMR_Exception.h"
+#include "Common/NMR_StringUtils.h" 
 #include <memory>
+#include <algorithm>
+
 namespace NMR {
 	CKeyStore::CKeyStore() {
 		m_UUID = std::make_shared<CUUID>();
@@ -58,6 +61,10 @@ namespace NMR {
 
 	void CKeyStore::addConsumer(PKeyStoreConsumer const & consumer)
 	{
+		std::lock_guard<std::mutex> guard(mtx);
+		if (m_Consumers.size() >= XML_3MF_SECURE_CONTENT_MAXELEMENTCOUNT)
+			throw CNMRException(NMR_ERROR_KEYSTORETOOMANYELEMENTS);
+
 		std::string const id = consumer->getConsumerID();
 		if (m_ConsumerRefs.find(id) != m_ConsumerRefs.end()) {
 			throw CNMRException(NMR_ERROR_KEYSTOREDUPLICATECONSUMER);
@@ -68,7 +75,7 @@ namespace NMR {
 
 	nfUint64 CKeyStore::getConsumerCount() const
 	{
-		return (uint32_t)m_Consumers.size();
+		return m_Consumers.size();
 	}
 
 	PKeyStoreConsumer CKeyStore::getConsumer(nfUint64 index) const
@@ -88,17 +95,14 @@ namespace NMR {
 
 	void CKeyStore::removeConsumer(NMR::PKeyStoreConsumer consumer)
 	{
+		std::lock_guard<std::mutex> guard(mtx);
 		size_t n = m_ConsumerRefs.erase(consumer->getConsumerID());
 		if (n > 0) {
 			for (auto it : m_ResourceDataGroups) {
 				it->removeAccessRight(consumer->getConsumerID());
 			}
-			for (auto it = m_Consumers.begin(); it != m_Consumers.end(); it++) {
-				if ((*it) == consumer) {
-					m_Consumers.erase(it);
-					break;
-				}
-			}
+			auto found = std::find(m_Consumers.begin(), m_Consumers.end(), consumer);
+			m_Consumers.erase(found);
 		}
 	}
 
@@ -107,14 +111,80 @@ namespace NMR {
 		return m_ResourceDataGroups.size();
 	}
 
+	PKeyStoreResourceDataGroup CKeyStore::getResourceDataGroup(nfUint64 index) const {
+		if (index < m_ResourceDataGroups.size())
+			return m_ResourceDataGroups[index];
+		throw CNMRException(NMR_ERROR_INVALIDINDEX);
+	}
+
 	void CKeyStore::addResourceDataGroup(PKeyStoreResourceDataGroup const & dataGroup)
 	{
+		std::lock_guard<std::mutex> guard(mtx);
+
+		if (m_ResourceDataGroups.size() >= XML_3MF_SECURE_CONTENT_MAXELEMENTCOUNT)
+			throw CNMRException(NMR_ERROR_KEYSTORETOOMANYELEMENTS);
+
 		PUUID const keyUUID = dataGroup->getKeyUUID();
 		if (m_ResourceDataGroupsRefs.find(keyUUID) != m_ResourceDataGroupsRefs.end()) {
 			throw CNMRException(NMR_ERROR_KEYSTOREDUPLICATERESOURCEDATAGROUP);
 		}
 		m_ResourceDataGroups.push_back(dataGroup);
 		m_ResourceDataGroupsRefs[keyUUID] = dataGroup;
+	}
+
+	PKeyStoreResourceDataGroup CKeyStore::findResourceDataGroupByResourceDataPath(std::string const & rdPath) {
+		auto found = m_ResourceDataRefs.find(rdPath);
+		if (found != m_ResourceDataRefs.end())
+			return (*found).second->getGroup();
+		return nullptr;
+	}
+
+	nfUint64 CKeyStore::addResourceData(PKeyStoreResourceData const & rd) {
+		std::lock_guard<std::mutex> guard(mtx);
+
+		if (m_ResourceDatas.size() >= XML_3MF_SECURE_CONTENT_MAXELEMENTCOUNT)
+			throw CNMRException(NMR_ERROR_KEYSTORETOOMANYELEMENTS);
+
+		if (nullptr == rd->getGroup())
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		auto found = m_ResourceDataRefs.find(rd->getPath());
+		if (found != m_ResourceDataRefs.end())
+			throw CNMRException(NMR_ERROR_KEYSTOREDUPLICATERESOURCEDATA);
+
+		m_ResourceDatas.push_back(rd);
+		m_ResourceDataRefs[rd->getPath()] = rd;
+		return m_ResourceDatas.size() - 1;
+	}
+
+	void CKeyStore::removeResourceData(NMR::PKeyStoreResourceData const & rd) {
+		std::lock_guard<std::mutex> guard(mtx);
+		size_t n = m_ResourceDataRefs.erase(rd->getPath());
+		if (n > 0) {
+			auto found = std::find(m_ResourceDatas.begin(), m_ResourceDatas.end(), rd);
+			m_ResourceDatas.erase(found);
+		}
+	}
+
+	nfUint64 CKeyStore::getResourceDataCount() {
+		return m_ResourceDatas.size();
+	}
+
+	PKeyStoreResourceData CKeyStore::getResourceData(nfUint64 index) const {
+		if (index < m_ResourceDatas.size())
+			return m_ResourceDatas[index];
+		throw CNMRException(NMR_ERROR_INVALIDINDEX);
+	}
+
+	PKeyStoreResourceData CKeyStore::findResourceData(std::string const & path) {
+		auto found = m_ResourceDataRefs.find(path);
+		if (found != m_ResourceDataRefs.end())
+			return (*found).second;
+		return nullptr;
+	}
+
+	std::vector<PKeyStoreResourceData> CKeyStore::getResourceDataByGroup(PKeyStoreResourceDataGroup const & rdg) const {
+		throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
 	}
 
 	bool CKeyStore::empty() const {

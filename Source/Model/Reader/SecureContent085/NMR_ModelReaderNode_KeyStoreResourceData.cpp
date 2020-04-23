@@ -42,9 +42,9 @@ NMR_ModelReaderNode_KeyStoreResourceData.h defines the Model Reader Node class t
 
 namespace NMR {
 
-	PKeyStoreResourceData CModelReaderNode_KeyStoreResourceData::getResourceData()
+	PKeyStoreResourceData CModelReaderNode_KeyStoreResourceData::getResourceData(PKeyStoreResourceDataGroup const & rdg)
 	{
-		return CKeyStoreFactory::makeResourceData(m_path, m_sCekParams);
+		return CKeyStoreFactory::makeResourceData(rdg, m_path, m_sCekParams);
 	}
 
 	void CModelReaderNode_KeyStoreResourceData::parseXML(_In_ CXmlReader * pXMLReader)

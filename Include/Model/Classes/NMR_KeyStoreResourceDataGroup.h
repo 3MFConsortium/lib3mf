@@ -54,22 +54,23 @@ namespace NMR {
 		std::map<std::string, PKeyStoreAccessRight> m_ConsumerAccesstRight;
 		std::vector<nfByte> m_rgKey;
 		std::mutex mtx;
-	protected:
-	
+		nfBool m_bIsNew;
 	public:
-		CKeyStoreResourceDataGroup(PUUID const& keyUUID, std::vector<PKeyStoreAccessRight> const& ar);
+		CKeyStoreResourceDataGroup(PUUID const& keyUUID, std::vector<nfByte> const & key);
 
 		PUUID getKeyUUID() const;
-		nfUint32 addAccessRight(PKeyStoreAccessRight const & ar);
+		nfUint64 addAccessRight(PKeyStoreAccessRight const & ar);
 		void removeAccessRight(std::string const & consumerId);
-		nfUint32 getAccessRightCount();
-		PKeyStoreAccessRight getAccessRight(nfUint32 index) const;
+		nfUint64 getAccessRightCount();
+		PKeyStoreAccessRight getAccessRight(nfUint64 index) const;
 		PKeyStoreAccessRight findAccessRightByConsumerID(std::string const & consumerId) const;
 
 		std::vector<nfByte> const & getKey() const;
 		void setKey(std::vector<nfByte> const & key);
 
-
+		inline nfBool isOpen() const {
+			return !m_rgKey.empty();
+		}
 	};
 	typedef std::shared_ptr<CKeyStoreResourceDataGroup> PKeyStoreResourceDataGroup;
 }

@@ -7,14 +7,17 @@ namespace NMR {
 
 	nfUint64 CKeyStoreResourceData::s_nfHandleCount = 0;
 
-	CKeyStoreResourceData::CKeyStoreResourceData(std::string const& path,
+	CKeyStoreResourceData::CKeyStoreResourceData(
+		PKeyStoreResourceDataGroup const & rdg,
+		std::string const& path,
 		bool compression,
 		eKeyStoreEncryptAlgorithm alg,
 		std::vector<nfByte> const & iv,
 		std::vector<nfByte> const & tag,
-		std::vector<nfByte> const & aad) : CKeyStoreCEKParams(compression, alg, iv, tag, aad, ++s_nfHandleCount)
+		std::vector<nfByte> const & aad) 
+		: CKeyStoreCEKParams(compression, alg, iv, tag, aad, ++s_nfHandleCount), 
+		m_pGroup(rdg), m_sPath(path)
 	{
-		m_sPath = path;
 	}
 
 	void CKeyStoreResourceData::setInitVector(std::vector<nfByte> const & newIV) {

@@ -65,11 +65,11 @@ namespace NMR {
 
 	class CKeyStoreFactory {
 	public:
-		static PKeyStore makeKeyStore(PModel model);
-		static PKeyStoreResourceDataGroup makeResourceDataGroup(PUUID const & keyUUID);
+		static PKeyStore makeKeyStore();
+		static PKeyStoreResourceDataGroup makeResourceDataGroup(PUUID const & keyUUID = nullptr, std::vector<nfByte> const & key = std::vector<nfByte>());
 		static PKeyStoreConsumer makeConsumer(std::string const & consumerID, std::string const & keyId = std::string(), std::string const & keyValue = std::string());
-		static PKeyStoreAccessRight makeAccessRight(PKeyStoreConsumer const & consumer, eKeyStoreWrapAlgorithm const algorithm, eKeyStoreMaskGenerationFunction const mask, eKeyStoreMessageDigest const digest);
-		static PKeyStoreResourceData makeResourceData(std::string const & path, PKeyStoreCEKParams params = nullptr);
+		static PKeyStoreAccessRight makeAccessRight(PKeyStoreConsumer const & consumer, eKeyStoreWrapAlgorithm const algorithm, eKeyStoreMaskGenerationFunction const mask, eKeyStoreMessageDigest const digest, std::vector<nfByte> const & cipherValue = std::vector<nfByte>());
+		static PKeyStoreResourceData makeResourceData(PKeyStoreResourceDataGroup const & rdg, std::string const & path, PKeyStoreCEKParams params = nullptr);
 		static PKeyStoreContentEncryptionParams makeContentEncryptionParams(PKeyStoreResourceData rd, PKeyStoreResourceDataGroup rdg);
 		static PKeyStoreCEKParams makeCEKParams(nfBool compressed, eKeyStoreEncryptAlgorithm algorithm, std::vector<nfByte> const & aad, std::vector<nfByte> const & iv = std::vector<nfByte>(), std::vector<nfByte> const & tag = std::vector<nfByte>());
 	};

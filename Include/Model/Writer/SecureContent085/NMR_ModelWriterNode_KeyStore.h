@@ -41,13 +41,16 @@ namespace NMR {
 
 	class CModelWriterNode_KeyStore : public CModelWriterNode_KeyStoreBase {
 	private:
+		std::map<PKeyStoreConsumer, nfUint64> m_consumerIndexes;
+	protected:
 		void writeWrapAlgorithmAttribute(eKeyStoreWrapAlgorithm ea);
 		void writeMgf(eKeyStoreMaskGenerationFunction mgf);
 		void writeDigest(eKeyStoreMessageDigest md);
 		void writeEncryptionAlgorithmAttribute(eKeyStoreEncryptAlgorithm ea);
-	protected:
 		void writeConsumers();
 		void writeResourceDatagroup();
+		void writeAccessRight(PKeyStoreAccessRight const & ar);
+		void writeResourceData(PKeyStoreResourceData const & rd);
 	public:
 		using CModelWriterNode_KeyStoreBase::CModelWriterNode_KeyStoreBase;
 		CModelWriterNode_KeyStore() = delete;

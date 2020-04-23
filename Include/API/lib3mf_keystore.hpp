@@ -41,6 +41,7 @@ Abstract: This is the class declaration of CKeyStore
 
 // Include custom headers here.
 #include "Model/Classes/NMR_KeyStore.h"
+#include "Model/Classes/NMR_Model.h"
 namespace Lib3MF {
 	namespace Impl {
 
@@ -56,6 +57,7 @@ namespace Lib3MF {
 			* Put private members here.
 			*/
 			NMR::PKeyStore m_pKeyStore;
+			NMR::PModel m_pModel;
 		protected:
 
 			/**
@@ -67,7 +69,7 @@ namespace Lib3MF {
 			/**
 			* Put additional public members here. They will not be visible in the external API.
 			*/
-			CKeyStore(NMR::PKeyStore pKeyStore);
+			CKeyStore(NMR::PModel const & pModel);
 		
 			/**
 			* Public member functions to implement.

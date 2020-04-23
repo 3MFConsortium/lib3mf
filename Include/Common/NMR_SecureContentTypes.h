@@ -102,6 +102,17 @@ namespace NMR {
 		void * m_pUserData;
 	};
 
+	constexpr nfUint64 fnGetAlgorithmInitVectorSize(eKeyStoreEncryptAlgorithm ea) {
+		return 12;
+	}
+
+	constexpr nfUint64 fnGetAlgorithmKeySize(eKeyStoreEncryptAlgorithm ea) {
+		return 32;
+	}
+
+	constexpr nfUint64 fnGetAlgorithmAuthTagSize(eKeyStoreEncryptAlgorithm ea) {
+		return 16;
+	}
 }
 
 #endif // !NMR_SECURECONTENTTYPES

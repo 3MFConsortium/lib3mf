@@ -687,7 +687,7 @@ Lib3MF::sBox CModel::GetOutbox()
 }
 
 IKeyStore * Lib3MF::Impl::CModel::GetKeyStore() {
-	return new CKeyStore(m_model->getKeyStore());
+	return new CKeyStore(m_model);
 }
 
 void Lib3MF::Impl::CModel::SetRandomNumberCallback(Lib3MF::RandomNumberCallback pTheCallback, Lib3MF_pvoid pUserData) {

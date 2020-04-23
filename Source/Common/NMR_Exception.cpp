@@ -423,6 +423,7 @@ namespace NMR {
 		case NMR_ERROR_KEYSTOREINCONSISTENTKEKPARAMS: return "Element kekparams ha invalid configuration";
 		case NMR_ERROR_KEYSTOREMISSINGCONSUMERINDEX: return "Attribute consumerindex is missing";
 		case NMR_ERROR_KEYSTOREMISSINGKEKPARAMS: return "Element kekparams is missing";
+		case NMR_ERROR_KEYSTOREMISSINGKEYUUID: return "Attribute keyuuid is missing";
 
 		// XML Parser Error Constants(0x9XXX)
 		case NMR_ERROR_XMLPARSER_INVALIDATTRIBVALUE: return "Invalid XML attribute value";

@@ -1,17 +1,20 @@
 #include "Model/Classes/NMR_KeyStoreResourceDataGroup.h"
+#include "Model/Classes/NMR_ModelConstants.h"
 #include "Common/NMR_Exception.h"
 #include <memory>
 
 namespace NMR {
 
-	CKeyStoreResourceDataGroup::CKeyStoreResourceDataGroup(PUUID const & keyUUID, std::vector<PKeyStoreAccessRight> const & ar)
+	CKeyStoreResourceDataGroup::CKeyStoreResourceDataGroup(PUUID const& keyUUID, std::vector<nfByte> const & key)
 	{
 		m_sKeyUUID = keyUUID;
-		m_AccessRights = ar;
+		m_rgKey = key;
 	}
 
 	void CKeyStoreResourceDataGroup::removeAccessRight(std::string const & consumerId)
 	{
+		std::lock_guard<std::mutex> guard(mtx);
+
 		if (consumerId.empty())
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 		size_t n = m_ConsumerAccesstRight.erase(consumerId);
@@ -29,26 +32,30 @@ namespace NMR {
 		return m_sKeyUUID;
 	}
 
-	nfUint32 CKeyStoreResourceDataGroup::addAccessRight(PKeyStoreAccessRight const & ar)
+	nfUint64 CKeyStoreResourceDataGroup::addAccessRight(PKeyStoreAccessRight const & ar)
 	{
+		std::lock_guard<std::mutex> guard(mtx);
+
+		if (m_AccessRights.size() >= XML_3MF_SECURE_CONTENT_MAXELEMENTCOUNT)
+			throw CNMRException(NMR_ERROR_KEYSTORETOOMANYELEMENTS);
+
 		std::string consumerId = ar->getConsumer()->getConsumerID();
 		if (m_ConsumerAccesstRight.find(consumerId) != m_ConsumerAccesstRight.end()) {
 			throw CNMRException(NMR_ERROR_KEYSTOREDUPLICATEACCESSRIGHT);
 		}
-		mtx.lock();
+
 		m_AccessRights.push_back(ar);
-		nfUint32 elIdx = (nfUint32)m_AccessRights.size() - 1;
+		nfUint64 elIdx = m_AccessRights.size() - 1;
 		m_ConsumerAccesstRight[consumerId] = ar;
-		mtx.unlock();
 		return elIdx;
 	}
 
-	nfUint32 CKeyStoreResourceDataGroup::getAccessRightCount()
+	nfUint64 CKeyStoreResourceDataGroup::getAccessRightCount()
 	{
-		return (uint32_t)m_AccessRights.size();
+		return m_AccessRights.size();
 	}
 
-	PKeyStoreAccessRight CKeyStoreResourceDataGroup::getAccessRight(nfUint32 index) const
+	PKeyStoreAccessRight CKeyStoreResourceDataGroup::getAccessRight(nfUint64 index) const
 	{
 		if (index >= m_AccessRights.size())
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);

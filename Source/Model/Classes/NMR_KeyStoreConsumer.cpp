@@ -37,12 +37,4 @@ namespace NMR {
 	nfBool CKeyStoreConsumer::hasKeyValue() const {
 		return !m_sKeyValue.empty();
 	}
-
-	void CKeyStoreConsumer::setIndex(uint32_t const& nIndex) {
-		m_nIndex = nIndex;
-	}
-
-	uint32_t CKeyStoreConsumer::getIndex() const {
-		return m_nIndex;
-	}
 }

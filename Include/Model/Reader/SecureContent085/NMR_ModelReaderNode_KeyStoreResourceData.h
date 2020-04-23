@@ -56,7 +56,7 @@ namespace NMR {
 		CModelReaderNode_KeyStoreResourceData() = delete;
 		using CModelReaderNode_KeyStoreBase::CModelReaderNode_KeyStoreBase;
 		
-		PKeyStoreResourceData getResourceData();
+		PKeyStoreResourceData getResourceData(PKeyStoreResourceDataGroup const & rdg);
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 	};
 

@@ -67,7 +67,7 @@ namespace NMR {
 			parseKeyStore(keyStoreStream, pProgressMonitor);
 
 			if (!m_pKeyStore->empty()) {
-				openAllResourceData();
+				openAllResourceDataGroups();
 			}
 		}
 	}
@@ -79,7 +79,6 @@ namespace NMR {
 	POpcPackagePart CKeyStoreOpcPackageReader::createPart(std::string sPath) {
 		auto pPart = m_pPackageReader->createPart(sPath);
 		if (m_pSecureContext->hasDekCtx()) {
-			//TODO find resourcedatagroup, find resource data, create contentencryptionparams, set on the context
 			NMR::PKeyStoreResourceDataGroup rdg = m_pKeyStore->findResourceDataGroupByResourceDataPath(sPath);
 			if (nullptr != rdg) {
 				NMR::PKeyStoreResourceData rd = m_pKeyStore->findResourceData(sPath);
@@ -160,7 +159,7 @@ namespace NMR {
 		}
 	}
 
-	void CKeyStoreOpcPackageReader::openAllResourceData() {
+	void CKeyStoreOpcPackageReader::openAllResourceDataGroups() {
 		for (nfUint64 i = 0; i < m_pKeyStore->getResourceDataGroupCount() && !m_pSecureContext->emptyKekCtx(); ++i) {
 			PKeyStoreResourceDataGroup rdg = m_pKeyStore->getResourceDataGroup(i);
 			for (auto it = m_pSecureContext->kekCtxBegin(); it != m_pSecureContext->kekCtxEnd(); ++it) {

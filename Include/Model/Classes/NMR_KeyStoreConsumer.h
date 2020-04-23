@@ -44,7 +44,6 @@ namespace NMR {
 		std::string m_sConsumerID;
 		std::string m_sKeyID;
 		std::string m_sKeyValue;
-		uint32_t	m_nIndex;
 	public:
 		CKeyStoreConsumer(std::string const & consumerID, std::string const & keyID, std::string keyValue);
 
@@ -57,8 +56,6 @@ namespace NMR {
 		std::string getKeyValue() const;
 		void setKeyValue(std::string const & keyValue);
 		nfBool hasKeyValue() const;
-		void setIndex(uint32_t const& nIndex);
-		uint32_t getIndex() const;
 	};
 
 	typedef std::shared_ptr<CKeyStoreConsumer> PKeyStoreConsumer;

@@ -55,7 +55,8 @@ namespace NMR {
 			m_pKeyStore->getConsumer(m_nConsumerIndex), 
 			m_sParams.m_eAlgorithm,
 			m_sParams.m_eMgf,
-			m_sParams.m_eDigest);
+			m_sParams.m_eDigest, 
+			m_rgCipherValue);
 	}
 
 	void CModelReaderNode_KeyStoreAccessRight::parseXML(_In_ CXmlReader * pXMLReader)

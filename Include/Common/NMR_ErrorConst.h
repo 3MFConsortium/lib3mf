@@ -1197,6 +1197,12 @@ Model error codes (0x8XXX)
 // No kekparams
 #define NMR_ERROR_KEYSTOREMISSINGKEKPARAMS 0x8106
 
+// No keyuuid
+#define NMR_ERROR_KEYSTOREMISSINGKEYUUID 0x8107
+
+// Too many elements in a keystore xml tree
+#define NMR_ERROR_KEYSTORETOOMANYELEMENTS 0x8108
+
 
 
 /*-------------------------------------------------------------------

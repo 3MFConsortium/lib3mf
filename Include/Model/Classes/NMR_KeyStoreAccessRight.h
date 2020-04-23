@@ -47,11 +47,13 @@ namespace NMR {
 		std::vector<nfByte> m_rgCipherValue;
 	public:
 		CKeyStoreAccessRight(PKeyStoreConsumer const & consumer, eKeyStoreWrapAlgorithm const algorithm, eKeyStoreMaskGenerationFunction const mgf, eKeyStoreMessageDigest const digest, std::vector<nfByte> const & cipherValue);
-		PKeyStoreConsumer getConsumer();
+		PKeyStoreConsumer getConsumer() const;
 		eKeyStoreWrapAlgorithm getAlgorithm() const;
 		eKeyStoreMaskGenerationFunction getMgf() const;
 		eKeyStoreMessageDigest getDigest() const;
 		std::vector<nfByte> const & getCipherValue() const;
+		void setCipherValue(std::vector<nfByte> const & cv);
+		nfBool isNew() const;
 	};
 
 	typedef std::shared_ptr<CKeyStoreAccessRight> PKeyStoreAccessRight;

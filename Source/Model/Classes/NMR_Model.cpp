@@ -62,6 +62,9 @@ A model is an in memory representation of the 3MF file.
 #include "Common/Platform/NMR_ImportStream_Unique_Memory.h"
 
 #include "Common/NMR_StringUtils.h" 
+
+#include "Model/Classes/NMR_KeyStoreFactory.h"
+
 namespace NMR {
 
 	CModel::CModel()
@@ -71,8 +74,10 @@ namespace NMR {
 		m_nHandleCounter = 1;
 		m_pPath = m_resourceHandler.makePackageModelPath(PACKAGE_3D_MODEL_URI);
 		m_pCurPath = m_pPath;
-		m_pKeyStore = std::make_shared<NMR::CKeyStore>();
+		m_pKeyStore = CKeyStoreFactory::makeKeyStore();
+
 		setBuildUUID(std::make_shared<CUUID>());
+
 		m_MetaDataGroup = std::make_shared<CModelMetaDataGroup>();
 	}
 

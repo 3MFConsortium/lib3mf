@@ -65,6 +65,10 @@ namespace NMR {
 
 		// Parse Content
 		parseContent(pXMLReader);
+
+		if (m_sCipherValue.empty()) {
+			m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREINVALIDCIPHERVALUE), eModelReaderWarningLevel::mrwMissingMandatoryValue);
+		}
 	}
 
 	void CModelReaderNode_KeyStoreCipherValue::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader) {
@@ -73,8 +77,6 @@ namespace NMR {
 			PModelReaderNode_StringValue pNode = std::make_shared<CModelReaderNode_StringValue>(m_pWarnings);
 			pNode->parseXML(pXMLReader);
 			m_sCipherValue = base64_decode(pNode->getValue());
-		} else {
-			m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
 		}
 	}
 

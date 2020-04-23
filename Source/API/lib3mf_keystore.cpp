@@ -9,14 +9,20 @@
 
 #include "Model/Classes/NMR_KeyStoreFactory.h"
 #include "Model/Classes/NMR_PackageResourceID.h"
+#include "Model/Classes/NMR_Model.h"
+#include "Common/NMR_SecureContentTypes.h"
+#include "Common/NMR_Types.h"
+
+#include <vector>
 
 using namespace Lib3MF::Impl;
 
-Lib3MF::Impl::CKeyStore::CKeyStore(NMR::PKeyStore pKeyStore) 
-	:m_pKeyStore(pKeyStore)
+Lib3MF::Impl::CKeyStore::CKeyStore(NMR::PModel const & pModel) 
+	:m_pModel(pModel)
 {
-	if (nullptr == pKeyStore)
+	if (nullptr == pModel)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDKEYSTORE);
+	m_pKeyStore = pModel->getKeyStore();
 }
 
 IConsumer * Lib3MF::Impl::CKeyStore::AddConsumer(const std::string & sConsumerID, const std::string & sKeyID, const std::string & sKeyValue)
@@ -81,7 +87,13 @@ IResourceDataGroup * Lib3MF::Impl::CKeyStore::GetResourceDataGroup(const Lib3MF_
 }
 
 IResourceDataGroup * Lib3MF::Impl::CKeyStore::AddResourceDataGroup() {
-	NMR::PKeyStoreResourceDataGroup dg = NMR::CKeyStoreFactory::makeResourceDataGroup(std::make_shared<NMR::CUUID>());
+	//this is not ideal, as key size is determined by the encryptionalgorithm inside resourcedata.
+	//in any case, the spec does not state what happens if different resource datas have different algorithms,
+	//but resourcedatagroups are supposed to group the same key for a group of resources...
+	//so far, this should work as aes256 is the only thing we support.
+	std::vector<NMR::nfByte> key(NMR::fnGetAlgorithmKeySize(NMR::eKeyStoreEncryptAlgorithm::AES256_GCM), 0);
+	m_pModel->generateRandomBytes(key.data(), key.size());
+	NMR::PKeyStoreResourceDataGroup dg = NMR::CKeyStoreFactory::makeResourceDataGroup(std::make_shared<NMR::CUUID>(), key);
 	m_pKeyStore->addResourceDataGroup(dg);
 	return new CResourceDataGroup(dg);
 }
@@ -108,8 +120,8 @@ Lib3MF::Impl::IResourceData * Lib3MF::Impl::CKeyStore::AddResourceData(Lib3MF::I
 
 	std::vector<NMR::nfByte> aad(pAdditionalAuthenticationDataBuffer, pAdditionalAuthenticationDataBuffer + nAdditionalAuthenticationDataBufferSize);
 	NMR::PKeyStoreCEKParams params = NMR::CKeyStoreFactory::makeCEKParams(compression, algorithm, aad);
-	NMR::PKeyStoreResourceData rd = NMR::CKeyStoreFactory::makeResourceData(pPartPath->Get(), params);
-	m_pKeyStore->addResourceData(dg->resourceDataGroup(), rd);
+	NMR::PKeyStoreResourceData rd = NMR::CKeyStoreFactory::makeResourceData(dg->resourceDataGroup(), pPartPath->Get(), params);
+	m_pKeyStore->addResourceData(rd);
 	return new CResourceData(rd);
 }
 

@@ -41,16 +41,18 @@ NMR_KeyStoreResourceData.h defines the KeyStoreResourceData Class. A ResourceDat
 #include "Model/Classes/NMR_PackageResourceID.h"
 #include "Model/Classes/NMR_KeyStoreCEKParams.h"
 namespace NMR {
-	enum eResourceDataState {
-		NEW = 0,
-		CLOSED,
-		OPEN
-	};
+
+	class CKeyStoreResourceDataGroup;
+	using PKeyStoreResourceDataGroup = std::shared_ptr<CKeyStoreResourceDataGroup>;
+
 	class CKeyStoreResourceData: public CKeyStoreCEKParams {
+		PKeyStoreResourceDataGroup const & m_pGroup;
 		std::string m_sPath;
 		static nfUint64 s_nfHandleCount;
 	public:
-		CKeyStoreResourceData(std::string const& path, 
+		CKeyStoreResourceData(
+			PKeyStoreResourceDataGroup const & rdg,
+			std::string const& path, 
 			bool compression,
 			eKeyStoreEncryptAlgorithm alg,
 			std::vector<nfByte> const & iv,
@@ -59,6 +61,10 @@ namespace NMR {
 
 		inline std::string const & getPath() const {
 			return m_sPath;
+		}
+
+		inline PKeyStoreResourceDataGroup const & getGroup() const {
+			return m_pGroup;
 		}
 
 		void setInitVector(std::vector<nfByte> const &newIV);
