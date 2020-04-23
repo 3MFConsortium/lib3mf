@@ -1146,7 +1146,7 @@
 	</enum>
 
 	<enum name="MgfAlgorithm">
-		<option name="MGF1_SHA1" value="1" description="http://www.w3.org/2009/xmlenc11#mgf1sha1"/>
+		<option name="MGF1_SHA1" value="160" description="http://www.w3.org/2009/xmlenc11#mgf1sha1"/>
 		<option name="MGF1_SHA224" value="224" description="http://www.w3.org/2009/xmlenc11#mgf1sha224"/>
 		<option name="MGF1_SHA256" value="256" description="http://www.w3.org/2009/xmlenc11#mgf1sha256"/>
 		<option name="MGF1_SHA384" value="384" description="http://www.w3.org/2009/xmlenc11#mgf1sha384"/>
@@ -1154,7 +1154,7 @@
 	</enum>
 
 	<enum name="DigestMethod">
-		<option name="SHA1" value="1" description="http://www.w3.org/2000/09/xmldsig#sha1"/>
+		<option name="SHA1" value="160" description="http://www.w3.org/2000/09/xmldsig#sha1"/>
 		<option name="SHA256" value="256" description="http://www.w3.org/2001/04/xmlenc#sha256"/>
 	</enum>
 	
