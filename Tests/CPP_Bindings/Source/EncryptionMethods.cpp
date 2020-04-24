@@ -68,7 +68,6 @@ namespace Lib3MF {
 
 		void reset(KekContext & context) {
 			context.key = privateKey.get();
-			context.size = RsaMethods::getSize(privateKey);
 			context.wrapper = wrapper.get();
 		}
 

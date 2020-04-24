@@ -86,7 +86,7 @@ namespace RsaMethods {
 
 	PEVP_PKEY loadPublicKey(ByteVector const & pubKey);
 
-	size_t getSize(PEVP_PKEY const & evpKey);
+	size_t getSize(EVP_PKEY * evpKey);
 
 	size_t decrypt(EVP_PKEY * evpKey, size_t cipherSize, uint8_t const * cipher, uint8_t * plain);
 

@@ -104,8 +104,8 @@ namespace RsaMethods {
 		return pevpKey;
 	}
 
-	size_t getSize(PEVP_PKEY const & evpKey) {
-		RSA * rsa = EVP_PKEY_get1_RSA(evpKey.get());
+	size_t getSize(EVP_PKEY * evpKey) {
+		RSA * rsa = EVP_PKEY_get1_RSA(evpKey);
 		size_t rsaSize = RSA_size(rsa);
 		return rsaSize;
 	}
@@ -162,7 +162,6 @@ void EncryptionCallbacks::dataEncryptClientCallback(
 
 		if (0 == plainSize || nullptr == plainBuffer) {
 			ByteVector tag(16, 0);
-			p.GetAuthenticationTag(tag);
 
 			if (!AesMethods::Encrypt::finish(ctx, cipherBuffer, (Lib3MF_uint32)tag.size(), tag.data())) {
 				*cipherNeeded = 0;
@@ -197,10 +196,9 @@ void EncryptionCallbacks::keyEncryptClientCallback(
 		|| Lib3MF::eMgfAlgorithm::MGF1_SHA1 != ar.GetMgfAlgorithm()
 		|| Lib3MF::eDigestMethod::SHA1 != ar.GetDigestMethod())
 		*cipherNeeded = 0;
-	else if (nullptr == plainBuffer) {
-		*cipherNeeded = 256;
+	else if (nullptr == cipherBuffer || cipherSize == 0) {
+		*cipherNeeded = RsaMethods::getSize(context->key);
 	} else {
-
 		KekContext const * context = (KekContext const *)userData;
 		*cipherNeeded = RsaMethods::encrypt(context->key, plainSize, plainBuffer, cipherBuffer);
 	}
@@ -274,7 +272,7 @@ void EncryptionCallbacks::keyDecryptClientCallback(
 		|| Lib3MF::eMgfAlgorithm::MGF1_SHA1 != ar.GetMgfAlgorithm()
 		|| Lib3MF::eDigestMethod::SHA1 != ar.GetDigestMethod())
 		*plainNeeded = 0;
-	else if (nullptr == plainBuffer) {
+	else if (nullptr == plainBuffer || 0 == plainSize) {
 		*plainNeeded = 32;
 	}
 	else {
