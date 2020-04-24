@@ -369,7 +369,6 @@ namespace Lib3MF {
 
 			if (0 == inSize || nullptr == inBuffer) {
 				//finalize
-				cb->context.erase(cd.GetDescriptor());
 				*outNeededSize = 1;
 			} else if (0 == outSize || nullptr == outBuffer) {
 				//return size needed
