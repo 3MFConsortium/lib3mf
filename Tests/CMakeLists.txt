@@ -8,6 +8,12 @@ if (USE_INCLUDED_GTEST)
 	SET(gtest_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/googletest/googletest")
 endif()
 
+if (USE_INCLUDED_SSL)
+  add_subdirectory("libressl")
+  SET_TARGET_PROPERTIES (ssl PROPERTIES FOLDER LibreSSL)
+  SET_TARGET_PROPERTIES (crypto PROPERTIES FOLDER LibreSSL)
+endif()
+
 add_definitions( -DTESTFILESPATH="${CMAKE_CURRENT_SOURCE_DIR}/TestFiles/")
 add_definitions( -DLTESTFILESPATH=L"${CMAKE_CURRENT_SOURCE_DIR}/TestFiles/")
 add_definitions( -DLOUTFILESPATH=L"${CMAKE_BINARY_DIR}/")
