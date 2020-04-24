@@ -61,6 +61,15 @@ namespace Lib3MF {
 
 		PReader readKeyStore(std::string filename) {
 			auto reader = model->QueryReader("3mf");
+			KEKCallbackData kekData;
+			kekData.value = 1;
+			kekData.consumerId = "LIB3MF#TEST";
+			kekData.keyId = "contentKey";
+			reader->AddKeyWrappingCallback(kekData.consumerId, testKEKCallback, (Lib3MF_pvoid)&kekData);
+
+			DEKCallbackData dekData;
+			reader->SetContentEncryptionCallback(testDEKCallback, (Lib3MF_pvoid)&dekData);
+
 			reader->ReadFromFile(sTestFilesPath + filename);
 			return reader;
 		}
@@ -69,6 +78,7 @@ namespace Lib3MF {
 			return readKeyStore(UNENCRYPTEDKEYSTORE);
 		}
 	public:
+
 		static PWrapper wrapper;
 
 		static void notRandomBytesAtAll(Lib3MF_uint64 byteData, Lib3MF_uint64 size, Lib3MF_pvoid userData, Lib3MF_uint64 * bytesWritten) {
@@ -77,6 +87,84 @@ namespace Lib3MF {
 			*bytesWritten = size;
 			while (size > 0)
 				*(buffer + (--size)) = ++random;
+		}
+
+		struct KEKCallbackData {
+			int value;
+			std::string consumerId;
+			std::string keyId;
+		};
+
+		struct DEKCallbackData {
+			std::map<Lib3MF_uint64, Lib3MF_uint64> context;
+		};
+
+		static void testKEKCallback(
+			Lib3MF_AccessRight access,
+			Lib3MF_uint64 inSize,
+			const Lib3MF_uint8 * inBuffer,
+			const Lib3MF_uint64 outSize,
+			Lib3MF_uint64 * outNeeded,
+			Lib3MF_uint8 * outBuffer,
+			Lib3MF_pvoid userData) {
+
+
+			CAccessRight a(SecureContentT::wrapper.get(), access);
+			SecureContentT::wrapper->Acquire(&a);
+
+			PConsumer c = a.GetConsumer();
+
+			ASSERT_NE(userData, nullptr);
+
+			KEKCallbackData * cb = (KEKCallbackData *)userData;
+			ASSERT_GE(cb->value, 1);
+			cb->value++;
+
+			ASSERT_EQ(c->GetConsumerID(), cb->consumerId);
+			ASSERT_EQ(c->GetKeyID(), cb->keyId);
+			ASSERT_FALSE(c->GetKeyValue().empty());
+
+			if (nullptr == outBuffer || outSize == 0) {
+				*outNeeded = inSize;
+			} else {
+				std::copy(inBuffer, inBuffer + outSize, outBuffer);
+				*outNeeded = outSize;
+			}
+		}
+
+		static void testDEKCallback(
+			Lib3MF_ContentEncryptionParams params,
+			Lib3MF_uint64 inSize,
+			const Lib3MF_uint8 * inBuffer,
+			const Lib3MF_uint64 outSize,
+			Lib3MF_uint64 * outNeededSize,
+			Lib3MF_uint8 * outBuffer,
+			Lib3MF_pvoid userData) {
+
+			CContentEncryptionParams cd(SecureContentT::wrapper.get(), params);
+			SecureContentT::wrapper->Acquire(&cd);
+
+			ASSERT_GE(cd.GetDescriptor(), 1);
+			ASSERT_NE(userData, nullptr);
+
+			DEKCallbackData * cb = (DEKCallbackData *)userData;
+			auto localDescriptor = cb->context.find(cd.GetDescriptor());
+			if (localDescriptor != cb->context.end())
+				localDescriptor->second++;
+			else
+				cb->context[cd.GetDescriptor()] = 0;
+
+			if (0 == inSize || nullptr == inBuffer) {
+				//finalize
+				*outNeededSize = 1;
+			} else if (0 == outSize || nullptr == outBuffer) {
+				//return size needed
+				*outNeededSize = inSize;
+			} else {
+				//perform encryption/decription process
+				std::copy(inBuffer, inBuffer + outSize, outBuffer);
+				*outNeededSize = outSize;
+			}
 		}
 	};
 	PWrapper SecureContentT::wrapper;
@@ -342,49 +430,10 @@ namespace Lib3MF {
 		}
 	}
 
-	struct DEKCallbackData {
-		std::map<Lib3MF_uint64, Lib3MF_uint64> context;
-
-		static void testDEKCallback(
-			Lib3MF_ContentEncryptionParams params,
-			Lib3MF_uint64 inSize,
-			const Lib3MF_uint8 * inBuffer,
-			const Lib3MF_uint64 outSize,
-			Lib3MF_uint64 * outNeededSize,
-			Lib3MF_uint8 * outBuffer,
-			Lib3MF_pvoid userData) {
-
-			CContentEncryptionParams cd(SecureContentT::wrapper.get(), params);
-			SecureContentT::wrapper->Acquire(&cd);
-
-			ASSERT_GE(cd.GetDescriptor(), 1);
-			ASSERT_NE(userData, nullptr);
-
-			DEKCallbackData * cb = (DEKCallbackData *)userData;
-			auto localDescriptor = cb->context.find(cd.GetDescriptor());
-			if (localDescriptor != cb->context.end())
-				localDescriptor->second++;
-			else
-				cb->context[cd.GetDescriptor()] = 0;
-
-			if (0 == inSize || nullptr == inBuffer) {
-				//finalize
-				*outNeededSize = 1;
-			} else if (0 == outSize || nullptr == outBuffer) {
-				//return size needed
-				*outNeededSize = inSize;
-			} else {
-				//perform encryption/decription process
-				std::copy(inBuffer, inBuffer + outSize, outBuffer);
-				*outNeededSize = outSize;
-			}
-		}
-	};
-
 	TEST_F(SecureContentT, DEKReadTest) {
 		auto reader = model->QueryReader("3mf");
 		DEKCallbackData data;
-		reader->SetContentEncryptionCallback(DEKCallbackData::testDEKCallback, (Lib3MF_pvoid)&data);
+		reader->SetContentEncryptionCallback(testDEKCallback, (Lib3MF_pvoid)&data);
 		reader->ReadFromFile(sTestFilesPath + UNENCRYPTEDKEYSTORE);
 		ASSERT_EQ(data.context.size(), 1);
 		ASSERT_GE(data.context.begin()->second, 1);
@@ -394,7 +443,7 @@ namespace Lib3MF {
 	TEST_F(SecureContentT, ReadCompressedTest) {
 		auto reader = model->QueryReader("3mf");
 		DEKCallbackData data;
-		reader->SetContentEncryptionCallback(DEKCallbackData::testDEKCallback, (Lib3MF_pvoid)&data);
+		reader->SetContentEncryptionCallback(testDEKCallback, (Lib3MF_pvoid)&data);
 		reader->ReadFromFile(sTestFilesPath + UNENCRYPTEDCOMPRESSEDKEYSTORE);
 		ASSERT_EQ(data.context.size(), 1);
 		ASSERT_GE(data.context.begin()->second, 1);
@@ -404,51 +453,11 @@ namespace Lib3MF {
 		readUnencryptedKeyStore();
 		auto writer = model->QueryWriter("3mf");
 		DEKCallbackData data;
-		writer->SetContentEncryptionCallback(DEKCallbackData::testDEKCallback, (Lib3MF_pvoid)&data);
+		writer->SetContentEncryptionCallback(testDEKCallback, (Lib3MF_pvoid)&data);
 		writer->WriteToFile(sOutFilesPath + UNENCRYPTEDCOMPRESSEDKEYSTORE);
 		ASSERT_EQ(data.context.size(), 1);
 		ASSERT_GE(data.context.begin()->second, 1);
 	}
-
-
-	struct KEKCallbackData {
-		int value;
-		std::string consumerId;
-		std::string keyId;
-
-		static void testKEKCallback(
-			Lib3MF_AccessRight access,
-			Lib3MF_uint64 inSize,
-			const Lib3MF_uint8 * inBuffer,
-			const Lib3MF_uint64 outSize,
-			Lib3MF_uint64 * outNeeded,
-			Lib3MF_uint8 * outBuffer,
-			Lib3MF_pvoid userData) {
-
-
-			CAccessRight a(SecureContentT::wrapper.get(), access);
-			SecureContentT::wrapper->Acquire(&a);
-
-			PConsumer c = a.GetConsumer();
-
-			ASSERT_NE(userData, nullptr);
-
-			KEKCallbackData * cb = (KEKCallbackData *)userData;
-			ASSERT_GE(cb->value, 1);
-			cb->value++;
-
-			ASSERT_EQ(c->GetConsumerID(), cb->consumerId);
-			ASSERT_EQ(c->GetKeyID(), cb->keyId);
-			ASSERT_FALSE(c->GetKeyValue().empty());
-
-			if (nullptr == outBuffer || outSize == 0) {
-				*outNeeded = inSize;
-			} else {
-				std::copy(inBuffer, inBuffer + outSize, outBuffer);
-				*outNeeded = outSize;
-			}
-		}
-	};
 
 	TEST_F(SecureContentT, KEKReadTest) {
 		auto reader = model->QueryReader("3mf");
@@ -456,7 +465,7 @@ namespace Lib3MF {
 		data.value = 1;
 		data.consumerId = "LIB3MF#TEST";
 		data.keyId = "contentKey";
-		reader->AddKeyWrappingCallback(data.consumerId, KEKCallbackData::testKEKCallback, (Lib3MF_pvoid)&data);
+		reader->AddKeyWrappingCallback(data.consumerId, testKEKCallback, (Lib3MF_pvoid)&data);
 		reader->ReadFromFile(sTestFilesPath + UNENCRYPTEDKEYSTORE);
 		ASSERT_EQ(3, data.value);
 	}
@@ -469,22 +478,22 @@ namespace Lib3MF {
 		ASSERT_EQ(keyStore->GetConsumerCount(), 1);
 		Lib3MF::PConsumer consumer1 = keyStore->AddConsumer("consumerId", "contentKey", "consumerKeyValue");
 		Lib3MF::PResourceData rd = keyStore->GetResourceData(0);
-		Lib3MF::PLib3MFResourceDataGroup dg = keyStore->FindResourceDataGroup(rd->GetPath().get());
+		Lib3MF::PResourceDataGroup dg = keyStore->FindResourceDataGroup(rd->GetPath().get());
 		Lib3MF::PAccessRight ar = dg->AddAccessRight(consumer1.get(), eWrappingAlgorithm::RSA_OAEP, eMgfAlgorithm::MGF1_SHA1, eDigestMethod::SHA1);
 
 		auto writer = model->QueryWriter("3mf");
 		
 		DEKCallbackData contentData;
-		writer->SetContentEncryptionCallback(DEKCallbackData::testDEKCallback, (Lib3MF_pvoid)&contentData);
+		writer->SetContentEncryptionCallback(testDEKCallback, (Lib3MF_pvoid)&contentData);
 
 		KEKCallbackData wrappingData;
 		wrappingData.value = 1;
 		wrappingData.consumerId = "consumerId";
 		wrappingData.keyId = "contentKey";
-		writer->AddKeyWrappingCallback(wrappingData.consumerId, KEKCallbackData::testKEKCallback, (Lib3MF_pvoid)&wrappingData);
+		writer->AddKeyWrappingCallback(wrappingData.consumerId, testKEKCallback, (Lib3MF_pvoid)&wrappingData);
 		std::vector<Lib3MF_uint8> buffer;
 		writer->WriteToBuffer(buffer);
-		ASSERT_EQ(2, wrappingData.value);
+		ASSERT_EQ(3, wrappingData.value);
 	}
 
 	TEST_F(SecureContentT, KEKWriteTestUnregisteredConsumer) {
@@ -501,7 +510,7 @@ namespace Lib3MF {
 
 		auto writer = model->QueryWriter("3mf");
 		DEKCallbackData contentData;
-		writer->SetContentEncryptionCallback(DEKCallbackData::testDEKCallback, (Lib3MF_pvoid)&contentData);
+		writer->SetContentEncryptionCallback(testDEKCallback, (Lib3MF_pvoid)&contentData);
 
 		std::vector<Lib3MF_uint8> buffer;
 		try {
