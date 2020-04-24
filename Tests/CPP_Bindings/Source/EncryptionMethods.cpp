@@ -219,11 +219,11 @@ namespace Lib3MF {
 			ASSERT_EQ(keyStore->GetResourceDataCount(), 1);
 			ASSERT_EQ(keyStore->GetResourceDataGroupCount(), 1);
 
-			auto exConsumer = keyStore->GetConsumer(0);
 			auto dataGroup = keyStore->GetResourceDataGroup(0);
-			auto exAccess = dataGroup->FindAccessRightByConsumer(exConsumer.get());
+			auto existingConsumer = keyStore->GetConsumer(0);
+			auto existingAccess = dataGroup->FindAccessRightByConsumer(existingConsumer.get());
 
-			ASSERT_NE(exAccess, nullptr);
+			ASSERT_NE(existingAccess, nullptr);
 
 			//add new consumer
 			auto consumer = keyStore->AddConsumer("LIB3MF#TEST2", "", "");
