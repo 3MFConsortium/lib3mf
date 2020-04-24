@@ -49,7 +49,7 @@ IConsumer * Lib3MF::Impl::CKeyStore::FindConsumer(const std::string & sConsumerI
 {
 	NMR::PKeyStoreConsumer consumer = m_pKeyStore->findConsumerById(sConsumerID);
 	if (!consumer)
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_KEYSTORECONSUMERNOTFOUND);
+		return nullptr;
 	return new CConsumer(consumer);
 }
 
