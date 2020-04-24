@@ -106,8 +106,11 @@ namespace NMR {
 
 		// Parse Content
 		parseContent(pXMLReader);
+		if (!m_bHasAlgorithm)
+			m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREMISSINGALGORTHM), eModelReaderWarningLevel::mrwMissingMandatoryValue);
+
 		if (m_bAlgHasMgf && m_sKekParams.m_eMgf != eKeyStoreMaskGenerationFunction::MGF1_SHA1)
-			m_pWarnings->addWarning(MODELREADERWARNING_KEYSTOREKEKPARAMSINCONSISTENT, NMR_ERROR_KEYSTOREINCONSISTENTKEKPARAMS, eModelReaderWarningLevel::mrwInvalidOptionalValue);
+			m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREINCONSISTENTKEKPARAMS), eModelReaderWarningLevel::mrwInvalidOptionalValue);
 	}
 
 	void CModelReaderNode_KeyStoreKEKParams::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
@@ -117,6 +120,7 @@ namespace NMR {
 
 		try {
 			if (strcmp(XML_3MF_SECURE_CONTENT_WRAPPINGALGORITHM, pAttributeName) == 0) {
+				m_bHasAlgorithm = true;
 				m_sKekParams.m_eAlgorithm = ParserUtils::parseWrapAlgorithm(pAttributeValue, m_bAlgHasMgf);
 			} else if (strcmp(XML_3MF_SECURE_CONTENT_MGFALGORITHM, pAttributeName) == 0) {
 				m_sKekParams.m_eMgf = ParserUtils::parseMgf(pAttributeValue);

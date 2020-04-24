@@ -1175,7 +1175,7 @@ Model error codes (0x8XXX)
 #define NMR_ERROR_KEYSTOREDUPLICATEACCESSRIGHT 0x80FD
 
 // Invalid KEK Param
-#define NMR_ERROR_KEYSTOREINVALIDKEKPARAM 0x80FE
+#define NMR_ERROR_KEYSTOREMISSINGCEKPARAMS 0x80FE
 
 // Invalid key uuid param
 #define NMR_ERROR_KEYSTOREINVALIDKEYUUID 0x80FF
@@ -1206,6 +1206,14 @@ Model error codes (0x8XXX)
 
 // Too many elements in a keystore xml tree
 #define NMR_ERROR_KEYSTORETOOMANYELEMENTS 0x8108
+
+// No path defined on resourcedata
+#define NMR_ERROR_KEYSTOREMISSINGPATH 0x8109
+
+// No algorithm defined
+#define NMR_ERROR_KEYSTOREMISSINGALGORTHM 0x810A
+
+
 
 
 

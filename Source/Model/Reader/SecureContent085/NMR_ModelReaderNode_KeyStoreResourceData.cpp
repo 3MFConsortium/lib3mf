@@ -57,6 +57,11 @@ namespace NMR {
 
 		// Parse Content
 		parseContent(pXMLReader);
+
+		if (m_sPath.empty())
+			m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREMISSINGPATH), eModelReaderWarningLevel::mrwFatal);
+		if (nullptr == m_pCekParams)
+			m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREMISSINGCEKPARAMS), eModelReaderWarningLevel::mrwFatal);
 	}
 
 	void CModelReaderNode_KeyStoreResourceData::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)

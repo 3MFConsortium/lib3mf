@@ -56,6 +56,7 @@ namespace NMR {
 	private:
 		KEKPARAMS m_sKekParams;
 		nfBool m_bAlgHasMgf = false;
+		nfBool m_bHasAlgorithm = false;
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 	public:

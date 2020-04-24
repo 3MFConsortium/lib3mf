@@ -71,10 +71,12 @@ namespace NMR {
 		parseContent(pXMLReader);
 
 		// this can throw for values that are not numbers and it's ok so according to other reader nodes
-		if (m_nConsumerIndex >= m_pKeyStore->getConsumerCount())
-			m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREINVALIDCONSUMERINDEX), eModelReaderWarningLevel::mrwInvalidMandatoryValue);
-		if (!m_bHasConsumerIndex)
+		if (!m_bHasConsumerIndex) {
 			m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREMISSINGCONSUMERINDEX), eModelReaderWarningLevel::mrwMissingMandatoryValue);
+			m_nConsumerIndex = 0;
+		}
+		if (m_nConsumerIndex >= m_pKeyStore->getConsumerCount())
+			m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREINVALIDCONSUMERINDEX), eModelReaderWarningLevel::mrwFatal);
 		if (!m_bHasParams)
 			m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREMISSINGKEKPARAMS), eModelReaderWarningLevel::mrwFatal);
 		if (!m_bHasCipherData)

@@ -48,6 +48,7 @@ namespace NMR {
 		std::vector<nfByte> m_iv;
 		std::vector<nfByte> m_tag;
 		std::vector<nfByte> m_aad;
+		nfBool m_bHasAlgorithm = false;
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);

@@ -309,45 +309,60 @@ namespace Lib3MF {
 	}
 
 	TEST_F(SecureContentT, ModelReaderEmptyKeyStoreWarnings) {
-		PReader reader3MF = readKeyStore(NEGATIVEUNENCRYPTEDKEYSTOREEMPTY);
-		CheckReaderWarnings(reader3MF, 1);
-		Lib3MF_uint32 iWarning = 0;
-		
-		// NMR_ERROR_KEYSTOREINVALIDCONSUMERINDEX
-		// consumer index is higher than consumer count
-		reader3MF->GetWarning(0, iWarning);
-		ASSERT_EQ(0x80F6, iWarning);
+		try {
+			PReader reader3MF = readKeyStore(NEGATIVEUNENCRYPTEDKEYSTOREEMPTY);
+			ASSERT_FALSE(true);
+		} catch (ELib3MFException const & e) {
+			ASSERT_EQ(e.getErrorCode(), LIB3MF_ERROR_GENERICEXCEPTION);
+			//Lib3MF_uint32 iWarning = 0;
+
+			//// NMR_ERROR_KEYSTOREINVALIDCONSUMERINDEX
+			//// consumer index is higher than consumer count
+			//reader3MF->GetWarning(0, iWarning);
+			//ASSERT_EQ(0x80F6, iWarning);
+		}
 	}
 
 	TEST_F(SecureContentT, ModelReaderKeyStoreNoAttributesWarnings) {
 		PReader reader3MF = readKeyStore(NEGATIVEUNENCRYPTEDKEYSTOREMISSINGATTRIBUTES);
-		CheckReaderWarnings(reader3MF, 4);
+		CheckReaderWarnings(reader3MF, 6);
 		Lib3MF_uint32 iWarning = 0;
 
 		// NMR_ERROR_KEYSTOREMISSINGCONSUMERID
-		// consumer id is not defined
+		// consumerid is not defined on consumer
 		reader3MF->GetWarning(0, iWarning);
 		ASSERT_EQ(0x80F3, iWarning);
 
-		// NMR_ERROR_KEYSTOREINVALIDCIPHERVALUE 
-		// cipher value is not there
+		// NMR_ERROR_KEYSTOREMISSINGKEYUUID
+		// resourcedatagroup keyuuid is not defined
 		reader3MF->GetWarning(1, iWarning);
-		ASSERT_EQ(0x80F9, iWarning);
+		ASSERT_EQ(0x8107, iWarning);
 
-		// NMR_ERROR_KEYSTOREINVALIDCONSUMERINDEX
-		// consumer index is not defined
+		// NMR_ERROR_KEYSTOREMISSINGALGORTHM
+		// missing wrappingalgorithm on kekparams
 		reader3MF->GetWarning(2, iWarning);
-		ASSERT_EQ(0x80F6, iWarning);
+		ASSERT_EQ(0x810A, iWarning);
+
+		// NMR_ERROR_KEYSTOREMISSINGCONSUMERINDEX
+		// consumerindex on accessright is not defined
+		reader3MF->GetWarning(3, iWarning);
+		ASSERT_EQ(0x8105, iWarning);
+
+		// NMR_ERROR_KEYSTOREMISSINGALGORTHM
+		// missing encryptionalgorithm on cekparams
+		reader3MF->GetWarning(4, iWarning);
+		ASSERT_EQ(0x810A, iWarning);
 
 		// NMR_ERROR_MISSINGUUID
-		// no UUID attribute in <keystore>
-		reader3MF->GetWarning(3, iWarning);
+		//missing guid on keystore
+		reader3MF->GetWarning(5, iWarning);
 		ASSERT_EQ(0x80B0, iWarning);
+
 	}
 
 	TEST_F(SecureContentT, ModelReaderKeyStoreInvalidAttributesWarnings) {
 		PReader reader3MF = readKeyStore(NEGATIVEUNENCRYPTEDKEYSTOREINVALIDATTRIBUTES);
-		CheckReaderWarnings(reader3MF, 5);
+		CheckReaderWarnings(reader3MF, 8);
 		Lib3MF_uint32 iWarning = 0;
 
 		// NMR_ERROR_KEYSTOREDUPLICATECONSUMERID
@@ -355,25 +370,40 @@ namespace Lib3MF {
 		reader3MF->GetWarning(0, iWarning);
 		ASSERT_EQ(0x80F1, iWarning);
 
-		// NMR_ERROR_KEYSTOREINVALIDALGORITHM 
-		// invalid encryptionalgorithm attribute in kekparams
+		// NMR_ERROR_KEYSTOREINVALIDKEYUUID
+		// resourcedatagroup keyuuid is invalid
 		reader3MF->GetWarning(1, iWarning);
+		ASSERT_EQ(0x80FF, iWarning);
+
+		// NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE
+		// encryptionalgorithm on accessright
+		reader3MF->GetWarning(2, iWarning);
+		ASSERT_EQ(0x80A7, iWarning);
+
+		// NMR_ERROR_KEYSTOREINVALIDALGORITHM 
+		// invalid wrappinglagorithm attribute in kekparams
+		reader3MF->GetWarning(3, iWarning);
+		ASSERT_EQ(0x80F7, iWarning);
+
+		// NMR_ERROR_KEYSTOREINVALIDMGF
+		// invalid mgfalgorithm
+		reader3MF->GetWarning(4, iWarning);
+		ASSERT_EQ(0x8102, iWarning);
+
+		// NMR_ERROR_KEYSTOREINVALIDDIGEST
+		// invlid digestmethod
+		reader3MF->GetWarning(5, iWarning);
+		ASSERT_EQ(0x8103, iWarning);
+
+		// NMR_ERROR_KEYSTOREINVALIDALGORITHM 
+		// invalid encryptionalgorithm attribute in cekparams
+		reader3MF->GetWarning(6, iWarning);
 		ASSERT_EQ(0x80F7, iWarning);
 
 		// NMR_ERROR_KEYSTOREINVALIDCOMPRESSION 
 		// invalid compression attribute in ResourceData
-		reader3MF->GetWarning(2, iWarning);
+		reader3MF->GetWarning(7, iWarning);
 		ASSERT_EQ(0x80F8, iWarning);
-
-		// NMR_ERROR_KEYSTOREINVALIDALGORITHM
-		// invalid encryptionalgorithm attribute in cekparams
-		reader3MF->GetWarning(3, iWarning);
-		ASSERT_EQ(0x80F7, iWarning);
-
-		// NMR_ERROR_KEYSTOREINVALIDCIPHERVALUE 
-		// cipher value is not there
-		reader3MF->GetWarning(4, iWarning);
-		ASSERT_EQ(0x80F9, iWarning);
 	}
 	
 	TEST_F(SecureContentT, CheckKeyStoreConsumers) {
@@ -387,12 +417,8 @@ namespace Lib3MF {
 			ASSERT_EQ("LIB3MF#TEST", consumer->GetConsumerID());
 			ASSERT_EQ("contentKey", consumer->GetKeyID());
 
-			try {
-				PConsumer consumerNotFound = keyStore->FindConsumer("does not exist");
-				ASSERT_FALSE(true);
-			} catch (ELib3MFException const & e) {
-				ASSERT_EQ(e.getErrorCode(), LIB3MF_ERROR_KEYSTORECONSUMERNOTFOUND);
-			}
+			PConsumer consumerNotFound = keyStore->FindConsumer("does not exist");
+			ASSERT_EQ(nullptr, consumerNotFound);
 			PConsumer consumerFound = keyStore->FindConsumer(consumer->GetConsumerID());
 			ASSERT_EQ(consumer->GetConsumerID(), consumerFound->GetConsumerID());
 

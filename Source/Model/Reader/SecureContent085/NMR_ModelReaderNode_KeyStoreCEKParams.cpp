@@ -75,7 +75,9 @@ namespace NMR {
 
 		// Parse Content
 		parseContent(pXMLReader);
-
+		
+		if (!m_bHasAlgorithm)
+			m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREMISSINGALGORTHM), eModelReaderWarningLevel::mrwMissingMandatoryValue);
 	}
 
 	void CModelReaderNode_KeyStoreCEKParams::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
@@ -84,7 +86,13 @@ namespace NMR {
 		__NMRASSERT(pAttributeValue);
 
 		if (strcmp(XML_3MF_SECURE_CONTENT_ENCRYPTION_ALGORITHM, pAttributeName) == 0) {
-			m_eAlgorithm = ParserUtils::parseEncryptionAlgorithm(pAttributeValue);
+			try {
+				m_bHasAlgorithm = true;
+				m_eAlgorithm = ParserUtils::parseEncryptionAlgorithm(pAttributeValue);
+			} catch (CNMRException const &) {
+				m_eAlgorithm = eKeyStoreEncryptAlgorithm::AES256_GCM;
+				m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREINVALIDALGORITHM), eModelReaderWarningLevel::mrwInvalidMandatoryValue);
+			}
 		}
 		else if (strcmp(XML_3MF_SECURE_CONTENT_COMPRESSION, pAttributeName) == 0) {
 			if (strcmp(XML_3MF_SECURE_CONTENT_COMPRESSION_DEFLATE, pAttributeValue) == 0) {
