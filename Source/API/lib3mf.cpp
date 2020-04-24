@@ -250,3 +250,4 @@ sLib3MFTransform CWrapper::GetTranslationTransform(const Lib3MF_single fVectorX,
 	return Transform;
 }
 
+

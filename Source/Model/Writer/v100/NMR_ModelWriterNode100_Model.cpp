@@ -58,7 +58,7 @@ This is the class for exporting the 3mf model stream root node.
 namespace NMR {
 
 	CModelWriterNode100_Model::CModelWriterNode100_Model(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter, _In_ PProgressMonitor pProgressMonitor,
-		_In_ nfUint32 nDecimalPrecision, nfBool bWritesRootModel) : CModelWriterNode(pModel, pXMLWriter, pProgressMonitor), m_nDecimalPrecision(nDecimalPrecision)
+		_In_ nfUint32 nDecimalPrecision, nfBool bWritesRootModel) : CModelWriterNode_ModelBase(pModel, pXMLWriter, pProgressMonitor), m_nDecimalPrecision(nDecimalPrecision)
 	{
 		m_pPropertyIndexMapping = std::make_shared<CMeshInformation_PropertyIndexMapping>();
 		m_bIsRootModel = bWritesRootModel;
@@ -67,6 +67,7 @@ namespace NMR {
 		m_bWriteProductionExtension = true;
 		m_bWriteBeamLatticeExtension = true;
 		m_bWriteSliceExtension = true;
+		m_bWriteSecureContentExtension = true;
 		m_bWriteBaseMaterials = true;
 		m_bWriteObjects = true;
 
@@ -148,6 +149,15 @@ namespace NMR {
 				if (sRequiredExtensions.size() > 0)
 					sRequiredExtensions = sRequiredExtensions + " ";
 				sRequiredExtensions = sRequiredExtensions + XML_3MF_NAMESPACEPREFIX_SLICE;
+			}
+		}
+
+		if (m_bWriteSecureContentExtension) {
+			writeConstPrefixedStringAttribute(XML_3MF_ATTRIBUTE_XMLNS, XML_3MF_NAMESPACEPREFIX_SECURECONTENT, XML_3MF_NAMESPACE_SECURECONTENTSPEC);
+			if (m_pModel->RequireExtension(XML_3MF_NAMESPACE_SECURECONTENTSPEC)) {
+				if (sRequiredExtensions.size() > 0)
+					sRequiredExtensions = sRequiredExtensions + " ";
+				sRequiredExtensions = sRequiredExtensions + XML_3MF_NAMESPACEPREFIX_SECURECONTENT;
 			}
 		}
 

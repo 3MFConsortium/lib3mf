@@ -154,6 +154,9 @@ namespace NMR {
 				if (m_hasPath)
 					throw CNMRException(NMR_ERROR_DUPLICATEPATH);
 				m_sPath = std::string(pAttributeValue);
+				if (!fnStartsWithPathDelimiter(m_sPath)) {
+					m_pWarnings->addException(CNMRException(NMR_ERROR_PATH_NOT_ABSOLUTE), mrwInvalidOptionalValue);
+				}
 				m_hasPath = true;
 			}
 		}

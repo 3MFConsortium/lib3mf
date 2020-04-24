@@ -29,12 +29,18 @@ Abstract: This is a stub class definition of CReader
 */
 
 #include "lib3mf_reader.hpp"
-#include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
+#include "lib3mf_interfaceexception.hpp"
+#include "lib3mf_accessright.hpp"
+#include "lib3mf_contentencryptionparams.hpp"
 #include "Common/Platform/NMR_Platform.h"
 #include "Common/Platform/NMR_ImportStream_Shared_Memory.h"
 #include "Common/Platform/NMR_ImportStream_Callback.h"
+#include "Common/NMR_SecureContentTypes.h"
+#include "Common/NMR_SecureContext.h"
+#include "Model/Classes/NMR_KeyStore.h"
+
 
 using namespace Lib3MF::Impl;
 
@@ -170,5 +176,54 @@ std::string CReader::GetWarning (const Lib3MF_uint32 nIndex, Lib3MF_uint32 & nEr
 Lib3MF_uint32 CReader::GetWarningCount ()
 {
 	return reader().getWarnings()->getWarningCount();
+}
+
+void Lib3MF::Impl::CReader::AddKeyWrappingCallback(const std::string &sConsumerID, const Lib3MF::KeyWrappingCallback pTheCallback, const Lib3MF_pvoid pUserData) {
+	NMR::KeyWrappingDescriptor descriptor;
+	descriptor.m_sKekDecryptData.m_pUserData = pUserData;
+	descriptor.m_fnWrap =
+		[this, pTheCallback](
+			std::vector<NMR::nfByte> const & cipher,
+			std::vector<NMR::nfByte> & plain,
+			NMR::KeyWrappingContext & ctx) {
+
+		std::shared_ptr<IAccessRight> pAccessRight = std::make_shared<CAccessRight>(ctx.m_pAccessRight);
+		IBase * pBaseEntity(nullptr);
+		pBaseEntity = pAccessRight.get();
+		Lib3MF_AccessRight entityHandle = pBaseEntity;
+
+		//figure out the size of the key.
+		NMR::nfUint64 result = 0;
+		(*pTheCallback)(entityHandle, cipher.size(), cipher.data(),
+			0, &result, nullptr, ctx.m_pUserData);
+		if (result == 0)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_CALCULATIONABORTED);
+
+		plain.resize(result, 0);
+
+		result = 0;
+		(*pTheCallback)(entityHandle, cipher.size(), cipher.data(),
+			plain.size(), &result, plain.data(), ctx.m_pUserData);
+		if (result == 0)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_CALCULATIONABORTED);
+		return result;
+	};
+	reader().getSecureContext()->addKekCtx(sConsumerID, descriptor);
+}
+void Lib3MF::Impl::CReader::SetContentEncryptionCallback(const Lib3MF::ContentEncryptionCallback pTheCallback, const Lib3MF_pvoid pUserData) {
+	NMR::ContentEncryptionDescriptor descriptor;
+	descriptor.m_sDekDecryptData.m_pUserData = pUserData;
+	descriptor.m_fnCrypt = [this, pTheCallback](NMR::nfUint64 size, NMR::nfByte const * cipher, NMR::nfByte * plain, NMR::ContentEncryptionContext & ctx) {
+		std::shared_ptr<CContentEncryptionParams> pCekParams = std::make_shared<CContentEncryptionParams>(ctx.m_sParams);
+		IBase * pBaseEntity(nullptr);
+		pBaseEntity = pCekParams.get();
+		Lib3MF_ContentEncryptionParams entityHandle = pBaseEntity;
+		NMR::nfUint64 result = 0;
+		(*pTheCallback)(entityHandle, size, cipher, size, &result, plain, ctx.m_pUserData);
+		if (result == 0)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_CALCULATIONABORTED);
+		return result;
+	};
+	reader().getSecureContext()->setDekCtx(descriptor);
 }
 

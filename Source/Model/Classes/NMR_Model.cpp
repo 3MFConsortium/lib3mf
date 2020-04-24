@@ -47,6 +47,7 @@ A model is an in memory representation of the 3MF file.
 #include "Model/Classes/NMR_ModelTexture2D.h"
 #include "Model/Classes/NMR_ModelSliceStack.h"
 #include "Model/Classes/NMR_ModelMetaDataGroup.h"
+#include "Model/Classes/NMR_KeyStore.h"
 
 #include "Common/Mesh/NMR_Mesh.h"
 #include "Common/MeshInformation/NMR_MeshInformation.h"
@@ -61,6 +62,9 @@ A model is an in memory representation of the 3MF file.
 #include "Common/Platform/NMR_ImportStream_Unique_Memory.h"
 
 #include "Common/NMR_StringUtils.h" 
+
+#include "Model/Classes/NMR_KeyStoreFactory.h"
+
 namespace NMR {
 
 	CModel::CModel()
@@ -70,8 +74,10 @@ namespace NMR {
 		m_nHandleCounter = 1;
 		m_pPath = m_resourceHandler.makePackageModelPath(PACKAGE_3D_MODEL_URI);
 		m_pCurPath = m_pPath;
+		m_pKeyStore = CKeyStoreFactory::makeKeyStore();
 
 		setBuildUUID(std::make_shared<CUUID>());
+
 		m_MetaDataGroup = std::make_shared<CModelMetaDataGroup>();
 	}
 
@@ -1185,6 +1191,12 @@ namespace NMR {
 			return bRequireSliceExtension;
 		}
 
+		if (sExtension == XML_3MF_NAMESPACE_SECURECONTENTSPEC) {
+			if (m_pKeyStore.get() != nullptr) {
+				return true;
+			}
+		}
+
 		if (sExtension == XML_3MF_NAMESPACE_PRODUCTIONSPEC) {
 			// We do not write out models that require the production specification
 			// i.e. we do not make use of the "getPath"-redirection.
@@ -1236,6 +1248,28 @@ namespace NMR {
 		});
 
 		return resultList;
+	}
+
+	PKeyStore CModel::getKeyStore() {
+		return m_pKeyStore;
+	}
+
+	void CModel::setKeyStore(PKeyStore keyStore) {
+		m_pKeyStore = keyStore;
+	}
+
+	void CModel::setCryptoRandCallback(CryptoRandGenDescriptor const & randDescriptor) {
+		m_sRandDescriptor = randDescriptor;
+	}
+
+	nfBool CModel::hasCryptoRandCallbak() const {
+		return (bool)m_sRandDescriptor.m_fnRNG;
+	}
+
+	nfUint64 CModel::generateRandomBytes(nfByte * bytes, nfUint64 size) {
+		if (m_sRandDescriptor.m_fnRNG)
+			return m_sRandDescriptor.m_fnRNG(bytes, size, m_sRandDescriptor.m_pUserData);
+		throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
 	}
 
 }

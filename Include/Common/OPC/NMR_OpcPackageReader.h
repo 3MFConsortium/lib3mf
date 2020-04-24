@@ -33,6 +33,7 @@ NMR_OpcPackageReader.h defines an OPC Package reader in a portable way.
 #ifndef __NMR_OPCPACKAGEREADER
 #define __NMR_OPCPACKAGEREADER
 
+#include "Common/OPC/NMR_IOpcPackageReader.h"
 #include "Common/Platform/NMR_ImportStream.h"
 #include "Common/OPC/NMR_OpcPackagePart.h"
 #include "Common/OPC/NMR_OpcPackageTypes.h"
@@ -47,7 +48,7 @@ NMR_OpcPackageReader.h defines an OPC Package reader in a portable way.
 
 namespace NMR {
 
-	class COpcPackageReader {
+	class COpcPackageReader: public IOpcPackageReader {
 	protected:
 		PModelReaderWarnings m_pWarnings;
 		PProgressMonitor m_pProgressMonitor;
@@ -77,9 +78,9 @@ namespace NMR {
 		COpcPackageReader(_In_ PImportStream pImportStream, _In_ PModelReaderWarnings pWarnings, _In_ PProgressMonitor pProgressMonitor);
 		~COpcPackageReader();
 
-		_Ret_maybenull_ COpcPackageRelationship * findRootRelation(_In_ std::string sRelationType, _In_ nfBool bMustBeUnique);
-		POpcPackagePart createPart(_In_ std::string sPath);
-		nfUint64 GetPartSize(_In_ std::string sPath);
+		_Ret_maybenull_ COpcPackageRelationship * findRootRelation(_In_ std::string sRelationType, _In_ nfBool bMustBeUnique) override;
+		POpcPackagePart createPart(_In_ std::string sPath) override;
+		nfUint64 getPartSize(_In_ std::string sPath) override;
 	};
 
 	typedef std::shared_ptr<COpcPackageReader> POpcPackageReader;

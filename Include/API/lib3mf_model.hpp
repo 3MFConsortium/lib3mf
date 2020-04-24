@@ -43,7 +43,7 @@ Abstract: This is the class declaration of CModel
 
 // Include custom headers here.
 #include "Model/Classes/NMR_Model.h" 
-
+#include "Model/Classes/NMR_KeyStore.h"
 
 namespace Lib3MF {
 namespace Impl {
@@ -72,6 +72,10 @@ public:
 	CModel();
 
 	NMR::CModel& model();
+
+	/**
+	* Public member functions to implement.
+	*/
 
 	IPackagePart * RootModelPart() override;
 
@@ -187,6 +191,9 @@ public:
 
 	Lib3MF::sBox GetOutbox() override;
 
+	IKeyStore * GetKeyStore();
+
+	void SetRandomNumberCallback(const Lib3MF::RandomNumberCallback pTheCallback, const Lib3MF_pvoid pUserData);
 };
 
 }

@@ -32,7 +32,7 @@ NMR_ModelReader_3MF.cpp implements the Model Reader Class for
 --*/
 
 #include "Model/Reader/NMR_ModelReader_3MF.h"
-#include "Model/Reader/NMR_ModelReaderNode_Model.h"
+#include "Model/Reader/NMR_ModelReaderNode_ModelBase.h"
 #include "Model/Classes/NMR_ModelObject.h"
 #include "Model/Classes/NMR_ModelMeshObject.h"
 #include "Model/Classes/NMR_ModelConstants.h"
@@ -98,10 +98,10 @@ namespace NMR {
 						throw CNMRException(NMR_ERROR_DUPLICATEMODELNODE);
 					bHasModel = true;
 
-					PModelReaderNode_Model pXMLNode;
+					PModelReaderNode_ModelBase pXMLNode;
 					pModel->setCurrentPath(sPath);
 
-					pXMLNode = std::make_shared<CModelReaderNode_Model>(pModel.get(), pWarnings, sPath, pProgressMonitor);
+					pXMLNode = std::make_shared<CModelReaderNode_ModelBase>(pModel.get(), pWarnings, sPath, pProgressMonitor);
 					pXMLNode->setIgnoreBuild(true);
 					pXMLNode->setIgnoreMetaData(true);
 					pXMLNode->parseXML(pXMLReader.get());
@@ -122,21 +122,21 @@ namespace NMR {
 
 		nfBool bHasModel = false;
 
-		m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_READSTREAM);
+		monitor()->SetProgressIdentifier(ProgressIdentifier::PROGRESS_READSTREAM);
 
-		m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_EXTRACTOPCPACKAGE);
+		monitor()->SetProgressIdentifier(ProgressIdentifier::PROGRESS_EXTRACTOPCPACKAGE);
 		
 		// Extract Stream from Package
 		PImportStream pModelStream = extract3MFOPCPackage(pStream);
 		
 		// before reading the root model, read the other models in the file
-		readProductionAttachmentModels(m_pModel, m_pWarnings, m_pProgressMonitor);
+		readProductionAttachmentModels(model(), m_pWarnings, monitor());
 
-		m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_READROOTMODEL);
-		m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
+		monitor()->SetProgressIdentifier(ProgressIdentifier::PROGRESS_READROOTMODEL);
+		monitor()->ReportProgressAndQueryCancelled(true);
 
 		// Create XML Reader
-		PXmlReader pXMLReader = fnCreateXMLReaderInstance(pModelStream, m_pProgressMonitor);
+		PXmlReader pXMLReader = fnCreateXMLReaderInstance(pModelStream, monitor());
 
 		eXmlReaderNodeType NodeType;
 		// Read all XML Root Nodes
@@ -161,8 +161,8 @@ namespace NMR {
 					throw CNMRException(NMR_ERROR_DUPLICATEMODELNODE);
 				bHasModel = true;
 
-				m_pModel->setCurrentPath(m_pModel->rootPath());
-				PModelReaderNode_Model pXMLNode = std::make_shared<CModelReaderNode_Model>(m_pModel.get(), m_pWarnings, m_pModel->rootPath(), m_pProgressMonitor);
+				model()->setCurrentPath(model()->rootPath());
+				PModelReaderNode_ModelBase pXMLNode = std::make_shared<CModelReaderNode_ModelBase>(model().get(), m_pWarnings, model()->rootPath(), monitor());
 				pXMLNode->parseXML(pXMLReader.get());
 
 				if (!pXMLNode->getHasResources())
@@ -173,8 +173,8 @@ namespace NMR {
 
 		}
 
-		m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_CLEANUP);
-		m_pProgressMonitor->ReportProgressAndQueryCancelled(false);
+		monitor()->SetProgressIdentifier(ProgressIdentifier::PROGRESS_CLEANUP);
+		monitor()->ReportProgressAndQueryCancelled(false);
 
 		// Release Memory of 3MF Package
 		release3MFOPCPackage();
@@ -182,8 +182,8 @@ namespace NMR {
 		if (!bHasModel)
 			throw CNMRException(NMR_ERROR_NOMODELNODE);
 
-		m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_DONE);
-		m_pProgressMonitor->ReportProgressAndQueryCancelled(false);
+		monitor()->SetProgressIdentifier(ProgressIdentifier::PROGRESS_DONE);
+		monitor()->ReportProgressAndQueryCancelled(false);
 	}
 
 	void CModelReader_3MF::addTextureAttachment(_In_ std::string sPath, _In_ PImportStream pStream)
@@ -191,7 +191,7 @@ namespace NMR {
 		if (pStream.get() == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-		m_pModel->addAttachment(sPath, PACKAGE_TEXTURE_RELATIONSHIP_TYPE, pStream);
+		model()->addAttachment(sPath, PACKAGE_TEXTURE_RELATIONSHIP_TYPE, pStream);
 	}
 
 }

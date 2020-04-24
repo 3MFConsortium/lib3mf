@@ -48,6 +48,8 @@ NMR_Model.h defines the Model Class. A model is an in memory representation of t
 
 #include "Common/NMR_UUID.h"
 
+#include "Common/NMR_SecureContentTypes.h"
+
 namespace NMR {
 
 	class CModelBuildItem;
@@ -88,6 +90,9 @@ namespace NMR {
 
 	class CModelSliceStack;
 	typedef std::shared_ptr <CModelSliceStack> PModelSliceStack;
+
+	class CKeyStore;
+	typedef std::shared_ptr <CKeyStore> PKeyStore;
 
 	typedef std::map<NMR::UniqueResourceID, NMR::UniqueResourceID> UniqueResourceIDMapping;
 
@@ -142,6 +147,11 @@ namespace NMR {
 		std::vector<PModelResource> m_Texture2DGroupLookup;
 		std::vector<PModelResource> m_CompositeMaterialsLookup;
 		std::vector<PModelResource> m_MultiPropertyGroupLookup;
+
+		// The KeyStore reference
+		PKeyStore m_pKeyStore;
+
+		CryptoRandGenDescriptor m_sRandDescriptor;
 
 		// Add Resource to resource lookup tables
 		void addResourceToLookupTable(_In_ PModelResource pResource);
@@ -305,6 +315,16 @@ namespace NMR {
 
 		// Sorts objects by correct dependency
 		std::list<CModelObject *> getSortedObjectList ();
+
+
+		// Gets the KeyStore
+		PKeyStore getKeyStore();
+		void setKeyStore(PKeyStore keyStore);
+
+		void setCryptoRandCallback(CryptoRandGenDescriptor const & randDescriptor);
+		nfBool hasCryptoRandCallbak() const;
+		nfUint64 generateRandomBytes(nfByte *, nfUint64);
+
 	};
 
 	typedef std::shared_ptr <CModel> PModel;

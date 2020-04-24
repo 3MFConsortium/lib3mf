@@ -110,4 +110,19 @@ namespace Lib3MF
 		);
 		CheckReaderWarnings(Reader::reader3MF, 0);
 	}
+
+	TEST_F(Reader, Production)
+	{
+		auto buffer = ReadFileIntoBuffer(sTestFilesPath + "/Production/" + "2ProductionBoxes.3mf");
+		Reader::reader3MF->ReadFromBuffer(buffer);
+		CheckReaderWarnings(Reader::reader3MF, 0);
+	}
+
+	TEST_F(Reader, ProductionExternalModel) {
+		auto reader = model->QueryReader("3mf");
+		reader->ReadFromFile(sTestFilesPath + "/Production/" + "detachedmodel.3mf");
+		ASSERT_EQ(27, model->GetBuildItems()->Count());
+		ASSERT_EQ(28, model->GetObjects()->Count());
+	}
+
 }

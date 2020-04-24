@@ -101,8 +101,5 @@ void CResource::SetPackagePart(IPackagePart* pPackagePart)
 	m_pResource->setPackageResourceID(pID);
 
 	m_pResource->getModel()->removePackageResourceID(pIDOld);
-	
-	//m_pPackageResourceID = m_pModel->generatePackageResourceID(pModel->currentPath(), sResourceID);
-	//m_pResource->getPackageResourceID()->
 }
 

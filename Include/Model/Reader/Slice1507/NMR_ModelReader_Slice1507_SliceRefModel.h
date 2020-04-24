@@ -33,7 +33,7 @@ NMR_ModelReaderNode_slice1507.h covers the private 3MF slice extension.
 #ifndef __NMR_MODELREADERNODE_SLICE1507_SLICEREFMODEL
 #define __NMR_MODELREADERNODE_SLICE1507_SLICEREFMODEL
 
-#include "Model/Reader/NMR_ModelReaderNode_Model.h"
+#include "Model/Reader/NMR_ModelReaderNode_ModelBase.h"
 #include "Model/Classes/NMR_ModelComponent.h"
 #include "Model/Classes/NMR_ModelComponentsObject.h"
 #include "Model/Classes/NMR_ModelObject.h"
@@ -41,7 +41,7 @@ NMR_ModelReaderNode_slice1507.h covers the private 3MF slice extension.
 
 namespace NMR {
 
-	class CModelReader_Slice1507_SliceRefModel : public CModelReaderNode_Model {
+	class CModelReader_Slice1507_SliceRefModel : public CModelReaderNode_ModelBase {
 	private:
 		std::string m_sSliceRefPath;
 

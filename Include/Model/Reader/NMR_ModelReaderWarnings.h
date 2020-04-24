@@ -50,7 +50,7 @@ a relaxed import policy on the file format.
 #define MODELREADERWARNING_REQUIREDEXTENSIONNOTSUPPORTED "A required extension is not supported"
 #define MODELREADERWARNING_BEAMLATTICECLIPPINGRESOURCENOTDEFINED "The resource defined as clippingmesh has not yet been defined in the model"
 #define MODELREADERWARNING_BEAMLATTICEREPRESENTATIONRESOURCENOTDEFINED "The resource defined as representationmesh has not yet been defined in the model"
-
+#define MODELREADERWARNING_KEYSTOREKEKPARAMSINCONSISTENT "Inconsistent kekparams configuration"
 namespace NMR {
 
 	typedef enum _eModelReaderWarningLevel {

@@ -37,6 +37,8 @@ A model writer exports the in memory represenation into a model file.
 #include "Common/Platform/NMR_XmlWriter.h" 
 #include "Common/NMR_Exception.h" 
 #include "Common/NMR_Exception_Windows.h" 
+#include "Common/NMR_SecureContext.h"
+
 
 #include <sstream>
 
@@ -46,18 +48,9 @@ namespace NMR {
 	const int MAX_DECIMAL_PRECISION = 16;
 
 	CModelWriter::CModelWriter(_In_ PModel pModel):
+		CModelContext(pModel),
 		m_nDecimalPrecision(6)
 	{
-		if (!pModel.get())
-			throw CNMRException(NMR_ERROR_INVALIDPARAM);
-
-		m_pModel = pModel;
-		m_pProgressMonitor = std::make_shared<CProgressMonitor>();
-	}
-
-	void CModelWriter::SetProgressCallback(Lib3MFProgressCallback callback, void* userData)
-	{
-		m_pProgressMonitor->SetProgressCallback(callback, userData);
 	}
 
 	void CModelWriter::SetDecimalPrecision(nfUint32 nDecimalPrecision)

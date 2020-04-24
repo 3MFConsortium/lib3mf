@@ -34,6 +34,8 @@ NMR_PackageResourceID.cpp implements the UniqueResourceID Class.
 #include "Common/NMR_StringUtils.h" 
 #include "Common/NMR_Exception.h" 
 
+#include <algorithm>
+
 namespace NMR {
 
 	CPackageModelPath::CPackageModelPath(CResourceHandler* pResourceHandler, std::string sPath)
@@ -51,7 +53,6 @@ namespace NMR {
 
 	void CPackageModelPath::setPath(std::string sPath)
 	{
-		// TODO: changing this getPath MUST go through the CResourceHandler to update the maps there
 		m_sPath = sPath;
 	}
 
@@ -69,6 +70,7 @@ namespace NMR {
 	std::string CPackageResourceID::getPath() {
 		return m_pModelPath->getPath();
 	}
+
 	ModelResourceID CPackageResourceID::getModelResourceID() {
 		return m_id;
 	}
@@ -76,6 +78,10 @@ namespace NMR {
 	void CPackageResourceID::setModelPath(std::shared_ptr<CPackageResourceID> pPackageResourceID, PPackageModelPath pPath)
 	{
 		pPackageResourceID->m_pResourceHandler->updateModelPath(pPackageResourceID, pPath);
+	}
+
+	CResourceHandler * CPackageResourceID::getResourceHandler() {
+		return m_pResourceHandler;
 	}
 
 	void CPackageResourceID::setUniqueID(UniqueResourceID id) {
@@ -127,7 +133,15 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_DUPLICATERESOURCEID);
 
 		PPackageResourceID pPackageResourceID = std::make_shared<CPackageResourceID>(this, pModelPath, id);
-		pPackageResourceID->setUniqueID(int(m_resourceIDs.size())+1);
+		UniqueIDPackageIdMap::const_iterator biggestId = std::max_element(m_resourceIDs.begin(), m_resourceIDs.end(), [](const UniqueIdPackageIdPair & v1, const UniqueIdPackageIdPair v2) {
+			return v1.first < v2.first;
+		});
+		if (biggestId != m_resourceIDs.end()) {
+			pPackageResourceID->setUniqueID(int(biggestId->first) + 1);
+		} else {
+			pPackageResourceID->setUniqueID(1);
+		}
+
 
 		m_resourceIDs.insert(std::make_pair(pPackageResourceID->getUniqueID(), pPackageResourceID));
 		m_IdAndPathToPackageResourceIDs.insert(std::make_pair(std::make_pair(id, pModelPath), pPackageResourceID));
@@ -181,7 +195,8 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 		}
 
-		m_IdAndPathToPackageResourceIDs.erase(itOld);
+		m_IdAndPathToPackageResourceIDs.erase(itOld); 
+		//what if idOld was the last one standing pointint to PackageModelPath?
 		
 		pPackageResourceID->m_pModelPath = pNewPath;
 		m_IdAndPathToPackageResourceIDs.insert(std::make_pair(std::make_pair(pPackageResourceID->m_id, pNewPath), pPackageResourceID));

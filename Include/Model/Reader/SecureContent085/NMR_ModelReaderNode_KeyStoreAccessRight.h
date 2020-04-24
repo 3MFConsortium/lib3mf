@@ -26,58 +26,42 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelReaderNode_Model.h defines the Model Reader Model Node Class.
-A model reader model node is a parser for the root node of an XML Model Stream.
+NMR_ModelReaderNode_KeyStoreDecryptRight.h defines the Model Reader Node class that is related to <decryptright>.
 
 --*/
 
-#ifndef __NMR_MODELREADERNODE_MODEL
-#define __NMR_MODELREADERNODE_MODEL
+#ifndef __NMR_MODELREADERNODE_KEYSTOACCESSRIGHT
+#define __NMR_MODELREADERNODE_KEYSTOACCESSRIGHT
 
+#include "Model/Reader/NMR_ModelReaderNode_KeyStoreBase.h"
 #include "Model/Reader/NMR_ModelReaderNode.h"
+#include "Model/Classes/NMR_KeyStore.h"
+#include "Model/Classes/NMR_KeyStoreAccessRight.h"
+#include "Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreKEKParams.h"
 
 namespace NMR {
 
-	class CModelReaderNode_Model : public CModelReaderNode {
+	class CModelReaderNode_KeyStoreAccessRight : public CModelReaderNode_KeyStoreBase {
+	private:
+		nfBool m_bHasParams = false;
+		nfBool m_bHasConsumerIndex = false;
+		nfBool m_bHasCipherData = false;
+		nfUint64 m_nConsumerIndex = 0;
+		KEKPARAMS m_sParams;
+		std::vector<nfByte> m_rgCipherValue;
 	protected:
-		CModel * m_pModel;
-		std::string m_sRequiredExtensions;
-		std::map<std::string, std::string> m_ListedExtensions;
-
-		std::string m_sPath;
-		nfBool m_bHasResources;
-		nfBool m_bHasBuild;
-
-		nfBool m_bWithinIgnoredElement;
-		nfBool m_bIgnoreBuild;
-		nfBool m_bIgnoreMetaData;
-
-		nfBool m_bHaveWarnedAboutV093;
-
-		void ReadMetaDataNode(_In_ CXmlReader * pXMLReader);
-
-		virtual void CheckRequiredExtensions();
-
-		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
-		virtual void OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace);
+		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 	public:
-		CModelReaderNode_Model() = delete;
-		CModelReaderNode_Model(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings, const std::string sPath, _In_ PProgressMonitor pProgressMonitor);
+		CModelReaderNode_KeyStoreAccessRight() = delete;
+		CModelReaderNode_KeyStoreAccessRight(_In_ CKeyStore * pKeyStore, _In_ PModelReaderWarnings pWarnings);
+
+		PKeyStoreAccessRight getAccessRight();
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
-
-		nfBool getHasResources();
-		nfBool getHasBuild();
-
-		nfBool ignoreBuild();
-		void setIgnoreBuild(bool bIgnoreBuild);
-		nfBool ignoreMetaData();
-		void setIgnoreMetaData(bool bIgnoreMetaData);
 	};
 
-	typedef std::shared_ptr <CModelReaderNode_Model> PModelReaderNode_Model;
-
+	typedef std::shared_ptr <CModelReaderNode_KeyStoreAccessRight> PModelReaderNode_KeyStoreAccessRight;
 }
 
-#endif // __NMR_MODELREADERNODE_MODEL
+#endif // __NMR_MODELREADERNODE_KEYSTOACCESSRIGHT

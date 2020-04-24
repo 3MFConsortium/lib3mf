@@ -33,6 +33,7 @@ using LibZ and a native XML writer implementation.
 
 --*/
 
+#include "Model/Classes/NMR_KeyStoreResourceData.h"
 #include "Model/Writer/NMR_ModelWriter_3MF_Native.h" 
 #include "Model/Classes/NMR_ModelConstants.h" 
 #include "Model/Classes/NMR_ModelAttachment.h" 
@@ -52,119 +53,107 @@ namespace NMR {
 	
 	CModelWriter_3MF_Native::CModelWriter_3MF_Native(_In_ PModel pModel) : CModelWriter_3MF(pModel)
 	{
-		m_nRelationIDCounter = 0;
-		m_pModel = nullptr;
+		m_pOtherModel = nullptr;
 	}
 
 	// These are OPC dependent functions
 	void CModelWriter_3MF_Native::createPackage(_In_ CModel * pModel)
 	{
 		__NMRASSERT(pModel != nullptr);
-		m_pModel = pModel;
-
-		m_nRelationIDCounter = 0;
+		m_pOtherModel = pModel;
 	}
 
 	void CModelWriter_3MF_Native::releasePackage()
 	{
-		m_pModel = nullptr;
+		m_pPackageWriter->close();
+		m_pPackageWriter = nullptr;
+		m_pOtherModel = nullptr;
 	}
 
 	void CModelWriter_3MF_Native::writePackageToStream(_In_ PExportStream pStream)
 	{
 		if (pStream.get() == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
-		if (m_pModel == nullptr)
+		if (m_pOtherModel == nullptr)
 			throw CNMRException(NMR_ERROR_NOMODELTOWRITE);
 
 		// Maximal progress = NrResources + NrAttachments + Build + Cleanup
-		m_pProgressMonitor->SetMaxProgress(m_pModel->getResourceCount() + m_pModel->getAttachmentCount() + 1 + 1);
+		monitor()->SetMaxProgress(m_pOtherModel->getResourceCount() + m_pOtherModel->getAttachmentCount() + 1 + 1);
 
 		// Write Model Stream
-		POpcPackageWriter pPackageWriter = std::make_shared<COpcPackageWriter>(pStream);
-		POpcPackagePart pModelPart = pPackageWriter->addPart(m_pModel->rootModelPath()->getPath());
+		m_pPackageWriter = std::make_shared<CKeyStoreOpcPackageWriter>(pStream, this);
+		POpcPackagePart pModelPart = m_pPackageWriter->addPart(m_pOtherModel->rootPath());
 		PXmlWriter_Native pXMLWriter = std::make_shared<CXmlWriter_Native>(pModelPart->getExportStream());
 
-		m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_WRITEROOTMODEL);
-		m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
+		monitor()->SetProgressIdentifier(ProgressIdentifier::PROGRESS_WRITEROOTMODEL);
+		monitor()->ReportProgressAndQueryCancelled(true);
 
-		writeModelStream(pXMLWriter.get(), m_pModel);
+		writeModelStream(pXMLWriter.get(), m_pOtherModel);
 
 		// add Root relationships
-		pPackageWriter->addRootRelationship(generateRelationShipID(), PACKAGE_START_PART_RELATIONSHIP_TYPE, pModelPart.get());
+		m_pPackageWriter->addRootRelationship(PACKAGE_START_PART_RELATIONSHIP_TYPE, pModelPart.get());
 
-		PModelAttachment pPackageThumbnail = m_pModel->getPackageThumbnail();
+		PModelAttachment pPackageThumbnail = m_pOtherModel->getPackageThumbnail();
 		if (pPackageThumbnail.get() != nullptr)
 		{
 			// create Package Thumbnail Part
-			POpcPackagePart pThumbnailPart = pPackageWriter->addPart(pPackageThumbnail->getPathURI());
+			POpcPackagePart pThumbnailPart = m_pPackageWriter->addPart(pPackageThumbnail->getPathURI());
 			PExportStream pExportStream = pThumbnailPart->getExportStream();
 			// Copy data
 			PImportStream pPackageThumbnailStream = pPackageThumbnail->getStream();
 			pPackageThumbnailStream->seekPosition(0, true);
 			pExportStream->copyFrom(pPackageThumbnailStream.get(), pPackageThumbnailStream->retrieveSize(), MODELWRITER_NATIVE_BUFFERSIZE);
 			// add root relationship
-			pPackageWriter->addRootRelationship(generateRelationShipID(), pPackageThumbnail->getRelationShipType(), pThumbnailPart.get());
+			m_pPackageWriter->addRootRelationship(pPackageThumbnail->getRelationShipType(), pThumbnailPart.get());
 		}
 
-		m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_WRITENONROOTMODELS);
-		m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
+		monitor()->SetProgressIdentifier(ProgressIdentifier::PROGRESS_WRITENONROOTMODELS);
+		monitor()->ReportProgressAndQueryCancelled(true);
 
 		addNonRootModels();
 		
 		// add Attachments
-		m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_WRITEATTACHMENTS);
-		m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
+		monitor()->SetProgressIdentifier(ProgressIdentifier::PROGRESS_WRITEATTACHMENTS);
+		monitor()->ReportProgressAndQueryCancelled(true);
 
-		addAttachments(m_pModel, pPackageWriter, pModelPart);
+		addAttachments(m_pOtherModel, pModelPart);
 
-		m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_WRITECONTENTTYPES);
-		m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
+		monitor()->SetProgressIdentifier(ProgressIdentifier::PROGRESS_WRITECONTENTTYPES);
+		monitor()->ReportProgressAndQueryCancelled(true);
 
 		// add Content Types
-		pPackageWriter->addContentType(PACKAGE_3D_RELS_EXTENSION, PACKAGE_3D_RELS_CONTENT_TYPE);
-		pPackageWriter->addContentType(PACKAGE_3D_MODEL_EXTENSION, PACKAGE_3D_MODEL_CONTENT_TYPE);
-		pPackageWriter->addContentType(PACKAGE_3D_TEXTURE_EXTENSION, PACKAGE_TEXTURE_CONTENT_TYPE);
-		pPackageWriter->addContentType(PACKAGE_3D_PNG_EXTENSION, PACKAGE_PNG_CONTENT_TYPE);
-		pPackageWriter->addContentType(PACKAGE_3D_JPEG_EXTENSION, PACKAGE_JPG_CONTENT_TYPE);
-		pPackageWriter->addContentType(PACKAGE_3D_JPG_EXTENSION, PACKAGE_JPG_CONTENT_TYPE);
+		m_pPackageWriter->addContentType(PACKAGE_3D_RELS_EXTENSION, PACKAGE_3D_RELS_CONTENT_TYPE);
+		m_pPackageWriter->addContentType(PACKAGE_3D_MODEL_EXTENSION, PACKAGE_3D_MODEL_CONTENT_TYPE);
+		m_pPackageWriter->addContentType(PACKAGE_3D_TEXTURE_EXTENSION, PACKAGE_TEXTURE_CONTENT_TYPE);
+		m_pPackageWriter->addContentType(PACKAGE_3D_PNG_EXTENSION, PACKAGE_PNG_CONTENT_TYPE);
+		m_pPackageWriter->addContentType(PACKAGE_3D_JPEG_EXTENSION, PACKAGE_JPG_CONTENT_TYPE);
+		m_pPackageWriter->addContentType(PACKAGE_3D_JPG_EXTENSION, PACKAGE_JPG_CONTENT_TYPE);
 
-		std::map<std::string, std::string> CustomContentTypes = m_pModel->getCustomContentTypes();
+		std::map<std::string, std::string> CustomContentTypes = m_pOtherModel->getCustomContentTypes();
 		std::map<std::string, std::string>::iterator iContentTypeIterator;
 
 		for (iContentTypeIterator = CustomContentTypes.begin(); iContentTypeIterator != CustomContentTypes.end(); iContentTypeIterator++) {
-			if (!m_pModel->contentTypeIsDefault(iContentTypeIterator->first)) {
-				pPackageWriter->addContentType(iContentTypeIterator->first, iContentTypeIterator->second);
+			if (!m_pOtherModel->contentTypeIsDefault(iContentTypeIterator->first)) {
+				m_pPackageWriter->addContentType(iContentTypeIterator->first, iContentTypeIterator->second);
 			}
 		}
-
-	}
-
-
-	std::string CModelWriter_3MF_Native::generateRelationShipID()
-	{
-		// Create Unique ID String
-		std::stringstream sStream;
-		sStream << "rel" << m_nRelationIDCounter;
-		m_nRelationIDCounter++;
-		return sStream.str();
 	}
 
 	void CModelWriter_3MF_Native::addNonRootModels() {
 
 		// do this based on resource-paths
-		std::vector<PPackageModelPath> vctPPaths = m_pModel->retrieveAllModelPaths();
+		std::vector<PPackageModelPath> vctPPaths = m_pOtherModel->retrieveAllModelPaths();
 		nfUint64 nCount = vctPPaths.size();
 
 		for (nfUint32 nIndex = 0; nIndex < nCount; nIndex++) {
-			m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_WRITENONROOTMODELS);
-			m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
+			monitor()->SetProgressIdentifier(ProgressIdentifier::PROGRESS_WRITENONROOTMODELS);
+			monitor()->ReportProgressAndQueryCancelled(true);
 
 			std::string sNonRootModelPath = vctPPaths[nIndex]->getPath();
-			if (sNonRootModelPath == m_pModel->rootPath())
+			if (sNonRootModelPath == m_pOtherModel->rootPath())
 				continue;
 
-			m_pModel->setCurrentPath(sNonRootModelPath);
+			m_pOtherModel->setCurrentPath(sNonRootModelPath);
 			PImportStream pStream;
 			{
 				PExportStreamMemory pExportStream = std::make_shared<CExportStreamMemory>();
@@ -175,18 +164,18 @@ namespace NMR {
 			}
 			
 			// check, whether this non-root model is already in here
-			PModelAttachment pNonRootModelAttachment = m_pModel->findModelAttachment(sNonRootModelPath);
+			PModelAttachment pNonRootModelAttachment = m_pOtherModel->findModelAttachment(sNonRootModelPath);
 			if (pNonRootModelAttachment.get() != nullptr) {
 				if (pNonRootModelAttachment->getRelationShipType() != PACKAGE_START_PART_RELATIONSHIP_TYPE)
 					throw CNMRException(NMR_ERROR_DUPLICATEATTACHMENTPATH);
 				pNonRootModelAttachment->setStream(pStream);
 			}
 			else
-				pNonRootModelAttachment = m_pModel->addAttachment(sNonRootModelPath, PACKAGE_START_PART_RELATIONSHIP_TYPE, pStream);
+				pNonRootModelAttachment = m_pOtherModel->addAttachment(sNonRootModelPath, PACKAGE_START_PART_RELATIONSHIP_TYPE, pStream);
 		}
 	}
 
-	void CModelWriter_3MF_Native::addAttachments(_In_ CModel * pModel, _In_ POpcPackageWriter pPackageWriter, _In_ POpcPackagePart pModelPart)
+	void CModelWriter_3MF_Native::addAttachments(_In_ CModel * pModel, _In_ POpcPackagePart pModelPart)
 	{
 		__NMRASSERT(pModel != nullptr);
 		__NMRASSERT(pModelPart.get() != nullptr);
@@ -198,8 +187,8 @@ namespace NMR {
 		if (nCount > 0) {
 			for (nIndex = 0; nIndex < nCount; nIndex++) {
 
-				m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_WRITEATTACHMENTS);
-				m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
+				monitor()->SetProgressIdentifier(ProgressIdentifier::PROGRESS_WRITEATTACHMENTS);
+				monitor()->ReportProgressAndQueryCancelled(true);
 
 				PModelAttachment pAttachment = pModel->getModelAttachment(nIndex);
 				PImportStream pStream = pAttachment->getStream();
@@ -211,7 +200,7 @@ namespace NMR {
 					throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
 				// create Texture Part
-				POpcPackagePart pAttachmentPart = pPackageWriter->addPart(sPath);
+				POpcPackagePart pAttachmentPart = m_pPackageWriter->addPart(sPath);
 				PExportStream pExportStream = pAttachmentPart->getExportStream();
 
 				// Copy data
@@ -219,12 +208,10 @@ namespace NMR {
 				pExportStream->copyFrom(pStream.get(), pStream->retrieveSize(), MODELWRITER_NATIVE_BUFFERSIZE);
 
 				// add relationships
-				pModelPart->addRelationship(generateRelationShipID(), sRelationShipType.c_str(), pAttachmentPart->getURI());
+				m_pPackageWriter->addPartRelationship(pModelPart, sRelationShipType.c_str(), pAttachmentPart.get());
 
-				m_pProgressMonitor->IncrementProgress(1);
+				monitor()->IncrementProgress(1);
 			}
 		}
 	}
-
-
 }
