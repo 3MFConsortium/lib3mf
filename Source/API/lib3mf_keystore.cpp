@@ -98,7 +98,12 @@ IResourceDataGroup * Lib3MF::Impl::CKeyStore::AddResourceDataGroup() {
 	return new CResourceDataGroup(dg);
 }
 
-void Lib3MF::Impl::CKeyStore::RemoveResourceDataGroup(IResourceDataGroup * pTheResourceDataGroup) {}
+void Lib3MF::Impl::CKeyStore::RemoveResourceDataGroup(IResourceDataGroup * pTheResourceDataGroup) {
+	CResourceDataGroup * dg = dynamic_cast<CResourceDataGroup *>(pTheResourceDataGroup);
+	if (!dg)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+	m_pKeyStore->removeResourceDataGroup(dg->resourceDataGroup());
+}
 
 Lib3MF::Impl::IResourceDataGroup * Lib3MF::Impl::CKeyStore::FindResourceDataGroup(Lib3MF::Impl::IPackagePart *pPartPath) {
 	NMR::PKeyStoreResourceDataGroup dg = m_pKeyStore->findResourceDataGroupByResourceDataPath(pPartPath->Get());

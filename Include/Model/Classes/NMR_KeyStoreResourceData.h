@@ -46,7 +46,7 @@ namespace NMR {
 	using PKeyStoreResourceDataGroup = std::shared_ptr<CKeyStoreResourceDataGroup>;
 
 	class CKeyStoreResourceData: public CKeyStoreCEKParams {
-		PKeyStoreResourceDataGroup const & m_pGroup;
+		PKeyStoreResourceDataGroup m_pGroup;
 		std::string m_sPath;
 		static nfUint64 s_nfHandleCount;
 	public:

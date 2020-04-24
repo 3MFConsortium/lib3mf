@@ -2,12 +2,44 @@
 #include "Common/Platform/NMR_ImportStream_Unique_Memory.h"
 #include "Common/NMR_Exception.h"
 #include <vector>
+#include <array>
 namespace NMR {
 	CImportStream_Encrypted::CImportStream_Encrypted(PImportStream pEncryptedStream, ContentEncryptionDescriptor pDecryptContext)
 		:m_pEncryptedStream(pEncryptedStream), m_pDecryptContext(pDecryptContext)
 	{
 		if (nullptr == pEncryptedStream)
 			throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+		//checkHeader();
+	}
+
+	void CImportStream_Encrypted::checkHeader() {
+		union EncryptedFileHeader {
+			nfByte bytes[12];
+			struct HeaderStructure {
+				union Magic {
+					nfByte bytes[5];
+					char * string;
+				} Signature;
+				nfByte majorVersion;
+				nfByte minorVersion;
+				nfByte unused;
+				union Length {
+					nfUint32 length;
+					nfByte bytes[4];
+				} Length;
+			} Header;
+		};
+		EncryptedFileHeader header = { { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0} };
+		m_pEncryptedStream->readBuffer(header.bytes, sizeof(header), true);
+		if (strncmp(header.Header.Signature.string, "%3McF", sizeof(header.Header.Signature.bytes)) != 0)
+			throw CNMRException(NMR_ERROR_COULDNOTREADENCRYPTEDSTREAM);
+		if (header.Header.majorVersion != 0 || header.Header.minorVersion != 0)
+			throw CNMRException(NMR_ERROR_ENCRYPTEDCONTENTFORMATNOTSUPPORTED);
+		nfUint32 remainingBytes = header.Header.Length.length - sizeof(EncryptedFileHeader);
+		if (remainingBytes > 0) {
+			std::vector<nfByte> remainingBuffer(remainingBytes, 0);
+			m_pEncryptedStream->readBuffer(remainingBuffer.data(), remainingBytes, true);
+		}
 	}
 
 	nfBool CImportStream_Encrypted::seekPosition(nfUint64 position, nfBool bHasToSucceed) {

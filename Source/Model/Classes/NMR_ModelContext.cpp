@@ -39,7 +39,7 @@ namespace NMR {
 
 
 	CModelContext::CModelContext(_In_ PModel pModel) {
-		if (!pModel.get())
+		if (!pModel)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
 		m_pModel = pModel;
@@ -63,6 +63,10 @@ namespace NMR {
 
 	PKeyStore CModelContext::getKeyStore() const {
 		return m_pModel->getKeyStore();
+	}
+
+	nfBool CModelContext::isComplete() const {
+		return (nullptr != m_pModel && nullptr != m_pProgressMonitor && nullptr != m_pSecureContext);
 	}
 
 	void CModelContext::SetProgressCallback(Lib3MFProgressCallback callback, void* userData) {

@@ -486,7 +486,6 @@ Core framework error codes (0x2XXX)
 // Too many beams
 #define NMR_ERROR_TOOMANYBEAMS 0x203D
 
-
 // Invalid slice polygon index
 #define NMR_ERROR_INVALIDSLICEPOLYGON 0x2040
 
@@ -1127,6 +1126,11 @@ Model error codes (0x8XXX)
 // Path attribute is not absolute
 #define NMR_ERROR_PATH_NOT_ABSOLUTE 0x80EC
 
+// Encrypted stream header signature mismatch
+#define NMR_ERROR_COULDNOTREADENCRYPTEDSTREAM 0x80ED
+
+// Header version mismatch
+#define NMR_ERROR_ENCRYPTEDCONTENTFORMATNOTSUPPORTED 0x80EE
 
 // Could not get OPC KeyStore Stream
 #define NMR_ERROR_KEYSTOREOPCCOULDNOTGETSTREAM 0x80F0

@@ -62,7 +62,7 @@ namespace NMR {
 
 	PKeyStoreCEKParams CModelReaderNode_KeyStoreCEKParams::getCEKParams()
 	{
-		return CKeyStoreFactory::makeCEKParams(m_compression, m_encryptionAlgorithm, m_aad, m_iv, m_tag);
+		return CKeyStoreFactory::makeCEKParams(m_bCompressed, m_eAlgorithm, m_aad, m_iv, m_tag);
 	}
 
 	void CModelReaderNode_KeyStoreCEKParams::parseXML(_In_ CXmlReader * pXMLReader)
@@ -84,14 +84,14 @@ namespace NMR {
 		__NMRASSERT(pAttributeValue);
 
 		if (strcmp(XML_3MF_SECURE_CONTENT_ENCRYPTION_ALGORITHM, pAttributeName) == 0) {
-			m_encryptionAlgorithm = ParserUtils::parseEncryptionAlgorithm(pAttributeValue);
+			m_eAlgorithm = ParserUtils::parseEncryptionAlgorithm(pAttributeValue);
 		}
 		else if (strcmp(XML_3MF_SECURE_CONTENT_COMPRESSION, pAttributeName) == 0) {
 			if (strcmp(XML_3MF_SECURE_CONTENT_COMPRESSION_DEFLATE, pAttributeValue) == 0) {
-				m_compression = true;
+				m_bCompressed = true;
 			}
 			else if (strcmp(XML_3MF_SECURE_CONTENT_COMPRESSION_NONE, pAttributeValue) == 0) {
-				m_compression = false;
+				m_bCompressed = false;
 			} else {
 				m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREINVALIDCOMPRESSION), mrwInvalidOptionalValue);
 			}

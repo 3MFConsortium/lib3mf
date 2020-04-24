@@ -43,10 +43,10 @@ namespace NMR {
 
 	class CModelReaderNode_KeyStoreAccessRight : public CModelReaderNode_KeyStoreBase {
 	private:
-		nfBool m_bHasParams;
-		nfBool m_bHasConsumerIndex;
-		nfBool m_bHasCipherData;
-		nfUint64 m_nConsumerIndex;
+		nfBool m_bHasParams = false;
+		nfBool m_bHasConsumerIndex = false;
+		nfBool m_bHasCipherData = false;
+		nfUint64 m_nConsumerIndex = 0;
 		KEKPARAMS m_sParams;
 		std::vector<nfByte> m_rgCipherValue;
 	protected:

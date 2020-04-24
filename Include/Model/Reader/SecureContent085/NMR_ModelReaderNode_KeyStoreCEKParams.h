@@ -43,12 +43,11 @@ namespace NMR {
 
 	class CModelReaderNode_KeyStoreCEKParams: public CModelReaderNode_KeyStoreBase {
 	private:
-		nfBool m_compression;
-		eKeyStoreEncryptAlgorithm m_encryptionAlgorithm;
+		nfBool m_bCompressed = false;
+		eKeyStoreEncryptAlgorithm m_eAlgorithm = eKeyStoreEncryptAlgorithm::AES256_GCM;
 		std::vector<nfByte> m_iv;
 		std::vector<nfByte> m_tag;
 		std::vector<nfByte> m_aad;
-		PKeyStoreCEKParams m_CEKParams;
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);

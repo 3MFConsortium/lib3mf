@@ -160,19 +160,22 @@ void EncryptionCallbacks::dataEncryptClientCallback(
 			dek->ciphers[p.GetDescriptor()] = ctx;
 		}
 
-		if (0 != cipherSize) {
-			size_t encrypted = AesMethods::Encrypt::encrypt(ctx, (Lib3MF_uint32)plainSize, plainBuffer, cipherBuffer);
-			*cipherNeeded = encrypted;
-		} else {
+		if (0 == plainSize || nullptr == plainBuffer) {
 			ByteVector tag(16, 0);
 			p.GetAuthenticationTag(tag);
 
 			if (!AesMethods::Encrypt::finish(ctx, cipherBuffer, (Lib3MF_uint32)tag.size(), tag.data())) {
-				*cipherNeeded = -2;
+				*cipherNeeded = 0;
 			} else {
+				*cipherNeeded = tag.size();
 				p.SetAuthenticationTag(tag);
 				dek->ciphers.erase(it);
 			}
+		} else if (0 == cipherSize || nullptr == cipherBuffer) {
+			*cipherNeeded = plainSize;
+		} else {
+			size_t encrypted = AesMethods::Encrypt::encrypt(ctx, (Lib3MF_uint32)plainSize, plainBuffer, cipherBuffer);
+			*cipherNeeded = encrypted;
 		}
 	}
 }
@@ -236,12 +239,7 @@ void EncryptionCallbacks::dataDecryptClientCallback(
 			dek->ciphers[p.GetDescriptor()] = ctx;
 		}
 
-		if (nullptr == plainBuffer) {
-			*plainNeeded = cipherSize;
-		} else if (0 != cipherSize) {
-			size_t decrypted = AesMethods::Decrypt::decrypt(ctx, (Lib3MF_uint32)plainSize, cipherBuffer, plainBuffer);
-			*plainNeeded = decrypted;
-		} else {
+		if (0 == cipherSize || nullptr == cipherBuffer) {
 			ByteVector tag(16, 0);
 			p.GetAuthenticationTag(tag);
 			if (!AesMethods::Decrypt::finish(ctx, plainBuffer, tag.data())) {
@@ -250,6 +248,11 @@ void EncryptionCallbacks::dataDecryptClientCallback(
 				*plainNeeded = tag.size();
 				dek->ciphers.erase(it);
 			}
+		} else if (0 == plainSize || nullptr == plainBuffer) {
+			*plainNeeded = cipherSize;
+		} else {
+			size_t decrypted = AesMethods::Decrypt::decrypt(ctx, (Lib3MF_uint32)plainSize, cipherBuffer, plainBuffer);
+			*plainNeeded = decrypted;
 		}
 	}
 }
@@ -275,8 +278,8 @@ void EncryptionCallbacks::keyDecryptClientCallback(
 		*plainNeeded = 32;
 	}
 	else {
-		ASSERT_EQ(cipherSize, context->size);
-		ASSERT_GE(plainSize, context->size);
+		ASSERT_EQ(cipherSize, 256);
+		ASSERT_GE(plainSize, 32);
 
 		*plainNeeded = RsaMethods::decrypt(context->key, cipherSize, cipherBuffer, plainBuffer);
 	}

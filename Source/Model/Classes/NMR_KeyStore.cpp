@@ -133,10 +133,14 @@ namespace NMR {
 	}
 
 	PKeyStoreResourceDataGroup CKeyStore::findResourceDataGroupByResourceDataPath(std::string const & rdPath) {
-		auto found = m_ResourceDataRefs.find(rdPath);
-		if (found != m_ResourceDataRefs.end())
-			return (*found).second->getGroup();
+		auto found = findResourceData(rdPath);
+		if (nullptr != found)
+			return found->getGroup();
 		return nullptr;
+	}
+
+	void CKeyStore::removeResourceDataGroup(PKeyStoreResourceDataGroup rdg) {
+		throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
 	}
 
 	nfUint64 CKeyStore::addResourceData(PKeyStoreResourceData const & rd) {
@@ -177,7 +181,7 @@ namespace NMR {
 	}
 
 	PKeyStoreResourceData CKeyStore::findResourceData(std::string const & path) {
-		auto found = m_ResourceDataRefs.find(path);
+		auto found = m_ResourceDataRefs.find(fnIncludeLeadingPathDelimiter(path));
 		if (found != m_ResourceDataRefs.end())
 			return (*found).second;
 		return nullptr;

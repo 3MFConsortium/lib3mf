@@ -109,7 +109,7 @@ namespace NMR {
 					pXMLNode->parseXML(pXMLReader);
 					m_sParams = pXMLNode->getKekParams();
 				}
-			} if (strcmp(pChildName, XML_3MF_ELEMENT_CIPHERDATA) == 0) {
+			} else if (strcmp(pChildName, XML_3MF_ELEMENT_CIPHERDATA) == 0) {
 				if (!m_bHasCipherData) {
 					m_bHasCipherData = true;
 					PModelReaderNode_KeyStoreCipherValue pXMLNode = std::make_shared<CModelReaderNode_KeyStoreCipherValue>(m_pKeyStore, m_pWarnings);

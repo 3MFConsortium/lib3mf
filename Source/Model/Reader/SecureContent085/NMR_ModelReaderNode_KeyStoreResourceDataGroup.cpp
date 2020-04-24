@@ -60,10 +60,10 @@ namespace NMR {
 		// Parse Content
 		parseContent(pXMLReader);
 		
-		if (!m_group) {
+		if (!m_pGroup) {
 			throw CNMRException(NMR_ERROR_KEYSTOREMISSINGKEYUUID);
 		}
-		m_pKeyStore->addResourceDataGroup(m_group);
+		m_pKeyStore->addResourceDataGroup(m_pGroup);
 	}
 
 	void CModelReaderNode_KeyStoreResourceDataGroup::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
@@ -72,9 +72,9 @@ namespace NMR {
 		__NMRASSERT(pAttributeValue);
 
 		if (strcmp(XML_3MF_SECURE_CONTENT_KEY_UUID, pAttributeName) == 0) {
-			if (m_group != nullptr)
+			if (m_pGroup != nullptr)
 				m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREDUPLICATERESOURCEDATAGROUP), eModelReaderWarningLevel::mrwInvalidMandatoryValue);
-			m_group =  CKeyStoreFactory::makeResourceDataGroup(std::make_shared<CUUID>(pAttributeValue));
+			m_pGroup =  CKeyStoreFactory::makeResourceDataGroup(std::make_shared<CUUID>(pAttributeValue));
 		}
 		else
 			m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE), mrwInvalidOptionalValue);
@@ -90,16 +90,14 @@ namespace NMR {
 			if (strcmp(pChildName, XML_3MF_ELEMENT_RESOURCEDATA) == 0) {
 				PModelReaderNode_KeyStoreResourceData pXMLNode = std::make_shared<CModelReaderNode_KeyStoreResourceData>(m_pKeyStore, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
-				PKeyStoreResourceData rd = pXMLNode->getResourceData(m_group);
+				PKeyStoreResourceData rd = pXMLNode->getResourceData(m_pGroup);
 				m_pKeyStore->addResourceData(rd);
-			}
-			else if (strcmp(pChildName, XML_3MF_ELEMENT_ACCESSRIGHT) == 0) {
+			} else if (strcmp(pChildName, XML_3MF_ELEMENT_ACCESSRIGHT) == 0) {
 				PModelReaderNode_KeyStoreAccessRight pXMLNode = std::make_shared<CModelReaderNode_KeyStoreAccessRight>(m_pKeyStore, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 				PKeyStoreAccessRight ar = pXMLNode->getAccessRight();
-				m_group->addAccessRight(ar);
-			}
-			else
+				m_pGroup->addAccessRight(ar);
+			} else
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
 		}
 	}

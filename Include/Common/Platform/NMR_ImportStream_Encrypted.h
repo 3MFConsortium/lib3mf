@@ -43,11 +43,10 @@ to the proper callbacks that will decrypt the content before returning back to t
 
 namespace NMR {
 
-	
-
 	class CImportStream_Encrypted : public CImportStream {
 		PImportStream m_pEncryptedStream;
 		ContentEncryptionDescriptor m_pDecryptContext;
+		void checkHeader();
 	public:
 		CImportStream_Encrypted(PImportStream pEncryptedStream, ContentEncryptionDescriptor context);
 

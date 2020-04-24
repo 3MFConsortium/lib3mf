@@ -58,13 +58,13 @@ namespace NMR {
 		eKeyStoreMaskGenerationFunction parseMgf(std::string const & value) {
 			if (XML_3MF_SECURE_CONTENT_MGF1_SHA1 == value)
 				return eKeyStoreMaskGenerationFunction::MGF1_SHA1;
-			else if (XML_3MF_SECURE_CONTENT_MGF1_SHA224)
+			else if (XML_3MF_SECURE_CONTENT_MGF1_SHA224 == value)
 				return eKeyStoreMaskGenerationFunction::MGF1_SHA224;
-			else if (XML_3MF_SECURE_CONTENT_MGF1_SHA256)
+			else if (XML_3MF_SECURE_CONTENT_MGF1_SHA256 == value)
 				return eKeyStoreMaskGenerationFunction::MGF1_SHA256;
-			else if (XML_3MF_SECURE_CONTENT_MGF1_SHA384)
+			else if (XML_3MF_SECURE_CONTENT_MGF1_SHA384 == value)
 				return eKeyStoreMaskGenerationFunction::MGF1_SHA384;
-			else if (XML_3MF_SECURE_CONTENT_MGF1_SHA512)
+			else if (XML_3MF_SECURE_CONTENT_MGF1_SHA512 == value)
 				return eKeyStoreMaskGenerationFunction::MGF1_SHA512;
 			throw CNMRException(NMR_ERROR_KEYSTOREINVALIDMGF);
 		}
@@ -86,7 +86,9 @@ namespace NMR {
 	CModelReaderNode_KeyStoreKEKParams::CModelReaderNode_KeyStoreKEKParams(CKeyStore * pKeyStore, PModelReaderWarnings pWarnings)
 		: CModelReaderNode_KeyStoreBase(pKeyStore, pWarnings)
 	{
-
+		//m_sKekParams.m_eAlgorithm = eKeyStoreWrapAlgorithm::RSA_OAEP;
+		//m_sKekParams.m_eMgf = eKeyStoreMaskGenerationFunction::MGF1_SHA1;
+		//m_sKekParams.m_eDigest = eKeyStoreMessageDigest::SHA1;
 	}
 
 	KEKPARAMS CModelReaderNode_KeyStoreKEKParams::getKekParams()
@@ -104,14 +106,8 @@ namespace NMR {
 
 		// Parse Content
 		parseContent(pXMLReader);
-		if (m_sKekParams.m_eAlgorithm == 0)
-			m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREINVALIDALGORITHM), eModelReaderWarningLevel::mrwFatal);
-		if (m_bAlgHasMgf && m_sKekParams.m_eMgf != 0)
+		if (m_bAlgHasMgf && m_sKekParams.m_eMgf != eKeyStoreMaskGenerationFunction::MGF1_SHA1)
 			m_pWarnings->addWarning(MODELREADERWARNING_KEYSTOREKEKPARAMSINCONSISTENT, NMR_ERROR_KEYSTOREINCONSISTENTKEKPARAMS, eModelReaderWarningLevel::mrwInvalidOptionalValue);
-		if (m_sKekParams.m_eMgf == 0)
-			m_sKekParams.m_eMgf = eKeyStoreMaskGenerationFunction::MGF1_SHA1;
-		if (m_sKekParams.m_eDigest == 0)
-			m_sKekParams.m_eDigest = eKeyStoreMessageDigest::SHA1;
 	}
 
 	void CModelReaderNode_KeyStoreKEKParams::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
@@ -120,11 +116,11 @@ namespace NMR {
 		__NMRASSERT(pAttributeValue);
 
 		try {
-			if (strcmp(XML_3MF_SECURE_CONTENT_WRAPPINGALGORITHM, pAttributeName)) {
+			if (strcmp(XML_3MF_SECURE_CONTENT_WRAPPINGALGORITHM, pAttributeName) == 0) {
 				m_sKekParams.m_eAlgorithm = ParserUtils::parseWrapAlgorithm(pAttributeValue, m_bAlgHasMgf);
-			} else if (strcmp(XML_3MF_SECURE_CONTENT_MGFALGORITHM, pAttributeName)) {
+			} else if (strcmp(XML_3MF_SECURE_CONTENT_MGFALGORITHM, pAttributeName) == 0) {
 				m_sKekParams.m_eMgf = ParserUtils::parseMgf(pAttributeValue);
-			} else if (strcmp(XML_3MF_SECURE_CONTENT_DIGESTMETHOD, pAttributeName)) {
+			} else if (strcmp(XML_3MF_SECURE_CONTENT_DIGESTMETHOD, pAttributeName) == 0) {
 				m_sKekParams.m_eDigest = ParserUtils::parseMessageDigest(pAttributeValue);
 			} else {
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE), mrwInvalidOptionalValue);

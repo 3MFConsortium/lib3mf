@@ -55,7 +55,7 @@ namespace NMR {
 	class CModelReaderNode_KeyStoreKEKParams: public CModelReaderNode_KeyStoreBase {
 	private:
 		KEKPARAMS m_sKekParams;
-		nfBool m_bAlgHasMgf;
+		nfBool m_bAlgHasMgf = false;
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 	public:

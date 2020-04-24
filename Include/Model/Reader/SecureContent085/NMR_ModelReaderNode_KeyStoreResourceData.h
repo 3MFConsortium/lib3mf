@@ -46,9 +46,8 @@ namespace NMR {
 
 	class CModelReaderNode_KeyStoreResourceData : public CModelReaderNode_KeyStoreBase {
 	private:
-		std::string m_path;
-		nfBool m_bHasCEKParams;
-		PKeyStoreCEKParams m_sCekParams;
+		std::string m_sPath;
+		PKeyStoreCEKParams m_pCekParams;
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);

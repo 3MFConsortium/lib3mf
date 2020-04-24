@@ -8,6 +8,7 @@
 #include "Model/Classes/NMR_KeyStoreAccessRight.h"
 #include "Model/Classes/NMR_KeyStoreResourceData.h"
 #include "Model/Classes/NMR_KeyStoreCEKParams.h"
+#include "Common/NMR_StringUtils.h"
 
 namespace NMR {
 	PKeyStore CKeyStoreFactory::makeKeyStore() {
@@ -28,7 +29,7 @@ namespace NMR {
 	}
 
 	PKeyStoreResourceData CKeyStoreFactory::makeResourceData(PKeyStoreResourceDataGroup const & rdg, std::string const & path, PKeyStoreCEKParams params) {
-		return std::make_shared<CKeyStoreResourceData>(rdg, path,
+		return std::make_shared<CKeyStoreResourceData>(rdg, fnIncludeLeadingPathDelimiter(path),
 			params->isCompressed(),
 			params->getEncryptionAlgorithm(),
 			params->getInitVector(),

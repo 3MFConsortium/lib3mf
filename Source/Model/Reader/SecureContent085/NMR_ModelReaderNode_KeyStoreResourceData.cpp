@@ -44,7 +44,7 @@ namespace NMR {
 
 	PKeyStoreResourceData CModelReaderNode_KeyStoreResourceData::getResourceData(PKeyStoreResourceDataGroup const & rdg)
 	{
-		return CKeyStoreFactory::makeResourceData(rdg, m_path, m_sCekParams);
+		return CKeyStoreFactory::makeResourceData(rdg, m_sPath, m_pCekParams);
 	}
 
 	void CModelReaderNode_KeyStoreResourceData::parseXML(_In_ CXmlReader * pXMLReader)
@@ -65,9 +65,9 @@ namespace NMR {
 		__NMRASSERT(pAttributeValue);
 		
 		if (strcmp(XML_3MF_SECURE_CONTENT_PATH, pAttributeName) == 0) {
-			if (!m_path.empty())
+			if (!m_sPath.empty())
 				m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREDUPLICATERESOURCEDATAPATH), eModelReaderWarningLevel::mrwInvalidMandatoryValue);
-			m_path = pAttributeValue;
+			m_sPath = pAttributeValue;
 		}
 		else
 			m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE), mrwInvalidOptionalValue);
@@ -81,11 +81,10 @@ namespace NMR {
 
 		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_SECURECONTENTSPEC) == 0) {
 			if (strcmp(pChildName, XML_3MF_ELEMENT_CEKPARAMS) == 0) {
-				if (!m_bHasCEKParams) {
-					m_bHasCEKParams = true;
+				if (nullptr == m_pCekParams) {
 					PModelReaderNode_KeyStoreCEKParams pXMLNode = std::make_shared<CModelReaderNode_KeyStoreCEKParams>(m_pKeyStore, m_pWarnings);
 					pXMLNode->parseXML(pXMLReader);
-					m_sCekParams = pXMLNode->getCEKParams();
+					m_pCekParams = pXMLNode->getCEKParams();
 				}
 			}
 			else

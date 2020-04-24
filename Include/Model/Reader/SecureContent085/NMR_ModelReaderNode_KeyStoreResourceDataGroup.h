@@ -47,7 +47,7 @@ namespace NMR {
 
 	class CModelReaderNode_KeyStoreResourceDataGroup : public CModelReaderNode_KeyStoreBase {
 	private:
-		PKeyStoreResourceDataGroup m_group;
+		PKeyStoreResourceDataGroup m_pGroup;
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);

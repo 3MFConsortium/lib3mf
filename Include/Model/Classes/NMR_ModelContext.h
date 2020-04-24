@@ -32,6 +32,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <memory>
 
+#include "Common/NMR_Types.h"
 #include "Common/3MF_ProgressTypes.h"
 
 namespace NMR {
@@ -52,10 +53,10 @@ namespace NMR {
 		PSecureContext m_pSecureContext;
 		PProgressMonitor m_pProgressMonitor;
 	protected:
-		PModel & model() {
+		inline PModel & model() {
 			return m_pModel;
 		}
-		PProgressMonitor  & monitor() {
+		inline PProgressMonitor  & monitor() {
 			return m_pProgressMonitor;
 		}
 	public:
@@ -67,6 +68,8 @@ namespace NMR {
 		PProgressMonitor getProgressMonitor() const;
 		PSecureContext getSecureContext() const;
 		PKeyStore getKeyStore() const;
+
+		nfBool isComplete() const;
 
 		void SetProgressCallback(Lib3MFProgressCallback callback, void* userData);
 	};

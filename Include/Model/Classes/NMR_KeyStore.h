@@ -82,6 +82,7 @@ namespace NMR {
 		PKeyStoreResourceDataGroup getResourceDataGroup(nfUint64 index) const;
 		void addResourceDataGroup(PKeyStoreResourceDataGroup const &dataGroup);
 		PKeyStoreResourceDataGroup findResourceDataGroupByResourceDataPath(std::string const & rdPath);
+		void removeResourceDataGroup(PKeyStoreResourceDataGroup rdg);
 
 		nfUint64 addResourceData(PKeyStoreResourceData const & rd);
 		void removeResourceData(NMR::PKeyStoreResourceData const & rd);
