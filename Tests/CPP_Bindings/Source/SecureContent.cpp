@@ -434,8 +434,8 @@ namespace Lib3MF {
 			ASSERT_NE(userData, nullptr);
 
 			KEKCallbackData * cb = (KEKCallbackData *)userData;
-			ASSERT_EQ(cb->value, 1);
-			cb->value = 2;
+			ASSERT_GE(cb->value, 1);
+			cb->value++;
 
 			ASSERT_EQ(c->GetConsumerID(), cb->consumerId);
 			ASSERT_EQ(c->GetKeyID(), cb->keyId);
@@ -458,7 +458,7 @@ namespace Lib3MF {
 		data.keyId = "contentKey";
 		reader->AddKeyWrappingCallback(data.consumerId, KEKCallbackData::testKEKCallback, (Lib3MF_pvoid)&data);
 		reader->ReadFromFile(sTestFilesPath + UNENCRYPTEDKEYSTORE);
-		ASSERT_EQ(2, data.value);
+		ASSERT_EQ(3, data.value);
 	}
 
 
