@@ -48,7 +48,7 @@ namespace Lib3MF {
 			pTriangles[10] = fnCreateTriangle(3, 0, 4);
 			pTriangles[11] = fnCreateTriangle(4, 7, 3);
 			model = wrapper->CreateModel();
-			model->SetRandomNumberCallback(generateRandomBytes, nullptr);
+			model->SetRandomNumberCallback(notRandomBytesAtAll, nullptr);
 		}
 
 		virtual void TearDown() {
@@ -71,7 +71,7 @@ namespace Lib3MF {
 	public:
 		static PWrapper wrapper;
 
-		static void generateRandomBytes(Lib3MF_uint64 byteData, Lib3MF_uint64 size, Lib3MF_pvoid userData, Lib3MF_uint64 * bytesWritten) {
+		static void notRandomBytesAtAll(Lib3MF_uint64 byteData, Lib3MF_uint64 size, Lib3MF_pvoid userData, Lib3MF_uint64 * bytesWritten) {
 			static Lib3MF_uint8 random = 0;
 			Lib3MF_uint8 * buffer = (Lib3MF_uint8 *)byteData;
 			*bytesWritten = size;
@@ -358,30 +358,34 @@ namespace Lib3MF {
 			SecureContentT::wrapper->Acquire(&cd);
 
 			ASSERT_GE(cd.GetDescriptor(), 1);
-			if (nullptr != userData) {
-				DEKCallbackData * cb = reinterpret_cast<DEKCallbackData *>(userData);
-				auto localDescriptor = cb->context.find(cd.GetDescriptor());
-				if (localDescriptor != cb->context.end())
-					localDescriptor->second++;
-				else
-					cb->context[cd.GetDescriptor()] = 0;
-			}
+			ASSERT_NE(userData, nullptr);
 
-			if (0 != inSize) {
-				std::copy(inBuffer, inBuffer + outSize, outBuffer);
+			DEKCallbackData * cb = (DEKCallbackData *)userData;
+			auto localDescriptor = cb->context.find(cd.GetDescriptor());
+			if (localDescriptor != cb->context.end())
+				localDescriptor->second++;
+			else
+				cb->context[cd.GetDescriptor()] = 0;
+
+			if (0 == inSize || nullptr == inBuffer) {
+				//finalize
+				cb->context.erase(cd.GetDescriptor());
+				*outNeededSize = 1;
+			} else if (0 == outSize || nullptr == outBuffer) {
+				//return size needed
+				*outNeededSize = inSize;
 			} else {
-				std::vector<Lib3MF_uint8> fakeTag = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F, 0x10};
-				cd.SetAuthenticationTag(fakeTag);
+				//perform encryption/decription process
+				std::copy(inBuffer, inBuffer + outSize, outBuffer);
+				*outNeededSize = outSize;
 			}
-
-			*outNeededSize = outSize;
 		}
 	};
 
 	TEST_F(SecureContentT, DEKReadTest) {
 		auto reader = model->QueryReader("3mf");
 		DEKCallbackData data;
-		reader->SetContentEncryptionCallback(DEKCallbackData::testDEKCallback, reinterpret_cast<Lib3MF_pvoid>(&data));
+		reader->SetContentEncryptionCallback(DEKCallbackData::testDEKCallback, (Lib3MF_pvoid)&data);
 		reader->ReadFromFile(sTestFilesPath + UNENCRYPTEDKEYSTORE);
 		ASSERT_EQ(data.context.size(), 1);
 		ASSERT_GE(data.context.begin()->second, 1);
@@ -391,7 +395,7 @@ namespace Lib3MF {
 	TEST_F(SecureContentT, ReadCompressedTest) {
 		auto reader = model->QueryReader("3mf");
 		DEKCallbackData data;
-		reader->SetContentEncryptionCallback(DEKCallbackData::testDEKCallback, reinterpret_cast<Lib3MF_pvoid>(&data));
+		reader->SetContentEncryptionCallback(DEKCallbackData::testDEKCallback, (Lib3MF_pvoid)&data);
 		reader->ReadFromFile(sTestFilesPath + UNENCRYPTEDCOMPRESSEDKEYSTORE);
 		ASSERT_EQ(data.context.size(), 1);
 		ASSERT_GE(data.context.begin()->second, 1);
@@ -401,7 +405,7 @@ namespace Lib3MF {
 		readUnencryptedKeyStore();
 		auto writer = model->QueryWriter("3mf");
 		DEKCallbackData data;
-		writer->SetContentEncryptionCallback(DEKCallbackData::testDEKCallback, reinterpret_cast<Lib3MF_pvoid>(&data));
+		writer->SetContentEncryptionCallback(DEKCallbackData::testDEKCallback, (Lib3MF_pvoid)&data);
 		writer->WriteToFile(sOutFilesPath + UNENCRYPTEDCOMPRESSEDKEYSTORE);
 		ASSERT_EQ(data.context.size(), 1);
 		ASSERT_GE(data.context.begin()->second, 1);
@@ -428,24 +432,22 @@ namespace Lib3MF {
 
 			PConsumer c = a.GetConsumer();
 
-			if (nullptr != userData) {
-				KEKCallbackData * cb = reinterpret_cast<KEKCallbackData *>(userData);
-				ASSERT_EQ(cb->value, 1);
-				cb->value = 2;
+			ASSERT_NE(userData, nullptr);
 
+			KEKCallbackData * cb = (KEKCallbackData *)userData;
+			ASSERT_EQ(cb->value, 1);
+			cb->value = 2;
 
-				ASSERT_EQ(c->GetConsumerID(), cb->consumerId);
-
-				ASSERT_EQ(c->GetKeyID(), cb->keyId);
-			}
-
+			ASSERT_EQ(c->GetConsumerID(), cb->consumerId);
+			ASSERT_EQ(c->GetKeyID(), cb->keyId);
 			ASSERT_FALSE(c->GetKeyValue().empty());
 
-			Lib3MF_uint32 needed = 0;
-			std::vector<char> buffer;
-
-			std::copy(inBuffer, inBuffer + outSize, outBuffer);
-			*outNeeded = outSize;
+			if (nullptr == outBuffer || outSize == 0) {
+				*outNeeded = inSize;
+			} else {
+				std::copy(inBuffer, inBuffer + outSize, outBuffer);
+				*outNeeded = outSize;
+			}
 		}
 	};
 
@@ -500,7 +502,7 @@ namespace Lib3MF {
 
 		auto writer = model->QueryWriter("3mf");
 		DEKCallbackData contentData;
-		writer->SetContentEncryptionCallback(DEKCallbackData::testDEKCallback, reinterpret_cast<Lib3MF_pvoid>(&contentData));
+		writer->SetContentEncryptionCallback(DEKCallbackData::testDEKCallback, (Lib3MF_pvoid)&contentData);
 
 		std::vector<Lib3MF_uint8> buffer;
 		try {
