@@ -59,11 +59,7 @@ namespace NMR {
 	CKeyStoreOpcPackageWriter::CKeyStoreOpcPackageWriter(_In_ PExportStream pImportStream, _In_ CModelContext * context)
 		:m_pContext(context)
 	{
-		if (nullptr == m_pContext
-		 || nullptr == m_pContext->getKeyStore()
-		 || nullptr == m_pContext->getSecureContext()
-		 || nullptr == m_pContext->getProgressMonitor()
-		 || nullptr == m_pContext->getModel())
+		if (nullptr == context || !context->isComplete())
 			throw CNMRException(NMR_ERROR_INVALIDPOINTER);
 
 		m_pPackageWriter = std::make_shared<COpcPackageWriter>(pImportStream);
@@ -76,7 +72,7 @@ namespace NMR {
 		for (nfUint64 i = 0; i < keyStore->getResourceDataGroupCount(); ++i) {
 			PKeyStoreResourceDataGroup rdg = keyStore->getResourceDataGroup(i);
 			if (rdg->isOpen()) {
-				for (nfUint64 j = 0; rdg->getAccessRightCount(); ++j) {
+				for (nfUint64 j = 0; j < rdg->getAccessRightCount(); ++j) {
 					PKeyStoreAccessRight ar = rdg->getAccessRight(j);
 					refreshAccessRight(ar, rdg->getKey());
 				}

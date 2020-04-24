@@ -29,7 +29,7 @@ namespace NMR {
 	}
 
 	PKeyStoreResourceData CKeyStoreFactory::makeResourceData(PKeyStoreResourceDataGroup const & rdg, std::string const & path, PKeyStoreCEKParams params) {
-		return std::make_shared<CKeyStoreResourceData>(rdg, fnIncludeLeadingPathDelimiter(path),
+		return std::make_shared<CKeyStoreResourceData>(rdg, path,
 			params->isCompressed(),
 			params->getEncryptionAlgorithm(),
 			params->getInitVector(),

@@ -181,7 +181,7 @@ namespace NMR {
 	}
 
 	PKeyStoreResourceData CKeyStore::findResourceData(std::string const & path) {
-		auto found = m_ResourceDataRefs.find(fnIncludeLeadingPathDelimiter(path));
+		auto found = m_ResourceDataRefs.find(path);
 		if (found != m_ResourceDataRefs.end())
 			return (*found).second;
 		return nullptr;

@@ -53,47 +53,47 @@ namespace NMR {
 	
 	CModelWriter_3MF_Native::CModelWriter_3MF_Native(_In_ PModel pModel) : CModelWriter_3MF(pModel)
 	{
-		m_pModel = nullptr;
+		m_pOtherModel = nullptr;
 	}
 
 	// These are OPC dependent functions
 	void CModelWriter_3MF_Native::createPackage(_In_ CModel * pModel)
 	{
 		__NMRASSERT(pModel != nullptr);
-		m_pModel = pModel;
+		m_pOtherModel = pModel;
 	}
 
 	void CModelWriter_3MF_Native::releasePackage()
 	{
 		m_pPackageWriter->close();
 		m_pPackageWriter = nullptr;
-		m_pModel = nullptr;
+		m_pOtherModel = nullptr;
 	}
 
 	void CModelWriter_3MF_Native::writePackageToStream(_In_ PExportStream pStream)
 	{
 		if (pStream.get() == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
-		if (m_pModel == nullptr)
+		if (m_pOtherModel == nullptr)
 			throw CNMRException(NMR_ERROR_NOMODELTOWRITE);
 
 		// Maximal progress = NrResources + NrAttachments + Build + Cleanup
-		monitor()->SetMaxProgress(m_pModel->getResourceCount() + m_pModel->getAttachmentCount() + 1 + 1);
+		monitor()->SetMaxProgress(m_pOtherModel->getResourceCount() + m_pOtherModel->getAttachmentCount() + 1 + 1);
 
 		// Write Model Stream
 		m_pPackageWriter = std::make_shared<CKeyStoreOpcPackageWriter>(pStream, this);
-		POpcPackagePart pModelPart = m_pPackageWriter->addPart(m_pModel->rootPath());
+		POpcPackagePart pModelPart = m_pPackageWriter->addPart(m_pOtherModel->rootPath());
 		PXmlWriter_Native pXMLWriter = std::make_shared<CXmlWriter_Native>(pModelPart->getExportStream());
 
 		monitor()->SetProgressIdentifier(ProgressIdentifier::PROGRESS_WRITEROOTMODEL);
 		monitor()->ReportProgressAndQueryCancelled(true);
 
-		writeModelStream(pXMLWriter.get(), m_pModel);
+		writeModelStream(pXMLWriter.get(), m_pOtherModel);
 
 		// add Root relationships
 		m_pPackageWriter->addRootRelationship(PACKAGE_START_PART_RELATIONSHIP_TYPE, pModelPart.get());
 
-		PModelAttachment pPackageThumbnail = m_pModel->getPackageThumbnail();
+		PModelAttachment pPackageThumbnail = m_pOtherModel->getPackageThumbnail();
 		if (pPackageThumbnail.get() != nullptr)
 		{
 			// create Package Thumbnail Part
@@ -116,7 +116,7 @@ namespace NMR {
 		monitor()->SetProgressIdentifier(ProgressIdentifier::PROGRESS_WRITEATTACHMENTS);
 		monitor()->ReportProgressAndQueryCancelled(true);
 
-		addAttachments(m_pModel, pModelPart);
+		addAttachments(m_pOtherModel, pModelPart);
 
 		monitor()->SetProgressIdentifier(ProgressIdentifier::PROGRESS_WRITECONTENTTYPES);
 		monitor()->ReportProgressAndQueryCancelled(true);
@@ -129,11 +129,11 @@ namespace NMR {
 		m_pPackageWriter->addContentType(PACKAGE_3D_JPEG_EXTENSION, PACKAGE_JPG_CONTENT_TYPE);
 		m_pPackageWriter->addContentType(PACKAGE_3D_JPG_EXTENSION, PACKAGE_JPG_CONTENT_TYPE);
 
-		std::map<std::string, std::string> CustomContentTypes = m_pModel->getCustomContentTypes();
+		std::map<std::string, std::string> CustomContentTypes = m_pOtherModel->getCustomContentTypes();
 		std::map<std::string, std::string>::iterator iContentTypeIterator;
 
 		for (iContentTypeIterator = CustomContentTypes.begin(); iContentTypeIterator != CustomContentTypes.end(); iContentTypeIterator++) {
-			if (!m_pModel->contentTypeIsDefault(iContentTypeIterator->first)) {
+			if (!m_pOtherModel->contentTypeIsDefault(iContentTypeIterator->first)) {
 				m_pPackageWriter->addContentType(iContentTypeIterator->first, iContentTypeIterator->second);
 			}
 		}
@@ -142,7 +142,7 @@ namespace NMR {
 	void CModelWriter_3MF_Native::addNonRootModels() {
 
 		// do this based on resource-paths
-		std::vector<PPackageModelPath> vctPPaths = m_pModel->retrieveAllModelPaths();
+		std::vector<PPackageModelPath> vctPPaths = m_pOtherModel->retrieveAllModelPaths();
 		nfUint64 nCount = vctPPaths.size();
 
 		for (nfUint32 nIndex = 0; nIndex < nCount; nIndex++) {
@@ -150,10 +150,10 @@ namespace NMR {
 			monitor()->ReportProgressAndQueryCancelled(true);
 
 			std::string sNonRootModelPath = vctPPaths[nIndex]->getPath();
-			if (sNonRootModelPath == m_pModel->rootPath())
+			if (sNonRootModelPath == m_pOtherModel->rootPath())
 				continue;
 
-			m_pModel->setCurrentPath(sNonRootModelPath);
+			m_pOtherModel->setCurrentPath(sNonRootModelPath);
 			PImportStream pStream;
 			{
 				PExportStreamMemory pExportStream = std::make_shared<CExportStreamMemory>();
@@ -164,14 +164,14 @@ namespace NMR {
 			}
 			
 			// check, whether this non-root model is already in here
-			PModelAttachment pNonRootModelAttachment = m_pModel->findModelAttachment(sNonRootModelPath);
+			PModelAttachment pNonRootModelAttachment = m_pOtherModel->findModelAttachment(sNonRootModelPath);
 			if (pNonRootModelAttachment.get() != nullptr) {
 				if (pNonRootModelAttachment->getRelationShipType() != PACKAGE_START_PART_RELATIONSHIP_TYPE)
 					throw CNMRException(NMR_ERROR_DUPLICATEATTACHMENTPATH);
 				pNonRootModelAttachment->setStream(pStream);
 			}
 			else
-				pNonRootModelAttachment = m_pModel->addAttachment(sNonRootModelPath, PACKAGE_START_PART_RELATIONSHIP_TYPE, pStream);
+				pNonRootModelAttachment = m_pOtherModel->addAttachment(sNonRootModelPath, PACKAGE_START_PART_RELATIONSHIP_TYPE, pStream);
 		}
 	}
 

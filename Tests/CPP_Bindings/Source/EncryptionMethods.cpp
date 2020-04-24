@@ -100,8 +100,9 @@ namespace Lib3MF {
 		ASSERT_EQ(1, keyStore->GetResourceDataCount());
 
 		//find the target resource data and remove it from keystore
-		Lib3MF::PPackagePart part = model->FindOrCreatePackagePart("3D/3dexternal.model");
+		Lib3MF::PPackagePart part = model->FindOrCreatePackagePart("/3D/3dexternal.model");
 		auto resourceData = keyStore->FindResourceData(part.get());
+		ASSERT_NE(nullptr, resourceData);
 		keyStore->RemoveResourceData(resourceData.get());
 
 		//write model again

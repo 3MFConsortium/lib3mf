@@ -46,7 +46,7 @@ namespace NMR {
 	class CModelWriter_3MF_Native : public CModelWriter_3MF {
 	protected:
 		std::shared_ptr<IOpcPackageWriter> m_pPackageWriter;
-		CModel * m_pModel;
+		CModel * m_pOtherModel;
 
 		// These are OPC dependent functions
 		virtual void createPackage(_In_ CModel * pModel);
