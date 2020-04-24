@@ -89,8 +89,7 @@ namespace NMR {
 		else if (strcmp(XML_3MF_SECURE_CONTENT_COMPRESSION, pAttributeName) == 0) {
 			if (strcmp(XML_3MF_SECURE_CONTENT_COMPRESSION_DEFLATE, pAttributeValue) == 0) {
 				m_bCompressed = true;
-			}
-			else if (strcmp(XML_3MF_SECURE_CONTENT_COMPRESSION_NONE, pAttributeValue) == 0) {
+			} else if (strcmp(XML_3MF_SECURE_CONTENT_COMPRESSION_NONE, pAttributeValue) == 0) {
 				m_bCompressed = false;
 			} else {
 				m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREINVALIDCOMPRESSION), mrwInvalidOptionalValue);
