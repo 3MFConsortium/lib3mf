@@ -81,6 +81,10 @@ namespace NMR {
 		if (m_pSecureContext->hasDekCtx()) {
 			NMR::PKeyStoreResourceDataGroup rdg = m_pKeyStore->findResourceDataGroupByResourceDataPath(sPath);
 			if (nullptr != rdg) {
+				auto pIt = m_encryptedParts.find(pPart->getURI());
+				if (pIt != m_encryptedParts.end()) {
+					return pIt->second;
+				}
 				NMR::PKeyStoreResourceData rd = m_pKeyStore->findResourceData(sPath);
 				PKeyStoreContentEncryptionParams params = CKeyStoreFactory::makeContentEncryptionParams(rd, rdg);
 
@@ -96,7 +100,9 @@ namespace NMR {
 				else {
 					stream = decryptStream;
 				}
-				pPart->setImportStream(stream);
+				auto encryptedPart = std::make_shared<COpcPackagePart>(*pPart, stream);
+				m_encryptedParts[pPart->getURI()] = encryptedPart;
+				return encryptedPart;
 			}
 		}
 		return pPart;

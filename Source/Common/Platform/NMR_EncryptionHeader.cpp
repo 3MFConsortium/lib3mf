@@ -37,20 +37,21 @@ namespace NMR {
 			m_rgAdditionalData.resize(remainingBytes, 0);
 			from->readBuffer(m_rgAdditionalData.data(), remainingBytes, true);
 		}
-		return header.Header.Length.length;
+		m_nfHeaderSize = header.Header.Length.length;
+		return m_nfHeaderSize;
 	}
 	size_t CEncryptionHeader::writeTo(PExportStream to) {
 		uEncryptedFileHeader header = { { '%', '3', 'M', 'c', 'F', 0, 0, 0, 0, 0, 0, 0 } };
 		constexpr size_t headerSize = sizeof(header);
-		size_t totalSize = (nfUint32)(headerSize + m_rgAdditionalData.size());
-		header.Header.Length.length = (nfUint32)totalSize;
+		m_nfHeaderSize = (nfUint32)(headerSize + m_rgAdditionalData.size());
+		header.Header.Length.length = (nfUint32)m_nfHeaderSize;
 		if (!little_endian()) {
 			header.Header.Length.length = _byteswap_ulong(header.Header.Length.length);
 		}
 		to->writeBuffer(header.bytes, headerSize);
 		if (m_rgAdditionalData.size() > 0)
 			to->writeBuffer(m_rgAdditionalData.data(), m_rgAdditionalData.size());
-		return totalSize;
+		return m_nfHeaderSize;
 	}
 	std::vector<nfByte> const & CEncryptionHeader::additionalData() const {
 		return m_rgAdditionalData;

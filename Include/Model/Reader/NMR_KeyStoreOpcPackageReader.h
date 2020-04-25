@@ -34,6 +34,8 @@ NMR_KeyStoreOpcPackageReader.h defines an OPC Package reader in a portable way.
 #define NMR_KEYSTOREOPCPACKAGEREADER
 
 #include <memory>
+#include <map>
+#include <string>
 
 #include "Common/NMR_SecureContentTypes.h"
 #include "Common/OPC/NMR_IOpcPackageReader.h"
@@ -55,6 +57,7 @@ namespace NMR {
 		PSecureContext m_pSecureContext;
 		nfUint64 m_nfHandler;
 		NMR::PModelReaderWarnings m_pWarnings;
+		std::map<std::string, POpcPackagePart> m_encryptedParts;
 	protected:
 		NMR::PImportStream findKeyStoreStream();
 		void parseKeyStore(NMR::PImportStream keyStoreStream, NMR::PProgressMonitor pProgressMonitor);
