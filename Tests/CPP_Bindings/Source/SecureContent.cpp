@@ -170,6 +170,68 @@ namespace Lib3MF {
 				*outNeededSize = outSize;
 			}
 		}
+
+		void generateTestFiles(bool compressed, std::string const & fileName) {
+			std::vector<Lib3MF_uint8> buffer;
+			{
+				PModel modelToCrpt = wrapper->CreateModel();
+				modelToCrpt->SetRandomNumberCallback(notRandomBytesAtAll, nullptr);
+
+				PReader reader = modelToCrpt->QueryReader("3mf");
+				reader->ReadFromFile(sTestFilesPath + "/Production/detachedmodel.3mf");
+
+				auto meshObjIt = modelToCrpt->GetMeshObjects();
+				ASSERT_EQ(meshObjIt->Count(), 1);
+				ASSERT_TRUE(meshObjIt->MoveNext());
+				auto meshObj = meshObjIt->GetCurrentMeshObject();
+				ASSERT_NE(nullptr, meshObj);
+				auto part = meshObj->PackagePart();
+				ASSERT_NE(nullptr, meshObj);
+				auto keyStore = modelToCrpt->GetKeyStore();
+				auto consumer = keyStore->AddConsumer("LIB3MF#TEST", "contentKey", publicKey);
+				auto rdGroup = keyStore->AddResourceDataGroup();
+				rdGroup->AddAccessRight(consumer.get(),
+					eWrappingAlgorithm::RSA_OAEP,
+					eMgfAlgorithm::MGF1_SHA1,
+					eDigestMethod::SHA1);
+
+				std::vector<Lib3MF_uint8> aad = { 'l', 'i', 'b', '3', 'm', 'f', 's', 'a', 'm', 'p', 'l', 'e' };
+				auto rd = keyStore->AddResourceData(rdGroup.get(), part.get(),
+					eEncryptionAlgorithm::AES256_GCM, (compressed ? eCompression::Deflate : eCompression::None), aad);
+
+				PWriter writer = modelToCrpt->QueryWriter("3mf");
+				DEKCallbackData contentData;
+				writer->SetContentEncryptionCallback(testDEKCallback, (Lib3MF_pvoid)&contentData);
+
+				KEKCallbackData wrappingData;
+				wrappingData.value = 1;
+				wrappingData.consumerId = "LIB3MF#TEST";
+				wrappingData.keyId = "contentKey";
+				writer->AddKeyWrappingCallback(wrappingData.consumerId, testKEKCallback, (Lib3MF_pvoid)&wrappingData);
+
+				writer->WriteToBuffer(buffer);
+				//WriteBufferToFile(buffer, sOutFilesPath + "/SecureContent/" + fileName);
+			}
+			{
+				PModel encryptedModel = wrapper->CreateModel();
+				PReader reader = encryptedModel->QueryReader("3mf");
+				DEKCallbackData dekData;
+				reader->SetContentEncryptionCallback(testDEKCallback, (Lib3MF_pvoid)&dekData);
+
+				KEKCallbackData kekData;
+				kekData.value = 1;
+				kekData.consumerId = "LIB3MF#TEST";
+				kekData.keyId = "contentKey";
+				reader->AddKeyWrappingCallback(kekData.consumerId, testKEKCallback, (Lib3MF_pvoid)&kekData);
+
+				reader->ReadFromBuffer(buffer);
+
+				auto meshObjIt = encryptedModel->GetMeshObjects();
+				ASSERT_EQ(meshObjIt->Count(), 1);
+				auto objCount = encryptedModel->GetObjects();
+				ASSERT_EQ(objCount->Count(), 28);
+			}
+		}
 	};
 	PWrapper SecureContentT::wrapper;
 
@@ -426,9 +488,8 @@ namespace Lib3MF {
 			PConsumer consumerFound = keyStore->FindConsumer(consumer->GetConsumerID());
 			ASSERT_EQ(consumer->GetConsumerID(), consumerFound->GetConsumerID());
 
-			std::string expected = "-----BEGIN PUBLIC KEY-----\r\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAw53q4y2KB2WcoOBUE9OE\r\nXI0OCzUf4SI1J6fDx6XeDJ8PzqxN4pPRtXgtKfp/RiSL0invf7ASfkBMcXuhD8XP\r\n0uki3JIzvsxTH+Jnnz/PrYnS9DFa6c9MYciTIV8vC4u03vkZH6OuGq4rWeSZuNCT\r\nCgT59q67Ly6OytNsQgsDHL2QO8xhpYdQ4bx7F0uNn5LAxFyA0ymsFsgSSLONJWza\r\nVtsq9jvkIOEdTzYq52PAXMUIpegbyqSheNlmedcss8teqiZGnCOxpBxL3z+ogcFe\r\nnX1S8kq2UhzOjXLEjPs9B0SchwXSadephL89shJwra+30NS3R3frwfCz+a3H6wTV\r\nBwIDAQAB\r\n-----END PUBLIC KEY-----";
 			std::string keyValue = consumer->GetKeyValue();
-			ASSERT_EQ(expected, keyValue);
+			ASSERT_EQ(publicKey, keyValue);
 
 		}
 	}
@@ -552,64 +613,7 @@ namespace Lib3MF {
 	}
 
 	TEST_F(SecureContentT, MakeExistingModelEncrypted) {
-		std::vector<Lib3MF_uint8> buffer;
-		{
-			PModel modelToCrpt = wrapper->CreateModel();
-			modelToCrpt->SetRandomNumberCallback(notRandomBytesAtAll, nullptr);
-
-			PReader reader = modelToCrpt->QueryReader("3mf");
-			reader->ReadFromFile(sTestFilesPath + "/Production/detachedmodel.3mf");
-
-			auto meshObjIt = modelToCrpt->GetMeshObjects();
-			ASSERT_EQ(meshObjIt->Count(), 1);
-			ASSERT_TRUE(meshObjIt->MoveNext());
-			auto meshObj = meshObjIt->GetCurrentMeshObject();
-			ASSERT_NE(nullptr, meshObj);
-			auto part = meshObj->PackagePart();
-			ASSERT_NE(nullptr, meshObj);
-			auto keyStore = modelToCrpt->GetKeyStore();
-			auto consumer = keyStore->AddConsumer("LIB3MF#TEST", "contentKey", publicKey);
-			auto rdGroup = keyStore->AddResourceDataGroup();
-			rdGroup->AddAccessRight(consumer.get(),
-				eWrappingAlgorithm::RSA_OAEP,
-				eMgfAlgorithm::MGF1_SHA1,
-				eDigestMethod::SHA1);
-
-			std::vector<Lib3MF_uint8> aad = { 'l', 'i', 'b', '3', 'm', 'f', 's', 'a', 'm', 'p', 'l', 'e' };
-			auto rd = keyStore->AddResourceData(rdGroup.get(), part.get(),
-				eEncryptionAlgorithm::AES256_GCM, eCompression::Deflate, aad);
-
-			PWriter writer = modelToCrpt->QueryWriter("3mf");
-			DEKCallbackData contentData;
-			writer->SetContentEncryptionCallback(testDEKCallback, (Lib3MF_pvoid)&contentData);
-
-			KEKCallbackData wrappingData;
-			wrappingData.value = 1;
-			wrappingData.consumerId = "LIB3MF#TEST";
-			wrappingData.keyId = "contentKey";
-			writer->AddKeyWrappingCallback(wrappingData.consumerId, testKEKCallback, (Lib3MF_pvoid)&wrappingData);
-
-			writer->WriteToBuffer(buffer);
-			WriteBufferToFile(buffer, sOutFilesPath + "/SecureContent/keystore_compressed.3mf");
-		}
-		{
-			PModel encryptedModel = wrapper->CreateModel();
-			PReader reader = encryptedModel->QueryReader("3mf");
-			DEKCallbackData dekData;
-			reader->SetContentEncryptionCallback(testDEKCallback, (Lib3MF_pvoid)&dekData);
-
-			KEKCallbackData kekData;
-			kekData.value = 1;
-			kekData.consumerId = "LIB3MF#TEST";
-			kekData.keyId = "contentKey";
-			reader->AddKeyWrappingCallback(kekData.consumerId, testKEKCallback, (Lib3MF_pvoid)&kekData);
-
-			reader->ReadFromBuffer(buffer);
-
-			auto meshObjIt = encryptedModel->GetMeshObjects();
-			ASSERT_EQ(meshObjIt->Count(), 1);
-			auto objCount = encryptedModel->GetObjects();
-			ASSERT_EQ(objCount->Count(), 28);
-		}
+		generateTestFiles(false, "keystore.3mf");
+		generateTestFiles(true, "keystore_compressed.3mf");
 	}
 }
