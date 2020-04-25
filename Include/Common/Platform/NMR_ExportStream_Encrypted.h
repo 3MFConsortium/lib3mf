@@ -38,8 +38,7 @@ to the proper callbacks that will decrypt the content before returning back to t
 #include "Common/NMR_Types.h"
 #include "Common/NMR_SecureContentTypes.h"
 #include "Common/Platform/NMR_ExportStream.h"
-
-#include <functional>
+#include "Common/Platform/NMR_EncryptionHeader.h"
 
 namespace NMR {
 
@@ -48,6 +47,7 @@ namespace NMR {
 	class CExportStream_Encrypted : public CExportStream {
 		PExportStream m_pEncryptedStream;
 		ContentEncryptionDescriptor m_pDecryptContext;
+		CEncryptionHeader m_header;
 	public:
 		CExportStream_Encrypted(PExportStream pEncryptedStream, ContentEncryptionDescriptor context);
 

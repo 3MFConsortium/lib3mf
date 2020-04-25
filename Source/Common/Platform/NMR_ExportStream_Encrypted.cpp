@@ -7,11 +7,12 @@ namespace NMR {
 	{
 		if (nullptr == pEncryptedStream)
 			throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+		m_header.writeTo(m_pEncryptedStream);
 	}
 
 	nfBool CExportStream_Encrypted::seekPosition(nfUint64 position, nfBool bHasToSucceed)
 	{
-		return m_pEncryptedStream->seekPosition(position, bHasToSucceed);
+		return m_pEncryptedStream->seekPosition(position + m_header.headerSize(), bHasToSucceed);
 	}
 
 	nfBool CExportStream_Encrypted::seekForward(nfUint64 bytes, nfBool bHasToSucceed)
@@ -21,12 +22,17 @@ namespace NMR {
 
 	nfBool CExportStream_Encrypted::seekFromEnd(nfUint64 bytes, nfBool bHasToSucceed)
 	{
-		return m_pEncryptedStream->seekFromEnd(bytes, bHasToSucceed);
+		if (m_pEncryptedStream->getPosition() + m_header.headerSize() >= bytes) {
+			return m_pEncryptedStream->seekFromEnd(bytes, bHasToSucceed);
+		} else if (bHasToSucceed) {
+			throw CNMRException(NMR_ERROR_COULDNOTSEEKSTREAM);
+		}
+		return false;
 	}
 
 	nfUint64 CExportStream_Encrypted::getPosition()
 	{
-		return m_pEncryptedStream->getPosition();
+		return m_pEncryptedStream->getPosition() - m_header.headerSize();
 	}
 
 	nfUint64 CExportStream_Encrypted::writeBuffer(const void * pBuffer, nfUint64 cbTotalBytesToWrite)

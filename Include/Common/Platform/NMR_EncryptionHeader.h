@@ -2,32 +2,40 @@
 #define NMR_ENCRYPTIONHEADER
 
 #include <vector>
+#include <memory>
 #include "Common/NMR_Types.h"
-#include "Common/Platform/NMR_ImportStream.h"
-#include "Common/Platform/NMR_ExportStream.h"
 namespace NMR {
+	class CImportStream;
+	using PImportStream = std::shared_ptr<CImportStream>;
+	class CExportStream;
+	using PExportStream = std::shared_ptr<CExportStream>;
 
 	union uEncryptedFileHeader {
 		nfByte bytes[12];
 		struct sHeaderStructure {
 			union uMagic {
 				nfByte bytes[5];
-				char * string;
 			} Signature;
 			nfByte majorVersion;
 			nfByte minorVersion;
 			nfByte unused;
 			union uLength {
-				nfUint32 length;
 				nfByte bytes[4];
+				nfUint32 length;
 			} Length;
 		} Header;
 	};
 
 	class CEncryptionHeader {
+		std::vector<nfByte> m_rgAdditionalData;
+		nfUint64 m_nfHeaderSize;
 	public:
-		std::vector<nfByte> readFrom(PImportStream from);
-		void writeTo(PExportStream to, std::vector<nfByte> const & additionalData);
+		CEncryptionHeader(std::vector<nfByte> const & additionalData = std::vector<nfByte>());
+		size_t readFrom(PImportStream from);
+		size_t writeTo(PExportStream to);
+
+		std::vector<nfByte> const & additionalData() const;
+		nfUint64 headerSize() const;
 	};
 }
 

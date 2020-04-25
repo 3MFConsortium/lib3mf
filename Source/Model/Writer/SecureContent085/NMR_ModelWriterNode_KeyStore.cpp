@@ -85,7 +85,7 @@ void NMR::CModelWriterNode_KeyStore::writeEncryptionAlgorithmAttribute(eKeyStore
 
 void NMR::CModelWriterNode_KeyStore::writeWrapAlgorithmAttribute(eKeyStoreWrapAlgorithm ea) {
 	if (ea == eKeyStoreWrapAlgorithm::RSA_OAEP) {
-		writeConstStringAttribute(XML_3MF_SECURE_CONTENT_WRAPPINGALGORITHM, XML_3MF_SECURE_CONTENT_KEYWRAPPING_RSA);
+		writeConstStringAttribute(XML_3MF_SECURE_CONTENT_WRAPPINGALGORITHM, XML_3MF_SECURE_CONTENT_KEYWRAPPING_RSASHORT);
 	}
 }
 
@@ -176,7 +176,7 @@ void NMR::CModelWriterNode_KeyStore::writeAccessRight(PKeyStoreAccessRight const
 	// digestmethod - attribute
 	writeDigest(ar->getDigest());
 	//</kekparams>
-	writeFullEndElement();
+	writeEndElement();
 
 	// <cipherdata>
 	writeStartElement(XML_3MF_ELEMENT_CIPHERDATA);

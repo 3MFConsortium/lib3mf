@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
-	<Relationship Target="/3D/3dmodel.model" Id="rel0" Type="http://schemas.microsoft.com/3dmanufacturing/2013/01/3dmodel" />
-	<Relationship Target="/Secure/keystore.xml" Id="rel10" Type="http://schemas.microsoft.com/3dmanufacturing/2019/04/keystore"/>
-	<Relationship Target="/Secure/keystore.xml" Id="rel11" Type="http://schemas.openxmlformats.org/package/2006/relationships/mustpreserve"/>
-</Relationships>

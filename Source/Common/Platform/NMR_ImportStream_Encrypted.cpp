@@ -39,10 +39,11 @@ namespace NMR {
 	{
 		if (nullptr == pEncryptedStream)
 			throw CNMRException(NMR_ERROR_INVALIDPOINTER);
+		m_header.readFrom(pEncryptedStream);
 	}
 
 	nfBool CImportStream_Encrypted::seekPosition(nfUint64 position, nfBool bHasToSucceed) {
-		return m_pEncryptedStream->seekPosition(position, bHasToSucceed);
+		return m_pEncryptedStream->seekPosition(position + m_header.headerSize(), bHasToSucceed);
 	}
 
 	nfBool CImportStream_Encrypted::seekForward(nfUint64 bytes, nfBool bHasToSucceed) {
@@ -50,7 +51,12 @@ namespace NMR {
 	}
 
 	nfBool CImportStream_Encrypted::seekFromEnd(nfUint64 bytes, nfBool bHasToSucceed) {
-		return m_pEncryptedStream->seekFromEnd(bytes, bHasToSucceed);
+		if (m_pEncryptedStream->getPosition() + m_header.headerSize() >= bytes) {
+			return m_pEncryptedStream->seekFromEnd(bytes, bHasToSucceed);
+		} else if (bHasToSucceed) {
+			throw CNMRException(NMR_ERROR_COULDNOTSEEKSTREAM);
+		}
+		return false;
 	}
 
 	nfUint64 CImportStream_Encrypted::readBuffer(nfByte * pBuffer, nfUint64 cbTotalBytesToRead, nfBool bNeedsToReadAll) {
@@ -65,7 +71,7 @@ namespace NMR {
 	}
 
 	nfUint64 CImportStream_Encrypted::retrieveSize() {
-		return m_pEncryptedStream->retrieveSize();
+		return m_pEncryptedStream->retrieveSize() - m_header.headerSize();
 	}
 
 	void CImportStream_Encrypted::writeToFile(const nfWChar * pwszFileName) {
@@ -78,7 +84,7 @@ namespace NMR {
 	}
 
 	nfUint64 CImportStream_Encrypted::getPosition() {
-		return m_pEncryptedStream->getPosition();
+		return m_pEncryptedStream->getPosition() - m_header.headerSize();
 	}
 
 
