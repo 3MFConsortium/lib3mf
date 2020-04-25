@@ -7,13 +7,9 @@
 #include "Common/Platform/NMR_ImportStream.h"
 #include "Common/Platform/NMR_ExportStream.h"
 
-
+#include "Common/NMR_Architecture_Utils.h"
 
 namespace NMR {
-	bool little_endian() {
-		int n = 1;
-		return (*(char *)&n == 1);
-	}
 
 	CEncryptionHeader::CEncryptionHeader(std::vector<nfByte> const & additionalData)
 		:m_rgAdditionalData(additionalData)
@@ -23,8 +19,8 @@ namespace NMR {
 	size_t CEncryptionHeader::readFrom(PImportStream from) {
 		uEncryptedFileHeader header = { { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } };
 		from->readBuffer(header.bytes, sizeof(header), true);
-		if (!little_endian()) {
-			header.Header.Length.length = _byteswap_ulong(header.Header.Length.length);
+		if (isBigEndian()) {
+			header.Header.Length.length = swapBytes(header.Header.Length.length);
 		}
 		constexpr size_t sigSize = sizeof(header.Header.Signature.bytes);
 		if (strncmp((char *)header.Header.Signature.bytes, "%3McF", sigSize) != 0)
@@ -45,8 +41,8 @@ namespace NMR {
 		constexpr size_t headerSize = sizeof(header);
 		m_nfHeaderSize = (nfUint32)(headerSize + m_rgAdditionalData.size());
 		header.Header.Length.length = (nfUint32)m_nfHeaderSize;
-		if (!little_endian()) {
-			header.Header.Length.length = _byteswap_ulong(header.Header.Length.length);
+		if (isBigEndian()) {
+			header.Header.Length.length = swapBytes(header.Header.Length.length);
 		}
 		to->writeBuffer(header.bytes, headerSize);
 		if (m_rgAdditionalData.size() > 0)
