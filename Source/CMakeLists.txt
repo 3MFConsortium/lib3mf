@@ -97,6 +97,7 @@ Source/Common/OPC/NMR_OpcPackageContentTypesReader.cpp
 Source/Common/OPC/NMR_OpcPackageRelationshipReader.cpp
 Source/Common/OPC/NMR_OpcPackageWriter.cpp
 Source/Common/Platform/NMR_XmlReader_Native.cpp
+Source/Common/Platform/NMR_EncryptionHeader.cpp
 Source/Common/Platform/NMR_ExportStream.cpp
 Source/Common/Platform/NMR_ExportStream_Callback.cpp
 Source/Common/Platform/NMR_ExportStream_Compressed.cpp
