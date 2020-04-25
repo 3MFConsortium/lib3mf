@@ -56,6 +56,7 @@ namespace NMR {
 	public:
 		COpcPackagePart(_In_ std::string sURI, _In_ PExportStream pExportStream);
 		COpcPackagePart(_In_ std::string sURI, _In_ PImportStream pImportStream);
+		COpcPackagePart(_In_ COpcPackagePart const & cp, _In_ PExportStream pExportStream);
 		COpcPackagePart(_In_ COpcPackagePart const & cp, _In_ PImportStream pImportStream);
 
 		std::string getURI ();
@@ -67,9 +68,6 @@ namespace NMR {
 		std::multimap<std::string, POpcPackageRelationship>& getRelationShips();
 
 		void writeRelationships(_In_ PExportStream pExportStream);
-
-		void setImportStream(_In_ PImportStream pImportStream);
-		void setExportStream(_In_ PExportStream pExportStream);
 	};
 
 	typedef std::shared_ptr<COpcPackagePart> POpcPackagePart;

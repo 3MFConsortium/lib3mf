@@ -60,6 +60,14 @@ namespace NMR {
 		m_pImportStream = pImportStream;
 	}
 
+	COpcPackagePart::COpcPackagePart(COpcPackagePart const & cp, PExportStream pExportStream) {
+		if (pExportStream.get() == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+		m_sURI = cp.m_sURI;
+		m_Relationships = cp.m_Relationships;
+		m_pExportStream = pExportStream;
+	}
+
 	COpcPackagePart::COpcPackagePart(COpcPackagePart const & cp, PImportStream pImportStream) {
 		if (pImportStream.get() == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
@@ -140,12 +148,4 @@ namespace NMR {
 		pXMLWriter->WriteFullEndElement();
 		pXMLWriter->WriteEndDocument();
 	}
-
-	void COpcPackagePart::setImportStream(_In_ PImportStream pImportStream) {
-		m_pImportStream = pImportStream;
-	}
-	void COpcPackagePart::setExportStream(_In_ PExportStream pExportStream) {
-		m_pExportStream = pExportStream;
-	}
-
 }

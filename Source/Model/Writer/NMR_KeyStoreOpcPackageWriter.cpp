@@ -89,7 +89,7 @@ namespace NMR {
 		}
 	}
 
-	void CKeyStoreOpcPackageWriter::wrapPartStream(PKeyStoreResourceData rd, POpcPackagePart part) {
+	POpcPackagePart CKeyStoreOpcPackageWriter::wrapPartStream(PKeyStoreResourceData rd, POpcPackagePart part) {
 		PSecureContext secureContext = m_pContext->getSecureContext();
 		ContentEncryptionDescriptor p = secureContext->getDekCtx();
 		PKeyStoreResourceDataGroup rdg = m_pContext->getKeyStore()->findResourceDataGroupByResourceDataPath(rd->getPath());
@@ -103,7 +103,7 @@ namespace NMR {
 		} else {
 			stream = encryptStream;
 		}
-		part->setExportStream(stream);
+		return std::make_shared<COpcPackagePart>(*part, stream);
 	}
 
 	void CKeyStoreOpcPackageWriter::refreshResourceDataTag(PKeyStoreResourceData rd) {
@@ -140,7 +140,7 @@ namespace NMR {
 		NMR::PKeyStoreResourceData rd = keyStore->findResourceData(sPath);
 		if (nullptr != rd) {
 			if (secureContext->hasDekCtx()) {
-				wrapPartStream(rd, pPart);
+				return wrapPartStream(rd, pPart);
 			} else {
 				throw CNMRException(NMR_ERROR_DEKDESCRIPTORNOTFOUND);
 			}

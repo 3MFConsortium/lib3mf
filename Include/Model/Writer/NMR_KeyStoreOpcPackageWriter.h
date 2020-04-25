@@ -55,7 +55,7 @@ namespace NMR {
 
 		void writeKeyStoreStream(_In_ CXmlWriter * pXMLWriter);
 		void refreshAllResourceDataGroups();
-		void wrapPartStream(PKeyStoreResourceData rd, POpcPackagePart part);
+		POpcPackagePart wrapPartStream(PKeyStoreResourceData rd, POpcPackagePart part);
 		void refreshResourceDataTag(PKeyStoreResourceData rd);
 		void refreshAccessRight(PKeyStoreAccessRight ar, std::vector<nfByte> const & key);
 	public:
