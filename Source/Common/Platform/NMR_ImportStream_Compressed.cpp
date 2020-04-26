@@ -92,7 +92,7 @@ namespace NMR {
 
 		m_strm.avail_out = (nfUint32) cbTotalBytesToRead;
 		m_strm.next_out = pBuffer;
-		nfUint32 ret = inflate(&m_strm, Z_NO_FLUSH);
+		nfInt32 ret = inflate(&m_strm, Z_NO_FLUSH);
 		switch (ret) {
 		case Z_NEED_DICT:
 		case Z_DATA_ERROR:
