@@ -33,6 +33,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <memory>
 
 #include "Common/NMR_Types.h"
+#include "Common/NMR_Local.h"
 #include "Common/3MF_ProgressTypes.h"
 
 namespace NMR {
