@@ -22,6 +22,12 @@ namespace Lib3MF {
 			publicKey = std::string(pubKey.begin(), pubKey.end());
 			model = wrapper->CreateModel();
 		}
+
+		virtual ~EncryptionMethods() {
+			//attempt to solve leaks
+			EncryptionCallbacks::cleanup();
+		}
+
 		static PWrapper wrapper;
 
 		static void SetUpTestCase() {

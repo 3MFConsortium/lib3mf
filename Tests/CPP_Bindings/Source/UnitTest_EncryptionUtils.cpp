@@ -112,19 +112,25 @@ namespace RsaMethods {
 
 	size_t decrypt(EVP_PKEY * evpKey, size_t cipherSize, uint8_t const * cipher, uint8_t * plain) {
 		RSA * rsa = EVP_PKEY_get1_RSA(evpKey);
-		size_t result = RSA_private_decrypt((int)cipherSize, cipher, plain, rsa, RSA_PKCS1_OAEP_PADDING);
-		if (-1 == result)
+		int result = RSA_private_decrypt((int)cipherSize, cipher, plain, rsa, RSA_PKCS1_OAEP_PADDING);
+		if (result < 0)
 			throw std::runtime_error("unable to decrypt");
 		return result;
 	}
 
 	size_t encrypt(EVP_PKEY * evpKey, size_t plainSize, uint8_t const * plain, uint8_t * cipher) {
 		RSA * rsa = EVP_PKEY_get1_RSA(evpKey);
-		size_t result = RSA_public_encrypt((int)plainSize, plain, cipher, rsa, RSA_PKCS1_OAEP_PADDING);
-		if (-1 == result)
+		int result = RSA_public_encrypt((int)plainSize, plain, cipher, rsa, RSA_PKCS1_OAEP_PADDING);
+		if (result < 0)
 			throw std::runtime_error("unable do encrypt");
 		return result;
 	}
+}
+
+void EncryptionCallbacks::cleanup() {
+	RAND_cleanup();
+	EVP_cleanup();
+	CRYPTO_cleanup_all_ex_data();
 }
 
 void EncryptionCallbacks::dataEncryptClientCallback(

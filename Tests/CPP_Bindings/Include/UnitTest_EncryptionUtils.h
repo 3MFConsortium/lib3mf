@@ -95,6 +95,8 @@ namespace RsaMethods {
 
 struct EncryptionCallbacks {
 
+	static void cleanup();
+
 	/**
 	* ContentEncryptionCallback - A callback to encrypt/decrypt content called on each resource encrypted. This might be called several times depending on content size. If cipher size is zero, clients must return the result of authenticated tag validation
 	*
