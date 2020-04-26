@@ -47,6 +47,7 @@ using PEVP_ENCODE_CTX = std::unique_ptr<EVP_ENCODE_CTX, decltype(&::EVP_ENCODE_C
 using PBIO = std::unique_ptr<BIO, decltype(&::BIO_free)>;
 using PEVP_CIPHER_CTX = std::shared_ptr<EVP_CIPHER_CTX>;
 using PEVP_PKEY = std::unique_ptr<EVP_PKEY, decltype(&::EVP_PKEY_free)>;
+using PRSA = std::unique_ptr<RSA, decltype(&::RSA_free)>;
 
 struct KekContext {
 	EVP_PKEY * key;

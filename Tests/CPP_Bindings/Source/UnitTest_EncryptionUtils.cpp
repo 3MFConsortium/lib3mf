@@ -105,22 +105,22 @@ namespace RsaMethods {
 	}
 
 	size_t getSize(EVP_PKEY * evpKey) {
-		RSA * rsa = EVP_PKEY_get1_RSA(evpKey);
-		size_t rsaSize = RSA_size(rsa);
+		PRSA rsa(EVP_PKEY_get1_RSA(evpKey), ::RSA_free);
+		size_t rsaSize = RSA_size(rsa.get());
 		return rsaSize;
 	}
 
 	size_t decrypt(EVP_PKEY * evpKey, size_t cipherSize, uint8_t const * cipher, uint8_t * plain) {
-		RSA * rsa = EVP_PKEY_get1_RSA(evpKey);
-		int result = RSA_private_decrypt((int)cipherSize, cipher, plain, rsa, RSA_PKCS1_OAEP_PADDING);
+		PRSA rsa(EVP_PKEY_get1_RSA(evpKey), ::RSA_free);
+		int result = RSA_private_decrypt((int)cipherSize, cipher, plain, rsa.get(), RSA_PKCS1_OAEP_PADDING);
 		if (result < 0)
 			throw std::runtime_error("unable to decrypt");
 		return result;
 	}
 
 	size_t encrypt(EVP_PKEY * evpKey, size_t plainSize, uint8_t const * plain, uint8_t * cipher) {
-		RSA * rsa = EVP_PKEY_get1_RSA(evpKey);
-		int result = RSA_public_encrypt((int)plainSize, plain, cipher, rsa, RSA_PKCS1_OAEP_PADDING);
+		PRSA rsa(EVP_PKEY_get1_RSA(evpKey), ::RSA_free);
+		int result = RSA_public_encrypt((int)plainSize, plain, cipher, rsa.get(), RSA_PKCS1_OAEP_PADDING);
 		if (result < 0)
 			throw std::runtime_error("unable do encrypt");
 		return result;
