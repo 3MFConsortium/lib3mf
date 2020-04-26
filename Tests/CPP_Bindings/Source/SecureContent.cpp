@@ -1,6 +1,9 @@
 #include "UnitTest_Utilities.h"
 #include "lib3mf_implicit.hpp"
 
+#include <algorithm>
+#include <cctype>
+
 namespace Lib3MF {
 
 	class SecureContentT : public ::testing::Test {
@@ -489,7 +492,12 @@ namespace Lib3MF {
 			ASSERT_EQ(consumer->GetConsumerID(), consumerFound->GetConsumerID());
 
 			std::string keyValue = consumer->GetKeyValue();
-			ASSERT_EQ(publicKey, keyValue);
+			keyValue.erase(std::remove_if(keyValue.begin(), keyValue.end(), ::isspace), keyValue.end());
+			std::string expected = publicKey;
+			expected.erase(std::remove_if(expected.begin(), expected.end(), ::isspace), expected.end());
+
+
+			ASSERT_EQ(expected, keyValue);
 
 		}
 	}
