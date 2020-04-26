@@ -1,4 +1,4 @@
-#include "..\..\..\Include\Model\Writer\NMR_ModelWriterNode_KeyStoreBase.h"
+#include "Model/Writer/NMR_ModelWriterNode_KeyStoreBase.h"
 /*++
 
 Copyright (C) 2019 3MF Consortium

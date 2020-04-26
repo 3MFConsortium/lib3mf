@@ -36,14 +36,14 @@ NMR_ModelReaderNode_KeyStoreKeyValue.h defines the Model Reader Node class that 
 #include "Model/Reader/NMR_ModelReaderNode_KeyStoreBase.h"
 #include "Model/Reader/NMR_ModelReaderNode.h"
 #include "Model/Classes/NMR_KeyStore.h"
-
+#include "Common/NMR_Local.h"
 namespace NMR {
 
 	class CModelReaderNode_StringValue: public CModelReaderNode {
 	private:
 		std::string m_sKeyValue;
 	protected:
-		void CModelReaderNode_StringValue::OnText(_In_z_ const nfChar * pText, _In_ CXmlReader * pXMLReader);
+		void OnText(_In_z_ const nfChar * pText, _In_ CXmlReader * pXMLReader);
 	public:
 		CModelReaderNode_StringValue() = delete;
 		using CModelReaderNode::CModelReaderNode;

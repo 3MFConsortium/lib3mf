@@ -107,6 +107,8 @@ Lib3MF_uint64 CWriter::GetStreamSize ()
 	return pStream->getDataSize();
 }
 
+#include <cstring>
+
 void CWriter::WriteToBuffer(Lib3MF_uint64 nBufferBufferSize, Lib3MF_uint64* pBufferNeededCount, Lib3MF_uint8 * pBufferBuffer)
 {
 	NMR::PExportStreamMemory pStream;
@@ -132,7 +134,7 @@ void CWriter::WriteToBuffer(Lib3MF_uint64 nBufferBufferSize, Lib3MF_uint64* pBuf
 
 	if (nBufferBufferSize >= cbStreamSize) {
 		// TODO eliminate this copy, perhaps by allowing CExportStreamMemory to use existing buffers
-		std::memcpy(pBufferBuffer, pStream->getData(), static_cast<size_t>(cbStreamSize));
+		memcpy(pBufferBuffer, pStream->getData(), static_cast<size_t>(cbStreamSize));
 		momentBuffer.reset();
 	} else {
 		momentBuffer = pStream;

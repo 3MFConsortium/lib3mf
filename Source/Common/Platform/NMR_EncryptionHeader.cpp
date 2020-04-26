@@ -8,7 +8,7 @@
 #include "Common/Platform/NMR_ExportStream.h"
 
 #include "Common/NMR_Architecture_Utils.h"
-
+#include <cstring>
 namespace NMR {
 
 	CEncryptionHeader::CEncryptionHeader(std::vector<nfByte> const & additionalData)

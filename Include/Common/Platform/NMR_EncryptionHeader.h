@@ -4,6 +4,8 @@
 #include <vector>
 #include <memory>
 #include "Common/NMR_Types.h"
+#include "Common/NMR_Local.h"
+
 namespace NMR {
 	class CImportStream;
 	using PImportStream = std::shared_ptr<CImportStream>;
