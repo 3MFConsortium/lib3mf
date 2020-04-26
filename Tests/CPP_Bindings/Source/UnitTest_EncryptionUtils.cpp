@@ -174,8 +174,9 @@ void EncryptionCallbacks::dataEncryptClientCallback(
 			} else {
 				*cipherNeeded = tag.size();
 				p.SetAuthenticationTag(tag);
-				dek->ciphers.erase(it);
 			}
+			dek->ciphers.erase(it);
+			ctx.reset();
 		} else if (0 == cipherSize || nullptr == cipherBuffer) {
 			*cipherNeeded = plainSize;
 		} else {
@@ -250,8 +251,9 @@ void EncryptionCallbacks::dataDecryptClientCallback(
 				*plainNeeded = 0;
 			} else {
 				*plainNeeded = tag.size();
-				dek->ciphers.erase(it);
 			}
+			dek->ciphers.erase(it);
+			ctx.reset();
 		} else if (0 == plainSize || nullptr == plainBuffer) {
 			*plainNeeded = cipherSize;
 		} else {
