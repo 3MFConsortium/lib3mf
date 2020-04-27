@@ -61,6 +61,7 @@ misrepresented as being the original software.
 Jean-loup Gailly        Mark Adler
 jloup@gzip.org          madler@alumni.caltech.edu
 
+
 cpp-base64 1.01.00
 https://github.com/ReneNyffenegger/cpp-base64/blob/master/LICENSE
 Copyright © 2004-2017 by René Nyffenegger
