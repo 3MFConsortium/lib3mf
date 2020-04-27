@@ -140,7 +140,8 @@ void EncryptionCallbacks::dataEncryptClientCallback(
 	const Lib3MF_uint64 cipherSize,
 	Lib3MF_uint64 * cipherNeeded,
 	Lib3MF_uint8 * cipherBuffer,
-	Lib3MF_pvoid userData) {
+	Lib3MF_pvoid userData,
+	Lib3MF_uint64 * status) {
 
 	DekContext * dek = (DekContext *)userData;
 
@@ -149,7 +150,7 @@ void EncryptionCallbacks::dataEncryptClientCallback(
 
 
 	if (Lib3MF::eEncryptionAlgorithm::AES256_GCM != p.GetEncryptionAlgorithm())
-		*cipherNeeded = 0;
+		*status = 0;
 	else {
 		PEVP_CIPHER_CTX ctx;
 
@@ -170,18 +171,19 @@ void EncryptionCallbacks::dataEncryptClientCallback(
 			ByteVector tag(16, 0);
 
 			if (!AesMethods::Encrypt::finish(ctx, cipherBuffer, (Lib3MF_uint32)tag.size(), tag.data())) {
-				*cipherNeeded = 0;
+				*status = 0;
 			} else {
-				*cipherNeeded = tag.size();
+				*status = tag.size();
 				p.SetAuthenticationTag(tag);
 			}
 			dek->ciphers.erase(it);
 			ctx.reset();
 		} else if (0 == cipherSize || nullptr == cipherBuffer) {
 			*cipherNeeded = plainSize;
+			*status = plainSize;
 		} else {
 			size_t encrypted = AesMethods::Encrypt::encrypt(ctx, (Lib3MF_uint32)plainSize, plainBuffer, cipherBuffer);
-			*cipherNeeded = encrypted;
+			*status = encrypted;
 		}
 	}
 }
@@ -193,7 +195,8 @@ void EncryptionCallbacks::keyEncryptClientCallback(
 	const Lib3MF_uint64 cipherSize,
 	Lib3MF_uint64* cipherNeeded,
 	Lib3MF_uint8 * cipherBuffer,
-	Lib3MF_pvoid userData) {
+	Lib3MF_pvoid userData,
+	Lib3MF_uint64 * status) {
 
 	KekContext const * context = (KekContext const *)userData;
 	Lib3MF::CAccessRight ar(context->wrapper, accessRight);
@@ -202,12 +205,13 @@ void EncryptionCallbacks::keyEncryptClientCallback(
 	if (Lib3MF::eWrappingAlgorithm::RSA_OAEP != ar.GetWrappingAlgorithm()
 		|| Lib3MF::eMgfAlgorithm::MGF1_SHA1 != ar.GetMgfAlgorithm()
 		|| Lib3MF::eDigestMethod::SHA1 != ar.GetDigestMethod())
-		*cipherNeeded = 0;
+		*status = 0;
 	else if (nullptr == cipherBuffer || cipherSize == 0) {
 		*cipherNeeded = RsaMethods::getSize(context->key);
+		*status = *cipherNeeded;
 	} else {
 		KekContext const * context = (KekContext const *)userData;
-		*cipherNeeded = RsaMethods::encrypt(context->key, plainSize, plainBuffer, cipherBuffer);
+		*status = RsaMethods::encrypt(context->key, plainSize, plainBuffer, cipherBuffer);
 	}
 }
 
@@ -218,7 +222,8 @@ void EncryptionCallbacks::dataDecryptClientCallback(
 	const Lib3MF_uint64 plainSize,
 	Lib3MF_uint64 * plainNeeded,
 	Lib3MF_uint8 * plainBuffer,
-	Lib3MF_pvoid userData) {
+	Lib3MF_pvoid userData,
+	Lib3MF_uint64 * status) {
 
 	DekContext * dek = (DekContext *)userData;
 
@@ -227,7 +232,7 @@ void EncryptionCallbacks::dataDecryptClientCallback(
 
 
 	if (Lib3MF::eEncryptionAlgorithm::AES256_GCM != p.GetEncryptionAlgorithm())
-		*plainNeeded = 0;
+		*status = 0;
 	else {
 		PEVP_CIPHER_CTX ctx;
 
@@ -248,17 +253,18 @@ void EncryptionCallbacks::dataDecryptClientCallback(
 			ByteVector tag(16, 0);
 			p.GetAuthenticationTag(tag);
 			if (!AesMethods::Decrypt::finish(ctx, plainBuffer, tag.data())) {
-				*plainNeeded = 0;
+				*status = 0;
 			} else {
-				*plainNeeded = tag.size();
+				*status = tag.size();
 			}
 			dek->ciphers.erase(it);
 			ctx.reset();
 		} else if (0 == plainSize || nullptr == plainBuffer) {
 			*plainNeeded = cipherSize;
+			*status = cipherSize;
 		} else {
 			size_t decrypted = AesMethods::Decrypt::decrypt(ctx, (Lib3MF_uint32)plainSize, cipherBuffer, plainBuffer);
-			*plainNeeded = decrypted;
+			*status = decrypted;
 		}
 	}
 }
@@ -270,7 +276,8 @@ void EncryptionCallbacks::keyDecryptClientCallback(
 	const Lib3MF_uint64 plainSize,
 	Lib3MF_uint64* plainNeeded,
 	Lib3MF_uint8 * plainBuffer,
-	Lib3MF_pvoid userData) {
+	Lib3MF_pvoid userData,
+	Lib3MF_uint64 * status) {
 
 	KekContext const * context = (KekContext const *)userData;
 	Lib3MF::CAccessRight ar(context->wrapper, accessRight);
@@ -279,15 +286,16 @@ void EncryptionCallbacks::keyDecryptClientCallback(
 	if (Lib3MF::eWrappingAlgorithm::RSA_OAEP != ar.GetWrappingAlgorithm()
 		|| Lib3MF::eMgfAlgorithm::MGF1_SHA1 != ar.GetMgfAlgorithm()
 		|| Lib3MF::eDigestMethod::SHA1 != ar.GetDigestMethod())
-		*plainNeeded = 0;
+		*status = 0;
 	else if (nullptr == plainBuffer || 0 == plainSize) {
 		*plainNeeded = 32;
+		*status = 32;
 	}
 	else {
 		ASSERT_EQ(cipherSize, 256);
 		ASSERT_GE(plainSize, 32);
 
-		*plainNeeded = RsaMethods::decrypt(context->key, cipherSize, cipherBuffer, plainBuffer);
+		*status = RsaMethods::decrypt(context->key, cipherSize, cipherBuffer, plainBuffer);
 	}
 }
 

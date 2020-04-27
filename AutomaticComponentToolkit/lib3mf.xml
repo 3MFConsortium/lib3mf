@@ -1176,8 +1176,9 @@
 	<functiontype name="KeyWrappingCallback" description="A callback used to wrap (encrypt) the content key available in keystore resource group">
 		<param name="KEKParams" type="class" class="AccessRight" pass="in" description="The information about the parameters used used to wrap the key to the contents"/>
 		<param name="InBuffer" type="basicarray" class="uint8" pass="in" description="Buffer to the input value. When encrypting, this should be the plain key. When decrypting, this should be the key cipher."/>
-		<param name="OutBuffer" type="basicarray" class="uint8" pass="out" description="Buffer where the data will be placed. When encrypting, this will be the key cipher. When decrypting, this will be the plain key. When buffer is null, neededBytes contains the required bytes to run. When not, amount it reflects the encrypted/decrypted/verified bytes when succeed or zero when error"/>
+		<param name="OutBuffer" type="basicarray" class="uint8" pass="out" description="Buffer where the data will be placed. When encrypting, this will be the key cipher. When decrypting, this will be the plain key. When buffer is null, neededBytes contains the required bytes to run."/>
 		<param name="UserData" type="pointer" pass="in" description="Userdata that is passed to the callback function"/>
+		<param name="Status" type="uint64" pass="return" description="The needed/encrypted/decrypted bytes when succeed or zero when error."/>
 	</functiontype>
 
 	<class name="ContentEncryptionParams">
@@ -1199,9 +1200,6 @@
 		<method name="GetAdditionalAuthenticationData" description="A handler descriptor that uniquely identifies the context of the resource. Each resource will be assigned a different value">
 			<param name="ByteData" type="basicarray" class="uint8" pass="out" description="Buffer where the data will be placed"/>
 		</method>
-		<method name="SetAdditionalAuthenticationData" description="A handler descriptor that uniquely identifies the context of the resource. Each resource will be assigned a different value">
-			<param name="ByteData" type="basicarray" class="uint8" pass="in" description="Buffer from where the data will be read"/>
-		</method>
 		<method name="GetDescriptor" description="A handler descriptor that uniquely identifies the context of the resource. Each resource will be assigned a different value">
 			<param name="Descriptor" type="uint64" pass="return" descrption="The resource descriptor" />
 		</method>
@@ -1210,11 +1208,12 @@
 		</method>		
 	</class>
 
-	<functiontype name="ContentEncryptionCallback" description="A callback to encrypt/decrypt content called on each resource encrypted. This might be called several times depending on content size. If cipher size is zero, clients must return the result of authenticated tag validation">
-		<param name="CEKParams" type="class" class="ContentEncryptionParams" pass="in" description="The params of the encryption process."/>
-		<param name="Input" type="basicarray" class="uint8" pass="in" description="Buffer to the original data. In encrypting, this will be the plain data. If derypting, this will be the cipher data"/>
-		<param name="Output" type="basicarray" class="uint8" pass="out" description="Buffer to hold the transformed data. When encrypting, this will be the cipher data. When decrypting, this shall be the plain data. If buffer is null, neededBytes return the necessary amount of bytes. Otherwise, amount of bytes decrypted if succeed or zero on error"/>
+	<functiontype name="ContentEncryptionCallback" description="A callback to encrypt/decrypt content called on each resource encrypted. This might be called several times depending on content size. If Input is not available(either null or size is 0), clients must return the result of authenticated tag generation/validation.">
+		<param name="CEKParams" type="class" class="ContentEncryptionParams" pass="in" description="The params of the encryption process. Client must set/check AuthenticationTag when closing the encryption/decryption process."/>
+		<param name="Input" type="basicarray" class="uint8" pass="in" description="Buffer to the original data. In encrypting, this will be the plain data. If decrypting, this will be the cipher data"/>
+		<param name="Output" type="basicarray" class="uint8" pass="out" description="Buffer to hold the transformed data. When encrypting, this will be the cipher data. When decrypting, this shall be the plain data. If buffer is null, neededBytes return the necessary amount of bytes."/>
 		<param name="UserData" type="pointer" pass="in" description="Userdata that is passed to the callback function"/>
+		<param name="Status" type="uint64" pass="return" description="The needed/encrypted/decrypted/verified bytes when succeed or zero when error."/>	
 	</functiontype>
 
 	<enum name="Compression">

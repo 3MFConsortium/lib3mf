@@ -61,13 +61,13 @@ namespace NMR {
 
 	nfUint64 CImportStream_Encrypted::readBuffer(nfByte * pBuffer, nfUint64 cbTotalBytesToRead, nfBool bNeedsToReadAll) {
 		std::vector<nfByte> decBuffer(cbTotalBytesToRead, 0);
-		nfUint64 n = m_pEncryptedStream->readBuffer(decBuffer.data(), cbTotalBytesToRead, bNeedsToReadAll);
-		if (n > 0) {
-			nfUint64 decryted = m_pDecryptContext.m_fnCrypt(n, decBuffer.data(), pBuffer, m_pDecryptContext.m_sDekDecryptData);
-			if (decryted != n)
+		nfUint64 bytesRead = m_pEncryptedStream->readBuffer(decBuffer.data(), cbTotalBytesToRead, bNeedsToReadAll);
+		if (bytesRead > 0) {
+			nfUint64 decryted = m_pDecryptContext.m_fnCrypt(bytesRead, decBuffer.data(), pBuffer, m_pDecryptContext.m_sDekDecryptData);
+			if (decryted != bytesRead)
 				throw CNMRException(NMR_ERROR_CALCULATIONTERMINATED);
 		}
-		return n;
+		return bytesRead;
 	}
 
 	nfUint64 CImportStream_Encrypted::retrieveSize() {

@@ -193,17 +193,18 @@ void Lib3MF::Impl::CReader::AddKeyWrappingCallback(const std::string &sConsumerI
 		Lib3MF_AccessRight entityHandle = pBaseEntity;
 
 		//figure out the size of the key.
+		Lib3MF_uint64 needed = 0;
 		Lib3MF_uint64 result = 0;
 		(*pTheCallback)(entityHandle, cipher.size(), cipher.data(),
-			0, &result, nullptr, ctx.m_pUserData);
+			0, &needed, nullptr, ctx.m_pUserData, &result);
 		if (result == 0)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_CALCULATIONABORTED);
 
-		plain.resize(result, 0);
+		plain.resize(needed, 0);
 
 		result = 0;
 		(*pTheCallback)(entityHandle, cipher.size(), cipher.data(),
-			plain.size(), &result, plain.data(), ctx.m_pUserData);
+			plain.size(), nullptr, plain.data(), ctx.m_pUserData, &result);
 		if (result == 0)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_CALCULATIONABORTED);
 		return (NMR::nfUint64)result;
@@ -219,7 +220,7 @@ void Lib3MF::Impl::CReader::SetContentEncryptionCallback(const Lib3MF::ContentEn
 		pBaseEntity = pCekParams.get();
 		Lib3MF_ContentEncryptionParams entityHandle = pBaseEntity;
 		Lib3MF_uint64 result = 0;
-		(*pTheCallback)(entityHandle, (Lib3MF_uint64)size, cipher, (Lib3MF_uint64)size, &result, plain, ctx.m_pUserData);
+		(*pTheCallback)(entityHandle, (Lib3MF_uint64)size, cipher, (Lib3MF_uint64)size, nullptr, plain, ctx.m_pUserData, &result);
 		if (result == 0)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_CALCULATIONABORTED);
 		return (NMR::nfUint64)result;

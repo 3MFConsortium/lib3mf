@@ -113,7 +113,8 @@ namespace Lib3MF {
 			const Lib3MF_uint64 outSize,
 			Lib3MF_uint64 * outNeeded,
 			Lib3MF_uint8 * outBuffer,
-			Lib3MF_pvoid userData) {
+			Lib3MF_pvoid userData,
+			Lib3MF_uint64 * status) {
 
 
 			CAccessRight a(SecureContentT::wrapper.get(), access);
@@ -133,9 +134,10 @@ namespace Lib3MF {
 
 			if (nullptr == outBuffer || outSize == 0) {
 				*outNeeded = inSize;
+				*status = inSize;
 			} else {
 				std::copy(inBuffer, inBuffer + outSize, outBuffer);
-				*outNeeded = outSize;
+				*status = outSize;
 			}
 		}
 
@@ -146,7 +148,8 @@ namespace Lib3MF {
 			const Lib3MF_uint64 outSize,
 			Lib3MF_uint64 * outNeededSize,
 			Lib3MF_uint8 * outBuffer,
-			Lib3MF_pvoid userData) {
+			Lib3MF_pvoid userData,
+			Lib3MF_uint64 * status) {
 
 			CContentEncryptionParams cd(SecureContentT::wrapper.get(), params);
 			SecureContentT::wrapper->Acquire(&cd);
@@ -163,14 +166,15 @@ namespace Lib3MF {
 
 			if (0 == inSize || nullptr == inBuffer) {
 				//finalize
-				*outNeededSize = 1;
+				*status = 1;
 			} else if (0 == outSize || nullptr == outBuffer) {
 				//return size needed
 				*outNeededSize = inSize;
+				*status = inSize;
 			} else {
 				//perform encryption/decription process
 				std::copy(inBuffer, inBuffer + outSize, outBuffer);
-				*outNeededSize = outSize;
+				*status = outSize;
 			}
 		}
 

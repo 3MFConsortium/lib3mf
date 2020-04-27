@@ -117,7 +117,8 @@ struct EncryptionCallbacks {
 		const Lib3MF_uint64 cipherSize,
 		Lib3MF_uint64 * cipherNeeded,
 		Lib3MF_uint8 * cipherBuffer,
-		Lib3MF_pvoid userData);
+		Lib3MF_pvoid userData,
+		Lib3MF_uint64 * status);
 
 
 	/**
@@ -138,7 +139,8 @@ struct EncryptionCallbacks {
 		const Lib3MF_uint64 cipherSize,
 		Lib3MF_uint64* cipherNeeded,
 		Lib3MF_uint8 * cipherBuffer,
-		Lib3MF_pvoid userData);
+		Lib3MF_pvoid userData,
+		Lib3MF_uint64 * status);
 
 	static void dataDecryptClientCallback(
 		Lib3MF_ContentEncryptionParams params,
@@ -147,7 +149,8 @@ struct EncryptionCallbacks {
 		const Lib3MF_uint64 plainSize,
 		Lib3MF_uint64 * plainNeeded,
 		Lib3MF_uint8 * plainBuffer,
-		Lib3MF_pvoid userData);
+		Lib3MF_pvoid userData,
+		Lib3MF_uint64 * status);
 
 	static void keyDecryptClientCallback(
 		Lib3MF_AccessRight accessRight,
@@ -156,7 +159,8 @@ struct EncryptionCallbacks {
 		const Lib3MF_uint64 plainSize,
 		Lib3MF_uint64* plainNeeded,
 		Lib3MF_uint8 * plainBuffer,
-		Lib3MF_pvoid userData);
+		Lib3MF_pvoid userData,
+		Lib3MF_uint64 * status);
 
 	/**
 	* RandomNumberCallback - Callback to generate random numbers
