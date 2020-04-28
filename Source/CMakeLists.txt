@@ -87,6 +87,7 @@ Source/Common/Mesh/NMR_BeamLattice.cpp
 Source/Common/Mesh/NMR_MeshBuilder.cpp
 Source/Common/NMR_Exception.cpp
 Source/Common/NMR_Exception_Windows.cpp
+Source/Common/NMR_ModelWarnings.cpp
 Source/Common/NMR_StringUtils.cpp
 Source/Common/NMR_SecureContext.cpp
 Source/Common/NMR_UUID.cpp
@@ -157,7 +158,6 @@ Source/Model/Reader/NMR_ModelReader.cpp
 Source/Model/Reader/NMR_ModelReaderNode.cpp
 Source/Model/Reader/NMR_ModelReaderNode_ModelBase.cpp
 Source/Model/Reader/NMR_ModelReaderNode_KeyStoreBase.cpp
-Source/Model/Reader/NMR_ModelReaderWarnings.cpp
 Source/Model/Reader/NMR_ModelReader_3MF.cpp
 Source/Model/Reader/NMR_ModelReader_3MF_Native.cpp
 Source/Model/Reader/NMR_ModelReader_ColorMapping.cpp

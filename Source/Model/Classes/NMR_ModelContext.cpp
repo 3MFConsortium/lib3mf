@@ -33,6 +33,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "Model/Classes/NMR_KeyStore.h"
 #include "Common/NMR_SecureContext.h"
 #include "Common/3MF_ProgressMonitor.h"
+#include "Common/NMR_ModelWarnings.h"
 
 namespace NMR {
 
@@ -44,25 +45,13 @@ namespace NMR {
 
 		m_pModel = pModel;
 
+		m_pKeystore = pModel->getKeyStore();
+
 		m_pProgressMonitor = std::make_shared<CProgressMonitor>();
 
 		m_pSecureContext = std::make_shared<CSecureContext>();
-	}
 
-	PModel CModelContext::getModel() const {
-		return m_pModel;
-	}
-
-	PProgressMonitor CModelContext::getProgressMonitor() const {
-		return m_pProgressMonitor;
-	}
-
-	PSecureContext CModelContext::getSecureContext() const {
-		return m_pSecureContext;
-	}
-
-	PKeyStore CModelContext::getKeyStore() const {
-		return m_pModel->getKeyStore();
+		m_pWarnings = std::make_shared<CModelWarnings>();
 	}
 
 	nfBool CModelContext::isComplete() const {

@@ -221,7 +221,7 @@ void Lib3MF::Impl::CWriter::AddKeyWrappingCallback(const std::string & sConsumer
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_CALCULATIONABORTED);
 		return (NMR::nfUint64)result;
 	};
-	writer().getSecureContext()->addKekCtx(sConsumerID, descriptor);
+	writer().secureContext()->addKekCtx(sConsumerID, descriptor);
 }
 
 void Lib3MF::Impl::CWriter::SetContentEncryptionCallback(const Lib3MF::ContentEncryptionCallback pTheCallback, const Lib3MF_pvoid pUserData)
@@ -243,5 +243,5 @@ void Lib3MF::Impl::CWriter::SetContentEncryptionCallback(const Lib3MF::ContentEn
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_CALCULATIONABORTED);
 		return (NMR::nfUint64)result;
 	};
-	m_pWriter->getSecureContext()->setDekCtx(descriptor);
+	m_pWriter->secureContext()->setDekCtx(descriptor);
 }

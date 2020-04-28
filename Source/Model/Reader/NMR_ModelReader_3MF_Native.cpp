@@ -56,7 +56,7 @@ namespace NMR {
 
 	PImportStream CModelReader_3MF_Native::extract3MFOPCPackage(_In_ PImportStream pPackageStream)
 	{
-		m_pPackageReader = std::make_shared<CKeyStoreOpcPackageReader>(pPackageStream, model(), getSecureContext(), getWarnings(), monitor());
+		m_pPackageReader = std::make_shared<CKeyStoreOpcPackageReader>(pPackageStream, *this);
 
 		COpcPackageRelationship * pModelRelation = m_pPackageReader->findRootRelation(PACKAGE_START_PART_RELATIONSHIP_TYPE, true);
 		if (pModelRelation == nullptr)
@@ -139,7 +139,7 @@ namespace NMR {
 					PImportStream pMemoryStream = pTextureAttachmentStream->copyToMemory();
 
 					if (pMemoryStream->retrieveSize() == 0)
-						m_pWarnings->addException(CNMRException(NMR_ERROR_IMPORTSTREAMISEMPTY), mrwMissingMandatoryValue);
+						warnings()->addException(CNMRException(NMR_ERROR_IMPORTSTREAMISEMPTY), mrwMissingMandatoryValue);
 
 					// Add Texture Attachment to Model
 					addTextureAttachment(sURI, pMemoryStream);
@@ -178,7 +178,7 @@ namespace NMR {
 					PImportStream pMemoryStream = pAttachmentStream->copyToMemory();
 
 					if (pMemoryStream->retrieveSize() == 0)
-						m_pWarnings->addException(CNMRException(NMR_ERROR_IMPORTSTREAMISEMPTY), mrwMissingMandatoryValue);
+						warnings()->addException(CNMRException(NMR_ERROR_IMPORTSTREAMISEMPTY), mrwMissingMandatoryValue);
 
 					// Add Attachment Stream to Model
 					model()->addAttachment(sURI, sRelationShipType, pMemoryStream);
@@ -188,7 +188,7 @@ namespace NMR {
 				}
 				catch (CNMRException &e) {
 					if (e.getErrorCode() == NMR_ERROR_INVALIDBUFFERSIZE)
-						m_pWarnings->addException(CNMRException(NMR_ERROR_ATTACHMENTTOOLARGE), mrwMissingMandatoryValue);
+						warnings()->addException(CNMRException(NMR_ERROR_ATTACHMENTTOOLARGE), mrwMissingMandatoryValue);
 					else
 						throw;
 				}
@@ -235,7 +235,7 @@ namespace NMR {
 					PImportStream pAttachmentStream = pPart->getImportStream();
 					PImportStream pMemoryStream = pAttachmentStream->copyToMemory();
 					if (pMemoryStream->retrieveSize() == 0)
-						m_pWarnings->addException(CNMRException(NMR_ERROR_IMPORTSTREAMISEMPTY), mrwMissingMandatoryValue);
+						warnings()->addException(CNMRException(NMR_ERROR_IMPORTSTREAMISEMPTY), mrwMissingMandatoryValue);
 					model()->addProductionAttachment(sURI, sRelationShipType, pMemoryStream, true);
 				}
 			}

@@ -56,10 +56,10 @@ NMR_OpcPackageWriter.cpp defines an OPC Package writer in a portable way.
 namespace NMR {
 
 
-	CKeyStoreOpcPackageWriter::CKeyStoreOpcPackageWriter(_In_ PExportStream pImportStream, _In_ CModelContext * context)
+	CKeyStoreOpcPackageWriter::CKeyStoreOpcPackageWriter(_In_ PExportStream pImportStream, _In_ CModelContext const & context)
 		:m_pContext(context)
 	{
-		if (nullptr == context || !context->isComplete())
+		if (!context.isComplete())
 			throw CNMRException(NMR_ERROR_INVALIDPOINTER);
 
 		m_pPackageWriter = std::make_shared<COpcPackageWriter>(pImportStream);
@@ -67,8 +67,7 @@ namespace NMR {
 	}
 
 	void CKeyStoreOpcPackageWriter::refreshAllResourceDataGroups() {
-		PModel model = m_pContext->getModel();
-		PKeyStore keyStore = m_pContext->getKeyStore();
+		PKeyStore const & keyStore = m_pContext.keyStore();
 		for (nfUint64 i = 0; i < keyStore->getResourceDataGroupCount(); ++i) {
 			PKeyStoreResourceDataGroup rdg = keyStore->getResourceDataGroup(i);
 			if (rdg->isOpen()) {
@@ -79,6 +78,7 @@ namespace NMR {
 			}
 		}
 
+		PModel const & model = m_pContext.model();
 		for (nfUint64 i = 0; i < keyStore->getResourceDataCount(); ++i) {
 			PKeyStoreResourceData rd = keyStore->getResourceData(i);
 			if (rd->getGroup()->isOpen()) {
@@ -90,9 +90,9 @@ namespace NMR {
 	}
 
 	POpcPackagePart CKeyStoreOpcPackageWriter::wrapPartStream(PKeyStoreResourceData rd, POpcPackagePart part) {
-		PSecureContext secureContext = m_pContext->getSecureContext();
+		PSecureContext const & secureContext = m_pContext.secureContext();
 		ContentEncryptionDescriptor p = secureContext->getDekCtx();
-		PKeyStoreResourceDataGroup rdg = m_pContext->getKeyStore()->findResourceDataGroupByResourceDataPath(rd->packagePath());
+		PKeyStoreResourceDataGroup rdg = m_pContext.keyStore()->findResourceDataGroupByResourceDataPath(rd->packagePath());
 		p.m_sDekDecryptData.m_sParams = CKeyStoreFactory::makeContentEncryptionParams(rd, rdg);
 
 		PExportStream stream;
@@ -107,18 +107,16 @@ namespace NMR {
 	}
 
 	void CKeyStoreOpcPackageWriter::refreshResourceDataTag(PKeyStoreResourceData rd) {
-		PSecureContext secureContext = m_pContext->getSecureContext();
-		ContentEncryptionDescriptor dekCtx = secureContext->getDekCtx();
-		PKeyStoreResourceDataGroup rdg = m_pContext->getKeyStore()->findResourceDataGroupByResourceDataPath(rd->packagePath());
+		ContentEncryptionDescriptor dekCtx = m_pContext.secureContext()->getDekCtx();
+		PKeyStoreResourceDataGroup rdg = m_pContext.keyStore()->findResourceDataGroupByResourceDataPath(rd->packagePath());
 		dekCtx.m_sDekDecryptData.m_sParams = CKeyStoreFactory::makeContentEncryptionParams(rd, rdg);
 		dekCtx.m_fnCrypt(0, nullptr, nullptr, dekCtx.m_sDekDecryptData);
 		rd->setAuthTag(dekCtx.m_sDekDecryptData.m_sParams->getAuthTag());
 	}
 
 	void CKeyStoreOpcPackageWriter::refreshAccessRight(PKeyStoreAccessRight ar, std::vector<nfByte> const & key) {
-		PSecureContext secureContext = m_pContext->getSecureContext();
 		try {
-			KeyWrappingDescriptor ctx = secureContext->getKekCtx(ar->getConsumer()->getConsumerID());
+			KeyWrappingDescriptor ctx = m_pContext.secureContext()->getKekCtx(ar->getConsumer()->getConsumerID());
 			ctx.m_sKekDecryptData.m_pAccessRight = ar;
 			std::vector<nfByte> closedKey;
 			//give consumer a chance to (re)encrypt this key
@@ -133,8 +131,8 @@ namespace NMR {
 
 	POpcPackagePart CKeyStoreOpcPackageWriter::addPart(_In_ std::string sPath)
 	{
-		PSecureContext secureContext = m_pContext->getSecureContext();
-		PKeyStore keyStore = m_pContext->getKeyStore();
+		PSecureContext const & secureContext = m_pContext.secureContext();
+		PKeyStore const & keyStore = m_pContext.keyStore();
 
 		auto pPart = m_pPackageWriter->addPart(sPath);
 		NMR::PKeyStoreResourceData rd = keyStore->findResourceData(sPath);
@@ -149,8 +147,8 @@ namespace NMR {
 	}
 
 	void CKeyStoreOpcPackageWriter::close() {
-		PSecureContext secureContext = m_pContext->getSecureContext();
-		PKeyStore keyStore = m_pContext->getKeyStore();
+		PSecureContext const & secureContext = m_pContext.secureContext();
+		PKeyStore const & keyStore = m_pContext.keyStore();
 
 		for (nfUint32 i = 0; i < keyStore->getResourceDataCount(); i++) {
 			PKeyStoreResourceData rd = keyStore->getResourceData(i);
@@ -195,7 +193,7 @@ namespace NMR {
 
 		pXMLWriter->WriteStartDocument();
 
-		CModelWriterNode_KeyStore XMLNode4KeyStore(pXMLWriter, m_pContext->getProgressMonitor(), m_pContext->getKeyStore());
+		CModelWriterNode_KeyStore XMLNode4KeyStore(pXMLWriter, m_pContext.monitor(), m_pContext.keyStore());
 		XMLNode4KeyStore.writeToXML();
 
 		pXMLWriter->WriteEndDocument();

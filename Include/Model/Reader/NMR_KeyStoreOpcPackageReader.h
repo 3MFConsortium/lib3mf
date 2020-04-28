@@ -41,39 +41,30 @@ NMR_KeyStoreOpcPackageReader.h defines an OPC Package reader in a portable way.
 #include "Common/OPC/NMR_IOpcPackageReader.h"
 #include "Common/Platform/NMR_ImportStream.h"
 #include "Common/3MF_ProgressMonitor.h"
-#include "Model/Reader/NMR_ModelReaderWarnings.h"
+#include "Common/NMR_ModelWarnings.h"
 
 namespace NMR {
-	class CModel;
-	using PModel = std::shared_ptr<CModel>;
-	class CSecureContext;
-	using PSecureContext = std::shared_ptr<CSecureContext>;
-	class CKeyStore;
-	using PKeyStore = std::shared_ptr<CKeyStore>;
+
+	class CModelContext;
+
 
 	class CKeyStoreOpcPackageReader: public IOpcPackageReader {
 	private:
+		CModelContext const & m_pContext;
 		PIOpcPackageReader m_pPackageReader;
-		PKeyStore m_pKeyStore;
-		PSecureContext m_pSecureContext;
-		nfUint64 m_nfHandler;
-		NMR::PModelReaderWarnings m_pWarnings;
 		std::map<std::string, POpcPackagePart> m_encryptedParts;
 	protected:
 		NMR::PImportStream findKeyStoreStream();
-		void parseKeyStore(PModel pModel, NMR::PImportStream keyStoreStream, NMR::PProgressMonitor pProgressMonitor);
+		void parseKeyStore(NMR::PImportStream keyStoreStream);
 		void openAllResourceDataGroups();
 		void checkAuthenticatedTags();
 	public:
-		CKeyStoreOpcPackageReader(_In_ PImportStream pImportStream, _In_ PModel pModel, _In_ PSecureContext pSecureContext, _In_ PModelReaderWarnings pWarnings, _In_ PProgressMonitor pProgressMonitor);
+		CKeyStoreOpcPackageReader(_In_ PImportStream pImportStream, _In_ CModelContext const & context);
 
 		// Inherited via IOpcPackageReader
 		virtual COpcPackageRelationship * findRootRelation(std::string sRelationType, nfBool bMustBeUnique) override;
 		virtual POpcPackagePart createPart(std::string sPath) override;
 		virtual nfUint64 getPartSize(std::string sPath) override;
-
-		// get Keystore
-		PKeyStore getKeyStore() const;
 
 		void close() override;
 	};

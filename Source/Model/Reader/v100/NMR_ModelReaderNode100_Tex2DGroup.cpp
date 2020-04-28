@@ -44,7 +44,7 @@ NMR_ModelReaderNode100_Colors.cpp implements the Model Reader Color Group Class.
 
 namespace NMR {
 
-	CModelReaderNode100_Tex2DGroup::CModelReaderNode100_Tex2DGroup(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings)
+	CModelReaderNode100_Tex2DGroup::CModelReaderNode100_Tex2DGroup(_In_ CModel * pModel, _In_ PModelWarnings pWarnings)
 		: CModelReaderNode(pWarnings)
 	{
 		// Initialize variables

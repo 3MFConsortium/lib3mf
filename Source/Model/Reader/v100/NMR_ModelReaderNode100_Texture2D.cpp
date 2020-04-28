@@ -44,7 +44,7 @@ NMR_ModelReaderNode100_Texture2D.cpp implements the Model Reader Texture2D Class
 
 namespace NMR {
 
-	CModelReaderNode100_Texture2D::CModelReaderNode100_Texture2D(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings)
+	CModelReaderNode100_Texture2D::CModelReaderNode100_Texture2D(_In_ CModel * pModel, _In_ PModelWarnings pWarnings)
 		: CModelReaderNode(pWarnings)
 	{
 		// Initialize variables

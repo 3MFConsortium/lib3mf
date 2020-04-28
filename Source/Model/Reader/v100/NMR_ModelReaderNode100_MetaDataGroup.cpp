@@ -41,7 +41,7 @@ of an XML Model Stream.
 
 namespace NMR {
 
-	CModelReaderNode100_MetaDataGroup::CModelReaderNode100_MetaDataGroup(_In_ PModelReaderWarnings pWarnings)
+	CModelReaderNode100_MetaDataGroup::CModelReaderNode100_MetaDataGroup(_In_ PModelWarnings pWarnings)
 		: CModelReaderNode(pWarnings)
 	{
 		m_MetaDataGroup = std::make_shared<CModelMetaDataGroup>();

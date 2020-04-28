@@ -47,7 +47,7 @@ Stream.
 
 namespace NMR {
 
-	CModelReaderNode093_Object::CModelReaderNode093_Object(_In_ CModel * pModel, _In_ PModelReader_ColorMapping pColorMapping, _In_ PModelReaderWarnings pWarnings)
+	CModelReaderNode093_Object::CModelReaderNode093_Object(_In_ CModel * pModel, _In_ PModelReader_ColorMapping pColorMapping, _In_ PModelWarnings pWarnings)
 		: CModelReaderNode(pWarnings)
 	{
 		__NMRASSERT(pColorMapping.get() != nullptr);

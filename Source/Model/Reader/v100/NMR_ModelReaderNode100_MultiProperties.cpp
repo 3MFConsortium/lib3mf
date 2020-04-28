@@ -43,7 +43,7 @@ NMR_ModelReaderNode100_MultiProperties.cpp implements the Model Reader MultiProp
 
 namespace NMR {
 
-	CModelReaderNode100_MultiProperties::CModelReaderNode100_MultiProperties(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings)
+	CModelReaderNode100_MultiProperties::CModelReaderNode100_MultiProperties(_In_ CModel * pModel, _In_ PModelWarnings pWarnings)
 		: CModelReaderNode(pWarnings)
 	{
 		// Initialize variables

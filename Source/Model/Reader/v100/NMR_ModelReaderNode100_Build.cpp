@@ -41,7 +41,7 @@ A build reader model node is a parser for the build node of an XML Model Stream.
 
 namespace NMR {
 
-	CModelReaderNode100_Build::CModelReaderNode100_Build(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings)
+	CModelReaderNode100_Build::CModelReaderNode100_Build(_In_ CModel * pModel, _In_ PModelWarnings pWarnings)
 		: CModelReaderNode(pWarnings)
 	{
 		__NMRASSERT(pModel);

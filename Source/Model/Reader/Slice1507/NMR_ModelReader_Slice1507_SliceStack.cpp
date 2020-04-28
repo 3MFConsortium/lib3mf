@@ -83,7 +83,7 @@ namespace NMR {
 	}
 
 	CModelReaderNode_Slice1507_SliceStack::CModelReaderNode_Slice1507_SliceStack(
-		_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings,
+		_In_ CModel * pModel, _In_ PModelWarnings pWarnings,
 		_In_ PProgressMonitor pProgressMonitor,_In_ const std::string sSlicePath)
 		: CModelReaderNode(pWarnings, pProgressMonitor)
 	{

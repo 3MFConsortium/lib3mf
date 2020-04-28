@@ -50,8 +50,8 @@ namespace NMR {
 
 	class CKeyStoreOpcPackageWriter : public IOpcPackageWriter {
 	protected:
+		CModelContext const & m_pContext;
 		PIOpcPackageWriter m_pPackageWriter;
-		CModelContext * m_pContext;
 
 		void writeKeyStoreStream(_In_ CXmlWriter * pXMLWriter);
 		void refreshAllResourceDataGroups();
@@ -61,7 +61,7 @@ namespace NMR {
 	public:
 		CKeyStoreOpcPackageWriter(
 			_In_ PExportStream pImportStream, 
-			_In_ CModelContext * context);
+			_In_ CModelContext const & context);
 
 		POpcPackagePart addPart(_In_ std::string sPath) override;
 		void close() override;

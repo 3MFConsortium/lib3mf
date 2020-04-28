@@ -57,7 +57,7 @@ namespace NMR {
 		_Ret_notnull_ CMeshInformation_Properties * createPropertiesInformation();
 	public:
 		CModelReaderNode100_Triangles() = delete;
-		CModelReaderNode100_Triangles(_In_ CModel * pModel, _In_ CMesh * pMesh, _In_ PModelReaderWarnings pWarnings,
+		CModelReaderNode100_Triangles(_In_ CModel * pModel, _In_ CMesh * pMesh, _In_ PModelWarnings pWarnings,
 			_In_ PPackageResourceID pObjectLevelPropertyID, _In_ ModelResourceIndex nDefaultPropertyIndex);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);

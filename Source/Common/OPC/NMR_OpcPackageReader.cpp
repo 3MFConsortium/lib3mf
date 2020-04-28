@@ -103,7 +103,7 @@ namespace NMR {
 		return -1;
 	}
 
-	COpcPackageReader::COpcPackageReader(_In_ PImportStream pImportStream, _In_ PModelReaderWarnings pWarnings, _In_ PProgressMonitor pProgressMonitor)
+	COpcPackageReader::COpcPackageReader(_In_ PImportStream pImportStream, _In_ PModelWarnings pWarnings, _In_ PProgressMonitor pProgressMonitor)
 		: m_pWarnings(pWarnings), m_pProgressMonitor(pProgressMonitor)
 	{
 		if (!pImportStream)

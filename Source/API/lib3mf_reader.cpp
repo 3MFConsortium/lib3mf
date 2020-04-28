@@ -156,26 +156,26 @@ void CReader::RemoveRelationToRead (const std::string & sRelationShipType)
 void CReader::SetStrictModeActive (const bool bStrictModeActive)
 {
 	if (bStrictModeActive)
-		reader().getWarnings()->setCriticalWarningLevel(NMR::mrwInvalidOptionalValue);
+		reader().warnings()->setCriticalWarningLevel(NMR::mrwInvalidOptionalValue);
 	else
-		reader().getWarnings()->setCriticalWarningLevel(NMR::mrwFatal);
+		reader().warnings()->setCriticalWarningLevel(NMR::mrwFatal);
 }
 
 bool CReader::GetStrictModeActive ()
 {
-	return reader().getWarnings()->getCriticalWarningLevel() == NMR::mrwInvalidOptionalValue;
+	return reader().warnings()->getCriticalWarningLevel() == NMR::mrwInvalidOptionalValue;
 }
 
 std::string CReader::GetWarning (const Lib3MF_uint32 nIndex, Lib3MF_uint32 & nErrorCode)
 {
-	auto warning = reader().getWarnings()->getWarning(nIndex);
+	auto warning = reader().warnings()->getWarning(nIndex);
 	nErrorCode = warning->getErrorCode();
 	return warning->getMessage();
 }
 
 Lib3MF_uint32 CReader::GetWarningCount ()
 {
-	return reader().getWarnings()->getWarningCount();
+	return reader().warnings()->getWarningCount();
 }
 
 void Lib3MF::Impl::CReader::AddKeyWrappingCallback(const std::string &sConsumerID, const Lib3MF::KeyWrappingCallback pTheCallback, const Lib3MF_pvoid pUserData) {
@@ -209,7 +209,7 @@ void Lib3MF::Impl::CReader::AddKeyWrappingCallback(const std::string &sConsumerI
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_CALCULATIONABORTED);
 		return (NMR::nfUint64)result;
 	};
-	reader().getSecureContext()->addKekCtx(sConsumerID, descriptor);
+	reader().secureContext()->addKekCtx(sConsumerID, descriptor);
 }
 void Lib3MF::Impl::CReader::SetContentEncryptionCallback(const Lib3MF::ContentEncryptionCallback pTheCallback, const Lib3MF_pvoid pUserData) {
 	NMR::ContentEncryptionDescriptor descriptor;
@@ -225,6 +225,6 @@ void Lib3MF::Impl::CReader::SetContentEncryptionCallback(const Lib3MF::ContentEn
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_CALCULATIONABORTED);
 		return (NMR::nfUint64)result;
 	};
-	reader().getSecureContext()->setDekCtx(descriptor);
+	reader().secureContext()->setDekCtx(descriptor);
 }
 

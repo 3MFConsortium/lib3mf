@@ -45,7 +45,6 @@ namespace NMR {
 	CModelReader::CModelReader(_In_ PModel pModel)
 		:CModelContext(pModel)
 	{
-		m_pWarnings = std::make_shared<CModelReaderWarnings>();
 	}
 
 	void CModelReader::readFromMeshImporter(_In_ CMeshImporter * pImporter)
@@ -71,11 +70,6 @@ namespace NMR {
 	{
 		sContentType = m_sPrintTicketContentType;
 		return m_pPrintTicketStream;
-	}
-
-	PModelReaderWarnings CModelReader::getWarnings()
-	{
-		return m_pWarnings;
 	}
 
 	void CModelReader::addRelationToRead(_In_ std::string sRelationShipType)

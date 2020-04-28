@@ -44,7 +44,7 @@ NMR_ModelReaderNode100_CompositeMaterials.cpp implements the Model Reader Compos
 
 namespace NMR {
 
-	CModelReaderNode100_CompositeMaterials::CModelReaderNode100_CompositeMaterials(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings)
+	CModelReaderNode100_CompositeMaterials::CModelReaderNode100_CompositeMaterials(_In_ CModel * pModel, _In_ PModelWarnings pWarnings)
 		: CModelReaderNode(pWarnings)
 	{
 		// Initialize variables

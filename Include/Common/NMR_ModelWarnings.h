@@ -76,12 +76,12 @@ namespace NMR {
 
 	typedef std::shared_ptr <CModelReaderWarning> PModelReaderWarning;
 
-	class CModelReaderWarnings {
+	class CModelWarnings {
 	private:
 		std::vector<PModelReaderWarning> m_Warnings;
 		eModelReaderWarningLevel m_CriticalWarningLevel;
 	public:
-		CModelReaderWarnings();
+		CModelWarnings();
 
 		eModelReaderWarningLevel getCriticalWarningLevel ();
 		void setCriticalWarningLevel(_In_ eModelReaderWarningLevel WarningLevel);
@@ -93,7 +93,7 @@ namespace NMR {
 		PModelReaderWarning getWarning(_In_ nfUint32 nIndex);
 	};
 
-	typedef std::shared_ptr <CModelReaderWarnings> PModelReaderWarnings;
+	typedef std::shared_ptr <CModelWarnings> PModelWarnings;
 
 }
 

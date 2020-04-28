@@ -42,33 +42,48 @@ namespace NMR {
 	class CKeyStore;
 	class CSecureContext;
 	class CProgressMonitor;
+	class CModelWarnings;
 
 	using PModel = std::shared_ptr<CModel>;
 	using PKeyStore = std::shared_ptr<CKeyStore>;
 	using PSecureContext = std::shared_ptr<CSecureContext>;
 	using PProgressMonitor = std::shared_ptr<CProgressMonitor>;
+	using PModelWarnings = std::shared_ptr<CModelWarnings>;
 
 	class CModelContext {
 	private:
 		PModel m_pModel;
 		PSecureContext m_pSecureContext;
 		PProgressMonitor m_pProgressMonitor;
+		PModelWarnings m_pWarnings;
+		PKeyStore m_pKeystore;
+
 	protected:
-		inline PModel & model() {
-			return m_pModel;
-		}
-		inline PProgressMonitor  & monitor() {
-			return m_pProgressMonitor;
-		}
+
+
 	public:
 		CModelContext() = delete;
 		CModelContext(_In_ PModel pModel);
 		virtual ~CModelContext() = default;
 
-		PModel getModel() const;
-		PProgressMonitor getProgressMonitor() const;
-		PSecureContext getSecureContext() const;
-		PKeyStore getKeyStore() const;
+		inline PModel const & model() const{
+			return m_pModel;
+		}
+		inline PProgressMonitor const & monitor() const{
+			return m_pProgressMonitor;
+		}
+
+		inline PModelWarnings const & warnings() const{
+			return m_pWarnings;
+		}
+
+		inline PKeyStore const & keyStore() const{
+			return m_pKeystore;
+		}
+
+		inline PSecureContext const & secureContext() const{
+			return m_pSecureContext;
+		}
 
 		nfBool isComplete() const;
 

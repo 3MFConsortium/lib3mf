@@ -47,7 +47,7 @@ namespace NMR {
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 	public:
 		CModelReaderNode_BeamLattice1702_BeamSets() = delete;
-		CModelReaderNode_BeamLattice1702_BeamSets(_In_ CMesh * pMesh, _In_ PModelReaderWarnings pWarnings);
+		CModelReaderNode_BeamLattice1702_BeamSets(_In_ CMesh * pMesh, _In_ PModelWarnings pWarnings);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 	};

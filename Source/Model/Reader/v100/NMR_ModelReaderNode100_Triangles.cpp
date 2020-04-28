@@ -44,7 +44,7 @@ XML Model Stream.
 namespace NMR {
 
 	CModelReaderNode100_Triangles::CModelReaderNode100_Triangles(_In_ CModel * pModel, _In_ CMesh * pMesh,
-		_In_ PModelReaderWarnings pWarnings, _In_ PPackageResourceID pObjectLevelPropertyID, _In_ ModelResourceIndex nDefaultPropertyIndex)
+		_In_ PModelWarnings pWarnings, _In_ PPackageResourceID pObjectLevelPropertyID, _In_ ModelResourceIndex nDefaultPropertyIndex)
 		: CModelReaderNode(pWarnings)
 	{
 		__NMRASSERT(pMesh);

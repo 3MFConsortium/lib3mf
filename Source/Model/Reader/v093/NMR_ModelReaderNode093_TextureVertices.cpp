@@ -42,7 +42,7 @@ XML Model Stream.
 
 namespace NMR {
 
-	CModelReaderNode093_TextureVertices::CModelReaderNode093_TextureVertices(_In_ CMesh * pMesh, _In_ PModelReaderWarnings pWarnings, _In_ PModelReader_TexCoordMapping pTexCoordMapping)
+	CModelReaderNode093_TextureVertices::CModelReaderNode093_TextureVertices(_In_ CMesh * pMesh, _In_ PModelWarnings pWarnings, _In_ PModelReader_TexCoordMapping pTexCoordMapping)
 		: CModelReaderNode(pWarnings)
 	{
 		__NMRASSERT(pMesh);

@@ -47,7 +47,7 @@ namespace NMR {
 
 	public:
 		CModelReaderNode_KeyStoreBase() = delete;
-		CModelReaderNode_KeyStoreBase(_In_ CModel * const pModel, _In_ CKeyStore * const pKeyStore, _In_ PModelReaderWarnings pWarnings);
+		CModelReaderNode_KeyStoreBase(_In_ CModel * const pModel, _In_ CKeyStore * const pKeyStore, _In_ PModelWarnings pWarnings);
 
 		inline CKeyStore * const keystore() const {
 			return m_pKeyStore;

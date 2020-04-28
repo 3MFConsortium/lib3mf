@@ -43,7 +43,7 @@ NMR_ModelReaderNode_BeamLattice1702_BeamSets.cpp covers the official 3MF beamlat
 
 namespace NMR {
 
-	CModelReaderNode_BeamLattice1702_BeamSets::CModelReaderNode_BeamLattice1702_BeamSets(_In_ CMesh * pMesh, _In_ PModelReaderWarnings pWarnings)
+	CModelReaderNode_BeamLattice1702_BeamSets::CModelReaderNode_BeamLattice1702_BeamSets(_In_ CMesh * pMesh, _In_ PModelWarnings pWarnings)
 		: CModelReaderNode(pWarnings)
 	{
 		m_pMesh = pMesh;

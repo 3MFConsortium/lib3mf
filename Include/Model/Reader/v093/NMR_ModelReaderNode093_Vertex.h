@@ -50,7 +50,7 @@ namespace NMR {
 		nfBool m_bHasZ;
 	public:
 		CModelReaderNode093_Vertex() = delete;
-		CModelReaderNode093_Vertex(_In_ PModelReaderWarnings pWarnings);
+		CModelReaderNode093_Vertex(_In_ PModelWarnings pWarnings);
 
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 

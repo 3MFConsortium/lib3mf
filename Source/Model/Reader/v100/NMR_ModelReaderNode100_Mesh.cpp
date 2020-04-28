@@ -43,7 +43,7 @@ A mesh reader model node is a parser for the mesh node of an XML Model Stream.
 
 namespace NMR {
 
-	CModelReaderNode100_Mesh::CModelReaderNode100_Mesh(_In_ CModel * pModel, _In_ CMesh * pMesh, _In_ PModelReaderWarnings pWarnings,
+	CModelReaderNode100_Mesh::CModelReaderNode100_Mesh(_In_ CModel * pModel, _In_ CMesh * pMesh, _In_ PModelWarnings pWarnings,
 		_In_ PProgressMonitor pProgressMonitor, _In_ PPackageResourceID pObjectLevelPropertyID, _In_ ModelResourceIndex nDefaultPropertyIndex)
 		: CModelReaderNode(pWarnings, pProgressMonitor)
 	{

@@ -42,6 +42,7 @@ NMR_KeyStoreOpcPackageReader.cpp defines an OPC Package reader in a portable way
 #include "Common/Platform/NMR_ImportStream_Encrypted.h"
 #include "Common/OPC/NMR_OpcPackageReader.h"
 #include "Common/OPC/NMR_OpcPackagePart.h"
+#include "Model/Classes/NMR_ModelContext.h"
 #include "Model/Classes/NMR_KeyStoreFactory.h"
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Model/Classes/NMR_KeyStore.h"
@@ -52,19 +53,18 @@ NMR_KeyStoreOpcPackageReader.cpp defines an OPC Package reader in a portable way
 #include <cstring>
 
 namespace NMR {
-	CKeyStoreOpcPackageReader::CKeyStoreOpcPackageReader(PImportStream pImportStream, PModel pModel, PSecureContext pSecureContext, PModelReaderWarnings pWarnings, PProgressMonitor pProgressMonitor)	{
-		if (nullptr == pSecureContext || nullptr == pModel || nullptr == pWarnings)
+	CKeyStoreOpcPackageReader::CKeyStoreOpcPackageReader(PImportStream pImportStream, CModelContext const & context)
+		:m_pContext(context)
+	{
+		if (!context.isComplete())
 			throw CNMRException(NMR_ERROR_INVALIDPOINTER);
-		m_pSecureContext = pSecureContext;
-		m_pKeyStore = pModel->getKeyStore();
-		m_pWarnings = pWarnings;
-		m_pPackageReader = std::make_shared<COpcPackageReader>(pImportStream, pWarnings, pProgressMonitor);
+		m_pPackageReader = std::make_shared<COpcPackageReader>(pImportStream, context.warnings(), context.monitor());
 
 		PImportStream keyStoreStream = findKeyStoreStream();
 		if (nullptr != keyStoreStream) {
-			parseKeyStore(pModel, keyStoreStream, pProgressMonitor);
+			parseKeyStore(keyStoreStream);
 
-			if (!m_pKeyStore->empty()) {
+			if (!context.keyStore()->empty()) {
 				openAllResourceDataGroups();
 			}
 		}
@@ -76,17 +76,19 @@ namespace NMR {
 
 	POpcPackagePart CKeyStoreOpcPackageReader::createPart(std::string sPath) {
 		auto pPart = m_pPackageReader->createPart(sPath);
-		if (m_pSecureContext->hasDekCtx()) {
-			NMR::PKeyStoreResourceDataGroup rdg = m_pKeyStore->findResourceDataGroupByResourceDataPath(sPath);
+		auto keyStore = m_pContext.keyStore();
+		auto secureContext = m_pContext.secureContext();
+		if (secureContext->hasDekCtx()) {
+			NMR::PKeyStoreResourceDataGroup rdg = keyStore->findResourceDataGroupByResourceDataPath(sPath);
 			if (nullptr != rdg) {
 				auto pIt = m_encryptedParts.find(pPart->getURI());
 				if (pIt != m_encryptedParts.end()) {
 					return pIt->second;
 				}
-				NMR::PKeyStoreResourceData rd = m_pKeyStore->findResourceData(sPath);
+				NMR::PKeyStoreResourceData rd = keyStore->findResourceData(sPath);
 				PKeyStoreContentEncryptionParams params = CKeyStoreFactory::makeContentEncryptionParams(rd, rdg);
 
-				ContentEncryptionDescriptor p = m_pSecureContext->getDekCtx();
+				ContentEncryptionDescriptor p = secureContext->getDekCtx();
 				p.m_sDekDecryptData.m_sParams = params;
 
 				PImportStream stream;
@@ -110,10 +112,6 @@ namespace NMR {
 		return m_pPackageReader->getPartSize(sPath);
 	}
 
-	PKeyStore CKeyStoreOpcPackageReader::getKeyStore() const {
-		return m_pKeyStore;
-	}
-
 	void CKeyStoreOpcPackageReader::close() {
 		checkAuthenticatedTags();
 	}
@@ -130,9 +128,9 @@ namespace NMR {
 		return nullptr;
 	}
 
-	void CKeyStoreOpcPackageReader::parseKeyStore(NMR::PModel pModel, NMR::PImportStream keyStoreStream, NMR::PProgressMonitor pProgressMonitor) {
+	void CKeyStoreOpcPackageReader::parseKeyStore(NMR::PImportStream keyStoreStream) {
 
-		PXmlReader pXMLReader = fnCreateXMLReaderInstance(keyStoreStream, pProgressMonitor);
+		PXmlReader pXMLReader = fnCreateXMLReaderInstance(keyStoreStream, m_pContext.monitor());
 		nfBool bHasModel = false;
 		eXmlReaderNodeType NodeType;
 		// Read all XML Root Nodes
@@ -147,7 +145,7 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_COULDNOTGETLOCALXMLNAME);
 
 			if (strcmp(pszLocalName, XML_3MF_ATTRIBUTE_PREFIX_XML) == 0) {
-				PModelReader_InstructionElement pXMLNode = std::make_shared<CModelReader_InstructionElement>(m_pWarnings);
+				PModelReader_InstructionElement pXMLNode = std::make_shared<CModelReader_InstructionElement>(m_pContext.warnings());
 				pXMLNode->parseXML(pXMLReader.get());
 			}
 
@@ -157,17 +155,20 @@ namespace NMR {
 					throw CNMRException(NMR_ERROR_DUPLICATEMODELNODE);
 				bHasModel = true;
 
-				PModelReaderNode_KeyStore pXMLNode = std::make_shared<CModelReaderNode_KeyStore>(pModel.get(), m_pKeyStore.get(), m_pWarnings);
+				PModelReaderNode_KeyStore pXMLNode = std::make_shared<CModelReaderNode_KeyStore>(m_pContext.model().get(), m_pContext.keyStore().get(), m_pContext.warnings());
 				pXMLNode->parseXML(pXMLReader.get());
 			}
 		}
 	}
 
 	void CKeyStoreOpcPackageReader::openAllResourceDataGroups() {
-		for (nfUint64 i = 0; i < m_pKeyStore->getResourceDataGroupCount() && !m_pSecureContext->emptyKekCtx(); ++i) {
-			PKeyStoreResourceDataGroup rdg = m_pKeyStore->getResourceDataGroup(i);
-			for (auto it = m_pSecureContext->kekCtxBegin(); it != m_pSecureContext->kekCtxEnd(); ++it) {
-				PKeyStoreConsumer consumer = m_pKeyStore->findConsumerById((*it).first);
+		auto keyStore = m_pContext.keyStore();
+		auto secureContext = m_pContext.secureContext();
+
+		for (nfUint64 i = 0; i < keyStore->getResourceDataGroupCount() && !secureContext->emptyKekCtx(); ++i) {
+			PKeyStoreResourceDataGroup rdg = keyStore->getResourceDataGroup(i);
+			for (auto it = secureContext->kekCtxBegin(); it != secureContext->kekCtxEnd(); ++it) {
+				PKeyStoreConsumer consumer = keyStore->findConsumerById((*it).first);
 				if (consumer) {
 					PKeyStoreAccessRight accessRight = rdg->findAccessRightByConsumerID(consumer->getConsumerID());
 					if (accessRight) {
@@ -186,12 +187,14 @@ namespace NMR {
 		}
 	}
 	void CKeyStoreOpcPackageReader::checkAuthenticatedTags() {
-		if (m_pSecureContext->hasDekCtx()) {
-			for (nfUint64 i = 0; i < m_pKeyStore->getResourceDataCount(); ++i) {
-				NMR::PKeyStoreResourceData rd = m_pKeyStore->getResourceData(i);
-				NMR::PKeyStoreResourceDataGroup rdg = m_pKeyStore->findResourceDataGroupByResourceDataPath(rd->packagePath());
+		auto secureContext = m_pContext.secureContext();
+		auto keyStore = m_pContext.keyStore();
+		if (secureContext->hasDekCtx()) {
+			for (nfUint64 i = 0; i < m_pContext.keyStore()->getResourceDataCount(); ++i) {
+				NMR::PKeyStoreResourceData rd = keyStore->getResourceData(i);
+				NMR::PKeyStoreResourceDataGroup rdg = keyStore->findResourceDataGroupByResourceDataPath(rd->packagePath());
 				PKeyStoreContentEncryptionParams params = CKeyStoreFactory::makeContentEncryptionParams(rd, rdg);
-				ContentEncryptionDescriptor descriptor = m_pSecureContext->getDekCtx();
+				ContentEncryptionDescriptor descriptor = secureContext->getDekCtx();
 				descriptor.m_sDekDecryptData.m_sParams= params;
 				descriptor.m_fnCrypt(0, nullptr, nullptr, descriptor.m_sDekDecryptData);
 			}

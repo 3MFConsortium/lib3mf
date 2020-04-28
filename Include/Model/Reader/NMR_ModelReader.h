@@ -35,7 +35,7 @@ A model reader reads in a model file and generates an in-memory representation o
 #define __NMR_MODELREADER
 
 #include "Model/Classes/NMR_ModelContext.h"
-#include "Model/Reader/NMR_ModelReaderWarnings.h" 
+#include "Common/NMR_ModelWarnings.h" 
 #include "Common/MeshImport/NMR_MeshImporter.h" 
 
 #include <list>
@@ -49,7 +49,6 @@ namespace NMR {
 		std::string m_sPrintTicketContentType;
 		std::set<std::string> m_RelationsToRead;
 
-		PModelReaderWarnings m_pWarnings;
 
 		void readFromMeshImporter(_In_ CMeshImporter * pImporter);
 	public:
@@ -59,7 +58,6 @@ namespace NMR {
 
 		virtual void readStream(_In_ PImportStream pStream) = 0;
 		PImportStream retrievePrintTicket(_Out_ std::string & sContentType);
-		PModelReaderWarnings getWarnings ();
 
 		void addRelationToRead(_In_ std::string sRelationShipType);
 		void removeRelationToRead(_In_ std::string sRelationShipType);

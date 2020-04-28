@@ -35,7 +35,7 @@ NMR_ModelReaderNode_KeyStoreBase.h defines the base class for all Model Reader N
 
 namespace NMR {
 
-	CModelReaderNode_KeyStoreBase::CModelReaderNode_KeyStoreBase(_In_ CModel * const pModel, _In_ CKeyStore * const pKeyStore, _In_ PModelReaderWarnings pWarnings)
+	CModelReaderNode_KeyStoreBase::CModelReaderNode_KeyStoreBase(_In_ CModel * const pModel, _In_ CKeyStore * const pKeyStore, _In_ PModelWarnings pWarnings)
 		: CModelReaderNode(pWarnings), m_pModel(pModel), m_pKeyStore(pKeyStore)
 	{
 	}

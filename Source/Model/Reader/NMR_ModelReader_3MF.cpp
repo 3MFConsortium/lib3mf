@@ -57,7 +57,7 @@ namespace NMR {
 		// empty on purpose
 	}
 
-	void readProductionAttachmentModels(_In_ PModel pModel, _In_ PModelReaderWarnings pWarnings, _In_ PProgressMonitor pProgressMonitor)
+	void readProductionAttachmentModels(_In_ PModel pModel, _In_ PModelWarnings pWarnings, _In_ PProgressMonitor pProgressMonitor)
 	{
 		nfUint32 prodAttCount = pModel->getProductionAttachmentCount();
 		for (nfInt32 i = prodAttCount-1; i >=0; i--)
@@ -130,7 +130,7 @@ namespace NMR {
 		PImportStream pModelStream = extract3MFOPCPackage(pStream);
 		
 		// before reading the root model, read the other models in the file
-		readProductionAttachmentModels(model(), m_pWarnings, monitor());
+		readProductionAttachmentModels(model(), warnings(), monitor());
 
 		monitor()->SetProgressIdentifier(ProgressIdentifier::PROGRESS_READROOTMODEL);
 		monitor()->ReportProgressAndQueryCancelled(true);
@@ -151,7 +151,7 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_COULDNOTGETLOCALXMLNAME);
 
 			if (strcmp(pszLocalName, XML_3MF_ATTRIBUTE_PREFIX_XML) == 0) {
-				PModelReader_InstructionElement pXMLNode = std::make_shared<CModelReader_InstructionElement>(m_pWarnings);
+				PModelReader_InstructionElement pXMLNode = std::make_shared<CModelReader_InstructionElement>(warnings());
 				pXMLNode->parseXML(pXMLReader.get());
 			}
 
@@ -162,7 +162,7 @@ namespace NMR {
 				bHasModel = true;
 
 				model()->setCurrentPath(model()->rootPath());
-				PModelReaderNode_ModelBase pXMLNode = std::make_shared<CModelReaderNode_ModelBase>(model().get(), m_pWarnings, model()->rootPath(), monitor());
+				PModelReaderNode_ModelBase pXMLNode = std::make_shared<CModelReaderNode_ModelBase>(model().get(), warnings(), model()->rootPath(), monitor());
 				pXMLNode->parseXML(pXMLReader.get());
 
 				if (!pXMLNode->getHasResources())

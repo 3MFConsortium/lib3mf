@@ -41,7 +41,7 @@ A builditem reader model node is a parser for the builditem node of an XML Model
 
 namespace NMR {
 
-	CModelReaderNode093_BuildItem::CModelReaderNode093_BuildItem(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings)
+	CModelReaderNode093_BuildItem::CModelReaderNode093_BuildItem(_In_ CModel * pModel, _In_ PModelWarnings pWarnings)
 		: CModelReaderNode(pWarnings)
 	{
 		__NMRASSERT(pModel);

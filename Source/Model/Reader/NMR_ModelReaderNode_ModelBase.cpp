@@ -51,7 +51,7 @@ A model reader node is an abstract base class for all XML nodes of a 3MF Model S
 
 namespace NMR {
 
-	CModelReaderNode_ModelBase::CModelReaderNode_ModelBase(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings, const std::string sPath,
+	CModelReaderNode_ModelBase::CModelReaderNode_ModelBase(_In_ CModel * pModel, _In_ PModelWarnings pWarnings, const std::string sPath,
 		_In_ PProgressMonitor pProgressMonitor)
 		: CModelReaderNode(pWarnings, pProgressMonitor), m_bIgnoreBuild(false), m_bIgnoreMetaData(false), m_bHaveWarnedAboutV093(false)
 	{

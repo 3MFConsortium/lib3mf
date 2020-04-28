@@ -32,7 +32,7 @@ a relaxed import policy on the file format.
 
 --*/
 
-#include "Model/Reader/NMR_ModelReaderWarnings.h" 
+#include "Common/NMR_ModelWarnings.h" 
 
 namespace NMR {
 
@@ -58,22 +58,22 @@ namespace NMR {
 		return m_nErrorCode;
 	}
 
-	CModelReaderWarnings::CModelReaderWarnings()
+	CModelWarnings::CModelWarnings()
 	{
 		setCriticalWarningLevel(mrwFatal);
 	}
 
-	eModelReaderWarningLevel CModelReaderWarnings::getCriticalWarningLevel()
+	eModelReaderWarningLevel CModelWarnings::getCriticalWarningLevel()
 	{
 		return m_CriticalWarningLevel;
 	}
 
-	void CModelReaderWarnings::setCriticalWarningLevel(_In_ eModelReaderWarningLevel WarningLevel)
+	void CModelWarnings::setCriticalWarningLevel(_In_ eModelReaderWarningLevel WarningLevel)
 	{
 		m_CriticalWarningLevel = WarningLevel;
 	}
 
-	void CModelReaderWarnings::addWarning(_In_ std::string sMessage, _In_ nfError nErrorCode, eModelReaderWarningLevel WarningLevel)
+	void CModelWarnings::addWarning(_In_ std::string sMessage, _In_ nfError nErrorCode, eModelReaderWarningLevel WarningLevel)
 	{
 		if (m_Warnings.size() < NMR_MAXWARNINGCOUNT) { // Failsafe check for Index overflows
 			PModelReaderWarning pWarning = std::make_shared<CModelReaderWarning>(sMessage, WarningLevel, nErrorCode);
@@ -85,7 +85,7 @@ namespace NMR {
 
 	}
 
-	void CModelReaderWarnings::addException(const _In_ CNMRException & Exception, _In_ eModelReaderWarningLevel WarningLevel)
+	void CModelWarnings::addException(const _In_ CNMRException & Exception, _In_ eModelReaderWarningLevel WarningLevel)
 	{
 		if (m_Warnings.size() < NMR_MAXWARNINGCOUNT) { // Failsafe check for Index overflows
 			std::string sMessage (Exception.what());
@@ -98,12 +98,12 @@ namespace NMR {
 			throw Exception;
 	}
 
-	nfUint32 CModelReaderWarnings::getWarningCount()
+	nfUint32 CModelWarnings::getWarningCount()
 	{
 		return (nfUint32)m_Warnings.size();
 	}
 
-	PModelReaderWarning CModelReaderWarnings::getWarning(_In_ nfUint32 nIndex)
+	PModelReaderWarning CModelWarnings::getWarning(_In_ nfUint32 nIndex)
 	{
 		return m_Warnings[nIndex];
 	}

@@ -39,7 +39,7 @@ NMR_OpcPackageReader.h defines an OPC Package reader in a portable way.
 #include "Common/OPC/NMR_OpcPackageTypes.h"
 #include "Common/OPC/NMR_OpcPackageRelationship.h"
 #include "Common/3MF_ProgressMonitor.h"
-#include "Model/Reader/NMR_ModelReaderWarnings.h"
+#include "Common/NMR_ModelWarnings.h"
 #include "Libraries/libzip/zip.h"
 #include <list>
 #include <vector>
@@ -50,7 +50,7 @@ namespace NMR {
 
 	class COpcPackageReader: public IOpcPackageReader {
 	protected:
-		PModelReaderWarnings m_pWarnings;
+		PModelWarnings m_pWarnings;
 		PProgressMonitor m_pProgressMonitor;
 
 		// ZIP Handling Variables
@@ -75,7 +75,7 @@ namespace NMR {
 		void readRootRelationships();
 
 	public:
-		COpcPackageReader(_In_ PImportStream pImportStream, _In_ PModelReaderWarnings pWarnings, _In_ PProgressMonitor pProgressMonitor);
+		COpcPackageReader(_In_ PImportStream pImportStream, _In_ PModelWarnings pWarnings, _In_ PProgressMonitor pProgressMonitor);
 		~COpcPackageReader();
 
 		_Ret_maybenull_ COpcPackageRelationship * findRootRelation(_In_ std::string sRelationType, _In_ nfBool bMustBeUnique) override;

@@ -41,7 +41,7 @@ A color reader model node is a parser for the color node of an XML Model Stream.
 
 namespace NMR {
 
-	CModelReaderNode093_Color::CModelReaderNode093_Color(_In_ PModelReaderWarnings pWarnings)
+	CModelReaderNode093_Color::CModelReaderNode093_Color(_In_ PModelWarnings pWarnings)
 		: CModelReaderNode(pWarnings)
 	{
 		m_nResourceID = 0;
