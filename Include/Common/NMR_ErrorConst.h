@@ -1327,5 +1327,8 @@ Library errors (0xAXXX)
 // Content encryption descritor not found
 #define NMR_ERROR_DEKDESCRIPTORNOTFOUND 0xA00B
 
+// Using cryptographically weak random number generator
+#define NMR_ERROR_RNGCALLBACKNOTCRYPTOSTRONG 0XA00C
+
 
 #endif // __NMR_ERRORCONST

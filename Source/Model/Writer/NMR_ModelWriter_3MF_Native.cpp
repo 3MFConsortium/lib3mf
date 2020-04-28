@@ -46,6 +46,7 @@ using LibZ and a native XML writer implementation.
 #include "Common/Platform/NMR_ExportStream_Memory.h"
 #include "Common/NMR_StringUtils.h" 
 #include "Common/3MF_ProgressMonitor.h"
+#include "Common/NMR_ModelWarnings.h"
 #include <functional>
 #include <sstream>
 
@@ -167,7 +168,7 @@ namespace NMR {
 			PModelAttachment pNonRootModelAttachment = m_pOtherModel->findModelAttachment(sNonRootModelPath);
 			if (pNonRootModelAttachment.get() != nullptr) {
 				if (pNonRootModelAttachment->getRelationShipType() != PACKAGE_START_PART_RELATIONSHIP_TYPE)
-					throw CNMRException(NMR_ERROR_DUPLICATEATTACHMENTPATH);
+					warnings()->addWarning(NMR_ERROR_DUPLICATEATTACHMENTPATH, eModelWarningLevel::mrwFatal);
 				pNonRootModelAttachment->setStream(pStream);
 			}
 			else

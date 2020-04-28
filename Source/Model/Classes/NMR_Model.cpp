@@ -55,6 +55,9 @@ A model is an in memory representation of the 3MF file.
 #include "Common/NMR_Exception.h"
 #include <sstream>
 #include <memory>
+#include <random>
+#include <mutex>
+#include <array>
 
 #include "Model/Reader/Slice1507/NMR_ModelReader_Slice1507_SliceRefModel.h"
 #include "Common/Platform/NMR_XmlReader.h"
@@ -1269,7 +1272,31 @@ namespace NMR {
 	nfUint64 CModel::generateRandomBytes(nfByte * bytes, nfUint64 size) {
 		if (m_sRandDescriptor.m_fnRNG)
 			return m_sRandDescriptor.m_fnRNG(bytes, size, m_sRandDescriptor.m_pUserData);
-		throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
+
+		static bool rngInitialized = false;
+		static std::random_device randDev;
+		static std::mt19937 mTwister;
+		static std::mutex mtLock;
+
+		{
+			//scope the guard to the generator initialization
+			std::lock_guard<std::mutex> guard(mtLock);
+			if (!rngInitialized) {
+				std::array<uint32_t, std::mt19937::state_size> seedData;
+				uint32_t curTime = static_cast<uint32_t>(time(nullptr));
+				for (auto it = seedData.begin(); it != seedData.end(); ++it)
+					*it = randDev() ^ curTime;
+				std::seed_seq seedSeq(seedData.begin(), seedData.end());
+				mTwister.seed(seedSeq);
+				rngInitialized = true;
+			}
+		}
+
+		std::uniform_int_distribution<std::mt19937::result_type> distByte(std::numeric_limits<nfByte>::min(), std::numeric_limits<nfByte>::max());
+		for (nfUint64 n = 0; n < size; ++n) {
+			*(bytes + n) = distByte(mTwister);
+		}
+		return size;
 	}
 
 }

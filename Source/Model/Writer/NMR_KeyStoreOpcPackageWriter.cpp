@@ -34,7 +34,7 @@ NMR_OpcPackageWriter.cpp defines an OPC Package writer in a portable way.
 #include "Common/NMR_StringUtils.h" 
 
 #include "Model/Classes/NMR_ModelConstants.h"
-
+#include "Common/NMR_ErrorConst.h"
 #include "Model/Writer/NMR_KeyStoreOpcPackageWriter.h" 
 #include "Model/Writer/SecureContent101/NMR_ModelWriterNode_KeyStore.h"
 #include "Common/Platform/NMR_ExportStream_Compressed.h"
@@ -50,7 +50,7 @@ NMR_OpcPackageWriter.cpp defines an OPC Package writer in a portable way.
 #include "Common/Platform/NMR_ExportStream_Encrypted.h"
 #include "Common/Platform/NMR_ImportStream_Encrypted.h"
 #include "Common/Platform/NMR_ExportStream.h"
-
+#include "Common/NMR_ModelWarnings.h"
 #include "Model/Classes/NMR_KeyStoreFactory.h"
 
 namespace NMR {
@@ -79,6 +79,8 @@ namespace NMR {
 		}
 
 		PModel const & model = m_pContext.model();
+		if (!model->hasCryptoRandCallbak())
+			m_pContext.warnings()->addWarning(NMR_ERROR_RNGCALLBACKNOTCRYPTOSTRONG, eModelWarningLevel::mrwInvalidOptionalValue);
 		for (nfUint64 i = 0; i < keyStore->getResourceDataCount(); ++i) {
 			PKeyStoreResourceData rd = keyStore->getResourceData(i);
 			if (rd->getGroup()->isOpen()) {
@@ -122,9 +124,10 @@ namespace NMR {
 			//give consumer a chance to (re)encrypt this key
 			nfUint64 wrapped = ctx.m_fnWrap(key, closedKey, ctx.m_sKekDecryptData);
 			ar->setCipherValue(closedKey);
-		} catch (CNMRException const &) {
-			if (ar->isNew())
-				throw;
+		} catch (CNMRException const & e) {
+			if (ar->isNew()) {
+				m_pContext.warnings()->addException(e, eModelWarningLevel::mrwFatal);
+			}
 			//here, either there is no registered consumer client or client decided not to refresh the value
 		}
 	}
@@ -140,7 +143,7 @@ namespace NMR {
 			if (secureContext->hasDekCtx()) {
 				return wrapPartStream(rd, pPart);
 			} else {
-				throw CNMRException(NMR_ERROR_DEKDESCRIPTORNOTFOUND);
+				m_pContext.warnings()->addWarning(NMR_ERROR_DEKDESCRIPTORNOTFOUND, eModelWarningLevel::mrwFatal);
 			}
 		}
 		return pPart;
@@ -188,9 +191,6 @@ namespace NMR {
 	}
 
 	void CKeyStoreOpcPackageWriter::writeKeyStoreStream(_In_ CXmlWriter * pXMLWriter) {
-		if (pXMLWriter == nullptr)
-			throw CNMRException(NMR_ERROR_INVALIDPARAM);
-
 		pXMLWriter->WriteStartDocument();
 
 		CModelWriterNode_KeyStore XMLNode4KeyStore(pXMLWriter, m_pContext.monitor(), m_pContext.keyStore());

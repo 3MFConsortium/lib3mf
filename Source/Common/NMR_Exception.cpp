@@ -466,6 +466,7 @@ namespace NMR {
 		case NMR_ERROR_INVALIDTEXTURETYPE: return "Invalid Texture type";
 		case NMR_ERROR_KEKDESCRIPTORNOTFOUND: return "Required key encryption client was not registered for a consumer";
 		case NMR_ERROR_DEKDESCRIPTORNOTFOUND: return "Required data encryption client was not registered";
+		case NMR_ERROR_RNGCALLBACKNOTCRYPTOSTRONG: return "Using cryptographically weak random number generator";
 
 		default:
 			return "unknown error";

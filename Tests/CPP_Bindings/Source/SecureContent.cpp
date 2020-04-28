@@ -182,7 +182,6 @@ namespace Lib3MF {
 			std::vector<Lib3MF_uint8> buffer;
 			{
 				PModel modelToCrpt = wrapper->CreateModel();
-				modelToCrpt->SetRandomNumberCallback(notRandomBytesAtAll, nullptr);
 
 				PReader reader = modelToCrpt->QueryReader("3mf");
 				reader->ReadFromFile(sTestFilesPath + "/Production/detachedmodel.3mf");
