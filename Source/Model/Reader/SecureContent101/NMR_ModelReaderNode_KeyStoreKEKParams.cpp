@@ -31,7 +31,7 @@ NMR_ModelReaderNode_KeyStoreCipherValue.h defines the Model Reader Node class th
 
 --*/
 
-#include "Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreKEKParams.h"
+#include "Model/Reader/SecureContent101/NMR_ModelReaderNode_KeyStoreKEKParams.h"
 
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Model/Classes/NMR_KeyStoreResourceData.h"

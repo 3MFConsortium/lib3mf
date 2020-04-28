@@ -48,7 +48,7 @@ NMR_KeyStoreOpcPackageReader.cpp defines an OPC Package reader in a portable way
 #include "Model/Classes/NMR_KeyStoreResourceData.h"
 #include "Model/Classes/NMR_KeyStoreResourceDataGroup.h"
 #include "Model/Reader/NMR_ModelReader_InstructionElement.h"
-#include "Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStore.h"
+#include "Model/Reader/SecureContent101/NMR_ModelReaderNode_KeyStore.h"
 #include <cstring>
 
 namespace NMR {

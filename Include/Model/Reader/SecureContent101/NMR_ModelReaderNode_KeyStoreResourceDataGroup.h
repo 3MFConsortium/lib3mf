@@ -26,42 +26,40 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelReaderNode_KeyStoreDecryptRight.h defines the Model Reader Node class that is related to <decryptright>.
+NMR_ModelReaderNode_KeyStoreResourceData.h defines the Model Reader Node class that is related to <resourcedata>.
 
 --*/
 
-#ifndef __NMR_MODELREADERNODE_KEYSTOACCESSRIGHT
-#define __NMR_MODELREADERNODE_KEYSTOACCESSRIGHT
+#ifndef __NMR_MODELREADERNODE_KEYSTORERESOURCEDATAGROUP
+#define __NMR_MODELREADERNODE_KEYSTORERESOURCEDATAGROUP
 
+#include "Model/Reader/SecureContent101/NMR_ModelReaderNode_KeyStoreAccessRight.h"
+#include "Model/Reader/SecureContent101/NMR_ModelReaderNode_KeyStoreResourceData.h"
 #include "Model/Reader/NMR_ModelReaderNode_KeyStoreBase.h"
 #include "Model/Reader/NMR_ModelReaderNode.h"
 #include "Model/Classes/NMR_KeyStore.h"
 #include "Model/Classes/NMR_KeyStoreAccessRight.h"
-#include "Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreKEKParams.h"
+#include "Model/Classes/NMR_KeyStoreResourceData.h"
+#include "Model/Classes/NMR_KeyStoreResourceDataGroup.h"
+
 
 namespace NMR {
 
-	class CModelReaderNode_KeyStoreAccessRight : public CModelReaderNode_KeyStoreBase {
+	class CModelReaderNode_KeyStoreResourceDataGroup : public CModelReaderNode_KeyStoreBase {
 	private:
-		nfBool m_bHasParams = false;
-		nfBool m_bHasConsumerIndex = false;
-		nfBool m_bHasCipherData = false;
-		nfUint64 m_nConsumerIndex = 0;
-		KEKPARAMS m_sParams;
-		std::vector<nfByte> m_rgCipherValue;
+		PKeyStoreResourceDataGroup m_pGroup;
+		nfBool m_bHasUuid = false;
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 	public:
-		CModelReaderNode_KeyStoreAccessRight() = delete;
+		CModelReaderNode_KeyStoreResourceDataGroup() = delete;
 		using CModelReaderNode_KeyStoreBase::CModelReaderNode_KeyStoreBase;
-
-		PKeyStoreAccessRight getAccessRight();
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 	};
 
-	typedef std::shared_ptr <CModelReaderNode_KeyStoreAccessRight> PModelReaderNode_KeyStoreAccessRight;
+	typedef std::shared_ptr <CModelReaderNode_KeyStoreResourceDataGroup> PModelReaderNode_KeyStoreResourceDataGroup;
 }
 
-#endif // __NMR_MODELREADERNODE_KEYSTOACCESSRIGHT
+#endif // __NMR_MODELREADERNODE_KEYSTORERESOURCEDATAGROUP

@@ -27,26 +27,29 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelReaderNode_KeyStore.h defines the Model Reader Node class that is related to <keystore>.
+NMR_ModelReaderNode_KeyStoreResourceData.h defines the Model Reader Node class that is related to <resourcedata>.
 
 --*/
 
-// TODO: check if needs #include <stdlib.h>
-// https://stackoverflow.com/questions/1646031/strtoull-and-long-long-arithmetic
-
-#include "Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStore.h"
-#include "Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreConsumer.h"
-#include "Model/Reader/SecureContent085/NMR_ModelReaderNode_KeyStoreResourceDataGroup.h"
-
+#include "Model/Reader/SecureContent101/NMR_ModelReaderNode_KeyStoreResourceData.h"
+#include "Model/Reader/SecureContent101/NMR_ModelReaderNode_KeyStoreCEKParams.h"
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Model/Classes/NMR_KeyStoreResourceData.h"
+#include "Model/Classes/NMR_KeyStoreFactory.h"
+#include "Model/Classes/NMR_PackageResourceID.h"
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_Exception_Windows.h"
 #include "Common/NMR_StringUtils.h"
 
 namespace NMR {
 
-	void CModelReaderNode_KeyStore::parseXML(_In_ CXmlReader * pXMLReader)
+	PKeyStoreResourceData CModelReaderNode_KeyStoreResourceData::getResourceData(PKeyStoreResourceDataGroup const & rdg)
+	{
+		PPackageModelPath p = model()->findOrCreateModelPath(m_sPath);
+		return CKeyStoreFactory::makeResourceData(rdg, p, m_pCekParams);
+	}
+
+	void CModelReaderNode_KeyStoreResourceData::parseXML(_In_ CXmlReader * pXMLReader)
 	{
 		// Parse name
 		parseName(pXMLReader);
@@ -57,47 +60,39 @@ namespace NMR {
 		// Parse Content
 		parseContent(pXMLReader);
 
-		// Set references
-		if (!m_UUID.get()) {
-			// We do not have to check for secure content spec, because it is the base spec of a keystore
-			m_pWarnings->addException(CNMRException(NMR_ERROR_MISSINGUUID), mrwMissingMandatoryValue);
-			m_UUID = std::make_shared<CUUID>();
-		}
-		keystore()->setUUID(m_UUID);
+		if (m_sPath.empty())
+			m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREMISSINGPATH), eModelReaderWarningLevel::mrwFatal);
+		if (nullptr == m_pCekParams)
+			m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREMISSINGCEKPARAMS), eModelReaderWarningLevel::mrwFatal);
 	}
 
-	void CModelReaderNode_KeyStore::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
+	void CModelReaderNode_KeyStoreResourceData::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
 	{
 		__NMRASSERT(pAttributeName);
 		__NMRASSERT(pAttributeValue);
-
-		if (strcmp(XML_3MF_SECURE_CONTENT_UUID, pAttributeName) == 0) {
-			if (m_UUID.get())
-				m_pWarnings->addException(CNMRException(NMR_ERROR_DUPLICATEUUID), eModelReaderWarningLevel::mrwInvalidMandatoryValue);
-			// this can throw for invalid UUIDs and it's ok so according to other reader nodes
-			m_UUID = std::make_shared<CUUID>(pAttributeValue);
+		
+		if (strcmp(XML_3MF_SECURE_CONTENT_PATH, pAttributeName) == 0) {
+			if (!m_sPath.empty())
+				m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREDUPLICATERESOURCEDATAPATH), eModelReaderWarningLevel::mrwInvalidMandatoryValue);
+			m_sPath = pAttributeValue;
 		}
-		else if (strcmp(XML_3MF_ATTRIBUTE_XMLNS, pAttributeName) != 0)
+		else
 			m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE), mrwInvalidOptionalValue);
 	}
 
-	void CModelReaderNode_KeyStore::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
+	void CModelReaderNode_KeyStoreResourceData::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
 	{
 		__NMRASSERT(pChildName);
 		__NMRASSERT(pXMLReader);
 		__NMRASSERT(pNameSpace);
 
 		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_SECURECONTENTSPEC) == 0) {
-			// Read a consumer
-			if (strcmp(pChildName, XML_3MF_ELEMENT_CONSUMER) == 0) {
-				PModelReaderNode_KeyStoreConsumer pXMLNode = extractCopy<CModelReaderNode_KeyStoreConsumer>();
-				pXMLNode->parseXML(pXMLReader);
-				// consumer adds itself to m_pKeyStore, nothing else to do here
-			}
-			else if (strcmp(pChildName, XML_3MF_ELEMENT_RESOURCEDATAGROUP) == 0) {
-				PModelReaderNode_KeyStoreResourceDataGroup pXMLNode = extractCopy<CModelReaderNode_KeyStoreResourceDataGroup>();
-				pXMLNode->parseXML(pXMLReader);
-				// resource data adds itself to m_pKeyStore, nothing else to do here
+			if (strcmp(pChildName, XML_3MF_ELEMENT_CEKPARAMS) == 0) {
+				if (nullptr == m_pCekParams) {
+					PModelReaderNode_KeyStoreCEKParams pXMLNode = extractCopy<CModelReaderNode_KeyStoreCEKParams>();
+					pXMLNode->parseXML(pXMLReader);
+					m_pCekParams = pXMLNode->getCEKParams();
+				}
 			}
 			else
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);

@@ -36,7 +36,7 @@ NMR_OpcPackageWriter.cpp defines an OPC Package writer in a portable way.
 #include "Model/Classes/NMR_ModelConstants.h"
 
 #include "Model/Writer/NMR_KeyStoreOpcPackageWriter.h" 
-#include "Model/Writer/SecureContent085/NMR_ModelWriterNode_KeyStore.h"
+#include "Model/Writer/SecureContent101/NMR_ModelWriterNode_KeyStore.h"
 #include "Common/Platform/NMR_ExportStream_Compressed.h"
 #include "Common/Platform/NMR_XmlWriter_Native.h"
 #include "Common/OPC/NMR_OpcPackageWriter.h"

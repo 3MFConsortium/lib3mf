@@ -31,7 +31,7 @@ A model writer exports the in memory represenation into a 3MF file.
 
 --*/
 
-#include "Model/Writer/SecureContent085/NMR_ModelWriterNode_KeyStore.h"
+#include "Model/Writer/SecureContent101/NMR_ModelWriterNode_KeyStore.h"
 #include "Model/Writer/NMR_ModelWriter_3MF.h"
 #include "Model/Writer/v100/NMR_ModelWriterNode100_Model.h"
 #include "Model/Classes/NMR_ModelConstants.h"
