@@ -53,7 +53,13 @@ namespace NMR {
 
 	void CPackageModelPath::setPath(std::string sPath)
 	{
-		m_sPath = sPath;
+		if (m_sPath != sPath) {
+			PPackageModelPath pPath = m_pResourceHandler->findPackageModelPath(sPath);
+			if (pPath) {
+				throw CNMRException(NMR_ERROR_DUPLICATEPACKAGEPATH);
+			}
+			m_sPath = sPath;
+		}
 	}
 
 	CPackageResourceID::CPackageResourceID(CResourceHandler* pResourceHandler, PPackageModelPath pModelPath, ModelResourceID nID)

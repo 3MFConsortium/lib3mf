@@ -59,26 +59,3 @@ void CPackagePart::Set(const std::string & sPath)
 {
 	m_pPath->setPath(sPath);
 }
-
-
-CPackageResourcePath::CPackageResourcePath(NMR::PPackageResourceID pPath)
-	: m_pResource(pPath) {
-	if (!pPath.get())
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
-}
-
-std::string CPackageResourcePath::Get() {
-	return m_pResource->getPath();
-}
-
-void CPackageResourcePath::Set(const std::string & sPath) {
-	NMR::CResourceHandler * pRH = m_pResource->getResourceHandler();
-
-	NMR::PPackageModelPath pPath = pRH->findPackageModelPath(sPath);
-	if (nullptr == pPath) {
-		pPath = pRH->makePackageModelPath(sPath);
-	}
-	NMR::CPackageResourceID::setModelPath(m_pResource, pPath);
-}
-
-

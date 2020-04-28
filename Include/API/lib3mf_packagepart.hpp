@@ -83,34 +83,6 @@ public:
 
 };
 
-class CPackageResourcePath : public virtual IPackagePart, public virtual CBase {
-private:
-
-	/**
-	* Put private members here.
-	*/
-	NMR::PPackageResourceID m_pResource;
-
-protected:
-
-	/**
-	* Put protected members here.
-	*/
-
-public:
-
-	/**
-	* Put additional public members here. They will not be visible in the external API.
-	*/
-	CPackageResourcePath(NMR::PPackageResourceID pPath);
-
-	/**
-	* Public member functions to implement.
-	*/
-	std::string Get() override;
-	void Set(const std::string & sPath) override;
-};
-
 } // namespace Impl
 } // namespace Lib3MF
 

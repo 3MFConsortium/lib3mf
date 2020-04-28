@@ -84,6 +84,13 @@ namespace Lib3MF
 	};
 	PWrapper ProductionExtension::wrapper;
 
+	TEST_F(ProductionExtension, ManipulatePaths)
+	{
+		auto rootPart = model->RootModelPart();
+		auto otherPart = model->FindOrCreatePackagePart("/somepart");
+		ASSERT_SPECIFIC_THROW(otherPart->Set(rootPart->Get()), ELib3MFException);
+	}
+
 	TEST_F(ProductionExtension, ReadInspect)
 	{
 		auto buffer = ReadFileIntoBuffer(sTestFilesPath + "/Production/" + "2ProductionBoxes.3mf");
