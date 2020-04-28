@@ -55,11 +55,6 @@ namespace NMR {
 		}
 	}
 
-	CModelReaderNode_KeyStoreCEKParams::CModelReaderNode_KeyStoreCEKParams(CKeyStore * pKeyStore, PModelReaderWarnings pWarnings)
-		: CModelReaderNode_KeyStoreBase(pKeyStore, pWarnings)
-	{
-	}
-
 	PKeyStoreCEKParams CModelReaderNode_KeyStoreCEKParams::getCEKParams()
 	{
 		return CKeyStoreFactory::makeCEKParams(m_bCompressed, m_eAlgorithm, m_aad, m_iv, m_tag);

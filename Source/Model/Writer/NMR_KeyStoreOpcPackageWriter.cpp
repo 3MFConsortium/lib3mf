@@ -92,7 +92,7 @@ namespace NMR {
 	POpcPackagePart CKeyStoreOpcPackageWriter::wrapPartStream(PKeyStoreResourceData rd, POpcPackagePart part) {
 		PSecureContext secureContext = m_pContext->getSecureContext();
 		ContentEncryptionDescriptor p = secureContext->getDekCtx();
-		PKeyStoreResourceDataGroup rdg = m_pContext->getKeyStore()->findResourceDataGroupByResourceDataPath(rd->getPath());
+		PKeyStoreResourceDataGroup rdg = m_pContext->getKeyStore()->findResourceDataGroupByResourceDataPath(rd->packagePath());
 		p.m_sDekDecryptData.m_sParams = CKeyStoreFactory::makeContentEncryptionParams(rd, rdg);
 
 		PExportStream stream;
@@ -109,7 +109,7 @@ namespace NMR {
 	void CKeyStoreOpcPackageWriter::refreshResourceDataTag(PKeyStoreResourceData rd) {
 		PSecureContext secureContext = m_pContext->getSecureContext();
 		ContentEncryptionDescriptor dekCtx = secureContext->getDekCtx();
-		PKeyStoreResourceDataGroup rdg = m_pContext->getKeyStore()->findResourceDataGroupByResourceDataPath(rd->getPath());
+		PKeyStoreResourceDataGroup rdg = m_pContext->getKeyStore()->findResourceDataGroupByResourceDataPath(rd->packagePath());
 		dekCtx.m_sDekDecryptData.m_sParams = CKeyStoreFactory::makeContentEncryptionParams(rd, rdg);
 		dekCtx.m_fnCrypt(0, nullptr, nullptr, dekCtx.m_sDekDecryptData);
 		rd->setAuthTag(dekCtx.m_sDekDecryptData.m_sParams->getAuthTag());

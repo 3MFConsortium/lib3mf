@@ -43,12 +43,6 @@ NMR_ModelReaderNode_KeyStoreAccessRight.h defines the Model Reader Node class th
 
 namespace NMR {
 
-
-	CModelReaderNode_KeyStoreAccessRight::CModelReaderNode_KeyStoreAccessRight(CKeyStore * pKeyStore, PModelReaderWarnings pWarnings)
-		: CModelReaderNode_KeyStoreBase(pKeyStore, pWarnings)
-	{
-	}
-
 	PKeyStoreAccessRight CModelReaderNode_KeyStoreAccessRight::getAccessRight()
 	{
 		return CKeyStoreFactory::makeAccessRight(
@@ -107,14 +101,14 @@ namespace NMR {
 			if (strcmp(pChildName, XML_3MF_ELEMENT_KEKPARAMS) == 0) {
 				if (!m_bHasParams) {
 					m_bHasParams = true;
-					PModelReaderNode_KeyStoreKEKParams pXMLNode = std::make_shared<CModelReaderNode_KeyStoreKEKParams>(m_pKeyStore, m_pWarnings);
+					PModelReaderNode_KeyStoreKEKParams pXMLNode = extractCopy<CModelReaderNode_KeyStoreKEKParams>();
 					pXMLNode->parseXML(pXMLReader);
 					m_sParams = pXMLNode->getKekParams();
 				}
 			} else if (strcmp(pChildName, XML_3MF_ELEMENT_CIPHERDATA) == 0) {
 				if (!m_bHasCipherData) {
 					m_bHasCipherData = true;
-					PModelReaderNode_KeyStoreCipherValue pXMLNode = std::make_shared<CModelReaderNode_KeyStoreCipherValue>(m_pKeyStore, m_pWarnings);
+					PModelReaderNode_KeyStoreCipherValue pXMLNode = extractCopy<CModelReaderNode_KeyStoreCipherValue>();
 					pXMLNode->parseXML(pXMLReader);
 					m_rgCipherValue = pXMLNode->getCipherValue();
 				}

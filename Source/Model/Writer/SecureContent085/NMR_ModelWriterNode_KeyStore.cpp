@@ -196,7 +196,7 @@ void NMR::CModelWriterNode_KeyStore::writeResourceData(PKeyStoreResourceData con
 	// <resourcedata>
 	writeStartElement(XML_3MF_ELEMENT_RESOURCEDATA);
 	// path - attribute
-	writeConstStringAttribute(XML_3MF_SECURE_CONTENT_PATH, rd->getPath().c_str());
+	writeConstStringAttribute(XML_3MF_SECURE_CONTENT_PATH, rd->packagePath()->getPath().c_str());
 	writeStartElement(XML_3MF_ELEMENT_CEKPARAMS);
 	// encryptionalgorithm - attribute
 	writeEncryptionAlgorithmAttribute(rd->getEncryptionAlgorithm());

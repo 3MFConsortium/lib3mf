@@ -68,7 +68,7 @@ namespace NMR {
 		virtual ~CModelReaderNode() = default;
 
 		std::string getName();
-		PModelReaderWarnings getWarnings();
+		PModelReaderWarnings getWarnings() const;
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader) = 0;
 	};

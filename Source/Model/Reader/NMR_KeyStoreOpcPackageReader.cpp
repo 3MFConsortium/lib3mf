@@ -52,19 +52,17 @@ NMR_KeyStoreOpcPackageReader.cpp defines an OPC Package reader in a portable way
 #include <cstring>
 
 namespace NMR {
-	CKeyStoreOpcPackageReader::CKeyStoreOpcPackageReader(PImportStream pImportStream, PKeyStore pKeyStore, PSecureContext pSecureContext, PModelReaderWarnings pWarnings, PProgressMonitor pProgressMonitor)
-		:m_pSecureContext(pSecureContext), m_pKeyStore(pKeyStore)
-	{
-		if (nullptr == pSecureContext)
+	CKeyStoreOpcPackageReader::CKeyStoreOpcPackageReader(PImportStream pImportStream, PModel pModel, PSecureContext pSecureContext, PModelReaderWarnings pWarnings, PProgressMonitor pProgressMonitor)	{
+		if (nullptr == pSecureContext || nullptr == pModel || nullptr == pWarnings)
 			throw CNMRException(NMR_ERROR_INVALIDPOINTER);
-
-		m_nfHandler = 0;
-		m_pPackageReader = std::make_shared<COpcPackageReader>(pImportStream, pWarnings, pProgressMonitor);
+		m_pSecureContext = pSecureContext;
+		m_pKeyStore = pModel->getKeyStore();
 		m_pWarnings = pWarnings;
+		m_pPackageReader = std::make_shared<COpcPackageReader>(pImportStream, pWarnings, pProgressMonitor);
 
 		PImportStream keyStoreStream = findKeyStoreStream();
 		if (nullptr != keyStoreStream) {
-			parseKeyStore(keyStoreStream, pProgressMonitor);
+			parseKeyStore(pModel, keyStoreStream, pProgressMonitor);
 
 			if (!m_pKeyStore->empty()) {
 				openAllResourceDataGroups();
@@ -132,7 +130,7 @@ namespace NMR {
 		return nullptr;
 	}
 
-	void CKeyStoreOpcPackageReader::parseKeyStore(NMR::PImportStream keyStoreStream, NMR::PProgressMonitor pProgressMonitor) {
+	void CKeyStoreOpcPackageReader::parseKeyStore(NMR::PModel pModel, NMR::PImportStream keyStoreStream, NMR::PProgressMonitor pProgressMonitor) {
 
 		PXmlReader pXMLReader = fnCreateXMLReaderInstance(keyStoreStream, pProgressMonitor);
 		nfBool bHasModel = false;
@@ -159,7 +157,7 @@ namespace NMR {
 					throw CNMRException(NMR_ERROR_DUPLICATEMODELNODE);
 				bHasModel = true;
 
-				PModelReaderNode_KeyStore pXMLNode = std::make_shared<CModelReaderNode_KeyStore>(m_pKeyStore.get(), m_pWarnings);
+				PModelReaderNode_KeyStore pXMLNode = std::make_shared<CModelReaderNode_KeyStore>(pModel.get(), m_pKeyStore.get(), m_pWarnings);
 				pXMLNode->parseXML(pXMLReader.get());
 			}
 		}
@@ -191,7 +189,7 @@ namespace NMR {
 		if (m_pSecureContext->hasDekCtx()) {
 			for (nfUint64 i = 0; i < m_pKeyStore->getResourceDataCount(); ++i) {
 				NMR::PKeyStoreResourceData rd = m_pKeyStore->getResourceData(i);
-				NMR::PKeyStoreResourceDataGroup rdg = m_pKeyStore->findResourceDataGroupByResourceDataPath(rd->getPath());
+				NMR::PKeyStoreResourceDataGroup rdg = m_pKeyStore->findResourceDataGroupByResourceDataPath(rd->packagePath());
 				PKeyStoreContentEncryptionParams params = CKeyStoreFactory::makeContentEncryptionParams(rd, rdg);
 				ContentEncryptionDescriptor descriptor = m_pSecureContext->getDekCtx();
 				descriptor.m_sDekDecryptData.m_sParams= params;

@@ -84,7 +84,7 @@ namespace NMR {
 		return m_sName;
 	}
 
-	PModelReaderWarnings CModelReaderNode::getWarnings()
+	PModelReaderWarnings CModelReaderNode::getWarnings() const
 	{
 		return m_pWarnings;
 	}

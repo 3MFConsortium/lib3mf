@@ -33,18 +33,33 @@ NMR_ModelReaderNode_KeyStoreBase.h defines the base class for all Model Reader N
 #ifndef __NMR_MODELREADERNODE_KEYSTOREBASE
 #define __NMR_MODELREADERNODE_KEYSTOREBASE
 
+#include "Common/NMR_Local.h"
 #include "Model/Reader/NMR_ModelReaderNode.h"
+#include "Model/Classes/NMR_Model.h"
 #include "Model/Classes/NMR_KeyStore.h"
-
+#include <memory>
 namespace NMR {
 
 	class CModelReaderNode_KeyStoreBase : public CModelReaderNode {
 	protected:
-		CKeyStore * m_pKeyStore;
+		CKeyStore * const m_pKeyStore;
+		CModel * const m_pModel;
 
 	public:
 		CModelReaderNode_KeyStoreBase() = delete;
-		CModelReaderNode_KeyStoreBase(_In_ CKeyStore * pKeyStore, _In_ PModelReaderWarnings pWarnings);
+		CModelReaderNode_KeyStoreBase(_In_ CModel * const pModel, _In_ CKeyStore * const pKeyStore, _In_ PModelReaderWarnings pWarnings);
+
+		inline CKeyStore * const keystore() const {
+			return m_pKeyStore;
+		}
+
+		inline CModel * const model() const {
+			return m_pModel;
+		}
+
+		template<class T> std::shared_ptr<T> extractCopy() const {
+			return std::make_shared<T>(model(), keystore(), getWarnings());
+		}
 	};
 }
 

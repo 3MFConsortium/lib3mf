@@ -51,7 +51,8 @@ namespace NMR {
 	class CKeyStoreAccessRight;
 	using PKeyStoreAccessRight = std::shared_ptr<CKeyStoreAccessRight>;
 
-
+	class CPackageModelPath;
+	using PPackageModelPath = std::shared_ptr<CPackageModelPath>;
 
 	class CKeyStore {
 	private:
@@ -64,7 +65,7 @@ namespace NMR {
 		std::map<PUUID, PKeyStoreResourceDataGroup> m_ResourceDataGroupsRefs;
 
 		std::vector<PKeyStoreResourceData> m_ResourceDatas;
-		std::map<std::string, PKeyStoreResourceData> m_ResourceDataRefs;
+		std::map<PPackageModelPath, PKeyStoreResourceData> m_ResourceDataRefs;
 
 		std::mutex mtx;
 	public:
@@ -81,16 +82,19 @@ namespace NMR {
 		nfUint64 getResourceDataGroupCount() const;
 		PKeyStoreResourceDataGroup getResourceDataGroup(nfUint64 index) const;
 		void addResourceDataGroup(PKeyStoreResourceDataGroup const &dataGroup);
-		PKeyStoreResourceDataGroup findResourceDataGroupByResourceDataPath(std::string const & rdPath);
+		PKeyStoreResourceDataGroup findResourceDataGroupByResourceDataPath(PPackageModelPath const & rdPath);
 		void removeResourceDataGroup(PKeyStoreResourceDataGroup rdg);
 
 		nfUint64 addResourceData(PKeyStoreResourceData const & rd);
 		void removeResourceData(NMR::PKeyStoreResourceData const & rd);
 		nfUint64 getResourceDataCount();
 		PKeyStoreResourceData getResourceData(nfUint64 index) const;
-		PKeyStoreResourceData findResourceData(std::string const & path);
+		PKeyStoreResourceData findResourceData(PPackageModelPath const & path);
 
 		std::vector<PKeyStoreResourceData> getResourceDataByGroup(PKeyStoreResourceDataGroup const & rdg) const;
+
+		PKeyStoreResourceDataGroup findResourceDataGroupByResourceDataPath(std::string const & rdPath);
+		PKeyStoreResourceData findResourceData(std::string const & path);
 
 		bool empty() const;
 	protected:

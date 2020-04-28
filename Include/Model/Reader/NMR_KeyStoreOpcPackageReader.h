@@ -44,7 +44,8 @@ NMR_KeyStoreOpcPackageReader.h defines an OPC Package reader in a portable way.
 #include "Model/Reader/NMR_ModelReaderWarnings.h"
 
 namespace NMR {
-
+	class CModel;
+	using PModel = std::shared_ptr<CModel>;
 	class CSecureContext;
 	using PSecureContext = std::shared_ptr<CSecureContext>;
 	class CKeyStore;
@@ -60,11 +61,11 @@ namespace NMR {
 		std::map<std::string, POpcPackagePart> m_encryptedParts;
 	protected:
 		NMR::PImportStream findKeyStoreStream();
-		void parseKeyStore(NMR::PImportStream keyStoreStream, NMR::PProgressMonitor pProgressMonitor);
+		void parseKeyStore(PModel pModel, NMR::PImportStream keyStoreStream, NMR::PProgressMonitor pProgressMonitor);
 		void openAllResourceDataGroups();
 		void checkAuthenticatedTags();
 	public:
-		CKeyStoreOpcPackageReader(_In_ PImportStream pImportStream, _In_ PKeyStore pKeyStore, _In_ PSecureContext pSecureContext, _In_ PModelReaderWarnings pWarnings, _In_ PProgressMonitor pProgressMonitor);
+		CKeyStoreOpcPackageReader(_In_ PImportStream pImportStream, _In_ PModel pModel, _In_ PSecureContext pSecureContext, _In_ PModelReaderWarnings pWarnings, _In_ PProgressMonitor pProgressMonitor);
 
 		// Inherited via IOpcPackageReader
 		virtual COpcPackageRelationship * findRootRelation(std::string sRelationType, nfBool bMustBeUnique) override;

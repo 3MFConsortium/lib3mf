@@ -55,7 +55,7 @@ namespace NMR {
 
 	public:
 		CModelReaderNode_KeyStoreCEKParams() = delete;
-		CModelReaderNode_KeyStoreCEKParams(_In_ CKeyStore * pKeyStore, _In_ PModelReaderWarnings pWarnings);
+		using CModelReaderNode_KeyStoreBase::CModelReaderNode_KeyStoreBase;
 
 		PKeyStoreCEKParams getCEKParams();
 

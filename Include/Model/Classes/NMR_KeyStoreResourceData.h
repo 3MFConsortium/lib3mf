@@ -47,20 +47,20 @@ namespace NMR {
 
 	class CKeyStoreResourceData: public CKeyStoreCEKParams {
 		PKeyStoreResourceDataGroup m_pGroup;
-		std::string m_sPath;
+		PPackageModelPath m_pPath;
 		static nfUint64 s_nfHandleCount;
 	public:
 		CKeyStoreResourceData(
 			PKeyStoreResourceDataGroup const & rdg,
-			std::string const& path, 
+			PPackageModelPath const & path,
 			bool compression,
 			eKeyStoreEncryptAlgorithm alg,
 			std::vector<nfByte> const & iv,
 			std::vector<nfByte> const & tag,
 			std::vector<nfByte> const & aad);
 
-		inline std::string const & getPath() const {
-			return m_sPath;
+		inline PPackageModelPath packagePath() const {
+			return m_pPath;
 		}
 
 		inline PKeyStoreResourceDataGroup const & getGroup() const {

@@ -46,12 +46,6 @@ NMR_ModelReaderNode_KeyStore.h defines the Model Reader Node class that is relat
 
 namespace NMR {
 
-	CModelReaderNode_KeyStore::CModelReaderNode_KeyStore(CKeyStore * pKeyStore, PModelReaderWarnings pWarnings)
-		: CModelReaderNode_KeyStoreBase(pKeyStore, pWarnings)
-	{
-
-	}
-
 	void CModelReaderNode_KeyStore::parseXML(_In_ CXmlReader * pXMLReader)
 	{
 		// Parse name
@@ -63,18 +57,13 @@ namespace NMR {
 		// Parse Content
 		parseContent(pXMLReader);
 
-		// TODO: add checks similar to build item reader
-
-		// TODO: a path must not show up in more than one resourcedata element
-
 		// Set references
 		if (!m_UUID.get()) {
 			// We do not have to check for secure content spec, because it is the base spec of a keystore
 			m_pWarnings->addException(CNMRException(NMR_ERROR_MISSINGUUID), mrwMissingMandatoryValue);
 			m_UUID = std::make_shared<CUUID>();
 		}
-		m_pKeyStore->setUUID(m_UUID);
-		//pBuildItem->setPath(m_sPath);
+		keystore()->setUUID(m_UUID);
 	}
 
 	void CModelReaderNode_KeyStore::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
@@ -101,12 +90,12 @@ namespace NMR {
 		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_SECURECONTENTSPEC) == 0) {
 			// Read a consumer
 			if (strcmp(pChildName, XML_3MF_ELEMENT_CONSUMER) == 0) {
-				PModelReaderNode_KeyStoreConsumer pXMLNode = std::make_shared<CModelReaderNode_KeyStoreConsumer>(m_pKeyStore, m_pWarnings);
+				PModelReaderNode_KeyStoreConsumer pXMLNode = extractCopy<CModelReaderNode_KeyStoreConsumer>();
 				pXMLNode->parseXML(pXMLReader);
 				// consumer adds itself to m_pKeyStore, nothing else to do here
 			}
 			else if (strcmp(pChildName, XML_3MF_ELEMENT_RESOURCEDATAGROUP) == 0) {
-				PModelReaderNode_KeyStoreResourceDataGroup pXMLNode = std::make_shared<CModelReaderNode_KeyStoreResourceDataGroup>(m_pKeyStore, m_pWarnings);
+				PModelReaderNode_KeyStoreResourceDataGroup pXMLNode = extractCopy<CModelReaderNode_KeyStoreResourceDataGroup>();
 				pXMLNode->parseXML(pXMLReader);
 				// resource data adds itself to m_pKeyStore, nothing else to do here
 			}

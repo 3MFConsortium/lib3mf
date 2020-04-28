@@ -56,7 +56,7 @@ namespace NMR {
 
 	PImportStream CModelReader_3MF_Native::extract3MFOPCPackage(_In_ PImportStream pPackageStream)
 	{
-		m_pPackageReader = std::make_shared<CKeyStoreOpcPackageReader>(pPackageStream, model()->getKeyStore(), getSecureContext(), m_pWarnings, monitor());
+		m_pPackageReader = std::make_shared<CKeyStoreOpcPackageReader>(pPackageStream, model(), getSecureContext(), getWarnings(), monitor());
 
 		COpcPackageRelationship * pModelRelation = m_pPackageReader->findRootRelation(PACKAGE_START_PART_RELATIONSHIP_TYPE, true);
 		if (pModelRelation == nullptr)

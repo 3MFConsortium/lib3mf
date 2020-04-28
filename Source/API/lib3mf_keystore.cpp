@@ -106,7 +106,11 @@ void Lib3MF::Impl::CKeyStore::RemoveResourceDataGroup(IResourceDataGroup * pTheR
 }
 
 Lib3MF::Impl::IResourceDataGroup * Lib3MF::Impl::CKeyStore::FindResourceDataGroup(Lib3MF::Impl::IPackagePart *pPartPath) {
-	NMR::PKeyStoreResourceDataGroup dg = m_pKeyStore->findResourceDataGroupByResourceDataPath(pPartPath->Get());
+	NMR::PPackageModelPath pPath = m_pModel->findOrCreateModelPath(pPartPath->Get());
+	if (!pPath)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+
+	NMR::PKeyStoreResourceDataGroup dg = m_pKeyStore->findResourceDataGroupByResourceDataPath(pPath);
 	if (!dg)
 		return nullptr;
 	return new CResourceDataGroup(dg);
@@ -118,16 +122,16 @@ Lib3MF::Impl::IResourceData * Lib3MF::Impl::CKeyStore::AddResourceData(Lib3MF::I
 	CResourceDataGroup * dg = dynamic_cast<CResourceDataGroup *>(pResourceDataGroup);
 	if (!dg)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
-
+	//pPartPath might have different implementations, so asking model get us right to what we need.
 	NMR::PPackageModelPath pPath = m_pModel->findOrCreateModelPath(pPartPath->Get());
 	if (!pPath)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
 
 	std::vector<NMR::nfByte> aad(pAdditionalAuthenticationDataBuffer, pAdditionalAuthenticationDataBuffer + nAdditionalAuthenticationDataBufferSize);
 	NMR::PKeyStoreCEKParams params = NMR::CKeyStoreFactory::makeCEKParams(compression, algorithm, aad);
-	NMR::PKeyStoreResourceData rd = NMR::CKeyStoreFactory::makeResourceData(dg->resourceDataGroup(), pPartPath->Get(), params);
+	NMR::PKeyStoreResourceData rd = NMR::CKeyStoreFactory::makeResourceData(dg->resourceDataGroup(), pPath, params);
 	m_pKeyStore->addResourceData(rd);
-	return new CResourceData(rd, pPath);
+	return new CResourceData(rd);
 }
 
 void Lib3MF::Impl::CKeyStore::RemoveResourceData(Lib3MF::Impl::IResourceData *pResourceData) {
@@ -143,14 +147,15 @@ Lib3MF_uint64 Lib3MF::Impl::CKeyStore::GetResourceDataCount() {
 
 Lib3MF::Impl::IResourceData * Lib3MF::Impl::CKeyStore::GetResourceData(Lib3MF_uint64 nResourceDataIndex) {
 	NMR::PKeyStoreResourceData rd = m_pKeyStore->getResourceData(nResourceDataIndex);
-	NMR::PPackageModelPath p = m_pModel->findOrCreateModelPath(rd->getPath());
-	return new CResourceData(rd, p);
+	return new CResourceData(rd);
 }
 
 IResourceData * Lib3MF::Impl::CKeyStore::FindResourceData(IPackagePart * pResourcePath) {
-	NMR::PKeyStoreResourceData rd = m_pKeyStore->findResourceData(pResourcePath->Get());
+	NMR::PPackageModelPath pPath = m_pModel->findOrCreateModelPath(pResourcePath->Get());
+	if (!pPath)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+	NMR::PKeyStoreResourceData rd = m_pKeyStore->findResourceData(pPath);
 	if (!rd)
 		return nullptr;
-	NMR::PPackageModelPath p = m_pModel->findOrCreateModelPath(rd->getPath());
-	return new CResourceData(rd, p);
+	return new CResourceData(rd);
 }

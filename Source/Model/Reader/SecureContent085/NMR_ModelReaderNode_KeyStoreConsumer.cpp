@@ -41,12 +41,6 @@ NMR_ModelReaderNode_KeyStoreConsumer.h defines the Model Reader Node class that 
 
 namespace NMR {
 
-	CModelReaderNode_KeyStoreConsumer::CModelReaderNode_KeyStoreConsumer(CKeyStore * pKeyStore, PModelReaderWarnings pWarnings)
-		: CModelReaderNode_KeyStoreBase(pKeyStore, pWarnings)
-	{
-
-	}
-
 	void CModelReaderNode_KeyStoreConsumer::parseXML(_In_ CXmlReader * pXMLReader)
 	{
 		// Parse name

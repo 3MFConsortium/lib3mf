@@ -47,7 +47,7 @@ namespace NMR {
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 	public:
 		CModelReaderNode_KeyStoreCipherValue() = delete;
-		CModelReaderNode_KeyStoreCipherValue(_In_ CKeyStore * pKeyStore, _In_ PModelReaderWarnings pWarnings);
+		using CModelReaderNode_KeyStoreBase::CModelReaderNode_KeyStoreBase;
 
 		std::vector<nfByte> const & getCipherValue() const;
 

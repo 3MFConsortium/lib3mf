@@ -45,11 +45,6 @@ NMR_ModelReaderNode_KeyStoreCipherValue.h defines the Model Reader Node class th
 
 namespace NMR {
 
-	CModelReaderNode_KeyStoreCipherValue::CModelReaderNode_KeyStoreCipherValue(CKeyStore * pKeyStore, PModelReaderWarnings pWarnings)
-		: CModelReaderNode_KeyStoreBase(pKeyStore, pWarnings)
-	{
-	}
-
 	std::vector<nfByte> const & CModelReaderNode_KeyStoreCipherValue::getCipherValue() const
 	{
 		return m_sCipherValue;

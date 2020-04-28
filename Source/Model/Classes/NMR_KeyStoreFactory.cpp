@@ -28,7 +28,7 @@ namespace NMR {
 		return std::make_shared<CKeyStoreAccessRight>(consumer, algorithm, mask, digest, cipherValue);
 	}
 
-	PKeyStoreResourceData CKeyStoreFactory::makeResourceData(PKeyStoreResourceDataGroup const & rdg, std::string const & path, PKeyStoreCEKParams params) {
+	PKeyStoreResourceData CKeyStoreFactory::makeResourceData(PKeyStoreResourceDataGroup const & rdg, PPackageModelPath const & path, PKeyStoreCEKParams params) {
 		return std::make_shared<CKeyStoreResourceData>(rdg, path,
 			params->isCompressed(),
 			params->getEncryptionAlgorithm(),

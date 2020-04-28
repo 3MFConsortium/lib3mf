@@ -46,9 +46,6 @@ NMR_ModelReaderNode_KeyStoreResourceDataGroup.h defines the Model Reader Node cl
 
 namespace NMR {
 
-	CModelReaderNode_KeyStoreResourceDataGroup::CModelReaderNode_KeyStoreResourceDataGroup(CKeyStore * pKeyStore, PModelReaderWarnings pWarnings)
-		: CModelReaderNode_KeyStoreBase(pKeyStore, pWarnings) {}
-
 	void CModelReaderNode_KeyStoreResourceDataGroup::parseXML(_In_ CXmlReader * pXMLReader)
 	{
 		// Parse name
@@ -66,7 +63,7 @@ namespace NMR {
 		// Parse Content
 		parseContent(pXMLReader);
 		
-		m_pKeyStore->addResourceDataGroup(m_pGroup);
+		keystore()->addResourceDataGroup(m_pGroup);
 	}
 
 	void CModelReaderNode_KeyStoreResourceDataGroup::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
@@ -96,12 +93,12 @@ namespace NMR {
 
 		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_SECURECONTENTSPEC) == 0) {
 			if (strcmp(pChildName, XML_3MF_ELEMENT_RESOURCEDATA) == 0) {
-				PModelReaderNode_KeyStoreResourceData pXMLNode = std::make_shared<CModelReaderNode_KeyStoreResourceData>(m_pKeyStore, m_pWarnings);
+				PModelReaderNode_KeyStoreResourceData pXMLNode = extractCopy<CModelReaderNode_KeyStoreResourceData>();
 				pXMLNode->parseXML(pXMLReader);
 				PKeyStoreResourceData rd = pXMLNode->getResourceData(m_pGroup);
 				m_pKeyStore->addResourceData(rd);
 			} else if (strcmp(pChildName, XML_3MF_ELEMENT_ACCESSRIGHT) == 0) {
-				PModelReaderNode_KeyStoreAccessRight pXMLNode = std::make_shared<CModelReaderNode_KeyStoreAccessRight>(m_pKeyStore, m_pWarnings);
+				PModelReaderNode_KeyStoreAccessRight pXMLNode = extractCopy<CModelReaderNode_KeyStoreAccessRight>();
 				pXMLNode->parseXML(pXMLReader);
 				PKeyStoreAccessRight ar = pXMLNode->getAccessRight();
 				m_pGroup->addAccessRight(ar);

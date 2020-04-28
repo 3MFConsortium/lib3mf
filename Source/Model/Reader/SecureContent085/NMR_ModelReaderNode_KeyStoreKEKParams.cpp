@@ -82,15 +82,6 @@ namespace NMR {
 		}
 	}
 
-
-	CModelReaderNode_KeyStoreKEKParams::CModelReaderNode_KeyStoreKEKParams(CKeyStore * pKeyStore, PModelReaderWarnings pWarnings)
-		: CModelReaderNode_KeyStoreBase(pKeyStore, pWarnings)
-	{
-		m_sKekParams.m_eAlgorithm = eKeyStoreWrapAlgorithm::RSA_OAEP;
-		m_sKekParams.m_eMgf = eKeyStoreMaskGenerationFunction::MGF1_SHA1;
-		m_sKekParams.m_eDigest = eKeyStoreMessageDigest::SHA1;
-	}
-
 	KEKPARAMS CModelReaderNode_KeyStoreKEKParams::getKekParams()
 	{
 		return m_sKekParams;

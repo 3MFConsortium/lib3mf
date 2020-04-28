@@ -54,14 +54,14 @@ namespace NMR {
 
 	class CModelReaderNode_KeyStoreKEKParams: public CModelReaderNode_KeyStoreBase {
 	private:
-		KEKPARAMS m_sKekParams;
+		KEKPARAMS m_sKekParams = { eKeyStoreWrapAlgorithm::RSA_OAEP, eKeyStoreMaskGenerationFunction::MGF1_SHA1, eKeyStoreMessageDigest::SHA1 };
 		nfBool m_bAlgHasMgf = false;
 		nfBool m_bHasAlgorithm = false;
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 	public:
 		CModelReaderNode_KeyStoreKEKParams() = delete;
-		CModelReaderNode_KeyStoreKEKParams(_In_ CKeyStore * pKeyStore, _In_ PModelReaderWarnings pWarnings);
+		using CModelReaderNode_KeyStoreBase::CModelReaderNode_KeyStoreBase;
 
 		KEKPARAMS getKekParams();
 
