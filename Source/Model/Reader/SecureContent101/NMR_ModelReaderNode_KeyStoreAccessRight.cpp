@@ -66,15 +66,15 @@ namespace NMR {
 
 		// this can throw for values that are not numbers and it's ok so according to other reader nodes
 		if (!m_bHasConsumerIndex) {
-			m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREMISSINGCONSUMERINDEX), eModelReaderWarningLevel::mrwMissingMandatoryValue);
+			m_pWarnings->addWarning(NMR_ERROR_KEYSTOREMISSINGCONSUMERINDEX, eModelWarningLevel::mrwMissingMandatoryValue);
 			m_nConsumerIndex = 0;
 		}
 		if (m_nConsumerIndex >= m_pKeyStore->getConsumerCount())
-			m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREINVALIDCONSUMERINDEX), eModelReaderWarningLevel::mrwFatal);
+			m_pWarnings->addWarning(NMR_ERROR_KEYSTOREINVALIDCONSUMERINDEX, eModelWarningLevel::mrwFatal);
 		if (!m_bHasParams)
-			m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREMISSINGKEKPARAMS), eModelReaderWarningLevel::mrwFatal);
+			m_pWarnings->addWarning(NMR_ERROR_KEYSTOREMISSINGKEKPARAMS, eModelWarningLevel::mrwFatal);
 		if (!m_bHasCipherData)
-			m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREMISSINGCIPHERDATA), eModelReaderWarningLevel::mrwFatal);
+			m_pWarnings->addWarning(NMR_ERROR_KEYSTOREMISSINGCIPHERDATA, eModelWarningLevel::mrwFatal);
 	}
 
 	void CModelReaderNode_KeyStoreAccessRight::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
@@ -84,12 +84,12 @@ namespace NMR {
 
 		if (strcmp(XML_3MF_SECURE_CONTENT_CONSUMER_INDEX, pAttributeName) == 0) {
 			if (m_bHasConsumerIndex)
-				m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREDUPLICATECONSUMERINDEX), eModelReaderWarningLevel::mrwInvalidMandatoryValue);
+				m_pWarnings->addWarning(NMR_ERROR_KEYSTOREDUPLICATECONSUMERINDEX, eModelWarningLevel::mrwInvalidMandatoryValue);
 			m_bHasConsumerIndex = true;
 			m_nConsumerIndex = fnStringToUint32(pAttributeValue);
 		}
 		else
-			m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE), mrwInvalidOptionalValue);
+			m_pWarnings->addWarning(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE, mrwInvalidOptionalValue);
 	}
 
 	void CModelReaderNode_KeyStoreAccessRight::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
@@ -113,7 +113,7 @@ namespace NMR {
 					m_rgCipherValue = pXMLNode->getCipherValue();
 				}
 			} else {
-				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
+				m_pWarnings->addWarning(NMR_ERROR_NAMESPACE_INVALID_ELEMENT, mrwInvalidOptionalValue);
 			}
 		}
 	}

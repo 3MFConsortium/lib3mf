@@ -92,7 +92,7 @@ namespace NMR {
 		// Set Object Type (might fail, if string is invalid)
 		if (m_sType.length() > 0) {
 			if (!m_pObject->setObjectTypeString(m_sType, false))
-				m_pWarnings->addWarning(MODELREADERWARNING_INVALIDMODELOBJECTTYPE, NMR_ERROR_INVALIDMODELOBJECTTYPE, mrwInvalidOptionalValue);
+				m_pWarnings->addWarning(NMR_ERROR_INVALIDMODELOBJECTTYPE, mrwInvalidOptionalValue);
 		}
 	}
 

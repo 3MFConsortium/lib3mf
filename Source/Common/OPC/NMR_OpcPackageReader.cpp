@@ -203,7 +203,7 @@ namespace NMR {
 				}
 				else {
 					if (bMustBeUnique)
-						m_pWarnings->addException(CNMRException(NMR_ERROR_OPCRELATIONSHIPNOTUNIQUE), eModelReaderWarningLevel::mrwInvalidOptionalValue);
+						m_pWarnings->addException(CNMRException(NMR_ERROR_OPCRELATIONSHIPNOTUNIQUE), eModelWarningLevel::mrwInvalidOptionalValue);
 				}
 
 			}

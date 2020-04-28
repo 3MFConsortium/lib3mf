@@ -36,24 +36,24 @@ a relaxed import policy on the file format.
 
 namespace NMR {
 
-	CModelReaderWarning::CModelReaderWarning(std::string sMessage, eModelReaderWarningLevel WarningLevel, nfError nErrorCode)
+	CModelWarning::CModelWarning(std::string sMessage, eModelWarningLevel WarningLevel, nfError nErrorCode)
 	{
 		m_sMessage = sMessage;
 		m_WarningLevel = WarningLevel;
 		m_nErrorCode = nErrorCode;
 	}
 
-	std::string CModelReaderWarning::getMessage()
+	std::string CModelWarning::getMessage()
 	{
 		return m_sMessage;
 	}
 
-	eModelReaderWarningLevel CModelReaderWarning::getWarningLevel()
+	eModelWarningLevel CModelWarning::getWarningLevel()
 	{
 		return m_WarningLevel;
 	}
 
-	nfError CModelReaderWarning::getErrorCode()
+	nfError CModelWarning::getErrorCode()
 	{
 		return m_nErrorCode;
 	}
@@ -63,34 +63,28 @@ namespace NMR {
 		setCriticalWarningLevel(mrwFatal);
 	}
 
-	eModelReaderWarningLevel CModelWarnings::getCriticalWarningLevel()
+	eModelWarningLevel CModelWarnings::getCriticalWarningLevel()
 	{
 		return m_CriticalWarningLevel;
 	}
 
-	void CModelWarnings::setCriticalWarningLevel(_In_ eModelReaderWarningLevel WarningLevel)
+	void CModelWarnings::setCriticalWarningLevel(_In_ eModelWarningLevel WarningLevel)
 	{
 		m_CriticalWarningLevel = WarningLevel;
 	}
 
-	void CModelWarnings::addWarning(_In_ std::string sMessage, _In_ nfError nErrorCode, eModelReaderWarningLevel WarningLevel)
+	void CModelWarnings::addWarning(_In_ nfError nErrorCode, eModelWarningLevel WarningLevel)
 	{
-		if (m_Warnings.size() < NMR_MAXWARNINGCOUNT) { // Failsafe check for Index overflows
-			PModelReaderWarning pWarning = std::make_shared<CModelReaderWarning>(sMessage, WarningLevel, nErrorCode);
-			m_Warnings.push_back(pWarning);
-		}
-
-		if ((nfInt32)WarningLevel <= (nfInt32)m_CriticalWarningLevel)
-			throw CNMRException(nErrorCode);
-
+		CNMRException e(nErrorCode);
+		addException(e, WarningLevel);
 	}
 
-	void CModelWarnings::addException(const _In_ CNMRException & Exception, _In_ eModelReaderWarningLevel WarningLevel)
+	void CModelWarnings::addException(const _In_ CNMRException & Exception, _In_ eModelWarningLevel WarningLevel)
 	{
 		if (m_Warnings.size() < NMR_MAXWARNINGCOUNT) { // Failsafe check for Index overflows
 			std::string sMessage (Exception.what());
 
-			PModelReaderWarning pWarning = std::make_shared<CModelReaderWarning>(sMessage, WarningLevel, Exception.getErrorCode());
+			PModelReaderWarning pWarning = std::make_shared<CModelWarning>(sMessage, WarningLevel, Exception.getErrorCode());
 			m_Warnings.push_back(pWarning);
 		}
 

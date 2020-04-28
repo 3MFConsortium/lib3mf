@@ -188,12 +188,12 @@ namespace NMR {
 		if (strcmp(XML_3MF_NAMESPACE_SLICESPEC, pNameSpace) == 0) {
 			if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_OBJECT_SLICESTACKID) == 0) {
 				if (m_nSliceStackId != 0)
-					m_pWarnings->addException(CNMRException(NMR_ERROR_DUPLICATE_SLICESTACKID), eModelReaderWarningLevel::mrwInvalidOptionalValue);
+					m_pWarnings->addException(CNMRException(NMR_ERROR_DUPLICATE_SLICESTACKID), eModelWarningLevel::mrwInvalidOptionalValue);
 				m_nSliceStackId = fnStringToUint32(pAttributeValue);
 			}
 			else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_OBJECT_MESHRESOLUTION) == 0) {
 				if (m_bHasMeshResolution) 
-					m_pWarnings->addException(CNMRException(NMR_ERROR_DUPLICATE_MESHRESOLUTION), eModelReaderWarningLevel::mrwInvalidOptionalValue);
+					m_pWarnings->addException(CNMRException(NMR_ERROR_DUPLICATE_MESHRESOLUTION), eModelWarningLevel::mrwInvalidOptionalValue);
 				m_bHasMeshResolution = true;
 				if (strcmp(pAttributeValue, XML_3MF_VALUE_OBJECT_MESHRESOLUTION_FULL)==0) {
 					m_eSlicesMeshResolution = MODELSLICESMESHRESOLUTION_FULL;
@@ -202,7 +202,7 @@ namespace NMR {
 					m_eSlicesMeshResolution = MODELSLICESMESHRESOLUTION_LOW;
 				}
 				else
-					m_pWarnings->addException(CNMRException(NMR_ERROR_INVALID_MESHRESOLUTION), eModelReaderWarningLevel::mrwInvalidOptionalValue);
+					m_pWarnings->addException(CNMRException(NMR_ERROR_INVALID_MESHRESOLUTION), eModelWarningLevel::mrwInvalidOptionalValue);
 			}
 			else
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE), mrwInvalidOptionalValue);
@@ -212,7 +212,7 @@ namespace NMR {
 		if (strcmp(XML_3MF_NAMESPACE_PRODUCTIONSPEC, pNameSpace) == 0) {
 			if (strcmp(XML_3MF_PRODUCTION_UUID, pAttributeName) == 0) {
 				if (m_UUID.get())
-					m_pWarnings->addException(CNMRException(NMR_ERROR_DUPLICATEUUID), eModelReaderWarningLevel::mrwInvalidMandatoryValue);
+					m_pWarnings->addException(CNMRException(NMR_ERROR_DUPLICATEUUID), eModelWarningLevel::mrwInvalidMandatoryValue);
 				m_UUID = std::make_shared<CUUID>(pAttributeValue);
 			}
 			else
@@ -240,7 +240,7 @@ namespace NMR {
 				// Set Object Type (might fail, if string is invalid)
 				if (m_bHasType) {
 					if (!m_pObject->setObjectTypeString(m_sType, false))
-						m_pWarnings->addWarning(MODELREADERWARNING_INVALIDMODELOBJECTTYPE, NMR_ERROR_INVALIDMODELOBJECTTYPE, mrwInvalidOptionalValue);
+						m_pWarnings->addWarning(NMR_ERROR_INVALIDMODELOBJECTTYPE, mrwInvalidOptionalValue);
 				}
 				
 				// Read Mesh
@@ -269,7 +269,7 @@ namespace NMR {
 				// Set Object Type (might fail, if string is invalid)
 				if (m_bHasType) {
 					if (!m_pObject->setObjectTypeString(m_sType, false))
-						m_pWarnings->addWarning(MODELREADERWARNING_INVALIDMODELOBJECTTYPE, NMR_ERROR_INVALIDMODELOBJECTTYPE, mrwInvalidOptionalValue);
+						m_pWarnings->addWarning(NMR_ERROR_INVALIDMODELOBJECTTYPE, mrwInvalidOptionalValue);
 				}
 
 				// Read Components
@@ -385,7 +385,7 @@ namespace NMR {
 		if (bHasClippingMeshID) {
 			PPackageResourceID pID = m_pModel->findPackageResourceID(m_pModel->currentPath(), nClippingMeshID);
 			if (!pID.get()) {
-				m_pWarnings->addWarning(MODELREADERWARNING_BEAMLATTICECLIPPINGRESOURCENOTDEFINED, NMR_ERROR_BEAMLATTICECLIPPINGRESOURCENOTDEFINED, mrwInvalidMandatoryValue);
+				m_pWarnings->addWarning(NMR_ERROR_BEAMLATTICECLIPPINGRESOURCENOTDEFINED, mrwInvalidMandatoryValue);
 			}
 			else {
 				CModelObject * pModelObject = m_pModel->findObject(pID->getUniqueID());
@@ -396,7 +396,7 @@ namespace NMR {
 				}
 				else {
 					pMeshObject->getBeamLatticeAttributes()->m_bHasClippingMeshID = false;
-					m_pWarnings->addWarning(MODELREADERWARNING_BEAMLATTICECLIPPINGRESOURCENOTDEFINED, NMR_ERROR_BEAMLATTICECLIPPINGRESOURCENOTDEFINED, mrwInvalidMandatoryValue);
+					m_pWarnings->addWarning(NMR_ERROR_BEAMLATTICECLIPPINGRESOURCENOTDEFINED, mrwInvalidMandatoryValue);
 				}
 			}
 		}
@@ -407,7 +407,7 @@ namespace NMR {
 		if (nRepresentationMeshID) {
 			PPackageResourceID pID = m_pModel->findPackageResourceID(m_pModel->currentPath(), nRepresentationMeshID);
 			if (!pID.get()) {
-				m_pWarnings->addWarning(MODELREADERWARNING_BEAMLATTICEREPRESENTATIONRESOURCENOTDEFINED, NMR_ERROR_BEAMLATTICE_INVALID_REPRESENTATIONRESOURCE, mrwInvalidMandatoryValue);
+				m_pWarnings->addWarning(NMR_ERROR_BEAMLATTICE_INVALID_REPRESENTATIONRESOURCE, mrwInvalidMandatoryValue);
 			}
 			else {
 				CModelObject * pModelObject = m_pModel->findObject(pID->getUniqueID());
@@ -417,7 +417,7 @@ namespace NMR {
 				}
 				else {
 					pMeshObject->getBeamLatticeAttributes()->m_bHasRepresentationMeshID = false;
-					m_pWarnings->addWarning(MODELREADERWARNING_BEAMLATTICEREPRESENTATIONRESOURCENOTDEFINED, NMR_ERROR_BEAMLATTICE_INVALID_REPRESENTATIONRESOURCE, mrwInvalidMandatoryValue);
+					m_pWarnings->addWarning(NMR_ERROR_BEAMLATTICE_INVALID_REPRESENTATIONRESOURCE, mrwInvalidMandatoryValue);
 				}
 			}
 		}

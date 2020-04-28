@@ -43,51 +43,43 @@ a relaxed import policy on the file format.
 
 #define NMR_MAXWARNINGCOUNT 1000000000
 
-#define MODELREADERWARNING_INVALIDMODELUNIT "invalid model unit"
-#define MODELREADERWARNING_INVALIDMETADATA "invalid model metadata"
-#define MODELREADERWARNING_DUPLICATEMETADATA "duplicate model metadata"
-#define MODELREADERWARNING_INVALIDMODELOBJECTTYPE "invalid model object tpye"
-#define MODELREADERWARNING_REQUIREDEXTENSIONNOTSUPPORTED "A required extension is not supported"
-#define MODELREADERWARNING_BEAMLATTICECLIPPINGRESOURCENOTDEFINED "The resource defined as clippingmesh has not yet been defined in the model"
-#define MODELREADERWARNING_BEAMLATTICEREPRESENTATIONRESOURCENOTDEFINED "The resource defined as representationmesh has not yet been defined in the model"
-#define MODELREADERWARNING_KEYSTOREKEKPARAMSINCONSISTENT "Inconsistent kekparams configuration"
 namespace NMR {
 
-	typedef enum _eModelReaderWarningLevel {
+	typedef enum _eModelWarningLevel {
 		mrwFatal,
 		mrwInvalidMandatoryValue,
 		mrwMissingMandatoryValue,
 		mrwInvalidOptionalValue
-	} eModelReaderWarningLevel;
+	} eModelWarningLevel;
 
-	class CModelReaderWarning {
+	class CModelWarning {
 	private:
 		std::string m_sMessage;
-		eModelReaderWarningLevel m_WarningLevel;
+		eModelWarningLevel m_WarningLevel;
 		nfError m_nErrorCode;
 	public:
-		CModelReaderWarning() = delete;
-		CModelReaderWarning(std::string sMessage, eModelReaderWarningLevel WarningLevel, nfError nErrorCode);
+		CModelWarning() = delete;
+		CModelWarning(std::string sMessage, eModelWarningLevel WarningLevel, nfError nErrorCode);
 
 		std::string getMessage();
-		eModelReaderWarningLevel getWarningLevel();
+		eModelWarningLevel getWarningLevel();
 		nfError getErrorCode();
 	};
 
-	typedef std::shared_ptr <CModelReaderWarning> PModelReaderWarning;
+	typedef std::shared_ptr <CModelWarning> PModelReaderWarning;
 
 	class CModelWarnings {
 	private:
 		std::vector<PModelReaderWarning> m_Warnings;
-		eModelReaderWarningLevel m_CriticalWarningLevel;
+		eModelWarningLevel m_CriticalWarningLevel;
 	public:
 		CModelWarnings();
 
-		eModelReaderWarningLevel getCriticalWarningLevel ();
-		void setCriticalWarningLevel(_In_ eModelReaderWarningLevel WarningLevel);
+		eModelWarningLevel getCriticalWarningLevel ();
+		void setCriticalWarningLevel(_In_ eModelWarningLevel WarningLevel);
 
-		void addWarning(_In_ std::string sMessage, _In_ nfError nErrorCode, _In_ eModelReaderWarningLevel WarningLevel);
-		void addException(const _In_ CNMRException & Exception, _In_ eModelReaderWarningLevel WarningLevel);
+		void addWarning(_In_ nfError nErrorCode, _In_ eModelWarningLevel WarningLevel);
+		void addException(const _In_ CNMRException & Exception, _In_ eModelWarningLevel WarningLevel);
 
 		nfUint32 getWarningCount();
 		PModelReaderWarning getWarning(_In_ nfUint32 nIndex);

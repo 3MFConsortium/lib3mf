@@ -60,7 +60,7 @@ namespace NMR {
 		// Set references
 		if (!m_UUID.get()) {
 			// We do not have to check for secure content spec, because it is the base spec of a keystore
-			m_pWarnings->addException(CNMRException(NMR_ERROR_MISSINGUUID), mrwMissingMandatoryValue);
+			m_pWarnings->addWarning(NMR_ERROR_MISSINGUUID, mrwMissingMandatoryValue);
 			m_UUID = std::make_shared<CUUID>();
 		}
 		keystore()->setUUID(m_UUID);
@@ -73,12 +73,12 @@ namespace NMR {
 
 		if (strcmp(XML_3MF_SECURE_CONTENT_UUID, pAttributeName) == 0) {
 			if (m_UUID.get())
-				m_pWarnings->addException(CNMRException(NMR_ERROR_DUPLICATEUUID), eModelReaderWarningLevel::mrwInvalidMandatoryValue);
+				m_pWarnings->addWarning(NMR_ERROR_DUPLICATEUUID, eModelWarningLevel::mrwInvalidMandatoryValue);
 			// this can throw for invalid UUIDs and it's ok so according to other reader nodes
 			m_UUID = std::make_shared<CUUID>(pAttributeValue);
 		}
 		else if (strcmp(XML_3MF_ATTRIBUTE_XMLNS, pAttributeName) != 0)
-			m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE), mrwInvalidOptionalValue);
+			m_pWarnings->addWarning(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE, mrwInvalidOptionalValue);
 	}
 
 	void CModelReaderNode_KeyStore::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
@@ -100,7 +100,7 @@ namespace NMR {
 				// resource data adds itself to m_pKeyStore, nothing else to do here
 			}
 			else
-				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
+				m_pWarnings->addWarning(NMR_ERROR_NAMESPACE_INVALID_ELEMENT, mrwInvalidOptionalValue);
 		}
 	}
 

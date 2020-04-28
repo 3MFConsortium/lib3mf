@@ -87,7 +87,7 @@ namespace NMR {
 				strcmp(sExtensionURI.c_str(), XML_3MF_NAMESPACE_BEAMLATTICESPEC) != 0 &&
 				strcmp(sExtensionURI.c_str(), XML_3MF_NAMESPACE_SECURECONTENTSPEC) != 0 )
 			{
-				m_pWarnings->addWarning(MODELREADERWARNING_REQUIREDEXTENSIONNOTSUPPORTED, NMR_ERROR_REQUIREDEXTENSIONNOTSUPPORTED, mrwInvalidMandatoryValue);
+				m_pWarnings->addWarning(NMR_ERROR_REQUIREDEXTENSIONNOTSUPPORTED, mrwInvalidMandatoryValue);
 			}
 		}
 	}
@@ -120,7 +120,7 @@ namespace NMR {
 				m_pModel->setUnitString(pAttributeValue);
 			}
 			catch (CNMRException & e) {
-				m_pWarnings->addWarning(MODELREADERWARNING_INVALIDMODELUNIT, e.getErrorCode(), mrwInvalidMandatoryValue);
+				m_pWarnings->addException(e, mrwInvalidMandatoryValue);
 			}
 		}
 		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_REQUIREDEXTENSIONS) == 0) {
@@ -157,7 +157,7 @@ namespace NMR {
 
 		if (!sKey.empty()) {
 			if (m_pModel->hasMetaData(sKey)) {
-				m_pWarnings->addWarning(MODELREADERWARNING_DUPLICATEMETADATA, NMR_ERROR_DUPLICATEMETADATA, mrwInvalidOptionalValue);
+				m_pWarnings->addWarning(NMR_ERROR_DUPLICATEMETADATA, mrwInvalidOptionalValue);
 			}
 			std::string sNameSpace, sName;
 			decomposeKeyIntoNamespaceAndName(sKey, sNameSpace, sName);
@@ -179,7 +179,7 @@ namespace NMR {
 			}
 		}
 		else {
-			m_pWarnings->addWarning(MODELREADERWARNING_INVALIDMETADATA, NMR_ERROR_INVALIDMETADATA, mrwInvalidOptionalValue);
+			m_pWarnings->addWarning(NMR_ERROR_INVALIDMETADATA, mrwInvalidOptionalValue);
 		}
 	}
 

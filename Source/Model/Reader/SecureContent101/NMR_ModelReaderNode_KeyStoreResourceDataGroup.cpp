@@ -56,7 +56,7 @@ namespace NMR {
 
 		if (!m_pGroup) {
 			if (!m_bHasUuid)
-				m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREMISSINGKEYUUID), eModelReaderWarningLevel::mrwInvalidMandatoryValue);
+				m_pWarnings->addWarning(NMR_ERROR_KEYSTOREMISSINGKEYUUID, eModelWarningLevel::mrwInvalidMandatoryValue);
 			m_pGroup = CKeyStoreFactory::makeResourceDataGroup();
 		}
 
@@ -74,15 +74,15 @@ namespace NMR {
 		if (strcmp(XML_3MF_SECURE_CONTENT_KEY_UUID, pAttributeName) == 0) {
 			m_bHasUuid = true;
 			if (m_pGroup != nullptr)
-				m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREDUPLICATERESOURCEDATAGROUP), eModelReaderWarningLevel::mrwInvalidMandatoryValue);
+				m_pWarnings->addWarning(NMR_ERROR_KEYSTOREDUPLICATERESOURCEDATAGROUP, eModelWarningLevel::mrwInvalidMandatoryValue);
 			try {
 				m_pGroup = CKeyStoreFactory::makeResourceDataGroup(std::make_shared<CUUID>(pAttributeValue));
 			} catch (CNMRException const &) {
-				m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREINVALIDKEYUUID), eModelReaderWarningLevel::mrwInvalidMandatoryValue);
+				m_pWarnings->addWarning(NMR_ERROR_KEYSTOREINVALIDKEYUUID, eModelWarningLevel::mrwInvalidMandatoryValue);
 			}
 		}
 		else
-			m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE), mrwInvalidOptionalValue);
+			m_pWarnings->addWarning(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE, mrwInvalidOptionalValue);
 	}
 
 	void CModelReaderNode_KeyStoreResourceDataGroup::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
@@ -103,7 +103,7 @@ namespace NMR {
 				PKeyStoreAccessRight ar = pXMLNode->getAccessRight();
 				m_pGroup->addAccessRight(ar);
 			} else
-				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
+				m_pWarnings->addWarning(NMR_ERROR_NAMESPACE_INVALID_ELEMENT, mrwInvalidOptionalValue);
 		}
 	}
 

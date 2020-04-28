@@ -72,7 +72,7 @@ namespace NMR {
 		parseContent(pXMLReader);
 		
 		if (!m_bHasAlgorithm)
-			m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREMISSINGALGORTHM), eModelReaderWarningLevel::mrwMissingMandatoryValue);
+			m_pWarnings->addWarning(NMR_ERROR_KEYSTOREMISSINGALGORTHM, eModelWarningLevel::mrwMissingMandatoryValue);
 	}
 
 	void CModelReaderNode_KeyStoreCEKParams::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
@@ -86,7 +86,7 @@ namespace NMR {
 				m_eAlgorithm = ParserUtils::parseEncryptionAlgorithm(pAttributeValue);
 			} catch (CNMRException const &) {
 				m_eAlgorithm = eKeyStoreEncryptAlgorithm::AES256_GCM;
-				m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREINVALIDALGORITHM), eModelReaderWarningLevel::mrwInvalidMandatoryValue);
+				m_pWarnings->addWarning(NMR_ERROR_KEYSTOREINVALIDALGORITHM, eModelWarningLevel::mrwInvalidMandatoryValue);
 			}
 		}
 		else if (strcmp(XML_3MF_SECURE_CONTENT_COMPRESSION, pAttributeName) == 0) {
@@ -95,11 +95,11 @@ namespace NMR {
 			} else if (strcmp(XML_3MF_SECURE_CONTENT_COMPRESSION_NONE, pAttributeValue) == 0) {
 				m_bCompressed = false;
 			} else {
-				m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREINVALIDCOMPRESSION), mrwInvalidOptionalValue);
+				m_pWarnings->addWarning(NMR_ERROR_KEYSTOREINVALIDCOMPRESSION, mrwInvalidOptionalValue);
 			}
 		}
 		else
-			m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE), mrwInvalidOptionalValue);
+			m_pWarnings->addWarning(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE, mrwInvalidOptionalValue);
 	}
 
 	void CModelReaderNode_KeyStoreCEKParams::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
@@ -121,7 +121,7 @@ namespace NMR {
 				pXMLNode->parseXML(pXMLReader);
 				m_aad = base64_decode(pXMLNode->getValue());
 			} else {
-				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
+				m_pWarnings->addWarning(NMR_ERROR_NAMESPACE_INVALID_ELEMENT, mrwInvalidOptionalValue);
 			}
 		}
 	}

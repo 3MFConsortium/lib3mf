@@ -61,9 +61,9 @@ namespace NMR {
 		parseContent(pXMLReader);
 
 		if (m_sPath.empty())
-			m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREMISSINGPATH), eModelReaderWarningLevel::mrwFatal);
+			m_pWarnings->addWarning(NMR_ERROR_KEYSTOREMISSINGPATH, eModelWarningLevel::mrwFatal);
 		if (nullptr == m_pCekParams)
-			m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREMISSINGCEKPARAMS), eModelReaderWarningLevel::mrwFatal);
+			m_pWarnings->addWarning(NMR_ERROR_KEYSTOREMISSINGCEKPARAMS, eModelWarningLevel::mrwFatal);
 	}
 
 	void CModelReaderNode_KeyStoreResourceData::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
@@ -73,11 +73,11 @@ namespace NMR {
 		
 		if (strcmp(XML_3MF_SECURE_CONTENT_PATH, pAttributeName) == 0) {
 			if (!m_sPath.empty())
-				m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREDUPLICATERESOURCEDATAPATH), eModelReaderWarningLevel::mrwInvalidMandatoryValue);
+				m_pWarnings->addWarning(NMR_ERROR_KEYSTOREDUPLICATERESOURCEDATAPATH, eModelWarningLevel::mrwInvalidMandatoryValue);
 			m_sPath = pAttributeValue;
 		}
 		else
-			m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE), mrwInvalidOptionalValue);
+			m_pWarnings->addWarning(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE, mrwInvalidOptionalValue);
 	}
 
 	void CModelReaderNode_KeyStoreResourceData::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
@@ -95,7 +95,7 @@ namespace NMR {
 				}
 			}
 			else
-				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
+				m_pWarnings->addWarning(NMR_ERROR_NAMESPACE_INVALID_ELEMENT, mrwInvalidOptionalValue);
 		}
 	}
 

@@ -62,7 +62,7 @@ namespace NMR {
 		parseContent(pXMLReader);
 
 		if (m_sCipherValue.empty()) {
-			m_pWarnings->addException(CNMRException(NMR_ERROR_KEYSTOREINVALIDCIPHERVALUE), eModelReaderWarningLevel::mrwMissingMandatoryValue);
+			m_pWarnings->addWarning(NMR_ERROR_KEYSTOREINVALIDCIPHERVALUE, eModelWarningLevel::mrwMissingMandatoryValue);
 		}
 	}
 
