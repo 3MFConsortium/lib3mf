@@ -45,7 +45,6 @@ namespace NMR {
 	private:
 		CModel * m_pModel;
 		CMesh * m_pMesh;
-		PModelWarnings m_pWarnings;
 
 		eModelBeamLatticeClipMode m_eClipMode;
 		nfBool m_bHasClippingMeshID;
