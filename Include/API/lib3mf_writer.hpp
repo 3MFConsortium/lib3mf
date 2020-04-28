@@ -102,6 +102,14 @@ public:
 
 	void SetContentEncryptionCallback(const Lib3MF::ContentEncryptionCallback pTheCallback, const Lib3MF_pvoid pUserData);
 
+	void SetStrictModeActive(const bool bStrictModeActive);
+
+	bool GetStrictModeActive();
+
+	std::string GetWarning(const Lib3MF_uint32 nIndex, Lib3MF_uint32 & nErrorCode);
+
+	Lib3MF_uint32 GetWarningCount();
+
 };
 
 }

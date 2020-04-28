@@ -41,6 +41,7 @@ Abstract: This is a stub class definition of CWriter
 #include "Common/NMR_SecureContentTypes.h"
 #include "Common/NMR_SecureContext.h"
 #include "Model/Classes/NMR_KeyStore.h"
+#include "Common/NMR_ModelWarnings.h"
 
 
 
@@ -244,4 +245,25 @@ void Lib3MF::Impl::CWriter::SetContentEncryptionCallback(const Lib3MF::ContentEn
 		return (NMR::nfUint64)result;
 	};
 	m_pWriter->secureContext()->setDekCtx(descriptor);
+}
+
+void CWriter::SetStrictModeActive(const bool bStrictModeActive) {
+	if (bStrictModeActive)
+		writer().warnings()->setCriticalWarningLevel(NMR::mrwInvalidOptionalValue);
+	else
+		writer().warnings()->setCriticalWarningLevel(NMR::mrwFatal);
+}
+
+bool CWriter::GetStrictModeActive() {
+	return writer().warnings()->getCriticalWarningLevel() == NMR::mrwInvalidOptionalValue;
+}
+
+std::string CWriter::GetWarning(const Lib3MF_uint32 nIndex, Lib3MF_uint32 & nErrorCode) {
+	auto warning = writer().warnings()->getWarning(nIndex);
+	nErrorCode = warning->getErrorCode();
+	return warning->getMessage();
+}
+
+Lib3MF_uint32 CWriter::GetWarningCount() {
+	return writer().warnings()->getWarningCount();
 }

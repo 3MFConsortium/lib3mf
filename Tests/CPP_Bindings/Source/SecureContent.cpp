@@ -216,6 +216,13 @@ namespace Lib3MF {
 				writer->AddKeyWrappingCallback(wrappingData.consumerId, testKEKCallback, (Lib3MF_pvoid)&wrappingData);
 
 				writer->WriteToBuffer(buffer);
+
+				auto count = writer->GetWarningCount();
+				ASSERT_GE(count, 1U);
+				Lib3MF_uint32 warning;
+				writer->GetWarning(0, warning);
+				// Using cryptographically weak random number generator
+				ASSERT_EQ(warning, 0xA00C);
 				//WriteBufferToFile(buffer, sOutFilesPath + "/SecureContent/" + fileName);
 			}
 			{

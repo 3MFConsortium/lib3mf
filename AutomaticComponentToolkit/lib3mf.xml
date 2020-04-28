@@ -294,6 +294,20 @@
 		<method name="SetDecimalPrecision" description="Sets the number of digits after the decimal point to be written in each vertex coordinate-value.">
 			<param name="DecimalPrecision" type="uint32" pass="in" description="The number of digits to be written in each vertex coordinate-value after the decimal point."/>
 		</method>
+		<method name="SetStrictModeActive" description="Activates (deactivates) the strict mode of the reader.">
+			<param name="StrictModeActive" type="bool" pass="in" description="flag whether strict mode is active or not."/>
+		</method>
+		<method name="GetStrictModeActive" description="Queries whether the strict mode of the reader is active or not">
+			<param name="StrictModeActive" type="bool" pass="return" description="returns flag whether strict mode is active or not."/>
+		</method>
+		<method name="GetWarning" description="Returns Warning and Error Information of the read process">
+			<param name="Index" type="uint32" pass="in" description="Index of the Warning. Valid values are 0 to WarningCount - 1"/>
+			<param name="ErrorCode" type="uint32" pass="out" description="filled with the error code of the warning"/>
+			<param name="Warning" type="string" pass="return" description="the message of the warning"/>
+		</method>
+		<method name="GetWarningCount" description="Returns Warning and Error Count of the read process">
+			<param name="Count" type="uint32" pass="return" description="filled with the count of the occurred warnings."/>
+		</method>		
 		<method name="AddKeyWrappingCallback" description="Registers a callback to deal with data key encryption/decryption from keystore">
 			<param name="ConsumerID" type="string" pass="in" description="The ConsumerID to register for"/>
 			<param name="TheCallback" type="functiontype" class="KeyWrappingCallback" pass="in" description="The callback to be callede for wrapping and encryption key" />

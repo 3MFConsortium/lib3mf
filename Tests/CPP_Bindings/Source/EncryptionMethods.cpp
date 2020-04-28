@@ -119,6 +119,9 @@ namespace Lib3MF {
 				writer->AddKeyWrappingCallback("LIB3MF#TEST", EncryptionCallbacks::keyEncryptClientCallback, &kekUserData);
 
 				writer->WriteToBuffer(buffer);
+
+				auto count = writer->GetWarningCount();
+				ASSERT_EQ(count, 0);
 				//WriteBufferToFile(buffer, sOutFilesPath + "/SecureContent/" + fileName);
 			}
 			{
