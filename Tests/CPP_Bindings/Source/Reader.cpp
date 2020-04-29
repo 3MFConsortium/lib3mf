@@ -69,6 +69,13 @@ namespace Lib3MF
 	{
 		Reader::readerSTL->ReadFromFile(sTestFilesPath + "/Reader/" + "Pyramid.stl");
 		CheckReaderWarnings(Reader::readerSTL, 0);
+		auto meshObjects = model->GetMeshObjects();
+		ASSERT_TRUE(meshObjects->Count() > 0);
+		while (meshObjects->MoveNext()) {
+			auto meshObject = meshObjects->GetCurrentMeshObject();
+			ASSERT_TRUE(meshObject->GetVertexCount() > 0);
+			ASSERT_TRUE(meshObject->GetTriangleCount() > 0);
+		}
 	}
 
 	TEST_F(Reader, STLReadWriteRead)
