@@ -25,8 +25,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-SecureCube.cpp : 3MF encrypted Cube creation example
-
+SecureCube.cpp : 3MF encrypted Cube creation and read example. This is a sample 
+skeleton code provided to guide you to the process of reading and writing a 3MF
+file using the Secure Content spec. Encryption and decryption processes are abstracted
+so to avoid binding this sample to any particular implementation. If you would like
+to check a working version of the process, there's a unit tests available on the 3MF code
+base that implements the entire workflow using LibreSSL: EncryptionMethods.cpp
+Tip: you could also copy buffers around - file won't be valid but you will be able
+to run the entire process.
 --*/
 
 #include <iostream>
@@ -39,9 +45,8 @@ SecureCube.cpp : 3MF encrypted Cube creation example
 using namespace Lib3MF;
 
 
-class SecureContentCallbacks {
-public:
-	// Sample random number generation callback. Do not use this beyond the scope of this example as it is not really a random generation function.
+namespace SecureContentCallbacks {
+	// Sample random number generation callback. Do not use this beyond the scope of this example as it is not really a random number generation function.
 	static void NotRandomBytesAtAll(Lib3MF_uint64 byteData, Lib3MF_uint64 size, Lib3MF_pvoid userData, Lib3MF_uint64 * bytesWritten) {
 		static Lib3MF_uint8 random = 0;
 		Lib3MF_uint8 * buffer = (Lib3MF_uint8 *)byteData;
@@ -63,7 +68,7 @@ public:
 	};
 
 	// Sample callback to wrap the key of an encryption process
-	static void KeyWrappingCbSample(
+	static void WriteKeyWrappingCbSample(
 		Lib3MF_AccessRight access,
 		Lib3MF_uint64 inSize,
 		const Lib3MF_uint8 * inBuffer,
@@ -80,8 +85,8 @@ public:
 		CAccessRight accessRight(cp->wrapper, access);
 		cp->wrapper->Acquire(&accessRight);
 
+		// This is going to be called for each consumer you've registered to
 		PConsumer consumer = accessRight.GetConsumer();
-
 		std::string consumerId = consumer->GetConsumerID();
 		std::cout << "ConsumerID " << consumer->GetConsumerID() << std::endl;
 		// You can also check for keyid and keyvalue
@@ -99,18 +104,19 @@ public:
 		eMgfAlgorithm mask = accessRight.GetMgfAlgorithm();
 		eDigestMethod diges = accessRight.GetDigestMethod();
 
-		// You should deal with the encryption/decryption process of the key.
-		// Use the encryption process to wrap inBuffer into outBuffer using details above.
+		// You should deal with the encryption process of the key.
+		// Use the encryption process to wrap inBuffer (plain) into outBuffer (cipher) using details above.
 		// Use KeyWrappingCbData to hold any information you'll be needing at this point.
 		throw std::runtime_error("TODO: Add your encryption wrapping process here");
+		//std::copy(inBuffer, inBuffer + outSize, outBuffer);
 
 		// Finally, this function should use status to return the number of bytes needed, 
-		// encrypted/decrypted - or zero to indicate a failure.
+		// encrypted - or zero to indicate a failure.
 		*status = outSize;
 	}
 
 	// Sample callback to encrypt contents of a resource
-	static void ContentEncryptionCbSample(
+	static void WriteContentEncryptionCbSample(
 		Lib3MF_ContentEncryptionParams params,
 		Lib3MF_uint64 inSize,
 		const Lib3MF_uint8 * inBuffer,
@@ -143,46 +149,168 @@ public:
 			std::vector<Lib3MF_uint8> key;
 			cd.GetKey(key);
 
+			// You can also use keyuuid to look up a key externally
+			std::string keyUUID = cd.GetKeyUUID();
+
 			// Retrieve the additional authenticaton data, if it has been used to encrypt
 			std::vector<Lib3MF_uint8> aad;
 			cd.GetAdditionalAuthenticationData(aad);
+
+			// TODO: Initialize the encryption context
 			cb->context[cd.GetDescriptor()] = 0;
 		}
-
-		// The encryption process must be initialized if needed, processed and finalized.
+		
+		// Attention to the order in which params are tested, it matters
 		if (0 == inSize || nullptr == inBuffer) {
 			// When input buffer is null or input size is 0, this is a request
-			// to finalize this encryption process by verifying the tag
-			std::vector<Lib3MF_uint8> tag;
-			cd.GetAuthenticationTag(tag);
-			// Proceed to verify this tag with the encryption context
-
+			// to finalize this encryption process and generating the authentication tag
+			// TODO: generate proper tag
+			std::vector<Lib3MF_uint8> tag = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 };
+			cd.SetAuthenticationTag(tag);
 			//add tag verification status here
-			*status = 1;
+			*status = tag.size();
 		} else if (0 == outSize || nullptr == outBuffer) {
-			// If outSize is zero or outBuffer is null, this is a call to figure out the output buffer size.
+			// If outSize is zero or outBuffer is null (but inSize and inBuffer are not), 
+			// this is a call to figure out the output buffer size.
 			// Put the respective value in outNeededSize.
 			*outNeededSize = inSize;
 			*status = inSize;
 		} else {
-			// Else, perform the encryption/descryption process
+			// Else, perform the encryption process
 			throw std::runtime_error("TODO: Add your encryption process here");
+			//std::copy(inBuffer, inBuffer + outSize, outBuffer);
 			*status = outSize;
 		}
-		//This function should use status to return the number of bytes needed, encrypted/decrypted
+		//This function should use status to return the number of bytes needed, encrypted
+		// or verified - or zero to indicate a failure.
+	}
+
+	static void ReadKeyWrappingCbSample(
+		Lib3MF_AccessRight access,
+		Lib3MF_uint64 inSize,
+		const Lib3MF_uint8 * inBuffer,
+		const Lib3MF_uint64 outSize,
+		Lib3MF_uint64 * outNeeded,
+		Lib3MF_uint8 * outBuffer,
+		Lib3MF_pvoid userData,
+		Lib3MF_uint64 * status) {
+
+		// A call could be made to first identify what the output buffer size should be.
+		// In that case, outSize will be 0 or outBuffer will be null, and the proper size must be placed in outNeeded.
+		if (nullptr == outBuffer || outSize == 0) {
+			*outNeeded = inSize;
+			*status = inSize;
+			return;
+		}
+
+		KeyWrappingCbData * cp = (KeyWrappingCbData *)userData;
+
+		// Since we're using CAccessRight constructure, we have to account for 
+		// the use of 'access' by calling Acquire on the CWrapper
+		CAccessRight accessRight(cp->wrapper, access);
+		cp->wrapper->Acquire(&accessRight);
+
+		// This is going to be called for each consumer you've registered to
+		PConsumer consumer = accessRight.GetConsumer();
+		std::string consumerId = consumer->GetConsumerID();
+		std::cout << "ConsumerID " << consumer->GetConsumerID() << std::endl;
+		// You can also check for keyid and keyvalue
+
+		// Query the data about the encryption process to be done
+		eWrappingAlgorithm algorithm = accessRight.GetWrappingAlgorithm();
+		eMgfAlgorithm mask = accessRight.GetMgfAlgorithm();
+		eDigestMethod diges = accessRight.GetDigestMethod();
+
+		// You should deal with the encryption process of the key.
+		// Use the encryption process to wrap inBuffer (cipher) into outBuffer (plain) using details above.
+		// Use KeyWrappingCbData to hold any information you'll be needing at this point.
+		throw std::runtime_error("TODO: Add your decryption wrapping process here");
+		//std::copy(inBuffer, inBuffer + outSize, outBuffer);
+
+		// Finally, this function should use status to return the number of bytes needed, 
+		// decrypted - or zero to indicate a failure.
+		*status = outSize;
+	}
+
+	static void ReadContentEncryptionCbSample(
+		Lib3MF_ContentEncryptionParams params,
+		Lib3MF_uint64 inSize,
+		const Lib3MF_uint8 * inBuffer,
+		const Lib3MF_uint64 outSize,
+		Lib3MF_uint64 * outNeededSize,
+		Lib3MF_uint8 * outBuffer,
+		Lib3MF_pvoid userData,
+		Lib3MF_uint64 * status) {
+
+		ContentEncryptionCbData * cb = (ContentEncryptionCbData *)userData;
+
+		// Since we're using CAccessRight constructure, we have to account for 
+		// the use of 'access' by calling Acquire on the CWrapper
+		CContentEncryptionParams cd(cb->wrapper, params);
+		cb->wrapper->Acquire(&cd);
+
+		// A descriptor uniquely identifies the encryption process for a resource
+		Lib3MF_uint64 descriptor = cd.GetDescriptor();
+
+		// You can map the descriptor in use as you'll probably keep several
+		// contexts initialized at same time
+		auto localDescriptor = cb->context.find(cd.GetDescriptor());
+		if (localDescriptor != cb->context.end())
+			// Use an existing context
+			localDescriptor->second++;
+		else {
+			// Initialize a new context
+
+			// Retrieve the encryption key, if there is one
+			std::vector<Lib3MF_uint8> key;
+			cd.GetKey(key);
+
+			// You can also use keyuuid to look up a key externally
+			std::string keyUUID = cd.GetKeyUUID();
+
+			// Retrieve the additional authenticaton data, if it has been used to encrypt
+			std::vector<Lib3MF_uint8> aad;
+			cd.GetAdditionalAuthenticationData(aad);
+
+			// TODO: Initialize the encryption context
+			cb->context[cd.GetDescriptor()] = 0;
+		}
+
+		// Attention to the order in which params are tested, it matters
+		if (0 == inSize || nullptr == inBuffer) {
+			// When input buffer is null or input size is 0, this is a request
+			// to finalize this encryption process and verify the authentication tag
+			std::vector<Lib3MF_uint8> tag;
+			cd.GetAuthenticationTag(tag);
+			// TODO: verify tag
+			*status = tag.size();
+		} else if (0 == outSize || nullptr == outBuffer) {
+			// If outSize is zero or outBuffer is null (but inSize and inBuffer are not), 
+			// this is a call to figure out the output buffer size.
+			// Put the respective value in outNeededSize.
+			*outNeededSize = inSize;
+			*status = inSize;
+			return;
+		} else {
+			// Else, perform the descryption process
+			throw std::runtime_error("TODO: Add your encryption process here");
+			//std::copy(inBuffer, inBuffer + outSize, outBuffer);
+			*status = outSize;
+		}
+		//This function should use status to return the number of bytes needed, decrypted
 		// or verified - or zero to indicate a failure.
 	}
 };
 
-void printVersion(PWrapper wrapper) {
+void printVersion(CWrapper & wrapper) {
 	Lib3MF_uint32 nMajor, nMinor, nMicro;
-	wrapper->GetLibraryVersion(nMajor, nMinor, nMicro);
+	wrapper.GetLibraryVersion(nMajor, nMinor, nMicro);
 	std::cout << "lib3mf version = " << nMajor << "." << nMinor << "." << nMicro;
 	std::string sReleaseInfo, sBuildInfo;
-	if (wrapper->GetPrereleaseInformation(sReleaseInfo)) {
+	if (wrapper.GetPrereleaseInformation(sReleaseInfo)) {
 		std::cout << "-" << sReleaseInfo;
 	}
-	if (wrapper->GetBuildInformation(sBuildInfo)) {
+	if (wrapper.GetBuildInformation(sBuildInfo)) {
 		std::cout << "+" << sBuildInfo;
 	}
 	std::cout << std::endl;
@@ -205,15 +333,9 @@ sLib3MFTriangle fnCreateTriangle(int v0, int v1, int v2) {
 	return result;
 }
 
-void SecureContentExample() {
-	PWrapper wrapper = CWrapper::loadLibrary();
+void WriteSecureContentExample(CWrapper & wrapper) {
 
-	std::cout << "------------------------------------------------------------------" << std::endl;
-	std::cout << "3MF SecureContent example" << std::endl;
-	printVersion(wrapper);
-	std::cout << "------------------------------------------------------------------" << std::endl;
-
-	PModel model = wrapper->CreateModel();
+	PModel model = wrapper.CreateModel();
 
 	// After initializing the model, set the random number generation callback
 	// A default one will be used if you don't, current implementation uses std::mt19937
@@ -257,7 +379,7 @@ void SecureContentExample() {
 	meshObject->SetGeometry(vertices, triangles);
 
 	// Add build item
-	model->AddBuildItem(meshObject.get(), wrapper->GetIdentityTransform());
+	model->AddBuildItem(meshObject.get(), wrapper.GetIdentityTransform());
 
 	// Move this mesh out of the root model file into another model
 	PPackagePart nonRootModel = model->FindOrCreatePackagePart("/3D/securecube.model");
@@ -288,23 +410,75 @@ void SecureContentExample() {
 
 	// Setup Key Wrapping process
 	SecureContentCallbacks::KeyWrappingCbData keyData;
-	keyData.wrapper = wrapper.get();
-	writer->AddKeyWrappingCallback(consumer->GetConsumerID(), SecureContentCallbacks::KeyWrappingCbSample, &keyData);
+	keyData.wrapper = &wrapper;
+	writer->AddKeyWrappingCallback(consumer->GetConsumerID(), SecureContentCallbacks::WriteKeyWrappingCbSample, &keyData);
 
 	// Content Encryption process
 	SecureContentCallbacks::ContentEncryptionCbData contentData;
-	contentData.wrapper = wrapper.get();
-	writer->SetContentEncryptionCallback(SecureContentCallbacks::ContentEncryptionCbSample, &contentData);
+	contentData.wrapper = &wrapper;
+	writer->SetContentEncryptionCallback(SecureContentCallbacks::WriteContentEncryptionCbSample, &contentData);
 
 	// You'll need to complete the callback code for this call to work properly.
 	writer->WriteToFile("secureCube.3mf");
 
-	std::cout << "done." << std::endl;
+	std::cout << "Writing Done." << std::endl;
+}
+
+void ReadSecureContentExample(CWrapper & wrapper) {
+	PModel model = wrapper.CreateModel();
+
+	// After initializing the model, set the random number generation callback
+	// A default one will be used if you don't, current implementation uses std::mt19937
+	model->SetRandomNumberCallback(SecureContentCallbacks::NotRandomBytesAtAll, nullptr);
+
+	// Query the reader and setup the encryption before saving results
+	PReader reader = model->QueryReader("3mf");
+
+	// Setup Key Wrapping process
+	SecureContentCallbacks::KeyWrappingCbData keyData;
+	keyData.wrapper = &wrapper;
+	reader->AddKeyWrappingCallback("MyConsumerID", SecureContentCallbacks::ReadKeyWrappingCbSample, &keyData);
+
+	// Content Encryption process
+	SecureContentCallbacks::ContentEncryptionCbData contentData;
+	contentData.wrapper = &wrapper;
+	reader->SetContentEncryptionCallback(SecureContentCallbacks::ReadContentEncryptionCbSample, &contentData);
+
+	// You'll need to complete the callback code for this call to work properly.
+	reader->ReadFromFile("secureCube.3mf");
+
+	PKeyStore keystore = model->GetKeyStore();
+
+	// If you know the part you're interested in, look for its resource data
+	PPackagePart partPath = model->FindOrCreatePackagePart("/3D/securecube.model");
+	PResourceData resourceData = keystore->FindResourceData(partPath.get());
+
+	// You can retrieve additional authenticated data using in the encryption
+	// to further verify the consistency of the process. At this time, it is
+	// already verified.
+	std::vector<Lib3MF_uint8> aad;
+	resourceData->GetAdditionalAuthenticationData(aad);
+	std::cout << "Additional Authenticated Data: ";
+	for (auto it = aad.begin(); it != aad.end(); ++it) {
+		std::cout << (char)*it;
+	}
+	std::cout << std::endl;
+
+	std::cout << "Reading Done." << std::endl;
+
 }
 
 int main() {
+	PWrapper wrapper = CWrapper::loadLibrary();
+
+	std::cout << "------------------------------------------------------------------" << std::endl;
+	std::cout << "3MF SecureContent example" << std::endl;
+	printVersion(*wrapper);
+	std::cout << "------------------------------------------------------------------" << std::endl;
+
 	try {
-		SecureContentExample();
+		WriteSecureContentExample(*wrapper);
+		ReadSecureContentExample(*wrapper);
 	} catch (ELib3MFException &e) {
 		std::cout << e.what() << std::endl;
 		return e.getErrorCode();
