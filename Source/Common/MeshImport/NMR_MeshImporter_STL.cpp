@@ -181,6 +181,7 @@ namespace NMR {
 						VectorTree.addVector3(pNodes[j]->m_position, (nfUint32)pNodes[j]->m_index);
 					}
 				}
+				pMesh->addFace(pNodes[0], pNodes[1], pNodes[2]);
 
 				// check, if Nodes are separate
 				bIsValid = (pNodes[0] != pNodes[1]) && (pNodes[0] != pNodes[2]) && (pNodes[1] != pNodes[2]);
