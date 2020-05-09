@@ -33,7 +33,7 @@ Interface version: 2.0.0
 
 */
 
-package com.aibuild.lib3mf4j;
+package lib3mf;
 
 import com.sun.jna.Memory;
 import com.sun.jna.Pointer;
@@ -44,12 +44,25 @@ import java.util.List;
 public class Beam {
 
 	public int[] Indices = new int[2];
-
 	public double[] Radii = new double[2];
-
 	public int[] CapModes = new int[2];
-
 	public static final int SIZE = 32;
+
+	public Beam() {
+	}
+
+	public Beam(
+		final int startIndex,
+		final int endIndex,
+		final float startRadius,
+		final float endRadius
+		)
+	{
+		Indices[0] = startIndex;
+		Indices[1] = endIndex;
+		Radii[0] = startRadius;
+		Radii[1] = endRadius;
+	}
 
 	public void readFromPointer(Pointer p, long offset) {
 		Indices[0] = p.getInt(offset + 0);
@@ -68,6 +81,5 @@ public class Beam {
 		p.setInt(offset + 24, CapModes[0]);
 		p.setInt(offset + 28, CapModes[1]);
 	}
-
 }
 
