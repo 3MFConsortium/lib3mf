@@ -51,7 +51,7 @@ if (${MSVC})
 endif()
 
 ### The API generation target
-if(UNIX OR MINGW)
+if(UNIX)
   if(APPLE)
     set(ACT_COMMANDENDING darwin)
   else()
