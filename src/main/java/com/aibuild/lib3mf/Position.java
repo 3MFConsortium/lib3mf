@@ -33,7 +33,7 @@ Interface version: 2.0.0
 
 */
 
-package com.aibuild.lib3mf4j;
+package lib3mf;
 
 import com.sun.jna.Memory;
 import com.sun.jna.Pointer;
@@ -46,6 +46,15 @@ public class Position {
 	public float[] Coordinates = new float[3];
 
 	public static final int SIZE = 12;
+
+	public Position() {
+	}
+
+	public Position(final float x, final float y, final float z) {
+		Coordinates[0] = x;
+		Coordinates[1] = y;
+		Coordinates[2] = z;
+	}
 
 	public void readFromPointer(Pointer p, long offset) {
 		Coordinates[0] = p.getFloat(offset + 0);
