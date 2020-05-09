@@ -33,7 +33,7 @@ Interface version: 2.0.0
 
 */
 
-package lib3mf;
+package com.aibuild.lib3mf4j;
 
 import com.sun.jna.Memory;
 import com.sun.jna.Pointer;
