@@ -447,8 +447,6 @@ namespace NMR {
 				}
 			}
 
-			writeMetaDataGroup(pObject->metaDataGroup());
-
 			// Check if object is a mesh Object
 			CModelMeshObject * pMeshObject = dynamic_cast<CModelMeshObject *> (pObject);
 			if (pMeshObject) {
@@ -481,7 +479,11 @@ namespace NMR {
 					writeIntAttribute(XML_3MF_ATTRIBUTE_OBJECT_PID, nObjectLevelPropertyID);
 					writeIntAttribute(XML_3MF_ATTRIBUTE_OBJECT_PINDEX, nObjectLevelPropertyIndex);
 				}
+			}
 
+			writeMetaDataGroup(pObject->metaDataGroup());
+
+			if (pMeshObject) {
 				CModelWriterNode100_Mesh ModelWriter_Mesh(pMeshObject, m_pXMLWriter, m_pProgressMonitor,
 					m_pPropertyIndexMapping, m_nDecimalPrecision, m_bWriteMaterialExtension, m_bWriteBeamLatticeExtension);
 
