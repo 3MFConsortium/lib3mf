@@ -255,6 +255,9 @@ These are given by the 3MF Standard
 #define XML_3MF_ATTRIBUTE_VOLUMEDATA_CHANNEL            "channel"
 #define XML_3MF_ATTRIBUTE_VOLUMEDATA_SOLIDTHRESHOLD     "solidthreshold"
 
+#define XML_3MF_ATTRIBUTE_VOLUMEDATA_PROPERTY           "name"
+#define XML_3MF_ATTRIBUTE_VOLUMEDATA_PROPERTY_REQUIRED  "required"
+
 // Multiproperties
 #define XML_3MF_ELEMENT_MULTIPROPERTIES             "multiproperties"
 #define XML_3MF_ATTRIBUTE_MULTIPROPERTIES_ID        "id"

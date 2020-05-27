@@ -446,7 +446,8 @@ namespace NMR {
 		case NMR_ERROR_MISSINGVOLUMEDATACHANNEL: return "Missing VolumeData Channel";
 		case NMR_ERROR_MISSINGVOLUMEDATASTACKID: return "Missing VolumeData VolumetricStackID";
 		case NMR_ERROR_INVALIDVOLUMEDATASOLIDTHRESHOLD: return "Invalid VolumeData Solid Threshold";
-		case NMR_ERROR_DUPLICATEVOLUMEDATAPROPERTY: return "Duplicate VolumeData Proeprty";
+		case NMR_ERROR_DUPLICATEVOLUMEDATAPROPERTY: return "Duplicate VolumeData Property";
+		case NMR_ERROR_MISSINGVOLUMEDATAPROPERTY: return "Missing VolumeData Property";
 
 		// XML Parser Error Constants(0x9XXX)
 		case NMR_ERROR_XMLPARSER_INVALIDATTRIBVALUE: return "Invalid XML attribute value";

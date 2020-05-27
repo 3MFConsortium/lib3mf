@@ -294,7 +294,7 @@ namespace NMR {
 		if (m_bWriteVolumetricExtension)
 		{
 			// TODO: different logic
-			if (m_pModelMeshObject->getVolumeData()->HasLevelset()) {
+			if (m_pModelMeshObject->getVolumeData()->HasLevelset() || m_pModelMeshObject->getVolumeData()->GetPropertyCount()) {
 				writeStartElementWithPrefix(XML_3MF_ELEMENT_VOLUMEDATA, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
 
 				if (m_pModelMeshObject->getVolumeData()->HasLevelset()) {
@@ -307,6 +307,26 @@ namespace NMR {
 						writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_TRANSFORM, fnMATRIX3_toString(pLevelset->GetTransform()));
 					}
 					writeEndElement();
+				}
+
+				if (m_pModelMeshObject->getVolumeData()->GetPropertyCount())
+				{
+					nfUint32 count = m_pModelMeshObject->getVolumeData()->GetPropertyCount();
+
+					for (nfUint32 i = 0; i < count; i++)
+					{
+						writeStartElementWithPrefix(XML_3MF_ELEMENT_VOLUMETRIC_PROPERTY, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
+						PVolumeProperty pProperty = m_pModelMeshObject->getVolumeData()->GetProperty(i);
+						writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_PROPERTY, pProperty->GetName());
+						if (!fnMATRIX3_isIdentity(pProperty->GetTransform())) {
+							writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_TRANSFORM, fnMATRIX3_toString(pProperty->GetTransform()));
+						}
+						writeIntAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_VOLUMETRICSTACKID, pProperty->GetVolumetricStack()->getResourceID()->getUniqueID());
+						writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_CHANNEL, pProperty->GetChannel());
+						if (!pProperty->IsRequired())
+							writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_PROPERTY_REQUIRED, "false");
+						writeEndElement();
+					}
 				}
 
 				writeFullEndElement();

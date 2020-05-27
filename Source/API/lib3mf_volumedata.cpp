@@ -102,7 +102,6 @@ IVolumeDataProperty * CVolumeData::AddProperty(const std::string & sName, IVolum
 	if (!pVolStack) {
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_RESOURCENOTFOUND);
 	}
-	m_pVolumeData->CreateProperty(sName, pVolStack);
 
 	auto pProperty = m_pVolumeData->CreateProperty(sName, pVolStack);
 	return new CVolumeDataProperty(pProperty, m_pModel);
