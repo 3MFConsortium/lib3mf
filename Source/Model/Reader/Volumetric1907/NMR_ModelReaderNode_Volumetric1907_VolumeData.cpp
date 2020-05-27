@@ -32,6 +32,7 @@ NMR_ModelReaderNode_Volumetric1907_VolumeData.cpp covers the official 3MF volume
 #include "Model/Reader/Volumetric1907/NMR_ModelReaderNode_Volumetric1907_VolumeData.h"
 
 #include "Model/Reader/Volumetric1907/NMR_ModelReaderNode_Volumetric1907_Levelset.h"
+#include "Model/Reader/Volumetric1907/NMR_ModelReaderNode_Volumetric1907_Property.h"
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Model/Classes/NMR_ModelMeshObject.h"
 #include "Model/Classes/NMR_ModelResource.h"
@@ -87,6 +88,23 @@ namespace NMR {
 
 				PVolumeLevelset pLevelSet = pXMLNode->MakeLevelset(m_pModel);
 				m_pVolumeData->SetLevelset(pLevelSet);
+			}
+			else if (strcmp(pChildName, XML_3MF_ELEMENT_VOLUMETRIC_PROPERTY) == 0)
+			{
+				PModelReaderNode_Volumetric1907_Property pXMLNode = std::make_shared<CModelReaderNode_Volumetric1907_Property>(m_pWarnings);
+				pXMLNode->parseXML(pXMLReader);
+
+				PVolumeProperty pProperty = pXMLNode->MakeProperty(m_pModel);
+
+				if (m_pVolumeData->hasProperty(pProperty->GetName()) == false) {
+					PVolumeProperty pVolDataProp = m_pVolumeData->CreateProperty(pProperty->GetName(), pProperty->GetVolumetricStack());
+					pVolDataProp->SetChannel(pProperty->GetChannel());
+					pVolDataProp->SetIsRequired(pProperty->IsRequired());
+					pVolDataProp->SetTransform(pProperty->GetTransform());
+				}
+				else {
+					throw CNMRException(NMR_ERROR_DUPLICATEVOLUMEDATAPROPERTY);
+				}
 			}
 			else
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);

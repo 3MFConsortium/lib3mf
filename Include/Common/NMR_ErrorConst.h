@@ -1253,6 +1253,9 @@ Model error codes (0x8XXX)
 // Duplicate VolumeData Property
 #define NMR_ERROR_DUPLICATEVOLUMEDATAPROPERTY 0x8119
 
+// Missing VolumeData Property
+#define NMR_ERROR_MISSINGVOLUMEDATAPROPERTY 0x8120
+
 
 /*-------------------------------------------------------------------
 XML Parser Error Constants (0x9XXX)
