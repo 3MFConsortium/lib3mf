@@ -52,7 +52,7 @@ namespace NMR {
 			m_bHasDstAlpha (false),
 			m_bHasSourceAlpha (false),
 			m_bHasBlendMethod (false),
-			m_BlendMethod (eModelBlendMethod::MODELBLENDMETHOD_NONE),
+			m_BlendMethod (eModelBlendMethod::MODELBLENDMETHOD_MIX),
 			m_dSourceAlpha (0.0),
 			m_dDstAlpha (0.0)
 	{
@@ -80,6 +80,18 @@ namespace NMR {
 			m_pVolumetricLayer->setSourceAlpha(m_dSourceAlpha);
 		if (m_bHasDstAlpha)
 			m_pVolumetricLayer->setDstAlpha(m_dDstAlpha);
+
+		if (m_BlendMethod == eModelBlendMethod::MODELBLENDMETHOD_MIX)
+		{
+			if (!m_bHasSourceAlpha)
+			{
+				m_pWarnings->addException(CNMRException(NMR_ERROR_MISSINGVOLUMETRICSRCALPHA), mrwMissingMandatoryValue);
+			}
+			if (!m_bHasDstAlpha)
+			{
+				m_pWarnings->addException(CNMRException(NMR_ERROR_MISSINGVOLUMETRICDSTALPHA), mrwMissingMandatoryValue);
+			}
+		}
 
 		// Parse Content
 		parseContent(pXMLReader);

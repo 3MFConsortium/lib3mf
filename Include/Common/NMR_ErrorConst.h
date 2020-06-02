@@ -1256,6 +1256,12 @@ Model error codes (0x8XXX)
 // Missing VolumeData Property
 #define NMR_ERROR_MISSINGVOLUMEDATAPROPERTY 0x8120
 
+// Missing Volumetric Source Alpha
+#define NMR_ERROR_MISSINGVOLUMETRICSRCALPHA 0x8121
+
+// Missing Volumetric Destination Alpha
+#define NMR_ERROR_MISSINGVOLUMETRICDSTALPHA 0x8122
+
 
 /*-------------------------------------------------------------------
 XML Parser Error Constants (0x9XXX)

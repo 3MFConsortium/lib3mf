@@ -167,10 +167,9 @@
 	</enum>
 
 	<enum name="BlendMethod">
-		<option name="NoBlendMethod" value="0"/>
-		<option name="Mix" value="1"/>
-		<option name="Multiply" value="2"/>
-		<option name="Mask" value="3"/>
+		<option name="Mix" value="0"/>
+		<option name="Multiply" value="1"/>
+		<option name="Mask" value="2"/>
 	</enum>
 
 	<enum name="ColorChannel">
