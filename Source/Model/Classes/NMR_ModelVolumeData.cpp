@@ -100,7 +100,7 @@ namespace NMR {
 		if (iIterator != m_mapProperties.end()) {
 			return iIterator->second;
 		}
-		throw CNMRException(NMR_ERROR_INVALIDPARAM);
+		return nullptr;
 	}
 
 	PVolumeProperty CModelVolumeData::CreateProperty(std::string sName, PModelVolumetricStack pVolumetricStack)

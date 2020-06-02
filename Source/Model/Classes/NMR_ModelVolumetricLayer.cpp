@@ -43,14 +43,14 @@ namespace NMR {
 
 
 	CModelVolumetricLayer::CModelVolumetricLayer(NMATRIX3 Transform, eModelBlendMethod BlendMethod)
-		: m_Transform (Transform), m_BlendMethod (BlendMethod), m_dSourceAlpha (0.0), m_dDstAlpha (0.0), m_nInternalIndex (0)
+		: m_Transform(Transform), m_BlendMethod(BlendMethod), m_dSourceAlpha(1.0), m_dDstAlpha(1.0), m_nInternalIndex(0)
 	{
 
 	}
 
 	CModelVolumetricLayer::~CModelVolumetricLayer()
 	{
-		
+
 	}
 
 	PModelVolumetricLayer CModelVolumetricLayer::make(NMATRIX3 Transform, eModelBlendMethod BlendMethod)
@@ -63,19 +63,19 @@ namespace NMR {
 		if (pVolumetricLayer == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-		PModelVolumetricLayer pNewLayer = std::make_shared<CModelVolumetricLayer>(CModelVolumetricLayer (pVolumetricLayer->getTransform(), pVolumetricLayer->getBlendMethod()));
-		pNewLayer->setSourceAlpha (pVolumetricLayer->getSourceAlpha());
-		pNewLayer->setDstAlpha(pVolumetricLayer->getDstAlpha());		
+		PModelVolumetricLayer pNewLayer = std::make_shared<CModelVolumetricLayer>(CModelVolumetricLayer(pVolumetricLayer->getTransform(), pVolumetricLayer->getBlendMethod()));
+		pNewLayer->setSourceAlpha(pVolumetricLayer->getSourceAlpha());
+		pNewLayer->setDstAlpha(pVolumetricLayer->getDstAlpha());
 
 		auto pMaskSelector = pVolumetricLayer->getMaskChannelSelector();
 		if (pMaskSelector.get() != nullptr)
-			pNewLayer->setMaskChannelSelector (CModelImage3DChannelSelector::make_from (pMaskSelector.get(), PackageIDMap));
+			pNewLayer->setMaskChannelSelector(CModelImage3DChannelSelector::make_from(pMaskSelector.get(), PackageIDMap));
 
 		for (auto iChannelSelector : pVolumetricLayer->m_ChannelSelectors) {
 			pNewLayer->addChannelSelector(CModelImage3DChannelSelector::make_from(iChannelSelector.get(), PackageIDMap));
 
 		}
-		
+
 		return pNewLayer;
 	}
 
@@ -144,13 +144,13 @@ namespace NMR {
 		if (m_ChannelSelectors.size() >= MAX_VOLUMETRIC_CHANNELS)
 			throw CNMRException(NMR_ERROR_TOOMANYCHANNELSELECTORS);
 
-		ChannelSelector->setInternalIndex(getChannelSelectorCount ());
+		ChannelSelector->setInternalIndex(getChannelSelectorCount());
 		m_ChannelSelectors.push_back(ChannelSelector);
 	}
 
 	nfUint32 CModelVolumetricLayer::getChannelSelectorCount()
 	{
-		return (nfUint32) m_ChannelSelectors.size();
+		return (nfUint32)m_ChannelSelectors.size();
 	}
 
 	PModelImage3DChannelSelector CModelVolumetricLayer::getChannelSelector(nfUint32 nIndex)
@@ -180,7 +180,7 @@ namespace NMR {
 
 		auto iIter = m_ChannelSelectors.begin();
 		iIter += nIndex;
-		m_ChannelSelectors.erase (iIter);
+		m_ChannelSelectors.erase(iIter);
 	}
 
 	void CModelVolumetricLayer::reIndexChannelSelector(CModelImage3DChannelSelector * pChannelSelector, nfUint32 nNewIndex)
@@ -240,9 +240,6 @@ namespace NMR {
 	{
 		return fnMATRIX3_toString(m_Transform);
 	}
-
-
-
 
 }
 

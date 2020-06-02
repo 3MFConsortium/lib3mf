@@ -62,13 +62,16 @@ namespace Lib3MF
 			wrapper = CWrapper::loadLibrary();
 		}
 		static PWrapper wrapper;
+
+		PImage3D SetupSheetsFromFile();
+		PMeshObject GetMesh();
 	};
 	PWrapper Volumetric::wrapper;
 	std::string Volumetric::InFolder(sTestFilesPath + "/Volumetric/");
 	std::string Volumetric::OutFolder(sOutFilesPath + "/Volumetric/");
 	
 
-	TEST_F(Volumetric, VolumetricWriter)
+	PImage3D Volumetric::SetupSheetsFromFile()
 	{
 		auto pImage3D = model->AddImage3D(821, 819, 11);
 		for (int i = 0; i < 11; i++) {
@@ -79,16 +82,28 @@ namespace Lib3MF
 			}
 			sNumber = sNumber + std::to_string(k);
 
-			pImage3D->CreateSheetFromFile(i, "/volume/layer" + sNumber + ".png", InFolder+"img" +sNumber + ".png");
+			pImage3D->CreateSheetFromFile(i, "/volume/layer" + sNumber + ".png", InFolder + "img" + sNumber + ".png");
 		}
+		return pImage3D;
+	}
+
+	PMeshObject Volumetric::GetMesh()
+	{
+		auto meshes = model->GetMeshObjects();
+		meshes->MoveNext();
+		return meshes->GetCurrentMeshObject();
+	}
+
+	TEST_F(Volumetric, VolumetricWriter)
+	{
+		auto pImage3D = SetupSheetsFromFile();
+
 		auto pVolumetricStack = model->AddVolumetricStack();
 		pVolumetricStack->AddDestinationChannel("channel", 0.0);
-		auto pLayer = pVolumetricStack->AddLayer(wrapper->GetIdentityTransform(), Lib3MF::eBlendMethod::NoBlendMethod);
+		auto pLayer = pVolumetricStack->AddLayer(wrapper->GetIdentityTransform(), Lib3MF::eBlendMethod::Mix);
 		auto pChannelSelector = pLayer->AddChannelSelector(pImage3D.get(), "R", "channel");
 
-		auto meshes = model->GetMeshObjects();
-		ASSERT_EQ(meshes->MoveNext(), true);
-		auto theMesh = meshes->GetCurrentMeshObject();
+		auto theMesh = GetMesh();
 		auto volumeData = theMesh->VolumeData();
 
 		ASSERT_TRUE(volumeData->GetLevelset() == nullptr);
@@ -114,6 +129,45 @@ namespace Lib3MF
 		ASSERT_TRUE(levelset->GetChannel() == sChannelName);
 
 		Volumetric::writer3MF->WriteToFile(Volumetric::OutFolder + "ColoredVolume.3mf");
+	}
+
+	TEST_F(Volumetric, VolumetricProperty)
+	{
+		auto pImage3D = SetupSheetsFromFile();
+
+		auto pVolumetricStack = model->AddVolumetricStack();
+		pVolumetricStack->AddDestinationChannel("channel", 0.0);
+		auto pLayer = pVolumetricStack->AddLayer(wrapper->GetIdentityTransform(), Lib3MF::eBlendMethod::Mix);
+		auto pChannelSelector = pLayer->AddChannelSelector(pImage3D.get(), "R", "channel");
+
+		auto theMesh = GetMesh();
+		auto volumeData = theMesh->VolumeData();
+		const std::string propertyName = "MyProperty";
+		auto oldProperty = volumeData->FindProperty(propertyName);
+		ASSERT_TRUE(volumeData->FindProperty(propertyName) == nullptr);
+
+		auto theProperty = volumeData->AddProperty(propertyName, pVolumetricStack.get());
+		ASSERT_TRUE(theProperty->GetName() == propertyName);
+		ASSERT_TRUE(volumeData->FindProperty(propertyName) != nullptr);
+
+		ASSERT_TRUE(theProperty->IsRequired());
+		theProperty->SetIsRequired(false);
+		ASSERT_FALSE(theProperty->IsRequired());
+
+		theProperty->SetChannel("channel");
+
+		writer3MF->WriteToFile(Volumetric::OutFolder + "MyProperty.3mf");
+
+		{
+			PModel ioModel = wrapper->CreateModel();
+			PReader ioReader = ioModel->QueryReader("3mf");
+			ioReader->ReadFromFile(Volumetric::OutFolder + "MyProperty.3mf");
+			
+			PWriter ioWriter = ioModel->QueryWriter("3mf");
+			ioWriter->WriteToFile(Volumetric::OutFolder + "MyPropertyReOut.3mf");
+		}
+
+
 	}
 
 }

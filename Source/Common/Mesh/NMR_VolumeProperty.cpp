@@ -35,7 +35,7 @@ NMR_VolumeProperty.cpp implements the class CVolumeProperty.
 namespace NMR {
 
 	CVolumeProperty::CVolumeProperty(std::string sName, PModelVolumetricStack pVolumetricStack)
-		: CVolumeBase(pVolumetricStack)
+		: CVolumeBase(pVolumetricStack), m_bIsRequired(true)
 	{
 		m_sPropertyName = sName;
 	}
