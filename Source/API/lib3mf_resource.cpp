@@ -90,7 +90,7 @@ IPackagePart * CResource::PackagePart()
 
 void CResource::SetPackagePart(IPackagePart* pPackagePart)
 {
-	std::string sPath = pPackagePart->Get();
+	std::string sPath = pPackagePart->GetPath();
 	NMR::ModelResourceID nID = m_pResource->getPackageResourceID()->getModelResourceID();
 	NMR::PPackageResourceID pTargetPackageResourceID = m_pResource->getModel()->findPackageResourceID(sPath, nID);
 	if (pTargetPackageResourceID) {

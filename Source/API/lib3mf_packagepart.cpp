@@ -50,12 +50,12 @@ CPackagePart::CPackagePart(NMR::PPackageModelPath pPath)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
 }
 
-std::string CPackagePart::Get()
+std::string CPackagePart::GetPath()
 {
 	return m_pPath->getPath();
 }
 
-void CPackagePart::Set(const std::string & sPath)
+void CPackagePart::SetPath(const std::string & sPath)
 {
 	m_pPath->setPath(sPath);
 }

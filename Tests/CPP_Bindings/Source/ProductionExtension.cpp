@@ -88,7 +88,7 @@ namespace Lib3MF
 	{
 		auto rootPart = model->RootModelPart();
 		auto otherPart = model->FindOrCreatePackagePart("/somepart");
-		ASSERT_SPECIFIC_THROW(otherPart->Set(rootPart->Get()), ELib3MFException);
+		ASSERT_SPECIFIC_THROW(otherPart->SetPath(rootPart->GetPath()), ELib3MFException);
 	}
 
 	TEST_F(ProductionExtension, ReadInspect)
@@ -116,14 +116,14 @@ namespace Lib3MF
 
 		auto resources = model->GetResources();
 		auto partToChange = model->FindOrCreatePackagePart("/3D/box2.model");
-		partToChange->Set("/3D/boxPathChanged.model");
+		partToChange->SetPath("/3D/boxPathChanged.model");
 
 		auto newPart = model->FindOrCreatePackagePart("/3D/boxPathNew.model");
 
 		while (resources->MoveNext()) {
 			auto resource = resources->GetCurrent();
-			std::cout << resource->PackagePart()->Get() << ":" << resource->GetModelResourceID() << std::endl;
-			if (resource->PackagePart()->Get() == "/3D/box1.model") {
+			std::cout << resource->PackagePart()->GetPath() << ":" << resource->GetModelResourceID() << std::endl;
+			if (resource->PackagePart()->GetPath() == "/3D/box1.model") {
 				resource->SetPackagePart(newPart.get());
 			}
 		}

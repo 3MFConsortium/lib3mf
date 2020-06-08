@@ -318,8 +318,8 @@ namespace Lib3MF {
 		keyStore->AddResourceData(dataGroup.get(), part2.get(), Lib3MF::eEncryptionAlgorithm::AES256_GCM, Lib3MF::eCompression::Deflate, std::vector<Lib3MF_uint8>());
 
 		ASSERT_EQ(2, keyStore->GetResourceDataCount());
-		ASSERT_EQ(path1, keyStore->GetResourceData(0)->GetPath()->Get());
-		ASSERT_EQ(path2, keyStore->GetResourceData(1)->GetPath()->Get());
+		ASSERT_EQ(path1, keyStore->GetResourceData(0)->GetPath()->GetPath());
+		ASSERT_EQ(path2, keyStore->GetResourceData(1)->GetPath()->GetPath());
 	}
 
 
@@ -531,11 +531,11 @@ namespace Lib3MF {
 			PResourceData resourceDataFound = keyStore->FindResourceData(resourceData->GetPath().get());
 			ASSERT_TRUE(resourceDataFound != nullptr);
 
-			ASSERT_EQ(resourceData->GetPath()->Get(), resourceDataFound->GetPath()->Get());
+			ASSERT_EQ(resourceData->GetPath()->GetPath(), resourceDataFound->GetPath()->GetPath());
 
 			ASSERT_EQ(Lib3MF::eEncryptionAlgorithm::AES256_GCM, resourceData->GetEncryptionAlgorithm());
 			ASSERT_EQ(Lib3MF::eCompression::None, resourceData->GetCompression());
-			ASSERT_EQ("/3D/3dexternal.model", resourceData->GetPath()->Get());
+			ASSERT_EQ("/3D/3dexternal.model", resourceData->GetPath()->GetPath());
 		}
 	}
 

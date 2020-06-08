@@ -77,9 +77,9 @@ public:
 	* Public member functions to implement.
 	*/
 
-	std::string Get() override;
+	std::string GetPath() override;
 
-	void Set(const std::string & sPath) override;
+	void SetPath(const std::string & sPath) override;
 
 };
 

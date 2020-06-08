@@ -83,7 +83,7 @@ void CSliceStack::AddSliceStackReference(ISliceStack* pTheSliceStack)
 	NMR::ModelResourceID nID = pTheSliceStack->GetResourceID();
 	
 	std::shared_ptr<IPackagePart> pPackagePart(pTheSliceStack->PackagePart());
-	std::string sPath = pPackagePart->Get();
+	std::string sPath = pPackagePart->GetPath();
 
 	NMR::PModelResource pResource = sliceStack()->getModel()->findResource(sPath, nID);
 	NMR::PModelSliceStack pModelSliceStack = std::dynamic_pointer_cast<NMR::CModelSliceStack>(pResource);

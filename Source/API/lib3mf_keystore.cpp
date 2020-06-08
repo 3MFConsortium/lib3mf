@@ -106,7 +106,7 @@ void Lib3MF::Impl::CKeyStore::RemoveResourceDataGroup(IResourceDataGroup * pTheR
 }
 
 Lib3MF::Impl::IResourceDataGroup * Lib3MF::Impl::CKeyStore::FindResourceDataGroup(Lib3MF::Impl::IPackagePart *pPartPath) {
-	NMR::PPackageModelPath pPath = m_pModel->findOrCreateModelPath(pPartPath->Get());
+	NMR::PPackageModelPath pPath = m_pModel->findOrCreateModelPath(pPartPath->GetPath());
 	if (!pPath)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
 
@@ -123,7 +123,7 @@ Lib3MF::Impl::IResourceData * Lib3MF::Impl::CKeyStore::AddResourceData(Lib3MF::I
 	if (!dg)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
 	//pPartPath might have different implementations, so asking model get us right to what we need.
-	NMR::PPackageModelPath pPath = m_pModel->findOrCreateModelPath(pPartPath->Get());
+	NMR::PPackageModelPath pPath = m_pModel->findOrCreateModelPath(pPartPath->GetPath());
 	if (!pPath)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
 
@@ -151,7 +151,7 @@ Lib3MF::Impl::IResourceData * Lib3MF::Impl::CKeyStore::GetResourceData(Lib3MF_ui
 }
 
 IResourceData * Lib3MF::Impl::CKeyStore::FindResourceData(IPackagePart * pResourcePath) {
-	NMR::PPackageModelPath pPath = m_pModel->findOrCreateModelPath(pResourcePath->Get());
+	NMR::PPackageModelPath pPath = m_pModel->findOrCreateModelPath(pResourcePath->GetPath());
 	if (!pPath)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
 	NMR::PKeyStoreResourceData rd = m_pKeyStore->findResourceData(pPath);
