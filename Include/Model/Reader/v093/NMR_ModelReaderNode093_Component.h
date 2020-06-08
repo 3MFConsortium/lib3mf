@@ -47,7 +47,7 @@ namespace NMR {
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 	public:
 		CModelReaderNode093_Component() = delete;
-		CModelReaderNode093_Component(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings);
+		CModelReaderNode093_Component(_In_ CModel * pModel, _In_ PModelWarnings pWarnings);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 

@@ -48,7 +48,7 @@ namespace NMR {
 		nfBool m_bHasV;
 	public:
 		CModelReaderNode093_TextureVertex() = delete;
-		CModelReaderNode093_TextureVertex(_In_ PModelReaderWarnings pWarnings);
+		CModelReaderNode093_TextureVertex(_In_ PModelWarnings pWarnings);
 
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 

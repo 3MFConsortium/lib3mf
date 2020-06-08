@@ -44,7 +44,7 @@ NMR_ModelReaderNode100_Colors.cpp implements the Model Reader Color Group Class.
 
 namespace NMR {
 
-	CModelReaderNode100_Colors::CModelReaderNode100_Colors(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings)
+	CModelReaderNode100_Colors::CModelReaderNode100_Colors(_In_ CModel * pModel, _In_ PModelWarnings pWarnings)
 		: CModelReaderNode(pWarnings)
 	{
 		// Initialize variables

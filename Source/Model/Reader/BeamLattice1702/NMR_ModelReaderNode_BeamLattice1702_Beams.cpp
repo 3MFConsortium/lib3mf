@@ -43,7 +43,7 @@ namespace NMR {
 
 	CModelReaderNode_BeamLattice1702_Beams::CModelReaderNode_BeamLattice1702_Beams(_In_ CModel * pModel, _In_ CMesh * pMesh,
 		_In_ nfDouble defaultRadius, _In_ eModelBeamLatticeCapMode defaultCapMode,
-		_In_ PModelReaderWarnings pWarnings)
+		_In_ PModelWarnings pWarnings)
 		: CModelReaderNode(pWarnings)
 	{
 		__NMRASSERT(pMesh);

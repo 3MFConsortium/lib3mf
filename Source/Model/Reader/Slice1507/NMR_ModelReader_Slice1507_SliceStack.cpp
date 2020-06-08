@@ -70,20 +70,20 @@ namespace NMR {
 			
 			std::string path = pXmlNode->Path();
 			if (path.empty()) {
-				path = m_pModel->curPath();
+				path = m_pModel->currentPath();
 			}
 			PModelResource pResource = m_pModel->findResource(path, pXmlNode->SliceStackId());
 			PModelSliceStack pSliceStackResource = std::dynamic_pointer_cast<CModelSliceStack>(pResource);
 			if (!pSliceStackResource)
 				throw CNMRException(NMR_ERROR_SLICESTACKRESOURCE_NOT_FOUND);
-			if (!m_pSliceStackResource->OwnPath().empty())
+			if (m_pSliceStackResource->OwnPath() != m_pModel->rootPath() )
 				throw CNMRException(NMR_ERROR_SLICEREFSTOODEEP);
 			m_pSliceStackResource->AddSliceRef(pSliceStackResource);
 		}
 	}
 
 	CModelReaderNode_Slice1507_SliceStack::CModelReaderNode_Slice1507_SliceStack(
-		_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings,
+		_In_ CModel * pModel, _In_ PModelWarnings pWarnings,
 		_In_ PProgressMonitor pProgressMonitor,_In_ const std::string sSlicePath)
 		: CModelReaderNode(pWarnings, pProgressMonitor)
 	{

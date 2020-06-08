@@ -51,7 +51,7 @@ namespace NMR {
 
 #pragma pack (1)
 	typedef struct {
-		nfUint32 m_nResourceID;
+		nfUint32 m_nUniqueResourceID;
 		nfUint32 m_nPropertyIDs[3];
 	} MESHINFORMATION_PROPERTIES;
 

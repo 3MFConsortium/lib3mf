@@ -425,26 +425,26 @@ namespace NMR {
 		m_pMeshInformationHandler.reset();
 	}
 
-	void CMesh::patchMeshInformationResources(_In_ std::map<PackageResourceID, PackageResourceID> &oldToNewMapping)
+	void CMesh::patchMeshInformationResources(_In_ std::map<UniqueResourceID, UniqueResourceID> &oldToNewMapping)
 	{
 		NMR::CMeshInformationHandler *pMeshInformationHandler = this->getMeshInformationHandler();
 		if (pMeshInformationHandler) {
 			NMR::CMeshInformation *pProperties = dynamic_cast<NMR::CMeshInformation_Properties *>(pMeshInformationHandler->getInformationByType(0, NMR::emiProperties));
 			if (pProperties) {
 				NMR::MESHINFORMATION_PROPERTIES * pDefaultData = (NMR::MESHINFORMATION_PROPERTIES*)pProperties->getDefaultData();
-				if (pDefaultData && pDefaultData->m_nResourceID != 0) {
-					NMR::PackageResourceID nNewResourceID = oldToNewMapping[pDefaultData->m_nResourceID];
+				if (pDefaultData && pDefaultData->m_nUniqueResourceID != 0) {
+					NMR::UniqueResourceID nNewResourceID = oldToNewMapping[pDefaultData->m_nUniqueResourceID];
 					if (nNewResourceID == 0)
 						throw CNMRException(NMR_ERROR_UNKNOWNMODELRESOURCE);
-					pDefaultData->m_nResourceID = nNewResourceID;
+					pDefaultData->m_nUniqueResourceID = nNewResourceID;
 				}
 				for (NMR::nfUint32 nFaceIndex = 0; nFaceIndex < this->getFaceCount(); nFaceIndex++) {
 					NMR::MESHINFORMATION_PROPERTIES * pFaceData = (NMR::MESHINFORMATION_PROPERTIES*)pProperties->getFaceData(nFaceIndex);
-					if (pFaceData && pFaceData->m_nResourceID != 0) {
-						NMR::PackageResourceID nNewResourceID = oldToNewMapping[pFaceData->m_nResourceID];
+					if (pFaceData && pFaceData->m_nUniqueResourceID != 0) {
+						NMR::UniqueResourceID nNewResourceID = oldToNewMapping[pFaceData->m_nUniqueResourceID];
 						if (nNewResourceID == 0)
 							throw CNMRException(NMR_ERROR_UNKNOWNMODELRESOURCE);
-						pFaceData->m_nResourceID = nNewResourceID;
+						pFaceData->m_nUniqueResourceID = nNewResourceID;
 					}
 				}
 			}

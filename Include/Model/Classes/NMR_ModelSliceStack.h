@@ -47,7 +47,6 @@ namespace NMR {
 	class CModelSliceStack : public CModelResource {
 	private:
 		nfDouble m_dZBottom;
-		std::string m_sOwnPath;
 
 		std::vector<PModelSliceStack> m_pSliceRefs;
 		std::vector<PSlice> m_pSlices;

@@ -35,7 +35,7 @@ A model reader node is an abstract base class for all XML nodes of a 3MF Model S
 #define __NMR_MODELREADERNODE
 
 #include "Model/Classes/NMR_Model.h"
-#include "Model/Reader/NMR_ModelReaderWarnings.h"
+#include "Common/NMR_ModelWarnings.h"
 #include "Common/Platform/NMR_XmlReader.h"
 #include "Common/3MF_ProgressMonitor.h"
 
@@ -50,7 +50,7 @@ namespace NMR {
 
 	protected:
 		PProgressMonitor m_pProgressMonitor;
-		PModelReaderWarnings m_pWarnings;
+		PModelWarnings m_pWarnings;
 
 		void parseName(_In_ CXmlReader * pXMLReader);
 		void parseAttributes(_In_ CXmlReader * pXMLReader);
@@ -64,11 +64,11 @@ namespace NMR {
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 	public:
 		CModelReaderNode() = delete;
-		CModelReaderNode(_In_ PModelReaderWarnings pWarnings, _In_ PProgressMonitor pProgressMonitor = nullptr);
+		CModelReaderNode(_In_ PModelWarnings pWarnings, _In_ PProgressMonitor pProgressMonitor = nullptr);
 		virtual ~CModelReaderNode() = default;
 
 		std::string getName();
-		PModelReaderWarnings getWarnings();
+		PModelWarnings getWarnings() const;
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader) = 0;
 	};

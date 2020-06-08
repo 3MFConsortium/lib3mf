@@ -23,6 +23,7 @@ set(CMAKE_INSTALL_INCLUDEDIR include/lib3mf CACHE PATH "directory for installing
 option(USE_INCLUDED_ZLIB "Use included zlib" ON)
 option(USE_INCLUDED_LIBZIP "Use included libzip" ON)
 option(USE_INCLUDED_GTEST "Used included gtest" ON)
+option(USE_INCLUDED_SSL "Use included libressl" ON)
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
   # using GCC
@@ -163,6 +164,7 @@ if (NOT USE_INCLUDED_ZLIB)
 	pkg_check_modules(ZLIB REQUIRED zlib)
 	target_link_libraries(${PROJECT_NAME} ${ZLIB_LIBRARIES})
 endif()
+
 
 set_target_properties(${PROJECT_NAME} PROPERTIES PREFIX "" IMPORT_PREFIX "" )
 # This makes sure symbols are exported

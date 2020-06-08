@@ -42,16 +42,16 @@ namespace NMR {
 
 	class CMeshInformation_PropertyIndexMapping {
 	private:
-		std::map<std::pair <nfUint32, ModelPropertyID>, nfUint32> m_IDMap;
+		std::map<std::pair<UniqueResourceID, ModelPropertyID>, nfUint32> m_IDMap;
 	public:
 		CMeshInformation_PropertyIndexMapping();
 
-		nfUint32 mapPropertyIDToIndex(nfUint32 nResourceID, ModelPropertyID nPropertyID);
+		nfUint32 mapPropertyIDToIndex(UniqueResourceID nUniqueResourceID, ModelPropertyID nPropertyID);
 		
-		nfUint32 getDefaultResourceID ();
-		nfUint32 getDefaultResourceIndex ();
+		UniqueResourceID getDefaultResourceID();
+		nfUint32 getDefaultResourceIndex();
 
-		nfUint32 registerPropertyID(nfUint32 nResourceID, ModelPropertyID nPropertyID, nfUint32 nResourceIndex);
+		nfUint32 registerPropertyID(UniqueResourceID nUniqueResourceID, ModelPropertyID nPropertyID, nfUint32 nResourceIndex);
 
 	};
 

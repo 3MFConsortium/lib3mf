@@ -19,6 +19,9 @@ matrix:
           packages:
             - valgrind
     - os: osx
+      osx_image: xcode10.1
+      env: BUILDMODE=cmake-make-osx
+    - os: osx
       osx_image: xcode7.2
       env: BUILDMODE=cmake-make-osx
     - os: linux
@@ -37,6 +40,10 @@ matrix:
             - gcc-mingw-w64-x86-64
             - gcc-mingw-w64
             - g++-mingw-w64-x86-64
+
+before_install:
+    - if [[ "$BUILDMODE" = "cmake-make-osx" ]]; then brew update; fi
+    - if [[ "$BUILDMODE" = "cmake-make-osx" ]]; then brew install valgrind; fi
 
 before_script:
     - if [[ "$BUILDMODE" = "cmake-mingw32" ]]; then sh cmake/GenerateMinGW.sh; cd build; fi

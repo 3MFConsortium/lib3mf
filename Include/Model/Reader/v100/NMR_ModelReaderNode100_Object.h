@@ -59,7 +59,8 @@ namespace NMR {
 		PModelObject m_pObject;
 		nfBool m_bHasDefaultPropertyID;
 		nfBool m_bHasDefaultPropertyIndex;
-		ModelResourceID m_nObjectLevelPropertyID;
+		ModelResourceID m_nObjectLevelPropertyModelID;
+		PPackageResourceID m_pObjectLevelPropertyID;
 		ModelResourceIndex m_nObjectLevelPropertyIndex;
 
 		nfUint32 m_nSliceStackId;
@@ -76,7 +77,7 @@ namespace NMR {
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 	public:
 		CModelReaderNode100_Object() = delete;
-		CModelReaderNode100_Object(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings, _In_ PProgressMonitor pProgressMonitor);
+		CModelReaderNode100_Object(_In_ CModel * pModel, _In_ PModelWarnings pWarnings, _In_ PProgressMonitor pProgressMonitor);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 	};

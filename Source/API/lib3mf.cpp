@@ -89,10 +89,17 @@ void CWrapper::GetSpecificationVersion (const std::string & sSpecificationURL, b
 		nMinor = NMR_SPECVERSION_BEAMLATTICE_MINOR;
 		nMicro = NMR_SPECVERSION_BEAMLATTICE_MICRO;
 		bIsSupported = true;
-	} else if (!sSpecificationURL.compare(std::string(XML_3MF_NAMESPACE_SLICESPEC) )) {
+	}
+	else if (!sSpecificationURL.compare(std::string(XML_3MF_NAMESPACE_SLICESPEC))) {
 		nMajor = NMR_SPECVERSION_SLICE_MAJOR;
 		nMinor = NMR_SPECVERSION_SLICE_MINOR;
 		nMicro = NMR_SPECVERSION_SLICE_MICRO;
+		bIsSupported = true;
+	}
+	else if (!sSpecificationURL.compare(std::string(XML_3MF_NAMESPACE_SECURECONTENTSPEC))) {
+		nMajor = NMR_SPECVERSION_SECURECONTENT_MAJOR;
+		nMinor = NMR_SPECVERSION_SECURECONTENT_MINOR;
+		nMicro = NMR_SPECVERSION_SECURECONTENT_MICRO;
 		bIsSupported = true;
 	}
 	else {
@@ -249,4 +256,5 @@ sLib3MFTransform CWrapper::GetTranslationTransform(const Lib3MF_single fVectorX,
 
 	return Transform;
 }
+
 

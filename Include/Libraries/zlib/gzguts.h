@@ -167,7 +167,7 @@ typedef struct {
         /* used for both reading and writing */
     int mode;               /* see gzip modes above */
     int fd;                 /* file descriptor */
-    char *path;             /* path or fd for error messages */
+    char *path;             /* getPath or fd for error messages */
     unsigned size;          /* buffer size, zero if not allocated yet */
     unsigned want;          /* requested buffer size, default is GZBUFSIZE */
     unsigned char *in;      /* input buffer */

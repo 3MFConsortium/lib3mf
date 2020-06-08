@@ -57,29 +57,29 @@ void CBeamLattice::SetMinLength (const Lib3MF_double dMinLength)
 	return m_mesh.setBeamLatticeMinLength(dMinLength);
 }
 
-void CBeamLattice::GetClipping (eLib3MFBeamLatticeClipMode & eClipMode, Lib3MF_uint32 & nResourceID)
+void CBeamLattice::GetClipping(eLib3MFBeamLatticeClipMode & eClipMode, Lib3MF_uint32 & nUniqueResourceID)
 {
 	if (!m_pAttributes->m_bHasClippingMeshID) {
 		eClipMode = eBeamLatticeClipMode::NoClipMode;
-		nResourceID = 0;
+		nUniqueResourceID = 0;
 	}
 	else {
 		eClipMode = eBeamLatticeClipMode(m_pAttributes->m_eClipMode);
-		nResourceID = m_pAttributes->m_nClippingMeshID->getUniqueID();
+		nUniqueResourceID = m_pAttributes->m_pClippingMeshUniqueID->getUniqueID();
 	}
 }
 
-void CBeamLattice::SetClipping (const eLib3MFBeamLatticeClipMode eClipMode, const Lib3MF_uint32 nResourceID)
+void CBeamLattice::SetClipping(const eLib3MFBeamLatticeClipMode eClipMode, const Lib3MF_uint32 nUniqueResourceID)
 {
-	if ( ((int)eClipMode == (NMR::eModelBeamLatticeClipMode::MODELBEAMLATTICECLIPMODE_NONE)) || (nResourceID == 0) ){
+	if ( ((int)eClipMode == (NMR::eModelBeamLatticeClipMode::MODELBEAMLATTICECLIPMODE_NONE)) || (nUniqueResourceID == 0) ){
 		m_pAttributes->m_eClipMode = NMR::eModelBeamLatticeClipMode(eClipMode);
 		m_pAttributes->m_bHasClippingMeshID = false;
-		m_pAttributes->m_nClippingMeshID = nullptr;
+		m_pAttributes->m_pClippingMeshUniqueID = nullptr;
 	}
 	else {
 		NMR::CModel* pModel = m_pMeshObject->getModel();
 
-		NMR::CModelMeshObject * pClippingObject = dynamic_cast<NMR::CModelMeshObject*>(pModel->findObject(nResourceID));
+		NMR::CModelMeshObject * pClippingObject = dynamic_cast<NMR::CModelMeshObject*>(pModel->findObject(nUniqueResourceID));
 		if (pClippingObject == nullptr) {
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
 		}
@@ -91,32 +91,32 @@ void CBeamLattice::SetClipping (const eLib3MFBeamLatticeClipMode eClipMode, cons
 
 		m_pAttributes->m_eClipMode = NMR::eModelBeamLatticeClipMode(eClipMode);;
 		m_pAttributes->m_bHasClippingMeshID = true;
-		m_pAttributes->m_nClippingMeshID = pClippingObject->getResourceID();
+		m_pAttributes->m_pClippingMeshUniqueID = pClippingObject->getPackageResourceID();
 	}
 }
 
-bool CBeamLattice::GetRepresentation (Lib3MF_uint32 & nResourceID)
+bool CBeamLattice::GetRepresentation (Lib3MF_uint32 & nUniqueResourceID)
 {
 	if (m_pAttributes->m_bHasRepresentationMeshID) {
-		nResourceID = m_pAttributes->m_nRepresentationID->getUniqueID();
+		nUniqueResourceID = m_pAttributes->m_pRepresentationUniqueID->getUniqueID();
 		return true;
 	}
 	else {
-		nResourceID = 0;
+		nUniqueResourceID = 0;
 		return false;
 	}
 }
 
-void CBeamLattice::SetRepresentation (const Lib3MF_uint32 nResourceID)
+void CBeamLattice::SetRepresentation (const Lib3MF_uint32 nUniqueResourceID)
 {
-	if (nResourceID == 0) {
+	if (nUniqueResourceID == 0) {
 		m_pAttributes->m_bHasRepresentationMeshID = false;
-		m_pAttributes->m_nRepresentationID = nullptr;
+		m_pAttributes->m_pRepresentationUniqueID = nullptr;
 	}
 	else {
 		NMR::CModel* pModel = m_pMeshObject->getModel();
 
-		NMR::CModelMeshObject * pRepresentationObject = dynamic_cast<NMR::CModelMeshObject*>(pModel->findObject(nResourceID));
+		NMR::CModelMeshObject * pRepresentationObject = dynamic_cast<NMR::CModelMeshObject*>(pModel->findObject(nUniqueResourceID));
 		if (pRepresentationObject == nullptr) {
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
 		}
@@ -127,7 +127,7 @@ void CBeamLattice::SetRepresentation (const Lib3MF_uint32 nResourceID)
 		}
 
 		m_pAttributes->m_bHasRepresentationMeshID = true;
-		m_pAttributes->m_nRepresentationID = pRepresentationObject->getResourceID();
+		m_pAttributes->m_pRepresentationUniqueID = pRepresentationObject->getPackageResourceID();
 	}
 }
 

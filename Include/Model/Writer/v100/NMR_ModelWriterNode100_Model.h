@@ -35,7 +35,7 @@ This is the class for exporting the 3mf model stream root node.
 #define __NMR_MODELWRITERNODE100_MODEL
 
 #include "Model/Classes/NMR_Model.h" 
-#include "Model/Writer/NMR_ModelWriterNode.h" 
+#include "Model/Writer/NMR_ModelWriterNode_ModelBase.h" 
 #include "Model/Classes/NMR_ModelComponentsObject.h" 
 #include "Model/Classes/NMR_ModelMeshObject.h" 
 #include "Common/Platform/NMR_XmlWriter.h"
@@ -45,10 +45,9 @@ This is the class for exporting the 3mf model stream root node.
 
 namespace NMR {
 
-	class CModelWriterNode100_Model : public CModelWriterNode {
+	class CModelWriterNode100_Model : public CModelWriterNode_ModelBase {
 	protected:
 		nfUint32 m_nDecimalPrecision;
-		ModelResourceID m_ResourceCounter;
 		
 		PMeshInformation_PropertyIndexMapping m_pPropertyIndexMapping;
 		
@@ -57,6 +56,7 @@ namespace NMR {
 		nfBool m_bWriteBeamLatticeExtension;
 		nfBool m_bWriteNurbsExtension;
 		nfBool m_bWriteSliceExtension;
+		nfBool m_bWriteSecureContentExtension;
 		nfBool m_bWriteBaseMaterials;
 		nfBool m_bWriteObjects;
 		nfBool m_bIsRootModel;
@@ -83,8 +83,6 @@ namespace NMR {
 		void writeSliceStack(_In_ CModelSliceStack *pSliceStack);
 
 		void writeComponentsObject(_In_ CModelComponentsObject * pComponentsObject);
-
-		ModelResourceID generateOutputResourceID();
 
 		void RegisterMetaDataGroupNameSpaces(PModelMetaDataGroup mdg);
 		void RegisterMetaDataNameSpaces();

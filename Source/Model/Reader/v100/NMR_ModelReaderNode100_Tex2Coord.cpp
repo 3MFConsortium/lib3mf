@@ -41,7 +41,7 @@ NMR_ModelReaderNode100_Tex2Coord.cpp implements the Model Reader Tex2Coord Node 
 
 namespace NMR {
 
-	CModelReaderNode100_Tex2Coord::CModelReaderNode100_Tex2Coord(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings)
+	CModelReaderNode100_Tex2Coord::CModelReaderNode100_Tex2Coord(_In_ CModel * pModel, _In_ PModelWarnings pWarnings)
 		: CModelReaderNode(pWarnings)
 	{
 

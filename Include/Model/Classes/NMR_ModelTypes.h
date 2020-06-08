@@ -111,7 +111,7 @@ namespace NMR {
 
 	typedef DWORD ModelPropertyID;
 	typedef DWORD ModelResourceID;
-	typedef DWORD PackageResourceID;
+	typedef DWORD UniqueResourceID;
 	typedef DWORD ModelResourceIndex;
 
 	enum eModelUnit {
@@ -174,7 +174,7 @@ namespace NMR {
 	} MODELCOMPOSITECONSTITUENT;
 
 	typedef struct {
-		ModelResourceID m_nResourceID;
+		UniqueResourceID m_nUniqueResourceID;
 		eModelBlendMethod m_nMethod;
 	} MODELMULTIPROPERTYLAYER;
 

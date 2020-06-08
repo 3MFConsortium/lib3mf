@@ -41,7 +41,7 @@ NMR_ModelReaderNode100_Color.cpp implements the Model Reader Color Node Class.
 
 namespace NMR {
 
-	CModelReaderNode100_Composite::CModelReaderNode100_Composite(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings,
+	CModelReaderNode100_Composite::CModelReaderNode100_Composite(_In_ CModel * pModel, _In_ PModelWarnings pWarnings,
 		_In_z_ const std::vector<ModelPropertyID>& baseMaterialPropertyIds)
 		: CModelReaderNode(pWarnings), m_vctBaseMaterialPropertyIds(baseMaterialPropertyIds)
 	{

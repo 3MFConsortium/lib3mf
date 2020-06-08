@@ -47,7 +47,7 @@ namespace NMR {
 		ModelResourceID m_nColorID;
 	public:
 		CModelReaderNode093_Material() = delete;
-		CModelReaderNode093_Material(_In_ PModelReaderWarnings pWarnings);
+		CModelReaderNode093_Material(_In_ PModelWarnings pWarnings);
 
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 

@@ -60,7 +60,7 @@ namespace NMR {
 		virtual void OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace);
 	public:
 		CModelReaderNode_BeamLattice1702_Beam() = delete;
-		CModelReaderNode_BeamLattice1702_Beam(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings);
+		CModelReaderNode_BeamLattice1702_Beam(_In_ CModel * pModel, _In_ PModelWarnings pWarnings);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 

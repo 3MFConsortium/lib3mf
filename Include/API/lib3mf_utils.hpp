@@ -36,12 +36,24 @@ Abstract: This file contains utilties used in the API of lib3mf
 
 // Include custom headers here.
 #include "Common/Math/NMR_Matrix.h" 
+#include "Common/NMR_SecureContentTypes.h"
 
 namespace Lib3MF {
 
 NMR::NMATRIX3 TransformToMatrix(const sLib3MFTransform Transform);
 
 sLib3MFTransform MatrixToTransform(const NMR::NMATRIX3 matrix);
+
+eLib3MFEncryptionAlgorithm translateEncryptionAlgorithm(const NMR::eKeyStoreEncryptAlgorithm algorithm);
+
+NMR::eKeyStoreEncryptAlgorithm translateEncryptionAlgorithm(const eLib3MFEncryptionAlgorithm algorithm);
+
+eLib3MFWrappingAlgorithm translateWrappingAlgorithm(const NMR::eKeyStoreWrapAlgorithm algorithm);
+
+NMR::eKeyStoreWrapAlgorithm translateWrappingAlgorithm(const eLib3MFWrappingAlgorithm algorithm);
+
+eLib3MFCompression translateCompression(bool compression);
+bool translateCompression(const eLib3MFCompression compression);
 
 }
 

@@ -44,7 +44,7 @@ NMR_ModelReaderNode093_Texture.cpp implements the Model Reader Texture Class.
 
 namespace NMR {
 
-	CModelReaderNode093_Texture::CModelReaderNode093_Texture(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings)
+	CModelReaderNode093_Texture::CModelReaderNode093_Texture(_In_ CModel * pModel, _In_ PModelWarnings pWarnings)
 		: CModelReaderNode(pWarnings)
 	{
 		// Initialize variables

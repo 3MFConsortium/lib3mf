@@ -44,7 +44,7 @@ NMR_ModelReaderNode100_CompositeMaterials.cpp implements the Model Reader Compos
 
 namespace NMR {
 
-	CModelReaderNode100_CompositeMaterials::CModelReaderNode100_CompositeMaterials(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings)
+	CModelReaderNode100_CompositeMaterials::CModelReaderNode100_CompositeMaterials(_In_ CModel * pModel, _In_ PModelWarnings pWarnings)
 		: CModelReaderNode(pWarnings)
 	{
 		// Initialize variables
@@ -69,11 +69,11 @@ namespace NMR {
 		if (m_nBaseMaterialID == 0)
 			throw CNMRException(NMR_ERROR_MISSINGMODELRESOURCEID);
 
-		PPackageResourceID pID = m_pModel->findPackageResourceID(m_pModel->curPath(), m_nBaseMaterialID);
+		PPackageResourceID pID = m_pModel->findPackageResourceID(m_pModel->currentPath(), m_nBaseMaterialID);
 		if (!pID)
 			throw CNMRException(NMR_ERROR_INVALIDMODELRESOURCE);
 
-		PModelBaseMaterialResource pBaseMaterial = m_pModel->findBaseMaterial(pID->getUniqueID());
+		PModelBaseMaterialResource pBaseMaterial = m_pModel->findBaseMaterial(pID);
 
 		// Create Resource
  		m_pCompositeMaterials = std::make_shared<CModelCompositeMaterialsResource>(m_nID, m_pModel, pBaseMaterial);

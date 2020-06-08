@@ -41,7 +41,7 @@ of an XML Model Stream.
 
 namespace NMR {
 
-	CModelReaderNode100_MetaData::CModelReaderNode100_MetaData(_In_ PModelReaderWarnings pWarnings)
+	CModelReaderNode100_MetaData::CModelReaderNode100_MetaData(_In_ PModelWarnings pWarnings)
 		: CModelReaderNode(pWarnings)
 	{
 		m_sKey = "";

@@ -53,7 +53,7 @@ namespace NMR {
 		return eModelBeamLatticeCapMode::MODELBEAMLATTICECAPMODE_SPHERE;
 	}
 
-	CModelReaderNode_BeamLattice1702_Beam::CModelReaderNode_BeamLattice1702_Beam(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings)
+	CModelReaderNode_BeamLattice1702_Beam::CModelReaderNode_BeamLattice1702_Beam(_In_ CModel * pModel, _In_ PModelWarnings pWarnings)
 		: CModelReaderNode(pWarnings)
 	{
 		m_nIndex1 = -1;

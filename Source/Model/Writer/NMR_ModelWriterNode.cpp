@@ -39,12 +39,10 @@ This is the abstract base class for all 3MF model stream exporters.
 
 namespace NMR {
 
-	CModelWriterNode::CModelWriterNode(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter, _In_ PProgressMonitor pProgressMonitor)
+	CModelWriterNode::CModelWriterNode(_In_ CXmlWriter * pXMLWriter, _In_ PProgressMonitor pProgressMonitor)
 	{
-		__NMRASSERT(pModel);
 		__NMRASSERT(pXMLWriter);
 		__NMRASSERT(pProgressMonitor);
-		m_pModel = pModel;
 		m_pXMLWriter = pXMLWriter;
 		m_pProgressMonitor = pProgressMonitor;
 	}
@@ -128,6 +126,4 @@ namespace NMR {
 	{
 		m_pXMLWriter->WriteText(pwszText, cbLength);
 	}
-
-
 }

@@ -52,7 +52,7 @@ namespace NMR {
 
 	CModelWriterNode100_Mesh::CModelWriterNode100_Mesh(_In_ CModelMeshObject * pModelMeshObject, _In_ CXmlWriter * pXMLWriter, _In_ PProgressMonitor pProgressMonitor,
 		_In_ PMeshInformation_PropertyIndexMapping pPropertyIndexMapping, _In_ int nPosAfterDecPoint, _In_ nfBool bWriteMaterialExtension, _In_ nfBool bWriteBeamLatticeExtension)
-		:CModelWriterNode(pModelMeshObject->getModel(), pXMLWriter, pProgressMonitor), m_nPosAfterDecPoint(nPosAfterDecPoint), m_nPutDoubleFactor((int)(pow(10, CModelWriterNode100_Mesh::m_nPosAfterDecPoint)))
+		:CModelWriterNode_ModelBase(pModelMeshObject->getModel(), pXMLWriter, pProgressMonitor), m_nPosAfterDecPoint(nPosAfterDecPoint), m_nPutDoubleFactor((int)(pow(10, CModelWriterNode100_Mesh::m_nPosAfterDecPoint)))
 	{
 		__NMRASSERT(pModelMeshObject != nullptr);
 		if (!pPropertyIndexMapping.get())
@@ -137,7 +137,7 @@ namespace NMR {
 		// Retrieve Mesh Informations
 		CMeshInformation_Properties * pProperties = NULL;
 
-		ModelResourceID nObjectLevelPropertyID = 0;
+		UniqueResourceID nObjectLevelPropertyID = 0;
 		ModelResourceIndex nObjectLevelPropertyIndex = 0;
 
 		CMeshInformationHandler * pMeshInformationHandler = pMesh->getMeshInformationHandler();
@@ -148,8 +148,8 @@ namespace NMR {
 				pProperties = dynamic_cast<CMeshInformation_Properties *> (pInformation);
 				NMR::MESHINFORMATION_PROPERTIES * pDefaultData = (NMR::MESHINFORMATION_PROPERTIES*)pProperties->getDefaultData();
 
-				if (pDefaultData && pDefaultData->m_nResourceID != 0) {
-					nObjectLevelPropertyID = pDefaultData->m_nResourceID;
+				if (pDefaultData && pDefaultData->m_nUniqueResourceID != 0) {
+					nObjectLevelPropertyID = pDefaultData->m_nUniqueResourceID;
 					nObjectLevelPropertyIndex = m_pPropertyIndexMapping->mapPropertyIDToIndex(nObjectLevelPropertyID, pDefaultData->m_nPropertyIDs[0]);
 				}
 			}
@@ -168,7 +168,7 @@ namespace NMR {
 			// Get Mesh Face
 			MESHFACE * pMeshFace = pMesh->getFace(nFaceIndex);
 
-			ModelResourceID nPropertyID = 0;
+			UniqueResourceID nPropertyID = 0;
 			ModelResourceIndex nPropertyIndex1 = 0;
 			ModelResourceIndex nPropertyIndex2 = 0;
 			ModelResourceIndex nPropertyIndex3 = 0;
@@ -178,8 +178,8 @@ namespace NMR {
 			if (pProperties != nullptr) {
 				MESHINFORMATION_PROPERTIES* pFaceData = (MESHINFORMATION_PROPERTIES*)pProperties->getFaceData(nFaceIndex);
 				if (pFaceData != nullptr) {
-					if (pFaceData->m_nResourceID) {
-						nPropertyID = pFaceData->m_nResourceID;
+					if (pFaceData->m_nUniqueResourceID) {
+						nPropertyID = pFaceData->m_nUniqueResourceID;
 						nPropertyIndex1 = m_pPropertyIndexMapping->mapPropertyIDToIndex(nPropertyID, pFaceData->m_nPropertyIDs[0]);
 						nPropertyIndex2 = m_pPropertyIndexMapping->mapPropertyIDToIndex(nPropertyID, pFaceData->m_nPropertyIDs[1]);
 						nPropertyIndex3 = m_pPropertyIndexMapping->mapPropertyIDToIndex(nPropertyID, pFaceData->m_nPropertyIDs[2]);
@@ -190,14 +190,16 @@ namespace NMR {
 
 			if (nPropertyID != 0) {
 				bMeshHasAProperty = true;
+				// TODO: this is slow
+				ModelResourceID nPropertyModelResourceID = m_pModel->findPackageResourceID(nPropertyID)->getModelResourceID();
 				if ((nPropertyIndex1 != nPropertyIndex2) || (nPropertyIndex1 != nPropertyIndex3)) {
-					writeFaceData_ThreeProperties(pMeshFace, nPropertyID, nPropertyIndex1, nPropertyIndex2, nPropertyIndex3, pAdditionalString);
+					writeFaceData_ThreeProperties(pMeshFace, nPropertyModelResourceID, nPropertyIndex1, nPropertyIndex2, nPropertyIndex3, pAdditionalString);
 				}
 				else {
 					if ((nPropertyID == nObjectLevelPropertyID) && (nPropertyIndex1 == nObjectLevelPropertyIndex)){
 						writeFaceData_Plain(pMeshFace, pAdditionalString);
 					} else {
-						writeFaceData_OneProperty(pMeshFace, nPropertyID, nPropertyIndex1, pAdditionalString);
+						writeFaceData_OneProperty(pMeshFace, nPropertyModelResourceID, nPropertyIndex1, pAdditionalString);
 					}
 				}
 			}
@@ -242,11 +244,17 @@ namespace NMR {
 
 				if (m_pModelMeshObject->getBeamLatticeAttributes()->m_bHasClippingMeshID) {
 					writeStringAttribute(XML_3MF_ATTRIBUTE_BEAMLATTICE_CLIPPINGMODE, clipModeToString(m_pModelMeshObject->getBeamLatticeAttributes()->m_eClipMode));
-					writeIntAttribute(XML_3MF_ATTRIBUTE_BEAMLATTICE_CLIPPINGMESH, m_pModelMeshObject->getBeamLatticeAttributes()->m_nClippingMeshID->getUniqueID());
+					PPackageResourceID pID = m_pModelMeshObject->getBeamLatticeAttributes()->m_pClippingMeshUniqueID;
+					if (pID->getPath() != m_pModel->currentPath())
+						throw CNMRException(NMR_ERROR_MODELRESOURCE_IN_DIFFERENT_MODEL);
+					writeIntAttribute(XML_3MF_ATTRIBUTE_BEAMLATTICE_CLIPPINGMESH, pID->getModelResourceID());
 				}
 
 				if (m_pModelMeshObject->getBeamLatticeAttributes()->m_bHasRepresentationMeshID) {
-					writeIntAttribute(XML_3MF_ATTRIBUTE_BEAMLATTICE_REPRESENTATIONMESH, m_pModelMeshObject->getBeamLatticeAttributes()->m_nRepresentationID->getUniqueID());
+					PPackageResourceID pID = m_pModelMeshObject->getBeamLatticeAttributes()->m_pRepresentationUniqueID;
+					if (pID->getPath() != m_pModel->currentPath())
+						throw CNMRException(NMR_ERROR_MODELRESOURCE_IN_DIFFERENT_MODEL);
+					writeIntAttribute(XML_3MF_ATTRIBUTE_BEAMLATTICE_REPRESENTATIONMESH, pID->getModelResourceID());
 				}
 
 				eModelBeamLatticeCapMode eDefaultCapMode = pMesh->getBeamLatticeCapMode();

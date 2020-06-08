@@ -43,13 +43,14 @@ XML Model Stream.
 
 namespace NMR {
 
-	CModelReaderNode100_Triangles::CModelReaderNode100_Triangles(_In_ CModel * pModel, _In_ CMesh * pMesh, _In_ PModelReaderWarnings pWarnings, _In_ ModelResourceID nDefaultPropertyID, _In_ ModelResourceIndex nDefaultPropertyIndex)
+	CModelReaderNode100_Triangles::CModelReaderNode100_Triangles(_In_ CModel * pModel, _In_ CMesh * pMesh,
+		_In_ PModelWarnings pWarnings, _In_ PPackageResourceID pObjectLevelPropertyID, _In_ ModelResourceIndex nDefaultPropertyIndex)
 		: CModelReaderNode(pWarnings)
 	{
 		__NMRASSERT(pMesh);
 		__NMRASSERT(pModel);
 
-		m_nDefaultResourceID = nDefaultPropertyID;
+		m_pObjectLevelPropertyID = pObjectLevelPropertyID;
 		m_nDefaultResourceIndex = nDefaultPropertyIndex;
 
 		m_nUsedResourceID = 0;
@@ -121,16 +122,18 @@ namespace NMR {
 					MESHNODE * pNode3 = m_pMesh->getNode(nIndex3);
 					MESHFACE * pFace = m_pMesh->addFace(pNode1, pNode2, pNode3);
 
-					ModelResourceID nResourceID = m_nDefaultResourceID;
+					ModelResourceID nModelResourceID = 0;
+					if (m_pObjectLevelPropertyID)
+						nModelResourceID = m_pObjectLevelPropertyID->getModelResourceID();
 					ModelResourceIndex nResourceIndex1 = m_nDefaultResourceIndex;
 					ModelResourceIndex nResourceIndex2 = m_nDefaultResourceIndex;
 					ModelResourceIndex nResourceIndex3 = m_nDefaultResourceIndex;
 
-					if (pXMLNode->retrieveProperties(nResourceID, nResourceIndex1, nResourceIndex2, nResourceIndex3) || (nResourceID != 0)) {
+					if (pXMLNode->retrieveProperties(nModelResourceID, nResourceIndex1, nResourceIndex2, nResourceIndex3) || (nModelResourceID != 0)) {
 						// set potential default properties (i.e. used pid)
-						m_nUsedResourceID = nResourceID;
+						m_nUsedResourceID = nModelResourceID;
 
-						PPackageResourceID pID = m_pModel->findPackageResourceID(m_pModel->curPath(), nResourceID);
+						PPackageResourceID pID = m_pModel->findPackageResourceID(m_pModel->currentPath(), nModelResourceID);
 						if (pID.get()) {
 							// Find and Assign Resource of this Property
 							PModelResource pResource = m_pModel->findResource(pID->getUniqueID());
@@ -138,17 +141,17 @@ namespace NMR {
 								if (!pResource->hasResourceIndexMap())
 									pResource->buildResourceIndexMap();
 
-								ModelResourceID pPropertyID1;
-								ModelResourceID pPropertyID2;
-								ModelResourceID pPropertyID3;
-								if (pResource->mapResourceIndexToPropertyID (nResourceIndex1, pPropertyID1)
+								ModelPropertyID pPropertyID1;
+								ModelPropertyID pPropertyID2;
+								ModelPropertyID pPropertyID3;
+								if (pResource->mapResourceIndexToPropertyID(nResourceIndex1, pPropertyID1)
 									&& pResource->mapResourceIndexToPropertyID(nResourceIndex2, pPropertyID2) 
 									&& pResource->mapResourceIndexToPropertyID(nResourceIndex3, pPropertyID3)) {
 
 									CMeshInformation_Properties * pProperties = createPropertiesInformation();
 									MESHINFORMATION_PROPERTIES* pFaceData = (MESHINFORMATION_PROPERTIES*)pProperties->getFaceData(pFace->m_index);
 									if (pFaceData) {
-										pFaceData->m_nResourceID = pID->getUniqueID();
+										pFaceData->m_nUniqueResourceID = pID->getUniqueID();
 										pFaceData->m_nPropertyIDs[0] = pPropertyID1;
 										pFaceData->m_nPropertyIDs[1] = pPropertyID2;
 										pFaceData->m_nPropertyIDs[2] = pPropertyID3;

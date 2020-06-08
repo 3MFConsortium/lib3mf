@@ -41,7 +41,7 @@ of an XML Model Stream.
 
 namespace NMR {
 
-	CModelReaderNode100_MetaDataGroup::CModelReaderNode100_MetaDataGroup(_In_ PModelReaderWarnings pWarnings)
+	CModelReaderNode100_MetaDataGroup::CModelReaderNode100_MetaDataGroup(_In_ PModelWarnings pWarnings)
 		: CModelReaderNode(pWarnings)
 	{
 		m_MetaDataGroup = std::make_shared<CModelMetaDataGroup>();
@@ -74,7 +74,7 @@ namespace NMR {
 
 				if (!sKey.empty()) {
 					if (m_MetaDataGroup->hasMetaData(sKey)) {
-						m_pWarnings->addWarning(MODELREADERWARNING_DUPLICATEMETADATA, NMR_ERROR_DUPLICATEMETADATA, mrwInvalidOptionalValue);
+						m_pWarnings->addWarning(NMR_ERROR_DUPLICATEMETADATA, mrwInvalidOptionalValue);
 					}
 					std::string sNameSpace, sName;
 					decomposeKeyIntoNamespaceAndName(sKey, sNameSpace, sName);
@@ -96,7 +96,7 @@ namespace NMR {
 					}
 				}
 				else {
-					m_pWarnings->addWarning(MODELREADERWARNING_INVALIDMETADATA, NMR_ERROR_INVALIDMETADATA, mrwInvalidOptionalValue);
+					m_pWarnings->addWarning(NMR_ERROR_INVALIDMETADATA, mrwInvalidOptionalValue);
 				}
 			}
 		}

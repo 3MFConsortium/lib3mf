@@ -74,7 +74,7 @@ NMR::CModelComponentsObject * CComponentsObject::getComponentsObject()
 	return pComponentsObject;
 }
 
-IComponent * CComponentsObject::AddComponent (IObject* pObjectResource, const sLib3MFTransform Transform)
+IComponent * CComponentsObject::AddComponent(IObject* pObjectResource, const sLib3MFTransform Transform)
 {
 	NMR::CModelComponentsObject * pComponentsObject = getComponentsObject();
 	NMR::CModel * pModel = pComponentsObject->getModel();
@@ -82,7 +82,7 @@ IComponent * CComponentsObject::AddComponent (IObject* pObjectResource, const sL
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDMODEL);
 	
 	// Get Resource ID
-	NMR::PackageResourceID nObjectID = pObjectResource->GetResourceID();
+	NMR::UniqueResourceID nObjectID = pObjectResource->GetResourceID();
 
 	if (GetResourceID() == nObjectID)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_FORBIDDENCYCLICREFERENCE);

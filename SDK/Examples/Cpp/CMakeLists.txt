@@ -46,6 +46,9 @@ CopySharedLibrary(Example_Converter)
 add_executable(Example_Cube Source/Cube.cpp)
 CopySharedLibrary(Example_Cube)
 
+add_executable(Example_SecureCube Source/SecureCube.cpp)
+CopySharedLibrary(Example_SecureCube)
+
 add_executable(Example_ExtractInfo Source/ExtractInfo.cpp)
 CopySharedLibrary(Example_ExtractInfo)
 

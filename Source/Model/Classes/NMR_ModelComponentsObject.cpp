@@ -59,7 +59,7 @@ namespace NMR {
 		if (pModel != pModelObject->getModel())
 			throw CNMRException(NMR_ERROR_MODELMISMATCH);
 
-		if (pComponent->getObjectID() == this->getResourceID()->getUniqueID() )
+		if (pComponent->getObject()->getPackageResourceID() == this->getPackageResourceID() )
 			throw CNMRException(NMR_ERROR_MODELMISMATCH);
 
 		m_Components.push_back(pComponent);

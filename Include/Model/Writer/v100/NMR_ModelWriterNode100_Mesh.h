@@ -34,7 +34,7 @@ This is the class for exporting the 3mf mesh node.
 #ifndef __NMR_MODELWRITERNODE100_MESH
 #define __NMR_MODELWRITERNODE100_MESH
 
-#include "Model/Writer/NMR_ModelWriterNode.h" 
+#include "Model/Writer/NMR_ModelWriterNode_ModelBase.h" 
 #include "Model/Classes/NMR_ModelObject.h" 
 #include "Model/Classes/NMR_ModelMeshObject.h" 
 
@@ -56,7 +56,7 @@ This is the class for exporting the 3mf mesh node.
 
 namespace NMR {
 
-	class CModelWriterNode100_Mesh : public CModelWriterNode {
+	class CModelWriterNode100_Mesh : public CModelWriterNode_ModelBase {
 	protected:
 		CModelMeshObject * m_pModelMeshObject;
 

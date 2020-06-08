@@ -80,8 +80,12 @@ Lib3MF_uint64 CSliceStack::GetSliceRefCount()
 
 void CSliceStack::AddSliceStackReference(ISliceStack* pTheSliceStack)
 {
-	Lib3MF_uint32 nID = pTheSliceStack->GetResourceID();
-	NMR::PModelResource pResource = sliceStack()->getModel()->findResource(nID);
+	NMR::ModelResourceID nID = pTheSliceStack->GetResourceID();
+	
+	std::shared_ptr<IPackagePart> pPackagePart(pTheSliceStack->PackagePart());
+	std::string sPath = pPackagePart->GetPath();
+
+	NMR::PModelResource pResource = sliceStack()->getModel()->findResource(sPath, nID);
 	NMR::PModelSliceStack pModelSliceStack = std::dynamic_pointer_cast<NMR::CModelSliceStack>(pResource);
 	if (!pModelSliceStack)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDSLICESTACKRESOURCE);

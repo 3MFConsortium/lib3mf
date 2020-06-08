@@ -34,8 +34,6 @@ This is the abstract base class for all 3MF model stream exporters.
 #ifndef __NMR_MODELWRITERNODE
 #define __NMR_MODELWRITERNODE
 
-#include "Model/Classes/NMR_Model.h"
-#include "Model/Classes/NMR_ModelConstants.h"
 #include "Common/Platform/NMR_XmlWriter.h"
 #include "Common/3MF_ProgressMonitor.h"
 
@@ -43,7 +41,6 @@ namespace NMR {
 
 	class CModelWriterNode {
 	protected:
-		CModel * m_pModel;
 		CXmlWriter * m_pXMLWriter;
 		PProgressMonitor m_pProgressMonitor;
 
@@ -63,10 +60,9 @@ namespace NMR {
 		void writeEndElement();
 		void writeFullEndElement();
 		void writeText(_In_z_ const nfChar * pwszText, _In_ nfUint32 cbLength);
-
 	public:
 		CModelWriterNode() = delete;
-		CModelWriterNode(_In_ CModel * pModel, _In_ CXmlWriter * pXMLWriter, _In_ PProgressMonitor pProgressMonitor);
+		CModelWriterNode(_In_ CXmlWriter * pXMLWriter, _In_ PProgressMonitor pProgressMonitor);
 
 		virtual void writeToXML () = 0;
 	};

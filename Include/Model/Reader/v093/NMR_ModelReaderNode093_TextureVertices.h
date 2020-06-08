@@ -51,7 +51,7 @@ namespace NMR {
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 	public:
 		CModelReaderNode093_TextureVertices() = delete;
-		CModelReaderNode093_TextureVertices(_In_ CMesh * pMesh, _In_ PModelReaderWarnings pWarnings, _In_ PModelReader_TexCoordMapping pTexCoordMapping);
+		CModelReaderNode093_TextureVertices(_In_ CMesh * pMesh, _In_ PModelWarnings pWarnings, _In_ PModelReader_TexCoordMapping pTexCoordMapping);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 	};

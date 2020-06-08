@@ -42,7 +42,7 @@ A texture vertex reader model node is a parser for the vertex node of an XML Mod
 
 namespace NMR {
 
-	CModelReaderNode093_TextureVertex::CModelReaderNode093_TextureVertex(_In_ PModelReaderWarnings pWarnings)
+	CModelReaderNode093_TextureVertex::CModelReaderNode093_TextureVertex(_In_ PModelWarnings pWarnings)
 		: CModelReaderNode(pWarnings)
 	{
 		m_fU = 0.0f;

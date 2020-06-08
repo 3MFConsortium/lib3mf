@@ -52,7 +52,7 @@ namespace NMR {
 
 		// Create Merged Mesh
 		PMesh pMesh = std::make_shared<CMesh>();
-		m_pModel->mergeToMesh(pMesh.get());
+		model()->mergeToMesh(pMesh.get());
 
 		// Export Merged Mesh to STL
 		PMeshExporter pExporter = std::make_shared<CMeshExporter_STL>(pStream);

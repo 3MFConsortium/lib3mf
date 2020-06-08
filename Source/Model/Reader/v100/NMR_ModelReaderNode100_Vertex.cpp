@@ -42,7 +42,7 @@ A vertex reader model node is a parser for the vertex node of an XML Model Strea
 
 namespace NMR {
 
-	CModelReaderNode100_Vertex::CModelReaderNode100_Vertex(_In_ PModelReaderWarnings pWarnings)
+	CModelReaderNode100_Vertex::CModelReaderNode100_Vertex(_In_ PModelWarnings pWarnings)
 		: CModelReaderNode(pWarnings)
 	{
 		m_fX = 0.0f;

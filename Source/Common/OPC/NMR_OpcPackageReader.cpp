@@ -103,7 +103,7 @@ namespace NMR {
 		return -1;
 	}
 
-	COpcPackageReader::COpcPackageReader(_In_ PImportStream pImportStream, _In_ PModelReaderWarnings pWarnings, _In_ PProgressMonitor pProgressMonitor)
+	COpcPackageReader::COpcPackageReader(_In_ PImportStream pImportStream, _In_ PModelWarnings pWarnings, _In_ PProgressMonitor pProgressMonitor)
 		: m_pWarnings(pWarnings), m_pProgressMonitor(pProgressMonitor)
 	{
 		if (!pImportStream)
@@ -203,7 +203,7 @@ namespace NMR {
 				}
 				else {
 					if (bMustBeUnique)
-						m_pWarnings->addException(CNMRException(NMR_ERROR_OPCRELATIONSHIPNOTUNIQUE), eModelReaderWarningLevel::mrwInvalidOptionalValue);
+						m_pWarnings->addException(CNMRException(NMR_ERROR_OPCRELATIONSHIPNOTUNIQUE), eModelWarningLevel::mrwInvalidOptionalValue);
 				}
 
 			}
@@ -305,7 +305,7 @@ namespace NMR {
 		}
 	}
 
-	nfUint64 COpcPackageReader::GetPartSize(_In_ std::string sPath)
+	nfUint64 COpcPackageReader::getPartSize(_In_ std::string sPath)
 	{
 		std::string sRealPath = fnRemoveLeadingPathDelimiter(sPath);
 		auto iIterator = m_ZIPEntries.find(sRealPath);
