@@ -62,6 +62,13 @@
 }
 
 {
+   <cond_inflate>
+   Memcheck:Cond
+   ...
+   fun:inflate
+}
+
+{
    <value8_zip_open_from_source>
    Memcheck:Value8
    ...
@@ -76,9 +83,24 @@
 }
 
 {
+   <cond_platform_strcmp>
+   Memcheck:Cond
+   ...
+   fun:_platform_strcmp
+}
+
+{
    <value8_strtof_l>
    Memcheck:Value8
    ...
    fun:strtof_l
 }
- 
+
+{
+   <cond_strtof_l>
+   Memcheck:Cond
+   ...
+   fun:strtof_l
+}
+
+
