@@ -403,6 +403,22 @@ namespace NMR {
 			return 1;
 	}
 
+	void CModel::updateUniqueResourceID(UniqueResourceID nOldID, UniqueResourceID nNewID)
+	{
+		if (m_ResourceMap.find(nNewID) != m_ResourceMap.end()) {
+			throw CNMRException(NMR_ERROR_DUPLICATEMODELRESOURCE);
+		}
+		else
+		{
+			auto iIterator = m_ResourceMap.find(nOldID);
+			if (iIterator == m_ResourceMap.end()) {
+				throw CNMRException(NMR_ERROR_INVALIDMODELRESOURCE);
+			}
+			m_ResourceMap.insert(std::make_pair<>(nNewID, iIterator->second));
+			m_ResourceMap.erase(m_ResourceMap.find(nOldID));
+		}
+	}
+
 	PPackageResourceID CModel::generatePackageResourceID(_In_ std::string path, ModelResourceID nID)
 	{
 		return m_resourceHandler.makePackageResourceID(path, nID);

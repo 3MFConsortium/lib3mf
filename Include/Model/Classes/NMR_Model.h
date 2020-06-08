@@ -225,6 +225,8 @@ namespace NMR {
 
 		// Retrieve a unique Resource ID
 		UniqueResourceID generateResourceID();	// unique per model
+		void updateUniqueResourceID(UniqueResourceID nOldID, UniqueResourceID nNewID);
+
 		PPackageResourceID generatePackageResourceID(_In_ std::string path, ModelResourceID nID);	// unique per package
 		void removePackageResourceID(PPackageResourceID pID);
 

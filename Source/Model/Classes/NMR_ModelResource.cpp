@@ -64,7 +64,7 @@ namespace NMR {
 
 	void CModelResource::setPackageResourceID(PPackageResourceID pID)
 	{
-		
+		m_pModel->updateUniqueResourceID(m_pPackageResourceID->getUniqueID(), pID->getUniqueID());
 		m_pPackageResourceID = pID;
 	}
 
