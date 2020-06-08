@@ -21,7 +21,7 @@
 
 {
    <conditional_RSA_setup_blinding>
-   Memcheck:Cond
+   Memcheck:Value8
    ...
    fun:RSA_setup_blinding
 }
