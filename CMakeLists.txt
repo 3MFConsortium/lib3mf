@@ -52,13 +52,13 @@ if (${MSVC})
 endif()
 
 ### The API generation target
-if(UNIX OR MINGW)
+if(CMAKE_HOST_UNIX)
   if(APPLE)
     set(ACT_COMMANDENDING darwin)
   else()
     set(ACT_COMMANDENDING linux)
   endif()
-elseif(WIN32)
+elseif(CMAKE_HOST_WIN32)
   set(ACT_COMMANDENDING exe)
 endif()
 

@@ -437,17 +437,14 @@ namespace NMR {
 				}
 			}
 
-			writeMetaDataGroup(pObject->metaDataGroup());
-
 			// Check if object is a mesh Object
 			CModelMeshObject * pMeshObject = dynamic_cast<CModelMeshObject *> (pObject);
 			if (pMeshObject) {
 				// Prepare Object Level Property ID and Index
 				UniqueResourceID nObjectLevelPropertyID = 0;
 				ModelResourceIndex nObjectLevelPropertyIndex = 0;
-
 				CMesh* pMesh = pMeshObject->getMesh();
-				
+
 				if (pMesh) {
 					CMeshInformationHandler * pMeshInformationHandler = pMesh->getMeshInformationHandler();
 					if (pMeshInformationHandler) {
@@ -456,23 +453,24 @@ namespace NMR {
 						if (pInformation) {
 							auto pProperties = dynamic_cast<CMeshInformation_Properties *> (pInformation);
 							NMR::MESHINFORMATION_PROPERTIES * pDefaultData = (NMR::MESHINFORMATION_PROPERTIES*)pProperties->getDefaultData();
-							
 							if (pDefaultData && pDefaultData->m_nUniqueResourceID != 0) {
 								nObjectLevelPropertyID = pDefaultData->m_nUniqueResourceID;
 								nObjectLevelPropertyIndex = m_pPropertyIndexMapping->mapPropertyIDToIndex(nObjectLevelPropertyID, pDefaultData->m_nPropertyIDs[0]);
 							}
 						}
-
 					}
 				}
-
 				// Write Object Level Attributes (only for meshes)
 				if (nObjectLevelPropertyID != 0) {
 					ModelResourceID nPropertyModelResourceID = m_pModel->findPackageResourceID(nObjectLevelPropertyID)->getModelResourceID();
 					writeIntAttribute(XML_3MF_ATTRIBUTE_OBJECT_PID, nPropertyModelResourceID);
 					writeIntAttribute(XML_3MF_ATTRIBUTE_OBJECT_PINDEX, nObjectLevelPropertyIndex);
 				}
+			}
 
+			writeMetaDataGroup(pObject->metaDataGroup());
+
+			if (pMeshObject) {
 				CModelWriterNode100_Mesh ModelWriter_Mesh(pMeshObject, m_pXMLWriter, m_pProgressMonitor,
 					m_pPropertyIndexMapping, m_nDecimalPrecision, m_bWriteMaterialExtension, m_bWriteBeamLatticeExtension);
 
