@@ -11,3 +11,20 @@
    ...
    fun:lib3mf_reader_readfromfile 
 }
+
+{
+   <conditional_printf>
+   Memcheck:Cond
+   ...
+   fun:printf
+}
+
+{
+   <conditional_RSA_setup_blinding>
+   Memcheck:Cond
+   ...
+   fun:RSA_setup_blinding
+}
+
+
+ 
