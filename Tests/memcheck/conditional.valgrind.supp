@@ -41,15 +41,44 @@
 }
 
 {
-   <value8_bn_mul4x_mont_gather5>
+   <value8_bn_mul4x_mont>
    Memcheck:Value8
    ...
-   fun:bn_mul4x_mont_gather5
+   fun:bn_mul4x_mont*
 }
 
+{
+   <value8_crc32>
+   Memcheck:Value8
+   ...
+   fun:crc32
+}
 
+{
+   <value8_inflate>
+   Memcheck:Value8
+   ...
+   fun:inflate
+}
 
+{
+   <value8_zip_open_from_source>
+   Memcheck:Value8
+   ...
+   fun:zip_open_from_source
+}
 
+{
+   <value8_platform_strcmp>
+   Memcheck:Value8
+   ...
+   fun:_platform_strcmp
+}
 
-
+{
+   <value8_strtof_l>
+   Memcheck:Value8
+   ...
+   fun:strtof_l
+}
  
