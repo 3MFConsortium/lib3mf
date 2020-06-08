@@ -86,19 +86,19 @@ CMeshObject
 		:param IndicesBuffer: contains the triangle indices. 
 
 
-	.. cpp:function:: void SetObjectLevelProperty(const Lib3MF_uint32 nResourceID, const Lib3MF_uint32 nPropertyID)
+	.. cpp:function:: void SetObjectLevelProperty(const Lib3MF_uint32 nUniqueResourceID, const Lib3MF_uint32 nPropertyID)
 
 		Sets the property at the object-level of the mesh object.
 
-		:param nResourceID: the object-level Property Resource ID. 
+		:param nUniqueResourceID: the object-level Property UniqueResourceID. 
 		:param nPropertyID: the object-level PropertyID. 
 
 
-	.. cpp:function:: bool GetObjectLevelProperty(Lib3MF_uint32 & nResourceID, Lib3MF_uint32 & nPropertyID)
+	.. cpp:function:: bool GetObjectLevelProperty(Lib3MF_uint32 & nUniqueResourceID, Lib3MF_uint32 & nPropertyID)
 
 		Gets the property at the object-level of the mesh object.
 
-		:param nResourceID: the object-level Property Resource ID. 
+		:param nUniqueResourceID: the object-level Property UniqueResourceID. 
 		:param nPropertyID: the object-level PropertyID. 
 		:returns: Has an object-level property been specified?
 

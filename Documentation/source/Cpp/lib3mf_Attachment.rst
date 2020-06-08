@@ -12,16 +12,23 @@ CAttachment
 
 	.. cpp:function:: std::string GetPath()
 
-		Retrieves an attachment's package path.
+		Retrieves an attachment's package path. This function will be removed in a later release.
 
 		:returns: returns the attachment's package path string
 
 
 	.. cpp:function:: void SetPath(const std::string & sPath)
 
-		Sets an attachment's package path.
+		Sets an attachment's package path. This function will be removed in a later release.
 
 		:param sPath: new path of the attachment. 
+
+
+	.. cpp:function:: PPackagePart PackagePart()
+
+		Returns the PackagePart that is this attachment.
+
+		:returns: The PackagePart of this attachment.
 
 
 	.. cpp:function:: std::string GetRelationShipType()

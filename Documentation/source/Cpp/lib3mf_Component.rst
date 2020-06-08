@@ -12,16 +12,16 @@ CComponent
 
 	.. cpp:function:: PObject GetObjectResource()
 
-		Returns the Resource Instance of the component..
+		Returns the Resource Instance of the component.
 
 		:returns: filled with the Resource Instance.
 
 
 	.. cpp:function:: Lib3MF_uint32 GetObjectResourceID()
 
-		Returns the Resource ID of the component.
+		Returns the UniqueResourceID of the component.
 
-		:returns: returns the Resource ID.
+		:returns: returns the UniqueResourceID.
 
 
 	.. cpp:function:: std::string GetUUID(bool & bHasUUID)

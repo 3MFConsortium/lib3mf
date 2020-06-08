@@ -86,6 +86,23 @@ CReader
 		:returns: filled with the count of the occurred warnings.
 
 
+	.. cpp:function:: void AddKeyWrappingCallback(const std::string & sConsumerID, const KeyWrappingCallback pTheCallback, const Lib3MF_pvoid pUserData)
+
+		Registers a callback to deal with key wrapping mechanism from keystore
+
+		:param sConsumerID: The ConsumerID to register for 
+		:param pTheCallback: The callback used to decrypt data key 
+		:param pUserData: Userdata that is passed to the callback function 
+
+
+	.. cpp:function:: void SetContentEncryptionCallback(const ContentEncryptionCallback pTheCallback, const Lib3MF_pvoid pUserData)
+
+		Registers a callback to deal with encryption of content
+
+		:param pTheCallback: The callback used to encrypt content 
+		:param pUserData: Userdata that is passed to the callback function 
+
+
 .. cpp:type:: std::shared_ptr<CReader> Lib3MF::PReader
 
 	Shared pointer to CReader to easily allow reference counting.

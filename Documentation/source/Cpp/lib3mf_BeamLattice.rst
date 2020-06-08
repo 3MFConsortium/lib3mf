@@ -24,35 +24,35 @@ CBeamLattice
 		:param dMinLength: minimal length of beams for the beamlattice 
 
 
-	.. cpp:function:: void GetClipping(eBeamLatticeClipMode & eClipMode, Lib3MF_uint32 & nResourceID)
+	.. cpp:function:: void GetClipping(eBeamLatticeClipMode & eClipMode, Lib3MF_uint32 & nUniqueResourceID)
 
 		Returns the clipping mode and the clipping-mesh for the beamlattice of this mesh.
 
 		:param eClipMode: contains the clip mode of this mesh 
-		:param nResourceID: filled with the resourceID of the clipping mesh-object or an undefined value if pClipMode is MODELBEAMLATTICECLIPMODE_NONE 
+		:param nUniqueResourceID: filled with the UniqueResourceID of the clipping mesh-object or an undefined value if pClipMode is MODELBEAMLATTICECLIPMODE_NONE 
 
 
-	.. cpp:function:: void SetClipping(const eBeamLatticeClipMode eClipMode, const Lib3MF_uint32 nResourceID)
+	.. cpp:function:: void SetClipping(const eBeamLatticeClipMode eClipMode, const Lib3MF_uint32 nUniqueResourceID)
 
 		Sets the clipping mode and the clipping-mesh for the beamlattice of this mesh.
 
 		:param eClipMode: contains the clip mode of this mesh 
-		:param nResourceID: the resourceID of the clipping mesh-object. This mesh-object has to be defined before setting the Clipping. 
+		:param nUniqueResourceID: the UniqueResourceID of the clipping mesh-object. This mesh-object has to be defined before setting the Clipping. 
 
 
-	.. cpp:function:: bool GetRepresentation(Lib3MF_uint32 & nResourceID)
+	.. cpp:function:: bool GetRepresentation(Lib3MF_uint32 & nUniqueResourceID)
 
 		Returns the representation-mesh for the beamlattice of this mesh.
 
 		:returns: flag whether the beamlattice has a representation mesh.
-		:param nResourceID: filled with the resourceID of the clipping mesh-object. 
+		:param nUniqueResourceID: filled with the UniqueResourceID of the clipping mesh-object. 
 
 
-	.. cpp:function:: void SetRepresentation(const Lib3MF_uint32 nResourceID)
+	.. cpp:function:: void SetRepresentation(const Lib3MF_uint32 nUniqueResourceID)
 
 		Sets the representation-mesh for the beamlattice of this mesh.
 
-		:param nResourceID: the resourceID of the representation mesh-object. This mesh-object has to be defined before setting the representation. 
+		:param nUniqueResourceID: the UniqueResourceID of the representation mesh-object. This mesh-object has to be defined before setting the representation. 
 
 
 	.. cpp:function:: Lib3MF_uint32 GetBeamCount()
