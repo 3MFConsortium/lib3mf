@@ -60,6 +60,6 @@ before_script:
 script:
     - if [[ "$BUILDMODE" != "ppcxenial" ]]; then cmake --build .; fi
     - if [[ "$BUILDMODE" == "cmake-make-linux" ]]; then ctest -V; cmake --build . --target lib3mf_memcheck; fi
-    - if [[ "$BUILDMODE" == "cmake-make-osx" ]]; then ctest -V; cmake --build . --target lib3mf_memcheck; fi
+    - if [[ "$BUILDMODE" == "cmake-make-osx" ]]; then ctest -V; fi
     - if [[ "$BUILDMODE" == "windows" ]]; then ctest -V ; fi
     - if [[ "$BUILDMODE" == "ppcxenial" ]]; then docker run ppc-xenial; fi
