@@ -18,4 +18,4 @@ The specification can be downloaded at
 
 
 ## Documentation
-lib3mf's documentation is available on https://lib3mf.readthedocs.io or as PDF in [Documentation/lib3mf_v2.0.0.pdf](Documentation/lib3mf_v2.0.0.pdf).
+lib3mf's documentation is available on https://lib3mf.readthedocs.io or as PDF in [Documentation/lib3mf_v2.1.0-alpha.pdf](Documentation/lib3mf_v2.1.0-alpha.pdf).

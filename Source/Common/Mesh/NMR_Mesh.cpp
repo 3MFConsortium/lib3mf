@@ -215,7 +215,7 @@ namespace NMR {
 		if (nFaceCount >= NMR_MESH_MAXFACECOUNT)
 			throw CNMRException(NMR_ERROR_TOOMANYFACES);
 
-		nfUint32 nNewIndex;
+		nfUint32 nNewIndex = 0;
 
 		pFace = m_Faces.allocData (nNewIndex);
 		pFace->m_nodeindices[0] = pNode1->m_index;
