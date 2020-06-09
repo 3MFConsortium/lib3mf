@@ -76,23 +76,25 @@ namespace NMR {
 					if (m_MetaDataGroup->hasMetaData(sKey)) {
 						m_pWarnings->addWarning(NMR_ERROR_DUPLICATEMETADATA, mrwInvalidOptionalValue);
 					}
-					std::string sNameSpace, sName;
-					decomposeKeyIntoNamespaceAndName(sKey, sNameSpace, sName);
-					if (!sNameSpace.empty()) {
-						std::string sNameSpaceURI;
-						if (!pXMLReader->GetNamespaceURI(sNameSpace, sNameSpaceURI)) {
-							m_pWarnings->addException(CNMRException(NMR_ERROR_METADATA_COULDNOTGETNAMESPACE), mrwInvalidOptionalValue);
-							sNameSpaceURI = sNameSpace;
-						}
-						m_MetaDataGroup->addMetaData(sNameSpaceURI, sName, sValue, sType, bPreserve);
-					}
 					else {
-						// default namespace
-						if (CModelMetaData::isValidNamespaceAndName("", sName)) {
-							m_MetaDataGroup->addMetaData("", sName, sValue, sType, bPreserve);
+						std::string sNameSpace, sName;
+						decomposeKeyIntoNamespaceAndName(sKey, sNameSpace, sName);
+						if (!sNameSpace.empty()) {
+							std::string sNameSpaceURI;
+							if (!pXMLReader->GetNamespaceURI(sNameSpace, sNameSpaceURI)) {
+								m_pWarnings->addException(CNMRException(NMR_ERROR_METADATA_COULDNOTGETNAMESPACE), mrwInvalidOptionalValue);
+								sNameSpaceURI = sNameSpace;
+							}
+							m_MetaDataGroup->addMetaData(sNameSpaceURI, sName, sValue, sType, bPreserve);
 						}
-						else
-							m_pWarnings->addException(CNMRException(NMR_ERROR_UNKNOWNMETADATA), mrwInvalidOptionalValue);
+						else {
+							// default namespace
+							if (CModelMetaData::isValidNamespaceAndName("", sName)) {
+								m_MetaDataGroup->addMetaData("", sName, sValue, sType, bPreserve);
+							}
+							else
+								m_pWarnings->addException(CNMRException(NMR_ERROR_UNKNOWNMETADATA), mrwInvalidOptionalValue);
+						}
 					}
 				}
 				else {
