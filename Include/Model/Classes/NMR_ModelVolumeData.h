@@ -65,6 +65,11 @@ namespace NMR {
 		PVolumeProperty FindProperty(std::string sName);
 		PVolumeProperty CreateProperty(std::string sName, PModelVolumetricStack pVolumetricStack);
 		void RemoveProperty(std::string sName);
+
+		bool HasColor();
+		PVolumeColor GetColor();
+		PVolumeColor CreateColor(PModelVolumetricStack pVolumetricStack);
+		void SetColor(PVolumeColor pColor);
 	};
 
 	typedef std::shared_ptr <CModelVolumeData> PModelVolumeData;

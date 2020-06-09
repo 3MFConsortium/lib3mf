@@ -45,4 +45,34 @@ namespace NMR {
 
 	}
 
+	void CVolumeColor::SetChannel(const eModelColorChannel eTheColorChannel, const std::string & sChannelName)
+	{
+		if (!GetVolumetricStack()->hasDstChannel(sChannelName)) {
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+		}
+
+		if (eTheColorChannel > eModelColorChannel::MODELCOLORCHANNEL_BLUE)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		if (eTheColorChannel == eModelColorChannel::MODELCOLORCHANNEL_RED)
+			m_sChannelRed = sChannelName;
+		else if (eTheColorChannel == eModelColorChannel::MODELCOLORCHANNEL_GREEN)
+			m_sChannelGreen = sChannelName;
+		else if (eTheColorChannel == eModelColorChannel::MODELCOLORCHANNEL_BLUE)
+			m_sChannelBlue = sChannelName;
+	}
+
+	std::string CVolumeColor::GetChannel(const eModelColorChannel eTheColorChannel)
+	{
+		if (eTheColorChannel > eModelColorChannel::MODELCOLORCHANNEL_BLUE)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		if (eTheColorChannel == eModelColorChannel::MODELCOLORCHANNEL_RED)
+			return m_sChannelRed;
+		else if (eTheColorChannel == eModelColorChannel::MODELCOLORCHANNEL_GREEN)
+			return m_sChannelGreen;
+		else
+			return m_sChannelBlue;
+	}
+
 }

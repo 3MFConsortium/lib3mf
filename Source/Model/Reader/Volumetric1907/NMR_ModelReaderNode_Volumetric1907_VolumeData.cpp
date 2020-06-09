@@ -33,6 +33,7 @@ NMR_ModelReaderNode_Volumetric1907_VolumeData.cpp covers the official 3MF volume
 
 #include "Model/Reader/Volumetric1907/NMR_ModelReaderNode_Volumetric1907_Levelset.h"
 #include "Model/Reader/Volumetric1907/NMR_ModelReaderNode_Volumetric1907_Property.h"
+#include "Model/Reader/Volumetric1907/NMR_ModelReaderNode_Volumetric1907_Color.h"
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Model/Classes/NMR_ModelMeshObject.h"
 #include "Model/Classes/NMR_ModelResource.h"
@@ -105,6 +106,14 @@ namespace NMR {
 				else {
 					throw CNMRException(NMR_ERROR_DUPLICATEVOLUMEDATAPROPERTY);
 				}
+			}
+			else if (strcmp(pChildName, XML_3MF_ELEMENT_VOLUMETRIC_COLOR) == 0)
+			{
+				PModelReaderNode_Volumetric1907_Color pXMLNode = std::make_shared<CModelReaderNode_Volumetric1907_Color>(m_pWarnings);
+				pXMLNode->parseXML(pXMLReader);
+
+				PVolumeColor pColor = pXMLNode->MakeColor(m_pModel);
+				m_pVolumeData->SetColor(pColor);
 			}
 			else
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);

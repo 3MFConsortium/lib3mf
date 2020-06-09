@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium
+Copyright (C) 2020 3MF Consortium
 
 All rights reserved.
 
@@ -25,37 +25,40 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
-
-NMR_VolumeColor.h defines the class CVolumeColor.
+NMR_ModelReaderNode_Volumetric1907_ColorChannel.h covers the official 3MF volumetric extension.
 
 --*/
 
-#ifndef __NMR_VOLUMECOLOR
-#define __NMR_VOLUMECOLOR
+#ifndef __NMR_MODELREADERNODE_VOLUMETRIC1907_COLORCHANNEL
+#define __NMR_MODELREADERNODE_VOLUMETRIC1907_COLORCHANNEL
 
-#include "Common/NMR_Types.h"
-#include "Model/Classes/NMR_ModelTypes.h"
-#include "Common/Mesh/NMR_VolumeBase.h"
+#include "Model/Reader/NMR_ModelReaderNode.h"
+#include "Model/Classes/NMR_ModelComponent.h"
+#include "Model/Classes/NMR_ModelComponentsObject.h"
+#include "Model/Classes/NMR_ModelObject.h"
 
 namespace NMR {
 
-	class CVolumeColor : public CVolumeBase {
+	class CModelReaderNode_Volumetric1907_ColorChannel : public CModelReaderNode {
 	private:
-		std::string m_sChannelRed;
-		std::string m_sChannelGreen;
-		std::string m_sChannelBlue;
+		nfBool m_bHasChannel;
 
+		std::string m_sChannel;
+
+	protected:
+		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 	public:
-		CVolumeColor(PModelVolumetricStack pVolumetricStack);
+		CModelReaderNode_Volumetric1907_ColorChannel() = delete;
+		CModelReaderNode_Volumetric1907_ColorChannel(_In_ PModelReaderWarnings pWarnings);
 
-		void SetChannel(const eModelColorChannel eTheColorChannel, const std::string & sChannelName);
-		std::string GetChannel(const eModelColorChannel eTheColorChannel);
+		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 
-		void clear();
+		std::string getChannel();
+		nfBool hasChannel();
 	};
 
-	typedef std::shared_ptr<CVolumeColor> PVolumeColor;
+	typedef std::shared_ptr <CModelReaderNode_Volumetric1907_ColorChannel> PModelReaderNode_Volumetric1907_ColorChannel;
 
 }
 
-#endif // __NMR_VOLUMECOLOR
+#endif // __NMR_MODELREADERNODE_VOLUMETRIC1907_COLORCHANNEL

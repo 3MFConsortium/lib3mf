@@ -294,7 +294,10 @@ namespace NMR {
 		if (m_bWriteVolumetricExtension)
 		{
 			// TODO: different logic
-			if (m_pModelMeshObject->getVolumeData()->HasLevelset() || m_pModelMeshObject->getVolumeData()->GetPropertyCount()) {
+			if (m_pModelMeshObject->getVolumeData()->HasLevelset() ||
+				m_pModelMeshObject->getVolumeData()->GetPropertyCount() ||
+				m_pModelMeshObject->getVolumeData()->HasColor()) {
+
 				writeStartElementWithPrefix(XML_3MF_ELEMENT_VOLUMEDATA, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
 
 				if (m_pModelMeshObject->getVolumeData()->HasLevelset()) {
@@ -327,6 +330,32 @@ namespace NMR {
 							writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_PROPERTY_REQUIRED, "false");
 						writeEndElement();
 					}
+				}
+
+				if (m_pModelMeshObject->getVolumeData()->HasColor())
+				{
+					writeStartElementWithPrefix(XML_3MF_ELEMENT_VOLUMETRIC_COLOR, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
+					PVolumeColor pColor = m_pModelMeshObject->getVolumeData()->GetColor();
+					PModelVolumetricStack pStackResource = pColor->GetVolumetricStack();
+
+					writeIntAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_VOLUMETRICSTACKID, pStackResource->getResourceID()->getUniqueID());
+					if (!fnMATRIX3_isIdentity(pColor->GetTransform())) {
+						writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_TRANSFORM, fnMATRIX3_toString(pColor->GetTransform()));
+					}
+
+					writeStartElementWithPrefix(XML_3MF_ELEMENT_VOLUMETRIC_COLOR_RED, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
+					writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_CHANNEL, pColor->GetChannel(eModelColorChannel::MODELCOLORCHANNEL_RED));
+					writeEndElement();
+
+					writeStartElementWithPrefix(XML_3MF_ELEMENT_VOLUMETRIC_COLOR_GREEN, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
+					writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_CHANNEL, pColor->GetChannel(eModelColorChannel::MODELCOLORCHANNEL_GREEN));
+					writeEndElement();
+
+					writeStartElementWithPrefix(XML_3MF_ELEMENT_VOLUMETRIC_COLOR_BLUE, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
+					writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_CHANNEL, pColor->GetChannel(eModelColorChannel::MODELCOLORCHANNEL_BLUE));
+					writeEndElement();
+
+					writeFullEndElement();
 				}
 
 				writeFullEndElement();
