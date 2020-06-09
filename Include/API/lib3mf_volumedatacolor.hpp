@@ -42,6 +42,7 @@ Abstract: This is the class declaration of CVolumeDataColor
 #endif
 
 // Include custom headers here.
+#include "Common/Mesh/NMR_VolumeColor.h"
 
 
 namespace Lib3MF {
@@ -64,12 +65,14 @@ protected:
 	/**
 	* Put protected members here.
 	*/
+	NMR::CVolumeColor* VolumeColor();
 
 public:
 
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
+	CVolumeDataColor(NMR::PVolumeColor pVolumeColor, NMR::CModel* pModel);
 
 
 	/**

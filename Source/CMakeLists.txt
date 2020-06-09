@@ -221,6 +221,8 @@ Source/Model/Reader/Volumetric1907/NMR_ModelReaderNode_Volumetric1907_Volumetric
 Source/Model/Reader/Volumetric1907/NMR_ModelReaderNode_Volumetric1907_VolumetricStack.cpp
 Source/Model/Reader/Volumetric1907/NMR_ModelReaderNode_Volumetric1907_VolumeData.cpp
 Source/Model/Reader/Volumetric1907/NMR_ModelReaderNode_Volumetric1907_Property.cpp
+Source/Model/Reader/Volumetric1907/NMR_ModelReaderNode_Volumetric1907_Color.cpp
+Source/Model/Reader/Volumetric1907/NMR_ModelReaderNode_Volumetric1907_ColorChannel.cpp
 Source/Model/Writer/NMR_ModelWriter.cpp
 Source/Model/Writer/NMR_ModelWriterNode.cpp
 Source/Model/Writer/NMR_ModelWriter_3MF.cpp

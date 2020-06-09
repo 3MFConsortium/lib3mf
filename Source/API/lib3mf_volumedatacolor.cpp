@@ -40,13 +40,29 @@ using namespace Lib3MF::Impl;
  Class definition of CVolumeDataColor 
 **************************************************************************************************************************/
 
+CVolumeDataColor::CVolumeDataColor(NMR::PVolumeColor pVolumeColor, NMR::CModel* pModel)
+	: CVolumeDataItem(pVolumeColor, pModel)
+{
+	if (pVolumeColor == nullptr)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+}
+
+NMR::CVolumeColor* CVolumeDataColor::VolumeColor()
+{
+	auto pColor = std::dynamic_pointer_cast<NMR::CVolumeColor>(m_pVolumeBase);
+	if (!pColor)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+
+	return pColor.get();
+}
+
 void CVolumeDataColor::SetChannel(const Lib3MF::eColorChannel eTheColorChannel, const std::string & sChannelName)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	VolumeColor()->SetChannel(NMR::eModelColorChannel(eTheColorChannel), sChannelName);
 }
 
 std::string CVolumeDataColor::GetChannel(const Lib3MF::eColorChannel eTheColorChannel)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return VolumeColor()->GetChannel(NMR::eModelColorChannel(eTheColorChannel));
 }
 

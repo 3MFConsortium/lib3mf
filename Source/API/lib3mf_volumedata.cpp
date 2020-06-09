@@ -34,6 +34,7 @@ Abstract: This is a stub class definition of CVolumeData
 // Include custom headers here.
 #include "lib3mf_volumedatalevelset.hpp"
 #include "lib3mf_volumedataproperty.hpp"
+#include "lib3mf_volumedatacolor.hpp"
 
 using namespace Lib3MF::Impl;
 
@@ -77,12 +78,16 @@ IVolumeDataComposite * CVolumeData::CreateNewComposite(IVolumetricStack* pTheVol
 
 IVolumeDataColor * CVolumeData::GetColor()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return new CVolumeDataColor(m_pVolumeData->GetColor(), m_pModel);
 }
 
 IVolumeDataColor * CVolumeData::CreateNewColor(IVolumetricStack* pTheVolumetricStack)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	NMR::PModelVolumetricStack pVolStack = m_pModel->findVolumetricStack(pTheVolumetricStack->GetResourceID());
+	if (!pVolStack) {
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_RESOURCENOTFOUND);
+	}
+	return new CVolumeDataColor(m_pVolumeData->CreateColor(pVolStack), m_pModel);
 }
 
 Lib3MF_uint32 CVolumeData::GetPropertyCount()

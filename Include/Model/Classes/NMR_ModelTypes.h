@@ -160,6 +160,11 @@ namespace NMR {
 		MODELBLENDMETHOD_MASK = 2
 	};
 
+	enum eModelColorChannel {
+		MODELCOLORCHANNEL_RED = 0,
+		MODELCOLORCHANNEL_GREEN = 1,
+		MODELCOLORCHANNEL_BLUE = 2
+	};
 
 	typedef struct {
 		FLOAT m_fPosition[2];

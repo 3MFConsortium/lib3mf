@@ -119,4 +119,27 @@ namespace NMR {
 		m_mapProperties.erase(sName);
 	}
 
+	bool CModelVolumeData::HasColor()
+	{
+		return m_pColor.get() != nullptr;
+	}
+
+	void CModelVolumeData::SetColor(PVolumeColor pColor)
+	{
+		if (!pColor)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		m_pColor = pColor;
+	}
+
+	PVolumeColor CModelVolumeData::CreateColor(PModelVolumetricStack pVolumetricStack)
+	{
+		m_pColor = std::make_shared<CVolumeColor>(pVolumetricStack);
+		return m_pColor;
+	}
+
+	PVolumeColor CModelVolumeData::GetColor()
+	{
+		return m_pColor;
+	}
 }

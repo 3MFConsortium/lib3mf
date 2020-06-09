@@ -258,6 +258,10 @@ These are given by the 3MF Standard
 #define XML_3MF_ATTRIBUTE_VOLUMEDATA_PROPERTY           "name"
 #define XML_3MF_ATTRIBUTE_VOLUMEDATA_PROPERTY_REQUIRED  "required"
 
+#define XML_3MF_ELEMENT_VOLUMETRIC_COLOR_RED            "red"
+#define XML_3MF_ELEMENT_VOLUMETRIC_COLOR_GREEN          "green"
+#define XML_3MF_ELEMENT_VOLUMETRIC_COLOR_BLUE           "blue"
+
 // Multiproperties
 #define XML_3MF_ELEMENT_MULTIPROPERTIES             "multiproperties"
 #define XML_3MF_ATTRIBUTE_MULTIPROPERTIES_ID        "id"
