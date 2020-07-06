@@ -170,4 +170,35 @@ namespace Lib3MF
 
 	}
 
+	TEST_F(Volumetric, VolumetricColor)
+	{
+		auto pImage3D = SetupSheetsFromFile();
+
+		auto pVolumetricStack = model->AddVolumetricStack();
+		pVolumetricStack->AddDestinationChannel("r", 0.0);
+		pVolumetricStack->AddDestinationChannel("g", 0.0);
+		pVolumetricStack->AddDestinationChannel("b", 0.0);
+		auto pLayer = pVolumetricStack->AddLayer(wrapper->GetIdentityTransform(), Lib3MF::eBlendMethod::Mix);
+		auto pChannelSelector0 = pLayer->AddChannelSelector(pImage3D.get(), "r", "r");
+		auto pChannelSelector1 = pLayer->AddChannelSelector(pImage3D.get(), "g", "g");
+		auto pChannelSelector2 = pLayer->AddChannelSelector(pImage3D.get(), "b", "b");
+
+		auto theMesh = GetMesh();
+		auto volumeData = theMesh->VolumeData();
+		auto color = volumeData->CreateNewColor(pVolumetricStack.get());
+
+		Lib3MF::sTransform sTransform = wrapper->GetIdentityTransform();
+		Lib3MF::sTransform sObtainedTransform = color->GetTransform();
+		ASSERT_FLOAT_EQ(sObtainedTransform.m_Fields[1][1], 1.0f);
+
+		sTransform.m_Fields[1][1] = 2.0;
+		color->SetTransform(sTransform);
+
+		color->SetChannel(eColorChannel::Red, "r");
+		color->SetChannel(eColorChannel::Green, "g");
+		color->SetChannel(eColorChannel::Blue, "b");
+
+		writer3MF->WriteToFile(Volumetric::OutFolder + "MyColor.3mf");
+	}
+
 }
