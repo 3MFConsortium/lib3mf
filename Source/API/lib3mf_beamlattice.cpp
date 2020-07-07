@@ -452,22 +452,13 @@ void CBeamLattice::GetBalls(Lib3MF_uint64 nBallInfoBufferSize, Lib3MF_uint64 * p
 				meshBallMap[meshBall->m_nodeindex] = meshBall->m_radius;
 			}
 
-			std::map<Lib3MF_uint32, Lib3MF_double>::iterator meshBallMapIter = meshBallMap.begin();
-
 			// Fill balls from default or mesh balls
 			sLib3MFBall * ball = pBallInfoBuffer;
 			for (Lib3MF_uint32 i = 0; i < ballCount; i++) {
 				Lib3MF_uint32 currNodeIndex = m_mesh.getOccupiedNode(i)->m_index;
 
 				ball->m_Index = currNodeIndex;
-
-				if (meshBallMapIter != meshBallMap.end() && meshBallMapIter->first == currNodeIndex) {
-					ball->m_Radius = meshBallMapIter->second;
-					meshBallMapIter++;
-				}
-				else {
-					ball->m_Radius = defaultBallRadius;
-				}
+				ball->m_Radius = meshBallMap[currNodeIndex] > 0.0 ? meshBallMap[currNodeIndex] : defaultBallRadius;
 
 				ball++;
 			}

@@ -177,25 +177,28 @@ namespace Lib3MF
 		sBall ball;
 
 		ball.m_Index = 1;
-		ball.m_Radius = 1.2;
+		ball.m_Radius = 1.5;
 		beamLattice->AddBall(ball);
 		ASSERT_EQ(beamLattice->GetBallCount(), 1);
 
 		beamLattice->SetBallOptions(eBeamLatticeBallMode::All, 1.2);
 		ASSERT_EQ(beamLattice->GetBallCount(), mesh->GetVertexCount());
 
-		auto outBall = beamLattice->GetBall(0);
-		ASSERT_EQ(outBall.m_Index, 0);
-		ASSERT_DOUBLE_EQ(outBall.m_Radius, 1.2);
+		// Ball order can change between platforms
+		std::map<int, double> ballMap;
 
-		outBall = beamLattice->GetBall(1);
-		ASSERT_EQ(outBall.m_Index, ball.m_Index);
-		ASSERT_DOUBLE_EQ(outBall.m_Radius, ball.m_Radius);
+		for (Lib3MF_uint32 iBall = 0; iBall < beamLattice->GetBallCount(); iBall++) {
+			auto outBall = beamLattice->GetBall(iBall);
+			ballMap[outBall.m_Index] = outBall.m_Radius;
+		}
 
-		// Use SetBall in BallMode = All with a previously unadded ball
+		ASSERT_DOUBLE_EQ(ballMap[0], 1.2);
+		ASSERT_DOUBLE_EQ(ballMap[1], ball.m_Radius);
+		ASSERT_DOUBLE_EQ(ballMap[2], 1.2);
+
 		ball.m_Index = 2;
 		ball.m_Radius = 3.1;
-		beamLattice->SetBall(ball.m_Index, ball);
+		beamLattice->AddBall(ball);
 
 		auto writer = model->QueryWriter("3mf");
 		std::vector<Lib3MF_uint8> buffer;
@@ -219,12 +222,16 @@ namespace Lib3MF
 				Lib3MF_double defaultBallRadius;
 				readBeamLattice->GetBallOptions(ballMode, defaultBallRadius);
 				ASSERT_EQ(ballMode, eBeamLatticeBallMode::All);
-				outBall = beamLattice->GetBall(1);
-				ASSERT_EQ(outBall.m_Index, 1);
-				ASSERT_DOUBLE_EQ(outBall.m_Radius, 1.2);
-				outBall = beamLattice->GetBall(2);
-				ASSERT_EQ(outBall.m_Index, ball.m_Index);
-				ASSERT_DOUBLE_EQ(outBall.m_Radius, ball.m_Radius);
+
+				ballMap.clear();
+				for (Lib3MF_uint32 iBall = 0; iBall < beamLattice->GetBallCount(); iBall++) {
+					auto outBall = beamLattice->GetBall(iBall);
+					ballMap[outBall.m_Index] = outBall.m_Radius;
+				}
+
+				ASSERT_DOUBLE_EQ(ballMap[0], 1.2);
+				ASSERT_DOUBLE_EQ(ballMap[1], 1.5);
+				ASSERT_DOUBLE_EQ(ballMap[2], ball.m_Radius);
 				return;
 			}
 		}
@@ -248,9 +255,15 @@ namespace Lib3MF
 		std::vector<sBall> outBalls;
 		beamLattice->GetBalls(outBalls);
 
-		ASSERT_EQ(outBalls.size(), beamLattice->GetBallCount());
-		ASSERT_EQ(outBalls[1].m_Index, 2);
-		ASSERT_DOUBLE_EQ(outBalls[1].m_Radius, 1.2);
+		// Ball order can change between platforms
+		std::map<int, double> ballMap;
+
+		for (auto outBall : outBalls) {
+			ballMap[outBall.m_Index] = outBall.m_Radius;
+		}
+
+		ASSERT_EQ(ballMap.size(), beamLattice->GetBallCount());
+		ASSERT_DOUBLE_EQ(ballMap[2], 1.2);
 	}
 
 	TEST_F(BeamLattice, GeometryShouldFail)
@@ -439,12 +452,17 @@ namespace Lib3MF
 		std::vector<sBall> outBalls;
 		beamLattice->GetBalls(outBalls);
 
-		ASSERT_EQ(outBalls[0].m_Index, 0);
-		ASSERT_DOUBLE_EQ(outBalls[0].m_Radius, 1.8);
+		// Ball order can change between platforms
+		std::map<int, double> ballMap;
+
+		for (auto outBall : outBalls) {
+			ballMap[outBall.m_Index] = outBall.m_Radius;
+		}
+
+		ASSERT_DOUBLE_EQ(ballMap[0], 1.8);
 
 		for (int i = 1; i < 3; i++) {
-			ASSERT_EQ(outBalls[i].m_Index, balls[i-1].m_Index);
-			ASSERT_EQ(outBalls[i].m_Radius, balls[i-1].m_Radius);
+			ASSERT_DOUBLE_EQ(ballMap[i], balls[i-1].m_Radius);
 		}
 
 		// modify balls to fail:
