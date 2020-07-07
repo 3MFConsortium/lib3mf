@@ -811,7 +811,7 @@ namespace NMR {
 
 				nfUint32 nSelectorCount = pLayer->getChannelSelectorCount();
 				for (nfUint32 nSelectorIndex = 0; nSelectorIndex < nSelectorCount; nSelectorIndex++) {
-					auto pChannelSelector = pLayer->getChannelSelector(nIndex);
+					auto pChannelSelector = pLayer->getChannelSelector(nSelectorIndex);
 					writeImage3DChannelSelector(pChannelSelector.get(), XML_3MF_ELEMENT_SOURCECHANNELSELECTOR);
 				}
 
