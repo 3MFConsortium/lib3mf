@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium
+Copyright (C) 2020 3MF Consortium
 
 All rights reserved.
 
@@ -26,34 +26,36 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_MeshBeamLattice.h implements the class CMeshBeamLattice.
+NMR_ModelReaderNode_BeamLattice1702_Balls.h covers the official 3MF beamlattice extension.
 
 --*/
 
-#include "Common/Mesh/NMR_BeamLattice.h" 
+#ifndef __NMR_MODELREADERNODE_BEAMLATTICE1702_BALLS
+#define __NMR_MODELREADERNODE_BEAMLATTICE1702_BALLS
+
+#include "Model/Reader/NMR_ModelReaderNode.h"
+#include "Model/Classes/NMR_ModelComponent.h"
+#include "Model/Classes/NMR_ModelObject.h"
 
 namespace NMR {
 
-	CBeamLattice::CBeamLattice(_In_ MESHNODES &nodes) : m_Nodes(nodes)
-	{ 
-		m_dMinLength = 0.0001;
-		m_eBallMode = eModelBeamLatticeBallMode::MODELBEAMLATTICEBALLMODE_NONE;
-		m_dDefaultBallRadius = 0.0;
-	}
+	class CModelReaderNode_BeamLattice1702_Balls : public CModelReaderNode {
+	protected:
+		CMesh* m_pMesh;
+		CModel* m_pModel;
 
-	void CBeamLattice::clearBeams() {
-		m_Beams.clearAllData();
-		m_pBeamSets.clear();
-		m_OccupiedNodes.clear();
-	}
+		nfDouble m_dDefaultBallRadius;
 
-	void CBeamLattice::clearBalls() {
-		m_Balls.clearAllData();
-	}
+		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
+		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
+	public:
+		CModelReaderNode_BeamLattice1702_Balls() = delete;
+		CModelReaderNode_BeamLattice1702_Balls(_In_ CModel * pModel, _In_ CMesh * pMesh, _In_ nfDouble defaultBallRadius, _In_ PModelWarnings pWarnings);
 
-	void CBeamLattice::clear() {
-		clearBeams();
-		clearBalls();
-	}
+		virtual void parseXML(_In_ CXmlReader * pXMLReader);
+	};
 
+	typedef std::shared_ptr <CModelReaderNode_BeamLattice1702_Balls> PModelReaderNode_BeamLattice1702_Balls;
 }
+
+#endif // __NMR_MODELREADERNODE_BEAMLATTICE1702_BALLS

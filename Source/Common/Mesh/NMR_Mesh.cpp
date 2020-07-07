@@ -70,12 +70,14 @@ namespace NMR {
 		if (!pMesh)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-		nfInt32 nIdx, nNodeCount, nFaceCount, nBeamCount, j;
+		nfInt32 nIdx, nNodeCount, nFaceCount, nBeamCount, nBallCount, j;
 		MESHNODE * pNode;
 		MESHFACE * pFace;
 		MESHBEAM * pBeam;
+		MESHBALL * pBall;
 		MESHNODE * pFaceNodes[3];
 		MESHNODE * pBeamNodes[2];
+		MESHNODE * pBallNode;
 
 		// Copy Mesh Information
 		CMeshInformationHandler * pOtherMeshInformationHandler = pMesh->getMeshInformationHandler();
@@ -87,6 +89,7 @@ namespace NMR {
 		nNodeCount = pMesh->getNodeCount();
 		nFaceCount = pMesh->getFaceCount();
 		nBeamCount = pMesh->getBeamCount();
+		nBallCount = pMesh->getBallCount();
 
 		if (nNodeCount > 0) {
 			std::vector<MESHNODE *> aNewNodes;
@@ -128,6 +131,16 @@ namespace NMR {
 						pBeamNodes[j] = aNewNodes[pBeam->m_nodeindices[j]];
 					}
 					addBeam(pBeamNodes[0], pBeamNodes[1], pBeam->m_radius[0], pBeam->m_radius[1], pBeam->m_capMode[0], pBeam->m_capMode[1]);
+				}
+			}
+			if (nBallCount > 0) {
+				for (nIdx = 0; nIdx < nBallCount; nIdx++) {
+					pBall = pMesh->getBall(nIdx);
+					if ((pBall->m_nodeindex < 0) || (pBall->m_nodeindex >= nNodeCount))
+						throw CNMRException(NMR_ERROR_INVALIDNODEINDEX);
+
+					pBallNode = aNewNodes[pBall->m_nodeindex];
+					addBall(pBallNode, pBall->m_radius);
 				}
 			}
 
@@ -282,6 +295,8 @@ namespace NMR {
 		pBeam->m_capMode[0] = eCapMode1;
 		pBeam->m_capMode[1] = eCapMode2;
 
+		m_BeamLattice.m_OccupiedNodes.insert({ pNode1->m_index, pNode2->m_index });
+
 		return pBeam;
 	}
 
@@ -289,6 +304,32 @@ namespace NMR {
 	{
 		m_BeamLattice.m_pBeamSets.push_back(std::make_shared<BEAMSET>());
 		return m_BeamLattice.m_pBeamSets.back();
+	}
+
+	_Ret_notnull_ MESHBALL * CMesh::addBall(_In_ MESHNODE * pNode, _In_ nfDouble dRadius)
+	{
+		if ((!pNode))
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		MESHBALL * pBall;
+		nfUint32 nBallCount = getBallCount();
+
+		if (nBallCount >= NMR_MESH_MAXBALLCOUNT)
+			throw CNMRException(NMR_ERROR_TOOMANYBALLS);
+
+		// Ensure that at least one beam exists at this node
+		if (m_BeamLattice.m_OccupiedNodes.find(pNode->m_index) == m_BeamLattice.m_OccupiedNodes.end()) {
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+		}
+
+		nfUint32 nNewIndex;
+
+		pBall = m_BeamLattice.m_Balls.allocData(nNewIndex);
+		pBall->m_nodeindex = pNode->m_index;
+		pBall->m_index = nNewIndex;
+		pBall->m_radius = dRadius;
+
+		return pBall;
 	}
 
 
@@ -309,6 +350,21 @@ namespace NMR {
 	nfUint32 CMesh::getBeamSetCount()
 	{
 		return (nfUint32)(m_BeamLattice.m_pBeamSets.size());
+	}
+
+	nfUint32 CMesh::getBallCount()
+	{
+		return m_BeamLattice.m_Balls.getCount();
+	}
+
+	nfUint32 CMesh::getOccupiedNodeCount()
+	{
+		return (nfUint32)m_BeamLattice.m_OccupiedNodes.size();
+	}
+
+	nfBool CMesh::isNodeOccupied(_In_ nfUint32 nIdx)
+	{
+		return m_BeamLattice.m_OccupiedNodes.find(nIdx) != m_BeamLattice.m_OccupiedNodes.end();
 	}
 
 	_Ret_notnull_ MESHNODE * CMesh::getNode(_In_ nfUint32 nIdx)
@@ -333,6 +389,18 @@ namespace NMR {
 		return m_BeamLattice.m_pBeamSets[nIdx];
 	}
 
+	_Ret_notnull_ MESHBALL * CMesh::getBall(_In_ nfUint32 nIdx)
+	{
+		return m_BeamLattice.m_Balls.getData(nIdx);
+	}
+
+	_Ret_notnull_ MESHNODE * CMesh::getOccupiedNode(_In_ nfUint32 nIdx)
+	{
+		std::unordered_set<nfInt32>::iterator iter = m_BeamLattice.m_OccupiedNodes.begin();
+		std::advance(iter, nIdx);
+		return getNode(*iter);
+	}
+
 	void CMesh::setBeamLatticeMinLength(nfDouble dMinLength)
 	{
 		m_BeamLattice.m_dMinLength = dMinLength;
@@ -348,10 +416,30 @@ namespace NMR {
 		return 1.0;
 	}
 
+	void CMesh::setDefaultBallRadius(nfDouble dDefaultBallRadius)
+	{
+		m_BeamLattice.m_dDefaultBallRadius = dDefaultBallRadius;
+	}
+
+	nfDouble CMesh::getDefaultBallRadius()
+	{
+		return m_BeamLattice.m_dDefaultBallRadius;
+	}
+
 	nfBool CMesh::getBeamLatticeAccuracy(nfDouble& dAccuracy)
 	{
 		dAccuracy = 1.0;
 		return false;
+	}
+
+	void CMesh::setBeamLatticeBallMode(eModelBeamLatticeBallMode eBallMode)
+	{
+		m_BeamLattice.m_eBallMode = eBallMode;
+	}
+
+	eModelBeamLatticeBallMode CMesh::getBeamLatticeBallMode()
+	{
+		return m_BeamLattice.m_eBallMode;
 	}
 
 	eModelBeamLatticeCapMode CMesh::getBeamLatticeCapMode()
@@ -366,6 +454,7 @@ namespace NMR {
 		nfUint32 nNodeCount = getNodeCount();
 		nfUint32 nFaceCount = getFaceCount();
 		nfUint32 nBeamCount = getBeamCount();
+		nfUint32 nBallCount = getBallCount();
 
 		// max 2^31-1 billion Nodes/Faces
 		if (nNodeCount > NMR_MESH_MAXNODECOUNT)
@@ -373,6 +462,8 @@ namespace NMR {
 		if (nFaceCount > NMR_MESH_MAXFACECOUNT)
 			return false;
 		if (nBeamCount > NMR_MESH_MAXBEAMCOUNT)
+			return false;
+		if (nBallCount > NMR_MESH_MAXBALLCOUNT)
 			return false;
 
 		for (nIdx = 0; nIdx < nNodeCount; nIdx++) {
@@ -405,6 +496,12 @@ namespace NMR {
 			if (beam->m_nodeindices[0] == beam->m_nodeindices[1])
 				return false;
 		}
+
+		for (nIdx = 0; nIdx < nBallCount; nIdx++) {
+			MESHBALL* ball = getBall(nIdx);
+			if ((ball->m_nodeindex < 0) || (((nfUint32)ball->m_nodeindex) >= nNodeCount))
+				return false;
+		}
 		return true;
 	}
 
@@ -418,6 +515,42 @@ namespace NMR {
 	
 	void CMesh::clearBeamLattice() {
 		m_BeamLattice.clear();
+	}
+
+	void CMesh::clearBeamLatticeBeams() {
+		m_BeamLattice.clearBeams();
+	}
+
+	void CMesh::clearBeamLatticeBalls() {
+		m_BeamLattice.clearBalls();
+	}
+
+	void CMesh::scanOccupiedNodes() {
+		m_BeamLattice.m_OccupiedNodes.clear();
+
+		nfUint32 beamCount = m_BeamLattice.m_Beams.getCount();
+		for (nfUint32 iBeam = 0; iBeam < beamCount; iBeam++) {
+			MESHBEAM * meshBeam = getBeam(iBeam);
+			m_BeamLattice.m_OccupiedNodes.insert({ meshBeam->m_nodeindices[0], meshBeam->m_nodeindices[1] });
+		}
+	}
+
+	void CMesh::validateBeamLatticeBalls() {
+		nfUint32 ballCount = m_BeamLattice.m_Balls.getCount();
+		MESHBALL * ballData = new MESHBALL[ballCount];
+		for (nfUint32 iBall = 0; iBall < ballCount; iBall++) {
+			ballData[iBall] = *m_BeamLattice.m_Balls.getData(iBall);
+		}
+
+		clearBeamLatticeBalls();
+		for (nfUint32 iBall = 0; iBall < ballCount; iBall++) {
+			try {
+				addBall(getNode(ballData[iBall].m_nodeindex), ballData[iBall].m_radius);
+			}
+			catch (CNMRException) {}
+		}
+
+		delete [] ballData;
 	}
 
 	void CMesh::clearMeshInformationHandler()

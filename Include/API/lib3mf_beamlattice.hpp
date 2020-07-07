@@ -92,6 +92,10 @@ public:
 
 	void SetRepresentation(const Lib3MF_uint32 nUniqueResourceID);
 
+	void GetBallOptions (eBeamLatticeBallMode & eBallMode, Lib3MF_double & dBallRadius);
+
+	void SetBallOptions (const eBeamLatticeBallMode eBallMode, const Lib3MF_double dBallRadius);
+
 	Lib3MF_uint32 GetBeamCount ();
 
 	sLib3MFBeam GetBeam (const Lib3MF_uint32 nIndex);
@@ -102,7 +106,19 @@ public:
 
 	void SetBeams (const Lib3MF_uint64 nBeamInfoBufferSize, const sLib3MFBeam * pBeamInfoBuffer);
 
-	void GetBeams (Lib3MF_uint64 nBeamInfoBufferSize, Lib3MF_uint64* pBeamInfoNeededCount, sLib3MFBeam * pBeamInfoBuffer);
+	void GetBeams (Lib3MF_uint64 nBeamInfoBufferSize, Lib3MF_uint64 * pBeamInfoNeededCount, sLib3MFBeam * pBeamInfoBuffer);
+
+	Lib3MF_uint32 GetBallCount ();
+
+	sLib3MFBall GetBall (const Lib3MF_uint32 nIndex);
+
+	Lib3MF_uint32 AddBall (const sLib3MFBall BallInfo);
+
+	void SetBall (const Lib3MF_uint32 nIndex, const sLib3MFBall BallInfo);
+
+	void SetBalls (const Lib3MF_uint64 nBallInfoBufferSize, const sLib3MFBall * pBallInfoBuffer);
+
+	void GetBalls (Lib3MF_uint64 nBeamInfoBufferSize, Lib3MF_uint64 * pBallInfoNeededCount, sLib3MFBall * pBallInfoBuffer);
 
 	Lib3MF_uint32 GetBeamSetCount ();
 

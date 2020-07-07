@@ -144,6 +144,12 @@
 		<option name="Outside" value="2"/>
 	</enum>
 
+	<enum name="BeamLatticeBallMode">
+		<option name="None" value="0"/>
+		<option name="Mixed" value="1"/>
+		<option name="All" value="2"/>
+	</enum>
+
 	<enum name="ProgressIdentifier">
 		<option name="QUERYCANCELED" value="0"/>
 		<option name="DONE" value="1"/>
@@ -229,6 +235,11 @@
 		<member name="Indices" type="uint32" rows="2"/>
 		<member name="Radii" type="double" rows="2"/>
 		<member name="CapModes" type="enum" class="BeamLatticeCapMode" rows="2"/>
+	</struct>
+
+	<struct name="Ball">
+		<member name="Index" type="uint32"/>
+		<member name="Radius" type="double"/>
 	</struct>
 
 	<functiontype name="ProgressCallback" description="A callback function">
@@ -698,6 +709,14 @@
 		<method name="SetRepresentation" description="Sets the representation-mesh for the beamlattice of this mesh.">
 			<param name="UniqueResourceID" type="uint32" pass="in" description="the UniqueResourceID of the representation mesh-object. This mesh-object has to be defined before setting the representation."/>
 		</method>
+		<method name="GetBallOptions" description="Returns the ball mode and the default ball radius for the beamlattice of this mesh.">
+			<param name="BallMode" type="enum" class="BeamLatticeBallMode" pass="out" description="contains the ball mode of this mesh"/>
+			<param name="BallRadius" type="double" pass="out" description="default ball radius of balls for the beamlattice"/>
+		</method>
+		<method name="SetBallOptions" description="Sets the ball mode and thedefault ball radius for the beamlattice.">
+			<param name="BallMode" type="enum" class="BeamLatticeBallMode" pass="in" description="contains the ball mode of this mesh"/>
+			<param name="BallRadius" type="double" pass="in" description="default ball radius of balls for the beamlattice"/>
+		</method>
 		<method name="GetBeamCount" description="Returns the beam count of a mesh object.">
 			<param name="Count" type="uint32" pass="return" description="filled with the beam count."/>
 		</method>
@@ -718,6 +737,27 @@
 		</method>
 		<method name="GetBeams" description="obtains all beam indices, radii and capmodes of a mesh object.">
 			<param name="BeamInfo" type="structarray" class="Beam" pass="out" description="contains information of all beams"/>
+		</method>
+		<method name="GetBallCount" description="Returns the ball count of a mesh object.">
+			<param name="Count" type="uint32" pass="return" description="filled with the ball count."/>
+		</method>
+		<method name="GetBall" description="Returns index and radius of a single ball of a mesh object.">
+			<param name="Index" type="uint32" pass="in" description="Index of the ball (0 to ballcount - 1)."/>
+			<param name="BallInfo" type="struct" class="Ball" pass="return" description="filled with the ball node index and radius."/>
+		</method>
+		<method name="AddBall" description="Adds a single ball to a mesh object.">
+			<param name="BallInfo" type="struct" class="Ball" pass="in" description="contains the node index and radius."/>
+			<param name="Index" type="uint32" pass="return" description="filled with the new Index of the ball."/>
+		</method>
+		<method name="SetBall" description="Sets the index and radius of a single ball of a mesh object.">
+			<param name="Index" type="uint32" pass="in" description="Index of the ball (0 to ballcount - 1)."/>
+			<param name="BallInfo" type="struct" class="Ball" pass="in" description="filled with the ball node index and radius."/>
+		</method>
+		<method name="SetBalls" description="Sets all ball indices and radii of a mesh object.">
+			<param name="BallInfo" type="structarray" class="Ball" pass="in" description="contains information of a number of  balls"/>
+		</method>
+		<method name="GetBalls" description="obtains all ball indices and radii of a mesh object.">
+			<param name="BallInfo" type="structarray" class="Ball" pass="out" description="contains information of all balls"/>
 		</method>
 		<method name="GetBeamSetCount" description="Returns the number of beamsets of a mesh object.">
 			<param name="Count" type="uint32" pass="return" description="filled with the beamset count."/>
@@ -792,6 +832,15 @@
 		</method>
 		<method name="GetReferences" description="Retrieves the references of a beamset">
 			<param name="References" type="basicarray" class="uint32" pass="out" description="retrieves the indices of all beams in this beamset"/>
+		</method>
+		<method name="GetBallReferenceCount" description="Retrieves the ball reference count of a beamset">
+			<param name="Count" type="uint32" pass="return" description="returns the ball reference count"/>
+		</method>
+		<method name="SetBallReferences" description="Sets the ball references of a beamset">
+			<param name="BallReferences" type="basicarray" class="uint32" pass="in" description="the new indices of all balls in this beamset"/>
+		</method>
+		<method name="GetBallReferences" description="Retrieves the ball references of a beamset">
+			<param name="BallReferences" type="basicarray" class="uint32" pass="out" description="retrieves the indices of all balls in this beamset"/>
 		</method>
 	</class>
 

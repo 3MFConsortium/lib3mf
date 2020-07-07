@@ -137,9 +137,12 @@ These are given by the 3MF Standard
 #define XML_3MF_ELEMENT_BEAMLATTICE                       "beamlattice"
 #define XML_3MF_ELEMENT_BEAMS                             "beams"
 #define XML_3MF_ELEMENT_BEAM                              "beam"
+#define XML_3MF_ELEMENT_BALLS                             "balls"
+#define XML_3MF_ELEMENT_BALL                              "ball"
 #define XML_3MF_ELEMENT_BEAMSETS                          "beamsets"
 #define XML_3MF_ELEMENT_BEAMSET                           "beamset"
 #define XML_3MF_ELEMENT_REF                               "ref"
+#define XML_3MF_ELEMENT_BALLREF                           "ballref"
 
 // Triangle element.
 #define XML_3MF_ELEMENT_TRIANGLE                    "triangle"
@@ -170,6 +173,10 @@ These are given by the 3MF Standard
 #define XML_3MF_ATTRIBUTE_BEAMLATTICE_CAPMODE       "cap"
 #define XML_3MF_ATTRIBUTE_BEAMLATTICE_CAP1          "cap1"
 #define XML_3MF_ATTRIBUTE_BEAMLATTICE_CAP2          "cap2"
+#define XML_3MF_ATTRIBUTE_BEAMLATTICE_BALLMODE      "ballmode"
+#define XML_3MF_ATTRIBUTE_BEAMLATTICE_BALLRADIUS    "ballradius"
+#define XML_3MF_ATTRIBUTE_BEAMLATTICE_BALL_VINDEX   "vindex"
+#define XML_3MF_ATTRIBUTE_BEAMLATTICE_BALL_R        "r"
 #define XML_3MF_ATTRIBUTE_BEAMLATTICE_INDEX         "index"
 #define XML_3MF_ATTRIBUTE_BEAMLATTICETAG_TAG        "tag"
 // deprecated (has been used in draft version of the specification):
@@ -344,6 +351,9 @@ These are given by the 3MF Standard
 // depricated (from a draft version of the spec):
 #define XML_3MF_BEAMLATTICE_CAPMODE_ROUND           "round"
 
+#define XML_3MF_BEAMLATTICE_BALLMODE_NONE           "none"
+#define XML_3MF_BEAMLATTICE_BALLMODE_MIXED          "mixed"
+#define XML_3MF_BEAMLATTICE_BALLMODE_ALL            "all"
 
 // KeyStore element.
 #define XML_3MF_ELEMENT_KEYSTORE					"keystore"
@@ -408,7 +418,9 @@ These are given by the 3MF Standard
 #define XML_3MF_MAXBUILDITEMCOUNT                   2147483647
 #define XML_3MF_MAXRESOURCECOUNT                    2147483647
 #define XML_3MF_MAXIMUMBEAMRADIUSVALUE              1000000000.0f
+#define XML_3MF_MAXIMUMBALLRADIUSVALUE              1000000000.0f
 #define XML_3MF_MAXIMUMSKINTHICKNESSVALUE           1000000000.0f
 #define XML_3MF_MAXBEAMCOUNT                        2147483647
+#define XML_3MF_MAXBALLCOUNT                        2147483647
 
 #endif // __NMR_MODELCONSTANTS

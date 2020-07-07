@@ -33,6 +33,8 @@ NMR_ModelReaderNode_BeamLattice1702_BeamSet.cpp covers the official 3MF beamlatt
 
 #include "Model/Reader/BeamLattice1702/NMR_ModelReaderNode_BeamLattice1702_BeamSet.h"
 #include "Model/Reader/BeamLattice1702/NMR_ModelReaderNode_BeamLattice1702_Ref.h"
+#include "Model/Reader/BeamLattice1702/NMR_ModelReaderNode_BeamLattice1702_BallRef.h"
+
 
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Model/Classes/NMR_ModelMeshObject.h"
@@ -98,6 +100,13 @@ namespace NMR {
 				nfInt32 nIndex;
 				pXMLNode->retrieveIndex(nIndex);
 				m_pBeamSet->m_Refs.push_back(nIndex);
+			}
+			else if (strcmp(pChildName, XML_3MF_ELEMENT_BALLREF) == 0) {
+				PModelReaderNode_BeamLattice1702_BallRef pXMLNode = std::make_shared<CModelReaderNode_BeamLattice1702_BallRef>(m_pWarnings);
+				pXMLNode->parseXML(pXMLReader);
+				nfInt32 nIndex;
+				pXMLNode->retrieveIndex(nIndex);
+				m_pBeamSet->m_BallRefs.push_back(nIndex);
 			}
 			else
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);

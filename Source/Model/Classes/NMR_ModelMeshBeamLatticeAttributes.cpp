@@ -42,6 +42,7 @@ namespace NMR {
 		m_pClippingMeshUniqueID = nullptr;
 		m_bHasRepresentationMeshID = false;
 		m_pRepresentationUniqueID = nullptr;
+		m_eBallMode = eModelBeamLatticeBallMode::MODELBEAMLATTICEBALLMODE_NONE;
 	}
 
 	CModelMeshBeamLatticeAttributes::~CModelMeshBeamLatticeAttributes()

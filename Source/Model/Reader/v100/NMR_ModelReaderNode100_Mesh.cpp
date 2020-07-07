@@ -144,6 +144,7 @@ namespace NMR {
 
 				pXMLNode->retrieveClippingInfo(m_eClipMode, m_bHasClippingMeshID, m_nClippingMeshID);
 				pXMLNode->retrieveRepresentationInfo(m_bHasRepresentationMeshID, m_nRepresentationMeshID);
+				pXMLNode->validateBallOptions(m_pWarnings);
 			}
 			else
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);

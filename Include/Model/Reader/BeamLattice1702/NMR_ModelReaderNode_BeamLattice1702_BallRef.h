@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium
+Copyright (C) 2020 3MF Consortium
 
 All rights reserved.
 
@@ -25,35 +25,35 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
-
-NMR_MeshBeamLattice.h implements the class CMeshBeamLattice.
+NMR_ModelReaderNode_BeamLattice1702_BallRef.h covers the official 3MF beamlattice extension.
 
 --*/
 
-#include "Common/Mesh/NMR_BeamLattice.h" 
+#ifndef __NMR_MODELREADERNODE_BEAMLATTICE1702_BALLREF
+#define __NMR_MODELREADERNODE_BEAMLATTICE1702_BALLREF
+
+#include "Model/Reader/NMR_ModelReaderNode.h"
+#include "Model/Classes/NMR_ModelComponent.h"
+#include "Model/Classes/NMR_ModelComponentsObject.h"
+#include "Model/Classes/NMR_ModelObject.h"
 
 namespace NMR {
 
-	CBeamLattice::CBeamLattice(_In_ MESHNODES &nodes) : m_Nodes(nodes)
-	{ 
-		m_dMinLength = 0.0001;
-		m_eBallMode = eModelBeamLatticeBallMode::MODELBEAMLATTICEBALLMODE_NONE;
-		m_dDefaultBallRadius = 0.0;
-	}
+	class CModelReaderNode_BeamLattice1702_BallRef : public CModelReaderNode {
+	private:
+		nfInt32 m_nIndex;
+	protected:
+		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
+	public:
+		CModelReaderNode_BeamLattice1702_BallRef() = delete;
+		CModelReaderNode_BeamLattice1702_BallRef(_In_ PModelWarnings pWarnings);
 
-	void CBeamLattice::clearBeams() {
-		m_Beams.clearAllData();
-		m_pBeamSets.clear();
-		m_OccupiedNodes.clear();
-	}
+		virtual void parseXML(_In_ CXmlReader * pXMLReader);
+		void retrieveIndex(_Out_ nfInt32 & nIndex);
+	};
 
-	void CBeamLattice::clearBalls() {
-		m_Balls.clearAllData();
-	}
-
-	void CBeamLattice::clear() {
-		clearBeams();
-		clearBalls();
-	}
+	typedef std::shared_ptr <CModelReaderNode_BeamLattice1702_BallRef> PModelReaderNode_BeamLattice1702_BallRef;
 
 }
+
+#endif // __NMR_MODELREADERNODE_BEAMLATTICE1702_BALLREF

@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium
+Copyright (C) 2020 3MF Consortium
 
 All rights reserved.
 
@@ -25,14 +25,12 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
-NMR_ModelReaderNode_BeamLattice1702_BeamLattice.h covers the official 3MF beamlattice extension.
-(Initial version based on private beam extension)
-
+NMR_ModelReaderNode_BeamLattice1702_Ball.h covers the official 3MF beamlattice extension.
 
 --*/
 
-#ifndef __NMR_MODELREADERNODE_BEAMLATTICE1702_BEAMLATTICE
-#define __NMR_MODELREADERNODE_BEAMLATTICE1702_BEAMLATTICE
+#ifndef __NMR_MODELREADERNODE_BEAMLATTICE1702_BALL
+#define __NMR_MODELREADERNODE_BEAMLATTICE1702_BALL
 
 #include "Model/Reader/NMR_ModelReaderNode.h"
 #include "Model/Classes/NMR_ModelComponent.h"
@@ -40,38 +38,30 @@ NMR_ModelReaderNode_BeamLattice1702_BeamLattice.h covers the official 3MF beamla
 #include "Model/Classes/NMR_ModelObject.h"
 
 namespace NMR {
+	eModelBeamLatticeBallMode stringToBallMode(const nfChar * ballModeStr);
 
-	class CModelReaderNode_BeamLattice1702_BeamLattice : public CModelReaderNode {
+	class CModelReaderNode_BeamLattice1702_Ball : public CModelReaderNode {
 	private:
-		CModel * m_pModel;
-		CMesh * m_pMesh;
-
-		eModelBeamLatticeClipMode m_eClipMode;
-		nfBool m_bHasClippingMeshID;
-		ModelResourceID m_nClippingMeshID;
-		nfBool m_bHasRepresentationMeshID;
-		ModelResourceID m_nRepresentationMeshID;
-		nfDouble m_dDefaultRadius;
-		eModelBeamLatticeCapMode m_eDefaultCapMode;
-		nfDouble m_dDefaultBallRadius;
+		nfInt32 m_nIndex;
+		nfBool m_bHasRadius;
+		nfDouble m_dRadius;
+		nfBool m_bHasTag;
+		nfInt32 m_nTag;
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 		virtual void OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace);
-		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 	public:
-		CModelReaderNode_BeamLattice1702_BeamLattice() = delete;
-		CModelReaderNode_BeamLattice1702_BeamLattice(_In_ CModel * pModel, _In_ CMesh * pMesh, _In_ PModelWarnings pWarnings);
-
-		void retrieveClippingInfo(_Out_ eModelBeamLatticeClipMode &eClipMode, _Out_ nfBool & bHasClippingMode, _Out_ ModelResourceID & nClippingMeshID);
-		void retrieveRepresentationInfo(_Out_ nfBool & bHasRepresentation, _Out_ ModelResourceID & nRepresentationMeshID);
-		void validateBallOptions(_In_ PModelWarnings pWarnings);
+		CModelReaderNode_BeamLattice1702_Ball() = delete;
+		CModelReaderNode_BeamLattice1702_Ball(_In_ CModel * pModel, _In_ PModelWarnings pWarnings);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 
+		void retrieveIndex(_Out_ nfInt32 & nIndex, nfInt32 nNodeCount);
+		void retrieveRadius(_Out_ nfBool & bHasRadius, _Out_ nfDouble & dRadius);
+		void retrieveTag(_Out_ nfBool & bHasTag, _Out_ nfInt32 & tag);
 	};
 
-	typedef std::shared_ptr <CModelReaderNode_BeamLattice1702_BeamLattice> PModelReaderNode_BeamLattice1702_BeamLattice;
-
+	typedef std::shared_ptr <CModelReaderNode_BeamLattice1702_Ball> PModelReaderNode_BeamLattice1702_Ball;
 }
 
-#endif // __NMR_MODELREADERNODE_BEAMLATTICE1702_BEAMLATTICE
+#endif // __NMR_MODELREADERNODE_BEAMLATTICE1702_BALL

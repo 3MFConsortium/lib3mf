@@ -148,6 +148,9 @@ Source/Model/Classes/NMR_KeyStoreFactory.cpp
 Source/Model/Classes/NMR_KeyStoreResourceData.cpp
 Source/Model/Classes/NMR_KeyStoreResourceDataGroup.cpp
 Source/Model/Classes/NMR_KeyStoreCEKParams.cpp
+Source/Model/Reader/BeamLattice1702/NMR_ModelReaderNode_BeamLattice1702_Ball.cpp
+Source/Model/Reader/BeamLattice1702/NMR_ModelReaderNode_BeamLattice1702_BallRef.cpp
+Source/Model/Reader/BeamLattice1702/NMR_ModelReaderNode_BeamLattice1702_Balls.cpp
 Source/Model/Reader/BeamLattice1702/NMR_ModelReaderNode_BeamLattice1702_Beam.cpp
 Source/Model/Reader/BeamLattice1702/NMR_ModelReaderNode_BeamLattice1702_Beams.cpp
 Source/Model/Reader/BeamLattice1702/NMR_ModelReaderNode_BeamLattice1702_BeamLattice.cpp
