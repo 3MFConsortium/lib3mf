@@ -294,7 +294,7 @@ sLib3MFBall CBeamLattice::GetBall (const Lib3MF_uint32 nIndex)
 
 	Lib3MF_uint32 ballCount = GetBallCount();
 	if (nIndex >= ballCount) {
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDRESOURCEINDEX);
 	}
 
 	if (ballMode == eBeamLatticeBallMode::Mixed) {
@@ -392,7 +392,7 @@ void CBeamLattice::SetBall (const Lib3MF_uint32 nIndex, const sLib3MFBall BallIn
 		// Not in mesh, add the ball
 		NMR::MESHNODE * pNode = m_mesh.getNode(BallInfo.m_Index);
 
-		NMR::MESHBALL * pMeshBall = m_mesh.addBall(pNode, BallInfo.m_Radius);
+		m_mesh.addBall(pNode, BallInfo.m_Radius);
 	}
 	else {
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);

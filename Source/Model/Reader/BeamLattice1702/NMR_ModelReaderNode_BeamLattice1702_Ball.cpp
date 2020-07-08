@@ -59,6 +59,8 @@ namespace NMR {
 		m_dRadius = 0;
 
 		m_bHasRadius = false;
+
+		m_bHasTag = false;
 		m_nTag = -1;
 	}
 
