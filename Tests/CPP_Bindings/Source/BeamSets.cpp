@@ -112,6 +112,26 @@ namespace Lib3MF
 		ASSERT_EQ(beamSet->GetIdentifier(), ident);
 	}
 
+	TEST_F(BeamSet, UniqueIdentifier)
+	{
+		auto beamSet = beamLattice->AddBeamSet();
+		std::string ident1 = "ASDF";
+		std::string ident2 = "GHJKL";
+		beamSet->SetIdentifier(ident1);
+
+		beamSet = beamLattice->AddBeamSet();
+		beamSet->SetIdentifier(ident2);
+
+		beamSet = beamLattice->AddBeamSet();
+		try {
+			beamSet->SetIdentifier(ident1);
+			ASSERT_FALSE(true);
+		}
+		catch (ELib3MFException) {
+			ASSERT_TRUE(true);
+		}
+	}
+
 	TEST_F(BeamSet, References)
 	{
 		auto beamSet = beamLattice->AddBeamSet();

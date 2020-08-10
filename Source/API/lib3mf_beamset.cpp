@@ -58,6 +58,14 @@ std::string CBeamSet::GetName()
 
 void CBeamSet::SetIdentifier(const std::string & sIdentifier)
 {
+	// Ensure identifier is unique
+	if (sIdentifier.compare("") != 0) {
+		Lib3MF_uint32 nBeamSets = m_mesh.getBeamSetCount();
+		for (Lib3MF_uint32 iBeamSet = 0; iBeamSet < nBeamSets; iBeamSet++)
+			if (sIdentifier.compare(m_mesh.getBeamSet(iBeamSet)->m_sIdentifier) == 0)
+				throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+	}
+
 	m_pBeamSet->m_sIdentifier = sIdentifier;
 }
 
