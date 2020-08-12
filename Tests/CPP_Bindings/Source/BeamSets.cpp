@@ -132,6 +132,25 @@ namespace Lib3MF
 		}
 	}
 
+	TEST_F(BeamSet, ReadUniqueIdentifier)
+	{
+		std::string fName("BeamSet_Unique.3mf");
+		auto model = wrapper->CreateModel();
+		{
+			auto reader = model->QueryReader("3mf");
+			reader->ReadFromFile(sTestFilesPath + "/" + "BeamLattice" + "/" + fName);
+			ASSERT_EQ(reader->GetWarningCount(), 0);
+		}
+
+		fName = "BeamSet_Not_Unique.3mf";
+		model = wrapper->CreateModel();
+		{
+			auto reader = model->QueryReader("3mf");
+			reader->ReadFromFile(sTestFilesPath + "/" + "BeamLattice" + "/" + fName);
+			ASSERT_NE(reader->GetWarningCount(), 0);
+		}
+	}
+
 	TEST_F(BeamSet, References)
 	{
 		auto beamSet = beamLattice->AddBeamSet();

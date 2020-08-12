@@ -78,7 +78,7 @@ namespace NMR {
 			if (strcmp(pChildName, XML_3MF_ELEMENT_BEAMSET) == 0)
 			{
 				PBEAMSET pBeamSet = m_pMesh->addBeamSet();
-				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode_BeamLattice1702_BeamSet>(pBeamSet.get(), m_pWarnings);
+				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode_BeamLattice1702_BeamSet>(pBeamSet.get(), &m_uniqueIdentifiers, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 			}
 			else

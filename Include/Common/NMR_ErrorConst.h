@@ -1216,6 +1216,9 @@ Model error codes (0x8XXX)
 // No algorithm defined
 #define NMR_ERROR_KEYSTOREMISSINGALGORTHM 0x810A
 
+// A beamset identifier is not unique
+#define NMR_ERROR_BEAMSET_IDENTIFIER_NOT_UNIQUE 0x810B
+
 
 
 

@@ -45,10 +45,11 @@ NMR_ModelReaderNode_BeamLattice1702_BeamSet.cpp covers the official 3MF beamlatt
 
 namespace NMR {
 
-	CModelReaderNode_BeamLattice1702_BeamSet::CModelReaderNode_BeamLattice1702_BeamSet(_In_ BEAMSET * pBeamSet, _In_ PModelWarnings pWarnings)
+	CModelReaderNode_BeamLattice1702_BeamSet::CModelReaderNode_BeamLattice1702_BeamSet(_In_ BEAMSET * pBeamSet, _In_ std::unordered_set<std::string> * pUniqueIdentifiers, _In_ PModelWarnings pWarnings)
 		: CModelReaderNode(pWarnings)
 	{
 		m_pBeamSet = pBeamSet;
+		m_pUniqueIdentifiers = pUniqueIdentifiers;
 	}
 
 	void CModelReaderNode_BeamLattice1702_BeamSet::parseXML(_In_ CXmlReader * pXMLReader)
@@ -73,7 +74,13 @@ namespace NMR {
 			m_pBeamSet->m_sName = pAttributeValue;
 		}
 		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_BEAMLATTICE_IDENTIFIER) == 0) {
-			m_pBeamSet->m_sIdentifier = pAttributeValue;
+			std::string attributeString(pAttributeValue);
+			if (m_pUniqueIdentifiers->find(attributeString) == m_pUniqueIdentifiers->end()) {
+				m_pUniqueIdentifiers->insert(attributeString);
+				m_pBeamSet->m_sIdentifier = pAttributeValue;
+			}
+			else
+				m_pWarnings->addException(CNMRException(NMR_ERROR_BEAMSET_IDENTIFIER_NOT_UNIQUE), mrwInvalidOptionalValue);
 		}
 		else
 			m_pWarnings->addException(CNMRException(NMR_ERROR_BEAMLATTICEINVALIDATTRIBUTE), mrwInvalidOptionalValue);
