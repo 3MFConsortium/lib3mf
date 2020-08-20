@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium
+Copyright (C) 2020 3MF Consortium
 
 All rights reserved.
 
@@ -26,64 +26,83 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelReaderNode_BeamLattice1702_BeamSets.cpp covers the official 3MF beamlattice extension.
-
+NMR_ModelReaderNode_BeamLattice1702_Balls.cpp covers the official 3MF beamlattice extension.
 
 --*/
 
-#include "Model/Reader/BeamLattice1702/NMR_ModelReaderNode_BeamLattice1702_BeamSets.h"
-#include "Model/Reader/BeamLattice1702/NMR_ModelReaderNode_BeamLattice1702_BeamSet.h"
+#include "Model/Reader/BeamLattice1702/NMR_ModelReaderNode_BeamLattice1702_Balls.h"
+#include "Model/Reader/BeamLattice1702/NMR_ModelReaderNode_BeamLattice1702_Ball.h"
 
 #include "Model/Classes/NMR_ModelConstants.h"
-#include "Model/Classes/NMR_ModelMeshObject.h"
-
-#include "Common/NMR_StringUtils.h"
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_Exception_Windows.h"
+#include "Common/NMR_StringUtils.h"
 
 namespace NMR {
-
-	CModelReaderNode_BeamLattice1702_BeamSets::CModelReaderNode_BeamLattice1702_BeamSets(_In_ CMesh * pMesh, _In_ PModelWarnings pWarnings)
+	
+	CModelReaderNode_BeamLattice1702_Balls::CModelReaderNode_BeamLattice1702_Balls(_In_ CModel * pModel, _In_ CMesh * pMesh,
+		_In_ nfDouble defaultBallRadius, _In_ PModelWarnings pWarnings)
 		: CModelReaderNode(pWarnings)
 	{
+		__NMRASSERT(pMesh);
+		__NMRASSERT(pModel);
+
+		m_pModel = pModel;
 		m_pMesh = pMesh;
+		m_dDefaultBallRadius = defaultBallRadius;
 	}
 
-	void CModelReaderNode_BeamLattice1702_BeamSets::parseXML(_In_ CXmlReader * pXMLReader)
+	void CModelReaderNode_BeamLattice1702_Balls::parseXML(_In_ CXmlReader * pXMLReader)
 	{
-		// Parse name
+		// Parse Name
 		parseName(pXMLReader);
 
-		// Parse attribute
+		// Parse Attributes
 		parseAttributes(pXMLReader);
 
 		// Parse Content
 		parseContent(pXMLReader);
-
 	}
-	
-	void CModelReaderNode_BeamLattice1702_BeamSets::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
+
+	void CModelReaderNode_BeamLattice1702_Balls::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
 	{
 		__NMRASSERT(pAttributeName);
 		__NMRASSERT(pAttributeValue);
 	}
 
-	void CModelReaderNode_BeamLattice1702_BeamSets::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
+	void CModelReaderNode_BeamLattice1702_Balls::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
 	{
 		__NMRASSERT(pChildName);
 		__NMRASSERT(pXMLReader);
 		__NMRASSERT(pNameSpace);
 
 		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_BEAMLATTICESPEC) == 0) {
-			if (strcmp(pChildName, XML_3MF_ELEMENT_BEAMSET) == 0)
-			{
-				PBEAMSET pBeamSet = m_pMesh->addBeamSet();
-				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode_BeamLattice1702_BeamSet>(pBeamSet.get(), &m_uniqueIdentifiers, m_pWarnings);
+			if (strcmp(pChildName, XML_3MF_ELEMENT_BALL) == 0) {
+				// Parse XML
+				PModelReaderNode_BeamLattice1702_Ball pXMLNode = std::make_shared<CModelReaderNode_BeamLattice1702_Ball>(m_pModel, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
+
+				// Retrieve node index
+				nfInt32 nIndex;
+				pXMLNode->retrieveIndex(nIndex, m_pMesh->getNodeCount());
+
+				nfInt32 nTag;
+				nfBool bHasTag, bHasRadius;
+				nfDouble dRadius;
+				pXMLNode->retrieveTag(bHasTag, nTag);
+				pXMLNode->retrieveRadius(bHasRadius, dRadius);
+				
+				if (!bHasRadius) {
+					dRadius = m_dDefaultBallRadius;
+				}
+
+				// Create ball
+				MESHNODE * pNode = m_pMesh->getNode(nIndex);
+				m_pMesh->addBall(pNode, dRadius);
 			}
-			else
+			else {
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
+			}
 		}
 	}
-
 }

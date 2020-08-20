@@ -49,6 +49,7 @@ namespace NMR {
 		PPackageResourceID m_pClippingMeshUniqueID;
 		nfBool m_bHasRepresentationMeshID;
 		PPackageResourceID m_pRepresentationUniqueID;
+		eModelBeamLatticeBallMode m_eBallMode;
 		
 		CModelMeshBeamLatticeAttributes();
 		virtual ~CModelMeshBeamLatticeAttributes();

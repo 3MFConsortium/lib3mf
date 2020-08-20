@@ -486,6 +486,9 @@ Core framework error codes (0x2XXX)
 // Too many beams
 #define NMR_ERROR_TOOMANYBEAMS 0x203D
 
+// Too many balls
+#define NMR_ERROR_TOOMANYBALLS 0x203E
+
 // Invalid slice polygon index
 #define NMR_ERROR_INVALIDSLICEPOLYGON 0x2040
 
@@ -1212,6 +1215,9 @@ Model error codes (0x8XXX)
 
 // No algorithm defined
 #define NMR_ERROR_KEYSTOREMISSINGALGORTHM 0x810A
+
+// A beamset identifier is not unique
+#define NMR_ERROR_BEAMSET_IDENTIFIER_NOT_UNIQUE 0x810B
 
 
 

@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium
+Copyright (C) 2020 3MF Consortium
 
 All rights reserved.
 
@@ -26,13 +26,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelReaderNode_BeamLattice1702_BeamSets.cpp covers the official 3MF beamlattice extension.
-
+NMR_ModelReaderNode_BeamLattice1702_BallRef.cpp covers the official 3MF beamlattice extension.
 
 --*/
 
-#include "Model/Reader/BeamLattice1702/NMR_ModelReaderNode_BeamLattice1702_BeamSets.h"
-#include "Model/Reader/BeamLattice1702/NMR_ModelReaderNode_BeamLattice1702_BeamSet.h"
+#include "Model/Reader/BeamLattice1702/NMR_ModelReaderNode_BeamLattice1702_BallRef.h"
 
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Model/Classes/NMR_ModelMeshObject.h"
@@ -43,13 +41,12 @@ NMR_ModelReaderNode_BeamLattice1702_BeamSets.cpp covers the official 3MF beamlat
 
 namespace NMR {
 
-	CModelReaderNode_BeamLattice1702_BeamSets::CModelReaderNode_BeamLattice1702_BeamSets(_In_ CMesh * pMesh, _In_ PModelWarnings pWarnings)
-		: CModelReaderNode(pWarnings)
+	CModelReaderNode_BeamLattice1702_BallRef::CModelReaderNode_BeamLattice1702_BallRef(_In_ PModelWarnings pWarnings)
+		: CModelReaderNode(pWarnings), m_nIndex(0)
 	{
-		m_pMesh = pMesh;
 	}
 
-	void CModelReaderNode_BeamLattice1702_BeamSets::parseXML(_In_ CXmlReader * pXMLReader)
+	void CModelReaderNode_BeamLattice1702_BallRef::parseXML(_In_ CXmlReader * pXMLReader)
 	{
 		// Parse name
 		parseName(pXMLReader);
@@ -61,29 +58,25 @@ namespace NMR {
 		parseContent(pXMLReader);
 
 	}
-	
-	void CModelReaderNode_BeamLattice1702_BeamSets::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
+
+	void CModelReaderNode_BeamLattice1702_BallRef::retrieveIndex(_Out_ nfInt32 & nIndex)
+	{
+		nIndex = m_nIndex;
+	}
+
+	void CModelReaderNode_BeamLattice1702_BallRef::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
 	{
 		__NMRASSERT(pAttributeName);
 		__NMRASSERT(pAttributeValue);
-	}
 
-	void CModelReaderNode_BeamLattice1702_BeamSets::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
-	{
-		__NMRASSERT(pChildName);
-		__NMRASSERT(pXMLReader);
-		__NMRASSERT(pNameSpace);
-
-		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_BEAMLATTICESPEC) == 0) {
-			if (strcmp(pChildName, XML_3MF_ELEMENT_BEAMSET) == 0)
-			{
-				PBEAMSET pBeamSet = m_pMesh->addBeamSet();
-				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode_BeamLattice1702_BeamSet>(pBeamSet.get(), &m_uniqueIdentifiers, m_pWarnings);
-				pXMLNode->parseXML(pXMLReader);
-			}
-			else
-				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_BEAMLATTICE_INDEX) == 0) {
+			nfInt32 nValue = fnStringToInt32(pAttributeValue);
+			if ((nValue >= 0) && (nValue < XML_3MF_MAXBALLCOUNT))
+				m_nIndex = nValue;
 		}
+		else
+			m_pWarnings->addException(CNMRException(NMR_ERROR_BEAMLATTICEINVALIDATTRIBUTE), mrwInvalidOptionalValue);
+
 	}
 
 }

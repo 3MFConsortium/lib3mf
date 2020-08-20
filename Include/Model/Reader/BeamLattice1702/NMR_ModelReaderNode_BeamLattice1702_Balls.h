@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium
+Copyright (C) 2020 3MF Consortium
 
 All rights reserved.
 
@@ -25,42 +25,37 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
-NMR_ModelReaderNode_BeamLattice1702_BeamSet.h covers the official 3MF beamlattice extension.
+
+NMR_ModelReaderNode_BeamLattice1702_Balls.h covers the official 3MF beamlattice extension.
 
 --*/
 
-#ifndef __NMR_MODELREADERNODE_BEAMLATTICE1702_BEAMSET
-#define __NMR_MODELREADERNODE_BEAMLATTICE1702_BEAMSET
+#ifndef __NMR_MODELREADERNODE_BEAMLATTICE1702_BALLS
+#define __NMR_MODELREADERNODE_BEAMLATTICE1702_BALLS
 
 #include "Model/Reader/NMR_ModelReaderNode.h"
 #include "Model/Classes/NMR_ModelComponent.h"
-#include "Model/Classes/NMR_ModelComponentsObject.h"
 #include "Model/Classes/NMR_ModelObject.h"
-
-#include <unordered_set>
 
 namespace NMR {
 
-	class CModelReaderNode_BeamLattice1702_BeamSet : public CModelReaderNode {
-	private:
-		BEAMSET * m_pBeamSet;
-
-		std::unordered_set<std::string> * m_pUniqueIdentifiers;
+	class CModelReaderNode_BeamLattice1702_Balls : public CModelReaderNode {
 	protected:
+		CMesh* m_pMesh;
+		CModel* m_pModel;
+
+		nfDouble m_dDefaultBallRadius;
+
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
-		virtual void OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace);
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 	public:
-		CModelReaderNode_BeamLattice1702_BeamSet() = delete;
-		CModelReaderNode_BeamLattice1702_BeamSet(_In_ BEAMSET * pBeamSet, _In_ std::unordered_set<std::string> * pUniqueIdentifiers, _In_ PModelWarnings pWarnings);
+		CModelReaderNode_BeamLattice1702_Balls() = delete;
+		CModelReaderNode_BeamLattice1702_Balls(_In_ CModel * pModel, _In_ CMesh * pMesh, _In_ nfDouble defaultBallRadius, _In_ PModelWarnings pWarnings);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
-
-		// void retrieveId(_Out_ nfInt32 & nIndex1, _Out_ nfInt32 & nIndex2, nfInt32 nNodeCount);
 	};
 
-	typedef std::shared_ptr <CModelReaderNode_BeamLattice1702_BeamSet> PModelReaderNode_BeamLattice1702_BeamSet;
-
+	typedef std::shared_ptr <CModelReaderNode_BeamLattice1702_Balls> PModelReaderNode_BeamLattice1702_Balls;
 }
 
-#endif // __NMR_MODELREADERNODE_BEAMLATTICE1702_BEAMSET
+#endif // __NMR_MODELREADERNODE_BEAMLATTICE1702_BALLS

@@ -96,6 +96,12 @@ Enumerations
 		.. cpp:enumerator:: Inside = 1
 		.. cpp:enumerator:: Outside = 2
 	
+    .. cpp:enum-class:: eBeamLatticeBallMode : Lib3MF_int32
+	
+		.. cpp:enumerator:: None = 0
+		.. cpp:enumerator:: Mixed = 1
+		.. cpp:enumerator:: All = 2
+    
 	.. cpp:enum-class:: eProgressIdentifier : Lib3MF_int32
 	
 		.. cpp:enumerator:: QUERYCANCELED = 0
@@ -239,6 +245,12 @@ Structs
 	
 		.. cpp:member:: eBeamLatticeCapMode m_CapModes[2]
 	
+
+	.. cpp:struct:: sBall
+	
+		.. cpp:member:: Lib3MF_uint32 m_Index
+	
+		.. cpp:member:: Lib3MF_double m_Radius
 
 
 Function types

@@ -37,11 +37,23 @@ namespace NMR {
 	CBeamLattice::CBeamLattice(_In_ MESHNODES &nodes) : m_Nodes(nodes)
 	{ 
 		m_dMinLength = 0.0001;
+		m_eBallMode = eModelBeamLatticeBallMode::MODELBEAMLATTICEBALLMODE_NONE;
+		m_dDefaultBallRadius = 0.0;
+	}
+
+	void CBeamLattice::clearBeams() {
+		m_Beams.clearAllData();
+		m_pBeamSets.clear();
+		m_OccupiedNodes.clear();
+	}
+
+	void CBeamLattice::clearBalls() {
+		m_Balls.clearAllData();
 	}
 
 	void CBeamLattice::clear() {
-		m_Beams.clearAllData();
-		m_pBeamSets.clear();
+		clearBeams();
+		clearBalls();
 	}
 
 }
