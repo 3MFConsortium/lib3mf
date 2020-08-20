@@ -85,7 +85,7 @@ NMR::eKeyStoreWrapAlgorithm Lib3MF::translateWrappingAlgorithm(const eLib3MFWrap
 eLib3MFCompression Lib3MF::translateCompression(bool compression) {
 	if (compression)
 		return eLib3MFCompression::Deflate;
-	return eLib3MFCompression::None;
+	return eLib3MFCompression::NoCompression;
 }
 
 bool Lib3MF::translateCompression(const eLib3MFCompression compression) {

@@ -1276,7 +1276,7 @@
 	</functiontype>
 
 	<enum name="Compression">
-		<option name="None" value="0" description="No compression applied"/>
+		<option name="NoCompression" value="0" description="No compression applied"/>
 		<option name="Deflate" value="1" description="Deflate compression applied"/>
 	</enum>
 	

@@ -203,7 +203,7 @@ namespace Lib3MF {
 
 				std::vector<Lib3MF_uint8> aad = { 'l', 'i', 'b', '3', 'm', 'f', 's', 'a', 'm', 'p', 'l', 'e' };
 				auto rd = keyStore->AddResourceData(rdGroup.get(), part.get(),
-					eEncryptionAlgorithm::AES256_GCM, (compressed ? eCompression::Deflate : eCompression::None), aad);
+					eEncryptionAlgorithm::AES256_GCM, (compressed ? eCompression::Deflate : eCompression::NoCompression), aad);
 
 				PWriter writer = modelToCrpt->QueryWriter("3mf");
 				DEKCallbackData contentData;
@@ -534,7 +534,7 @@ namespace Lib3MF {
 			ASSERT_EQ(resourceData->GetPath()->GetPath(), resourceDataFound->GetPath()->GetPath());
 
 			ASSERT_EQ(Lib3MF::eEncryptionAlgorithm::AES256_GCM, resourceData->GetEncryptionAlgorithm());
-			ASSERT_EQ(Lib3MF::eCompression::None, resourceData->GetCompression());
+			ASSERT_EQ(Lib3MF::eCompression::NoCompression, resourceData->GetCompression());
 			ASSERT_EQ("/3D/3dexternal.model", resourceData->GetPath()->GetPath());
 		}
 	}

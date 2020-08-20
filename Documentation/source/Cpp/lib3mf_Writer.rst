@@ -62,6 +62,53 @@ CWriter
 		:param nDecimalPrecision: The number of digits to be written in each vertex coordinate-value after the decimal point. 
 
 
+	.. cpp:function:: void SetStrictModeActive(const bool bStrictModeActive)
+
+		Activates (deactivates) the strict mode of the reader.
+
+		:param bStrictModeActive: flag whether strict mode is active or not. 
+
+
+	.. cpp:function:: bool GetStrictModeActive()
+
+		Queries whether the strict mode of the reader is active or not
+
+		:returns: returns flag whether strict mode is active or not.
+
+
+	.. cpp:function:: std::string GetWarning(const Lib3MF_uint32 nIndex, Lib3MF_uint32 & nErrorCode)
+
+		Returns Warning and Error Information of the read process
+
+		:param nIndex: Index of the Warning. Valid values are 0 to WarningCount - 1 
+		:param nErrorCode: filled with the error code of the warning 
+		:returns: the message of the warning
+
+
+	.. cpp:function:: Lib3MF_uint32 GetWarningCount()
+
+		Returns Warning and Error Count of the read process
+
+		:returns: filled with the count of the occurred warnings.
+
+
+	.. cpp:function:: void AddKeyWrappingCallback(const std::string & sConsumerID, const KeyWrappingCallback pTheCallback, const Lib3MF_pvoid pUserData)
+
+		Registers a callback to deal with data key encryption/decryption from keystore
+
+		:param sConsumerID: The ConsumerID to register for 
+		:param pTheCallback: The callback to be callede for wrapping and encryption key 
+		:param pUserData: Userdata that is passed to the callback function 
+
+
+	.. cpp:function:: void SetContentEncryptionCallback(const ContentEncryptionCallback pTheCallback, const Lib3MF_pvoid pUserData)
+
+		Registers a callback to deal with encryption of content
+
+		:param pTheCallback: The callback used to encrypt content 
+		:param pUserData: Userdata that is passed to the callback function 
+
+
 .. cpp:type:: std::shared_ptr<CWriter> Lib3MF::PWriter
 
 	Shared pointer to CWriter to easily allow reference counting.
