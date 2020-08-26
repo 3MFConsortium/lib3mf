@@ -8,5 +8,5 @@ Description: @PROJECT_DESCRIPTION@
 Version: @PROJECT_VERSION@
 
 Requires:
-Libs: -L${libdir} -l3MF -lzip -lz
+Libs: -L${libdir} -l3mf -lzip -lz
 Cflags: -I${includedir}

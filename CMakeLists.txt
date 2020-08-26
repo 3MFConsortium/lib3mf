@@ -5,9 +5,6 @@ cmake_policy(SET CMP0048 NEW)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-project(lib3mf)
-
-
 include(GNUInstallDirs)
 
 # Define Version
@@ -15,6 +12,10 @@ set(LIB3MF_VERSION_MAJOR 2)        # increase on every backward-compatibility br
 set(LIB3MF_VERSION_MINOR 0)        # increase on every backward compatible change of the API
 set(LIB3MF_VERSION_MICRO 0)        # increase on on every change that does not alter the API
 set(LIB3MF_VERSION_PRERELEASE "")  # denotes pre-release information of a version of lib3mf
+
+project(lib3mf
+  VERSION ${LIB3MF_VERSION_MAJOR}.${LIB3MF_VERSION_MINOR}.${LIB3MF_VERSION_MICRO}
+  DESCRIPTION "An implementation of the 3D Manufacturing Format file standard")
 
 set(CMAKE_INSTALL_BINDIR bin CACHE PATH "directory for installing binary files")
 set(CMAKE_INSTALL_LIBDIR lib CACHE PATH "directory for installing library files")
@@ -176,6 +177,8 @@ else()
   target_compile_options(${PROJECT_NAME} PUBLIC "$<$<CONFIG:RELEASE>:/O2;/sdl;/WX;/Oi;/Gy;/FC;/wd4996>")
 endif()
 
+configure_file(lib3mf.pc.in lib3mf.pc @ONLY)
+install(FILES ${CMAKE_BINARY_DIR}/lib3mf.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
 install(TARGETS ${PROJECT_NAME}
   ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
   LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
