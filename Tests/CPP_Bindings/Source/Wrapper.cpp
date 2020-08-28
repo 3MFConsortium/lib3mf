@@ -86,8 +86,8 @@ namespace Lib3MF
 		wrapper->GetSpecificationVersion("http://schemas.microsoft.com/3dmanufacturing/beamlattice/2017/02", bIsSupported, nMajor, nMinor, nMicro);
 		ASSERT_TRUE(bIsSupported);
 		ASSERT_EQ(nMajor, 1);
-		ASSERT_EQ(nMinor, 0);
-		ASSERT_EQ(nMicro, 4);
+		ASSERT_EQ(nMinor, 1);
+		ASSERT_EQ(nMicro, 0);
 
 		wrapper->GetSpecificationVersion("http://schemas.microsoft.com/3dmanufacturing/slice/2015/07", bIsSupported, nMajor, nMinor, nMicro);
 		ASSERT_TRUE(bIsSupported);
