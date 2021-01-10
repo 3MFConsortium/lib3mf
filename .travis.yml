@@ -39,10 +39,6 @@ matrix:
             - gcc-mingw-w64
             - g++-mingw-w64-x86-64
 
-before_install:
-    - if [[ "$BUILDMODE" = "cmake-make-osx" ]]; then brew update; fi
-    - if [[ "$BUILDMODE" = "cmake-make-osx" ]]; then brew install valgrind; fi
-
 before_script:
     - if [[ "$BUILDMODE" = "cmake-mingw32" ]]; then sh cmake/GenerateMinGW.sh; cd build; fi
     - if [[ "$BUILDMODE" = "cmake-make-linux" ]]; then sh cmake/GenerateMake.sh; cd build; fi
