@@ -41,6 +41,8 @@ matrix:
 
 before_install:
     - if [[ "$BUILDMODE" = "cmake-make-osx" ]]; then brew update; fi
+    - if [[ "$BUILDMODE" = "cmake-make-osx" ]]; then git -C /usr/local/Homebrew/Library/Taps/homebrew/homebrew-core fetch --unshallow
+    - if [[ "$BUILDMODE" = "cmake-make-osx" ]]; then git -C /usr/local/Homebrew/Library/Taps/homebrew/homebrew-cask fetch --unshallow
     - if [[ "$BUILDMODE" = "cmake-make-osx" ]]; then brew install valgrind; fi
 
 before_script:
