@@ -49,6 +49,8 @@ namespace NMR {
 	using PKeyStoreAccessRight = std::shared_ptr<CKeyStoreAccessRight>;
 
 	class CKeyStoreOpcPackageWriter : public IOpcPackageWriter {
+	private:
+		bool pathIsEncrypted(_In_ std::string sPath);
 	protected:
 		CModelContext const & m_pContext;
 		PIOpcPackageWriter m_pPackageWriter;
@@ -69,6 +71,7 @@ namespace NMR {
 		void addContentType(_In_ POpcPackagePart pOpcPackagePart, _In_ std::string sContentType) override;
 		POpcPackageRelationship addRootRelationship(std::string sType, COpcPackagePart * pTargetPart) override;
 		POpcPackageRelationship addPartRelationship(_In_ POpcPackagePart pOpcPackagePart, _In_ std::string sType, _In_ COpcPackagePart * pTargetPart) override;
+		std::list<POpcPackageRelationship> addWriterSpecificRelationships(_In_ POpcPackagePart pOpcPackagePart, _In_ COpcPackagePart* pTargetPart) override;
 	};
 
 	using PKeyStoreOpcPackageWriter = std::shared_ptr<CKeyStoreOpcPackageWriter>;

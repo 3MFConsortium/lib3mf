@@ -72,6 +72,7 @@ namespace NMR {
 		void addContentType(_In_ POpcPackagePart pOpcPackagePart, _In_ std::string sContentType) override;
 		POpcPackageRelationship addRootRelationship(_In_ std::string sType, _In_ COpcPackagePart * pTargetPart) override;
 		POpcPackageRelationship addPartRelationship(_In_ POpcPackagePart pOpcPackagePart, _In_ std::string sType, _In_ COpcPackagePart * pTargetPart) override;
+		std::list<POpcPackageRelationship> addWriterSpecificRelationships(_In_ POpcPackagePart pOpcPackagePart, _In_ COpcPackagePart* pTargetPart) override;
 	};
 
 	typedef std::shared_ptr<COpcPackageWriter> POpcPackageWriter;

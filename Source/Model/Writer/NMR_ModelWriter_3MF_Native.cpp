@@ -200,7 +200,7 @@ namespace NMR {
 				if (pStream.get() == nullptr)
 					throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-				// create Texture Part
+				// create Attachment Part
 				POpcPackagePart pAttachmentPart = m_pPackageWriter->addPart(sPath);
 				PExportStream pExportStream = pAttachmentPart->getExportStream();
 
@@ -210,6 +210,8 @@ namespace NMR {
 
 				// add relationships
 				m_pPackageWriter->addPartRelationship(pModelPart, sRelationShipType.c_str(), pAttachmentPart.get());
+
+				m_pPackageWriter->addWriterSpecificRelationships(pModelPart, pAttachmentPart.get());
 
 				monitor()->IncrementProgress(1);
 			}

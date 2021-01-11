@@ -121,6 +121,11 @@ namespace NMR {
 		return pOpcPackagePart->addRelationship(generateRelationShipID(), sType, pTargetPart->getURI());
 	}
 
+	std::list<POpcPackageRelationship> COpcPackageWriter::addWriterSpecificRelationships(_In_ POpcPackagePart pOpcPackagePart, _In_ COpcPackagePart* pTargetPart)
+	{
+		return std::list<POpcPackageRelationship>();
+	}
+
 	void COpcPackageWriter::finishPackage()
 	{
 		writeContentTypes();
