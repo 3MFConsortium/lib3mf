@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <string>
+#include <list>
 #include "Common/NMR_Types.h"
 #include "Common/NMR_Local.h"
 
@@ -19,6 +20,7 @@ namespace NMR {
 		virtual void addContentType(_In_ POpcPackagePart pOpcPackagePart, _In_ std::string sContentType) = 0;
 		virtual POpcPackageRelationship addRootRelationship(_In_ std::string sType, _In_ COpcPackagePart * pTargetPart) = 0;
 		virtual POpcPackageRelationship addPartRelationship(_In_ POpcPackagePart pOpcPackagePart, _In_ std::string sType, _In_ COpcPackagePart * pTargetPart) = 0;
+		virtual std::list<POpcPackageRelationship> addWriterSpecificRelationships(_In_ POpcPackagePart pOpcPackagePart, _In_ COpcPackagePart* pTargetPart) = 0;
 		virtual void close() {}
 	};
 

@@ -91,6 +91,23 @@ namespace NMR {
 		}
 	}
 
+	bool CKeyStoreOpcPackageWriter::pathIsEncrypted(_In_ std::string sPath)
+	{
+		PSecureContext const& secureContext = m_pContext.secureContext();
+		PKeyStore const& keyStore = m_pContext.keyStore();
+
+		NMR::PKeyStoreResourceData rd = keyStore->findResourceData(sPath);
+		if (nullptr != rd) {
+			if (secureContext->hasDekCtx()) {
+				return true;
+			}
+			else {
+				m_pContext.warnings()->addWarning(NMR_ERROR_DEKDESCRIPTORNOTFOUND, eModelWarningLevel::mrwMissingMandatoryValue);
+			}
+		}
+		return false;
+	}
+
 	POpcPackagePart CKeyStoreOpcPackageWriter::wrapPartStream(PKeyStoreResourceData rd, POpcPackagePart part) {
 		PSecureContext const & secureContext = m_pContext.secureContext();
 		ContentEncryptionDescriptor p = secureContext->getDekCtx();
@@ -188,6 +205,19 @@ namespace NMR {
 	POpcPackageRelationship CKeyStoreOpcPackageWriter::addPartRelationship(POpcPackagePart pOpcPackagePart, std::string sType, COpcPackagePart * pTargetPart)
 	{
 		return m_pPackageWriter->addPartRelationship(pOpcPackagePart, sType, pTargetPart);
+	}
+
+	std::list<POpcPackageRelationship> CKeyStoreOpcPackageWriter::addWriterSpecificRelationships(_In_ POpcPackagePart pOpcPackagePart, _In_ COpcPackagePart* pTargetPart)
+	{
+		std::list<POpcPackageRelationship> list;
+		std::string sPath = fnIncludeLeadingPathDelimiter(pTargetPart->getURI());
+		if (pathIsEncrypted(sPath))
+		{
+			list.push_back(addPartRelationship(pOpcPackagePart, PACKAGE_ENCRYPTED_FILE_RELATIONSHIP, pTargetPart));
+		}
+
+		list.merge(m_pPackageWriter->addWriterSpecificRelationships(pOpcPackagePart, pTargetPart));
+		return list;
 	}
 
 	void CKeyStoreOpcPackageWriter::writeKeyStoreStream(_In_ CXmlWriter * pXMLWriter) {
