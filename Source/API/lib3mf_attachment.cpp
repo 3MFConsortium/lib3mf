@@ -70,6 +70,11 @@ void CAttachment::SetPath (const std::string & sPath)
 	}
 }
 
+IPackagePart * CAttachment::PackagePart()
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
+
 std::string CAttachment::GetRelationShipType ()
 {
 	return m_pModelAttachment->getRelationShipType();

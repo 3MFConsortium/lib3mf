@@ -45,6 +45,11 @@ Abstract: This is the class declaration of CWriter
 #include "Model/Writer/NMR_ModelWriter_3MF_Native.h"
 #include "Model/Writer/NMR_ModelWriter_STL.h"
 
+namespace NMR {
+	class CExportStreamMemory;
+	using PExportStreamMemory = std::shared_ptr<CExportStreamMemory>;
+}
+
 namespace Lib3MF {
 namespace Impl {
 
@@ -60,6 +65,7 @@ private:
 	*/
 	NMR::PModelWriter m_pWriter;
 
+	NMR::PExportStreamMemory momentBuffer;
 protected:
 
 	/**
@@ -91,6 +97,19 @@ public:
 	Lib3MF_uint32 GetDecimalPrecision() override;
 
 	void SetDecimalPrecision(const Lib3MF_uint32 nDecimalPrecision) override;
+
+	void AddKeyWrappingCallback(const std::string & sConsumerID, const Lib3MF::KeyWrappingCallback pTheCallback, const Lib3MF_pvoid pUserData);
+
+	void SetContentEncryptionCallback(const Lib3MF::ContentEncryptionCallback pTheCallback, const Lib3MF_pvoid pUserData);
+
+	void SetStrictModeActive(const bool bStrictModeActive);
+
+	bool GetStrictModeActive();
+
+	std::string GetWarning(const Lib3MF_uint32 nIndex, Lib3MF_uint32 & nErrorCode);
+
+	Lib3MF_uint32 GetWarningCount();
+
 };
 
 }

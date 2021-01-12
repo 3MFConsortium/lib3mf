@@ -50,7 +50,7 @@ namespace NMR {
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 	public:
 		CModelReaderNode100_Composite() = delete;
-		CModelReaderNode100_Composite(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings, _In_z_ const std::vector<ModelPropertyID>& baseMaterialPropertyIds);
+		CModelReaderNode100_Composite(_In_ CModel * pModel, _In_ PModelWarnings pWarnings, _In_z_ const std::vector<ModelPropertyID>& baseMaterialPropertyIds);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 

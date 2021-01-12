@@ -35,6 +35,7 @@ metadata, and can be attached to any 3MF model node.
 #include "Model/Classes/NMR_ModelMetaData.h" 
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Common/NMR_Exception.h"
+#include "Common/NMR_StringUtils.h"
 
 namespace NMR {
 
@@ -68,7 +69,7 @@ namespace NMR {
 
 	std::string CModelMetaData::getKey()
 	{
-		return calculateKey(m_sNameSpace, m_sName);
+		return composeNamespaceAndNameIntoKey(m_sNameSpace, m_sName);
 	}
 
 	std::string CModelMetaData::getValue()
@@ -117,25 +118,6 @@ namespace NMR {
 	void CModelMetaData::setPreserve(nfBool bPreserve)
 	{
 		m_bPreserve = bPreserve;
-	}
-
-	void CModelMetaData::decomposeKeyIntoNamespaceAndName(const std::string &sKey, std::string &sNameSpace, std::string &sName) {
-		size_t cInd = sKey.find(":");
-		if (cInd != std::string::npos) {
-			sNameSpace = sKey.substr(0, cInd);
-			sName = sKey.substr(cInd + 1, sKey.length() - cInd);
-		} else{
-			sNameSpace = "";
-			sName = sKey;
-		}
-	}
-
-	std::string CModelMetaData::calculateKey(const std::string &sNameSpace, const std::string &sName)
-	{
-		if (sNameSpace.empty())
-			return sName;
-		else
-			return sNameSpace + ":" + sName;
 	}
 
 	bool CModelMetaData::isValidNamespaceAndName(std::string sNameSpace, std::string sName)

@@ -47,6 +47,7 @@ A model is an in memory representation of the 3MF file.
 #include "Model/Classes/NMR_ModelTexture2D.h"
 #include "Model/Classes/NMR_ModelSliceStack.h"
 #include "Model/Classes/NMR_ModelMetaDataGroup.h"
+#include "Model/Classes/NMR_KeyStore.h"
 
 #include "Common/Mesh/NMR_Mesh.h"
 #include "Common/MeshInformation/NMR_MeshInformation.h"
@@ -54,6 +55,9 @@ A model is an in memory representation of the 3MF file.
 #include "Common/NMR_Exception.h"
 #include <sstream>
 #include <memory>
+#include <random>
+#include <mutex>
+#include <array>
 
 #include "Model/Reader/Slice1507/NMR_ModelReader_Slice1507_SliceRefModel.h"
 #include "Common/Platform/NMR_XmlReader.h"
@@ -61,6 +65,9 @@ A model is an in memory representation of the 3MF file.
 #include "Common/Platform/NMR_ImportStream_Unique_Memory.h"
 
 #include "Common/NMR_StringUtils.h" 
+
+#include "Model/Classes/NMR_KeyStoreFactory.h"
+
 namespace NMR {
 
 	CModel::CModel()
@@ -68,9 +75,12 @@ namespace NMR {
 		m_Unit = MODELUNIT_MILLIMETER;
 		m_sLanguage = XML_3MF_LANG_US;
 		m_nHandleCounter = 1;
-		m_sCurPath = "";
+		m_pPath = m_resourceHandler.makePackageModelPath(PACKAGE_3D_MODEL_URI);
+		m_pCurPath = m_pPath;
+		m_pKeyStore = CKeyStoreFactory::makeKeyStore();
 
 		setBuildUUID(std::make_shared<CUUID>());
+
 		m_MetaDataGroup = std::make_shared<CModelMetaDataGroup>();
 	}
 
@@ -79,24 +89,52 @@ namespace NMR {
 		clearAll();
 	}
 
-	const std::string CModel::curPath()
+	PPackageModelPath CModel::currentModelPath()
 	{
-		return m_sCurPath;
+		return m_pCurPath;
 	}
 
-	void CModel::setCurPath(const std::string sPath)
+	const std::string CModel::currentPath()
 	{
-		m_sCurPath = sPath;
+		return m_pCurPath->getPath();
+	}
+
+	void CModel::setCurrentPath(const std::string sPath)
+	{
+		if (PPackageModelPath pModelPath = m_resourceHandler.findPackageModelPath(sPath)) {
+			m_pCurPath = pModelPath;
+		}
+		else {
+			m_pCurPath = m_resourceHandler.makePackageModelPath(sPath);
+		}
+	}
+
+	PPackageModelPath CModel::rootModelPath()
+	{
+		return m_pPath;
 	}
 
 	const std::string CModel::rootPath()
 	{
-		return m_sRootPath;
+		return m_pPath->getPath();
 	}
 
 	void CModel::setRootPath(const std::string sPath)
 	{
-		m_sRootPath = sPath;
+		m_pPath->setPath(sPath);
+	}
+
+	PPackageModelPath CModel::findOrCreateModelPath(std::string sPath)
+	{
+		if (PPackageModelPath pModelPath = m_resourceHandler.findPackageModelPath(sPath)) {
+			return pModelPath;
+		}
+		return m_resourceHandler.makePackageModelPath(sPath);
+	}
+
+	std::vector<PPackageModelPath> CModel::retrieveAllModelPaths()
+	{
+		return m_resourceHandler.retrieveAllModelPaths();
 	}
 
 	// Merge all build items into one mesh
@@ -172,16 +210,16 @@ namespace NMR {
 	// General Resource Handling
 	PModelResource CModel::findResource(_In_ std::string path, ModelResourceID nID)
 	{
-		PPackageResourceID pID = m_resourceHandler.findResourceID(path, nID);
+		PPackageResourceID pID = m_resourceHandler.findResourceIDByPair(path, nID);
 		if (pID.get())
 			return findResource(pID);
 		else
 			return nullptr;
 	}
 
-	PModelResource CModel::findResource(_In_ PackageResourceID nID)
+	PModelResource CModel::findResource(_In_ UniqueResourceID nID)
 	{
-		PPackageResourceID pID = m_resourceHandler.findResourceID(nID);
+		PPackageResourceID pID = m_resourceHandler.findResourceIDByUniqueID(nID);
 		if (pID.get())
 			return findResource(pID);
 		else
@@ -190,7 +228,7 @@ namespace NMR {
 
 	PModelResource CModel::findResource(_In_ PPackageResourceID pID)
 	{
-		PackageResourceID uID = pID->getUniqueID();
+		UniqueResourceID uID = pID->getUniqueID();
 
 		auto iIterator = m_ResourceMap.find(uID);
 		if (iIterator != m_ResourceMap.end()) {
@@ -201,11 +239,11 @@ namespace NMR {
 
 	PPackageResourceID CModel::findPackageResourceID(_In_ std::string path, ModelResourceID nID)
 	{
-		return m_resourceHandler.findResourceID(path, nID);
+		return m_resourceHandler.findResourceIDByPair(path, nID);
 	}
-	PPackageResourceID CModel::findPackageResourceID(_In_ PackageResourceID nID)
+	PPackageResourceID CModel::findPackageResourceID(_In_ UniqueResourceID nID)
 	{
-		return m_resourceHandler.findResourceID(nID);
+		return m_resourceHandler.findResourceIDByUniqueID(nID);
 	}
 
 	nfUint32 CModel::getResourceCount()
@@ -231,7 +269,7 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_INVALIDRESOURCECOUNT);
 
 		// Check if ID already exists
-		PackageResourceID nID = pResource->getResourceID()->getUniqueID();
+		UniqueResourceID nID = pResource->getPackageResourceID()->getUniqueID();
 		auto iIterator = m_ResourceMap.find(nID);
 		if (iIterator != m_ResourceMap.end())
 			throw CNMRException(NMR_ERROR_DUPLICATEMODELRESOURCE);
@@ -365,13 +403,34 @@ namespace NMR {
 			return 1;
 	}
 
-	PPackageResourceID CModel::generatePackageResourceID(_In_ std::string path, ModelResourceID nID)	// per package
+	void CModel::updateUniqueResourceID(UniqueResourceID nOldID, UniqueResourceID nNewID)
 	{
-		return m_resourceHandler.getNewResourceID(path, nID);
+		if (m_ResourceMap.find(nNewID) != m_ResourceMap.end()) {
+			throw CNMRException(NMR_ERROR_DUPLICATEMODELRESOURCE);
+		}
+		else
+		{
+			auto iIterator = m_ResourceMap.find(nOldID);
+			if (iIterator == m_ResourceMap.end()) {
+				throw CNMRException(NMR_ERROR_INVALIDMODELRESOURCE);
+			}
+			m_ResourceMap.insert(std::make_pair<>(nNewID, iIterator->second));
+			m_ResourceMap.erase(m_ResourceMap.find(nOldID));
+		}
+	}
+
+	PPackageResourceID CModel::generatePackageResourceID(_In_ std::string path, ModelResourceID nID)
+	{
+		return m_resourceHandler.makePackageResourceID(path, nID);
+	}
+
+	void CModel::removePackageResourceID(PPackageResourceID pID)
+	{
+		m_resourceHandler.removePackageResourceID(pID);
 	}
 
 	// Convenience functions for objects
-	_Ret_maybenull_ CModelObject * CModel::findObject(_In_ PackageResourceID nResourceID)
+	_Ret_maybenull_ CModelObject * CModel::findObject(_In_ UniqueResourceID nResourceID)
 	{
 		PModelResource pResource = findResource(nResourceID);
 		if (pResource != nullptr) {
@@ -494,9 +553,9 @@ namespace NMR {
 		m_MetaDataGroup->clear();
 	}
 
-	_Ret_maybenull_ PModelBaseMaterialResource CModel::findBaseMaterial(_In_ PackageResourceID nResourceID)
+	_Ret_maybenull_ PModelBaseMaterialResource CModel::findBaseMaterial(_In_ PPackageResourceID pID)
 	{
-		PModelResource pResource = findResource(nResourceID);
+		PModelResource pResource = findResource(pID);
 		if (pResource != nullptr) {
 			PModelBaseMaterialResource pBaseMaterialResource = std::dynamic_pointer_cast<CModelBaseMaterialResource>(pResource);
 			if (pBaseMaterialResource.get() == nullptr)
@@ -545,12 +604,12 @@ namespace NMR {
 			pNewMaterial->mergeFrom(pOldMaterial);
 
 			addResource(pNewMaterial);
-			oldToNewMapping[pOldMaterial->getResourceID()->getUniqueID()] = pNewMaterial->getResourceID()->getUniqueID();
+			oldToNewMapping[pOldMaterial->getPackageResourceID()->getUniqueID()] = pNewMaterial->getPackageResourceID()->getUniqueID();
 		}
 
 	}
 
-	_Ret_maybenull_ PModelColorGroupResource CModel::findColorGroup(_In_ PackageResourceID nResourceID)
+	_Ret_maybenull_ PModelColorGroupResource CModel::findColorGroup(_In_ UniqueResourceID nResourceID)
 	{
 		PModelResource pResource = findResource(nResourceID);
 		if (pResource != nullptr) {
@@ -602,12 +661,12 @@ namespace NMR {
 			pNewColor->mergeFrom(pOldColor);
 
 			addResource(pNewColor);
-			oldToNewMapping[pOldColor->getResourceID()->getUniqueID()] = pNewColor->getResourceID()->getUniqueID();
+			oldToNewMapping[pOldColor->getPackageResourceID()->getUniqueID()] = pNewColor->getPackageResourceID()->getUniqueID();
 		}
 	}
 
 
-	_Ret_maybenull_ PModelTexture2DGroupResource CModel::findTexture2DGroup(_In_ PackageResourceID nResourceID)
+	_Ret_maybenull_ PModelTexture2DGroupResource CModel::findTexture2DGroup(_In_ UniqueResourceID nResourceID)
 	{
 		PModelResource pResource = findResource(nResourceID);
 		if (pResource != nullptr) {
@@ -659,7 +718,7 @@ namespace NMR {
 			if (!pOldTexture2D) {
 				throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
 			}
-			PackageResourceID packageIDOfOldTexture = oldToNewMapping[pOldTexture2D->getResourceID()->getUniqueID()];
+			UniqueResourceID packageIDOfOldTexture = oldToNewMapping[pOldTexture2D->getPackageResourceID()->getUniqueID()];
 			PModelTexture2DResource pNewTexture2D = findTexture2D(packageIDOfOldTexture);
 			if (!pNewTexture2D) {
 				throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
@@ -669,12 +728,12 @@ namespace NMR {
 			pNewTexture2DGroup->mergeFrom(pOldTexture2DGroup);
 
 			addResource(pNewTexture2DGroup);
-			oldToNewMapping[pOldTexture2DGroup->getResourceID()->getUniqueID()] = pNewTexture2DGroup->getResourceID()->getUniqueID();
+			oldToNewMapping[pOldTexture2DGroup->getPackageResourceID()->getUniqueID()] = pNewTexture2DGroup->getPackageResourceID()->getUniqueID();
 		}
 	}
 
 
-	_Ret_maybenull_ PModelCompositeMaterialsResource CModel::findCompositeMaterials(_In_ PackageResourceID nResourceID)
+	_Ret_maybenull_ PModelCompositeMaterialsResource CModel::findCompositeMaterials(_In_ UniqueResourceID nResourceID)
 	{
 		PModelResource pResource = findResource(nResourceID);
 		if (pResource != nullptr) {
@@ -723,8 +782,10 @@ namespace NMR {
 			if (!pOldCompositeMaterials || !pOldBaseMaterial) {
 				throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
 			}
-			PackageResourceID packageIDOfOldMaterial = oldToNewMapping[pOldBaseMaterial->getResourceID()->getUniqueID()];
-			PModelBaseMaterialResource pNewBaseMaterialResource = findBaseMaterial(packageIDOfOldMaterial);
+			UniqueResourceID packageIDOfOldMaterial = oldToNewMapping[pOldBaseMaterial->getPackageResourceID()->getUniqueID()];
+			
+			PPackageResourceID pNewIDOfOldMaterial = findPackageResourceID(packageIDOfOldMaterial);
+			PModelBaseMaterialResource pNewBaseMaterialResource = findBaseMaterial(pNewIDOfOldMaterial);
 			if (!pNewBaseMaterialResource) {
 				throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
 			}
@@ -734,11 +795,11 @@ namespace NMR {
 			pNewCompositeMaterials->mergeFrom(pOldCompositeMaterials);
 
 			addResource(pNewCompositeMaterials);
-			oldToNewMapping[pOldCompositeMaterials->getResourceID()->getUniqueID()] = pNewCompositeMaterials->getResourceID()->getUniqueID();
+			oldToNewMapping[pOldCompositeMaterials->getPackageResourceID()->getUniqueID()] = pNewCompositeMaterials->getPackageResourceID()->getUniqueID();
 		}
 	}
 
-	_Ret_maybenull_ PModelMultiPropertyGroupResource CModel::findMultiPropertyGroup(_In_ PackageResourceID nResourceID)
+	_Ret_maybenull_ PModelMultiPropertyGroupResource CModel::findMultiPropertyGroup(_In_ UniqueResourceID nResourceID)
 	{
 		PModelResource pResource = findResource(nResourceID);
 		if (pResource != nullptr) {
@@ -788,11 +849,11 @@ namespace NMR {
 			pNewMultiPropertyGroup->mergeFrom(pOldMultiPropertyGroup);
 
 			addResource(pNewMultiPropertyGroup);
-			oldToNewMapping[pOldMultiPropertyGroup->getResourceID()->getUniqueID()] = pNewMultiPropertyGroup->getResourceID()->getUniqueID();
+			oldToNewMapping[pOldMultiPropertyGroup->getPackageResourceID()->getUniqueID()] = pNewMultiPropertyGroup->getPackageResourceID()->getUniqueID();
 		}
 	}
 
-	_Ret_maybenull_ PModelTexture2DResource CModel::findTexture2D(_In_ PackageResourceID nResourceID)
+	_Ret_maybenull_ PModelTexture2DResource CModel::findTexture2D(_In_ UniqueResourceID nResourceID)
 	{
 		PModelResource pResource = findResource(nResourceID);
 		if (pResource != nullptr) {
@@ -842,11 +903,18 @@ namespace NMR {
 			if (pTextureResource == nullptr)
 				throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-			PModelTexture2DResource pNewTextureResource = CModelTexture2DResource::make(generateResourceID(), this, pTextureResource->getAttachment());
-			pNewTextureResource->copyFrom(pTextureResource);
+			PModelAttachment pSourceAttachment = pTextureResource->getAttachment();
+			PModelAttachment pNewAttachment;
+			if (pSourceAttachment.get()) {
+				pNewAttachment = findModelAttachment(pSourceAttachment->getPathURI());
+				if (pNewAttachment.get() == nullptr)
+					throw CNMRException(NMR_ERROR_ATTACHMENTNOTFOUND);
+			}
+			PModelTexture2DResource pNewTextureResource = CModelTexture2DResource::make(generateResourceID(), this, pNewAttachment);
+			pNewTextureResource->copyFrom(pTextureResource, false);
 
 			addResource(pNewTextureResource);
-			oldToNewMapping[pTextureResource->getResourceID()->getUniqueID()] = pNewTextureResource->getResourceID()->getUniqueID();
+			oldToNewMapping[pTextureResource->getPackageResourceID()->getUniqueID()] = pNewTextureResource->getPackageResourceID()->getUniqueID();
 		}
 	}
 	
@@ -1142,9 +1210,15 @@ namespace NMR {
 			return bRequireSliceExtension;
 		}
 
+		if (sExtension == XML_3MF_NAMESPACE_SECURECONTENTSPEC) {
+			if (m_pKeyStore.get() != nullptr) {
+				return true;
+			}
+		}
+
 		if (sExtension == XML_3MF_NAMESPACE_PRODUCTIONSPEC) {
 			// We do not write out models that require the production specification
-			// i.e. we do not make use of the "path"-redirection.
+			// i.e. we do not make use of the "getPath"-redirection.
 			// Thus, never mark the production extension is required.
 			return false;
 		}
@@ -1180,7 +1254,6 @@ namespace NMR {
 			(*iIterator)->calculateComponentDepthLevel(1);
 		}
 
-
 		// sort by (level descending, ResourceID ascending)
 		resultList.sort( [](CModelObject * pObject1, CModelObject * pObject2)
 		{
@@ -1188,12 +1261,58 @@ namespace NMR {
 			nfUint32 nLevel2 = pObject2->getComponentDepthLevel();
 			
 			if (nLevel1 == nLevel2)
-				return (pObject1->getResourceID()->getUniqueID()) < (pObject2->getResourceID()->getUniqueID());
+				return (pObject1->getPackageResourceID()->getUniqueID()) < (pObject2->getPackageResourceID()->getUniqueID());
 
 			return nLevel1 > nLevel2;
 		});
 
 		return resultList;
+	}
+
+	PKeyStore CModel::getKeyStore() {
+		return m_pKeyStore;
+	}
+
+	void CModel::setKeyStore(PKeyStore keyStore) {
+		m_pKeyStore = keyStore;
+	}
+
+	void CModel::setCryptoRandCallback(CryptoRandGenDescriptor const & randDescriptor) {
+		m_sRandDescriptor = randDescriptor;
+	}
+
+	nfBool CModel::hasCryptoRandCallbak() const {
+		return (bool)m_sRandDescriptor.m_fnRNG;
+	}
+
+	nfUint64 CModel::generateRandomBytes(nfByte * bytes, nfUint64 size) {
+		if (m_sRandDescriptor.m_fnRNG)
+			return m_sRandDescriptor.m_fnRNG(bytes, size, m_sRandDescriptor.m_pUserData);
+
+		static bool rngInitialized = false;
+		static std::random_device randDev;
+		static std::mt19937 mTwister;
+		static std::mutex mtLock;
+
+		{
+			//scope the guard to the generator initialization
+			std::lock_guard<std::mutex> guard(mtLock);
+			if (!rngInitialized) {
+				std::array<uint32_t, std::mt19937::state_size> seedData;
+				uint32_t curTime = static_cast<uint32_t>(time(nullptr));
+				for (auto it = seedData.begin(); it != seedData.end(); ++it)
+					*it = randDev() ^ curTime;
+				std::seed_seq seedSeq(seedData.begin(), seedData.end());
+				mTwister.seed(seedSeq);
+				rngInitialized = true;
+			}
+		}
+
+		std::uniform_int_distribution<std::mt19937::result_type> distByte(std::numeric_limits<nfByte>::min(), std::numeric_limits<nfByte>::max());
+		for (nfUint64 n = 0; n < size; ++n) {
+			*(bytes + n) = distByte(mTwister);
+		}
+		return size;
 	}
 
 }

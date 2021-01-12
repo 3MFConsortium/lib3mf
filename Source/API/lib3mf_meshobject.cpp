@@ -187,12 +187,12 @@ void CMeshObject::GetTriangleIndices (Lib3MF_uint64 nIndicesBufferSize, Lib3MF_u
 	}
 }
 
-void CMeshObject::SetObjectLevelProperty(const Lib3MF_uint32 nResourceID, const Lib3MF_uint32 nPropertyID)
+void CMeshObject::SetObjectLevelProperty(const Lib3MF_uint32 nUniqueResourceID, const Lib3MF_uint32 nPropertyID)
 {
 	NMR::CMeshInformation_Properties * pInformation = getMeshInformationProperties();
 
 	NMR::MESHINFORMATION_PROPERTIES * pDefaultData = new NMR::MESHINFORMATION_PROPERTIES;
-	pDefaultData->m_nResourceID = nResourceID;
+	pDefaultData->m_nUniqueResourceID = nUniqueResourceID;
 	pDefaultData->m_nPropertyIDs[0] = nPropertyID;
 	pDefaultData->m_nPropertyIDs[1] = nPropertyID;
 	pDefaultData->m_nPropertyIDs[2] = nPropertyID;
@@ -200,13 +200,13 @@ void CMeshObject::SetObjectLevelProperty(const Lib3MF_uint32 nResourceID, const 
 	pInformation->setDefaultData((NMR::MESHINFORMATIONFACEDATA*)pDefaultData);
 }
 
-bool CMeshObject::GetObjectLevelProperty(Lib3MF_uint32 & nResourceID, Lib3MF_uint32 & nPropertyID)
+bool CMeshObject::GetObjectLevelProperty(Lib3MF_uint32 & nUniqueResourceID, Lib3MF_uint32 & nPropertyID)
 {
 	NMR::CMeshInformation_Properties * pInformation = getMeshInformationProperties();
 
 	NMR::MESHINFORMATION_PROPERTIES * pDefaultData = (NMR::MESHINFORMATION_PROPERTIES*)pInformation->getDefaultData();
 	if (pDefaultData) {
-		nResourceID = pDefaultData->m_nResourceID;
+		nUniqueResourceID = pDefaultData->m_nUniqueResourceID;
 		nPropertyID = pDefaultData->m_nPropertyIDs[0];
 		return true;
 	}
@@ -219,7 +219,7 @@ void CMeshObject::SetTriangleProperties(const Lib3MF_uint32 nIndex, const sLib3M
 
 	NMR::MESHINFORMATION_PROPERTIES * pFaceData = (NMR::MESHINFORMATION_PROPERTIES*)pInformation->getFaceData(nIndex);
 	if (pFaceData != nullptr) {
-		pFaceData->m_nResourceID = Properties.m_ResourceID;
+		pFaceData->m_nUniqueResourceID = Properties.m_ResourceID;
 		for (unsigned j = 0; j < 3; j++) {
 			pFaceData->m_nPropertyIDs[j] = Properties.m_PropertyIDs[j];
 		}
@@ -233,7 +233,7 @@ void CMeshObject::GetTriangleProperties(const Lib3MF_uint32 nIndex, sLib3MFTrian
 
 	NMR::MESHINFORMATION_PROPERTIES * pFaceData = (NMR::MESHINFORMATION_PROPERTIES*)pInformation->getFaceData(nIndex);
 	if (pFaceData != nullptr) {
-		sProperty.m_ResourceID = pFaceData->m_nResourceID;
+		sProperty.m_ResourceID = pFaceData->m_nUniqueResourceID;
 		for (unsigned j = 0; j < 3; j++) {
 			sProperty.m_PropertyIDs[j] = pFaceData->m_nPropertyIDs[j];
 		}
@@ -265,7 +265,7 @@ void CMeshObject::SetAllTriangleProperties(const Lib3MF_uint64 nPropertiesArrayB
 	for (uint32_t nIndex = 0; nIndex < nFaceCount; nIndex++) {
 		NMR::MESHINFORMATION_PROPERTIES * pFaceData = (NMR::MESHINFORMATION_PROPERTIES*)pInformation->getFaceData(nIndex);
 		if (pFaceData != nullptr) {
-			pFaceData->m_nResourceID = pProperty->m_ResourceID;
+			pFaceData->m_nUniqueResourceID = pProperty->m_ResourceID;
 			for (unsigned j = 0; j < 3; j++) {
 				pFaceData->m_nPropertyIDs[j] = pProperty->m_PropertyIDs[j];
 			}
@@ -277,7 +277,7 @@ void CMeshObject::SetAllTriangleProperties(const Lib3MF_uint64 nPropertiesArrayB
 	if ((nFaceCount > 0) && (pInformation->getDefaultData() == nullptr)) {
 		NMR::MESHINFORMATION_PROPERTIES * pFaceData = (NMR::MESHINFORMATION_PROPERTIES*)pInformation->getFaceData(0);
 		std::unique_ptr<NMR::MESHINFORMATION_PROPERTIES> pDefaultFaceData(new NMR::MESHINFORMATION_PROPERTIES);
-		pDefaultFaceData->m_nResourceID = pFaceData->m_nResourceID;
+		pDefaultFaceData->m_nUniqueResourceID = pFaceData->m_nUniqueResourceID;
 		for (unsigned j = 0; j < 3; j++) {
 			pDefaultFaceData->m_nPropertyIDs[j] = pFaceData->m_nPropertyIDs[j];
 		}
@@ -305,7 +305,7 @@ void CMeshObject::GetAllTriangleProperties(Lib3MF_uint64 nPropertiesArrayBufferS
 
 			NMR::MESHINFORMATION_PROPERTIES * pFaceData = (NMR::MESHINFORMATION_PROPERTIES*)pInformation->getFaceData(nIndex);
 			if (pFaceData != nullptr) {
-				pProperty->m_ResourceID = pFaceData->m_nResourceID;
+				pProperty->m_ResourceID = pFaceData->m_nUniqueResourceID;
 				for (unsigned j = 0; j < 3; j++) {
 					pProperty->m_PropertyIDs[j] = pFaceData->m_nPropertyIDs[j];
 				}

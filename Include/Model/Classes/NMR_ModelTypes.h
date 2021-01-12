@@ -71,6 +71,13 @@ namespace NMR {
 		MODELBEAMLATTICECAPMODE_HEMISPHERE = 1,
 		MODELBEAMLATTICECAPMODE_BUTT = 2
 	};
+
+	enum eModelBeamLatticeBallMode {
+		MODELBEAMLATTICEBALLMODE_NONE = 0,
+		MODELBEAMLATTICEBALLMODE_MIXED = 1,
+		MODELBEAMLATTICEBALLMODE_ALL = 2
+	};
+
 	typedef struct MODELMESHBEAM {
 		DWORD m_nIndices[2];
 		DOUBLE m_dRadius[2];	// the radius of end 0 or 1 of this beam
@@ -80,6 +87,13 @@ namespace NMR {
 			m_eCapMode[1] = MODELBEAMLATTICECAPMODE_SPHERE;
 		}
 	} MODELMESHBEAM;
+
+	typedef struct MODELMESHBALL {
+		DWORD m_nIndex;
+		DOUBLE m_dRadius;	// the radius of this ball
+		MODELMESHBALL() {
+		}
+	} MODELMESHBALL;
 
 	typedef struct {
 		FLOAT m_fFields[3][4];
@@ -111,7 +125,7 @@ namespace NMR {
 
 	typedef DWORD ModelPropertyID;
 	typedef DWORD ModelResourceID;
-	typedef DWORD PackageResourceID;
+	typedef DWORD UniqueResourceID;
 	typedef DWORD ModelResourceIndex;
 
 	enum eModelUnit {
@@ -174,7 +188,7 @@ namespace NMR {
 	} MODELCOMPOSITECONSTITUENT;
 
 	typedef struct {
-		ModelResourceID m_nResourceID;
+		UniqueResourceID m_nUniqueResourceID;
 		eModelBlendMethod m_nMethod;
 	} MODELMULTIPROPERTYLAYER;
 

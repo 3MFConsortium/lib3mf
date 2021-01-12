@@ -48,7 +48,7 @@ namespace NMR {
 		virtual void OnText(_In_z_ const nfChar * pText, _In_ CXmlReader * pXMLReader);
 	public:
 		CModelReaderNode100_MetaDataGroup() = delete;
-		CModelReaderNode100_MetaDataGroup(_In_ PModelReaderWarnings pWarnings);
+		CModelReaderNode100_MetaDataGroup(_In_ PModelWarnings pWarnings);
 
 		PModelMetaDataGroup getMetaDataGroup();
 

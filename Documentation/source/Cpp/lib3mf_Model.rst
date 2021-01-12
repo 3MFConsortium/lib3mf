@@ -10,6 +10,21 @@ CModel
 
 
 
+	.. cpp:function:: PPackagePart RootModelPart()
+
+		Returns the PackagePart within the OPC package that holds the root model.
+
+		:returns: the PackagePart within the OPC package that holds the model-file
+
+
+	.. cpp:function:: PPackagePart FindOrCreatePackagePart(const std::string & sAbsolutePath)
+
+		Returns a new PackagePart for use within the OPC package.
+
+		:param sAbsolutePath: the absolute Path (physical location) within the OPC package 
+		:returns: the new PackagePart within the OPC package
+
+
 	.. cpp:function:: void SetUnit(const eModelUnit eUnit)
 
 		sets the units of a model.
@@ -54,83 +69,83 @@ CModel
 		:returns:  string identifier for the file type
 
 
-	.. cpp:function:: PTexture2D GetTexture2DByID(const Lib3MF_uint32 nResourceID)
+	.. cpp:function:: PTexture2D GetTexture2DByID(const Lib3MF_uint32 nUniqueResourceID)
 
-		finds a model texture by its id
+		finds a model texture by its UniqueResourceID
 
-		:param nResourceID: Resource ID 
+		:param nUniqueResourceID: UniqueResourceID 
 		:returns: returns the texture2d instance
 
 
-	.. cpp:function:: ePropertyType GetPropertyTypeByID(const Lib3MF_uint32 nResourceID)
+	.. cpp:function:: ePropertyType GetPropertyTypeByID(const Lib3MF_uint32 nUniqueResourceID)
 
 		returns a Property's type
 
-		:param nResourceID: Resource ID of the Property to Query 
+		:param nUniqueResourceID: Resource ID of the Property to Query 
 		:returns: returns a Property's type
 
 
-	.. cpp:function:: PBaseMaterialGroup GetBaseMaterialGroupByID(const Lib3MF_uint32 nResourceID)
+	.. cpp:function:: PBaseMaterialGroup GetBaseMaterialGroupByID(const Lib3MF_uint32 nUniqueResourceID)
 
-		finds a model base material group by its id
+		finds a model base material group by its UniqueResourceID
 
-		:param nResourceID: Resource ID 
+		:param nUniqueResourceID: UniqueResourceID 
 		:returns: returns the BaseMaterialGroup instance
 
 
-	.. cpp:function:: PTexture2DGroup GetTexture2DGroupByID(const Lib3MF_uint32 nResourceID)
+	.. cpp:function:: PTexture2DGroup GetTexture2DGroupByID(const Lib3MF_uint32 nUniqueResourceID)
 
-		finds a model texture2d group by its id
+		finds a model texture2d group by its UniqueResourceID
 
-		:param nResourceID: Resource ID 
+		:param nUniqueResourceID: UniqueResourceID 
 		:returns: returns the Texture2DGroup instance
 
 
-	.. cpp:function:: PCompositeMaterials GetCompositeMaterialsByID(const Lib3MF_uint32 nResourceID)
+	.. cpp:function:: PCompositeMaterials GetCompositeMaterialsByID(const Lib3MF_uint32 nUniqueResourceID)
 
-		finds a model CompositeMaterials by its id
+		finds a model CompositeMaterials by its UniqueResourceID
 
-		:param nResourceID: Resource ID 
+		:param nUniqueResourceID: UniqueResourceID 
 		:returns: returns the CompositeMaterials instance
 
 
-	.. cpp:function:: PMultiPropertyGroup GetMultiPropertyGroupByID(const Lib3MF_uint32 nResourceID)
+	.. cpp:function:: PMultiPropertyGroup GetMultiPropertyGroupByID(const Lib3MF_uint32 nUniqueResourceID)
 
-		finds a model MultiPropertyGroup by its id
+		finds a model MultiPropertyGroup by its UniqueResourceID
 
-		:param nResourceID: Resource ID 
+		:param nUniqueResourceID: UniqueResourceID 
 		:returns: returns the MultiPropertyGroup instance
 
 
-	.. cpp:function:: PMeshObject GetMeshObjectByID(const Lib3MF_uint32 nResourceID)
+	.. cpp:function:: PMeshObject GetMeshObjectByID(const Lib3MF_uint32 nUniqueResourceID)
 
-		finds a mesh object by its id
+		finds a mesh object by its UniqueResourceID
 
-		:param nResourceID: Resource ID 
+		:param nUniqueResourceID: UniqueResourceID 
 		:returns: returns the mesh object instance
 
 
-	.. cpp:function:: PComponentsObject GetComponentsObjectByID(const Lib3MF_uint32 nResourceID)
+	.. cpp:function:: PComponentsObject GetComponentsObjectByID(const Lib3MF_uint32 nUniqueResourceID)
 
-		finds a components object by its id
+		finds a components object by its UniqueResourceID
 
-		:param nResourceID: Resource ID 
+		:param nUniqueResourceID: UniqueResourceID 
 		:returns: returns the components object instance
 
 
-	.. cpp:function:: PColorGroup GetColorGroupByID(const Lib3MF_uint32 nResourceID)
+	.. cpp:function:: PColorGroup GetColorGroupByID(const Lib3MF_uint32 nUniqueResourceID)
 
-		finds a model color group by its id
+		finds a model color group by its UniqueResourceID
 
-		:param nResourceID: Resource ID 
+		:param nUniqueResourceID: UniqueResourceID 
 		:returns: returns the ColorGroup instance
 
 
-	.. cpp:function:: PSliceStack GetSliceStackByID(const Lib3MF_uint32 nResourceID)
+	.. cpp:function:: PSliceStack GetSliceStackByID(const Lib3MF_uint32 nUniqueResourceID)
 
-		finds a model slicestack by its id
+		finds a model slicestack by its UniqueResourceID
 
-		:param nResourceID: Resource ID 
+		:param nUniqueResourceID: UniqueResourceID 
 		:returns: returns the slicestack instance
 
 
@@ -339,7 +354,7 @@ CModel
 
 	.. cpp:function:: PAttachment AddAttachment(const std::string & sURI, const std::string & sRelationShipType)
 
-		adds an attachment stream to the model. The OPC part will be related to the model stream with a certain relationship type..
+		adds an attachment stream to the model. The OPC part will be related to the model stream with a certain relationship type.
 
 		:param sURI: Path of the attachment 
 		:param sRelationShipType: Relationship type of the attachment 
@@ -405,7 +420,7 @@ CModel
 
 	.. cpp:function:: void AddCustomContentType(const std::string & sExtension, const std::string & sContentType)
 
-		adds a new Content Type to the model.
+		Adds a new Content Type to the model.
 
 		:param sExtension: File Extension 
 		:param sContentType: Content Type Identifier 
@@ -413,9 +428,24 @@ CModel
 
 	.. cpp:function:: void RemoveCustomContentType(const std::string & sExtension)
 
-		removes a custom Content Type from the model (UTF8 version).
+		Removes a custom Content Type from the model (UTF8 version).
 
 		:param sExtension: File Extension 
+
+
+	.. cpp:function:: void SetRandomNumberCallback(const RandomNumberCallback pTheCallback, const Lib3MF_pvoid pUserData)
+
+		Sets the random number generator callback for use in the library
+
+		:param pTheCallback: The callback used to generate random numbers 
+		:param pUserData: Userdata to be passed to the callback function 
+
+
+	.. cpp:function:: PKeyStore GetKeyStore()
+
+		Gets the keystore associated with this model
+
+		:returns: The package keystore
 
 
 .. cpp:type:: std::shared_ptr<CModel> Lib3MF::PModel

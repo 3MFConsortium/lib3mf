@@ -74,17 +74,23 @@ namespace NMR {
 		_Ret_notnull_ MESHFACE * addFace(_In_ nfInt32 nNodeIndex1, _In_ nfInt32 nNodeIndex2, _In_ nfInt32 nNodeIndex3);
 		_Ret_notnull_ MESHBEAM * addBeam(_In_ MESHNODE * pNode1, _In_ MESHNODE * pNode2, _In_ nfDouble dRadius1, _In_ nfDouble dRadius2,
 			_In_ nfInt32 eCapMode1, _In_ nfInt32 eCapMode2);
+		_Ret_notnull_ MESHBALL * addBall(_In_ MESHNODE * pNode, _In_ nfDouble dRadius);
 		_Ret_notnull_ PBEAMSET addBeamSet();
 		
 		nfUint32 getNodeCount();
 		nfUint32 getFaceCount();
 		nfUint32 getBeamCount();
+		nfUint32 getBallCount();
 		nfUint32 getBeamSetCount();
+		nfUint32 getOccupiedNodeCount();
+		nfBool isNodeOccupied(_In_ nfUint32 nIdx);
 
 		_Ret_notnull_ MESHNODE * getNode(_In_ nfUint32 nIdx);
 		_Ret_notnull_ MESHFACE * getFace(_In_ nfUint32 nIdx);
 		_Ret_notnull_ MESHBEAM * getBeam(_In_ nfUint32 nIdx);
+		_Ret_notnull_ MESHBALL * getBall(_In_ nfUint32 nIdx);
 		_Ret_notnull_ PBEAMSET getBeamSet(_In_ nfUint32 nIdx);
+		_Ret_notnull_ MESHNODE * getOccupiedNode(_In_ nfUint32 nIdx);
 
 		void setBeamLatticeMinLength(nfDouble dMinLength);
 		nfDouble getBeamLatticeMinLength();
@@ -92,20 +98,28 @@ namespace NMR {
 		// TODO: make these return sensible values
 		void setDefaultBeamRadius(nfDouble dRadius);
 		nfDouble getDefaultBeamRadius();
+		void setDefaultBallRadius(nfDouble dBallRadius);
+		nfDouble getDefaultBallRadius();
 		void setBeamLatticeAccuracy(nfDouble dAccuracy);
 		nfBool getBeamLatticeAccuracy(nfDouble& dAccuracy);
-		void setBeamLatticeCapMode(eModelBeamLatticeCapMode dRadius);
+		void setBeamLatticeBallMode(eModelBeamLatticeBallMode eBallMode);
+		eModelBeamLatticeBallMode getBeamLatticeBallMode();
+		void setBeamLatticeCapMode(eModelBeamLatticeCapMode eCapMode);
 		eModelBeamLatticeCapMode getBeamLatticeCapMode();
 
 		nfBool checkSanity();
 
 		void clear();
 		void clearBeamLattice();
+		void clearBeamLatticeBeams();
+		void clearBeamLatticeBalls();
+		void scanOccupiedNodes();
+		void validateBeamLatticeBalls();
 
 		_Ret_maybenull_ CMeshInformationHandler * getMeshInformationHandler();
 		_Ret_notnull_ CMeshInformationHandler * createMeshInformationHandler();
 		void clearMeshInformationHandler();
-		void patchMeshInformationResources(_In_ std::map<PackageResourceID, PackageResourceID> &oldToNewMapping);
+		void patchMeshInformationResources(_In_ std::map<UniqueResourceID, UniqueResourceID> &oldToNewMapping);
 		void extendOutbox(_Out_ NOUTBOX3& vOutBox, _In_ const NMATRIX3 mAccumulatedMatrix);
 	};
 

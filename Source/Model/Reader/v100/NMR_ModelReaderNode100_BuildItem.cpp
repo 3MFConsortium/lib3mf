@@ -42,7 +42,7 @@ A builditem reader model node is a parser for the builditem node of an XML Model
 
 namespace NMR {
 
-	CModelReaderNode100_BuildItem::CModelReaderNode100_BuildItem(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings)
+	CModelReaderNode100_BuildItem::CModelReaderNode100_BuildItem(_In_ CModel * pModel, _In_ PModelWarnings pWarnings)
 		: CModelReaderNode(pWarnings)
 	{
 		__NMRASSERT(pModel);
@@ -73,12 +73,12 @@ namespace NMR {
 		CModelObject * pObject;
 		PPackageResourceID pID;
 		if (m_hasPath) {
-			if (m_pModel->curPath() != m_pModel->rootPath() )
+			if (m_pModel->currentPath() != m_pModel->rootPath() )
 				throw CNMRException(NMR_ERROR_REFERENCESTOODEEP);
 			pID = m_pModel->findPackageResourceID(m_sPath, m_ObjectID);
 		}
 		else
-			pID = m_pModel->findPackageResourceID(m_pModel->curPath(), m_ObjectID);
+			pID = m_pModel->findPackageResourceID(m_pModel->currentPath(), m_ObjectID);
 		if (!pID)
 			throw CNMRException(NMR_ERROR_COULDNOTFINDBUILDITEMOBJECT);
 
@@ -154,6 +154,9 @@ namespace NMR {
 				if (m_hasPath)
 					throw CNMRException(NMR_ERROR_DUPLICATEPATH);
 				m_sPath = std::string(pAttributeValue);
+				if (!fnStartsWithPathDelimiter(m_sPath)) {
+					m_pWarnings->addException(CNMRException(NMR_ERROR_PATH_NOT_ABSOLUTE), mrwInvalidOptionalValue);
+				}
 				m_hasPath = true;
 			}
 		}

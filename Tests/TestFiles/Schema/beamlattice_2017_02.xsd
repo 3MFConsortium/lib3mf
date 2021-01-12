@@ -24,11 +24,14 @@
   <xs:complexType name="CT_BeamLattice">
     <xs:sequence>
        <xs:element ref="beams"/>
+       <xs:element ref="balls" minOccurs="0" maxOccurs="1"/>
        <xs:element ref="beamsets" minOccurs="0" maxOccurs="1"/>
        <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="2147483647"/> 
     </xs:sequence>
     <xs:attribute name="minlength" type="ST_PositiveNumber" use="required"/>
     <xs:attribute name="radius" type="ST_PositiveNumber" use="required"/>
+    <xs:attribute name="ballmode" type="ST_BallMode" default="none"/>
+    <xs:attribute name="ballradius" type="ST_PositiveNumber"/>
     <xs:attribute name="clippingmode" type="ST_ClippingMode" default="none"/>
     <xs:attribute name="clippingmesh" type="ST_ResourceID" />
     <xs:attribute name="representationmesh" type="ST_ResourceID" />
@@ -58,10 +61,28 @@
         <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="2147483647"/>
       </xs:sequence>
   </xs:complexType>
+  <xs:complexType name="CT_Ball">
+    <xs:sequence>
+      <xs:any namespace="##other" processContents="lax" minOccurs="0"  maxOccurs="2147483647"/>
+    </xs:sequence>
+    <xs:attribute name="vindex" type="ST_ResourceIndex" use="required" />
+    <xs:attribute name="r" type="ST_PositiveNumber" />
+    <xs:attribute name="p" type="ST_ResourceIndex" />
+    <xs:attribute name="pid" type="ST_ResourceID" />
+    <xs:anyAttribute namespace="##other" processContents="lax"/>
+  </xs:complexType>
+  <xs:complexType name="CT_Balls">
+    <xs:sequence>
+      <xs:element ref="ball" minOccurs="1" maxOccurs="2147483647"/>
+      <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="2147483647"/>
   <xs:complexType name="CT_BeamSet">
     <xs:sequence>
       <xs:element ref="ref" minOccurs="0" maxOccurs="2147483647"/>
       <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="2147483647"/> 
+    </xs:sequence>
+    <xs:sequence>
+      <xs:element ref="ballref" minOccurs="0" maxOccurs="2147483647"/>
+      <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="2147483647"/>
     </xs:sequence>
     <xs:attribute name="name" type="xs:string"/>
     <xs:attribute name="identifier" type="xs:string"/>
@@ -80,7 +101,21 @@
     <xs:attribute name="index" type="ST_ResourceIndex" use="required"/>
     <xs:anyAttribute namespace="##other" processContents="lax"/>
   </xs:complexType>
+  <xs:complexType name="CT_BallRef">
+    <xs:sequence>
+      <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="2147483647"/>
+    </xs:sequence>
+    <xs:attribute name="index" type="ST_ResourceIndex" use="required"/>
+    <xs:anyAttribute namespace="##other" processContents="lax"/>
+  </xs:complexType>
   <!-- Simple Types -->
+  <xs:simpleType name="ST_BallMode">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="none"/>
+      <xs:enumeration value="mixed"/>
+      <xs:enumeration value="all"/>
+    </xs:restriction>
+  </xs:simpleType>
   <xs:simpleType name="ST_ClippingMode">
     <xs:restriction base="xs:string">
       <xs:enumeration value="none"/>
@@ -114,7 +149,10 @@
   <!-- Elements -->
   <xs:element name="beam" type="CT_Beam"/>
   <xs:element name="beams" type="CT_Beams"/>
+  <xs:element name="ball" type="CT_Ball"/>
+  <xs:element name="balls" type="CT_Balls"/>
   <xs:element name="ref" type="CT_Ref"/>
+  <xs:element name="ballref" type="CT_BallRef"/>
   <xs:element name="beamset" type="CT_BeamSet"/>
   <xs:element name="beamsets" type="CT_BeamSets"/>
   <xs:element name="beamlattice" type="CT_BeamLattice"/>

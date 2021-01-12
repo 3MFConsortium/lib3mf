@@ -1224,7 +1224,7 @@ ZEXTERN int ZEXPORT uncompress OF((Bytef *dest,   uLongf *destLen,
 typedef struct gzFile_s *gzFile;    /* semi-opaque gzip file descriptor */
 
 /*
-ZEXTERN gzFile ZEXPORT gzopen OF((const char *path, const char *mode));
+ZEXTERN gzFile ZEXPORT gzopen OF((const char *getPath, const char *mode));
 
      Opens a gzip (.gz) file for reading or writing.  The mode parameter is as
    in fopen ("rb" or "wb") but can also include a compression level ("wb9") or

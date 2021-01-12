@@ -63,7 +63,7 @@ namespace NMR {
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 	public:
 		CModelReaderNode093_Object() = delete;
-		CModelReaderNode093_Object(_In_ CModel * pModel, _In_ PModelReader_ColorMapping pColorMapping, _In_ PModelReaderWarnings pWarnings);
+		CModelReaderNode093_Object(_In_ CModel * pModel, _In_ PModelReader_ColorMapping pColorMapping, _In_ PModelWarnings pWarnings);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 	};

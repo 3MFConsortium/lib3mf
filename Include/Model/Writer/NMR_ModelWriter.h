@@ -34,29 +34,23 @@ A model writer exports the in memory represenation into the 3MF file.
 #ifndef __NMR_MODELWRITER
 #define __NMR_MODELWRITER
 
-#include "Model/Classes/NMR_Model.h" 
+#include "Model/Classes/NMR_Model.h"
+#include "Model/Classes/NMR_ModelContext.h"
 #include "Common/Platform/NMR_ExportStream.h" 
 #include "Common/3MF_ProgressMonitor.h" 
 #include <list>
 
 namespace NMR {
 
-	class CModelWriter {
+	class CModelWriter : public CModelContext{
 	private:
 		nfUint32 m_nDecimalPrecision;
-	protected:
-		PModel m_pModel;
-		PProgressMonitor m_pProgressMonitor;
 	public:
 		CModelWriter() = delete;
 		CModelWriter(_In_ PModel pModel);
 		virtual ~CModelWriter() = default;
 
 		virtual void exportToStream(_In_ PExportStream pStream) = 0;
-		void addCustomContentType(_In_ std::wstring sExtension, _In_ std::wstring sContentType);
- 		void removeCustomContentType(_In_ std::wstring sExtension);
-
-		void SetProgressCallback(Lib3MFProgressCallback callback, void* userData);
 
 		void SetDecimalPrecision(nfUint32);
 		nfUint32 GetDecimalPrecision();

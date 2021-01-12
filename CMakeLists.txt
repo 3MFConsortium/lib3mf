@@ -5,16 +5,17 @@ cmake_policy(SET CMP0048 NEW)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-project(lib3mf)
-
-
 include(GNUInstallDirs)
 
 # Define Version
 set(LIB3MF_VERSION_MAJOR 2)        # increase on every backward-compatibility breaking change of the API
-set(LIB3MF_VERSION_MINOR 0)        # increase on every backward compatible change of the API
+set(LIB3MF_VERSION_MINOR 1)        # increase on every backward compatible change of the API
 set(LIB3MF_VERSION_MICRO 0)        # increase on on every change that does not alter the API
 set(LIB3MF_VERSION_PRERELEASE "")  # denotes pre-release information of a version of lib3mf
+
+project(lib3mf
+  VERSION ${LIB3MF_VERSION_MAJOR}.${LIB3MF_VERSION_MINOR}.${LIB3MF_VERSION_MICRO}
+  DESCRIPTION "An implementation of the 3D Manufacturing Format file standard")
 
 set(CMAKE_INSTALL_BINDIR bin CACHE PATH "directory for installing binary files")
 set(CMAKE_INSTALL_LIBDIR lib CACHE PATH "directory for installing library files")
@@ -22,6 +23,8 @@ set(CMAKE_INSTALL_INCLUDEDIR include/lib3mf CACHE PATH "directory for installing
 
 option(USE_INCLUDED_ZLIB "Use included zlib" ON)
 option(USE_INCLUDED_LIBZIP "Use included libzip" ON)
+option(USE_INCLUDED_GTEST "Used included gtest" ON)
+option(USE_INCLUDED_SSL "Use included libressl" ON)
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
   # using GCC
@@ -50,13 +53,13 @@ if (${MSVC})
 endif()
 
 ### The API generation target
-if(UNIX OR MINGW)
+if(CMAKE_HOST_UNIX)
   if(APPLE)
     set(ACT_COMMANDENDING darwin)
   else()
     set(ACT_COMMANDENDING linux)
   endif()
-elseif(WIN32)
+elseif(CMAKE_HOST_WIN32)
   set(ACT_COMMANDENDING exe)
 endif()
 
@@ -152,6 +155,18 @@ target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_BINARY_DIR_AU
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/Include/API)
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/Include)
 
+if (NOT USE_INCLUDED_LIBZIP)
+	find_package(PkgConfig REQUIRED)
+	pkg_check_modules(LIBZIP REQUIRED libzip)
+	target_link_libraries(${PROJECT_NAME} ${LIBZIP_LIBRARIES})
+endif()
+if (NOT USE_INCLUDED_ZLIB)
+	find_package(PkgConfig REQUIRED)
+	pkg_check_modules(ZLIB REQUIRED zlib)
+	target_link_libraries(${PROJECT_NAME} ${ZLIB_LIBRARIES})
+endif()
+
+
 set_target_properties(${PROJECT_NAME} PROPERTIES PREFIX "" IMPORT_PREFIX "" )
 # This makes sure symbols are exported
 target_compile_options(${PROJECT_NAME} PRIVATE "-D__LIB3MF_EXPORTS")
@@ -176,6 +191,8 @@ else()
   target_compile_options(${PROJECT_NAME} PUBLIC "$<$<CONFIG:RELEASE>:/O2;/sdl;/WX;/Oi;/Gy;/FC;/wd4996>")
 endif()
 
+configure_file(lib3mf.pc.in lib3mf.pc @ONLY)
+install(FILES ${CMAKE_BINARY_DIR}/lib3mf.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
 install(TARGETS ${PROJECT_NAME}
   ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
   LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"

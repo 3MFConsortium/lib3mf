@@ -41,7 +41,7 @@ A material reader model node is a parser for the material node of an XML Model S
 
 namespace NMR {
 
-	CModelReaderNode093_Material::CModelReaderNode093_Material(_In_ PModelReaderWarnings pWarnings)
+	CModelReaderNode093_Material::CModelReaderNode093_Material(_In_ PModelWarnings pWarnings)
 		: CModelReaderNode(pWarnings)
 	{
 		m_nResourceID = 0;

@@ -40,7 +40,7 @@ NMR_ModelReader_InstructionElement.cpp implements a reader for an instruction el
 
 namespace NMR {
 
-	CModelReader_InstructionElement::CModelReader_InstructionElement(_In_ PModelReaderWarnings pWarnings)
+	CModelReader_InstructionElement::CModelReader_InstructionElement(_In_ PModelWarnings pWarnings)
 		: CModelReaderNode(pWarnings), m_sName("")
 	{
 	}

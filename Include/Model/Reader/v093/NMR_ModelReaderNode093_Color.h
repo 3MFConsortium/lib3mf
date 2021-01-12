@@ -50,7 +50,7 @@ namespace NMR {
 		void parseColor();
 	public:
 		CModelReaderNode093_Color() = delete;
-		CModelReaderNode093_Color(_In_ PModelReaderWarnings pWarnings);
+		CModelReaderNode093_Color(_In_ PModelWarnings pWarnings);
 
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 

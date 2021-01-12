@@ -41,7 +41,7 @@ NMR_ModelReaderNode100_Multi.cpp implements the Model Reader Multi Node Class.
 
 namespace NMR {
 
-	CModelReaderNode100_Multi::CModelReaderNode100_Multi(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings)
+	CModelReaderNode100_Multi::CModelReaderNode100_Multi(_In_ CModel * pModel, _In_ PModelWarnings pWarnings)
 		: CModelReaderNode(pWarnings)
 	{
 		m_pModel = pModel;

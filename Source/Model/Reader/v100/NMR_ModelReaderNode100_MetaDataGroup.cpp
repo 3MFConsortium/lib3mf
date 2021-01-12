@@ -41,7 +41,7 @@ of an XML Model Stream.
 
 namespace NMR {
 
-	CModelReaderNode100_MetaDataGroup::CModelReaderNode100_MetaDataGroup(_In_ PModelReaderWarnings pWarnings)
+	CModelReaderNode100_MetaDataGroup::CModelReaderNode100_MetaDataGroup(_In_ PModelWarnings pWarnings)
 		: CModelReaderNode(pWarnings)
 	{
 		m_MetaDataGroup = std::make_shared<CModelMetaDataGroup>();
@@ -74,29 +74,31 @@ namespace NMR {
 
 				if (!sKey.empty()) {
 					if (m_MetaDataGroup->hasMetaData(sKey)) {
-						m_pWarnings->addWarning(MODELREADERWARNING_DUPLICATEMETADATA, NMR_ERROR_DUPLICATEMETADATA, mrwInvalidOptionalValue);
-					}
-					std::string sNameSpace, sName;
-					CModelMetaData::decomposeKeyIntoNamespaceAndName(sKey, sNameSpace, sName);
-					if (!sNameSpace.empty()) {
-						std::string sNameSpaceURI;
-						if (!pXMLReader->GetNamespaceURI(sNameSpace, sNameSpaceURI)) {
-							m_pWarnings->addException(CNMRException(NMR_ERROR_METADATA_COULDNOTGETNAMESPACE), mrwInvalidOptionalValue);
-							sNameSpaceURI = sNameSpace;
-						}
-						m_MetaDataGroup->addMetaData(sNameSpaceURI, sName, sValue, sType, bPreserve);
+						m_pWarnings->addWarning(NMR_ERROR_DUPLICATEMETADATA, mrwInvalidOptionalValue);
 					}
 					else {
-						// default namespace
-						if (CModelMetaData::isValidNamespaceAndName("", sName)) {
-							m_MetaDataGroup->addMetaData("", sName, sValue, sType, bPreserve);
+						std::string sNameSpace, sName;
+						decomposeKeyIntoNamespaceAndName(sKey, sNameSpace, sName);
+						if (!sNameSpace.empty()) {
+							std::string sNameSpaceURI;
+							if (!pXMLReader->GetNamespaceURI(sNameSpace, sNameSpaceURI)) {
+								m_pWarnings->addException(CNMRException(NMR_ERROR_METADATA_COULDNOTGETNAMESPACE), mrwInvalidOptionalValue);
+								sNameSpaceURI = sNameSpace;
+							}
+							m_MetaDataGroup->addMetaData(sNameSpaceURI, sName, sValue, sType, bPreserve);
 						}
-						else
-							m_pWarnings->addException(CNMRException(NMR_ERROR_UNKNOWNMETADATA), mrwInvalidOptionalValue);
+						else {
+							// default namespace
+							if (CModelMetaData::isValidNamespaceAndName("", sName)) {
+								m_MetaDataGroup->addMetaData("", sName, sValue, sType, bPreserve);
+							}
+							else
+								m_pWarnings->addException(CNMRException(NMR_ERROR_UNKNOWNMETADATA), mrwInvalidOptionalValue);
+						}
 					}
 				}
 				else {
-					m_pWarnings->addWarning(MODELREADERWARNING_INVALIDMETADATA, NMR_ERROR_INVALIDMETADATA, mrwInvalidOptionalValue);
+					m_pWarnings->addWarning(NMR_ERROR_INVALIDMETADATA, mrwInvalidOptionalValue);
 				}
 			}
 		}

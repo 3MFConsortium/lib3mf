@@ -42,7 +42,7 @@ Node Class.
 
 namespace NMR {
 
-	CModelReaderNode093_Component::CModelReaderNode093_Component(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings)
+	CModelReaderNode093_Component::CModelReaderNode093_Component(_In_ CModel * pModel, _In_ PModelWarnings pWarnings)
 		: CModelReaderNode(pWarnings)
 	{
 		__NMRASSERT(pModel);
@@ -88,7 +88,7 @@ namespace NMR {
 		if (!m_bHasID)
 			throw CNMRException(NMR_ERROR_MISSINGMODELOBJECTID);
 
-		PPackageResourceID pRID = m_pModel->findPackageResourceID(m_pModel->curPath(), m_ObjectID);
+		PPackageResourceID pRID = m_pModel->findPackageResourceID(m_pModel->currentPath(), m_ObjectID);
 		if (pRID.get())
 			return m_pModel->findObject(pRID->getUniqueID());
 		return nullptr;

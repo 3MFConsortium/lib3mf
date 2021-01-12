@@ -48,7 +48,7 @@ Stream.
 
 namespace NMR {
 
-	CModelReaderNode100_Object::CModelReaderNode100_Object(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings, _In_ PProgressMonitor pProgressMonitor)
+	CModelReaderNode100_Object::CModelReaderNode100_Object(_In_ CModel * pModel, _In_ PModelWarnings pWarnings, _In_ PProgressMonitor pProgressMonitor)
 		: CModelReaderNode(pWarnings, pProgressMonitor)
 	{
 		// Initialize variables
@@ -65,7 +65,7 @@ namespace NMR {
 		m_bHasThumbnail = false;
 		m_bHasDefaultPropertyID = false;
 		m_bHasDefaultPropertyIndex = false;
-		m_nObjectLevelPropertyID = 0;
+		m_nObjectLevelPropertyModelID = 0;
 		m_nObjectLevelPropertyIndex = 0;
 
 		m_nSliceStackId = 0;
@@ -84,6 +84,10 @@ namespace NMR {
 		// Use parameter and assign to model Object
 		if (m_nID == 0)
 			throw CNMRException(NMR_ERROR_MISSINGMODELOBJECTID);
+
+		if (m_nObjectLevelPropertyModelID != 0) {
+			m_pObjectLevelPropertyID = m_pModel->findPackageResourceID(m_pModel->currentPath(), m_nObjectLevelPropertyModelID);
+		}
 
 		// Parse Content
 		parseContent(pXMLReader);
@@ -164,7 +168,7 @@ namespace NMR {
 			if (m_bHasDefaultPropertyID)
 				throw CNMRException(NMR_ERROR_DUPLICATEPID);
 			m_bHasDefaultPropertyID = true;
-			m_nObjectLevelPropertyID = fnStringToUint32(pAttributeValue);
+			m_nObjectLevelPropertyModelID = fnStringToUint32(pAttributeValue);
 		}
 
 		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_OBJECT_PINDEX) == 0) {
@@ -184,12 +188,12 @@ namespace NMR {
 		if (strcmp(XML_3MF_NAMESPACE_SLICESPEC, pNameSpace) == 0) {
 			if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_OBJECT_SLICESTACKID) == 0) {
 				if (m_nSliceStackId != 0)
-					m_pWarnings->addException(CNMRException(NMR_ERROR_DUPLICATE_SLICESTACKID), eModelReaderWarningLevel::mrwInvalidOptionalValue);
+					m_pWarnings->addException(CNMRException(NMR_ERROR_DUPLICATE_SLICESTACKID), eModelWarningLevel::mrwInvalidOptionalValue);
 				m_nSliceStackId = fnStringToUint32(pAttributeValue);
 			}
 			else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_OBJECT_MESHRESOLUTION) == 0) {
 				if (m_bHasMeshResolution) 
-					m_pWarnings->addException(CNMRException(NMR_ERROR_DUPLICATE_MESHRESOLUTION), eModelReaderWarningLevel::mrwInvalidOptionalValue);
+					m_pWarnings->addException(CNMRException(NMR_ERROR_DUPLICATE_MESHRESOLUTION), eModelWarningLevel::mrwInvalidOptionalValue);
 				m_bHasMeshResolution = true;
 				if (strcmp(pAttributeValue, XML_3MF_VALUE_OBJECT_MESHRESOLUTION_FULL)==0) {
 					m_eSlicesMeshResolution = MODELSLICESMESHRESOLUTION_FULL;
@@ -198,7 +202,7 @@ namespace NMR {
 					m_eSlicesMeshResolution = MODELSLICESMESHRESOLUTION_LOW;
 				}
 				else
-					m_pWarnings->addException(CNMRException(NMR_ERROR_INVALID_MESHRESOLUTION), eModelReaderWarningLevel::mrwInvalidOptionalValue);
+					m_pWarnings->addException(CNMRException(NMR_ERROR_INVALID_MESHRESOLUTION), eModelWarningLevel::mrwInvalidOptionalValue);
 			}
 			else
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE), mrwInvalidOptionalValue);
@@ -208,7 +212,7 @@ namespace NMR {
 		if (strcmp(XML_3MF_NAMESPACE_PRODUCTIONSPEC, pNameSpace) == 0) {
 			if (strcmp(XML_3MF_PRODUCTION_UUID, pAttributeName) == 0) {
 				if (m_UUID.get())
-					m_pWarnings->addException(CNMRException(NMR_ERROR_DUPLICATEUUID), eModelReaderWarningLevel::mrwInvalidMandatoryValue);
+					m_pWarnings->addException(CNMRException(NMR_ERROR_DUPLICATEUUID), eModelWarningLevel::mrwInvalidMandatoryValue);
 				m_UUID = std::make_shared<CUUID>(pAttributeValue);
 			}
 			else
@@ -236,11 +240,12 @@ namespace NMR {
 				// Set Object Type (might fail, if string is invalid)
 				if (m_bHasType) {
 					if (!m_pObject->setObjectTypeString(m_sType, false))
-						m_pWarnings->addWarning(MODELREADERWARNING_INVALIDMODELOBJECTTYPE, NMR_ERROR_INVALIDMODELOBJECTTYPE, mrwInvalidOptionalValue);
+						m_pWarnings->addWarning(NMR_ERROR_INVALIDMODELOBJECTTYPE, mrwInvalidOptionalValue);
 				}
 				
 				// Read Mesh
-				PModelReaderNode100_Mesh pXMLNode = std::make_shared<CModelReaderNode100_Mesh>(m_pModel, pMesh.get(), m_pWarnings, m_pProgressMonitor, m_nObjectLevelPropertyID, m_nObjectLevelPropertyIndex);
+				PModelReaderNode100_Mesh pXMLNode = std::make_shared<CModelReaderNode100_Mesh>(m_pModel, pMesh.get(),
+					m_pWarnings, m_pProgressMonitor, m_pObjectLevelPropertyID, m_nObjectLevelPropertyIndex);
 				pXMLNode->parseXML(pXMLReader);
 
 				// Add Object to Parent
@@ -264,7 +269,7 @@ namespace NMR {
 				// Set Object Type (might fail, if string is invalid)
 				if (m_bHasType) {
 					if (!m_pObject->setObjectTypeString(m_sType, false))
-						m_pWarnings->addWarning(MODELREADERWARNING_INVALIDMODELOBJECTTYPE, NMR_ERROR_INVALIDMODELOBJECTTYPE, mrwInvalidOptionalValue);
+						m_pWarnings->addWarning(NMR_ERROR_INVALIDMODELOBJECTTYPE, mrwInvalidOptionalValue);
 				}
 
 				// Read Components
@@ -274,7 +279,7 @@ namespace NMR {
 				// Add Object to Parent
 				m_pModel->addResource(m_pObject);
 				
-				if (m_nObjectLevelPropertyID != 0)
+				if (m_nObjectLevelPropertyIndex != 0)
 					m_pWarnings->addException(CNMRException(NMR_ERROR_OBJECTLEVELPID_ON_COMPONENTSOBJECT), mrwInvalidOptionalValue);
 			}
 			else if (strcmp(pChildName, XML_3MF_ELEMENT_METADATAGROUP) == 0) {
@@ -291,10 +296,10 @@ namespace NMR {
 
 			// In any case (component object or mesh object)
 			if ( (m_pObject) && (m_nSliceStackId > 0) ) {
-				PPackageResourceID pID = m_pModel->findPackageResourceID(m_pModel->curPath(), m_nSliceStackId);
+				PPackageResourceID pID = m_pModel->findPackageResourceID(m_pModel->currentPath(), m_nSliceStackId);
 				if (!pID.get())
 					throw CNMRException(NMR_ERROR_SLICESTACKRESOURCE_NOT_FOUND);
-				PModelSliceStack pSliceStackResource = std::dynamic_pointer_cast<CModelSliceStack>(m_pModel->findResource(pID->getUniqueID()) );
+				PModelSliceStack pSliceStackResource = std::dynamic_pointer_cast<CModelSliceStack>(m_pModel->findResource(pID) );
 				if (pSliceStackResource) {
 					if ((m_pObject->getObjectType() == MODELOBJECTTYPE_MODEL) || (MODELOBJECTTYPE_SOLIDSUPPORT)) {
 						if (!pSliceStackResource->areAllPolygonsClosed()) {
@@ -319,14 +324,14 @@ namespace NMR {
 		if (m_pObject.get() == nullptr)
 			return;
 
-		if (m_nObjectLevelPropertyID != 0) {
+		if (m_bHasDefaultPropertyIndex && m_bHasDefaultPropertyID) {
 			CModelMeshObject* pMeshObject = dynamic_cast<CModelMeshObject*>(m_pObject.get());
 			if (pMeshObject) {
 				CMesh * pMesh = pMeshObject->getMesh();
 				if (pMesh) {
 
 					// Assign Default Resource Property
-					PModelResource pResource = m_pModel->findResource(m_pModel->curPath(), m_nObjectLevelPropertyID);
+					PModelResource pResource = m_pModel->findResource(m_pModel->currentPath(), m_nObjectLevelPropertyModelID);
 					if (pResource.get() == nullptr) {
 						throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
 					}
@@ -345,7 +350,7 @@ namespace NMR {
 					ModelResourceID pPropertyID;
 					if (pResource->mapResourceIndexToPropertyID(m_nObjectLevelPropertyIndex, pPropertyID)) {
 						NMR::MESHINFORMATION_PROPERTIES * pDefaultData = new NMR::MESHINFORMATION_PROPERTIES;
-						pDefaultData->m_nResourceID = pResource->getResourceID()->getUniqueID();
+						pDefaultData->m_nUniqueResourceID = pResource->getPackageResourceID()->getUniqueID();
 						pDefaultData->m_nPropertyIDs[0] = pPropertyID;
 						pDefaultData->m_nPropertyIDs[1] = pPropertyID;
 						pDefaultData->m_nPropertyIDs[2] = pPropertyID;
@@ -378,20 +383,20 @@ namespace NMR {
 
 		pXMLNode->retrieveClippingInfo(eClipMode, bHasClippingMeshID, nClippingMeshID);
 		if (bHasClippingMeshID) {
-			PPackageResourceID pID = m_pModel->findPackageResourceID(m_pModel->curPath(), nClippingMeshID);
+			PPackageResourceID pID = m_pModel->findPackageResourceID(m_pModel->currentPath(), nClippingMeshID);
 			if (!pID.get()) {
-				m_pWarnings->addWarning(MODELREADERWARNING_BEAMLATTICECLIPPINGRESOURCENOTDEFINED, NMR_ERROR_BEAMLATTICECLIPPINGRESOURCENOTDEFINED, mrwInvalidMandatoryValue);
+				m_pWarnings->addWarning(NMR_ERROR_BEAMLATTICECLIPPINGRESOURCENOTDEFINED, mrwInvalidMandatoryValue);
 			}
 			else {
 				CModelObject * pModelObject = m_pModel->findObject(pID->getUniqueID());
 				if (pModelObject) {
 					pMeshObject->getBeamLatticeAttributes()->m_bHasClippingMeshID = bHasClippingMeshID;
-					pMeshObject->getBeamLatticeAttributes()->m_nClippingMeshID = pID;
+					pMeshObject->getBeamLatticeAttributes()->m_pClippingMeshUniqueID = pID;
 					pMeshObject->getBeamLatticeAttributes()->m_eClipMode = eClipMode;
 				}
 				else {
 					pMeshObject->getBeamLatticeAttributes()->m_bHasClippingMeshID = false;
-					m_pWarnings->addWarning(MODELREADERWARNING_BEAMLATTICECLIPPINGRESOURCENOTDEFINED, NMR_ERROR_BEAMLATTICECLIPPINGRESOURCENOTDEFINED, mrwInvalidMandatoryValue);
+					m_pWarnings->addWarning(NMR_ERROR_BEAMLATTICECLIPPINGRESOURCENOTDEFINED, mrwInvalidMandatoryValue);
 				}
 			}
 		}
@@ -400,19 +405,19 @@ namespace NMR {
 		ModelResourceID nRepresentationMeshID;
 		pXMLNode->retrieveRepresentationInfo(bHasRepresentationMeshID, nRepresentationMeshID);
 		if (nRepresentationMeshID) {
-			PPackageResourceID pID = m_pModel->findPackageResourceID(m_pModel->curPath(), nRepresentationMeshID);
+			PPackageResourceID pID = m_pModel->findPackageResourceID(m_pModel->currentPath(), nRepresentationMeshID);
 			if (!pID.get()) {
-				m_pWarnings->addWarning(MODELREADERWARNING_BEAMLATTICEREPRESENTATIONRESOURCENOTDEFINED, NMR_ERROR_BEAMLATTICE_INVALID_REPRESENTATIONRESOURCE, mrwInvalidMandatoryValue);
+				m_pWarnings->addWarning(NMR_ERROR_BEAMLATTICE_INVALID_REPRESENTATIONRESOURCE, mrwInvalidMandatoryValue);
 			}
 			else {
 				CModelObject * pModelObject = m_pModel->findObject(pID->getUniqueID());
 				if (pModelObject) {
 					pMeshObject->getBeamLatticeAttributes()->m_bHasRepresentationMeshID = bHasRepresentationMeshID;
-					pMeshObject->getBeamLatticeAttributes()->m_nRepresentationID = pID;
+					pMeshObject->getBeamLatticeAttributes()->m_pRepresentationUniqueID = pID;
 				}
 				else {
 					pMeshObject->getBeamLatticeAttributes()->m_bHasRepresentationMeshID = false;
-					m_pWarnings->addWarning(MODELREADERWARNING_BEAMLATTICEREPRESENTATIONRESOURCENOTDEFINED, NMR_ERROR_BEAMLATTICE_INVALID_REPRESENTATIONRESOURCE, mrwInvalidMandatoryValue);
+					m_pWarnings->addWarning(NMR_ERROR_BEAMLATTICE_INVALID_REPRESENTATIONRESOURCE, mrwInvalidMandatoryValue);
 				}
 			}
 		}

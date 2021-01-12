@@ -79,6 +79,8 @@ public:
 
 	void SetPath (const std::string & sPath);
 
+	IPackagePart * PackagePart();
+
 	std::string GetRelationShipType ();
 
 	void SetRelationShipType (const std::string & sPath);

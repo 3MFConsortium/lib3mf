@@ -43,13 +43,14 @@ A mesh reader model node is a parser for the mesh node of an XML Model Stream.
 
 namespace NMR {
 
-	CModelReaderNode100_Mesh::CModelReaderNode100_Mesh(_In_ CModel * pModel, _In_ CMesh * pMesh, _In_ PModelReaderWarnings pWarnings, _In_ PProgressMonitor pProgressMonitor, _In_ ModelResourceID nDefaultPropertyID, _In_ ModelResourceIndex nDefaultPropertyIndex)
+	CModelReaderNode100_Mesh::CModelReaderNode100_Mesh(_In_ CModel * pModel, _In_ CMesh * pMesh, _In_ PModelWarnings pWarnings,
+		_In_ PProgressMonitor pProgressMonitor, _In_ PPackageResourceID pObjectLevelPropertyID, _In_ ModelResourceIndex nDefaultPropertyIndex)
 		: CModelReaderNode(pWarnings, pProgressMonitor)
 	{
 		__NMRASSERT(pMesh);
 		__NMRASSERT(pModel);
 
-		m_nObjectLevelPropertyID = nDefaultPropertyID;
+		m_pObjectLevelPropertyID = pObjectLevelPropertyID;
 		m_nObjectLevelPropertyIndex = nDefaultPropertyIndex;
 
 		m_pMesh = pMesh;
@@ -116,15 +117,17 @@ namespace NMR {
 					m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_READMESH);
 					m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
 				}
-				PModelReaderNode100_Triangles pXMLNode = std::make_shared<CModelReaderNode100_Triangles>(m_pModel, m_pMesh, m_pWarnings, m_nObjectLevelPropertyID, m_nObjectLevelPropertyIndex);
+				PModelReaderNode100_Triangles pXMLNode = std::make_shared<CModelReaderNode100_Triangles>(m_pModel, m_pMesh, m_pWarnings,
+					m_pObjectLevelPropertyID, m_nObjectLevelPropertyIndex);
 				pXMLNode->parseXML(pXMLReader);
-				if (m_nObjectLevelPropertyID == 0) {
+				if (m_pObjectLevelPropertyID && m_pObjectLevelPropertyID->getPackageModelPath() == 0) {
 					// warn, if object does not have an object-level property, but a triangle has one
 					if (pXMLNode->getUsedPropertyID() != 0) {
 						m_pWarnings->addException(CNMRException(NMR_ERROR_MISSINGOBJECTLEVELPID), mrwMissingMandatoryValue);
 					}
 					// Try and define an object-level property as some PropertyID used by a triangle in the meshobject
-					m_nObjectLevelPropertyID = pXMLNode->getUsedPropertyID();
+					ModelResourceID nObjectLevelPropertyID = pXMLNode->getUsedPropertyID();
+					m_pObjectLevelPropertyID = m_pModel->findPackageResourceID(m_pModel->currentPath(), nObjectLevelPropertyID);
 					m_nObjectLevelPropertyIndex = 0;
 				}
 			}
@@ -141,6 +144,7 @@ namespace NMR {
 
 				pXMLNode->retrieveClippingInfo(m_eClipMode, m_bHasClippingMeshID, m_nClippingMeshID);
 				pXMLNode->retrieveRepresentationInfo(m_bHasRepresentationMeshID, m_nRepresentationMeshID);
+				pXMLNode->validateBallOptions(m_pWarnings);
 			}
 			else
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);

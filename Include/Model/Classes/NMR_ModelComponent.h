@@ -47,7 +47,6 @@ namespace NMR {
 		NMATRIX3 m_mTransform;
 
 		PUUID m_UUID;
-		std::wstring m_sPath;
 	public:
 		CModelComponent() = delete;
 		CModelComponent(_In_ CModelObject * pObject);
@@ -60,7 +59,6 @@ namespace NMR {
 		NMATRIX3 getTransform ();
 		void setTransform(_In_ const NMATRIX3 mTransform);
 		
-		PackageResourceID getObjectID();
 		nfBool hasTransform();
 		std::string getTransformString();
 

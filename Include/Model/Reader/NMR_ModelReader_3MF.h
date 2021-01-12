@@ -35,6 +35,7 @@ NMR_ModelReader_3MF.h defines the Model Reader Class for
 #define __NMR_MODELREADER_3MF
 
 #include "Model/Reader/NMR_ModelReader.h" 
+#include "Common/NMR_SecureContentTypes.h"
 #include <string>
 #include <map>
 

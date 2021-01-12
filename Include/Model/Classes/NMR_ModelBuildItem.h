@@ -73,9 +73,6 @@ namespace NMR {
 		nfBool hasTransform();
 		std::string getTransformString();
 
-		// Associated object getter/setter
-		PackageResourceID getObjectID();
-
 		// Item reference getter/setter
 		std::string getPartNumber();
 		void setPartNumber(_In_ std::string sPartNumber);

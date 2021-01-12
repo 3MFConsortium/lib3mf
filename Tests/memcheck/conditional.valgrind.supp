@@ -1,0 +1,13 @@
+{
+   <conditional_lib3mf_writer_writetobuffer>
+   Memcheck:Cond
+   ...
+   fun:lib3mf_writer_writetobuffer
+}
+
+{
+   <conditional_lib3mf_reader_readfromfile>
+   Memcheck:Cond
+   ...
+   fun:lib3mf_reader_readfromfile
+}

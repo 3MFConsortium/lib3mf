@@ -49,7 +49,7 @@ namespace NMR {
 		virtual void OnText(_In_z_ const nfChar * pText, _In_ CXmlReader * pXMLReader);
 	public:
 		CModelReaderNode100_MetaData() = delete;
-		CModelReaderNode100_MetaData(_In_ PModelReaderWarnings pWarnings);
+		CModelReaderNode100_MetaData(_In_ PModelWarnings pWarnings);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 		

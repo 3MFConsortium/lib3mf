@@ -58,6 +58,9 @@ Abstract: This is a stub class definition of CModel
 #include "lib3mf_compositematerialsiterator.hpp"
 #include "lib3mf_multipropertygroup.hpp"
 #include "lib3mf_multipropertygroupiterator.hpp"
+#include "lib3mf_packagepart.hpp"
+#include "lib3mf_keystore.hpp"
+
 
 // Include custom headers here.
 #include "Model/Classes/NMR_ModelMeshObject.h"
@@ -66,7 +69,7 @@ Abstract: This is a stub class definition of CModel
 #include "Model/Classes/NMR_ModelColorGroup.h"
 #include "Model/Classes/NMR_ModelTexture2DGroup.h"
 #include "Model/Classes/NMR_ModelMultiPropertyGroup.h"
-
+#include "Common/NMR_SecureContentTypes.h"
 #include "lib3mf_utils.hpp"
 
 using namespace Lib3MF::Impl;
@@ -84,6 +87,16 @@ CModel::CModel()
 NMR::CModel& CModel::model()
 {
 	return *m_model;
+}
+
+IPackagePart* CModel::RootModelPart()
+{
+	return new CPackagePart(model().rootModelPath());
+}
+
+IPackagePart * CModel::FindOrCreatePackagePart(const std::string & sAbsolutePath)
+{
+	return new CPackagePart(model().findOrCreateModelPath(sAbsolutePath));
 }
 
 void CModel::SetUnit (const eLib3MFModelUnit eUnit)
@@ -116,9 +129,9 @@ IReader * CModel::QueryReader (const std::string & sReaderClass)
 	return new CReader(sReaderClass, m_model);
 }
 
-ITexture2D * CModel::GetTexture2DByID (const Lib3MF_uint32 nResourceID)
+ITexture2D * CModel::GetTexture2DByID(const Lib3MF_uint32 nUniqueResourceID)
 {
-	NMR::PModelTexture2DResource pTexture2DResource = model().findTexture2D(nResourceID);
+	NMR::PModelTexture2DResource pTexture2DResource = model().findTexture2D(nUniqueResourceID);
 	if (pTexture2DResource) {
 		return new CTexture2D(pTexture2DResource);
 	}
@@ -126,9 +139,9 @@ ITexture2D * CModel::GetTexture2DByID (const Lib3MF_uint32 nResourceID)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDTEXTURERESOURCE);
 }
 
-eLib3MFPropertyType CModel::GetPropertyTypeByID(const Lib3MF_uint32 nResourceID)
+eLib3MFPropertyType CModel::GetPropertyTypeByID(const Lib3MF_uint32 nUniqueResourceID)
 {
-	NMR::PModelResource pResource = model().findResource(nResourceID);
+	NMR::PModelResource pResource = model().findResource(nUniqueResourceID);
 	if (!pResource) {
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_RESOURCENOTFOUND);
 	}
@@ -152,19 +165,26 @@ eLib3MFPropertyType CModel::GetPropertyTypeByID(const Lib3MF_uint32 nResourceID)
 		return ePropertyType::NoPropertyType;
 }
 
-IBaseMaterialGroup * CModel::GetBaseMaterialGroupByID (const Lib3MF_uint32 nResourceID)
+IBaseMaterialGroup * CModel::GetBaseMaterialGroupByID(const Lib3MF_uint32 nUniqueResourceID)
 {
-	NMR::PModelBaseMaterialResource pBaseMaterialResource = model().findBaseMaterial(nResourceID);
-	if (pBaseMaterialResource) {
-		return new CBaseMaterialGroup(pBaseMaterialResource);
+	NMR::PPackageResourceID pID = model().findPackageResourceID(nUniqueResourceID);
+	if (pID) {
+		NMR::PModelBaseMaterialResource pBaseMaterialResource = model().findBaseMaterial(pID);
+		if (pBaseMaterialResource) {
+			return new CBaseMaterialGroup(pBaseMaterialResource);
+		}
+		else
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDBASEMATERIALGROUP);
 	}
-	else
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDBASEMATERIALGROUP);
+	else {
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_RESOURCENOTFOUND);
+	}
+	
 }
 
-IMeshObject * CModel::GetMeshObjectByID (const Lib3MF_uint32 nResourceID)
+IMeshObject * CModel::GetMeshObjectByID(const Lib3MF_uint32 nUniqueResourceID)
 {
-	NMR::PModelResource pObjectResource = model().findResource(nResourceID);
+	NMR::PModelResource pObjectResource = model().findResource(nUniqueResourceID);
 	if (dynamic_cast<NMR::CModelMeshObject*>(pObjectResource.get())) {
 		return new CMeshObject(pObjectResource);
 	}
@@ -172,9 +192,9 @@ IMeshObject * CModel::GetMeshObjectByID (const Lib3MF_uint32 nResourceID)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDMESHOBJECT);
 }
 
-IComponentsObject * CModel::GetComponentsObjectByID (const Lib3MF_uint32 nResourceID)
+IComponentsObject * CModel::GetComponentsObjectByID(const Lib3MF_uint32 nUniqueResourceID)
 {
-	NMR::PModelResource pObjectResource = model().findResource(nResourceID);
+	NMR::PModelResource pObjectResource = model().findResource(nUniqueResourceID);
 	if (dynamic_cast<NMR::CModelComponentsObject*>(pObjectResource.get())) {
 		return new CComponentsObject(pObjectResource);
 	}
@@ -182,9 +202,9 @@ IComponentsObject * CModel::GetComponentsObjectByID (const Lib3MF_uint32 nResour
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCOMPONENTSOBJECT);
 }
 
-IColorGroup * CModel::GetColorGroupByID(const Lib3MF_uint32 nResourceID)
+IColorGroup * CModel::GetColorGroupByID(const Lib3MF_uint32 nUniqueResourceID)
 {
-	NMR::PModelResource pResource = model().findResource(nResourceID);
+	NMR::PModelResource pResource = model().findResource(nUniqueResourceID);
 	if (dynamic_cast<NMR::CModelColorGroupResource*>(pResource.get())) {
 		return new CColorGroup(std::dynamic_pointer_cast<NMR::CModelColorGroupResource>(pResource));
 	}
@@ -192,9 +212,9 @@ IColorGroup * CModel::GetColorGroupByID(const Lib3MF_uint32 nResourceID)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCOLORGROUP);
 }
 
-ISliceStack * CModel::GetSliceStackByID(const Lib3MF_uint32 nResourceID)
+ISliceStack * CModel::GetSliceStackByID(const Lib3MF_uint32 nUniqueResourceID)
 {
-	NMR::PModelResource pResource = model().findResource(nResourceID);
+	NMR::PModelResource pResource = model().findResource(nUniqueResourceID);
 	if (dynamic_cast<NMR::CModelSliceStack*>(pResource.get())) {
 		return new CSliceStack(std::dynamic_pointer_cast<NMR::CModelSliceStack>(pResource));
 	}
@@ -202,9 +222,9 @@ ISliceStack * CModel::GetSliceStackByID(const Lib3MF_uint32 nResourceID)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDSLICESTACKRESOURCE);
 }
 
-ITexture2DGroup * CModel::GetTexture2DGroupByID(const Lib3MF_uint32 nResourceID)
+ITexture2DGroup * CModel::GetTexture2DGroupByID(const Lib3MF_uint32 nUniqueResourceID)
 {
-	NMR::PModelResource pResource = model().findResource(nResourceID);
+	NMR::PModelResource pResource = model().findResource(nUniqueResourceID);
 	if (dynamic_cast<NMR::CModelTexture2DGroupResource*>(pResource.get())) {
 		return new CTexture2DGroup(std::dynamic_pointer_cast<NMR::CModelTexture2DGroupResource>(pResource));
 	}
@@ -212,9 +232,9 @@ ITexture2DGroup * CModel::GetTexture2DGroupByID(const Lib3MF_uint32 nResourceID)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDTEXTURE2DGROUP);
 }
 
-ICompositeMaterials * CModel::GetCompositeMaterialsByID(const Lib3MF_uint32 nResourceID)
+ICompositeMaterials * CModel::GetCompositeMaterialsByID(const Lib3MF_uint32 nUniqueResourceID)
 {
-	NMR::PModelResource pResource = model().findResource(nResourceID);
+	NMR::PModelResource pResource = model().findResource(nUniqueResourceID);
 	if (dynamic_cast<NMR::CModelCompositeMaterialsResource*>(pResource.get())) {
 		return new CCompositeMaterials(std::dynamic_pointer_cast<NMR::CModelCompositeMaterialsResource>(pResource));
 	}
@@ -222,9 +242,9 @@ ICompositeMaterials * CModel::GetCompositeMaterialsByID(const Lib3MF_uint32 nRes
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCOMPOSITEMATERIALS);
 }
 
-IMultiPropertyGroup * CModel::GetMultiPropertyGroupByID(const Lib3MF_uint32 nResourceID)
+IMultiPropertyGroup * CModel::GetMultiPropertyGroupByID(const Lib3MF_uint32 nUniqueResourceID)
 {
-	NMR::PModelResource pResource = model().findResource(nResourceID);
+	NMR::PModelResource pResource = model().findResource(nUniqueResourceID);
 	if (dynamic_cast<NMR::CModelMultiPropertyGroupResource*>(pResource.get())) {
 		return new CMultiPropertyGroup(std::dynamic_pointer_cast<NMR::CModelMultiPropertyGroupResource>(pResource));
 	}
@@ -495,7 +515,7 @@ IColorGroup * CModel::AddColorGroup()
 
 ITexture2DGroup * CModel::AddTexture2DGroup(ITexture2D* pTexture2DInstance)
 {
-	NMR::PackageResourceID nTexture2DID = pTexture2DInstance->GetResourceID();
+	NMR::UniqueResourceID nTexture2DID = pTexture2DInstance->GetResourceID();
 
 	// Find class instance
 	NMR::PModelTexture2DResource pModelTexture2DObject = model().findTexture2D(nTexture2DID);
@@ -510,10 +530,10 @@ ITexture2DGroup * CModel::AddTexture2DGroup(ITexture2D* pTexture2DInstance)
 
 ICompositeMaterials * CModel::AddCompositeMaterials(IBaseMaterialGroup* pBaseMaterialGroupInstance)
 {
-	NMR::PackageResourceID nBaseMaterialGroupID = pBaseMaterialGroupInstance->GetResourceID();
-
+	NMR::UniqueResourceID nBaseMaterialGroupID = pBaseMaterialGroupInstance->GetUniqueResourceID();
+	NMR::PPackageResourceID pID = model().findPackageResourceID(nBaseMaterialGroupID);
 	// Find class instance
-	NMR::PModelBaseMaterialResource pModelBaseMaterialGroup = model().findBaseMaterial(nBaseMaterialGroupID);
+	NMR::PModelBaseMaterialResource pModelBaseMaterialGroup = model().findBaseMaterial(pID);
 	if (pModelBaseMaterialGroup == nullptr)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_RESOURCENOTFOUND);
 
@@ -534,7 +554,7 @@ IMultiPropertyGroup * CModel::AddMultiPropertyGroup()
 IBuildItem * CModel::AddBuildItem (IObject* pObject, const sLib3MFTransform Transform)
 {
 	// Get Resource ID
-	NMR::PackageResourceID nObjectID = pObject->GetResourceID();
+	NMR::UniqueResourceID nObjectID = pObject->GetResourceID();
 	
 	// Find class instance
 	NMR::CModelObject * pModelObject = model().findObject(nObjectID);
@@ -664,5 +684,25 @@ Lib3MF::sBox CModel::GetOutbox()
 	s.m_MaxCoordinate[1] = sOutbox.m_max.m_fields[1];
 	s.m_MaxCoordinate[2] = sOutbox.m_max.m_fields[2];
 	return s;
+}
+
+IKeyStore * Lib3MF::Impl::CModel::GetKeyStore() {
+	return new CKeyStore(m_model);
+}
+
+void Lib3MF::Impl::CModel::SetRandomNumberCallback(Lib3MF::RandomNumberCallback pTheCallback, Lib3MF_pvoid pUserData) {
+	if (nullptr == pTheCallback)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+	NMR::CryptoRandGenDescriptor descriptor;
+	descriptor.m_pUserData = pUserData;
+	descriptor.m_fnRNG = [pTheCallback](NMR::nfByte * buffer, NMR::nfUint64 size, void * userData) {
+		Lib3MF_uint64 generated = 0;
+		(*pTheCallback)((Lib3MF_uint64)buffer, size, userData, &generated);
+		if (generated > 0)
+			return generated;
+		throw NMR::CNMRException(NMR_ERROR_CALCULATIONTERMINATED);
+	};
+
+	m_model->setCryptoRandCallback(descriptor);
 }
 

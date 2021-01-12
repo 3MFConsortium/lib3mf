@@ -37,6 +37,7 @@ using LibZ and a native XML writer implementation.
 
 #include "Common/OPC/NMR_OpcPackageWriter.h" 
 #include "Model/Writer/NMR_ModelWriter_3MF.h" 
+#include "Model/Writer/NMR_KeyStoreOpcPackageWriter.h"
 
 #define MODELWRITER_NATIVE_BUFFERSIZE 65536
 
@@ -44,18 +45,17 @@ namespace NMR {
 
 	class CModelWriter_3MF_Native : public CModelWriter_3MF {
 	protected:
-		nfInt32 m_nRelationIDCounter;
-		CModel * m_pModel;
-		std::vector<nfByte> m_aSliceStreamBuffer;
+		std::shared_ptr<IOpcPackageWriter> m_pPackageWriter;
+		CModel * m_pOtherModel;
 
 		// These are OPC dependent functions
 		virtual void createPackage(_In_ CModel * pModel);
 		virtual void writePackageToStream(_In_ PExportStream pStream);
 		virtual void releasePackage();
 
-		std::string generateRelationShipID();
-		void addAttachments(_In_ CModel * pModel, _In_ POpcPackageWriter pPackageWriter, _In_ POpcPackagePart pModelPart);
-		void addSlicerefAttachments();
+		void addAttachments(_In_ CModel * pModel, _In_ POpcPackagePart pModelPart);
+
+		void addNonRootModels();
 
 	public:
 		CModelWriter_3MF_Native() = delete;

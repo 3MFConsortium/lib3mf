@@ -290,6 +290,15 @@ NMR_ErrorConst.h defines all error code constants.
 // XML prefix is already registered.
 #define NMR_ERROR_XMLPREFIXALREADYREGISTERED 0x104F
 
+// Failed to initialize a zlib buffer
+#define NMR_ERROR_COULDNOTINITINFLATE 0x1050
+
+// Failed to decompress part
+#define NMR_ERROR_COULDNOTINFLATE 0x1051
+
+// Failed to initialize a zlib buffer
+#define NMR_ERROR_COULDNOTINITDEFLATE 0x1052
+
 /*-------------------------------------------------------------------
 Core framework error codes (0x2XXX)
 -------------------------------------------------------------------*/
@@ -423,7 +432,7 @@ Core framework error codes (0x2XXX)
 // Part is too large
 #define NMR_ERROR_PARTTOOLARGE 0x202B
 
-// Texture path is already existing
+// Texture getPath is already existing
 #define NMR_ERROR_DUPLICATETEXTUREPATH 0x202C
 
 // Texture width is already existing
@@ -477,6 +486,8 @@ Core framework error codes (0x2XXX)
 // Too many beams
 #define NMR_ERROR_TOOMANYBEAMS 0x203D
 
+// Too many balls
+#define NMR_ERROR_TOOMANYBALLS 0x203E
 
 // Invalid slice polygon index
 #define NMR_ERROR_INVALIDSLICEPOLYGON 0x2040
@@ -911,7 +922,7 @@ Model error codes (0x8XXX)
 // a slice stack resource is invalid
 #define  NMR_ERROR_INVALIDSLICESTACK 0x809D
 
-// Duplicate path
+// Duplicate getPath
 #define NMR_ERROR_DUPLICATEPATH 0x809E
 
 // Duplicate UUID
@@ -1103,6 +1114,114 @@ Model error codes (0x8XXX)
 // Version 093 of the core-specification is not fully supported
 #define NMR_ERROR_VERSION093_NOT_SUPPORTED 0x80E7
 
+// Attachment Model Mismatch
+#define NMR_ERROR_ATTACHMENTMODELMISMATCH 0x80E8
+
+// Duplicate PackagePath
+#define NMR_ERROR_DUPLICATEPACKAGEPATH 0x80E9
+
+// Serialization of this Model requires the production extension
+#define NMR_ERROR_PRODUCTIONEXTENSION_REQUIRED 0x80EA
+
+// Referenced model resource must not be in a different model
+#define NMR_ERROR_MODELRESOURCE_IN_DIFFERENT_MODEL 0x80EB
+
+// Path attribute is not absolute
+#define NMR_ERROR_PATH_NOT_ABSOLUTE 0x80EC
+
+// Encrypted stream header signature mismatch
+#define NMR_ERROR_COULDNOTREADENCRYPTEDSTREAM 0x80ED
+
+// Header version mismatch
+#define NMR_ERROR_ENCRYPTEDCONTENTVERSIONUNSUPPORTED 0x80EE
+
+// Could not get OPC KeyStore Stream
+#define NMR_ERROR_KEYSTOREOPCCOULDNOTGETSTREAM 0x80F0
+
+// Duplicate KeyStore Consumer id attribute on xml
+#define NMR_ERROR_KEYSTOREDUPLICATECONSUMERID 0x80F1
+
+// Duplicate KeyStore Consumer keyId attribute on xml
+#define NMR_ERROR_KEYSTOREDUPLICATECONSUMERKEYID 0x80F2
+
+// Missing KeyStore Consumer id
+#define NMR_ERROR_KEYSTOREMISSINGCONSUMERID 0x80F3
+
+// Duplicate KeyStore ResourceData path
+#define NMR_ERROR_KEYSTOREDUPLICATERESOURCEDATAPATH 0x80F4
+
+// Duplicate KeyStore DecryptRight consumerindex
+#define NMR_ERROR_KEYSTOREDUPLICATECONSUMERINDEX 0x80F5
+
+// Invalid KeyStore Consumer Index
+#define NMR_ERROR_KEYSTOREINVALIDCONSUMERINDEX 0x80F6
+
+// Invalid KeyStore encryption algorithm
+#define NMR_ERROR_KEYSTOREINVALIDALGORITHM 0x80F7
+
+// Invalid KeyStore compression
+#define NMR_ERROR_KEYSTOREINVALIDCOMPRESSION 0x80F8
+
+// Invlaid KeyStore CipherValue
+#define NMR_ERROR_KEYSTOREINVALIDCIPHERVALUE 0x80F9
+
+//Missing decrypt right
+#define NMR_ERROR_KEYSTOREMISSINGCIPHERDATA 0x80FA
+
+// Duplicate KeyStore consumer
+#define NMR_ERROR_KEYSTOREDUPLICATECONSUMER 0x80FB
+
+// Duplicate KeyStore ResourceData object
+#define NMR_ERROR_KEYSTOREDUPLICATERESOURCEDATA 0x80FC
+
+// Duplicate KeyStore DecryptRight object
+#define NMR_ERROR_KEYSTOREDUPLICATEACCESSRIGHT 0x80FD
+
+// Invalid KEK Param
+#define NMR_ERROR_KEYSTOREMISSINGCEKPARAMS 0x80FE
+
+// Invalid key uuid param
+#define NMR_ERROR_KEYSTOREINVALIDKEYUUID 0x80FF
+
+// Unsupported algorithm
+#define NMR_ERROR_KEYSTOREUNSUPPORTEDALGORITHM 0x8100
+
+// Dupliaced KeySore ResourceDataGroup
+#define NMR_ERROR_KEYSTOREDUPLICATERESOURCEDATAGROUP 0x8101
+
+// Invalid KeyStore Mask Generation Function
+#define NMR_ERROR_KEYSTOREINVALIDMGF 0x8102
+
+// Invalid KeyStore Digest Method
+#define NMR_ERROR_KEYSTOREINVALIDDIGEST 0x8103
+
+// Invalid Keystore kekparams configuration
+#define NMR_ERROR_KEYSTOREINCONSISTENTKEKPARAMS 0x8104
+
+// No Consumer Index
+#define NMR_ERROR_KEYSTOREMISSINGCONSUMERINDEX 0x8105
+
+// No kekparams
+#define NMR_ERROR_KEYSTOREMISSINGKEKPARAMS 0x8106
+
+// No keyuuid
+#define NMR_ERROR_KEYSTOREMISSINGKEYUUID 0x8107
+
+// Too many elements in a keystore xml tree
+#define NMR_ERROR_KEYSTORETOOMANYELEMENTS 0x8108
+
+// No path defined on resourcedata
+#define NMR_ERROR_KEYSTOREMISSINGPATH 0x8109
+
+// No algorithm defined
+#define NMR_ERROR_KEYSTOREMISSINGALGORTHM 0x810A
+
+// A beamset identifier is not unique
+#define NMR_ERROR_BEAMSET_IDENTIFIER_NOT_UNIQUE 0x810B
+
+
+
+
 
 /*-------------------------------------------------------------------
 XML Parser Error Constants (0x9XXX)
@@ -1183,6 +1302,8 @@ XML Parser Error Constants (0x9XXX)
 // A matindices attribute is duplicated
 #define NMR_ERROR_DUPLICATE_MATINDICES_ATTRIBUTE 0x9019
 
+//
+
 
 /*-------------------------------------------------------------------
 Library errors (0xAXXX)
@@ -1205,5 +1326,15 @@ Library errors (0xAXXX)
 
 // Invalid Texture type
 #define NMR_ERROR_INVALIDTEXTURETYPE 0xA006
+
+// Key Encryption Descriptor not found
+#define NMR_ERROR_KEKDESCRIPTORNOTFOUND 0xA00A
+
+// Content encryption descritor not found
+#define NMR_ERROR_DEKDESCRIPTORNOTFOUND 0xA00B
+
+// Using cryptographically weak random number generator
+#define NMR_ERROR_RNGCALLBACKNOTCRYPTOSTRONG 0XA00C
+
 
 #endif // __NMR_ERRORCONST

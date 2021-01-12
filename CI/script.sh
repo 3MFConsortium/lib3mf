@@ -1,7 +1,7 @@
 #!/bin/sh
 
 cd lib3mf-repo
-sh cmake/GenerateMake.sh
+sh cmake/GenerateMakeFast.sh
 cd build
-make -j2
+make -j1
 ctest -V .

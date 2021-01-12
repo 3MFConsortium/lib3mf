@@ -42,7 +42,7 @@ XML Model Stream.
 
 namespace NMR {
 
-	CModelReaderNode100_Vertices::CModelReaderNode100_Vertices(_In_ CMesh * pMesh, _In_ PModelReaderWarnings pWarnings)
+	CModelReaderNode100_Vertices::CModelReaderNode100_Vertices(_In_ CMesh * pMesh, _In_ PModelWarnings pWarnings)
 		: CModelReaderNode(pWarnings)
 	{
 		__NMRASSERT(pMesh);

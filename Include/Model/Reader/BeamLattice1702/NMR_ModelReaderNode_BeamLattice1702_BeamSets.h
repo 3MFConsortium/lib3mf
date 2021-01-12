@@ -37,9 +37,13 @@ NMR_ModelReaderNode_BeamLattice1702_BeamSets.h covers the official 3MF beamlatti
 #include "Model/Classes/NMR_ModelComponent.h"
 #include "Model/Classes/NMR_ModelObject.h"
 
+#include <unordered_set>
+
 namespace NMR {
 
 	class CModelReaderNode_BeamLattice1702_BeamSets : public CModelReaderNode {
+	private:
+		std::unordered_set<std::string> m_uniqueIdentifiers; // Data structure used to ensure beamsets have unique identifiers
 	protected:
 		CMesh * m_pMesh;
 
@@ -47,7 +51,7 @@ namespace NMR {
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 	public:
 		CModelReaderNode_BeamLattice1702_BeamSets() = delete;
-		CModelReaderNode_BeamLattice1702_BeamSets(_In_ CMesh * pMesh, _In_ PModelReaderWarnings pWarnings);
+		CModelReaderNode_BeamLattice1702_BeamSets(_In_ CMesh * pMesh, _In_ PModelWarnings pWarnings);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 	};

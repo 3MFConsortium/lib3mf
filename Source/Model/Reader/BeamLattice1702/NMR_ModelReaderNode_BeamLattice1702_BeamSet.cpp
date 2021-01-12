@@ -33,6 +33,8 @@ NMR_ModelReaderNode_BeamLattice1702_BeamSet.cpp covers the official 3MF beamlatt
 
 #include "Model/Reader/BeamLattice1702/NMR_ModelReaderNode_BeamLattice1702_BeamSet.h"
 #include "Model/Reader/BeamLattice1702/NMR_ModelReaderNode_BeamLattice1702_Ref.h"
+#include "Model/Reader/BeamLattice1702/NMR_ModelReaderNode_BeamLattice1702_BallRef.h"
+
 
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Model/Classes/NMR_ModelMeshObject.h"
@@ -43,10 +45,11 @@ NMR_ModelReaderNode_BeamLattice1702_BeamSet.cpp covers the official 3MF beamlatt
 
 namespace NMR {
 
-	CModelReaderNode_BeamLattice1702_BeamSet::CModelReaderNode_BeamLattice1702_BeamSet(_In_ BEAMSET * pBeamSet, _In_ PModelReaderWarnings pWarnings)
+	CModelReaderNode_BeamLattice1702_BeamSet::CModelReaderNode_BeamLattice1702_BeamSet(_In_ BEAMSET * pBeamSet, _In_ std::unordered_set<std::string> * pUniqueIdentifiers, _In_ PModelWarnings pWarnings)
 		: CModelReaderNode(pWarnings)
 	{
 		m_pBeamSet = pBeamSet;
+		m_pUniqueIdentifiers = pUniqueIdentifiers;
 	}
 
 	void CModelReaderNode_BeamLattice1702_BeamSet::parseXML(_In_ CXmlReader * pXMLReader)
@@ -71,7 +74,13 @@ namespace NMR {
 			m_pBeamSet->m_sName = pAttributeValue;
 		}
 		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_BEAMLATTICE_IDENTIFIER) == 0) {
-			m_pBeamSet->m_sIdentifier = pAttributeValue;
+			std::string attributeString(pAttributeValue);
+			if (m_pUniqueIdentifiers->find(attributeString) == m_pUniqueIdentifiers->end()) {
+				m_pUniqueIdentifiers->insert(attributeString);
+				m_pBeamSet->m_sIdentifier = pAttributeValue;
+			}
+			else
+				m_pWarnings->addException(CNMRException(NMR_ERROR_BEAMSET_IDENTIFIER_NOT_UNIQUE), mrwInvalidOptionalValue);
 		}
 		else
 			m_pWarnings->addException(CNMRException(NMR_ERROR_BEAMLATTICEINVALIDATTRIBUTE), mrwInvalidOptionalValue);
@@ -98,6 +107,13 @@ namespace NMR {
 				nfInt32 nIndex;
 				pXMLNode->retrieveIndex(nIndex);
 				m_pBeamSet->m_Refs.push_back(nIndex);
+			}
+			else if (strcmp(pChildName, XML_3MF_ELEMENT_BALLREF) == 0) {
+				PModelReaderNode_BeamLattice1702_BallRef pXMLNode = std::make_shared<CModelReaderNode_BeamLattice1702_BallRef>(m_pWarnings);
+				pXMLNode->parseXML(pXMLReader);
+				nfInt32 nIndex;
+				pXMLNode->retrieveIndex(nIndex);
+				m_pBeamSet->m_BallRefs.push_back(nIndex);
 			}
 			else
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);

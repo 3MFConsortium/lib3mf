@@ -91,7 +91,13 @@ public:
 
 	virtual void SetReferences(const Lib3MF_uint64 nReferencesBufferSize, const Lib3MF_uint32 * pReferencesBuffer);
 
-	virtual void GetReferences(Lib3MF_uint64 nReferencesBufferSize, Lib3MF_uint64* pReferencesNeededCount, Lib3MF_uint32 * pReferencesBuffer);
+	virtual void GetReferences(Lib3MF_uint64 nReferencesBufferSize, Lib3MF_uint64 * pReferencesNeededCount, Lib3MF_uint32 * pReferencesBuffer);
+
+	virtual Lib3MF_uint32 GetBallReferenceCount();
+
+	virtual void SetBallReferences(const Lib3MF_uint64 nBallReferencesBufferSize, const Lib3MF_uint32 * pBallReferencesBuffer);
+
+	virtual void GetBallReferences(Lib3MF_uint64 nBallReferencesBufferSize, Lib3MF_uint64 * pBallReferencesNeededCount, Lib3MF_uint32 * pBallReferencesBuffer);
 
 };
 

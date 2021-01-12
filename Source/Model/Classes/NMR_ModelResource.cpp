@@ -43,7 +43,7 @@ namespace NMR {
 		if (!pModel)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 		m_pModel = pModel;
-		m_sResourceID = m_pModel->generatePackageResourceID(pModel->curPath(), sResourceID);
+		m_pPackageResourceID = m_pModel->generatePackageResourceID(pModel->currentPath(), sResourceID);
 		m_bHasResourceIndexMap = false;
 	}
 
@@ -57,9 +57,15 @@ namespace NMR {
 		return m_pModel;
 	}
 
-	PPackageResourceID CModelResource::getResourceID()
+	PPackageResourceID CModelResource::getPackageResourceID()
 	{
-		return m_sResourceID;
+		return m_pPackageResourceID;
+	}
+
+	void CModelResource::setPackageResourceID(PPackageResourceID pID)
+	{
+		m_pModel->updateUniqueResourceID(m_pPackageResourceID->getUniqueID(), pID->getUniqueID());
+		m_pPackageResourceID = pID;
 	}
 
 	_Ret_notnull_ CModel * CModelResource::getModel()

@@ -118,13 +118,13 @@ namespace NMR {
 		bool hasColorGroup = false;
 		for (MODELMULTIPROPERTYLAYER layer : m_vctLayers)
 		{
-			PModelResource pResource = Model()->findResource(layer.m_nResourceID);
+			PModelResource pResource = Model()->findResource(layer.m_nUniqueResourceID);
 			hasMaterial |= (dynamic_cast<CModelBaseMaterialResource*>(pResource.get())!=nullptr)
 				|| (dynamic_cast<CModelCompositeMaterialsResource*>(pResource.get()) != nullptr);
 			hasColorGroup |= (dynamic_cast<CModelColorGroupResource*>(pResource.get()) != nullptr);
 		}
 		
-		PModelResource pResource = Model()->findResource(sLayer.m_nResourceID);
+		PModelResource pResource = Model()->findResource(sLayer.m_nUniqueResourceID);
 		if ((dynamic_cast<CModelMultiPropertyGroupResource*>(pResource.get()) != nullptr))
 		{
 			throw CNMRException(NMR_ERROR_MULTIPROPERTIES_MUST_NOT_CONTAIN_MULTIPROPERTIES);

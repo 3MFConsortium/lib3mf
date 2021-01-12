@@ -39,6 +39,7 @@ These are given by the 3MF Standard
 #define PACKAGE_TEXTURE_CONTENT_TYPE "application/vnd.ms-package.3dmanufacturing-3dmodeltexture"
 #define PACKAGE_PRINT_TICKET_CONTENT_TYPE "application/vnd.ms-printing.printticket+xml"
 #define PACKAGE_CORE_PROPERTIES_CONTENT_TYPE "application/vnd.openxmlformats-package.core-properties+xml"
+#define PACKAGE_KEYSTORE_CONTENT_TYPE "application/vnd.ms-package.3dmanufacturing-keystore+xml"
 #define PACKAGE_GIF_CONTENT_TYPE "image/gif"
 #define PACKAGE_JPG_CONTENT_TYPE "image/jpeg"
 #define PACKAGE_PNG_CONTENT_TYPE "image/png"
@@ -56,6 +57,8 @@ These are given by the 3MF Standard
 #define PACKAGE_CORE_PROPERTIES_URI "/Metadata/CoreProperties.prop"
 #define PACKAGE_THUMBNAIL_URI_BASE "/Metadata"
 
+#define PACKAGE_3D_KEYSTORE_URI "/Secure/keystore.xml"
+
 #define NMR_MAXHANDLE 0xfffffffe
 
 #define PACKAGE_XMLNS_093 "http://schemas.microsoft.com/3dmanufacturing/2013/01"
@@ -66,6 +69,9 @@ These are given by the 3MF Standard
 #define PACKAGE_TEXTURE_RELATIONSHIP_TYPE "http://schemas.microsoft.com/3dmanufacturing/2013/01/3dtexture"
 #define PACKAGE_CORE_PROPERTIES_RELATIONSHIP_TYPE "http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties"
 #define PACKAGE_THUMBNAIL_RELATIONSHIP_TYPE "http://schemas.openxmlformats.org/package/2006/relationships/metadata/thumbnail"
+#define PACKAGE_MUST_PRESERVE_RELATIONSHIP_TYPE "http://schemas.openxmlformats.org/package/2006/relationships/mustpreserve"
+#define PACKAGE_KEYSTORE_RELATIONSHIP_TYPE "http://schemas.microsoft.com/3dmanufacturing/2019/04/keystore"
+#define PACKAGE_ENCRYPTED_FILE_RELATIONSHIP "http://schemas.openxmlformats.org/package/2006/relationships/encryptedfile"
 
 #define XML_3MF_NAMESPACE_XML "http://www.w3.org/XML/1998/namespace"
 #define XML_3MF_NAMESPACE_XMLNS "http://www.w3.org/2000/xmlns/"
@@ -75,11 +81,15 @@ These are given by the 3MF Standard
 #define XML_3MF_NAMESPACE_PRODUCTIONSPEC "http://schemas.microsoft.com/3dmanufacturing/production/2015/06"
 #define XML_3MF_NAMESPACE_BEAMLATTICESPEC "http://schemas.microsoft.com/3dmanufacturing/beamlattice/2017/02"
 #define XML_3MF_NAMESPACE_SLICESPEC "http://schemas.microsoft.com/3dmanufacturing/slice/2015/07"
+#define XML_3MF_NAMESPACE_SECURECONTENTSPEC "http://schemas.microsoft.com/3dmanufacturing/securecontent/2019/04"
+#define XML_3MF_NAMESPACE_DIGITALSIGNATURESPEC "http://www.w3.org/2000/09/xmldsig#"
+#define XML_3MF_NAMESPACE_CIPHERVALUESPEC "http://www.w3.org/2001/04/xmlenc#"
 
 #define XML_3MF_NAMESPACEPREFIX_MATERIAL "m"
 #define XML_3MF_NAMESPACEPREFIX_PRODUCTION "p"
 #define XML_3MF_NAMESPACEPREFIX_BEAMLATTICE "b"
 #define XML_3MF_NAMESPACEPREFIX_SLICE "s"
+#define XML_3MF_NAMESPACEPREFIX_SECURECONTENT "sc"
 
 #define XML_3MF_ATTRIBUTE_XMLNS                     "xmlns"
 #define XML_3MF_ATTRIBUTE_PREFIX_XML                "xml"
@@ -128,9 +138,12 @@ These are given by the 3MF Standard
 #define XML_3MF_ELEMENT_BEAMLATTICE                       "beamlattice"
 #define XML_3MF_ELEMENT_BEAMS                             "beams"
 #define XML_3MF_ELEMENT_BEAM                              "beam"
+#define XML_3MF_ELEMENT_BALLS                             "balls"
+#define XML_3MF_ELEMENT_BALL                              "ball"
 #define XML_3MF_ELEMENT_BEAMSETS                          "beamsets"
 #define XML_3MF_ELEMENT_BEAMSET                           "beamset"
 #define XML_3MF_ELEMENT_REF                               "ref"
+#define XML_3MF_ELEMENT_BALLREF                           "ballref"
 
 // Triangle element.
 #define XML_3MF_ELEMENT_TRIANGLE                    "triangle"
@@ -161,6 +174,10 @@ These are given by the 3MF Standard
 #define XML_3MF_ATTRIBUTE_BEAMLATTICE_CAPMODE       "cap"
 #define XML_3MF_ATTRIBUTE_BEAMLATTICE_CAP1          "cap1"
 #define XML_3MF_ATTRIBUTE_BEAMLATTICE_CAP2          "cap2"
+#define XML_3MF_ATTRIBUTE_BEAMLATTICE_BALLMODE      "ballmode"
+#define XML_3MF_ATTRIBUTE_BEAMLATTICE_BALLRADIUS    "ballradius"
+#define XML_3MF_ATTRIBUTE_BEAMLATTICE_BALL_VINDEX   "vindex"
+#define XML_3MF_ATTRIBUTE_BEAMLATTICE_BALL_R        "r"
 #define XML_3MF_ATTRIBUTE_BEAMLATTICE_INDEX         "index"
 #define XML_3MF_ATTRIBUTE_BEAMLATTICETAG_TAG        "tag"
 // deprecated (has been used in draft version of the specification):
@@ -299,7 +316,6 @@ These are given by the 3MF Standard
 #define XML_3MF_ATTRIBUTE_COLOR_ID                  "id"
 #define XML_3MF_ATTRIBUTE_COLOR_VALUE               "value"
 
-
 // Base Material element.
 #define XML_3MF_ELEMENT_BASEMATERIALS                    "basematerials"
 #define XML_3MF_ELEMENT_BASE                             "base"
@@ -336,6 +352,59 @@ These are given by the 3MF Standard
 // depricated (from a draft version of the spec):
 #define XML_3MF_BEAMLATTICE_CAPMODE_ROUND           "round"
 
+#define XML_3MF_BEAMLATTICE_BALLMODE_NONE           "none"
+#define XML_3MF_BEAMLATTICE_BALLMODE_MIXED          "mixed"
+#define XML_3MF_BEAMLATTICE_BALLMODE_ALL            "all"
+
+// KeyStore element.
+#define XML_3MF_ELEMENT_KEYSTORE					"keystore"
+#define XML_3MF_ELEMENT_CONSUMER					"consumer"
+#define XML_3MF_ELEMENT_RESOURCEDATA				"resourcedata"
+#define XML_3MF_ELEMENT_RESOURCEDATAGROUP			"resourcedatagroup"
+#define XML_3MF_ELEMENT_KEYVALUE					"keyvalue"
+#define XML_3MF_ELEMENT_CIPHERDATA					"cipherdata"
+#define XML_3MF_ELEMENT_CIPHERVALUE					"CipherValue"
+#define XML_3MF_ELEMENT_KEKPARAMS					"kekparams"
+#define XML_3MF_ELEMENT_CEKPARAMS					"cekparams"
+#define XML_3MF_ELEMENT_ACCESSRIGHT					"accessright"
+#define XML_3MF_SECURE_CONTENT_UUID					"UUID"
+#define XML_3MF_SECURE_CONTENT_CONSUMER_ID			"consumerid"
+#define XML_3MF_SECURE_CONTENT_KEY_ID				"keyid"
+#define XML_3MF_SECURE_CONTENT_KEY_UUID				"keyuuid"
+#define XML_3MF_SECURE_CONTENT_PATH					"path"
+#define XML_3MF_SECURE_CONTENT_ENCRYPTION_ALGORITHM	"encryptionalgorithm"
+#define XML_3MF_SECURE_CONTENT_COMPRESSION			"compression"
+#define XML_3MF_SECURE_CONTENT_COMPRESSION_DEFLATE	"deflate"
+#define XML_3MF_SECURE_CONTENT_COMPRESSION_NONE		"none"
+#define XML_3MF_SECURE_CONTENT_CONSUMER_INDEX		"consumerindex"
+#define XML_3MF_SECURE_CONTENT_ALGORITHM			"Algorithm"
+#define XML_3MF_SECURE_CONTENT_WRAPPINGALGORITHM	"wrappingalgorithm"
+#define XML_3MF_SECURE_CONTENT_MGFALGORITHM			"mgfalgorithm"
+#define XML_3MF_SECURE_CONTENT_DIGESTMETHOD			"digestmethod"
+#define XML_3MF_SECURE_CONTENT_IV					"iv"
+#define XML_3MF_SECURE_CONTENT_TAG					"tag"
+#define XML_3MF_SECURE_CONTENT_AAD					"aad"
+#define XML_3MF_SECURE_CONTENT_KEY_UUID				"keyuuid"
+
+#define XML_3MF_SECURE_CONTENT_ENCRYPTION_AES256	"http://www.w3.org/2009/xmlenc11#aes256-gcm"
+#define XML_3MF_SECURE_CONTENT_KEYWRAPPING_RSA		"http://www.w3.org/2001/04/xmlenc#rsa-oaep-mgf1p"
+#define XML_3MF_SECURE_CONTENT_KEYWRAPPING_RSASHORT	"http://www.w3.org/2009/xmlenc11#rsa-oaep"
+
+#define XML_3MF_SECURE_CONTENT_MGF1_SHA1			"http://www.w3.org/2009/xmlenc11#mgf1sha1"
+#define XML_3MF_SECURE_CONTENT_MGF1_SHA224			"http://www.w3.org/2009/xmlenc11#mgf1sha224"
+#define XML_3MF_SECURE_CONTENT_MGF1_SHA256			"http://www.w3.org/2009/xmlenc11#mgf1sha256"
+#define XML_3MF_SECURE_CONTENT_MGF1_SHA384			"http://www.w3.org/2009/xmlenc11#mgf1sha384"
+#define XML_3MF_SECURE_CONTENT_MGF1_SHA512			"http://www.w3.org/2009/xmlenc11#mgf1sha512"
+
+#define XML_3MF_SECURE_CONTENT_MD_SHA1				"http://www.w3.org/2000/09/xmldsig#sha1"
+#define XML_3MF_SECURE_CONTENT_MD_SHA256			"http://www.w3.org/2001/04/xmlenc#sha256"
+#define XML_3MF_SECURE_CONTENT_MD_SHA384			"http://www.w3.org/2001/04/xmlenc#sha384"
+#define XML_3MF_SECURE_CONTENT_MD_SHA512			"http://www.w3.org/2001/04/xmlenc#sha512"
+
+#define XML_3MF_SECURE_CONTENT_MAXELEMENTCOUNT		2147483647
+
+#define XML_3MF_NAMESPACEPREFIX_DS					"ds"
+#define XML_3MF_NAMESPACEPREFIX_XENC				"xenc"
 
 #define XML_3MF_PRODUCTION_PATH                     "path"
 #define XML_3MF_PRODUCTION_UUID                     "UUID"
@@ -350,7 +419,9 @@ These are given by the 3MF Standard
 #define XML_3MF_MAXBUILDITEMCOUNT                   2147483647
 #define XML_3MF_MAXRESOURCECOUNT                    2147483647
 #define XML_3MF_MAXIMUMBEAMRADIUSVALUE              1000000000.0f
+#define XML_3MF_MAXIMUMBALLRADIUSVALUE              1000000000.0f
 #define XML_3MF_MAXIMUMSKINTHICKNESSVALUE           1000000000.0f
 #define XML_3MF_MAXBEAMCOUNT                        2147483647
+#define XML_3MF_MAXBALLCOUNT                        2147483647
 
 #endif // __NMR_MODELCONSTANTS

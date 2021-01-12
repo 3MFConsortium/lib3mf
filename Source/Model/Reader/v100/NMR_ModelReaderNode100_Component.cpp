@@ -42,7 +42,7 @@ Node Class.
 
 namespace NMR {
 
-	CModelReaderNode100_Component::CModelReaderNode100_Component(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings)
+	CModelReaderNode100_Component::CModelReaderNode100_Component(_In_ CModel * pModel, _In_ PModelWarnings pWarnings)
 		: CModelReaderNode(pWarnings)
 	{
 		__NMRASSERT(pModel);
@@ -78,6 +78,9 @@ namespace NMR {
 				if (m_bHasPath)
 					throw CNMRException(NMR_ERROR_DUPLICATEPATH);
 				m_sPath = pAttributeValue;
+				if (!fnStartsWithPathDelimiter(m_sPath)) {
+					m_pWarnings->addException(CNMRException(NMR_ERROR_PATH_NOT_ABSOLUTE), mrwInvalidOptionalValue);
+				}
 				m_bHasPath = true;
 			}
 			else if (strcmp(pAttributeName, XML_3MF_PRODUCTION_UUID) == 0) {
@@ -119,12 +122,12 @@ namespace NMR {
 		
 		PPackageResourceID pRID; 
 		if (m_bHasPath) {
-			if (m_pModel->curPath() != m_pModel->rootPath())
+			if (m_pModel->currentPath() != m_pModel->rootPath())
 				throw CNMRException(NMR_ERROR_REFERENCESTOODEEP);
 			pRID = m_pModel->findPackageResourceID(m_sPath, m_ObjectID);
 		}
 		else {
-			pRID = m_pModel->findPackageResourceID(m_pModel->curPath(), m_ObjectID);
+			pRID = m_pModel->findPackageResourceID(m_pModel->currentPath(), m_ObjectID);
 		}
 		if (pRID.get())
 			return m_pModel->findObject(pRID->getUniqueID());

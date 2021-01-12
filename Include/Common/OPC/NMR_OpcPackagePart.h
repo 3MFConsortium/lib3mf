@@ -56,6 +56,8 @@ namespace NMR {
 	public:
 		COpcPackagePart(_In_ std::string sURI, _In_ PExportStream pExportStream);
 		COpcPackagePart(_In_ std::string sURI, _In_ PImportStream pImportStream);
+		COpcPackagePart(_In_ COpcPackagePart const & cp, _In_ PExportStream pExportStream);
+		COpcPackagePart(_In_ COpcPackagePart const & cp, _In_ PImportStream pImportStream);
 
 		std::string getURI ();
 		PExportStream getExportStream ();

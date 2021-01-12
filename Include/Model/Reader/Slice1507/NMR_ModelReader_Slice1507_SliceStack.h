@@ -55,7 +55,7 @@ namespace NMR {
 
 	public:
 		CModelReaderNode_Slice1507_SliceStack() = delete;
-		CModelReaderNode_Slice1507_SliceStack(_In_ CModel *pModel, _In_ PModelReaderWarnings pWarnings, _In_ PProgressMonitor pProgressMonitor, _In_ const std::string sSlicePath);
+		CModelReaderNode_Slice1507_SliceStack(_In_ CModel *pModel, _In_ PModelWarnings pWarnings, _In_ PProgressMonitor pProgressMonitor, _In_ const std::string sSlicePath);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 	};

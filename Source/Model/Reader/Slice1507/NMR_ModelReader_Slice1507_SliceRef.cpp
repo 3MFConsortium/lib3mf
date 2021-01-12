@@ -57,7 +57,7 @@ namespace NMR {
 
 	}
 
-	CModelReaderNode_Slice1507_SliceRef::CModelReaderNode_Slice1507_SliceRef(_In_ PModelReaderWarnings pWarnings) : CModelReaderNode(pWarnings) {
+	CModelReaderNode_Slice1507_SliceRef::CModelReaderNode_Slice1507_SliceRef(_In_ PModelWarnings pWarnings) : CModelReaderNode(pWarnings) {
 		m_SliceStackId = -1;
 		m_Path = "";
 	}

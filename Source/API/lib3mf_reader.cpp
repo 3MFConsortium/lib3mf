@@ -29,12 +29,18 @@ Abstract: This is a stub class definition of CReader
 */
 
 #include "lib3mf_reader.hpp"
-#include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
+#include "lib3mf_interfaceexception.hpp"
+#include "lib3mf_accessright.hpp"
+#include "lib3mf_contentencryptionparams.hpp"
 #include "Common/Platform/NMR_Platform.h"
 #include "Common/Platform/NMR_ImportStream_Shared_Memory.h"
 #include "Common/Platform/NMR_ImportStream_Callback.h"
+#include "Common/NMR_SecureContentTypes.h"
+#include "Common/NMR_SecureContext.h"
+#include "Model/Classes/NMR_KeyStore.h"
+
 
 using namespace Lib3MF::Impl;
 
@@ -150,25 +156,75 @@ void CReader::RemoveRelationToRead (const std::string & sRelationShipType)
 void CReader::SetStrictModeActive (const bool bStrictModeActive)
 {
 	if (bStrictModeActive)
-		reader().getWarnings()->setCriticalWarningLevel(NMR::mrwInvalidOptionalValue);
+		reader().warnings()->setCriticalWarningLevel(NMR::mrwInvalidOptionalValue);
 	else
-		reader().getWarnings()->setCriticalWarningLevel(NMR::mrwFatal);
+		reader().warnings()->setCriticalWarningLevel(NMR::mrwFatal);
 }
 
 bool CReader::GetStrictModeActive ()
 {
-	return reader().getWarnings()->getCriticalWarningLevel() == NMR::mrwInvalidOptionalValue;
+	return reader().warnings()->getCriticalWarningLevel() == NMR::mrwInvalidOptionalValue;
 }
 
 std::string CReader::GetWarning (const Lib3MF_uint32 nIndex, Lib3MF_uint32 & nErrorCode)
 {
-	auto warning = reader().getWarnings()->getWarning(nIndex);
+	auto warning = reader().warnings()->getWarning(nIndex);
 	nErrorCode = warning->getErrorCode();
 	return warning->getMessage();
 }
 
 Lib3MF_uint32 CReader::GetWarningCount ()
 {
-	return reader().getWarnings()->getWarningCount();
+	return reader().warnings()->getWarningCount();
+}
+
+void Lib3MF::Impl::CReader::AddKeyWrappingCallback(const std::string &sConsumerID, const Lib3MF::KeyWrappingCallback pTheCallback, const Lib3MF_pvoid pUserData) {
+	NMR::KeyWrappingDescriptor descriptor;
+	descriptor.m_sKekDecryptData.m_pUserData = pUserData;
+	descriptor.m_fnWrap =
+		[this, pTheCallback](
+			std::vector<NMR::nfByte> const & cipher,
+			std::vector<NMR::nfByte> & plain,
+			NMR::KeyWrappingContext & ctx) {
+
+		std::shared_ptr<IAccessRight> pAccessRight = std::make_shared<CAccessRight>(ctx.m_pAccessRight);
+		IBase * pBaseEntity(nullptr);
+		pBaseEntity = pAccessRight.get();
+		Lib3MF_AccessRight entityHandle = pBaseEntity;
+
+		//figure out the size of the key.
+		Lib3MF_uint64 needed = 0;
+		Lib3MF_uint64 result = 0;
+		(*pTheCallback)(entityHandle, cipher.size(), cipher.data(),
+			0, &needed, nullptr, ctx.m_pUserData, &result);
+		if (result == 0)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_CALCULATIONABORTED);
+
+		plain.resize(needed, 0);
+
+		result = 0;
+		(*pTheCallback)(entityHandle, cipher.size(), cipher.data(),
+			plain.size(), nullptr, plain.data(), ctx.m_pUserData, &result);
+		if (result == 0)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_CALCULATIONABORTED);
+		return (NMR::nfUint64)result;
+	};
+	reader().secureContext()->addKekCtx(sConsumerID, descriptor);
+}
+void Lib3MF::Impl::CReader::SetContentEncryptionCallback(const Lib3MF::ContentEncryptionCallback pTheCallback, const Lib3MF_pvoid pUserData) {
+	NMR::ContentEncryptionDescriptor descriptor;
+	descriptor.m_sDekDecryptData.m_pUserData = pUserData;
+	descriptor.m_fnCrypt = [this, pTheCallback](NMR::nfUint64 size, NMR::nfByte const * cipher, NMR::nfByte * plain, NMR::ContentEncryptionContext & ctx) {
+		std::shared_ptr<CContentEncryptionParams> pCekParams = std::make_shared<CContentEncryptionParams>(ctx.m_sParams);
+		IBase * pBaseEntity(nullptr);
+		pBaseEntity = pCekParams.get();
+		Lib3MF_ContentEncryptionParams entityHandle = pBaseEntity;
+		Lib3MF_uint64 result = 0;
+		(*pTheCallback)(entityHandle, (Lib3MF_uint64)size, cipher, (Lib3MF_uint64)size, nullptr, plain, ctx.m_pUserData, &result);
+		if (result == 0)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_CALCULATIONABORTED);
+		return (NMR::nfUint64)result;
+	};
+	reader().secureContext()->setDekCtx(descriptor);
 }
 

@@ -53,7 +53,7 @@ namespace NMR {
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 	public:
 		CModelReaderNode100_Triangle() = delete;
-		CModelReaderNode100_Triangle(_In_ PModelReaderWarnings pWarnings);
+		CModelReaderNode100_Triangle(_In_ PModelWarnings pWarnings);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 		void retrieveIndices(_Out_ nfInt32 & nIndex1, _Out_ nfInt32 & nIndex2, _Out_ nfInt32 & nIndex3, nfInt32 nNodeCount);

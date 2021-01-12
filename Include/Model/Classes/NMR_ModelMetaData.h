@@ -35,7 +35,7 @@ metadata, and can be attached to any 3MF model node.
 #ifndef __NMR_MODELMETADATA
 #define __NMR_MODELMETADATA
 
-#include "Common/NMR_Types.h" 
+#include "Common/NMR_Types.h"
 #include "Common/Platform/NMR_SAL.h"
 #include <memory>
 #include <map>
@@ -69,9 +69,7 @@ namespace NMR {
 
 		std::string getKey();
 		
-		static void decomposeKeyIntoNamespaceAndName(const std::string &sKey, std::string &sNameSpace, std::string &sName);
 		static bool isValidNamespaceAndName(std::string sNameSpace, std::string sName);
-		static std::string calculateKey(const std::string &sNameSpace, const std::string &sName);
 	};
 
 	typedef std::shared_ptr <CModelMetaData> PModelMetaData;

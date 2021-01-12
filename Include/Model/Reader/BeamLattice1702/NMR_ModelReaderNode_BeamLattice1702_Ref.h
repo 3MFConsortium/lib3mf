@@ -46,7 +46,7 @@ namespace NMR {
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 	public:
 		CModelReaderNode_BeamLattice1702_Ref() = delete;
-		CModelReaderNode_BeamLattice1702_Ref(_In_ PModelReaderWarnings pWarnings);
+		CModelReaderNode_BeamLattice1702_Ref(_In_ PModelWarnings pWarnings);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 		void retrieveIndex(_Out_ nfInt32 & nIndex);

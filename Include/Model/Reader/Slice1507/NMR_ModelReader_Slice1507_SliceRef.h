@@ -51,7 +51,7 @@ namespace NMR {
 
 	public:
 		CModelReaderNode_Slice1507_SliceRef() = delete;
-		CModelReaderNode_Slice1507_SliceRef(_In_ PModelReaderWarnings pWarnings);
+		CModelReaderNode_Slice1507_SliceRef(_In_ PModelWarnings pWarnings);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 		

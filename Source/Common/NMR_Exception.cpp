@@ -178,7 +178,7 @@ namespace NMR {
 		case NMR_ERROR_DUPLICATETEXTURE: return "Texture is already existing";
 		case NMR_ERROR_DUPLICATETEXTUREID: return "Texture ID is already existing";
 		case NMR_ERROR_PARTTOOLARGE: return "Part is too large";
-		case NMR_ERROR_DUPLICATETEXTUREPATH: return "Texture path is already existing";
+		case NMR_ERROR_DUPLICATETEXTUREPATH: return "Texture getPath is already existing";
 		case NMR_ERROR_DUPLICATETEXTUREWIDTH: return "Texture width is already existing";
 		case NMR_ERROR_DUPLICATETEXTUREHEIGHT: return "Texture height is already existing";
 		case NMR_ERROR_DUPLICATETEXTUREDEPTH: return "Texture depth is already existing";
@@ -332,7 +332,7 @@ namespace NMR {
 		case NMR_ERROR_SLICESTACK_SLICESANDSLICEREF: return "Slicestack contains slices and slicerefs";
 		case NMR_ERROR_ILLFORMATUUID: return "A UUID is ill formatted";
 		case NMR_ERROR_INVALIDSLICESTACK: return "A slice stack resource is invalid";
-		case NMR_ERROR_DUPLICATEPATH: return "Duplicate path attribute";
+		case NMR_ERROR_DUPLICATEPATH: return "Duplicate getPath attribute";
 		case NMR_ERROR_DUPLICATEUUID: return "Duplicate UUID attribute";
 		case NMR_ERROR_REFERENCESTOODEEP: return "References in production extension go deeper than one level.";
 		case NMR_ERROR_SLICEREFSTOODEEP: return "A slicestack referenced via a slicepath cannot reference another slicestack.";
@@ -396,7 +396,40 @@ namespace NMR {
 		case NMR_ERROR_MULTIPROPERTIES_INVALID_MULTI_ELEMENT: return "A multi-element is invalid";
 		case NMR_ERROR_INVALID_RESOURCE_INDEX: return "A Resource Index is invalid";
 		case NMR_ERROR_VERSION093_NOT_SUPPORTED: return "This document contains content from Version 093 of the core-specification. This is not fully supported by Lib3MF version 2 or later.";
-
+		case NMR_ERROR_ATTACHMENTMODELMISMATCH: return "The model of an attachment does not match the model of a resource.";
+		case NMR_ERROR_DUPLICATEPACKAGEPATH: return "The PackagePath of a model is not unique.";
+		case NMR_ERROR_PRODUCTIONEXTENSION_REQUIRED: return "Serialization of this Model requires the production extension.";
+		case NMR_ERROR_MODELRESOURCE_IN_DIFFERENT_MODEL: return "Referenced model resource must not be in a different model.";
+		case NMR_ERROR_PATH_NOT_ABSOLUTE: return "A path attribute element is not absolute.";
+		case NMR_ERROR_BEAMSET_IDENTIFIER_NOT_UNIQUE: return "A beamset identifier is not unique.";
+			//keystore error codes
+		case NMR_ERROR_KEYSTOREDUPLICATECONSUMER: return "A consumer already exists for this consumerid";
+		case NMR_ERROR_KEYSTOREDUPLICATECONSUMERID: return "The attribute consumerid is duplicated";
+		case NMR_ERROR_KEYSTOREDUPLICATECONSUMERKEYID: return "The KeyStore Consumer key id is not unique ";
+		case NMR_ERROR_KEYSTOREDUPLICATERESOURCEDATAPATH: return "The attribute path is duplicated";
+		case NMR_ERROR_KEYSTOREDUPLICATECONSUMERINDEX: return "The attribute consumerindex is duplicated";
+		case NMR_ERROR_KEYSTOREDUPLICATERESOURCEDATA: return "A ResourceData already exists for this path in the KeyStore";
+		case NMR_ERROR_KEYSTOREDUPLICATEACCESSRIGHT: return "An AccessRight already exists for this consumer in a ResourceDataGroup";
+		case NMR_ERROR_KEYSTOREDUPLICATERESOURCEDATAGROUP: return "A resource data group already exist for this keyuuid";
+		case NMR_ERROR_KEYSTOREINVALIDALGORITHM: return "The algorithm attribute is invalid";
+		case NMR_ERROR_KEYSTOREINVALIDCOMPRESSION: return "The KeyStore ResourceData compression is invalid";
+		case NMR_ERROR_KEYSTOREINVALIDCIPHERVALUE: return "Invalid CipherValue elment value";
+		case NMR_ERROR_KEYSTOREINVALIDMGF: return "The mfgalgorithm attribute has invalid value";
+		case NMR_ERROR_KEYSTOREINVALIDDIGEST: return "The digestmethod attribute has invalid value";
+		case NMR_ERROR_KEYSTOREINVALIDCONSUMERINDEX: return "The attribute consumerindex is invalid";
+		case NMR_ERROR_KEYSTOREINVALIDKEYUUID: return "Attribute keyuuid is invalid, a default value has been assigned.";
+		case NMR_ERROR_KEYSTOREMISSINGCIPHERDATA: return "Element cipherdata is missing";
+		case NMR_ERROR_KEYSTOREMISSINGCONSUMERID: return "Attribute consumerid is missing, a default value has been assigned.";
+		case NMR_ERROR_KEYSTOREMISSINGCONSUMERINDEX: return "Attribute consumerindex is missing, a default value has been assigned.";
+		case NMR_ERROR_KEYSTOREMISSINGKEKPARAMS: return "Element kekparams is missing, , default values have been assigned.";
+		case NMR_ERROR_KEYSTOREMISSINGCEKPARAMS: return "Element cekparams is missing.";
+		case NMR_ERROR_KEYSTOREMISSINGKEYUUID: return "Attribute keyuuid is missing, , a default value has been assigned.";
+		case NMR_ERROR_KEYSTOREMISSINGPATH: return "Attribute path is missing on a resouredata";
+		case NMR_ERROR_KEYSTOREMISSINGALGORTHM: return "An algorithm attribute is missing, a default value has been assigned.";
+		case NMR_ERROR_KEYSTOREINCONSISTENTKEKPARAMS: return "Element kekparams ha invalid configuration";
+		case NMR_ERROR_KEYSTOREOPCCOULDNOTGETSTREAM: return "Could not get KeyStore stream";
+		case NMR_ERROR_KEYSTOREUNSUPPORTEDALGORITHM: return "The algorithm attribute is unsupported";
+		case NMR_ERROR_KEYSTORETOOMANYELEMENTS: return "Too many elements added to a keystore tree";
 
 		// XML Parser Error Constants(0x9XXX)
 		case NMR_ERROR_XMLPARSER_INVALIDATTRIBVALUE: return "Invalid XML attribute value";
@@ -432,6 +465,9 @@ namespace NMR {
 		case NMR_ERROR_INVALIDNAMELENGTH: return "Invalid name length";
 		case NMR_ERROR_COULDNOTCREATEMODEL: return "Could not create model";
 		case NMR_ERROR_INVALIDTEXTURETYPE: return "Invalid Texture type";
+		case NMR_ERROR_KEKDESCRIPTORNOTFOUND: return "Required key encryption client was not registered for a consumer";
+		case NMR_ERROR_DEKDESCRIPTORNOTFOUND: return "Required data encryption client was not registered";
+		case NMR_ERROR_RNGCALLBACKNOTCRYPTOSTRONG: return "Using cryptographically weak random number generator";
 
 		default:
 			return "unknown error";

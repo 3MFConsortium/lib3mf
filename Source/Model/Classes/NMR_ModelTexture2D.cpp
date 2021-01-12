@@ -62,6 +62,8 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_INVALIDTEXTURE);
 		if (pAttachment->getRelationShipType() != PACKAGE_TEXTURE_RELATIONSHIP_TYPE)
 			throw CNMRException(NMR_ERROR_INVALIDRELATIONSHIPTYPEFORTEXTURE);
+		if (pAttachment->getModel() != pModel)
+			throw CNMRException(NMR_ERROR_ATTACHMENTMODELMISMATCH);
 
 		return std::make_shared<CModelTexture2DResource>(CModelTexture2DResource(sID, pModel, pAttachment));
 	}
@@ -75,8 +77,15 @@ namespace NMR {
 
 	void CModelTexture2DResource::setAttachment(PModelAttachment pAttachment)
 	{
+		if (pAttachment.get() == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		if (pAttachment->getModel() != getModel())
+			throw CNMRException(NMR_ERROR_ATTACHMENTMODELMISMATCH);
+
 		if (pAttachment->getRelationShipType() != PACKAGE_TEXTURE_RELATIONSHIP_TYPE)
 			throw CNMRException(NMR_ERROR_INVALIDRELATIONSHIPTYPEFORTEXTURE);
+
 		m_pAttachment = pAttachment;
 	}
 
@@ -211,12 +220,14 @@ namespace NMR {
 		m_eFilter = eFilter;
 	}
 
-	void CModelTexture2DResource::copyFrom(_In_ CModelTexture2DResource * pSourceTexture)
+	void CModelTexture2DResource::copyFrom(_In_ CModelTexture2DResource * pSourceTexture, _In_ nfBool bCopyAttachment)
 	{
 		if (pSourceTexture == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-		setAttachment(pSourceTexture->getAttachment());
+		if (bCopyAttachment)
+			setAttachment(pSourceTexture->getAttachment());
+
 		setContentType(pSourceTexture->getContentType ());
 		setTileStyleU(pSourceTexture->getTileStyleU());
 		setTileStyleV(pSourceTexture->getTileStyleV());

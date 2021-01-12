@@ -1,7 +1,7 @@
 # lib3mf
-[![Build Status](https://travis-ci.org/3MFConsortium/lib3mf.svg?branch=release%2F2.0.0)](https://travis-ci.org/3MFConsortium/lib3mf)
+[![Build Status](https://travis-ci.org/3MFConsortium/lib3mf.svg?branch=release%2F2.1.0)](https://travis-ci.org/3MFConsortium/lib3mf)
 [![Documentation Status](https://readthedocs.org/projects/lib3mf/badge/?version=master)](https://readthedocs.org/projects/lib3mf)
-[![Version 2.0.0](https://img.shields.io/static/v1.svg?label=lib3mf&message=v2.0.0&color=green)]()
+[![Version 2.1.0](https://img.shields.io/static/v1.svg?label=lib3mf&message=v2.1.0&color=green)]()
 [![Supported platforms](https://img.shields.io/static/v1.svg?label=platform&message=windows%20%7C%20macos%20%7C%20linux&color=lightgrey)]()
 [![Simplified BSD License](https://img.shields.io/static/v1.svg?label=license&message=BSD&color=green)](LICENSE)
 
@@ -37,3 +37,11 @@ lib3mf is an open source project and supported by the [3MF Consortium](https://3
 
 Contributions are welcome and we are always looking for people that improve the implementation of the specification and extensions of 3MF. Have a look at the [contributor's guide](CONTRIBUTING.md) for details.
 This page also contains a section about building lib3mf from source or obtaining nightly snapshot builds.
+
+## Licenses and third party code
+lib3mf is released under the [BSD license](LICENSE). The library contains code of the following [third parties](SDK/Credits.txt):
+1. libzip 1.2.8, https://libzip.org/license/
+2. zlib 1.2.8, http://www.zlib.net/zlib_license.html
+3. cpp-base64 1.01.00, https://github.com/ReneNyffenegger/cpp-base64/blob/master/LICENSE
+
+In addition, the automated tests of lib3mf make use of LibReSSL 3.0.2, [License](Tests/libressl/COPYING).

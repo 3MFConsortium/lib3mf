@@ -57,29 +57,29 @@ void CBeamLattice::SetMinLength (const Lib3MF_double dMinLength)
 	return m_mesh.setBeamLatticeMinLength(dMinLength);
 }
 
-void CBeamLattice::GetClipping (eLib3MFBeamLatticeClipMode & eClipMode, Lib3MF_uint32 & nResourceID)
+void CBeamLattice::GetClipping(eLib3MFBeamLatticeClipMode & eClipMode, Lib3MF_uint32 & nUniqueResourceID)
 {
 	if (!m_pAttributes->m_bHasClippingMeshID) {
 		eClipMode = eBeamLatticeClipMode::NoClipMode;
-		nResourceID = 0;
+		nUniqueResourceID = 0;
 	}
 	else {
 		eClipMode = eBeamLatticeClipMode(m_pAttributes->m_eClipMode);
-		nResourceID = m_pAttributes->m_nClippingMeshID->getUniqueID();
+		nUniqueResourceID = m_pAttributes->m_pClippingMeshUniqueID->getUniqueID();
 	}
 }
 
-void CBeamLattice::SetClipping (const eLib3MFBeamLatticeClipMode eClipMode, const Lib3MF_uint32 nResourceID)
+void CBeamLattice::SetClipping(const eLib3MFBeamLatticeClipMode eClipMode, const Lib3MF_uint32 nUniqueResourceID)
 {
-	if ( ((int)eClipMode == (NMR::eModelBeamLatticeClipMode::MODELBEAMLATTICECLIPMODE_NONE)) || (nResourceID == 0) ){
+	if ( ((int)eClipMode == (NMR::eModelBeamLatticeClipMode::MODELBEAMLATTICECLIPMODE_NONE)) || (nUniqueResourceID == 0) ){
 		m_pAttributes->m_eClipMode = NMR::eModelBeamLatticeClipMode(eClipMode);
 		m_pAttributes->m_bHasClippingMeshID = false;
-		m_pAttributes->m_nClippingMeshID = nullptr;
+		m_pAttributes->m_pClippingMeshUniqueID = nullptr;
 	}
 	else {
 		NMR::CModel* pModel = m_pMeshObject->getModel();
 
-		NMR::CModelMeshObject * pClippingObject = dynamic_cast<NMR::CModelMeshObject*>(pModel->findObject(nResourceID));
+		NMR::CModelMeshObject * pClippingObject = dynamic_cast<NMR::CModelMeshObject*>(pModel->findObject(nUniqueResourceID));
 		if (pClippingObject == nullptr) {
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
 		}
@@ -91,32 +91,32 @@ void CBeamLattice::SetClipping (const eLib3MFBeamLatticeClipMode eClipMode, cons
 
 		m_pAttributes->m_eClipMode = NMR::eModelBeamLatticeClipMode(eClipMode);;
 		m_pAttributes->m_bHasClippingMeshID = true;
-		m_pAttributes->m_nClippingMeshID = pClippingObject->getResourceID();
+		m_pAttributes->m_pClippingMeshUniqueID = pClippingObject->getPackageResourceID();
 	}
 }
 
-bool CBeamLattice::GetRepresentation (Lib3MF_uint32 & nResourceID)
+bool CBeamLattice::GetRepresentation (Lib3MF_uint32 & nUniqueResourceID)
 {
 	if (m_pAttributes->m_bHasRepresentationMeshID) {
-		nResourceID = m_pAttributes->m_nRepresentationID->getUniqueID();
+		nUniqueResourceID = m_pAttributes->m_pRepresentationUniqueID->getUniqueID();
 		return true;
 	}
 	else {
-		nResourceID = 0;
+		nUniqueResourceID = 0;
 		return false;
 	}
 }
 
-void CBeamLattice::SetRepresentation (const Lib3MF_uint32 nResourceID)
+void CBeamLattice::SetRepresentation (const Lib3MF_uint32 nUniqueResourceID)
 {
-	if (nResourceID == 0) {
+	if (nUniqueResourceID == 0) {
 		m_pAttributes->m_bHasRepresentationMeshID = false;
-		m_pAttributes->m_nRepresentationID = nullptr;
+		m_pAttributes->m_pRepresentationUniqueID = nullptr;
 	}
 	else {
 		NMR::CModel* pModel = m_pMeshObject->getModel();
 
-		NMR::CModelMeshObject * pRepresentationObject = dynamic_cast<NMR::CModelMeshObject*>(pModel->findObject(nResourceID));
+		NMR::CModelMeshObject * pRepresentationObject = dynamic_cast<NMR::CModelMeshObject*>(pModel->findObject(nUniqueResourceID));
 		if (pRepresentationObject == nullptr) {
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
 		}
@@ -127,7 +127,24 @@ void CBeamLattice::SetRepresentation (const Lib3MF_uint32 nResourceID)
 		}
 
 		m_pAttributes->m_bHasRepresentationMeshID = true;
-		m_pAttributes->m_nRepresentationID = pRepresentationObject->getResourceID();
+		m_pAttributes->m_pRepresentationUniqueID = pRepresentationObject->getPackageResourceID();
+	}
+}
+
+void CBeamLattice::GetBallOptions (eLib3MFBeamLatticeBallMode & eBallMode, Lib3MF_double & dBallRadius)
+{
+	eBallMode = (eLib3MFBeamLatticeBallMode)m_mesh.getBeamLatticeBallMode();
+	dBallRadius = m_mesh.getDefaultBallRadius();
+}
+
+void CBeamLattice::SetBallOptions (const eLib3MFBeamLatticeBallMode eBallMode, const Lib3MF_double dBallRadius)
+{
+	if (eBallMode == eLib3MFBeamLatticeBallMode::None || dBallRadius > 0.0) {
+		m_mesh.setBeamLatticeBallMode((NMR::eModelBeamLatticeBallMode)eBallMode);
+		m_mesh.setDefaultBallRadius(dBallRadius);
+	}
+	else {
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
 	}
 }
 
@@ -196,6 +213,10 @@ void CBeamLattice::SetBeam (const Lib3MF_uint32 nIndex, const sLib3MFBeam BeamIn
 
 	meshBeam->m_radius[0] = BeamInfo.m_Radii[0];
 	meshBeam->m_radius[1] = BeamInfo.m_Radii[1];
+
+	// Occupied nodes may have changed, need to validate
+	m_mesh.scanOccupiedNodes();
+	m_mesh.validateBeamLatticeBalls();
 }
 
 void CBeamLattice::SetBeams(const Lib3MF_uint64 nBeamInfoBufferSize, const sLib3MFBeam * pBeamInfoBuffer)
@@ -203,7 +224,7 @@ void CBeamLattice::SetBeams(const Lib3MF_uint64 nBeamInfoBufferSize, const sLib3
 	if ((nBeamInfoBufferSize>0) && (!m_pMeshObject->isValidForBeamLattices()))
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_BEAMLATTICE_INVALID_OBJECTTYPE);
 
-	m_mesh.clearBeamLattice();
+	m_mesh.clearBeamLatticeBeams();
 
 	const sLib3MFBeam* pBeamInfoCurrent = pBeamInfoBuffer;
 	for (Lib3MF_uint32 nIndex = 0; nIndex < nBeamInfoBufferSize; nIndex++)
@@ -219,6 +240,8 @@ void CBeamLattice::SetBeams(const Lib3MF_uint64 nBeamInfoBufferSize, const sLib3
 		pBeamInfoCurrent++;
 	}
 
+	// Occupied nodes may have changed, need to validate
+	m_mesh.validateBeamLatticeBalls();
 }
 
 void CBeamLattice::GetBeams(Lib3MF_uint64 nBeamInfoBufferSize, Lib3MF_uint64* pBeamInfoNeededCount, sLib3MFBeam * pBeamInfoBuffer)
@@ -242,6 +265,206 @@ void CBeamLattice::GetBeams(Lib3MF_uint64 nBeamInfoBufferSize, Lib3MF_uint64* pB
 			beam->m_Radii[0] = meshBeam->m_radius[0];
 			beam->m_Radii[1] = meshBeam->m_radius[1];
 			beam++;
+		}
+	}
+}
+
+Lib3MF_uint32 CBeamLattice::GetBallCount ()
+{
+	eBeamLatticeBallMode ballMode = (eBeamLatticeBallMode)m_mesh.getBeamLatticeBallMode();
+
+	if (ballMode == eBeamLatticeBallMode::Mixed) {
+		return m_mesh.getBallCount();
+	}
+	else if (ballMode == eBeamLatticeBallMode::All) {
+		return m_mesh.getOccupiedNodeCount();
+	}
+	else {
+		return 0;
+	}
+}
+
+sLib3MFBall CBeamLattice::GetBall (const Lib3MF_uint32 nIndex)
+{
+	sLib3MFBall ball;
+
+	eBeamLatticeBallMode ballMode;
+	Lib3MF_double defaultBallRadius;
+	GetBallOptions(ballMode, defaultBallRadius);
+
+	Lib3MF_uint32 ballCount = GetBallCount();
+	if (nIndex >= ballCount) {
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDRESOURCEINDEX);
+	}
+
+	if (ballMode == eBeamLatticeBallMode::Mixed) {
+		NMR::MESHBALL * meshBall = m_mesh.getBall(nIndex);
+
+		ball.m_Index = meshBall->m_nodeindex;
+
+		ball.m_Radius = meshBall->m_radius;
+
+		return ball;
+	}
+	else if (ballMode == eBeamLatticeBallMode::All) {
+		Lib3MF_uint32 ballNodeIndex = m_mesh.getOccupiedNode(nIndex)->m_index;
+
+		Lib3MF_uint32 meshBallCount = m_mesh.getBallCount();
+		for (Lib3MF_uint32 iBall = 0; iBall < meshBallCount; iBall++) {
+			NMR::MESHBALL * meshBall = m_mesh.getBall(iBall);
+
+			if (meshBall->m_nodeindex == ballNodeIndex) {
+				ball.m_Index = meshBall->m_nodeindex;
+
+				ball.m_Radius = meshBall->m_radius;
+
+				return ball;
+			}
+		}
+
+		ball.m_Index = ballNodeIndex;
+
+		ball.m_Radius = defaultBallRadius;
+
+		return ball;
+	}
+	else {
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+	}
+}
+
+bool isBallValid(const Lib3MF_uint32 nNodeCount, const sLib3MFBall& BallInfo)
+{
+	if (BallInfo.m_Index >= nNodeCount)
+		return false;
+	if (BallInfo.m_Radius <= 0)
+		return false;
+	return true;
+}
+
+Lib3MF_uint32 CBeamLattice::AddBall (const sLib3MFBall BallInfo)
+{
+	if (!m_pMeshObject->isValidForBeamLattices())
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_BEAMLATTICE_INVALID_OBJECTTYPE);
+
+	// Check for input validity
+	if (!isBallValid(m_mesh.getNodeCount(), BallInfo))
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+
+	// retrieve node and add ball
+	NMR::MESHNODE * pNode = m_mesh.getNode(BallInfo.m_Index);
+
+	NMR::MESHBALL * pMeshBall = m_mesh.addBall(pNode, BallInfo.m_Radius);
+	return pMeshBall->m_index;
+}
+
+void CBeamLattice::SetBall (const Lib3MF_uint32 nIndex, const sLib3MFBall BallInfo)
+{
+	if (!isBallValid(m_mesh.getNodeCount(), BallInfo))
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+
+	if (!m_mesh.isNodeOccupied(BallInfo.m_Index)) {
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+	}
+
+	eBeamLatticeBallMode ballMode = (eBeamLatticeBallMode(m_mesh.getBeamLatticeBallMode()));
+
+	if (ballMode == eBeamLatticeBallMode::Mixed) {
+		NMR::MESHBALL * meshBall = m_mesh.getBall(nIndex);
+
+		meshBall->m_nodeindex = BallInfo.m_Index;
+
+		meshBall->m_radius = BallInfo.m_Radius;
+	}
+	else if (ballMode == eBeamLatticeBallMode::All) {
+		Lib3MF_uint32 ballNodeIndex = m_mesh.getOccupiedNode(nIndex)->m_index;
+		Lib3MF_uint32 meshBallCount = m_mesh.getBallCount();
+		for (Lib3MF_uint32 iBall = 0; iBall < meshBallCount; iBall++) {
+			NMR::MESHBALL * meshBall = m_mesh.getBall(iBall);
+
+			if (meshBall->m_nodeindex == ballNodeIndex) {
+				meshBall->m_nodeindex = BallInfo.m_Index;
+				meshBall->m_radius = BallInfo.m_Radius;
+				return;
+			}
+		}
+
+		// Not in mesh, add the ball
+		NMR::MESHNODE * pNode = m_mesh.getNode(BallInfo.m_Index);
+
+		m_mesh.addBall(pNode, BallInfo.m_Radius);
+	}
+	else {
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+	}
+}
+
+void CBeamLattice::SetBalls (const Lib3MF_uint64 nBallInfoBufferSize, const sLib3MFBall * pBallInfoBuffer)
+{
+	if ((nBallInfoBufferSize > 0) && (!m_pMeshObject->isValidForBeamLattices()))
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_BEAMLATTICE_INVALID_OBJECTTYPE);
+
+	m_mesh.clearBeamLatticeBalls();
+
+	const sLib3MFBall * pBallInfoCurrent = pBallInfoBuffer;
+	for (Lib3MF_uint32 nIndex = 0; nIndex < nBallInfoBufferSize; nIndex++)
+	{
+		if (!isBallValid(m_mesh.getNodeCount(), *pBallInfoCurrent))
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+
+		NMR::MESHNODE * pNode = m_mesh.getNode(pBallInfoCurrent->m_Index);
+
+		m_mesh.addBall(pNode, pBallInfoCurrent->m_Radius);
+		pBallInfoCurrent++;
+	}
+}
+
+void CBeamLattice::GetBalls(Lib3MF_uint64 nBallInfoBufferSize, Lib3MF_uint64 * pBallInfoNeededCount, sLib3MFBall * pBallInfoBuffer)
+{
+	Lib3MF_uint32 ballCount = GetBallCount();
+	if (pBallInfoNeededCount)
+		*pBallInfoNeededCount = ballCount;
+
+	if (nBallInfoBufferSize >= ballCount && pBallInfoBuffer) {
+		eBeamLatticeBallMode ballMode;
+		Lib3MF_double defaultBallRadius;
+		GetBallOptions(ballMode, defaultBallRadius);
+
+		if (ballMode == eBeamLatticeBallMode::Mixed) {
+			sLib3MFBall * ball = pBallInfoBuffer;
+			for (Lib3MF_uint32 iBall = 0; iBall < ballCount; iBall++) {
+				const NMR::MESHBALL * meshBall = m_mesh.getBall(iBall);
+
+				ball->m_Index = meshBall->m_nodeindex;
+
+				ball->m_Radius = meshBall->m_radius;
+				ball++;
+			}
+		}
+		else if (ballMode == eBeamLatticeBallMode::All) {
+			Lib3MF_uint32 meshBallCount = m_mesh.getBallCount();
+
+			// Sort balls that are in the mesh into a map by node index
+			std::map<Lib3MF_uint32, Lib3MF_double> meshBallMap;
+			for (Lib3MF_uint32 iBall = 0; iBall < meshBallCount; iBall++) {
+				const NMR::MESHBALL * meshBall = m_mesh.getBall(iBall);
+
+				meshBallMap[meshBall->m_nodeindex] = meshBall->m_radius;
+			}
+
+			// Fill balls from default or mesh balls
+			sLib3MFBall * ball = pBallInfoBuffer;
+			for (Lib3MF_uint32 i = 0; i < ballCount; i++) {
+				Lib3MF_uint32 currNodeIndex = m_mesh.getOccupiedNode(i)->m_index;
+
+				ball->m_Index = currNodeIndex;
+				ball->m_Radius = meshBallMap[currNodeIndex] > 0.0 ? meshBallMap[currNodeIndex] : defaultBallRadius;
+
+				ball++;
+			}
+		}
+		else {
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
 		}
 	}
 }

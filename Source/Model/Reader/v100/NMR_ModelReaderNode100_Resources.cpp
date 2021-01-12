@@ -49,7 +49,7 @@ XML Model Stream.
 
 namespace NMR {
 
-	CModelReaderNode100_Resources::CModelReaderNode100_Resources(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings, _In_z_ const std::string sPath,
+	CModelReaderNode100_Resources::CModelReaderNode100_Resources(_In_ CModel * pModel, _In_ PModelWarnings pWarnings, _In_z_ const std::string sPath,
 		_In_ PProgressMonitor pProgressMonitor)
 		: CModelReaderNode(pWarnings, pProgressMonitor)
 	{

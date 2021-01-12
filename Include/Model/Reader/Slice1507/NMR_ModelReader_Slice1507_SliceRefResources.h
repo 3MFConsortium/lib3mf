@@ -50,7 +50,7 @@ namespace NMR {
 
 	public:
 		CModelReader_Slice1507_SliceRefResources() = delete;
-		CModelReader_Slice1507_SliceRefResources(_In_ CModel *pModel, _In_ PModelReaderWarnings pWarnings, _In_z_ const std::string sSliceRefPath);
+		CModelReader_Slice1507_SliceRefResources(_In_ CModel *pModel, _In_ PModelWarnings pWarnings, _In_z_ const std::string sSliceRefPath);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 	};
