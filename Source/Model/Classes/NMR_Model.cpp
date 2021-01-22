@@ -1339,11 +1339,7 @@ namespace NMR {
 		}
 	}
 
-	nfBool CModel::hasExtension(_In_ const std::string sNameSpaceURI) {
-		return getExtensionByURI(sNameSpaceURI) != nullptr;
-	}
-
-	PExtension CModel::getExtensionByURI(_In_ const std::string sNameSpaceURI) {
+	PExtension CModel::findExtensionByURI(_In_ const std::string sNameSpaceURI) {
 		for (auto iIterator = m_Extensions.begin(); iIterator != m_Extensions.end(); iIterator++) {
 			if ((*iIterator)->getNameSpaceURI() == sNameSpaceURI) {
 				return *iIterator;
@@ -1352,7 +1348,7 @@ namespace NMR {
 		return nullptr;
 	}
 
-	PExtension CModel::getExtensionByPrefix(_In_ const std::string sNameSpacePrefix) {
+	PExtension CModel::findExtensionByPrefix(_In_ const std::string sNameSpacePrefix) {
 		for (auto iIterator = m_Extensions.begin(); iIterator != m_Extensions.end(); iIterator++) {
 			if ((*iIterator)->getNameSpacePrefix() == sNameSpacePrefix) {
 				return *iIterator;
@@ -1361,4 +1357,17 @@ namespace NMR {
 		return nullptr;
 	}
 
+	PExtension CModel::getExtension(_In_ nfUint32 nIndex)
+	{
+		nfUint32 nCount = getExtensionCount();
+		if (nIndex >= nCount)
+			throw CNMRException(NMR_ERROR_INVALIDINDEX);
+
+		return m_Extensions[nIndex];
+	}
+
+	nfUint32 CModel::getExtensionCount()
+	{
+		return (nfUint32)m_Extensions.size();
+	}
 }

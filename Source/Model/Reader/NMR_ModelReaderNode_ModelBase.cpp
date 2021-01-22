@@ -75,7 +75,7 @@ namespace NMR {
 		std::vector<std::string> tokens{ std::istream_iterator<std::string,  char>{iss},
 			std::istream_iterator<std::string,  char>{} };
 		for (auto token : tokens) {
-			auto pExt = m_pModel->getExtensionByPrefix(token);
+			auto pExt = m_pModel->findExtensionByPrefix(token);
 			// is the extension listed?
 			if (pExt == nullptr) {
 				throw CNMRException(NMR_ERROR_INVALIDREQUIREDEXTENSIONPREFIX);

@@ -337,9 +337,10 @@ namespace NMR {
 		// Extensions
 		PExtension addExtension(_In_ const std::string sNameSpaceURI, _In_ std::string sNameSpacePrefix, _In_ nfBool bIsRequired);
 		void removeExtension(_In_ const std::string sNameSpaceURI);
-		nfBool hasExtension(_In_ const std::string sNameSpaceURI);
-		PExtension getExtensionByURI(_In_ const std::string sNameSpaceURI);
-		PExtension getExtensionByPrefix(_In_ const std::string sNameSpacePrefix);
+		PExtension findExtensionByURI(_In_ const std::string sNameSpaceURI);
+		PExtension findExtensionByPrefix(_In_ const std::string sNameSpacePrefix);
+		PExtension getExtension(_In_ nfUint32 nIndex);
+		nfUint32 getExtensionCount();
 
 	};
 

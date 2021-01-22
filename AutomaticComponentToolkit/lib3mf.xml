@@ -1586,8 +1586,47 @@
 		<method name="GetKeyStore" description="Gets the keystore associated with this model">
 			<param name="KeyStore" type="handle" class="KeyStore" pass="return" description="The package keystore"/>
 		</method>
+		<method name="AddExtension" description="adds an extension to the model.">
+			<param name="URI" type="string" pass="in" description="NameSpace URI of the extension"/>
+			<param name="Prefix" type="string" pass="in" description="NameSpace prefix of the extension"/>
+			<param name="IsRequired" type="bool" pass="in" description="Whether the extensions is required or not"/>
+			<param name="ExtensionInstance" type="handle" class="Extension" pass="return" description="Instance of the extension object"/>
+		</method>
+		<method name="RemoveExtension" description="Removes extension object from the model.">
+			<param name="URI" type="string" pass="in" description="NameSpace URI of the extension"/>
+		</method>
+		<method name="GetExtension" description="retrieves an extension object from the model..">
+			<param name="Index" type="uint32" pass="in" description="Index of the extension"/>
+			<param name="ExtensionInstance" type="handle" class="Extension" pass="return" description="Instance of the extension object"/>
+		</method>
+		<method name="FindExtension" description="retrieves an extension object from the model.">
+			<param name="URI" type="string" pass="in" description="Path URI in the package"/>
+			<param name="ExtensionInstance" type="handle" class="Extension" pass="return" description="Instance of the extension object"/>
+		</method>
+		<method name="GetExtensionCount" description="retrieves the number of extensions of the model.">
+			<param name="ExtensionCount" type="uint32" pass="return" description="Returns the number of extensions."/>
+		</method>
+	</class>		
+	<class name="Extension">
+		<method name="GetNameSpaceURI" description="Returns the namespace URI.">
+			<param name="NameSpaceURI" type="string" pass="return" description="Returns the namespace URI"/>
+		</method>
+		<method name="SetNameSpaceURI" description="Sets the namespace URI.">
+			<param name="NameSpaceURI" type="string" pass="in" description=" the namespace URI."/>
+		</method>
+		<method name="GetNameSpacePrefix" description="Returns the namespace prefix.">
+			<param name="NameSpacePrefix" type="string" pass="return" description="Returns the namespace prefix"/>
+		</method>
+		<method name="SetNameSpacePrefix" description="Sets the namespace prefix.">
+			<param name="NameSpacePrefix" type="string" pass="in" description=" the namespace prefix."/>
+		</method>
+		<method name="SetIsRequired" description="Sets if the extension is required or not.">
+			<param name="IsRequired" type="bool" pass="in" description="flag whether extension is required or not."/>
+		</method>
+		<method name="GetIsRequired" description="Queries whether theextension is required or not">
+			<param name="IsRequired" type="bool" pass="return" description="returns flag whether extension is required or not or not."/>
+		</method>
 	</class>
-
 	<global baseclassname="Base" releasemethod="Release" acquiremethod="Acquire" journalmethod="SetJournal" versionmethod="GetLibraryVersion" errormethod="GetLastError" prereleasemethod="GetPrereleaseInformation" buildinfomethod="GetBuildInformation">
 		<method name="GetLibraryVersion" description="retrieves the binary version of this library.">
 			<param name="Major" type="uint32" pass="out" description="returns the major version of this library"/>

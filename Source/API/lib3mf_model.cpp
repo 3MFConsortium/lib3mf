@@ -60,6 +60,7 @@ Abstract: This is a stub class definition of CModel
 #include "lib3mf_multipropertygroupiterator.hpp"
 #include "lib3mf_packagepart.hpp"
 #include "lib3mf_keystore.hpp"
+#include "lib3mf_extension.hpp"
 
 
 // Include custom headers here.
@@ -704,5 +705,25 @@ void Lib3MF::Impl::CModel::SetRandomNumberCallback(Lib3MF::RandomNumberCallback 
 	};
 
 	m_model->setCryptoRandCallback(descriptor);
+}
+
+IExtension * Lib3MF::Impl::CModel::AddExtension(const std::string & sNameSpaceURI, const std::string & sNameSpacePrefix, bool bIsRequired) {
+	return new CExtension(m_model->addExtension(sNameSpaceURI, sNameSpacePrefix, bIsRequired));
+}
+
+void Lib3MF::Impl::CModel::RemoveExtension(const std::string & sNameSpaceURI) {
+	m_model->removeExtension(sNameSpaceURI);
+}
+
+IExtension * Lib3MF::Impl::CModel::GetExtension(const Lib3MF_uint32 nIndex) {
+	return new CExtension(m_model->getExtension(nIndex));
+}
+
+IExtension * Lib3MF::Impl::CModel::FindExtension(const std::string & sNameSpaceURI) {
+	return new CExtension(m_model->findExtensionByURI(sNameSpaceURI));
+}
+
+Lib3MF_uint32 Lib3MF::Impl::CModel::GetExtensionCount() {
+	return m_model->getExtensionCount();
 }
 

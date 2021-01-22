@@ -194,6 +194,16 @@ public:
 	IKeyStore * GetKeyStore();
 
 	void SetRandomNumberCallback(const Lib3MF::RandomNumberCallback pTheCallback, const Lib3MF_pvoid pUserData);
+
+	IExtension * AddExtension(const std::string & sNameSpaceURI, const std::string & sNameSpacePrefix, bool bIsRequired) override;
+
+	void RemoveExtension(const std::string & sNameSpaceURI) override;
+
+	IExtension * GetExtension(const Lib3MF_uint32 nIndex) override;
+
+	IExtension * FindExtension(const std::string & sNameSpaceURI) override;
+
+	Lib3MF_uint32 GetExtensionCount() override;
 };
 
 }
