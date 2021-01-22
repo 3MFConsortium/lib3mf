@@ -197,6 +197,8 @@ public:
 
 	IExtension * AddExtension(const std::string & sNameSpaceURI, const std::string & sNameSpacePrefix, bool bIsRequired) override;
 
+	bool HasExtension(const std::string & sNameSpaceURI) override;
+
 	void RemoveExtension(const std::string & sNameSpaceURI) override;
 
 	IExtension * GetExtension(const Lib3MF_uint32 nIndex) override;

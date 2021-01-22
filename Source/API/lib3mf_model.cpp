@@ -715,6 +715,10 @@ void Lib3MF::Impl::CModel::RemoveExtension(const std::string & sNameSpaceURI) {
 	m_model->removeExtension(sNameSpaceURI);
 }
 
+bool Lib3MF::Impl::CModel::HasExtension(const std::string & sNameSpaceURI) {
+	return m_model->findExtensionByURI(sNameSpaceURI) != nullptr;
+}
+
 IExtension * Lib3MF::Impl::CModel::GetExtension(const Lib3MF_uint32 nIndex) {
 	return new CExtension(m_model->getExtension(nIndex));
 }

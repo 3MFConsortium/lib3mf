@@ -145,7 +145,13 @@ namespace NMR {
 			// lax handling here for other XML_3MF_NAMESPACE_XML-attributes
 		}
 		else if (strcmp(pNameSpace, XML_3MF_NAMESPACE_XMLNS) == 0) {
-			m_pModel->addExtension(pAttributeValue, pAttributeName, false);
+			auto pExt = m_pModel->findExtensionByURI(pAttributeValue);
+			if (pExt == nullptr) {
+				m_pModel->addExtension(std::string(pAttributeValue), std::string(pAttributeName), false);
+			} else {
+				// If it already exists just update the prefix so it matches with what the xml expects.
+				pExt->setNameSpacePrefix(std::string(pAttributeName));
+			}
 		}
 	}
 

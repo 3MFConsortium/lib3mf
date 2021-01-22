@@ -1595,6 +1595,10 @@
 		<method name="RemoveExtension" description="Removes extension object from the model.">
 			<param name="URI" type="string" pass="in" description="NameSpace URI of the extension"/>
 		</method>
+		<method name="HasExtension" description="Checks if the model contains an extension with the namespace URI">
+			<param name="URI" type="string" pass="in" description="NameSpace URI of the extension"/>
+			<param name="Exists" type="bool" pass="return" description="returns flag whether the model contains an extension with the namespace URI"/>
+		</method>
 		<method name="GetExtension" description="retrieves an extension object from the model..">
 			<param name="Index" type="uint32" pass="in" description="Index of the extension"/>
 			<param name="ExtensionInstance" type="handle" class="Extension" pass="return" description="Instance of the extension object"/>
