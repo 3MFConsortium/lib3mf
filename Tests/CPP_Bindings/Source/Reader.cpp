@@ -63,6 +63,23 @@ namespace Lib3MF
 	{
 		Reader::reader3MF->ReadFromFile(sTestFilesPath + "/Reader/" + "Pyramid.3mf");
 		CheckReaderWarnings(Reader::reader3MF, 0);
+		
+		ASSERT_TRUE(model->HasExtension("http://schemas.microsoft.com/3dmanufacturing/material/2015/02"));
+		ASSERT_TRUE(model->HasExtension("http://schemas.microsoft.com/3dmanufacturing/production/2015/06"));
+		ASSERT_TRUE(model->HasExtension("http://schemas.microsoft.com/3dmanufacturing/slice/2015/07"));
+
+		PExtension pExt = nullptr;
+		pExt = model->FindExtension("http://schemas.microsoft.com/3dmanufacturing/material/2015/02");
+		ASSERT_EQ(pExt->GetNameSpacePrefix(), "m");
+		ASSERT_FALSE(pExt->GetIsRequired());
+
+		pExt = model->FindExtension("http://schemas.microsoft.com/3dmanufacturing/production/2015/06");
+		ASSERT_EQ(pExt->GetNameSpacePrefix(), "p");
+		ASSERT_FALSE(pExt->GetIsRequired());
+
+		pExt = model->FindExtension("http://schemas.microsoft.com/3dmanufacturing/slice/2015/07");
+		ASSERT_EQ(pExt->GetNameSpacePrefix(), "s");
+		ASSERT_FALSE(pExt->GetIsRequired());
 	}
 
 	TEST_F(Reader, STLReadFromFile)
