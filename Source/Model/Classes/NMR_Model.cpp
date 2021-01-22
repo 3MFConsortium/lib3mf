@@ -1317,51 +1317,46 @@ namespace NMR {
 	}
 
 	PExtension CModel::addExtension(_In_ const std::string sNameSpaceURI, _In_ std::string sNameSpacePrefix, _In_ nfBool bIsRequired) {
+		for (auto iIterator = m_Extensions.begin(); iIterator != m_Extensions.end(); iIterator++) {
+			auto pExt = *iIterator;
+			if (pExt->getNameSpaceURI() == sNameSpaceURI) {
+				throw CNMRException(NMR_ERROR_DUPLICATE_EXTENSION_NAMESPACEURI);
+			}
+			if (pExt->getNameSpacePrefix() == sNameSpacePrefix) {
+				throw CNMRException(NMR_ERROR_DUPLICATE_EXTENSION_NAMESPACEPREFIX);
+			}
+		}
 		PExtension pExtension = std::make_shared<CExtension>(sNameSpaceURI, sNameSpacePrefix, bIsRequired);
 		m_Extensions.push_back(pExtension);
 		return pExtension;
 	}
 
 	void CModel::removeExtension(_In_ const std::string sNameSpaceURI) {
-		auto iIterator = m_Extensions.begin();
-		while (iIterator != m_Extensions.end()) {
+		for (auto iIterator = m_Extensions.begin(); iIterator != m_Extensions.end(); iIterator++) {
 			if ((*iIterator)->getNameSpaceURI() == sNameSpaceURI) {
 				m_Extensions.erase(iIterator);
-				return;
 			}
-			iIterator++;
 		}
 	}
 
 	nfBool CModel::hasExtension(_In_ const std::string sNameSpaceURI) {
-		auto iIterator = m_Extensions.begin();
-		while (iIterator != m_Extensions.end()) {
-			if ((*iIterator)->getNameSpaceURI() == sNameSpaceURI) {
-				return true;
-			}
-			iIterator++;
-		}
-		return false;
+		return getExtensionByURI(sNameSpaceURI) != nullptr;
 	}
 
 	PExtension CModel::getExtensionByURI(_In_ const std::string sNameSpaceURI) {
-		auto iIterator = m_Extensions.begin();
-		while (iIterator != m_Extensions.end()) {
+		for (auto iIterator = m_Extensions.begin(); iIterator != m_Extensions.end(); iIterator++) {
 			if ((*iIterator)->getNameSpaceURI() == sNameSpaceURI) {
 				return *iIterator;
 			}
-			iIterator++;
 		}
 		return nullptr;
 	}
 
 	PExtension CModel::getExtensionByPrefix(_In_ const std::string sNameSpacePrefix) {
-		auto iIterator = m_Extensions.begin();
-		while (iIterator != m_Extensions.end()) {
+		for (auto iIterator = m_Extensions.begin(); iIterator != m_Extensions.end(); iIterator++) {
 			if ((*iIterator)->getNameSpacePrefix() == sNameSpacePrefix) {
 				return *iIterator;
 			}
-			iIterator++;
 		}
 		return nullptr;
 	}

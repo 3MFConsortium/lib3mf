@@ -1219,6 +1219,11 @@ Model error codes (0x8XXX)
 // A beamset identifier is not unique
 #define NMR_ERROR_BEAMSET_IDENTIFIER_NOT_UNIQUE 0x810B
 
+// An extension namespace prefix is duplicated
+#define NMR_ERROR_DUPLICATE_EXTENSION_NAMESPACEPREFIX 0x810C
+
+// An extension namespace uri is duplicated
+#define NMR_ERROR_DUPLICATE_EXTENSION_NAMESPACEURI 0x810D
 
 
 
