@@ -1610,7 +1610,8 @@
 		<method name="GetExtensionCount" description="retrieves the number of extensions of the model.">
 			<param name="ExtensionCount" type="uint32" pass="return" description="Returns the number of extensions."/>
 		</method>
-	</class>		
+	</class>
+	
 	<class name="Extension">
 		<method name="GetNameSpaceURI" description="Returns the namespace URI.">
 			<param name="NameSpaceURI" type="string" pass="return" description="Returns the namespace URI"/>
@@ -1631,6 +1632,7 @@
 			<param name="IsRequired" type="bool" pass="return" description="returns flag whether extension is required or not or not."/>
 		</method>
 	</class>
+
 	<global baseclassname="Base" releasemethod="Release" acquiremethod="Acquire" journalmethod="SetJournal" versionmethod="GetLibraryVersion" errormethod="GetLastError" prereleasemethod="GetPrereleaseInformation" buildinfomethod="GetBuildInformation">
 		<method name="GetLibraryVersion" description="retrieves the binary version of this library.">
 			<param name="Major" type="uint32" pass="out" description="returns the major version of this library"/>
