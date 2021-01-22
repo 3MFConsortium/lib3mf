@@ -40,6 +40,7 @@ A model reader node is an abstract base class for all XML nodes of a 3MF Model S
 #include "Model/Reader/v093/NMR_ModelReaderNode093_Build.h" 
 
 #include "Model/Classes/NMR_ModelConstants.h" 
+#include "Model/Classes/NMR_Extension.h" 
 #include "Common/3MF_ProgressMonitor.h"
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_StringUtils.h"
@@ -74,12 +75,15 @@ namespace NMR {
 		std::vector<std::string> tokens{ std::istream_iterator<std::string,  char>{iss},
 			std::istream_iterator<std::string,  char>{} };
 		for (auto token : tokens) {
+			auto pExt = m_pModel->getExtensionByPrefix(token);
 			// is the extension listed?
-			if (m_ListedExtensions.count(token) < 1) {
+			if (pExt == nullptr) {
 				throw CNMRException(NMR_ERROR_INVALIDREQUIREDEXTENSIONPREFIX);
 			}
+
+			pExt->setIsRequired(true);
 			// is the extension supported?
-			std::string sExtensionURI = m_ListedExtensions[token];
+			auto sExtensionURI = pExt->getNameSpaceURI();
 			if (strcmp(sExtensionURI.c_str(), PACKAGE_XMLNS_100) != 0 &&
 				strcmp(sExtensionURI.c_str(), XML_3MF_NAMESPACE_MATERIALSPEC) != 0 &&
 				strcmp(sExtensionURI.c_str(), XML_3MF_NAMESPACE_PRODUCTIONSPEC) != 0 &&
@@ -141,7 +145,7 @@ namespace NMR {
 			// lax handling here for other XML_3MF_NAMESPACE_XML-attributes
 		}
 		else if (strcmp(pNameSpace, XML_3MF_NAMESPACE_XMLNS) == 0) {
-			m_ListedExtensions.insert(std::pair<std::string, std::string>(std::string(pAttributeName), std::string(pAttributeValue)));
+			m_pModel->addExtension(pAttributeValue, pAttributeName, false);
 		}
 	}
 

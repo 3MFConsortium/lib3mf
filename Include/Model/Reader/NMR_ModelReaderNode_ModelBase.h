@@ -42,7 +42,6 @@ namespace NMR {
 	protected:
 		CModel * m_pModel;
 		std::string m_sRequiredExtensions;
-		std::map<std::string, std::string> m_ListedExtensions;
 
 		std::string m_sPath;
 		nfBool m_bHasResources;
