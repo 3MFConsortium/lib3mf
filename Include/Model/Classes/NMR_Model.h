@@ -94,6 +94,9 @@ namespace NMR {
 	class CKeyStore;
 	typedef std::shared_ptr <CKeyStore> PKeyStore;
 
+	class CExtension;
+	typedef std::shared_ptr <CExtension> PExtension;
+
 	typedef std::map<NMR::UniqueResourceID, NMR::UniqueResourceID> UniqueResourceIDMapping;
 
 	// The Model class implements the unification of all model-file in a 3MF package
@@ -110,6 +113,9 @@ namespace NMR {
 		CResourceHandler m_resourceHandler;
 	private:
 		std::vector<PModelResource> m_Resources;
+
+		// Extensions
+		std::vector<PExtension> m_Extensions;
 
 		// Model Build Items
 		std::vector<PModelBuildItem> m_BuildItems;
@@ -301,6 +307,7 @@ namespace NMR {
 		nfBool contentTypeIsDefault(_In_ const std::string sExtension);
 
 		// Production Extension Attachments
+
 		PModelAttachment addProductionAttachment(_In_ const std::string sPath, _In_ const std::string sRelationShipType, PImportStream pCopiedStream, nfBool bForceUnique);
 		void removeProductionAttachment(_In_ const std::string sPath);
 		nfUint32 getProductionAttachmentCount();
@@ -326,6 +333,13 @@ namespace NMR {
 		void setCryptoRandCallback(CryptoRandGenDescriptor const & randDescriptor);
 		nfBool hasCryptoRandCallbak() const;
 		nfUint64 generateRandomBytes(nfByte *, nfUint64);
+
+		// Extensions
+		PExtension addExtension(_In_ const std::string sNameSpaceURI, _In_ std::string sNameSpacePrefix, _In_ nfBool bIsRequired);
+		void removeExtension(_In_ const std::string sNameSpaceURI);
+		nfBool hasExtension(_In_ const std::string sNameSpaceURI);
+		PExtension getExtensionByURI(_In_ const std::string sNameSpaceURI);
+		PExtension getExtensionByPrefix(_In_ const std::string sNameSpacePrefix);
 
 	};
 

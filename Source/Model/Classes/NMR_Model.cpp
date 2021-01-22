@@ -31,6 +31,7 @@ A model is an in memory representation of the 3MF file.
 
 --*/
 
+#include "Model/Classes/NMR_Extension.h"
 #include "Model/Classes/NMR_Model.h"
 #include "Model/Classes/NMR_ModelObject.h"
 #include "Model/Classes/NMR_ModelMeshObject.h"
@@ -1313,6 +1314,56 @@ namespace NMR {
 			*(bytes + n) = distByte(mTwister);
 		}
 		return size;
+	}
+
+	PExtension CModel::addExtension(_In_ const std::string sNameSpaceURI, _In_ std::string sNameSpacePrefix, _In_ nfBool bIsRequired) {
+		PExtension pExtension = std::make_shared<CExtension>(sNameSpaceURI, sNameSpacePrefix, bIsRequired);
+		m_Extensions.push_back(pExtension);
+		return pExtension;
+	}
+
+	void CModel::removeExtension(_In_ const std::string sNameSpaceURI) {
+		auto iIterator = m_Extensions.begin();
+		while (iIterator != m_Extensions.end()) {
+			if ((*iIterator)->getNameSpaceURI() == sNameSpaceURI) {
+				m_Extensions.erase(iIterator);
+				return;
+			}
+			iIterator++;
+		}
+	}
+
+	nfBool CModel::hasExtension(_In_ const std::string sNameSpaceURI) {
+		auto iIterator = m_Extensions.begin();
+		while (iIterator != m_Extensions.end()) {
+			if ((*iIterator)->getNameSpaceURI() == sNameSpaceURI) {
+				return true;
+			}
+			iIterator++;
+		}
+		return false;
+	}
+
+	PExtension CModel::getExtensionByURI(_In_ const std::string sNameSpaceURI) {
+		auto iIterator = m_Extensions.begin();
+		while (iIterator != m_Extensions.end()) {
+			if ((*iIterator)->getNameSpaceURI() == sNameSpaceURI) {
+				return *iIterator;
+			}
+			iIterator++;
+		}
+		return nullptr;
+	}
+
+	PExtension CModel::getExtensionByPrefix(_In_ const std::string sNameSpacePrefix) {
+		auto iIterator = m_Extensions.begin();
+		while (iIterator != m_Extensions.end()) {
+			if ((*iIterator)->getNameSpacePrefix() == sNameSpacePrefix) {
+				return *iIterator;
+			}
+			iIterator++;
+		}
+		return nullptr;
 	}
 
 }

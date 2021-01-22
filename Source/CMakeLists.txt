@@ -120,6 +120,7 @@ Source/Common/Platform/NMR_XmlReader.cpp
 Source/Common/Platform/NMR_XmlWriter.cpp
 Source/Common/Platform/NMR_XmlWriter_Native.cpp
 Source/Model/Classes/NMR_PackageResourceID.cpp
+Source/Model/Classes/NMR_Extension.cpp
 Source/Model/Classes/NMR_Model.cpp
 Source/Model/Classes/NMR_ModelAttachment.cpp
 Source/Model/Classes/NMR_ModelBaseMaterial.cpp
