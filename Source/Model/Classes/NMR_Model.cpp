@@ -1212,7 +1212,7 @@ namespace NMR {
 
 		if (sExtension == XML_3MF_NAMESPACE_SECURECONTENTSPEC) {
 			if (m_pKeyStore.get() != nullptr) {
-				return true;
+				return !m_pKeyStore->empty();
 			}
 		}
 
