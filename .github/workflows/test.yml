@@ -36,7 +36,7 @@ jobs:
         working-directory: ./build
   test-windows:
       - uses: actions/checkout@v2
-      - run: sh cmake/GenerateVS2017.sh
+      - run: sh cmake/GenerateVS2019.sh
       - run: ctest -V
         working-directory: ./build
 
