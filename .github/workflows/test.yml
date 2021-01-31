@@ -1,0 +1,42 @@
+on: [push, pull_request]
+name: Test
+jobs:
+  test-linux:
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+      - run: sudo apt install -y valgrind
+      - run: sh cmake/GenerateMake.sh
+      - run: ctest -V
+        working-directory: ./build
+      - run: cmake --build . --target lib3mf_memcheck
+        working-directory: ./build
+  test-linux-mingw-w64:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: sudo apt install -y \
+          gcc-mingw-w64-base \
+          binutils-mingw-w64-x86-64 \
+          gcc-mingw-w64-x86-64 \
+          gcc-mingw-w64 \
+          g++-mingw-w64-x86-64
+      - run: sh cmake/GenerateMinGW.sh
+      - run: ctest -V
+        working-directory: ./build
+  test-macos:
+    strategy:
+      matrix:
+        os: [macos-10.15, macos-11.0]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+      - run: sh cmake/GenerateMake.sh
+      - run: ctest -V
+        working-directory: ./build
+  test-windows:
+      - uses: actions/checkout@v2
+      - run: sh cmake/GenerateVS2017.sh
+      - run: ctest -V
+        working-directory: ./build
+
