@@ -42,14 +42,14 @@ endif()
 if (${MSVC})
   # using Visual Studio C++
 
-  # Allow unnamed structs
-  append_cxx_flag("/Wv:18")
-
   # this ensures that the min/max macros of minwindef.h are not used
   add_definitions(-DNOMINMAX /W3)
 
   add_definitions(/W3)
   
+  # Allow unnamed structs
+  add_definitions(/Wv:18)
+
   # add_definitions(-D_CRT_NONSTDC_NO_DEPRECATE -D_CRT_SECURE_NO_WARNINGS)
   # set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
   # set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
