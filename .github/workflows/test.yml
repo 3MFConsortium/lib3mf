@@ -13,19 +13,6 @@ jobs:
         working-directory: ./build
       - run: ctest -V
         working-directory: ./build
-  test-linux-mingw-w64:
-    runs-on: ubuntu-latest
-    steps:
-      - run: sudo apt-get update -y
-      - run: sudo apt-get install -y mingw-w64
-      - uses: actions/checkout@v2
-        with:
-          submodules: true
-      - run: sh cmake/GenerateMinGW.sh
-      - run: cmake --build .
-        working-directory: ./build
-      - run: ctest -V
-        working-directory: ./build
   test-macos:
     runs-on: macos-10.15
     steps:
@@ -43,7 +30,19 @@ jobs:
       - uses: actions/checkout@v2
         with:
           submodules: true
-      - run: sh cmake/GenerateVS2019.sh
+      - run: ./cmake/GenerateVS2019.bat
+      - run: cmake --build .
+        working-directory: ./build
+      - run: ctest -V
+        working-directory: ./build
+  test-mingw-w64:
+    runs-on: windows-2019
+    steps:
+      - run: choco install mingw -y
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+      - run: ./cmake/GenerateMinGW.bat
       - run: cmake --build .
         working-directory: ./build
       - run: ctest -V
