@@ -4,10 +4,9 @@ jobs:
   test-linux:
     runs-on: ubuntu-18.04
     steps:
-      - uses: actions/checkout@v2
-        with:
-          submodules: recursive
       - run: sudo apt install -y valgrind
+      - uses: actions/checkout@v2
+      - run: git submodule update --init
       - run: sh cmake/GenerateMake.sh
       - run: ctest -V
         working-directory: ./build
@@ -16,11 +15,10 @@ jobs:
   test-linux-mingw-w64:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-        with:
-          submodules: recursive
       - run: sudo apt-get update -y
       - run: sudo apt-get install -y mingw-w64
+      - uses: actions/checkout@v2
+      - run: git submodule update --init
       - run: sh cmake/GenerateMinGW.sh
       - run: ctest -V
         working-directory: ./build
@@ -31,8 +29,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
-        with:
-          submodules: recursive
+      - run: git submodule update --init
       - run: sh cmake/GenerateMake.sh
       - run: ctest -V
         working-directory: ./build
@@ -40,8 +37,7 @@ jobs:
     runs-on: windows-2019
     steps:
       - uses: actions/checkout@v2
-        with:
-          submodules: recursive
+      - run: git submodule update --init
       - run: sh cmake/GenerateVS2019.sh
       - run: ctest -V
         working-directory: ./build
