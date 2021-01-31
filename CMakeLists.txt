@@ -42,6 +42,9 @@ endif()
 if (${MSVC})
   # using Visual Studio C++
 
+  # Allow unnamed structs
+  append_cxx_flag("/Wv:18")
+
   # this ensures that the min/max macros of minwindef.h are not used
   add_definitions(-DNOMINMAX /W3)
 
