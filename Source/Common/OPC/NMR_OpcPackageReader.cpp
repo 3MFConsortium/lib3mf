@@ -113,7 +113,7 @@ namespace NMR {
 		m_ZIPError.sys_err = 0;
 		m_ZIPError.zip_err = 0;
 		m_ZIParchive = nullptr;
-		m_ZIPsource = nullptr;
+		zip_source_t* pZIPsource = nullptr;
 
 		try {
 			// determine stream size
@@ -129,20 +129,20 @@ namespace NMR {
 			bool bUseCallback = true;
 			if (bUseCallback) {
 				// read ZIP from callback: faster and requires less memory
-				m_ZIPsource = zip_source_function_create(custom_zip_source_callback, pImportStream.get(), &m_ZIPError);
+				pZIPsource = zip_source_function_create(custom_zip_source_callback, pImportStream.get(), &m_ZIPError);
 			}
 			else {
 				// read ZIP into memory
 				m_Buffer.resize((size_t)nStreamSize);
 				pImportStream->readBuffer(&m_Buffer[0], nStreamSize, true);
-				m_ZIPsource = zip_source_buffer_create(&m_Buffer[0], (size_t)nStreamSize, 0, &m_ZIPError);
+				pZIPsource = zip_source_buffer_create(&m_Buffer[0], (size_t)nStreamSize, 0, &m_ZIPError);
 			}
-			if (m_ZIPsource == nullptr)
+			if (pZIPsource == nullptr)
 				throw CNMRException(NMR_ERROR_COULDNOTREADZIPFILE);
 
-			m_ZIParchive = zip_open_from_source(m_ZIPsource, ZIP_RDONLY | ZIP_CHECKCONS, &m_ZIPError);
+			m_ZIParchive = zip_open_from_source(pZIPsource, ZIP_RDONLY | ZIP_CHECKCONS, &m_ZIPError);
 			if (m_ZIParchive == nullptr) {
-				m_ZIParchive = zip_open_from_source(m_ZIPsource, ZIP_RDONLY, &m_ZIPError);
+				m_ZIParchive = zip_open_from_source(pZIPsource, ZIP_RDONLY, &m_ZIPError);
 				if (m_ZIParchive == nullptr)
 					throw CNMRException(NMR_ERROR_COULDNOTREADZIPFILE);
 				else
@@ -215,13 +215,9 @@ namespace NMR {
 		if (m_ZIParchive != nullptr)
 			zip_close(m_ZIParchive);
 
-		if (m_ZIPsource != nullptr)
-			zip_source_close(m_ZIPsource);
-
 		zip_error_fini(&m_ZIPError);
 		m_Buffer.resize(0);
 
-		m_ZIPsource = nullptr;
 		m_ZIParchive = nullptr;
 	}
 
