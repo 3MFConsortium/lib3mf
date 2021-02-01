@@ -1,0 +1,50 @@
+on: [push, pull_request]
+name: Test
+jobs:
+  test-linux:
+    runs-on: ubuntu-18.04
+    steps:
+      - run: sudo apt install -y valgrind
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+      - run: sh cmake/GenerateMake.sh
+      - run: cmake --build . --target lib3mf_memcheck
+        working-directory: ./build
+      - run: ctest -V
+        working-directory: ./build
+  test-macos:
+    runs-on: macos-10.15
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+      - run: sh cmake/GenerateMake.sh
+      - run: cmake --build .
+        working-directory: ./build
+      - run: ctest -V
+        working-directory: ./build
+  test-windows:
+    runs-on: windows-2019
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+      - run: ./cmake/GenerateVS2019.bat
+      - run: cmake --build .
+        working-directory: ./build
+      - run: ctest -V
+        working-directory: ./build
+  test-mingw-w64:
+    runs-on: windows-2019
+    steps:
+      - run: choco install mingw -y
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+      - run: ./cmake/GenerateMinGW.bat
+      - run: cmake --build .
+        working-directory: ./build
+      - run: ctest -V
+        working-directory: ./build
+
