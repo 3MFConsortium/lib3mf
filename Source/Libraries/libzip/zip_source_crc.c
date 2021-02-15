@@ -1,6 +1,6 @@
 /*
   zip_source_crc.c -- pass-through source that calculates CRC32 and size
-  Copyright (C) 2009-2014 Dieter Baron and Thomas Klausner
+  Copyright (C) 2009-2020 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -17,7 +17,7 @@
   3. The names of the authors may not be used to endorse or promote
      products derived from this software without specific prior
      written permission.
- 
+
   THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS
   OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -32,17 +32,19 @@
 */
 
 
-#include <stdlib.h>
-#include <string.h>
 #include <limits.h>
+#include <stdlib.h>
+#include <zlib.h>
 
-#include "Libraries/libzip/zipint.h"
+#include "zipint.h"
 
 struct crc_context {
-    int eof;
-    int validate;
+    int validate;     /* whether to check CRC on EOF and return error on mismatch */
+    int crc_complete; /* whether CRC was computed for complete file */
     zip_error_t error;
     zip_uint64_t size;
+    zip_uint64_t position;     /* current reading position */
+    zip_uint64_t crc_position; /* how far we've computed the CRC */
     zip_uint32_t crc;
 };
 
@@ -50,65 +52,61 @@ static zip_int64_t crc_read(zip_source_t *, void *, void *, zip_uint64_t, zip_so
 
 
 zip_source_t *
-zip_source_crc(zip_t *za, zip_source_t *src, int validate)
-{
+zip_source_crc(zip_t *za, zip_source_t *src, int validate) {
     struct crc_context *ctx;
 
     if (src == NULL) {
-	zip_error_set(&za->error, ZIP_ER_INVAL, 0);
-	return NULL;
+        zip_error_set(&za->error, ZIP_ER_INVAL, 0);
+        return NULL;
     }
 
-    if ((ctx=(struct crc_context *)malloc(sizeof(*ctx))) == NULL) {
-	zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
-	return NULL;
+    if ((ctx = (struct crc_context *)malloc(sizeof(*ctx))) == NULL) {
+        zip_error_set(&za->error, ZIP_ER_MEMORY, 0);
+        return NULL;
     }
 
-    ctx->eof = 0;
-    ctx->validate = validate;
     zip_error_init(&ctx->error);
+    ctx->validate = validate;
+    ctx->crc_complete = 0;
+    ctx->crc_position = 0;
+    ctx->crc = (zip_uint32_t)crc32(0, NULL, 0);
     ctx->size = 0;
-    ctx->crc = 0;
-    
+
     return zip_source_layered(za, src, crc_read, ctx);
 }
 
 
 static zip_int64_t
-crc_read(zip_source_t *src, void *_ctx, void *data, zip_uint64_t len, zip_source_cmd_t cmd)
-{
+crc_read(zip_source_t *src, void *_ctx, void *data, zip_uint64_t len, zip_source_cmd_t cmd) {
     struct crc_context *ctx;
     zip_int64_t n;
 
     ctx = (struct crc_context *)_ctx;
 
     switch (cmd) {
-        case ZIP_SOURCE_OPEN:
-            ctx->eof = 0;
-            ctx->crc = (zip_uint32_t)crc32(0, NULL, 0);
-            ctx->size = 0;
-            
-            return 0;
-            
-        case ZIP_SOURCE_READ:
-            if (ctx->eof || len == 0)
-                return 0;
-            
-            if ((n=zip_source_read(src, data, len)) < 0) {
-                _zip_error_set_from_source(&ctx->error, src);
-                return -1;
-            }
-            
-            if (n == 0) {
-                ctx->eof = 1;
+    case ZIP_SOURCE_OPEN:
+        ctx->position = 0;
+        return 0;
+
+    case ZIP_SOURCE_READ:
+        if ((n = zip_source_read(src, data, len)) < 0) {
+            _zip_error_set_from_source(&ctx->error, src);
+            return -1;
+        }
+
+        if (n == 0) {
+            if (ctx->crc_position == ctx->position) {
+                ctx->crc_complete = 1;
+                ctx->size = ctx->position;
+
                 if (ctx->validate) {
                     struct zip_stat st;
-                    
+
                     if (zip_source_stat(src, &st) < 0) {
                         _zip_error_set_from_source(&ctx->error, src);
                         return -1;
                     }
-                    
+
                     if ((st.valid & ZIP_STAT_CRC) && st.crc != ctx->crc) {
                         zip_error_set(&ctx->error, ZIP_ER_CRC, 0);
                         return -1;
@@ -119,52 +117,81 @@ crc_read(zip_source_t *src, void *_ctx, void *data, zip_uint64_t len, zip_source
                     }
                 }
             }
-            else {
-		zip_uint64_t i, nn;
-
-		for (i=0; i < (zip_uint64_t)n; i += nn) {
-		    nn = ZIP_MIN(UINT_MAX, (zip_uint64_t)n-i);
-
-		    ctx->crc = (zip_uint32_t)crc32(ctx->crc, (const Bytef *)data+i, (uInt)nn);
-		}
-                ctx->size += (zip_uint64_t)n;
-            }
-            return n;
-
-        case ZIP_SOURCE_CLOSE:
-            return 0;
-
-        case ZIP_SOURCE_STAT:
-        {
-            zip_stat_t *st;
-
-	    st = (zip_stat_t *)data;
-
-	    if (ctx->eof) {
-		/* TODO: Set comp_size, comp_method, encryption_method?
-		        After all, this only works for uncompressed data. */
-		st->size = ctx->size;
-		st->crc = ctx->crc;
-		st->comp_size = ctx->size;
-		st->comp_method = ZIP_CM_STORE;
-		st->encryption_method = ZIP_EM_NONE;
-		st->valid |= ZIP_STAT_SIZE|ZIP_STAT_CRC|ZIP_STAT_COMP_SIZE|ZIP_STAT_COMP_METHOD|ZIP_STAT_ENCRYPTION_METHOD;;
-	    }
-            return 0;
         }
-            
-        case ZIP_SOURCE_ERROR:
-            return zip_error_to_data(&ctx->error, data, len);
+        else if (!ctx->crc_complete && ctx->position <= ctx->crc_position) {
+            zip_uint64_t i, nn;
 
-        case ZIP_SOURCE_FREE:
-            free(ctx);
-            return 0;
-            
-        case ZIP_SOURCE_SUPPORTS:
-            return zip_source_make_command_bitmap(ZIP_SOURCE_OPEN, ZIP_SOURCE_READ, ZIP_SOURCE_CLOSE, ZIP_SOURCE_STAT, ZIP_SOURCE_ERROR, ZIP_SOURCE_FREE, -1);
-            
-        default:
-            zip_error_set(&ctx->error, ZIP_ER_OPNOTSUPP, 0);
+            for (i = ctx->crc_position - ctx->position; i < (zip_uint64_t)n; i += nn) {
+                nn = ZIP_MIN(UINT_MAX, (zip_uint64_t)n - i);
+
+                ctx->crc = (zip_uint32_t)crc32(ctx->crc, (const Bytef *)data + i, (uInt)nn);
+                ctx->crc_position += nn;
+            }
+        }
+        ctx->position += (zip_uint64_t)n;
+        return n;
+
+    case ZIP_SOURCE_CLOSE:
+        return 0;
+
+    case ZIP_SOURCE_STAT: {
+        zip_stat_t *st;
+
+        st = (zip_stat_t *)data;
+
+        if (ctx->crc_complete) {
+            /* TODO: Set comp_size, comp_method, encryption_method?
+                    After all, this only works for uncompressed data. */
+            st->size = ctx->size;
+            st->crc = ctx->crc;
+            st->comp_size = ctx->size;
+            st->comp_method = ZIP_CM_STORE;
+            st->encryption_method = ZIP_EM_NONE;
+            st->valid |= ZIP_STAT_SIZE | ZIP_STAT_CRC | ZIP_STAT_COMP_SIZE | ZIP_STAT_COMP_METHOD | ZIP_STAT_ENCRYPTION_METHOD;
+        }
+        return 0;
+    }
+
+    case ZIP_SOURCE_ERROR:
+        return zip_error_to_data(&ctx->error, data, len);
+
+    case ZIP_SOURCE_FREE:
+        free(ctx);
+        return 0;
+
+    case ZIP_SOURCE_SUPPORTS: {
+        zip_int64_t mask = zip_source_supports(src);
+
+        if (mask < 0) {
+            _zip_error_set_from_source(&ctx->error, src);
             return -1;
+        }
+
+        return mask & ~zip_source_make_command_bitmap(ZIP_SOURCE_BEGIN_WRITE, ZIP_SOURCE_COMMIT_WRITE, ZIP_SOURCE_ROLLBACK_WRITE, ZIP_SOURCE_SEEK_WRITE, ZIP_SOURCE_TELL_WRITE, ZIP_SOURCE_REMOVE, ZIP_SOURCE_GET_FILE_ATTRIBUTES, -1);
+    }
+
+    case ZIP_SOURCE_SEEK: {
+        zip_int64_t new_position;
+        zip_source_args_seek_t *args = ZIP_SOURCE_GET_ARGS(zip_source_args_seek_t, data, len, &ctx->error);
+
+        if (args == NULL) {
+            return -1;
+        }
+        if (zip_source_seek(src, args->offset, args->whence) < 0 || (new_position = zip_source_tell(src)) < 0) {
+            _zip_error_set_from_source(&ctx->error, src);
+            return -1;
+        }
+
+        ctx->position = (zip_uint64_t)new_position;
+
+        return 0;
+    }
+
+    case ZIP_SOURCE_TELL:
+        return (zip_int64_t)ctx->position;
+
+    default:
+        zip_error_set(&ctx->error, ZIP_ER_OPNOTSUPP, 0);
+        return -1;
     }
 }

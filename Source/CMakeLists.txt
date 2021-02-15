@@ -1,6 +1,11 @@
 
 if (USE_INCLUDED_LIBZIP)
   file(GLOB LIBZIP_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "Source/Libraries/libzip/*.c")
+  if (UNIX OR MINGW)
+	file(GLOB LIBZIP_FILES_PLATFORM RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "Source/Libraries/libzip/Unix/*.c")
+  else()
+	file(GLOB LIBZIP_FILES_PLATFORM RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "Source/Libraries/libzip/Win/*.c")
+  endif()
 endif()
 
 if (USE_INCLUDED_ZLIB)
@@ -12,6 +17,7 @@ file (GLOB CPPBASE64_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "Source/Librarie
 # sources for COM emulation
 set(SRCS_PLATFORM
   ${LIBZIP_FILES}
+  ${LIBZIP_FILES_PLATFORM}
   Source/Common/Platform/NMR_Platform_GCC.cpp
   Source/Common/Platform/NMR_ImportStream_GCC_Native.cpp
   Source/Common/Platform/NMR_ImportStream_GCC_Win32.cpp

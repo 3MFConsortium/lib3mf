@@ -1,6 +1,6 @@
 /*
   zip_source_supports.c -- check for supported functions
-  Copyright (C) 2014 Dieter Baron and Thomas Klausner
+  Copyright (C) 2014-2020 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -17,7 +17,7 @@
   3. The names of the authors may not be used to endorse or promote
      products derived from this software without specific prior
      written permission.
- 
+
   THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS
   OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -34,23 +34,21 @@
 
 #include <stdarg.h>
 
-#include "Libraries/libzip/zipint.h"
+#include "zipint.h"
 
 
 zip_int64_t
-zip_source_supports(zip_source_t *src)
-{
+zip_source_supports(zip_source_t *src) {
     return src->supports;
 }
 
 
-zip_int64_t
-zip_source_make_command_bitmap(zip_source_cmd_t cmd0, ...)
-{
+ZIP_EXTERN zip_int64_t
+zip_source_make_command_bitmap(zip_source_cmd_t cmd0, ...) {
     zip_int64_t bitmap;
     va_list ap;
-    
-    bitmap = (zip_int64_t) ZIP_SOURCE_MAKE_COMMAND_BITMASK(cmd0);
+
+    bitmap = ZIP_SOURCE_MAKE_COMMAND_BITMASK(cmd0);
 
 
     va_start(ap, cmd0);
@@ -59,9 +57,9 @@ zip_source_make_command_bitmap(zip_source_cmd_t cmd0, ...)
         if (cmd < 0) {
             break;
         }
-        bitmap |= (zip_int64_t) ZIP_SOURCE_MAKE_COMMAND_BITMASK(cmd);
+        bitmap |= ZIP_SOURCE_MAKE_COMMAND_BITMASK(cmd);
     }
     va_end(ap);
-    
+
     return bitmap;
 }

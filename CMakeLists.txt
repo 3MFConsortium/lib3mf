@@ -15,7 +15,8 @@ set(LIB3MF_VERSION_PRERELEASE "develop")  # denotes pre-release information of a
 
 project(lib3mf
   VERSION ${LIB3MF_VERSION_MAJOR}.${LIB3MF_VERSION_MINOR}.${LIB3MF_VERSION_MICRO}
-  DESCRIPTION "An implementation of the 3D Manufacturing Format file standard")
+  DESCRIPTION "An implementation of the 3D Manufacturing Format file standard"
+)
 
 set(CMAKE_INSTALL_BINDIR bin CACHE PATH "directory for installing binary files")
 set(CMAKE_INSTALL_LIBDIR lib CACHE PATH "directory for installing library files")
@@ -158,12 +159,17 @@ target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_BINARY_DIR_AU
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/Include/API)
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/Include)
 
-if (NOT USE_INCLUDED_LIBZIP)
+if (USE_INCLUDED_LIBZIP)
+	target_compile_options(${PROJECT_NAME} PRIVATE "-DZIP_STATIC")
+	target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/Include/Libraries/libzip)
+else()
 	find_package(PkgConfig REQUIRED)
 	pkg_check_modules(LIBZIP REQUIRED libzip)
 	target_link_libraries(${PROJECT_NAME} ${LIBZIP_LIBRARIES})
 endif()
-if (NOT USE_INCLUDED_ZLIB)
+if (USE_INCLUDED_ZLIB)
+	target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/Include/Libraries/zlib)
+else()
 	find_package(PkgConfig REQUIRED)
 	pkg_check_modules(ZLIB REQUIRED zlib)
 	target_link_libraries(${PROJECT_NAME} ${ZLIB_LIBRARIES})
