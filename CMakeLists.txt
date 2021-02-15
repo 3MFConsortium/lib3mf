@@ -32,7 +32,7 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 elseif ("${CMAKE_SYSTEM_NAME}" MATCHES "Darwin")
   # using GCC
   add_definitions(-DBUILD_DLL)
-  add_compile_options(-Wall) 
+  add_compile_options(-Wall /Wv:18) 
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O2")
   set(CMAKE_MACOSX_RPATH ON)
 endif()
@@ -45,6 +45,9 @@ if (${MSVC})
 
   add_definitions(/W3)
   
+  # Allow unnamed structs
+  add_definitions(/Wv:18)
+
   # add_definitions(-D_CRT_NONSTDC_NO_DEPRECATE -D_CRT_SECURE_NO_WARNINGS)
   # set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
   # set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")

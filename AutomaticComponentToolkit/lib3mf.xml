@@ -1709,7 +1709,7 @@
 		</method>
 	</class>
 
-	<global baseclassname="Base" releasemethod="Release" acquiremethod="Acquire" journalmethod="SetJournal" versionmethod="GetLibraryVersion" errormethod="GetLastError" prereleasemethod="GetPrereleaseInformation" buildinfomethod="GetBuildInformation">
+	<global baseclassname="Base" releasemethod="Release" acquiremethod="Acquire" journalmethod="SetJournal" versionmethod="GetLibraryVersion" errormethod="GetLastError" prereleasemethod="GetPrereleaseInformation" buildinfomethod="GetBuildInformation" symbollookupmethod="GetSymbolLookupMethod">
 		<method name="GetLibraryVersion" description="retrieves the binary version of this library.">
 			<param name="Major" type="uint32" pass="out" description="returns the major version of this library"/>
 			<param name="Minor" type="uint32" pass="out" description="returns the minor version of this library"/>
@@ -1797,6 +1797,9 @@
 			<param name="VectorY" type="single" pass="in" description="Translation in Y"/>
 			<param name="VectorZ" type="single" pass="in" description="Translation in Z"/>
 			<param name="Transform" type="struct" class="Transform" pass="return" description="Transformation matrix."/>
+		</method>
+		<method name="GetSymbolLookupMethod" description="Returns the address of the SymbolLookupMethod">
+			<param name="SymbolLookupMethod" type="pointer" pass="return" description="Address of the SymbolAddressMethod" />
 		</method>
 	</global>
 
