@@ -14,7 +14,7 @@ endif()
 
 file (GLOB CPPBASE64_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "Source/Libraries/cpp-base64/*.cpp")
 
-# sources for COM emulation
+# sources
 set(SRCS_PLATFORM
   ${LIBZIP_FILES}
   ${LIBZIP_FILES_PLATFORM}
