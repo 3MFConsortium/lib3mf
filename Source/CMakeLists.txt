@@ -1,7 +1,7 @@
 
 if (USE_INCLUDED_LIBZIP)
   file(GLOB LIBZIP_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "Source/Libraries/libzip/*.c")
-  if (UNIX OR MINGW)
+  if (UNIX)
 	file(GLOB LIBZIP_FILES_PLATFORM RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "Source/Libraries/libzip/Unix/*.c")
   else()
 	file(GLOB LIBZIP_FILES_PLATFORM RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "Source/Libraries/libzip/Win/*.c")

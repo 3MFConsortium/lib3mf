@@ -163,7 +163,7 @@ if (USE_INCLUDED_LIBZIP)
     target_compile_options(${PROJECT_NAME} PRIVATE "-DZIP_STATIC")
     target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/Include/Libraries/libzip)
 
-    if (UNIX OR MINGW)
+    if (UNIX)
         target_compile_options(${PROJECT_NAME} PRIVATE "-DHAVE_FSEEKO")
         target_compile_options(${PROJECT_NAME} PRIVATE "-DHAVE_FTELLO")
         target_compile_options(${PROJECT_NAME} PRIVATE "-DHAVE_STRCASECMP")
