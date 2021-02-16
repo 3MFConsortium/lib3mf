@@ -42,4 +42,5 @@ echo "GITBranch = "`git rev-parse --abbrev-ref HEAD` >> $VERSIONTXT
 echo "GITRevision = "`git rev-parse HEAD` >> $VERSIONTXT
 
 echo Zip SDK artifacts
-zip -r $LOCATION/$OUTFILE $SDKARTIFACT/* || failed "Error zipping SDK"
+cd $SDKARTIFACT
+zip -r ../$OUTFILE ./* || failed "Error zipping SDK"
