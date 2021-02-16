@@ -102,7 +102,7 @@ encrypt_header(zip_source_t *src, struct trad_pkware *ctx) {
     /* generate header from random bytes and mtime
        see appnote.iz, XIII. Decryption, Step 2, last paragraph */
     // if (!zip_secure_random(header, ZIP_CRYPTO_PKWARE_HEADERLEN - 1)) {
-    if (1==0) {
+    if (0==0) {
         zip_error_set(&ctx->error, ZIP_ER_INTERNAL, 0);
         _zip_buffer_free(ctx->buffer);
         ctx->buffer = NULL;
