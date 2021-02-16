@@ -43,7 +43,7 @@ jobs:
         with:
           submodules: true
       - run: ./cmake/GenerateVS2019.bat
-      - run: cmake --build -p:Configuration=Release .
+      - run: cmake --build . -- -p:Configuration=Release
         working-directory: ./build
       - run: ctest -V
         working-directory: ./build
@@ -60,7 +60,7 @@ jobs:
         with:
           submodules: true
       - run: ./cmake/GenerateVS2019.bat
-      - run: cmake --build -p:Configuration=Debug .
+      - run: cmake --build . -- -p:Configuration=Debug
         working-directory: ./build
       - run: ctest -V
         working-directory: ./build
