@@ -103,6 +103,7 @@ jobs:
           submodules: false
       - name: Download all workflow run artifacts
         uses: actions/download-artifact@v2
-        working-directory: ./build
+        with:
+          working-directory: ./build
       - run: ls -R
         working-directory: ./build
