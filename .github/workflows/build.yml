@@ -108,8 +108,8 @@ jobs:
       - run: ls -Rl ./build
       - run: unzip bindings.zip/bindings.zip
         working-directory: ./build
-      - run: sh SDK/GenerateSDK_github.sh
-      - name: Archive Windows Debug binary
+      - run: bash SDK/GenerateSDK_github.sh
+      - name: Archive SDK artifact
         uses: actions/upload-artifact@v2
         with:
           name: lib3mf_sdk.zip
