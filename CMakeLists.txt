@@ -167,6 +167,7 @@ if (USE_INCLUDED_LIBZIP)
         target_compile_options(${PROJECT_NAME} PRIVATE "-DHAVE_FSEEKO")
         target_compile_options(${PROJECT_NAME} PRIVATE "-DHAVE_FTELLO")
         target_compile_options(${PROJECT_NAME} PRIVATE "-DHAVE_STRCASECMP")
+        target_compile_options(${PROJECT_NAME} PRIVATE "-DHAVE_UNISTD_H")
     endif()
 
 else()
