@@ -28,10 +28,10 @@ mkdir -p $SDKARTIFACT/Bin || failed "Error creating Bin-folder"
 mkdir -p $SDKARTIFACT/Lib || failed "Error creating Lib-folder"
 
 echo Copy binaries
-cp $LOCATION/lib3mf.dll $SDKARTIFACT/Bin/ || failed "Error copying binary"
-cp $LOCATION/lib3mf.so $SDKARTIFACT/Bin/ || failed "Error copying binary"
-cp $LOCATION/lib3mf.dylib $SDKARTIFACT/Bin/ || failed "Error copying binary"
-cp $LOCATION/lib3mf.lib $SDKARTIFACT/Lib/ || failed "Error copying binary"
+cp $LOCATION/lib3mf.dll/lib3mf.dll $SDKARTIFACT/Bin/ || failed "Error copying binary"
+cp $LOCATION/lib3mf.so/lib3mf.so $SDKARTIFACT/Bin/ || failed "Error copying binary"
+cp $LOCATION/lib3mf.dylib/lib3mf.dylib $SDKARTIFACT/Bin/ || failed "Error copying binary"
+cp $LOCATION/lib3mf.lib/lib3mf.lib $SDKARTIFACT/Lib/ || failed "Error copying binary"
 
 echo Generate version.txt
 VERSIONTXT="$SDKARTIFACT/version.txt"
