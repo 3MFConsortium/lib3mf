@@ -119,22 +119,28 @@ jobs:
     runs-on: ubuntu-18.04
     needs: [assemble-sdk]
     steps:
-      - run: sudo apt install -y zip unzip wget
+      - run: sudo apt install -y zip unzip
+      - run: pwd
+      - run: ls -Rl .
       - name: Download lib3mf_sdk artifact
         uses: actions/download-artifact@v2
         with:
           name: lib3mf_sdk.zip
           path: lib3mf_sdk.zip
-      - name: Unpack the SDK
+      - run: ls -Rl .
+      - name: Get the SDK
+        id step_one
         run: |
-            unzip lib3mf_sdk.zip
+            unzip lib3mf_sdk.zip/lib3mf_sdk.zip
       - name: Build CppDynamic
+        id step_two
         run: |
           sh Examples/CppDynamic/GenerateMake.sh
           cd Examples/CppDynamic/build
           cmake --build .
           ./Example_ExtractInfo ../../Files/Helix.3mf
       - name: Build Cpp
+        id step_three
         run: |
           sh Examples/Cpp/GenerateMake.sh
           cd Examples/Cpp/build
