@@ -13,6 +13,12 @@ jobs:
         working-directory: ./build
       - run: ctest -V
         working-directory: ./build
+      - name: Archive Linux binary
+        uses: actions/upload-artifact@v2
+        with:
+          name: lib3mf.so.2
+          path: build/lib3mf.so.2
+          retention-days: 5 
   test-macos:
     runs-on: macos-10.15
     steps:
@@ -24,17 +30,46 @@ jobs:
         working-directory: ./build
       - run: ctest -V
         working-directory: ./build
-  test-windows:
+      - name: Archive Mac binary
+        uses: actions/upload-artifact@v2
+        with:
+          name: lib3mf.dylib
+          path: build/lib3mf.dylib
+          retention-days: 5 
+  test-windows-release:
     runs-on: windows-2019
     steps:
       - uses: actions/checkout@v2
         with:
           submodules: true
       - run: ./cmake/GenerateVS2019.bat
-      - run: cmake --build .
+      - run: cmake --build . --config Release
         working-directory: ./build
       - run: ctest -V
         working-directory: ./build
+      - name: Archive Windows Release binary
+        uses: actions/upload-artifact@v2
+        with:
+          name: lib3mf.dll
+          path: build/Release/lib3mf.dll
+          retention-days: 5 
+  test-windows-debug:
+    runs-on: windows-2019
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+      - run: ./cmake/GenerateVS2019.bat
+      - run: cmake --build . --config Debug
+        working-directory: ./build
+      - run: ctest -V
+        working-directory: ./build
+      - name: Archive Windows Debug binary
+        uses: actions/upload-artifact@v2
+        with:
+          name: lib3mf.debug.dll
+          path: build/Debug/lib3mf.dll
+          retention-days: 5 
   test-mingw-w64:
     runs-on: windows-2019
     steps:

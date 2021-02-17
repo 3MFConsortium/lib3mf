@@ -1,6 +1,6 @@
 /*
   zip_source_layered.c -- create layered source
-  Copyright (C) 2009-2014 Dieter Baron and Thomas Klausner
+  Copyright (C) 2009-2020 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -17,7 +17,7 @@
   3. The names of the authors may not be used to endorse or promote
      products derived from this software without specific prior
      written permission.
- 
+
   THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS
   OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -34,12 +34,11 @@
 
 #include <stdlib.h>
 
-#include "Libraries/libzip/zipint.h"
+#include "zipint.h"
 
 
 zip_source_t *
-zip_source_layered(zip_t *za, zip_source_t *src, zip_source_layered_callback cb, void *ud)
-{
+zip_source_layered(zip_t *za, zip_source_t *src, zip_source_layered_callback cb, void *ud) {
     if (za == NULL)
         return NULL;
 
@@ -48,13 +47,12 @@ zip_source_layered(zip_t *za, zip_source_t *src, zip_source_layered_callback cb,
 
 
 zip_source_t *
-zip_source_layered_create(zip_source_t *src, zip_source_layered_callback cb, void *ud, zip_error_t *error)
-{
+zip_source_layered_create(zip_source_t *src, zip_source_layered_callback cb, void *ud, zip_error_t *error) {
     zip_source_t *zs;
-    
-    if ((zs=_zip_source_new(error)) == NULL)
+
+    if ((zs = _zip_source_new(error)) == NULL)
         return NULL;
-    
+
     zip_source_keep(src);
     zs->src = src;
     zs->cb.l = cb;

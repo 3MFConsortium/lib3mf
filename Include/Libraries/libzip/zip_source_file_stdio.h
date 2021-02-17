@@ -1,6 +1,9 @@
+#ifndef _HAD_ZIP_SOURCE_FILE_STDIO_H
+#define _HAD_ZIP_SOURCE_FILE_STDIO_H
+
 /*
-  zip_filerange_crc.c -- compute CRC32 for a range of a file
-  Copyright (C) 2008-2014 Dieter Baron and Thomas Klausner
+  zip_source_file_stdio.h -- common header for stdio file implementation
+  Copyright (C) 2020 Dieter Baron and Thomas Klausner
 
   This file is part of libzip, a library to manipulate ZIP archives.
   The authors can be contacted at <libzip@nih.at>
@@ -17,7 +20,7 @@
   3. The names of the authors may not be used to endorse or promote
      products derived from this software without specific prior
      written permission.
- 
+
   THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS
   OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -31,47 +34,14 @@
   IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
 #include <stdio.h>
-#include <errno.h>
 
-#include "Libraries/libzip/zipint.h"
+void _zip_stdio_op_close(zip_source_file_context_t *ctx);
+zip_int64_t _zip_stdio_op_read(zip_source_file_context_t *ctx, void *buf, zip_uint64_t len);
+bool _zip_stdio_op_seek(zip_source_file_context_t *ctx, void *f, zip_int64_t offset, int whence);
+bool _zip_stdio_op_stat(zip_source_file_context_t *ctx, zip_source_file_stat_t *st);
+zip_int64_t _zip_stdio_op_tell(zip_source_file_context_t *ctx, void *f);
 
+FILE *_zip_fopen_close_on_exec(const char *name, bool writeable);
 
-
-int
-_zip_filerange_crc(zip_source_t *src, zip_uint64_t start, zip_uint64_t len, uLong *crcp, zip_error_t *error)
-{
-    Bytef buf[BUFSIZE];
-    zip_int64_t n;
-
-    *crcp = crc32(0L, Z_NULL, 0);
-
-    if (start > ZIP_INT64_MAX) {
-	zip_error_set(error, ZIP_ER_SEEK, EFBIG);
-	return -1;
-    }
-
-    if (zip_source_seek(src, (zip_int64_t)start, SEEK_SET) != 0) {
-	_zip_error_set_from_source(error, src);
-	return -1;
-    }
-    
-    while (len > 0) {
-	n = (zip_int64_t)(len > BUFSIZE ? BUFSIZE : len);
-	if ((n = zip_source_read(src, buf, (zip_uint64_t)n)) < 0) {
-	    _zip_error_set_from_source(error, src);
-	    return -1;
-	}
-	if (n == 0) {
-	    zip_error_set(error, ZIP_ER_EOF, 0);
-	    return -1;
-	}
-
-	*crcp = crc32(*crcp, buf, (uInt)n);
-
-	len -= (zip_uint64_t)n;
-    }
-
-    return 0;
-}
+#endif /* _HAD_ZIP_SOURCE_FILE_STDIO_H */
