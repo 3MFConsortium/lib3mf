@@ -91,7 +91,6 @@ jobs:
         working-directory: ./build
       - run: ctest -V
         working-directory: ./build
-  
   assemble-sdk:
     runs-on: ubuntu-18.04
     needs: [build-windows-release, build-linux, build-macos]
@@ -114,7 +113,6 @@ jobs:
         with:
           name: lib3mf_sdk.zip
           path: build/lib3mf_sdk.zip
-
   deploy-linux:
     runs-on: ubuntu-18.04
     needs: [assemble-sdk]
@@ -122,6 +120,55 @@ jobs:
       - run: sudo apt install -y zip unzip
       - run: pwd
       - run: ls -Rl .
+      - name: Download lib3mf_sdk artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: lib3mf_sdk.zip
+          path: lib3mf_sdk.zip
+      - run: ls -Rl .
+      - name: Get the SDK
+        run: |
+            unzip lib3mf_sdk.zip/lib3mf_sdk.zip
+      - name: Build CppDynamic
+        run: |
+          sh Examples/CppDynamic/GenerateMake.sh
+          cd Examples/CppDynamic/build
+          cmake --build .
+          ./Example_ExtractInfo ../../Files/Helix.3mf
+      - name: Build Cpp
+        run: |
+          sh Examples/Cpp/GenerateMake.sh
+          cd Examples/Cpp/build
+          cmake --build .
+          ./Example_ExtractInfo ../../Files/Helix.3mf
+  deploy-windows:
+    runs-on: windows-2019
+    needs: [assemble-sdk]
+    steps:
+      - name: Download lib3mf_sdk artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: lib3mf_sdk.zip
+          path: lib3mf_sdk.zip
+      - name: Get the SDK
+        run: |
+            unzip lib3mf_sdk.zip/lib3mf_sdk.zip
+      - name: Build CppDynamic
+        run: |
+          ./Examples/CppDynamic/GenerateVS2019.bat
+          cd Examples/CppDynamic/build
+          cmake --build .
+          ./Example_ExtractInfo ../../Files/Helix.3mf
+      - name: Build Cpp
+        run: |
+          ./Examples/Cpp/GenerateVS2019.bat
+          cd Examples/Cpp/build
+          cmake --build .
+          ./Example_ExtractInfo ../../Files/Helix.3mf
+  deploy-macos:
+    runs-on: macos-10.15
+    needs: [assemble-sdk]
+    steps:
       - name: Download lib3mf_sdk artifact
         uses: actions/download-artifact@v2
         with:
