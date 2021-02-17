@@ -2,10 +2,7 @@ on: [push, pull_request]
 name: Build
 jobs:
   build-linux:
-    runs-on: ubuntu-16.04
-    env:
-      CC: gcc-5
-      CXX: g++-5
+    runs-on: ubuntu-18.04
     steps:
       - run: sudo apt install -y valgrind
       - uses: actions/checkout@v2
