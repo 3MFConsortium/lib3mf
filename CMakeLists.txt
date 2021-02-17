@@ -48,9 +48,6 @@ if (${MSVC})
 
   add_definitions(/W3)
   
-  # Allow unnamed structs
-  add_definitions(/Wv:18)
-
   # add_definitions(-D_CRT_NONSTDC_NO_DEPRECATE -D_CRT_SECURE_NO_WARNINGS)
   # set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
   # set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
