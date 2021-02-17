@@ -45,7 +45,7 @@ This is a derived class for Importing the binary STL and color STL Mesh Format.
 namespace NMR {
 
 #pragma pack (1)
-	typedef struct {
+	typedef struct MESHFORMAT_STL_FACET {
 		NVEC3 m_normal;
 		NVEC3 m_vertices[3];
 		nfUint16 m_attribute;
