@@ -129,18 +129,15 @@ jobs:
           path: lib3mf_sdk.zip
       - run: ls -Rl .
       - name: Get the SDK
-        id step_one
         run: |
             unzip lib3mf_sdk.zip/lib3mf_sdk.zip
       - name: Build CppDynamic
-        id step_two
         run: |
           sh Examples/CppDynamic/GenerateMake.sh
           cd Examples/CppDynamic/build
           cmake --build .
           ./Example_ExtractInfo ../../Files/Helix.3mf
       - name: Build Cpp
-        id step_three
         run: |
           sh Examples/Cpp/GenerateMake.sh
           cd Examples/Cpp/build
