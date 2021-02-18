@@ -58,7 +58,7 @@ try {\
   statement;\
   ASSERT_FALSE(true);\
 }\
-catch (type) {\
+catch (const type &) {\
   ASSERT_TRUE(true);\
 }\
 }
