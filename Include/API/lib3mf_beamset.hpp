@@ -48,6 +48,7 @@ Abstract: This is the class declaration of CBeamSet
 namespace Lib3MF {
 namespace Impl {
 
+#define LIB3MF_MAXBEAMCOUNT (1UL << 31)
 
 /*************************************************************************************************************************
  Class declaration of CBeamSet 

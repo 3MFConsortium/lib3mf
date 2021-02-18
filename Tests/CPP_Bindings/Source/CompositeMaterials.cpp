@@ -153,7 +153,7 @@ namespace Lib3MF
 		Lib3MF_uint32 propertyID2 = compositeMaterial->AddComposite(constituents2);
 
 		std::vector<sTriangleProperties> properties(mesh->GetTriangleCount());
-		for (Lib3MF_uint64 i = 0; i < mesh->GetTriangleCount(); i++) {
+		for (size_t i = 0; i < mesh->GetTriangleCount(); i++) {
 			properties[i].m_ResourceID = compositeMaterial->GetResourceID();
 			for (int k = 0; k < 3; k++) {
 				properties[i].m_PropertyIDs[k] = ((i + k) % 2) ? propertyID1 : propertyID2;
@@ -191,7 +191,7 @@ namespace Lib3MF
 
 		std::vector<sTriangleProperties> obtainedProperties;
 		mesh->GetAllTriangleProperties(obtainedProperties);
-		for (Lib3MF_uint64 i = 0; i < mesh->GetTriangleCount(); i++) {
+		for (size_t i = 0; i < mesh->GetTriangleCount(); i++) {
 			EXPECT_EQ(obtainedProperties[i].m_ResourceID, properties[i].m_ResourceID);
 			for (Lib3MF_uint64 j = 0; j < 3; j++) {
 				EXPECT_EQ(obtainedProperties[i].m_PropertyIDs[j], properties[i].m_PropertyIDs[j]);

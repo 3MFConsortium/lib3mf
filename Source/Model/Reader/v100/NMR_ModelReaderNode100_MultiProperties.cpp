@@ -79,7 +79,7 @@ namespace NMR {
 				m_pWarnings->addException(CNMRException(NMR_ERROR_MULTIPROPERTIES_DIFFERNT_NUMBER_OF_BLENDMETHODS_AND_PIDS), mrwInvalidMandatoryValue);
 			}
 
-			for (int i = 0; i < m_pPIDs->size(); i++) {
+			for (size_t i = 0; i < m_pPIDs->size(); i++) {
 				PPackageResourceID pID = m_pModel->findPackageResourceID(m_pModel->currentPath(), (*m_pPIDs)[i]);
 				if (!pID)
 					throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);

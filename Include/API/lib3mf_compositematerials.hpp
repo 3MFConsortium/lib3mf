@@ -44,6 +44,8 @@ Abstract: This is the class declaration of CCompositeMaterials
 // Include custom headers here.
 #include "Model/Classes/NMR_ModelCompositeMaterials.h"
 
+#define LIB3MF_MAXCOMPOSITEMATERIALS (1UL << 31)
+
 namespace Lib3MF {
 namespace Impl {
 
