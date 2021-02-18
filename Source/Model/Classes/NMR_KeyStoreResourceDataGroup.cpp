@@ -59,7 +59,7 @@ namespace NMR {
 	{
 		if (index >= m_AccessRights.size())
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
-		return m_AccessRights[index];
+		return m_AccessRights[(size_t)index];
 	}
 
 	PKeyStoreAccessRight CKeyStoreResourceDataGroup::findAccessRightByConsumerID(std::string const & consumerId) const

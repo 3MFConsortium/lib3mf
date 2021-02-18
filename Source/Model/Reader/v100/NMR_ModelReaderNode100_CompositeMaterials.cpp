@@ -81,7 +81,7 @@ namespace NMR {
 		if (m_pMatIndices) {
 			pBaseMaterial->buildResourceIndexMap();
 			m_vctMaterialPropertyIDs.resize(m_pMatIndices->size());
-			for (int i = 0; i < m_vctMaterialPropertyIDs.size(); i++) {
+			for (size_t i = 0; i < m_vctMaterialPropertyIDs.size(); i++) {
 				ModelPropertyID nPropertyID;
 				if (!pBaseMaterial->mapResourceIndexToPropertyID(i, nPropertyID)) {
 					throw CNMRException(NMR_ERROR_INVALIDBASEMATERIAL);
