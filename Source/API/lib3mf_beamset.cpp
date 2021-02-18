@@ -81,9 +81,12 @@ Lib3MF_uint32 CBeamSet::GetReferenceCount()
 
 void CBeamSet::SetReferences(const Lib3MF_uint64 nReferencesBufferSize, const Lib3MF_uint32 * pReferencesBuffer)
 {
-	m_pBeamSet->m_Refs.resize(nReferencesBufferSize);
+	if (nReferencesBufferSize > LIB3MF_MAXBEAMCOUNT)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_ELEMENTCOUNTEXCEEDSLIMIT);
+
+	m_pBeamSet->m_Refs.resize((size_t) nReferencesBufferSize);
 	const Lib3MF_uint32 beamCount = m_mesh.getBeamCount();
-	for (Lib3MF_uint64 i = 0; i < nReferencesBufferSize; i++) {
+	for (size_t i = 0; i < (size_t)nReferencesBufferSize; i++) {
 		if (beamCount <= pReferencesBuffer[i])
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
 		m_pBeamSet->m_Refs[i] = Lib3MF_uint32(pReferencesBuffer[i]);
@@ -115,9 +118,12 @@ Lib3MF_uint32 CBeamSet::GetBallReferenceCount()
 
 void CBeamSet::SetBallReferences(const Lib3MF_uint64 nBallReferencesBufferSize, const Lib3MF_uint32* pBallReferencesBuffer)
 {
-	m_pBeamSet->m_BallRefs.resize(nBallReferencesBufferSize);
+	if (nBallReferencesBufferSize > LIB3MF_MAXBEAMCOUNT)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_ELEMENTCOUNTEXCEEDSLIMIT);
+
+	m_pBeamSet->m_BallRefs.resize((size_t)nBallReferencesBufferSize);
 	const Lib3MF_uint32 ballCount = m_mesh.getBallCount();
-	for (Lib3MF_uint64 i = 0; i < nBallReferencesBufferSize; i++) {
+	for (size_t i = 0; i < (size_t)nBallReferencesBufferSize; i++) {
 		if (ballCount <= pBallReferencesBuffer[i])
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
 		m_pBeamSet->m_BallRefs[i] = Lib3MF_uint32(pBallReferencesBuffer[i]);
