@@ -213,7 +213,7 @@ void Lib3MF::Impl::CWriter::AddKeyWrappingCallback(const std::string & sConsumer
 		if (result == 0)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_CALCULATIONABORTED);
 
-		cipher.resize(needed, 0);
+		cipher.resize((size_t)needed, 0);
 
 		result = 0;
 		(*pTheCallback)(entityHandle, plain.size(), plain.data(), plain.size(),

@@ -176,7 +176,7 @@ namespace NMR {
 						ctx.m_sKekDecryptData.m_pAccessRight = accessRight;
 						std::vector<nfByte> const & closedKey = accessRight->getCipherValue();
 						std::vector<nfByte> openedKey;
-						size_t decrypted = ctx.m_fnWrap(closedKey, openedKey, ctx.m_sKekDecryptData);
+						size_t decrypted = (size_t)ctx.m_fnWrap(closedKey, openedKey, ctx.m_sKekDecryptData);
 						if (decrypted) {
 							rdg->setKey(openedKey);
 							break;

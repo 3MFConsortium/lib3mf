@@ -130,7 +130,7 @@ namespace NMR {
 		for (auto pStack : m_pSliceRefs) {
 			nSlices += pStack->getSliceCount();
 		}
-		m_pSlices.reserve(nSlices);
+		m_pSlices.reserve((size_t)nSlices);
 		for (auto pStack : m_pSliceRefs) {
 			for (auto pOldSlice : pStack->m_pSlices) {
 				m_pSlices.push_back(std::make_shared<CSlice>(*pOldSlice.get()));
