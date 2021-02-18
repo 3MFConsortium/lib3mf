@@ -57,7 +57,6 @@ namespace NMR {
 		std::vector<nfByte> m_Buffer;
 		zip_error_t m_ZIPError;
 		zip_t * m_ZIParchive;
-		zip_source_t * m_ZIPsource;
 		std::map <std::string, nfUint64> m_ZIPEntries;
 		std::map <std::string, POpcPackagePart> m_Parts;
 

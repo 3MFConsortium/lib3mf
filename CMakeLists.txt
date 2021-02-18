@@ -10,12 +10,13 @@ include(GNUInstallDirs)
 # Define Version
 set(LIB3MF_VERSION_MAJOR 2)        # increase on every backward-compatibility breaking change of the API
 set(LIB3MF_VERSION_MINOR 1)        # increase on every backward compatible change of the API
-set(LIB3MF_VERSION_MICRO 0)        # increase on on every change that does not alter the API
-set(LIB3MF_VERSION_PRERELEASE "")  # denotes pre-release information of a version of lib3mf
+set(LIB3MF_VERSION_MICRO 1)        # increase on on every change that does not alter the API
+set(LIB3MF_VERSION_PRERELEASE "develop")  # denotes pre-release information of a version of lib3mf
 
 project(lib3mf
   VERSION ${LIB3MF_VERSION_MAJOR}.${LIB3MF_VERSION_MINOR}.${LIB3MF_VERSION_MICRO}
-  DESCRIPTION "An implementation of the 3D Manufacturing Format file standard")
+  DESCRIPTION "An implementation of the 3D Manufacturing Format file standard"
+)
 
 set(CMAKE_INSTALL_BINDIR bin CACHE PATH "directory for installing binary files")
 set(CMAKE_INSTALL_LIBDIR lib CACHE PATH "directory for installing library files")
@@ -155,15 +156,28 @@ target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_BINARY_DIR_AU
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/Include/API)
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/Include)
 
-if (NOT USE_INCLUDED_LIBZIP)
-	find_package(PkgConfig REQUIRED)
-	pkg_check_modules(LIBZIP REQUIRED libzip)
-	target_link_libraries(${PROJECT_NAME} ${LIBZIP_LIBRARIES})
+if (USE_INCLUDED_LIBZIP)
+    target_compile_options(${PROJECT_NAME} PRIVATE "-DZIP_STATIC")
+    target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/Include/Libraries/libzip)
+
+    if (UNIX OR MINGW)
+        target_compile_options(${PROJECT_NAME} PRIVATE "-DHAVE_FSEEKO")
+        target_compile_options(${PROJECT_NAME} PRIVATE "-DHAVE_FTELLO")
+        target_compile_options(${PROJECT_NAME} PRIVATE "-DHAVE_STRCASECMP")
+        target_compile_options(${PROJECT_NAME} PRIVATE "-DHAVE_UNISTD_H")
+    endif()
+
+else()
+    find_package(PkgConfig REQUIRED)
+    pkg_check_modules(LIBZIP REQUIRED libzip)
+    target_link_libraries(${PROJECT_NAME} ${LIBZIP_LIBRARIES})
 endif()
-if (NOT USE_INCLUDED_ZLIB)
-	find_package(PkgConfig REQUIRED)
-	pkg_check_modules(ZLIB REQUIRED zlib)
-	target_link_libraries(${PROJECT_NAME} ${ZLIB_LIBRARIES})
+if (USE_INCLUDED_ZLIB)
+    target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/Include/Libraries/zlib)
+else()
+    find_package(PkgConfig REQUIRED)
+    pkg_check_modules(ZLIB REQUIRED zlib)
+    target_link_libraries(${PROJECT_NAME} ${ZLIB_LIBRARIES})
 endif()
 
 
