@@ -118,7 +118,7 @@ struct PositionedVector
 				buffer->vec.push_back(*pData);
 			}
 			else  if (buffer->pos < buffer->vec.size()) {
-				buffer->vec[buffer->pos] = *pData;
+				buffer->vec[(size_t)buffer->pos] = *pData;
 			}
 			else {
 				ASSERT_TRUE(false);
@@ -133,7 +133,7 @@ struct PositionedVector
 		T* pData = (T*)(nByteData);
 		for (int i = 0; i < nNumBytes; i++) {
 			if (buffer->pos < buffer->vec.size()) {
-				*pData = buffer->vec[buffer->pos];
+				*pData = buffer->vec[(size_t)buffer->pos];
 			}
 			else {
 				ASSERT_TRUE(false);
