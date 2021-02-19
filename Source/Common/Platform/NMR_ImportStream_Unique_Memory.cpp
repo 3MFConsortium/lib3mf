@@ -124,7 +124,12 @@ namespace NMR {
 	}
 
 	__NMR_INLINE const nfByte * CImportStream_Unique_Memory::getAt(nfUint64 nPosition) { 
-		return &m_Buffer[nPosition]; 
+
+		if (nPosition >= (uint64_t) m_Buffer.size())
+			throw CNMRException(NMR_ERROR_COULDNOTREADSTREAM);
+
+		// On 32 bit system, nPosition is definitely a 32bit value, because m_Buffer.size () is a size_t
+		return &m_Buffer[(size_t) nPosition]; 
 	}
 
 }

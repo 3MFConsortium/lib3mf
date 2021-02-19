@@ -60,7 +60,7 @@ NMR_PortableZIPWriterTypes.h defines a portable and fast writer of ZIP files
 namespace NMR {
 
 #pragma pack (1)
-	typedef struct {
+	typedef struct ZIPLOCALFILEHEADER {
 		nfUint32 m_nSignature;
 		nfUint16 m_nVersion;
 		nfUint16 m_nGeneralPurposeFlags;
@@ -87,7 +87,7 @@ namespace NMR {
 		}
 	} ZIPLOCALFILEHEADER;
 
-	typedef struct {
+	typedef struct ZIPLOCALFILEDESCRIPTOR {
 		nfUint32 m_nCRC32;
 		nfUint32 m_nCompressedSize;
 		nfUint32 m_nUnCompressedSize;
@@ -98,7 +98,7 @@ namespace NMR {
 		}
 	} ZIPLOCALFILEDESCRIPTOR;
 
-	typedef struct {
+	typedef struct ZIP64EXTRAINFORMATIONFIELD {
 		nfUint16 m_nTag;
 		nfUint16 m_nFieldSize;
 		nfUint64 m_nUncompressedSize;
@@ -111,7 +111,7 @@ namespace NMR {
 		}
 	} ZIP64EXTRAINFORMATIONFIELD;
 
-	typedef struct {
+	typedef struct ZIPCENTRALDIRECTORYFILEHEADER {
 		nfUint32 m_nSignature;
 		nfUint16 m_nVersionMade;
 		nfUint16 m_nVersionNeeded;
@@ -150,7 +150,7 @@ namespace NMR {
 		}
 	} ZIPCENTRALDIRECTORYFILEHEADER;
 
-	typedef struct {
+	typedef struct ZIPENDOFCENTRALDIRHEADER {
 		nfUint32 m_nSignature;
 		nfUint16 m_nNumberOfDisk;
 		nfUint16 m_nRelativeNumberOfDisk;
@@ -171,7 +171,7 @@ namespace NMR {
 		}
 	} ZIPENDOFCENTRALDIRHEADER;
 
-	typedef struct {
+	typedef struct ZIP64ENDOFCENTRALDIRHEADER {
 		nfUint32 m_nSignature;
 		nfUint64 m_nEndOfCentralDirHeaderRecord;
 		nfUint16 m_nVersionMade;
@@ -197,7 +197,7 @@ namespace NMR {
 		}
 	} ZIP64ENDOFCENTRALDIRHEADER;
 
-	typedef struct {
+	typedef struct ZIP64ENDOFCENTRALDIRLOCATOR {
 		nfUint32 m_nSignature;
 		nfUint32 m_nNumberOfDiskWithStartOfZIP64EOCentralDir;
 		nfUint64 m_nRelativeOffset;

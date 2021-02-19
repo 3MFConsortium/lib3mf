@@ -1,5 +1,5 @@
 /* infback.c -- inflate using a call-back interface
- * Copyright (C) 1995-2011 Mark Adler
+ * Copyright (C) 1995-2016 Mark Adler
  * For conditions of distribution and use, see copyright notice in zlib.h
  */
 
@@ -10,10 +10,10 @@
    inflate_fast() can be used with either inflate.c or infback.c.
  */
 
-#include "Libraries/zlib/zutil.h"
-#include "Libraries/zlib/inftrees.h"
-#include "Libraries/zlib/inflate.h"
-#include "Libraries/zlib/inffast.h"
+#include "zutil.h"
+#include "inftrees.h"
+#include "inflate.h"
+#include "inffast.h"
 
 /* function prototypes */
 local void fixedtables OF((struct inflate_state FAR *state));
@@ -61,7 +61,7 @@ int stream_size;
     Tracev((stderr, "inflate: allocated\n"));
     strm->state = (struct internal_state FAR *)state;
     state->dmax = 32768U;
-    state->wbits = windowBits;
+    state->wbits = (uInt)windowBits;
     state->wsize = 1U << windowBits;
     state->window = window;
     state->wnext = 0;
@@ -114,7 +114,7 @@ struct inflate_state FAR *state;
         virgin = 0;
     }
 #else /* !BUILDFIXED */
-#   include "Libraries/zlib/inffixed.h"
+#   include "inffixed.h"
 #endif /* BUILDFIXED */
     state->lencode = lenfix;
     state->lenbits = 9;

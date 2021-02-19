@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<component xmlns="http://schemas.autodesk.com/netfabb/automaticcomponenttoolkit/2018" libraryname="the 3MF Library" namespace="Lib3MF" copyright="3MF Consortium (Original Author)" year="2019" basename="lib3mf" version="2.1.0">
+<component xmlns="http://schemas.autodesk.com/netfabb/automaticcomponenttoolkit/2018" libraryname="the 3MF Library" namespace="Lib3MF" copyright="3MF Consortium (Original Author)" year="2019" basename="lib3mf" version="2.1.1">
 
 	<license>
 		<line value="All rights reserved."/>
@@ -75,7 +75,8 @@
 		<error name="INVALIDATTACHMENTSTREAM" code="131" description="An attachment stream is invalid"/>
 		<error name="INVALIDPROPERTYCOUNT" code="132" description="Invalid property count."/>
 		<error name="UNKOWNPROGRESSIDENTIFIER" code="140" description="A progress identifier is unknown"/>
-		<error name="BEAMLATTICE_INVALID_OBJECTTYPE" code="2000" description="This object type is not valid for beamlattices"/>
+		<error name="ELEMENTCOUNTEXCEEDSLIMIT" code="141" description="An element buffer exceeds its spec limit"/>
+		<error name="BEAMLATTICE_INVALID_OBJECTTYPE" code="2000" description="This object type is not valid for beamlattices"/>		
 		<error name="INVALIDKEYSTORE" code="3000" description="The keystore object is invalid"/>
 		<error name="INVALIDKEYSTORECONSUMER" code="3001" description="The consumer keystore object is invalid"/>
 		<error name="KEYSTORECONSUMERNOTFOUND" code="3002" description="A consumer has not been found"/>

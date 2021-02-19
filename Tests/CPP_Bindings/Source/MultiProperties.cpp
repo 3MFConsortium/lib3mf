@@ -83,7 +83,7 @@ namespace Lib3MF
 			std::vector<sTex2Coord> coords(0);
 			texture2DGroup = model->AddTexture2DGroup(texture2D.get());
 			std::vector<sTriangleProperties> properties(mesh->GetTriangleCount());
-			for (Lib3MF_uint64 i = 0; i < mesh->GetTriangleCount(); i++) {
+			for (size_t i = 0; i < mesh->GetTriangleCount(); i++) {
 				properties[i].m_ResourceID = texture2DGroup->GetResourceID();
 
 				coords.push_back({ 1.0*i / mesh->GetTriangleCount(), 1.0 - 1.0*i / mesh->GetTriangleCount() });
@@ -211,7 +211,7 @@ namespace Lib3MF
 		{
 			std::vector<Lib3MF_uint32> vctPropertyIDs;
 			multiPropertyGroup->GetAllPropertyIDs(vctPropertyIDs);
-			for (Lib3MF_uint64 i = 0; i < mesh->GetTriangleCount(); i++) {
+			for (size_t i = 0; i < mesh->GetTriangleCount(); i++) {
 				properties[i].m_ResourceID = multiPropertyGroup->GetResourceID();
 				for (Lib3MF_uint64 k = 0; k < 3; k++) {
 					properties[i].m_PropertyIDs[k] = vctPropertyIDs[(i + k) % vctPropertyIDs.size()];

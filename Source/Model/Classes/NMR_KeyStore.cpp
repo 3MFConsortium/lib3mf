@@ -83,7 +83,7 @@ namespace NMR {
 	{	
 		if (index >= m_Consumers.size())
 			throw CNMRException(NMR_ERROR_INVALIDINDEX);
-		return m_Consumers[index];
+		return m_Consumers[(size_t)index];
 	}
 
 	PKeyStoreConsumer CKeyStore::findConsumerById(std::string id)
@@ -114,7 +114,7 @@ namespace NMR {
 
 	PKeyStoreResourceDataGroup CKeyStore::getResourceDataGroup(nfUint64 index) const {
 		if (index < m_ResourceDataGroups.size())
-			return m_ResourceDataGroups[index];
+			return m_ResourceDataGroups[(size_t)index];
 		throw CNMRException(NMR_ERROR_INVALIDINDEX);
 	}
 
@@ -177,7 +177,7 @@ namespace NMR {
 
 	PKeyStoreResourceData CKeyStore::getResourceData(nfUint64 index) const {
 		if (index < m_ResourceDatas.size())
-			return m_ResourceDatas[index];
+			return m_ResourceDatas[(size_t)index];
 		throw CNMRException(NMR_ERROR_INVALIDINDEX);
 	}
 

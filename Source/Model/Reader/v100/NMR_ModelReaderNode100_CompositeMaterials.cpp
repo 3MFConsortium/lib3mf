@@ -80,10 +80,15 @@ namespace NMR {
 		
 		if (m_pMatIndices) {
 			pBaseMaterial->buildResourceIndexMap();
+
+			if (m_pMatIndices->size() > XML_3MF_MAXRESOURCECOUNT)
+				throw CNMRException(NMR_ERROR_INVALIDBUFFERSIZE);
+
+
 			m_vctMaterialPropertyIDs.resize(m_pMatIndices->size());
-			for (int i = 0; i < m_vctMaterialPropertyIDs.size(); i++) {
+			for (size_t i = 0; i < m_vctMaterialPropertyIDs.size(); i++) {
 				ModelPropertyID nPropertyID;
-				if (!pBaseMaterial->mapResourceIndexToPropertyID(i, nPropertyID)) {
+				if (!pBaseMaterial->mapResourceIndexToPropertyID((ModelResourceIndex)i, nPropertyID)) {
 					throw CNMRException(NMR_ERROR_INVALIDBASEMATERIAL);
 				}
 				m_vctMaterialPropertyIDs[i] = nPropertyID;

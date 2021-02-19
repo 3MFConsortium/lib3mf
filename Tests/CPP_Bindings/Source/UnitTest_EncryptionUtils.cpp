@@ -211,7 +211,7 @@ void EncryptionCallbacks::keyEncryptClientCallback(
 		*status = *cipherNeeded;
 	} else {
 		KekContext const * context = (KekContext const *)userData;
-		*status = RsaMethods::encrypt(context->key, plainSize, plainBuffer, cipherBuffer);
+		*status = RsaMethods::encrypt(context->key, (size_t) plainSize, plainBuffer, cipherBuffer);
 	}
 }
 
@@ -295,7 +295,7 @@ void EncryptionCallbacks::keyDecryptClientCallback(
 		ASSERT_EQ(cipherSize, 256);
 		ASSERT_GE(plainSize, 32);
 
-		*status = RsaMethods::decrypt(context->key, cipherSize, cipherBuffer, plainBuffer);
+		*status = RsaMethods::decrypt(context->key, (size_t) cipherSize, cipherBuffer, plainBuffer);
 	}
 }
 

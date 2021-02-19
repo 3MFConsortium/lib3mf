@@ -489,8 +489,8 @@ namespace Lib3MF {
 		readUnencryptedKeyStore();
 		auto keyStore = model->GetKeyStore();
 		ASSERT_TRUE(keyStore != nullptr);
-		const size_t consumerCount = keyStore->GetConsumerCount();
-		for (int i = 0; i < consumerCount; ++i) {
+		const size_t consumerCount = (size_t) keyStore->GetConsumerCount();
+		for (size_t i = 0; i < consumerCount; ++i) {
 			PConsumer consumer = keyStore->GetConsumer(i);
 
 			ASSERT_EQ("LIB3MF#TEST", consumer->GetConsumerID());
@@ -516,7 +516,7 @@ namespace Lib3MF {
 		readUnencryptedKeyStore();
 		auto keyStore = model->GetKeyStore();
 		ASSERT_TRUE(keyStore != nullptr);
-		const size_t resourceDataCount = keyStore->GetResourceDataCount();
+		const size_t resourceDataCount = (size_t) keyStore->GetResourceDataCount();
 
 		ASSERT_TRUE(resourceDataCount > 0);
 
@@ -524,7 +524,7 @@ namespace Lib3MF {
 		PResourceData resourceDataNotFound = keyStore->FindResourceData(newPart.get());
 		ASSERT_TRUE(nullptr == resourceDataNotFound);
 
-		for (int i = 0; i < resourceDataCount; ++i) {
+		for (size_t i = 0; i < resourceDataCount; ++i) {
 			PResourceData resourceData = keyStore->GetResourceData(i);
 			ASSERT_TRUE(resourceData != nullptr);
 

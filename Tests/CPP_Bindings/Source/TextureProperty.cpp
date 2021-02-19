@@ -77,14 +77,14 @@ namespace Lib3MF
 
 		auto texture2DGroup = model->AddTexture2DGroup(texture2D.get());
 		std::vector<sTriangleProperties> properties(mesh->GetTriangleCount());
-		for (Lib3MF_uint64 i = 0; i < mesh->GetTriangleCount(); i++) {
+		for (size_t i = 0; i < mesh->GetTriangleCount(); i++) {
 			properties[i].m_ResourceID = texture2DGroup->GetResourceID();
 
 			coords.push_back({ 1.0*i / mesh->GetTriangleCount(), 1.0 - 1.0*i / mesh->GetTriangleCount() });
 			properties[i].m_PropertyIDs[0] = texture2DGroup->AddTex2Coord(coords.rbegin()[0]);
-			coords.push_back({ 1.0*(i + 1) / mesh->GetTriangleCount(), 1.0 - 1.0*i / mesh->GetTriangleCount() });
+			coords.push_back({ 1.0*((uint64_t) i + 1) / mesh->GetTriangleCount(), 1.0 - 1.0*i / mesh->GetTriangleCount() });
 			properties[i].m_PropertyIDs[1] = texture2DGroup->AddTex2Coord(coords.rbegin()[0]);
-			coords.push_back({ 1.0*i / mesh->GetTriangleCount(), 1.0 - 1.0*(i + 1) / mesh->GetTriangleCount() });
+			coords.push_back({ 1.0*i / mesh->GetTriangleCount(), 1.0 - 1.0*((uint64_t)i + 1) / mesh->GetTriangleCount() });
 			properties[i].m_PropertyIDs[2] = texture2DGroup->AddTex2Coord(coords.rbegin()[0]);
 		}
 		mesh->SetAllTriangleProperties(properties);
@@ -92,9 +92,9 @@ namespace Lib3MF
 		std::vector<sTriangleProperties> obtainedProperties;
 		mesh->GetAllTriangleProperties(obtainedProperties);
 		int count = 0;
-		for (Lib3MF_uint64 i = 0; i < mesh->GetTriangleCount(); i++) {
+		for (size_t i = 0; i < mesh->GetTriangleCount(); i++) {
 			EXPECT_EQ(obtainedProperties[i].m_ResourceID, properties[i].m_ResourceID);
-			for (Lib3MF_uint64 j = 0; j < 3; j++) {
+			for (size_t j = 0; j < 3; j++) {
 				EXPECT_EQ(obtainedProperties[i].m_PropertyIDs[j], properties[i].m_PropertyIDs[j]);
 			}
 
@@ -102,7 +102,7 @@ namespace Lib3MF
 			mesh->GetTriangleProperties(Lib3MF_uint32(i), currentProperty);
 			auto currentTexture2DGroup = model->GetTexture2DGroupByID(currentProperty.m_ResourceID);
 			EXPECT_EQ(currentProperty.m_ResourceID, properties[i].m_ResourceID);
-			for (Lib3MF_uint64 j = 0; j < 3; j++) {
+			for (size_t j = 0; j < 3; j++) {
 				EXPECT_EQ(currentProperty.m_PropertyIDs[j], properties[i].m_PropertyIDs[j]);
 				sTex2Coord uvcoord = currentTexture2DGroup->GetTex2Coord(currentProperty.m_PropertyIDs[j]);
 				EXPECT_DOUBLE_EQ(uvcoord.m_U, coords[count].m_U);
@@ -118,7 +118,7 @@ namespace Lib3MF
 	{
 		auto texture2DGroup = model->AddTexture2DGroup(texture2D.get());
 		std::vector<sTriangleProperties> properties(mesh->GetTriangleCount());
-		for (Lib3MF_uint64 i = 0; i < mesh->GetTriangleCount(); i++) {
+		for (size_t i = 0; i < mesh->GetTriangleCount(); i++) {
 			properties[i].m_ResourceID = texture2DGroup->GetResourceID();
 			properties[i].m_PropertyIDs[0] = texture2DGroup->AddTex2Coord({ 1.0*i / mesh->GetTriangleCount(), 1.0 - 1.0*i / mesh->GetTriangleCount() });
 			properties[i].m_PropertyIDs[1] = texture2DGroup->AddTex2Coord({ 1.0*(i + 1) / mesh->GetTriangleCount(), 1.0 - 1.0*i / mesh->GetTriangleCount() });
