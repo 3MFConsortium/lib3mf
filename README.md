@@ -1,7 +1,7 @@
 # lib3mf
 ![Build Status](https://github.com/3MFConsortium/lib3mf/workflows/Build/badge.svg?branch=develop)
 [![Documentation Status](https://readthedocs.org/projects/lib3mf/badge/?version=master)](https://readthedocs.org/projects/lib3mf)
-[![Version 2.1.1](https://img.shields.io/static/v1.svg?label=lib3mf&message=v2.1.1&color=green)]()
+[![Version 2.2.0-develop](https://img.shields.io/static/v1.svg?label=lib3mf&message=v2.2.0-develop&color=green)]()
 [![Supported platforms](https://img.shields.io/static/v1.svg?label=platform&message=windows%20%7C%20macos%20%7C%20linux&color=lightgrey)]()
 [![Simplified BSD License](https://img.shields.io/static/v1.svg?label=license&message=BSD&color=green)](LICENSE)
 
