@@ -1589,7 +1589,7 @@
 		</method>
 	</class>
 
-	<global baseclassname="Base" releasemethod="Release" acquiremethod="Acquire" journalmethod="SetJournal" versionmethod="GetLibraryVersion" errormethod="GetLastError" prereleasemethod="GetPrereleaseInformation" buildinfomethod="GetBuildInformation">
+	<global baseclassname="Base" releasemethod="Release" acquiremethod="Acquire" journalmethod="SetJournal" versionmethod="GetLibraryVersion" errormethod="GetLastError" prereleasemethod="GetPrereleaseInformation" buildinfomethod="GetBuildInformation" symbollookupmethod="GetSymbolLookupMethod">
 		<method name="GetLibraryVersion" description="retrieves the binary version of this library.">
 			<param name="Major" type="uint32" pass="out" description="returns the major version of this library"/>
 			<param name="Minor" type="uint32" pass="out" description="returns the minor version of this library"/>
@@ -1626,6 +1626,9 @@
 			<param name="Instance" type="handle" class="Base" pass="in" description="Object where the error occured."/>
 			<param name="LastErrorString" type="string" pass="out" description="Last Error String"/>
 			<param name="HasLastError" type="bool" pass="return" description="Returns if the instance has a last error."/>
+		</method>
+		<method name="GetSymbolLookupMethod" description="Returns the address of the SymbolLookupMethod">
+			<param name="SymbolLookupMethod" type="pointer" pass="return" description="Address of the SymbolAddressMethod" />
 		</method>
 		<method name="RetrieveProgressMessage" description="Return an English text for a progress identifier.|Note: this is the only function you can call from your callback function.">
 			<param name="TheProgressIdentifier" type="enum" class="ProgressIdentifier" pass="in" description="the progress identifier that is passed to the callback function"/>
