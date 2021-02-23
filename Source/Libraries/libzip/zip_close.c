@@ -547,8 +547,12 @@ copy_data(zip_t *za, zip_uint64_t len) {
         return -1;
     }
 
+    uint64_t maxMemSize = 1ULL << (sizeof(size_t) * 8);
+    if (len >= maxMemSize)
+        return -1;
+
     while (len > 0) {
-        n = len > BUFSIZE ? BUFSIZE : len;
+        n = len > BUFSIZE ? BUFSIZE : (size_t) len;
         if (_zip_read(za->src, buf, n, &za->error) < 0) {
             byte_array_fini(buf);
             return -1;

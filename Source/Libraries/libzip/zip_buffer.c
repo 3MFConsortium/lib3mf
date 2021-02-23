@@ -136,7 +136,12 @@ _zip_buffer_read(zip_buffer_t *buffer, zip_uint8_t *data, zip_uint64_t length) {
         length = _zip_buffer_left(buffer);
     }
 
-    memcpy(data, _zip_buffer_get(buffer, length), length);
+    // Cannot read on 32bit, if length is larger than 2GB
+    uint64_t maxMemSize = 1ULL << (sizeof(size_t) * 8);
+    if (length >= maxMemSize)
+        return 0;
+
+    memcpy(data, _zip_buffer_get(buffer, length), (size_t) length);
 
     return length;
 }
@@ -148,7 +153,13 @@ _zip_buffer_new(zip_uint8_t *data, zip_uint64_t size) {
     zip_buffer_t *buffer;
 
     if (data == NULL) {
-        if ((data = (zip_uint8_t *)malloc(size)) == NULL) {
+
+        // 32bit size_t overflow check!
+        uint64_t maxMemSize = 1ULL << (sizeof(size_t) * 8);
+        if (size >= maxMemSize)
+            return NULL;
+
+        if ((data = (zip_uint8_t *)malloc((size_t) size)) == NULL) {
             return NULL;
         }
     }
