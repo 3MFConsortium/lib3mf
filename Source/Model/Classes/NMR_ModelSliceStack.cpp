@@ -130,6 +130,11 @@ namespace NMR {
 		for (auto pStack : m_pSliceRefs) {
 			nSlices += pStack->getSliceCount();
 		}
+
+		if (nSlices > LIB3MF_MAXSLICEREFERENCES)
+			throw CNMRException(NMR_ERROR_TOOMANYSLICES);
+
+
 		m_pSlices.reserve((size_t)nSlices);
 		for (auto pStack : m_pSliceRefs) {
 			for (auto pOldSlice : pStack->m_pSlices) {

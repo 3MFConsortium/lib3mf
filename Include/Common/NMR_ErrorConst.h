@@ -299,6 +299,9 @@ NMR_ErrorConst.h defines all error code constants.
 // Failed to initialize a zlib buffer
 #define NMR_ERROR_COULDNOTINITDEFLATE 0x1052
 
+// Too many slices
+#define NMR_ERROR_TOOMANYSLICES 0x1053
+
 /*-------------------------------------------------------------------
 Core framework error codes (0x2XXX)
 -------------------------------------------------------------------*/

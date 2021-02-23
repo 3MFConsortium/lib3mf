@@ -57,6 +57,8 @@ namespace Impl {
  Class declaration of CWriter 
 **************************************************************************************************************************/
 
+#define LIB3MF_WRITER_MAXKEYSIZE (1UL << 31)
+
 class CWriter : public virtual IWriter, public virtual CBase {
 private:
 

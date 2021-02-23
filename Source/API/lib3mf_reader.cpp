@@ -200,6 +200,9 @@ void Lib3MF::Impl::CReader::AddKeyWrappingCallback(const std::string &sConsumerI
 		if (result == 0)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_CALCULATIONABORTED);
 
+		if (needed > LIB3MF_READER_MAXKEYSIZE)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDKEYSIZE);
+
 		plain.resize((size_t)needed, 0);
 
 		result = 0;
