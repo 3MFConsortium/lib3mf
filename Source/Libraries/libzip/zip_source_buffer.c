@@ -429,8 +429,8 @@ buffer_grow_fragments(buffer_t *buffer, zip_uint64_t capacity, zip_error_t *erro
         return true;
     }
 
-    // 32bit size_t overflow check!
-    uint64_t maxMemSize = 1ULL << (sizeof(size_t) * 8);
+    // Check for 32bit overflow
+    uint64_t maxMemSize = SIZE_MAX;
     uint64_t memFragmentSize = sizeof(buffer->fragments[0])* capacity;
     if (memFragmentSize >= maxMemSize)
         return false;    
@@ -535,7 +535,7 @@ buffer_read(buffer_t *buffer, zip_uint8_t *data, zip_uint64_t length) {
     while (n < length) {
         zip_uint64_t left = ZIP_MIN(length - n, buffer->fragments[i].length - fragment_offset);
 
-        uint64_t maxMemSize = 1ULL << (sizeof(size_t) * 8);
+        uint64_t maxMemSize = SIZE_MAX;
         if (left >= maxMemSize)
             return -1;
 
@@ -616,7 +616,7 @@ buffer_write(buffer_t *buffer, const zip_uint8_t *data, zip_uint64_t length, zip
     while (n < length) {
         zip_uint64_t left = ZIP_MIN(length - n, buffer->fragments[i].length - fragment_offset);
 
-        uint64_t maxMemSize = 1ULL << (sizeof(size_t) * 8);
+        uint64_t maxMemSize = SIZE_MAX;
         if (left >= maxMemSize)
             return -1;
         memcpy(buffer->fragments[i].data + fragment_offset, data + n, (size_t)left);

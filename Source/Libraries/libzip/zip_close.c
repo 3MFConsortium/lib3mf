@@ -547,7 +547,7 @@ copy_data(zip_t *za, zip_uint64_t len) {
         return -1;
     }
 
-    uint64_t maxMemSize = 1ULL << (sizeof(size_t) * 8);
+    uint64_t maxMemSize = SIZE_MAX;
     if (len >= maxMemSize)
         return -1;
 

@@ -136,8 +136,8 @@ _zip_buffer_read(zip_buffer_t *buffer, zip_uint8_t *data, zip_uint64_t length) {
         length = _zip_buffer_left(buffer);
     }
 
-    // Cannot read on 32bit, if length is larger than 2GB
-    uint64_t maxMemSize = 1ULL << (sizeof(size_t) * 8);
+    // Check for 32bit overflow
+    uint64_t maxMemSize = SIZE_MAX;
     if (length >= maxMemSize)
         return 0;
 
@@ -154,8 +154,8 @@ _zip_buffer_new(zip_uint8_t *data, zip_uint64_t size) {
 
     if (data == NULL) {
 
-        // 32bit size_t overflow check!
-        uint64_t maxMemSize = 1ULL << (sizeof(size_t) * 8);
+        // Check for 32bit overflow
+        uint64_t maxMemSize = SIZE_MAX;
         if (size >= maxMemSize)
             return NULL;
 

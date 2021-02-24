@@ -242,7 +242,7 @@ compress_read(zip_source_t *src, struct context *ctx, void *data, zip_uint64_t l
                 ctx->size = (zip_uint64_t)ctx->first_read;
 
                 // Check 32bit overflow
-                uint64_t maxMemSize = 1ULL << (sizeof(size_t) * 8);
+                uint64_t maxMemSize = SIZE_MAX;
                 if (ctx->size >= maxMemSize)
                     return -1;
 

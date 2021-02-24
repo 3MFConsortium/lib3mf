@@ -578,7 +578,7 @@ _zip_find_central_dir(zip_t *za, zip_uint64_t len) {
 
     // Check for 32bit overflow
     zip_uint64_t zipBufferLeft = _zip_buffer_left(buffer);
-    uint64_t maxMemSize = 1ULL << (sizeof(size_t) * 8);
+    uint64_t maxMemSize = SIZE_MAX;
     if (zipBufferLeft >= maxMemSize)
         return NULL;
 
