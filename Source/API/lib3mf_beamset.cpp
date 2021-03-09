@@ -58,6 +58,14 @@ std::string CBeamSet::GetName()
 
 void CBeamSet::SetIdentifier(const std::string & sIdentifier)
 {
+	// Ensure identifier is unique
+	if (sIdentifier.compare("") != 0) {
+		Lib3MF_uint32 nBeamSets = m_mesh.getBeamSetCount();
+		for (Lib3MF_uint32 iBeamSet = 0; iBeamSet < nBeamSets; iBeamSet++)
+			if (sIdentifier.compare(m_mesh.getBeamSet(iBeamSet)->m_sIdentifier) == 0)
+				throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+	}
+
 	m_pBeamSet->m_sIdentifier = sIdentifier;
 }
 
@@ -73,9 +81,12 @@ Lib3MF_uint32 CBeamSet::GetReferenceCount()
 
 void CBeamSet::SetReferences(const Lib3MF_uint64 nReferencesBufferSize, const Lib3MF_uint32 * pReferencesBuffer)
 {
-	m_pBeamSet->m_Refs.resize(nReferencesBufferSize);
+	if (nReferencesBufferSize > LIB3MF_MAXBEAMCOUNT)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_ELEMENTCOUNTEXCEEDSLIMIT);
+
+	m_pBeamSet->m_Refs.resize((size_t) nReferencesBufferSize);
 	const Lib3MF_uint32 beamCount = m_mesh.getBeamCount();
-	for (Lib3MF_uint64 i = 0; i < nReferencesBufferSize; i++) {
+	for (size_t i = 0; i < (size_t)nReferencesBufferSize; i++) {
 		if (beamCount <= pReferencesBuffer[i])
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
 		m_pBeamSet->m_Refs[i] = Lib3MF_uint32(pReferencesBuffer[i]);
@@ -100,3 +111,36 @@ void CBeamSet::GetReferences(Lib3MF_uint64 nReferencesBufferSize, Lib3MF_uint64*
 	}
 }
 
+Lib3MF_uint32 CBeamSet::GetBallReferenceCount()
+{
+	return (Lib3MF_uint32)m_pBeamSet->m_BallRefs.size();
+}
+
+void CBeamSet::SetBallReferences(const Lib3MF_uint64 nBallReferencesBufferSize, const Lib3MF_uint32* pBallReferencesBuffer)
+{
+	if (nBallReferencesBufferSize > LIB3MF_MAXBEAMCOUNT)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_ELEMENTCOUNTEXCEEDSLIMIT);
+
+	m_pBeamSet->m_BallRefs.resize((size_t)nBallReferencesBufferSize);
+	const Lib3MF_uint32 ballCount = m_mesh.getBallCount();
+	for (size_t i = 0; i < (size_t)nBallReferencesBufferSize; i++) {
+		if (ballCount <= pBallReferencesBuffer[i])
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+		m_pBeamSet->m_BallRefs[i] = Lib3MF_uint32(pBallReferencesBuffer[i]);
+	}
+}
+
+void CBeamSet::GetBallReferences(Lib3MF_uint64 nBallReferencesBufferSize, Lib3MF_uint64* pBallReferencesNeededCount, Lib3MF_uint32* pBallReferencesBuffer)
+{
+	Lib3MF_uint32 ballReferenceCount = GetBallReferenceCount();
+	if (pBallReferencesNeededCount)
+		*pBallReferencesNeededCount = ballReferenceCount;
+
+	if (nBallReferencesBufferSize >= ballReferenceCount && pBallReferencesBuffer) {
+		Lib3MF_uint32* pBallRef = pBallReferencesBuffer;
+		for (Lib3MF_uint32 i = 0; i < ballReferenceCount; i++) {
+			*pBallRef = m_pBeamSet->m_BallRefs[i];
+			pBallRef++;
+		}
+	}
+}

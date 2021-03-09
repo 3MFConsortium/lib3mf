@@ -86,9 +86,12 @@ void CMultiPropertyGroup::GetAllPropertyIDs (Lib3MF_uint64 nPropertyIDsBufferSiz
 
 Lib3MF_uint32 CMultiPropertyGroup::AddMultiProperty (const Lib3MF_uint64 nPropertyIDsBufferSize, const Lib3MF_uint32 * pPropertyIDsBuffer)
 {
+	if (nPropertyIDsBufferSize > LIB3MF_MAXMULTIPROPERTIES)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_ELEMENTCOUNTEXCEEDSLIMIT);
+
 	NMR::PModelMultiProperty multiProperty = std::make_shared<NMR::CModelMultiProperty>();
-	multiProperty->resize(nPropertyIDsBufferSize);
-	for (Lib3MF_uint64 i = 0; i < nPropertyIDsBufferSize; i++) {
+	multiProperty->resize((size_t)nPropertyIDsBufferSize);
+	for (size_t i = 0; i < (size_t) nPropertyIDsBufferSize; i++) {
 		(*multiProperty)[i] = pPropertyIDsBuffer[i];
 	}
 	return multiPropertyGroup().addMultiProperty(multiProperty);
@@ -96,9 +99,12 @@ Lib3MF_uint32 CMultiPropertyGroup::AddMultiProperty (const Lib3MF_uint64 nProper
 
 void CMultiPropertyGroup::SetMultiProperty (const Lib3MF_uint32 nPropertyID, const Lib3MF_uint64 nPropertyIDsBufferSize, const Lib3MF_uint32 * pPropertyIDsBuffer)
 {
+	if (nPropertyIDsBufferSize > LIB3MF_MAXMULTIPROPERTIES)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_ELEMENTCOUNTEXCEEDSLIMIT);
+
 	NMR::PModelMultiProperty multiProperty = std::make_shared<NMR::CModelMultiProperty>();
-	multiProperty->resize(nPropertyIDsBufferSize);
-	for (Lib3MF_uint64 i = 0; i < nPropertyIDsBufferSize; i++) {
+	multiProperty->resize((size_t)nPropertyIDsBufferSize);
+	for (size_t i = 0; i < (size_t)nPropertyIDsBufferSize; i++) {
 		(*multiProperty)[i] = pPropertyIDsBuffer[i];
 	}
 	multiPropertyGroup().setMultiProperty(nPropertyID, multiProperty);
@@ -113,7 +119,11 @@ void CMultiPropertyGroup::GetMultiProperty (const Lib3MF_uint32 nPropertyID, Lib
 	}
 
 	if (pPropertyIDsBuffer && nPropertyIDsBufferSize >= multiProperty->size()) {
-		for (Lib3MF_uint64 i = 0; i < nPropertyIDsBufferSize; i++) {
+
+		if (nPropertyIDsBufferSize > LIB3MF_MAXMULTIPROPERTIES)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_ELEMENTCOUNTEXCEEDSLIMIT);
+
+		for (size_t i = 0; i < (size_t)nPropertyIDsBufferSize; i++) {
 			pPropertyIDsBuffer[i] = (*multiProperty)[i];
 		}
 	}
@@ -138,7 +148,7 @@ sLib3MFMultiPropertyLayer CMultiPropertyGroup::GetLayer (const Lib3MF_uint32 nLa
 {
 	NMR::MODELMULTIPROPERTYLAYER sLayer = multiPropertyGroup().getLayer(nLayerIndex);
 	sLib3MFMultiPropertyLayer outLayer;
-	outLayer.m_ResourceID = sLayer.m_nResourceID;
+	outLayer.m_ResourceID = sLayer.m_nUniqueResourceID;
 	outLayer.m_TheBlendMethod = (eLib3MFBlendMethod)sLayer.m_nMethod;
 	return outLayer;
 }

@@ -43,7 +43,7 @@ NMR_ModelReaderNode_Volumetric1907_VolumetricDstChannel.cpp covers the official 
 namespace NMR {
 
 
-	CModelReaderNode_Volumetric1907_VolumetricDstChannel::CModelReaderNode_Volumetric1907_VolumetricDstChannel(_In_ PModelReaderWarnings pWarnings)
+	CModelReaderNode_Volumetric1907_VolumetricDstChannel::CModelReaderNode_Volumetric1907_VolumetricDstChannel(_In_ PModelWarnings pWarnings)
 		: CModelReaderNode(pWarnings) ,
 			m_bHasBackground (false),
 			m_dBackground (0.0)		

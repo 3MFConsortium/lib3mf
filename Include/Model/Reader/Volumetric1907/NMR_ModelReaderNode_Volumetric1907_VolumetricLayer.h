@@ -64,7 +64,7 @@ namespace NMR {
 
 	public:
 		CModelReaderNode_Volumetric1907_VolumetricLayer() = delete;
-		CModelReaderNode_Volumetric1907_VolumetricLayer(CModelVolumetricStack * pVolumetricStack, _In_ PModelReaderWarnings pWarnings);
+		CModelReaderNode_Volumetric1907_VolumetricLayer(CModelVolumetricStack * pVolumetricStack, _In_ PModelWarnings pWarnings);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 

@@ -46,6 +46,7 @@ In addition, some constants are defined here.
 #define NMR_MESH_MAXEDGECOUNT 2147483647
 #define NMR_MESH_MAXFACECOUNT 2147483647
 #define NMR_MESH_MAXBEAMCOUNT 2147483647
+#define NMR_MESH_MAXBALLCOUNT 2147483647
 
 #define NMR_MESH_MAXCOORDINATE 1000000000.0f
 
@@ -53,6 +54,7 @@ In addition, some constants are defined here.
 #define NMR_MESH_EDGEBLOCKCOUNT 256
 #define NMR_MESH_FACEBLOCKCOUNT 256
 #define NMR_MESH_BEAMBLOCKCOUNT 256
+#define NMR_MESH_BALLBLOCKCOUNT 256
 #define NMR_MESH_NODEEDGELINKBLOCKCOUNT 256
 
 namespace NMR {
@@ -71,6 +73,7 @@ namespace NMR {
 
 	typedef struct BEAMSET {
 		std::vector<nfUint32> m_Refs;
+		std::vector<nfUint32> m_BallRefs;
 		std::string m_sName;	// "" for no name
 		std::string m_sIdentifier;		// "" for no identifier
 		BEAMSET() {
@@ -90,6 +93,15 @@ namespace NMR {
 		};
 	} MESHBEAM;
 	typedef CPagedVector<MESHBEAM, NMR_MESH_BEAMBLOCKCOUNT> MESHBEAMS;
+
+	typedef struct MESHBALL {
+		nfInt32 m_index;
+		nfInt32 m_nodeindex;
+		nfDouble m_radius;
+		MESHBALL() {
+		};
+	} MESHBALL;
+	typedef CPagedVector<MESHBALL, NMR_MESH_BALLBLOCKCOUNT> MESHBALLS;
 
   typedef struct {
     nfInt32 m_index;

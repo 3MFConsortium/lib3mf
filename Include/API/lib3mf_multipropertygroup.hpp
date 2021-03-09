@@ -44,6 +44,7 @@ Abstract: This is the class declaration of CMultiPropertyGroup
 // Include custom headers here.
 #include "Model/Classes/NMR_ModelMultiPropertyGroup.h"
 
+#define LIB3MF_MAXMULTIPROPERTIES (1UL << 31)
 
 namespace Lib3MF {
 namespace Impl {

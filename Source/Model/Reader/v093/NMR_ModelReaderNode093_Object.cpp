@@ -47,7 +47,7 @@ Stream.
 
 namespace NMR {
 
-	CModelReaderNode093_Object::CModelReaderNode093_Object(_In_ CModel * pModel, _In_ PModelReader_ColorMapping pColorMapping, _In_ PModelReaderWarnings pWarnings)
+	CModelReaderNode093_Object::CModelReaderNode093_Object(_In_ CModel * pModel, _In_ PModelReader_ColorMapping pColorMapping, _In_ PModelWarnings pWarnings)
 		: CModelReaderNode(pWarnings)
 	{
 		__NMRASSERT(pColorMapping.get() != nullptr);
@@ -92,7 +92,7 @@ namespace NMR {
 		// Set Object Type (might fail, if string is invalid)
 		if (m_sType.length() > 0) {
 			if (!m_pObject->setObjectTypeString(m_sType, false))
-				m_pWarnings->addWarning(MODELREADERWARNING_INVALIDMODELOBJECTTYPE, NMR_ERROR_INVALIDMODELOBJECTTYPE, mrwInvalidOptionalValue);
+				m_pWarnings->addWarning(NMR_ERROR_INVALIDMODELOBJECTTYPE, mrwInvalidOptionalValue);
 		}
 	}
 
@@ -164,7 +164,7 @@ namespace NMR {
 				PModelBaseMaterialResource pBaseMaterialResource;
 				if (m_nObjectLevelMaterialID > 0) {
 					// every v93 material becomes its own v100 base material group resource
-					pBaseMaterialResource = std::dynamic_pointer_cast<NMR::CModelBaseMaterialResource>(m_pModel->findResource(m_pModel->curPath(), m_nObjectLevelMaterialID));
+					pBaseMaterialResource = std::dynamic_pointer_cast<NMR::CModelBaseMaterialResource>(m_pModel->findResource(m_pModel->currentPath(), m_nObjectLevelMaterialID));
 					if (pBaseMaterialResource.get() == nullptr) {
 						m_pWarnings->addException(CNMRException(NMR_ERROR_INVALIDMODELRESOURCE), mrwInvalidOptionalValue);
 					}

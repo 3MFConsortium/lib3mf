@@ -45,7 +45,7 @@ NMR_ModelReaderNode_Volumetric1907_VolumeData.cpp covers the official 3MF volume
 
 namespace NMR {
 
-	CModelReaderNode_Volumetric1907_VolumeData::CModelReaderNode_Volumetric1907_VolumeData(_In_ CModel* pModel, _In_ CModelVolumeData * pVolumeData, _In_ PModelReaderWarnings pWarnings)
+	CModelReaderNode_Volumetric1907_VolumeData::CModelReaderNode_Volumetric1907_VolumeData(_In_ CModel* pModel, _In_ CModelVolumeData * pVolumeData, _In_ PModelWarnings pWarnings)
 		: CModelReaderNode(pWarnings), m_pModel(pModel), m_pVolumeData(pVolumeData)
 	{
 		if ((pVolumeData == nullptr) ||  (pModel == nullptr))

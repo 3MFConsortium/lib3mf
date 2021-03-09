@@ -33,12 +33,13 @@ NMR_OpcPackageReader.h defines an OPC Package reader in a portable way.
 #ifndef __NMR_OPCPACKAGEREADER
 #define __NMR_OPCPACKAGEREADER
 
+#include "Common/OPC/NMR_IOpcPackageReader.h"
 #include "Common/Platform/NMR_ImportStream.h"
 #include "Common/OPC/NMR_OpcPackagePart.h"
 #include "Common/OPC/NMR_OpcPackageTypes.h"
 #include "Common/OPC/NMR_OpcPackageRelationship.h"
 #include "Common/3MF_ProgressMonitor.h"
-#include "Model/Reader/NMR_ModelReaderWarnings.h"
+#include "Common/NMR_ModelWarnings.h"
 #include "Libraries/libzip/zip.h"
 #include <list>
 #include <vector>
@@ -47,16 +48,15 @@ NMR_OpcPackageReader.h defines an OPC Package reader in a portable way.
 
 namespace NMR {
 
-	class COpcPackageReader {
+	class COpcPackageReader: public IOpcPackageReader {
 	protected:
-		PModelReaderWarnings m_pWarnings;
+		PModelWarnings m_pWarnings;
 		PProgressMonitor m_pProgressMonitor;
 
 		// ZIP Handling Variables
 		std::vector<nfByte> m_Buffer;
 		zip_error_t m_ZIPError;
 		zip_t * m_ZIParchive;
-		zip_source_t * m_ZIPsource;
 		std::map <std::string, nfUint64> m_ZIPEntries;
 		std::map <std::string, POpcPackagePart> m_Parts;
 
@@ -74,12 +74,12 @@ namespace NMR {
 		void readRootRelationships();
 
 	public:
-		COpcPackageReader(_In_ PImportStream pImportStream, _In_ PModelReaderWarnings pWarnings, _In_ PProgressMonitor pProgressMonitor);
+		COpcPackageReader(_In_ PImportStream pImportStream, _In_ PModelWarnings pWarnings, _In_ PProgressMonitor pProgressMonitor);
 		~COpcPackageReader();
 
-		_Ret_maybenull_ COpcPackageRelationship * findRootRelation(_In_ std::string sRelationType, _In_ nfBool bMustBeUnique);
-		POpcPackagePart createPart(_In_ std::string sPath);
-		nfUint64 GetPartSize(_In_ std::string sPath);
+		_Ret_maybenull_ COpcPackageRelationship * findRootRelation(_In_ std::string sRelationType, _In_ nfBool bMustBeUnique) override;
+		POpcPackagePart createPart(_In_ std::string sPath) override;
+		nfUint64 getPartSize(_In_ std::string sPath) override;
 	};
 
 	typedef std::shared_ptr<COpcPackageReader> POpcPackageReader;

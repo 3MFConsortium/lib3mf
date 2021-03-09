@@ -150,7 +150,7 @@ namespace Lib3MF
 			ASSERT_FALSE(true);
 		}
 		catch (ELib3MFException &e) {
-			ASSERT_EQ(e.getErrorCode(), LIB3MF_ERROR_INVALIDBASEMATERIALGROUP);
+			ASSERT_EQ(e.getErrorCode(), LIB3MF_ERROR_RESOURCENOTFOUND);
 		}
 	}
 

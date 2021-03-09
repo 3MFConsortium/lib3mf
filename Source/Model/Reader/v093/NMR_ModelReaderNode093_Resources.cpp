@@ -52,7 +52,7 @@ XML Model Stream.
 
 namespace NMR {
 
-	CModelReaderNode093_Resources::CModelReaderNode093_Resources(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings)
+	CModelReaderNode093_Resources::CModelReaderNode093_Resources(_In_ CModel * pModel, _In_ PModelWarnings pWarnings)
 		: CModelReaderNode(pWarnings)
 	{
 		__NMRASSERT(pModel);

@@ -47,7 +47,7 @@ namespace NMR {
 	class CModelResource {
 	private:
 		CModel * m_pModel;
-		PPackageResourceID m_sResourceID;
+		PPackageResourceID m_pPackageResourceID;
 
 	protected:
 		std::vector<ModelPropertyID> m_ResourceIndexMap;
@@ -60,7 +60,8 @@ namespace NMR {
 		CModelResource(_In_ const ModelResourceID sResourceID, _In_ CModel * pModel);
 		virtual ~CModelResource();
 		
-		virtual PPackageResourceID getResourceID();
+		virtual PPackageResourceID getPackageResourceID();
+		void setPackageResourceID(PPackageResourceID pID);
 
 		bool mapResourceIndexToPropertyID (_In_ ModelResourceIndex nPropertyIndex, _Out_ ModelPropertyID & nPropertyID);
 		void clearResourceIndexMap();

@@ -57,7 +57,7 @@ namespace NMR {
 		}
 	}
 
-	CModelReaderNode_Slices1507_Polygon::CModelReaderNode_Slices1507_Polygon(_In_ CSlice *pSlice, _In_ PModelReaderWarnings pWarnings) : CModelReaderNode(pWarnings) {
+	CModelReaderNode_Slices1507_Polygon::CModelReaderNode_Slices1507_Polygon(_In_ CSlice *pSlice, _In_ PModelWarnings pWarnings) : CModelReaderNode(pWarnings) {
 		m_pSlice = pSlice;
 	}
 

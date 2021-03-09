@@ -45,7 +45,6 @@ namespace NMR {
 	private:
 		CModel * m_pModel;
 		CMesh * m_pMesh;
-		PModelReaderWarnings m_pWarnings;
 
 		eModelBeamLatticeClipMode m_eClipMode;
 		nfBool m_bHasClippingMeshID;
@@ -54,16 +53,18 @@ namespace NMR {
 		ModelResourceID m_nRepresentationMeshID;
 		nfDouble m_dDefaultRadius;
 		eModelBeamLatticeCapMode m_eDefaultCapMode;
+		nfDouble m_dDefaultBallRadius;
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 		virtual void OnNSAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue, _In_z_ const nfChar * pNameSpace);
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 	public:
 		CModelReaderNode_BeamLattice1702_BeamLattice() = delete;
-		CModelReaderNode_BeamLattice1702_BeamLattice(_In_ CModel * pModel, _In_ CMesh * pMesh, _In_ PModelReaderWarnings pWarnings);
+		CModelReaderNode_BeamLattice1702_BeamLattice(_In_ CModel * pModel, _In_ CMesh * pMesh, _In_ PModelWarnings pWarnings);
 
 		void retrieveClippingInfo(_Out_ eModelBeamLatticeClipMode &eClipMode, _Out_ nfBool & bHasClippingMode, _Out_ ModelResourceID & nClippingMeshID);
 		void retrieveRepresentationInfo(_Out_ nfBool & bHasRepresentation, _Out_ ModelResourceID & nRepresentationMeshID);
+		void validateBallOptions(_In_ PModelWarnings pWarnings);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 

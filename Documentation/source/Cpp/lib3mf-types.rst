@@ -96,6 +96,12 @@ Enumerations
 		.. cpp:enumerator:: Inside = 1
 		.. cpp:enumerator:: Outside = 2
 	
+    .. cpp:enum-class:: eBeamLatticeBallMode : Lib3MF_int32
+	
+		.. cpp:enumerator:: None = 0
+		.. cpp:enumerator:: Mixed = 1
+		.. cpp:enumerator:: All = 2
+    
 	.. cpp:enum-class:: eProgressIdentifier : Lib3MF_int32
 	
 		.. cpp:enumerator:: QUERYCANCELED = 0
@@ -121,12 +127,39 @@ Enumerations
 		.. cpp:enumerator:: WRITENODES = 20
 		.. cpp:enumerator:: WRITETRIANGLES = 21
 		.. cpp:enumerator:: WRITESLICES = 22
+		.. cpp:enumerator:: WRITEKEYSTORE = 23
 	
 	.. cpp:enum-class:: eBlendMethod : Lib3MF_int32
 	
 		.. cpp:enumerator:: NoBlendMethod = 0
 		.. cpp:enumerator:: Mix = 1
 		.. cpp:enumerator:: Multiply = 2
+	
+	.. cpp:enum-class:: eEncryptionAlgorithm : Lib3MF_int32
+	
+		.. cpp:enumerator:: AES256_GCM = 1
+	
+	.. cpp:enum-class:: eWrappingAlgorithm : Lib3MF_int32
+	
+		.. cpp:enumerator:: RSA_OAEP = 0
+	
+	.. cpp:enum-class:: eMgfAlgorithm : Lib3MF_int32
+	
+		.. cpp:enumerator:: MGF1_SHA1 = 160
+		.. cpp:enumerator:: MGF1_SHA224 = 224
+		.. cpp:enumerator:: MGF1_SHA256 = 256
+		.. cpp:enumerator:: MGF1_SHA384 = 384
+		.. cpp:enumerator:: MGF1_SHA512 = 512
+	
+	.. cpp:enum-class:: eDigestMethod : Lib3MF_int32
+	
+		.. cpp:enumerator:: SHA1 = 160
+		.. cpp:enumerator:: SHA256 = 256
+	
+	.. cpp:enum-class:: eCompression : Lib3MF_int32
+	
+		.. cpp:enumerator:: NoCompression = 0
+		.. cpp:enumerator:: Deflate = 1
 	
 
 Structs
@@ -213,6 +246,12 @@ Structs
 		.. cpp:member:: eBeamLatticeCapMode m_CapModes[2]
 	
 
+	.. cpp:struct:: sBall
+	
+		.. cpp:member:: Lib3MF_uint32 m_Index
+	
+		.. cpp:member:: Lib3MF_double m_Radius
+
 
 Function types
 ---------------
@@ -249,6 +288,41 @@ Function types
 		
 		:param nPosition: Position in the stream to move to
 		:param pUserData: Userdata that is passed to the callback function
+		
+	.. cpp:type:: RandomNumberCallback = void(*)(Lib3MF_uint64, Lib3MF_uint64, Lib3MF_pvoid, Lib3MF_uint64*)
+		
+		Callback to generate random numbers
+		
+		:param nByteData: Pointer to a buffer to read data into
+		:param nNumBytes: Size of available bytes in the buffer
+		:param pUserData: Userdata that is passed to the callback function
+		:return: Number of bytes generated when succeed. 0 or less if failed.
+		
+	.. cpp:type:: KeyWrappingCallback = void(*)(Lib3MF_AccessRight, Lib3MF_uint8 *, Lib3MF_uint8 **, Lib3MF_pvoid, Lib3MF_uint64*)
+		
+		A callback used to wrap (encrypt) the content key available in keystore resource group
+		
+		:param pKEKParams: The information about the parameters used used to wrap the key to the contents
+		:param nInBufferBufferSize: Buffer to the input value. When encrypting, this should be the plain key. When decrypting, this should be the key cipher.
+		:param nInBufferBufferSize: buffer of Buffer to the input value. When encrypting, this should be the plain key. When decrypting, this should be the key cipher.
+		:param nOutBufferBufferSize: Number of elements in buffer
+		:param pOutBufferNeededCount: will be filled with the count of the written elements, or needed buffer size.
+		:param pOutBufferBuffer: buffer of Buffer where the data will be placed. When encrypting, this will be the key cipher. When decrypting, this will be the plain key. When buffer is null, neededBytes contains the required bytes to run.
+		:param pUserData: Userdata that is passed to the callback function
+		:return: The needed/encrypted/decrypted bytes when succeed or zero when error.
+		
+	.. cpp:type:: ContentEncryptionCallback = void(*)(Lib3MF_ContentEncryptionParams, Lib3MF_uint8 *, Lib3MF_uint8 **, Lib3MF_pvoid, Lib3MF_uint64*)
+		
+		A callback to encrypt/decrypt content called on each resource encrypted. This might be called several times depending on content size. If Input is not available(either null or size is 0), clients must return the result of authenticated tag generation/validation.
+		
+		:param pCEKParams: The params of the encryption process. Client must set/check AuthenticationTag when closing the encryption/decryption process.
+		:param nInputBufferSize: Buffer to the original data. In encrypting, this will be the plain data. If decrypting, this will be the cipher data
+		:param nInputBufferSize: buffer of Buffer to the original data. In encrypting, this will be the plain data. If decrypting, this will be the cipher data
+		:param nOutputBufferSize: Number of elements in buffer
+		:param pOutputNeededCount: will be filled with the count of the written elements, or needed buffer size.
+		:param pOutputBuffer: buffer of Buffer to hold the transformed data. When encrypting, this will be the cipher data. When decrypting, this shall be the plain data. If buffer is null, neededBytes return the necessary amount of bytes.
+		:param pUserData: Userdata that is passed to the callback function
+		:return: The needed/encrypted/decrypted/verified bytes when succeed or zero when error.
 		
 
 	

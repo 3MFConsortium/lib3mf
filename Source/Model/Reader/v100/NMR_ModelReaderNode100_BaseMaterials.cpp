@@ -45,7 +45,7 @@ NMR_ModelReaderNode100_BaseMaterials.cpp implements the Model Reader Base Materi
 
 namespace NMR {
 
-	CModelReaderNode100_BaseMaterials::CModelReaderNode100_BaseMaterials(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings)
+	CModelReaderNode100_BaseMaterials::CModelReaderNode100_BaseMaterials(_In_ CModel * pModel, _In_ PModelWarnings pWarnings)
 		: CModelReaderNode(pWarnings)
 	{
 		// Initialize variables

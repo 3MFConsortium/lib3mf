@@ -44,7 +44,7 @@ CModelReaderNode_Volumetric1907_Color.cpp covers the official 3MF volumetric ext
 namespace NMR {
 
 
-	CModelReaderNode_Volumetric1907_Color::CModelReaderNode_Volumetric1907_Color(_In_ PModelReaderWarnings pWarnings)
+	CModelReaderNode_Volumetric1907_Color::CModelReaderNode_Volumetric1907_Color(_In_ PModelWarnings pWarnings)
 		: CModelReaderNode(pWarnings)
 	{
 		m_bHasStackId = false;
@@ -78,7 +78,7 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_MISSINGVOLUMEDATASTACKID);
 		}
 
-		PPackageResourceID pID = pModel->findPackageResourceID(pModel->curPath(), m_nStackID);
+		PPackageResourceID pID = pModel->findPackageResourceID(pModel->currentPath(), m_nStackID);
 		if (!pID.get()) {
 			throw CNMRException(NMR_ERROR_UNKNOWNMODELRESOURCE);
 		}

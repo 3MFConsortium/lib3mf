@@ -355,11 +355,13 @@ namespace Lib3MF
 
 	TEST_F(ObjectThumbnail, ReadObjectThumbnail)
 	{
-		auto reader = model->QueryReader("3mf");
+		auto readModel = wrapper->CreateModel();
+
+		auto reader = readModel->QueryReader("3mf");
 		reader->ReadFromFile(sTestFilesPath+"/Objects/HelixWithThumbnail.3mf");
 
-		ASSERT_EQ(model->GetAttachmentCount(), 1);
-		auto meshObjects = model->GetMeshObjects();
+		ASSERT_EQ(readModel->GetAttachmentCount(), 1);
+		auto meshObjects = readModel->GetMeshObjects();
 		ASSERT_EQ(meshObjects->MoveNext(), true);
 		auto mesh = meshObjects->GetCurrentMeshObject();
 		auto thumbnail = mesh->GetThumbnailAttachment();
@@ -369,7 +371,9 @@ namespace Lib3MF
 
 	TEST_F(ObjectThumbnail, ReadInvalidObjectThumbnail)
 	{
-		auto reader = model->QueryReader("3mf");
+		auto readModel = wrapper->CreateModel();
+
+		auto reader = readModel->QueryReader("3mf");
 		reader->AddRelationToRead("otherrelationship");
 		reader->ReadFromFile(sTestFilesPath + "/Objects/HelixWithThumbnail_IncorrectRelationship.3mf");
 		CheckReaderWarnings(reader, 1);

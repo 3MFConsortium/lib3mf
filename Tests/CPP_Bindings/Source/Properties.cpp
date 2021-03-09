@@ -69,7 +69,7 @@ namespace Lib3MF
 		std::vector<sTriangleProperties> properties;
 		mesh->GetAllTriangleProperties(properties);
 
-		for (Lib3MF_uint64 i=0; i < mesh->GetTriangleCount(); i++) {
+		for (size_t i=0; i < mesh->GetTriangleCount(); i++) {
 			EXPECT_EQ(properties[i].m_ResourceID, 0);
 			for (Lib3MF_uint64 j = 0; j < 3; j++) {
 				EXPECT_EQ(properties[i].m_PropertyIDs[j], 0);
@@ -84,7 +84,7 @@ namespace Lib3MF
 		auto anotherMaterial = baseMaterialGroup->AddMaterial("AnotherMaterial", wrapper->RGBAToColor(100, 200, 150, 255));
 
 		std::vector<sTriangleProperties> properties(mesh->GetTriangleCount());
-		for (Lib3MF_uint64 i = 0; i < mesh->GetTriangleCount(); i++) {
+		for (size_t i = 0; i < mesh->GetTriangleCount(); i++) {
 			properties[i].m_ResourceID = baseMaterialGroup->GetResourceID();
 			for (int j = 0; j < 3; j++) {
 				properties[i].m_PropertyIDs[j] = (i % (2 + j)) ? anotherMaterial : someMaterial;
@@ -94,9 +94,9 @@ namespace Lib3MF
 
 		mesh->ClearAllProperties();
 		mesh->GetAllTriangleProperties(properties);
-		for (Lib3MF_uint64 i = 0; i < mesh->GetTriangleCount(); i++) {
+		for (size_t i = 0; i < mesh->GetTriangleCount(); i++) {
 			EXPECT_EQ(properties[i].m_ResourceID, 0);
-			for (Lib3MF_uint64 j = 0; j < 3; j++) {
+			for (size_t j = 0; j < 3; j++) {
 				EXPECT_EQ(properties[i].m_PropertyIDs[j], 0);
 			}
 		}
@@ -127,7 +127,7 @@ namespace Lib3MF
 		auto anotherMaterial = baseMaterialGroup->AddMaterial("AnotherMaterial", wrapper->RGBAToColor(100, 200, 150, 255));
 
 		std::vector<sTriangleProperties> properties(mesh->GetTriangleCount());
-		for (Lib3MF_uint64 i = 0; i < mesh->GetTriangleCount(); i++) {
+		for (size_t i = 0; i < mesh->GetTriangleCount(); i++) {
 			properties[i].m_ResourceID = baseMaterialGroup->GetResourceID();
 			for (int j = 0; j < 3; j++) {
 				properties[i].m_PropertyIDs[j] = ( i % (2+j) ) ? someMaterial : anotherMaterial;
@@ -149,7 +149,57 @@ namespace Lib3MF
 		readMesh->GetAllTriangleProperties(readProperties);
 
 		ASSERT_EQ(readMesh->GetTriangleCount(), mesh->GetTriangleCount());
-		for (Lib3MF_uint64 i = 0; i < readMesh->GetTriangleCount(); i++) {
+		for (size_t i = 0; i < readMesh->GetTriangleCount(); i++) {
+			auto readBaseMaterialGroup = readModel->GetBaseMaterialGroupByID(readProperties[i].m_ResourceID);
+			for (int j = 0; j < 3; j++) {
+				CompareColors(baseMaterialGroup->GetDisplayColor(properties[i].m_PropertyIDs[j]), baseMaterialGroup->GetDisplayColor(readProperties[i].m_PropertyIDs[j]));
+			}
+		}
+
+		Lib3MF_uint32 nObjectResourceID = 0;
+		Lib3MF_uint32 nObjectPropertyID = 0;
+		EXPECT_TRUE(readMesh->GetObjectLevelProperty(nObjectResourceID, nObjectPropertyID));
+		EXPECT_EQ(nObjectResourceID, 1);
+		EXPECT_EQ(nObjectPropertyID, someMaterial);
+
+		auto readBaseMaterialGroup = readModel->GetBaseMaterialGroupByID(nObjectResourceID);
+		CompareColors(baseMaterialGroup->GetDisplayColor(someMaterial), readBaseMaterialGroup->GetDisplayColor(nObjectPropertyID));
+	}
+
+
+	// Copy-pasted from the previous test ("ObjectLevelPropertiesWriteRead"), but adds metadata to the mesh
+	TEST_F(Properties, ObjectLevelPropertiesWriteRead_WithMetaData)
+	{
+		auto baseMaterialGroup = model->AddBaseMaterialGroup();
+		auto someMaterial = baseMaterialGroup->AddMaterial("SomeMaterial", wrapper->RGBAToColor(100, 200, 150, 255));
+		auto anotherMaterial = baseMaterialGroup->AddMaterial("AnotherMaterial", wrapper->RGBAToColor(100, 200, 150, 255));
+
+		std::vector<sTriangleProperties> properties(mesh->GetTriangleCount());
+		for (size_t i = 0; i < mesh->GetTriangleCount(); i++) {
+			properties[i].m_ResourceID = baseMaterialGroup->GetResourceID();
+			for (int j = 0; j < 3; j++) {
+				properties[i].m_PropertyIDs[j] = (i % (2 + j)) ? someMaterial : anotherMaterial;
+			}
+		}
+		mesh->SetAllTriangleProperties(properties);
+		mesh->SetObjectLevelProperty(baseMaterialGroup->GetResourceID(), someMaterial);
+
+		mesh->GetMetaDataGroup()->AddMetaData("", "Designer", "SomeDesigner", "xs:string", true);
+
+		auto writer = model->QueryWriter("3mf");
+		std::vector<Lib3MF_uint8> buffer;
+		writer->WriteToBuffer(buffer);
+
+		auto readModel = wrapper->CreateModel();
+		auto reader3MF = readModel->QueryReader("3mf");
+		reader3MF->ReadFromBuffer(buffer);
+
+		auto readMesh = readModel->GetMeshObjectByID(2);
+		std::vector<sTriangleProperties> readProperties;
+		readMesh->GetAllTriangleProperties(readProperties);
+
+		ASSERT_EQ(readMesh->GetTriangleCount(), mesh->GetTriangleCount());
+		for (size_t i = 0; i < readMesh->GetTriangleCount(); i++) {
 			auto readBaseMaterialGroup = readModel->GetBaseMaterialGroupByID(readProperties[i].m_ResourceID);
 			for (int j = 0; j < 3; j++) {
 				CompareColors(baseMaterialGroup->GetDisplayColor(properties[i].m_PropertyIDs[j]), baseMaterialGroup->GetDisplayColor(readProperties[i].m_PropertyIDs[j]));
@@ -213,7 +263,7 @@ namespace Lib3MF
 		auto anotherMaterial = baseMaterialGroup->AddMaterial("AnotherMaterial", wrapper->RGBAToColor(100, 200, 150, 255));
 
 		std::vector<sTriangleProperties> properties(mesh->GetTriangleCount());
-		for (Lib3MF_uint64 i = 0; i < mesh->GetTriangleCount(); i++) {
+		for (size_t i = 0; i < mesh->GetTriangleCount(); i++) {
 			properties[i].m_ResourceID = baseMaterialGroup->GetResourceID();
 			auto material = someMaterial;
 			if (i % 2 == 0) {
@@ -227,16 +277,16 @@ namespace Lib3MF
 
 		std::vector<sTriangleProperties> gottenProperties;
 		mesh->GetAllTriangleProperties(gottenProperties);
-		for (Lib3MF_uint64 i = 0; i < mesh->GetTriangleCount(); i++) {
+		for (size_t i = 0; i < mesh->GetTriangleCount(); i++) {
 			EXPECT_EQ(gottenProperties[i].m_ResourceID, properties[i].m_ResourceID);
-			for (Lib3MF_uint64 j = 0; j < 3; j++) {
+			for (size_t j = 0; j < 3; j++) {
 				EXPECT_EQ(gottenProperties[i].m_PropertyIDs[j], properties[i].m_PropertyIDs[j]);
 			}
 
 			sTriangleProperties currentProperty;
 			mesh->GetTriangleProperties(Lib3MF_uint32(i), currentProperty);
 			EXPECT_EQ(currentProperty.m_ResourceID, properties[i].m_ResourceID);
-			for (Lib3MF_uint64 j = 0; j < 3; j++) {
+			for (size_t j = 0; j < 3; j++) {
 				EXPECT_EQ(currentProperty.m_PropertyIDs[j], properties[i].m_PropertyIDs[j]);
 			}
 		}
@@ -294,7 +344,7 @@ namespace Lib3MF
 			auto anotherMaterial = baseMaterialGroup->AddMaterial("AnotherMaterial", wrapper->RGBAToColor(100, 200, 150, 255));
 
 			std::vector<sTriangleProperties> properties(mesh->GetTriangleCount());
-			for (Lib3MF_uint64 i = 0; i < mesh->GetTriangleCount(); i++) {
+			for (size_t i = 0; i < mesh->GetTriangleCount(); i++) {
 				properties[i].m_ResourceID = baseMaterialGroup->GetResourceID();
 				auto material = someMaterial;
 				if (i % 2 == 0) {
@@ -361,7 +411,7 @@ namespace Lib3MF
 			auto anotherColor = colorGroup->AddColor(cAnotherColor);
 
 			std::vector<sTriangleProperties> properties(mesh->GetTriangleCount());
-			for (Lib3MF_uint64 i = 0; i < mesh->GetTriangleCount(); i++) {
+			for (size_t i = 0; i < mesh->GetTriangleCount(); i++) {
 				properties[i].m_ResourceID = colorGroup->GetResourceID();
 				auto color = someColor;
 				if (i % 2 == 0) {
@@ -409,7 +459,7 @@ namespace Lib3MF
 		std::vector<sTriangleProperties> properties;
 		mesh->GetAllTriangleProperties(properties);
 
-		for (Lib3MF_uint64 i = 0; i < mesh->GetTriangleCount(); i++) {
+		for (size_t i = 0; i < mesh->GetTriangleCount(); i++) {
 			auto colorGroup = readModel->GetColorGroupByID(properties[i].m_ResourceID);
 			auto color = cSomeColor;
 			if (i % 2 == 0) {

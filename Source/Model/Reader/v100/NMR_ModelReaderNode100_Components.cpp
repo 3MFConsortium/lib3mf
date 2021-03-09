@@ -41,7 +41,7 @@ Node Class.
 
 namespace NMR {
 
-	CModelReaderNode100_Components::CModelReaderNode100_Components(_In_ CModelComponentsObject * pComponentsObject, _In_ PModelReaderWarnings pWarnings)
+	CModelReaderNode100_Components::CModelReaderNode100_Components(_In_ CModelComponentsObject * pComponentsObject, _In_ PModelWarnings pWarnings)
 		: CModelReaderNode(pWarnings)
 	{
 		__NMRASSERT(pComponentsObject);

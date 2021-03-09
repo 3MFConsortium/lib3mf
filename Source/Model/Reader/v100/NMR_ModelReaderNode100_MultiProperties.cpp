@@ -43,7 +43,7 @@ NMR_ModelReaderNode100_MultiProperties.cpp implements the Model Reader MultiProp
 
 namespace NMR {
 
-	CModelReaderNode100_MultiProperties::CModelReaderNode100_MultiProperties(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings)
+	CModelReaderNode100_MultiProperties::CModelReaderNode100_MultiProperties(_In_ CModel * pModel, _In_ PModelWarnings pWarnings)
 		: CModelReaderNode(pWarnings)
 	{
 		// Initialize variables
@@ -79,8 +79,8 @@ namespace NMR {
 				m_pWarnings->addException(CNMRException(NMR_ERROR_MULTIPROPERTIES_DIFFERNT_NUMBER_OF_BLENDMETHODS_AND_PIDS), mrwInvalidMandatoryValue);
 			}
 
-			for (int i = 0; i < m_pPIDs->size(); i++) {
-				PPackageResourceID pID = m_pModel->findPackageResourceID(m_pModel->curPath(), (*m_pPIDs)[i]);
+			for (size_t i = 0; i < m_pPIDs->size(); i++) {
+				PPackageResourceID pID = m_pModel->findPackageResourceID(m_pModel->currentPath(), (*m_pPIDs)[i]);
 				if (!pID)
 					throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
 
@@ -101,7 +101,7 @@ namespace NMR {
 		m_pModel->addResource(m_pMultiPropertyGroup);
 		
 		for (auto layer : vctLayers) {
-			PModelResource pResource = m_pModel->findResource(layer.m_nResourceID);
+			PModelResource pResource = m_pModel->findResource(layer.m_nUniqueResourceID);
 			if (!pResource) {
 				throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
 			}
@@ -172,7 +172,7 @@ namespace NMR {
 				PModelMultiProperty pMultiProperty = std::make_shared<CModelMultiProperty>(nLayers);
 
 				for (nfUint32 iLayer=0; iLayer < nLayers; iLayer++) {
-					PModelResource pResource = m_pModel->findResource(m_pMultiPropertyGroup->getLayer(iLayer).m_nResourceID);
+					PModelResource pResource = m_pModel->findResource(m_pMultiPropertyGroup->getLayer(iLayer).m_nUniqueResourceID);
 					if (!pResource) {
 						throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
 					}

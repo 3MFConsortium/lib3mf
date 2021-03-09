@@ -38,6 +38,8 @@ NMR_OpcPackageWriter.cpp defines an OPC Package writer in a portable way.
 
 #include "Model/Classes/NMR_ModelConstants.h"
 
+#include <sstream>
+
 namespace NMR {
 
 
@@ -48,6 +50,8 @@ namespace NMR {
 
 		m_pExportStream = pExportStream;
 		m_pZIPWriter = std::make_shared<CPortableZIPWriter>(m_pExportStream, true);
+
+		m_nRelationIDCounter = 0;
 	}
 
 	COpcPackageWriter::~COpcPackageWriter()
@@ -68,17 +72,58 @@ namespace NMR {
 
 	void COpcPackageWriter::addContentType(_In_ std::string sExtension, _In_ std::string sContentType)
 	{
-		m_ContentTypes.insert(std::make_pair(sExtension, sContentType));
+		m_DefaultContentTypes.insert(std::make_pair(sExtension, sContentType));
 	}
 
-	POpcPackageRelationship COpcPackageWriter::addRootRelationship(_In_ std::string sID, _In_ std::string sType, _In_ COpcPackagePart * pTargetPart)
+	void COpcPackageWriter::addContentType(POpcPackagePart pOpcPackagePart, std::string sContentType)
+	{
+		// Follows section 10.1.2.3 of "Ecma Office Open XML Part 2 - Open Packaging Conventions"
+		nfBool isOverride = false;
+
+		// Step 1 - Get extension
+		std::size_t extensionPosition = pOpcPackagePart->getURI().find_last_of('.');
+		if (std::string::npos == extensionPosition) // Step 2 - No extension available, use Override Content Type
+			isOverride = true;
+		else {
+			// Step 3 - Compare extensions with Default Content Types
+			std::string extension = pOpcPackagePart->getURI().substr(extensionPosition + 1);
+			std::map<std::string, std::string>::iterator defaultSameExtension = m_DefaultContentTypes.find(extension);
+			if (m_DefaultContentTypes.end() != defaultSameExtension) {
+				// Step 4 - An extension assigned to a Default Content Type matches
+				if (defaultSameExtension->second.compare(sContentType) == 0) {
+					// Step 4.a - Content Types match, nothing else to do
+					isOverride = false;
+					addContentType(extension, sContentType);
+				}
+				else // Step 4.b - Content Types do not match, use Override Content Type
+					isOverride = true;
+			}
+			else // Step 5 - No Default Content Type that matches, use Override Content Type
+				isOverride = true;
+		}
+
+		if (isOverride)
+			m_OverrideContentTypes.insert(std::make_pair(pOpcPackagePart->getURI(), sContentType));
+	}
+
+	POpcPackageRelationship COpcPackageWriter::addRootRelationship(_In_ std::string sType, _In_ COpcPackagePart * pTargetPart)
 	{
 		if (pTargetPart == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-		POpcPackageRelationship pRelationship = std::make_shared<COpcPackageRelationship>(sID, sType, pTargetPart->getURI());
+		POpcPackageRelationship pRelationship = std::make_shared<COpcPackageRelationship>(generateRelationShipID(), sType, pTargetPart->getURI());
 		m_RootRelationships.push_back(pRelationship);
 		return pRelationship;
+	}
+
+	POpcPackageRelationship COpcPackageWriter::addPartRelationship(POpcPackagePart pOpcPackagePart, std::string sType, COpcPackagePart * pTargetPart)
+	{
+		return pOpcPackagePart->addRelationship(generateRelationShipID(), sType, pTargetPart->getURI());
+	}
+
+	std::list<POpcPackageRelationship> COpcPackageWriter::addWriterSpecificRelationships(_In_ POpcPackagePart pOpcPackagePart, _In_ COpcPackagePart* pTargetPart)
+	{
+		return std::list<POpcPackageRelationship>();
 	}
 
 	void COpcPackageWriter::finishPackage()
@@ -113,14 +158,24 @@ namespace NMR {
 		pXMLWriter->WriteStartElement(nullptr, OPC_CONTENTTYPES_CONTAINER, nullptr);
 		pXMLWriter->WriteAttributeString(nullptr, "xmlns", nullptr, OPCPACKAGE_SCHEMA_CONTENTTYPES);
 
-		auto iIterator = m_ContentTypes.begin();
-		while (iIterator != m_ContentTypes.end()) {
+		auto iDefaultIterator = m_DefaultContentTypes.begin();
+		while (iDefaultIterator != m_DefaultContentTypes.end()) {
 			pXMLWriter->WriteStartElement(nullptr, OPC_CONTENTTYPES_NODE, nullptr);
-			pXMLWriter->WriteAttributeString(nullptr, OPC_CONTENTTYPES_ATTRIB_EXTENSION, nullptr, iIterator->first.c_str());
-			pXMLWriter->WriteAttributeString(nullptr, OPC_CONTENTTYPES_ATTRIB_CONTENTTYPE, nullptr, iIterator->second.c_str());
+			pXMLWriter->WriteAttributeString(nullptr, OPC_CONTENTTYPES_ATTRIB_EXTENSION, nullptr, iDefaultIterator->first.c_str());
+			pXMLWriter->WriteAttributeString(nullptr, OPC_CONTENTTYPES_ATTRIB_CONTENTTYPE, nullptr, iDefaultIterator->second.c_str());
 			pXMLWriter->WriteEndElement();
 
-			iIterator++;
+			iDefaultIterator++;
+		}
+
+		auto iOverrideIterator = m_OverrideContentTypes.begin();
+		while (iOverrideIterator != m_OverrideContentTypes.end()) {
+			pXMLWriter->WriteStartElement(nullptr, OPC_CONTENTTYPES_NODE_OVERRIDE, nullptr);
+			pXMLWriter->WriteAttributeString(nullptr, OPC_CONTENTTYPES_ATTRIB_PARTNAME, nullptr, iOverrideIterator->first.c_str());
+			pXMLWriter->WriteAttributeString(nullptr, OPC_CONTENTTYPES_ATTRIB_CONTENTTYPE, nullptr, iOverrideIterator->second.c_str());
+			pXMLWriter->WriteEndElement();
+
+			iOverrideIterator++;
 		}
 
 		pXMLWriter->WriteFullEndElement();
@@ -153,4 +208,12 @@ namespace NMR {
 
 	}
 
+	std::string COpcPackageWriter::generateRelationShipID()
+	{
+		// Create Unique ID String
+		std::stringstream sStream;
+		sStream << "rel" << m_nRelationIDCounter;
+		m_nRelationIDCounter++;
+		return sStream.str();
+	}
 }

@@ -58,7 +58,7 @@ try {\
   statement;\
   ASSERT_FALSE(true);\
 }\
-catch (type) {\
+catch (const type &) {\
   ASSERT_TRUE(true);\
 }\
 }
@@ -76,6 +76,14 @@ inline std::vector<Lib3MF_uint8> ReadFileIntoBuffer(std::string sFileName)
 	return buffer;
 }
 
+inline void WriteBufferToFile(std::vector<Lib3MF_uint8> const & buffer, std::string sFileName) 
+{
+	std::ofstream file(sFileName, std::ios::binary);
+	for (Lib3MF_uint8 cByte: buffer) {
+		file.put(cByte);
+	}
+	file.close();
+}
 
 inline sLib3MFTransform getIdentityTransform()
 {
@@ -110,7 +118,7 @@ struct PositionedVector
 				buffer->vec.push_back(*pData);
 			}
 			else  if (buffer->pos < buffer->vec.size()) {
-				buffer->vec[buffer->pos] = *pData;
+				buffer->vec[(size_t)buffer->pos] = *pData;
 			}
 			else {
 				ASSERT_TRUE(false);
@@ -125,7 +133,7 @@ struct PositionedVector
 		T* pData = (T*)(nByteData);
 		for (int i = 0; i < nNumBytes; i++) {
 			if (buffer->pos < buffer->vec.size()) {
-				*pData = buffer->vec[buffer->pos];
+				*pData = buffer->vec[(size_t)buffer->pos];
 			}
 			else {
 				ASSERT_TRUE(false);

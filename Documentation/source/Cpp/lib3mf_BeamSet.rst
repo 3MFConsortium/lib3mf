@@ -59,6 +59,27 @@ CBeamSet
 		:param ReferencesBuffer: retrieves the indices of all beams in this beamset 
 
 
+	.. cpp:function:: Lib3MF_uint32 GetBallReferenceCount()
+
+		Retrieves the ball reference count of a beamset
+
+		:returns: returns the ball reference count
+
+
+	.. cpp:function:: void SetBallReferences(const CInputVector<Lib3MF_uint32> & BallReferencesBuffer)
+
+		Sets the ball references of a beamset
+
+		:param BallReferencesBuffer: the new indices of all balls in this beamset 
+
+
+	.. cpp:function:: void GetBallReferences(std::vector<Lib3MF_uint32> & BallReferencesBuffer)
+
+		Retrieves the ball references of a beamset
+
+		:param BallReferencesBuffer: retrieves the indices of all balls in this beamset 
+
+
 .. cpp:type:: std::shared_ptr<CBeamSet> Lib3MF::PBeamSet
 
 	Shared pointer to CBeamSet to easily allow reference counting.

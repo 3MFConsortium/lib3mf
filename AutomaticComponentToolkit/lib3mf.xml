@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<component xmlns="http://schemas.autodesk.com/netfabb/automaticcomponenttoolkit/2018" libraryname="the 3MF Library" namespace="Lib3MF" copyright="3MF Consortium (Original Author)" year="2019" basename="lib3mf" version="2.0.0-volumetric">
+<component xmlns="http://schemas.autodesk.com/netfabb/automaticcomponenttoolkit/2018" libraryname="the 3MF Library" namespace="Lib3MF" copyright="3MF Consortium (Original Author)" year="2019" basename="lib3mf" version="2.2.0-volumetric">
 
 	<license>
 		<line value="All rights reserved."/>
@@ -74,9 +74,15 @@
 		<error name="FORBIDDENCYCLICREFERENCE" code="130" description="A component references one of its ancestors"/>
 		<error name="INVALIDATTACHMENTSTREAM" code="131" description="An attachment stream is invalid"/>
 		<error name="INVALIDPROPERTYCOUNT" code="132" description="Invalid property count."/>
-		<error name="UNKOWNPROGRESSIDENTIFIER" code="140" description="A progress identifier is unknown" />
-		<error name="NOMASKCHANNELSELECTOR" code="141" description="No mask channel selector." />
-		<error name="BEAMLATTICE_INVALID_OBJECTTYPE" code="2000" description="This object type is not valid for beamlattices" />
+		<error name="UNKOWNPROGRESSIDENTIFIER" code="140" description="A progress identifier is unknown"/>
+		<error name="ELEMENTCOUNTEXCEEDSLIMIT" code="141" description="An element buffer exceeds its spec limit"/>
+		<error name="NOMASKCHANNELSELECTOR" code="250" description="No mask channel selector." />
+		<error name="BEAMLATTICE_INVALID_OBJECTTYPE" code="2000" description="This object type is not valid for beamlattices"/>		
+		<error name="INVALIDKEYSTORE" code="3000" description="The keystore object is invalid"/>
+		<error name="INVALIDKEYSTORECONSUMER" code="3001" description="The consumer keystore object is invalid"/>
+		<error name="KEYSTORECONSUMERNOTFOUND" code="3002" description="A consumer has not been found"/>
+		<error name="KEYSTORERESOURCEDATANOTFOUND" code="3003" description="A resource data has not been found"/>
+		<error name="SECURECONTEXTNOTREGISTERED" code="3004" description="A Key or Conentent encryption callback has not been registered"/>
 	</errors>
 
 	<enum name="PropertyType">
@@ -140,6 +146,12 @@
 		<option name="Outside" value="2"/>
 	</enum>
 
+	<enum name="BeamLatticeBallMode">
+		<option name="None" value="0"/>
+		<option name="Mixed" value="1"/>
+		<option name="All" value="2"/>
+	</enum>
+
 	<enum name="ProgressIdentifier">
 		<option name="QUERYCANCELED" value="0"/>
 		<option name="DONE" value="1"/>
@@ -164,6 +176,7 @@
 		<option name="WRITENODES" value="20"/>
 		<option name="WRITETRIANGLES" value="21"/>
 		<option name="WRITESLICES" value="22"/>
+		<option name="WRITEKEYSTORE" value="23"/>
 	</enum>
 
 	<enum name="BlendMethod">
@@ -232,6 +245,11 @@
 		<member name="CapModes" type="enum" class="BeamLatticeCapMode" rows="2"/>
 	</struct>
 
+	<struct name="Ball">
+		<member name="Index" type="uint32"/>
+		<member name="Radius" type="double"/>
+	</struct>
+
 	<functiontype name="ProgressCallback" description="A callback function">
 		<param name="Abort" type="bool" pass="return" description="Returns whether the calculation should be aborted"/>
 		<param name="ProgressValue" type="double" pass="in" description="The value of the progress function: values in the interval [0,1] are progress; &lt; mean no progress update"/>
@@ -254,6 +272,13 @@
 	<functiontype name="SeekCallback" description="Callback to call for seeking in the stream">
 		<param name="Position" type="uint64" pass="in" description="Position in the stream to move to"/>
 		<param name="UserData" type="pointer" pass="in" description="Userdata that is passed to the callback function"/>
+	</functiontype>
+	
+	<functiontype name="RandomNumberCallback" description="Callback to generate random numbers">
+		<param name="ByteData" type="uint64" pass="in" description="Pointer to a buffer to read data into"/>
+		<param name="NumBytes" type="uint64" pass="in" description="Size of available bytes in the buffer" />
+		<param name="UserData" type="pointer" pass="in" description="Userdata that is passed to the callback function"/>
+		<param name="BytesWritten" type="uint64" pass="return" description="Number of bytes generated when succeed. 0 or less if failed." />
 	</functiontype>
 
 	<class name="Base">
@@ -283,6 +308,29 @@
 		</method>
 		<method name="SetDecimalPrecision" description="Sets the number of digits after the decimal point to be written in each vertex coordinate-value.">
 			<param name="DecimalPrecision" type="uint32" pass="in" description="The number of digits to be written in each vertex coordinate-value after the decimal point."/>
+		</method>
+		<method name="SetStrictModeActive" description="Activates (deactivates) the strict mode of the reader.">
+			<param name="StrictModeActive" type="bool" pass="in" description="flag whether strict mode is active or not."/>
+		</method>
+		<method name="GetStrictModeActive" description="Queries whether the strict mode of the reader is active or not">
+			<param name="StrictModeActive" type="bool" pass="return" description="returns flag whether strict mode is active or not."/>
+		</method>
+		<method name="GetWarning" description="Returns Warning and Error Information of the read process">
+			<param name="Index" type="uint32" pass="in" description="Index of the Warning. Valid values are 0 to WarningCount - 1"/>
+			<param name="ErrorCode" type="uint32" pass="out" description="filled with the error code of the warning"/>
+			<param name="Warning" type="string" pass="return" description="the message of the warning"/>
+		</method>
+		<method name="GetWarningCount" description="Returns Warning and Error Count of the read process">
+			<param name="Count" type="uint32" pass="return" description="filled with the count of the occurred warnings."/>
+		</method>		
+		<method name="AddKeyWrappingCallback" description="Registers a callback to deal with data key encryption/decryption from keystore">
+			<param name="ConsumerID" type="string" pass="in" description="The ConsumerID to register for"/>
+			<param name="TheCallback" type="functiontype" class="KeyWrappingCallback" pass="in" description="The callback to be callede for wrapping and encryption key" />
+			<param name="UserData" type="pointer" pass="in" description="Userdata that is passed to the callback function"/>
+		</method>
+		<method name="SetContentEncryptionCallback" description="Registers a callback to deal with encryption of content">
+			<param name="TheCallback" type="functiontype" class="ContentEncryptionCallback" pass="in" description="The callback used to encrypt content"/>
+			<param name="UserData" type="pointer" pass="in" description="Userdata that is passed to the callback function"/>
 		</method>
 	</class>
 
@@ -323,11 +371,41 @@
 		<method name="GetWarningCount" description="Returns Warning and Error Count of the read process">
 			<param name="Count" type="uint32" pass="return" description="filled with the count of the occurred warnings."/>
 		</method>
-	</class>
+		<method name="AddKeyWrappingCallback" description="Registers a callback to deal with key wrapping mechanism from keystore">
+			<param name="ConsumerID" type="string" pass="in" description="The ConsumerID to register for"/>
+			<param name="TheCallback" type="functiontype" class="KeyWrappingCallback" pass="in" description="The callback used to decrypt data key"/>
+			<param name="UserData" type="pointer" pass="in" description="Userdata that is passed to the callback function"/>
+		</method>
+		<method name="SetContentEncryptionCallback" description="Registers a callback to deal with encryption of content">
+			<param name="TheCallback" type="functiontype" class="ContentEncryptionCallback" pass="in" description="The callback used to encrypt content"/>
+			<param name="UserData" type="pointer" pass="in" description="Userdata that is passed to the callback function"/>
+		</method>
+  </class>
 
+	<class name="PackagePart">
+		<method name="GetPath" description="Returns the absolute path of this PackagePart.">
+			<param name="Path" type="string" pass="return" description="Returns the absolute path of this PackagePart"/>
+		</method>
+		<method name="SetPath" description="Sets the absolute path of this PackagePart.">
+			<param name="Path" type="string" pass="in" description="Sets the absolute path of this PackagePart."/>
+		</method>
+	</class>
+	
 	<class name="Resource">
-		<method name="GetResourceID" description="Retrieves the resource id of the resource instance.">
-			<param name="Id" type="uint32" pass="return" description="Retrieves the ID of a Model Resource Instance."/>
+		<method name="GetResourceID" description="Retrieves the unique id of this resource within a package. This function will be removed in a later release in favor of GetUniqueResourceID">
+			<param name="UniqueResourceID" type="uint32" pass="return" description="Retrieves the unique id of this resource within a package."/>
+		</method>
+		<method name="GetUniqueResourceID" description="Retrieves the unique id of this resource within a package.">
+			<param name="UniqueResourceID" type="uint32" pass="return" description="Retrieves the unique id of this resource within a package."/>
+		</method>
+		<method name="PackagePart" description="Returns the PackagePart within which this resource resides">
+			<param name="PackagePart" type="class" class="PackagePart" pass="return" description="the PackagePart within which this resource resides."/>
+		</method>
+		<method name="SetPackagePart" description="Sets the new PackagePart within which this resource resides">
+			<param name="PackagePart" type="class" class="PackagePart" pass="in" description="the new PackagePart within which this resource resides."/>
+		</method>
+		<method name="GetModelResourceID" description="Retrieves the id of this resource within a model.">
+			<param name="ModelResourceId" type="uint32" pass="return" description="Retrieves the id of this resource within a model."/>
 		</method>
 	</class>
 
@@ -593,11 +671,11 @@
 			<param name="Indices" type="structarray" class="Triangle" pass="out" description="contains the triangle indices."/>
 		</method>
 		<method name="SetObjectLevelProperty" description="Sets the property at the object-level of the mesh object.">
-			<param name="ResourceID" type="uint32" pass="in" description="the object-level Property Resource ID."/>
+			<param name="UniqueResourceID" type="uint32" pass="in" description="the object-level Property UniqueResourceID."/>
 			<param name="PropertyID" type="uint32" pass="in" description="the object-level PropertyID."/>
 		</method>
 		<method name="GetObjectLevelProperty" description="Gets the property at the object-level of the mesh object.">
-			<param name="ResourceID" type="uint32" pass="out" description="the object-level Property Resource ID."/>
+			<param name="UniqueResourceID" type="uint32" pass="out" description="the object-level Property UniqueResourceID."/>
 			<param name="PropertyID" type="uint32" pass="out" description="the object-level PropertyID."/>
 			<param name="HasObjectLevelProperty" type="bool" pass="return" description="Has an object-level property been specified?"/>
 		</method>
@@ -641,18 +719,26 @@
 		</method>
 		<method name="GetClipping" description="Returns the clipping mode and the clipping-mesh for the beamlattice of this mesh.">
 			<param name="ClipMode" type="enum" class="BeamLatticeClipMode" pass="out" description="contains the clip mode of this mesh"/>
-			<param name="ResourceID" type="uint32" pass="out" description="filled with the resourceID of the clipping mesh-object or an undefined value if pClipMode is MODELBEAMLATTICECLIPMODE_NONE"/>
+			<param name="UniqueResourceID" type="uint32" pass="out" description="filled with the UniqueResourceID of the clipping mesh-object or an undefined value if pClipMode is MODELBEAMLATTICECLIPMODE_NONE"/>
 		</method>
 		<method name="SetClipping" description="Sets the clipping mode and the clipping-mesh for the beamlattice of this mesh.">
 			<param name="ClipMode" type="enum" class="BeamLatticeClipMode" pass="in" description="contains the clip mode of this mesh"/>
-			<param name="ResourceID" type="uint32" pass="in" description="the resourceID of the clipping mesh-object. This mesh-object has to be defined before setting the Clipping."/>
+			<param name="UniqueResourceID" type="uint32" pass="in" description="the UniqueResourceID of the clipping mesh-object. This mesh-object has to be defined before setting the Clipping."/>
 		</method>
 		<method name="GetRepresentation" description="Returns the representation-mesh for the beamlattice of this mesh.">
 			<param name="HasRepresentation" type="bool" pass="return" description="flag whether the beamlattice has a representation mesh."/>
-			<param name="ResourceID" type="uint32" pass="out" description="filled with the resourceID of the clipping mesh-object."/>
+			<param name="UniqueResourceID" type="uint32" pass="out" description="filled with the UniqueResourceID of the clipping mesh-object."/>
 		</method>
 		<method name="SetRepresentation" description="Sets the representation-mesh for the beamlattice of this mesh.">
-			<param name="ResourceID" type="uint32" pass="in" description="the resourceID of the representation mesh-object. This mesh-object has to be defined before setting the representation."/>
+			<param name="UniqueResourceID" type="uint32" pass="in" description="the UniqueResourceID of the representation mesh-object. This mesh-object has to be defined before setting the representation."/>
+		</method>
+		<method name="GetBallOptions" description="Returns the ball mode and the default ball radius for the beamlattice of this mesh.">
+			<param name="BallMode" type="enum" class="BeamLatticeBallMode" pass="out" description="contains the ball mode of this mesh"/>
+			<param name="BallRadius" type="double" pass="out" description="default ball radius of balls for the beamlattice"/>
+		</method>
+		<method name="SetBallOptions" description="Sets the ball mode and thedefault ball radius for the beamlattice.">
+			<param name="BallMode" type="enum" class="BeamLatticeBallMode" pass="in" description="contains the ball mode of this mesh"/>
+			<param name="BallRadius" type="double" pass="in" description="default ball radius of balls for the beamlattice"/>
 		</method>
 		<method name="GetBeamCount" description="Returns the beam count of a mesh object.">
 			<param name="Count" type="uint32" pass="return" description="filled with the beam count."/>
@@ -674,6 +760,27 @@
 		</method>
 		<method name="GetBeams" description="obtains all beam indices, radii and capmodes of a mesh object.">
 			<param name="BeamInfo" type="structarray" class="Beam" pass="out" description="contains information of all beams"/>
+		</method>
+		<method name="GetBallCount" description="Returns the ball count of a mesh object.">
+			<param name="Count" type="uint32" pass="return" description="filled with the ball count."/>
+		</method>
+		<method name="GetBall" description="Returns index and radius of a single ball of a mesh object.">
+			<param name="Index" type="uint32" pass="in" description="Index of the ball (0 to ballcount - 1)."/>
+			<param name="BallInfo" type="struct" class="Ball" pass="return" description="filled with the ball node index and radius."/>
+		</method>
+		<method name="AddBall" description="Adds a single ball to a mesh object.">
+			<param name="BallInfo" type="struct" class="Ball" pass="in" description="contains the node index and radius."/>
+			<param name="Index" type="uint32" pass="return" description="filled with the new Index of the ball."/>
+		</method>
+		<method name="SetBall" description="Sets the index and radius of a single ball of a mesh object.">
+			<param name="Index" type="uint32" pass="in" description="Index of the ball (0 to ballcount - 1)."/>
+			<param name="BallInfo" type="struct" class="Ball" pass="in" description="filled with the ball node index and radius."/>
+		</method>
+		<method name="SetBalls" description="Sets all ball indices and radii of a mesh object.">
+			<param name="BallInfo" type="structarray" class="Ball" pass="in" description="contains information of a number of  balls"/>
+		</method>
+		<method name="GetBalls" description="obtains all ball indices and radii of a mesh object.">
+			<param name="BallInfo" type="structarray" class="Ball" pass="out" description="contains information of all balls"/>
 		</method>
 		<method name="GetBeamSetCount" description="Returns the number of beamsets of a mesh object.">
 			<param name="Count" type="uint32" pass="return" description="filled with the beamset count."/>
@@ -822,11 +929,11 @@
 	</class>
 	
 	<class name="Component">
-		<method name="GetObjectResource" description="Returns the Resource Instance of the component..">
+		<method name="GetObjectResource" description="Returns the Resource Instance of the component.">
 			<param name="ObjectResource" type="handle" class="Object" pass="return" description="filled with the Resource Instance."/>
 		</method>
-		<method name="GetObjectResourceID" description="Returns the Resource ID of the component.">
-			<param name="ObjectResourceID" type="uint32" pass="return" description="returns the Resource ID."/>
+		<method name="GetObjectResourceID" description="Returns the UniqueResourceID of the component.">
+			<param name="UniqueResourceID" type="uint32" pass="return" description="returns the UniqueResourceID."/>
 		</method>
 		<method name="GetUUID" description="returns, whether a component has a UUID and, if true, the component's UUID">
 			<param name="HasUUID" type="bool" pass="out" description="flag whether the component has a UUID"/>
@@ -882,6 +989,15 @@
 		</method>
 		<method name="GetReferences" description="Retrieves the references of a beamset">
 			<param name="References" type="basicarray" class="uint32" pass="out" description="retrieves the indices of all beams in this beamset"/>
+		</method>
+		<method name="GetBallReferenceCount" description="Retrieves the ball reference count of a beamset">
+			<param name="Count" type="uint32" pass="return" description="returns the ball reference count"/>
+		</method>
+		<method name="SetBallReferences" description="Sets the ball references of a beamset">
+			<param name="BallReferences" type="basicarray" class="uint32" pass="in" description="the new indices of all balls in this beamset"/>
+		</method>
+		<method name="GetBallReferences" description="Retrieves the ball references of a beamset">
+			<param name="BallReferences" type="basicarray" class="uint32" pass="out" description="retrieves the indices of all balls in this beamset"/>
 		</method>
 	</class>
 
@@ -1308,11 +1424,14 @@
 
 	
 	<class name="Attachment">
-		<method name="GetPath" description="Retrieves an attachment's package path.">
+		<method name="GetPath" description="Retrieves an attachment's package path. This function will be removed in a later release.">
 			<param name="Path" type="string" pass="return" description="returns the attachment's package path string"/>
 		</method>
-		<method name="SetPath" description="Sets an attachment's package path.">
+		<method name="SetPath" description="Sets an attachment's package path. This function will be removed in a later release.">
 			<param name="Path" type="string" pass="in" description="new path of the attachment."/>
+		</method>
+		<method name="PackagePart" description="Returns the PackagePart that is this attachment.">
+			<param name="PackagePart" type="class" class="PackagePart" pass="return" description="The PackagePart of this attachment."/>
 		</method>
 		<method name="GetRelationShipType" description="Retrieves an attachment's relationship type">
 			<param name="Path" type="string" pass="return" description="returns the attachment's package relationship type string"/>
@@ -1389,8 +1508,8 @@
 		<method name="SetUUID" description="sets the build item's UUID">
 			<param name="UUID" type="string" pass="in" description="the UUID as string of the form 'xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxx'"/>
 		</method>
-		<method name="GetObjectResourceID" description="Retrieves the object resource id associated to a build item">
-			<param name="Id" type="uint32" pass="return" description=" eturns the ID of the object"/>
+		<method name="GetObjectResourceID" description="Retrieves the object UniqueResourceID associated to a build item">
+			<param name="UniqueResourceID" type="uint32" pass="return" description="returns the UniqueResourceID of the object"/>
 		</method>
 		<method name="HasObjectTransform" description="Checks, if a build item has a non-identity transformation matrix">
 			<param name="HasTransform" type="bool" pass="return" description="returns true, if the transformation matrix is not the identity"/>
@@ -1503,7 +1622,213 @@
 		</method>
 	</class>
 
+	<class name="Consumer">
+		<method name="GetConsumerID" description="Gets the consumerid">
+			<param name="ConsumerID" type="string" pass="return" description="A unique identifier for the consumers"/>
+		</method>
+		<method name="GetKeyID" description="Getts the keyid">
+			<param name="KeyID" type="string" pass="return" description="The identifier for the key of this consumer"/>
+		</method>
+		<method name="GetKeyValue" description="Gets the keyvalue associated with this consumer">
+			<param name="KeyValue" type="string" pass="return" description="The public key, when available, of this consumer"/>
+		</method>
+	</class>
+	
+	<enum name="EncryptionAlgorithm">
+		<option name="AES256_GCM" value="1" description="http://www.w3.org/2009/xmlenc11#aes256-gcm"/>
+	</enum>
+
+	<enum name="WrappingAlgorithm">
+		<option name="RSA_OAEP" value="0" description="http://www.w3.org/2009/xmlenc11#rsa-oaep"/>
+	</enum>
+
+	<enum name="MgfAlgorithm">
+		<option name="MGF1_SHA1" value="160" description="http://www.w3.org/2009/xmlenc11#mgf1sha1"/>
+		<option name="MGF1_SHA224" value="224" description="http://www.w3.org/2009/xmlenc11#mgf1sha224"/>
+		<option name="MGF1_SHA256" value="256" description="http://www.w3.org/2009/xmlenc11#mgf1sha256"/>
+		<option name="MGF1_SHA384" value="384" description="http://www.w3.org/2009/xmlenc11#mgf1sha384"/>
+		<option name="MGF1_SHA512" value="512" description="http://www.w3.org/2009/xmlenc11#mgf1sha512"/>
+	</enum>
+
+	<enum name="DigestMethod">
+		<option name="SHA1" value="160" description="http://www.w3.org/2000/09/xmldsig#sha1"/>
+		<option name="SHA256" value="256" description="http://www.w3.org/2001/04/xmlenc#sha256"/>
+	</enum>
+	
+	<class name="AccessRight">
+		<method name="GetConsumer" description="Gets the consumer associated with this access right">
+			<param name="Consumer" type="class" class="Consumer" pass="return" description="The consumer instance"/>
+		</method>
+		<method name="GetWrappingAlgorithm" description="Gets the associated encryption algorithm">
+			<param name="Algorithm" type="enum" class="WrappingAlgorithm" pass="return" description="The algorithm used for the key in this accessright"/>
+		</method>
+		<method name="GetMgfAlgorithm" description="Gets the associated mask generation function algorithm">
+			<param name="Algorithm" type="enum" class="MgfAlgorithm" pass="return" description="The MFG1 algorithm" />
+		</method>
+		<method name="GetDigestMethod" description="Gets the digest method assoicated">
+			<param name="Algorithm" type="enum" class="DigestMethod" pass="return" description="The digest method for this accessright" />
+		</method>
+	</class>
+	
+	<functiontype name="KeyWrappingCallback" description="A callback used to wrap (encrypt) the content key available in keystore resource group">
+		<param name="KEKParams" type="class" class="AccessRight" pass="in" description="The information about the parameters used used to wrap the key to the contents"/>
+		<param name="InBuffer" type="basicarray" class="uint8" pass="in" description="Buffer to the input value. When encrypting, this should be the plain key. When decrypting, this should be the key cipher."/>
+		<param name="OutBuffer" type="basicarray" class="uint8" pass="out" description="Buffer where the data will be placed. When encrypting, this will be the key cipher. When decrypting, this will be the plain key. When buffer is null, neededBytes contains the required bytes to run."/>
+		<param name="UserData" type="pointer" pass="in" description="Userdata that is passed to the callback function"/>
+		<param name="Status" type="uint64" pass="return" description="The needed/encrypted/decrypted bytes when succeed or zero when error."/>
+	</functiontype>
+
+	<class name="ContentEncryptionParams">
+		<method name="GetEncryptionAlgorithm" description="Returns the encryption method to be used in this encryption process">
+			<param name="Algorithm" type="enum" class="EncryptionAlgorithm" pass="return" descripton="The encryption algorith"/>
+		</method>
+		<method name="GetKey" description="Gets the key for the resource associated">
+			<param name="ByteData" type="basicarray" class="uint8" pass="out" description="Pointer to a buffer where to place the key."/>
+		</method>
+		<method name="GetInitializationVector" description="Gets the IV data">
+			<param name="ByteData" type="basicarray" class="uint8" pass="out" description="Pointer to a buffer where to place the data."/>
+		</method>
+		<method name="GetAuthenticationTag" description="A handler descriptor that uniquely identifies the context of the resource. Each resource will be assigned a different value">
+			<param name="ByteData" type="basicarray" class="uint8" pass="out" description="Pointer to a buffer where to place the data."/>
+		</method>
+		<method name="SetAuthenticationTag" description="Sets the authentication tag">
+			<param name="ByteData" type="basicarray" class="uint8" pass="in" description="The authentication tag size"/>
+		</method>
+		<method name="GetAdditionalAuthenticationData" description="A handler descriptor that uniquely identifies the context of the resource. Each resource will be assigned a different value">
+			<param name="ByteData" type="basicarray" class="uint8" pass="out" description="Buffer where the data will be placed"/>
+		</method>
+		<method name="GetDescriptor" description="A handler descriptor that uniquely identifies the context of the resource. Each resource will be assigned a different value">
+			<param name="Descriptor" type="uint64" pass="return" descrption="The resource descriptor" />
+		</method>
+		<method name="GetKeyUUID" description="Gets the resourcedatagroup keyuuid">
+			<param name="UUID" type="string" pass="return" description="The resourcedatagroup keyuuid that may be use to reference an external key"/>
+		</method>		
+	</class>
+
+	<functiontype name="ContentEncryptionCallback" description="A callback to encrypt/decrypt content called on each resource encrypted. This might be called several times depending on content size. If Input is not available(either null or size is 0), clients must return the result of authenticated tag generation/validation.">
+		<param name="CEKParams" type="class" class="ContentEncryptionParams" pass="in" description="The params of the encryption process. Client must set/check AuthenticationTag when closing the encryption/decryption process."/>
+		<param name="Input" type="basicarray" class="uint8" pass="in" description="Buffer to the original data. In encrypting, this will be the plain data. If decrypting, this will be the cipher data"/>
+		<param name="Output" type="basicarray" class="uint8" pass="out" description="Buffer to hold the transformed data. When encrypting, this will be the cipher data. When decrypting, this shall be the plain data. If buffer is null, neededBytes return the necessary amount of bytes."/>
+		<param name="UserData" type="pointer" pass="in" description="Userdata that is passed to the callback function"/>
+		<param name="Status" type="uint64" pass="return" description="The needed/encrypted/decrypted/verified bytes when succeed or zero when error."/>	
+	</functiontype>
+
+	<enum name="Compression">
+		<option name="NoCompression" value="0" description="No compression applied"/>
+		<option name="Deflate" value="1" description="Deflate compression applied"/>
+	</enum>
+	
+	<class name="ResourceData">
+		<method name="GetPath" description="Gets the encrypted part path">
+			<param name="Path" type="class" class="PackagePart" pass="return" description="The part path"/>
+		</method>
+		<method name="GetEncryptionAlgorithm" description="Gets the encryption algorithm used to encrypt this ResourceData">
+			<param name="EncryptionAlgorithm" type="enum" class="EncryptionAlgorithm" pass="return" description="The encryption algorithm"/>
+		</method>
+		<method name="GetCompression" description="Tells whether this ResourceData is compressed or not">
+			<param name="Compression" type="enum" class="Compression" pass="return" description="The compression method"/>
+		</method>
+		<method name="GetAdditionalAuthenticationData" description="Tells whether this ResourceData is compressed or not">
+			<param name="ByteData" type="basicarray" class="uint8" pass="out" description="The compression method"/>
+		</method>
+	</class>
+
+	<class name="ResourceDataGroup">
+		<method name="GetKeyUUID" description="Sets the resourcedatagroup keyuuid">
+			<param name="UUID" type="string" pass="return" description="The new resourcedatagroup keyuuid."/>
+		</method>
+		<method name="AddAccessRight" description="Add accessright to resourcedatagroup element">
+			<param name="Consumer" type="class" class="Consumer" pass="in" description="The Consumer reference"/>
+			<param name="WrappingAlgorithm" type="enum" class="WrappingAlgorithm" pass="in" description="The key wrapping algorithm to be used" />
+			<param name="MgfAlgorithm" type="enum" class="MgfAlgorithm" pass="in" description="The mask generation function to be used" />
+			<param name="DigestMethod" type="enum" class="DigestMethod" pass="in" description="The digest mechanism to be used"/>
+			<param name="TheAccessRight" type="handle" class="AccessRight" pass="return" description="The acess right instance"/>
+		</method>
+		<method name="FindAccessRightByConsumer" description="Finds the AccessRight associated with a Consumer">
+			<param name="Consumer" type="class" class="Consumer" pass="in" description="The Consumer instance"/>
+			<param name="TheAccessRight" type="optionalclass" class="AccessRight" pass="return" description="The AcessRight instance"/>
+		</method>
+		<method name="RemoveAccessRight" description="Removes access from a Consumer on this resource data group">
+			<param name="Consumer" type="class" class="Consumer" pass="in" description="The Consumer instance"/>
+		</method>
+	</class>
+	<class name="KeyStore">
+		<method name="AddConsumer" description="Adds a consumer to the keystore">
+			<param name="ConsumerID" type="string" pass="in" description="A unique identifier for the consumer"/>
+			<param name="KeyID" type="string" pass="in" description="The id of the key of the consumer"/>
+			<param name="KeyValue" type="string" pass="in" description="The public key for this consumer in PEM format"/>
+			<param name="Consumer" type="class" class="Consumer" pass="return" description="The consumer instance"/>
+		</method> 
+		<method name="GetConsumerCount" description="Gets the number of consumers in the keystore">
+			<param name="Count" type="uint64" pass="return" description="The consumer count"/>
+		</method>
+		<method name="GetConsumer" description="Get a consumer from the keystore">
+			<param name="ConsumerIndex" type="uint64" pass="in" description="The index of the consumer"/>
+			<param name="Consumer" type="class" class="Consumer" pass="return" description="The consumer instance"/>
+		</method>
+		<method name="RemoveConsumer" description="Removes a consumer from the keystore">
+			<param name="Consumer" type="class" class="Consumer" pass="in" description="The consumer instance to remove"/>
+		</method>
+		<method name="FindConsumer" description="Finds a consumer by ID">
+			<param name="ConsumerID" type="string" pass="in" description="The ID of the consumer"/>
+			<param name="Consumer" type="optionalclass" class="Consumer" pass="return" description="The consumer instance"/>
+		</method>
+		<method name="GetResourceDataGroupCount" description="Gets the number of resource data group in the keysore">
+			<param name="Count" type="uint64" pass="return" description="The number of resource data available"/>
+		</method>
+		<method name="AddResourceDataGroup" description="Adds a resource data group into the keystore.">
+			<param name="ResourceDataGroup" type="class" class="ResourceDataGroup" pass="return" description="The resource data group instance"/>
+		</method>
+		<method name="GetResourceDataGroup" description="Gets a resource data group">
+			<param name="ResourceDataIndex" type="uint64" pass="in" description="The index of the resource data"/>
+			<param name="ResourceDataGroup" type="class" class="ResourceDataGroup" pass="return" description="The resource data group instance"/>
+		</method>
+		<method name="RemoveResourceDataGroup" description="Removes a resource data group">
+			<param name="ResourceDataGroup" type="class" class="ResourceDataGroup" pass="in" description="The resource data group instance"/>
+		</method>
+		<method name="FindResourceDataGroup" description="Finds a resource data group that contains a particular resourcedata">
+			<param name="PartPath" type="class" class="PackagePart" pass="in" description="The target path for the resourcedata hold by the resource data group"/>
+			<param name="ResourceDataGroup" type="optionalclass" class="ResourceDataGroup" pass="return" description="The data resource instance"/>
+		</method>
+		<method name="AddResourceData" description="Add resourcedata to resourcedatagroup element">
+			<param name="ResourceDataGroup" type="class" class="ResourceDataGroup" pass="in" description="The resource data group where to add this resource data"/>
+			<param name="PartPath" type="class" class="PackagePart" pass="in" description="The path of the part to be encrypted"/>
+			<param name="Algorithm" type="enum" class="EncryptionAlgorithm" pass="in" description="The encryption algorithm to be used to encrypt this resource"/>
+			<param name="Compression" type="enum" class="Compression" pass="in" description="Whether compression should be used prior to encryption"/>
+			<param name="AdditionalAuthenticationData" type="basicarray" class="uint8" pass="in" description="Additional data to be encrypted along the contents for better security" />
+			<param name="ResourceData" type="class" class="ResourceData" pass="return" description="The data resource instance"/>
+		</method>
+		<method name="RemoveResourceData" description="Removes a resource data">
+			<param name="ResourceData" type="class" class="ResourceData" pass="in" description="The resource data to be removed"/>
+		</method>
+		<method name="FindResourceData" description="Finds a resource data on this resource group">
+			<param name="ResourcePath" type="class" class="PackagePart" pass="in" description="The target path for the resourcedata"/>
+			<param name="ResourceData" type="optionalclass" class="ResourceData" pass="return" description="The resource data instance"/>
+		</method>
+		<method name="GetResourceDataCount" description="Gets the number of resource data in the keysore">
+			<param name="Count" type="uint64" pass="return" description="The number of resource data available"/>
+		</method>
+		<method name="GetResourceData" description="Gets a resource data">
+			<param name="ResourceDataIndex" type="uint64" pass="in" description="The index of the resource data"/>
+			<param name="ResourceData" type="class" class="ResourceData" pass="return" description="The data resource instance"/>
+		</method>
+		<method name="GetUUID" description="Gets the keystore UUID">
+			<param name="HasUUID" type="bool" pass="out" description="flag whether the keystore has a UUID"/>
+			<param name="UUID" type="string" pass="return" description="returns the keystore uuid."/>
+		</method>
+		<method name="SetUUID" description="Sets the keystore UUID">
+			<param name="UUID" type="string" pass="in" description="The new keystore uuid."/>
+		</method>
+	</class>
+
 	<class name="Model">
+		<method name="RootModelPart" description="Returns the PackagePart within the OPC package that holds the root model.">
+			<param name="RootModelPart" type="class" class="PackagePart" pass="return" description="the PackagePart within the OPC package that holds the model-file"/>
+		</method>
+		<method name="FindOrCreatePackagePart" description="Returns a new PackagePart for use within the OPC package.">
+			<param name="AbsolutePath" type="string" pass="in" description="the absolute Path (physical location) within the OPC package"/>
+			<param name="ModelPart" type="class" class="PackagePart" pass="return" description="the new PackagePart within the OPC package"/>
+		</method>
 		<method name="SetUnit" description="sets the units of a model.">
 			<param name="Unit" type="enum" class="ModelUnit" pass="in" description="Unit enum value for the model unit"/>
 		</method>
@@ -1524,44 +1849,44 @@
 			<param name="ReaderClass" type="string" pass="in" description=" string identifier for the file type"/>
 			<param name="ReaderInstance" type="handle" class="Reader" pass="return" description=" string identifier for the file type"/>
 		</method>
-		<method name="GetTexture2DByID" description="finds a model texture by its id">
-			<param name="ResourceID" type="uint32" pass="in" description="Resource ID"/>
+		<method name="GetTexture2DByID" description="finds a model texture by its UniqueResourceID">
+			<param name="UniqueResourceID" type="uint32" pass="in" description="UniqueResourceID"/>
 			<param name="TextureInstance" type="handle" class="Texture2D" pass="return" description="returns the texture2d instance"/>
 		</method>
 		<method name="GetPropertyTypeByID" description="returns a Property's type">
-			<param name="ResourceID" type="uint32" pass="in" description="Resource ID of the Property to Query"/>
+			<param name="UniqueResourceID" type="uint32" pass="in" description="Resource ID of the Property to Query"/>
 			<param name="ThePropertyType" type="enum" class="PropertyType" pass="return" description="returns a Property's type"/>
 		</method>
-		<method name="GetBaseMaterialGroupByID" description="finds a model base material group by its id">
-			<param name="ResourceID" type="uint32" pass="in" description="Resource ID"/>
+		<method name="GetBaseMaterialGroupByID" description="finds a model base material group by its UniqueResourceID">
+			<param name="UniqueResourceID" type="uint32" pass="in" description="UniqueResourceID"/>
 			<param name="BaseMaterialGroupInstance" type="handle" class="BaseMaterialGroup" pass="return" description="returns the BaseMaterialGroup instance"/>
 		</method>
-		<method name="GetTexture2DGroupByID" description="finds a model texture2d group by its id">
-			<param name="ResourceID" type="uint32" pass="in" description="Resource ID"/>
+		<method name="GetTexture2DGroupByID" description="finds a model texture2d group by its UniqueResourceID">
+			<param name="UniqueResourceID" type="uint32" pass="in" description="UniqueResourceID"/>
 			<param name="Texture2DGroupInstance" type="handle" class="Texture2DGroup" pass="return" description="returns the Texture2DGroup instance"/>
 		</method>
-		<method name="GetCompositeMaterialsByID" description="finds a model CompositeMaterials by its id">
-			<param name="ResourceID" type="uint32" pass="in" description="Resource ID"/>
+		<method name="GetCompositeMaterialsByID" description="finds a model CompositeMaterials by its UniqueResourceID">
+			<param name="UniqueResourceID" type="uint32" pass="in" description="UniqueResourceID"/>
 			<param name="CompositeMaterialsInstance" type="handle" class="CompositeMaterials" pass="return" description="returns the CompositeMaterials instance"/>
 		</method>
-		<method name="GetMultiPropertyGroupByID" description="finds a model MultiPropertyGroup by its id">
-			<param name="ResourceID" type="uint32" pass="in" description="Resource ID"/>
+		<method name="GetMultiPropertyGroupByID" description="finds a model MultiPropertyGroup by its UniqueResourceID">
+			<param name="UniqueResourceID" type="uint32" pass="in" description="UniqueResourceID"/>
 			<param name="MultiPropertyGroupInstance" type="handle" class="MultiPropertyGroup" pass="return" description="returns the MultiPropertyGroup instance"/>
 		</method>
-		<method name="GetMeshObjectByID" description="finds a mesh object by its id">
-			<param name="ResourceID" type="uint32" pass="in" description="Resource ID"/>
+		<method name="GetMeshObjectByID" description="finds a mesh object by its UniqueResourceID">
+			<param name="UniqueResourceID" type="uint32" pass="in" description="UniqueResourceID"/>
 			<param name="MeshObjectInstance" type="handle" class="MeshObject" pass="return" description="returns the mesh object instance"/>
 		</method>
-		<method name="GetComponentsObjectByID" description="finds a components object by its id">
-			<param name="ResourceID" type="uint32" pass="in" description="Resource ID"/>
+		<method name="GetComponentsObjectByID" description="finds a components object by its UniqueResourceID">
+			<param name="UniqueResourceID" type="uint32" pass="in" description="UniqueResourceID"/>
 			<param name="ComponentsObjectInstance" type="handle" class="ComponentsObject" pass="return" description="returns the components object instance"/>
 		</method>
-		<method name="GetColorGroupByID" description="finds a model color group by its id">
-			<param name="ResourceID" type="uint32" pass="in" description="Resource ID"/>
+		<method name="GetColorGroupByID" description="finds a model color group by its UniqueResourceID">
+			<param name="UniqueResourceID" type="uint32" pass="in" description="UniqueResourceID"/>
 			<param name="ColorGroupInstance" type="handle" class="ColorGroup" pass="return" description="returns the ColorGroup instance"/>
 		</method>
-		<method name="GetSliceStackByID" description="finds a model slicestack by its id">
-			<param name="ResourceID" type="uint32" pass="in" description="Resource ID"/>
+		<method name="GetSliceStackByID" description="finds a model slicestack by its UniqueResourceID">
+			<param name="UniqueResourceID" type="uint32" pass="in" description="UniqueResourceID"/>
 			<param name="SliceStacInstance" type="handle" class="SliceStack" pass="return" description="returns the slicestack instance"/>
 		</method>
 		<method name="GetBuildUUID" description="returns, whether a build has a UUID and, if true, the build's UUID">
@@ -1670,7 +1995,7 @@
 		<method name="GetMetaDataGroup" description="Returns the metadata of the model as MetaDataGroup">
 			<param name="TheMetaDataGroup" type="handle" class="MetaDataGroup" pass="return" description="returns an Instance of the metadatagroup of the model"/>
 		</method>
-		<method name="AddAttachment" description="adds an attachment stream to the model. The OPC part will be related to the model stream with a certain relationship type..">
+		<method name="AddAttachment" description="adds an attachment stream to the model. The OPC part will be related to the model stream with a certain relationship type.">
 			<param name="URI" type="string" pass="in" description="Path of the attachment"/>
 			<param name="RelationShipType" type="string" pass="in" description="Relationship type of the attachment"/>
 			<param name="AttachmentInstance" type="handle" class="Attachment" pass="return" description="Instance of the attachment object"/>
@@ -1700,12 +2025,19 @@
 		</method>
 		<method name="RemovePackageThumbnailAttachment" description="Remove the attachment to the OPC package containing the package thumbnail.">
 		</method>
-		<method name="AddCustomContentType" description="adds a new Content Type to the model.">
+		<method name="AddCustomContentType" description="Adds a new Content Type to the model.">
 			<param name="Extension" type="string" pass="in" description="File Extension"/>
 			<param name="ContentType" type="string" pass="in" description="Content Type Identifier"/>
 		</method>
-		<method name="RemoveCustomContentType" description="removes a custom Content Type from the model (UTF8 version).">
+		<method name="RemoveCustomContentType" description="Removes a custom Content Type from the model (UTF8 version).">
 			<param name="Extension" type="string" pass="in" description="File Extension"/>
+		</method>
+		<method name="SetRandomNumberCallback" description="Sets the random number generator callback for use in the library">
+			<param name="TheCallback" type="functiontype" class="RandomNumberCallback" pass="in" description="The callback used to generate random numbers"/>
+			<param name="UserData" type="pointer" pass="in" description="Userdata to be passed to the callback function"/>
+		</method>
+		<method name="GetKeyStore" description="Gets the keystore associated with this model">
+			<param name="KeyStore" type="handle" class="KeyStore" pass="return" description="The package keystore"/>
 		</method>
 	</class>
 
@@ -1746,6 +2078,9 @@
 			<param name="Instance" type="handle" class="Base" pass="in" description="Object where the error occured."/>
 			<param name="LastErrorString" type="string" pass="out" description="Last Error String"/>
 			<param name="HasLastError" type="bool" pass="return" description="Returns if the instance has a last error."/>
+		</method>
+		<method name="GetSymbolLookupMethod" description="Returns the address of the SymbolLookupMethod">
+			<param name="SymbolLookupMethod" type="pointer" pass="return" description="Address of the SymbolAddressMethod" />
 		</method>
 		<method name="RetrieveProgressMessage" description="Return an English text for a progress identifier.|Note: this is the only function you can call from your callback function.">
 			<param name="TheProgressIdentifier" type="enum" class="ProgressIdentifier" pass="in" description="the progress identifier that is passed to the callback function"/>
@@ -1797,9 +2132,6 @@
 			<param name="VectorY" type="single" pass="in" description="Translation in Y"/>
 			<param name="VectorZ" type="single" pass="in" description="Translation in Z"/>
 			<param name="Transform" type="struct" class="Transform" pass="return" description="Transformation matrix."/>
-		</method>
-		<method name="GetSymbolLookupMethod" description="Returns the address of the SymbolLookupMethod">
-			<param name="SymbolLookupMethod" type="pointer" pass="return" description="Address of the SymbolAddressMethod" />
 		</method>
 	</global>
 

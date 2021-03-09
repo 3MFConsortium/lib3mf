@@ -50,6 +50,7 @@ namespace NMR {
 		PModelVolumeData m_pVolumeData;
 
 		ModelResourceID m_nObjectLevelPropertyID;
+		PPackageResourceID m_pObjectLevelPropertyID;
 		ModelResourceIndex m_nObjectLevelPropertyIndex;
 
 		eModelBeamLatticeClipMode m_eClipMode;
@@ -62,7 +63,7 @@ namespace NMR {
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 	public:
 		CModelReaderNode100_Mesh() = delete;
-		CModelReaderNode100_Mesh(_In_ CModel * pModel, _In_ CMesh * pMesh, _In_ PModelReaderWarnings pWarnings, _In_ PProgressMonitor pProgressMonitor, _In_ ModelResourceID nDefaultPropertyID, _In_ ModelResourceIndex nDefaultPropertyIndex);
+		CModelReaderNode100_Mesh(_In_ CModel * pModel, _In_ CMesh * pMesh, _In_ PModelWarnings pWarnings, _In_ PProgressMonitor pProgressMonitor, _In_ PPackageResourceID m_pObjectLevelPropertyID, _In_ ModelResourceIndex nDefaultPropertyIndex);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 		void retrieveClippingInfo(_Out_ eModelBeamLatticeClipMode &eClipMode, _Out_ nfBool & bHasClippingMode, _Out_ ModelResourceID & nClippingMeshID);

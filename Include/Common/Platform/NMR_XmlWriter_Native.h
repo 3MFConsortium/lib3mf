@@ -37,6 +37,7 @@ NMR_XmlWriter_Native.h implements an XML Writer Class without dependencies.
 #include <array>
 #include <map>
 #include <list>
+#include <string>
 
 #define NATIVEXMLSPACINGBUFFERSIZE 256
 #define NATIVEXMLSPACING 9

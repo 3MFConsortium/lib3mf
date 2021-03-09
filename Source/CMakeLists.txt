@@ -1,16 +1,23 @@
 
 if (USE_INCLUDED_LIBZIP)
   file(GLOB LIBZIP_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "Source/Libraries/libzip/*.c")
+  if (UNIX)
+	file(GLOB LIBZIP_FILES_PLATFORM RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "Source/Libraries/libzip/Unix/*.c")
+  else()
+	file(GLOB LIBZIP_FILES_PLATFORM RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "Source/Libraries/libzip/Win/*.c")
+  endif()
 endif()
 
 if (USE_INCLUDED_ZLIB)
   file(GLOB ZLIB_FILES ./Source/Libraries/zlib/*.c)
 endif()
 
+file (GLOB CPPBASE64_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "Source/Libraries/cpp-base64/*.cpp")
 
-# sources for COM emulation
+# sources
 set(SRCS_PLATFORM
   ${LIBZIP_FILES}
+  ${LIBZIP_FILES_PLATFORM}
   Source/Common/Platform/NMR_Platform_GCC.cpp
   Source/Common/Platform/NMR_ImportStream_GCC_Native.cpp
   Source/Common/Platform/NMR_ImportStream_GCC_Win32.cpp
@@ -22,6 +29,7 @@ set(SRCS_PLATFORM
 set(SRCS_COMMON
 ${SRCS_PLATFORM}
 ${ZLIB_FILES}
+${CPPBASE64_FILES}
 Source/API/lib3mf.cpp
 Source/API/lib3mf_attachment.cpp
 Source/API/lib3mf_base.cpp
@@ -47,9 +55,16 @@ Source/API/lib3mf_metadata.cpp
 Source/API/lib3mf_metadatagroup.cpp
 Source/API/lib3mf_multipropertygroup.cpp
 Source/API/lib3mf_multipropertygroupiterator.cpp
+Source/API/lib3mf_contentencryptionparams.cpp
+Source/API/lib3mf_accessright.cpp
+Source/API/lib3mf_consumer.cpp
+Source/API/lib3mf_resourcedata.cpp
+Source/API/lib3mf_resourcedatagroup.cpp
+Source/API/lib3mf_keystore.cpp
 Source/API/lib3mf_model.cpp
 Source/API/lib3mf_object.cpp
 Source/API/lib3mf_objectiterator.cpp
+Source/API/lib3mf_packagepart.cpp
 Source/API/lib3mf_reader.cpp
 Source/API/lib3mf_resource.cpp
 Source/API/lib3mf_resourceiterator.cpp
@@ -72,7 +87,6 @@ Source/API/lib3mf_volumetricstackiterator.cpp
 Source/API/lib3mf_writer.cpp
 Source/API/lib3mf_utils.cpp
 Source/Common/3MF_ProgressMonitor.cpp
-Source/Model/Reader/NMR_ModelReader_InstructionElement.cpp
 Source/Common/Math/NMR_Matrix.cpp
 Source/Common/Math/NMR_PairMatchingTree.cpp
 Source/Common/Math/NMR_Vector.cpp
@@ -96,7 +110,9 @@ Source/Common/Mesh/NMR_VolumeColor.cpp
 Source/Common/Mesh/NMR_VolumeComposite.cpp
 Source/Common/NMR_Exception.cpp
 Source/Common/NMR_Exception_Windows.cpp
+Source/Common/NMR_ModelWarnings.cpp
 Source/Common/NMR_StringUtils.cpp
+Source/Common/NMR_SecureContext.cpp
 Source/Common/NMR_UUID.cpp
 Source/Common/OPC/NMR_OpcPackagePart.cpp
 Source/Common/OPC/NMR_OpcPackageRelationship.cpp
@@ -105,17 +121,21 @@ Source/Common/OPC/NMR_OpcPackageContentTypesReader.cpp
 Source/Common/OPC/NMR_OpcPackageRelationshipReader.cpp
 Source/Common/OPC/NMR_OpcPackageWriter.cpp
 Source/Common/Platform/NMR_XmlReader_Native.cpp
-Source/Model/Reader/NMR_ModelReader_3MF_Native.cpp
+Source/Common/Platform/NMR_EncryptionHeader.cpp
 Source/Common/Platform/NMR_ExportStream.cpp
 Source/Common/Platform/NMR_ExportStream_Callback.cpp
+Source/Common/Platform/NMR_ExportStream_Compressed.cpp
+Source/Common/Platform/NMR_ExportStream_Encrypted.cpp
 Source/Common/Platform/NMR_ExportStream_Memory.cpp
 Source/Common/Platform/NMR_ExportStream_Dummy.cpp
 Source/Common/Platform/NMR_ExportStream_ZIP.cpp
 Source/Common/Platform/NMR_ImportStream_Callback.cpp
+Source/Common/Platform/NMR_ImportStream_Compressed.cpp
 Source/Common/Platform/NMR_ImportStream_Memory.cpp
 Source/Common/Platform/NMR_ImportStream_Shared_Memory.cpp
 Source/Common/Platform/NMR_ImportStream_Unique_Memory.cpp
 Source/Common/Platform/NMR_ImportStream_ZIP.cpp
+Source/Common/Platform/NMR_ImportStream_Encrypted.cpp
 Source/Common/Platform/NMR_PortableZIPWriter.cpp
 Source/Common/Platform/NMR_PortableZIPWriterEntry.cpp
 Source/Common/Platform/NMR_Time.cpp
@@ -127,6 +147,7 @@ Source/Model/Classes/NMR_Model.cpp
 Source/Model/Classes/NMR_ModelAttachment.cpp
 Source/Model/Classes/NMR_ModelBaseMaterial.cpp
 Source/Model/Classes/NMR_ModelBaseMaterials.cpp
+Source/Model/Classes/NMR_ModelContext.cpp
 Source/Model/Classes/NMR_ModelColorGroup.cpp
 Source/Model/Classes/NMR_ModelCompositeMaterials.cpp
 Source/Model/Classes/NMR_ModelBuildItem.cpp
@@ -145,10 +166,20 @@ Source/Model/Classes/NMR_ModelTexture2D.cpp
 Source/Model/Classes/NMR_ModelTexture2DGroup.cpp
 Source/Model/Classes/NMR_ModelSlice.cpp
 Source/Model/Classes/NMR_ModelSliceStack.cpp
+Source/Model/Classes/NMR_KeyStore.cpp
+Source/Model/Classes/NMR_KeyStoreConsumer.cpp
+Source/Model/Classes/NMR_KeyStoreAccessRight.cpp
+Source/Model/Classes/NMR_KeyStoreFactory.cpp
+Source/Model/Classes/NMR_KeyStoreResourceData.cpp
+Source/Model/Classes/NMR_KeyStoreResourceDataGroup.cpp
+Source/Model/Classes/NMR_KeyStoreCEKParams.cpp
 Source/Model/Classes/NMR_ModelVolumeData.cpp
 Source/Model/Classes/NMR_ModelVolumetricDstChannel.cpp
 Source/Model/Classes/NMR_ModelVolumetricLayer.cpp
 Source/Model/Classes/NMR_ModelVolumetricStack.cpp
+Source/Model/Reader/BeamLattice1702/NMR_ModelReaderNode_BeamLattice1702_Ball.cpp
+Source/Model/Reader/BeamLattice1702/NMR_ModelReaderNode_BeamLattice1702_BallRef.cpp
+Source/Model/Reader/BeamLattice1702/NMR_ModelReaderNode_BeamLattice1702_Balls.cpp
 Source/Model/Reader/BeamLattice1702/NMR_ModelReaderNode_BeamLattice1702_Beam.cpp
 Source/Model/Reader/BeamLattice1702/NMR_ModelReaderNode_BeamLattice1702_Beams.cpp
 Source/Model/Reader/BeamLattice1702/NMR_ModelReaderNode_BeamLattice1702_BeamLattice.cpp
@@ -157,12 +188,15 @@ Source/Model/Reader/BeamLattice1702/NMR_ModelReaderNode_BeamLattice1702_BeamSets
 Source/Model/Reader/BeamLattice1702/NMR_ModelReaderNode_BeamLattice1702_Ref.cpp
 Source/Model/Reader/NMR_ModelReader.cpp
 Source/Model/Reader/NMR_ModelReaderNode.cpp
-Source/Model/Reader/NMR_ModelReaderNode_Model.cpp
-Source/Model/Reader/NMR_ModelReaderWarnings.cpp
+Source/Model/Reader/NMR_ModelReaderNode_ModelBase.cpp
+Source/Model/Reader/NMR_ModelReaderNode_KeyStoreBase.cpp
 Source/Model/Reader/NMR_ModelReader_3MF.cpp
+Source/Model/Reader/NMR_ModelReader_3MF_Native.cpp
 Source/Model/Reader/NMR_ModelReader_ColorMapping.cpp
+Source/Model/Reader/NMR_ModelReader_InstructionElement.cpp
 Source/Model/Reader/NMR_ModelReader_STL.cpp
 Source/Model/Reader/NMR_ModelReader_TexCoordMapping.cpp
+Source/Model/Reader/NMR_KeyStoreOpcPackageReader.cpp
 Source/Model/Reader/v100/NMR_ModelReaderNode100_BaseMaterial.cpp
 Source/Model/Reader/v100/NMR_ModelReaderNode100_BaseMaterials.cpp
 Source/Model/Reader/v100/NMR_ModelReaderNode100_Build.cpp
@@ -212,6 +246,15 @@ Source/Model/Reader/Slice1507/NMR_ModelReader_Slice1507_SliceRefResources.cpp
 Source/Model/Reader/Slice1507/NMR_ModelReader_Slice1507_SliceStack.cpp
 Source/Model/Reader/Slice1507/NMR_ModelReader_Slice1507_Vertex.cpp
 Source/Model/Reader/Slice1507/NMR_ModelReader_Slice1507_Vertices.cpp
+Source/Model/Reader/SecureContent101/NMR_ModelReaderNode_KeyStore.cpp
+Source/Model/Reader/SecureContent101/NMR_ModelReaderNode_KeyStoreCipherValue.cpp
+Source/Model/Reader/SecureContent101/NMR_ModelReaderNode_KeyStoreKEKParams.cpp
+Source/Model/Reader/SecureContent101/NMR_ModelReaderNode_KeyStoreCEKParams.cpp
+Source/Model/Reader/SecureContent101/NMR_ModelReaderNode_KeyStoreConsumer.cpp
+Source/Model/Reader/SecureContent101/NMR_ModelReaderNode_KeyStoreAccessRight.cpp
+Source/Model/Reader/SecureContent101/NMR_ModelReaderNode_KeyStoreResourceData.cpp
+Source/Model/Reader/SecureContent101/NMR_ModelReaderNode_KeyStoreResourceDataGroup.cpp
+Source/Model/Writer/NMR_KeyStoreOpcPackageWriter.cpp
 Source/Model/Reader/Volumetric1907/NMR_ModelReaderNode_Volumetric1907_Image3D.cpp
 Source/Model/Reader/Volumetric1907/NMR_ModelReaderNode_Volumetric1907_Image3DSheet.cpp
 Source/Model/Reader/Volumetric1907/NMR_ModelReaderNode_Volumetric1907_Image3DChannelSelector.cpp
@@ -223,14 +266,18 @@ Source/Model/Reader/Volumetric1907/NMR_ModelReaderNode_Volumetric1907_VolumeData
 Source/Model/Reader/Volumetric1907/NMR_ModelReaderNode_Volumetric1907_Property.cpp
 Source/Model/Reader/Volumetric1907/NMR_ModelReaderNode_Volumetric1907_Color.cpp
 Source/Model/Reader/Volumetric1907/NMR_ModelReaderNode_Volumetric1907_ColorChannel.cpp
+Source/Model/Reader/NMR_ModelReaderNode_StringValue.cpp
 Source/Model/Writer/NMR_ModelWriter.cpp
 Source/Model/Writer/NMR_ModelWriterNode.cpp
+Source/Model/Writer/NMR_ModelWriterNode_ModelBase.cpp
+Source/Model/Writer/NMR_ModelWriterNode_KeyStoreBase.cpp
 Source/Model/Writer/NMR_ModelWriter_3MF.cpp
 Source/Model/Writer/NMR_ModelWriter_3MF_Native.cpp
 Source/Model/Writer/NMR_ModelWriter_ColorMapping.cpp
 Source/Model/Writer/NMR_ModelWriter_STL.cpp
 Source/Model/Writer/NMR_ModelWriter_TexCoordMapping.cpp
 Source/Model/Writer/NMR_ModelWriter_TexCoordMappingContainer.cpp
+Source/Model/Writer/SecureContent101/NMR_ModelWriterNode_KeyStore.cpp
 Source/Model/Writer/v100/NMR_ModelWriterNode100_Mesh.cpp
 Source/Model/Writer/v100/NMR_ModelWriterNode100_Model.cpp
 )

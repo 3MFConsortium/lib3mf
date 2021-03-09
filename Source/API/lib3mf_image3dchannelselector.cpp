@@ -76,7 +76,7 @@ void CImage3DChannelSelector::SetImage(IImage3D* pImage3D)
 	if (pNMRImage.get() == nullptr)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 
-	m_pSelector->setImage3DID(pNMRImage->getResourceID());
+	m_pSelector->setImage3DID(pNMRImage->getPackageResourceID());
 }
 
 void CImage3DChannelSelector::SetSourceChannel(const std::string & sChannelName)

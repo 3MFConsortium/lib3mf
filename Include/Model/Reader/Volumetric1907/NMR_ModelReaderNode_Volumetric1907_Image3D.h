@@ -63,7 +63,7 @@ namespace NMR {
 
 	public:
 		CModelReaderNode_Volumetric1907_Image3D() = delete;
-		CModelReaderNode_Volumetric1907_Image3D(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings);
+		CModelReaderNode_Volumetric1907_Image3D(_In_ CModel * pModel, _In_ PModelWarnings pWarnings);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 

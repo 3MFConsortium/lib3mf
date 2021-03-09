@@ -50,7 +50,7 @@ namespace NMR {
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 	public:
 		CModelReaderNode_Volumetric1907_VolumetricDstChannel() = delete;
-		CModelReaderNode_Volumetric1907_VolumetricDstChannel(_In_ PModelReaderWarnings pWarnings);
+		CModelReaderNode_Volumetric1907_VolumetricDstChannel(_In_ PModelWarnings pWarnings);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 

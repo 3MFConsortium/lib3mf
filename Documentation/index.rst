@@ -1,10 +1,10 @@
 .. lib3mf documentation master file
 
 *********************************************
-lib3mf v2.0.0 documentation
+lib3mf v2.2.0-develop documentation
 *********************************************
 
-.. image:: https://travis-ci.org/3MFConsortium/lib3mf.svg?branch=master
+.. image:: https://github.com/3MFConsortium/lib3mf/workflows/Build/badge.svg?branch=master
 	:target: https://travis-ci.org/3MFConsortium/lib3mf
 	:alt: Build Status
 
@@ -12,7 +12,7 @@ lib3mf v2.0.0 documentation
 	:target: https://readthedocs.org/projects/lib3mf/
 	:alt: Documentation Status
 
-.. image:: https://img.shields.io/static/v1.svg?label=lib3mf&message=v2.0.0&color=green
+.. image:: https://img.shields.io/static/v1.svg?label=lib3mf&message=v2.2.0-develop&color=green
 	:alt: Version
 
 .. image:: https://img.shields.io/static/v1.svg?label=platform&message=windows%20%7C%20macos%20%7C%20linux&color=lightgrey
@@ -27,7 +27,7 @@ lib3mf v2.0.0 documentation
 	:language: bash
 
 
-Welcome! This is the documentation for lib3mf v2.0.0.
+Welcome! This is the documentation for lib3mf v2.2.0-develop.
 
 lib3mf is an implementation of the 3D Manufacturing Format file standard.
 

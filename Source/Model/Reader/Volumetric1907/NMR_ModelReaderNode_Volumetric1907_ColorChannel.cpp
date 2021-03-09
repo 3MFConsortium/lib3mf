@@ -43,7 +43,7 @@ NMR_ModelReaderNode_Volumetric1907_ColorChannel.cpp covers the official 3MF volu
 namespace NMR {
 
 
-	CModelReaderNode_Volumetric1907_ColorChannel::CModelReaderNode_Volumetric1907_ColorChannel(_In_ PModelReaderWarnings pWarnings)
+	CModelReaderNode_Volumetric1907_ColorChannel::CModelReaderNode_Volumetric1907_ColorChannel(_In_ PModelWarnings pWarnings)
 		: CModelReaderNode(pWarnings),
 			m_bHasChannel (false)
 	{

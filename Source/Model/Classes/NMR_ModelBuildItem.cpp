@@ -81,11 +81,6 @@ namespace NMR {
 	{
 		m_mTransform = mTransform;
 	}
-	
-	PackageResourceID CModelBuildItem::getObjectID()
-	{
-		return m_pObject->getResourceID()->getUniqueID();
-	}
 
 	nfBool CModelBuildItem::hasTransform()
 	{

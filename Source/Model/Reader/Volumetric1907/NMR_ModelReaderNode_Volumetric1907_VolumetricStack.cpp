@@ -45,7 +45,7 @@ NMR_ModelReaderNode_Volumetric1907_VolumetricStack.cpp covers the official 3MF v
 namespace NMR {
 
 
-	CModelReaderNode_Volumetric1907_VolumetricStack::CModelReaderNode_Volumetric1907_VolumetricStack(_In_ CModel * pModel, _In_ PModelReaderWarnings pWarnings)
+	CModelReaderNode_Volumetric1907_VolumetricStack::CModelReaderNode_Volumetric1907_VolumetricStack(_In_ CModel * pModel, _In_ PModelWarnings pWarnings)
 		: CModelReaderNode(pWarnings),
 			m_pModel (pModel),
 			m_nID (0)

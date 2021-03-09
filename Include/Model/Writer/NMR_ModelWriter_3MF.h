@@ -34,6 +34,7 @@ A model writer exports the in memory represenation into a 3MF file.
 #ifndef __NMR_MODELWRITER_3MF
 #define __NMR_MODELWRITER_3MF
 
+#include "Model/Classes/NMR_KeyStore.h"
 #include "Model/Writer/NMR_ModelWriter.h" 
 #include "Common/Platform/NMR_XmlWriter.h" 
 
@@ -45,7 +46,7 @@ namespace NMR {
 		void writeModelStream(_In_ CXmlWriter * pXMLWriter, _In_ CModel * pModel);
 
 		// Creates a slicestack attachment stream
-		void writeSliceStackStream(_In_ CXmlWriter *pXMLWriter);
+		void writeNonRootModelStream(_In_ CXmlWriter *pXMLWriter);
 
 		// These are OPC dependent functions
 		virtual void createPackage(_In_ CModel * pModel) = 0;

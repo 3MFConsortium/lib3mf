@@ -290,6 +290,15 @@ NMR_ErrorConst.h defines all error code constants.
 // XML prefix is already registered.
 #define NMR_ERROR_XMLPREFIXALREADYREGISTERED 0x104F
 
+// Failed to initialize a zlib buffer
+#define NMR_ERROR_COULDNOTINITINFLATE 0x1050
+
+// Failed to decompress part
+#define NMR_ERROR_COULDNOTINFLATE 0x1051
+
+// Failed to initialize a zlib buffer
+#define NMR_ERROR_COULDNOTINITDEFLATE 0x1052
+
 /*-------------------------------------------------------------------
 Core framework error codes (0x2XXX)
 -------------------------------------------------------------------*/
@@ -423,7 +432,7 @@ Core framework error codes (0x2XXX)
 // Part is too large
 #define NMR_ERROR_PARTTOOLARGE 0x202B
 
-// Texture path is already existing
+// Texture getPath is already existing
 #define NMR_ERROR_DUPLICATETEXTUREPATH 0x202C
 
 // Texture width is already existing
@@ -477,6 +486,8 @@ Core framework error codes (0x2XXX)
 // Too many beams
 #define NMR_ERROR_TOOMANYBEAMS 0x203D
 
+// Too many balls
+#define NMR_ERROR_TOOMANYBALLS 0x203E
 
 // Invalid slice polygon index
 #define NMR_ERROR_INVALIDSLICEPOLYGON 0x2040
@@ -911,7 +922,7 @@ Model error codes (0x8XXX)
 // a slice stack resource is invalid
 #define  NMR_ERROR_INVALIDSLICESTACK 0x809D
 
-// Duplicate path
+// Duplicate getPath
 #define NMR_ERROR_DUPLICATEPATH 0x809E
 
 // Duplicate UUID
@@ -1106,161 +1117,265 @@ Model error codes (0x8XXX)
 // Attachment Model Mismatch
 #define NMR_ERROR_ATTACHMENTMODELMISMATCH 0x80E8
 
+// Duplicate PackagePath
+#define NMR_ERROR_DUPLICATEPACKAGEPATH 0x80E9
+
+// Serialization of this Model requires the production extension
+#define NMR_ERROR_PRODUCTIONEXTENSION_REQUIRED 0x80EA
+
+// Referenced model resource must not be in a different model
+#define NMR_ERROR_MODELRESOURCE_IN_DIFFERENT_MODEL 0x80EB
+
+// Path attribute is not absolute
+#define NMR_ERROR_PATH_NOT_ABSOLUTE 0x80EC
+
+// Encrypted stream header signature mismatch
+#define NMR_ERROR_COULDNOTREADENCRYPTEDSTREAM 0x80ED
+
+// Header version mismatch
+#define NMR_ERROR_ENCRYPTEDCONTENTVERSIONUNSUPPORTED 0x80EE
+
+// Could not get OPC KeyStore Stream
+#define NMR_ERROR_KEYSTOREOPCCOULDNOTGETSTREAM 0x80F0
+
+// Duplicate KeyStore Consumer id attribute on xml
+#define NMR_ERROR_KEYSTOREDUPLICATECONSUMERID 0x80F1
+
+// Duplicate KeyStore Consumer keyId attribute on xml
+#define NMR_ERROR_KEYSTOREDUPLICATECONSUMERKEYID 0x80F2
+
+// Missing KeyStore Consumer id
+#define NMR_ERROR_KEYSTOREMISSINGCONSUMERID 0x80F3
+
+// Duplicate KeyStore ResourceData path
+#define NMR_ERROR_KEYSTOREDUPLICATERESOURCEDATAPATH 0x80F4
+
+// Duplicate KeyStore DecryptRight consumerindex
+#define NMR_ERROR_KEYSTOREDUPLICATECONSUMERINDEX 0x80F5
+
+// Invalid KeyStore Consumer Index
+#define NMR_ERROR_KEYSTOREINVALIDCONSUMERINDEX 0x80F6
+
+// Invalid KeyStore encryption algorithm
+#define NMR_ERROR_KEYSTOREINVALIDALGORITHM 0x80F7
+
+// Invalid KeyStore compression
+#define NMR_ERROR_KEYSTOREINVALIDCOMPRESSION 0x80F8
+
+// Invlaid KeyStore CipherValue
+#define NMR_ERROR_KEYSTOREINVALIDCIPHERVALUE 0x80F9
+
+//Missing decrypt right
+#define NMR_ERROR_KEYSTOREMISSINGCIPHERDATA 0x80FA
+
+// Duplicate KeyStore consumer
+#define NMR_ERROR_KEYSTOREDUPLICATECONSUMER 0x80FB
+
+// Duplicate KeyStore ResourceData object
+#define NMR_ERROR_KEYSTOREDUPLICATERESOURCEDATA 0x80FC
+
+// Duplicate KeyStore DecryptRight object
+#define NMR_ERROR_KEYSTOREDUPLICATEACCESSRIGHT 0x80FD
+
+// Invalid KEK Param
+#define NMR_ERROR_KEYSTOREMISSINGCEKPARAMS 0x80FE
+
+// Invalid key uuid param
+#define NMR_ERROR_KEYSTOREINVALIDKEYUUID 0x80FF
+
+// Unsupported algorithm
+#define NMR_ERROR_KEYSTOREUNSUPPORTEDALGORITHM 0x8100
+
+// Dupliaced KeySore ResourceDataGroup
+#define NMR_ERROR_KEYSTOREDUPLICATERESOURCEDATAGROUP 0x8101
+
+// Invalid KeyStore Mask Generation Function
+#define NMR_ERROR_KEYSTOREINVALIDMGF 0x8102
+
+// Invalid KeyStore Digest Method
+#define NMR_ERROR_KEYSTOREINVALIDDIGEST 0x8103
+
+// Invalid Keystore kekparams configuration
+#define NMR_ERROR_KEYSTOREINCONSISTENTKEKPARAMS 0x8104
+
+// No Consumer Index
+#define NMR_ERROR_KEYSTOREMISSINGCONSUMERINDEX 0x8105
+
+// No kekparams
+#define NMR_ERROR_KEYSTOREMISSINGKEKPARAMS 0x8106
+
+// No keyuuid
+#define NMR_ERROR_KEYSTOREMISSINGKEYUUID 0x8107
+
+// Too many elements in a keystore xml tree
+#define NMR_ERROR_KEYSTORETOOMANYELEMENTS 0x8108
+
+// No path defined on resourcedata
+#define NMR_ERROR_KEYSTOREMISSINGPATH 0x8109
+
+// No algorithm defined
+#define NMR_ERROR_KEYSTOREMISSINGALGORTHM 0x810A
+
+// A beamset identifier is not unique
+#define NMR_ERROR_BEAMSET_IDENTIFIER_NOT_UNIQUE 0x810B
+
+// errors for the volumetric extension 0x88xx
+
 // Invalid Image3D Size
-#define NMR_ERROR_INVALIDIMAGE3DSIZE 0x80E9
+#define NMR_ERROR_INVALIDIMAGE3DSIZE 0x8800
 
 // Too many channel selectors
-#define NMR_ERROR_TOOMANYCHANNELSELECTORS 0x80EA
+#define NMR_ERROR_TOOMANYCHANNELSELECTORS 0x8801
 
 // Too many volumetric channels
-#define NMR_ERROR_TOOMANYVOLUMETRICCHANNELS 0x80EB
+#define NMR_ERROR_TOOMANYVOLUMETRICCHANNELS 0x8802
 
 // Could not map package ID
-#define NMR_ERROR_COULDNOTMAPPACKAGEID 0x80EC
+#define NMR_ERROR_COULDNOTMAPPACKAGEID 0x8803
 
 // Duplicate volumetric channel
-#define NMR_ERROR_DUPLICATEVOLUMETRICCHANNEL 0x80ED
+#define NMR_ERROR_DUPLICATEVOLUMETRICCHANNEL 0x8804
 
 // Could not remove volumetric layer
-#define NMR_ERROR_COULDNOTREMOVEVOLUMETRICLAYER 0x80EE
+#define NMR_ERROR_COULDNOTREMOVEVOLUMETRICLAYER 0x8805
 
 // Could not reindex volumetric layer
-#define NMR_ERROR_COULDNOTREINDEXVOLUMETRICLAYER 0x80EF
+#define NMR_ERROR_COULDNOTREINDEXVOLUMETRICLAYER 0x8806
 
 // Could not reindex channel selector
-#define NMR_ERROR_COULDNOTREINDEXCHANNELSELECTOR 0x80F0
+#define NMR_ERROR_COULDNOTREINDEXCHANNELSELECTOR 0x8807
 
 // Duplicate Image3D Name
-#define NMR_ERROR_DUPLICATEIMAGE3DNAME 0x80F1
+#define NMR_ERROR_DUPLICATEIMAGE3DNAME 0x8808
 
 // Duplicate Image3D Size
-#define NMR_ERROR_DUPLICATEIMAGE3DSIZE 0x80F2
+#define NMR_ERROR_DUPLICATEIMAGE3DSIZE 0x8809
 
 // Duplicate Image3D Sheet count
-#define NMR_ERROR_DUPLICATEIMAGE3DSHEETCOUNT 0x80F3
+#define NMR_ERROR_DUPLICATEIMAGE3DSHEETCOUNT 0x880A
 
 // Missing 3D Image Size
-#define NMR_ERROR_MISSINGIMAGE3DSIZE 0x80F4
+#define NMR_ERROR_MISSINGIMAGE3DSIZE 0x880B
 
 // Missing 3D Image Sheetcount
-#define NMR_ERROR_MISSINGIMAGE3DSHEETCOUNT 0x80F5
+#define NMR_ERROR_MISSINGIMAGE3DSHEETCOUNT 0x880C
 
 // Missing 3D Image Name
-#define NMR_ERROR_MISSINGIMAGE3DNAME 0x80F6
+#define NMR_ERROR_MISSINGIMAGE3DNAME 0x880D
 
 // Invalid Image3D Sheet Count
-#define NMR_ERROR_INVALIDIMAGE3DSHEETCOUNT 0x80F7
+#define NMR_ERROR_INVALIDIMAGE3DSHEETCOUNT 0x880E
 
 // Image 3D Sheet not found
-#define NMR_ERROR_IMAGE3DSHEETNOTFOUND 0x80F8
+#define NMR_ERROR_IMAGE3DSHEETNOTFOUND 0x880F
 
 // Too many Image3D sheets
-#define NMR_ERROR_TOOMANYIMAGE3DSHEETS 0x80F9
+#define NMR_ERROR_TOOMANYIMAGE3DSHEETS 0x8810
 
 // Missing Image3D sheet path
-#define NMR_ERROR_MISSINGIMAGE3DSHEETPATH 0x80FA
+#define NMR_ERROR_MISSINGIMAGE3DSHEETPATH 0x8811
 
 // Duplicate Volumetric Background
-#define NMR_ERROR_DUPLICATEVOLUMETRICBACKGROUND 0x80FB
+#define NMR_ERROR_DUPLICATEVOLUMETRICBACKGROUND 0x8812
 
 // Invalid Volumetric Background
-#define NMR_ERROR_INVALIDVOLUMETRICBACKGROUND 0x80FC
+#define NMR_ERROR_INVALIDVOLUMETRICBACKGROUND 0x8813
 
 // Missing Volumetric DstChannel Name
-#define NMR_ERROR_MISSINGVOLUMETRICDSTCHANNELNAME 0x80FD
+#define NMR_ERROR_MISSINGVOLUMETRICDSTCHANNELNAME 0x8814
 
 // Missing Volumetric Layer Blend Method
-#define NMR_ERROR_MISSINGVOLUMETRICLAYERBLENDMETHOD 0x80FE
+#define NMR_ERROR_MISSINGVOLUMETRICLAYERBLENDMETHOD 0x8815
 
 // Duplicate Volumetric Blend Method
-#define NMR_ERROR_DUPLICATEVOLUMETRICBLENDMETHOD 0x80FF
+#define NMR_ERROR_DUPLICATEVOLUMETRICBLENDMETHOD 0x8816
 
 // Missing Volumetric Layer Transform
-#define NMR_ERROR_MISSINGVOLUMETRICLAYERTRANSFORM 0x8100
+#define NMR_ERROR_MISSINGVOLUMETRICLAYERTRANSFORM 0x8817
 
 // Duplicate Volumetric Transform
-#define NMR_ERROR_DUPLICATEVOLUMETRICTRANSFORM 0x8101
+#define NMR_ERROR_DUPLICATEVOLUMETRICTRANSFORM 0x8818
 
 // Duplicate Volumetric Src Alpha
-#define NMR_ERROR_DUPLICATEVOLUMETRICSRCALPHA 0x8102
+#define NMR_ERROR_DUPLICATEVOLUMETRICSRCALPHA 0x8819
 
 // Invalid Volumetric Src Alpha
-#define NMR_ERROR_INVALIDVOLUMETRICSRCALPHA 0x8103
+#define NMR_ERROR_INVALIDVOLUMETRICSRCALPHA 0x881A
 
 // Duplicate Volumetric Dst Alpha
-#define NMR_ERROR_DUPLICATEVOLUMETRICDSTALPHA 0x8104
+#define NMR_ERROR_DUPLICATEVOLUMETRICDSTALPHA 0x881B
 
 // Invalid Volumetric Dst Alpha
-#define NMR_ERROR_INVALIDVOLUMETRICDSTALPHA 0x8105
+#define NMR_ERROR_INVALIDVOLUMETRICDSTALPHA 0x881C
 
 // Duplicate Mask Channel Selector
-#define NMR_ERROR_DUPLICATEMASKCHANNELSELECTOR 0x8106
+#define NMR_ERROR_DUPLICATEMASKCHANNELSELECTOR 0x881D
 
 // Duplicate Volumetric Min Value
-#define NMR_ERROR_DUPLICATEVOLUMETRICMINVALUE 0x8107
+#define NMR_ERROR_DUPLICATEVOLUMETRICMINVALUE 0x881E
 
 // Invalid Volumetric Min Value
-#define NMR_ERROR_INVALIDVOLUMETRICMINVALUE 0x8108
+#define NMR_ERROR_INVALIDVOLUMETRICMINVALUE 0x881F
 
 // Duplicate Volumetric Max Value
-#define NMR_ERROR_DUPLICATEVOLUMETRICMAXVALUE 0x8109
+#define NMR_ERROR_DUPLICATEVOLUMETRICMAXVALUE 0x8820
 
 // Invalid Volumetric Max Value
-#define NMR_ERROR_INVALIDVOLUMETRICMAXVALUE 0x810A
+#define NMR_ERROR_INVALIDVOLUMETRICMAXVALUE 0x8821
 
 // Missing Channel Selector ID
-#define NMR_ERROR_MISSINGCHANNELSELECTORID 0x810B
+#define NMR_ERROR_MISSINGCHANNELSELECTORID 0x8822
 
 // Missing Channel Selector TileStyle
-#define NMR_ERROR_MISSINGCHANNELSELECTORTILESTYLE 0x810C
+#define NMR_ERROR_MISSINGCHANNELSELECTORTILESTYLE 0x8823
 
 // Duplicate Volumetric TileStyle
-#define NMR_ERROR_DUPLICATEVOLUMETRICTILESTYLE 0x810D
+#define NMR_ERROR_DUPLICATEVOLUMETRICTILESTYLE 0x8824
 
 // Duplicate Volumetric Filter
-#define NMR_ERROR_DUPLICATEVOLUMETRICFILTER 0x810E
+#define NMR_ERROR_DUPLICATEVOLUMETRICFILTER 0x8825
 
 // Duplicate Volumetric Source Channel
-#define NMR_ERROR_DUPLICATEVOLUMETRICSOURCECHANNEL 0x810F
+#define NMR_ERROR_DUPLICATEVOLUMETRICSOURCECHANNEL 0x8826
 
 // Duplicate Volumetric Destination Channel
-#define NMR_ERROR_DUPLICATEVOLUMETRICDESTINATIONCHANNEL 0x8110
+#define NMR_ERROR_DUPLICATEVOLUMETRICDESTINATIONCHANNEL 0x8827
 
 // Duplicate VolumeData Levelset
-#define NMR_ERROR_DUPLICATEVOLUMEDATALEVELSET 0x8111
+#define NMR_ERROR_DUPLICATEVOLUMEDATALEVELSET 0x8828
 
 // Duplicate VolumeData Transform
-#define NMR_ERROR_DUPLICATEVOLUMEDATATRANSFORM 0x8112
+#define NMR_ERROR_DUPLICATEVOLUMEDATATRANSFORM 0x8829
 
 // Duplicate VolumeData Channel
-#define NMR_ERROR_DUPLICATEVOLUMEDATACHANNEL 0x8113
+#define NMR_ERROR_DUPLICATEVOLUMEDATACHANNEL 0x882A
 
 // Duplicate VolumeData VolumetricStackID
-#define NMR_ERROR_DUPLICATEVOLUMEDATASTACKID 0x8114
+#define NMR_ERROR_DUPLICATEVOLUMEDATASTACKID 0x882B
 
 // Duplicate VolumeData Solid Threshold
-#define NMR_ERROR_DUPLICATEVOLUMEDATASOLIDTHRESHOLD 0x8115
+#define NMR_ERROR_DUPLICATEVOLUMEDATASOLIDTHRESHOLD 0x882C
 
 // Missing VolumeData Channel
-#define NMR_ERROR_MISSINGVOLUMEDATACHANNEL 0x8116
+#define NMR_ERROR_MISSINGVOLUMEDATACHANNEL 0x882D
 
 // Missing VolumeData VolumetricStackID
-#define NMR_ERROR_MISSINGVOLUMEDATASTACKID 0x8117
+#define NMR_ERROR_MISSINGVOLUMEDATASTACKID 0x882E
 
 // Invalid VolumeData Solid Threshold
-#define NMR_ERROR_INVALIDVOLUMEDATASOLIDTHRESHOLD 0x8118
+#define NMR_ERROR_INVALIDVOLUMEDATASOLIDTHRESHOLD 0x882F
 
 // Duplicate VolumeData Property
-#define NMR_ERROR_DUPLICATEVOLUMEDATAPROPERTY 0x8119
+#define NMR_ERROR_DUPLICATEVOLUMEDATAPROPERTY 0x8830
 
 // Missing VolumeData Property
-#define NMR_ERROR_MISSINGVOLUMEDATAPROPERTY 0x8120
+#define NMR_ERROR_MISSINGVOLUMEDATAPROPERTY 0x8831
 
 // Missing Volumetric Source Alpha
-#define NMR_ERROR_MISSINGVOLUMETRICSRCALPHA 0x8121
+#define NMR_ERROR_MISSINGVOLUMETRICSRCALPHA 0x882
 
 // Missing Volumetric Destination Alpha
-#define NMR_ERROR_MISSINGVOLUMETRICDSTALPHA 0x8122
+#define NMR_ERROR_MISSINGVOLUMETRICDSTALPHA 0x8833
 
 
 /*-------------------------------------------------------------------
@@ -1342,6 +1457,8 @@ XML Parser Error Constants (0x9XXX)
 // A matindices attribute is duplicated
 #define NMR_ERROR_DUPLICATE_MATINDICES_ATTRIBUTE 0x9019
 
+//
+
 
 /*-------------------------------------------------------------------
 Library errors (0xAXXX)
@@ -1364,5 +1481,15 @@ Library errors (0xAXXX)
 
 // Invalid Texture type
 #define NMR_ERROR_INVALIDTEXTURETYPE 0xA006
+
+// Key Encryption Descriptor not found
+#define NMR_ERROR_KEKDESCRIPTORNOTFOUND 0xA00A
+
+// Content encryption descritor not found
+#define NMR_ERROR_DEKDESCRIPTORNOTFOUND 0xA00B
+
+// Using cryptographically weak random number generator
+#define NMR_ERROR_RNGCALLBACKNOTCRYPTOSTRONG 0XA00C
+
 
 #endif // __NMR_ERRORCONST

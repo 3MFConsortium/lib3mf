@@ -68,6 +68,17 @@ namespace Lib3MF
 			}
 
 			beamLattice->SetBeams(beams);
+
+			beamLattice->SetBallOptions(eBeamLatticeBallMode::Mixed, 1.8);
+			sBall ball;
+			ball.m_Radius = 1.8;
+			std::vector<sBall> balls(3);
+			for (int i = 0; i < 3; i++) {
+				ball.m_Index = i;
+				balls[i] = ball;
+			}
+
+			beamLattice->SetBalls(balls);
 		}
 		virtual void TearDown() {
 			model.reset();
@@ -101,6 +112,45 @@ namespace Lib3MF
 		ASSERT_EQ(beamSet->GetIdentifier(), ident);
 	}
 
+	TEST_F(BeamSet, UniqueIdentifier)
+	{
+		auto beamSet = beamLattice->AddBeamSet();
+		std::string ident1 = "ASDF";
+		std::string ident2 = "GHJKL";
+		beamSet->SetIdentifier(ident1);
+
+		beamSet = beamLattice->AddBeamSet();
+		beamSet->SetIdentifier(ident2);
+
+		beamSet = beamLattice->AddBeamSet();
+		try {
+			beamSet->SetIdentifier(ident1);
+			ASSERT_FALSE(true);
+		}
+		catch (ELib3MFException) {
+			ASSERT_TRUE(true);
+		}
+	}
+
+	TEST_F(BeamSet, ReadUniqueIdentifier)
+	{
+		std::string fName("BeamSet_Unique.3mf");
+		auto model = wrapper->CreateModel();
+		{
+			auto reader = model->QueryReader("3mf");
+			reader->ReadFromFile(sTestFilesPath + "/" + "BeamLattice" + "/" + fName);
+			ASSERT_EQ(reader->GetWarningCount(), 0);
+		}
+
+		fName = "BeamSet_Not_Unique.3mf";
+		model = wrapper->CreateModel();
+		{
+			auto reader = model->QueryReader("3mf");
+			reader->ReadFromFile(sTestFilesPath + "/" + "BeamLattice" + "/" + fName);
+			ASSERT_NE(reader->GetWarningCount(), 0);
+		}
+	}
+
 	TEST_F(BeamSet, References)
 	{
 		auto beamSet = beamLattice->AddBeamSet();
@@ -131,6 +181,37 @@ namespace Lib3MF
 			ASSERT_EQ(referencesOut[i], references[i]);
 		}
 
+	}
+
+	TEST_F(BeamSet, BallReferences)
+	{
+		auto beamSet = beamLattice->AddBeamSet();
+
+		ASSERT_EQ(beamSet->GetBallReferenceCount(), 0);
+
+		Lib3MF_uint32 nBallReferences = 2;
+		std::vector<Lib3MF_uint32> ballReferences(nBallReferences);
+		ballReferences[0] = 2;
+		ballReferences[1] = 5;
+		try {
+			beamSet->SetBallReferences(ballReferences);
+			ASSERT_FALSE(true);
+		}
+		catch (ELib3MFException) {
+			ASSERT_TRUE(true);
+		}
+
+		ballReferences[1] = 1;
+		beamSet->SetBallReferences(ballReferences);
+
+		ASSERT_EQ(beamSet->GetBallReferenceCount(), nBallReferences);
+
+		std::vector<Lib3MF_uint32> ballReferencesOut;
+		beamSet->GetBallReferences(ballReferencesOut);
+		ASSERT_EQ(beamSet->GetBallReferenceCount(), ballReferencesOut.size());
+		for (size_t i = 0; i < ballReferencesOut.size(); i++) {
+			ASSERT_EQ(ballReferencesOut[i], ballReferences[i]);
+		}
 	}
 
 }

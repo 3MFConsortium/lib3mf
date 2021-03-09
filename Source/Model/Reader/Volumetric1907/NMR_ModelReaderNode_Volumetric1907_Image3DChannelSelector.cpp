@@ -43,7 +43,7 @@ NMR_ModelReaderNode_Volumetric1907_Image3DChannelSelector.cpp covers the officia
 namespace NMR {
 
 
-	CModelReaderNode_Volumetric1907_Image3DChannelSelector::CModelReaderNode_Volumetric1907_Image3DChannelSelector(_In_ PModelReaderWarnings pWarnings)
+	CModelReaderNode_Volumetric1907_Image3DChannelSelector::CModelReaderNode_Volumetric1907_Image3DChannelSelector(_In_ PModelWarnings pWarnings)
 		: CModelReaderNode(pWarnings),
 		m_nID(0),
 		m_dMinValue(0.0),
@@ -171,7 +171,7 @@ namespace NMR {
 		if (m_nID == 0)
 			throw CNMRException(NMR_ERROR_MISSINGCHANNELSELECTORID);
 
-		PPackageResourceID pImage3DID = pModel->findPackageResourceID(pModel->curPath(), m_nID);
+		PPackageResourceID pImage3DID = pModel->findPackageResourceID(pModel->currentPath(), m_nID);
 		if (pImage3DID.get() == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDMODELRESOURCE);
 
@@ -191,7 +191,6 @@ namespace NMR {
 			pSelector->setFilter(m_eFilter);
 
 		return pSelector;
-
 	}
 
 

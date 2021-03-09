@@ -34,9 +34,9 @@ CBuildItem
 
 	.. cpp:function:: Lib3MF_uint32 GetObjectResourceID()
 
-		Retrieves the object resource id associated to a build item
+		Retrieves the object UniqueResourceID associated to a build item
 
-		:returns:  eturns the ID of the object
+		:returns: returns the UniqueResourceID of the object
 
 
 	.. cpp:function:: bool HasObjectTransform()

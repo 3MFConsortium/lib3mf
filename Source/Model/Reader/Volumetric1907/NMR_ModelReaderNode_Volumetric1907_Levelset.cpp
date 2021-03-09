@@ -43,7 +43,7 @@ CModelReaderNode_Volumetric1907_Levelset.cpp covers the official 3MF volumetric 
 namespace NMR {
 
 
-	CModelReaderNode_Volumetric1907_Levelset::CModelReaderNode_Volumetric1907_Levelset(_In_ PModelReaderWarnings pWarnings)
+	CModelReaderNode_Volumetric1907_Levelset::CModelReaderNode_Volumetric1907_Levelset(_In_ PModelWarnings pWarnings)
 		: CModelReaderNode(pWarnings)
 	{
 		m_bHasStackId = false;
@@ -76,7 +76,7 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_MISSINGVOLUMEDATACHANNEL);
 		}
 
-		PPackageResourceID pID = pModel->findPackageResourceID(pModel->curPath(), m_nStackID);
+		PPackageResourceID pID = pModel->findPackageResourceID(pModel->currentPath(), m_nStackID);
 		if (!pID.get()) {
 			throw CNMRException(NMR_ERROR_UNKNOWNMODELRESOURCE);
 		}

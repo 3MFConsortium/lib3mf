@@ -223,10 +223,12 @@ ISliceStack * CObject::GetSliceStack()
 
 void CObject::AssignSliceStack(ISliceStack* pSliceStackInstance)
 {
-	Lib3MF_uint32 id = pSliceStackInstance->GetResourceID();
-
+	NMR::ModelResourceID nID = pSliceStackInstance->GetResourceID();
+	std::shared_ptr<IPackagePart> pPackagePart(pSliceStackInstance->PackagePart());
+	std::string sPath = pPackagePart->GetPath();
+	
 	NMR::PModelSliceStack pSliceStackResource = std::dynamic_pointer_cast<NMR::CModelSliceStack>
-		( object()->getModel()->findResource(id) );
+		( object()->getModel()->findResource(sPath, nID) );
 	if (!pSliceStackResource)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDSLICESTACKRESOURCE);
 

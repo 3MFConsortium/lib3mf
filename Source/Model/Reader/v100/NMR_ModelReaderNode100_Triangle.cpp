@@ -43,7 +43,7 @@ XML Model Stream.
 
 namespace NMR {
 
-	CModelReaderNode100_Triangle::CModelReaderNode100_Triangle(_In_ PModelReaderWarnings pWarnings)
+	CModelReaderNode100_Triangle::CModelReaderNode100_Triangle(_In_ PModelWarnings pWarnings)
 		: CModelReaderNode(pWarnings)
 	{
 		// Initialise default values

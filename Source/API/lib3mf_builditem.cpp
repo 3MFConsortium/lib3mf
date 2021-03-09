@@ -59,7 +59,7 @@ Lib3MF_uint32 CBuildItem::GetHandle()
 
 IObject * CBuildItem::GetObjectResource ()
 {
-	NMR::PModelResource pResource = buildItem().getModel()->findResource(buildItem().getObjectID());
+	NMR::PModelResource pResource = buildItem().getModel()->findResource(buildItem().getObject()->getPackageResourceID());
 	if (!pResource.get())
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDMODELRESOURCE);
 	
@@ -84,9 +84,9 @@ void CBuildItem::SetUUID (const std::string & sUUID)
 	buildItem().setUUID(pUUID);
 }
 
-Lib3MF_uint32 CBuildItem::GetObjectResourceID ()
+Lib3MF_uint32 CBuildItem::GetObjectResourceID()
 {
-	return buildItem().getObjectID();
+	return buildItem().getObject()->getPackageResourceID()->getUniqueID();
 }
 
 bool CBuildItem::HasObjectTransform ()

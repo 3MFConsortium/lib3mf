@@ -118,7 +118,7 @@ IImage3DChannelSelector * CVolumetricLayer::CreateMaskChannelSelector(IImage3D* 
 	if (pImage3DClass == nullptr)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 	
-	NMR::PModelImage3DChannelSelector pChannelSelector = NMR::CModelImage3DChannelSelector::make (pImage3DClass->getModelImage3D ()->getResourceID(), sSourceChannel, sDestinationChannel );
+	NMR::PModelImage3DChannelSelector pChannelSelector = NMR::CModelImage3DChannelSelector::make(pImage3DClass->getModelImage3D()->getPackageResourceID(), sSourceChannel, sDestinationChannel );
 	m_pLayer->setMaskChannelSelector(pChannelSelector);
 	return new CImage3DChannelSelector(m_pModel, pChannelSelector);
 }
@@ -162,7 +162,7 @@ IImage3DChannelSelector * CVolumetricLayer::AddChannelSelector(IImage3D* pImage3
 	if (pImage3DClass == nullptr)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 
-	NMR::PModelImage3DChannelSelector pChannelSelector = NMR::CModelImage3DChannelSelector::make(pImage3DClass->getModelImage3D()->getResourceID(), sSourceChannel, sDestinationChannel);
+	NMR::PModelImage3DChannelSelector pChannelSelector = NMR::CModelImage3DChannelSelector::make(pImage3DClass->getModelImage3D()->getPackageResourceID(), sSourceChannel, sDestinationChannel);
 	m_pLayer->addChannelSelector(pChannelSelector);
 	return new CImage3DChannelSelector(m_pModel, pChannelSelector);
 

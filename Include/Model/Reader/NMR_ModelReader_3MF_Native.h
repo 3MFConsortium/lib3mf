@@ -39,15 +39,15 @@ It uses libzip and irrxml to parse the OPC package.
 #include "Model/Reader/NMR_ModelReader.h"
 #include "Model/Classes/NMR_Model.h"
 #include "Common/Platform/NMR_XmlReader.h"
-#include "Common/OPC/NMR_OpcPackageReader.h"
-
+#include "Model/Reader/NMR_KeyStoreOpcPackageReader.h"
+#include "Common/OPC/NMR_OpcPackagePart.h"
 #include <list>
 
 namespace NMR {
 
 	class CModelReader_3MF_Native : public CModelReader_3MF {
 	private:
-		POpcPackageReader m_pPackageReader;
+		PKeyStoreOpcPackageReader m_pPackageReader;
 
 	protected:
 		void extractCustomDataFromRelationships(_In_ std::string& sTargetPartURIDir, _In_ COpcPackagePart * pModelPart);

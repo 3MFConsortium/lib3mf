@@ -42,7 +42,6 @@ namespace NMR {
 		: CModelResource(sID, pModel)
 	{
 		m_dZBottom = dZBottom;
-		m_sOwnPath = "";
 	}
 
 	CModelSliceStack::~CModelSliceStack()
@@ -141,21 +140,24 @@ namespace NMR {
 
 	std::string CModelSliceStack::OwnPath()
 	{
-		return m_sOwnPath;
+		std::string sPath = getPackageResourceID()->getPath();
+		if (sPath.empty()) {
+			throw CNMRException(NMR_ERROR_INVALID_SLICEPATH);
+		}
+		return sPath;
 	}
 
 	void CModelSliceStack::SetOwnPath(std::string sOwnPath)
 	{
-		if (sOwnPath == getModel()->rootPath())
-			m_sOwnPath = "";
-		else
-			m_sOwnPath = sOwnPath;
+		PPackageModelPath pModelPath = getModel()->findOrCreateModelPath(sOwnPath);
+		CPackageResourceID::setModelPath(getPackageResourceID(), pModelPath);
 	}
 
 	nfDouble CModelSliceStack::getZBottom()
 	{
 		return m_dZBottom;
 	}
+
 	void CModelSliceStack::setZBottom(nfDouble dZBottom)
 	{
 		if (!m_pSlices.empty()) {
@@ -168,7 +170,6 @@ namespace NMR {
 		}
 		m_dZBottom = dZBottom;
 	}
-
 
 	nfDouble CModelSliceStack::getHighestZ() const
 	{
@@ -197,47 +198,5 @@ namespace NMR {
 		return true;
 	}
 
-
-	//nfUint32 CSliceStackGeometry::addSlice(PSlice pSlice)
-	//{
-	//	if (pSlice->getTopZ() < m_BottomZ)
-	//		throw CNMRException(NMR_ERROR_SLICES_Z_NOTINCREASING);
-	//	if (!m_Slices.empty()) {
-	//		if (pSlice->getTopZ() < m_Slices.rbegin()->get()->getTopZ() ) {
-	//			throw CNMRException(NMR_ERROR_SLICES_Z_NOTINCREASING);
-	//		}
-	//	}
-	//	m_Slices.push_back(pSlice);
-	//	return (nfUint32)m_Slices.size() - 1;
-	//}
-
-	//nfUint32 CSliceStackGeometry::getSliceCount()
-	//{
-	//	return (nfUint32)m_Slices.size();
-	//}
-
-	//nfFloat CSliceStackGeometry::getBottomZ()
-	//{
-	//	return m_BottomZ;
-	//}
-
-	//void CSliceStackGeometry::setBottomZ(nfFloat nBottomZ)
-	//{
-	//	m_BottomZ = nBottomZ;
-	//}
-
-	//void CSliceStackGeometry::setUsesSliceRef(nfBool bUsesSliceRef)
-	//{
-	//	m_bUsesSliceRef = bUsesSliceRef;
-	//}
-
-	//nfBool CSliceStackGeometry::usesSliceRef()
-	//{
-	//	return m_bUsesSliceRef;
-	//}
-
-	
-
-	
 }
 
