@@ -47,6 +47,11 @@ jobs:
       - uses: actions/checkout@v2
         with:
           submodules: true
+      - name: Install Prerequisites
+        run: |
+          brew install lcov
+          brew install gcovr
+          brew install gcov 
       - run: sh cmake/GenerateMake.sh -DBUILD_FOR_CODECOVERAGE=ON
       - run: cmake --build .
         working-directory: ./build
