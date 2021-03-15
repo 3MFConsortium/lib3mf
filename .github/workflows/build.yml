@@ -41,6 +41,7 @@ jobs:
         with:
           name: lib3mf.dylib
           path: build/lib3mf.dylib
+
   codecoverage-macos:
     runs-on: macos-10.15
     steps:
@@ -65,6 +66,11 @@ jobs:
         with:
           name: index.html
           path: build/codecoverage/index.html
+      - uses: codecov/codecov-action@v1
+        with:
+          files: ./build/Test_CPP_Bindings_filtered.info
+          fail_ci_if_error: true # optional (default = false)
+          verbose: true # optional (default = false)
           
   build-windows-release:
     runs-on: windows-2019
