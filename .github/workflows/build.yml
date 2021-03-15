@@ -61,12 +61,8 @@ jobs:
         with:
           name: codecoverage.zip
           path: build/codecoverage.zip
-      - name: Archive Code Coverage Index
-        uses: actions/upload-artifact@v2
-        with:
-          name: index.html
-          path: build/codecoverage/index.html
-      - uses: codecov/codecov-action@v1
+      - name: Upload code coverage to codecov
+        uses: codecov/codecov-action@v1
         with:
           files: ./build/Test_CPP_Bindings_filtered.info
           fail_ci_if_error: true # optional (default = false)
