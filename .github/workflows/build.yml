@@ -60,7 +60,6 @@ jobs:
         with:
           name: codecoverage.zip
           path: build/codecoverage.zip
-      - run: cat ./build/Test_CPP_Bindings_filtered.info 
       - name: Upload code coverage to codecov
         uses: codecov/codecov-action@v1
         with:
