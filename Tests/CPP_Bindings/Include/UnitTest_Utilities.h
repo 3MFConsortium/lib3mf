@@ -64,6 +64,18 @@ catch (const type &) {\
 }
 
 
+class Lib3MFTest : public ::testing::Test {
+	public:
+	static void SetUpTestCase() {
+		wrapper = Lib3MF::CWrapper::loadLibrary();
+		#ifdef CREATEJOURNAL
+		wrapper->SetJournal("journal.txt");
+		#endif
+	}
+	static Lib3MF::PWrapper wrapper;
+};
+	
+
 inline std::vector<Lib3MF_uint8> ReadFileIntoBuffer(std::string sFileName)
 {
 	// Read the file fully into a memory buffer

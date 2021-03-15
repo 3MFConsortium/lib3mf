@@ -35,7 +35,7 @@ UnitTest_BaseMaterialGroup.cpp: Defines Unittests for the BaseMaterialGroup clas
 
 namespace Lib3MF
 {
-	class BaseMaterialGroup : public ::testing::Test {
+	class BaseMaterialGroup : public Lib3MFTest {
 	protected:
 
 		virtual void SetUp() {
@@ -48,13 +48,7 @@ namespace Lib3MF
 
 		PModel model;
 		PBaseMaterialGroup baseMaterialGroup;
-
-		static void SetUpTestCase() {
-			wrapper = CWrapper::loadLibrary();
-		}
-		static PWrapper wrapper;
 	};
-	PWrapper BaseMaterialGroup::wrapper;
 
 	TEST_F(BaseMaterialGroup, GetCount)
 	{

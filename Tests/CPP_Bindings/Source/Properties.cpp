@@ -35,7 +35,7 @@ UnitTest_Properties.cpp: Defines Unittests for the color and basematerial proper
 
 namespace Lib3MF
 {
-	class Properties : public ::testing::Test {
+	class Properties : public Lib3MFTest {
 	protected:
 
 		virtual void SetUp() {
@@ -55,14 +55,7 @@ namespace Lib3MF
 
 		PModel model;
 		PMeshObject mesh;
-
-		static void SetUpTestCase() {
-			wrapper = wrapper->loadLibrary();
-		}
-		static PWrapper wrapper;
 	};
-	PWrapper Properties::wrapper;
-
 
 	TEST_F(Properties, GetProperties)
 	{
@@ -325,7 +318,7 @@ namespace Lib3MF
 		writer->WriteToBuffer(buffer);
 	}
 
-	class Properties_BaseMaterial : public ::testing::Test {
+	class Properties_BaseMaterial : public Lib3MFTest {
 	protected:
 
 		virtual void SetUp() {
@@ -390,7 +383,7 @@ namespace Lib3MF
 
 
 
-	class Properties_Color : public ::testing::Test {
+	class Properties_Color : public Lib3MFTest {
 	protected:
 
 		virtual void SetUp() {

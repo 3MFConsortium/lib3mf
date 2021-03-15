@@ -39,21 +39,27 @@ operations
 
 namespace Lib3MF
 {
-	PWrapper wrapper = CWrapper::loadLibrary();
+	class Wrapper : public Lib3MFTest {
+	protected:
+		virtual void SetUp() {
+		}
+		virtual void TearDown() {
+		}
+	};
 
 	TEST(Wrapper, GetLibraryVersion)
 	{
 		Lib3MF_uint32 nMajor, nMinor, nMicro;
-		wrapper->GetLibraryVersion(nMajor, nMinor, nMicro);
+		Lib3MFTest::wrapper->GetLibraryVersion(nMajor, nMinor, nMicro);
 
 		ASSERT_EQ(nMajor, LIB3MF_VERSION_MAJOR);
 		ASSERT_EQ(nMinor, LIB3MF_VERSION_MINOR);
 		ASSERT_EQ(nMicro, LIB3MF_VERSION_MICRO);
 
 		std::string sPreReleaseInfo, sBuildInfo;
-		wrapper->GetPrereleaseInformation(sPreReleaseInfo);
+		Lib3MFTest::wrapper->GetPrereleaseInformation(sPreReleaseInfo);
 		ASSERT_TRUE(sPreReleaseInfo == LIB3MF_VERSION_PRERELEASEINFO);
-		wrapper->GetBuildInformation(sBuildInfo);
+		Lib3MFTest::wrapper->GetBuildInformation(sBuildInfo);
 		ASSERT_TRUE(sBuildInfo == LIB3MF_VERSION_BUILDINFO);
 	}
 	
@@ -62,40 +68,40 @@ namespace Lib3MF
 		Lib3MF_uint32 nMajor, nMinor, nMicro;
 		bool bIsSupported;
 
-		wrapper->GetSpecificationVersion("BogusSpecification", bIsSupported, nMajor, nMinor, nMicro);
+		Lib3MFTest::wrapper->GetSpecificationVersion("BogusSpecification", bIsSupported, nMajor, nMinor, nMicro);
 		ASSERT_FALSE(bIsSupported);
 
-		wrapper->GetSpecificationVersion("http://schemas.microsoft.com/3dmanufacturing/core/2015/02", bIsSupported, nMajor, nMinor, nMicro);
+		Lib3MFTest::wrapper->GetSpecificationVersion("http://schemas.microsoft.com/3dmanufacturing/core/2015/02", bIsSupported, nMajor, nMinor, nMicro);
 		ASSERT_TRUE(bIsSupported);
 		ASSERT_EQ(nMajor, 1);
 		ASSERT_EQ(nMinor, 2);
 		ASSERT_EQ(nMicro, 3);
 
-		wrapper->GetSpecificationVersion("http://schemas.microsoft.com/3dmanufacturing/material/2015/02", bIsSupported, nMajor, nMinor, nMicro);
+		Lib3MFTest::wrapper->GetSpecificationVersion("http://schemas.microsoft.com/3dmanufacturing/material/2015/02", bIsSupported, nMajor, nMinor, nMicro);
 		ASSERT_TRUE(bIsSupported);
 		ASSERT_EQ(nMajor, 1);
 		ASSERT_EQ(nMinor, 1);
 		ASSERT_EQ(nMicro, 0);
 
-		wrapper->GetSpecificationVersion("http://schemas.microsoft.com/3dmanufacturing/production/2015/06", bIsSupported, nMajor, nMinor, nMicro);
+		Lib3MFTest::wrapper->GetSpecificationVersion("http://schemas.microsoft.com/3dmanufacturing/production/2015/06", bIsSupported, nMajor, nMinor, nMicro);
 		ASSERT_TRUE(bIsSupported);
 		ASSERT_EQ(nMajor, 1);
 		ASSERT_EQ(nMinor, 1);
 		ASSERT_EQ(nMicro, 2);
 
-		wrapper->GetSpecificationVersion("http://schemas.microsoft.com/3dmanufacturing/beamlattice/2017/02", bIsSupported, nMajor, nMinor, nMicro);
+		Lib3MFTest::wrapper->GetSpecificationVersion("http://schemas.microsoft.com/3dmanufacturing/beamlattice/2017/02", bIsSupported, nMajor, nMinor, nMicro);
 		ASSERT_TRUE(bIsSupported);
 		ASSERT_EQ(nMajor, 1);
 		ASSERT_EQ(nMinor, 1);
 		ASSERT_EQ(nMicro, 0);
 
-		wrapper->GetSpecificationVersion("http://schemas.microsoft.com/3dmanufacturing/slice/2015/07", bIsSupported, nMajor, nMinor, nMicro);
+		Lib3MFTest::wrapper->GetSpecificationVersion("http://schemas.microsoft.com/3dmanufacturing/slice/2015/07", bIsSupported, nMajor, nMinor, nMicro);
 		ASSERT_TRUE(bIsSupported);
 		ASSERT_EQ(nMajor, 1);
 		ASSERT_EQ(nMinor, 0);
 		ASSERT_EQ(nMicro, 2);
 
-		wrapper->GetSpecificationVersion("http://schemas.microsoft.com/3dmanufacturing/securecontent/2019/04", bIsSupported, nMajor, nMinor, nMicro);
+		Lib3MFTest::wrapper->GetSpecificationVersion("http://schemas.microsoft.com/3dmanufacturing/securecontent/2019/04", bIsSupported, nMajor, nMinor, nMicro);
 		ASSERT_TRUE(bIsSupported);
 		ASSERT_EQ(nMajor, 1);
 		ASSERT_EQ(nMinor, 0);
@@ -104,14 +110,14 @@ namespace Lib3MF
 
 	TEST(Wrapper, CreateModel)
 	{
-		auto model = wrapper->CreateModel();
+		auto model = Lib3MFTest::wrapper->CreateModel();
 	}
 
 	TEST(Wrapper, CheckError)
 	{
-		wrapper->CheckError(nullptr, 0);
+		Lib3MFTest::wrapper->CheckError(nullptr, 0);
 		try {
-			wrapper->CheckError(nullptr, 1);
+			Lib3MFTest::wrapper->CheckError(nullptr, 1);
 			ASSERT_TRUE(false);
 		}
 		catch (ELib3MFException &e) {
@@ -130,25 +136,25 @@ namespace Lib3MF
 		Lib3MF_single fR, fG, fB, fA;
 		Lib3MF_uint8 nR, nG, nB, nA;
 
-		wrapper->ColorToRGBA(c1, nR, nG, nB, nA);
+		Lib3MFTest::wrapper->ColorToRGBA(c1, nR, nG, nB, nA);
 		ASSERT_EQ(c1.m_Red, nR);
 		ASSERT_EQ(c1.m_Green, nG);
 		ASSERT_EQ(c1.m_Blue, nB);
 		ASSERT_EQ(c1.m_Alpha, nA);
 
-		wrapper->ColorToFloatRGBA(c1, fR, fG, fB, fA);
+		Lib3MFTest::wrapper->ColorToFloatRGBA(c1, fR, fG, fB, fA);
 		ASSERT_EQ(c1.m_Red, std::round(fR*255));
 		ASSERT_EQ(c1.m_Green, std::round(fG * 255));
 		ASSERT_EQ(c1.m_Blue, std::round(fB * 255));
 		ASSERT_EQ(c1.m_Alpha, std::round(fA * 255));
 
-		c2 = wrapper->RGBAToColor(nR, nG, nB, nA);
+		c2 = Lib3MFTest::wrapper->RGBAToColor(nR, nG, nB, nA);
 		ASSERT_EQ(c2.m_Red, nR);
 		ASSERT_EQ(c2.m_Green, nG);
 		ASSERT_EQ(c2.m_Blue, nB);
 		ASSERT_EQ(c2.m_Alpha, nA);
 
-		c2 = wrapper->FloatRGBAToColor(fR, fG, fB, fA);
+		c2 = Lib3MFTest::wrapper->FloatRGBAToColor(fR, fG, fB, fA);
 		ASSERT_EQ(c1.m_Red, c2.m_Red);
 		ASSERT_EQ(c1.m_Green, c2.m_Green);
 		ASSERT_EQ(c1.m_Blue, c2.m_Blue);

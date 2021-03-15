@@ -35,7 +35,7 @@ UnitTest_v093.cpp: Defines Unittests for the reading the 093-version of 3mf.
 
 namespace Lib3MF
 {
-	class ReaderV093 : public ::testing::Test {
+	class ReaderV093 : public Lib3MFTest {
 	protected:
 		virtual void SetUp() {
 			model = wrapper->CreateModel();
@@ -48,14 +48,8 @@ namespace Lib3MF
 	
 		PModel model;
 		PReader reader;
-
-		static void SetUpTestCase() {
-			wrapper = CWrapper::loadLibrary();
-		}
-		static PWrapper wrapper;
 	};
-	PWrapper ReaderV093::wrapper;
-
+	
 	TEST_F(ReaderV093, 3MFReadFromFile_Geometry)
 	{
 		reader->ReadFromFile(sTestFilesPath + "/v093/" + "Track_093.3mf");

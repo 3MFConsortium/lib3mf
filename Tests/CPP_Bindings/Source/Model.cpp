@@ -35,7 +35,7 @@ UnitTest_Model.cpp: Defines Unittests for the Model classes
 
 namespace Lib3MF
 {
-	class Model : public ::testing::Test {
+	class Model : public Lib3MFTest {
 	protected:
 		virtual void SetUp() {
 			m_pModel = wrapper->CreateModel();

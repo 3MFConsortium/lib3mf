@@ -35,7 +35,7 @@ UnitTest_CompositeMaterials.cpp: Defines Unittests for Composite Materials
 
 namespace Lib3MF
 {
-	class CompositeMaterials : public ::testing::Test {
+	class CompositeMaterials : public Lib3MFTest {
 	protected:
 
 		virtual void SetUp() {
@@ -77,13 +77,7 @@ namespace Lib3MF
 		PModel model;
 		PMeshObject mesh;
 		PBaseMaterialGroup baseMaterialGroup1, baseMaterialGroup2;
-
-		static void SetUpTestCase() {
-			wrapper = CWrapper::loadLibrary();
-		}
-		static PWrapper wrapper;
 	};
-	PWrapper CompositeMaterials::wrapper;
 
 	TEST_F(CompositeMaterials, Create)
 	{

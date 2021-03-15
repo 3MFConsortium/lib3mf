@@ -35,7 +35,7 @@ UnitTest_BeamSets.cpp: Defines Unittests for the BeamSet class
 
 namespace Lib3MF
 {
-	class BeamSet : public ::testing::Test {
+	class BeamSet : public Lib3MFTest {
 	protected:
 		virtual void SetUp() {
 			model = wrapper->CreateModel();
@@ -87,13 +87,7 @@ namespace Lib3MF
 		PModel model;
 		PMeshObject mesh;
 		PBeamLattice beamLattice;
-
-		static void SetUpTestCase() {
-			wrapper = CWrapper::loadLibrary();
-		}
-		static PWrapper wrapper;
 	};
-	PWrapper BeamSet::wrapper;
 	
 	TEST_F(BeamSet, Name)
 	{
