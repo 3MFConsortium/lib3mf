@@ -6,7 +6,7 @@
 
 namespace Lib3MF {
 
-	class EncryptionMethods : public ::testing::Test {
+	class EncryptionMethods : public Lib3MFTest {
 	protected:
 		PModel model;
 		PEVP_PKEY privateKey;
@@ -26,12 +26,6 @@ namespace Lib3MF {
 		virtual ~EncryptionMethods() {
 			//attempt to solve leaks
 			EncryptionCallbacks::cleanup();
-		}
-
-		static PWrapper wrapper;
-
-		static void SetUpTestCase() {
-			wrapper = CWrapper::loadLibrary();
 		}
 
 		virtual void SetUp() {
@@ -144,8 +138,6 @@ namespace Lib3MF {
 			}
 		}
 	};
-
-	PWrapper EncryptionMethods::wrapper;
 	
 	TEST_F(EncryptionMethods, RemoveEncryptionFromResource) {
 

@@ -35,7 +35,7 @@ UnitTest_Attachments.cpp: Defines Unittests for handling of attachments
 
 namespace Lib3MF
 {
-	class AttachmentsT : public ::testing::Test {
+	class AttachmentsT : public Lib3MFTest {
 	protected:
 		const std::string m_sFolderName;
 		const std::string m_sFilenameReadWrite;
@@ -66,12 +66,7 @@ namespace Lib3MF
 		}
 
 		PModel model;
-		static void SetUpTestCase() {
-			wrapper = CWrapper::loadLibrary();
-		}
-		static PWrapper wrapper;
 	};
-	PWrapper AttachmentsT::wrapper;
 
 	TEST_F(AttachmentsT, AddRemove)
 	{

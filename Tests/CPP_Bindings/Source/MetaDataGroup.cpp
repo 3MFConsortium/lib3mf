@@ -35,7 +35,7 @@ UnitTest_MetaDataGroup.cpp: Defines Unittests for the MetaDataGroup class
 
 namespace Lib3MF
 {
-	class MetaDataGroup : public ::testing::Test {
+	class MetaDataGroup : public Lib3MFTest {
 	protected:
 
 		virtual void SetUp() {
@@ -51,12 +51,7 @@ namespace Lib3MF
 		PReader reader;
 		PWriter writer;
 		static std::string m_sFolderName;
-		static void SetUpTestCase() {
-			wrapper = CWrapper::loadLibrary();
-		}
-		static PWrapper wrapper;
 	};
-	PWrapper MetaDataGroup::wrapper;
 
 	std::string MetaDataGroup::m_sFolderName("TestOutput");
 

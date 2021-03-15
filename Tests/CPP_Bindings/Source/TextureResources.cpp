@@ -35,7 +35,7 @@ UnitTest_TextureResources.cpp: Defines Unittests for the Texture Resource class
 
 namespace Lib3MF
 {
-	class Model_TextureResource : public ::testing::Test {
+	class Model_TextureResource : public Lib3MFTest {
 	protected:
 
 		virtual void SetUp() {
@@ -59,13 +59,7 @@ namespace Lib3MF
 		std::string m_sRelationshipType;
 		std::string m_sRelationshipType_Texture;
 		std::string m_sPath_Texture;
-
-		static void SetUpTestCase() {
-			wrapper = wrapper->loadLibrary();
-		}
-		static PWrapper wrapper;
 	};
-	PWrapper Model_TextureResource::wrapper;
 
 	TEST_F(Model_TextureResource, AddTexture)
 	{
@@ -84,7 +78,7 @@ namespace Lib3MF
 		ASSERT_SPECIFIC_THROW(texture->SetAttachment(otherAttachment.get()), ELib3MFException);
 	}
 
-	class Model_TextureResources : public ::testing::Test {
+	class Model_TextureResources : public Lib3MFTest {
 	protected:
 
 		virtual void SetUp() {
@@ -165,7 +159,7 @@ namespace Lib3MF
 		ASSERT_EQ(count, 3);
 	}
 
-	class TextureResource : public ::testing::Test {
+	class TextureResource : public Lib3MFTest {
 	protected:
 
 		virtual void SetUp() {

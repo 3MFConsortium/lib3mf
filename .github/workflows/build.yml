@@ -41,6 +41,27 @@ jobs:
         with:
           name: lib3mf.dylib
           path: build/lib3mf.dylib
+  codecoverage-macos:
+    runs-on: macos-10.15
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+      - run: sh cmake/GenerateMake.sh -DBUILD_FOR_CODECOVERAGE=ON
+      - run: cmake --build .
+        working-directory: ./build
+      - run: ./Tests/codecoverage/run_codecoverage.sh
+      - name: Archive Code Coverage Results
+        uses: actions/upload-artifact@v2
+        with:
+          name: codecoverage.zip
+          path: build/codecoverage.zip
+      - name: Archive Code Coverage Index
+        uses: actions/upload-artifact@v2
+        with:
+          name: index.html
+          path: build/codecoverage/index.html
+          
   build-windows-release:
     runs-on: windows-2019
     steps:

@@ -36,7 +36,7 @@ classes
 
 namespace Lib3MF
 {
-	class ProductionExtension : public ::testing::Test {
+	class ProductionExtension : public Lib3MFTest {
 	protected:
 		sPosition pVertices[8];
 		sTriangle pTriangles[12];
@@ -76,13 +76,7 @@ namespace Lib3MF
 		}
 
 		PModel model;
-
-		static void SetUpTestCase() {
-			wrapper = CWrapper::loadLibrary();
-		}
-		static PWrapper wrapper;
 	};
-	PWrapper ProductionExtension::wrapper;
 
 	TEST_F(ProductionExtension, ManipulatePaths)
 	{

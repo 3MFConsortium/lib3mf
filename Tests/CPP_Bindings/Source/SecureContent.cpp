@@ -6,7 +6,7 @@
 
 namespace Lib3MF {
 
-	class SecureContentT : public ::testing::Test {
+	class SecureContentT : public Lib3MFTest {
 	protected:
 		sPosition pVertices[8];
 		sTriangle pTriangles[12];
@@ -62,10 +62,6 @@ namespace Lib3MF {
 			model.reset();
 		}
 
-		static void SetUpTestCase() {
-			wrapper = CWrapper::loadLibrary();
-		}
-
 		PReader readKeyStore(std::string filename) {
 			auto reader = model->QueryReader("3mf");
 			KEKCallbackData kekData;
@@ -85,9 +81,6 @@ namespace Lib3MF {
 			return readKeyStore(UNENCRYPTEDKEYSTORE);
 		}
 	public:
-
-		static PWrapper wrapper;
-
 		static void notRandomBytesAtAll(Lib3MF_uint64 byteData, Lib3MF_uint64 size, Lib3MF_pvoid userData, Lib3MF_uint64 * bytesWritten) {
 			static Lib3MF_uint8 random = 0;
 			Lib3MF_uint8 * buffer = (Lib3MF_uint8 *)byteData;
@@ -246,8 +239,6 @@ namespace Lib3MF {
 			}
 		}
 	};
-	PWrapper SecureContentT::wrapper;
-
 	
 
 	using Lib3MF_buffer = std::vector<Lib3MF_uint8>;
