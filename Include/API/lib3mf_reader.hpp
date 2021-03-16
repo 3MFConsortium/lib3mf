@@ -48,6 +48,7 @@ Abstract: This is the class declaration of CReader
 namespace Lib3MF {
 namespace Impl {
 
+#define LIB3MF_READER_MAXKEYSIZE (1UL << 31)
 
 /*************************************************************************************************************************
  Class declaration of CReader 

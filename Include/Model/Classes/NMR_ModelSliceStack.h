@@ -41,6 +41,8 @@ A Model Slice Stack represents a ordered list of slices.
 
 #include <vector>
 
+#define LIB3MF_MAXSLICEREFERENCES (1UL << 31)
+
 namespace NMR {
 
 

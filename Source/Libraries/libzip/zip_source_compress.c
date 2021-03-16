@@ -240,7 +240,13 @@ compress_read(zip_source_t *src, struct context *ctx, void *data, zip_uint64_t l
             if (ctx->can_store && (zip_uint64_t)ctx->first_read <= out_offset) {
                 ctx->is_stored = true;
                 ctx->size = (zip_uint64_t)ctx->first_read;
-                memcpy(data, ctx->buffer, ctx->size);
+
+                // Check 32bit overflow
+                uint64_t maxMemSize = SIZE_MAX;
+                if (ctx->size >= maxMemSize)
+                    return -1;
+
+                memcpy(data, ctx->buffer, (size_t) ctx->size);
                 return (zip_int64_t)ctx->size;
             }
             end = true;

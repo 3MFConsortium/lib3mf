@@ -429,12 +429,23 @@ buffer_grow_fragments(buffer_t *buffer, zip_uint64_t capacity, zip_error_t *erro
         return true;
     }
 
-    if ((fragments = realloc(buffer->fragments, sizeof(buffer->fragments[0]) * capacity)) == NULL) {
+    // Check for 32bit overflow
+    uint64_t maxMemSize = SIZE_MAX;
+    uint64_t memFragmentSize = sizeof(buffer->fragments[0])* capacity;
+    if (memFragmentSize >= maxMemSize)
+        return false;    
+
+    if ((fragments = realloc(buffer->fragments, (size_t)memFragmentSize)) == NULL) {
         zip_error_set(error, ZIP_ER_MEMORY, 0);
         return false;
     }
     buffer->fragments = fragments;
-    if ((offsets = realloc(buffer->fragment_offsets, sizeof(buffer->fragment_offsets[0]) * (capacity + 1))) == NULL) {
+
+    uint64_t newOffsetSize = sizeof(buffer->fragment_offsets[0]) * (capacity + 1);
+    if (newOffsetSize >= maxMemSize)
+        return false;
+
+    if ((offsets = realloc(buffer->fragment_offsets, (size_t) newOffsetSize)) == NULL) {
         zip_error_set(error, ZIP_ER_MEMORY, 0);
         return false;
     }
@@ -524,7 +535,11 @@ buffer_read(buffer_t *buffer, zip_uint8_t *data, zip_uint64_t length) {
     while (n < length) {
         zip_uint64_t left = ZIP_MIN(length - n, buffer->fragments[i].length - fragment_offset);
 
-        memcpy(data + n, buffer->fragments[i].data + fragment_offset, left);
+        uint64_t maxMemSize = SIZE_MAX;
+        if (left >= maxMemSize)
+            return -1;
+
+        memcpy(data + n, buffer->fragments[i].data + fragment_offset, (size_t)left);
 
         if (left == buffer->fragments[i].length - fragment_offset) {
             i++;
@@ -601,7 +616,10 @@ buffer_write(buffer_t *buffer, const zip_uint8_t *data, zip_uint64_t length, zip
     while (n < length) {
         zip_uint64_t left = ZIP_MIN(length - n, buffer->fragments[i].length - fragment_offset);
 
-        memcpy(buffer->fragments[i].data + fragment_offset, data + n, left);
+        uint64_t maxMemSize = SIZE_MAX;
+        if (left >= maxMemSize)
+            return -1;
+        memcpy(buffer->fragments[i].data + fragment_offset, data + n, (size_t)left);
 
         if (left == buffer->fragments[i].length - fragment_offset) {
             i++;

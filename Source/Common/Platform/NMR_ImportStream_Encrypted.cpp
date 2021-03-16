@@ -60,7 +60,7 @@ namespace NMR {
 	}
 
 	nfUint64 CImportStream_Encrypted::readBuffer(nfByte * pBuffer, nfUint64 cbTotalBytesToRead, nfBool bNeedsToReadAll) {
-		std::vector<nfByte> decBuffer(cbTotalBytesToRead, 0);
+		std::vector<nfByte> decBuffer((size_t)cbTotalBytesToRead, 0);
 		nfUint64 bytesRead = m_pEncryptedStream->readBuffer(decBuffer.data(), cbTotalBytesToRead, bNeedsToReadAll);
 		if (bytesRead > 0) {
 			nfUint64 decryted = m_pDecryptContext.m_fnCrypt(bytesRead, decBuffer.data(), pBuffer, m_pDecryptContext.m_sDekDecryptData);

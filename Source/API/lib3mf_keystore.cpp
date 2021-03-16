@@ -91,7 +91,7 @@ IResourceDataGroup * Lib3MF::Impl::CKeyStore::AddResourceDataGroup() {
 	//in any case, the spec does not state what happens if different resource datas have different algorithms,
 	//but resourcedatagroups are supposed to group the same key for a group of resources...
 	//so far, this should work as aes256 is the only thing we support.
-	std::vector<NMR::nfByte> key(NMR::fnGetAlgorithmKeySize(NMR::eKeyStoreEncryptAlgorithm::AES256_GCM), 0);
+	std::vector<NMR::nfByte> key((size_t) NMR::fnGetAlgorithmKeySize(NMR::eKeyStoreEncryptAlgorithm::AES256_GCM), 0);
 	m_pModel->generateRandomBytes(key.data(), key.size());
 	NMR::PKeyStoreResourceDataGroup dg = NMR::CKeyStoreFactory::makeResourceDataGroup(std::make_shared<NMR::CUUID>(), key);
 	m_pKeyStore->addResourceDataGroup(dg);

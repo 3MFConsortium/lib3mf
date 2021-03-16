@@ -118,7 +118,10 @@ void CMultiPropertyGroup::GetMultiProperty (const Lib3MF_uint32 nPropertyID, Lib
 		*pPropertyIDsNeededCount = multiProperty->size();
 	}
 
-	if (pPropertyIDsBuffer && nPropertyIDsBufferSize >= multiProperty->size()) {
+	if (pPropertyIDsBuffer) {
+
+		if (nPropertyIDsBufferSize < multiProperty->size())
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_BUFFERTOOSMALL);
 
 		if (nPropertyIDsBufferSize > LIB3MF_MAXMULTIPROPERTIES)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_ELEMENTCOUNTEXCEEDSLIMIT);
