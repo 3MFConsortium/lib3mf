@@ -1765,10 +1765,19 @@ public:
 	virtual void WriteToFile(const std::string & sFileName) = 0;
 
 	/**
-	* IAttachment::ReadFromFile - Reads an attachment from a file.
+	* IAttachment::ReadFromFile - Reads an attachment from a file. The path of this file is only read when this attachment is being written as part of the 3MF packege, or via the WriteToFile or WriteToBuffer-methods.
 	* @param[in] sFileName - file to read from.
 	*/
 	virtual void ReadFromFile(const std::string & sFileName) = 0;
+
+	/**
+	* IAttachment::ReadFromCallback - Reads a model and from the data provided by a callback function
+	* @param[in] pTheReadCallback - callback function
+	* @param[in] nStreamSize - number of bytes the callback returns
+	* @param[in] pTheSeekCallback - callback function
+	* @param[in] nUserData - Userdata that is passed to the callback function
+	*/
+	virtual void ReadFromCallback(const Lib3MF::ReadCallback pTheReadCallback, const Lib3MF_uint64 nStreamSize, const Lib3MF::SeekCallback pTheSeekCallback, const Lib3MF_pvoid pUserData) = 0;
 
 	/**
 	* IAttachment::GetStreamSize - Retrieves the size of the attachment stream

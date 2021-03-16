@@ -2025,13 +2025,25 @@ typedef Lib3MFResult (*PLib3MFAttachment_SetRelationShipTypePtr) (Lib3MF_Attachm
 typedef Lib3MFResult (*PLib3MFAttachment_WriteToFilePtr) (Lib3MF_Attachment pAttachment, const char * pFileName);
 
 /**
-* Reads an attachment from a file.
+* Reads an attachment from a file. The path of this file is only read when this attachment is being written as part of the 3MF packege, or via the WriteToFile or WriteToBuffer-methods.
 *
 * @param[in] pAttachment - Attachment instance.
 * @param[in] pFileName - file to read from.
 * @return error code or 0 (success)
 */
 typedef Lib3MFResult (*PLib3MFAttachment_ReadFromFilePtr) (Lib3MF_Attachment pAttachment, const char * pFileName);
+
+/**
+* Reads a model and from the data provided by a callback function
+*
+* @param[in] pAttachment - Attachment instance.
+* @param[in] pTheReadCallback - Callback to call for reading a data chunk
+* @param[in] nStreamSize - number of bytes the callback returns
+* @param[in] pTheSeekCallback - Callback to call for seeking in the stream.
+* @param[in] pUserData - Userdata that is passed to the callback function
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFAttachment_ReadFromCallbackPtr) (Lib3MF_Attachment pAttachment, Lib3MFReadCallback pTheReadCallback, Lib3MF_uint64 nStreamSize, Lib3MFSeekCallback pTheSeekCallback, Lib3MF_pvoid pUserData);
 
 /**
 * Retrieves the size of the attachment stream
@@ -3880,6 +3892,7 @@ typedef struct {
 	PLib3MFAttachment_SetRelationShipTypePtr m_Attachment_SetRelationShipType;
 	PLib3MFAttachment_WriteToFilePtr m_Attachment_WriteToFile;
 	PLib3MFAttachment_ReadFromFilePtr m_Attachment_ReadFromFile;
+	PLib3MFAttachment_ReadFromCallbackPtr m_Attachment_ReadFromCallback;
 	PLib3MFAttachment_GetStreamSizePtr m_Attachment_GetStreamSize;
 	PLib3MFAttachment_WriteToBufferPtr m_Attachment_WriteToBuffer;
 	PLib3MFAttachment_ReadFromBufferPtr m_Attachment_ReadFromBuffer;

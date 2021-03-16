@@ -2050,12 +2050,24 @@ type Lib3MFGoInterface interface {
 
 
 	/**
-	* Reads an attachment from a file.
+	* Reads an attachment from a file. The path of this file is only read when this attachment is being written as part of the 3MF packege, or via the WriteToFile or WriteToBuffer-methods.
 	*
 	* @param[in] Attachment - Attachment instance.
 	* @param[in] sFileName - file to read from.
 	*/
 	Attachment_ReadFromFile(Attachment Lib3MFHandle, sFileName string) (error)
+
+
+	/**
+	* Reads a model and from the data provided by a callback function
+	*
+	* @param[in] Attachment - Attachment instance.
+	* @param[in] pTheReadCallback - Callback to call for reading a data chunk
+	* @param[in] nStreamSize - number of bytes the callback returns
+	* @param[in] pTheSeekCallback - Callback to call for seeking in the stream.
+	* @param[in] nUserData - Userdata that is passed to the callback function
+	*/
+	Attachment_ReadFromCallback(Attachment Lib3MFHandle, pTheReadCallback int64, nStreamSize uint64, pTheSeekCallback int64, nUserData uint64) (error)
 
 
 	/**
@@ -5056,6 +5068,11 @@ func (instance *Lib3MFAttachment) WriteToFile(sFileName string) (error) {
 
 func (instance *Lib3MFAttachment) ReadFromFile(sFileName string) (error) {
 	error := instance.Interface.Attachment_ReadFromFile(instance.Handle, sFileName)
+	return error
+}
+
+func (instance *Lib3MFAttachment) ReadFromCallback(pTheReadCallback int64, nStreamSize uint64, pTheSeekCallback int64, nUserData uint64) (error) {
+	error := instance.Interface.Attachment_ReadFromCallback(instance.Handle, pTheReadCallback, nStreamSize, pTheSeekCallback, nUserData)
 	return error
 }
 

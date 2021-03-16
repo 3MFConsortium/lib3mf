@@ -239,6 +239,7 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_Attachment_SetRelationShipType = NULL;
 	pWrapperTable->m_Attachment_WriteToFile = NULL;
 	pWrapperTable->m_Attachment_ReadFromFile = NULL;
+	pWrapperTable->m_Attachment_ReadFromCallback = NULL;
 	pWrapperTable->m_Attachment_GetStreamSize = NULL;
 	pWrapperTable->m_Attachment_WriteToBuffer = NULL;
 	pWrapperTable->m_Attachment_ReadFromBuffer = NULL;
@@ -2181,6 +2182,15 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 	dlerror();
 	#endif // _WIN32
 	if (pWrapperTable->m_Attachment_ReadFromFile == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Attachment_ReadFromCallback = (PLib3MFAttachment_ReadFromCallbackPtr) GetProcAddress(hLibrary, "lib3mf_attachment_readfromcallback");
+	#else // _WIN32
+	pWrapperTable->m_Attachment_ReadFromCallback = (PLib3MFAttachment_ReadFromCallbackPtr) dlsym(hLibrary, "lib3mf_attachment_readfromcallback");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Attachment_ReadFromCallback == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
