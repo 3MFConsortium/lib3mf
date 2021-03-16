@@ -6978,6 +6978,39 @@ Lib3MFResult lib3mf_attachment_readfromfile(Lib3MF_Attachment pAttachment, const
 	}
 }
 
+Lib3MFResult lib3mf_attachment_readfromcallback(Lib3MF_Attachment pAttachment, Lib3MFReadCallback pTheReadCallback, Lib3MF_uint64 nStreamSize, Lib3MFSeekCallback pTheSeekCallback, Lib3MF_pvoid pUserData)
+{
+	IBase* pIBaseClass = (IBase *)pAttachment;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pAttachment, "Attachment", "ReadFromCallback");
+			pJournalEntry->addUInt64Parameter("StreamSize", nStreamSize);
+			pJournalEntry->addPointerParameter("UserData", pUserData);
+		}
+		IAttachment* pIAttachment = dynamic_cast<IAttachment*>(pIBaseClass);
+		if (!pIAttachment)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIAttachment->ReadFromCallback(pTheReadCallback, nStreamSize, pTheSeekCallback, pUserData);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
 Lib3MFResult lib3mf_attachment_getstreamsize(Lib3MF_Attachment pAttachment, Lib3MF_uint64 * pStreamSize)
 {
 	IBase* pIBaseClass = (IBase *)pAttachment;
@@ -12542,6 +12575,7 @@ Lib3MFResult _lib3mf_getprocaddress_internal(const char * pProcName, void ** ppP
 		sProcAddressMap["lib3mf_attachment_setrelationshiptype"] = (void*)&lib3mf_attachment_setrelationshiptype;
 		sProcAddressMap["lib3mf_attachment_writetofile"] = (void*)&lib3mf_attachment_writetofile;
 		sProcAddressMap["lib3mf_attachment_readfromfile"] = (void*)&lib3mf_attachment_readfromfile;
+		sProcAddressMap["lib3mf_attachment_readfromcallback"] = (void*)&lib3mf_attachment_readfromcallback;
 		sProcAddressMap["lib3mf_attachment_getstreamsize"] = (void*)&lib3mf_attachment_getstreamsize;
 		sProcAddressMap["lib3mf_attachment_writetobuffer"] = (void*)&lib3mf_attachment_writetobuffer;
 		sProcAddressMap["lib3mf_attachment_readfrombuffer"] = (void*)&lib3mf_attachment_readfrombuffer;

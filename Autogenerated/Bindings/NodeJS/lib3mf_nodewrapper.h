@@ -760,6 +760,7 @@ private:
     static void SetRelationShipType (const v8::FunctionCallbackInfo<v8::Value>& args);
     static void WriteToFile (const v8::FunctionCallbackInfo<v8::Value>& args);
     static void ReadFromFile (const v8::FunctionCallbackInfo<v8::Value>& args);
+    static void ReadFromCallback (const v8::FunctionCallbackInfo<v8::Value>& args);
     static void GetStreamSize (const v8::FunctionCallbackInfo<v8::Value>& args);
     static void WriteToBuffer (const v8::FunctionCallbackInfo<v8::Value>& args);
     static void ReadFromBuffer (const v8::FunctionCallbackInfo<v8::Value>& args);

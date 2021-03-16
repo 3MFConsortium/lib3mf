@@ -320,6 +320,7 @@ class FunctionTable:
 	lib3mf_attachment_setrelationshiptype = None
 	lib3mf_attachment_writetofile = None
 	lib3mf_attachment_readfromfile = None
+	lib3mf_attachment_readfromcallback = None
 	lib3mf_attachment_getstreamsize = None
 	lib3mf_attachment_writetobuffer = None
 	lib3mf_attachment_readfrombuffer = None
@@ -2039,6 +2040,12 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p)
 			self.lib.lib3mf_attachment_readfromfile = methodType(int(methodAddress.value))
 			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_attachment_readfromcallback")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ReadCallback, ctypes.c_uint64, SeekCallback, ctypes.c_void_p)
+			self.lib.lib3mf_attachment_readfromcallback = methodType(int(methodAddress.value))
+			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_attachment_getstreamsize")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
@@ -3546,6 +3553,9 @@ class Wrapper:
 			
 			self.lib.lib3mf_attachment_readfromfile.restype = ctypes.c_int32
 			self.lib.lib3mf_attachment_readfromfile.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
+			
+			self.lib.lib3mf_attachment_readfromcallback.restype = ctypes.c_int32
+			self.lib.lib3mf_attachment_readfromcallback.argtypes = [ctypes.c_void_p, ReadCallback, ctypes.c_uint64, SeekCallback, ctypes.c_void_p]
 			
 			self.lib.lib3mf_attachment_getstreamsize.restype = ctypes.c_int32
 			self.lib.lib3mf_attachment_getstreamsize.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint64)]
@@ -5815,6 +5825,12 @@ class Attachment(Base):
 	def ReadFromFile(self, FileName):
 		pFileName = ctypes.c_char_p(str.encode(FileName))
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_attachment_readfromfile(self._handle, pFileName))
+		
+	
+	def ReadFromCallback(self, TheReadCallbackFunc, StreamSize, TheSeekCallbackFunc, UserData):
+		nStreamSize = ctypes.c_uint64(StreamSize)
+		pUserData = ctypes.c_void_p(UserData)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_attachment_readfromcallback(self._handle, TheReadCallbackFunc, nStreamSize, TheSeekCallbackFunc, pUserData))
 		
 	
 	def GetStreamSize(self):

@@ -241,6 +241,7 @@ type Lib3MFImplementation struct {
 	Lib3MF_attachment_setrelationshiptype uintptr
 	Lib3MF_attachment_writetofile uintptr
 	Lib3MF_attachment_readfromfile uintptr
+	Lib3MF_attachment_readfromcallback uintptr
 	Lib3MF_attachment_getstreamsize uintptr
 	Lib3MF_attachment_writetobuffer uintptr
 	Lib3MF_attachment_readfrombuffer uintptr
@@ -1556,6 +1557,11 @@ func (implementation *Lib3MFImplementation) Initialize(DLLFileName string) error
 	implementation.Lib3MF_attachment_readfromfile, err = syscall.GetProcAddress(dllHandle, "lib3mf_attachment_readfromfile")
 	if (err != nil) {
 		return errors.New("Could not get function lib3mf_attachment_readfromfile: " + err.Error())
+	}
+	
+	implementation.Lib3MF_attachment_readfromcallback, err = syscall.GetProcAddress(dllHandle, "lib3mf_attachment_readfromcallback")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_attachment_readfromcallback: " + err.Error())
 	}
 	
 	implementation.Lib3MF_attachment_getstreamsize, err = syscall.GetProcAddress(dllHandle, "lib3mf_attachment_getstreamsize")
@@ -5909,6 +5915,22 @@ func (implementation *Lib3MFImplementation) Attachment_ReadFromFile(Attachment L
 	}
 
 	err = implementation.CallFunction(implementation.Lib3MF_attachment_readfromfile, implementation_attachment.GetDLLInHandle(), StringInValue(sFileName))
+	if (err != nil) {
+		return err
+	}
+	
+	return err
+}
+
+func (implementation *Lib3MFImplementation) Attachment_ReadFromCallback(Attachment Lib3MFHandle, pTheReadCallback int64, nStreamSize uint64, pTheSeekCallback int64, nUserData uint64) (error) {
+	var err error = nil
+	
+	implementation_attachment, err := implementation.GetWrapperHandle(Attachment)
+	if (err != nil) {
+		return err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_attachment_readfromcallback, implementation_attachment.GetDLLInHandle(), 0, UInt64InValue(nStreamSize), 0, UInt64InValue(nUserData))
 	if (err != nil) {
 		return err
 	}
