@@ -26,13 +26,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ImportStream_GCC_Native.cpp implements the CImportStream_GCC_Native Class.
-This is an abstract base stream class for importing from streams with with std::streams.
+NMR_ExportStream_Native.cpp implements the CExportStream_Native Class.
+This is an abstract base stream class for exporting with std::streams
 
 --*/
 
-#include "Common/Platform/NMR_ImportStream_GCC_Native.h"
-#include "Common/Platform/NMR_ImportStream_Unique_Memory.h"
+#include "Common/Platform/NMR_ExportStream_Native.h"
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_Exception_Windows.h"
 #include "Common/NMR_StringUtils.h"
@@ -41,33 +40,36 @@ This is an abstract base stream class for importing from streams with with std::
 
 namespace NMR {
 
-	CImportStream_GCC_Native::CImportStream_GCC_Native(_In_ const nfWChar * pwszFileName)
+
+	CExportStream_Native::CExportStream_Native(_In_ const nfWChar * pwszFileName)
 	{
 		if (pwszFileName == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
 		std::wstring sFileName(pwszFileName);
 #if defined(_WIN32) && !defined(__MINGW32__)
-		m_Stream.open(sFileName.c_str(), std::ios::in | std::ios::binary);
+		m_Stream.open(sFileName.c_str(), std::ios::out | std::ios::binary);
 #else
 		std::string sUTF8Name = fnUTF16toUTF8(sFileName);
-		m_Stream.open(sUTF8Name.c_str(), std::ios::in | std::ios::binary);
+		m_Stream.open(sUTF8Name.c_str(), std::ios::out | std::ios::binary);
 #endif
 		if (m_Stream.fail())
-			throw CNMRException(NMR_ERROR_COULDNOTOPENFILE);
+			throw CNMRException(NMR_ERROR_COULDNOTCREATEFILE);
+
 	}
 
-	CImportStream_GCC_Native::~CImportStream_GCC_Native()
+	CExportStream_Native::~CExportStream_Native()
 	{
 		if (m_Stream.is_open()) {
 			m_Stream.close();
 		}
 	}
 
-	nfBool CImportStream_GCC_Native::seekPosition(_In_ nfUint64 position, _In_ nfBool bHasToSucceed)
+
+	nfBool CExportStream_Native::seekPosition(_In_ nfUint64 position, _In_ nfBool bHasToSucceed)
 	{
 		std::streampos nStreamPos = position;
-		m_Stream.seekg(nStreamPos, std::ios_base::beg);
+		m_Stream.seekp(nStreamPos, std::ios_base::beg);
 
 		if (m_Stream.fail()) {
 			if (bHasToSucceed)
@@ -79,10 +81,10 @@ namespace NMR {
 		return true;
 	}
 
-	nfBool CImportStream_GCC_Native::seekForward(_In_ nfUint64 bytes, _In_ nfBool bHasToSucceed)
+	nfBool CExportStream_Native::seekForward(_In_ nfUint64 bytes, _In_ nfBool bHasToSucceed)
 	{
 		std::streampos nStreamOffset = bytes;
-		m_Stream.seekg(nStreamOffset, std::ios_base::cur);
+		m_Stream.seekp(nStreamOffset, std::ios_base::cur);
 
 		if (m_Stream.fail()) {
 			if (bHasToSucceed)
@@ -94,10 +96,10 @@ namespace NMR {
 		return true;
 	}
 
-	nfBool CImportStream_GCC_Native::seekFromEnd(_In_ nfUint64 bytes, _In_ nfBool bHasToSucceed)
+	nfBool CExportStream_Native::seekFromEnd(_In_ nfUint64 bytes, _In_ nfBool bHasToSucceed)
 	{
 		std::streampos nStreamOffset = 0-bytes;
-		m_Stream.seekg(nStreamOffset, std::ios_base::end);
+		m_Stream.seekp(nStreamOffset, std::ios_base::end);
 
 		if (m_Stream.fail()) {
 			if (bHasToSucceed)
@@ -109,53 +111,27 @@ namespace NMR {
 		return true;
 	}
 
-	nfUint64 CImportStream_GCC_Native::getPosition()
+	nfUint64 CExportStream_Native::getPosition()
 	{
-		std::streampos nStreamPosition = m_Stream.tellg();
+		std::streampos nStreamPosition = m_Stream.tellp();
 		if (nStreamPosition < 0)
 			throw CNMRException(NMR_ERROR_COULDNOTGETSTREAMPOSITION);
 
 		return nStreamPosition;
 	}
 
-	nfUint64 CImportStream_GCC_Native::readBuffer(_In_ nfByte * pBuffer, _In_ nfUint64 cbTotalBytesToRead, nfBool bNeedsToReadAll)
+	nfUint64 CExportStream_Native::writeBuffer(_In_ const void * pBuffer, _In_ nfUint64 cbTotalBytesToWrite)
 	{
 		if (pBuffer == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-		char * pChar = (char*)pBuffer;
-		std::streamsize nSize = cbTotalBytesToRead;
-		m_Stream.read(pChar, nSize);
+		const char * pChar = (const char*)pBuffer;
+		std::streamsize nSize = cbTotalBytesToWrite;
+        m_Stream.write(pChar, nSize);
 		if (m_Stream.fail())
-			throw CNMRException(NMR_ERROR_COULDNOTREADSTREAM);
+			throw CNMRException(NMR_ERROR_COULDNOTWRITESTREAM);
 
-		std::streamsize nReadBytes = m_Stream.gcount();
-		if (nReadBytes != nSize) {
-			if (bNeedsToReadAll)
-				throw CNMRException(NMR_ERROR_COULDNOTREADFULLDATA);
-		}
-
-		return nReadBytes;
-	}
-
-	nfUint64 CImportStream_GCC_Native::retrieveSize()
-	{
-		nfUint64 nOrigPosition = getPosition();
-		seekFromEnd(0, true);
-		nfUint64 nSize = getPosition();
-		seekPosition(nOrigPosition, true);
-		return nSize;
-	}
-
-	void CImportStream_GCC_Native::writeToFile(_In_ const nfWChar * pwszFileName)
-	{
-		throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
-	}
-
-	PImportStream CImportStream_GCC_Native::copyToMemory()
-	{
-		nfUint64 cbStreamSize = retrieveSize();
-		return std::make_shared<CImportStream_Unique_Memory>(this, cbStreamSize, false);
+        return nSize;
 	}
 
 }

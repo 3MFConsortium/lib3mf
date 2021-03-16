@@ -26,43 +26,40 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ExportStream_GCC.h defines the CExportStream_GCC Class.
-This is an abstract base stream class for exporting in GCC.
+NMR_ImportStream_Native defines the CImportStream_Native Class.
+This is a stream class for importing from streams with with std::streams.
 
 --*/
 
-#ifndef __NMR_EXPORTSTREAM_GCC_WIN32
-#define __NMR_EXPORTSTREAM_GCC_WIN32
+#ifndef __NMR_IMPORTSTREAM_NATIVE
+#define __NMR_IMPORTSTREAM_NATIVE
 
-#include "Common/Platform/NMR_ExportStream.h"
+#include "Common/Platform/NMR_ImportStream.h"
 #include "Common/NMR_Types.h"
 #include "Common/NMR_Local.h"
 
-#ifdef __GCC_WIN32
-#include <Windows.h>
-#endif // __GCC_WIN32
+#include <iostream>
+#include <fstream>
 
 namespace NMR {
 
-#ifdef __GCC_WIN32
-
-	class CExportStream_GCC_Win32 : public CExportStream {
+	class CImportStream_Native : public CImportStream {
 	private:
-	    HANDLE m_hHandle;
+		std::ifstream m_Stream;
 	public:
-		CExportStream_GCC_Win32(_In_ const nfWChar * pwszFileName);
-		~CExportStream_GCC_Win32();
+		CImportStream_Native(_In_ const nfWChar * pwszFileName);
+		~CImportStream_Native();
 
 		virtual nfBool seekPosition(_In_ nfUint64 position, _In_ nfBool bHasToSucceed);
 		virtual nfBool seekForward(_In_ nfUint64 bytes, _In_ nfBool bHasToSucceed);
 		virtual nfBool seekFromEnd(_In_ nfUint64 bytes, _In_ nfBool bHasToSucceed);
-		virtual nfUint64 getPosition ();
-		virtual nfUint64 writeBuffer(_In_ const void * pBuffer, _In_ nfUint64 cbTotalBytesToWrite);
-		void copyFrom(_In_ CImportStream * pImportStream, _In_ nfUint64 cbCount, _In_ nfUint32 cbBufferSize);
+		virtual nfUint64 getPosition();
+		virtual nfUint64 readIntoBuffer(_In_ nfByte * pBuffer, _In_ nfUint64 cbTotalBytesToRead, nfBool bNeedsToReadAll);
+		virtual nfUint64 retrieveSize();
+		virtual void writeToFile(_In_ const nfWChar * pwszFileName);
+		virtual PImportStream copyToMemory();
 	};
-
-#endif // __GCC_WIN32
 
 }
 
-#endif // __NMR_EXPORTSTREAM_GCC_WIN32
+#endif // __NMR_IMPORTSTREAM_NATIVE

@@ -79,12 +79,12 @@ namespace NMR {
 		return m_pCompressedStream->getPosition();
 	}
 
-	nfUint64 CImportStream_Compressed::readBuffer(nfByte * pBuffer, nfUint64 cbTotalBytesToRead, nfBool bNeedsToReadAll)
+	nfUint64 CImportStream_Compressed::readIntoBuffer(nfByte * pBuffer, nfUint64 cbTotalBytesToRead, nfBool bNeedsToReadAll)
 	{
 		nfBool firstRead = m_strm.next_in == Z_NULL;
 		nfBool hasDecompressLeftovers = m_strm.avail_out == 0;
 		if (firstRead || !hasDecompressLeftovers) {
-			m_strm.avail_in = (nfUint32) m_pCompressedStream->readBuffer(in, IMPORTSTREAM_COMPRESSED_CHUNKSIZE, bNeedsToReadAll);
+			m_strm.avail_in = (nfUint32) m_pCompressedStream->readIntoBuffer(in, IMPORTSTREAM_COMPRESSED_CHUNKSIZE, bNeedsToReadAll);
 			if (m_strm.avail_in == 0)
 				return 0;
 			m_strm.next_in = in;
@@ -109,7 +109,7 @@ namespace NMR {
 		}
 
 		nfUint64 bytesDecompressed = cbTotalBytesToRead - m_strm.avail_out;
-		return readBuffer(pBuffer + bytesDecompressed, m_strm.avail_out, bNeedsToReadAll) + bytesDecompressed;
+		return readIntoBuffer(pBuffer + bytesDecompressed, m_strm.avail_out, bNeedsToReadAll) + bytesDecompressed;
 	}
 	
 	nfUint64 CImportStream_Compressed::retrieveSize()
@@ -129,7 +129,7 @@ namespace NMR {
 		nfUint64 chunkSize = IMPORTSTREAM_READ_BUFFER_CHUNKSIZE;
 		do {
 			m_decompressedBuffer.resize(m_decompressedBuffer.size() + chunkSize);
-			bytesRead = readBuffer(&m_decompressedBuffer[currentPosition], chunkSize, false);
+			bytesRead = readIntoBuffer(&m_decompressedBuffer[currentPosition], chunkSize, false);
 			currentPosition += bytesRead;
 		} while (chunkSize == bytesRead);
 		return std::make_shared<CImportStream_Shared_Memory>(m_decompressedBuffer.data(), m_decompressedBuffer.size());
