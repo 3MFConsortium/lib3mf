@@ -53,7 +53,7 @@ namespace NMR {
 		virtual nfBool seekPosition(_In_ nfUint64 position, _In_ nfBool bHasToSucceed) = 0;
 		virtual nfBool seekForward(_In_ nfUint64 bytes, _In_ nfBool bHasToSucceed) = 0;
 		virtual nfBool seekFromEnd(_In_ nfUint64 bytes, _In_ nfBool bHasToSucceed) = 0;
-		virtual nfUint64 readBuffer(_In_ nfByte * pBuffer, _In_ nfUint64 cbTotalBytesToRead, nfBool bNeedsToReadAll) = 0;
+		virtual nfUint64 readIntoBuffer(_In_ nfByte * pBuffer, _In_ nfUint64 cbTotalBytesToRead, nfBool bNeedsToReadAll) = 0;
 		virtual nfUint64 retrieveSize() = 0;
 		virtual void writeToFile(_In_ const nfWChar * pwszFileName) = 0;
 		virtual PImportStream copyToMemory() = 0;

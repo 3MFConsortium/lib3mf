@@ -74,7 +74,7 @@ namespace NMR {
 
 			// Read bytes into memory
 			nfUint64 cbBytesRead;
-			cbBytesRead = pStream->readBuffer(&m_Buffer[(size_t) m_cbSize], cbBytesToRead, false);
+			cbBytesRead = pStream->readIntoBuffer(&m_Buffer[(size_t) m_cbSize], cbBytesToRead, false);
 
 			// increase size
 			m_cbSize += cbBytesRead;

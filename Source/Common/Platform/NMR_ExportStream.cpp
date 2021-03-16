@@ -64,7 +64,7 @@ namespace NMR {
 			else
 				cbBytesToCopy = (nfUint32)cbCount;
 
-			pImportStream->readBuffer(&Buffer[0], cbBytesToCopy, true);
+			pImportStream->readIntoBuffer(&Buffer[0], cbBytesToCopy, true);
 			writeBuffer(&Buffer[0], cbBytesToCopy);
 
 			cbCount -= cbBytesToCopy;

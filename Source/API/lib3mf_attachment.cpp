@@ -151,7 +151,7 @@ void CAttachment::WriteToBuffer (Lib3MF_uint64 nBufferBufferSize, Lib3MF_uint64*
 
 	if (nBufferBufferSize >= cbStreamSize) {
 		pStream->seekPosition(0, true);
-		pStream->readBuffer(pBufferBuffer, cbStreamSize, true);
+		pStream->readIntoBuffer(pBufferBuffer, cbStreamSize, true);
 	}
 }
 
