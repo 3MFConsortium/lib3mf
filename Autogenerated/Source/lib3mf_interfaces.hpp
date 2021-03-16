@@ -67,11 +67,19 @@ class IColorGroupIterator;
 class ITexture2DGroupIterator;
 class ICompositeMaterialsIterator;
 class IMultiPropertyGroupIterator;
+class IImage3DIterator;
+class IVolumetricStackIterator;
 class IMetaData;
 class IMetaDataGroup;
 class IObject;
 class IMeshObject;
 class IBeamLattice;
+class IVolumeDataItem;
+class IVolumeDataLevelset;
+class IVolumeDataColor;
+class IVolumeDataComposite;
+class IVolumeDataProperty;
+class IVolumeData;
 class IComponent;
 class IComponentsObject;
 class IBeamSet;
@@ -80,6 +88,10 @@ class IColorGroup;
 class ITexture2DGroup;
 class ICompositeMaterials;
 class IMultiPropertyGroup;
+class IImage3D;
+class IImage3DChannelSelector;
+class IVolumetricLayer;
+class IVolumetricStack;
 class IAttachment;
 class ITexture2D;
 class IBuildItem;
@@ -661,6 +673,40 @@ typedef IBaseSharedPtr<IMultiPropertyGroupIterator> PIMultiPropertyGroupIterator
 
 
 /*************************************************************************************************************************
+ Class interface for Image3DIterator 
+**************************************************************************************************************************/
+
+class IImage3DIterator : public virtual IResourceIterator {
+public:
+	/**
+	* IImage3DIterator::GetCurrentImage3D - Returns the Image3D the iterator points at.
+	* @return returns the Image3D instance.
+	*/
+	virtual IImage3D * GetCurrentImage3D() = 0;
+
+};
+
+typedef IBaseSharedPtr<IImage3DIterator> PIImage3DIterator;
+
+
+/*************************************************************************************************************************
+ Class interface for VolumetricStackIterator 
+**************************************************************************************************************************/
+
+class IVolumetricStackIterator : public virtual IResourceIterator {
+public:
+	/**
+	* IVolumetricStackIterator::GetCurrentVolumetricStack - Returns the VolumetricStack the iterator points at.
+	* @return returns the VolumetricStack instance.
+	*/
+	virtual IVolumetricStack * GetCurrentVolumetricStack() = 0;
+
+};
+
+typedef IBaseSharedPtr<IVolumetricStackIterator> PIVolumetricStackIterator;
+
+
+/*************************************************************************************************************************
  Class interface for MetaData 
 **************************************************************************************************************************/
 
@@ -1081,6 +1127,12 @@ public:
 	*/
 	virtual IBeamLattice * BeamLattice() = 0;
 
+	/**
+	* IMeshObject::VolumeData - Retrieves the VolumeData of this MeshObject.
+	* @return the VolumeData of this MeshObject
+	*/
+	virtual IVolumeData * VolumeData() = 0;
+
 };
 
 typedef IBaseSharedPtr<IMeshObject> PIMeshObject;
@@ -1251,6 +1303,290 @@ public:
 };
 
 typedef IBaseSharedPtr<IBeamLattice> PIBeamLattice;
+
+
+/*************************************************************************************************************************
+ Class interface for VolumeDataItem 
+**************************************************************************************************************************/
+
+class IVolumeDataItem : public virtual IBase {
+public:
+	/**
+	* IVolumeDataItem::GetVolumetricStack - Returns the VolumetricStack used within this volume data item
+	* @return VolumetricStack used within this volume data item
+	*/
+	virtual IVolumetricStack * GetVolumetricStack() = 0;
+
+	/**
+	* IVolumeDataItem::SetVolumetricStack - Sets the VolumetricStack to use within this volume data item.
+	* @param[in] pTheVolumetricStack - VolumetricStack to use within this volume data item
+	*/
+	virtual void SetVolumetricStack(IVolumetricStack* pTheVolumetricStack) = 0;
+
+	/**
+	* IVolumeDataItem::GetTransform - Returns the transformation matrix of the volume data item.
+	* @return filled with the volume data item transformation matrix
+	*/
+	virtual Lib3MF::sTransform GetTransform() = 0;
+
+	/**
+	* IVolumeDataItem::SetTransform - Sets the transformation matrix of the volume data item.
+	* @param[in] Transform - new transformation matrix
+	*/
+	virtual void SetTransform(const Lib3MF::sTransform Transform) = 0;
+
+};
+
+typedef IBaseSharedPtr<IVolumeDataItem> PIVolumeDataItem;
+
+
+/*************************************************************************************************************************
+ Class interface for VolumeDataLevelset 
+**************************************************************************************************************************/
+
+class IVolumeDataLevelset : public virtual IVolumeDataItem {
+public:
+	/**
+	* IVolumeDataLevelset::GetSolidThreshold - Returns the solidthreshold for the levelset function encoded in this VolumeDataLevelset
+	* @return The solidthreshold for the levelset function encoded in this VolumeDataLevelset
+	*/
+	virtual Lib3MF_double GetSolidThreshold() = 0;
+
+	/**
+	* IVolumeDataLevelset::SetSolidThreshold - Sets the solidthreshold for the levelset function encoded in this VolumeDataLevelset
+	* @param[in] dTheSolidThreshold - The solidthreshold for the levelset function encoded in this VolumeDataLevelset
+	*/
+	virtual void SetSolidThreshold(const Lib3MF_double dTheSolidThreshold) = 0;
+
+	/**
+	* IVolumeDataLevelset::SetChannel - Sets the name of the channel that holds the levelset function.
+	* @param[in] sChannelName - The name of the channel that holds the levelset function
+	*/
+	virtual void SetChannel(const std::string & sChannelName) = 0;
+
+	/**
+	* IVolumeDataLevelset::GetChannel - Returns the name of the channel that holds the levelset function.
+	* @return The name of the channel that holds the levelset function
+	*/
+	virtual std::string GetChannel() = 0;
+
+};
+
+typedef IBaseSharedPtr<IVolumeDataLevelset> PIVolumeDataLevelset;
+
+
+/*************************************************************************************************************************
+ Class interface for VolumeDataColor 
+**************************************************************************************************************************/
+
+class IVolumeDataColor : public virtual IVolumeDataItem {
+public:
+	/**
+	* IVolumeDataColor::SetChannel - Sets the name of the channel that holds the levelset function.
+	* @param[in] eTheColorChannel - The color in question
+	* @param[in] sChannelName - The new name of the channel that holds the scalar function of this ColorChannel
+	*/
+	virtual void SetChannel(const Lib3MF::eColorChannel eTheColorChannel, const std::string & sChannelName) = 0;
+
+	/**
+	* IVolumeDataColor::GetChannel - Returns the name of the channel that holds the levelset function.
+	* @param[in] eTheColorChannel - The color in question
+	* @return The name of the channel that holds the scalar function of this ColorChannel
+	*/
+	virtual std::string GetChannel(const Lib3MF::eColorChannel eTheColorChannel) = 0;
+
+};
+
+typedef IBaseSharedPtr<IVolumeDataColor> PIVolumeDataColor;
+
+
+/*************************************************************************************************************************
+ Class interface for VolumeDataComposite 
+**************************************************************************************************************************/
+
+class IVolumeDataComposite : public virtual IVolumeDataItem {
+public:
+	/**
+	* IVolumeDataComposite::GetBaseMaterialGroup - Returns the BaseMaterialGroup used within this volume data item
+	* @return The BaseMaterialGroup instance of this VolumeDataComposite
+	*/
+	virtual IBaseMaterialGroup * GetBaseMaterialGroup() = 0;
+
+	/**
+	* IVolumeDataComposite::SetBaseMaterialGroup - Sets the BaseMaterialGroup to use within this volume data item.
+	* @param[in] pBaseMaterialGroupInstance - The new BaseMaterialGroup instance of this VolumeDataComposite
+	*/
+	virtual void SetBaseMaterialGroup(IBaseMaterialGroup* pBaseMaterialGroupInstance) = 0;
+
+	/**
+	* IVolumeDataComposite::GetMaterialMappingCount - Returns the number of material mappings of this VolumeDataComposite
+	* @return the number of material mappings.
+	*/
+	virtual Lib3MF_uint32 GetMaterialMappingCount() = 0;
+
+	/**
+	* IVolumeDataComposite::GetMaterialMapping - Returns PropertyID and ChannelName of the MaterialMapping with given index
+	* @param[in] nIndex - Index of the MaterialMapping in question.
+	* @param[out] nPropertyID - PropertyID of the material.
+	* @param[out] sChannelName - The name of the channel that holds the intensity function of this Material within the Composite
+	*/
+	virtual void GetMaterialMapping(const Lib3MF_uint32 nIndex, Lib3MF_uint32 & nPropertyID, std::string & sChannelName) = 0;
+
+	/**
+	* IVolumeDataComposite::SetMaterialMapping - Sets PropertyID and ChannelName of the MaterialMapping with given index
+	* @param[in] nIndex - Index of the MaterialMapping in question.
+	* @param[out] nPropertyID - New PropertyID of the material.
+	* @param[out] sChannelName - The new name of the channel that holds the intensity function of this Material within the Composite
+	*/
+	virtual void SetMaterialMapping(const Lib3MF_uint32 nIndex, Lib3MF_uint32 & nPropertyID, std::string & sChannelName) = 0;
+
+	/**
+	* IVolumeDataComposite::AddMaterialMapping - Adds a the MaterialMapping
+	* @param[in] nPropertyID - PropertyID of the new MaterialMapping
+	* @param[in] sChannelName - The name of the channel that holds the intensity function of the new Material within the Composite
+	*/
+	virtual void AddMaterialMapping(const Lib3MF_uint32 nPropertyID, const std::string & sChannelName) = 0;
+
+	/**
+	* IVolumeDataComposite::RemoveMaterialMapping - Removes the MaterialMapping with given index
+	* @param[in] nIndex - The index of the MaterialMapping to be removed.
+	*/
+	virtual void RemoveMaterialMapping(const Lib3MF_uint32 nIndex) = 0;
+
+};
+
+typedef IBaseSharedPtr<IVolumeDataComposite> PIVolumeDataComposite;
+
+
+/*************************************************************************************************************************
+ Class interface for VolumeDataProperty 
+**************************************************************************************************************************/
+
+class IVolumeDataProperty : public virtual IVolumeDataItem {
+public:
+	/**
+	* IVolumeDataProperty::SetChannel - Sets the channel name to be used for this property
+	* @param[in] sChannelName - The mew channel name to be used for this property.
+	*/
+	virtual void SetChannel(const std::string & sChannelName) = 0;
+
+	/**
+	* IVolumeDataProperty::GetChannel - Gets the channel name to be used for this property.
+	* @return The channel name to be used for this property.
+	*/
+	virtual std::string GetChannel() = 0;
+
+	/**
+	* IVolumeDataProperty::SetName - Sets the qualified name of this property.
+	* @param[in] sPropertyName - The new qualified name of this property
+	*/
+	virtual void SetName(const std::string & sPropertyName) = 0;
+
+	/**
+	* IVolumeDataProperty::GetName - Gets the qualified name of this property.
+	* @return The qualified name of this property.
+	*/
+	virtual std::string GetName() = 0;
+
+	/**
+	* IVolumeDataProperty::SetIsRequired - Sets whether this property is required to process this 3MF document instance.
+	* @param[in] bIsRequired - New value for whether this property is required to process this 3MF document instance.
+	*/
+	virtual void SetIsRequired(const bool bIsRequired) = 0;
+
+	/**
+	* IVolumeDataProperty::IsRequired - Returns whether this property is required to process this 3MF document instance.
+	* @return Is this property required to process this 3MF document instance?
+	*/
+	virtual bool IsRequired() = 0;
+
+};
+
+typedef IBaseSharedPtr<IVolumeDataProperty> PIVolumeDataProperty;
+
+
+/*************************************************************************************************************************
+ Class interface for VolumeData 
+**************************************************************************************************************************/
+
+class IVolumeData : public virtual IBase {
+public:
+	/**
+	* IVolumeData::GetLevelset - Returns the VolumeDataLevelset of this VolumeData instance
+	* @return filled with the VolumeDataLevelset of this VolumeData instance.
+	*/
+	virtual IVolumeDataLevelset * GetLevelset() = 0;
+
+	/**
+	* IVolumeData::CreateNewLevelset - Creates a new VolumeDataLevelset for this VolumeData instance
+	* @param[in] pTheVolumetricStack - The VolumetricStack for the new VolumeDataLevelset.
+	* @return The new VolumeDataLevelset of this VolumeData instance.
+	*/
+	virtual IVolumeDataLevelset * CreateNewLevelset(IVolumetricStack* pTheVolumetricStack) = 0;
+
+	/**
+	* IVolumeData::GetComposite - Returns the VolumeDataComposite of this VolumeData instance
+	* @return filled with the VolumeDataComposite of this VolumeData instance.
+	*/
+	virtual IVolumeDataComposite * GetComposite() = 0;
+
+	/**
+	* IVolumeData::CreateNewComposite - Creates a new VolumeDataComposite for this VolumeData instance
+	* @param[in] pTheVolumetricStack - The VolumetricStack for the new VolumeDataComposite.
+	* @return The new VolumeDataComposite of this VolumeData instance.
+	*/
+	virtual IVolumeDataComposite * CreateNewComposite(IVolumetricStack* pTheVolumetricStack) = 0;
+
+	/**
+	* IVolumeData::GetColor - Returns the VolumeDataColor of this VolumeData instance
+	* @return filled with the VolumeDataColor of this VolumeData instance.
+	*/
+	virtual IVolumeDataColor * GetColor() = 0;
+
+	/**
+	* IVolumeData::CreateNewColor - Creates a new VolumeDataColor for this VolumeData instance
+	* @param[in] pTheVolumetricStack - The VolumetricStack for the new VolumeDataComposite.
+	* @return The new VolumeDataColor of this VolumeData instance.
+	*/
+	virtual IVolumeDataColor * CreateNewColor(IVolumetricStack* pTheVolumetricStack) = 0;
+
+	/**
+	* IVolumeData::GetPropertyCount - Returns the number of VolumeDataProperty
+	* @return the number of VolumeDataProperty-elements within this VolumdeData
+	*/
+	virtual Lib3MF_uint32 GetPropertyCount() = 0;
+
+	/**
+	* IVolumeData::GetProperty - Returns the VolumeDataProperty at a given Index
+	* @param[in] nIndex - the index of the VolumeDataProperty to be returned.
+	* @return the VolumeDataProperty at the given index.
+	*/
+	virtual IVolumeDataProperty * GetProperty(const Lib3MF_uint32 nIndex) = 0;
+
+	/**
+	* IVolumeData::FindProperty - Returns the VolumeDataProperty at a given Index
+	* @param[in] sName - the qualified name of the VolumeDataProperty to be returned.
+	* @return the VolumeDataProperty at the given index.
+	*/
+	virtual IVolumeDataProperty * FindProperty(const std::string & sName) = 0;
+
+	/**
+	* IVolumeData::AddProperty - Adds a new VolumeDataProperty
+	* @param[in] sName - the qualified name (namespace+name) of the Property
+	* @param[in] pTheVolumetricStack - The VolumetricStack for the new VolumeDataProperty.
+	* @return the new VolumeDataProperty.
+	*/
+	virtual IVolumeDataProperty * AddProperty(const std::string & sName, IVolumetricStack* pTheVolumetricStack) = 0;
+
+	/**
+	* IVolumeData::RemoveProperty - Removes the VolumeDataProperty with a given name
+	* @param[in] sName - the qualified name of the VolumeDataProperty to be removed.
+	*/
+	virtual void RemoveProperty(const std::string & sName) = 0;
+
+};
+
+typedef IBaseSharedPtr<IVolumeData> PIVolumeData;
 
 
 /*************************************************************************************************************************
@@ -1720,6 +2056,423 @@ public:
 };
 
 typedef IBaseSharedPtr<IMultiPropertyGroup> PIMultiPropertyGroup;
+
+
+/*************************************************************************************************************************
+ Class interface for Image3D 
+**************************************************************************************************************************/
+
+class IImage3D : public virtual IResource {
+public:
+	/**
+	* IImage3D::GetSizeX - Retrieves the extensions of the image stack in X direction.
+	* @return size in X
+	*/
+	virtual Lib3MF_uint32 GetSizeX() = 0;
+
+	/**
+	* IImage3D::GetSizeY - Retrieves the extensions of the image stack in Y direction.
+	* @return size in Y
+	*/
+	virtual Lib3MF_uint32 GetSizeY() = 0;
+
+	/**
+	* IImage3D::GetSheetCount - Retrieves the number of images in the stack.
+	* @return number of images
+	*/
+	virtual Lib3MF_uint32 GetSheetCount() = 0;
+
+	/**
+	* IImage3D::GetSheet - Retrieves a sheet of the stack. Raises an error if sheet is not set.
+	* @param[in] nIndex - index of the image (0-based)
+	* @return attachment containing the image
+	*/
+	virtual IAttachment * GetSheet(const Lib3MF_uint32 nIndex) = 0;
+
+	/**
+	* IImage3D::CreateEmptySheet - Creates a new sheet attachment with empty data.
+	* @param[in] nIndex - index of the image (0-based)
+	* @param[in] sPath - path name of package
+	* @return attachment containing the image
+	*/
+	virtual IAttachment * CreateEmptySheet(const Lib3MF_uint32 nIndex, const std::string & sPath) = 0;
+
+	/**
+	* IImage3D::CreateSheetFromBuffer - Creates a new sheet attachment from a memory buffer.
+	* @param[in] nIndex - index of the image (0-based)
+	* @param[in] sPath - path name of package
+	* @param[in] nDataBufferSize - Number of elements in buffer
+	* @param[in] pDataBuffer - binary image data
+	* @return attachment containing the image
+	*/
+	virtual IAttachment * CreateSheetFromBuffer(const Lib3MF_uint32 nIndex, const std::string & sPath, const Lib3MF_uint64 nDataBufferSize, const Lib3MF_uint8 * pDataBuffer) = 0;
+
+	/**
+	* IImage3D::CreateSheetFromFile - Creates a new sheet attachment from a file on disk.
+	* @param[in] nIndex - index of the image (0-based)
+	* @param[in] sPath - path name of package
+	* @param[in] sFileName - file name to read from
+	* @return attachment containing the image
+	*/
+	virtual IAttachment * CreateSheetFromFile(const Lib3MF_uint32 nIndex, const std::string & sPath, const std::string & sFileName) = 0;
+
+	/**
+	* IImage3D::SetSheet - Sets a sheet to an existing attachment.
+	* @param[in] nIndex - index of the image (0-based)
+	* @param[in] pSheet - attachment containing the image
+	*/
+	virtual void SetSheet(const Lib3MF_uint32 nIndex, IAttachment* pSheet) = 0;
+
+};
+
+typedef IBaseSharedPtr<IImage3D> PIImage3D;
+
+
+/*************************************************************************************************************************
+ Class interface for Image3DChannelSelector 
+**************************************************************************************************************************/
+
+class IImage3DChannelSelector : public virtual IBase {
+public:
+	/**
+	* IImage3DChannelSelector::GetImage - Returns the selected 3D image.
+	* @return image instance
+	*/
+	virtual IImage3D * GetImage() = 0;
+
+	/**
+	* IImage3DChannelSelector::SetImage - Sets the 3D image of the selector.
+	* @param[in] pImage3D - image instance
+	*/
+	virtual void SetImage(IImage3D* pImage3D) = 0;
+
+	/**
+	* IImage3DChannelSelector::SetSourceChannel - Sets the source channel of the selector.
+	* @param[in] sChannelName - name of the channel
+	*/
+	virtual void SetSourceChannel(const std::string & sChannelName) = 0;
+
+	/**
+	* IImage3DChannelSelector::GetSourceChannel - Returns the source channel of the selector.
+	* @return name of the channel
+	*/
+	virtual std::string GetSourceChannel() = 0;
+
+	/**
+	* IImage3DChannelSelector::SetDestinationChannel - Sets the destination channel of the selector.
+	* @param[in] sChannelName - name of the channel
+	*/
+	virtual void SetDestinationChannel(const std::string & sChannelName) = 0;
+
+	/**
+	* IImage3DChannelSelector::GetDestinationChannel - Returns the destination channel of the selector.
+	* @return name of the channel
+	*/
+	virtual std::string GetDestinationChannel() = 0;
+
+	/**
+	* IImage3DChannelSelector::SetFilter - Sets the texture filter of the selector.
+	* @param[in] eFilter - texture filter
+	*/
+	virtual void SetFilter(const Lib3MF::eTextureFilter eFilter) = 0;
+
+	/**
+	* IImage3DChannelSelector::GetFilter - Returns the texture filter of the selector.
+	* @return texture filter
+	*/
+	virtual Lib3MF::eTextureFilter GetFilter() = 0;
+
+	/**
+	* IImage3DChannelSelector::SetTileStyles - Sets the tile styles of the selector.
+	* @param[in] eTileStyleU - tile style in U
+	* @param[in] eTileStyleV - tile style in V
+	* @param[in] eTileStyleW - tile style in W
+	*/
+	virtual void SetTileStyles(const Lib3MF::eTextureTileStyle eTileStyleU, const Lib3MF::eTextureTileStyle eTileStyleV, const Lib3MF::eTextureTileStyle eTileStyleW) = 0;
+
+	/**
+	* IImage3DChannelSelector::GetTileStyles - Retrieves the tile styles of the selector.
+	* @param[out] eTileStyleU - tile style in U
+	* @param[out] eTileStyleV - tile style in V
+	* @param[out] eTileStyleW - tile style in W
+	*/
+	virtual void GetTileStyles(Lib3MF::eTextureTileStyle & eTileStyleU, Lib3MF::eTextureTileStyle & eTileStyleV, Lib3MF::eTextureTileStyle & eTileStyleW) = 0;
+
+	/**
+	* IImage3DChannelSelector::SetValueRange - Sets the value range of the selector.
+	* @param[in] dMin - Mapped value of the minimal (e.g. 0) image3D pixel values.
+	* @param[in] dMax - Mapped value of the maximal (e.g. 255) image3D pixel values.
+	*/
+	virtual void SetValueRange(const Lib3MF_double dMin, const Lib3MF_double dMax) = 0;
+
+	/**
+	* IImage3DChannelSelector::GetValueRange - Retrieves the value range of the selector.
+	* @param[out] dMin - Mapped value of the minimal (e.g. 0) image3D pixel values.
+	* @param[out] dMax - Mapped value of the maximal (e.g. 255) image3D pixel values.
+	*/
+	virtual void GetValueRange(Lib3MF_double & dMin, Lib3MF_double & dMax) = 0;
+
+};
+
+typedef IBaseSharedPtr<IImage3DChannelSelector> PIImage3DChannelSelector;
+
+
+/*************************************************************************************************************************
+ Class interface for VolumetricLayer 
+**************************************************************************************************************************/
+
+class IVolumetricLayer : public virtual IBase {
+public:
+	/**
+	* IVolumetricLayer::GetTransform - Retrieves the transform of the layer.
+	* @return The transform matrix
+	*/
+	virtual Lib3MF::sTransform GetTransform() = 0;
+
+	/**
+	* IVolumetricLayer::SetTransform - Sets the transform of the layer.
+	* @param[in] Transform - The transform matrix
+	*/
+	virtual void SetTransform(const Lib3MF::sTransform Transform) = 0;
+
+	/**
+	* IVolumetricLayer::GetBlendMethod - Retrieves the transform of the layer.
+	* @return The blend method
+	*/
+	virtual Lib3MF::eBlendMethod GetBlendMethod() = 0;
+
+	/**
+	* IVolumetricLayer::SetBlendMethod - Sets the transform of the layer.
+	* @param[in] eBlendMethod - The blend method
+	*/
+	virtual void SetBlendMethod(const Lib3MF::eBlendMethod eBlendMethod) = 0;
+
+	/**
+	* IVolumetricLayer::GetSourceAlpha - Retrieves the source alpha value of the layer.
+	* @return the source alpha value
+	*/
+	virtual Lib3MF_double GetSourceAlpha() = 0;
+
+	/**
+	* IVolumetricLayer::SetSourceAlpha - Sets the source alpha value of the layer.
+	* @param[in] dSourceAlpha - the source alpha value
+	*/
+	virtual void SetSourceAlpha(const Lib3MF_double dSourceAlpha) = 0;
+
+	/**
+	* IVolumetricLayer::GetDestinationAlpha - Retrieves the destination alpha value of the layer.
+	* @return the destination alpha value
+	*/
+	virtual Lib3MF_double GetDestinationAlpha() = 0;
+
+	/**
+	* IVolumetricLayer::SetDestinationAlpha - Sets the destination alpha value of the layer.
+	* @param[in] dDestinationAlpha - the destination alpha value
+	*/
+	virtual void SetDestinationAlpha(const Lib3MF_double dDestinationAlpha) = 0;
+
+	/**
+	* IVolumetricLayer::GetInformation - Retrieves all properties of the layer.
+	* @param[out] sTransform - The transform matrix
+	* @param[out] eBlendMethod - The blend method
+	* @param[out] dSourceAlpha - the source alpha value
+	* @param[out] dDestinationAlpha - the destination alpha value
+	*/
+	virtual void GetInformation(Lib3MF::sTransform & sTransform, Lib3MF::eBlendMethod & eBlendMethod, Lib3MF_double & dSourceAlpha, Lib3MF_double & dDestinationAlpha) = 0;
+
+	/**
+	* IVolumetricLayer::SetInformation - Sets all properties of the layer.
+	* @param[in] Transform - The transform matrix
+	* @param[in] eBlendMethod - The blend method
+	* @param[in] dSourceAlpha - the source alpha value
+	* @param[in] dDestinationAlpha - the destination alpha value
+	*/
+	virtual void SetInformation(const Lib3MF::sTransform Transform, const Lib3MF::eBlendMethod eBlendMethod, const Lib3MF_double dSourceAlpha, const Lib3MF_double dDestinationAlpha) = 0;
+
+	/**
+	* IVolumetricLayer::CreateMaskChannelSelector - Creates a new mask channel selector.
+	* @param[in] pImage3D - Image3D Class to reference
+	* @param[in] sSourceChannel - Name of source channel.
+	* @param[in] sDestinationChannel - Name of destination channel.
+	* @return Channel Selector Instance
+	*/
+	virtual IImage3DChannelSelector * CreateMaskChannelSelector(IImage3D* pImage3D, const std::string & sSourceChannel, const std::string & sDestinationChannel) = 0;
+
+	/**
+	* IVolumetricLayer::HasMaskChannelSelector - Returns if a mask channel selector exists.
+	* @return true if a mask channel selector exists.
+	*/
+	virtual bool HasMaskChannelSelector() = 0;
+
+	/**
+	* IVolumetricLayer::ClearMaskChannelSelector - Removes a mask channel selector, if it exists.
+	*/
+	virtual void ClearMaskChannelSelector() = 0;
+
+	/**
+	* IVolumetricLayer::GetMaskChannelSelector - Returns a new mask channel selector. Fails if none exists.
+	* @return Channel Selector Instance
+	*/
+	virtual IImage3DChannelSelector * GetMaskChannelSelector() = 0;
+
+	/**
+	* IVolumetricLayer::GetChannelSelectorCount - Returns the channel selector.
+	* @return Count of channel selectors
+	*/
+	virtual Lib3MF_uint32 GetChannelSelectorCount() = 0;
+
+	/**
+	* IVolumetricLayer::GetChannelSelector - Returns a channel selector.
+	* @param[in] nIndex - Index of the channel selector
+	* @return Channel Selector Instance
+	*/
+	virtual IImage3DChannelSelector * GetChannelSelector(const Lib3MF_uint32 nIndex) = 0;
+
+	/**
+	* IVolumetricLayer::AddChannelSelector - Adds a new channel selector.
+	* @param[in] pImage3D - Image3D Class to reference
+	* @param[in] sSourceChannel - Name of source channel.
+	* @param[in] sDestinationChannel - Name of destination channel.
+	* @return Channel Selector Instance
+	*/
+	virtual IImage3DChannelSelector * AddChannelSelector(IImage3D* pImage3D, const std::string & sSourceChannel, const std::string & sDestinationChannel) = 0;
+
+	/**
+	* IVolumetricLayer::ClearChannelSelectors - Removes all channel selectors.
+	*/
+	virtual void ClearChannelSelectors() = 0;
+
+	/**
+	* IVolumetricLayer::ReindexChannelSelector - Moves a channel selector to a different position in the list.
+	* @param[in] pChannelSelector - ChannelSelector instance
+	* @param[in] nIndex - new index of the channel selector. All layers with higher indices will increase by one.
+	*/
+	virtual void ReindexChannelSelector(IImage3DChannelSelector* pChannelSelector, const Lib3MF_uint32 nIndex) = 0;
+
+	/**
+	* IVolumetricLayer::RemoveChannelSelector - Removes a channel selector from the stack. Fails if the channel selector does not exist.
+	* @param[in] pChannelSelector - channel selector instance.
+	*/
+	virtual void RemoveChannelSelector(IImage3DChannelSelector* pChannelSelector) = 0;
+
+	/**
+	* IVolumetricLayer::RemoveChannelSelectorByIndex - Removes a channel selector from the stack. Fails if the channel selector does not exist.
+	* @param[in] nIndex - index of the channel selector
+	*/
+	virtual void RemoveChannelSelectorByIndex(const Lib3MF_uint32 nIndex) = 0;
+
+};
+
+typedef IBaseSharedPtr<IVolumetricLayer> PIVolumetricLayer;
+
+
+/*************************************************************************************************************************
+ Class interface for VolumetricStack 
+**************************************************************************************************************************/
+
+class IVolumetricStack : public virtual IResource {
+public:
+	/**
+	* IVolumetricStack::Clear - Clears all destination channels and layers of the stack.
+	*/
+	virtual void Clear() = 0;
+
+	/**
+	* IVolumetricStack::ClearUnusedDestinationChannels - Clears all unused destination channels of the stack.
+	*/
+	virtual void ClearUnusedDestinationChannels() = 0;
+
+	/**
+	* IVolumetricStack::GetDestinationChannelCount - Retrieves the number of Destination Channels.
+	* @return number of destination channels
+	*/
+	virtual Lib3MF_uint32 GetDestinationChannelCount() = 0;
+
+	/**
+	* IVolumetricStack::GetDestinationChannel - Adds a new destination channel.
+	* @param[in] nIndex - Index of Destination Channel
+	* @param[out] sName - Name of Destination Channel.
+	* @param[out] dBackground - Background of Destination Channel
+	*/
+	virtual void GetDestinationChannel(const Lib3MF_uint32 nIndex, std::string & sName, Lib3MF_double & dBackground) = 0;
+
+	/**
+	* IVolumetricStack::AddDestinationChannel - Adds a new destination channel.
+	* @param[in] sName - Name of Destination Channel. Must be unique in the stack.
+	* @param[in] dBackground - Background of Destination Channel
+	* @return Index of Destination Channel
+	*/
+	virtual Lib3MF_uint32 AddDestinationChannel(const std::string & sName, const Lib3MF_double dBackground) = 0;
+
+	/**
+	* IVolumetricStack::UpdateDestinationChannel - Changes a destination channels background.
+	* @param[in] nIndex - Index of Destination Channel
+	* @param[in] dBackground - Background of Destination Channel
+	*/
+	virtual void UpdateDestinationChannel(const Lib3MF_uint32 nIndex, const Lib3MF_double dBackground) = 0;
+
+	/**
+	* IVolumetricStack::UpdateDestinationChannelByName - Changes a destination channels background.
+	* @param[in] sName - Name of Destination Channel
+	* @param[in] dBackground - Background of Destination Channel
+	*/
+	virtual void UpdateDestinationChannelByName(const std::string & sName, const Lib3MF_double dBackground) = 0;
+
+	/**
+	* IVolumetricStack::RemoveDestinationChannel - Removes a destination channel. Fails if channel is still referenced in the stack.
+	* @param[in] nIndex - Index of Destination Channel
+	*/
+	virtual void RemoveDestinationChannel(const Lib3MF_uint32 nIndex) = 0;
+
+	/**
+	* IVolumetricStack::RemoveDestinationChannelByName - Removes a destination channel. Fails if channel is still referenced in the stack.
+	* @param[in] sName - Name of Destination Channel
+	*/
+	virtual void RemoveDestinationChannelByName(const std::string & sName) = 0;
+
+	/**
+	* IVolumetricStack::GetLayerCount - Retrieves the number of Layers.
+	* @return number of layers.
+	*/
+	virtual Lib3MF_uint32 GetLayerCount() = 0;
+
+	/**
+	* IVolumetricStack::GetLayer - Retrieves a layer.
+	* @param[in] nIndex - index of the layer
+	* @return index of the layer
+	*/
+	virtual IVolumetricLayer * GetLayer(const Lib3MF_uint32 nIndex) = 0;
+
+	/**
+	* IVolumetricStack::AddLayer - Adds a new layer.
+	* @param[in] Transform - transform of the layer
+	* @param[in] eBlendMethod - BlendMethod of the layer
+	* @return Layer instance
+	*/
+	virtual IVolumetricLayer * AddLayer(const Lib3MF::sTransform Transform, const Lib3MF::eBlendMethod eBlendMethod) = 0;
+
+	/**
+	* IVolumetricStack::ReindexLayer - Moves a layer to a different position in the stack.
+	* @param[in] pLayer - layer instance
+	* @param[in] nIndex - new index of the layer. All layers with higher indices will increase by one.
+	*/
+	virtual void ReindexLayer(IVolumetricLayer* pLayer, const Lib3MF_uint32 nIndex) = 0;
+
+	/**
+	* IVolumetricStack::RemoveLayer - Removes a layer from the stack. Fails if the layer does not exist.
+	* @param[in] pLayer - layer instance.
+	*/
+	virtual void RemoveLayer(IVolumetricLayer* pLayer) = 0;
+
+	/**
+	* IVolumetricStack::RemoveLayerByIndex - Removes a layer from the stack. Fails if the layer does not exist.
+	* @param[in] nIndex - index of the layer
+	*/
+	virtual void RemoveLayerByIndex(const Lib3MF_uint32 nIndex) = 0;
+
+};
+
+typedef IBaseSharedPtr<IVolumetricStack> PIVolumetricStack;
 
 
 /*************************************************************************************************************************
@@ -2682,10 +3435,22 @@ public:
 	virtual ISliceStackIterator * GetSliceStacks() = 0;
 
 	/**
+	* IModel::GetImage3Ds - creates a resource iterator instance with all image3d resources.
+	* @return returns the iterator instance.
+	*/
+	virtual IImage3DIterator * GetImage3Ds() = 0;
+
+	/**
 	* IModel::MergeToModel - Merges all components and objects which are referenced by a build item into a mesh. The memory is duplicated and a new model is created.
 	* @return returns the merged model instance
 	*/
 	virtual IModel * MergeToModel() = 0;
+
+	/**
+	* IModel::GetVolumetricStacks - creates a resource iterator instance with all volumetric stack resources.
+	* @return returns the iterator instance.
+	*/
+	virtual IVolumetricStackIterator * GetVolumetricStacks() = 0;
 
 	/**
 	* IModel::AddMeshObject - adds an empty mesh object to the model.
@@ -2744,6 +3509,21 @@ public:
 	* @return returns the new MultiPropertyGroup instance.
 	*/
 	virtual IMultiPropertyGroup * AddMultiPropertyGroup() = 0;
+
+	/**
+	* IModel::AddImage3D - creates a new 3D Image Resource
+	* @param[in] nSizeX - the extensions of the image stack in X direction.
+	* @param[in] nSizeY - the extensions of the image stack in Y direction.
+	* @param[in] nSheetCount - the number of sheets in the image stack.
+	* @return returns the new Image3D instance
+	*/
+	virtual IImage3D * AddImage3D(const Lib3MF_uint32 nSizeX, const Lib3MF_uint32 nSizeY, const Lib3MF_uint32 nSheetCount) = 0;
+
+	/**
+	* IModel::AddVolumetricStack - creates a new Volumetric Stack Resource
+	* @return returns the new VolumetricStack instance
+	*/
+	virtual IVolumetricStack * AddVolumetricStack() = 0;
 
 	/**
 	* IModel::AddBuildItem - adds a build item to the model.

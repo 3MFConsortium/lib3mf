@@ -565,6 +565,32 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_compositematerialsiterator_getcurrentcomposi
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_multipropertygroupiterator_getcurrentmultipropertygroup(Lib3MF_MultiPropertyGroupIterator pMultiPropertyGroupIterator, Lib3MF_MultiPropertyGroup * pResource);
 
 /*************************************************************************************************************************
+ Class definition for Image3DIterator
+**************************************************************************************************************************/
+
+/**
+* Returns the Image3D the iterator points at.
+*
+* @param[in] pImage3DIterator - Image3DIterator instance.
+* @param[out] pResource - returns the Image3D instance.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_image3diterator_getcurrentimage3d(Lib3MF_Image3DIterator pImage3DIterator, Lib3MF_Image3D * pResource);
+
+/*************************************************************************************************************************
+ Class definition for VolumetricStackIterator
+**************************************************************************************************************************/
+
+/**
+* Returns the VolumetricStack the iterator points at.
+*
+* @param[in] pVolumetricStackIterator - VolumetricStackIterator instance.
+* @param[out] pResource - returns the VolumetricStack instance.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumetricstackiterator_getcurrentvolumetricstack(Lib3MF_VolumetricStackIterator pVolumetricStackIterator, Lib3MF_VolumetricStack * pResource);
+
+/*************************************************************************************************************************
  Class definition for MetaData
 **************************************************************************************************************************/
 
@@ -1155,6 +1181,15 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_meshobject_ismanifoldandoriented(Lib3MF_Mesh
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_meshobject_beamlattice(Lib3MF_MeshObject pMeshObject, Lib3MF_BeamLattice * pTheBeamLattice);
 
+/**
+* Retrieves the VolumeData of this MeshObject.
+*
+* @param[in] pMeshObject - MeshObject instance.
+* @param[out] pTheVolumeData - the VolumeData of this MeshObject
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_meshobject_volumedata(Lib3MF_MeshObject pMeshObject, Lib3MF_VolumeData * pTheVolumeData);
+
 /*************************************************************************************************************************
  Class definition for BeamLattice
 **************************************************************************************************************************/
@@ -1383,6 +1418,362 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_beamlattice_addbeamset(Lib3MF_BeamLattice pB
 * @return error code or 0 (success)
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_beamlattice_getbeamset(Lib3MF_BeamLattice pBeamLattice, Lib3MF_uint32 nIndex, Lib3MF_BeamSet * pBeamSet);
+
+/*************************************************************************************************************************
+ Class definition for VolumeDataItem
+**************************************************************************************************************************/
+
+/**
+* Returns the VolumetricStack used within this volume data item
+*
+* @param[in] pVolumeDataItem - VolumeDataItem instance.
+* @param[out] pTheVolumetricStack - VolumetricStack used within this volume data item
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumedataitem_getvolumetricstack(Lib3MF_VolumeDataItem pVolumeDataItem, Lib3MF_VolumetricStack * pTheVolumetricStack);
+
+/**
+* Sets the VolumetricStack to use within this volume data item.
+*
+* @param[in] pVolumeDataItem - VolumeDataItem instance.
+* @param[in] pTheVolumetricStack - VolumetricStack to use within this volume data item
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumedataitem_setvolumetricstack(Lib3MF_VolumeDataItem pVolumeDataItem, Lib3MF_VolumetricStack pTheVolumetricStack);
+
+/**
+* Returns the transformation matrix of the volume data item.
+*
+* @param[in] pVolumeDataItem - VolumeDataItem instance.
+* @param[out] pTransform - filled with the volume data item transformation matrix
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumedataitem_gettransform(Lib3MF_VolumeDataItem pVolumeDataItem, sLib3MFTransform * pTransform);
+
+/**
+* Sets the transformation matrix of the volume data item.
+*
+* @param[in] pVolumeDataItem - VolumeDataItem instance.
+* @param[in] pTransform - new transformation matrix
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumedataitem_settransform(Lib3MF_VolumeDataItem pVolumeDataItem, const sLib3MFTransform * pTransform);
+
+/*************************************************************************************************************************
+ Class definition for VolumeDataLevelset
+**************************************************************************************************************************/
+
+/**
+* Returns the solidthreshold for the levelset function encoded in this VolumeDataLevelset
+*
+* @param[in] pVolumeDataLevelset - VolumeDataLevelset instance.
+* @param[out] pTheSolidThreshold - The solidthreshold for the levelset function encoded in this VolumeDataLevelset
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumedatalevelset_getsolidthreshold(Lib3MF_VolumeDataLevelset pVolumeDataLevelset, Lib3MF_double * pTheSolidThreshold);
+
+/**
+* Sets the solidthreshold for the levelset function encoded in this VolumeDataLevelset
+*
+* @param[in] pVolumeDataLevelset - VolumeDataLevelset instance.
+* @param[in] dTheSolidThreshold - The solidthreshold for the levelset function encoded in this VolumeDataLevelset
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumedatalevelset_setsolidthreshold(Lib3MF_VolumeDataLevelset pVolumeDataLevelset, Lib3MF_double dTheSolidThreshold);
+
+/**
+* Sets the name of the channel that holds the levelset function.
+*
+* @param[in] pVolumeDataLevelset - VolumeDataLevelset instance.
+* @param[in] pChannelName - The name of the channel that holds the levelset function
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumedatalevelset_setchannel(Lib3MF_VolumeDataLevelset pVolumeDataLevelset, const char * pChannelName);
+
+/**
+* Returns the name of the channel that holds the levelset function.
+*
+* @param[in] pVolumeDataLevelset - VolumeDataLevelset instance.
+* @param[in] nChannelNameBufferSize - size of the buffer (including trailing 0)
+* @param[out] pChannelNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pChannelNameBuffer -  buffer of The name of the channel that holds the levelset function, may be NULL
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumedatalevelset_getchannel(Lib3MF_VolumeDataLevelset pVolumeDataLevelset, const Lib3MF_uint32 nChannelNameBufferSize, Lib3MF_uint32* pChannelNameNeededChars, char * pChannelNameBuffer);
+
+/*************************************************************************************************************************
+ Class definition for VolumeDataColor
+**************************************************************************************************************************/
+
+/**
+* Sets the name of the channel that holds the levelset function.
+*
+* @param[in] pVolumeDataColor - VolumeDataColor instance.
+* @param[in] eTheColorChannel - The color in question
+* @param[in] pChannelName - The new name of the channel that holds the scalar function of this ColorChannel
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumedatacolor_setchannel(Lib3MF_VolumeDataColor pVolumeDataColor, eLib3MFColorChannel eTheColorChannel, const char * pChannelName);
+
+/**
+* Returns the name of the channel that holds the levelset function.
+*
+* @param[in] pVolumeDataColor - VolumeDataColor instance.
+* @param[in] eTheColorChannel - The color in question
+* @param[in] nChannelNameBufferSize - size of the buffer (including trailing 0)
+* @param[out] pChannelNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pChannelNameBuffer -  buffer of The name of the channel that holds the scalar function of this ColorChannel, may be NULL
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumedatacolor_getchannel(Lib3MF_VolumeDataColor pVolumeDataColor, eLib3MFColorChannel eTheColorChannel, const Lib3MF_uint32 nChannelNameBufferSize, Lib3MF_uint32* pChannelNameNeededChars, char * pChannelNameBuffer);
+
+/*************************************************************************************************************************
+ Class definition for VolumeDataComposite
+**************************************************************************************************************************/
+
+/**
+* Returns the BaseMaterialGroup used within this volume data item
+*
+* @param[in] pVolumeDataComposite - VolumeDataComposite instance.
+* @param[out] pBaseMaterialGroupInstance - The BaseMaterialGroup instance of this VolumeDataComposite
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumedatacomposite_getbasematerialgroup(Lib3MF_VolumeDataComposite pVolumeDataComposite, Lib3MF_BaseMaterialGroup * pBaseMaterialGroupInstance);
+
+/**
+* Sets the BaseMaterialGroup to use within this volume data item.
+*
+* @param[in] pVolumeDataComposite - VolumeDataComposite instance.
+* @param[in] pBaseMaterialGroupInstance - The new BaseMaterialGroup instance of this VolumeDataComposite
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumedatacomposite_setbasematerialgroup(Lib3MF_VolumeDataComposite pVolumeDataComposite, Lib3MF_BaseMaterialGroup pBaseMaterialGroupInstance);
+
+/**
+* Returns the number of material mappings of this VolumeDataComposite
+*
+* @param[in] pVolumeDataComposite - VolumeDataComposite instance.
+* @param[out] pCount - the number of material mappings.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumedatacomposite_getmaterialmappingcount(Lib3MF_VolumeDataComposite pVolumeDataComposite, Lib3MF_uint32 * pCount);
+
+/**
+* Returns PropertyID and ChannelName of the MaterialMapping with given index
+*
+* @param[in] pVolumeDataComposite - VolumeDataComposite instance.
+* @param[in] nIndex - Index of the MaterialMapping in question.
+* @param[out] pPropertyID - PropertyID of the material.
+* @param[in] nChannelNameBufferSize - size of the buffer (including trailing 0)
+* @param[out] pChannelNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pChannelNameBuffer -  buffer of The name of the channel that holds the intensity function of this Material within the Composite, may be NULL
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumedatacomposite_getmaterialmapping(Lib3MF_VolumeDataComposite pVolumeDataComposite, Lib3MF_uint32 nIndex, Lib3MF_uint32 * pPropertyID, const Lib3MF_uint32 nChannelNameBufferSize, Lib3MF_uint32* pChannelNameNeededChars, char * pChannelNameBuffer);
+
+/**
+* Sets PropertyID and ChannelName of the MaterialMapping with given index
+*
+* @param[in] pVolumeDataComposite - VolumeDataComposite instance.
+* @param[in] nIndex - Index of the MaterialMapping in question.
+* @param[out] pPropertyID - New PropertyID of the material.
+* @param[in] nChannelNameBufferSize - size of the buffer (including trailing 0)
+* @param[out] pChannelNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pChannelNameBuffer -  buffer of The new name of the channel that holds the intensity function of this Material within the Composite, may be NULL
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumedatacomposite_setmaterialmapping(Lib3MF_VolumeDataComposite pVolumeDataComposite, Lib3MF_uint32 nIndex, Lib3MF_uint32 * pPropertyID, const Lib3MF_uint32 nChannelNameBufferSize, Lib3MF_uint32* pChannelNameNeededChars, char * pChannelNameBuffer);
+
+/**
+* Adds a the MaterialMapping
+*
+* @param[in] pVolumeDataComposite - VolumeDataComposite instance.
+* @param[in] nPropertyID - PropertyID of the new MaterialMapping
+* @param[in] pChannelName - The name of the channel that holds the intensity function of the new Material within the Composite
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumedatacomposite_addmaterialmapping(Lib3MF_VolumeDataComposite pVolumeDataComposite, Lib3MF_uint32 nPropertyID, const char * pChannelName);
+
+/**
+* Removes the MaterialMapping with given index
+*
+* @param[in] pVolumeDataComposite - VolumeDataComposite instance.
+* @param[in] nIndex - The index of the MaterialMapping to be removed.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumedatacomposite_removematerialmapping(Lib3MF_VolumeDataComposite pVolumeDataComposite, Lib3MF_uint32 nIndex);
+
+/*************************************************************************************************************************
+ Class definition for VolumeDataProperty
+**************************************************************************************************************************/
+
+/**
+* Sets the channel name to be used for this property
+*
+* @param[in] pVolumeDataProperty - VolumeDataProperty instance.
+* @param[in] pChannelName - The mew channel name to be used for this property.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumedataproperty_setchannel(Lib3MF_VolumeDataProperty pVolumeDataProperty, const char * pChannelName);
+
+/**
+* Gets the channel name to be used for this property.
+*
+* @param[in] pVolumeDataProperty - VolumeDataProperty instance.
+* @param[in] nChannelNameBufferSize - size of the buffer (including trailing 0)
+* @param[out] pChannelNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pChannelNameBuffer -  buffer of The channel name to be used for this property., may be NULL
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumedataproperty_getchannel(Lib3MF_VolumeDataProperty pVolumeDataProperty, const Lib3MF_uint32 nChannelNameBufferSize, Lib3MF_uint32* pChannelNameNeededChars, char * pChannelNameBuffer);
+
+/**
+* Sets the qualified name of this property.
+*
+* @param[in] pVolumeDataProperty - VolumeDataProperty instance.
+* @param[in] pPropertyName - The new qualified name of this property
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumedataproperty_setname(Lib3MF_VolumeDataProperty pVolumeDataProperty, const char * pPropertyName);
+
+/**
+* Gets the qualified name of this property.
+*
+* @param[in] pVolumeDataProperty - VolumeDataProperty instance.
+* @param[in] nPropertyNameBufferSize - size of the buffer (including trailing 0)
+* @param[out] pPropertyNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pPropertyNameBuffer -  buffer of The qualified name of this property., may be NULL
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumedataproperty_getname(Lib3MF_VolumeDataProperty pVolumeDataProperty, const Lib3MF_uint32 nPropertyNameBufferSize, Lib3MF_uint32* pPropertyNameNeededChars, char * pPropertyNameBuffer);
+
+/**
+* Sets whether this property is required to process this 3MF document instance.
+*
+* @param[in] pVolumeDataProperty - VolumeDataProperty instance.
+* @param[in] bIsRequired - New value for whether this property is required to process this 3MF document instance.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumedataproperty_setisrequired(Lib3MF_VolumeDataProperty pVolumeDataProperty, bool bIsRequired);
+
+/**
+* Returns whether this property is required to process this 3MF document instance.
+*
+* @param[in] pVolumeDataProperty - VolumeDataProperty instance.
+* @param[out] pIsRequired - Is this property required to process this 3MF document instance?
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumedataproperty_isrequired(Lib3MF_VolumeDataProperty pVolumeDataProperty, bool * pIsRequired);
+
+/*************************************************************************************************************************
+ Class definition for VolumeData
+**************************************************************************************************************************/
+
+/**
+* Returns the VolumeDataLevelset of this VolumeData instance
+*
+* @param[in] pVolumeData - VolumeData instance.
+* @param[out] pTheLevelsetData - filled with the VolumeDataLevelset of this VolumeData instance.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumedata_getlevelset(Lib3MF_VolumeData pVolumeData, Lib3MF_VolumeDataLevelset * pTheLevelsetData);
+
+/**
+* Creates a new VolumeDataLevelset for this VolumeData instance
+*
+* @param[in] pVolumeData - VolumeData instance.
+* @param[in] pTheVolumetricStack - The VolumetricStack for the new VolumeDataLevelset.
+* @param[out] pTheLevelsetData - The new VolumeDataLevelset of this VolumeData instance.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumedata_createnewlevelset(Lib3MF_VolumeData pVolumeData, Lib3MF_VolumetricStack pTheVolumetricStack, Lib3MF_VolumeDataLevelset * pTheLevelsetData);
+
+/**
+* Returns the VolumeDataComposite of this VolumeData instance
+*
+* @param[in] pVolumeData - VolumeData instance.
+* @param[out] pTheCompositeData - filled with the VolumeDataComposite of this VolumeData instance.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumedata_getcomposite(Lib3MF_VolumeData pVolumeData, Lib3MF_VolumeDataComposite * pTheCompositeData);
+
+/**
+* Creates a new VolumeDataComposite for this VolumeData instance
+*
+* @param[in] pVolumeData - VolumeData instance.
+* @param[in] pTheVolumetricStack - The VolumetricStack for the new VolumeDataComposite.
+* @param[out] pTheCompositeData - The new VolumeDataComposite of this VolumeData instance.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumedata_createnewcomposite(Lib3MF_VolumeData pVolumeData, Lib3MF_VolumetricStack pTheVolumetricStack, Lib3MF_VolumeDataComposite * pTheCompositeData);
+
+/**
+* Returns the VolumeDataColor of this VolumeData instance
+*
+* @param[in] pVolumeData - VolumeData instance.
+* @param[out] pTheColorData - filled with the VolumeDataColor of this VolumeData instance.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumedata_getcolor(Lib3MF_VolumeData pVolumeData, Lib3MF_VolumeDataColor * pTheColorData);
+
+/**
+* Creates a new VolumeDataColor for this VolumeData instance
+*
+* @param[in] pVolumeData - VolumeData instance.
+* @param[in] pTheVolumetricStack - The VolumetricStack for the new VolumeDataComposite.
+* @param[out] pTheColorData - The new VolumeDataColor of this VolumeData instance.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumedata_createnewcolor(Lib3MF_VolumeData pVolumeData, Lib3MF_VolumetricStack pTheVolumetricStack, Lib3MF_VolumeDataColor * pTheColorData);
+
+/**
+* Returns the number of VolumeDataProperty
+*
+* @param[in] pVolumeData - VolumeData instance.
+* @param[out] pCount - the number of VolumeDataProperty-elements within this VolumdeData
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumedata_getpropertycount(Lib3MF_VolumeData pVolumeData, Lib3MF_uint32 * pCount);
+
+/**
+* Returns the VolumeDataProperty at a given Index
+*
+* @param[in] pVolumeData - VolumeData instance.
+* @param[in] nIndex - the index of the VolumeDataProperty to be returned.
+* @param[out] pThePropertyData - the VolumeDataProperty at the given index.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumedata_getproperty(Lib3MF_VolumeData pVolumeData, Lib3MF_uint32 nIndex, Lib3MF_VolumeDataProperty * pThePropertyData);
+
+/**
+* Returns the VolumeDataProperty at a given Index
+*
+* @param[in] pVolumeData - VolumeData instance.
+* @param[in] pName - the qualified name of the VolumeDataProperty to be returned.
+* @param[out] pThePropertyData - the VolumeDataProperty at the given index.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumedata_findproperty(Lib3MF_VolumeData pVolumeData, const char * pName, Lib3MF_VolumeDataProperty * pThePropertyData);
+
+/**
+* Adds a new VolumeDataProperty
+*
+* @param[in] pVolumeData - VolumeData instance.
+* @param[in] pName - the qualified name (namespace+name) of the Property
+* @param[in] pTheVolumetricStack - The VolumetricStack for the new VolumeDataProperty.
+* @param[out] pThePropertyData - the new VolumeDataProperty.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumedata_addproperty(Lib3MF_VolumeData pVolumeData, const char * pName, Lib3MF_VolumetricStack pTheVolumetricStack, Lib3MF_VolumeDataProperty * pThePropertyData);
+
+/**
+* Removes the VolumeDataProperty with a given name
+*
+* @param[in] pVolumeData - VolumeData instance.
+* @param[in] pName - the qualified name of the VolumeDataProperty to be removed.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumedata_removeproperty(Lib3MF_VolumeData pVolumeData, const char * pName);
 
 /*************************************************************************************************************************
  Class definition for Component
@@ -1972,6 +2363,569 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_multipropertygroup_getlayer(Lib3MF_MultiProp
 * @return error code or 0 (success)
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_multipropertygroup_removelayer(Lib3MF_MultiPropertyGroup pMultiPropertyGroup, Lib3MF_uint32 nLayerIndex);
+
+/*************************************************************************************************************************
+ Class definition for Image3D
+**************************************************************************************************************************/
+
+/**
+* Retrieves the extensions of the image stack in X direction.
+*
+* @param[in] pImage3D - Image3D instance.
+* @param[out] pSizeX - size in X
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_image3d_getsizex(Lib3MF_Image3D pImage3D, Lib3MF_uint32 * pSizeX);
+
+/**
+* Retrieves the extensions of the image stack in Y direction.
+*
+* @param[in] pImage3D - Image3D instance.
+* @param[out] pSizeY - size in Y
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_image3d_getsizey(Lib3MF_Image3D pImage3D, Lib3MF_uint32 * pSizeY);
+
+/**
+* Retrieves the number of images in the stack.
+*
+* @param[in] pImage3D - Image3D instance.
+* @param[out] pSheetCount - number of images
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_image3d_getsheetcount(Lib3MF_Image3D pImage3D, Lib3MF_uint32 * pSheetCount);
+
+/**
+* Retrieves a sheet of the stack. Raises an error if sheet is not set.
+*
+* @param[in] pImage3D - Image3D instance.
+* @param[in] nIndex - index of the image (0-based)
+* @param[out] pSheet - attachment containing the image
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_image3d_getsheet(Lib3MF_Image3D pImage3D, Lib3MF_uint32 nIndex, Lib3MF_Attachment * pSheet);
+
+/**
+* Creates a new sheet attachment with empty data.
+*
+* @param[in] pImage3D - Image3D instance.
+* @param[in] nIndex - index of the image (0-based)
+* @param[in] pPath - path name of package
+* @param[out] pSheet - attachment containing the image
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_image3d_createemptysheet(Lib3MF_Image3D pImage3D, Lib3MF_uint32 nIndex, const char * pPath, Lib3MF_Attachment * pSheet);
+
+/**
+* Creates a new sheet attachment from a memory buffer.
+*
+* @param[in] pImage3D - Image3D instance.
+* @param[in] nIndex - index of the image (0-based)
+* @param[in] pPath - path name of package
+* @param[in] nDataBufferSize - Number of elements in buffer
+* @param[in] pDataBuffer - uint8 buffer of binary image data
+* @param[out] pSheet - attachment containing the image
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_image3d_createsheetfrombuffer(Lib3MF_Image3D pImage3D, Lib3MF_uint32 nIndex, const char * pPath, Lib3MF_uint64 nDataBufferSize, const Lib3MF_uint8 * pDataBuffer, Lib3MF_Attachment * pSheet);
+
+/**
+* Creates a new sheet attachment from a file on disk.
+*
+* @param[in] pImage3D - Image3D instance.
+* @param[in] nIndex - index of the image (0-based)
+* @param[in] pPath - path name of package
+* @param[in] pFileName - file name to read from
+* @param[out] pSheet - attachment containing the image
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_image3d_createsheetfromfile(Lib3MF_Image3D pImage3D, Lib3MF_uint32 nIndex, const char * pPath, const char * pFileName, Lib3MF_Attachment * pSheet);
+
+/**
+* Sets a sheet to an existing attachment.
+*
+* @param[in] pImage3D - Image3D instance.
+* @param[in] nIndex - index of the image (0-based)
+* @param[in] pSheet - attachment containing the image
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_image3d_setsheet(Lib3MF_Image3D pImage3D, Lib3MF_uint32 nIndex, Lib3MF_Attachment pSheet);
+
+/*************************************************************************************************************************
+ Class definition for Image3DChannelSelector
+**************************************************************************************************************************/
+
+/**
+* Returns the selected 3D image.
+*
+* @param[in] pImage3DChannelSelector - Image3DChannelSelector instance.
+* @param[out] pImage3D - image instance
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_image3dchannelselector_getimage(Lib3MF_Image3DChannelSelector pImage3DChannelSelector, Lib3MF_Image3D * pImage3D);
+
+/**
+* Sets the 3D image of the selector.
+*
+* @param[in] pImage3DChannelSelector - Image3DChannelSelector instance.
+* @param[in] pImage3D - image instance
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_image3dchannelselector_setimage(Lib3MF_Image3DChannelSelector pImage3DChannelSelector, Lib3MF_Image3D pImage3D);
+
+/**
+* Sets the source channel of the selector.
+*
+* @param[in] pImage3DChannelSelector - Image3DChannelSelector instance.
+* @param[in] pChannelName - name of the channel
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_image3dchannelselector_setsourcechannel(Lib3MF_Image3DChannelSelector pImage3DChannelSelector, const char * pChannelName);
+
+/**
+* Returns the source channel of the selector.
+*
+* @param[in] pImage3DChannelSelector - Image3DChannelSelector instance.
+* @param[in] nChannelNameBufferSize - size of the buffer (including trailing 0)
+* @param[out] pChannelNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pChannelNameBuffer -  buffer of name of the channel, may be NULL
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_image3dchannelselector_getsourcechannel(Lib3MF_Image3DChannelSelector pImage3DChannelSelector, const Lib3MF_uint32 nChannelNameBufferSize, Lib3MF_uint32* pChannelNameNeededChars, char * pChannelNameBuffer);
+
+/**
+* Sets the destination channel of the selector.
+*
+* @param[in] pImage3DChannelSelector - Image3DChannelSelector instance.
+* @param[in] pChannelName - name of the channel
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_image3dchannelselector_setdestinationchannel(Lib3MF_Image3DChannelSelector pImage3DChannelSelector, const char * pChannelName);
+
+/**
+* Returns the destination channel of the selector.
+*
+* @param[in] pImage3DChannelSelector - Image3DChannelSelector instance.
+* @param[in] nChannelNameBufferSize - size of the buffer (including trailing 0)
+* @param[out] pChannelNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pChannelNameBuffer -  buffer of name of the channel, may be NULL
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_image3dchannelselector_getdestinationchannel(Lib3MF_Image3DChannelSelector pImage3DChannelSelector, const Lib3MF_uint32 nChannelNameBufferSize, Lib3MF_uint32* pChannelNameNeededChars, char * pChannelNameBuffer);
+
+/**
+* Sets the texture filter of the selector.
+*
+* @param[in] pImage3DChannelSelector - Image3DChannelSelector instance.
+* @param[in] eFilter - texture filter
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_image3dchannelselector_setfilter(Lib3MF_Image3DChannelSelector pImage3DChannelSelector, eLib3MFTextureFilter eFilter);
+
+/**
+* Returns the texture filter of the selector.
+*
+* @param[in] pImage3DChannelSelector - Image3DChannelSelector instance.
+* @param[out] pFilter - texture filter
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_image3dchannelselector_getfilter(Lib3MF_Image3DChannelSelector pImage3DChannelSelector, eLib3MFTextureFilter * pFilter);
+
+/**
+* Sets the tile styles of the selector.
+*
+* @param[in] pImage3DChannelSelector - Image3DChannelSelector instance.
+* @param[in] eTileStyleU - tile style in U
+* @param[in] eTileStyleV - tile style in V
+* @param[in] eTileStyleW - tile style in W
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_image3dchannelselector_settilestyles(Lib3MF_Image3DChannelSelector pImage3DChannelSelector, eLib3MFTextureTileStyle eTileStyleU, eLib3MFTextureTileStyle eTileStyleV, eLib3MFTextureTileStyle eTileStyleW);
+
+/**
+* Retrieves the tile styles of the selector.
+*
+* @param[in] pImage3DChannelSelector - Image3DChannelSelector instance.
+* @param[out] pTileStyleU - tile style in U
+* @param[out] pTileStyleV - tile style in V
+* @param[out] pTileStyleW - tile style in W
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_image3dchannelselector_gettilestyles(Lib3MF_Image3DChannelSelector pImage3DChannelSelector, eLib3MFTextureTileStyle * pTileStyleU, eLib3MFTextureTileStyle * pTileStyleV, eLib3MFTextureTileStyle * pTileStyleW);
+
+/**
+* Sets the value range of the selector.
+*
+* @param[in] pImage3DChannelSelector - Image3DChannelSelector instance.
+* @param[in] dMin - Mapped value of the minimal (e.g. 0) image3D pixel values.
+* @param[in] dMax - Mapped value of the maximal (e.g. 255) image3D pixel values.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_image3dchannelselector_setvaluerange(Lib3MF_Image3DChannelSelector pImage3DChannelSelector, Lib3MF_double dMin, Lib3MF_double dMax);
+
+/**
+* Retrieves the value range of the selector.
+*
+* @param[in] pImage3DChannelSelector - Image3DChannelSelector instance.
+* @param[out] pMin - Mapped value of the minimal (e.g. 0) image3D pixel values.
+* @param[out] pMax - Mapped value of the maximal (e.g. 255) image3D pixel values.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_image3dchannelselector_getvaluerange(Lib3MF_Image3DChannelSelector pImage3DChannelSelector, Lib3MF_double * pMin, Lib3MF_double * pMax);
+
+/*************************************************************************************************************************
+ Class definition for VolumetricLayer
+**************************************************************************************************************************/
+
+/**
+* Retrieves the transform of the layer.
+*
+* @param[in] pVolumetricLayer - VolumetricLayer instance.
+* @param[out] pTransform - The transform matrix
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumetriclayer_gettransform(Lib3MF_VolumetricLayer pVolumetricLayer, sLib3MFTransform * pTransform);
+
+/**
+* Sets the transform of the layer.
+*
+* @param[in] pVolumetricLayer - VolumetricLayer instance.
+* @param[in] pTransform - The transform matrix
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumetriclayer_settransform(Lib3MF_VolumetricLayer pVolumetricLayer, const sLib3MFTransform * pTransform);
+
+/**
+* Retrieves the transform of the layer.
+*
+* @param[in] pVolumetricLayer - VolumetricLayer instance.
+* @param[out] pBlendMethod - The blend method
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumetriclayer_getblendmethod(Lib3MF_VolumetricLayer pVolumetricLayer, eLib3MFBlendMethod * pBlendMethod);
+
+/**
+* Sets the transform of the layer.
+*
+* @param[in] pVolumetricLayer - VolumetricLayer instance.
+* @param[in] eBlendMethod - The blend method
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumetriclayer_setblendmethod(Lib3MF_VolumetricLayer pVolumetricLayer, eLib3MFBlendMethod eBlendMethod);
+
+/**
+* Retrieves the source alpha value of the layer.
+*
+* @param[in] pVolumetricLayer - VolumetricLayer instance.
+* @param[out] pSourceAlpha - the source alpha value
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumetriclayer_getsourcealpha(Lib3MF_VolumetricLayer pVolumetricLayer, Lib3MF_double * pSourceAlpha);
+
+/**
+* Sets the source alpha value of the layer.
+*
+* @param[in] pVolumetricLayer - VolumetricLayer instance.
+* @param[in] dSourceAlpha - the source alpha value
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumetriclayer_setsourcealpha(Lib3MF_VolumetricLayer pVolumetricLayer, Lib3MF_double dSourceAlpha);
+
+/**
+* Retrieves the destination alpha value of the layer.
+*
+* @param[in] pVolumetricLayer - VolumetricLayer instance.
+* @param[out] pDestinationAlpha - the destination alpha value
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumetriclayer_getdestinationalpha(Lib3MF_VolumetricLayer pVolumetricLayer, Lib3MF_double * pDestinationAlpha);
+
+/**
+* Sets the destination alpha value of the layer.
+*
+* @param[in] pVolumetricLayer - VolumetricLayer instance.
+* @param[in] dDestinationAlpha - the destination alpha value
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumetriclayer_setdestinationalpha(Lib3MF_VolumetricLayer pVolumetricLayer, Lib3MF_double dDestinationAlpha);
+
+/**
+* Retrieves all properties of the layer.
+*
+* @param[in] pVolumetricLayer - VolumetricLayer instance.
+* @param[out] pTransform - The transform matrix
+* @param[out] pBlendMethod - The blend method
+* @param[out] pSourceAlpha - the source alpha value
+* @param[out] pDestinationAlpha - the destination alpha value
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumetriclayer_getinformation(Lib3MF_VolumetricLayer pVolumetricLayer, sLib3MFTransform * pTransform, eLib3MFBlendMethod * pBlendMethod, Lib3MF_double * pSourceAlpha, Lib3MF_double * pDestinationAlpha);
+
+/**
+* Sets all properties of the layer.
+*
+* @param[in] pVolumetricLayer - VolumetricLayer instance.
+* @param[in] pTransform - The transform matrix
+* @param[in] eBlendMethod - The blend method
+* @param[in] dSourceAlpha - the source alpha value
+* @param[in] dDestinationAlpha - the destination alpha value
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumetriclayer_setinformation(Lib3MF_VolumetricLayer pVolumetricLayer, const sLib3MFTransform * pTransform, eLib3MFBlendMethod eBlendMethod, Lib3MF_double dSourceAlpha, Lib3MF_double dDestinationAlpha);
+
+/**
+* Creates a new mask channel selector.
+*
+* @param[in] pVolumetricLayer - VolumetricLayer instance.
+* @param[in] pImage3D - Image3D Class to reference
+* @param[in] pSourceChannel - Name of source channel.
+* @param[in] pDestinationChannel - Name of destination channel.
+* @param[out] pChannelSelector - Channel Selector Instance
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumetriclayer_createmaskchannelselector(Lib3MF_VolumetricLayer pVolumetricLayer, Lib3MF_Image3D pImage3D, const char * pSourceChannel, const char * pDestinationChannel, Lib3MF_Image3DChannelSelector * pChannelSelector);
+
+/**
+* Returns if a mask channel selector exists.
+*
+* @param[in] pVolumetricLayer - VolumetricLayer instance.
+* @param[out] pSelectorExists - true if a mask channel selector exists.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumetriclayer_hasmaskchannelselector(Lib3MF_VolumetricLayer pVolumetricLayer, bool * pSelectorExists);
+
+/**
+* Removes a mask channel selector, if it exists.
+*
+* @param[in] pVolumetricLayer - VolumetricLayer instance.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumetriclayer_clearmaskchannelselector(Lib3MF_VolumetricLayer pVolumetricLayer);
+
+/**
+* Returns a new mask channel selector. Fails if none exists.
+*
+* @param[in] pVolumetricLayer - VolumetricLayer instance.
+* @param[out] pChannelSelector - Channel Selector Instance
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumetriclayer_getmaskchannelselector(Lib3MF_VolumetricLayer pVolumetricLayer, Lib3MF_Image3DChannelSelector * pChannelSelector);
+
+/**
+* Returns the channel selector.
+*
+* @param[in] pVolumetricLayer - VolumetricLayer instance.
+* @param[out] pCount - Count of channel selectors
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumetriclayer_getchannelselectorcount(Lib3MF_VolumetricLayer pVolumetricLayer, Lib3MF_uint32 * pCount);
+
+/**
+* Returns a channel selector.
+*
+* @param[in] pVolumetricLayer - VolumetricLayer instance.
+* @param[in] nIndex - Index of the channel selector
+* @param[out] pChannelSelector - Channel Selector Instance
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumetriclayer_getchannelselector(Lib3MF_VolumetricLayer pVolumetricLayer, Lib3MF_uint32 nIndex, Lib3MF_Image3DChannelSelector * pChannelSelector);
+
+/**
+* Adds a new channel selector.
+*
+* @param[in] pVolumetricLayer - VolumetricLayer instance.
+* @param[in] pImage3D - Image3D Class to reference
+* @param[in] pSourceChannel - Name of source channel.
+* @param[in] pDestinationChannel - Name of destination channel.
+* @param[out] pChannelSelector - Channel Selector Instance
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumetriclayer_addchannelselector(Lib3MF_VolumetricLayer pVolumetricLayer, Lib3MF_Image3D pImage3D, const char * pSourceChannel, const char * pDestinationChannel, Lib3MF_Image3DChannelSelector * pChannelSelector);
+
+/**
+* Removes all channel selectors.
+*
+* @param[in] pVolumetricLayer - VolumetricLayer instance.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumetriclayer_clearchannelselectors(Lib3MF_VolumetricLayer pVolumetricLayer);
+
+/**
+* Moves a channel selector to a different position in the list.
+*
+* @param[in] pVolumetricLayer - VolumetricLayer instance.
+* @param[in] pChannelSelector - ChannelSelector instance
+* @param[in] nIndex - new index of the channel selector. All layers with higher indices will increase by one.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumetriclayer_reindexchannelselector(Lib3MF_VolumetricLayer pVolumetricLayer, Lib3MF_Image3DChannelSelector pChannelSelector, Lib3MF_uint32 nIndex);
+
+/**
+* Removes a channel selector from the stack. Fails if the channel selector does not exist.
+*
+* @param[in] pVolumetricLayer - VolumetricLayer instance.
+* @param[in] pChannelSelector - channel selector instance.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumetriclayer_removechannelselector(Lib3MF_VolumetricLayer pVolumetricLayer, Lib3MF_Image3DChannelSelector pChannelSelector);
+
+/**
+* Removes a channel selector from the stack. Fails if the channel selector does not exist.
+*
+* @param[in] pVolumetricLayer - VolumetricLayer instance.
+* @param[in] nIndex - index of the channel selector
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumetriclayer_removechannelselectorbyindex(Lib3MF_VolumetricLayer pVolumetricLayer, Lib3MF_uint32 nIndex);
+
+/*************************************************************************************************************************
+ Class definition for VolumetricStack
+**************************************************************************************************************************/
+
+/**
+* Clears all destination channels and layers of the stack.
+*
+* @param[in] pVolumetricStack - VolumetricStack instance.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumetricstack_clear(Lib3MF_VolumetricStack pVolumetricStack);
+
+/**
+* Clears all unused destination channels of the stack.
+*
+* @param[in] pVolumetricStack - VolumetricStack instance.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumetricstack_clearunuseddestinationchannels(Lib3MF_VolumetricStack pVolumetricStack);
+
+/**
+* Retrieves the number of Destination Channels.
+*
+* @param[in] pVolumetricStack - VolumetricStack instance.
+* @param[out] pCount - number of destination channels
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumetricstack_getdestinationchannelcount(Lib3MF_VolumetricStack pVolumetricStack, Lib3MF_uint32 * pCount);
+
+/**
+* Adds a new destination channel.
+*
+* @param[in] pVolumetricStack - VolumetricStack instance.
+* @param[in] nIndex - Index of Destination Channel
+* @param[in] nNameBufferSize - size of the buffer (including trailing 0)
+* @param[out] pNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pNameBuffer -  buffer of Name of Destination Channel., may be NULL
+* @param[out] pBackground - Background of Destination Channel
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumetricstack_getdestinationchannel(Lib3MF_VolumetricStack pVolumetricStack, Lib3MF_uint32 nIndex, const Lib3MF_uint32 nNameBufferSize, Lib3MF_uint32* pNameNeededChars, char * pNameBuffer, Lib3MF_double * pBackground);
+
+/**
+* Adds a new destination channel.
+*
+* @param[in] pVolumetricStack - VolumetricStack instance.
+* @param[in] pName - Name of Destination Channel. Must be unique in the stack.
+* @param[in] dBackground - Background of Destination Channel
+* @param[out] pIndex - Index of Destination Channel
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumetricstack_adddestinationchannel(Lib3MF_VolumetricStack pVolumetricStack, const char * pName, Lib3MF_double dBackground, Lib3MF_uint32 * pIndex);
+
+/**
+* Changes a destination channels background.
+*
+* @param[in] pVolumetricStack - VolumetricStack instance.
+* @param[in] nIndex - Index of Destination Channel
+* @param[in] dBackground - Background of Destination Channel
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumetricstack_updatedestinationchannel(Lib3MF_VolumetricStack pVolumetricStack, Lib3MF_uint32 nIndex, Lib3MF_double dBackground);
+
+/**
+* Changes a destination channels background.
+*
+* @param[in] pVolumetricStack - VolumetricStack instance.
+* @param[in] pName - Name of Destination Channel
+* @param[in] dBackground - Background of Destination Channel
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumetricstack_updatedestinationchannelbyname(Lib3MF_VolumetricStack pVolumetricStack, const char * pName, Lib3MF_double dBackground);
+
+/**
+* Removes a destination channel. Fails if channel is still referenced in the stack.
+*
+* @param[in] pVolumetricStack - VolumetricStack instance.
+* @param[in] nIndex - Index of Destination Channel
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumetricstack_removedestinationchannel(Lib3MF_VolumetricStack pVolumetricStack, Lib3MF_uint32 nIndex);
+
+/**
+* Removes a destination channel. Fails if channel is still referenced in the stack.
+*
+* @param[in] pVolumetricStack - VolumetricStack instance.
+* @param[in] pName - Name of Destination Channel
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumetricstack_removedestinationchannelbyname(Lib3MF_VolumetricStack pVolumetricStack, const char * pName);
+
+/**
+* Retrieves the number of Layers.
+*
+* @param[in] pVolumetricStack - VolumetricStack instance.
+* @param[out] pCount - number of layers.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumetricstack_getlayercount(Lib3MF_VolumetricStack pVolumetricStack, Lib3MF_uint32 * pCount);
+
+/**
+* Retrieves a layer.
+*
+* @param[in] pVolumetricStack - VolumetricStack instance.
+* @param[in] nIndex - index of the layer
+* @param[out] pLayer - index of the layer
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumetricstack_getlayer(Lib3MF_VolumetricStack pVolumetricStack, Lib3MF_uint32 nIndex, Lib3MF_VolumetricLayer * pLayer);
+
+/**
+* Adds a new layer.
+*
+* @param[in] pVolumetricStack - VolumetricStack instance.
+* @param[in] pTransform - transform of the layer
+* @param[in] eBlendMethod - BlendMethod of the layer
+* @param[out] pLayer - Layer instance
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumetricstack_addlayer(Lib3MF_VolumetricStack pVolumetricStack, const sLib3MFTransform * pTransform, eLib3MFBlendMethod eBlendMethod, Lib3MF_VolumetricLayer * pLayer);
+
+/**
+* Moves a layer to a different position in the stack.
+*
+* @param[in] pVolumetricStack - VolumetricStack instance.
+* @param[in] pLayer - layer instance
+* @param[in] nIndex - new index of the layer. All layers with higher indices will increase by one.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumetricstack_reindexlayer(Lib3MF_VolumetricStack pVolumetricStack, Lib3MF_VolumetricLayer pLayer, Lib3MF_uint32 nIndex);
+
+/**
+* Removes a layer from the stack. Fails if the layer does not exist.
+*
+* @param[in] pVolumetricStack - VolumetricStack instance.
+* @param[in] pLayer - layer instance.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumetricstack_removelayer(Lib3MF_VolumetricStack pVolumetricStack, Lib3MF_VolumetricLayer pLayer);
+
+/**
+* Removes a layer from the stack. Fails if the layer does not exist.
+*
+* @param[in] pVolumetricStack - VolumetricStack instance.
+* @param[in] nIndex - index of the layer
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumetricstack_removelayerbyindex(Lib3MF_VolumetricStack pVolumetricStack, Lib3MF_uint32 nIndex);
 
 /*************************************************************************************************************************
  Class definition for Attachment
@@ -3251,6 +4205,15 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_getmultipropertygroups(Lib3MF_Model pM
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_getslicestacks(Lib3MF_Model pModel, Lib3MF_SliceStackIterator * pResourceIterator);
 
 /**
+* creates a resource iterator instance with all image3d resources.
+*
+* @param[in] pModel - Model instance.
+* @param[out] pResourceIterator - returns the iterator instance.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_getimage3ds(Lib3MF_Model pModel, Lib3MF_Image3DIterator * pResourceIterator);
+
+/**
 * Merges all components and objects which are referenced by a build item into a mesh. The memory is duplicated and a new model is created.
 *
 * @param[in] pModel - Model instance.
@@ -3258,6 +4221,15 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_getslicestacks(Lib3MF_Model pModel, Li
 * @return error code or 0 (success)
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_mergetomodel(Lib3MF_Model pModel, Lib3MF_Model * pMergedModelInstance);
+
+/**
+* creates a resource iterator instance with all volumetric stack resources.
+*
+* @param[in] pModel - Model instance.
+* @param[out] pResourceIterator - returns the iterator instance.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_getvolumetricstacks(Lib3MF_Model pModel, Lib3MF_VolumetricStackIterator * pResourceIterator);
 
 /**
 * adds an empty mesh object to the model.
@@ -3343,6 +4315,27 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_addcompositematerials(Lib3MF_Model pMo
 * @return error code or 0 (success)
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_addmultipropertygroup(Lib3MF_Model pModel, Lib3MF_MultiPropertyGroup * pMultiPropertyGroupInstance);
+
+/**
+* creates a new 3D Image Resource
+*
+* @param[in] pModel - Model instance.
+* @param[in] nSizeX - the extensions of the image stack in X direction.
+* @param[in] nSizeY - the extensions of the image stack in Y direction.
+* @param[in] nSheetCount - the number of sheets in the image stack.
+* @param[out] pInstance - returns the new Image3D instance
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_addimage3d(Lib3MF_Model pModel, Lib3MF_uint32 nSizeX, Lib3MF_uint32 nSizeY, Lib3MF_uint32 nSheetCount, Lib3MF_Image3D * pInstance);
+
+/**
+* creates a new Volumetric Stack Resource
+*
+* @param[in] pModel - Model instance.
+* @param[out] pInstance - returns the new VolumetricStack instance
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_addvolumetricstack(Lib3MF_Model pModel, Lib3MF_VolumetricStack * pInstance);
 
 /**
 * adds a build item to the model.

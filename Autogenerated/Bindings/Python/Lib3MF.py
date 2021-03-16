@@ -99,6 +99,7 @@ class ErrorCodes(enum.IntEnum):
 	INVALIDPROPERTYCOUNT = 132
 	UNKOWNPROGRESSIDENTIFIER = 140
 	ELEMENTCOUNTEXCEEDSLIMIT = 141
+	NOMASKCHANNELSELECTOR = 250
 	BEAMLATTICE_INVALID_OBJECTTYPE = 2000
 	INVALIDKEYSTORE = 3000
 	INVALIDKEYSTORECONSUMER = 3001
@@ -175,6 +176,8 @@ class FunctionTable:
 	lib3mf_texture2dgroupiterator_getcurrenttexture2dgroup = None
 	lib3mf_compositematerialsiterator_getcurrentcompositematerials = None
 	lib3mf_multipropertygroupiterator_getcurrentmultipropertygroup = None
+	lib3mf_image3diterator_getcurrentimage3d = None
+	lib3mf_volumetricstackiterator_getcurrentvolumetricstack = None
 	lib3mf_metadata_getnamespace = None
 	lib3mf_metadata_setnamespace = None
 	lib3mf_metadata_getname = None
@@ -234,6 +237,7 @@ class FunctionTable:
 	lib3mf_meshobject_setgeometry = None
 	lib3mf_meshobject_ismanifoldandoriented = None
 	lib3mf_meshobject_beamlattice = None
+	lib3mf_meshobject_volumedata = None
 	lib3mf_beamlattice_getminlength = None
 	lib3mf_beamlattice_setminlength = None
 	lib3mf_beamlattice_getclipping = None
@@ -257,6 +261,40 @@ class FunctionTable:
 	lib3mf_beamlattice_getbeamsetcount = None
 	lib3mf_beamlattice_addbeamset = None
 	lib3mf_beamlattice_getbeamset = None
+	lib3mf_volumedataitem_getvolumetricstack = None
+	lib3mf_volumedataitem_setvolumetricstack = None
+	lib3mf_volumedataitem_gettransform = None
+	lib3mf_volumedataitem_settransform = None
+	lib3mf_volumedatalevelset_getsolidthreshold = None
+	lib3mf_volumedatalevelset_setsolidthreshold = None
+	lib3mf_volumedatalevelset_setchannel = None
+	lib3mf_volumedatalevelset_getchannel = None
+	lib3mf_volumedatacolor_setchannel = None
+	lib3mf_volumedatacolor_getchannel = None
+	lib3mf_volumedatacomposite_getbasematerialgroup = None
+	lib3mf_volumedatacomposite_setbasematerialgroup = None
+	lib3mf_volumedatacomposite_getmaterialmappingcount = None
+	lib3mf_volumedatacomposite_getmaterialmapping = None
+	lib3mf_volumedatacomposite_setmaterialmapping = None
+	lib3mf_volumedatacomposite_addmaterialmapping = None
+	lib3mf_volumedatacomposite_removematerialmapping = None
+	lib3mf_volumedataproperty_setchannel = None
+	lib3mf_volumedataproperty_getchannel = None
+	lib3mf_volumedataproperty_setname = None
+	lib3mf_volumedataproperty_getname = None
+	lib3mf_volumedataproperty_setisrequired = None
+	lib3mf_volumedataproperty_isrequired = None
+	lib3mf_volumedata_getlevelset = None
+	lib3mf_volumedata_createnewlevelset = None
+	lib3mf_volumedata_getcomposite = None
+	lib3mf_volumedata_createnewcomposite = None
+	lib3mf_volumedata_getcolor = None
+	lib3mf_volumedata_createnewcolor = None
+	lib3mf_volumedata_getpropertycount = None
+	lib3mf_volumedata_getproperty = None
+	lib3mf_volumedata_findproperty = None
+	lib3mf_volumedata_addproperty = None
+	lib3mf_volumedata_removeproperty = None
 	lib3mf_component_getobjectresource = None
 	lib3mf_component_getobjectresourceid = None
 	lib3mf_component_getuuid = None
@@ -313,6 +351,62 @@ class FunctionTable:
 	lib3mf_multipropertygroup_addlayer = None
 	lib3mf_multipropertygroup_getlayer = None
 	lib3mf_multipropertygroup_removelayer = None
+	lib3mf_image3d_getsizex = None
+	lib3mf_image3d_getsizey = None
+	lib3mf_image3d_getsheetcount = None
+	lib3mf_image3d_getsheet = None
+	lib3mf_image3d_createemptysheet = None
+	lib3mf_image3d_createsheetfrombuffer = None
+	lib3mf_image3d_createsheetfromfile = None
+	lib3mf_image3d_setsheet = None
+	lib3mf_image3dchannelselector_getimage = None
+	lib3mf_image3dchannelselector_setimage = None
+	lib3mf_image3dchannelselector_setsourcechannel = None
+	lib3mf_image3dchannelselector_getsourcechannel = None
+	lib3mf_image3dchannelselector_setdestinationchannel = None
+	lib3mf_image3dchannelselector_getdestinationchannel = None
+	lib3mf_image3dchannelselector_setfilter = None
+	lib3mf_image3dchannelselector_getfilter = None
+	lib3mf_image3dchannelselector_settilestyles = None
+	lib3mf_image3dchannelselector_gettilestyles = None
+	lib3mf_image3dchannelselector_setvaluerange = None
+	lib3mf_image3dchannelselector_getvaluerange = None
+	lib3mf_volumetriclayer_gettransform = None
+	lib3mf_volumetriclayer_settransform = None
+	lib3mf_volumetriclayer_getblendmethod = None
+	lib3mf_volumetriclayer_setblendmethod = None
+	lib3mf_volumetriclayer_getsourcealpha = None
+	lib3mf_volumetriclayer_setsourcealpha = None
+	lib3mf_volumetriclayer_getdestinationalpha = None
+	lib3mf_volumetriclayer_setdestinationalpha = None
+	lib3mf_volumetriclayer_getinformation = None
+	lib3mf_volumetriclayer_setinformation = None
+	lib3mf_volumetriclayer_createmaskchannelselector = None
+	lib3mf_volumetriclayer_hasmaskchannelselector = None
+	lib3mf_volumetriclayer_clearmaskchannelselector = None
+	lib3mf_volumetriclayer_getmaskchannelselector = None
+	lib3mf_volumetriclayer_getchannelselectorcount = None
+	lib3mf_volumetriclayer_getchannelselector = None
+	lib3mf_volumetriclayer_addchannelselector = None
+	lib3mf_volumetriclayer_clearchannelselectors = None
+	lib3mf_volumetriclayer_reindexchannelselector = None
+	lib3mf_volumetriclayer_removechannelselector = None
+	lib3mf_volumetriclayer_removechannelselectorbyindex = None
+	lib3mf_volumetricstack_clear = None
+	lib3mf_volumetricstack_clearunuseddestinationchannels = None
+	lib3mf_volumetricstack_getdestinationchannelcount = None
+	lib3mf_volumetricstack_getdestinationchannel = None
+	lib3mf_volumetricstack_adddestinationchannel = None
+	lib3mf_volumetricstack_updatedestinationchannel = None
+	lib3mf_volumetricstack_updatedestinationchannelbyname = None
+	lib3mf_volumetricstack_removedestinationchannel = None
+	lib3mf_volumetricstack_removedestinationchannelbyname = None
+	lib3mf_volumetricstack_getlayercount = None
+	lib3mf_volumetricstack_getlayer = None
+	lib3mf_volumetricstack_addlayer = None
+	lib3mf_volumetricstack_reindexlayer = None
+	lib3mf_volumetricstack_removelayer = None
+	lib3mf_volumetricstack_removelayerbyindex = None
 	lib3mf_attachment_getpath = None
 	lib3mf_attachment_setpath = None
 	lib3mf_attachment_packagepart = None
@@ -439,7 +533,9 @@ class FunctionTable:
 	lib3mf_model_getcompositematerials = None
 	lib3mf_model_getmultipropertygroups = None
 	lib3mf_model_getslicestacks = None
+	lib3mf_model_getimage3ds = None
 	lib3mf_model_mergetomodel = None
+	lib3mf_model_getvolumetricstacks = None
 	lib3mf_model_addmeshobject = None
 	lib3mf_model_addcomponentsobject = None
 	lib3mf_model_addslicestack = None
@@ -449,6 +545,8 @@ class FunctionTable:
 	lib3mf_model_addtexture2dgroup = None
 	lib3mf_model_addcompositematerials = None
 	lib3mf_model_addmultipropertygroup = None
+	lib3mf_model_addimage3d = None
+	lib3mf_model_addvolumetricstack = None
 	lib3mf_model_addbuilditem = None
 	lib3mf_model_removebuilditem = None
 	lib3mf_model_getmetadatagroup = None
@@ -572,9 +670,15 @@ class ProgressIdentifier(CTypesEnum):
 '''Definition of BlendMethod
 '''
 class BlendMethod(CTypesEnum):
-	NoBlendMethod = 0
-	Mix = 1
-	Multiply = 2
+	Mix = 0
+	Multiply = 1
+	Mask = 2
+'''Definition of ColorChannel
+'''
+class ColorChannel(CTypesEnum):
+	Red = 0
+	Green = 1
+	Blue = 2
 '''Definition of EncryptionAlgorithm
 '''
 class EncryptionAlgorithm(CTypesEnum):
@@ -1169,6 +1273,18 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
 			self.lib.lib3mf_multipropertygroupiterator_getcurrentmultipropertygroup = methodType(int(methodAddress.value))
 			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_image3diterator_getcurrentimage3d")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_image3diterator_getcurrentimage3d = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumetricstackiterator_getcurrentvolumetricstack")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_volumetricstackiterator_getcurrentvolumetricstack = methodType(int(methodAddress.value))
+			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_metadata_getnamespace")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
@@ -1523,6 +1639,12 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
 			self.lib.lib3mf_meshobject_beamlattice = methodType(int(methodAddress.value))
 			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_meshobject_volumedata")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_meshobject_volumedata = methodType(int(methodAddress.value))
+			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_beamlattice_getminlength")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
@@ -1660,6 +1782,210 @@ class Wrapper:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p))
 			self.lib.lib3mf_beamlattice_getbeamset = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumedataitem_getvolumetricstack")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_volumedataitem_getvolumetricstack = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumedataitem_setvolumetricstack")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_void_p)
+			self.lib.lib3mf_volumedataitem_setvolumetricstack = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumedataitem_gettransform")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(Transform))
+			self.lib.lib3mf_volumedataitem_gettransform = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumedataitem_settransform")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(Transform))
+			self.lib.lib3mf_volumedataitem_settransform = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumedatalevelset_getsolidthreshold")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_double))
+			self.lib.lib3mf_volumedatalevelset_getsolidthreshold = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumedatalevelset_setsolidthreshold")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_double)
+			self.lib.lib3mf_volumedatalevelset_setsolidthreshold = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumedatalevelset_setchannel")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p)
+			self.lib.lib3mf_volumedatalevelset_setchannel = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumedatalevelset_getchannel")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
+			self.lib.lib3mf_volumedatalevelset_getchannel = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumedatacolor_setchannel")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ColorChannel, ctypes.c_char_p)
+			self.lib.lib3mf_volumedatacolor_setchannel = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumedatacolor_getchannel")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ColorChannel, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
+			self.lib.lib3mf_volumedatacolor_getchannel = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumedatacomposite_getbasematerialgroup")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_volumedatacomposite_getbasematerialgroup = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumedatacomposite_setbasematerialgroup")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_void_p)
+			self.lib.lib3mf_volumedatacomposite_setbasematerialgroup = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumedatacomposite_getmaterialmappingcount")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32))
+			self.lib.lib3mf_volumedatacomposite_getmaterialmappingcount = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumedatacomposite_getmaterialmapping")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_uint32), ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
+			self.lib.lib3mf_volumedatacomposite_getmaterialmapping = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumedatacomposite_setmaterialmapping")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_uint32), ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
+			self.lib.lib3mf_volumedatacomposite_setmaterialmapping = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumedatacomposite_addmaterialmapping")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_char_p)
+			self.lib.lib3mf_volumedatacomposite_addmaterialmapping = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumedatacomposite_removematerialmapping")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32)
+			self.lib.lib3mf_volumedatacomposite_removematerialmapping = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumedataproperty_setchannel")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p)
+			self.lib.lib3mf_volumedataproperty_setchannel = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumedataproperty_getchannel")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
+			self.lib.lib3mf_volumedataproperty_getchannel = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumedataproperty_setname")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p)
+			self.lib.lib3mf_volumedataproperty_setname = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumedataproperty_getname")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
+			self.lib.lib3mf_volumedataproperty_getname = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumedataproperty_setisrequired")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_bool)
+			self.lib.lib3mf_volumedataproperty_setisrequired = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumedataproperty_isrequired")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_bool))
+			self.lib.lib3mf_volumedataproperty_isrequired = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumedata_getlevelset")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_volumedata_getlevelset = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumedata_createnewlevelset")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_volumedata_createnewlevelset = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumedata_getcomposite")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_volumedata_getcomposite = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumedata_createnewcomposite")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_volumedata_createnewcomposite = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumedata_getcolor")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_volumedata_getcolor = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumedata_createnewcolor")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_volumedata_createnewcolor = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumedata_getpropertycount")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32))
+			self.lib.lib3mf_volumedata_getpropertycount = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumedata_getproperty")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_volumedata_getproperty = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumedata_findproperty")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_volumedata_findproperty = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumedata_addproperty")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_volumedata_addproperty = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumedata_removeproperty")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p)
+			self.lib.lib3mf_volumedata_removeproperty = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_component_getobjectresource")), methodAddress)
 			if err != 0:
@@ -1996,6 +2322,342 @@ class Wrapper:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32)
 			self.lib.lib3mf_multipropertygroup_removelayer = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_image3d_getsizex")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32))
+			self.lib.lib3mf_image3d_getsizex = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_image3d_getsizey")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32))
+			self.lib.lib3mf_image3d_getsizey = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_image3d_getsheetcount")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32))
+			self.lib.lib3mf_image3d_getsheetcount = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_image3d_getsheet")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_image3d_getsheet = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_image3d_createemptysheet")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_image3d_createemptysheet = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_image3d_createsheetfrombuffer")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_char_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint8), ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_image3d_createsheetfrombuffer = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_image3d_createsheetfromfile")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_image3d_createsheetfromfile = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_image3d_setsheet")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_void_p)
+			self.lib.lib3mf_image3d_setsheet = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_image3dchannelselector_getimage")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_image3dchannelselector_getimage = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_image3dchannelselector_setimage")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_void_p)
+			self.lib.lib3mf_image3dchannelselector_setimage = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_image3dchannelselector_setsourcechannel")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p)
+			self.lib.lib3mf_image3dchannelselector_setsourcechannel = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_image3dchannelselector_getsourcechannel")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
+			self.lib.lib3mf_image3dchannelselector_getsourcechannel = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_image3dchannelselector_setdestinationchannel")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p)
+			self.lib.lib3mf_image3dchannelselector_setdestinationchannel = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_image3dchannelselector_getdestinationchannel")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
+			self.lib.lib3mf_image3dchannelselector_getdestinationchannel = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_image3dchannelselector_setfilter")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, TextureFilter)
+			self.lib.lib3mf_image3dchannelselector_setfilter = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_image3dchannelselector_getfilter")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_int32))
+			self.lib.lib3mf_image3dchannelselector_getfilter = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_image3dchannelselector_settilestyles")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, TextureTileStyle, TextureTileStyle, TextureTileStyle)
+			self.lib.lib3mf_image3dchannelselector_settilestyles = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_image3dchannelselector_gettilestyles")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_int32), ctypes.POINTER(ctypes.c_int32), ctypes.POINTER(ctypes.c_int32))
+			self.lib.lib3mf_image3dchannelselector_gettilestyles = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_image3dchannelselector_setvaluerange")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_double, ctypes.c_double)
+			self.lib.lib3mf_image3dchannelselector_setvaluerange = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_image3dchannelselector_getvaluerange")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_double))
+			self.lib.lib3mf_image3dchannelselector_getvaluerange = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumetriclayer_gettransform")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(Transform))
+			self.lib.lib3mf_volumetriclayer_gettransform = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumetriclayer_settransform")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(Transform))
+			self.lib.lib3mf_volumetriclayer_settransform = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumetriclayer_getblendmethod")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_int32))
+			self.lib.lib3mf_volumetriclayer_getblendmethod = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumetriclayer_setblendmethod")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, BlendMethod)
+			self.lib.lib3mf_volumetriclayer_setblendmethod = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumetriclayer_getsourcealpha")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_double))
+			self.lib.lib3mf_volumetriclayer_getsourcealpha = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumetriclayer_setsourcealpha")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_double)
+			self.lib.lib3mf_volumetriclayer_setsourcealpha = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumetriclayer_getdestinationalpha")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_double))
+			self.lib.lib3mf_volumetriclayer_getdestinationalpha = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumetriclayer_setdestinationalpha")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_double)
+			self.lib.lib3mf_volumetriclayer_setdestinationalpha = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumetriclayer_getinformation")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(Transform), ctypes.POINTER(ctypes.c_int32), ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_double))
+			self.lib.lib3mf_volumetriclayer_getinformation = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumetriclayer_setinformation")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(Transform), BlendMethod, ctypes.c_double, ctypes.c_double)
+			self.lib.lib3mf_volumetriclayer_setinformation = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumetriclayer_createmaskchannelselector")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_volumetriclayer_createmaskchannelselector = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumetriclayer_hasmaskchannelselector")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_bool))
+			self.lib.lib3mf_volumetriclayer_hasmaskchannelselector = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumetriclayer_clearmaskchannelselector")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p)
+			self.lib.lib3mf_volumetriclayer_clearmaskchannelselector = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumetriclayer_getmaskchannelselector")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_volumetriclayer_getmaskchannelselector = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumetriclayer_getchannelselectorcount")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32))
+			self.lib.lib3mf_volumetriclayer_getchannelselectorcount = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumetriclayer_getchannelselector")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_volumetriclayer_getchannelselector = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumetriclayer_addchannelselector")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_volumetriclayer_addchannelselector = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumetriclayer_clearchannelselectors")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p)
+			self.lib.lib3mf_volumetriclayer_clearchannelselectors = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumetriclayer_reindexchannelselector")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_uint32)
+			self.lib.lib3mf_volumetriclayer_reindexchannelselector = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumetriclayer_removechannelselector")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_void_p)
+			self.lib.lib3mf_volumetriclayer_removechannelselector = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumetriclayer_removechannelselectorbyindex")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32)
+			self.lib.lib3mf_volumetriclayer_removechannelselectorbyindex = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumetricstack_clear")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p)
+			self.lib.lib3mf_volumetricstack_clear = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumetricstack_clearunuseddestinationchannels")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p)
+			self.lib.lib3mf_volumetricstack_clearunuseddestinationchannels = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumetricstack_getdestinationchannelcount")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32))
+			self.lib.lib3mf_volumetricstack_getdestinationchannelcount = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumetricstack_getdestinationchannel")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p, ctypes.POINTER(ctypes.c_double))
+			self.lib.lib3mf_volumetricstack_getdestinationchannel = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumetricstack_adddestinationchannel")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_double, ctypes.POINTER(ctypes.c_uint32))
+			self.lib.lib3mf_volumetricstack_adddestinationchannel = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumetricstack_updatedestinationchannel")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_double)
+			self.lib.lib3mf_volumetricstack_updatedestinationchannel = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumetricstack_updatedestinationchannelbyname")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_double)
+			self.lib.lib3mf_volumetricstack_updatedestinationchannelbyname = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumetricstack_removedestinationchannel")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32)
+			self.lib.lib3mf_volumetricstack_removedestinationchannel = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumetricstack_removedestinationchannelbyname")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p)
+			self.lib.lib3mf_volumetricstack_removedestinationchannelbyname = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumetricstack_getlayercount")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32))
+			self.lib.lib3mf_volumetricstack_getlayercount = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumetricstack_getlayer")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_volumetricstack_getlayer = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumetricstack_addlayer")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(Transform), BlendMethod, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_volumetricstack_addlayer = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumetricstack_reindexlayer")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_uint32)
+			self.lib.lib3mf_volumetricstack_reindexlayer = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumetricstack_removelayer")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_void_p)
+			self.lib.lib3mf_volumetricstack_removelayer = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumetricstack_removelayerbyindex")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32)
+			self.lib.lib3mf_volumetricstack_removelayerbyindex = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_attachment_getpath")), methodAddress)
 			if err != 0:
@@ -2753,11 +3415,23 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
 			self.lib.lib3mf_model_getslicestacks = methodType(int(methodAddress.value))
 			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_model_getimage3ds")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_model_getimage3ds = methodType(int(methodAddress.value))
+			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_model_mergetomodel")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
 			self.lib.lib3mf_model_mergetomodel = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_model_getvolumetricstacks")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_model_getvolumetricstacks = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_model_addmeshobject")), methodAddress)
 			if err != 0:
@@ -2812,6 +3486,18 @@ class Wrapper:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
 			self.lib.lib3mf_model_addmultipropertygroup = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_model_addimage3d")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint32, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_model_addimage3d = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_model_addvolumetricstack")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_model_addvolumetricstack = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_model_addbuilditem")), methodAddress)
 			if err != 0:
@@ -3112,6 +3798,12 @@ class Wrapper:
 			self.lib.lib3mf_multipropertygroupiterator_getcurrentmultipropertygroup.restype = ctypes.c_int32
 			self.lib.lib3mf_multipropertygroupiterator_getcurrentmultipropertygroup.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
 			
+			self.lib.lib3mf_image3diterator_getcurrentimage3d.restype = ctypes.c_int32
+			self.lib.lib3mf_image3diterator_getcurrentimage3d.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_volumetricstackiterator_getcurrentvolumetricstack.restype = ctypes.c_int32
+			self.lib.lib3mf_volumetricstackiterator_getcurrentvolumetricstack.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
 			self.lib.lib3mf_metadata_getnamespace.restype = ctypes.c_int32
 			self.lib.lib3mf_metadata_getnamespace.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
 			
@@ -3289,6 +3981,9 @@ class Wrapper:
 			self.lib.lib3mf_meshobject_beamlattice.restype = ctypes.c_int32
 			self.lib.lib3mf_meshobject_beamlattice.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
 			
+			self.lib.lib3mf_meshobject_volumedata.restype = ctypes.c_int32
+			self.lib.lib3mf_meshobject_volumedata.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
 			self.lib.lib3mf_beamlattice_getminlength.restype = ctypes.c_int32
 			self.lib.lib3mf_beamlattice_getminlength.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_double)]
 			
@@ -3357,6 +4052,108 @@ class Wrapper:
 			
 			self.lib.lib3mf_beamlattice_getbeamset.restype = ctypes.c_int32
 			self.lib.lib3mf_beamlattice_getbeamset.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_volumedataitem_getvolumetricstack.restype = ctypes.c_int32
+			self.lib.lib3mf_volumedataitem_getvolumetricstack.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_volumedataitem_setvolumetricstack.restype = ctypes.c_int32
+			self.lib.lib3mf_volumedataitem_setvolumetricstack.argtypes = [ctypes.c_void_p, ctypes.c_void_p]
+			
+			self.lib.lib3mf_volumedataitem_gettransform.restype = ctypes.c_int32
+			self.lib.lib3mf_volumedataitem_gettransform.argtypes = [ctypes.c_void_p, ctypes.POINTER(Transform)]
+			
+			self.lib.lib3mf_volumedataitem_settransform.restype = ctypes.c_int32
+			self.lib.lib3mf_volumedataitem_settransform.argtypes = [ctypes.c_void_p, ctypes.POINTER(Transform)]
+			
+			self.lib.lib3mf_volumedatalevelset_getsolidthreshold.restype = ctypes.c_int32
+			self.lib.lib3mf_volumedatalevelset_getsolidthreshold.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_double)]
+			
+			self.lib.lib3mf_volumedatalevelset_setsolidthreshold.restype = ctypes.c_int32
+			self.lib.lib3mf_volumedatalevelset_setsolidthreshold.argtypes = [ctypes.c_void_p, ctypes.c_double]
+			
+			self.lib.lib3mf_volumedatalevelset_setchannel.restype = ctypes.c_int32
+			self.lib.lib3mf_volumedatalevelset_setchannel.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
+			
+			self.lib.lib3mf_volumedatalevelset_getchannel.restype = ctypes.c_int32
+			self.lib.lib3mf_volumedatalevelset_getchannel.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
+			
+			self.lib.lib3mf_volumedatacolor_setchannel.restype = ctypes.c_int32
+			self.lib.lib3mf_volumedatacolor_setchannel.argtypes = [ctypes.c_void_p, ColorChannel, ctypes.c_char_p]
+			
+			self.lib.lib3mf_volumedatacolor_getchannel.restype = ctypes.c_int32
+			self.lib.lib3mf_volumedatacolor_getchannel.argtypes = [ctypes.c_void_p, ColorChannel, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
+			
+			self.lib.lib3mf_volumedatacomposite_getbasematerialgroup.restype = ctypes.c_int32
+			self.lib.lib3mf_volumedatacomposite_getbasematerialgroup.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_volumedatacomposite_setbasematerialgroup.restype = ctypes.c_int32
+			self.lib.lib3mf_volumedatacomposite_setbasematerialgroup.argtypes = [ctypes.c_void_p, ctypes.c_void_p]
+			
+			self.lib.lib3mf_volumedatacomposite_getmaterialmappingcount.restype = ctypes.c_int32
+			self.lib.lib3mf_volumedatacomposite_getmaterialmappingcount.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32)]
+			
+			self.lib.lib3mf_volumedatacomposite_getmaterialmapping.restype = ctypes.c_int32
+			self.lib.lib3mf_volumedatacomposite_getmaterialmapping.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_uint32), ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
+			
+			self.lib.lib3mf_volumedatacomposite_setmaterialmapping.restype = ctypes.c_int32
+			self.lib.lib3mf_volumedatacomposite_setmaterialmapping.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_uint32), ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
+			
+			self.lib.lib3mf_volumedatacomposite_addmaterialmapping.restype = ctypes.c_int32
+			self.lib.lib3mf_volumedatacomposite_addmaterialmapping.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_char_p]
+			
+			self.lib.lib3mf_volumedatacomposite_removematerialmapping.restype = ctypes.c_int32
+			self.lib.lib3mf_volumedatacomposite_removematerialmapping.argtypes = [ctypes.c_void_p, ctypes.c_uint32]
+			
+			self.lib.lib3mf_volumedataproperty_setchannel.restype = ctypes.c_int32
+			self.lib.lib3mf_volumedataproperty_setchannel.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
+			
+			self.lib.lib3mf_volumedataproperty_getchannel.restype = ctypes.c_int32
+			self.lib.lib3mf_volumedataproperty_getchannel.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
+			
+			self.lib.lib3mf_volumedataproperty_setname.restype = ctypes.c_int32
+			self.lib.lib3mf_volumedataproperty_setname.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
+			
+			self.lib.lib3mf_volumedataproperty_getname.restype = ctypes.c_int32
+			self.lib.lib3mf_volumedataproperty_getname.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
+			
+			self.lib.lib3mf_volumedataproperty_setisrequired.restype = ctypes.c_int32
+			self.lib.lib3mf_volumedataproperty_setisrequired.argtypes = [ctypes.c_void_p, ctypes.c_bool]
+			
+			self.lib.lib3mf_volumedataproperty_isrequired.restype = ctypes.c_int32
+			self.lib.lib3mf_volumedataproperty_isrequired.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_bool)]
+			
+			self.lib.lib3mf_volumedata_getlevelset.restype = ctypes.c_int32
+			self.lib.lib3mf_volumedata_getlevelset.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_volumedata_createnewlevelset.restype = ctypes.c_int32
+			self.lib.lib3mf_volumedata_createnewlevelset.argtypes = [ctypes.c_void_p, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_volumedata_getcomposite.restype = ctypes.c_int32
+			self.lib.lib3mf_volumedata_getcomposite.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_volumedata_createnewcomposite.restype = ctypes.c_int32
+			self.lib.lib3mf_volumedata_createnewcomposite.argtypes = [ctypes.c_void_p, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_volumedata_getcolor.restype = ctypes.c_int32
+			self.lib.lib3mf_volumedata_getcolor.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_volumedata_createnewcolor.restype = ctypes.c_int32
+			self.lib.lib3mf_volumedata_createnewcolor.argtypes = [ctypes.c_void_p, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_volumedata_getpropertycount.restype = ctypes.c_int32
+			self.lib.lib3mf_volumedata_getpropertycount.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32)]
+			
+			self.lib.lib3mf_volumedata_getproperty.restype = ctypes.c_int32
+			self.lib.lib3mf_volumedata_getproperty.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_volumedata_findproperty.restype = ctypes.c_int32
+			self.lib.lib3mf_volumedata_findproperty.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_volumedata_addproperty.restype = ctypes.c_int32
+			self.lib.lib3mf_volumedata_addproperty.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_volumedata_removeproperty.restype = ctypes.c_int32
+			self.lib.lib3mf_volumedata_removeproperty.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
 			
 			self.lib.lib3mf_component_getobjectresource.restype = ctypes.c_int32
 			self.lib.lib3mf_component_getobjectresource.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
@@ -3525,6 +4322,174 @@ class Wrapper:
 			
 			self.lib.lib3mf_multipropertygroup_removelayer.restype = ctypes.c_int32
 			self.lib.lib3mf_multipropertygroup_removelayer.argtypes = [ctypes.c_void_p, ctypes.c_uint32]
+			
+			self.lib.lib3mf_image3d_getsizex.restype = ctypes.c_int32
+			self.lib.lib3mf_image3d_getsizex.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32)]
+			
+			self.lib.lib3mf_image3d_getsizey.restype = ctypes.c_int32
+			self.lib.lib3mf_image3d_getsizey.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32)]
+			
+			self.lib.lib3mf_image3d_getsheetcount.restype = ctypes.c_int32
+			self.lib.lib3mf_image3d_getsheetcount.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32)]
+			
+			self.lib.lib3mf_image3d_getsheet.restype = ctypes.c_int32
+			self.lib.lib3mf_image3d_getsheet.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_image3d_createemptysheet.restype = ctypes.c_int32
+			self.lib.lib3mf_image3d_createemptysheet.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_image3d_createsheetfrombuffer.restype = ctypes.c_int32
+			self.lib.lib3mf_image3d_createsheetfrombuffer.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_char_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint8), ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_image3d_createsheetfromfile.restype = ctypes.c_int32
+			self.lib.lib3mf_image3d_createsheetfromfile.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_image3d_setsheet.restype = ctypes.c_int32
+			self.lib.lib3mf_image3d_setsheet.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_void_p]
+			
+			self.lib.lib3mf_image3dchannelselector_getimage.restype = ctypes.c_int32
+			self.lib.lib3mf_image3dchannelselector_getimage.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_image3dchannelselector_setimage.restype = ctypes.c_int32
+			self.lib.lib3mf_image3dchannelselector_setimage.argtypes = [ctypes.c_void_p, ctypes.c_void_p]
+			
+			self.lib.lib3mf_image3dchannelselector_setsourcechannel.restype = ctypes.c_int32
+			self.lib.lib3mf_image3dchannelselector_setsourcechannel.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
+			
+			self.lib.lib3mf_image3dchannelselector_getsourcechannel.restype = ctypes.c_int32
+			self.lib.lib3mf_image3dchannelselector_getsourcechannel.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
+			
+			self.lib.lib3mf_image3dchannelselector_setdestinationchannel.restype = ctypes.c_int32
+			self.lib.lib3mf_image3dchannelselector_setdestinationchannel.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
+			
+			self.lib.lib3mf_image3dchannelselector_getdestinationchannel.restype = ctypes.c_int32
+			self.lib.lib3mf_image3dchannelselector_getdestinationchannel.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
+			
+			self.lib.lib3mf_image3dchannelselector_setfilter.restype = ctypes.c_int32
+			self.lib.lib3mf_image3dchannelselector_setfilter.argtypes = [ctypes.c_void_p, TextureFilter]
+			
+			self.lib.lib3mf_image3dchannelselector_getfilter.restype = ctypes.c_int32
+			self.lib.lib3mf_image3dchannelselector_getfilter.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_int32)]
+			
+			self.lib.lib3mf_image3dchannelselector_settilestyles.restype = ctypes.c_int32
+			self.lib.lib3mf_image3dchannelselector_settilestyles.argtypes = [ctypes.c_void_p, TextureTileStyle, TextureTileStyle, TextureTileStyle]
+			
+			self.lib.lib3mf_image3dchannelselector_gettilestyles.restype = ctypes.c_int32
+			self.lib.lib3mf_image3dchannelselector_gettilestyles.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_int32), ctypes.POINTER(ctypes.c_int32), ctypes.POINTER(ctypes.c_int32)]
+			
+			self.lib.lib3mf_image3dchannelselector_setvaluerange.restype = ctypes.c_int32
+			self.lib.lib3mf_image3dchannelselector_setvaluerange.argtypes = [ctypes.c_void_p, ctypes.c_double, ctypes.c_double]
+			
+			self.lib.lib3mf_image3dchannelselector_getvaluerange.restype = ctypes.c_int32
+			self.lib.lib3mf_image3dchannelselector_getvaluerange.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_double)]
+			
+			self.lib.lib3mf_volumetriclayer_gettransform.restype = ctypes.c_int32
+			self.lib.lib3mf_volumetriclayer_gettransform.argtypes = [ctypes.c_void_p, ctypes.POINTER(Transform)]
+			
+			self.lib.lib3mf_volumetriclayer_settransform.restype = ctypes.c_int32
+			self.lib.lib3mf_volumetriclayer_settransform.argtypes = [ctypes.c_void_p, ctypes.POINTER(Transform)]
+			
+			self.lib.lib3mf_volumetriclayer_getblendmethod.restype = ctypes.c_int32
+			self.lib.lib3mf_volumetriclayer_getblendmethod.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_int32)]
+			
+			self.lib.lib3mf_volumetriclayer_setblendmethod.restype = ctypes.c_int32
+			self.lib.lib3mf_volumetriclayer_setblendmethod.argtypes = [ctypes.c_void_p, BlendMethod]
+			
+			self.lib.lib3mf_volumetriclayer_getsourcealpha.restype = ctypes.c_int32
+			self.lib.lib3mf_volumetriclayer_getsourcealpha.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_double)]
+			
+			self.lib.lib3mf_volumetriclayer_setsourcealpha.restype = ctypes.c_int32
+			self.lib.lib3mf_volumetriclayer_setsourcealpha.argtypes = [ctypes.c_void_p, ctypes.c_double]
+			
+			self.lib.lib3mf_volumetriclayer_getdestinationalpha.restype = ctypes.c_int32
+			self.lib.lib3mf_volumetriclayer_getdestinationalpha.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_double)]
+			
+			self.lib.lib3mf_volumetriclayer_setdestinationalpha.restype = ctypes.c_int32
+			self.lib.lib3mf_volumetriclayer_setdestinationalpha.argtypes = [ctypes.c_void_p, ctypes.c_double]
+			
+			self.lib.lib3mf_volumetriclayer_getinformation.restype = ctypes.c_int32
+			self.lib.lib3mf_volumetriclayer_getinformation.argtypes = [ctypes.c_void_p, ctypes.POINTER(Transform), ctypes.POINTER(ctypes.c_int32), ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_double)]
+			
+			self.lib.lib3mf_volumetriclayer_setinformation.restype = ctypes.c_int32
+			self.lib.lib3mf_volumetriclayer_setinformation.argtypes = [ctypes.c_void_p, ctypes.POINTER(Transform), BlendMethod, ctypes.c_double, ctypes.c_double]
+			
+			self.lib.lib3mf_volumetriclayer_createmaskchannelselector.restype = ctypes.c_int32
+			self.lib.lib3mf_volumetriclayer_createmaskchannelselector.argtypes = [ctypes.c_void_p, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_volumetriclayer_hasmaskchannelselector.restype = ctypes.c_int32
+			self.lib.lib3mf_volumetriclayer_hasmaskchannelselector.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_bool)]
+			
+			self.lib.lib3mf_volumetriclayer_clearmaskchannelselector.restype = ctypes.c_int32
+			self.lib.lib3mf_volumetriclayer_clearmaskchannelselector.argtypes = [ctypes.c_void_p]
+			
+			self.lib.lib3mf_volumetriclayer_getmaskchannelselector.restype = ctypes.c_int32
+			self.lib.lib3mf_volumetriclayer_getmaskchannelselector.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_volumetriclayer_getchannelselectorcount.restype = ctypes.c_int32
+			self.lib.lib3mf_volumetriclayer_getchannelselectorcount.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32)]
+			
+			self.lib.lib3mf_volumetriclayer_getchannelselector.restype = ctypes.c_int32
+			self.lib.lib3mf_volumetriclayer_getchannelselector.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_volumetriclayer_addchannelselector.restype = ctypes.c_int32
+			self.lib.lib3mf_volumetriclayer_addchannelselector.argtypes = [ctypes.c_void_p, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_volumetriclayer_clearchannelselectors.restype = ctypes.c_int32
+			self.lib.lib3mf_volumetriclayer_clearchannelselectors.argtypes = [ctypes.c_void_p]
+			
+			self.lib.lib3mf_volumetriclayer_reindexchannelselector.restype = ctypes.c_int32
+			self.lib.lib3mf_volumetriclayer_reindexchannelselector.argtypes = [ctypes.c_void_p, ctypes.c_void_p, ctypes.c_uint32]
+			
+			self.lib.lib3mf_volumetriclayer_removechannelselector.restype = ctypes.c_int32
+			self.lib.lib3mf_volumetriclayer_removechannelselector.argtypes = [ctypes.c_void_p, ctypes.c_void_p]
+			
+			self.lib.lib3mf_volumetriclayer_removechannelselectorbyindex.restype = ctypes.c_int32
+			self.lib.lib3mf_volumetriclayer_removechannelselectorbyindex.argtypes = [ctypes.c_void_p, ctypes.c_uint32]
+			
+			self.lib.lib3mf_volumetricstack_clear.restype = ctypes.c_int32
+			self.lib.lib3mf_volumetricstack_clear.argtypes = [ctypes.c_void_p]
+			
+			self.lib.lib3mf_volumetricstack_clearunuseddestinationchannels.restype = ctypes.c_int32
+			self.lib.lib3mf_volumetricstack_clearunuseddestinationchannels.argtypes = [ctypes.c_void_p]
+			
+			self.lib.lib3mf_volumetricstack_getdestinationchannelcount.restype = ctypes.c_int32
+			self.lib.lib3mf_volumetricstack_getdestinationchannelcount.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32)]
+			
+			self.lib.lib3mf_volumetricstack_getdestinationchannel.restype = ctypes.c_int32
+			self.lib.lib3mf_volumetricstack_getdestinationchannel.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p, ctypes.POINTER(ctypes.c_double)]
+			
+			self.lib.lib3mf_volumetricstack_adddestinationchannel.restype = ctypes.c_int32
+			self.lib.lib3mf_volumetricstack_adddestinationchannel.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_double, ctypes.POINTER(ctypes.c_uint32)]
+			
+			self.lib.lib3mf_volumetricstack_updatedestinationchannel.restype = ctypes.c_int32
+			self.lib.lib3mf_volumetricstack_updatedestinationchannel.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_double]
+			
+			self.lib.lib3mf_volumetricstack_updatedestinationchannelbyname.restype = ctypes.c_int32
+			self.lib.lib3mf_volumetricstack_updatedestinationchannelbyname.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_double]
+			
+			self.lib.lib3mf_volumetricstack_removedestinationchannel.restype = ctypes.c_int32
+			self.lib.lib3mf_volumetricstack_removedestinationchannel.argtypes = [ctypes.c_void_p, ctypes.c_uint32]
+			
+			self.lib.lib3mf_volumetricstack_removedestinationchannelbyname.restype = ctypes.c_int32
+			self.lib.lib3mf_volumetricstack_removedestinationchannelbyname.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
+			
+			self.lib.lib3mf_volumetricstack_getlayercount.restype = ctypes.c_int32
+			self.lib.lib3mf_volumetricstack_getlayercount.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32)]
+			
+			self.lib.lib3mf_volumetricstack_getlayer.restype = ctypes.c_int32
+			self.lib.lib3mf_volumetricstack_getlayer.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_volumetricstack_addlayer.restype = ctypes.c_int32
+			self.lib.lib3mf_volumetricstack_addlayer.argtypes = [ctypes.c_void_p, ctypes.POINTER(Transform), BlendMethod, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_volumetricstack_reindexlayer.restype = ctypes.c_int32
+			self.lib.lib3mf_volumetricstack_reindexlayer.argtypes = [ctypes.c_void_p, ctypes.c_void_p, ctypes.c_uint32]
+			
+			self.lib.lib3mf_volumetricstack_removelayer.restype = ctypes.c_int32
+			self.lib.lib3mf_volumetricstack_removelayer.argtypes = [ctypes.c_void_p, ctypes.c_void_p]
+			
+			self.lib.lib3mf_volumetricstack_removelayerbyindex.restype = ctypes.c_int32
+			self.lib.lib3mf_volumetricstack_removelayerbyindex.argtypes = [ctypes.c_void_p, ctypes.c_uint32]
 			
 			self.lib.lib3mf_attachment_getpath.restype = ctypes.c_int32
 			self.lib.lib3mf_attachment_getpath.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
@@ -3904,8 +4869,14 @@ class Wrapper:
 			self.lib.lib3mf_model_getslicestacks.restype = ctypes.c_int32
 			self.lib.lib3mf_model_getslicestacks.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
 			
+			self.lib.lib3mf_model_getimage3ds.restype = ctypes.c_int32
+			self.lib.lib3mf_model_getimage3ds.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
 			self.lib.lib3mf_model_mergetomodel.restype = ctypes.c_int32
 			self.lib.lib3mf_model_mergetomodel.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_model_getvolumetricstacks.restype = ctypes.c_int32
+			self.lib.lib3mf_model_getvolumetricstacks.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
 			
 			self.lib.lib3mf_model_addmeshobject.restype = ctypes.c_int32
 			self.lib.lib3mf_model_addmeshobject.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
@@ -3933,6 +4904,12 @@ class Wrapper:
 			
 			self.lib.lib3mf_model_addmultipropertygroup.restype = ctypes.c_int32
 			self.lib.lib3mf_model_addmultipropertygroup.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_model_addimage3d.restype = ctypes.c_int32
+			self.lib.lib3mf_model_addimage3d.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint32, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_model_addvolumetricstack.restype = ctypes.c_int32
+			self.lib.lib3mf_model_addvolumetricstack.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
 			
 			self.lib.lib3mf_model_addbuilditem.restype = ctypes.c_int32
 			self.lib.lib3mf_model_addbuilditem.argtypes = [ctypes.c_void_p, ctypes.c_void_p, ctypes.POINTER(Transform), ctypes.POINTER(ctypes.c_void_p)]
@@ -4644,6 +5621,40 @@ class MultiPropertyGroupIterator(ResourceIterator):
 	
 
 
+''' Class Implementation for Image3DIterator
+'''
+class Image3DIterator(ResourceIterator):
+	def __init__(self, handle, wrapper):
+		ResourceIterator.__init__(self, handle, wrapper)
+	def GetCurrentImage3D(self):
+		ResourceHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_image3diterator_getcurrentimage3d(self._handle, ResourceHandle))
+		if ResourceHandle:
+			ResourceObject = Image3D(ResourceHandle, self._wrapper)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return ResourceObject
+	
+
+
+''' Class Implementation for VolumetricStackIterator
+'''
+class VolumetricStackIterator(ResourceIterator):
+	def __init__(self, handle, wrapper):
+		ResourceIterator.__init__(self, handle, wrapper)
+	def GetCurrentVolumetricStack(self):
+		ResourceHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumetricstackiterator_getcurrentvolumetricstack(self._handle, ResourceHandle))
+		if ResourceHandle:
+			ResourceObject = VolumetricStack(ResourceHandle, self._wrapper)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return ResourceObject
+	
+
+
 ''' Class Implementation for MetaData
 '''
 class MetaData(Base):
@@ -5111,6 +6122,16 @@ class MeshObject(Object):
 		
 		return TheBeamLatticeObject
 	
+	def VolumeData(self):
+		TheVolumeDataHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_meshobject_volumedata(self._handle, TheVolumeDataHandle))
+		if TheVolumeDataHandle:
+			TheVolumeDataObject = VolumeData(TheVolumeDataHandle, self._wrapper)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return TheVolumeDataObject
+	
 
 
 ''' Class Implementation for BeamLattice
@@ -5273,6 +6294,349 @@ class BeamLattice(Base):
 			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
 		
 		return BeamSetObject
+	
+
+
+''' Class Implementation for VolumeDataItem
+'''
+class VolumeDataItem(Base):
+	def __init__(self, handle, wrapper):
+		Base.__init__(self, handle, wrapper)
+	def GetVolumetricStack(self):
+		TheVolumetricStackHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumedataitem_getvolumetricstack(self._handle, TheVolumetricStackHandle))
+		if TheVolumetricStackHandle:
+			TheVolumetricStackObject = VolumetricStack(TheVolumetricStackHandle, self._wrapper)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return TheVolumetricStackObject
+	
+	def SetVolumetricStack(self, TheVolumetricStackObject):
+		TheVolumetricStackHandle = None
+		if TheVolumetricStackObject:
+			TheVolumetricStackHandle = TheVolumetricStackObject._handle
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDPARAM, 'Invalid return/output value')
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumedataitem_setvolumetricstack(self._handle, TheVolumetricStackHandle))
+		
+	
+	def GetTransform(self):
+		pTransform = Transform()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumedataitem_gettransform(self._handle, pTransform))
+		
+		return pTransform
+	
+	def SetTransform(self, Transform):
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumedataitem_settransform(self._handle, Transform))
+		
+	
+
+
+''' Class Implementation for VolumeDataLevelset
+'''
+class VolumeDataLevelset(VolumeDataItem):
+	def __init__(self, handle, wrapper):
+		VolumeDataItem.__init__(self, handle, wrapper)
+	def GetSolidThreshold(self):
+		pTheSolidThreshold = ctypes.c_double()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumedatalevelset_getsolidthreshold(self._handle, pTheSolidThreshold))
+		
+		return pTheSolidThreshold.value
+	
+	def SetSolidThreshold(self, TheSolidThreshold):
+		dTheSolidThreshold = ctypes.c_double(TheSolidThreshold)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumedatalevelset_setsolidthreshold(self._handle, dTheSolidThreshold))
+		
+	
+	def SetChannel(self, ChannelName):
+		pChannelName = ctypes.c_char_p(str.encode(ChannelName))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumedatalevelset_setchannel(self._handle, pChannelName))
+		
+	
+	def GetChannel(self):
+		nChannelNameBufferSize = ctypes.c_uint64(0)
+		nChannelNameNeededChars = ctypes.c_uint64(0)
+		pChannelNameBuffer = ctypes.c_char_p(None)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumedatalevelset_getchannel(self._handle, nChannelNameBufferSize, nChannelNameNeededChars, pChannelNameBuffer))
+		nChannelNameBufferSize = ctypes.c_uint64(nChannelNameNeededChars.value)
+		pChannelNameBuffer = (ctypes.c_char * (nChannelNameNeededChars.value))()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumedatalevelset_getchannel(self._handle, nChannelNameBufferSize, nChannelNameNeededChars, pChannelNameBuffer))
+		
+		return pChannelNameBuffer.value.decode()
+	
+
+
+''' Class Implementation for VolumeDataColor
+'''
+class VolumeDataColor(VolumeDataItem):
+	def __init__(self, handle, wrapper):
+		VolumeDataItem.__init__(self, handle, wrapper)
+	def SetChannel(self, TheColorChannel, ChannelName):
+		pChannelName = ctypes.c_char_p(str.encode(ChannelName))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumedatacolor_setchannel(self._handle, TheColorChannel, pChannelName))
+		
+	
+	def GetChannel(self, TheColorChannel):
+		nChannelNameBufferSize = ctypes.c_uint64(0)
+		nChannelNameNeededChars = ctypes.c_uint64(0)
+		pChannelNameBuffer = ctypes.c_char_p(None)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumedatacolor_getchannel(self._handle, TheColorChannel, nChannelNameBufferSize, nChannelNameNeededChars, pChannelNameBuffer))
+		nChannelNameBufferSize = ctypes.c_uint64(nChannelNameNeededChars.value)
+		pChannelNameBuffer = (ctypes.c_char * (nChannelNameNeededChars.value))()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumedatacolor_getchannel(self._handle, TheColorChannel, nChannelNameBufferSize, nChannelNameNeededChars, pChannelNameBuffer))
+		
+		return pChannelNameBuffer.value.decode()
+	
+
+
+''' Class Implementation for VolumeDataComposite
+'''
+class VolumeDataComposite(VolumeDataItem):
+	def __init__(self, handle, wrapper):
+		VolumeDataItem.__init__(self, handle, wrapper)
+	def GetBaseMaterialGroup(self):
+		BaseMaterialGroupInstanceHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumedatacomposite_getbasematerialgroup(self._handle, BaseMaterialGroupInstanceHandle))
+		if BaseMaterialGroupInstanceHandle:
+			BaseMaterialGroupInstanceObject = BaseMaterialGroup(BaseMaterialGroupInstanceHandle, self._wrapper)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return BaseMaterialGroupInstanceObject
+	
+	def SetBaseMaterialGroup(self, BaseMaterialGroupInstanceObject):
+		BaseMaterialGroupInstanceHandle = None
+		if BaseMaterialGroupInstanceObject:
+			BaseMaterialGroupInstanceHandle = BaseMaterialGroupInstanceObject._handle
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDPARAM, 'Invalid return/output value')
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumedatacomposite_setbasematerialgroup(self._handle, BaseMaterialGroupInstanceHandle))
+		
+	
+	def GetMaterialMappingCount(self):
+		pCount = ctypes.c_uint32()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumedatacomposite_getmaterialmappingcount(self._handle, pCount))
+		
+		return pCount.value
+	
+	def GetMaterialMapping(self, Index):
+		nIndex = ctypes.c_uint32(Index)
+		pPropertyID = ctypes.c_uint32()
+		nChannelNameBufferSize = ctypes.c_uint64(0)
+		nChannelNameNeededChars = ctypes.c_uint64(0)
+		pChannelNameBuffer = ctypes.c_char_p(None)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumedatacomposite_getmaterialmapping(self._handle, nIndex, pPropertyID, nChannelNameBufferSize, nChannelNameNeededChars, pChannelNameBuffer))
+		nChannelNameBufferSize = ctypes.c_uint64(nChannelNameNeededChars.value)
+		pChannelNameBuffer = (ctypes.c_char * (nChannelNameNeededChars.value))()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumedatacomposite_getmaterialmapping(self._handle, nIndex, pPropertyID, nChannelNameBufferSize, nChannelNameNeededChars, pChannelNameBuffer))
+		
+		return pPropertyID.value, pChannelNameBuffer.value.decode()
+	
+	def SetMaterialMapping(self, Index):
+		nIndex = ctypes.c_uint32(Index)
+		pPropertyID = ctypes.c_uint32()
+		nChannelNameBufferSize = ctypes.c_uint64(0)
+		nChannelNameNeededChars = ctypes.c_uint64(0)
+		pChannelNameBuffer = ctypes.c_char_p(None)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumedatacomposite_setmaterialmapping(self._handle, nIndex, pPropertyID, nChannelNameBufferSize, nChannelNameNeededChars, pChannelNameBuffer))
+		nChannelNameBufferSize = ctypes.c_uint64(nChannelNameNeededChars.value)
+		pChannelNameBuffer = (ctypes.c_char * (nChannelNameNeededChars.value))()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumedatacomposite_setmaterialmapping(self._handle, nIndex, pPropertyID, nChannelNameBufferSize, nChannelNameNeededChars, pChannelNameBuffer))
+		
+		return pPropertyID.value, pChannelNameBuffer.value.decode()
+	
+	def AddMaterialMapping(self, PropertyID, ChannelName):
+		nPropertyID = ctypes.c_uint32(PropertyID)
+		pChannelName = ctypes.c_char_p(str.encode(ChannelName))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumedatacomposite_addmaterialmapping(self._handle, nPropertyID, pChannelName))
+		
+	
+	def RemoveMaterialMapping(self, Index):
+		nIndex = ctypes.c_uint32(Index)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumedatacomposite_removematerialmapping(self._handle, nIndex))
+		
+	
+
+
+''' Class Implementation for VolumeDataProperty
+'''
+class VolumeDataProperty(VolumeDataItem):
+	def __init__(self, handle, wrapper):
+		VolumeDataItem.__init__(self, handle, wrapper)
+	def SetChannel(self, ChannelName):
+		pChannelName = ctypes.c_char_p(str.encode(ChannelName))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumedataproperty_setchannel(self._handle, pChannelName))
+		
+	
+	def GetChannel(self):
+		nChannelNameBufferSize = ctypes.c_uint64(0)
+		nChannelNameNeededChars = ctypes.c_uint64(0)
+		pChannelNameBuffer = ctypes.c_char_p(None)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumedataproperty_getchannel(self._handle, nChannelNameBufferSize, nChannelNameNeededChars, pChannelNameBuffer))
+		nChannelNameBufferSize = ctypes.c_uint64(nChannelNameNeededChars.value)
+		pChannelNameBuffer = (ctypes.c_char * (nChannelNameNeededChars.value))()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumedataproperty_getchannel(self._handle, nChannelNameBufferSize, nChannelNameNeededChars, pChannelNameBuffer))
+		
+		return pChannelNameBuffer.value.decode()
+	
+	def SetName(self, PropertyName):
+		pPropertyName = ctypes.c_char_p(str.encode(PropertyName))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumedataproperty_setname(self._handle, pPropertyName))
+		
+	
+	def GetName(self):
+		nPropertyNameBufferSize = ctypes.c_uint64(0)
+		nPropertyNameNeededChars = ctypes.c_uint64(0)
+		pPropertyNameBuffer = ctypes.c_char_p(None)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumedataproperty_getname(self._handle, nPropertyNameBufferSize, nPropertyNameNeededChars, pPropertyNameBuffer))
+		nPropertyNameBufferSize = ctypes.c_uint64(nPropertyNameNeededChars.value)
+		pPropertyNameBuffer = (ctypes.c_char * (nPropertyNameNeededChars.value))()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumedataproperty_getname(self._handle, nPropertyNameBufferSize, nPropertyNameNeededChars, pPropertyNameBuffer))
+		
+		return pPropertyNameBuffer.value.decode()
+	
+	def SetIsRequired(self, IsRequired):
+		bIsRequired = ctypes.c_bool(IsRequired)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumedataproperty_setisrequired(self._handle, bIsRequired))
+		
+	
+	def IsRequired(self):
+		pIsRequired = ctypes.c_bool()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumedataproperty_isrequired(self._handle, pIsRequired))
+		
+		return pIsRequired.value
+	
+
+
+''' Class Implementation for VolumeData
+'''
+class VolumeData(Base):
+	def __init__(self, handle, wrapper):
+		Base.__init__(self, handle, wrapper)
+	def GetLevelset(self):
+		TheLevelsetDataHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumedata_getlevelset(self._handle, TheLevelsetDataHandle))
+		if TheLevelsetDataHandle:
+			TheLevelsetDataObject = VolumeDataLevelset(TheLevelsetDataHandle, self._wrapper)
+		else:
+			TheLevelsetDataObject = None
+		
+		return TheLevelsetDataObject
+	
+	def CreateNewLevelset(self, TheVolumetricStackObject):
+		TheVolumetricStackHandle = None
+		if TheVolumetricStackObject:
+			TheVolumetricStackHandle = TheVolumetricStackObject._handle
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDPARAM, 'Invalid return/output value')
+		TheLevelsetDataHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumedata_createnewlevelset(self._handle, TheVolumetricStackHandle, TheLevelsetDataHandle))
+		if TheLevelsetDataHandle:
+			TheLevelsetDataObject = VolumeDataLevelset(TheLevelsetDataHandle, self._wrapper)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return TheLevelsetDataObject
+	
+	def GetComposite(self):
+		TheCompositeDataHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumedata_getcomposite(self._handle, TheCompositeDataHandle))
+		if TheCompositeDataHandle:
+			TheCompositeDataObject = VolumeDataComposite(TheCompositeDataHandle, self._wrapper)
+		else:
+			TheCompositeDataObject = None
+		
+		return TheCompositeDataObject
+	
+	def CreateNewComposite(self, TheVolumetricStackObject):
+		TheVolumetricStackHandle = None
+		if TheVolumetricStackObject:
+			TheVolumetricStackHandle = TheVolumetricStackObject._handle
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDPARAM, 'Invalid return/output value')
+		TheCompositeDataHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumedata_createnewcomposite(self._handle, TheVolumetricStackHandle, TheCompositeDataHandle))
+		if TheCompositeDataHandle:
+			TheCompositeDataObject = VolumeDataComposite(TheCompositeDataHandle, self._wrapper)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return TheCompositeDataObject
+	
+	def GetColor(self):
+		TheColorDataHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumedata_getcolor(self._handle, TheColorDataHandle))
+		if TheColorDataHandle:
+			TheColorDataObject = VolumeDataColor(TheColorDataHandle, self._wrapper)
+		else:
+			TheColorDataObject = None
+		
+		return TheColorDataObject
+	
+	def CreateNewColor(self, TheVolumetricStackObject):
+		TheVolumetricStackHandle = None
+		if TheVolumetricStackObject:
+			TheVolumetricStackHandle = TheVolumetricStackObject._handle
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDPARAM, 'Invalid return/output value')
+		TheColorDataHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumedata_createnewcolor(self._handle, TheVolumetricStackHandle, TheColorDataHandle))
+		if TheColorDataHandle:
+			TheColorDataObject = VolumeDataColor(TheColorDataHandle, self._wrapper)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return TheColorDataObject
+	
+	def GetPropertyCount(self):
+		pCount = ctypes.c_uint32()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumedata_getpropertycount(self._handle, pCount))
+		
+		return pCount.value
+	
+	def GetProperty(self, Index):
+		nIndex = ctypes.c_uint32(Index)
+		ThePropertyDataHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumedata_getproperty(self._handle, nIndex, ThePropertyDataHandle))
+		if ThePropertyDataHandle:
+			ThePropertyDataObject = VolumeDataProperty(ThePropertyDataHandle, self._wrapper)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return ThePropertyDataObject
+	
+	def FindProperty(self, Name):
+		pName = ctypes.c_char_p(str.encode(Name))
+		ThePropertyDataHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumedata_findproperty(self._handle, pName, ThePropertyDataHandle))
+		if ThePropertyDataHandle:
+			ThePropertyDataObject = VolumeDataProperty(ThePropertyDataHandle, self._wrapper)
+		else:
+			ThePropertyDataObject = None
+		
+		return ThePropertyDataObject
+	
+	def AddProperty(self, Name, TheVolumetricStackObject):
+		pName = ctypes.c_char_p(str.encode(Name))
+		TheVolumetricStackHandle = None
+		if TheVolumetricStackObject:
+			TheVolumetricStackHandle = TheVolumetricStackObject._handle
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDPARAM, 'Invalid return/output value')
+		ThePropertyDataHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumedata_addproperty(self._handle, pName, TheVolumetricStackHandle, ThePropertyDataHandle))
+		if ThePropertyDataHandle:
+			ThePropertyDataObject = VolumeDataProperty(ThePropertyDataHandle, self._wrapper)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return ThePropertyDataObject
+	
+	def RemoveProperty(self, Name):
+		pName = ctypes.c_char_p(str.encode(Name))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumedata_removeproperty(self._handle, pName))
+		
 	
 
 
@@ -5756,6 +7120,462 @@ class MultiPropertyGroup(Resource):
 	def RemoveLayer(self, LayerIndex):
 		nLayerIndex = ctypes.c_uint32(LayerIndex)
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_multipropertygroup_removelayer(self._handle, nLayerIndex))
+		
+	
+
+
+''' Class Implementation for Image3D
+'''
+class Image3D(Resource):
+	def __init__(self, handle, wrapper):
+		Resource.__init__(self, handle, wrapper)
+	def GetSizeX(self):
+		pSizeX = ctypes.c_uint32()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_image3d_getsizex(self._handle, pSizeX))
+		
+		return pSizeX.value
+	
+	def GetSizeY(self):
+		pSizeY = ctypes.c_uint32()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_image3d_getsizey(self._handle, pSizeY))
+		
+		return pSizeY.value
+	
+	def GetSheetCount(self):
+		pSheetCount = ctypes.c_uint32()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_image3d_getsheetcount(self._handle, pSheetCount))
+		
+		return pSheetCount.value
+	
+	def GetSheet(self, Index):
+		nIndex = ctypes.c_uint32(Index)
+		SheetHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_image3d_getsheet(self._handle, nIndex, SheetHandle))
+		if SheetHandle:
+			SheetObject = Attachment(SheetHandle, self._wrapper)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return SheetObject
+	
+	def CreateEmptySheet(self, Index, Path):
+		nIndex = ctypes.c_uint32(Index)
+		pPath = ctypes.c_char_p(str.encode(Path))
+		SheetHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_image3d_createemptysheet(self._handle, nIndex, pPath, SheetHandle))
+		if SheetHandle:
+			SheetObject = Attachment(SheetHandle, self._wrapper)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return SheetObject
+	
+	def CreateSheetFromBuffer(self, Index, Path, Data):
+		nIndex = ctypes.c_uint32(Index)
+		pPath = ctypes.c_char_p(str.encode(Path))
+		nDataCount = ctypes.c_uint64(len(Data))
+		pDataBuffer = (ctypes.c_uint8*len(Data))(*Data)
+		SheetHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_image3d_createsheetfrombuffer(self._handle, nIndex, pPath, nDataCount, pDataBuffer, SheetHandle))
+		if SheetHandle:
+			SheetObject = Attachment(SheetHandle, self._wrapper)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return SheetObject
+	
+	def CreateSheetFromFile(self, Index, Path, FileName):
+		nIndex = ctypes.c_uint32(Index)
+		pPath = ctypes.c_char_p(str.encode(Path))
+		pFileName = ctypes.c_char_p(str.encode(FileName))
+		SheetHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_image3d_createsheetfromfile(self._handle, nIndex, pPath, pFileName, SheetHandle))
+		if SheetHandle:
+			SheetObject = Attachment(SheetHandle, self._wrapper)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return SheetObject
+	
+	def SetSheet(self, Index, SheetObject):
+		nIndex = ctypes.c_uint32(Index)
+		SheetHandle = None
+		if SheetObject:
+			SheetHandle = SheetObject._handle
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDPARAM, 'Invalid return/output value')
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_image3d_setsheet(self._handle, nIndex, SheetHandle))
+		
+	
+
+
+''' Class Implementation for Image3DChannelSelector
+'''
+class Image3DChannelSelector(Base):
+	def __init__(self, handle, wrapper):
+		Base.__init__(self, handle, wrapper)
+	def GetImage(self):
+		Image3DHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_image3dchannelselector_getimage(self._handle, Image3DHandle))
+		if Image3DHandle:
+			Image3DObject = Image3D(Image3DHandle, self._wrapper)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return Image3DObject
+	
+	def SetImage(self, Image3DObject):
+		Image3DHandle = None
+		if Image3DObject:
+			Image3DHandle = Image3DObject._handle
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDPARAM, 'Invalid return/output value')
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_image3dchannelselector_setimage(self._handle, Image3DHandle))
+		
+	
+	def SetSourceChannel(self, ChannelName):
+		pChannelName = ctypes.c_char_p(str.encode(ChannelName))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_image3dchannelselector_setsourcechannel(self._handle, pChannelName))
+		
+	
+	def GetSourceChannel(self):
+		nChannelNameBufferSize = ctypes.c_uint64(0)
+		nChannelNameNeededChars = ctypes.c_uint64(0)
+		pChannelNameBuffer = ctypes.c_char_p(None)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_image3dchannelselector_getsourcechannel(self._handle, nChannelNameBufferSize, nChannelNameNeededChars, pChannelNameBuffer))
+		nChannelNameBufferSize = ctypes.c_uint64(nChannelNameNeededChars.value)
+		pChannelNameBuffer = (ctypes.c_char * (nChannelNameNeededChars.value))()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_image3dchannelselector_getsourcechannel(self._handle, nChannelNameBufferSize, nChannelNameNeededChars, pChannelNameBuffer))
+		
+		return pChannelNameBuffer.value.decode()
+	
+	def SetDestinationChannel(self, ChannelName):
+		pChannelName = ctypes.c_char_p(str.encode(ChannelName))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_image3dchannelselector_setdestinationchannel(self._handle, pChannelName))
+		
+	
+	def GetDestinationChannel(self):
+		nChannelNameBufferSize = ctypes.c_uint64(0)
+		nChannelNameNeededChars = ctypes.c_uint64(0)
+		pChannelNameBuffer = ctypes.c_char_p(None)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_image3dchannelselector_getdestinationchannel(self._handle, nChannelNameBufferSize, nChannelNameNeededChars, pChannelNameBuffer))
+		nChannelNameBufferSize = ctypes.c_uint64(nChannelNameNeededChars.value)
+		pChannelNameBuffer = (ctypes.c_char * (nChannelNameNeededChars.value))()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_image3dchannelselector_getdestinationchannel(self._handle, nChannelNameBufferSize, nChannelNameNeededChars, pChannelNameBuffer))
+		
+		return pChannelNameBuffer.value.decode()
+	
+	def SetFilter(self, Filter):
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_image3dchannelselector_setfilter(self._handle, Filter))
+		
+	
+	def GetFilter(self):
+		pFilter = ctypes.c_int32()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_image3dchannelselector_getfilter(self._handle, pFilter))
+		
+		return TextureFilter(pFilter.value)
+	
+	def SetTileStyles(self, TileStyleU, TileStyleV, TileStyleW):
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_image3dchannelselector_settilestyles(self._handle, TileStyleU, TileStyleV, TileStyleW))
+		
+	
+	def GetTileStyles(self):
+		pTileStyleU = ctypes.c_int32()
+		pTileStyleV = ctypes.c_int32()
+		pTileStyleW = ctypes.c_int32()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_image3dchannelselector_gettilestyles(self._handle, pTileStyleU, pTileStyleV, pTileStyleW))
+		
+		return TextureTileStyle(pTileStyleU.value), TextureTileStyle(pTileStyleV.value), TextureTileStyle(pTileStyleW.value)
+	
+	def SetValueRange(self, Min, Max):
+		dMin = ctypes.c_double(Min)
+		dMax = ctypes.c_double(Max)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_image3dchannelselector_setvaluerange(self._handle, dMin, dMax))
+		
+	
+	def GetValueRange(self):
+		pMin = ctypes.c_double()
+		pMax = ctypes.c_double()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_image3dchannelselector_getvaluerange(self._handle, pMin, pMax))
+		
+		return pMin.value, pMax.value
+	
+
+
+''' Class Implementation for VolumetricLayer
+'''
+class VolumetricLayer(Base):
+	def __init__(self, handle, wrapper):
+		Base.__init__(self, handle, wrapper)
+	def GetTransform(self):
+		pTransform = Transform()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumetriclayer_gettransform(self._handle, pTransform))
+		
+		return pTransform
+	
+	def SetTransform(self, Transform):
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumetriclayer_settransform(self._handle, Transform))
+		
+	
+	def GetBlendMethod(self):
+		pBlendMethod = ctypes.c_int32()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumetriclayer_getblendmethod(self._handle, pBlendMethod))
+		
+		return BlendMethod(pBlendMethod.value)
+	
+	def SetBlendMethod(self, BlendMethod):
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumetriclayer_setblendmethod(self._handle, BlendMethod))
+		
+	
+	def GetSourceAlpha(self):
+		pSourceAlpha = ctypes.c_double()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumetriclayer_getsourcealpha(self._handle, pSourceAlpha))
+		
+		return pSourceAlpha.value
+	
+	def SetSourceAlpha(self, SourceAlpha):
+		dSourceAlpha = ctypes.c_double(SourceAlpha)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumetriclayer_setsourcealpha(self._handle, dSourceAlpha))
+		
+	
+	def GetDestinationAlpha(self):
+		pDestinationAlpha = ctypes.c_double()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumetriclayer_getdestinationalpha(self._handle, pDestinationAlpha))
+		
+		return pDestinationAlpha.value
+	
+	def SetDestinationAlpha(self, DestinationAlpha):
+		dDestinationAlpha = ctypes.c_double(DestinationAlpha)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumetriclayer_setdestinationalpha(self._handle, dDestinationAlpha))
+		
+	
+	def GetInformation(self):
+		pTransform = Transform()
+		pBlendMethod = ctypes.c_int32()
+		pSourceAlpha = ctypes.c_double()
+		pDestinationAlpha = ctypes.c_double()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumetriclayer_getinformation(self._handle, pTransform, pBlendMethod, pSourceAlpha, pDestinationAlpha))
+		
+		return pTransform, BlendMethod(pBlendMethod.value), pSourceAlpha.value, pDestinationAlpha.value
+	
+	def SetInformation(self, Transform, BlendMethod, SourceAlpha, DestinationAlpha):
+		dSourceAlpha = ctypes.c_double(SourceAlpha)
+		dDestinationAlpha = ctypes.c_double(DestinationAlpha)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumetriclayer_setinformation(self._handle, Transform, BlendMethod, dSourceAlpha, dDestinationAlpha))
+		
+	
+	def CreateMaskChannelSelector(self, Image3DObject, SourceChannel, DestinationChannel):
+		Image3DHandle = None
+		if Image3DObject:
+			Image3DHandle = Image3DObject._handle
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDPARAM, 'Invalid return/output value')
+		pSourceChannel = ctypes.c_char_p(str.encode(SourceChannel))
+		pDestinationChannel = ctypes.c_char_p(str.encode(DestinationChannel))
+		ChannelSelectorHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumetriclayer_createmaskchannelselector(self._handle, Image3DHandle, pSourceChannel, pDestinationChannel, ChannelSelectorHandle))
+		if ChannelSelectorHandle:
+			ChannelSelectorObject = Image3DChannelSelector(ChannelSelectorHandle, self._wrapper)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return ChannelSelectorObject
+	
+	def HasMaskChannelSelector(self):
+		pSelectorExists = ctypes.c_bool()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumetriclayer_hasmaskchannelselector(self._handle, pSelectorExists))
+		
+		return pSelectorExists.value
+	
+	def ClearMaskChannelSelector(self):
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumetriclayer_clearmaskchannelselector(self._handle))
+		
+	
+	def GetMaskChannelSelector(self):
+		ChannelSelectorHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumetriclayer_getmaskchannelselector(self._handle, ChannelSelectorHandle))
+		if ChannelSelectorHandle:
+			ChannelSelectorObject = Image3DChannelSelector(ChannelSelectorHandle, self._wrapper)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return ChannelSelectorObject
+	
+	def GetChannelSelectorCount(self):
+		pCount = ctypes.c_uint32()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumetriclayer_getchannelselectorcount(self._handle, pCount))
+		
+		return pCount.value
+	
+	def GetChannelSelector(self, Index):
+		nIndex = ctypes.c_uint32(Index)
+		ChannelSelectorHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumetriclayer_getchannelselector(self._handle, nIndex, ChannelSelectorHandle))
+		if ChannelSelectorHandle:
+			ChannelSelectorObject = Image3DChannelSelector(ChannelSelectorHandle, self._wrapper)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return ChannelSelectorObject
+	
+	def AddChannelSelector(self, Image3DObject, SourceChannel, DestinationChannel):
+		Image3DHandle = None
+		if Image3DObject:
+			Image3DHandle = Image3DObject._handle
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDPARAM, 'Invalid return/output value')
+		pSourceChannel = ctypes.c_char_p(str.encode(SourceChannel))
+		pDestinationChannel = ctypes.c_char_p(str.encode(DestinationChannel))
+		ChannelSelectorHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumetriclayer_addchannelselector(self._handle, Image3DHandle, pSourceChannel, pDestinationChannel, ChannelSelectorHandle))
+		if ChannelSelectorHandle:
+			ChannelSelectorObject = Image3DChannelSelector(ChannelSelectorHandle, self._wrapper)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return ChannelSelectorObject
+	
+	def ClearChannelSelectors(self):
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumetriclayer_clearchannelselectors(self._handle))
+		
+	
+	def ReindexChannelSelector(self, ChannelSelectorObject, Index):
+		ChannelSelectorHandle = None
+		if ChannelSelectorObject:
+			ChannelSelectorHandle = ChannelSelectorObject._handle
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDPARAM, 'Invalid return/output value')
+		nIndex = ctypes.c_uint32(Index)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumetriclayer_reindexchannelselector(self._handle, ChannelSelectorHandle, nIndex))
+		
+	
+	def RemoveChannelSelector(self, ChannelSelectorObject):
+		ChannelSelectorHandle = None
+		if ChannelSelectorObject:
+			ChannelSelectorHandle = ChannelSelectorObject._handle
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDPARAM, 'Invalid return/output value')
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumetriclayer_removechannelselector(self._handle, ChannelSelectorHandle))
+		
+	
+	def RemoveChannelSelectorByIndex(self, Index):
+		nIndex = ctypes.c_uint32(Index)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumetriclayer_removechannelselectorbyindex(self._handle, nIndex))
+		
+	
+
+
+''' Class Implementation for VolumetricStack
+'''
+class VolumetricStack(Resource):
+	def __init__(self, handle, wrapper):
+		Resource.__init__(self, handle, wrapper)
+	def Clear(self):
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumetricstack_clear(self._handle))
+		
+	
+	def ClearUnusedDestinationChannels(self):
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumetricstack_clearunuseddestinationchannels(self._handle))
+		
+	
+	def GetDestinationChannelCount(self):
+		pCount = ctypes.c_uint32()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumetricstack_getdestinationchannelcount(self._handle, pCount))
+		
+		return pCount.value
+	
+	def GetDestinationChannel(self, Index):
+		nIndex = ctypes.c_uint32(Index)
+		nNameBufferSize = ctypes.c_uint64(0)
+		nNameNeededChars = ctypes.c_uint64(0)
+		pNameBuffer = ctypes.c_char_p(None)
+		pBackground = ctypes.c_double()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumetricstack_getdestinationchannel(self._handle, nIndex, nNameBufferSize, nNameNeededChars, pNameBuffer, pBackground))
+		nNameBufferSize = ctypes.c_uint64(nNameNeededChars.value)
+		pNameBuffer = (ctypes.c_char * (nNameNeededChars.value))()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumetricstack_getdestinationchannel(self._handle, nIndex, nNameBufferSize, nNameNeededChars, pNameBuffer, pBackground))
+		
+		return pNameBuffer.value.decode(), pBackground.value
+	
+	def AddDestinationChannel(self, Name, Background):
+		pName = ctypes.c_char_p(str.encode(Name))
+		dBackground = ctypes.c_double(Background)
+		pIndex = ctypes.c_uint32()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumetricstack_adddestinationchannel(self._handle, pName, dBackground, pIndex))
+		
+		return pIndex.value
+	
+	def UpdateDestinationChannel(self, Index, Background):
+		nIndex = ctypes.c_uint32(Index)
+		dBackground = ctypes.c_double(Background)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumetricstack_updatedestinationchannel(self._handle, nIndex, dBackground))
+		
+	
+	def UpdateDestinationChannelByName(self, Name, Background):
+		pName = ctypes.c_char_p(str.encode(Name))
+		dBackground = ctypes.c_double(Background)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumetricstack_updatedestinationchannelbyname(self._handle, pName, dBackground))
+		
+	
+	def RemoveDestinationChannel(self, Index):
+		nIndex = ctypes.c_uint32(Index)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumetricstack_removedestinationchannel(self._handle, nIndex))
+		
+	
+	def RemoveDestinationChannelByName(self, Name):
+		pName = ctypes.c_char_p(str.encode(Name))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumetricstack_removedestinationchannelbyname(self._handle, pName))
+		
+	
+	def GetLayerCount(self):
+		pCount = ctypes.c_uint32()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumetricstack_getlayercount(self._handle, pCount))
+		
+		return pCount.value
+	
+	def GetLayer(self, Index):
+		nIndex = ctypes.c_uint32(Index)
+		LayerHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumetricstack_getlayer(self._handle, nIndex, LayerHandle))
+		if LayerHandle:
+			LayerObject = VolumetricLayer(LayerHandle, self._wrapper)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return LayerObject
+	
+	def AddLayer(self, Transform, BlendMethod):
+		LayerHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumetricstack_addlayer(self._handle, Transform, BlendMethod, LayerHandle))
+		if LayerHandle:
+			LayerObject = VolumetricLayer(LayerHandle, self._wrapper)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return LayerObject
+	
+	def ReindexLayer(self, LayerObject, Index):
+		LayerHandle = None
+		if LayerObject:
+			LayerHandle = LayerObject._handle
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDPARAM, 'Invalid return/output value')
+		nIndex = ctypes.c_uint32(Index)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumetricstack_reindexlayer(self._handle, LayerHandle, nIndex))
+		
+	
+	def RemoveLayer(self, LayerObject):
+		LayerHandle = None
+		if LayerObject:
+			LayerHandle = LayerObject._handle
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDPARAM, 'Invalid return/output value')
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumetricstack_removelayer(self._handle, LayerHandle))
+		
+	
+	def RemoveLayerByIndex(self, Index):
+		nIndex = ctypes.c_uint32(Index)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumetricstack_removelayerbyindex(self._handle, nIndex))
 		
 	
 
@@ -6958,6 +8778,16 @@ class Model(Base):
 		
 		return ResourceIteratorObject
 	
+	def GetImage3Ds(self):
+		ResourceIteratorHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_model_getimage3ds(self._handle, ResourceIteratorHandle))
+		if ResourceIteratorHandle:
+			ResourceIteratorObject = Image3DIterator(ResourceIteratorHandle, self._wrapper)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return ResourceIteratorObject
+	
 	def MergeToModel(self):
 		MergedModelInstanceHandle = ctypes.c_void_p()
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_model_mergetomodel(self._handle, MergedModelInstanceHandle))
@@ -6967,6 +8797,16 @@ class Model(Base):
 			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
 		
 		return MergedModelInstanceObject
+	
+	def GetVolumetricStacks(self):
+		ResourceIteratorHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_model_getvolumetricstacks(self._handle, ResourceIteratorHandle))
+		if ResourceIteratorHandle:
+			ResourceIteratorObject = VolumetricStackIterator(ResourceIteratorHandle, self._wrapper)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return ResourceIteratorObject
 	
 	def AddMeshObject(self):
 		MeshObjectInstanceHandle = ctypes.c_void_p()
@@ -7073,6 +8913,29 @@ class Model(Base):
 			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
 		
 		return MultiPropertyGroupInstanceObject
+	
+	def AddImage3D(self, SizeX, SizeY, SheetCount):
+		nSizeX = ctypes.c_uint32(SizeX)
+		nSizeY = ctypes.c_uint32(SizeY)
+		nSheetCount = ctypes.c_uint32(SheetCount)
+		InstanceHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_model_addimage3d(self._handle, nSizeX, nSizeY, nSheetCount, InstanceHandle))
+		if InstanceHandle:
+			InstanceObject = Image3D(InstanceHandle, self._wrapper)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return InstanceObject
+	
+	def AddVolumetricStack(self):
+		InstanceHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_model_addvolumetricstack(self._handle, InstanceHandle))
+		if InstanceHandle:
+			InstanceObject = VolumetricStack(InstanceHandle, self._wrapper)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return InstanceObject
 	
 	def AddBuildItem(self, ObjectObject, Transform):
 		ObjectHandle = None

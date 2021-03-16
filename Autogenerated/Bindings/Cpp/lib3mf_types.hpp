@@ -85,7 +85,7 @@ typedef void * Lib3MF_pvoid;
 #define LIB3MF_VERSION_MAJOR 2
 #define LIB3MF_VERSION_MINOR 2
 #define LIB3MF_VERSION_MICRO 0
-#define LIB3MF_VERSION_PRERELEASEINFO "develop"
+#define LIB3MF_VERSION_PRERELEASEINFO "volumetric"
 #define LIB3MF_VERSION_BUILDINFO ""
 
 /*************************************************************************************************************************
@@ -128,6 +128,7 @@ typedef void * Lib3MF_pvoid;
 #define LIB3MF_ERROR_INVALIDPROPERTYCOUNT 132
 #define LIB3MF_ERROR_UNKOWNPROGRESSIDENTIFIER 140
 #define LIB3MF_ERROR_ELEMENTCOUNTEXCEEDSLIMIT 141
+#define LIB3MF_ERROR_NOMASKCHANNELSELECTOR 250
 #define LIB3MF_ERROR_BEAMLATTICE_INVALID_OBJECTTYPE 2000
 #define LIB3MF_ERROR_INVALIDKEYSTORE 3000
 #define LIB3MF_ERROR_INVALIDKEYSTORECONSUMER 3001
@@ -155,11 +156,19 @@ typedef Lib3MFHandle Lib3MF_ColorGroupIterator;
 typedef Lib3MFHandle Lib3MF_Texture2DGroupIterator;
 typedef Lib3MFHandle Lib3MF_CompositeMaterialsIterator;
 typedef Lib3MFHandle Lib3MF_MultiPropertyGroupIterator;
+typedef Lib3MFHandle Lib3MF_Image3DIterator;
+typedef Lib3MFHandle Lib3MF_VolumetricStackIterator;
 typedef Lib3MFHandle Lib3MF_MetaData;
 typedef Lib3MFHandle Lib3MF_MetaDataGroup;
 typedef Lib3MFHandle Lib3MF_Object;
 typedef Lib3MFHandle Lib3MF_MeshObject;
 typedef Lib3MFHandle Lib3MF_BeamLattice;
+typedef Lib3MFHandle Lib3MF_VolumeDataItem;
+typedef Lib3MFHandle Lib3MF_VolumeDataLevelset;
+typedef Lib3MFHandle Lib3MF_VolumeDataColor;
+typedef Lib3MFHandle Lib3MF_VolumeDataComposite;
+typedef Lib3MFHandle Lib3MF_VolumeDataProperty;
+typedef Lib3MFHandle Lib3MF_VolumeData;
 typedef Lib3MFHandle Lib3MF_Component;
 typedef Lib3MFHandle Lib3MF_ComponentsObject;
 typedef Lib3MFHandle Lib3MF_BeamSet;
@@ -168,6 +177,10 @@ typedef Lib3MFHandle Lib3MF_ColorGroup;
 typedef Lib3MFHandle Lib3MF_Texture2DGroup;
 typedef Lib3MFHandle Lib3MF_CompositeMaterials;
 typedef Lib3MFHandle Lib3MF_MultiPropertyGroup;
+typedef Lib3MFHandle Lib3MF_Image3D;
+typedef Lib3MFHandle Lib3MF_Image3DChannelSelector;
+typedef Lib3MFHandle Lib3MF_VolumetricLayer;
+typedef Lib3MFHandle Lib3MF_VolumetricStack;
 typedef Lib3MFHandle Lib3MF_Attachment;
 typedef Lib3MFHandle Lib3MF_Texture2D;
 typedef Lib3MFHandle Lib3MF_BuildItem;
@@ -283,9 +296,15 @@ namespace Lib3MF {
   };
   
   enum class eBlendMethod : Lib3MF_int32 {
-    NoBlendMethod = 0,
-    Mix = 1,
-    Multiply = 2
+    Mix = 0,
+    Multiply = 1,
+    Mask = 2
+  };
+  
+  enum class eColorChannel : Lib3MF_int32 {
+    Red = 0,
+    Green = 1,
+    Blue = 2
   };
   
   enum class eEncryptionAlgorithm : Lib3MF_int32 {
@@ -474,6 +493,7 @@ typedef Lib3MF::eBeamLatticeClipMode eLib3MFBeamLatticeClipMode;
 typedef Lib3MF::eBeamLatticeBallMode eLib3MFBeamLatticeBallMode;
 typedef Lib3MF::eProgressIdentifier eLib3MFProgressIdentifier;
 typedef Lib3MF::eBlendMethod eLib3MFBlendMethod;
+typedef Lib3MF::eColorChannel eLib3MFColorChannel;
 typedef Lib3MF::eEncryptionAlgorithm eLib3MFEncryptionAlgorithm;
 typedef Lib3MF::eWrappingAlgorithm eLib3MFWrappingAlgorithm;
 typedef Lib3MF::eMgfAlgorithm eLib3MFMgfAlgorithm;
