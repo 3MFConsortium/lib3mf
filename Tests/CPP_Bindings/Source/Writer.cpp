@@ -35,7 +35,7 @@ UnitTest_Writer.cpp: Defines Unittests for the Writer classes
 
 namespace Lib3MF
 {
-	class Writer : public ::testing::Test {
+	class Writer : public Lib3MFTest {
 	protected:
 		sPosition pVertices[8];
 		sTriangle pTriangles[12];
@@ -87,13 +87,7 @@ namespace Lib3MF
 
 		static std::string InFolder;
 		static std::string OutFolder;
-
-		static void SetUpTestCase() {
-			wrapper = CWrapper::loadLibrary();
-		}
-		static PWrapper wrapper;
 	};
-	PWrapper Writer::wrapper;
 	std::string Writer::InFolder(sTestFilesPath + "/Writer/");
 	std::string Writer::OutFolder(sOutFilesPath + "/Writer/");
 	

@@ -35,7 +35,7 @@ UnitTest_Reader.cpp: Defines Unittests for the Reader classes
 
 namespace Lib3MF
 {
-	class Reader : public ::testing::Test {
+	class Reader : public Lib3MFTest {
 	protected:
 		virtual void SetUp() {
 			model = wrapper->CreateModel();
@@ -51,13 +51,7 @@ namespace Lib3MF
 		PModel model;
 		PReader reader3MF;
 		PReader readerSTL;
-
-		static void SetUpTestCase() {
-			wrapper = CWrapper::loadLibrary();
-		}
-		static PWrapper wrapper;
 	};
-	PWrapper Reader::wrapper;
 
 	TEST_F(Reader, 3MFReadFromFile)
 	{

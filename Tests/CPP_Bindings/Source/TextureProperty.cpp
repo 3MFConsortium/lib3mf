@@ -35,7 +35,7 @@ UnitTest_TextureProperties.cpp: Defines Unittests for texture properties
 
 namespace Lib3MF
 {
-	class TextureProperty : public ::testing::Test {
+	class TextureProperty : public Lib3MFTest {
 	protected:
 
 		virtual void SetUp() {
@@ -64,13 +64,8 @@ namespace Lib3MF
 		PMeshObject mesh;
 		PAttachment textureAttachment;
 		PTexture2D texture2D;
-		static void SetUpTestCase() {
-			wrapper = CWrapper::loadLibrary();
-		}
-		static PWrapper wrapper;
 	};
-	PWrapper TextureProperty::wrapper;
-
+	
 	TEST_F(TextureProperty, SetGet_Texture2DGroup)
 	{
 		std::vector<sTex2Coord> coords(0);

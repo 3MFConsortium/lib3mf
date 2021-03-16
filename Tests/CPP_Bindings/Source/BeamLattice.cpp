@@ -35,7 +35,7 @@ UnitTest_BeamLattice.cpp: Defines Unittests for the BeamLattice class
 
 namespace Lib3MF
 {
-	class BeamLattice : public ::testing::Test {
+	class BeamLattice : public Lib3MFTest {
 	protected:
 
 		virtual void SetUp() {
@@ -66,15 +66,7 @@ namespace Lib3MF
 		PMeshObject otherMesh;
 		PMeshObject meshAfter;
 		PBeamLattice beamLattice;
-
-		static void SetUpTestCase() {
-			wrapper = CWrapper::loadLibrary();
-		}
-	public:
-		static PWrapper wrapper;
 	};
-	PWrapper BeamLattice::wrapper;
-	
 
 	TEST_F(BeamLattice, MinLength)
 	{

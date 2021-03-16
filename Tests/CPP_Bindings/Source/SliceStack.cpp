@@ -37,7 +37,7 @@ UnitTest_SliceStack.cpp: Defines Unittests for the SliceStack class
 
 namespace Lib3MF
 {
-	class SliceStack : public ::testing::Test {
+	class SliceStack : public Lib3MFTest {
 	protected:
 
 		virtual void SetUp() {
@@ -53,14 +53,7 @@ namespace Lib3MF
 		PModel model;
 		PSliceStack sliceStack;
 		PMeshObject mesh;
-
-		static void SetUpTestCase() {
-			wrapper = CWrapper::loadLibrary();
-		}
-		static PWrapper wrapper;
 	};
-	PWrapper SliceStack::wrapper;
-
 
 	TEST_F(SliceStack, HasSetClearSliceStack)
 	{
@@ -126,7 +119,7 @@ namespace Lib3MF
 	}
 
 
-	class SliceStackArrangement : public ::testing::Test {
+	class SliceStackArrangement : public Lib3MFTest {
 	protected:
 		virtual void SetUp() {
 			model = wrapper->CreateModel();
@@ -249,7 +242,7 @@ namespace Lib3MF
 	}
 
 
-	class SliceStackWriting : public ::testing::Test {
+	class SliceStackWriting : public Lib3MFTest {
 	protected:
 		virtual void SetUp() {
 			model = wrapper->CreateModel();
@@ -397,7 +390,7 @@ namespace Lib3MF
 
 
 
-	class SliceStackReading : public ::testing::Test {
+	class SliceStackReading : public Lib3MFTest {
 	protected:
 		virtual void SetUp() {
 			model = wrapper->CreateModel();
@@ -508,7 +501,7 @@ namespace Lib3MF
 	}
 
 
-	class SliceStackTransform : public ::testing::Test {
+	class SliceStackTransform : public Lib3MFTest {
 	protected:
 		virtual void SetUp() {
 			model = wrapper->CreateModel();

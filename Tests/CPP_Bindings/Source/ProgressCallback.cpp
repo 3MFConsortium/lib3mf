@@ -35,7 +35,7 @@ UnitTest_Writer.cpp: Defines Unittests for the Writer classes
 
 namespace Lib3MF
 {
-	class ProgressCallbackTest : public ::testing::Test {
+	class ProgressCallbackTest : public Lib3MFTest {
 	protected:
 		virtual void SetUp() {
 			model = wrapper->CreateModel();
@@ -55,13 +55,7 @@ namespace Lib3MF
 		static std::string OutFolder;
 	public:
 		static void* m_spUserData;
-
-		static void SetUpTestCase() {
-			wrapper = CWrapper::loadLibrary();
-		}
-		static PWrapper wrapper;
 	};
-	PWrapper ProgressCallbackTest::wrapper;
 
 	PModel ProgressCallbackTest::model;
 	std::string ProgressCallbackTest::InFolder(sTestFilesPath + "/Writer/");

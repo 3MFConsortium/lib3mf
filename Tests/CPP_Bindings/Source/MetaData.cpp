@@ -35,7 +35,7 @@ UnitTest_MetaData.cpp: Defines Unittests for the MetaData class
 
 namespace Lib3MF
 {
-	class MetaData : public ::testing::Test {
+	class MetaData : public Lib3MFTest {
 	protected:
 
 		virtual void SetUp() {
@@ -50,14 +50,8 @@ namespace Lib3MF
 		PModel model;
 		PMetaDataGroup metaDataGroup;
 		PMetaData metaData;
-
-		static void SetUpTestCase() {
-			wrapper = CWrapper::loadLibrary();
-		}
-		static PWrapper wrapper;
 	};
-	PWrapper MetaData::wrapper;
-
+	
 	TEST_F(MetaData, DefaultNameSpace)
 	{
 		auto md = metaDataGroup->AddMetaData("", "Designer", "SomeDesigner", "xs:string", true);
