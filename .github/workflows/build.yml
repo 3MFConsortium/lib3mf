@@ -33,8 +33,8 @@ jobs:
       - run: sh cmake/GenerateMake.sh
       - run: cmake --build .
         working-directory: ./build
-      - run: ctest -V
-        working-directory: ./build
+#      - run: ctest -V
+#        working-directory: ./build
       - name: Archive Mac binary
         uses: actions/upload-artifact@v2
         with:
