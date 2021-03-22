@@ -15,7 +15,7 @@ set(LIB3MF_VERSION_PRERELEASE "develop")  # denotes pre-release information of a
 
 
 if(NOT(DEFINED ENV{CMAKE_OSX_ARCHITECTURES}))
-  SET(CMAKE_OSX_ARCHITECTURES "$(ARCHS_STANDARD)")
+  SET(CMAKE_OSX_ARCHITECTURES "arm64;x86_64")
 endif()
 
 project(lib3mf
