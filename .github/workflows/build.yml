@@ -30,11 +30,11 @@ jobs:
       - uses: actions/checkout@v2
         with:
           submodules: true
-      - run: sh cmake/GenerateMake.sh "-DCMAKE_OSX_ARCHITECTURES=arm64;x86_64"
+      - run: sh cmake/GenerateMake.sh
       - run: cmake --build .
         working-directory: ./build
-#      - run: ctest -V
-#        working-directory: ./build
+      - run: ctest -V
+        working-directory: ./build
       - name: Archive Mac binary
         uses: actions/upload-artifact@v2
         with:
