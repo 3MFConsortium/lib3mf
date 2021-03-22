@@ -14,9 +14,9 @@ set(LIB3MF_VERSION_MICRO 0)        # increase on on every change that does not a
 set(LIB3MF_VERSION_PRERELEASE "develop")  # denotes pre-release information of a version of lib3mf
 
 
-if(NOT(DEFINED ENV{CMAKE_OSX_ARCHITECTURES}))
-  SET(CMAKE_OSX_ARCHITECTURES "arm64;x86_64")
-endif()
+#if(NOT(DEFINED ENV{CMAKE_OSX_ARCHITECTURES}))
+#  SET(CMAKE_OSX_ARCHITECTURES "arm64;x86_64")
+#endif()
 
 project(lib3mf
   VERSION ${LIB3MF_VERSION_MAJOR}.${LIB3MF_VERSION_MINOR}.${LIB3MF_VERSION_MICRO}
