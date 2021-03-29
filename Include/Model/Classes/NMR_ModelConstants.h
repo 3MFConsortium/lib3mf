@@ -487,10 +487,11 @@ These are given by the 3MF Standard
 namespace std {
     static bool isNaN(double value)
     {
-        unsigned long long int jvalue = (I64(value) &
-            ~0x8000000000000000uLL);
-        return (jvalue > 0x7ff0000000000000uLL);
-}
+        Cv64suf ieee754;
+        ieee754.f = value;
+        return ((unsigned)(ieee754.u >> 32) & 0x7fffffff) +
+            ((unsigned)ieee754.u != 0) > 0x7ff00000;
+    }
 }
 
 #endif
