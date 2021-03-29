@@ -234,8 +234,8 @@ These are given by the 3MF Standard
 
 #define XML_3MF_ELEMENT_IMAGE3DSHEET           "image3dsheet"
 #define XML_3MF_ATTRIBUTE_IMAGE3DSHEET_PATH    "path"
-#define XML_3MF_ATTRIBUTE_IMAGE3DSHEET_MIN_VAL "minValue"
-#define XML_3MF_ATTRIBUTE_IMAGE3DSHEET_MAX_VAL "maxValue"
+#define XML_3MF_ATTRIBUTE_IMAGE3DSHEET_MIN_VAL "minvalue"
+#define XML_3MF_ATTRIBUTE_IMAGE3DSHEET_MAX_VAL "maxvalue"
 
 #define XML_3MF_ELEMENT_VOLUMETRICSTACK        "volumetricstack"
 #define XML_3MF_ATTRIBUTE_VOLUMETRICSTACK_ID   "id"

@@ -56,8 +56,8 @@ namespace NMR {
 			throw CNMRException(MAX_IMAGE3D_SIZE);
 
 		m_Sheets.resize (m_nSheetCount);
-    m_minValues.resize (m_nSheetCount);
-    m_maxValues.resize (m_nSheetCount);
+		m_minValues.resize (m_nSheetCount);
+		m_maxValues.resize (m_nSheetCount);
 	}
 		
 	
@@ -95,8 +95,8 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_ATTACHMENTMODELMISMATCH);
 
 		m_Sheets[nSheetIndex] = pAttachment;
-    m_minValues[nSheetIndex] = dMin;
-    m_maxValues[nSheetIndex] = dMax;
+		m_minValues[nSheetIndex] = dMin;
+		m_maxValues[nSheetIndex] = dMax;
 	}
 		
 	PModelAttachment CModelImage3D::getSheet(nfUint32 nSheetIndex)
@@ -117,36 +117,36 @@ namespace NMR {
 		return pAttachment;
 	}
 
-  nfDouble CModelImage3D::getSheetMinValue (nfUint32 nSheetIndex)
-  {
-    if (nSheetIndex >= m_nSheetCount)
-      throw CNMRException(NMR_ERROR_INVALIDINDEX);
+	nfDouble CModelImage3D::getSheetMinValue (nfUint32 nSheetIndex)
+	{
+		if (nSheetIndex >= m_nSheetCount)
+			throw CNMRException(NMR_ERROR_INVALIDINDEX);
+		
+		return m_minValues [nSheetIndex];
+	}
 
-    return m_minValues [nSheetIndex];
-  }
-
-  void CModelImage3D::setSheetMinValue (nfUint32 nSheetIndex, nfDouble minVal)
-  {
-    if (nSheetIndex >= m_nSheetCount)
-      throw CNMRException(NMR_ERROR_INVALIDINDEX);
-
-    m_minValues [nSheetIndex] = minVal;
-  }
-
-  nfDouble CModelImage3D::getSheetMaxValue (nfUint32 nSheetIndex)
-  {
-    if (nSheetIndex >= m_nSheetCount)
-      throw CNMRException(NMR_ERROR_INVALIDINDEX);
-
-    return m_maxValues [nSheetIndex];
-  }
-
-  void CModelImage3D::setSheetMaxValue (nfUint32 nSheetIndex, nfDouble maxVal)
-  {
-    if (nSheetIndex >= m_nSheetCount)
-      throw CNMRException(NMR_ERROR_INVALIDINDEX);
-
-    m_maxValues [nSheetIndex] = maxVal;
-  }
+	void CModelImage3D::setSheetMinValue (nfUint32 nSheetIndex, nfDouble minVal)
+	{
+		if (nSheetIndex >= m_nSheetCount)
+			throw CNMRException(NMR_ERROR_INVALIDINDEX);
+		
+		m_minValues [nSheetIndex] = minVal;
+	}
+	
+	nfDouble CModelImage3D::getSheetMaxValue (nfUint32 nSheetIndex)
+	{
+		if (nSheetIndex >= m_nSheetCount)
+			throw CNMRException(NMR_ERROR_INVALIDINDEX);
+		
+		return m_maxValues [nSheetIndex];
+	}
+	
+	void CModelImage3D::setSheetMaxValue (nfUint32 nSheetIndex, nfDouble maxVal)
+	{
+		if (nSheetIndex >= m_nSheetCount)
+			throw CNMRException(NMR_ERROR_INVALIDINDEX);
+		
+		m_maxValues [nSheetIndex] = maxVal;
+	}
 
 }
