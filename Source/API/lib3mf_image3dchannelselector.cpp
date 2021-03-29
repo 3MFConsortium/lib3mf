@@ -124,19 +124,6 @@ void CImage3DChannelSelector::GetTileStyles(Lib3MF::eTextureTileStyle & eTileSty
 	eTileStyleW = eLib3MFTextureTileStyle(m_pSelector->getTileStyleW());
 }
 
-void CImage3DChannelSelector::SetValueRange(const Lib3MF_double dMin, const Lib3MF_double dMax)
-{
-	m_pSelector->setMinValue(dMin);
-	m_pSelector->setMaxValue(dMax);
-}
-
-void CImage3DChannelSelector::GetValueRange(Lib3MF_double & dMin, Lib3MF_double & dMax)
-{
-	dMin = m_pSelector->getMinValue();
-	dMax = m_pSelector->getMaxValue();
-}
-
-
 NMR::PModelImage3DChannelSelector CImage3DChannelSelector::getModelSelector()
 {
 	return m_pSelector;

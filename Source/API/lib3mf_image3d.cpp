@@ -74,26 +74,26 @@ IAttachment * CImage3D::GetSheet(const Lib3MF_uint32 nIndex)
 	return new CAttachment(pAttachment);
 }
 
-IAttachment * CImage3D::CreateEmptySheet(const Lib3MF_uint32 nIndex, const std::string & sPath)
+IAttachment * CImage3D::CreateEmptySheet(const Lib3MF_uint32 nIndex, const std::string & sPath, const Lib3MF_double dMin, const Lib3MF_double dMax)
 {
 	NMR::PImportStream pStream = std::make_shared<NMR::CImportStream_Unique_Memory>();
-	auto pAttachment = m_pImage3D->createSheet(nIndex, sPath, pStream);
+	auto pAttachment = m_pImage3D->createSheet(nIndex, sPath, pStream, dMin, dMax);
 	return new CAttachment(pAttachment);
 }
 
 
-IAttachment * CImage3D::CreateSheetFromBuffer(const Lib3MF_uint32 nIndex, const std::string & sPath, const Lib3MF_uint64 nDataBufferSize, const Lib3MF_uint8 * pDataBuffer)
+IAttachment * CImage3D::CreateSheetFromBuffer(const Lib3MF_uint32 nIndex, const std::string & sPath, const Lib3MF_uint64 nDataBufferSize, const Lib3MF_uint8 * pDataBuffer, const Lib3MF_double dMin, const Lib3MF_double dMax)
 {
 	NMR::PImportStream pStream = std::make_shared<NMR::CImportStream_Unique_Memory>(pDataBuffer, nDataBufferSize);
-	auto pAttachment = m_pImage3D->createSheet(nIndex, sPath, pStream);
+	auto pAttachment = m_pImage3D->createSheet(nIndex, sPath, pStream, dMin, dMax);
 	return new CAttachment(pAttachment);
 }
 
-IAttachment * CImage3D::CreateSheetFromFile(const Lib3MF_uint32 nIndex, const std::string & sPath, const std::string & sFileName)
+IAttachment * CImage3D::CreateSheetFromFile(const Lib3MF_uint32 nIndex, const std::string & sPath, const std::string & sFileName, const Lib3MF_double dMin, const Lib3MF_double dMax)
 {
 	std::wstring sUTF16FileName = NMR::fnUTF8toUTF16(sFileName);
 	NMR::PImportStream pFileStream = std::make_shared<NMR::CImportStream_Native>(sUTF16FileName.c_str ());
-	auto pAttachment = m_pImage3D->createSheet(nIndex, sPath, pFileStream->copyToMemory ());
+	auto pAttachment = m_pImage3D->createSheet(nIndex, sPath, pFileStream->copyToMemory (), dMin, dMax);
 	return new CAttachment(pAttachment);
 }
 
@@ -107,7 +107,7 @@ void CImage3D::SetSheet(const Lib3MF_uint32 nIndex, IAttachment* pSheet)
 	if (pAttachment == nullptr)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 
-	m_pImage3D->setSheet(nIndex, pAttachment->getModelAttachment());
+	m_pImage3D->setSheet(nIndex, pAttachment->getModelAttachment(), 0.0, 0.0); // These values are set using setter functions afterwards
 }
 
 NMR::PModelImage3D CImage3D::getModelImage3D()

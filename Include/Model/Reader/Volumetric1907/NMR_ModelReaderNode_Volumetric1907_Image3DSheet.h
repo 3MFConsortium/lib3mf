@@ -42,6 +42,8 @@ namespace NMR {
 	class CModelReaderNode_Volumetric1907_Image3DSheet : public CModelReaderNode {
 	private:
 		std::string m_sPath;
+    nfDouble m_minValue;
+    nfDouble m_maxValue;
 
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
@@ -52,6 +54,9 @@ namespace NMR {
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 
 		std::string getPath();
+
+    nfDouble getMinValue();
+    nfDouble getMaxValue();
 
 	};
 

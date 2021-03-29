@@ -47,8 +47,6 @@ namespace NMR {
 		  m_eTileStyleU (MODELTEXTURETILESTYLE_WRAP),
 		  m_eTileStyleV (MODELTEXTURETILESTYLE_WRAP),
 		  m_eTileStyleW (MODELTEXTURETILESTYLE_WRAP),
-		  m_dMinValue (0.0),
-		  m_dMaxValue (1.0),
 		  m_nInternalIndex (0)
 	{
 	}
@@ -77,7 +75,6 @@ namespace NMR {
 
 		PModelImage3DChannelSelector pNewSelector = std::make_shared<CModelImage3DChannelSelector>(CModelImage3DChannelSelector (pNewImage3DID, pChannelSelector->getSourceChannel (), pChannelSelector->getDstChannel()));
 		pNewSelector->setFilter(pChannelSelector->getFilter());
-		pNewSelector->setMinValue(pChannelSelector->getMinValue());
 		pNewSelector->setTileStyleU(pChannelSelector->getTileStyleU());
 		pNewSelector->setTileStyleV(pChannelSelector->getTileStyleV());
 		pNewSelector->setTileStyleW(pChannelSelector->getTileStyleW());
@@ -98,17 +95,6 @@ namespace NMR {
 	std::string CModelImage3DChannelSelector::getDstChannel()
 	{
 		return m_sDstChannel;
-	}
-
-
-	nfDouble CModelImage3DChannelSelector::getMinValue()
-	{
-		return m_dMinValue;
-	}
-
-	nfDouble CModelImage3DChannelSelector::getMaxValue()
-	{
-		return m_dMaxValue;
 	}
 
 	eModelTextureTileStyle CModelImage3DChannelSelector::getTileStyleU()
@@ -145,16 +131,6 @@ namespace NMR {
 	void CModelImage3DChannelSelector::setDstChannel(std::string sValue)
 	{
 		m_sDstChannel = sValue;
-	}
-
-	void CModelImage3DChannelSelector::setMinValue(nfDouble dValue)
-	{
-		m_dMinValue = dValue;
-	}
-
-	void CModelImage3DChannelSelector::setMaxValue(nfDouble dValue)
-	{
-		m_dMaxValue = dValue;
 	}
 
 	void CModelImage3DChannelSelector::setTileStyleU(eModelTextureTileStyle eValue)

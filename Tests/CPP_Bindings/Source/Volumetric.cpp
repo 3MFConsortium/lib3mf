@@ -82,7 +82,7 @@ namespace Lib3MF
 			}
 			sNumber = sNumber + std::to_string(k);
 
-			pImage3D->CreateSheetFromFile(i, "/volume/layer" + sNumber + ".png", InFolder + "img" + sNumber + ".png");
+			pImage3D->CreateSheetFromFile(i, "/volume/layer" + sNumber + ".png", InFolder + "img" + sNumber + ".png", 0.0, 0.0);
 		}
 		return pImage3D;
 	}

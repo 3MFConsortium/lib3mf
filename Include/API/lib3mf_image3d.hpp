@@ -72,11 +72,11 @@ public:
 
 	IAttachment * GetSheet(const Lib3MF_uint32 nIndex);
 
-	IAttachment * CreateEmptySheet(const Lib3MF_uint32 nIndex, const std::string & sPath);
+	IAttachment * CreateEmptySheet(const Lib3MF_uint32 nIndex, const std::string & sPath, const Lib3MF_double dMin, const Lib3MF_double dMax);
 
-	IAttachment * CreateSheetFromBuffer(const Lib3MF_uint32 nIndex, const std::string & sPath, const Lib3MF_uint64 nDataBufferSize, const Lib3MF_uint8 * pDataBuffer);
+	IAttachment * CreateSheetFromBuffer(const Lib3MF_uint32 nIndex, const std::string & sPath, const Lib3MF_uint64 nDataBufferSize, const Lib3MF_uint8 * pDataBuffer, const Lib3MF_double dMin, const Lib3MF_double dMax);
 
-	IAttachment * CreateSheetFromFile(const Lib3MF_uint32 nIndex, const std::string & sPath, const std::string & sFileName);
+	IAttachment * CreateSheetFromFile(const Lib3MF_uint32 nIndex, const std::string & sPath, const std::string & sFileName, const Lib3MF_double dMin, const Lib3MF_double dMax);
 
 	void SetSheet(const Lib3MF_uint32 nIndex, IAttachment* pSheet);
 
