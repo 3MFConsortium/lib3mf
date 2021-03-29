@@ -487,8 +487,6 @@ These are given by the 3MF Standard
 #ifndef isnan 
     #define isnan(x) ((x) != (x)) 
 #endif
-}
-
 #endif
 
 
