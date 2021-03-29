@@ -761,8 +761,8 @@ namespace NMR {
 				writeStartElementWithPrefix(XML_3MF_ELEMENT_IMAGE3DSHEET, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
 				if (pSheet.get() != nullptr) {
 					writeStringAttribute(XML_3MF_ATTRIBUTE_IMAGE3DSHEET_PATH, pSheet->getPathURI());
-          writeFloatAttribute(XML_3MF_ATTRIBUTE_IMAGE3DSHEET_MIN_VAL, pImage3DResource->getSheetMinValue(nSheetIndex));
-          writeFloatAttribute(XML_3MF_ATTRIBUTE_IMAGE3DSHEET_MAX_VAL, pImage3DResource->getSheetMaxValue(nSheetIndex));
+          writeFloatAttribute(XML_3MF_ATTRIBUTE_IMAGE3DSHEET_MIN_VAL, (float)pImage3DResource->getSheetMinValue(nSheetIndex));
+          writeFloatAttribute(XML_3MF_ATTRIBUTE_IMAGE3DSHEET_MAX_VAL, (float)pImage3DResource->getSheetMaxValue(nSheetIndex));
 				}
 				writeEndElement();
 			}
