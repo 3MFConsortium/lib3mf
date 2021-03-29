@@ -42,8 +42,8 @@ namespace NMR {
 	class CModelReaderNode_Volumetric1907_Image3DSheet : public CModelReaderNode {
 	private:
 		std::string m_sPath;
-    nfDouble m_minValue;
-    nfDouble m_maxValue;
+    nfDouble m_minValue = 0.0;
+    nfDouble m_maxValue = 0.0;
 
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
