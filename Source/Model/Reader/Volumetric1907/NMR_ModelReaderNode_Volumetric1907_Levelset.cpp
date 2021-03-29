@@ -120,7 +120,7 @@ namespace NMR {
 			m_bHasSolidThreshold = true;
 
 			m_dSolidThreshold = strtod(pAttributeValue, nullptr);
-			if (isnan(m_dSolidThreshold))
+			if (std::isnan(m_dSolidThreshold))
 				throw CNMRException(NMR_ERROR_INVALIDVOLUMEDATASOLIDTHRESHOLD);
 		}
 

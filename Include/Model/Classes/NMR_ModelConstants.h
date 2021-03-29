@@ -483,4 +483,17 @@ These are given by the 3MF Standard
 #define XML_3MF_MAXBEAMCOUNT                        2147483647
 #define XML_3MF_MAXBALLCOUNT                        2147483647
 
+#if defined(__MINGW32__) || defined(__MINGW64__)
+namespace std {
+    static bool isNaN(double value)
+    {
+        unsigned long long int jvalue = (I64(value) &
+            ~0x8000000000000000uLL);
+        return (jvalue > 0x7ff0000000000000uLL);
+}
+}
+
+#endif
+
+
 #endif // __NMR_MODELCONSTANTS
