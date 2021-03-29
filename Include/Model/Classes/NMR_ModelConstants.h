@@ -484,14 +484,7 @@ These are given by the 3MF Standard
 #define XML_3MF_MAXBALLCOUNT                        2147483647
 
 #if defined(__MINGW32__) || defined(__MINGW64__)
-namespace std {
-    static bool isNaN(double value)
-    {
-        Cv64suf ieee754;
-        ieee754.f = value;
-        return ((unsigned)(ieee754.u >> 32) & 0x7fffffff) +
-            ((unsigned)ieee754.u != 0) > 0x7ff00000;
-    }
+    ifndef isnan #define isnan(x) ((x) != (x)) #endif
 }
 
 #endif
