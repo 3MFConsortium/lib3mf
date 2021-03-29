@@ -106,7 +106,7 @@ namespace NMR {
 
 		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_BEAMLATTICE_RADIUS) == 0) {
 			nfDouble dValue = fnStringToDouble(pAttributeValue);
-			if ( std::isnan(dValue) || (dValue <= 0) || (dValue > XML_3MF_MAXIMUMCOORDINATEVALUE) )
+			if ( isnan(dValue) || (dValue <= 0) || (dValue > XML_3MF_MAXIMUMCOORDINATEVALUE) )
 				throw CNMRException(NMR_ERROR_BEAMLATTICEINVALIDATTRIBUTE);
 			m_dDefaultRadius = dValue;
 		}
@@ -114,7 +114,7 @@ namespace NMR {
 			(strcmp(pAttributeName, XML_3MF_ATTRIBUTE_BEAMLATTICE_PRECISION) == 0) )	// legacy
 		{
 			nfDouble dValue = fnStringToDouble(pAttributeValue);
-			if (std::isnan(dValue) || (dValue <= 0) || (dValue > XML_3MF_MAXIMUMCOORDINATEVALUE))
+			if (isnan(dValue) || (dValue <= 0) || (dValue > XML_3MF_MAXIMUMCOORDINATEVALUE))
 				throw CNMRException(NMR_ERROR_BEAMLATTICEINVALIDATTRIBUTE);
 			m_pMesh->setBeamLatticeMinLength(dValue);
 		}
@@ -150,7 +150,7 @@ namespace NMR {
 		}
 		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_BEAMLATTICE_BALLRADIUS) == 0) {
 			nfDouble dValue = fnStringToDouble(pAttributeValue);
-			if (std::isnan(dValue) || (dValue <= 0) || (dValue > XML_3MF_MAXIMUMCOORDINATEVALUE))
+			if (isnan(dValue) || (dValue <= 0) || (dValue > XML_3MF_MAXIMUMCOORDINATEVALUE))
 				throw CNMRException(NMR_ERROR_BEAMLATTICEINVALIDATTRIBUTE);
 			m_dDefaultBallRadius = dValue;
 			m_pMesh->setDefaultBallRadius(dValue);

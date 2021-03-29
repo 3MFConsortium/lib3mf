@@ -40,8 +40,6 @@ CModelReaderNode_Volumetric1907_Levelset.cpp covers the official 3MF volumetric 
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_Exception_Windows.h"
 
-#include <cmath>
-
 namespace NMR {
 
 
@@ -122,7 +120,7 @@ namespace NMR {
 			m_bHasSolidThreshold = true;
 
 			m_dSolidThreshold = strtod(pAttributeValue, nullptr);
-			if (std::isnan(m_dSolidThreshold))
+			if (isnan(m_dSolidThreshold))
 				throw CNMRException(NMR_ERROR_INVALIDVOLUMEDATASOLIDTHRESHOLD);
 		}
 

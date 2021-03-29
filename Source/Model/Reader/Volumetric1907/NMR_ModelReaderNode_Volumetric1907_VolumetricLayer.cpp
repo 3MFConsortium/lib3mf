@@ -129,7 +129,7 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_DUPLICATEVOLUMETRICSRCALPHA);
 
 			m_dSourceAlpha = strtod(pAttributeValue, nullptr);
-			if (std::isnan(m_dSourceAlpha))
+			if (isnan(m_dSourceAlpha))
 				throw CNMRException(NMR_ERROR_INVALIDVOLUMETRICSRCALPHA);
 
 			m_bHasSourceAlpha = true;
@@ -140,7 +140,7 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_DUPLICATEVOLUMETRICDSTALPHA);
 
 			m_dDstAlpha = strtod(pAttributeValue, nullptr);
-			if (std::isnan(m_dDstAlpha))
+			if (isnan(m_dDstAlpha))
 				throw CNMRException(NMR_ERROR_INVALIDVOLUMETRICDSTALPHA);
 
 			m_bHasDstAlpha = true;

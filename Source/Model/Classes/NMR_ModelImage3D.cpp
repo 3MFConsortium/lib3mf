@@ -45,7 +45,7 @@ namespace NMR {
 
 
 	CModelImage3D::CModelImage3D(_In_ const ModelResourceID sID, _In_ CModel * pModel, _In_ nfUint32 nSizeX, _In_ nfUint32 nSizeY, nfUint32 nSheetCount)
-		: CModelResource(sID, pModel), m_nSizeX(nSizeX), m_nSizeY(nSizeY), m_nSheetCount(nSheetCount), m_minValues(nSheetCount, 0.0), m_maxValues(nSheetCount, 0.0)
+		: CModelResource(sID, pModel), m_nSizeX(nSizeX), m_nSizeY(nSizeY), m_nSheetCount(nSheetCount), m_minValues(nSheetCount, 1.0), m_maxValues(nSheetCount, 1.0)
 	{
 
 		if ((nSizeX == 0) || (nSizeX > MAX_IMAGE3D_SIZE))
