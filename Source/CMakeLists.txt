@@ -18,12 +18,10 @@ file (GLOB CPPBASE64_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "Source/Librarie
 set(SRCS_PLATFORM
   ${LIBZIP_FILES}
   ${LIBZIP_FILES_PLATFORM}
-  Source/Common/Platform/NMR_Platform_GCC.cpp
-  Source/Common/Platform/NMR_ImportStream_GCC_Native.cpp
-  Source/Common/Platform/NMR_ImportStream_GCC_Win32.cpp
-  Source/Common/Platform/NMR_ExportStream_GCC_Native.cpp
-  Source/Common/Platform/NMR_ExportStream_GCC_Win32.cpp
-  Source/Common/Platform/NMR_ExportStream_ZIP.cpp
+  Source/Common/Platform/NMR_Platform.cpp
+  Source/Common/Platform/NMR_ImportStream_Native.cpp
+  Source/Common/Platform/NMR_ExportStream_Native.cpp
+    Source/Common/Platform/NMR_ExportStream_ZIP.cpp
 )
 
 set(SRCS_COMMON

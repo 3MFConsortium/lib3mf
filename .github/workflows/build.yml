@@ -30,7 +30,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           submodules: true
-      - run: sh cmake/GenerateMake.sh
+      - run: sh cmake/GenerateMake.sh "-DCMAKE_OSX_ARCHITECTURES=arm64;x86_64"
       - run: cmake --build .
         working-directory: ./build
       - run: ctest -V

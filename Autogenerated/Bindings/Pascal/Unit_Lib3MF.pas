@@ -3409,13 +3409,25 @@ type
 	TLib3MFAttachment_WriteToFileFunc = function(pAttachment: TLib3MFHandle; const pFileName: PAnsiChar): TLib3MFResult; cdecl;
 	
 	(**
-	* Reads an attachment from a file.
+	* Reads an attachment from a file. The path of this file is only read when this attachment is being written as part of the 3MF packege, or via the WriteToFile or WriteToBuffer-methods.
 	*
 	* @param[in] pAttachment - Attachment instance.
 	* @param[in] pFileName - file to read from.
 	* @return error code or 0 (success)
 	*)
 	TLib3MFAttachment_ReadFromFileFunc = function(pAttachment: TLib3MFHandle; const pFileName: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Reads a model and from the data provided by a callback function
+	*
+	* @param[in] pAttachment - Attachment instance.
+	* @param[in] pTheReadCallback - Callback to call for reading a data chunk
+	* @param[in] nStreamSize - number of bytes the callback returns
+	* @param[in] pTheSeekCallback - Callback to call for seeking in the stream.
+	* @param[in] pUserData - Userdata that is passed to the callback function
+	* @return error code or 0 (success)
+	*)
+	TLib3MFAttachment_ReadFromCallbackFunc = function(pAttachment: TLib3MFHandle; const pTheReadCallback: PLib3MF_ReadCallback; const nStreamSize: QWord; const pTheSeekCallback: PLib3MF_SeekCallback; const pUserData: Pointer): TLib3MFResult; cdecl;
 	
 	(**
 	* Retrieves the size of the attachment stream
@@ -5887,6 +5899,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		procedure SetRelationShipType(const APath: String);
 		procedure WriteToFile(const AFileName: String);
 		procedure ReadFromFile(const AFileName: String);
+		procedure ReadFromCallback(const ATheReadCallback: PLib3MF_ReadCallback; const AStreamSize: QWord; const ATheSeekCallback: PLib3MF_SeekCallback; const AUserData: Pointer);
 		function GetStreamSize(): QWord;
 		procedure WriteToBuffer(out ABuffer: TByteDynArray);
 		procedure ReadFromBuffer(const ABuffer: TByteDynArray);
@@ -6462,6 +6475,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFAttachment_SetRelationShipTypeFunc: TLib3MFAttachment_SetRelationShipTypeFunc;
 		FLib3MFAttachment_WriteToFileFunc: TLib3MFAttachment_WriteToFileFunc;
 		FLib3MFAttachment_ReadFromFileFunc: TLib3MFAttachment_ReadFromFileFunc;
+		FLib3MFAttachment_ReadFromCallbackFunc: TLib3MFAttachment_ReadFromCallbackFunc;
 		FLib3MFAttachment_GetStreamSizeFunc: TLib3MFAttachment_GetStreamSizeFunc;
 		FLib3MFAttachment_WriteToBufferFunc: TLib3MFAttachment_WriteToBufferFunc;
 		FLib3MFAttachment_ReadFromBufferFunc: TLib3MFAttachment_ReadFromBufferFunc;
@@ -6925,6 +6939,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFAttachment_SetRelationShipTypeFunc: TLib3MFAttachment_SetRelationShipTypeFunc read FLib3MFAttachment_SetRelationShipTypeFunc;
 		property Lib3MFAttachment_WriteToFileFunc: TLib3MFAttachment_WriteToFileFunc read FLib3MFAttachment_WriteToFileFunc;
 		property Lib3MFAttachment_ReadFromFileFunc: TLib3MFAttachment_ReadFromFileFunc read FLib3MFAttachment_ReadFromFileFunc;
+		property Lib3MFAttachment_ReadFromCallbackFunc: TLib3MFAttachment_ReadFromCallbackFunc read FLib3MFAttachment_ReadFromCallbackFunc;
 		property Lib3MFAttachment_GetStreamSizeFunc: TLib3MFAttachment_GetStreamSizeFunc read FLib3MFAttachment_GetStreamSizeFunc;
 		property Lib3MFAttachment_WriteToBufferFunc: TLib3MFAttachment_WriteToBufferFunc read FLib3MFAttachment_WriteToBufferFunc;
 		property Lib3MFAttachment_ReadFromBufferFunc: TLib3MFAttachment_ReadFromBufferFunc read FLib3MFAttachment_ReadFromBufferFunc;
@@ -10736,6 +10751,15 @@ implementation
 		FWrapper.CheckError(Self, FWrapper.Lib3MFAttachment_ReadFromFileFunc(FHandle, PAnsiChar(AFileName)));
 	end;
 
+	procedure TLib3MFAttachment.ReadFromCallback(const ATheReadCallback: PLib3MF_ReadCallback; const AStreamSize: QWord; const ATheSeekCallback: PLib3MF_SeekCallback; const AUserData: Pointer);
+	begin
+		if not Assigned(ATheReadCallback) then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'ATheReadCallback is a nil value.');
+		if not Assigned(ATheSeekCallback) then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'ATheSeekCallback is a nil value.');
+		FWrapper.CheckError(Self, FWrapper.Lib3MFAttachment_ReadFromCallbackFunc(FHandle, ATheReadCallback, AStreamSize, ATheSeekCallback, AUserData));
+	end;
+
 	function TLib3MFAttachment.GetStreamSize(): QWord;
 	begin
 		FWrapper.CheckError(Self, FWrapper.Lib3MFAttachment_GetStreamSizeFunc(FHandle, Result));
@@ -12756,6 +12780,7 @@ implementation
 		FLib3MFAttachment_SetRelationShipTypeFunc := LoadFunction('lib3mf_attachment_setrelationshiptype');
 		FLib3MFAttachment_WriteToFileFunc := LoadFunction('lib3mf_attachment_writetofile');
 		FLib3MFAttachment_ReadFromFileFunc := LoadFunction('lib3mf_attachment_readfromfile');
+		FLib3MFAttachment_ReadFromCallbackFunc := LoadFunction('lib3mf_attachment_readfromcallback');
 		FLib3MFAttachment_GetStreamSizeFunc := LoadFunction('lib3mf_attachment_getstreamsize');
 		FLib3MFAttachment_WriteToBufferFunc := LoadFunction('lib3mf_attachment_writetobuffer');
 		FLib3MFAttachment_ReadFromBufferFunc := LoadFunction('lib3mf_attachment_readfrombuffer');
@@ -13788,6 +13813,9 @@ implementation
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_attachment_readfromfile'), @FLib3MFAttachment_ReadFromFileFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_attachment_readfromcallback'), @FLib3MFAttachment_ReadFromCallbackFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_attachment_getstreamsize'), @FLib3MFAttachment_GetStreamSizeFunc);

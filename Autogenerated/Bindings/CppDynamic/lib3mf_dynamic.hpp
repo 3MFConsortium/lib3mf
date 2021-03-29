@@ -1490,6 +1490,7 @@ public:
 	inline void SetRelationShipType(const std::string & sPath);
 	inline void WriteToFile(const std::string & sFileName);
 	inline void ReadFromFile(const std::string & sFileName);
+	inline void ReadFromCallback(const ReadCallback pTheReadCallback, const Lib3MF_uint64 nStreamSize, const SeekCallback pTheSeekCallback, const Lib3MF_pvoid pUserData);
 	inline Lib3MF_uint64 GetStreamSize();
 	inline void WriteToBuffer(std::vector<Lib3MF_uint8> & BufferBuffer);
 	inline void ReadFromBuffer(const CInputVector<Lib3MF_uint8> & BufferBuffer);
@@ -2409,6 +2410,7 @@ public:
 		pWrapperTable->m_Attachment_SetRelationShipType = nullptr;
 		pWrapperTable->m_Attachment_WriteToFile = nullptr;
 		pWrapperTable->m_Attachment_ReadFromFile = nullptr;
+		pWrapperTable->m_Attachment_ReadFromCallback = nullptr;
 		pWrapperTable->m_Attachment_GetStreamSize = nullptr;
 		pWrapperTable->m_Attachment_WriteToBuffer = nullptr;
 		pWrapperTable->m_Attachment_ReadFromBuffer = nullptr;
@@ -5191,6 +5193,15 @@ public:
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
+		pWrapperTable->m_Attachment_ReadFromCallback = (PLib3MFAttachment_ReadFromCallbackPtr) GetProcAddress(hLibrary, "lib3mf_attachment_readfromcallback");
+		#else // _WIN32
+		pWrapperTable->m_Attachment_ReadFromCallback = (PLib3MFAttachment_ReadFromCallbackPtr) dlsym(hLibrary, "lib3mf_attachment_readfromcallback");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Attachment_ReadFromCallback == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
 		pWrapperTable->m_Attachment_GetStreamSize = (PLib3MFAttachment_GetStreamSizePtr) GetProcAddress(hLibrary, "lib3mf_attachment_getstreamsize");
 		#else // _WIN32
 		pWrapperTable->m_Attachment_GetStreamSize = (PLib3MFAttachment_GetStreamSizePtr) dlsym(hLibrary, "lib3mf_attachment_getstreamsize");
@@ -7856,6 +7867,10 @@ public:
 		
 		eLookupError = (*pLookup)("lib3mf_attachment_readfromfile", (void**)&(pWrapperTable->m_Attachment_ReadFromFile));
 		if ( (eLookupError != 0) || (pWrapperTable->m_Attachment_ReadFromFile == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_attachment_readfromcallback", (void**)&(pWrapperTable->m_Attachment_ReadFromCallback));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Attachment_ReadFromCallback == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("lib3mf_attachment_getstreamsize", (void**)&(pWrapperTable->m_Attachment_GetStreamSize));
@@ -12226,12 +12241,24 @@ public:
 	}
 	
 	/**
-	* CAttachment::ReadFromFile - Reads an attachment from a file.
+	* CAttachment::ReadFromFile - Reads an attachment from a file. The path of this file is only read when this attachment is being written as part of the 3MF packege, or via the WriteToFile or WriteToBuffer-methods.
 	* @param[in] sFileName - file to read from.
 	*/
 	void CAttachment::ReadFromFile(const std::string & sFileName)
 	{
 		CheckError(m_pWrapper->m_WrapperTable.m_Attachment_ReadFromFile(m_pHandle, sFileName.c_str()));
+	}
+	
+	/**
+	* CAttachment::ReadFromCallback - Reads a model and from the data provided by a callback function
+	* @param[in] pTheReadCallback - Callback to call for reading a data chunk
+	* @param[in] nStreamSize - number of bytes the callback returns
+	* @param[in] pTheSeekCallback - Callback to call for seeking in the stream.
+	* @param[in] pUserData - Userdata that is passed to the callback function
+	*/
+	void CAttachment::ReadFromCallback(const ReadCallback pTheReadCallback, const Lib3MF_uint64 nStreamSize, const SeekCallback pTheSeekCallback, const Lib3MF_pvoid pUserData)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_Attachment_ReadFromCallback(m_pHandle, pTheReadCallback, nStreamSize, pTheSeekCallback, pUserData));
 	}
 	
 	/**

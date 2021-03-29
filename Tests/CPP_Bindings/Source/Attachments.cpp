@@ -108,6 +108,25 @@ namespace Lib3MF
 		ASSERT_TRUE(bAreEqual);
 	}
 
+	TEST_F(AttachmentsT, AddAttachmentCallback)
+	{
+		auto attachment = model->AddAttachment(m_sRelationShipPath + ".xml", m_sAttachmetType);
+
+		PositionedVector<Lib3MF_uint8> bufferCallback;
+		bufferCallback.vec = std::vector<Lib3MF_uint8>(m_sAttachmetPayload.begin(), m_sAttachmetPayload.end());
+
+		attachment->ReadFromCallback(PositionedVector<Lib3MF_uint8>::readCallback,
+			bufferCallback.vec.size(),
+			PositionedVector<Lib3MF_uint8>::seekCallback,
+			reinterpret_cast<Lib3MF_pvoid>(&bufferCallback));
+
+		std::vector<Lib3MF_uint8> buffer;
+		attachment->WriteToBuffer(buffer);
+
+		bool bAreEqual = std::equal(buffer.begin(), buffer.end(), m_sAttachmetPayload.begin());
+		ASSERT_TRUE(bAreEqual);
+	}
+
 	TEST_F(AttachmentsT, FindAttachment)
 	{
 		std::string sRelationShipPath1("/Attachments/test1.xml");

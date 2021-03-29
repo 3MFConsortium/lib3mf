@@ -129,8 +129,8 @@ namespace NMR {
 		nfUint32 nFaceCount = 0;
 		nfUint32 nGlobalColor = 0xffffffff;
 
-		pStream->readBuffer(&aSTLHeader[0], 80, true);
-		pStream->readBuffer((nfByte*)&nFaceCount, sizeof(nFaceCount), true);
+		pStream->readIntoBuffer(&aSTLHeader[0], 80, true);
+		pStream->readIntoBuffer((nfByte*)&nFaceCount, sizeof(nFaceCount), true);
 		if (isBigEndian()) {
 			nFaceCount = swapBytes(nFaceCount);
 		}
@@ -156,7 +156,7 @@ namespace NMR {
 		VectorTree.setUnits(m_fUnits);
 
 		for (nfUint32 nIdx = 0; nIdx < nFaceCount; nIdx++) {
-			pStream->readBuffer((nfByte*)&Facet, sizeof(Facet), true);
+			pStream->readIntoBuffer((nfByte*)&Facet, sizeof(Facet), true);
 			if (isBigEndian()) {
 				Facet.swapByteOrder();
 			}

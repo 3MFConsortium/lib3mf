@@ -33,6 +33,7 @@ Abstract: This is a stub class definition of CAttachment
 
 // Include custom headers here.
 #include "Common/Platform/NMR_ImportStream_Unique_Memory.h"
+#include "Common/Platform/NMR_ImportStream_Callback.h"
 #include "Common/Platform/NMR_ImportStream.h"
 #include "Common/Platform/NMR_Platform.h"
 #include "Common/NMR_StringUtils.h"
@@ -103,6 +104,37 @@ void CAttachment::ReadFromFile (const std::string & sFileName)
 	m_pModelAttachment->setStream(pImportStream);
 }
 
+void CAttachment::ReadFromCallback(const Lib3MF::ReadCallback pTheReadCallback, const Lib3MF_uint64 nStreamSize, const Lib3MF::SeekCallback pTheSeekCallback, const Lib3MF_pvoid pUserData)
+{
+	NMR::ImportStream_ReadCallbackType lambdaReadCallback =
+		[pTheReadCallback](NMR::nfByte* pData, NMR::nfUint64 cbBytes, void* pUserData)
+	{
+		(*pTheReadCallback)(reinterpret_cast<Lib3MF_uint64>(pData), cbBytes, pUserData);
+		return 0;
+	};
+
+	NMR::ImportStream_SeekCallbackType lambdaSeekCallback =
+		[pTheSeekCallback](NMR::nfUint64 nPosition, void* pUserData)
+	{
+		(*pTheSeekCallback)(nPosition, pUserData);
+		return 0;
+	};
+
+	NMR::PImportStream pImportStream = std::make_shared<NMR::CImportStream_Callback>(
+		lambdaReadCallback, lambdaSeekCallback,
+		pUserData, nStreamSize);
+	try {
+		m_pModelAttachment->setStream(pImportStream);
+	}
+	catch (NMR::CNMRException& e) {
+		if (e.getErrorCode() == NMR_USERABORTED) {
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_CALCULATIONABORTED);
+		}
+		else throw e;
+	}
+}
+
+
 Lib3MF_uint64 CAttachment::GetStreamSize ()
 {
 	NMR::PImportStream pStream = m_pModelAttachment->getStream();
@@ -119,7 +151,7 @@ void CAttachment::WriteToBuffer (Lib3MF_uint64 nBufferBufferSize, Lib3MF_uint64*
 
 	if (nBufferBufferSize >= cbStreamSize) {
 		pStream->seekPosition(0, true);
-		pStream->readBuffer(pBufferBuffer, cbStreamSize, true);
+		pStream->readIntoBuffer(pBufferBuffer, cbStreamSize, true);
 	}
 }
 

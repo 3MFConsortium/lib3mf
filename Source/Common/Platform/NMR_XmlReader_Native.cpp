@@ -433,7 +433,7 @@ namespace NMR {
 		}
 
 		// Read buffer into memory
-		cbBytesRead = m_pImportStream->readBuffer((nfByte*)(&((*m_pNextBuffer)[m_nCurrentBufferSize])), cbReadSize, false);
+		cbBytesRead = m_pImportStream->readIntoBuffer((nfByte*)(&((*m_pNextBuffer)[m_nCurrentBufferSize])), cbReadSize, false);
 		m_nCurrentBufferSize += (nfUint32)cbBytesRead;
 
 		// Update Progress

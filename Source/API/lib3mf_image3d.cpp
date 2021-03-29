@@ -34,7 +34,7 @@ Abstract: This is a stub class definition of CImage3D
 
 #include "Common/Platform/NMR_ImportStream_Shared_Memory.h"
 #include "Common/Platform/NMR_ImportStream_Unique_Memory.h"
-#include "Common/Platform/NMR_ImportStream_GCC_Native.h"
+#include "Common/Platform/NMR_ImportStream_Native.h"
 
 #include "Common/NMR_StringUtils.h"
 
@@ -92,7 +92,7 @@ IAttachment * CImage3D::CreateSheetFromBuffer(const Lib3MF_uint32 nIndex, const 
 IAttachment * CImage3D::CreateSheetFromFile(const Lib3MF_uint32 nIndex, const std::string & sPath, const std::string & sFileName)
 {
 	std::wstring sUTF16FileName = NMR::fnUTF8toUTF16(sFileName);
-	NMR::PImportStream pFileStream = std::make_shared<NMR::CImportStream_GCC_Native>(sUTF16FileName.c_str ());
+	NMR::PImportStream pFileStream = std::make_shared<NMR::CImportStream_Native>(sUTF16FileName.c_str ());
 	auto pAttachment = m_pImage3D->createSheet(nIndex, sPath, pFileStream->copyToMemory ());
 	return new CAttachment(pAttachment);
 }

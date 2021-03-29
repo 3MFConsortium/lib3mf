@@ -1151,6 +1151,9 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_attachment_readfromfile", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Attachment_ReadFromFile (IntPtr Handle, byte[] AFileName);
 
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_attachment_readfromcallback", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Attachment_ReadFromCallback (IntPtr Handle, IntPtr ATheReadCallback, UInt64 AStreamSize, IntPtr ATheSeekCallback, UInt64 AUserData);
+
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_attachment_getstreamsize", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Attachment_GetStreamSize (IntPtr Handle, out UInt64 AStreamSize);
 
@@ -4753,6 +4756,12 @@ namespace Lib3MF {
 			byte[] byteFileName = Encoding.UTF8.GetBytes(AFileName + char.MinValue);
 
 			CheckError(Internal.Lib3MFWrapper.Attachment_ReadFromFile (Handle, byteFileName));
+		}
+
+		public void ReadFromCallback (IntPtr ATheReadCallback, UInt64 AStreamSize, IntPtr ATheSeekCallback, UInt64 AUserData)
+		{
+
+			CheckError(Internal.Lib3MFWrapper.Attachment_ReadFromCallback (Handle, IntPtr.Zero, AStreamSize, IntPtr.Zero, AUserData));
 		}
 
 		public UInt64 GetStreamSize ()

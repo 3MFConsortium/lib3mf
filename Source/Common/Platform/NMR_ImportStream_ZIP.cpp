@@ -76,7 +76,7 @@ namespace NMR {
 		throw CNMRException(NMR_ERROR_COULDNOTSEEKINZIP);
 	}
 
-	nfUint64 CImportStream_ZIP::readBuffer(_In_ nfByte * pBuffer, _In_ nfUint64 cbTotalBytesToRead, nfBool bNeedsToReadAll)
+	nfUint64 CImportStream_ZIP::readIntoBuffer(_In_ nfByte * pBuffer, _In_ nfUint64 cbTotalBytesToRead, nfBool bNeedsToReadAll)
 	{
 		nfUint64 cbBytesLeft = cbTotalBytesToRead;
 		nfUint64 cbBytesRead = 0;

@@ -10711,6 +10711,7 @@ void CLib3MFAttachment::Init()
     NODE_SET_PROTOTYPE_METHOD(tpl, "SetRelationShipType", SetRelationShipType);
     NODE_SET_PROTOTYPE_METHOD(tpl, "WriteToFile", WriteToFile);
     NODE_SET_PROTOTYPE_METHOD(tpl, "ReadFromFile", ReadFromFile);
+    NODE_SET_PROTOTYPE_METHOD(tpl, "ReadFromCallback", ReadFromCallback);
     NODE_SET_PROTOTYPE_METHOD(tpl, "GetStreamSize", GetStreamSize);
     NODE_SET_PROTOTYPE_METHOD(tpl, "WriteToBuffer", WriteToBuffer);
     NODE_SET_PROTOTYPE_METHOD(tpl, "ReadFromBuffer", ReadFromBuffer);
@@ -10916,6 +10917,38 @@ void CLib3MFAttachment::ReadFromFile (const FunctionCallbackInfo<Value>& args)
             throw std::runtime_error ("Could not call Lib3MF method Attachment::ReadFromFile.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
         Lib3MFResult errorCode = wrapperTable->m_Attachment_ReadFromFile (instanceHandle, sFileName.c_str());
+        CheckError (isolate, wrapperTable, instanceHandle, errorCode);
+
+    } catch (std::exception & E) {
+        RaiseError (isolate, E.what());
+    }
+}
+
+
+void CLib3MFAttachment::ReadFromCallback (const FunctionCallbackInfo<Value>& args) 
+{
+    Isolate* isolate = args.GetIsolate();
+    HandleScope scope(isolate);
+    try {
+        if (!args[1]->IsString()) {
+            throw std::runtime_error ("Expected uint64 parameter 1 (StreamSize)");
+        }
+        if (!args[3]->IsString()) {
+            throw std::runtime_error ("Expected pointer parameter 3 (UserData)");
+        }
+        v8::String::Utf8Value sutf8StreamSize (args[1]->ToString());
+        std::string sStreamSize = *sutf8StreamSize;
+        uint64_t nStreamSize = stoull (sStreamSize);
+        v8::String::Utf8Value sutf8UserData (args[3]->ToString());
+        std::string sUserData = *sutf8UserData;
+        uint64_t nUserData = stoull (sUserData);
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error ("Could not get wrapper table for Lib3MF method ReadFromCallback.");
+        if (wrapperTable->m_Attachment_ReadFromCallback == nullptr)
+            throw std::runtime_error ("Could not call Lib3MF method Attachment::ReadFromCallback.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Attachment_ReadFromCallback (instanceHandle, nullptr, nStreamSize, nullptr, (void*) nUserData);
         CheckError (isolate, wrapperTable, instanceHandle, errorCode);
 
     } catch (std::exception & E) {
