@@ -145,9 +145,9 @@ namespace NMR {
 
 			m_dDstAlpha = strtod(pAttributeValue, nullptr);
 #ifdef __MINGW32__
-			if (isNotANumber(m_dDstAlpha))
+      if (isNotANumber(m_dDstAlpha))
 #else
-			if (std::isnan(m_dDstAlpha))
+      if (std::isnan(m_dDstAlpha))
 #endif
 				throw CNMRException(NMR_ERROR_INVALIDVOLUMETRICDSTALPHA);
 
