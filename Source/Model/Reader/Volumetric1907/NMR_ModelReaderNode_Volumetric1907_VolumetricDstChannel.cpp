@@ -73,7 +73,11 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_DUPLICATEVOLUMETRICBACKGROUND);
 
 			m_dBackground = strtod(pAttributeValue, nullptr);
+#ifdef __MINGW32__
+			if (isNotANumber(m_dBackground))
+#else
 			if (std::isnan(m_dBackground))
+#endif
 				throw CNMRException(NMR_ERROR_INVALIDVOLUMETRICBACKGROUND);
 
 			m_bHasBackground = true;
