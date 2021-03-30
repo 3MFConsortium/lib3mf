@@ -9084,9 +9084,17 @@ void CLib3MFImage3D::CreateEmptySheet (const FunctionCallbackInfo<Value>& args)
         if (!args[1]->IsString()) {
             throw std::runtime_error ("Expected string parameter 1 (Path)");
         }
+        if (!args[2]->IsNumber()) {
+            throw std::runtime_error ("Expected double parameter 2 (Min)");
+        }
+        if (!args[3]->IsNumber()) {
+            throw std::runtime_error ("Expected double parameter 3 (Max)");
+        }
         unsigned int nIndex = (unsigned int) args[0]->IntegerValue ();
         v8::String::Utf8Value sutf8Path (args[1]->ToString());
         std::string sPath = *sutf8Path;
+        double dMin = (double) args[2]->NumberValue ();
+        double dMax = (double) args[3]->NumberValue ();
         Lib3MFHandle hReturnSheet = nullptr;
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
         if (wrapperTable == nullptr)
@@ -9094,7 +9102,7 @@ void CLib3MFImage3D::CreateEmptySheet (const FunctionCallbackInfo<Value>& args)
         if (wrapperTable->m_Image3D_CreateEmptySheet == nullptr)
             throw std::runtime_error ("Could not call Lib3MF method Image3D::CreateEmptySheet.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_Image3D_CreateEmptySheet (instanceHandle, nIndex, sPath.c_str(), &hReturnSheet);
+        Lib3MFResult errorCode = wrapperTable->m_Image3D_CreateEmptySheet (instanceHandle, nIndex, sPath.c_str(), dMin, dMax, &hReturnSheet);
         CheckError (isolate, wrapperTable, instanceHandle, errorCode);
         Local<Object> instanceObjSheet = CLib3MFAttachment::NewInstance (args.Holder(), hReturnSheet);
         args.GetReturnValue().Set (instanceObjSheet);
@@ -9116,9 +9124,17 @@ void CLib3MFImage3D::CreateSheetFromBuffer (const FunctionCallbackInfo<Value>& a
         if (!args[1]->IsString()) {
             throw std::runtime_error ("Expected string parameter 1 (Path)");
         }
+        if (!args[3]->IsNumber()) {
+            throw std::runtime_error ("Expected double parameter 3 (Min)");
+        }
+        if (!args[4]->IsNumber()) {
+            throw std::runtime_error ("Expected double parameter 4 (Max)");
+        }
         unsigned int nIndex = (unsigned int) args[0]->IntegerValue ();
         v8::String::Utf8Value sutf8Path (args[1]->ToString());
         std::string sPath = *sutf8Path;
+        double dMin = (double) args[3]->NumberValue ();
+        double dMax = (double) args[4]->NumberValue ();
         Lib3MFHandle hReturnSheet = nullptr;
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
         if (wrapperTable == nullptr)
@@ -9126,7 +9142,7 @@ void CLib3MFImage3D::CreateSheetFromBuffer (const FunctionCallbackInfo<Value>& a
         if (wrapperTable->m_Image3D_CreateSheetFromBuffer == nullptr)
             throw std::runtime_error ("Could not call Lib3MF method Image3D::CreateSheetFromBuffer.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_Image3D_CreateSheetFromBuffer (instanceHandle, nIndex, sPath.c_str(), 0, nullptr, &hReturnSheet);
+        Lib3MFResult errorCode = wrapperTable->m_Image3D_CreateSheetFromBuffer (instanceHandle, nIndex, sPath.c_str(), 0, nullptr, dMin, dMax, &hReturnSheet);
         CheckError (isolate, wrapperTable, instanceHandle, errorCode);
         Local<Object> instanceObjSheet = CLib3MFAttachment::NewInstance (args.Holder(), hReturnSheet);
         args.GetReturnValue().Set (instanceObjSheet);
@@ -9151,11 +9167,19 @@ void CLib3MFImage3D::CreateSheetFromFile (const FunctionCallbackInfo<Value>& arg
         if (!args[2]->IsString()) {
             throw std::runtime_error ("Expected string parameter 2 (FileName)");
         }
+        if (!args[3]->IsNumber()) {
+            throw std::runtime_error ("Expected double parameter 3 (Min)");
+        }
+        if (!args[4]->IsNumber()) {
+            throw std::runtime_error ("Expected double parameter 4 (Max)");
+        }
         unsigned int nIndex = (unsigned int) args[0]->IntegerValue ();
         v8::String::Utf8Value sutf8Path (args[1]->ToString());
         std::string sPath = *sutf8Path;
         v8::String::Utf8Value sutf8FileName (args[2]->ToString());
         std::string sFileName = *sutf8FileName;
+        double dMin = (double) args[3]->NumberValue ();
+        double dMax = (double) args[4]->NumberValue ();
         Lib3MFHandle hReturnSheet = nullptr;
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
         if (wrapperTable == nullptr)
@@ -9163,7 +9187,7 @@ void CLib3MFImage3D::CreateSheetFromFile (const FunctionCallbackInfo<Value>& arg
         if (wrapperTable->m_Image3D_CreateSheetFromFile == nullptr)
             throw std::runtime_error ("Could not call Lib3MF method Image3D::CreateSheetFromFile.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_Image3D_CreateSheetFromFile (instanceHandle, nIndex, sPath.c_str(), sFileName.c_str(), &hReturnSheet);
+        Lib3MFResult errorCode = wrapperTable->m_Image3D_CreateSheetFromFile (instanceHandle, nIndex, sPath.c_str(), sFileName.c_str(), dMin, dMax, &hReturnSheet);
         CheckError (isolate, wrapperTable, instanceHandle, errorCode);
         Local<Object> instanceObjSheet = CLib3MFAttachment::NewInstance (args.Holder(), hReturnSheet);
         args.GetReturnValue().Set (instanceObjSheet);
@@ -9238,8 +9262,6 @@ void CLib3MFImage3DChannelSelector::Init()
     NODE_SET_PROTOTYPE_METHOD(tpl, "GetFilter", GetFilter);
     NODE_SET_PROTOTYPE_METHOD(tpl, "SetTileStyles", SetTileStyles);
     NODE_SET_PROTOTYPE_METHOD(tpl, "GetTileStyles", GetTileStyles);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "SetValueRange", SetValueRange);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "GetValueRange", GetValueRange);
     constructor.Reset(isolate, tpl->GetFunction());
 
 }
@@ -9526,60 +9548,6 @@ void CLib3MFImage3DChannelSelector::GetTileStyles (const FunctionCallbackInfo<Va
         outObject->Set (String::NewFromUtf8 (isolate, "TileStyleU"), Integer::New (isolate, (int) eReturnTileStyleU));
         outObject->Set (String::NewFromUtf8 (isolate, "TileStyleV"), Integer::New (isolate, (int) eReturnTileStyleV));
         outObject->Set (String::NewFromUtf8 (isolate, "TileStyleW"), Integer::New (isolate, (int) eReturnTileStyleW));
-        args.GetReturnValue().Set (outObject);
-
-    } catch (std::exception & E) {
-        RaiseError (isolate, E.what());
-    }
-}
-
-
-void CLib3MFImage3DChannelSelector::SetValueRange (const FunctionCallbackInfo<Value>& args) 
-{
-    Isolate* isolate = args.GetIsolate();
-    HandleScope scope(isolate);
-    try {
-        if (!args[0]->IsNumber()) {
-            throw std::runtime_error ("Expected double parameter 0 (Min)");
-        }
-        if (!args[1]->IsNumber()) {
-            throw std::runtime_error ("Expected double parameter 1 (Max)");
-        }
-        double dMin = (double) args[0]->NumberValue ();
-        double dMax = (double) args[1]->NumberValue ();
-        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
-        if (wrapperTable == nullptr)
-            throw std::runtime_error ("Could not get wrapper table for Lib3MF method SetValueRange.");
-        if (wrapperTable->m_Image3DChannelSelector_SetValueRange == nullptr)
-            throw std::runtime_error ("Could not call Lib3MF method Image3DChannelSelector::SetValueRange.");
-        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_Image3DChannelSelector_SetValueRange (instanceHandle, dMin, dMax);
-        CheckError (isolate, wrapperTable, instanceHandle, errorCode);
-
-    } catch (std::exception & E) {
-        RaiseError (isolate, E.what());
-    }
-}
-
-
-void CLib3MFImage3DChannelSelector::GetValueRange (const FunctionCallbackInfo<Value>& args) 
-{
-    Isolate* isolate = args.GetIsolate();
-    HandleScope scope(isolate);
-    try {
-        Local<Object> outObject = Object::New(isolate);
-        double dReturnMin = 0.0;
-        double dReturnMax = 0.0;
-        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
-        if (wrapperTable == nullptr)
-            throw std::runtime_error ("Could not get wrapper table for Lib3MF method GetValueRange.");
-        if (wrapperTable->m_Image3DChannelSelector_GetValueRange == nullptr)
-            throw std::runtime_error ("Could not call Lib3MF method Image3DChannelSelector::GetValueRange.");
-        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_Image3DChannelSelector_GetValueRange (instanceHandle, &dReturnMin, &dReturnMax);
-        CheckError (isolate, wrapperTable, instanceHandle, errorCode);
-        outObject->Set (String::NewFromUtf8 (isolate, "Min"), Number::New (isolate, dReturnMin));
-        outObject->Set (String::NewFromUtf8 (isolate, "Max"), Number::New (isolate, dReturnMax));
         args.GetReturnValue().Set (outObject);
 
     } catch (std::exception & E) {

@@ -2411,10 +2411,12 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_image3d_getsheet(Lib3MF_Image3D pImage3D, Li
 * @param[in] pImage3D - Image3D instance.
 * @param[in] nIndex - index of the image (0-based)
 * @param[in] pPath - path name of package
+* @param[in] dMin - Mapped value of the minimal (e.g. 0) image3D pixel values.
+* @param[in] dMax - Mapped value of the maximal (e.g. 255) image3D pixel values.
 * @param[out] pSheet - attachment containing the image
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_image3d_createemptysheet(Lib3MF_Image3D pImage3D, Lib3MF_uint32 nIndex, const char * pPath, Lib3MF_Attachment * pSheet);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_image3d_createemptysheet(Lib3MF_Image3D pImage3D, Lib3MF_uint32 nIndex, const char * pPath, Lib3MF_double dMin, Lib3MF_double dMax, Lib3MF_Attachment * pSheet);
 
 /**
 * Creates a new sheet attachment from a memory buffer.
@@ -2424,10 +2426,12 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_image3d_createemptysheet(Lib3MF_Image3D pIma
 * @param[in] pPath - path name of package
 * @param[in] nDataBufferSize - Number of elements in buffer
 * @param[in] pDataBuffer - uint8 buffer of binary image data
+* @param[in] dMin - Mapped value of the minimal (e.g. 0) image3D pixel values.
+* @param[in] dMax - Mapped value of the maximal (e.g. 255) image3D pixel values.
 * @param[out] pSheet - attachment containing the image
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_image3d_createsheetfrombuffer(Lib3MF_Image3D pImage3D, Lib3MF_uint32 nIndex, const char * pPath, Lib3MF_uint64 nDataBufferSize, const Lib3MF_uint8 * pDataBuffer, Lib3MF_Attachment * pSheet);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_image3d_createsheetfrombuffer(Lib3MF_Image3D pImage3D, Lib3MF_uint32 nIndex, const char * pPath, Lib3MF_uint64 nDataBufferSize, const Lib3MF_uint8 * pDataBuffer, Lib3MF_double dMin, Lib3MF_double dMax, Lib3MF_Attachment * pSheet);
 
 /**
 * Creates a new sheet attachment from a file on disk.
@@ -2436,10 +2440,12 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_image3d_createsheetfrombuffer(Lib3MF_Image3D
 * @param[in] nIndex - index of the image (0-based)
 * @param[in] pPath - path name of package
 * @param[in] pFileName - file name to read from
+* @param[in] dMin - Mapped value of the minimal (e.g. 0) image3D pixel values.
+* @param[in] dMax - Mapped value of the maximal (e.g. 255) image3D pixel values.
 * @param[out] pSheet - attachment containing the image
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_image3d_createsheetfromfile(Lib3MF_Image3D pImage3D, Lib3MF_uint32 nIndex, const char * pPath, const char * pFileName, Lib3MF_Attachment * pSheet);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_image3d_createsheetfromfile(Lib3MF_Image3D pImage3D, Lib3MF_uint32 nIndex, const char * pPath, const char * pFileName, Lib3MF_double dMin, Lib3MF_double dMax, Lib3MF_Attachment * pSheet);
 
 /**
 * Sets a sheet to an existing attachment.
@@ -2552,26 +2558,6 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_image3dchannelselector_settilestyles(Lib3MF_
 * @return error code or 0 (success)
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_image3dchannelselector_gettilestyles(Lib3MF_Image3DChannelSelector pImage3DChannelSelector, eLib3MFTextureTileStyle * pTileStyleU, eLib3MFTextureTileStyle * pTileStyleV, eLib3MFTextureTileStyle * pTileStyleW);
-
-/**
-* Sets the value range of the selector.
-*
-* @param[in] pImage3DChannelSelector - Image3DChannelSelector instance.
-* @param[in] dMin - Mapped value of the minimal (e.g. 0) image3D pixel values.
-* @param[in] dMax - Mapped value of the maximal (e.g. 255) image3D pixel values.
-* @return error code or 0 (success)
-*/
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_image3dchannelselector_setvaluerange(Lib3MF_Image3DChannelSelector pImage3DChannelSelector, Lib3MF_double dMin, Lib3MF_double dMax);
-
-/**
-* Retrieves the value range of the selector.
-*
-* @param[in] pImage3DChannelSelector - Image3DChannelSelector instance.
-* @param[out] pMin - Mapped value of the minimal (e.g. 0) image3D pixel values.
-* @param[out] pMax - Mapped value of the maximal (e.g. 255) image3D pixel values.
-* @return error code or 0 (success)
-*/
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_image3dchannelselector_getvaluerange(Lib3MF_Image3DChannelSelector pImage3DChannelSelector, Lib3MF_double * pMin, Lib3MF_double * pMax);
 
 /*************************************************************************************************************************
  Class definition for VolumetricLayer

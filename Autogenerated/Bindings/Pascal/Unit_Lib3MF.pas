@@ -2826,10 +2826,12 @@ type
 	* @param[in] pImage3D - Image3D instance.
 	* @param[in] nIndex - index of the image (0-based)
 	* @param[in] pPath - path name of package
+	* @param[in] dMin - Mapped value of the minimal (e.g. 0) image3D pixel values.
+	* @param[in] dMax - Mapped value of the maximal (e.g. 255) image3D pixel values.
 	* @param[out] pSheet - attachment containing the image
 	* @return error code or 0 (success)
 	*)
-	TLib3MFImage3D_CreateEmptySheetFunc = function(pImage3D: TLib3MFHandle; const nIndex: Cardinal; const pPath: PAnsiChar; out pSheet: TLib3MFHandle): TLib3MFResult; cdecl;
+	TLib3MFImage3D_CreateEmptySheetFunc = function(pImage3D: TLib3MFHandle; const nIndex: Cardinal; const pPath: PAnsiChar; const dMin: Double; const dMax: Double; out pSheet: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
 	* Creates a new sheet attachment from a memory buffer.
@@ -2839,10 +2841,12 @@ type
 	* @param[in] pPath - path name of package
 	* @param[in] nDataCount - Number of elements in buffer
 	* @param[in] pDataBuffer - uint8 buffer of binary image data
+	* @param[in] dMin - Mapped value of the minimal (e.g. 0) image3D pixel values.
+	* @param[in] dMax - Mapped value of the maximal (e.g. 255) image3D pixel values.
 	* @param[out] pSheet - attachment containing the image
 	* @return error code or 0 (success)
 	*)
-	TLib3MFImage3D_CreateSheetFromBufferFunc = function(pImage3D: TLib3MFHandle; const nIndex: Cardinal; const pPath: PAnsiChar; const nDataCount: QWord; const pDataBuffer: PByte; out pSheet: TLib3MFHandle): TLib3MFResult; cdecl;
+	TLib3MFImage3D_CreateSheetFromBufferFunc = function(pImage3D: TLib3MFHandle; const nIndex: Cardinal; const pPath: PAnsiChar; const nDataCount: QWord; const pDataBuffer: PByte; const dMin: Double; const dMax: Double; out pSheet: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
 	* Creates a new sheet attachment from a file on disk.
@@ -2851,10 +2855,12 @@ type
 	* @param[in] nIndex - index of the image (0-based)
 	* @param[in] pPath - path name of package
 	* @param[in] pFileName - file name to read from
+	* @param[in] dMin - Mapped value of the minimal (e.g. 0) image3D pixel values.
+	* @param[in] dMax - Mapped value of the maximal (e.g. 255) image3D pixel values.
 	* @param[out] pSheet - attachment containing the image
 	* @return error code or 0 (success)
 	*)
-	TLib3MFImage3D_CreateSheetFromFileFunc = function(pImage3D: TLib3MFHandle; const nIndex: Cardinal; const pPath: PAnsiChar; const pFileName: PAnsiChar; out pSheet: TLib3MFHandle): TLib3MFResult; cdecl;
+	TLib3MFImage3D_CreateSheetFromFileFunc = function(pImage3D: TLib3MFHandle; const nIndex: Cardinal; const pPath: PAnsiChar; const pFileName: PAnsiChar; const dMin: Double; const dMax: Double; out pSheet: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
 	* Sets a sheet to an existing attachment.
@@ -2968,26 +2974,6 @@ type
 	* @return error code or 0 (success)
 	*)
 	TLib3MFImage3DChannelSelector_GetTileStylesFunc = function(pImage3DChannelSelector: TLib3MFHandle; out pTileStyleU: Integer; out pTileStyleV: Integer; out pTileStyleW: Integer): TLib3MFResult; cdecl;
-	
-	(**
-	* Sets the value range of the selector.
-	*
-	* @param[in] pImage3DChannelSelector - Image3DChannelSelector instance.
-	* @param[in] dMin - Mapped value of the minimal (e.g. 0) image3D pixel values.
-	* @param[in] dMax - Mapped value of the maximal (e.g. 255) image3D pixel values.
-	* @return error code or 0 (success)
-	*)
-	TLib3MFImage3DChannelSelector_SetValueRangeFunc = function(pImage3DChannelSelector: TLib3MFHandle; const dMin: Double; const dMax: Double): TLib3MFResult; cdecl;
-	
-	(**
-	* Retrieves the value range of the selector.
-	*
-	* @param[in] pImage3DChannelSelector - Image3DChannelSelector instance.
-	* @param[out] pMin - Mapped value of the minimal (e.g. 0) image3D pixel values.
-	* @param[out] pMax - Mapped value of the maximal (e.g. 255) image3D pixel values.
-	* @return error code or 0 (success)
-	*)
-	TLib3MFImage3DChannelSelector_GetValueRangeFunc = function(pImage3DChannelSelector: TLib3MFHandle; out pMin: Double; out pMax: Double): TLib3MFResult; cdecl;
 	
 
 (*************************************************************************************************************************
@@ -5796,9 +5782,9 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		function GetSizeY(): Cardinal;
 		function GetSheetCount(): Cardinal;
 		function GetSheet(const AIndex: Cardinal): TLib3MFAttachment;
-		function CreateEmptySheet(const AIndex: Cardinal; const APath: String): TLib3MFAttachment;
-		function CreateSheetFromBuffer(const AIndex: Cardinal; const APath: String; const AData: TByteDynArray): TLib3MFAttachment;
-		function CreateSheetFromFile(const AIndex: Cardinal; const APath: String; const AFileName: String): TLib3MFAttachment;
+		function CreateEmptySheet(const AIndex: Cardinal; const APath: String; const AMin: Double; const AMax: Double): TLib3MFAttachment;
+		function CreateSheetFromBuffer(const AIndex: Cardinal; const APath: String; const AData: TByteDynArray; const AMin: Double; const AMax: Double): TLib3MFAttachment;
+		function CreateSheetFromFile(const AIndex: Cardinal; const APath: String; const AFileName: String; const AMin: Double; const AMax: Double): TLib3MFAttachment;
 		procedure SetSheet(const AIndex: Cardinal; const ASheet: TLib3MFAttachment);
 	end;
 
@@ -5821,8 +5807,6 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		function GetFilter(): TLib3MFTextureFilter;
 		procedure SetTileStyles(const ATileStyleU: TLib3MFTextureTileStyle; const ATileStyleV: TLib3MFTextureTileStyle; const ATileStyleW: TLib3MFTextureTileStyle);
 		procedure GetTileStyles(out ATileStyleU: TLib3MFTextureTileStyle; out ATileStyleV: TLib3MFTextureTileStyle; out ATileStyleW: TLib3MFTextureTileStyle);
-		procedure SetValueRange(const AMin: Double; const AMax: Double);
-		procedure GetValueRange(out AMin: Double; out AMax: Double);
 	end;
 
 
@@ -6430,8 +6414,6 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFImage3DChannelSelector_GetFilterFunc: TLib3MFImage3DChannelSelector_GetFilterFunc;
 		FLib3MFImage3DChannelSelector_SetTileStylesFunc: TLib3MFImage3DChannelSelector_SetTileStylesFunc;
 		FLib3MFImage3DChannelSelector_GetTileStylesFunc: TLib3MFImage3DChannelSelector_GetTileStylesFunc;
-		FLib3MFImage3DChannelSelector_SetValueRangeFunc: TLib3MFImage3DChannelSelector_SetValueRangeFunc;
-		FLib3MFImage3DChannelSelector_GetValueRangeFunc: TLib3MFImage3DChannelSelector_GetValueRangeFunc;
 		FLib3MFVolumetricLayer_GetTransformFunc: TLib3MFVolumetricLayer_GetTransformFunc;
 		FLib3MFVolumetricLayer_SetTransformFunc: TLib3MFVolumetricLayer_SetTransformFunc;
 		FLib3MFVolumetricLayer_GetBlendMethodFunc: TLib3MFVolumetricLayer_GetBlendMethodFunc;
@@ -6894,8 +6876,6 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFImage3DChannelSelector_GetFilterFunc: TLib3MFImage3DChannelSelector_GetFilterFunc read FLib3MFImage3DChannelSelector_GetFilterFunc;
 		property Lib3MFImage3DChannelSelector_SetTileStylesFunc: TLib3MFImage3DChannelSelector_SetTileStylesFunc read FLib3MFImage3DChannelSelector_SetTileStylesFunc;
 		property Lib3MFImage3DChannelSelector_GetTileStylesFunc: TLib3MFImage3DChannelSelector_GetTileStylesFunc read FLib3MFImage3DChannelSelector_GetTileStylesFunc;
-		property Lib3MFImage3DChannelSelector_SetValueRangeFunc: TLib3MFImage3DChannelSelector_SetValueRangeFunc read FLib3MFImage3DChannelSelector_SetValueRangeFunc;
-		property Lib3MFImage3DChannelSelector_GetValueRangeFunc: TLib3MFImage3DChannelSelector_GetValueRangeFunc read FLib3MFImage3DChannelSelector_GetValueRangeFunc;
 		property Lib3MFVolumetricLayer_GetTransformFunc: TLib3MFVolumetricLayer_GetTransformFunc read FLib3MFVolumetricLayer_GetTransformFunc;
 		property Lib3MFVolumetricLayer_SetTransformFunc: TLib3MFVolumetricLayer_SetTransformFunc read FLib3MFVolumetricLayer_SetTransformFunc;
 		property Lib3MFVolumetricLayer_GetBlendMethodFunc: TLib3MFVolumetricLayer_GetBlendMethodFunc read FLib3MFVolumetricLayer_GetBlendMethodFunc;
@@ -10207,18 +10187,18 @@ implementation
 			Result := TLib3MFAttachment.Create(FWrapper, HSheet);
 	end;
 
-	function TLib3MFImage3D.CreateEmptySheet(const AIndex: Cardinal; const APath: String): TLib3MFAttachment;
+	function TLib3MFImage3D.CreateEmptySheet(const AIndex: Cardinal; const APath: String; const AMin: Double; const AMax: Double): TLib3MFAttachment;
 	var
 		HSheet: TLib3MFHandle;
 	begin
 		Result := nil;
 		HSheet := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImage3D_CreateEmptySheetFunc(FHandle, AIndex, PAnsiChar(APath), HSheet));
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImage3D_CreateEmptySheetFunc(FHandle, AIndex, PAnsiChar(APath), AMin, AMax, HSheet));
 		if Assigned(HSheet) then
 			Result := TLib3MFAttachment.Create(FWrapper, HSheet);
 	end;
 
-	function TLib3MFImage3D.CreateSheetFromBuffer(const AIndex: Cardinal; const APath: String; const AData: TByteDynArray): TLib3MFAttachment;
+	function TLib3MFImage3D.CreateSheetFromBuffer(const AIndex: Cardinal; const APath: String; const AData: TByteDynArray; const AMin: Double; const AMax: Double): TLib3MFAttachment;
 	var
 		PtrData: PByte;
 		LenData: QWord;
@@ -10234,18 +10214,18 @@ implementation
 		
 		Result := nil;
 		HSheet := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImage3D_CreateSheetFromBufferFunc(FHandle, AIndex, PAnsiChar(APath), QWord(LenData), PtrData, HSheet));
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImage3D_CreateSheetFromBufferFunc(FHandle, AIndex, PAnsiChar(APath), QWord(LenData), PtrData, AMin, AMax, HSheet));
 		if Assigned(HSheet) then
 			Result := TLib3MFAttachment.Create(FWrapper, HSheet);
 	end;
 
-	function TLib3MFImage3D.CreateSheetFromFile(const AIndex: Cardinal; const APath: String; const AFileName: String): TLib3MFAttachment;
+	function TLib3MFImage3D.CreateSheetFromFile(const AIndex: Cardinal; const APath: String; const AFileName: String; const AMin: Double; const AMax: Double): TLib3MFAttachment;
 	var
 		HSheet: TLib3MFHandle;
 	begin
 		Result := nil;
 		HSheet := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImage3D_CreateSheetFromFileFunc(FHandle, AIndex, PAnsiChar(APath), PAnsiChar(AFileName), HSheet));
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImage3D_CreateSheetFromFileFunc(FHandle, AIndex, PAnsiChar(APath), PAnsiChar(AFileName), AMin, AMax, HSheet));
 		if Assigned(HSheet) then
 			Result := TLib3MFAttachment.Create(FWrapper, HSheet);
 	end;
@@ -10367,16 +10347,6 @@ implementation
 		ATileStyleU := convertConstToTextureTileStyle(ResultTileStyleU);
 		ATileStyleV := convertConstToTextureTileStyle(ResultTileStyleV);
 		ATileStyleW := convertConstToTextureTileStyle(ResultTileStyleW);
-	end;
-
-	procedure TLib3MFImage3DChannelSelector.SetValueRange(const AMin: Double; const AMax: Double);
-	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImage3DChannelSelector_SetValueRangeFunc(FHandle, AMin, AMax));
-	end;
-
-	procedure TLib3MFImage3DChannelSelector.GetValueRange(out AMin: Double; out AMax: Double);
-	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImage3DChannelSelector_GetValueRangeFunc(FHandle, AMin, AMax));
 	end;
 
 (*************************************************************************************************************************
@@ -12735,8 +12705,6 @@ implementation
 		FLib3MFImage3DChannelSelector_GetFilterFunc := LoadFunction('lib3mf_image3dchannelselector_getfilter');
 		FLib3MFImage3DChannelSelector_SetTileStylesFunc := LoadFunction('lib3mf_image3dchannelselector_settilestyles');
 		FLib3MFImage3DChannelSelector_GetTileStylesFunc := LoadFunction('lib3mf_image3dchannelselector_gettilestyles');
-		FLib3MFImage3DChannelSelector_SetValueRangeFunc := LoadFunction('lib3mf_image3dchannelselector_setvaluerange');
-		FLib3MFImage3DChannelSelector_GetValueRangeFunc := LoadFunction('lib3mf_image3dchannelselector_getvaluerange');
 		FLib3MFVolumetricLayer_GetTransformFunc := LoadFunction('lib3mf_volumetriclayer_gettransform');
 		FLib3MFVolumetricLayer_SetTransformFunc := LoadFunction('lib3mf_volumetriclayer_settransform');
 		FLib3MFVolumetricLayer_GetBlendMethodFunc := LoadFunction('lib3mf_volumetriclayer_getblendmethod');
@@ -13678,12 +13646,6 @@ implementation
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_image3dchannelselector_gettilestyles'), @FLib3MFImage3DChannelSelector_GetTileStylesFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_image3dchannelselector_setvaluerange'), @FLib3MFImage3DChannelSelector_SetValueRangeFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_image3dchannelselector_getvaluerange'), @FLib3MFImage3DChannelSelector_GetValueRangeFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_volumetriclayer_gettransform'), @FLib3MFVolumetricLayer_GetTransformFunc);

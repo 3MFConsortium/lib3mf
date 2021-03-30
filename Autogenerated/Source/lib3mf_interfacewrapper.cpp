@@ -8277,7 +8277,7 @@ Lib3MFResult lib3mf_image3d_getsheet(Lib3MF_Image3D pImage3D, Lib3MF_uint32 nInd
 	}
 }
 
-Lib3MFResult lib3mf_image3d_createemptysheet(Lib3MF_Image3D pImage3D, Lib3MF_uint32 nIndex, const char * pPath, Lib3MF_Attachment * pSheet)
+Lib3MFResult lib3mf_image3d_createemptysheet(Lib3MF_Image3D pImage3D, Lib3MF_uint32 nIndex, const char * pPath, Lib3MF_double dMin, Lib3MF_double dMax, Lib3MF_Attachment * pSheet)
 {
 	IBase* pIBaseClass = (IBase *)pImage3D;
 
@@ -8287,6 +8287,8 @@ Lib3MFResult lib3mf_image3d_createemptysheet(Lib3MF_Image3D pImage3D, Lib3MF_uin
 			pJournalEntry = m_GlobalJournal->beginClassMethod(pImage3D, "Image3D", "CreateEmptySheet");
 			pJournalEntry->addUInt32Parameter("Index", nIndex);
 			pJournalEntry->addStringParameter("Path", pPath);
+			pJournalEntry->addDoubleParameter("Min", dMin);
+			pJournalEntry->addDoubleParameter("Max", dMax);
 		}
 		if (pPath == nullptr)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
@@ -8298,7 +8300,7 @@ Lib3MFResult lib3mf_image3d_createemptysheet(Lib3MF_Image3D pImage3D, Lib3MF_uin
 		if (!pIImage3D)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pBaseSheet = pIImage3D->CreateEmptySheet(nIndex, sPath);
+		pBaseSheet = pIImage3D->CreateEmptySheet(nIndex, sPath, dMin, dMax);
 
 		*pSheet = (IBase*)(pBaseSheet);
 		if (pJournalEntry.get() != nullptr) {
@@ -8318,7 +8320,7 @@ Lib3MFResult lib3mf_image3d_createemptysheet(Lib3MF_Image3D pImage3D, Lib3MF_uin
 	}
 }
 
-Lib3MFResult lib3mf_image3d_createsheetfrombuffer(Lib3MF_Image3D pImage3D, Lib3MF_uint32 nIndex, const char * pPath, Lib3MF_uint64 nDataBufferSize, const Lib3MF_uint8 * pDataBuffer, Lib3MF_Attachment * pSheet)
+Lib3MFResult lib3mf_image3d_createsheetfrombuffer(Lib3MF_Image3D pImage3D, Lib3MF_uint32 nIndex, const char * pPath, Lib3MF_uint64 nDataBufferSize, const Lib3MF_uint8 * pDataBuffer, Lib3MF_double dMin, Lib3MF_double dMax, Lib3MF_Attachment * pSheet)
 {
 	IBase* pIBaseClass = (IBase *)pImage3D;
 
@@ -8328,6 +8330,8 @@ Lib3MFResult lib3mf_image3d_createsheetfrombuffer(Lib3MF_Image3D pImage3D, Lib3M
 			pJournalEntry = m_GlobalJournal->beginClassMethod(pImage3D, "Image3D", "CreateSheetFromBuffer");
 			pJournalEntry->addUInt32Parameter("Index", nIndex);
 			pJournalEntry->addStringParameter("Path", pPath);
+			pJournalEntry->addDoubleParameter("Min", dMin);
+			pJournalEntry->addDoubleParameter("Max", dMax);
 		}
 		if (pPath == nullptr)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
@@ -8341,7 +8345,7 @@ Lib3MFResult lib3mf_image3d_createsheetfrombuffer(Lib3MF_Image3D pImage3D, Lib3M
 		if (!pIImage3D)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pBaseSheet = pIImage3D->CreateSheetFromBuffer(nIndex, sPath, nDataBufferSize, pDataBuffer);
+		pBaseSheet = pIImage3D->CreateSheetFromBuffer(nIndex, sPath, nDataBufferSize, pDataBuffer, dMin, dMax);
 
 		*pSheet = (IBase*)(pBaseSheet);
 		if (pJournalEntry.get() != nullptr) {
@@ -8361,7 +8365,7 @@ Lib3MFResult lib3mf_image3d_createsheetfrombuffer(Lib3MF_Image3D pImage3D, Lib3M
 	}
 }
 
-Lib3MFResult lib3mf_image3d_createsheetfromfile(Lib3MF_Image3D pImage3D, Lib3MF_uint32 nIndex, const char * pPath, const char * pFileName, Lib3MF_Attachment * pSheet)
+Lib3MFResult lib3mf_image3d_createsheetfromfile(Lib3MF_Image3D pImage3D, Lib3MF_uint32 nIndex, const char * pPath, const char * pFileName, Lib3MF_double dMin, Lib3MF_double dMax, Lib3MF_Attachment * pSheet)
 {
 	IBase* pIBaseClass = (IBase *)pImage3D;
 
@@ -8372,6 +8376,8 @@ Lib3MFResult lib3mf_image3d_createsheetfromfile(Lib3MF_Image3D pImage3D, Lib3MF_
 			pJournalEntry->addUInt32Parameter("Index", nIndex);
 			pJournalEntry->addStringParameter("Path", pPath);
 			pJournalEntry->addStringParameter("FileName", pFileName);
+			pJournalEntry->addDoubleParameter("Min", dMin);
+			pJournalEntry->addDoubleParameter("Max", dMax);
 		}
 		if (pPath == nullptr)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
@@ -8386,7 +8392,7 @@ Lib3MFResult lib3mf_image3d_createsheetfromfile(Lib3MF_Image3D pImage3D, Lib3MF_
 		if (!pIImage3D)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pBaseSheet = pIImage3D->CreateSheetFromFile(nIndex, sPath, sFileName);
+		pBaseSheet = pIImage3D->CreateSheetFromFile(nIndex, sPath, sFileName, dMin, dMax);
 
 		*pSheet = (IBase*)(pBaseSheet);
 		if (pJournalEntry.get() != nullptr) {
@@ -8804,76 +8810,6 @@ Lib3MFResult lib3mf_image3dchannelselector_gettilestyles(Lib3MF_Image3DChannelSe
 			pJournalEntry->addEnumResult("TileStyleU", "TextureTileStyle", (Lib3MF_int32)(*pTileStyleU));
 			pJournalEntry->addEnumResult("TileStyleV", "TextureTileStyle", (Lib3MF_int32)(*pTileStyleV));
 			pJournalEntry->addEnumResult("TileStyleW", "TextureTileStyle", (Lib3MF_int32)(*pTileStyleW));
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_image3dchannelselector_setvaluerange(Lib3MF_Image3DChannelSelector pImage3DChannelSelector, Lib3MF_double dMin, Lib3MF_double dMax)
-{
-	IBase* pIBaseClass = (IBase *)pImage3DChannelSelector;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pImage3DChannelSelector, "Image3DChannelSelector", "SetValueRange");
-			pJournalEntry->addDoubleParameter("Min", dMin);
-			pJournalEntry->addDoubleParameter("Max", dMax);
-		}
-		IImage3DChannelSelector* pIImage3DChannelSelector = dynamic_cast<IImage3DChannelSelector*>(pIBaseClass);
-		if (!pIImage3DChannelSelector)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		pIImage3DChannelSelector->SetValueRange(dMin, dMax);
-
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_image3dchannelselector_getvaluerange(Lib3MF_Image3DChannelSelector pImage3DChannelSelector, Lib3MF_double * pMin, Lib3MF_double * pMax)
-{
-	IBase* pIBaseClass = (IBase *)pImage3DChannelSelector;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pImage3DChannelSelector, "Image3DChannelSelector", "GetValueRange");
-		}
-		if (!pMin)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		if (!pMax)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		IImage3DChannelSelector* pIImage3DChannelSelector = dynamic_cast<IImage3DChannelSelector*>(pIBaseClass);
-		if (!pIImage3DChannelSelector)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		pIImage3DChannelSelector->GetValueRange(*pMin, *pMax);
-
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addDoubleResult("Min", *pMin);
-			pJournalEntry->addDoubleResult("Max", *pMax);
 			pJournalEntry->writeSuccess();
 		}
 		return LIB3MF_SUCCESS;
@@ -16239,8 +16175,6 @@ Lib3MFResult _lib3mf_getprocaddress_internal(const char * pProcName, void ** ppP
 		sProcAddressMap["lib3mf_image3dchannelselector_getfilter"] = (void*)&lib3mf_image3dchannelselector_getfilter;
 		sProcAddressMap["lib3mf_image3dchannelselector_settilestyles"] = (void*)&lib3mf_image3dchannelselector_settilestyles;
 		sProcAddressMap["lib3mf_image3dchannelselector_gettilestyles"] = (void*)&lib3mf_image3dchannelselector_gettilestyles;
-		sProcAddressMap["lib3mf_image3dchannelselector_setvaluerange"] = (void*)&lib3mf_image3dchannelselector_setvaluerange;
-		sProcAddressMap["lib3mf_image3dchannelselector_getvaluerange"] = (void*)&lib3mf_image3dchannelselector_getvaluerange;
 		sProcAddressMap["lib3mf_volumetriclayer_gettransform"] = (void*)&lib3mf_volumetriclayer_gettransform;
 		sProcAddressMap["lib3mf_volumetriclayer_settransform"] = (void*)&lib3mf_volumetriclayer_settransform;
 		sProcAddressMap["lib3mf_volumetriclayer_getblendmethod"] = (void*)&lib3mf_volumetriclayer_getblendmethod;

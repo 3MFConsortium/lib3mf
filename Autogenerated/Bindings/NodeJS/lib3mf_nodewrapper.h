@@ -961,8 +961,6 @@ private:
     static void GetFilter (const v8::FunctionCallbackInfo<v8::Value>& args);
     static void SetTileStyles (const v8::FunctionCallbackInfo<v8::Value>& args);
     static void GetTileStyles (const v8::FunctionCallbackInfo<v8::Value>& args);
-    static void SetValueRange (const v8::FunctionCallbackInfo<v8::Value>& args);
-    static void GetValueRange (const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:
     CLib3MFImage3DChannelSelector ();
