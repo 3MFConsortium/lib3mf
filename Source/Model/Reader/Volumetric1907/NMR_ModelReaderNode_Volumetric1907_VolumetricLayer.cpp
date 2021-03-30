@@ -149,7 +149,6 @@ namespace NMR {
 #else
 			if (std::isnan(m_dDstAlpha))
 #endif
-			if (std::isnan(m_dDstAlpha))
 				throw CNMRException(NMR_ERROR_INVALIDVOLUMETRICDSTALPHA);
 
 			m_bHasDstAlpha = true;
