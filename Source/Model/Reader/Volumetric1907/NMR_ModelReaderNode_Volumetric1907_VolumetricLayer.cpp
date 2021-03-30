@@ -129,11 +129,7 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_DUPLICATEVOLUMETRICSRCALPHA);
 
 			m_dSourceAlpha = strtod(pAttributeValue, nullptr);
-#ifdef __MINGW32__
-			if (isNotANumber(m_dSourceAlpha))
-#else
 			if (std::isnan(m_dSourceAlpha))
-#endif
 				throw CNMRException(NMR_ERROR_INVALIDVOLUMETRICSRCALPHA);
 
 			m_bHasSourceAlpha = true;
