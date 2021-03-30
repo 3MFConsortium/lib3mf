@@ -84,7 +84,7 @@ namespace NMR {
 		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_VERTEX_X) == 0) {
 			m_fX = strtof(pAttributeValue, nullptr);
 #ifdef __MINGW32__
-			if (isNotANumber(m_fX)
+			if (isNotANumber(m_fX))
 #else
 			if (std::isnan(m_fX))
 #endif
@@ -97,7 +97,7 @@ namespace NMR {
 		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_VERTEX_Y) == 0) {
 			m_fY = strtof(pAttributeValue, nullptr);
 #ifdef __MINGW32__
-			if (isNotANumber(m_fY)
+			if (isNotANumber(m_fY))
 #else
 			if (std::isnan(m_fY))
 #endif
@@ -110,7 +110,7 @@ namespace NMR {
 		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_VERTEX_Z) == 0) {
 			m_fZ = strtof(pAttributeValue, nullptr);
 #ifdef __MINGW32__
-			if (isNotANumber(m_fZ)
+			if (isNotANumber(m_fZ))
 #else
 			if (std::isnan(m_fZ))
 #endif
