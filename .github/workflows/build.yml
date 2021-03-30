@@ -108,7 +108,7 @@ jobs:
   build-mingw-w64:
     runs-on: windows-2019
     steps:
-      - run: choco install mingw --version 10.2.0 -y
+      - run: choco install mingw -y
       - uses: actions/checkout@v2
         with:
           submodules: true
