@@ -120,13 +120,8 @@ namespace NMR {
 			m_bHasSolidThreshold = true;
 
 			m_dSolidThreshold = strtod(pAttributeValue, nullptr);
-			#ifdef __MINGW32__
-			if (isnan(m_dSolidThreshold))
+			if (std::isnan((float)m_dSolidThreshold))
 				throw CNMRException(NMR_ERROR_INVALIDVOLUMEDATASOLIDTHRESHOLD);
-			#else
-			if (std::isnan(m_dSolidThreshold))
-				throw CNMRException(NMR_ERROR_INVALIDVOLUMEDATASOLIDTHRESHOLD);
-			#endif
 		}
 
 		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_VOLUMEDATA_VOLUMETRICSTACKID) == 0) {
