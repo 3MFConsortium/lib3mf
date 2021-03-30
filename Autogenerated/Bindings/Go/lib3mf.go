@@ -2392,9 +2392,11 @@ type Lib3MFGoInterface interface {
 	* @param[in] Image3D - Image3D instance.
 	* @param[in] nIndex - index of the image (0-based)
 	* @param[in] sPath - path name of package
+	* @param[in] dMin - Mapped value of the minimal (e.g. 0) image3D pixel values.
+	* @param[in] dMax - Mapped value of the maximal (e.g. 255) image3D pixel values.
 	* @return attachment containing the image
 	*/
-	Image3D_CreateEmptySheet(Image3D Lib3MFHandle, nIndex uint32, sPath string) (Lib3MFHandle, error)
+	Image3D_CreateEmptySheet(Image3D Lib3MFHandle, nIndex uint32, sPath string, dMin float64, dMax float64) (Lib3MFHandle, error)
 
 
 	/**
@@ -2404,9 +2406,11 @@ type Lib3MFGoInterface interface {
 	* @param[in] nIndex - index of the image (0-based)
 	* @param[in] sPath - path name of package
 	* @param[in] Data - binary image data
+	* @param[in] dMin - Mapped value of the minimal (e.g. 0) image3D pixel values.
+	* @param[in] dMax - Mapped value of the maximal (e.g. 255) image3D pixel values.
 	* @return attachment containing the image
 	*/
-	Image3D_CreateSheetFromBuffer(Image3D Lib3MFHandle, nIndex uint32, sPath string, Data []uint8) (Lib3MFHandle, error)
+	Image3D_CreateSheetFromBuffer(Image3D Lib3MFHandle, nIndex uint32, sPath string, Data []uint8, dMin float64, dMax float64) (Lib3MFHandle, error)
 
 
 	/**
@@ -2416,9 +2420,11 @@ type Lib3MFGoInterface interface {
 	* @param[in] nIndex - index of the image (0-based)
 	* @param[in] sPath - path name of package
 	* @param[in] sFileName - file name to read from
+	* @param[in] dMin - Mapped value of the minimal (e.g. 0) image3D pixel values.
+	* @param[in] dMax - Mapped value of the maximal (e.g. 255) image3D pixel values.
 	* @return attachment containing the image
 	*/
-	Image3D_CreateSheetFromFile(Image3D Lib3MFHandle, nIndex uint32, sPath string, sFileName string) (Lib3MFHandle, error)
+	Image3D_CreateSheetFromFile(Image3D Lib3MFHandle, nIndex uint32, sPath string, sFileName string, dMin float64, dMax float64) (Lib3MFHandle, error)
 
 
 	/**
@@ -2523,26 +2529,6 @@ type Lib3MFGoInterface interface {
 	* @return tile style in W
 	*/
 	Image3DChannelSelector_GetTileStyles(Image3DChannelSelector Lib3MFHandle) (ELib3MFTextureTileStyle, ELib3MFTextureTileStyle, ELib3MFTextureTileStyle, error)
-
-
-	/**
-	* Sets the value range of the selector.
-	*
-	* @param[in] Image3DChannelSelector - Image3DChannelSelector instance.
-	* @param[in] dMin - Mapped value of the minimal (e.g. 0) image3D pixel values.
-	* @param[in] dMax - Mapped value of the maximal (e.g. 255) image3D pixel values.
-	*/
-	Image3DChannelSelector_SetValueRange(Image3DChannelSelector Lib3MFHandle, dMin float64, dMax float64) (error)
-
-
-	/**
-	* Retrieves the value range of the selector.
-	*
-	* @param[in] Image3DChannelSelector - Image3DChannelSelector instance.
-	* @return Mapped value of the minimal (e.g. 0) image3D pixel values.
-	* @return Mapped value of the maximal (e.g. 255) image3D pixel values.
-	*/
-	Image3DChannelSelector_GetValueRange(Image3DChannelSelector Lib3MFHandle) (float64, float64, error)
 
 
 	/**
@@ -6320,24 +6306,24 @@ func (instance *Lib3MFImage3D) GetSheet(nIndex uint32) (Lib3MFAttachment, error)
 	return cSheet, error
 }
 
-func (instance *Lib3MFImage3D) CreateEmptySheet(nIndex uint32, sPath string) (Lib3MFAttachment, error) {
-	hSheet, error := instance.Interface.Image3D_CreateEmptySheet(instance.Handle, nIndex, sPath)
+func (instance *Lib3MFImage3D) CreateEmptySheet(nIndex uint32, sPath string, dMin float64, dMax float64) (Lib3MFAttachment, error) {
+	hSheet, error := instance.Interface.Image3D_CreateEmptySheet(instance.Handle, nIndex, sPath, dMin, dMax)
 	var cSheet Lib3MFAttachment
 	cSheet.Interface = instance.Interface
 	cSheet.Handle = hSheet
 	return cSheet, error
 }
 
-func (instance *Lib3MFImage3D) CreateSheetFromBuffer(nIndex uint32, sPath string, Data []uint8) (Lib3MFAttachment, error) {
-	hSheet, error := instance.Interface.Image3D_CreateSheetFromBuffer(instance.Handle, nIndex, sPath, Data)
+func (instance *Lib3MFImage3D) CreateSheetFromBuffer(nIndex uint32, sPath string, Data []uint8, dMin float64, dMax float64) (Lib3MFAttachment, error) {
+	hSheet, error := instance.Interface.Image3D_CreateSheetFromBuffer(instance.Handle, nIndex, sPath, Data, dMin, dMax)
 	var cSheet Lib3MFAttachment
 	cSheet.Interface = instance.Interface
 	cSheet.Handle = hSheet
 	return cSheet, error
 }
 
-func (instance *Lib3MFImage3D) CreateSheetFromFile(nIndex uint32, sPath string, sFileName string) (Lib3MFAttachment, error) {
-	hSheet, error := instance.Interface.Image3D_CreateSheetFromFile(instance.Handle, nIndex, sPath, sFileName)
+func (instance *Lib3MFImage3D) CreateSheetFromFile(nIndex uint32, sPath string, sFileName string, dMin float64, dMax float64) (Lib3MFAttachment, error) {
+	hSheet, error := instance.Interface.Image3D_CreateSheetFromFile(instance.Handle, nIndex, sPath, sFileName, dMin, dMax)
 	var cSheet Lib3MFAttachment
 	cSheet.Interface = instance.Interface
 	cSheet.Handle = hSheet
@@ -6413,16 +6399,6 @@ func (instance *Lib3MFImage3DChannelSelector) SetTileStyles(eTileStyleU ELib3MFT
 func (instance *Lib3MFImage3DChannelSelector) GetTileStyles() (ELib3MFTextureTileStyle, ELib3MFTextureTileStyle, ELib3MFTextureTileStyle, error) {
 	eTileStyleU, eTileStyleV, eTileStyleW, error := instance.Interface.Image3DChannelSelector_GetTileStyles(instance.Handle)
 	return eTileStyleU, eTileStyleV, eTileStyleW, error
-}
-
-func (instance *Lib3MFImage3DChannelSelector) SetValueRange(dMin float64, dMax float64) (error) {
-	error := instance.Interface.Image3DChannelSelector_SetValueRange(instance.Handle, dMin, dMax)
-	return error
-}
-
-func (instance *Lib3MFImage3DChannelSelector) GetValueRange() (float64, float64, error) {
-	dMin, dMax, error := instance.Interface.Image3DChannelSelector_GetValueRange(instance.Handle)
-	return dMin, dMax, error
 }
 
 

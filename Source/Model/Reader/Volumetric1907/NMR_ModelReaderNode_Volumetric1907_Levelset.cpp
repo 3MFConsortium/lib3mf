@@ -120,7 +120,12 @@ namespace NMR {
 			m_bHasSolidThreshold = true;
 
 			m_dSolidThreshold = strtod(pAttributeValue, nullptr);
-			if (std::isnan(m_dSolidThreshold))
+
+#ifdef __MINGW32__
+			if (isNotANumber((float)m_dSolidThreshold))
+#else
+			if (std::isnan((float)m_dSolidThreshold))
+#endif
 				throw CNMRException(NMR_ERROR_INVALIDVOLUMEDATASOLIDTHRESHOLD);
 		}
 

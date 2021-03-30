@@ -2093,9 +2093,11 @@ public:
 	* IImage3D::CreateEmptySheet - Creates a new sheet attachment with empty data.
 	* @param[in] nIndex - index of the image (0-based)
 	* @param[in] sPath - path name of package
+	* @param[in] dMin - Mapped value of the minimal (e.g. 0) image3D pixel values.
+	* @param[in] dMax - Mapped value of the maximal (e.g. 255) image3D pixel values.
 	* @return attachment containing the image
 	*/
-	virtual IAttachment * CreateEmptySheet(const Lib3MF_uint32 nIndex, const std::string & sPath) = 0;
+	virtual IAttachment * CreateEmptySheet(const Lib3MF_uint32 nIndex, const std::string & sPath, const Lib3MF_double dMin, const Lib3MF_double dMax) = 0;
 
 	/**
 	* IImage3D::CreateSheetFromBuffer - Creates a new sheet attachment from a memory buffer.
@@ -2103,18 +2105,22 @@ public:
 	* @param[in] sPath - path name of package
 	* @param[in] nDataBufferSize - Number of elements in buffer
 	* @param[in] pDataBuffer - binary image data
+	* @param[in] dMin - Mapped value of the minimal (e.g. 0) image3D pixel values.
+	* @param[in] dMax - Mapped value of the maximal (e.g. 255) image3D pixel values.
 	* @return attachment containing the image
 	*/
-	virtual IAttachment * CreateSheetFromBuffer(const Lib3MF_uint32 nIndex, const std::string & sPath, const Lib3MF_uint64 nDataBufferSize, const Lib3MF_uint8 * pDataBuffer) = 0;
+	virtual IAttachment * CreateSheetFromBuffer(const Lib3MF_uint32 nIndex, const std::string & sPath, const Lib3MF_uint64 nDataBufferSize, const Lib3MF_uint8 * pDataBuffer, const Lib3MF_double dMin, const Lib3MF_double dMax) = 0;
 
 	/**
 	* IImage3D::CreateSheetFromFile - Creates a new sheet attachment from a file on disk.
 	* @param[in] nIndex - index of the image (0-based)
 	* @param[in] sPath - path name of package
 	* @param[in] sFileName - file name to read from
+	* @param[in] dMin - Mapped value of the minimal (e.g. 0) image3D pixel values.
+	* @param[in] dMax - Mapped value of the maximal (e.g. 255) image3D pixel values.
 	* @return attachment containing the image
 	*/
-	virtual IAttachment * CreateSheetFromFile(const Lib3MF_uint32 nIndex, const std::string & sPath, const std::string & sFileName) = 0;
+	virtual IAttachment * CreateSheetFromFile(const Lib3MF_uint32 nIndex, const std::string & sPath, const std::string & sFileName, const Lib3MF_double dMin, const Lib3MF_double dMax) = 0;
 
 	/**
 	* IImage3D::SetSheet - Sets a sheet to an existing attachment.
@@ -2197,20 +2203,6 @@ public:
 	* @param[out] eTileStyleW - tile style in W
 	*/
 	virtual void GetTileStyles(Lib3MF::eTextureTileStyle & eTileStyleU, Lib3MF::eTextureTileStyle & eTileStyleV, Lib3MF::eTextureTileStyle & eTileStyleW) = 0;
-
-	/**
-	* IImage3DChannelSelector::SetValueRange - Sets the value range of the selector.
-	* @param[in] dMin - Mapped value of the minimal (e.g. 0) image3D pixel values.
-	* @param[in] dMax - Mapped value of the maximal (e.g. 255) image3D pixel values.
-	*/
-	virtual void SetValueRange(const Lib3MF_double dMin, const Lib3MF_double dMax) = 0;
-
-	/**
-	* IImage3DChannelSelector::GetValueRange - Retrieves the value range of the selector.
-	* @param[out] dMin - Mapped value of the minimal (e.g. 0) image3D pixel values.
-	* @param[out] dMax - Mapped value of the maximal (e.g. 255) image3D pixel values.
-	*/
-	virtual void GetValueRange(Lib3MF_double & dMin, Lib3MF_double & dMax) = 0;
 
 };
 

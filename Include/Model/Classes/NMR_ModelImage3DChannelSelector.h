@@ -55,9 +55,6 @@ namespace NMR {
 		std::string m_sSourceChannel;
 		std::string m_sDstChannel;
 		
-		nfDouble m_dMinValue;
-		nfDouble m_dMaxValue;
-		
 		eModelTextureTileStyle m_eTileStyleU;
 		eModelTextureTileStyle m_eTileStyleV;
 		eModelTextureTileStyle m_eTileStyleW;
@@ -80,9 +77,6 @@ namespace NMR {
 		PPackageResourceID getImage3DID ();
 		std::string getSourceChannel ();
 		std::string getDstChannel ();
-
-		nfDouble getMinValue ();
-		nfDouble getMaxValue ();
 
 		eModelTextureTileStyle getTileStyleU ();
 		eModelTextureTileStyle getTileStyleV ();

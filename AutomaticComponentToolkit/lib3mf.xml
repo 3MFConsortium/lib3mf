@@ -380,7 +380,7 @@
 			<param name="TheCallback" type="functiontype" class="ContentEncryptionCallback" pass="in" description="The callback used to encrypt content"/>
 			<param name="UserData" type="pointer" pass="in" description="Userdata that is passed to the callback function"/>
 		</method>
-  </class>
+	</class>
 
 	<class name="PackagePart">
 		<method name="GetPath" description="Returns the absolute path of this PackagePart.">
@@ -1163,14 +1163,17 @@
 		<method name="CreateEmptySheet" description="Creates a new sheet attachment with empty data.">
 			<param name="Index" type="uint32" pass="in" description="index of the image (0-based)" />
 			<param name="Path" type="string" pass="in" description="path name of package" />
+			<param name="Min" type="double" pass="in" description="Mapped value of the minimal (e.g. 0) image3D pixel values." />
+			<param name="Max" type="double" pass="in" description="Mapped value of the maximal (e.g. 255) image3D pixel values." />
 			<param name="Sheet" type="class" class="Attachment" pass="return" description="attachment containing the image" />
 		</method>
-		
-		
+
 		<method name="CreateSheetFromBuffer" description="Creates a new sheet attachment from a memory buffer.">
 			<param name="Index" type="uint32" pass="in" description="index of the image (0-based)" />
 			<param name="Path" type="string" pass="in" description="path name of package" />
 			<param name="Data" type="basicarray" class="uint8" pass="in" description="binary image data" />
+			<param name="Min" type="double" pass="in" description="Mapped value of the minimal (e.g. 0) image3D pixel values." />
+			<param name="Max" type="double" pass="in" description="Mapped value of the maximal (e.g. 255) image3D pixel values." />
 			<param name="Sheet" type="class" class="Attachment" pass="return" description="attachment containing the image" />
 		</method>
 
@@ -1178,6 +1181,8 @@
 			<param name="Index" type="uint32" pass="in" description="index of the image (0-based)" />
 			<param name="Path" type="string" pass="in" description="path name of package" />
 			<param name="FileName" type="string" pass="in" description="file name to read from" />
+			<param name="Min" type="double" pass="in" description="Mapped value of the minimal (e.g. 0) image3D pixel values." />
+			<param name="Max" type="double" pass="in" description="Mapped value of the maximal (e.g. 255) image3D pixel values." />
 			<param name="Sheet" type="class" class="Attachment" pass="return" description="attachment containing the image" />
 		</method>
 		
@@ -1234,21 +1239,9 @@
 			<param name="TileStyleV" type="enum" class="TextureTileStyle" pass="out" description="tile style in V" />
 			<param name="TileStyleW" type="enum" class="TextureTileStyle" pass="out" description="tile style in W" />
 		</method>
-		
-		<method name="SetValueRange" description="Sets the value range of the selector.">
-			<param name="Min" type="double" pass="in" description="Mapped value of the minimal (e.g. 0) image3D pixel values." />
-			<param name="Max" type="double" pass="in" description="Mapped value of the maximal (e.g. 255) image3D pixel values." />
-		</method>
 
-		<method name="GetValueRange" description="Retrieves the value range of the selector.">
-			<param name="Min" type="double" pass="out" description="Mapped value of the minimal (e.g. 0) image3D pixel values." />
-			<param name="Max" type="double" pass="out" description="Mapped value of the maximal (e.g. 255) image3D pixel values." />
-		</method>
-		
-		
 	</class>
 	
-
 	<class name="VolumetricLayer">
 
 		<method name="GetTransform" description="Retrieves the transform of the layer.">

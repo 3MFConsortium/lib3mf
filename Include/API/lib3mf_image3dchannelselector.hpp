@@ -86,10 +86,6 @@ public:
 
 	void GetTileStyles(Lib3MF::eTextureTileStyle & eTileStyleU, Lib3MF::eTextureTileStyle & eTileStyleV, Lib3MF::eTextureTileStyle & eTileStyleW);
 
-	void SetValueRange(const Lib3MF_double dMin, const Lib3MF_double dMax);
-
-	void GetValueRange(Lib3MF_double & dMin, Lib3MF_double & dMax);
-
 	NMR::PModelImage3DChannelSelector getModelSelector ();
 
 };

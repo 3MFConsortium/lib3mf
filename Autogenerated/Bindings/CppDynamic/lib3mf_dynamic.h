@@ -2400,10 +2400,12 @@ typedef Lib3MFResult (*PLib3MFImage3D_GetSheetPtr) (Lib3MF_Image3D pImage3D, Lib
 * @param[in] pImage3D - Image3D instance.
 * @param[in] nIndex - index of the image (0-based)
 * @param[in] pPath - path name of package
+* @param[in] dMin - Mapped value of the minimal (e.g. 0) image3D pixel values.
+* @param[in] dMax - Mapped value of the maximal (e.g. 255) image3D pixel values.
 * @param[out] pSheet - attachment containing the image
 * @return error code or 0 (success)
 */
-typedef Lib3MFResult (*PLib3MFImage3D_CreateEmptySheetPtr) (Lib3MF_Image3D pImage3D, Lib3MF_uint32 nIndex, const char * pPath, Lib3MF_Attachment * pSheet);
+typedef Lib3MFResult (*PLib3MFImage3D_CreateEmptySheetPtr) (Lib3MF_Image3D pImage3D, Lib3MF_uint32 nIndex, const char * pPath, Lib3MF_double dMin, Lib3MF_double dMax, Lib3MF_Attachment * pSheet);
 
 /**
 * Creates a new sheet attachment from a memory buffer.
@@ -2413,10 +2415,12 @@ typedef Lib3MFResult (*PLib3MFImage3D_CreateEmptySheetPtr) (Lib3MF_Image3D pImag
 * @param[in] pPath - path name of package
 * @param[in] nDataBufferSize - Number of elements in buffer
 * @param[in] pDataBuffer - uint8 buffer of binary image data
+* @param[in] dMin - Mapped value of the minimal (e.g. 0) image3D pixel values.
+* @param[in] dMax - Mapped value of the maximal (e.g. 255) image3D pixel values.
 * @param[out] pSheet - attachment containing the image
 * @return error code or 0 (success)
 */
-typedef Lib3MFResult (*PLib3MFImage3D_CreateSheetFromBufferPtr) (Lib3MF_Image3D pImage3D, Lib3MF_uint32 nIndex, const char * pPath, Lib3MF_uint64 nDataBufferSize, const Lib3MF_uint8 * pDataBuffer, Lib3MF_Attachment * pSheet);
+typedef Lib3MFResult (*PLib3MFImage3D_CreateSheetFromBufferPtr) (Lib3MF_Image3D pImage3D, Lib3MF_uint32 nIndex, const char * pPath, Lib3MF_uint64 nDataBufferSize, const Lib3MF_uint8 * pDataBuffer, Lib3MF_double dMin, Lib3MF_double dMax, Lib3MF_Attachment * pSheet);
 
 /**
 * Creates a new sheet attachment from a file on disk.
@@ -2425,10 +2429,12 @@ typedef Lib3MFResult (*PLib3MFImage3D_CreateSheetFromBufferPtr) (Lib3MF_Image3D 
 * @param[in] nIndex - index of the image (0-based)
 * @param[in] pPath - path name of package
 * @param[in] pFileName - file name to read from
+* @param[in] dMin - Mapped value of the minimal (e.g. 0) image3D pixel values.
+* @param[in] dMax - Mapped value of the maximal (e.g. 255) image3D pixel values.
 * @param[out] pSheet - attachment containing the image
 * @return error code or 0 (success)
 */
-typedef Lib3MFResult (*PLib3MFImage3D_CreateSheetFromFilePtr) (Lib3MF_Image3D pImage3D, Lib3MF_uint32 nIndex, const char * pPath, const char * pFileName, Lib3MF_Attachment * pSheet);
+typedef Lib3MFResult (*PLib3MFImage3D_CreateSheetFromFilePtr) (Lib3MF_Image3D pImage3D, Lib3MF_uint32 nIndex, const char * pPath, const char * pFileName, Lib3MF_double dMin, Lib3MF_double dMax, Lib3MF_Attachment * pSheet);
 
 /**
 * Sets a sheet to an existing attachment.
@@ -2541,26 +2547,6 @@ typedef Lib3MFResult (*PLib3MFImage3DChannelSelector_SetTileStylesPtr) (Lib3MF_I
 * @return error code or 0 (success)
 */
 typedef Lib3MFResult (*PLib3MFImage3DChannelSelector_GetTileStylesPtr) (Lib3MF_Image3DChannelSelector pImage3DChannelSelector, Lib3MF::eTextureTileStyle * pTileStyleU, Lib3MF::eTextureTileStyle * pTileStyleV, Lib3MF::eTextureTileStyle * pTileStyleW);
-
-/**
-* Sets the value range of the selector.
-*
-* @param[in] pImage3DChannelSelector - Image3DChannelSelector instance.
-* @param[in] dMin - Mapped value of the minimal (e.g. 0) image3D pixel values.
-* @param[in] dMax - Mapped value of the maximal (e.g. 255) image3D pixel values.
-* @return error code or 0 (success)
-*/
-typedef Lib3MFResult (*PLib3MFImage3DChannelSelector_SetValueRangePtr) (Lib3MF_Image3DChannelSelector pImage3DChannelSelector, Lib3MF_double dMin, Lib3MF_double dMax);
-
-/**
-* Retrieves the value range of the selector.
-*
-* @param[in] pImage3DChannelSelector - Image3DChannelSelector instance.
-* @param[out] pMin - Mapped value of the minimal (e.g. 0) image3D pixel values.
-* @param[out] pMax - Mapped value of the maximal (e.g. 255) image3D pixel values.
-* @return error code or 0 (success)
-*/
-typedef Lib3MFResult (*PLib3MFImage3DChannelSelector_GetValueRangePtr) (Lib3MF_Image3DChannelSelector pImage3DChannelSelector, Lib3MF_double * pMin, Lib3MF_double * pMax);
 
 /*************************************************************************************************************************
  Class definition for VolumetricLayer
@@ -4933,8 +4919,6 @@ typedef struct {
 	PLib3MFImage3DChannelSelector_GetFilterPtr m_Image3DChannelSelector_GetFilter;
 	PLib3MFImage3DChannelSelector_SetTileStylesPtr m_Image3DChannelSelector_SetTileStyles;
 	PLib3MFImage3DChannelSelector_GetTileStylesPtr m_Image3DChannelSelector_GetTileStyles;
-	PLib3MFImage3DChannelSelector_SetValueRangePtr m_Image3DChannelSelector_SetValueRange;
-	PLib3MFImage3DChannelSelector_GetValueRangePtr m_Image3DChannelSelector_GetValueRange;
 	PLib3MFVolumetricLayer_GetTransformPtr m_VolumetricLayer_GetTransform;
 	PLib3MFVolumetricLayer_SetTransformPtr m_VolumetricLayer_SetTransform;
 	PLib3MFVolumetricLayer_GetBlendMethodPtr m_VolumetricLayer_GetBlendMethod;

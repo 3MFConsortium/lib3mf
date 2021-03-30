@@ -287,8 +287,6 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_Image3DChannelSelector_GetFilter = NULL;
 	pWrapperTable->m_Image3DChannelSelector_SetTileStyles = NULL;
 	pWrapperTable->m_Image3DChannelSelector_GetTileStyles = NULL;
-	pWrapperTable->m_Image3DChannelSelector_SetValueRange = NULL;
-	pWrapperTable->m_Image3DChannelSelector_GetValueRange = NULL;
 	pWrapperTable->m_VolumetricLayer_GetTransform = NULL;
 	pWrapperTable->m_VolumetricLayer_SetTransform = NULL;
 	pWrapperTable->m_VolumetricLayer_GetBlendMethod = NULL;
@@ -2711,24 +2709,6 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 	dlerror();
 	#endif // _WIN32
 	if (pWrapperTable->m_Image3DChannelSelector_GetTileStyles == NULL)
-		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
-	
-	#ifdef _WIN32
-	pWrapperTable->m_Image3DChannelSelector_SetValueRange = (PLib3MFImage3DChannelSelector_SetValueRangePtr) GetProcAddress(hLibrary, "lib3mf_image3dchannelselector_setvaluerange");
-	#else // _WIN32
-	pWrapperTable->m_Image3DChannelSelector_SetValueRange = (PLib3MFImage3DChannelSelector_SetValueRangePtr) dlsym(hLibrary, "lib3mf_image3dchannelselector_setvaluerange");
-	dlerror();
-	#endif // _WIN32
-	if (pWrapperTable->m_Image3DChannelSelector_SetValueRange == NULL)
-		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
-	
-	#ifdef _WIN32
-	pWrapperTable->m_Image3DChannelSelector_GetValueRange = (PLib3MFImage3DChannelSelector_GetValueRangePtr) GetProcAddress(hLibrary, "lib3mf_image3dchannelselector_getvaluerange");
-	#else // _WIN32
-	pWrapperTable->m_Image3DChannelSelector_GetValueRange = (PLib3MFImage3DChannelSelector_GetValueRangePtr) dlsym(hLibrary, "lib3mf_image3dchannelselector_getvaluerange");
-	dlerror();
-	#endif // _WIN32
-	if (pWrapperTable->m_Image3DChannelSelector_GetValueRange == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32

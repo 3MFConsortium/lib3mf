@@ -46,16 +46,12 @@ namespace NMR {
 	CModelReaderNode_Volumetric1907_Image3DChannelSelector::CModelReaderNode_Volumetric1907_Image3DChannelSelector(_In_ PModelWarnings pWarnings)
 		: CModelReaderNode(pWarnings),
 		m_nID(0),
-		m_dMinValue(0.0),
-		m_dMaxValue(1.0),
 		m_eTileStyleU(MODELTEXTURETILESTYLE_WRAP),
 		m_eTileStyleV(MODELTEXTURETILESTYLE_WRAP),
 		m_eTileStyleW(MODELTEXTURETILESTYLE_WRAP),
 		m_eFilter(MODELTEXTUREFILTER_LINEAR),
 		m_bHasSourceChannel(false),
 		m_bHasDestinationChannel(false),
-		m_bHasMinValue(false),
-		m_bHasMaxValue(false),
 		m_bHasTileStyleU(false),
 		m_bHasTileStyleV(false),
 		m_bHasTileStyleW(false),
@@ -84,27 +80,6 @@ namespace NMR {
 
 			// Convert to integer and make a input and range check!
 			m_nID = fnStringToUint32(pAttributeValue);
-		}
-		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_CHANNELSELECTOR_MINVALUE) == 0) {
-			if (m_bHasMinValue)
-				throw CNMRException(NMR_ERROR_DUPLICATEVOLUMETRICMINVALUE);
-
-			m_dMinValue = strtod(pAttributeValue, nullptr);
-			if (std::isnan(m_dMinValue))
-				throw CNMRException(NMR_ERROR_INVALIDVOLUMETRICMINVALUE);
-
-			m_bHasMinValue = true;
-		}
-
-		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_CHANNELSELECTOR_MAXVALUE) == 0) {
-			if (m_bHasMaxValue)
-				throw CNMRException(NMR_ERROR_DUPLICATEVOLUMETRICMAXVALUE);
-
-			m_dMaxValue = strtod(pAttributeValue, nullptr);
-			if (std::isnan(m_dMaxValue))
-				throw CNMRException(NMR_ERROR_INVALIDVOLUMETRICMAXVALUE);
-
-			m_bHasMaxValue = true;
 		}
 
 		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_CHANNELSELECTOR_FILTER) == 0) {
@@ -176,9 +151,6 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_INVALIDMODELRESOURCE);
 
 		PModelImage3DChannelSelector pSelector = CModelImage3DChannelSelector::make(pImage3DID, m_sSourceChannel, m_sDestinationChannel);
-
-		pSelector->setMinValue(m_dMinValue);
-		pSelector->setMaxValue(m_dMaxValue);
 
 		if ((!m_bHasTileStyleU) || (!m_bHasTileStyleV) || (!m_bHasTileStyleW))
 			throw CNMRException(NMR_ERROR_MISSINGCHANNELSELECTORTILESTYLE);

@@ -289,8 +289,6 @@ type Lib3MFImplementation struct {
 	Lib3MF_image3dchannelselector_getfilter uintptr
 	Lib3MF_image3dchannelselector_settilestyles uintptr
 	Lib3MF_image3dchannelselector_gettilestyles uintptr
-	Lib3MF_image3dchannelselector_setvaluerange uintptr
-	Lib3MF_image3dchannelselector_getvaluerange uintptr
 	Lib3MF_volumetriclayer_gettransform uintptr
 	Lib3MF_volumetriclayer_settransform uintptr
 	Lib3MF_volumetriclayer_getblendmethod uintptr
@@ -1895,16 +1893,6 @@ func (implementation *Lib3MFImplementation) Initialize(DLLFileName string) error
 	implementation.Lib3MF_image3dchannelselector_gettilestyles, err = syscall.GetProcAddress(dllHandle, "lib3mf_image3dchannelselector_gettilestyles")
 	if (err != nil) {
 		return errors.New("Could not get function lib3mf_image3dchannelselector_gettilestyles: " + err.Error())
-	}
-	
-	implementation.Lib3MF_image3dchannelselector_setvaluerange, err = syscall.GetProcAddress(dllHandle, "lib3mf_image3dchannelselector_setvaluerange")
-	if (err != nil) {
-		return errors.New("Could not get function lib3mf_image3dchannelselector_setvaluerange: " + err.Error())
-	}
-	
-	implementation.Lib3MF_image3dchannelselector_getvaluerange, err = syscall.GetProcAddress(dllHandle, "lib3mf_image3dchannelselector_getvaluerange")
-	if (err != nil) {
-		return errors.New("Could not get function lib3mf_image3dchannelselector_getvaluerange: " + err.Error())
 	}
 	
 	implementation.Lib3MF_volumetriclayer_gettransform, err = syscall.GetProcAddress(dllHandle, "lib3mf_volumetriclayer_gettransform")
@@ -7170,7 +7158,7 @@ func (implementation *Lib3MFImplementation) Image3D_GetSheet(Image3D Lib3MFHandl
 	return hSheet, err
 }
 
-func (implementation *Lib3MFImplementation) Image3D_CreateEmptySheet(Image3D Lib3MFHandle, nIndex uint32, sPath string) (Lib3MFHandle, error) {
+func (implementation *Lib3MFImplementation) Image3D_CreateEmptySheet(Image3D Lib3MFHandle, nIndex uint32, sPath string, dMin float64, dMax float64) (Lib3MFHandle, error) {
 	var err error = nil
 	hSheet := implementation.NewHandle()
 	
@@ -7179,7 +7167,7 @@ func (implementation *Lib3MFImplementation) Image3D_CreateEmptySheet(Image3D Lib
 		return hSheet, err
 	}
 
-	err = implementation.CallFunction(implementation.Lib3MF_image3d_createemptysheet, implementation_image3d.GetDLLInHandle(), UInt32InValue(nIndex), StringInValue(sPath), hSheet.GetDLLOutHandle())
+	err = implementation.CallFunction(implementation.Lib3MF_image3d_createemptysheet, implementation_image3d.GetDLLInHandle(), UInt32InValue(nIndex), StringInValue(sPath), Float64InValue(dMin), Float64InValue(dMax), hSheet.GetDLLOutHandle())
 	if (err != nil) {
 		return hSheet, err
 	}
@@ -7187,7 +7175,7 @@ func (implementation *Lib3MFImplementation) Image3D_CreateEmptySheet(Image3D Lib
 	return hSheet, err
 }
 
-func (implementation *Lib3MFImplementation) Image3D_CreateSheetFromBuffer(Image3D Lib3MFHandle, nIndex uint32, sPath string, Data []uint8) (Lib3MFHandle, error) {
+func (implementation *Lib3MFImplementation) Image3D_CreateSheetFromBuffer(Image3D Lib3MFHandle, nIndex uint32, sPath string, Data []uint8, dMin float64, dMax float64) (Lib3MFHandle, error) {
 	var err error = nil
 	hSheet := implementation.NewHandle()
 	
@@ -7196,7 +7184,7 @@ func (implementation *Lib3MFImplementation) Image3D_CreateSheetFromBuffer(Image3
 		return hSheet, err
 	}
 
-	err = implementation.CallFunction(implementation.Lib3MF_image3d_createsheetfrombuffer, implementation_image3d.GetDLLInHandle(), UInt32InValue(nIndex), StringInValue(sPath), 0, 0, hSheet.GetDLLOutHandle())
+	err = implementation.CallFunction(implementation.Lib3MF_image3d_createsheetfrombuffer, implementation_image3d.GetDLLInHandle(), UInt32InValue(nIndex), StringInValue(sPath), 0, 0, Float64InValue(dMin), Float64InValue(dMax), hSheet.GetDLLOutHandle())
 	if (err != nil) {
 		return hSheet, err
 	}
@@ -7204,7 +7192,7 @@ func (implementation *Lib3MFImplementation) Image3D_CreateSheetFromBuffer(Image3
 	return hSheet, err
 }
 
-func (implementation *Lib3MFImplementation) Image3D_CreateSheetFromFile(Image3D Lib3MFHandle, nIndex uint32, sPath string, sFileName string) (Lib3MFHandle, error) {
+func (implementation *Lib3MFImplementation) Image3D_CreateSheetFromFile(Image3D Lib3MFHandle, nIndex uint32, sPath string, sFileName string, dMin float64, dMax float64) (Lib3MFHandle, error) {
 	var err error = nil
 	hSheet := implementation.NewHandle()
 	
@@ -7213,7 +7201,7 @@ func (implementation *Lib3MFImplementation) Image3D_CreateSheetFromFile(Image3D 
 		return hSheet, err
 	}
 
-	err = implementation.CallFunction(implementation.Lib3MF_image3d_createsheetfromfile, implementation_image3d.GetDLLInHandle(), UInt32InValue(nIndex), StringInValue(sPath), StringInValue(sFileName), hSheet.GetDLLOutHandle())
+	err = implementation.CallFunction(implementation.Lib3MF_image3d_createsheetfromfile, implementation_image3d.GetDLLInHandle(), UInt32InValue(nIndex), StringInValue(sPath), StringInValue(sFileName), Float64InValue(dMin), Float64InValue(dMax), hSheet.GetDLLOutHandle())
 	if (err != nil) {
 		return hSheet, err
 	}
@@ -7436,40 +7424,6 @@ func (implementation *Lib3MFImplementation) Image3DChannelSelector_GetTileStyles
 	}
 	
 	return ELib3MFTextureTileStyle (eTileStyleU), ELib3MFTextureTileStyle (eTileStyleV), ELib3MFTextureTileStyle (eTileStyleW), err
-}
-
-func (implementation *Lib3MFImplementation) Image3DChannelSelector_SetValueRange(Image3DChannelSelector Lib3MFHandle, dMin float64, dMax float64) (error) {
-	var err error = nil
-	
-	implementation_image3dchannelselector, err := implementation.GetWrapperHandle(Image3DChannelSelector)
-	if (err != nil) {
-		return err
-	}
-
-	err = implementation.CallFunction(implementation.Lib3MF_image3dchannelselector_setvaluerange, implementation_image3dchannelselector.GetDLLInHandle(), Float64InValue(dMin), Float64InValue(dMax))
-	if (err != nil) {
-		return err
-	}
-	
-	return err
-}
-
-func (implementation *Lib3MFImplementation) Image3DChannelSelector_GetValueRange(Image3DChannelSelector Lib3MFHandle) (float64, float64, error) {
-	var err error = nil
-	var dMin float64 = 0
-	var dMax float64 = 0
-	
-	implementation_image3dchannelselector, err := implementation.GetWrapperHandle(Image3DChannelSelector)
-	if (err != nil) {
-		return 0, 0, err
-	}
-
-	err = implementation.CallFunction(implementation.Lib3MF_image3dchannelselector_getvaluerange, implementation_image3dchannelselector.GetDLLInHandle(), Float64OutValue(&dMin), Float64OutValue(&dMax))
-	if (err != nil) {
-		return 0, 0, err
-	}
-	
-	return dMin, dMax, err
 }
 
 func (implementation *Lib3MFImplementation) VolumetricLayer_GetTransform(VolumetricLayer Lib3MFHandle) (sLib3MFTransform, error) {

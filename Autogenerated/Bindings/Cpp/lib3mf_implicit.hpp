@@ -1343,9 +1343,9 @@ public:
 	inline Lib3MF_uint32 GetSizeY();
 	inline Lib3MF_uint32 GetSheetCount();
 	inline PAttachment GetSheet(const Lib3MF_uint32 nIndex);
-	inline PAttachment CreateEmptySheet(const Lib3MF_uint32 nIndex, const std::string & sPath);
-	inline PAttachment CreateSheetFromBuffer(const Lib3MF_uint32 nIndex, const std::string & sPath, const CInputVector<Lib3MF_uint8> & DataBuffer);
-	inline PAttachment CreateSheetFromFile(const Lib3MF_uint32 nIndex, const std::string & sPath, const std::string & sFileName);
+	inline PAttachment CreateEmptySheet(const Lib3MF_uint32 nIndex, const std::string & sPath, const Lib3MF_double dMin, const Lib3MF_double dMax);
+	inline PAttachment CreateSheetFromBuffer(const Lib3MF_uint32 nIndex, const std::string & sPath, const CInputVector<Lib3MF_uint8> & DataBuffer, const Lib3MF_double dMin, const Lib3MF_double dMax);
+	inline PAttachment CreateSheetFromFile(const Lib3MF_uint32 nIndex, const std::string & sPath, const std::string & sFileName, const Lib3MF_double dMin, const Lib3MF_double dMax);
 	inline void SetSheet(const Lib3MF_uint32 nIndex, CAttachment * pSheet);
 };
 	
@@ -1373,8 +1373,6 @@ public:
 	inline eTextureFilter GetFilter();
 	inline void SetTileStyles(const eTextureTileStyle eTileStyleU, const eTextureTileStyle eTileStyleV, const eTextureTileStyle eTileStyleW);
 	inline void GetTileStyles(eTextureTileStyle & eTileStyleU, eTextureTileStyle & eTileStyleV, eTextureTileStyle & eTileStyleW);
-	inline void SetValueRange(const Lib3MF_double dMin, const Lib3MF_double dMax);
-	inline void GetValueRange(Lib3MF_double & dMin, Lib3MF_double & dMax);
 };
 	
 /*************************************************************************************************************************
@@ -5060,12 +5058,14 @@ public:
 	* CImage3D::CreateEmptySheet - Creates a new sheet attachment with empty data.
 	* @param[in] nIndex - index of the image (0-based)
 	* @param[in] sPath - path name of package
+	* @param[in] dMin - Mapped value of the minimal (e.g. 0) image3D pixel values.
+	* @param[in] dMax - Mapped value of the maximal (e.g. 255) image3D pixel values.
 	* @return attachment containing the image
 	*/
-	PAttachment CImage3D::CreateEmptySheet(const Lib3MF_uint32 nIndex, const std::string & sPath)
+	PAttachment CImage3D::CreateEmptySheet(const Lib3MF_uint32 nIndex, const std::string & sPath, const Lib3MF_double dMin, const Lib3MF_double dMax)
 	{
 		Lib3MFHandle hSheet = nullptr;
-		CheckError(lib3mf_image3d_createemptysheet(m_pHandle, nIndex, sPath.c_str(), &hSheet));
+		CheckError(lib3mf_image3d_createemptysheet(m_pHandle, nIndex, sPath.c_str(), dMin, dMax, &hSheet));
 		
 		if (!hSheet) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
@@ -5078,12 +5078,14 @@ public:
 	* @param[in] nIndex - index of the image (0-based)
 	* @param[in] sPath - path name of package
 	* @param[in] DataBuffer - binary image data
+	* @param[in] dMin - Mapped value of the minimal (e.g. 0) image3D pixel values.
+	* @param[in] dMax - Mapped value of the maximal (e.g. 255) image3D pixel values.
 	* @return attachment containing the image
 	*/
-	PAttachment CImage3D::CreateSheetFromBuffer(const Lib3MF_uint32 nIndex, const std::string & sPath, const CInputVector<Lib3MF_uint8> & DataBuffer)
+	PAttachment CImage3D::CreateSheetFromBuffer(const Lib3MF_uint32 nIndex, const std::string & sPath, const CInputVector<Lib3MF_uint8> & DataBuffer, const Lib3MF_double dMin, const Lib3MF_double dMax)
 	{
 		Lib3MFHandle hSheet = nullptr;
-		CheckError(lib3mf_image3d_createsheetfrombuffer(m_pHandle, nIndex, sPath.c_str(), (Lib3MF_uint64)DataBuffer.size(), DataBuffer.data(), &hSheet));
+		CheckError(lib3mf_image3d_createsheetfrombuffer(m_pHandle, nIndex, sPath.c_str(), (Lib3MF_uint64)DataBuffer.size(), DataBuffer.data(), dMin, dMax, &hSheet));
 		
 		if (!hSheet) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
@@ -5096,12 +5098,14 @@ public:
 	* @param[in] nIndex - index of the image (0-based)
 	* @param[in] sPath - path name of package
 	* @param[in] sFileName - file name to read from
+	* @param[in] dMin - Mapped value of the minimal (e.g. 0) image3D pixel values.
+	* @param[in] dMax - Mapped value of the maximal (e.g. 255) image3D pixel values.
 	* @return attachment containing the image
 	*/
-	PAttachment CImage3D::CreateSheetFromFile(const Lib3MF_uint32 nIndex, const std::string & sPath, const std::string & sFileName)
+	PAttachment CImage3D::CreateSheetFromFile(const Lib3MF_uint32 nIndex, const std::string & sPath, const std::string & sFileName, const Lib3MF_double dMin, const Lib3MF_double dMax)
 	{
 		Lib3MFHandle hSheet = nullptr;
-		CheckError(lib3mf_image3d_createsheetfromfile(m_pHandle, nIndex, sPath.c_str(), sFileName.c_str(), &hSheet));
+		CheckError(lib3mf_image3d_createsheetfromfile(m_pHandle, nIndex, sPath.c_str(), sFileName.c_str(), dMin, dMax, &hSheet));
 		
 		if (!hSheet) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
@@ -5244,26 +5248,6 @@ public:
 	void CImage3DChannelSelector::GetTileStyles(eTextureTileStyle & eTileStyleU, eTextureTileStyle & eTileStyleV, eTextureTileStyle & eTileStyleW)
 	{
 		CheckError(lib3mf_image3dchannelselector_gettilestyles(m_pHandle, &eTileStyleU, &eTileStyleV, &eTileStyleW));
-	}
-	
-	/**
-	* CImage3DChannelSelector::SetValueRange - Sets the value range of the selector.
-	* @param[in] dMin - Mapped value of the minimal (e.g. 0) image3D pixel values.
-	* @param[in] dMax - Mapped value of the maximal (e.g. 255) image3D pixel values.
-	*/
-	void CImage3DChannelSelector::SetValueRange(const Lib3MF_double dMin, const Lib3MF_double dMax)
-	{
-		CheckError(lib3mf_image3dchannelselector_setvaluerange(m_pHandle, dMin, dMax));
-	}
-	
-	/**
-	* CImage3DChannelSelector::GetValueRange - Retrieves the value range of the selector.
-	* @param[out] dMin - Mapped value of the minimal (e.g. 0) image3D pixel values.
-	* @param[out] dMax - Mapped value of the maximal (e.g. 255) image3D pixel values.
-	*/
-	void CImage3DChannelSelector::GetValueRange(Lib3MF_double & dMin, Lib3MF_double & dMax)
-	{
-		CheckError(lib3mf_image3dchannelselector_getvaluerange(m_pHandle, &dMin, &dMax));
 	}
 	
 	/**

@@ -52,11 +52,6 @@ namespace NMR {
 		std::string m_sSourceChannel;
 		std::string m_sDestinationChannel;
 
-		nfBool m_bHasMinValue;
-		nfBool m_bHasMaxValue;
-		nfDouble m_dMinValue;
-		nfDouble m_dMaxValue;
-
 		nfBool m_bHasTileStyleU;
 		nfBool m_bHasTileStyleV;
 		nfBool m_bHasTileStyleW;

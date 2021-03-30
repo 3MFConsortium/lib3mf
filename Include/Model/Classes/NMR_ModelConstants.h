@@ -234,6 +234,8 @@ These are given by the 3MF Standard
 
 #define XML_3MF_ELEMENT_IMAGE3DSHEET           "image3dsheet"
 #define XML_3MF_ATTRIBUTE_IMAGE3DSHEET_PATH    "path"
+#define XML_3MF_ATTRIBUTE_IMAGE3DSHEET_MIN_VAL "minvalue"
+#define XML_3MF_ATTRIBUTE_IMAGE3DSHEET_MAX_VAL "maxvalue"
 
 #define XML_3MF_ELEMENT_VOLUMETRICSTACK        "volumetricstack"
 #define XML_3MF_ATTRIBUTE_VOLUMETRICSTACK_ID   "id"
@@ -254,8 +256,6 @@ These are given by the 3MF Standard
 #define XML_3MF_ATTRIBUTE_CHANNELSELECTOR_IMAGE3DID     "image3dID"
 #define XML_3MF_ATTRIBUTE_CHANNELSELECTOR_SRCCHANNEL    "srcchannel"
 #define XML_3MF_ATTRIBUTE_CHANNELSELECTOR_DSTCHANNEL    "dstchannel"
-#define XML_3MF_ATTRIBUTE_CHANNELSELECTOR_MINVALUE      "minvalue"
-#define XML_3MF_ATTRIBUTE_CHANNELSELECTOR_MAXVALUE      "maxvalue"
 #define XML_3MF_ATTRIBUTE_CHANNELSELECTOR_FILTER        "filter"
 #define XML_3MF_ATTRIBUTE_CHANNELSELECTOR_TILESTYLEU    "tilestyleu"
 #define XML_3MF_ATTRIBUTE_CHANNELSELECTOR_TILESTYLEV    "tilestylev"
@@ -482,5 +482,9 @@ These are given by the 3MF Standard
 #define XML_3MF_MAXIMUMSKINTHICKNESSVALUE           1000000000.0f
 #define XML_3MF_MAXBEAMCOUNT                        2147483647
 #define XML_3MF_MAXBALLCOUNT                        2147483647
+
+#ifdef __MINGW32__
+#define isNotANumber(x) ((x)!=(x))
+#endif
 
 #endif // __NMR_MODELCONSTANTS

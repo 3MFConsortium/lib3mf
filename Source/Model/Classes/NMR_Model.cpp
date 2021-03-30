@@ -993,7 +993,7 @@ namespace NMR {
 					if (pNewSheet.get() == nullptr)
 						throw CNMRException(NMR_ERROR_ATTACHMENTNOTFOUND);
 
-					pNewImage3D->setSheet(nIndex, pNewSheet);
+					pNewImage3D->setSheet(nIndex, pNewSheet, 0.0, 0.0);
 				}
 			}
 

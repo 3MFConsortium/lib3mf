@@ -67,15 +67,27 @@ namespace NMR {
 		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_IMAGE3DSHEET_PATH) == 0) {
 			m_sPath = pAttributeValue;
 		}
+		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_IMAGE3DSHEET_MIN_VAL) == 0) {
+			m_minValue = std::stod(pAttributeValue);
+		}
+		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_IMAGE3DSHEET_MAX_VAL) == 0) {
+			m_maxValue = std::stod(pAttributeValue);
+		}
 	}
-	
-	
 
 	std::string CModelReaderNode_Volumetric1907_Image3DSheet::getPath()
 	{	
 		return m_sPath;
-
 	}
 
+	nfDouble CModelReaderNode_Volumetric1907_Image3DSheet::getMinValue()
+	{
+		return m_minValue;
+	}
+
+	nfDouble CModelReaderNode_Volumetric1907_Image3DSheet::getMaxValue()
+	{
+		return m_maxValue;
+	}
 
 }

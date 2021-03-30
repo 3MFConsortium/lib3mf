@@ -761,6 +761,8 @@ namespace NMR {
 				writeStartElementWithPrefix(XML_3MF_ELEMENT_IMAGE3DSHEET, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
 				if (pSheet.get() != nullptr) {
 					writeStringAttribute(XML_3MF_ATTRIBUTE_IMAGE3DSHEET_PATH, pSheet->getPathURI());
+					writeFloatAttribute(XML_3MF_ATTRIBUTE_IMAGE3DSHEET_MIN_VAL, (float)pImage3DResource->getSheetMinValue(nSheetIndex));
+					writeFloatAttribute(XML_3MF_ATTRIBUTE_IMAGE3DSHEET_MAX_VAL, (float)pImage3DResource->getSheetMaxValue(nSheetIndex));
 				}
 				writeEndElement();
 			}
@@ -833,8 +835,6 @@ namespace NMR {
 		writeStringAttribute(XML_3MF_ATTRIBUTE_CHANNELSELECTOR_SRCCHANNEL, pSelector->getSourceChannel ());
 		writeStringAttribute(XML_3MF_ATTRIBUTE_CHANNELSELECTOR_DSTCHANNEL, pSelector->getDstChannel());
 		writeStringAttribute(XML_3MF_ATTRIBUTE_CHANNELSELECTOR_FILTER, CModelTexture2DResource::filterToString(pSelector->getFilter()));
-		writeFloatAttribute(XML_3MF_ATTRIBUTE_CHANNELSELECTOR_MINVALUE, (nfFloat) pSelector->getMinValue());
-		writeFloatAttribute(XML_3MF_ATTRIBUTE_CHANNELSELECTOR_MAXVALUE, (nfFloat)pSelector->getMaxValue());
 		writeStringAttribute(XML_3MF_ATTRIBUTE_CHANNELSELECTOR_TILESTYLEU, CModelTexture2DResource::tileStyleToString(pSelector->getTileStyleU()));
 		writeStringAttribute(XML_3MF_ATTRIBUTE_CHANNELSELECTOR_TILESTYLEV, CModelTexture2DResource::tileStyleToString(pSelector->getTileStyleV()));
 		writeStringAttribute(XML_3MF_ATTRIBUTE_CHANNELSELECTOR_TILESTYLEW, CModelTexture2DResource::tileStyleToString(pSelector->getTileStyleW()));

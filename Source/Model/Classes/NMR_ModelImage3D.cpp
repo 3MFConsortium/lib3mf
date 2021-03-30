@@ -45,7 +45,7 @@ namespace NMR {
 
 
 	CModelImage3D::CModelImage3D(_In_ const ModelResourceID sID, _In_ CModel * pModel, _In_ nfUint32 nSizeX, _In_ nfUint32 nSizeY, nfUint32 nSheetCount)
-		: CModelResource(sID, pModel), m_nSizeX(nSizeX), m_nSizeY(nSizeY), m_nSheetCount(nSheetCount)
+		: CModelResource(sID, pModel), m_nSizeX(nSizeX), m_nSizeY(nSizeY), m_nSheetCount(nSheetCount), m_minValues(nSheetCount, 1.0), m_maxValues(nSheetCount, 1.0)
 	{
 
 		if ((nSizeX == 0) || (nSizeX > MAX_IMAGE3D_SIZE))
@@ -56,6 +56,8 @@ namespace NMR {
 			throw CNMRException(MAX_IMAGE3D_SIZE);
 
 		m_Sheets.resize (m_nSheetCount);
+		m_minValues.resize (m_nSheetCount);
+		m_maxValues.resize (m_nSheetCount);
 	}
 		
 	
@@ -80,7 +82,7 @@ namespace NMR {
 		return m_nSheetCount;
 	}
 
-	void CModelImage3D::setSheet(nfUint32 nSheetIndex, PModelAttachment pAttachment)
+	void CModelImage3D::setSheet(nfUint32 nSheetIndex, PModelAttachment pAttachment, const nfDouble dMin, const nfDouble dMax)
 	{
 		if (!pAttachment.get())
 			throw CNMRException(NMR_ERROR_INVALIDTEXTURE);
@@ -93,6 +95,8 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_ATTACHMENTMODELMISMATCH);
 
 		m_Sheets[nSheetIndex] = pAttachment;
+		m_minValues[nSheetIndex] = dMin;
+		m_maxValues[nSheetIndex] = dMax;
 	}
 		
 	PModelAttachment CModelImage3D::getSheet(nfUint32 nSheetIndex)
@@ -103,13 +107,46 @@ namespace NMR {
 
 	}
 
-	PModelAttachment CModelImage3D::createSheet(nfUint32 nSheetIndex, const std::string & sPath, PImportStream pCopiedStream)
+	PModelAttachment CModelImage3D::createSheet(nfUint32 nSheetIndex, const std::string & sPath, PImportStream pCopiedStream, const nfDouble dMin, const nfDouble dMax)
 	{
 
 		PModelAttachment pAttachment = getModel()->addAttachment(sPath, PACKAGE_TEXTURE_RELATIONSHIP_TYPE, pCopiedStream);
-		setSheet(nSheetIndex, pAttachment);
+
+		setSheet(nSheetIndex, pAttachment, dMin, dMax);
 
 		return pAttachment;
+	}
+
+	nfDouble CModelImage3D::getSheetMinValue (nfUint32 nSheetIndex)
+	{
+		if (nSheetIndex >= m_nSheetCount)
+			throw CNMRException(NMR_ERROR_INVALIDINDEX);
+		
+		return m_minValues [nSheetIndex];
+	}
+
+	void CModelImage3D::setSheetMinValue (nfUint32 nSheetIndex, nfDouble minVal)
+	{
+		if (nSheetIndex >= m_nSheetCount)
+			throw CNMRException(NMR_ERROR_INVALIDINDEX);
+		
+		m_minValues [nSheetIndex] = minVal;
+	}
+	
+	nfDouble CModelImage3D::getSheetMaxValue (nfUint32 nSheetIndex)
+	{
+		if (nSheetIndex >= m_nSheetCount)
+			throw CNMRException(NMR_ERROR_INVALIDINDEX);
+		
+		return m_maxValues [nSheetIndex];
+	}
+	
+	void CModelImage3D::setSheetMaxValue (nfUint32 nSheetIndex, nfDouble maxVal)
+	{
+		if (nSheetIndex >= m_nSheetCount)
+			throw CNMRException(NMR_ERROR_INVALIDINDEX);
+		
+		m_maxValues [nSheetIndex] = maxVal;
 	}
 
 }

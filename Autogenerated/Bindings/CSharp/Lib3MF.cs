@@ -975,13 +975,13 @@ namespace Lib3MF {
 			public unsafe extern static Int32 Image3D_GetSheet (IntPtr Handle, UInt32 AIndex, out IntPtr ASheet);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_image3d_createemptysheet", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Image3D_CreateEmptySheet (IntPtr Handle, UInt32 AIndex, byte[] APath, out IntPtr ASheet);
+			public unsafe extern static Int32 Image3D_CreateEmptySheet (IntPtr Handle, UInt32 AIndex, byte[] APath, Double AMin, Double AMax, out IntPtr ASheet);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_image3d_createsheetfrombuffer", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Image3D_CreateSheetFromBuffer (IntPtr Handle, UInt32 AIndex, byte[] APath, UInt64 sizeData, IntPtr dataData, out IntPtr ASheet);
+			public unsafe extern static Int32 Image3D_CreateSheetFromBuffer (IntPtr Handle, UInt32 AIndex, byte[] APath, UInt64 sizeData, IntPtr dataData, Double AMin, Double AMax, out IntPtr ASheet);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_image3d_createsheetfromfile", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Image3D_CreateSheetFromFile (IntPtr Handle, UInt32 AIndex, byte[] APath, byte[] AFileName, out IntPtr ASheet);
+			public unsafe extern static Int32 Image3D_CreateSheetFromFile (IntPtr Handle, UInt32 AIndex, byte[] APath, byte[] AFileName, Double AMin, Double AMax, out IntPtr ASheet);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_image3d_setsheet", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Image3D_SetSheet (IntPtr Handle, UInt32 AIndex, IntPtr ASheet);
@@ -1015,12 +1015,6 @@ namespace Lib3MF {
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_image3dchannelselector_gettilestyles", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Image3DChannelSelector_GetTileStyles (IntPtr Handle, out Int32 ATileStyleU, out Int32 ATileStyleV, out Int32 ATileStyleW);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_image3dchannelselector_setvaluerange", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Image3DChannelSelector_SetValueRange (IntPtr Handle, Double AMin, Double AMax);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_image3dchannelselector_getvaluerange", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Image3DChannelSelector_GetValueRange (IntPtr Handle, out Double AMin, out Double AMax);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumetriclayer_gettransform", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 VolumetricLayer_GetTransform (IntPtr Handle, out InternalTransform ATransform);
@@ -4251,33 +4245,33 @@ namespace Lib3MF {
 			return new CAttachment (newSheet );
 		}
 
-		public CAttachment CreateEmptySheet (UInt32 AIndex, String APath)
+		public CAttachment CreateEmptySheet (UInt32 AIndex, String APath, Double AMin, Double AMax)
 		{
 			byte[] bytePath = Encoding.UTF8.GetBytes(APath + char.MinValue);
 			IntPtr newSheet = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.Image3D_CreateEmptySheet (Handle, AIndex, bytePath, out newSheet));
+			CheckError(Internal.Lib3MFWrapper.Image3D_CreateEmptySheet (Handle, AIndex, bytePath, AMin, AMax, out newSheet));
 			return new CAttachment (newSheet );
 		}
 
-		public CAttachment CreateSheetFromBuffer (UInt32 AIndex, String APath, Byte[] AData)
+		public CAttachment CreateSheetFromBuffer (UInt32 AIndex, String APath, Byte[] AData, Double AMin, Double AMax)
 		{
 			byte[] bytePath = Encoding.UTF8.GetBytes(APath + char.MinValue);
 			GCHandle dataData = GCHandle.Alloc(AData, GCHandleType.Pinned);
 			IntPtr newSheet = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.Image3D_CreateSheetFromBuffer (Handle, AIndex, bytePath, (UInt64) AData.Length, dataData.AddrOfPinnedObject(), out newSheet));
+			CheckError(Internal.Lib3MFWrapper.Image3D_CreateSheetFromBuffer (Handle, AIndex, bytePath, (UInt64) AData.Length, dataData.AddrOfPinnedObject(), AMin, AMax, out newSheet));
 			dataData.Free ();
 			return new CAttachment (newSheet );
 		}
 
-		public CAttachment CreateSheetFromFile (UInt32 AIndex, String APath, String AFileName)
+		public CAttachment CreateSheetFromFile (UInt32 AIndex, String APath, String AFileName, Double AMin, Double AMax)
 		{
 			byte[] bytePath = Encoding.UTF8.GetBytes(APath + char.MinValue);
 			byte[] byteFileName = Encoding.UTF8.GetBytes(AFileName + char.MinValue);
 			IntPtr newSheet = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.Image3D_CreateSheetFromFile (Handle, AIndex, bytePath, byteFileName, out newSheet));
+			CheckError(Internal.Lib3MFWrapper.Image3D_CreateSheetFromFile (Handle, AIndex, bytePath, byteFileName, AMin, AMax, out newSheet));
 			return new CAttachment (newSheet );
 		}
 
@@ -4385,18 +4379,6 @@ namespace Lib3MF {
 			ATileStyleU = (eTextureTileStyle) (resultTileStyleU);
 			ATileStyleV = (eTextureTileStyle) (resultTileStyleV);
 			ATileStyleW = (eTextureTileStyle) (resultTileStyleW);
-		}
-
-		public void SetValueRange (Double AMin, Double AMax)
-		{
-
-			CheckError(Internal.Lib3MFWrapper.Image3DChannelSelector_SetValueRange (Handle, AMin, AMax));
-		}
-
-		public void GetValueRange (out Double AMin, out Double AMax)
-		{
-
-			CheckError(Internal.Lib3MFWrapper.Image3DChannelSelector_GetValueRange (Handle, out AMin, out AMax));
 		}
 
 	}

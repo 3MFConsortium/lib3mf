@@ -157,9 +157,10 @@ namespace NMR {
 						m_pWarnings->addException(CNMRException(NMR_ERROR_TOOMANYIMAGE3DSHEETS), mrwFatal);
 
 					__NMRASSERT(m_pImage3D.get() != nullptr);
-					m_pImage3D->setSheet(m_nSheetIndex, pAttachment);
+					m_pImage3D->setSheet(m_nSheetIndex, pAttachment, 0.0, 0.0);
+					m_pImage3D->setSheetMinValue(m_nSheetIndex, pXMLNode->getMinValue());
+					m_pImage3D->setSheetMaxValue(m_nSheetIndex, pXMLNode->getMaxValue());
 					m_nSheetIndex++;
-
 
 				} else
 					m_pWarnings->addException(CNMRException(NMR_ERROR_MISSINGIMAGE3DSHEETPATH), mrwMissingMandatoryValue);
