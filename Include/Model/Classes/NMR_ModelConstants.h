@@ -483,4 +483,8 @@ These are given by the 3MF Standard
 #define XML_3MF_MAXBEAMCOUNT                        2147483647
 #define XML_3MF_MAXBALLCOUNT                        2147483647
 
+#ifdef __MINGW32__
+#define isNotANumber(x) ((x)!=(x))
+#endif
+
 #endif // __NMR_MODELCONSTANTS
