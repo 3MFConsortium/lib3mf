@@ -486,7 +486,7 @@ These are given by the 3MF Standard
 #if defined(__MINGW32__) || defined(__MINGW64__)
 namespace std{
 #ifndef isnan 
-    #define isnan(x) ((x) != (x)) 
+    #define isnan(_Val)         (fpclassify(_Val) == FP_NAN)
 #endif
 }
 #endif
