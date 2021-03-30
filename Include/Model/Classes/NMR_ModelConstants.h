@@ -484,9 +484,11 @@ These are given by the 3MF Standard
 #define XML_3MF_MAXBALLCOUNT                        2147483647
 
 #if defined(__MINGW32__) || defined(__MINGW64__)
+namespace std{
 #ifndef isnan 
     #define isnan(x) ((x) != (x)) 
 #endif
+}
 #endif
 
 
