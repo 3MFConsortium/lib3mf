@@ -1,5 +1,5 @@
 cd build
-lcov --no-external --capture --initial --directory . --output-file Test_CPP_Bindings_base.info
+lcov --capture --initial --directory . --output-file Test_CPP_Bindings_base.info
 
 ./Test_CPP_Bindings
 
