@@ -74,6 +74,16 @@ IAttachment * CImage3D::GetSheet(const Lib3MF_uint32 nIndex)
 	return new CAttachment(pAttachment);
 }
 
+Lib3MF_double CImage3D::GetSheetMinValue(const Lib3MF_uint32 nIndex)
+{
+	return m_pImage3D->getSheetMinValue(nIndex);
+}
+
+Lib3MF_double CImage3D::GetSheetMaxValue(const Lib3MF_uint32 nIndex)
+{
+	return m_pImage3D->getSheetMaxValue(nIndex);
+}
+
 IAttachment * CImage3D::CreateEmptySheet(const Lib3MF_uint32 nIndex, const std::string & sPath, const Lib3MF_double dMin, const Lib3MF_double dMax)
 {
 	NMR::PImportStream pStream = std::make_shared<NMR::CImportStream_Unique_Memory>();
@@ -97,7 +107,6 @@ IAttachment * CImage3D::CreateSheetFromFile(const Lib3MF_uint32 nIndex, const st
 	return new CAttachment(pAttachment);
 }
 
-
 void CImage3D::SetSheet(const Lib3MF_uint32 nIndex, IAttachment* pSheet)
 {
 	if (pSheet == nullptr)
@@ -108,6 +117,16 @@ void CImage3D::SetSheet(const Lib3MF_uint32 nIndex, IAttachment* pSheet)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 
 	m_pImage3D->setSheet(nIndex, pAttachment->getModelAttachment(), 0.0, 0.0); // These values are set using setter functions afterwards
+}
+
+void CImage3D::SetSheetMinValue(const Lib3MF_uint32 nIndex, const Lib3MF_double dMinVal)
+{
+	m_pImage3D->setSheetMinValue(nIndex, dMinVal);
+}
+
+void CImage3D::SetSheetMaxValue(const Lib3MF_uint32 nIndex, const Lib3MF_double dMaxVal)
+{
+	m_pImage3D->setSheetMaxValue(nIndex, dMaxVal);
 }
 
 NMR::PModelImage3D CImage3D::getModelImage3D()

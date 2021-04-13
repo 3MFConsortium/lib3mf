@@ -355,10 +355,14 @@ class FunctionTable:
 	lib3mf_image3d_getsizey = None
 	lib3mf_image3d_getsheetcount = None
 	lib3mf_image3d_getsheet = None
+	lib3mf_image3d_getsheetminvalue = None
+	lib3mf_image3d_getsheetmaxvalue = None
 	lib3mf_image3d_createemptysheet = None
 	lib3mf_image3d_createsheetfrombuffer = None
 	lib3mf_image3d_createsheetfromfile = None
 	lib3mf_image3d_setsheet = None
+	lib3mf_image3d_setsheetminvalue = None
+	lib3mf_image3d_setsheetmaxvalue = None
 	lib3mf_image3dchannelselector_getimage = None
 	lib3mf_image3dchannelselector_setimage = None
 	lib3mf_image3dchannelselector_setsourcechannel = None
@@ -2346,6 +2350,18 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p))
 			self.lib.lib3mf_image3d_getsheet = methodType(int(methodAddress.value))
 			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_image3d_getsheetminvalue")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_double))
+			self.lib.lib3mf_image3d_getsheetminvalue = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_image3d_getsheetmaxvalue")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_double))
+			self.lib.lib3mf_image3d_getsheetmaxvalue = methodType(int(methodAddress.value))
+			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_image3d_createemptysheet")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
@@ -2369,6 +2385,18 @@ class Wrapper:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_void_p)
 			self.lib.lib3mf_image3d_setsheet = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_image3d_setsheetminvalue")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_double)
+			self.lib.lib3mf_image3d_setsheetminvalue = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_image3d_setsheetmaxvalue")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_double)
+			self.lib.lib3mf_image3d_setsheetmaxvalue = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_image3dchannelselector_getimage")), methodAddress)
 			if err != 0:
@@ -4328,6 +4356,12 @@ class Wrapper:
 			self.lib.lib3mf_image3d_getsheet.restype = ctypes.c_int32
 			self.lib.lib3mf_image3d_getsheet.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p)]
 			
+			self.lib.lib3mf_image3d_getsheetminvalue.restype = ctypes.c_int32
+			self.lib.lib3mf_image3d_getsheetminvalue.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_double)]
+			
+			self.lib.lib3mf_image3d_getsheetmaxvalue.restype = ctypes.c_int32
+			self.lib.lib3mf_image3d_getsheetmaxvalue.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_double)]
+			
 			self.lib.lib3mf_image3d_createemptysheet.restype = ctypes.c_int32
 			self.lib.lib3mf_image3d_createemptysheet.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_char_p, ctypes.c_double, ctypes.c_double, ctypes.POINTER(ctypes.c_void_p)]
 			
@@ -4339,6 +4373,12 @@ class Wrapper:
 			
 			self.lib.lib3mf_image3d_setsheet.restype = ctypes.c_int32
 			self.lib.lib3mf_image3d_setsheet.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_void_p]
+			
+			self.lib.lib3mf_image3d_setsheetminvalue.restype = ctypes.c_int32
+			self.lib.lib3mf_image3d_setsheetminvalue.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_double]
+			
+			self.lib.lib3mf_image3d_setsheetmaxvalue.restype = ctypes.c_int32
+			self.lib.lib3mf_image3d_setsheetmaxvalue.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_double]
 			
 			self.lib.lib3mf_image3dchannelselector_getimage.restype = ctypes.c_int32
 			self.lib.lib3mf_image3dchannelselector_getimage.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
@@ -7148,6 +7188,20 @@ class Image3D(Resource):
 		
 		return SheetObject
 	
+	def GetSheetMinValue(self, Index):
+		nIndex = ctypes.c_uint32(Index)
+		pMinVal = ctypes.c_double()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_image3d_getsheetminvalue(self._handle, nIndex, pMinVal))
+		
+		return pMinVal.value
+	
+	def GetSheetMaxValue(self, Index):
+		nIndex = ctypes.c_uint32(Index)
+		pMaxVal = ctypes.c_double()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_image3d_getsheetmaxvalue(self._handle, nIndex, pMaxVal))
+		
+		return pMaxVal.value
+	
 	def CreateEmptySheet(self, Index, Path, Min, Max):
 		nIndex = ctypes.c_uint32(Index)
 		pPath = ctypes.c_char_p(str.encode(Path))
@@ -7201,6 +7255,18 @@ class Image3D(Resource):
 		else:
 			raise ELib3MFException(ErrorCodes.INVALIDPARAM, 'Invalid return/output value')
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_image3d_setsheet(self._handle, nIndex, SheetHandle))
+		
+	
+	def SetSheetMinValue(self, Index, MinVal):
+		nIndex = ctypes.c_uint32(Index)
+		dMinVal = ctypes.c_double(MinVal)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_image3d_setsheetminvalue(self._handle, nIndex, dMinVal))
+		
+	
+	def SetSheetMaxValue(self, Index, MaxVal):
+		nIndex = ctypes.c_uint32(Index)
+		dMaxVal = ctypes.c_double(MaxVal)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_image3d_setsheetmaxvalue(self._handle, nIndex, dMaxVal))
 		
 	
 

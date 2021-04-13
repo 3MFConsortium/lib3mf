@@ -275,10 +275,14 @@ type Lib3MFImplementation struct {
 	Lib3MF_image3d_getsizey uintptr
 	Lib3MF_image3d_getsheetcount uintptr
 	Lib3MF_image3d_getsheet uintptr
+	Lib3MF_image3d_getsheetminvalue uintptr
+	Lib3MF_image3d_getsheetmaxvalue uintptr
 	Lib3MF_image3d_createemptysheet uintptr
 	Lib3MF_image3d_createsheetfrombuffer uintptr
 	Lib3MF_image3d_createsheetfromfile uintptr
 	Lib3MF_image3d_setsheet uintptr
+	Lib3MF_image3d_setsheetminvalue uintptr
+	Lib3MF_image3d_setsheetmaxvalue uintptr
 	Lib3MF_image3dchannelselector_getimage uintptr
 	Lib3MF_image3dchannelselector_setimage uintptr
 	Lib3MF_image3dchannelselector_setsourcechannel uintptr
@@ -1825,6 +1829,16 @@ func (implementation *Lib3MFImplementation) Initialize(DLLFileName string) error
 		return errors.New("Could not get function lib3mf_image3d_getsheet: " + err.Error())
 	}
 	
+	implementation.Lib3MF_image3d_getsheetminvalue, err = syscall.GetProcAddress(dllHandle, "lib3mf_image3d_getsheetminvalue")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_image3d_getsheetminvalue: " + err.Error())
+	}
+	
+	implementation.Lib3MF_image3d_getsheetmaxvalue, err = syscall.GetProcAddress(dllHandle, "lib3mf_image3d_getsheetmaxvalue")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_image3d_getsheetmaxvalue: " + err.Error())
+	}
+	
 	implementation.Lib3MF_image3d_createemptysheet, err = syscall.GetProcAddress(dllHandle, "lib3mf_image3d_createemptysheet")
 	if (err != nil) {
 		return errors.New("Could not get function lib3mf_image3d_createemptysheet: " + err.Error())
@@ -1843,6 +1857,16 @@ func (implementation *Lib3MFImplementation) Initialize(DLLFileName string) error
 	implementation.Lib3MF_image3d_setsheet, err = syscall.GetProcAddress(dllHandle, "lib3mf_image3d_setsheet")
 	if (err != nil) {
 		return errors.New("Could not get function lib3mf_image3d_setsheet: " + err.Error())
+	}
+	
+	implementation.Lib3MF_image3d_setsheetminvalue, err = syscall.GetProcAddress(dllHandle, "lib3mf_image3d_setsheetminvalue")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_image3d_setsheetminvalue: " + err.Error())
+	}
+	
+	implementation.Lib3MF_image3d_setsheetmaxvalue, err = syscall.GetProcAddress(dllHandle, "lib3mf_image3d_setsheetmaxvalue")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_image3d_setsheetmaxvalue: " + err.Error())
 	}
 	
 	implementation.Lib3MF_image3dchannelselector_getimage, err = syscall.GetProcAddress(dllHandle, "lib3mf_image3dchannelselector_getimage")
@@ -7158,6 +7182,40 @@ func (implementation *Lib3MFImplementation) Image3D_GetSheet(Image3D Lib3MFHandl
 	return hSheet, err
 }
 
+func (implementation *Lib3MFImplementation) Image3D_GetSheetMinValue(Image3D Lib3MFHandle, nIndex uint32) (float64, error) {
+	var err error = nil
+	var dMinVal float64 = 0
+	
+	implementation_image3d, err := implementation.GetWrapperHandle(Image3D)
+	if (err != nil) {
+		return 0, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_image3d_getsheetminvalue, implementation_image3d.GetDLLInHandle(), UInt32InValue(nIndex), Float64OutValue(&dMinVal))
+	if (err != nil) {
+		return 0, err
+	}
+	
+	return dMinVal, err
+}
+
+func (implementation *Lib3MFImplementation) Image3D_GetSheetMaxValue(Image3D Lib3MFHandle, nIndex uint32) (float64, error) {
+	var err error = nil
+	var dMaxVal float64 = 0
+	
+	implementation_image3d, err := implementation.GetWrapperHandle(Image3D)
+	if (err != nil) {
+		return 0, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_image3d_getsheetmaxvalue, implementation_image3d.GetDLLInHandle(), UInt32InValue(nIndex), Float64OutValue(&dMaxVal))
+	if (err != nil) {
+		return 0, err
+	}
+	
+	return dMaxVal, err
+}
+
 func (implementation *Lib3MFImplementation) Image3D_CreateEmptySheet(Image3D Lib3MFHandle, nIndex uint32, sPath string, dMin float64, dMax float64) (Lib3MFHandle, error) {
 	var err error = nil
 	hSheet := implementation.NewHandle()
@@ -7228,6 +7286,38 @@ func (implementation *Lib3MFImplementation) Image3D_SetSheet(Image3D Lib3MFHandl
 	}
 
 	err = implementation.CallFunction(implementation.Lib3MF_image3d_setsheet, implementation_image3d.GetDLLInHandle(), UInt32InValue(nIndex), SheetDLLHandle)
+	if (err != nil) {
+		return err
+	}
+	
+	return err
+}
+
+func (implementation *Lib3MFImplementation) Image3D_SetSheetMinValue(Image3D Lib3MFHandle, nIndex uint32, dMinVal float64) (error) {
+	var err error = nil
+	
+	implementation_image3d, err := implementation.GetWrapperHandle(Image3D)
+	if (err != nil) {
+		return err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_image3d_setsheetminvalue, implementation_image3d.GetDLLInHandle(), UInt32InValue(nIndex), Float64InValue(dMinVal))
+	if (err != nil) {
+		return err
+	}
+	
+	return err
+}
+
+func (implementation *Lib3MFImplementation) Image3D_SetSheetMaxValue(Image3D Lib3MFHandle, nIndex uint32, dMaxVal float64) (error) {
+	var err error = nil
+	
+	implementation_image3d, err := implementation.GetWrapperHandle(Image3D)
+	if (err != nil) {
+		return err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_image3d_setsheetmaxvalue, implementation_image3d.GetDLLInHandle(), UInt32InValue(nIndex), Float64InValue(dMaxVal))
 	if (err != nil) {
 		return err
 	}

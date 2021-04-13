@@ -2821,6 +2821,26 @@ type
 	TLib3MFImage3D_GetSheetFunc = function(pImage3D: TLib3MFHandle; const nIndex: Cardinal; out pSheet: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
+	* Retrieves the minimum occuring double value of sampled field data.
+	*
+	* @param[in] pImage3D - Image3D instance.
+	* @param[in] nIndex - index of the image (0-based)
+	* @param[out] pMinVal - Minimum occuring double value
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImage3D_GetSheetMinValueFunc = function(pImage3D: TLib3MFHandle; const nIndex: Cardinal; out pMinVal: Double): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the maximum occuring double value of sampled field data.
+	*
+	* @param[in] pImage3D - Image3D instance.
+	* @param[in] nIndex - index of the image (0-based)
+	* @param[out] pMaxVal - Maximum occuring double value
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImage3D_GetSheetMaxValueFunc = function(pImage3D: TLib3MFHandle; const nIndex: Cardinal; out pMaxVal: Double): TLib3MFResult; cdecl;
+	
+	(**
 	* Creates a new sheet attachment with empty data.
 	*
 	* @param[in] pImage3D - Image3D instance.
@@ -2871,6 +2891,26 @@ type
 	* @return error code or 0 (success)
 	*)
 	TLib3MFImage3D_SetSheetFunc = function(pImage3D: TLib3MFHandle; const nIndex: Cardinal; const pSheet: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Sets the minimum occuring double value of sampled field data.
+	*
+	* @param[in] pImage3D - Image3D instance.
+	* @param[in] nIndex - index of the image (0-based)
+	* @param[in] dMinVal - Minimum occuring double value
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImage3D_SetSheetMinValueFunc = function(pImage3D: TLib3MFHandle; const nIndex: Cardinal; const dMinVal: Double): TLib3MFResult; cdecl;
+	
+	(**
+	* Sets the maximum occuring double value of sampled field data.
+	*
+	* @param[in] pImage3D - Image3D instance.
+	* @param[in] nIndex - index of the image (0-based)
+	* @param[in] dMaxVal - Maximum occuring double value
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImage3D_SetSheetMaxValueFunc = function(pImage3D: TLib3MFHandle; const nIndex: Cardinal; const dMaxVal: Double): TLib3MFResult; cdecl;
 	
 
 (*************************************************************************************************************************
@@ -5782,10 +5822,14 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		function GetSizeY(): Cardinal;
 		function GetSheetCount(): Cardinal;
 		function GetSheet(const AIndex: Cardinal): TLib3MFAttachment;
+		function GetSheetMinValue(const AIndex: Cardinal): Double;
+		function GetSheetMaxValue(const AIndex: Cardinal): Double;
 		function CreateEmptySheet(const AIndex: Cardinal; const APath: String; const AMin: Double; const AMax: Double): TLib3MFAttachment;
 		function CreateSheetFromBuffer(const AIndex: Cardinal; const APath: String; const AData: TByteDynArray; const AMin: Double; const AMax: Double): TLib3MFAttachment;
 		function CreateSheetFromFile(const AIndex: Cardinal; const APath: String; const AFileName: String; const AMin: Double; const AMax: Double): TLib3MFAttachment;
 		procedure SetSheet(const AIndex: Cardinal; const ASheet: TLib3MFAttachment);
+		procedure SetSheetMinValue(const AIndex: Cardinal; const AMinVal: Double);
+		procedure SetSheetMaxValue(const AIndex: Cardinal; const AMaxVal: Double);
 	end;
 
 
@@ -6400,10 +6444,14 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFImage3D_GetSizeYFunc: TLib3MFImage3D_GetSizeYFunc;
 		FLib3MFImage3D_GetSheetCountFunc: TLib3MFImage3D_GetSheetCountFunc;
 		FLib3MFImage3D_GetSheetFunc: TLib3MFImage3D_GetSheetFunc;
+		FLib3MFImage3D_GetSheetMinValueFunc: TLib3MFImage3D_GetSheetMinValueFunc;
+		FLib3MFImage3D_GetSheetMaxValueFunc: TLib3MFImage3D_GetSheetMaxValueFunc;
 		FLib3MFImage3D_CreateEmptySheetFunc: TLib3MFImage3D_CreateEmptySheetFunc;
 		FLib3MFImage3D_CreateSheetFromBufferFunc: TLib3MFImage3D_CreateSheetFromBufferFunc;
 		FLib3MFImage3D_CreateSheetFromFileFunc: TLib3MFImage3D_CreateSheetFromFileFunc;
 		FLib3MFImage3D_SetSheetFunc: TLib3MFImage3D_SetSheetFunc;
+		FLib3MFImage3D_SetSheetMinValueFunc: TLib3MFImage3D_SetSheetMinValueFunc;
+		FLib3MFImage3D_SetSheetMaxValueFunc: TLib3MFImage3D_SetSheetMaxValueFunc;
 		FLib3MFImage3DChannelSelector_GetImageFunc: TLib3MFImage3DChannelSelector_GetImageFunc;
 		FLib3MFImage3DChannelSelector_SetImageFunc: TLib3MFImage3DChannelSelector_SetImageFunc;
 		FLib3MFImage3DChannelSelector_SetSourceChannelFunc: TLib3MFImage3DChannelSelector_SetSourceChannelFunc;
@@ -6862,10 +6910,14 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFImage3D_GetSizeYFunc: TLib3MFImage3D_GetSizeYFunc read FLib3MFImage3D_GetSizeYFunc;
 		property Lib3MFImage3D_GetSheetCountFunc: TLib3MFImage3D_GetSheetCountFunc read FLib3MFImage3D_GetSheetCountFunc;
 		property Lib3MFImage3D_GetSheetFunc: TLib3MFImage3D_GetSheetFunc read FLib3MFImage3D_GetSheetFunc;
+		property Lib3MFImage3D_GetSheetMinValueFunc: TLib3MFImage3D_GetSheetMinValueFunc read FLib3MFImage3D_GetSheetMinValueFunc;
+		property Lib3MFImage3D_GetSheetMaxValueFunc: TLib3MFImage3D_GetSheetMaxValueFunc read FLib3MFImage3D_GetSheetMaxValueFunc;
 		property Lib3MFImage3D_CreateEmptySheetFunc: TLib3MFImage3D_CreateEmptySheetFunc read FLib3MFImage3D_CreateEmptySheetFunc;
 		property Lib3MFImage3D_CreateSheetFromBufferFunc: TLib3MFImage3D_CreateSheetFromBufferFunc read FLib3MFImage3D_CreateSheetFromBufferFunc;
 		property Lib3MFImage3D_CreateSheetFromFileFunc: TLib3MFImage3D_CreateSheetFromFileFunc read FLib3MFImage3D_CreateSheetFromFileFunc;
 		property Lib3MFImage3D_SetSheetFunc: TLib3MFImage3D_SetSheetFunc read FLib3MFImage3D_SetSheetFunc;
+		property Lib3MFImage3D_SetSheetMinValueFunc: TLib3MFImage3D_SetSheetMinValueFunc read FLib3MFImage3D_SetSheetMinValueFunc;
+		property Lib3MFImage3D_SetSheetMaxValueFunc: TLib3MFImage3D_SetSheetMaxValueFunc read FLib3MFImage3D_SetSheetMaxValueFunc;
 		property Lib3MFImage3DChannelSelector_GetImageFunc: TLib3MFImage3DChannelSelector_GetImageFunc read FLib3MFImage3DChannelSelector_GetImageFunc;
 		property Lib3MFImage3DChannelSelector_SetImageFunc: TLib3MFImage3DChannelSelector_SetImageFunc read FLib3MFImage3DChannelSelector_SetImageFunc;
 		property Lib3MFImage3DChannelSelector_SetSourceChannelFunc: TLib3MFImage3DChannelSelector_SetSourceChannelFunc read FLib3MFImage3DChannelSelector_SetSourceChannelFunc;
@@ -10187,6 +10239,16 @@ implementation
 			Result := TLib3MFAttachment.Create(FWrapper, HSheet);
 	end;
 
+	function TLib3MFImage3D.GetSheetMinValue(const AIndex: Cardinal): Double;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImage3D_GetSheetMinValueFunc(FHandle, AIndex, Result));
+	end;
+
+	function TLib3MFImage3D.GetSheetMaxValue(const AIndex: Cardinal): Double;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImage3D_GetSheetMaxValueFunc(FHandle, AIndex, Result));
+	end;
+
 	function TLib3MFImage3D.CreateEmptySheet(const AIndex: Cardinal; const APath: String; const AMin: Double; const AMax: Double): TLib3MFAttachment;
 	var
 		HSheet: TLib3MFHandle;
@@ -10239,6 +10301,16 @@ implementation
 		else
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'ASheet is a nil value.');
 		FWrapper.CheckError(Self, FWrapper.Lib3MFImage3D_SetSheetFunc(FHandle, AIndex, ASheetHandle));
+	end;
+
+	procedure TLib3MFImage3D.SetSheetMinValue(const AIndex: Cardinal; const AMinVal: Double);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImage3D_SetSheetMinValueFunc(FHandle, AIndex, AMinVal));
+	end;
+
+	procedure TLib3MFImage3D.SetSheetMaxValue(const AIndex: Cardinal; const AMaxVal: Double);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImage3D_SetSheetMaxValueFunc(FHandle, AIndex, AMaxVal));
 	end;
 
 (*************************************************************************************************************************
@@ -12691,10 +12763,14 @@ implementation
 		FLib3MFImage3D_GetSizeYFunc := LoadFunction('lib3mf_image3d_getsizey');
 		FLib3MFImage3D_GetSheetCountFunc := LoadFunction('lib3mf_image3d_getsheetcount');
 		FLib3MFImage3D_GetSheetFunc := LoadFunction('lib3mf_image3d_getsheet');
+		FLib3MFImage3D_GetSheetMinValueFunc := LoadFunction('lib3mf_image3d_getsheetminvalue');
+		FLib3MFImage3D_GetSheetMaxValueFunc := LoadFunction('lib3mf_image3d_getsheetmaxvalue');
 		FLib3MFImage3D_CreateEmptySheetFunc := LoadFunction('lib3mf_image3d_createemptysheet');
 		FLib3MFImage3D_CreateSheetFromBufferFunc := LoadFunction('lib3mf_image3d_createsheetfrombuffer');
 		FLib3MFImage3D_CreateSheetFromFileFunc := LoadFunction('lib3mf_image3d_createsheetfromfile');
 		FLib3MFImage3D_SetSheetFunc := LoadFunction('lib3mf_image3d_setsheet');
+		FLib3MFImage3D_SetSheetMinValueFunc := LoadFunction('lib3mf_image3d_setsheetminvalue');
+		FLib3MFImage3D_SetSheetMaxValueFunc := LoadFunction('lib3mf_image3d_setsheetmaxvalue');
 		FLib3MFImage3DChannelSelector_GetImageFunc := LoadFunction('lib3mf_image3dchannelselector_getimage');
 		FLib3MFImage3DChannelSelector_SetImageFunc := LoadFunction('lib3mf_image3dchannelselector_setimage');
 		FLib3MFImage3DChannelSelector_SetSourceChannelFunc := LoadFunction('lib3mf_image3dchannelselector_setsourcechannel');
@@ -13606,6 +13682,12 @@ implementation
 		AResult := ALookupMethod(PAnsiChar('lib3mf_image3d_getsheet'), @FLib3MFImage3D_GetSheetFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_image3d_getsheetminvalue'), @FLib3MFImage3D_GetSheetMinValueFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_image3d_getsheetmaxvalue'), @FLib3MFImage3D_GetSheetMaxValueFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_image3d_createemptysheet'), @FLib3MFImage3D_CreateEmptySheetFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
@@ -13616,6 +13698,12 @@ implementation
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_image3d_setsheet'), @FLib3MFImage3D_SetSheetFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_image3d_setsheetminvalue'), @FLib3MFImage3D_SetSheetMinValueFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_image3d_setsheetmaxvalue'), @FLib3MFImage3D_SetSheetMaxValueFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_image3dchannelselector_getimage'), @FLib3MFImage3DChannelSelector_GetImageFunc);

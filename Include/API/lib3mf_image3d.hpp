@@ -72,6 +72,10 @@ public:
 
 	IAttachment * GetSheet(const Lib3MF_uint32 nIndex);
 
+	Lib3MF_double GetSheetMinValue(const Lib3MF_uint32 nIndex);
+
+	Lib3MF_double GetSheetMaxValue(const Lib3MF_uint32 nIndex);
+
 	IAttachment * CreateEmptySheet(const Lib3MF_uint32 nIndex, const std::string & sPath, const Lib3MF_double dMin, const Lib3MF_double dMax);
 
 	IAttachment * CreateSheetFromBuffer(const Lib3MF_uint32 nIndex, const std::string & sPath, const Lib3MF_uint64 nDataBufferSize, const Lib3MF_uint8 * pDataBuffer, const Lib3MF_double dMin, const Lib3MF_double dMax);
@@ -79,6 +83,10 @@ public:
 	IAttachment * CreateSheetFromFile(const Lib3MF_uint32 nIndex, const std::string & sPath, const std::string & sFileName, const Lib3MF_double dMin, const Lib3MF_double dMax);
 
 	void SetSheet(const Lib3MF_uint32 nIndex, IAttachment* pSheet);
+
+	void SetSheetMinValue(const Lib3MF_uint32 nIndex, const Lib3MF_double dMinVal);
+
+	void SetSheetMaxValue(const Lib3MF_uint32 nIndex, const Lib3MF_double dMaxVal);
 
 	NMR::PModelImage3D getModelImage3D ();
 

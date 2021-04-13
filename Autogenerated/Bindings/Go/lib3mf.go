@@ -2387,6 +2387,26 @@ type Lib3MFGoInterface interface {
 
 
 	/**
+	* Retrieves the minimum occuring double value of sampled field data.
+	*
+	* @param[in] Image3D - Image3D instance.
+	* @param[in] nIndex - index of the image (0-based)
+	* @return Minimum occuring double value
+	*/
+	Image3D_GetSheetMinValue(Image3D Lib3MFHandle, nIndex uint32) (float64, error)
+
+
+	/**
+	* Retrieves the maximum occuring double value of sampled field data.
+	*
+	* @param[in] Image3D - Image3D instance.
+	* @param[in] nIndex - index of the image (0-based)
+	* @return Maximum occuring double value
+	*/
+	Image3D_GetSheetMaxValue(Image3D Lib3MFHandle, nIndex uint32) (float64, error)
+
+
+	/**
 	* Creates a new sheet attachment with empty data.
 	*
 	* @param[in] Image3D - Image3D instance.
@@ -2435,6 +2455,26 @@ type Lib3MFGoInterface interface {
 	* @param[in] Sheet - attachment containing the image
 	*/
 	Image3D_SetSheet(Image3D Lib3MFHandle, nIndex uint32, Sheet Lib3MFHandle) (error)
+
+
+	/**
+	* Sets the minimum occuring double value of sampled field data.
+	*
+	* @param[in] Image3D - Image3D instance.
+	* @param[in] nIndex - index of the image (0-based)
+	* @param[in] dMinVal - Minimum occuring double value
+	*/
+	Image3D_SetSheetMinValue(Image3D Lib3MFHandle, nIndex uint32, dMinVal float64) (error)
+
+
+	/**
+	* Sets the maximum occuring double value of sampled field data.
+	*
+	* @param[in] Image3D - Image3D instance.
+	* @param[in] nIndex - index of the image (0-based)
+	* @param[in] dMaxVal - Maximum occuring double value
+	*/
+	Image3D_SetSheetMaxValue(Image3D Lib3MFHandle, nIndex uint32, dMaxVal float64) (error)
 
 
 	/**
@@ -6306,6 +6346,16 @@ func (instance *Lib3MFImage3D) GetSheet(nIndex uint32) (Lib3MFAttachment, error)
 	return cSheet, error
 }
 
+func (instance *Lib3MFImage3D) GetSheetMinValue(nIndex uint32) (float64, error) {
+	dMinVal, error := instance.Interface.Image3D_GetSheetMinValue(instance.Handle, nIndex)
+	return dMinVal, error
+}
+
+func (instance *Lib3MFImage3D) GetSheetMaxValue(nIndex uint32) (float64, error) {
+	dMaxVal, error := instance.Interface.Image3D_GetSheetMaxValue(instance.Handle, nIndex)
+	return dMaxVal, error
+}
+
 func (instance *Lib3MFImage3D) CreateEmptySheet(nIndex uint32, sPath string, dMin float64, dMax float64) (Lib3MFAttachment, error) {
 	hSheet, error := instance.Interface.Image3D_CreateEmptySheet(instance.Handle, nIndex, sPath, dMin, dMax)
 	var cSheet Lib3MFAttachment
@@ -6332,6 +6382,16 @@ func (instance *Lib3MFImage3D) CreateSheetFromFile(nIndex uint32, sPath string, 
 
 func (instance *Lib3MFImage3D) SetSheet(nIndex uint32, Sheet Lib3MFHandle) (error) {
 	error := instance.Interface.Image3D_SetSheet(instance.Handle, nIndex, Sheet)
+	return error
+}
+
+func (instance *Lib3MFImage3D) SetSheetMinValue(nIndex uint32, dMinVal float64) (error) {
+	error := instance.Interface.Image3D_SetSheetMinValue(instance.Handle, nIndex, dMinVal)
+	return error
+}
+
+func (instance *Lib3MFImage3D) SetSheetMaxValue(nIndex uint32, dMaxVal float64) (error) {
+	error := instance.Interface.Image3D_SetSheetMaxValue(instance.Handle, nIndex, dMaxVal)
 	return error
 }
 
