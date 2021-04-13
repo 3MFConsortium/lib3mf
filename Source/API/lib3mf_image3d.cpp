@@ -76,12 +76,12 @@ IAttachment * CImage3D::GetSheet(const Lib3MF_uint32 nIndex)
 
 Lib3MF_double CImage3D::GetSheetMinValue(const Lib3MF_uint32 nIndex)
 {
-  return m_pImage3D->getSheetMinValue(nIndex);
+	return m_pImage3D->getSheetMinValue(nIndex);
 }
 
 Lib3MF_double CImage3D::GetSheetMaxValue(const Lib3MF_uint32 nIndex)
 {
-  return m_pImage3D->getSheetMaxValue(nIndex);
+	return m_pImage3D->getSheetMaxValue(nIndex);
 }
 
 IAttachment * CImage3D::CreateEmptySheet(const Lib3MF_uint32 nIndex, const std::string & sPath, const Lib3MF_double dMin, const Lib3MF_double dMax)
@@ -121,12 +121,12 @@ void CImage3D::SetSheet(const Lib3MF_uint32 nIndex, IAttachment* pSheet)
 
 void CImage3D::SetSheetMinValue(const Lib3MF_uint32 nIndex, const Lib3MF_double dMinVal)
 {
-  m_pImage3D->setSheetMinValue(nIndex, dMinVal);
+	m_pImage3D->setSheetMinValue(nIndex, dMinVal);
 }
 
 void CImage3D::SetSheetMaxValue(const Lib3MF_uint32 nIndex, const Lib3MF_double dMaxVal)
 {
-  m_pImage3D->setSheetMaxValue(nIndex, dMaxVal);
+	m_pImage3D->setSheetMaxValue(nIndex, dMaxVal);
 }
 
 NMR::PModelImage3D CImage3D::getModelImage3D()
