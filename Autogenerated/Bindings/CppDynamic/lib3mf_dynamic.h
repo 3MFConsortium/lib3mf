@@ -2395,6 +2395,26 @@ typedef Lib3MFResult (*PLib3MFImage3D_GetSheetCountPtr) (Lib3MF_Image3D pImage3D
 typedef Lib3MFResult (*PLib3MFImage3D_GetSheetPtr) (Lib3MF_Image3D pImage3D, Lib3MF_uint32 nIndex, Lib3MF_Attachment * pSheet);
 
 /**
+* Retrieves the minimum occuring double value of sampled field data.
+*
+* @param[in] pImage3D - Image3D instance.
+* @param[in] nIndex - index of the image (0-based)
+* @param[out] pMinVal - Minimum occuring double value
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFImage3D_GetSheetMinValuePtr) (Lib3MF_Image3D pImage3D, Lib3MF_uint32 nIndex, Lib3MF_double * pMinVal);
+
+/**
+* Retrieves the maximum occuring double value of sampled field data.
+*
+* @param[in] pImage3D - Image3D instance.
+* @param[in] nIndex - index of the image (0-based)
+* @param[out] pMaxVal - Maximum occuring double value
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFImage3D_GetSheetMaxValuePtr) (Lib3MF_Image3D pImage3D, Lib3MF_uint32 nIndex, Lib3MF_double * pMaxVal);
+
+/**
 * Creates a new sheet attachment with empty data.
 *
 * @param[in] pImage3D - Image3D instance.
@@ -2445,6 +2465,26 @@ typedef Lib3MFResult (*PLib3MFImage3D_CreateSheetFromFilePtr) (Lib3MF_Image3D pI
 * @return error code or 0 (success)
 */
 typedef Lib3MFResult (*PLib3MFImage3D_SetSheetPtr) (Lib3MF_Image3D pImage3D, Lib3MF_uint32 nIndex, Lib3MF_Attachment pSheet);
+
+/**
+* Sets the minimum occuring double value of sampled field data.
+*
+* @param[in] pImage3D - Image3D instance.
+* @param[in] nIndex - index of the image (0-based)
+* @param[in] dMinVal - Minimum occuring double value
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFImage3D_SetSheetMinValuePtr) (Lib3MF_Image3D pImage3D, Lib3MF_uint32 nIndex, Lib3MF_double dMinVal);
+
+/**
+* Sets the maximum occuring double value of sampled field data.
+*
+* @param[in] pImage3D - Image3D instance.
+* @param[in] nIndex - index of the image (0-based)
+* @param[in] dMaxVal - Maximum occuring double value
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFImage3D_SetSheetMaxValuePtr) (Lib3MF_Image3D pImage3D, Lib3MF_uint32 nIndex, Lib3MF_double dMaxVal);
 
 /*************************************************************************************************************************
  Class definition for Image3DChannelSelector
@@ -4905,10 +4945,14 @@ typedef struct {
 	PLib3MFImage3D_GetSizeYPtr m_Image3D_GetSizeY;
 	PLib3MFImage3D_GetSheetCountPtr m_Image3D_GetSheetCount;
 	PLib3MFImage3D_GetSheetPtr m_Image3D_GetSheet;
+	PLib3MFImage3D_GetSheetMinValuePtr m_Image3D_GetSheetMinValue;
+	PLib3MFImage3D_GetSheetMaxValuePtr m_Image3D_GetSheetMaxValue;
 	PLib3MFImage3D_CreateEmptySheetPtr m_Image3D_CreateEmptySheet;
 	PLib3MFImage3D_CreateSheetFromBufferPtr m_Image3D_CreateSheetFromBuffer;
 	PLib3MFImage3D_CreateSheetFromFilePtr m_Image3D_CreateSheetFromFile;
 	PLib3MFImage3D_SetSheetPtr m_Image3D_SetSheet;
+	PLib3MFImage3D_SetSheetMinValuePtr m_Image3D_SetSheetMinValue;
+	PLib3MFImage3D_SetSheetMaxValuePtr m_Image3D_SetSheetMaxValue;
 	PLib3MFImage3DChannelSelector_GetImagePtr m_Image3DChannelSelector_GetImage;
 	PLib3MFImage3DChannelSelector_SetImagePtr m_Image3DChannelSelector_SetImage;
 	PLib3MFImage3DChannelSelector_SetSourceChannelPtr m_Image3DChannelSelector_SetSourceChannel;

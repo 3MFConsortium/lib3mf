@@ -1160,6 +1160,16 @@
 			<param name="Sheet" type="class" class="Attachment" pass="return" description="attachment containing the image" />
 		</method>
 
+    <method name="GetSheetMinValue" description="Retrieves the minimum occuring double value of sampled field data.">
+      <param name="Index" type="uint32" pass="in" description="index of the image (0-based)" />
+      <param name="MinVal" type="double" pass="return" description="Minimum occuring double value" />
+    </method>
+
+    <method name="GetSheetMaxValue" description="Retrieves the maximum occuring double value of sampled field data.">
+      <param name="Index" type="uint32" pass="in" description="index of the image (0-based)" />
+      <param name="MaxVal" type="double" pass="return" description="Maximum occuring double value" />
+    </method>
+
 		<method name="CreateEmptySheet" description="Creates a new sheet attachment with empty data.">
 			<param name="Index" type="uint32" pass="in" description="index of the image (0-based)" />
 			<param name="Path" type="string" pass="in" description="path name of package" />
@@ -1190,7 +1200,17 @@
 			<param name="Index" type="uint32" pass="in" description="index of the image (0-based)" />
 			<param name="Sheet" type="class" class="Attachment" pass="in" description="attachment containing the image" />
 		</method>
-		
+
+    <method name="SetSheetMinValue" description="Sets the minimum occuring double value of sampled field data.">
+      <param name="Index" type="uint32" pass="in" description="index of the image (0-based)" />
+      <param name="MinVal" type="double" pass="in" description="Minimum occuring double value" />
+    </method>
+
+    <method name="SetSheetMaxValue" description="Sets the maximum occuring double value of sampled field data.">
+      <param name="Index" type="uint32" pass="in" description="index of the image (0-based)" />
+      <param name="MaxVal" type="double" pass="in" description="Maximum occuring double value" />
+    </method>
+
 	</class>
 	
 

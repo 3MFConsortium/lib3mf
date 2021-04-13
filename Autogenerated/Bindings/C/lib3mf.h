@@ -2406,6 +2406,26 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_image3d_getsheetcount(Lib3MF_Image3D pImage3
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_image3d_getsheet(Lib3MF_Image3D pImage3D, Lib3MF_uint32 nIndex, Lib3MF_Attachment * pSheet);
 
 /**
+* Retrieves the minimum occuring double value of sampled field data.
+*
+* @param[in] pImage3D - Image3D instance.
+* @param[in] nIndex - index of the image (0-based)
+* @param[out] pMinVal - Minimum occuring double value
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_image3d_getsheetminvalue(Lib3MF_Image3D pImage3D, Lib3MF_uint32 nIndex, Lib3MF_double * pMinVal);
+
+/**
+* Retrieves the maximum occuring double value of sampled field data.
+*
+* @param[in] pImage3D - Image3D instance.
+* @param[in] nIndex - index of the image (0-based)
+* @param[out] pMaxVal - Maximum occuring double value
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_image3d_getsheetmaxvalue(Lib3MF_Image3D pImage3D, Lib3MF_uint32 nIndex, Lib3MF_double * pMaxVal);
+
+/**
 * Creates a new sheet attachment with empty data.
 *
 * @param[in] pImage3D - Image3D instance.
@@ -2456,6 +2476,26 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_image3d_createsheetfromfile(Lib3MF_Image3D p
 * @return error code or 0 (success)
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_image3d_setsheet(Lib3MF_Image3D pImage3D, Lib3MF_uint32 nIndex, Lib3MF_Attachment pSheet);
+
+/**
+* Sets the minimum occuring double value of sampled field data.
+*
+* @param[in] pImage3D - Image3D instance.
+* @param[in] nIndex - index of the image (0-based)
+* @param[in] dMinVal - Minimum occuring double value
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_image3d_setsheetminvalue(Lib3MF_Image3D pImage3D, Lib3MF_uint32 nIndex, Lib3MF_double dMinVal);
+
+/**
+* Sets the maximum occuring double value of sampled field data.
+*
+* @param[in] pImage3D - Image3D instance.
+* @param[in] nIndex - index of the image (0-based)
+* @param[in] dMaxVal - Maximum occuring double value
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_image3d_setsheetmaxvalue(Lib3MF_Image3D pImage3D, Lib3MF_uint32 nIndex, Lib3MF_double dMaxVal);
 
 /*************************************************************************************************************************
  Class definition for Image3DChannelSelector

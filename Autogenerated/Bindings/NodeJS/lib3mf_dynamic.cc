@@ -273,10 +273,14 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_Image3D_GetSizeY = NULL;
 	pWrapperTable->m_Image3D_GetSheetCount = NULL;
 	pWrapperTable->m_Image3D_GetSheet = NULL;
+	pWrapperTable->m_Image3D_GetSheetMinValue = NULL;
+	pWrapperTable->m_Image3D_GetSheetMaxValue = NULL;
 	pWrapperTable->m_Image3D_CreateEmptySheet = NULL;
 	pWrapperTable->m_Image3D_CreateSheetFromBuffer = NULL;
 	pWrapperTable->m_Image3D_CreateSheetFromFile = NULL;
 	pWrapperTable->m_Image3D_SetSheet = NULL;
+	pWrapperTable->m_Image3D_SetSheetMinValue = NULL;
+	pWrapperTable->m_Image3D_SetSheetMaxValue = NULL;
 	pWrapperTable->m_Image3DChannelSelector_GetImage = NULL;
 	pWrapperTable->m_Image3DChannelSelector_SetImage = NULL;
 	pWrapperTable->m_Image3DChannelSelector_SetSourceChannel = NULL;
@@ -2586,6 +2590,24 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
+	pWrapperTable->m_Image3D_GetSheetMinValue = (PLib3MFImage3D_GetSheetMinValuePtr) GetProcAddress(hLibrary, "lib3mf_image3d_getsheetminvalue");
+	#else // _WIN32
+	pWrapperTable->m_Image3D_GetSheetMinValue = (PLib3MFImage3D_GetSheetMinValuePtr) dlsym(hLibrary, "lib3mf_image3d_getsheetminvalue");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Image3D_GetSheetMinValue == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Image3D_GetSheetMaxValue = (PLib3MFImage3D_GetSheetMaxValuePtr) GetProcAddress(hLibrary, "lib3mf_image3d_getsheetmaxvalue");
+	#else // _WIN32
+	pWrapperTable->m_Image3D_GetSheetMaxValue = (PLib3MFImage3D_GetSheetMaxValuePtr) dlsym(hLibrary, "lib3mf_image3d_getsheetmaxvalue");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Image3D_GetSheetMaxValue == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
 	pWrapperTable->m_Image3D_CreateEmptySheet = (PLib3MFImage3D_CreateEmptySheetPtr) GetProcAddress(hLibrary, "lib3mf_image3d_createemptysheet");
 	#else // _WIN32
 	pWrapperTable->m_Image3D_CreateEmptySheet = (PLib3MFImage3D_CreateEmptySheetPtr) dlsym(hLibrary, "lib3mf_image3d_createemptysheet");
@@ -2619,6 +2641,24 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 	dlerror();
 	#endif // _WIN32
 	if (pWrapperTable->m_Image3D_SetSheet == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Image3D_SetSheetMinValue = (PLib3MFImage3D_SetSheetMinValuePtr) GetProcAddress(hLibrary, "lib3mf_image3d_setsheetminvalue");
+	#else // _WIN32
+	pWrapperTable->m_Image3D_SetSheetMinValue = (PLib3MFImage3D_SetSheetMinValuePtr) dlsym(hLibrary, "lib3mf_image3d_setsheetminvalue");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Image3D_SetSheetMinValue == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Image3D_SetSheetMaxValue = (PLib3MFImage3D_SetSheetMaxValuePtr) GetProcAddress(hLibrary, "lib3mf_image3d_setsheetmaxvalue");
+	#else // _WIN32
+	pWrapperTable->m_Image3D_SetSheetMaxValue = (PLib3MFImage3D_SetSheetMaxValuePtr) dlsym(hLibrary, "lib3mf_image3d_setsheetmaxvalue");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Image3D_SetSheetMaxValue == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32

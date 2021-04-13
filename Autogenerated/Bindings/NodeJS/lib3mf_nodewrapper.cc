@@ -8943,10 +8943,14 @@ void CLib3MFImage3D::Init()
     NODE_SET_PROTOTYPE_METHOD(tpl, "GetSizeY", GetSizeY);
     NODE_SET_PROTOTYPE_METHOD(tpl, "GetSheetCount", GetSheetCount);
     NODE_SET_PROTOTYPE_METHOD(tpl, "GetSheet", GetSheet);
+    NODE_SET_PROTOTYPE_METHOD(tpl, "GetSheetMinValue", GetSheetMinValue);
+    NODE_SET_PROTOTYPE_METHOD(tpl, "GetSheetMaxValue", GetSheetMaxValue);
     NODE_SET_PROTOTYPE_METHOD(tpl, "CreateEmptySheet", CreateEmptySheet);
     NODE_SET_PROTOTYPE_METHOD(tpl, "CreateSheetFromBuffer", CreateSheetFromBuffer);
     NODE_SET_PROTOTYPE_METHOD(tpl, "CreateSheetFromFile", CreateSheetFromFile);
     NODE_SET_PROTOTYPE_METHOD(tpl, "SetSheet", SetSheet);
+    NODE_SET_PROTOTYPE_METHOD(tpl, "SetSheetMinValue", SetSheetMinValue);
+    NODE_SET_PROTOTYPE_METHOD(tpl, "SetSheetMaxValue", SetSheetMaxValue);
     constructor.Reset(isolate, tpl->GetFunction());
 
 }
@@ -9066,6 +9070,58 @@ void CLib3MFImage3D::GetSheet (const FunctionCallbackInfo<Value>& args)
         CheckError (isolate, wrapperTable, instanceHandle, errorCode);
         Local<Object> instanceObjSheet = CLib3MFAttachment::NewInstance (args.Holder(), hReturnSheet);
         args.GetReturnValue().Set (instanceObjSheet);
+
+    } catch (std::exception & E) {
+        RaiseError (isolate, E.what());
+    }
+}
+
+
+void CLib3MFImage3D::GetSheetMinValue (const FunctionCallbackInfo<Value>& args) 
+{
+    Isolate* isolate = args.GetIsolate();
+    HandleScope scope(isolate);
+    try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error ("Expected uint32 parameter 0 (Index)");
+        }
+        unsigned int nIndex = (unsigned int) args[0]->IntegerValue ();
+        double dReturnMinVal = 0.0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error ("Could not get wrapper table for Lib3MF method GetSheetMinValue.");
+        if (wrapperTable->m_Image3D_GetSheetMinValue == nullptr)
+            throw std::runtime_error ("Could not call Lib3MF method Image3D::GetSheetMinValue.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Image3D_GetSheetMinValue (instanceHandle, nIndex, &dReturnMinVal);
+        CheckError (isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set (Number::New (isolate, dReturnMinVal));
+
+    } catch (std::exception & E) {
+        RaiseError (isolate, E.what());
+    }
+}
+
+
+void CLib3MFImage3D::GetSheetMaxValue (const FunctionCallbackInfo<Value>& args) 
+{
+    Isolate* isolate = args.GetIsolate();
+    HandleScope scope(isolate);
+    try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error ("Expected uint32 parameter 0 (Index)");
+        }
+        unsigned int nIndex = (unsigned int) args[0]->IntegerValue ();
+        double dReturnMaxVal = 0.0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error ("Could not get wrapper table for Lib3MF method GetSheetMaxValue.");
+        if (wrapperTable->m_Image3D_GetSheetMaxValue == nullptr)
+            throw std::runtime_error ("Could not call Lib3MF method Image3D::GetSheetMaxValue.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Image3D_GetSheetMaxValue (instanceHandle, nIndex, &dReturnMaxVal);
+        CheckError (isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set (Number::New (isolate, dReturnMaxVal));
 
     } catch (std::exception & E) {
         RaiseError (isolate, E.what());
@@ -9222,6 +9278,62 @@ void CLib3MFImage3D::SetSheet (const FunctionCallbackInfo<Value>& args)
             throw std::runtime_error ("Could not call Lib3MF method Image3D::SetSheet.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
         Lib3MFResult errorCode = wrapperTable->m_Image3D_SetSheet (instanceHandle, nIndex, hSheet);
+        CheckError (isolate, wrapperTable, instanceHandle, errorCode);
+
+    } catch (std::exception & E) {
+        RaiseError (isolate, E.what());
+    }
+}
+
+
+void CLib3MFImage3D::SetSheetMinValue (const FunctionCallbackInfo<Value>& args) 
+{
+    Isolate* isolate = args.GetIsolate();
+    HandleScope scope(isolate);
+    try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error ("Expected uint32 parameter 0 (Index)");
+        }
+        if (!args[1]->IsNumber()) {
+            throw std::runtime_error ("Expected double parameter 1 (MinVal)");
+        }
+        unsigned int nIndex = (unsigned int) args[0]->IntegerValue ();
+        double dMinVal = (double) args[1]->NumberValue ();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error ("Could not get wrapper table for Lib3MF method SetSheetMinValue.");
+        if (wrapperTable->m_Image3D_SetSheetMinValue == nullptr)
+            throw std::runtime_error ("Could not call Lib3MF method Image3D::SetSheetMinValue.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Image3D_SetSheetMinValue (instanceHandle, nIndex, dMinVal);
+        CheckError (isolate, wrapperTable, instanceHandle, errorCode);
+
+    } catch (std::exception & E) {
+        RaiseError (isolate, E.what());
+    }
+}
+
+
+void CLib3MFImage3D::SetSheetMaxValue (const FunctionCallbackInfo<Value>& args) 
+{
+    Isolate* isolate = args.GetIsolate();
+    HandleScope scope(isolate);
+    try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error ("Expected uint32 parameter 0 (Index)");
+        }
+        if (!args[1]->IsNumber()) {
+            throw std::runtime_error ("Expected double parameter 1 (MaxVal)");
+        }
+        unsigned int nIndex = (unsigned int) args[0]->IntegerValue ();
+        double dMaxVal = (double) args[1]->NumberValue ();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error ("Could not get wrapper table for Lib3MF method SetSheetMaxValue.");
+        if (wrapperTable->m_Image3D_SetSheetMaxValue == nullptr)
+            throw std::runtime_error ("Could not call Lib3MF method Image3D::SetSheetMaxValue.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Image3D_SetSheetMaxValue (instanceHandle, nIndex, dMaxVal);
         CheckError (isolate, wrapperTable, instanceHandle, errorCode);
 
     } catch (std::exception & E) {

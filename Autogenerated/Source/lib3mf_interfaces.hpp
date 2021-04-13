@@ -2090,6 +2090,20 @@ public:
 	virtual IAttachment * GetSheet(const Lib3MF_uint32 nIndex) = 0;
 
 	/**
+	* IImage3D::GetSheetMinValue - Retrieves the minimum occuring double value of sampled field data.
+	* @param[in] nIndex - index of the image (0-based)
+	* @return Minimum occuring double value
+	*/
+	virtual Lib3MF_double GetSheetMinValue(const Lib3MF_uint32 nIndex) = 0;
+
+	/**
+	* IImage3D::GetSheetMaxValue - Retrieves the maximum occuring double value of sampled field data.
+	* @param[in] nIndex - index of the image (0-based)
+	* @return Maximum occuring double value
+	*/
+	virtual Lib3MF_double GetSheetMaxValue(const Lib3MF_uint32 nIndex) = 0;
+
+	/**
 	* IImage3D::CreateEmptySheet - Creates a new sheet attachment with empty data.
 	* @param[in] nIndex - index of the image (0-based)
 	* @param[in] sPath - path name of package
@@ -2128,6 +2142,20 @@ public:
 	* @param[in] pSheet - attachment containing the image
 	*/
 	virtual void SetSheet(const Lib3MF_uint32 nIndex, IAttachment* pSheet) = 0;
+
+	/**
+	* IImage3D::SetSheetMinValue - Sets the minimum occuring double value of sampled field data.
+	* @param[in] nIndex - index of the image (0-based)
+	* @param[in] dMinVal - Minimum occuring double value
+	*/
+	virtual void SetSheetMinValue(const Lib3MF_uint32 nIndex, const Lib3MF_double dMinVal) = 0;
+
+	/**
+	* IImage3D::SetSheetMaxValue - Sets the maximum occuring double value of sampled field data.
+	* @param[in] nIndex - index of the image (0-based)
+	* @param[in] dMaxVal - Maximum occuring double value
+	*/
+	virtual void SetSheetMaxValue(const Lib3MF_uint32 nIndex, const Lib3MF_double dMaxVal) = 0;
 
 };
 

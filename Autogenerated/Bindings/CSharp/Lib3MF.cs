@@ -974,6 +974,12 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_image3d_getsheet", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Image3D_GetSheet (IntPtr Handle, UInt32 AIndex, out IntPtr ASheet);
 
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_image3d_getsheetminvalue", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Image3D_GetSheetMinValue (IntPtr Handle, UInt32 AIndex, out Double AMinVal);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_image3d_getsheetmaxvalue", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Image3D_GetSheetMaxValue (IntPtr Handle, UInt32 AIndex, out Double AMaxVal);
+
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_image3d_createemptysheet", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Image3D_CreateEmptySheet (IntPtr Handle, UInt32 AIndex, byte[] APath, Double AMin, Double AMax, out IntPtr ASheet);
 
@@ -985,6 +991,12 @@ namespace Lib3MF {
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_image3d_setsheet", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Image3D_SetSheet (IntPtr Handle, UInt32 AIndex, IntPtr ASheet);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_image3d_setsheetminvalue", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Image3D_SetSheetMinValue (IntPtr Handle, UInt32 AIndex, Double AMinVal);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_image3d_setsheetmaxvalue", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Image3D_SetSheetMaxValue (IntPtr Handle, UInt32 AIndex, Double AMaxVal);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_image3dchannelselector_getimage", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Image3DChannelSelector_GetImage (IntPtr Handle, out IntPtr AImage3D);
@@ -4245,6 +4257,22 @@ namespace Lib3MF {
 			return new CAttachment (newSheet );
 		}
 
+		public Double GetSheetMinValue (UInt32 AIndex)
+		{
+			Double resultMinVal = 0;
+
+			CheckError(Internal.Lib3MFWrapper.Image3D_GetSheetMinValue (Handle, AIndex, out resultMinVal));
+			return resultMinVal;
+		}
+
+		public Double GetSheetMaxValue (UInt32 AIndex)
+		{
+			Double resultMaxVal = 0;
+
+			CheckError(Internal.Lib3MFWrapper.Image3D_GetSheetMaxValue (Handle, AIndex, out resultMaxVal));
+			return resultMaxVal;
+		}
+
 		public CAttachment CreateEmptySheet (UInt32 AIndex, String APath, Double AMin, Double AMax)
 		{
 			byte[] bytePath = Encoding.UTF8.GetBytes(APath + char.MinValue);
@@ -4279,6 +4307,18 @@ namespace Lib3MF {
 		{
 
 			CheckError(Internal.Lib3MFWrapper.Image3D_SetSheet (Handle, AIndex, ASheet.GetHandle()));
+		}
+
+		public void SetSheetMinValue (UInt32 AIndex, Double AMinVal)
+		{
+
+			CheckError(Internal.Lib3MFWrapper.Image3D_SetSheetMinValue (Handle, AIndex, AMinVal));
+		}
+
+		public void SetSheetMaxValue (UInt32 AIndex, Double AMaxVal)
+		{
+
+			CheckError(Internal.Lib3MFWrapper.Image3D_SetSheetMaxValue (Handle, AIndex, AMaxVal));
 		}
 
 	}

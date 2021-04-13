@@ -8277,6 +8277,76 @@ Lib3MFResult lib3mf_image3d_getsheet(Lib3MF_Image3D pImage3D, Lib3MF_uint32 nInd
 	}
 }
 
+Lib3MFResult lib3mf_image3d_getsheetminvalue(Lib3MF_Image3D pImage3D, Lib3MF_uint32 nIndex, Lib3MF_double * pMinVal)
+{
+	IBase* pIBaseClass = (IBase *)pImage3D;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImage3D, "Image3D", "GetSheetMinValue");
+			pJournalEntry->addUInt32Parameter("Index", nIndex);
+		}
+		if (pMinVal == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IImage3D* pIImage3D = dynamic_cast<IImage3D*>(pIBaseClass);
+		if (!pIImage3D)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pMinVal = pIImage3D->GetSheetMinValue(nIndex);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addDoubleResult("MinVal", *pMinVal);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_image3d_getsheetmaxvalue(Lib3MF_Image3D pImage3D, Lib3MF_uint32 nIndex, Lib3MF_double * pMaxVal)
+{
+	IBase* pIBaseClass = (IBase *)pImage3D;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImage3D, "Image3D", "GetSheetMaxValue");
+			pJournalEntry->addUInt32Parameter("Index", nIndex);
+		}
+		if (pMaxVal == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IImage3D* pIImage3D = dynamic_cast<IImage3D*>(pIBaseClass);
+		if (!pIImage3D)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pMaxVal = pIImage3D->GetSheetMaxValue(nIndex);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addDoubleResult("MaxVal", *pMaxVal);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
 Lib3MFResult lib3mf_image3d_createemptysheet(Lib3MF_Image3D pImage3D, Lib3MF_uint32 nIndex, const char * pPath, Lib3MF_double dMin, Lib3MF_double dMax, Lib3MF_Attachment * pSheet)
 {
 	IBase* pIBaseClass = (IBase *)pImage3D;
@@ -8433,6 +8503,72 @@ Lib3MFResult lib3mf_image3d_setsheet(Lib3MF_Image3D pImage3D, Lib3MF_uint32 nInd
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
 		pIImage3D->SetSheet(nIndex, pISheet);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_image3d_setsheetminvalue(Lib3MF_Image3D pImage3D, Lib3MF_uint32 nIndex, Lib3MF_double dMinVal)
+{
+	IBase* pIBaseClass = (IBase *)pImage3D;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImage3D, "Image3D", "SetSheetMinValue");
+			pJournalEntry->addUInt32Parameter("Index", nIndex);
+			pJournalEntry->addDoubleParameter("MinVal", dMinVal);
+		}
+		IImage3D* pIImage3D = dynamic_cast<IImage3D*>(pIBaseClass);
+		if (!pIImage3D)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIImage3D->SetSheetMinValue(nIndex, dMinVal);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_image3d_setsheetmaxvalue(Lib3MF_Image3D pImage3D, Lib3MF_uint32 nIndex, Lib3MF_double dMaxVal)
+{
+	IBase* pIBaseClass = (IBase *)pImage3D;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImage3D, "Image3D", "SetSheetMaxValue");
+			pJournalEntry->addUInt32Parameter("Index", nIndex);
+			pJournalEntry->addDoubleParameter("MaxVal", dMaxVal);
+		}
+		IImage3D* pIImage3D = dynamic_cast<IImage3D*>(pIBaseClass);
+		if (!pIImage3D)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIImage3D->SetSheetMaxValue(nIndex, dMaxVal);
 
 		if (pJournalEntry.get() != nullptr) {
 			pJournalEntry->writeSuccess();
@@ -16161,10 +16297,14 @@ Lib3MFResult _lib3mf_getprocaddress_internal(const char * pProcName, void ** ppP
 		sProcAddressMap["lib3mf_image3d_getsizey"] = (void*)&lib3mf_image3d_getsizey;
 		sProcAddressMap["lib3mf_image3d_getsheetcount"] = (void*)&lib3mf_image3d_getsheetcount;
 		sProcAddressMap["lib3mf_image3d_getsheet"] = (void*)&lib3mf_image3d_getsheet;
+		sProcAddressMap["lib3mf_image3d_getsheetminvalue"] = (void*)&lib3mf_image3d_getsheetminvalue;
+		sProcAddressMap["lib3mf_image3d_getsheetmaxvalue"] = (void*)&lib3mf_image3d_getsheetmaxvalue;
 		sProcAddressMap["lib3mf_image3d_createemptysheet"] = (void*)&lib3mf_image3d_createemptysheet;
 		sProcAddressMap["lib3mf_image3d_createsheetfrombuffer"] = (void*)&lib3mf_image3d_createsheetfrombuffer;
 		sProcAddressMap["lib3mf_image3d_createsheetfromfile"] = (void*)&lib3mf_image3d_createsheetfromfile;
 		sProcAddressMap["lib3mf_image3d_setsheet"] = (void*)&lib3mf_image3d_setsheet;
+		sProcAddressMap["lib3mf_image3d_setsheetminvalue"] = (void*)&lib3mf_image3d_setsheetminvalue;
+		sProcAddressMap["lib3mf_image3d_setsheetmaxvalue"] = (void*)&lib3mf_image3d_setsheetmaxvalue;
 		sProcAddressMap["lib3mf_image3dchannelselector_getimage"] = (void*)&lib3mf_image3dchannelselector_getimage;
 		sProcAddressMap["lib3mf_image3dchannelselector_setimage"] = (void*)&lib3mf_image3dchannelselector_setimage;
 		sProcAddressMap["lib3mf_image3dchannelselector_setsourcechannel"] = (void*)&lib3mf_image3dchannelselector_setsourcechannel;

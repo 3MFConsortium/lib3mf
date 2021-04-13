@@ -1343,10 +1343,14 @@ public:
 	inline Lib3MF_uint32 GetSizeY();
 	inline Lib3MF_uint32 GetSheetCount();
 	inline PAttachment GetSheet(const Lib3MF_uint32 nIndex);
+	inline Lib3MF_double GetSheetMinValue(const Lib3MF_uint32 nIndex);
+	inline Lib3MF_double GetSheetMaxValue(const Lib3MF_uint32 nIndex);
 	inline PAttachment CreateEmptySheet(const Lib3MF_uint32 nIndex, const std::string & sPath, const Lib3MF_double dMin, const Lib3MF_double dMax);
 	inline PAttachment CreateSheetFromBuffer(const Lib3MF_uint32 nIndex, const std::string & sPath, const CInputVector<Lib3MF_uint8> & DataBuffer, const Lib3MF_double dMin, const Lib3MF_double dMax);
 	inline PAttachment CreateSheetFromFile(const Lib3MF_uint32 nIndex, const std::string & sPath, const std::string & sFileName, const Lib3MF_double dMin, const Lib3MF_double dMax);
 	inline void SetSheet(const Lib3MF_uint32 nIndex, CAttachment * pSheet);
+	inline void SetSheetMinValue(const Lib3MF_uint32 nIndex, const Lib3MF_double dMinVal);
+	inline void SetSheetMaxValue(const Lib3MF_uint32 nIndex, const Lib3MF_double dMaxVal);
 };
 	
 /*************************************************************************************************************************
@@ -5055,6 +5059,32 @@ public:
 	}
 	
 	/**
+	* CImage3D::GetSheetMinValue - Retrieves the minimum occuring double value of sampled field data.
+	* @param[in] nIndex - index of the image (0-based)
+	* @return Minimum occuring double value
+	*/
+	Lib3MF_double CImage3D::GetSheetMinValue(const Lib3MF_uint32 nIndex)
+	{
+		Lib3MF_double resultMinVal = 0;
+		CheckError(lib3mf_image3d_getsheetminvalue(m_pHandle, nIndex, &resultMinVal));
+		
+		return resultMinVal;
+	}
+	
+	/**
+	* CImage3D::GetSheetMaxValue - Retrieves the maximum occuring double value of sampled field data.
+	* @param[in] nIndex - index of the image (0-based)
+	* @return Maximum occuring double value
+	*/
+	Lib3MF_double CImage3D::GetSheetMaxValue(const Lib3MF_uint32 nIndex)
+	{
+		Lib3MF_double resultMaxVal = 0;
+		CheckError(lib3mf_image3d_getsheetmaxvalue(m_pHandle, nIndex, &resultMaxVal));
+		
+		return resultMaxVal;
+	}
+	
+	/**
 	* CImage3D::CreateEmptySheet - Creates a new sheet attachment with empty data.
 	* @param[in] nIndex - index of the image (0-based)
 	* @param[in] sPath - path name of package
@@ -5125,6 +5155,26 @@ public:
 			hSheet = pSheet->GetHandle();
 		};
 		CheckError(lib3mf_image3d_setsheet(m_pHandle, nIndex, hSheet));
+	}
+	
+	/**
+	* CImage3D::SetSheetMinValue - Sets the minimum occuring double value of sampled field data.
+	* @param[in] nIndex - index of the image (0-based)
+	* @param[in] dMinVal - Minimum occuring double value
+	*/
+	void CImage3D::SetSheetMinValue(const Lib3MF_uint32 nIndex, const Lib3MF_double dMinVal)
+	{
+		CheckError(lib3mf_image3d_setsheetminvalue(m_pHandle, nIndex, dMinVal));
+	}
+	
+	/**
+	* CImage3D::SetSheetMaxValue - Sets the maximum occuring double value of sampled field data.
+	* @param[in] nIndex - index of the image (0-based)
+	* @param[in] dMaxVal - Maximum occuring double value
+	*/
+	void CImage3D::SetSheetMaxValue(const Lib3MF_uint32 nIndex, const Lib3MF_double dMaxVal)
+	{
+		CheckError(lib3mf_image3d_setsheetmaxvalue(m_pHandle, nIndex, dMaxVal));
 	}
 	
 	/**

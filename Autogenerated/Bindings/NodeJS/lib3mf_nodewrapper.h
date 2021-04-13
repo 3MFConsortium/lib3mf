@@ -930,10 +930,14 @@ private:
     static void GetSizeY (const v8::FunctionCallbackInfo<v8::Value>& args);
     static void GetSheetCount (const v8::FunctionCallbackInfo<v8::Value>& args);
     static void GetSheet (const v8::FunctionCallbackInfo<v8::Value>& args);
+    static void GetSheetMinValue (const v8::FunctionCallbackInfo<v8::Value>& args);
+    static void GetSheetMaxValue (const v8::FunctionCallbackInfo<v8::Value>& args);
     static void CreateEmptySheet (const v8::FunctionCallbackInfo<v8::Value>& args);
     static void CreateSheetFromBuffer (const v8::FunctionCallbackInfo<v8::Value>& args);
     static void CreateSheetFromFile (const v8::FunctionCallbackInfo<v8::Value>& args);
     static void SetSheet (const v8::FunctionCallbackInfo<v8::Value>& args);
+    static void SetSheetMinValue (const v8::FunctionCallbackInfo<v8::Value>& args);
+    static void SetSheetMaxValue (const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:
     CLib3MFImage3D ();
