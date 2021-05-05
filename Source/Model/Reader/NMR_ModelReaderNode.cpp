@@ -175,14 +175,14 @@ namespace NMR {
 				if (!pszNameSpaceURI)
 					throw CNMRException(NMR_ERROR_COULDNOTGETNAMESPACE);
 
-					if (nCount > 0) {
-						if (pszNameSpaceURI == nullptr) {
-							OnNSChildElement(pszLocalName, "", pXMLReader);
-						}
-						else {
-							OnNSChildElement(pszLocalName, pszNameSpaceURI, pXMLReader);
-						}
+				if (nCount > 0) {
+					if (pszNameSpaceURI == nullptr) {
+						OnNSChildElement(pszLocalName, "", pXMLReader);
 					}
+					else {
+						OnNSChildElement(pszLocalName, pszNameSpaceURI, pXMLReader);
+					}
+				}
 				break;
 
 			case XMLREADERNODETYPE_TEXT:
