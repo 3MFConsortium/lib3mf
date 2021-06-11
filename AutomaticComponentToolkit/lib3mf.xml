@@ -76,6 +76,9 @@
 		<error name="INVALIDPROPERTYCOUNT" code="132" description="Invalid property count."/>
 		<error name="UNKOWNPROGRESSIDENTIFIER" code="140" description="A progress identifier is unknown"/>
 		<error name="ELEMENTCOUNTEXCEEDSLIMIT" code="141" description="An element buffer exceeds its spec limit"/>
+		<error name="COULDNOTFINDTRIANGLESET" code="142" description="Could not find triangle set"/>
+		<error name="INVALIDTRIANGLESETINDEX" code="143" description="Invalid triangle set index"/>
+		
 		<error name="BEAMLATTICE_INVALID_OBJECTTYPE" code="2000" description="This object type is not valid for beamlattices"/>		
 		<error name="INVALIDKEYSTORE" code="3000" description="The keystore object is invalid"/>
 		<error name="INVALIDKEYSTORECONSUMER" code="3001" description="The consumer keystore object is invalid"/>
@@ -544,6 +547,60 @@
 			<param name="MetaData" type="handle" class="MetaData" pass="return" description="a new instance of the metadata"/>
 		</method>
 	</class>
+	
+	
+	<class name="TriangleSet">
+
+		<method name="SetName" description="sets the name of the triangle set">
+			<param name="Name" type="string" pass="in" description="the new name"/>
+		</method>
+
+		<method name="GetName" description="returns the name of the triangle set">
+			<param name="Name" type="string" pass="return" description="returns the name"/>
+		</method>
+
+		<method name="SetIdentifier" description="sets the identifier of the triangle set.">
+			<param name="Identifier" type="string" pass="in" description="the new identifier. MUST be unique within the mesh. MUST NOT be an empty string"/>
+		</method>
+
+		<method name="GetIdentifier" description="returns the identifier of the triangle set">
+			<param name="Identifier" type="string" pass="return" description="returns the identifier"/>
+		</method>
+		
+		<method name="AddTriangle" description="adds a triangle to the set. Does nothing if triangle is already in the set.">
+			<param name="TriangleIndex" type="uint32" pass="in" description="Triangle index to add. MUST be between 0 and TriangleCount - 1."/>
+		</method>
+
+		<method name="RemoveTriangle" description="removes a triangle from the set">
+			<param name="TriangleIndex" type="uint32" pass="in" description="Triangle index to remove. MUST be between 0 and TriangleCount - 1."/>
+		</method>
+
+		<method name="Clear" description="clears all triangles from the list">
+		</method>
+
+		<method name="SetTriangleList" description="Sets all triangles in the list, while clearing old values. Duplicates will be merged.">
+			<param name="TriangleIndices" type="basicarray" class="uint32" pass="in" description="Triangle indices to add. Every element MUST be between 0 and TriangleCount - 1."/>
+		</method>
+				
+		<method name="AddTriangleList" description="Adds multiple triangles in the list. Duplicates will be merged.">
+			<param name="TriangleIndices" type="basicarray" class="uint32" pass="in" description="Triangle indices to add. Every element MUST be between 0 and TriangleCount - 1."/>
+		</method>
+		
+		<method name="Merge" description="Merges another Triangle set.">
+			<param name="OtherTriangleSet" type="class" class="TriangleSet" pass="in" description="Other triangle set to merge."/>
+			<param name="DeleteOther" type="bool" pass="in" description="Flag if other triangle set is getting removed."/>
+		</method>
+
+		<method name="DeleteSet" description="Deletes the whole set from the mesh.">
+		</method>
+
+		<method name="Duplicate" description="Duplicates the set in the mesh.">
+			<param name="Identifier" type="string" pass="in" description="the new identifier. MUST be unique within the mesh. MUST NOT be an empty string"/>
+			<param name="NewSet" type="class" class="TriangleSet" pass="return" description="Copy of the triangle set."/>
+		</method>
+
+	</class>
+	
 
 	<class name="Object" parent="Resource">
 		<method name="GetType" description="Retrieves an object's type">
@@ -685,6 +742,26 @@
 		</method>
 		<method name="BeamLattice" description="Retrieves the BeamLattice within this MeshObject.">
 			<param name="TheBeamLattice" type="handle" class="BeamLattice" pass="return" description="the BeamLattice within this MeshObject"/>
+		</method>
+		<method name="AddTriangleSet" description="Adds a new triangle set.">
+			<param name="Identifier" type="string" pass="in" description="the new identifier. MUST be unique within the mesh. MUST NOT be an empty string"/>
+			<param name="Name" type="string" pass="in" description="the human readable name. MUST NOT be an empty string"/>
+			<param name="TheTriangleSet" type="class" class="TriangleSet" pass="return" description="the new Triangle Set Instance."/>
+		</method>
+		<method name="HasTriangleSet" description="Checks if a triangle set exists.">
+			<param name="Identifier" type="string" pass="in" description="the identifier to be found."/>
+			<param name="TriangleSetExists" type="bool" pass="return" description="flag if the triangles set exists."/>
+		</method>
+		<method name="FindTriangleSet" description="Finds a new triangle set by identifier. Fails if not existing.">
+			<param name="Identifier" type="string" pass="in" description="the identifier to be found."/>
+			<param name="TheTriangleSet" type="class" class="TriangleSet" pass="return" description="the triangle Set Instance."/>
+		</method>
+		<method name="GetTriangleSetCount" description="Returns number of triangle sets.">
+			<param name="Count" type="uint32" pass="return" description="the number of triangle sets of this mesh."/>
+		</method>
+		<method name="GetTriangleSet" description="Returns a specific triangle set by index.">
+			<param name="Index" type="uint32" pass="in" description="the index of the triangle set."/>
+			<param name="TheTriangleSet" type="class" class="TriangleSet" pass="return" description="the triangle Set Instance."/>
 		</method>
 	</class>
 

@@ -299,6 +299,7 @@ NMR_ErrorConst.h defines all error code constants.
 // Failed to initialize a zlib buffer
 #define NMR_ERROR_COULDNOTINITDEFLATE 0x1052
 
+
 /*-------------------------------------------------------------------
 Core framework error codes (0x2XXX)
 -------------------------------------------------------------------*/
@@ -494,6 +495,12 @@ Core framework error codes (0x2XXX)
 
 // Invalid slice vertex index
 #define NMR_ERROR_INVALIDSLICEVERTEX 0x2041
+
+// Duplicate triangle set
+#define NMR_ERROR_DUPLICATETRIANGLESET 0x2042
+
+// Too many triangle sets
+#define NMR_ERROR_TOOMANYTRIANGLESETS 0x2043
 
 /*-------------------------------------------------------------------
 Model error codes (0x8XXX)

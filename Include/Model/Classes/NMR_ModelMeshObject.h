@@ -37,6 +37,7 @@ mesh object.
 
 #include "Common/Mesh/NMR_Mesh.h" 
 #include "Model/Classes/NMR_ModelObject.h"
+#include "Model/Classes/NMR_ModelTriangleSet.h"
 #include "Model/Classes/NMR_ModelMeshBeamLatticeAttributes.h"
 
 namespace NMR {
@@ -51,6 +52,10 @@ namespace NMR {
 	private:
 		PMesh m_pMesh; 
 		PModelMeshBeamLatticeAttributes m_pBeamLatticeAttributes;
+
+		std::map<std::string, PModelTriangleSet> m_TriangleSetMap;
+		std::vector<PModelTriangleSet> m_TriangleSets;
+
 	public:
 		CModelMeshObject() = delete;
 		CModelMeshObject(_In_ const ModelResourceID sID, _In_ CModel * pModel);
@@ -79,6 +84,13 @@ namespace NMR {
 		void setBeamLatticeAttributes(_In_ PModelMeshBeamLatticeAttributes pBeamLatticeAttributes);
 
 		void extendOutbox(_Out_ NOUTBOX3& vOutBox, _In_ const NMATRIX3 mAccumulatedMatrix) override;
+
+		void deleteTriangleSet (_In_ CModelTriangleSet * pTriangleSet);
+		PModelTriangleSet addTriangleSet(const std::string& sIdentifier, const std::string& sName);
+		PModelTriangleSet findTriangleSet (const std::string & sIdentifier);
+		uint32_t getTriangleSetCount();
+		PModelTriangleSet getTriangleSet(const uint32_t nIndex);
+		
 
 	};
 
