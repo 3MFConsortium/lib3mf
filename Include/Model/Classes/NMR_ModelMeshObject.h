@@ -38,6 +38,7 @@ mesh object.
 #include "Common/Mesh/NMR_Mesh.h"
 #include "Model/Classes/NMR_ModelVolumeData.h"
 #include "Model/Classes/NMR_ModelObject.h"
+#include "Model/Classes/NMR_ModelTriangleSet.h"
 #include "Model/Classes/NMR_ModelMeshBeamLatticeAttributes.h"
 
 namespace NMR {
@@ -54,6 +55,10 @@ namespace NMR {
 
 		PModelVolumeData m_pVolumeData;
 		PModelMeshBeamLatticeAttributes m_pBeamLatticeAttributes;
+
+		std::map<std::string, PModelTriangleSet> m_TriangleSetMap;
+		std::vector<PModelTriangleSet> m_TriangleSets;
+
 	public:
 		CModelMeshObject() = delete;
 		CModelMeshObject(_In_ const ModelResourceID sID, _In_ CModel * pModel);
@@ -87,6 +92,13 @@ namespace NMR {
 		void setVolumeData(_In_ PModelVolumeData pVolumeData);
 
 		ResourceDependencies getDependencies() override;
+		void deleteTriangleSet (_In_ CModelTriangleSet * pTriangleSet);
+		PModelTriangleSet addTriangleSet(const std::string& sIdentifier, const std::string& sName);
+		PModelTriangleSet findTriangleSet (const std::string & sIdentifier);
+		uint32_t getTriangleSetCount();
+		PModelTriangleSet getTriangleSet(const uint32_t nIndex);
+		
+
 	};
 
 	typedef std::shared_ptr <CModelMeshObject> PModelMeshObject;
