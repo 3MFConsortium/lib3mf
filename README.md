@@ -41,8 +41,8 @@ This page also contains a section about building lib3mf from source or obtaining
 
 ## Licenses and third party code
 lib3mf is released under the [BSD license](LICENSE). The library contains code of the following [third parties](SDK/Credits.txt):
-1. libzip 1.2.11, https://libzip.org/license/
-2. zlib 1.7.3, http://www.zlib.net/zlib_license.html
+1. libzip 1.7.3.1, https://libzip.org/license/
+2. zlib 1.2.11, http://www.zlib.net/zlib_license.html
 3. cpp-base64 1.01.00, https://github.com/ReneNyffenegger/cpp-base64/blob/master/LICENSE
 
 In addition, the automated tests of lib3mf make use of LibReSSL 3.0.2, [License](Tests/libressl/COPYING).
