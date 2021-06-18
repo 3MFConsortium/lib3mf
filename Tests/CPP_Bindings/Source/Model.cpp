@@ -175,4 +175,45 @@ namespace Lib3MF
 		ASSERT_EQ(oldID, newId);
 	}
 
+	TEST_F(Model, AddExtension)
+	{
+		std::string spec_uri("https://example.com/");
+		std::string spec_prefix("ex");
+		auto pExt = m_pModel->AddExtension(spec_uri, spec_prefix, true);
+		auto newExt = m_pModel->FindExtension(spec_uri);
+
+		ASSERT_EQ(pExt->GetNameSpaceURI(), spec_uri);
+		ASSERT_EQ(pExt->GetNameSpacePrefix(), spec_prefix);
+		ASSERT_TRUE(pExt->GetIsRequired());
+		ASSERT_EQ(newExt->GetNameSpaceURI(), spec_uri);
+		ASSERT_EQ(newExt->GetNameSpacePrefix(), spec_prefix);
+		ASSERT_TRUE(newExt->GetIsRequired());
+	}
+
+	TEST_F(Model, GetExtension)
+	{;
+		auto pExt1 = m_pModel->AddExtension("spec0", "s0", true);
+		auto pExt2 = m_pModel->AddExtension("spec1", "s1", true);
+
+		ASSERT_EQ(m_pModel->GetExtensionCount(), 2);
+		ASSERT_EQ(m_pModel->GetExtension(0)->GetNameSpaceURI(), "spec0");
+		ASSERT_EQ(m_pModel->GetExtension(1)->GetNameSpaceURI(), "spec1");
+	}
+
+	TEST_F(Model, ModifyExtension)
+	{
+		std::string spec_uri("https://example.com/");
+		auto pExt = m_pModel->AddExtension(spec_uri, "ex", true);
+		auto newExt = m_pModel->FindExtension(spec_uri);
+
+		std::string new_spec_uri("https://example2.com/");
+		std::string new_spec_prefix("ex2");
+		newExt->SetNameSpaceURI(new_spec_uri);
+		newExt->SetNameSpacePrefix(new_spec_prefix);
+		newExt->SetIsRequired(false);
+		
+		ASSERT_EQ(pExt->GetNameSpaceURI(), new_spec_uri);
+		ASSERT_EQ(pExt->GetNameSpacePrefix(), new_spec_prefix);
+		ASSERT_FALSE(pExt->GetIsRequired());
+	}
 }

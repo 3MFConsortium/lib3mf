@@ -91,6 +91,11 @@ namespace Lib3MF
 		auto reader3MF = model->QueryReader("3mf");
 		reader3MF->ReadFromBuffer(buffer);
 		CheckReaderWarnings(reader3MF, 0);
+
+		ASSERT_TRUE(model->HasExtension("http://schemas.microsoft.com/3dmanufacturing/production/2015/06"));
+		auto pExt = model->FindExtension("http://schemas.microsoft.com/3dmanufacturing/production/2015/06");
+		ASSERT_EQ(pExt->GetNameSpacePrefix(), "p");
+		ASSERT_TRUE(pExt->GetIsRequired());
 	}
 
 	//TEST_F(ProductionExtension, ReadWrite)

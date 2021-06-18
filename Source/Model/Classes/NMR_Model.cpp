@@ -31,6 +31,7 @@ A model is an in memory representation of the 3MF file.
 
 --*/
 
+#include "Model/Classes/NMR_Extension.h"
 #include "Model/Classes/NMR_Model.h"
 #include "Model/Classes/NMR_ModelObject.h"
 #include "Model/Classes/NMR_ModelMeshObject.h"
@@ -1315,4 +1316,58 @@ namespace NMR {
 		return size;
 	}
 
+	PExtension CModel::addExtension(_In_ const std::string sNameSpaceURI, _In_ std::string sNameSpacePrefix, _In_ nfBool bIsRequired) {
+		for (auto iIterator = m_Extensions.begin(); iIterator != m_Extensions.end(); iIterator++) {
+			auto pExt = *iIterator;
+			if (pExt->getNameSpaceURI() == sNameSpaceURI) {
+				throw CNMRException(NMR_ERROR_DUPLICATE_EXTENSION_NAMESPACEURI);
+			}
+			if (pExt->getNameSpacePrefix() == sNameSpacePrefix) {
+				throw CNMRException(NMR_ERROR_DUPLICATE_EXTENSION_NAMESPACEPREFIX);
+			}
+		}
+		PExtension pExtension = std::make_shared<CExtension>(sNameSpaceURI, sNameSpacePrefix, bIsRequired);
+		m_Extensions.push_back(pExtension);
+		return pExtension;
+	}
+
+	void CModel::removeExtension(_In_ const std::string sNameSpaceURI) {
+		for (auto iIterator = m_Extensions.begin(); iIterator != m_Extensions.end(); iIterator++) {
+			if ((*iIterator)->getNameSpaceURI() == sNameSpaceURI) {
+				m_Extensions.erase(iIterator);
+			}
+		}
+	}
+
+	PExtension CModel::findExtensionByURI(_In_ const std::string sNameSpaceURI) {
+		for (auto iIterator = m_Extensions.begin(); iIterator != m_Extensions.end(); iIterator++) {
+			if ((*iIterator)->getNameSpaceURI() == sNameSpaceURI) {
+				return *iIterator;
+			}
+		}
+		return nullptr;
+	}
+
+	PExtension CModel::findExtensionByPrefix(_In_ const std::string sNameSpacePrefix) {
+		for (auto iIterator = m_Extensions.begin(); iIterator != m_Extensions.end(); iIterator++) {
+			if ((*iIterator)->getNameSpacePrefix() == sNameSpacePrefix) {
+				return *iIterator;
+			}
+		}
+		return nullptr;
+	}
+
+	PExtension CModel::getExtension(_In_ nfUint32 nIndex)
+	{
+		nfUint32 nCount = getExtensionCount();
+		if (nIndex >= nCount)
+			throw CNMRException(NMR_ERROR_INVALIDINDEX);
+
+		return m_Extensions[nIndex];
+	}
+
+	nfUint32 CModel::getExtensionCount()
+	{
+		return (nfUint32)m_Extensions.size();
+	}
 }

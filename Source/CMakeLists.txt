@@ -44,6 +44,7 @@ Source/API/lib3mf_compositematerials.cpp
 Source/API/lib3mf_compositematerialsiterator.cpp
 Source/API/lib3mf_componentsobject.cpp
 Source/API/lib3mf_componentsobjectiterator.cpp
+Source/API/lib3mf_extension.cpp
 Source/API/lib3mf_meshobject.cpp
 Source/API/lib3mf_meshobjectiterator.cpp
 Source/API/lib3mf_metadata.cpp
@@ -124,6 +125,7 @@ Source/Common/Platform/NMR_XmlReader.cpp
 Source/Common/Platform/NMR_XmlWriter.cpp
 Source/Common/Platform/NMR_XmlWriter_Native.cpp
 Source/Model/Classes/NMR_PackageResourceID.cpp
+Source/Model/Classes/NMR_Extension.cpp
 Source/Model/Classes/NMR_Model.cpp
 Source/Model/Classes/NMR_ModelAttachment.cpp
 Source/Model/Classes/NMR_ModelBaseMaterial.cpp
