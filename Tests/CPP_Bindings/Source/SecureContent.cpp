@@ -188,7 +188,7 @@ namespace Lib3MF {
 				ASSERT_NE(nullptr, meshObj);
 				auto keyStore = modelToCrpt->GetKeyStore();
 				auto consumer = keyStore->AddConsumer("LIB3MF#TEST", "contentKey", publicKey);
-				auto rdGroup = keyStore->AddResourceDataGroup();
+				auto rdGroup = keyStore->AddResourceDataGroup(std::vector<Lib3MF_uint8>());
 				rdGroup->AddAccessRight(consumer.get(),
 					eWrappingAlgorithm::RSA_OAEP,
 					eMgfAlgorithm::MGF1_SHA1,
@@ -296,7 +296,7 @@ namespace Lib3MF {
 		std::string path1 = "/3D/nonrootmodel1.model";
 		auto part1 = model->FindOrCreatePackagePart(path1);
 
-		auto dataGroup = keyStore->AddResourceDataGroup();
+		auto dataGroup = keyStore->AddResourceDataGroup(std::vector<Lib3MF_uint8>());
 
 		std::string dguuid = dataGroup->GetKeyUUID();
 		ASSERT_FALSE(dguuid.empty());
@@ -321,14 +321,14 @@ namespace Lib3MF {
 		std::string path1 = "/3D/nonrootmodel1.model";
 		auto part1 = model->FindOrCreatePackagePart(path1);
 
-		auto dataGroup1 = keyStore->AddResourceDataGroup();
+		auto dataGroup1 = keyStore->AddResourceDataGroup(std::vector<Lib3MF_uint8>());
 
 		keyStore->AddResourceData(dataGroup1.get(), part1.get(), Lib3MF::eEncryptionAlgorithm::AES256_GCM, Lib3MF::eCompression::Deflate, std::vector<Lib3MF_uint8>());
 
 		std::string path2 = "/3D/nonrootmodel2.model";
 		auto part2 = model->FindOrCreatePackagePart(path2);
 
-		auto dataGroup2 = keyStore->AddResourceDataGroup();
+		auto dataGroup2 = keyStore->AddResourceDataGroup(std::vector<Lib3MF_uint8>());
 
 		keyStore->AddResourceData(dataGroup2.get(), part2.get(), Lib3MF::eEncryptionAlgorithm::AES256_GCM, Lib3MF::eCompression::Deflate, std::vector<Lib3MF_uint8>());
 
