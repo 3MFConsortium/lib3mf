@@ -1346,6 +1346,7 @@
 			<param name="Count" type="uint64" pass="return" description="The number of resource data available"/>
 		</method>
 		<method name="AddResourceDataGroup" description="Adds a resource data group into the keystore.">
+			<param name="ContentEncryptionKey" type="basicarray" class="uint8" pass="in" description="The (optional) encryption key that will be used to encrypt all resource datas in this group" />
 			<param name="ResourceDataGroup" type="class" class="ResourceDataGroup" pass="return" description="The resource data group instance"/>
 		</method>
 		<method name="GetResourceDataGroup" description="Gets a resource data group">

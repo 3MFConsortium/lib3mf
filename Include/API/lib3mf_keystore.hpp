@@ -95,7 +95,7 @@ namespace Lib3MF {
 
 			virtual IResourceDataGroup * GetResourceDataGroup(const Lib3MF_uint64 nResourceDataIndex) override;
 
-			virtual IResourceDataGroup * AddResourceDataGroup() override;
+			virtual IResourceDataGroup * AddResourceDataGroup(const Lib3MF_uint64 nContentEncryptionKeyBufferSize, const Lib3MF_uint8 * pContentEncryptionKeyBuffer) override;
 
 			virtual void RemoveResourceDataGroup(IResourceDataGroup * pTheResourceDataGroup) override;
 
