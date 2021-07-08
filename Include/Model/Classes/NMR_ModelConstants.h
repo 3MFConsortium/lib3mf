@@ -80,6 +80,7 @@ These are given by the 3MF Standard
 #define XML_3MF_NAMESPACE_MATERIALSPEC "http://schemas.microsoft.com/3dmanufacturing/material/2015/02"
 #define XML_3MF_NAMESPACE_PRODUCTIONSPEC "http://schemas.microsoft.com/3dmanufacturing/production/2015/06"
 #define XML_3MF_NAMESPACE_BEAMLATTICESPEC "http://schemas.microsoft.com/3dmanufacturing/beamlattice/2017/02"
+#define XML_3MF_NAMESPACE_TRIANGLESETS "http://schemas.microsoft.com/3dmanufacturing/trianglesets/2021/07"
 #define XML_3MF_NAMESPACE_SLICESPEC "http://schemas.microsoft.com/3dmanufacturing/slice/2015/07"
 #define XML_3MF_NAMESPACE_SECURECONTENTSPEC "http://schemas.microsoft.com/3dmanufacturing/securecontent/2019/04"
 #define XML_3MF_NAMESPACE_DIGITALSIGNATURESPEC "http://www.w3.org/2000/09/xmldsig#"
@@ -94,6 +95,7 @@ These are given by the 3MF Standard
 #define XML_3MF_NAMESPACEPREFIX_SECURECONTENT "sc"
 #define XML_3MF_NAMESPACEPREFIX_VOLUMETRIC "v"
 #define XML_3MF_NAMESPACEPREFIX_IMPLICIT "i"
+#define XML_3MF_NAMESPACEPREFIX_TRIANGLESETS "t"
 
 #define XML_3MF_ATTRIBUTE_XMLNS                     "xmlns"
 #define XML_3MF_ATTRIBUTE_PREFIX_XML                "xml"
@@ -149,6 +151,8 @@ These are given by the 3MF Standard
 #define XML_3MF_ELEMENT_BEAMSET                           "beamset"
 #define XML_3MF_ELEMENT_REF                               "ref"
 #define XML_3MF_ELEMENT_BALLREF                           "ballref"
+#define XML_3MF_ELEMENT_TRIANGLESETS                      "trianglesets"
+#define XML_3MF_ELEMENT_TRIANGLESET                       "triangleset"
 
 // Triangle element.
 #define XML_3MF_ELEMENT_TRIANGLE                    "triangle"
@@ -188,6 +192,8 @@ These are given by the 3MF Standard
 // deprecated (has been used in draft version of the specification):
 #define XML_3MF_ATTRIBUTE_BEAMLATTICE_ACCURACY      "accuracy"
 #define XML_3MF_ATTRIBUTE_BEAMLATTICE_PRECISION     "precision"
+#define XML_3MF_ATTRIBUTE_TRIANGLESET_IDENTIFIER    "identifier"
+#define XML_3MF_ATTRIBUTE_TRIANGLESET_NAME          "name"
 
 // Vertex element.
 #define XML_3MF_ELEMENT_VERTEX                      "vertex"
