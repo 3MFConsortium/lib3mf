@@ -68,6 +68,7 @@ namespace NMR {
 		m_bWriteBeamLatticeExtension = true;
 		m_bWriteSliceExtension = true;
 		m_bWriteSecureContentExtension = true;
+		m_bWriteTriangleSetExtension = true;
 		m_bWriteBaseMaterials = true;
 		m_bWriteObjects = true;
 
@@ -149,6 +150,15 @@ namespace NMR {
 				if (sRequiredExtensions.size() > 0)
 					sRequiredExtensions = sRequiredExtensions + " ";
 				sRequiredExtensions = sRequiredExtensions + XML_3MF_NAMESPACEPREFIX_SLICE;
+			}
+		}
+
+		if (m_bWriteTriangleSetExtension) {
+			writeConstPrefixedStringAttribute(XML_3MF_ATTRIBUTE_XMLNS, XML_3MF_NAMESPACEPREFIX_SLICE, XML_3MF_NAMESPACE_TRIANGLESETS);
+			if (m_pModel->RequireExtension(XML_3MF_NAMESPACE_TRIANGLESETS)) {
+				if (sRequiredExtensions.size() > 0)
+					sRequiredExtensions = sRequiredExtensions + " ";
+				sRequiredExtensions = sRequiredExtensions + XML_3MF_NAMESPACEPREFIX_TRIANGLESETS;
 			}
 		}
 
@@ -472,7 +482,7 @@ namespace NMR {
 
 			if (pMeshObject) {
 				CModelWriterNode100_Mesh ModelWriter_Mesh(pMeshObject, m_pXMLWriter, m_pProgressMonitor,
-					m_pPropertyIndexMapping, m_nDecimalPrecision, m_bWriteMaterialExtension, m_bWriteBeamLatticeExtension);
+					m_pPropertyIndexMapping, m_nDecimalPrecision, m_bWriteMaterialExtension, m_bWriteBeamLatticeExtension, m_bWriteTriangleSetExtension);
 
 				ModelWriter_Mesh.writeToXML();
 			}

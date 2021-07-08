@@ -103,5 +103,9 @@ namespace NMR {
 
 	}
 
+	std::set<uint32_t>& CModelTriangleSet::getTriangles()
+	{
+		return m_sTriangles;
 
+	}
 }

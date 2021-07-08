@@ -73,6 +73,8 @@ namespace NMR {
 		PModelTriangleSet duplicate(const std::string & sIdentifier);
 		void merge (PModelTriangleSet pTriangleSet);
 
+		std::set<uint32_t> & getTriangles ();
+
 	};
 
 }

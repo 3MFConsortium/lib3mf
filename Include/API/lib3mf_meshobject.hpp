@@ -63,6 +63,7 @@ private:
 
 	NMR::CMeshInformation_Properties* getMeshInformationProperties();
 
+
 protected:
 
 	/**
