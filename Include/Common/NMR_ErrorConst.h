@@ -502,6 +502,19 @@ Core framework error codes (0x2XXX)
 // Too many triangle sets
 #define NMR_ERROR_TOOMANYTRIANGLESETS 0x2043
 
+// Invalid triangle set attribute
+#define NMR_ERROR_TRIANGLESETINVALIDATTRIBUTE 0x2044
+
+// Missing triangle set reference index
+#define NMR_ERROR_TRIANGLESETMISSINGREFERENCEINDEX 0x2045
+
+// Triangle set name missing
+#define NMR_ERROR_TRIANGLESETNAMEMISSING 0x2046
+
+// Triangle set identifier missing
+#define NMR_ERROR_TRIANGLESETIDENTIFIERMISSING 0x2047
+
+
 /*-------------------------------------------------------------------
 Model error codes (0x8XXX)
 -------------------------------------------------------------------*/

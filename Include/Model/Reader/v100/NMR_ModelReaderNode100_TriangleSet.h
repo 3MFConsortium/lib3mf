@@ -24,53 +24,40 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract:
-
-NMR_ModelReaderNode100_Mesh.h defines the Model Reader Mesh Node Class.
-A mesh reader model node is a parser for the mesh node of an XML Model Stream.
-
 --*/
 
-#ifndef __NMR_MODELREADERNODE100_MESH
-#define __NMR_MODELREADERNODE100_MESH
+#ifndef __NMR_MODELREADERNODE100_TRIANGLESET
+#define __NMR_MODELREADERNODE100_TRIANGLESET
 
 #include "Model/Reader/NMR_ModelReaderNode.h"
-#include "Model/Reader/NMR_ModelReader_TexCoordMapping.h"
 #include "Model/Classes/NMR_ModelComponent.h"
 #include "Model/Classes/NMR_ModelObject.h"
 #include "Model/Classes/NMR_ModelTriangleSet.h"
 
 namespace NMR {
 
-	class CModelReaderNode100_Mesh : public CModelReaderNode {
-	private:
-		CMesh * m_pMesh;
-		CModel * m_pModel;
-		std::vector<PModelTriangleSet> m_pTriangleSets;
-
-		PPackageResourceID m_pObjectLevelPropertyID;
-		ModelResourceIndex m_nObjectLevelPropertyIndex;
-
-		eModelBeamLatticeClipMode m_eClipMode;
-		nfBool m_bHasClippingMeshID;
-		ModelResourceID m_nClippingMeshID;
-		nfBool m_bHasRepresentationMeshID;
-		ModelResourceID m_nRepresentationMeshID;
-		
+	class CModelReaderNode100_TriangleSet : public CModelReaderNode {
 	protected:
+
+		std::string m_sName;
+		std::string m_sIdentifier;
+
+		PModelTriangleSet m_pTriangleSet;
+
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
-		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
+		virtual void OnNSChildElement(_In_z_ const nfChar* pChildName, _In_z_ const nfChar* pNameSpace, _In_ CXmlReader* pXMLReader);
+
 	public:
-		CModelReaderNode100_Mesh() = delete;
-		CModelReaderNode100_Mesh(_In_ CModel * pModel, _In_ CMesh * pMesh, _In_ PModelWarnings pWarnings, _In_ PProgressMonitor pProgressMonitor, _In_ PPackageResourceID m_pObjectLevelPropertyID, _In_ ModelResourceIndex nDefaultPropertyIndex);
+		CModelReaderNode100_TriangleSet() = delete;
+		CModelReaderNode100_TriangleSet(_In_ PModelWarnings pWarnings);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
-		void retrieveClippingInfo(_Out_ eModelBeamLatticeClipMode &eClipMode, _Out_ nfBool & bHasClippingMode, _Out_ ModelResourceID & nClippingMeshID);
-		void retrieveRepresentationInfo(_Out_ nfBool & bHasRepresentation, _Out_ ModelResourceID & nRepresentationMeshID);
 
-		std::vector<PModelTriangleSet> getTriangleSets ();
+		PModelTriangleSet createTriangleSet();
 	};
-	typedef std::shared_ptr <CModelReaderNode100_Mesh> PModelReaderNode100_Mesh;
+
+	typedef std::shared_ptr <CModelReaderNode100_TriangleSet> PModelReaderNode100_TriangleSet;
+
 }
 
-#endif // __NMR_MODELREADERNODE100_MESH
+#endif // __NMR_MODELREADERNODE100_TRIANGLESET

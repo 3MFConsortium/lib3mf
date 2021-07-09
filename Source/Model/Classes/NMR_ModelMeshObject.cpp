@@ -271,6 +271,24 @@ namespace NMR {
 
 	}
 
+	PModelTriangleSet CModelMeshObject::addTriangleSet(PModelTriangleSet pModelTriangleSet)
+	{
+		if (pModelTriangleSet.get() == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		auto iIterator = m_TriangleSetMap.find(pModelTriangleSet->getIdentifier());
+		if (iIterator != m_TriangleSetMap.end())
+			throw CNMRException(NMR_ERROR_DUPLICATETRIANGLESET);
+
+		if (m_TriangleSets.size() >= TRIANGLESET_MAXCOUNT)
+			throw CNMRException(NMR_ERROR_TOOMANYTRIANGLESETS);
+
+		m_TriangleSets.push_back(pModelTriangleSet);
+		m_TriangleSetMap.insert(std::make_pair(pModelTriangleSet->getIdentifier(), pModelTriangleSet));
+
+		return pModelTriangleSet;
+	}
+
 	uint32_t CModelMeshObject::getTriangleSetCount()
 	{
 		return (uint32_t)m_TriangleSets.size();

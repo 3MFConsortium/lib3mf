@@ -236,7 +236,9 @@ namespace NMR {
 				// Create Empty Mesh
 				PMesh pMesh = std::make_shared<CMesh>();
 				// Create Mesh Object
-				m_pObject = std::make_shared<CModelMeshObject>(m_nID, m_pModel, pMesh);
+				PModelMeshObject pModelMeshObject = std::make_shared<CModelMeshObject>(m_nID, m_pModel, pMesh);
+
+				m_pObject = pModelMeshObject;
 				// Set Object Type (might fail, if string is invalid)
 				if (m_bHasType) {
 					if (!m_pObject->setObjectTypeString(m_sType, false))
@@ -247,6 +249,11 @@ namespace NMR {
 				PModelReaderNode100_Mesh pXMLNode = std::make_shared<CModelReaderNode100_Mesh>(m_pModel, pMesh.get(),
 					m_pWarnings, m_pProgressMonitor, m_pObjectLevelPropertyID, m_nObjectLevelPropertyIndex);
 				pXMLNode->parseXML(pXMLReader);
+
+				// store triangle sets in memory model
+				auto triangleSets = pXMLNode->getTriangleSets();
+				for (auto triangleSet : triangleSets)
+					pModelMeshObject->addTriangleSet(triangleSet);
 
 				// Add Object to Parent
 				m_pModel->addResource(m_pObject);

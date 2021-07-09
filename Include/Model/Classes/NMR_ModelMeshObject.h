@@ -87,6 +87,7 @@ namespace NMR {
 
 		void deleteTriangleSet (_In_ CModelTriangleSet * pTriangleSet);
 		PModelTriangleSet addTriangleSet(const std::string& sIdentifier, const std::string& sName);
+		PModelTriangleSet addTriangleSet(PModelTriangleSet pModelTriangleSet);
 		PModelTriangleSet findTriangleSet (const std::string & sIdentifier);
 		uint32_t getTriangleSetCount();
 		PModelTriangleSet getTriangleSet(const uint32_t nIndex);
