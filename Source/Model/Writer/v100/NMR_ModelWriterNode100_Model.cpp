@@ -168,7 +168,7 @@ namespace NMR {
 		}
 
 		if (m_bWriteTriangleSetExtension) {
-			writeConstPrefixedStringAttribute(XML_3MF_ATTRIBUTE_XMLNS, XML_3MF_NAMESPACEPREFIX_SLICE, XML_3MF_NAMESPACE_TRIANGLESETS);
+			writeConstPrefixedStringAttribute(XML_3MF_ATTRIBUTE_XMLNS, XML_3MF_NAMESPACEPREFIX_TRIANGLESETS, XML_3MF_NAMESPACE_TRIANGLESETS);
 			if (m_pModel->RequireExtension(XML_3MF_NAMESPACE_TRIANGLESETS)) {
 				if (sRequiredExtensions.size() > 0)
 					sRequiredExtensions = sRequiredExtensions + " ";

@@ -428,8 +428,8 @@ void CMeshObject::SetVolumeData(IVolumeData* pTheVolumeData)
 }
 
 ITriangleSet* CMeshObject::AddTriangleSet(const std::string& sIdentifier, const std::string& sName)
-{
-	return new CTriangleSet(NMR::CModelTriangleSet::make (sIdentifier, sName), meshObject());
+{	
+	return new CTriangleSet(meshObject()->addTriangleSet(sIdentifier, sName), meshObject());
 }
 
 bool CMeshObject::HasTriangleSet(const std::string& sIdentifier)
