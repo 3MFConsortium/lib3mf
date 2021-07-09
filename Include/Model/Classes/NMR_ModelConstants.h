@@ -194,6 +194,7 @@ These are given by the 3MF Standard
 #define XML_3MF_ATTRIBUTE_BEAMLATTICE_PRECISION     "precision"
 #define XML_3MF_ATTRIBUTE_TRIANGLESET_IDENTIFIER    "identifier"
 #define XML_3MF_ATTRIBUTE_TRIANGLESET_NAME          "name"
+#define XML_3MF_ATTRIBUTE_TRIANGLESETREF_INDEX		"index"
 
 // Vertex element.
 #define XML_3MF_ELEMENT_VERTEX                      "vertex"
