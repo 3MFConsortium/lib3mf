@@ -72,6 +72,7 @@ Source/API/lib3mf_texture2d.cpp
 Source/API/lib3mf_texture2dgroup.cpp
 Source/API/lib3mf_texture2dgroupiterator.cpp
 Source/API/lib3mf_texture2diterator.cpp
+Source/API/lib3mf_triangleset.cpp
 Source/API/lib3mf_writer.cpp
 Source/API/lib3mf_utils.cpp
 Source/Common/3MF_ProgressMonitor.cpp
@@ -196,6 +197,9 @@ Source/Model/Reader/v100/NMR_ModelReaderNode100_Tex2DGroup.cpp
 Source/Model/Reader/v100/NMR_ModelReaderNode100_Texture2D.cpp
 Source/Model/Reader/v100/NMR_ModelReaderNode100_Triangle.cpp
 Source/Model/Reader/v100/NMR_ModelReaderNode100_Triangles.cpp
+Source/Model/Reader/v100/NMR_ModelReaderNode100_TriangleSet.cpp
+Source/Model/Reader/v100/NMR_ModelReaderNode100_TriangleSets.cpp
+Source/Model/Reader/v100/NMR_ModelReaderNode100_TriangleSetRef.cpp
 Source/Model/Reader/v100/NMR_ModelReaderNode100_Vertex.cpp
 Source/Model/Reader/v100/NMR_ModelReaderNode100_Vertices.cpp
 Source/Model/Reader/v093/NMR_ModelReaderNode093_Build.cpp
