@@ -39,7 +39,7 @@ Abstract: This is a stub class definition of CMeshObject
 using namespace Lib3MF::Impl;
 
 CTriangleSet::CTriangleSet(NMR::PModelTriangleSet pTriangleSet, NMR::PModelMeshObject pMeshObject)
-	: CBase (), m_pTriangleSet (pTriangleSet), m_pMeshObject (pMeshObject)
+	: m_pTriangleSet (pTriangleSet), m_pMeshObject (pMeshObject)
 {
 	if (pTriangleSet.get() == nullptr)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
