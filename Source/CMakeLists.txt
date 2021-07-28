@@ -148,6 +148,7 @@ Source/Model/Classes/NMR_ModelTexture2D.cpp
 Source/Model/Classes/NMR_ModelTexture2DGroup.cpp
 Source/Model/Classes/NMR_ModelSlice.cpp
 Source/Model/Classes/NMR_ModelSliceStack.cpp
+Source/Model/Classes/NMR_ModelTriangleSet.cpp
 Source/Model/Classes/NMR_KeyStore.cpp
 Source/Model/Classes/NMR_KeyStoreConsumer.cpp
 Source/Model/Classes/NMR_KeyStoreAccessRight.cpp
