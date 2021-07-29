@@ -793,7 +793,6 @@
 		<method name="GetTriangleList" description="Retrieves all the triangles in the TriangleSet">
 			<param name="TriangleIndices" type="basicarray" class="uint32" pass="out" description="retrieves the indices of the triangles in this TriangleSet"/>
 		</method>
-
 		<method name="AddTriangleList" description="Adds multiple triangles in the list. Duplicates will be merged.">
 			<param name="TriangleIndices" type="basicarray" class="uint32" pass="in" description="Triangle indices to add. Every element MUST be between 0 and TriangleCount - 1."/>
 		</method>

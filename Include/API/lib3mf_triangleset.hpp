@@ -82,6 +82,8 @@ public:
 
 	void SetTriangleList(const Lib3MF_uint64 nTriangleIndicesBufferSize, const Lib3MF_uint32* pTriangleIndicesBuffer) override;
 
+	void GetTriangleList(Lib3MF_uint64 nTriangleIndicesBufferSize, Lib3MF_uint64 * pTriangleIndicesNeededCount, Lib3MF_uint32 * pTriangleIndicesBuffer) override;
+
 	void AddTriangleList(const Lib3MF_uint64 nTriangleIndicesBufferSize, const Lib3MF_uint32* pTriangleIndicesBuffer) override;
 
 	void Merge(ITriangleSet* pOtherTriangleSet, const bool bDeleteOther) override;

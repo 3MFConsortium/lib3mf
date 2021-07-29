@@ -100,6 +100,24 @@ void CTriangleSet::SetTriangleList(const Lib3MF_uint64 nTriangleIndicesBufferSiz
 	}
 }
 
+void CTriangleSet::GetTriangleList(Lib3MF_uint64 nTriangleIndicesBufferSize, Lib3MF_uint64 * pTriangleIndicesNeededCount, Lib3MF_uint32 * pTriangleIndicesBuffer)
+{
+	auto triangleIndicesSet = m_pTriangleSet->getTriangles();
+	Lib3MF_uint32 count = (Lib3MF_uint32)triangleIndicesSet.size();
+	if (pTriangleIndicesNeededCount)
+		*pTriangleIndicesNeededCount = count;
+
+	if (nTriangleIndicesBufferSize >= count && pTriangleIndicesBuffer)
+	{
+		Lib3MF_uint32* pIndex = pTriangleIndicesBuffer;
+		for (auto index : triangleIndicesSet)
+		{
+			*pIndex = index;
+			pIndex++;
+		}
+	}
+}
+
 void CTriangleSet::AddTriangleList(const Lib3MF_uint64 nTriangleIndicesBufferSize, const Lib3MF_uint32* pTriangleIndicesBuffer)
 {
 	if (pTriangleIndicesBuffer) {
