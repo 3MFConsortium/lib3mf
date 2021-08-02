@@ -61,12 +61,15 @@ namespace NMR {
 	void CModelReaderNode100_TriangleSet::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
 	{
 		__NMRASSERT(pAttributeName);
-		__NMRASSERT(pAttributeValue);
+		__NMRASSERT(pAttributeValue); 
 		
-		
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_TRIANGLESET_NAME) == 0) {
+            m_sName = pAttributeValue;
+		}
+		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_TRIANGLESET_IDENTIFIER) == 0) {
+			m_sIdentifier = pAttributeValue;
+		}
 	}
-
-
 
 	void CModelReaderNode100_TriangleSet::OnNSChildElement(_In_z_ const nfChar* pChildName, _In_z_ const nfChar* pNameSpace, _In_ CXmlReader* pXMLReader)
 	{
@@ -75,7 +78,7 @@ namespace NMR {
 		__NMRASSERT(pNameSpace);
 
 		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_TRIANGLESETS) == 0) {
-			if (strcmp(pChildName, XML_3MF_ELEMENT_TRIANGLESET) == 0)
+			if (strcmp(pChildName, XML_3MF_ELEMENT_REF) == 0)
 			{
 				PModelReaderNode100_TriangleSetRef pXMLNode = std::make_shared<CModelReaderNode100_TriangleSetRef>(m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
