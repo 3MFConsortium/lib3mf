@@ -11,7 +11,7 @@ include(GNUInstallDirs)
 set(LIB3MF_VERSION_MAJOR 2)        # increase on every backward-compatibility breaking change of the API
 set(LIB3MF_VERSION_MINOR 2)        # increase on every backward compatible change of the API
 set(LIB3MF_VERSION_MICRO 0)        # increase on on every change that does not alter the API
-set(LIB3MF_VERSION_PRERELEASE "develop")  # denotes pre-release information of a version of lib3mf
+set(LIB3MF_VERSION_PRERELEASE "")  # denotes pre-release information of a version of lib3mf
 
 project(lib3mf
   VERSION ${LIB3MF_VERSION_MAJOR}.${LIB3MF_VERSION_MINOR}.${LIB3MF_VERSION_MICRO}
