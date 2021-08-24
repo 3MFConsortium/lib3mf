@@ -35,7 +35,7 @@ UnitTest_MultiProperties.cpp: Defines Unittests for MultiProperties
 
 namespace Lib3MF
 {
-	class MultiProperties : public ::testing::Test {
+	class MultiProperties : public Lib3MFTest {
 	protected:
 
 		virtual void SetUp() {
@@ -107,12 +107,7 @@ namespace Lib3MF
 		PTexture2DGroup texture2DGroup;
 
 		void setupMultiPropertyGroup(PMultiPropertyGroup multiPropertyGroup);
-		static void SetUpTestCase() {
-			wrapper = CWrapper::loadLibrary();
-		}
-		static PWrapper wrapper;
 	};
-	PWrapper MultiProperties::wrapper;
 
 	TEST_F(MultiProperties, Create)
 	{

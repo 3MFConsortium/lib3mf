@@ -35,7 +35,7 @@ UnitTest_Object.cpp: Defines Unittests for the object class and its descendants
 
 namespace Lib3MF
 {
-	class Outbox : public ::testing::Test {
+	class Outbox : public Lib3MFTest {
 	protected:
 		virtual void SetUp() {
 			model = wrapper->CreateModel();
@@ -47,13 +47,7 @@ namespace Lib3MF
 		}
 	
 		PModel model;
-
-		static void SetUpTestCase() {
-			wrapper = CWrapper::loadLibrary();
-		}
-		static PWrapper wrapper;
 	};
-	PWrapper Outbox::wrapper;
 
 	void CompareBoxes(Lib3MF::sBox boxA, Lib3MF::sBox boxB) {
 		for (int i = 0; i < 3; i++) {

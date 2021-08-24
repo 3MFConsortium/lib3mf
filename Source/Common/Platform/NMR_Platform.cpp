@@ -26,8 +26,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_Platform_GCC.cpp implements several factory functions which create platform
-specific classes for GCC.
+NMR_Platform.cpp implements several factory functions which create platform
+specific classes.
 
 --*/
 
@@ -37,10 +37,8 @@ specific classes for GCC.
 
 #define NMR_PLATFORM_XMLREADER_BUFFERSIZE 65536
 
-#include "Common/Platform/NMR_ImportStream_GCC_Win32.h"
-#include "Common/Platform/NMR_ExportStream_GCC_Win32.h"
-#include "Common/Platform/NMR_ImportStream_GCC_Native.h"
-#include "Common/Platform/NMR_ExportStream_GCC_Native.h"
+#include "Common/Platform/NMR_ImportStream_Native.h"
+#include "Common/Platform/NMR_ExportStream_Native.h"
 #include "Common/Platform/NMR_XmlReader_Native.h"
 #include "Common/NMR_StringUtils.h"
 
@@ -50,13 +48,13 @@ namespace NMR {
 	PImportStream fnCreateImportStreamInstance (_In_ const nfChar * pszFileName)
 	{
 		std::wstring sFileName = fnUTF8toUTF16(pszFileName);
-		return std::make_shared<CImportStream_GCC_Native> (sFileName.c_str());
+		return std::make_shared<CImportStream_Native> (sFileName.c_str());
 	}
 
 	PExportStream fnCreateExportStreamInstance (_In_ const nfChar * pszFileName)
 	{
 		std::wstring sFileName = fnUTF8toUTF16(pszFileName);
-		return std::make_shared<CExportStream_GCC_Native> (sFileName.c_str());
+		return std::make_shared<CExportStream_Native> (sFileName.c_str());
 	}
 
 	PXmlReader fnCreateXMLReaderInstance (_In_ PImportStream pImportStream, PProgressMonitor pProgressMonitor)

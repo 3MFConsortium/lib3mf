@@ -35,7 +35,7 @@ UnitTest_BuildItems.cpp: Defines Unittests for the BuildItems class
 
 namespace Lib3MF
 {
-	class BuildItems : public ::testing::Test {
+	class BuildItems : public Lib3MFTest {
 	protected:
 
 		virtual void SetUp() {
@@ -49,13 +49,7 @@ namespace Lib3MF
 	
 		PModel model;
 		static std::string InFolder;
-
-		static void SetUpTestCase() {
-			wrapper = CWrapper::loadLibrary();
-		}
-		static PWrapper wrapper;
 	};
-	PWrapper BuildItems::wrapper;
 
 	std::string BuildItems::InFolder(sTestFilesPath + "/BuildItems/");
 

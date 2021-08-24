@@ -89,7 +89,7 @@ namespace NMR {
 		return m_nPosition;
 	}
 
-	nfUint64 CImportStream_Memory::readBuffer(_In_ nfByte * pBuffer, _In_ nfUint64 cbTotalBytesToRead, nfBool bNeedsToReadAll)
+	nfUint64 CImportStream_Memory::readIntoBuffer(_In_ nfByte * pBuffer, _In_ nfUint64 cbTotalBytesToRead, nfBool bNeedsToReadAll)
 	{
 		__NMRASSERT(m_nPosition <= m_cbSize);
 		nfUint64 cbBytesLeft = (m_cbSize - m_nPosition);

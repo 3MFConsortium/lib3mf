@@ -88,6 +88,8 @@ public:
 	void WriteToFile (const std::string & sFileName);
 
 	void ReadFromFile (const std::string & sFileName);
+	
+	void ReadFromCallback(const Lib3MF::ReadCallback pTheReadCallback, const Lib3MF_uint64 nStreamSize, const Lib3MF::SeekCallback pTheSeekCallback, const Lib3MF_pvoid pUserData);
 
 	Lib3MF_uint64 GetStreamSize ();
 

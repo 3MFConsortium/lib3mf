@@ -35,7 +35,7 @@ UnitTest_Slice.cpp: Defines Unittests for the Slice class
 
 namespace Lib3MF
 {
-	class Slice : public ::testing::Test {
+	class Slice : public Lib3MFTest {
 	protected:
 		virtual void SetUp() {
 			model = wrapper->CreateModel();
@@ -84,14 +84,8 @@ namespace Lib3MF
 		std::vector<Lib3MF_uint32> vEmptyPolygon;
 
 		std::vector<Lib3MF_uint32> vInvalidPolygon;
-
-		static void SetUpTestCase() {
-			wrapper = CWrapper::loadLibrary();
-		}
-		static PWrapper wrapper;
 	};
-	PWrapper Slice::wrapper;
-
+	
 	TEST_F(Slice, Properties)
 	{
 		ASSERT_DOUBLE_EQ(slice->GetZTop(), 1.0);

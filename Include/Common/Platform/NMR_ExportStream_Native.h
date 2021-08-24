@@ -26,15 +26,15 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ExportStream_GCC_Native.cpp defines the CExportStream_GCC_Native Class.
-This is an abstract base stream class for exporting with GCC with std::streams
+NMR_ExportStream_Native.cpp defines the CExportStream_Native Class.
+This is an abstract base stream class for exporting with std::streams
 
 Attention: Only use in UTF8-native environments!
 
 --*/
 
-#ifndef __NMR_EXPORTSTREAM_GCC_NATIVE
-#define __NMR_EXPORTSTREAM_GCC_NATIVE
+#ifndef __NMR_EXPORTSTREAM_NATIVE
+#define __NMR_EXPORTSTREAM_NATIVE
 
 #include "Common/Platform/NMR_ExportStream.h"
 #include "Common/NMR_Types.h"
@@ -45,12 +45,12 @@ Attention: Only use in UTF8-native environments!
 
 namespace NMR {
 
-	class CExportStream_GCC_Native : public CExportStream {
+	class CExportStream_Native : public CExportStream {
 	private:
 		std::ofstream m_Stream;
 	public:
-		CExportStream_GCC_Native(_In_ const nfWChar * pwszFileName);
-		~CExportStream_GCC_Native();
+		CExportStream_Native(_In_ const nfWChar * pwszFileName);
+		~CExportStream_Native();
 
 		virtual nfBool seekPosition(_In_ nfUint64 position, _In_ nfBool bHasToSucceed);
 		virtual nfBool seekForward(_In_ nfUint64 bytes, _In_ nfBool bHasToSucceed);
@@ -62,4 +62,4 @@ namespace NMR {
 
 }
 
-#endif // __NMR_EXPORTSTREAM_GCC_NATIVE
+#endif // __NMR_EXPORTSTREAM_NATIVE

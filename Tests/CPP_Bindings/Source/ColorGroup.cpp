@@ -35,7 +35,7 @@ UnitTest_ColorGroup.cpp: Defines Unittests for the ColorGroup class
 
 namespace Lib3MF
 {
-	class ColorGroup : public ::testing::Test {
+	class ColorGroup : public Lib3MFTest {
 	protected:
 
 		virtual void SetUp() {
@@ -48,12 +48,7 @@ namespace Lib3MF
 
 		PModel model;
 		PColorGroup colorGroup;
-		static void SetUpTestCase() {
-			wrapper = CWrapper::loadLibrary();
-		}
-		static PWrapper wrapper;
 	};
-	PWrapper ColorGroup::wrapper;
 
 	TEST_F(ColorGroup, GetCount)
 	{

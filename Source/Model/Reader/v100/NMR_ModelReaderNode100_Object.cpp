@@ -301,7 +301,7 @@ namespace NMR {
 					throw CNMRException(NMR_ERROR_SLICESTACKRESOURCE_NOT_FOUND);
 				PModelSliceStack pSliceStackResource = std::dynamic_pointer_cast<CModelSliceStack>(m_pModel->findResource(pID) );
 				if (pSliceStackResource) {
-					if ((m_pObject->getObjectType() == MODELOBJECTTYPE_MODEL) || (MODELOBJECTTYPE_SOLIDSUPPORT)) {
+					if ((m_pObject->getObjectType() == MODELOBJECTTYPE_MODEL) || (m_pObject->getObjectType() == MODELOBJECTTYPE_SOLIDSUPPORT)) {
 						if (!pSliceStackResource->areAllPolygonsClosed()) {
 							m_pWarnings->addException(CNMRException(NMR_ERROR_SLICEPOLYGONNOTCLOSED), mrwInvalidMandatoryValue);
 						}

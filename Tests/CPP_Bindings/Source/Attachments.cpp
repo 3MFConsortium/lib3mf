@@ -35,7 +35,7 @@ UnitTest_Attachments.cpp: Defines Unittests for handling of attachments
 
 namespace Lib3MF
 {
-	class AttachmentsT : public ::testing::Test {
+	class AttachmentsT : public Lib3MFTest {
 	protected:
 		const std::string m_sFolderName;
 		const std::string m_sFilenameReadWrite;
@@ -66,12 +66,7 @@ namespace Lib3MF
 		}
 
 		PModel model;
-		static void SetUpTestCase() {
-			wrapper = CWrapper::loadLibrary();
-		}
-		static PWrapper wrapper;
 	};
-	PWrapper AttachmentsT::wrapper;
 
 	TEST_F(AttachmentsT, AddRemove)
 	{
@@ -105,6 +100,25 @@ namespace Lib3MF
 		auto attachment = model->AddAttachment(m_sRelationShipPath + ".xml", m_sAttachmetType);
 
 		attachment->ReadFromFile(m_sAttachmentPath);
+
+		std::vector<Lib3MF_uint8> buffer;
+		attachment->WriteToBuffer(buffer);
+
+		bool bAreEqual = std::equal(buffer.begin(), buffer.end(), m_sAttachmetPayload.begin());
+		ASSERT_TRUE(bAreEqual);
+	}
+
+	TEST_F(AttachmentsT, AddAttachmentCallback)
+	{
+		auto attachment = model->AddAttachment(m_sRelationShipPath + ".xml", m_sAttachmetType);
+
+		PositionedVector<Lib3MF_uint8> bufferCallback;
+		bufferCallback.vec = std::vector<Lib3MF_uint8>(m_sAttachmetPayload.begin(), m_sAttachmetPayload.end());
+
+		attachment->ReadFromCallback(PositionedVector<Lib3MF_uint8>::readCallback,
+			bufferCallback.vec.size(),
+			PositionedVector<Lib3MF_uint8>::seekCallback,
+			reinterpret_cast<Lib3MF_pvoid>(&bufferCallback));
 
 		std::vector<Lib3MF_uint8> buffer;
 		attachment->WriteToBuffer(buffer);

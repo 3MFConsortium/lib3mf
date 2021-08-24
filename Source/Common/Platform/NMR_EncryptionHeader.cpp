@@ -18,7 +18,7 @@ namespace NMR {
 
 	size_t CEncryptionHeader::readFrom(PImportStream from) {
 		uEncryptedFileHeader header = { { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } };
-		from->readBuffer(header.bytes, sizeof(header), true);
+		from->readIntoBuffer(header.bytes, sizeof(header), true);
 		if (isBigEndian()) {
 			header.Header.Length.length = swapBytes(header.Header.Length.length);
 		}
@@ -31,7 +31,7 @@ namespace NMR {
 		nfUint32 remainingBytes = header.Header.Length.length - headerSize;
 		if (remainingBytes > 0) {
 			m_rgAdditionalData.resize(remainingBytes, 0);
-			from->readBuffer(m_rgAdditionalData.data(), remainingBytes, true);
+			from->readIntoBuffer(m_rgAdditionalData.data(), remainingBytes, true);
 		}
 		m_nfHeaderSize = header.Header.Length.length;
 		return m_nfHeaderSize;

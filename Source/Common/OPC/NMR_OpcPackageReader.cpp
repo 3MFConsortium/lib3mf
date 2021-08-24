@@ -78,7 +78,7 @@ namespace NMR {
 				return 0;
 
 			case ZIP_SOURCE_READ:
-				return pImportStream->readBuffer((nfByte*)data, len, true);
+				return pImportStream->readIntoBuffer((nfByte*)data, len, true);
 
 			case ZIP_SOURCE_CLOSE:
 				return 0;
@@ -137,7 +137,7 @@ namespace NMR {
 			else {
 				// read ZIP into memory
 				m_Buffer.resize((size_t)nStreamSize);
-				pImportStream->readBuffer(&m_Buffer[0], nStreamSize, true);
+				pImportStream->readIntoBuffer(&m_Buffer[0], nStreamSize, true);
 				pZIPsource = zip_source_buffer_create(&m_Buffer[0], (size_t)nStreamSize, 0, &m_ZIPError);
 			}
 			if (pZIPsource == nullptr)

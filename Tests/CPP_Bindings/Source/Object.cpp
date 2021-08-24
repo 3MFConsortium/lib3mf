@@ -35,7 +35,7 @@ UnitTest_Object.cpp: Defines Unittests for the object class and its descendants
 
 namespace Lib3MF
 {
-	class ObjectT : public ::testing::Test {
+	class ObjectT : public Lib3MFTest {
 	protected:
 		virtual void SetUp() {
 			model = wrapper->CreateModel();
@@ -45,13 +45,7 @@ namespace Lib3MF
 		}
 	
 		PModel model;
-
-		static void SetUpTestCase() {
-			wrapper = CWrapper::loadLibrary();
-		}
-		static PWrapper wrapper;
 	};
-	PWrapper ObjectT::wrapper;
 
 	TEST_F(ObjectT, AddMesh)
 	{
@@ -156,7 +150,7 @@ namespace Lib3MF
 	}
 
 
-	class ObjectAssembled : public ::testing::Test {
+	class ObjectAssembled : public Lib3MFTest {
 	protected:
 		virtual void SetUp() {
 			model = wrapper->CreateModel();
@@ -208,7 +202,7 @@ namespace Lib3MF
 	}
 
 
-	class ObjectSingle : public ::testing::Test {
+	class ObjectSingle : public Lib3MFTest {
 	protected:
 		virtual void SetUp() {
 			model = wrapper->CreateModel();
@@ -310,7 +304,7 @@ namespace Lib3MF
 	}
 
 
-	class ObjectThumbnail : public ::testing::Test {
+	class ObjectThumbnail : public Lib3MFTest {
 	protected:
 		virtual void SetUp() {
 			model = wrapper->CreateModel();

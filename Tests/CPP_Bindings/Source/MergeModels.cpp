@@ -35,7 +35,7 @@ UnitTest_Model.cpp: Defines Unittests for the functionality to merge models
 
 namespace Lib3MF
 {
-	class MergeModels : public ::testing::Test {
+	class MergeModels : public Lib3MFTest {
 	protected:
 		virtual void SetUp() {
 			m_pModel = wrapper->CreateModel();
@@ -47,12 +47,7 @@ namespace Lib3MF
 		}
 
 		PModel m_pModel;
-		static void SetUpTestCase() {
-			wrapper = CWrapper::loadLibrary();
-		}
-		static PWrapper wrapper;
 	};
-	PWrapper MergeModels::wrapper;
 
 	void ExpectEqModels(PModel p1, PModel p2)
 	{
