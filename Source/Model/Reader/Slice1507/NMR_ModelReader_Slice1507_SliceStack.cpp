@@ -78,7 +78,19 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_SLICESTACKRESOURCE_NOT_FOUND);
 			if (m_pSliceStackResource->OwnPath() != m_pModel->rootPath() )
 				throw CNMRException(NMR_ERROR_SLICEREFSTOODEEP);
-			m_pSliceStackResource->AddSliceRef(pSliceStackResource);
+
+			try {
+				m_pSliceStackResource->AddSliceRef(pSliceStackResource, true);
+			} catch (const CNMRException& e)
+			{
+				if (e.getErrorCode() == NMR_ERROR_SLICES_REFS_Z_NOTINCREASING)
+				{
+					getWarnings()->addException(e, mrwInvalidMandatoryValue);
+					m_pSliceStackResource->AddSliceRef(pSliceStackResource, false);
+				}
+				else
+					throw;
+			}
 		}
 	}
 
