@@ -1013,10 +1013,10 @@
 		<method name="WriteToFile" description="Writes out the attachment as file.">
 			<param name="FileName" type="string" pass="in" description="file to write into."/>
 		</method>
-		<method name="ReadFromFile" description="Reads an attachment from a file. The path of this file is only read when this attachment is being written as part of the 3MF packege, or via the WriteToFile or WriteToBuffer-methods.">
+		<method name="ReadFromFile" description="Reads an attachment from a file. The path of this file is only read when this attachment is being written as part of the 3MF package, or via the WriteToFile or WriteToBuffer-methods.">
 			<param name="FileName" type="string" pass="in" description="file to read from."/>
 		</method>
-		<method name="ReadFromCallback" description="Reads a model and from the data provided by a callback function">
+		<method name="ReadFromCallback" description="Reads an attachment from the data provided by a callback function. This callback function is only invoked when this attachment is being written as part of the 3MF package, or via the WriteToFile or WriteToBuffer-methods.">
 			<param name="TheReadCallback" type="functiontype" class="ReadCallback" pass="in" description="Callback to call for reading a data chunk"/>
 			<param name="StreamSize" type="uint64" pass="in" description="number of bytes the callback returns"/>
 			<param name="TheSeekCallback" type="functiontype" class="SeekCallback" pass="in" description="Callback to call for seeking in the stream."/>
@@ -1028,7 +1028,7 @@
 		<method name="WriteToBuffer" description="Writes out the attachment into a buffer">
 			<param name="Buffer" type="basicarray" class="uint8" pass="out" description="Buffer to write into"/>
 		</method>
-		<method name="ReadFromBuffer" description="Reads an attachment from a memory buffer">
+		<method name="ReadFromBuffer" description="Reads an attachment from a memory buffer. This buffer is immediatly read (in contrast to the ReadFromCallback and ReadFromFile-methods).">
 			<param name="Buffer" type="basicarray" class="uint8" pass="in" description="Buffer to read from"/>
 		</method>
 		<!--
