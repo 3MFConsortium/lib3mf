@@ -93,7 +93,7 @@ namespace Lib3MF {
 				ASSERT_NE(nullptr, meshObj);
 				auto keyStore = modelToCrpt->GetKeyStore();
 				auto consumer = keyStore->AddConsumer("LIB3MF#TEST", "contentKey", publicKey);
-				auto rdGroup = keyStore->AddResourceDataGroup();
+				auto rdGroup = keyStore->AddResourceDataGroup(ByteVector());
 				rdGroup->AddAccessRight(consumer.get(),
 					eWrappingAlgorithm::RSA_OAEP,
 					eMgfAlgorithm::MGF1_SHA1,
@@ -203,7 +203,7 @@ namespace Lib3MF {
 		Lib3MF::PConsumer consumer = keyStore->AddConsumer(consumerId, keyId, keyValue);
 
 		//add a resource data group
-		Lib3MF::PResourceDataGroup dataGroup = keyStore->AddResourceDataGroup();
+		Lib3MF::PResourceDataGroup dataGroup = keyStore->AddResourceDataGroup(ByteVector());
 
 		//establish consumer access to the datagroup
 		Lib3MF::PAccessRight accessRight = dataGroup->AddAccessRight(

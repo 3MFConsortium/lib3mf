@@ -86,13 +86,20 @@ IResourceDataGroup * Lib3MF::Impl::CKeyStore::GetResourceDataGroup(const Lib3MF_
 	return new CResourceDataGroup(dg);
 }
 
-IResourceDataGroup * Lib3MF::Impl::CKeyStore::AddResourceDataGroup() {
+IResourceDataGroup * Lib3MF::Impl::CKeyStore::AddResourceDataGroup(const Lib3MF_uint64 nContentEncryptionKeyBufferSize, const Lib3MF_uint8 * pContentEncryptionKeyBuffer) {
 	//this is not ideal, as key size is determined by the encryptionalgorithm inside resourcedata.
-	//in any case, the spec does not state what happens if different resource datas have different algorithms,
-	//but resourcedatagroups are supposed to group the same key for a group of resources...
+	//in any case, the spec does not state what happens if different resource datas have different algorithms.
+	//resourcedatagroups are supposed to group the same key for resourcedatas.
+	//at resource data, we should assert key size maches the algorithm chosen.
 	//so far, this should work as aes256 is the only thing we support.
 	std::vector<NMR::nfByte> key(NMR::fnGetAlgorithmKeySize(NMR::eKeyStoreEncryptAlgorithm::AES256_GCM), 0);
-	m_pModel->generateRandomBytes(key.data(), key.size());
+	if (nContentEncryptionKeyBufferSize == 0) {
+		m_pModel->generateRandomBytes(key.data(), key.size());
+	} else if ((key.size() != nContentEncryptionKeyBufferSize) || (nullptr == pContentEncryptionKeyBuffer)) {
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+	} else {
+		std::copy(pContentEncryptionKeyBuffer, pContentEncryptionKeyBuffer + nContentEncryptionKeyBufferSize, key.data());
+	}
 	NMR::PKeyStoreResourceDataGroup dg = NMR::CKeyStoreFactory::makeResourceDataGroup(std::make_shared<NMR::CUUID>(), key);
 	m_pKeyStore->addResourceDataGroup(dg);
 	return new CResourceDataGroup(dg);
