@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<component xmlns="http://schemas.autodesk.com/netfabb/automaticcomponenttoolkit/2018" libraryname="the 3MF Library" namespace="Lib3MF" copyright="3MF Consortium (Original Author)" year="2019" basename="lib3mf" version="2.2.0-develop">
+<component xmlns="http://schemas.autodesk.com/netfabb/automaticcomponenttoolkit/2018" libraryname="the 3MF Library" namespace="Lib3MF" copyright="3MF Consortium (Original Author)" year="2019" basename="lib3mf" version="2.3.0-develop">
+
 
 	<license>
 		<line value="All rights reserved."/>
@@ -1008,8 +1009,14 @@
 		<method name="WriteToFile" description="Writes out the attachment as file.">
 			<param name="FileName" type="string" pass="in" description="file to write into."/>
 		</method>
-		<method name="ReadFromFile" description="Reads an attachment from a file.">
+		<method name="ReadFromFile" description="Reads an attachment from a file. The path of this file is only read when this attachment is being written as part of the 3MF packege, or via the WriteToFile or WriteToBuffer-methods.">
 			<param name="FileName" type="string" pass="in" description="file to read from."/>
+		</method>
+		<method name="ReadFromCallback" description="Reads a model and from the data provided by a callback function">
+			<param name="TheReadCallback" type="functiontype" class="ReadCallback" pass="in" description="Callback to call for reading a data chunk"/>
+			<param name="StreamSize" type="uint64" pass="in" description="number of bytes the callback returns"/>
+			<param name="TheSeekCallback" type="functiontype" class="SeekCallback" pass="in" description="Callback to call for seeking in the stream."/>
+			<param name="UserData" type="pointer" pass="in" description="Userdata that is passed to the callback function"/>
 		</method>
 		<method name="GetStreamSize" description="Retrieves the size of the attachment stream">
 			<param name="StreamSize" type="uint64" pass="return" description="the stream size"/>

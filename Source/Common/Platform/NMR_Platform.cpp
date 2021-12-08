@@ -26,40 +26,40 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ExportStream_GCC_Native.cpp defines the CExportStream_GCC_Native Class.
-This is an abstract base stream class for exporting with GCC with std::streams
-
-Attention: Only use in UTF8-native environments!
+NMR_Platform.cpp implements several factory functions which create platform
+specific classes.
 
 --*/
 
-#ifndef __NMR_EXPORTSTREAM_GCC_NATIVE
-#define __NMR_EXPORTSTREAM_GCC_NATIVE
+#include "Common/Platform/NMR_Platform.h"
+#include "Common/NMR_Exception.h"
 
-#include "Common/Platform/NMR_ExportStream.h"
-#include "Common/NMR_Types.h"
-#include "Common/NMR_Local.h"
 
-#include <iostream>
-#include <fstream>
+#define NMR_PLATFORM_XMLREADER_BUFFERSIZE 65536
+
+#include "Common/Platform/NMR_ImportStream_Native.h"
+#include "Common/Platform/NMR_ExportStream_Native.h"
+#include "Common/Platform/NMR_XmlReader_Native.h"
+#include "Common/NMR_StringUtils.h"
+
 
 namespace NMR {
 
-	class CExportStream_GCC_Native : public CExportStream {
-	private:
-		std::ofstream m_Stream;
-	public:
-		CExportStream_GCC_Native(_In_ const nfWChar * pwszFileName);
-		~CExportStream_GCC_Native();
+	PImportStream fnCreateImportStreamInstance (_In_ const nfChar * pszFileName)
+	{
+		std::wstring sFileName = fnUTF8toUTF16(pszFileName);
+		return std::make_shared<CImportStream_Native> (sFileName.c_str());
+	}
 
-		virtual nfBool seekPosition(_In_ nfUint64 position, _In_ nfBool bHasToSucceed);
-		virtual nfBool seekForward(_In_ nfUint64 bytes, _In_ nfBool bHasToSucceed);
-		virtual nfBool seekFromEnd(_In_ nfUint64 bytes, _In_ nfBool bHasToSucceed);
-		virtual nfUint64 getPosition ();
-		virtual nfUint64 writeBuffer(_In_ const void * pBuffer, _In_ nfUint64 cbTotalBytesToWrite);
-		void copyFrom(_In_ CImportStream * pImportStream, _In_ nfUint64 cbCount, _In_ nfUint32 cbBufferSize);
-	};
+	PExportStream fnCreateExportStreamInstance (_In_ const nfChar * pszFileName)
+	{
+		std::wstring sFileName = fnUTF8toUTF16(pszFileName);
+		return std::make_shared<CExportStream_Native> (sFileName.c_str());
+	}
+
+	PXmlReader fnCreateXMLReaderInstance (_In_ PImportStream pImportStream, PProgressMonitor pProgressMonitor)
+	{
+		return std::make_shared<CXmlReader_Native> (pImportStream, NMR_PLATFORM_XMLREADER_BUFFERSIZE, pProgressMonitor);
+	}
 
 }
-
-#endif // __NMR_EXPORTSTREAM_GCC_NATIVE

@@ -26,10 +26,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ExportStream_GCC_Native.cpp implements the CExportStream_GCC_Native Class.
-This is an abstract base stream class for exporting with GCC with std::streams
-
-Attention: Only use in UTF8-native environments!
+NMR_ExportStream_Callback.cpp implements the CExportStream_Callback Class.
+This is a stream class for exporting via a callback to custom data writer.
 
 --*/
 

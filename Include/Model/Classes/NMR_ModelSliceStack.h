@@ -63,7 +63,7 @@ namespace NMR {
 		~CModelSliceStack();
 
 		PSlice AddSlice(const nfDouble dZTop);
-		void AddSliceRef(PModelSliceStack);
+		void AddSliceRef(PModelSliceStack pOtherStack, bool bPedantic = true);
 
 		nfUint32 getSliceCount();
 		PSlice getSlice(nfUint32 nIndex);

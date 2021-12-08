@@ -69,7 +69,7 @@ namespace NMR {
 		return pSlice;
 	}
 
-	void CModelSliceStack::AddSliceRef(PModelSliceStack pOtherStack)
+	void CModelSliceStack::AddSliceRef(PModelSliceStack pOtherStack, bool bPedantic)
 	{
 		if (!AllowsReferences()) {
 			throw CNMRException(NMR_ERROR_SLICES_MIXING_SLICES_WITH_SLICEREFS);
@@ -80,8 +80,10 @@ namespace NMR {
 		if (pOtherStack->getSliceRefCount() > 0) {
 			throw CNMRException(NMR_ERROR_SLICES_REFS_LEVELTOODEEP);
 		}
-		if (pOtherStack->getZBottom() < getHighestZ()) {
-			throw CNMRException(NMR_ERROR_SLICES_REFS_Z_NOTINCREASING);
+		if (bPedantic) {
+			if (pOtherStack->getZBottom() < getHighestZ()) {
+				throw CNMRException(NMR_ERROR_SLICES_REFS_Z_NOTINCREASING);
+			}
 		}
 
 		// TODO: check in model, whether "this" is used as sliceref anywhere in the model
