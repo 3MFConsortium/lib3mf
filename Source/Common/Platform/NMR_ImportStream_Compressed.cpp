@@ -128,8 +128,9 @@ namespace NMR {
 		nfUint64 currentPosition = 0;
 		nfUint64 chunkSize = IMPORTSTREAM_READ_BUFFER_CHUNKSIZE;
 		do {
-			m_decompressedBuffer.resize(m_decompressedBuffer.size() + chunkSize);
-			bytesRead = readIntoBuffer(&m_decompressedBuffer[currentPosition], chunkSize, false);
+			m_decompressedBuffer.resize((size_t) m_decompressedBuffer.size() + (size_t) chunkSize);
+			bytesRead = readIntoBuffer(&m_decompressedBuffer[(size_t)currentPosition], chunkSize, false);
+
 			currentPosition += bytesRead;
 		} while (chunkSize == bytesRead);
 		return std::make_shared<CImportStream_Shared_Memory>(m_decompressedBuffer.data(), m_decompressedBuffer.size());

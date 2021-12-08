@@ -128,7 +128,10 @@ namespace NMR {
 		case NMR_ERROR_ZIPCONTAINSINCONSISTENCIES: return "ZIP file contains inconsistencies. It might load with errors or incorrectly.";
 		case NMR_ERROR_XMLNAMESPACEALREADYREGISTERED: return "An XML namespace is already registered.";
 		case NMR_ERROR_XMLPREFIXALREADYREGISTERED: return "An XML prefix is already registered.";
-
+		case NMR_ERROR_COULDNOTINITINFLATE: return "Failed to initialize a zlib buffer";
+		case NMR_ERROR_COULDNOTINFLATE: return "Failed to decompress part";
+		case NMR_ERROR_COULDNOTINITDEFLATE: return "Failed to initialize a zlib buffer";
+		case NMR_ERROR_TOOMANYSLICES: return "Too many slices";
 
 		// Unhandled exception
 		case NMR_ERROR_GENERICEXCEPTION: return NMR_GENERICEXCEPTIONSTRING;
