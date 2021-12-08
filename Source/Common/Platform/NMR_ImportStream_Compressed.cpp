@@ -129,7 +129,7 @@ namespace NMR {
 		nfUint64 chunkSize = IMPORTSTREAM_READ_BUFFER_CHUNKSIZE;
 		do {
 			m_decompressedBuffer.resize((size_t) m_decompressedBuffer.size() + (size_t) chunkSize);
-			bytesRead = readBuffer(&m_decompressedBuffer[(size_t)currentPosition], chunkSize, false);
+			bytesRead = readIntoBuffer(&m_decompressedBuffer[(size_t)currentPosition], chunkSize, false);
 
 			currentPosition += bytesRead;
 		} while (chunkSize == bytesRead);
