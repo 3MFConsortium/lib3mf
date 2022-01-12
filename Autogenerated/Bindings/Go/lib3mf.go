@@ -2393,6 +2393,24 @@ Lib3MFResult CCall_lib3mf_resourcedata_getadditionalauthenticationdata(Lib3MFHan
 }
 
 
+Lib3MFResult CCall_lib3mf_resourcedata_getcustominitvector(Lib3MFHandle libraryHandle, Lib3MF_ResourceData pResourceData, const Lib3MF_uint64 nIVBufferSize, Lib3MF_uint64* pIVNeededCount, Lib3MF_uint8 * pIVBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ResourceData_GetCustomInitVector (pResourceData, nIVBufferSize, pIVNeededCount, pIVBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_resourcedata_setcustominitvector(Lib3MFHandle libraryHandle, Lib3MF_ResourceData pResourceData, Lib3MF_uint64 nIVBufferSize, const Lib3MF_uint8 * pIVBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ResourceData_SetCustomInitVector (pResourceData, nIVBufferSize, pIVBuffer);
+}
+
+
 Lib3MFResult CCall_lib3mf_resourcedatagroup_getkeyuuid(Lib3MFHandle libraryHandle, Lib3MF_ResourceDataGroup pResourceDataGroup, const Lib3MF_uint32 nUUIDBufferSize, Lib3MF_uint32* pUUIDNeededChars, char * pUUIDBuffer)
 {
 	if (libraryHandle == 0) 
@@ -2426,6 +2444,42 @@ Lib3MFResult CCall_lib3mf_resourcedatagroup_removeaccessright(Lib3MFHandle libra
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
 	return wrapperTable->m_ResourceDataGroup_RemoveAccessRight (pResourceDataGroup, pConsumer);
+}
+
+
+Lib3MFResult CCall_lib3mf_resourcedatagroup_addcustominformation(Lib3MFHandle libraryHandle, Lib3MF_ResourceDataGroup pResourceDataGroup, const char * pNameSpace, const char * pName, const char * pValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ResourceDataGroup_AddCustomInformation (pResourceDataGroup, pNameSpace, pName, pValue);
+}
+
+
+Lib3MFResult CCall_lib3mf_resourcedatagroup_hascustominformation(Lib3MFHandle libraryHandle, Lib3MF_ResourceDataGroup pResourceDataGroup, const char * pNameSpace, const char * pName, bool * pHasValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ResourceDataGroup_HasCustomInformation (pResourceDataGroup, pNameSpace, pName, pHasValue);
+}
+
+
+Lib3MFResult CCall_lib3mf_resourcedatagroup_removecustominformation(Lib3MFHandle libraryHandle, Lib3MF_ResourceDataGroup pResourceDataGroup, const char * pNameSpace, const char * pName, bool * pValueExisted)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ResourceDataGroup_RemoveCustomInformation (pResourceDataGroup, pNameSpace, pName, pValueExisted);
+}
+
+
+Lib3MFResult CCall_lib3mf_resourcedatagroup_getcustominformation(Lib3MFHandle libraryHandle, Lib3MF_ResourceDataGroup pResourceDataGroup, const char * pNameSpace, const char * pName, const Lib3MF_uint32 nValueBufferSize, Lib3MF_uint32* pValueNeededChars, char * pValueBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ResourceDataGroup_GetCustomInformation (pResourceDataGroup, pNameSpace, pName, nValueBufferSize, pValueNeededChars, pValueBuffer);
 }
 
 
@@ -3586,6 +3640,10 @@ const LIB3MF_ERROR_KEYSTORECONSUMERNOTFOUND = 3002;
 const LIB3MF_ERROR_KEYSTORERESOURCEDATANOTFOUND = 3003;
 const LIB3MF_ERROR_SECURECONTEXTNOTREGISTERED = 3004;
 const LIB3MF_ERROR_INVALIDKEYSIZE = 3005;
+const LIB3MF_ERROR_CUSTOMINFORMATIONNOTFOUND = 3006;
+const LIB3MF_ERROR_INVALIDCUSTOMNAMESPACE = 3007;
+const LIB3MF_ERROR_INVALIDCUSTOMNAME = 3008;
+const LIB3MF_ERROR_INVALIDINITVECTOR = 3009;
 
 // WrappedError is an error that wraps a Lib3MF error.
 type WrappedError struct {
@@ -3683,6 +3741,14 @@ func errorMessage(errorcode uint32) string {
 		return "A Key or Conentent encryption callback has not been registered";
 	case LIB3MF_ERROR_INVALIDKEYSIZE:
 		return "The key siue is invalid";
+	case LIB3MF_ERROR_CUSTOMINFORMATIONNOTFOUND:
+		return "The custom information has not been found";
+	case LIB3MF_ERROR_INVALIDCUSTOMNAMESPACE:
+		return "Invalid custom namespace";
+	case LIB3MF_ERROR_INVALIDCUSTOMNAME:
+		return "Invalid custom name tag";
+	case LIB3MF_ERROR_INVALIDINITVECTOR:
+		return "Invalid init vector";
 	default:
 		return "unknown";
 	}
@@ -7051,6 +7117,32 @@ func (inst ResourceData) GetAdditionalAuthenticationData(byteData []uint8) ([]ui
 	return byteData[:int(neededforbyteData)], nil
 }
 
+// GetCustomInitVector gets the custom Initialization Vector (in base64).
+func (inst ResourceData) GetCustomInitVector(iV []uint8) ([]uint8, error) {
+	var neededforiV C.uint64_t
+	ret := C.CCall_lib3mf_resourcedata_getcustominitvector(inst.wrapperRef.LibraryHandle, inst.Ref, 0, &neededforiV, nil)
+	if ret != 0 {
+		return nil, makeError(uint32(ret))
+	}
+	if len(iV) < int(neededforiV) {
+	 iV = append(iV, make([]uint8, int(neededforiV)-len(iV))...)
+	}
+	ret = C.CCall_lib3mf_resourcedata_getcustominitvector(inst.wrapperRef.LibraryHandle, inst.Ref, neededforiV, nil, (*C.uint8_t)(unsafe.Pointer(&iV[0])))
+	if ret != 0 {
+		return nil, makeError(uint32(ret))
+	}
+	return iV[:int(neededforiV)], nil
+}
+
+// SetCustomInitVector sets a custom Initialization Vector (in base64).
+func (inst ResourceData) SetCustomInitVector(iV []uint8) error {
+	ret := C.CCall_lib3mf_resourcedata_setcustominitvector(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint64_t(len(iV)), (*C.uint8_t)(unsafe.Pointer(&iV[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
 
 // ResourceDataGroup represents a Lib3MF class.
 type ResourceDataGroup struct {
@@ -7110,6 +7202,52 @@ func (inst ResourceDataGroup) RemoveAccessRight(consumer Consumer) error {
 		return makeError(uint32(ret))
 	}
 	return nil
+}
+
+// AddCustomInformation adds a custom information string to the resource data group. Overwrites existing value with same name.
+func (inst ResourceDataGroup) AddCustomInformation(nameSpace string, name string, value string) error {
+	ret := C.CCall_lib3mf_resourcedatagroup_addcustominformation(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpace)[0])), (*C.char)(unsafe.Pointer(&[]byte(name)[0])), (*C.char)(unsafe.Pointer(&[]byte(value)[0])))
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// HasCustomInformation checks for a custom information string of the resource data group.
+func (inst ResourceDataGroup) HasCustomInformation(nameSpace string, name string) (bool, error) {
+	var hasValue C.bool
+	ret := C.CCall_lib3mf_resourcedatagroup_hascustominformation(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpace)[0])), (*C.char)(unsafe.Pointer(&[]byte(name)[0])), &hasValue)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(hasValue), nil
+}
+
+// RemoveCustomInformation removes a custom information string of the resource data group.
+func (inst ResourceDataGroup) RemoveCustomInformation(nameSpace string, name string) (bool, error) {
+	var valueExisted C.bool
+	ret := C.CCall_lib3mf_resourcedatagroup_removecustominformation(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpace)[0])), (*C.char)(unsafe.Pointer(&[]byte(name)[0])), &valueExisted)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(valueExisted), nil
+}
+
+// GetCustomInformation gets a custom information string to the resource data group. Fails if not existing.
+func (inst ResourceDataGroup) GetCustomInformation(nameSpace string, name string) (string, error) {
+	var neededforvalue C.uint32_t
+	var filledinvalue C.uint32_t
+	ret := C.CCall_lib3mf_resourcedatagroup_getcustominformation(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpace)[0])), (*C.char)(unsafe.Pointer(&[]byte(name)[0])), 0, &neededforvalue, nil)
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	bufferSizevalue := neededforvalue
+	buffervalue := make([]byte, bufferSizevalue)
+	ret = C.CCall_lib3mf_resourcedatagroup_getcustominformation(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpace)[0])), (*C.char)(unsafe.Pointer(&[]byte(name)[0])), bufferSizevalue, &filledinvalue, (*C.char)(unsafe.Pointer(&buffervalue[0])))
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	return string(buffervalue[:(filledinvalue-1)]), nil
 }
 
 

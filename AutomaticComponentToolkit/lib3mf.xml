@@ -85,7 +85,10 @@
 		<error name="KEYSTORERESOURCEDATANOTFOUND" code="3003" description="A resource data has not been found"/>
 		<error name="SECURECONTEXTNOTREGISTERED" code="3004" description="A Key or Conentent encryption callback has not been registered"/>
 		<error name="INVALIDKEYSIZE" code="3005" description="The key siue is invalid"/>
-
+		<error name="CUSTOMINFORMATIONNOTFOUND" code="3006" description="The custom information has not been found"/>
+		<error name="INVALIDCUSTOMNAMESPACE" code="3007" description="Invalid custom namespace"/>
+		<error name="INVALIDCUSTOMNAME" code="3008" description="Invalid custom name tag"/>
+		<error name="INVALIDINITVECTOR" code="3009" description="Invalid init vector"/>
 	</errors>
 
 	<enum name="PropertyType">
@@ -1304,6 +1307,12 @@
 		<method name="GetAdditionalAuthenticationData" description="Tells whether this ResourceData is compressed or not">
 			<param name="ByteData" type="basicarray" class="uint8" pass="out" description="The compression method"/>
 		</method>
+		<method name="GetCustomInitVector" description="Gets the custom Initialization Vector (in base64)">
+			<param name="IV" type="basicarray" class="uint8" pass="out" description="The Initialization Vector encoded in base 64. Empty string if none is set."/>
+		</method>
+		<method name="SetCustomInitVector" description="Sets a custom Initialization Vector (in base64)">
+			<param name="IV" type="basicarray" class="uint8" pass="in" description="The new Initialization Vector encoded in base 64. Empty string if none shall be used."/>
+		</method>
 	</class>
 
 	<class name="ResourceDataGroup" parent="Base">
@@ -1323,6 +1332,26 @@
 		</method>
 		<method name="RemoveAccessRight" description="Removes access from a Consumer on this resource data group">
 			<param name="Consumer" type="class" class="Consumer" pass="in" description="The Consumer instance"/>
+		</method>
+		<method name="AddCustomInformation" description="Adds a custom information string to the resource data group. Overwrites existing value with same name.">
+			<param name="NameSpace" type="string" pass="in" description="A proper XML namespace for the Information."/>
+			<param name="Name" type="string" pass="in" description="A proper name for the Information. Only alphanumerical characters are allowed, not starting with a number."/>
+			<param name="Value" type="string" pass="in" description="Information string value to add."/>
+		</method>
+		<method name="HasCustomInformation" description="Checks for a custom information string of the resource data group">
+			<param name="NameSpace" type="string" pass="in" description="A proper XML namespace for the Information."/>
+			<param name="Name" type="string" pass="in" description="A proper name for the Information. Only alphanumerical characters are allowed, not starting with a number."/>
+			<param name="HasValue" type="bool" pass="return" description="Information string value exists."/>
+		</method>
+		<method name="RemoveCustomInformation" description="Removes a custom information string of the resource data group">
+			<param name="NameSpace" type="string" pass="in" description="A proper XML namespace for the Information."/>
+			<param name="Name" type="string" pass="in" description="A proper name for the Information. Only alphanumerical characters are allowed, not starting with a number."/>
+			<param name="ValueExisted" type="bool" pass="return" description="Information string value existed."/>
+		</method>
+		<method name="GetCustomInformation" description="Gets a custom information string to the resource data group. Fails if not existing.">
+			<param name="NameSpace" type="string" pass="in" description="A proper XML namespace for the Information."/>
+			<param name="Name" type="string" pass="in" description="A proper name for the Information. Only alphanumerical characters are allowed, not starting with a number."/>
+			<param name="Value" type="string" pass="return" description="Information string value."/>
 		</method>
 	</class>
 	<class name="KeyStore" parent="Base">

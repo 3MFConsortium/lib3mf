@@ -1099,6 +1099,12 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_resourcedata_getadditionalauthenticationdata", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ResourceData_GetAdditionalAuthenticationData (IntPtr Handle, UInt64 sizeByteData, out UInt64 neededByteData, IntPtr dataByteData);
 
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_resourcedata_getcustominitvector", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ResourceData_GetCustomInitVector (IntPtr Handle, UInt64 sizeIV, out UInt64 neededIV, IntPtr dataIV);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_resourcedata_setcustominitvector", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ResourceData_SetCustomInitVector (IntPtr Handle, UInt64 sizeIV, IntPtr dataIV);
+
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_resourcedatagroup_getkeyuuid", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ResourceDataGroup_GetKeyUUID (IntPtr Handle, UInt32 sizeUUID, out UInt32 neededUUID, IntPtr dataUUID);
 
@@ -1110,6 +1116,18 @@ namespace Lib3MF {
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_resourcedatagroup_removeaccessright", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ResourceDataGroup_RemoveAccessRight (IntPtr Handle, IntPtr AConsumer);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_resourcedatagroup_addcustominformation", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ResourceDataGroup_AddCustomInformation (IntPtr Handle, byte[] ANameSpace, byte[] AName, byte[] AValue);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_resourcedatagroup_hascustominformation", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ResourceDataGroup_HasCustomInformation (IntPtr Handle, byte[] ANameSpace, byte[] AName, out Byte AHasValue);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_resourcedatagroup_removecustominformation", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ResourceDataGroup_RemoveCustomInformation (IntPtr Handle, byte[] ANameSpace, byte[] AName, out Byte AValueExisted);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_resourcedatagroup_getcustominformation", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ResourceDataGroup_GetCustomInformation (IntPtr Handle, byte[] ANameSpace, byte[] AName, UInt32 sizeValue, out UInt32 neededValue, IntPtr dataValue);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_keystore_addconsumer", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 KeyStore_AddConsumer (IntPtr Handle, byte[] AConsumerID, byte[] AKeyID, byte[] AKeyValue, out IntPtr AConsumer);
@@ -4339,6 +4357,27 @@ namespace Lib3MF {
 			dataByteData.Free();
 		}
 
+		public void GetCustomInitVector (out Byte[] AIV)
+		{
+			UInt64 sizeIV = 0;
+			UInt64 neededIV = 0;
+			CheckError(Internal.Lib3MFWrapper.ResourceData_GetCustomInitVector (Handle, sizeIV, out neededIV, IntPtr.Zero));
+			sizeIV = neededIV;
+			AIV = new Byte[sizeIV];
+			GCHandle dataIV = GCHandle.Alloc(AIV, GCHandleType.Pinned);
+
+			CheckError(Internal.Lib3MFWrapper.ResourceData_GetCustomInitVector (Handle, sizeIV, out neededIV, dataIV.AddrOfPinnedObject()));
+			dataIV.Free();
+		}
+
+		public void SetCustomInitVector (Byte[] AIV)
+		{
+			GCHandle dataIV = GCHandle.Alloc(AIV, GCHandleType.Pinned);
+
+			CheckError(Internal.Lib3MFWrapper.ResourceData_SetCustomInitVector (Handle, (UInt64) AIV.Length, dataIV.AddrOfPinnedObject()));
+			dataIV.Free ();
+		}
+
 	}
 
 	public class CResourceDataGroup : CBase
@@ -4393,6 +4432,51 @@ namespace Lib3MF {
 				AConsumerHandle = AConsumer.GetHandle();
 
 			CheckError(Internal.Lib3MFWrapper.ResourceDataGroup_RemoveAccessRight (Handle, AConsumerHandle));
+		}
+
+		public void AddCustomInformation (String ANameSpace, String AName, String AValue)
+		{
+			byte[] byteNameSpace = Encoding.UTF8.GetBytes(ANameSpace + char.MinValue);
+			byte[] byteName = Encoding.UTF8.GetBytes(AName + char.MinValue);
+			byte[] byteValue = Encoding.UTF8.GetBytes(AValue + char.MinValue);
+
+			CheckError(Internal.Lib3MFWrapper.ResourceDataGroup_AddCustomInformation (Handle, byteNameSpace, byteName, byteValue));
+		}
+
+		public bool HasCustomInformation (String ANameSpace, String AName)
+		{
+			byte[] byteNameSpace = Encoding.UTF8.GetBytes(ANameSpace + char.MinValue);
+			byte[] byteName = Encoding.UTF8.GetBytes(AName + char.MinValue);
+			Byte resultHasValue = 0;
+
+			CheckError(Internal.Lib3MFWrapper.ResourceDataGroup_HasCustomInformation (Handle, byteNameSpace, byteName, out resultHasValue));
+			return (resultHasValue != 0);
+		}
+
+		public bool RemoveCustomInformation (String ANameSpace, String AName)
+		{
+			byte[] byteNameSpace = Encoding.UTF8.GetBytes(ANameSpace + char.MinValue);
+			byte[] byteName = Encoding.UTF8.GetBytes(AName + char.MinValue);
+			Byte resultValueExisted = 0;
+
+			CheckError(Internal.Lib3MFWrapper.ResourceDataGroup_RemoveCustomInformation (Handle, byteNameSpace, byteName, out resultValueExisted));
+			return (resultValueExisted != 0);
+		}
+
+		public String GetCustomInformation (String ANameSpace, String AName)
+		{
+			byte[] byteNameSpace = Encoding.UTF8.GetBytes(ANameSpace + char.MinValue);
+			byte[] byteName = Encoding.UTF8.GetBytes(AName + char.MinValue);
+			UInt32 sizeValue = 0;
+			UInt32 neededValue = 0;
+			CheckError(Internal.Lib3MFWrapper.ResourceDataGroup_GetCustomInformation (Handle, byteNameSpace, byteName, sizeValue, out neededValue, IntPtr.Zero));
+			sizeValue = neededValue;
+			byte[] bytesValue = new byte[sizeValue];
+			GCHandle dataValue = GCHandle.Alloc(bytesValue, GCHandleType.Pinned);
+
+			CheckError(Internal.Lib3MFWrapper.ResourceDataGroup_GetCustomInformation (Handle, byteNameSpace, byteName, sizeValue, out neededValue, dataValue.AddrOfPinnedObject()));
+			dataValue.Free();
+			return Encoding.UTF8.GetString(bytesValue).TrimEnd(char.MinValue);
 		}
 
 	}

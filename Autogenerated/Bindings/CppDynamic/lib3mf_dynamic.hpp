@@ -360,6 +360,10 @@ public:
 			case LIB3MF_ERROR_KEYSTORERESOURCEDATANOTFOUND: return "KEYSTORERESOURCEDATANOTFOUND";
 			case LIB3MF_ERROR_SECURECONTEXTNOTREGISTERED: return "SECURECONTEXTNOTREGISTERED";
 			case LIB3MF_ERROR_INVALIDKEYSIZE: return "INVALIDKEYSIZE";
+			case LIB3MF_ERROR_CUSTOMINFORMATIONNOTFOUND: return "CUSTOMINFORMATIONNOTFOUND";
+			case LIB3MF_ERROR_INVALIDCUSTOMNAMESPACE: return "INVALIDCUSTOMNAMESPACE";
+			case LIB3MF_ERROR_INVALIDCUSTOMNAME: return "INVALIDCUSTOMNAME";
+			case LIB3MF_ERROR_INVALIDINITVECTOR: return "INVALIDINITVECTOR";
 		}
 		return "UNKNOWN";
 	}
@@ -410,6 +414,10 @@ public:
 			case LIB3MF_ERROR_KEYSTORERESOURCEDATANOTFOUND: return "A resource data has not been found";
 			case LIB3MF_ERROR_SECURECONTEXTNOTREGISTERED: return "A Key or Conentent encryption callback has not been registered";
 			case LIB3MF_ERROR_INVALIDKEYSIZE: return "The key siue is invalid";
+			case LIB3MF_ERROR_CUSTOMINFORMATIONNOTFOUND: return "The custom information has not been found";
+			case LIB3MF_ERROR_INVALIDCUSTOMNAMESPACE: return "Invalid custom namespace";
+			case LIB3MF_ERROR_INVALIDCUSTOMNAME: return "Invalid custom name tag";
+			case LIB3MF_ERROR_INVALIDINITVECTOR: return "Invalid init vector";
 		}
 		return "unknown error";
 	}
@@ -1506,6 +1514,8 @@ public:
 	inline eEncryptionAlgorithm GetEncryptionAlgorithm();
 	inline eCompression GetCompression();
 	inline void GetAdditionalAuthenticationData(std::vector<Lib3MF_uint8> & ByteDataBuffer);
+	inline void GetCustomInitVector(std::vector<Lib3MF_uint8> & IVBuffer);
+	inline void SetCustomInitVector(const CInputVector<Lib3MF_uint8> & IVBuffer);
 };
 	
 /*************************************************************************************************************************
@@ -1526,6 +1536,10 @@ public:
 	inline PAccessRight AddAccessRight(classParam<CConsumer> pConsumer, const eWrappingAlgorithm eWrappingAlgorithm, const eMgfAlgorithm eMgfAlgorithm, const eDigestMethod eDigestMethod);
 	inline PAccessRight FindAccessRightByConsumer(classParam<CConsumer> pConsumer);
 	inline void RemoveAccessRight(classParam<CConsumer> pConsumer);
+	inline void AddCustomInformation(const std::string & sNameSpace, const std::string & sName, const std::string & sValue);
+	inline bool HasCustomInformation(const std::string & sNameSpace, const std::string & sName);
+	inline bool RemoveCustomInformation(const std::string & sNameSpace, const std::string & sName);
+	inline std::string GetCustomInformation(const std::string & sNameSpace, const std::string & sName);
 };
 	
 /*************************************************************************************************************************
@@ -2176,10 +2190,16 @@ public:
 		pWrapperTable->m_ResourceData_GetEncryptionAlgorithm = nullptr;
 		pWrapperTable->m_ResourceData_GetCompression = nullptr;
 		pWrapperTable->m_ResourceData_GetAdditionalAuthenticationData = nullptr;
+		pWrapperTable->m_ResourceData_GetCustomInitVector = nullptr;
+		pWrapperTable->m_ResourceData_SetCustomInitVector = nullptr;
 		pWrapperTable->m_ResourceDataGroup_GetKeyUUID = nullptr;
 		pWrapperTable->m_ResourceDataGroup_AddAccessRight = nullptr;
 		pWrapperTable->m_ResourceDataGroup_FindAccessRightByConsumer = nullptr;
 		pWrapperTable->m_ResourceDataGroup_RemoveAccessRight = nullptr;
+		pWrapperTable->m_ResourceDataGroup_AddCustomInformation = nullptr;
+		pWrapperTable->m_ResourceDataGroup_HasCustomInformation = nullptr;
+		pWrapperTable->m_ResourceDataGroup_RemoveCustomInformation = nullptr;
+		pWrapperTable->m_ResourceDataGroup_GetCustomInformation = nullptr;
 		pWrapperTable->m_KeyStore_AddConsumer = nullptr;
 		pWrapperTable->m_KeyStore_GetConsumerCount = nullptr;
 		pWrapperTable->m_KeyStore_GetConsumer = nullptr;
@@ -4646,6 +4666,24 @@ public:
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
+		pWrapperTable->m_ResourceData_GetCustomInitVector = (PLib3MFResourceData_GetCustomInitVectorPtr) GetProcAddress(hLibrary, "lib3mf_resourcedata_getcustominitvector");
+		#else // _WIN32
+		pWrapperTable->m_ResourceData_GetCustomInitVector = (PLib3MFResourceData_GetCustomInitVectorPtr) dlsym(hLibrary, "lib3mf_resourcedata_getcustominitvector");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ResourceData_GetCustomInitVector == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ResourceData_SetCustomInitVector = (PLib3MFResourceData_SetCustomInitVectorPtr) GetProcAddress(hLibrary, "lib3mf_resourcedata_setcustominitvector");
+		#else // _WIN32
+		pWrapperTable->m_ResourceData_SetCustomInitVector = (PLib3MFResourceData_SetCustomInitVectorPtr) dlsym(hLibrary, "lib3mf_resourcedata_setcustominitvector");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ResourceData_SetCustomInitVector == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
 		pWrapperTable->m_ResourceDataGroup_GetKeyUUID = (PLib3MFResourceDataGroup_GetKeyUUIDPtr) GetProcAddress(hLibrary, "lib3mf_resourcedatagroup_getkeyuuid");
 		#else // _WIN32
 		pWrapperTable->m_ResourceDataGroup_GetKeyUUID = (PLib3MFResourceDataGroup_GetKeyUUIDPtr) dlsym(hLibrary, "lib3mf_resourcedatagroup_getkeyuuid");
@@ -4679,6 +4717,42 @@ public:
 		dlerror();
 		#endif // _WIN32
 		if (pWrapperTable->m_ResourceDataGroup_RemoveAccessRight == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ResourceDataGroup_AddCustomInformation = (PLib3MFResourceDataGroup_AddCustomInformationPtr) GetProcAddress(hLibrary, "lib3mf_resourcedatagroup_addcustominformation");
+		#else // _WIN32
+		pWrapperTable->m_ResourceDataGroup_AddCustomInformation = (PLib3MFResourceDataGroup_AddCustomInformationPtr) dlsym(hLibrary, "lib3mf_resourcedatagroup_addcustominformation");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ResourceDataGroup_AddCustomInformation == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ResourceDataGroup_HasCustomInformation = (PLib3MFResourceDataGroup_HasCustomInformationPtr) GetProcAddress(hLibrary, "lib3mf_resourcedatagroup_hascustominformation");
+		#else // _WIN32
+		pWrapperTable->m_ResourceDataGroup_HasCustomInformation = (PLib3MFResourceDataGroup_HasCustomInformationPtr) dlsym(hLibrary, "lib3mf_resourcedatagroup_hascustominformation");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ResourceDataGroup_HasCustomInformation == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ResourceDataGroup_RemoveCustomInformation = (PLib3MFResourceDataGroup_RemoveCustomInformationPtr) GetProcAddress(hLibrary, "lib3mf_resourcedatagroup_removecustominformation");
+		#else // _WIN32
+		pWrapperTable->m_ResourceDataGroup_RemoveCustomInformation = (PLib3MFResourceDataGroup_RemoveCustomInformationPtr) dlsym(hLibrary, "lib3mf_resourcedatagroup_removecustominformation");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ResourceDataGroup_RemoveCustomInformation == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ResourceDataGroup_GetCustomInformation = (PLib3MFResourceDataGroup_GetCustomInformationPtr) GetProcAddress(hLibrary, "lib3mf_resourcedatagroup_getcustominformation");
+		#else // _WIN32
+		pWrapperTable->m_ResourceDataGroup_GetCustomInformation = (PLib3MFResourceDataGroup_GetCustomInformationPtr) dlsym(hLibrary, "lib3mf_resourcedatagroup_getcustominformation");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ResourceDataGroup_GetCustomInformation == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
@@ -6584,6 +6658,14 @@ public:
 		if ( (eLookupError != 0) || (pWrapperTable->m_ResourceData_GetAdditionalAuthenticationData == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
+		eLookupError = (*pLookup)("lib3mf_resourcedata_getcustominitvector", (void**)&(pWrapperTable->m_ResourceData_GetCustomInitVector));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ResourceData_GetCustomInitVector == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_resourcedata_setcustominitvector", (void**)&(pWrapperTable->m_ResourceData_SetCustomInitVector));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ResourceData_SetCustomInitVector == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
 		eLookupError = (*pLookup)("lib3mf_resourcedatagroup_getkeyuuid", (void**)&(pWrapperTable->m_ResourceDataGroup_GetKeyUUID));
 		if ( (eLookupError != 0) || (pWrapperTable->m_ResourceDataGroup_GetKeyUUID == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
@@ -6598,6 +6680,22 @@ public:
 		
 		eLookupError = (*pLookup)("lib3mf_resourcedatagroup_removeaccessright", (void**)&(pWrapperTable->m_ResourceDataGroup_RemoveAccessRight));
 		if ( (eLookupError != 0) || (pWrapperTable->m_ResourceDataGroup_RemoveAccessRight == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_resourcedatagroup_addcustominformation", (void**)&(pWrapperTable->m_ResourceDataGroup_AddCustomInformation));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ResourceDataGroup_AddCustomInformation == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_resourcedatagroup_hascustominformation", (void**)&(pWrapperTable->m_ResourceDataGroup_HasCustomInformation));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ResourceDataGroup_HasCustomInformation == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_resourcedatagroup_removecustominformation", (void**)&(pWrapperTable->m_ResourceDataGroup_RemoveCustomInformation));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ResourceDataGroup_RemoveCustomInformation == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_resourcedatagroup_getcustominformation", (void**)&(pWrapperTable->m_ResourceDataGroup_GetCustomInformation));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ResourceDataGroup_GetCustomInformation == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("lib3mf_keystore_addconsumer", (void**)&(pWrapperTable->m_KeyStore_AddConsumer));
@@ -10273,6 +10371,28 @@ public:
 	}
 	
 	/**
+	* CResourceData::GetCustomInitVector - Gets the custom Initialization Vector (in base64)
+	* @param[out] IVBuffer - The Initialization Vector encoded in base 64. Empty string if none is set.
+	*/
+	void CResourceData::GetCustomInitVector(std::vector<Lib3MF_uint8> & IVBuffer)
+	{
+		Lib3MF_uint64 elementsNeededIV = 0;
+		Lib3MF_uint64 elementsWrittenIV = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ResourceData_GetCustomInitVector(m_pHandle, 0, &elementsNeededIV, nullptr));
+		IVBuffer.resize((size_t) elementsNeededIV);
+		CheckError(m_pWrapper->m_WrapperTable.m_ResourceData_GetCustomInitVector(m_pHandle, elementsNeededIV, &elementsWrittenIV, IVBuffer.data()));
+	}
+	
+	/**
+	* CResourceData::SetCustomInitVector - Sets a custom Initialization Vector (in base64)
+	* @param[in] IVBuffer - The new Initialization Vector encoded in base 64. Empty string if none shall be used.
+	*/
+	void CResourceData::SetCustomInitVector(const CInputVector<Lib3MF_uint8> & IVBuffer)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_ResourceData_SetCustomInitVector(m_pHandle, (Lib3MF_uint64)IVBuffer.size(), IVBuffer.data()));
+	}
+	
+	/**
 	 * Method definitions for class CResourceDataGroup
 	 */
 	
@@ -10337,6 +10457,62 @@ public:
 	{
 		Lib3MFHandle hConsumer = pConsumer.GetHandle();
 		CheckError(m_pWrapper->m_WrapperTable.m_ResourceDataGroup_RemoveAccessRight(m_pHandle, hConsumer));
+	}
+	
+	/**
+	* CResourceDataGroup::AddCustomInformation - Adds a custom information string to the resource data group. Overwrites existing value with same name.
+	* @param[in] sNameSpace - A proper XML namespace for the Information.
+	* @param[in] sName - A proper name for the Information. Only alphanumerical characters are allowed, not starting with a number.
+	* @param[in] sValue - Information string value to add.
+	*/
+	void CResourceDataGroup::AddCustomInformation(const std::string & sNameSpace, const std::string & sName, const std::string & sValue)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_ResourceDataGroup_AddCustomInformation(m_pHandle, sNameSpace.c_str(), sName.c_str(), sValue.c_str()));
+	}
+	
+	/**
+	* CResourceDataGroup::HasCustomInformation - Checks for a custom information string of the resource data group
+	* @param[in] sNameSpace - A proper XML namespace for the Information.
+	* @param[in] sName - A proper name for the Information. Only alphanumerical characters are allowed, not starting with a number.
+	* @return Information string value exists.
+	*/
+	bool CResourceDataGroup::HasCustomInformation(const std::string & sNameSpace, const std::string & sName)
+	{
+		bool resultHasValue = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ResourceDataGroup_HasCustomInformation(m_pHandle, sNameSpace.c_str(), sName.c_str(), &resultHasValue));
+		
+		return resultHasValue;
+	}
+	
+	/**
+	* CResourceDataGroup::RemoveCustomInformation - Removes a custom information string of the resource data group
+	* @param[in] sNameSpace - A proper XML namespace for the Information.
+	* @param[in] sName - A proper name for the Information. Only alphanumerical characters are allowed, not starting with a number.
+	* @return Information string value existed.
+	*/
+	bool CResourceDataGroup::RemoveCustomInformation(const std::string & sNameSpace, const std::string & sName)
+	{
+		bool resultValueExisted = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ResourceDataGroup_RemoveCustomInformation(m_pHandle, sNameSpace.c_str(), sName.c_str(), &resultValueExisted));
+		
+		return resultValueExisted;
+	}
+	
+	/**
+	* CResourceDataGroup::GetCustomInformation - Gets a custom information string to the resource data group. Fails if not existing.
+	* @param[in] sNameSpace - A proper XML namespace for the Information.
+	* @param[in] sName - A proper name for the Information. Only alphanumerical characters are allowed, not starting with a number.
+	* @return Information string value.
+	*/
+	std::string CResourceDataGroup::GetCustomInformation(const std::string & sNameSpace, const std::string & sName)
+	{
+		Lib3MF_uint32 bytesNeededValue = 0;
+		Lib3MF_uint32 bytesWrittenValue = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ResourceDataGroup_GetCustomInformation(m_pHandle, sNameSpace.c_str(), sName.c_str(), 0, &bytesNeededValue, nullptr));
+		std::vector<char> bufferValue(bytesNeededValue);
+		CheckError(m_pWrapper->m_WrapperTable.m_ResourceDataGroup_GetCustomInformation(m_pHandle, sNameSpace.c_str(), sName.c_str(), bytesNeededValue, &bytesWrittenValue, &bufferValue[0]));
+		
+		return std::string(&bufferValue[0]);
 	}
 	
 	/**

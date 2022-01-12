@@ -61,6 +61,11 @@ namespace Lib3MF {
 			virtual void RemoveAccessRight(IConsumer * pConsumerInstance) override;
 			virtual std::string GetKeyUUID() override;
 
+			virtual void AddCustomInformation(const std::string& sNameSpace, const std::string& sName, const std::string& sValue) override;
+			virtual bool HasCustomInformation(const std::string& sNameSpace, const std::string& sName) override;
+			virtual bool RemoveCustomInformation(const std::string& sNameSpace, const std::string& sName) override;
+			virtual std::string GetCustomInformation(const std::string& sNameSpace, const std::string& sName) override;
+
 
 			inline NMR::PKeyStoreResourceDataGroup resourceDataGroup() const {
 				return m_pDataGroup;

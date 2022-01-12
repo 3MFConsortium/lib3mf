@@ -9694,6 +9694,8 @@ void CLib3MFResourceData::Init()
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetEncryptionAlgorithm", GetEncryptionAlgorithm);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetCompression", GetCompression);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetAdditionalAuthenticationData", GetAdditionalAuthenticationData);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetCustomInitVector", GetCustomInitVector);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "SetCustomInitVector", SetCustomInitVector);
 		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
 
 }
@@ -9813,6 +9815,46 @@ void CLib3MFResourceData::GetAdditionalAuthenticationData(const FunctionCallback
 		}
 }
 
+
+void CLib3MFResourceData::GetCustomInitVector(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetCustomInitVector.");
+        if (wrapperTable->m_ResourceData_GetCustomInitVector == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ResourceData::GetCustomInitVector.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ResourceData_GetCustomInitVector(instanceHandle, 0, nullptr, nullptr);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFResourceData::SetCustomInitVector(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method SetCustomInitVector.");
+        if (wrapperTable->m_ResourceData_SetCustomInitVector == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ResourceData::SetCustomInitVector.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ResourceData_SetCustomInitVector(instanceHandle, 0, nullptr);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
 /*************************************************************************************************************************
  Class CLib3MFResourceDataGroup Implementation
 **************************************************************************************************************************/
@@ -9840,6 +9882,10 @@ void CLib3MFResourceDataGroup::Init()
 		NODE_SET_PROTOTYPE_METHOD(tpl, "AddAccessRight", AddAccessRight);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "FindAccessRightByConsumer", FindAccessRightByConsumer);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "RemoveAccessRight", RemoveAccessRight);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "AddCustomInformation", AddCustomInformation);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "HasCustomInformation", HasCustomInformation);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "RemoveCustomInformation", RemoveCustomInformation);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetCustomInformation", GetCustomInformation);
 		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
 
 }
@@ -9995,6 +10041,142 @@ void CLib3MFResourceDataGroup::RemoveAccessRight(const FunctionCallbackInfo<Valu
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
         Lib3MFResult errorCode = wrapperTable->m_ResourceDataGroup_RemoveAccessRight(instanceHandle, hConsumer);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFResourceDataGroup::AddCustomInformation(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsString()) {
+            throw std::runtime_error("Expected string parameter 0 (NameSpace)");
+        }
+        if (!args[1]->IsString()) {
+            throw std::runtime_error("Expected string parameter 1 (Name)");
+        }
+        if (!args[2]->IsString()) {
+            throw std::runtime_error("Expected string parameter 2 (Value)");
+        }
+        v8::String::Utf8Value sutf8NameSpace(isolate, args[0]);
+        std::string sNameSpace = *sutf8NameSpace;
+        v8::String::Utf8Value sutf8Name(isolate, args[1]);
+        std::string sName = *sutf8Name;
+        v8::String::Utf8Value sutf8Value(isolate, args[2]);
+        std::string sValue = *sutf8Value;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method AddCustomInformation.");
+        if (wrapperTable->m_ResourceDataGroup_AddCustomInformation == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ResourceDataGroup::AddCustomInformation.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ResourceDataGroup_AddCustomInformation(instanceHandle, sNameSpace.c_str(), sName.c_str(), sValue.c_str());
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFResourceDataGroup::HasCustomInformation(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsString()) {
+            throw std::runtime_error("Expected string parameter 0 (NameSpace)");
+        }
+        if (!args[1]->IsString()) {
+            throw std::runtime_error("Expected string parameter 1 (Name)");
+        }
+        v8::String::Utf8Value sutf8NameSpace(isolate, args[0]);
+        std::string sNameSpace = *sutf8NameSpace;
+        v8::String::Utf8Value sutf8Name(isolate, args[1]);
+        std::string sName = *sutf8Name;
+        bool bReturnHasValue = false;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method HasCustomInformation.");
+        if (wrapperTable->m_ResourceDataGroup_HasCustomInformation == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ResourceDataGroup::HasCustomInformation.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ResourceDataGroup_HasCustomInformation(instanceHandle, sNameSpace.c_str(), sName.c_str(), &bReturnHasValue);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Boolean::New(isolate, bReturnHasValue));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFResourceDataGroup::RemoveCustomInformation(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsString()) {
+            throw std::runtime_error("Expected string parameter 0 (NameSpace)");
+        }
+        if (!args[1]->IsString()) {
+            throw std::runtime_error("Expected string parameter 1 (Name)");
+        }
+        v8::String::Utf8Value sutf8NameSpace(isolate, args[0]);
+        std::string sNameSpace = *sutf8NameSpace;
+        v8::String::Utf8Value sutf8Name(isolate, args[1]);
+        std::string sName = *sutf8Name;
+        bool bReturnValueExisted = false;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method RemoveCustomInformation.");
+        if (wrapperTable->m_ResourceDataGroup_RemoveCustomInformation == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ResourceDataGroup::RemoveCustomInformation.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ResourceDataGroup_RemoveCustomInformation(instanceHandle, sNameSpace.c_str(), sName.c_str(), &bReturnValueExisted);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Boolean::New(isolate, bReturnValueExisted));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFResourceDataGroup::GetCustomInformation(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsString()) {
+            throw std::runtime_error("Expected string parameter 0 (NameSpace)");
+        }
+        if (!args[1]->IsString()) {
+            throw std::runtime_error("Expected string parameter 1 (Name)");
+        }
+        v8::String::Utf8Value sutf8NameSpace(isolate, args[0]);
+        std::string sNameSpace = *sutf8NameSpace;
+        v8::String::Utf8Value sutf8Name(isolate, args[1]);
+        std::string sName = *sutf8Name;
+        unsigned int bytesNeededValue = 0;
+        unsigned int bytesWrittenValue = 0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetCustomInformation.");
+        if (wrapperTable->m_ResourceDataGroup_GetCustomInformation == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ResourceDataGroup::GetCustomInformation.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult initErrorCode = wrapperTable->m_ResourceDataGroup_GetCustomInformation(instanceHandle, sNameSpace.c_str(), sName.c_str(), 0, &bytesNeededValue, nullptr);
+        CheckError(isolate, wrapperTable, instanceHandle, initErrorCode);
+        std::vector<char> bufferValue;
+        bufferValue.resize(bytesNeededValue);
+        Lib3MFResult errorCode = wrapperTable->m_ResourceDataGroup_GetCustomInformation(instanceHandle, sNameSpace.c_str(), sName.c_str(), bytesNeededValue, &bytesWrittenValue, &bufferValue[0]);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferValue[0]));
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());

@@ -37,6 +37,7 @@ NMR_KeyStoreResourceData.h defines the KeyStoreResourceData Class. A ResourceDat
 #include <memory>
 #include <vector>
 #include <mutex>
+#include <set>
 
 #include "Common/NMR_Types.h"
 #include "Common/NMR_SecureContentTypes.h"
@@ -54,6 +55,9 @@ namespace NMR {
 		std::map<std::string, PKeyStoreAccessRight> m_ConsumerAccesstRight;
 		std::vector<nfByte> m_rgKey;
 		std::mutex mtx;
+
+
+		std::map <std::pair <std::string, std::string>, std::string> m_CustomInformation;
 	public:
 		CKeyStoreResourceDataGroup(PUUID const& keyUUID, std::vector<nfByte> const & key);
 
@@ -66,6 +70,14 @@ namespace NMR {
 
 		std::vector<nfByte> const & getKey() const;
 		void setKey(std::vector<nfByte> const & key);
+
+		void addCustomInformation (const std::string & sNameSpace, const std::string & sName, const std::string & sValue);
+		bool hasCustomInformation(const std::string& sNameSpace, const std::string& sName);
+		bool removeCustomInformation(const std::string& sNameSpace, const std::string& sName);
+		std::string getCustomInformation(const std::string& sNameSpace, const std::string& sName);
+
+		std::set<std::string> getCustomNameSpaces();
+		std::set<std::pair<std::string, std::string>> getCustomInformationNames();
 
 		inline nfBool isOpen() const {
 			return !m_rgKey.empty();

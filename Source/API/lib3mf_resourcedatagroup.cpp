@@ -9,7 +9,7 @@
 #include "Model/Classes/NMR_KeyStoreFactory.h"
 namespace Lib3MF {
 	namespace Impl {
-		CResourceDataGroup::CResourceDataGroup(NMR::PKeyStoreResourceDataGroup const & dg) 
+		CResourceDataGroup::CResourceDataGroup(NMR::PKeyStoreResourceDataGroup const & dg)
 		: m_pDataGroup(dg)
 		{
 			if (!dg)
@@ -43,5 +43,30 @@ namespace Lib3MF {
 		std::string CResourceDataGroup::GetKeyUUID() {
 			return m_pDataGroup->getKeyUUID()->toString();
 		}
+
+		void CResourceDataGroup::AddCustomInformation(const std::string& sNameSpace, const std::string& sName, const std::string& sValue)
+		{
+			m_pDataGroup->addCustomInformation (sNameSpace, sName, sValue);
+		}
+
+		bool CResourceDataGroup::HasCustomInformation(const std::string& sNameSpace, const std::string& sName)
+		{
+			return m_pDataGroup->hasCustomInformation (sNameSpace, sName);
+		}
+
+		bool CResourceDataGroup::RemoveCustomInformation(const std::string& sNameSpace, const std::string& sName)
+		{
+			return m_pDataGroup->removeCustomInformation(sNameSpace, sName);
+		}
+	
+		std::string CResourceDataGroup::GetCustomInformation(const std::string& sNameSpace, const std::string& sName)
+		{
+			if (!m_pDataGroup->hasCustomInformation(sNameSpace, sName))
+				throw ELib3MFInterfaceException( LIB3MF_ERROR_CUSTOMINFORMATIONNOTFOUND);
+
+			return m_pDataGroup->getCustomInformation(sNameSpace, sName);
+
+		}
+
 	}
 }

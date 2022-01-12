@@ -49,6 +49,7 @@ namespace NMR {
 		PKeyStoreResourceDataGroup m_pGroup;
 		PPackageModelPath m_pPath;
 		static nfUint64 s_nfHandleCount;
+
 	public:
 		CKeyStoreResourceData(
 			PKeyStoreResourceDataGroup const & rdg,

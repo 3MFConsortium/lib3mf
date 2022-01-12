@@ -2399,6 +2399,21 @@ public:
 	*/
 	virtual void GetAdditionalAuthenticationData(Lib3MF_uint64 nByteDataBufferSize, Lib3MF_uint64* pByteDataNeededCount, Lib3MF_uint8 * pByteDataBuffer) = 0;
 
+	/**
+	* IResourceData::GetCustomInitVector - Gets the custom Initialization Vector (in base64)
+	* @param[in] nIVBufferSize - Number of elements in buffer
+	* @param[out] pIVNeededCount - will be filled with the count of the written structs, or needed buffer size.
+	* @param[out] pIVBuffer - uint8 buffer of The Initialization Vector encoded in base 64. Empty string if none is set.
+	*/
+	virtual void GetCustomInitVector(Lib3MF_uint64 nIVBufferSize, Lib3MF_uint64* pIVNeededCount, Lib3MF_uint8 * pIVBuffer) = 0;
+
+	/**
+	* IResourceData::SetCustomInitVector - Sets a custom Initialization Vector (in base64)
+	* @param[in] nIVBufferSize - Number of elements in buffer
+	* @param[in] pIVBuffer - The new Initialization Vector encoded in base 64. Empty string if none shall be used.
+	*/
+	virtual void SetCustomInitVector(const Lib3MF_uint64 nIVBufferSize, const Lib3MF_uint8 * pIVBuffer) = 0;
+
 };
 
 typedef IBaseSharedPtr<IResourceData> PIResourceData;
@@ -2438,6 +2453,38 @@ public:
 	* @param[in] pConsumer - The Consumer instance
 	*/
 	virtual void RemoveAccessRight(IConsumer* pConsumer) = 0;
+
+	/**
+	* IResourceDataGroup::AddCustomInformation - Adds a custom information string to the resource data group. Overwrites existing value with same name.
+	* @param[in] sNameSpace - A proper XML namespace for the Information.
+	* @param[in] sName - A proper name for the Information. Only alphanumerical characters are allowed, not starting with a number.
+	* @param[in] sValue - Information string value to add.
+	*/
+	virtual void AddCustomInformation(const std::string & sNameSpace, const std::string & sName, const std::string & sValue) = 0;
+
+	/**
+	* IResourceDataGroup::HasCustomInformation - Checks for a custom information string of the resource data group
+	* @param[in] sNameSpace - A proper XML namespace for the Information.
+	* @param[in] sName - A proper name for the Information. Only alphanumerical characters are allowed, not starting with a number.
+	* @return Information string value exists.
+	*/
+	virtual bool HasCustomInformation(const std::string & sNameSpace, const std::string & sName) = 0;
+
+	/**
+	* IResourceDataGroup::RemoveCustomInformation - Removes a custom information string of the resource data group
+	* @param[in] sNameSpace - A proper XML namespace for the Information.
+	* @param[in] sName - A proper name for the Information. Only alphanumerical characters are allowed, not starting with a number.
+	* @return Information string value existed.
+	*/
+	virtual bool RemoveCustomInformation(const std::string & sNameSpace, const std::string & sName) = 0;
+
+	/**
+	* IResourceDataGroup::GetCustomInformation - Gets a custom information string to the resource data group. Fails if not existing.
+	* @param[in] sNameSpace - A proper XML namespace for the Information.
+	* @param[in] sName - A proper name for the Information. Only alphanumerical characters are allowed, not starting with a number.
+	* @return Information string value.
+	*/
+	virtual std::string GetCustomInformation(const std::string & sNameSpace, const std::string & sName) = 0;
 
 };
 

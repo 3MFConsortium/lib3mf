@@ -2710,6 +2710,27 @@ typedef Lib3MFResult (*PLib3MFResourceData_GetCompressionPtr) (Lib3MF_ResourceDa
 */
 typedef Lib3MFResult (*PLib3MFResourceData_GetAdditionalAuthenticationDataPtr) (Lib3MF_ResourceData pResourceData, const Lib3MF_uint64 nByteDataBufferSize, Lib3MF_uint64* pByteDataNeededCount, Lib3MF_uint8 * pByteDataBuffer);
 
+/**
+* Gets the custom Initialization Vector (in base64)
+*
+* @param[in] pResourceData - ResourceData instance.
+* @param[in] nIVBufferSize - Number of elements in buffer
+* @param[out] pIVNeededCount - will be filled with the count of the written elements, or needed buffer size.
+* @param[out] pIVBuffer - uint8 buffer of The Initialization Vector encoded in base 64. Empty string if none is set.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFResourceData_GetCustomInitVectorPtr) (Lib3MF_ResourceData pResourceData, const Lib3MF_uint64 nIVBufferSize, Lib3MF_uint64* pIVNeededCount, Lib3MF_uint8 * pIVBuffer);
+
+/**
+* Sets a custom Initialization Vector (in base64)
+*
+* @param[in] pResourceData - ResourceData instance.
+* @param[in] nIVBufferSize - Number of elements in buffer
+* @param[in] pIVBuffer - uint8 buffer of The new Initialization Vector encoded in base 64. Empty string if none shall be used.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFResourceData_SetCustomInitVectorPtr) (Lib3MF_ResourceData pResourceData, Lib3MF_uint64 nIVBufferSize, const Lib3MF_uint8 * pIVBuffer);
+
 /*************************************************************************************************************************
  Class definition for ResourceDataGroup
 **************************************************************************************************************************/
@@ -2756,6 +2777,52 @@ typedef Lib3MFResult (*PLib3MFResourceDataGroup_FindAccessRightByConsumerPtr) (L
 * @return error code or 0 (success)
 */
 typedef Lib3MFResult (*PLib3MFResourceDataGroup_RemoveAccessRightPtr) (Lib3MF_ResourceDataGroup pResourceDataGroup, Lib3MF_Consumer pConsumer);
+
+/**
+* Adds a custom information string to the resource data group. Overwrites existing value with same name.
+*
+* @param[in] pResourceDataGroup - ResourceDataGroup instance.
+* @param[in] pNameSpace - A proper XML namespace for the Information.
+* @param[in] pName - A proper name for the Information. Only alphanumerical characters are allowed, not starting with a number.
+* @param[in] pValue - Information string value to add.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFResourceDataGroup_AddCustomInformationPtr) (Lib3MF_ResourceDataGroup pResourceDataGroup, const char * pNameSpace, const char * pName, const char * pValue);
+
+/**
+* Checks for a custom information string of the resource data group
+*
+* @param[in] pResourceDataGroup - ResourceDataGroup instance.
+* @param[in] pNameSpace - A proper XML namespace for the Information.
+* @param[in] pName - A proper name for the Information. Only alphanumerical characters are allowed, not starting with a number.
+* @param[out] pHasValue - Information string value exists.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFResourceDataGroup_HasCustomInformationPtr) (Lib3MF_ResourceDataGroup pResourceDataGroup, const char * pNameSpace, const char * pName, bool * pHasValue);
+
+/**
+* Removes a custom information string of the resource data group
+*
+* @param[in] pResourceDataGroup - ResourceDataGroup instance.
+* @param[in] pNameSpace - A proper XML namespace for the Information.
+* @param[in] pName - A proper name for the Information. Only alphanumerical characters are allowed, not starting with a number.
+* @param[out] pValueExisted - Information string value existed.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFResourceDataGroup_RemoveCustomInformationPtr) (Lib3MF_ResourceDataGroup pResourceDataGroup, const char * pNameSpace, const char * pName, bool * pValueExisted);
+
+/**
+* Gets a custom information string to the resource data group. Fails if not existing.
+*
+* @param[in] pResourceDataGroup - ResourceDataGroup instance.
+* @param[in] pNameSpace - A proper XML namespace for the Information.
+* @param[in] pName - A proper name for the Information. Only alphanumerical characters are allowed, not starting with a number.
+* @param[in] nValueBufferSize - size of the buffer (including trailing 0)
+* @param[out] pValueNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pValueBuffer -  buffer of Information string value., may be NULL
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFResourceDataGroup_GetCustomInformationPtr) (Lib3MF_ResourceDataGroup pResourceDataGroup, const char * pNameSpace, const char * pName, const Lib3MF_uint32 nValueBufferSize, Lib3MF_uint32* pValueNeededChars, char * pValueBuffer);
 
 /*************************************************************************************************************************
  Class definition for KeyStore
@@ -3958,10 +4025,16 @@ typedef struct {
 	PLib3MFResourceData_GetEncryptionAlgorithmPtr m_ResourceData_GetEncryptionAlgorithm;
 	PLib3MFResourceData_GetCompressionPtr m_ResourceData_GetCompression;
 	PLib3MFResourceData_GetAdditionalAuthenticationDataPtr m_ResourceData_GetAdditionalAuthenticationData;
+	PLib3MFResourceData_GetCustomInitVectorPtr m_ResourceData_GetCustomInitVector;
+	PLib3MFResourceData_SetCustomInitVectorPtr m_ResourceData_SetCustomInitVector;
 	PLib3MFResourceDataGroup_GetKeyUUIDPtr m_ResourceDataGroup_GetKeyUUID;
 	PLib3MFResourceDataGroup_AddAccessRightPtr m_ResourceDataGroup_AddAccessRight;
 	PLib3MFResourceDataGroup_FindAccessRightByConsumerPtr m_ResourceDataGroup_FindAccessRightByConsumer;
 	PLib3MFResourceDataGroup_RemoveAccessRightPtr m_ResourceDataGroup_RemoveAccessRight;
+	PLib3MFResourceDataGroup_AddCustomInformationPtr m_ResourceDataGroup_AddCustomInformation;
+	PLib3MFResourceDataGroup_HasCustomInformationPtr m_ResourceDataGroup_HasCustomInformation;
+	PLib3MFResourceDataGroup_RemoveCustomInformationPtr m_ResourceDataGroup_RemoveCustomInformation;
+	PLib3MFResourceDataGroup_GetCustomInformationPtr m_ResourceDataGroup_GetCustomInformation;
 	PLib3MFKeyStore_AddConsumerPtr m_KeyStore_AddConsumer;
 	PLib3MFKeyStore_GetConsumerCountPtr m_KeyStore_GetConsumerCount;
 	PLib3MFKeyStore_GetConsumerPtr m_KeyStore_GetConsumer;

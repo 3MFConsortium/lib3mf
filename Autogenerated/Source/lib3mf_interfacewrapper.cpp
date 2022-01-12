@@ -9633,6 +9633,72 @@ Lib3MFResult lib3mf_resourcedata_getadditionalauthenticationdata(Lib3MF_Resource
 	}
 }
 
+Lib3MFResult lib3mf_resourcedata_getcustominitvector(Lib3MF_ResourceData pResourceData, const Lib3MF_uint64 nIVBufferSize, Lib3MF_uint64* pIVNeededCount, Lib3MF_uint8 * pIVBuffer)
+{
+	IBase* pIBaseClass = (IBase *)pResourceData;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pResourceData, "ResourceData", "GetCustomInitVector");
+		}
+		if ((!pIVBuffer) && !(pIVNeededCount))
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IResourceData* pIResourceData = dynamic_cast<IResourceData*>(pIBaseClass);
+		if (!pIResourceData)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIResourceData->GetCustomInitVector(nIVBufferSize, pIVNeededCount, pIVBuffer);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_resourcedata_setcustominitvector(Lib3MF_ResourceData pResourceData, Lib3MF_uint64 nIVBufferSize, const Lib3MF_uint8 * pIVBuffer)
+{
+	IBase* pIBaseClass = (IBase *)pResourceData;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pResourceData, "ResourceData", "SetCustomInitVector");
+		}
+		if ( (!pIVBuffer) && (nIVBufferSize>0))
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IResourceData* pIResourceData = dynamic_cast<IResourceData*>(pIBaseClass);
+		if (!pIResourceData)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIResourceData->SetCustomInitVector(nIVBufferSize, pIVBuffer);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
 
 /*************************************************************************************************************************
  Class implementation for ResourceDataGroup
@@ -9802,6 +9868,197 @@ Lib3MFResult lib3mf_resourcedatagroup_removeaccessright(Lib3MF_ResourceDataGroup
 		pIResourceDataGroup->RemoveAccessRight(pIConsumer);
 
 		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_resourcedatagroup_addcustominformation(Lib3MF_ResourceDataGroup pResourceDataGroup, const char * pNameSpace, const char * pName, const char * pValue)
+{
+	IBase* pIBaseClass = (IBase *)pResourceDataGroup;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pResourceDataGroup, "ResourceDataGroup", "AddCustomInformation");
+			pJournalEntry->addStringParameter("NameSpace", pNameSpace);
+			pJournalEntry->addStringParameter("Name", pName);
+			pJournalEntry->addStringParameter("Value", pValue);
+		}
+		if (pNameSpace == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pValue == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sNameSpace(pNameSpace);
+		std::string sName(pName);
+		std::string sValue(pValue);
+		IResourceDataGroup* pIResourceDataGroup = dynamic_cast<IResourceDataGroup*>(pIBaseClass);
+		if (!pIResourceDataGroup)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIResourceDataGroup->AddCustomInformation(sNameSpace, sName, sValue);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_resourcedatagroup_hascustominformation(Lib3MF_ResourceDataGroup pResourceDataGroup, const char * pNameSpace, const char * pName, bool * pHasValue)
+{
+	IBase* pIBaseClass = (IBase *)pResourceDataGroup;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pResourceDataGroup, "ResourceDataGroup", "HasCustomInformation");
+			pJournalEntry->addStringParameter("NameSpace", pNameSpace);
+			pJournalEntry->addStringParameter("Name", pName);
+		}
+		if (pNameSpace == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pHasValue == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sNameSpace(pNameSpace);
+		std::string sName(pName);
+		IResourceDataGroup* pIResourceDataGroup = dynamic_cast<IResourceDataGroup*>(pIBaseClass);
+		if (!pIResourceDataGroup)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pHasValue = pIResourceDataGroup->HasCustomInformation(sNameSpace, sName);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addBooleanResult("HasValue", *pHasValue);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_resourcedatagroup_removecustominformation(Lib3MF_ResourceDataGroup pResourceDataGroup, const char * pNameSpace, const char * pName, bool * pValueExisted)
+{
+	IBase* pIBaseClass = (IBase *)pResourceDataGroup;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pResourceDataGroup, "ResourceDataGroup", "RemoveCustomInformation");
+			pJournalEntry->addStringParameter("NameSpace", pNameSpace);
+			pJournalEntry->addStringParameter("Name", pName);
+		}
+		if (pNameSpace == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pValueExisted == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sNameSpace(pNameSpace);
+		std::string sName(pName);
+		IResourceDataGroup* pIResourceDataGroup = dynamic_cast<IResourceDataGroup*>(pIBaseClass);
+		if (!pIResourceDataGroup)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pValueExisted = pIResourceDataGroup->RemoveCustomInformation(sNameSpace, sName);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addBooleanResult("ValueExisted", *pValueExisted);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_resourcedatagroup_getcustominformation(Lib3MF_ResourceDataGroup pResourceDataGroup, const char * pNameSpace, const char * pName, const Lib3MF_uint32 nValueBufferSize, Lib3MF_uint32* pValueNeededChars, char * pValueBuffer)
+{
+	IBase* pIBaseClass = (IBase *)pResourceDataGroup;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pResourceDataGroup, "ResourceDataGroup", "GetCustomInformation");
+			pJournalEntry->addStringParameter("NameSpace", pNameSpace);
+			pJournalEntry->addStringParameter("Name", pName);
+		}
+		if (pNameSpace == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if ( (!pValueBuffer) && !(pValueNeededChars) )
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sNameSpace(pNameSpace);
+		std::string sName(pName);
+		std::string sValue("");
+		IResourceDataGroup* pIResourceDataGroup = dynamic_cast<IResourceDataGroup*>(pIBaseClass);
+		if (!pIResourceDataGroup)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		bool isCacheCall = (pValueBuffer == nullptr);
+		if (isCacheCall) {
+			sValue = pIResourceDataGroup->GetCustomInformation(sNameSpace, sName);
+
+			pIResourceDataGroup->_setCache (new ParameterCache_1<std::string> (sValue));
+		}
+		else {
+			auto cache = dynamic_cast<ParameterCache_1<std::string>*> (pIResourceDataGroup->_getCache ());
+			if (cache == nullptr)
+				throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+			cache->retrieveData (sValue);
+			pIResourceDataGroup->_setCache (nullptr);
+		}
+		
+		if (pValueNeededChars)
+			*pValueNeededChars = (Lib3MF_uint32) (sValue.size()+1);
+		if (pValueBuffer) {
+			if (sValue.size() >= nValueBufferSize)
+				throw ELib3MFInterfaceException (LIB3MF_ERROR_BUFFERTOOSMALL);
+			for (size_t iValue = 0; iValue < sValue.size(); iValue++)
+				pValueBuffer[iValue] = sValue[iValue];
+			pValueBuffer[sValue.size()] = 0;
+		}
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addStringResult("Value", sValue.c_str());
 			pJournalEntry->writeSuccess();
 		}
 		return LIB3MF_SUCCESS;
@@ -13239,6 +13496,10 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_resourcedata_getcompression;
 	if (sProcName == "lib3mf_resourcedata_getadditionalauthenticationdata") 
 		*ppProcAddress = (void*) &lib3mf_resourcedata_getadditionalauthenticationdata;
+	if (sProcName == "lib3mf_resourcedata_getcustominitvector") 
+		*ppProcAddress = (void*) &lib3mf_resourcedata_getcustominitvector;
+	if (sProcName == "lib3mf_resourcedata_setcustominitvector") 
+		*ppProcAddress = (void*) &lib3mf_resourcedata_setcustominitvector;
 	if (sProcName == "lib3mf_resourcedatagroup_getkeyuuid") 
 		*ppProcAddress = (void*) &lib3mf_resourcedatagroup_getkeyuuid;
 	if (sProcName == "lib3mf_resourcedatagroup_addaccessright") 
@@ -13247,6 +13508,14 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_resourcedatagroup_findaccessrightbyconsumer;
 	if (sProcName == "lib3mf_resourcedatagroup_removeaccessright") 
 		*ppProcAddress = (void*) &lib3mf_resourcedatagroup_removeaccessright;
+	if (sProcName == "lib3mf_resourcedatagroup_addcustominformation") 
+		*ppProcAddress = (void*) &lib3mf_resourcedatagroup_addcustominformation;
+	if (sProcName == "lib3mf_resourcedatagroup_hascustominformation") 
+		*ppProcAddress = (void*) &lib3mf_resourcedatagroup_hascustominformation;
+	if (sProcName == "lib3mf_resourcedatagroup_removecustominformation") 
+		*ppProcAddress = (void*) &lib3mf_resourcedatagroup_removecustominformation;
+	if (sProcName == "lib3mf_resourcedatagroup_getcustominformation") 
+		*ppProcAddress = (void*) &lib3mf_resourcedatagroup_getcustominformation;
 	if (sProcName == "lib3mf_keystore_addconsumer") 
 		*ppProcAddress = (void*) &lib3mf_keystore_addconsumer;
 	if (sProcName == "lib3mf_keystore_getconsumercount") 

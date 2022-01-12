@@ -360,6 +360,10 @@ public:
 			case LIB3MF_ERROR_KEYSTORERESOURCEDATANOTFOUND: return "KEYSTORERESOURCEDATANOTFOUND";
 			case LIB3MF_ERROR_SECURECONTEXTNOTREGISTERED: return "SECURECONTEXTNOTREGISTERED";
 			case LIB3MF_ERROR_INVALIDKEYSIZE: return "INVALIDKEYSIZE";
+			case LIB3MF_ERROR_CUSTOMINFORMATIONNOTFOUND: return "CUSTOMINFORMATIONNOTFOUND";
+			case LIB3MF_ERROR_INVALIDCUSTOMNAMESPACE: return "INVALIDCUSTOMNAMESPACE";
+			case LIB3MF_ERROR_INVALIDCUSTOMNAME: return "INVALIDCUSTOMNAME";
+			case LIB3MF_ERROR_INVALIDINITVECTOR: return "INVALIDINITVECTOR";
 		}
 		return "UNKNOWN";
 	}
@@ -410,6 +414,10 @@ public:
 			case LIB3MF_ERROR_KEYSTORERESOURCEDATANOTFOUND: return "A resource data has not been found";
 			case LIB3MF_ERROR_SECURECONTEXTNOTREGISTERED: return "A Key or Conentent encryption callback has not been registered";
 			case LIB3MF_ERROR_INVALIDKEYSIZE: return "The key siue is invalid";
+			case LIB3MF_ERROR_CUSTOMINFORMATIONNOTFOUND: return "The custom information has not been found";
+			case LIB3MF_ERROR_INVALIDCUSTOMNAMESPACE: return "Invalid custom namespace";
+			case LIB3MF_ERROR_INVALIDCUSTOMNAME: return "Invalid custom name tag";
+			case LIB3MF_ERROR_INVALIDINITVECTOR: return "Invalid init vector";
 		}
 		return "unknown error";
 	}
@@ -1482,6 +1490,8 @@ public:
 	inline eEncryptionAlgorithm GetEncryptionAlgorithm();
 	inline eCompression GetCompression();
 	inline void GetAdditionalAuthenticationData(std::vector<Lib3MF_uint8> & ByteDataBuffer);
+	inline void GetCustomInitVector(std::vector<Lib3MF_uint8> & IVBuffer);
+	inline void SetCustomInitVector(const CInputVector<Lib3MF_uint8> & IVBuffer);
 };
 	
 /*************************************************************************************************************************
@@ -1502,6 +1512,10 @@ public:
 	inline PAccessRight AddAccessRight(classParam<CConsumer> pConsumer, const eWrappingAlgorithm eWrappingAlgorithm, const eMgfAlgorithm eMgfAlgorithm, const eDigestMethod eDigestMethod);
 	inline PAccessRight FindAccessRightByConsumer(classParam<CConsumer> pConsumer);
 	inline void RemoveAccessRight(classParam<CConsumer> pConsumer);
+	inline void AddCustomInformation(const std::string & sNameSpace, const std::string & sName, const std::string & sValue);
+	inline bool HasCustomInformation(const std::string & sNameSpace, const std::string & sName);
+	inline bool RemoveCustomInformation(const std::string & sNameSpace, const std::string & sName);
+	inline std::string GetCustomInformation(const std::string & sNameSpace, const std::string & sName);
 };
 	
 /*************************************************************************************************************************
@@ -5177,6 +5191,28 @@ public:
 	}
 	
 	/**
+	* CResourceData::GetCustomInitVector - Gets the custom Initialization Vector (in base64)
+	* @param[out] IVBuffer - The Initialization Vector encoded in base 64. Empty string if none is set.
+	*/
+	void CResourceData::GetCustomInitVector(std::vector<Lib3MF_uint8> & IVBuffer)
+	{
+		Lib3MF_uint64 elementsNeededIV = 0;
+		Lib3MF_uint64 elementsWrittenIV = 0;
+		CheckError(lib3mf_resourcedata_getcustominitvector(m_pHandle, 0, &elementsNeededIV, nullptr));
+		IVBuffer.resize((size_t) elementsNeededIV);
+		CheckError(lib3mf_resourcedata_getcustominitvector(m_pHandle, elementsNeededIV, &elementsWrittenIV, IVBuffer.data()));
+	}
+	
+	/**
+	* CResourceData::SetCustomInitVector - Sets a custom Initialization Vector (in base64)
+	* @param[in] IVBuffer - The new Initialization Vector encoded in base 64. Empty string if none shall be used.
+	*/
+	void CResourceData::SetCustomInitVector(const CInputVector<Lib3MF_uint8> & IVBuffer)
+	{
+		CheckError(lib3mf_resourcedata_setcustominitvector(m_pHandle, (Lib3MF_uint64)IVBuffer.size(), IVBuffer.data()));
+	}
+	
+	/**
 	 * Method definitions for class CResourceDataGroup
 	 */
 	
@@ -5241,6 +5277,62 @@ public:
 	{
 		Lib3MFHandle hConsumer = pConsumer.GetHandle();
 		CheckError(lib3mf_resourcedatagroup_removeaccessright(m_pHandle, hConsumer));
+	}
+	
+	/**
+	* CResourceDataGroup::AddCustomInformation - Adds a custom information string to the resource data group. Overwrites existing value with same name.
+	* @param[in] sNameSpace - A proper XML namespace for the Information.
+	* @param[in] sName - A proper name for the Information. Only alphanumerical characters are allowed, not starting with a number.
+	* @param[in] sValue - Information string value to add.
+	*/
+	void CResourceDataGroup::AddCustomInformation(const std::string & sNameSpace, const std::string & sName, const std::string & sValue)
+	{
+		CheckError(lib3mf_resourcedatagroup_addcustominformation(m_pHandle, sNameSpace.c_str(), sName.c_str(), sValue.c_str()));
+	}
+	
+	/**
+	* CResourceDataGroup::HasCustomInformation - Checks for a custom information string of the resource data group
+	* @param[in] sNameSpace - A proper XML namespace for the Information.
+	* @param[in] sName - A proper name for the Information. Only alphanumerical characters are allowed, not starting with a number.
+	* @return Information string value exists.
+	*/
+	bool CResourceDataGroup::HasCustomInformation(const std::string & sNameSpace, const std::string & sName)
+	{
+		bool resultHasValue = 0;
+		CheckError(lib3mf_resourcedatagroup_hascustominformation(m_pHandle, sNameSpace.c_str(), sName.c_str(), &resultHasValue));
+		
+		return resultHasValue;
+	}
+	
+	/**
+	* CResourceDataGroup::RemoveCustomInformation - Removes a custom information string of the resource data group
+	* @param[in] sNameSpace - A proper XML namespace for the Information.
+	* @param[in] sName - A proper name for the Information. Only alphanumerical characters are allowed, not starting with a number.
+	* @return Information string value existed.
+	*/
+	bool CResourceDataGroup::RemoveCustomInformation(const std::string & sNameSpace, const std::string & sName)
+	{
+		bool resultValueExisted = 0;
+		CheckError(lib3mf_resourcedatagroup_removecustominformation(m_pHandle, sNameSpace.c_str(), sName.c_str(), &resultValueExisted));
+		
+		return resultValueExisted;
+	}
+	
+	/**
+	* CResourceDataGroup::GetCustomInformation - Gets a custom information string to the resource data group. Fails if not existing.
+	* @param[in] sNameSpace - A proper XML namespace for the Information.
+	* @param[in] sName - A proper name for the Information. Only alphanumerical characters are allowed, not starting with a number.
+	* @return Information string value.
+	*/
+	std::string CResourceDataGroup::GetCustomInformation(const std::string & sNameSpace, const std::string & sName)
+	{
+		Lib3MF_uint32 bytesNeededValue = 0;
+		Lib3MF_uint32 bytesWrittenValue = 0;
+		CheckError(lib3mf_resourcedatagroup_getcustominformation(m_pHandle, sNameSpace.c_str(), sName.c_str(), 0, &bytesNeededValue, nullptr));
+		std::vector<char> bufferValue(bytesNeededValue);
+		CheckError(lib3mf_resourcedatagroup_getcustominformation(m_pHandle, sNameSpace.c_str(), sName.c_str(), bytesNeededValue, &bytesWrittenValue, &bufferValue[0]));
+		
+		return std::string(&bufferValue[0]);
 	}
 	
 	/**

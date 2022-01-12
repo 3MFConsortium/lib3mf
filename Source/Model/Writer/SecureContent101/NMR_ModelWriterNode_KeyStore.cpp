@@ -44,6 +44,12 @@ This is the class for exporting the 3mf keystore stream root node.
 #include <array>
 
 
+NMR::CModelWriterNode_KeyStore::CModelWriterNode_KeyStore(_In_ CXmlWriter* pXMLWriter, _In_ PProgressMonitor pProgressMonitor, _In_ PKeyStore pKeyStore)
+	: CModelWriterNode_KeyStoreBase (pXMLWriter, pProgressMonitor, pKeyStore), m_CustomNameSpaceID (1)
+{
+
+}
+
 void NMR::CModelWriterNode_KeyStore::writeConsumers() {
 	nfUint64 count = m_pKeyStore->getConsumerCount();
 	for (nfUint64 nIndex = 0; nIndex < count; ++nIndex) {
@@ -141,6 +147,14 @@ void NMR::CModelWriterNode_KeyStore::writeResourceDatagroup() {
 		// keyuuid - attribute
 		writeConstStringAttribute(XML_3MF_SECURE_CONTENT_KEY_UUID, resourcedatagroup->getKeyUUID()->toString().c_str());
 
+		// Write Custom Resource Datagroup Information
+		auto sNameSet = resourcedatagroup->getCustomInformationNames();
+		for (auto sNameIter : sNameSet) {
+			auto sPrefix = registerNameSpace(sNameIter.first);
+			auto sValue = resourcedatagroup->getCustomInformation(sNameIter.first, sNameIter.second);
+			writeConstPrefixedStringAttribute (sPrefix.c_str (), sNameIter.second.c_str(), sValue.c_str ());
+		}
+
 		nfUint64 const accessCount = resourcedatagroup->getAccessRightCount();
 		for (nfUint64 accessIndex = 0; accessIndex < accessCount; ++accessIndex) {
 			PKeyStoreAccessRight ar = resourcedatagroup->getAccessRight(accessIndex);
@@ -197,6 +211,7 @@ void NMR::CModelWriterNode_KeyStore::writeResourceData(PKeyStoreResourceData con
 	writeStartElement(XML_3MF_ELEMENT_RESOURCEDATA);
 	// path - attribute
 	writeConstStringAttribute(XML_3MF_SECURE_CONTENT_PATH, rd->packagePath()->getPath().c_str());
+
 	writeStartElement(XML_3MF_ELEMENT_CEKPARAMS);
 	// encryptionalgorithm - attribute
 	writeEncryptionAlgorithmAttribute(rd->getEncryptionAlgorithm());
@@ -236,11 +251,42 @@ void NMR::CModelWriterNode_KeyStore::writeResourceData(PKeyStoreResourceData con
 }
 
 void NMR::CModelWriterNode_KeyStore::writeToXML() {
+
+	m_customNameSpaces.clear();
+
 	writeStartElementWithNamespace(XML_3MF_ELEMENT_KEYSTORE, XML_3MF_NAMESPACE_SECURECONTENTSPEC);
 	writeConstPrefixedStringAttribute(XML_3MF_ATTRIBUTE_XMLNS, XML_3MF_NAMESPACEPREFIX_XENC, XML_3MF_NAMESPACE_CIPHERVALUESPEC);
 	writeConstPrefixedStringAttribute(XML_3MF_ATTRIBUTE_XMLNS, XML_3MF_NAMESPACEPREFIX_DS, XML_3MF_NAMESPACE_DIGITALSIGNATURESPEC);
+
+	auto nCount = m_pKeyStore->getResourceDataGroupCount();
+	for (nfUint64 nIndex = 0; nIndex < nCount; nIndex++) {
+		auto pGroup = m_pKeyStore->getResourceDataGroup(nIndex);
+		auto nameSpaceSet = pGroup->getCustomNameSpaces();
+		for (auto sNameSpace : nameSpaceSet) {
+			auto iIter = m_customNameSpaces.find(sNameSpace);
+			if (iIter == m_customNameSpaces.end()) {
+				std::string sPrefix = registerNameSpace(sNameSpace);
+				writeConstPrefixedStringAttribute(XML_3MF_ATTRIBUTE_XMLNS, sPrefix.c_str(), sNameSpace.c_str());
+			}
+		}
+	}
+
 	writeConstStringAttribute(XML_3MF_SECURE_CONTENT_UUID, m_pKeyStore->getUUID()->toString().c_str());
 	writeConsumers();
 	writeResourceDatagroup();
 	writeFullEndElement();
+}
+
+std::string NMR::CModelWriterNode_KeyStore::registerNameSpace(const std::string& sNameSpace)
+{
+	auto iIter = m_customNameSpaces.find(sNameSpace);
+	if (iIter != m_customNameSpaces.end()) {
+		return iIter->second;
+	}
+
+	std::string sPrefix = "cns" + std::to_string(m_CustomNameSpaceID);
+	m_CustomNameSpaceID++;
+
+	m_customNameSpaces.insert(std::make_pair (sNameSpace, sPrefix));
+	return sPrefix;
 }

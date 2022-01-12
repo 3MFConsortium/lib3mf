@@ -2723,6 +2723,27 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_resourcedata_getcompression(Lib3MF_ResourceD
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_resourcedata_getadditionalauthenticationdata(Lib3MF_ResourceData pResourceData, const Lib3MF_uint64 nByteDataBufferSize, Lib3MF_uint64* pByteDataNeededCount, Lib3MF_uint8 * pByteDataBuffer);
 
+/**
+* Gets the custom Initialization Vector (in base64)
+*
+* @param[in] pResourceData - ResourceData instance.
+* @param[in] nIVBufferSize - Number of elements in buffer
+* @param[out] pIVNeededCount - will be filled with the count of the written elements, or needed buffer size.
+* @param[out] pIVBuffer - uint8 buffer of The Initialization Vector encoded in base 64. Empty string if none is set.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_resourcedata_getcustominitvector(Lib3MF_ResourceData pResourceData, const Lib3MF_uint64 nIVBufferSize, Lib3MF_uint64* pIVNeededCount, Lib3MF_uint8 * pIVBuffer);
+
+/**
+* Sets a custom Initialization Vector (in base64)
+*
+* @param[in] pResourceData - ResourceData instance.
+* @param[in] nIVBufferSize - Number of elements in buffer
+* @param[in] pIVBuffer - uint8 buffer of The new Initialization Vector encoded in base 64. Empty string if none shall be used.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_resourcedata_setcustominitvector(Lib3MF_ResourceData pResourceData, Lib3MF_uint64 nIVBufferSize, const Lib3MF_uint8 * pIVBuffer);
+
 /*************************************************************************************************************************
  Class definition for ResourceDataGroup
 **************************************************************************************************************************/
@@ -2769,6 +2790,52 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_resourcedatagroup_findaccessrightbyconsumer(
 * @return error code or 0 (success)
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_resourcedatagroup_removeaccessright(Lib3MF_ResourceDataGroup pResourceDataGroup, Lib3MF_Consumer pConsumer);
+
+/**
+* Adds a custom information string to the resource data group. Overwrites existing value with same name.
+*
+* @param[in] pResourceDataGroup - ResourceDataGroup instance.
+* @param[in] pNameSpace - A proper XML namespace for the Information.
+* @param[in] pName - A proper name for the Information. Only alphanumerical characters are allowed, not starting with a number.
+* @param[in] pValue - Information string value to add.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_resourcedatagroup_addcustominformation(Lib3MF_ResourceDataGroup pResourceDataGroup, const char * pNameSpace, const char * pName, const char * pValue);
+
+/**
+* Checks for a custom information string of the resource data group
+*
+* @param[in] pResourceDataGroup - ResourceDataGroup instance.
+* @param[in] pNameSpace - A proper XML namespace for the Information.
+* @param[in] pName - A proper name for the Information. Only alphanumerical characters are allowed, not starting with a number.
+* @param[out] pHasValue - Information string value exists.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_resourcedatagroup_hascustominformation(Lib3MF_ResourceDataGroup pResourceDataGroup, const char * pNameSpace, const char * pName, bool * pHasValue);
+
+/**
+* Removes a custom information string of the resource data group
+*
+* @param[in] pResourceDataGroup - ResourceDataGroup instance.
+* @param[in] pNameSpace - A proper XML namespace for the Information.
+* @param[in] pName - A proper name for the Information. Only alphanumerical characters are allowed, not starting with a number.
+* @param[out] pValueExisted - Information string value existed.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_resourcedatagroup_removecustominformation(Lib3MF_ResourceDataGroup pResourceDataGroup, const char * pNameSpace, const char * pName, bool * pValueExisted);
+
+/**
+* Gets a custom information string to the resource data group. Fails if not existing.
+*
+* @param[in] pResourceDataGroup - ResourceDataGroup instance.
+* @param[in] pNameSpace - A proper XML namespace for the Information.
+* @param[in] pName - A proper name for the Information. Only alphanumerical characters are allowed, not starting with a number.
+* @param[in] nValueBufferSize - size of the buffer (including trailing 0)
+* @param[out] pValueNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pValueBuffer -  buffer of Information string value., may be NULL
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_resourcedatagroup_getcustominformation(Lib3MF_ResourceDataGroup pResourceDataGroup, const char * pNameSpace, const char * pName, const Lib3MF_uint32 nValueBufferSize, Lib3MF_uint32* pValueNeededChars, char * pValueBuffer);
 
 /*************************************************************************************************************************
  Class definition for KeyStore

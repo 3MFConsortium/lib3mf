@@ -306,10 +306,16 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_ResourceData_GetEncryptionAlgorithm = NULL;
 	pWrapperTable->m_ResourceData_GetCompression = NULL;
 	pWrapperTable->m_ResourceData_GetAdditionalAuthenticationData = NULL;
+	pWrapperTable->m_ResourceData_GetCustomInitVector = NULL;
+	pWrapperTable->m_ResourceData_SetCustomInitVector = NULL;
 	pWrapperTable->m_ResourceDataGroup_GetKeyUUID = NULL;
 	pWrapperTable->m_ResourceDataGroup_AddAccessRight = NULL;
 	pWrapperTable->m_ResourceDataGroup_FindAccessRightByConsumer = NULL;
 	pWrapperTable->m_ResourceDataGroup_RemoveAccessRight = NULL;
+	pWrapperTable->m_ResourceDataGroup_AddCustomInformation = NULL;
+	pWrapperTable->m_ResourceDataGroup_HasCustomInformation = NULL;
+	pWrapperTable->m_ResourceDataGroup_RemoveCustomInformation = NULL;
+	pWrapperTable->m_ResourceDataGroup_GetCustomInformation = NULL;
 	pWrapperTable->m_KeyStore_AddConsumer = NULL;
 	pWrapperTable->m_KeyStore_GetConsumerCount = NULL;
 	pWrapperTable->m_KeyStore_GetConsumer = NULL;
@@ -2780,6 +2786,24 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
+	pWrapperTable->m_ResourceData_GetCustomInitVector = (PLib3MFResourceData_GetCustomInitVectorPtr) GetProcAddress(hLibrary, "lib3mf_resourcedata_getcustominitvector");
+	#else // _WIN32
+	pWrapperTable->m_ResourceData_GetCustomInitVector = (PLib3MFResourceData_GetCustomInitVectorPtr) dlsym(hLibrary, "lib3mf_resourcedata_getcustominitvector");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ResourceData_GetCustomInitVector == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ResourceData_SetCustomInitVector = (PLib3MFResourceData_SetCustomInitVectorPtr) GetProcAddress(hLibrary, "lib3mf_resourcedata_setcustominitvector");
+	#else // _WIN32
+	pWrapperTable->m_ResourceData_SetCustomInitVector = (PLib3MFResourceData_SetCustomInitVectorPtr) dlsym(hLibrary, "lib3mf_resourcedata_setcustominitvector");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ResourceData_SetCustomInitVector == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
 	pWrapperTable->m_ResourceDataGroup_GetKeyUUID = (PLib3MFResourceDataGroup_GetKeyUUIDPtr) GetProcAddress(hLibrary, "lib3mf_resourcedatagroup_getkeyuuid");
 	#else // _WIN32
 	pWrapperTable->m_ResourceDataGroup_GetKeyUUID = (PLib3MFResourceDataGroup_GetKeyUUIDPtr) dlsym(hLibrary, "lib3mf_resourcedatagroup_getkeyuuid");
@@ -2813,6 +2837,42 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 	dlerror();
 	#endif // _WIN32
 	if (pWrapperTable->m_ResourceDataGroup_RemoveAccessRight == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ResourceDataGroup_AddCustomInformation = (PLib3MFResourceDataGroup_AddCustomInformationPtr) GetProcAddress(hLibrary, "lib3mf_resourcedatagroup_addcustominformation");
+	#else // _WIN32
+	pWrapperTable->m_ResourceDataGroup_AddCustomInformation = (PLib3MFResourceDataGroup_AddCustomInformationPtr) dlsym(hLibrary, "lib3mf_resourcedatagroup_addcustominformation");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ResourceDataGroup_AddCustomInformation == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ResourceDataGroup_HasCustomInformation = (PLib3MFResourceDataGroup_HasCustomInformationPtr) GetProcAddress(hLibrary, "lib3mf_resourcedatagroup_hascustominformation");
+	#else // _WIN32
+	pWrapperTable->m_ResourceDataGroup_HasCustomInformation = (PLib3MFResourceDataGroup_HasCustomInformationPtr) dlsym(hLibrary, "lib3mf_resourcedatagroup_hascustominformation");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ResourceDataGroup_HasCustomInformation == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ResourceDataGroup_RemoveCustomInformation = (PLib3MFResourceDataGroup_RemoveCustomInformationPtr) GetProcAddress(hLibrary, "lib3mf_resourcedatagroup_removecustominformation");
+	#else // _WIN32
+	pWrapperTable->m_ResourceDataGroup_RemoveCustomInformation = (PLib3MFResourceDataGroup_RemoveCustomInformationPtr) dlsym(hLibrary, "lib3mf_resourcedatagroup_removecustominformation");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ResourceDataGroup_RemoveCustomInformation == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ResourceDataGroup_GetCustomInformation = (PLib3MFResourceDataGroup_GetCustomInformationPtr) GetProcAddress(hLibrary, "lib3mf_resourcedatagroup_getcustominformation");
+	#else // _WIN32
+	pWrapperTable->m_ResourceDataGroup_GetCustomInformation = (PLib3MFResourceDataGroup_GetCustomInformationPtr) dlsym(hLibrary, "lib3mf_resourcedatagroup_getcustominformation");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ResourceDataGroup_GetCustomInformation == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32

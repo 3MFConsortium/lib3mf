@@ -84,9 +84,11 @@ namespace NMR {
 		for (nfUint64 i = 0; i < keyStore->getResourceDataCount(); ++i) {
 			PKeyStoreResourceData rd = keyStore->getResourceData(i);
 			if (rd->getGroup()->isOpen()) {
-				std::vector<nfByte> newIv((size_t)fnGetAlgorithmInitVectorSize(rd->getEncryptionAlgorithm()), 0);
-				model->generateRandomBytes(newIv.data(), newIv.size());
-				rd->setInitVector(newIv);
+				if (rd->getInitVector().empty()) {
+					std::vector<nfByte> newIv(fnGetAlgorithmInitVectorSize(rd->getEncryptionAlgorithm()), 0);
+					model->generateRandomBytes(newIv.data(), newIv.size());
+					rd->setInitVector(newIv);
+				}
 			}
 		}
 	}

@@ -42,6 +42,12 @@ namespace NMR {
 	class CModelWriterNode_KeyStore : public CModelWriterNode_KeyStoreBase {
 	private:
 		std::map<PKeyStoreConsumer, nfUint64> m_consumerIndexes;
+
+		nfUint64 m_CustomNameSpaceID;
+		std::map<std::string, std::string> m_customNameSpaces;
+
+		std::string registerNameSpace(const std::string & sNameSpace);
+
 	protected:
 		void writeWrapAlgorithmAttribute(eKeyStoreWrapAlgorithm ea);
 		void writeMgf(eKeyStoreMaskGenerationFunction mgf);
@@ -52,7 +58,7 @@ namespace NMR {
 		void writeAccessRight(PKeyStoreAccessRight const & ar);
 		void writeResourceData(PKeyStoreResourceData const & rd);
 	public:
-		using CModelWriterNode_KeyStoreBase::CModelWriterNode_KeyStoreBase;
+		CModelWriterNode_KeyStore(_In_ CXmlWriter* pXMLWriter, _In_ PProgressMonitor pProgressMonitor, _In_ PKeyStore pKeyStore);
 		CModelWriterNode_KeyStore() = delete;
 		virtual void writeToXML();
 	};

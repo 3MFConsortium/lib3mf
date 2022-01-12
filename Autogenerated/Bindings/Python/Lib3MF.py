@@ -106,6 +106,10 @@ class ErrorCodes(enum.IntEnum):
 	KEYSTORERESOURCEDATANOTFOUND = 3003
 	SECURECONTEXTNOTREGISTERED = 3004
 	INVALIDKEYSIZE = 3005
+	CUSTOMINFORMATIONNOTFOUND = 3006
+	INVALIDCUSTOMNAMESPACE = 3007
+	INVALIDCUSTOMNAME = 3008
+	INVALIDINITVECTOR = 3009
 
 '''Definition of Function Table
 '''
@@ -387,10 +391,16 @@ class FunctionTable:
 	lib3mf_resourcedata_getencryptionalgorithm = None
 	lib3mf_resourcedata_getcompression = None
 	lib3mf_resourcedata_getadditionalauthenticationdata = None
+	lib3mf_resourcedata_getcustominitvector = None
+	lib3mf_resourcedata_setcustominitvector = None
 	lib3mf_resourcedatagroup_getkeyuuid = None
 	lib3mf_resourcedatagroup_addaccessright = None
 	lib3mf_resourcedatagroup_findaccessrightbyconsumer = None
 	lib3mf_resourcedatagroup_removeaccessright = None
+	lib3mf_resourcedatagroup_addcustominformation = None
+	lib3mf_resourcedatagroup_hascustominformation = None
+	lib3mf_resourcedatagroup_removecustominformation = None
+	lib3mf_resourcedatagroup_getcustominformation = None
 	lib3mf_keystore_addconsumer = None
 	lib3mf_keystore_getconsumercount = None
 	lib3mf_keystore_getconsumer = None
@@ -2437,6 +2447,18 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.POINTER(ctypes.c_uint8))
 			self.lib.lib3mf_resourcedata_getadditionalauthenticationdata = methodType(int(methodAddress.value))
 			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_resourcedata_getcustominitvector")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.POINTER(ctypes.c_uint8))
+			self.lib.lib3mf_resourcedata_getcustominitvector = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_resourcedata_setcustominitvector")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint8))
+			self.lib.lib3mf_resourcedata_setcustominitvector = methodType(int(methodAddress.value))
+			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_resourcedatagroup_getkeyuuid")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
@@ -2460,6 +2482,30 @@ class Wrapper:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_void_p)
 			self.lib.lib3mf_resourcedatagroup_removeaccessright = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_resourcedatagroup_addcustominformation")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p)
+			self.lib.lib3mf_resourcedatagroup_addcustominformation = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_resourcedatagroup_hascustominformation")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_bool))
+			self.lib.lib3mf_resourcedatagroup_hascustominformation = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_resourcedatagroup_removecustominformation")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_bool))
+			self.lib.lib3mf_resourcedatagroup_removecustominformation = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_resourcedatagroup_getcustominformation")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
+			self.lib.lib3mf_resourcedatagroup_getcustominformation = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_keystore_addconsumer")), methodAddress)
 			if err != 0:
@@ -3753,6 +3799,12 @@ class Wrapper:
 			self.lib.lib3mf_resourcedata_getadditionalauthenticationdata.restype = ctypes.c_int32
 			self.lib.lib3mf_resourcedata_getadditionalauthenticationdata.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.POINTER(ctypes.c_uint8)]
 			
+			self.lib.lib3mf_resourcedata_getcustominitvector.restype = ctypes.c_int32
+			self.lib.lib3mf_resourcedata_getcustominitvector.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.POINTER(ctypes.c_uint8)]
+			
+			self.lib.lib3mf_resourcedata_setcustominitvector.restype = ctypes.c_int32
+			self.lib.lib3mf_resourcedata_setcustominitvector.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint8)]
+			
 			self.lib.lib3mf_resourcedatagroup_getkeyuuid.restype = ctypes.c_int32
 			self.lib.lib3mf_resourcedatagroup_getkeyuuid.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
 			
@@ -3764,6 +3816,18 @@ class Wrapper:
 			
 			self.lib.lib3mf_resourcedatagroup_removeaccessright.restype = ctypes.c_int32
 			self.lib.lib3mf_resourcedatagroup_removeaccessright.argtypes = [ctypes.c_void_p, ctypes.c_void_p]
+			
+			self.lib.lib3mf_resourcedatagroup_addcustominformation.restype = ctypes.c_int32
+			self.lib.lib3mf_resourcedatagroup_addcustominformation.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p]
+			
+			self.lib.lib3mf_resourcedatagroup_hascustominformation.restype = ctypes.c_int32
+			self.lib.lib3mf_resourcedatagroup_hascustominformation.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_bool)]
+			
+			self.lib.lib3mf_resourcedatagroup_removecustominformation.restype = ctypes.c_int32
+			self.lib.lib3mf_resourcedatagroup_removecustominformation.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_bool)]
+			
+			self.lib.lib3mf_resourcedatagroup_getcustominformation.restype = ctypes.c_int32
+			self.lib.lib3mf_resourcedatagroup_getcustominformation.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
 			
 			self.lib.lib3mf_keystore_addconsumer.restype = ctypes.c_int32
 			self.lib.lib3mf_keystore_addconsumer.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p)]
@@ -6405,6 +6469,23 @@ class ResourceData(Base):
 		
 		return [pByteDataBuffer[i] for i in range(nByteDataNeededCount.value)]
 	
+	def GetCustomInitVector(self):
+		nIVCount = ctypes.c_uint64(0)
+		nIVNeededCount = ctypes.c_uint64(0)
+		pIVBuffer = (ctypes.c_uint8*0)()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_resourcedata_getcustominitvector(self._handle, nIVCount, nIVNeededCount, pIVBuffer))
+		nIVCount = ctypes.c_uint64(nIVNeededCount.value)
+		pIVBuffer = (ctypes.c_uint8 * nIVNeededCount.value)()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_resourcedata_getcustominitvector(self._handle, nIVCount, nIVNeededCount, pIVBuffer))
+		
+		return [pIVBuffer[i] for i in range(nIVNeededCount.value)]
+	
+	def SetCustomInitVector(self, IV):
+		nIVCount = ctypes.c_uint64(len(IV))
+		pIVBuffer = (ctypes.c_uint8*len(IV))(*IV)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_resourcedata_setcustominitvector(self._handle, nIVCount, pIVBuffer))
+		
+	
 
 
 ''' Class Implementation for ResourceDataGroup
@@ -6461,6 +6542,42 @@ class ResourceDataGroup(Base):
 			raise ELib3MFException(ErrorCodes.INVALIDPARAM, 'Invalid return/output value')
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_resourcedatagroup_removeaccessright(self._handle, ConsumerHandle))
 		
+	
+	def AddCustomInformation(self, NameSpace, Name, Value):
+		pNameSpace = ctypes.c_char_p(str.encode(NameSpace))
+		pName = ctypes.c_char_p(str.encode(Name))
+		pValue = ctypes.c_char_p(str.encode(Value))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_resourcedatagroup_addcustominformation(self._handle, pNameSpace, pName, pValue))
+		
+	
+	def HasCustomInformation(self, NameSpace, Name):
+		pNameSpace = ctypes.c_char_p(str.encode(NameSpace))
+		pName = ctypes.c_char_p(str.encode(Name))
+		pHasValue = ctypes.c_bool()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_resourcedatagroup_hascustominformation(self._handle, pNameSpace, pName, pHasValue))
+		
+		return pHasValue.value
+	
+	def RemoveCustomInformation(self, NameSpace, Name):
+		pNameSpace = ctypes.c_char_p(str.encode(NameSpace))
+		pName = ctypes.c_char_p(str.encode(Name))
+		pValueExisted = ctypes.c_bool()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_resourcedatagroup_removecustominformation(self._handle, pNameSpace, pName, pValueExisted))
+		
+		return pValueExisted.value
+	
+	def GetCustomInformation(self, NameSpace, Name):
+		pNameSpace = ctypes.c_char_p(str.encode(NameSpace))
+		pName = ctypes.c_char_p(str.encode(Name))
+		nValueBufferSize = ctypes.c_uint64(0)
+		nValueNeededChars = ctypes.c_uint64(0)
+		pValueBuffer = ctypes.c_char_p(None)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_resourcedatagroup_getcustominformation(self._handle, pNameSpace, pName, nValueBufferSize, nValueNeededChars, pValueBuffer))
+		nValueBufferSize = ctypes.c_uint64(nValueNeededChars.value)
+		pValueBuffer = (ctypes.c_char * (nValueNeededChars.value))()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_resourcedatagroup_getcustominformation(self._handle, pNameSpace, pName, nValueBufferSize, nValueNeededChars, pValueBuffer))
+		
+		return pValueBuffer.value.decode()
 	
 
 

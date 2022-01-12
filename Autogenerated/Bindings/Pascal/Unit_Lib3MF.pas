@@ -119,6 +119,10 @@ const
 	LIB3MF_ERROR_KEYSTORERESOURCEDATANOTFOUND = 3003;
 	LIB3MF_ERROR_SECURECONTEXTNOTREGISTERED = 3004;
 	LIB3MF_ERROR_INVALIDKEYSIZE = 3005;
+	LIB3MF_ERROR_CUSTOMINFORMATIONNOTFOUND = 3006;
+	LIB3MF_ERROR_INVALIDCUSTOMNAMESPACE = 3007;
+	LIB3MF_ERROR_INVALIDCUSTOMNAME = 3008;
+	LIB3MF_ERROR_INVALIDINITVECTOR = 3009;
 
 (*************************************************************************************************************************
  Declaration of enums
@@ -3119,6 +3123,27 @@ type
 	*)
 	TLib3MFResourceData_GetAdditionalAuthenticationDataFunc = function(pResourceData: TLib3MFHandle; const nByteDataCount: QWord; out pByteDataNeededCount: QWord; pByteDataBuffer: PByte): TLib3MFResult; cdecl;
 	
+	(**
+	* Gets the custom Initialization Vector (in base64)
+	*
+	* @param[in] pResourceData - ResourceData instance.
+	* @param[in] nIVCount - Number of elements in buffer
+	* @param[out] pIVNeededCount - will be filled with the count of the written elements, or needed buffer size.
+	* @param[out] pIVBuffer - uint8 buffer of The Initialization Vector encoded in base 64. Empty string if none is set.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFResourceData_GetCustomInitVectorFunc = function(pResourceData: TLib3MFHandle; const nIVCount: QWord; out pIVNeededCount: QWord; pIVBuffer: PByte): TLib3MFResult; cdecl;
+	
+	(**
+	* Sets a custom Initialization Vector (in base64)
+	*
+	* @param[in] pResourceData - ResourceData instance.
+	* @param[in] nIVCount - Number of elements in buffer
+	* @param[in] pIVBuffer - uint8 buffer of The new Initialization Vector encoded in base 64. Empty string if none shall be used.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFResourceData_SetCustomInitVectorFunc = function(pResourceData: TLib3MFHandle; const nIVCount: QWord; const pIVBuffer: PByte): TLib3MFResult; cdecl;
+	
 
 (*************************************************************************************************************************
  Function type definitions for ResourceDataGroup
@@ -3166,6 +3191,52 @@ type
 	* @return error code or 0 (success)
 	*)
 	TLib3MFResourceDataGroup_RemoveAccessRightFunc = function(pResourceDataGroup: TLib3MFHandle; const pConsumer: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Adds a custom information string to the resource data group. Overwrites existing value with same name.
+	*
+	* @param[in] pResourceDataGroup - ResourceDataGroup instance.
+	* @param[in] pNameSpace - A proper XML namespace for the Information.
+	* @param[in] pName - A proper name for the Information. Only alphanumerical characters are allowed, not starting with a number.
+	* @param[in] pValue - Information string value to add.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFResourceDataGroup_AddCustomInformationFunc = function(pResourceDataGroup: TLib3MFHandle; const pNameSpace: PAnsiChar; const pName: PAnsiChar; const pValue: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Checks for a custom information string of the resource data group
+	*
+	* @param[in] pResourceDataGroup - ResourceDataGroup instance.
+	* @param[in] pNameSpace - A proper XML namespace for the Information.
+	* @param[in] pName - A proper name for the Information. Only alphanumerical characters are allowed, not starting with a number.
+	* @param[out] pHasValue - Information string value exists.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFResourceDataGroup_HasCustomInformationFunc = function(pResourceDataGroup: TLib3MFHandle; const pNameSpace: PAnsiChar; const pName: PAnsiChar; out pHasValue: Byte): TLib3MFResult; cdecl;
+	
+	(**
+	* Removes a custom information string of the resource data group
+	*
+	* @param[in] pResourceDataGroup - ResourceDataGroup instance.
+	* @param[in] pNameSpace - A proper XML namespace for the Information.
+	* @param[in] pName - A proper name for the Information. Only alphanumerical characters are allowed, not starting with a number.
+	* @param[out] pValueExisted - Information string value existed.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFResourceDataGroup_RemoveCustomInformationFunc = function(pResourceDataGroup: TLib3MFHandle; const pNameSpace: PAnsiChar; const pName: PAnsiChar; out pValueExisted: Byte): TLib3MFResult; cdecl;
+	
+	(**
+	* Gets a custom information string to the resource data group. Fails if not existing.
+	*
+	* @param[in] pResourceDataGroup - ResourceDataGroup instance.
+	* @param[in] pNameSpace - A proper XML namespace for the Information.
+	* @param[in] pName - A proper name for the Information. Only alphanumerical characters are allowed, not starting with a number.
+	* @param[in] nValueBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pValueNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pValueBuffer -  buffer of Information string value., may be NULL
+	* @return error code or 0 (success)
+	*)
+	TLib3MFResourceDataGroup_GetCustomInformationFunc = function(pResourceDataGroup: TLib3MFHandle; const pNameSpace: PAnsiChar; const pName: PAnsiChar; const nValueBufferSize: Cardinal; out pValueNeededChars: Cardinal; pValueBuffer: PAnsiChar): TLib3MFResult; cdecl;
 	
 
 (*************************************************************************************************************************
@@ -4816,6 +4887,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		function GetEncryptionAlgorithm(): TLib3MFEncryptionAlgorithm;
 		function GetCompression(): TLib3MFCompression;
 		procedure GetAdditionalAuthenticationData(out AByteData: TByteDynArray);
+		procedure GetCustomInitVector(out AIV: TByteDynArray);
+		procedure SetCustomInitVector(const AIV: TByteDynArray);
 	end;
 
 
@@ -4831,6 +4904,10 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		function AddAccessRight(const AConsumer: TLib3MFConsumer; const AWrappingAlgorithm: TLib3MFWrappingAlgorithm; const AMgfAlgorithm: TLib3MFMgfAlgorithm; const ADigestMethod: TLib3MFDigestMethod): TLib3MFAccessRight;
 		function FindAccessRightByConsumer(const AConsumer: TLib3MFConsumer): TLib3MFAccessRight;
 		procedure RemoveAccessRight(const AConsumer: TLib3MFConsumer);
+		procedure AddCustomInformation(const ANameSpace: String; const AName: String; const AValue: String);
+		function HasCustomInformation(const ANameSpace: String; const AName: String): Boolean;
+		function RemoveCustomInformation(const ANameSpace: String; const AName: String): Boolean;
+		function GetCustomInformation(const ANameSpace: String; const AName: String): String;
 	end;
 
 
@@ -5196,10 +5273,16 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFResourceData_GetEncryptionAlgorithmFunc: TLib3MFResourceData_GetEncryptionAlgorithmFunc;
 		FLib3MFResourceData_GetCompressionFunc: TLib3MFResourceData_GetCompressionFunc;
 		FLib3MFResourceData_GetAdditionalAuthenticationDataFunc: TLib3MFResourceData_GetAdditionalAuthenticationDataFunc;
+		FLib3MFResourceData_GetCustomInitVectorFunc: TLib3MFResourceData_GetCustomInitVectorFunc;
+		FLib3MFResourceData_SetCustomInitVectorFunc: TLib3MFResourceData_SetCustomInitVectorFunc;
 		FLib3MFResourceDataGroup_GetKeyUUIDFunc: TLib3MFResourceDataGroup_GetKeyUUIDFunc;
 		FLib3MFResourceDataGroup_AddAccessRightFunc: TLib3MFResourceDataGroup_AddAccessRightFunc;
 		FLib3MFResourceDataGroup_FindAccessRightByConsumerFunc: TLib3MFResourceDataGroup_FindAccessRightByConsumerFunc;
 		FLib3MFResourceDataGroup_RemoveAccessRightFunc: TLib3MFResourceDataGroup_RemoveAccessRightFunc;
+		FLib3MFResourceDataGroup_AddCustomInformationFunc: TLib3MFResourceDataGroup_AddCustomInformationFunc;
+		FLib3MFResourceDataGroup_HasCustomInformationFunc: TLib3MFResourceDataGroup_HasCustomInformationFunc;
+		FLib3MFResourceDataGroup_RemoveCustomInformationFunc: TLib3MFResourceDataGroup_RemoveCustomInformationFunc;
+		FLib3MFResourceDataGroup_GetCustomInformationFunc: TLib3MFResourceDataGroup_GetCustomInformationFunc;
 		FLib3MFKeyStore_AddConsumerFunc: TLib3MFKeyStore_AddConsumerFunc;
 		FLib3MFKeyStore_GetConsumerCountFunc: TLib3MFKeyStore_GetConsumerCountFunc;
 		FLib3MFKeyStore_GetConsumerFunc: TLib3MFKeyStore_GetConsumerFunc;
@@ -5563,10 +5646,16 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFResourceData_GetEncryptionAlgorithmFunc: TLib3MFResourceData_GetEncryptionAlgorithmFunc read FLib3MFResourceData_GetEncryptionAlgorithmFunc;
 		property Lib3MFResourceData_GetCompressionFunc: TLib3MFResourceData_GetCompressionFunc read FLib3MFResourceData_GetCompressionFunc;
 		property Lib3MFResourceData_GetAdditionalAuthenticationDataFunc: TLib3MFResourceData_GetAdditionalAuthenticationDataFunc read FLib3MFResourceData_GetAdditionalAuthenticationDataFunc;
+		property Lib3MFResourceData_GetCustomInitVectorFunc: TLib3MFResourceData_GetCustomInitVectorFunc read FLib3MFResourceData_GetCustomInitVectorFunc;
+		property Lib3MFResourceData_SetCustomInitVectorFunc: TLib3MFResourceData_SetCustomInitVectorFunc read FLib3MFResourceData_SetCustomInitVectorFunc;
 		property Lib3MFResourceDataGroup_GetKeyUUIDFunc: TLib3MFResourceDataGroup_GetKeyUUIDFunc read FLib3MFResourceDataGroup_GetKeyUUIDFunc;
 		property Lib3MFResourceDataGroup_AddAccessRightFunc: TLib3MFResourceDataGroup_AddAccessRightFunc read FLib3MFResourceDataGroup_AddAccessRightFunc;
 		property Lib3MFResourceDataGroup_FindAccessRightByConsumerFunc: TLib3MFResourceDataGroup_FindAccessRightByConsumerFunc read FLib3MFResourceDataGroup_FindAccessRightByConsumerFunc;
 		property Lib3MFResourceDataGroup_RemoveAccessRightFunc: TLib3MFResourceDataGroup_RemoveAccessRightFunc read FLib3MFResourceDataGroup_RemoveAccessRightFunc;
+		property Lib3MFResourceDataGroup_AddCustomInformationFunc: TLib3MFResourceDataGroup_AddCustomInformationFunc read FLib3MFResourceDataGroup_AddCustomInformationFunc;
+		property Lib3MFResourceDataGroup_HasCustomInformationFunc: TLib3MFResourceDataGroup_HasCustomInformationFunc read FLib3MFResourceDataGroup_HasCustomInformationFunc;
+		property Lib3MFResourceDataGroup_RemoveCustomInformationFunc: TLib3MFResourceDataGroup_RemoveCustomInformationFunc read FLib3MFResourceDataGroup_RemoveCustomInformationFunc;
+		property Lib3MFResourceDataGroup_GetCustomInformationFunc: TLib3MFResourceDataGroup_GetCustomInformationFunc read FLib3MFResourceDataGroup_GetCustomInformationFunc;
 		property Lib3MFKeyStore_AddConsumerFunc: TLib3MFKeyStore_AddConsumerFunc read FLib3MFKeyStore_AddConsumerFunc;
 		property Lib3MFKeyStore_GetConsumerCountFunc: TLib3MFKeyStore_GetConsumerCountFunc read FLib3MFKeyStore_GetConsumerCountFunc;
 		property Lib3MFKeyStore_GetConsumerFunc: TLib3MFKeyStore_GetConsumerFunc read FLib3MFKeyStore_GetConsumerFunc;
@@ -6227,6 +6316,10 @@ implementation
 			LIB3MF_ERROR_KEYSTORERESOURCEDATANOTFOUND: ADescription := 'A resource data has not been found';
 			LIB3MF_ERROR_SECURECONTEXTNOTREGISTERED: ADescription := 'A Key or Conentent encryption callback has not been registered';
 			LIB3MF_ERROR_INVALIDKEYSIZE: ADescription := 'The key siue is invalid';
+			LIB3MF_ERROR_CUSTOMINFORMATIONNOTFOUND: ADescription := 'The custom information has not been found';
+			LIB3MF_ERROR_INVALIDCUSTOMNAMESPACE: ADescription := 'Invalid custom namespace';
+			LIB3MF_ERROR_INVALIDCUSTOMNAME: ADescription := 'Invalid custom name tag';
+			LIB3MF_ERROR_INVALIDINITVECTOR: ADescription := 'Invalid init vector';
 			else
 				ADescription := 'unknown';
 		end;
@@ -9058,6 +9151,34 @@ implementation
 		FWrapper.CheckError(Self, FWrapper.Lib3MFResourceData_GetAdditionalAuthenticationDataFunc(FHandle, countNeededByteData, countWrittenByteData, @AByteData[0]));
 	end;
 
+	procedure TLib3MFResourceData.GetCustomInitVector(out AIV: TByteDynArray);
+	var
+		countNeededIV: QWord;
+		countWrittenIV: QWord;
+	begin
+		countNeededIV:= 0;
+		countWrittenIV:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFResourceData_GetCustomInitVectorFunc(FHandle, 0, countNeededIV, nil));
+		SetLength(AIV, countNeededIV);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFResourceData_GetCustomInitVectorFunc(FHandle, countNeededIV, countWrittenIV, @AIV[0]));
+	end;
+
+	procedure TLib3MFResourceData.SetCustomInitVector(const AIV: TByteDynArray);
+	var
+		PtrIV: PByte;
+		LenIV: QWord;
+	begin
+		LenIV := Length(AIV);
+		if LenIV > $FFFFFFFF then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'array has too many entries.');
+		if LenIV > 0 then
+			PtrIV := @AIV[0]
+		else
+			PtrIV := nil;
+		
+		FWrapper.CheckError(Self, FWrapper.Lib3MFResourceData_SetCustomInitVectorFunc(FHandle, QWord(LenIV), PtrIV));
+	end;
+
 (*************************************************************************************************************************
  Class implementation for ResourceDataGroup
 **************************************************************************************************************************)
@@ -9127,6 +9248,43 @@ implementation
 		else
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'AConsumer is a nil value.');
 		FWrapper.CheckError(Self, FWrapper.Lib3MFResourceDataGroup_RemoveAccessRightFunc(FHandle, AConsumerHandle));
+	end;
+
+	procedure TLib3MFResourceDataGroup.AddCustomInformation(const ANameSpace: String; const AName: String; const AValue: String);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFResourceDataGroup_AddCustomInformationFunc(FHandle, PAnsiChar(ANameSpace), PAnsiChar(AName), PAnsiChar(AValue)));
+	end;
+
+	function TLib3MFResourceDataGroup.HasCustomInformation(const ANameSpace: String; const AName: String): Boolean;
+	var
+		ResultHasValue: Byte;
+	begin
+		ResultHasValue := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFResourceDataGroup_HasCustomInformationFunc(FHandle, PAnsiChar(ANameSpace), PAnsiChar(AName), ResultHasValue));
+		Result := (ResultHasValue <> 0);
+	end;
+
+	function TLib3MFResourceDataGroup.RemoveCustomInformation(const ANameSpace: String; const AName: String): Boolean;
+	var
+		ResultValueExisted: Byte;
+	begin
+		ResultValueExisted := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFResourceDataGroup_RemoveCustomInformationFunc(FHandle, PAnsiChar(ANameSpace), PAnsiChar(AName), ResultValueExisted));
+		Result := (ResultValueExisted <> 0);
+	end;
+
+	function TLib3MFResourceDataGroup.GetCustomInformation(const ANameSpace: String; const AName: String): String;
+	var
+		bytesNeededValue: Cardinal;
+		bytesWrittenValue: Cardinal;
+		bufferValue: array of Char;
+	begin
+		bytesNeededValue:= 0;
+		bytesWrittenValue:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFResourceDataGroup_GetCustomInformationFunc(FHandle, PAnsiChar(ANameSpace), PAnsiChar(AName), 0, bytesNeededValue, nil));
+		SetLength(bufferValue, bytesNeededValue);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFResourceDataGroup_GetCustomInformationFunc(FHandle, PAnsiChar(ANameSpace), PAnsiChar(AName), bytesNeededValue, bytesWrittenValue, @bufferValue[0]));
+		Result := StrPas(@bufferValue[0]);
 	end;
 
 (*************************************************************************************************************************
@@ -10256,10 +10414,16 @@ implementation
 		FLib3MFResourceData_GetEncryptionAlgorithmFunc := LoadFunction('lib3mf_resourcedata_getencryptionalgorithm');
 		FLib3MFResourceData_GetCompressionFunc := LoadFunction('lib3mf_resourcedata_getcompression');
 		FLib3MFResourceData_GetAdditionalAuthenticationDataFunc := LoadFunction('lib3mf_resourcedata_getadditionalauthenticationdata');
+		FLib3MFResourceData_GetCustomInitVectorFunc := LoadFunction('lib3mf_resourcedata_getcustominitvector');
+		FLib3MFResourceData_SetCustomInitVectorFunc := LoadFunction('lib3mf_resourcedata_setcustominitvector');
 		FLib3MFResourceDataGroup_GetKeyUUIDFunc := LoadFunction('lib3mf_resourcedatagroup_getkeyuuid');
 		FLib3MFResourceDataGroup_AddAccessRightFunc := LoadFunction('lib3mf_resourcedatagroup_addaccessright');
 		FLib3MFResourceDataGroup_FindAccessRightByConsumerFunc := LoadFunction('lib3mf_resourcedatagroup_findaccessrightbyconsumer');
 		FLib3MFResourceDataGroup_RemoveAccessRightFunc := LoadFunction('lib3mf_resourcedatagroup_removeaccessright');
+		FLib3MFResourceDataGroup_AddCustomInformationFunc := LoadFunction('lib3mf_resourcedatagroup_addcustominformation');
+		FLib3MFResourceDataGroup_HasCustomInformationFunc := LoadFunction('lib3mf_resourcedatagroup_hascustominformation');
+		FLib3MFResourceDataGroup_RemoveCustomInformationFunc := LoadFunction('lib3mf_resourcedatagroup_removecustominformation');
+		FLib3MFResourceDataGroup_GetCustomInformationFunc := LoadFunction('lib3mf_resourcedatagroup_getcustominformation');
 		FLib3MFKeyStore_AddConsumerFunc := LoadFunction('lib3mf_keystore_addconsumer');
 		FLib3MFKeyStore_GetConsumerCountFunc := LoadFunction('lib3mf_keystore_getconsumercount');
 		FLib3MFKeyStore_GetConsumerFunc := LoadFunction('lib3mf_keystore_getconsumer');
@@ -11140,6 +11304,12 @@ implementation
 		AResult := ALookupMethod(PAnsiChar('lib3mf_resourcedata_getadditionalauthenticationdata'), @FLib3MFResourceData_GetAdditionalAuthenticationDataFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_resourcedata_getcustominitvector'), @FLib3MFResourceData_GetCustomInitVectorFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_resourcedata_setcustominitvector'), @FLib3MFResourceData_SetCustomInitVectorFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_resourcedatagroup_getkeyuuid'), @FLib3MFResourceDataGroup_GetKeyUUIDFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
@@ -11150,6 +11320,18 @@ implementation
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_resourcedatagroup_removeaccessright'), @FLib3MFResourceDataGroup_RemoveAccessRightFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_resourcedatagroup_addcustominformation'), @FLib3MFResourceDataGroup_AddCustomInformationFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_resourcedatagroup_hascustominformation'), @FLib3MFResourceDataGroup_HasCustomInformationFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_resourcedatagroup_removecustominformation'), @FLib3MFResourceDataGroup_RemoveCustomInformationFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_resourcedatagroup_getcustominformation'), @FLib3MFResourceDataGroup_GetCustomInformationFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_keystore_addconsumer'), @FLib3MFKeyStore_AddConsumerFunc);

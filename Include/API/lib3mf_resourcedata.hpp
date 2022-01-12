@@ -52,6 +52,7 @@ namespace Lib3MF {
 		class CResourceData : public virtual IResourceData, public virtual CBase {
 		private:
 			NMR::PKeyStoreResourceData m_pResourceData;
+			
 		public:
 			CResourceData(NMR::PKeyStoreResourceData resourceData);
 
@@ -64,10 +65,15 @@ namespace Lib3MF {
 			Lib3MF::eCompression GetCompression() override;
 
 			void GetAdditionalAuthenticationData(Lib3MF_uint64 nByteDataBufferSize, Lib3MF_uint64 * pByteDataNeededCount, Lib3MF_uint8 * pByteDataBuffer) override;
+			
+			void GetCustomInitVector(Lib3MF_uint64 nIVBufferSize, Lib3MF_uint64* pIVNeededCount, Lib3MF_uint8* pIVBuffer) override;
+			
+			void SetCustomInitVector(const Lib3MF_uint64 nIVBufferSize, const Lib3MF_uint8* pIVBuffer) override;
 
 			inline NMR::PKeyStoreResourceData resourceData() const {
 				return m_pResourceData;
 			}
+
 		};
 	}
 }

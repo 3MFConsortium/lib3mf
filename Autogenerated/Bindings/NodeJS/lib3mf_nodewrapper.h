@@ -980,6 +980,8 @@ private:
 	static void GetEncryptionAlgorithm(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetCompression(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetAdditionalAuthenticationData(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetCustomInitVector(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void SetCustomInitVector(const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:
 	CLib3MFResourceData();
@@ -1001,6 +1003,10 @@ private:
 	static void AddAccessRight(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void FindAccessRightByConsumer(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void RemoveAccessRight(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void AddCustomInformation(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void HasCustomInformation(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void RemoveCustomInformation(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetCustomInformation(const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:
 	CLib3MFResourceDataGroup();

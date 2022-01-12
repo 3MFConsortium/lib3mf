@@ -135,6 +135,10 @@ typedef void * Lib3MF_pvoid;
 #define LIB3MF_ERROR_KEYSTORERESOURCEDATANOTFOUND 3003 /** A resource data has not been found */
 #define LIB3MF_ERROR_SECURECONTEXTNOTREGISTERED 3004 /** A Key or Conentent encryption callback has not been registered */
 #define LIB3MF_ERROR_INVALIDKEYSIZE 3005 /** The key siue is invalid */
+#define LIB3MF_ERROR_CUSTOMINFORMATIONNOTFOUND 3006 /** The custom information has not been found */
+#define LIB3MF_ERROR_INVALIDCUSTOMNAMESPACE 3007 /** Invalid custom namespace */
+#define LIB3MF_ERROR_INVALIDCUSTOMNAME 3008 /** Invalid custom name tag */
+#define LIB3MF_ERROR_INVALIDINITVECTOR 3009 /** Invalid init vector */
 
 /*************************************************************************************************************************
  Error strings for Lib3MF
@@ -185,6 +189,10 @@ inline const char * LIB3MF_GETERRORSTRING (Lib3MFResult nErrorCode) {
     case LIB3MF_ERROR_KEYSTORERESOURCEDATANOTFOUND: return "A resource data has not been found";
     case LIB3MF_ERROR_SECURECONTEXTNOTREGISTERED: return "A Key or Conentent encryption callback has not been registered";
     case LIB3MF_ERROR_INVALIDKEYSIZE: return "The key siue is invalid";
+    case LIB3MF_ERROR_CUSTOMINFORMATIONNOTFOUND: return "The custom information has not been found";
+    case LIB3MF_ERROR_INVALIDCUSTOMNAMESPACE: return "Invalid custom namespace";
+    case LIB3MF_ERROR_INVALIDCUSTOMNAME: return "Invalid custom name tag";
+    case LIB3MF_ERROR_INVALIDINITVECTOR: return "Invalid init vector";
     default: return "unknown error";
   }
 }

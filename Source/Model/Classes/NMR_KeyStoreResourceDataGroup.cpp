@@ -80,4 +80,55 @@ namespace NMR {
 		m_rgKey = key;
 	}
 
+
+	void CKeyStoreResourceDataGroup::addCustomInformation(const std::string& sNameSpace, const std::string& sName, const std::string& sValue)
+	{
+		m_CustomInformation.insert(std::make_pair(std::make_pair(sNameSpace, sName), sValue));
+	}
+
+	bool CKeyStoreResourceDataGroup::hasCustomInformation(const std::string& sNameSpace, const std::string& sName)
+	{
+		auto iIter = m_CustomInformation.find(std::make_pair(sNameSpace, sName));
+		return iIter != m_CustomInformation.end();
+	}
+
+	bool CKeyStoreResourceDataGroup::removeCustomInformation(const std::string& sNameSpace, const std::string& sName)
+	{
+		auto iIter = m_CustomInformation.find(std::make_pair(sNameSpace, sName));
+		bool bFoundInformation = (iIter != m_CustomInformation.end());
+		m_CustomInformation.erase(iIter);
+		return bFoundInformation;
+	}
+
+	std::string CKeyStoreResourceDataGroup::getCustomInformation(const std::string& sNameSpace, const std::string& sName)
+	{
+		auto iIter = m_CustomInformation.find(std::make_pair(sNameSpace, sName));
+		if (iIter != m_CustomInformation.end())
+			return iIter->second;
+
+		return "";
+	}
+
+	std::set<std::string> CKeyStoreResourceDataGroup::getCustomNameSpaces()
+	{
+		std::set<std::string> sNameSpaces;
+		for (auto iIter : m_CustomInformation) {
+			sNameSpaces.insert(iIter.first.first);
+		}
+
+		return sNameSpaces;
+	}
+
+	std::set<std::pair<std::string, std::string>> CKeyStoreResourceDataGroup::getCustomInformationNames()
+	{
+		std::set<std::pair<std::string, std::string>> sNamesSet;
+		for (auto iIter : m_CustomInformation) {
+			sNamesSet.insert(iIter.first);
+		}
+
+		return sNamesSet;
+
+	}
+
+
 }
