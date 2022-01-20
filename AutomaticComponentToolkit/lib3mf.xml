@@ -76,7 +76,6 @@
 		<error name="INVALIDPROPERTYCOUNT" code="132" description="Invalid property count."/>
 		<error name="UNKOWNPROGRESSIDENTIFIER" code="140" description="A progress identifier is unknown"/>
 		<error name="ELEMENTCOUNTEXCEEDSLIMIT" code="141" description="An element buffer exceeds its spec limit"/>
-		<error name="NOMASKCHANNELSELECTOR" code="250" description="No mask channel selector." />
 		<error name="BEAMLATTICE_INVALID_OBJECTTYPE" code="2000" description="This object type is not valid for beamlattices"/>		
 		<error name="INVALIDKEYSTORE" code="3000" description="The keystore object is invalid"/>
 		<error name="INVALIDKEYSTORECONSUMER" code="3001" description="The consumer keystore object is invalid"/>
@@ -180,12 +179,12 @@
 	</enum>
 
 	<enum name="BlendMethod">
-		<option name="Mix" value="0"/>
-		<option name="Multiply" value="1"/>
-		<option name="Mask" value="2"/>
+		<option name="NoBlendMethod" value="0"/>
+		<option name="Mix" value="1"/>
+		<option name="Multiply" value="2"/>
 	</enum>
 
-	<enum name="ColorChannel">
+	<enum name="ChannelName">
 		<option name="Red" value="0"/>
 		<option name="Green" value="1"/>
 		<option name="Blue" value="2"/>
@@ -249,6 +248,14 @@
 		<member name="Index" type="uint32"/>
 		<member name="Radius" type="double"/>
 	</struct>
+	
+	<enum name="CompositionMethod">
+		<option name="WeightedSum" value="0"/>
+		<option name="Multiply" value="1"/>
+		<option name="Min" value="2"/>
+		<option name="Max" value="3"/>
+		<option name="Mask" value="4"/>
+	</enum>
 
 	<functiontype name="ProgressCallback" description="A callback function">
 		<param name="Abort" type="bool" pass="return" description="Returns whether the calculation should be aborted"/>
@@ -493,12 +500,18 @@
 		</method>
 	</class>
 
-	<class name="VolumetricStackIterator" parent="ResourceIterator">
-		<method name="GetCurrentVolumetricStack" description="Returns the VolumetricStack the iterator points at.">
-			<param name="Resource" type="handle" class="VolumetricStack" pass="return" description="returns the VolumetricStack instance." />
+	<class name="ScalarFieldIterator" parent="ResourceIterator">
+		<method name="GetCurrentScalarField" description="Returns the ScalarField the iterator points at.">
+			<param name="Resource" type="handle" class="ScalarField" pass="return" description="returns the ScalarField instance." />
 		</method>
 	</class>
-	
+
+	<class name="Vector3DFieldIterator" parent="ResourceIterator">
+		<method name="GetCurrentVector3DField" description="Returns the Vector3DField the iterator points at.">
+			<param name="Resource" type="handle" class="Vector3DField" pass="return" description="returns the Vector3DField instance." />
+		</method>
+	</class>
+
 	<class name="MetaData">
 		<method name="GetNameSpace" description="returns the namespace URL of the metadata">
 			<param name="NameSpace" type="string" pass="return" description="the namespace URL of the metadata"/>
@@ -794,83 +807,248 @@
 		</method>
 	</class>
 
-	<class name="VolumeDataItem">
-		<method name="GetVolumetricStack" description="Returns the VolumetricStack used within this volume data item">
-			<param name="TheVolumetricStack" type="class" class="VolumetricStack" pass="return" description="VolumetricStack used within this volume data item"/>
+	<class name="ScalarField" parent="Resource">
+		<method name="GetName" description="Gets the name of this ScalarField.">
+			<param name="Name" type="string" pass="return" description="The name of this ScalarField." />
 		</method>
-		<method name="SetVolumetricStack" description="Sets the VolumetricStack to use within this volume data item.">
-			<param name="TheVolumetricStack" type="class" class="VolumetricStack" pass="in" description="VolumetricStack to use within this volume data item"/>
+		<method name="SetName" description="Sets the name of this ScalarField.">
+			<param name="Name" type="string" pass="in" description="The name of this ScalarField." />
 		</method>
-		<method name="GetTransform" description="Returns the transformation matrix of the volume data item.">
-			<param name="Transform" type="struct" class="Transform" pass="return" description="filled with the volume data item transformation matrix"/>
+		<method name="IsFromImage3D" description="Retrieves, if this ScalarField is a ScalarFieldFromImage3D">
+			<param name="IsFromImage3D" type="bool" pass="return" description="returns, whether the scalar field is a ScalarFieldFromImage3D"/>
 		</method>
-		<method name="SetTransform" description="Sets the transformation matrix of the volume data item.">
+		<method name="IsComposed" description="Retrieves, if this ScalarField is a ScalarFieldComposed">
+			<param name="IsComposed" type="bool" pass="return" description="returns, whether the scalar field is a ScalarFieldComposed"/>
+		</method>
+	</class>
+
+	<class name="Vector3DField" parent="Resource">
+		<method name="GetName" description="Gets the name of this Vector3DField.">
+			<param name="Name" type="string" pass="return" description="The name of this Vector3DField." />
+		</method>
+		<method name="SetName" description="Sets the name of this Vector3DField.">
+			<param name="Name" type="string" pass="in" description="The name of this Vector3DField." />
+		</method>
+		<method name="IsFromImage3D" description="Retrieves, if this Vector3DField is a Vector3DFieldFromImage3D">
+			<param name="IsFromImage3D" type="bool" pass="return" description="returns, whether the scalar field is a Vector3DFieldFromImage3D"/>
+		</method>
+		<method name="IsComposed" description="Retrieves, if this Vector3DField is a ScalarFieldComposed">
+			<param name="IsComposed" type="bool" pass="return" description="returns, whether the scalar field is a Vector3DFieldComposed"/>
+		</method>
+	</class>
+
+	<class name="ScalarFieldFromImage3D" parent="ScalarField">
+		<method name="GetImage" description="Returns the selected 3D image.">
+			<param name="Image3D" type="class" class="Image3D" pass="return" description="image instance" />
+		</method>
+		<method name="SetImage" description="Sets the 3D image of the selector.">
+			<param name="Image3D" type="class" class="Image3D" pass="in" description="image instance" />
+		</method>
+		<method name="SetChannel" description="Sets the channel name to be picked from the referenced Image3D.">
+			<param name="Name" type="enum" class="ChannelName" pass="in" description="Sets the channel name." />
+		</method>
+		<method name="GetChannel" description="Gets the channel name to be picked from the referenced Image3D.">
+			<param name="Name" type="enum" class="ChannelName" pass="return" description="Sets the channel name." />
+		</method>
+		<method name="SetFilter" description="Sets the texture filter of the selector.">
+			<param name="Filter" type="enum" class="TextureFilter" pass="in" description="texture filter" />
+		</method>
+		<method name="GetFilter" description="Returns the texture filter of the selector.">
+			<param name="Filter" type="enum" class="TextureFilter" pass="return" description="texture filter" />
+		</method>
+		<method name="SetTileStyles" description="Sets the tile styles of the selector.">
+			<param name="TileStyleU" type="enum" class="TextureTileStyle" pass="in" description="tile style in U" />
+			<param name="TileStyleV" type="enum" class="TextureTileStyle" pass="in" description="tile style in V" />
+			<param name="TileStyleW" type="enum" class="TextureTileStyle" pass="in" description="tile style in W" />
+		</method>
+		<method name="GetTileStyles" description="Retrieves the tile styles of the selector.">
+			<param name="TileStyleU" type="enum" class="TextureTileStyle" pass="out" description="tile style in U" />
+			<param name="TileStyleV" type="enum" class="TextureTileStyle" pass="out" description="tile style in V" />
+			<param name="TileStyleW" type="enum" class="TextureTileStyle" pass="out" description="tile style in W" />
+		</method>
+		<method name="GetOffset" description="returns the offset value for the pixel values in the Image3D">
+			<param name="Offset" type="double" pass="return" description="the offset value for the pixel values in the Image3D"/>
+		</method>
+		<method name="SetOffset" description="Sets the offset value for the pixel values in the Image3D">
+			<param name="Offset" type="double" pass="in" description="the offset value for the pixel values in the Image3D"/>
+		</method>
+		<method name="GetScale" description="returns the scale value for the pixel values in the Image3D">
+			<param name="Scale" type="double" pass="return" description="the scale value for the pixel values in the Image3D"/>
+		</method>
+		<method name="SetOffset" description="Sets the scale value for the pixel values in the Image3D">
+			<param name="Scale" type="double" pass="in" description="the scale value for the pixel values in the Image3D"/>
+		</method>
+	</class>
+
+	<class name="ScalarFieldComposed" parent="ScalarField">
+		<method name="SetMethod" description="Sets the method to used for composition.">
+			<param name="TheMethod" type="enum" class="CompositionMethod" pass="in" description="Sets the composition method." />
+		</method>
+		<method name="GetMethod" description="Gets the method to used for composition.">
+			<param name="TheMethod" type="enum" class="CompositionMethod" pass="return" description="Gets the composition method." />
+		</method>
+		<method name="GetFactor1" description="returns the factor scalar field 1 is multiplied with when composited">
+			<param name="Factor1" type="double" pass="return" description="the factor scalar field 1 is multiplied with when composited"/>
+		</method>
+		<method name="GetFactor1" description="sets the factor scalar field 1 is multiplied with when composited">
+			<param name="Factor1" type="double" pass="int" description="the factor scalar field 1 is multiplied with when composited"/>
+		</method>
+		<method name="GetFactor2" description="returns the factor scalar field 2 is multiplied with when composited">
+			<param name="Factor2" type="double" pass="return" description="the factor scalar field 2 is multiplied with when composited"/>
+		</method>
+		<method name="GetFactor2" description="sets the factor scalar field 2 is multiplied with when composited">
+			<param name="Factor2" type="double" pass="int" description="the factor scalar field 2 is multiplied with when composited"/>
+		</method>
+		<method name="ScalarFieldReference1" description="Access to the ScalarFieldReference for the first composited field">
+			<param name="TheScalarFieldReference1" type="class" class="ScalarFieldReference" pass="return" description="ScalarFieldReference"/>
+		</method>
+		<method name="ScalarFieldReference2" description="Access to the ScalarFieldReference for the second composited field">
+			<param name="TheScalarFieldReference1" type="class" class="ScalarFieldReference" pass="return" description="ScalarFieldReference"/>
+		</method>
+		<method name="ScalarFieldReferenceMask" description="Access to the ScalarFieldReference for masking. Only relevant if the Method is mask.">
+			<param name="TheScalarFieldReferenceMask" type="class" class="ScalarFieldReference" pass="return" description="ScalarFieldReference"/>
+		</method>
+	</class>
+
+	<class name="Vector3DFieldFromImage3D" parent="ScalarField">
+		<method name="GetImage" description="Returns the selected 3D image.">
+			<param name="Image3D" type="class" class="Image3D" pass="return" description="image instance" />
+		</method>
+		<method name="SetImage" description="Sets the 3D image of the selector.">
+			<param name="Image3D" type="class" class="Image3D" pass="in" description="image instance" />
+		</method>
+		<method name="SetFilter" description="Sets the texture filter of the selector.">
+			<param name="Filter" type="enum" class="TextureFilter" pass="in" description="texture filter" />
+		</method>
+		<method name="GetFilter" description="Returns the texture filter of the selector.">
+			<param name="Filter" type="enum" class="TextureFilter" pass="return" description="texture filter" />
+		</method>
+		<method name="SetTileStyles" description="Sets the tile styles of the selector.">
+			<param name="TileStyleU" type="enum" class="TextureTileStyle" pass="in" description="tile style in U" />
+			<param name="TileStyleV" type="enum" class="TextureTileStyle" pass="in" description="tile style in V" />
+			<param name="TileStyleW" type="enum" class="TextureTileStyle" pass="in" description="tile style in W" />
+		</method>
+		<method name="GetTileStyles" description="Retrieves the tile styles of the selector.">
+			<param name="TileStyleU" type="enum" class="TextureTileStyle" pass="out" description="tile style in U" />
+			<param name="TileStyleV" type="enum" class="TextureTileStyle" pass="out" description="tile style in V" />
+			<param name="TileStyleW" type="enum" class="TextureTileStyle" pass="out" description="tile style in W" />
+		</method>
+		<method name="GetOffset" description="returns the offset value for the pixel values in the Image3D">
+			<param name="Offset" type="double" pass="return" description="the offset value for the pixel values in the Image3D"/>
+		</method>
+		<method name="SetOffset" description="Sets the offset value for the pixel values in the Image3D">
+			<param name="Offset" type="double" pass="in" description="the offset value for the pixel values in the Image3D"/>
+		</method>
+		<method name="GetScale" description="returns the scale value for the pixel values in the Image3D">
+			<param name="Scale" type="double" pass="return" description="the scale value for the pixel values in the Image3D"/>
+		</method>
+		<method name="SetOffset" description="Sets the scale value for the pixel values in the Image3D">
+			<param name="Scale" type="double" pass="in" description="the scale value for the pixel values in the Image3D"/>
+		</method>
+	</class>
+
+	<class name="Vector3DFieldComposed" parent="ScalarField">
+		<method name="SetMethod" description="Sets the method to used for composition.">
+			<param name="TheMethod" type="enum" class="CompositionMethod" pass="in" description="Sets the composition method." />
+		</method>
+		<method name="GetMethod" description="Gets the method to used for composition.">
+			<param name="TheMethod" type="enum" class="CompositionMethod" pass="return" description="Gets the composition method." />
+		</method>
+		<method name="GetFactor1" description="returns the factor vector3d field 1 is multiplied with when composited">
+			<param name="Factor1" type="double" pass="return" description="the factor vector3d field 1 is multiplied with when composited"/>
+		</method>
+		<method name="GetFactor1" description="sets the factor vector3d field 1 is multiplied with when composited">
+			<param name="Factor1" type="double" pass="int" description="the factor vector3d field 1 is multiplied with when composited"/>
+		</method>
+		<method name="GetFactor2" description="returns the vector3d scalar field 2 is multiplied with when composited">
+			<param name="Factor2" type="double" pass="return" description="the factor vector3d field 2 is multiplied with when composited"/>
+		</method>
+		<method name="GetFactor2" description="sets the factor vector3d field 2 is multiplied with when composited">
+			<param name="Factor2" type="double" pass="int" description="the factor vector3d field 2 is multiplied with when composited"/>
+		</method>
+		<method name="Vector3DFieldReference1" description="Access to the Vector3DFieldReference for the first composited field">
+			<param name="TheVector3DFieldReference1" type="class" class="Vector3DFieldReference" pass="return" description="Vector3DFieldReference"/>
+		</method>
+		<method name="Vector3DFieldReference2" description="Access to the Vector3DFieldReference for the second composited field">
+			<param name="TheVector3DFieldReference1" type="class" class="Vector3DFieldReference" pass="return" description="Vector3DFieldReference"/>
+		</method>
+		<method name="ScalarFieldReferenceMask" description="Access to the ScalarFieldReference for masking. Only relevant if the Method is mask.">
+			<param name="TheScalarFieldReferenceMask" type="class" class="ScalarFieldReference" pass="return" description="ScalarFieldReference"/>
+		</method>
+	</class>
+
+	<class name="FieldReference">
+		<method name="GetFieldResourceID" description="Returns the UniqueResourceID of the Field (Scalar- or Vector3DField).">
+			<param name="UniqueResourceID" type="uint32" pass="return" description="returns the UniqueResourceID."/>
+		</method>
+		<method name="SetFieldResourceID" description="Sets the UniqueResourceID to refer to.">
+			<param name="UniqueResourceID" type="uint32" pass="in" description="UniqueResourceID of the Field (Scalar- or Vector3DField)"/>
+		</method>
+		<method name="GetTransform" description="Returns the transformation matrix into the coordinate system of the referenced Field.">
+			<param name="Transform" type="struct" class="Transform" pass="return" description="the transformation matrix"/>
+		</method>
+		<method name="SetTransform" description="Sets the transformation matrix into the coordinate system of the referenced Field.">
 			<param name="Transform" type="struct" class="Transform" pass="in" description="new transformation matrix"/>
 		</method>
 	</class>
-	
-	<class name="VolumeDataLevelset" parent="VolumeDataItem">
+
+	<class name="ScalarFieldReference" parent="FieldReference">
+		<method name="GetScalarField" description="Returns the ScalarField">
+			<param name="TheScalarField" type="class" class="ScalarField" pass="return" description="ScalarField used in this element"/>
+		</method>
+		<method name="SetScalarField" description="Sets the ScalarField to use within this volume data item.">
+			<param name="TheScalarField" type="class" class="ScalarField" pass="in" description="ScalarField used in this element"/>
+		</method>
+	</class>
+
+	<class name="Vector3DFieldReference" parent="FieldReference">
+		<method name="GetVector3DField" description="Returns the Vector3DField">
+			<param name="TheVector3DField" type="class" class="Vector3DField" pass="return" description="Vector3DField used in this element"/>
+		</method>
+		<method name="SetVector3DField" description="Sets the Vector3DField to use within this volume data item.">
+			<param name="TheVector3DField" type="class" class="Vector3DField" pass="in" description="Vector3DField used in this element"/>
+		</method>
+	</class>
+
+	<class name="VolumeDataLevelset" parent="ScalarFieldReference">
 		<method name="GetSolidThreshold" description="Returns the solidthreshold for the levelset function encoded in this VolumeDataLevelset">
 			<param name="TheSolidThreshold" type="double" pass="return" description="The solidthreshold for the levelset function encoded in this VolumeDataLevelset"/>
 		</method>
 		<method name="SetSolidThreshold" description="Sets the solidthreshold for the levelset function encoded in this VolumeDataLevelset">
 			<param name="TheSolidThreshold" type="double" pass="in" description="The solidthreshold for the levelset function encoded in this VolumeDataLevelset"/>
 		</method>
-		<method name="SetChannel" description="Sets the name of the channel that holds the levelset function.">
-			<param name="ChannelName" type="string" pass="in" description="The name of the channel that holds the levelset function" />
-		</method>
-		<method name="GetChannel" description="Returns the name of the channel that holds the levelset function.">
-			<param name="ChannelName" type="string" pass="return" description="The name of the channel that holds the levelset function" />
-		</method>
 	</class>
-	
-	<class name="VolumeDataColor" parent="VolumeDataItem">
-		<method name="SetChannel" description="Sets the name of the channel that holds the levelset function.">
-			<param name="TheColorChannel" type="enum" class="ColorChannel" pass="in" description="The color in question" />
-			<param name="ChannelName" type="string" pass="in" description="The new name of the channel that holds the scalar function of this ColorChannel" />
-		</method>
-		<method name="GetChannel" description="Returns the name of the channel that holds the levelset function.">
-			<param name="TheColorChannel" type="enum" class="ColorChannel" pass="in" description="The color in question" />
-			<param name="ChannelName" type="string" pass="return" description="The name of the channel that holds the scalar function of this ColorChannel" />
-		</method>
+
+	<class name="VolumeDataColor" parent="Vector3DFieldReference">
 	</class>
-	
-	<class name="VolumeDataComposite" parent="VolumeDataItem">
+
+	<class name="MaterialMapping" parent="ScalarFieldReference">
+	</class>
+
+	<class name="VolumeDataComposite">
 		<method name="GetBaseMaterialGroup" description="Returns the BaseMaterialGroup used within this volume data item">
-			<param name="BaseMaterialGroupInstance" type="handle" class="BaseMaterialGroup" pass="return" description="The BaseMaterialGroup instance of this VolumeDataComposite"/>
+			<param name="BaseMaterialGroupInstance" type="class" class="BaseMaterialGroup" pass="return" description="The BaseMaterialGroup instance of this VolumeDataComposite element"/>
 		</method>
 		<method name="SetBaseMaterialGroup" description="Sets the BaseMaterialGroup to use within this volume data item.">
-			<param name="BaseMaterialGroupInstance" type="handle" class="BaseMaterialGroup" pass="in" description="The new BaseMaterialGroup instance of this VolumeDataComposite"/>
+			<param name="BaseMaterialGroupInstance" type="class" class="BaseMaterialGroup" pass="in" description="The new BaseMaterialGroup instance of this VolumeDataComposite element"/>
 		</method>
-		<method name="GetMaterialMappingCount" description="Returns the number of material mappings of this VolumeDataComposite">
+		<method name="GetMaterialMappingCount" description="Returns the number of material mappings of this VolumeDataComposite element">
 			<param name="Count" type="uint32" pass="return" description="the number of material mappings."/>
 		</method>
-		<method name="GetMaterialMapping" description="Returns PropertyID and ChannelName of the MaterialMapping with given index">
+		<method name="GetMaterialMapping" description="Returns MaterialMappting with given index">
 			<param name="Index" type="uint32" pass="in" description="Index of the MaterialMapping in question."/>
-			<param name="PropertyID" type="uint32" class="uint32" pass="out" description="PropertyID of the material."/>
-			<param name="ChannelName" type="string" pass="out" description="The name of the channel that holds the intensity function of this Material within the Composite" />
-		</method>
-		<method name="SetMaterialMapping" description="Sets PropertyID and ChannelName of the MaterialMapping with given index">
-			<param name="Index" type="uint32" pass="in" description="Index of the MaterialMapping in question."/>
-			<param name="PropertyID" type="uint32" class="uint32" pass="out" description="New PropertyID of the material."/>
-			<param name="ChannelName" type="string" pass="out" description="The new name of the channel that holds the intensity function of this Material within the Composite" />
+			<param name="TheMaterialMapping" type="class" class="MaterialMapping" pass="return" description="MaterialMapping used in this element"/>
 		</method>
 		<method name="AddMaterialMapping" description="Adds a the MaterialMapping">
-			<param name="PropertyID" type="uint32" class="uint32" pass="in" description="PropertyID of the new MaterialMapping"/>
-			<param name="ChannelName" type="string" pass="in" description="The name of the channel that holds the intensity function of the new Material within the Composite" />
+			<param name="Transform" type="struct" class="Transform" pass="in" description="new transformation matrix"/>
+			<param name="TheMaterialMapping" type="class" class="MaterialMapping" pass="return" description="The new MaterialMapping"/>
 		</method>
 		<method name="RemoveMaterialMapping" description="Removes the MaterialMapping with given index">
 			<param name="Index" type="uint32" pass="in" description="The index of the MaterialMapping to be removed."/>
 		</method>
 	</class>
-	
-	<class name="VolumeDataProperty" parent="VolumeDataItem">
-		<method name="SetChannel" description="Sets the channel name to be used for this property">
-			<param name="ChannelName" type="string" pass="in" description="The mew channel name to be used for this property." />
-		</method>
-		<method name="GetChannel" description="Gets the channel name to be used for this property.">
-			<param name="ChannelName" type="string" pass="return" description="The channel name to be used for this property." />
-		</method>
+
+	<class name="VolumeDataProperty" parent="FieldReference">
 		<method name="SetName" description="Sets the qualified name of this property.">
 			<param name="PropertyName" type="string" pass="in" description="The new qualified name of this property" />
 		</method>
@@ -884,50 +1062,53 @@
 			<param name="IsRequired" type="bool" pass="return" description="Is this property required to process this 3MF document instance?" />
 		</method>
 	</class>
-	
+
 	<class name="VolumeData">
 		<method name="GetLevelset" description="Returns the VolumeDataLevelset of this VolumeData instance">
 			<param name="TheLevelsetData" type="optionalclass" class="VolumeDataLevelset" pass="return" description="filled with the VolumeDataLevelset of this VolumeData instance."/>
 		</method>
 		<method name="CreateNewLevelset" description="Creates a new VolumeDataLevelset for this VolumeData instance">
-			<param name="TheVolumetricStack" type="class" class="VolumetricStack" pass="in" description="The VolumetricStack for the new VolumeDataLevelset."/>
+			<param name="TheScalarField" type="class" class="ScalarField" pass="in" description="ScalarField used in this element"/>
+			<param name="Transform" type="struct" class="Transform" pass="in" description="new transformation matrix"/>
 			<param name="TheLevelsetData" type="class" class="VolumeDataLevelset" pass="return" description="The new VolumeDataLevelset of this VolumeData instance."/>
+		</method>
+		<method name="RemoveLevelset" description="Removes the VolumeDataLevelset of this VolumeData instance">
 		</method>
 		<method name="GetComposite" description="Returns the VolumeDataComposite of this VolumeData instance">
 			<param name="TheCompositeData" type="optionalclass" class="VolumeDataComposite" pass="return" description="filled with the VolumeDataComposite of this VolumeData instance."/>
 		</method>
 		<method name="CreateNewComposite" description="Creates a new VolumeDataComposite for this VolumeData instance">
-			<param name="TheVolumetricStack" type="class" class="VolumetricStack" pass="in" description="The VolumetricStack for the new VolumeDataComposite."/>
 			<param name="TheCompositeData" type="class" class="VolumeDataComposite" pass="return" description="The new VolumeDataComposite of this VolumeData instance."/>
+		</method>
+		<method name="RemoveComposite" description="Removes the VolumeDataComposite of this VolumeData instance">
 		</method>
 		<method name="GetColor" description="Returns the VolumeDataColor of this VolumeData instance">
 			<param name="TheColorData" type="optionalclass" class="VolumeDataColor" pass="return" description="filled with the VolumeDataColor of this VolumeData instance."/>
 		</method>
 		<method name="CreateNewColor" description="Creates a new VolumeDataColor for this VolumeData instance">
-			<param name="TheVolumetricStack" type="class" class="VolumetricStack" pass="in" description="The VolumetricStack for the new VolumeDataComposite."/>
+			<param name="TheVector3DField" type="class" class="Vector3DField" pass="in" description="Vector3DField used in this element"/>
+			<param name="Transform" type="struct" class="Transform" pass="in" description="new transformation matrix"/>
 			<param name="TheColorData" type="class" class="VolumeDataColor" pass="return" description="The new VolumeDataColor of this VolumeData instance."/>
+		</method>
+		<method name="RemoveColor" description="Removes the VolumeDataColor of this VolumeData instance">
 		</method>
 		<method name="GetPropertyCount" description="Returns the number of VolumeDataProperty">
 			<param name="Count" type="uint32" pass="return" description="the number of VolumeDataProperty-elements within this VolumdeData"/>
 		</method>
 		<method name="GetProperty" description="Returns the VolumeDataProperty at a given Index">
 			<param name="Index" type="uint32" pass="in" description="the index of the VolumeDataProperty to be returned."/>
-			<param name="ThePropertyData" type="class" class="VolumeDataProperty" pass="return" description="the VolumeDataProperty at the given index."/>
-		</method>
-		<method name="FindProperty" description="Returns the VolumeDataProperty at a given Index">
-			<param name="Name" type="string" pass="in" description="the qualified name of the VolumeDataProperty to be returned."/>
-			<param name="ThePropertyData" type="optionalclass" class="VolumeDataProperty" pass="return" description="the VolumeDataProperty at the given index."/>
+			<param name="TheVolumeDataProperty" type="class" class="VolumeDataProperty" pass="return" description="the VolumeDataProperty at the given index."/>
 		</method>
 		<method name="AddProperty" description="Adds a new VolumeDataProperty">
 			<param name="Name" type="string" pass="in" description="the qualified name (namespace+name) of the Property"/>
-			<param name="TheVolumetricStack" type="class" class="VolumetricStack" pass="in" description="The VolumetricStack for the new VolumeDataProperty."/>
-			<param name="ThePropertyData" type="class" class="VolumeDataProperty" pass="return" description="the new VolumeDataProperty."/>
+			<param name="UniqueResourceID" type="uint32" pass="in" description="UniqueResourceID of the Field (Scalar- or Vector3DField)"/>
+			<param name="TheVolumeDataProperty" type="class" class="VolumeDataProperty" pass="return" description="the newly created VolumeDataProperty."/>
 		</method>
-		<method name="RemoveProperty" description="Removes the VolumeDataProperty with a given name">
-			<param name="Name" type="string" pass="in" description="the qualified name of the VolumeDataProperty to be removed."/>
+		<method name="RemoveProperty" description="Removes the VolumeDataProperty with a given index">
+			<param name="Index" type="uint32" pass="in" description="the index of the VolumeDataProperty to be removed."/>
 		</method>
 	</class>
-	
+
 	<class name="Component">
 		<method name="GetObjectResource" description="Returns the Resource Instance of the component.">
 			<param name="ObjectResource" type="handle" class="Object" pass="return" description="filled with the Resource Instance."/>
@@ -1143,299 +1324,51 @@
 	</class>
 
 	<class name="Image3D" parent="Resource">
-		<method name="GetSizeX" description="Retrieves the extensions of the image stack in X direction.">
-			<param name="SizeX" type="uint32" pass="return" description="size in X" />
+		<method name="GetName" description="returns the name of this Image3D">
+			<param name="Name" type="string" pass="return" description="the name of this Image3D"/>
 		</method>
-	
-		<method name="GetSizeY" description="Retrieves the extensions of the image stack in Y direction.">
-			<param name="SizeY" type="uint32" pass="return" description="size in Y" />
+		<method name="SetName" description="sets a new name of this Image3D">
+			<param name="Name" type="string" pass="in" description="the new name of this Image3D"/>
 		</method>
-
+		<method name="GetRowCount" description="Retrieves the number of rows in each image of this image3d">
+			<param name="RowCount" type="uint32" pass="return" description="number of rows" />
+		</method>
+		<method name="SetRowCount" description="Sets the number of rows in each image of this image3d">
+			<param name="RowCount" type="uint32" pass="in" description="number of rows" />
+		</method>
+		<method name="GetColumnCount" description="Retrieves the number of columns in each image of this image3d">
+			<param name="ColumnCount" type="uint32" pass="return" description="number of columns" />
+		</method>
+		<method name="SetColumnCount" description="Sets the number of columns in each image of this image3d">
+			<param name="ColumnCount" type="uint32" pass="in" description="number of columns" />
+		</method>
 		<method name="GetSheetCount" description="Retrieves the number of images in the stack.">
 			<param name="SheetCount" type="uint32" pass="return" description="number of images" />
 		</method>
-
 		<method name="GetSheet" description="Retrieves a sheet of the stack. Raises an error if sheet is not set.">
 			<param name="Index" type="uint32" pass="in" description="index of the image (0-based)" />
 			<param name="Sheet" type="class" class="Attachment" pass="return" description="attachment containing the image" />
 		</method>
-
-		 <method name="GetSheetMinValue" description="Retrieves the minimum occuring double value of sampled field data.">
-			<param name="Index" type="uint32" pass="in" description="index of the image (0-based)" />
-			<param name="MinVal" type="double" pass="return" description="Minimum occuring double value" />
-		</method>
-
-		<method name="GetSheetMaxValue" description="Retrieves the maximum occuring double value of sampled field data.">
-			<param name="Index" type="uint32" pass="in" description="index of the image (0-based)" />
-			<param name="MaxVal" type="double" pass="return" description="Maximum occuring double value" />
-		</method>
-
-		<method name="CreateEmptySheet" description="Creates a new sheet attachment with empty data.">
-			<param name="Index" type="uint32" pass="in" description="index of the image (0-based)" />
-			<param name="Path" type="string" pass="in" description="path name of package" />
-			<param name="Min" type="double" pass="in" description="Mapped value of the minimal (e.g. 0) image3D pixel values." />
-			<param name="Max" type="double" pass="in" description="Mapped value of the maximal (e.g. 255) image3D pixel values." />
-			<param name="Sheet" type="class" class="Attachment" pass="return" description="attachment containing the image" />
-		</method>
-
-		<method name="CreateSheetFromBuffer" description="Creates a new sheet attachment from a memory buffer.">
-			<param name="Index" type="uint32" pass="in" description="index of the image (0-based)" />
-			<param name="Path" type="string" pass="in" description="path name of package" />
-			<param name="Data" type="basicarray" class="uint8" pass="in" description="binary image data" />
-			<param name="Min" type="double" pass="in" description="Mapped value of the minimal (e.g. 0) image3D pixel values." />
-			<param name="Max" type="double" pass="in" description="Mapped value of the maximal (e.g. 255) image3D pixel values." />
-			<param name="Sheet" type="class" class="Attachment" pass="return" description="attachment containing the image" />
-		</method>
-
-		<method name="CreateSheetFromFile" description="Creates a new sheet attachment from a file on disk.">
-			<param name="Index" type="uint32" pass="in" description="index of the image (0-based)" />
-			<param name="Path" type="string" pass="in" description="path name of package" />
-			<param name="FileName" type="string" pass="in" description="file name to read from" />
-			<param name="Min" type="double" pass="in" description="Mapped value of the minimal (e.g. 0) image3D pixel values." />
-			<param name="Max" type="double" pass="in" description="Mapped value of the maximal (e.g. 255) image3D pixel values." />
-			<param name="Sheet" type="class" class="Attachment" pass="return" description="attachment containing the image" />
-		</method>
-		
 		<method name="SetSheet" description="Sets a sheet to an existing attachment.">
 			<param name="Index" type="uint32" pass="in" description="index of the image (0-based)" />
 			<param name="Sheet" type="class" class="Attachment" pass="in" description="attachment containing the image" />
 		</method>
-
-		<method name="SetSheetMinValue" description="Sets the minimum occuring double value of sampled field data.">
-			<param name="Index" type="uint32" pass="in" description="index of the image (0-based)" />
-			<param name="MinVal" type="double" pass="in" description="Minimum occuring double value" />
+		<method name="CreateEmptySheet" description="Creates a new sheet attachment with empty data.">
+			<param name="Path" type="string" pass="in" description="path of part in the package" />
+			<param name="Sheet" type="class" class="Attachment" pass="return" description="attachment containing the image" />
 		</method>
-
-		<method name="SetSheetMaxValue" description="Sets the maximum occuring double value of sampled field data.">
-			<param name="Index" type="uint32" pass="in" description="index of the image (0-based)" />
-			<param name="MaxVal" type="double" pass="in" description="Maximum occuring double value" />
+		<method name="CreateSheetFromBuffer" description="Creates a new sheet attachment from a memory buffer.">
+			<param name="Path" type="string" pass="in" description="path of part in the package" />
+			<param name="Data" type="basicarray" class="uint8" pass="in" description="binary image data" />
+			<param name="Sheet" type="class" class="Attachment" pass="return" description="attachment containing the image" />
 		</method>
-
-	</class>
-	
-
-	<class name="Image3DChannelSelector">
-
-		<method name="GetImage" description="Returns the selected 3D image.">
-			<param name="Image3D" type="class" class="Image3D" pass="return" description="image instance" />
+		<method name="CreateSheetFromFile" description="Creates a new sheet attachment from a file on disk.">
+			<param name="Path" type="string" pass="in" description="path of part in the package" />
+			<param name="FileName" type="string" pass="in" description="file name to read from" />
+			<param name="Sheet" type="class" class="Attachment" pass="return" description="attachment containing the image" />
 		</method>
-
-		<method name="SetImage" description="Sets the 3D image of the selector.">
-			<param name="Image3D" type="class" class="Image3D" pass="in" description="image instance" />
-		</method>
-
-		<method name="SetSourceChannel" description="Sets the source channel of the selector.">
-			<param name="ChannelName" type="string" pass="in" description="name of the channel" />
-		</method>
-
-		<method name="GetSourceChannel" description="Returns the source channel of the selector.">
-			<param name="ChannelName" type="string" pass="return" description="name of the channel" />
-		</method>
-		
-		<method name="SetDestinationChannel" description="Sets the destination channel of the selector.">
-			<param name="ChannelName" type="string" pass="in" description="name of the channel" />
-		</method>
-
-		<method name="GetDestinationChannel" description="Returns the destination channel of the selector.">
-			<param name="ChannelName" type="string" pass="return" description="name of the channel" />
-		</method>
-
-		<method name="SetFilter" description="Sets the texture filter of the selector.">
-			<param name="Filter" type="enum" class="TextureFilter" pass="in" description="texture filter" />
-		</method>
-
-		<method name="GetFilter" description="Returns the texture filter of the selector.">
-			<param name="Filter" type="enum" class="TextureFilter" pass="return" description="texture filter" />
-		</method>
-
-		<method name="SetTileStyles" description="Sets the tile styles of the selector.">
-			<param name="TileStyleU" type="enum" class="TextureTileStyle" pass="in" description="tile style in U" />
-			<param name="TileStyleV" type="enum" class="TextureTileStyle" pass="in" description="tile style in V" />
-			<param name="TileStyleW" type="enum" class="TextureTileStyle" pass="in" description="tile style in W" />
-		</method>
-
-		<method name="GetTileStyles" description="Retrieves the tile styles of the selector.">
-			<param name="TileStyleU" type="enum" class="TextureTileStyle" pass="out" description="tile style in U" />
-			<param name="TileStyleV" type="enum" class="TextureTileStyle" pass="out" description="tile style in V" />
-			<param name="TileStyleW" type="enum" class="TextureTileStyle" pass="out" description="tile style in W" />
-		</method>
-
-	</class>
-	
-	<class name="VolumetricLayer">
-
-		<method name="GetTransform" description="Retrieves the transform of the layer.">
-			<param name="Transform" type="struct" class="Transform" pass="return" description="The transform matrix" />
-		</method>
-	
-		<method name="SetTransform" description="Sets the transform of the layer.">
-			<param name="Transform" type="struct" class="Transform" pass="in" description="The transform matrix" />
-		</method>
-
-		<method name="GetBlendMethod" description="Retrieves the transform of the layer.">
-			<param name="BlendMethod" type="enum" class="BlendMethod" pass="return" description="The blend method" />
-		</method>
-	
-		<method name="SetBlendMethod" description="Sets the transform of the layer.">
-			<param name="BlendMethod" type="enum" class="BlendMethod" pass="in" description="The blend method" />
-		</method>
-
-		<method name="GetSourceAlpha" description="Retrieves the source alpha value of the layer.">
-			<param name="SourceAlpha" type="double" pass="return" description="the source alpha value" />
-		</method>
-	
-		<method name="SetSourceAlpha" description="Sets the source alpha value of the layer.">
-			<param name="SourceAlpha" type="double" pass="in" description="the source alpha value" />
-		</method>
-		
-		<method name="GetDestinationAlpha" description="Retrieves the destination alpha value of the layer.">
-			<param name="DestinationAlpha" type="double" pass="return" description="the destination alpha value" />
-		</method>
-	
-		<method name="SetDestinationAlpha" description="Sets the destination alpha value of the layer.">
-			<param name="DestinationAlpha" type="double" pass="in" description="the destination alpha value" />
-		</method>
-
-		<method name="GetInformation" description="Retrieves all properties of the layer.">
-			<param name="Transform" type="struct" class="Transform" pass="out" description="The transform matrix" />
-			<param name="BlendMethod" type="enum" class="BlendMethod" pass="out" description="The blend method" />
-			<param name="SourceAlpha" type="double" pass="out" description="the source alpha value" />
-			<param name="DestinationAlpha" type="double" pass="out" description="the destination alpha value" />
-		</method>
-	
-		<method name="SetInformation" description="Sets all properties of the layer.">
-			<param name="Transform" type="struct" class="Transform" pass="in" description="The transform matrix" />
-			<param name="BlendMethod" type="enum" class="BlendMethod" pass="in" description="The blend method" />
-			<param name="SourceAlpha" type="double" pass="in" description="the source alpha value" />
-			<param name="DestinationAlpha" type="double" pass="in" description="the destination alpha value" />
-		</method>
-
-		<method name="CreateMaskChannelSelector" description="Creates a new mask channel selector.">
-			<param name="Image3D" type="class" class="Image3D" pass="in" description="Image3D Class to reference" />
-			<param name="SourceChannel" type="string" pass="in" description="Name of source channel." />
-			<param name="DestinationChannel" type="string" pass="in" description="Name of destination channel." />
-			<param name="ChannelSelector" type="class" class="Image3DChannelSelector" pass="return" description="Channel Selector Instance" />
-		</method>
-		
-		<method name="HasMaskChannelSelector" description="Returns if a mask channel selector exists.">
-			<param name="SelectorExists" type="bool" pass="return" description="true if a mask channel selector exists." />
-		</method>
-		
-		<method name="ClearMaskChannelSelector" description="Removes a mask channel selector, if it exists.">
-		</method>
-
-		<method name="GetMaskChannelSelector" description="Returns a new mask channel selector. Fails if none exists.">
-			<param name="ChannelSelector" type="class" class="Image3DChannelSelector" pass="return" description="Channel Selector Instance" />
-		</method>
-
-		<method name="GetChannelSelectorCount" description="Returns the channel selector.">
-			<param name="Count" type="uint32" pass="return" description="Count of channel selectors" />
-		</method>
-
-		<method name="GetChannelSelector" description="Returns a channel selector.">
-			<param name="Index" type="uint32" pass="in" description="Index of the channel selector" />
-			<param name="ChannelSelector" type="class" class="Image3DChannelSelector" pass="return" description="Channel Selector Instance" />
-		</method>
-		
-		<method name="AddChannelSelector" description="Adds a new channel selector.">
-			<param name="Image3D" type="class" class="Image3D" pass="in" description="Image3D Class to reference" />
-			<param name="SourceChannel" type="string" pass="in" description="Name of source channel." />
-			<param name="DestinationChannel" type="string" pass="in" description="Name of destination channel." />
-			<param name="ChannelSelector" type="class" class="Image3DChannelSelector" pass="return" description="Channel Selector Instance" />
-		</method>
-		
-		<method name="ClearChannelSelectors" description="Removes all channel selectors.">
-		</method>
-		
-		<method name="ReindexChannelSelector" description="Moves a channel selector to a different position in the list.">
-			<param name="ChannelSelector" type="class" class="Image3DChannelSelector" pass="in" description="ChannelSelector instance" />
-			<param name="Index" type="uint32" pass="in" description="new index of the channel selector. All layers with higher indices will increase by one." />
-		</method>
-
-		<method name="RemoveChannelSelector" description="Removes a channel selector from the stack. Fails if the channel selector does not exist.">
-			<param name="ChannelSelector" type="class" class="Image3DChannelSelector" pass="in" description="channel selector instance." />
-		</method>
-
-		<method name="RemoveChannelSelectorByIndex" description="Removes a channel selector from the stack. Fails if the channel selector does not exist.">
-			<param name="Index" type="uint32" pass="in" description="index of the channel selector" />
-		</method>
-		
-	</class>
-	
-	
-	<class name="VolumetricStack" parent="Resource">
-
-		<method name="Clear" description="Clears all destination channels and layers of the stack.">
-		</method>
-
-		<method name="ClearUnusedDestinationChannels" description="Clears all unused destination channels of the stack.">
-		</method>
-		
-		<method name="GetDestinationChannelCount" description="Retrieves the number of Destination Channels.">
-			<param name="Count" type="uint32" pass="return" description="number of destination channels" />
-		</method>
-	
-		<method name="GetDestinationChannel" description="Adds a new destination channel.">
-			<param name="Index" type="uint32" pass="in" description="Index of Destination Channel" />
-			<param name="Name" type="string" pass="out" description="Name of Destination Channel." />
-			<param name="Background" type="double" pass="out" description="Background of Destination Channel" />
-		</method>
-
-		<method name="AddDestinationChannel" description="Adds a new destination channel.">
-			<param name="Name" type="string" pass="in" description="Name of Destination Channel. Must be unique in the stack." />
-			<param name="Background" type="double" pass="in" description="Background of Destination Channel" />
-			<param name="Index" type="uint32" pass="return" description="Index of Destination Channel" />
-		</method>
-		
-		<method name="UpdateDestinationChannel" description="Changes a destination channels background.">
-			<param name="Index" type="uint32" pass="in" description="Index of Destination Channel" />
-			<param name="Background" type="double" pass="in" description="Background of Destination Channel" />
-		</method>
-
-		<method name="UpdateDestinationChannelByName" description="Changes a destination channels background.">
-			<param name="Name" type="string" pass="in" description="Name of Destination Channel" />
-			<param name="Background" type="double" pass="in" description="Background of Destination Channel" />
-		</method>
-
-		<method name="RemoveDestinationChannel" description="Removes a destination channel. Fails if channel is still referenced in the stack.">
-			<param name="Index" type="uint32" pass="in" description="Index of Destination Channel" />
-		</method>
-
-		<method name="RemoveDestinationChannelByName" description="Removes a destination channel. Fails if channel is still referenced in the stack.">
-			<param name="Name" type="string" pass="in" description="Name of Destination Channel" />
-		</method>
-		
-		<method name="GetLayerCount" description="Retrieves the number of Layers.">
-			<param name="Count" type="uint32" pass="return" description="number of layers." />
-		</method>
-		
-		<method name="GetLayer" description="Retrieves a layer.">
-			<param name="Index" type="uint32" pass="in" description="index of the layer" />
-			<param name="Layer" type="class" class="VolumetricLayer" pass="return" description="index of the layer" />
-		</method>
-
-		<method name="AddLayer" description="Adds a new layer.">
-			<param name="Transform" type="struct" class="Transform" pass="in" description="transform of the layer" />
-			<param name="BlendMethod" type="enum" class="BlendMethod" pass="in" description="BlendMethod of the layer" />
-			<param name="Layer" type="class" class="VolumetricLayer" pass="return" description="Layer instance" />
-		</method>
-
-		<method name="ReindexLayer" description="Moves a layer to a different position in the stack.">
-			<param name="Layer" type="class" class="VolumetricLayer" pass="in" description="layer instance" />
-			<param name="Index" type="uint32" pass="in" description="new index of the layer. All layers with higher indices will increase by one." />
-		</method>
-
-		<method name="RemoveLayer" description="Removes a layer from the stack. Fails if the layer does not exist.">
-			<param name="Layer" type="class" class="VolumetricLayer" pass="in" description="layer instance." />
-		</method>
-
-		<method name="RemoveLayerByIndex" description="Removes a layer from the stack. Fails if the layer does not exist.">
-			<param name="Index" type="uint32" pass="in" description="index of the layer" />
-		</method>
-		
 	</class>
 
-	
 	<class name="Attachment">
 		<method name="GetPath" description="Retrieves an attachment's package path. This function will be removed in a later release.">
 			<param name="Path" type="string" pass="return" description="returns the attachment's package path string"/>
@@ -1515,7 +1448,6 @@
 		</method>
 	</class>
 
-
 	<class name="BuildItem">
 		<method name="GetObjectResource" description="Retrieves the object resource associated to a build item">
 			<param name="ObjectResource" type="handle" class="Object" pass="return" description="returns the associated resource instance"/>
@@ -1552,7 +1484,6 @@
 			<param name="Outbox" type="struct" class="Box" pass="return" description="Outbox of this build item"/>
 		</method>
 	</class>
-
 
 	<class name="BuildItemIterator">
 		<method name="MoveNext" description="Iterates to the next build item in the list.">
@@ -1673,7 +1604,7 @@
 		<option name="SHA1" value="160" description="http://www.w3.org/2000/09/xmldsig#sha1"/>
 		<option name="SHA256" value="256" description="http://www.w3.org/2001/04/xmlenc#sha256"/>
 	</enum>
-	
+
 	<class name="AccessRight">
 		<method name="GetConsumer" description="Gets the consumer associated with this access right">
 			<param name="Consumer" type="class" class="Consumer" pass="return" description="The consumer instance"/>
@@ -1688,7 +1619,7 @@
 			<param name="Algorithm" type="enum" class="DigestMethod" pass="return" description="The digest method for this accessright" />
 		</method>
 	</class>
-	
+
 	<functiontype name="KeyWrappingCallback" description="A callback used to wrap (encrypt) the content key available in keystore resource group">
 		<param name="KEKParams" type="class" class="AccessRight" pass="in" description="The information about the parameters used used to wrap the key to the contents"/>
 		<param name="InBuffer" type="basicarray" class="uint8" pass="in" description="Buffer to the input value. When encrypting, this should be the plain key. When decrypting, this should be the key cipher."/>
@@ -1736,7 +1667,7 @@
 		<option name="NoCompression" value="0" description="No compression applied"/>
 		<option name="Deflate" value="1" description="Deflate compression applied"/>
 	</enum>
-	
+
 	<class name="ResourceData">
 		<method name="GetPath" description="Gets the encrypted part path">
 			<param name="Path" type="class" class="PackagePart" pass="return" description="The part path"/>
@@ -1957,11 +1888,14 @@
 		<method name="GetImage3Ds" description="creates a resource iterator instance with all image3d resources.">
 			<param name="ResourceIterator" type="handle" class="Image3DIterator" pass="return" description="returns the iterator instance." />
 		</method>
+		<method name="GetScalarFields" description="creates a resource iterator instance with all ScalarField resources.">
+			<param name="ResourceIterator" type="handle" class="ScalarFieldIterator" pass="return" description="returns the iterator instance." />
+		</method>
+		<method name="GetVector3DFields" description="creates a resource iterator instance with all Vector3DField resources.">
+			<param name="ResourceIterator" type="handle" class="Vector3DFieldIterator" pass="return" description="returns the iterator instance." />
+		</method>
 		<method name="MergeToModel" description = "Merges all components and objects which are referenced by a build item into a mesh. The memory is duplicated and a new model is created.">
 			<param name="MergedModelInstance" type="handle" class="Model" pass="return" description="returns the merged model instance" />
-		</method>
-		<method name="GetVolumetricStacks" description="creates a resource iterator instance with all volumetric stack resources.">
-			<param name="ResourceIterator" type="handle" class="VolumetricStackIterator" pass="return" description="returns the iterator instance." />
 		</method>
 		<method name="AddMeshObject" description="adds an empty mesh object to the model.">
 			<param name="MeshObjectInstance" type="handle" class="MeshObject" pass="return" description=" returns the mesh object instance"/>
@@ -1995,13 +1929,46 @@
 			<param name="MultiPropertyGroupInstance" type="handle" class="MultiPropertyGroup" pass="return" description="returns the new MultiPropertyGroup instance."/>
 		</method>
 		<method name="AddImage3D" description="creates a new 3D Image Resource">
-			<param name="SizeX" type="uint32" pass="in" description="the extensions of the image stack in X direction."/>
-			<param name="SizeY" type="uint32" pass="in" description="the extensions of the image stack in Y direction."/>
+			<param name="ColumnCount" type="uint32" pass="in" description="the number of columns in each sheet."/>
+			<param name="RowCount" type="uint32" pass="in" description="the number of rows in each sheet."/>
 			<param name="SheetCount" type="uint32" pass="in" description="the number of sheets in the image stack."/>
 			<param name="Instance" type="handle" class="Image3D" pass="return" description="returns the new Image3D instance" />
 		</method>
-		<method name="AddVolumetricStack" description="creates a new Volumetric Stack Resource">
-			<param name="Instance" type="handle" class="VolumetricStack" pass="return" description="returns the new VolumetricStack instance" />
+		<method name="AddScalarFieldFromImage3D" description="creates a new ScalarFieldFromImage3D Resource">
+			<param name="TheScalarFieldFromImage3D" type="class" class="ScalarFieldFromImage3D" pass="return" description="returns the new ScalarFieldFromImage3D instance" />
+		</method>
+		<method name="AddScalarFieldComposed" description="creates a new ScalarFieldComposed Resource">
+			<param name="TheScalarFieldComposed" type="class" class="ScalarFieldComposed" pass="return" description="returns the new ScalarFieldComposed instance" />
+		</method>
+		<method name="GetScalarFieldByID" description="finds a ScalarField object by its UniqueResourceID">
+			<param name="UniqueResourceID" type="uint32" pass="in" description="UniqueResourceID"/>
+			<param name="ScalarFieldInstance" type="class" class="ScalarField" pass="return" description="returns the scalar field instance"/>
+		</method>
+		<method name="GetScalarFieldFromImage3DByID" description="finds a ScalarFieldFromImage3D object by its UniqueResourceID">
+			<param name="UniqueResourceID" type="uint32" pass="in" description="UniqueResourceID"/>
+			<param name="ScalarFieldFromImage3DInstance" type="class" class="ScalarFieldFromImage3D" pass="return" description="returns the ScalarFieldFromImage3D instance"/>
+		</method>
+		<method name="GetScalarFieldComposedByID" description="finds a ScalarFieldComposed object by its UniqueResourceID">
+			<param name="UniqueResourceID" type="uint32" pass="in" description="UniqueResourceID"/>
+			<param name="ScalarFieldComposedInstance" type="class" class="ScalarFieldComposed" pass="return" description="returns the ScalarFieldComponsed instance"/>
+		</method>
+		<method name="AddVector3DFieldFromImage3D" description="creates a new Vector3DFieldFromImage3D Resource">
+			<param name="TheVector3DFieldFromImage3D" type="class" class="Vector3DFieldFromImage3D" pass="return" description="returns the new Vector3DFieldFromImage3D instance" />
+		</method>
+		<method name="AddVector3DFieldComposed" description="creates a new Vector3DFieldComposed Resource">
+			<param name="TheVector3DFieldComposed" type="class" class="Vector3DFieldComposed" pass="return" description="returns the new Vector3DFieldComposed instance" />
+		</method>
+		<method name="GetVector3DFieldByID" description="finds a Vector3DField object by its UniqueResourceID">
+			<param name="UniqueResourceID" type="uint32" pass="in" description="UniqueResourceID"/>
+			<param name="Vector3DFieldInstance" type="class" class="Vector3DField" pass="return" description="returns the scalar field instance"/>
+		</method>
+		<method name="GetVector3DFieldFromImage3DByID" description="finds a Vector3DFieldFromImage3D object by its UniqueResourceID">
+			<param name="UniqueResourceID" type="uint32" pass="in" description="UniqueResourceID"/>
+			<param name="Vector3DFieldFromImage3DInstance" type="class" class="Vector3DFieldFromImage3D" pass="return" description="returns the Vector3DFieldFromImage3D instance"/>
+		</method>
+		<method name="GetVector3DFieldComposedByID" description="finds a Vector3DFieldComposed object by its UniqueResourceID">
+			<param name="UniqueResourceID" type="uint32" pass="in" description="UniqueResourceID"/>
+			<param name="Vector3DFieldComposedInstance" type="class" class="Vector3DFieldComposed" pass="return" description="returns the Vector3DFieldComponsed instance"/>
 		</method>
 		<method name="AddBuildItem" description = "adds a build item to the model.">
 			<param name="Object" type="handle" class="Object" pass="in" description="Object instance." />
