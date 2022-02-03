@@ -35,14 +35,13 @@ Abstract: This is the class declaration of CVolumeDataProperty
 #include "lib3mf_interfaces.hpp"
 
 // Parent classes
-#include "lib3mf_volumedataitem.hpp"
+#include "lib3mf_fieldreference.hpp"
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable : 4250)
 #endif
 
 // Include custom headers here.
-#include "Common/Mesh/NMR_VolumeProperty.h"
 
 
 namespace Lib3MF {
@@ -53,7 +52,7 @@ namespace Impl {
  Class declaration of CVolumeDataProperty 
 **************************************************************************************************************************/
 
-class CVolumeDataProperty : public virtual IVolumeDataProperty, public virtual CVolumeDataItem {
+class CVolumeDataProperty : public virtual IVolumeDataProperty, public virtual CFieldReference {
 private:
 
 	/**
@@ -65,26 +64,17 @@ protected:
 	/**
 	* Put protected members here.
 	*/
-	NMR::CVolumeProperty* VolumeProperty();
-
-	/**
-	* Put protected members here.
-	*/
 
 public:
 
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-	CVolumeDataProperty(NMR::PVolumeProperty pVolumeProperty, NMR::CModel* pModel);
+
 
 	/**
 	* Public member functions to implement.
 	*/
-
-	void SetChannel(const std::string & sChannelName) override;
-
-	std::string GetChannel() override;
 
 	void SetName(const std::string & sPropertyName) override;
 

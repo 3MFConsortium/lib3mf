@@ -148,16 +148,25 @@ const (
 
 type ELib3MFBlendMethod int
 const (
-		eBlendMethod_Mix = 0
-		eBlendMethod_Multiply = 1
-		eBlendMethod_Mask = 2
+		eBlendMethod_NoBlendMethod = 0
+		eBlendMethod_Mix = 1
+		eBlendMethod_Multiply = 2
 )
 
-type ELib3MFColorChannel int
+type ELib3MFChannelName int
 const (
-		eColorChannel_Red = 0
-		eColorChannel_Green = 1
-		eColorChannel_Blue = 2
+		eChannelName_Red = 0
+		eChannelName_Green = 1
+		eChannelName_Blue = 2
+)
+
+type ELib3MFCompositionMethod int
+const (
+		eCompositionMethod_WeightedSum = 0
+		eCompositionMethod_Multiply = 1
+		eCompositionMethod_Min = 2
+		eCompositionMethod_Max = 3
+		eCompositionMethod_Mask = 4
 )
 
 type ELib3MFEncryptionAlgorithm int
@@ -717,12 +726,21 @@ type Lib3MFGoInterface interface {
 
 
 	/**
-	* Returns the VolumetricStack the iterator points at.
+	* Returns the ScalarField the iterator points at.
 	*
-	* @param[in] VolumetricStackIterator - VolumetricStackIterator instance.
-	* @return returns the VolumetricStack instance.
+	* @param[in] ScalarFieldIterator - ScalarFieldIterator instance.
+	* @return returns the ScalarField instance.
 	*/
-	VolumetricStackIterator_GetCurrentVolumetricStack(VolumetricStackIterator Lib3MFHandle) (Lib3MFHandle, error)
+	ScalarFieldIterator_GetCurrentScalarField(ScalarFieldIterator Lib3MFHandle) (Lib3MFHandle, error)
+
+
+	/**
+	* Returns the Vector3DField the iterator points at.
+	*
+	* @param[in] Vector3DFieldIterator - Vector3DFieldIterator instance.
+	* @return returns the Vector3DField instance.
+	*/
+	Vector3DFieldIterator_GetCurrentVector3DField(Vector3DFieldIterator Lib3MFHandle) (Lib3MFHandle, error)
 
 
 	/**
@@ -1504,39 +1522,515 @@ type Lib3MFGoInterface interface {
 
 
 	/**
-	* Returns the VolumetricStack used within this volume data item
+	* Gets the name of this ScalarField.
 	*
-	* @param[in] VolumeDataItem - VolumeDataItem instance.
-	* @return VolumetricStack used within this volume data item
+	* @param[in] ScalarField - ScalarField instance.
+	* @return The name of this ScalarField.
 	*/
-	VolumeDataItem_GetVolumetricStack(VolumeDataItem Lib3MFHandle) (Lib3MFHandle, error)
+	ScalarField_GetName(ScalarField Lib3MFHandle) (string, error)
 
 
 	/**
-	* Sets the VolumetricStack to use within this volume data item.
+	* Sets the name of this ScalarField.
 	*
-	* @param[in] VolumeDataItem - VolumeDataItem instance.
-	* @param[in] TheVolumetricStack - VolumetricStack to use within this volume data item
+	* @param[in] ScalarField - ScalarField instance.
+	* @param[in] sName - The name of this ScalarField.
 	*/
-	VolumeDataItem_SetVolumetricStack(VolumeDataItem Lib3MFHandle, TheVolumetricStack Lib3MFHandle) (error)
+	ScalarField_SetName(ScalarField Lib3MFHandle, sName string) (error)
 
 
 	/**
-	* Returns the transformation matrix of the volume data item.
+	* Retrieves, if this ScalarField is a ScalarFieldFromImage3D
 	*
-	* @param[in] VolumeDataItem - VolumeDataItem instance.
-	* @return filled with the volume data item transformation matrix
+	* @param[in] ScalarField - ScalarField instance.
+	* @return returns, whether the scalar field is a ScalarFieldFromImage3D
 	*/
-	VolumeDataItem_GetTransform(VolumeDataItem Lib3MFHandle) (sLib3MFTransform, error)
+	ScalarField_IsFromImage3D(ScalarField Lib3MFHandle) (bool, error)
 
 
 	/**
-	* Sets the transformation matrix of the volume data item.
+	* Retrieves, if this ScalarField is a ScalarFieldComposed
 	*
-	* @param[in] VolumeDataItem - VolumeDataItem instance.
+	* @param[in] ScalarField - ScalarField instance.
+	* @return returns, whether the scalar field is a ScalarFieldComposed
+	*/
+	ScalarField_IsComposed(ScalarField Lib3MFHandle) (bool, error)
+
+
+	/**
+	* Gets the name of this Vector3DField.
+	*
+	* @param[in] Vector3DField - Vector3DField instance.
+	* @return The name of this Vector3DField.
+	*/
+	Vector3DField_GetName(Vector3DField Lib3MFHandle) (string, error)
+
+
+	/**
+	* Sets the name of this Vector3DField.
+	*
+	* @param[in] Vector3DField - Vector3DField instance.
+	* @param[in] sName - The name of this Vector3DField.
+	*/
+	Vector3DField_SetName(Vector3DField Lib3MFHandle, sName string) (error)
+
+
+	/**
+	* Retrieves, if this Vector3DField is a Vector3DFieldFromImage3D
+	*
+	* @param[in] Vector3DField - Vector3DField instance.
+	* @return returns, whether the scalar field is a Vector3DFieldFromImage3D
+	*/
+	Vector3DField_IsFromImage3D(Vector3DField Lib3MFHandle) (bool, error)
+
+
+	/**
+	* Retrieves, if this Vector3DField is a ScalarFieldComposed
+	*
+	* @param[in] Vector3DField - Vector3DField instance.
+	* @return returns, whether the scalar field is a Vector3DFieldComposed
+	*/
+	Vector3DField_IsComposed(Vector3DField Lib3MFHandle) (bool, error)
+
+
+	/**
+	* Returns the selected 3D image.
+	*
+	* @param[in] ScalarFieldFromImage3D - ScalarFieldFromImage3D instance.
+	* @return image instance
+	*/
+	ScalarFieldFromImage3D_GetImage(ScalarFieldFromImage3D Lib3MFHandle) (Lib3MFHandle, error)
+
+
+	/**
+	* Sets the 3D image of the selector.
+	*
+	* @param[in] ScalarFieldFromImage3D - ScalarFieldFromImage3D instance.
+	* @param[in] Image3D - image instance
+	*/
+	ScalarFieldFromImage3D_SetImage(ScalarFieldFromImage3D Lib3MFHandle, Image3D Lib3MFHandle) (error)
+
+
+	/**
+	* Sets the channel name to be picked from the referenced Image3D.
+	*
+	* @param[in] ScalarFieldFromImage3D - ScalarFieldFromImage3D instance.
+	* @param[in] eName - Sets the channel name.
+	*/
+	ScalarFieldFromImage3D_SetChannel(ScalarFieldFromImage3D Lib3MFHandle, eName ELib3MFChannelName) (error)
+
+
+	/**
+	* Gets the channel name to be picked from the referenced Image3D.
+	*
+	* @param[in] ScalarFieldFromImage3D - ScalarFieldFromImage3D instance.
+	* @return Sets the channel name.
+	*/
+	ScalarFieldFromImage3D_GetChannel(ScalarFieldFromImage3D Lib3MFHandle) (ELib3MFChannelName, error)
+
+
+	/**
+	* Sets the texture filter of the selector.
+	*
+	* @param[in] ScalarFieldFromImage3D - ScalarFieldFromImage3D instance.
+	* @param[in] eFilter - texture filter
+	*/
+	ScalarFieldFromImage3D_SetFilter(ScalarFieldFromImage3D Lib3MFHandle, eFilter ELib3MFTextureFilter) (error)
+
+
+	/**
+	* Returns the texture filter of the selector.
+	*
+	* @param[in] ScalarFieldFromImage3D - ScalarFieldFromImage3D instance.
+	* @return texture filter
+	*/
+	ScalarFieldFromImage3D_GetFilter(ScalarFieldFromImage3D Lib3MFHandle) (ELib3MFTextureFilter, error)
+
+
+	/**
+	* Sets the tile styles of the selector.
+	*
+	* @param[in] ScalarFieldFromImage3D - ScalarFieldFromImage3D instance.
+	* @param[in] eTileStyleU - tile style in U
+	* @param[in] eTileStyleV - tile style in V
+	* @param[in] eTileStyleW - tile style in W
+	*/
+	ScalarFieldFromImage3D_SetTileStyles(ScalarFieldFromImage3D Lib3MFHandle, eTileStyleU ELib3MFTextureTileStyle, eTileStyleV ELib3MFTextureTileStyle, eTileStyleW ELib3MFTextureTileStyle) (error)
+
+
+	/**
+	* Retrieves the tile styles of the selector.
+	*
+	* @param[in] ScalarFieldFromImage3D - ScalarFieldFromImage3D instance.
+	* @return tile style in U
+	* @return tile style in V
+	* @return tile style in W
+	*/
+	ScalarFieldFromImage3D_GetTileStyles(ScalarFieldFromImage3D Lib3MFHandle) (ELib3MFTextureTileStyle, ELib3MFTextureTileStyle, ELib3MFTextureTileStyle, error)
+
+
+	/**
+	* returns the offset value for the pixel values in the Image3D
+	*
+	* @param[in] ScalarFieldFromImage3D - ScalarFieldFromImage3D instance.
+	* @return the offset value for the pixel values in the Image3D
+	*/
+	ScalarFieldFromImage3D_GetOffset(ScalarFieldFromImage3D Lib3MFHandle) (float64, error)
+
+
+	/**
+	* Sets the offset value for the pixel values in the Image3D
+	*
+	* @param[in] ScalarFieldFromImage3D - ScalarFieldFromImage3D instance.
+	* @param[in] dOffset - the offset value for the pixel values in the Image3D
+	*/
+	ScalarFieldFromImage3D_SetOffset(ScalarFieldFromImage3D Lib3MFHandle, dOffset float64) (error)
+
+
+	/**
+	* returns the scale value for the pixel values in the Image3D
+	*
+	* @param[in] ScalarFieldFromImage3D - ScalarFieldFromImage3D instance.
+	* @return the scale value for the pixel values in the Image3D
+	*/
+	ScalarFieldFromImage3D_GetScale(ScalarFieldFromImage3D Lib3MFHandle) (float64, error)
+
+
+	/**
+	* Sets the scale value for the pixel values in the Image3D
+	*
+	* @param[in] ScalarFieldFromImage3D - ScalarFieldFromImage3D instance.
+	* @param[in] dScale - the scale value for the pixel values in the Image3D
+	*/
+	ScalarFieldFromImage3D_SetScale(ScalarFieldFromImage3D Lib3MFHandle, dScale float64) (error)
+
+
+	/**
+	* Sets the method to used for composition.
+	*
+	* @param[in] ScalarFieldComposed - ScalarFieldComposed instance.
+	* @param[in] eTheMethod - Sets the composition method.
+	*/
+	ScalarFieldComposed_SetMethod(ScalarFieldComposed Lib3MFHandle, eTheMethod ELib3MFCompositionMethod) (error)
+
+
+	/**
+	* Gets the method to used for composition.
+	*
+	* @param[in] ScalarFieldComposed - ScalarFieldComposed instance.
+	* @return Gets the composition method.
+	*/
+	ScalarFieldComposed_GetMethod(ScalarFieldComposed Lib3MFHandle) (ELib3MFCompositionMethod, error)
+
+
+	/**
+	* returns the factor scalar field 1 is multiplied with when composited
+	*
+	* @param[in] ScalarFieldComposed - ScalarFieldComposed instance.
+	* @return the factor scalar field 1 is multiplied with when composited
+	*/
+	ScalarFieldComposed_GetFactor1(ScalarFieldComposed Lib3MFHandle) (float64, error)
+
+
+	/**
+	* sets the factor scalar field 1 is multiplied with when composited
+	*
+	* @param[in] ScalarFieldComposed - ScalarFieldComposed instance.
+	* @param[in] dFactor1 - the factor scalar field 1 is multiplied with when composited
+	*/
+	ScalarFieldComposed_SetFactor1(ScalarFieldComposed Lib3MFHandle, dFactor1 float64) (error)
+
+
+	/**
+	* returns the factor scalar field 2 is multiplied with when composited
+	*
+	* @param[in] ScalarFieldComposed - ScalarFieldComposed instance.
+	* @return the factor scalar field 2 is multiplied with when composited
+	*/
+	ScalarFieldComposed_GetFactor2(ScalarFieldComposed Lib3MFHandle) (float64, error)
+
+
+	/**
+	* sets the factor scalar field 2 is multiplied with when composited
+	*
+	* @param[in] ScalarFieldComposed - ScalarFieldComposed instance.
+	* @param[in] dFactor2 - the factor scalar field 2 is multiplied with when composited
+	*/
+	ScalarFieldComposed_SetFactor2(ScalarFieldComposed Lib3MFHandle, dFactor2 float64) (error)
+
+
+	/**
+	* Access to the ScalarFieldReference for the first composited field
+	*
+	* @param[in] ScalarFieldComposed - ScalarFieldComposed instance.
+	* @return ScalarFieldReference
+	*/
+	ScalarFieldComposed_ScalarFieldReference1(ScalarFieldComposed Lib3MFHandle) (Lib3MFHandle, error)
+
+
+	/**
+	* Access to the ScalarFieldReference for the second composited field
+	*
+	* @param[in] ScalarFieldComposed - ScalarFieldComposed instance.
+	* @return ScalarFieldReference
+	*/
+	ScalarFieldComposed_ScalarFieldReference2(ScalarFieldComposed Lib3MFHandle) (Lib3MFHandle, error)
+
+
+	/**
+	* Access to the ScalarFieldReference for masking. Only relevant if the Method is mask.
+	*
+	* @param[in] ScalarFieldComposed - ScalarFieldComposed instance.
+	* @return ScalarFieldReference
+	*/
+	ScalarFieldComposed_ScalarFieldReferenceMask(ScalarFieldComposed Lib3MFHandle) (Lib3MFHandle, error)
+
+
+	/**
+	* Returns the selected 3D image.
+	*
+	* @param[in] Vector3DFieldFromImage3D - Vector3DFieldFromImage3D instance.
+	* @return image instance
+	*/
+	Vector3DFieldFromImage3D_GetImage(Vector3DFieldFromImage3D Lib3MFHandle) (Lib3MFHandle, error)
+
+
+	/**
+	* Sets the 3D image of the selector.
+	*
+	* @param[in] Vector3DFieldFromImage3D - Vector3DFieldFromImage3D instance.
+	* @param[in] Image3D - image instance
+	*/
+	Vector3DFieldFromImage3D_SetImage(Vector3DFieldFromImage3D Lib3MFHandle, Image3D Lib3MFHandle) (error)
+
+
+	/**
+	* Sets the texture filter of the selector.
+	*
+	* @param[in] Vector3DFieldFromImage3D - Vector3DFieldFromImage3D instance.
+	* @param[in] eFilter - texture filter
+	*/
+	Vector3DFieldFromImage3D_SetFilter(Vector3DFieldFromImage3D Lib3MFHandle, eFilter ELib3MFTextureFilter) (error)
+
+
+	/**
+	* Returns the texture filter of the selector.
+	*
+	* @param[in] Vector3DFieldFromImage3D - Vector3DFieldFromImage3D instance.
+	* @return texture filter
+	*/
+	Vector3DFieldFromImage3D_GetFilter(Vector3DFieldFromImage3D Lib3MFHandle) (ELib3MFTextureFilter, error)
+
+
+	/**
+	* Sets the tile styles of the selector.
+	*
+	* @param[in] Vector3DFieldFromImage3D - Vector3DFieldFromImage3D instance.
+	* @param[in] eTileStyleU - tile style in U
+	* @param[in] eTileStyleV - tile style in V
+	* @param[in] eTileStyleW - tile style in W
+	*/
+	Vector3DFieldFromImage3D_SetTileStyles(Vector3DFieldFromImage3D Lib3MFHandle, eTileStyleU ELib3MFTextureTileStyle, eTileStyleV ELib3MFTextureTileStyle, eTileStyleW ELib3MFTextureTileStyle) (error)
+
+
+	/**
+	* Retrieves the tile styles of the selector.
+	*
+	* @param[in] Vector3DFieldFromImage3D - Vector3DFieldFromImage3D instance.
+	* @return tile style in U
+	* @return tile style in V
+	* @return tile style in W
+	*/
+	Vector3DFieldFromImage3D_GetTileStyles(Vector3DFieldFromImage3D Lib3MFHandle) (ELib3MFTextureTileStyle, ELib3MFTextureTileStyle, ELib3MFTextureTileStyle, error)
+
+
+	/**
+	* returns the offset value for the pixel values in the Image3D
+	*
+	* @param[in] Vector3DFieldFromImage3D - Vector3DFieldFromImage3D instance.
+	* @return the offset value for the pixel values in the Image3D
+	*/
+	Vector3DFieldFromImage3D_GetOffset(Vector3DFieldFromImage3D Lib3MFHandle) (float64, error)
+
+
+	/**
+	* Sets the offset value for the pixel values in the Image3D
+	*
+	* @param[in] Vector3DFieldFromImage3D - Vector3DFieldFromImage3D instance.
+	* @param[in] dOffset - the offset value for the pixel values in the Image3D
+	*/
+	Vector3DFieldFromImage3D_SetOffset(Vector3DFieldFromImage3D Lib3MFHandle, dOffset float64) (error)
+
+
+	/**
+	* returns the scale value for the pixel values in the Image3D
+	*
+	* @param[in] Vector3DFieldFromImage3D - Vector3DFieldFromImage3D instance.
+	* @return the scale value for the pixel values in the Image3D
+	*/
+	Vector3DFieldFromImage3D_GetScale(Vector3DFieldFromImage3D Lib3MFHandle) (float64, error)
+
+
+	/**
+	* Sets the scale value for the pixel values in the Image3D
+	*
+	* @param[in] Vector3DFieldFromImage3D - Vector3DFieldFromImage3D instance.
+	* @param[in] dScale - the scale value for the pixel values in the Image3D
+	*/
+	Vector3DFieldFromImage3D_SetScale(Vector3DFieldFromImage3D Lib3MFHandle, dScale float64) (error)
+
+
+	/**
+	* Sets the method to used for composition.
+	*
+	* @param[in] Vector3DFieldComposed - Vector3DFieldComposed instance.
+	* @param[in] eTheMethod - Sets the composition method.
+	*/
+	Vector3DFieldComposed_SetMethod(Vector3DFieldComposed Lib3MFHandle, eTheMethod ELib3MFCompositionMethod) (error)
+
+
+	/**
+	* Gets the method to used for composition.
+	*
+	* @param[in] Vector3DFieldComposed - Vector3DFieldComposed instance.
+	* @return Gets the composition method.
+	*/
+	Vector3DFieldComposed_GetMethod(Vector3DFieldComposed Lib3MFHandle) (ELib3MFCompositionMethod, error)
+
+
+	/**
+	* returns the factor vector3d field 1 is multiplied with when composited
+	*
+	* @param[in] Vector3DFieldComposed - Vector3DFieldComposed instance.
+	* @return the factor vector3d field 1 is multiplied with when composited
+	*/
+	Vector3DFieldComposed_GetFactor1(Vector3DFieldComposed Lib3MFHandle) (float64, error)
+
+
+	/**
+	* sets the factor vector3d field 1 is multiplied with when composited
+	*
+	* @param[in] Vector3DFieldComposed - Vector3DFieldComposed instance.
+	* @param[in] dFactor1 - the factor vector3d field 1 is multiplied with when composited
+	*/
+	Vector3DFieldComposed_SetFactor1(Vector3DFieldComposed Lib3MFHandle, dFactor1 float64) (error)
+
+
+	/**
+	* returns the vector3d scalar field 2 is multiplied with when composited
+	*
+	* @param[in] Vector3DFieldComposed - Vector3DFieldComposed instance.
+	* @return the factor vector3d field 2 is multiplied with when composited
+	*/
+	Vector3DFieldComposed_GetFactor2(Vector3DFieldComposed Lib3MFHandle) (float64, error)
+
+
+	/**
+	* sets the factor vector3d field 2 is multiplied with when composited
+	*
+	* @param[in] Vector3DFieldComposed - Vector3DFieldComposed instance.
+	* @param[in] dFactor2 - the factor vector3d field 2 is multiplied with when composited
+	*/
+	Vector3DFieldComposed_SetFactor2(Vector3DFieldComposed Lib3MFHandle, dFactor2 float64) (error)
+
+
+	/**
+	* Access to the Vector3DFieldReference for the first composited field
+	*
+	* @param[in] Vector3DFieldComposed - Vector3DFieldComposed instance.
+	* @return Vector3DFieldReference
+	*/
+	Vector3DFieldComposed_Vector3DFieldReference1(Vector3DFieldComposed Lib3MFHandle) (Lib3MFHandle, error)
+
+
+	/**
+	* Access to the Vector3DFieldReference for the second composited field
+	*
+	* @param[in] Vector3DFieldComposed - Vector3DFieldComposed instance.
+	* @return Vector3DFieldReference
+	*/
+	Vector3DFieldComposed_Vector3DFieldReference2(Vector3DFieldComposed Lib3MFHandle) (Lib3MFHandle, error)
+
+
+	/**
+	* Access to the ScalarFieldReference for masking. Only relevant if the Method is mask.
+	*
+	* @param[in] Vector3DFieldComposed - Vector3DFieldComposed instance.
+	* @return ScalarFieldReference
+	*/
+	Vector3DFieldComposed_ScalarFieldReferenceMask(Vector3DFieldComposed Lib3MFHandle) (Lib3MFHandle, error)
+
+
+	/**
+	* Returns the UniqueResourceID of the Field (Scalar- or Vector3DField).
+	*
+	* @param[in] FieldReference - FieldReference instance.
+	* @return returns the UniqueResourceID.
+	*/
+	FieldReference_GetFieldResourceID(FieldReference Lib3MFHandle) (uint32, error)
+
+
+	/**
+	* Sets the UniqueResourceID to refer to.
+	*
+	* @param[in] FieldReference - FieldReference instance.
+	* @param[in] nUniqueResourceID - UniqueResourceID of the Field (Scalar- or Vector3DField)
+	*/
+	FieldReference_SetFieldResourceID(FieldReference Lib3MFHandle, nUniqueResourceID uint32) (error)
+
+
+	/**
+	* Returns the transformation matrix into the coordinate system of the referenced Field.
+	*
+	* @param[in] FieldReference - FieldReference instance.
+	* @return the transformation matrix
+	*/
+	FieldReference_GetTransform(FieldReference Lib3MFHandle) (sLib3MFTransform, error)
+
+
+	/**
+	* Sets the transformation matrix into the coordinate system of the referenced Field.
+	*
+	* @param[in] FieldReference - FieldReference instance.
 	* @param[in] sTransform - new transformation matrix
 	*/
-	VolumeDataItem_SetTransform(VolumeDataItem Lib3MFHandle, sTransform sLib3MFTransform) (error)
+	FieldReference_SetTransform(FieldReference Lib3MFHandle, sTransform sLib3MFTransform) (error)
+
+
+	/**
+	* Returns the ScalarField
+	*
+	* @param[in] ScalarFieldReference - ScalarFieldReference instance.
+	* @return ScalarField used in this element
+	*/
+	ScalarFieldReference_GetScalarField(ScalarFieldReference Lib3MFHandle) (Lib3MFHandle, error)
+
+
+	/**
+	* Sets the ScalarField to use within this volume data item.
+	*
+	* @param[in] ScalarFieldReference - ScalarFieldReference instance.
+	* @param[in] TheScalarField - ScalarField used in this element
+	*/
+	ScalarFieldReference_SetScalarField(ScalarFieldReference Lib3MFHandle, TheScalarField Lib3MFHandle) (error)
+
+
+	/**
+	* Returns the Vector3DField
+	*
+	* @param[in] Vector3DFieldReference - Vector3DFieldReference instance.
+	* @return Vector3DField used in this element
+	*/
+	Vector3DFieldReference_GetVector3DField(Vector3DFieldReference Lib3MFHandle) (Lib3MFHandle, error)
+
+
+	/**
+	* Sets the Vector3DField to use within this volume data item.
+	*
+	* @param[in] Vector3DFieldReference - Vector3DFieldReference instance.
+	* @param[in] TheVector3DField - Vector3DField used in this element
+	*/
+	Vector3DFieldReference_SetVector3DField(Vector3DFieldReference Lib3MFHandle, TheVector3DField Lib3MFHandle) (error)
 
 
 	/**
@@ -1558,48 +2052,10 @@ type Lib3MFGoInterface interface {
 
 
 	/**
-	* Sets the name of the channel that holds the levelset function.
-	*
-	* @param[in] VolumeDataLevelset - VolumeDataLevelset instance.
-	* @param[in] sChannelName - The name of the channel that holds the levelset function
-	*/
-	VolumeDataLevelset_SetChannel(VolumeDataLevelset Lib3MFHandle, sChannelName string) (error)
-
-
-	/**
-	* Returns the name of the channel that holds the levelset function.
-	*
-	* @param[in] VolumeDataLevelset - VolumeDataLevelset instance.
-	* @return The name of the channel that holds the levelset function
-	*/
-	VolumeDataLevelset_GetChannel(VolumeDataLevelset Lib3MFHandle) (string, error)
-
-
-	/**
-	* Sets the name of the channel that holds the levelset function.
-	*
-	* @param[in] VolumeDataColor - VolumeDataColor instance.
-	* @param[in] eTheColorChannel - The color in question
-	* @param[in] sChannelName - The new name of the channel that holds the scalar function of this ColorChannel
-	*/
-	VolumeDataColor_SetChannel(VolumeDataColor Lib3MFHandle, eTheColorChannel ELib3MFColorChannel, sChannelName string) (error)
-
-
-	/**
-	* Returns the name of the channel that holds the levelset function.
-	*
-	* @param[in] VolumeDataColor - VolumeDataColor instance.
-	* @param[in] eTheColorChannel - The color in question
-	* @return The name of the channel that holds the scalar function of this ColorChannel
-	*/
-	VolumeDataColor_GetChannel(VolumeDataColor Lib3MFHandle, eTheColorChannel ELib3MFColorChannel) (string, error)
-
-
-	/**
 	* Returns the BaseMaterialGroup used within this volume data item
 	*
 	* @param[in] VolumeDataComposite - VolumeDataComposite instance.
-	* @return The BaseMaterialGroup instance of this VolumeDataComposite
+	* @return The BaseMaterialGroup instance of this VolumeDataComposite element
 	*/
 	VolumeDataComposite_GetBaseMaterialGroup(VolumeDataComposite Lib3MFHandle) (Lib3MFHandle, error)
 
@@ -1608,13 +2064,13 @@ type Lib3MFGoInterface interface {
 	* Sets the BaseMaterialGroup to use within this volume data item.
 	*
 	* @param[in] VolumeDataComposite - VolumeDataComposite instance.
-	* @param[in] BaseMaterialGroupInstance - The new BaseMaterialGroup instance of this VolumeDataComposite
+	* @param[in] BaseMaterialGroupInstance - The new BaseMaterialGroup instance of this VolumeDataComposite element
 	*/
 	VolumeDataComposite_SetBaseMaterialGroup(VolumeDataComposite Lib3MFHandle, BaseMaterialGroupInstance Lib3MFHandle) (error)
 
 
 	/**
-	* Returns the number of material mappings of this VolumeDataComposite
+	* Returns the number of material mappings of this VolumeDataComposite element
 	*
 	* @param[in] VolumeDataComposite - VolumeDataComposite instance.
 	* @return the number of material mappings.
@@ -1623,35 +2079,23 @@ type Lib3MFGoInterface interface {
 
 
 	/**
-	* Returns PropertyID and ChannelName of the MaterialMapping with given index
+	* Returns MaterialMappting with given index
 	*
 	* @param[in] VolumeDataComposite - VolumeDataComposite instance.
 	* @param[in] nIndex - Index of the MaterialMapping in question.
-	* @return PropertyID of the material.
-	* @return The name of the channel that holds the intensity function of this Material within the Composite
+	* @return MaterialMapping used in this element
 	*/
-	VolumeDataComposite_GetMaterialMapping(VolumeDataComposite Lib3MFHandle, nIndex uint32) (uint32, string, error)
-
-
-	/**
-	* Sets PropertyID and ChannelName of the MaterialMapping with given index
-	*
-	* @param[in] VolumeDataComposite - VolumeDataComposite instance.
-	* @param[in] nIndex - Index of the MaterialMapping in question.
-	* @return New PropertyID of the material.
-	* @return The new name of the channel that holds the intensity function of this Material within the Composite
-	*/
-	VolumeDataComposite_SetMaterialMapping(VolumeDataComposite Lib3MFHandle, nIndex uint32) (uint32, string, error)
+	VolumeDataComposite_GetMaterialMapping(VolumeDataComposite Lib3MFHandle, nIndex uint32) (Lib3MFHandle, error)
 
 
 	/**
 	* Adds a the MaterialMapping
 	*
 	* @param[in] VolumeDataComposite - VolumeDataComposite instance.
-	* @param[in] nPropertyID - PropertyID of the new MaterialMapping
-	* @param[in] sChannelName - The name of the channel that holds the intensity function of the new Material within the Composite
+	* @param[in] sTransform - new transformation matrix
+	* @return The new MaterialMapping
 	*/
-	VolumeDataComposite_AddMaterialMapping(VolumeDataComposite Lib3MFHandle, nPropertyID uint32, sChannelName string) (error)
+	VolumeDataComposite_AddMaterialMapping(VolumeDataComposite Lib3MFHandle, sTransform sLib3MFTransform) (Lib3MFHandle, error)
 
 
 	/**
@@ -1661,24 +2105,6 @@ type Lib3MFGoInterface interface {
 	* @param[in] nIndex - The index of the MaterialMapping to be removed.
 	*/
 	VolumeDataComposite_RemoveMaterialMapping(VolumeDataComposite Lib3MFHandle, nIndex uint32) (error)
-
-
-	/**
-	* Sets the channel name to be used for this property
-	*
-	* @param[in] VolumeDataProperty - VolumeDataProperty instance.
-	* @param[in] sChannelName - The mew channel name to be used for this property.
-	*/
-	VolumeDataProperty_SetChannel(VolumeDataProperty Lib3MFHandle, sChannelName string) (error)
-
-
-	/**
-	* Gets the channel name to be used for this property.
-	*
-	* @param[in] VolumeDataProperty - VolumeDataProperty instance.
-	* @return The channel name to be used for this property.
-	*/
-	VolumeDataProperty_GetChannel(VolumeDataProperty Lib3MFHandle) (string, error)
 
 
 	/**
@@ -1730,10 +2156,19 @@ type Lib3MFGoInterface interface {
 	* Creates a new VolumeDataLevelset for this VolumeData instance
 	*
 	* @param[in] VolumeData - VolumeData instance.
-	* @param[in] TheVolumetricStack - The VolumetricStack for the new VolumeDataLevelset.
+	* @param[in] TheScalarField - ScalarField used in this element
+	* @param[in] sTransform - new transformation matrix
 	* @return The new VolumeDataLevelset of this VolumeData instance.
 	*/
-	VolumeData_CreateNewLevelset(VolumeData Lib3MFHandle, TheVolumetricStack Lib3MFHandle) (Lib3MFHandle, error)
+	VolumeData_CreateNewLevelset(VolumeData Lib3MFHandle, TheScalarField Lib3MFHandle, sTransform sLib3MFTransform) (Lib3MFHandle, error)
+
+
+	/**
+	* Removes the VolumeDataLevelset of this VolumeData instance
+	*
+	* @param[in] VolumeData - VolumeData instance.
+	*/
+	VolumeData_RemoveLevelset(VolumeData Lib3MFHandle) (error)
 
 
 	/**
@@ -1749,10 +2184,17 @@ type Lib3MFGoInterface interface {
 	* Creates a new VolumeDataComposite for this VolumeData instance
 	*
 	* @param[in] VolumeData - VolumeData instance.
-	* @param[in] TheVolumetricStack - The VolumetricStack for the new VolumeDataComposite.
 	* @return The new VolumeDataComposite of this VolumeData instance.
 	*/
-	VolumeData_CreateNewComposite(VolumeData Lib3MFHandle, TheVolumetricStack Lib3MFHandle) (Lib3MFHandle, error)
+	VolumeData_CreateNewComposite(VolumeData Lib3MFHandle) (Lib3MFHandle, error)
+
+
+	/**
+	* Removes the VolumeDataComposite of this VolumeData instance
+	*
+	* @param[in] VolumeData - VolumeData instance.
+	*/
+	VolumeData_RemoveComposite(VolumeData Lib3MFHandle) (error)
 
 
 	/**
@@ -1768,10 +2210,19 @@ type Lib3MFGoInterface interface {
 	* Creates a new VolumeDataColor for this VolumeData instance
 	*
 	* @param[in] VolumeData - VolumeData instance.
-	* @param[in] TheVolumetricStack - The VolumetricStack for the new VolumeDataComposite.
+	* @param[in] TheVector3DField - Vector3DField used in this element
+	* @param[in] sTransform - new transformation matrix
 	* @return The new VolumeDataColor of this VolumeData instance.
 	*/
-	VolumeData_CreateNewColor(VolumeData Lib3MFHandle, TheVolumetricStack Lib3MFHandle) (Lib3MFHandle, error)
+	VolumeData_CreateNewColor(VolumeData Lib3MFHandle, TheVector3DField Lib3MFHandle, sTransform sLib3MFTransform) (Lib3MFHandle, error)
+
+
+	/**
+	* Removes the VolumeDataColor of this VolumeData instance
+	*
+	* @param[in] VolumeData - VolumeData instance.
+	*/
+	VolumeData_RemoveColor(VolumeData Lib3MFHandle) (error)
 
 
 	/**
@@ -1794,33 +2245,23 @@ type Lib3MFGoInterface interface {
 
 
 	/**
-	* Returns the VolumeDataProperty at a given Index
-	*
-	* @param[in] VolumeData - VolumeData instance.
-	* @param[in] sName - the qualified name of the VolumeDataProperty to be returned.
-	* @return the VolumeDataProperty at the given index.
-	*/
-	VolumeData_FindProperty(VolumeData Lib3MFHandle, sName string) (Lib3MFHandle, error)
-
-
-	/**
 	* Adds a new VolumeDataProperty
 	*
 	* @param[in] VolumeData - VolumeData instance.
 	* @param[in] sName - the qualified name (namespace+name) of the Property
-	* @param[in] TheVolumetricStack - The VolumetricStack for the new VolumeDataProperty.
-	* @return the new VolumeDataProperty.
+	* @param[in] nUniqueResourceID - UniqueResourceID of the Field (Scalar- or Vector3DField)
+	* @return the newly created VolumeDataProperty.
 	*/
-	VolumeData_AddProperty(VolumeData Lib3MFHandle, sName string, TheVolumetricStack Lib3MFHandle) (Lib3MFHandle, error)
+	VolumeData_AddProperty(VolumeData Lib3MFHandle, sName string, nUniqueResourceID uint32) (Lib3MFHandle, error)
 
 
 	/**
-	* Removes the VolumeDataProperty with a given name
+	* Removes the VolumeDataProperty with a given index
 	*
 	* @param[in] VolumeData - VolumeData instance.
-	* @param[in] sName - the qualified name of the VolumeDataProperty to be removed.
+	* @param[in] nIndex - the index of the VolumeDataProperty to be removed.
 	*/
-	VolumeData_RemoveProperty(VolumeData Lib3MFHandle, sName string) (error)
+	VolumeData_RemoveProperty(VolumeData Lib3MFHandle, nIndex uint32) (error)
 
 
 	/**
@@ -2350,569 +2791,127 @@ type Lib3MFGoInterface interface {
 
 
 	/**
-	* Retrieves the extensions of the image stack in X direction.
+	* returns the name of this Image3D
 	*
 	* @param[in] Image3D - Image3D instance.
-	* @return size in X
+	* @return the name of this Image3D
 	*/
-	Image3D_GetSizeX(Image3D Lib3MFHandle) (uint32, error)
+	Image3D_GetName(Image3D Lib3MFHandle) (string, error)
 
 
 	/**
-	* Retrieves the extensions of the image stack in Y direction.
+	* sets a new name of this Image3D
 	*
 	* @param[in] Image3D - Image3D instance.
-	* @return size in Y
+	* @param[in] sName - the new name of this Image3D
 	*/
-	Image3D_GetSizeY(Image3D Lib3MFHandle) (uint32, error)
+	Image3D_SetName(Image3D Lib3MFHandle, sName string) (error)
+
+
+	/**
+	* Retrieves, if this Image3D is a ImageStack
+	*
+	* @param[in] Image3D - Image3D instance.
+	* @return returns, whether the Image3D is an ImageStack
+	*/
+	Image3D_IsImageStack(Image3D Lib3MFHandle) (bool, error)
+
+
+	/**
+	* Retrieves the number of rows in each image of this image3d
+	*
+	* @param[in] ImageStack - ImageStack instance.
+	* @return number of rows
+	*/
+	ImageStack_GetRowCount(ImageStack Lib3MFHandle) (uint32, error)
+
+
+	/**
+	* Sets the number of rows in each image of this image3d
+	*
+	* @param[in] ImageStack - ImageStack instance.
+	* @param[in] nRowCount - number of rows
+	*/
+	ImageStack_SetRowCount(ImageStack Lib3MFHandle, nRowCount uint32) (error)
+
+
+	/**
+	* Retrieves the number of columns in each image of this image3d
+	*
+	* @param[in] ImageStack - ImageStack instance.
+	* @return number of columns
+	*/
+	ImageStack_GetColumnCount(ImageStack Lib3MFHandle) (uint32, error)
+
+
+	/**
+	* Sets the number of columns in each image of this image3d
+	*
+	* @param[in] ImageStack - ImageStack instance.
+	* @param[in] nColumnCount - number of columns
+	*/
+	ImageStack_SetColumnCount(ImageStack Lib3MFHandle, nColumnCount uint32) (error)
 
 
 	/**
 	* Retrieves the number of images in the stack.
 	*
-	* @param[in] Image3D - Image3D instance.
+	* @param[in] ImageStack - ImageStack instance.
 	* @return number of images
 	*/
-	Image3D_GetSheetCount(Image3D Lib3MFHandle) (uint32, error)
+	ImageStack_GetSheetCount(ImageStack Lib3MFHandle) (uint32, error)
 
 
 	/**
 	* Retrieves a sheet of the stack. Raises an error if sheet is not set.
 	*
-	* @param[in] Image3D - Image3D instance.
+	* @param[in] ImageStack - ImageStack instance.
 	* @param[in] nIndex - index of the image (0-based)
 	* @return attachment containing the image
 	*/
-	Image3D_GetSheet(Image3D Lib3MFHandle, nIndex uint32) (Lib3MFHandle, error)
-
-
-	/**
-	* Retrieves the minimum occuring double value of sampled field data.
-	*
-	* @param[in] Image3D - Image3D instance.
-	* @param[in] nIndex - index of the image (0-based)
-	* @return Minimum occuring double value
-	*/
-	Image3D_GetSheetMinValue(Image3D Lib3MFHandle, nIndex uint32) (float64, error)
-
-
-	/**
-	* Retrieves the maximum occuring double value of sampled field data.
-	*
-	* @param[in] Image3D - Image3D instance.
-	* @param[in] nIndex - index of the image (0-based)
-	* @return Maximum occuring double value
-	*/
-	Image3D_GetSheetMaxValue(Image3D Lib3MFHandle, nIndex uint32) (float64, error)
-
-
-	/**
-	* Creates a new sheet attachment with empty data.
-	*
-	* @param[in] Image3D - Image3D instance.
-	* @param[in] nIndex - index of the image (0-based)
-	* @param[in] sPath - path name of package
-	* @param[in] dMin - Mapped value of the minimal (e.g. 0) image3D pixel values.
-	* @param[in] dMax - Mapped value of the maximal (e.g. 255) image3D pixel values.
-	* @return attachment containing the image
-	*/
-	Image3D_CreateEmptySheet(Image3D Lib3MFHandle, nIndex uint32, sPath string, dMin float64, dMax float64) (Lib3MFHandle, error)
-
-
-	/**
-	* Creates a new sheet attachment from a memory buffer.
-	*
-	* @param[in] Image3D - Image3D instance.
-	* @param[in] nIndex - index of the image (0-based)
-	* @param[in] sPath - path name of package
-	* @param[in] Data - binary image data
-	* @param[in] dMin - Mapped value of the minimal (e.g. 0) image3D pixel values.
-	* @param[in] dMax - Mapped value of the maximal (e.g. 255) image3D pixel values.
-	* @return attachment containing the image
-	*/
-	Image3D_CreateSheetFromBuffer(Image3D Lib3MFHandle, nIndex uint32, sPath string, Data []uint8, dMin float64, dMax float64) (Lib3MFHandle, error)
-
-
-	/**
-	* Creates a new sheet attachment from a file on disk.
-	*
-	* @param[in] Image3D - Image3D instance.
-	* @param[in] nIndex - index of the image (0-based)
-	* @param[in] sPath - path name of package
-	* @param[in] sFileName - file name to read from
-	* @param[in] dMin - Mapped value of the minimal (e.g. 0) image3D pixel values.
-	* @param[in] dMax - Mapped value of the maximal (e.g. 255) image3D pixel values.
-	* @return attachment containing the image
-	*/
-	Image3D_CreateSheetFromFile(Image3D Lib3MFHandle, nIndex uint32, sPath string, sFileName string, dMin float64, dMax float64) (Lib3MFHandle, error)
+	ImageStack_GetSheet(ImageStack Lib3MFHandle, nIndex uint32) (Lib3MFHandle, error)
 
 
 	/**
 	* Sets a sheet to an existing attachment.
 	*
-	* @param[in] Image3D - Image3D instance.
+	* @param[in] ImageStack - ImageStack instance.
 	* @param[in] nIndex - index of the image (0-based)
 	* @param[in] Sheet - attachment containing the image
 	*/
-	Image3D_SetSheet(Image3D Lib3MFHandle, nIndex uint32, Sheet Lib3MFHandle) (error)
+	ImageStack_SetSheet(ImageStack Lib3MFHandle, nIndex uint32, Sheet Lib3MFHandle) (error)
 
 
 	/**
-	* Sets the minimum occuring double value of sampled field data.
+	* Creates a new sheet attachment with empty data.
 	*
-	* @param[in] Image3D - Image3D instance.
-	* @param[in] nIndex - index of the image (0-based)
-	* @param[in] dMinVal - Minimum occuring double value
+	* @param[in] ImageStack - ImageStack instance.
+	* @param[in] sPath - path of part in the package
+	* @return attachment containing the image
 	*/
-	Image3D_SetSheetMinValue(Image3D Lib3MFHandle, nIndex uint32, dMinVal float64) (error)
+	ImageStack_CreateEmptySheet(ImageStack Lib3MFHandle, sPath string) (Lib3MFHandle, error)
 
 
 	/**
-	* Sets the maximum occuring double value of sampled field data.
+	* Creates a new sheet attachment from a memory buffer.
 	*
-	* @param[in] Image3D - Image3D instance.
-	* @param[in] nIndex - index of the image (0-based)
-	* @param[in] dMaxVal - Maximum occuring double value
+	* @param[in] ImageStack - ImageStack instance.
+	* @param[in] sPath - path of part in the package
+	* @param[in] Data - binary image data
+	* @return attachment containing the image
 	*/
-	Image3D_SetSheetMaxValue(Image3D Lib3MFHandle, nIndex uint32, dMaxVal float64) (error)
+	ImageStack_CreateSheetFromBuffer(ImageStack Lib3MFHandle, sPath string, Data []uint8) (Lib3MFHandle, error)
 
 
 	/**
-	* Returns the selected 3D image.
+	* Creates a new sheet attachment from a file on disk.
 	*
-	* @param[in] Image3DChannelSelector - Image3DChannelSelector instance.
-	* @return image instance
+	* @param[in] ImageStack - ImageStack instance.
+	* @param[in] sPath - path of part in the package
+	* @param[in] sFileName - file name to read from
+	* @return attachment containing the image
 	*/
-	Image3DChannelSelector_GetImage(Image3DChannelSelector Lib3MFHandle) (Lib3MFHandle, error)
-
-
-	/**
-	* Sets the 3D image of the selector.
-	*
-	* @param[in] Image3DChannelSelector - Image3DChannelSelector instance.
-	* @param[in] Image3D - image instance
-	*/
-	Image3DChannelSelector_SetImage(Image3DChannelSelector Lib3MFHandle, Image3D Lib3MFHandle) (error)
-
-
-	/**
-	* Sets the source channel of the selector.
-	*
-	* @param[in] Image3DChannelSelector - Image3DChannelSelector instance.
-	* @param[in] sChannelName - name of the channel
-	*/
-	Image3DChannelSelector_SetSourceChannel(Image3DChannelSelector Lib3MFHandle, sChannelName string) (error)
-
-
-	/**
-	* Returns the source channel of the selector.
-	*
-	* @param[in] Image3DChannelSelector - Image3DChannelSelector instance.
-	* @return name of the channel
-	*/
-	Image3DChannelSelector_GetSourceChannel(Image3DChannelSelector Lib3MFHandle) (string, error)
-
-
-	/**
-	* Sets the destination channel of the selector.
-	*
-	* @param[in] Image3DChannelSelector - Image3DChannelSelector instance.
-	* @param[in] sChannelName - name of the channel
-	*/
-	Image3DChannelSelector_SetDestinationChannel(Image3DChannelSelector Lib3MFHandle, sChannelName string) (error)
-
-
-	/**
-	* Returns the destination channel of the selector.
-	*
-	* @param[in] Image3DChannelSelector - Image3DChannelSelector instance.
-	* @return name of the channel
-	*/
-	Image3DChannelSelector_GetDestinationChannel(Image3DChannelSelector Lib3MFHandle) (string, error)
-
-
-	/**
-	* Sets the texture filter of the selector.
-	*
-	* @param[in] Image3DChannelSelector - Image3DChannelSelector instance.
-	* @param[in] eFilter - texture filter
-	*/
-	Image3DChannelSelector_SetFilter(Image3DChannelSelector Lib3MFHandle, eFilter ELib3MFTextureFilter) (error)
-
-
-	/**
-	* Returns the texture filter of the selector.
-	*
-	* @param[in] Image3DChannelSelector - Image3DChannelSelector instance.
-	* @return texture filter
-	*/
-	Image3DChannelSelector_GetFilter(Image3DChannelSelector Lib3MFHandle) (ELib3MFTextureFilter, error)
-
-
-	/**
-	* Sets the tile styles of the selector.
-	*
-	* @param[in] Image3DChannelSelector - Image3DChannelSelector instance.
-	* @param[in] eTileStyleU - tile style in U
-	* @param[in] eTileStyleV - tile style in V
-	* @param[in] eTileStyleW - tile style in W
-	*/
-	Image3DChannelSelector_SetTileStyles(Image3DChannelSelector Lib3MFHandle, eTileStyleU ELib3MFTextureTileStyle, eTileStyleV ELib3MFTextureTileStyle, eTileStyleW ELib3MFTextureTileStyle) (error)
-
-
-	/**
-	* Retrieves the tile styles of the selector.
-	*
-	* @param[in] Image3DChannelSelector - Image3DChannelSelector instance.
-	* @return tile style in U
-	* @return tile style in V
-	* @return tile style in W
-	*/
-	Image3DChannelSelector_GetTileStyles(Image3DChannelSelector Lib3MFHandle) (ELib3MFTextureTileStyle, ELib3MFTextureTileStyle, ELib3MFTextureTileStyle, error)
-
-
-	/**
-	* Retrieves the transform of the layer.
-	*
-	* @param[in] VolumetricLayer - VolumetricLayer instance.
-	* @return The transform matrix
-	*/
-	VolumetricLayer_GetTransform(VolumetricLayer Lib3MFHandle) (sLib3MFTransform, error)
-
-
-	/**
-	* Sets the transform of the layer.
-	*
-	* @param[in] VolumetricLayer - VolumetricLayer instance.
-	* @param[in] sTransform - The transform matrix
-	*/
-	VolumetricLayer_SetTransform(VolumetricLayer Lib3MFHandle, sTransform sLib3MFTransform) (error)
-
-
-	/**
-	* Retrieves the transform of the layer.
-	*
-	* @param[in] VolumetricLayer - VolumetricLayer instance.
-	* @return The blend method
-	*/
-	VolumetricLayer_GetBlendMethod(VolumetricLayer Lib3MFHandle) (ELib3MFBlendMethod, error)
-
-
-	/**
-	* Sets the transform of the layer.
-	*
-	* @param[in] VolumetricLayer - VolumetricLayer instance.
-	* @param[in] eBlendMethod - The blend method
-	*/
-	VolumetricLayer_SetBlendMethod(VolumetricLayer Lib3MFHandle, eBlendMethod ELib3MFBlendMethod) (error)
-
-
-	/**
-	* Retrieves the source alpha value of the layer.
-	*
-	* @param[in] VolumetricLayer - VolumetricLayer instance.
-	* @return the source alpha value
-	*/
-	VolumetricLayer_GetSourceAlpha(VolumetricLayer Lib3MFHandle) (float64, error)
-
-
-	/**
-	* Sets the source alpha value of the layer.
-	*
-	* @param[in] VolumetricLayer - VolumetricLayer instance.
-	* @param[in] dSourceAlpha - the source alpha value
-	*/
-	VolumetricLayer_SetSourceAlpha(VolumetricLayer Lib3MFHandle, dSourceAlpha float64) (error)
-
-
-	/**
-	* Retrieves the destination alpha value of the layer.
-	*
-	* @param[in] VolumetricLayer - VolumetricLayer instance.
-	* @return the destination alpha value
-	*/
-	VolumetricLayer_GetDestinationAlpha(VolumetricLayer Lib3MFHandle) (float64, error)
-
-
-	/**
-	* Sets the destination alpha value of the layer.
-	*
-	* @param[in] VolumetricLayer - VolumetricLayer instance.
-	* @param[in] dDestinationAlpha - the destination alpha value
-	*/
-	VolumetricLayer_SetDestinationAlpha(VolumetricLayer Lib3MFHandle, dDestinationAlpha float64) (error)
-
-
-	/**
-	* Retrieves all properties of the layer.
-	*
-	* @param[in] VolumetricLayer - VolumetricLayer instance.
-	* @return The transform matrix
-	* @return The blend method
-	* @return the source alpha value
-	* @return the destination alpha value
-	*/
-	VolumetricLayer_GetInformation(VolumetricLayer Lib3MFHandle) (sLib3MFTransform, ELib3MFBlendMethod, float64, float64, error)
-
-
-	/**
-	* Sets all properties of the layer.
-	*
-	* @param[in] VolumetricLayer - VolumetricLayer instance.
-	* @param[in] sTransform - The transform matrix
-	* @param[in] eBlendMethod - The blend method
-	* @param[in] dSourceAlpha - the source alpha value
-	* @param[in] dDestinationAlpha - the destination alpha value
-	*/
-	VolumetricLayer_SetInformation(VolumetricLayer Lib3MFHandle, sTransform sLib3MFTransform, eBlendMethod ELib3MFBlendMethod, dSourceAlpha float64, dDestinationAlpha float64) (error)
-
-
-	/**
-	* Creates a new mask channel selector.
-	*
-	* @param[in] VolumetricLayer - VolumetricLayer instance.
-	* @param[in] Image3D - Image3D Class to reference
-	* @param[in] sSourceChannel - Name of source channel.
-	* @param[in] sDestinationChannel - Name of destination channel.
-	* @return Channel Selector Instance
-	*/
-	VolumetricLayer_CreateMaskChannelSelector(VolumetricLayer Lib3MFHandle, Image3D Lib3MFHandle, sSourceChannel string, sDestinationChannel string) (Lib3MFHandle, error)
-
-
-	/**
-	* Returns if a mask channel selector exists.
-	*
-	* @param[in] VolumetricLayer - VolumetricLayer instance.
-	* @return true if a mask channel selector exists.
-	*/
-	VolumetricLayer_HasMaskChannelSelector(VolumetricLayer Lib3MFHandle) (bool, error)
-
-
-	/**
-	* Removes a mask channel selector, if it exists.
-	*
-	* @param[in] VolumetricLayer - VolumetricLayer instance.
-	*/
-	VolumetricLayer_ClearMaskChannelSelector(VolumetricLayer Lib3MFHandle) (error)
-
-
-	/**
-	* Returns a new mask channel selector. Fails if none exists.
-	*
-	* @param[in] VolumetricLayer - VolumetricLayer instance.
-	* @return Channel Selector Instance
-	*/
-	VolumetricLayer_GetMaskChannelSelector(VolumetricLayer Lib3MFHandle) (Lib3MFHandle, error)
-
-
-	/**
-	* Returns the channel selector.
-	*
-	* @param[in] VolumetricLayer - VolumetricLayer instance.
-	* @return Count of channel selectors
-	*/
-	VolumetricLayer_GetChannelSelectorCount(VolumetricLayer Lib3MFHandle) (uint32, error)
-
-
-	/**
-	* Returns a channel selector.
-	*
-	* @param[in] VolumetricLayer - VolumetricLayer instance.
-	* @param[in] nIndex - Index of the channel selector
-	* @return Channel Selector Instance
-	*/
-	VolumetricLayer_GetChannelSelector(VolumetricLayer Lib3MFHandle, nIndex uint32) (Lib3MFHandle, error)
-
-
-	/**
-	* Adds a new channel selector.
-	*
-	* @param[in] VolumetricLayer - VolumetricLayer instance.
-	* @param[in] Image3D - Image3D Class to reference
-	* @param[in] sSourceChannel - Name of source channel.
-	* @param[in] sDestinationChannel - Name of destination channel.
-	* @return Channel Selector Instance
-	*/
-	VolumetricLayer_AddChannelSelector(VolumetricLayer Lib3MFHandle, Image3D Lib3MFHandle, sSourceChannel string, sDestinationChannel string) (Lib3MFHandle, error)
-
-
-	/**
-	* Removes all channel selectors.
-	*
-	* @param[in] VolumetricLayer - VolumetricLayer instance.
-	*/
-	VolumetricLayer_ClearChannelSelectors(VolumetricLayer Lib3MFHandle) (error)
-
-
-	/**
-	* Moves a channel selector to a different position in the list.
-	*
-	* @param[in] VolumetricLayer - VolumetricLayer instance.
-	* @param[in] ChannelSelector - ChannelSelector instance
-	* @param[in] nIndex - new index of the channel selector. All layers with higher indices will increase by one.
-	*/
-	VolumetricLayer_ReindexChannelSelector(VolumetricLayer Lib3MFHandle, ChannelSelector Lib3MFHandle, nIndex uint32) (error)
-
-
-	/**
-	* Removes a channel selector from the stack. Fails if the channel selector does not exist.
-	*
-	* @param[in] VolumetricLayer - VolumetricLayer instance.
-	* @param[in] ChannelSelector - channel selector instance.
-	*/
-	VolumetricLayer_RemoveChannelSelector(VolumetricLayer Lib3MFHandle, ChannelSelector Lib3MFHandle) (error)
-
-
-	/**
-	* Removes a channel selector from the stack. Fails if the channel selector does not exist.
-	*
-	* @param[in] VolumetricLayer - VolumetricLayer instance.
-	* @param[in] nIndex - index of the channel selector
-	*/
-	VolumetricLayer_RemoveChannelSelectorByIndex(VolumetricLayer Lib3MFHandle, nIndex uint32) (error)
-
-
-	/**
-	* Clears all destination channels and layers of the stack.
-	*
-	* @param[in] VolumetricStack - VolumetricStack instance.
-	*/
-	VolumetricStack_Clear(VolumetricStack Lib3MFHandle) (error)
-
-
-	/**
-	* Clears all unused destination channels of the stack.
-	*
-	* @param[in] VolumetricStack - VolumetricStack instance.
-	*/
-	VolumetricStack_ClearUnusedDestinationChannels(VolumetricStack Lib3MFHandle) (error)
-
-
-	/**
-	* Retrieves the number of Destination Channels.
-	*
-	* @param[in] VolumetricStack - VolumetricStack instance.
-	* @return number of destination channels
-	*/
-	VolumetricStack_GetDestinationChannelCount(VolumetricStack Lib3MFHandle) (uint32, error)
-
-
-	/**
-	* Adds a new destination channel.
-	*
-	* @param[in] VolumetricStack - VolumetricStack instance.
-	* @param[in] nIndex - Index of Destination Channel
-	* @return Name of Destination Channel.
-	* @return Background of Destination Channel
-	*/
-	VolumetricStack_GetDestinationChannel(VolumetricStack Lib3MFHandle, nIndex uint32) (string, float64, error)
-
-
-	/**
-	* Adds a new destination channel.
-	*
-	* @param[in] VolumetricStack - VolumetricStack instance.
-	* @param[in] sName - Name of Destination Channel. Must be unique in the stack.
-	* @param[in] dBackground - Background of Destination Channel
-	* @return Index of Destination Channel
-	*/
-	VolumetricStack_AddDestinationChannel(VolumetricStack Lib3MFHandle, sName string, dBackground float64) (uint32, error)
-
-
-	/**
-	* Changes a destination channels background.
-	*
-	* @param[in] VolumetricStack - VolumetricStack instance.
-	* @param[in] nIndex - Index of Destination Channel
-	* @param[in] dBackground - Background of Destination Channel
-	*/
-	VolumetricStack_UpdateDestinationChannel(VolumetricStack Lib3MFHandle, nIndex uint32, dBackground float64) (error)
-
-
-	/**
-	* Changes a destination channels background.
-	*
-	* @param[in] VolumetricStack - VolumetricStack instance.
-	* @param[in] sName - Name of Destination Channel
-	* @param[in] dBackground - Background of Destination Channel
-	*/
-	VolumetricStack_UpdateDestinationChannelByName(VolumetricStack Lib3MFHandle, sName string, dBackground float64) (error)
-
-
-	/**
-	* Removes a destination channel. Fails if channel is still referenced in the stack.
-	*
-	* @param[in] VolumetricStack - VolumetricStack instance.
-	* @param[in] nIndex - Index of Destination Channel
-	*/
-	VolumetricStack_RemoveDestinationChannel(VolumetricStack Lib3MFHandle, nIndex uint32) (error)
-
-
-	/**
-	* Removes a destination channel. Fails if channel is still referenced in the stack.
-	*
-	* @param[in] VolumetricStack - VolumetricStack instance.
-	* @param[in] sName - Name of Destination Channel
-	*/
-	VolumetricStack_RemoveDestinationChannelByName(VolumetricStack Lib3MFHandle, sName string) (error)
-
-
-	/**
-	* Retrieves the number of Layers.
-	*
-	* @param[in] VolumetricStack - VolumetricStack instance.
-	* @return number of layers.
-	*/
-	VolumetricStack_GetLayerCount(VolumetricStack Lib3MFHandle) (uint32, error)
-
-
-	/**
-	* Retrieves a layer.
-	*
-	* @param[in] VolumetricStack - VolumetricStack instance.
-	* @param[in] nIndex - index of the layer
-	* @return index of the layer
-	*/
-	VolumetricStack_GetLayer(VolumetricStack Lib3MFHandle, nIndex uint32) (Lib3MFHandle, error)
-
-
-	/**
-	* Adds a new layer.
-	*
-	* @param[in] VolumetricStack - VolumetricStack instance.
-	* @param[in] sTransform - transform of the layer
-	* @param[in] eBlendMethod - BlendMethod of the layer
-	* @return Layer instance
-	*/
-	VolumetricStack_AddLayer(VolumetricStack Lib3MFHandle, sTransform sLib3MFTransform, eBlendMethod ELib3MFBlendMethod) (Lib3MFHandle, error)
-
-
-	/**
-	* Moves a layer to a different position in the stack.
-	*
-	* @param[in] VolumetricStack - VolumetricStack instance.
-	* @param[in] Layer - layer instance
-	* @param[in] nIndex - new index of the layer. All layers with higher indices will increase by one.
-	*/
-	VolumetricStack_ReindexLayer(VolumetricStack Lib3MFHandle, Layer Lib3MFHandle, nIndex uint32) (error)
-
-
-	/**
-	* Removes a layer from the stack. Fails if the layer does not exist.
-	*
-	* @param[in] VolumetricStack - VolumetricStack instance.
-	* @param[in] Layer - layer instance.
-	*/
-	VolumetricStack_RemoveLayer(VolumetricStack Lib3MFHandle, Layer Lib3MFHandle) (error)
-
-
-	/**
-	* Removes a layer from the stack. Fails if the layer does not exist.
-	*
-	* @param[in] VolumetricStack - VolumetricStack instance.
-	* @param[in] nIndex - index of the layer
-	*/
-	VolumetricStack_RemoveLayerByIndex(VolumetricStack Lib3MFHandle, nIndex uint32) (error)
+	ImageStack_CreateSheetFromFile(ImageStack Lib3MFHandle, sPath string, sFileName string) (Lib3MFHandle, error)
 
 
 	/**
@@ -4114,21 +4113,30 @@ type Lib3MFGoInterface interface {
 
 
 	/**
+	* creates a resource iterator instance with all ScalarField resources.
+	*
+	* @param[in] Model - Model instance.
+	* @return returns the iterator instance.
+	*/
+	Model_GetScalarFields(Model Lib3MFHandle) (Lib3MFHandle, error)
+
+
+	/**
+	* creates a resource iterator instance with all Vector3DField resources.
+	*
+	* @param[in] Model - Model instance.
+	* @return returns the iterator instance.
+	*/
+	Model_GetVector3DFields(Model Lib3MFHandle) (Lib3MFHandle, error)
+
+
+	/**
 	* Merges all components and objects which are referenced by a build item into a mesh. The memory is duplicated and a new model is created.
 	*
 	* @param[in] Model - Model instance.
 	* @return returns the merged model instance
 	*/
 	Model_MergeToModel(Model Lib3MFHandle) (Lib3MFHandle, error)
-
-
-	/**
-	* creates a resource iterator instance with all volumetric stack resources.
-	*
-	* @param[in] Model - Model instance.
-	* @return returns the iterator instance.
-	*/
-	Model_GetVolumetricStacks(Model Lib3MFHandle) (Lib3MFHandle, error)
 
 
 	/**
@@ -4220,21 +4228,108 @@ type Lib3MFGoInterface interface {
 	* creates a new 3D Image Resource
 	*
 	* @param[in] Model - Model instance.
-	* @param[in] nSizeX - the extensions of the image stack in X direction.
-	* @param[in] nSizeY - the extensions of the image stack in Y direction.
+	* @param[in] nColumnCount - the number of columns in each sheet.
+	* @param[in] nRowCount - the number of rows in each sheet.
 	* @param[in] nSheetCount - the number of sheets in the image stack.
-	* @return returns the new Image3D instance
+	* @return returns the new ImageStack instance
 	*/
-	Model_AddImage3D(Model Lib3MFHandle, nSizeX uint32, nSizeY uint32, nSheetCount uint32) (Lib3MFHandle, error)
+	Model_AddImageStack(Model Lib3MFHandle, nColumnCount uint32, nRowCount uint32, nSheetCount uint32) (Lib3MFHandle, error)
 
 
 	/**
-	* creates a new Volumetric Stack Resource
+	* creates a new ScalarFieldFromImage3D Resource
 	*
 	* @param[in] Model - Model instance.
-	* @return returns the new VolumetricStack instance
+	* @return returns the new ScalarFieldFromImage3D instance
 	*/
-	Model_AddVolumetricStack(Model Lib3MFHandle) (Lib3MFHandle, error)
+	Model_AddScalarFieldFromImage3D(Model Lib3MFHandle) (Lib3MFHandle, error)
+
+
+	/**
+	* creates a new ScalarFieldComposed Resource
+	*
+	* @param[in] Model - Model instance.
+	* @return returns the new ScalarFieldComposed instance
+	*/
+	Model_AddScalarFieldComposed(Model Lib3MFHandle) (Lib3MFHandle, error)
+
+
+	/**
+	* finds a ScalarField object by its UniqueResourceID
+	*
+	* @param[in] Model - Model instance.
+	* @param[in] nUniqueResourceID - UniqueResourceID
+	* @return returns the scalar field instance
+	*/
+	Model_GetScalarFieldByID(Model Lib3MFHandle, nUniqueResourceID uint32) (Lib3MFHandle, error)
+
+
+	/**
+	* finds a ScalarFieldFromImage3D object by its UniqueResourceID
+	*
+	* @param[in] Model - Model instance.
+	* @param[in] nUniqueResourceID - UniqueResourceID
+	* @return returns the ScalarFieldFromImage3D instance
+	*/
+	Model_GetScalarFieldFromImage3DByID(Model Lib3MFHandle, nUniqueResourceID uint32) (Lib3MFHandle, error)
+
+
+	/**
+	* finds a ScalarFieldComposed object by its UniqueResourceID
+	*
+	* @param[in] Model - Model instance.
+	* @param[in] nUniqueResourceID - UniqueResourceID
+	* @return returns the ScalarFieldComponsed instance
+	*/
+	Model_GetScalarFieldComposedByID(Model Lib3MFHandle, nUniqueResourceID uint32) (Lib3MFHandle, error)
+
+
+	/**
+	* creates a new Vector3DFieldFromImage3D Resource
+	*
+	* @param[in] Model - Model instance.
+	* @return returns the new Vector3DFieldFromImage3D instance
+	*/
+	Model_AddVector3DFieldFromImage3D(Model Lib3MFHandle) (Lib3MFHandle, error)
+
+
+	/**
+	* creates a new Vector3DFieldComposed Resource
+	*
+	* @param[in] Model - Model instance.
+	* @return returns the new Vector3DFieldComposed instance
+	*/
+	Model_AddVector3DFieldComposed(Model Lib3MFHandle) (Lib3MFHandle, error)
+
+
+	/**
+	* finds a Vector3DField object by its UniqueResourceID
+	*
+	* @param[in] Model - Model instance.
+	* @param[in] nUniqueResourceID - UniqueResourceID
+	* @return returns the scalar field instance
+	*/
+	Model_GetVector3DFieldByID(Model Lib3MFHandle, nUniqueResourceID uint32) (Lib3MFHandle, error)
+
+
+	/**
+	* finds a Vector3DFieldFromImage3D object by its UniqueResourceID
+	*
+	* @param[in] Model - Model instance.
+	* @param[in] nUniqueResourceID - UniqueResourceID
+	* @return returns the Vector3DFieldFromImage3D instance
+	*/
+	Model_GetVector3DFieldFromImage3DByID(Model Lib3MFHandle, nUniqueResourceID uint32) (Lib3MFHandle, error)
+
+
+	/**
+	* finds a Vector3DFieldComposed object by its UniqueResourceID
+	*
+	* @param[in] Model - Model instance.
+	* @param[in] nUniqueResourceID - UniqueResourceID
+	* @return returns the Vector3DFieldComponsed instance
+	*/
+	Model_GetVector3DFieldComposedByID(Model Lib3MFHandle, nUniqueResourceID uint32) (Lib3MFHandle, error)
 
 
 	/**
@@ -5101,20 +5196,41 @@ func (instance *Lib3MFImage3DIterator) GetCurrentImage3D() (Lib3MFImage3D, error
 
 
 /*************************************************************************************************************************
-Class definition Lib3MFVolumetricStackIterator
+Class definition Lib3MFScalarFieldIterator
 **************************************************************************************************************************/
 
-type Lib3MFVolumetricStackIterator struct {
+type Lib3MFScalarFieldIterator struct {
 	Lib3MFResourceIterator
 }
 
-func (instance *Lib3MFVolumetricStackIterator) Close() (error) {
+func (instance *Lib3MFScalarFieldIterator) Close() (error) {
 	return instance.Handle.Close()
 }
 
-func (instance *Lib3MFVolumetricStackIterator) GetCurrentVolumetricStack() (Lib3MFVolumetricStack, error) {
-	hResource, error := instance.Interface.VolumetricStackIterator_GetCurrentVolumetricStack(instance.Handle)
-	var cResource Lib3MFVolumetricStack
+func (instance *Lib3MFScalarFieldIterator) GetCurrentScalarField() (Lib3MFScalarField, error) {
+	hResource, error := instance.Interface.ScalarFieldIterator_GetCurrentScalarField(instance.Handle)
+	var cResource Lib3MFScalarField
+	cResource.Interface = instance.Interface
+	cResource.Handle = hResource
+	return cResource, error
+}
+
+
+/*************************************************************************************************************************
+Class definition Lib3MFVector3DFieldIterator
+**************************************************************************************************************************/
+
+type Lib3MFVector3DFieldIterator struct {
+	Lib3MFResourceIterator
+}
+
+func (instance *Lib3MFVector3DFieldIterator) Close() (error) {
+	return instance.Handle.Close()
+}
+
+func (instance *Lib3MFVector3DFieldIterator) GetCurrentVector3DField() (Lib3MFVector3DField, error) {
+	hResource, error := instance.Interface.Vector3DFieldIterator_GetCurrentVector3DField(instance.Handle)
+	var cResource Lib3MFVector3DField
 	cResource.Interface = instance.Interface
 	cResource.Handle = hResource
 	return cResource, error
@@ -5632,37 +5748,428 @@ func (instance *Lib3MFBeamLattice) GetBeamSet(nIndex uint32) (Lib3MFBeamSet, err
 
 
 /*************************************************************************************************************************
-Class definition Lib3MFVolumeDataItem
+Class definition Lib3MFScalarField
 **************************************************************************************************************************/
 
-type Lib3MFVolumeDataItem struct {
-	Lib3MFBase
+type Lib3MFScalarField struct {
+	Lib3MFResource
 }
 
-func (instance *Lib3MFVolumeDataItem) Close() (error) {
+func (instance *Lib3MFScalarField) Close() (error) {
 	return instance.Handle.Close()
 }
 
-func (instance *Lib3MFVolumeDataItem) GetVolumetricStack() (Lib3MFVolumetricStack, error) {
-	hTheVolumetricStack, error := instance.Interface.VolumeDataItem_GetVolumetricStack(instance.Handle)
-	var cTheVolumetricStack Lib3MFVolumetricStack
-	cTheVolumetricStack.Interface = instance.Interface
-	cTheVolumetricStack.Handle = hTheVolumetricStack
-	return cTheVolumetricStack, error
+func (instance *Lib3MFScalarField) GetName() (string, error) {
+	sName, error := instance.Interface.ScalarField_GetName(instance.Handle)
+	return sName, error
 }
 
-func (instance *Lib3MFVolumeDataItem) SetVolumetricStack(TheVolumetricStack Lib3MFHandle) (error) {
-	error := instance.Interface.VolumeDataItem_SetVolumetricStack(instance.Handle, TheVolumetricStack)
+func (instance *Lib3MFScalarField) SetName(sName string) (error) {
+	error := instance.Interface.ScalarField_SetName(instance.Handle, sName)
 	return error
 }
 
-func (instance *Lib3MFVolumeDataItem) GetTransform() (sLib3MFTransform, error) {
-	sTransform, error := instance.Interface.VolumeDataItem_GetTransform(instance.Handle)
+func (instance *Lib3MFScalarField) IsFromImage3D() (bool, error) {
+	bIsFromImage3D, error := instance.Interface.ScalarField_IsFromImage3D(instance.Handle)
+	return bIsFromImage3D, error
+}
+
+func (instance *Lib3MFScalarField) IsComposed() (bool, error) {
+	bIsComposed, error := instance.Interface.ScalarField_IsComposed(instance.Handle)
+	return bIsComposed, error
+}
+
+
+/*************************************************************************************************************************
+Class definition Lib3MFVector3DField
+**************************************************************************************************************************/
+
+type Lib3MFVector3DField struct {
+	Lib3MFResource
+}
+
+func (instance *Lib3MFVector3DField) Close() (error) {
+	return instance.Handle.Close()
+}
+
+func (instance *Lib3MFVector3DField) GetName() (string, error) {
+	sName, error := instance.Interface.Vector3DField_GetName(instance.Handle)
+	return sName, error
+}
+
+func (instance *Lib3MFVector3DField) SetName(sName string) (error) {
+	error := instance.Interface.Vector3DField_SetName(instance.Handle, sName)
+	return error
+}
+
+func (instance *Lib3MFVector3DField) IsFromImage3D() (bool, error) {
+	bIsFromImage3D, error := instance.Interface.Vector3DField_IsFromImage3D(instance.Handle)
+	return bIsFromImage3D, error
+}
+
+func (instance *Lib3MFVector3DField) IsComposed() (bool, error) {
+	bIsComposed, error := instance.Interface.Vector3DField_IsComposed(instance.Handle)
+	return bIsComposed, error
+}
+
+
+/*************************************************************************************************************************
+Class definition Lib3MFScalarFieldFromImage3D
+**************************************************************************************************************************/
+
+type Lib3MFScalarFieldFromImage3D struct {
+	Lib3MFScalarField
+}
+
+func (instance *Lib3MFScalarFieldFromImage3D) Close() (error) {
+	return instance.Handle.Close()
+}
+
+func (instance *Lib3MFScalarFieldFromImage3D) GetImage() (Lib3MFImage3D, error) {
+	hImage3D, error := instance.Interface.ScalarFieldFromImage3D_GetImage(instance.Handle)
+	var cImage3D Lib3MFImage3D
+	cImage3D.Interface = instance.Interface
+	cImage3D.Handle = hImage3D
+	return cImage3D, error
+}
+
+func (instance *Lib3MFScalarFieldFromImage3D) SetImage(Image3D Lib3MFHandle) (error) {
+	error := instance.Interface.ScalarFieldFromImage3D_SetImage(instance.Handle, Image3D)
+	return error
+}
+
+func (instance *Lib3MFScalarFieldFromImage3D) SetChannel(eName ELib3MFChannelName) (error) {
+	error := instance.Interface.ScalarFieldFromImage3D_SetChannel(instance.Handle, eName)
+	return error
+}
+
+func (instance *Lib3MFScalarFieldFromImage3D) GetChannel() (ELib3MFChannelName, error) {
+	eName, error := instance.Interface.ScalarFieldFromImage3D_GetChannel(instance.Handle)
+	return eName, error
+}
+
+func (instance *Lib3MFScalarFieldFromImage3D) SetFilter(eFilter ELib3MFTextureFilter) (error) {
+	error := instance.Interface.ScalarFieldFromImage3D_SetFilter(instance.Handle, eFilter)
+	return error
+}
+
+func (instance *Lib3MFScalarFieldFromImage3D) GetFilter() (ELib3MFTextureFilter, error) {
+	eFilter, error := instance.Interface.ScalarFieldFromImage3D_GetFilter(instance.Handle)
+	return eFilter, error
+}
+
+func (instance *Lib3MFScalarFieldFromImage3D) SetTileStyles(eTileStyleU ELib3MFTextureTileStyle, eTileStyleV ELib3MFTextureTileStyle, eTileStyleW ELib3MFTextureTileStyle) (error) {
+	error := instance.Interface.ScalarFieldFromImage3D_SetTileStyles(instance.Handle, eTileStyleU, eTileStyleV, eTileStyleW)
+	return error
+}
+
+func (instance *Lib3MFScalarFieldFromImage3D) GetTileStyles() (ELib3MFTextureTileStyle, ELib3MFTextureTileStyle, ELib3MFTextureTileStyle, error) {
+	eTileStyleU, eTileStyleV, eTileStyleW, error := instance.Interface.ScalarFieldFromImage3D_GetTileStyles(instance.Handle)
+	return eTileStyleU, eTileStyleV, eTileStyleW, error
+}
+
+func (instance *Lib3MFScalarFieldFromImage3D) GetOffset() (float64, error) {
+	dOffset, error := instance.Interface.ScalarFieldFromImage3D_GetOffset(instance.Handle)
+	return dOffset, error
+}
+
+func (instance *Lib3MFScalarFieldFromImage3D) SetOffset(dOffset float64) (error) {
+	error := instance.Interface.ScalarFieldFromImage3D_SetOffset(instance.Handle, dOffset)
+	return error
+}
+
+func (instance *Lib3MFScalarFieldFromImage3D) GetScale() (float64, error) {
+	dScale, error := instance.Interface.ScalarFieldFromImage3D_GetScale(instance.Handle)
+	return dScale, error
+}
+
+func (instance *Lib3MFScalarFieldFromImage3D) SetScale(dScale float64) (error) {
+	error := instance.Interface.ScalarFieldFromImage3D_SetScale(instance.Handle, dScale)
+	return error
+}
+
+
+/*************************************************************************************************************************
+Class definition Lib3MFScalarFieldComposed
+**************************************************************************************************************************/
+
+type Lib3MFScalarFieldComposed struct {
+	Lib3MFScalarField
+}
+
+func (instance *Lib3MFScalarFieldComposed) Close() (error) {
+	return instance.Handle.Close()
+}
+
+func (instance *Lib3MFScalarFieldComposed) SetMethod(eTheMethod ELib3MFCompositionMethod) (error) {
+	error := instance.Interface.ScalarFieldComposed_SetMethod(instance.Handle, eTheMethod)
+	return error
+}
+
+func (instance *Lib3MFScalarFieldComposed) GetMethod() (ELib3MFCompositionMethod, error) {
+	eTheMethod, error := instance.Interface.ScalarFieldComposed_GetMethod(instance.Handle)
+	return eTheMethod, error
+}
+
+func (instance *Lib3MFScalarFieldComposed) GetFactor1() (float64, error) {
+	dFactor1, error := instance.Interface.ScalarFieldComposed_GetFactor1(instance.Handle)
+	return dFactor1, error
+}
+
+func (instance *Lib3MFScalarFieldComposed) SetFactor1(dFactor1 float64) (error) {
+	error := instance.Interface.ScalarFieldComposed_SetFactor1(instance.Handle, dFactor1)
+	return error
+}
+
+func (instance *Lib3MFScalarFieldComposed) GetFactor2() (float64, error) {
+	dFactor2, error := instance.Interface.ScalarFieldComposed_GetFactor2(instance.Handle)
+	return dFactor2, error
+}
+
+func (instance *Lib3MFScalarFieldComposed) SetFactor2(dFactor2 float64) (error) {
+	error := instance.Interface.ScalarFieldComposed_SetFactor2(instance.Handle, dFactor2)
+	return error
+}
+
+func (instance *Lib3MFScalarFieldComposed) ScalarFieldReference1() (Lib3MFScalarFieldReference, error) {
+	hTheScalarFieldReference1, error := instance.Interface.ScalarFieldComposed_ScalarFieldReference1(instance.Handle)
+	var cTheScalarFieldReference1 Lib3MFScalarFieldReference
+	cTheScalarFieldReference1.Interface = instance.Interface
+	cTheScalarFieldReference1.Handle = hTheScalarFieldReference1
+	return cTheScalarFieldReference1, error
+}
+
+func (instance *Lib3MFScalarFieldComposed) ScalarFieldReference2() (Lib3MFScalarFieldReference, error) {
+	hTheScalarFieldReference1, error := instance.Interface.ScalarFieldComposed_ScalarFieldReference2(instance.Handle)
+	var cTheScalarFieldReference1 Lib3MFScalarFieldReference
+	cTheScalarFieldReference1.Interface = instance.Interface
+	cTheScalarFieldReference1.Handle = hTheScalarFieldReference1
+	return cTheScalarFieldReference1, error
+}
+
+func (instance *Lib3MFScalarFieldComposed) ScalarFieldReferenceMask() (Lib3MFScalarFieldReference, error) {
+	hTheScalarFieldReferenceMask, error := instance.Interface.ScalarFieldComposed_ScalarFieldReferenceMask(instance.Handle)
+	var cTheScalarFieldReferenceMask Lib3MFScalarFieldReference
+	cTheScalarFieldReferenceMask.Interface = instance.Interface
+	cTheScalarFieldReferenceMask.Handle = hTheScalarFieldReferenceMask
+	return cTheScalarFieldReferenceMask, error
+}
+
+
+/*************************************************************************************************************************
+Class definition Lib3MFVector3DFieldFromImage3D
+**************************************************************************************************************************/
+
+type Lib3MFVector3DFieldFromImage3D struct {
+	Lib3MFScalarField
+}
+
+func (instance *Lib3MFVector3DFieldFromImage3D) Close() (error) {
+	return instance.Handle.Close()
+}
+
+func (instance *Lib3MFVector3DFieldFromImage3D) GetImage() (Lib3MFImage3D, error) {
+	hImage3D, error := instance.Interface.Vector3DFieldFromImage3D_GetImage(instance.Handle)
+	var cImage3D Lib3MFImage3D
+	cImage3D.Interface = instance.Interface
+	cImage3D.Handle = hImage3D
+	return cImage3D, error
+}
+
+func (instance *Lib3MFVector3DFieldFromImage3D) SetImage(Image3D Lib3MFHandle) (error) {
+	error := instance.Interface.Vector3DFieldFromImage3D_SetImage(instance.Handle, Image3D)
+	return error
+}
+
+func (instance *Lib3MFVector3DFieldFromImage3D) SetFilter(eFilter ELib3MFTextureFilter) (error) {
+	error := instance.Interface.Vector3DFieldFromImage3D_SetFilter(instance.Handle, eFilter)
+	return error
+}
+
+func (instance *Lib3MFVector3DFieldFromImage3D) GetFilter() (ELib3MFTextureFilter, error) {
+	eFilter, error := instance.Interface.Vector3DFieldFromImage3D_GetFilter(instance.Handle)
+	return eFilter, error
+}
+
+func (instance *Lib3MFVector3DFieldFromImage3D) SetTileStyles(eTileStyleU ELib3MFTextureTileStyle, eTileStyleV ELib3MFTextureTileStyle, eTileStyleW ELib3MFTextureTileStyle) (error) {
+	error := instance.Interface.Vector3DFieldFromImage3D_SetTileStyles(instance.Handle, eTileStyleU, eTileStyleV, eTileStyleW)
+	return error
+}
+
+func (instance *Lib3MFVector3DFieldFromImage3D) GetTileStyles() (ELib3MFTextureTileStyle, ELib3MFTextureTileStyle, ELib3MFTextureTileStyle, error) {
+	eTileStyleU, eTileStyleV, eTileStyleW, error := instance.Interface.Vector3DFieldFromImage3D_GetTileStyles(instance.Handle)
+	return eTileStyleU, eTileStyleV, eTileStyleW, error
+}
+
+func (instance *Lib3MFVector3DFieldFromImage3D) GetOffset() (float64, error) {
+	dOffset, error := instance.Interface.Vector3DFieldFromImage3D_GetOffset(instance.Handle)
+	return dOffset, error
+}
+
+func (instance *Lib3MFVector3DFieldFromImage3D) SetOffset(dOffset float64) (error) {
+	error := instance.Interface.Vector3DFieldFromImage3D_SetOffset(instance.Handle, dOffset)
+	return error
+}
+
+func (instance *Lib3MFVector3DFieldFromImage3D) GetScale() (float64, error) {
+	dScale, error := instance.Interface.Vector3DFieldFromImage3D_GetScale(instance.Handle)
+	return dScale, error
+}
+
+func (instance *Lib3MFVector3DFieldFromImage3D) SetScale(dScale float64) (error) {
+	error := instance.Interface.Vector3DFieldFromImage3D_SetScale(instance.Handle, dScale)
+	return error
+}
+
+
+/*************************************************************************************************************************
+Class definition Lib3MFVector3DFieldComposed
+**************************************************************************************************************************/
+
+type Lib3MFVector3DFieldComposed struct {
+	Lib3MFScalarField
+}
+
+func (instance *Lib3MFVector3DFieldComposed) Close() (error) {
+	return instance.Handle.Close()
+}
+
+func (instance *Lib3MFVector3DFieldComposed) SetMethod(eTheMethod ELib3MFCompositionMethod) (error) {
+	error := instance.Interface.Vector3DFieldComposed_SetMethod(instance.Handle, eTheMethod)
+	return error
+}
+
+func (instance *Lib3MFVector3DFieldComposed) GetMethod() (ELib3MFCompositionMethod, error) {
+	eTheMethod, error := instance.Interface.Vector3DFieldComposed_GetMethod(instance.Handle)
+	return eTheMethod, error
+}
+
+func (instance *Lib3MFVector3DFieldComposed) GetFactor1() (float64, error) {
+	dFactor1, error := instance.Interface.Vector3DFieldComposed_GetFactor1(instance.Handle)
+	return dFactor1, error
+}
+
+func (instance *Lib3MFVector3DFieldComposed) SetFactor1(dFactor1 float64) (error) {
+	error := instance.Interface.Vector3DFieldComposed_SetFactor1(instance.Handle, dFactor1)
+	return error
+}
+
+func (instance *Lib3MFVector3DFieldComposed) GetFactor2() (float64, error) {
+	dFactor2, error := instance.Interface.Vector3DFieldComposed_GetFactor2(instance.Handle)
+	return dFactor2, error
+}
+
+func (instance *Lib3MFVector3DFieldComposed) SetFactor2(dFactor2 float64) (error) {
+	error := instance.Interface.Vector3DFieldComposed_SetFactor2(instance.Handle, dFactor2)
+	return error
+}
+
+func (instance *Lib3MFVector3DFieldComposed) Vector3DFieldReference1() (Lib3MFVector3DFieldReference, error) {
+	hTheVector3DFieldReference1, error := instance.Interface.Vector3DFieldComposed_Vector3DFieldReference1(instance.Handle)
+	var cTheVector3DFieldReference1 Lib3MFVector3DFieldReference
+	cTheVector3DFieldReference1.Interface = instance.Interface
+	cTheVector3DFieldReference1.Handle = hTheVector3DFieldReference1
+	return cTheVector3DFieldReference1, error
+}
+
+func (instance *Lib3MFVector3DFieldComposed) Vector3DFieldReference2() (Lib3MFVector3DFieldReference, error) {
+	hTheVector3DFieldReference1, error := instance.Interface.Vector3DFieldComposed_Vector3DFieldReference2(instance.Handle)
+	var cTheVector3DFieldReference1 Lib3MFVector3DFieldReference
+	cTheVector3DFieldReference1.Interface = instance.Interface
+	cTheVector3DFieldReference1.Handle = hTheVector3DFieldReference1
+	return cTheVector3DFieldReference1, error
+}
+
+func (instance *Lib3MFVector3DFieldComposed) ScalarFieldReferenceMask() (Lib3MFScalarFieldReference, error) {
+	hTheScalarFieldReferenceMask, error := instance.Interface.Vector3DFieldComposed_ScalarFieldReferenceMask(instance.Handle)
+	var cTheScalarFieldReferenceMask Lib3MFScalarFieldReference
+	cTheScalarFieldReferenceMask.Interface = instance.Interface
+	cTheScalarFieldReferenceMask.Handle = hTheScalarFieldReferenceMask
+	return cTheScalarFieldReferenceMask, error
+}
+
+
+/*************************************************************************************************************************
+Class definition Lib3MFFieldReference
+**************************************************************************************************************************/
+
+type Lib3MFFieldReference struct {
+	Lib3MFBase
+}
+
+func (instance *Lib3MFFieldReference) Close() (error) {
+	return instance.Handle.Close()
+}
+
+func (instance *Lib3MFFieldReference) GetFieldResourceID() (uint32, error) {
+	nUniqueResourceID, error := instance.Interface.FieldReference_GetFieldResourceID(instance.Handle)
+	return nUniqueResourceID, error
+}
+
+func (instance *Lib3MFFieldReference) SetFieldResourceID(nUniqueResourceID uint32) (error) {
+	error := instance.Interface.FieldReference_SetFieldResourceID(instance.Handle, nUniqueResourceID)
+	return error
+}
+
+func (instance *Lib3MFFieldReference) GetTransform() (sLib3MFTransform, error) {
+	sTransform, error := instance.Interface.FieldReference_GetTransform(instance.Handle)
 	return sTransform, error
 }
 
-func (instance *Lib3MFVolumeDataItem) SetTransform(sTransform sLib3MFTransform) (error) {
-	error := instance.Interface.VolumeDataItem_SetTransform(instance.Handle, sTransform)
+func (instance *Lib3MFFieldReference) SetTransform(sTransform sLib3MFTransform) (error) {
+	error := instance.Interface.FieldReference_SetTransform(instance.Handle, sTransform)
+	return error
+}
+
+
+/*************************************************************************************************************************
+Class definition Lib3MFScalarFieldReference
+**************************************************************************************************************************/
+
+type Lib3MFScalarFieldReference struct {
+	Lib3MFFieldReference
+}
+
+func (instance *Lib3MFScalarFieldReference) Close() (error) {
+	return instance.Handle.Close()
+}
+
+func (instance *Lib3MFScalarFieldReference) GetScalarField() (Lib3MFScalarField, error) {
+	hTheScalarField, error := instance.Interface.ScalarFieldReference_GetScalarField(instance.Handle)
+	var cTheScalarField Lib3MFScalarField
+	cTheScalarField.Interface = instance.Interface
+	cTheScalarField.Handle = hTheScalarField
+	return cTheScalarField, error
+}
+
+func (instance *Lib3MFScalarFieldReference) SetScalarField(TheScalarField Lib3MFHandle) (error) {
+	error := instance.Interface.ScalarFieldReference_SetScalarField(instance.Handle, TheScalarField)
+	return error
+}
+
+
+/*************************************************************************************************************************
+Class definition Lib3MFVector3DFieldReference
+**************************************************************************************************************************/
+
+type Lib3MFVector3DFieldReference struct {
+	Lib3MFFieldReference
+}
+
+func (instance *Lib3MFVector3DFieldReference) Close() (error) {
+	return instance.Handle.Close()
+}
+
+func (instance *Lib3MFVector3DFieldReference) GetVector3DField() (Lib3MFVector3DField, error) {
+	hTheVector3DField, error := instance.Interface.Vector3DFieldReference_GetVector3DField(instance.Handle)
+	var cTheVector3DField Lib3MFVector3DField
+	cTheVector3DField.Interface = instance.Interface
+	cTheVector3DField.Handle = hTheVector3DField
+	return cTheVector3DField, error
+}
+
+func (instance *Lib3MFVector3DFieldReference) SetVector3DField(TheVector3DField Lib3MFHandle) (error) {
+	error := instance.Interface.Vector3DFieldReference_SetVector3DField(instance.Handle, TheVector3DField)
 	return error
 }
 
@@ -5672,7 +6179,7 @@ Class definition Lib3MFVolumeDataLevelset
 **************************************************************************************************************************/
 
 type Lib3MFVolumeDataLevelset struct {
-	Lib3MFVolumeDataItem
+	Lib3MFScalarFieldReference
 }
 
 func (instance *Lib3MFVolumeDataLevelset) Close() (error) {
@@ -5689,37 +6196,30 @@ func (instance *Lib3MFVolumeDataLevelset) SetSolidThreshold(dTheSolidThreshold f
 	return error
 }
 
-func (instance *Lib3MFVolumeDataLevelset) SetChannel(sChannelName string) (error) {
-	error := instance.Interface.VolumeDataLevelset_SetChannel(instance.Handle, sChannelName)
-	return error
-}
-
-func (instance *Lib3MFVolumeDataLevelset) GetChannel() (string, error) {
-	sChannelName, error := instance.Interface.VolumeDataLevelset_GetChannel(instance.Handle)
-	return sChannelName, error
-}
-
 
 /*************************************************************************************************************************
 Class definition Lib3MFVolumeDataColor
 **************************************************************************************************************************/
 
 type Lib3MFVolumeDataColor struct {
-	Lib3MFVolumeDataItem
+	Lib3MFVector3DFieldReference
 }
 
 func (instance *Lib3MFVolumeDataColor) Close() (error) {
 	return instance.Handle.Close()
 }
 
-func (instance *Lib3MFVolumeDataColor) SetChannel(eTheColorChannel ELib3MFColorChannel, sChannelName string) (error) {
-	error := instance.Interface.VolumeDataColor_SetChannel(instance.Handle, eTheColorChannel, sChannelName)
-	return error
+
+/*************************************************************************************************************************
+Class definition Lib3MFMaterialMapping
+**************************************************************************************************************************/
+
+type Lib3MFMaterialMapping struct {
+	Lib3MFScalarFieldReference
 }
 
-func (instance *Lib3MFVolumeDataColor) GetChannel(eTheColorChannel ELib3MFColorChannel) (string, error) {
-	sChannelName, error := instance.Interface.VolumeDataColor_GetChannel(instance.Handle, eTheColorChannel)
-	return sChannelName, error
+func (instance *Lib3MFMaterialMapping) Close() (error) {
+	return instance.Handle.Close()
 }
 
 
@@ -5728,7 +6228,7 @@ Class definition Lib3MFVolumeDataComposite
 **************************************************************************************************************************/
 
 type Lib3MFVolumeDataComposite struct {
-	Lib3MFVolumeDataItem
+	Lib3MFBase
 }
 
 func (instance *Lib3MFVolumeDataComposite) Close() (error) {
@@ -5753,19 +6253,20 @@ func (instance *Lib3MFVolumeDataComposite) GetMaterialMappingCount() (uint32, er
 	return nCount, error
 }
 
-func (instance *Lib3MFVolumeDataComposite) GetMaterialMapping(nIndex uint32) (uint32, string, error) {
-	nPropertyID, sChannelName, error := instance.Interface.VolumeDataComposite_GetMaterialMapping(instance.Handle, nIndex)
-	return nPropertyID, sChannelName, error
+func (instance *Lib3MFVolumeDataComposite) GetMaterialMapping(nIndex uint32) (Lib3MFMaterialMapping, error) {
+	hTheMaterialMapping, error := instance.Interface.VolumeDataComposite_GetMaterialMapping(instance.Handle, nIndex)
+	var cTheMaterialMapping Lib3MFMaterialMapping
+	cTheMaterialMapping.Interface = instance.Interface
+	cTheMaterialMapping.Handle = hTheMaterialMapping
+	return cTheMaterialMapping, error
 }
 
-func (instance *Lib3MFVolumeDataComposite) SetMaterialMapping(nIndex uint32) (uint32, string, error) {
-	nPropertyID, sChannelName, error := instance.Interface.VolumeDataComposite_SetMaterialMapping(instance.Handle, nIndex)
-	return nPropertyID, sChannelName, error
-}
-
-func (instance *Lib3MFVolumeDataComposite) AddMaterialMapping(nPropertyID uint32, sChannelName string) (error) {
-	error := instance.Interface.VolumeDataComposite_AddMaterialMapping(instance.Handle, nPropertyID, sChannelName)
-	return error
+func (instance *Lib3MFVolumeDataComposite) AddMaterialMapping(sTransform sLib3MFTransform) (Lib3MFMaterialMapping, error) {
+	hTheMaterialMapping, error := instance.Interface.VolumeDataComposite_AddMaterialMapping(instance.Handle, sTransform)
+	var cTheMaterialMapping Lib3MFMaterialMapping
+	cTheMaterialMapping.Interface = instance.Interface
+	cTheMaterialMapping.Handle = hTheMaterialMapping
+	return cTheMaterialMapping, error
 }
 
 func (instance *Lib3MFVolumeDataComposite) RemoveMaterialMapping(nIndex uint32) (error) {
@@ -5779,21 +6280,11 @@ Class definition Lib3MFVolumeDataProperty
 **************************************************************************************************************************/
 
 type Lib3MFVolumeDataProperty struct {
-	Lib3MFVolumeDataItem
+	Lib3MFFieldReference
 }
 
 func (instance *Lib3MFVolumeDataProperty) Close() (error) {
 	return instance.Handle.Close()
-}
-
-func (instance *Lib3MFVolumeDataProperty) SetChannel(sChannelName string) (error) {
-	error := instance.Interface.VolumeDataProperty_SetChannel(instance.Handle, sChannelName)
-	return error
-}
-
-func (instance *Lib3MFVolumeDataProperty) GetChannel() (string, error) {
-	sChannelName, error := instance.Interface.VolumeDataProperty_GetChannel(instance.Handle)
-	return sChannelName, error
 }
 
 func (instance *Lib3MFVolumeDataProperty) SetName(sPropertyName string) (error) {
@@ -5837,12 +6328,17 @@ func (instance *Lib3MFVolumeData) GetLevelset() (Lib3MFVolumeDataLevelset, error
 	return cTheLevelsetData, error
 }
 
-func (instance *Lib3MFVolumeData) CreateNewLevelset(TheVolumetricStack Lib3MFHandle) (Lib3MFVolumeDataLevelset, error) {
-	hTheLevelsetData, error := instance.Interface.VolumeData_CreateNewLevelset(instance.Handle, TheVolumetricStack)
+func (instance *Lib3MFVolumeData) CreateNewLevelset(TheScalarField Lib3MFHandle, sTransform sLib3MFTransform) (Lib3MFVolumeDataLevelset, error) {
+	hTheLevelsetData, error := instance.Interface.VolumeData_CreateNewLevelset(instance.Handle, TheScalarField, sTransform)
 	var cTheLevelsetData Lib3MFVolumeDataLevelset
 	cTheLevelsetData.Interface = instance.Interface
 	cTheLevelsetData.Handle = hTheLevelsetData
 	return cTheLevelsetData, error
+}
+
+func (instance *Lib3MFVolumeData) RemoveLevelset() (error) {
+	error := instance.Interface.VolumeData_RemoveLevelset(instance.Handle)
+	return error
 }
 
 func (instance *Lib3MFVolumeData) GetComposite() (Lib3MFVolumeDataComposite, error) {
@@ -5853,12 +6349,17 @@ func (instance *Lib3MFVolumeData) GetComposite() (Lib3MFVolumeDataComposite, err
 	return cTheCompositeData, error
 }
 
-func (instance *Lib3MFVolumeData) CreateNewComposite(TheVolumetricStack Lib3MFHandle) (Lib3MFVolumeDataComposite, error) {
-	hTheCompositeData, error := instance.Interface.VolumeData_CreateNewComposite(instance.Handle, TheVolumetricStack)
+func (instance *Lib3MFVolumeData) CreateNewComposite() (Lib3MFVolumeDataComposite, error) {
+	hTheCompositeData, error := instance.Interface.VolumeData_CreateNewComposite(instance.Handle)
 	var cTheCompositeData Lib3MFVolumeDataComposite
 	cTheCompositeData.Interface = instance.Interface
 	cTheCompositeData.Handle = hTheCompositeData
 	return cTheCompositeData, error
+}
+
+func (instance *Lib3MFVolumeData) RemoveComposite() (error) {
+	error := instance.Interface.VolumeData_RemoveComposite(instance.Handle)
+	return error
 }
 
 func (instance *Lib3MFVolumeData) GetColor() (Lib3MFVolumeDataColor, error) {
@@ -5869,12 +6370,17 @@ func (instance *Lib3MFVolumeData) GetColor() (Lib3MFVolumeDataColor, error) {
 	return cTheColorData, error
 }
 
-func (instance *Lib3MFVolumeData) CreateNewColor(TheVolumetricStack Lib3MFHandle) (Lib3MFVolumeDataColor, error) {
-	hTheColorData, error := instance.Interface.VolumeData_CreateNewColor(instance.Handle, TheVolumetricStack)
+func (instance *Lib3MFVolumeData) CreateNewColor(TheVector3DField Lib3MFHandle, sTransform sLib3MFTransform) (Lib3MFVolumeDataColor, error) {
+	hTheColorData, error := instance.Interface.VolumeData_CreateNewColor(instance.Handle, TheVector3DField, sTransform)
 	var cTheColorData Lib3MFVolumeDataColor
 	cTheColorData.Interface = instance.Interface
 	cTheColorData.Handle = hTheColorData
 	return cTheColorData, error
+}
+
+func (instance *Lib3MFVolumeData) RemoveColor() (error) {
+	error := instance.Interface.VolumeData_RemoveColor(instance.Handle)
+	return error
 }
 
 func (instance *Lib3MFVolumeData) GetPropertyCount() (uint32, error) {
@@ -5883,31 +6389,23 @@ func (instance *Lib3MFVolumeData) GetPropertyCount() (uint32, error) {
 }
 
 func (instance *Lib3MFVolumeData) GetProperty(nIndex uint32) (Lib3MFVolumeDataProperty, error) {
-	hThePropertyData, error := instance.Interface.VolumeData_GetProperty(instance.Handle, nIndex)
-	var cThePropertyData Lib3MFVolumeDataProperty
-	cThePropertyData.Interface = instance.Interface
-	cThePropertyData.Handle = hThePropertyData
-	return cThePropertyData, error
+	hTheVolumeDataProperty, error := instance.Interface.VolumeData_GetProperty(instance.Handle, nIndex)
+	var cTheVolumeDataProperty Lib3MFVolumeDataProperty
+	cTheVolumeDataProperty.Interface = instance.Interface
+	cTheVolumeDataProperty.Handle = hTheVolumeDataProperty
+	return cTheVolumeDataProperty, error
 }
 
-func (instance *Lib3MFVolumeData) FindProperty(sName string) (Lib3MFVolumeDataProperty, error) {
-	hThePropertyData, error := instance.Interface.VolumeData_FindProperty(instance.Handle, sName)
-	var cThePropertyData Lib3MFVolumeDataProperty
-	cThePropertyData.Interface = instance.Interface
-	cThePropertyData.Handle = hThePropertyData
-	return cThePropertyData, error
+func (instance *Lib3MFVolumeData) AddProperty(sName string, nUniqueResourceID uint32) (Lib3MFVolumeDataProperty, error) {
+	hTheVolumeDataProperty, error := instance.Interface.VolumeData_AddProperty(instance.Handle, sName, nUniqueResourceID)
+	var cTheVolumeDataProperty Lib3MFVolumeDataProperty
+	cTheVolumeDataProperty.Interface = instance.Interface
+	cTheVolumeDataProperty.Handle = hTheVolumeDataProperty
+	return cTheVolumeDataProperty, error
 }
 
-func (instance *Lib3MFVolumeData) AddProperty(sName string, TheVolumetricStack Lib3MFHandle) (Lib3MFVolumeDataProperty, error) {
-	hThePropertyData, error := instance.Interface.VolumeData_AddProperty(instance.Handle, sName, TheVolumetricStack)
-	var cThePropertyData Lib3MFVolumeDataProperty
-	cThePropertyData.Interface = instance.Interface
-	cThePropertyData.Handle = hThePropertyData
-	return cThePropertyData, error
-}
-
-func (instance *Lib3MFVolumeData) RemoveProperty(sName string) (error) {
-	error := instance.Interface.VolumeData_RemoveProperty(instance.Handle, sName)
+func (instance *Lib3MFVolumeData) RemoveProperty(nIndex uint32) (error) {
+	error := instance.Interface.VolumeData_RemoveProperty(instance.Handle, nIndex)
 	return error
 }
 
@@ -6323,366 +6821,94 @@ func (instance *Lib3MFImage3D) Close() (error) {
 	return instance.Handle.Close()
 }
 
-func (instance *Lib3MFImage3D) GetSizeX() (uint32, error) {
-	nSizeX, error := instance.Interface.Image3D_GetSizeX(instance.Handle)
-	return nSizeX, error
+func (instance *Lib3MFImage3D) GetName() (string, error) {
+	sName, error := instance.Interface.Image3D_GetName(instance.Handle)
+	return sName, error
 }
 
-func (instance *Lib3MFImage3D) GetSizeY() (uint32, error) {
-	nSizeY, error := instance.Interface.Image3D_GetSizeY(instance.Handle)
-	return nSizeY, error
+func (instance *Lib3MFImage3D) SetName(sName string) (error) {
+	error := instance.Interface.Image3D_SetName(instance.Handle, sName)
+	return error
 }
 
-func (instance *Lib3MFImage3D) GetSheetCount() (uint32, error) {
-	nSheetCount, error := instance.Interface.Image3D_GetSheetCount(instance.Handle)
+func (instance *Lib3MFImage3D) IsImageStack() (bool, error) {
+	bIsImageStack, error := instance.Interface.Image3D_IsImageStack(instance.Handle)
+	return bIsImageStack, error
+}
+
+
+/*************************************************************************************************************************
+Class definition Lib3MFImageStack
+**************************************************************************************************************************/
+
+type Lib3MFImageStack struct {
+	Lib3MFImage3D
+}
+
+func (instance *Lib3MFImageStack) Close() (error) {
+	return instance.Handle.Close()
+}
+
+func (instance *Lib3MFImageStack) GetRowCount() (uint32, error) {
+	nRowCount, error := instance.Interface.ImageStack_GetRowCount(instance.Handle)
+	return nRowCount, error
+}
+
+func (instance *Lib3MFImageStack) SetRowCount(nRowCount uint32) (error) {
+	error := instance.Interface.ImageStack_SetRowCount(instance.Handle, nRowCount)
+	return error
+}
+
+func (instance *Lib3MFImageStack) GetColumnCount() (uint32, error) {
+	nColumnCount, error := instance.Interface.ImageStack_GetColumnCount(instance.Handle)
+	return nColumnCount, error
+}
+
+func (instance *Lib3MFImageStack) SetColumnCount(nColumnCount uint32) (error) {
+	error := instance.Interface.ImageStack_SetColumnCount(instance.Handle, nColumnCount)
+	return error
+}
+
+func (instance *Lib3MFImageStack) GetSheetCount() (uint32, error) {
+	nSheetCount, error := instance.Interface.ImageStack_GetSheetCount(instance.Handle)
 	return nSheetCount, error
 }
 
-func (instance *Lib3MFImage3D) GetSheet(nIndex uint32) (Lib3MFAttachment, error) {
-	hSheet, error := instance.Interface.Image3D_GetSheet(instance.Handle, nIndex)
+func (instance *Lib3MFImageStack) GetSheet(nIndex uint32) (Lib3MFAttachment, error) {
+	hSheet, error := instance.Interface.ImageStack_GetSheet(instance.Handle, nIndex)
 	var cSheet Lib3MFAttachment
 	cSheet.Interface = instance.Interface
 	cSheet.Handle = hSheet
 	return cSheet, error
 }
 
-func (instance *Lib3MFImage3D) GetSheetMinValue(nIndex uint32) (float64, error) {
-	dMinVal, error := instance.Interface.Image3D_GetSheetMinValue(instance.Handle, nIndex)
-	return dMinVal, error
+func (instance *Lib3MFImageStack) SetSheet(nIndex uint32, Sheet Lib3MFHandle) (error) {
+	error := instance.Interface.ImageStack_SetSheet(instance.Handle, nIndex, Sheet)
+	return error
 }
 
-func (instance *Lib3MFImage3D) GetSheetMaxValue(nIndex uint32) (float64, error) {
-	dMaxVal, error := instance.Interface.Image3D_GetSheetMaxValue(instance.Handle, nIndex)
-	return dMaxVal, error
-}
-
-func (instance *Lib3MFImage3D) CreateEmptySheet(nIndex uint32, sPath string, dMin float64, dMax float64) (Lib3MFAttachment, error) {
-	hSheet, error := instance.Interface.Image3D_CreateEmptySheet(instance.Handle, nIndex, sPath, dMin, dMax)
+func (instance *Lib3MFImageStack) CreateEmptySheet(sPath string) (Lib3MFAttachment, error) {
+	hSheet, error := instance.Interface.ImageStack_CreateEmptySheet(instance.Handle, sPath)
 	var cSheet Lib3MFAttachment
 	cSheet.Interface = instance.Interface
 	cSheet.Handle = hSheet
 	return cSheet, error
 }
 
-func (instance *Lib3MFImage3D) CreateSheetFromBuffer(nIndex uint32, sPath string, Data []uint8, dMin float64, dMax float64) (Lib3MFAttachment, error) {
-	hSheet, error := instance.Interface.Image3D_CreateSheetFromBuffer(instance.Handle, nIndex, sPath, Data, dMin, dMax)
+func (instance *Lib3MFImageStack) CreateSheetFromBuffer(sPath string, Data []uint8) (Lib3MFAttachment, error) {
+	hSheet, error := instance.Interface.ImageStack_CreateSheetFromBuffer(instance.Handle, sPath, Data)
 	var cSheet Lib3MFAttachment
 	cSheet.Interface = instance.Interface
 	cSheet.Handle = hSheet
 	return cSheet, error
 }
 
-func (instance *Lib3MFImage3D) CreateSheetFromFile(nIndex uint32, sPath string, sFileName string, dMin float64, dMax float64) (Lib3MFAttachment, error) {
-	hSheet, error := instance.Interface.Image3D_CreateSheetFromFile(instance.Handle, nIndex, sPath, sFileName, dMin, dMax)
+func (instance *Lib3MFImageStack) CreateSheetFromFile(sPath string, sFileName string) (Lib3MFAttachment, error) {
+	hSheet, error := instance.Interface.ImageStack_CreateSheetFromFile(instance.Handle, sPath, sFileName)
 	var cSheet Lib3MFAttachment
 	cSheet.Interface = instance.Interface
 	cSheet.Handle = hSheet
 	return cSheet, error
-}
-
-func (instance *Lib3MFImage3D) SetSheet(nIndex uint32, Sheet Lib3MFHandle) (error) {
-	error := instance.Interface.Image3D_SetSheet(instance.Handle, nIndex, Sheet)
-	return error
-}
-
-func (instance *Lib3MFImage3D) SetSheetMinValue(nIndex uint32, dMinVal float64) (error) {
-	error := instance.Interface.Image3D_SetSheetMinValue(instance.Handle, nIndex, dMinVal)
-	return error
-}
-
-func (instance *Lib3MFImage3D) SetSheetMaxValue(nIndex uint32, dMaxVal float64) (error) {
-	error := instance.Interface.Image3D_SetSheetMaxValue(instance.Handle, nIndex, dMaxVal)
-	return error
-}
-
-
-/*************************************************************************************************************************
-Class definition Lib3MFImage3DChannelSelector
-**************************************************************************************************************************/
-
-type Lib3MFImage3DChannelSelector struct {
-	Lib3MFBase
-}
-
-func (instance *Lib3MFImage3DChannelSelector) Close() (error) {
-	return instance.Handle.Close()
-}
-
-func (instance *Lib3MFImage3DChannelSelector) GetImage() (Lib3MFImage3D, error) {
-	hImage3D, error := instance.Interface.Image3DChannelSelector_GetImage(instance.Handle)
-	var cImage3D Lib3MFImage3D
-	cImage3D.Interface = instance.Interface
-	cImage3D.Handle = hImage3D
-	return cImage3D, error
-}
-
-func (instance *Lib3MFImage3DChannelSelector) SetImage(Image3D Lib3MFHandle) (error) {
-	error := instance.Interface.Image3DChannelSelector_SetImage(instance.Handle, Image3D)
-	return error
-}
-
-func (instance *Lib3MFImage3DChannelSelector) SetSourceChannel(sChannelName string) (error) {
-	error := instance.Interface.Image3DChannelSelector_SetSourceChannel(instance.Handle, sChannelName)
-	return error
-}
-
-func (instance *Lib3MFImage3DChannelSelector) GetSourceChannel() (string, error) {
-	sChannelName, error := instance.Interface.Image3DChannelSelector_GetSourceChannel(instance.Handle)
-	return sChannelName, error
-}
-
-func (instance *Lib3MFImage3DChannelSelector) SetDestinationChannel(sChannelName string) (error) {
-	error := instance.Interface.Image3DChannelSelector_SetDestinationChannel(instance.Handle, sChannelName)
-	return error
-}
-
-func (instance *Lib3MFImage3DChannelSelector) GetDestinationChannel() (string, error) {
-	sChannelName, error := instance.Interface.Image3DChannelSelector_GetDestinationChannel(instance.Handle)
-	return sChannelName, error
-}
-
-func (instance *Lib3MFImage3DChannelSelector) SetFilter(eFilter ELib3MFTextureFilter) (error) {
-	error := instance.Interface.Image3DChannelSelector_SetFilter(instance.Handle, eFilter)
-	return error
-}
-
-func (instance *Lib3MFImage3DChannelSelector) GetFilter() (ELib3MFTextureFilter, error) {
-	eFilter, error := instance.Interface.Image3DChannelSelector_GetFilter(instance.Handle)
-	return eFilter, error
-}
-
-func (instance *Lib3MFImage3DChannelSelector) SetTileStyles(eTileStyleU ELib3MFTextureTileStyle, eTileStyleV ELib3MFTextureTileStyle, eTileStyleW ELib3MFTextureTileStyle) (error) {
-	error := instance.Interface.Image3DChannelSelector_SetTileStyles(instance.Handle, eTileStyleU, eTileStyleV, eTileStyleW)
-	return error
-}
-
-func (instance *Lib3MFImage3DChannelSelector) GetTileStyles() (ELib3MFTextureTileStyle, ELib3MFTextureTileStyle, ELib3MFTextureTileStyle, error) {
-	eTileStyleU, eTileStyleV, eTileStyleW, error := instance.Interface.Image3DChannelSelector_GetTileStyles(instance.Handle)
-	return eTileStyleU, eTileStyleV, eTileStyleW, error
-}
-
-
-/*************************************************************************************************************************
-Class definition Lib3MFVolumetricLayer
-**************************************************************************************************************************/
-
-type Lib3MFVolumetricLayer struct {
-	Lib3MFBase
-}
-
-func (instance *Lib3MFVolumetricLayer) Close() (error) {
-	return instance.Handle.Close()
-}
-
-func (instance *Lib3MFVolumetricLayer) GetTransform() (sLib3MFTransform, error) {
-	sTransform, error := instance.Interface.VolumetricLayer_GetTransform(instance.Handle)
-	return sTransform, error
-}
-
-func (instance *Lib3MFVolumetricLayer) SetTransform(sTransform sLib3MFTransform) (error) {
-	error := instance.Interface.VolumetricLayer_SetTransform(instance.Handle, sTransform)
-	return error
-}
-
-func (instance *Lib3MFVolumetricLayer) GetBlendMethod() (ELib3MFBlendMethod, error) {
-	eBlendMethod, error := instance.Interface.VolumetricLayer_GetBlendMethod(instance.Handle)
-	return eBlendMethod, error
-}
-
-func (instance *Lib3MFVolumetricLayer) SetBlendMethod(eBlendMethod ELib3MFBlendMethod) (error) {
-	error := instance.Interface.VolumetricLayer_SetBlendMethod(instance.Handle, eBlendMethod)
-	return error
-}
-
-func (instance *Lib3MFVolumetricLayer) GetSourceAlpha() (float64, error) {
-	dSourceAlpha, error := instance.Interface.VolumetricLayer_GetSourceAlpha(instance.Handle)
-	return dSourceAlpha, error
-}
-
-func (instance *Lib3MFVolumetricLayer) SetSourceAlpha(dSourceAlpha float64) (error) {
-	error := instance.Interface.VolumetricLayer_SetSourceAlpha(instance.Handle, dSourceAlpha)
-	return error
-}
-
-func (instance *Lib3MFVolumetricLayer) GetDestinationAlpha() (float64, error) {
-	dDestinationAlpha, error := instance.Interface.VolumetricLayer_GetDestinationAlpha(instance.Handle)
-	return dDestinationAlpha, error
-}
-
-func (instance *Lib3MFVolumetricLayer) SetDestinationAlpha(dDestinationAlpha float64) (error) {
-	error := instance.Interface.VolumetricLayer_SetDestinationAlpha(instance.Handle, dDestinationAlpha)
-	return error
-}
-
-func (instance *Lib3MFVolumetricLayer) GetInformation() (sLib3MFTransform, ELib3MFBlendMethod, float64, float64, error) {
-	sTransform, eBlendMethod, dSourceAlpha, dDestinationAlpha, error := instance.Interface.VolumetricLayer_GetInformation(instance.Handle)
-	return sTransform, eBlendMethod, dSourceAlpha, dDestinationAlpha, error
-}
-
-func (instance *Lib3MFVolumetricLayer) SetInformation(sTransform sLib3MFTransform, eBlendMethod ELib3MFBlendMethod, dSourceAlpha float64, dDestinationAlpha float64) (error) {
-	error := instance.Interface.VolumetricLayer_SetInformation(instance.Handle, sTransform, eBlendMethod, dSourceAlpha, dDestinationAlpha)
-	return error
-}
-
-func (instance *Lib3MFVolumetricLayer) CreateMaskChannelSelector(Image3D Lib3MFHandle, sSourceChannel string, sDestinationChannel string) (Lib3MFImage3DChannelSelector, error) {
-	hChannelSelector, error := instance.Interface.VolumetricLayer_CreateMaskChannelSelector(instance.Handle, Image3D, sSourceChannel, sDestinationChannel)
-	var cChannelSelector Lib3MFImage3DChannelSelector
-	cChannelSelector.Interface = instance.Interface
-	cChannelSelector.Handle = hChannelSelector
-	return cChannelSelector, error
-}
-
-func (instance *Lib3MFVolumetricLayer) HasMaskChannelSelector() (bool, error) {
-	bSelectorExists, error := instance.Interface.VolumetricLayer_HasMaskChannelSelector(instance.Handle)
-	return bSelectorExists, error
-}
-
-func (instance *Lib3MFVolumetricLayer) ClearMaskChannelSelector() (error) {
-	error := instance.Interface.VolumetricLayer_ClearMaskChannelSelector(instance.Handle)
-	return error
-}
-
-func (instance *Lib3MFVolumetricLayer) GetMaskChannelSelector() (Lib3MFImage3DChannelSelector, error) {
-	hChannelSelector, error := instance.Interface.VolumetricLayer_GetMaskChannelSelector(instance.Handle)
-	var cChannelSelector Lib3MFImage3DChannelSelector
-	cChannelSelector.Interface = instance.Interface
-	cChannelSelector.Handle = hChannelSelector
-	return cChannelSelector, error
-}
-
-func (instance *Lib3MFVolumetricLayer) GetChannelSelectorCount() (uint32, error) {
-	nCount, error := instance.Interface.VolumetricLayer_GetChannelSelectorCount(instance.Handle)
-	return nCount, error
-}
-
-func (instance *Lib3MFVolumetricLayer) GetChannelSelector(nIndex uint32) (Lib3MFImage3DChannelSelector, error) {
-	hChannelSelector, error := instance.Interface.VolumetricLayer_GetChannelSelector(instance.Handle, nIndex)
-	var cChannelSelector Lib3MFImage3DChannelSelector
-	cChannelSelector.Interface = instance.Interface
-	cChannelSelector.Handle = hChannelSelector
-	return cChannelSelector, error
-}
-
-func (instance *Lib3MFVolumetricLayer) AddChannelSelector(Image3D Lib3MFHandle, sSourceChannel string, sDestinationChannel string) (Lib3MFImage3DChannelSelector, error) {
-	hChannelSelector, error := instance.Interface.VolumetricLayer_AddChannelSelector(instance.Handle, Image3D, sSourceChannel, sDestinationChannel)
-	var cChannelSelector Lib3MFImage3DChannelSelector
-	cChannelSelector.Interface = instance.Interface
-	cChannelSelector.Handle = hChannelSelector
-	return cChannelSelector, error
-}
-
-func (instance *Lib3MFVolumetricLayer) ClearChannelSelectors() (error) {
-	error := instance.Interface.VolumetricLayer_ClearChannelSelectors(instance.Handle)
-	return error
-}
-
-func (instance *Lib3MFVolumetricLayer) ReindexChannelSelector(ChannelSelector Lib3MFHandle, nIndex uint32) (error) {
-	error := instance.Interface.VolumetricLayer_ReindexChannelSelector(instance.Handle, ChannelSelector, nIndex)
-	return error
-}
-
-func (instance *Lib3MFVolumetricLayer) RemoveChannelSelector(ChannelSelector Lib3MFHandle) (error) {
-	error := instance.Interface.VolumetricLayer_RemoveChannelSelector(instance.Handle, ChannelSelector)
-	return error
-}
-
-func (instance *Lib3MFVolumetricLayer) RemoveChannelSelectorByIndex(nIndex uint32) (error) {
-	error := instance.Interface.VolumetricLayer_RemoveChannelSelectorByIndex(instance.Handle, nIndex)
-	return error
-}
-
-
-/*************************************************************************************************************************
-Class definition Lib3MFVolumetricStack
-**************************************************************************************************************************/
-
-type Lib3MFVolumetricStack struct {
-	Lib3MFResource
-}
-
-func (instance *Lib3MFVolumetricStack) Close() (error) {
-	return instance.Handle.Close()
-}
-
-func (instance *Lib3MFVolumetricStack) Clear() (error) {
-	error := instance.Interface.VolumetricStack_Clear(instance.Handle)
-	return error
-}
-
-func (instance *Lib3MFVolumetricStack) ClearUnusedDestinationChannels() (error) {
-	error := instance.Interface.VolumetricStack_ClearUnusedDestinationChannels(instance.Handle)
-	return error
-}
-
-func (instance *Lib3MFVolumetricStack) GetDestinationChannelCount() (uint32, error) {
-	nCount, error := instance.Interface.VolumetricStack_GetDestinationChannelCount(instance.Handle)
-	return nCount, error
-}
-
-func (instance *Lib3MFVolumetricStack) GetDestinationChannel(nIndex uint32) (string, float64, error) {
-	sName, dBackground, error := instance.Interface.VolumetricStack_GetDestinationChannel(instance.Handle, nIndex)
-	return sName, dBackground, error
-}
-
-func (instance *Lib3MFVolumetricStack) AddDestinationChannel(sName string, dBackground float64) (uint32, error) {
-	nIndex, error := instance.Interface.VolumetricStack_AddDestinationChannel(instance.Handle, sName, dBackground)
-	return nIndex, error
-}
-
-func (instance *Lib3MFVolumetricStack) UpdateDestinationChannel(nIndex uint32, dBackground float64) (error) {
-	error := instance.Interface.VolumetricStack_UpdateDestinationChannel(instance.Handle, nIndex, dBackground)
-	return error
-}
-
-func (instance *Lib3MFVolumetricStack) UpdateDestinationChannelByName(sName string, dBackground float64) (error) {
-	error := instance.Interface.VolumetricStack_UpdateDestinationChannelByName(instance.Handle, sName, dBackground)
-	return error
-}
-
-func (instance *Lib3MFVolumetricStack) RemoveDestinationChannel(nIndex uint32) (error) {
-	error := instance.Interface.VolumetricStack_RemoveDestinationChannel(instance.Handle, nIndex)
-	return error
-}
-
-func (instance *Lib3MFVolumetricStack) RemoveDestinationChannelByName(sName string) (error) {
-	error := instance.Interface.VolumetricStack_RemoveDestinationChannelByName(instance.Handle, sName)
-	return error
-}
-
-func (instance *Lib3MFVolumetricStack) GetLayerCount() (uint32, error) {
-	nCount, error := instance.Interface.VolumetricStack_GetLayerCount(instance.Handle)
-	return nCount, error
-}
-
-func (instance *Lib3MFVolumetricStack) GetLayer(nIndex uint32) (Lib3MFVolumetricLayer, error) {
-	hLayer, error := instance.Interface.VolumetricStack_GetLayer(instance.Handle, nIndex)
-	var cLayer Lib3MFVolumetricLayer
-	cLayer.Interface = instance.Interface
-	cLayer.Handle = hLayer
-	return cLayer, error
-}
-
-func (instance *Lib3MFVolumetricStack) AddLayer(sTransform sLib3MFTransform, eBlendMethod ELib3MFBlendMethod) (Lib3MFVolumetricLayer, error) {
-	hLayer, error := instance.Interface.VolumetricStack_AddLayer(instance.Handle, sTransform, eBlendMethod)
-	var cLayer Lib3MFVolumetricLayer
-	cLayer.Interface = instance.Interface
-	cLayer.Handle = hLayer
-	return cLayer, error
-}
-
-func (instance *Lib3MFVolumetricStack) ReindexLayer(Layer Lib3MFHandle, nIndex uint32) (error) {
-	error := instance.Interface.VolumetricStack_ReindexLayer(instance.Handle, Layer, nIndex)
-	return error
-}
-
-func (instance *Lib3MFVolumetricStack) RemoveLayer(Layer Lib3MFHandle) (error) {
-	error := instance.Interface.VolumetricStack_RemoveLayer(instance.Handle, Layer)
-	return error
-}
-
-func (instance *Lib3MFVolumetricStack) RemoveLayerByIndex(nIndex uint32) (error) {
-	error := instance.Interface.VolumetricStack_RemoveLayerByIndex(instance.Handle, nIndex)
-	return error
 }
 
 
@@ -7638,20 +7864,28 @@ func (instance *Lib3MFModel) GetImage3Ds() (Lib3MFImage3DIterator, error) {
 	return cResourceIterator, error
 }
 
+func (instance *Lib3MFModel) GetScalarFields() (Lib3MFScalarFieldIterator, error) {
+	hResourceIterator, error := instance.Interface.Model_GetScalarFields(instance.Handle)
+	var cResourceIterator Lib3MFScalarFieldIterator
+	cResourceIterator.Interface = instance.Interface
+	cResourceIterator.Handle = hResourceIterator
+	return cResourceIterator, error
+}
+
+func (instance *Lib3MFModel) GetVector3DFields() (Lib3MFVector3DFieldIterator, error) {
+	hResourceIterator, error := instance.Interface.Model_GetVector3DFields(instance.Handle)
+	var cResourceIterator Lib3MFVector3DFieldIterator
+	cResourceIterator.Interface = instance.Interface
+	cResourceIterator.Handle = hResourceIterator
+	return cResourceIterator, error
+}
+
 func (instance *Lib3MFModel) MergeToModel() (Lib3MFModel, error) {
 	hMergedModelInstance, error := instance.Interface.Model_MergeToModel(instance.Handle)
 	var cMergedModelInstance Lib3MFModel
 	cMergedModelInstance.Interface = instance.Interface
 	cMergedModelInstance.Handle = hMergedModelInstance
 	return cMergedModelInstance, error
-}
-
-func (instance *Lib3MFModel) GetVolumetricStacks() (Lib3MFVolumetricStackIterator, error) {
-	hResourceIterator, error := instance.Interface.Model_GetVolumetricStacks(instance.Handle)
-	var cResourceIterator Lib3MFVolumetricStackIterator
-	cResourceIterator.Interface = instance.Interface
-	cResourceIterator.Handle = hResourceIterator
-	return cResourceIterator, error
 }
 
 func (instance *Lib3MFModel) AddMeshObject() (Lib3MFMeshObject, error) {
@@ -7726,20 +7960,92 @@ func (instance *Lib3MFModel) AddMultiPropertyGroup() (Lib3MFMultiPropertyGroup, 
 	return cMultiPropertyGroupInstance, error
 }
 
-func (instance *Lib3MFModel) AddImage3D(nSizeX uint32, nSizeY uint32, nSheetCount uint32) (Lib3MFImage3D, error) {
-	hInstance, error := instance.Interface.Model_AddImage3D(instance.Handle, nSizeX, nSizeY, nSheetCount)
-	var cInstance Lib3MFImage3D
+func (instance *Lib3MFModel) AddImageStack(nColumnCount uint32, nRowCount uint32, nSheetCount uint32) (Lib3MFImageStack, error) {
+	hInstance, error := instance.Interface.Model_AddImageStack(instance.Handle, nColumnCount, nRowCount, nSheetCount)
+	var cInstance Lib3MFImageStack
 	cInstance.Interface = instance.Interface
 	cInstance.Handle = hInstance
 	return cInstance, error
 }
 
-func (instance *Lib3MFModel) AddVolumetricStack() (Lib3MFVolumetricStack, error) {
-	hInstance, error := instance.Interface.Model_AddVolumetricStack(instance.Handle)
-	var cInstance Lib3MFVolumetricStack
-	cInstance.Interface = instance.Interface
-	cInstance.Handle = hInstance
-	return cInstance, error
+func (instance *Lib3MFModel) AddScalarFieldFromImage3D() (Lib3MFScalarFieldFromImage3D, error) {
+	hTheScalarFieldFromImage3D, error := instance.Interface.Model_AddScalarFieldFromImage3D(instance.Handle)
+	var cTheScalarFieldFromImage3D Lib3MFScalarFieldFromImage3D
+	cTheScalarFieldFromImage3D.Interface = instance.Interface
+	cTheScalarFieldFromImage3D.Handle = hTheScalarFieldFromImage3D
+	return cTheScalarFieldFromImage3D, error
+}
+
+func (instance *Lib3MFModel) AddScalarFieldComposed() (Lib3MFScalarFieldComposed, error) {
+	hTheScalarFieldComposed, error := instance.Interface.Model_AddScalarFieldComposed(instance.Handle)
+	var cTheScalarFieldComposed Lib3MFScalarFieldComposed
+	cTheScalarFieldComposed.Interface = instance.Interface
+	cTheScalarFieldComposed.Handle = hTheScalarFieldComposed
+	return cTheScalarFieldComposed, error
+}
+
+func (instance *Lib3MFModel) GetScalarFieldByID(nUniqueResourceID uint32) (Lib3MFScalarField, error) {
+	hScalarFieldInstance, error := instance.Interface.Model_GetScalarFieldByID(instance.Handle, nUniqueResourceID)
+	var cScalarFieldInstance Lib3MFScalarField
+	cScalarFieldInstance.Interface = instance.Interface
+	cScalarFieldInstance.Handle = hScalarFieldInstance
+	return cScalarFieldInstance, error
+}
+
+func (instance *Lib3MFModel) GetScalarFieldFromImage3DByID(nUniqueResourceID uint32) (Lib3MFScalarFieldFromImage3D, error) {
+	hScalarFieldFromImage3DInstance, error := instance.Interface.Model_GetScalarFieldFromImage3DByID(instance.Handle, nUniqueResourceID)
+	var cScalarFieldFromImage3DInstance Lib3MFScalarFieldFromImage3D
+	cScalarFieldFromImage3DInstance.Interface = instance.Interface
+	cScalarFieldFromImage3DInstance.Handle = hScalarFieldFromImage3DInstance
+	return cScalarFieldFromImage3DInstance, error
+}
+
+func (instance *Lib3MFModel) GetScalarFieldComposedByID(nUniqueResourceID uint32) (Lib3MFScalarFieldComposed, error) {
+	hScalarFieldComposedInstance, error := instance.Interface.Model_GetScalarFieldComposedByID(instance.Handle, nUniqueResourceID)
+	var cScalarFieldComposedInstance Lib3MFScalarFieldComposed
+	cScalarFieldComposedInstance.Interface = instance.Interface
+	cScalarFieldComposedInstance.Handle = hScalarFieldComposedInstance
+	return cScalarFieldComposedInstance, error
+}
+
+func (instance *Lib3MFModel) AddVector3DFieldFromImage3D() (Lib3MFVector3DFieldFromImage3D, error) {
+	hTheVector3DFieldFromImage3D, error := instance.Interface.Model_AddVector3DFieldFromImage3D(instance.Handle)
+	var cTheVector3DFieldFromImage3D Lib3MFVector3DFieldFromImage3D
+	cTheVector3DFieldFromImage3D.Interface = instance.Interface
+	cTheVector3DFieldFromImage3D.Handle = hTheVector3DFieldFromImage3D
+	return cTheVector3DFieldFromImage3D, error
+}
+
+func (instance *Lib3MFModel) AddVector3DFieldComposed() (Lib3MFVector3DFieldComposed, error) {
+	hTheVector3DFieldComposed, error := instance.Interface.Model_AddVector3DFieldComposed(instance.Handle)
+	var cTheVector3DFieldComposed Lib3MFVector3DFieldComposed
+	cTheVector3DFieldComposed.Interface = instance.Interface
+	cTheVector3DFieldComposed.Handle = hTheVector3DFieldComposed
+	return cTheVector3DFieldComposed, error
+}
+
+func (instance *Lib3MFModel) GetVector3DFieldByID(nUniqueResourceID uint32) (Lib3MFVector3DField, error) {
+	hVector3DFieldInstance, error := instance.Interface.Model_GetVector3DFieldByID(instance.Handle, nUniqueResourceID)
+	var cVector3DFieldInstance Lib3MFVector3DField
+	cVector3DFieldInstance.Interface = instance.Interface
+	cVector3DFieldInstance.Handle = hVector3DFieldInstance
+	return cVector3DFieldInstance, error
+}
+
+func (instance *Lib3MFModel) GetVector3DFieldFromImage3DByID(nUniqueResourceID uint32) (Lib3MFVector3DFieldFromImage3D, error) {
+	hVector3DFieldFromImage3DInstance, error := instance.Interface.Model_GetVector3DFieldFromImage3DByID(instance.Handle, nUniqueResourceID)
+	var cVector3DFieldFromImage3DInstance Lib3MFVector3DFieldFromImage3D
+	cVector3DFieldFromImage3DInstance.Interface = instance.Interface
+	cVector3DFieldFromImage3DInstance.Handle = hVector3DFieldFromImage3DInstance
+	return cVector3DFieldFromImage3DInstance, error
+}
+
+func (instance *Lib3MFModel) GetVector3DFieldComposedByID(nUniqueResourceID uint32) (Lib3MFVector3DFieldComposed, error) {
+	hVector3DFieldComposedInstance, error := instance.Interface.Model_GetVector3DFieldComposedByID(instance.Handle, nUniqueResourceID)
+	var cVector3DFieldComposedInstance Lib3MFVector3DFieldComposed
+	cVector3DFieldComposedInstance.Interface = instance.Interface
+	cVector3DFieldComposedInstance.Handle = hVector3DFieldComposedInstance
+	return cVector3DFieldComposedInstance, error
 }
 
 func (instance *Lib3MFModel) AddBuildItem(Object Lib3MFHandle, sTransform sLib3MFTransform) (Lib3MFBuildItem, error) {

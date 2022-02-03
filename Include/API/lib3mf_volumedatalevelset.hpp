@@ -35,14 +35,14 @@ Abstract: This is the class declaration of CVolumeDataLevelset
 #include "lib3mf_interfaces.hpp"
 
 // Parent classes
-#include "lib3mf_volumedataitem.hpp"
+#include "lib3mf_scalarfieldreference.hpp"
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable : 4250)
 #endif
 
 // Include custom headers here.
-#include "Common/Mesh/NMR_VolumeLevelset.h"
+
 
 namespace Lib3MF {
 namespace Impl {
@@ -52,27 +52,24 @@ namespace Impl {
  Class declaration of CVolumeDataLevelset 
 **************************************************************************************************************************/
 
-class CVolumeDataLevelset : public virtual IVolumeDataLevelset, public virtual CVolumeDataItem {
+class CVolumeDataLevelset : public virtual IVolumeDataLevelset, public virtual CScalarFieldReference {
 private:
 
 	/**
 	* Put private members here.
 	*/
 
-
 protected:
 
 	/**
 	* Put protected members here.
 	*/
-	NMR::CVolumeLevelset* VolumeLevelset();
 
 public:
 
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-	CVolumeDataLevelset(NMR::PVolumeLevelset pVolumeLevelsel, NMR::CModel* pModel);
 
 
 	/**
@@ -82,10 +79,6 @@ public:
 	Lib3MF_double GetSolidThreshold() override;
 
 	void SetSolidThreshold(const Lib3MF_double dTheSolidThreshold) override;
-
-	void SetChannel(const std::string & sChannelName) override;
-
-	std::string GetChannel() override;
 
 };
 

@@ -31,8 +31,6 @@ Abstract: This is a stub class definition of CImage3DIterator
 #include "lib3mf_image3diterator.hpp"
 #include "lib3mf_interfaceexception.hpp"
 
-#include "lib3mf_image3d.hpp"
-
 // Include custom headers here.
 
 
@@ -44,6 +42,6 @@ using namespace Lib3MF::Impl;
 
 IImage3D * CImage3DIterator::GetCurrentImage3D()
 {
-	return new CImage3D(std::dynamic_pointer_cast<NMR::CModelImage3D>(GetCurrentResource()));
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 

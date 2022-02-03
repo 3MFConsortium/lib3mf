@@ -40,40 +40,13 @@ using namespace Lib3MF::Impl;
  Class definition of CVolumeDataLevelset 
 **************************************************************************************************************************/
 
-CVolumeDataLevelset::CVolumeDataLevelset(NMR::PVolumeLevelset pVolumeLevelset, NMR::CModel* pModel)
-	: CVolumeDataItem(pVolumeLevelset, pModel)
-{
-	if (pVolumeLevelset == nullptr)
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
-}
-
-NMR::CVolumeLevelset* CVolumeDataLevelset::VolumeLevelset()
-{
-	auto pLevelset = std::dynamic_pointer_cast<NMR::CVolumeLevelset>(m_pVolumeBase);
-	if (!pLevelset)
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-
-	return pLevelset.get();
-}
-
-
 Lib3MF_double CVolumeDataLevelset::GetSolidThreshold()
 {
-	return VolumeLevelset()->GetSolidThreshold();
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 void CVolumeDataLevelset::SetSolidThreshold(const Lib3MF_double dTheSolidThreshold)
 {
-	VolumeLevelset()->SetSolidThreshold(dTheSolidThreshold);
-}
-
-void CVolumeDataLevelset::SetChannel(const std::string & sChannelName)
-{
-	VolumeLevelset()->SetChannel(sChannelName);
-}
-
-std::string CVolumeDataLevelset::GetChannel()
-{
-	return VolumeLevelset()->GetChannel();
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 

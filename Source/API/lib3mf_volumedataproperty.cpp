@@ -40,49 +40,23 @@ using namespace Lib3MF::Impl;
  Class definition of CVolumeDataProperty 
 **************************************************************************************************************************/
 
-CVolumeDataProperty::CVolumeDataProperty(NMR::PVolumeProperty pVolumeProperty, NMR::CModel* pModel)
-	: CVolumeDataItem(pVolumeProperty, pModel)
-{
-	if (pVolumeProperty == nullptr)
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
-}
-
-NMR::CVolumeProperty* CVolumeDataProperty::VolumeProperty()
-{
-	auto pProperty = std::dynamic_pointer_cast<NMR::CVolumeProperty>(m_pVolumeBase);
-	if (!pProperty)
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-
-	return pProperty.get();
-}
-
-void CVolumeDataProperty::SetChannel(const std::string & sChannelName)
-{
-	VolumeProperty()->SetChannel(sChannelName);
-}
-
-std::string CVolumeDataProperty::GetChannel()
-{
-	return VolumeProperty()->GetChannel();
-}
-
 void CVolumeDataProperty::SetName(const std::string & sPropertyName)
 {
-	VolumeProperty()->SetName(sPropertyName);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 std::string CVolumeDataProperty::GetName()
 {
-	return VolumeProperty()->GetName();
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 void CVolumeDataProperty::SetIsRequired(const bool bIsRequired)
 {
-	VolumeProperty()->SetIsRequired(bIsRequired);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 bool CVolumeDataProperty::IsRequired()
 {
-	return VolumeProperty()->IsRequired();
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 

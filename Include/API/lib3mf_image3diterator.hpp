@@ -76,7 +76,7 @@ public:
 	* Public member functions to implement.
 	*/
 
-	IImage3D * GetCurrentImage3D();
+	IImage3D * GetCurrentImage3D() override;
 
 };
 

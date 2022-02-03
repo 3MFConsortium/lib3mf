@@ -112,7 +112,6 @@ const
 	LIB3MF_ERROR_INVALIDPROPERTYCOUNT = 132;
 	LIB3MF_ERROR_UNKOWNPROGRESSIDENTIFIER = 140;
 	LIB3MF_ERROR_ELEMENTCOUNTEXCEEDSLIMIT = 141;
-	LIB3MF_ERROR_NOMASKCHANNELSELECTOR = 250;
 	LIB3MF_ERROR_BEAMLATTICE_INVALID_OBJECTTYPE = 2000;
 	LIB3MF_ERROR_INVALIDKEYSTORE = 3000;
 	LIB3MF_ERROR_INVALIDKEYSTORECONSUMER = 3001;
@@ -221,15 +220,23 @@ type
 	);
 
 	TLib3MFBlendMethod = (
+		eBlendMethodNoBlendMethod,
 		eBlendMethodMix,
-		eBlendMethodMultiply,
-		eBlendMethodMask
+		eBlendMethodMultiply
 	);
 
-	TLib3MFColorChannel = (
-		eColorChannelRed,
-		eColorChannelGreen,
-		eColorChannelBlue
+	TLib3MFChannelName = (
+		eChannelNameRed,
+		eChannelNameGreen,
+		eChannelNameBlue
+	);
+
+	TLib3MFCompositionMethod = (
+		eCompositionMethodWeightedSum,
+		eCompositionMethodMultiply,
+		eCompositionMethodMin,
+		eCompositionMethodMax,
+		eCompositionMethodMask
 	);
 
 	TLib3MFEncryptionAlgorithm = (
@@ -390,15 +397,25 @@ type
 	TLib3MFCompositeMaterialsIterator = class;
 	TLib3MFMultiPropertyGroupIterator = class;
 	TLib3MFImage3DIterator = class;
-	TLib3MFVolumetricStackIterator = class;
+	TLib3MFScalarFieldIterator = class;
+	TLib3MFVector3DFieldIterator = class;
 	TLib3MFMetaData = class;
 	TLib3MFMetaDataGroup = class;
 	TLib3MFObject = class;
 	TLib3MFMeshObject = class;
 	TLib3MFBeamLattice = class;
-	TLib3MFVolumeDataItem = class;
+	TLib3MFScalarField = class;
+	TLib3MFVector3DField = class;
+	TLib3MFScalarFieldFromImage3D = class;
+	TLib3MFScalarFieldComposed = class;
+	TLib3MFVector3DFieldFromImage3D = class;
+	TLib3MFVector3DFieldComposed = class;
+	TLib3MFFieldReference = class;
+	TLib3MFScalarFieldReference = class;
+	TLib3MFVector3DFieldReference = class;
 	TLib3MFVolumeDataLevelset = class;
 	TLib3MFVolumeDataColor = class;
+	TLib3MFMaterialMapping = class;
 	TLib3MFVolumeDataComposite = class;
 	TLib3MFVolumeDataProperty = class;
 	TLib3MFVolumeData = class;
@@ -411,9 +428,7 @@ type
 	TLib3MFCompositeMaterials = class;
 	TLib3MFMultiPropertyGroup = class;
 	TLib3MFImage3D = class;
-	TLib3MFImage3DChannelSelector = class;
-	TLib3MFVolumetricLayer = class;
-	TLib3MFVolumetricStack = class;
+	TLib3MFImageStack = class;
 	TLib3MFAttachment = class;
 	TLib3MFTexture2D = class;
 	TLib3MFBuildItem = class;
@@ -973,17 +988,31 @@ type
 	
 
 (*************************************************************************************************************************
- Function type definitions for VolumetricStackIterator
+ Function type definitions for ScalarFieldIterator
 **************************************************************************************************************************)
 
 	(**
-	* Returns the VolumetricStack the iterator points at.
+	* Returns the ScalarField the iterator points at.
 	*
-	* @param[in] pVolumetricStackIterator - VolumetricStackIterator instance.
-	* @param[out] pResource - returns the VolumetricStack instance.
+	* @param[in] pScalarFieldIterator - ScalarFieldIterator instance.
+	* @param[out] pResource - returns the ScalarField instance.
 	* @return error code or 0 (success)
 	*)
-	TLib3MFVolumetricStackIterator_GetCurrentVolumetricStackFunc = function(pVolumetricStackIterator: TLib3MFHandle; out pResource: TLib3MFHandle): TLib3MFResult; cdecl;
+	TLib3MFScalarFieldIterator_GetCurrentScalarFieldFunc = function(pScalarFieldIterator: TLib3MFHandle; out pResource: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+
+(*************************************************************************************************************************
+ Function type definitions for Vector3DFieldIterator
+**************************************************************************************************************************)
+
+	(**
+	* Returns the Vector3DField the iterator points at.
+	*
+	* @param[in] pVector3DFieldIterator - Vector3DFieldIterator instance.
+	* @param[out] pResource - returns the Vector3DField instance.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFVector3DFieldIterator_GetCurrentVector3DFieldFunc = function(pVector3DFieldIterator: TLib3MFHandle; out pResource: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 
 (*************************************************************************************************************************
@@ -1821,44 +1850,564 @@ type
 	
 
 (*************************************************************************************************************************
- Function type definitions for VolumeDataItem
+ Function type definitions for ScalarField
 **************************************************************************************************************************)
 
 	(**
-	* Returns the VolumetricStack used within this volume data item
+	* Gets the name of this ScalarField.
 	*
-	* @param[in] pVolumeDataItem - VolumeDataItem instance.
-	* @param[out] pTheVolumetricStack - VolumetricStack used within this volume data item
+	* @param[in] pScalarField - ScalarField instance.
+	* @param[in] nNameBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pNameBuffer -  buffer of The name of this ScalarField., may be NULL
 	* @return error code or 0 (success)
 	*)
-	TLib3MFVolumeDataItem_GetVolumetricStackFunc = function(pVolumeDataItem: TLib3MFHandle; out pTheVolumetricStack: TLib3MFHandle): TLib3MFResult; cdecl;
+	TLib3MFScalarField_GetNameFunc = function(pScalarField: TLib3MFHandle; const nNameBufferSize: Cardinal; out pNameNeededChars: Cardinal; pNameBuffer: PAnsiChar): TLib3MFResult; cdecl;
 	
 	(**
-	* Sets the VolumetricStack to use within this volume data item.
+	* Sets the name of this ScalarField.
 	*
-	* @param[in] pVolumeDataItem - VolumeDataItem instance.
-	* @param[in] pTheVolumetricStack - VolumetricStack to use within this volume data item
+	* @param[in] pScalarField - ScalarField instance.
+	* @param[in] pName - The name of this ScalarField.
 	* @return error code or 0 (success)
 	*)
-	TLib3MFVolumeDataItem_SetVolumetricStackFunc = function(pVolumeDataItem: TLib3MFHandle; const pTheVolumetricStack: TLib3MFHandle): TLib3MFResult; cdecl;
+	TLib3MFScalarField_SetNameFunc = function(pScalarField: TLib3MFHandle; const pName: PAnsiChar): TLib3MFResult; cdecl;
 	
 	(**
-	* Returns the transformation matrix of the volume data item.
+	* Retrieves, if this ScalarField is a ScalarFieldFromImage3D
 	*
-	* @param[in] pVolumeDataItem - VolumeDataItem instance.
-	* @param[out] pTransform - filled with the volume data item transformation matrix
+	* @param[in] pScalarField - ScalarField instance.
+	* @param[out] pIsFromImage3D - returns, whether the scalar field is a ScalarFieldFromImage3D
 	* @return error code or 0 (success)
 	*)
-	TLib3MFVolumeDataItem_GetTransformFunc = function(pVolumeDataItem: TLib3MFHandle; pTransform: PLib3MFTransform): TLib3MFResult; cdecl;
+	TLib3MFScalarField_IsFromImage3DFunc = function(pScalarField: TLib3MFHandle; out pIsFromImage3D: Byte): TLib3MFResult; cdecl;
 	
 	(**
-	* Sets the transformation matrix of the volume data item.
+	* Retrieves, if this ScalarField is a ScalarFieldComposed
 	*
-	* @param[in] pVolumeDataItem - VolumeDataItem instance.
+	* @param[in] pScalarField - ScalarField instance.
+	* @param[out] pIsComposed - returns, whether the scalar field is a ScalarFieldComposed
+	* @return error code or 0 (success)
+	*)
+	TLib3MFScalarField_IsComposedFunc = function(pScalarField: TLib3MFHandle; out pIsComposed: Byte): TLib3MFResult; cdecl;
+	
+
+(*************************************************************************************************************************
+ Function type definitions for Vector3DField
+**************************************************************************************************************************)
+
+	(**
+	* Gets the name of this Vector3DField.
+	*
+	* @param[in] pVector3DField - Vector3DField instance.
+	* @param[in] nNameBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pNameBuffer -  buffer of The name of this Vector3DField., may be NULL
+	* @return error code or 0 (success)
+	*)
+	TLib3MFVector3DField_GetNameFunc = function(pVector3DField: TLib3MFHandle; const nNameBufferSize: Cardinal; out pNameNeededChars: Cardinal; pNameBuffer: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Sets the name of this Vector3DField.
+	*
+	* @param[in] pVector3DField - Vector3DField instance.
+	* @param[in] pName - The name of this Vector3DField.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFVector3DField_SetNameFunc = function(pVector3DField: TLib3MFHandle; const pName: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves, if this Vector3DField is a Vector3DFieldFromImage3D
+	*
+	* @param[in] pVector3DField - Vector3DField instance.
+	* @param[out] pIsFromImage3D - returns, whether the scalar field is a Vector3DFieldFromImage3D
+	* @return error code or 0 (success)
+	*)
+	TLib3MFVector3DField_IsFromImage3DFunc = function(pVector3DField: TLib3MFHandle; out pIsFromImage3D: Byte): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves, if this Vector3DField is a ScalarFieldComposed
+	*
+	* @param[in] pVector3DField - Vector3DField instance.
+	* @param[out] pIsComposed - returns, whether the scalar field is a Vector3DFieldComposed
+	* @return error code or 0 (success)
+	*)
+	TLib3MFVector3DField_IsComposedFunc = function(pVector3DField: TLib3MFHandle; out pIsComposed: Byte): TLib3MFResult; cdecl;
+	
+
+(*************************************************************************************************************************
+ Function type definitions for ScalarFieldFromImage3D
+**************************************************************************************************************************)
+
+	(**
+	* Returns the selected 3D image.
+	*
+	* @param[in] pScalarFieldFromImage3D - ScalarFieldFromImage3D instance.
+	* @param[out] pImage3D - image instance
+	* @return error code or 0 (success)
+	*)
+	TLib3MFScalarFieldFromImage3D_GetImageFunc = function(pScalarFieldFromImage3D: TLib3MFHandle; out pImage3D: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Sets the 3D image of the selector.
+	*
+	* @param[in] pScalarFieldFromImage3D - ScalarFieldFromImage3D instance.
+	* @param[in] pImage3D - image instance
+	* @return error code or 0 (success)
+	*)
+	TLib3MFScalarFieldFromImage3D_SetImageFunc = function(pScalarFieldFromImage3D: TLib3MFHandle; const pImage3D: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Sets the channel name to be picked from the referenced Image3D.
+	*
+	* @param[in] pScalarFieldFromImage3D - ScalarFieldFromImage3D instance.
+	* @param[in] eName - Sets the channel name.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFScalarFieldFromImage3D_SetChannelFunc = function(pScalarFieldFromImage3D: TLib3MFHandle; const eName: Integer): TLib3MFResult; cdecl;
+	
+	(**
+	* Gets the channel name to be picked from the referenced Image3D.
+	*
+	* @param[in] pScalarFieldFromImage3D - ScalarFieldFromImage3D instance.
+	* @param[out] pName - Sets the channel name.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFScalarFieldFromImage3D_GetChannelFunc = function(pScalarFieldFromImage3D: TLib3MFHandle; out pName: Integer): TLib3MFResult; cdecl;
+	
+	(**
+	* Sets the texture filter of the selector.
+	*
+	* @param[in] pScalarFieldFromImage3D - ScalarFieldFromImage3D instance.
+	* @param[in] eFilter - texture filter
+	* @return error code or 0 (success)
+	*)
+	TLib3MFScalarFieldFromImage3D_SetFilterFunc = function(pScalarFieldFromImage3D: TLib3MFHandle; const eFilter: Integer): TLib3MFResult; cdecl;
+	
+	(**
+	* Returns the texture filter of the selector.
+	*
+	* @param[in] pScalarFieldFromImage3D - ScalarFieldFromImage3D instance.
+	* @param[out] pFilter - texture filter
+	* @return error code or 0 (success)
+	*)
+	TLib3MFScalarFieldFromImage3D_GetFilterFunc = function(pScalarFieldFromImage3D: TLib3MFHandle; out pFilter: Integer): TLib3MFResult; cdecl;
+	
+	(**
+	* Sets the tile styles of the selector.
+	*
+	* @param[in] pScalarFieldFromImage3D - ScalarFieldFromImage3D instance.
+	* @param[in] eTileStyleU - tile style in U
+	* @param[in] eTileStyleV - tile style in V
+	* @param[in] eTileStyleW - tile style in W
+	* @return error code or 0 (success)
+	*)
+	TLib3MFScalarFieldFromImage3D_SetTileStylesFunc = function(pScalarFieldFromImage3D: TLib3MFHandle; const eTileStyleU: Integer; const eTileStyleV: Integer; const eTileStyleW: Integer): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the tile styles of the selector.
+	*
+	* @param[in] pScalarFieldFromImage3D - ScalarFieldFromImage3D instance.
+	* @param[out] pTileStyleU - tile style in U
+	* @param[out] pTileStyleV - tile style in V
+	* @param[out] pTileStyleW - tile style in W
+	* @return error code or 0 (success)
+	*)
+	TLib3MFScalarFieldFromImage3D_GetTileStylesFunc = function(pScalarFieldFromImage3D: TLib3MFHandle; out pTileStyleU: Integer; out pTileStyleV: Integer; out pTileStyleW: Integer): TLib3MFResult; cdecl;
+	
+	(**
+	* returns the offset value for the pixel values in the Image3D
+	*
+	* @param[in] pScalarFieldFromImage3D - ScalarFieldFromImage3D instance.
+	* @param[out] pOffset - the offset value for the pixel values in the Image3D
+	* @return error code or 0 (success)
+	*)
+	TLib3MFScalarFieldFromImage3D_GetOffsetFunc = function(pScalarFieldFromImage3D: TLib3MFHandle; out pOffset: Double): TLib3MFResult; cdecl;
+	
+	(**
+	* Sets the offset value for the pixel values in the Image3D
+	*
+	* @param[in] pScalarFieldFromImage3D - ScalarFieldFromImage3D instance.
+	* @param[in] dOffset - the offset value for the pixel values in the Image3D
+	* @return error code or 0 (success)
+	*)
+	TLib3MFScalarFieldFromImage3D_SetOffsetFunc = function(pScalarFieldFromImage3D: TLib3MFHandle; const dOffset: Double): TLib3MFResult; cdecl;
+	
+	(**
+	* returns the scale value for the pixel values in the Image3D
+	*
+	* @param[in] pScalarFieldFromImage3D - ScalarFieldFromImage3D instance.
+	* @param[out] pScale - the scale value for the pixel values in the Image3D
+	* @return error code or 0 (success)
+	*)
+	TLib3MFScalarFieldFromImage3D_GetScaleFunc = function(pScalarFieldFromImage3D: TLib3MFHandle; out pScale: Double): TLib3MFResult; cdecl;
+	
+	(**
+	* Sets the scale value for the pixel values in the Image3D
+	*
+	* @param[in] pScalarFieldFromImage3D - ScalarFieldFromImage3D instance.
+	* @param[in] dScale - the scale value for the pixel values in the Image3D
+	* @return error code or 0 (success)
+	*)
+	TLib3MFScalarFieldFromImage3D_SetScaleFunc = function(pScalarFieldFromImage3D: TLib3MFHandle; const dScale: Double): TLib3MFResult; cdecl;
+	
+
+(*************************************************************************************************************************
+ Function type definitions for ScalarFieldComposed
+**************************************************************************************************************************)
+
+	(**
+	* Sets the method to used for composition.
+	*
+	* @param[in] pScalarFieldComposed - ScalarFieldComposed instance.
+	* @param[in] eTheMethod - Sets the composition method.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFScalarFieldComposed_SetMethodFunc = function(pScalarFieldComposed: TLib3MFHandle; const eTheMethod: Integer): TLib3MFResult; cdecl;
+	
+	(**
+	* Gets the method to used for composition.
+	*
+	* @param[in] pScalarFieldComposed - ScalarFieldComposed instance.
+	* @param[out] pTheMethod - Gets the composition method.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFScalarFieldComposed_GetMethodFunc = function(pScalarFieldComposed: TLib3MFHandle; out pTheMethod: Integer): TLib3MFResult; cdecl;
+	
+	(**
+	* returns the factor scalar field 1 is multiplied with when composited
+	*
+	* @param[in] pScalarFieldComposed - ScalarFieldComposed instance.
+	* @param[out] pFactor1 - the factor scalar field 1 is multiplied with when composited
+	* @return error code or 0 (success)
+	*)
+	TLib3MFScalarFieldComposed_GetFactor1Func = function(pScalarFieldComposed: TLib3MFHandle; out pFactor1: Double): TLib3MFResult; cdecl;
+	
+	(**
+	* sets the factor scalar field 1 is multiplied with when composited
+	*
+	* @param[in] pScalarFieldComposed - ScalarFieldComposed instance.
+	* @param[in] dFactor1 - the factor scalar field 1 is multiplied with when composited
+	* @return error code or 0 (success)
+	*)
+	TLib3MFScalarFieldComposed_SetFactor1Func = function(pScalarFieldComposed: TLib3MFHandle; const dFactor1: Double): TLib3MFResult; cdecl;
+	
+	(**
+	* returns the factor scalar field 2 is multiplied with when composited
+	*
+	* @param[in] pScalarFieldComposed - ScalarFieldComposed instance.
+	* @param[out] pFactor2 - the factor scalar field 2 is multiplied with when composited
+	* @return error code or 0 (success)
+	*)
+	TLib3MFScalarFieldComposed_GetFactor2Func = function(pScalarFieldComposed: TLib3MFHandle; out pFactor2: Double): TLib3MFResult; cdecl;
+	
+	(**
+	* sets the factor scalar field 2 is multiplied with when composited
+	*
+	* @param[in] pScalarFieldComposed - ScalarFieldComposed instance.
+	* @param[in] dFactor2 - the factor scalar field 2 is multiplied with when composited
+	* @return error code or 0 (success)
+	*)
+	TLib3MFScalarFieldComposed_SetFactor2Func = function(pScalarFieldComposed: TLib3MFHandle; const dFactor2: Double): TLib3MFResult; cdecl;
+	
+	(**
+	* Access to the ScalarFieldReference for the first composited field
+	*
+	* @param[in] pScalarFieldComposed - ScalarFieldComposed instance.
+	* @param[out] pTheScalarFieldReference1 - ScalarFieldReference
+	* @return error code or 0 (success)
+	*)
+	TLib3MFScalarFieldComposed_ScalarFieldReference1Func = function(pScalarFieldComposed: TLib3MFHandle; out pTheScalarFieldReference1: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Access to the ScalarFieldReference for the second composited field
+	*
+	* @param[in] pScalarFieldComposed - ScalarFieldComposed instance.
+	* @param[out] pTheScalarFieldReference1 - ScalarFieldReference
+	* @return error code or 0 (success)
+	*)
+	TLib3MFScalarFieldComposed_ScalarFieldReference2Func = function(pScalarFieldComposed: TLib3MFHandle; out pTheScalarFieldReference1: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Access to the ScalarFieldReference for masking. Only relevant if the Method is mask.
+	*
+	* @param[in] pScalarFieldComposed - ScalarFieldComposed instance.
+	* @param[out] pTheScalarFieldReferenceMask - ScalarFieldReference
+	* @return error code or 0 (success)
+	*)
+	TLib3MFScalarFieldComposed_ScalarFieldReferenceMaskFunc = function(pScalarFieldComposed: TLib3MFHandle; out pTheScalarFieldReferenceMask: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+
+(*************************************************************************************************************************
+ Function type definitions for Vector3DFieldFromImage3D
+**************************************************************************************************************************)
+
+	(**
+	* Returns the selected 3D image.
+	*
+	* @param[in] pVector3DFieldFromImage3D - Vector3DFieldFromImage3D instance.
+	* @param[out] pImage3D - image instance
+	* @return error code or 0 (success)
+	*)
+	TLib3MFVector3DFieldFromImage3D_GetImageFunc = function(pVector3DFieldFromImage3D: TLib3MFHandle; out pImage3D: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Sets the 3D image of the selector.
+	*
+	* @param[in] pVector3DFieldFromImage3D - Vector3DFieldFromImage3D instance.
+	* @param[in] pImage3D - image instance
+	* @return error code or 0 (success)
+	*)
+	TLib3MFVector3DFieldFromImage3D_SetImageFunc = function(pVector3DFieldFromImage3D: TLib3MFHandle; const pImage3D: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Sets the texture filter of the selector.
+	*
+	* @param[in] pVector3DFieldFromImage3D - Vector3DFieldFromImage3D instance.
+	* @param[in] eFilter - texture filter
+	* @return error code or 0 (success)
+	*)
+	TLib3MFVector3DFieldFromImage3D_SetFilterFunc = function(pVector3DFieldFromImage3D: TLib3MFHandle; const eFilter: Integer): TLib3MFResult; cdecl;
+	
+	(**
+	* Returns the texture filter of the selector.
+	*
+	* @param[in] pVector3DFieldFromImage3D - Vector3DFieldFromImage3D instance.
+	* @param[out] pFilter - texture filter
+	* @return error code or 0 (success)
+	*)
+	TLib3MFVector3DFieldFromImage3D_GetFilterFunc = function(pVector3DFieldFromImage3D: TLib3MFHandle; out pFilter: Integer): TLib3MFResult; cdecl;
+	
+	(**
+	* Sets the tile styles of the selector.
+	*
+	* @param[in] pVector3DFieldFromImage3D - Vector3DFieldFromImage3D instance.
+	* @param[in] eTileStyleU - tile style in U
+	* @param[in] eTileStyleV - tile style in V
+	* @param[in] eTileStyleW - tile style in W
+	* @return error code or 0 (success)
+	*)
+	TLib3MFVector3DFieldFromImage3D_SetTileStylesFunc = function(pVector3DFieldFromImage3D: TLib3MFHandle; const eTileStyleU: Integer; const eTileStyleV: Integer; const eTileStyleW: Integer): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the tile styles of the selector.
+	*
+	* @param[in] pVector3DFieldFromImage3D - Vector3DFieldFromImage3D instance.
+	* @param[out] pTileStyleU - tile style in U
+	* @param[out] pTileStyleV - tile style in V
+	* @param[out] pTileStyleW - tile style in W
+	* @return error code or 0 (success)
+	*)
+	TLib3MFVector3DFieldFromImage3D_GetTileStylesFunc = function(pVector3DFieldFromImage3D: TLib3MFHandle; out pTileStyleU: Integer; out pTileStyleV: Integer; out pTileStyleW: Integer): TLib3MFResult; cdecl;
+	
+	(**
+	* returns the offset value for the pixel values in the Image3D
+	*
+	* @param[in] pVector3DFieldFromImage3D - Vector3DFieldFromImage3D instance.
+	* @param[out] pOffset - the offset value for the pixel values in the Image3D
+	* @return error code or 0 (success)
+	*)
+	TLib3MFVector3DFieldFromImage3D_GetOffsetFunc = function(pVector3DFieldFromImage3D: TLib3MFHandle; out pOffset: Double): TLib3MFResult; cdecl;
+	
+	(**
+	* Sets the offset value for the pixel values in the Image3D
+	*
+	* @param[in] pVector3DFieldFromImage3D - Vector3DFieldFromImage3D instance.
+	* @param[in] dOffset - the offset value for the pixel values in the Image3D
+	* @return error code or 0 (success)
+	*)
+	TLib3MFVector3DFieldFromImage3D_SetOffsetFunc = function(pVector3DFieldFromImage3D: TLib3MFHandle; const dOffset: Double): TLib3MFResult; cdecl;
+	
+	(**
+	* returns the scale value for the pixel values in the Image3D
+	*
+	* @param[in] pVector3DFieldFromImage3D - Vector3DFieldFromImage3D instance.
+	* @param[out] pScale - the scale value for the pixel values in the Image3D
+	* @return error code or 0 (success)
+	*)
+	TLib3MFVector3DFieldFromImage3D_GetScaleFunc = function(pVector3DFieldFromImage3D: TLib3MFHandle; out pScale: Double): TLib3MFResult; cdecl;
+	
+	(**
+	* Sets the scale value for the pixel values in the Image3D
+	*
+	* @param[in] pVector3DFieldFromImage3D - Vector3DFieldFromImage3D instance.
+	* @param[in] dScale - the scale value for the pixel values in the Image3D
+	* @return error code or 0 (success)
+	*)
+	TLib3MFVector3DFieldFromImage3D_SetScaleFunc = function(pVector3DFieldFromImage3D: TLib3MFHandle; const dScale: Double): TLib3MFResult; cdecl;
+	
+
+(*************************************************************************************************************************
+ Function type definitions for Vector3DFieldComposed
+**************************************************************************************************************************)
+
+	(**
+	* Sets the method to used for composition.
+	*
+	* @param[in] pVector3DFieldComposed - Vector3DFieldComposed instance.
+	* @param[in] eTheMethod - Sets the composition method.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFVector3DFieldComposed_SetMethodFunc = function(pVector3DFieldComposed: TLib3MFHandle; const eTheMethod: Integer): TLib3MFResult; cdecl;
+	
+	(**
+	* Gets the method to used for composition.
+	*
+	* @param[in] pVector3DFieldComposed - Vector3DFieldComposed instance.
+	* @param[out] pTheMethod - Gets the composition method.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFVector3DFieldComposed_GetMethodFunc = function(pVector3DFieldComposed: TLib3MFHandle; out pTheMethod: Integer): TLib3MFResult; cdecl;
+	
+	(**
+	* returns the factor vector3d field 1 is multiplied with when composited
+	*
+	* @param[in] pVector3DFieldComposed - Vector3DFieldComposed instance.
+	* @param[out] pFactor1 - the factor vector3d field 1 is multiplied with when composited
+	* @return error code or 0 (success)
+	*)
+	TLib3MFVector3DFieldComposed_GetFactor1Func = function(pVector3DFieldComposed: TLib3MFHandle; out pFactor1: Double): TLib3MFResult; cdecl;
+	
+	(**
+	* sets the factor vector3d field 1 is multiplied with when composited
+	*
+	* @param[in] pVector3DFieldComposed - Vector3DFieldComposed instance.
+	* @param[in] dFactor1 - the factor vector3d field 1 is multiplied with when composited
+	* @return error code or 0 (success)
+	*)
+	TLib3MFVector3DFieldComposed_SetFactor1Func = function(pVector3DFieldComposed: TLib3MFHandle; const dFactor1: Double): TLib3MFResult; cdecl;
+	
+	(**
+	* returns the vector3d scalar field 2 is multiplied with when composited
+	*
+	* @param[in] pVector3DFieldComposed - Vector3DFieldComposed instance.
+	* @param[out] pFactor2 - the factor vector3d field 2 is multiplied with when composited
+	* @return error code or 0 (success)
+	*)
+	TLib3MFVector3DFieldComposed_GetFactor2Func = function(pVector3DFieldComposed: TLib3MFHandle; out pFactor2: Double): TLib3MFResult; cdecl;
+	
+	(**
+	* sets the factor vector3d field 2 is multiplied with when composited
+	*
+	* @param[in] pVector3DFieldComposed - Vector3DFieldComposed instance.
+	* @param[in] dFactor2 - the factor vector3d field 2 is multiplied with when composited
+	* @return error code or 0 (success)
+	*)
+	TLib3MFVector3DFieldComposed_SetFactor2Func = function(pVector3DFieldComposed: TLib3MFHandle; const dFactor2: Double): TLib3MFResult; cdecl;
+	
+	(**
+	* Access to the Vector3DFieldReference for the first composited field
+	*
+	* @param[in] pVector3DFieldComposed - Vector3DFieldComposed instance.
+	* @param[out] pTheVector3DFieldReference1 - Vector3DFieldReference
+	* @return error code or 0 (success)
+	*)
+	TLib3MFVector3DFieldComposed_Vector3DFieldReference1Func = function(pVector3DFieldComposed: TLib3MFHandle; out pTheVector3DFieldReference1: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Access to the Vector3DFieldReference for the second composited field
+	*
+	* @param[in] pVector3DFieldComposed - Vector3DFieldComposed instance.
+	* @param[out] pTheVector3DFieldReference1 - Vector3DFieldReference
+	* @return error code or 0 (success)
+	*)
+	TLib3MFVector3DFieldComposed_Vector3DFieldReference2Func = function(pVector3DFieldComposed: TLib3MFHandle; out pTheVector3DFieldReference1: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Access to the ScalarFieldReference for masking. Only relevant if the Method is mask.
+	*
+	* @param[in] pVector3DFieldComposed - Vector3DFieldComposed instance.
+	* @param[out] pTheScalarFieldReferenceMask - ScalarFieldReference
+	* @return error code or 0 (success)
+	*)
+	TLib3MFVector3DFieldComposed_ScalarFieldReferenceMaskFunc = function(pVector3DFieldComposed: TLib3MFHandle; out pTheScalarFieldReferenceMask: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+
+(*************************************************************************************************************************
+ Function type definitions for FieldReference
+**************************************************************************************************************************)
+
+	(**
+	* Returns the UniqueResourceID of the Field (Scalar- or Vector3DField).
+	*
+	* @param[in] pFieldReference - FieldReference instance.
+	* @param[out] pUniqueResourceID - returns the UniqueResourceID.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFFieldReference_GetFieldResourceIDFunc = function(pFieldReference: TLib3MFHandle; out pUniqueResourceID: Cardinal): TLib3MFResult; cdecl;
+	
+	(**
+	* Sets the UniqueResourceID to refer to.
+	*
+	* @param[in] pFieldReference - FieldReference instance.
+	* @param[in] nUniqueResourceID - UniqueResourceID of the Field (Scalar- or Vector3DField)
+	* @return error code or 0 (success)
+	*)
+	TLib3MFFieldReference_SetFieldResourceIDFunc = function(pFieldReference: TLib3MFHandle; const nUniqueResourceID: Cardinal): TLib3MFResult; cdecl;
+	
+	(**
+	* Returns the transformation matrix into the coordinate system of the referenced Field.
+	*
+	* @param[in] pFieldReference - FieldReference instance.
+	* @param[out] pTransform - the transformation matrix
+	* @return error code or 0 (success)
+	*)
+	TLib3MFFieldReference_GetTransformFunc = function(pFieldReference: TLib3MFHandle; pTransform: PLib3MFTransform): TLib3MFResult; cdecl;
+	
+	(**
+	* Sets the transformation matrix into the coordinate system of the referenced Field.
+	*
+	* @param[in] pFieldReference - FieldReference instance.
 	* @param[in] pTransform - new transformation matrix
 	* @return error code or 0 (success)
 	*)
-	TLib3MFVolumeDataItem_SetTransformFunc = function(pVolumeDataItem: TLib3MFHandle; const pTransform: PLib3MFTransform): TLib3MFResult; cdecl;
+	TLib3MFFieldReference_SetTransformFunc = function(pFieldReference: TLib3MFHandle; const pTransform: PLib3MFTransform): TLib3MFResult; cdecl;
+	
+
+(*************************************************************************************************************************
+ Function type definitions for ScalarFieldReference
+**************************************************************************************************************************)
+
+	(**
+	* Returns the ScalarField
+	*
+	* @param[in] pScalarFieldReference - ScalarFieldReference instance.
+	* @param[out] pTheScalarField - ScalarField used in this element
+	* @return error code or 0 (success)
+	*)
+	TLib3MFScalarFieldReference_GetScalarFieldFunc = function(pScalarFieldReference: TLib3MFHandle; out pTheScalarField: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Sets the ScalarField to use within this volume data item.
+	*
+	* @param[in] pScalarFieldReference - ScalarFieldReference instance.
+	* @param[in] pTheScalarField - ScalarField used in this element
+	* @return error code or 0 (success)
+	*)
+	TLib3MFScalarFieldReference_SetScalarFieldFunc = function(pScalarFieldReference: TLib3MFHandle; const pTheScalarField: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+
+(*************************************************************************************************************************
+ Function type definitions for Vector3DFieldReference
+**************************************************************************************************************************)
+
+	(**
+	* Returns the Vector3DField
+	*
+	* @param[in] pVector3DFieldReference - Vector3DFieldReference instance.
+	* @param[out] pTheVector3DField - Vector3DField used in this element
+	* @return error code or 0 (success)
+	*)
+	TLib3MFVector3DFieldReference_GetVector3DFieldFunc = function(pVector3DFieldReference: TLib3MFHandle; out pTheVector3DField: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Sets the Vector3DField to use within this volume data item.
+	*
+	* @param[in] pVector3DFieldReference - Vector3DFieldReference instance.
+	* @param[in] pTheVector3DField - Vector3DField used in this element
+	* @return error code or 0 (success)
+	*)
+	TLib3MFVector3DFieldReference_SetVector3DFieldFunc = function(pVector3DFieldReference: TLib3MFHandle; const pTheVector3DField: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 
 (*************************************************************************************************************************
@@ -1883,53 +2432,16 @@ type
 	*)
 	TLib3MFVolumeDataLevelset_SetSolidThresholdFunc = function(pVolumeDataLevelset: TLib3MFHandle; const dTheSolidThreshold: Double): TLib3MFResult; cdecl;
 	
-	(**
-	* Sets the name of the channel that holds the levelset function.
-	*
-	* @param[in] pVolumeDataLevelset - VolumeDataLevelset instance.
-	* @param[in] pChannelName - The name of the channel that holds the levelset function
-	* @return error code or 0 (success)
-	*)
-	TLib3MFVolumeDataLevelset_SetChannelFunc = function(pVolumeDataLevelset: TLib3MFHandle; const pChannelName: PAnsiChar): TLib3MFResult; cdecl;
-	
-	(**
-	* Returns the name of the channel that holds the levelset function.
-	*
-	* @param[in] pVolumeDataLevelset - VolumeDataLevelset instance.
-	* @param[in] nChannelNameBufferSize - size of the buffer (including trailing 0)
-	* @param[out] pChannelNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
-	* @param[out] pChannelNameBuffer -  buffer of The name of the channel that holds the levelset function, may be NULL
-	* @return error code or 0 (success)
-	*)
-	TLib3MFVolumeDataLevelset_GetChannelFunc = function(pVolumeDataLevelset: TLib3MFHandle; const nChannelNameBufferSize: Cardinal; out pChannelNameNeededChars: Cardinal; pChannelNameBuffer: PAnsiChar): TLib3MFResult; cdecl;
-	
 
 (*************************************************************************************************************************
  Function type definitions for VolumeDataColor
 **************************************************************************************************************************)
 
-	(**
-	* Sets the name of the channel that holds the levelset function.
-	*
-	* @param[in] pVolumeDataColor - VolumeDataColor instance.
-	* @param[in] eTheColorChannel - The color in question
-	* @param[in] pChannelName - The new name of the channel that holds the scalar function of this ColorChannel
-	* @return error code or 0 (success)
-	*)
-	TLib3MFVolumeDataColor_SetChannelFunc = function(pVolumeDataColor: TLib3MFHandle; const eTheColorChannel: Integer; const pChannelName: PAnsiChar): TLib3MFResult; cdecl;
-	
-	(**
-	* Returns the name of the channel that holds the levelset function.
-	*
-	* @param[in] pVolumeDataColor - VolumeDataColor instance.
-	* @param[in] eTheColorChannel - The color in question
-	* @param[in] nChannelNameBufferSize - size of the buffer (including trailing 0)
-	* @param[out] pChannelNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
-	* @param[out] pChannelNameBuffer -  buffer of The name of the channel that holds the scalar function of this ColorChannel, may be NULL
-	* @return error code or 0 (success)
-	*)
-	TLib3MFVolumeDataColor_GetChannelFunc = function(pVolumeDataColor: TLib3MFHandle; const eTheColorChannel: Integer; const nChannelNameBufferSize: Cardinal; out pChannelNameNeededChars: Cardinal; pChannelNameBuffer: PAnsiChar): TLib3MFResult; cdecl;
-	
+
+(*************************************************************************************************************************
+ Function type definitions for MaterialMapping
+**************************************************************************************************************************)
+
 
 (*************************************************************************************************************************
  Function type definitions for VolumeDataComposite
@@ -1939,7 +2451,7 @@ type
 	* Returns the BaseMaterialGroup used within this volume data item
 	*
 	* @param[in] pVolumeDataComposite - VolumeDataComposite instance.
-	* @param[out] pBaseMaterialGroupInstance - The BaseMaterialGroup instance of this VolumeDataComposite
+	* @param[out] pBaseMaterialGroupInstance - The BaseMaterialGroup instance of this VolumeDataComposite element
 	* @return error code or 0 (success)
 	*)
 	TLib3MFVolumeDataComposite_GetBaseMaterialGroupFunc = function(pVolumeDataComposite: TLib3MFHandle; out pBaseMaterialGroupInstance: TLib3MFHandle): TLib3MFResult; cdecl;
@@ -1948,13 +2460,13 @@ type
 	* Sets the BaseMaterialGroup to use within this volume data item.
 	*
 	* @param[in] pVolumeDataComposite - VolumeDataComposite instance.
-	* @param[in] pBaseMaterialGroupInstance - The new BaseMaterialGroup instance of this VolumeDataComposite
+	* @param[in] pBaseMaterialGroupInstance - The new BaseMaterialGroup instance of this VolumeDataComposite element
 	* @return error code or 0 (success)
 	*)
 	TLib3MFVolumeDataComposite_SetBaseMaterialGroupFunc = function(pVolumeDataComposite: TLib3MFHandle; const pBaseMaterialGroupInstance: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
-	* Returns the number of material mappings of this VolumeDataComposite
+	* Returns the number of material mappings of this VolumeDataComposite element
 	*
 	* @param[in] pVolumeDataComposite - VolumeDataComposite instance.
 	* @param[out] pCount - the number of material mappings.
@@ -1963,40 +2475,24 @@ type
 	TLib3MFVolumeDataComposite_GetMaterialMappingCountFunc = function(pVolumeDataComposite: TLib3MFHandle; out pCount: Cardinal): TLib3MFResult; cdecl;
 	
 	(**
-	* Returns PropertyID and ChannelName of the MaterialMapping with given index
+	* Returns MaterialMappting with given index
 	*
 	* @param[in] pVolumeDataComposite - VolumeDataComposite instance.
 	* @param[in] nIndex - Index of the MaterialMapping in question.
-	* @param[out] pPropertyID - PropertyID of the material.
-	* @param[in] nChannelNameBufferSize - size of the buffer (including trailing 0)
-	* @param[out] pChannelNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
-	* @param[out] pChannelNameBuffer -  buffer of The name of the channel that holds the intensity function of this Material within the Composite, may be NULL
+	* @param[out] pTheMaterialMapping - MaterialMapping used in this element
 	* @return error code or 0 (success)
 	*)
-	TLib3MFVolumeDataComposite_GetMaterialMappingFunc = function(pVolumeDataComposite: TLib3MFHandle; const nIndex: Cardinal; out pPropertyID: Cardinal; const nChannelNameBufferSize: Cardinal; out pChannelNameNeededChars: Cardinal; pChannelNameBuffer: PAnsiChar): TLib3MFResult; cdecl;
-	
-	(**
-	* Sets PropertyID and ChannelName of the MaterialMapping with given index
-	*
-	* @param[in] pVolumeDataComposite - VolumeDataComposite instance.
-	* @param[in] nIndex - Index of the MaterialMapping in question.
-	* @param[out] pPropertyID - New PropertyID of the material.
-	* @param[in] nChannelNameBufferSize - size of the buffer (including trailing 0)
-	* @param[out] pChannelNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
-	* @param[out] pChannelNameBuffer -  buffer of The new name of the channel that holds the intensity function of this Material within the Composite, may be NULL
-	* @return error code or 0 (success)
-	*)
-	TLib3MFVolumeDataComposite_SetMaterialMappingFunc = function(pVolumeDataComposite: TLib3MFHandle; const nIndex: Cardinal; out pPropertyID: Cardinal; const nChannelNameBufferSize: Cardinal; out pChannelNameNeededChars: Cardinal; pChannelNameBuffer: PAnsiChar): TLib3MFResult; cdecl;
+	TLib3MFVolumeDataComposite_GetMaterialMappingFunc = function(pVolumeDataComposite: TLib3MFHandle; const nIndex: Cardinal; out pTheMaterialMapping: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
 	* Adds a the MaterialMapping
 	*
 	* @param[in] pVolumeDataComposite - VolumeDataComposite instance.
-	* @param[in] nPropertyID - PropertyID of the new MaterialMapping
-	* @param[in] pChannelName - The name of the channel that holds the intensity function of the new Material within the Composite
+	* @param[in] pTransform - new transformation matrix
+	* @param[out] pTheMaterialMapping - The new MaterialMapping
 	* @return error code or 0 (success)
 	*)
-	TLib3MFVolumeDataComposite_AddMaterialMappingFunc = function(pVolumeDataComposite: TLib3MFHandle; const nPropertyID: Cardinal; const pChannelName: PAnsiChar): TLib3MFResult; cdecl;
+	TLib3MFVolumeDataComposite_AddMaterialMappingFunc = function(pVolumeDataComposite: TLib3MFHandle; const pTransform: PLib3MFTransform; out pTheMaterialMapping: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
 	* Removes the MaterialMapping with given index
@@ -2012,26 +2508,6 @@ type
  Function type definitions for VolumeDataProperty
 **************************************************************************************************************************)
 
-	(**
-	* Sets the channel name to be used for this property
-	*
-	* @param[in] pVolumeDataProperty - VolumeDataProperty instance.
-	* @param[in] pChannelName - The mew channel name to be used for this property.
-	* @return error code or 0 (success)
-	*)
-	TLib3MFVolumeDataProperty_SetChannelFunc = function(pVolumeDataProperty: TLib3MFHandle; const pChannelName: PAnsiChar): TLib3MFResult; cdecl;
-	
-	(**
-	* Gets the channel name to be used for this property.
-	*
-	* @param[in] pVolumeDataProperty - VolumeDataProperty instance.
-	* @param[in] nChannelNameBufferSize - size of the buffer (including trailing 0)
-	* @param[out] pChannelNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
-	* @param[out] pChannelNameBuffer -  buffer of The channel name to be used for this property., may be NULL
-	* @return error code or 0 (success)
-	*)
-	TLib3MFVolumeDataProperty_GetChannelFunc = function(pVolumeDataProperty: TLib3MFHandle; const nChannelNameBufferSize: Cardinal; out pChannelNameNeededChars: Cardinal; pChannelNameBuffer: PAnsiChar): TLib3MFResult; cdecl;
-	
 	(**
 	* Sets the qualified name of this property.
 	*
@@ -2088,11 +2564,20 @@ type
 	* Creates a new VolumeDataLevelset for this VolumeData instance
 	*
 	* @param[in] pVolumeData - VolumeData instance.
-	* @param[in] pTheVolumetricStack - The VolumetricStack for the new VolumeDataLevelset.
+	* @param[in] pTheScalarField - ScalarField used in this element
+	* @param[in] pTransform - new transformation matrix
 	* @param[out] pTheLevelsetData - The new VolumeDataLevelset of this VolumeData instance.
 	* @return error code or 0 (success)
 	*)
-	TLib3MFVolumeData_CreateNewLevelsetFunc = function(pVolumeData: TLib3MFHandle; const pTheVolumetricStack: TLib3MFHandle; out pTheLevelsetData: TLib3MFHandle): TLib3MFResult; cdecl;
+	TLib3MFVolumeData_CreateNewLevelsetFunc = function(pVolumeData: TLib3MFHandle; const pTheScalarField: TLib3MFHandle; const pTransform: PLib3MFTransform; out pTheLevelsetData: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Removes the VolumeDataLevelset of this VolumeData instance
+	*
+	* @param[in] pVolumeData - VolumeData instance.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFVolumeData_RemoveLevelsetFunc = function(pVolumeData: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
 	* Returns the VolumeDataComposite of this VolumeData instance
@@ -2107,11 +2592,18 @@ type
 	* Creates a new VolumeDataComposite for this VolumeData instance
 	*
 	* @param[in] pVolumeData - VolumeData instance.
-	* @param[in] pTheVolumetricStack - The VolumetricStack for the new VolumeDataComposite.
 	* @param[out] pTheCompositeData - The new VolumeDataComposite of this VolumeData instance.
 	* @return error code or 0 (success)
 	*)
-	TLib3MFVolumeData_CreateNewCompositeFunc = function(pVolumeData: TLib3MFHandle; const pTheVolumetricStack: TLib3MFHandle; out pTheCompositeData: TLib3MFHandle): TLib3MFResult; cdecl;
+	TLib3MFVolumeData_CreateNewCompositeFunc = function(pVolumeData: TLib3MFHandle; out pTheCompositeData: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Removes the VolumeDataComposite of this VolumeData instance
+	*
+	* @param[in] pVolumeData - VolumeData instance.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFVolumeData_RemoveCompositeFunc = function(pVolumeData: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
 	* Returns the VolumeDataColor of this VolumeData instance
@@ -2126,11 +2618,20 @@ type
 	* Creates a new VolumeDataColor for this VolumeData instance
 	*
 	* @param[in] pVolumeData - VolumeData instance.
-	* @param[in] pTheVolumetricStack - The VolumetricStack for the new VolumeDataComposite.
+	* @param[in] pTheVector3DField - Vector3DField used in this element
+	* @param[in] pTransform - new transformation matrix
 	* @param[out] pTheColorData - The new VolumeDataColor of this VolumeData instance.
 	* @return error code or 0 (success)
 	*)
-	TLib3MFVolumeData_CreateNewColorFunc = function(pVolumeData: TLib3MFHandle; const pTheVolumetricStack: TLib3MFHandle; out pTheColorData: TLib3MFHandle): TLib3MFResult; cdecl;
+	TLib3MFVolumeData_CreateNewColorFunc = function(pVolumeData: TLib3MFHandle; const pTheVector3DField: TLib3MFHandle; const pTransform: PLib3MFTransform; out pTheColorData: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Removes the VolumeDataColor of this VolumeData instance
+	*
+	* @param[in] pVolumeData - VolumeData instance.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFVolumeData_RemoveColorFunc = function(pVolumeData: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
 	* Returns the number of VolumeDataProperty
@@ -2146,40 +2647,30 @@ type
 	*
 	* @param[in] pVolumeData - VolumeData instance.
 	* @param[in] nIndex - the index of the VolumeDataProperty to be returned.
-	* @param[out] pThePropertyData - the VolumeDataProperty at the given index.
+	* @param[out] pTheVolumeDataProperty - the VolumeDataProperty at the given index.
 	* @return error code or 0 (success)
 	*)
-	TLib3MFVolumeData_GetPropertyFunc = function(pVolumeData: TLib3MFHandle; const nIndex: Cardinal; out pThePropertyData: TLib3MFHandle): TLib3MFResult; cdecl;
-	
-	(**
-	* Returns the VolumeDataProperty at a given Index
-	*
-	* @param[in] pVolumeData - VolumeData instance.
-	* @param[in] pName - the qualified name of the VolumeDataProperty to be returned.
-	* @param[out] pThePropertyData - the VolumeDataProperty at the given index.
-	* @return error code or 0 (success)
-	*)
-	TLib3MFVolumeData_FindPropertyFunc = function(pVolumeData: TLib3MFHandle; const pName: PAnsiChar; out pThePropertyData: TLib3MFHandle): TLib3MFResult; cdecl;
+	TLib3MFVolumeData_GetPropertyFunc = function(pVolumeData: TLib3MFHandle; const nIndex: Cardinal; out pTheVolumeDataProperty: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
 	* Adds a new VolumeDataProperty
 	*
 	* @param[in] pVolumeData - VolumeData instance.
 	* @param[in] pName - the qualified name (namespace+name) of the Property
-	* @param[in] pTheVolumetricStack - The VolumetricStack for the new VolumeDataProperty.
-	* @param[out] pThePropertyData - the new VolumeDataProperty.
+	* @param[in] nUniqueResourceID - UniqueResourceID of the Field (Scalar- or Vector3DField)
+	* @param[out] pTheVolumeDataProperty - the newly created VolumeDataProperty.
 	* @return error code or 0 (success)
 	*)
-	TLib3MFVolumeData_AddPropertyFunc = function(pVolumeData: TLib3MFHandle; const pName: PAnsiChar; const pTheVolumetricStack: TLib3MFHandle; out pThePropertyData: TLib3MFHandle): TLib3MFResult; cdecl;
+	TLib3MFVolumeData_AddPropertyFunc = function(pVolumeData: TLib3MFHandle; const pName: PAnsiChar; const nUniqueResourceID: Cardinal; out pTheVolumeDataProperty: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
-	* Removes the VolumeDataProperty with a given name
+	* Removes the VolumeDataProperty with a given index
 	*
 	* @param[in] pVolumeData - VolumeData instance.
-	* @param[in] pName - the qualified name of the VolumeDataProperty to be removed.
+	* @param[in] nIndex - the index of the VolumeDataProperty to be removed.
 	* @return error code or 0 (success)
 	*)
-	TLib3MFVolumeData_RemovePropertyFunc = function(pVolumeData: TLib3MFHandle; const pName: PAnsiChar): TLib3MFResult; cdecl;
+	TLib3MFVolumeData_RemovePropertyFunc = function(pVolumeData: TLib3MFHandle; const nIndex: Cardinal): TLib3MFResult; cdecl;
 	
 
 (*************************************************************************************************************************
@@ -2784,592 +3275,136 @@ type
 **************************************************************************************************************************)
 
 	(**
-	* Retrieves the extensions of the image stack in X direction.
+	* returns the name of this Image3D
 	*
 	* @param[in] pImage3D - Image3D instance.
-	* @param[out] pSizeX - size in X
+	* @param[in] nNameBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pNameBuffer -  buffer of the name of this Image3D, may be NULL
 	* @return error code or 0 (success)
 	*)
-	TLib3MFImage3D_GetSizeXFunc = function(pImage3D: TLib3MFHandle; out pSizeX: Cardinal): TLib3MFResult; cdecl;
+	TLib3MFImage3D_GetNameFunc = function(pImage3D: TLib3MFHandle; const nNameBufferSize: Cardinal; out pNameNeededChars: Cardinal; pNameBuffer: PAnsiChar): TLib3MFResult; cdecl;
 	
 	(**
-	* Retrieves the extensions of the image stack in Y direction.
+	* sets a new name of this Image3D
 	*
 	* @param[in] pImage3D - Image3D instance.
-	* @param[out] pSizeY - size in Y
+	* @param[in] pName - the new name of this Image3D
 	* @return error code or 0 (success)
 	*)
-	TLib3MFImage3D_GetSizeYFunc = function(pImage3D: TLib3MFHandle; out pSizeY: Cardinal): TLib3MFResult; cdecl;
+	TLib3MFImage3D_SetNameFunc = function(pImage3D: TLib3MFHandle; const pName: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves, if this Image3D is a ImageStack
+	*
+	* @param[in] pImage3D - Image3D instance.
+	* @param[out] pIsImageStack - returns, whether the Image3D is an ImageStack
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImage3D_IsImageStackFunc = function(pImage3D: TLib3MFHandle; out pIsImageStack: Byte): TLib3MFResult; cdecl;
+	
+
+(*************************************************************************************************************************
+ Function type definitions for ImageStack
+**************************************************************************************************************************)
+
+	(**
+	* Retrieves the number of rows in each image of this image3d
+	*
+	* @param[in] pImageStack - ImageStack instance.
+	* @param[out] pRowCount - number of rows
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImageStack_GetRowCountFunc = function(pImageStack: TLib3MFHandle; out pRowCount: Cardinal): TLib3MFResult; cdecl;
+	
+	(**
+	* Sets the number of rows in each image of this image3d
+	*
+	* @param[in] pImageStack - ImageStack instance.
+	* @param[in] nRowCount - number of rows
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImageStack_SetRowCountFunc = function(pImageStack: TLib3MFHandle; const nRowCount: Cardinal): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the number of columns in each image of this image3d
+	*
+	* @param[in] pImageStack - ImageStack instance.
+	* @param[out] pColumnCount - number of columns
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImageStack_GetColumnCountFunc = function(pImageStack: TLib3MFHandle; out pColumnCount: Cardinal): TLib3MFResult; cdecl;
+	
+	(**
+	* Sets the number of columns in each image of this image3d
+	*
+	* @param[in] pImageStack - ImageStack instance.
+	* @param[in] nColumnCount - number of columns
+	* @return error code or 0 (success)
+	*)
+	TLib3MFImageStack_SetColumnCountFunc = function(pImageStack: TLib3MFHandle; const nColumnCount: Cardinal): TLib3MFResult; cdecl;
 	
 	(**
 	* Retrieves the number of images in the stack.
 	*
-	* @param[in] pImage3D - Image3D instance.
+	* @param[in] pImageStack - ImageStack instance.
 	* @param[out] pSheetCount - number of images
 	* @return error code or 0 (success)
 	*)
-	TLib3MFImage3D_GetSheetCountFunc = function(pImage3D: TLib3MFHandle; out pSheetCount: Cardinal): TLib3MFResult; cdecl;
+	TLib3MFImageStack_GetSheetCountFunc = function(pImageStack: TLib3MFHandle; out pSheetCount: Cardinal): TLib3MFResult; cdecl;
 	
 	(**
 	* Retrieves a sheet of the stack. Raises an error if sheet is not set.
 	*
-	* @param[in] pImage3D - Image3D instance.
+	* @param[in] pImageStack - ImageStack instance.
 	* @param[in] nIndex - index of the image (0-based)
 	* @param[out] pSheet - attachment containing the image
 	* @return error code or 0 (success)
 	*)
-	TLib3MFImage3D_GetSheetFunc = function(pImage3D: TLib3MFHandle; const nIndex: Cardinal; out pSheet: TLib3MFHandle): TLib3MFResult; cdecl;
-	
-	(**
-	* Retrieves the minimum occuring double value of sampled field data.
-	*
-	* @param[in] pImage3D - Image3D instance.
-	* @param[in] nIndex - index of the image (0-based)
-	* @param[out] pMinVal - Minimum occuring double value
-	* @return error code or 0 (success)
-	*)
-	TLib3MFImage3D_GetSheetMinValueFunc = function(pImage3D: TLib3MFHandle; const nIndex: Cardinal; out pMinVal: Double): TLib3MFResult; cdecl;
-	
-	(**
-	* Retrieves the maximum occuring double value of sampled field data.
-	*
-	* @param[in] pImage3D - Image3D instance.
-	* @param[in] nIndex - index of the image (0-based)
-	* @param[out] pMaxVal - Maximum occuring double value
-	* @return error code or 0 (success)
-	*)
-	TLib3MFImage3D_GetSheetMaxValueFunc = function(pImage3D: TLib3MFHandle; const nIndex: Cardinal; out pMaxVal: Double): TLib3MFResult; cdecl;
-	
-	(**
-	* Creates a new sheet attachment with empty data.
-	*
-	* @param[in] pImage3D - Image3D instance.
-	* @param[in] nIndex - index of the image (0-based)
-	* @param[in] pPath - path name of package
-	* @param[in] dMin - Mapped value of the minimal (e.g. 0) image3D pixel values.
-	* @param[in] dMax - Mapped value of the maximal (e.g. 255) image3D pixel values.
-	* @param[out] pSheet - attachment containing the image
-	* @return error code or 0 (success)
-	*)
-	TLib3MFImage3D_CreateEmptySheetFunc = function(pImage3D: TLib3MFHandle; const nIndex: Cardinal; const pPath: PAnsiChar; const dMin: Double; const dMax: Double; out pSheet: TLib3MFHandle): TLib3MFResult; cdecl;
-	
-	(**
-	* Creates a new sheet attachment from a memory buffer.
-	*
-	* @param[in] pImage3D - Image3D instance.
-	* @param[in] nIndex - index of the image (0-based)
-	* @param[in] pPath - path name of package
-	* @param[in] nDataCount - Number of elements in buffer
-	* @param[in] pDataBuffer - uint8 buffer of binary image data
-	* @param[in] dMin - Mapped value of the minimal (e.g. 0) image3D pixel values.
-	* @param[in] dMax - Mapped value of the maximal (e.g. 255) image3D pixel values.
-	* @param[out] pSheet - attachment containing the image
-	* @return error code or 0 (success)
-	*)
-	TLib3MFImage3D_CreateSheetFromBufferFunc = function(pImage3D: TLib3MFHandle; const nIndex: Cardinal; const pPath: PAnsiChar; const nDataCount: QWord; const pDataBuffer: PByte; const dMin: Double; const dMax: Double; out pSheet: TLib3MFHandle): TLib3MFResult; cdecl;
-	
-	(**
-	* Creates a new sheet attachment from a file on disk.
-	*
-	* @param[in] pImage3D - Image3D instance.
-	* @param[in] nIndex - index of the image (0-based)
-	* @param[in] pPath - path name of package
-	* @param[in] pFileName - file name to read from
-	* @param[in] dMin - Mapped value of the minimal (e.g. 0) image3D pixel values.
-	* @param[in] dMax - Mapped value of the maximal (e.g. 255) image3D pixel values.
-	* @param[out] pSheet - attachment containing the image
-	* @return error code or 0 (success)
-	*)
-	TLib3MFImage3D_CreateSheetFromFileFunc = function(pImage3D: TLib3MFHandle; const nIndex: Cardinal; const pPath: PAnsiChar; const pFileName: PAnsiChar; const dMin: Double; const dMax: Double; out pSheet: TLib3MFHandle): TLib3MFResult; cdecl;
+	TLib3MFImageStack_GetSheetFunc = function(pImageStack: TLib3MFHandle; const nIndex: Cardinal; out pSheet: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
 	* Sets a sheet to an existing attachment.
 	*
-	* @param[in] pImage3D - Image3D instance.
+	* @param[in] pImageStack - ImageStack instance.
 	* @param[in] nIndex - index of the image (0-based)
 	* @param[in] pSheet - attachment containing the image
 	* @return error code or 0 (success)
 	*)
-	TLib3MFImage3D_SetSheetFunc = function(pImage3D: TLib3MFHandle; const nIndex: Cardinal; const pSheet: TLib3MFHandle): TLib3MFResult; cdecl;
+	TLib3MFImageStack_SetSheetFunc = function(pImageStack: TLib3MFHandle; const nIndex: Cardinal; const pSheet: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
-	* Sets the minimum occuring double value of sampled field data.
+	* Creates a new sheet attachment with empty data.
 	*
-	* @param[in] pImage3D - Image3D instance.
-	* @param[in] nIndex - index of the image (0-based)
-	* @param[in] dMinVal - Minimum occuring double value
+	* @param[in] pImageStack - ImageStack instance.
+	* @param[in] pPath - path of part in the package
+	* @param[out] pSheet - attachment containing the image
 	* @return error code or 0 (success)
 	*)
-	TLib3MFImage3D_SetSheetMinValueFunc = function(pImage3D: TLib3MFHandle; const nIndex: Cardinal; const dMinVal: Double): TLib3MFResult; cdecl;
+	TLib3MFImageStack_CreateEmptySheetFunc = function(pImageStack: TLib3MFHandle; const pPath: PAnsiChar; out pSheet: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
-	* Sets the maximum occuring double value of sampled field data.
+	* Creates a new sheet attachment from a memory buffer.
 	*
-	* @param[in] pImage3D - Image3D instance.
-	* @param[in] nIndex - index of the image (0-based)
-	* @param[in] dMaxVal - Maximum occuring double value
+	* @param[in] pImageStack - ImageStack instance.
+	* @param[in] pPath - path of part in the package
+	* @param[in] nDataCount - Number of elements in buffer
+	* @param[in] pDataBuffer - uint8 buffer of binary image data
+	* @param[out] pSheet - attachment containing the image
 	* @return error code or 0 (success)
 	*)
-	TLib3MFImage3D_SetSheetMaxValueFunc = function(pImage3D: TLib3MFHandle; const nIndex: Cardinal; const dMaxVal: Double): TLib3MFResult; cdecl;
-	
-
-(*************************************************************************************************************************
- Function type definitions for Image3DChannelSelector
-**************************************************************************************************************************)
-
-	(**
-	* Returns the selected 3D image.
-	*
-	* @param[in] pImage3DChannelSelector - Image3DChannelSelector instance.
-	* @param[out] pImage3D - image instance
-	* @return error code or 0 (success)
-	*)
-	TLib3MFImage3DChannelSelector_GetImageFunc = function(pImage3DChannelSelector: TLib3MFHandle; out pImage3D: TLib3MFHandle): TLib3MFResult; cdecl;
+	TLib3MFImageStack_CreateSheetFromBufferFunc = function(pImageStack: TLib3MFHandle; const pPath: PAnsiChar; const nDataCount: QWord; const pDataBuffer: PByte; out pSheet: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
-	* Sets the 3D image of the selector.
+	* Creates a new sheet attachment from a file on disk.
 	*
-	* @param[in] pImage3DChannelSelector - Image3DChannelSelector instance.
-	* @param[in] pImage3D - image instance
+	* @param[in] pImageStack - ImageStack instance.
+	* @param[in] pPath - path of part in the package
+	* @param[in] pFileName - file name to read from
+	* @param[out] pSheet - attachment containing the image
 	* @return error code or 0 (success)
 	*)
-	TLib3MFImage3DChannelSelector_SetImageFunc = function(pImage3DChannelSelector: TLib3MFHandle; const pImage3D: TLib3MFHandle): TLib3MFResult; cdecl;
-	
-	(**
-	* Sets the source channel of the selector.
-	*
-	* @param[in] pImage3DChannelSelector - Image3DChannelSelector instance.
-	* @param[in] pChannelName - name of the channel
-	* @return error code or 0 (success)
-	*)
-	TLib3MFImage3DChannelSelector_SetSourceChannelFunc = function(pImage3DChannelSelector: TLib3MFHandle; const pChannelName: PAnsiChar): TLib3MFResult; cdecl;
-	
-	(**
-	* Returns the source channel of the selector.
-	*
-	* @param[in] pImage3DChannelSelector - Image3DChannelSelector instance.
-	* @param[in] nChannelNameBufferSize - size of the buffer (including trailing 0)
-	* @param[out] pChannelNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
-	* @param[out] pChannelNameBuffer -  buffer of name of the channel, may be NULL
-	* @return error code or 0 (success)
-	*)
-	TLib3MFImage3DChannelSelector_GetSourceChannelFunc = function(pImage3DChannelSelector: TLib3MFHandle; const nChannelNameBufferSize: Cardinal; out pChannelNameNeededChars: Cardinal; pChannelNameBuffer: PAnsiChar): TLib3MFResult; cdecl;
-	
-	(**
-	* Sets the destination channel of the selector.
-	*
-	* @param[in] pImage3DChannelSelector - Image3DChannelSelector instance.
-	* @param[in] pChannelName - name of the channel
-	* @return error code or 0 (success)
-	*)
-	TLib3MFImage3DChannelSelector_SetDestinationChannelFunc = function(pImage3DChannelSelector: TLib3MFHandle; const pChannelName: PAnsiChar): TLib3MFResult; cdecl;
-	
-	(**
-	* Returns the destination channel of the selector.
-	*
-	* @param[in] pImage3DChannelSelector - Image3DChannelSelector instance.
-	* @param[in] nChannelNameBufferSize - size of the buffer (including trailing 0)
-	* @param[out] pChannelNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
-	* @param[out] pChannelNameBuffer -  buffer of name of the channel, may be NULL
-	* @return error code or 0 (success)
-	*)
-	TLib3MFImage3DChannelSelector_GetDestinationChannelFunc = function(pImage3DChannelSelector: TLib3MFHandle; const nChannelNameBufferSize: Cardinal; out pChannelNameNeededChars: Cardinal; pChannelNameBuffer: PAnsiChar): TLib3MFResult; cdecl;
-	
-	(**
-	* Sets the texture filter of the selector.
-	*
-	* @param[in] pImage3DChannelSelector - Image3DChannelSelector instance.
-	* @param[in] eFilter - texture filter
-	* @return error code or 0 (success)
-	*)
-	TLib3MFImage3DChannelSelector_SetFilterFunc = function(pImage3DChannelSelector: TLib3MFHandle; const eFilter: Integer): TLib3MFResult; cdecl;
-	
-	(**
-	* Returns the texture filter of the selector.
-	*
-	* @param[in] pImage3DChannelSelector - Image3DChannelSelector instance.
-	* @param[out] pFilter - texture filter
-	* @return error code or 0 (success)
-	*)
-	TLib3MFImage3DChannelSelector_GetFilterFunc = function(pImage3DChannelSelector: TLib3MFHandle; out pFilter: Integer): TLib3MFResult; cdecl;
-	
-	(**
-	* Sets the tile styles of the selector.
-	*
-	* @param[in] pImage3DChannelSelector - Image3DChannelSelector instance.
-	* @param[in] eTileStyleU - tile style in U
-	* @param[in] eTileStyleV - tile style in V
-	* @param[in] eTileStyleW - tile style in W
-	* @return error code or 0 (success)
-	*)
-	TLib3MFImage3DChannelSelector_SetTileStylesFunc = function(pImage3DChannelSelector: TLib3MFHandle; const eTileStyleU: Integer; const eTileStyleV: Integer; const eTileStyleW: Integer): TLib3MFResult; cdecl;
-	
-	(**
-	* Retrieves the tile styles of the selector.
-	*
-	* @param[in] pImage3DChannelSelector - Image3DChannelSelector instance.
-	* @param[out] pTileStyleU - tile style in U
-	* @param[out] pTileStyleV - tile style in V
-	* @param[out] pTileStyleW - tile style in W
-	* @return error code or 0 (success)
-	*)
-	TLib3MFImage3DChannelSelector_GetTileStylesFunc = function(pImage3DChannelSelector: TLib3MFHandle; out pTileStyleU: Integer; out pTileStyleV: Integer; out pTileStyleW: Integer): TLib3MFResult; cdecl;
-	
-
-(*************************************************************************************************************************
- Function type definitions for VolumetricLayer
-**************************************************************************************************************************)
-
-	(**
-	* Retrieves the transform of the layer.
-	*
-	* @param[in] pVolumetricLayer - VolumetricLayer instance.
-	* @param[out] pTransform - The transform matrix
-	* @return error code or 0 (success)
-	*)
-	TLib3MFVolumetricLayer_GetTransformFunc = function(pVolumetricLayer: TLib3MFHandle; pTransform: PLib3MFTransform): TLib3MFResult; cdecl;
-	
-	(**
-	* Sets the transform of the layer.
-	*
-	* @param[in] pVolumetricLayer - VolumetricLayer instance.
-	* @param[in] pTransform - The transform matrix
-	* @return error code or 0 (success)
-	*)
-	TLib3MFVolumetricLayer_SetTransformFunc = function(pVolumetricLayer: TLib3MFHandle; const pTransform: PLib3MFTransform): TLib3MFResult; cdecl;
-	
-	(**
-	* Retrieves the transform of the layer.
-	*
-	* @param[in] pVolumetricLayer - VolumetricLayer instance.
-	* @param[out] pBlendMethod - The blend method
-	* @return error code or 0 (success)
-	*)
-	TLib3MFVolumetricLayer_GetBlendMethodFunc = function(pVolumetricLayer: TLib3MFHandle; out pBlendMethod: Integer): TLib3MFResult; cdecl;
-	
-	(**
-	* Sets the transform of the layer.
-	*
-	* @param[in] pVolumetricLayer - VolumetricLayer instance.
-	* @param[in] eBlendMethod - The blend method
-	* @return error code or 0 (success)
-	*)
-	TLib3MFVolumetricLayer_SetBlendMethodFunc = function(pVolumetricLayer: TLib3MFHandle; const eBlendMethod: Integer): TLib3MFResult; cdecl;
-	
-	(**
-	* Retrieves the source alpha value of the layer.
-	*
-	* @param[in] pVolumetricLayer - VolumetricLayer instance.
-	* @param[out] pSourceAlpha - the source alpha value
-	* @return error code or 0 (success)
-	*)
-	TLib3MFVolumetricLayer_GetSourceAlphaFunc = function(pVolumetricLayer: TLib3MFHandle; out pSourceAlpha: Double): TLib3MFResult; cdecl;
-	
-	(**
-	* Sets the source alpha value of the layer.
-	*
-	* @param[in] pVolumetricLayer - VolumetricLayer instance.
-	* @param[in] dSourceAlpha - the source alpha value
-	* @return error code or 0 (success)
-	*)
-	TLib3MFVolumetricLayer_SetSourceAlphaFunc = function(pVolumetricLayer: TLib3MFHandle; const dSourceAlpha: Double): TLib3MFResult; cdecl;
-	
-	(**
-	* Retrieves the destination alpha value of the layer.
-	*
-	* @param[in] pVolumetricLayer - VolumetricLayer instance.
-	* @param[out] pDestinationAlpha - the destination alpha value
-	* @return error code or 0 (success)
-	*)
-	TLib3MFVolumetricLayer_GetDestinationAlphaFunc = function(pVolumetricLayer: TLib3MFHandle; out pDestinationAlpha: Double): TLib3MFResult; cdecl;
-	
-	(**
-	* Sets the destination alpha value of the layer.
-	*
-	* @param[in] pVolumetricLayer - VolumetricLayer instance.
-	* @param[in] dDestinationAlpha - the destination alpha value
-	* @return error code or 0 (success)
-	*)
-	TLib3MFVolumetricLayer_SetDestinationAlphaFunc = function(pVolumetricLayer: TLib3MFHandle; const dDestinationAlpha: Double): TLib3MFResult; cdecl;
-	
-	(**
-	* Retrieves all properties of the layer.
-	*
-	* @param[in] pVolumetricLayer - VolumetricLayer instance.
-	* @param[out] pTransform - The transform matrix
-	* @param[out] pBlendMethod - The blend method
-	* @param[out] pSourceAlpha - the source alpha value
-	* @param[out] pDestinationAlpha - the destination alpha value
-	* @return error code or 0 (success)
-	*)
-	TLib3MFVolumetricLayer_GetInformationFunc = function(pVolumetricLayer: TLib3MFHandle; pTransform: PLib3MFTransform; out pBlendMethod: Integer; out pSourceAlpha: Double; out pDestinationAlpha: Double): TLib3MFResult; cdecl;
-	
-	(**
-	* Sets all properties of the layer.
-	*
-	* @param[in] pVolumetricLayer - VolumetricLayer instance.
-	* @param[in] pTransform - The transform matrix
-	* @param[in] eBlendMethod - The blend method
-	* @param[in] dSourceAlpha - the source alpha value
-	* @param[in] dDestinationAlpha - the destination alpha value
-	* @return error code or 0 (success)
-	*)
-	TLib3MFVolumetricLayer_SetInformationFunc = function(pVolumetricLayer: TLib3MFHandle; const pTransform: PLib3MFTransform; const eBlendMethod: Integer; const dSourceAlpha: Double; const dDestinationAlpha: Double): TLib3MFResult; cdecl;
-	
-	(**
-	* Creates a new mask channel selector.
-	*
-	* @param[in] pVolumetricLayer - VolumetricLayer instance.
-	* @param[in] pImage3D - Image3D Class to reference
-	* @param[in] pSourceChannel - Name of source channel.
-	* @param[in] pDestinationChannel - Name of destination channel.
-	* @param[out] pChannelSelector - Channel Selector Instance
-	* @return error code or 0 (success)
-	*)
-	TLib3MFVolumetricLayer_CreateMaskChannelSelectorFunc = function(pVolumetricLayer: TLib3MFHandle; const pImage3D: TLib3MFHandle; const pSourceChannel: PAnsiChar; const pDestinationChannel: PAnsiChar; out pChannelSelector: TLib3MFHandle): TLib3MFResult; cdecl;
-	
-	(**
-	* Returns if a mask channel selector exists.
-	*
-	* @param[in] pVolumetricLayer - VolumetricLayer instance.
-	* @param[out] pSelectorExists - true if a mask channel selector exists.
-	* @return error code or 0 (success)
-	*)
-	TLib3MFVolumetricLayer_HasMaskChannelSelectorFunc = function(pVolumetricLayer: TLib3MFHandle; out pSelectorExists: Byte): TLib3MFResult; cdecl;
-	
-	(**
-	* Removes a mask channel selector, if it exists.
-	*
-	* @param[in] pVolumetricLayer - VolumetricLayer instance.
-	* @return error code or 0 (success)
-	*)
-	TLib3MFVolumetricLayer_ClearMaskChannelSelectorFunc = function(pVolumetricLayer: TLib3MFHandle): TLib3MFResult; cdecl;
-	
-	(**
-	* Returns a new mask channel selector. Fails if none exists.
-	*
-	* @param[in] pVolumetricLayer - VolumetricLayer instance.
-	* @param[out] pChannelSelector - Channel Selector Instance
-	* @return error code or 0 (success)
-	*)
-	TLib3MFVolumetricLayer_GetMaskChannelSelectorFunc = function(pVolumetricLayer: TLib3MFHandle; out pChannelSelector: TLib3MFHandle): TLib3MFResult; cdecl;
-	
-	(**
-	* Returns the channel selector.
-	*
-	* @param[in] pVolumetricLayer - VolumetricLayer instance.
-	* @param[out] pCount - Count of channel selectors
-	* @return error code or 0 (success)
-	*)
-	TLib3MFVolumetricLayer_GetChannelSelectorCountFunc = function(pVolumetricLayer: TLib3MFHandle; out pCount: Cardinal): TLib3MFResult; cdecl;
-	
-	(**
-	* Returns a channel selector.
-	*
-	* @param[in] pVolumetricLayer - VolumetricLayer instance.
-	* @param[in] nIndex - Index of the channel selector
-	* @param[out] pChannelSelector - Channel Selector Instance
-	* @return error code or 0 (success)
-	*)
-	TLib3MFVolumetricLayer_GetChannelSelectorFunc = function(pVolumetricLayer: TLib3MFHandle; const nIndex: Cardinal; out pChannelSelector: TLib3MFHandle): TLib3MFResult; cdecl;
-	
-	(**
-	* Adds a new channel selector.
-	*
-	* @param[in] pVolumetricLayer - VolumetricLayer instance.
-	* @param[in] pImage3D - Image3D Class to reference
-	* @param[in] pSourceChannel - Name of source channel.
-	* @param[in] pDestinationChannel - Name of destination channel.
-	* @param[out] pChannelSelector - Channel Selector Instance
-	* @return error code or 0 (success)
-	*)
-	TLib3MFVolumetricLayer_AddChannelSelectorFunc = function(pVolumetricLayer: TLib3MFHandle; const pImage3D: TLib3MFHandle; const pSourceChannel: PAnsiChar; const pDestinationChannel: PAnsiChar; out pChannelSelector: TLib3MFHandle): TLib3MFResult; cdecl;
-	
-	(**
-	* Removes all channel selectors.
-	*
-	* @param[in] pVolumetricLayer - VolumetricLayer instance.
-	* @return error code or 0 (success)
-	*)
-	TLib3MFVolumetricLayer_ClearChannelSelectorsFunc = function(pVolumetricLayer: TLib3MFHandle): TLib3MFResult; cdecl;
-	
-	(**
-	* Moves a channel selector to a different position in the list.
-	*
-	* @param[in] pVolumetricLayer - VolumetricLayer instance.
-	* @param[in] pChannelSelector - ChannelSelector instance
-	* @param[in] nIndex - new index of the channel selector. All layers with higher indices will increase by one.
-	* @return error code or 0 (success)
-	*)
-	TLib3MFVolumetricLayer_ReindexChannelSelectorFunc = function(pVolumetricLayer: TLib3MFHandle; const pChannelSelector: TLib3MFHandle; const nIndex: Cardinal): TLib3MFResult; cdecl;
-	
-	(**
-	* Removes a channel selector from the stack. Fails if the channel selector does not exist.
-	*
-	* @param[in] pVolumetricLayer - VolumetricLayer instance.
-	* @param[in] pChannelSelector - channel selector instance.
-	* @return error code or 0 (success)
-	*)
-	TLib3MFVolumetricLayer_RemoveChannelSelectorFunc = function(pVolumetricLayer: TLib3MFHandle; const pChannelSelector: TLib3MFHandle): TLib3MFResult; cdecl;
-	
-	(**
-	* Removes a channel selector from the stack. Fails if the channel selector does not exist.
-	*
-	* @param[in] pVolumetricLayer - VolumetricLayer instance.
-	* @param[in] nIndex - index of the channel selector
-	* @return error code or 0 (success)
-	*)
-	TLib3MFVolumetricLayer_RemoveChannelSelectorByIndexFunc = function(pVolumetricLayer: TLib3MFHandle; const nIndex: Cardinal): TLib3MFResult; cdecl;
-	
-
-(*************************************************************************************************************************
- Function type definitions for VolumetricStack
-**************************************************************************************************************************)
-
-	(**
-	* Clears all destination channels and layers of the stack.
-	*
-	* @param[in] pVolumetricStack - VolumetricStack instance.
-	* @return error code or 0 (success)
-	*)
-	TLib3MFVolumetricStack_ClearFunc = function(pVolumetricStack: TLib3MFHandle): TLib3MFResult; cdecl;
-	
-	(**
-	* Clears all unused destination channels of the stack.
-	*
-	* @param[in] pVolumetricStack - VolumetricStack instance.
-	* @return error code or 0 (success)
-	*)
-	TLib3MFVolumetricStack_ClearUnusedDestinationChannelsFunc = function(pVolumetricStack: TLib3MFHandle): TLib3MFResult; cdecl;
-	
-	(**
-	* Retrieves the number of Destination Channels.
-	*
-	* @param[in] pVolumetricStack - VolumetricStack instance.
-	* @param[out] pCount - number of destination channels
-	* @return error code or 0 (success)
-	*)
-	TLib3MFVolumetricStack_GetDestinationChannelCountFunc = function(pVolumetricStack: TLib3MFHandle; out pCount: Cardinal): TLib3MFResult; cdecl;
-	
-	(**
-	* Adds a new destination channel.
-	*
-	* @param[in] pVolumetricStack - VolumetricStack instance.
-	* @param[in] nIndex - Index of Destination Channel
-	* @param[in] nNameBufferSize - size of the buffer (including trailing 0)
-	* @param[out] pNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
-	* @param[out] pNameBuffer -  buffer of Name of Destination Channel., may be NULL
-	* @param[out] pBackground - Background of Destination Channel
-	* @return error code or 0 (success)
-	*)
-	TLib3MFVolumetricStack_GetDestinationChannelFunc = function(pVolumetricStack: TLib3MFHandle; const nIndex: Cardinal; const nNameBufferSize: Cardinal; out pNameNeededChars: Cardinal; pNameBuffer: PAnsiChar; out pBackground: Double): TLib3MFResult; cdecl;
-	
-	(**
-	* Adds a new destination channel.
-	*
-	* @param[in] pVolumetricStack - VolumetricStack instance.
-	* @param[in] pName - Name of Destination Channel. Must be unique in the stack.
-	* @param[in] dBackground - Background of Destination Channel
-	* @param[out] pIndex - Index of Destination Channel
-	* @return error code or 0 (success)
-	*)
-	TLib3MFVolumetricStack_AddDestinationChannelFunc = function(pVolumetricStack: TLib3MFHandle; const pName: PAnsiChar; const dBackground: Double; out pIndex: Cardinal): TLib3MFResult; cdecl;
-	
-	(**
-	* Changes a destination channels background.
-	*
-	* @param[in] pVolumetricStack - VolumetricStack instance.
-	* @param[in] nIndex - Index of Destination Channel
-	* @param[in] dBackground - Background of Destination Channel
-	* @return error code or 0 (success)
-	*)
-	TLib3MFVolumetricStack_UpdateDestinationChannelFunc = function(pVolumetricStack: TLib3MFHandle; const nIndex: Cardinal; const dBackground: Double): TLib3MFResult; cdecl;
-	
-	(**
-	* Changes a destination channels background.
-	*
-	* @param[in] pVolumetricStack - VolumetricStack instance.
-	* @param[in] pName - Name of Destination Channel
-	* @param[in] dBackground - Background of Destination Channel
-	* @return error code or 0 (success)
-	*)
-	TLib3MFVolumetricStack_UpdateDestinationChannelByNameFunc = function(pVolumetricStack: TLib3MFHandle; const pName: PAnsiChar; const dBackground: Double): TLib3MFResult; cdecl;
-	
-	(**
-	* Removes a destination channel. Fails if channel is still referenced in the stack.
-	*
-	* @param[in] pVolumetricStack - VolumetricStack instance.
-	* @param[in] nIndex - Index of Destination Channel
-	* @return error code or 0 (success)
-	*)
-	TLib3MFVolumetricStack_RemoveDestinationChannelFunc = function(pVolumetricStack: TLib3MFHandle; const nIndex: Cardinal): TLib3MFResult; cdecl;
-	
-	(**
-	* Removes a destination channel. Fails if channel is still referenced in the stack.
-	*
-	* @param[in] pVolumetricStack - VolumetricStack instance.
-	* @param[in] pName - Name of Destination Channel
-	* @return error code or 0 (success)
-	*)
-	TLib3MFVolumetricStack_RemoveDestinationChannelByNameFunc = function(pVolumetricStack: TLib3MFHandle; const pName: PAnsiChar): TLib3MFResult; cdecl;
-	
-	(**
-	* Retrieves the number of Layers.
-	*
-	* @param[in] pVolumetricStack - VolumetricStack instance.
-	* @param[out] pCount - number of layers.
-	* @return error code or 0 (success)
-	*)
-	TLib3MFVolumetricStack_GetLayerCountFunc = function(pVolumetricStack: TLib3MFHandle; out pCount: Cardinal): TLib3MFResult; cdecl;
-	
-	(**
-	* Retrieves a layer.
-	*
-	* @param[in] pVolumetricStack - VolumetricStack instance.
-	* @param[in] nIndex - index of the layer
-	* @param[out] pLayer - index of the layer
-	* @return error code or 0 (success)
-	*)
-	TLib3MFVolumetricStack_GetLayerFunc = function(pVolumetricStack: TLib3MFHandle; const nIndex: Cardinal; out pLayer: TLib3MFHandle): TLib3MFResult; cdecl;
-	
-	(**
-	* Adds a new layer.
-	*
-	* @param[in] pVolumetricStack - VolumetricStack instance.
-	* @param[in] pTransform - transform of the layer
-	* @param[in] eBlendMethod - BlendMethod of the layer
-	* @param[out] pLayer - Layer instance
-	* @return error code or 0 (success)
-	*)
-	TLib3MFVolumetricStack_AddLayerFunc = function(pVolumetricStack: TLib3MFHandle; const pTransform: PLib3MFTransform; const eBlendMethod: Integer; out pLayer: TLib3MFHandle): TLib3MFResult; cdecl;
-	
-	(**
-	* Moves a layer to a different position in the stack.
-	*
-	* @param[in] pVolumetricStack - VolumetricStack instance.
-	* @param[in] pLayer - layer instance
-	* @param[in] nIndex - new index of the layer. All layers with higher indices will increase by one.
-	* @return error code or 0 (success)
-	*)
-	TLib3MFVolumetricStack_ReindexLayerFunc = function(pVolumetricStack: TLib3MFHandle; const pLayer: TLib3MFHandle; const nIndex: Cardinal): TLib3MFResult; cdecl;
-	
-	(**
-	* Removes a layer from the stack. Fails if the layer does not exist.
-	*
-	* @param[in] pVolumetricStack - VolumetricStack instance.
-	* @param[in] pLayer - layer instance.
-	* @return error code or 0 (success)
-	*)
-	TLib3MFVolumetricStack_RemoveLayerFunc = function(pVolumetricStack: TLib3MFHandle; const pLayer: TLib3MFHandle): TLib3MFResult; cdecl;
-	
-	(**
-	* Removes a layer from the stack. Fails if the layer does not exist.
-	*
-	* @param[in] pVolumetricStack - VolumetricStack instance.
-	* @param[in] nIndex - index of the layer
-	* @return error code or 0 (success)
-	*)
-	TLib3MFVolumetricStack_RemoveLayerByIndexFunc = function(pVolumetricStack: TLib3MFHandle; const nIndex: Cardinal): TLib3MFResult; cdecl;
+	TLib3MFImageStack_CreateSheetFromFileFunc = function(pImageStack: TLib3MFHandle; const pPath: PAnsiChar; const pFileName: PAnsiChar; out pSheet: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 
 (*************************************************************************************************************************
@@ -4683,6 +4718,24 @@ type
 	TLib3MFModel_GetImage3DsFunc = function(pModel: TLib3MFHandle; out pResourceIterator: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
+	* creates a resource iterator instance with all ScalarField resources.
+	*
+	* @param[in] pModel - Model instance.
+	* @param[out] pResourceIterator - returns the iterator instance.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFModel_GetScalarFieldsFunc = function(pModel: TLib3MFHandle; out pResourceIterator: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* creates a resource iterator instance with all Vector3DField resources.
+	*
+	* @param[in] pModel - Model instance.
+	* @param[out] pResourceIterator - returns the iterator instance.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFModel_GetVector3DFieldsFunc = function(pModel: TLib3MFHandle; out pResourceIterator: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
 	* Merges all components and objects which are referenced by a build item into a mesh. The memory is duplicated and a new model is created.
 	*
 	* @param[in] pModel - Model instance.
@@ -4690,15 +4743,6 @@ type
 	* @return error code or 0 (success)
 	*)
 	TLib3MFModel_MergeToModelFunc = function(pModel: TLib3MFHandle; out pMergedModelInstance: TLib3MFHandle): TLib3MFResult; cdecl;
-	
-	(**
-	* creates a resource iterator instance with all volumetric stack resources.
-	*
-	* @param[in] pModel - Model instance.
-	* @param[out] pResourceIterator - returns the iterator instance.
-	* @return error code or 0 (success)
-	*)
-	TLib3MFModel_GetVolumetricStacksFunc = function(pModel: TLib3MFHandle; out pResourceIterator: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
 	* adds an empty mesh object to the model.
@@ -4789,22 +4833,109 @@ type
 	* creates a new 3D Image Resource
 	*
 	* @param[in] pModel - Model instance.
-	* @param[in] nSizeX - the extensions of the image stack in X direction.
-	* @param[in] nSizeY - the extensions of the image stack in Y direction.
+	* @param[in] nColumnCount - the number of columns in each sheet.
+	* @param[in] nRowCount - the number of rows in each sheet.
 	* @param[in] nSheetCount - the number of sheets in the image stack.
-	* @param[out] pInstance - returns the new Image3D instance
+	* @param[out] pInstance - returns the new ImageStack instance
 	* @return error code or 0 (success)
 	*)
-	TLib3MFModel_AddImage3DFunc = function(pModel: TLib3MFHandle; const nSizeX: Cardinal; const nSizeY: Cardinal; const nSheetCount: Cardinal; out pInstance: TLib3MFHandle): TLib3MFResult; cdecl;
+	TLib3MFModel_AddImageStackFunc = function(pModel: TLib3MFHandle; const nColumnCount: Cardinal; const nRowCount: Cardinal; const nSheetCount: Cardinal; out pInstance: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
-	* creates a new Volumetric Stack Resource
+	* creates a new ScalarFieldFromImage3D Resource
 	*
 	* @param[in] pModel - Model instance.
-	* @param[out] pInstance - returns the new VolumetricStack instance
+	* @param[out] pTheScalarFieldFromImage3D - returns the new ScalarFieldFromImage3D instance
 	* @return error code or 0 (success)
 	*)
-	TLib3MFModel_AddVolumetricStackFunc = function(pModel: TLib3MFHandle; out pInstance: TLib3MFHandle): TLib3MFResult; cdecl;
+	TLib3MFModel_AddScalarFieldFromImage3DFunc = function(pModel: TLib3MFHandle; out pTheScalarFieldFromImage3D: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* creates a new ScalarFieldComposed Resource
+	*
+	* @param[in] pModel - Model instance.
+	* @param[out] pTheScalarFieldComposed - returns the new ScalarFieldComposed instance
+	* @return error code or 0 (success)
+	*)
+	TLib3MFModel_AddScalarFieldComposedFunc = function(pModel: TLib3MFHandle; out pTheScalarFieldComposed: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* finds a ScalarField object by its UniqueResourceID
+	*
+	* @param[in] pModel - Model instance.
+	* @param[in] nUniqueResourceID - UniqueResourceID
+	* @param[out] pScalarFieldInstance - returns the scalar field instance
+	* @return error code or 0 (success)
+	*)
+	TLib3MFModel_GetScalarFieldByIDFunc = function(pModel: TLib3MFHandle; const nUniqueResourceID: Cardinal; out pScalarFieldInstance: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* finds a ScalarFieldFromImage3D object by its UniqueResourceID
+	*
+	* @param[in] pModel - Model instance.
+	* @param[in] nUniqueResourceID - UniqueResourceID
+	* @param[out] pScalarFieldFromImage3DInstance - returns the ScalarFieldFromImage3D instance
+	* @return error code or 0 (success)
+	*)
+	TLib3MFModel_GetScalarFieldFromImage3DByIDFunc = function(pModel: TLib3MFHandle; const nUniqueResourceID: Cardinal; out pScalarFieldFromImage3DInstance: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* finds a ScalarFieldComposed object by its UniqueResourceID
+	*
+	* @param[in] pModel - Model instance.
+	* @param[in] nUniqueResourceID - UniqueResourceID
+	* @param[out] pScalarFieldComposedInstance - returns the ScalarFieldComponsed instance
+	* @return error code or 0 (success)
+	*)
+	TLib3MFModel_GetScalarFieldComposedByIDFunc = function(pModel: TLib3MFHandle; const nUniqueResourceID: Cardinal; out pScalarFieldComposedInstance: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* creates a new Vector3DFieldFromImage3D Resource
+	*
+	* @param[in] pModel - Model instance.
+	* @param[out] pTheVector3DFieldFromImage3D - returns the new Vector3DFieldFromImage3D instance
+	* @return error code or 0 (success)
+	*)
+	TLib3MFModel_AddVector3DFieldFromImage3DFunc = function(pModel: TLib3MFHandle; out pTheVector3DFieldFromImage3D: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* creates a new Vector3DFieldComposed Resource
+	*
+	* @param[in] pModel - Model instance.
+	* @param[out] pTheVector3DFieldComposed - returns the new Vector3DFieldComposed instance
+	* @return error code or 0 (success)
+	*)
+	TLib3MFModel_AddVector3DFieldComposedFunc = function(pModel: TLib3MFHandle; out pTheVector3DFieldComposed: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* finds a Vector3DField object by its UniqueResourceID
+	*
+	* @param[in] pModel - Model instance.
+	* @param[in] nUniqueResourceID - UniqueResourceID
+	* @param[out] pVector3DFieldInstance - returns the scalar field instance
+	* @return error code or 0 (success)
+	*)
+	TLib3MFModel_GetVector3DFieldByIDFunc = function(pModel: TLib3MFHandle; const nUniqueResourceID: Cardinal; out pVector3DFieldInstance: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* finds a Vector3DFieldFromImage3D object by its UniqueResourceID
+	*
+	* @param[in] pModel - Model instance.
+	* @param[in] nUniqueResourceID - UniqueResourceID
+	* @param[out] pVector3DFieldFromImage3DInstance - returns the Vector3DFieldFromImage3D instance
+	* @return error code or 0 (success)
+	*)
+	TLib3MFModel_GetVector3DFieldFromImage3DByIDFunc = function(pModel: TLib3MFHandle; const nUniqueResourceID: Cardinal; out pVector3DFieldFromImage3DInstance: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* finds a Vector3DFieldComposed object by its UniqueResourceID
+	*
+	* @param[in] pModel - Model instance.
+	* @param[in] nUniqueResourceID - UniqueResourceID
+	* @param[out] pVector3DFieldComposedInstance - returns the Vector3DFieldComponsed instance
+	* @return error code or 0 (success)
+	*)
+	TLib3MFModel_GetVector3DFieldComposedByIDFunc = function(pModel: TLib3MFHandle; const nUniqueResourceID: Cardinal; out pVector3DFieldComposedInstance: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
 	* adds a build item to the model.
@@ -5417,14 +5548,26 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 
 
 (*************************************************************************************************************************
- Class definition for VolumetricStackIterator
+ Class definition for ScalarFieldIterator
 **************************************************************************************************************************)
 
-	TLib3MFVolumetricStackIterator = class(TLib3MFResourceIterator)
+	TLib3MFScalarFieldIterator = class(TLib3MFResourceIterator)
 	public
 		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
 		destructor Destroy; override;
-		function GetCurrentVolumetricStack(): TLib3MFVolumetricStack;
+		function GetCurrentScalarField(): TLib3MFScalarField;
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for Vector3DFieldIterator
+**************************************************************************************************************************)
+
+	TLib3MFVector3DFieldIterator = class(TLib3MFResourceIterator)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+		function GetCurrentVector3DField(): TLib3MFVector3DField;
 	end;
 
 
@@ -5567,17 +5710,157 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 
 
 (*************************************************************************************************************************
- Class definition for VolumeDataItem
+ Class definition for ScalarField
 **************************************************************************************************************************)
 
-	TLib3MFVolumeDataItem = class(TLib3MFBase)
+	TLib3MFScalarField = class(TLib3MFResource)
 	public
 		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
 		destructor Destroy; override;
-		function GetVolumetricStack(): TLib3MFVolumetricStack;
-		procedure SetVolumetricStack(const ATheVolumetricStack: TLib3MFVolumetricStack);
+		function GetName(): String;
+		procedure SetName(const AName: String);
+		function IsFromImage3D(): Boolean;
+		function IsComposed(): Boolean;
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for Vector3DField
+**************************************************************************************************************************)
+
+	TLib3MFVector3DField = class(TLib3MFResource)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+		function GetName(): String;
+		procedure SetName(const AName: String);
+		function IsFromImage3D(): Boolean;
+		function IsComposed(): Boolean;
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for ScalarFieldFromImage3D
+**************************************************************************************************************************)
+
+	TLib3MFScalarFieldFromImage3D = class(TLib3MFScalarField)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+		function GetImage(): TLib3MFImage3D;
+		procedure SetImage(const AImage3D: TLib3MFImage3D);
+		procedure SetChannel(const AName: TLib3MFChannelName);
+		function GetChannel(): TLib3MFChannelName;
+		procedure SetFilter(const AFilter: TLib3MFTextureFilter);
+		function GetFilter(): TLib3MFTextureFilter;
+		procedure SetTileStyles(const ATileStyleU: TLib3MFTextureTileStyle; const ATileStyleV: TLib3MFTextureTileStyle; const ATileStyleW: TLib3MFTextureTileStyle);
+		procedure GetTileStyles(out ATileStyleU: TLib3MFTextureTileStyle; out ATileStyleV: TLib3MFTextureTileStyle; out ATileStyleW: TLib3MFTextureTileStyle);
+		function GetOffset(): Double;
+		procedure SetOffset(const AOffset: Double);
+		function GetScale(): Double;
+		procedure SetScale(const AScale: Double);
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for ScalarFieldComposed
+**************************************************************************************************************************)
+
+	TLib3MFScalarFieldComposed = class(TLib3MFScalarField)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+		procedure SetMethod(const ATheMethod: TLib3MFCompositionMethod);
+		function GetMethod(): TLib3MFCompositionMethod;
+		function GetFactor1(): Double;
+		procedure SetFactor1(const AFactor1: Double);
+		function GetFactor2(): Double;
+		procedure SetFactor2(const AFactor2: Double);
+		function ScalarFieldReference1(): TLib3MFScalarFieldReference;
+		function ScalarFieldReference2(): TLib3MFScalarFieldReference;
+		function ScalarFieldReferenceMask(): TLib3MFScalarFieldReference;
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for Vector3DFieldFromImage3D
+**************************************************************************************************************************)
+
+	TLib3MFVector3DFieldFromImage3D = class(TLib3MFScalarField)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+		function GetImage(): TLib3MFImage3D;
+		procedure SetImage(const AImage3D: TLib3MFImage3D);
+		procedure SetFilter(const AFilter: TLib3MFTextureFilter);
+		function GetFilter(): TLib3MFTextureFilter;
+		procedure SetTileStyles(const ATileStyleU: TLib3MFTextureTileStyle; const ATileStyleV: TLib3MFTextureTileStyle; const ATileStyleW: TLib3MFTextureTileStyle);
+		procedure GetTileStyles(out ATileStyleU: TLib3MFTextureTileStyle; out ATileStyleV: TLib3MFTextureTileStyle; out ATileStyleW: TLib3MFTextureTileStyle);
+		function GetOffset(): Double;
+		procedure SetOffset(const AOffset: Double);
+		function GetScale(): Double;
+		procedure SetScale(const AScale: Double);
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for Vector3DFieldComposed
+**************************************************************************************************************************)
+
+	TLib3MFVector3DFieldComposed = class(TLib3MFScalarField)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+		procedure SetMethod(const ATheMethod: TLib3MFCompositionMethod);
+		function GetMethod(): TLib3MFCompositionMethod;
+		function GetFactor1(): Double;
+		procedure SetFactor1(const AFactor1: Double);
+		function GetFactor2(): Double;
+		procedure SetFactor2(const AFactor2: Double);
+		function Vector3DFieldReference1(): TLib3MFVector3DFieldReference;
+		function Vector3DFieldReference2(): TLib3MFVector3DFieldReference;
+		function ScalarFieldReferenceMask(): TLib3MFScalarFieldReference;
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for FieldReference
+**************************************************************************************************************************)
+
+	TLib3MFFieldReference = class(TLib3MFBase)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+		function GetFieldResourceID(): Cardinal;
+		procedure SetFieldResourceID(const AUniqueResourceID: Cardinal);
 		function GetTransform(): TLib3MFTransform;
 		procedure SetTransform(const ATransform: TLib3MFTransform);
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for ScalarFieldReference
+**************************************************************************************************************************)
+
+	TLib3MFScalarFieldReference = class(TLib3MFFieldReference)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+		function GetScalarField(): TLib3MFScalarField;
+		procedure SetScalarField(const ATheScalarField: TLib3MFScalarField);
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for Vector3DFieldReference
+**************************************************************************************************************************)
+
+	TLib3MFVector3DFieldReference = class(TLib3MFFieldReference)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+		function GetVector3DField(): TLib3MFVector3DField;
+		procedure SetVector3DField(const ATheVector3DField: TLib3MFVector3DField);
 	end;
 
 
@@ -5585,14 +5868,12 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
  Class definition for VolumeDataLevelset
 **************************************************************************************************************************)
 
-	TLib3MFVolumeDataLevelset = class(TLib3MFVolumeDataItem)
+	TLib3MFVolumeDataLevelset = class(TLib3MFScalarFieldReference)
 	public
 		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
 		destructor Destroy; override;
 		function GetSolidThreshold(): Double;
 		procedure SetSolidThreshold(const ATheSolidThreshold: Double);
-		procedure SetChannel(const AChannelName: String);
-		function GetChannel(): String;
 	end;
 
 
@@ -5600,12 +5881,21 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
  Class definition for VolumeDataColor
 **************************************************************************************************************************)
 
-	TLib3MFVolumeDataColor = class(TLib3MFVolumeDataItem)
+	TLib3MFVolumeDataColor = class(TLib3MFVector3DFieldReference)
 	public
 		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
 		destructor Destroy; override;
-		procedure SetChannel(const ATheColorChannel: TLib3MFColorChannel; const AChannelName: String);
-		function GetChannel(const ATheColorChannel: TLib3MFColorChannel): String;
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for MaterialMapping
+**************************************************************************************************************************)
+
+	TLib3MFMaterialMapping = class(TLib3MFScalarFieldReference)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
 	end;
 
 
@@ -5613,16 +5903,15 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
  Class definition for VolumeDataComposite
 **************************************************************************************************************************)
 
-	TLib3MFVolumeDataComposite = class(TLib3MFVolumeDataItem)
+	TLib3MFVolumeDataComposite = class(TLib3MFBase)
 	public
 		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
 		destructor Destroy; override;
 		function GetBaseMaterialGroup(): TLib3MFBaseMaterialGroup;
 		procedure SetBaseMaterialGroup(const ABaseMaterialGroupInstance: TLib3MFBaseMaterialGroup);
 		function GetMaterialMappingCount(): Cardinal;
-		procedure GetMaterialMapping(const AIndex: Cardinal; out APropertyID: Cardinal; out AChannelName: String);
-		procedure SetMaterialMapping(const AIndex: Cardinal; out APropertyID: Cardinal; out AChannelName: String);
-		procedure AddMaterialMapping(const APropertyID: Cardinal; const AChannelName: String);
+		function GetMaterialMapping(const AIndex: Cardinal): TLib3MFMaterialMapping;
+		function AddMaterialMapping(const ATransform: TLib3MFTransform): TLib3MFMaterialMapping;
 		procedure RemoveMaterialMapping(const AIndex: Cardinal);
 	end;
 
@@ -5631,12 +5920,10 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
  Class definition for VolumeDataProperty
 **************************************************************************************************************************)
 
-	TLib3MFVolumeDataProperty = class(TLib3MFVolumeDataItem)
+	TLib3MFVolumeDataProperty = class(TLib3MFFieldReference)
 	public
 		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
 		destructor Destroy; override;
-		procedure SetChannel(const AChannelName: String);
-		function GetChannel(): String;
 		procedure SetName(const APropertyName: String);
 		function GetName(): String;
 		procedure SetIsRequired(const AIsRequired: Boolean);
@@ -5653,16 +5940,18 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
 		destructor Destroy; override;
 		function GetLevelset(): TLib3MFVolumeDataLevelset;
-		function CreateNewLevelset(const ATheVolumetricStack: TLib3MFVolumetricStack): TLib3MFVolumeDataLevelset;
+		function CreateNewLevelset(const ATheScalarField: TLib3MFScalarField; const ATransform: TLib3MFTransform): TLib3MFVolumeDataLevelset;
+		procedure RemoveLevelset();
 		function GetComposite(): TLib3MFVolumeDataComposite;
-		function CreateNewComposite(const ATheVolumetricStack: TLib3MFVolumetricStack): TLib3MFVolumeDataComposite;
+		function CreateNewComposite(): TLib3MFVolumeDataComposite;
+		procedure RemoveComposite();
 		function GetColor(): TLib3MFVolumeDataColor;
-		function CreateNewColor(const ATheVolumetricStack: TLib3MFVolumetricStack): TLib3MFVolumeDataColor;
+		function CreateNewColor(const ATheVector3DField: TLib3MFVector3DField; const ATransform: TLib3MFTransform): TLib3MFVolumeDataColor;
+		procedure RemoveColor();
 		function GetPropertyCount(): Cardinal;
 		function GetProperty(const AIndex: Cardinal): TLib3MFVolumeDataProperty;
-		function FindProperty(const AName: String): TLib3MFVolumeDataProperty;
-		function AddProperty(const AName: String; const ATheVolumetricStack: TLib3MFVolumetricStack): TLib3MFVolumeDataProperty;
-		procedure RemoveProperty(const AName: String);
+		function AddProperty(const AName: String; const AUniqueResourceID: Cardinal): TLib3MFVolumeDataProperty;
+		procedure RemoveProperty(const AIndex: Cardinal);
 	end;
 
 
@@ -5818,97 +6107,30 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 	public
 		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
 		destructor Destroy; override;
-		function GetSizeX(): Cardinal;
-		function GetSizeY(): Cardinal;
+		function GetName(): String;
+		procedure SetName(const AName: String);
+		function IsImageStack(): Boolean;
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for ImageStack
+**************************************************************************************************************************)
+
+	TLib3MFImageStack = class(TLib3MFImage3D)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+		function GetRowCount(): Cardinal;
+		procedure SetRowCount(const ARowCount: Cardinal);
+		function GetColumnCount(): Cardinal;
+		procedure SetColumnCount(const AColumnCount: Cardinal);
 		function GetSheetCount(): Cardinal;
 		function GetSheet(const AIndex: Cardinal): TLib3MFAttachment;
-		function GetSheetMinValue(const AIndex: Cardinal): Double;
-		function GetSheetMaxValue(const AIndex: Cardinal): Double;
-		function CreateEmptySheet(const AIndex: Cardinal; const APath: String; const AMin: Double; const AMax: Double): TLib3MFAttachment;
-		function CreateSheetFromBuffer(const AIndex: Cardinal; const APath: String; const AData: TByteDynArray; const AMin: Double; const AMax: Double): TLib3MFAttachment;
-		function CreateSheetFromFile(const AIndex: Cardinal; const APath: String; const AFileName: String; const AMin: Double; const AMax: Double): TLib3MFAttachment;
 		procedure SetSheet(const AIndex: Cardinal; const ASheet: TLib3MFAttachment);
-		procedure SetSheetMinValue(const AIndex: Cardinal; const AMinVal: Double);
-		procedure SetSheetMaxValue(const AIndex: Cardinal; const AMaxVal: Double);
-	end;
-
-
-(*************************************************************************************************************************
- Class definition for Image3DChannelSelector
-**************************************************************************************************************************)
-
-	TLib3MFImage3DChannelSelector = class(TLib3MFBase)
-	public
-		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
-		destructor Destroy; override;
-		function GetImage(): TLib3MFImage3D;
-		procedure SetImage(const AImage3D: TLib3MFImage3D);
-		procedure SetSourceChannel(const AChannelName: String);
-		function GetSourceChannel(): String;
-		procedure SetDestinationChannel(const AChannelName: String);
-		function GetDestinationChannel(): String;
-		procedure SetFilter(const AFilter: TLib3MFTextureFilter);
-		function GetFilter(): TLib3MFTextureFilter;
-		procedure SetTileStyles(const ATileStyleU: TLib3MFTextureTileStyle; const ATileStyleV: TLib3MFTextureTileStyle; const ATileStyleW: TLib3MFTextureTileStyle);
-		procedure GetTileStyles(out ATileStyleU: TLib3MFTextureTileStyle; out ATileStyleV: TLib3MFTextureTileStyle; out ATileStyleW: TLib3MFTextureTileStyle);
-	end;
-
-
-(*************************************************************************************************************************
- Class definition for VolumetricLayer
-**************************************************************************************************************************)
-
-	TLib3MFVolumetricLayer = class(TLib3MFBase)
-	public
-		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
-		destructor Destroy; override;
-		function GetTransform(): TLib3MFTransform;
-		procedure SetTransform(const ATransform: TLib3MFTransform);
-		function GetBlendMethod(): TLib3MFBlendMethod;
-		procedure SetBlendMethod(const ABlendMethod: TLib3MFBlendMethod);
-		function GetSourceAlpha(): Double;
-		procedure SetSourceAlpha(const ASourceAlpha: Double);
-		function GetDestinationAlpha(): Double;
-		procedure SetDestinationAlpha(const ADestinationAlpha: Double);
-		procedure GetInformation(out ATransform: TLib3MFTransform; out ABlendMethod: TLib3MFBlendMethod; out ASourceAlpha: Double; out ADestinationAlpha: Double);
-		procedure SetInformation(const ATransform: TLib3MFTransform; const ABlendMethod: TLib3MFBlendMethod; const ASourceAlpha: Double; const ADestinationAlpha: Double);
-		function CreateMaskChannelSelector(const AImage3D: TLib3MFImage3D; const ASourceChannel: String; const ADestinationChannel: String): TLib3MFImage3DChannelSelector;
-		function HasMaskChannelSelector(): Boolean;
-		procedure ClearMaskChannelSelector();
-		function GetMaskChannelSelector(): TLib3MFImage3DChannelSelector;
-		function GetChannelSelectorCount(): Cardinal;
-		function GetChannelSelector(const AIndex: Cardinal): TLib3MFImage3DChannelSelector;
-		function AddChannelSelector(const AImage3D: TLib3MFImage3D; const ASourceChannel: String; const ADestinationChannel: String): TLib3MFImage3DChannelSelector;
-		procedure ClearChannelSelectors();
-		procedure ReindexChannelSelector(const AChannelSelector: TLib3MFImage3DChannelSelector; const AIndex: Cardinal);
-		procedure RemoveChannelSelector(const AChannelSelector: TLib3MFImage3DChannelSelector);
-		procedure RemoveChannelSelectorByIndex(const AIndex: Cardinal);
-	end;
-
-
-(*************************************************************************************************************************
- Class definition for VolumetricStack
-**************************************************************************************************************************)
-
-	TLib3MFVolumetricStack = class(TLib3MFResource)
-	public
-		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
-		destructor Destroy; override;
-		procedure Clear();
-		procedure ClearUnusedDestinationChannels();
-		function GetDestinationChannelCount(): Cardinal;
-		procedure GetDestinationChannel(const AIndex: Cardinal; out AName: String; out ABackground: Double);
-		function AddDestinationChannel(const AName: String; const ABackground: Double): Cardinal;
-		procedure UpdateDestinationChannel(const AIndex: Cardinal; const ABackground: Double);
-		procedure UpdateDestinationChannelByName(const AName: String; const ABackground: Double);
-		procedure RemoveDestinationChannel(const AIndex: Cardinal);
-		procedure RemoveDestinationChannelByName(const AName: String);
-		function GetLayerCount(): Cardinal;
-		function GetLayer(const AIndex: Cardinal): TLib3MFVolumetricLayer;
-		function AddLayer(const ATransform: TLib3MFTransform; const ABlendMethod: TLib3MFBlendMethod): TLib3MFVolumetricLayer;
-		procedure ReindexLayer(const ALayer: TLib3MFVolumetricLayer; const AIndex: Cardinal);
-		procedure RemoveLayer(const ALayer: TLib3MFVolumetricLayer);
-		procedure RemoveLayerByIndex(const AIndex: Cardinal);
+		function CreateEmptySheet(const APath: String): TLib3MFAttachment;
+		function CreateSheetFromBuffer(const APath: String; const AData: TByteDynArray): TLib3MFAttachment;
+		function CreateSheetFromFile(const APath: String; const AFileName: String): TLib3MFAttachment;
 	end;
 
 
@@ -6180,8 +6402,9 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		function GetMultiPropertyGroups(): TLib3MFMultiPropertyGroupIterator;
 		function GetSliceStacks(): TLib3MFSliceStackIterator;
 		function GetImage3Ds(): TLib3MFImage3DIterator;
+		function GetScalarFields(): TLib3MFScalarFieldIterator;
+		function GetVector3DFields(): TLib3MFVector3DFieldIterator;
 		function MergeToModel(): TLib3MFModel;
-		function GetVolumetricStacks(): TLib3MFVolumetricStackIterator;
 		function AddMeshObject(): TLib3MFMeshObject;
 		function AddComponentsObject(): TLib3MFComponentsObject;
 		function AddSliceStack(const AZBottom: Double): TLib3MFSliceStack;
@@ -6191,8 +6414,17 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		function AddTexture2DGroup(const ATexture2DInstance: TLib3MFTexture2D): TLib3MFTexture2DGroup;
 		function AddCompositeMaterials(const ABaseMaterialGroupInstance: TLib3MFBaseMaterialGroup): TLib3MFCompositeMaterials;
 		function AddMultiPropertyGroup(): TLib3MFMultiPropertyGroup;
-		function AddImage3D(const ASizeX: Cardinal; const ASizeY: Cardinal; const ASheetCount: Cardinal): TLib3MFImage3D;
-		function AddVolumetricStack(): TLib3MFVolumetricStack;
+		function AddImageStack(const AColumnCount: Cardinal; const ARowCount: Cardinal; const ASheetCount: Cardinal): TLib3MFImageStack;
+		function AddScalarFieldFromImage3D(): TLib3MFScalarFieldFromImage3D;
+		function AddScalarFieldComposed(): TLib3MFScalarFieldComposed;
+		function GetScalarFieldByID(const AUniqueResourceID: Cardinal): TLib3MFScalarField;
+		function GetScalarFieldFromImage3DByID(const AUniqueResourceID: Cardinal): TLib3MFScalarFieldFromImage3D;
+		function GetScalarFieldComposedByID(const AUniqueResourceID: Cardinal): TLib3MFScalarFieldComposed;
+		function AddVector3DFieldFromImage3D(): TLib3MFVector3DFieldFromImage3D;
+		function AddVector3DFieldComposed(): TLib3MFVector3DFieldComposed;
+		function GetVector3DFieldByID(const AUniqueResourceID: Cardinal): TLib3MFVector3DField;
+		function GetVector3DFieldFromImage3DByID(const AUniqueResourceID: Cardinal): TLib3MFVector3DFieldFromImage3D;
+		function GetVector3DFieldComposedByID(const AUniqueResourceID: Cardinal): TLib3MFVector3DFieldComposed;
 		function AddBuildItem(const AObject: TLib3MFObject; const ATransform: TLib3MFTransform): TLib3MFBuildItem;
 		procedure RemoveBuildItem(const ABuildItemInstance: TLib3MFBuildItem);
 		function GetMetaDataGroup(): TLib3MFMetaDataGroup;
@@ -6266,7 +6498,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFCompositeMaterialsIterator_GetCurrentCompositeMaterialsFunc: TLib3MFCompositeMaterialsIterator_GetCurrentCompositeMaterialsFunc;
 		FLib3MFMultiPropertyGroupIterator_GetCurrentMultiPropertyGroupFunc: TLib3MFMultiPropertyGroupIterator_GetCurrentMultiPropertyGroupFunc;
 		FLib3MFImage3DIterator_GetCurrentImage3DFunc: TLib3MFImage3DIterator_GetCurrentImage3DFunc;
-		FLib3MFVolumetricStackIterator_GetCurrentVolumetricStackFunc: TLib3MFVolumetricStackIterator_GetCurrentVolumetricStackFunc;
+		FLib3MFScalarFieldIterator_GetCurrentScalarFieldFunc: TLib3MFScalarFieldIterator_GetCurrentScalarFieldFunc;
+		FLib3MFVector3DFieldIterator_GetCurrentVector3DFieldFunc: TLib3MFVector3DFieldIterator_GetCurrentVector3DFieldFunc;
 		FLib3MFMetaData_GetNameSpaceFunc: TLib3MFMetaData_GetNameSpaceFunc;
 		FLib3MFMetaData_SetNameSpaceFunc: TLib3MFMetaData_SetNameSpaceFunc;
 		FLib3MFMetaData_GetNameFunc: TLib3MFMetaData_GetNameFunc;
@@ -6350,38 +6583,85 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFBeamLattice_GetBeamSetCountFunc: TLib3MFBeamLattice_GetBeamSetCountFunc;
 		FLib3MFBeamLattice_AddBeamSetFunc: TLib3MFBeamLattice_AddBeamSetFunc;
 		FLib3MFBeamLattice_GetBeamSetFunc: TLib3MFBeamLattice_GetBeamSetFunc;
-		FLib3MFVolumeDataItem_GetVolumetricStackFunc: TLib3MFVolumeDataItem_GetVolumetricStackFunc;
-		FLib3MFVolumeDataItem_SetVolumetricStackFunc: TLib3MFVolumeDataItem_SetVolumetricStackFunc;
-		FLib3MFVolumeDataItem_GetTransformFunc: TLib3MFVolumeDataItem_GetTransformFunc;
-		FLib3MFVolumeDataItem_SetTransformFunc: TLib3MFVolumeDataItem_SetTransformFunc;
+		FLib3MFScalarField_GetNameFunc: TLib3MFScalarField_GetNameFunc;
+		FLib3MFScalarField_SetNameFunc: TLib3MFScalarField_SetNameFunc;
+		FLib3MFScalarField_IsFromImage3DFunc: TLib3MFScalarField_IsFromImage3DFunc;
+		FLib3MFScalarField_IsComposedFunc: TLib3MFScalarField_IsComposedFunc;
+		FLib3MFVector3DField_GetNameFunc: TLib3MFVector3DField_GetNameFunc;
+		FLib3MFVector3DField_SetNameFunc: TLib3MFVector3DField_SetNameFunc;
+		FLib3MFVector3DField_IsFromImage3DFunc: TLib3MFVector3DField_IsFromImage3DFunc;
+		FLib3MFVector3DField_IsComposedFunc: TLib3MFVector3DField_IsComposedFunc;
+		FLib3MFScalarFieldFromImage3D_GetImageFunc: TLib3MFScalarFieldFromImage3D_GetImageFunc;
+		FLib3MFScalarFieldFromImage3D_SetImageFunc: TLib3MFScalarFieldFromImage3D_SetImageFunc;
+		FLib3MFScalarFieldFromImage3D_SetChannelFunc: TLib3MFScalarFieldFromImage3D_SetChannelFunc;
+		FLib3MFScalarFieldFromImage3D_GetChannelFunc: TLib3MFScalarFieldFromImage3D_GetChannelFunc;
+		FLib3MFScalarFieldFromImage3D_SetFilterFunc: TLib3MFScalarFieldFromImage3D_SetFilterFunc;
+		FLib3MFScalarFieldFromImage3D_GetFilterFunc: TLib3MFScalarFieldFromImage3D_GetFilterFunc;
+		FLib3MFScalarFieldFromImage3D_SetTileStylesFunc: TLib3MFScalarFieldFromImage3D_SetTileStylesFunc;
+		FLib3MFScalarFieldFromImage3D_GetTileStylesFunc: TLib3MFScalarFieldFromImage3D_GetTileStylesFunc;
+		FLib3MFScalarFieldFromImage3D_GetOffsetFunc: TLib3MFScalarFieldFromImage3D_GetOffsetFunc;
+		FLib3MFScalarFieldFromImage3D_SetOffsetFunc: TLib3MFScalarFieldFromImage3D_SetOffsetFunc;
+		FLib3MFScalarFieldFromImage3D_GetScaleFunc: TLib3MFScalarFieldFromImage3D_GetScaleFunc;
+		FLib3MFScalarFieldFromImage3D_SetScaleFunc: TLib3MFScalarFieldFromImage3D_SetScaleFunc;
+		FLib3MFScalarFieldComposed_SetMethodFunc: TLib3MFScalarFieldComposed_SetMethodFunc;
+		FLib3MFScalarFieldComposed_GetMethodFunc: TLib3MFScalarFieldComposed_GetMethodFunc;
+		FLib3MFScalarFieldComposed_GetFactor1Func: TLib3MFScalarFieldComposed_GetFactor1Func;
+		FLib3MFScalarFieldComposed_SetFactor1Func: TLib3MFScalarFieldComposed_SetFactor1Func;
+		FLib3MFScalarFieldComposed_GetFactor2Func: TLib3MFScalarFieldComposed_GetFactor2Func;
+		FLib3MFScalarFieldComposed_SetFactor2Func: TLib3MFScalarFieldComposed_SetFactor2Func;
+		FLib3MFScalarFieldComposed_ScalarFieldReference1Func: TLib3MFScalarFieldComposed_ScalarFieldReference1Func;
+		FLib3MFScalarFieldComposed_ScalarFieldReference2Func: TLib3MFScalarFieldComposed_ScalarFieldReference2Func;
+		FLib3MFScalarFieldComposed_ScalarFieldReferenceMaskFunc: TLib3MFScalarFieldComposed_ScalarFieldReferenceMaskFunc;
+		FLib3MFVector3DFieldFromImage3D_GetImageFunc: TLib3MFVector3DFieldFromImage3D_GetImageFunc;
+		FLib3MFVector3DFieldFromImage3D_SetImageFunc: TLib3MFVector3DFieldFromImage3D_SetImageFunc;
+		FLib3MFVector3DFieldFromImage3D_SetFilterFunc: TLib3MFVector3DFieldFromImage3D_SetFilterFunc;
+		FLib3MFVector3DFieldFromImage3D_GetFilterFunc: TLib3MFVector3DFieldFromImage3D_GetFilterFunc;
+		FLib3MFVector3DFieldFromImage3D_SetTileStylesFunc: TLib3MFVector3DFieldFromImage3D_SetTileStylesFunc;
+		FLib3MFVector3DFieldFromImage3D_GetTileStylesFunc: TLib3MFVector3DFieldFromImage3D_GetTileStylesFunc;
+		FLib3MFVector3DFieldFromImage3D_GetOffsetFunc: TLib3MFVector3DFieldFromImage3D_GetOffsetFunc;
+		FLib3MFVector3DFieldFromImage3D_SetOffsetFunc: TLib3MFVector3DFieldFromImage3D_SetOffsetFunc;
+		FLib3MFVector3DFieldFromImage3D_GetScaleFunc: TLib3MFVector3DFieldFromImage3D_GetScaleFunc;
+		FLib3MFVector3DFieldFromImage3D_SetScaleFunc: TLib3MFVector3DFieldFromImage3D_SetScaleFunc;
+		FLib3MFVector3DFieldComposed_SetMethodFunc: TLib3MFVector3DFieldComposed_SetMethodFunc;
+		FLib3MFVector3DFieldComposed_GetMethodFunc: TLib3MFVector3DFieldComposed_GetMethodFunc;
+		FLib3MFVector3DFieldComposed_GetFactor1Func: TLib3MFVector3DFieldComposed_GetFactor1Func;
+		FLib3MFVector3DFieldComposed_SetFactor1Func: TLib3MFVector3DFieldComposed_SetFactor1Func;
+		FLib3MFVector3DFieldComposed_GetFactor2Func: TLib3MFVector3DFieldComposed_GetFactor2Func;
+		FLib3MFVector3DFieldComposed_SetFactor2Func: TLib3MFVector3DFieldComposed_SetFactor2Func;
+		FLib3MFVector3DFieldComposed_Vector3DFieldReference1Func: TLib3MFVector3DFieldComposed_Vector3DFieldReference1Func;
+		FLib3MFVector3DFieldComposed_Vector3DFieldReference2Func: TLib3MFVector3DFieldComposed_Vector3DFieldReference2Func;
+		FLib3MFVector3DFieldComposed_ScalarFieldReferenceMaskFunc: TLib3MFVector3DFieldComposed_ScalarFieldReferenceMaskFunc;
+		FLib3MFFieldReference_GetFieldResourceIDFunc: TLib3MFFieldReference_GetFieldResourceIDFunc;
+		FLib3MFFieldReference_SetFieldResourceIDFunc: TLib3MFFieldReference_SetFieldResourceIDFunc;
+		FLib3MFFieldReference_GetTransformFunc: TLib3MFFieldReference_GetTransformFunc;
+		FLib3MFFieldReference_SetTransformFunc: TLib3MFFieldReference_SetTransformFunc;
+		FLib3MFScalarFieldReference_GetScalarFieldFunc: TLib3MFScalarFieldReference_GetScalarFieldFunc;
+		FLib3MFScalarFieldReference_SetScalarFieldFunc: TLib3MFScalarFieldReference_SetScalarFieldFunc;
+		FLib3MFVector3DFieldReference_GetVector3DFieldFunc: TLib3MFVector3DFieldReference_GetVector3DFieldFunc;
+		FLib3MFVector3DFieldReference_SetVector3DFieldFunc: TLib3MFVector3DFieldReference_SetVector3DFieldFunc;
 		FLib3MFVolumeDataLevelset_GetSolidThresholdFunc: TLib3MFVolumeDataLevelset_GetSolidThresholdFunc;
 		FLib3MFVolumeDataLevelset_SetSolidThresholdFunc: TLib3MFVolumeDataLevelset_SetSolidThresholdFunc;
-		FLib3MFVolumeDataLevelset_SetChannelFunc: TLib3MFVolumeDataLevelset_SetChannelFunc;
-		FLib3MFVolumeDataLevelset_GetChannelFunc: TLib3MFVolumeDataLevelset_GetChannelFunc;
-		FLib3MFVolumeDataColor_SetChannelFunc: TLib3MFVolumeDataColor_SetChannelFunc;
-		FLib3MFVolumeDataColor_GetChannelFunc: TLib3MFVolumeDataColor_GetChannelFunc;
 		FLib3MFVolumeDataComposite_GetBaseMaterialGroupFunc: TLib3MFVolumeDataComposite_GetBaseMaterialGroupFunc;
 		FLib3MFVolumeDataComposite_SetBaseMaterialGroupFunc: TLib3MFVolumeDataComposite_SetBaseMaterialGroupFunc;
 		FLib3MFVolumeDataComposite_GetMaterialMappingCountFunc: TLib3MFVolumeDataComposite_GetMaterialMappingCountFunc;
 		FLib3MFVolumeDataComposite_GetMaterialMappingFunc: TLib3MFVolumeDataComposite_GetMaterialMappingFunc;
-		FLib3MFVolumeDataComposite_SetMaterialMappingFunc: TLib3MFVolumeDataComposite_SetMaterialMappingFunc;
 		FLib3MFVolumeDataComposite_AddMaterialMappingFunc: TLib3MFVolumeDataComposite_AddMaterialMappingFunc;
 		FLib3MFVolumeDataComposite_RemoveMaterialMappingFunc: TLib3MFVolumeDataComposite_RemoveMaterialMappingFunc;
-		FLib3MFVolumeDataProperty_SetChannelFunc: TLib3MFVolumeDataProperty_SetChannelFunc;
-		FLib3MFVolumeDataProperty_GetChannelFunc: TLib3MFVolumeDataProperty_GetChannelFunc;
 		FLib3MFVolumeDataProperty_SetNameFunc: TLib3MFVolumeDataProperty_SetNameFunc;
 		FLib3MFVolumeDataProperty_GetNameFunc: TLib3MFVolumeDataProperty_GetNameFunc;
 		FLib3MFVolumeDataProperty_SetIsRequiredFunc: TLib3MFVolumeDataProperty_SetIsRequiredFunc;
 		FLib3MFVolumeDataProperty_IsRequiredFunc: TLib3MFVolumeDataProperty_IsRequiredFunc;
 		FLib3MFVolumeData_GetLevelsetFunc: TLib3MFVolumeData_GetLevelsetFunc;
 		FLib3MFVolumeData_CreateNewLevelsetFunc: TLib3MFVolumeData_CreateNewLevelsetFunc;
+		FLib3MFVolumeData_RemoveLevelsetFunc: TLib3MFVolumeData_RemoveLevelsetFunc;
 		FLib3MFVolumeData_GetCompositeFunc: TLib3MFVolumeData_GetCompositeFunc;
 		FLib3MFVolumeData_CreateNewCompositeFunc: TLib3MFVolumeData_CreateNewCompositeFunc;
+		FLib3MFVolumeData_RemoveCompositeFunc: TLib3MFVolumeData_RemoveCompositeFunc;
 		FLib3MFVolumeData_GetColorFunc: TLib3MFVolumeData_GetColorFunc;
 		FLib3MFVolumeData_CreateNewColorFunc: TLib3MFVolumeData_CreateNewColorFunc;
+		FLib3MFVolumeData_RemoveColorFunc: TLib3MFVolumeData_RemoveColorFunc;
 		FLib3MFVolumeData_GetPropertyCountFunc: TLib3MFVolumeData_GetPropertyCountFunc;
 		FLib3MFVolumeData_GetPropertyFunc: TLib3MFVolumeData_GetPropertyFunc;
-		FLib3MFVolumeData_FindPropertyFunc: TLib3MFVolumeData_FindPropertyFunc;
 		FLib3MFVolumeData_AddPropertyFunc: TLib3MFVolumeData_AddPropertyFunc;
 		FLib3MFVolumeData_RemovePropertyFunc: TLib3MFVolumeData_RemovePropertyFunc;
 		FLib3MFComponent_GetObjectResourceFunc: TLib3MFComponent_GetObjectResourceFunc;
@@ -6440,64 +6720,19 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFMultiPropertyGroup_AddLayerFunc: TLib3MFMultiPropertyGroup_AddLayerFunc;
 		FLib3MFMultiPropertyGroup_GetLayerFunc: TLib3MFMultiPropertyGroup_GetLayerFunc;
 		FLib3MFMultiPropertyGroup_RemoveLayerFunc: TLib3MFMultiPropertyGroup_RemoveLayerFunc;
-		FLib3MFImage3D_GetSizeXFunc: TLib3MFImage3D_GetSizeXFunc;
-		FLib3MFImage3D_GetSizeYFunc: TLib3MFImage3D_GetSizeYFunc;
-		FLib3MFImage3D_GetSheetCountFunc: TLib3MFImage3D_GetSheetCountFunc;
-		FLib3MFImage3D_GetSheetFunc: TLib3MFImage3D_GetSheetFunc;
-		FLib3MFImage3D_GetSheetMinValueFunc: TLib3MFImage3D_GetSheetMinValueFunc;
-		FLib3MFImage3D_GetSheetMaxValueFunc: TLib3MFImage3D_GetSheetMaxValueFunc;
-		FLib3MFImage3D_CreateEmptySheetFunc: TLib3MFImage3D_CreateEmptySheetFunc;
-		FLib3MFImage3D_CreateSheetFromBufferFunc: TLib3MFImage3D_CreateSheetFromBufferFunc;
-		FLib3MFImage3D_CreateSheetFromFileFunc: TLib3MFImage3D_CreateSheetFromFileFunc;
-		FLib3MFImage3D_SetSheetFunc: TLib3MFImage3D_SetSheetFunc;
-		FLib3MFImage3D_SetSheetMinValueFunc: TLib3MFImage3D_SetSheetMinValueFunc;
-		FLib3MFImage3D_SetSheetMaxValueFunc: TLib3MFImage3D_SetSheetMaxValueFunc;
-		FLib3MFImage3DChannelSelector_GetImageFunc: TLib3MFImage3DChannelSelector_GetImageFunc;
-		FLib3MFImage3DChannelSelector_SetImageFunc: TLib3MFImage3DChannelSelector_SetImageFunc;
-		FLib3MFImage3DChannelSelector_SetSourceChannelFunc: TLib3MFImage3DChannelSelector_SetSourceChannelFunc;
-		FLib3MFImage3DChannelSelector_GetSourceChannelFunc: TLib3MFImage3DChannelSelector_GetSourceChannelFunc;
-		FLib3MFImage3DChannelSelector_SetDestinationChannelFunc: TLib3MFImage3DChannelSelector_SetDestinationChannelFunc;
-		FLib3MFImage3DChannelSelector_GetDestinationChannelFunc: TLib3MFImage3DChannelSelector_GetDestinationChannelFunc;
-		FLib3MFImage3DChannelSelector_SetFilterFunc: TLib3MFImage3DChannelSelector_SetFilterFunc;
-		FLib3MFImage3DChannelSelector_GetFilterFunc: TLib3MFImage3DChannelSelector_GetFilterFunc;
-		FLib3MFImage3DChannelSelector_SetTileStylesFunc: TLib3MFImage3DChannelSelector_SetTileStylesFunc;
-		FLib3MFImage3DChannelSelector_GetTileStylesFunc: TLib3MFImage3DChannelSelector_GetTileStylesFunc;
-		FLib3MFVolumetricLayer_GetTransformFunc: TLib3MFVolumetricLayer_GetTransformFunc;
-		FLib3MFVolumetricLayer_SetTransformFunc: TLib3MFVolumetricLayer_SetTransformFunc;
-		FLib3MFVolumetricLayer_GetBlendMethodFunc: TLib3MFVolumetricLayer_GetBlendMethodFunc;
-		FLib3MFVolumetricLayer_SetBlendMethodFunc: TLib3MFVolumetricLayer_SetBlendMethodFunc;
-		FLib3MFVolumetricLayer_GetSourceAlphaFunc: TLib3MFVolumetricLayer_GetSourceAlphaFunc;
-		FLib3MFVolumetricLayer_SetSourceAlphaFunc: TLib3MFVolumetricLayer_SetSourceAlphaFunc;
-		FLib3MFVolumetricLayer_GetDestinationAlphaFunc: TLib3MFVolumetricLayer_GetDestinationAlphaFunc;
-		FLib3MFVolumetricLayer_SetDestinationAlphaFunc: TLib3MFVolumetricLayer_SetDestinationAlphaFunc;
-		FLib3MFVolumetricLayer_GetInformationFunc: TLib3MFVolumetricLayer_GetInformationFunc;
-		FLib3MFVolumetricLayer_SetInformationFunc: TLib3MFVolumetricLayer_SetInformationFunc;
-		FLib3MFVolumetricLayer_CreateMaskChannelSelectorFunc: TLib3MFVolumetricLayer_CreateMaskChannelSelectorFunc;
-		FLib3MFVolumetricLayer_HasMaskChannelSelectorFunc: TLib3MFVolumetricLayer_HasMaskChannelSelectorFunc;
-		FLib3MFVolumetricLayer_ClearMaskChannelSelectorFunc: TLib3MFVolumetricLayer_ClearMaskChannelSelectorFunc;
-		FLib3MFVolumetricLayer_GetMaskChannelSelectorFunc: TLib3MFVolumetricLayer_GetMaskChannelSelectorFunc;
-		FLib3MFVolumetricLayer_GetChannelSelectorCountFunc: TLib3MFVolumetricLayer_GetChannelSelectorCountFunc;
-		FLib3MFVolumetricLayer_GetChannelSelectorFunc: TLib3MFVolumetricLayer_GetChannelSelectorFunc;
-		FLib3MFVolumetricLayer_AddChannelSelectorFunc: TLib3MFVolumetricLayer_AddChannelSelectorFunc;
-		FLib3MFVolumetricLayer_ClearChannelSelectorsFunc: TLib3MFVolumetricLayer_ClearChannelSelectorsFunc;
-		FLib3MFVolumetricLayer_ReindexChannelSelectorFunc: TLib3MFVolumetricLayer_ReindexChannelSelectorFunc;
-		FLib3MFVolumetricLayer_RemoveChannelSelectorFunc: TLib3MFVolumetricLayer_RemoveChannelSelectorFunc;
-		FLib3MFVolumetricLayer_RemoveChannelSelectorByIndexFunc: TLib3MFVolumetricLayer_RemoveChannelSelectorByIndexFunc;
-		FLib3MFVolumetricStack_ClearFunc: TLib3MFVolumetricStack_ClearFunc;
-		FLib3MFVolumetricStack_ClearUnusedDestinationChannelsFunc: TLib3MFVolumetricStack_ClearUnusedDestinationChannelsFunc;
-		FLib3MFVolumetricStack_GetDestinationChannelCountFunc: TLib3MFVolumetricStack_GetDestinationChannelCountFunc;
-		FLib3MFVolumetricStack_GetDestinationChannelFunc: TLib3MFVolumetricStack_GetDestinationChannelFunc;
-		FLib3MFVolumetricStack_AddDestinationChannelFunc: TLib3MFVolumetricStack_AddDestinationChannelFunc;
-		FLib3MFVolumetricStack_UpdateDestinationChannelFunc: TLib3MFVolumetricStack_UpdateDestinationChannelFunc;
-		FLib3MFVolumetricStack_UpdateDestinationChannelByNameFunc: TLib3MFVolumetricStack_UpdateDestinationChannelByNameFunc;
-		FLib3MFVolumetricStack_RemoveDestinationChannelFunc: TLib3MFVolumetricStack_RemoveDestinationChannelFunc;
-		FLib3MFVolumetricStack_RemoveDestinationChannelByNameFunc: TLib3MFVolumetricStack_RemoveDestinationChannelByNameFunc;
-		FLib3MFVolumetricStack_GetLayerCountFunc: TLib3MFVolumetricStack_GetLayerCountFunc;
-		FLib3MFVolumetricStack_GetLayerFunc: TLib3MFVolumetricStack_GetLayerFunc;
-		FLib3MFVolumetricStack_AddLayerFunc: TLib3MFVolumetricStack_AddLayerFunc;
-		FLib3MFVolumetricStack_ReindexLayerFunc: TLib3MFVolumetricStack_ReindexLayerFunc;
-		FLib3MFVolumetricStack_RemoveLayerFunc: TLib3MFVolumetricStack_RemoveLayerFunc;
-		FLib3MFVolumetricStack_RemoveLayerByIndexFunc: TLib3MFVolumetricStack_RemoveLayerByIndexFunc;
+		FLib3MFImage3D_GetNameFunc: TLib3MFImage3D_GetNameFunc;
+		FLib3MFImage3D_SetNameFunc: TLib3MFImage3D_SetNameFunc;
+		FLib3MFImage3D_IsImageStackFunc: TLib3MFImage3D_IsImageStackFunc;
+		FLib3MFImageStack_GetRowCountFunc: TLib3MFImageStack_GetRowCountFunc;
+		FLib3MFImageStack_SetRowCountFunc: TLib3MFImageStack_SetRowCountFunc;
+		FLib3MFImageStack_GetColumnCountFunc: TLib3MFImageStack_GetColumnCountFunc;
+		FLib3MFImageStack_SetColumnCountFunc: TLib3MFImageStack_SetColumnCountFunc;
+		FLib3MFImageStack_GetSheetCountFunc: TLib3MFImageStack_GetSheetCountFunc;
+		FLib3MFImageStack_GetSheetFunc: TLib3MFImageStack_GetSheetFunc;
+		FLib3MFImageStack_SetSheetFunc: TLib3MFImageStack_SetSheetFunc;
+		FLib3MFImageStack_CreateEmptySheetFunc: TLib3MFImageStack_CreateEmptySheetFunc;
+		FLib3MFImageStack_CreateSheetFromBufferFunc: TLib3MFImageStack_CreateSheetFromBufferFunc;
+		FLib3MFImageStack_CreateSheetFromFileFunc: TLib3MFImageStack_CreateSheetFromFileFunc;
 		FLib3MFAttachment_GetPathFunc: TLib3MFAttachment_GetPathFunc;
 		FLib3MFAttachment_SetPathFunc: TLib3MFAttachment_SetPathFunc;
 		FLib3MFAttachment_PackagePartFunc: TLib3MFAttachment_PackagePartFunc;
@@ -6626,8 +6861,9 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFModel_GetMultiPropertyGroupsFunc: TLib3MFModel_GetMultiPropertyGroupsFunc;
 		FLib3MFModel_GetSliceStacksFunc: TLib3MFModel_GetSliceStacksFunc;
 		FLib3MFModel_GetImage3DsFunc: TLib3MFModel_GetImage3DsFunc;
+		FLib3MFModel_GetScalarFieldsFunc: TLib3MFModel_GetScalarFieldsFunc;
+		FLib3MFModel_GetVector3DFieldsFunc: TLib3MFModel_GetVector3DFieldsFunc;
 		FLib3MFModel_MergeToModelFunc: TLib3MFModel_MergeToModelFunc;
-		FLib3MFModel_GetVolumetricStacksFunc: TLib3MFModel_GetVolumetricStacksFunc;
 		FLib3MFModel_AddMeshObjectFunc: TLib3MFModel_AddMeshObjectFunc;
 		FLib3MFModel_AddComponentsObjectFunc: TLib3MFModel_AddComponentsObjectFunc;
 		FLib3MFModel_AddSliceStackFunc: TLib3MFModel_AddSliceStackFunc;
@@ -6637,8 +6873,17 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFModel_AddTexture2DGroupFunc: TLib3MFModel_AddTexture2DGroupFunc;
 		FLib3MFModel_AddCompositeMaterialsFunc: TLib3MFModel_AddCompositeMaterialsFunc;
 		FLib3MFModel_AddMultiPropertyGroupFunc: TLib3MFModel_AddMultiPropertyGroupFunc;
-		FLib3MFModel_AddImage3DFunc: TLib3MFModel_AddImage3DFunc;
-		FLib3MFModel_AddVolumetricStackFunc: TLib3MFModel_AddVolumetricStackFunc;
+		FLib3MFModel_AddImageStackFunc: TLib3MFModel_AddImageStackFunc;
+		FLib3MFModel_AddScalarFieldFromImage3DFunc: TLib3MFModel_AddScalarFieldFromImage3DFunc;
+		FLib3MFModel_AddScalarFieldComposedFunc: TLib3MFModel_AddScalarFieldComposedFunc;
+		FLib3MFModel_GetScalarFieldByIDFunc: TLib3MFModel_GetScalarFieldByIDFunc;
+		FLib3MFModel_GetScalarFieldFromImage3DByIDFunc: TLib3MFModel_GetScalarFieldFromImage3DByIDFunc;
+		FLib3MFModel_GetScalarFieldComposedByIDFunc: TLib3MFModel_GetScalarFieldComposedByIDFunc;
+		FLib3MFModel_AddVector3DFieldFromImage3DFunc: TLib3MFModel_AddVector3DFieldFromImage3DFunc;
+		FLib3MFModel_AddVector3DFieldComposedFunc: TLib3MFModel_AddVector3DFieldComposedFunc;
+		FLib3MFModel_GetVector3DFieldByIDFunc: TLib3MFModel_GetVector3DFieldByIDFunc;
+		FLib3MFModel_GetVector3DFieldFromImage3DByIDFunc: TLib3MFModel_GetVector3DFieldFromImage3DByIDFunc;
+		FLib3MFModel_GetVector3DFieldComposedByIDFunc: TLib3MFModel_GetVector3DFieldComposedByIDFunc;
 		FLib3MFModel_AddBuildItemFunc: TLib3MFModel_AddBuildItemFunc;
 		FLib3MFModel_RemoveBuildItemFunc: TLib3MFModel_RemoveBuildItemFunc;
 		FLib3MFModel_GetMetaDataGroupFunc: TLib3MFModel_GetMetaDataGroupFunc;
@@ -6732,7 +6977,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFCompositeMaterialsIterator_GetCurrentCompositeMaterialsFunc: TLib3MFCompositeMaterialsIterator_GetCurrentCompositeMaterialsFunc read FLib3MFCompositeMaterialsIterator_GetCurrentCompositeMaterialsFunc;
 		property Lib3MFMultiPropertyGroupIterator_GetCurrentMultiPropertyGroupFunc: TLib3MFMultiPropertyGroupIterator_GetCurrentMultiPropertyGroupFunc read FLib3MFMultiPropertyGroupIterator_GetCurrentMultiPropertyGroupFunc;
 		property Lib3MFImage3DIterator_GetCurrentImage3DFunc: TLib3MFImage3DIterator_GetCurrentImage3DFunc read FLib3MFImage3DIterator_GetCurrentImage3DFunc;
-		property Lib3MFVolumetricStackIterator_GetCurrentVolumetricStackFunc: TLib3MFVolumetricStackIterator_GetCurrentVolumetricStackFunc read FLib3MFVolumetricStackIterator_GetCurrentVolumetricStackFunc;
+		property Lib3MFScalarFieldIterator_GetCurrentScalarFieldFunc: TLib3MFScalarFieldIterator_GetCurrentScalarFieldFunc read FLib3MFScalarFieldIterator_GetCurrentScalarFieldFunc;
+		property Lib3MFVector3DFieldIterator_GetCurrentVector3DFieldFunc: TLib3MFVector3DFieldIterator_GetCurrentVector3DFieldFunc read FLib3MFVector3DFieldIterator_GetCurrentVector3DFieldFunc;
 		property Lib3MFMetaData_GetNameSpaceFunc: TLib3MFMetaData_GetNameSpaceFunc read FLib3MFMetaData_GetNameSpaceFunc;
 		property Lib3MFMetaData_SetNameSpaceFunc: TLib3MFMetaData_SetNameSpaceFunc read FLib3MFMetaData_SetNameSpaceFunc;
 		property Lib3MFMetaData_GetNameFunc: TLib3MFMetaData_GetNameFunc read FLib3MFMetaData_GetNameFunc;
@@ -6816,38 +7062,85 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFBeamLattice_GetBeamSetCountFunc: TLib3MFBeamLattice_GetBeamSetCountFunc read FLib3MFBeamLattice_GetBeamSetCountFunc;
 		property Lib3MFBeamLattice_AddBeamSetFunc: TLib3MFBeamLattice_AddBeamSetFunc read FLib3MFBeamLattice_AddBeamSetFunc;
 		property Lib3MFBeamLattice_GetBeamSetFunc: TLib3MFBeamLattice_GetBeamSetFunc read FLib3MFBeamLattice_GetBeamSetFunc;
-		property Lib3MFVolumeDataItem_GetVolumetricStackFunc: TLib3MFVolumeDataItem_GetVolumetricStackFunc read FLib3MFVolumeDataItem_GetVolumetricStackFunc;
-		property Lib3MFVolumeDataItem_SetVolumetricStackFunc: TLib3MFVolumeDataItem_SetVolumetricStackFunc read FLib3MFVolumeDataItem_SetVolumetricStackFunc;
-		property Lib3MFVolumeDataItem_GetTransformFunc: TLib3MFVolumeDataItem_GetTransformFunc read FLib3MFVolumeDataItem_GetTransformFunc;
-		property Lib3MFVolumeDataItem_SetTransformFunc: TLib3MFVolumeDataItem_SetTransformFunc read FLib3MFVolumeDataItem_SetTransformFunc;
+		property Lib3MFScalarField_GetNameFunc: TLib3MFScalarField_GetNameFunc read FLib3MFScalarField_GetNameFunc;
+		property Lib3MFScalarField_SetNameFunc: TLib3MFScalarField_SetNameFunc read FLib3MFScalarField_SetNameFunc;
+		property Lib3MFScalarField_IsFromImage3DFunc: TLib3MFScalarField_IsFromImage3DFunc read FLib3MFScalarField_IsFromImage3DFunc;
+		property Lib3MFScalarField_IsComposedFunc: TLib3MFScalarField_IsComposedFunc read FLib3MFScalarField_IsComposedFunc;
+		property Lib3MFVector3DField_GetNameFunc: TLib3MFVector3DField_GetNameFunc read FLib3MFVector3DField_GetNameFunc;
+		property Lib3MFVector3DField_SetNameFunc: TLib3MFVector3DField_SetNameFunc read FLib3MFVector3DField_SetNameFunc;
+		property Lib3MFVector3DField_IsFromImage3DFunc: TLib3MFVector3DField_IsFromImage3DFunc read FLib3MFVector3DField_IsFromImage3DFunc;
+		property Lib3MFVector3DField_IsComposedFunc: TLib3MFVector3DField_IsComposedFunc read FLib3MFVector3DField_IsComposedFunc;
+		property Lib3MFScalarFieldFromImage3D_GetImageFunc: TLib3MFScalarFieldFromImage3D_GetImageFunc read FLib3MFScalarFieldFromImage3D_GetImageFunc;
+		property Lib3MFScalarFieldFromImage3D_SetImageFunc: TLib3MFScalarFieldFromImage3D_SetImageFunc read FLib3MFScalarFieldFromImage3D_SetImageFunc;
+		property Lib3MFScalarFieldFromImage3D_SetChannelFunc: TLib3MFScalarFieldFromImage3D_SetChannelFunc read FLib3MFScalarFieldFromImage3D_SetChannelFunc;
+		property Lib3MFScalarFieldFromImage3D_GetChannelFunc: TLib3MFScalarFieldFromImage3D_GetChannelFunc read FLib3MFScalarFieldFromImage3D_GetChannelFunc;
+		property Lib3MFScalarFieldFromImage3D_SetFilterFunc: TLib3MFScalarFieldFromImage3D_SetFilterFunc read FLib3MFScalarFieldFromImage3D_SetFilterFunc;
+		property Lib3MFScalarFieldFromImage3D_GetFilterFunc: TLib3MFScalarFieldFromImage3D_GetFilterFunc read FLib3MFScalarFieldFromImage3D_GetFilterFunc;
+		property Lib3MFScalarFieldFromImage3D_SetTileStylesFunc: TLib3MFScalarFieldFromImage3D_SetTileStylesFunc read FLib3MFScalarFieldFromImage3D_SetTileStylesFunc;
+		property Lib3MFScalarFieldFromImage3D_GetTileStylesFunc: TLib3MFScalarFieldFromImage3D_GetTileStylesFunc read FLib3MFScalarFieldFromImage3D_GetTileStylesFunc;
+		property Lib3MFScalarFieldFromImage3D_GetOffsetFunc: TLib3MFScalarFieldFromImage3D_GetOffsetFunc read FLib3MFScalarFieldFromImage3D_GetOffsetFunc;
+		property Lib3MFScalarFieldFromImage3D_SetOffsetFunc: TLib3MFScalarFieldFromImage3D_SetOffsetFunc read FLib3MFScalarFieldFromImage3D_SetOffsetFunc;
+		property Lib3MFScalarFieldFromImage3D_GetScaleFunc: TLib3MFScalarFieldFromImage3D_GetScaleFunc read FLib3MFScalarFieldFromImage3D_GetScaleFunc;
+		property Lib3MFScalarFieldFromImage3D_SetScaleFunc: TLib3MFScalarFieldFromImage3D_SetScaleFunc read FLib3MFScalarFieldFromImage3D_SetScaleFunc;
+		property Lib3MFScalarFieldComposed_SetMethodFunc: TLib3MFScalarFieldComposed_SetMethodFunc read FLib3MFScalarFieldComposed_SetMethodFunc;
+		property Lib3MFScalarFieldComposed_GetMethodFunc: TLib3MFScalarFieldComposed_GetMethodFunc read FLib3MFScalarFieldComposed_GetMethodFunc;
+		property Lib3MFScalarFieldComposed_GetFactor1Func: TLib3MFScalarFieldComposed_GetFactor1Func read FLib3MFScalarFieldComposed_GetFactor1Func;
+		property Lib3MFScalarFieldComposed_SetFactor1Func: TLib3MFScalarFieldComposed_SetFactor1Func read FLib3MFScalarFieldComposed_SetFactor1Func;
+		property Lib3MFScalarFieldComposed_GetFactor2Func: TLib3MFScalarFieldComposed_GetFactor2Func read FLib3MFScalarFieldComposed_GetFactor2Func;
+		property Lib3MFScalarFieldComposed_SetFactor2Func: TLib3MFScalarFieldComposed_SetFactor2Func read FLib3MFScalarFieldComposed_SetFactor2Func;
+		property Lib3MFScalarFieldComposed_ScalarFieldReference1Func: TLib3MFScalarFieldComposed_ScalarFieldReference1Func read FLib3MFScalarFieldComposed_ScalarFieldReference1Func;
+		property Lib3MFScalarFieldComposed_ScalarFieldReference2Func: TLib3MFScalarFieldComposed_ScalarFieldReference2Func read FLib3MFScalarFieldComposed_ScalarFieldReference2Func;
+		property Lib3MFScalarFieldComposed_ScalarFieldReferenceMaskFunc: TLib3MFScalarFieldComposed_ScalarFieldReferenceMaskFunc read FLib3MFScalarFieldComposed_ScalarFieldReferenceMaskFunc;
+		property Lib3MFVector3DFieldFromImage3D_GetImageFunc: TLib3MFVector3DFieldFromImage3D_GetImageFunc read FLib3MFVector3DFieldFromImage3D_GetImageFunc;
+		property Lib3MFVector3DFieldFromImage3D_SetImageFunc: TLib3MFVector3DFieldFromImage3D_SetImageFunc read FLib3MFVector3DFieldFromImage3D_SetImageFunc;
+		property Lib3MFVector3DFieldFromImage3D_SetFilterFunc: TLib3MFVector3DFieldFromImage3D_SetFilterFunc read FLib3MFVector3DFieldFromImage3D_SetFilterFunc;
+		property Lib3MFVector3DFieldFromImage3D_GetFilterFunc: TLib3MFVector3DFieldFromImage3D_GetFilterFunc read FLib3MFVector3DFieldFromImage3D_GetFilterFunc;
+		property Lib3MFVector3DFieldFromImage3D_SetTileStylesFunc: TLib3MFVector3DFieldFromImage3D_SetTileStylesFunc read FLib3MFVector3DFieldFromImage3D_SetTileStylesFunc;
+		property Lib3MFVector3DFieldFromImage3D_GetTileStylesFunc: TLib3MFVector3DFieldFromImage3D_GetTileStylesFunc read FLib3MFVector3DFieldFromImage3D_GetTileStylesFunc;
+		property Lib3MFVector3DFieldFromImage3D_GetOffsetFunc: TLib3MFVector3DFieldFromImage3D_GetOffsetFunc read FLib3MFVector3DFieldFromImage3D_GetOffsetFunc;
+		property Lib3MFVector3DFieldFromImage3D_SetOffsetFunc: TLib3MFVector3DFieldFromImage3D_SetOffsetFunc read FLib3MFVector3DFieldFromImage3D_SetOffsetFunc;
+		property Lib3MFVector3DFieldFromImage3D_GetScaleFunc: TLib3MFVector3DFieldFromImage3D_GetScaleFunc read FLib3MFVector3DFieldFromImage3D_GetScaleFunc;
+		property Lib3MFVector3DFieldFromImage3D_SetScaleFunc: TLib3MFVector3DFieldFromImage3D_SetScaleFunc read FLib3MFVector3DFieldFromImage3D_SetScaleFunc;
+		property Lib3MFVector3DFieldComposed_SetMethodFunc: TLib3MFVector3DFieldComposed_SetMethodFunc read FLib3MFVector3DFieldComposed_SetMethodFunc;
+		property Lib3MFVector3DFieldComposed_GetMethodFunc: TLib3MFVector3DFieldComposed_GetMethodFunc read FLib3MFVector3DFieldComposed_GetMethodFunc;
+		property Lib3MFVector3DFieldComposed_GetFactor1Func: TLib3MFVector3DFieldComposed_GetFactor1Func read FLib3MFVector3DFieldComposed_GetFactor1Func;
+		property Lib3MFVector3DFieldComposed_SetFactor1Func: TLib3MFVector3DFieldComposed_SetFactor1Func read FLib3MFVector3DFieldComposed_SetFactor1Func;
+		property Lib3MFVector3DFieldComposed_GetFactor2Func: TLib3MFVector3DFieldComposed_GetFactor2Func read FLib3MFVector3DFieldComposed_GetFactor2Func;
+		property Lib3MFVector3DFieldComposed_SetFactor2Func: TLib3MFVector3DFieldComposed_SetFactor2Func read FLib3MFVector3DFieldComposed_SetFactor2Func;
+		property Lib3MFVector3DFieldComposed_Vector3DFieldReference1Func: TLib3MFVector3DFieldComposed_Vector3DFieldReference1Func read FLib3MFVector3DFieldComposed_Vector3DFieldReference1Func;
+		property Lib3MFVector3DFieldComposed_Vector3DFieldReference2Func: TLib3MFVector3DFieldComposed_Vector3DFieldReference2Func read FLib3MFVector3DFieldComposed_Vector3DFieldReference2Func;
+		property Lib3MFVector3DFieldComposed_ScalarFieldReferenceMaskFunc: TLib3MFVector3DFieldComposed_ScalarFieldReferenceMaskFunc read FLib3MFVector3DFieldComposed_ScalarFieldReferenceMaskFunc;
+		property Lib3MFFieldReference_GetFieldResourceIDFunc: TLib3MFFieldReference_GetFieldResourceIDFunc read FLib3MFFieldReference_GetFieldResourceIDFunc;
+		property Lib3MFFieldReference_SetFieldResourceIDFunc: TLib3MFFieldReference_SetFieldResourceIDFunc read FLib3MFFieldReference_SetFieldResourceIDFunc;
+		property Lib3MFFieldReference_GetTransformFunc: TLib3MFFieldReference_GetTransformFunc read FLib3MFFieldReference_GetTransformFunc;
+		property Lib3MFFieldReference_SetTransformFunc: TLib3MFFieldReference_SetTransformFunc read FLib3MFFieldReference_SetTransformFunc;
+		property Lib3MFScalarFieldReference_GetScalarFieldFunc: TLib3MFScalarFieldReference_GetScalarFieldFunc read FLib3MFScalarFieldReference_GetScalarFieldFunc;
+		property Lib3MFScalarFieldReference_SetScalarFieldFunc: TLib3MFScalarFieldReference_SetScalarFieldFunc read FLib3MFScalarFieldReference_SetScalarFieldFunc;
+		property Lib3MFVector3DFieldReference_GetVector3DFieldFunc: TLib3MFVector3DFieldReference_GetVector3DFieldFunc read FLib3MFVector3DFieldReference_GetVector3DFieldFunc;
+		property Lib3MFVector3DFieldReference_SetVector3DFieldFunc: TLib3MFVector3DFieldReference_SetVector3DFieldFunc read FLib3MFVector3DFieldReference_SetVector3DFieldFunc;
 		property Lib3MFVolumeDataLevelset_GetSolidThresholdFunc: TLib3MFVolumeDataLevelset_GetSolidThresholdFunc read FLib3MFVolumeDataLevelset_GetSolidThresholdFunc;
 		property Lib3MFVolumeDataLevelset_SetSolidThresholdFunc: TLib3MFVolumeDataLevelset_SetSolidThresholdFunc read FLib3MFVolumeDataLevelset_SetSolidThresholdFunc;
-		property Lib3MFVolumeDataLevelset_SetChannelFunc: TLib3MFVolumeDataLevelset_SetChannelFunc read FLib3MFVolumeDataLevelset_SetChannelFunc;
-		property Lib3MFVolumeDataLevelset_GetChannelFunc: TLib3MFVolumeDataLevelset_GetChannelFunc read FLib3MFVolumeDataLevelset_GetChannelFunc;
-		property Lib3MFVolumeDataColor_SetChannelFunc: TLib3MFVolumeDataColor_SetChannelFunc read FLib3MFVolumeDataColor_SetChannelFunc;
-		property Lib3MFVolumeDataColor_GetChannelFunc: TLib3MFVolumeDataColor_GetChannelFunc read FLib3MFVolumeDataColor_GetChannelFunc;
 		property Lib3MFVolumeDataComposite_GetBaseMaterialGroupFunc: TLib3MFVolumeDataComposite_GetBaseMaterialGroupFunc read FLib3MFVolumeDataComposite_GetBaseMaterialGroupFunc;
 		property Lib3MFVolumeDataComposite_SetBaseMaterialGroupFunc: TLib3MFVolumeDataComposite_SetBaseMaterialGroupFunc read FLib3MFVolumeDataComposite_SetBaseMaterialGroupFunc;
 		property Lib3MFVolumeDataComposite_GetMaterialMappingCountFunc: TLib3MFVolumeDataComposite_GetMaterialMappingCountFunc read FLib3MFVolumeDataComposite_GetMaterialMappingCountFunc;
 		property Lib3MFVolumeDataComposite_GetMaterialMappingFunc: TLib3MFVolumeDataComposite_GetMaterialMappingFunc read FLib3MFVolumeDataComposite_GetMaterialMappingFunc;
-		property Lib3MFVolumeDataComposite_SetMaterialMappingFunc: TLib3MFVolumeDataComposite_SetMaterialMappingFunc read FLib3MFVolumeDataComposite_SetMaterialMappingFunc;
 		property Lib3MFVolumeDataComposite_AddMaterialMappingFunc: TLib3MFVolumeDataComposite_AddMaterialMappingFunc read FLib3MFVolumeDataComposite_AddMaterialMappingFunc;
 		property Lib3MFVolumeDataComposite_RemoveMaterialMappingFunc: TLib3MFVolumeDataComposite_RemoveMaterialMappingFunc read FLib3MFVolumeDataComposite_RemoveMaterialMappingFunc;
-		property Lib3MFVolumeDataProperty_SetChannelFunc: TLib3MFVolumeDataProperty_SetChannelFunc read FLib3MFVolumeDataProperty_SetChannelFunc;
-		property Lib3MFVolumeDataProperty_GetChannelFunc: TLib3MFVolumeDataProperty_GetChannelFunc read FLib3MFVolumeDataProperty_GetChannelFunc;
 		property Lib3MFVolumeDataProperty_SetNameFunc: TLib3MFVolumeDataProperty_SetNameFunc read FLib3MFVolumeDataProperty_SetNameFunc;
 		property Lib3MFVolumeDataProperty_GetNameFunc: TLib3MFVolumeDataProperty_GetNameFunc read FLib3MFVolumeDataProperty_GetNameFunc;
 		property Lib3MFVolumeDataProperty_SetIsRequiredFunc: TLib3MFVolumeDataProperty_SetIsRequiredFunc read FLib3MFVolumeDataProperty_SetIsRequiredFunc;
 		property Lib3MFVolumeDataProperty_IsRequiredFunc: TLib3MFVolumeDataProperty_IsRequiredFunc read FLib3MFVolumeDataProperty_IsRequiredFunc;
 		property Lib3MFVolumeData_GetLevelsetFunc: TLib3MFVolumeData_GetLevelsetFunc read FLib3MFVolumeData_GetLevelsetFunc;
 		property Lib3MFVolumeData_CreateNewLevelsetFunc: TLib3MFVolumeData_CreateNewLevelsetFunc read FLib3MFVolumeData_CreateNewLevelsetFunc;
+		property Lib3MFVolumeData_RemoveLevelsetFunc: TLib3MFVolumeData_RemoveLevelsetFunc read FLib3MFVolumeData_RemoveLevelsetFunc;
 		property Lib3MFVolumeData_GetCompositeFunc: TLib3MFVolumeData_GetCompositeFunc read FLib3MFVolumeData_GetCompositeFunc;
 		property Lib3MFVolumeData_CreateNewCompositeFunc: TLib3MFVolumeData_CreateNewCompositeFunc read FLib3MFVolumeData_CreateNewCompositeFunc;
+		property Lib3MFVolumeData_RemoveCompositeFunc: TLib3MFVolumeData_RemoveCompositeFunc read FLib3MFVolumeData_RemoveCompositeFunc;
 		property Lib3MFVolumeData_GetColorFunc: TLib3MFVolumeData_GetColorFunc read FLib3MFVolumeData_GetColorFunc;
 		property Lib3MFVolumeData_CreateNewColorFunc: TLib3MFVolumeData_CreateNewColorFunc read FLib3MFVolumeData_CreateNewColorFunc;
+		property Lib3MFVolumeData_RemoveColorFunc: TLib3MFVolumeData_RemoveColorFunc read FLib3MFVolumeData_RemoveColorFunc;
 		property Lib3MFVolumeData_GetPropertyCountFunc: TLib3MFVolumeData_GetPropertyCountFunc read FLib3MFVolumeData_GetPropertyCountFunc;
 		property Lib3MFVolumeData_GetPropertyFunc: TLib3MFVolumeData_GetPropertyFunc read FLib3MFVolumeData_GetPropertyFunc;
-		property Lib3MFVolumeData_FindPropertyFunc: TLib3MFVolumeData_FindPropertyFunc read FLib3MFVolumeData_FindPropertyFunc;
 		property Lib3MFVolumeData_AddPropertyFunc: TLib3MFVolumeData_AddPropertyFunc read FLib3MFVolumeData_AddPropertyFunc;
 		property Lib3MFVolumeData_RemovePropertyFunc: TLib3MFVolumeData_RemovePropertyFunc read FLib3MFVolumeData_RemovePropertyFunc;
 		property Lib3MFComponent_GetObjectResourceFunc: TLib3MFComponent_GetObjectResourceFunc read FLib3MFComponent_GetObjectResourceFunc;
@@ -6906,64 +7199,19 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFMultiPropertyGroup_AddLayerFunc: TLib3MFMultiPropertyGroup_AddLayerFunc read FLib3MFMultiPropertyGroup_AddLayerFunc;
 		property Lib3MFMultiPropertyGroup_GetLayerFunc: TLib3MFMultiPropertyGroup_GetLayerFunc read FLib3MFMultiPropertyGroup_GetLayerFunc;
 		property Lib3MFMultiPropertyGroup_RemoveLayerFunc: TLib3MFMultiPropertyGroup_RemoveLayerFunc read FLib3MFMultiPropertyGroup_RemoveLayerFunc;
-		property Lib3MFImage3D_GetSizeXFunc: TLib3MFImage3D_GetSizeXFunc read FLib3MFImage3D_GetSizeXFunc;
-		property Lib3MFImage3D_GetSizeYFunc: TLib3MFImage3D_GetSizeYFunc read FLib3MFImage3D_GetSizeYFunc;
-		property Lib3MFImage3D_GetSheetCountFunc: TLib3MFImage3D_GetSheetCountFunc read FLib3MFImage3D_GetSheetCountFunc;
-		property Lib3MFImage3D_GetSheetFunc: TLib3MFImage3D_GetSheetFunc read FLib3MFImage3D_GetSheetFunc;
-		property Lib3MFImage3D_GetSheetMinValueFunc: TLib3MFImage3D_GetSheetMinValueFunc read FLib3MFImage3D_GetSheetMinValueFunc;
-		property Lib3MFImage3D_GetSheetMaxValueFunc: TLib3MFImage3D_GetSheetMaxValueFunc read FLib3MFImage3D_GetSheetMaxValueFunc;
-		property Lib3MFImage3D_CreateEmptySheetFunc: TLib3MFImage3D_CreateEmptySheetFunc read FLib3MFImage3D_CreateEmptySheetFunc;
-		property Lib3MFImage3D_CreateSheetFromBufferFunc: TLib3MFImage3D_CreateSheetFromBufferFunc read FLib3MFImage3D_CreateSheetFromBufferFunc;
-		property Lib3MFImage3D_CreateSheetFromFileFunc: TLib3MFImage3D_CreateSheetFromFileFunc read FLib3MFImage3D_CreateSheetFromFileFunc;
-		property Lib3MFImage3D_SetSheetFunc: TLib3MFImage3D_SetSheetFunc read FLib3MFImage3D_SetSheetFunc;
-		property Lib3MFImage3D_SetSheetMinValueFunc: TLib3MFImage3D_SetSheetMinValueFunc read FLib3MFImage3D_SetSheetMinValueFunc;
-		property Lib3MFImage3D_SetSheetMaxValueFunc: TLib3MFImage3D_SetSheetMaxValueFunc read FLib3MFImage3D_SetSheetMaxValueFunc;
-		property Lib3MFImage3DChannelSelector_GetImageFunc: TLib3MFImage3DChannelSelector_GetImageFunc read FLib3MFImage3DChannelSelector_GetImageFunc;
-		property Lib3MFImage3DChannelSelector_SetImageFunc: TLib3MFImage3DChannelSelector_SetImageFunc read FLib3MFImage3DChannelSelector_SetImageFunc;
-		property Lib3MFImage3DChannelSelector_SetSourceChannelFunc: TLib3MFImage3DChannelSelector_SetSourceChannelFunc read FLib3MFImage3DChannelSelector_SetSourceChannelFunc;
-		property Lib3MFImage3DChannelSelector_GetSourceChannelFunc: TLib3MFImage3DChannelSelector_GetSourceChannelFunc read FLib3MFImage3DChannelSelector_GetSourceChannelFunc;
-		property Lib3MFImage3DChannelSelector_SetDestinationChannelFunc: TLib3MFImage3DChannelSelector_SetDestinationChannelFunc read FLib3MFImage3DChannelSelector_SetDestinationChannelFunc;
-		property Lib3MFImage3DChannelSelector_GetDestinationChannelFunc: TLib3MFImage3DChannelSelector_GetDestinationChannelFunc read FLib3MFImage3DChannelSelector_GetDestinationChannelFunc;
-		property Lib3MFImage3DChannelSelector_SetFilterFunc: TLib3MFImage3DChannelSelector_SetFilterFunc read FLib3MFImage3DChannelSelector_SetFilterFunc;
-		property Lib3MFImage3DChannelSelector_GetFilterFunc: TLib3MFImage3DChannelSelector_GetFilterFunc read FLib3MFImage3DChannelSelector_GetFilterFunc;
-		property Lib3MFImage3DChannelSelector_SetTileStylesFunc: TLib3MFImage3DChannelSelector_SetTileStylesFunc read FLib3MFImage3DChannelSelector_SetTileStylesFunc;
-		property Lib3MFImage3DChannelSelector_GetTileStylesFunc: TLib3MFImage3DChannelSelector_GetTileStylesFunc read FLib3MFImage3DChannelSelector_GetTileStylesFunc;
-		property Lib3MFVolumetricLayer_GetTransformFunc: TLib3MFVolumetricLayer_GetTransformFunc read FLib3MFVolumetricLayer_GetTransformFunc;
-		property Lib3MFVolumetricLayer_SetTransformFunc: TLib3MFVolumetricLayer_SetTransformFunc read FLib3MFVolumetricLayer_SetTransformFunc;
-		property Lib3MFVolumetricLayer_GetBlendMethodFunc: TLib3MFVolumetricLayer_GetBlendMethodFunc read FLib3MFVolumetricLayer_GetBlendMethodFunc;
-		property Lib3MFVolumetricLayer_SetBlendMethodFunc: TLib3MFVolumetricLayer_SetBlendMethodFunc read FLib3MFVolumetricLayer_SetBlendMethodFunc;
-		property Lib3MFVolumetricLayer_GetSourceAlphaFunc: TLib3MFVolumetricLayer_GetSourceAlphaFunc read FLib3MFVolumetricLayer_GetSourceAlphaFunc;
-		property Lib3MFVolumetricLayer_SetSourceAlphaFunc: TLib3MFVolumetricLayer_SetSourceAlphaFunc read FLib3MFVolumetricLayer_SetSourceAlphaFunc;
-		property Lib3MFVolumetricLayer_GetDestinationAlphaFunc: TLib3MFVolumetricLayer_GetDestinationAlphaFunc read FLib3MFVolumetricLayer_GetDestinationAlphaFunc;
-		property Lib3MFVolumetricLayer_SetDestinationAlphaFunc: TLib3MFVolumetricLayer_SetDestinationAlphaFunc read FLib3MFVolumetricLayer_SetDestinationAlphaFunc;
-		property Lib3MFVolumetricLayer_GetInformationFunc: TLib3MFVolumetricLayer_GetInformationFunc read FLib3MFVolumetricLayer_GetInformationFunc;
-		property Lib3MFVolumetricLayer_SetInformationFunc: TLib3MFVolumetricLayer_SetInformationFunc read FLib3MFVolumetricLayer_SetInformationFunc;
-		property Lib3MFVolumetricLayer_CreateMaskChannelSelectorFunc: TLib3MFVolumetricLayer_CreateMaskChannelSelectorFunc read FLib3MFVolumetricLayer_CreateMaskChannelSelectorFunc;
-		property Lib3MFVolumetricLayer_HasMaskChannelSelectorFunc: TLib3MFVolumetricLayer_HasMaskChannelSelectorFunc read FLib3MFVolumetricLayer_HasMaskChannelSelectorFunc;
-		property Lib3MFVolumetricLayer_ClearMaskChannelSelectorFunc: TLib3MFVolumetricLayer_ClearMaskChannelSelectorFunc read FLib3MFVolumetricLayer_ClearMaskChannelSelectorFunc;
-		property Lib3MFVolumetricLayer_GetMaskChannelSelectorFunc: TLib3MFVolumetricLayer_GetMaskChannelSelectorFunc read FLib3MFVolumetricLayer_GetMaskChannelSelectorFunc;
-		property Lib3MFVolumetricLayer_GetChannelSelectorCountFunc: TLib3MFVolumetricLayer_GetChannelSelectorCountFunc read FLib3MFVolumetricLayer_GetChannelSelectorCountFunc;
-		property Lib3MFVolumetricLayer_GetChannelSelectorFunc: TLib3MFVolumetricLayer_GetChannelSelectorFunc read FLib3MFVolumetricLayer_GetChannelSelectorFunc;
-		property Lib3MFVolumetricLayer_AddChannelSelectorFunc: TLib3MFVolumetricLayer_AddChannelSelectorFunc read FLib3MFVolumetricLayer_AddChannelSelectorFunc;
-		property Lib3MFVolumetricLayer_ClearChannelSelectorsFunc: TLib3MFVolumetricLayer_ClearChannelSelectorsFunc read FLib3MFVolumetricLayer_ClearChannelSelectorsFunc;
-		property Lib3MFVolumetricLayer_ReindexChannelSelectorFunc: TLib3MFVolumetricLayer_ReindexChannelSelectorFunc read FLib3MFVolumetricLayer_ReindexChannelSelectorFunc;
-		property Lib3MFVolumetricLayer_RemoveChannelSelectorFunc: TLib3MFVolumetricLayer_RemoveChannelSelectorFunc read FLib3MFVolumetricLayer_RemoveChannelSelectorFunc;
-		property Lib3MFVolumetricLayer_RemoveChannelSelectorByIndexFunc: TLib3MFVolumetricLayer_RemoveChannelSelectorByIndexFunc read FLib3MFVolumetricLayer_RemoveChannelSelectorByIndexFunc;
-		property Lib3MFVolumetricStack_ClearFunc: TLib3MFVolumetricStack_ClearFunc read FLib3MFVolumetricStack_ClearFunc;
-		property Lib3MFVolumetricStack_ClearUnusedDestinationChannelsFunc: TLib3MFVolumetricStack_ClearUnusedDestinationChannelsFunc read FLib3MFVolumetricStack_ClearUnusedDestinationChannelsFunc;
-		property Lib3MFVolumetricStack_GetDestinationChannelCountFunc: TLib3MFVolumetricStack_GetDestinationChannelCountFunc read FLib3MFVolumetricStack_GetDestinationChannelCountFunc;
-		property Lib3MFVolumetricStack_GetDestinationChannelFunc: TLib3MFVolumetricStack_GetDestinationChannelFunc read FLib3MFVolumetricStack_GetDestinationChannelFunc;
-		property Lib3MFVolumetricStack_AddDestinationChannelFunc: TLib3MFVolumetricStack_AddDestinationChannelFunc read FLib3MFVolumetricStack_AddDestinationChannelFunc;
-		property Lib3MFVolumetricStack_UpdateDestinationChannelFunc: TLib3MFVolumetricStack_UpdateDestinationChannelFunc read FLib3MFVolumetricStack_UpdateDestinationChannelFunc;
-		property Lib3MFVolumetricStack_UpdateDestinationChannelByNameFunc: TLib3MFVolumetricStack_UpdateDestinationChannelByNameFunc read FLib3MFVolumetricStack_UpdateDestinationChannelByNameFunc;
-		property Lib3MFVolumetricStack_RemoveDestinationChannelFunc: TLib3MFVolumetricStack_RemoveDestinationChannelFunc read FLib3MFVolumetricStack_RemoveDestinationChannelFunc;
-		property Lib3MFVolumetricStack_RemoveDestinationChannelByNameFunc: TLib3MFVolumetricStack_RemoveDestinationChannelByNameFunc read FLib3MFVolumetricStack_RemoveDestinationChannelByNameFunc;
-		property Lib3MFVolumetricStack_GetLayerCountFunc: TLib3MFVolumetricStack_GetLayerCountFunc read FLib3MFVolumetricStack_GetLayerCountFunc;
-		property Lib3MFVolumetricStack_GetLayerFunc: TLib3MFVolumetricStack_GetLayerFunc read FLib3MFVolumetricStack_GetLayerFunc;
-		property Lib3MFVolumetricStack_AddLayerFunc: TLib3MFVolumetricStack_AddLayerFunc read FLib3MFVolumetricStack_AddLayerFunc;
-		property Lib3MFVolumetricStack_ReindexLayerFunc: TLib3MFVolumetricStack_ReindexLayerFunc read FLib3MFVolumetricStack_ReindexLayerFunc;
-		property Lib3MFVolumetricStack_RemoveLayerFunc: TLib3MFVolumetricStack_RemoveLayerFunc read FLib3MFVolumetricStack_RemoveLayerFunc;
-		property Lib3MFVolumetricStack_RemoveLayerByIndexFunc: TLib3MFVolumetricStack_RemoveLayerByIndexFunc read FLib3MFVolumetricStack_RemoveLayerByIndexFunc;
+		property Lib3MFImage3D_GetNameFunc: TLib3MFImage3D_GetNameFunc read FLib3MFImage3D_GetNameFunc;
+		property Lib3MFImage3D_SetNameFunc: TLib3MFImage3D_SetNameFunc read FLib3MFImage3D_SetNameFunc;
+		property Lib3MFImage3D_IsImageStackFunc: TLib3MFImage3D_IsImageStackFunc read FLib3MFImage3D_IsImageStackFunc;
+		property Lib3MFImageStack_GetRowCountFunc: TLib3MFImageStack_GetRowCountFunc read FLib3MFImageStack_GetRowCountFunc;
+		property Lib3MFImageStack_SetRowCountFunc: TLib3MFImageStack_SetRowCountFunc read FLib3MFImageStack_SetRowCountFunc;
+		property Lib3MFImageStack_GetColumnCountFunc: TLib3MFImageStack_GetColumnCountFunc read FLib3MFImageStack_GetColumnCountFunc;
+		property Lib3MFImageStack_SetColumnCountFunc: TLib3MFImageStack_SetColumnCountFunc read FLib3MFImageStack_SetColumnCountFunc;
+		property Lib3MFImageStack_GetSheetCountFunc: TLib3MFImageStack_GetSheetCountFunc read FLib3MFImageStack_GetSheetCountFunc;
+		property Lib3MFImageStack_GetSheetFunc: TLib3MFImageStack_GetSheetFunc read FLib3MFImageStack_GetSheetFunc;
+		property Lib3MFImageStack_SetSheetFunc: TLib3MFImageStack_SetSheetFunc read FLib3MFImageStack_SetSheetFunc;
+		property Lib3MFImageStack_CreateEmptySheetFunc: TLib3MFImageStack_CreateEmptySheetFunc read FLib3MFImageStack_CreateEmptySheetFunc;
+		property Lib3MFImageStack_CreateSheetFromBufferFunc: TLib3MFImageStack_CreateSheetFromBufferFunc read FLib3MFImageStack_CreateSheetFromBufferFunc;
+		property Lib3MFImageStack_CreateSheetFromFileFunc: TLib3MFImageStack_CreateSheetFromFileFunc read FLib3MFImageStack_CreateSheetFromFileFunc;
 		property Lib3MFAttachment_GetPathFunc: TLib3MFAttachment_GetPathFunc read FLib3MFAttachment_GetPathFunc;
 		property Lib3MFAttachment_SetPathFunc: TLib3MFAttachment_SetPathFunc read FLib3MFAttachment_SetPathFunc;
 		property Lib3MFAttachment_PackagePartFunc: TLib3MFAttachment_PackagePartFunc read FLib3MFAttachment_PackagePartFunc;
@@ -7092,8 +7340,9 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFModel_GetMultiPropertyGroupsFunc: TLib3MFModel_GetMultiPropertyGroupsFunc read FLib3MFModel_GetMultiPropertyGroupsFunc;
 		property Lib3MFModel_GetSliceStacksFunc: TLib3MFModel_GetSliceStacksFunc read FLib3MFModel_GetSliceStacksFunc;
 		property Lib3MFModel_GetImage3DsFunc: TLib3MFModel_GetImage3DsFunc read FLib3MFModel_GetImage3DsFunc;
+		property Lib3MFModel_GetScalarFieldsFunc: TLib3MFModel_GetScalarFieldsFunc read FLib3MFModel_GetScalarFieldsFunc;
+		property Lib3MFModel_GetVector3DFieldsFunc: TLib3MFModel_GetVector3DFieldsFunc read FLib3MFModel_GetVector3DFieldsFunc;
 		property Lib3MFModel_MergeToModelFunc: TLib3MFModel_MergeToModelFunc read FLib3MFModel_MergeToModelFunc;
-		property Lib3MFModel_GetVolumetricStacksFunc: TLib3MFModel_GetVolumetricStacksFunc read FLib3MFModel_GetVolumetricStacksFunc;
 		property Lib3MFModel_AddMeshObjectFunc: TLib3MFModel_AddMeshObjectFunc read FLib3MFModel_AddMeshObjectFunc;
 		property Lib3MFModel_AddComponentsObjectFunc: TLib3MFModel_AddComponentsObjectFunc read FLib3MFModel_AddComponentsObjectFunc;
 		property Lib3MFModel_AddSliceStackFunc: TLib3MFModel_AddSliceStackFunc read FLib3MFModel_AddSliceStackFunc;
@@ -7103,8 +7352,17 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFModel_AddTexture2DGroupFunc: TLib3MFModel_AddTexture2DGroupFunc read FLib3MFModel_AddTexture2DGroupFunc;
 		property Lib3MFModel_AddCompositeMaterialsFunc: TLib3MFModel_AddCompositeMaterialsFunc read FLib3MFModel_AddCompositeMaterialsFunc;
 		property Lib3MFModel_AddMultiPropertyGroupFunc: TLib3MFModel_AddMultiPropertyGroupFunc read FLib3MFModel_AddMultiPropertyGroupFunc;
-		property Lib3MFModel_AddImage3DFunc: TLib3MFModel_AddImage3DFunc read FLib3MFModel_AddImage3DFunc;
-		property Lib3MFModel_AddVolumetricStackFunc: TLib3MFModel_AddVolumetricStackFunc read FLib3MFModel_AddVolumetricStackFunc;
+		property Lib3MFModel_AddImageStackFunc: TLib3MFModel_AddImageStackFunc read FLib3MFModel_AddImageStackFunc;
+		property Lib3MFModel_AddScalarFieldFromImage3DFunc: TLib3MFModel_AddScalarFieldFromImage3DFunc read FLib3MFModel_AddScalarFieldFromImage3DFunc;
+		property Lib3MFModel_AddScalarFieldComposedFunc: TLib3MFModel_AddScalarFieldComposedFunc read FLib3MFModel_AddScalarFieldComposedFunc;
+		property Lib3MFModel_GetScalarFieldByIDFunc: TLib3MFModel_GetScalarFieldByIDFunc read FLib3MFModel_GetScalarFieldByIDFunc;
+		property Lib3MFModel_GetScalarFieldFromImage3DByIDFunc: TLib3MFModel_GetScalarFieldFromImage3DByIDFunc read FLib3MFModel_GetScalarFieldFromImage3DByIDFunc;
+		property Lib3MFModel_GetScalarFieldComposedByIDFunc: TLib3MFModel_GetScalarFieldComposedByIDFunc read FLib3MFModel_GetScalarFieldComposedByIDFunc;
+		property Lib3MFModel_AddVector3DFieldFromImage3DFunc: TLib3MFModel_AddVector3DFieldFromImage3DFunc read FLib3MFModel_AddVector3DFieldFromImage3DFunc;
+		property Lib3MFModel_AddVector3DFieldComposedFunc: TLib3MFModel_AddVector3DFieldComposedFunc read FLib3MFModel_AddVector3DFieldComposedFunc;
+		property Lib3MFModel_GetVector3DFieldByIDFunc: TLib3MFModel_GetVector3DFieldByIDFunc read FLib3MFModel_GetVector3DFieldByIDFunc;
+		property Lib3MFModel_GetVector3DFieldFromImage3DByIDFunc: TLib3MFModel_GetVector3DFieldFromImage3DByIDFunc read FLib3MFModel_GetVector3DFieldFromImage3DByIDFunc;
+		property Lib3MFModel_GetVector3DFieldComposedByIDFunc: TLib3MFModel_GetVector3DFieldComposedByIDFunc read FLib3MFModel_GetVector3DFieldComposedByIDFunc;
 		property Lib3MFModel_AddBuildItemFunc: TLib3MFModel_AddBuildItemFunc read FLib3MFModel_AddBuildItemFunc;
 		property Lib3MFModel_RemoveBuildItemFunc: TLib3MFModel_RemoveBuildItemFunc read FLib3MFModel_RemoveBuildItemFunc;
 		property Lib3MFModel_GetMetaDataGroupFunc: TLib3MFModel_GetMetaDataGroupFunc read FLib3MFModel_GetMetaDataGroupFunc;
@@ -7194,8 +7452,10 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 	function convertConstToProgressIdentifier(const AValue: Integer): TLib3MFProgressIdentifier;
 	function convertBlendMethodToConst(const AValue: TLib3MFBlendMethod): Integer;
 	function convertConstToBlendMethod(const AValue: Integer): TLib3MFBlendMethod;
-	function convertColorChannelToConst(const AValue: TLib3MFColorChannel): Integer;
-	function convertConstToColorChannel(const AValue: Integer): TLib3MFColorChannel;
+	function convertChannelNameToConst(const AValue: TLib3MFChannelName): Integer;
+	function convertConstToChannelName(const AValue: Integer): TLib3MFChannelName;
+	function convertCompositionMethodToConst(const AValue: TLib3MFCompositionMethod): Integer;
+	function convertConstToCompositionMethod(const AValue: Integer): TLib3MFCompositionMethod;
 	function convertEncryptionAlgorithmToConst(const AValue: TLib3MFEncryptionAlgorithm): Integer;
 	function convertConstToEncryptionAlgorithm(const AValue: Integer): TLib3MFEncryptionAlgorithm;
 	function convertWrappingAlgorithmToConst(const AValue: TLib3MFWrappingAlgorithm): Integer;
@@ -7526,9 +7786,9 @@ implementation
 	function convertBlendMethodToConst(const AValue: TLib3MFBlendMethod): Integer;
 	begin
 		case AValue of
-			eBlendMethodMix: Result := 0;
-			eBlendMethodMultiply: Result := 1;
-			eBlendMethodMask: Result := 2;
+			eBlendMethodNoBlendMethod: Result := 0;
+			eBlendMethodMix: Result := 1;
+			eBlendMethodMultiply: Result := 2;
 			else 
 				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum value');
 		end;
@@ -7537,32 +7797,59 @@ implementation
 	function convertConstToBlendMethod(const AValue: Integer): TLib3MFBlendMethod;
 	begin
 		case AValue of
-			0: Result := eBlendMethodMix;
-			1: Result := eBlendMethodMultiply;
-			2: Result := eBlendMethodMask;
+			0: Result := eBlendMethodNoBlendMethod;
+			1: Result := eBlendMethodMix;
+			2: Result := eBlendMethodMultiply;
 			else 
 				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum constant');
 		end;
 	end;
 	
 	
-	function convertColorChannelToConst(const AValue: TLib3MFColorChannel): Integer;
+	function convertChannelNameToConst(const AValue: TLib3MFChannelName): Integer;
 	begin
 		case AValue of
-			eColorChannelRed: Result := 0;
-			eColorChannelGreen: Result := 1;
-			eColorChannelBlue: Result := 2;
+			eChannelNameRed: Result := 0;
+			eChannelNameGreen: Result := 1;
+			eChannelNameBlue: Result := 2;
 			else 
 				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum value');
 		end;
 	end;
 	
-	function convertConstToColorChannel(const AValue: Integer): TLib3MFColorChannel;
+	function convertConstToChannelName(const AValue: Integer): TLib3MFChannelName;
 	begin
 		case AValue of
-			0: Result := eColorChannelRed;
-			1: Result := eColorChannelGreen;
-			2: Result := eColorChannelBlue;
+			0: Result := eChannelNameRed;
+			1: Result := eChannelNameGreen;
+			2: Result := eChannelNameBlue;
+			else 
+				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum constant');
+		end;
+	end;
+	
+	
+	function convertCompositionMethodToConst(const AValue: TLib3MFCompositionMethod): Integer;
+	begin
+		case AValue of
+			eCompositionMethodWeightedSum: Result := 0;
+			eCompositionMethodMultiply: Result := 1;
+			eCompositionMethodMin: Result := 2;
+			eCompositionMethodMax: Result := 3;
+			eCompositionMethodMask: Result := 4;
+			else 
+				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum value');
+		end;
+	end;
+	
+	function convertConstToCompositionMethod(const AValue: Integer): TLib3MFCompositionMethod;
+	begin
+		case AValue of
+			0: Result := eCompositionMethodWeightedSum;
+			1: Result := eCompositionMethodMultiply;
+			2: Result := eCompositionMethodMin;
+			3: Result := eCompositionMethodMax;
+			4: Result := eCompositionMethodMask;
 			else 
 				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum constant');
 		end;
@@ -7723,7 +8010,6 @@ implementation
 			LIB3MF_ERROR_INVALIDPROPERTYCOUNT: ADescription := 'Invalid property count.';
 			LIB3MF_ERROR_UNKOWNPROGRESSIDENTIFIER: ADescription := 'A progress identifier is unknown';
 			LIB3MF_ERROR_ELEMENTCOUNTEXCEEDSLIMIT: ADescription := 'An element buffer exceeds its spec limit';
-			LIB3MF_ERROR_NOMASKCHANNELSELECTOR: ADescription := 'No mask channel selector.';
 			LIB3MF_ERROR_BEAMLATTICE_INVALID_OBJECTTYPE: ADescription := 'This object type is not valid for beamlattices';
 			LIB3MF_ERROR_INVALIDKEYSTORE: ADescription := 'The keystore object is invalid';
 			LIB3MF_ERROR_INVALIDKEYSTORECONSUMER: ADescription := 'The consumer keystore object is invalid';
@@ -8402,28 +8688,53 @@ implementation
 	end;
 
 (*************************************************************************************************************************
- Class implementation for VolumetricStackIterator
+ Class implementation for ScalarFieldIterator
 **************************************************************************************************************************)
 
-	constructor TLib3MFVolumetricStackIterator.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	constructor TLib3MFScalarFieldIterator.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
 	begin
 		inherited Create(AWrapper, AHandle);
 	end;
 
-	destructor TLib3MFVolumetricStackIterator.Destroy;
+	destructor TLib3MFScalarFieldIterator.Destroy;
 	begin
 		inherited;
 	end;
 
-	function TLib3MFVolumetricStackIterator.GetCurrentVolumetricStack(): TLib3MFVolumetricStack;
+	function TLib3MFScalarFieldIterator.GetCurrentScalarField(): TLib3MFScalarField;
 	var
 		HResource: TLib3MFHandle;
 	begin
 		Result := nil;
 		HResource := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumetricStackIterator_GetCurrentVolumetricStackFunc(FHandle, HResource));
+		FWrapper.CheckError(Self, FWrapper.Lib3MFScalarFieldIterator_GetCurrentScalarFieldFunc(FHandle, HResource));
 		if Assigned(HResource) then
-			Result := TLib3MFVolumetricStack.Create(FWrapper, HResource);
+			Result := TLib3MFScalarField.Create(FWrapper, HResource);
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for Vector3DFieldIterator
+**************************************************************************************************************************)
+
+	constructor TLib3MFVector3DFieldIterator.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFVector3DFieldIterator.Destroy;
+	begin
+		inherited;
+	end;
+
+	function TLib3MFVector3DFieldIterator.GetCurrentVector3DField(): TLib3MFVector3DField;
+	var
+		HResource: TLib3MFHandle;
+	begin
+		Result := nil;
+		HResource := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFVector3DFieldIterator_GetCurrentVector3DFieldFunc(FHandle, HResource));
+		if Assigned(HResource) then
+			Result := TLib3MFVector3DField.Create(FWrapper, HResource);
 	end;
 
 (*************************************************************************************************************************
@@ -9202,49 +9513,567 @@ implementation
 	end;
 
 (*************************************************************************************************************************
- Class implementation for VolumeDataItem
+ Class implementation for ScalarField
 **************************************************************************************************************************)
 
-	constructor TLib3MFVolumeDataItem.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	constructor TLib3MFScalarField.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
 	begin
 		inherited Create(AWrapper, AHandle);
 	end;
 
-	destructor TLib3MFVolumeDataItem.Destroy;
+	destructor TLib3MFScalarField.Destroy;
 	begin
 		inherited;
 	end;
 
-	function TLib3MFVolumeDataItem.GetVolumetricStack(): TLib3MFVolumetricStack;
+	function TLib3MFScalarField.GetName(): String;
 	var
-		HTheVolumetricStack: TLib3MFHandle;
+		bytesNeededName: Cardinal;
+		bytesWrittenName: Cardinal;
+		bufferName: array of Char;
+	begin
+		bytesNeededName:= 0;
+		bytesWrittenName:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFScalarField_GetNameFunc(FHandle, 0, bytesNeededName, nil));
+		SetLength(bufferName, bytesNeededName);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFScalarField_GetNameFunc(FHandle, bytesNeededName, bytesWrittenName, @bufferName[0]));
+		Result := StrPas(@bufferName[0]);
+	end;
+
+	procedure TLib3MFScalarField.SetName(const AName: String);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFScalarField_SetNameFunc(FHandle, PAnsiChar(AName)));
+	end;
+
+	function TLib3MFScalarField.IsFromImage3D(): Boolean;
+	var
+		ResultIsFromImage3D: Byte;
+	begin
+		ResultIsFromImage3D := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFScalarField_IsFromImage3DFunc(FHandle, ResultIsFromImage3D));
+		Result := (ResultIsFromImage3D <> 0);
+	end;
+
+	function TLib3MFScalarField.IsComposed(): Boolean;
+	var
+		ResultIsComposed: Byte;
+	begin
+		ResultIsComposed := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFScalarField_IsComposedFunc(FHandle, ResultIsComposed));
+		Result := (ResultIsComposed <> 0);
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for Vector3DField
+**************************************************************************************************************************)
+
+	constructor TLib3MFVector3DField.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFVector3DField.Destroy;
+	begin
+		inherited;
+	end;
+
+	function TLib3MFVector3DField.GetName(): String;
+	var
+		bytesNeededName: Cardinal;
+		bytesWrittenName: Cardinal;
+		bufferName: array of Char;
+	begin
+		bytesNeededName:= 0;
+		bytesWrittenName:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFVector3DField_GetNameFunc(FHandle, 0, bytesNeededName, nil));
+		SetLength(bufferName, bytesNeededName);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFVector3DField_GetNameFunc(FHandle, bytesNeededName, bytesWrittenName, @bufferName[0]));
+		Result := StrPas(@bufferName[0]);
+	end;
+
+	procedure TLib3MFVector3DField.SetName(const AName: String);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFVector3DField_SetNameFunc(FHandle, PAnsiChar(AName)));
+	end;
+
+	function TLib3MFVector3DField.IsFromImage3D(): Boolean;
+	var
+		ResultIsFromImage3D: Byte;
+	begin
+		ResultIsFromImage3D := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFVector3DField_IsFromImage3DFunc(FHandle, ResultIsFromImage3D));
+		Result := (ResultIsFromImage3D <> 0);
+	end;
+
+	function TLib3MFVector3DField.IsComposed(): Boolean;
+	var
+		ResultIsComposed: Byte;
+	begin
+		ResultIsComposed := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFVector3DField_IsComposedFunc(FHandle, ResultIsComposed));
+		Result := (ResultIsComposed <> 0);
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for ScalarFieldFromImage3D
+**************************************************************************************************************************)
+
+	constructor TLib3MFScalarFieldFromImage3D.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFScalarFieldFromImage3D.Destroy;
+	begin
+		inherited;
+	end;
+
+	function TLib3MFScalarFieldFromImage3D.GetImage(): TLib3MFImage3D;
+	var
+		HImage3D: TLib3MFHandle;
 	begin
 		Result := nil;
-		HTheVolumetricStack := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumeDataItem_GetVolumetricStackFunc(FHandle, HTheVolumetricStack));
-		if Assigned(HTheVolumetricStack) then
-			Result := TLib3MFVolumetricStack.Create(FWrapper, HTheVolumetricStack);
+		HImage3D := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFScalarFieldFromImage3D_GetImageFunc(FHandle, HImage3D));
+		if Assigned(HImage3D) then
+			Result := TLib3MFImage3D.Create(FWrapper, HImage3D);
 	end;
 
-	procedure TLib3MFVolumeDataItem.SetVolumetricStack(const ATheVolumetricStack: TLib3MFVolumetricStack);
+	procedure TLib3MFScalarFieldFromImage3D.SetImage(const AImage3D: TLib3MFImage3D);
 	var
-		ATheVolumetricStackHandle: TLib3MFHandle;
+		AImage3DHandle: TLib3MFHandle;
 	begin
-		if Assigned(ATheVolumetricStack) then
-		ATheVolumetricStackHandle := ATheVolumetricStack.TheHandle
+		if Assigned(AImage3D) then
+		AImage3DHandle := AImage3D.TheHandle
 		else
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'ATheVolumetricStack is a nil value.');
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumeDataItem_SetVolumetricStackFunc(FHandle, ATheVolumetricStackHandle));
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'AImage3D is a nil value.');
+		FWrapper.CheckError(Self, FWrapper.Lib3MFScalarFieldFromImage3D_SetImageFunc(FHandle, AImage3DHandle));
 	end;
 
-	function TLib3MFVolumeDataItem.GetTransform(): TLib3MFTransform;
+	procedure TLib3MFScalarFieldFromImage3D.SetChannel(const AName: TLib3MFChannelName);
 	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumeDataItem_GetTransformFunc(FHandle, @Result));
+		FWrapper.CheckError(Self, FWrapper.Lib3MFScalarFieldFromImage3D_SetChannelFunc(FHandle, convertChannelNameToConst(AName)));
 	end;
 
-	procedure TLib3MFVolumeDataItem.SetTransform(const ATransform: TLib3MFTransform);
+	function TLib3MFScalarFieldFromImage3D.GetChannel(): TLib3MFChannelName;
+	var
+		ResultName: Integer;
 	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumeDataItem_SetTransformFunc(FHandle, @ATransform));
+		ResultName := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFScalarFieldFromImage3D_GetChannelFunc(FHandle, ResultName));
+		Result := convertConstToChannelName(ResultName);
+	end;
+
+	procedure TLib3MFScalarFieldFromImage3D.SetFilter(const AFilter: TLib3MFTextureFilter);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFScalarFieldFromImage3D_SetFilterFunc(FHandle, convertTextureFilterToConst(AFilter)));
+	end;
+
+	function TLib3MFScalarFieldFromImage3D.GetFilter(): TLib3MFTextureFilter;
+	var
+		ResultFilter: Integer;
+	begin
+		ResultFilter := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFScalarFieldFromImage3D_GetFilterFunc(FHandle, ResultFilter));
+		Result := convertConstToTextureFilter(ResultFilter);
+	end;
+
+	procedure TLib3MFScalarFieldFromImage3D.SetTileStyles(const ATileStyleU: TLib3MFTextureTileStyle; const ATileStyleV: TLib3MFTextureTileStyle; const ATileStyleW: TLib3MFTextureTileStyle);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFScalarFieldFromImage3D_SetTileStylesFunc(FHandle, convertTextureTileStyleToConst(ATileStyleU), convertTextureTileStyleToConst(ATileStyleV), convertTextureTileStyleToConst(ATileStyleW)));
+	end;
+
+	procedure TLib3MFScalarFieldFromImage3D.GetTileStyles(out ATileStyleU: TLib3MFTextureTileStyle; out ATileStyleV: TLib3MFTextureTileStyle; out ATileStyleW: TLib3MFTextureTileStyle);
+	var
+		ResultTileStyleU: Integer;
+		ResultTileStyleV: Integer;
+		ResultTileStyleW: Integer;
+	begin
+		ResultTileStyleU := 0;
+		ResultTileStyleV := 0;
+		ResultTileStyleW := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFScalarFieldFromImage3D_GetTileStylesFunc(FHandle, ResultTileStyleU, ResultTileStyleV, ResultTileStyleW));
+		ATileStyleU := convertConstToTextureTileStyle(ResultTileStyleU);
+		ATileStyleV := convertConstToTextureTileStyle(ResultTileStyleV);
+		ATileStyleW := convertConstToTextureTileStyle(ResultTileStyleW);
+	end;
+
+	function TLib3MFScalarFieldFromImage3D.GetOffset(): Double;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFScalarFieldFromImage3D_GetOffsetFunc(FHandle, Result));
+	end;
+
+	procedure TLib3MFScalarFieldFromImage3D.SetOffset(const AOffset: Double);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFScalarFieldFromImage3D_SetOffsetFunc(FHandle, AOffset));
+	end;
+
+	function TLib3MFScalarFieldFromImage3D.GetScale(): Double;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFScalarFieldFromImage3D_GetScaleFunc(FHandle, Result));
+	end;
+
+	procedure TLib3MFScalarFieldFromImage3D.SetScale(const AScale: Double);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFScalarFieldFromImage3D_SetScaleFunc(FHandle, AScale));
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for ScalarFieldComposed
+**************************************************************************************************************************)
+
+	constructor TLib3MFScalarFieldComposed.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFScalarFieldComposed.Destroy;
+	begin
+		inherited;
+	end;
+
+	procedure TLib3MFScalarFieldComposed.SetMethod(const ATheMethod: TLib3MFCompositionMethod);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFScalarFieldComposed_SetMethodFunc(FHandle, convertCompositionMethodToConst(ATheMethod)));
+	end;
+
+	function TLib3MFScalarFieldComposed.GetMethod(): TLib3MFCompositionMethod;
+	var
+		ResultTheMethod: Integer;
+	begin
+		ResultTheMethod := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFScalarFieldComposed_GetMethodFunc(FHandle, ResultTheMethod));
+		Result := convertConstToCompositionMethod(ResultTheMethod);
+	end;
+
+	function TLib3MFScalarFieldComposed.GetFactor1(): Double;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFScalarFieldComposed_GetFactor1Func(FHandle, Result));
+	end;
+
+	procedure TLib3MFScalarFieldComposed.SetFactor1(const AFactor1: Double);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFScalarFieldComposed_SetFactor1Func(FHandle, AFactor1));
+	end;
+
+	function TLib3MFScalarFieldComposed.GetFactor2(): Double;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFScalarFieldComposed_GetFactor2Func(FHandle, Result));
+	end;
+
+	procedure TLib3MFScalarFieldComposed.SetFactor2(const AFactor2: Double);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFScalarFieldComposed_SetFactor2Func(FHandle, AFactor2));
+	end;
+
+	function TLib3MFScalarFieldComposed.ScalarFieldReference1(): TLib3MFScalarFieldReference;
+	var
+		HTheScalarFieldReference1: TLib3MFHandle;
+	begin
+		Result := nil;
+		HTheScalarFieldReference1 := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFScalarFieldComposed_ScalarFieldReference1Func(FHandle, HTheScalarFieldReference1));
+		if Assigned(HTheScalarFieldReference1) then
+			Result := TLib3MFScalarFieldReference.Create(FWrapper, HTheScalarFieldReference1);
+	end;
+
+	function TLib3MFScalarFieldComposed.ScalarFieldReference2(): TLib3MFScalarFieldReference;
+	var
+		HTheScalarFieldReference1: TLib3MFHandle;
+	begin
+		Result := nil;
+		HTheScalarFieldReference1 := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFScalarFieldComposed_ScalarFieldReference2Func(FHandle, HTheScalarFieldReference1));
+		if Assigned(HTheScalarFieldReference1) then
+			Result := TLib3MFScalarFieldReference.Create(FWrapper, HTheScalarFieldReference1);
+	end;
+
+	function TLib3MFScalarFieldComposed.ScalarFieldReferenceMask(): TLib3MFScalarFieldReference;
+	var
+		HTheScalarFieldReferenceMask: TLib3MFHandle;
+	begin
+		Result := nil;
+		HTheScalarFieldReferenceMask := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFScalarFieldComposed_ScalarFieldReferenceMaskFunc(FHandle, HTheScalarFieldReferenceMask));
+		if Assigned(HTheScalarFieldReferenceMask) then
+			Result := TLib3MFScalarFieldReference.Create(FWrapper, HTheScalarFieldReferenceMask);
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for Vector3DFieldFromImage3D
+**************************************************************************************************************************)
+
+	constructor TLib3MFVector3DFieldFromImage3D.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFVector3DFieldFromImage3D.Destroy;
+	begin
+		inherited;
+	end;
+
+	function TLib3MFVector3DFieldFromImage3D.GetImage(): TLib3MFImage3D;
+	var
+		HImage3D: TLib3MFHandle;
+	begin
+		Result := nil;
+		HImage3D := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFVector3DFieldFromImage3D_GetImageFunc(FHandle, HImage3D));
+		if Assigned(HImage3D) then
+			Result := TLib3MFImage3D.Create(FWrapper, HImage3D);
+	end;
+
+	procedure TLib3MFVector3DFieldFromImage3D.SetImage(const AImage3D: TLib3MFImage3D);
+	var
+		AImage3DHandle: TLib3MFHandle;
+	begin
+		if Assigned(AImage3D) then
+		AImage3DHandle := AImage3D.TheHandle
+		else
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'AImage3D is a nil value.');
+		FWrapper.CheckError(Self, FWrapper.Lib3MFVector3DFieldFromImage3D_SetImageFunc(FHandle, AImage3DHandle));
+	end;
+
+	procedure TLib3MFVector3DFieldFromImage3D.SetFilter(const AFilter: TLib3MFTextureFilter);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFVector3DFieldFromImage3D_SetFilterFunc(FHandle, convertTextureFilterToConst(AFilter)));
+	end;
+
+	function TLib3MFVector3DFieldFromImage3D.GetFilter(): TLib3MFTextureFilter;
+	var
+		ResultFilter: Integer;
+	begin
+		ResultFilter := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFVector3DFieldFromImage3D_GetFilterFunc(FHandle, ResultFilter));
+		Result := convertConstToTextureFilter(ResultFilter);
+	end;
+
+	procedure TLib3MFVector3DFieldFromImage3D.SetTileStyles(const ATileStyleU: TLib3MFTextureTileStyle; const ATileStyleV: TLib3MFTextureTileStyle; const ATileStyleW: TLib3MFTextureTileStyle);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFVector3DFieldFromImage3D_SetTileStylesFunc(FHandle, convertTextureTileStyleToConst(ATileStyleU), convertTextureTileStyleToConst(ATileStyleV), convertTextureTileStyleToConst(ATileStyleW)));
+	end;
+
+	procedure TLib3MFVector3DFieldFromImage3D.GetTileStyles(out ATileStyleU: TLib3MFTextureTileStyle; out ATileStyleV: TLib3MFTextureTileStyle; out ATileStyleW: TLib3MFTextureTileStyle);
+	var
+		ResultTileStyleU: Integer;
+		ResultTileStyleV: Integer;
+		ResultTileStyleW: Integer;
+	begin
+		ResultTileStyleU := 0;
+		ResultTileStyleV := 0;
+		ResultTileStyleW := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFVector3DFieldFromImage3D_GetTileStylesFunc(FHandle, ResultTileStyleU, ResultTileStyleV, ResultTileStyleW));
+		ATileStyleU := convertConstToTextureTileStyle(ResultTileStyleU);
+		ATileStyleV := convertConstToTextureTileStyle(ResultTileStyleV);
+		ATileStyleW := convertConstToTextureTileStyle(ResultTileStyleW);
+	end;
+
+	function TLib3MFVector3DFieldFromImage3D.GetOffset(): Double;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFVector3DFieldFromImage3D_GetOffsetFunc(FHandle, Result));
+	end;
+
+	procedure TLib3MFVector3DFieldFromImage3D.SetOffset(const AOffset: Double);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFVector3DFieldFromImage3D_SetOffsetFunc(FHandle, AOffset));
+	end;
+
+	function TLib3MFVector3DFieldFromImage3D.GetScale(): Double;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFVector3DFieldFromImage3D_GetScaleFunc(FHandle, Result));
+	end;
+
+	procedure TLib3MFVector3DFieldFromImage3D.SetScale(const AScale: Double);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFVector3DFieldFromImage3D_SetScaleFunc(FHandle, AScale));
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for Vector3DFieldComposed
+**************************************************************************************************************************)
+
+	constructor TLib3MFVector3DFieldComposed.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFVector3DFieldComposed.Destroy;
+	begin
+		inherited;
+	end;
+
+	procedure TLib3MFVector3DFieldComposed.SetMethod(const ATheMethod: TLib3MFCompositionMethod);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFVector3DFieldComposed_SetMethodFunc(FHandle, convertCompositionMethodToConst(ATheMethod)));
+	end;
+
+	function TLib3MFVector3DFieldComposed.GetMethod(): TLib3MFCompositionMethod;
+	var
+		ResultTheMethod: Integer;
+	begin
+		ResultTheMethod := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFVector3DFieldComposed_GetMethodFunc(FHandle, ResultTheMethod));
+		Result := convertConstToCompositionMethod(ResultTheMethod);
+	end;
+
+	function TLib3MFVector3DFieldComposed.GetFactor1(): Double;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFVector3DFieldComposed_GetFactor1Func(FHandle, Result));
+	end;
+
+	procedure TLib3MFVector3DFieldComposed.SetFactor1(const AFactor1: Double);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFVector3DFieldComposed_SetFactor1Func(FHandle, AFactor1));
+	end;
+
+	function TLib3MFVector3DFieldComposed.GetFactor2(): Double;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFVector3DFieldComposed_GetFactor2Func(FHandle, Result));
+	end;
+
+	procedure TLib3MFVector3DFieldComposed.SetFactor2(const AFactor2: Double);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFVector3DFieldComposed_SetFactor2Func(FHandle, AFactor2));
+	end;
+
+	function TLib3MFVector3DFieldComposed.Vector3DFieldReference1(): TLib3MFVector3DFieldReference;
+	var
+		HTheVector3DFieldReference1: TLib3MFHandle;
+	begin
+		Result := nil;
+		HTheVector3DFieldReference1 := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFVector3DFieldComposed_Vector3DFieldReference1Func(FHandle, HTheVector3DFieldReference1));
+		if Assigned(HTheVector3DFieldReference1) then
+			Result := TLib3MFVector3DFieldReference.Create(FWrapper, HTheVector3DFieldReference1);
+	end;
+
+	function TLib3MFVector3DFieldComposed.Vector3DFieldReference2(): TLib3MFVector3DFieldReference;
+	var
+		HTheVector3DFieldReference1: TLib3MFHandle;
+	begin
+		Result := nil;
+		HTheVector3DFieldReference1 := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFVector3DFieldComposed_Vector3DFieldReference2Func(FHandle, HTheVector3DFieldReference1));
+		if Assigned(HTheVector3DFieldReference1) then
+			Result := TLib3MFVector3DFieldReference.Create(FWrapper, HTheVector3DFieldReference1);
+	end;
+
+	function TLib3MFVector3DFieldComposed.ScalarFieldReferenceMask(): TLib3MFScalarFieldReference;
+	var
+		HTheScalarFieldReferenceMask: TLib3MFHandle;
+	begin
+		Result := nil;
+		HTheScalarFieldReferenceMask := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFVector3DFieldComposed_ScalarFieldReferenceMaskFunc(FHandle, HTheScalarFieldReferenceMask));
+		if Assigned(HTheScalarFieldReferenceMask) then
+			Result := TLib3MFScalarFieldReference.Create(FWrapper, HTheScalarFieldReferenceMask);
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for FieldReference
+**************************************************************************************************************************)
+
+	constructor TLib3MFFieldReference.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFFieldReference.Destroy;
+	begin
+		inherited;
+	end;
+
+	function TLib3MFFieldReference.GetFieldResourceID(): Cardinal;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFFieldReference_GetFieldResourceIDFunc(FHandle, Result));
+	end;
+
+	procedure TLib3MFFieldReference.SetFieldResourceID(const AUniqueResourceID: Cardinal);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFFieldReference_SetFieldResourceIDFunc(FHandle, AUniqueResourceID));
+	end;
+
+	function TLib3MFFieldReference.GetTransform(): TLib3MFTransform;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFFieldReference_GetTransformFunc(FHandle, @Result));
+	end;
+
+	procedure TLib3MFFieldReference.SetTransform(const ATransform: TLib3MFTransform);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFFieldReference_SetTransformFunc(FHandle, @ATransform));
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for ScalarFieldReference
+**************************************************************************************************************************)
+
+	constructor TLib3MFScalarFieldReference.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFScalarFieldReference.Destroy;
+	begin
+		inherited;
+	end;
+
+	function TLib3MFScalarFieldReference.GetScalarField(): TLib3MFScalarField;
+	var
+		HTheScalarField: TLib3MFHandle;
+	begin
+		Result := nil;
+		HTheScalarField := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFScalarFieldReference_GetScalarFieldFunc(FHandle, HTheScalarField));
+		if Assigned(HTheScalarField) then
+			Result := TLib3MFScalarField.Create(FWrapper, HTheScalarField);
+	end;
+
+	procedure TLib3MFScalarFieldReference.SetScalarField(const ATheScalarField: TLib3MFScalarField);
+	var
+		ATheScalarFieldHandle: TLib3MFHandle;
+	begin
+		if Assigned(ATheScalarField) then
+		ATheScalarFieldHandle := ATheScalarField.TheHandle
+		else
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'ATheScalarField is a nil value.');
+		FWrapper.CheckError(Self, FWrapper.Lib3MFScalarFieldReference_SetScalarFieldFunc(FHandle, ATheScalarFieldHandle));
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for Vector3DFieldReference
+**************************************************************************************************************************)
+
+	constructor TLib3MFVector3DFieldReference.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFVector3DFieldReference.Destroy;
+	begin
+		inherited;
+	end;
+
+	function TLib3MFVector3DFieldReference.GetVector3DField(): TLib3MFVector3DField;
+	var
+		HTheVector3DField: TLib3MFHandle;
+	begin
+		Result := nil;
+		HTheVector3DField := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFVector3DFieldReference_GetVector3DFieldFunc(FHandle, HTheVector3DField));
+		if Assigned(HTheVector3DField) then
+			Result := TLib3MFVector3DField.Create(FWrapper, HTheVector3DField);
+	end;
+
+	procedure TLib3MFVector3DFieldReference.SetVector3DField(const ATheVector3DField: TLib3MFVector3DField);
+	var
+		ATheVector3DFieldHandle: TLib3MFHandle;
+	begin
+		if Assigned(ATheVector3DField) then
+		ATheVector3DFieldHandle := ATheVector3DField.TheHandle
+		else
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'ATheVector3DField is a nil value.');
+		FWrapper.CheckError(Self, FWrapper.Lib3MFVector3DFieldReference_SetVector3DFieldFunc(FHandle, ATheVector3DFieldHandle));
 	end;
 
 (*************************************************************************************************************************
@@ -9271,25 +10100,6 @@ implementation
 		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumeDataLevelset_SetSolidThresholdFunc(FHandle, ATheSolidThreshold));
 	end;
 
-	procedure TLib3MFVolumeDataLevelset.SetChannel(const AChannelName: String);
-	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumeDataLevelset_SetChannelFunc(FHandle, PAnsiChar(AChannelName)));
-	end;
-
-	function TLib3MFVolumeDataLevelset.GetChannel(): String;
-	var
-		bytesNeededChannelName: Cardinal;
-		bytesWrittenChannelName: Cardinal;
-		bufferChannelName: array of Char;
-	begin
-		bytesNeededChannelName:= 0;
-		bytesWrittenChannelName:= 0;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumeDataLevelset_GetChannelFunc(FHandle, 0, bytesNeededChannelName, nil));
-		SetLength(bufferChannelName, bytesNeededChannelName);
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumeDataLevelset_GetChannelFunc(FHandle, bytesNeededChannelName, bytesWrittenChannelName, @bufferChannelName[0]));
-		Result := StrPas(@bufferChannelName[0]);
-	end;
-
 (*************************************************************************************************************************
  Class implementation for VolumeDataColor
 **************************************************************************************************************************)
@@ -9304,23 +10114,18 @@ implementation
 		inherited;
 	end;
 
-	procedure TLib3MFVolumeDataColor.SetChannel(const ATheColorChannel: TLib3MFColorChannel; const AChannelName: String);
+(*************************************************************************************************************************
+ Class implementation for MaterialMapping
+**************************************************************************************************************************)
+
+	constructor TLib3MFMaterialMapping.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
 	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumeDataColor_SetChannelFunc(FHandle, convertColorChannelToConst(ATheColorChannel), PAnsiChar(AChannelName)));
+		inherited Create(AWrapper, AHandle);
 	end;
 
-	function TLib3MFVolumeDataColor.GetChannel(const ATheColorChannel: TLib3MFColorChannel): String;
-	var
-		bytesNeededChannelName: Cardinal;
-		bytesWrittenChannelName: Cardinal;
-		bufferChannelName: array of Char;
+	destructor TLib3MFMaterialMapping.Destroy;
 	begin
-		bytesNeededChannelName:= 0;
-		bytesWrittenChannelName:= 0;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumeDataColor_GetChannelFunc(FHandle, convertColorChannelToConst(ATheColorChannel), 0, bytesNeededChannelName, nil));
-		SetLength(bufferChannelName, bytesNeededChannelName);
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumeDataColor_GetChannelFunc(FHandle, convertColorChannelToConst(ATheColorChannel), bytesNeededChannelName, bytesWrittenChannelName, @bufferChannelName[0]));
-		Result := StrPas(@bufferChannelName[0]);
+		inherited;
 	end;
 
 (*************************************************************************************************************************
@@ -9364,37 +10169,26 @@ implementation
 		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumeDataComposite_GetMaterialMappingCountFunc(FHandle, Result));
 	end;
 
-	procedure TLib3MFVolumeDataComposite.GetMaterialMapping(const AIndex: Cardinal; out APropertyID: Cardinal; out AChannelName: String);
+	function TLib3MFVolumeDataComposite.GetMaterialMapping(const AIndex: Cardinal): TLib3MFMaterialMapping;
 	var
-		bytesNeededChannelName: Cardinal;
-		bytesWrittenChannelName: Cardinal;
-		bufferChannelName: array of Char;
+		HTheMaterialMapping: TLib3MFHandle;
 	begin
-		bytesNeededChannelName:= 0;
-		bytesWrittenChannelName:= 0;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumeDataComposite_GetMaterialMappingFunc(FHandle, AIndex, APropertyID, 0, bytesNeededChannelName, nil));
-		SetLength(bufferChannelName, bytesNeededChannelName);
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumeDataComposite_GetMaterialMappingFunc(FHandle, AIndex, APropertyID, bytesNeededChannelName, bytesWrittenChannelName, @bufferChannelName[0]));
-		AChannelName := StrPas(@bufferChannelName[0]);
+		Result := nil;
+		HTheMaterialMapping := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumeDataComposite_GetMaterialMappingFunc(FHandle, AIndex, HTheMaterialMapping));
+		if Assigned(HTheMaterialMapping) then
+			Result := TLib3MFMaterialMapping.Create(FWrapper, HTheMaterialMapping);
 	end;
 
-	procedure TLib3MFVolumeDataComposite.SetMaterialMapping(const AIndex: Cardinal; out APropertyID: Cardinal; out AChannelName: String);
+	function TLib3MFVolumeDataComposite.AddMaterialMapping(const ATransform: TLib3MFTransform): TLib3MFMaterialMapping;
 	var
-		bytesNeededChannelName: Cardinal;
-		bytesWrittenChannelName: Cardinal;
-		bufferChannelName: array of Char;
+		HTheMaterialMapping: TLib3MFHandle;
 	begin
-		bytesNeededChannelName:= 0;
-		bytesWrittenChannelName:= 0;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumeDataComposite_SetMaterialMappingFunc(FHandle, AIndex, APropertyID, 0, bytesNeededChannelName, nil));
-		SetLength(bufferChannelName, bytesNeededChannelName);
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumeDataComposite_SetMaterialMappingFunc(FHandle, AIndex, APropertyID, bytesNeededChannelName, bytesWrittenChannelName, @bufferChannelName[0]));
-		AChannelName := StrPas(@bufferChannelName[0]);
-	end;
-
-	procedure TLib3MFVolumeDataComposite.AddMaterialMapping(const APropertyID: Cardinal; const AChannelName: String);
-	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumeDataComposite_AddMaterialMappingFunc(FHandle, APropertyID, PAnsiChar(AChannelName)));
+		Result := nil;
+		HTheMaterialMapping := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumeDataComposite_AddMaterialMappingFunc(FHandle, @ATransform, HTheMaterialMapping));
+		if Assigned(HTheMaterialMapping) then
+			Result := TLib3MFMaterialMapping.Create(FWrapper, HTheMaterialMapping);
 	end;
 
 	procedure TLib3MFVolumeDataComposite.RemoveMaterialMapping(const AIndex: Cardinal);
@@ -9414,25 +10208,6 @@ implementation
 	destructor TLib3MFVolumeDataProperty.Destroy;
 	begin
 		inherited;
-	end;
-
-	procedure TLib3MFVolumeDataProperty.SetChannel(const AChannelName: String);
-	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumeDataProperty_SetChannelFunc(FHandle, PAnsiChar(AChannelName)));
-	end;
-
-	function TLib3MFVolumeDataProperty.GetChannel(): String;
-	var
-		bytesNeededChannelName: Cardinal;
-		bytesWrittenChannelName: Cardinal;
-		bufferChannelName: array of Char;
-	begin
-		bytesNeededChannelName:= 0;
-		bytesWrittenChannelName:= 0;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumeDataProperty_GetChannelFunc(FHandle, 0, bytesNeededChannelName, nil));
-		SetLength(bufferChannelName, bytesNeededChannelName);
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumeDataProperty_GetChannelFunc(FHandle, bytesNeededChannelName, bytesWrittenChannelName, @bufferChannelName[0]));
-		Result := StrPas(@bufferChannelName[0]);
 	end;
 
 	procedure TLib3MFVolumeDataProperty.SetName(const APropertyName: String);
@@ -9493,20 +10268,25 @@ implementation
 			Result := TLib3MFVolumeDataLevelset.Create(FWrapper, HTheLevelsetData);
 	end;
 
-	function TLib3MFVolumeData.CreateNewLevelset(const ATheVolumetricStack: TLib3MFVolumetricStack): TLib3MFVolumeDataLevelset;
+	function TLib3MFVolumeData.CreateNewLevelset(const ATheScalarField: TLib3MFScalarField; const ATransform: TLib3MFTransform): TLib3MFVolumeDataLevelset;
 	var
-		ATheVolumetricStackHandle: TLib3MFHandle;
+		ATheScalarFieldHandle: TLib3MFHandle;
 		HTheLevelsetData: TLib3MFHandle;
 	begin
-		if Assigned(ATheVolumetricStack) then
-		ATheVolumetricStackHandle := ATheVolumetricStack.TheHandle
+		if Assigned(ATheScalarField) then
+		ATheScalarFieldHandle := ATheScalarField.TheHandle
 		else
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'ATheVolumetricStack is a nil value.');
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'ATheScalarField is a nil value.');
 		Result := nil;
 		HTheLevelsetData := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumeData_CreateNewLevelsetFunc(FHandle, ATheVolumetricStackHandle, HTheLevelsetData));
+		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumeData_CreateNewLevelsetFunc(FHandle, ATheScalarFieldHandle, @ATransform, HTheLevelsetData));
 		if Assigned(HTheLevelsetData) then
 			Result := TLib3MFVolumeDataLevelset.Create(FWrapper, HTheLevelsetData);
+	end;
+
+	procedure TLib3MFVolumeData.RemoveLevelset();
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumeData_RemoveLevelsetFunc(FHandle));
 	end;
 
 	function TLib3MFVolumeData.GetComposite(): TLib3MFVolumeDataComposite;
@@ -9520,20 +10300,20 @@ implementation
 			Result := TLib3MFVolumeDataComposite.Create(FWrapper, HTheCompositeData);
 	end;
 
-	function TLib3MFVolumeData.CreateNewComposite(const ATheVolumetricStack: TLib3MFVolumetricStack): TLib3MFVolumeDataComposite;
+	function TLib3MFVolumeData.CreateNewComposite(): TLib3MFVolumeDataComposite;
 	var
-		ATheVolumetricStackHandle: TLib3MFHandle;
 		HTheCompositeData: TLib3MFHandle;
 	begin
-		if Assigned(ATheVolumetricStack) then
-		ATheVolumetricStackHandle := ATheVolumetricStack.TheHandle
-		else
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'ATheVolumetricStack is a nil value.');
 		Result := nil;
 		HTheCompositeData := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumeData_CreateNewCompositeFunc(FHandle, ATheVolumetricStackHandle, HTheCompositeData));
+		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumeData_CreateNewCompositeFunc(FHandle, HTheCompositeData));
 		if Assigned(HTheCompositeData) then
 			Result := TLib3MFVolumeDataComposite.Create(FWrapper, HTheCompositeData);
+	end;
+
+	procedure TLib3MFVolumeData.RemoveComposite();
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumeData_RemoveCompositeFunc(FHandle));
 	end;
 
 	function TLib3MFVolumeData.GetColor(): TLib3MFVolumeDataColor;
@@ -9547,20 +10327,25 @@ implementation
 			Result := TLib3MFVolumeDataColor.Create(FWrapper, HTheColorData);
 	end;
 
-	function TLib3MFVolumeData.CreateNewColor(const ATheVolumetricStack: TLib3MFVolumetricStack): TLib3MFVolumeDataColor;
+	function TLib3MFVolumeData.CreateNewColor(const ATheVector3DField: TLib3MFVector3DField; const ATransform: TLib3MFTransform): TLib3MFVolumeDataColor;
 	var
-		ATheVolumetricStackHandle: TLib3MFHandle;
+		ATheVector3DFieldHandle: TLib3MFHandle;
 		HTheColorData: TLib3MFHandle;
 	begin
-		if Assigned(ATheVolumetricStack) then
-		ATheVolumetricStackHandle := ATheVolumetricStack.TheHandle
+		if Assigned(ATheVector3DField) then
+		ATheVector3DFieldHandle := ATheVector3DField.TheHandle
 		else
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'ATheVolumetricStack is a nil value.');
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'ATheVector3DField is a nil value.');
 		Result := nil;
 		HTheColorData := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumeData_CreateNewColorFunc(FHandle, ATheVolumetricStackHandle, HTheColorData));
+		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumeData_CreateNewColorFunc(FHandle, ATheVector3DFieldHandle, @ATransform, HTheColorData));
 		if Assigned(HTheColorData) then
 			Result := TLib3MFVolumeDataColor.Create(FWrapper, HTheColorData);
+	end;
+
+	procedure TLib3MFVolumeData.RemoveColor();
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumeData_RemoveColorFunc(FHandle));
 	end;
 
 	function TLib3MFVolumeData.GetPropertyCount(): Cardinal;
@@ -9570,45 +10355,29 @@ implementation
 
 	function TLib3MFVolumeData.GetProperty(const AIndex: Cardinal): TLib3MFVolumeDataProperty;
 	var
-		HThePropertyData: TLib3MFHandle;
+		HTheVolumeDataProperty: TLib3MFHandle;
 	begin
 		Result := nil;
-		HThePropertyData := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumeData_GetPropertyFunc(FHandle, AIndex, HThePropertyData));
-		if Assigned(HThePropertyData) then
-			Result := TLib3MFVolumeDataProperty.Create(FWrapper, HThePropertyData);
+		HTheVolumeDataProperty := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumeData_GetPropertyFunc(FHandle, AIndex, HTheVolumeDataProperty));
+		if Assigned(HTheVolumeDataProperty) then
+			Result := TLib3MFVolumeDataProperty.Create(FWrapper, HTheVolumeDataProperty);
 	end;
 
-	function TLib3MFVolumeData.FindProperty(const AName: String): TLib3MFVolumeDataProperty;
+	function TLib3MFVolumeData.AddProperty(const AName: String; const AUniqueResourceID: Cardinal): TLib3MFVolumeDataProperty;
 	var
-		HThePropertyData: TLib3MFHandle;
+		HTheVolumeDataProperty: TLib3MFHandle;
 	begin
 		Result := nil;
-		HThePropertyData := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumeData_FindPropertyFunc(FHandle, PAnsiChar(AName), HThePropertyData));
-		if Assigned(HThePropertyData) then
-			Result := TLib3MFVolumeDataProperty.Create(FWrapper, HThePropertyData);
+		HTheVolumeDataProperty := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumeData_AddPropertyFunc(FHandle, PAnsiChar(AName), AUniqueResourceID, HTheVolumeDataProperty));
+		if Assigned(HTheVolumeDataProperty) then
+			Result := TLib3MFVolumeDataProperty.Create(FWrapper, HTheVolumeDataProperty);
 	end;
 
-	function TLib3MFVolumeData.AddProperty(const AName: String; const ATheVolumetricStack: TLib3MFVolumetricStack): TLib3MFVolumeDataProperty;
-	var
-		ATheVolumetricStackHandle: TLib3MFHandle;
-		HThePropertyData: TLib3MFHandle;
+	procedure TLib3MFVolumeData.RemoveProperty(const AIndex: Cardinal);
 	begin
-		if Assigned(ATheVolumetricStack) then
-		ATheVolumetricStackHandle := ATheVolumetricStack.TheHandle
-		else
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'ATheVolumetricStack is a nil value.');
-		Result := nil;
-		HThePropertyData := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumeData_AddPropertyFunc(FHandle, PAnsiChar(AName), ATheVolumetricStackHandle, HThePropertyData));
-		if Assigned(HThePropertyData) then
-			Result := TLib3MFVolumeDataProperty.Create(FWrapper, HThePropertyData);
-	end;
-
-	procedure TLib3MFVolumeData.RemoveProperty(const AName: String);
-	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumeData_RemovePropertyFunc(FHandle, PAnsiChar(AName)));
+		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumeData_RemovePropertyFunc(FHandle, AIndex));
 	end;
 
 (*************************************************************************************************************************
@@ -10213,54 +10982,107 @@ implementation
 		inherited;
 	end;
 
-	function TLib3MFImage3D.GetSizeX(): Cardinal;
+	function TLib3MFImage3D.GetName(): String;
+	var
+		bytesNeededName: Cardinal;
+		bytesWrittenName: Cardinal;
+		bufferName: array of Char;
 	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImage3D_GetSizeXFunc(FHandle, Result));
+		bytesNeededName:= 0;
+		bytesWrittenName:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImage3D_GetNameFunc(FHandle, 0, bytesNeededName, nil));
+		SetLength(bufferName, bytesNeededName);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImage3D_GetNameFunc(FHandle, bytesNeededName, bytesWrittenName, @bufferName[0]));
+		Result := StrPas(@bufferName[0]);
 	end;
 
-	function TLib3MFImage3D.GetSizeY(): Cardinal;
+	procedure TLib3MFImage3D.SetName(const AName: String);
 	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImage3D_GetSizeYFunc(FHandle, Result));
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImage3D_SetNameFunc(FHandle, PAnsiChar(AName)));
 	end;
 
-	function TLib3MFImage3D.GetSheetCount(): Cardinal;
+	function TLib3MFImage3D.IsImageStack(): Boolean;
+	var
+		ResultIsImageStack: Byte;
 	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImage3D_GetSheetCountFunc(FHandle, Result));
+		ResultIsImageStack := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImage3D_IsImageStackFunc(FHandle, ResultIsImageStack));
+		Result := (ResultIsImageStack <> 0);
 	end;
 
-	function TLib3MFImage3D.GetSheet(const AIndex: Cardinal): TLib3MFAttachment;
+(*************************************************************************************************************************
+ Class implementation for ImageStack
+**************************************************************************************************************************)
+
+	constructor TLib3MFImageStack.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFImageStack.Destroy;
+	begin
+		inherited;
+	end;
+
+	function TLib3MFImageStack.GetRowCount(): Cardinal;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImageStack_GetRowCountFunc(FHandle, Result));
+	end;
+
+	procedure TLib3MFImageStack.SetRowCount(const ARowCount: Cardinal);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImageStack_SetRowCountFunc(FHandle, ARowCount));
+	end;
+
+	function TLib3MFImageStack.GetColumnCount(): Cardinal;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImageStack_GetColumnCountFunc(FHandle, Result));
+	end;
+
+	procedure TLib3MFImageStack.SetColumnCount(const AColumnCount: Cardinal);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImageStack_SetColumnCountFunc(FHandle, AColumnCount));
+	end;
+
+	function TLib3MFImageStack.GetSheetCount(): Cardinal;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImageStack_GetSheetCountFunc(FHandle, Result));
+	end;
+
+	function TLib3MFImageStack.GetSheet(const AIndex: Cardinal): TLib3MFAttachment;
 	var
 		HSheet: TLib3MFHandle;
 	begin
 		Result := nil;
 		HSheet := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImage3D_GetSheetFunc(FHandle, AIndex, HSheet));
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImageStack_GetSheetFunc(FHandle, AIndex, HSheet));
 		if Assigned(HSheet) then
 			Result := TLib3MFAttachment.Create(FWrapper, HSheet);
 	end;
 
-	function TLib3MFImage3D.GetSheetMinValue(const AIndex: Cardinal): Double;
+	procedure TLib3MFImageStack.SetSheet(const AIndex: Cardinal; const ASheet: TLib3MFAttachment);
+	var
+		ASheetHandle: TLib3MFHandle;
 	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImage3D_GetSheetMinValueFunc(FHandle, AIndex, Result));
+		if Assigned(ASheet) then
+		ASheetHandle := ASheet.TheHandle
+		else
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'ASheet is a nil value.');
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImageStack_SetSheetFunc(FHandle, AIndex, ASheetHandle));
 	end;
 
-	function TLib3MFImage3D.GetSheetMaxValue(const AIndex: Cardinal): Double;
-	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImage3D_GetSheetMaxValueFunc(FHandle, AIndex, Result));
-	end;
-
-	function TLib3MFImage3D.CreateEmptySheet(const AIndex: Cardinal; const APath: String; const AMin: Double; const AMax: Double): TLib3MFAttachment;
+	function TLib3MFImageStack.CreateEmptySheet(const APath: String): TLib3MFAttachment;
 	var
 		HSheet: TLib3MFHandle;
 	begin
 		Result := nil;
 		HSheet := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImage3D_CreateEmptySheetFunc(FHandle, AIndex, PAnsiChar(APath), AMin, AMax, HSheet));
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImageStack_CreateEmptySheetFunc(FHandle, PAnsiChar(APath), HSheet));
 		if Assigned(HSheet) then
 			Result := TLib3MFAttachment.Create(FWrapper, HSheet);
 	end;
 
-	function TLib3MFImage3D.CreateSheetFromBuffer(const AIndex: Cardinal; const APath: String; const AData: TByteDynArray; const AMin: Double; const AMax: Double): TLib3MFAttachment;
+	function TLib3MFImageStack.CreateSheetFromBuffer(const APath: String; const AData: TByteDynArray): TLib3MFAttachment;
 	var
 		PtrData: PByte;
 		LenData: QWord;
@@ -10276,448 +11098,20 @@ implementation
 		
 		Result := nil;
 		HSheet := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImage3D_CreateSheetFromBufferFunc(FHandle, AIndex, PAnsiChar(APath), QWord(LenData), PtrData, AMin, AMax, HSheet));
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImageStack_CreateSheetFromBufferFunc(FHandle, PAnsiChar(APath), QWord(LenData), PtrData, HSheet));
 		if Assigned(HSheet) then
 			Result := TLib3MFAttachment.Create(FWrapper, HSheet);
 	end;
 
-	function TLib3MFImage3D.CreateSheetFromFile(const AIndex: Cardinal; const APath: String; const AFileName: String; const AMin: Double; const AMax: Double): TLib3MFAttachment;
+	function TLib3MFImageStack.CreateSheetFromFile(const APath: String; const AFileName: String): TLib3MFAttachment;
 	var
 		HSheet: TLib3MFHandle;
 	begin
 		Result := nil;
 		HSheet := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImage3D_CreateSheetFromFileFunc(FHandle, AIndex, PAnsiChar(APath), PAnsiChar(AFileName), AMin, AMax, HSheet));
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImageStack_CreateSheetFromFileFunc(FHandle, PAnsiChar(APath), PAnsiChar(AFileName), HSheet));
 		if Assigned(HSheet) then
 			Result := TLib3MFAttachment.Create(FWrapper, HSheet);
-	end;
-
-	procedure TLib3MFImage3D.SetSheet(const AIndex: Cardinal; const ASheet: TLib3MFAttachment);
-	var
-		ASheetHandle: TLib3MFHandle;
-	begin
-		if Assigned(ASheet) then
-		ASheetHandle := ASheet.TheHandle
-		else
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'ASheet is a nil value.');
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImage3D_SetSheetFunc(FHandle, AIndex, ASheetHandle));
-	end;
-
-	procedure TLib3MFImage3D.SetSheetMinValue(const AIndex: Cardinal; const AMinVal: Double);
-	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImage3D_SetSheetMinValueFunc(FHandle, AIndex, AMinVal));
-	end;
-
-	procedure TLib3MFImage3D.SetSheetMaxValue(const AIndex: Cardinal; const AMaxVal: Double);
-	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImage3D_SetSheetMaxValueFunc(FHandle, AIndex, AMaxVal));
-	end;
-
-(*************************************************************************************************************************
- Class implementation for Image3DChannelSelector
-**************************************************************************************************************************)
-
-	constructor TLib3MFImage3DChannelSelector.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
-	begin
-		inherited Create(AWrapper, AHandle);
-	end;
-
-	destructor TLib3MFImage3DChannelSelector.Destroy;
-	begin
-		inherited;
-	end;
-
-	function TLib3MFImage3DChannelSelector.GetImage(): TLib3MFImage3D;
-	var
-		HImage3D: TLib3MFHandle;
-	begin
-		Result := nil;
-		HImage3D := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImage3DChannelSelector_GetImageFunc(FHandle, HImage3D));
-		if Assigned(HImage3D) then
-			Result := TLib3MFImage3D.Create(FWrapper, HImage3D);
-	end;
-
-	procedure TLib3MFImage3DChannelSelector.SetImage(const AImage3D: TLib3MFImage3D);
-	var
-		AImage3DHandle: TLib3MFHandle;
-	begin
-		if Assigned(AImage3D) then
-		AImage3DHandle := AImage3D.TheHandle
-		else
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'AImage3D is a nil value.');
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImage3DChannelSelector_SetImageFunc(FHandle, AImage3DHandle));
-	end;
-
-	procedure TLib3MFImage3DChannelSelector.SetSourceChannel(const AChannelName: String);
-	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImage3DChannelSelector_SetSourceChannelFunc(FHandle, PAnsiChar(AChannelName)));
-	end;
-
-	function TLib3MFImage3DChannelSelector.GetSourceChannel(): String;
-	var
-		bytesNeededChannelName: Cardinal;
-		bytesWrittenChannelName: Cardinal;
-		bufferChannelName: array of Char;
-	begin
-		bytesNeededChannelName:= 0;
-		bytesWrittenChannelName:= 0;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImage3DChannelSelector_GetSourceChannelFunc(FHandle, 0, bytesNeededChannelName, nil));
-		SetLength(bufferChannelName, bytesNeededChannelName);
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImage3DChannelSelector_GetSourceChannelFunc(FHandle, bytesNeededChannelName, bytesWrittenChannelName, @bufferChannelName[0]));
-		Result := StrPas(@bufferChannelName[0]);
-	end;
-
-	procedure TLib3MFImage3DChannelSelector.SetDestinationChannel(const AChannelName: String);
-	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImage3DChannelSelector_SetDestinationChannelFunc(FHandle, PAnsiChar(AChannelName)));
-	end;
-
-	function TLib3MFImage3DChannelSelector.GetDestinationChannel(): String;
-	var
-		bytesNeededChannelName: Cardinal;
-		bytesWrittenChannelName: Cardinal;
-		bufferChannelName: array of Char;
-	begin
-		bytesNeededChannelName:= 0;
-		bytesWrittenChannelName:= 0;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImage3DChannelSelector_GetDestinationChannelFunc(FHandle, 0, bytesNeededChannelName, nil));
-		SetLength(bufferChannelName, bytesNeededChannelName);
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImage3DChannelSelector_GetDestinationChannelFunc(FHandle, bytesNeededChannelName, bytesWrittenChannelName, @bufferChannelName[0]));
-		Result := StrPas(@bufferChannelName[0]);
-	end;
-
-	procedure TLib3MFImage3DChannelSelector.SetFilter(const AFilter: TLib3MFTextureFilter);
-	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImage3DChannelSelector_SetFilterFunc(FHandle, convertTextureFilterToConst(AFilter)));
-	end;
-
-	function TLib3MFImage3DChannelSelector.GetFilter(): TLib3MFTextureFilter;
-	var
-		ResultFilter: Integer;
-	begin
-		ResultFilter := 0;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImage3DChannelSelector_GetFilterFunc(FHandle, ResultFilter));
-		Result := convertConstToTextureFilter(ResultFilter);
-	end;
-
-	procedure TLib3MFImage3DChannelSelector.SetTileStyles(const ATileStyleU: TLib3MFTextureTileStyle; const ATileStyleV: TLib3MFTextureTileStyle; const ATileStyleW: TLib3MFTextureTileStyle);
-	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImage3DChannelSelector_SetTileStylesFunc(FHandle, convertTextureTileStyleToConst(ATileStyleU), convertTextureTileStyleToConst(ATileStyleV), convertTextureTileStyleToConst(ATileStyleW)));
-	end;
-
-	procedure TLib3MFImage3DChannelSelector.GetTileStyles(out ATileStyleU: TLib3MFTextureTileStyle; out ATileStyleV: TLib3MFTextureTileStyle; out ATileStyleW: TLib3MFTextureTileStyle);
-	var
-		ResultTileStyleU: Integer;
-		ResultTileStyleV: Integer;
-		ResultTileStyleW: Integer;
-	begin
-		ResultTileStyleU := 0;
-		ResultTileStyleV := 0;
-		ResultTileStyleW := 0;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImage3DChannelSelector_GetTileStylesFunc(FHandle, ResultTileStyleU, ResultTileStyleV, ResultTileStyleW));
-		ATileStyleU := convertConstToTextureTileStyle(ResultTileStyleU);
-		ATileStyleV := convertConstToTextureTileStyle(ResultTileStyleV);
-		ATileStyleW := convertConstToTextureTileStyle(ResultTileStyleW);
-	end;
-
-(*************************************************************************************************************************
- Class implementation for VolumetricLayer
-**************************************************************************************************************************)
-
-	constructor TLib3MFVolumetricLayer.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
-	begin
-		inherited Create(AWrapper, AHandle);
-	end;
-
-	destructor TLib3MFVolumetricLayer.Destroy;
-	begin
-		inherited;
-	end;
-
-	function TLib3MFVolumetricLayer.GetTransform(): TLib3MFTransform;
-	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumetricLayer_GetTransformFunc(FHandle, @Result));
-	end;
-
-	procedure TLib3MFVolumetricLayer.SetTransform(const ATransform: TLib3MFTransform);
-	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumetricLayer_SetTransformFunc(FHandle, @ATransform));
-	end;
-
-	function TLib3MFVolumetricLayer.GetBlendMethod(): TLib3MFBlendMethod;
-	var
-		ResultBlendMethod: Integer;
-	begin
-		ResultBlendMethod := 0;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumetricLayer_GetBlendMethodFunc(FHandle, ResultBlendMethod));
-		Result := convertConstToBlendMethod(ResultBlendMethod);
-	end;
-
-	procedure TLib3MFVolumetricLayer.SetBlendMethod(const ABlendMethod: TLib3MFBlendMethod);
-	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumetricLayer_SetBlendMethodFunc(FHandle, convertBlendMethodToConst(ABlendMethod)));
-	end;
-
-	function TLib3MFVolumetricLayer.GetSourceAlpha(): Double;
-	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumetricLayer_GetSourceAlphaFunc(FHandle, Result));
-	end;
-
-	procedure TLib3MFVolumetricLayer.SetSourceAlpha(const ASourceAlpha: Double);
-	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumetricLayer_SetSourceAlphaFunc(FHandle, ASourceAlpha));
-	end;
-
-	function TLib3MFVolumetricLayer.GetDestinationAlpha(): Double;
-	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumetricLayer_GetDestinationAlphaFunc(FHandle, Result));
-	end;
-
-	procedure TLib3MFVolumetricLayer.SetDestinationAlpha(const ADestinationAlpha: Double);
-	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumetricLayer_SetDestinationAlphaFunc(FHandle, ADestinationAlpha));
-	end;
-
-	procedure TLib3MFVolumetricLayer.GetInformation(out ATransform: TLib3MFTransform; out ABlendMethod: TLib3MFBlendMethod; out ASourceAlpha: Double; out ADestinationAlpha: Double);
-	var
-		ResultBlendMethod: Integer;
-	begin
-		ResultBlendMethod := 0;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumetricLayer_GetInformationFunc(FHandle, @ATransform, ResultBlendMethod, ASourceAlpha, ADestinationAlpha));
-		ABlendMethod := convertConstToBlendMethod(ResultBlendMethod);
-	end;
-
-	procedure TLib3MFVolumetricLayer.SetInformation(const ATransform: TLib3MFTransform; const ABlendMethod: TLib3MFBlendMethod; const ASourceAlpha: Double; const ADestinationAlpha: Double);
-	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumetricLayer_SetInformationFunc(FHandle, @ATransform, convertBlendMethodToConst(ABlendMethod), ASourceAlpha, ADestinationAlpha));
-	end;
-
-	function TLib3MFVolumetricLayer.CreateMaskChannelSelector(const AImage3D: TLib3MFImage3D; const ASourceChannel: String; const ADestinationChannel: String): TLib3MFImage3DChannelSelector;
-	var
-		AImage3DHandle: TLib3MFHandle;
-		HChannelSelector: TLib3MFHandle;
-	begin
-		if Assigned(AImage3D) then
-		AImage3DHandle := AImage3D.TheHandle
-		else
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'AImage3D is a nil value.');
-		Result := nil;
-		HChannelSelector := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumetricLayer_CreateMaskChannelSelectorFunc(FHandle, AImage3DHandle, PAnsiChar(ASourceChannel), PAnsiChar(ADestinationChannel), HChannelSelector));
-		if Assigned(HChannelSelector) then
-			Result := TLib3MFImage3DChannelSelector.Create(FWrapper, HChannelSelector);
-	end;
-
-	function TLib3MFVolumetricLayer.HasMaskChannelSelector(): Boolean;
-	var
-		ResultSelectorExists: Byte;
-	begin
-		ResultSelectorExists := 0;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumetricLayer_HasMaskChannelSelectorFunc(FHandle, ResultSelectorExists));
-		Result := (ResultSelectorExists <> 0);
-	end;
-
-	procedure TLib3MFVolumetricLayer.ClearMaskChannelSelector();
-	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumetricLayer_ClearMaskChannelSelectorFunc(FHandle));
-	end;
-
-	function TLib3MFVolumetricLayer.GetMaskChannelSelector(): TLib3MFImage3DChannelSelector;
-	var
-		HChannelSelector: TLib3MFHandle;
-	begin
-		Result := nil;
-		HChannelSelector := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumetricLayer_GetMaskChannelSelectorFunc(FHandle, HChannelSelector));
-		if Assigned(HChannelSelector) then
-			Result := TLib3MFImage3DChannelSelector.Create(FWrapper, HChannelSelector);
-	end;
-
-	function TLib3MFVolumetricLayer.GetChannelSelectorCount(): Cardinal;
-	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumetricLayer_GetChannelSelectorCountFunc(FHandle, Result));
-	end;
-
-	function TLib3MFVolumetricLayer.GetChannelSelector(const AIndex: Cardinal): TLib3MFImage3DChannelSelector;
-	var
-		HChannelSelector: TLib3MFHandle;
-	begin
-		Result := nil;
-		HChannelSelector := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumetricLayer_GetChannelSelectorFunc(FHandle, AIndex, HChannelSelector));
-		if Assigned(HChannelSelector) then
-			Result := TLib3MFImage3DChannelSelector.Create(FWrapper, HChannelSelector);
-	end;
-
-	function TLib3MFVolumetricLayer.AddChannelSelector(const AImage3D: TLib3MFImage3D; const ASourceChannel: String; const ADestinationChannel: String): TLib3MFImage3DChannelSelector;
-	var
-		AImage3DHandle: TLib3MFHandle;
-		HChannelSelector: TLib3MFHandle;
-	begin
-		if Assigned(AImage3D) then
-		AImage3DHandle := AImage3D.TheHandle
-		else
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'AImage3D is a nil value.');
-		Result := nil;
-		HChannelSelector := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumetricLayer_AddChannelSelectorFunc(FHandle, AImage3DHandle, PAnsiChar(ASourceChannel), PAnsiChar(ADestinationChannel), HChannelSelector));
-		if Assigned(HChannelSelector) then
-			Result := TLib3MFImage3DChannelSelector.Create(FWrapper, HChannelSelector);
-	end;
-
-	procedure TLib3MFVolumetricLayer.ClearChannelSelectors();
-	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumetricLayer_ClearChannelSelectorsFunc(FHandle));
-	end;
-
-	procedure TLib3MFVolumetricLayer.ReindexChannelSelector(const AChannelSelector: TLib3MFImage3DChannelSelector; const AIndex: Cardinal);
-	var
-		AChannelSelectorHandle: TLib3MFHandle;
-	begin
-		if Assigned(AChannelSelector) then
-		AChannelSelectorHandle := AChannelSelector.TheHandle
-		else
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'AChannelSelector is a nil value.');
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumetricLayer_ReindexChannelSelectorFunc(FHandle, AChannelSelectorHandle, AIndex));
-	end;
-
-	procedure TLib3MFVolumetricLayer.RemoveChannelSelector(const AChannelSelector: TLib3MFImage3DChannelSelector);
-	var
-		AChannelSelectorHandle: TLib3MFHandle;
-	begin
-		if Assigned(AChannelSelector) then
-		AChannelSelectorHandle := AChannelSelector.TheHandle
-		else
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'AChannelSelector is a nil value.');
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumetricLayer_RemoveChannelSelectorFunc(FHandle, AChannelSelectorHandle));
-	end;
-
-	procedure TLib3MFVolumetricLayer.RemoveChannelSelectorByIndex(const AIndex: Cardinal);
-	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumetricLayer_RemoveChannelSelectorByIndexFunc(FHandle, AIndex));
-	end;
-
-(*************************************************************************************************************************
- Class implementation for VolumetricStack
-**************************************************************************************************************************)
-
-	constructor TLib3MFVolumetricStack.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
-	begin
-		inherited Create(AWrapper, AHandle);
-	end;
-
-	destructor TLib3MFVolumetricStack.Destroy;
-	begin
-		inherited;
-	end;
-
-	procedure TLib3MFVolumetricStack.Clear();
-	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumetricStack_ClearFunc(FHandle));
-	end;
-
-	procedure TLib3MFVolumetricStack.ClearUnusedDestinationChannels();
-	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumetricStack_ClearUnusedDestinationChannelsFunc(FHandle));
-	end;
-
-	function TLib3MFVolumetricStack.GetDestinationChannelCount(): Cardinal;
-	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumetricStack_GetDestinationChannelCountFunc(FHandle, Result));
-	end;
-
-	procedure TLib3MFVolumetricStack.GetDestinationChannel(const AIndex: Cardinal; out AName: String; out ABackground: Double);
-	var
-		bytesNeededName: Cardinal;
-		bytesWrittenName: Cardinal;
-		bufferName: array of Char;
-	begin
-		bytesNeededName:= 0;
-		bytesWrittenName:= 0;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumetricStack_GetDestinationChannelFunc(FHandle, AIndex, 0, bytesNeededName, nil, ABackground));
-		SetLength(bufferName, bytesNeededName);
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumetricStack_GetDestinationChannelFunc(FHandle, AIndex, bytesNeededName, bytesWrittenName, @bufferName[0], ABackground));
-		AName := StrPas(@bufferName[0]);
-	end;
-
-	function TLib3MFVolumetricStack.AddDestinationChannel(const AName: String; const ABackground: Double): Cardinal;
-	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumetricStack_AddDestinationChannelFunc(FHandle, PAnsiChar(AName), ABackground, Result));
-	end;
-
-	procedure TLib3MFVolumetricStack.UpdateDestinationChannel(const AIndex: Cardinal; const ABackground: Double);
-	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumetricStack_UpdateDestinationChannelFunc(FHandle, AIndex, ABackground));
-	end;
-
-	procedure TLib3MFVolumetricStack.UpdateDestinationChannelByName(const AName: String; const ABackground: Double);
-	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumetricStack_UpdateDestinationChannelByNameFunc(FHandle, PAnsiChar(AName), ABackground));
-	end;
-
-	procedure TLib3MFVolumetricStack.RemoveDestinationChannel(const AIndex: Cardinal);
-	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumetricStack_RemoveDestinationChannelFunc(FHandle, AIndex));
-	end;
-
-	procedure TLib3MFVolumetricStack.RemoveDestinationChannelByName(const AName: String);
-	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumetricStack_RemoveDestinationChannelByNameFunc(FHandle, PAnsiChar(AName)));
-	end;
-
-	function TLib3MFVolumetricStack.GetLayerCount(): Cardinal;
-	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumetricStack_GetLayerCountFunc(FHandle, Result));
-	end;
-
-	function TLib3MFVolumetricStack.GetLayer(const AIndex: Cardinal): TLib3MFVolumetricLayer;
-	var
-		HLayer: TLib3MFHandle;
-	begin
-		Result := nil;
-		HLayer := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumetricStack_GetLayerFunc(FHandle, AIndex, HLayer));
-		if Assigned(HLayer) then
-			Result := TLib3MFVolumetricLayer.Create(FWrapper, HLayer);
-	end;
-
-	function TLib3MFVolumetricStack.AddLayer(const ATransform: TLib3MFTransform; const ABlendMethod: TLib3MFBlendMethod): TLib3MFVolumetricLayer;
-	var
-		HLayer: TLib3MFHandle;
-	begin
-		Result := nil;
-		HLayer := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumetricStack_AddLayerFunc(FHandle, @ATransform, convertBlendMethodToConst(ABlendMethod), HLayer));
-		if Assigned(HLayer) then
-			Result := TLib3MFVolumetricLayer.Create(FWrapper, HLayer);
-	end;
-
-	procedure TLib3MFVolumetricStack.ReindexLayer(const ALayer: TLib3MFVolumetricLayer; const AIndex: Cardinal);
-	var
-		ALayerHandle: TLib3MFHandle;
-	begin
-		if Assigned(ALayer) then
-		ALayerHandle := ALayer.TheHandle
-		else
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'ALayer is a nil value.');
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumetricStack_ReindexLayerFunc(FHandle, ALayerHandle, AIndex));
-	end;
-
-	procedure TLib3MFVolumetricStack.RemoveLayer(const ALayer: TLib3MFVolumetricLayer);
-	var
-		ALayerHandle: TLib3MFHandle;
-	begin
-		if Assigned(ALayer) then
-		ALayerHandle := ALayer.TheHandle
-		else
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'ALayer is a nil value.');
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumetricStack_RemoveLayerFunc(FHandle, ALayerHandle));
-	end;
-
-	procedure TLib3MFVolumetricStack.RemoveLayerByIndex(const AIndex: Cardinal);
-	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumetricStack_RemoveLayerByIndexFunc(FHandle, AIndex));
 	end;
 
 (*************************************************************************************************************************
@@ -12206,6 +12600,28 @@ implementation
 			Result := TLib3MFImage3DIterator.Create(FWrapper, HResourceIterator);
 	end;
 
+	function TLib3MFModel.GetScalarFields(): TLib3MFScalarFieldIterator;
+	var
+		HResourceIterator: TLib3MFHandle;
+	begin
+		Result := nil;
+		HResourceIterator := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFModel_GetScalarFieldsFunc(FHandle, HResourceIterator));
+		if Assigned(HResourceIterator) then
+			Result := TLib3MFScalarFieldIterator.Create(FWrapper, HResourceIterator);
+	end;
+
+	function TLib3MFModel.GetVector3DFields(): TLib3MFVector3DFieldIterator;
+	var
+		HResourceIterator: TLib3MFHandle;
+	begin
+		Result := nil;
+		HResourceIterator := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFModel_GetVector3DFieldsFunc(FHandle, HResourceIterator));
+		if Assigned(HResourceIterator) then
+			Result := TLib3MFVector3DFieldIterator.Create(FWrapper, HResourceIterator);
+	end;
+
 	function TLib3MFModel.MergeToModel(): TLib3MFModel;
 	var
 		HMergedModelInstance: TLib3MFHandle;
@@ -12215,17 +12631,6 @@ implementation
 		FWrapper.CheckError(Self, FWrapper.Lib3MFModel_MergeToModelFunc(FHandle, HMergedModelInstance));
 		if Assigned(HMergedModelInstance) then
 			Result := TLib3MFModel.Create(FWrapper, HMergedModelInstance);
-	end;
-
-	function TLib3MFModel.GetVolumetricStacks(): TLib3MFVolumetricStackIterator;
-	var
-		HResourceIterator: TLib3MFHandle;
-	begin
-		Result := nil;
-		HResourceIterator := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFModel_GetVolumetricStacksFunc(FHandle, HResourceIterator));
-		if Assigned(HResourceIterator) then
-			Result := TLib3MFVolumetricStackIterator.Create(FWrapper, HResourceIterator);
 	end;
 
 	function TLib3MFModel.AddMeshObject(): TLib3MFMeshObject;
@@ -12342,26 +12747,125 @@ implementation
 			Result := TLib3MFMultiPropertyGroup.Create(FWrapper, HMultiPropertyGroupInstance);
 	end;
 
-	function TLib3MFModel.AddImage3D(const ASizeX: Cardinal; const ASizeY: Cardinal; const ASheetCount: Cardinal): TLib3MFImage3D;
+	function TLib3MFModel.AddImageStack(const AColumnCount: Cardinal; const ARowCount: Cardinal; const ASheetCount: Cardinal): TLib3MFImageStack;
 	var
 		HInstance: TLib3MFHandle;
 	begin
 		Result := nil;
 		HInstance := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFModel_AddImage3DFunc(FHandle, ASizeX, ASizeY, ASheetCount, HInstance));
+		FWrapper.CheckError(Self, FWrapper.Lib3MFModel_AddImageStackFunc(FHandle, AColumnCount, ARowCount, ASheetCount, HInstance));
 		if Assigned(HInstance) then
-			Result := TLib3MFImage3D.Create(FWrapper, HInstance);
+			Result := TLib3MFImageStack.Create(FWrapper, HInstance);
 	end;
 
-	function TLib3MFModel.AddVolumetricStack(): TLib3MFVolumetricStack;
+	function TLib3MFModel.AddScalarFieldFromImage3D(): TLib3MFScalarFieldFromImage3D;
 	var
-		HInstance: TLib3MFHandle;
+		HTheScalarFieldFromImage3D: TLib3MFHandle;
 	begin
 		Result := nil;
-		HInstance := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFModel_AddVolumetricStackFunc(FHandle, HInstance));
-		if Assigned(HInstance) then
-			Result := TLib3MFVolumetricStack.Create(FWrapper, HInstance);
+		HTheScalarFieldFromImage3D := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFModel_AddScalarFieldFromImage3DFunc(FHandle, HTheScalarFieldFromImage3D));
+		if Assigned(HTheScalarFieldFromImage3D) then
+			Result := TLib3MFScalarFieldFromImage3D.Create(FWrapper, HTheScalarFieldFromImage3D);
+	end;
+
+	function TLib3MFModel.AddScalarFieldComposed(): TLib3MFScalarFieldComposed;
+	var
+		HTheScalarFieldComposed: TLib3MFHandle;
+	begin
+		Result := nil;
+		HTheScalarFieldComposed := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFModel_AddScalarFieldComposedFunc(FHandle, HTheScalarFieldComposed));
+		if Assigned(HTheScalarFieldComposed) then
+			Result := TLib3MFScalarFieldComposed.Create(FWrapper, HTheScalarFieldComposed);
+	end;
+
+	function TLib3MFModel.GetScalarFieldByID(const AUniqueResourceID: Cardinal): TLib3MFScalarField;
+	var
+		HScalarFieldInstance: TLib3MFHandle;
+	begin
+		Result := nil;
+		HScalarFieldInstance := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFModel_GetScalarFieldByIDFunc(FHandle, AUniqueResourceID, HScalarFieldInstance));
+		if Assigned(HScalarFieldInstance) then
+			Result := TLib3MFScalarField.Create(FWrapper, HScalarFieldInstance);
+	end;
+
+	function TLib3MFModel.GetScalarFieldFromImage3DByID(const AUniqueResourceID: Cardinal): TLib3MFScalarFieldFromImage3D;
+	var
+		HScalarFieldFromImage3DInstance: TLib3MFHandle;
+	begin
+		Result := nil;
+		HScalarFieldFromImage3DInstance := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFModel_GetScalarFieldFromImage3DByIDFunc(FHandle, AUniqueResourceID, HScalarFieldFromImage3DInstance));
+		if Assigned(HScalarFieldFromImage3DInstance) then
+			Result := TLib3MFScalarFieldFromImage3D.Create(FWrapper, HScalarFieldFromImage3DInstance);
+	end;
+
+	function TLib3MFModel.GetScalarFieldComposedByID(const AUniqueResourceID: Cardinal): TLib3MFScalarFieldComposed;
+	var
+		HScalarFieldComposedInstance: TLib3MFHandle;
+	begin
+		Result := nil;
+		HScalarFieldComposedInstance := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFModel_GetScalarFieldComposedByIDFunc(FHandle, AUniqueResourceID, HScalarFieldComposedInstance));
+		if Assigned(HScalarFieldComposedInstance) then
+			Result := TLib3MFScalarFieldComposed.Create(FWrapper, HScalarFieldComposedInstance);
+	end;
+
+	function TLib3MFModel.AddVector3DFieldFromImage3D(): TLib3MFVector3DFieldFromImage3D;
+	var
+		HTheVector3DFieldFromImage3D: TLib3MFHandle;
+	begin
+		Result := nil;
+		HTheVector3DFieldFromImage3D := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFModel_AddVector3DFieldFromImage3DFunc(FHandle, HTheVector3DFieldFromImage3D));
+		if Assigned(HTheVector3DFieldFromImage3D) then
+			Result := TLib3MFVector3DFieldFromImage3D.Create(FWrapper, HTheVector3DFieldFromImage3D);
+	end;
+
+	function TLib3MFModel.AddVector3DFieldComposed(): TLib3MFVector3DFieldComposed;
+	var
+		HTheVector3DFieldComposed: TLib3MFHandle;
+	begin
+		Result := nil;
+		HTheVector3DFieldComposed := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFModel_AddVector3DFieldComposedFunc(FHandle, HTheVector3DFieldComposed));
+		if Assigned(HTheVector3DFieldComposed) then
+			Result := TLib3MFVector3DFieldComposed.Create(FWrapper, HTheVector3DFieldComposed);
+	end;
+
+	function TLib3MFModel.GetVector3DFieldByID(const AUniqueResourceID: Cardinal): TLib3MFVector3DField;
+	var
+		HVector3DFieldInstance: TLib3MFHandle;
+	begin
+		Result := nil;
+		HVector3DFieldInstance := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFModel_GetVector3DFieldByIDFunc(FHandle, AUniqueResourceID, HVector3DFieldInstance));
+		if Assigned(HVector3DFieldInstance) then
+			Result := TLib3MFVector3DField.Create(FWrapper, HVector3DFieldInstance);
+	end;
+
+	function TLib3MFModel.GetVector3DFieldFromImage3DByID(const AUniqueResourceID: Cardinal): TLib3MFVector3DFieldFromImage3D;
+	var
+		HVector3DFieldFromImage3DInstance: TLib3MFHandle;
+	begin
+		Result := nil;
+		HVector3DFieldFromImage3DInstance := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFModel_GetVector3DFieldFromImage3DByIDFunc(FHandle, AUniqueResourceID, HVector3DFieldFromImage3DInstance));
+		if Assigned(HVector3DFieldFromImage3DInstance) then
+			Result := TLib3MFVector3DFieldFromImage3D.Create(FWrapper, HVector3DFieldFromImage3DInstance);
+	end;
+
+	function TLib3MFModel.GetVector3DFieldComposedByID(const AUniqueResourceID: Cardinal): TLib3MFVector3DFieldComposed;
+	var
+		HVector3DFieldComposedInstance: TLib3MFHandle;
+	begin
+		Result := nil;
+		HVector3DFieldComposedInstance := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFModel_GetVector3DFieldComposedByIDFunc(FHandle, AUniqueResourceID, HVector3DFieldComposedInstance));
+		if Assigned(HVector3DFieldComposedInstance) then
+			Result := TLib3MFVector3DFieldComposed.Create(FWrapper, HVector3DFieldComposedInstance);
 	end;
 
 	function TLib3MFModel.AddBuildItem(const AObject: TLib3MFObject; const ATransform: TLib3MFTransform): TLib3MFBuildItem;
@@ -12585,7 +13089,8 @@ implementation
 		FLib3MFCompositeMaterialsIterator_GetCurrentCompositeMaterialsFunc := LoadFunction('lib3mf_compositematerialsiterator_getcurrentcompositematerials');
 		FLib3MFMultiPropertyGroupIterator_GetCurrentMultiPropertyGroupFunc := LoadFunction('lib3mf_multipropertygroupiterator_getcurrentmultipropertygroup');
 		FLib3MFImage3DIterator_GetCurrentImage3DFunc := LoadFunction('lib3mf_image3diterator_getcurrentimage3d');
-		FLib3MFVolumetricStackIterator_GetCurrentVolumetricStackFunc := LoadFunction('lib3mf_volumetricstackiterator_getcurrentvolumetricstack');
+		FLib3MFScalarFieldIterator_GetCurrentScalarFieldFunc := LoadFunction('lib3mf_scalarfielditerator_getcurrentscalarfield');
+		FLib3MFVector3DFieldIterator_GetCurrentVector3DFieldFunc := LoadFunction('lib3mf_vector3dfielditerator_getcurrentvector3dfield');
 		FLib3MFMetaData_GetNameSpaceFunc := LoadFunction('lib3mf_metadata_getnamespace');
 		FLib3MFMetaData_SetNameSpaceFunc := LoadFunction('lib3mf_metadata_setnamespace');
 		FLib3MFMetaData_GetNameFunc := LoadFunction('lib3mf_metadata_getname');
@@ -12669,38 +13174,85 @@ implementation
 		FLib3MFBeamLattice_GetBeamSetCountFunc := LoadFunction('lib3mf_beamlattice_getbeamsetcount');
 		FLib3MFBeamLattice_AddBeamSetFunc := LoadFunction('lib3mf_beamlattice_addbeamset');
 		FLib3MFBeamLattice_GetBeamSetFunc := LoadFunction('lib3mf_beamlattice_getbeamset');
-		FLib3MFVolumeDataItem_GetVolumetricStackFunc := LoadFunction('lib3mf_volumedataitem_getvolumetricstack');
-		FLib3MFVolumeDataItem_SetVolumetricStackFunc := LoadFunction('lib3mf_volumedataitem_setvolumetricstack');
-		FLib3MFVolumeDataItem_GetTransformFunc := LoadFunction('lib3mf_volumedataitem_gettransform');
-		FLib3MFVolumeDataItem_SetTransformFunc := LoadFunction('lib3mf_volumedataitem_settransform');
+		FLib3MFScalarField_GetNameFunc := LoadFunction('lib3mf_scalarfield_getname');
+		FLib3MFScalarField_SetNameFunc := LoadFunction('lib3mf_scalarfield_setname');
+		FLib3MFScalarField_IsFromImage3DFunc := LoadFunction('lib3mf_scalarfield_isfromimage3d');
+		FLib3MFScalarField_IsComposedFunc := LoadFunction('lib3mf_scalarfield_iscomposed');
+		FLib3MFVector3DField_GetNameFunc := LoadFunction('lib3mf_vector3dfield_getname');
+		FLib3MFVector3DField_SetNameFunc := LoadFunction('lib3mf_vector3dfield_setname');
+		FLib3MFVector3DField_IsFromImage3DFunc := LoadFunction('lib3mf_vector3dfield_isfromimage3d');
+		FLib3MFVector3DField_IsComposedFunc := LoadFunction('lib3mf_vector3dfield_iscomposed');
+		FLib3MFScalarFieldFromImage3D_GetImageFunc := LoadFunction('lib3mf_scalarfieldfromimage3d_getimage');
+		FLib3MFScalarFieldFromImage3D_SetImageFunc := LoadFunction('lib3mf_scalarfieldfromimage3d_setimage');
+		FLib3MFScalarFieldFromImage3D_SetChannelFunc := LoadFunction('lib3mf_scalarfieldfromimage3d_setchannel');
+		FLib3MFScalarFieldFromImage3D_GetChannelFunc := LoadFunction('lib3mf_scalarfieldfromimage3d_getchannel');
+		FLib3MFScalarFieldFromImage3D_SetFilterFunc := LoadFunction('lib3mf_scalarfieldfromimage3d_setfilter');
+		FLib3MFScalarFieldFromImage3D_GetFilterFunc := LoadFunction('lib3mf_scalarfieldfromimage3d_getfilter');
+		FLib3MFScalarFieldFromImage3D_SetTileStylesFunc := LoadFunction('lib3mf_scalarfieldfromimage3d_settilestyles');
+		FLib3MFScalarFieldFromImage3D_GetTileStylesFunc := LoadFunction('lib3mf_scalarfieldfromimage3d_gettilestyles');
+		FLib3MFScalarFieldFromImage3D_GetOffsetFunc := LoadFunction('lib3mf_scalarfieldfromimage3d_getoffset');
+		FLib3MFScalarFieldFromImage3D_SetOffsetFunc := LoadFunction('lib3mf_scalarfieldfromimage3d_setoffset');
+		FLib3MFScalarFieldFromImage3D_GetScaleFunc := LoadFunction('lib3mf_scalarfieldfromimage3d_getscale');
+		FLib3MFScalarFieldFromImage3D_SetScaleFunc := LoadFunction('lib3mf_scalarfieldfromimage3d_setscale');
+		FLib3MFScalarFieldComposed_SetMethodFunc := LoadFunction('lib3mf_scalarfieldcomposed_setmethod');
+		FLib3MFScalarFieldComposed_GetMethodFunc := LoadFunction('lib3mf_scalarfieldcomposed_getmethod');
+		FLib3MFScalarFieldComposed_GetFactor1Func := LoadFunction('lib3mf_scalarfieldcomposed_getfactor1');
+		FLib3MFScalarFieldComposed_SetFactor1Func := LoadFunction('lib3mf_scalarfieldcomposed_setfactor1');
+		FLib3MFScalarFieldComposed_GetFactor2Func := LoadFunction('lib3mf_scalarfieldcomposed_getfactor2');
+		FLib3MFScalarFieldComposed_SetFactor2Func := LoadFunction('lib3mf_scalarfieldcomposed_setfactor2');
+		FLib3MFScalarFieldComposed_ScalarFieldReference1Func := LoadFunction('lib3mf_scalarfieldcomposed_scalarfieldreference1');
+		FLib3MFScalarFieldComposed_ScalarFieldReference2Func := LoadFunction('lib3mf_scalarfieldcomposed_scalarfieldreference2');
+		FLib3MFScalarFieldComposed_ScalarFieldReferenceMaskFunc := LoadFunction('lib3mf_scalarfieldcomposed_scalarfieldreferencemask');
+		FLib3MFVector3DFieldFromImage3D_GetImageFunc := LoadFunction('lib3mf_vector3dfieldfromimage3d_getimage');
+		FLib3MFVector3DFieldFromImage3D_SetImageFunc := LoadFunction('lib3mf_vector3dfieldfromimage3d_setimage');
+		FLib3MFVector3DFieldFromImage3D_SetFilterFunc := LoadFunction('lib3mf_vector3dfieldfromimage3d_setfilter');
+		FLib3MFVector3DFieldFromImage3D_GetFilterFunc := LoadFunction('lib3mf_vector3dfieldfromimage3d_getfilter');
+		FLib3MFVector3DFieldFromImage3D_SetTileStylesFunc := LoadFunction('lib3mf_vector3dfieldfromimage3d_settilestyles');
+		FLib3MFVector3DFieldFromImage3D_GetTileStylesFunc := LoadFunction('lib3mf_vector3dfieldfromimage3d_gettilestyles');
+		FLib3MFVector3DFieldFromImage3D_GetOffsetFunc := LoadFunction('lib3mf_vector3dfieldfromimage3d_getoffset');
+		FLib3MFVector3DFieldFromImage3D_SetOffsetFunc := LoadFunction('lib3mf_vector3dfieldfromimage3d_setoffset');
+		FLib3MFVector3DFieldFromImage3D_GetScaleFunc := LoadFunction('lib3mf_vector3dfieldfromimage3d_getscale');
+		FLib3MFVector3DFieldFromImage3D_SetScaleFunc := LoadFunction('lib3mf_vector3dfieldfromimage3d_setscale');
+		FLib3MFVector3DFieldComposed_SetMethodFunc := LoadFunction('lib3mf_vector3dfieldcomposed_setmethod');
+		FLib3MFVector3DFieldComposed_GetMethodFunc := LoadFunction('lib3mf_vector3dfieldcomposed_getmethod');
+		FLib3MFVector3DFieldComposed_GetFactor1Func := LoadFunction('lib3mf_vector3dfieldcomposed_getfactor1');
+		FLib3MFVector3DFieldComposed_SetFactor1Func := LoadFunction('lib3mf_vector3dfieldcomposed_setfactor1');
+		FLib3MFVector3DFieldComposed_GetFactor2Func := LoadFunction('lib3mf_vector3dfieldcomposed_getfactor2');
+		FLib3MFVector3DFieldComposed_SetFactor2Func := LoadFunction('lib3mf_vector3dfieldcomposed_setfactor2');
+		FLib3MFVector3DFieldComposed_Vector3DFieldReference1Func := LoadFunction('lib3mf_vector3dfieldcomposed_vector3dfieldreference1');
+		FLib3MFVector3DFieldComposed_Vector3DFieldReference2Func := LoadFunction('lib3mf_vector3dfieldcomposed_vector3dfieldreference2');
+		FLib3MFVector3DFieldComposed_ScalarFieldReferenceMaskFunc := LoadFunction('lib3mf_vector3dfieldcomposed_scalarfieldreferencemask');
+		FLib3MFFieldReference_GetFieldResourceIDFunc := LoadFunction('lib3mf_fieldreference_getfieldresourceid');
+		FLib3MFFieldReference_SetFieldResourceIDFunc := LoadFunction('lib3mf_fieldreference_setfieldresourceid');
+		FLib3MFFieldReference_GetTransformFunc := LoadFunction('lib3mf_fieldreference_gettransform');
+		FLib3MFFieldReference_SetTransformFunc := LoadFunction('lib3mf_fieldreference_settransform');
+		FLib3MFScalarFieldReference_GetScalarFieldFunc := LoadFunction('lib3mf_scalarfieldreference_getscalarfield');
+		FLib3MFScalarFieldReference_SetScalarFieldFunc := LoadFunction('lib3mf_scalarfieldreference_setscalarfield');
+		FLib3MFVector3DFieldReference_GetVector3DFieldFunc := LoadFunction('lib3mf_vector3dfieldreference_getvector3dfield');
+		FLib3MFVector3DFieldReference_SetVector3DFieldFunc := LoadFunction('lib3mf_vector3dfieldreference_setvector3dfield');
 		FLib3MFVolumeDataLevelset_GetSolidThresholdFunc := LoadFunction('lib3mf_volumedatalevelset_getsolidthreshold');
 		FLib3MFVolumeDataLevelset_SetSolidThresholdFunc := LoadFunction('lib3mf_volumedatalevelset_setsolidthreshold');
-		FLib3MFVolumeDataLevelset_SetChannelFunc := LoadFunction('lib3mf_volumedatalevelset_setchannel');
-		FLib3MFVolumeDataLevelset_GetChannelFunc := LoadFunction('lib3mf_volumedatalevelset_getchannel');
-		FLib3MFVolumeDataColor_SetChannelFunc := LoadFunction('lib3mf_volumedatacolor_setchannel');
-		FLib3MFVolumeDataColor_GetChannelFunc := LoadFunction('lib3mf_volumedatacolor_getchannel');
 		FLib3MFVolumeDataComposite_GetBaseMaterialGroupFunc := LoadFunction('lib3mf_volumedatacomposite_getbasematerialgroup');
 		FLib3MFVolumeDataComposite_SetBaseMaterialGroupFunc := LoadFunction('lib3mf_volumedatacomposite_setbasematerialgroup');
 		FLib3MFVolumeDataComposite_GetMaterialMappingCountFunc := LoadFunction('lib3mf_volumedatacomposite_getmaterialmappingcount');
 		FLib3MFVolumeDataComposite_GetMaterialMappingFunc := LoadFunction('lib3mf_volumedatacomposite_getmaterialmapping');
-		FLib3MFVolumeDataComposite_SetMaterialMappingFunc := LoadFunction('lib3mf_volumedatacomposite_setmaterialmapping');
 		FLib3MFVolumeDataComposite_AddMaterialMappingFunc := LoadFunction('lib3mf_volumedatacomposite_addmaterialmapping');
 		FLib3MFVolumeDataComposite_RemoveMaterialMappingFunc := LoadFunction('lib3mf_volumedatacomposite_removematerialmapping');
-		FLib3MFVolumeDataProperty_SetChannelFunc := LoadFunction('lib3mf_volumedataproperty_setchannel');
-		FLib3MFVolumeDataProperty_GetChannelFunc := LoadFunction('lib3mf_volumedataproperty_getchannel');
 		FLib3MFVolumeDataProperty_SetNameFunc := LoadFunction('lib3mf_volumedataproperty_setname');
 		FLib3MFVolumeDataProperty_GetNameFunc := LoadFunction('lib3mf_volumedataproperty_getname');
 		FLib3MFVolumeDataProperty_SetIsRequiredFunc := LoadFunction('lib3mf_volumedataproperty_setisrequired');
 		FLib3MFVolumeDataProperty_IsRequiredFunc := LoadFunction('lib3mf_volumedataproperty_isrequired');
 		FLib3MFVolumeData_GetLevelsetFunc := LoadFunction('lib3mf_volumedata_getlevelset');
 		FLib3MFVolumeData_CreateNewLevelsetFunc := LoadFunction('lib3mf_volumedata_createnewlevelset');
+		FLib3MFVolumeData_RemoveLevelsetFunc := LoadFunction('lib3mf_volumedata_removelevelset');
 		FLib3MFVolumeData_GetCompositeFunc := LoadFunction('lib3mf_volumedata_getcomposite');
 		FLib3MFVolumeData_CreateNewCompositeFunc := LoadFunction('lib3mf_volumedata_createnewcomposite');
+		FLib3MFVolumeData_RemoveCompositeFunc := LoadFunction('lib3mf_volumedata_removecomposite');
 		FLib3MFVolumeData_GetColorFunc := LoadFunction('lib3mf_volumedata_getcolor');
 		FLib3MFVolumeData_CreateNewColorFunc := LoadFunction('lib3mf_volumedata_createnewcolor');
+		FLib3MFVolumeData_RemoveColorFunc := LoadFunction('lib3mf_volumedata_removecolor');
 		FLib3MFVolumeData_GetPropertyCountFunc := LoadFunction('lib3mf_volumedata_getpropertycount');
 		FLib3MFVolumeData_GetPropertyFunc := LoadFunction('lib3mf_volumedata_getproperty');
-		FLib3MFVolumeData_FindPropertyFunc := LoadFunction('lib3mf_volumedata_findproperty');
 		FLib3MFVolumeData_AddPropertyFunc := LoadFunction('lib3mf_volumedata_addproperty');
 		FLib3MFVolumeData_RemovePropertyFunc := LoadFunction('lib3mf_volumedata_removeproperty');
 		FLib3MFComponent_GetObjectResourceFunc := LoadFunction('lib3mf_component_getobjectresource');
@@ -12759,64 +13311,19 @@ implementation
 		FLib3MFMultiPropertyGroup_AddLayerFunc := LoadFunction('lib3mf_multipropertygroup_addlayer');
 		FLib3MFMultiPropertyGroup_GetLayerFunc := LoadFunction('lib3mf_multipropertygroup_getlayer');
 		FLib3MFMultiPropertyGroup_RemoveLayerFunc := LoadFunction('lib3mf_multipropertygroup_removelayer');
-		FLib3MFImage3D_GetSizeXFunc := LoadFunction('lib3mf_image3d_getsizex');
-		FLib3MFImage3D_GetSizeYFunc := LoadFunction('lib3mf_image3d_getsizey');
-		FLib3MFImage3D_GetSheetCountFunc := LoadFunction('lib3mf_image3d_getsheetcount');
-		FLib3MFImage3D_GetSheetFunc := LoadFunction('lib3mf_image3d_getsheet');
-		FLib3MFImage3D_GetSheetMinValueFunc := LoadFunction('lib3mf_image3d_getsheetminvalue');
-		FLib3MFImage3D_GetSheetMaxValueFunc := LoadFunction('lib3mf_image3d_getsheetmaxvalue');
-		FLib3MFImage3D_CreateEmptySheetFunc := LoadFunction('lib3mf_image3d_createemptysheet');
-		FLib3MFImage3D_CreateSheetFromBufferFunc := LoadFunction('lib3mf_image3d_createsheetfrombuffer');
-		FLib3MFImage3D_CreateSheetFromFileFunc := LoadFunction('lib3mf_image3d_createsheetfromfile');
-		FLib3MFImage3D_SetSheetFunc := LoadFunction('lib3mf_image3d_setsheet');
-		FLib3MFImage3D_SetSheetMinValueFunc := LoadFunction('lib3mf_image3d_setsheetminvalue');
-		FLib3MFImage3D_SetSheetMaxValueFunc := LoadFunction('lib3mf_image3d_setsheetmaxvalue');
-		FLib3MFImage3DChannelSelector_GetImageFunc := LoadFunction('lib3mf_image3dchannelselector_getimage');
-		FLib3MFImage3DChannelSelector_SetImageFunc := LoadFunction('lib3mf_image3dchannelselector_setimage');
-		FLib3MFImage3DChannelSelector_SetSourceChannelFunc := LoadFunction('lib3mf_image3dchannelselector_setsourcechannel');
-		FLib3MFImage3DChannelSelector_GetSourceChannelFunc := LoadFunction('lib3mf_image3dchannelselector_getsourcechannel');
-		FLib3MFImage3DChannelSelector_SetDestinationChannelFunc := LoadFunction('lib3mf_image3dchannelselector_setdestinationchannel');
-		FLib3MFImage3DChannelSelector_GetDestinationChannelFunc := LoadFunction('lib3mf_image3dchannelselector_getdestinationchannel');
-		FLib3MFImage3DChannelSelector_SetFilterFunc := LoadFunction('lib3mf_image3dchannelselector_setfilter');
-		FLib3MFImage3DChannelSelector_GetFilterFunc := LoadFunction('lib3mf_image3dchannelselector_getfilter');
-		FLib3MFImage3DChannelSelector_SetTileStylesFunc := LoadFunction('lib3mf_image3dchannelselector_settilestyles');
-		FLib3MFImage3DChannelSelector_GetTileStylesFunc := LoadFunction('lib3mf_image3dchannelselector_gettilestyles');
-		FLib3MFVolumetricLayer_GetTransformFunc := LoadFunction('lib3mf_volumetriclayer_gettransform');
-		FLib3MFVolumetricLayer_SetTransformFunc := LoadFunction('lib3mf_volumetriclayer_settransform');
-		FLib3MFVolumetricLayer_GetBlendMethodFunc := LoadFunction('lib3mf_volumetriclayer_getblendmethod');
-		FLib3MFVolumetricLayer_SetBlendMethodFunc := LoadFunction('lib3mf_volumetriclayer_setblendmethod');
-		FLib3MFVolumetricLayer_GetSourceAlphaFunc := LoadFunction('lib3mf_volumetriclayer_getsourcealpha');
-		FLib3MFVolumetricLayer_SetSourceAlphaFunc := LoadFunction('lib3mf_volumetriclayer_setsourcealpha');
-		FLib3MFVolumetricLayer_GetDestinationAlphaFunc := LoadFunction('lib3mf_volumetriclayer_getdestinationalpha');
-		FLib3MFVolumetricLayer_SetDestinationAlphaFunc := LoadFunction('lib3mf_volumetriclayer_setdestinationalpha');
-		FLib3MFVolumetricLayer_GetInformationFunc := LoadFunction('lib3mf_volumetriclayer_getinformation');
-		FLib3MFVolumetricLayer_SetInformationFunc := LoadFunction('lib3mf_volumetriclayer_setinformation');
-		FLib3MFVolumetricLayer_CreateMaskChannelSelectorFunc := LoadFunction('lib3mf_volumetriclayer_createmaskchannelselector');
-		FLib3MFVolumetricLayer_HasMaskChannelSelectorFunc := LoadFunction('lib3mf_volumetriclayer_hasmaskchannelselector');
-		FLib3MFVolumetricLayer_ClearMaskChannelSelectorFunc := LoadFunction('lib3mf_volumetriclayer_clearmaskchannelselector');
-		FLib3MFVolumetricLayer_GetMaskChannelSelectorFunc := LoadFunction('lib3mf_volumetriclayer_getmaskchannelselector');
-		FLib3MFVolumetricLayer_GetChannelSelectorCountFunc := LoadFunction('lib3mf_volumetriclayer_getchannelselectorcount');
-		FLib3MFVolumetricLayer_GetChannelSelectorFunc := LoadFunction('lib3mf_volumetriclayer_getchannelselector');
-		FLib3MFVolumetricLayer_AddChannelSelectorFunc := LoadFunction('lib3mf_volumetriclayer_addchannelselector');
-		FLib3MFVolumetricLayer_ClearChannelSelectorsFunc := LoadFunction('lib3mf_volumetriclayer_clearchannelselectors');
-		FLib3MFVolumetricLayer_ReindexChannelSelectorFunc := LoadFunction('lib3mf_volumetriclayer_reindexchannelselector');
-		FLib3MFVolumetricLayer_RemoveChannelSelectorFunc := LoadFunction('lib3mf_volumetriclayer_removechannelselector');
-		FLib3MFVolumetricLayer_RemoveChannelSelectorByIndexFunc := LoadFunction('lib3mf_volumetriclayer_removechannelselectorbyindex');
-		FLib3MFVolumetricStack_ClearFunc := LoadFunction('lib3mf_volumetricstack_clear');
-		FLib3MFVolumetricStack_ClearUnusedDestinationChannelsFunc := LoadFunction('lib3mf_volumetricstack_clearunuseddestinationchannels');
-		FLib3MFVolumetricStack_GetDestinationChannelCountFunc := LoadFunction('lib3mf_volumetricstack_getdestinationchannelcount');
-		FLib3MFVolumetricStack_GetDestinationChannelFunc := LoadFunction('lib3mf_volumetricstack_getdestinationchannel');
-		FLib3MFVolumetricStack_AddDestinationChannelFunc := LoadFunction('lib3mf_volumetricstack_adddestinationchannel');
-		FLib3MFVolumetricStack_UpdateDestinationChannelFunc := LoadFunction('lib3mf_volumetricstack_updatedestinationchannel');
-		FLib3MFVolumetricStack_UpdateDestinationChannelByNameFunc := LoadFunction('lib3mf_volumetricstack_updatedestinationchannelbyname');
-		FLib3MFVolumetricStack_RemoveDestinationChannelFunc := LoadFunction('lib3mf_volumetricstack_removedestinationchannel');
-		FLib3MFVolumetricStack_RemoveDestinationChannelByNameFunc := LoadFunction('lib3mf_volumetricstack_removedestinationchannelbyname');
-		FLib3MFVolumetricStack_GetLayerCountFunc := LoadFunction('lib3mf_volumetricstack_getlayercount');
-		FLib3MFVolumetricStack_GetLayerFunc := LoadFunction('lib3mf_volumetricstack_getlayer');
-		FLib3MFVolumetricStack_AddLayerFunc := LoadFunction('lib3mf_volumetricstack_addlayer');
-		FLib3MFVolumetricStack_ReindexLayerFunc := LoadFunction('lib3mf_volumetricstack_reindexlayer');
-		FLib3MFVolumetricStack_RemoveLayerFunc := LoadFunction('lib3mf_volumetricstack_removelayer');
-		FLib3MFVolumetricStack_RemoveLayerByIndexFunc := LoadFunction('lib3mf_volumetricstack_removelayerbyindex');
+		FLib3MFImage3D_GetNameFunc := LoadFunction('lib3mf_image3d_getname');
+		FLib3MFImage3D_SetNameFunc := LoadFunction('lib3mf_image3d_setname');
+		FLib3MFImage3D_IsImageStackFunc := LoadFunction('lib3mf_image3d_isimagestack');
+		FLib3MFImageStack_GetRowCountFunc := LoadFunction('lib3mf_imagestack_getrowcount');
+		FLib3MFImageStack_SetRowCountFunc := LoadFunction('lib3mf_imagestack_setrowcount');
+		FLib3MFImageStack_GetColumnCountFunc := LoadFunction('lib3mf_imagestack_getcolumncount');
+		FLib3MFImageStack_SetColumnCountFunc := LoadFunction('lib3mf_imagestack_setcolumncount');
+		FLib3MFImageStack_GetSheetCountFunc := LoadFunction('lib3mf_imagestack_getsheetcount');
+		FLib3MFImageStack_GetSheetFunc := LoadFunction('lib3mf_imagestack_getsheet');
+		FLib3MFImageStack_SetSheetFunc := LoadFunction('lib3mf_imagestack_setsheet');
+		FLib3MFImageStack_CreateEmptySheetFunc := LoadFunction('lib3mf_imagestack_createemptysheet');
+		FLib3MFImageStack_CreateSheetFromBufferFunc := LoadFunction('lib3mf_imagestack_createsheetfrombuffer');
+		FLib3MFImageStack_CreateSheetFromFileFunc := LoadFunction('lib3mf_imagestack_createsheetfromfile');
 		FLib3MFAttachment_GetPathFunc := LoadFunction('lib3mf_attachment_getpath');
 		FLib3MFAttachment_SetPathFunc := LoadFunction('lib3mf_attachment_setpath');
 		FLib3MFAttachment_PackagePartFunc := LoadFunction('lib3mf_attachment_packagepart');
@@ -12945,8 +13452,9 @@ implementation
 		FLib3MFModel_GetMultiPropertyGroupsFunc := LoadFunction('lib3mf_model_getmultipropertygroups');
 		FLib3MFModel_GetSliceStacksFunc := LoadFunction('lib3mf_model_getslicestacks');
 		FLib3MFModel_GetImage3DsFunc := LoadFunction('lib3mf_model_getimage3ds');
+		FLib3MFModel_GetScalarFieldsFunc := LoadFunction('lib3mf_model_getscalarfields');
+		FLib3MFModel_GetVector3DFieldsFunc := LoadFunction('lib3mf_model_getvector3dfields');
 		FLib3MFModel_MergeToModelFunc := LoadFunction('lib3mf_model_mergetomodel');
-		FLib3MFModel_GetVolumetricStacksFunc := LoadFunction('lib3mf_model_getvolumetricstacks');
 		FLib3MFModel_AddMeshObjectFunc := LoadFunction('lib3mf_model_addmeshobject');
 		FLib3MFModel_AddComponentsObjectFunc := LoadFunction('lib3mf_model_addcomponentsobject');
 		FLib3MFModel_AddSliceStackFunc := LoadFunction('lib3mf_model_addslicestack');
@@ -12956,8 +13464,17 @@ implementation
 		FLib3MFModel_AddTexture2DGroupFunc := LoadFunction('lib3mf_model_addtexture2dgroup');
 		FLib3MFModel_AddCompositeMaterialsFunc := LoadFunction('lib3mf_model_addcompositematerials');
 		FLib3MFModel_AddMultiPropertyGroupFunc := LoadFunction('lib3mf_model_addmultipropertygroup');
-		FLib3MFModel_AddImage3DFunc := LoadFunction('lib3mf_model_addimage3d');
-		FLib3MFModel_AddVolumetricStackFunc := LoadFunction('lib3mf_model_addvolumetricstack');
+		FLib3MFModel_AddImageStackFunc := LoadFunction('lib3mf_model_addimagestack');
+		FLib3MFModel_AddScalarFieldFromImage3DFunc := LoadFunction('lib3mf_model_addscalarfieldfromimage3d');
+		FLib3MFModel_AddScalarFieldComposedFunc := LoadFunction('lib3mf_model_addscalarfieldcomposed');
+		FLib3MFModel_GetScalarFieldByIDFunc := LoadFunction('lib3mf_model_getscalarfieldbyid');
+		FLib3MFModel_GetScalarFieldFromImage3DByIDFunc := LoadFunction('lib3mf_model_getscalarfieldfromimage3dbyid');
+		FLib3MFModel_GetScalarFieldComposedByIDFunc := LoadFunction('lib3mf_model_getscalarfieldcomposedbyid');
+		FLib3MFModel_AddVector3DFieldFromImage3DFunc := LoadFunction('lib3mf_model_addvector3dfieldfromimage3d');
+		FLib3MFModel_AddVector3DFieldComposedFunc := LoadFunction('lib3mf_model_addvector3dfieldcomposed');
+		FLib3MFModel_GetVector3DFieldByIDFunc := LoadFunction('lib3mf_model_getvector3dfieldbyid');
+		FLib3MFModel_GetVector3DFieldFromImage3DByIDFunc := LoadFunction('lib3mf_model_getvector3dfieldfromimage3dbyid');
+		FLib3MFModel_GetVector3DFieldComposedByIDFunc := LoadFunction('lib3mf_model_getvector3dfieldcomposedbyid');
 		FLib3MFModel_AddBuildItemFunc := LoadFunction('lib3mf_model_addbuilditem');
 		FLib3MFModel_RemoveBuildItemFunc := LoadFunction('lib3mf_model_removebuilditem');
 		FLib3MFModel_GetMetaDataGroupFunc := LoadFunction('lib3mf_model_getmetadatagroup');
@@ -13148,7 +13665,10 @@ implementation
 		AResult := ALookupMethod(PAnsiChar('lib3mf_image3diterator_getcurrentimage3d'), @FLib3MFImage3DIterator_GetCurrentImage3DFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_volumetricstackiterator_getcurrentvolumetricstack'), @FLib3MFVolumetricStackIterator_GetCurrentVolumetricStackFunc);
+		AResult := ALookupMethod(PAnsiChar('lib3mf_scalarfielditerator_getcurrentscalarfield'), @FLib3MFScalarFieldIterator_GetCurrentScalarFieldFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_vector3dfielditerator_getcurrentvector3dfield'), @FLib3MFVector3DFieldIterator_GetCurrentVector3DFieldFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_metadata_getnamespace'), @FLib3MFMetaData_GetNameSpaceFunc);
@@ -13400,34 +13920,178 @@ implementation
 		AResult := ALookupMethod(PAnsiChar('lib3mf_beamlattice_getbeamset'), @FLib3MFBeamLattice_GetBeamSetFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_volumedataitem_getvolumetricstack'), @FLib3MFVolumeDataItem_GetVolumetricStackFunc);
+		AResult := ALookupMethod(PAnsiChar('lib3mf_scalarfield_getname'), @FLib3MFScalarField_GetNameFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_volumedataitem_setvolumetricstack'), @FLib3MFVolumeDataItem_SetVolumetricStackFunc);
+		AResult := ALookupMethod(PAnsiChar('lib3mf_scalarfield_setname'), @FLib3MFScalarField_SetNameFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_volumedataitem_gettransform'), @FLib3MFVolumeDataItem_GetTransformFunc);
+		AResult := ALookupMethod(PAnsiChar('lib3mf_scalarfield_isfromimage3d'), @FLib3MFScalarField_IsFromImage3DFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_volumedataitem_settransform'), @FLib3MFVolumeDataItem_SetTransformFunc);
+		AResult := ALookupMethod(PAnsiChar('lib3mf_scalarfield_iscomposed'), @FLib3MFScalarField_IsComposedFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_vector3dfield_getname'), @FLib3MFVector3DField_GetNameFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_vector3dfield_setname'), @FLib3MFVector3DField_SetNameFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_vector3dfield_isfromimage3d'), @FLib3MFVector3DField_IsFromImage3DFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_vector3dfield_iscomposed'), @FLib3MFVector3DField_IsComposedFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_scalarfieldfromimage3d_getimage'), @FLib3MFScalarFieldFromImage3D_GetImageFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_scalarfieldfromimage3d_setimage'), @FLib3MFScalarFieldFromImage3D_SetImageFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_scalarfieldfromimage3d_setchannel'), @FLib3MFScalarFieldFromImage3D_SetChannelFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_scalarfieldfromimage3d_getchannel'), @FLib3MFScalarFieldFromImage3D_GetChannelFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_scalarfieldfromimage3d_setfilter'), @FLib3MFScalarFieldFromImage3D_SetFilterFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_scalarfieldfromimage3d_getfilter'), @FLib3MFScalarFieldFromImage3D_GetFilterFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_scalarfieldfromimage3d_settilestyles'), @FLib3MFScalarFieldFromImage3D_SetTileStylesFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_scalarfieldfromimage3d_gettilestyles'), @FLib3MFScalarFieldFromImage3D_GetTileStylesFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_scalarfieldfromimage3d_getoffset'), @FLib3MFScalarFieldFromImage3D_GetOffsetFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_scalarfieldfromimage3d_setoffset'), @FLib3MFScalarFieldFromImage3D_SetOffsetFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_scalarfieldfromimage3d_getscale'), @FLib3MFScalarFieldFromImage3D_GetScaleFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_scalarfieldfromimage3d_setscale'), @FLib3MFScalarFieldFromImage3D_SetScaleFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_scalarfieldcomposed_setmethod'), @FLib3MFScalarFieldComposed_SetMethodFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_scalarfieldcomposed_getmethod'), @FLib3MFScalarFieldComposed_GetMethodFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_scalarfieldcomposed_getfactor1'), @FLib3MFScalarFieldComposed_GetFactor1Func);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_scalarfieldcomposed_setfactor1'), @FLib3MFScalarFieldComposed_SetFactor1Func);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_scalarfieldcomposed_getfactor2'), @FLib3MFScalarFieldComposed_GetFactor2Func);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_scalarfieldcomposed_setfactor2'), @FLib3MFScalarFieldComposed_SetFactor2Func);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_scalarfieldcomposed_scalarfieldreference1'), @FLib3MFScalarFieldComposed_ScalarFieldReference1Func);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_scalarfieldcomposed_scalarfieldreference2'), @FLib3MFScalarFieldComposed_ScalarFieldReference2Func);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_scalarfieldcomposed_scalarfieldreferencemask'), @FLib3MFScalarFieldComposed_ScalarFieldReferenceMaskFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_vector3dfieldfromimage3d_getimage'), @FLib3MFVector3DFieldFromImage3D_GetImageFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_vector3dfieldfromimage3d_setimage'), @FLib3MFVector3DFieldFromImage3D_SetImageFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_vector3dfieldfromimage3d_setfilter'), @FLib3MFVector3DFieldFromImage3D_SetFilterFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_vector3dfieldfromimage3d_getfilter'), @FLib3MFVector3DFieldFromImage3D_GetFilterFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_vector3dfieldfromimage3d_settilestyles'), @FLib3MFVector3DFieldFromImage3D_SetTileStylesFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_vector3dfieldfromimage3d_gettilestyles'), @FLib3MFVector3DFieldFromImage3D_GetTileStylesFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_vector3dfieldfromimage3d_getoffset'), @FLib3MFVector3DFieldFromImage3D_GetOffsetFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_vector3dfieldfromimage3d_setoffset'), @FLib3MFVector3DFieldFromImage3D_SetOffsetFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_vector3dfieldfromimage3d_getscale'), @FLib3MFVector3DFieldFromImage3D_GetScaleFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_vector3dfieldfromimage3d_setscale'), @FLib3MFVector3DFieldFromImage3D_SetScaleFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_vector3dfieldcomposed_setmethod'), @FLib3MFVector3DFieldComposed_SetMethodFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_vector3dfieldcomposed_getmethod'), @FLib3MFVector3DFieldComposed_GetMethodFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_vector3dfieldcomposed_getfactor1'), @FLib3MFVector3DFieldComposed_GetFactor1Func);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_vector3dfieldcomposed_setfactor1'), @FLib3MFVector3DFieldComposed_SetFactor1Func);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_vector3dfieldcomposed_getfactor2'), @FLib3MFVector3DFieldComposed_GetFactor2Func);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_vector3dfieldcomposed_setfactor2'), @FLib3MFVector3DFieldComposed_SetFactor2Func);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_vector3dfieldcomposed_vector3dfieldreference1'), @FLib3MFVector3DFieldComposed_Vector3DFieldReference1Func);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_vector3dfieldcomposed_vector3dfieldreference2'), @FLib3MFVector3DFieldComposed_Vector3DFieldReference2Func);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_vector3dfieldcomposed_scalarfieldreferencemask'), @FLib3MFVector3DFieldComposed_ScalarFieldReferenceMaskFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_fieldreference_getfieldresourceid'), @FLib3MFFieldReference_GetFieldResourceIDFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_fieldreference_setfieldresourceid'), @FLib3MFFieldReference_SetFieldResourceIDFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_fieldreference_gettransform'), @FLib3MFFieldReference_GetTransformFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_fieldreference_settransform'), @FLib3MFFieldReference_SetTransformFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_scalarfieldreference_getscalarfield'), @FLib3MFScalarFieldReference_GetScalarFieldFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_scalarfieldreference_setscalarfield'), @FLib3MFScalarFieldReference_SetScalarFieldFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_vector3dfieldreference_getvector3dfield'), @FLib3MFVector3DFieldReference_GetVector3DFieldFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_vector3dfieldreference_setvector3dfield'), @FLib3MFVector3DFieldReference_SetVector3DFieldFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_volumedatalevelset_getsolidthreshold'), @FLib3MFVolumeDataLevelset_GetSolidThresholdFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_volumedatalevelset_setsolidthreshold'), @FLib3MFVolumeDataLevelset_SetSolidThresholdFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_volumedatalevelset_setchannel'), @FLib3MFVolumeDataLevelset_SetChannelFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_volumedatalevelset_getchannel'), @FLib3MFVolumeDataLevelset_GetChannelFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_volumedatacolor_setchannel'), @FLib3MFVolumeDataColor_SetChannelFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_volumedatacolor_getchannel'), @FLib3MFVolumeDataColor_GetChannelFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_volumedatacomposite_getbasematerialgroup'), @FLib3MFVolumeDataComposite_GetBaseMaterialGroupFunc);
@@ -13442,19 +14106,10 @@ implementation
 		AResult := ALookupMethod(PAnsiChar('lib3mf_volumedatacomposite_getmaterialmapping'), @FLib3MFVolumeDataComposite_GetMaterialMappingFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_volumedatacomposite_setmaterialmapping'), @FLib3MFVolumeDataComposite_SetMaterialMappingFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_volumedatacomposite_addmaterialmapping'), @FLib3MFVolumeDataComposite_AddMaterialMappingFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_volumedatacomposite_removematerialmapping'), @FLib3MFVolumeDataComposite_RemoveMaterialMappingFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_volumedataproperty_setchannel'), @FLib3MFVolumeDataProperty_SetChannelFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_volumedataproperty_getchannel'), @FLib3MFVolumeDataProperty_GetChannelFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_volumedataproperty_setname'), @FLib3MFVolumeDataProperty_SetNameFunc);
@@ -13475,10 +14130,16 @@ implementation
 		AResult := ALookupMethod(PAnsiChar('lib3mf_volumedata_createnewlevelset'), @FLib3MFVolumeData_CreateNewLevelsetFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_volumedata_removelevelset'), @FLib3MFVolumeData_RemoveLevelsetFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_volumedata_getcomposite'), @FLib3MFVolumeData_GetCompositeFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_volumedata_createnewcomposite'), @FLib3MFVolumeData_CreateNewCompositeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_volumedata_removecomposite'), @FLib3MFVolumeData_RemoveCompositeFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_volumedata_getcolor'), @FLib3MFVolumeData_GetColorFunc);
@@ -13487,13 +14148,13 @@ implementation
 		AResult := ALookupMethod(PAnsiChar('lib3mf_volumedata_createnewcolor'), @FLib3MFVolumeData_CreateNewColorFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_volumedata_removecolor'), @FLib3MFVolumeData_RemoveColorFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_volumedata_getpropertycount'), @FLib3MFVolumeData_GetPropertyCountFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_volumedata_getproperty'), @FLib3MFVolumeData_GetPropertyFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_volumedata_findproperty'), @FLib3MFVolumeData_FindPropertyFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_volumedata_addproperty'), @FLib3MFVolumeData_AddPropertyFunc);
@@ -13670,178 +14331,43 @@ implementation
 		AResult := ALookupMethod(PAnsiChar('lib3mf_multipropertygroup_removelayer'), @FLib3MFMultiPropertyGroup_RemoveLayerFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_image3d_getsizex'), @FLib3MFImage3D_GetSizeXFunc);
+		AResult := ALookupMethod(PAnsiChar('lib3mf_image3d_getname'), @FLib3MFImage3D_GetNameFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_image3d_getsizey'), @FLib3MFImage3D_GetSizeYFunc);
+		AResult := ALookupMethod(PAnsiChar('lib3mf_image3d_setname'), @FLib3MFImage3D_SetNameFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_image3d_getsheetcount'), @FLib3MFImage3D_GetSheetCountFunc);
+		AResult := ALookupMethod(PAnsiChar('lib3mf_image3d_isimagestack'), @FLib3MFImage3D_IsImageStackFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_image3d_getsheet'), @FLib3MFImage3D_GetSheetFunc);
+		AResult := ALookupMethod(PAnsiChar('lib3mf_imagestack_getrowcount'), @FLib3MFImageStack_GetRowCountFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_image3d_getsheetminvalue'), @FLib3MFImage3D_GetSheetMinValueFunc);
+		AResult := ALookupMethod(PAnsiChar('lib3mf_imagestack_setrowcount'), @FLib3MFImageStack_SetRowCountFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_image3d_getsheetmaxvalue'), @FLib3MFImage3D_GetSheetMaxValueFunc);
+		AResult := ALookupMethod(PAnsiChar('lib3mf_imagestack_getcolumncount'), @FLib3MFImageStack_GetColumnCountFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_image3d_createemptysheet'), @FLib3MFImage3D_CreateEmptySheetFunc);
+		AResult := ALookupMethod(PAnsiChar('lib3mf_imagestack_setcolumncount'), @FLib3MFImageStack_SetColumnCountFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_image3d_createsheetfrombuffer'), @FLib3MFImage3D_CreateSheetFromBufferFunc);
+		AResult := ALookupMethod(PAnsiChar('lib3mf_imagestack_getsheetcount'), @FLib3MFImageStack_GetSheetCountFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_image3d_createsheetfromfile'), @FLib3MFImage3D_CreateSheetFromFileFunc);
+		AResult := ALookupMethod(PAnsiChar('lib3mf_imagestack_getsheet'), @FLib3MFImageStack_GetSheetFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_image3d_setsheet'), @FLib3MFImage3D_SetSheetFunc);
+		AResult := ALookupMethod(PAnsiChar('lib3mf_imagestack_setsheet'), @FLib3MFImageStack_SetSheetFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_image3d_setsheetminvalue'), @FLib3MFImage3D_SetSheetMinValueFunc);
+		AResult := ALookupMethod(PAnsiChar('lib3mf_imagestack_createemptysheet'), @FLib3MFImageStack_CreateEmptySheetFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_image3d_setsheetmaxvalue'), @FLib3MFImage3D_SetSheetMaxValueFunc);
+		AResult := ALookupMethod(PAnsiChar('lib3mf_imagestack_createsheetfrombuffer'), @FLib3MFImageStack_CreateSheetFromBufferFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_image3dchannelselector_getimage'), @FLib3MFImage3DChannelSelector_GetImageFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_image3dchannelselector_setimage'), @FLib3MFImage3DChannelSelector_SetImageFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_image3dchannelselector_setsourcechannel'), @FLib3MFImage3DChannelSelector_SetSourceChannelFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_image3dchannelselector_getsourcechannel'), @FLib3MFImage3DChannelSelector_GetSourceChannelFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_image3dchannelselector_setdestinationchannel'), @FLib3MFImage3DChannelSelector_SetDestinationChannelFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_image3dchannelselector_getdestinationchannel'), @FLib3MFImage3DChannelSelector_GetDestinationChannelFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_image3dchannelselector_setfilter'), @FLib3MFImage3DChannelSelector_SetFilterFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_image3dchannelselector_getfilter'), @FLib3MFImage3DChannelSelector_GetFilterFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_image3dchannelselector_settilestyles'), @FLib3MFImage3DChannelSelector_SetTileStylesFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_image3dchannelselector_gettilestyles'), @FLib3MFImage3DChannelSelector_GetTileStylesFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_volumetriclayer_gettransform'), @FLib3MFVolumetricLayer_GetTransformFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_volumetriclayer_settransform'), @FLib3MFVolumetricLayer_SetTransformFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_volumetriclayer_getblendmethod'), @FLib3MFVolumetricLayer_GetBlendMethodFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_volumetriclayer_setblendmethod'), @FLib3MFVolumetricLayer_SetBlendMethodFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_volumetriclayer_getsourcealpha'), @FLib3MFVolumetricLayer_GetSourceAlphaFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_volumetriclayer_setsourcealpha'), @FLib3MFVolumetricLayer_SetSourceAlphaFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_volumetriclayer_getdestinationalpha'), @FLib3MFVolumetricLayer_GetDestinationAlphaFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_volumetriclayer_setdestinationalpha'), @FLib3MFVolumetricLayer_SetDestinationAlphaFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_volumetriclayer_getinformation'), @FLib3MFVolumetricLayer_GetInformationFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_volumetriclayer_setinformation'), @FLib3MFVolumetricLayer_SetInformationFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_volumetriclayer_createmaskchannelselector'), @FLib3MFVolumetricLayer_CreateMaskChannelSelectorFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_volumetriclayer_hasmaskchannelselector'), @FLib3MFVolumetricLayer_HasMaskChannelSelectorFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_volumetriclayer_clearmaskchannelselector'), @FLib3MFVolumetricLayer_ClearMaskChannelSelectorFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_volumetriclayer_getmaskchannelselector'), @FLib3MFVolumetricLayer_GetMaskChannelSelectorFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_volumetriclayer_getchannelselectorcount'), @FLib3MFVolumetricLayer_GetChannelSelectorCountFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_volumetriclayer_getchannelselector'), @FLib3MFVolumetricLayer_GetChannelSelectorFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_volumetriclayer_addchannelselector'), @FLib3MFVolumetricLayer_AddChannelSelectorFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_volumetriclayer_clearchannelselectors'), @FLib3MFVolumetricLayer_ClearChannelSelectorsFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_volumetriclayer_reindexchannelselector'), @FLib3MFVolumetricLayer_ReindexChannelSelectorFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_volumetriclayer_removechannelselector'), @FLib3MFVolumetricLayer_RemoveChannelSelectorFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_volumetriclayer_removechannelselectorbyindex'), @FLib3MFVolumetricLayer_RemoveChannelSelectorByIndexFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_volumetricstack_clear'), @FLib3MFVolumetricStack_ClearFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_volumetricstack_clearunuseddestinationchannels'), @FLib3MFVolumetricStack_ClearUnusedDestinationChannelsFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_volumetricstack_getdestinationchannelcount'), @FLib3MFVolumetricStack_GetDestinationChannelCountFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_volumetricstack_getdestinationchannel'), @FLib3MFVolumetricStack_GetDestinationChannelFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_volumetricstack_adddestinationchannel'), @FLib3MFVolumetricStack_AddDestinationChannelFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_volumetricstack_updatedestinationchannel'), @FLib3MFVolumetricStack_UpdateDestinationChannelFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_volumetricstack_updatedestinationchannelbyname'), @FLib3MFVolumetricStack_UpdateDestinationChannelByNameFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_volumetricstack_removedestinationchannel'), @FLib3MFVolumetricStack_RemoveDestinationChannelFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_volumetricstack_removedestinationchannelbyname'), @FLib3MFVolumetricStack_RemoveDestinationChannelByNameFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_volumetricstack_getlayercount'), @FLib3MFVolumetricStack_GetLayerCountFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_volumetricstack_getlayer'), @FLib3MFVolumetricStack_GetLayerFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_volumetricstack_addlayer'), @FLib3MFVolumetricStack_AddLayerFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_volumetricstack_reindexlayer'), @FLib3MFVolumetricStack_ReindexLayerFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_volumetricstack_removelayer'), @FLib3MFVolumetricStack_RemoveLayerFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_volumetricstack_removelayerbyindex'), @FLib3MFVolumetricStack_RemoveLayerByIndexFunc);
+		AResult := ALookupMethod(PAnsiChar('lib3mf_imagestack_createsheetfromfile'), @FLib3MFImageStack_CreateSheetFromFileFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_attachment_getpath'), @FLib3MFAttachment_GetPathFunc);
@@ -14228,10 +14754,13 @@ implementation
 		AResult := ALookupMethod(PAnsiChar('lib3mf_model_getimage3ds'), @FLib3MFModel_GetImage3DsFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_model_mergetomodel'), @FLib3MFModel_MergeToModelFunc);
+		AResult := ALookupMethod(PAnsiChar('lib3mf_model_getscalarfields'), @FLib3MFModel_GetScalarFieldsFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_model_getvolumetricstacks'), @FLib3MFModel_GetVolumetricStacksFunc);
+		AResult := ALookupMethod(PAnsiChar('lib3mf_model_getvector3dfields'), @FLib3MFModel_GetVector3DFieldsFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_model_mergetomodel'), @FLib3MFModel_MergeToModelFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_model_addmeshobject'), @FLib3MFModel_AddMeshObjectFunc);
@@ -14261,10 +14790,37 @@ implementation
 		AResult := ALookupMethod(PAnsiChar('lib3mf_model_addmultipropertygroup'), @FLib3MFModel_AddMultiPropertyGroupFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_model_addimage3d'), @FLib3MFModel_AddImage3DFunc);
+		AResult := ALookupMethod(PAnsiChar('lib3mf_model_addimagestack'), @FLib3MFModel_AddImageStackFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_model_addvolumetricstack'), @FLib3MFModel_AddVolumetricStackFunc);
+		AResult := ALookupMethod(PAnsiChar('lib3mf_model_addscalarfieldfromimage3d'), @FLib3MFModel_AddScalarFieldFromImage3DFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_model_addscalarfieldcomposed'), @FLib3MFModel_AddScalarFieldComposedFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_model_getscalarfieldbyid'), @FLib3MFModel_GetScalarFieldByIDFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_model_getscalarfieldfromimage3dbyid'), @FLib3MFModel_GetScalarFieldFromImage3DByIDFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_model_getscalarfieldcomposedbyid'), @FLib3MFModel_GetScalarFieldComposedByIDFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_model_addvector3dfieldfromimage3d'), @FLib3MFModel_AddVector3DFieldFromImage3DFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_model_addvector3dfieldcomposed'), @FLib3MFModel_AddVector3DFieldComposedFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_model_getvector3dfieldbyid'), @FLib3MFModel_GetVector3DFieldByIDFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_model_getvector3dfieldfromimage3dbyid'), @FLib3MFModel_GetVector3DFieldFromImage3DByIDFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_model_getvector3dfieldcomposedbyid'), @FLib3MFModel_GetVector3DFieldComposedByIDFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_model_addbuilditem'), @FLib3MFModel_AddBuildItemFunc);

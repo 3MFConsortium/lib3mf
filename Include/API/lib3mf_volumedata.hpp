@@ -42,9 +42,6 @@ Abstract: This is the class declaration of CVolumeData
 #endif
 
 // Include custom headers here.
-#include "Common/Mesh/NMR_Mesh.h"
-#include "Model/Classes/NMR_ModelVolumeData.h"
-#include "Model/Classes/NMR_ModelMeshObject.h"
 
 
 namespace Lib3MF {
@@ -61,9 +58,6 @@ private:
 	/**
 	* Put private members here.
 	*/
-	NMR::PModelVolumeData m_pVolumeData;
-	NMR::PModelMeshObject m_pMeshObject;
-	NMR::CModel* m_pModel;
 
 protected:
 
@@ -76,7 +70,7 @@ public:
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-	CVolumeData(NMR::PModelMeshObject pMeshObject, NMR::PModelVolumeData pVolumeData, NMR::CModel* pModel);
+
 
 	/**
 	* Public member functions to implement.
@@ -84,25 +78,30 @@ public:
 
 	IVolumeDataLevelset * GetLevelset() override;
 
-	IVolumeDataLevelset * CreateNewLevelset(IVolumetricStack* pTheVolumetricStack) override;
+	IVolumeDataLevelset * CreateNewLevelset(IScalarField* pTheScalarField, const Lib3MF::sTransform Transform) override;
+
+	void RemoveLevelset() override;
 
 	IVolumeDataComposite * GetComposite() override;
 
-	IVolumeDataComposite * CreateNewComposite(IVolumetricStack* pTheVolumetricStack) override;
+	IVolumeDataComposite * CreateNewComposite() override;
+
+	void RemoveComposite() override;
 
 	IVolumeDataColor * GetColor() override;
 
-	IVolumeDataColor * CreateNewColor(IVolumetricStack* pTheVolumetricStack) override;
+	IVolumeDataColor * CreateNewColor(IVector3DField* pTheVector3DField, const Lib3MF::sTransform Transform) override;
+
+	void RemoveColor() override;
 
 	Lib3MF_uint32 GetPropertyCount() override;
 
 	IVolumeDataProperty * GetProperty(const Lib3MF_uint32 nIndex) override;
 
-	IVolumeDataProperty * AddProperty(const std::string & sName, IVolumetricStack* pTheVolumetricStack) override;
+	IVolumeDataProperty * AddProperty(const std::string & sName, const Lib3MF_uint32 nUniqueResourceID) override;
 
-	IVolumeDataProperty * FindProperty(const std::string & sName) override;
+	void RemoveProperty(const Lib3MF_uint32 nIndex) override;
 
-	void RemoveProperty(const std::string & sName) override;
 };
 
 } // namespace Impl

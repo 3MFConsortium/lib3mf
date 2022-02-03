@@ -61,9 +61,7 @@ Abstract: This is a stub class definition of CModel
 #include "lib3mf_packagepart.hpp"
 #include "lib3mf_keystore.hpp"
 #include "lib3mf_image3d.hpp"
-#include "lib3mf_volumetricstack.hpp"
 #include "lib3mf_image3diterator.hpp"
-#include "lib3mf_volumetricstackiterator.hpp"
 
 
 // Include custom headers here.
@@ -690,13 +688,64 @@ Lib3MF::sBox CModel::GetOutbox()
 	return s;
 }
 
-IImage3D * CModel::AddImage3D(const Lib3MF_uint32 nSizeX, const Lib3MF_uint32 nSizeY, const Lib3MF_uint32 nSheetCount)
+IImageStack * CModel::AddImageStack(const Lib3MF_uint32 nSizeX, const Lib3MF_uint32 nSizeY, const Lib3MF_uint32 nSheetCount)
 {
-	NMR::PModelImage3D pResource = NMR::CModelImage3D::make(model().generateResourceID(), &model(), nSizeX, nSizeY, nSheetCount);
-	model().addResource(pResource);
+	//NMR::PModelImage3D pResource = NMR::CModelImage3D::make(model().generateResourceID(), &model(), nSizeX, nSizeY, nSheetCount);
+	//model().addResource(pResource);
 
-	return new CImage3D(pResource);
+	//return new CImage3D(pResource);
 
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
+
+IScalarFieldFromImage3D* CModel::AddScalarFieldFromImage3D()
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
+
+IScalarFieldComposed* CModel::AddScalarFieldComposed()
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
+
+IScalarField* CModel::GetScalarFieldByID(const Lib3MF_uint32 nUniqueResourceID)
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
+
+IScalarFieldFromImage3D* CModel::GetScalarFieldFromImage3DByID(const Lib3MF_uint32 nUniqueResourceID)
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
+
+IScalarFieldComposed* CModel::GetScalarFieldComposedByID(const Lib3MF_uint32 nUniqueResourceID)
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
+
+IVector3DFieldFromImage3D* CModel::AddVector3DFieldFromImage3D()
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
+
+IVector3DFieldComposed* CModel::AddVector3DFieldComposed()
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
+
+IVector3DField* CModel::GetVector3DFieldByID(const Lib3MF_uint32 nUniqueResourceID)
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
+
+IVector3DFieldFromImage3D* CModel::GetVector3DFieldFromImage3DByID(const Lib3MF_uint32 nUniqueResourceID)
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
+
+IVector3DFieldComposed* CModel::GetVector3DFieldComposedByID(const Lib3MF_uint32 nUniqueResourceID)
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 IImage3DIterator * CModel::GetImage3Ds()
@@ -711,24 +760,14 @@ IImage3DIterator * CModel::GetImage3Ds()
 	return pResult.release();
 }
 
-IVolumetricStack * CModel::AddVolumetricStack()
+IScalarFieldIterator* CModel::GetScalarFields()
 {
-	NMR::PModelVolumetricStack pResource = NMR::CModelVolumetricStack::make(model().generateResourceID(), &model());
-	model().addResource(pResource);
-
-	return new CVolumetricStack(pResource, pResource->getModel());
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-IVolumetricStackIterator * CModel::GetVolumetricStacks()
+IVector3DFieldIterator* CModel::GetVector3DFields()
 {
-	auto pResult = std::unique_ptr<CVolumetricStackIterator>(new CVolumetricStackIterator(m_model));
-	Lib3MF_uint32 nVolumeStackCount = model().getVolumetricStackCount();
-
-	for (Lib3MF_uint32 nIdx = 0; nIdx < nVolumeStackCount; nIdx++) {
-		auto resource = model().getVolumetricStackResource(nIdx);
-		pResult->addResource(resource);
-	}
-	return pResult.release();
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 IKeyStore * Lib3MF::Impl::CModel::GetKeyStore()

@@ -55,17 +55,12 @@ Lib3MF_uint32 CVolumeDataComposite::GetMaterialMappingCount()
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CVolumeDataComposite::GetMaterialMapping(const Lib3MF_uint32 nIndex, Lib3MF_uint32 & nPropertyID, std::string & sChannelName)
+IMaterialMapping * CVolumeDataComposite::GetMaterialMapping(const Lib3MF_uint32 nIndex)
 {
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-void CVolumeDataComposite::SetMaterialMapping(const Lib3MF_uint32 nIndex, Lib3MF_uint32 & nPropertyID, std::string & sChannelName)
-{
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
-}
-
-void CVolumeDataComposite::AddMaterialMapping(const Lib3MF_uint32 nPropertyID, const std::string & sChannelName)
+IMaterialMapping * CVolumeDataComposite::AddMaterialMapping(const Lib3MF::sTransform Transform)
 {
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }

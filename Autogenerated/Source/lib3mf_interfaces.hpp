@@ -68,15 +68,25 @@ class ITexture2DGroupIterator;
 class ICompositeMaterialsIterator;
 class IMultiPropertyGroupIterator;
 class IImage3DIterator;
-class IVolumetricStackIterator;
+class IScalarFieldIterator;
+class IVector3DFieldIterator;
 class IMetaData;
 class IMetaDataGroup;
 class IObject;
 class IMeshObject;
 class IBeamLattice;
-class IVolumeDataItem;
+class IScalarField;
+class IVector3DField;
+class IScalarFieldFromImage3D;
+class IScalarFieldComposed;
+class IVector3DFieldFromImage3D;
+class IVector3DFieldComposed;
+class IFieldReference;
+class IScalarFieldReference;
+class IVector3DFieldReference;
 class IVolumeDataLevelset;
 class IVolumeDataColor;
+class IMaterialMapping;
 class IVolumeDataComposite;
 class IVolumeDataProperty;
 class IVolumeData;
@@ -89,9 +99,7 @@ class ITexture2DGroup;
 class ICompositeMaterials;
 class IMultiPropertyGroup;
 class IImage3D;
-class IImage3DChannelSelector;
-class IVolumetricLayer;
-class IVolumetricStack;
+class IImageStack;
 class IAttachment;
 class ITexture2D;
 class IBuildItem;
@@ -690,20 +698,37 @@ typedef IBaseSharedPtr<IImage3DIterator> PIImage3DIterator;
 
 
 /*************************************************************************************************************************
- Class interface for VolumetricStackIterator 
+ Class interface for ScalarFieldIterator 
 **************************************************************************************************************************/
 
-class IVolumetricStackIterator : public virtual IResourceIterator {
+class IScalarFieldIterator : public virtual IResourceIterator {
 public:
 	/**
-	* IVolumetricStackIterator::GetCurrentVolumetricStack - Returns the VolumetricStack the iterator points at.
-	* @return returns the VolumetricStack instance.
+	* IScalarFieldIterator::GetCurrentScalarField - Returns the ScalarField the iterator points at.
+	* @return returns the ScalarField instance.
 	*/
-	virtual IVolumetricStack * GetCurrentVolumetricStack() = 0;
+	virtual IScalarField * GetCurrentScalarField() = 0;
 
 };
 
-typedef IBaseSharedPtr<IVolumetricStackIterator> PIVolumetricStackIterator;
+typedef IBaseSharedPtr<IScalarFieldIterator> PIScalarFieldIterator;
+
+
+/*************************************************************************************************************************
+ Class interface for Vector3DFieldIterator 
+**************************************************************************************************************************/
+
+class IVector3DFieldIterator : public virtual IResourceIterator {
+public:
+	/**
+	* IVector3DFieldIterator::GetCurrentVector3DField - Returns the Vector3DField the iterator points at.
+	* @return returns the Vector3DField instance.
+	*/
+	virtual IVector3DField * GetCurrentVector3DField() = 0;
+
+};
+
+typedef IBaseSharedPtr<IVector3DFieldIterator> PIVector3DFieldIterator;
 
 
 /*************************************************************************************************************************
@@ -1306,45 +1331,453 @@ typedef IBaseSharedPtr<IBeamLattice> PIBeamLattice;
 
 
 /*************************************************************************************************************************
- Class interface for VolumeDataItem 
+ Class interface for ScalarField 
 **************************************************************************************************************************/
 
-class IVolumeDataItem : public virtual IBase {
+class IScalarField : public virtual IResource {
 public:
 	/**
-	* IVolumeDataItem::GetVolumetricStack - Returns the VolumetricStack used within this volume data item
-	* @return VolumetricStack used within this volume data item
+	* IScalarField::GetName - Gets the name of this ScalarField.
+	* @return The name of this ScalarField.
 	*/
-	virtual IVolumetricStack * GetVolumetricStack() = 0;
+	virtual std::string GetName() = 0;
 
 	/**
-	* IVolumeDataItem::SetVolumetricStack - Sets the VolumetricStack to use within this volume data item.
-	* @param[in] pTheVolumetricStack - VolumetricStack to use within this volume data item
+	* IScalarField::SetName - Sets the name of this ScalarField.
+	* @param[in] sName - The name of this ScalarField.
 	*/
-	virtual void SetVolumetricStack(IVolumetricStack* pTheVolumetricStack) = 0;
+	virtual void SetName(const std::string & sName) = 0;
 
 	/**
-	* IVolumeDataItem::GetTransform - Returns the transformation matrix of the volume data item.
-	* @return filled with the volume data item transformation matrix
+	* IScalarField::IsFromImage3D - Retrieves, if this ScalarField is a ScalarFieldFromImage3D
+	* @return returns, whether the scalar field is a ScalarFieldFromImage3D
+	*/
+	virtual bool IsFromImage3D() = 0;
+
+	/**
+	* IScalarField::IsComposed - Retrieves, if this ScalarField is a ScalarFieldComposed
+	* @return returns, whether the scalar field is a ScalarFieldComposed
+	*/
+	virtual bool IsComposed() = 0;
+
+};
+
+typedef IBaseSharedPtr<IScalarField> PIScalarField;
+
+
+/*************************************************************************************************************************
+ Class interface for Vector3DField 
+**************************************************************************************************************************/
+
+class IVector3DField : public virtual IResource {
+public:
+	/**
+	* IVector3DField::GetName - Gets the name of this Vector3DField.
+	* @return The name of this Vector3DField.
+	*/
+	virtual std::string GetName() = 0;
+
+	/**
+	* IVector3DField::SetName - Sets the name of this Vector3DField.
+	* @param[in] sName - The name of this Vector3DField.
+	*/
+	virtual void SetName(const std::string & sName) = 0;
+
+	/**
+	* IVector3DField::IsFromImage3D - Retrieves, if this Vector3DField is a Vector3DFieldFromImage3D
+	* @return returns, whether the scalar field is a Vector3DFieldFromImage3D
+	*/
+	virtual bool IsFromImage3D() = 0;
+
+	/**
+	* IVector3DField::IsComposed - Retrieves, if this Vector3DField is a ScalarFieldComposed
+	* @return returns, whether the scalar field is a Vector3DFieldComposed
+	*/
+	virtual bool IsComposed() = 0;
+
+};
+
+typedef IBaseSharedPtr<IVector3DField> PIVector3DField;
+
+
+/*************************************************************************************************************************
+ Class interface for ScalarFieldFromImage3D 
+**************************************************************************************************************************/
+
+class IScalarFieldFromImage3D : public virtual IScalarField {
+public:
+	/**
+	* IScalarFieldFromImage3D::GetImage - Returns the selected 3D image.
+	* @return image instance
+	*/
+	virtual IImage3D * GetImage() = 0;
+
+	/**
+	* IScalarFieldFromImage3D::SetImage - Sets the 3D image of the selector.
+	* @param[in] pImage3D - image instance
+	*/
+	virtual void SetImage(IImage3D* pImage3D) = 0;
+
+	/**
+	* IScalarFieldFromImage3D::SetChannel - Sets the channel name to be picked from the referenced Image3D.
+	* @param[in] eName - Sets the channel name.
+	*/
+	virtual void SetChannel(const Lib3MF::eChannelName eName) = 0;
+
+	/**
+	* IScalarFieldFromImage3D::GetChannel - Gets the channel name to be picked from the referenced Image3D.
+	* @return Sets the channel name.
+	*/
+	virtual Lib3MF::eChannelName GetChannel() = 0;
+
+	/**
+	* IScalarFieldFromImage3D::SetFilter - Sets the texture filter of the selector.
+	* @param[in] eFilter - texture filter
+	*/
+	virtual void SetFilter(const Lib3MF::eTextureFilter eFilter) = 0;
+
+	/**
+	* IScalarFieldFromImage3D::GetFilter - Returns the texture filter of the selector.
+	* @return texture filter
+	*/
+	virtual Lib3MF::eTextureFilter GetFilter() = 0;
+
+	/**
+	* IScalarFieldFromImage3D::SetTileStyles - Sets the tile styles of the selector.
+	* @param[in] eTileStyleU - tile style in U
+	* @param[in] eTileStyleV - tile style in V
+	* @param[in] eTileStyleW - tile style in W
+	*/
+	virtual void SetTileStyles(const Lib3MF::eTextureTileStyle eTileStyleU, const Lib3MF::eTextureTileStyle eTileStyleV, const Lib3MF::eTextureTileStyle eTileStyleW) = 0;
+
+	/**
+	* IScalarFieldFromImage3D::GetTileStyles - Retrieves the tile styles of the selector.
+	* @param[out] eTileStyleU - tile style in U
+	* @param[out] eTileStyleV - tile style in V
+	* @param[out] eTileStyleW - tile style in W
+	*/
+	virtual void GetTileStyles(Lib3MF::eTextureTileStyle & eTileStyleU, Lib3MF::eTextureTileStyle & eTileStyleV, Lib3MF::eTextureTileStyle & eTileStyleW) = 0;
+
+	/**
+	* IScalarFieldFromImage3D::GetOffset - returns the offset value for the pixel values in the Image3D
+	* @return the offset value for the pixel values in the Image3D
+	*/
+	virtual Lib3MF_double GetOffset() = 0;
+
+	/**
+	* IScalarFieldFromImage3D::SetOffset - Sets the offset value for the pixel values in the Image3D
+	* @param[in] dOffset - the offset value for the pixel values in the Image3D
+	*/
+	virtual void SetOffset(const Lib3MF_double dOffset) = 0;
+
+	/**
+	* IScalarFieldFromImage3D::GetScale - returns the scale value for the pixel values in the Image3D
+	* @return the scale value for the pixel values in the Image3D
+	*/
+	virtual Lib3MF_double GetScale() = 0;
+
+	/**
+	* IScalarFieldFromImage3D::SetScale - Sets the scale value for the pixel values in the Image3D
+	* @param[in] dScale - the scale value for the pixel values in the Image3D
+	*/
+	virtual void SetScale(const Lib3MF_double dScale) = 0;
+
+};
+
+typedef IBaseSharedPtr<IScalarFieldFromImage3D> PIScalarFieldFromImage3D;
+
+
+/*************************************************************************************************************************
+ Class interface for ScalarFieldComposed 
+**************************************************************************************************************************/
+
+class IScalarFieldComposed : public virtual IScalarField {
+public:
+	/**
+	* IScalarFieldComposed::SetMethod - Sets the method to used for composition.
+	* @param[in] eTheMethod - Sets the composition method.
+	*/
+	virtual void SetMethod(const Lib3MF::eCompositionMethod eTheMethod) = 0;
+
+	/**
+	* IScalarFieldComposed::GetMethod - Gets the method to used for composition.
+	* @return Gets the composition method.
+	*/
+	virtual Lib3MF::eCompositionMethod GetMethod() = 0;
+
+	/**
+	* IScalarFieldComposed::GetFactor1 - returns the factor scalar field 1 is multiplied with when composited
+	* @return the factor scalar field 1 is multiplied with when composited
+	*/
+	virtual Lib3MF_double GetFactor1() = 0;
+
+	/**
+	* IScalarFieldComposed::SetFactor1 - sets the factor scalar field 1 is multiplied with when composited
+	* @param[in] dFactor1 - the factor scalar field 1 is multiplied with when composited
+	*/
+	virtual void SetFactor1(const Lib3MF_double dFactor1) = 0;
+
+	/**
+	* IScalarFieldComposed::GetFactor2 - returns the factor scalar field 2 is multiplied with when composited
+	* @return the factor scalar field 2 is multiplied with when composited
+	*/
+	virtual Lib3MF_double GetFactor2() = 0;
+
+	/**
+	* IScalarFieldComposed::SetFactor2 - sets the factor scalar field 2 is multiplied with when composited
+	* @param[in] dFactor2 - the factor scalar field 2 is multiplied with when composited
+	*/
+	virtual void SetFactor2(const Lib3MF_double dFactor2) = 0;
+
+	/**
+	* IScalarFieldComposed::ScalarFieldReference1 - Access to the ScalarFieldReference for the first composited field
+	* @return ScalarFieldReference
+	*/
+	virtual IScalarFieldReference * ScalarFieldReference1() = 0;
+
+	/**
+	* IScalarFieldComposed::ScalarFieldReference2 - Access to the ScalarFieldReference for the second composited field
+	* @return ScalarFieldReference
+	*/
+	virtual IScalarFieldReference * ScalarFieldReference2() = 0;
+
+	/**
+	* IScalarFieldComposed::ScalarFieldReferenceMask - Access to the ScalarFieldReference for masking. Only relevant if the Method is mask.
+	* @return ScalarFieldReference
+	*/
+	virtual IScalarFieldReference * ScalarFieldReferenceMask() = 0;
+
+};
+
+typedef IBaseSharedPtr<IScalarFieldComposed> PIScalarFieldComposed;
+
+
+/*************************************************************************************************************************
+ Class interface for Vector3DFieldFromImage3D 
+**************************************************************************************************************************/
+
+class IVector3DFieldFromImage3D : public virtual IScalarField {
+public:
+	/**
+	* IVector3DFieldFromImage3D::GetImage - Returns the selected 3D image.
+	* @return image instance
+	*/
+	virtual IImage3D * GetImage() = 0;
+
+	/**
+	* IVector3DFieldFromImage3D::SetImage - Sets the 3D image of the selector.
+	* @param[in] pImage3D - image instance
+	*/
+	virtual void SetImage(IImage3D* pImage3D) = 0;
+
+	/**
+	* IVector3DFieldFromImage3D::SetFilter - Sets the texture filter of the selector.
+	* @param[in] eFilter - texture filter
+	*/
+	virtual void SetFilter(const Lib3MF::eTextureFilter eFilter) = 0;
+
+	/**
+	* IVector3DFieldFromImage3D::GetFilter - Returns the texture filter of the selector.
+	* @return texture filter
+	*/
+	virtual Lib3MF::eTextureFilter GetFilter() = 0;
+
+	/**
+	* IVector3DFieldFromImage3D::SetTileStyles - Sets the tile styles of the selector.
+	* @param[in] eTileStyleU - tile style in U
+	* @param[in] eTileStyleV - tile style in V
+	* @param[in] eTileStyleW - tile style in W
+	*/
+	virtual void SetTileStyles(const Lib3MF::eTextureTileStyle eTileStyleU, const Lib3MF::eTextureTileStyle eTileStyleV, const Lib3MF::eTextureTileStyle eTileStyleW) = 0;
+
+	/**
+	* IVector3DFieldFromImage3D::GetTileStyles - Retrieves the tile styles of the selector.
+	* @param[out] eTileStyleU - tile style in U
+	* @param[out] eTileStyleV - tile style in V
+	* @param[out] eTileStyleW - tile style in W
+	*/
+	virtual void GetTileStyles(Lib3MF::eTextureTileStyle & eTileStyleU, Lib3MF::eTextureTileStyle & eTileStyleV, Lib3MF::eTextureTileStyle & eTileStyleW) = 0;
+
+	/**
+	* IVector3DFieldFromImage3D::GetOffset - returns the offset value for the pixel values in the Image3D
+	* @return the offset value for the pixel values in the Image3D
+	*/
+	virtual Lib3MF_double GetOffset() = 0;
+
+	/**
+	* IVector3DFieldFromImage3D::SetOffset - Sets the offset value for the pixel values in the Image3D
+	* @param[in] dOffset - the offset value for the pixel values in the Image3D
+	*/
+	virtual void SetOffset(const Lib3MF_double dOffset) = 0;
+
+	/**
+	* IVector3DFieldFromImage3D::GetScale - returns the scale value for the pixel values in the Image3D
+	* @return the scale value for the pixel values in the Image3D
+	*/
+	virtual Lib3MF_double GetScale() = 0;
+
+	/**
+	* IVector3DFieldFromImage3D::SetScale - Sets the scale value for the pixel values in the Image3D
+	* @param[in] dScale - the scale value for the pixel values in the Image3D
+	*/
+	virtual void SetScale(const Lib3MF_double dScale) = 0;
+
+};
+
+typedef IBaseSharedPtr<IVector3DFieldFromImage3D> PIVector3DFieldFromImage3D;
+
+
+/*************************************************************************************************************************
+ Class interface for Vector3DFieldComposed 
+**************************************************************************************************************************/
+
+class IVector3DFieldComposed : public virtual IScalarField {
+public:
+	/**
+	* IVector3DFieldComposed::SetMethod - Sets the method to used for composition.
+	* @param[in] eTheMethod - Sets the composition method.
+	*/
+	virtual void SetMethod(const Lib3MF::eCompositionMethod eTheMethod) = 0;
+
+	/**
+	* IVector3DFieldComposed::GetMethod - Gets the method to used for composition.
+	* @return Gets the composition method.
+	*/
+	virtual Lib3MF::eCompositionMethod GetMethod() = 0;
+
+	/**
+	* IVector3DFieldComposed::GetFactor1 - returns the factor vector3d field 1 is multiplied with when composited
+	* @return the factor vector3d field 1 is multiplied with when composited
+	*/
+	virtual Lib3MF_double GetFactor1() = 0;
+
+	/**
+	* IVector3DFieldComposed::SetFactor1 - sets the factor vector3d field 1 is multiplied with when composited
+	* @param[in] dFactor1 - the factor vector3d field 1 is multiplied with when composited
+	*/
+	virtual void SetFactor1(const Lib3MF_double dFactor1) = 0;
+
+	/**
+	* IVector3DFieldComposed::GetFactor2 - returns the vector3d scalar field 2 is multiplied with when composited
+	* @return the factor vector3d field 2 is multiplied with when composited
+	*/
+	virtual Lib3MF_double GetFactor2() = 0;
+
+	/**
+	* IVector3DFieldComposed::SetFactor2 - sets the factor vector3d field 2 is multiplied with when composited
+	* @param[in] dFactor2 - the factor vector3d field 2 is multiplied with when composited
+	*/
+	virtual void SetFactor2(const Lib3MF_double dFactor2) = 0;
+
+	/**
+	* IVector3DFieldComposed::Vector3DFieldReference1 - Access to the Vector3DFieldReference for the first composited field
+	* @return Vector3DFieldReference
+	*/
+	virtual IVector3DFieldReference * Vector3DFieldReference1() = 0;
+
+	/**
+	* IVector3DFieldComposed::Vector3DFieldReference2 - Access to the Vector3DFieldReference for the second composited field
+	* @return Vector3DFieldReference
+	*/
+	virtual IVector3DFieldReference * Vector3DFieldReference2() = 0;
+
+	/**
+	* IVector3DFieldComposed::ScalarFieldReferenceMask - Access to the ScalarFieldReference for masking. Only relevant if the Method is mask.
+	* @return ScalarFieldReference
+	*/
+	virtual IScalarFieldReference * ScalarFieldReferenceMask() = 0;
+
+};
+
+typedef IBaseSharedPtr<IVector3DFieldComposed> PIVector3DFieldComposed;
+
+
+/*************************************************************************************************************************
+ Class interface for FieldReference 
+**************************************************************************************************************************/
+
+class IFieldReference : public virtual IBase {
+public:
+	/**
+	* IFieldReference::GetFieldResourceID - Returns the UniqueResourceID of the Field (Scalar- or Vector3DField).
+	* @return returns the UniqueResourceID.
+	*/
+	virtual Lib3MF_uint32 GetFieldResourceID() = 0;
+
+	/**
+	* IFieldReference::SetFieldResourceID - Sets the UniqueResourceID to refer to.
+	* @param[in] nUniqueResourceID - UniqueResourceID of the Field (Scalar- or Vector3DField)
+	*/
+	virtual void SetFieldResourceID(const Lib3MF_uint32 nUniqueResourceID) = 0;
+
+	/**
+	* IFieldReference::GetTransform - Returns the transformation matrix into the coordinate system of the referenced Field.
+	* @return the transformation matrix
 	*/
 	virtual Lib3MF::sTransform GetTransform() = 0;
 
 	/**
-	* IVolumeDataItem::SetTransform - Sets the transformation matrix of the volume data item.
+	* IFieldReference::SetTransform - Sets the transformation matrix into the coordinate system of the referenced Field.
 	* @param[in] Transform - new transformation matrix
 	*/
 	virtual void SetTransform(const Lib3MF::sTransform Transform) = 0;
 
 };
 
-typedef IBaseSharedPtr<IVolumeDataItem> PIVolumeDataItem;
+typedef IBaseSharedPtr<IFieldReference> PIFieldReference;
+
+
+/*************************************************************************************************************************
+ Class interface for ScalarFieldReference 
+**************************************************************************************************************************/
+
+class IScalarFieldReference : public virtual IFieldReference {
+public:
+	/**
+	* IScalarFieldReference::GetScalarField - Returns the ScalarField
+	* @return ScalarField used in this element
+	*/
+	virtual IScalarField * GetScalarField() = 0;
+
+	/**
+	* IScalarFieldReference::SetScalarField - Sets the ScalarField to use within this volume data item.
+	* @param[in] pTheScalarField - ScalarField used in this element
+	*/
+	virtual void SetScalarField(IScalarField* pTheScalarField) = 0;
+
+};
+
+typedef IBaseSharedPtr<IScalarFieldReference> PIScalarFieldReference;
+
+
+/*************************************************************************************************************************
+ Class interface for Vector3DFieldReference 
+**************************************************************************************************************************/
+
+class IVector3DFieldReference : public virtual IFieldReference {
+public:
+	/**
+	* IVector3DFieldReference::GetVector3DField - Returns the Vector3DField
+	* @return Vector3DField used in this element
+	*/
+	virtual IVector3DField * GetVector3DField() = 0;
+
+	/**
+	* IVector3DFieldReference::SetVector3DField - Sets the Vector3DField to use within this volume data item.
+	* @param[in] pTheVector3DField - Vector3DField used in this element
+	*/
+	virtual void SetVector3DField(IVector3DField* pTheVector3DField) = 0;
+
+};
+
+typedef IBaseSharedPtr<IVector3DFieldReference> PIVector3DFieldReference;
 
 
 /*************************************************************************************************************************
  Class interface for VolumeDataLevelset 
 **************************************************************************************************************************/
 
-class IVolumeDataLevelset : public virtual IVolumeDataItem {
+class IVolumeDataLevelset : public virtual IScalarFieldReference {
 public:
 	/**
 	* IVolumeDataLevelset::GetSolidThreshold - Returns the solidthreshold for the levelset function encoded in this VolumeDataLevelset
@@ -1358,18 +1791,6 @@ public:
 	*/
 	virtual void SetSolidThreshold(const Lib3MF_double dTheSolidThreshold) = 0;
 
-	/**
-	* IVolumeDataLevelset::SetChannel - Sets the name of the channel that holds the levelset function.
-	* @param[in] sChannelName - The name of the channel that holds the levelset function
-	*/
-	virtual void SetChannel(const std::string & sChannelName) = 0;
-
-	/**
-	* IVolumeDataLevelset::GetChannel - Returns the name of the channel that holds the levelset function.
-	* @return The name of the channel that holds the levelset function
-	*/
-	virtual std::string GetChannel() = 0;
-
 };
 
 typedef IBaseSharedPtr<IVolumeDataLevelset> PIVolumeDataLevelset;
@@ -1379,73 +1800,61 @@ typedef IBaseSharedPtr<IVolumeDataLevelset> PIVolumeDataLevelset;
  Class interface for VolumeDataColor 
 **************************************************************************************************************************/
 
-class IVolumeDataColor : public virtual IVolumeDataItem {
+class IVolumeDataColor : public virtual IVector3DFieldReference {
 public:
-	/**
-	* IVolumeDataColor::SetChannel - Sets the name of the channel that holds the levelset function.
-	* @param[in] eTheColorChannel - The color in question
-	* @param[in] sChannelName - The new name of the channel that holds the scalar function of this ColorChannel
-	*/
-	virtual void SetChannel(const Lib3MF::eColorChannel eTheColorChannel, const std::string & sChannelName) = 0;
-
-	/**
-	* IVolumeDataColor::GetChannel - Returns the name of the channel that holds the levelset function.
-	* @param[in] eTheColorChannel - The color in question
-	* @return The name of the channel that holds the scalar function of this ColorChannel
-	*/
-	virtual std::string GetChannel(const Lib3MF::eColorChannel eTheColorChannel) = 0;
-
 };
 
 typedef IBaseSharedPtr<IVolumeDataColor> PIVolumeDataColor;
 
 
 /*************************************************************************************************************************
+ Class interface for MaterialMapping 
+**************************************************************************************************************************/
+
+class IMaterialMapping : public virtual IScalarFieldReference {
+public:
+};
+
+typedef IBaseSharedPtr<IMaterialMapping> PIMaterialMapping;
+
+
+/*************************************************************************************************************************
  Class interface for VolumeDataComposite 
 **************************************************************************************************************************/
 
-class IVolumeDataComposite : public virtual IVolumeDataItem {
+class IVolumeDataComposite : public virtual IBase {
 public:
 	/**
 	* IVolumeDataComposite::GetBaseMaterialGroup - Returns the BaseMaterialGroup used within this volume data item
-	* @return The BaseMaterialGroup instance of this VolumeDataComposite
+	* @return The BaseMaterialGroup instance of this VolumeDataComposite element
 	*/
 	virtual IBaseMaterialGroup * GetBaseMaterialGroup() = 0;
 
 	/**
 	* IVolumeDataComposite::SetBaseMaterialGroup - Sets the BaseMaterialGroup to use within this volume data item.
-	* @param[in] pBaseMaterialGroupInstance - The new BaseMaterialGroup instance of this VolumeDataComposite
+	* @param[in] pBaseMaterialGroupInstance - The new BaseMaterialGroup instance of this VolumeDataComposite element
 	*/
 	virtual void SetBaseMaterialGroup(IBaseMaterialGroup* pBaseMaterialGroupInstance) = 0;
 
 	/**
-	* IVolumeDataComposite::GetMaterialMappingCount - Returns the number of material mappings of this VolumeDataComposite
+	* IVolumeDataComposite::GetMaterialMappingCount - Returns the number of material mappings of this VolumeDataComposite element
 	* @return the number of material mappings.
 	*/
 	virtual Lib3MF_uint32 GetMaterialMappingCount() = 0;
 
 	/**
-	* IVolumeDataComposite::GetMaterialMapping - Returns PropertyID and ChannelName of the MaterialMapping with given index
+	* IVolumeDataComposite::GetMaterialMapping - Returns MaterialMappting with given index
 	* @param[in] nIndex - Index of the MaterialMapping in question.
-	* @param[out] nPropertyID - PropertyID of the material.
-	* @param[out] sChannelName - The name of the channel that holds the intensity function of this Material within the Composite
+	* @return MaterialMapping used in this element
 	*/
-	virtual void GetMaterialMapping(const Lib3MF_uint32 nIndex, Lib3MF_uint32 & nPropertyID, std::string & sChannelName) = 0;
-
-	/**
-	* IVolumeDataComposite::SetMaterialMapping - Sets PropertyID and ChannelName of the MaterialMapping with given index
-	* @param[in] nIndex - Index of the MaterialMapping in question.
-	* @param[out] nPropertyID - New PropertyID of the material.
-	* @param[out] sChannelName - The new name of the channel that holds the intensity function of this Material within the Composite
-	*/
-	virtual void SetMaterialMapping(const Lib3MF_uint32 nIndex, Lib3MF_uint32 & nPropertyID, std::string & sChannelName) = 0;
+	virtual IMaterialMapping * GetMaterialMapping(const Lib3MF_uint32 nIndex) = 0;
 
 	/**
 	* IVolumeDataComposite::AddMaterialMapping - Adds a the MaterialMapping
-	* @param[in] nPropertyID - PropertyID of the new MaterialMapping
-	* @param[in] sChannelName - The name of the channel that holds the intensity function of the new Material within the Composite
+	* @param[in] Transform - new transformation matrix
+	* @return The new MaterialMapping
 	*/
-	virtual void AddMaterialMapping(const Lib3MF_uint32 nPropertyID, const std::string & sChannelName) = 0;
+	virtual IMaterialMapping * AddMaterialMapping(const Lib3MF::sTransform Transform) = 0;
 
 	/**
 	* IVolumeDataComposite::RemoveMaterialMapping - Removes the MaterialMapping with given index
@@ -1462,20 +1871,8 @@ typedef IBaseSharedPtr<IVolumeDataComposite> PIVolumeDataComposite;
  Class interface for VolumeDataProperty 
 **************************************************************************************************************************/
 
-class IVolumeDataProperty : public virtual IVolumeDataItem {
+class IVolumeDataProperty : public virtual IFieldReference {
 public:
-	/**
-	* IVolumeDataProperty::SetChannel - Sets the channel name to be used for this property
-	* @param[in] sChannelName - The mew channel name to be used for this property.
-	*/
-	virtual void SetChannel(const std::string & sChannelName) = 0;
-
-	/**
-	* IVolumeDataProperty::GetChannel - Gets the channel name to be used for this property.
-	* @return The channel name to be used for this property.
-	*/
-	virtual std::string GetChannel() = 0;
-
 	/**
 	* IVolumeDataProperty::SetName - Sets the qualified name of this property.
 	* @param[in] sPropertyName - The new qualified name of this property
@@ -1519,10 +1916,16 @@ public:
 
 	/**
 	* IVolumeData::CreateNewLevelset - Creates a new VolumeDataLevelset for this VolumeData instance
-	* @param[in] pTheVolumetricStack - The VolumetricStack for the new VolumeDataLevelset.
+	* @param[in] pTheScalarField - ScalarField used in this element
+	* @param[in] Transform - new transformation matrix
 	* @return The new VolumeDataLevelset of this VolumeData instance.
 	*/
-	virtual IVolumeDataLevelset * CreateNewLevelset(IVolumetricStack* pTheVolumetricStack) = 0;
+	virtual IVolumeDataLevelset * CreateNewLevelset(IScalarField* pTheScalarField, const Lib3MF::sTransform Transform) = 0;
+
+	/**
+	* IVolumeData::RemoveLevelset - Removes the VolumeDataLevelset of this VolumeData instance
+	*/
+	virtual void RemoveLevelset() = 0;
 
 	/**
 	* IVolumeData::GetComposite - Returns the VolumeDataComposite of this VolumeData instance
@@ -1532,10 +1935,14 @@ public:
 
 	/**
 	* IVolumeData::CreateNewComposite - Creates a new VolumeDataComposite for this VolumeData instance
-	* @param[in] pTheVolumetricStack - The VolumetricStack for the new VolumeDataComposite.
 	* @return The new VolumeDataComposite of this VolumeData instance.
 	*/
-	virtual IVolumeDataComposite * CreateNewComposite(IVolumetricStack* pTheVolumetricStack) = 0;
+	virtual IVolumeDataComposite * CreateNewComposite() = 0;
+
+	/**
+	* IVolumeData::RemoveComposite - Removes the VolumeDataComposite of this VolumeData instance
+	*/
+	virtual void RemoveComposite() = 0;
 
 	/**
 	* IVolumeData::GetColor - Returns the VolumeDataColor of this VolumeData instance
@@ -1545,10 +1952,16 @@ public:
 
 	/**
 	* IVolumeData::CreateNewColor - Creates a new VolumeDataColor for this VolumeData instance
-	* @param[in] pTheVolumetricStack - The VolumetricStack for the new VolumeDataComposite.
+	* @param[in] pTheVector3DField - Vector3DField used in this element
+	* @param[in] Transform - new transformation matrix
 	* @return The new VolumeDataColor of this VolumeData instance.
 	*/
-	virtual IVolumeDataColor * CreateNewColor(IVolumetricStack* pTheVolumetricStack) = 0;
+	virtual IVolumeDataColor * CreateNewColor(IVector3DField* pTheVector3DField, const Lib3MF::sTransform Transform) = 0;
+
+	/**
+	* IVolumeData::RemoveColor - Removes the VolumeDataColor of this VolumeData instance
+	*/
+	virtual void RemoveColor() = 0;
 
 	/**
 	* IVolumeData::GetPropertyCount - Returns the number of VolumeDataProperty
@@ -1564,25 +1977,18 @@ public:
 	virtual IVolumeDataProperty * GetProperty(const Lib3MF_uint32 nIndex) = 0;
 
 	/**
-	* IVolumeData::FindProperty - Returns the VolumeDataProperty at a given Index
-	* @param[in] sName - the qualified name of the VolumeDataProperty to be returned.
-	* @return the VolumeDataProperty at the given index.
-	*/
-	virtual IVolumeDataProperty * FindProperty(const std::string & sName) = 0;
-
-	/**
 	* IVolumeData::AddProperty - Adds a new VolumeDataProperty
 	* @param[in] sName - the qualified name (namespace+name) of the Property
-	* @param[in] pTheVolumetricStack - The VolumetricStack for the new VolumeDataProperty.
-	* @return the new VolumeDataProperty.
+	* @param[in] nUniqueResourceID - UniqueResourceID of the Field (Scalar- or Vector3DField)
+	* @return the newly created VolumeDataProperty.
 	*/
-	virtual IVolumeDataProperty * AddProperty(const std::string & sName, IVolumetricStack* pTheVolumetricStack) = 0;
+	virtual IVolumeDataProperty * AddProperty(const std::string & sName, const Lib3MF_uint32 nUniqueResourceID) = 0;
 
 	/**
-	* IVolumeData::RemoveProperty - Removes the VolumeDataProperty with a given name
-	* @param[in] sName - the qualified name of the VolumeDataProperty to be removed.
+	* IVolumeData::RemoveProperty - Removes the VolumeDataProperty with a given index
+	* @param[in] nIndex - the index of the VolumeDataProperty to be removed.
 	*/
-	virtual void RemoveProperty(const std::string & sName) = 0;
+	virtual void RemoveProperty(const Lib3MF_uint32 nIndex) = 0;
 
 };
 
@@ -2065,97 +2471,22 @@ typedef IBaseSharedPtr<IMultiPropertyGroup> PIMultiPropertyGroup;
 class IImage3D : public virtual IResource {
 public:
 	/**
-	* IImage3D::GetSizeX - Retrieves the extensions of the image stack in X direction.
-	* @return size in X
+	* IImage3D::GetName - returns the name of this Image3D
+	* @return the name of this Image3D
 	*/
-	virtual Lib3MF_uint32 GetSizeX() = 0;
+	virtual std::string GetName() = 0;
 
 	/**
-	* IImage3D::GetSizeY - Retrieves the extensions of the image stack in Y direction.
-	* @return size in Y
+	* IImage3D::SetName - sets a new name of this Image3D
+	* @param[in] sName - the new name of this Image3D
 	*/
-	virtual Lib3MF_uint32 GetSizeY() = 0;
+	virtual void SetName(const std::string & sName) = 0;
 
 	/**
-	* IImage3D::GetSheetCount - Retrieves the number of images in the stack.
-	* @return number of images
+	* IImage3D::IsImageStack - Retrieves, if this Image3D is a ImageStack
+	* @return returns, whether the Image3D is an ImageStack
 	*/
-	virtual Lib3MF_uint32 GetSheetCount() = 0;
-
-	/**
-	* IImage3D::GetSheet - Retrieves a sheet of the stack. Raises an error if sheet is not set.
-	* @param[in] nIndex - index of the image (0-based)
-	* @return attachment containing the image
-	*/
-	virtual IAttachment * GetSheet(const Lib3MF_uint32 nIndex) = 0;
-
-	/**
-	* IImage3D::GetSheetMinValue - Retrieves the minimum occuring double value of sampled field data.
-	* @param[in] nIndex - index of the image (0-based)
-	* @return Minimum occuring double value
-	*/
-	virtual Lib3MF_double GetSheetMinValue(const Lib3MF_uint32 nIndex) = 0;
-
-	/**
-	* IImage3D::GetSheetMaxValue - Retrieves the maximum occuring double value of sampled field data.
-	* @param[in] nIndex - index of the image (0-based)
-	* @return Maximum occuring double value
-	*/
-	virtual Lib3MF_double GetSheetMaxValue(const Lib3MF_uint32 nIndex) = 0;
-
-	/**
-	* IImage3D::CreateEmptySheet - Creates a new sheet attachment with empty data.
-	* @param[in] nIndex - index of the image (0-based)
-	* @param[in] sPath - path name of package
-	* @param[in] dMin - Mapped value of the minimal (e.g. 0) image3D pixel values.
-	* @param[in] dMax - Mapped value of the maximal (e.g. 255) image3D pixel values.
-	* @return attachment containing the image
-	*/
-	virtual IAttachment * CreateEmptySheet(const Lib3MF_uint32 nIndex, const std::string & sPath, const Lib3MF_double dMin, const Lib3MF_double dMax) = 0;
-
-	/**
-	* IImage3D::CreateSheetFromBuffer - Creates a new sheet attachment from a memory buffer.
-	* @param[in] nIndex - index of the image (0-based)
-	* @param[in] sPath - path name of package
-	* @param[in] nDataBufferSize - Number of elements in buffer
-	* @param[in] pDataBuffer - binary image data
-	* @param[in] dMin - Mapped value of the minimal (e.g. 0) image3D pixel values.
-	* @param[in] dMax - Mapped value of the maximal (e.g. 255) image3D pixel values.
-	* @return attachment containing the image
-	*/
-	virtual IAttachment * CreateSheetFromBuffer(const Lib3MF_uint32 nIndex, const std::string & sPath, const Lib3MF_uint64 nDataBufferSize, const Lib3MF_uint8 * pDataBuffer, const Lib3MF_double dMin, const Lib3MF_double dMax) = 0;
-
-	/**
-	* IImage3D::CreateSheetFromFile - Creates a new sheet attachment from a file on disk.
-	* @param[in] nIndex - index of the image (0-based)
-	* @param[in] sPath - path name of package
-	* @param[in] sFileName - file name to read from
-	* @param[in] dMin - Mapped value of the minimal (e.g. 0) image3D pixel values.
-	* @param[in] dMax - Mapped value of the maximal (e.g. 255) image3D pixel values.
-	* @return attachment containing the image
-	*/
-	virtual IAttachment * CreateSheetFromFile(const Lib3MF_uint32 nIndex, const std::string & sPath, const std::string & sFileName, const Lib3MF_double dMin, const Lib3MF_double dMax) = 0;
-
-	/**
-	* IImage3D::SetSheet - Sets a sheet to an existing attachment.
-	* @param[in] nIndex - index of the image (0-based)
-	* @param[in] pSheet - attachment containing the image
-	*/
-	virtual void SetSheet(const Lib3MF_uint32 nIndex, IAttachment* pSheet) = 0;
-
-	/**
-	* IImage3D::SetSheetMinValue - Sets the minimum occuring double value of sampled field data.
-	* @param[in] nIndex - index of the image (0-based)
-	* @param[in] dMinVal - Minimum occuring double value
-	*/
-	virtual void SetSheetMinValue(const Lib3MF_uint32 nIndex, const Lib3MF_double dMinVal) = 0;
-
-	/**
-	* IImage3D::SetSheetMaxValue - Sets the maximum occuring double value of sampled field data.
-	* @param[in] nIndex - index of the image (0-based)
-	* @param[in] dMaxVal - Maximum occuring double value
-	*/
-	virtual void SetSheetMaxValue(const Lib3MF_uint32 nIndex, const Lib3MF_double dMaxVal) = 0;
+	virtual bool IsImageStack() = 0;
 
 };
 
@@ -2163,336 +2494,82 @@ typedef IBaseSharedPtr<IImage3D> PIImage3D;
 
 
 /*************************************************************************************************************************
- Class interface for Image3DChannelSelector 
+ Class interface for ImageStack 
 **************************************************************************************************************************/
 
-class IImage3DChannelSelector : public virtual IBase {
+class IImageStack : public virtual IImage3D {
 public:
 	/**
-	* IImage3DChannelSelector::GetImage - Returns the selected 3D image.
-	* @return image instance
+	* IImageStack::GetRowCount - Retrieves the number of rows in each image of this image3d
+	* @return number of rows
 	*/
-	virtual IImage3D * GetImage() = 0;
+	virtual Lib3MF_uint32 GetRowCount() = 0;
 
 	/**
-	* IImage3DChannelSelector::SetImage - Sets the 3D image of the selector.
-	* @param[in] pImage3D - image instance
+	* IImageStack::SetRowCount - Sets the number of rows in each image of this image3d
+	* @param[in] nRowCount - number of rows
 	*/
-	virtual void SetImage(IImage3D* pImage3D) = 0;
+	virtual void SetRowCount(const Lib3MF_uint32 nRowCount) = 0;
 
 	/**
-	* IImage3DChannelSelector::SetSourceChannel - Sets the source channel of the selector.
-	* @param[in] sChannelName - name of the channel
+	* IImageStack::GetColumnCount - Retrieves the number of columns in each image of this image3d
+	* @return number of columns
 	*/
-	virtual void SetSourceChannel(const std::string & sChannelName) = 0;
+	virtual Lib3MF_uint32 GetColumnCount() = 0;
 
 	/**
-	* IImage3DChannelSelector::GetSourceChannel - Returns the source channel of the selector.
-	* @return name of the channel
+	* IImageStack::SetColumnCount - Sets the number of columns in each image of this image3d
+	* @param[in] nColumnCount - number of columns
 	*/
-	virtual std::string GetSourceChannel() = 0;
+	virtual void SetColumnCount(const Lib3MF_uint32 nColumnCount) = 0;
 
 	/**
-	* IImage3DChannelSelector::SetDestinationChannel - Sets the destination channel of the selector.
-	* @param[in] sChannelName - name of the channel
+	* IImageStack::GetSheetCount - Retrieves the number of images in the stack.
+	* @return number of images
 	*/
-	virtual void SetDestinationChannel(const std::string & sChannelName) = 0;
+	virtual Lib3MF_uint32 GetSheetCount() = 0;
 
 	/**
-	* IImage3DChannelSelector::GetDestinationChannel - Returns the destination channel of the selector.
-	* @return name of the channel
+	* IImageStack::GetSheet - Retrieves a sheet of the stack. Raises an error if sheet is not set.
+	* @param[in] nIndex - index of the image (0-based)
+	* @return attachment containing the image
 	*/
-	virtual std::string GetDestinationChannel() = 0;
+	virtual IAttachment * GetSheet(const Lib3MF_uint32 nIndex) = 0;
 
 	/**
-	* IImage3DChannelSelector::SetFilter - Sets the texture filter of the selector.
-	* @param[in] eFilter - texture filter
+	* IImageStack::SetSheet - Sets a sheet to an existing attachment.
+	* @param[in] nIndex - index of the image (0-based)
+	* @param[in] pSheet - attachment containing the image
 	*/
-	virtual void SetFilter(const Lib3MF::eTextureFilter eFilter) = 0;
+	virtual void SetSheet(const Lib3MF_uint32 nIndex, IAttachment* pSheet) = 0;
 
 	/**
-	* IImage3DChannelSelector::GetFilter - Returns the texture filter of the selector.
-	* @return texture filter
+	* IImageStack::CreateEmptySheet - Creates a new sheet attachment with empty data.
+	* @param[in] sPath - path of part in the package
+	* @return attachment containing the image
 	*/
-	virtual Lib3MF::eTextureFilter GetFilter() = 0;
+	virtual IAttachment * CreateEmptySheet(const std::string & sPath) = 0;
 
 	/**
-	* IImage3DChannelSelector::SetTileStyles - Sets the tile styles of the selector.
-	* @param[in] eTileStyleU - tile style in U
-	* @param[in] eTileStyleV - tile style in V
-	* @param[in] eTileStyleW - tile style in W
+	* IImageStack::CreateSheetFromBuffer - Creates a new sheet attachment from a memory buffer.
+	* @param[in] sPath - path of part in the package
+	* @param[in] nDataBufferSize - Number of elements in buffer
+	* @param[in] pDataBuffer - binary image data
+	* @return attachment containing the image
 	*/
-	virtual void SetTileStyles(const Lib3MF::eTextureTileStyle eTileStyleU, const Lib3MF::eTextureTileStyle eTileStyleV, const Lib3MF::eTextureTileStyle eTileStyleW) = 0;
+	virtual IAttachment * CreateSheetFromBuffer(const std::string & sPath, const Lib3MF_uint64 nDataBufferSize, const Lib3MF_uint8 * pDataBuffer) = 0;
 
 	/**
-	* IImage3DChannelSelector::GetTileStyles - Retrieves the tile styles of the selector.
-	* @param[out] eTileStyleU - tile style in U
-	* @param[out] eTileStyleV - tile style in V
-	* @param[out] eTileStyleW - tile style in W
+	* IImageStack::CreateSheetFromFile - Creates a new sheet attachment from a file on disk.
+	* @param[in] sPath - path of part in the package
+	* @param[in] sFileName - file name to read from
+	* @return attachment containing the image
 	*/
-	virtual void GetTileStyles(Lib3MF::eTextureTileStyle & eTileStyleU, Lib3MF::eTextureTileStyle & eTileStyleV, Lib3MF::eTextureTileStyle & eTileStyleW) = 0;
+	virtual IAttachment * CreateSheetFromFile(const std::string & sPath, const std::string & sFileName) = 0;
 
 };
 
-typedef IBaseSharedPtr<IImage3DChannelSelector> PIImage3DChannelSelector;
-
-
-/*************************************************************************************************************************
- Class interface for VolumetricLayer 
-**************************************************************************************************************************/
-
-class IVolumetricLayer : public virtual IBase {
-public:
-	/**
-	* IVolumetricLayer::GetTransform - Retrieves the transform of the layer.
-	* @return The transform matrix
-	*/
-	virtual Lib3MF::sTransform GetTransform() = 0;
-
-	/**
-	* IVolumetricLayer::SetTransform - Sets the transform of the layer.
-	* @param[in] Transform - The transform matrix
-	*/
-	virtual void SetTransform(const Lib3MF::sTransform Transform) = 0;
-
-	/**
-	* IVolumetricLayer::GetBlendMethod - Retrieves the transform of the layer.
-	* @return The blend method
-	*/
-	virtual Lib3MF::eBlendMethod GetBlendMethod() = 0;
-
-	/**
-	* IVolumetricLayer::SetBlendMethod - Sets the transform of the layer.
-	* @param[in] eBlendMethod - The blend method
-	*/
-	virtual void SetBlendMethod(const Lib3MF::eBlendMethod eBlendMethod) = 0;
-
-	/**
-	* IVolumetricLayer::GetSourceAlpha - Retrieves the source alpha value of the layer.
-	* @return the source alpha value
-	*/
-	virtual Lib3MF_double GetSourceAlpha() = 0;
-
-	/**
-	* IVolumetricLayer::SetSourceAlpha - Sets the source alpha value of the layer.
-	* @param[in] dSourceAlpha - the source alpha value
-	*/
-	virtual void SetSourceAlpha(const Lib3MF_double dSourceAlpha) = 0;
-
-	/**
-	* IVolumetricLayer::GetDestinationAlpha - Retrieves the destination alpha value of the layer.
-	* @return the destination alpha value
-	*/
-	virtual Lib3MF_double GetDestinationAlpha() = 0;
-
-	/**
-	* IVolumetricLayer::SetDestinationAlpha - Sets the destination alpha value of the layer.
-	* @param[in] dDestinationAlpha - the destination alpha value
-	*/
-	virtual void SetDestinationAlpha(const Lib3MF_double dDestinationAlpha) = 0;
-
-	/**
-	* IVolumetricLayer::GetInformation - Retrieves all properties of the layer.
-	* @param[out] sTransform - The transform matrix
-	* @param[out] eBlendMethod - The blend method
-	* @param[out] dSourceAlpha - the source alpha value
-	* @param[out] dDestinationAlpha - the destination alpha value
-	*/
-	virtual void GetInformation(Lib3MF::sTransform & sTransform, Lib3MF::eBlendMethod & eBlendMethod, Lib3MF_double & dSourceAlpha, Lib3MF_double & dDestinationAlpha) = 0;
-
-	/**
-	* IVolumetricLayer::SetInformation - Sets all properties of the layer.
-	* @param[in] Transform - The transform matrix
-	* @param[in] eBlendMethod - The blend method
-	* @param[in] dSourceAlpha - the source alpha value
-	* @param[in] dDestinationAlpha - the destination alpha value
-	*/
-	virtual void SetInformation(const Lib3MF::sTransform Transform, const Lib3MF::eBlendMethod eBlendMethod, const Lib3MF_double dSourceAlpha, const Lib3MF_double dDestinationAlpha) = 0;
-
-	/**
-	* IVolumetricLayer::CreateMaskChannelSelector - Creates a new mask channel selector.
-	* @param[in] pImage3D - Image3D Class to reference
-	* @param[in] sSourceChannel - Name of source channel.
-	* @param[in] sDestinationChannel - Name of destination channel.
-	* @return Channel Selector Instance
-	*/
-	virtual IImage3DChannelSelector * CreateMaskChannelSelector(IImage3D* pImage3D, const std::string & sSourceChannel, const std::string & sDestinationChannel) = 0;
-
-	/**
-	* IVolumetricLayer::HasMaskChannelSelector - Returns if a mask channel selector exists.
-	* @return true if a mask channel selector exists.
-	*/
-	virtual bool HasMaskChannelSelector() = 0;
-
-	/**
-	* IVolumetricLayer::ClearMaskChannelSelector - Removes a mask channel selector, if it exists.
-	*/
-	virtual void ClearMaskChannelSelector() = 0;
-
-	/**
-	* IVolumetricLayer::GetMaskChannelSelector - Returns a new mask channel selector. Fails if none exists.
-	* @return Channel Selector Instance
-	*/
-	virtual IImage3DChannelSelector * GetMaskChannelSelector() = 0;
-
-	/**
-	* IVolumetricLayer::GetChannelSelectorCount - Returns the channel selector.
-	* @return Count of channel selectors
-	*/
-	virtual Lib3MF_uint32 GetChannelSelectorCount() = 0;
-
-	/**
-	* IVolumetricLayer::GetChannelSelector - Returns a channel selector.
-	* @param[in] nIndex - Index of the channel selector
-	* @return Channel Selector Instance
-	*/
-	virtual IImage3DChannelSelector * GetChannelSelector(const Lib3MF_uint32 nIndex) = 0;
-
-	/**
-	* IVolumetricLayer::AddChannelSelector - Adds a new channel selector.
-	* @param[in] pImage3D - Image3D Class to reference
-	* @param[in] sSourceChannel - Name of source channel.
-	* @param[in] sDestinationChannel - Name of destination channel.
-	* @return Channel Selector Instance
-	*/
-	virtual IImage3DChannelSelector * AddChannelSelector(IImage3D* pImage3D, const std::string & sSourceChannel, const std::string & sDestinationChannel) = 0;
-
-	/**
-	* IVolumetricLayer::ClearChannelSelectors - Removes all channel selectors.
-	*/
-	virtual void ClearChannelSelectors() = 0;
-
-	/**
-	* IVolumetricLayer::ReindexChannelSelector - Moves a channel selector to a different position in the list.
-	* @param[in] pChannelSelector - ChannelSelector instance
-	* @param[in] nIndex - new index of the channel selector. All layers with higher indices will increase by one.
-	*/
-	virtual void ReindexChannelSelector(IImage3DChannelSelector* pChannelSelector, const Lib3MF_uint32 nIndex) = 0;
-
-	/**
-	* IVolumetricLayer::RemoveChannelSelector - Removes a channel selector from the stack. Fails if the channel selector does not exist.
-	* @param[in] pChannelSelector - channel selector instance.
-	*/
-	virtual void RemoveChannelSelector(IImage3DChannelSelector* pChannelSelector) = 0;
-
-	/**
-	* IVolumetricLayer::RemoveChannelSelectorByIndex - Removes a channel selector from the stack. Fails if the channel selector does not exist.
-	* @param[in] nIndex - index of the channel selector
-	*/
-	virtual void RemoveChannelSelectorByIndex(const Lib3MF_uint32 nIndex) = 0;
-
-};
-
-typedef IBaseSharedPtr<IVolumetricLayer> PIVolumetricLayer;
-
-
-/*************************************************************************************************************************
- Class interface for VolumetricStack 
-**************************************************************************************************************************/
-
-class IVolumetricStack : public virtual IResource {
-public:
-	/**
-	* IVolumetricStack::Clear - Clears all destination channels and layers of the stack.
-	*/
-	virtual void Clear() = 0;
-
-	/**
-	* IVolumetricStack::ClearUnusedDestinationChannels - Clears all unused destination channels of the stack.
-	*/
-	virtual void ClearUnusedDestinationChannels() = 0;
-
-	/**
-	* IVolumetricStack::GetDestinationChannelCount - Retrieves the number of Destination Channels.
-	* @return number of destination channels
-	*/
-	virtual Lib3MF_uint32 GetDestinationChannelCount() = 0;
-
-	/**
-	* IVolumetricStack::GetDestinationChannel - Adds a new destination channel.
-	* @param[in] nIndex - Index of Destination Channel
-	* @param[out] sName - Name of Destination Channel.
-	* @param[out] dBackground - Background of Destination Channel
-	*/
-	virtual void GetDestinationChannel(const Lib3MF_uint32 nIndex, std::string & sName, Lib3MF_double & dBackground) = 0;
-
-	/**
-	* IVolumetricStack::AddDestinationChannel - Adds a new destination channel.
-	* @param[in] sName - Name of Destination Channel. Must be unique in the stack.
-	* @param[in] dBackground - Background of Destination Channel
-	* @return Index of Destination Channel
-	*/
-	virtual Lib3MF_uint32 AddDestinationChannel(const std::string & sName, const Lib3MF_double dBackground) = 0;
-
-	/**
-	* IVolumetricStack::UpdateDestinationChannel - Changes a destination channels background.
-	* @param[in] nIndex - Index of Destination Channel
-	* @param[in] dBackground - Background of Destination Channel
-	*/
-	virtual void UpdateDestinationChannel(const Lib3MF_uint32 nIndex, const Lib3MF_double dBackground) = 0;
-
-	/**
-	* IVolumetricStack::UpdateDestinationChannelByName - Changes a destination channels background.
-	* @param[in] sName - Name of Destination Channel
-	* @param[in] dBackground - Background of Destination Channel
-	*/
-	virtual void UpdateDestinationChannelByName(const std::string & sName, const Lib3MF_double dBackground) = 0;
-
-	/**
-	* IVolumetricStack::RemoveDestinationChannel - Removes a destination channel. Fails if channel is still referenced in the stack.
-	* @param[in] nIndex - Index of Destination Channel
-	*/
-	virtual void RemoveDestinationChannel(const Lib3MF_uint32 nIndex) = 0;
-
-	/**
-	* IVolumetricStack::RemoveDestinationChannelByName - Removes a destination channel. Fails if channel is still referenced in the stack.
-	* @param[in] sName - Name of Destination Channel
-	*/
-	virtual void RemoveDestinationChannelByName(const std::string & sName) = 0;
-
-	/**
-	* IVolumetricStack::GetLayerCount - Retrieves the number of Layers.
-	* @return number of layers.
-	*/
-	virtual Lib3MF_uint32 GetLayerCount() = 0;
-
-	/**
-	* IVolumetricStack::GetLayer - Retrieves a layer.
-	* @param[in] nIndex - index of the layer
-	* @return index of the layer
-	*/
-	virtual IVolumetricLayer * GetLayer(const Lib3MF_uint32 nIndex) = 0;
-
-	/**
-	* IVolumetricStack::AddLayer - Adds a new layer.
-	* @param[in] Transform - transform of the layer
-	* @param[in] eBlendMethod - BlendMethod of the layer
-	* @return Layer instance
-	*/
-	virtual IVolumetricLayer * AddLayer(const Lib3MF::sTransform Transform, const Lib3MF::eBlendMethod eBlendMethod) = 0;
-
-	/**
-	* IVolumetricStack::ReindexLayer - Moves a layer to a different position in the stack.
-	* @param[in] pLayer - layer instance
-	* @param[in] nIndex - new index of the layer. All layers with higher indices will increase by one.
-	*/
-	virtual void ReindexLayer(IVolumetricLayer* pLayer, const Lib3MF_uint32 nIndex) = 0;
-
-	/**
-	* IVolumetricStack::RemoveLayer - Removes a layer from the stack. Fails if the layer does not exist.
-	* @param[in] pLayer - layer instance.
-	*/
-	virtual void RemoveLayer(IVolumetricLayer* pLayer) = 0;
-
-	/**
-	* IVolumetricStack::RemoveLayerByIndex - Removes a layer from the stack. Fails if the layer does not exist.
-	* @param[in] nIndex - index of the layer
-	*/
-	virtual void RemoveLayerByIndex(const Lib3MF_uint32 nIndex) = 0;
-
-};
-
-typedef IBaseSharedPtr<IVolumetricStack> PIVolumetricStack;
+typedef IBaseSharedPtr<IImageStack> PIImageStack;
 
 
 /*************************************************************************************************************************
@@ -3470,16 +3547,22 @@ public:
 	virtual IImage3DIterator * GetImage3Ds() = 0;
 
 	/**
+	* IModel::GetScalarFields - creates a resource iterator instance with all ScalarField resources.
+	* @return returns the iterator instance.
+	*/
+	virtual IScalarFieldIterator * GetScalarFields() = 0;
+
+	/**
+	* IModel::GetVector3DFields - creates a resource iterator instance with all Vector3DField resources.
+	* @return returns the iterator instance.
+	*/
+	virtual IVector3DFieldIterator * GetVector3DFields() = 0;
+
+	/**
 	* IModel::MergeToModel - Merges all components and objects which are referenced by a build item into a mesh. The memory is duplicated and a new model is created.
 	* @return returns the merged model instance
 	*/
 	virtual IModel * MergeToModel() = 0;
-
-	/**
-	* IModel::GetVolumetricStacks - creates a resource iterator instance with all volumetric stack resources.
-	* @return returns the iterator instance.
-	*/
-	virtual IVolumetricStackIterator * GetVolumetricStacks() = 0;
 
 	/**
 	* IModel::AddMeshObject - adds an empty mesh object to the model.
@@ -3540,19 +3623,79 @@ public:
 	virtual IMultiPropertyGroup * AddMultiPropertyGroup() = 0;
 
 	/**
-	* IModel::AddImage3D - creates a new 3D Image Resource
-	* @param[in] nSizeX - the extensions of the image stack in X direction.
-	* @param[in] nSizeY - the extensions of the image stack in Y direction.
+	* IModel::AddImageStack - creates a new 3D Image Resource
+	* @param[in] nColumnCount - the number of columns in each sheet.
+	* @param[in] nRowCount - the number of rows in each sheet.
 	* @param[in] nSheetCount - the number of sheets in the image stack.
-	* @return returns the new Image3D instance
+	* @return returns the new ImageStack instance
 	*/
-	virtual IImage3D * AddImage3D(const Lib3MF_uint32 nSizeX, const Lib3MF_uint32 nSizeY, const Lib3MF_uint32 nSheetCount) = 0;
+	virtual IImageStack * AddImageStack(const Lib3MF_uint32 nColumnCount, const Lib3MF_uint32 nRowCount, const Lib3MF_uint32 nSheetCount) = 0;
 
 	/**
-	* IModel::AddVolumetricStack - creates a new Volumetric Stack Resource
-	* @return returns the new VolumetricStack instance
+	* IModel::AddScalarFieldFromImage3D - creates a new ScalarFieldFromImage3D Resource
+	* @return returns the new ScalarFieldFromImage3D instance
 	*/
-	virtual IVolumetricStack * AddVolumetricStack() = 0;
+	virtual IScalarFieldFromImage3D * AddScalarFieldFromImage3D() = 0;
+
+	/**
+	* IModel::AddScalarFieldComposed - creates a new ScalarFieldComposed Resource
+	* @return returns the new ScalarFieldComposed instance
+	*/
+	virtual IScalarFieldComposed * AddScalarFieldComposed() = 0;
+
+	/**
+	* IModel::GetScalarFieldByID - finds a ScalarField object by its UniqueResourceID
+	* @param[in] nUniqueResourceID - UniqueResourceID
+	* @return returns the scalar field instance
+	*/
+	virtual IScalarField * GetScalarFieldByID(const Lib3MF_uint32 nUniqueResourceID) = 0;
+
+	/**
+	* IModel::GetScalarFieldFromImage3DByID - finds a ScalarFieldFromImage3D object by its UniqueResourceID
+	* @param[in] nUniqueResourceID - UniqueResourceID
+	* @return returns the ScalarFieldFromImage3D instance
+	*/
+	virtual IScalarFieldFromImage3D * GetScalarFieldFromImage3DByID(const Lib3MF_uint32 nUniqueResourceID) = 0;
+
+	/**
+	* IModel::GetScalarFieldComposedByID - finds a ScalarFieldComposed object by its UniqueResourceID
+	* @param[in] nUniqueResourceID - UniqueResourceID
+	* @return returns the ScalarFieldComponsed instance
+	*/
+	virtual IScalarFieldComposed * GetScalarFieldComposedByID(const Lib3MF_uint32 nUniqueResourceID) = 0;
+
+	/**
+	* IModel::AddVector3DFieldFromImage3D - creates a new Vector3DFieldFromImage3D Resource
+	* @return returns the new Vector3DFieldFromImage3D instance
+	*/
+	virtual IVector3DFieldFromImage3D * AddVector3DFieldFromImage3D() = 0;
+
+	/**
+	* IModel::AddVector3DFieldComposed - creates a new Vector3DFieldComposed Resource
+	* @return returns the new Vector3DFieldComposed instance
+	*/
+	virtual IVector3DFieldComposed * AddVector3DFieldComposed() = 0;
+
+	/**
+	* IModel::GetVector3DFieldByID - finds a Vector3DField object by its UniqueResourceID
+	* @param[in] nUniqueResourceID - UniqueResourceID
+	* @return returns the scalar field instance
+	*/
+	virtual IVector3DField * GetVector3DFieldByID(const Lib3MF_uint32 nUniqueResourceID) = 0;
+
+	/**
+	* IModel::GetVector3DFieldFromImage3DByID - finds a Vector3DFieldFromImage3D object by its UniqueResourceID
+	* @param[in] nUniqueResourceID - UniqueResourceID
+	* @return returns the Vector3DFieldFromImage3D instance
+	*/
+	virtual IVector3DFieldFromImage3D * GetVector3DFieldFromImage3DByID(const Lib3MF_uint32 nUniqueResourceID) = 0;
+
+	/**
+	* IModel::GetVector3DFieldComposedByID - finds a Vector3DFieldComposed object by its UniqueResourceID
+	* @param[in] nUniqueResourceID - UniqueResourceID
+	* @return returns the Vector3DFieldComponsed instance
+	*/
+	virtual IVector3DFieldComposed * GetVector3DFieldComposedByID(const Lib3MF_uint32 nUniqueResourceID) = 0;
 
 	/**
 	* IModel::AddBuildItem - adds a build item to the model.

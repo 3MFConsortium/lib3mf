@@ -875,7 +875,7 @@
 		<method name="GetScale" description="returns the scale value for the pixel values in the Image3D">
 			<param name="Scale" type="double" pass="return" description="the scale value for the pixel values in the Image3D"/>
 		</method>
-		<method name="SetOffset" description="Sets the scale value for the pixel values in the Image3D">
+		<method name="SetScale" description="Sets the scale value for the pixel values in the Image3D">
 			<param name="Scale" type="double" pass="in" description="the scale value for the pixel values in the Image3D"/>
 		</method>
 	</class>
@@ -890,14 +890,14 @@
 		<method name="GetFactor1" description="returns the factor scalar field 1 is multiplied with when composited">
 			<param name="Factor1" type="double" pass="return" description="the factor scalar field 1 is multiplied with when composited"/>
 		</method>
-		<method name="GetFactor1" description="sets the factor scalar field 1 is multiplied with when composited">
-			<param name="Factor1" type="double" pass="int" description="the factor scalar field 1 is multiplied with when composited"/>
+		<method name="SetFactor1" description="sets the factor scalar field 1 is multiplied with when composited">
+			<param name="Factor1" type="double" pass="in" description="the factor scalar field 1 is multiplied with when composited"/>
 		</method>
 		<method name="GetFactor2" description="returns the factor scalar field 2 is multiplied with when composited">
 			<param name="Factor2" type="double" pass="return" description="the factor scalar field 2 is multiplied with when composited"/>
 		</method>
-		<method name="GetFactor2" description="sets the factor scalar field 2 is multiplied with when composited">
-			<param name="Factor2" type="double" pass="int" description="the factor scalar field 2 is multiplied with when composited"/>
+		<method name="SetFactor2" description="sets the factor scalar field 2 is multiplied with when composited">
+			<param name="Factor2" type="double" pass="in" description="the factor scalar field 2 is multiplied with when composited"/>
 		</method>
 		<method name="ScalarFieldReference1" description="Access to the ScalarFieldReference for the first composited field">
 			<param name="TheScalarFieldReference1" type="class" class="ScalarFieldReference" pass="return" description="ScalarFieldReference"/>
@@ -942,7 +942,7 @@
 		<method name="GetScale" description="returns the scale value for the pixel values in the Image3D">
 			<param name="Scale" type="double" pass="return" description="the scale value for the pixel values in the Image3D"/>
 		</method>
-		<method name="SetOffset" description="Sets the scale value for the pixel values in the Image3D">
+		<method name="SetScale" description="Sets the scale value for the pixel values in the Image3D">
 			<param name="Scale" type="double" pass="in" description="the scale value for the pixel values in the Image3D"/>
 		</method>
 	</class>
@@ -957,14 +957,14 @@
 		<method name="GetFactor1" description="returns the factor vector3d field 1 is multiplied with when composited">
 			<param name="Factor1" type="double" pass="return" description="the factor vector3d field 1 is multiplied with when composited"/>
 		</method>
-		<method name="GetFactor1" description="sets the factor vector3d field 1 is multiplied with when composited">
-			<param name="Factor1" type="double" pass="int" description="the factor vector3d field 1 is multiplied with when composited"/>
+		<method name="SetFactor1" description="sets the factor vector3d field 1 is multiplied with when composited">
+			<param name="Factor1" type="double" pass="in" description="the factor vector3d field 1 is multiplied with when composited"/>
 		</method>
 		<method name="GetFactor2" description="returns the vector3d scalar field 2 is multiplied with when composited">
 			<param name="Factor2" type="double" pass="return" description="the factor vector3d field 2 is multiplied with when composited"/>
 		</method>
-		<method name="GetFactor2" description="sets the factor vector3d field 2 is multiplied with when composited">
-			<param name="Factor2" type="double" pass="int" description="the factor vector3d field 2 is multiplied with when composited"/>
+		<method name="SetFactor2" description="sets the factor vector3d field 2 is multiplied with when composited">
+			<param name="Factor2" type="double" pass="in" description="the factor vector3d field 2 is multiplied with when composited"/>
 		</method>
 		<method name="Vector3DFieldReference1" description="Access to the Vector3DFieldReference for the first composited field">
 			<param name="TheVector3DFieldReference1" type="class" class="Vector3DFieldReference" pass="return" description="Vector3DFieldReference"/>
@@ -1330,6 +1330,12 @@
 		<method name="SetName" description="sets a new name of this Image3D">
 			<param name="Name" type="string" pass="in" description="the new name of this Image3D"/>
 		</method>
+		<method name="IsImageStack" description="Retrieves, if this Image3D is a ImageStack">
+			<param name="IsImageStack" type="bool" pass="return" description="returns, whether the Image3D is an ImageStack"/>
+		</method>
+	</class>
+
+	<class name="ImageStack" parent="Image3D">
 		<method name="GetRowCount" description="Retrieves the number of rows in each image of this image3d">
 			<param name="RowCount" type="uint32" pass="return" description="number of rows" />
 		</method>
@@ -1928,11 +1934,11 @@
 		<method name="AddMultiPropertyGroup" description="adds an empty MultiPropertyGroup resource to the model.">
 			<param name="MultiPropertyGroupInstance" type="handle" class="MultiPropertyGroup" pass="return" description="returns the new MultiPropertyGroup instance."/>
 		</method>
-		<method name="AddImage3D" description="creates a new 3D Image Resource">
+		<method name="AddImageStack" description="creates a new 3D Image Resource">
 			<param name="ColumnCount" type="uint32" pass="in" description="the number of columns in each sheet."/>
 			<param name="RowCount" type="uint32" pass="in" description="the number of rows in each sheet."/>
 			<param name="SheetCount" type="uint32" pass="in" description="the number of sheets in the image stack."/>
-			<param name="Instance" type="handle" class="Image3D" pass="return" description="returns the new Image3D instance" />
+			<param name="Instance" type="handle" class="ImageStack" pass="return" description="returns the new ImageStack instance" />
 		</method>
 		<method name="AddScalarFieldFromImage3D" description="creates a new ScalarFieldFromImage3D Resource">
 			<param name="TheScalarFieldFromImage3D" type="class" class="ScalarFieldFromImage3D" pass="return" description="returns the new ScalarFieldFromImage3D instance" />

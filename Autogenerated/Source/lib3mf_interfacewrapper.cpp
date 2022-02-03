@@ -1845,25 +1845,65 @@ Lib3MFResult lib3mf_image3diterator_getcurrentimage3d(Lib3MF_Image3DIterator pIm
 
 
 /*************************************************************************************************************************
- Class implementation for VolumetricStackIterator
+ Class implementation for ScalarFieldIterator
 **************************************************************************************************************************/
-Lib3MFResult lib3mf_volumetricstackiterator_getcurrentvolumetricstack(Lib3MF_VolumetricStackIterator pVolumetricStackIterator, Lib3MF_VolumetricStack * pResource)
+Lib3MFResult lib3mf_scalarfielditerator_getcurrentscalarfield(Lib3MF_ScalarFieldIterator pScalarFieldIterator, Lib3MF_ScalarField * pResource)
 {
-	IBase* pIBaseClass = (IBase *)pVolumetricStackIterator;
+	IBase* pIBaseClass = (IBase *)pScalarFieldIterator;
 
 	PLib3MFInterfaceJournalEntry pJournalEntry;
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumetricStackIterator, "VolumetricStackIterator", "GetCurrentVolumetricStack");
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pScalarFieldIterator, "ScalarFieldIterator", "GetCurrentScalarField");
 		}
 		if (pResource == nullptr)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
 		IBase* pBaseResource(nullptr);
-		IVolumetricStackIterator* pIVolumetricStackIterator = dynamic_cast<IVolumetricStackIterator*>(pIBaseClass);
-		if (!pIVolumetricStackIterator)
+		IScalarFieldIterator* pIScalarFieldIterator = dynamic_cast<IScalarFieldIterator*>(pIBaseClass);
+		if (!pIScalarFieldIterator)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pBaseResource = pIVolumetricStackIterator->GetCurrentVolumetricStack();
+		pBaseResource = pIScalarFieldIterator->GetCurrentScalarField();
+
+		*pResource = (IBase*)(pBaseResource);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Resource", *pResource);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+
+/*************************************************************************************************************************
+ Class implementation for Vector3DFieldIterator
+**************************************************************************************************************************/
+Lib3MFResult lib3mf_vector3dfielditerator_getcurrentvector3dfield(Lib3MF_Vector3DFieldIterator pVector3DFieldIterator, Lib3MF_Vector3DField * pResource)
+{
+	IBase* pIBaseClass = (IBase *)pVector3DFieldIterator;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pVector3DFieldIterator, "Vector3DFieldIterator", "GetCurrentVector3DField");
+		}
+		if (pResource == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseResource(nullptr);
+		IVector3DFieldIterator* pIVector3DFieldIterator = dynamic_cast<IVector3DFieldIterator*>(pIBaseClass);
+		if (!pIVector3DFieldIterator)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseResource = pIVector3DFieldIterator->GetCurrentVector3DField();
 
 		*pResource = (IBase*)(pBaseResource);
 		if (pJournalEntry.get() != nullptr) {
@@ -4847,29 +4887,37 @@ Lib3MFResult lib3mf_beamlattice_getbeamset(Lib3MF_BeamLattice pBeamLattice, Lib3
 
 
 /*************************************************************************************************************************
- Class implementation for VolumeDataItem
+ Class implementation for ScalarField
 **************************************************************************************************************************/
-Lib3MFResult lib3mf_volumedataitem_getvolumetricstack(Lib3MF_VolumeDataItem pVolumeDataItem, Lib3MF_VolumetricStack * pTheVolumetricStack)
+Lib3MFResult lib3mf_scalarfield_getname(Lib3MF_ScalarField pScalarField, const Lib3MF_uint32 nNameBufferSize, Lib3MF_uint32* pNameNeededChars, char * pNameBuffer)
 {
-	IBase* pIBaseClass = (IBase *)pVolumeDataItem;
+	IBase* pIBaseClass = (IBase *)pScalarField;
 
 	PLib3MFInterfaceJournalEntry pJournalEntry;
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumeDataItem, "VolumeDataItem", "GetVolumetricStack");
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pScalarField, "ScalarField", "GetName");
 		}
-		if (pTheVolumetricStack == nullptr)
+		if ( (!pNameBuffer) && !(pNameNeededChars) )
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		IBase* pBaseTheVolumetricStack(nullptr);
-		IVolumeDataItem* pIVolumeDataItem = dynamic_cast<IVolumeDataItem*>(pIBaseClass);
-		if (!pIVolumeDataItem)
+		std::string sName("");
+		IScalarField* pIScalarField = dynamic_cast<IScalarField*>(pIBaseClass);
+		if (!pIScalarField)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pBaseTheVolumetricStack = pIVolumeDataItem->GetVolumetricStack();
+		sName = pIScalarField->GetName();
 
-		*pTheVolumetricStack = (IBase*)(pBaseTheVolumetricStack);
+		if (pNameNeededChars)
+			*pNameNeededChars = (Lib3MF_uint32) (sName.size()+1);
+		if (pNameBuffer) {
+			if (sName.size() >= nNameBufferSize)
+				throw ELib3MFInterfaceException (LIB3MF_ERROR_BUFFERTOOSMALL);
+			for (size_t iName = 0; iName < sName.size(); iName++)
+				pNameBuffer[iName] = sName[iName];
+			pNameBuffer[sName.size()] = 0;
+		}
 		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addHandleResult("TheVolumetricStack", *pTheVolumetricStack);
+			pJournalEntry->addStringResult("Name", sName.c_str());
 			pJournalEntry->writeSuccess();
 		}
 		return LIB3MF_SUCCESS;
@@ -4885,26 +4933,320 @@ Lib3MFResult lib3mf_volumedataitem_getvolumetricstack(Lib3MF_VolumeDataItem pVol
 	}
 }
 
-Lib3MFResult lib3mf_volumedataitem_setvolumetricstack(Lib3MF_VolumeDataItem pVolumeDataItem, Lib3MF_VolumetricStack pTheVolumetricStack)
+Lib3MFResult lib3mf_scalarfield_setname(Lib3MF_ScalarField pScalarField, const char * pName)
 {
-	IBase* pIBaseClass = (IBase *)pVolumeDataItem;
+	IBase* pIBaseClass = (IBase *)pScalarField;
 
 	PLib3MFInterfaceJournalEntry pJournalEntry;
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumeDataItem, "VolumeDataItem", "SetVolumetricStack");
-			pJournalEntry->addHandleParameter("TheVolumetricStack", pTheVolumetricStack);
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pScalarField, "ScalarField", "SetName");
+			pJournalEntry->addStringParameter("Name", pName);
 		}
-		IBase* pIBaseClassTheVolumetricStack = (IBase *)pTheVolumetricStack;
-		IVolumetricStack* pITheVolumetricStack = dynamic_cast<IVolumetricStack*>(pIBaseClassTheVolumetricStack);
-		if (!pITheVolumetricStack)
+		if (pName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sName(pName);
+		IScalarField* pIScalarField = dynamic_cast<IScalarField*>(pIBaseClass);
+		if (!pIScalarField)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIScalarField->SetName(sName);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_scalarfield_isfromimage3d(Lib3MF_ScalarField pScalarField, bool * pIsFromImage3D)
+{
+	IBase* pIBaseClass = (IBase *)pScalarField;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pScalarField, "ScalarField", "IsFromImage3D");
+		}
+		if (pIsFromImage3D == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IScalarField* pIScalarField = dynamic_cast<IScalarField*>(pIBaseClass);
+		if (!pIScalarField)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pIsFromImage3D = pIScalarField->IsFromImage3D();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addBooleanResult("IsFromImage3D", *pIsFromImage3D);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_scalarfield_iscomposed(Lib3MF_ScalarField pScalarField, bool * pIsComposed)
+{
+	IBase* pIBaseClass = (IBase *)pScalarField;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pScalarField, "ScalarField", "IsComposed");
+		}
+		if (pIsComposed == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IScalarField* pIScalarField = dynamic_cast<IScalarField*>(pIBaseClass);
+		if (!pIScalarField)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pIsComposed = pIScalarField->IsComposed();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addBooleanResult("IsComposed", *pIsComposed);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+
+/*************************************************************************************************************************
+ Class implementation for Vector3DField
+**************************************************************************************************************************/
+Lib3MFResult lib3mf_vector3dfield_getname(Lib3MF_Vector3DField pVector3DField, const Lib3MF_uint32 nNameBufferSize, Lib3MF_uint32* pNameNeededChars, char * pNameBuffer)
+{
+	IBase* pIBaseClass = (IBase *)pVector3DField;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pVector3DField, "Vector3DField", "GetName");
+		}
+		if ( (!pNameBuffer) && !(pNameNeededChars) )
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sName("");
+		IVector3DField* pIVector3DField = dynamic_cast<IVector3DField*>(pIBaseClass);
+		if (!pIVector3DField)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		sName = pIVector3DField->GetName();
+
+		if (pNameNeededChars)
+			*pNameNeededChars = (Lib3MF_uint32) (sName.size()+1);
+		if (pNameBuffer) {
+			if (sName.size() >= nNameBufferSize)
+				throw ELib3MFInterfaceException (LIB3MF_ERROR_BUFFERTOOSMALL);
+			for (size_t iName = 0; iName < sName.size(); iName++)
+				pNameBuffer[iName] = sName[iName];
+			pNameBuffer[sName.size()] = 0;
+		}
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addStringResult("Name", sName.c_str());
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_vector3dfield_setname(Lib3MF_Vector3DField pVector3DField, const char * pName)
+{
+	IBase* pIBaseClass = (IBase *)pVector3DField;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pVector3DField, "Vector3DField", "SetName");
+			pJournalEntry->addStringParameter("Name", pName);
+		}
+		if (pName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sName(pName);
+		IVector3DField* pIVector3DField = dynamic_cast<IVector3DField*>(pIBaseClass);
+		if (!pIVector3DField)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIVector3DField->SetName(sName);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_vector3dfield_isfromimage3d(Lib3MF_Vector3DField pVector3DField, bool * pIsFromImage3D)
+{
+	IBase* pIBaseClass = (IBase *)pVector3DField;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pVector3DField, "Vector3DField", "IsFromImage3D");
+		}
+		if (pIsFromImage3D == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IVector3DField* pIVector3DField = dynamic_cast<IVector3DField*>(pIBaseClass);
+		if (!pIVector3DField)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pIsFromImage3D = pIVector3DField->IsFromImage3D();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addBooleanResult("IsFromImage3D", *pIsFromImage3D);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_vector3dfield_iscomposed(Lib3MF_Vector3DField pVector3DField, bool * pIsComposed)
+{
+	IBase* pIBaseClass = (IBase *)pVector3DField;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pVector3DField, "Vector3DField", "IsComposed");
+		}
+		if (pIsComposed == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IVector3DField* pIVector3DField = dynamic_cast<IVector3DField*>(pIBaseClass);
+		if (!pIVector3DField)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pIsComposed = pIVector3DField->IsComposed();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addBooleanResult("IsComposed", *pIsComposed);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+
+/*************************************************************************************************************************
+ Class implementation for ScalarFieldFromImage3D
+**************************************************************************************************************************/
+Lib3MFResult lib3mf_scalarfieldfromimage3d_getimage(Lib3MF_ScalarFieldFromImage3D pScalarFieldFromImage3D, Lib3MF_Image3D * pImage3D)
+{
+	IBase* pIBaseClass = (IBase *)pScalarFieldFromImage3D;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pScalarFieldFromImage3D, "ScalarFieldFromImage3D", "GetImage");
+		}
+		if (pImage3D == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseImage3D(nullptr);
+		IScalarFieldFromImage3D* pIScalarFieldFromImage3D = dynamic_cast<IScalarFieldFromImage3D*>(pIBaseClass);
+		if (!pIScalarFieldFromImage3D)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseImage3D = pIScalarFieldFromImage3D->GetImage();
+
+		*pImage3D = (IBase*)(pBaseImage3D);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Image3D", *pImage3D);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_scalarfieldfromimage3d_setimage(Lib3MF_ScalarFieldFromImage3D pScalarFieldFromImage3D, Lib3MF_Image3D pImage3D)
+{
+	IBase* pIBaseClass = (IBase *)pScalarFieldFromImage3D;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pScalarFieldFromImage3D, "ScalarFieldFromImage3D", "SetImage");
+			pJournalEntry->addHandleParameter("Image3D", pImage3D);
+		}
+		IBase* pIBaseClassImage3D = (IBase *)pImage3D;
+		IImage3D* pIImage3D = dynamic_cast<IImage3D*>(pIBaseClassImage3D);
+		if (!pIImage3D)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDCAST);
 		
-		IVolumeDataItem* pIVolumeDataItem = dynamic_cast<IVolumeDataItem*>(pIBaseClass);
-		if (!pIVolumeDataItem)
+		IScalarFieldFromImage3D* pIScalarFieldFromImage3D = dynamic_cast<IScalarFieldFromImage3D*>(pIBaseClass);
+		if (!pIScalarFieldFromImage3D)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pIVolumeDataItem->SetVolumetricStack(pITheVolumetricStack);
+		pIScalarFieldFromImage3D->SetImage(pIImage3D);
 
 		if (pJournalEntry.get() != nullptr) {
 			pJournalEntry->writeSuccess();
@@ -4922,22 +5264,1399 @@ Lib3MFResult lib3mf_volumedataitem_setvolumetricstack(Lib3MF_VolumeDataItem pVol
 	}
 }
 
-Lib3MFResult lib3mf_volumedataitem_gettransform(Lib3MF_VolumeDataItem pVolumeDataItem, sLib3MFTransform * pTransform)
+Lib3MFResult lib3mf_scalarfieldfromimage3d_setchannel(Lib3MF_ScalarFieldFromImage3D pScalarFieldFromImage3D, eLib3MFChannelName eName)
 {
-	IBase* pIBaseClass = (IBase *)pVolumeDataItem;
+	IBase* pIBaseClass = (IBase *)pScalarFieldFromImage3D;
 
 	PLib3MFInterfaceJournalEntry pJournalEntry;
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumeDataItem, "VolumeDataItem", "GetTransform");
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pScalarFieldFromImage3D, "ScalarFieldFromImage3D", "SetChannel");
+			pJournalEntry->addEnumParameter("Name", "ChannelName", (Lib3MF_int32)(eName));
+		}
+		IScalarFieldFromImage3D* pIScalarFieldFromImage3D = dynamic_cast<IScalarFieldFromImage3D*>(pIBaseClass);
+		if (!pIScalarFieldFromImage3D)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIScalarFieldFromImage3D->SetChannel(eName);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_scalarfieldfromimage3d_getchannel(Lib3MF_ScalarFieldFromImage3D pScalarFieldFromImage3D, eLib3MFChannelName * pName)
+{
+	IBase* pIBaseClass = (IBase *)pScalarFieldFromImage3D;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pScalarFieldFromImage3D, "ScalarFieldFromImage3D", "GetChannel");
+		}
+		if (pName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IScalarFieldFromImage3D* pIScalarFieldFromImage3D = dynamic_cast<IScalarFieldFromImage3D*>(pIBaseClass);
+		if (!pIScalarFieldFromImage3D)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pName = pIScalarFieldFromImage3D->GetChannel();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addEnumResult("Name", "ChannelName", (Lib3MF_int32)(*pName));
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_scalarfieldfromimage3d_setfilter(Lib3MF_ScalarFieldFromImage3D pScalarFieldFromImage3D, eLib3MFTextureFilter eFilter)
+{
+	IBase* pIBaseClass = (IBase *)pScalarFieldFromImage3D;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pScalarFieldFromImage3D, "ScalarFieldFromImage3D", "SetFilter");
+			pJournalEntry->addEnumParameter("Filter", "TextureFilter", (Lib3MF_int32)(eFilter));
+		}
+		IScalarFieldFromImage3D* pIScalarFieldFromImage3D = dynamic_cast<IScalarFieldFromImage3D*>(pIBaseClass);
+		if (!pIScalarFieldFromImage3D)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIScalarFieldFromImage3D->SetFilter(eFilter);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_scalarfieldfromimage3d_getfilter(Lib3MF_ScalarFieldFromImage3D pScalarFieldFromImage3D, eLib3MFTextureFilter * pFilter)
+{
+	IBase* pIBaseClass = (IBase *)pScalarFieldFromImage3D;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pScalarFieldFromImage3D, "ScalarFieldFromImage3D", "GetFilter");
+		}
+		if (pFilter == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IScalarFieldFromImage3D* pIScalarFieldFromImage3D = dynamic_cast<IScalarFieldFromImage3D*>(pIBaseClass);
+		if (!pIScalarFieldFromImage3D)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pFilter = pIScalarFieldFromImage3D->GetFilter();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addEnumResult("Filter", "TextureFilter", (Lib3MF_int32)(*pFilter));
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_scalarfieldfromimage3d_settilestyles(Lib3MF_ScalarFieldFromImage3D pScalarFieldFromImage3D, eLib3MFTextureTileStyle eTileStyleU, eLib3MFTextureTileStyle eTileStyleV, eLib3MFTextureTileStyle eTileStyleW)
+{
+	IBase* pIBaseClass = (IBase *)pScalarFieldFromImage3D;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pScalarFieldFromImage3D, "ScalarFieldFromImage3D", "SetTileStyles");
+			pJournalEntry->addEnumParameter("TileStyleU", "TextureTileStyle", (Lib3MF_int32)(eTileStyleU));
+			pJournalEntry->addEnumParameter("TileStyleV", "TextureTileStyle", (Lib3MF_int32)(eTileStyleV));
+			pJournalEntry->addEnumParameter("TileStyleW", "TextureTileStyle", (Lib3MF_int32)(eTileStyleW));
+		}
+		IScalarFieldFromImage3D* pIScalarFieldFromImage3D = dynamic_cast<IScalarFieldFromImage3D*>(pIBaseClass);
+		if (!pIScalarFieldFromImage3D)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIScalarFieldFromImage3D->SetTileStyles(eTileStyleU, eTileStyleV, eTileStyleW);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_scalarfieldfromimage3d_gettilestyles(Lib3MF_ScalarFieldFromImage3D pScalarFieldFromImage3D, eLib3MFTextureTileStyle * pTileStyleU, eLib3MFTextureTileStyle * pTileStyleV, eLib3MFTextureTileStyle * pTileStyleW)
+{
+	IBase* pIBaseClass = (IBase *)pScalarFieldFromImage3D;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pScalarFieldFromImage3D, "ScalarFieldFromImage3D", "GetTileStyles");
+		}
+		if (!pTileStyleU)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (!pTileStyleV)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (!pTileStyleW)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IScalarFieldFromImage3D* pIScalarFieldFromImage3D = dynamic_cast<IScalarFieldFromImage3D*>(pIBaseClass);
+		if (!pIScalarFieldFromImage3D)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIScalarFieldFromImage3D->GetTileStyles(*pTileStyleU, *pTileStyleV, *pTileStyleW);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addEnumResult("TileStyleU", "TextureTileStyle", (Lib3MF_int32)(*pTileStyleU));
+			pJournalEntry->addEnumResult("TileStyleV", "TextureTileStyle", (Lib3MF_int32)(*pTileStyleV));
+			pJournalEntry->addEnumResult("TileStyleW", "TextureTileStyle", (Lib3MF_int32)(*pTileStyleW));
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_scalarfieldfromimage3d_getoffset(Lib3MF_ScalarFieldFromImage3D pScalarFieldFromImage3D, Lib3MF_double * pOffset)
+{
+	IBase* pIBaseClass = (IBase *)pScalarFieldFromImage3D;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pScalarFieldFromImage3D, "ScalarFieldFromImage3D", "GetOffset");
+		}
+		if (pOffset == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IScalarFieldFromImage3D* pIScalarFieldFromImage3D = dynamic_cast<IScalarFieldFromImage3D*>(pIBaseClass);
+		if (!pIScalarFieldFromImage3D)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pOffset = pIScalarFieldFromImage3D->GetOffset();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addDoubleResult("Offset", *pOffset);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_scalarfieldfromimage3d_setoffset(Lib3MF_ScalarFieldFromImage3D pScalarFieldFromImage3D, Lib3MF_double dOffset)
+{
+	IBase* pIBaseClass = (IBase *)pScalarFieldFromImage3D;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pScalarFieldFromImage3D, "ScalarFieldFromImage3D", "SetOffset");
+			pJournalEntry->addDoubleParameter("Offset", dOffset);
+		}
+		IScalarFieldFromImage3D* pIScalarFieldFromImage3D = dynamic_cast<IScalarFieldFromImage3D*>(pIBaseClass);
+		if (!pIScalarFieldFromImage3D)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIScalarFieldFromImage3D->SetOffset(dOffset);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_scalarfieldfromimage3d_getscale(Lib3MF_ScalarFieldFromImage3D pScalarFieldFromImage3D, Lib3MF_double * pScale)
+{
+	IBase* pIBaseClass = (IBase *)pScalarFieldFromImage3D;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pScalarFieldFromImage3D, "ScalarFieldFromImage3D", "GetScale");
+		}
+		if (pScale == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IScalarFieldFromImage3D* pIScalarFieldFromImage3D = dynamic_cast<IScalarFieldFromImage3D*>(pIBaseClass);
+		if (!pIScalarFieldFromImage3D)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pScale = pIScalarFieldFromImage3D->GetScale();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addDoubleResult("Scale", *pScale);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_scalarfieldfromimage3d_setscale(Lib3MF_ScalarFieldFromImage3D pScalarFieldFromImage3D, Lib3MF_double dScale)
+{
+	IBase* pIBaseClass = (IBase *)pScalarFieldFromImage3D;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pScalarFieldFromImage3D, "ScalarFieldFromImage3D", "SetScale");
+			pJournalEntry->addDoubleParameter("Scale", dScale);
+		}
+		IScalarFieldFromImage3D* pIScalarFieldFromImage3D = dynamic_cast<IScalarFieldFromImage3D*>(pIBaseClass);
+		if (!pIScalarFieldFromImage3D)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIScalarFieldFromImage3D->SetScale(dScale);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+
+/*************************************************************************************************************************
+ Class implementation for ScalarFieldComposed
+**************************************************************************************************************************/
+Lib3MFResult lib3mf_scalarfieldcomposed_setmethod(Lib3MF_ScalarFieldComposed pScalarFieldComposed, eLib3MFCompositionMethod eTheMethod)
+{
+	IBase* pIBaseClass = (IBase *)pScalarFieldComposed;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pScalarFieldComposed, "ScalarFieldComposed", "SetMethod");
+			pJournalEntry->addEnumParameter("TheMethod", "CompositionMethod", (Lib3MF_int32)(eTheMethod));
+		}
+		IScalarFieldComposed* pIScalarFieldComposed = dynamic_cast<IScalarFieldComposed*>(pIBaseClass);
+		if (!pIScalarFieldComposed)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIScalarFieldComposed->SetMethod(eTheMethod);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_scalarfieldcomposed_getmethod(Lib3MF_ScalarFieldComposed pScalarFieldComposed, eLib3MFCompositionMethod * pTheMethod)
+{
+	IBase* pIBaseClass = (IBase *)pScalarFieldComposed;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pScalarFieldComposed, "ScalarFieldComposed", "GetMethod");
+		}
+		if (pTheMethod == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IScalarFieldComposed* pIScalarFieldComposed = dynamic_cast<IScalarFieldComposed*>(pIBaseClass);
+		if (!pIScalarFieldComposed)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pTheMethod = pIScalarFieldComposed->GetMethod();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addEnumResult("TheMethod", "CompositionMethod", (Lib3MF_int32)(*pTheMethod));
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_scalarfieldcomposed_getfactor1(Lib3MF_ScalarFieldComposed pScalarFieldComposed, Lib3MF_double * pFactor1)
+{
+	IBase* pIBaseClass = (IBase *)pScalarFieldComposed;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pScalarFieldComposed, "ScalarFieldComposed", "GetFactor1");
+		}
+		if (pFactor1 == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IScalarFieldComposed* pIScalarFieldComposed = dynamic_cast<IScalarFieldComposed*>(pIBaseClass);
+		if (!pIScalarFieldComposed)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pFactor1 = pIScalarFieldComposed->GetFactor1();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addDoubleResult("Factor1", *pFactor1);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_scalarfieldcomposed_setfactor1(Lib3MF_ScalarFieldComposed pScalarFieldComposed, Lib3MF_double dFactor1)
+{
+	IBase* pIBaseClass = (IBase *)pScalarFieldComposed;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pScalarFieldComposed, "ScalarFieldComposed", "SetFactor1");
+			pJournalEntry->addDoubleParameter("Factor1", dFactor1);
+		}
+		IScalarFieldComposed* pIScalarFieldComposed = dynamic_cast<IScalarFieldComposed*>(pIBaseClass);
+		if (!pIScalarFieldComposed)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIScalarFieldComposed->SetFactor1(dFactor1);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_scalarfieldcomposed_getfactor2(Lib3MF_ScalarFieldComposed pScalarFieldComposed, Lib3MF_double * pFactor2)
+{
+	IBase* pIBaseClass = (IBase *)pScalarFieldComposed;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pScalarFieldComposed, "ScalarFieldComposed", "GetFactor2");
+		}
+		if (pFactor2 == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IScalarFieldComposed* pIScalarFieldComposed = dynamic_cast<IScalarFieldComposed*>(pIBaseClass);
+		if (!pIScalarFieldComposed)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pFactor2 = pIScalarFieldComposed->GetFactor2();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addDoubleResult("Factor2", *pFactor2);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_scalarfieldcomposed_setfactor2(Lib3MF_ScalarFieldComposed pScalarFieldComposed, Lib3MF_double dFactor2)
+{
+	IBase* pIBaseClass = (IBase *)pScalarFieldComposed;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pScalarFieldComposed, "ScalarFieldComposed", "SetFactor2");
+			pJournalEntry->addDoubleParameter("Factor2", dFactor2);
+		}
+		IScalarFieldComposed* pIScalarFieldComposed = dynamic_cast<IScalarFieldComposed*>(pIBaseClass);
+		if (!pIScalarFieldComposed)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIScalarFieldComposed->SetFactor2(dFactor2);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_scalarfieldcomposed_scalarfieldreference1(Lib3MF_ScalarFieldComposed pScalarFieldComposed, Lib3MF_ScalarFieldReference * pTheScalarFieldReference1)
+{
+	IBase* pIBaseClass = (IBase *)pScalarFieldComposed;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pScalarFieldComposed, "ScalarFieldComposed", "ScalarFieldReference1");
+		}
+		if (pTheScalarFieldReference1 == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseTheScalarFieldReference1(nullptr);
+		IScalarFieldComposed* pIScalarFieldComposed = dynamic_cast<IScalarFieldComposed*>(pIBaseClass);
+		if (!pIScalarFieldComposed)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseTheScalarFieldReference1 = pIScalarFieldComposed->ScalarFieldReference1();
+
+		*pTheScalarFieldReference1 = (IBase*)(pBaseTheScalarFieldReference1);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("TheScalarFieldReference1", *pTheScalarFieldReference1);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_scalarfieldcomposed_scalarfieldreference2(Lib3MF_ScalarFieldComposed pScalarFieldComposed, Lib3MF_ScalarFieldReference * pTheScalarFieldReference1)
+{
+	IBase* pIBaseClass = (IBase *)pScalarFieldComposed;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pScalarFieldComposed, "ScalarFieldComposed", "ScalarFieldReference2");
+		}
+		if (pTheScalarFieldReference1 == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseTheScalarFieldReference1(nullptr);
+		IScalarFieldComposed* pIScalarFieldComposed = dynamic_cast<IScalarFieldComposed*>(pIBaseClass);
+		if (!pIScalarFieldComposed)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseTheScalarFieldReference1 = pIScalarFieldComposed->ScalarFieldReference2();
+
+		*pTheScalarFieldReference1 = (IBase*)(pBaseTheScalarFieldReference1);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("TheScalarFieldReference1", *pTheScalarFieldReference1);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_scalarfieldcomposed_scalarfieldreferencemask(Lib3MF_ScalarFieldComposed pScalarFieldComposed, Lib3MF_ScalarFieldReference * pTheScalarFieldReferenceMask)
+{
+	IBase* pIBaseClass = (IBase *)pScalarFieldComposed;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pScalarFieldComposed, "ScalarFieldComposed", "ScalarFieldReferenceMask");
+		}
+		if (pTheScalarFieldReferenceMask == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseTheScalarFieldReferenceMask(nullptr);
+		IScalarFieldComposed* pIScalarFieldComposed = dynamic_cast<IScalarFieldComposed*>(pIBaseClass);
+		if (!pIScalarFieldComposed)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseTheScalarFieldReferenceMask = pIScalarFieldComposed->ScalarFieldReferenceMask();
+
+		*pTheScalarFieldReferenceMask = (IBase*)(pBaseTheScalarFieldReferenceMask);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("TheScalarFieldReferenceMask", *pTheScalarFieldReferenceMask);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+
+/*************************************************************************************************************************
+ Class implementation for Vector3DFieldFromImage3D
+**************************************************************************************************************************/
+Lib3MFResult lib3mf_vector3dfieldfromimage3d_getimage(Lib3MF_Vector3DFieldFromImage3D pVector3DFieldFromImage3D, Lib3MF_Image3D * pImage3D)
+{
+	IBase* pIBaseClass = (IBase *)pVector3DFieldFromImage3D;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pVector3DFieldFromImage3D, "Vector3DFieldFromImage3D", "GetImage");
+		}
+		if (pImage3D == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseImage3D(nullptr);
+		IVector3DFieldFromImage3D* pIVector3DFieldFromImage3D = dynamic_cast<IVector3DFieldFromImage3D*>(pIBaseClass);
+		if (!pIVector3DFieldFromImage3D)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseImage3D = pIVector3DFieldFromImage3D->GetImage();
+
+		*pImage3D = (IBase*)(pBaseImage3D);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Image3D", *pImage3D);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_vector3dfieldfromimage3d_setimage(Lib3MF_Vector3DFieldFromImage3D pVector3DFieldFromImage3D, Lib3MF_Image3D pImage3D)
+{
+	IBase* pIBaseClass = (IBase *)pVector3DFieldFromImage3D;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pVector3DFieldFromImage3D, "Vector3DFieldFromImage3D", "SetImage");
+			pJournalEntry->addHandleParameter("Image3D", pImage3D);
+		}
+		IBase* pIBaseClassImage3D = (IBase *)pImage3D;
+		IImage3D* pIImage3D = dynamic_cast<IImage3D*>(pIBaseClassImage3D);
+		if (!pIImage3D)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDCAST);
+		
+		IVector3DFieldFromImage3D* pIVector3DFieldFromImage3D = dynamic_cast<IVector3DFieldFromImage3D*>(pIBaseClass);
+		if (!pIVector3DFieldFromImage3D)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIVector3DFieldFromImage3D->SetImage(pIImage3D);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_vector3dfieldfromimage3d_setfilter(Lib3MF_Vector3DFieldFromImage3D pVector3DFieldFromImage3D, eLib3MFTextureFilter eFilter)
+{
+	IBase* pIBaseClass = (IBase *)pVector3DFieldFromImage3D;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pVector3DFieldFromImage3D, "Vector3DFieldFromImage3D", "SetFilter");
+			pJournalEntry->addEnumParameter("Filter", "TextureFilter", (Lib3MF_int32)(eFilter));
+		}
+		IVector3DFieldFromImage3D* pIVector3DFieldFromImage3D = dynamic_cast<IVector3DFieldFromImage3D*>(pIBaseClass);
+		if (!pIVector3DFieldFromImage3D)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIVector3DFieldFromImage3D->SetFilter(eFilter);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_vector3dfieldfromimage3d_getfilter(Lib3MF_Vector3DFieldFromImage3D pVector3DFieldFromImage3D, eLib3MFTextureFilter * pFilter)
+{
+	IBase* pIBaseClass = (IBase *)pVector3DFieldFromImage3D;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pVector3DFieldFromImage3D, "Vector3DFieldFromImage3D", "GetFilter");
+		}
+		if (pFilter == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IVector3DFieldFromImage3D* pIVector3DFieldFromImage3D = dynamic_cast<IVector3DFieldFromImage3D*>(pIBaseClass);
+		if (!pIVector3DFieldFromImage3D)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pFilter = pIVector3DFieldFromImage3D->GetFilter();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addEnumResult("Filter", "TextureFilter", (Lib3MF_int32)(*pFilter));
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_vector3dfieldfromimage3d_settilestyles(Lib3MF_Vector3DFieldFromImage3D pVector3DFieldFromImage3D, eLib3MFTextureTileStyle eTileStyleU, eLib3MFTextureTileStyle eTileStyleV, eLib3MFTextureTileStyle eTileStyleW)
+{
+	IBase* pIBaseClass = (IBase *)pVector3DFieldFromImage3D;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pVector3DFieldFromImage3D, "Vector3DFieldFromImage3D", "SetTileStyles");
+			pJournalEntry->addEnumParameter("TileStyleU", "TextureTileStyle", (Lib3MF_int32)(eTileStyleU));
+			pJournalEntry->addEnumParameter("TileStyleV", "TextureTileStyle", (Lib3MF_int32)(eTileStyleV));
+			pJournalEntry->addEnumParameter("TileStyleW", "TextureTileStyle", (Lib3MF_int32)(eTileStyleW));
+		}
+		IVector3DFieldFromImage3D* pIVector3DFieldFromImage3D = dynamic_cast<IVector3DFieldFromImage3D*>(pIBaseClass);
+		if (!pIVector3DFieldFromImage3D)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIVector3DFieldFromImage3D->SetTileStyles(eTileStyleU, eTileStyleV, eTileStyleW);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_vector3dfieldfromimage3d_gettilestyles(Lib3MF_Vector3DFieldFromImage3D pVector3DFieldFromImage3D, eLib3MFTextureTileStyle * pTileStyleU, eLib3MFTextureTileStyle * pTileStyleV, eLib3MFTextureTileStyle * pTileStyleW)
+{
+	IBase* pIBaseClass = (IBase *)pVector3DFieldFromImage3D;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pVector3DFieldFromImage3D, "Vector3DFieldFromImage3D", "GetTileStyles");
+		}
+		if (!pTileStyleU)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (!pTileStyleV)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (!pTileStyleW)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IVector3DFieldFromImage3D* pIVector3DFieldFromImage3D = dynamic_cast<IVector3DFieldFromImage3D*>(pIBaseClass);
+		if (!pIVector3DFieldFromImage3D)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIVector3DFieldFromImage3D->GetTileStyles(*pTileStyleU, *pTileStyleV, *pTileStyleW);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addEnumResult("TileStyleU", "TextureTileStyle", (Lib3MF_int32)(*pTileStyleU));
+			pJournalEntry->addEnumResult("TileStyleV", "TextureTileStyle", (Lib3MF_int32)(*pTileStyleV));
+			pJournalEntry->addEnumResult("TileStyleW", "TextureTileStyle", (Lib3MF_int32)(*pTileStyleW));
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_vector3dfieldfromimage3d_getoffset(Lib3MF_Vector3DFieldFromImage3D pVector3DFieldFromImage3D, Lib3MF_double * pOffset)
+{
+	IBase* pIBaseClass = (IBase *)pVector3DFieldFromImage3D;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pVector3DFieldFromImage3D, "Vector3DFieldFromImage3D", "GetOffset");
+		}
+		if (pOffset == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IVector3DFieldFromImage3D* pIVector3DFieldFromImage3D = dynamic_cast<IVector3DFieldFromImage3D*>(pIBaseClass);
+		if (!pIVector3DFieldFromImage3D)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pOffset = pIVector3DFieldFromImage3D->GetOffset();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addDoubleResult("Offset", *pOffset);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_vector3dfieldfromimage3d_setoffset(Lib3MF_Vector3DFieldFromImage3D pVector3DFieldFromImage3D, Lib3MF_double dOffset)
+{
+	IBase* pIBaseClass = (IBase *)pVector3DFieldFromImage3D;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pVector3DFieldFromImage3D, "Vector3DFieldFromImage3D", "SetOffset");
+			pJournalEntry->addDoubleParameter("Offset", dOffset);
+		}
+		IVector3DFieldFromImage3D* pIVector3DFieldFromImage3D = dynamic_cast<IVector3DFieldFromImage3D*>(pIBaseClass);
+		if (!pIVector3DFieldFromImage3D)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIVector3DFieldFromImage3D->SetOffset(dOffset);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_vector3dfieldfromimage3d_getscale(Lib3MF_Vector3DFieldFromImage3D pVector3DFieldFromImage3D, Lib3MF_double * pScale)
+{
+	IBase* pIBaseClass = (IBase *)pVector3DFieldFromImage3D;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pVector3DFieldFromImage3D, "Vector3DFieldFromImage3D", "GetScale");
+		}
+		if (pScale == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IVector3DFieldFromImage3D* pIVector3DFieldFromImage3D = dynamic_cast<IVector3DFieldFromImage3D*>(pIBaseClass);
+		if (!pIVector3DFieldFromImage3D)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pScale = pIVector3DFieldFromImage3D->GetScale();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addDoubleResult("Scale", *pScale);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_vector3dfieldfromimage3d_setscale(Lib3MF_Vector3DFieldFromImage3D pVector3DFieldFromImage3D, Lib3MF_double dScale)
+{
+	IBase* pIBaseClass = (IBase *)pVector3DFieldFromImage3D;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pVector3DFieldFromImage3D, "Vector3DFieldFromImage3D", "SetScale");
+			pJournalEntry->addDoubleParameter("Scale", dScale);
+		}
+		IVector3DFieldFromImage3D* pIVector3DFieldFromImage3D = dynamic_cast<IVector3DFieldFromImage3D*>(pIBaseClass);
+		if (!pIVector3DFieldFromImage3D)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIVector3DFieldFromImage3D->SetScale(dScale);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+
+/*************************************************************************************************************************
+ Class implementation for Vector3DFieldComposed
+**************************************************************************************************************************/
+Lib3MFResult lib3mf_vector3dfieldcomposed_setmethod(Lib3MF_Vector3DFieldComposed pVector3DFieldComposed, eLib3MFCompositionMethod eTheMethod)
+{
+	IBase* pIBaseClass = (IBase *)pVector3DFieldComposed;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pVector3DFieldComposed, "Vector3DFieldComposed", "SetMethod");
+			pJournalEntry->addEnumParameter("TheMethod", "CompositionMethod", (Lib3MF_int32)(eTheMethod));
+		}
+		IVector3DFieldComposed* pIVector3DFieldComposed = dynamic_cast<IVector3DFieldComposed*>(pIBaseClass);
+		if (!pIVector3DFieldComposed)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIVector3DFieldComposed->SetMethod(eTheMethod);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_vector3dfieldcomposed_getmethod(Lib3MF_Vector3DFieldComposed pVector3DFieldComposed, eLib3MFCompositionMethod * pTheMethod)
+{
+	IBase* pIBaseClass = (IBase *)pVector3DFieldComposed;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pVector3DFieldComposed, "Vector3DFieldComposed", "GetMethod");
+		}
+		if (pTheMethod == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IVector3DFieldComposed* pIVector3DFieldComposed = dynamic_cast<IVector3DFieldComposed*>(pIBaseClass);
+		if (!pIVector3DFieldComposed)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pTheMethod = pIVector3DFieldComposed->GetMethod();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addEnumResult("TheMethod", "CompositionMethod", (Lib3MF_int32)(*pTheMethod));
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_vector3dfieldcomposed_getfactor1(Lib3MF_Vector3DFieldComposed pVector3DFieldComposed, Lib3MF_double * pFactor1)
+{
+	IBase* pIBaseClass = (IBase *)pVector3DFieldComposed;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pVector3DFieldComposed, "Vector3DFieldComposed", "GetFactor1");
+		}
+		if (pFactor1 == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IVector3DFieldComposed* pIVector3DFieldComposed = dynamic_cast<IVector3DFieldComposed*>(pIBaseClass);
+		if (!pIVector3DFieldComposed)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pFactor1 = pIVector3DFieldComposed->GetFactor1();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addDoubleResult("Factor1", *pFactor1);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_vector3dfieldcomposed_setfactor1(Lib3MF_Vector3DFieldComposed pVector3DFieldComposed, Lib3MF_double dFactor1)
+{
+	IBase* pIBaseClass = (IBase *)pVector3DFieldComposed;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pVector3DFieldComposed, "Vector3DFieldComposed", "SetFactor1");
+			pJournalEntry->addDoubleParameter("Factor1", dFactor1);
+		}
+		IVector3DFieldComposed* pIVector3DFieldComposed = dynamic_cast<IVector3DFieldComposed*>(pIBaseClass);
+		if (!pIVector3DFieldComposed)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIVector3DFieldComposed->SetFactor1(dFactor1);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_vector3dfieldcomposed_getfactor2(Lib3MF_Vector3DFieldComposed pVector3DFieldComposed, Lib3MF_double * pFactor2)
+{
+	IBase* pIBaseClass = (IBase *)pVector3DFieldComposed;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pVector3DFieldComposed, "Vector3DFieldComposed", "GetFactor2");
+		}
+		if (pFactor2 == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IVector3DFieldComposed* pIVector3DFieldComposed = dynamic_cast<IVector3DFieldComposed*>(pIBaseClass);
+		if (!pIVector3DFieldComposed)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pFactor2 = pIVector3DFieldComposed->GetFactor2();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addDoubleResult("Factor2", *pFactor2);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_vector3dfieldcomposed_setfactor2(Lib3MF_Vector3DFieldComposed pVector3DFieldComposed, Lib3MF_double dFactor2)
+{
+	IBase* pIBaseClass = (IBase *)pVector3DFieldComposed;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pVector3DFieldComposed, "Vector3DFieldComposed", "SetFactor2");
+			pJournalEntry->addDoubleParameter("Factor2", dFactor2);
+		}
+		IVector3DFieldComposed* pIVector3DFieldComposed = dynamic_cast<IVector3DFieldComposed*>(pIBaseClass);
+		if (!pIVector3DFieldComposed)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIVector3DFieldComposed->SetFactor2(dFactor2);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_vector3dfieldcomposed_vector3dfieldreference1(Lib3MF_Vector3DFieldComposed pVector3DFieldComposed, Lib3MF_Vector3DFieldReference * pTheVector3DFieldReference1)
+{
+	IBase* pIBaseClass = (IBase *)pVector3DFieldComposed;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pVector3DFieldComposed, "Vector3DFieldComposed", "Vector3DFieldReference1");
+		}
+		if (pTheVector3DFieldReference1 == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseTheVector3DFieldReference1(nullptr);
+		IVector3DFieldComposed* pIVector3DFieldComposed = dynamic_cast<IVector3DFieldComposed*>(pIBaseClass);
+		if (!pIVector3DFieldComposed)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseTheVector3DFieldReference1 = pIVector3DFieldComposed->Vector3DFieldReference1();
+
+		*pTheVector3DFieldReference1 = (IBase*)(pBaseTheVector3DFieldReference1);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("TheVector3DFieldReference1", *pTheVector3DFieldReference1);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_vector3dfieldcomposed_vector3dfieldreference2(Lib3MF_Vector3DFieldComposed pVector3DFieldComposed, Lib3MF_Vector3DFieldReference * pTheVector3DFieldReference1)
+{
+	IBase* pIBaseClass = (IBase *)pVector3DFieldComposed;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pVector3DFieldComposed, "Vector3DFieldComposed", "Vector3DFieldReference2");
+		}
+		if (pTheVector3DFieldReference1 == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseTheVector3DFieldReference1(nullptr);
+		IVector3DFieldComposed* pIVector3DFieldComposed = dynamic_cast<IVector3DFieldComposed*>(pIBaseClass);
+		if (!pIVector3DFieldComposed)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseTheVector3DFieldReference1 = pIVector3DFieldComposed->Vector3DFieldReference2();
+
+		*pTheVector3DFieldReference1 = (IBase*)(pBaseTheVector3DFieldReference1);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("TheVector3DFieldReference1", *pTheVector3DFieldReference1);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_vector3dfieldcomposed_scalarfieldreferencemask(Lib3MF_Vector3DFieldComposed pVector3DFieldComposed, Lib3MF_ScalarFieldReference * pTheScalarFieldReferenceMask)
+{
+	IBase* pIBaseClass = (IBase *)pVector3DFieldComposed;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pVector3DFieldComposed, "Vector3DFieldComposed", "ScalarFieldReferenceMask");
+		}
+		if (pTheScalarFieldReferenceMask == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseTheScalarFieldReferenceMask(nullptr);
+		IVector3DFieldComposed* pIVector3DFieldComposed = dynamic_cast<IVector3DFieldComposed*>(pIBaseClass);
+		if (!pIVector3DFieldComposed)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseTheScalarFieldReferenceMask = pIVector3DFieldComposed->ScalarFieldReferenceMask();
+
+		*pTheScalarFieldReferenceMask = (IBase*)(pBaseTheScalarFieldReferenceMask);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("TheScalarFieldReferenceMask", *pTheScalarFieldReferenceMask);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+
+/*************************************************************************************************************************
+ Class implementation for FieldReference
+**************************************************************************************************************************/
+Lib3MFResult lib3mf_fieldreference_getfieldresourceid(Lib3MF_FieldReference pFieldReference, Lib3MF_uint32 * pUniqueResourceID)
+{
+	IBase* pIBaseClass = (IBase *)pFieldReference;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pFieldReference, "FieldReference", "GetFieldResourceID");
+		}
+		if (pUniqueResourceID == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IFieldReference* pIFieldReference = dynamic_cast<IFieldReference*>(pIBaseClass);
+		if (!pIFieldReference)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pUniqueResourceID = pIFieldReference->GetFieldResourceID();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addUInt32Result("UniqueResourceID", *pUniqueResourceID);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_fieldreference_setfieldresourceid(Lib3MF_FieldReference pFieldReference, Lib3MF_uint32 nUniqueResourceID)
+{
+	IBase* pIBaseClass = (IBase *)pFieldReference;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pFieldReference, "FieldReference", "SetFieldResourceID");
+			pJournalEntry->addUInt32Parameter("UniqueResourceID", nUniqueResourceID);
+		}
+		IFieldReference* pIFieldReference = dynamic_cast<IFieldReference*>(pIBaseClass);
+		if (!pIFieldReference)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIFieldReference->SetFieldResourceID(nUniqueResourceID);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_fieldreference_gettransform(Lib3MF_FieldReference pFieldReference, sLib3MFTransform * pTransform)
+{
+	IBase* pIBaseClass = (IBase *)pFieldReference;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pFieldReference, "FieldReference", "GetTransform");
 		}
 		if (pTransform == nullptr)
 		throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		IVolumeDataItem* pIVolumeDataItem = dynamic_cast<IVolumeDataItem*>(pIBaseClass);
-		if (!pIVolumeDataItem)
+		IFieldReference* pIFieldReference = dynamic_cast<IFieldReference*>(pIBaseClass);
+		if (!pIFieldReference)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		*pTransform = pIVolumeDataItem->GetTransform();
+		*pTransform = pIFieldReference->GetTransform();
 
 		if (pJournalEntry.get() != nullptr) {
 			pJournalEntry->writeSuccess();
@@ -4955,20 +6674,174 @@ Lib3MFResult lib3mf_volumedataitem_gettransform(Lib3MF_VolumeDataItem pVolumeDat
 	}
 }
 
-Lib3MFResult lib3mf_volumedataitem_settransform(Lib3MF_VolumeDataItem pVolumeDataItem, const sLib3MFTransform * pTransform)
+Lib3MFResult lib3mf_fieldreference_settransform(Lib3MF_FieldReference pFieldReference, const sLib3MFTransform * pTransform)
 {
-	IBase* pIBaseClass = (IBase *)pVolumeDataItem;
+	IBase* pIBaseClass = (IBase *)pFieldReference;
 
 	PLib3MFInterfaceJournalEntry pJournalEntry;
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumeDataItem, "VolumeDataItem", "SetTransform");
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pFieldReference, "FieldReference", "SetTransform");
 		}
-		IVolumeDataItem* pIVolumeDataItem = dynamic_cast<IVolumeDataItem*>(pIBaseClass);
-		if (!pIVolumeDataItem)
+		IFieldReference* pIFieldReference = dynamic_cast<IFieldReference*>(pIBaseClass);
+		if (!pIFieldReference)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pIVolumeDataItem->SetTransform(*pTransform);
+		pIFieldReference->SetTransform(*pTransform);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+
+/*************************************************************************************************************************
+ Class implementation for ScalarFieldReference
+**************************************************************************************************************************/
+Lib3MFResult lib3mf_scalarfieldreference_getscalarfield(Lib3MF_ScalarFieldReference pScalarFieldReference, Lib3MF_ScalarField * pTheScalarField)
+{
+	IBase* pIBaseClass = (IBase *)pScalarFieldReference;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pScalarFieldReference, "ScalarFieldReference", "GetScalarField");
+		}
+		if (pTheScalarField == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseTheScalarField(nullptr);
+		IScalarFieldReference* pIScalarFieldReference = dynamic_cast<IScalarFieldReference*>(pIBaseClass);
+		if (!pIScalarFieldReference)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseTheScalarField = pIScalarFieldReference->GetScalarField();
+
+		*pTheScalarField = (IBase*)(pBaseTheScalarField);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("TheScalarField", *pTheScalarField);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_scalarfieldreference_setscalarfield(Lib3MF_ScalarFieldReference pScalarFieldReference, Lib3MF_ScalarField pTheScalarField)
+{
+	IBase* pIBaseClass = (IBase *)pScalarFieldReference;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pScalarFieldReference, "ScalarFieldReference", "SetScalarField");
+			pJournalEntry->addHandleParameter("TheScalarField", pTheScalarField);
+		}
+		IBase* pIBaseClassTheScalarField = (IBase *)pTheScalarField;
+		IScalarField* pITheScalarField = dynamic_cast<IScalarField*>(pIBaseClassTheScalarField);
+		if (!pITheScalarField)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDCAST);
+		
+		IScalarFieldReference* pIScalarFieldReference = dynamic_cast<IScalarFieldReference*>(pIBaseClass);
+		if (!pIScalarFieldReference)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIScalarFieldReference->SetScalarField(pITheScalarField);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+
+/*************************************************************************************************************************
+ Class implementation for Vector3DFieldReference
+**************************************************************************************************************************/
+Lib3MFResult lib3mf_vector3dfieldreference_getvector3dfield(Lib3MF_Vector3DFieldReference pVector3DFieldReference, Lib3MF_Vector3DField * pTheVector3DField)
+{
+	IBase* pIBaseClass = (IBase *)pVector3DFieldReference;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pVector3DFieldReference, "Vector3DFieldReference", "GetVector3DField");
+		}
+		if (pTheVector3DField == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseTheVector3DField(nullptr);
+		IVector3DFieldReference* pIVector3DFieldReference = dynamic_cast<IVector3DFieldReference*>(pIBaseClass);
+		if (!pIVector3DFieldReference)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseTheVector3DField = pIVector3DFieldReference->GetVector3DField();
+
+		*pTheVector3DField = (IBase*)(pBaseTheVector3DField);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("TheVector3DField", *pTheVector3DField);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_vector3dfieldreference_setvector3dfield(Lib3MF_Vector3DFieldReference pVector3DFieldReference, Lib3MF_Vector3DField pTheVector3DField)
+{
+	IBase* pIBaseClass = (IBase *)pVector3DFieldReference;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pVector3DFieldReference, "Vector3DFieldReference", "SetVector3DField");
+			pJournalEntry->addHandleParameter("TheVector3DField", pTheVector3DField);
+		}
+		IBase* pIBaseClassTheVector3DField = (IBase *)pTheVector3DField;
+		IVector3DField* pITheVector3DField = dynamic_cast<IVector3DField*>(pIBaseClassTheVector3DField);
+		if (!pITheVector3DField)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDCAST);
+		
+		IVector3DFieldReference* pIVector3DFieldReference = dynamic_cast<IVector3DFieldReference*>(pIBaseClass);
+		if (!pIVector3DFieldReference)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIVector3DFieldReference->SetVector3DField(pITheVector3DField);
 
 		if (pJournalEntry.get() != nullptr) {
 			pJournalEntry->writeSuccess();
@@ -5056,170 +6929,14 @@ Lib3MFResult lib3mf_volumedatalevelset_setsolidthreshold(Lib3MF_VolumeDataLevels
 	}
 }
 
-Lib3MFResult lib3mf_volumedatalevelset_setchannel(Lib3MF_VolumeDataLevelset pVolumeDataLevelset, const char * pChannelName)
-{
-	IBase* pIBaseClass = (IBase *)pVolumeDataLevelset;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumeDataLevelset, "VolumeDataLevelset", "SetChannel");
-			pJournalEntry->addStringParameter("ChannelName", pChannelName);
-		}
-		if (pChannelName == nullptr)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		std::string sChannelName(pChannelName);
-		IVolumeDataLevelset* pIVolumeDataLevelset = dynamic_cast<IVolumeDataLevelset*>(pIBaseClass);
-		if (!pIVolumeDataLevelset)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		pIVolumeDataLevelset->SetChannel(sChannelName);
-
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_volumedatalevelset_getchannel(Lib3MF_VolumeDataLevelset pVolumeDataLevelset, const Lib3MF_uint32 nChannelNameBufferSize, Lib3MF_uint32* pChannelNameNeededChars, char * pChannelNameBuffer)
-{
-	IBase* pIBaseClass = (IBase *)pVolumeDataLevelset;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumeDataLevelset, "VolumeDataLevelset", "GetChannel");
-		}
-		if ( (!pChannelNameBuffer) && !(pChannelNameNeededChars) )
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		std::string sChannelName("");
-		IVolumeDataLevelset* pIVolumeDataLevelset = dynamic_cast<IVolumeDataLevelset*>(pIBaseClass);
-		if (!pIVolumeDataLevelset)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		sChannelName = pIVolumeDataLevelset->GetChannel();
-
-		if (pChannelNameNeededChars)
-			*pChannelNameNeededChars = (Lib3MF_uint32) (sChannelName.size()+1);
-		if (pChannelNameBuffer) {
-			if (sChannelName.size() >= nChannelNameBufferSize)
-				throw ELib3MFInterfaceException (LIB3MF_ERROR_BUFFERTOOSMALL);
-			for (size_t iChannelName = 0; iChannelName < sChannelName.size(); iChannelName++)
-				pChannelNameBuffer[iChannelName] = sChannelName[iChannelName];
-			pChannelNameBuffer[sChannelName.size()] = 0;
-		}
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addStringResult("ChannelName", sChannelName.c_str());
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
 
 /*************************************************************************************************************************
  Class implementation for VolumeDataColor
 **************************************************************************************************************************/
-Lib3MFResult lib3mf_volumedatacolor_setchannel(Lib3MF_VolumeDataColor pVolumeDataColor, eLib3MFColorChannel eTheColorChannel, const char * pChannelName)
-{
-	IBase* pIBaseClass = (IBase *)pVolumeDataColor;
 
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumeDataColor, "VolumeDataColor", "SetChannel");
-			pJournalEntry->addEnumParameter("TheColorChannel", "ColorChannel", (Lib3MF_int32)(eTheColorChannel));
-			pJournalEntry->addStringParameter("ChannelName", pChannelName);
-		}
-		if (pChannelName == nullptr)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		std::string sChannelName(pChannelName);
-		IVolumeDataColor* pIVolumeDataColor = dynamic_cast<IVolumeDataColor*>(pIBaseClass);
-		if (!pIVolumeDataColor)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		pIVolumeDataColor->SetChannel(eTheColorChannel, sChannelName);
-
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_volumedatacolor_getchannel(Lib3MF_VolumeDataColor pVolumeDataColor, eLib3MFColorChannel eTheColorChannel, const Lib3MF_uint32 nChannelNameBufferSize, Lib3MF_uint32* pChannelNameNeededChars, char * pChannelNameBuffer)
-{
-	IBase* pIBaseClass = (IBase *)pVolumeDataColor;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumeDataColor, "VolumeDataColor", "GetChannel");
-			pJournalEntry->addEnumParameter("TheColorChannel", "ColorChannel", (Lib3MF_int32)(eTheColorChannel));
-		}
-		if ( (!pChannelNameBuffer) && !(pChannelNameNeededChars) )
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		std::string sChannelName("");
-		IVolumeDataColor* pIVolumeDataColor = dynamic_cast<IVolumeDataColor*>(pIBaseClass);
-		if (!pIVolumeDataColor)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		sChannelName = pIVolumeDataColor->GetChannel(eTheColorChannel);
-
-		if (pChannelNameNeededChars)
-			*pChannelNameNeededChars = (Lib3MF_uint32) (sChannelName.size()+1);
-		if (pChannelNameBuffer) {
-			if (sChannelName.size() >= nChannelNameBufferSize)
-				throw ELib3MFInterfaceException (LIB3MF_ERROR_BUFFERTOOSMALL);
-			for (size_t iChannelName = 0; iChannelName < sChannelName.size(); iChannelName++)
-				pChannelNameBuffer[iChannelName] = sChannelName[iChannelName];
-			pChannelNameBuffer[sChannelName.size()] = 0;
-		}
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addStringResult("ChannelName", sChannelName.c_str());
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
+/*************************************************************************************************************************
+ Class implementation for MaterialMapping
+**************************************************************************************************************************/
 
 /*************************************************************************************************************************
  Class implementation for VolumeDataComposite
@@ -5331,7 +7048,7 @@ Lib3MFResult lib3mf_volumedatacomposite_getmaterialmappingcount(Lib3MF_VolumeDat
 	}
 }
 
-Lib3MFResult lib3mf_volumedatacomposite_getmaterialmapping(Lib3MF_VolumeDataComposite pVolumeDataComposite, Lib3MF_uint32 nIndex, Lib3MF_uint32 * pPropertyID, const Lib3MF_uint32 nChannelNameBufferSize, Lib3MF_uint32* pChannelNameNeededChars, char * pChannelNameBuffer)
+Lib3MFResult lib3mf_volumedatacomposite_getmaterialmapping(Lib3MF_VolumeDataComposite pVolumeDataComposite, Lib3MF_uint32 nIndex, Lib3MF_MaterialMapping * pTheMaterialMapping)
 {
 	IBase* pIBaseClass = (IBase *)pVolumeDataComposite;
 
@@ -5341,29 +7058,18 @@ Lib3MFResult lib3mf_volumedatacomposite_getmaterialmapping(Lib3MF_VolumeDataComp
 			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumeDataComposite, "VolumeDataComposite", "GetMaterialMapping");
 			pJournalEntry->addUInt32Parameter("Index", nIndex);
 		}
-		if (!pPropertyID)
+		if (pTheMaterialMapping == nullptr)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		if ( (!pChannelNameBuffer) && !(pChannelNameNeededChars) )
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		std::string sChannelName("");
+		IBase* pBaseTheMaterialMapping(nullptr);
 		IVolumeDataComposite* pIVolumeDataComposite = dynamic_cast<IVolumeDataComposite*>(pIBaseClass);
 		if (!pIVolumeDataComposite)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pIVolumeDataComposite->GetMaterialMapping(nIndex, *pPropertyID, sChannelName);
+		pBaseTheMaterialMapping = pIVolumeDataComposite->GetMaterialMapping(nIndex);
 
-		if (pChannelNameNeededChars)
-			*pChannelNameNeededChars = (Lib3MF_uint32) (sChannelName.size()+1);
-		if (pChannelNameBuffer) {
-			if (sChannelName.size() >= nChannelNameBufferSize)
-				throw ELib3MFInterfaceException (LIB3MF_ERROR_BUFFERTOOSMALL);
-			for (size_t iChannelName = 0; iChannelName < sChannelName.size(); iChannelName++)
-				pChannelNameBuffer[iChannelName] = sChannelName[iChannelName];
-			pChannelNameBuffer[sChannelName.size()] = 0;
-		}
+		*pTheMaterialMapping = (IBase*)(pBaseTheMaterialMapping);
 		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addUInt32Result("PropertyID", *pPropertyID);
-			pJournalEntry->addStringResult("ChannelName", sChannelName.c_str());
+			pJournalEntry->addHandleResult("TheMaterialMapping", *pTheMaterialMapping);
 			pJournalEntry->writeSuccess();
 		}
 		return LIB3MF_SUCCESS;
@@ -5379,55 +7085,7 @@ Lib3MFResult lib3mf_volumedatacomposite_getmaterialmapping(Lib3MF_VolumeDataComp
 	}
 }
 
-Lib3MFResult lib3mf_volumedatacomposite_setmaterialmapping(Lib3MF_VolumeDataComposite pVolumeDataComposite, Lib3MF_uint32 nIndex, Lib3MF_uint32 * pPropertyID, const Lib3MF_uint32 nChannelNameBufferSize, Lib3MF_uint32* pChannelNameNeededChars, char * pChannelNameBuffer)
-{
-	IBase* pIBaseClass = (IBase *)pVolumeDataComposite;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumeDataComposite, "VolumeDataComposite", "SetMaterialMapping");
-			pJournalEntry->addUInt32Parameter("Index", nIndex);
-		}
-		if (!pPropertyID)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		if ( (!pChannelNameBuffer) && !(pChannelNameNeededChars) )
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		std::string sChannelName("");
-		IVolumeDataComposite* pIVolumeDataComposite = dynamic_cast<IVolumeDataComposite*>(pIBaseClass);
-		if (!pIVolumeDataComposite)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		pIVolumeDataComposite->SetMaterialMapping(nIndex, *pPropertyID, sChannelName);
-
-		if (pChannelNameNeededChars)
-			*pChannelNameNeededChars = (Lib3MF_uint32) (sChannelName.size()+1);
-		if (pChannelNameBuffer) {
-			if (sChannelName.size() >= nChannelNameBufferSize)
-				throw ELib3MFInterfaceException (LIB3MF_ERROR_BUFFERTOOSMALL);
-			for (size_t iChannelName = 0; iChannelName < sChannelName.size(); iChannelName++)
-				pChannelNameBuffer[iChannelName] = sChannelName[iChannelName];
-			pChannelNameBuffer[sChannelName.size()] = 0;
-		}
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addUInt32Result("PropertyID", *pPropertyID);
-			pJournalEntry->addStringResult("ChannelName", sChannelName.c_str());
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_volumedatacomposite_addmaterialmapping(Lib3MF_VolumeDataComposite pVolumeDataComposite, Lib3MF_uint32 nPropertyID, const char * pChannelName)
+Lib3MFResult lib3mf_volumedatacomposite_addmaterialmapping(Lib3MF_VolumeDataComposite pVolumeDataComposite, const sLib3MFTransform * pTransform, Lib3MF_MaterialMapping * pTheMaterialMapping)
 {
 	IBase* pIBaseClass = (IBase *)pVolumeDataComposite;
 
@@ -5435,19 +7093,19 @@ Lib3MFResult lib3mf_volumedatacomposite_addmaterialmapping(Lib3MF_VolumeDataComp
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
 			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumeDataComposite, "VolumeDataComposite", "AddMaterialMapping");
-			pJournalEntry->addUInt32Parameter("PropertyID", nPropertyID);
-			pJournalEntry->addStringParameter("ChannelName", pChannelName);
 		}
-		if (pChannelName == nullptr)
+		if (pTheMaterialMapping == nullptr)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		std::string sChannelName(pChannelName);
+		IBase* pBaseTheMaterialMapping(nullptr);
 		IVolumeDataComposite* pIVolumeDataComposite = dynamic_cast<IVolumeDataComposite*>(pIBaseClass);
 		if (!pIVolumeDataComposite)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pIVolumeDataComposite->AddMaterialMapping(nPropertyID, sChannelName);
+		pBaseTheMaterialMapping = pIVolumeDataComposite->AddMaterialMapping(*pTransform);
 
+		*pTheMaterialMapping = (IBase*)(pBaseTheMaterialMapping);
 		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("TheMaterialMapping", *pTheMaterialMapping);
 			pJournalEntry->writeSuccess();
 		}
 		return LIB3MF_SUCCESS;
@@ -5499,85 +7157,6 @@ Lib3MFResult lib3mf_volumedatacomposite_removematerialmapping(Lib3MF_VolumeDataC
 /*************************************************************************************************************************
  Class implementation for VolumeDataProperty
 **************************************************************************************************************************/
-Lib3MFResult lib3mf_volumedataproperty_setchannel(Lib3MF_VolumeDataProperty pVolumeDataProperty, const char * pChannelName)
-{
-	IBase* pIBaseClass = (IBase *)pVolumeDataProperty;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumeDataProperty, "VolumeDataProperty", "SetChannel");
-			pJournalEntry->addStringParameter("ChannelName", pChannelName);
-		}
-		if (pChannelName == nullptr)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		std::string sChannelName(pChannelName);
-		IVolumeDataProperty* pIVolumeDataProperty = dynamic_cast<IVolumeDataProperty*>(pIBaseClass);
-		if (!pIVolumeDataProperty)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		pIVolumeDataProperty->SetChannel(sChannelName);
-
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_volumedataproperty_getchannel(Lib3MF_VolumeDataProperty pVolumeDataProperty, const Lib3MF_uint32 nChannelNameBufferSize, Lib3MF_uint32* pChannelNameNeededChars, char * pChannelNameBuffer)
-{
-	IBase* pIBaseClass = (IBase *)pVolumeDataProperty;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumeDataProperty, "VolumeDataProperty", "GetChannel");
-		}
-		if ( (!pChannelNameBuffer) && !(pChannelNameNeededChars) )
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		std::string sChannelName("");
-		IVolumeDataProperty* pIVolumeDataProperty = dynamic_cast<IVolumeDataProperty*>(pIBaseClass);
-		if (!pIVolumeDataProperty)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		sChannelName = pIVolumeDataProperty->GetChannel();
-
-		if (pChannelNameNeededChars)
-			*pChannelNameNeededChars = (Lib3MF_uint32) (sChannelName.size()+1);
-		if (pChannelNameBuffer) {
-			if (sChannelName.size() >= nChannelNameBufferSize)
-				throw ELib3MFInterfaceException (LIB3MF_ERROR_BUFFERTOOSMALL);
-			for (size_t iChannelName = 0; iChannelName < sChannelName.size(); iChannelName++)
-				pChannelNameBuffer[iChannelName] = sChannelName[iChannelName];
-			pChannelNameBuffer[sChannelName.size()] = 0;
-		}
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addStringResult("ChannelName", sChannelName.c_str());
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
 Lib3MFResult lib3mf_volumedataproperty_setname(Lib3MF_VolumeDataProperty pVolumeDataProperty, const char * pPropertyName)
 {
 	IBase* pIBaseClass = (IBase *)pVolumeDataProperty;
@@ -5763,7 +7342,7 @@ Lib3MFResult lib3mf_volumedata_getlevelset(Lib3MF_VolumeData pVolumeData, Lib3MF
 	}
 }
 
-Lib3MFResult lib3mf_volumedata_createnewlevelset(Lib3MF_VolumeData pVolumeData, Lib3MF_VolumetricStack pTheVolumetricStack, Lib3MF_VolumeDataLevelset * pTheLevelsetData)
+Lib3MFResult lib3mf_volumedata_createnewlevelset(Lib3MF_VolumeData pVolumeData, Lib3MF_ScalarField pTheScalarField, const sLib3MFTransform * pTransform, Lib3MF_VolumeDataLevelset * pTheLevelsetData)
 {
 	IBase* pIBaseClass = (IBase *)pVolumeData;
 
@@ -5771,13 +7350,13 @@ Lib3MFResult lib3mf_volumedata_createnewlevelset(Lib3MF_VolumeData pVolumeData, 
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
 			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumeData, "VolumeData", "CreateNewLevelset");
-			pJournalEntry->addHandleParameter("TheVolumetricStack", pTheVolumetricStack);
+			pJournalEntry->addHandleParameter("TheScalarField", pTheScalarField);
 		}
 		if (pTheLevelsetData == nullptr)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		IBase* pIBaseClassTheVolumetricStack = (IBase *)pTheVolumetricStack;
-		IVolumetricStack* pITheVolumetricStack = dynamic_cast<IVolumetricStack*>(pIBaseClassTheVolumetricStack);
-		if (!pITheVolumetricStack)
+		IBase* pIBaseClassTheScalarField = (IBase *)pTheScalarField;
+		IScalarField* pITheScalarField = dynamic_cast<IScalarField*>(pIBaseClassTheScalarField);
+		if (!pITheScalarField)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDCAST);
 		
 		IBase* pBaseTheLevelsetData(nullptr);
@@ -5785,11 +7364,42 @@ Lib3MFResult lib3mf_volumedata_createnewlevelset(Lib3MF_VolumeData pVolumeData, 
 		if (!pIVolumeData)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pBaseTheLevelsetData = pIVolumeData->CreateNewLevelset(pITheVolumetricStack);
+		pBaseTheLevelsetData = pIVolumeData->CreateNewLevelset(pITheScalarField, *pTransform);
 
 		*pTheLevelsetData = (IBase*)(pBaseTheLevelsetData);
 		if (pJournalEntry.get() != nullptr) {
 			pJournalEntry->addHandleResult("TheLevelsetData", *pTheLevelsetData);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_volumedata_removelevelset(Lib3MF_VolumeData pVolumeData)
+{
+	IBase* pIBaseClass = (IBase *)pVolumeData;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumeData, "VolumeData", "RemoveLevelset");
+		}
+		IVolumeData* pIVolumeData = dynamic_cast<IVolumeData*>(pIBaseClass);
+		if (!pIVolumeData)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIVolumeData->RemoveLevelset();
+
+		if (pJournalEntry.get() != nullptr) {
 			pJournalEntry->writeSuccess();
 		}
 		return LIB3MF_SUCCESS;
@@ -5841,7 +7451,7 @@ Lib3MFResult lib3mf_volumedata_getcomposite(Lib3MF_VolumeData pVolumeData, Lib3M
 	}
 }
 
-Lib3MFResult lib3mf_volumedata_createnewcomposite(Lib3MF_VolumeData pVolumeData, Lib3MF_VolumetricStack pTheVolumetricStack, Lib3MF_VolumeDataComposite * pTheCompositeData)
+Lib3MFResult lib3mf_volumedata_createnewcomposite(Lib3MF_VolumeData pVolumeData, Lib3MF_VolumeDataComposite * pTheCompositeData)
 {
 	IBase* pIBaseClass = (IBase *)pVolumeData;
 
@@ -5849,25 +7459,50 @@ Lib3MFResult lib3mf_volumedata_createnewcomposite(Lib3MF_VolumeData pVolumeData,
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
 			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumeData, "VolumeData", "CreateNewComposite");
-			pJournalEntry->addHandleParameter("TheVolumetricStack", pTheVolumetricStack);
 		}
 		if (pTheCompositeData == nullptr)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		IBase* pIBaseClassTheVolumetricStack = (IBase *)pTheVolumetricStack;
-		IVolumetricStack* pITheVolumetricStack = dynamic_cast<IVolumetricStack*>(pIBaseClassTheVolumetricStack);
-		if (!pITheVolumetricStack)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDCAST);
-		
 		IBase* pBaseTheCompositeData(nullptr);
 		IVolumeData* pIVolumeData = dynamic_cast<IVolumeData*>(pIBaseClass);
 		if (!pIVolumeData)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pBaseTheCompositeData = pIVolumeData->CreateNewComposite(pITheVolumetricStack);
+		pBaseTheCompositeData = pIVolumeData->CreateNewComposite();
 
 		*pTheCompositeData = (IBase*)(pBaseTheCompositeData);
 		if (pJournalEntry.get() != nullptr) {
 			pJournalEntry->addHandleResult("TheCompositeData", *pTheCompositeData);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_volumedata_removecomposite(Lib3MF_VolumeData pVolumeData)
+{
+	IBase* pIBaseClass = (IBase *)pVolumeData;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumeData, "VolumeData", "RemoveComposite");
+		}
+		IVolumeData* pIVolumeData = dynamic_cast<IVolumeData*>(pIBaseClass);
+		if (!pIVolumeData)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIVolumeData->RemoveComposite();
+
+		if (pJournalEntry.get() != nullptr) {
 			pJournalEntry->writeSuccess();
 		}
 		return LIB3MF_SUCCESS;
@@ -5919,7 +7554,7 @@ Lib3MFResult lib3mf_volumedata_getcolor(Lib3MF_VolumeData pVolumeData, Lib3MF_Vo
 	}
 }
 
-Lib3MFResult lib3mf_volumedata_createnewcolor(Lib3MF_VolumeData pVolumeData, Lib3MF_VolumetricStack pTheVolumetricStack, Lib3MF_VolumeDataColor * pTheColorData)
+Lib3MFResult lib3mf_volumedata_createnewcolor(Lib3MF_VolumeData pVolumeData, Lib3MF_Vector3DField pTheVector3DField, const sLib3MFTransform * pTransform, Lib3MF_VolumeDataColor * pTheColorData)
 {
 	IBase* pIBaseClass = (IBase *)pVolumeData;
 
@@ -5927,13 +7562,13 @@ Lib3MFResult lib3mf_volumedata_createnewcolor(Lib3MF_VolumeData pVolumeData, Lib
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
 			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumeData, "VolumeData", "CreateNewColor");
-			pJournalEntry->addHandleParameter("TheVolumetricStack", pTheVolumetricStack);
+			pJournalEntry->addHandleParameter("TheVector3DField", pTheVector3DField);
 		}
 		if (pTheColorData == nullptr)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		IBase* pIBaseClassTheVolumetricStack = (IBase *)pTheVolumetricStack;
-		IVolumetricStack* pITheVolumetricStack = dynamic_cast<IVolumetricStack*>(pIBaseClassTheVolumetricStack);
-		if (!pITheVolumetricStack)
+		IBase* pIBaseClassTheVector3DField = (IBase *)pTheVector3DField;
+		IVector3DField* pITheVector3DField = dynamic_cast<IVector3DField*>(pIBaseClassTheVector3DField);
+		if (!pITheVector3DField)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDCAST);
 		
 		IBase* pBaseTheColorData(nullptr);
@@ -5941,11 +7576,42 @@ Lib3MFResult lib3mf_volumedata_createnewcolor(Lib3MF_VolumeData pVolumeData, Lib
 		if (!pIVolumeData)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pBaseTheColorData = pIVolumeData->CreateNewColor(pITheVolumetricStack);
+		pBaseTheColorData = pIVolumeData->CreateNewColor(pITheVector3DField, *pTransform);
 
 		*pTheColorData = (IBase*)(pBaseTheColorData);
 		if (pJournalEntry.get() != nullptr) {
 			pJournalEntry->addHandleResult("TheColorData", *pTheColorData);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_volumedata_removecolor(Lib3MF_VolumeData pVolumeData)
+{
+	IBase* pIBaseClass = (IBase *)pVolumeData;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumeData, "VolumeData", "RemoveColor");
+		}
+		IVolumeData* pIVolumeData = dynamic_cast<IVolumeData*>(pIBaseClass);
+		if (!pIVolumeData)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIVolumeData->RemoveColor();
+
+		if (pJournalEntry.get() != nullptr) {
 			pJournalEntry->writeSuccess();
 		}
 		return LIB3MF_SUCCESS;
@@ -5995,7 +7661,7 @@ Lib3MFResult lib3mf_volumedata_getpropertycount(Lib3MF_VolumeData pVolumeData, L
 	}
 }
 
-Lib3MFResult lib3mf_volumedata_getproperty(Lib3MF_VolumeData pVolumeData, Lib3MF_uint32 nIndex, Lib3MF_VolumeDataProperty * pThePropertyData)
+Lib3MFResult lib3mf_volumedata_getproperty(Lib3MF_VolumeData pVolumeData, Lib3MF_uint32 nIndex, Lib3MF_VolumeDataProperty * pTheVolumeDataProperty)
 {
 	IBase* pIBaseClass = (IBase *)pVolumeData;
 
@@ -6005,18 +7671,18 @@ Lib3MFResult lib3mf_volumedata_getproperty(Lib3MF_VolumeData pVolumeData, Lib3MF
 			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumeData, "VolumeData", "GetProperty");
 			pJournalEntry->addUInt32Parameter("Index", nIndex);
 		}
-		if (pThePropertyData == nullptr)
+		if (pTheVolumeDataProperty == nullptr)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		IBase* pBaseThePropertyData(nullptr);
+		IBase* pBaseTheVolumeDataProperty(nullptr);
 		IVolumeData* pIVolumeData = dynamic_cast<IVolumeData*>(pIBaseClass);
 		if (!pIVolumeData)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pBaseThePropertyData = pIVolumeData->GetProperty(nIndex);
+		pBaseTheVolumeDataProperty = pIVolumeData->GetProperty(nIndex);
 
-		*pThePropertyData = (IBase*)(pBaseThePropertyData);
+		*pTheVolumeDataProperty = (IBase*)(pBaseTheVolumeDataProperty);
 		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addHandleResult("ThePropertyData", *pThePropertyData);
+			pJournalEntry->addHandleResult("TheVolumeDataProperty", *pTheVolumeDataProperty);
 			pJournalEntry->writeSuccess();
 		}
 		return LIB3MF_SUCCESS;
@@ -6032,47 +7698,7 @@ Lib3MFResult lib3mf_volumedata_getproperty(Lib3MF_VolumeData pVolumeData, Lib3MF
 	}
 }
 
-Lib3MFResult lib3mf_volumedata_findproperty(Lib3MF_VolumeData pVolumeData, const char * pName, Lib3MF_VolumeDataProperty * pThePropertyData)
-{
-	IBase* pIBaseClass = (IBase *)pVolumeData;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumeData, "VolumeData", "FindProperty");
-			pJournalEntry->addStringParameter("Name", pName);
-		}
-		if (pName == nullptr)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		if (pThePropertyData == nullptr)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		std::string sName(pName);
-		IBase* pBaseThePropertyData(nullptr);
-		IVolumeData* pIVolumeData = dynamic_cast<IVolumeData*>(pIBaseClass);
-		if (!pIVolumeData)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		pBaseThePropertyData = pIVolumeData->FindProperty(sName);
-
-		*pThePropertyData = (IBase*)(pBaseThePropertyData);
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addHandleResult("ThePropertyData", *pThePropertyData);
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_volumedata_addproperty(Lib3MF_VolumeData pVolumeData, const char * pName, Lib3MF_VolumetricStack pTheVolumetricStack, Lib3MF_VolumeDataProperty * pThePropertyData)
+Lib3MFResult lib3mf_volumedata_addproperty(Lib3MF_VolumeData pVolumeData, const char * pName, Lib3MF_uint32 nUniqueResourceID, Lib3MF_VolumeDataProperty * pTheVolumeDataProperty)
 {
 	IBase* pIBaseClass = (IBase *)pVolumeData;
 
@@ -6081,28 +7707,23 @@ Lib3MFResult lib3mf_volumedata_addproperty(Lib3MF_VolumeData pVolumeData, const 
 		if (m_GlobalJournal.get() != nullptr)  {
 			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumeData, "VolumeData", "AddProperty");
 			pJournalEntry->addStringParameter("Name", pName);
-			pJournalEntry->addHandleParameter("TheVolumetricStack", pTheVolumetricStack);
+			pJournalEntry->addUInt32Parameter("UniqueResourceID", nUniqueResourceID);
 		}
 		if (pName == nullptr)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		if (pThePropertyData == nullptr)
+		if (pTheVolumeDataProperty == nullptr)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
 		std::string sName(pName);
-		IBase* pIBaseClassTheVolumetricStack = (IBase *)pTheVolumetricStack;
-		IVolumetricStack* pITheVolumetricStack = dynamic_cast<IVolumetricStack*>(pIBaseClassTheVolumetricStack);
-		if (!pITheVolumetricStack)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDCAST);
-		
-		IBase* pBaseThePropertyData(nullptr);
+		IBase* pBaseTheVolumeDataProperty(nullptr);
 		IVolumeData* pIVolumeData = dynamic_cast<IVolumeData*>(pIBaseClass);
 		if (!pIVolumeData)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pBaseThePropertyData = pIVolumeData->AddProperty(sName, pITheVolumetricStack);
+		pBaseTheVolumeDataProperty = pIVolumeData->AddProperty(sName, nUniqueResourceID);
 
-		*pThePropertyData = (IBase*)(pBaseThePropertyData);
+		*pTheVolumeDataProperty = (IBase*)(pBaseTheVolumeDataProperty);
 		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addHandleResult("ThePropertyData", *pThePropertyData);
+			pJournalEntry->addHandleResult("TheVolumeDataProperty", *pTheVolumeDataProperty);
 			pJournalEntry->writeSuccess();
 		}
 		return LIB3MF_SUCCESS;
@@ -6118,7 +7739,7 @@ Lib3MFResult lib3mf_volumedata_addproperty(Lib3MF_VolumeData pVolumeData, const 
 	}
 }
 
-Lib3MFResult lib3mf_volumedata_removeproperty(Lib3MF_VolumeData pVolumeData, const char * pName)
+Lib3MFResult lib3mf_volumedata_removeproperty(Lib3MF_VolumeData pVolumeData, Lib3MF_uint32 nIndex)
 {
 	IBase* pIBaseClass = (IBase *)pVolumeData;
 
@@ -6126,16 +7747,13 @@ Lib3MFResult lib3mf_volumedata_removeproperty(Lib3MF_VolumeData pVolumeData, con
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
 			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumeData, "VolumeData", "RemoveProperty");
-			pJournalEntry->addStringParameter("Name", pName);
+			pJournalEntry->addUInt32Parameter("Index", nIndex);
 		}
-		if (pName == nullptr)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		std::string sName(pName);
 		IVolumeData* pIVolumeData = dynamic_cast<IVolumeData*>(pIBaseClass);
 		if (!pIVolumeData)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pIVolumeData->RemoveProperty(sName);
+		pIVolumeData->RemoveProperty(nIndex);
 
 		if (pJournalEntry.get() != nullptr) {
 			pJournalEntry->writeSuccess();
@@ -8138,25 +9756,35 @@ Lib3MFResult lib3mf_multipropertygroup_removelayer(Lib3MF_MultiPropertyGroup pMu
 /*************************************************************************************************************************
  Class implementation for Image3D
 **************************************************************************************************************************/
-Lib3MFResult lib3mf_image3d_getsizex(Lib3MF_Image3D pImage3D, Lib3MF_uint32 * pSizeX)
+Lib3MFResult lib3mf_image3d_getname(Lib3MF_Image3D pImage3D, const Lib3MF_uint32 nNameBufferSize, Lib3MF_uint32* pNameNeededChars, char * pNameBuffer)
 {
 	IBase* pIBaseClass = (IBase *)pImage3D;
 
 	PLib3MFInterfaceJournalEntry pJournalEntry;
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pImage3D, "Image3D", "GetSizeX");
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImage3D, "Image3D", "GetName");
 		}
-		if (pSizeX == nullptr)
+		if ( (!pNameBuffer) && !(pNameNeededChars) )
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sName("");
 		IImage3D* pIImage3D = dynamic_cast<IImage3D*>(pIBaseClass);
 		if (!pIImage3D)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		*pSizeX = pIImage3D->GetSizeX();
+		sName = pIImage3D->GetName();
 
+		if (pNameNeededChars)
+			*pNameNeededChars = (Lib3MF_uint32) (sName.size()+1);
+		if (pNameBuffer) {
+			if (sName.size() >= nNameBufferSize)
+				throw ELib3MFInterfaceException (LIB3MF_ERROR_BUFFERTOOSMALL);
+			for (size_t iName = 0; iName < sName.size(); iName++)
+				pNameBuffer[iName] = sName[iName];
+			pNameBuffer[sName.size()] = 0;
+		}
 		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addUInt32Result("SizeX", *pSizeX);
+			pJournalEntry->addStringResult("Name", sName.c_str());
 			pJournalEntry->writeSuccess();
 		}
 		return LIB3MF_SUCCESS;
@@ -8172,25 +9800,26 @@ Lib3MFResult lib3mf_image3d_getsizex(Lib3MF_Image3D pImage3D, Lib3MF_uint32 * pS
 	}
 }
 
-Lib3MFResult lib3mf_image3d_getsizey(Lib3MF_Image3D pImage3D, Lib3MF_uint32 * pSizeY)
+Lib3MFResult lib3mf_image3d_setname(Lib3MF_Image3D pImage3D, const char * pName)
 {
 	IBase* pIBaseClass = (IBase *)pImage3D;
 
 	PLib3MFInterfaceJournalEntry pJournalEntry;
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pImage3D, "Image3D", "GetSizeY");
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImage3D, "Image3D", "SetName");
+			pJournalEntry->addStringParameter("Name", pName);
 		}
-		if (pSizeY == nullptr)
+		if (pName == nullptr)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sName(pName);
 		IImage3D* pIImage3D = dynamic_cast<IImage3D*>(pIBaseClass);
 		if (!pIImage3D)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		*pSizeY = pIImage3D->GetSizeY();
+		pIImage3D->SetName(sName);
 
 		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addUInt32Result("SizeY", *pSizeY);
 			pJournalEntry->writeSuccess();
 		}
 		return LIB3MF_SUCCESS;
@@ -8206,22 +9835,192 @@ Lib3MFResult lib3mf_image3d_getsizey(Lib3MF_Image3D pImage3D, Lib3MF_uint32 * pS
 	}
 }
 
-Lib3MFResult lib3mf_image3d_getsheetcount(Lib3MF_Image3D pImage3D, Lib3MF_uint32 * pSheetCount)
+Lib3MFResult lib3mf_image3d_isimagestack(Lib3MF_Image3D pImage3D, bool * pIsImageStack)
 {
 	IBase* pIBaseClass = (IBase *)pImage3D;
 
 	PLib3MFInterfaceJournalEntry pJournalEntry;
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pImage3D, "Image3D", "GetSheetCount");
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImage3D, "Image3D", "IsImageStack");
+		}
+		if (pIsImageStack == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IImage3D* pIImage3D = dynamic_cast<IImage3D*>(pIBaseClass);
+		if (!pIImage3D)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pIsImageStack = pIImage3D->IsImageStack();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addBooleanResult("IsImageStack", *pIsImageStack);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+
+/*************************************************************************************************************************
+ Class implementation for ImageStack
+**************************************************************************************************************************/
+Lib3MFResult lib3mf_imagestack_getrowcount(Lib3MF_ImageStack pImageStack, Lib3MF_uint32 * pRowCount)
+{
+	IBase* pIBaseClass = (IBase *)pImageStack;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImageStack, "ImageStack", "GetRowCount");
+		}
+		if (pRowCount == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IImageStack* pIImageStack = dynamic_cast<IImageStack*>(pIBaseClass);
+		if (!pIImageStack)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pRowCount = pIImageStack->GetRowCount();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addUInt32Result("RowCount", *pRowCount);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_imagestack_setrowcount(Lib3MF_ImageStack pImageStack, Lib3MF_uint32 nRowCount)
+{
+	IBase* pIBaseClass = (IBase *)pImageStack;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImageStack, "ImageStack", "SetRowCount");
+			pJournalEntry->addUInt32Parameter("RowCount", nRowCount);
+		}
+		IImageStack* pIImageStack = dynamic_cast<IImageStack*>(pIBaseClass);
+		if (!pIImageStack)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIImageStack->SetRowCount(nRowCount);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_imagestack_getcolumncount(Lib3MF_ImageStack pImageStack, Lib3MF_uint32 * pColumnCount)
+{
+	IBase* pIBaseClass = (IBase *)pImageStack;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImageStack, "ImageStack", "GetColumnCount");
+		}
+		if (pColumnCount == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IImageStack* pIImageStack = dynamic_cast<IImageStack*>(pIBaseClass);
+		if (!pIImageStack)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pColumnCount = pIImageStack->GetColumnCount();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addUInt32Result("ColumnCount", *pColumnCount);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_imagestack_setcolumncount(Lib3MF_ImageStack pImageStack, Lib3MF_uint32 nColumnCount)
+{
+	IBase* pIBaseClass = (IBase *)pImageStack;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImageStack, "ImageStack", "SetColumnCount");
+			pJournalEntry->addUInt32Parameter("ColumnCount", nColumnCount);
+		}
+		IImageStack* pIImageStack = dynamic_cast<IImageStack*>(pIBaseClass);
+		if (!pIImageStack)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIImageStack->SetColumnCount(nColumnCount);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_imagestack_getsheetcount(Lib3MF_ImageStack pImageStack, Lib3MF_uint32 * pSheetCount)
+{
+	IBase* pIBaseClass = (IBase *)pImageStack;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImageStack, "ImageStack", "GetSheetCount");
 		}
 		if (pSheetCount == nullptr)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		IImage3D* pIImage3D = dynamic_cast<IImage3D*>(pIBaseClass);
-		if (!pIImage3D)
+		IImageStack* pIImageStack = dynamic_cast<IImageStack*>(pIBaseClass);
+		if (!pIImageStack)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		*pSheetCount = pIImage3D->GetSheetCount();
+		*pSheetCount = pIImageStack->GetSheetCount();
 
 		if (pJournalEntry.get() != nullptr) {
 			pJournalEntry->addUInt32Result("SheetCount", *pSheetCount);
@@ -8240,24 +10039,24 @@ Lib3MFResult lib3mf_image3d_getsheetcount(Lib3MF_Image3D pImage3D, Lib3MF_uint32
 	}
 }
 
-Lib3MFResult lib3mf_image3d_getsheet(Lib3MF_Image3D pImage3D, Lib3MF_uint32 nIndex, Lib3MF_Attachment * pSheet)
+Lib3MFResult lib3mf_imagestack_getsheet(Lib3MF_ImageStack pImageStack, Lib3MF_uint32 nIndex, Lib3MF_Attachment * pSheet)
 {
-	IBase* pIBaseClass = (IBase *)pImage3D;
+	IBase* pIBaseClass = (IBase *)pImageStack;
 
 	PLib3MFInterfaceJournalEntry pJournalEntry;
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pImage3D, "Image3D", "GetSheet");
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImageStack, "ImageStack", "GetSheet");
 			pJournalEntry->addUInt32Parameter("Index", nIndex);
 		}
 		if (pSheet == nullptr)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
 		IBase* pBaseSheet(nullptr);
-		IImage3D* pIImage3D = dynamic_cast<IImage3D*>(pIBaseClass);
-		if (!pIImage3D)
+		IImageStack* pIImageStack = dynamic_cast<IImageStack*>(pIBaseClass);
+		if (!pIImageStack)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pBaseSheet = pIImage3D->GetSheet(nIndex);
+		pBaseSheet = pIImageStack->GetSheet(nIndex);
 
 		*pSheet = (IBase*)(pBaseSheet);
 		if (pJournalEntry.get() != nullptr) {
@@ -8277,26 +10076,29 @@ Lib3MFResult lib3mf_image3d_getsheet(Lib3MF_Image3D pImage3D, Lib3MF_uint32 nInd
 	}
 }
 
-Lib3MFResult lib3mf_image3d_getsheetminvalue(Lib3MF_Image3D pImage3D, Lib3MF_uint32 nIndex, Lib3MF_double * pMinVal)
+Lib3MFResult lib3mf_imagestack_setsheet(Lib3MF_ImageStack pImageStack, Lib3MF_uint32 nIndex, Lib3MF_Attachment pSheet)
 {
-	IBase* pIBaseClass = (IBase *)pImage3D;
+	IBase* pIBaseClass = (IBase *)pImageStack;
 
 	PLib3MFInterfaceJournalEntry pJournalEntry;
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pImage3D, "Image3D", "GetSheetMinValue");
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImageStack, "ImageStack", "SetSheet");
 			pJournalEntry->addUInt32Parameter("Index", nIndex);
+			pJournalEntry->addHandleParameter("Sheet", pSheet);
 		}
-		if (pMinVal == nullptr)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		IImage3D* pIImage3D = dynamic_cast<IImage3D*>(pIBaseClass);
-		if (!pIImage3D)
+		IBase* pIBaseClassSheet = (IBase *)pSheet;
+		IAttachment* pISheet = dynamic_cast<IAttachment*>(pIBaseClassSheet);
+		if (!pISheet)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDCAST);
+		
+		IImageStack* pIImageStack = dynamic_cast<IImageStack*>(pIBaseClass);
+		if (!pIImageStack)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		*pMinVal = pIImage3D->GetSheetMinValue(nIndex);
+		pIImageStack->SetSheet(nIndex, pISheet);
 
 		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addDoubleResult("MinVal", *pMinVal);
 			pJournalEntry->writeSuccess();
 		}
 		return LIB3MF_SUCCESS;
@@ -8312,53 +10114,15 @@ Lib3MFResult lib3mf_image3d_getsheetminvalue(Lib3MF_Image3D pImage3D, Lib3MF_uin
 	}
 }
 
-Lib3MFResult lib3mf_image3d_getsheetmaxvalue(Lib3MF_Image3D pImage3D, Lib3MF_uint32 nIndex, Lib3MF_double * pMaxVal)
+Lib3MFResult lib3mf_imagestack_createemptysheet(Lib3MF_ImageStack pImageStack, const char * pPath, Lib3MF_Attachment * pSheet)
 {
-	IBase* pIBaseClass = (IBase *)pImage3D;
+	IBase* pIBaseClass = (IBase *)pImageStack;
 
 	PLib3MFInterfaceJournalEntry pJournalEntry;
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pImage3D, "Image3D", "GetSheetMaxValue");
-			pJournalEntry->addUInt32Parameter("Index", nIndex);
-		}
-		if (pMaxVal == nullptr)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		IImage3D* pIImage3D = dynamic_cast<IImage3D*>(pIBaseClass);
-		if (!pIImage3D)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		*pMaxVal = pIImage3D->GetSheetMaxValue(nIndex);
-
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addDoubleResult("MaxVal", *pMaxVal);
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_image3d_createemptysheet(Lib3MF_Image3D pImage3D, Lib3MF_uint32 nIndex, const char * pPath, Lib3MF_double dMin, Lib3MF_double dMax, Lib3MF_Attachment * pSheet)
-{
-	IBase* pIBaseClass = (IBase *)pImage3D;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pImage3D, "Image3D", "CreateEmptySheet");
-			pJournalEntry->addUInt32Parameter("Index", nIndex);
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImageStack, "ImageStack", "CreateEmptySheet");
 			pJournalEntry->addStringParameter("Path", pPath);
-			pJournalEntry->addDoubleParameter("Min", dMin);
-			pJournalEntry->addDoubleParameter("Max", dMax);
 		}
 		if (pPath == nullptr)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
@@ -8366,11 +10130,11 @@ Lib3MFResult lib3mf_image3d_createemptysheet(Lib3MF_Image3D pImage3D, Lib3MF_uin
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
 		std::string sPath(pPath);
 		IBase* pBaseSheet(nullptr);
-		IImage3D* pIImage3D = dynamic_cast<IImage3D*>(pIBaseClass);
-		if (!pIImage3D)
+		IImageStack* pIImageStack = dynamic_cast<IImageStack*>(pIBaseClass);
+		if (!pIImageStack)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pBaseSheet = pIImage3D->CreateEmptySheet(nIndex, sPath, dMin, dMax);
+		pBaseSheet = pIImageStack->CreateEmptySheet(sPath);
 
 		*pSheet = (IBase*)(pBaseSheet);
 		if (pJournalEntry.get() != nullptr) {
@@ -8390,18 +10154,15 @@ Lib3MFResult lib3mf_image3d_createemptysheet(Lib3MF_Image3D pImage3D, Lib3MF_uin
 	}
 }
 
-Lib3MFResult lib3mf_image3d_createsheetfrombuffer(Lib3MF_Image3D pImage3D, Lib3MF_uint32 nIndex, const char * pPath, Lib3MF_uint64 nDataBufferSize, const Lib3MF_uint8 * pDataBuffer, Lib3MF_double dMin, Lib3MF_double dMax, Lib3MF_Attachment * pSheet)
+Lib3MFResult lib3mf_imagestack_createsheetfrombuffer(Lib3MF_ImageStack pImageStack, const char * pPath, Lib3MF_uint64 nDataBufferSize, const Lib3MF_uint8 * pDataBuffer, Lib3MF_Attachment * pSheet)
 {
-	IBase* pIBaseClass = (IBase *)pImage3D;
+	IBase* pIBaseClass = (IBase *)pImageStack;
 
 	PLib3MFInterfaceJournalEntry pJournalEntry;
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pImage3D, "Image3D", "CreateSheetFromBuffer");
-			pJournalEntry->addUInt32Parameter("Index", nIndex);
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImageStack, "ImageStack", "CreateSheetFromBuffer");
 			pJournalEntry->addStringParameter("Path", pPath);
-			pJournalEntry->addDoubleParameter("Min", dMin);
-			pJournalEntry->addDoubleParameter("Max", dMax);
 		}
 		if (pPath == nullptr)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
@@ -8411,11 +10172,11 @@ Lib3MFResult lib3mf_image3d_createsheetfrombuffer(Lib3MF_Image3D pImage3D, Lib3M
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
 		std::string sPath(pPath);
 		IBase* pBaseSheet(nullptr);
-		IImage3D* pIImage3D = dynamic_cast<IImage3D*>(pIBaseClass);
-		if (!pIImage3D)
+		IImageStack* pIImageStack = dynamic_cast<IImageStack*>(pIBaseClass);
+		if (!pIImageStack)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pBaseSheet = pIImage3D->CreateSheetFromBuffer(nIndex, sPath, nDataBufferSize, pDataBuffer, dMin, dMax);
+		pBaseSheet = pIImageStack->CreateSheetFromBuffer(sPath, nDataBufferSize, pDataBuffer);
 
 		*pSheet = (IBase*)(pBaseSheet);
 		if (pJournalEntry.get() != nullptr) {
@@ -8435,19 +10196,16 @@ Lib3MFResult lib3mf_image3d_createsheetfrombuffer(Lib3MF_Image3D pImage3D, Lib3M
 	}
 }
 
-Lib3MFResult lib3mf_image3d_createsheetfromfile(Lib3MF_Image3D pImage3D, Lib3MF_uint32 nIndex, const char * pPath, const char * pFileName, Lib3MF_double dMin, Lib3MF_double dMax, Lib3MF_Attachment * pSheet)
+Lib3MFResult lib3mf_imagestack_createsheetfromfile(Lib3MF_ImageStack pImageStack, const char * pPath, const char * pFileName, Lib3MF_Attachment * pSheet)
 {
-	IBase* pIBaseClass = (IBase *)pImage3D;
+	IBase* pIBaseClass = (IBase *)pImageStack;
 
 	PLib3MFInterfaceJournalEntry pJournalEntry;
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pImage3D, "Image3D", "CreateSheetFromFile");
-			pJournalEntry->addUInt32Parameter("Index", nIndex);
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pImageStack, "ImageStack", "CreateSheetFromFile");
 			pJournalEntry->addStringParameter("Path", pPath);
 			pJournalEntry->addStringParameter("FileName", pFileName);
-			pJournalEntry->addDoubleParameter("Min", dMin);
-			pJournalEntry->addDoubleParameter("Max", dMax);
 		}
 		if (pPath == nullptr)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
@@ -8458,1784 +10216,15 @@ Lib3MFResult lib3mf_image3d_createsheetfromfile(Lib3MF_Image3D pImage3D, Lib3MF_
 		std::string sPath(pPath);
 		std::string sFileName(pFileName);
 		IBase* pBaseSheet(nullptr);
-		IImage3D* pIImage3D = dynamic_cast<IImage3D*>(pIBaseClass);
-		if (!pIImage3D)
+		IImageStack* pIImageStack = dynamic_cast<IImageStack*>(pIBaseClass);
+		if (!pIImageStack)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pBaseSheet = pIImage3D->CreateSheetFromFile(nIndex, sPath, sFileName, dMin, dMax);
+		pBaseSheet = pIImageStack->CreateSheetFromFile(sPath, sFileName);
 
 		*pSheet = (IBase*)(pBaseSheet);
 		if (pJournalEntry.get() != nullptr) {
 			pJournalEntry->addHandleResult("Sheet", *pSheet);
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_image3d_setsheet(Lib3MF_Image3D pImage3D, Lib3MF_uint32 nIndex, Lib3MF_Attachment pSheet)
-{
-	IBase* pIBaseClass = (IBase *)pImage3D;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pImage3D, "Image3D", "SetSheet");
-			pJournalEntry->addUInt32Parameter("Index", nIndex);
-			pJournalEntry->addHandleParameter("Sheet", pSheet);
-		}
-		IBase* pIBaseClassSheet = (IBase *)pSheet;
-		IAttachment* pISheet = dynamic_cast<IAttachment*>(pIBaseClassSheet);
-		if (!pISheet)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDCAST);
-		
-		IImage3D* pIImage3D = dynamic_cast<IImage3D*>(pIBaseClass);
-		if (!pIImage3D)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		pIImage3D->SetSheet(nIndex, pISheet);
-
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_image3d_setsheetminvalue(Lib3MF_Image3D pImage3D, Lib3MF_uint32 nIndex, Lib3MF_double dMinVal)
-{
-	IBase* pIBaseClass = (IBase *)pImage3D;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pImage3D, "Image3D", "SetSheetMinValue");
-			pJournalEntry->addUInt32Parameter("Index", nIndex);
-			pJournalEntry->addDoubleParameter("MinVal", dMinVal);
-		}
-		IImage3D* pIImage3D = dynamic_cast<IImage3D*>(pIBaseClass);
-		if (!pIImage3D)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		pIImage3D->SetSheetMinValue(nIndex, dMinVal);
-
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_image3d_setsheetmaxvalue(Lib3MF_Image3D pImage3D, Lib3MF_uint32 nIndex, Lib3MF_double dMaxVal)
-{
-	IBase* pIBaseClass = (IBase *)pImage3D;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pImage3D, "Image3D", "SetSheetMaxValue");
-			pJournalEntry->addUInt32Parameter("Index", nIndex);
-			pJournalEntry->addDoubleParameter("MaxVal", dMaxVal);
-		}
-		IImage3D* pIImage3D = dynamic_cast<IImage3D*>(pIBaseClass);
-		if (!pIImage3D)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		pIImage3D->SetSheetMaxValue(nIndex, dMaxVal);
-
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-
-/*************************************************************************************************************************
- Class implementation for Image3DChannelSelector
-**************************************************************************************************************************/
-Lib3MFResult lib3mf_image3dchannelselector_getimage(Lib3MF_Image3DChannelSelector pImage3DChannelSelector, Lib3MF_Image3D * pImage3D)
-{
-	IBase* pIBaseClass = (IBase *)pImage3DChannelSelector;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pImage3DChannelSelector, "Image3DChannelSelector", "GetImage");
-		}
-		if (pImage3D == nullptr)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		IBase* pBaseImage3D(nullptr);
-		IImage3DChannelSelector* pIImage3DChannelSelector = dynamic_cast<IImage3DChannelSelector*>(pIBaseClass);
-		if (!pIImage3DChannelSelector)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		pBaseImage3D = pIImage3DChannelSelector->GetImage();
-
-		*pImage3D = (IBase*)(pBaseImage3D);
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addHandleResult("Image3D", *pImage3D);
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_image3dchannelselector_setimage(Lib3MF_Image3DChannelSelector pImage3DChannelSelector, Lib3MF_Image3D pImage3D)
-{
-	IBase* pIBaseClass = (IBase *)pImage3DChannelSelector;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pImage3DChannelSelector, "Image3DChannelSelector", "SetImage");
-			pJournalEntry->addHandleParameter("Image3D", pImage3D);
-		}
-		IBase* pIBaseClassImage3D = (IBase *)pImage3D;
-		IImage3D* pIImage3D = dynamic_cast<IImage3D*>(pIBaseClassImage3D);
-		if (!pIImage3D)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDCAST);
-		
-		IImage3DChannelSelector* pIImage3DChannelSelector = dynamic_cast<IImage3DChannelSelector*>(pIBaseClass);
-		if (!pIImage3DChannelSelector)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		pIImage3DChannelSelector->SetImage(pIImage3D);
-
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_image3dchannelselector_setsourcechannel(Lib3MF_Image3DChannelSelector pImage3DChannelSelector, const char * pChannelName)
-{
-	IBase* pIBaseClass = (IBase *)pImage3DChannelSelector;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pImage3DChannelSelector, "Image3DChannelSelector", "SetSourceChannel");
-			pJournalEntry->addStringParameter("ChannelName", pChannelName);
-		}
-		if (pChannelName == nullptr)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		std::string sChannelName(pChannelName);
-		IImage3DChannelSelector* pIImage3DChannelSelector = dynamic_cast<IImage3DChannelSelector*>(pIBaseClass);
-		if (!pIImage3DChannelSelector)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		pIImage3DChannelSelector->SetSourceChannel(sChannelName);
-
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_image3dchannelselector_getsourcechannel(Lib3MF_Image3DChannelSelector pImage3DChannelSelector, const Lib3MF_uint32 nChannelNameBufferSize, Lib3MF_uint32* pChannelNameNeededChars, char * pChannelNameBuffer)
-{
-	IBase* pIBaseClass = (IBase *)pImage3DChannelSelector;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pImage3DChannelSelector, "Image3DChannelSelector", "GetSourceChannel");
-		}
-		if ( (!pChannelNameBuffer) && !(pChannelNameNeededChars) )
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		std::string sChannelName("");
-		IImage3DChannelSelector* pIImage3DChannelSelector = dynamic_cast<IImage3DChannelSelector*>(pIBaseClass);
-		if (!pIImage3DChannelSelector)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		sChannelName = pIImage3DChannelSelector->GetSourceChannel();
-
-		if (pChannelNameNeededChars)
-			*pChannelNameNeededChars = (Lib3MF_uint32) (sChannelName.size()+1);
-		if (pChannelNameBuffer) {
-			if (sChannelName.size() >= nChannelNameBufferSize)
-				throw ELib3MFInterfaceException (LIB3MF_ERROR_BUFFERTOOSMALL);
-			for (size_t iChannelName = 0; iChannelName < sChannelName.size(); iChannelName++)
-				pChannelNameBuffer[iChannelName] = sChannelName[iChannelName];
-			pChannelNameBuffer[sChannelName.size()] = 0;
-		}
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addStringResult("ChannelName", sChannelName.c_str());
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_image3dchannelselector_setdestinationchannel(Lib3MF_Image3DChannelSelector pImage3DChannelSelector, const char * pChannelName)
-{
-	IBase* pIBaseClass = (IBase *)pImage3DChannelSelector;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pImage3DChannelSelector, "Image3DChannelSelector", "SetDestinationChannel");
-			pJournalEntry->addStringParameter("ChannelName", pChannelName);
-		}
-		if (pChannelName == nullptr)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		std::string sChannelName(pChannelName);
-		IImage3DChannelSelector* pIImage3DChannelSelector = dynamic_cast<IImage3DChannelSelector*>(pIBaseClass);
-		if (!pIImage3DChannelSelector)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		pIImage3DChannelSelector->SetDestinationChannel(sChannelName);
-
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_image3dchannelselector_getdestinationchannel(Lib3MF_Image3DChannelSelector pImage3DChannelSelector, const Lib3MF_uint32 nChannelNameBufferSize, Lib3MF_uint32* pChannelNameNeededChars, char * pChannelNameBuffer)
-{
-	IBase* pIBaseClass = (IBase *)pImage3DChannelSelector;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pImage3DChannelSelector, "Image3DChannelSelector", "GetDestinationChannel");
-		}
-		if ( (!pChannelNameBuffer) && !(pChannelNameNeededChars) )
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		std::string sChannelName("");
-		IImage3DChannelSelector* pIImage3DChannelSelector = dynamic_cast<IImage3DChannelSelector*>(pIBaseClass);
-		if (!pIImage3DChannelSelector)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		sChannelName = pIImage3DChannelSelector->GetDestinationChannel();
-
-		if (pChannelNameNeededChars)
-			*pChannelNameNeededChars = (Lib3MF_uint32) (sChannelName.size()+1);
-		if (pChannelNameBuffer) {
-			if (sChannelName.size() >= nChannelNameBufferSize)
-				throw ELib3MFInterfaceException (LIB3MF_ERROR_BUFFERTOOSMALL);
-			for (size_t iChannelName = 0; iChannelName < sChannelName.size(); iChannelName++)
-				pChannelNameBuffer[iChannelName] = sChannelName[iChannelName];
-			pChannelNameBuffer[sChannelName.size()] = 0;
-		}
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addStringResult("ChannelName", sChannelName.c_str());
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_image3dchannelselector_setfilter(Lib3MF_Image3DChannelSelector pImage3DChannelSelector, eLib3MFTextureFilter eFilter)
-{
-	IBase* pIBaseClass = (IBase *)pImage3DChannelSelector;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pImage3DChannelSelector, "Image3DChannelSelector", "SetFilter");
-			pJournalEntry->addEnumParameter("Filter", "TextureFilter", (Lib3MF_int32)(eFilter));
-		}
-		IImage3DChannelSelector* pIImage3DChannelSelector = dynamic_cast<IImage3DChannelSelector*>(pIBaseClass);
-		if (!pIImage3DChannelSelector)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		pIImage3DChannelSelector->SetFilter(eFilter);
-
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_image3dchannelselector_getfilter(Lib3MF_Image3DChannelSelector pImage3DChannelSelector, eLib3MFTextureFilter * pFilter)
-{
-	IBase* pIBaseClass = (IBase *)pImage3DChannelSelector;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pImage3DChannelSelector, "Image3DChannelSelector", "GetFilter");
-		}
-		if (pFilter == nullptr)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		IImage3DChannelSelector* pIImage3DChannelSelector = dynamic_cast<IImage3DChannelSelector*>(pIBaseClass);
-		if (!pIImage3DChannelSelector)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		*pFilter = pIImage3DChannelSelector->GetFilter();
-
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addEnumResult("Filter", "TextureFilter", (Lib3MF_int32)(*pFilter));
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_image3dchannelselector_settilestyles(Lib3MF_Image3DChannelSelector pImage3DChannelSelector, eLib3MFTextureTileStyle eTileStyleU, eLib3MFTextureTileStyle eTileStyleV, eLib3MFTextureTileStyle eTileStyleW)
-{
-	IBase* pIBaseClass = (IBase *)pImage3DChannelSelector;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pImage3DChannelSelector, "Image3DChannelSelector", "SetTileStyles");
-			pJournalEntry->addEnumParameter("TileStyleU", "TextureTileStyle", (Lib3MF_int32)(eTileStyleU));
-			pJournalEntry->addEnumParameter("TileStyleV", "TextureTileStyle", (Lib3MF_int32)(eTileStyleV));
-			pJournalEntry->addEnumParameter("TileStyleW", "TextureTileStyle", (Lib3MF_int32)(eTileStyleW));
-		}
-		IImage3DChannelSelector* pIImage3DChannelSelector = dynamic_cast<IImage3DChannelSelector*>(pIBaseClass);
-		if (!pIImage3DChannelSelector)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		pIImage3DChannelSelector->SetTileStyles(eTileStyleU, eTileStyleV, eTileStyleW);
-
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_image3dchannelselector_gettilestyles(Lib3MF_Image3DChannelSelector pImage3DChannelSelector, eLib3MFTextureTileStyle * pTileStyleU, eLib3MFTextureTileStyle * pTileStyleV, eLib3MFTextureTileStyle * pTileStyleW)
-{
-	IBase* pIBaseClass = (IBase *)pImage3DChannelSelector;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pImage3DChannelSelector, "Image3DChannelSelector", "GetTileStyles");
-		}
-		if (!pTileStyleU)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		if (!pTileStyleV)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		if (!pTileStyleW)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		IImage3DChannelSelector* pIImage3DChannelSelector = dynamic_cast<IImage3DChannelSelector*>(pIBaseClass);
-		if (!pIImage3DChannelSelector)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		pIImage3DChannelSelector->GetTileStyles(*pTileStyleU, *pTileStyleV, *pTileStyleW);
-
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addEnumResult("TileStyleU", "TextureTileStyle", (Lib3MF_int32)(*pTileStyleU));
-			pJournalEntry->addEnumResult("TileStyleV", "TextureTileStyle", (Lib3MF_int32)(*pTileStyleV));
-			pJournalEntry->addEnumResult("TileStyleW", "TextureTileStyle", (Lib3MF_int32)(*pTileStyleW));
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-
-/*************************************************************************************************************************
- Class implementation for VolumetricLayer
-**************************************************************************************************************************/
-Lib3MFResult lib3mf_volumetriclayer_gettransform(Lib3MF_VolumetricLayer pVolumetricLayer, sLib3MFTransform * pTransform)
-{
-	IBase* pIBaseClass = (IBase *)pVolumetricLayer;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumetricLayer, "VolumetricLayer", "GetTransform");
-		}
-		if (pTransform == nullptr)
-		throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		IVolumetricLayer* pIVolumetricLayer = dynamic_cast<IVolumetricLayer*>(pIBaseClass);
-		if (!pIVolumetricLayer)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		*pTransform = pIVolumetricLayer->GetTransform();
-
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_volumetriclayer_settransform(Lib3MF_VolumetricLayer pVolumetricLayer, const sLib3MFTransform * pTransform)
-{
-	IBase* pIBaseClass = (IBase *)pVolumetricLayer;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumetricLayer, "VolumetricLayer", "SetTransform");
-		}
-		IVolumetricLayer* pIVolumetricLayer = dynamic_cast<IVolumetricLayer*>(pIBaseClass);
-		if (!pIVolumetricLayer)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		pIVolumetricLayer->SetTransform(*pTransform);
-
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_volumetriclayer_getblendmethod(Lib3MF_VolumetricLayer pVolumetricLayer, eLib3MFBlendMethod * pBlendMethod)
-{
-	IBase* pIBaseClass = (IBase *)pVolumetricLayer;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumetricLayer, "VolumetricLayer", "GetBlendMethod");
-		}
-		if (pBlendMethod == nullptr)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		IVolumetricLayer* pIVolumetricLayer = dynamic_cast<IVolumetricLayer*>(pIBaseClass);
-		if (!pIVolumetricLayer)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		*pBlendMethod = pIVolumetricLayer->GetBlendMethod();
-
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addEnumResult("BlendMethod", "BlendMethod", (Lib3MF_int32)(*pBlendMethod));
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_volumetriclayer_setblendmethod(Lib3MF_VolumetricLayer pVolumetricLayer, eLib3MFBlendMethod eBlendMethod)
-{
-	IBase* pIBaseClass = (IBase *)pVolumetricLayer;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumetricLayer, "VolumetricLayer", "SetBlendMethod");
-			pJournalEntry->addEnumParameter("BlendMethod", "BlendMethod", (Lib3MF_int32)(eBlendMethod));
-		}
-		IVolumetricLayer* pIVolumetricLayer = dynamic_cast<IVolumetricLayer*>(pIBaseClass);
-		if (!pIVolumetricLayer)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		pIVolumetricLayer->SetBlendMethod(eBlendMethod);
-
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_volumetriclayer_getsourcealpha(Lib3MF_VolumetricLayer pVolumetricLayer, Lib3MF_double * pSourceAlpha)
-{
-	IBase* pIBaseClass = (IBase *)pVolumetricLayer;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumetricLayer, "VolumetricLayer", "GetSourceAlpha");
-		}
-		if (pSourceAlpha == nullptr)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		IVolumetricLayer* pIVolumetricLayer = dynamic_cast<IVolumetricLayer*>(pIBaseClass);
-		if (!pIVolumetricLayer)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		*pSourceAlpha = pIVolumetricLayer->GetSourceAlpha();
-
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addDoubleResult("SourceAlpha", *pSourceAlpha);
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_volumetriclayer_setsourcealpha(Lib3MF_VolumetricLayer pVolumetricLayer, Lib3MF_double dSourceAlpha)
-{
-	IBase* pIBaseClass = (IBase *)pVolumetricLayer;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumetricLayer, "VolumetricLayer", "SetSourceAlpha");
-			pJournalEntry->addDoubleParameter("SourceAlpha", dSourceAlpha);
-		}
-		IVolumetricLayer* pIVolumetricLayer = dynamic_cast<IVolumetricLayer*>(pIBaseClass);
-		if (!pIVolumetricLayer)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		pIVolumetricLayer->SetSourceAlpha(dSourceAlpha);
-
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_volumetriclayer_getdestinationalpha(Lib3MF_VolumetricLayer pVolumetricLayer, Lib3MF_double * pDestinationAlpha)
-{
-	IBase* pIBaseClass = (IBase *)pVolumetricLayer;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumetricLayer, "VolumetricLayer", "GetDestinationAlpha");
-		}
-		if (pDestinationAlpha == nullptr)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		IVolumetricLayer* pIVolumetricLayer = dynamic_cast<IVolumetricLayer*>(pIBaseClass);
-		if (!pIVolumetricLayer)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		*pDestinationAlpha = pIVolumetricLayer->GetDestinationAlpha();
-
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addDoubleResult("DestinationAlpha", *pDestinationAlpha);
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_volumetriclayer_setdestinationalpha(Lib3MF_VolumetricLayer pVolumetricLayer, Lib3MF_double dDestinationAlpha)
-{
-	IBase* pIBaseClass = (IBase *)pVolumetricLayer;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumetricLayer, "VolumetricLayer", "SetDestinationAlpha");
-			pJournalEntry->addDoubleParameter("DestinationAlpha", dDestinationAlpha);
-		}
-		IVolumetricLayer* pIVolumetricLayer = dynamic_cast<IVolumetricLayer*>(pIBaseClass);
-		if (!pIVolumetricLayer)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		pIVolumetricLayer->SetDestinationAlpha(dDestinationAlpha);
-
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_volumetriclayer_getinformation(Lib3MF_VolumetricLayer pVolumetricLayer, sLib3MFTransform * pTransform, eLib3MFBlendMethod * pBlendMethod, Lib3MF_double * pSourceAlpha, Lib3MF_double * pDestinationAlpha)
-{
-	IBase* pIBaseClass = (IBase *)pVolumetricLayer;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumetricLayer, "VolumetricLayer", "GetInformation");
-		}
-		if (!pTransform)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		if (!pBlendMethod)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		if (!pSourceAlpha)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		if (!pDestinationAlpha)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		IVolumetricLayer* pIVolumetricLayer = dynamic_cast<IVolumetricLayer*>(pIBaseClass);
-		if (!pIVolumetricLayer)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		pIVolumetricLayer->GetInformation(*pTransform, *pBlendMethod, *pSourceAlpha, *pDestinationAlpha);
-
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addEnumResult("BlendMethod", "BlendMethod", (Lib3MF_int32)(*pBlendMethod));
-			pJournalEntry->addDoubleResult("SourceAlpha", *pSourceAlpha);
-			pJournalEntry->addDoubleResult("DestinationAlpha", *pDestinationAlpha);
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_volumetriclayer_setinformation(Lib3MF_VolumetricLayer pVolumetricLayer, const sLib3MFTransform * pTransform, eLib3MFBlendMethod eBlendMethod, Lib3MF_double dSourceAlpha, Lib3MF_double dDestinationAlpha)
-{
-	IBase* pIBaseClass = (IBase *)pVolumetricLayer;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumetricLayer, "VolumetricLayer", "SetInformation");
-			pJournalEntry->addEnumParameter("BlendMethod", "BlendMethod", (Lib3MF_int32)(eBlendMethod));
-			pJournalEntry->addDoubleParameter("SourceAlpha", dSourceAlpha);
-			pJournalEntry->addDoubleParameter("DestinationAlpha", dDestinationAlpha);
-		}
-		IVolumetricLayer* pIVolumetricLayer = dynamic_cast<IVolumetricLayer*>(pIBaseClass);
-		if (!pIVolumetricLayer)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		pIVolumetricLayer->SetInformation(*pTransform, eBlendMethod, dSourceAlpha, dDestinationAlpha);
-
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_volumetriclayer_createmaskchannelselector(Lib3MF_VolumetricLayer pVolumetricLayer, Lib3MF_Image3D pImage3D, const char * pSourceChannel, const char * pDestinationChannel, Lib3MF_Image3DChannelSelector * pChannelSelector)
-{
-	IBase* pIBaseClass = (IBase *)pVolumetricLayer;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumetricLayer, "VolumetricLayer", "CreateMaskChannelSelector");
-			pJournalEntry->addHandleParameter("Image3D", pImage3D);
-			pJournalEntry->addStringParameter("SourceChannel", pSourceChannel);
-			pJournalEntry->addStringParameter("DestinationChannel", pDestinationChannel);
-		}
-		if (pSourceChannel == nullptr)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		if (pDestinationChannel == nullptr)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		if (pChannelSelector == nullptr)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		IBase* pIBaseClassImage3D = (IBase *)pImage3D;
-		IImage3D* pIImage3D = dynamic_cast<IImage3D*>(pIBaseClassImage3D);
-		if (!pIImage3D)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDCAST);
-		
-		std::string sSourceChannel(pSourceChannel);
-		std::string sDestinationChannel(pDestinationChannel);
-		IBase* pBaseChannelSelector(nullptr);
-		IVolumetricLayer* pIVolumetricLayer = dynamic_cast<IVolumetricLayer*>(pIBaseClass);
-		if (!pIVolumetricLayer)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		pBaseChannelSelector = pIVolumetricLayer->CreateMaskChannelSelector(pIImage3D, sSourceChannel, sDestinationChannel);
-
-		*pChannelSelector = (IBase*)(pBaseChannelSelector);
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addHandleResult("ChannelSelector", *pChannelSelector);
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_volumetriclayer_hasmaskchannelselector(Lib3MF_VolumetricLayer pVolumetricLayer, bool * pSelectorExists)
-{
-	IBase* pIBaseClass = (IBase *)pVolumetricLayer;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumetricLayer, "VolumetricLayer", "HasMaskChannelSelector");
-		}
-		if (pSelectorExists == nullptr)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		IVolumetricLayer* pIVolumetricLayer = dynamic_cast<IVolumetricLayer*>(pIBaseClass);
-		if (!pIVolumetricLayer)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		*pSelectorExists = pIVolumetricLayer->HasMaskChannelSelector();
-
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addBooleanResult("SelectorExists", *pSelectorExists);
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_volumetriclayer_clearmaskchannelselector(Lib3MF_VolumetricLayer pVolumetricLayer)
-{
-	IBase* pIBaseClass = (IBase *)pVolumetricLayer;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumetricLayer, "VolumetricLayer", "ClearMaskChannelSelector");
-		}
-		IVolumetricLayer* pIVolumetricLayer = dynamic_cast<IVolumetricLayer*>(pIBaseClass);
-		if (!pIVolumetricLayer)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		pIVolumetricLayer->ClearMaskChannelSelector();
-
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_volumetriclayer_getmaskchannelselector(Lib3MF_VolumetricLayer pVolumetricLayer, Lib3MF_Image3DChannelSelector * pChannelSelector)
-{
-	IBase* pIBaseClass = (IBase *)pVolumetricLayer;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumetricLayer, "VolumetricLayer", "GetMaskChannelSelector");
-		}
-		if (pChannelSelector == nullptr)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		IBase* pBaseChannelSelector(nullptr);
-		IVolumetricLayer* pIVolumetricLayer = dynamic_cast<IVolumetricLayer*>(pIBaseClass);
-		if (!pIVolumetricLayer)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		pBaseChannelSelector = pIVolumetricLayer->GetMaskChannelSelector();
-
-		*pChannelSelector = (IBase*)(pBaseChannelSelector);
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addHandleResult("ChannelSelector", *pChannelSelector);
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_volumetriclayer_getchannelselectorcount(Lib3MF_VolumetricLayer pVolumetricLayer, Lib3MF_uint32 * pCount)
-{
-	IBase* pIBaseClass = (IBase *)pVolumetricLayer;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumetricLayer, "VolumetricLayer", "GetChannelSelectorCount");
-		}
-		if (pCount == nullptr)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		IVolumetricLayer* pIVolumetricLayer = dynamic_cast<IVolumetricLayer*>(pIBaseClass);
-		if (!pIVolumetricLayer)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		*pCount = pIVolumetricLayer->GetChannelSelectorCount();
-
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addUInt32Result("Count", *pCount);
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_volumetriclayer_getchannelselector(Lib3MF_VolumetricLayer pVolumetricLayer, Lib3MF_uint32 nIndex, Lib3MF_Image3DChannelSelector * pChannelSelector)
-{
-	IBase* pIBaseClass = (IBase *)pVolumetricLayer;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumetricLayer, "VolumetricLayer", "GetChannelSelector");
-			pJournalEntry->addUInt32Parameter("Index", nIndex);
-		}
-		if (pChannelSelector == nullptr)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		IBase* pBaseChannelSelector(nullptr);
-		IVolumetricLayer* pIVolumetricLayer = dynamic_cast<IVolumetricLayer*>(pIBaseClass);
-		if (!pIVolumetricLayer)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		pBaseChannelSelector = pIVolumetricLayer->GetChannelSelector(nIndex);
-
-		*pChannelSelector = (IBase*)(pBaseChannelSelector);
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addHandleResult("ChannelSelector", *pChannelSelector);
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_volumetriclayer_addchannelselector(Lib3MF_VolumetricLayer pVolumetricLayer, Lib3MF_Image3D pImage3D, const char * pSourceChannel, const char * pDestinationChannel, Lib3MF_Image3DChannelSelector * pChannelSelector)
-{
-	IBase* pIBaseClass = (IBase *)pVolumetricLayer;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumetricLayer, "VolumetricLayer", "AddChannelSelector");
-			pJournalEntry->addHandleParameter("Image3D", pImage3D);
-			pJournalEntry->addStringParameter("SourceChannel", pSourceChannel);
-			pJournalEntry->addStringParameter("DestinationChannel", pDestinationChannel);
-		}
-		if (pSourceChannel == nullptr)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		if (pDestinationChannel == nullptr)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		if (pChannelSelector == nullptr)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		IBase* pIBaseClassImage3D = (IBase *)pImage3D;
-		IImage3D* pIImage3D = dynamic_cast<IImage3D*>(pIBaseClassImage3D);
-		if (!pIImage3D)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDCAST);
-		
-		std::string sSourceChannel(pSourceChannel);
-		std::string sDestinationChannel(pDestinationChannel);
-		IBase* pBaseChannelSelector(nullptr);
-		IVolumetricLayer* pIVolumetricLayer = dynamic_cast<IVolumetricLayer*>(pIBaseClass);
-		if (!pIVolumetricLayer)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		pBaseChannelSelector = pIVolumetricLayer->AddChannelSelector(pIImage3D, sSourceChannel, sDestinationChannel);
-
-		*pChannelSelector = (IBase*)(pBaseChannelSelector);
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addHandleResult("ChannelSelector", *pChannelSelector);
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_volumetriclayer_clearchannelselectors(Lib3MF_VolumetricLayer pVolumetricLayer)
-{
-	IBase* pIBaseClass = (IBase *)pVolumetricLayer;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumetricLayer, "VolumetricLayer", "ClearChannelSelectors");
-		}
-		IVolumetricLayer* pIVolumetricLayer = dynamic_cast<IVolumetricLayer*>(pIBaseClass);
-		if (!pIVolumetricLayer)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		pIVolumetricLayer->ClearChannelSelectors();
-
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_volumetriclayer_reindexchannelselector(Lib3MF_VolumetricLayer pVolumetricLayer, Lib3MF_Image3DChannelSelector pChannelSelector, Lib3MF_uint32 nIndex)
-{
-	IBase* pIBaseClass = (IBase *)pVolumetricLayer;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumetricLayer, "VolumetricLayer", "ReindexChannelSelector");
-			pJournalEntry->addHandleParameter("ChannelSelector", pChannelSelector);
-			pJournalEntry->addUInt32Parameter("Index", nIndex);
-		}
-		IBase* pIBaseClassChannelSelector = (IBase *)pChannelSelector;
-		IImage3DChannelSelector* pIChannelSelector = dynamic_cast<IImage3DChannelSelector*>(pIBaseClassChannelSelector);
-		if (!pIChannelSelector)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDCAST);
-		
-		IVolumetricLayer* pIVolumetricLayer = dynamic_cast<IVolumetricLayer*>(pIBaseClass);
-		if (!pIVolumetricLayer)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		pIVolumetricLayer->ReindexChannelSelector(pIChannelSelector, nIndex);
-
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_volumetriclayer_removechannelselector(Lib3MF_VolumetricLayer pVolumetricLayer, Lib3MF_Image3DChannelSelector pChannelSelector)
-{
-	IBase* pIBaseClass = (IBase *)pVolumetricLayer;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumetricLayer, "VolumetricLayer", "RemoveChannelSelector");
-			pJournalEntry->addHandleParameter("ChannelSelector", pChannelSelector);
-		}
-		IBase* pIBaseClassChannelSelector = (IBase *)pChannelSelector;
-		IImage3DChannelSelector* pIChannelSelector = dynamic_cast<IImage3DChannelSelector*>(pIBaseClassChannelSelector);
-		if (!pIChannelSelector)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDCAST);
-		
-		IVolumetricLayer* pIVolumetricLayer = dynamic_cast<IVolumetricLayer*>(pIBaseClass);
-		if (!pIVolumetricLayer)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		pIVolumetricLayer->RemoveChannelSelector(pIChannelSelector);
-
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_volumetriclayer_removechannelselectorbyindex(Lib3MF_VolumetricLayer pVolumetricLayer, Lib3MF_uint32 nIndex)
-{
-	IBase* pIBaseClass = (IBase *)pVolumetricLayer;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumetricLayer, "VolumetricLayer", "RemoveChannelSelectorByIndex");
-			pJournalEntry->addUInt32Parameter("Index", nIndex);
-		}
-		IVolumetricLayer* pIVolumetricLayer = dynamic_cast<IVolumetricLayer*>(pIBaseClass);
-		if (!pIVolumetricLayer)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		pIVolumetricLayer->RemoveChannelSelectorByIndex(nIndex);
-
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-
-/*************************************************************************************************************************
- Class implementation for VolumetricStack
-**************************************************************************************************************************/
-Lib3MFResult lib3mf_volumetricstack_clear(Lib3MF_VolumetricStack pVolumetricStack)
-{
-	IBase* pIBaseClass = (IBase *)pVolumetricStack;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumetricStack, "VolumetricStack", "Clear");
-		}
-		IVolumetricStack* pIVolumetricStack = dynamic_cast<IVolumetricStack*>(pIBaseClass);
-		if (!pIVolumetricStack)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		pIVolumetricStack->Clear();
-
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_volumetricstack_clearunuseddestinationchannels(Lib3MF_VolumetricStack pVolumetricStack)
-{
-	IBase* pIBaseClass = (IBase *)pVolumetricStack;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumetricStack, "VolumetricStack", "ClearUnusedDestinationChannels");
-		}
-		IVolumetricStack* pIVolumetricStack = dynamic_cast<IVolumetricStack*>(pIBaseClass);
-		if (!pIVolumetricStack)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		pIVolumetricStack->ClearUnusedDestinationChannels();
-
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_volumetricstack_getdestinationchannelcount(Lib3MF_VolumetricStack pVolumetricStack, Lib3MF_uint32 * pCount)
-{
-	IBase* pIBaseClass = (IBase *)pVolumetricStack;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumetricStack, "VolumetricStack", "GetDestinationChannelCount");
-		}
-		if (pCount == nullptr)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		IVolumetricStack* pIVolumetricStack = dynamic_cast<IVolumetricStack*>(pIBaseClass);
-		if (!pIVolumetricStack)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		*pCount = pIVolumetricStack->GetDestinationChannelCount();
-
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addUInt32Result("Count", *pCount);
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_volumetricstack_getdestinationchannel(Lib3MF_VolumetricStack pVolumetricStack, Lib3MF_uint32 nIndex, const Lib3MF_uint32 nNameBufferSize, Lib3MF_uint32* pNameNeededChars, char * pNameBuffer, Lib3MF_double * pBackground)
-{
-	IBase* pIBaseClass = (IBase *)pVolumetricStack;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumetricStack, "VolumetricStack", "GetDestinationChannel");
-			pJournalEntry->addUInt32Parameter("Index", nIndex);
-		}
-		if ( (!pNameBuffer) && !(pNameNeededChars) )
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		if (!pBackground)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		std::string sName("");
-		IVolumetricStack* pIVolumetricStack = dynamic_cast<IVolumetricStack*>(pIBaseClass);
-		if (!pIVolumetricStack)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		pIVolumetricStack->GetDestinationChannel(nIndex, sName, *pBackground);
-
-		if (pNameNeededChars)
-			*pNameNeededChars = (Lib3MF_uint32) (sName.size()+1);
-		if (pNameBuffer) {
-			if (sName.size() >= nNameBufferSize)
-				throw ELib3MFInterfaceException (LIB3MF_ERROR_BUFFERTOOSMALL);
-			for (size_t iName = 0; iName < sName.size(); iName++)
-				pNameBuffer[iName] = sName[iName];
-			pNameBuffer[sName.size()] = 0;
-		}
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addStringResult("Name", sName.c_str());
-			pJournalEntry->addDoubleResult("Background", *pBackground);
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_volumetricstack_adddestinationchannel(Lib3MF_VolumetricStack pVolumetricStack, const char * pName, Lib3MF_double dBackground, Lib3MF_uint32 * pIndex)
-{
-	IBase* pIBaseClass = (IBase *)pVolumetricStack;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumetricStack, "VolumetricStack", "AddDestinationChannel");
-			pJournalEntry->addStringParameter("Name", pName);
-			pJournalEntry->addDoubleParameter("Background", dBackground);
-		}
-		if (pName == nullptr)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		if (pIndex == nullptr)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		std::string sName(pName);
-		IVolumetricStack* pIVolumetricStack = dynamic_cast<IVolumetricStack*>(pIBaseClass);
-		if (!pIVolumetricStack)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		*pIndex = pIVolumetricStack->AddDestinationChannel(sName, dBackground);
-
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addUInt32Result("Index", *pIndex);
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_volumetricstack_updatedestinationchannel(Lib3MF_VolumetricStack pVolumetricStack, Lib3MF_uint32 nIndex, Lib3MF_double dBackground)
-{
-	IBase* pIBaseClass = (IBase *)pVolumetricStack;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumetricStack, "VolumetricStack", "UpdateDestinationChannel");
-			pJournalEntry->addUInt32Parameter("Index", nIndex);
-			pJournalEntry->addDoubleParameter("Background", dBackground);
-		}
-		IVolumetricStack* pIVolumetricStack = dynamic_cast<IVolumetricStack*>(pIBaseClass);
-		if (!pIVolumetricStack)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		pIVolumetricStack->UpdateDestinationChannel(nIndex, dBackground);
-
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_volumetricstack_updatedestinationchannelbyname(Lib3MF_VolumetricStack pVolumetricStack, const char * pName, Lib3MF_double dBackground)
-{
-	IBase* pIBaseClass = (IBase *)pVolumetricStack;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumetricStack, "VolumetricStack", "UpdateDestinationChannelByName");
-			pJournalEntry->addStringParameter("Name", pName);
-			pJournalEntry->addDoubleParameter("Background", dBackground);
-		}
-		if (pName == nullptr)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		std::string sName(pName);
-		IVolumetricStack* pIVolumetricStack = dynamic_cast<IVolumetricStack*>(pIBaseClass);
-		if (!pIVolumetricStack)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		pIVolumetricStack->UpdateDestinationChannelByName(sName, dBackground);
-
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_volumetricstack_removedestinationchannel(Lib3MF_VolumetricStack pVolumetricStack, Lib3MF_uint32 nIndex)
-{
-	IBase* pIBaseClass = (IBase *)pVolumetricStack;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumetricStack, "VolumetricStack", "RemoveDestinationChannel");
-			pJournalEntry->addUInt32Parameter("Index", nIndex);
-		}
-		IVolumetricStack* pIVolumetricStack = dynamic_cast<IVolumetricStack*>(pIBaseClass);
-		if (!pIVolumetricStack)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		pIVolumetricStack->RemoveDestinationChannel(nIndex);
-
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_volumetricstack_removedestinationchannelbyname(Lib3MF_VolumetricStack pVolumetricStack, const char * pName)
-{
-	IBase* pIBaseClass = (IBase *)pVolumetricStack;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumetricStack, "VolumetricStack", "RemoveDestinationChannelByName");
-			pJournalEntry->addStringParameter("Name", pName);
-		}
-		if (pName == nullptr)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		std::string sName(pName);
-		IVolumetricStack* pIVolumetricStack = dynamic_cast<IVolumetricStack*>(pIBaseClass);
-		if (!pIVolumetricStack)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		pIVolumetricStack->RemoveDestinationChannelByName(sName);
-
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_volumetricstack_getlayercount(Lib3MF_VolumetricStack pVolumetricStack, Lib3MF_uint32 * pCount)
-{
-	IBase* pIBaseClass = (IBase *)pVolumetricStack;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumetricStack, "VolumetricStack", "GetLayerCount");
-		}
-		if (pCount == nullptr)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		IVolumetricStack* pIVolumetricStack = dynamic_cast<IVolumetricStack*>(pIBaseClass);
-		if (!pIVolumetricStack)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		*pCount = pIVolumetricStack->GetLayerCount();
-
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addUInt32Result("Count", *pCount);
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_volumetricstack_getlayer(Lib3MF_VolumetricStack pVolumetricStack, Lib3MF_uint32 nIndex, Lib3MF_VolumetricLayer * pLayer)
-{
-	IBase* pIBaseClass = (IBase *)pVolumetricStack;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumetricStack, "VolumetricStack", "GetLayer");
-			pJournalEntry->addUInt32Parameter("Index", nIndex);
-		}
-		if (pLayer == nullptr)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		IBase* pBaseLayer(nullptr);
-		IVolumetricStack* pIVolumetricStack = dynamic_cast<IVolumetricStack*>(pIBaseClass);
-		if (!pIVolumetricStack)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		pBaseLayer = pIVolumetricStack->GetLayer(nIndex);
-
-		*pLayer = (IBase*)(pBaseLayer);
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addHandleResult("Layer", *pLayer);
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_volumetricstack_addlayer(Lib3MF_VolumetricStack pVolumetricStack, const sLib3MFTransform * pTransform, eLib3MFBlendMethod eBlendMethod, Lib3MF_VolumetricLayer * pLayer)
-{
-	IBase* pIBaseClass = (IBase *)pVolumetricStack;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumetricStack, "VolumetricStack", "AddLayer");
-			pJournalEntry->addEnumParameter("BlendMethod", "BlendMethod", (Lib3MF_int32)(eBlendMethod));
-		}
-		if (pLayer == nullptr)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		IBase* pBaseLayer(nullptr);
-		IVolumetricStack* pIVolumetricStack = dynamic_cast<IVolumetricStack*>(pIBaseClass);
-		if (!pIVolumetricStack)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		pBaseLayer = pIVolumetricStack->AddLayer(*pTransform, eBlendMethod);
-
-		*pLayer = (IBase*)(pBaseLayer);
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addHandleResult("Layer", *pLayer);
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_volumetricstack_reindexlayer(Lib3MF_VolumetricStack pVolumetricStack, Lib3MF_VolumetricLayer pLayer, Lib3MF_uint32 nIndex)
-{
-	IBase* pIBaseClass = (IBase *)pVolumetricStack;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumetricStack, "VolumetricStack", "ReindexLayer");
-			pJournalEntry->addHandleParameter("Layer", pLayer);
-			pJournalEntry->addUInt32Parameter("Index", nIndex);
-		}
-		IBase* pIBaseClassLayer = (IBase *)pLayer;
-		IVolumetricLayer* pILayer = dynamic_cast<IVolumetricLayer*>(pIBaseClassLayer);
-		if (!pILayer)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDCAST);
-		
-		IVolumetricStack* pIVolumetricStack = dynamic_cast<IVolumetricStack*>(pIBaseClass);
-		if (!pIVolumetricStack)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		pIVolumetricStack->ReindexLayer(pILayer, nIndex);
-
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_volumetricstack_removelayer(Lib3MF_VolumetricStack pVolumetricStack, Lib3MF_VolumetricLayer pLayer)
-{
-	IBase* pIBaseClass = (IBase *)pVolumetricStack;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumetricStack, "VolumetricStack", "RemoveLayer");
-			pJournalEntry->addHandleParameter("Layer", pLayer);
-		}
-		IBase* pIBaseClassLayer = (IBase *)pLayer;
-		IVolumetricLayer* pILayer = dynamic_cast<IVolumetricLayer*>(pIBaseClassLayer);
-		if (!pILayer)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDCAST);
-		
-		IVolumetricStack* pIVolumetricStack = dynamic_cast<IVolumetricStack*>(pIBaseClass);
-		if (!pIVolumetricStack)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		pIVolumetricStack->RemoveLayer(pILayer);
-
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_volumetricstack_removelayerbyindex(Lib3MF_VolumetricStack pVolumetricStack, Lib3MF_uint32 nIndex)
-{
-	IBase* pIBaseClass = (IBase *)pVolumetricStack;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumetricStack, "VolumetricStack", "RemoveLayerByIndex");
-			pJournalEntry->addUInt32Parameter("Index", nIndex);
-		}
-		IVolumetricStack* pIVolumetricStack = dynamic_cast<IVolumetricStack*>(pIBaseClass);
-		if (!pIVolumetricStack)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		pIVolumetricStack->RemoveLayerByIndex(nIndex);
-
-		if (pJournalEntry.get() != nullptr) {
 			pJournalEntry->writeSuccess();
 		}
 		return LIB3MF_SUCCESS;
@@ -14984,6 +14973,78 @@ Lib3MFResult lib3mf_model_getimage3ds(Lib3MF_Model pModel, Lib3MF_Image3DIterato
 	}
 }
 
+Lib3MFResult lib3mf_model_getscalarfields(Lib3MF_Model pModel, Lib3MF_ScalarFieldIterator * pResourceIterator)
+{
+	IBase* pIBaseClass = (IBase *)pModel;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pModel, "Model", "GetScalarFields");
+		}
+		if (pResourceIterator == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseResourceIterator(nullptr);
+		IModel* pIModel = dynamic_cast<IModel*>(pIBaseClass);
+		if (!pIModel)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseResourceIterator = pIModel->GetScalarFields();
+
+		*pResourceIterator = (IBase*)(pBaseResourceIterator);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("ResourceIterator", *pResourceIterator);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_model_getvector3dfields(Lib3MF_Model pModel, Lib3MF_Vector3DFieldIterator * pResourceIterator)
+{
+	IBase* pIBaseClass = (IBase *)pModel;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pModel, "Model", "GetVector3DFields");
+		}
+		if (pResourceIterator == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseResourceIterator(nullptr);
+		IModel* pIModel = dynamic_cast<IModel*>(pIBaseClass);
+		if (!pIModel)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseResourceIterator = pIModel->GetVector3DFields();
+
+		*pResourceIterator = (IBase*)(pBaseResourceIterator);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("ResourceIterator", *pResourceIterator);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
 Lib3MFResult lib3mf_model_mergetomodel(Lib3MF_Model pModel, Lib3MF_Model * pMergedModelInstance)
 {
 	IBase* pIBaseClass = (IBase *)pModel;
@@ -15005,42 +15066,6 @@ Lib3MFResult lib3mf_model_mergetomodel(Lib3MF_Model pModel, Lib3MF_Model * pMerg
 		*pMergedModelInstance = (IBase*)(pBaseMergedModelInstance);
 		if (pJournalEntry.get() != nullptr) {
 			pJournalEntry->addHandleResult("MergedModelInstance", *pMergedModelInstance);
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
-Lib3MFResult lib3mf_model_getvolumetricstacks(Lib3MF_Model pModel, Lib3MF_VolumetricStackIterator * pResourceIterator)
-{
-	IBase* pIBaseClass = (IBase *)pModel;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pModel, "Model", "GetVolumetricStacks");
-		}
-		if (pResourceIterator == nullptr)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		IBase* pBaseResourceIterator(nullptr);
-		IModel* pIModel = dynamic_cast<IModel*>(pIBaseClass);
-		if (!pIModel)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		pBaseResourceIterator = pIModel->GetVolumetricStacks();
-
-		*pResourceIterator = (IBase*)(pBaseResourceIterator);
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addHandleResult("ResourceIterator", *pResourceIterator);
 			pJournalEntry->writeSuccess();
 		}
 		return LIB3MF_SUCCESS;
@@ -15399,16 +15424,16 @@ Lib3MFResult lib3mf_model_addmultipropertygroup(Lib3MF_Model pModel, Lib3MF_Mult
 	}
 }
 
-Lib3MFResult lib3mf_model_addimage3d(Lib3MF_Model pModel, Lib3MF_uint32 nSizeX, Lib3MF_uint32 nSizeY, Lib3MF_uint32 nSheetCount, Lib3MF_Image3D * pInstance)
+Lib3MFResult lib3mf_model_addimagestack(Lib3MF_Model pModel, Lib3MF_uint32 nColumnCount, Lib3MF_uint32 nRowCount, Lib3MF_uint32 nSheetCount, Lib3MF_ImageStack * pInstance)
 {
 	IBase* pIBaseClass = (IBase *)pModel;
 
 	PLib3MFInterfaceJournalEntry pJournalEntry;
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pModel, "Model", "AddImage3D");
-			pJournalEntry->addUInt32Parameter("SizeX", nSizeX);
-			pJournalEntry->addUInt32Parameter("SizeY", nSizeY);
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pModel, "Model", "AddImageStack");
+			pJournalEntry->addUInt32Parameter("ColumnCount", nColumnCount);
+			pJournalEntry->addUInt32Parameter("RowCount", nRowCount);
 			pJournalEntry->addUInt32Parameter("SheetCount", nSheetCount);
 		}
 		if (pInstance == nullptr)
@@ -15418,7 +15443,7 @@ Lib3MFResult lib3mf_model_addimage3d(Lib3MF_Model pModel, Lib3MF_uint32 nSizeX, 
 		if (!pIModel)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pBaseInstance = pIModel->AddImage3D(nSizeX, nSizeY, nSheetCount);
+		pBaseInstance = pIModel->AddImageStack(nColumnCount, nRowCount, nSheetCount);
 
 		*pInstance = (IBase*)(pBaseInstance);
 		if (pJournalEntry.get() != nullptr) {
@@ -15438,27 +15463,357 @@ Lib3MFResult lib3mf_model_addimage3d(Lib3MF_Model pModel, Lib3MF_uint32 nSizeX, 
 	}
 }
 
-Lib3MFResult lib3mf_model_addvolumetricstack(Lib3MF_Model pModel, Lib3MF_VolumetricStack * pInstance)
+Lib3MFResult lib3mf_model_addscalarfieldfromimage3d(Lib3MF_Model pModel, Lib3MF_ScalarFieldFromImage3D * pTheScalarFieldFromImage3D)
 {
 	IBase* pIBaseClass = (IBase *)pModel;
 
 	PLib3MFInterfaceJournalEntry pJournalEntry;
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pModel, "Model", "AddVolumetricStack");
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pModel, "Model", "AddScalarFieldFromImage3D");
 		}
-		if (pInstance == nullptr)
+		if (pTheScalarFieldFromImage3D == nullptr)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		IBase* pBaseInstance(nullptr);
+		IBase* pBaseTheScalarFieldFromImage3D(nullptr);
 		IModel* pIModel = dynamic_cast<IModel*>(pIBaseClass);
 		if (!pIModel)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pBaseInstance = pIModel->AddVolumetricStack();
+		pBaseTheScalarFieldFromImage3D = pIModel->AddScalarFieldFromImage3D();
 
-		*pInstance = (IBase*)(pBaseInstance);
+		*pTheScalarFieldFromImage3D = (IBase*)(pBaseTheScalarFieldFromImage3D);
 		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addHandleResult("Instance", *pInstance);
+			pJournalEntry->addHandleResult("TheScalarFieldFromImage3D", *pTheScalarFieldFromImage3D);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_model_addscalarfieldcomposed(Lib3MF_Model pModel, Lib3MF_ScalarFieldComposed * pTheScalarFieldComposed)
+{
+	IBase* pIBaseClass = (IBase *)pModel;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pModel, "Model", "AddScalarFieldComposed");
+		}
+		if (pTheScalarFieldComposed == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseTheScalarFieldComposed(nullptr);
+		IModel* pIModel = dynamic_cast<IModel*>(pIBaseClass);
+		if (!pIModel)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseTheScalarFieldComposed = pIModel->AddScalarFieldComposed();
+
+		*pTheScalarFieldComposed = (IBase*)(pBaseTheScalarFieldComposed);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("TheScalarFieldComposed", *pTheScalarFieldComposed);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_model_getscalarfieldbyid(Lib3MF_Model pModel, Lib3MF_uint32 nUniqueResourceID, Lib3MF_ScalarField * pScalarFieldInstance)
+{
+	IBase* pIBaseClass = (IBase *)pModel;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pModel, "Model", "GetScalarFieldByID");
+			pJournalEntry->addUInt32Parameter("UniqueResourceID", nUniqueResourceID);
+		}
+		if (pScalarFieldInstance == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseScalarFieldInstance(nullptr);
+		IModel* pIModel = dynamic_cast<IModel*>(pIBaseClass);
+		if (!pIModel)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseScalarFieldInstance = pIModel->GetScalarFieldByID(nUniqueResourceID);
+
+		*pScalarFieldInstance = (IBase*)(pBaseScalarFieldInstance);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("ScalarFieldInstance", *pScalarFieldInstance);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_model_getscalarfieldfromimage3dbyid(Lib3MF_Model pModel, Lib3MF_uint32 nUniqueResourceID, Lib3MF_ScalarFieldFromImage3D * pScalarFieldFromImage3DInstance)
+{
+	IBase* pIBaseClass = (IBase *)pModel;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pModel, "Model", "GetScalarFieldFromImage3DByID");
+			pJournalEntry->addUInt32Parameter("UniqueResourceID", nUniqueResourceID);
+		}
+		if (pScalarFieldFromImage3DInstance == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseScalarFieldFromImage3DInstance(nullptr);
+		IModel* pIModel = dynamic_cast<IModel*>(pIBaseClass);
+		if (!pIModel)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseScalarFieldFromImage3DInstance = pIModel->GetScalarFieldFromImage3DByID(nUniqueResourceID);
+
+		*pScalarFieldFromImage3DInstance = (IBase*)(pBaseScalarFieldFromImage3DInstance);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("ScalarFieldFromImage3DInstance", *pScalarFieldFromImage3DInstance);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_model_getscalarfieldcomposedbyid(Lib3MF_Model pModel, Lib3MF_uint32 nUniqueResourceID, Lib3MF_ScalarFieldComposed * pScalarFieldComposedInstance)
+{
+	IBase* pIBaseClass = (IBase *)pModel;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pModel, "Model", "GetScalarFieldComposedByID");
+			pJournalEntry->addUInt32Parameter("UniqueResourceID", nUniqueResourceID);
+		}
+		if (pScalarFieldComposedInstance == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseScalarFieldComposedInstance(nullptr);
+		IModel* pIModel = dynamic_cast<IModel*>(pIBaseClass);
+		if (!pIModel)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseScalarFieldComposedInstance = pIModel->GetScalarFieldComposedByID(nUniqueResourceID);
+
+		*pScalarFieldComposedInstance = (IBase*)(pBaseScalarFieldComposedInstance);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("ScalarFieldComposedInstance", *pScalarFieldComposedInstance);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_model_addvector3dfieldfromimage3d(Lib3MF_Model pModel, Lib3MF_Vector3DFieldFromImage3D * pTheVector3DFieldFromImage3D)
+{
+	IBase* pIBaseClass = (IBase *)pModel;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pModel, "Model", "AddVector3DFieldFromImage3D");
+		}
+		if (pTheVector3DFieldFromImage3D == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseTheVector3DFieldFromImage3D(nullptr);
+		IModel* pIModel = dynamic_cast<IModel*>(pIBaseClass);
+		if (!pIModel)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseTheVector3DFieldFromImage3D = pIModel->AddVector3DFieldFromImage3D();
+
+		*pTheVector3DFieldFromImage3D = (IBase*)(pBaseTheVector3DFieldFromImage3D);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("TheVector3DFieldFromImage3D", *pTheVector3DFieldFromImage3D);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_model_addvector3dfieldcomposed(Lib3MF_Model pModel, Lib3MF_Vector3DFieldComposed * pTheVector3DFieldComposed)
+{
+	IBase* pIBaseClass = (IBase *)pModel;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pModel, "Model", "AddVector3DFieldComposed");
+		}
+		if (pTheVector3DFieldComposed == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseTheVector3DFieldComposed(nullptr);
+		IModel* pIModel = dynamic_cast<IModel*>(pIBaseClass);
+		if (!pIModel)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseTheVector3DFieldComposed = pIModel->AddVector3DFieldComposed();
+
+		*pTheVector3DFieldComposed = (IBase*)(pBaseTheVector3DFieldComposed);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("TheVector3DFieldComposed", *pTheVector3DFieldComposed);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_model_getvector3dfieldbyid(Lib3MF_Model pModel, Lib3MF_uint32 nUniqueResourceID, Lib3MF_Vector3DField * pVector3DFieldInstance)
+{
+	IBase* pIBaseClass = (IBase *)pModel;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pModel, "Model", "GetVector3DFieldByID");
+			pJournalEntry->addUInt32Parameter("UniqueResourceID", nUniqueResourceID);
+		}
+		if (pVector3DFieldInstance == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseVector3DFieldInstance(nullptr);
+		IModel* pIModel = dynamic_cast<IModel*>(pIBaseClass);
+		if (!pIModel)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseVector3DFieldInstance = pIModel->GetVector3DFieldByID(nUniqueResourceID);
+
+		*pVector3DFieldInstance = (IBase*)(pBaseVector3DFieldInstance);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Vector3DFieldInstance", *pVector3DFieldInstance);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_model_getvector3dfieldfromimage3dbyid(Lib3MF_Model pModel, Lib3MF_uint32 nUniqueResourceID, Lib3MF_Vector3DFieldFromImage3D * pVector3DFieldFromImage3DInstance)
+{
+	IBase* pIBaseClass = (IBase *)pModel;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pModel, "Model", "GetVector3DFieldFromImage3DByID");
+			pJournalEntry->addUInt32Parameter("UniqueResourceID", nUniqueResourceID);
+		}
+		if (pVector3DFieldFromImage3DInstance == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseVector3DFieldFromImage3DInstance(nullptr);
+		IModel* pIModel = dynamic_cast<IModel*>(pIBaseClass);
+		if (!pIModel)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseVector3DFieldFromImage3DInstance = pIModel->GetVector3DFieldFromImage3DByID(nUniqueResourceID);
+
+		*pVector3DFieldFromImage3DInstance = (IBase*)(pBaseVector3DFieldFromImage3DInstance);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Vector3DFieldFromImage3DInstance", *pVector3DFieldFromImage3DInstance);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_model_getvector3dfieldcomposedbyid(Lib3MF_Model pModel, Lib3MF_uint32 nUniqueResourceID, Lib3MF_Vector3DFieldComposed * pVector3DFieldComposedInstance)
+{
+	IBase* pIBaseClass = (IBase *)pModel;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pModel, "Model", "GetVector3DFieldComposedByID");
+			pJournalEntry->addUInt32Parameter("UniqueResourceID", nUniqueResourceID);
+		}
+		if (pVector3DFieldComposedInstance == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseVector3DFieldComposedInstance(nullptr);
+		IModel* pIModel = dynamic_cast<IModel*>(pIBaseClass);
+		if (!pIModel)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseVector3DFieldComposedInstance = pIModel->GetVector3DFieldComposedByID(nUniqueResourceID);
+
+		*pVector3DFieldComposedInstance = (IBase*)(pBaseVector3DFieldComposedInstance);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Vector3DFieldComposedInstance", *pVector3DFieldComposedInstance);
 			pJournalEntry->writeSuccess();
 		}
 		return LIB3MF_SUCCESS;
@@ -16119,7 +16474,8 @@ Lib3MFResult _lib3mf_getprocaddress_internal(const char * pProcName, void ** ppP
 		sProcAddressMap["lib3mf_compositematerialsiterator_getcurrentcompositematerials"] = (void*)&lib3mf_compositematerialsiterator_getcurrentcompositematerials;
 		sProcAddressMap["lib3mf_multipropertygroupiterator_getcurrentmultipropertygroup"] = (void*)&lib3mf_multipropertygroupiterator_getcurrentmultipropertygroup;
 		sProcAddressMap["lib3mf_image3diterator_getcurrentimage3d"] = (void*)&lib3mf_image3diterator_getcurrentimage3d;
-		sProcAddressMap["lib3mf_volumetricstackiterator_getcurrentvolumetricstack"] = (void*)&lib3mf_volumetricstackiterator_getcurrentvolumetricstack;
+		sProcAddressMap["lib3mf_scalarfielditerator_getcurrentscalarfield"] = (void*)&lib3mf_scalarfielditerator_getcurrentscalarfield;
+		sProcAddressMap["lib3mf_vector3dfielditerator_getcurrentvector3dfield"] = (void*)&lib3mf_vector3dfielditerator_getcurrentvector3dfield;
 		sProcAddressMap["lib3mf_metadata_getnamespace"] = (void*)&lib3mf_metadata_getnamespace;
 		sProcAddressMap["lib3mf_metadata_setnamespace"] = (void*)&lib3mf_metadata_setnamespace;
 		sProcAddressMap["lib3mf_metadata_getname"] = (void*)&lib3mf_metadata_getname;
@@ -16203,38 +16559,85 @@ Lib3MFResult _lib3mf_getprocaddress_internal(const char * pProcName, void ** ppP
 		sProcAddressMap["lib3mf_beamlattice_getbeamsetcount"] = (void*)&lib3mf_beamlattice_getbeamsetcount;
 		sProcAddressMap["lib3mf_beamlattice_addbeamset"] = (void*)&lib3mf_beamlattice_addbeamset;
 		sProcAddressMap["lib3mf_beamlattice_getbeamset"] = (void*)&lib3mf_beamlattice_getbeamset;
-		sProcAddressMap["lib3mf_volumedataitem_getvolumetricstack"] = (void*)&lib3mf_volumedataitem_getvolumetricstack;
-		sProcAddressMap["lib3mf_volumedataitem_setvolumetricstack"] = (void*)&lib3mf_volumedataitem_setvolumetricstack;
-		sProcAddressMap["lib3mf_volumedataitem_gettransform"] = (void*)&lib3mf_volumedataitem_gettransform;
-		sProcAddressMap["lib3mf_volumedataitem_settransform"] = (void*)&lib3mf_volumedataitem_settransform;
+		sProcAddressMap["lib3mf_scalarfield_getname"] = (void*)&lib3mf_scalarfield_getname;
+		sProcAddressMap["lib3mf_scalarfield_setname"] = (void*)&lib3mf_scalarfield_setname;
+		sProcAddressMap["lib3mf_scalarfield_isfromimage3d"] = (void*)&lib3mf_scalarfield_isfromimage3d;
+		sProcAddressMap["lib3mf_scalarfield_iscomposed"] = (void*)&lib3mf_scalarfield_iscomposed;
+		sProcAddressMap["lib3mf_vector3dfield_getname"] = (void*)&lib3mf_vector3dfield_getname;
+		sProcAddressMap["lib3mf_vector3dfield_setname"] = (void*)&lib3mf_vector3dfield_setname;
+		sProcAddressMap["lib3mf_vector3dfield_isfromimage3d"] = (void*)&lib3mf_vector3dfield_isfromimage3d;
+		sProcAddressMap["lib3mf_vector3dfield_iscomposed"] = (void*)&lib3mf_vector3dfield_iscomposed;
+		sProcAddressMap["lib3mf_scalarfieldfromimage3d_getimage"] = (void*)&lib3mf_scalarfieldfromimage3d_getimage;
+		sProcAddressMap["lib3mf_scalarfieldfromimage3d_setimage"] = (void*)&lib3mf_scalarfieldfromimage3d_setimage;
+		sProcAddressMap["lib3mf_scalarfieldfromimage3d_setchannel"] = (void*)&lib3mf_scalarfieldfromimage3d_setchannel;
+		sProcAddressMap["lib3mf_scalarfieldfromimage3d_getchannel"] = (void*)&lib3mf_scalarfieldfromimage3d_getchannel;
+		sProcAddressMap["lib3mf_scalarfieldfromimage3d_setfilter"] = (void*)&lib3mf_scalarfieldfromimage3d_setfilter;
+		sProcAddressMap["lib3mf_scalarfieldfromimage3d_getfilter"] = (void*)&lib3mf_scalarfieldfromimage3d_getfilter;
+		sProcAddressMap["lib3mf_scalarfieldfromimage3d_settilestyles"] = (void*)&lib3mf_scalarfieldfromimage3d_settilestyles;
+		sProcAddressMap["lib3mf_scalarfieldfromimage3d_gettilestyles"] = (void*)&lib3mf_scalarfieldfromimage3d_gettilestyles;
+		sProcAddressMap["lib3mf_scalarfieldfromimage3d_getoffset"] = (void*)&lib3mf_scalarfieldfromimage3d_getoffset;
+		sProcAddressMap["lib3mf_scalarfieldfromimage3d_setoffset"] = (void*)&lib3mf_scalarfieldfromimage3d_setoffset;
+		sProcAddressMap["lib3mf_scalarfieldfromimage3d_getscale"] = (void*)&lib3mf_scalarfieldfromimage3d_getscale;
+		sProcAddressMap["lib3mf_scalarfieldfromimage3d_setscale"] = (void*)&lib3mf_scalarfieldfromimage3d_setscale;
+		sProcAddressMap["lib3mf_scalarfieldcomposed_setmethod"] = (void*)&lib3mf_scalarfieldcomposed_setmethod;
+		sProcAddressMap["lib3mf_scalarfieldcomposed_getmethod"] = (void*)&lib3mf_scalarfieldcomposed_getmethod;
+		sProcAddressMap["lib3mf_scalarfieldcomposed_getfactor1"] = (void*)&lib3mf_scalarfieldcomposed_getfactor1;
+		sProcAddressMap["lib3mf_scalarfieldcomposed_setfactor1"] = (void*)&lib3mf_scalarfieldcomposed_setfactor1;
+		sProcAddressMap["lib3mf_scalarfieldcomposed_getfactor2"] = (void*)&lib3mf_scalarfieldcomposed_getfactor2;
+		sProcAddressMap["lib3mf_scalarfieldcomposed_setfactor2"] = (void*)&lib3mf_scalarfieldcomposed_setfactor2;
+		sProcAddressMap["lib3mf_scalarfieldcomposed_scalarfieldreference1"] = (void*)&lib3mf_scalarfieldcomposed_scalarfieldreference1;
+		sProcAddressMap["lib3mf_scalarfieldcomposed_scalarfieldreference2"] = (void*)&lib3mf_scalarfieldcomposed_scalarfieldreference2;
+		sProcAddressMap["lib3mf_scalarfieldcomposed_scalarfieldreferencemask"] = (void*)&lib3mf_scalarfieldcomposed_scalarfieldreferencemask;
+		sProcAddressMap["lib3mf_vector3dfieldfromimage3d_getimage"] = (void*)&lib3mf_vector3dfieldfromimage3d_getimage;
+		sProcAddressMap["lib3mf_vector3dfieldfromimage3d_setimage"] = (void*)&lib3mf_vector3dfieldfromimage3d_setimage;
+		sProcAddressMap["lib3mf_vector3dfieldfromimage3d_setfilter"] = (void*)&lib3mf_vector3dfieldfromimage3d_setfilter;
+		sProcAddressMap["lib3mf_vector3dfieldfromimage3d_getfilter"] = (void*)&lib3mf_vector3dfieldfromimage3d_getfilter;
+		sProcAddressMap["lib3mf_vector3dfieldfromimage3d_settilestyles"] = (void*)&lib3mf_vector3dfieldfromimage3d_settilestyles;
+		sProcAddressMap["lib3mf_vector3dfieldfromimage3d_gettilestyles"] = (void*)&lib3mf_vector3dfieldfromimage3d_gettilestyles;
+		sProcAddressMap["lib3mf_vector3dfieldfromimage3d_getoffset"] = (void*)&lib3mf_vector3dfieldfromimage3d_getoffset;
+		sProcAddressMap["lib3mf_vector3dfieldfromimage3d_setoffset"] = (void*)&lib3mf_vector3dfieldfromimage3d_setoffset;
+		sProcAddressMap["lib3mf_vector3dfieldfromimage3d_getscale"] = (void*)&lib3mf_vector3dfieldfromimage3d_getscale;
+		sProcAddressMap["lib3mf_vector3dfieldfromimage3d_setscale"] = (void*)&lib3mf_vector3dfieldfromimage3d_setscale;
+		sProcAddressMap["lib3mf_vector3dfieldcomposed_setmethod"] = (void*)&lib3mf_vector3dfieldcomposed_setmethod;
+		sProcAddressMap["lib3mf_vector3dfieldcomposed_getmethod"] = (void*)&lib3mf_vector3dfieldcomposed_getmethod;
+		sProcAddressMap["lib3mf_vector3dfieldcomposed_getfactor1"] = (void*)&lib3mf_vector3dfieldcomposed_getfactor1;
+		sProcAddressMap["lib3mf_vector3dfieldcomposed_setfactor1"] = (void*)&lib3mf_vector3dfieldcomposed_setfactor1;
+		sProcAddressMap["lib3mf_vector3dfieldcomposed_getfactor2"] = (void*)&lib3mf_vector3dfieldcomposed_getfactor2;
+		sProcAddressMap["lib3mf_vector3dfieldcomposed_setfactor2"] = (void*)&lib3mf_vector3dfieldcomposed_setfactor2;
+		sProcAddressMap["lib3mf_vector3dfieldcomposed_vector3dfieldreference1"] = (void*)&lib3mf_vector3dfieldcomposed_vector3dfieldreference1;
+		sProcAddressMap["lib3mf_vector3dfieldcomposed_vector3dfieldreference2"] = (void*)&lib3mf_vector3dfieldcomposed_vector3dfieldreference2;
+		sProcAddressMap["lib3mf_vector3dfieldcomposed_scalarfieldreferencemask"] = (void*)&lib3mf_vector3dfieldcomposed_scalarfieldreferencemask;
+		sProcAddressMap["lib3mf_fieldreference_getfieldresourceid"] = (void*)&lib3mf_fieldreference_getfieldresourceid;
+		sProcAddressMap["lib3mf_fieldreference_setfieldresourceid"] = (void*)&lib3mf_fieldreference_setfieldresourceid;
+		sProcAddressMap["lib3mf_fieldreference_gettransform"] = (void*)&lib3mf_fieldreference_gettransform;
+		sProcAddressMap["lib3mf_fieldreference_settransform"] = (void*)&lib3mf_fieldreference_settransform;
+		sProcAddressMap["lib3mf_scalarfieldreference_getscalarfield"] = (void*)&lib3mf_scalarfieldreference_getscalarfield;
+		sProcAddressMap["lib3mf_scalarfieldreference_setscalarfield"] = (void*)&lib3mf_scalarfieldreference_setscalarfield;
+		sProcAddressMap["lib3mf_vector3dfieldreference_getvector3dfield"] = (void*)&lib3mf_vector3dfieldreference_getvector3dfield;
+		sProcAddressMap["lib3mf_vector3dfieldreference_setvector3dfield"] = (void*)&lib3mf_vector3dfieldreference_setvector3dfield;
 		sProcAddressMap["lib3mf_volumedatalevelset_getsolidthreshold"] = (void*)&lib3mf_volumedatalevelset_getsolidthreshold;
 		sProcAddressMap["lib3mf_volumedatalevelset_setsolidthreshold"] = (void*)&lib3mf_volumedatalevelset_setsolidthreshold;
-		sProcAddressMap["lib3mf_volumedatalevelset_setchannel"] = (void*)&lib3mf_volumedatalevelset_setchannel;
-		sProcAddressMap["lib3mf_volumedatalevelset_getchannel"] = (void*)&lib3mf_volumedatalevelset_getchannel;
-		sProcAddressMap["lib3mf_volumedatacolor_setchannel"] = (void*)&lib3mf_volumedatacolor_setchannel;
-		sProcAddressMap["lib3mf_volumedatacolor_getchannel"] = (void*)&lib3mf_volumedatacolor_getchannel;
 		sProcAddressMap["lib3mf_volumedatacomposite_getbasematerialgroup"] = (void*)&lib3mf_volumedatacomposite_getbasematerialgroup;
 		sProcAddressMap["lib3mf_volumedatacomposite_setbasematerialgroup"] = (void*)&lib3mf_volumedatacomposite_setbasematerialgroup;
 		sProcAddressMap["lib3mf_volumedatacomposite_getmaterialmappingcount"] = (void*)&lib3mf_volumedatacomposite_getmaterialmappingcount;
 		sProcAddressMap["lib3mf_volumedatacomposite_getmaterialmapping"] = (void*)&lib3mf_volumedatacomposite_getmaterialmapping;
-		sProcAddressMap["lib3mf_volumedatacomposite_setmaterialmapping"] = (void*)&lib3mf_volumedatacomposite_setmaterialmapping;
 		sProcAddressMap["lib3mf_volumedatacomposite_addmaterialmapping"] = (void*)&lib3mf_volumedatacomposite_addmaterialmapping;
 		sProcAddressMap["lib3mf_volumedatacomposite_removematerialmapping"] = (void*)&lib3mf_volumedatacomposite_removematerialmapping;
-		sProcAddressMap["lib3mf_volumedataproperty_setchannel"] = (void*)&lib3mf_volumedataproperty_setchannel;
-		sProcAddressMap["lib3mf_volumedataproperty_getchannel"] = (void*)&lib3mf_volumedataproperty_getchannel;
 		sProcAddressMap["lib3mf_volumedataproperty_setname"] = (void*)&lib3mf_volumedataproperty_setname;
 		sProcAddressMap["lib3mf_volumedataproperty_getname"] = (void*)&lib3mf_volumedataproperty_getname;
 		sProcAddressMap["lib3mf_volumedataproperty_setisrequired"] = (void*)&lib3mf_volumedataproperty_setisrequired;
 		sProcAddressMap["lib3mf_volumedataproperty_isrequired"] = (void*)&lib3mf_volumedataproperty_isrequired;
 		sProcAddressMap["lib3mf_volumedata_getlevelset"] = (void*)&lib3mf_volumedata_getlevelset;
 		sProcAddressMap["lib3mf_volumedata_createnewlevelset"] = (void*)&lib3mf_volumedata_createnewlevelset;
+		sProcAddressMap["lib3mf_volumedata_removelevelset"] = (void*)&lib3mf_volumedata_removelevelset;
 		sProcAddressMap["lib3mf_volumedata_getcomposite"] = (void*)&lib3mf_volumedata_getcomposite;
 		sProcAddressMap["lib3mf_volumedata_createnewcomposite"] = (void*)&lib3mf_volumedata_createnewcomposite;
+		sProcAddressMap["lib3mf_volumedata_removecomposite"] = (void*)&lib3mf_volumedata_removecomposite;
 		sProcAddressMap["lib3mf_volumedata_getcolor"] = (void*)&lib3mf_volumedata_getcolor;
 		sProcAddressMap["lib3mf_volumedata_createnewcolor"] = (void*)&lib3mf_volumedata_createnewcolor;
+		sProcAddressMap["lib3mf_volumedata_removecolor"] = (void*)&lib3mf_volumedata_removecolor;
 		sProcAddressMap["lib3mf_volumedata_getpropertycount"] = (void*)&lib3mf_volumedata_getpropertycount;
 		sProcAddressMap["lib3mf_volumedata_getproperty"] = (void*)&lib3mf_volumedata_getproperty;
-		sProcAddressMap["lib3mf_volumedata_findproperty"] = (void*)&lib3mf_volumedata_findproperty;
 		sProcAddressMap["lib3mf_volumedata_addproperty"] = (void*)&lib3mf_volumedata_addproperty;
 		sProcAddressMap["lib3mf_volumedata_removeproperty"] = (void*)&lib3mf_volumedata_removeproperty;
 		sProcAddressMap["lib3mf_component_getobjectresource"] = (void*)&lib3mf_component_getobjectresource;
@@ -16293,64 +16696,19 @@ Lib3MFResult _lib3mf_getprocaddress_internal(const char * pProcName, void ** ppP
 		sProcAddressMap["lib3mf_multipropertygroup_addlayer"] = (void*)&lib3mf_multipropertygroup_addlayer;
 		sProcAddressMap["lib3mf_multipropertygroup_getlayer"] = (void*)&lib3mf_multipropertygroup_getlayer;
 		sProcAddressMap["lib3mf_multipropertygroup_removelayer"] = (void*)&lib3mf_multipropertygroup_removelayer;
-		sProcAddressMap["lib3mf_image3d_getsizex"] = (void*)&lib3mf_image3d_getsizex;
-		sProcAddressMap["lib3mf_image3d_getsizey"] = (void*)&lib3mf_image3d_getsizey;
-		sProcAddressMap["lib3mf_image3d_getsheetcount"] = (void*)&lib3mf_image3d_getsheetcount;
-		sProcAddressMap["lib3mf_image3d_getsheet"] = (void*)&lib3mf_image3d_getsheet;
-		sProcAddressMap["lib3mf_image3d_getsheetminvalue"] = (void*)&lib3mf_image3d_getsheetminvalue;
-		sProcAddressMap["lib3mf_image3d_getsheetmaxvalue"] = (void*)&lib3mf_image3d_getsheetmaxvalue;
-		sProcAddressMap["lib3mf_image3d_createemptysheet"] = (void*)&lib3mf_image3d_createemptysheet;
-		sProcAddressMap["lib3mf_image3d_createsheetfrombuffer"] = (void*)&lib3mf_image3d_createsheetfrombuffer;
-		sProcAddressMap["lib3mf_image3d_createsheetfromfile"] = (void*)&lib3mf_image3d_createsheetfromfile;
-		sProcAddressMap["lib3mf_image3d_setsheet"] = (void*)&lib3mf_image3d_setsheet;
-		sProcAddressMap["lib3mf_image3d_setsheetminvalue"] = (void*)&lib3mf_image3d_setsheetminvalue;
-		sProcAddressMap["lib3mf_image3d_setsheetmaxvalue"] = (void*)&lib3mf_image3d_setsheetmaxvalue;
-		sProcAddressMap["lib3mf_image3dchannelselector_getimage"] = (void*)&lib3mf_image3dchannelselector_getimage;
-		sProcAddressMap["lib3mf_image3dchannelselector_setimage"] = (void*)&lib3mf_image3dchannelselector_setimage;
-		sProcAddressMap["lib3mf_image3dchannelselector_setsourcechannel"] = (void*)&lib3mf_image3dchannelselector_setsourcechannel;
-		sProcAddressMap["lib3mf_image3dchannelselector_getsourcechannel"] = (void*)&lib3mf_image3dchannelselector_getsourcechannel;
-		sProcAddressMap["lib3mf_image3dchannelselector_setdestinationchannel"] = (void*)&lib3mf_image3dchannelselector_setdestinationchannel;
-		sProcAddressMap["lib3mf_image3dchannelselector_getdestinationchannel"] = (void*)&lib3mf_image3dchannelselector_getdestinationchannel;
-		sProcAddressMap["lib3mf_image3dchannelselector_setfilter"] = (void*)&lib3mf_image3dchannelselector_setfilter;
-		sProcAddressMap["lib3mf_image3dchannelselector_getfilter"] = (void*)&lib3mf_image3dchannelselector_getfilter;
-		sProcAddressMap["lib3mf_image3dchannelselector_settilestyles"] = (void*)&lib3mf_image3dchannelselector_settilestyles;
-		sProcAddressMap["lib3mf_image3dchannelselector_gettilestyles"] = (void*)&lib3mf_image3dchannelselector_gettilestyles;
-		sProcAddressMap["lib3mf_volumetriclayer_gettransform"] = (void*)&lib3mf_volumetriclayer_gettransform;
-		sProcAddressMap["lib3mf_volumetriclayer_settransform"] = (void*)&lib3mf_volumetriclayer_settransform;
-		sProcAddressMap["lib3mf_volumetriclayer_getblendmethod"] = (void*)&lib3mf_volumetriclayer_getblendmethod;
-		sProcAddressMap["lib3mf_volumetriclayer_setblendmethod"] = (void*)&lib3mf_volumetriclayer_setblendmethod;
-		sProcAddressMap["lib3mf_volumetriclayer_getsourcealpha"] = (void*)&lib3mf_volumetriclayer_getsourcealpha;
-		sProcAddressMap["lib3mf_volumetriclayer_setsourcealpha"] = (void*)&lib3mf_volumetriclayer_setsourcealpha;
-		sProcAddressMap["lib3mf_volumetriclayer_getdestinationalpha"] = (void*)&lib3mf_volumetriclayer_getdestinationalpha;
-		sProcAddressMap["lib3mf_volumetriclayer_setdestinationalpha"] = (void*)&lib3mf_volumetriclayer_setdestinationalpha;
-		sProcAddressMap["lib3mf_volumetriclayer_getinformation"] = (void*)&lib3mf_volumetriclayer_getinformation;
-		sProcAddressMap["lib3mf_volumetriclayer_setinformation"] = (void*)&lib3mf_volumetriclayer_setinformation;
-		sProcAddressMap["lib3mf_volumetriclayer_createmaskchannelselector"] = (void*)&lib3mf_volumetriclayer_createmaskchannelselector;
-		sProcAddressMap["lib3mf_volumetriclayer_hasmaskchannelselector"] = (void*)&lib3mf_volumetriclayer_hasmaskchannelselector;
-		sProcAddressMap["lib3mf_volumetriclayer_clearmaskchannelselector"] = (void*)&lib3mf_volumetriclayer_clearmaskchannelselector;
-		sProcAddressMap["lib3mf_volumetriclayer_getmaskchannelselector"] = (void*)&lib3mf_volumetriclayer_getmaskchannelselector;
-		sProcAddressMap["lib3mf_volumetriclayer_getchannelselectorcount"] = (void*)&lib3mf_volumetriclayer_getchannelselectorcount;
-		sProcAddressMap["lib3mf_volumetriclayer_getchannelselector"] = (void*)&lib3mf_volumetriclayer_getchannelselector;
-		sProcAddressMap["lib3mf_volumetriclayer_addchannelselector"] = (void*)&lib3mf_volumetriclayer_addchannelselector;
-		sProcAddressMap["lib3mf_volumetriclayer_clearchannelselectors"] = (void*)&lib3mf_volumetriclayer_clearchannelselectors;
-		sProcAddressMap["lib3mf_volumetriclayer_reindexchannelselector"] = (void*)&lib3mf_volumetriclayer_reindexchannelselector;
-		sProcAddressMap["lib3mf_volumetriclayer_removechannelselector"] = (void*)&lib3mf_volumetriclayer_removechannelselector;
-		sProcAddressMap["lib3mf_volumetriclayer_removechannelselectorbyindex"] = (void*)&lib3mf_volumetriclayer_removechannelselectorbyindex;
-		sProcAddressMap["lib3mf_volumetricstack_clear"] = (void*)&lib3mf_volumetricstack_clear;
-		sProcAddressMap["lib3mf_volumetricstack_clearunuseddestinationchannels"] = (void*)&lib3mf_volumetricstack_clearunuseddestinationchannels;
-		sProcAddressMap["lib3mf_volumetricstack_getdestinationchannelcount"] = (void*)&lib3mf_volumetricstack_getdestinationchannelcount;
-		sProcAddressMap["lib3mf_volumetricstack_getdestinationchannel"] = (void*)&lib3mf_volumetricstack_getdestinationchannel;
-		sProcAddressMap["lib3mf_volumetricstack_adddestinationchannel"] = (void*)&lib3mf_volumetricstack_adddestinationchannel;
-		sProcAddressMap["lib3mf_volumetricstack_updatedestinationchannel"] = (void*)&lib3mf_volumetricstack_updatedestinationchannel;
-		sProcAddressMap["lib3mf_volumetricstack_updatedestinationchannelbyname"] = (void*)&lib3mf_volumetricstack_updatedestinationchannelbyname;
-		sProcAddressMap["lib3mf_volumetricstack_removedestinationchannel"] = (void*)&lib3mf_volumetricstack_removedestinationchannel;
-		sProcAddressMap["lib3mf_volumetricstack_removedestinationchannelbyname"] = (void*)&lib3mf_volumetricstack_removedestinationchannelbyname;
-		sProcAddressMap["lib3mf_volumetricstack_getlayercount"] = (void*)&lib3mf_volumetricstack_getlayercount;
-		sProcAddressMap["lib3mf_volumetricstack_getlayer"] = (void*)&lib3mf_volumetricstack_getlayer;
-		sProcAddressMap["lib3mf_volumetricstack_addlayer"] = (void*)&lib3mf_volumetricstack_addlayer;
-		sProcAddressMap["lib3mf_volumetricstack_reindexlayer"] = (void*)&lib3mf_volumetricstack_reindexlayer;
-		sProcAddressMap["lib3mf_volumetricstack_removelayer"] = (void*)&lib3mf_volumetricstack_removelayer;
-		sProcAddressMap["lib3mf_volumetricstack_removelayerbyindex"] = (void*)&lib3mf_volumetricstack_removelayerbyindex;
+		sProcAddressMap["lib3mf_image3d_getname"] = (void*)&lib3mf_image3d_getname;
+		sProcAddressMap["lib3mf_image3d_setname"] = (void*)&lib3mf_image3d_setname;
+		sProcAddressMap["lib3mf_image3d_isimagestack"] = (void*)&lib3mf_image3d_isimagestack;
+		sProcAddressMap["lib3mf_imagestack_getrowcount"] = (void*)&lib3mf_imagestack_getrowcount;
+		sProcAddressMap["lib3mf_imagestack_setrowcount"] = (void*)&lib3mf_imagestack_setrowcount;
+		sProcAddressMap["lib3mf_imagestack_getcolumncount"] = (void*)&lib3mf_imagestack_getcolumncount;
+		sProcAddressMap["lib3mf_imagestack_setcolumncount"] = (void*)&lib3mf_imagestack_setcolumncount;
+		sProcAddressMap["lib3mf_imagestack_getsheetcount"] = (void*)&lib3mf_imagestack_getsheetcount;
+		sProcAddressMap["lib3mf_imagestack_getsheet"] = (void*)&lib3mf_imagestack_getsheet;
+		sProcAddressMap["lib3mf_imagestack_setsheet"] = (void*)&lib3mf_imagestack_setsheet;
+		sProcAddressMap["lib3mf_imagestack_createemptysheet"] = (void*)&lib3mf_imagestack_createemptysheet;
+		sProcAddressMap["lib3mf_imagestack_createsheetfrombuffer"] = (void*)&lib3mf_imagestack_createsheetfrombuffer;
+		sProcAddressMap["lib3mf_imagestack_createsheetfromfile"] = (void*)&lib3mf_imagestack_createsheetfromfile;
 		sProcAddressMap["lib3mf_attachment_getpath"] = (void*)&lib3mf_attachment_getpath;
 		sProcAddressMap["lib3mf_attachment_setpath"] = (void*)&lib3mf_attachment_setpath;
 		sProcAddressMap["lib3mf_attachment_packagepart"] = (void*)&lib3mf_attachment_packagepart;
@@ -16479,8 +16837,9 @@ Lib3MFResult _lib3mf_getprocaddress_internal(const char * pProcName, void ** ppP
 		sProcAddressMap["lib3mf_model_getmultipropertygroups"] = (void*)&lib3mf_model_getmultipropertygroups;
 		sProcAddressMap["lib3mf_model_getslicestacks"] = (void*)&lib3mf_model_getslicestacks;
 		sProcAddressMap["lib3mf_model_getimage3ds"] = (void*)&lib3mf_model_getimage3ds;
+		sProcAddressMap["lib3mf_model_getscalarfields"] = (void*)&lib3mf_model_getscalarfields;
+		sProcAddressMap["lib3mf_model_getvector3dfields"] = (void*)&lib3mf_model_getvector3dfields;
 		sProcAddressMap["lib3mf_model_mergetomodel"] = (void*)&lib3mf_model_mergetomodel;
-		sProcAddressMap["lib3mf_model_getvolumetricstacks"] = (void*)&lib3mf_model_getvolumetricstacks;
 		sProcAddressMap["lib3mf_model_addmeshobject"] = (void*)&lib3mf_model_addmeshobject;
 		sProcAddressMap["lib3mf_model_addcomponentsobject"] = (void*)&lib3mf_model_addcomponentsobject;
 		sProcAddressMap["lib3mf_model_addslicestack"] = (void*)&lib3mf_model_addslicestack;
@@ -16490,8 +16849,17 @@ Lib3MFResult _lib3mf_getprocaddress_internal(const char * pProcName, void ** ppP
 		sProcAddressMap["lib3mf_model_addtexture2dgroup"] = (void*)&lib3mf_model_addtexture2dgroup;
 		sProcAddressMap["lib3mf_model_addcompositematerials"] = (void*)&lib3mf_model_addcompositematerials;
 		sProcAddressMap["lib3mf_model_addmultipropertygroup"] = (void*)&lib3mf_model_addmultipropertygroup;
-		sProcAddressMap["lib3mf_model_addimage3d"] = (void*)&lib3mf_model_addimage3d;
-		sProcAddressMap["lib3mf_model_addvolumetricstack"] = (void*)&lib3mf_model_addvolumetricstack;
+		sProcAddressMap["lib3mf_model_addimagestack"] = (void*)&lib3mf_model_addimagestack;
+		sProcAddressMap["lib3mf_model_addscalarfieldfromimage3d"] = (void*)&lib3mf_model_addscalarfieldfromimage3d;
+		sProcAddressMap["lib3mf_model_addscalarfieldcomposed"] = (void*)&lib3mf_model_addscalarfieldcomposed;
+		sProcAddressMap["lib3mf_model_getscalarfieldbyid"] = (void*)&lib3mf_model_getscalarfieldbyid;
+		sProcAddressMap["lib3mf_model_getscalarfieldfromimage3dbyid"] = (void*)&lib3mf_model_getscalarfieldfromimage3dbyid;
+		sProcAddressMap["lib3mf_model_getscalarfieldcomposedbyid"] = (void*)&lib3mf_model_getscalarfieldcomposedbyid;
+		sProcAddressMap["lib3mf_model_addvector3dfieldfromimage3d"] = (void*)&lib3mf_model_addvector3dfieldfromimage3d;
+		sProcAddressMap["lib3mf_model_addvector3dfieldcomposed"] = (void*)&lib3mf_model_addvector3dfieldcomposed;
+		sProcAddressMap["lib3mf_model_getvector3dfieldbyid"] = (void*)&lib3mf_model_getvector3dfieldbyid;
+		sProcAddressMap["lib3mf_model_getvector3dfieldfromimage3dbyid"] = (void*)&lib3mf_model_getvector3dfieldfromimage3dbyid;
+		sProcAddressMap["lib3mf_model_getvector3dfieldcomposedbyid"] = (void*)&lib3mf_model_getvector3dfieldcomposedbyid;
 		sProcAddressMap["lib3mf_model_addbuilditem"] = (void*)&lib3mf_model_addbuilditem;
 		sProcAddressMap["lib3mf_model_removebuilditem"] = (void*)&lib3mf_model_removebuilditem;
 		sProcAddressMap["lib3mf_model_getmetadatagroup"] = (void*)&lib3mf_model_getmetadatagroup;

@@ -42,8 +42,7 @@ Abstract: This is the class declaration of CImage3D
 #endif
 
 // Include custom headers here.
-#include "Model/Classes/NMR_ModelImage3D.h"
-#include "Model/Classes/NMR_Model.h"
+
 
 namespace Lib3MF {
 namespace Impl {
@@ -56,39 +55,32 @@ namespace Impl {
 class CImage3D : public virtual IImage3D, public virtual CResource {
 private:
 
+	/**
+	* Put private members here.
+	*/
+
 protected:
 
-	NMR::PModelImage3D m_pImage3D;
+	/**
+	* Put protected members here.
+	*/
 
 public:
 
-	CImage3D (NMR::PModelImage3D pModelImage3D);
-	
-	Lib3MF_uint32 GetSizeX();
+	/**
+	* Put additional public members here. They will not be visible in the external API.
+	*/
 
-	Lib3MF_uint32 GetSizeY();
 
-	Lib3MF_uint32 GetSheetCount();
+	/**
+	* Public member functions to implement.
+	*/
 
-	IAttachment * GetSheet(const Lib3MF_uint32 nIndex);
+	std::string GetName() override;
 
-	Lib3MF_double GetSheetMinValue(const Lib3MF_uint32 nIndex);
+	void SetName(const std::string & sName) override;
 
-	Lib3MF_double GetSheetMaxValue(const Lib3MF_uint32 nIndex);
-
-	IAttachment * CreateEmptySheet(const Lib3MF_uint32 nIndex, const std::string & sPath, const Lib3MF_double dMin, const Lib3MF_double dMax);
-
-	IAttachment * CreateSheetFromBuffer(const Lib3MF_uint32 nIndex, const std::string & sPath, const Lib3MF_uint64 nDataBufferSize, const Lib3MF_uint8 * pDataBuffer, const Lib3MF_double dMin, const Lib3MF_double dMax);
-
-	IAttachment * CreateSheetFromFile(const Lib3MF_uint32 nIndex, const std::string & sPath, const std::string & sFileName, const Lib3MF_double dMin, const Lib3MF_double dMax);
-
-	void SetSheet(const Lib3MF_uint32 nIndex, IAttachment* pSheet);
-
-	void SetSheetMinValue(const Lib3MF_uint32 nIndex, const Lib3MF_double dMinVal);
-
-	void SetSheetMaxValue(const Lib3MF_uint32 nIndex, const Lib3MF_double dMaxVal);
-
-	NMR::PModelImage3D getModelImage3D ();
+	bool IsImageStack() override;
 
 };
 

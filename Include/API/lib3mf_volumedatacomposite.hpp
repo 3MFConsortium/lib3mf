@@ -35,7 +35,7 @@ Abstract: This is the class declaration of CVolumeDataComposite
 #include "lib3mf_interfaces.hpp"
 
 // Parent classes
-#include "lib3mf_volumedataitem.hpp"
+#include "lib3mf_base.hpp"
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable : 4250)
@@ -52,7 +52,7 @@ namespace Impl {
  Class declaration of CVolumeDataComposite 
 **************************************************************************************************************************/
 
-class CVolumeDataComposite : public virtual IVolumeDataComposite, public virtual CVolumeDataItem {
+class CVolumeDataComposite : public virtual IVolumeDataComposite, public virtual CBase {
 private:
 
 	/**
@@ -82,11 +82,9 @@ public:
 
 	Lib3MF_uint32 GetMaterialMappingCount() override;
 
-	void GetMaterialMapping(const Lib3MF_uint32 nIndex, Lib3MF_uint32 & nPropertyID, std::string & sChannelName) override;
+	IMaterialMapping * GetMaterialMapping(const Lib3MF_uint32 nIndex) override;
 
-	void SetMaterialMapping(const Lib3MF_uint32 nIndex, Lib3MF_uint32 & nPropertyID, std::string & sChannelName) override;
-
-	void AddMaterialMapping(const Lib3MF_uint32 nPropertyID, const std::string & sChannelName) override;
+	IMaterialMapping * AddMaterialMapping(const Lib3MF::sTransform Transform) override;
 
 	void RemoveMaterialMapping(const Lib3MF_uint32 nIndex) override;
 

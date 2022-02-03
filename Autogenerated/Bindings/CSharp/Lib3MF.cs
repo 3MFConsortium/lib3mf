@@ -99,15 +99,23 @@ namespace Lib3MF {
 	};
 
 	public enum eBlendMethod {
-		Mix = 0,
-		Multiply = 1,
-		Mask = 2
+		NoBlendMethod = 0,
+		Mix = 1,
+		Multiply = 2
 	};
 
-	public enum eColorChannel {
+	public enum eChannelName {
 		Red = 0,
 		Green = 1,
 		Blue = 2
+	};
+
+	public enum eCompositionMethod {
+		WeightedSum = 0,
+		Multiply = 1,
+		Min = 2,
+		Max = 3,
+		Mask = 4
 	};
 
 	public enum eEncryptionAlgorithm {
@@ -440,8 +448,11 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_image3diterator_getcurrentimage3d", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Image3DIterator_GetCurrentImage3D (IntPtr Handle, out IntPtr AResource);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumetricstackiterator_getcurrentvolumetricstack", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumetricStackIterator_GetCurrentVolumetricStack (IntPtr Handle, out IntPtr AResource);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfielditerator_getcurrentscalarfield", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ScalarFieldIterator_GetCurrentScalarField (IntPtr Handle, out IntPtr AResource);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfielditerator_getcurrentvector3dfield", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Vector3DFieldIterator_GetCurrentVector3DField (IntPtr Handle, out IntPtr AResource);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_metadata_getnamespace", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 MetaData_GetNameSpace (IntPtr Handle, UInt32 sizeNameSpace, out UInt32 neededNameSpace, IntPtr dataNameSpace);
@@ -692,35 +703,179 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_beamlattice_getbeamset", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 BeamLattice_GetBeamSet (IntPtr Handle, UInt32 AIndex, out IntPtr ABeamSet);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedataitem_getvolumetricstack", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumeDataItem_GetVolumetricStack (IntPtr Handle, out IntPtr ATheVolumetricStack);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfield_getname", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ScalarField_GetName (IntPtr Handle, UInt32 sizeName, out UInt32 neededName, IntPtr dataName);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedataitem_setvolumetricstack", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumeDataItem_SetVolumetricStack (IntPtr Handle, IntPtr ATheVolumetricStack);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfield_setname", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ScalarField_SetName (IntPtr Handle, byte[] AName);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedataitem_gettransform", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumeDataItem_GetTransform (IntPtr Handle, out InternalTransform ATransform);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfield_isfromimage3d", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ScalarField_IsFromImage3D (IntPtr Handle, out Byte AIsFromImage3D);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedataitem_settransform", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumeDataItem_SetTransform (IntPtr Handle, InternalTransform ATransform);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfield_iscomposed", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ScalarField_IsComposed (IntPtr Handle, out Byte AIsComposed);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfield_getname", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Vector3DField_GetName (IntPtr Handle, UInt32 sizeName, out UInt32 neededName, IntPtr dataName);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfield_setname", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Vector3DField_SetName (IntPtr Handle, byte[] AName);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfield_isfromimage3d", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Vector3DField_IsFromImage3D (IntPtr Handle, out Byte AIsFromImage3D);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfield_iscomposed", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Vector3DField_IsComposed (IntPtr Handle, out Byte AIsComposed);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfieldfromimage3d_getimage", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ScalarFieldFromImage3D_GetImage (IntPtr Handle, out IntPtr AImage3D);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfieldfromimage3d_setimage", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ScalarFieldFromImage3D_SetImage (IntPtr Handle, IntPtr AImage3D);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfieldfromimage3d_setchannel", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ScalarFieldFromImage3D_SetChannel (IntPtr Handle, Int32 AName);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfieldfromimage3d_getchannel", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ScalarFieldFromImage3D_GetChannel (IntPtr Handle, out Int32 AName);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfieldfromimage3d_setfilter", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ScalarFieldFromImage3D_SetFilter (IntPtr Handle, Int32 AFilter);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfieldfromimage3d_getfilter", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ScalarFieldFromImage3D_GetFilter (IntPtr Handle, out Int32 AFilter);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfieldfromimage3d_settilestyles", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ScalarFieldFromImage3D_SetTileStyles (IntPtr Handle, Int32 ATileStyleU, Int32 ATileStyleV, Int32 ATileStyleW);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfieldfromimage3d_gettilestyles", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ScalarFieldFromImage3D_GetTileStyles (IntPtr Handle, out Int32 ATileStyleU, out Int32 ATileStyleV, out Int32 ATileStyleW);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfieldfromimage3d_getoffset", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ScalarFieldFromImage3D_GetOffset (IntPtr Handle, out Double AOffset);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfieldfromimage3d_setoffset", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ScalarFieldFromImage3D_SetOffset (IntPtr Handle, Double AOffset);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfieldfromimage3d_getscale", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ScalarFieldFromImage3D_GetScale (IntPtr Handle, out Double AScale);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfieldfromimage3d_setscale", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ScalarFieldFromImage3D_SetScale (IntPtr Handle, Double AScale);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfieldcomposed_setmethod", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ScalarFieldComposed_SetMethod (IntPtr Handle, Int32 ATheMethod);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfieldcomposed_getmethod", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ScalarFieldComposed_GetMethod (IntPtr Handle, out Int32 ATheMethod);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfieldcomposed_getfactor1", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ScalarFieldComposed_GetFactor1 (IntPtr Handle, out Double AFactor1);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfieldcomposed_setfactor1", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ScalarFieldComposed_SetFactor1 (IntPtr Handle, Double AFactor1);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfieldcomposed_getfactor2", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ScalarFieldComposed_GetFactor2 (IntPtr Handle, out Double AFactor2);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfieldcomposed_setfactor2", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ScalarFieldComposed_SetFactor2 (IntPtr Handle, Double AFactor2);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfieldcomposed_scalarfieldreference1", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ScalarFieldComposed_ScalarFieldReference1 (IntPtr Handle, out IntPtr ATheScalarFieldReference1);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfieldcomposed_scalarfieldreference2", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ScalarFieldComposed_ScalarFieldReference2 (IntPtr Handle, out IntPtr ATheScalarFieldReference1);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfieldcomposed_scalarfieldreferencemask", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ScalarFieldComposed_ScalarFieldReferenceMask (IntPtr Handle, out IntPtr ATheScalarFieldReferenceMask);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfieldfromimage3d_getimage", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Vector3DFieldFromImage3D_GetImage (IntPtr Handle, out IntPtr AImage3D);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfieldfromimage3d_setimage", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Vector3DFieldFromImage3D_SetImage (IntPtr Handle, IntPtr AImage3D);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfieldfromimage3d_setfilter", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Vector3DFieldFromImage3D_SetFilter (IntPtr Handle, Int32 AFilter);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfieldfromimage3d_getfilter", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Vector3DFieldFromImage3D_GetFilter (IntPtr Handle, out Int32 AFilter);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfieldfromimage3d_settilestyles", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Vector3DFieldFromImage3D_SetTileStyles (IntPtr Handle, Int32 ATileStyleU, Int32 ATileStyleV, Int32 ATileStyleW);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfieldfromimage3d_gettilestyles", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Vector3DFieldFromImage3D_GetTileStyles (IntPtr Handle, out Int32 ATileStyleU, out Int32 ATileStyleV, out Int32 ATileStyleW);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfieldfromimage3d_getoffset", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Vector3DFieldFromImage3D_GetOffset (IntPtr Handle, out Double AOffset);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfieldfromimage3d_setoffset", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Vector3DFieldFromImage3D_SetOffset (IntPtr Handle, Double AOffset);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfieldfromimage3d_getscale", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Vector3DFieldFromImage3D_GetScale (IntPtr Handle, out Double AScale);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfieldfromimage3d_setscale", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Vector3DFieldFromImage3D_SetScale (IntPtr Handle, Double AScale);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfieldcomposed_setmethod", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Vector3DFieldComposed_SetMethod (IntPtr Handle, Int32 ATheMethod);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfieldcomposed_getmethod", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Vector3DFieldComposed_GetMethod (IntPtr Handle, out Int32 ATheMethod);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfieldcomposed_getfactor1", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Vector3DFieldComposed_GetFactor1 (IntPtr Handle, out Double AFactor1);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfieldcomposed_setfactor1", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Vector3DFieldComposed_SetFactor1 (IntPtr Handle, Double AFactor1);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfieldcomposed_getfactor2", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Vector3DFieldComposed_GetFactor2 (IntPtr Handle, out Double AFactor2);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfieldcomposed_setfactor2", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Vector3DFieldComposed_SetFactor2 (IntPtr Handle, Double AFactor2);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfieldcomposed_vector3dfieldreference1", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Vector3DFieldComposed_Vector3DFieldReference1 (IntPtr Handle, out IntPtr ATheVector3DFieldReference1);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfieldcomposed_vector3dfieldreference2", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Vector3DFieldComposed_Vector3DFieldReference2 (IntPtr Handle, out IntPtr ATheVector3DFieldReference1);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfieldcomposed_scalarfieldreferencemask", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Vector3DFieldComposed_ScalarFieldReferenceMask (IntPtr Handle, out IntPtr ATheScalarFieldReferenceMask);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_fieldreference_getfieldresourceid", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 FieldReference_GetFieldResourceID (IntPtr Handle, out UInt32 AUniqueResourceID);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_fieldreference_setfieldresourceid", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 FieldReference_SetFieldResourceID (IntPtr Handle, UInt32 AUniqueResourceID);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_fieldreference_gettransform", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 FieldReference_GetTransform (IntPtr Handle, out InternalTransform ATransform);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_fieldreference_settransform", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 FieldReference_SetTransform (IntPtr Handle, InternalTransform ATransform);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfieldreference_getscalarfield", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ScalarFieldReference_GetScalarField (IntPtr Handle, out IntPtr ATheScalarField);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfieldreference_setscalarfield", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ScalarFieldReference_SetScalarField (IntPtr Handle, IntPtr ATheScalarField);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfieldreference_getvector3dfield", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Vector3DFieldReference_GetVector3DField (IntPtr Handle, out IntPtr ATheVector3DField);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfieldreference_setvector3dfield", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Vector3DFieldReference_SetVector3DField (IntPtr Handle, IntPtr ATheVector3DField);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedatalevelset_getsolidthreshold", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 VolumeDataLevelset_GetSolidThreshold (IntPtr Handle, out Double ATheSolidThreshold);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedatalevelset_setsolidthreshold", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 VolumeDataLevelset_SetSolidThreshold (IntPtr Handle, Double ATheSolidThreshold);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedatalevelset_setchannel", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumeDataLevelset_SetChannel (IntPtr Handle, byte[] AChannelName);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedatalevelset_getchannel", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumeDataLevelset_GetChannel (IntPtr Handle, UInt32 sizeChannelName, out UInt32 neededChannelName, IntPtr dataChannelName);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedatacolor_setchannel", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumeDataColor_SetChannel (IntPtr Handle, Int32 ATheColorChannel, byte[] AChannelName);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedatacolor_getchannel", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumeDataColor_GetChannel (IntPtr Handle, Int32 ATheColorChannel, UInt32 sizeChannelName, out UInt32 neededChannelName, IntPtr dataChannelName);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedatacomposite_getbasematerialgroup", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 VolumeDataComposite_GetBaseMaterialGroup (IntPtr Handle, out IntPtr ABaseMaterialGroupInstance);
@@ -732,22 +887,13 @@ namespace Lib3MF {
 			public unsafe extern static Int32 VolumeDataComposite_GetMaterialMappingCount (IntPtr Handle, out UInt32 ACount);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedatacomposite_getmaterialmapping", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumeDataComposite_GetMaterialMapping (IntPtr Handle, UInt32 AIndex, out UInt32 APropertyID, UInt32 sizeChannelName, out UInt32 neededChannelName, IntPtr dataChannelName);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedatacomposite_setmaterialmapping", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumeDataComposite_SetMaterialMapping (IntPtr Handle, UInt32 AIndex, out UInt32 APropertyID, UInt32 sizeChannelName, out UInt32 neededChannelName, IntPtr dataChannelName);
+			public unsafe extern static Int32 VolumeDataComposite_GetMaterialMapping (IntPtr Handle, UInt32 AIndex, out IntPtr ATheMaterialMapping);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedatacomposite_addmaterialmapping", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumeDataComposite_AddMaterialMapping (IntPtr Handle, UInt32 APropertyID, byte[] AChannelName);
+			public unsafe extern static Int32 VolumeDataComposite_AddMaterialMapping (IntPtr Handle, InternalTransform ATransform, out IntPtr ATheMaterialMapping);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedatacomposite_removematerialmapping", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 VolumeDataComposite_RemoveMaterialMapping (IntPtr Handle, UInt32 AIndex);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedataproperty_setchannel", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumeDataProperty_SetChannel (IntPtr Handle, byte[] AChannelName);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedataproperty_getchannel", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumeDataProperty_GetChannel (IntPtr Handle, UInt32 sizeChannelName, out UInt32 neededChannelName, IntPtr dataChannelName);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedataproperty_setname", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 VolumeDataProperty_SetName (IntPtr Handle, byte[] APropertyName);
@@ -765,34 +911,40 @@ namespace Lib3MF {
 			public unsafe extern static Int32 VolumeData_GetLevelset (IntPtr Handle, out IntPtr ATheLevelsetData);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedata_createnewlevelset", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumeData_CreateNewLevelset (IntPtr Handle, IntPtr ATheVolumetricStack, out IntPtr ATheLevelsetData);
+			public unsafe extern static Int32 VolumeData_CreateNewLevelset (IntPtr Handle, IntPtr ATheScalarField, InternalTransform ATransform, out IntPtr ATheLevelsetData);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedata_removelevelset", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 VolumeData_RemoveLevelset (IntPtr Handle);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedata_getcomposite", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 VolumeData_GetComposite (IntPtr Handle, out IntPtr ATheCompositeData);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedata_createnewcomposite", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumeData_CreateNewComposite (IntPtr Handle, IntPtr ATheVolumetricStack, out IntPtr ATheCompositeData);
+			public unsafe extern static Int32 VolumeData_CreateNewComposite (IntPtr Handle, out IntPtr ATheCompositeData);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedata_removecomposite", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 VolumeData_RemoveComposite (IntPtr Handle);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedata_getcolor", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 VolumeData_GetColor (IntPtr Handle, out IntPtr ATheColorData);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedata_createnewcolor", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumeData_CreateNewColor (IntPtr Handle, IntPtr ATheVolumetricStack, out IntPtr ATheColorData);
+			public unsafe extern static Int32 VolumeData_CreateNewColor (IntPtr Handle, IntPtr ATheVector3DField, InternalTransform ATransform, out IntPtr ATheColorData);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedata_removecolor", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 VolumeData_RemoveColor (IntPtr Handle);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedata_getpropertycount", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 VolumeData_GetPropertyCount (IntPtr Handle, out UInt32 ACount);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedata_getproperty", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumeData_GetProperty (IntPtr Handle, UInt32 AIndex, out IntPtr AThePropertyData);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedata_findproperty", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumeData_FindProperty (IntPtr Handle, byte[] AName, out IntPtr AThePropertyData);
+			public unsafe extern static Int32 VolumeData_GetProperty (IntPtr Handle, UInt32 AIndex, out IntPtr ATheVolumeDataProperty);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedata_addproperty", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumeData_AddProperty (IntPtr Handle, byte[] AName, IntPtr ATheVolumetricStack, out IntPtr AThePropertyData);
+			public unsafe extern static Int32 VolumeData_AddProperty (IntPtr Handle, byte[] AName, UInt32 AUniqueResourceID, out IntPtr ATheVolumeDataProperty);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedata_removeproperty", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumeData_RemoveProperty (IntPtr Handle, byte[] AName);
+			public unsafe extern static Int32 VolumeData_RemoveProperty (IntPtr Handle, UInt32 AIndex);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_component_getobjectresource", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Component_GetObjectResource (IntPtr Handle, out IntPtr AObjectResource);
@@ -962,179 +1114,44 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_multipropertygroup_removelayer", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 MultiPropertyGroup_RemoveLayer (IntPtr Handle, UInt32 ALayerIndex);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_image3d_getsizex", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Image3D_GetSizeX (IntPtr Handle, out UInt32 ASizeX);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_image3d_getname", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Image3D_GetName (IntPtr Handle, UInt32 sizeName, out UInt32 neededName, IntPtr dataName);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_image3d_getsizey", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Image3D_GetSizeY (IntPtr Handle, out UInt32 ASizeY);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_image3d_setname", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Image3D_SetName (IntPtr Handle, byte[] AName);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_image3d_getsheetcount", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Image3D_GetSheetCount (IntPtr Handle, out UInt32 ASheetCount);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_image3d_isimagestack", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Image3D_IsImageStack (IntPtr Handle, out Byte AIsImageStack);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_image3d_getsheet", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Image3D_GetSheet (IntPtr Handle, UInt32 AIndex, out IntPtr ASheet);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_imagestack_getrowcount", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImageStack_GetRowCount (IntPtr Handle, out UInt32 ARowCount);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_image3d_getsheetminvalue", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Image3D_GetSheetMinValue (IntPtr Handle, UInt32 AIndex, out Double AMinVal);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_imagestack_setrowcount", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImageStack_SetRowCount (IntPtr Handle, UInt32 ARowCount);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_image3d_getsheetmaxvalue", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Image3D_GetSheetMaxValue (IntPtr Handle, UInt32 AIndex, out Double AMaxVal);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_imagestack_getcolumncount", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImageStack_GetColumnCount (IntPtr Handle, out UInt32 AColumnCount);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_image3d_createemptysheet", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Image3D_CreateEmptySheet (IntPtr Handle, UInt32 AIndex, byte[] APath, Double AMin, Double AMax, out IntPtr ASheet);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_imagestack_setcolumncount", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImageStack_SetColumnCount (IntPtr Handle, UInt32 AColumnCount);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_image3d_createsheetfrombuffer", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Image3D_CreateSheetFromBuffer (IntPtr Handle, UInt32 AIndex, byte[] APath, UInt64 sizeData, IntPtr dataData, Double AMin, Double AMax, out IntPtr ASheet);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_imagestack_getsheetcount", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImageStack_GetSheetCount (IntPtr Handle, out UInt32 ASheetCount);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_image3d_createsheetfromfile", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Image3D_CreateSheetFromFile (IntPtr Handle, UInt32 AIndex, byte[] APath, byte[] AFileName, Double AMin, Double AMax, out IntPtr ASheet);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_imagestack_getsheet", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImageStack_GetSheet (IntPtr Handle, UInt32 AIndex, out IntPtr ASheet);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_image3d_setsheet", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Image3D_SetSheet (IntPtr Handle, UInt32 AIndex, IntPtr ASheet);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_imagestack_setsheet", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImageStack_SetSheet (IntPtr Handle, UInt32 AIndex, IntPtr ASheet);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_image3d_setsheetminvalue", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Image3D_SetSheetMinValue (IntPtr Handle, UInt32 AIndex, Double AMinVal);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_imagestack_createemptysheet", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImageStack_CreateEmptySheet (IntPtr Handle, byte[] APath, out IntPtr ASheet);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_image3d_setsheetmaxvalue", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Image3D_SetSheetMaxValue (IntPtr Handle, UInt32 AIndex, Double AMaxVal);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_imagestack_createsheetfrombuffer", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImageStack_CreateSheetFromBuffer (IntPtr Handle, byte[] APath, UInt64 sizeData, IntPtr dataData, out IntPtr ASheet);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_image3dchannelselector_getimage", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Image3DChannelSelector_GetImage (IntPtr Handle, out IntPtr AImage3D);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_image3dchannelselector_setimage", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Image3DChannelSelector_SetImage (IntPtr Handle, IntPtr AImage3D);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_image3dchannelselector_setsourcechannel", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Image3DChannelSelector_SetSourceChannel (IntPtr Handle, byte[] AChannelName);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_image3dchannelselector_getsourcechannel", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Image3DChannelSelector_GetSourceChannel (IntPtr Handle, UInt32 sizeChannelName, out UInt32 neededChannelName, IntPtr dataChannelName);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_image3dchannelselector_setdestinationchannel", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Image3DChannelSelector_SetDestinationChannel (IntPtr Handle, byte[] AChannelName);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_image3dchannelselector_getdestinationchannel", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Image3DChannelSelector_GetDestinationChannel (IntPtr Handle, UInt32 sizeChannelName, out UInt32 neededChannelName, IntPtr dataChannelName);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_image3dchannelselector_setfilter", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Image3DChannelSelector_SetFilter (IntPtr Handle, Int32 AFilter);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_image3dchannelselector_getfilter", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Image3DChannelSelector_GetFilter (IntPtr Handle, out Int32 AFilter);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_image3dchannelselector_settilestyles", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Image3DChannelSelector_SetTileStyles (IntPtr Handle, Int32 ATileStyleU, Int32 ATileStyleV, Int32 ATileStyleW);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_image3dchannelselector_gettilestyles", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Image3DChannelSelector_GetTileStyles (IntPtr Handle, out Int32 ATileStyleU, out Int32 ATileStyleV, out Int32 ATileStyleW);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumetriclayer_gettransform", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumetricLayer_GetTransform (IntPtr Handle, out InternalTransform ATransform);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumetriclayer_settransform", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumetricLayer_SetTransform (IntPtr Handle, InternalTransform ATransform);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumetriclayer_getblendmethod", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumetricLayer_GetBlendMethod (IntPtr Handle, out Int32 ABlendMethod);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumetriclayer_setblendmethod", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumetricLayer_SetBlendMethod (IntPtr Handle, Int32 ABlendMethod);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumetriclayer_getsourcealpha", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumetricLayer_GetSourceAlpha (IntPtr Handle, out Double ASourceAlpha);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumetriclayer_setsourcealpha", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumetricLayer_SetSourceAlpha (IntPtr Handle, Double ASourceAlpha);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumetriclayer_getdestinationalpha", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumetricLayer_GetDestinationAlpha (IntPtr Handle, out Double ADestinationAlpha);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumetriclayer_setdestinationalpha", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumetricLayer_SetDestinationAlpha (IntPtr Handle, Double ADestinationAlpha);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumetriclayer_getinformation", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumetricLayer_GetInformation (IntPtr Handle, out InternalTransform ATransform, out Int32 ABlendMethod, out Double ASourceAlpha, out Double ADestinationAlpha);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumetriclayer_setinformation", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumetricLayer_SetInformation (IntPtr Handle, InternalTransform ATransform, Int32 ABlendMethod, Double ASourceAlpha, Double ADestinationAlpha);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumetriclayer_createmaskchannelselector", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumetricLayer_CreateMaskChannelSelector (IntPtr Handle, IntPtr AImage3D, byte[] ASourceChannel, byte[] ADestinationChannel, out IntPtr AChannelSelector);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumetriclayer_hasmaskchannelselector", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumetricLayer_HasMaskChannelSelector (IntPtr Handle, out Byte ASelectorExists);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumetriclayer_clearmaskchannelselector", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumetricLayer_ClearMaskChannelSelector (IntPtr Handle);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumetriclayer_getmaskchannelselector", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumetricLayer_GetMaskChannelSelector (IntPtr Handle, out IntPtr AChannelSelector);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumetriclayer_getchannelselectorcount", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumetricLayer_GetChannelSelectorCount (IntPtr Handle, out UInt32 ACount);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumetriclayer_getchannelselector", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumetricLayer_GetChannelSelector (IntPtr Handle, UInt32 AIndex, out IntPtr AChannelSelector);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumetriclayer_addchannelselector", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumetricLayer_AddChannelSelector (IntPtr Handle, IntPtr AImage3D, byte[] ASourceChannel, byte[] ADestinationChannel, out IntPtr AChannelSelector);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumetriclayer_clearchannelselectors", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumetricLayer_ClearChannelSelectors (IntPtr Handle);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumetriclayer_reindexchannelselector", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumetricLayer_ReindexChannelSelector (IntPtr Handle, IntPtr AChannelSelector, UInt32 AIndex);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumetriclayer_removechannelselector", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumetricLayer_RemoveChannelSelector (IntPtr Handle, IntPtr AChannelSelector);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumetriclayer_removechannelselectorbyindex", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumetricLayer_RemoveChannelSelectorByIndex (IntPtr Handle, UInt32 AIndex);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumetricstack_clear", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumetricStack_Clear (IntPtr Handle);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumetricstack_clearunuseddestinationchannels", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumetricStack_ClearUnusedDestinationChannels (IntPtr Handle);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumetricstack_getdestinationchannelcount", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumetricStack_GetDestinationChannelCount (IntPtr Handle, out UInt32 ACount);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumetricstack_getdestinationchannel", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumetricStack_GetDestinationChannel (IntPtr Handle, UInt32 AIndex, UInt32 sizeName, out UInt32 neededName, IntPtr dataName, out Double ABackground);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumetricstack_adddestinationchannel", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumetricStack_AddDestinationChannel (IntPtr Handle, byte[] AName, Double ABackground, out UInt32 AIndex);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumetricstack_updatedestinationchannel", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumetricStack_UpdateDestinationChannel (IntPtr Handle, UInt32 AIndex, Double ABackground);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumetricstack_updatedestinationchannelbyname", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumetricStack_UpdateDestinationChannelByName (IntPtr Handle, byte[] AName, Double ABackground);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumetricstack_removedestinationchannel", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumetricStack_RemoveDestinationChannel (IntPtr Handle, UInt32 AIndex);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumetricstack_removedestinationchannelbyname", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumetricStack_RemoveDestinationChannelByName (IntPtr Handle, byte[] AName);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumetricstack_getlayercount", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumetricStack_GetLayerCount (IntPtr Handle, out UInt32 ACount);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumetricstack_getlayer", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumetricStack_GetLayer (IntPtr Handle, UInt32 AIndex, out IntPtr ALayer);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumetricstack_addlayer", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumetricStack_AddLayer (IntPtr Handle, InternalTransform ATransform, Int32 ABlendMethod, out IntPtr ALayer);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumetricstack_reindexlayer", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumetricStack_ReindexLayer (IntPtr Handle, IntPtr ALayer, UInt32 AIndex);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumetricstack_removelayer", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumetricStack_RemoveLayer (IntPtr Handle, IntPtr ALayer);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumetricstack_removelayerbyindex", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumetricStack_RemoveLayerByIndex (IntPtr Handle, UInt32 AIndex);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_imagestack_createsheetfromfile", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ImageStack_CreateSheetFromFile (IntPtr Handle, byte[] APath, byte[] AFileName, out IntPtr ASheet);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_attachment_getpath", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Attachment_GetPath (IntPtr Handle, UInt32 sizePath, out UInt32 neededPath, IntPtr dataPath);
@@ -1520,11 +1537,14 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_getimage3ds", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Model_GetImage3Ds (IntPtr Handle, out IntPtr AResourceIterator);
 
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_getscalarfields", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Model_GetScalarFields (IntPtr Handle, out IntPtr AResourceIterator);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_getvector3dfields", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Model_GetVector3DFields (IntPtr Handle, out IntPtr AResourceIterator);
+
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_mergetomodel", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Model_MergeToModel (IntPtr Handle, out IntPtr AMergedModelInstance);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_getvolumetricstacks", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Model_GetVolumetricStacks (IntPtr Handle, out IntPtr AResourceIterator);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_addmeshobject", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Model_AddMeshObject (IntPtr Handle, out IntPtr AMeshObjectInstance);
@@ -1553,11 +1573,38 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_addmultipropertygroup", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Model_AddMultiPropertyGroup (IntPtr Handle, out IntPtr AMultiPropertyGroupInstance);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_addimage3d", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Model_AddImage3D (IntPtr Handle, UInt32 ASizeX, UInt32 ASizeY, UInt32 ASheetCount, out IntPtr AInstance);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_addimagestack", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Model_AddImageStack (IntPtr Handle, UInt32 AColumnCount, UInt32 ARowCount, UInt32 ASheetCount, out IntPtr AInstance);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_addvolumetricstack", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Model_AddVolumetricStack (IntPtr Handle, out IntPtr AInstance);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_addscalarfieldfromimage3d", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Model_AddScalarFieldFromImage3D (IntPtr Handle, out IntPtr ATheScalarFieldFromImage3D);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_addscalarfieldcomposed", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Model_AddScalarFieldComposed (IntPtr Handle, out IntPtr ATheScalarFieldComposed);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_getscalarfieldbyid", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Model_GetScalarFieldByID (IntPtr Handle, UInt32 AUniqueResourceID, out IntPtr AScalarFieldInstance);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_getscalarfieldfromimage3dbyid", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Model_GetScalarFieldFromImage3DByID (IntPtr Handle, UInt32 AUniqueResourceID, out IntPtr AScalarFieldFromImage3DInstance);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_getscalarfieldcomposedbyid", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Model_GetScalarFieldComposedByID (IntPtr Handle, UInt32 AUniqueResourceID, out IntPtr AScalarFieldComposedInstance);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_addvector3dfieldfromimage3d", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Model_AddVector3DFieldFromImage3D (IntPtr Handle, out IntPtr ATheVector3DFieldFromImage3D);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_addvector3dfieldcomposed", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Model_AddVector3DFieldComposed (IntPtr Handle, out IntPtr ATheVector3DFieldComposed);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_getvector3dfieldbyid", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Model_GetVector3DFieldByID (IntPtr Handle, UInt32 AUniqueResourceID, out IntPtr AVector3DFieldInstance);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_getvector3dfieldfromimage3dbyid", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Model_GetVector3DFieldFromImage3DByID (IntPtr Handle, UInt32 AUniqueResourceID, out IntPtr AVector3DFieldFromImage3DInstance);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_getvector3dfieldcomposedbyid", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Model_GetVector3DFieldComposedByID (IntPtr Handle, UInt32 AUniqueResourceID, out IntPtr AVector3DFieldComposedInstance);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_addbuilditem", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Model_AddBuildItem (IntPtr Handle, IntPtr AObject, InternalTransform ATransform, out IntPtr ABuildItemInstance);
@@ -2497,18 +2544,34 @@ namespace Lib3MF {
 
 	}
 
-	class CVolumetricStackIterator : CResourceIterator
+	class CScalarFieldIterator : CResourceIterator
 	{
-		public CVolumetricStackIterator (IntPtr NewHandle) : base (NewHandle)
+		public CScalarFieldIterator (IntPtr NewHandle) : base (NewHandle)
 		{
 		}
 
-		public CVolumetricStack GetCurrentVolumetricStack ()
+		public CScalarField GetCurrentScalarField ()
 		{
 			IntPtr newResource = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.VolumetricStackIterator_GetCurrentVolumetricStack (Handle, out newResource));
-			return new CVolumetricStack (newResource );
+			CheckError(Internal.Lib3MFWrapper.ScalarFieldIterator_GetCurrentScalarField (Handle, out newResource));
+			return new CScalarField (newResource );
+		}
+
+	}
+
+	class CVector3DFieldIterator : CResourceIterator
+	{
+		public CVector3DFieldIterator (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+		public CVector3DField GetCurrentVector3DField ()
+		{
+			IntPtr newResource = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Vector3DFieldIterator_GetCurrentVector3DField (Handle, out newResource));
+			return new CVector3DField (newResource );
 		}
 
 	}
@@ -3296,31 +3359,458 @@ namespace Lib3MF {
 
 	}
 
-	class CVolumeDataItem : CBase
+	class CScalarField : CResource
 	{
-		public CVolumeDataItem (IntPtr NewHandle) : base (NewHandle)
+		public CScalarField (IntPtr NewHandle) : base (NewHandle)
 		{
 		}
 
-		public CVolumetricStack GetVolumetricStack ()
+		public String GetName ()
 		{
-			IntPtr newTheVolumetricStack = IntPtr.Zero;
+			UInt32 sizeName = 0;
+			UInt32 neededName = 0;
+			CheckError(Internal.Lib3MFWrapper.ScalarField_GetName (Handle, sizeName, out neededName, IntPtr.Zero));
+			sizeName = neededName;
+			byte[] bytesName = new byte[sizeName];
+			GCHandle dataName = GCHandle.Alloc(bytesName, GCHandleType.Pinned);
 
-			CheckError(Internal.Lib3MFWrapper.VolumeDataItem_GetVolumetricStack (Handle, out newTheVolumetricStack));
-			return new CVolumetricStack (newTheVolumetricStack );
+			CheckError(Internal.Lib3MFWrapper.ScalarField_GetName (Handle, sizeName, out neededName, dataName.AddrOfPinnedObject()));
+			dataName.Free();
+			return Encoding.UTF8.GetString(bytesName).TrimEnd(char.MinValue);
 		}
 
-		public void SetVolumetricStack (CVolumetricStack ATheVolumetricStack)
+		public void SetName (String AName)
+		{
+			byte[] byteName = Encoding.UTF8.GetBytes(AName + char.MinValue);
+
+			CheckError(Internal.Lib3MFWrapper.ScalarField_SetName (Handle, byteName));
+		}
+
+		public bool IsFromImage3D ()
+		{
+			Byte resultIsFromImage3D = 0;
+
+			CheckError(Internal.Lib3MFWrapper.ScalarField_IsFromImage3D (Handle, out resultIsFromImage3D));
+			return (resultIsFromImage3D != 0);
+		}
+
+		public bool IsComposed ()
+		{
+			Byte resultIsComposed = 0;
+
+			CheckError(Internal.Lib3MFWrapper.ScalarField_IsComposed (Handle, out resultIsComposed));
+			return (resultIsComposed != 0);
+		}
+
+	}
+
+	class CVector3DField : CResource
+	{
+		public CVector3DField (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+		public String GetName ()
+		{
+			UInt32 sizeName = 0;
+			UInt32 neededName = 0;
+			CheckError(Internal.Lib3MFWrapper.Vector3DField_GetName (Handle, sizeName, out neededName, IntPtr.Zero));
+			sizeName = neededName;
+			byte[] bytesName = new byte[sizeName];
+			GCHandle dataName = GCHandle.Alloc(bytesName, GCHandleType.Pinned);
+
+			CheckError(Internal.Lib3MFWrapper.Vector3DField_GetName (Handle, sizeName, out neededName, dataName.AddrOfPinnedObject()));
+			dataName.Free();
+			return Encoding.UTF8.GetString(bytesName).TrimEnd(char.MinValue);
+		}
+
+		public void SetName (String AName)
+		{
+			byte[] byteName = Encoding.UTF8.GetBytes(AName + char.MinValue);
+
+			CheckError(Internal.Lib3MFWrapper.Vector3DField_SetName (Handle, byteName));
+		}
+
+		public bool IsFromImage3D ()
+		{
+			Byte resultIsFromImage3D = 0;
+
+			CheckError(Internal.Lib3MFWrapper.Vector3DField_IsFromImage3D (Handle, out resultIsFromImage3D));
+			return (resultIsFromImage3D != 0);
+		}
+
+		public bool IsComposed ()
+		{
+			Byte resultIsComposed = 0;
+
+			CheckError(Internal.Lib3MFWrapper.Vector3DField_IsComposed (Handle, out resultIsComposed));
+			return (resultIsComposed != 0);
+		}
+
+	}
+
+	class CScalarFieldFromImage3D : CScalarField
+	{
+		public CScalarFieldFromImage3D (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+		public CImage3D GetImage ()
+		{
+			IntPtr newImage3D = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ScalarFieldFromImage3D_GetImage (Handle, out newImage3D));
+			return new CImage3D (newImage3D );
+		}
+
+		public void SetImage (CImage3D AImage3D)
 		{
 
-			CheckError(Internal.Lib3MFWrapper.VolumeDataItem_SetVolumetricStack (Handle, ATheVolumetricStack.GetHandle()));
+			CheckError(Internal.Lib3MFWrapper.ScalarFieldFromImage3D_SetImage (Handle, AImage3D.GetHandle()));
+		}
+
+		public void SetChannel (eChannelName AName)
+		{
+			Int32 enumName = (Int32) AName;
+
+			CheckError(Internal.Lib3MFWrapper.ScalarFieldFromImage3D_SetChannel (Handle, enumName));
+		}
+
+		public eChannelName GetChannel ()
+		{
+			Int32 resultName = 0;
+
+			CheckError(Internal.Lib3MFWrapper.ScalarFieldFromImage3D_GetChannel (Handle, out resultName));
+			return (eChannelName) (resultName);
+		}
+
+		public void SetFilter (eTextureFilter AFilter)
+		{
+			Int32 enumFilter = (Int32) AFilter;
+
+			CheckError(Internal.Lib3MFWrapper.ScalarFieldFromImage3D_SetFilter (Handle, enumFilter));
+		}
+
+		public eTextureFilter GetFilter ()
+		{
+			Int32 resultFilter = 0;
+
+			CheckError(Internal.Lib3MFWrapper.ScalarFieldFromImage3D_GetFilter (Handle, out resultFilter));
+			return (eTextureFilter) (resultFilter);
+		}
+
+		public void SetTileStyles (eTextureTileStyle ATileStyleU, eTextureTileStyle ATileStyleV, eTextureTileStyle ATileStyleW)
+		{
+			Int32 enumTileStyleU = (Int32) ATileStyleU;
+			Int32 enumTileStyleV = (Int32) ATileStyleV;
+			Int32 enumTileStyleW = (Int32) ATileStyleW;
+
+			CheckError(Internal.Lib3MFWrapper.ScalarFieldFromImage3D_SetTileStyles (Handle, enumTileStyleU, enumTileStyleV, enumTileStyleW));
+		}
+
+		public void GetTileStyles (out eTextureTileStyle ATileStyleU, out eTextureTileStyle ATileStyleV, out eTextureTileStyle ATileStyleW)
+		{
+			Int32 resultTileStyleU = 0;
+			Int32 resultTileStyleV = 0;
+			Int32 resultTileStyleW = 0;
+
+			CheckError(Internal.Lib3MFWrapper.ScalarFieldFromImage3D_GetTileStyles (Handle, out resultTileStyleU, out resultTileStyleV, out resultTileStyleW));
+			ATileStyleU = (eTextureTileStyle) (resultTileStyleU);
+			ATileStyleV = (eTextureTileStyle) (resultTileStyleV);
+			ATileStyleW = (eTextureTileStyle) (resultTileStyleW);
+		}
+
+		public Double GetOffset ()
+		{
+			Double resultOffset = 0;
+
+			CheckError(Internal.Lib3MFWrapper.ScalarFieldFromImage3D_GetOffset (Handle, out resultOffset));
+			return resultOffset;
+		}
+
+		public void SetOffset (Double AOffset)
+		{
+
+			CheckError(Internal.Lib3MFWrapper.ScalarFieldFromImage3D_SetOffset (Handle, AOffset));
+		}
+
+		public Double GetScale ()
+		{
+			Double resultScale = 0;
+
+			CheckError(Internal.Lib3MFWrapper.ScalarFieldFromImage3D_GetScale (Handle, out resultScale));
+			return resultScale;
+		}
+
+		public void SetScale (Double AScale)
+		{
+
+			CheckError(Internal.Lib3MFWrapper.ScalarFieldFromImage3D_SetScale (Handle, AScale));
+		}
+
+	}
+
+	class CScalarFieldComposed : CScalarField
+	{
+		public CScalarFieldComposed (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+		public void SetMethod (eCompositionMethod ATheMethod)
+		{
+			Int32 enumTheMethod = (Int32) ATheMethod;
+
+			CheckError(Internal.Lib3MFWrapper.ScalarFieldComposed_SetMethod (Handle, enumTheMethod));
+		}
+
+		public eCompositionMethod GetMethod ()
+		{
+			Int32 resultTheMethod = 0;
+
+			CheckError(Internal.Lib3MFWrapper.ScalarFieldComposed_GetMethod (Handle, out resultTheMethod));
+			return (eCompositionMethod) (resultTheMethod);
+		}
+
+		public Double GetFactor1 ()
+		{
+			Double resultFactor1 = 0;
+
+			CheckError(Internal.Lib3MFWrapper.ScalarFieldComposed_GetFactor1 (Handle, out resultFactor1));
+			return resultFactor1;
+		}
+
+		public void SetFactor1 (Double AFactor1)
+		{
+
+			CheckError(Internal.Lib3MFWrapper.ScalarFieldComposed_SetFactor1 (Handle, AFactor1));
+		}
+
+		public Double GetFactor2 ()
+		{
+			Double resultFactor2 = 0;
+
+			CheckError(Internal.Lib3MFWrapper.ScalarFieldComposed_GetFactor2 (Handle, out resultFactor2));
+			return resultFactor2;
+		}
+
+		public void SetFactor2 (Double AFactor2)
+		{
+
+			CheckError(Internal.Lib3MFWrapper.ScalarFieldComposed_SetFactor2 (Handle, AFactor2));
+		}
+
+		public CScalarFieldReference ScalarFieldReference1 ()
+		{
+			IntPtr newTheScalarFieldReference1 = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ScalarFieldComposed_ScalarFieldReference1 (Handle, out newTheScalarFieldReference1));
+			return new CScalarFieldReference (newTheScalarFieldReference1 );
+		}
+
+		public CScalarFieldReference ScalarFieldReference2 ()
+		{
+			IntPtr newTheScalarFieldReference1 = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ScalarFieldComposed_ScalarFieldReference2 (Handle, out newTheScalarFieldReference1));
+			return new CScalarFieldReference (newTheScalarFieldReference1 );
+		}
+
+		public CScalarFieldReference ScalarFieldReferenceMask ()
+		{
+			IntPtr newTheScalarFieldReferenceMask = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ScalarFieldComposed_ScalarFieldReferenceMask (Handle, out newTheScalarFieldReferenceMask));
+			return new CScalarFieldReference (newTheScalarFieldReferenceMask );
+		}
+
+	}
+
+	class CVector3DFieldFromImage3D : CScalarField
+	{
+		public CVector3DFieldFromImage3D (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+		public CImage3D GetImage ()
+		{
+			IntPtr newImage3D = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Vector3DFieldFromImage3D_GetImage (Handle, out newImage3D));
+			return new CImage3D (newImage3D );
+		}
+
+		public void SetImage (CImage3D AImage3D)
+		{
+
+			CheckError(Internal.Lib3MFWrapper.Vector3DFieldFromImage3D_SetImage (Handle, AImage3D.GetHandle()));
+		}
+
+		public void SetFilter (eTextureFilter AFilter)
+		{
+			Int32 enumFilter = (Int32) AFilter;
+
+			CheckError(Internal.Lib3MFWrapper.Vector3DFieldFromImage3D_SetFilter (Handle, enumFilter));
+		}
+
+		public eTextureFilter GetFilter ()
+		{
+			Int32 resultFilter = 0;
+
+			CheckError(Internal.Lib3MFWrapper.Vector3DFieldFromImage3D_GetFilter (Handle, out resultFilter));
+			return (eTextureFilter) (resultFilter);
+		}
+
+		public void SetTileStyles (eTextureTileStyle ATileStyleU, eTextureTileStyle ATileStyleV, eTextureTileStyle ATileStyleW)
+		{
+			Int32 enumTileStyleU = (Int32) ATileStyleU;
+			Int32 enumTileStyleV = (Int32) ATileStyleV;
+			Int32 enumTileStyleW = (Int32) ATileStyleW;
+
+			CheckError(Internal.Lib3MFWrapper.Vector3DFieldFromImage3D_SetTileStyles (Handle, enumTileStyleU, enumTileStyleV, enumTileStyleW));
+		}
+
+		public void GetTileStyles (out eTextureTileStyle ATileStyleU, out eTextureTileStyle ATileStyleV, out eTextureTileStyle ATileStyleW)
+		{
+			Int32 resultTileStyleU = 0;
+			Int32 resultTileStyleV = 0;
+			Int32 resultTileStyleW = 0;
+
+			CheckError(Internal.Lib3MFWrapper.Vector3DFieldFromImage3D_GetTileStyles (Handle, out resultTileStyleU, out resultTileStyleV, out resultTileStyleW));
+			ATileStyleU = (eTextureTileStyle) (resultTileStyleU);
+			ATileStyleV = (eTextureTileStyle) (resultTileStyleV);
+			ATileStyleW = (eTextureTileStyle) (resultTileStyleW);
+		}
+
+		public Double GetOffset ()
+		{
+			Double resultOffset = 0;
+
+			CheckError(Internal.Lib3MFWrapper.Vector3DFieldFromImage3D_GetOffset (Handle, out resultOffset));
+			return resultOffset;
+		}
+
+		public void SetOffset (Double AOffset)
+		{
+
+			CheckError(Internal.Lib3MFWrapper.Vector3DFieldFromImage3D_SetOffset (Handle, AOffset));
+		}
+
+		public Double GetScale ()
+		{
+			Double resultScale = 0;
+
+			CheckError(Internal.Lib3MFWrapper.Vector3DFieldFromImage3D_GetScale (Handle, out resultScale));
+			return resultScale;
+		}
+
+		public void SetScale (Double AScale)
+		{
+
+			CheckError(Internal.Lib3MFWrapper.Vector3DFieldFromImage3D_SetScale (Handle, AScale));
+		}
+
+	}
+
+	class CVector3DFieldComposed : CScalarField
+	{
+		public CVector3DFieldComposed (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+		public void SetMethod (eCompositionMethod ATheMethod)
+		{
+			Int32 enumTheMethod = (Int32) ATheMethod;
+
+			CheckError(Internal.Lib3MFWrapper.Vector3DFieldComposed_SetMethod (Handle, enumTheMethod));
+		}
+
+		public eCompositionMethod GetMethod ()
+		{
+			Int32 resultTheMethod = 0;
+
+			CheckError(Internal.Lib3MFWrapper.Vector3DFieldComposed_GetMethod (Handle, out resultTheMethod));
+			return (eCompositionMethod) (resultTheMethod);
+		}
+
+		public Double GetFactor1 ()
+		{
+			Double resultFactor1 = 0;
+
+			CheckError(Internal.Lib3MFWrapper.Vector3DFieldComposed_GetFactor1 (Handle, out resultFactor1));
+			return resultFactor1;
+		}
+
+		public void SetFactor1 (Double AFactor1)
+		{
+
+			CheckError(Internal.Lib3MFWrapper.Vector3DFieldComposed_SetFactor1 (Handle, AFactor1));
+		}
+
+		public Double GetFactor2 ()
+		{
+			Double resultFactor2 = 0;
+
+			CheckError(Internal.Lib3MFWrapper.Vector3DFieldComposed_GetFactor2 (Handle, out resultFactor2));
+			return resultFactor2;
+		}
+
+		public void SetFactor2 (Double AFactor2)
+		{
+
+			CheckError(Internal.Lib3MFWrapper.Vector3DFieldComposed_SetFactor2 (Handle, AFactor2));
+		}
+
+		public CVector3DFieldReference Vector3DFieldReference1 ()
+		{
+			IntPtr newTheVector3DFieldReference1 = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Vector3DFieldComposed_Vector3DFieldReference1 (Handle, out newTheVector3DFieldReference1));
+			return new CVector3DFieldReference (newTheVector3DFieldReference1 );
+		}
+
+		public CVector3DFieldReference Vector3DFieldReference2 ()
+		{
+			IntPtr newTheVector3DFieldReference1 = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Vector3DFieldComposed_Vector3DFieldReference2 (Handle, out newTheVector3DFieldReference1));
+			return new CVector3DFieldReference (newTheVector3DFieldReference1 );
+		}
+
+		public CScalarFieldReference ScalarFieldReferenceMask ()
+		{
+			IntPtr newTheScalarFieldReferenceMask = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Vector3DFieldComposed_ScalarFieldReferenceMask (Handle, out newTheScalarFieldReferenceMask));
+			return new CScalarFieldReference (newTheScalarFieldReferenceMask );
+		}
+
+	}
+
+	class CFieldReference : CBase
+	{
+		public CFieldReference (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+		public UInt32 GetFieldResourceID ()
+		{
+			UInt32 resultUniqueResourceID = 0;
+
+			CheckError(Internal.Lib3MFWrapper.FieldReference_GetFieldResourceID (Handle, out resultUniqueResourceID));
+			return resultUniqueResourceID;
+		}
+
+		public void SetFieldResourceID (UInt32 AUniqueResourceID)
+		{
+
+			CheckError(Internal.Lib3MFWrapper.FieldReference_SetFieldResourceID (Handle, AUniqueResourceID));
 		}
 
 		public sTransform GetTransform ()
 		{
 			Internal.InternalTransform intresultTransform;
 
-			CheckError(Internal.Lib3MFWrapper.VolumeDataItem_GetTransform (Handle, out intresultTransform));
+			CheckError(Internal.Lib3MFWrapper.FieldReference_GetTransform (Handle, out intresultTransform));
 			return Internal.Lib3MFWrapper.convertInternalToStruct_Transform (intresultTransform);
 		}
 
@@ -3328,12 +3818,56 @@ namespace Lib3MF {
 		{
 			Internal.InternalTransform intTransform = Internal.Lib3MFWrapper.convertStructToInternal_Transform (ATransform);
 
-			CheckError(Internal.Lib3MFWrapper.VolumeDataItem_SetTransform (Handle, intTransform));
+			CheckError(Internal.Lib3MFWrapper.FieldReference_SetTransform (Handle, intTransform));
 		}
 
 	}
 
-	class CVolumeDataLevelset : CVolumeDataItem
+	class CScalarFieldReference : CFieldReference
+	{
+		public CScalarFieldReference (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+		public CScalarField GetScalarField ()
+		{
+			IntPtr newTheScalarField = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ScalarFieldReference_GetScalarField (Handle, out newTheScalarField));
+			return new CScalarField (newTheScalarField );
+		}
+
+		public void SetScalarField (CScalarField ATheScalarField)
+		{
+
+			CheckError(Internal.Lib3MFWrapper.ScalarFieldReference_SetScalarField (Handle, ATheScalarField.GetHandle()));
+		}
+
+	}
+
+	class CVector3DFieldReference : CFieldReference
+	{
+		public CVector3DFieldReference (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+		public CVector3DField GetVector3DField ()
+		{
+			IntPtr newTheVector3DField = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Vector3DFieldReference_GetVector3DField (Handle, out newTheVector3DField));
+			return new CVector3DField (newTheVector3DField );
+		}
+
+		public void SetVector3DField (CVector3DField ATheVector3DField)
+		{
+
+			CheckError(Internal.Lib3MFWrapper.Vector3DFieldReference_SetVector3DField (Handle, ATheVector3DField.GetHandle()));
+		}
+
+	}
+
+	class CVolumeDataLevelset : CScalarFieldReference
 	{
 		public CVolumeDataLevelset (IntPtr NewHandle) : base (NewHandle)
 		{
@@ -3353,61 +3887,25 @@ namespace Lib3MF {
 			CheckError(Internal.Lib3MFWrapper.VolumeDataLevelset_SetSolidThreshold (Handle, ATheSolidThreshold));
 		}
 
-		public void SetChannel (String AChannelName)
-		{
-			byte[] byteChannelName = Encoding.UTF8.GetBytes(AChannelName + char.MinValue);
-
-			CheckError(Internal.Lib3MFWrapper.VolumeDataLevelset_SetChannel (Handle, byteChannelName));
-		}
-
-		public String GetChannel ()
-		{
-			UInt32 sizeChannelName = 0;
-			UInt32 neededChannelName = 0;
-			CheckError(Internal.Lib3MFWrapper.VolumeDataLevelset_GetChannel (Handle, sizeChannelName, out neededChannelName, IntPtr.Zero));
-			sizeChannelName = neededChannelName;
-			byte[] bytesChannelName = new byte[sizeChannelName];
-			GCHandle dataChannelName = GCHandle.Alloc(bytesChannelName, GCHandleType.Pinned);
-
-			CheckError(Internal.Lib3MFWrapper.VolumeDataLevelset_GetChannel (Handle, sizeChannelName, out neededChannelName, dataChannelName.AddrOfPinnedObject()));
-			dataChannelName.Free();
-			return Encoding.UTF8.GetString(bytesChannelName).TrimEnd(char.MinValue);
-		}
-
 	}
 
-	class CVolumeDataColor : CVolumeDataItem
+	class CVolumeDataColor : CVector3DFieldReference
 	{
 		public CVolumeDataColor (IntPtr NewHandle) : base (NewHandle)
 		{
 		}
 
-		public void SetChannel (eColorChannel ATheColorChannel, String AChannelName)
+	}
+
+	class CMaterialMapping : CScalarFieldReference
+	{
+		public CMaterialMapping (IntPtr NewHandle) : base (NewHandle)
 		{
-			Int32 enumTheColorChannel = (Int32) ATheColorChannel;
-			byte[] byteChannelName = Encoding.UTF8.GetBytes(AChannelName + char.MinValue);
-
-			CheckError(Internal.Lib3MFWrapper.VolumeDataColor_SetChannel (Handle, enumTheColorChannel, byteChannelName));
-		}
-
-		public String GetChannel (eColorChannel ATheColorChannel)
-		{
-			Int32 enumTheColorChannel = (Int32) ATheColorChannel;
-			UInt32 sizeChannelName = 0;
-			UInt32 neededChannelName = 0;
-			CheckError(Internal.Lib3MFWrapper.VolumeDataColor_GetChannel (Handle, enumTheColorChannel, sizeChannelName, out neededChannelName, IntPtr.Zero));
-			sizeChannelName = neededChannelName;
-			byte[] bytesChannelName = new byte[sizeChannelName];
-			GCHandle dataChannelName = GCHandle.Alloc(bytesChannelName, GCHandleType.Pinned);
-
-			CheckError(Internal.Lib3MFWrapper.VolumeDataColor_GetChannel (Handle, enumTheColorChannel, sizeChannelName, out neededChannelName, dataChannelName.AddrOfPinnedObject()));
-			dataChannelName.Free();
-			return Encoding.UTF8.GetString(bytesChannelName).TrimEnd(char.MinValue);
 		}
 
 	}
 
-	class CVolumeDataComposite : CVolumeDataItem
+	class CVolumeDataComposite : CBase
 	{
 		public CVolumeDataComposite (IntPtr NewHandle) : base (NewHandle)
 		{
@@ -3435,39 +3933,21 @@ namespace Lib3MF {
 			return resultCount;
 		}
 
-		public void GetMaterialMapping (UInt32 AIndex, out UInt32 APropertyID, out String AChannelName)
+		public CMaterialMapping GetMaterialMapping (UInt32 AIndex)
 		{
-			UInt32 sizeChannelName = 0;
-			UInt32 neededChannelName = 0;
-			CheckError(Internal.Lib3MFWrapper.VolumeDataComposite_GetMaterialMapping (Handle, AIndex, out APropertyID, sizeChannelName, out neededChannelName, IntPtr.Zero));
-			sizeChannelName = neededChannelName;
-			byte[] bytesChannelName = new byte[sizeChannelName];
-			GCHandle dataChannelName = GCHandle.Alloc(bytesChannelName, GCHandleType.Pinned);
+			IntPtr newTheMaterialMapping = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.VolumeDataComposite_GetMaterialMapping (Handle, AIndex, out APropertyID, sizeChannelName, out neededChannelName, dataChannelName.AddrOfPinnedObject()));
-			dataChannelName.Free();
-			AChannelName = Encoding.UTF8.GetString(bytesChannelName).TrimEnd(char.MinValue);
+			CheckError(Internal.Lib3MFWrapper.VolumeDataComposite_GetMaterialMapping (Handle, AIndex, out newTheMaterialMapping));
+			return new CMaterialMapping (newTheMaterialMapping );
 		}
 
-		public void SetMaterialMapping (UInt32 AIndex, out UInt32 APropertyID, out String AChannelName)
+		public CMaterialMapping AddMaterialMapping (sTransform ATransform)
 		{
-			UInt32 sizeChannelName = 0;
-			UInt32 neededChannelName = 0;
-			CheckError(Internal.Lib3MFWrapper.VolumeDataComposite_SetMaterialMapping (Handle, AIndex, out APropertyID, sizeChannelName, out neededChannelName, IntPtr.Zero));
-			sizeChannelName = neededChannelName;
-			byte[] bytesChannelName = new byte[sizeChannelName];
-			GCHandle dataChannelName = GCHandle.Alloc(bytesChannelName, GCHandleType.Pinned);
+			Internal.InternalTransform intTransform = Internal.Lib3MFWrapper.convertStructToInternal_Transform (ATransform);
+			IntPtr newTheMaterialMapping = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.VolumeDataComposite_SetMaterialMapping (Handle, AIndex, out APropertyID, sizeChannelName, out neededChannelName, dataChannelName.AddrOfPinnedObject()));
-			dataChannelName.Free();
-			AChannelName = Encoding.UTF8.GetString(bytesChannelName).TrimEnd(char.MinValue);
-		}
-
-		public void AddMaterialMapping (UInt32 APropertyID, String AChannelName)
-		{
-			byte[] byteChannelName = Encoding.UTF8.GetBytes(AChannelName + char.MinValue);
-
-			CheckError(Internal.Lib3MFWrapper.VolumeDataComposite_AddMaterialMapping (Handle, APropertyID, byteChannelName));
+			CheckError(Internal.Lib3MFWrapper.VolumeDataComposite_AddMaterialMapping (Handle, intTransform, out newTheMaterialMapping));
+			return new CMaterialMapping (newTheMaterialMapping );
 		}
 
 		public void RemoveMaterialMapping (UInt32 AIndex)
@@ -3478,31 +3958,10 @@ namespace Lib3MF {
 
 	}
 
-	class CVolumeDataProperty : CVolumeDataItem
+	class CVolumeDataProperty : CFieldReference
 	{
 		public CVolumeDataProperty (IntPtr NewHandle) : base (NewHandle)
 		{
-		}
-
-		public void SetChannel (String AChannelName)
-		{
-			byte[] byteChannelName = Encoding.UTF8.GetBytes(AChannelName + char.MinValue);
-
-			CheckError(Internal.Lib3MFWrapper.VolumeDataProperty_SetChannel (Handle, byteChannelName));
-		}
-
-		public String GetChannel ()
-		{
-			UInt32 sizeChannelName = 0;
-			UInt32 neededChannelName = 0;
-			CheckError(Internal.Lib3MFWrapper.VolumeDataProperty_GetChannel (Handle, sizeChannelName, out neededChannelName, IntPtr.Zero));
-			sizeChannelName = neededChannelName;
-			byte[] bytesChannelName = new byte[sizeChannelName];
-			GCHandle dataChannelName = GCHandle.Alloc(bytesChannelName, GCHandleType.Pinned);
-
-			CheckError(Internal.Lib3MFWrapper.VolumeDataProperty_GetChannel (Handle, sizeChannelName, out neededChannelName, dataChannelName.AddrOfPinnedObject()));
-			dataChannelName.Free();
-			return Encoding.UTF8.GetString(bytesChannelName).TrimEnd(char.MinValue);
 		}
 
 		public void SetName (String APropertyName)
@@ -3556,12 +4015,19 @@ namespace Lib3MF {
 			return new CVolumeDataLevelset (newTheLevelsetData );
 		}
 
-		public CVolumeDataLevelset CreateNewLevelset (CVolumetricStack ATheVolumetricStack)
+		public CVolumeDataLevelset CreateNewLevelset (CScalarField ATheScalarField, sTransform ATransform)
 		{
+			Internal.InternalTransform intTransform = Internal.Lib3MFWrapper.convertStructToInternal_Transform (ATransform);
 			IntPtr newTheLevelsetData = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.VolumeData_CreateNewLevelset (Handle, ATheVolumetricStack.GetHandle(), out newTheLevelsetData));
+			CheckError(Internal.Lib3MFWrapper.VolumeData_CreateNewLevelset (Handle, ATheScalarField.GetHandle(), intTransform, out newTheLevelsetData));
 			return new CVolumeDataLevelset (newTheLevelsetData );
+		}
+
+		public void RemoveLevelset ()
+		{
+
+			CheckError(Internal.Lib3MFWrapper.VolumeData_RemoveLevelset (Handle));
 		}
 
 		public CVolumeDataComposite GetComposite ()
@@ -3572,12 +4038,18 @@ namespace Lib3MF {
 			return new CVolumeDataComposite (newTheCompositeData );
 		}
 
-		public CVolumeDataComposite CreateNewComposite (CVolumetricStack ATheVolumetricStack)
+		public CVolumeDataComposite CreateNewComposite ()
 		{
 			IntPtr newTheCompositeData = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.VolumeData_CreateNewComposite (Handle, ATheVolumetricStack.GetHandle(), out newTheCompositeData));
+			CheckError(Internal.Lib3MFWrapper.VolumeData_CreateNewComposite (Handle, out newTheCompositeData));
 			return new CVolumeDataComposite (newTheCompositeData );
+		}
+
+		public void RemoveComposite ()
+		{
+
+			CheckError(Internal.Lib3MFWrapper.VolumeData_RemoveComposite (Handle));
 		}
 
 		public CVolumeDataColor GetColor ()
@@ -3588,12 +4060,19 @@ namespace Lib3MF {
 			return new CVolumeDataColor (newTheColorData );
 		}
 
-		public CVolumeDataColor CreateNewColor (CVolumetricStack ATheVolumetricStack)
+		public CVolumeDataColor CreateNewColor (CVector3DField ATheVector3DField, sTransform ATransform)
 		{
+			Internal.InternalTransform intTransform = Internal.Lib3MFWrapper.convertStructToInternal_Transform (ATransform);
 			IntPtr newTheColorData = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.VolumeData_CreateNewColor (Handle, ATheVolumetricStack.GetHandle(), out newTheColorData));
+			CheckError(Internal.Lib3MFWrapper.VolumeData_CreateNewColor (Handle, ATheVector3DField.GetHandle(), intTransform, out newTheColorData));
 			return new CVolumeDataColor (newTheColorData );
+		}
+
+		public void RemoveColor ()
+		{
+
+			CheckError(Internal.Lib3MFWrapper.VolumeData_RemoveColor (Handle));
 		}
 
 		public UInt32 GetPropertyCount ()
@@ -3606,35 +4085,25 @@ namespace Lib3MF {
 
 		public CVolumeDataProperty GetProperty (UInt32 AIndex)
 		{
-			IntPtr newThePropertyData = IntPtr.Zero;
+			IntPtr newTheVolumeDataProperty = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.VolumeData_GetProperty (Handle, AIndex, out newThePropertyData));
-			return new CVolumeDataProperty (newThePropertyData );
+			CheckError(Internal.Lib3MFWrapper.VolumeData_GetProperty (Handle, AIndex, out newTheVolumeDataProperty));
+			return new CVolumeDataProperty (newTheVolumeDataProperty );
 		}
 
-		public CVolumeDataProperty FindProperty (String AName)
+		public CVolumeDataProperty AddProperty (String AName, UInt32 AUniqueResourceID)
 		{
 			byte[] byteName = Encoding.UTF8.GetBytes(AName + char.MinValue);
-			IntPtr newThePropertyData = IntPtr.Zero;
+			IntPtr newTheVolumeDataProperty = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.VolumeData_FindProperty (Handle, byteName, out newThePropertyData));
-			return new CVolumeDataProperty (newThePropertyData );
+			CheckError(Internal.Lib3MFWrapper.VolumeData_AddProperty (Handle, byteName, AUniqueResourceID, out newTheVolumeDataProperty));
+			return new CVolumeDataProperty (newTheVolumeDataProperty );
 		}
 
-		public CVolumeDataProperty AddProperty (String AName, CVolumetricStack ATheVolumetricStack)
+		public void RemoveProperty (UInt32 AIndex)
 		{
-			byte[] byteName = Encoding.UTF8.GetBytes(AName + char.MinValue);
-			IntPtr newThePropertyData = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.VolumeData_AddProperty (Handle, byteName, ATheVolumetricStack.GetHandle(), out newThePropertyData));
-			return new CVolumeDataProperty (newThePropertyData );
-		}
-
-		public void RemoveProperty (String AName)
-		{
-			byte[] byteName = Encoding.UTF8.GetBytes(AName + char.MinValue);
-
-			CheckError(Internal.Lib3MFWrapper.VolumeData_RemoveProperty (Handle, byteName));
+			CheckError(Internal.Lib3MFWrapper.VolumeData_RemoveProperty (Handle, AIndex));
 		}
 
 	}
@@ -4225,27 +4694,76 @@ namespace Lib3MF {
 		{
 		}
 
-		public UInt32 GetSizeX ()
+		public String GetName ()
 		{
-			UInt32 resultSizeX = 0;
+			UInt32 sizeName = 0;
+			UInt32 neededName = 0;
+			CheckError(Internal.Lib3MFWrapper.Image3D_GetName (Handle, sizeName, out neededName, IntPtr.Zero));
+			sizeName = neededName;
+			byte[] bytesName = new byte[sizeName];
+			GCHandle dataName = GCHandle.Alloc(bytesName, GCHandleType.Pinned);
 
-			CheckError(Internal.Lib3MFWrapper.Image3D_GetSizeX (Handle, out resultSizeX));
-			return resultSizeX;
+			CheckError(Internal.Lib3MFWrapper.Image3D_GetName (Handle, sizeName, out neededName, dataName.AddrOfPinnedObject()));
+			dataName.Free();
+			return Encoding.UTF8.GetString(bytesName).TrimEnd(char.MinValue);
 		}
 
-		public UInt32 GetSizeY ()
+		public void SetName (String AName)
 		{
-			UInt32 resultSizeY = 0;
+			byte[] byteName = Encoding.UTF8.GetBytes(AName + char.MinValue);
 
-			CheckError(Internal.Lib3MFWrapper.Image3D_GetSizeY (Handle, out resultSizeY));
-			return resultSizeY;
+			CheckError(Internal.Lib3MFWrapper.Image3D_SetName (Handle, byteName));
+		}
+
+		public bool IsImageStack ()
+		{
+			Byte resultIsImageStack = 0;
+
+			CheckError(Internal.Lib3MFWrapper.Image3D_IsImageStack (Handle, out resultIsImageStack));
+			return (resultIsImageStack != 0);
+		}
+
+	}
+
+	class CImageStack : CImage3D
+	{
+		public CImageStack (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+		public UInt32 GetRowCount ()
+		{
+			UInt32 resultRowCount = 0;
+
+			CheckError(Internal.Lib3MFWrapper.ImageStack_GetRowCount (Handle, out resultRowCount));
+			return resultRowCount;
+		}
+
+		public void SetRowCount (UInt32 ARowCount)
+		{
+
+			CheckError(Internal.Lib3MFWrapper.ImageStack_SetRowCount (Handle, ARowCount));
+		}
+
+		public UInt32 GetColumnCount ()
+		{
+			UInt32 resultColumnCount = 0;
+
+			CheckError(Internal.Lib3MFWrapper.ImageStack_GetColumnCount (Handle, out resultColumnCount));
+			return resultColumnCount;
+		}
+
+		public void SetColumnCount (UInt32 AColumnCount)
+		{
+
+			CheckError(Internal.Lib3MFWrapper.ImageStack_SetColumnCount (Handle, AColumnCount));
 		}
 
 		public UInt32 GetSheetCount ()
 		{
 			UInt32 resultSheetCount = 0;
 
-			CheckError(Internal.Lib3MFWrapper.Image3D_GetSheetCount (Handle, out resultSheetCount));
+			CheckError(Internal.Lib3MFWrapper.ImageStack_GetSheetCount (Handle, out resultSheetCount));
 			return resultSheetCount;
 		}
 
@@ -4253,459 +4771,44 @@ namespace Lib3MF {
 		{
 			IntPtr newSheet = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.Image3D_GetSheet (Handle, AIndex, out newSheet));
-			return new CAttachment (newSheet );
-		}
-
-		public Double GetSheetMinValue (UInt32 AIndex)
-		{
-			Double resultMinVal = 0;
-
-			CheckError(Internal.Lib3MFWrapper.Image3D_GetSheetMinValue (Handle, AIndex, out resultMinVal));
-			return resultMinVal;
-		}
-
-		public Double GetSheetMaxValue (UInt32 AIndex)
-		{
-			Double resultMaxVal = 0;
-
-			CheckError(Internal.Lib3MFWrapper.Image3D_GetSheetMaxValue (Handle, AIndex, out resultMaxVal));
-			return resultMaxVal;
-		}
-
-		public CAttachment CreateEmptySheet (UInt32 AIndex, String APath, Double AMin, Double AMax)
-		{
-			byte[] bytePath = Encoding.UTF8.GetBytes(APath + char.MinValue);
-			IntPtr newSheet = IntPtr.Zero;
-
-			CheckError(Internal.Lib3MFWrapper.Image3D_CreateEmptySheet (Handle, AIndex, bytePath, AMin, AMax, out newSheet));
-			return new CAttachment (newSheet );
-		}
-
-		public CAttachment CreateSheetFromBuffer (UInt32 AIndex, String APath, Byte[] AData, Double AMin, Double AMax)
-		{
-			byte[] bytePath = Encoding.UTF8.GetBytes(APath + char.MinValue);
-			GCHandle dataData = GCHandle.Alloc(AData, GCHandleType.Pinned);
-			IntPtr newSheet = IntPtr.Zero;
-
-			CheckError(Internal.Lib3MFWrapper.Image3D_CreateSheetFromBuffer (Handle, AIndex, bytePath, (UInt64) AData.Length, dataData.AddrOfPinnedObject(), AMin, AMax, out newSheet));
-			dataData.Free ();
-			return new CAttachment (newSheet );
-		}
-
-		public CAttachment CreateSheetFromFile (UInt32 AIndex, String APath, String AFileName, Double AMin, Double AMax)
-		{
-			byte[] bytePath = Encoding.UTF8.GetBytes(APath + char.MinValue);
-			byte[] byteFileName = Encoding.UTF8.GetBytes(AFileName + char.MinValue);
-			IntPtr newSheet = IntPtr.Zero;
-
-			CheckError(Internal.Lib3MFWrapper.Image3D_CreateSheetFromFile (Handle, AIndex, bytePath, byteFileName, AMin, AMax, out newSheet));
+			CheckError(Internal.Lib3MFWrapper.ImageStack_GetSheet (Handle, AIndex, out newSheet));
 			return new CAttachment (newSheet );
 		}
 
 		public void SetSheet (UInt32 AIndex, CAttachment ASheet)
 		{
 
-			CheckError(Internal.Lib3MFWrapper.Image3D_SetSheet (Handle, AIndex, ASheet.GetHandle()));
+			CheckError(Internal.Lib3MFWrapper.ImageStack_SetSheet (Handle, AIndex, ASheet.GetHandle()));
 		}
 
-		public void SetSheetMinValue (UInt32 AIndex, Double AMinVal)
+		public CAttachment CreateEmptySheet (String APath)
 		{
+			byte[] bytePath = Encoding.UTF8.GetBytes(APath + char.MinValue);
+			IntPtr newSheet = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.Image3D_SetSheetMinValue (Handle, AIndex, AMinVal));
+			CheckError(Internal.Lib3MFWrapper.ImageStack_CreateEmptySheet (Handle, bytePath, out newSheet));
+			return new CAttachment (newSheet );
 		}
 
-		public void SetSheetMaxValue (UInt32 AIndex, Double AMaxVal)
+		public CAttachment CreateSheetFromBuffer (String APath, Byte[] AData)
 		{
+			byte[] bytePath = Encoding.UTF8.GetBytes(APath + char.MinValue);
+			GCHandle dataData = GCHandle.Alloc(AData, GCHandleType.Pinned);
+			IntPtr newSheet = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.Image3D_SetSheetMaxValue (Handle, AIndex, AMaxVal));
+			CheckError(Internal.Lib3MFWrapper.ImageStack_CreateSheetFromBuffer (Handle, bytePath, (UInt64) AData.Length, dataData.AddrOfPinnedObject(), out newSheet));
+			dataData.Free ();
+			return new CAttachment (newSheet );
 		}
 
-	}
-
-	class CImage3DChannelSelector : CBase
-	{
-		public CImage3DChannelSelector (IntPtr NewHandle) : base (NewHandle)
+		public CAttachment CreateSheetFromFile (String APath, String AFileName)
 		{
-		}
-
-		public CImage3D GetImage ()
-		{
-			IntPtr newImage3D = IntPtr.Zero;
-
-			CheckError(Internal.Lib3MFWrapper.Image3DChannelSelector_GetImage (Handle, out newImage3D));
-			return new CImage3D (newImage3D );
-		}
-
-		public void SetImage (CImage3D AImage3D)
-		{
-
-			CheckError(Internal.Lib3MFWrapper.Image3DChannelSelector_SetImage (Handle, AImage3D.GetHandle()));
-		}
-
-		public void SetSourceChannel (String AChannelName)
-		{
-			byte[] byteChannelName = Encoding.UTF8.GetBytes(AChannelName + char.MinValue);
-
-			CheckError(Internal.Lib3MFWrapper.Image3DChannelSelector_SetSourceChannel (Handle, byteChannelName));
-		}
-
-		public String GetSourceChannel ()
-		{
-			UInt32 sizeChannelName = 0;
-			UInt32 neededChannelName = 0;
-			CheckError(Internal.Lib3MFWrapper.Image3DChannelSelector_GetSourceChannel (Handle, sizeChannelName, out neededChannelName, IntPtr.Zero));
-			sizeChannelName = neededChannelName;
-			byte[] bytesChannelName = new byte[sizeChannelName];
-			GCHandle dataChannelName = GCHandle.Alloc(bytesChannelName, GCHandleType.Pinned);
-
-			CheckError(Internal.Lib3MFWrapper.Image3DChannelSelector_GetSourceChannel (Handle, sizeChannelName, out neededChannelName, dataChannelName.AddrOfPinnedObject()));
-			dataChannelName.Free();
-			return Encoding.UTF8.GetString(bytesChannelName).TrimEnd(char.MinValue);
-		}
-
-		public void SetDestinationChannel (String AChannelName)
-		{
-			byte[] byteChannelName = Encoding.UTF8.GetBytes(AChannelName + char.MinValue);
-
-			CheckError(Internal.Lib3MFWrapper.Image3DChannelSelector_SetDestinationChannel (Handle, byteChannelName));
-		}
-
-		public String GetDestinationChannel ()
-		{
-			UInt32 sizeChannelName = 0;
-			UInt32 neededChannelName = 0;
-			CheckError(Internal.Lib3MFWrapper.Image3DChannelSelector_GetDestinationChannel (Handle, sizeChannelName, out neededChannelName, IntPtr.Zero));
-			sizeChannelName = neededChannelName;
-			byte[] bytesChannelName = new byte[sizeChannelName];
-			GCHandle dataChannelName = GCHandle.Alloc(bytesChannelName, GCHandleType.Pinned);
-
-			CheckError(Internal.Lib3MFWrapper.Image3DChannelSelector_GetDestinationChannel (Handle, sizeChannelName, out neededChannelName, dataChannelName.AddrOfPinnedObject()));
-			dataChannelName.Free();
-			return Encoding.UTF8.GetString(bytesChannelName).TrimEnd(char.MinValue);
-		}
-
-		public void SetFilter (eTextureFilter AFilter)
-		{
-			Int32 enumFilter = (Int32) AFilter;
-
-			CheckError(Internal.Lib3MFWrapper.Image3DChannelSelector_SetFilter (Handle, enumFilter));
-		}
-
-		public eTextureFilter GetFilter ()
-		{
-			Int32 resultFilter = 0;
-
-			CheckError(Internal.Lib3MFWrapper.Image3DChannelSelector_GetFilter (Handle, out resultFilter));
-			return (eTextureFilter) (resultFilter);
-		}
-
-		public void SetTileStyles (eTextureTileStyle ATileStyleU, eTextureTileStyle ATileStyleV, eTextureTileStyle ATileStyleW)
-		{
-			Int32 enumTileStyleU = (Int32) ATileStyleU;
-			Int32 enumTileStyleV = (Int32) ATileStyleV;
-			Int32 enumTileStyleW = (Int32) ATileStyleW;
-
-			CheckError(Internal.Lib3MFWrapper.Image3DChannelSelector_SetTileStyles (Handle, enumTileStyleU, enumTileStyleV, enumTileStyleW));
-		}
-
-		public void GetTileStyles (out eTextureTileStyle ATileStyleU, out eTextureTileStyle ATileStyleV, out eTextureTileStyle ATileStyleW)
-		{
-			Int32 resultTileStyleU = 0;
-			Int32 resultTileStyleV = 0;
-			Int32 resultTileStyleW = 0;
-
-			CheckError(Internal.Lib3MFWrapper.Image3DChannelSelector_GetTileStyles (Handle, out resultTileStyleU, out resultTileStyleV, out resultTileStyleW));
-			ATileStyleU = (eTextureTileStyle) (resultTileStyleU);
-			ATileStyleV = (eTextureTileStyle) (resultTileStyleV);
-			ATileStyleW = (eTextureTileStyle) (resultTileStyleW);
-		}
-
-	}
-
-	class CVolumetricLayer : CBase
-	{
-		public CVolumetricLayer (IntPtr NewHandle) : base (NewHandle)
-		{
-		}
-
-		public sTransform GetTransform ()
-		{
-			Internal.InternalTransform intresultTransform;
-
-			CheckError(Internal.Lib3MFWrapper.VolumetricLayer_GetTransform (Handle, out intresultTransform));
-			return Internal.Lib3MFWrapper.convertInternalToStruct_Transform (intresultTransform);
-		}
-
-		public void SetTransform (sTransform ATransform)
-		{
-			Internal.InternalTransform intTransform = Internal.Lib3MFWrapper.convertStructToInternal_Transform (ATransform);
-
-			CheckError(Internal.Lib3MFWrapper.VolumetricLayer_SetTransform (Handle, intTransform));
-		}
-
-		public eBlendMethod GetBlendMethod ()
-		{
-			Int32 resultBlendMethod = 0;
-
-			CheckError(Internal.Lib3MFWrapper.VolumetricLayer_GetBlendMethod (Handle, out resultBlendMethod));
-			return (eBlendMethod) (resultBlendMethod);
-		}
-
-		public void SetBlendMethod (eBlendMethod ABlendMethod)
-		{
-			Int32 enumBlendMethod = (Int32) ABlendMethod;
-
-			CheckError(Internal.Lib3MFWrapper.VolumetricLayer_SetBlendMethod (Handle, enumBlendMethod));
-		}
-
-		public Double GetSourceAlpha ()
-		{
-			Double resultSourceAlpha = 0;
-
-			CheckError(Internal.Lib3MFWrapper.VolumetricLayer_GetSourceAlpha (Handle, out resultSourceAlpha));
-			return resultSourceAlpha;
-		}
-
-		public void SetSourceAlpha (Double ASourceAlpha)
-		{
-
-			CheckError(Internal.Lib3MFWrapper.VolumetricLayer_SetSourceAlpha (Handle, ASourceAlpha));
-		}
-
-		public Double GetDestinationAlpha ()
-		{
-			Double resultDestinationAlpha = 0;
-
-			CheckError(Internal.Lib3MFWrapper.VolumetricLayer_GetDestinationAlpha (Handle, out resultDestinationAlpha));
-			return resultDestinationAlpha;
-		}
-
-		public void SetDestinationAlpha (Double ADestinationAlpha)
-		{
-
-			CheckError(Internal.Lib3MFWrapper.VolumetricLayer_SetDestinationAlpha (Handle, ADestinationAlpha));
-		}
-
-		public void GetInformation (out sTransform ATransform, out eBlendMethod ABlendMethod, out Double ASourceAlpha, out Double ADestinationAlpha)
-		{
-			Internal.InternalTransform intresultTransform;
-			Int32 resultBlendMethod = 0;
-
-			CheckError(Internal.Lib3MFWrapper.VolumetricLayer_GetInformation (Handle, out intresultTransform, out resultBlendMethod, out ASourceAlpha, out ADestinationAlpha));
-			ATransform = Internal.Lib3MFWrapper.convertInternalToStruct_Transform (intresultTransform);
-			ABlendMethod = (eBlendMethod) (resultBlendMethod);
-		}
-
-		public void SetInformation (sTransform ATransform, eBlendMethod ABlendMethod, Double ASourceAlpha, Double ADestinationAlpha)
-		{
-			Internal.InternalTransform intTransform = Internal.Lib3MFWrapper.convertStructToInternal_Transform (ATransform);
-			Int32 enumBlendMethod = (Int32) ABlendMethod;
-
-			CheckError(Internal.Lib3MFWrapper.VolumetricLayer_SetInformation (Handle, intTransform, enumBlendMethod, ASourceAlpha, ADestinationAlpha));
-		}
-
-		public CImage3DChannelSelector CreateMaskChannelSelector (CImage3D AImage3D, String ASourceChannel, String ADestinationChannel)
-		{
-			byte[] byteSourceChannel = Encoding.UTF8.GetBytes(ASourceChannel + char.MinValue);
-			byte[] byteDestinationChannel = Encoding.UTF8.GetBytes(ADestinationChannel + char.MinValue);
-			IntPtr newChannelSelector = IntPtr.Zero;
-
-			CheckError(Internal.Lib3MFWrapper.VolumetricLayer_CreateMaskChannelSelector (Handle, AImage3D.GetHandle(), byteSourceChannel, byteDestinationChannel, out newChannelSelector));
-			return new CImage3DChannelSelector (newChannelSelector );
-		}
-
-		public bool HasMaskChannelSelector ()
-		{
-			Byte resultSelectorExists = 0;
-
-			CheckError(Internal.Lib3MFWrapper.VolumetricLayer_HasMaskChannelSelector (Handle, out resultSelectorExists));
-			return (resultSelectorExists != 0);
-		}
-
-		public void ClearMaskChannelSelector ()
-		{
-
-			CheckError(Internal.Lib3MFWrapper.VolumetricLayer_ClearMaskChannelSelector (Handle));
-		}
-
-		public CImage3DChannelSelector GetMaskChannelSelector ()
-		{
-			IntPtr newChannelSelector = IntPtr.Zero;
-
-			CheckError(Internal.Lib3MFWrapper.VolumetricLayer_GetMaskChannelSelector (Handle, out newChannelSelector));
-			return new CImage3DChannelSelector (newChannelSelector );
-		}
-
-		public UInt32 GetChannelSelectorCount ()
-		{
-			UInt32 resultCount = 0;
-
-			CheckError(Internal.Lib3MFWrapper.VolumetricLayer_GetChannelSelectorCount (Handle, out resultCount));
-			return resultCount;
-		}
-
-		public CImage3DChannelSelector GetChannelSelector (UInt32 AIndex)
-		{
-			IntPtr newChannelSelector = IntPtr.Zero;
-
-			CheckError(Internal.Lib3MFWrapper.VolumetricLayer_GetChannelSelector (Handle, AIndex, out newChannelSelector));
-			return new CImage3DChannelSelector (newChannelSelector );
-		}
-
-		public CImage3DChannelSelector AddChannelSelector (CImage3D AImage3D, String ASourceChannel, String ADestinationChannel)
-		{
-			byte[] byteSourceChannel = Encoding.UTF8.GetBytes(ASourceChannel + char.MinValue);
-			byte[] byteDestinationChannel = Encoding.UTF8.GetBytes(ADestinationChannel + char.MinValue);
-			IntPtr newChannelSelector = IntPtr.Zero;
-
-			CheckError(Internal.Lib3MFWrapper.VolumetricLayer_AddChannelSelector (Handle, AImage3D.GetHandle(), byteSourceChannel, byteDestinationChannel, out newChannelSelector));
-			return new CImage3DChannelSelector (newChannelSelector );
-		}
-
-		public void ClearChannelSelectors ()
-		{
-
-			CheckError(Internal.Lib3MFWrapper.VolumetricLayer_ClearChannelSelectors (Handle));
-		}
-
-		public void ReindexChannelSelector (CImage3DChannelSelector AChannelSelector, UInt32 AIndex)
-		{
-
-			CheckError(Internal.Lib3MFWrapper.VolumetricLayer_ReindexChannelSelector (Handle, AChannelSelector.GetHandle(), AIndex));
-		}
-
-		public void RemoveChannelSelector (CImage3DChannelSelector AChannelSelector)
-		{
-
-			CheckError(Internal.Lib3MFWrapper.VolumetricLayer_RemoveChannelSelector (Handle, AChannelSelector.GetHandle()));
-		}
-
-		public void RemoveChannelSelectorByIndex (UInt32 AIndex)
-		{
-
-			CheckError(Internal.Lib3MFWrapper.VolumetricLayer_RemoveChannelSelectorByIndex (Handle, AIndex));
-		}
-
-	}
-
-	class CVolumetricStack : CResource
-	{
-		public CVolumetricStack (IntPtr NewHandle) : base (NewHandle)
-		{
-		}
-
-		public void Clear ()
-		{
-
-			CheckError(Internal.Lib3MFWrapper.VolumetricStack_Clear (Handle));
-		}
-
-		public void ClearUnusedDestinationChannels ()
-		{
-
-			CheckError(Internal.Lib3MFWrapper.VolumetricStack_ClearUnusedDestinationChannels (Handle));
-		}
-
-		public UInt32 GetDestinationChannelCount ()
-		{
-			UInt32 resultCount = 0;
-
-			CheckError(Internal.Lib3MFWrapper.VolumetricStack_GetDestinationChannelCount (Handle, out resultCount));
-			return resultCount;
-		}
-
-		public void GetDestinationChannel (UInt32 AIndex, out String AName, out Double ABackground)
-		{
-			UInt32 sizeName = 0;
-			UInt32 neededName = 0;
-			CheckError(Internal.Lib3MFWrapper.VolumetricStack_GetDestinationChannel (Handle, AIndex, sizeName, out neededName, IntPtr.Zero, out ABackground));
-			sizeName = neededName;
-			byte[] bytesName = new byte[sizeName];
-			GCHandle dataName = GCHandle.Alloc(bytesName, GCHandleType.Pinned);
-
-			CheckError(Internal.Lib3MFWrapper.VolumetricStack_GetDestinationChannel (Handle, AIndex, sizeName, out neededName, dataName.AddrOfPinnedObject(), out ABackground));
-			dataName.Free();
-			AName = Encoding.UTF8.GetString(bytesName).TrimEnd(char.MinValue);
-		}
-
-		public UInt32 AddDestinationChannel (String AName, Double ABackground)
-		{
-			byte[] byteName = Encoding.UTF8.GetBytes(AName + char.MinValue);
-			UInt32 resultIndex = 0;
-
-			CheckError(Internal.Lib3MFWrapper.VolumetricStack_AddDestinationChannel (Handle, byteName, ABackground, out resultIndex));
-			return resultIndex;
-		}
-
-		public void UpdateDestinationChannel (UInt32 AIndex, Double ABackground)
-		{
-
-			CheckError(Internal.Lib3MFWrapper.VolumetricStack_UpdateDestinationChannel (Handle, AIndex, ABackground));
-		}
-
-		public void UpdateDestinationChannelByName (String AName, Double ABackground)
-		{
-			byte[] byteName = Encoding.UTF8.GetBytes(AName + char.MinValue);
-
-			CheckError(Internal.Lib3MFWrapper.VolumetricStack_UpdateDestinationChannelByName (Handle, byteName, ABackground));
-		}
-
-		public void RemoveDestinationChannel (UInt32 AIndex)
-		{
-
-			CheckError(Internal.Lib3MFWrapper.VolumetricStack_RemoveDestinationChannel (Handle, AIndex));
-		}
-
-		public void RemoveDestinationChannelByName (String AName)
-		{
-			byte[] byteName = Encoding.UTF8.GetBytes(AName + char.MinValue);
-
-			CheckError(Internal.Lib3MFWrapper.VolumetricStack_RemoveDestinationChannelByName (Handle, byteName));
-		}
-
-		public UInt32 GetLayerCount ()
-		{
-			UInt32 resultCount = 0;
-
-			CheckError(Internal.Lib3MFWrapper.VolumetricStack_GetLayerCount (Handle, out resultCount));
-			return resultCount;
-		}
-
-		public CVolumetricLayer GetLayer (UInt32 AIndex)
-		{
-			IntPtr newLayer = IntPtr.Zero;
-
-			CheckError(Internal.Lib3MFWrapper.VolumetricStack_GetLayer (Handle, AIndex, out newLayer));
-			return new CVolumetricLayer (newLayer );
-		}
-
-		public CVolumetricLayer AddLayer (sTransform ATransform, eBlendMethod ABlendMethod)
-		{
-			Internal.InternalTransform intTransform = Internal.Lib3MFWrapper.convertStructToInternal_Transform (ATransform);
-			Int32 enumBlendMethod = (Int32) ABlendMethod;
-			IntPtr newLayer = IntPtr.Zero;
-
-			CheckError(Internal.Lib3MFWrapper.VolumetricStack_AddLayer (Handle, intTransform, enumBlendMethod, out newLayer));
-			return new CVolumetricLayer (newLayer );
-		}
-
-		public void ReindexLayer (CVolumetricLayer ALayer, UInt32 AIndex)
-		{
-
-			CheckError(Internal.Lib3MFWrapper.VolumetricStack_ReindexLayer (Handle, ALayer.GetHandle(), AIndex));
-		}
-
-		public void RemoveLayer (CVolumetricLayer ALayer)
-		{
-
-			CheckError(Internal.Lib3MFWrapper.VolumetricStack_RemoveLayer (Handle, ALayer.GetHandle()));
-		}
-
-		public void RemoveLayerByIndex (UInt32 AIndex)
-		{
-
-			CheckError(Internal.Lib3MFWrapper.VolumetricStack_RemoveLayerByIndex (Handle, AIndex));
+			byte[] bytePath = Encoding.UTF8.GetBytes(APath + char.MinValue);
+			byte[] byteFileName = Encoding.UTF8.GetBytes(AFileName + char.MinValue);
+			IntPtr newSheet = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ImageStack_CreateSheetFromFile (Handle, bytePath, byteFileName, out newSheet));
+			return new CAttachment (newSheet );
 		}
 
 	}
@@ -5954,20 +6057,28 @@ namespace Lib3MF {
 			return new CImage3DIterator (newResourceIterator );
 		}
 
+		public CScalarFieldIterator GetScalarFields ()
+		{
+			IntPtr newResourceIterator = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Model_GetScalarFields (Handle, out newResourceIterator));
+			return new CScalarFieldIterator (newResourceIterator );
+		}
+
+		public CVector3DFieldIterator GetVector3DFields ()
+		{
+			IntPtr newResourceIterator = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Model_GetVector3DFields (Handle, out newResourceIterator));
+			return new CVector3DFieldIterator (newResourceIterator );
+		}
+
 		public CModel MergeToModel ()
 		{
 			IntPtr newMergedModelInstance = IntPtr.Zero;
 
 			CheckError(Internal.Lib3MFWrapper.Model_MergeToModel (Handle, out newMergedModelInstance));
 			return new CModel (newMergedModelInstance );
-		}
-
-		public CVolumetricStackIterator GetVolumetricStacks ()
-		{
-			IntPtr newResourceIterator = IntPtr.Zero;
-
-			CheckError(Internal.Lib3MFWrapper.Model_GetVolumetricStacks (Handle, out newResourceIterator));
-			return new CVolumetricStackIterator (newResourceIterator );
 		}
 
 		public CMeshObject AddMeshObject ()
@@ -6042,20 +6153,92 @@ namespace Lib3MF {
 			return new CMultiPropertyGroup (newMultiPropertyGroupInstance );
 		}
 
-		public CImage3D AddImage3D (UInt32 ASizeX, UInt32 ASizeY, UInt32 ASheetCount)
+		public CImageStack AddImageStack (UInt32 AColumnCount, UInt32 ARowCount, UInt32 ASheetCount)
 		{
 			IntPtr newInstance = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.Model_AddImage3D (Handle, ASizeX, ASizeY, ASheetCount, out newInstance));
-			return new CImage3D (newInstance );
+			CheckError(Internal.Lib3MFWrapper.Model_AddImageStack (Handle, AColumnCount, ARowCount, ASheetCount, out newInstance));
+			return new CImageStack (newInstance );
 		}
 
-		public CVolumetricStack AddVolumetricStack ()
+		public CScalarFieldFromImage3D AddScalarFieldFromImage3D ()
 		{
-			IntPtr newInstance = IntPtr.Zero;
+			IntPtr newTheScalarFieldFromImage3D = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.Model_AddVolumetricStack (Handle, out newInstance));
-			return new CVolumetricStack (newInstance );
+			CheckError(Internal.Lib3MFWrapper.Model_AddScalarFieldFromImage3D (Handle, out newTheScalarFieldFromImage3D));
+			return new CScalarFieldFromImage3D (newTheScalarFieldFromImage3D );
+		}
+
+		public CScalarFieldComposed AddScalarFieldComposed ()
+		{
+			IntPtr newTheScalarFieldComposed = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Model_AddScalarFieldComposed (Handle, out newTheScalarFieldComposed));
+			return new CScalarFieldComposed (newTheScalarFieldComposed );
+		}
+
+		public CScalarField GetScalarFieldByID (UInt32 AUniqueResourceID)
+		{
+			IntPtr newScalarFieldInstance = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Model_GetScalarFieldByID (Handle, AUniqueResourceID, out newScalarFieldInstance));
+			return new CScalarField (newScalarFieldInstance );
+		}
+
+		public CScalarFieldFromImage3D GetScalarFieldFromImage3DByID (UInt32 AUniqueResourceID)
+		{
+			IntPtr newScalarFieldFromImage3DInstance = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Model_GetScalarFieldFromImage3DByID (Handle, AUniqueResourceID, out newScalarFieldFromImage3DInstance));
+			return new CScalarFieldFromImage3D (newScalarFieldFromImage3DInstance );
+		}
+
+		public CScalarFieldComposed GetScalarFieldComposedByID (UInt32 AUniqueResourceID)
+		{
+			IntPtr newScalarFieldComposedInstance = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Model_GetScalarFieldComposedByID (Handle, AUniqueResourceID, out newScalarFieldComposedInstance));
+			return new CScalarFieldComposed (newScalarFieldComposedInstance );
+		}
+
+		public CVector3DFieldFromImage3D AddVector3DFieldFromImage3D ()
+		{
+			IntPtr newTheVector3DFieldFromImage3D = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Model_AddVector3DFieldFromImage3D (Handle, out newTheVector3DFieldFromImage3D));
+			return new CVector3DFieldFromImage3D (newTheVector3DFieldFromImage3D );
+		}
+
+		public CVector3DFieldComposed AddVector3DFieldComposed ()
+		{
+			IntPtr newTheVector3DFieldComposed = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Model_AddVector3DFieldComposed (Handle, out newTheVector3DFieldComposed));
+			return new CVector3DFieldComposed (newTheVector3DFieldComposed );
+		}
+
+		public CVector3DField GetVector3DFieldByID (UInt32 AUniqueResourceID)
+		{
+			IntPtr newVector3DFieldInstance = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Model_GetVector3DFieldByID (Handle, AUniqueResourceID, out newVector3DFieldInstance));
+			return new CVector3DField (newVector3DFieldInstance );
+		}
+
+		public CVector3DFieldFromImage3D GetVector3DFieldFromImage3DByID (UInt32 AUniqueResourceID)
+		{
+			IntPtr newVector3DFieldFromImage3DInstance = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Model_GetVector3DFieldFromImage3DByID (Handle, AUniqueResourceID, out newVector3DFieldFromImage3DInstance));
+			return new CVector3DFieldFromImage3D (newVector3DFieldFromImage3DInstance );
+		}
+
+		public CVector3DFieldComposed GetVector3DFieldComposedByID (UInt32 AUniqueResourceID)
+		{
+			IntPtr newVector3DFieldComposedInstance = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Model_GetVector3DFieldComposedByID (Handle, AUniqueResourceID, out newVector3DFieldComposedInstance));
+			return new CVector3DFieldComposed (newVector3DFieldComposedInstance );
 		}
 
 		public CBuildItem AddBuildItem (CObject AObject, sTransform ATransform)

@@ -32,9 +32,7 @@ Abstract: This is a stub class definition of CVolumeData
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
-#include "lib3mf_volumedatalevelset.hpp"
-#include "lib3mf_volumedataproperty.hpp"
-#include "lib3mf_volumedatacolor.hpp"
+
 
 using namespace Lib3MF::Impl;
 
@@ -42,28 +40,19 @@ using namespace Lib3MF::Impl;
  Class definition of CVolumeData 
 **************************************************************************************************************************/
 
-CVolumeData::CVolumeData(NMR::PModelMeshObject pMeshObject, NMR::PModelVolumeData pVolumeData, NMR::CModel* pModel)
-	: m_pVolumeData(pVolumeData), m_pMeshObject(pMeshObject), m_pModel(pModel)
-{
-	if (m_pVolumeData.get() == nullptr)
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
-}
-
 IVolumeDataLevelset * CVolumeData::GetLevelset()
 {
-	if (m_pVolumeData->GetLevelset()) {
-		return new CVolumeDataLevelset(m_pVolumeData->GetLevelset(), m_pModel);
-	}
-	return nullptr;
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-IVolumeDataLevelset * CVolumeData::CreateNewLevelset(IVolumetricStack* pTheVolumetricStack)
+IVolumeDataLevelset * CVolumeData::CreateNewLevelset(IScalarField* pTheScalarField, const Lib3MF::sTransform Transform)
 {
-	NMR::PModelVolumetricStack pVolStack = m_pModel->findVolumetricStack(pTheVolumetricStack->GetResourceID());
-	if (!pVolStack) {
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_RESOURCENOTFOUND);
-	}
-	return new CVolumeDataLevelset(m_pVolumeData->CreateLevelset(pVolStack), m_pModel);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
+
+void CVolumeData::RemoveLevelset()
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 IVolumeDataComposite * CVolumeData::GetComposite()
@@ -71,58 +60,48 @@ IVolumeDataComposite * CVolumeData::GetComposite()
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-IVolumeDataComposite * CVolumeData::CreateNewComposite(IVolumetricStack* pTheVolumetricStack)
+IVolumeDataComposite * CVolumeData::CreateNewComposite()
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
+
+void CVolumeData::RemoveComposite()
 {
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 IVolumeDataColor * CVolumeData::GetColor()
 {
-	return new CVolumeDataColor(m_pVolumeData->GetColor(), m_pModel);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-IVolumeDataColor * CVolumeData::CreateNewColor(IVolumetricStack* pTheVolumetricStack)
+IVolumeDataColor * CVolumeData::CreateNewColor(IVector3DField* pTheVector3DField, const Lib3MF::sTransform Transform)
 {
-	NMR::PModelVolumetricStack pVolStack = m_pModel->findVolumetricStack(pTheVolumetricStack->GetResourceID());
-	if (!pVolStack) {
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_RESOURCENOTFOUND);
-	}
-	return new CVolumeDataColor(m_pVolumeData->CreateColor(pVolStack), m_pModel);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
+
+void CVolumeData::RemoveColor()
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 Lib3MF_uint32 CVolumeData::GetPropertyCount()
 {
-	return m_pVolumeData->GetPropertyCount();
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 IVolumeDataProperty * CVolumeData::GetProperty(const Lib3MF_uint32 nIndex)
 {
-	auto pProperty = m_pVolumeData->GetProperty(nIndex);
-	return new CVolumeDataProperty(pProperty, m_pModel);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-IVolumeDataProperty * CVolumeData::AddProperty(const std::string & sName, IVolumetricStack* pTheVolumetricStack)
+IVolumeDataProperty * CVolumeData::AddProperty(const std::string & sName, const Lib3MF_uint32 nUniqueResourceID)
 {
-	NMR::PModelVolumetricStack pVolStack = m_pModel->findVolumetricStack(pTheVolumetricStack->GetResourceID());
-	if (!pVolStack) {
-		throw ELib3MFInterfaceException(LIB3MF_ERROR_RESOURCENOTFOUND);
-	}
-
-	auto pProperty = m_pVolumeData->CreateProperty(sName, pVolStack);
-	return new CVolumeDataProperty(pProperty, m_pModel);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-IVolumeDataProperty* CVolumeData::FindProperty(const std::string & sName)
+void CVolumeData::RemoveProperty(const Lib3MF_uint32 nIndex)
 {
-	auto pProperty = m_pVolumeData->FindProperty(sName);
-	if (pProperty) {
-		return new CVolumeDataProperty(pProperty, m_pModel);
-	}
-	return nullptr;
-}
-
-void CVolumeData::RemoveProperty(const std::string & sName)
-{
-	m_pVolumeData->RemoveProperty(sName);
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 

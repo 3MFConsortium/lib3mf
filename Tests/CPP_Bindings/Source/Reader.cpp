@@ -134,17 +134,18 @@ namespace Lib3MF
 		auto pIterator = model->GetImage3Ds();
 		ASSERT_EQ (pIterator->MoveNext (), true);
 		auto pImage3D = pIterator->GetCurrentImage3D();
-		ASSERT_EQ(pImage3D->GetSizeX(), 10);
-		ASSERT_EQ(pImage3D->GetSizeY(), 10);
-		ASSERT_EQ(pImage3D->GetSheetCount(), 3);
+		ASSERT_EQ(false, true);
+		//ASSERT_EQ(pImage3D->GetSizeX(), 10);
+		//ASSERT_EQ(pImage3D->GetSizeY(), 10);
+		//ASSERT_EQ(pImage3D->GetSheetCount(), 3);
 
-		ASSERT_EQ(pIterator->MoveNext(), false);
+		//ASSERT_EQ(pIterator->MoveNext(), false);
 
-		auto pVolumeIterator = model->GetVolumetricStacks();
-		ASSERT_EQ(pVolumeIterator->MoveNext(), true);
-		auto pVolumetricStack = pVolumeIterator->GetCurrentVolumetricStack();
+		//auto pVolumeIterator = model->GetVolumetricStacks();
+		//ASSERT_EQ(pVolumeIterator->MoveNext(), true);
+		//auto pVolumetricStack = pVolumeIterator->GetCurrentVolumetricStack();
 
-		ASSERT_EQ(pVolumeIterator->MoveNext(), false);
+		//ASSERT_EQ(pVolumeIterator->MoveNext(), false);
 	}
 
 	TEST_F(Reader, 3MFReadVolumetric2)
@@ -155,37 +156,38 @@ namespace Lib3MF
 		auto pIterator = model->GetImage3Ds();
 		ASSERT_EQ(pIterator->MoveNext(), true);
 		auto pImage3D = pIterator->GetCurrentImage3D();
-		ASSERT_EQ(pImage3D->GetSizeX(), 821);
-		ASSERT_EQ(pImage3D->GetSizeY(), 819);
-		ASSERT_EQ(pImage3D->GetSheetCount(), 11);
+		ASSERT_TRUE(false);
+		//ASSERT_EQ(pImage3D->GetSizeX(), 821);
+		//ASSERT_EQ(pImage3D->GetSizeY(), 819);
+		//ASSERT_EQ(pImage3D->GetSheetCount(), 11);
 
-		ASSERT_EQ(pIterator->MoveNext(), false);
+		//ASSERT_EQ(pIterator->MoveNext(), false);
 
-		auto pVolumeIterator = model->GetVolumetricStacks();
-		ASSERT_EQ(pVolumeIterator->MoveNext(), true);
-		auto pVolumetricStack = pVolumeIterator->GetCurrentVolumetricStack();
+		//auto pVolumeIterator = model->GetVolumetricStacks();
+		//ASSERT_EQ(pVolumeIterator->MoveNext(), true);
+		//auto pVolumetricStack = pVolumeIterator->GetCurrentVolumetricStack();
 
-		ASSERT_EQ(pVolumetricStack->GetDestinationChannelCount(), 1);
+		//ASSERT_EQ(pVolumetricStack->GetDestinationChannelCount(), 1);
 
-		ASSERT_EQ(pVolumeIterator->MoveNext(), false);
+		//ASSERT_EQ(pVolumeIterator->MoveNext(), false);
 
-		auto meshObjects = model->GetMeshObjects();
-		ASSERT_EQ(meshObjects->MoveNext(), true);
-		auto mesh = meshObjects->GetCurrentMeshObject();
+		//auto meshObjects = model->GetMeshObjects();
+		//ASSERT_EQ(meshObjects->MoveNext(), true);
+		//auto mesh = meshObjects->GetCurrentMeshObject();
 
-		auto levelset = mesh->VolumeData()->GetLevelset();
-		ASSERT_TRUE(levelset != nullptr);
+		//auto levelset = mesh->VolumeData()->GetLevelset();
+		//ASSERT_TRUE(levelset != nullptr);
 
-		std::string sChannelName;
-		double dValue;
-		pVolumetricStack->GetDestinationChannel(0, sChannelName, dValue);
-		ASSERT_TRUE(levelset->GetChannel() == sChannelName);
+		//std::string sChannelName;
+		//double dValue;
+		//pVolumetricStack->GetDestinationChannel(0, sChannelName, dValue);
+		//ASSERT_TRUE(levelset->GetChannel() == sChannelName);
 
-		ASSERT_DOUBLE_EQ(levelset->GetSolidThreshold(), 0.4);
-		auto pLevelsetStack = levelset->GetVolumetricStack();
-		ASSERT_EQ(pLevelsetStack->GetResourceID(), pVolumetricStack->GetResourceID());
+		//ASSERT_DOUBLE_EQ(levelset->GetSolidThreshold(), 0.4);
+		//auto pLevelsetStack = levelset->GetVolumetricStack();
+		//ASSERT_EQ(pLevelsetStack->GetResourceID(), pVolumetricStack->GetResourceID());
 
-		sLib3MFTransform sTransform = levelset->GetTransform();
-		ASSERT_FLOAT_EQ(sTransform.m_Fields[1][1], 2.0f);
+		//sLib3MFTransform sTransform = levelset->GetTransform();
+		//ASSERT_FLOAT_EQ(sTransform.m_Fields[1][1], 2.0f);
 	}
 }

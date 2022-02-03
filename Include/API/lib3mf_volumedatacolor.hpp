@@ -35,14 +35,13 @@ Abstract: This is the class declaration of CVolumeDataColor
 #include "lib3mf_interfaces.hpp"
 
 // Parent classes
-#include "lib3mf_volumedataitem.hpp"
+#include "lib3mf_vector3dfieldreference.hpp"
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable : 4250)
 #endif
 
 // Include custom headers here.
-#include "Common/Mesh/NMR_VolumeColor.h"
 
 
 namespace Lib3MF {
@@ -53,7 +52,7 @@ namespace Impl {
  Class declaration of CVolumeDataColor 
 **************************************************************************************************************************/
 
-class CVolumeDataColor : public virtual IVolumeDataColor, public virtual CVolumeDataItem {
+class CVolumeDataColor : public virtual IVolumeDataColor, public virtual CVector3DFieldReference {
 private:
 
 	/**
@@ -65,23 +64,17 @@ protected:
 	/**
 	* Put protected members here.
 	*/
-	NMR::CVolumeColor* VolumeColor();
 
 public:
 
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-	CVolumeDataColor(NMR::PVolumeColor pVolumeColor, NMR::CModel* pModel);
 
 
 	/**
 	* Public member functions to implement.
 	*/
-
-	void SetChannel(const Lib3MF::eColorChannel eTheColorChannel, const std::string & sChannelName) override;
-
-	std::string GetChannel(const Lib3MF::eColorChannel eTheColorChannel) override;
 
 };
 
