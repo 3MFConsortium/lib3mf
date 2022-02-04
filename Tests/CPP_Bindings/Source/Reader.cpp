@@ -128,13 +128,13 @@ namespace Lib3MF
 
 	TEST_F(Reader, 3MFReadVolumetric)
 	{
-		Reader::reader3MF->ReadFromFile(sTestFilesPath + "/Reader/" + "PyramidVolume.3mf");
-		CheckReaderWarnings(Reader::reader3MF, 0);
-
-		auto pIterator = model->GetImage3Ds();
-		ASSERT_EQ (pIterator->MoveNext (), true);
-		auto pImage3D = pIterator->GetCurrentImage3D();
 		ASSERT_EQ(false, true);
+		//Reader::reader3MF->ReadFromFile(sTestFilesPath + "/Reader/" + "PyramidVolume.3mf");
+		//CheckReaderWarnings(Reader::reader3MF, 0);
+
+		//auto pIterator = model->GetImage3Ds();
+		//ASSERT_EQ (pIterator->MoveNext (), true);
+		//auto pImage3D = pIterator->GetCurrentImage3D();
 		//ASSERT_EQ(pImage3D->GetSizeX(), 10);
 		//ASSERT_EQ(pImage3D->GetSizeY(), 10);
 		//ASSERT_EQ(pImage3D->GetSheetCount(), 3);
@@ -150,13 +150,13 @@ namespace Lib3MF
 
 	TEST_F(Reader, 3MFReadVolumetric2)
 	{
-		Reader::reader3MF->ReadFromFile(sTestFilesPath + "/Volumetric/" + "ColoredVolume.3mf");
-		CheckReaderWarnings(Reader::reader3MF, 1); // missing Image3D Name
-
-		auto pIterator = model->GetImage3Ds();
-		ASSERT_EQ(pIterator->MoveNext(), true);
-		auto pImage3D = pIterator->GetCurrentImage3D();
 		ASSERT_TRUE(false);
+		//Reader::reader3MF->ReadFromFile(sTestFilesPath + "/Volumetric/" + "ColoredVolume.3mf");
+		//CheckReaderWarnings(Reader::reader3MF, 1); // missing Image3D Name
+
+		//auto pIterator = model->GetImage3Ds();
+		//ASSERT_EQ(pIterator->MoveNext(), true);
+		//auto pImage3D = pIterator->GetCurrentImage3D();
 		//ASSERT_EQ(pImage3D->GetSizeX(), 821);
 		//ASSERT_EQ(pImage3D->GetSizeY(), 819);
 		//ASSERT_EQ(pImage3D->GetSheetCount(), 11);

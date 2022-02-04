@@ -910,7 +910,7 @@
 		</method>
 	</class>
 
-	<class name="Vector3DFieldFromImage3D" parent="ScalarField">
+	<class name="Vector3DFieldFromImage3D" parent="Vector3DField">
 		<method name="GetImage" description="Returns the selected 3D image.">
 			<param name="Image3D" type="class" class="Image3D" pass="return" description="image instance" />
 		</method>
@@ -947,7 +947,7 @@
 		</method>
 	</class>
 
-	<class name="Vector3DFieldComposed" parent="ScalarField">
+	<class name="Vector3DFieldComposed" parent="Vector3DField">
 		<method name="SetMethod" description="Sets the method to used for composition.">
 			<param name="TheMethod" type="enum" class="CompositionMethod" pass="in" description="Sets the composition method." />
 		</method>

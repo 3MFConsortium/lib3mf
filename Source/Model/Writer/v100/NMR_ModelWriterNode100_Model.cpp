@@ -42,7 +42,6 @@ This is the class for exporting the 3mf model stream root node.
 #include "Model/Classes/NMR_ModelTexture2D.h"
 #include "Model/Classes/NMR_ModelTexture2DGroup.h"
 #include "Model/Classes/NMR_ModelImage3D.h"
-#include "Model/Classes/NMR_ModelVolumetricStack.h"
 #include "Model/Classes/NMR_ModelCompositeMaterials.h"
 #include "Model/Classes/NMR_ModelMultiPropertyGroup.h"
 #include "Model/Classes/NMR_ModelMeshObject.h"
@@ -744,102 +743,34 @@ namespace NMR {
 
 	void CModelWriterNode100_Model::writeImages3D()
 	{
-		nfUint32 nCount = m_pModel->getImage3DCount();
-		for (nfUint32 nIndex = 0; nIndex < nCount; nIndex++) {
-			CModelImage3D * pImage3DResource = m_pModel->getImage3D(nIndex);
-			nfUint32 nSheetCount = pImage3DResource->getSheetCount();
+		throw CNMRException(-1);
+		//nfUint32 nCount = m_pModel->getImage3DCount();
+		//for (nfUint32 nIndex = 0; nIndex < nCount; nIndex++) {
+		//	CModelImage3D * pImage3DResource = m_pModel->getImage3D(nIndex);
+		//	nfUint32 nSheetCount = pImage3DResource->getSheetCount();
 
-			writeStartElementWithPrefix(XML_3MF_ELEMENT_IMAGE3D, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
+		//	writeStartElementWithPrefix(XML_3MF_ELEMENT_IMAGE3D, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
 
-			writeIntAttribute(XML_3MF_ATTRIBUTE_IMAGE3D_ID, pImage3DResource->getPackageResourceID()->getUniqueID());
-			writeIntAttribute(XML_3MF_ATTRIBUTE_IMAGE3D_SIZEX, pImage3DResource->getSizeX());
-			writeIntAttribute(XML_3MF_ATTRIBUTE_IMAGE3D_SIZEY, pImage3DResource->getSizeY());
-			writeIntAttribute(XML_3MF_ATTRIBUTE_IMAGE3D_SHEETCOUNT, nSheetCount);
+		//	writeIntAttribute(XML_3MF_ATTRIBUTE_IMAGE3D_ID, pImage3DResource->getPackageResourceID()->getUniqueID());
+		//	writeIntAttribute(XML_3MF_ATTRIBUTE_IMAGE3D_SIZEX, pImage3DResource->getSizeX());
+		//	writeIntAttribute(XML_3MF_ATTRIBUTE_IMAGE3D_SIZEY, pImage3DResource->getSizeY());
+		//	writeIntAttribute(XML_3MF_ATTRIBUTE_IMAGE3D_SHEETCOUNT, nSheetCount);
 
-			for (nfUint32 nSheetIndex = 0; nSheetIndex < nSheetCount; nSheetIndex++) {
-				auto pSheet = pImage3DResource->getSheet(nSheetIndex);
-				writeStartElementWithPrefix(XML_3MF_ELEMENT_IMAGE3DSHEET, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
-				if (pSheet.get() != nullptr) {
-					writeStringAttribute(XML_3MF_ATTRIBUTE_IMAGE3DSHEET_PATH, pSheet->getPathURI());
-					writeFloatAttribute(XML_3MF_ATTRIBUTE_IMAGE3DSHEET_MIN_VAL, (float)pImage3DResource->getSheetMinValue(nSheetIndex));
-					writeFloatAttribute(XML_3MF_ATTRIBUTE_IMAGE3DSHEET_MAX_VAL, (float)pImage3DResource->getSheetMaxValue(nSheetIndex));
-				}
-				writeEndElement();
-			}
+		//	for (nfUint32 nSheetIndex = 0; nSheetIndex < nSheetCount; nSheetIndex++) {
+		//		auto pSheet = pImage3DResource->getSheet(nSheetIndex);
+		//		writeStartElementWithPrefix(XML_3MF_ELEMENT_IMAGE3DSHEET, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
+		//		if (pSheet.get() != nullptr) {
+		//			writeStringAttribute(XML_3MF_ATTRIBUTE_IMAGE3DSHEET_PATH, pSheet->getPathURI());
+		//			writeFloatAttribute(XML_3MF_ATTRIBUTE_IMAGE3DSHEET_MIN_VAL, (float)pImage3DResource->getSheetMinValue(nSheetIndex));
+		//			writeFloatAttribute(XML_3MF_ATTRIBUTE_IMAGE3DSHEET_MAX_VAL, (float)pImage3DResource->getSheetMaxValue(nSheetIndex));
+		//		}
+		//		writeEndElement();
+		//	}
 
-			writeFullEndElement();
+		//	writeFullEndElement();
 
-		}
+		//}
 
-	}
-
-
-	void CModelWriterNode100_Model::writeVolumetricStacks()
-	{
-		nfUint32 nCount = m_pModel->getVolumetricStackCount();
-		for (nfUint32 nIndex = 0; nIndex < nCount; nIndex++) {
-			CModelVolumetricStack * pStackResource = m_pModel->getVolumetricStack(nIndex);
-
-			writeStartElementWithPrefix(XML_3MF_ELEMENT_VOLUMETRICSTACK, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
-			writeIntAttribute(XML_3MF_ATTRIBUTE_VOLUMETRICSTACK_ID, pStackResource->getPackageResourceID()->getUniqueID());
-
-			nfUint32 nChannelCount = pStackResource->getDstChannelCount();
-			for (nfUint32 nChannelIdx = 0; nChannelIdx < nChannelCount; nChannelIdx++) {
-				auto pChannel = pStackResource->getDstChannel(nChannelIdx);
-				writeStartElementWithPrefix(XML_3MF_ELEMENT_DSTCHANNEL, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
-				writeStringAttribute(XML_3MF_ATTRIBUTE_DSTCHANNEL_NAME, pChannel->getName());
-				writeFloatAttribute(XML_3MF_ATTRIBUTE_DSTCHANNEL_BACKGROUND, (nfFloat) pChannel->getBackground());
-				writeEndElement();
-			}
-
-			nfUint32 nLayerCount = pStackResource->getLayerCount();
-			for (nfUint32 nLayerIdx = 0; nLayerIdx < nLayerCount; nLayerIdx++) {
-				auto pLayer = pStackResource->getLayer(nLayerIdx);
-				writeStartElementWithPrefix(XML_3MF_ELEMENT_VOLUMETRICLAYER, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
-				writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMETRICLAYER_TRANSFORM, pLayer->getTransformString());
-				if (pLayer->getBlendMethod() == MODELBLENDMETHOD_MIX) {
-					writeFloatAttribute(XML_3MF_ATTRIBUTE_VOLUMETRICLAYER_SRCALPHA, (nfFloat)pLayer->getSourceAlpha());
-					writeFloatAttribute(XML_3MF_ATTRIBUTE_VOLUMETRICLAYER_DSTALPHA, (nfFloat)pLayer->getDstAlpha());
-				}
-				writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMETRICLAYER_BLENDMETHOD, CModelMultiPropertyGroupResource::blendMethodToString(pLayer->getBlendMethod ()));
-
-				auto pMaskSelector = pLayer->getMaskChannelSelector();
-				if (pMaskSelector.get() != nullptr) {
-					writeImage3DChannelSelector(pMaskSelector.get(), XML_3MF_ELEMENT_MASKINGCHANNELSELECTOR);
-				}
-
-				nfUint32 nSelectorCount = pLayer->getChannelSelectorCount();
-				for (nfUint32 nSelectorIndex = 0; nSelectorIndex < nSelectorCount; nSelectorIndex++) {
-					auto pChannelSelector = pLayer->getChannelSelector(nSelectorIndex);
-					writeImage3DChannelSelector(pChannelSelector.get(), XML_3MF_ELEMENT_SOURCECHANNELSELECTOR);
-				}
-
-				writeFullEndElement();
-			}
-
-
-			writeFullEndElement();
-
-		}
-
-	}
-
-
-	void CModelWriterNode100_Model::writeImage3DChannelSelector(CModelImage3DChannelSelector * pSelector, std::string sElementName)
-	{
-		if (pSelector == nullptr)
-			throw CNMRException(NMR_ERROR_INVALIDPARAM);
-
-		writeStartElementWithPrefix(sElementName.c_str(), XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
-		writeIntAttribute(XML_3MF_ATTRIBUTE_CHANNELSELECTOR_IMAGE3DID, pSelector->getImage3DID()->getUniqueID());
-		writeStringAttribute(XML_3MF_ATTRIBUTE_CHANNELSELECTOR_SRCCHANNEL, pSelector->getSourceChannel ());
-		writeStringAttribute(XML_3MF_ATTRIBUTE_CHANNELSELECTOR_DSTCHANNEL, pSelector->getDstChannel());
-		writeStringAttribute(XML_3MF_ATTRIBUTE_CHANNELSELECTOR_FILTER, CModelTexture2DResource::filterToString(pSelector->getFilter()));
-		writeStringAttribute(XML_3MF_ATTRIBUTE_CHANNELSELECTOR_TILESTYLEU, CModelTexture2DResource::tileStyleToString(pSelector->getTileStyleU()));
-		writeStringAttribute(XML_3MF_ATTRIBUTE_CHANNELSELECTOR_TILESTYLEV, CModelTexture2DResource::tileStyleToString(pSelector->getTileStyleV()));
-		writeStringAttribute(XML_3MF_ATTRIBUTE_CHANNELSELECTOR_TILESTYLEW, CModelTexture2DResource::tileStyleToString(pSelector->getTileStyleW()));
-
-		writeEndElement();
 	}
 
 	void CModelWriterNode100_Model::writeMultiProperties()
@@ -884,7 +815,7 @@ namespace NMR {
 			}
 			if (m_bWriteVolumetricExtension) {
 				writeImages3D();
-				writeVolumetricStacks();
+				throw CNMRException(-1);
 			}
 			if (m_bWriteObjects)
 				writeObjects();

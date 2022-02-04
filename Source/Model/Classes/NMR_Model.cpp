@@ -49,7 +49,8 @@ A model is an in memory representation of the 3MF file.
 #include "Model/Classes/NMR_ModelSliceStack.h"
 #include "Model/Classes/NMR_ModelMetaDataGroup.h"
 #include "Model/Classes/NMR_KeyStore.h"
-#include "Model/Classes/NMR_ModelVolumetricStack.h"
+#include "Model/Classes/NMR_ModelVector3DField.h"
+#include "Model/Classes/NMR_ModelScalarField.h"
 
 #include "Common/Mesh/NMR_Mesh.h"
 #include "Common/MeshInformation/NMR_MeshInformation.h"
@@ -537,10 +538,6 @@ namespace NMR {
 		CModelImage3D *pImage3d = dynamic_cast<CModelImage3D *>(pResource.get());
 		if (pImage3d != nullptr)
 			m_Image3DLookup.push_back(pResource);
-
-		CModelVolumetricStack *pVolumetricStack = dynamic_cast<CModelVolumetricStack *>(pResource.get());
-		if (pVolumetricStack != nullptr)
-			m_VolumetricStackLookup.push_back(pResource);
 	}
 
 	// Clear all build items and Resources
@@ -560,7 +557,6 @@ namespace NMR {
 		m_CompositeMaterialsLookup.clear();
 		m_MultiPropertyGroupLookup.clear();
 		m_Image3DLookup.clear();
-		m_VolumetricStackLookup.clear();
 
 		m_MetaDataGroup->clear();
 	}
@@ -970,104 +966,41 @@ namespace NMR {
 
 	void CModel::mergeImages3D(_In_ CModel * pSourceModel, _In_ std::map<PPackageResourceID, PPackageResourceID> & PackageIDMap)
 	{
-		if (pSourceModel == nullptr)
-			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+		throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
+		//if (pSourceModel == nullptr)
+		//	throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-		nfUint32 nCount = pSourceModel->getImage3DCount();
-		nfUint32 nIndex;
+		//nfUint32 nCount = pSourceModel->getImage3DCount();
+		//nfUint32 nIndex;
 
-		for (nIndex = 0; nIndex < nCount; nIndex++)
-		{
-			CModelImage3D * pImage3D = pSourceModel->getImage3D(nIndex);
-			if (pImage3D == nullptr)
-				throw CNMRException(NMR_ERROR_INVALIDPARAM);
+		//for (nIndex = 0; nIndex < nCount; nIndex++)
+		//{
+		//	CModelImage3D * pImage3D = pSourceModel->getImage3D(nIndex);
+		//	if (pImage3D == nullptr)
+		//		throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-			nfUint32 nSheetCount = pImage3D->getSheetCount();;
-			nfUint32 nIndex;
-			PModelImage3D pNewImage3D = CModelImage3D::make(generateResourceID(), this, pImage3D->getSizeX(), pImage3D->getSizeY(), nSheetCount);
+		//	nfUint32 nSheetCount = pImage3D->getSheetCount();;
+		//	nfUint32 nIndex;
+		//	PModelImage3D pNewImage3D = CModelImage3D::make(generateResourceID(), this, pImage3D->getSizeX(), pImage3D->getSizeY(), nSheetCount);
 
-			for (nIndex = 0; nIndex < nSheetCount; nIndex++) {
-				PModelAttachment pSheet = pImage3D->getSheet(nIndex);
-				if (pSheet.get() != nullptr) {
-					PModelAttachment pNewSheet = findModelAttachment(pSheet->getPathURI());
-					if (pNewSheet.get() == nullptr)
-						throw CNMRException(NMR_ERROR_ATTACHMENTNOTFOUND);
+		//	for (nIndex = 0; nIndex < nSheetCount; nIndex++) {
+		//		PModelAttachment pSheet = pImage3D->getSheet(nIndex);
+		//		if (pSheet.get() != nullptr) {
+		//			PModelAttachment pNewSheet = findModelAttachment(pSheet->getPathURI());
+		//			if (pNewSheet.get() == nullptr)
+		//				throw CNMRException(NMR_ERROR_ATTACHMENTNOTFOUND);
 
-					pNewImage3D->setSheet(nIndex, pNewSheet, 0.0, 0.0);
-				}
-			}
+		//			pNewImage3D->setSheet(nIndex, pNewSheet, 0.0, 0.0);
+		//		}
+		//	}
 
-			addResource(pNewImage3D);
+		//	addResource(pNewImage3D);
 
-			PackageIDMap.insert(std::make_pair(pImage3D->getPackageResourceID(), pNewImage3D->getPackageResourceID()));
-		}
-
-	}
-
-	PModelVolumetricStack CModel::findVolumetricStack(_In_ UniqueResourceID nID)
-	{
-		PModelResource pResource = findResource(nID);
-		if (pResource != nullptr) {
-			PModelVolumetricStack pVolumetricResource = std::dynamic_pointer_cast<CModelVolumetricStack>(pResource);
-			if (pVolumetricResource.get() == nullptr)
-				throw CNMRException(NMR_ERROR_RESOURCETYPEMISMATCH);
-			return pVolumetricResource;
-		}
-		return nullptr;
+		//	PackageIDMap.insert(std::make_pair(pImage3D->getPackageResourceID(), pNewImage3D->getPackageResourceID()));
+		//}
 
 	}
 
-	nfUint32 CModel::getVolumetricStackCount()
-	{
-		return (nfUint32)m_VolumetricStackLookup.size();
-
-	}
-
-	PModelResource CModel::getVolumetricStackResource(_In_ nfUint32 nIndex)
-	{
-		nfUint32 nCount = getVolumetricStackCount();
-		if (nIndex >= nCount)
-			throw CNMRException(NMR_ERROR_INVALIDINDEX);
-
-		return m_VolumetricStackLookup[nIndex];
-
-	}
-
-	CModelVolumetricStack * CModel::getVolumetricStack(_In_ nfUint32 nIndex)
-	{
-		CModelVolumetricStack * pVolumetricStack = dynamic_cast<CModelVolumetricStack *> (getVolumetricStackResource(nIndex).get());
-		if (pVolumetricStack == nullptr)
-			throw CNMRException(NMR_ERROR_RESOURCETYPEMISMATCH);
-
-		return pVolumetricStack;
-
-	}
-
-	void CModel::mergeVolumetricStacks(_In_ CModel * pSourceModel, _In_ const std::map<PPackageResourceID, PPackageResourceID> & PackageIDMap)
-	{
-		if (pSourceModel == nullptr)
-			throw CNMRException(NMR_ERROR_INVALIDPARAM);
-
-		nfUint32 nCount = pSourceModel->getVolumetricStackCount();
-		nfUint32 nIndex;
-
-
-
-		for (nIndex = 0; nIndex < nCount; nIndex++)
-		{
-			CModelVolumetricStack * pVolumetricStack = pSourceModel->getVolumetricStack(nIndex);
-			if (pVolumetricStack == nullptr)
-				throw CNMRException(NMR_ERROR_INVALIDPARAM);
-
-			PModelVolumetricStack pNewVolumetricStack = CModelVolumetricStack::make_from(pVolumetricStack, generateResourceID(), this, PackageIDMap);
-			addResource(pNewVolumetricStack);
-
-		}
-
-	}
-
-
-	
 	nfUint32 CModel::createHandle()
 	{
 		if (m_nHandleCounter >= NMR_MAXHANDLE)

@@ -1188,14 +1188,14 @@ public:
 /*************************************************************************************************************************
  Class CVector3DFieldFromImage3D 
 **************************************************************************************************************************/
-class CVector3DFieldFromImage3D : public CScalarField {
+class CVector3DFieldFromImage3D : public CVector3DField {
 public:
 	
 	/**
 	* CVector3DFieldFromImage3D::CVector3DFieldFromImage3D - Constructor for Vector3DFieldFromImage3D class.
 	*/
 	CVector3DFieldFromImage3D(CWrapper* pWrapper, Lib3MFHandle pHandle)
-		: CScalarField(pWrapper, pHandle)
+		: CVector3DField(pWrapper, pHandle)
 	{
 	}
 	
@@ -1214,14 +1214,14 @@ public:
 /*************************************************************************************************************************
  Class CVector3DFieldComposed 
 **************************************************************************************************************************/
-class CVector3DFieldComposed : public CScalarField {
+class CVector3DFieldComposed : public CVector3DField {
 public:
 	
 	/**
 	* CVector3DFieldComposed::CVector3DFieldComposed - Constructor for Vector3DFieldComposed class.
 	*/
 	CVector3DFieldComposed(CWrapper* pWrapper, Lib3MFHandle pHandle)
-		: CScalarField(pWrapper, pHandle)
+		: CVector3DField(pWrapper, pHandle)
 	{
 	}
 	

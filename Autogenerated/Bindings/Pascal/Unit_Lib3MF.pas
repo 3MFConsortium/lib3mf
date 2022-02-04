@@ -5786,7 +5786,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
  Class definition for Vector3DFieldFromImage3D
 **************************************************************************************************************************)
 
-	TLib3MFVector3DFieldFromImage3D = class(TLib3MFScalarField)
+	TLib3MFVector3DFieldFromImage3D = class(TLib3MFVector3DField)
 	public
 		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
 		destructor Destroy; override;
@@ -5807,7 +5807,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
  Class definition for Vector3DFieldComposed
 **************************************************************************************************************************)
 
-	TLib3MFVector3DFieldComposed = class(TLib3MFScalarField)
+	TLib3MFVector3DFieldComposed = class(TLib3MFVector3DField)
 	public
 		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
 		destructor Destroy; override;

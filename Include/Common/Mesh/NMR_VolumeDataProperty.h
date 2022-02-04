@@ -26,30 +26,42 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_VolumeComposite.h defines the class CVolumeComposite.
+NMR_VolumeDataProperty.h defines the class CVolumeDataProperty.
 
 --*/
 
-#ifndef __NMR_VOLUMECOMPOSITE
-#define __NMR_VOLUMECOMPOSITE
+#ifndef __NMR_VOLUMEDATAPROPERTY
+#define __NMR_VOLUMEDATAPROPERTY
 
 #include "Common/NMR_Types.h"
 #include "Model/Classes/NMR_ModelTypes.h"
-#include "Common/Mesh/NMR_VolumeBase.h"
+#include "Common/NMR_FieldReference.h"
 
 namespace NMR {
+	class CModelScalarField;
+	typedef std::shared_ptr<CModelScalarField> PModelScalarField;
 
-	class CVolumeComposite : public CVolumeBase {
+	class CModelVector3DField;
+	typedef std::shared_ptr<CModelVector3DField> PModelVector3DField;
+
+	class CVolumeDataProperty : public CFieldReference {
 	private:
-
+		std::string m_sName;
+		bool m_bIsRequired;
 	public:
-		CVolumeComposite(PModelVolumetricStack pVolumetricStack);
+		CVolumeDataProperty() = delete;
+		CVolumeDataProperty(PModelScalarField pScalarField, std::string sName);
+		CVolumeDataProperty(PModelVector3DField pVectorField, std::string sName);
 
-		void clear();
+		std::string GetName();
+		void SetName(std::string sPropertyName);
+
+		bool IsRequired();
+		void SetIsRequired(bool bIsRequired);
 	};
 
-	typedef std::shared_ptr<CVolumeComposite> PVolumeComposite;
+	typedef std::shared_ptr<CVolumeDataProperty> PVolumeDataProperty;
 
 }
 
-#endif // __NMR_VOLUMECOMPOSITE
+#endif // __NMR_VOLUMEDATAPROPERTY

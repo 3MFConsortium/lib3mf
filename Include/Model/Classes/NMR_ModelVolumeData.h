@@ -33,43 +33,42 @@ NMR_VolumeData.h defines the class CVolumeData.
 #ifndef __NMR_VOLUMEDATA
 #define __NMR_VOLUMEDATA
 
+#include "Common/NMR_Types.h"
 #include "Common/Math/NMR_Geometry.h"
 #include "Common/Mesh/NMR_MeshTypes.h"
-#include "Common/NMR_Types.h"
-#include "Model/Classes/NMR_ModelTypes.h"
-#include "Common/Mesh/NMR_VolumeColor.h"
-#include "Common/Mesh/NMR_VolumeProperty.h"
-#include "Common/Mesh/NMR_VolumeLevelset.h"
-#include "Common/Mesh/NMR_VolumeComposite.h"
+#include "Common/Mesh/NMR_VolumeDataColor.h"
+#include "Common/Mesh/NMR_VolumeDataProperty.h"
+#include "Common/Mesh/NMR_VolumeDataLevelset.h"
+#include "Common/Mesh/NMR_VolumeDataComposite.h"
 
 namespace NMR {
 
 	class CModelVolumeData {
 	private:
-		PVolumeLevelset m_pLevelset;
-		PVolumeComposite m_pComposite;
-		PVolumeColor m_pColor;
-		std::map<std::string, PVolumeProperty> m_mapProperties;
+		PVolumeDataLevelset m_pLevelset;
+		PVolumeDataComposite m_pComposite;
+		PVolumeDataColor m_pColor;
+		std::map<std::string, PVolumeDataProperty> m_mapProperties;
 	public:
 		CModelVolumeData();
 
 		void clear();
 		bool HasLevelset();
-		PVolumeLevelset GetLevelset();
-		PVolumeLevelset CreateLevelset(PModelVolumetricStack pVolumetricStack);
-		void SetLevelset(PVolumeLevelset pLevelset);
+		PVolumeDataLevelset GetLevelset();
+		PVolumeDataLevelset CreateLevelset();
+		void SetLevelset(PVolumeDataLevelset pLevelset);
 
 		nfBool hasProperty(std::string sName);
 		nfUint32 GetPropertyCount();
-		PVolumeProperty GetProperty(nfUint32 nIndex);
-		PVolumeProperty FindProperty(std::string sName);
-		PVolumeProperty CreateProperty(std::string sName, PModelVolumetricStack pVolumetricStack);
+		PVolumeDataProperty GetProperty(nfUint32 nIndex);
+		PVolumeDataProperty FindProperty(std::string sName);
+		PVolumeDataProperty CreateProperty(std::string sName);
 		void RemoveProperty(std::string sName);
 
 		bool HasColor();
-		PVolumeColor GetColor();
-		PVolumeColor CreateColor(PModelVolumetricStack pVolumetricStack);
-		void SetColor(PVolumeColor pColor);
+		PVolumeDataColor GetColor();
+		PVolumeDataColor CreateColor();
+		void SetColor(PVolumeDataColor pColor);
 	};
 
 	typedef std::shared_ptr <CModelVolumeData> PModelVolumeData;

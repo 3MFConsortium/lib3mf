@@ -26,53 +26,30 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_VolumeColor.cpp implements the class CVolumeColor.
+NMR_ModelScalarField.cpp implements the Model ScalarField Class.
+A model scalar field is the base class of different scalar field specializations.
 
 --*/
 
-#include "Common/Mesh/NMR_VolumeColor.h" 
+#include "Model/Classes/NMR_ModelScalarField.h"
+#include "Model/Classes/NMR_ModelConstants.h"
+#include "Common/NMR_Exception.h"
 
 namespace NMR {
 
-	CVolumeColor::CVolumeColor(PModelVolumetricStack pVolumetricStack)
-		: CVolumeBase(pVolumetricStack)
+	CModelScalarField::CModelScalarField(_In_ const ModelResourceID sID, _In_ CModel * pModel)
+		: CModelResource(sID, pModel)
 	{
-
+	
 	}
 
-	void CVolumeColor::clear()
+	std::string CModelScalarField::getName()
 	{
-
+		return m_sName;
 	}
 
-	void CVolumeColor::SetChannel(const eModelColorChannel eTheColorChannel, const std::string & sChannelName)
+	void CModelScalarField::setName(_In_ std::string sName)
 	{
-		if (!GetVolumetricStack()->hasDstChannel(sChannelName)) {
-			throw CNMRException(NMR_ERROR_INVALIDPARAM);
-		}
-
-		if (eTheColorChannel > eModelColorChannel::MODELCOLORCHANNEL_BLUE)
-			throw CNMRException(NMR_ERROR_INVALIDPARAM);
-
-		if (eTheColorChannel == eModelColorChannel::MODELCOLORCHANNEL_RED)
-			m_sChannelRed = sChannelName;
-		else if (eTheColorChannel == eModelColorChannel::MODELCOLORCHANNEL_GREEN)
-			m_sChannelGreen = sChannelName;
-		else if (eTheColorChannel == eModelColorChannel::MODELCOLORCHANNEL_BLUE)
-			m_sChannelBlue = sChannelName;
+		m_sName = sName;
 	}
-
-	std::string CVolumeColor::GetChannel(const eModelColorChannel eTheColorChannel)
-	{
-		if (eTheColorChannel > eModelColorChannel::MODELCOLORCHANNEL_BLUE)
-			throw CNMRException(NMR_ERROR_INVALIDPARAM);
-
-		if (eTheColorChannel == eModelColorChannel::MODELCOLORCHANNEL_RED)
-			return m_sChannelRed;
-		else if (eTheColorChannel == eModelColorChannel::MODELCOLORCHANNEL_GREEN)
-			return m_sChannelGreen;
-		else
-			return m_sChannelBlue;
-	}
-
 }

@@ -5961,7 +5961,7 @@ Class definition Lib3MFVector3DFieldFromImage3D
 **************************************************************************************************************************/
 
 type Lib3MFVector3DFieldFromImage3D struct {
-	Lib3MFScalarField
+	Lib3MFVector3DField
 }
 
 func (instance *Lib3MFVector3DFieldFromImage3D) Close() (error) {
@@ -6027,7 +6027,7 @@ Class definition Lib3MFVector3DFieldComposed
 **************************************************************************************************************************/
 
 type Lib3MFVector3DFieldComposed struct {
-	Lib3MFScalarField
+	Lib3MFVector3DField
 }
 
 func (instance *Lib3MFVector3DFieldComposed) Close() (error) {

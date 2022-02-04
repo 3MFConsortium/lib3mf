@@ -1556,7 +1556,7 @@ typedef IBaseSharedPtr<IScalarFieldComposed> PIScalarFieldComposed;
  Class interface for Vector3DFieldFromImage3D 
 **************************************************************************************************************************/
 
-class IVector3DFieldFromImage3D : public virtual IScalarField {
+class IVector3DFieldFromImage3D : public virtual IVector3DField {
 public:
 	/**
 	* IVector3DFieldFromImage3D::GetImage - Returns the selected 3D image.
@@ -1631,7 +1631,7 @@ typedef IBaseSharedPtr<IVector3DFieldFromImage3D> PIVector3DFieldFromImage3D;
  Class interface for Vector3DFieldComposed 
 **************************************************************************************************************************/
 
-class IVector3DFieldComposed : public virtual IScalarField {
+class IVector3DFieldComposed : public virtual IVector3DField {
 public:
 	/**
 	* IVector3DFieldComposed::SetMethod - Sets the method to used for composition.

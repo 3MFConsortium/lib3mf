@@ -50,7 +50,7 @@ namespace NMR {
 		return m_pLevelset.get() != nullptr;
 	}
 
-	void CModelVolumeData::SetLevelset(PVolumeLevelset pLevelset)
+	void CModelVolumeData::SetLevelset(PVolumeDataLevelset pLevelset)
 	{
 		if (!pLevelset)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
@@ -58,13 +58,14 @@ namespace NMR {
 		m_pLevelset = pLevelset;
 	}
 
-	PVolumeLevelset CModelVolumeData::CreateLevelset(PModelVolumetricStack pVolumetricStack)
+	PVolumeDataLevelset CModelVolumeData::CreateLevelset()
 	{
-		m_pLevelset = std::make_shared<CVolumeLevelset>(pVolumetricStack);
-		return m_pLevelset;
+		//m_pLevelset = std::make_shared<CVolumeDataLevelset>(pVolumetricStack);
+		//return m_pLevelset;
+		throw CNMRException(-1);
 	}
 
-	PVolumeLevelset CModelVolumeData::GetLevelset()
+	PVolumeDataLevelset CModelVolumeData::GetLevelset()
 	{
 		return m_pLevelset;
 	}
@@ -72,7 +73,7 @@ namespace NMR {
 
 	nfBool CModelVolumeData::hasProperty(_In_ std::string sName)
 	{
-		std::map<std::string, PVolumeProperty>::iterator iIterator = m_mapProperties.find(sName);
+		std::map<std::string, PVolumeDataProperty>::iterator iIterator = m_mapProperties.find(sName);
 		return iIterator != m_mapProperties.end();
 	}
 
@@ -81,7 +82,7 @@ namespace NMR {
 		return (nfUint32)m_mapProperties.size();
 	}
 
-	PVolumeProperty CModelVolumeData::GetProperty(nfUint32 nIndex)
+	PVolumeDataProperty CModelVolumeData::GetProperty(nfUint32 nIndex)
 	{
 		auto iIterator = m_mapProperties.begin();
 		if (nIndex >= m_mapProperties.size())
@@ -94,24 +95,25 @@ namespace NMR {
 		return iIterator->second;
 	}
 
-	PVolumeProperty CModelVolumeData::FindProperty(std::string sName)
+	PVolumeDataProperty CModelVolumeData::FindProperty(std::string sName)
 	{
-		std::map<std::string, PVolumeProperty>::iterator iIterator = m_mapProperties.find(sName);
+		std::map<std::string, PVolumeDataProperty>::iterator iIterator = m_mapProperties.find(sName);
 		if (iIterator != m_mapProperties.end()) {
 			return iIterator->second;
 		}
 		return nullptr;
 	}
 
-	PVolumeProperty CModelVolumeData::CreateProperty(std::string sName, PModelVolumetricStack pVolumetricStack)
+	PVolumeDataProperty CModelVolumeData::CreateProperty(std::string sName)
 	{
-		if (hasProperty(sName)) {
-			throw CNMRException(NMR_ERROR_DUPLICATEVOLUMEDATAPROPERTY);
-		}
+		throw CNMRException(-1);
+		//if (hasProperty(sName)) {
+		//	throw CNMRException(NMR_ERROR_DUPLICATEVOLUMEDATAPROPERTY);
+		//}
 
-		PVolumeProperty pVolumeProperty = std::make_shared<CVolumeProperty>(sName, pVolumetricStack);
-		m_mapProperties.insert(std::make_pair(pVolumeProperty->GetName(), pVolumeProperty));
-		return pVolumeProperty;
+		//PVolumeDataProperty pVolumeDataProperty = std::make_shared<CVolumeDataProperty>(sName, pVolumetricStack);
+		//m_mapProperties.insert(std::make_pair(pVolumeDataProperty->GetName(), pVolumeDataProperty));
+		//return pVolumeDataProperty;
 	}
 
 	void CModelVolumeData::RemoveProperty(std::string sName)
@@ -124,21 +126,24 @@ namespace NMR {
 		return m_pColor.get() != nullptr;
 	}
 
-	void CModelVolumeData::SetColor(PVolumeColor pColor)
+	void CModelVolumeData::SetColor(PVolumeDataColor pColor)
 	{
-		if (!pColor)
-			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+		//if (!pColor)
+		//	throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-		m_pColor = pColor;
+		//m_pColor = pColor;
+
+		throw CNMRException(-1);
 	}
 
-	PVolumeColor CModelVolumeData::CreateColor(PModelVolumetricStack pVolumetricStack)
+	PVolumeDataColor CModelVolumeData::CreateColor()
 	{
-		m_pColor = std::make_shared<CVolumeColor>(pVolumetricStack);
-		return m_pColor;
+		//m_pColor = std::make_shared<CVolumeDataColor>(pVolumetricStack);
+		//return m_pColor;
+		throw CNMRException(-1);
 	}
 
-	PVolumeColor CModelVolumeData::GetColor()
+	PVolumeDataColor CModelVolumeData::GetColor()
 	{
 		return m_pColor;
 	}

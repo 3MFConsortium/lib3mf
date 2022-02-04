@@ -63,7 +63,7 @@ namespace NMR {
 
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 
-		PVolumeProperty MakeProperty(_In_ CModel* pModel);
+		PVolumeDataProperty MakeProperty(_In_ CModel* pModel);
 	};
 
 	typedef std::shared_ptr <CModelReaderNode_Volumetric2201_Property> PModelReaderNode_Volumetric2201_Property;

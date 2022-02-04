@@ -26,23 +26,28 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_VolumeComposite.cpp implements the class CVolumeComposite.
+NMR_VolumeLevelset.cpp implements the class CVolumeDataLevelset.
 
 --*/
 
-#include "Common/Mesh/NMR_VolumeComposite.h"
+#include "Common/Mesh/NMR_VolumeDataLevelset.h"
+#include "Model/Classes/NMR_ModelScalarField.h"
 
 namespace NMR {
 
-	CVolumeComposite::CVolumeComposite(PModelVolumetricStack pVolumetricStack)
-		: CVolumeBase(pVolumetricStack)
+	CVolumeDataLevelset::CVolumeDataLevelset(PModelScalarField pScalarField)
+		: CScalarFieldReference(pScalarField), m_dSolidThreshold(0.0), m_sChannelName("")
 	{
-
+		
 	}
 
-	void CVolumeComposite::clear()
+	nfDouble CVolumeDataLevelset::GetSolidThreshold()
 	{
-
+		return m_dSolidThreshold;
 	}
 
+	void CVolumeDataLevelset::SetSolidThreshold(nfDouble dSolidThreshold)
+	{
+		m_dSolidThreshold = dSolidThreshold;
+	}
 }

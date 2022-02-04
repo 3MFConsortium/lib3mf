@@ -26,7 +26,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelImage3D.h defines a 3D image for the volumetric extension
+NMR_ModelImageStack.h defines a 3D image stack for the volumetric extension
 
 --*/
 
@@ -54,16 +54,34 @@ namespace NMR {
 	class CModelImage3D : public CModelResource {
 	private:
 		std::string m_sName;
-
+		nfUint32 m_nSizeX;
+		nfUint32 m_nSizeY;
+		nfUint32 m_nSheetCount;
+		
+		std::vector <PModelAttachment> m_Sheets;
+		std::vector <nfDouble> m_minValues; // Array with the same size of m_Sheets containing the min double value of the source data, which has been converted to integer bitmap pixels of the attachment picture
+		std::vector <nfDouble> m_maxValues; // Array of max values of the source data of each sheet
+	
 	protected:
+		CModelImage3D(_In_ const ModelResourceID sID, _In_ CModel * pModel, _In_ nfUint32 nSizeX, _In_ nfUint32 nSizeY, nfUint32 nSheetCount);
+
 	public:
 		CModelImage3D() = delete;
-		CModelImage3D(_In_ const ModelResourceID sID, _In_ CModel* pModel);
+		
+		static PModelImage3D make(_In_ const ModelResourceID sID, _In_ CModel * pModel, _In_ nfUint32 nSizeX, _In_ nfUint32 nSizeY, nfUint32 nSheetCount);
+		
+		nfUint32 getSizeX ();
+		nfUint32 getSizeY ();
+		nfUint32 getSheetCount ();
+		
+		void setSheet (nfUint32 nSheetIndex, PModelAttachment pAttachment, const nfDouble dMin, const nfDouble dMax);
+		PModelAttachment getSheet (nfUint32 nSheetIndex);		
+		PModelAttachment createSheet(nfUint32 nSheetIndex, const std::string & sPath, PImportStream pCopiedStream, const nfDouble dMin, const nfDouble dMax);
+		nfDouble getSheetMinValue (nfUint32 nSheetIndex);
+		void setSheetMinValue (nfUint32 nSheetIndex, nfDouble minVal);
+		nfDouble getSheetMaxValue (nfUint32 nSheetIndex);
+		void setSheetMaxValue (nfUint32 nSheetIndex, nfDouble maxVal);
 
-
-
-		void setName(std::string);
-		std::string getName() const;
 	};
 
 	typedef std::shared_ptr <CModelImage3D> PModelImage3D;

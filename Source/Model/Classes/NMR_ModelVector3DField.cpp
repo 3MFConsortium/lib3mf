@@ -26,36 +26,30 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_VolumeColor.h defines the class CVolumeColor.
+NMR_ModelVector3DField.cpp implements the Model ScalarField Class.
+A model scalar field is the base class of different scalar field specializations.
 
 --*/
 
-#ifndef __NMR_VOLUMECOLOR
-#define __NMR_VOLUMECOLOR
-
-#include "Common/NMR_Types.h"
-#include "Model/Classes/NMR_ModelTypes.h"
-#include "Common/Mesh/NMR_VolumeBase.h"
+#include "Model/Classes/NMR_ModelVector3DField.h"
+#include "Model/Classes/NMR_ModelConstants.h"
+#include "Common/NMR_Exception.h"
 
 namespace NMR {
 
-	class CVolumeColor : public CVolumeBase {
-	private:
-		std::string m_sChannelRed;
-		std::string m_sChannelGreen;
-		std::string m_sChannelBlue;
+	CModelVector3DField::CModelVector3DField(_In_ const ModelResourceID sID, _In_ CModel * pModel)
+		: CModelResource(sID, pModel)
+	{
+	
+	}
 
-	public:
-		CVolumeColor(PModelVolumetricStack pVolumetricStack);
+	std::string CModelVector3DField::getName()
+	{
+		return m_sName;
+	}
 
-		void SetChannel(const eModelColorChannel eTheColorChannel, const std::string & sChannelName);
-		std::string GetChannel(const eModelColorChannel eTheColorChannel);
-
-		void clear();
-	};
-
-	typedef std::shared_ptr<CVolumeColor> PVolumeColor;
-
+	void CModelVector3DField::setName(_In_ std::string sName)
+	{
+		m_sName = sName;
+	}
 }
-
-#endif // __NMR_VOLUMECOLOR

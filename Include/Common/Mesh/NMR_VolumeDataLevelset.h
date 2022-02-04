@@ -26,49 +26,36 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelImage3D.h defines a 3D image for the volumetric extension
+NMR_VolumeDataLevelset.h defines the class CVolumeDataLevelset.
 
 --*/
 
-#ifndef __NMR_MODELIMAGE3D
-#define __NMR_MODELIMAGE3D
+#ifndef __NMR_VOLUMEDATALEVELSET
+#define __NMR_VOLUMEDATALEVELSET
 
-#include "Common/NMR_Types.h" 
-
-
-#include "Model/Classes/NMR_ModelResource.h"
-#include "Model/Classes/NMR_Model.h"
-#include <vector>
-#include "Common/Platform/NMR_ImportStream.h"
-#include <memory>
-#include <map>
+#include "Common/NMR_Types.h"
+#include "Model/Classes/NMR_ModelTypes.h"
+#include "Common/NMR_FieldReference.h"
 #include <string>
 
-#define MAX_IMAGE3D_SIZE (1024 * 1024 * 1024)
-
 namespace NMR {
+	class CModelScalarField;
+	typedef std::shared_ptr<CModelScalarField> PModelScalarField;
 
-	class CModel;
-	typedef std::shared_ptr <CModel> PModel;
-
-	class CModelImage3D : public CModelResource {
+	class CVolumeDataLevelset : public CScalarFieldReference {
 	private:
-		std::string m_sName;
-
-	protected:
+		nfDouble m_dSolidThreshold;
+		std::string m_sChannelName;
 	public:
-		CModelImage3D() = delete;
-		CModelImage3D(_In_ const ModelResourceID sID, _In_ CModel* pModel);
+		CVolumeDataLevelset() = delete;
+		CVolumeDataLevelset(PModelScalarField pScalarField);
 
-
-
-		void setName(std::string);
-		std::string getName() const;
+		nfDouble GetSolidThreshold();
+		void SetSolidThreshold(nfDouble dSolidThreshold);
 	};
 
-	typedef std::shared_ptr <CModelImage3D> PModelImage3D;
+	typedef std::shared_ptr<CVolumeDataLevelset> PVolumeDataLevelset;
 
 }
 
-#endif // __NMR_MODELIMAGE3D
-
+#endif // __NMR_VOLUMEDATALEVELSET

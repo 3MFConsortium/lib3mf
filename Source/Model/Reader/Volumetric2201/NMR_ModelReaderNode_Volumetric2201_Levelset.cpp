@@ -64,7 +64,7 @@ namespace NMR {
 		parseContent(pXMLReader);
 	}
 	
-	PVolumeLevelset CModelReaderNode_Volumetric2201_Levelset::MakeLevelset(_In_ CModel* pModel)
+	PVolumeDataLevelset CModelReaderNode_Volumetric2201_Levelset::MakeLevelset(_In_ CModel* pModel)
 	{
 		if (!pModel)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
@@ -81,17 +81,14 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_UNKNOWNMODELRESOURCE);
 		}
 		
-		PModelVolumetricStack pStack = pModel->findVolumetricStack(pID->getUniqueID());
-		if (!pStack.get()) {
-			throw CNMRException(NMR_ERROR_UNKNOWNMODELRESOURCE);
-		}
-		PVolumeLevelset pLevelset = std::make_shared<CVolumeLevelset>(pStack);
-		pLevelset->SetChannel(m_sChannel);
-		if (m_bHasSolidThreshold)
-			pLevelset->SetSolidThreshold(m_dSolidThreshold);
-		if (m_bHasTransform)
-			pLevelset->SetTransform(m_Transform);
-		return pLevelset;
+		throw CNMRException(-1);
+		//PVolumeDataLevelset pLevelset = std::make_shared<CVolumeDataLevelset>(pStack);
+		//pLevelset->SetChannel(m_sChannel);
+		//if (m_bHasSolidThreshold)
+		//	pLevelset->SetSolidThreshold(m_dSolidThreshold);
+		//if (m_bHasTransform)
+		//	pLevelset->SetTransform(m_Transform);
+		//return pLevelset;
 	}
 	
 	void CModelReaderNode_Volumetric2201_Levelset::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)

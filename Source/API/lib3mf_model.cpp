@@ -690,7 +690,7 @@ Lib3MF::sBox CModel::GetOutbox()
 
 IImageStack * CModel::AddImageStack(const Lib3MF_uint32 nSizeX, const Lib3MF_uint32 nSizeY, const Lib3MF_uint32 nSheetCount)
 {
-	//NMR::PModelImage3D pResource = NMR::CModelImage3D::make(model().generateResourceID(), &model(), nSizeX, nSizeY, nSheetCount);
+	// NMR::PModelImage3D pResource = NMR::CModelImage3D::make(model().generateResourceID(), &model(), nSizeX, nSizeY, nSheetCount);
 	//model().addResource(pResource);
 
 	//return new CImage3D(pResource);

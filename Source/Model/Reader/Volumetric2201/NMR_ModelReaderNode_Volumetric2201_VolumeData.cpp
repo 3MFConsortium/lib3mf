@@ -87,7 +87,7 @@ namespace NMR {
 				PModelReaderNode_Volumetric2201_Levelset pXMLNode = std::make_shared<CModelReaderNode_Volumetric2201_Levelset>(m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 
-				PVolumeLevelset pLevelSet = pXMLNode->MakeLevelset(m_pModel);
+				PVolumeDataLevelset pLevelSet = pXMLNode->MakeLevelset(m_pModel);
 				m_pVolumeData->SetLevelset(pLevelSet);
 			}
 			else if (strcmp(pChildName, XML_3MF_ELEMENT_VOLUMETRIC_PROPERTY) == 0)
@@ -95,13 +95,13 @@ namespace NMR {
 				PModelReaderNode_Volumetric2201_Property pXMLNode = std::make_shared<CModelReaderNode_Volumetric2201_Property>(m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 
-				PVolumeProperty pProperty = pXMLNode->MakeProperty(m_pModel);
+				PVolumeDataProperty pProperty = pXMLNode->MakeProperty(m_pModel);
 
 				if (m_pVolumeData->hasProperty(pProperty->GetName()) == false) {
-					PVolumeProperty pVolDataProp = m_pVolumeData->CreateProperty(pProperty->GetName(), pProperty->GetVolumetricStack());
-					pVolDataProp->SetChannel(pProperty->GetChannel());
-					pVolDataProp->SetIsRequired(pProperty->IsRequired());
-					pVolDataProp->SetTransform(pProperty->GetTransform());
+					//PVolumeDataProperty pVolDataProp = m_pVolumeData->CreateProperty(pProperty->GetName(), pProperty->GetVolumetricStack());
+					//pVolDataProp->SetIsRequired(pProperty->IsRequired());
+					//pVolDataProp->SetTransform(pProperty->GetTransform());
+					throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
 				}
 				else {
 					throw CNMRException(NMR_ERROR_DUPLICATEVOLUMEDATAPROPERTY);
@@ -109,11 +109,12 @@ namespace NMR {
 			}
 			else if (strcmp(pChildName, XML_3MF_ELEMENT_VOLUMETRIC_COLOR) == 0)
 			{
-				PModelReaderNode_Volumetric2201_Color pXMLNode = std::make_shared<CModelReaderNode_Volumetric2201_Color>(m_pWarnings);
-				pXMLNode->parseXML(pXMLReader);
+				//PModelReaderNode_Volumetric2201_Color pXMLNode = std::make_shared<CModelReaderNode_Volumetric2201_Color>(m_pWarnings);
+				//pXMLNode->parseXML(pXMLReader);
 
-				PVolumeColor pColor = pXMLNode->MakeColor(m_pModel);
-				m_pVolumeData->SetColor(pColor);
+				//PVolumeDataColor pColor = pXMLNode->MakeColor(m_pModel);
+				//m_pVolumeData->SetColor(pColor);
+				throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
 			}
 			else
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);

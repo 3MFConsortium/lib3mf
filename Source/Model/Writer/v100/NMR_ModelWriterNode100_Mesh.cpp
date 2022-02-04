@@ -376,15 +376,16 @@ namespace NMR {
 				writeStartElementWithPrefix(XML_3MF_ELEMENT_VOLUMEDATA, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
 
 				if (m_pModelMeshObject->getVolumeData()->HasLevelset()) {
-					writeStartElementWithPrefix(XML_3MF_ELEMENT_VOLUMETRIC_LEVELSET, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
-					PVolumeLevelset pLevelset = m_pModelMeshObject->getVolumeData()->GetLevelset();
-					writeIntAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_VOLUMETRICSTACKID, pLevelset->GetVolumetricStack()->getPackageResourceID()->getUniqueID());
-					writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_CHANNEL, pLevelset->GetChannel());
-					writeFloatAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_SOLIDTHRESHOLD, float(pLevelset->GetSolidThreshold()));
-					if (!fnMATRIX3_isIdentity(pLevelset->GetTransform())) {
-						writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_TRANSFORM, fnMATRIX3_toString(pLevelset->GetTransform()));
-					}
-					writeEndElement();
+					throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
+					//writeStartElementWithPrefix(XML_3MF_ELEMENT_VOLUMETRIC_LEVELSET, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
+					//PVolumeDataLevelset pLevelset = m_pModelMeshObject->getVolumeData()->GetLevelset();
+					//writeIntAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_VOLUMETRICSTACKID, pLevelset->GetVolumetricStack()->getPackageResourceID()->getUniqueID());
+					//writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_CHANNEL, pLevelset->GetChannel());
+					//writeFloatAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_SOLIDTHRESHOLD, float(pLevelset->GetSolidThreshold()));
+					//if (!fnMATRIX3_isIdentity(pLevelset->GetTransform())) {
+					//	writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_TRANSFORM, fnMATRIX3_toString(pLevelset->GetTransform()));
+					//}
+					//writeEndElement();
 				}
 
 				if (m_pModelMeshObject->getVolumeData()->GetPropertyCount())
@@ -393,41 +394,43 @@ namespace NMR {
 
 					for (nfUint32 i = 0; i < count; i++)
 					{
-						writeStartElementWithPrefix(XML_3MF_ELEMENT_VOLUMETRIC_PROPERTY, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
-						PVolumeProperty pProperty = m_pModelMeshObject->getVolumeData()->GetProperty(i);
-						writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_PROPERTY, pProperty->GetName());
-						if (!fnMATRIX3_isIdentity(pProperty->GetTransform())) {
-							writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_TRANSFORM, fnMATRIX3_toString(pProperty->GetTransform()));
-						}
-						writeIntAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_VOLUMETRICSTACKID, pProperty->GetVolumetricStack()->getPackageResourceID()->getUniqueID());
-						writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_CHANNEL, pProperty->GetChannel());
-						if (!pProperty->IsRequired())
-							writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_PROPERTY_REQUIRED, "false");
-						writeEndElement();
+						throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
+						//writeStartElementWithPrefix(XML_3MF_ELEMENT_VOLUMETRIC_PROPERTY, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
+						//PVolumeDataProperty pProperty = m_pModelMeshObject->getVolumeData()->GetProperty(i);
+						//writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_PROPERTY, pProperty->GetName());
+						//if (!fnMATRIX3_isIdentity(pProperty->GetTransform())) {
+						//	writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_TRANSFORM, fnMATRIX3_toString(pProperty->GetTransform()));
+						//}
+						//writeIntAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_VOLUMETRICSTACKID, pProperty->GetVolumetricStack()->getPackageResourceID()->getUniqueID());
+						//writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_CHANNEL, pProperty->GetChannel());
+						//if (!pProperty->IsRequired())
+						//	writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_PROPERTY_REQUIRED, "false");
+						//writeEndElement();
 					}
 				}
 
 				if (m_pModelMeshObject->getVolumeData()->HasColor())
 				{
-					writeStartElementWithPrefix(XML_3MF_ELEMENT_VOLUMETRIC_COLOR, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
-					PVolumeColor pColor = m_pModelMeshObject->getVolumeData()->GetColor();
-					PModelVolumetricStack pStackResource = pColor->GetVolumetricStack();
+					throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
+					//writeStartElementWithPrefix(XML_3MF_ELEMENT_VOLUMETRIC_COLOR, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
+					//PVolumeDataColor pColor = m_pModelMeshObject->getVolumeData()->GetColor();
+					//PModelVolumetricStack pStackResource = pColor->GetVolumetricStack();
 
-					writeIntAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_VOLUMETRICSTACKID, pStackResource->getPackageResourceID()->getUniqueID());
-					if (!fnMATRIX3_isIdentity(pColor->GetTransform())) {
-						writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_TRANSFORM, fnMATRIX3_toString(pColor->GetTransform()));
-					}
+					//writeIntAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_VOLUMETRICSTACKID, pStackResource->getPackageResourceID()->getUniqueID());
+					//if (!fnMATRIX3_isIdentity(pColor->GetTransform())) {
+					//	writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_TRANSFORM, fnMATRIX3_toString(pColor->GetTransform()));
+					//}
 
-					writeStartElementWithPrefix(XML_3MF_ELEMENT_VOLUMETRIC_COLOR_RED, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
-					writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_CHANNEL, pColor->GetChannel(eModelColorChannel::MODELCOLORCHANNEL_RED));
-					writeEndElement();
+					//writeStartElementWithPrefix(XML_3MF_ELEMENT_VOLUMETRIC_COLOR_RED, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
+					//writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_CHANNEL, pColor->GetChannel(eModelColorChannel::MODELCOLORCHANNEL_RED));
+					//writeEndElement();
 
-					writeStartElementWithPrefix(XML_3MF_ELEMENT_VOLUMETRIC_COLOR_GREEN, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
-					writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_CHANNEL, pColor->GetChannel(eModelColorChannel::MODELCOLORCHANNEL_GREEN));
-					writeEndElement();
+					//writeStartElementWithPrefix(XML_3MF_ELEMENT_VOLUMETRIC_COLOR_GREEN, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
+					//writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_CHANNEL, pColor->GetChannel(eModelColorChannel::MODELCOLORCHANNEL_GREEN));
+					//writeEndElement();
 
-					writeStartElementWithPrefix(XML_3MF_ELEMENT_VOLUMETRIC_COLOR_BLUE, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
-					writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_CHANNEL, pColor->GetChannel(eModelColorChannel::MODELCOLORCHANNEL_BLUE));
+					//writeStartElementWithPrefix(XML_3MF_ELEMENT_VOLUMETRIC_COLOR_BLUE, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
+					//writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_CHANNEL, pColor->GetChannel(eModelColorChannel::MODELCOLORCHANNEL_BLUE));
 					writeEndElement();
 
 					writeFullEndElement();

@@ -26,50 +26,28 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelVoLayer.cpp implements the Model Texture Class.
+NMR_VolumeComposite.h defines the class CVolumeDataComposite.
 
 --*/
 
-#include "Model/Classes/NMR_ModelConstants.h"
-#include "Model/Classes/NMR_ModelVolumetricDstChannel.h"
+#ifndef __NMR_VOLUMEDATACOMPOSITE
+#define __NMR_VOLUMEDATACOMPOSITE
 
-
-#include "Common/NMR_Exception.h"
-#include "Common/NMR_StringUtils.h"
-#include <sstream>
-#include <algorithm>
+#include <memory>
+#include "Common/NMR_Types.h"
+#include "Model/Classes/NMR_ModelTypes.h"
 
 namespace NMR {
 
-	CModelVolumetricDstChannel::CModelVolumetricDstChannel(const std::string & sName, nfDouble dBackground)
-		: m_sName (sName), m_dBackground (dBackground)
-	{
+	class CVolumeDataComposite/* : public CVolumeBase */{
+	private:
 
-	}
+	public:
+		CVolumeDataComposite();
+	};
 
-
-	CModelVolumetricDstChannel::~CModelVolumetricDstChannel()
-	{
-
-	}
-
-
-	std::string CModelVolumetricDstChannel::getName()
-	{
-		return m_sName;
-	}
-
-	nfDouble CModelVolumetricDstChannel::getBackground()
-	{
-		return m_dBackground;
-	}
-
-
-	void CModelVolumetricDstChannel::setBackground(const nfDouble dBackground)
-	{
-		m_dBackground = dBackground;
-	}
-
+	typedef std::shared_ptr<CVolumeDataComposite> PVolumeDataComposite;
 
 }
 
+#endif // __NMR_VOLUMEDATACOMPOSITE

@@ -80,7 +80,9 @@ namespace NMR {
 		if (m_nSheetCount == 0)
 			throw CNMRException(NMR_ERROR_MISSINGIMAGE3DSHEETCOUNT);
 
-		m_pImage3D = CModelImage3D::make(m_nID, m_pModel, m_nSizeX, m_nSizeY, m_nSheetCount);
+		m_pImage3D = nullptr;
+		// CModelImage3D::make(m_nID, m_pModel, m_nSizeX, m_nSizeY, m_nSheetCount);
+		throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
 		m_nSheetIndex = 0;
 
 		// Parse Content
@@ -156,11 +158,12 @@ namespace NMR {
 					if (m_nSheetIndex >= m_nSheetCount)
 						m_pWarnings->addException(CNMRException(NMR_ERROR_TOOMANYIMAGE3DSHEETS), mrwFatal);
 
-					__NMRASSERT(m_pImage3D.get() != nullptr);
-					m_pImage3D->setSheet(m_nSheetIndex, pAttachment, 0.0, 0.0);
-					m_pImage3D->setSheetMinValue(m_nSheetIndex, pXMLNode->getMinValue());
-					m_pImage3D->setSheetMaxValue(m_nSheetIndex, pXMLNode->getMaxValue());
-					m_nSheetIndex++;
+					//__NMRASSERT(m_pImage3D.get() != nullptr);
+					//m_pImage3D->setSheet(m_nSheetIndex, pAttachment, 0.0, 0.0);
+					//m_pImage3D->setSheetMinValue(m_nSheetIndex, pXMLNode->getMinValue());
+					//m_pImage3D->setSheetMaxValue(m_nSheetIndex, pXMLNode->getMaxValue());
+					//m_nSheetIndex++;
+					throw CNMRException(-1);
 
 				} else
 					m_pWarnings->addException(CNMRException(NMR_ERROR_MISSINGIMAGE3DSHEETPATH), mrwMissingMandatoryValue);

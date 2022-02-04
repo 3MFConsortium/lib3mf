@@ -26,44 +26,17 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelVolumetricDstChannel.h defines a destination channel for the volumetric extension
+NMR_VolumeComposite.cpp implements the class CVolumeDataComposite.
 
 --*/
 
-#ifndef __NMR_MODELVOLUMETRICDSTCHANNEL
-#define __NMR_MODELVOLUMETRICDSTCHANNEL
-
-
-#include "Common/NMR_Types.h" 
-#include "Model/Classes/NMR_ModelTypes.h" 
-
-#include <vector>
-#include <memory>
-#include <map>
-#include <string>
+#include "Common/Mesh/NMR_VolumeDataComposite.h"
 
 namespace NMR {
 
-	class CModelVolumetricDstChannel {
-	private:
-	
-		std::string m_sName;
-		nfDouble m_dBackground;
-	
-	public:	
-		CModelVolumetricDstChannel (const std::string & sName, nfDouble dBackground);
-		~CModelVolumetricDstChannel();
+	CVolumeDataComposite::CVolumeDataComposite()
+	{
 
-		std::string getName (); // Name should be readonly!
-		nfDouble getBackground ();
-
-		void setBackground(const nfDouble dBackground);
-
-	};
-
-	typedef std::shared_ptr <CModelVolumetricDstChannel> PModelVolumetricDstChannel;
+	}
 
 }
-
-#endif // __NMR_MODELVOLUMETRICDSTCHANNEL
-

@@ -3625,7 +3625,7 @@ namespace Lib3MF {
 
 	}
 
-	class CVector3DFieldFromImage3D : CScalarField
+	class CVector3DFieldFromImage3D : CVector3DField
 	{
 		public CVector3DFieldFromImage3D (IntPtr NewHandle) : base (NewHandle)
 		{
@@ -3711,7 +3711,7 @@ namespace Lib3MF {
 
 	}
 
-	class CVector3DFieldComposed : CScalarField
+	class CVector3DFieldComposed : CVector3DField
 	{
 		public CVector3DFieldComposed (IntPtr NewHandle) : base (NewHandle)
 		{

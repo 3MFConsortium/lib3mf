@@ -99,9 +99,6 @@ namespace NMR {
 	class CModelImage3D;
 	typedef std::shared_ptr <CModelImage3D> PModelImage3D;
 
-	class CModelVolumetricStack;
-	typedef std::shared_ptr <CModelVolumetricStack> PModelVolumetricStack;
-	
 	// The Model class implements the unification of all model-file in a 3MF package
 	// It should be understood as a "MultiModel"
 	class CModel {
@@ -154,7 +151,6 @@ namespace NMR {
 		std::vector<PModelResource> m_CompositeMaterialsLookup;
 		std::vector<PModelResource> m_MultiPropertyGroupLookup;
 		std::vector<PModelResource> m_Image3DLookup;
-		std::vector<PModelResource> m_VolumetricStackLookup;
 
 		// The KeyStore reference
 		PKeyStore m_pKeyStore;
@@ -293,13 +289,6 @@ namespace NMR {
 		PModelResource getImage3DResource(_In_ nfUint32 nIndex);
 		CModelImage3D * getImage3D(_In_ nfUint32 nIndex);
 		void mergeImages3D(_In_ CModel * pSourceModel, _In_ std::map<PPackageResourceID, PPackageResourceID> & PackageIDMap);
-
-		// Convenience functions for Volumetric Stacks
-		_Ret_maybenull_ PModelVolumetricStack findVolumetricStack(_In_ UniqueResourceID nID);
-		nfUint32 getVolumetricStackCount();
-		PModelResource getVolumetricStackResource(_In_ nfUint32 nIndex);
-		CModelVolumetricStack * getVolumetricStack(_In_ nfUint32 nIndex);
-		void mergeVolumetricStacks(_In_ CModel * pSourceModel, _In_ const std::map<PPackageResourceID, PPackageResourceID> & PackageIDMap);
 
 		// Clear all build items and Resources
 		void clearAll ();

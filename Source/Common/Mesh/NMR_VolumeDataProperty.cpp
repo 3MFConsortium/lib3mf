@@ -26,38 +26,45 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_VolumeLevelset.h defines the class CVolumeLevelset.
+NMR_VolumeDataProperty.cpp implements the class CVolumeDataProperty.
 
 --*/
 
-#ifndef __NMR_VOLUMELEVELSET
-#define __NMR_VOLUMELEVELSET
+#include "Common/Mesh/NMR_VolumeDataProperty.h" 
 
-#include "Common/NMR_Types.h"
-#include "Model/Classes/NMR_ModelTypes.h"
-#include "Common/Mesh/NMR_VolumeBase.h"
-#include <string>
+#include "Model/Classes/NMR_ModelScalarField.h"
+#include "Model/Classes/NMR_ModelVector3DField.h"
 
 namespace NMR {
 
-	class CVolumeLevelset : public CVolumeBase {
-	private:
-		nfDouble m_dSolidThreshold;
-		std::string m_sChannelName;
-	public:
-		CVolumeLevelset(PModelVolumetricStack pVolumetricStack);
-
-		nfDouble GetSolidThreshold();
-		void SetSolidThreshold(nfDouble dSolidThreshold);
-
-		std::string GetChannel();
-		void SetChannel(std::string sChannelName);
+	CVolumeDataProperty::CVolumeDataProperty(PModelScalarField pScalarField, std::string sName)
+		: CFieldReference(pScalarField->getPackageResourceID()), m_sName(sName), m_bIsRequired(true)
+	{
 		
-		void clear();
-	};
+	}
 
-	typedef std::shared_ptr<CVolumeLevelset> PVolumeLevelset;
+	CVolumeDataProperty::CVolumeDataProperty(PModelVector3DField pVectorField, std::string sName)
+		: CFieldReference(pVectorField->getPackageResourceID()), m_sName(sName), m_bIsRequired(true)
+	{
 
+	}
+
+	std::string CVolumeDataProperty::GetName()
+	{
+		return m_sName;
+	}
+	void CVolumeDataProperty::SetName(std::string sPropertyName)
+	{
+		m_sName = sPropertyName;
+	}
+
+	bool CVolumeDataProperty::IsRequired()
+	{
+		return m_bIsRequired;
+	}
+
+	void CVolumeDataProperty::SetIsRequired(bool bIsRequired)
+	{
+		m_bIsRequired = bIsRequired;
+	}
 }
-
-#endif // __NMR_VOLUMELEVELSET

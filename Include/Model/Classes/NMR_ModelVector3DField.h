@@ -26,41 +26,37 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_VolumeProperty.h defines the class CVolumeProperty.
-
+NMR_ModelScalarField.h defines the Model ScalarField Class.
+A model scalar field is the base class of different scalar field specializations.
 --*/
 
-#ifndef __NMR_VOLUMEPROPERTY
-#define __NMR_VOLUMEPROPERTY
+#ifndef __NMR_MODELVECTOR3DFIELD
+#define __NMR_MODELVECTOR3DFIELD
 
+#include "Model/Classes/NMR_Model.h"
+#include "Model/Classes/NMR_ModelResource.h"
 #include "Common/NMR_Types.h"
-#include "Model/Classes/NMR_ModelTypes.h"
-#include "Common/Mesh/NMR_VolumeBase.h"
+#include "Common/Math/NMR_Matrix.h"
+
+#include <vector>
 
 namespace NMR {
 
-	class CVolumeProperty : public CVolumeBase {
+	class CModel;
+	typedef std::shared_ptr <CModel> PModel;
+
+	class CModelVector3DField : public CModelResource { 
 	private:
-		std::string m_sChannelName;
-		std::string m_sPropertyName;
-		bool m_bIsRequired;
+		std::string m_sName;
 	public:
-		CVolumeProperty(std::string sName, PModelVolumetricStack pVolumetricStack);
+		CModelVector3DField() = delete;
+		CModelVector3DField(_In_ const ModelResourceID sID, _In_ CModel * pModel);
 
-		std::string GetChannel();
-		void SetChannel(std::string sChannelName);
-
-		std::string GetName();
-		void SetName(std::string sPropertyName);
-
-		bool IsRequired();
-		void SetIsRequired(bool bIsRequired);
-
-		void clear();
+		std::string getName();
+		void setName(_In_ std::string sName);
 	};
 
-	typedef std::shared_ptr<CVolumeProperty> PVolumeProperty;
-
+	typedef std::shared_ptr <CModelVector3DField> PModelVector3DField;
 }
 
-#endif // __NMR_VOLUMEPROPERTY
+#endif // __NMR_MODELVECTOR3DFIELD

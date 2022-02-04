@@ -26,46 +26,30 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_VolumeLevelset.cpp implements the class CVolumeLevelset.
+NMR_VolumeDataColor.h defines the class CVolumeDataColor.
 
 --*/
 
-#include "Common/Mesh/NMR_VolumeLevelset.h"
+#ifndef __NMR_VOLUMECOLOR
+#define __NMR_VOLUMECOLOR
+
+#include "Common/NMR_Types.h"
+#include "Model/Classes/NMR_ModelTypes.h"
+#include "Common/NMR_FieldReference.h"
+#include "Model/Classes/NMR_ModelResource.h"
+#include "Model/Classes/NMR_ModelVector3DField.h"
+#include "Model/Classes/NMR_ModelScalarField.h"
 
 namespace NMR {
 
-	CVolumeLevelset::CVolumeLevelset(PModelVolumetricStack pVolumetricStack)
-		:CVolumeBase(pVolumetricStack), m_dSolidThreshold(0.0), m_sChannelName("")
-	{
-		
-	}
+	class CVolumeDataColor : public CVector3DFieldReference {
+	private:
 
-	void CVolumeLevelset::clear()
-	{
+	public:
+		CVolumeDataColor(PModelVector3DField pVector3DField, NMR::NMATRIX3 transform);
+	};
 
-	}
-
-	nfDouble CVolumeLevelset::GetSolidThreshold()
-	{
-		return m_dSolidThreshold;
-	}
-
-	void CVolumeLevelset::SetSolidThreshold(nfDouble dSolidThreshold)
-	{
-		m_dSolidThreshold = dSolidThreshold;
-	}
-
-	std::string CVolumeLevelset::GetChannel()
-	{
-		return m_sChannelName;
-	}
-
-	void CVolumeLevelset::SetChannel(std::string sChannelName)
-	{
-		if (!GetVolumetricStack()->hasDstChannel(sChannelName)) {
-			throw CNMRException(NMR_ERROR_INVALIDPARAM);
-		}
-		m_sChannelName = sChannelName;
-	}
-
+	typedef std::shared_ptr<CVolumeDataColor> PVolumeDataColor;
 }
+
+#endif // __NMR_VOLUMECOLOR

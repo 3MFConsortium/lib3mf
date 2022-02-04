@@ -26,15 +26,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelImage3D.cpp implements a 3D image stack for the volumetric extension
+NMR_ModelImage3D.cpp implements a 3D image for the volumetric extension
 
 --*/
 
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Model/Classes/NMR_ModelImage3D.h"
-#include "Model/Classes/NMR_ModelAttachment.h"
-
-#include "Common/Platform/NMR_ImportStream_Memory.h"
 
 #include "Common/NMR_Exception.h"
 #include "Common/NMR_StringUtils.h"
@@ -44,109 +41,19 @@ NMR_ModelImage3D.cpp implements a 3D image stack for the volumetric extension
 namespace NMR {
 
 
-	CModelImage3D::CModelImage3D(_In_ const ModelResourceID sID, _In_ CModel * pModel, _In_ nfUint32 nSizeX, _In_ nfUint32 nSizeY, nfUint32 nSheetCount)
-		: CModelResource(sID, pModel), m_nSizeX(nSizeX), m_nSizeY(nSizeY), m_nSheetCount(nSheetCount), m_minValues(nSheetCount, 1.0), m_maxValues(nSheetCount, 1.0)
+	CModelImage3D::CModelImage3D(_In_ const ModelResourceID sID, _In_ CModel* pModel)
+		: CModelResource(sID, pModel)
 	{
-
-		if ((nSizeX == 0) || (nSizeX > MAX_IMAGE3D_SIZE))
-			throw CNMRException(NMR_ERROR_INVALIDIMAGE3DSIZE);
-		if ((nSizeY == 0) || (nSizeY > MAX_IMAGE3D_SIZE))
-			throw CNMRException(NMR_ERROR_INVALIDPARAM);
-		if ((nSheetCount == 0) || (nSheetCount > MAX_IMAGE3D_SIZE))
-			throw CNMRException(MAX_IMAGE3D_SIZE);
-
-		m_Sheets.resize (m_nSheetCount);
-		m_minValues.resize (m_nSheetCount);
-		m_maxValues.resize (m_nSheetCount);
-	}
-		
-	
-	PModelImage3D CModelImage3D::make(_In_ const ModelResourceID sID, _In_ CModel * pModel, _In_ nfUint32 nSizeX, _In_ nfUint32 nSizeY, nfUint32 nSheetCount)
-	{
-		return std::make_shared<CModelImage3D>(CModelImage3D (sID, pModel, nSizeX, nSizeY, nSheetCount));
-	}
-
-
-	nfUint32 CModelImage3D::getSizeX()
-	{
-		return m_nSizeX;
-	}
-
-	nfUint32 CModelImage3D::getSizeY()
-	{
-		return m_nSizeY;
-	}
-
-	nfUint32 CModelImage3D::getSheetCount()
-	{
-		return m_nSheetCount;
-	}
-
-	void CModelImage3D::setSheet(nfUint32 nSheetIndex, PModelAttachment pAttachment, const nfDouble dMin, const nfDouble dMax)
-	{
-		if (!pAttachment.get())
-			throw CNMRException(NMR_ERROR_INVALIDTEXTURE);
-		if (pAttachment->getRelationShipType() != PACKAGE_TEXTURE_RELATIONSHIP_TYPE)
-			throw CNMRException(NMR_ERROR_INVALIDRELATIONSHIPTYPEFORTEXTURE);
-		if (nSheetIndex >= m_nSheetCount)
-			throw CNMRException(NMR_ERROR_INVALIDINDEX);
-
-		if (pAttachment->getModel () != getModel ()) 
-			throw CNMRException(NMR_ERROR_ATTACHMENTMODELMISMATCH);
-
-		m_Sheets[nSheetIndex] = pAttachment;
-		m_minValues[nSheetIndex] = dMin;
-		m_maxValues[nSheetIndex] = dMax;
-	}
-		
-	PModelAttachment CModelImage3D::getSheet(nfUint32 nSheetIndex)
-	{
-		if (nSheetIndex >= m_nSheetCount)
-			throw CNMRException(NMR_ERROR_INVALIDINDEX);
-		return m_Sheets [nSheetIndex];
 
 	}
 
-	PModelAttachment CModelImage3D::createSheet(nfUint32 nSheetIndex, const std::string & sPath, PImportStream pCopiedStream, const nfDouble dMin, const nfDouble dMax)
+	std::string CModelImage3D::getName() const
 	{
-
-		PModelAttachment pAttachment = getModel()->addAttachment(sPath, PACKAGE_TEXTURE_RELATIONSHIP_TYPE, pCopiedStream);
-
-		setSheet(nSheetIndex, pAttachment, dMin, dMax);
-
-		return pAttachment;
+		return m_sName;
 	}
 
-	nfDouble CModelImage3D::getSheetMinValue (nfUint32 nSheetIndex)
+	void CModelImage3D::setName(_In_ std::string sName)
 	{
-		if (nSheetIndex >= m_nSheetCount)
-			throw CNMRException(NMR_ERROR_INVALIDINDEX);
-		
-		return m_minValues [nSheetIndex];
+		m_sName = sName;
 	}
-
-	void CModelImage3D::setSheetMinValue (nfUint32 nSheetIndex, nfDouble minVal)
-	{
-		if (nSheetIndex >= m_nSheetCount)
-			throw CNMRException(NMR_ERROR_INVALIDINDEX);
-		
-		m_minValues [nSheetIndex] = minVal;
-	}
-	
-	nfDouble CModelImage3D::getSheetMaxValue (nfUint32 nSheetIndex)
-	{
-		if (nSheetIndex >= m_nSheetCount)
-			throw CNMRException(NMR_ERROR_INVALIDINDEX);
-		
-		return m_maxValues [nSheetIndex];
-	}
-	
-	void CModelImage3D::setSheetMaxValue (nfUint32 nSheetIndex, nfDouble maxVal)
-	{
-		if (nSheetIndex >= m_nSheetCount)
-			throw CNMRException(NMR_ERROR_INVALIDINDEX);
-		
-		m_maxValues [nSheetIndex] = maxVal;
-	}
-
 }

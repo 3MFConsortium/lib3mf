@@ -63,7 +63,7 @@ namespace NMR {
 
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 
-		PVolumeColor MakeColor(_In_ CModel* pModel);
+		PVolumeDataColor MakeColor(_In_ CModel* pModel);
 	};
 
 	typedef std::shared_ptr <CModelReaderNode_Volumetric2201_Color> PModelReaderNode_Volumetric2201_Color;

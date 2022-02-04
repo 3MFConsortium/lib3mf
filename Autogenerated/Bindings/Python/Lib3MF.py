@@ -6702,9 +6702,9 @@ class ScalarFieldComposed(ScalarField):
 
 ''' Class Implementation for Vector3DFieldFromImage3D
 '''
-class Vector3DFieldFromImage3D(ScalarField):
+class Vector3DFieldFromImage3D(Vector3DField):
 	def __init__(self, handle, wrapper):
-		ScalarField.__init__(self, handle, wrapper)
+		Vector3DField.__init__(self, handle, wrapper)
 	def GetImage(self):
 		Image3DHandle = ctypes.c_void_p()
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_vector3dfieldfromimage3d_getimage(self._handle, Image3DHandle))
@@ -6772,9 +6772,9 @@ class Vector3DFieldFromImage3D(ScalarField):
 
 ''' Class Implementation for Vector3DFieldComposed
 '''
-class Vector3DFieldComposed(ScalarField):
+class Vector3DFieldComposed(Vector3DField):
 	def __init__(self, handle, wrapper):
-		ScalarField.__init__(self, handle, wrapper)
+		Vector3DField.__init__(self, handle, wrapper)
 	def SetMethod(self, TheMethod):
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_vector3dfieldcomposed_setmethod(self._handle, TheMethod))
 		

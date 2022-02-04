@@ -26,54 +26,37 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_VolumeProperty.cpp implements the class CVolumeProperty.
-
+NMR_ModelScalarField.h defines the Model ScalarField Class.
+A model scalar field is the base class of different scalar field specializations.
 --*/
 
-#include "Common/Mesh/NMR_VolumeProperty.h" 
+#ifndef __NMR_MODELSCALARFIELD
+#define __NMR_MODELSCALARFIELD
+
+#include "Model/Classes/NMR_Model.h"
+#include "Model/Classes/NMR_ModelResource.h"
+#include "Common/NMR_Types.h"
+#include "Common/Math/NMR_Matrix.h"
+
+#include <vector>
 
 namespace NMR {
 
-	CVolumeProperty::CVolumeProperty(std::string sName, PModelVolumetricStack pVolumetricStack)
-		: CVolumeBase(pVolumetricStack), m_bIsRequired(true)
-	{
-		m_sPropertyName = sName;
-	}
+	class CModel;
+	typedef std::shared_ptr <CModel> PModel;
 
-	void CVolumeProperty::clear()
-	{
+	class CModelScalarField : public CModelResource { 
+	private:
+		std::string m_sName;
+	public:
+		CModelScalarField() = delete;
+		CModelScalarField(_In_ const ModelResourceID sID, _In_ CModel * pModel);
 
-	}
+		std::string getName();
+		void setName(_In_ std::string sName);
+	};
 
-	std::string CVolumeProperty::GetChannel()
-	{
-		return m_sChannelName;
-	}
-
-	void CVolumeProperty::SetChannel(std::string sChannelName)
-	{
-		if (!GetVolumetricStack()->hasDstChannel(sChannelName)) {
-			throw CNMRException(NMR_ERROR_INVALIDPARAM);
-		}
-		m_sChannelName = sChannelName;
-	}
-
-	std::string CVolumeProperty::GetName()
-	{
-		return m_sPropertyName;
-	}
-	void CVolumeProperty::SetName(std::string sPropertyName)
-	{
-		m_sPropertyName = sPropertyName;
-	}
-
-	bool CVolumeProperty::IsRequired()
-	{
-		return m_bIsRequired;
-	}
-
-	void CVolumeProperty::SetIsRequired(bool bIsRequired)
-	{
-		m_bIsRequired = bIsRequired;
-	}
+	typedef std::shared_ptr <CModelScalarField> PModelScalarField;
 }
+
+#endif // __NMR_MODELSCALARFIELD

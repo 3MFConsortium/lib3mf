@@ -64,7 +64,7 @@ namespace NMR {
 		parseContent(pXMLReader);
 	}
 
-	PVolumeProperty CModelReaderNode_Volumetric2201_Property::MakeProperty(_In_ CModel* pModel)
+	PVolumeDataProperty CModelReaderNode_Volumetric2201_Property::MakeProperty(_In_ CModel* pModel)
 	{
 		if (!pModel)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
@@ -86,19 +86,20 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_UNKNOWNMODELRESOURCE);
 		}
 
-		PModelVolumetricStack pStack = pModel->findVolumetricStack(pID->getUniqueID());
-		if (!pStack.get()) {
-			throw CNMRException(NMR_ERROR_UNKNOWNMODELRESOURCE);
-		}
+		throw CNMRException(-1);
+		//PModelVolumetricStack pStack = pModel->findVolumetricStack(pID->getUniqueID());
+		//if (!pStack.get()) {
+		//	throw CNMRException(NMR_ERROR_UNKNOWNMODELRESOURCE);
+		//}
+		
+		//PVolumeDataProperty pProperty = std::make_shared<CVolumeDataProperty>(m_sName, pStack);
+		//pProperty->SetChannel(m_sChannel);
+		//if (m_bHasRequired)
+		//	pProperty->SetIsRequired(m_bRequired);
+		//if (m_bHasTransform)
+		//	pProperty->SetTransform(m_Transform);
 
-		PVolumeProperty pProperty = std::make_shared<CVolumeProperty>(m_sName, pStack);
-		pProperty->SetChannel(m_sChannel);
-		if (m_bHasRequired)
-			pProperty->SetIsRequired(m_bRequired);
-		if (m_bHasTransform)
-			pProperty->SetTransform(m_Transform);
-
-		return pProperty;
+		//return pProperty;
 	}
 
 	void CModelReaderNode_Volumetric2201_Property::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)

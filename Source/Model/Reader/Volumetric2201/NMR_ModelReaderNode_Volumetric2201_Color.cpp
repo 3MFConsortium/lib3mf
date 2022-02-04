@@ -65,7 +65,7 @@ namespace NMR {
 		parseContent(pXMLReader);
 	}
 
-	PVolumeColor CModelReaderNode_Volumetric2201_Color::MakeColor(_In_ CModel* pModel)
+	PVolumeDataColor CModelReaderNode_Volumetric2201_Color::MakeColor(_In_ CModel* pModel)
 	{
 		if (!pModel)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
@@ -82,20 +82,22 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_UNKNOWNMODELRESOURCE);
 		}
 
-		PModelVolumetricStack pStack = pModel->findVolumetricStack(pID->getUniqueID());
-		if (!pStack.get()) {
-			throw CNMRException(NMR_ERROR_UNKNOWNMODELRESOURCE);
-		}
+		throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
 
-		PVolumeColor pColor = std::make_shared<CVolumeColor>(pStack);
-		pColor->SetChannel(eModelColorChannel::MODELCOLORCHANNEL_RED,   m_sRedChannel);
-		pColor->SetChannel(eModelColorChannel::MODELCOLORCHANNEL_GREEN, m_sGreenChannel);
-		pColor->SetChannel(eModelColorChannel::MODELCOLORCHANNEL_BLUE,  m_sBlueChannel);
+		//PModelVolumetricStack pStack = pModel->findVolumetricStack(pID->getUniqueID());
+		//if (!pStack.get()) {
+		//	throw CNMRException(NMR_ERROR_UNKNOWNMODELRESOURCE);
+		//}
 
-		if (m_bHasTransform)
-			pColor->SetTransform(m_Transform);
+		//PVolumeDataColor pColor = std::make_shared<CVolumeDataColor>(pStack);
+		//pColor->SetChannel(eModelColorChannel::MODELCOLORCHANNEL_RED,   m_sRedChannel);
+		//pColor->SetChannel(eModelColorChannel::MODELCOLORCHANNEL_GREEN, m_sGreenChannel);
+		//pColor->SetChannel(eModelColorChannel::MODELCOLORCHANNEL_BLUE,  m_sBlueChannel);
+
+		//if (m_bHasTransform)
+		//	pColor->SetTransform(m_Transform);
 			
-		return pColor;
+		//return pColor;
 	}
 
 	void CModelReaderNode_Volumetric2201_Color::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
