@@ -302,6 +302,9 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_ContentEncryptionParams_GetAdditionalAuthenticationData = NULL;
 	pWrapperTable->m_ContentEncryptionParams_GetDescriptor = NULL;
 	pWrapperTable->m_ContentEncryptionParams_GetKeyUUID = NULL;
+	pWrapperTable->m_ContentEncryptionParams_GetPackagePath = NULL;
+	pWrapperTable->m_ContentEncryptionParams_HasCustomInformation = NULL;
+	pWrapperTable->m_ContentEncryptionParams_GetCustomInformation = NULL;
 	pWrapperTable->m_ResourceData_GetPath = NULL;
 	pWrapperTable->m_ResourceData_GetEncryptionAlgorithm = NULL;
 	pWrapperTable->m_ResourceData_GetCompression = NULL;
@@ -2747,6 +2750,33 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 	dlerror();
 	#endif // _WIN32
 	if (pWrapperTable->m_ContentEncryptionParams_GetKeyUUID == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ContentEncryptionParams_GetPackagePath = (PLib3MFContentEncryptionParams_GetPackagePathPtr) GetProcAddress(hLibrary, "lib3mf_contentencryptionparams_getpackagepath");
+	#else // _WIN32
+	pWrapperTable->m_ContentEncryptionParams_GetPackagePath = (PLib3MFContentEncryptionParams_GetPackagePathPtr) dlsym(hLibrary, "lib3mf_contentencryptionparams_getpackagepath");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ContentEncryptionParams_GetPackagePath == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ContentEncryptionParams_HasCustomInformation = (PLib3MFContentEncryptionParams_HasCustomInformationPtr) GetProcAddress(hLibrary, "lib3mf_contentencryptionparams_hascustominformation");
+	#else // _WIN32
+	pWrapperTable->m_ContentEncryptionParams_HasCustomInformation = (PLib3MFContentEncryptionParams_HasCustomInformationPtr) dlsym(hLibrary, "lib3mf_contentencryptionparams_hascustominformation");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ContentEncryptionParams_HasCustomInformation == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ContentEncryptionParams_GetCustomInformation = (PLib3MFContentEncryptionParams_GetCustomInformationPtr) GetProcAddress(hLibrary, "lib3mf_contentencryptionparams_getcustominformation");
+	#else // _WIN32
+	pWrapperTable->m_ContentEncryptionParams_GetCustomInformation = (PLib3MFContentEncryptionParams_GetCustomInformationPtr) dlsym(hLibrary, "lib3mf_contentencryptionparams_getcustominformation");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ContentEncryptionParams_GetCustomInformation == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32

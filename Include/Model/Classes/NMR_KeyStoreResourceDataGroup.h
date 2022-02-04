@@ -49,6 +49,20 @@ NMR_KeyStoreResourceData.h defines the KeyStoreResourceData Class. A ResourceDat
 
 namespace NMR {
 
+	class CKeyStoreResourceDataCustomInformation {
+	private:
+		std::map <std::pair <std::string, std::string>, std::string> m_CustomInformationMap;
+	public:
+		void add(const std::string& sNameSpace, const std::string& sName, const std::string& sValue);
+		bool has(const std::string& sNameSpace, const std::string& sName);
+		bool remove(const std::string& sNameSpace, const std::string& sName);
+		std::string get(const std::string& sNameSpace, const std::string& sName);
+		std::set<std::string> nameSpaces();
+		std::set<std::pair<std::string, std::string>> informationNames();
+	};
+
+	typedef std::shared_ptr<CKeyStoreResourceDataCustomInformation> PKeyStoreResourceDataCustomInformation;
+
 	class CKeyStoreResourceDataGroup {
 		PUUID m_sKeyUUID;
 		std::vector<PKeyStoreAccessRight> m_AccessRights;
@@ -56,8 +70,8 @@ namespace NMR {
 		std::vector<nfByte> m_rgKey;
 		std::mutex mtx;
 
+		PKeyStoreResourceDataCustomInformation m_CustomInformation;
 
-		std::map <std::pair <std::string, std::string>, std::string> m_CustomInformation;
 	public:
 		CKeyStoreResourceDataGroup(PUUID const& keyUUID, std::vector<nfByte> const & key);
 
@@ -68,16 +82,10 @@ namespace NMR {
 		PKeyStoreAccessRight getAccessRight(nfUint64 index) const;
 		PKeyStoreAccessRight findAccessRightByConsumerID(std::string const & consumerId) const;
 
+		PKeyStoreResourceDataCustomInformation customInformation() const;
+
 		std::vector<nfByte> const & getKey() const;
 		void setKey(std::vector<nfByte> const & key);
-
-		void addCustomInformation (const std::string & sNameSpace, const std::string & sName, const std::string & sValue);
-		bool hasCustomInformation(const std::string& sNameSpace, const std::string& sName);
-		bool removeCustomInformation(const std::string& sNameSpace, const std::string& sName);
-		std::string getCustomInformation(const std::string& sNameSpace, const std::string& sName);
-
-		std::set<std::string> getCustomNameSpaces();
-		std::set<std::pair<std::string, std::string>> getCustomInformationNames();
 
 		inline nfBool isOpen() const {
 			return !m_rgKey.empty();

@@ -303,6 +303,9 @@ type Lib3MFImplementation struct {
 	Lib3MF_contentencryptionparams_getadditionalauthenticationdata uintptr
 	Lib3MF_contentencryptionparams_getdescriptor uintptr
 	Lib3MF_contentencryptionparams_getkeyuuid uintptr
+	Lib3MF_contentencryptionparams_getpackagepath uintptr
+	Lib3MF_contentencryptionparams_hascustominformation uintptr
+	Lib3MF_contentencryptionparams_getcustominformation uintptr
 	Lib3MF_resourcedata_getpath uintptr
 	Lib3MF_resourcedata_getencryptionalgorithm uintptr
 	Lib3MF_resourcedata_getcompression uintptr
@@ -1867,6 +1870,21 @@ func (implementation *Lib3MFImplementation) Initialize(DLLFileName string) error
 	implementation.Lib3MF_contentencryptionparams_getkeyuuid, err = syscall.GetProcAddress(dllHandle, "lib3mf_contentencryptionparams_getkeyuuid")
 	if (err != nil) {
 		return errors.New("Could not get function lib3mf_contentencryptionparams_getkeyuuid: " + err.Error())
+	}
+	
+	implementation.Lib3MF_contentencryptionparams_getpackagepath, err = syscall.GetProcAddress(dllHandle, "lib3mf_contentencryptionparams_getpackagepath")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_contentencryptionparams_getpackagepath: " + err.Error())
+	}
+	
+	implementation.Lib3MF_contentencryptionparams_hascustominformation, err = syscall.GetProcAddress(dllHandle, "lib3mf_contentencryptionparams_hascustominformation")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_contentencryptionparams_hascustominformation: " + err.Error())
+	}
+	
+	implementation.Lib3MF_contentencryptionparams_getcustominformation, err = syscall.GetProcAddress(dllHandle, "lib3mf_contentencryptionparams_getcustominformation")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_contentencryptionparams_getcustominformation: " + err.Error())
 	}
 	
 	implementation.Lib3MF_resourcedata_getpath, err = syscall.GetProcAddress(dllHandle, "lib3mf_resourcedata_getpath")
@@ -7082,6 +7100,71 @@ func (implementation *Lib3MFImplementation) ContentEncryptionParams_GetKeyUUID(C
 	}
 	
 	return string(bufferUUID[:(filledinUUID-1)]), err
+}
+
+func (implementation *Lib3MFImplementation) ContentEncryptionParams_GetPackagePath(ContentEncryptionParams Lib3MFHandle) (string, error) {
+	var err error = nil
+	var neededforPath int64 = 0
+	var filledinPath int64 = 0
+	
+	implementation_contentencryptionparams, err := implementation.GetWrapperHandle(ContentEncryptionParams)
+	if (err != nil) {
+		return "", err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_contentencryptionparams_getpackagepath, implementation_contentencryptionparams.GetDLLInHandle(), Int64InValue(0), Int64OutValue(&neededforPath), Int64InValue(0))
+	if (err != nil) {
+		return "", err
+	}
+	bufferSizePath := neededforPath
+	bufferPath := make([]byte, bufferSizePath)
+	err = implementation.CallFunction(implementation.Lib3MF_contentencryptionparams_getpackagepath, implementation_contentencryptionparams.GetDLLInHandle(), Int64InValue(bufferSizePath), Int64OutValue(&filledinPath), uintptr(unsafe.Pointer(&bufferPath[0])))
+	if (err != nil) {
+		return "", err
+	}
+	
+	return string(bufferPath[:(filledinPath-1)]), err
+}
+
+func (implementation *Lib3MFImplementation) ContentEncryptionParams_HasCustomInformation(ContentEncryptionParams Lib3MFHandle, sNameSpace string, sName string) (bool, error) {
+	var err error = nil
+	var bHasValue int64 = 0
+	
+	implementation_contentencryptionparams, err := implementation.GetWrapperHandle(ContentEncryptionParams)
+	if (err != nil) {
+		return false, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_contentencryptionparams_hascustominformation, implementation_contentencryptionparams.GetDLLInHandle(), StringInValue(sNameSpace), StringInValue(sName), Int64OutValue(&bHasValue))
+	if (err != nil) {
+		return false, err
+	}
+	
+	return (bHasValue != 0), err
+}
+
+func (implementation *Lib3MFImplementation) ContentEncryptionParams_GetCustomInformation(ContentEncryptionParams Lib3MFHandle, sNameSpace string, sName string) (string, error) {
+	var err error = nil
+	var neededforValue int64 = 0
+	var filledinValue int64 = 0
+	
+	implementation_contentencryptionparams, err := implementation.GetWrapperHandle(ContentEncryptionParams)
+	if (err != nil) {
+		return "", err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_contentencryptionparams_getcustominformation, implementation_contentencryptionparams.GetDLLInHandle(), StringInValue(sNameSpace), StringInValue(sName), Int64InValue(0), Int64OutValue(&neededforValue), Int64InValue(0))
+	if (err != nil) {
+		return "", err
+	}
+	bufferSizeValue := neededforValue
+	bufferValue := make([]byte, bufferSizeValue)
+	err = implementation.CallFunction(implementation.Lib3MF_contentencryptionparams_getcustominformation, implementation_contentencryptionparams.GetDLLInHandle(), StringInValue(sNameSpace), StringInValue(sName), Int64InValue(bufferSizeValue), Int64OutValue(&filledinValue), uintptr(unsafe.Pointer(&bufferValue[0])))
+	if (err != nil) {
+		return "", err
+	}
+	
+	return string(bufferValue[:(filledinValue-1)]), err
 }
 
 func (implementation *Lib3MFImplementation) ResourceData_GetPath(ResourceData Lib3MFHandle) (Lib3MFHandle, error) {

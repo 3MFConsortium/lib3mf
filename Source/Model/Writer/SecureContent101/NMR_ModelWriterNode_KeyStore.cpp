@@ -148,10 +148,10 @@ void NMR::CModelWriterNode_KeyStore::writeResourceDatagroup() {
 		writeConstStringAttribute(XML_3MF_SECURE_CONTENT_KEY_UUID, resourcedatagroup->getKeyUUID()->toString().c_str());
 
 		// Write Custom Resource Datagroup Information
-		auto sNameSet = resourcedatagroup->getCustomInformationNames();
+		auto sNameSet = resourcedatagroup->customInformation()->informationNames();
 		for (auto sNameIter : sNameSet) {
 			auto sPrefix = registerNameSpace(sNameIter.first);
-			auto sValue = resourcedatagroup->getCustomInformation(sNameIter.first, sNameIter.second);
+			auto sValue = resourcedatagroup->customInformation()->get(sNameIter.first, sNameIter.second);
 			writeConstPrefixedStringAttribute (sPrefix.c_str (), sNameIter.second.c_str(), sValue.c_str ());
 		}
 
@@ -261,7 +261,7 @@ void NMR::CModelWriterNode_KeyStore::writeToXML() {
 	auto nCount = m_pKeyStore->getResourceDataGroupCount();
 	for (nfUint64 nIndex = 0; nIndex < nCount; nIndex++) {
 		auto pGroup = m_pKeyStore->getResourceDataGroup(nIndex);
-		auto nameSpaceSet = pGroup->getCustomNameSpaces();
+		auto nameSpaceSet = pGroup->customInformation()->nameSpaces();
 		for (auto sNameSpace : nameSpaceSet) {
 			auto iIter = m_customNameSpaces.find(sNameSpace);
 			if (iIter == m_customNameSpaces.end()) {

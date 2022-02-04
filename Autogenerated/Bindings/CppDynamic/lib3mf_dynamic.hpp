@@ -1494,6 +1494,9 @@ public:
 	inline void GetAdditionalAuthenticationData(std::vector<Lib3MF_uint8> & ByteDataBuffer);
 	inline Lib3MF_uint64 GetDescriptor();
 	inline std::string GetKeyUUID();
+	inline std::string GetPackagePath();
+	inline bool HasCustomInformation(const std::string & sNameSpace, const std::string & sName);
+	inline std::string GetCustomInformation(const std::string & sNameSpace, const std::string & sName);
 };
 	
 /*************************************************************************************************************************
@@ -2186,6 +2189,9 @@ public:
 		pWrapperTable->m_ContentEncryptionParams_GetAdditionalAuthenticationData = nullptr;
 		pWrapperTable->m_ContentEncryptionParams_GetDescriptor = nullptr;
 		pWrapperTable->m_ContentEncryptionParams_GetKeyUUID = nullptr;
+		pWrapperTable->m_ContentEncryptionParams_GetPackagePath = nullptr;
+		pWrapperTable->m_ContentEncryptionParams_HasCustomInformation = nullptr;
+		pWrapperTable->m_ContentEncryptionParams_GetCustomInformation = nullptr;
 		pWrapperTable->m_ResourceData_GetPath = nullptr;
 		pWrapperTable->m_ResourceData_GetEncryptionAlgorithm = nullptr;
 		pWrapperTable->m_ResourceData_GetCompression = nullptr;
@@ -4630,6 +4636,33 @@ public:
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
+		pWrapperTable->m_ContentEncryptionParams_GetPackagePath = (PLib3MFContentEncryptionParams_GetPackagePathPtr) GetProcAddress(hLibrary, "lib3mf_contentencryptionparams_getpackagepath");
+		#else // _WIN32
+		pWrapperTable->m_ContentEncryptionParams_GetPackagePath = (PLib3MFContentEncryptionParams_GetPackagePathPtr) dlsym(hLibrary, "lib3mf_contentencryptionparams_getpackagepath");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ContentEncryptionParams_GetPackagePath == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ContentEncryptionParams_HasCustomInformation = (PLib3MFContentEncryptionParams_HasCustomInformationPtr) GetProcAddress(hLibrary, "lib3mf_contentencryptionparams_hascustominformation");
+		#else // _WIN32
+		pWrapperTable->m_ContentEncryptionParams_HasCustomInformation = (PLib3MFContentEncryptionParams_HasCustomInformationPtr) dlsym(hLibrary, "lib3mf_contentencryptionparams_hascustominformation");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ContentEncryptionParams_HasCustomInformation == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ContentEncryptionParams_GetCustomInformation = (PLib3MFContentEncryptionParams_GetCustomInformationPtr) GetProcAddress(hLibrary, "lib3mf_contentencryptionparams_getcustominformation");
+		#else // _WIN32
+		pWrapperTable->m_ContentEncryptionParams_GetCustomInformation = (PLib3MFContentEncryptionParams_GetCustomInformationPtr) dlsym(hLibrary, "lib3mf_contentencryptionparams_getcustominformation");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ContentEncryptionParams_GetCustomInformation == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
 		pWrapperTable->m_ResourceData_GetPath = (PLib3MFResourceData_GetPathPtr) GetProcAddress(hLibrary, "lib3mf_resourcedata_getpath");
 		#else // _WIN32
 		pWrapperTable->m_ResourceData_GetPath = (PLib3MFResourceData_GetPathPtr) dlsym(hLibrary, "lib3mf_resourcedata_getpath");
@@ -6640,6 +6673,18 @@ public:
 		
 		eLookupError = (*pLookup)("lib3mf_contentencryptionparams_getkeyuuid", (void**)&(pWrapperTable->m_ContentEncryptionParams_GetKeyUUID));
 		if ( (eLookupError != 0) || (pWrapperTable->m_ContentEncryptionParams_GetKeyUUID == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_contentencryptionparams_getpackagepath", (void**)&(pWrapperTable->m_ContentEncryptionParams_GetPackagePath));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ContentEncryptionParams_GetPackagePath == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_contentencryptionparams_hascustominformation", (void**)&(pWrapperTable->m_ContentEncryptionParams_HasCustomInformation));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ContentEncryptionParams_HasCustomInformation == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_contentencryptionparams_getcustominformation", (void**)&(pWrapperTable->m_ContentEncryptionParams_GetCustomInformation));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ContentEncryptionParams_GetCustomInformation == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("lib3mf_resourcedata_getpath", (void**)&(pWrapperTable->m_ResourceData_GetPath));
@@ -10312,6 +10357,52 @@ public:
 		CheckError(m_pWrapper->m_WrapperTable.m_ContentEncryptionParams_GetKeyUUID(m_pHandle, bytesNeededUUID, &bytesWrittenUUID, &bufferUUID[0]));
 		
 		return std::string(&bufferUUID[0]);
+	}
+	
+	/**
+	* CContentEncryptionParams::GetPackagePath - Returns the path of the package part, if applicable.
+	* @return 
+	*/
+	std::string CContentEncryptionParams::GetPackagePath()
+	{
+		Lib3MF_uint32 bytesNeededPath = 0;
+		Lib3MF_uint32 bytesWrittenPath = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ContentEncryptionParams_GetPackagePath(m_pHandle, 0, &bytesNeededPath, nullptr));
+		std::vector<char> bufferPath(bytesNeededPath);
+		CheckError(m_pWrapper->m_WrapperTable.m_ContentEncryptionParams_GetPackagePath(m_pHandle, bytesNeededPath, &bytesWrittenPath, &bufferPath[0]));
+		
+		return std::string(&bufferPath[0]);
+	}
+	
+	/**
+	* CContentEncryptionParams::HasCustomInformation - Checks for a custom information string of the resource data group
+	* @param[in] sNameSpace - A proper XML namespace for the Information.
+	* @param[in] sName - A proper name for the Information. Only alphanumerical characters are allowed, not starting with a number.
+	* @return Information string value exists.
+	*/
+	bool CContentEncryptionParams::HasCustomInformation(const std::string & sNameSpace, const std::string & sName)
+	{
+		bool resultHasValue = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ContentEncryptionParams_HasCustomInformation(m_pHandle, sNameSpace.c_str(), sName.c_str(), &resultHasValue));
+		
+		return resultHasValue;
+	}
+	
+	/**
+	* CContentEncryptionParams::GetCustomInformation - Gets a custom information string to the resource data group. Fails if not existing.
+	* @param[in] sNameSpace - A proper XML namespace for the Information.
+	* @param[in] sName - A proper name for the Information. Only alphanumerical characters are allowed, not starting with a number.
+	* @return Information string value.
+	*/
+	std::string CContentEncryptionParams::GetCustomInformation(const std::string & sNameSpace, const std::string & sName)
+	{
+		Lib3MF_uint32 bytesNeededValue = 0;
+		Lib3MF_uint32 bytesWrittenValue = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ContentEncryptionParams_GetCustomInformation(m_pHandle, sNameSpace.c_str(), sName.c_str(), 0, &bytesNeededValue, nullptr));
+		std::vector<char> bufferValue(bytesNeededValue);
+		CheckError(m_pWrapper->m_WrapperTable.m_ContentEncryptionParams_GetCustomInformation(m_pHandle, sNameSpace.c_str(), sName.c_str(), bytesNeededValue, &bytesWrittenValue, &bufferValue[0]));
+		
+		return std::string(&bufferValue[0]);
 	}
 	
 	/**

@@ -37,8 +37,12 @@ NMR_KeyStoreDecryptRight.h defines the KeyStoreDecryptRight Class. A decryptrigh
 #include <map>
 #include <memory>
 #include "Common/NMR_Types.h"
+
 #include "Model/Classes/NMR_KeyStoreConsumer.h"
 namespace NMR {
+
+	class CKeyStoreResourceDataCustomInformation;
+	typedef std::shared_ptr<CKeyStoreResourceDataCustomInformation> PKeyStoreResourceDataCustomInformation;
 
 	class CKeyStoreCEKParams {
 	protected:
@@ -61,6 +65,8 @@ namespace NMR {
 		std::vector<nfByte> const & getAddAuthData() const;
 		nfUint64 getDescriptor() const;
 
+		virtual std::string getPath() const;
+
 		void setAuthTag(std::vector<nfByte> const & buf);
 		void setAddAuthData(std::vector<nfByte> const & buf);
 	};
@@ -69,6 +75,10 @@ namespace NMR {
 
 	class CKeyStoreContentEncryptionParams: public CKeyStoreCEKParams {
 		std::vector<nfByte> m_rgKey;
+		std::string m_sPath;
+		std::string m_sKeyUUID;
+		PKeyStoreResourceDataCustomInformation m_pCustomInformation;
+		
 	public:
 		CKeyStoreContentEncryptionParams(nfBool const & compression,
 			eKeyStoreEncryptAlgorithm const & encryptionAlgorithm,
@@ -76,9 +86,16 @@ namespace NMR {
 			std::vector<nfByte> const & iv,
 			std::vector<nfByte> const & tag,
 			std::vector<nfByte> const & aad,
+			const std::string & sPath,
+			const std::string& sKeyUUID,
+			PKeyStoreResourceDataCustomInformation pCustomInformation,
 			nfUint64 descriptor);
 
 		std::vector<nfByte> const & getKey() const;
+		std::string getKeyUUID() const;
+		PKeyStoreResourceDataCustomInformation customInformation () const;
+
+		virtual std::string getPath() const override;
 	};
 
 	typedef std::shared_ptr<CKeyStoreContentEncryptionParams> PCKeyStoreContentEncryptionParams;

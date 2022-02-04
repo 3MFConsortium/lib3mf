@@ -1279,6 +1279,20 @@
 		<method name="GetKeyUUID" description="Gets the resourcedatagroup keyuuid">
 			<param name="UUID" type="string" pass="return" description="The resourcedatagroup keyuuid that may be use to reference an external key"/>
 		</method>		
+		<method name="GetPackagePath" description="Returns the path of the package part, if applicable.">
+			<param name="Path" type="string" pass="return" descrption="The package path of the encrypted resource." />
+		</method>
+		<method name="HasCustomInformation" description="Checks for a custom information string of the resource data group">
+			<param name="NameSpace" type="string" pass="in" description="A proper XML namespace for the Information."/>
+			<param name="Name" type="string" pass="in" description="A proper name for the Information. Only alphanumerical characters are allowed, not starting with a number."/>
+			<param name="HasValue" type="bool" pass="return" description="Information string value exists."/>
+		</method>
+		<method name="GetCustomInformation" description="Gets a custom information string to the resource data group. Fails if not existing.">
+			<param name="NameSpace" type="string" pass="in" description="A proper XML namespace for the Information."/>
+			<param name="Name" type="string" pass="in" description="A proper name for the Information. Only alphanumerical characters are allowed, not starting with a number."/>
+			<param name="Value" type="string" pass="return" description="Information string value."/>
+		</method>
+		
 	</class>
 
 	<functiontype name="ContentEncryptionCallback" description="A callback to encrypt/decrypt content called on each resource encrypted. This might be called several times depending on content size. If Input is not available(either null or size is 0), clients must return the result of authenticated tag generation/validation.">

@@ -2362,6 +2362,28 @@ public:
 	*/
 	virtual std::string GetKeyUUID() = 0;
 
+	/**
+	* IContentEncryptionParams::GetPackagePath - Returns the path of the package part, if applicable.
+	* @return 
+	*/
+	virtual std::string GetPackagePath() = 0;
+
+	/**
+	* IContentEncryptionParams::HasCustomInformation - Checks for a custom information string of the resource data group
+	* @param[in] sNameSpace - A proper XML namespace for the Information.
+	* @param[in] sName - A proper name for the Information. Only alphanumerical characters are allowed, not starting with a number.
+	* @return Information string value exists.
+	*/
+	virtual bool HasCustomInformation(const std::string & sNameSpace, const std::string & sName) = 0;
+
+	/**
+	* IContentEncryptionParams::GetCustomInformation - Gets a custom information string to the resource data group. Fails if not existing.
+	* @param[in] sNameSpace - A proper XML namespace for the Information.
+	* @param[in] sName - A proper name for the Information. Only alphanumerical characters are allowed, not starting with a number.
+	* @return Information string value.
+	*/
+	virtual std::string GetCustomInformation(const std::string & sNameSpace, const std::string & sName) = 0;
+
 };
 
 typedef IBaseSharedPtr<IContentEncryptionParams> PIContentEncryptionParams;

@@ -1470,6 +1470,9 @@ public:
 	inline void GetAdditionalAuthenticationData(std::vector<Lib3MF_uint8> & ByteDataBuffer);
 	inline Lib3MF_uint64 GetDescriptor();
 	inline std::string GetKeyUUID();
+	inline std::string GetPackagePath();
+	inline bool HasCustomInformation(const std::string & sNameSpace, const std::string & sName);
+	inline std::string GetCustomInformation(const std::string & sNameSpace, const std::string & sName);
 };
 	
 /*************************************************************************************************************************
@@ -5132,6 +5135,52 @@ public:
 		CheckError(lib3mf_contentencryptionparams_getkeyuuid(m_pHandle, bytesNeededUUID, &bytesWrittenUUID, &bufferUUID[0]));
 		
 		return std::string(&bufferUUID[0]);
+	}
+	
+	/**
+	* CContentEncryptionParams::GetPackagePath - Returns the path of the package part, if applicable.
+	* @return 
+	*/
+	std::string CContentEncryptionParams::GetPackagePath()
+	{
+		Lib3MF_uint32 bytesNeededPath = 0;
+		Lib3MF_uint32 bytesWrittenPath = 0;
+		CheckError(lib3mf_contentencryptionparams_getpackagepath(m_pHandle, 0, &bytesNeededPath, nullptr));
+		std::vector<char> bufferPath(bytesNeededPath);
+		CheckError(lib3mf_contentencryptionparams_getpackagepath(m_pHandle, bytesNeededPath, &bytesWrittenPath, &bufferPath[0]));
+		
+		return std::string(&bufferPath[0]);
+	}
+	
+	/**
+	* CContentEncryptionParams::HasCustomInformation - Checks for a custom information string of the resource data group
+	* @param[in] sNameSpace - A proper XML namespace for the Information.
+	* @param[in] sName - A proper name for the Information. Only alphanumerical characters are allowed, not starting with a number.
+	* @return Information string value exists.
+	*/
+	bool CContentEncryptionParams::HasCustomInformation(const std::string & sNameSpace, const std::string & sName)
+	{
+		bool resultHasValue = 0;
+		CheckError(lib3mf_contentencryptionparams_hascustominformation(m_pHandle, sNameSpace.c_str(), sName.c_str(), &resultHasValue));
+		
+		return resultHasValue;
+	}
+	
+	/**
+	* CContentEncryptionParams::GetCustomInformation - Gets a custom information string to the resource data group. Fails if not existing.
+	* @param[in] sNameSpace - A proper XML namespace for the Information.
+	* @param[in] sName - A proper name for the Information. Only alphanumerical characters are allowed, not starting with a number.
+	* @return Information string value.
+	*/
+	std::string CContentEncryptionParams::GetCustomInformation(const std::string & sNameSpace, const std::string & sName)
+	{
+		Lib3MF_uint32 bytesNeededValue = 0;
+		Lib3MF_uint32 bytesWrittenValue = 0;
+		CheckError(lib3mf_contentencryptionparams_getcustominformation(m_pHandle, sNameSpace.c_str(), sName.c_str(), 0, &bytesNeededValue, nullptr));
+		std::vector<char> bufferValue(bytesNeededValue);
+		CheckError(lib3mf_contentencryptionparams_getcustominformation(m_pHandle, sNameSpace.c_str(), sName.c_str(), bytesNeededValue, &bytesWrittenValue, &bufferValue[0]));
+		
+		return std::string(&bufferValue[0]);
 	}
 	
 	/**

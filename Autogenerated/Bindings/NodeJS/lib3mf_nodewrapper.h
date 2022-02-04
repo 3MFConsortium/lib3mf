@@ -959,6 +959,9 @@ private:
 	static void GetAdditionalAuthenticationData(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetDescriptor(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetKeyUUID(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetPackagePath(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void HasCustomInformation(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetCustomInformation(const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:
 	CLib3MFContentEncryptionParams();

@@ -2679,6 +2679,41 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_contentencryptionparams_getdescriptor(Lib3MF
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_contentencryptionparams_getkeyuuid(Lib3MF_ContentEncryptionParams pContentEncryptionParams, const Lib3MF_uint32 nUUIDBufferSize, Lib3MF_uint32* pUUIDNeededChars, char * pUUIDBuffer);
 
+/**
+* Returns the path of the package part, if applicable.
+*
+* @param[in] pContentEncryptionParams - ContentEncryptionParams instance.
+* @param[in] nPathBufferSize - size of the buffer (including trailing 0)
+* @param[out] pPathNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pPathBuffer -  buffer of , may be NULL
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_contentencryptionparams_getpackagepath(Lib3MF_ContentEncryptionParams pContentEncryptionParams, const Lib3MF_uint32 nPathBufferSize, Lib3MF_uint32* pPathNeededChars, char * pPathBuffer);
+
+/**
+* Checks for a custom information string of the resource data group
+*
+* @param[in] pContentEncryptionParams - ContentEncryptionParams instance.
+* @param[in] pNameSpace - A proper XML namespace for the Information.
+* @param[in] pName - A proper name for the Information. Only alphanumerical characters are allowed, not starting with a number.
+* @param[out] pHasValue - Information string value exists.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_contentencryptionparams_hascustominformation(Lib3MF_ContentEncryptionParams pContentEncryptionParams, const char * pNameSpace, const char * pName, bool * pHasValue);
+
+/**
+* Gets a custom information string to the resource data group. Fails if not existing.
+*
+* @param[in] pContentEncryptionParams - ContentEncryptionParams instance.
+* @param[in] pNameSpace - A proper XML namespace for the Information.
+* @param[in] pName - A proper name for the Information. Only alphanumerical characters are allowed, not starting with a number.
+* @param[in] nValueBufferSize - size of the buffer (including trailing 0)
+* @param[out] pValueNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pValueBuffer -  buffer of Information string value., may be NULL
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_contentencryptionparams_getcustominformation(Lib3MF_ContentEncryptionParams pContentEncryptionParams, const char * pNameSpace, const char * pName, const Lib3MF_uint32 nValueBufferSize, Lib3MF_uint32* pValueNeededChars, char * pValueBuffer);
+
 /*************************************************************************************************************************
  Class definition for ResourceData
 **************************************************************************************************************************/

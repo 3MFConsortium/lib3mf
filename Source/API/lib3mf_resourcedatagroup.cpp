@@ -46,25 +46,25 @@ namespace Lib3MF {
 
 		void CResourceDataGroup::AddCustomInformation(const std::string& sNameSpace, const std::string& sName, const std::string& sValue)
 		{
-			m_pDataGroup->addCustomInformation (sNameSpace, sName, sValue);
+			m_pDataGroup->customInformation()->add (sNameSpace, sName, sValue);
 		}
 
 		bool CResourceDataGroup::HasCustomInformation(const std::string& sNameSpace, const std::string& sName)
 		{
-			return m_pDataGroup->hasCustomInformation (sNameSpace, sName);
+			return m_pDataGroup->customInformation()->has (sNameSpace, sName);
 		}
 
 		bool CResourceDataGroup::RemoveCustomInformation(const std::string& sNameSpace, const std::string& sName)
 		{
-			return m_pDataGroup->removeCustomInformation(sNameSpace, sName);
+			return m_pDataGroup->customInformation()->remove (sNameSpace, sName);
 		}
 	
 		std::string CResourceDataGroup::GetCustomInformation(const std::string& sNameSpace, const std::string& sName)
 		{
-			if (!m_pDataGroup->hasCustomInformation(sNameSpace, sName))
+			if (!m_pDataGroup->customInformation()->has (sNameSpace, sName))
 				throw ELib3MFInterfaceException( LIB3MF_ERROR_CUSTOMINFORMATIONNOTFOUND);
 
-			return m_pDataGroup->getCustomInformation(sNameSpace, sName);
+			return m_pDataGroup->customInformation()->get (sNameSpace, sName);
 
 		}
 

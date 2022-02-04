@@ -1087,6 +1087,15 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_contentencryptionparams_getkeyuuid", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ContentEncryptionParams_GetKeyUUID (IntPtr Handle, UInt32 sizeUUID, out UInt32 neededUUID, IntPtr dataUUID);
 
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_contentencryptionparams_getpackagepath", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ContentEncryptionParams_GetPackagePath (IntPtr Handle, UInt32 sizePath, out UInt32 neededPath, IntPtr dataPath);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_contentencryptionparams_hascustominformation", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ContentEncryptionParams_HasCustomInformation (IntPtr Handle, byte[] ANameSpace, byte[] AName, out Byte AHasValue);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_contentencryptionparams_getcustominformation", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ContentEncryptionParams_GetCustomInformation (IntPtr Handle, byte[] ANameSpace, byte[] AName, UInt32 sizeValue, out UInt32 neededValue, IntPtr dataValue);
+
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_resourcedata_getpath", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ResourceData_GetPath (IntPtr Handle, out IntPtr APath);
 
@@ -4310,6 +4319,46 @@ namespace Lib3MF {
 			CheckError(Internal.Lib3MFWrapper.ContentEncryptionParams_GetKeyUUID (Handle, sizeUUID, out neededUUID, dataUUID.AddrOfPinnedObject()));
 			dataUUID.Free();
 			return Encoding.UTF8.GetString(bytesUUID).TrimEnd(char.MinValue);
+		}
+
+		public String GetPackagePath ()
+		{
+			UInt32 sizePath = 0;
+			UInt32 neededPath = 0;
+			CheckError(Internal.Lib3MFWrapper.ContentEncryptionParams_GetPackagePath (Handle, sizePath, out neededPath, IntPtr.Zero));
+			sizePath = neededPath;
+			byte[] bytesPath = new byte[sizePath];
+			GCHandle dataPath = GCHandle.Alloc(bytesPath, GCHandleType.Pinned);
+
+			CheckError(Internal.Lib3MFWrapper.ContentEncryptionParams_GetPackagePath (Handle, sizePath, out neededPath, dataPath.AddrOfPinnedObject()));
+			dataPath.Free();
+			return Encoding.UTF8.GetString(bytesPath).TrimEnd(char.MinValue);
+		}
+
+		public bool HasCustomInformation (String ANameSpace, String AName)
+		{
+			byte[] byteNameSpace = Encoding.UTF8.GetBytes(ANameSpace + char.MinValue);
+			byte[] byteName = Encoding.UTF8.GetBytes(AName + char.MinValue);
+			Byte resultHasValue = 0;
+
+			CheckError(Internal.Lib3MFWrapper.ContentEncryptionParams_HasCustomInformation (Handle, byteNameSpace, byteName, out resultHasValue));
+			return (resultHasValue != 0);
+		}
+
+		public String GetCustomInformation (String ANameSpace, String AName)
+		{
+			byte[] byteNameSpace = Encoding.UTF8.GetBytes(ANameSpace + char.MinValue);
+			byte[] byteName = Encoding.UTF8.GetBytes(AName + char.MinValue);
+			UInt32 sizeValue = 0;
+			UInt32 neededValue = 0;
+			CheckError(Internal.Lib3MFWrapper.ContentEncryptionParams_GetCustomInformation (Handle, byteNameSpace, byteName, sizeValue, out neededValue, IntPtr.Zero));
+			sizeValue = neededValue;
+			byte[] bytesValue = new byte[sizeValue];
+			GCHandle dataValue = GCHandle.Alloc(bytesValue, GCHandleType.Pinned);
+
+			CheckError(Internal.Lib3MFWrapper.ContentEncryptionParams_GetCustomInformation (Handle, byteNameSpace, byteName, sizeValue, out neededValue, dataValue.AddrOfPinnedObject()));
+			dataValue.Free();
+			return Encoding.UTF8.GetString(bytesValue).TrimEnd(char.MinValue);
 		}
 
 	}

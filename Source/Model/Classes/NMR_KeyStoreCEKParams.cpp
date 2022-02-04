@@ -36,6 +36,10 @@ namespace NMR {
 		m_rgAad = buf;
 	}
 
+	std::string CKeyStoreCEKParams::getPath() const
+	{
+		return "";
+	}
 
 
 	CKeyStoreContentEncryptionParams::CKeyStoreContentEncryptionParams(
@@ -45,10 +49,35 @@ namespace NMR {
 		std::vector<nfByte> const & iv,
 		std::vector<nfByte> const & tag,
 		std::vector<nfByte> const & aad,
-		nfUint64 descriptor) : CKeyStoreCEKParams(compression, encryptionAlgorithm, iv, tag, aad, descriptor), m_rgKey(key) {}
+		const std::string& sKeyUUID,
+		const std::string & sPath,
+		PKeyStoreResourceDataCustomInformation pCustomInformation,
+		nfUint64 descriptor) 
+			: CKeyStoreCEKParams(compression, encryptionAlgorithm, iv, tag, aad, descriptor), 
+				m_rgKey(key), 
+				m_sPath (sPath), 
+				m_sKeyUUID (sKeyUUID),
+				m_pCustomInformation (pCustomInformation)
+	{}
 
 	std::vector<nfByte> const & CKeyStoreContentEncryptionParams::getKey() const {
 		return m_rgKey;
 	}
+
+	std::string CKeyStoreContentEncryptionParams::getPath() const
+	{
+		return m_sPath;
+	}
+
+	std::string CKeyStoreContentEncryptionParams::getKeyUUID() const
+	{
+		return m_sKeyUUID;
+	}
+
+	PKeyStoreResourceDataCustomInformation CKeyStoreContentEncryptionParams::customInformation() const
+	{
+		return m_pCustomInformation;
+	}
+
 
 }

@@ -45,8 +45,11 @@ namespace NMR {
 			rd->getInitVector(),
 			rd->getAuthTag(),
 			rd->getAddAuthData(),
-			rd->getDescriptor()
-		);
+			rd->getPath(),
+			rd->getGroup()->getKeyUUID()->toString(),	
+			rd->getGroup()->customInformation(),
+			rd->getDescriptor()			
+		);		
 	}
 
 	PKeyStoreCEKParams CKeyStoreFactory::makeCEKParams(nfBool compressed, eKeyStoreEncryptAlgorithm algorithm, std::vector<nfByte> const & aad, std::vector<nfByte> const & iv, std::vector<nfByte> const & tag) {

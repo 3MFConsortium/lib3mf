@@ -70,6 +70,8 @@ namespace NMR {
 
 		void setInitVector(std::vector<nfByte> const &newIV);
 		void setAuthTag(std::vector<nfByte> const & newTag);
+
+		virtual std::string getPath() const override;
 	};
 	typedef std::shared_ptr<CKeyStoreResourceData> PKeyStoreResourceData;
 }

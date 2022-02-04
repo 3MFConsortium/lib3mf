@@ -1,6 +1,8 @@
 #include "lib3mf_contentencryptionparams.hpp"
 #include "lib3mf_interfaceexception.hpp"
 
+#include "Model/Classes/NMR_KeyStoreResourceDataGroup.h"
+
 using namespace Lib3MF::Impl;
 
 
@@ -66,8 +68,25 @@ namespace Lib3MF {
 		}
 
 		std::string CContentEncryptionParams::GetKeyUUID() {
-			return std::string();
+			return m_pParams->getKeyUUID ();
 		}
+
+		std::string CContentEncryptionParams::GetPackagePath()
+		{
+			return m_pParams->getPath();
+		}
+
+		bool CContentEncryptionParams::HasCustomInformation(const std::string& sNameSpace, const std::string& sName)
+		{
+			return m_pParams->customInformation()->has(sNameSpace, sName);
+		}
+
+		std::string CContentEncryptionParams::GetCustomInformation(const std::string& sNameSpace, const std::string& sName)
+		{
+			return m_pParams->customInformation()->get(sNameSpace, sName);
+		}
+
+
 	}
 }
 

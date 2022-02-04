@@ -2357,6 +2357,33 @@ Lib3MFResult CCall_lib3mf_contentencryptionparams_getkeyuuid(Lib3MFHandle librar
 }
 
 
+Lib3MFResult CCall_lib3mf_contentencryptionparams_getpackagepath(Lib3MFHandle libraryHandle, Lib3MF_ContentEncryptionParams pContentEncryptionParams, const Lib3MF_uint32 nPathBufferSize, Lib3MF_uint32* pPathNeededChars, char * pPathBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ContentEncryptionParams_GetPackagePath (pContentEncryptionParams, nPathBufferSize, pPathNeededChars, pPathBuffer);
+}
+
+
+Lib3MFResult CCall_lib3mf_contentencryptionparams_hascustominformation(Lib3MFHandle libraryHandle, Lib3MF_ContentEncryptionParams pContentEncryptionParams, const char * pNameSpace, const char * pName, bool * pHasValue)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ContentEncryptionParams_HasCustomInformation (pContentEncryptionParams, pNameSpace, pName, pHasValue);
+}
+
+
+Lib3MFResult CCall_lib3mf_contentencryptionparams_getcustominformation(Lib3MFHandle libraryHandle, Lib3MF_ContentEncryptionParams pContentEncryptionParams, const char * pNameSpace, const char * pName, const Lib3MF_uint32 nValueBufferSize, Lib3MF_uint32* pValueNeededChars, char * pValueBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_ContentEncryptionParams_GetCustomInformation (pContentEncryptionParams, pNameSpace, pName, nValueBufferSize, pValueNeededChars, pValueBuffer);
+}
+
+
 Lib3MFResult CCall_lib3mf_resourcedata_getpath(Lib3MFHandle libraryHandle, Lib3MF_ResourceData pResourceData, Lib3MF_PackagePart * pPath)
 {
 	if (libraryHandle == 0) 
@@ -7058,6 +7085,50 @@ func (inst ContentEncryptionParams) GetKeyUUID() (string, error) {
 		return "", makeError(uint32(ret))
 	}
 	return string(bufferuUID[:(filledinuUID-1)]), nil
+}
+
+// GetPackagePath returns the path of the package part, if applicable.
+func (inst ContentEncryptionParams) GetPackagePath() (string, error) {
+	var neededforpath C.uint32_t
+	var filledinpath C.uint32_t
+	ret := C.CCall_lib3mf_contentencryptionparams_getpackagepath(inst.wrapperRef.LibraryHandle, inst.Ref, 0, &neededforpath, nil)
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	bufferSizepath := neededforpath
+	bufferpath := make([]byte, bufferSizepath)
+	ret = C.CCall_lib3mf_contentencryptionparams_getpackagepath(inst.wrapperRef.LibraryHandle, inst.Ref, bufferSizepath, &filledinpath, (*C.char)(unsafe.Pointer(&bufferpath[0])))
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	return string(bufferpath[:(filledinpath-1)]), nil
+}
+
+// HasCustomInformation checks for a custom information string of the resource data group.
+func (inst ContentEncryptionParams) HasCustomInformation(nameSpace string, name string) (bool, error) {
+	var hasValue C.bool
+	ret := C.CCall_lib3mf_contentencryptionparams_hascustominformation(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpace)[0])), (*C.char)(unsafe.Pointer(&[]byte(name)[0])), &hasValue)
+	if ret != 0 {
+		return false, makeError(uint32(ret))
+	}
+	return bool(hasValue), nil
+}
+
+// GetCustomInformation gets a custom information string to the resource data group. Fails if not existing.
+func (inst ContentEncryptionParams) GetCustomInformation(nameSpace string, name string) (string, error) {
+	var neededforvalue C.uint32_t
+	var filledinvalue C.uint32_t
+	ret := C.CCall_lib3mf_contentencryptionparams_getcustominformation(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpace)[0])), (*C.char)(unsafe.Pointer(&[]byte(name)[0])), 0, &neededforvalue, nil)
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	bufferSizevalue := neededforvalue
+	buffervalue := make([]byte, bufferSizevalue)
+	ret = C.CCall_lib3mf_contentencryptionparams_getcustominformation(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(nameSpace)[0])), (*C.char)(unsafe.Pointer(&[]byte(name)[0])), bufferSizevalue, &filledinvalue, (*C.char)(unsafe.Pointer(&buffervalue[0])))
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	return string(buffervalue[:(filledinvalue-1)]), nil
 }
 
 

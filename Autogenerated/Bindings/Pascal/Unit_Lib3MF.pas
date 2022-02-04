@@ -3080,6 +3080,41 @@ type
 	*)
 	TLib3MFContentEncryptionParams_GetKeyUUIDFunc = function(pContentEncryptionParams: TLib3MFHandle; const nUUIDBufferSize: Cardinal; out pUUIDNeededChars: Cardinal; pUUIDBuffer: PAnsiChar): TLib3MFResult; cdecl;
 	
+	(**
+	* Returns the path of the package part, if applicable.
+	*
+	* @param[in] pContentEncryptionParams - ContentEncryptionParams instance.
+	* @param[in] nPathBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pPathNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pPathBuffer -  buffer of , may be NULL
+	* @return error code or 0 (success)
+	*)
+	TLib3MFContentEncryptionParams_GetPackagePathFunc = function(pContentEncryptionParams: TLib3MFHandle; const nPathBufferSize: Cardinal; out pPathNeededChars: Cardinal; pPathBuffer: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Checks for a custom information string of the resource data group
+	*
+	* @param[in] pContentEncryptionParams - ContentEncryptionParams instance.
+	* @param[in] pNameSpace - A proper XML namespace for the Information.
+	* @param[in] pName - A proper name for the Information. Only alphanumerical characters are allowed, not starting with a number.
+	* @param[out] pHasValue - Information string value exists.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFContentEncryptionParams_HasCustomInformationFunc = function(pContentEncryptionParams: TLib3MFHandle; const pNameSpace: PAnsiChar; const pName: PAnsiChar; out pHasValue: Byte): TLib3MFResult; cdecl;
+	
+	(**
+	* Gets a custom information string to the resource data group. Fails if not existing.
+	*
+	* @param[in] pContentEncryptionParams - ContentEncryptionParams instance.
+	* @param[in] pNameSpace - A proper XML namespace for the Information.
+	* @param[in] pName - A proper name for the Information. Only alphanumerical characters are allowed, not starting with a number.
+	* @param[in] nValueBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pValueNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pValueBuffer -  buffer of Information string value., may be NULL
+	* @return error code or 0 (success)
+	*)
+	TLib3MFContentEncryptionParams_GetCustomInformationFunc = function(pContentEncryptionParams: TLib3MFHandle; const pNameSpace: PAnsiChar; const pName: PAnsiChar; const nValueBufferSize: Cardinal; out pValueNeededChars: Cardinal; pValueBuffer: PAnsiChar): TLib3MFResult; cdecl;
+	
 
 (*************************************************************************************************************************
  Function type definitions for ResourceData
@@ -4872,6 +4907,9 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		procedure GetAdditionalAuthenticationData(out AByteData: TByteDynArray);
 		function GetDescriptor(): QWord;
 		function GetKeyUUID(): String;
+		function GetPackagePath(): String;
+		function HasCustomInformation(const ANameSpace: String; const AName: String): Boolean;
+		function GetCustomInformation(const ANameSpace: String; const AName: String): String;
 	end;
 
 
@@ -5269,6 +5307,9 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFContentEncryptionParams_GetAdditionalAuthenticationDataFunc: TLib3MFContentEncryptionParams_GetAdditionalAuthenticationDataFunc;
 		FLib3MFContentEncryptionParams_GetDescriptorFunc: TLib3MFContentEncryptionParams_GetDescriptorFunc;
 		FLib3MFContentEncryptionParams_GetKeyUUIDFunc: TLib3MFContentEncryptionParams_GetKeyUUIDFunc;
+		FLib3MFContentEncryptionParams_GetPackagePathFunc: TLib3MFContentEncryptionParams_GetPackagePathFunc;
+		FLib3MFContentEncryptionParams_HasCustomInformationFunc: TLib3MFContentEncryptionParams_HasCustomInformationFunc;
+		FLib3MFContentEncryptionParams_GetCustomInformationFunc: TLib3MFContentEncryptionParams_GetCustomInformationFunc;
 		FLib3MFResourceData_GetPathFunc: TLib3MFResourceData_GetPathFunc;
 		FLib3MFResourceData_GetEncryptionAlgorithmFunc: TLib3MFResourceData_GetEncryptionAlgorithmFunc;
 		FLib3MFResourceData_GetCompressionFunc: TLib3MFResourceData_GetCompressionFunc;
@@ -5642,6 +5683,9 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFContentEncryptionParams_GetAdditionalAuthenticationDataFunc: TLib3MFContentEncryptionParams_GetAdditionalAuthenticationDataFunc read FLib3MFContentEncryptionParams_GetAdditionalAuthenticationDataFunc;
 		property Lib3MFContentEncryptionParams_GetDescriptorFunc: TLib3MFContentEncryptionParams_GetDescriptorFunc read FLib3MFContentEncryptionParams_GetDescriptorFunc;
 		property Lib3MFContentEncryptionParams_GetKeyUUIDFunc: TLib3MFContentEncryptionParams_GetKeyUUIDFunc read FLib3MFContentEncryptionParams_GetKeyUUIDFunc;
+		property Lib3MFContentEncryptionParams_GetPackagePathFunc: TLib3MFContentEncryptionParams_GetPackagePathFunc read FLib3MFContentEncryptionParams_GetPackagePathFunc;
+		property Lib3MFContentEncryptionParams_HasCustomInformationFunc: TLib3MFContentEncryptionParams_HasCustomInformationFunc read FLib3MFContentEncryptionParams_HasCustomInformationFunc;
+		property Lib3MFContentEncryptionParams_GetCustomInformationFunc: TLib3MFContentEncryptionParams_GetCustomInformationFunc read FLib3MFContentEncryptionParams_GetCustomInformationFunc;
 		property Lib3MFResourceData_GetPathFunc: TLib3MFResourceData_GetPathFunc read FLib3MFResourceData_GetPathFunc;
 		property Lib3MFResourceData_GetEncryptionAlgorithmFunc: TLib3MFResourceData_GetEncryptionAlgorithmFunc read FLib3MFResourceData_GetEncryptionAlgorithmFunc;
 		property Lib3MFResourceData_GetCompressionFunc: TLib3MFResourceData_GetCompressionFunc read FLib3MFResourceData_GetCompressionFunc;
@@ -9096,6 +9140,43 @@ implementation
 		Result := StrPas(@bufferUUID[0]);
 	end;
 
+	function TLib3MFContentEncryptionParams.GetPackagePath(): String;
+	var
+		bytesNeededPath: Cardinal;
+		bytesWrittenPath: Cardinal;
+		bufferPath: array of Char;
+	begin
+		bytesNeededPath:= 0;
+		bytesWrittenPath:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFContentEncryptionParams_GetPackagePathFunc(FHandle, 0, bytesNeededPath, nil));
+		SetLength(bufferPath, bytesNeededPath);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFContentEncryptionParams_GetPackagePathFunc(FHandle, bytesNeededPath, bytesWrittenPath, @bufferPath[0]));
+		Result := StrPas(@bufferPath[0]);
+	end;
+
+	function TLib3MFContentEncryptionParams.HasCustomInformation(const ANameSpace: String; const AName: String): Boolean;
+	var
+		ResultHasValue: Byte;
+	begin
+		ResultHasValue := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFContentEncryptionParams_HasCustomInformationFunc(FHandle, PAnsiChar(ANameSpace), PAnsiChar(AName), ResultHasValue));
+		Result := (ResultHasValue <> 0);
+	end;
+
+	function TLib3MFContentEncryptionParams.GetCustomInformation(const ANameSpace: String; const AName: String): String;
+	var
+		bytesNeededValue: Cardinal;
+		bytesWrittenValue: Cardinal;
+		bufferValue: array of Char;
+	begin
+		bytesNeededValue:= 0;
+		bytesWrittenValue:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFContentEncryptionParams_GetCustomInformationFunc(FHandle, PAnsiChar(ANameSpace), PAnsiChar(AName), 0, bytesNeededValue, nil));
+		SetLength(bufferValue, bytesNeededValue);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFContentEncryptionParams_GetCustomInformationFunc(FHandle, PAnsiChar(ANameSpace), PAnsiChar(AName), bytesNeededValue, bytesWrittenValue, @bufferValue[0]));
+		Result := StrPas(@bufferValue[0]);
+	end;
+
 (*************************************************************************************************************************
  Class implementation for ResourceData
 **************************************************************************************************************************)
@@ -10410,6 +10491,9 @@ implementation
 		FLib3MFContentEncryptionParams_GetAdditionalAuthenticationDataFunc := LoadFunction('lib3mf_contentencryptionparams_getadditionalauthenticationdata');
 		FLib3MFContentEncryptionParams_GetDescriptorFunc := LoadFunction('lib3mf_contentencryptionparams_getdescriptor');
 		FLib3MFContentEncryptionParams_GetKeyUUIDFunc := LoadFunction('lib3mf_contentencryptionparams_getkeyuuid');
+		FLib3MFContentEncryptionParams_GetPackagePathFunc := LoadFunction('lib3mf_contentencryptionparams_getpackagepath');
+		FLib3MFContentEncryptionParams_HasCustomInformationFunc := LoadFunction('lib3mf_contentencryptionparams_hascustominformation');
+		FLib3MFContentEncryptionParams_GetCustomInformationFunc := LoadFunction('lib3mf_contentencryptionparams_getcustominformation');
 		FLib3MFResourceData_GetPathFunc := LoadFunction('lib3mf_resourcedata_getpath');
 		FLib3MFResourceData_GetEncryptionAlgorithmFunc := LoadFunction('lib3mf_resourcedata_getencryptionalgorithm');
 		FLib3MFResourceData_GetCompressionFunc := LoadFunction('lib3mf_resourcedata_getcompression');
@@ -11290,6 +11374,15 @@ implementation
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_contentencryptionparams_getkeyuuid'), @FLib3MFContentEncryptionParams_GetKeyUUIDFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_contentencryptionparams_getpackagepath'), @FLib3MFContentEncryptionParams_GetPackagePathFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_contentencryptionparams_hascustominformation'), @FLib3MFContentEncryptionParams_HasCustomInformationFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_contentencryptionparams_getcustominformation'), @FLib3MFContentEncryptionParams_GetCustomInformationFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_resourcedata_getpath'), @FLib3MFResourceData_GetPathFunc);

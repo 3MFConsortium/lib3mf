@@ -387,6 +387,9 @@ class FunctionTable:
 	lib3mf_contentencryptionparams_getadditionalauthenticationdata = None
 	lib3mf_contentencryptionparams_getdescriptor = None
 	lib3mf_contentencryptionparams_getkeyuuid = None
+	lib3mf_contentencryptionparams_getpackagepath = None
+	lib3mf_contentencryptionparams_hascustominformation = None
+	lib3mf_contentencryptionparams_getcustominformation = None
 	lib3mf_resourcedata_getpath = None
 	lib3mf_resourcedata_getencryptionalgorithm = None
 	lib3mf_resourcedata_getcompression = None
@@ -2423,6 +2426,24 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
 			self.lib.lib3mf_contentencryptionparams_getkeyuuid = methodType(int(methodAddress.value))
 			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_contentencryptionparams_getpackagepath")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
+			self.lib.lib3mf_contentencryptionparams_getpackagepath = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_contentencryptionparams_hascustominformation")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_bool))
+			self.lib.lib3mf_contentencryptionparams_hascustominformation = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_contentencryptionparams_getcustominformation")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
+			self.lib.lib3mf_contentencryptionparams_getcustominformation = methodType(int(methodAddress.value))
+			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_resourcedata_getpath")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
@@ -3786,6 +3807,15 @@ class Wrapper:
 			
 			self.lib.lib3mf_contentencryptionparams_getkeyuuid.restype = ctypes.c_int32
 			self.lib.lib3mf_contentencryptionparams_getkeyuuid.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
+			
+			self.lib.lib3mf_contentencryptionparams_getpackagepath.restype = ctypes.c_int32
+			self.lib.lib3mf_contentencryptionparams_getpackagepath.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
+			
+			self.lib.lib3mf_contentencryptionparams_hascustominformation.restype = ctypes.c_int32
+			self.lib.lib3mf_contentencryptionparams_hascustominformation.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_bool)]
+			
+			self.lib.lib3mf_contentencryptionparams_getcustominformation.restype = ctypes.c_int32
+			self.lib.lib3mf_contentencryptionparams_getcustominformation.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
 			
 			self.lib.lib3mf_resourcedata_getpath.restype = ctypes.c_int32
 			self.lib.lib3mf_resourcedata_getpath.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
@@ -6428,6 +6458,38 @@ class ContentEncryptionParams(Base):
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_contentencryptionparams_getkeyuuid(self._handle, nUUIDBufferSize, nUUIDNeededChars, pUUIDBuffer))
 		
 		return pUUIDBuffer.value.decode()
+	
+	def GetPackagePath(self):
+		nPathBufferSize = ctypes.c_uint64(0)
+		nPathNeededChars = ctypes.c_uint64(0)
+		pPathBuffer = ctypes.c_char_p(None)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_contentencryptionparams_getpackagepath(self._handle, nPathBufferSize, nPathNeededChars, pPathBuffer))
+		nPathBufferSize = ctypes.c_uint64(nPathNeededChars.value)
+		pPathBuffer = (ctypes.c_char * (nPathNeededChars.value))()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_contentencryptionparams_getpackagepath(self._handle, nPathBufferSize, nPathNeededChars, pPathBuffer))
+		
+		return pPathBuffer.value.decode()
+	
+	def HasCustomInformation(self, NameSpace, Name):
+		pNameSpace = ctypes.c_char_p(str.encode(NameSpace))
+		pName = ctypes.c_char_p(str.encode(Name))
+		pHasValue = ctypes.c_bool()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_contentencryptionparams_hascustominformation(self._handle, pNameSpace, pName, pHasValue))
+		
+		return pHasValue.value
+	
+	def GetCustomInformation(self, NameSpace, Name):
+		pNameSpace = ctypes.c_char_p(str.encode(NameSpace))
+		pName = ctypes.c_char_p(str.encode(Name))
+		nValueBufferSize = ctypes.c_uint64(0)
+		nValueNeededChars = ctypes.c_uint64(0)
+		pValueBuffer = ctypes.c_char_p(None)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_contentencryptionparams_getcustominformation(self._handle, pNameSpace, pName, nValueBufferSize, nValueNeededChars, pValueBuffer))
+		nValueBufferSize = ctypes.c_uint64(nValueNeededChars.value)
+		pValueBuffer = (ctypes.c_char * (nValueNeededChars.value))()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_contentencryptionparams_getcustominformation(self._handle, pNameSpace, pName, nValueBufferSize, nValueNeededChars, pValueBuffer))
+		
+		return pValueBuffer.value.decode()
 	
 
 

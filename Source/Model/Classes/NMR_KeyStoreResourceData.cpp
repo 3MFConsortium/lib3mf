@@ -18,6 +18,8 @@ namespace NMR {
 		: CKeyStoreCEKParams(compression, alg, iv, tag, aad, ++s_nfHandleCount), 
 		m_pGroup(rdg), m_pPath(path)
 	{
+		if (rdg == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 	}
 
 	void CKeyStoreResourceData::setInitVector(std::vector<nfByte> const & newIV) {
@@ -27,4 +29,13 @@ namespace NMR {
 	void CKeyStoreResourceData::setAuthTag(std::vector<nfByte> const & newTag) {
 		m_rgTag = newTag;
 	}
+
+	std::string CKeyStoreResourceData::getPath() const
+	{
+		if (m_pPath.get () != nullptr)
+			return m_pPath->getPath ();
+
+		return "";
+	}
+
 }

@@ -9492,6 +9492,168 @@ Lib3MFResult lib3mf_contentencryptionparams_getkeyuuid(Lib3MF_ContentEncryptionP
 	}
 }
 
+Lib3MFResult lib3mf_contentencryptionparams_getpackagepath(Lib3MF_ContentEncryptionParams pContentEncryptionParams, const Lib3MF_uint32 nPathBufferSize, Lib3MF_uint32* pPathNeededChars, char * pPathBuffer)
+{
+	IBase* pIBaseClass = (IBase *)pContentEncryptionParams;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pContentEncryptionParams, "ContentEncryptionParams", "GetPackagePath");
+		}
+		if ( (!pPathBuffer) && !(pPathNeededChars) )
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sPath("");
+		IContentEncryptionParams* pIContentEncryptionParams = dynamic_cast<IContentEncryptionParams*>(pIBaseClass);
+		if (!pIContentEncryptionParams)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		bool isCacheCall = (pPathBuffer == nullptr);
+		if (isCacheCall) {
+			sPath = pIContentEncryptionParams->GetPackagePath();
+
+			pIContentEncryptionParams->_setCache (new ParameterCache_1<std::string> (sPath));
+		}
+		else {
+			auto cache = dynamic_cast<ParameterCache_1<std::string>*> (pIContentEncryptionParams->_getCache ());
+			if (cache == nullptr)
+				throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+			cache->retrieveData (sPath);
+			pIContentEncryptionParams->_setCache (nullptr);
+		}
+		
+		if (pPathNeededChars)
+			*pPathNeededChars = (Lib3MF_uint32) (sPath.size()+1);
+		if (pPathBuffer) {
+			if (sPath.size() >= nPathBufferSize)
+				throw ELib3MFInterfaceException (LIB3MF_ERROR_BUFFERTOOSMALL);
+			for (size_t iPath = 0; iPath < sPath.size(); iPath++)
+				pPathBuffer[iPath] = sPath[iPath];
+			pPathBuffer[sPath.size()] = 0;
+		}
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addStringResult("Path", sPath.c_str());
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_contentencryptionparams_hascustominformation(Lib3MF_ContentEncryptionParams pContentEncryptionParams, const char * pNameSpace, const char * pName, bool * pHasValue)
+{
+	IBase* pIBaseClass = (IBase *)pContentEncryptionParams;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pContentEncryptionParams, "ContentEncryptionParams", "HasCustomInformation");
+			pJournalEntry->addStringParameter("NameSpace", pNameSpace);
+			pJournalEntry->addStringParameter("Name", pName);
+		}
+		if (pNameSpace == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pHasValue == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sNameSpace(pNameSpace);
+		std::string sName(pName);
+		IContentEncryptionParams* pIContentEncryptionParams = dynamic_cast<IContentEncryptionParams*>(pIBaseClass);
+		if (!pIContentEncryptionParams)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pHasValue = pIContentEncryptionParams->HasCustomInformation(sNameSpace, sName);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addBooleanResult("HasValue", *pHasValue);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_contentencryptionparams_getcustominformation(Lib3MF_ContentEncryptionParams pContentEncryptionParams, const char * pNameSpace, const char * pName, const Lib3MF_uint32 nValueBufferSize, Lib3MF_uint32* pValueNeededChars, char * pValueBuffer)
+{
+	IBase* pIBaseClass = (IBase *)pContentEncryptionParams;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pContentEncryptionParams, "ContentEncryptionParams", "GetCustomInformation");
+			pJournalEntry->addStringParameter("NameSpace", pNameSpace);
+			pJournalEntry->addStringParameter("Name", pName);
+		}
+		if (pNameSpace == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if ( (!pValueBuffer) && !(pValueNeededChars) )
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sNameSpace(pNameSpace);
+		std::string sName(pName);
+		std::string sValue("");
+		IContentEncryptionParams* pIContentEncryptionParams = dynamic_cast<IContentEncryptionParams*>(pIBaseClass);
+		if (!pIContentEncryptionParams)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		bool isCacheCall = (pValueBuffer == nullptr);
+		if (isCacheCall) {
+			sValue = pIContentEncryptionParams->GetCustomInformation(sNameSpace, sName);
+
+			pIContentEncryptionParams->_setCache (new ParameterCache_1<std::string> (sValue));
+		}
+		else {
+			auto cache = dynamic_cast<ParameterCache_1<std::string>*> (pIContentEncryptionParams->_getCache ());
+			if (cache == nullptr)
+				throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+			cache->retrieveData (sValue);
+			pIContentEncryptionParams->_setCache (nullptr);
+		}
+		
+		if (pValueNeededChars)
+			*pValueNeededChars = (Lib3MF_uint32) (sValue.size()+1);
+		if (pValueBuffer) {
+			if (sValue.size() >= nValueBufferSize)
+				throw ELib3MFInterfaceException (LIB3MF_ERROR_BUFFERTOOSMALL);
+			for (size_t iValue = 0; iValue < sValue.size(); iValue++)
+				pValueBuffer[iValue] = sValue[iValue];
+			pValueBuffer[sValue.size()] = 0;
+		}
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addStringResult("Value", sValue.c_str());
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
 
 /*************************************************************************************************************************
  Class implementation for ResourceData
@@ -13488,6 +13650,12 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_contentencryptionparams_getdescriptor;
 	if (sProcName == "lib3mf_contentencryptionparams_getkeyuuid") 
 		*ppProcAddress = (void*) &lib3mf_contentencryptionparams_getkeyuuid;
+	if (sProcName == "lib3mf_contentencryptionparams_getpackagepath") 
+		*ppProcAddress = (void*) &lib3mf_contentencryptionparams_getpackagepath;
+	if (sProcName == "lib3mf_contentencryptionparams_hascustominformation") 
+		*ppProcAddress = (void*) &lib3mf_contentencryptionparams_hascustominformation;
+	if (sProcName == "lib3mf_contentencryptionparams_getcustominformation") 
+		*ppProcAddress = (void*) &lib3mf_contentencryptionparams_getcustominformation;
 	if (sProcName == "lib3mf_resourcedata_getpath") 
 		*ppProcAddress = (void*) &lib3mf_resourcedata_getpath;
 	if (sProcName == "lib3mf_resourcedata_getencryptionalgorithm") 

@@ -9464,6 +9464,9 @@ void CLib3MFContentEncryptionParams::Init()
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetAdditionalAuthenticationData", GetAdditionalAuthenticationData);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetDescriptor", GetDescriptor);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetKeyUUID", GetKeyUUID);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetPackagePath", GetPackagePath);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "HasCustomInformation", HasCustomInformation);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetCustomInformation", GetCustomInformation);
 		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
 
 }
@@ -9661,6 +9664,102 @@ void CLib3MFContentEncryptionParams::GetKeyUUID(const FunctionCallbackInfo<Value
         Lib3MFResult errorCode = wrapperTable->m_ContentEncryptionParams_GetKeyUUID(instanceHandle, bytesNeededUUID, &bytesWrittenUUID, &bufferUUID[0]);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
         args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferUUID[0]));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFContentEncryptionParams::GetPackagePath(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        unsigned int bytesNeededPath = 0;
+        unsigned int bytesWrittenPath = 0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetPackagePath.");
+        if (wrapperTable->m_ContentEncryptionParams_GetPackagePath == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ContentEncryptionParams::GetPackagePath.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult initErrorCode = wrapperTable->m_ContentEncryptionParams_GetPackagePath(instanceHandle, 0, &bytesNeededPath, nullptr);
+        CheckError(isolate, wrapperTable, instanceHandle, initErrorCode);
+        std::vector<char> bufferPath;
+        bufferPath.resize(bytesNeededPath);
+        Lib3MFResult errorCode = wrapperTable->m_ContentEncryptionParams_GetPackagePath(instanceHandle, bytesNeededPath, &bytesWrittenPath, &bufferPath[0]);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferPath[0]));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFContentEncryptionParams::HasCustomInformation(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsString()) {
+            throw std::runtime_error("Expected string parameter 0 (NameSpace)");
+        }
+        if (!args[1]->IsString()) {
+            throw std::runtime_error("Expected string parameter 1 (Name)");
+        }
+        v8::String::Utf8Value sutf8NameSpace(isolate, args[0]);
+        std::string sNameSpace = *sutf8NameSpace;
+        v8::String::Utf8Value sutf8Name(isolate, args[1]);
+        std::string sName = *sutf8Name;
+        bool bReturnHasValue = false;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method HasCustomInformation.");
+        if (wrapperTable->m_ContentEncryptionParams_HasCustomInformation == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ContentEncryptionParams::HasCustomInformation.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ContentEncryptionParams_HasCustomInformation(instanceHandle, sNameSpace.c_str(), sName.c_str(), &bReturnHasValue);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(Boolean::New(isolate, bReturnHasValue));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFContentEncryptionParams::GetCustomInformation(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsString()) {
+            throw std::runtime_error("Expected string parameter 0 (NameSpace)");
+        }
+        if (!args[1]->IsString()) {
+            throw std::runtime_error("Expected string parameter 1 (Name)");
+        }
+        v8::String::Utf8Value sutf8NameSpace(isolate, args[0]);
+        std::string sNameSpace = *sutf8NameSpace;
+        v8::String::Utf8Value sutf8Name(isolate, args[1]);
+        std::string sName = *sutf8Name;
+        unsigned int bytesNeededValue = 0;
+        unsigned int bytesWrittenValue = 0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetCustomInformation.");
+        if (wrapperTable->m_ContentEncryptionParams_GetCustomInformation == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method ContentEncryptionParams::GetCustomInformation.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult initErrorCode = wrapperTable->m_ContentEncryptionParams_GetCustomInformation(instanceHandle, sNameSpace.c_str(), sName.c_str(), 0, &bytesNeededValue, nullptr);
+        CheckError(isolate, wrapperTable, instanceHandle, initErrorCode);
+        std::vector<char> bufferValue;
+        bufferValue.resize(bytesNeededValue);
+        Lib3MFResult errorCode = wrapperTable->m_ContentEncryptionParams_GetCustomInformation(instanceHandle, sNameSpace.c_str(), sName.c_str(), bytesNeededValue, &bytesWrittenValue, &bufferValue[0]);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferValue[0]));
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());
