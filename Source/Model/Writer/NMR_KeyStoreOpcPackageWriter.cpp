@@ -79,7 +79,7 @@ namespace NMR {
 		}
 
 		PModel const & model = m_pContext.model();
-		if (!model->hasCryptoRandCallbak())
+		if (!model->hasCryptoRandCallbak() && (keyStore->getResourceDataCount()>0))
 			m_pContext.warnings()->addWarning(NMR_ERROR_RNGCALLBACKNOTCRYPTOSTRONG, eModelWarningLevel::mrwInvalidOptionalValue);
 		for (nfUint64 i = 0; i < keyStore->getResourceDataCount(); ++i) {
 			PKeyStoreResourceData rd = keyStore->getResourceData(i);

@@ -26,67 +26,55 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelImageStack.h defines a 3D image stack for the volumetric extension
+NMR_ModelImageStack.h defines an image stack for the volumetric extension
 
 --*/
 
-#ifndef __NMR_MODELIMAGE3D
-#define __NMR_MODELIMAGE3D
+#ifndef __NMR_MODELIMAGESTACK
+#define __NMR_MODELIMAGESTACK
 
-#include "Common/NMR_Types.h" 
-
-
-#include "Model/Classes/NMR_ModelResource.h"
-#include "Model/Classes/NMR_Model.h"
-#include <vector>
-#include "Common/Platform/NMR_ImportStream.h"
 #include <memory>
 #include <map>
 #include <string>
+#include <vector>
+#include "Common/NMR_Types.h" 
+#include "Model/Classes/NMR_ModelImage3D.h"
+#include "Common/Platform/NMR_ImportStream.h"
 
-#define MAX_IMAGE3D_SIZE (1024 * 1024 * 1024)
+constexpr auto MAX_IMAGESTACK_SIZE = (1024 * 1024 * 1024);
 
 namespace NMR {
 
-	class CModel;
-	typedef std::shared_ptr <CModel> PModel;
-
-	class CModelImage3D : public CModelResource {
+	class CModelImageStack : public CModelImage3D {
 	private:
-		std::string m_sName;
-		nfUint32 m_nSizeX;
-		nfUint32 m_nSizeY;
+		nfUint32 m_nRowCount;
+		nfUint32 m_nColumnCount;
 		nfUint32 m_nSheetCount;
 		
 		std::vector <PModelAttachment> m_Sheets;
-		std::vector <nfDouble> m_minValues; // Array with the same size of m_Sheets containing the min double value of the source data, which has been converted to integer bitmap pixels of the attachment picture
-		std::vector <nfDouble> m_maxValues; // Array of max values of the source data of each sheet
-	
 	protected:
-		CModelImage3D(_In_ const ModelResourceID sID, _In_ CModel * pModel, _In_ nfUint32 nSizeX, _In_ nfUint32 nSizeY, nfUint32 nSheetCount);
+		CModelImageStack(_In_ const ModelResourceID sID, _In_ CModel* pModel, _In_ nfUint32 nRowCount, _In_ nfUint32 nColumCount, nfUint32 nSheetCount);
 
 	public:
-		CModelImage3D() = delete;
+		CModelImageStack() = delete;
 		
-		static PModelImage3D make(_In_ const ModelResourceID sID, _In_ CModel * pModel, _In_ nfUint32 nSizeX, _In_ nfUint32 nSizeY, nfUint32 nSheetCount);
+		static std::shared_ptr<CModelImageStack> make(_In_ const ModelResourceID sID, _In_ CModel* pModel, _In_ nfUint32 nRowCount, _In_ nfUint32 nColumCount, nfUint32 nSheetCount);
 		
-		nfUint32 getSizeX ();
-		nfUint32 getSizeY ();
-		nfUint32 getSheetCount ();
+		nfUint32 getRowCount() const;
+		nfUint32 getColumnCount() const;
+		nfUint32 getSheetCount() const;
+		void setRowCount(nfUint32 nRowCount);
+		void setColumnCount(nfUint32 nColumnCount);
+		void setSheetCount(nfUint32 nSheetCount);
 		
-		void setSheet (nfUint32 nSheetIndex, PModelAttachment pAttachment, const nfDouble dMin, const nfDouble dMax);
-		PModelAttachment getSheet (nfUint32 nSheetIndex);		
-		PModelAttachment createSheet(nfUint32 nSheetIndex, const std::string & sPath, PImportStream pCopiedStream, const nfDouble dMin, const nfDouble dMax);
-		nfDouble getSheetMinValue (nfUint32 nSheetIndex);
-		void setSheetMinValue (nfUint32 nSheetIndex, nfDouble minVal);
-		nfDouble getSheetMaxValue (nfUint32 nSheetIndex);
-		void setSheetMaxValue (nfUint32 nSheetIndex, nfDouble maxVal);
-
+		void setSheet(nfUint32 nSheetIndex, PModelAttachment pAttachment);
+		PModelAttachment getSheet(nfUint32 nSheetIndex);
+		PModelAttachment createSheet(nfUint32 nSheetIndex, const std::string & sPath, PImportStream pCopiedStream);
 	};
 
-	typedef std::shared_ptr <CModelImage3D> PModelImage3D;
+	typedef std::shared_ptr<CModelImageStack> PModelImageStack;
 
 }
 
-#endif // __NMR_MODELIMAGE3D
+#endif // __NMR_MODELIMAGESTACK
 

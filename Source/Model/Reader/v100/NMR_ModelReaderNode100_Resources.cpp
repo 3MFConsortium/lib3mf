@@ -41,6 +41,7 @@ XML Model Stream.
 #include "Model/Reader/v100/NMR_ModelReaderNode100_MultiProperties.h"
 #include "Model/Reader/Slice1507/NMR_ModelReader_Slice1507_SliceStack.h"
 #include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_Volumetric2201_Image3D.h"
+#include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_Volumetric2201_ScalarField.h"
 
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Common/NMR_StringUtils.h"
@@ -149,12 +150,11 @@ namespace NMR {
 					m_pModel, m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 			}
-			else if (strcmp(pChildName, XML_3MF_ELEMENT_VOLUMETRICSTACK) == 0) {
+			else if (strcmp(pChildName, XML_3MF_ELEMENT_SCALARFIELD) == 0) {
 
-				throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
-				//PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode_Volumetric2201_VolumetricStack>(
-				//	m_pModel, m_pWarnings);
-				//pXMLNode->parseXML(pXMLReader);
+				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode_Volumetric2201_ScalarField>(
+					m_pModel, m_pWarnings);
+				pXMLNode->parseXML(pXMLReader);
 			}
 			else
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);

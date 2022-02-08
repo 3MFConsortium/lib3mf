@@ -25,12 +25,12 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
-NMR_ModelReaderNode_Volumetric2201_Image3DSheet.h covers the official 3MF volumetric extension.
+NMR_ModelReaderNode_Volumetric2201_ImageSheet.h covers the official 3MF volumetric extension.
 
 --*/
 
-#ifndef __NMR_MODELREADERNODE_Volumetric2201_IMAGE3DSHEET
-#define __NMR_MODELREADERNODE_Volumetric2201_IMAGE3DSHEET
+#ifndef __NMR_MODELREADERNODE_VOLUMETRIC2201_IMAGESHEET
+#define __NMR_MODELREADERNODE_VOLUMETRIC2201_IMAGESHEET
 
 #include "Model/Reader/NMR_ModelReaderNode.h"
 #include "Model/Classes/NMR_ModelComponent.h"
@@ -39,29 +39,23 @@ NMR_ModelReaderNode_Volumetric2201_Image3DSheet.h covers the official 3MF volume
 
 namespace NMR {
 
-	class CModelReaderNode_Volumetric2201_Image3DSheet : public CModelReaderNode {
+	class CModelReaderNode_Volumetric2201_ImageSheet : public CModelReaderNode {
 	private:
 		std::string m_sPath;
-    nfDouble m_minValue = 1.0;
-    nfDouble m_maxValue = 1.0;
 
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 	public:
-		CModelReaderNode_Volumetric2201_Image3DSheet() = delete;
-		CModelReaderNode_Volumetric2201_Image3DSheet(_In_ PModelWarnings pWarnings);
+		CModelReaderNode_Volumetric2201_ImageSheet() = delete;
+		CModelReaderNode_Volumetric2201_ImageSheet(_In_ PModelWarnings pWarnings);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 
 		std::string getPath();
-
-    nfDouble getMinValue();
-    nfDouble getMaxValue();
-
 	};
 
-	typedef std::shared_ptr <CModelReaderNode_Volumetric2201_Image3DSheet> PModelReaderNode_Volumetric2201_Image3DSheet;
+	typedef std::shared_ptr <CModelReaderNode_Volumetric2201_ImageSheet> PModelReaderNode_Volumetric2201_ImageSheet;
 
 }
 
-#endif // __NMR_MODELREADERNODE_Volumetric2201_IMAGE3DSHEET
+#endif // __NMR_MODELREADERNODE_VOLUMETRIC2201_IMAGESHEET

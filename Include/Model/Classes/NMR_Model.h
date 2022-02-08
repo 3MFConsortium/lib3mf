@@ -99,6 +99,9 @@ namespace NMR {
 	class CModelImage3D;
 	typedef std::shared_ptr <CModelImage3D> PModelImage3D;
 
+	class CModelScalarField;
+	typedef std::shared_ptr <CModelScalarField> PModelScalarField;
+
 	// The Model class implements the unification of all model-file in a 3MF package
 	// It should be understood as a "MultiModel"
 	class CModel {
@@ -151,6 +154,7 @@ namespace NMR {
 		std::vector<PModelResource> m_CompositeMaterialsLookup;
 		std::vector<PModelResource> m_MultiPropertyGroupLookup;
 		std::vector<PModelResource> m_Image3DLookup;
+		std::vector<PModelResource> m_ScalarFieldLookup;
 
 		// The KeyStore reference
 		PKeyStore m_pKeyStore;
@@ -287,8 +291,15 @@ namespace NMR {
 		_Ret_maybenull_ PModelImage3D findImage3D(_In_ PPackageResourceID ResourceID);
 		nfUint32 getImage3DCount();
 		PModelResource getImage3DResource(_In_ nfUint32 nIndex);
-		CModelImage3D * getImage3D(_In_ nfUint32 nIndex);
-		void mergeImages3D(_In_ CModel * pSourceModel, _In_ std::map<PPackageResourceID, PPackageResourceID> & PackageIDMap);
+		CModelImage3D* getImage3D(_In_ nfUint32 nIndex);
+		void mergeImages3D(_In_ CModel* pSourceModel, _In_ std::map<PPackageResourceID, PPackageResourceID>& PackageIDMap);
+
+		// Convenience functions for ScalarFields
+		_Ret_maybenull_ PModelScalarField findScalarField(_In_ PPackageResourceID ResourceID);
+		nfUint32 getScalarFieldCount();
+		PModelResource getScalarFieldResource(_In_ nfUint32 nIndex);
+		CModelScalarField* getScalarField(_In_ nfUint32 nIndex);
+		void mergeScalarField(_In_ CModel* pSourceModel, _In_ std::map<PPackageResourceID, PPackageResourceID>& PackageIDMap);
 
 		// Clear all build items and Resources
 		void clearAll ();

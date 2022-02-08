@@ -8161,7 +8161,7 @@ func (implementation *Lib3MFImplementation) ImageStack_SetSheet(ImageStack Lib3M
 	return err
 }
 
-func (implementation *Lib3MFImplementation) ImageStack_CreateEmptySheet(ImageStack Lib3MFHandle, sPath string) (Lib3MFHandle, error) {
+func (implementation *Lib3MFImplementation) ImageStack_CreateEmptySheet(ImageStack Lib3MFHandle, nIndex uint32, sPath string) (Lib3MFHandle, error) {
 	var err error = nil
 	hSheet := implementation.NewHandle()
 	
@@ -8170,7 +8170,7 @@ func (implementation *Lib3MFImplementation) ImageStack_CreateEmptySheet(ImageSta
 		return hSheet, err
 	}
 
-	err = implementation.CallFunction(implementation.Lib3MF_imagestack_createemptysheet, implementation_imagestack.GetDLLInHandle(), StringInValue(sPath), hSheet.GetDLLOutHandle())
+	err = implementation.CallFunction(implementation.Lib3MF_imagestack_createemptysheet, implementation_imagestack.GetDLLInHandle(), UInt32InValue(nIndex), StringInValue(sPath), hSheet.GetDLLOutHandle())
 	if (err != nil) {
 		return hSheet, err
 	}
@@ -8178,7 +8178,7 @@ func (implementation *Lib3MFImplementation) ImageStack_CreateEmptySheet(ImageSta
 	return hSheet, err
 }
 
-func (implementation *Lib3MFImplementation) ImageStack_CreateSheetFromBuffer(ImageStack Lib3MFHandle, sPath string, Data []uint8) (Lib3MFHandle, error) {
+func (implementation *Lib3MFImplementation) ImageStack_CreateSheetFromBuffer(ImageStack Lib3MFHandle, nIndex uint32, sPath string, Data []uint8) (Lib3MFHandle, error) {
 	var err error = nil
 	hSheet := implementation.NewHandle()
 	
@@ -8187,7 +8187,7 @@ func (implementation *Lib3MFImplementation) ImageStack_CreateSheetFromBuffer(Ima
 		return hSheet, err
 	}
 
-	err = implementation.CallFunction(implementation.Lib3MF_imagestack_createsheetfrombuffer, implementation_imagestack.GetDLLInHandle(), StringInValue(sPath), 0, 0, hSheet.GetDLLOutHandle())
+	err = implementation.CallFunction(implementation.Lib3MF_imagestack_createsheetfrombuffer, implementation_imagestack.GetDLLInHandle(), UInt32InValue(nIndex), StringInValue(sPath), 0, 0, hSheet.GetDLLOutHandle())
 	if (err != nil) {
 		return hSheet, err
 	}
@@ -8195,7 +8195,7 @@ func (implementation *Lib3MFImplementation) ImageStack_CreateSheetFromBuffer(Ima
 	return hSheet, err
 }
 
-func (implementation *Lib3MFImplementation) ImageStack_CreateSheetFromFile(ImageStack Lib3MFHandle, sPath string, sFileName string) (Lib3MFHandle, error) {
+func (implementation *Lib3MFImplementation) ImageStack_CreateSheetFromFile(ImageStack Lib3MFHandle, nIndex uint32, sPath string, sFileName string) (Lib3MFHandle, error) {
 	var err error = nil
 	hSheet := implementation.NewHandle()
 	
@@ -8204,7 +8204,7 @@ func (implementation *Lib3MFImplementation) ImageStack_CreateSheetFromFile(Image
 		return hSheet, err
 	}
 
-	err = implementation.CallFunction(implementation.Lib3MF_imagestack_createsheetfromfile, implementation_imagestack.GetDLLInHandle(), StringInValue(sPath), StringInValue(sFileName), hSheet.GetDLLOutHandle())
+	err = implementation.CallFunction(implementation.Lib3MF_imagestack_createsheetfromfile, implementation_imagestack.GetDLLInHandle(), UInt32InValue(nIndex), StringInValue(sPath), StringInValue(sFileName), hSheet.GetDLLOutHandle())
 	if (err != nil) {
 		return hSheet, err
 	}
@@ -10887,7 +10887,7 @@ func (implementation *Lib3MFImplementation) Model_AddImageStack(Model Lib3MFHand
 	return hInstance, err
 }
 
-func (implementation *Lib3MFImplementation) Model_AddScalarFieldFromImage3D(Model Lib3MFHandle) (Lib3MFHandle, error) {
+func (implementation *Lib3MFImplementation) Model_AddScalarFieldFromImage3D(Model Lib3MFHandle, Image3D Lib3MFHandle) (Lib3MFHandle, error) {
 	var err error = nil
 	hTheScalarFieldFromImage3D := implementation.NewHandle()
 	
@@ -10895,8 +10895,18 @@ func (implementation *Lib3MFImplementation) Model_AddScalarFieldFromImage3D(Mode
 	if (err != nil) {
 		return hTheScalarFieldFromImage3D, err
 	}
+	implementation_image3d, err := implementation.GetWrapperHandle(Image3D)
+	if (err != nil) {
+		return hTheScalarFieldFromImage3D, err
+	}
+	
+	Image3DDLLHandle := implementation_image3d.GetDLLInHandle()
+	if (Image3DDLLHandle == 0) {
+		err := fmt.Errorf("Handle must not be 0.")
+		return hTheScalarFieldFromImage3D, err
+	}
 
-	err = implementation.CallFunction(implementation.Lib3MF_model_addscalarfieldfromimage3d, implementation_model.GetDLLInHandle(), hTheScalarFieldFromImage3D.GetDLLOutHandle())
+	err = implementation.CallFunction(implementation.Lib3MF_model_addscalarfieldfromimage3d, implementation_model.GetDLLInHandle(), Image3DDLLHandle, hTheScalarFieldFromImage3D.GetDLLOutHandle())
 	if (err != nil) {
 		return hTheScalarFieldFromImage3D, err
 	}
@@ -10972,7 +10982,7 @@ func (implementation *Lib3MFImplementation) Model_GetScalarFieldComposedByID(Mod
 	return hScalarFieldComposedInstance, err
 }
 
-func (implementation *Lib3MFImplementation) Model_AddVector3DFieldFromImage3D(Model Lib3MFHandle) (Lib3MFHandle, error) {
+func (implementation *Lib3MFImplementation) Model_AddVector3DFieldFromImage3D(Model Lib3MFHandle, Image3D Lib3MFHandle) (Lib3MFHandle, error) {
 	var err error = nil
 	hTheVector3DFieldFromImage3D := implementation.NewHandle()
 	
@@ -10980,8 +10990,18 @@ func (implementation *Lib3MFImplementation) Model_AddVector3DFieldFromImage3D(Mo
 	if (err != nil) {
 		return hTheVector3DFieldFromImage3D, err
 	}
+	implementation_image3d, err := implementation.GetWrapperHandle(Image3D)
+	if (err != nil) {
+		return hTheVector3DFieldFromImage3D, err
+	}
+	
+	Image3DDLLHandle := implementation_image3d.GetDLLInHandle()
+	if (Image3DDLLHandle == 0) {
+		err := fmt.Errorf("Handle must not be 0.")
+		return hTheVector3DFieldFromImage3D, err
+	}
 
-	err = implementation.CallFunction(implementation.Lib3MF_model_addvector3dfieldfromimage3d, implementation_model.GetDLLInHandle(), hTheVector3DFieldFromImage3D.GetDLLOutHandle())
+	err = implementation.CallFunction(implementation.Lib3MF_model_addvector3dfieldfromimage3d, implementation_model.GetDLLInHandle(), Image3DDLLHandle, hTheVector3DFieldFromImage3D.GetDLLOutHandle())
 	if (err != nil) {
 		return hTheVector3DFieldFromImage3D, err
 	}

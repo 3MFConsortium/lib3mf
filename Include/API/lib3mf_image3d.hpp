@@ -70,7 +70,8 @@ public:
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-
+	CImage3D() = delete;
+	CImage3D(NMR::PModelResource pResource);
 
 	/**
 	* Public member functions to implement.

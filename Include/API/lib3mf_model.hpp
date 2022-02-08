@@ -197,7 +197,7 @@ public:
 
 	IImageStack * AddImageStack(const Lib3MF_uint32 nSizeX, const Lib3MF_uint32 nSizeY, const Lib3MF_uint32 nSheetCount) override;
 
-	IScalarFieldFromImage3D* AddScalarFieldFromImage3D() override;
+	IScalarFieldFromImage3D* AddScalarFieldFromImage3D(IImage3D* pImage3D) override;
 
 	IScalarFieldComposed* AddScalarFieldComposed() override;
 
@@ -207,7 +207,7 @@ public:
 
 	IScalarFieldComposed* GetScalarFieldComposedByID(const Lib3MF_uint32 nUniqueResourceID) override;
 
-	IVector3DFieldFromImage3D* AddVector3DFieldFromImage3D() override;
+	IVector3DFieldFromImage3D* AddVector3DFieldFromImage3D(IImage3D* pImage3D) override;
 
 	IVector3DFieldComposed* AddVector3DFieldComposed() override;
 

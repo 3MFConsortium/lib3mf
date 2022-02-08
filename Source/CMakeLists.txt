@@ -21,7 +21,7 @@ set(SRCS_PLATFORM
   Source/Common/Platform/NMR_Platform.cpp
   Source/Common/Platform/NMR_ImportStream_Native.cpp
   Source/Common/Platform/NMR_ExportStream_Native.cpp
-    Source/Common/Platform/NMR_ExportStream_ZIP.cpp
+  Source/Common/Platform/NMR_ExportStream_ZIP.cpp
 )
 
 set(SRCS_COMMON
@@ -159,7 +159,7 @@ Source/Model/Classes/NMR_ModelBuildItem.cpp
 Source/Model/Classes/NMR_ModelComponent.cpp
 Source/Model/Classes/NMR_ModelComponentsObject.cpp
 Source/Model/Classes/NMR_ModelImage3D.cpp
-Source/Model/Classes/NMR_ModelImage3DChannelSelector.cpp
+Source/Model/Classes/NMR_ModelImageStack.cpp
 Source/Model/Classes/NMR_ModelMeshBeamLatticeAttributes.cpp
 Source/Model/Classes/NMR_ModelMeshObject.cpp
 Source/Model/Classes/NMR_ModelMetaData.cpp
@@ -169,6 +169,8 @@ Source/Model/Classes/NMR_ModelObject.cpp
 Source/Model/Classes/NMR_ModelResource.cpp
 Source/Model/Classes/NMR_ModelTexture2D.cpp
 Source/Model/Classes/NMR_ModelTexture2DGroup.cpp
+Source/Model/Classes/NMR_ModelScalarField.cpp
+Source/Model/Classes/NMR_ModelScalarFieldFromImage3D.cpp
 Source/Model/Classes/NMR_ModelSlice.cpp
 Source/Model/Classes/NMR_ModelSliceStack.cpp
 Source/Model/Classes/NMR_KeyStore.cpp
@@ -260,7 +262,10 @@ Source/Model/Reader/SecureContent101/NMR_ModelReaderNode_KeyStoreResourceData.cp
 Source/Model/Reader/SecureContent101/NMR_ModelReaderNode_KeyStoreResourceDataGroup.cpp
 Source/Model/Reader/Volumetric2201/NMR_ModelReaderNode_Volumetric2201_Color.cpp
 Source/Model/Reader/Volumetric2201/NMR_ModelReaderNode_Volumetric2201_Image3D.cpp
-Source/Model/Reader/Volumetric2201/NMR_ModelReaderNode_Volumetric2201_Image3DSheet.cpp
+Source/Model/Reader/Volumetric2201/NMR_ModelReaderNode_Volumetric2201_ImageStack.cpp
+Source/Model/Reader/Volumetric2201/NMR_ModelReaderNode_Volumetric2201_ImageSheet.cpp
+Source/Model/Reader/Volumetric2201/NMR_ModelReaderNode_Volumetric2201_ScalarField.cpp
+Source/Model/Reader/Volumetric2201/NMR_ModelReaderNode_Volumetric2201_ScalarFieldFromImage3D.cpp
 Source/Model/Reader/Volumetric2201/NMR_ModelReaderNode_Volumetric2201_Levelset.cpp
 Source/Model/Reader/Volumetric2201/NMR_ModelReaderNode_Volumetric2201_Property.cpp
 Source/Model/Reader/Volumetric2201/NMR_ModelReaderNode_Volumetric2201_VolumeData.cpp

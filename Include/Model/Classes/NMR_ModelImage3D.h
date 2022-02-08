@@ -44,8 +44,6 @@ NMR_ModelImage3D.h defines a 3D image for the volumetric extension
 #include <map>
 #include <string>
 
-#define MAX_IMAGE3D_SIZE (1024 * 1024 * 1024)
-
 namespace NMR {
 
 	class CModel;
@@ -56,18 +54,15 @@ namespace NMR {
 		std::string m_sName;
 
 	protected:
+		CModelImage3D(_In_ const ModelResourceID sID, _In_ CModel* pModel);
 	public:
 		CModelImage3D() = delete;
-		CModelImage3D(_In_ const ModelResourceID sID, _In_ CModel* pModel);
-
-
 
 		void setName(std::string);
 		std::string getName() const;
 	};
 
 	typedef std::shared_ptr <CModelImage3D> PModelImage3D;
-
 }
 
 #endif // __NMR_MODELIMAGE3D

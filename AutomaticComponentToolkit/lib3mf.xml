@@ -188,6 +188,7 @@
 		<option name="Red" value="0"/>
 		<option name="Green" value="1"/>
 		<option name="Blue" value="2"/>
+		<option name="Alpha" value="3"/>
 	</enum>
 	
 	<struct name="Triangle">
@@ -1360,15 +1361,18 @@
 			<param name="Sheet" type="class" class="Attachment" pass="in" description="attachment containing the image" />
 		</method>
 		<method name="CreateEmptySheet" description="Creates a new sheet attachment with empty data.">
+			<param name="Index" type="uint32" pass="in" description="index of the image (0-based)" />
 			<param name="Path" type="string" pass="in" description="path of part in the package" />
 			<param name="Sheet" type="class" class="Attachment" pass="return" description="attachment containing the image" />
 		</method>
 		<method name="CreateSheetFromBuffer" description="Creates a new sheet attachment from a memory buffer.">
+			<param name="Index" type="uint32" pass="in" description="index of the image (0-based)" />
 			<param name="Path" type="string" pass="in" description="path of part in the package" />
 			<param name="Data" type="basicarray" class="uint8" pass="in" description="binary image data" />
 			<param name="Sheet" type="class" class="Attachment" pass="return" description="attachment containing the image" />
 		</method>
 		<method name="CreateSheetFromFile" description="Creates a new sheet attachment from a file on disk.">
+			<param name="Index" type="uint32" pass="in" description="index of the image (0-based)" />
 			<param name="Path" type="string" pass="in" description="path of part in the package" />
 			<param name="FileName" type="string" pass="in" description="file name to read from" />
 			<param name="Sheet" type="class" class="Attachment" pass="return" description="attachment containing the image" />
@@ -1941,6 +1945,7 @@
 			<param name="Instance" type="handle" class="ImageStack" pass="return" description="returns the new ImageStack instance" />
 		</method>
 		<method name="AddScalarFieldFromImage3D" description="creates a new ScalarFieldFromImage3D Resource">
+			<param name="Image3D" type="class" class="Image3D" pass="in" description="image instance" />
 			<param name="TheScalarFieldFromImage3D" type="class" class="ScalarFieldFromImage3D" pass="return" description="returns the new ScalarFieldFromImage3D instance" />
 		</method>
 		<method name="AddScalarFieldComposed" description="creates a new ScalarFieldComposed Resource">
@@ -1959,6 +1964,7 @@
 			<param name="ScalarFieldComposedInstance" type="class" class="ScalarFieldComposed" pass="return" description="returns the ScalarFieldComponsed instance"/>
 		</method>
 		<method name="AddVector3DFieldFromImage3D" description="creates a new Vector3DFieldFromImage3D Resource">
+			<param name="Image3D" type="class" class="Image3D" pass="in" description="image instance" />
 			<param name="TheVector3DFieldFromImage3D" type="class" class="Vector3DFieldFromImage3D" pass="return" description="returns the new Vector3DFieldFromImage3D instance" />
 		</method>
 		<method name="AddVector3DFieldComposed" description="creates a new Vector3DFieldComposed Resource">

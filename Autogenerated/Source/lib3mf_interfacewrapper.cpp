@@ -10114,7 +10114,7 @@ Lib3MFResult lib3mf_imagestack_setsheet(Lib3MF_ImageStack pImageStack, Lib3MF_ui
 	}
 }
 
-Lib3MFResult lib3mf_imagestack_createemptysheet(Lib3MF_ImageStack pImageStack, const char * pPath, Lib3MF_Attachment * pSheet)
+Lib3MFResult lib3mf_imagestack_createemptysheet(Lib3MF_ImageStack pImageStack, Lib3MF_uint32 nIndex, const char * pPath, Lib3MF_Attachment * pSheet)
 {
 	IBase* pIBaseClass = (IBase *)pImageStack;
 
@@ -10122,6 +10122,7 @@ Lib3MFResult lib3mf_imagestack_createemptysheet(Lib3MF_ImageStack pImageStack, c
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
 			pJournalEntry = m_GlobalJournal->beginClassMethod(pImageStack, "ImageStack", "CreateEmptySheet");
+			pJournalEntry->addUInt32Parameter("Index", nIndex);
 			pJournalEntry->addStringParameter("Path", pPath);
 		}
 		if (pPath == nullptr)
@@ -10134,7 +10135,7 @@ Lib3MFResult lib3mf_imagestack_createemptysheet(Lib3MF_ImageStack pImageStack, c
 		if (!pIImageStack)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pBaseSheet = pIImageStack->CreateEmptySheet(sPath);
+		pBaseSheet = pIImageStack->CreateEmptySheet(nIndex, sPath);
 
 		*pSheet = (IBase*)(pBaseSheet);
 		if (pJournalEntry.get() != nullptr) {
@@ -10154,7 +10155,7 @@ Lib3MFResult lib3mf_imagestack_createemptysheet(Lib3MF_ImageStack pImageStack, c
 	}
 }
 
-Lib3MFResult lib3mf_imagestack_createsheetfrombuffer(Lib3MF_ImageStack pImageStack, const char * pPath, Lib3MF_uint64 nDataBufferSize, const Lib3MF_uint8 * pDataBuffer, Lib3MF_Attachment * pSheet)
+Lib3MFResult lib3mf_imagestack_createsheetfrombuffer(Lib3MF_ImageStack pImageStack, Lib3MF_uint32 nIndex, const char * pPath, Lib3MF_uint64 nDataBufferSize, const Lib3MF_uint8 * pDataBuffer, Lib3MF_Attachment * pSheet)
 {
 	IBase* pIBaseClass = (IBase *)pImageStack;
 
@@ -10162,6 +10163,7 @@ Lib3MFResult lib3mf_imagestack_createsheetfrombuffer(Lib3MF_ImageStack pImageSta
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
 			pJournalEntry = m_GlobalJournal->beginClassMethod(pImageStack, "ImageStack", "CreateSheetFromBuffer");
+			pJournalEntry->addUInt32Parameter("Index", nIndex);
 			pJournalEntry->addStringParameter("Path", pPath);
 		}
 		if (pPath == nullptr)
@@ -10176,7 +10178,7 @@ Lib3MFResult lib3mf_imagestack_createsheetfrombuffer(Lib3MF_ImageStack pImageSta
 		if (!pIImageStack)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pBaseSheet = pIImageStack->CreateSheetFromBuffer(sPath, nDataBufferSize, pDataBuffer);
+		pBaseSheet = pIImageStack->CreateSheetFromBuffer(nIndex, sPath, nDataBufferSize, pDataBuffer);
 
 		*pSheet = (IBase*)(pBaseSheet);
 		if (pJournalEntry.get() != nullptr) {
@@ -10196,7 +10198,7 @@ Lib3MFResult lib3mf_imagestack_createsheetfrombuffer(Lib3MF_ImageStack pImageSta
 	}
 }
 
-Lib3MFResult lib3mf_imagestack_createsheetfromfile(Lib3MF_ImageStack pImageStack, const char * pPath, const char * pFileName, Lib3MF_Attachment * pSheet)
+Lib3MFResult lib3mf_imagestack_createsheetfromfile(Lib3MF_ImageStack pImageStack, Lib3MF_uint32 nIndex, const char * pPath, const char * pFileName, Lib3MF_Attachment * pSheet)
 {
 	IBase* pIBaseClass = (IBase *)pImageStack;
 
@@ -10204,6 +10206,7 @@ Lib3MFResult lib3mf_imagestack_createsheetfromfile(Lib3MF_ImageStack pImageStack
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
 			pJournalEntry = m_GlobalJournal->beginClassMethod(pImageStack, "ImageStack", "CreateSheetFromFile");
+			pJournalEntry->addUInt32Parameter("Index", nIndex);
 			pJournalEntry->addStringParameter("Path", pPath);
 			pJournalEntry->addStringParameter("FileName", pFileName);
 		}
@@ -10220,7 +10223,7 @@ Lib3MFResult lib3mf_imagestack_createsheetfromfile(Lib3MF_ImageStack pImageStack
 		if (!pIImageStack)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pBaseSheet = pIImageStack->CreateSheetFromFile(sPath, sFileName);
+		pBaseSheet = pIImageStack->CreateSheetFromFile(nIndex, sPath, sFileName);
 
 		*pSheet = (IBase*)(pBaseSheet);
 		if (pJournalEntry.get() != nullptr) {
@@ -15463,7 +15466,7 @@ Lib3MFResult lib3mf_model_addimagestack(Lib3MF_Model pModel, Lib3MF_uint32 nColu
 	}
 }
 
-Lib3MFResult lib3mf_model_addscalarfieldfromimage3d(Lib3MF_Model pModel, Lib3MF_ScalarFieldFromImage3D * pTheScalarFieldFromImage3D)
+Lib3MFResult lib3mf_model_addscalarfieldfromimage3d(Lib3MF_Model pModel, Lib3MF_Image3D pImage3D, Lib3MF_ScalarFieldFromImage3D * pTheScalarFieldFromImage3D)
 {
 	IBase* pIBaseClass = (IBase *)pModel;
 
@@ -15471,15 +15474,21 @@ Lib3MFResult lib3mf_model_addscalarfieldfromimage3d(Lib3MF_Model pModel, Lib3MF_
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
 			pJournalEntry = m_GlobalJournal->beginClassMethod(pModel, "Model", "AddScalarFieldFromImage3D");
+			pJournalEntry->addHandleParameter("Image3D", pImage3D);
 		}
 		if (pTheScalarFieldFromImage3D == nullptr)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pIBaseClassImage3D = (IBase *)pImage3D;
+		IImage3D* pIImage3D = dynamic_cast<IImage3D*>(pIBaseClassImage3D);
+		if (!pIImage3D)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDCAST);
+		
 		IBase* pBaseTheScalarFieldFromImage3D(nullptr);
 		IModel* pIModel = dynamic_cast<IModel*>(pIBaseClass);
 		if (!pIModel)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pBaseTheScalarFieldFromImage3D = pIModel->AddScalarFieldFromImage3D();
+		pBaseTheScalarFieldFromImage3D = pIModel->AddScalarFieldFromImage3D(pIImage3D);
 
 		*pTheScalarFieldFromImage3D = (IBase*)(pBaseTheScalarFieldFromImage3D);
 		if (pJournalEntry.get() != nullptr) {
@@ -15646,7 +15655,7 @@ Lib3MFResult lib3mf_model_getscalarfieldcomposedbyid(Lib3MF_Model pModel, Lib3MF
 	}
 }
 
-Lib3MFResult lib3mf_model_addvector3dfieldfromimage3d(Lib3MF_Model pModel, Lib3MF_Vector3DFieldFromImage3D * pTheVector3DFieldFromImage3D)
+Lib3MFResult lib3mf_model_addvector3dfieldfromimage3d(Lib3MF_Model pModel, Lib3MF_Image3D pImage3D, Lib3MF_Vector3DFieldFromImage3D * pTheVector3DFieldFromImage3D)
 {
 	IBase* pIBaseClass = (IBase *)pModel;
 
@@ -15654,15 +15663,21 @@ Lib3MFResult lib3mf_model_addvector3dfieldfromimage3d(Lib3MF_Model pModel, Lib3M
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
 			pJournalEntry = m_GlobalJournal->beginClassMethod(pModel, "Model", "AddVector3DFieldFromImage3D");
+			pJournalEntry->addHandleParameter("Image3D", pImage3D);
 		}
 		if (pTheVector3DFieldFromImage3D == nullptr)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pIBaseClassImage3D = (IBase *)pImage3D;
+		IImage3D* pIImage3D = dynamic_cast<IImage3D*>(pIBaseClassImage3D);
+		if (!pIImage3D)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDCAST);
+		
 		IBase* pBaseTheVector3DFieldFromImage3D(nullptr);
 		IModel* pIModel = dynamic_cast<IModel*>(pIBaseClass);
 		if (!pIModel)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pBaseTheVector3DFieldFromImage3D = pIModel->AddVector3DFieldFromImage3D();
+		pBaseTheVector3DFieldFromImage3D = pIModel->AddVector3DFieldFromImage3D(pIImage3D);
 
 		*pTheVector3DFieldFromImage3D = (IBase*)(pBaseTheVector3DFieldFromImage3D);
 		if (pJournalEntry.get() != nullptr) {

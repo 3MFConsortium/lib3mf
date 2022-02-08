@@ -228,7 +228,8 @@ type
 	TLib3MFChannelName = (
 		eChannelNameRed,
 		eChannelNameGreen,
-		eChannelNameBlue
+		eChannelNameBlue,
+		eChannelNameAlpha
 	);
 
 	TLib3MFCompositionMethod = (
@@ -3377,34 +3378,37 @@ type
 	* Creates a new sheet attachment with empty data.
 	*
 	* @param[in] pImageStack - ImageStack instance.
+	* @param[in] nIndex - index of the image (0-based)
 	* @param[in] pPath - path of part in the package
 	* @param[out] pSheet - attachment containing the image
 	* @return error code or 0 (success)
 	*)
-	TLib3MFImageStack_CreateEmptySheetFunc = function(pImageStack: TLib3MFHandle; const pPath: PAnsiChar; out pSheet: TLib3MFHandle): TLib3MFResult; cdecl;
+	TLib3MFImageStack_CreateEmptySheetFunc = function(pImageStack: TLib3MFHandle; const nIndex: Cardinal; const pPath: PAnsiChar; out pSheet: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
 	* Creates a new sheet attachment from a memory buffer.
 	*
 	* @param[in] pImageStack - ImageStack instance.
+	* @param[in] nIndex - index of the image (0-based)
 	* @param[in] pPath - path of part in the package
 	* @param[in] nDataCount - Number of elements in buffer
 	* @param[in] pDataBuffer - uint8 buffer of binary image data
 	* @param[out] pSheet - attachment containing the image
 	* @return error code or 0 (success)
 	*)
-	TLib3MFImageStack_CreateSheetFromBufferFunc = function(pImageStack: TLib3MFHandle; const pPath: PAnsiChar; const nDataCount: QWord; const pDataBuffer: PByte; out pSheet: TLib3MFHandle): TLib3MFResult; cdecl;
+	TLib3MFImageStack_CreateSheetFromBufferFunc = function(pImageStack: TLib3MFHandle; const nIndex: Cardinal; const pPath: PAnsiChar; const nDataCount: QWord; const pDataBuffer: PByte; out pSheet: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
 	* Creates a new sheet attachment from a file on disk.
 	*
 	* @param[in] pImageStack - ImageStack instance.
+	* @param[in] nIndex - index of the image (0-based)
 	* @param[in] pPath - path of part in the package
 	* @param[in] pFileName - file name to read from
 	* @param[out] pSheet - attachment containing the image
 	* @return error code or 0 (success)
 	*)
-	TLib3MFImageStack_CreateSheetFromFileFunc = function(pImageStack: TLib3MFHandle; const pPath: PAnsiChar; const pFileName: PAnsiChar; out pSheet: TLib3MFHandle): TLib3MFResult; cdecl;
+	TLib3MFImageStack_CreateSheetFromFileFunc = function(pImageStack: TLib3MFHandle; const nIndex: Cardinal; const pPath: PAnsiChar; const pFileName: PAnsiChar; out pSheet: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 
 (*************************************************************************************************************************
@@ -4845,10 +4849,11 @@ type
 	* creates a new ScalarFieldFromImage3D Resource
 	*
 	* @param[in] pModel - Model instance.
+	* @param[in] pImage3D - image instance
 	* @param[out] pTheScalarFieldFromImage3D - returns the new ScalarFieldFromImage3D instance
 	* @return error code or 0 (success)
 	*)
-	TLib3MFModel_AddScalarFieldFromImage3DFunc = function(pModel: TLib3MFHandle; out pTheScalarFieldFromImage3D: TLib3MFHandle): TLib3MFResult; cdecl;
+	TLib3MFModel_AddScalarFieldFromImage3DFunc = function(pModel: TLib3MFHandle; const pImage3D: TLib3MFHandle; out pTheScalarFieldFromImage3D: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
 	* creates a new ScalarFieldComposed Resource
@@ -4893,10 +4898,11 @@ type
 	* creates a new Vector3DFieldFromImage3D Resource
 	*
 	* @param[in] pModel - Model instance.
+	* @param[in] pImage3D - image instance
 	* @param[out] pTheVector3DFieldFromImage3D - returns the new Vector3DFieldFromImage3D instance
 	* @return error code or 0 (success)
 	*)
-	TLib3MFModel_AddVector3DFieldFromImage3DFunc = function(pModel: TLib3MFHandle; out pTheVector3DFieldFromImage3D: TLib3MFHandle): TLib3MFResult; cdecl;
+	TLib3MFModel_AddVector3DFieldFromImage3DFunc = function(pModel: TLib3MFHandle; const pImage3D: TLib3MFHandle; out pTheVector3DFieldFromImage3D: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
 	* creates a new Vector3DFieldComposed Resource
@@ -6128,9 +6134,9 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		function GetSheetCount(): Cardinal;
 		function GetSheet(const AIndex: Cardinal): TLib3MFAttachment;
 		procedure SetSheet(const AIndex: Cardinal; const ASheet: TLib3MFAttachment);
-		function CreateEmptySheet(const APath: String): TLib3MFAttachment;
-		function CreateSheetFromBuffer(const APath: String; const AData: TByteDynArray): TLib3MFAttachment;
-		function CreateSheetFromFile(const APath: String; const AFileName: String): TLib3MFAttachment;
+		function CreateEmptySheet(const AIndex: Cardinal; const APath: String): TLib3MFAttachment;
+		function CreateSheetFromBuffer(const AIndex: Cardinal; const APath: String; const AData: TByteDynArray): TLib3MFAttachment;
+		function CreateSheetFromFile(const AIndex: Cardinal; const APath: String; const AFileName: String): TLib3MFAttachment;
 	end;
 
 
@@ -6415,12 +6421,12 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		function AddCompositeMaterials(const ABaseMaterialGroupInstance: TLib3MFBaseMaterialGroup): TLib3MFCompositeMaterials;
 		function AddMultiPropertyGroup(): TLib3MFMultiPropertyGroup;
 		function AddImageStack(const AColumnCount: Cardinal; const ARowCount: Cardinal; const ASheetCount: Cardinal): TLib3MFImageStack;
-		function AddScalarFieldFromImage3D(): TLib3MFScalarFieldFromImage3D;
+		function AddScalarFieldFromImage3D(const AImage3D: TLib3MFImage3D): TLib3MFScalarFieldFromImage3D;
 		function AddScalarFieldComposed(): TLib3MFScalarFieldComposed;
 		function GetScalarFieldByID(const AUniqueResourceID: Cardinal): TLib3MFScalarField;
 		function GetScalarFieldFromImage3DByID(const AUniqueResourceID: Cardinal): TLib3MFScalarFieldFromImage3D;
 		function GetScalarFieldComposedByID(const AUniqueResourceID: Cardinal): TLib3MFScalarFieldComposed;
-		function AddVector3DFieldFromImage3D(): TLib3MFVector3DFieldFromImage3D;
+		function AddVector3DFieldFromImage3D(const AImage3D: TLib3MFImage3D): TLib3MFVector3DFieldFromImage3D;
 		function AddVector3DFieldComposed(): TLib3MFVector3DFieldComposed;
 		function GetVector3DFieldByID(const AUniqueResourceID: Cardinal): TLib3MFVector3DField;
 		function GetVector3DFieldFromImage3DByID(const AUniqueResourceID: Cardinal): TLib3MFVector3DFieldFromImage3D;
@@ -7812,6 +7818,7 @@ implementation
 			eChannelNameRed: Result := 0;
 			eChannelNameGreen: Result := 1;
 			eChannelNameBlue: Result := 2;
+			eChannelNameAlpha: Result := 3;
 			else 
 				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum value');
 		end;
@@ -7823,6 +7830,7 @@ implementation
 			0: Result := eChannelNameRed;
 			1: Result := eChannelNameGreen;
 			2: Result := eChannelNameBlue;
+			3: Result := eChannelNameAlpha;
 			else 
 				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum constant');
 		end;
@@ -11071,18 +11079,18 @@ implementation
 		FWrapper.CheckError(Self, FWrapper.Lib3MFImageStack_SetSheetFunc(FHandle, AIndex, ASheetHandle));
 	end;
 
-	function TLib3MFImageStack.CreateEmptySheet(const APath: String): TLib3MFAttachment;
+	function TLib3MFImageStack.CreateEmptySheet(const AIndex: Cardinal; const APath: String): TLib3MFAttachment;
 	var
 		HSheet: TLib3MFHandle;
 	begin
 		Result := nil;
 		HSheet := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImageStack_CreateEmptySheetFunc(FHandle, PAnsiChar(APath), HSheet));
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImageStack_CreateEmptySheetFunc(FHandle, AIndex, PAnsiChar(APath), HSheet));
 		if Assigned(HSheet) then
 			Result := TLib3MFAttachment.Create(FWrapper, HSheet);
 	end;
 
-	function TLib3MFImageStack.CreateSheetFromBuffer(const APath: String; const AData: TByteDynArray): TLib3MFAttachment;
+	function TLib3MFImageStack.CreateSheetFromBuffer(const AIndex: Cardinal; const APath: String; const AData: TByteDynArray): TLib3MFAttachment;
 	var
 		PtrData: PByte;
 		LenData: QWord;
@@ -11098,18 +11106,18 @@ implementation
 		
 		Result := nil;
 		HSheet := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImageStack_CreateSheetFromBufferFunc(FHandle, PAnsiChar(APath), QWord(LenData), PtrData, HSheet));
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImageStack_CreateSheetFromBufferFunc(FHandle, AIndex, PAnsiChar(APath), QWord(LenData), PtrData, HSheet));
 		if Assigned(HSheet) then
 			Result := TLib3MFAttachment.Create(FWrapper, HSheet);
 	end;
 
-	function TLib3MFImageStack.CreateSheetFromFile(const APath: String; const AFileName: String): TLib3MFAttachment;
+	function TLib3MFImageStack.CreateSheetFromFile(const AIndex: Cardinal; const APath: String; const AFileName: String): TLib3MFAttachment;
 	var
 		HSheet: TLib3MFHandle;
 	begin
 		Result := nil;
 		HSheet := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFImageStack_CreateSheetFromFileFunc(FHandle, PAnsiChar(APath), PAnsiChar(AFileName), HSheet));
+		FWrapper.CheckError(Self, FWrapper.Lib3MFImageStack_CreateSheetFromFileFunc(FHandle, AIndex, PAnsiChar(APath), PAnsiChar(AFileName), HSheet));
 		if Assigned(HSheet) then
 			Result := TLib3MFAttachment.Create(FWrapper, HSheet);
 	end;
@@ -12758,13 +12766,18 @@ implementation
 			Result := TLib3MFImageStack.Create(FWrapper, HInstance);
 	end;
 
-	function TLib3MFModel.AddScalarFieldFromImage3D(): TLib3MFScalarFieldFromImage3D;
+	function TLib3MFModel.AddScalarFieldFromImage3D(const AImage3D: TLib3MFImage3D): TLib3MFScalarFieldFromImage3D;
 	var
+		AImage3DHandle: TLib3MFHandle;
 		HTheScalarFieldFromImage3D: TLib3MFHandle;
 	begin
+		if Assigned(AImage3D) then
+		AImage3DHandle := AImage3D.TheHandle
+		else
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'AImage3D is a nil value.');
 		Result := nil;
 		HTheScalarFieldFromImage3D := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFModel_AddScalarFieldFromImage3DFunc(FHandle, HTheScalarFieldFromImage3D));
+		FWrapper.CheckError(Self, FWrapper.Lib3MFModel_AddScalarFieldFromImage3DFunc(FHandle, AImage3DHandle, HTheScalarFieldFromImage3D));
 		if Assigned(HTheScalarFieldFromImage3D) then
 			Result := TLib3MFScalarFieldFromImage3D.Create(FWrapper, HTheScalarFieldFromImage3D);
 	end;
@@ -12813,13 +12826,18 @@ implementation
 			Result := TLib3MFScalarFieldComposed.Create(FWrapper, HScalarFieldComposedInstance);
 	end;
 
-	function TLib3MFModel.AddVector3DFieldFromImage3D(): TLib3MFVector3DFieldFromImage3D;
+	function TLib3MFModel.AddVector3DFieldFromImage3D(const AImage3D: TLib3MFImage3D): TLib3MFVector3DFieldFromImage3D;
 	var
+		AImage3DHandle: TLib3MFHandle;
 		HTheVector3DFieldFromImage3D: TLib3MFHandle;
 	begin
+		if Assigned(AImage3D) then
+		AImage3DHandle := AImage3D.TheHandle
+		else
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'AImage3D is a nil value.');
 		Result := nil;
 		HTheVector3DFieldFromImage3D := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFModel_AddVector3DFieldFromImage3DFunc(FHandle, HTheVector3DFieldFromImage3D));
+		FWrapper.CheckError(Self, FWrapper.Lib3MFModel_AddVector3DFieldFromImage3DFunc(FHandle, AImage3DHandle, HTheVector3DFieldFromImage3D));
 		if Assigned(HTheVector3DFieldFromImage3D) then
 			Result := TLib3MFVector3DFieldFromImage3D.Create(FWrapper, HTheVector3DFieldFromImage3D);
 	end;

@@ -42,7 +42,7 @@ Abstract: This is the class declaration of CScalarField
 #endif
 
 // Include custom headers here.
-
+#include "Model/Classes/NMR_ModelScalarField.h"
 
 namespace Lib3MF {
 namespace Impl {
@@ -70,7 +70,8 @@ public:
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-
+	CScalarField() = delete;
+	CScalarField(NMR::PModelScalarField pResource);
 
 	/**
 	* Public member functions to implement.

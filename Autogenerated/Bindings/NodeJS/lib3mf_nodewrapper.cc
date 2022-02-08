@@ -10986,10 +10986,14 @@ void CLib3MFImageStack::CreateEmptySheet (const FunctionCallbackInfo<Value>& arg
     Isolate* isolate = args.GetIsolate();
     HandleScope scope(isolate);
     try {
-        if (!args[0]->IsString()) {
-            throw std::runtime_error ("Expected string parameter 0 (Path)");
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error ("Expected uint32 parameter 0 (Index)");
         }
-        v8::String::Utf8Value sutf8Path (args[0]->ToString());
+        if (!args[1]->IsString()) {
+            throw std::runtime_error ("Expected string parameter 1 (Path)");
+        }
+        unsigned int nIndex = (unsigned int) args[0]->IntegerValue ();
+        v8::String::Utf8Value sutf8Path (args[1]->ToString());
         std::string sPath = *sutf8Path;
         Lib3MFHandle hReturnSheet = nullptr;
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
@@ -10998,7 +11002,7 @@ void CLib3MFImageStack::CreateEmptySheet (const FunctionCallbackInfo<Value>& arg
         if (wrapperTable->m_ImageStack_CreateEmptySheet == nullptr)
             throw std::runtime_error ("Could not call Lib3MF method ImageStack::CreateEmptySheet.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_ImageStack_CreateEmptySheet (instanceHandle, sPath.c_str(), &hReturnSheet);
+        Lib3MFResult errorCode = wrapperTable->m_ImageStack_CreateEmptySheet (instanceHandle, nIndex, sPath.c_str(), &hReturnSheet);
         CheckError (isolate, wrapperTable, instanceHandle, errorCode);
         Local<Object> instanceObjSheet = CLib3MFAttachment::NewInstance (args.Holder(), hReturnSheet);
         args.GetReturnValue().Set (instanceObjSheet);
@@ -11014,10 +11018,14 @@ void CLib3MFImageStack::CreateSheetFromBuffer (const FunctionCallbackInfo<Value>
     Isolate* isolate = args.GetIsolate();
     HandleScope scope(isolate);
     try {
-        if (!args[0]->IsString()) {
-            throw std::runtime_error ("Expected string parameter 0 (Path)");
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error ("Expected uint32 parameter 0 (Index)");
         }
-        v8::String::Utf8Value sutf8Path (args[0]->ToString());
+        if (!args[1]->IsString()) {
+            throw std::runtime_error ("Expected string parameter 1 (Path)");
+        }
+        unsigned int nIndex = (unsigned int) args[0]->IntegerValue ();
+        v8::String::Utf8Value sutf8Path (args[1]->ToString());
         std::string sPath = *sutf8Path;
         Lib3MFHandle hReturnSheet = nullptr;
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
@@ -11026,7 +11034,7 @@ void CLib3MFImageStack::CreateSheetFromBuffer (const FunctionCallbackInfo<Value>
         if (wrapperTable->m_ImageStack_CreateSheetFromBuffer == nullptr)
             throw std::runtime_error ("Could not call Lib3MF method ImageStack::CreateSheetFromBuffer.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_ImageStack_CreateSheetFromBuffer (instanceHandle, sPath.c_str(), 0, nullptr, &hReturnSheet);
+        Lib3MFResult errorCode = wrapperTable->m_ImageStack_CreateSheetFromBuffer (instanceHandle, nIndex, sPath.c_str(), 0, nullptr, &hReturnSheet);
         CheckError (isolate, wrapperTable, instanceHandle, errorCode);
         Local<Object> instanceObjSheet = CLib3MFAttachment::NewInstance (args.Holder(), hReturnSheet);
         args.GetReturnValue().Set (instanceObjSheet);
@@ -11042,15 +11050,19 @@ void CLib3MFImageStack::CreateSheetFromFile (const FunctionCallbackInfo<Value>& 
     Isolate* isolate = args.GetIsolate();
     HandleScope scope(isolate);
     try {
-        if (!args[0]->IsString()) {
-            throw std::runtime_error ("Expected string parameter 0 (Path)");
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error ("Expected uint32 parameter 0 (Index)");
         }
         if (!args[1]->IsString()) {
-            throw std::runtime_error ("Expected string parameter 1 (FileName)");
+            throw std::runtime_error ("Expected string parameter 1 (Path)");
         }
-        v8::String::Utf8Value sutf8Path (args[0]->ToString());
+        if (!args[2]->IsString()) {
+            throw std::runtime_error ("Expected string parameter 2 (FileName)");
+        }
+        unsigned int nIndex = (unsigned int) args[0]->IntegerValue ();
+        v8::String::Utf8Value sutf8Path (args[1]->ToString());
         std::string sPath = *sutf8Path;
-        v8::String::Utf8Value sutf8FileName (args[1]->ToString());
+        v8::String::Utf8Value sutf8FileName (args[2]->ToString());
         std::string sFileName = *sutf8FileName;
         Lib3MFHandle hReturnSheet = nullptr;
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
@@ -11059,7 +11071,7 @@ void CLib3MFImageStack::CreateSheetFromFile (const FunctionCallbackInfo<Value>& 
         if (wrapperTable->m_ImageStack_CreateSheetFromFile == nullptr)
             throw std::runtime_error ("Could not call Lib3MF method ImageStack::CreateSheetFromFile.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_ImageStack_CreateSheetFromFile (instanceHandle, sPath.c_str(), sFileName.c_str(), &hReturnSheet);
+        Lib3MFResult errorCode = wrapperTable->m_ImageStack_CreateSheetFromFile (instanceHandle, nIndex, sPath.c_str(), sFileName.c_str(), &hReturnSheet);
         CheckError (isolate, wrapperTable, instanceHandle, errorCode);
         Local<Object> instanceObjSheet = CLib3MFAttachment::NewInstance (args.Holder(), hReturnSheet);
         args.GetReturnValue().Set (instanceObjSheet);
@@ -15500,6 +15512,14 @@ void CLib3MFModel::AddScalarFieldFromImage3D (const FunctionCallbackInfo<Value>&
     Isolate* isolate = args.GetIsolate();
     HandleScope scope(isolate);
     try {
+        if (!args[0]->IsObject()) {
+            throw std::runtime_error ("Expected class parameter 0 (Image3D)");
+        }
+        Local<Object> objImage3D = args[0]->ToObject(isolate->GetCurrentContext()).ToLocalChecked ();
+        CLib3MFImage3D * instanceImage3D = ObjectWrap::Unwrap<CLib3MFImage3D>(objImage3D);
+        if (instanceImage3D == nullptr)
+            throw std::runtime_error("Invalid Object parameter 0 (Image3D)");
+        Lib3MFHandle hImage3D = instanceImage3D->getHandle ( objImage3D );
         Lib3MFHandle hReturnTheScalarFieldFromImage3D = nullptr;
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
         if (wrapperTable == nullptr)
@@ -15507,7 +15527,7 @@ void CLib3MFModel::AddScalarFieldFromImage3D (const FunctionCallbackInfo<Value>&
         if (wrapperTable->m_Model_AddScalarFieldFromImage3D == nullptr)
             throw std::runtime_error ("Could not call Lib3MF method Model::AddScalarFieldFromImage3D.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_Model_AddScalarFieldFromImage3D (instanceHandle, &hReturnTheScalarFieldFromImage3D);
+        Lib3MFResult errorCode = wrapperTable->m_Model_AddScalarFieldFromImage3D (instanceHandle, hImage3D, &hReturnTheScalarFieldFromImage3D);
         CheckError (isolate, wrapperTable, instanceHandle, errorCode);
         Local<Object> instanceObjTheScalarFieldFromImage3D = CLib3MFScalarFieldFromImage3D::NewInstance (args.Holder(), hReturnTheScalarFieldFromImage3D);
         args.GetReturnValue().Set (instanceObjTheScalarFieldFromImage3D);
@@ -15627,6 +15647,14 @@ void CLib3MFModel::AddVector3DFieldFromImage3D (const FunctionCallbackInfo<Value
     Isolate* isolate = args.GetIsolate();
     HandleScope scope(isolate);
     try {
+        if (!args[0]->IsObject()) {
+            throw std::runtime_error ("Expected class parameter 0 (Image3D)");
+        }
+        Local<Object> objImage3D = args[0]->ToObject(isolate->GetCurrentContext()).ToLocalChecked ();
+        CLib3MFImage3D * instanceImage3D = ObjectWrap::Unwrap<CLib3MFImage3D>(objImage3D);
+        if (instanceImage3D == nullptr)
+            throw std::runtime_error("Invalid Object parameter 0 (Image3D)");
+        Lib3MFHandle hImage3D = instanceImage3D->getHandle ( objImage3D );
         Lib3MFHandle hReturnTheVector3DFieldFromImage3D = nullptr;
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
         if (wrapperTable == nullptr)
@@ -15634,7 +15662,7 @@ void CLib3MFModel::AddVector3DFieldFromImage3D (const FunctionCallbackInfo<Value
         if (wrapperTable->m_Model_AddVector3DFieldFromImage3D == nullptr)
             throw std::runtime_error ("Could not call Lib3MF method Model::AddVector3DFieldFromImage3D.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_Model_AddVector3DFieldFromImage3D (instanceHandle, &hReturnTheVector3DFieldFromImage3D);
+        Lib3MFResult errorCode = wrapperTable->m_Model_AddVector3DFieldFromImage3D (instanceHandle, hImage3D, &hReturnTheVector3DFieldFromImage3D);
         CheckError (isolate, wrapperTable, instanceHandle, errorCode);
         Local<Object> instanceObjTheVector3DFieldFromImage3D = CLib3MFVector3DFieldFromImage3D::NewInstance (args.Holder(), hReturnTheVector3DFieldFromImage3D);
         args.GetReturnValue().Set (instanceObjTheVector3DFieldFromImage3D);
@@ -16296,6 +16324,7 @@ void CLib3MFWrapper::New(const FunctionCallbackInfo<Value>& args)
             newObject->Set (String::NewFromUtf8(isolate, "eChannelName_Red"), Integer::New(isolate, 0));
             newObject->Set (String::NewFromUtf8(isolate, "eChannelName_Green"), Integer::New(isolate, 1));
             newObject->Set (String::NewFromUtf8(isolate, "eChannelName_Blue"), Integer::New(isolate, 2));
+            newObject->Set (String::NewFromUtf8(isolate, "eChannelName_Alpha"), Integer::New(isolate, 3));
             newObject->Set (String::NewFromUtf8(isolate, "eCompositionMethod_WeightedSum"), Integer::New(isolate, 0));
             newObject->Set (String::NewFromUtf8(isolate, "eCompositionMethod_Multiply"), Integer::New(isolate, 1));
             newObject->Set (String::NewFromUtf8(isolate, "eCompositionMethod_Min"), Integer::New(isolate, 2));

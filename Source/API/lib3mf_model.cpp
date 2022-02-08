@@ -61,7 +61,9 @@ Abstract: This is a stub class definition of CModel
 #include "lib3mf_packagepart.hpp"
 #include "lib3mf_keystore.hpp"
 #include "lib3mf_image3d.hpp"
+#include "lib3mf_imagestack.hpp"
 #include "lib3mf_image3diterator.hpp"
+#include "lib3mf_scalarfieldfromimage3d.hpp"
 
 
 // Include custom headers here.
@@ -71,6 +73,9 @@ Abstract: This is a stub class definition of CModel
 #include "Model/Classes/NMR_ModelColorGroup.h"
 #include "Model/Classes/NMR_ModelTexture2DGroup.h"
 #include "Model/Classes/NMR_ModelMultiPropertyGroup.h"
+#include "Model/Classes/NMR_ModelImageStack.h"
+#include "Model/Classes/NMR_ModelScalarField.h"
+#include "Model/Classes/NMR_ModelScalarFieldFromImage3D.h"
 #include "Common/NMR_SecureContentTypes.h"
 #include "lib3mf_utils.hpp"
 
@@ -690,17 +695,19 @@ Lib3MF::sBox CModel::GetOutbox()
 
 IImageStack * CModel::AddImageStack(const Lib3MF_uint32 nSizeX, const Lib3MF_uint32 nSizeY, const Lib3MF_uint32 nSheetCount)
 {
-	// NMR::PModelImage3D pResource = NMR::CModelImage3D::make(model().generateResourceID(), &model(), nSizeX, nSizeY, nSheetCount);
-	//model().addResource(pResource);
+	NMR::PModelImageStack pResource = NMR::CModelImageStack::make(model().generateResourceID(), &model(), nSizeX, nSizeY, nSheetCount);
+	model().addResource(pResource);
 
-	//return new CImage3D(pResource);
-
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return new CImageStack(pResource);
 }
 
-IScalarFieldFromImage3D* CModel::AddScalarFieldFromImage3D()
+IScalarFieldFromImage3D* CModel::AddScalarFieldFromImage3D(IImage3D* pImage3D)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	NMR::PModelScalarFieldFromImage3D pResource =
+		std::make_shared<NMR::CModelScalarFieldFromImage3D>(model().generateResourceID(), &model(), model().findPackageResourceID(pImage3D->GetUniqueResourceID()));
+	model().addResource(pResource);
+
+	return new CScalarFieldFromImage3D(pResource);
 }
 
 IScalarFieldComposed* CModel::AddScalarFieldComposed()
@@ -723,7 +730,7 @@ IScalarFieldComposed* CModel::GetScalarFieldComposedByID(const Lib3MF_uint32 nUn
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-IVector3DFieldFromImage3D* CModel::AddVector3DFieldFromImage3D()
+IVector3DFieldFromImage3D* CModel::AddVector3DFieldFromImage3D(IImage3D* pImage3D)
 {
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }

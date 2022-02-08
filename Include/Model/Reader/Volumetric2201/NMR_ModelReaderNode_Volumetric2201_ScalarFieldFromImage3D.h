@@ -25,44 +25,47 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
-NMR_ModelReaderNode_Volumetric2201_Image3D.h covers the official 3MF volumetric extension.
+NMR_ModelReaderNode_Volumetric2201_ScalarFieldFromImage3D.h covers the official 3MF volumetric extension.
 
 --*/
 
-#ifndef __NMR_MODELREADERNODE_Volumetric2201_IMAGE3D
-#define __NMR_MODELREADERNODE_Volumetric2201_IMAGE3D
+#ifndef __NMR_MODELREADERNODE_VOLUMETRIC2201_SCALARFIELDFROMIMAGE3D
+#define __NMR_MODELREADERNODE_VOLUMETRIC2201_SCALARFIELDFROMIMAGE3D
 
 #include "Model/Reader/NMR_ModelReaderNode.h"
-#include "Model/Classes/NMR_ModelImage3D.h"
+#include "Model/Classes/NMR_ModelScalarFieldFromImage3D.h"
 
 namespace NMR {
 
-	class CModelReaderNode_Volumetric2201_Image3D : public CModelReaderNode {
+	class CModelReaderNode_Volumetric2201_ScalarFieldFromImage3D : public CModelReaderNode {
 	private:
 	protected:
 
-		CModel * m_pModel;
+		CModelScalarFieldFromImage3D* m_pScalarFieldFromImage3D;
+		CModel* m_pModel;
 
-		ModelResourceID m_nID;
-
-		nfBool m_bHasName;
-		std::string m_sName;
-
-		PModelImage3D m_pImage3D;
+		nfBool m_bHasImage3DID = false;
+		nfBool m_bHasOffset = false;
+		nfBool m_bHasScale = false;
+		nfBool m_bHasChannel = false;
+		nfBool m_bHasTileStyleU = false;
+		nfBool m_bHasTileStyleV = false;
+		nfBool m_bHasTileStyleW = false;
+		nfBool m_bHasFilter = false;
 
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 
 	public:
-		CModelReaderNode_Volumetric2201_Image3D() = delete;
-		CModelReaderNode_Volumetric2201_Image3D(_In_ CModel * pModel, _In_ PModelWarnings pWarnings);
+		CModelReaderNode_Volumetric2201_ScalarFieldFromImage3D() = delete;
+		CModelReaderNode_Volumetric2201_ScalarFieldFromImage3D(_In_ CModel* pModel, _In_ CModelScalarFieldFromImage3D* pScalarFieldFromImage3D, _In_ PModelWarnings pWarnings);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 
 	};
 
-	typedef std::shared_ptr <CModelReaderNode_Volumetric2201_Image3D> PModelReaderNode_Volumetric2201_Image3D;
+	typedef std::shared_ptr <CModelReaderNode_Volumetric2201_ScalarFieldFromImage3D> PModelReaderNode_Volumetric2201_ScalarFieldFromImage3D;
 
 }
 
-#endif // __NMR_MODELREADERNODE_Volumetric2201_IMAGE3D
+#endif // __NMR_MODELREADERNODE_VOLUMETRIC2201_SCALARFIELDFROMIMAGE3D

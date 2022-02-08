@@ -25,54 +25,43 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
-
-NMR_ModelResource.h defines the Model Resource Class.
-A model resource is an in memory representation of the 3MF
-resource object.
+NMR_ModelReaderNode_Volumetric2201_Image3D.h covers the official 3MF volumetric extension.
 
 --*/
 
-#ifndef __NMR_MODELRESOURCE
-#define __NMR_MODELRESOURCE
+#ifndef __NMR_MODELREADERNODE_VOLUMETRIC2201_IMAGESTACK
+#define __NMR_MODELREADERNODE_VOLUMETRIC2201_IMAGESTACK
 
-#include "Model/Classes/NMR_ModelMetaData.h" 
-#include "Common/NMR_Types.h" 
-#include "Model/Classes/NMR_ModelTypes.h" 
-#include "Model/Classes/NMR_Model.h" 
-
-#include <string>
+#include "Model/Reader/NMR_ModelReaderNode.h"
+#include "Model/Classes/NMR_ModelImageStack.h"
 
 namespace NMR {
 
-	class CModelResource {
+	class CModelReaderNode_Volumetric2201_ImageStack : public CModelReaderNode {
 	private:
-		CModel * m_pModel;
-		PPackageResourceID m_pPackageResourceID;
-
 	protected:
-		std::vector<ModelPropertyID> m_ResourceIndexMap;
-		nfBool m_bHasResourceIndexMap;
-		CModel * Model();
-		
+
+		CModelImageStack* m_pImageStack;
+		CModel* m_pModel;
+
+		nfUint32 m_nRowCount;
+		nfUint32 m_nColumnCount;
+		nfUint32 m_nSheetCount;
+		nfUint32 m_nSheetIndex;
+
+		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
+		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
+
 	public:
-		CModelResource() = delete;
-		// CModelResource(_In_ const PPackageResourceID sResourceID, _In_ CModel * pModel);
-		CModelResource(_In_ const ModelResourceID sResourceID, _In_ CModel * pModel);
-		virtual ~CModelResource();
-		
-		PPackageResourceID getPackageResourceID();
-		void setPackageResourceID(PPackageResourceID pID);
+		CModelReaderNode_Volumetric2201_ImageStack() = delete;
+		CModelReaderNode_Volumetric2201_ImageStack(_In_ CModel* pModel, _In_ CModelImageStack* pImageStack, _In_ PModelWarnings pWarnings);
 
-		bool mapResourceIndexToPropertyID (_In_ ModelResourceIndex nPropertyIndex, _Out_ ModelPropertyID & nPropertyID);
-		void clearResourceIndexMap();
-		virtual void buildResourceIndexMap();
-		nfBool hasResourceIndexMap();
+		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 
-		_Ret_notnull_ CModel * getModel();
 	};
 
-	typedef std::shared_ptr <CModelResource> PModelResource;
+	typedef std::shared_ptr <CModelReaderNode_Volumetric2201_ImageStack> PModelReaderNode_Volumetric2201_ImageStack;
 
 }
 
-#endif // __NMR_MODELRESOURCE
+#endif // __NMR_MODELREADERNODE_VOLUMETRIC2201_IMAGESTACK

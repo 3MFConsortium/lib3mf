@@ -107,7 +107,8 @@ namespace Lib3MF {
 	public enum eChannelName {
 		Red = 0,
 		Green = 1,
-		Blue = 2
+		Blue = 2,
+		Alpha = 3
 	};
 
 	public enum eCompositionMethod {
@@ -1145,13 +1146,13 @@ namespace Lib3MF {
 			public unsafe extern static Int32 ImageStack_SetSheet (IntPtr Handle, UInt32 AIndex, IntPtr ASheet);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_imagestack_createemptysheet", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ImageStack_CreateEmptySheet (IntPtr Handle, byte[] APath, out IntPtr ASheet);
+			public unsafe extern static Int32 ImageStack_CreateEmptySheet (IntPtr Handle, UInt32 AIndex, byte[] APath, out IntPtr ASheet);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_imagestack_createsheetfrombuffer", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ImageStack_CreateSheetFromBuffer (IntPtr Handle, byte[] APath, UInt64 sizeData, IntPtr dataData, out IntPtr ASheet);
+			public unsafe extern static Int32 ImageStack_CreateSheetFromBuffer (IntPtr Handle, UInt32 AIndex, byte[] APath, UInt64 sizeData, IntPtr dataData, out IntPtr ASheet);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_imagestack_createsheetfromfile", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ImageStack_CreateSheetFromFile (IntPtr Handle, byte[] APath, byte[] AFileName, out IntPtr ASheet);
+			public unsafe extern static Int32 ImageStack_CreateSheetFromFile (IntPtr Handle, UInt32 AIndex, byte[] APath, byte[] AFileName, out IntPtr ASheet);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_attachment_getpath", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Attachment_GetPath (IntPtr Handle, UInt32 sizePath, out UInt32 neededPath, IntPtr dataPath);
@@ -1577,7 +1578,7 @@ namespace Lib3MF {
 			public unsafe extern static Int32 Model_AddImageStack (IntPtr Handle, UInt32 AColumnCount, UInt32 ARowCount, UInt32 ASheetCount, out IntPtr AInstance);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_addscalarfieldfromimage3d", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Model_AddScalarFieldFromImage3D (IntPtr Handle, out IntPtr ATheScalarFieldFromImage3D);
+			public unsafe extern static Int32 Model_AddScalarFieldFromImage3D (IntPtr Handle, IntPtr AImage3D, out IntPtr ATheScalarFieldFromImage3D);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_addscalarfieldcomposed", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Model_AddScalarFieldComposed (IntPtr Handle, out IntPtr ATheScalarFieldComposed);
@@ -1592,7 +1593,7 @@ namespace Lib3MF {
 			public unsafe extern static Int32 Model_GetScalarFieldComposedByID (IntPtr Handle, UInt32 AUniqueResourceID, out IntPtr AScalarFieldComposedInstance);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_addvector3dfieldfromimage3d", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Model_AddVector3DFieldFromImage3D (IntPtr Handle, out IntPtr ATheVector3DFieldFromImage3D);
+			public unsafe extern static Int32 Model_AddVector3DFieldFromImage3D (IntPtr Handle, IntPtr AImage3D, out IntPtr ATheVector3DFieldFromImage3D);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_addvector3dfieldcomposed", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Model_AddVector3DFieldComposed (IntPtr Handle, out IntPtr ATheVector3DFieldComposed);
@@ -4781,33 +4782,33 @@ namespace Lib3MF {
 			CheckError(Internal.Lib3MFWrapper.ImageStack_SetSheet (Handle, AIndex, ASheet.GetHandle()));
 		}
 
-		public CAttachment CreateEmptySheet (String APath)
+		public CAttachment CreateEmptySheet (UInt32 AIndex, String APath)
 		{
 			byte[] bytePath = Encoding.UTF8.GetBytes(APath + char.MinValue);
 			IntPtr newSheet = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.ImageStack_CreateEmptySheet (Handle, bytePath, out newSheet));
+			CheckError(Internal.Lib3MFWrapper.ImageStack_CreateEmptySheet (Handle, AIndex, bytePath, out newSheet));
 			return new CAttachment (newSheet );
 		}
 
-		public CAttachment CreateSheetFromBuffer (String APath, Byte[] AData)
+		public CAttachment CreateSheetFromBuffer (UInt32 AIndex, String APath, Byte[] AData)
 		{
 			byte[] bytePath = Encoding.UTF8.GetBytes(APath + char.MinValue);
 			GCHandle dataData = GCHandle.Alloc(AData, GCHandleType.Pinned);
 			IntPtr newSheet = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.ImageStack_CreateSheetFromBuffer (Handle, bytePath, (UInt64) AData.Length, dataData.AddrOfPinnedObject(), out newSheet));
+			CheckError(Internal.Lib3MFWrapper.ImageStack_CreateSheetFromBuffer (Handle, AIndex, bytePath, (UInt64) AData.Length, dataData.AddrOfPinnedObject(), out newSheet));
 			dataData.Free ();
 			return new CAttachment (newSheet );
 		}
 
-		public CAttachment CreateSheetFromFile (String APath, String AFileName)
+		public CAttachment CreateSheetFromFile (UInt32 AIndex, String APath, String AFileName)
 		{
 			byte[] bytePath = Encoding.UTF8.GetBytes(APath + char.MinValue);
 			byte[] byteFileName = Encoding.UTF8.GetBytes(AFileName + char.MinValue);
 			IntPtr newSheet = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.ImageStack_CreateSheetFromFile (Handle, bytePath, byteFileName, out newSheet));
+			CheckError(Internal.Lib3MFWrapper.ImageStack_CreateSheetFromFile (Handle, AIndex, bytePath, byteFileName, out newSheet));
 			return new CAttachment (newSheet );
 		}
 
@@ -6161,11 +6162,11 @@ namespace Lib3MF {
 			return new CImageStack (newInstance );
 		}
 
-		public CScalarFieldFromImage3D AddScalarFieldFromImage3D ()
+		public CScalarFieldFromImage3D AddScalarFieldFromImage3D (CImage3D AImage3D)
 		{
 			IntPtr newTheScalarFieldFromImage3D = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.Model_AddScalarFieldFromImage3D (Handle, out newTheScalarFieldFromImage3D));
+			CheckError(Internal.Lib3MFWrapper.Model_AddScalarFieldFromImage3D (Handle, AImage3D.GetHandle(), out newTheScalarFieldFromImage3D));
 			return new CScalarFieldFromImage3D (newTheScalarFieldFromImage3D );
 		}
 
@@ -6201,11 +6202,11 @@ namespace Lib3MF {
 			return new CScalarFieldComposed (newScalarFieldComposedInstance );
 		}
 
-		public CVector3DFieldFromImage3D AddVector3DFieldFromImage3D ()
+		public CVector3DFieldFromImage3D AddVector3DFieldFromImage3D (CImage3D AImage3D)
 		{
 			IntPtr newTheVector3DFieldFromImage3D = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.Model_AddVector3DFieldFromImage3D (Handle, out newTheVector3DFieldFromImage3D));
+			CheckError(Internal.Lib3MFWrapper.Model_AddVector3DFieldFromImage3D (Handle, AImage3D.GetHandle(), out newTheVector3DFieldFromImage3D));
 			return new CVector3DFieldFromImage3D (newTheVector3DFieldFromImage3D );
 		}
 

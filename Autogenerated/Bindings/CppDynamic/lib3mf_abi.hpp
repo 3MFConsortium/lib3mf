@@ -2936,34 +2936,37 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_imagestack_setsheet(Lib3MF_ImageStack pImage
 * Creates a new sheet attachment with empty data.
 *
 * @param[in] pImageStack - ImageStack instance.
+* @param[in] nIndex - index of the image (0-based)
 * @param[in] pPath - path of part in the package
 * @param[out] pSheet - attachment containing the image
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_imagestack_createemptysheet(Lib3MF_ImageStack pImageStack, const char * pPath, Lib3MF_Attachment * pSheet);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_imagestack_createemptysheet(Lib3MF_ImageStack pImageStack, Lib3MF_uint32 nIndex, const char * pPath, Lib3MF_Attachment * pSheet);
 
 /**
 * Creates a new sheet attachment from a memory buffer.
 *
 * @param[in] pImageStack - ImageStack instance.
+* @param[in] nIndex - index of the image (0-based)
 * @param[in] pPath - path of part in the package
 * @param[in] nDataBufferSize - Number of elements in buffer
 * @param[in] pDataBuffer - uint8 buffer of binary image data
 * @param[out] pSheet - attachment containing the image
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_imagestack_createsheetfrombuffer(Lib3MF_ImageStack pImageStack, const char * pPath, Lib3MF_uint64 nDataBufferSize, const Lib3MF_uint8 * pDataBuffer, Lib3MF_Attachment * pSheet);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_imagestack_createsheetfrombuffer(Lib3MF_ImageStack pImageStack, Lib3MF_uint32 nIndex, const char * pPath, Lib3MF_uint64 nDataBufferSize, const Lib3MF_uint8 * pDataBuffer, Lib3MF_Attachment * pSheet);
 
 /**
 * Creates a new sheet attachment from a file on disk.
 *
 * @param[in] pImageStack - ImageStack instance.
+* @param[in] nIndex - index of the image (0-based)
 * @param[in] pPath - path of part in the package
 * @param[in] pFileName - file name to read from
 * @param[out] pSheet - attachment containing the image
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_imagestack_createsheetfromfile(Lib3MF_ImageStack pImageStack, const char * pPath, const char * pFileName, Lib3MF_Attachment * pSheet);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_imagestack_createsheetfromfile(Lib3MF_ImageStack pImageStack, Lib3MF_uint32 nIndex, const char * pPath, const char * pFileName, Lib3MF_Attachment * pSheet);
 
 /*************************************************************************************************************************
  Class definition for Attachment
@@ -4391,10 +4394,11 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_addimagestack(Lib3MF_Model pModel, Lib
 * creates a new ScalarFieldFromImage3D Resource
 *
 * @param[in] pModel - Model instance.
+* @param[in] pImage3D - image instance
 * @param[out] pTheScalarFieldFromImage3D - returns the new ScalarFieldFromImage3D instance
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_addscalarfieldfromimage3d(Lib3MF_Model pModel, Lib3MF_ScalarFieldFromImage3D * pTheScalarFieldFromImage3D);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_addscalarfieldfromimage3d(Lib3MF_Model pModel, Lib3MF_Image3D pImage3D, Lib3MF_ScalarFieldFromImage3D * pTheScalarFieldFromImage3D);
 
 /**
 * creates a new ScalarFieldComposed Resource
@@ -4439,10 +4443,11 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_getscalarfieldcomposedbyid(Lib3MF_Mode
 * creates a new Vector3DFieldFromImage3D Resource
 *
 * @param[in] pModel - Model instance.
+* @param[in] pImage3D - image instance
 * @param[out] pTheVector3DFieldFromImage3D - returns the new Vector3DFieldFromImage3D instance
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_addvector3dfieldfromimage3d(Lib3MF_Model pModel, Lib3MF_Vector3DFieldFromImage3D * pTheVector3DFieldFromImage3D);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_addvector3dfieldfromimage3d(Lib3MF_Model pModel, Lib3MF_Image3D pImage3D, Lib3MF_Vector3DFieldFromImage3D * pTheVector3DFieldFromImage3D);
 
 /**
 * creates a new Vector3DFieldComposed Resource

@@ -29,10 +29,11 @@ Abstract: This is a stub class definition of CScalarFieldFromImage3D
 */
 
 #include "lib3mf_scalarfieldfromimage3d.hpp"
+#include "lib3mf_image3d.hpp"
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
-
+#include <memory>
 
 using namespace Lib3MF::Impl;
 
@@ -40,63 +41,83 @@ using namespace Lib3MF::Impl;
  Class definition of CScalarFieldFromImage3D 
 **************************************************************************************************************************/
 
+CScalarFieldFromImage3D::CScalarFieldFromImage3D(NMR::PModelScalarFieldFromImage3D pScalarFieldFromImage3D)
+	:CScalarField(pScalarFieldFromImage3D), CResource(pScalarFieldFromImage3D)
+{
+
+}
+
+NMR::CModelScalarFieldFromImage3D* CScalarFieldFromImage3D::scalarFieldFromImage3D()
+{
+	NMR::CModelScalarFieldFromImage3D* pFieldFromImage3D = dynamic_cast<NMR::CModelScalarFieldFromImage3D*>(resource().get());
+	if (pFieldFromImage3D == nullptr)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDOBJECT);
+	return pFieldFromImage3D;
+}
+
 IImage3D * CScalarFieldFromImage3D::GetImage()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	NMR::PModelResource pResource = model()->findResource(scalarFieldFromImage3D()->getImage3DResourceID());
+	return new CImage3D(pResource);
 }
 
 void CScalarFieldFromImage3D::SetImage(IImage3D* pImage3D)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	scalarFieldFromImage3D()->setImage3DResourceID(model()->findPackageResourceID(pImage3D->GetUniqueResourceID()));
 }
 
 void CScalarFieldFromImage3D::SetChannel(const Lib3MF::eChannelName eName)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	scalarFieldFromImage3D()->setChannel(NMR::eModelColorChannel(eName));
 }
 
 Lib3MF::eChannelName CScalarFieldFromImage3D::GetChannel()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return eChannelName(scalarFieldFromImage3D()->getChannel());
 }
 
 void CScalarFieldFromImage3D::SetFilter(const Lib3MF::eTextureFilter eFilter)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	scalarFieldFromImage3D()->setFilter(NMR::eModelTextureFilter(eFilter));
 }
 
 Lib3MF::eTextureFilter CScalarFieldFromImage3D::GetFilter()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return eTextureFilter(scalarFieldFromImage3D()->getFilter());
 }
 
 void CScalarFieldFromImage3D::SetTileStyles(const Lib3MF::eTextureTileStyle eTileStyleU, const Lib3MF::eTextureTileStyle eTileStyleV, const Lib3MF::eTextureTileStyle eTileStyleW)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	scalarFieldFromImage3D()->setTileStyleU(NMR::eModelTextureTileStyle(eTileStyleU));
+	scalarFieldFromImage3D()->setTileStyleV(NMR::eModelTextureTileStyle(eTileStyleV));
+	scalarFieldFromImage3D()->setTileStyleW(NMR::eModelTextureTileStyle(eTileStyleW));
 }
 
 void CScalarFieldFromImage3D::GetTileStyles(Lib3MF::eTextureTileStyle & eTileStyleU, Lib3MF::eTextureTileStyle & eTileStyleV, Lib3MF::eTextureTileStyle & eTileStyleW)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	eTileStyleU = eTextureTileStyle(scalarFieldFromImage3D()->getTileStyleU());
+	eTileStyleV = eTextureTileStyle(scalarFieldFromImage3D()->getTileStyleV());
+	eTileStyleW = eTextureTileStyle(scalarFieldFromImage3D()->getTileStyleW());
+
 }
 
 Lib3MF_double CScalarFieldFromImage3D::GetOffset()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return scalarFieldFromImage3D()->getOffset();
 }
 
 void CScalarFieldFromImage3D::SetOffset(const Lib3MF_double dOffset)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	scalarFieldFromImage3D()->setOffset(dOffset);
 }
 
 Lib3MF_double CScalarFieldFromImage3D::GetScale()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return scalarFieldFromImage3D()->getScale();
 }
 
 void CScalarFieldFromImage3D::SetScale(const Lib3MF_double dScale)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	scalarFieldFromImage3D()->setScale(dScale);
 }
 

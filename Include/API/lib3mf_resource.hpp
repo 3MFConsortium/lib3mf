@@ -62,6 +62,7 @@ private:
 protected:
 
 	NMR::PModelResource resource();
+	NMR::CModel* model();
 
 public:
 

@@ -42,7 +42,7 @@ Abstract: This is the class declaration of CScalarFieldFromImage3D
 #endif
 
 // Include custom headers here.
-
+#include "Model/Classes/NMR_ModelScalarFieldFromImage3D.h"
 
 namespace Lib3MF {
 namespace Impl {
@@ -58,6 +58,7 @@ private:
 	/**
 	* Put private members here.
 	*/
+	NMR::CModelScalarFieldFromImage3D* scalarFieldFromImage3D();
 
 protected:
 
@@ -66,10 +67,11 @@ protected:
 	*/
 
 public:
-
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
+	CScalarFieldFromImage3D() = delete;
+	CScalarFieldFromImage3D(NMR::PModelScalarFieldFromImage3D pScalarFieldFromImage3D);
 
 
 	/**

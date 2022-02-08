@@ -158,6 +158,7 @@ const (
 		eChannelName_Red = 0
 		eChannelName_Green = 1
 		eChannelName_Blue = 2
+		eChannelName_Alpha = 3
 )
 
 type ELib3MFCompositionMethod int
@@ -2886,32 +2887,35 @@ type Lib3MFGoInterface interface {
 	* Creates a new sheet attachment with empty data.
 	*
 	* @param[in] ImageStack - ImageStack instance.
+	* @param[in] nIndex - index of the image (0-based)
 	* @param[in] sPath - path of part in the package
 	* @return attachment containing the image
 	*/
-	ImageStack_CreateEmptySheet(ImageStack Lib3MFHandle, sPath string) (Lib3MFHandle, error)
+	ImageStack_CreateEmptySheet(ImageStack Lib3MFHandle, nIndex uint32, sPath string) (Lib3MFHandle, error)
 
 
 	/**
 	* Creates a new sheet attachment from a memory buffer.
 	*
 	* @param[in] ImageStack - ImageStack instance.
+	* @param[in] nIndex - index of the image (0-based)
 	* @param[in] sPath - path of part in the package
 	* @param[in] Data - binary image data
 	* @return attachment containing the image
 	*/
-	ImageStack_CreateSheetFromBuffer(ImageStack Lib3MFHandle, sPath string, Data []uint8) (Lib3MFHandle, error)
+	ImageStack_CreateSheetFromBuffer(ImageStack Lib3MFHandle, nIndex uint32, sPath string, Data []uint8) (Lib3MFHandle, error)
 
 
 	/**
 	* Creates a new sheet attachment from a file on disk.
 	*
 	* @param[in] ImageStack - ImageStack instance.
+	* @param[in] nIndex - index of the image (0-based)
 	* @param[in] sPath - path of part in the package
 	* @param[in] sFileName - file name to read from
 	* @return attachment containing the image
 	*/
-	ImageStack_CreateSheetFromFile(ImageStack Lib3MFHandle, sPath string, sFileName string) (Lib3MFHandle, error)
+	ImageStack_CreateSheetFromFile(ImageStack Lib3MFHandle, nIndex uint32, sPath string, sFileName string) (Lib3MFHandle, error)
 
 
 	/**
@@ -4240,9 +4244,10 @@ type Lib3MFGoInterface interface {
 	* creates a new ScalarFieldFromImage3D Resource
 	*
 	* @param[in] Model - Model instance.
+	* @param[in] Image3D - image instance
 	* @return returns the new ScalarFieldFromImage3D instance
 	*/
-	Model_AddScalarFieldFromImage3D(Model Lib3MFHandle) (Lib3MFHandle, error)
+	Model_AddScalarFieldFromImage3D(Model Lib3MFHandle, Image3D Lib3MFHandle) (Lib3MFHandle, error)
 
 
 	/**
@@ -4288,9 +4293,10 @@ type Lib3MFGoInterface interface {
 	* creates a new Vector3DFieldFromImage3D Resource
 	*
 	* @param[in] Model - Model instance.
+	* @param[in] Image3D - image instance
 	* @return returns the new Vector3DFieldFromImage3D instance
 	*/
-	Model_AddVector3DFieldFromImage3D(Model Lib3MFHandle) (Lib3MFHandle, error)
+	Model_AddVector3DFieldFromImage3D(Model Lib3MFHandle, Image3D Lib3MFHandle) (Lib3MFHandle, error)
 
 
 	/**
@@ -6887,24 +6893,24 @@ func (instance *Lib3MFImageStack) SetSheet(nIndex uint32, Sheet Lib3MFHandle) (e
 	return error
 }
 
-func (instance *Lib3MFImageStack) CreateEmptySheet(sPath string) (Lib3MFAttachment, error) {
-	hSheet, error := instance.Interface.ImageStack_CreateEmptySheet(instance.Handle, sPath)
+func (instance *Lib3MFImageStack) CreateEmptySheet(nIndex uint32, sPath string) (Lib3MFAttachment, error) {
+	hSheet, error := instance.Interface.ImageStack_CreateEmptySheet(instance.Handle, nIndex, sPath)
 	var cSheet Lib3MFAttachment
 	cSheet.Interface = instance.Interface
 	cSheet.Handle = hSheet
 	return cSheet, error
 }
 
-func (instance *Lib3MFImageStack) CreateSheetFromBuffer(sPath string, Data []uint8) (Lib3MFAttachment, error) {
-	hSheet, error := instance.Interface.ImageStack_CreateSheetFromBuffer(instance.Handle, sPath, Data)
+func (instance *Lib3MFImageStack) CreateSheetFromBuffer(nIndex uint32, sPath string, Data []uint8) (Lib3MFAttachment, error) {
+	hSheet, error := instance.Interface.ImageStack_CreateSheetFromBuffer(instance.Handle, nIndex, sPath, Data)
 	var cSheet Lib3MFAttachment
 	cSheet.Interface = instance.Interface
 	cSheet.Handle = hSheet
 	return cSheet, error
 }
 
-func (instance *Lib3MFImageStack) CreateSheetFromFile(sPath string, sFileName string) (Lib3MFAttachment, error) {
-	hSheet, error := instance.Interface.ImageStack_CreateSheetFromFile(instance.Handle, sPath, sFileName)
+func (instance *Lib3MFImageStack) CreateSheetFromFile(nIndex uint32, sPath string, sFileName string) (Lib3MFAttachment, error) {
+	hSheet, error := instance.Interface.ImageStack_CreateSheetFromFile(instance.Handle, nIndex, sPath, sFileName)
 	var cSheet Lib3MFAttachment
 	cSheet.Interface = instance.Interface
 	cSheet.Handle = hSheet
@@ -7968,8 +7974,8 @@ func (instance *Lib3MFModel) AddImageStack(nColumnCount uint32, nRowCount uint32
 	return cInstance, error
 }
 
-func (instance *Lib3MFModel) AddScalarFieldFromImage3D() (Lib3MFScalarFieldFromImage3D, error) {
-	hTheScalarFieldFromImage3D, error := instance.Interface.Model_AddScalarFieldFromImage3D(instance.Handle)
+func (instance *Lib3MFModel) AddScalarFieldFromImage3D(Image3D Lib3MFHandle) (Lib3MFScalarFieldFromImage3D, error) {
+	hTheScalarFieldFromImage3D, error := instance.Interface.Model_AddScalarFieldFromImage3D(instance.Handle, Image3D)
 	var cTheScalarFieldFromImage3D Lib3MFScalarFieldFromImage3D
 	cTheScalarFieldFromImage3D.Interface = instance.Interface
 	cTheScalarFieldFromImage3D.Handle = hTheScalarFieldFromImage3D
@@ -8008,8 +8014,8 @@ func (instance *Lib3MFModel) GetScalarFieldComposedByID(nUniqueResourceID uint32
 	return cScalarFieldComposedInstance, error
 }
 
-func (instance *Lib3MFModel) AddVector3DFieldFromImage3D() (Lib3MFVector3DFieldFromImage3D, error) {
-	hTheVector3DFieldFromImage3D, error := instance.Interface.Model_AddVector3DFieldFromImage3D(instance.Handle)
+func (instance *Lib3MFModel) AddVector3DFieldFromImage3D(Image3D Lib3MFHandle) (Lib3MFVector3DFieldFromImage3D, error) {
+	hTheVector3DFieldFromImage3D, error := instance.Interface.Model_AddVector3DFieldFromImage3D(instance.Handle, Image3D)
 	var cTheVector3DFieldFromImage3D Lib3MFVector3DFieldFromImage3D
 	cTheVector3DFieldFromImage3D.Interface = instance.Interface
 	cTheVector3DFieldFromImage3D.Handle = hTheVector3DFieldFromImage3D

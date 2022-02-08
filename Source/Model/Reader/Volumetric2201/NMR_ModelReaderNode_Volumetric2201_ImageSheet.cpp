@@ -25,11 +25,11 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
-NMR_ModelReaderNode_Volumetric2201_Image3DSheet.cpp covers the official 3MF volumetric extension.
+NMR_ModelReaderNode_Volumetric2201_ImageSheet.cpp covers the official 3MF volumetric extension.
 
 --*/
 
-#include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_Volumetric2201_Image3DSheet.h"
+#include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_Volumetric2201_ImageSheet.h"
 
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Model/Classes/NMR_ModelMeshObject.h"
@@ -43,13 +43,13 @@ NMR_ModelReaderNode_Volumetric2201_Image3DSheet.cpp covers the official 3MF volu
 namespace NMR {
 
 
-	CModelReaderNode_Volumetric2201_Image3DSheet::CModelReaderNode_Volumetric2201_Image3DSheet(_In_ PModelWarnings pWarnings)
-		: CModelReaderNode(pWarnings)		
+	CModelReaderNode_Volumetric2201_ImageSheet::CModelReaderNode_Volumetric2201_ImageSheet(_In_ PModelWarnings pWarnings)
+		: CModelReaderNode(pWarnings)
 		
 	{
 	}
 
-	void CModelReaderNode_Volumetric2201_Image3DSheet::parseXML(_In_ CXmlReader * pXMLReader)
+	void CModelReaderNode_Volumetric2201_ImageSheet::parseXML(_In_ CXmlReader * pXMLReader)
 	{
 		// Parse name
 		parseName(pXMLReader);
@@ -62,32 +62,16 @@ namespace NMR {
 	}
 	
 	
-	void CModelReaderNode_Volumetric2201_Image3DSheet::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
+	void CModelReaderNode_Volumetric2201_ImageSheet::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
 	{
-		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_IMAGE3DSHEET_PATH) == 0) {
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_IMAGESHEET_PATH) == 0) {
 			m_sPath = pAttributeValue;
 		}
-		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_IMAGE3DSHEET_MIN_VAL) == 0) {
-			m_minValue = std::stod(pAttributeValue);
-		}
-		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_IMAGE3DSHEET_MAX_VAL) == 0) {
-			m_maxValue = std::stod(pAttributeValue);
-		}
 	}
 
-	std::string CModelReaderNode_Volumetric2201_Image3DSheet::getPath()
+	std::string CModelReaderNode_Volumetric2201_ImageSheet::getPath()
 	{	
 		return m_sPath;
-	}
-
-	nfDouble CModelReaderNode_Volumetric2201_Image3DSheet::getMinValue()
-	{
-		return m_minValue;
-	}
-
-	nfDouble CModelReaderNode_Volumetric2201_Image3DSheet::getMaxValue()
-	{
-		return m_maxValue;
 	}
 
 }

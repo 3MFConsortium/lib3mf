@@ -535,9 +535,13 @@ namespace NMR {
 		if (pSliceStack != nullptr) 
 			m_SliceStackLookup.push_back(pResource);
 
-		CModelImage3D *pImage3d = dynamic_cast<CModelImage3D *>(pResource.get());
+		CModelImage3D* pImage3d = dynamic_cast<CModelImage3D*>(pResource.get());
 		if (pImage3d != nullptr)
 			m_Image3DLookup.push_back(pResource);
+
+		CModelScalarField* pScalarField = dynamic_cast<CModelScalarField*>(pResource.get());
+		if (pScalarField != nullptr)
+			m_ScalarFieldLookup.push_back(pResource);
 	}
 
 	// Clear all build items and Resources
@@ -557,6 +561,7 @@ namespace NMR {
 		m_CompositeMaterialsLookup.clear();
 		m_MultiPropertyGroupLookup.clear();
 		m_Image3DLookup.clear();
+		m_ScalarFieldLookup.clear();
 
 		m_MetaDataGroup->clear();
 	}
@@ -926,7 +931,7 @@ namespace NMR {
 		}
 	}
 
-	// Convenience functions for 2D Textures
+	// Convenience functions for 3D Textures
 	PModelImage3D CModel::findImage3D(_In_ PPackageResourceID ResourceID)
 	{
 		PModelResource pResource = findResource(ResourceID);
@@ -981,7 +986,7 @@ namespace NMR {
 
 		//	nfUint32 nSheetCount = pImage3D->getSheetCount();;
 		//	nfUint32 nIndex;
-		//	PModelImage3D pNewImage3D = CModelImage3D::make(generateResourceID(), this, pImage3D->getSizeX(), pImage3D->getSizeY(), nSheetCount);
+		//	PModelImage3D pNewImage3D = CModelImage3D::make(generateResourceID(), this, pImage3D->getRowCount(), pImage3D->getColumnCount(), nSheetCount);
 
 		//	for (nIndex = 0; nIndex < nSheetCount; nIndex++) {
 		//		PModelAttachment pSheet = pImage3D->getSheet(nIndex);
@@ -999,6 +1004,79 @@ namespace NMR {
 		//	PackageIDMap.insert(std::make_pair(pImage3D->getPackageResourceID(), pNewImage3D->getPackageResourceID()));
 		//}
 
+	}
+
+	// Convenience functions for Scalar Fields
+	PModelScalarField CModel::findScalarField(_In_ PPackageResourceID ResourceID)
+	{
+		PModelResource pResource = findResource(ResourceID);
+		if (pResource != nullptr) {
+			PModelScalarField pScalarFieldResource = std::dynamic_pointer_cast<CModelScalarField>(pResource);
+			if (pScalarFieldResource.get() == nullptr)
+				throw CNMRException(NMR_ERROR_RESOURCETYPEMISMATCH);
+			return pScalarFieldResource;
+		}
+		return nullptr;
+	}
+
+	nfUint32 CModel::getScalarFieldCount()
+	{
+		return (nfUint32)m_ScalarFieldLookup.size();
+	}
+
+	PModelResource CModel::getScalarFieldResource(_In_ nfUint32 nIndex)
+	{
+		nfUint32 nCount = getScalarFieldCount();
+		if (nIndex >= nCount)
+			throw CNMRException(NMR_ERROR_INVALIDINDEX);
+
+		return m_ScalarFieldLookup[nIndex];
+
+	}
+
+	CModelScalarField* CModel::getScalarField(_In_ nfUint32 nIndex)
+	{
+		CModelScalarField* pScalarField = dynamic_cast<CModelScalarField*> (getScalarFieldResource(nIndex).get());
+		if (pScalarField == nullptr)
+			throw CNMRException(NMR_ERROR_RESOURCETYPEMISMATCH);
+
+		return pScalarField;
+	}
+
+	void CModel::mergeScalarField(_In_ CModel* pSourceModel, _In_ std::map<PPackageResourceID, PPackageResourceID>& PackageIDMap)
+	{
+		throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
+		//if (pSourceModel == nullptr)
+		//	throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		//nfUint32 nCount = pSourceModel->getImage3DCount();
+		//nfUint32 nIndex;
+
+		//for (nIndex = 0; nIndex < nCount; nIndex++)
+		//{
+		//	CModelImage3D * pImage3D = pSourceModel->getImage3D(nIndex);
+		//	if (pImage3D == nullptr)
+		//		throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		//	nfUint32 nSheetCount = pImage3D->getSheetCount();;
+		//	nfUint32 nIndex;
+		//	PModelImage3D pNewImage3D = CModelImage3D::make(generateResourceID(), this, pImage3D->getRowCount(), pImage3D->getColumnCount(), nSheetCount);
+
+		//	for (nIndex = 0; nIndex < nSheetCount; nIndex++) {
+		//		PModelAttachment pSheet = pImage3D->getSheet(nIndex);
+		//		if (pSheet.get() != nullptr) {
+		//			PModelAttachment pNewSheet = findModelAttachment(pSheet->getPathURI());
+		//			if (pNewSheet.get() == nullptr)
+		//				throw CNMRException(NMR_ERROR_ATTACHMENTNOTFOUND);
+
+		//			pNewImage3D->setSheet(nIndex, pNewSheet, 0.0, 0.0);
+		//		}
+		//	}
+
+		//	addResource(pNewImage3D);
+
+		//	PackageIDMap.insert(std::make_pair(pImage3D->getPackageResourceID(), pNewImage3D->getPackageResourceID()));
+		//}
 	}
 
 	nfUint32 CModel::createHandle()

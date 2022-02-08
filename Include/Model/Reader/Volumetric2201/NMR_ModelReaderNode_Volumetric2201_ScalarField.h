@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -24,38 +24,45 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CImage3D
+Abstract:
+NMR_ModelReaderNode_Volumetric2201_ScalarField.h covers the official 3MF volumetric extension.
 
-*/
+--*/
 
-#include "lib3mf_image3d.hpp"
-#include "lib3mf_interfaceexception.hpp"
+#ifndef __NMR_MODELREADERNODE_VOLUMETRIC2201_SCALARFIELD
+#define __NMR_MODELREADERNODE_VOLUMETRIC2201_SCALARFIELD
 
-// Include custom headers here.
+#include "Model/Reader/NMR_ModelReaderNode.h"
+#include "Model/Classes/NMR_ModelScalarField.h"
 
+namespace NMR {
 
-using namespace Lib3MF::Impl;
+	class CModelReaderNode_Volumetric2201_ScalarField : public CModelReaderNode {
+	private:
+	protected:
 
-/*************************************************************************************************************************
- Class definition of CImage3D 
-**************************************************************************************************************************/
+		CModel * m_pModel;
 
-CImage3D::CImage3D(NMR::PModelResource pResource)
-	:CResource(pResource)
-{}
+		ModelResourceID m_nID;
 
-std::string CImage3D::GetName()
-{
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+		nfBool m_bHasName;
+		std::string m_sName;
+
+		PModelScalarField m_pScalarField;
+
+		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
+		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
+
+	public:
+		CModelReaderNode_Volumetric2201_ScalarField() = delete;
+		CModelReaderNode_Volumetric2201_ScalarField(_In_ CModel * pModel, _In_ PModelWarnings pWarnings);
+
+		virtual void parseXML(_In_ CXmlReader * pXMLReader);
+
+	};
+
+	typedef std::shared_ptr <CModelReaderNode_Volumetric2201_ScalarField> PModelReaderNode_Volumetric2201_ScalarField;
+
 }
 
-void CImage3D::SetName(const std::string & sName)
-{
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
-}
-
-bool CImage3D::IsImageStack()
-{
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
-}
-
+#endif // __NMR_MODELREADERNODE_VOLUMETRIC2201_SCALARFIELD

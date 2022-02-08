@@ -40,6 +40,12 @@ using namespace Lib3MF::Impl;
  Class definition of CScalarField 
 **************************************************************************************************************************/
 
+CScalarField::CScalarField(NMR::PModelScalarField pResource)
+	:CResource(pResource)
+{
+
+}
+
 std::string CScalarField::GetName()
 {
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);

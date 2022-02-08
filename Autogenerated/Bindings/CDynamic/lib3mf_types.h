@@ -310,7 +310,8 @@ typedef enum eLib3MFBlendMethod {
 typedef enum eLib3MFChannelName {
   eChannelNameRed = 0,
   eChannelNameGreen = 1,
-  eChannelNameBlue = 2
+  eChannelNameBlue = 2,
+  eChannelNameAlpha = 3
 } eLib3MFChannelName;
 
 typedef enum eLib3MFCompositionMethod {

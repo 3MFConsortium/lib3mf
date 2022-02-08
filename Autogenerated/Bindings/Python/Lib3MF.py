@@ -694,6 +694,7 @@ class ChannelName(CTypesEnum):
 	Red = 0
 	Green = 1
 	Blue = 2
+	Alpha = 3
 '''Definition of CompositionMethod
 '''
 class CompositionMethod(CTypesEnum):
@@ -2697,19 +2698,19 @@ class Wrapper:
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_imagestack_createemptysheet")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
-			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p))
 			self.lib.lib3mf_imagestack_createemptysheet = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_imagestack_createsheetfrombuffer")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
-			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint8), ctypes.POINTER(ctypes.c_void_p))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_char_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint8), ctypes.POINTER(ctypes.c_void_p))
 			self.lib.lib3mf_imagestack_createsheetfrombuffer = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_imagestack_createsheetfromfile")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
-			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p))
 			self.lib.lib3mf_imagestack_createsheetfromfile = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_attachment_getpath")), methodAddress)
@@ -3561,7 +3562,7 @@ class Wrapper:
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_model_addscalarfieldfromimage3d")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
-			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
 			self.lib.lib3mf_model_addscalarfieldfromimage3d = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_model_addscalarfieldcomposed")), methodAddress)
@@ -3591,7 +3592,7 @@ class Wrapper:
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_model_addvector3dfieldfromimage3d")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
-			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
 			self.lib.lib3mf_model_addvector3dfieldfromimage3d = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_model_addvector3dfieldcomposed")), methodAddress)
@@ -4617,13 +4618,13 @@ class Wrapper:
 			self.lib.lib3mf_imagestack_setsheet.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_void_p]
 			
 			self.lib.lib3mf_imagestack_createemptysheet.restype = ctypes.c_int32
-			self.lib.lib3mf_imagestack_createemptysheet.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p)]
+			self.lib.lib3mf_imagestack_createemptysheet.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p)]
 			
 			self.lib.lib3mf_imagestack_createsheetfrombuffer.restype = ctypes.c_int32
-			self.lib.lib3mf_imagestack_createsheetfrombuffer.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint8), ctypes.POINTER(ctypes.c_void_p)]
+			self.lib.lib3mf_imagestack_createsheetfrombuffer.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_char_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint8), ctypes.POINTER(ctypes.c_void_p)]
 			
 			self.lib.lib3mf_imagestack_createsheetfromfile.restype = ctypes.c_int32
-			self.lib.lib3mf_imagestack_createsheetfromfile.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p)]
+			self.lib.lib3mf_imagestack_createsheetfromfile.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p)]
 			
 			self.lib.lib3mf_attachment_getpath.restype = ctypes.c_int32
 			self.lib.lib3mf_attachment_getpath.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
@@ -5049,7 +5050,7 @@ class Wrapper:
 			self.lib.lib3mf_model_addimagestack.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint32, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p)]
 			
 			self.lib.lib3mf_model_addscalarfieldfromimage3d.restype = ctypes.c_int32
-			self.lib.lib3mf_model_addscalarfieldfromimage3d.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			self.lib.lib3mf_model_addscalarfieldfromimage3d.argtypes = [ctypes.c_void_p, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
 			
 			self.lib.lib3mf_model_addscalarfieldcomposed.restype = ctypes.c_int32
 			self.lib.lib3mf_model_addscalarfieldcomposed.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
@@ -5064,7 +5065,7 @@ class Wrapper:
 			self.lib.lib3mf_model_getscalarfieldcomposedbyid.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p)]
 			
 			self.lib.lib3mf_model_addvector3dfieldfromimage3d.restype = ctypes.c_int32
-			self.lib.lib3mf_model_addvector3dfieldfromimage3d.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			self.lib.lib3mf_model_addvector3dfieldfromimage3d.argtypes = [ctypes.c_void_p, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
 			
 			self.lib.lib3mf_model_addvector3dfieldcomposed.restype = ctypes.c_int32
 			self.lib.lib3mf_model_addvector3dfieldcomposed.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
@@ -7733,10 +7734,11 @@ class ImageStack(Image3D):
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_imagestack_setsheet(self._handle, nIndex, SheetHandle))
 		
 	
-	def CreateEmptySheet(self, Path):
+	def CreateEmptySheet(self, Index, Path):
+		nIndex = ctypes.c_uint32(Index)
 		pPath = ctypes.c_char_p(str.encode(Path))
 		SheetHandle = ctypes.c_void_p()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_imagestack_createemptysheet(self._handle, pPath, SheetHandle))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_imagestack_createemptysheet(self._handle, nIndex, pPath, SheetHandle))
 		if SheetHandle:
 			SheetObject = Attachment(SheetHandle, self._wrapper)
 		else:
@@ -7744,12 +7746,13 @@ class ImageStack(Image3D):
 		
 		return SheetObject
 	
-	def CreateSheetFromBuffer(self, Path, Data):
+	def CreateSheetFromBuffer(self, Index, Path, Data):
+		nIndex = ctypes.c_uint32(Index)
 		pPath = ctypes.c_char_p(str.encode(Path))
 		nDataCount = ctypes.c_uint64(len(Data))
 		pDataBuffer = (ctypes.c_uint8*len(Data))(*Data)
 		SheetHandle = ctypes.c_void_p()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_imagestack_createsheetfrombuffer(self._handle, pPath, nDataCount, pDataBuffer, SheetHandle))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_imagestack_createsheetfrombuffer(self._handle, nIndex, pPath, nDataCount, pDataBuffer, SheetHandle))
 		if SheetHandle:
 			SheetObject = Attachment(SheetHandle, self._wrapper)
 		else:
@@ -7757,11 +7760,12 @@ class ImageStack(Image3D):
 		
 		return SheetObject
 	
-	def CreateSheetFromFile(self, Path, FileName):
+	def CreateSheetFromFile(self, Index, Path, FileName):
+		nIndex = ctypes.c_uint32(Index)
 		pPath = ctypes.c_char_p(str.encode(Path))
 		pFileName = ctypes.c_char_p(str.encode(FileName))
 		SheetHandle = ctypes.c_void_p()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_imagestack_createsheetfromfile(self._handle, pPath, pFileName, SheetHandle))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_imagestack_createsheetfromfile(self._handle, nIndex, pPath, pFileName, SheetHandle))
 		if SheetHandle:
 			SheetObject = Attachment(SheetHandle, self._wrapper)
 		else:
@@ -9134,9 +9138,14 @@ class Model(Base):
 		
 		return InstanceObject
 	
-	def AddScalarFieldFromImage3D(self):
+	def AddScalarFieldFromImage3D(self, Image3DObject):
+		Image3DHandle = None
+		if Image3DObject:
+			Image3DHandle = Image3DObject._handle
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDPARAM, 'Invalid return/output value')
 		TheScalarFieldFromImage3DHandle = ctypes.c_void_p()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_model_addscalarfieldfromimage3d(self._handle, TheScalarFieldFromImage3DHandle))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_model_addscalarfieldfromimage3d(self._handle, Image3DHandle, TheScalarFieldFromImage3DHandle))
 		if TheScalarFieldFromImage3DHandle:
 			TheScalarFieldFromImage3DObject = ScalarFieldFromImage3D(TheScalarFieldFromImage3DHandle, self._wrapper)
 		else:
@@ -9187,9 +9196,14 @@ class Model(Base):
 		
 		return ScalarFieldComposedInstanceObject
 	
-	def AddVector3DFieldFromImage3D(self):
+	def AddVector3DFieldFromImage3D(self, Image3DObject):
+		Image3DHandle = None
+		if Image3DObject:
+			Image3DHandle = Image3DObject._handle
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDPARAM, 'Invalid return/output value')
 		TheVector3DFieldFromImage3DHandle = ctypes.c_void_p()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_model_addvector3dfieldfromimage3d(self._handle, TheVector3DFieldFromImage3DHandle))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_model_addvector3dfieldfromimage3d(self._handle, Image3DHandle, TheVector3DFieldFromImage3DHandle))
 		if TheVector3DFieldFromImage3DHandle:
 			TheVector3DFieldFromImage3DObject = Vector3DFieldFromImage3D(TheVector3DFieldFromImage3DHandle, self._wrapper)
 		else:

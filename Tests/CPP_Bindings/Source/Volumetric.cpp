@@ -82,7 +82,7 @@ namespace Lib3MF
 			}
 			sNumber = sNumber + std::to_string(k);
 
-			pImageStack->CreateSheetFromFile("/volume/layer" + sNumber + ".png", InFolder + "img" + sNumber + ".png");
+			pImageStack->CreateSheetFromFile(i, "/volume/layer" + sNumber + ".png", InFolder + "img" + sNumber + ".png");
 		}
 		return pImageStack;
 	}
@@ -135,18 +135,18 @@ namespace Lib3MF
 	{
 		auto pImage3D = SetupSheetsFromFile();
 
-		//auto pVolumetricStack = model->AddVolumetricStack();
-		//pVolumetricStack->AddDestinationChannel("channel", 0.0);
-		//auto pLayer = pVolumetricStack->AddLayer(wrapper->GetIdentityTransform(), Lib3MF::eBlendMethod::Mix);
-		//auto pChannelSelector = pLayer->AddChannelSelector(pImage3D.get(), "R", "channel");
+		auto fieldFromImage3D = model->AddScalarFieldFromImage3D(pImage3D.get());
+		fieldFromImage3D->SetChannel(Lib3MF::eChannelName::Red);
+		fieldFromImage3D->SetFilter(Lib3MF::eTextureFilter::Nearest);
+		fieldFromImage3D->SetOffset(1.2);
+		fieldFromImage3D->SetScale(.5);
+		fieldFromImage3D->SetTileStyles(Lib3MF::eTextureTileStyle::Wrap, Lib3MF::eTextureTileStyle::Mirror, Lib3MF::eTextureTileStyle::Clamp);
 
-		//auto theMesh = GetMesh();
+		auto theMesh = GetMesh();
 		//auto volumeData = theMesh->VolumeData();
 		//const std::string propertyName = "MyProperty";
-		//auto oldProperty = volumeData->FindProperty(propertyName);
-		//ASSERT_TRUE(volumeData->FindProperty(propertyName) == nullptr);
 
-		//auto theProperty = volumeData->AddProperty(propertyName, pVolumetricStack.get());
+		//auto theProperty = volumeData->AddProperty(propertyName, fieldFromImage3D->GetResourceID());
 		//ASSERT_TRUE(theProperty->GetName() == propertyName);
 		//ASSERT_TRUE(volumeData->FindProperty(propertyName) != nullptr);
 

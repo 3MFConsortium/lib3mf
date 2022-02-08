@@ -2545,27 +2545,30 @@ public:
 
 	/**
 	* IImageStack::CreateEmptySheet - Creates a new sheet attachment with empty data.
+	* @param[in] nIndex - index of the image (0-based)
 	* @param[in] sPath - path of part in the package
 	* @return attachment containing the image
 	*/
-	virtual IAttachment * CreateEmptySheet(const std::string & sPath) = 0;
+	virtual IAttachment * CreateEmptySheet(const Lib3MF_uint32 nIndex, const std::string & sPath) = 0;
 
 	/**
 	* IImageStack::CreateSheetFromBuffer - Creates a new sheet attachment from a memory buffer.
+	* @param[in] nIndex - index of the image (0-based)
 	* @param[in] sPath - path of part in the package
 	* @param[in] nDataBufferSize - Number of elements in buffer
 	* @param[in] pDataBuffer - binary image data
 	* @return attachment containing the image
 	*/
-	virtual IAttachment * CreateSheetFromBuffer(const std::string & sPath, const Lib3MF_uint64 nDataBufferSize, const Lib3MF_uint8 * pDataBuffer) = 0;
+	virtual IAttachment * CreateSheetFromBuffer(const Lib3MF_uint32 nIndex, const std::string & sPath, const Lib3MF_uint64 nDataBufferSize, const Lib3MF_uint8 * pDataBuffer) = 0;
 
 	/**
 	* IImageStack::CreateSheetFromFile - Creates a new sheet attachment from a file on disk.
+	* @param[in] nIndex - index of the image (0-based)
 	* @param[in] sPath - path of part in the package
 	* @param[in] sFileName - file name to read from
 	* @return attachment containing the image
 	*/
-	virtual IAttachment * CreateSheetFromFile(const std::string & sPath, const std::string & sFileName) = 0;
+	virtual IAttachment * CreateSheetFromFile(const Lib3MF_uint32 nIndex, const std::string & sPath, const std::string & sFileName) = 0;
 
 };
 
@@ -3633,9 +3636,10 @@ public:
 
 	/**
 	* IModel::AddScalarFieldFromImage3D - creates a new ScalarFieldFromImage3D Resource
+	* @param[in] pImage3D - image instance
 	* @return returns the new ScalarFieldFromImage3D instance
 	*/
-	virtual IScalarFieldFromImage3D * AddScalarFieldFromImage3D() = 0;
+	virtual IScalarFieldFromImage3D * AddScalarFieldFromImage3D(IImage3D* pImage3D) = 0;
 
 	/**
 	* IModel::AddScalarFieldComposed - creates a new ScalarFieldComposed Resource
@@ -3666,9 +3670,10 @@ public:
 
 	/**
 	* IModel::AddVector3DFieldFromImage3D - creates a new Vector3DFieldFromImage3D Resource
+	* @param[in] pImage3D - image instance
 	* @return returns the new Vector3DFieldFromImage3D instance
 	*/
-	virtual IVector3DFieldFromImage3D * AddVector3DFieldFromImage3D() = 0;
+	virtual IVector3DFieldFromImage3D * AddVector3DFieldFromImage3D(IImage3D* pImage3D) = 0;
 
 	/**
 	* IModel::AddVector3DFieldComposed - creates a new Vector3DFieldComposed Resource

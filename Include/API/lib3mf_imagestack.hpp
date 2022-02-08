@@ -42,7 +42,7 @@ Abstract: This is the class declaration of CImageStack
 #endif
 
 // Include custom headers here.
-
+#include "Model/Classes/NMR_ModelImageStack.h"
 
 namespace Lib3MF {
 namespace Impl {
@@ -58,6 +58,7 @@ private:
 	/**
 	* Put private members here.
 	*/
+	NMR::PModelImageStack m_pModelImageStack;
 
 protected:
 
@@ -70,7 +71,8 @@ public:
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-
+	CImageStack() = delete;
+	CImageStack(NMR::PModelImageStack pModelImageStack);
 
 	/**
 	* Public member functions to implement.
@@ -90,11 +92,11 @@ public:
 
 	void SetSheet(const Lib3MF_uint32 nIndex, IAttachment* pSheet) override;
 
-	IAttachment * CreateEmptySheet(const std::string & sPath) override;
+	IAttachment * CreateEmptySheet(const Lib3MF_uint32 nIndex, const std::string & sPath) override;
 
-	IAttachment * CreateSheetFromBuffer(const std::string & sPath, const Lib3MF_uint64 nDataBufferSize, const Lib3MF_uint8 * pDataBuffer) override;
+	IAttachment * CreateSheetFromBuffer(const Lib3MF_uint32 nIndex, const std::string & sPath, const Lib3MF_uint64 nDataBufferSize, const Lib3MF_uint8 * pDataBuffer) override;
 
-	IAttachment * CreateSheetFromFile(const std::string & sPath, const std::string & sFileName) override;
+	IAttachment * CreateSheetFromFile(const Lib3MF_uint32 nIndex, const std::string & sPath, const std::string & sFileName) override;
 
 };
 

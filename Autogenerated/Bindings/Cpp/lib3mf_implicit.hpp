@@ -1613,9 +1613,9 @@ public:
 	inline Lib3MF_uint32 GetSheetCount();
 	inline PAttachment GetSheet(const Lib3MF_uint32 nIndex);
 	inline void SetSheet(const Lib3MF_uint32 nIndex, CAttachment * pSheet);
-	inline PAttachment CreateEmptySheet(const std::string & sPath);
-	inline PAttachment CreateSheetFromBuffer(const std::string & sPath, const CInputVector<Lib3MF_uint8> & DataBuffer);
-	inline PAttachment CreateSheetFromFile(const std::string & sPath, const std::string & sFileName);
+	inline PAttachment CreateEmptySheet(const Lib3MF_uint32 nIndex, const std::string & sPath);
+	inline PAttachment CreateSheetFromBuffer(const Lib3MF_uint32 nIndex, const std::string & sPath, const CInputVector<Lib3MF_uint8> & DataBuffer);
+	inline PAttachment CreateSheetFromFile(const Lib3MF_uint32 nIndex, const std::string & sPath, const std::string & sFileName);
 };
 	
 /*************************************************************************************************************************
@@ -1965,12 +1965,12 @@ public:
 	inline PCompositeMaterials AddCompositeMaterials(CBaseMaterialGroup * pBaseMaterialGroupInstance);
 	inline PMultiPropertyGroup AddMultiPropertyGroup();
 	inline PImageStack AddImageStack(const Lib3MF_uint32 nColumnCount, const Lib3MF_uint32 nRowCount, const Lib3MF_uint32 nSheetCount);
-	inline PScalarFieldFromImage3D AddScalarFieldFromImage3D();
+	inline PScalarFieldFromImage3D AddScalarFieldFromImage3D(CImage3D * pImage3D);
 	inline PScalarFieldComposed AddScalarFieldComposed();
 	inline PScalarField GetScalarFieldByID(const Lib3MF_uint32 nUniqueResourceID);
 	inline PScalarFieldFromImage3D GetScalarFieldFromImage3DByID(const Lib3MF_uint32 nUniqueResourceID);
 	inline PScalarFieldComposed GetScalarFieldComposedByID(const Lib3MF_uint32 nUniqueResourceID);
-	inline PVector3DFieldFromImage3D AddVector3DFieldFromImage3D();
+	inline PVector3DFieldFromImage3D AddVector3DFieldFromImage3D(CImage3D * pImage3D);
 	inline PVector3DFieldComposed AddVector3DFieldComposed();
 	inline PVector3DField GetVector3DFieldByID(const Lib3MF_uint32 nUniqueResourceID);
 	inline PVector3DFieldFromImage3D GetVector3DFieldFromImage3DByID(const Lib3MF_uint32 nUniqueResourceID);
@@ -5892,13 +5892,14 @@ public:
 	
 	/**
 	* CImageStack::CreateEmptySheet - Creates a new sheet attachment with empty data.
+	* @param[in] nIndex - index of the image (0-based)
 	* @param[in] sPath - path of part in the package
 	* @return attachment containing the image
 	*/
-	PAttachment CImageStack::CreateEmptySheet(const std::string & sPath)
+	PAttachment CImageStack::CreateEmptySheet(const Lib3MF_uint32 nIndex, const std::string & sPath)
 	{
 		Lib3MFHandle hSheet = nullptr;
-		CheckError(lib3mf_imagestack_createemptysheet(m_pHandle, sPath.c_str(), &hSheet));
+		CheckError(lib3mf_imagestack_createemptysheet(m_pHandle, nIndex, sPath.c_str(), &hSheet));
 		
 		if (!hSheet) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
@@ -5908,14 +5909,15 @@ public:
 	
 	/**
 	* CImageStack::CreateSheetFromBuffer - Creates a new sheet attachment from a memory buffer.
+	* @param[in] nIndex - index of the image (0-based)
 	* @param[in] sPath - path of part in the package
 	* @param[in] DataBuffer - binary image data
 	* @return attachment containing the image
 	*/
-	PAttachment CImageStack::CreateSheetFromBuffer(const std::string & sPath, const CInputVector<Lib3MF_uint8> & DataBuffer)
+	PAttachment CImageStack::CreateSheetFromBuffer(const Lib3MF_uint32 nIndex, const std::string & sPath, const CInputVector<Lib3MF_uint8> & DataBuffer)
 	{
 		Lib3MFHandle hSheet = nullptr;
-		CheckError(lib3mf_imagestack_createsheetfrombuffer(m_pHandle, sPath.c_str(), (Lib3MF_uint64)DataBuffer.size(), DataBuffer.data(), &hSheet));
+		CheckError(lib3mf_imagestack_createsheetfrombuffer(m_pHandle, nIndex, sPath.c_str(), (Lib3MF_uint64)DataBuffer.size(), DataBuffer.data(), &hSheet));
 		
 		if (!hSheet) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
@@ -5925,14 +5927,15 @@ public:
 	
 	/**
 	* CImageStack::CreateSheetFromFile - Creates a new sheet attachment from a file on disk.
+	* @param[in] nIndex - index of the image (0-based)
 	* @param[in] sPath - path of part in the package
 	* @param[in] sFileName - file name to read from
 	* @return attachment containing the image
 	*/
-	PAttachment CImageStack::CreateSheetFromFile(const std::string & sPath, const std::string & sFileName)
+	PAttachment CImageStack::CreateSheetFromFile(const Lib3MF_uint32 nIndex, const std::string & sPath, const std::string & sFileName)
 	{
 		Lib3MFHandle hSheet = nullptr;
-		CheckError(lib3mf_imagestack_createsheetfromfile(m_pHandle, sPath.c_str(), sFileName.c_str(), &hSheet));
+		CheckError(lib3mf_imagestack_createsheetfromfile(m_pHandle, nIndex, sPath.c_str(), sFileName.c_str(), &hSheet));
 		
 		if (!hSheet) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
@@ -7949,12 +7952,17 @@ public:
 	
 	/**
 	* CModel::AddScalarFieldFromImage3D - creates a new ScalarFieldFromImage3D Resource
+	* @param[in] pImage3D - image instance
 	* @return returns the new ScalarFieldFromImage3D instance
 	*/
-	PScalarFieldFromImage3D CModel::AddScalarFieldFromImage3D()
+	PScalarFieldFromImage3D CModel::AddScalarFieldFromImage3D(CImage3D * pImage3D)
 	{
+		Lib3MFHandle hImage3D = nullptr;
+		if (pImage3D != nullptr) {
+			hImage3D = pImage3D->GetHandle();
+		};
 		Lib3MFHandle hTheScalarFieldFromImage3D = nullptr;
-		CheckError(lib3mf_model_addscalarfieldfromimage3d(m_pHandle, &hTheScalarFieldFromImage3D));
+		CheckError(lib3mf_model_addscalarfieldfromimage3d(m_pHandle, hImage3D, &hTheScalarFieldFromImage3D));
 		
 		if (!hTheScalarFieldFromImage3D) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
@@ -8027,12 +8035,17 @@ public:
 	
 	/**
 	* CModel::AddVector3DFieldFromImage3D - creates a new Vector3DFieldFromImage3D Resource
+	* @param[in] pImage3D - image instance
 	* @return returns the new Vector3DFieldFromImage3D instance
 	*/
-	PVector3DFieldFromImage3D CModel::AddVector3DFieldFromImage3D()
+	PVector3DFieldFromImage3D CModel::AddVector3DFieldFromImage3D(CImage3D * pImage3D)
 	{
+		Lib3MFHandle hImage3D = nullptr;
+		if (pImage3D != nullptr) {
+			hImage3D = pImage3D->GetHandle();
+		};
 		Lib3MFHandle hTheVector3DFieldFromImage3D = nullptr;
-		CheckError(lib3mf_model_addvector3dfieldfromimage3d(m_pHandle, &hTheVector3DFieldFromImage3D));
+		CheckError(lib3mf_model_addvector3dfieldfromimage3d(m_pHandle, hImage3D, &hTheVector3DFieldFromImage3D));
 		
 		if (!hTheVector3DFieldFromImage3D) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);

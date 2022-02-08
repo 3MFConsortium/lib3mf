@@ -42,6 +42,9 @@ This is the class for exporting the 3mf model stream root node.
 #include "Model/Classes/NMR_ModelTexture2D.h"
 #include "Model/Classes/NMR_ModelTexture2DGroup.h"
 #include "Model/Classes/NMR_ModelImage3D.h"
+#include "Model/Classes/NMR_ModelImageStack.h"
+#include "Model/Classes/NMR_ModelScalarField.h"
+#include "Model/Classes/NMR_ModelScalarFieldFromImage3D.h"
 #include "Model/Classes/NMR_ModelCompositeMaterials.h"
 #include "Model/Classes/NMR_ModelMultiPropertyGroup.h"
 #include "Model/Classes/NMR_ModelMeshObject.h"
@@ -741,36 +744,93 @@ namespace NMR {
 		}
 	}
 
-	void CModelWriterNode100_Model::writeImages3D()
+	void CModelWriterNode100_Model::writeImage3Ds()
 	{
-		throw CNMRException(-1);
-		//nfUint32 nCount = m_pModel->getImage3DCount();
-		//for (nfUint32 nIndex = 0; nIndex < nCount; nIndex++) {
-		//	CModelImage3D * pImage3DResource = m_pModel->getImage3D(nIndex);
-		//	nfUint32 nSheetCount = pImage3DResource->getSheetCount();
+		nfUint32 nCount = m_pModel->getImage3DCount();
 
-		//	writeStartElementWithPrefix(XML_3MF_ELEMENT_IMAGE3D, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
+		for (nfUint32 nIndex = 0; nIndex < nCount; nIndex++) {
+			CModelImage3D * pImage3DResource = m_pModel->getImage3D(nIndex);
 
-		//	writeIntAttribute(XML_3MF_ATTRIBUTE_IMAGE3D_ID, pImage3DResource->getPackageResourceID()->getUniqueID());
-		//	writeIntAttribute(XML_3MF_ATTRIBUTE_IMAGE3D_SIZEX, pImage3DResource->getSizeX());
-		//	writeIntAttribute(XML_3MF_ATTRIBUTE_IMAGE3D_SIZEY, pImage3DResource->getSizeY());
-		//	writeIntAttribute(XML_3MF_ATTRIBUTE_IMAGE3D_SHEETCOUNT, nSheetCount);
+			writeStartElementWithPrefix(XML_3MF_ELEMENT_IMAGE3D, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
+			writeIntAttribute(XML_3MF_ATTRIBUTE_IMAGE3D_ID, pImage3DResource->getPackageResourceID()->getModelResourceID());
+			if (!pImage3DResource->getName().empty())
+				writeStringAttribute(XML_3MF_ATTRIBUTE_IMAGE3D_NAME, pImage3DResource->getName());
 
-		//	for (nfUint32 nSheetIndex = 0; nSheetIndex < nSheetCount; nSheetIndex++) {
-		//		auto pSheet = pImage3DResource->getSheet(nSheetIndex);
-		//		writeStartElementWithPrefix(XML_3MF_ELEMENT_IMAGE3DSHEET, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
-		//		if (pSheet.get() != nullptr) {
-		//			writeStringAttribute(XML_3MF_ATTRIBUTE_IMAGE3DSHEET_PATH, pSheet->getPathURI());
-		//			writeFloatAttribute(XML_3MF_ATTRIBUTE_IMAGE3DSHEET_MIN_VAL, (float)pImage3DResource->getSheetMinValue(nSheetIndex));
-		//			writeFloatAttribute(XML_3MF_ATTRIBUTE_IMAGE3DSHEET_MAX_VAL, (float)pImage3DResource->getSheetMaxValue(nSheetIndex));
-		//		}
-		//		writeEndElement();
-		//	}
+			if (CModelImageStack* pImageStack = dynamic_cast<CModelImageStack*>(pImage3DResource))
+			{
+				writeStartElementWithPrefix(XML_3MF_ELEMENT_IMAGESTACK, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
+				
+				nfUint32 nSheetCount = pImageStack->getSheetCount();
+				writeIntAttribute(XML_3MF_ATTRIBUTE_IMAGESTACK_ROWCOUNT, pImageStack->getRowCount());
+				writeIntAttribute(XML_3MF_ATTRIBUTE_IMAGESTACK_COLUMNCOUNT, pImageStack->getColumnCount());
+				writeIntAttribute(XML_3MF_ATTRIBUTE_IMAGESTACK_SHEETCOUNT, nSheetCount);
 
-		//	writeFullEndElement();
+				for (nfUint32 nSheetIndex = 0; nSheetIndex < nSheetCount; nSheetIndex++) {
+					auto pSheet = pImageStack->getSheet(nSheetIndex);
+					writeStartElementWithPrefix(XML_3MF_ELEMENT_IMAGESHEET, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
+					if (pSheet.get() != nullptr) {
+						writeStringAttribute(XML_3MF_ATTRIBUTE_IMAGESHEET_PATH, pSheet->getPathURI());
+					}
+					writeEndElement();
+				}
 
-		//}
+				writeFullEndElement();
+			}
+			else
+			{
+				throw CNMRException(-1); // TODO NMR_ERROR_UNKNOWN_IMAGE3D_TYPE
+			}
 
+			writeFullEndElement();
+		}
+
+	}
+
+	void CModelWriterNode100_Model::writeFields()
+	{
+		nfUint32 nCount = m_pModel->getScalarFieldCount();
+
+		for (nfUint32 nIndex = 0; nIndex < nCount; nIndex++) {
+			CModelScalarField* pScalarField = m_pModel->getScalarField(nIndex);
+
+			writeStartElementWithPrefix(XML_3MF_ELEMENT_SCALARFIELD, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
+			writeIntAttribute(XML_3MF_ATTRIBUTE_SCALARFIELD_ID, pScalarField->getPackageResourceID()->getModelResourceID());
+			if (!pScalarField->getName().empty())
+				writeStringAttribute(XML_3MF_ATTRIBUTE_SCALARFIELD_NAME, pScalarField->getName());
+
+			if (CModelScalarFieldFromImage3D* pScalarFieldFromImage3D = dynamic_cast<CModelScalarFieldFromImage3D*>(pScalarField))
+			{
+				writeStartElementWithPrefix(XML_3MF_ELEMENT_SCALARFIELDFROMIMAGE3D, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
+
+				writeIntAttribute(XML_3MF_ATTRIBUTE_SCALARFIELDFROMIMAGE3D_IMAGE3DID, pScalarFieldFromImage3D->getImage3DResourceID()->getModelResourceID());
+
+				if (pScalarFieldFromImage3D->getOffset() != 1.0)
+					writeFloatAttribute(XML_3MF_ATTRIBUTE_SCALARFIELDFROMIMAGE3_OFFSET, (nfFloat)pScalarFieldFromImage3D->getOffset());
+				if (pScalarFieldFromImage3D->getScale() != 1.0)
+					writeFloatAttribute(XML_3MF_ATTRIBUTE_SCALARFIELDFROMIMAGE3_SCALE, (nfFloat)pScalarFieldFromImage3D->getScale());
+
+				if (pScalarFieldFromImage3D->getChannel() != MODELCOLORCHANNEL_RED)
+					writeStringAttribute(XML_3MF_ATTRIBUTE_SCALARFIELDFROMIMAGE3_CHANNEL, CModelScalarFieldFromImage3D::channelToString(pScalarFieldFromImage3D->getChannel()));
+
+				if (pScalarFieldFromImage3D->getTileStyleU() != MODELTEXTURETILESTYLE_WRAP)
+					writeStringAttribute(XML_3MF_ATTRIBUTE_SCALARFIELDFROMIMAGE3_TILESTYLEU, CModelTexture2DResource::tileStyleToString(pScalarFieldFromImage3D->getTileStyleU()));
+				if (pScalarFieldFromImage3D->getTileStyleV() != MODELTEXTURETILESTYLE_WRAP)
+					writeStringAttribute(XML_3MF_ATTRIBUTE_SCALARFIELDFROMIMAGE3_TILESTYLEV, CModelTexture2DResource::tileStyleToString(pScalarFieldFromImage3D->getTileStyleV()));
+				if (pScalarFieldFromImage3D->getTileStyleW() != MODELTEXTURETILESTYLE_WRAP)
+					writeStringAttribute(XML_3MF_ATTRIBUTE_SCALARFIELDFROMIMAGE3_TILESTYLEW, CModelTexture2DResource::tileStyleToString(pScalarFieldFromImage3D->getTileStyleW()));
+				
+				if (pScalarFieldFromImage3D->getFilter() != MODELTEXTUREFILTER_AUTO)
+					writeStringAttribute(XML_3MF_ATTRIBUTE_TEXTURE2D_FILTER, CModelTexture2DResource::filterToString(pScalarFieldFromImage3D->getFilter()));
+
+				writeEndElement();
+			}
+			else
+			{
+				throw CNMRException(-1); // TODO NMR_ERROR_UNKNOWN_SCALARFIELD_TYPE
+			}
+
+			writeFullEndElement();
+		}
 	}
 
 	void CModelWriterNode100_Model::writeMultiProperties()
@@ -814,8 +874,8 @@ namespace NMR {
 				writeSliceStacks();
 			}
 			if (m_bWriteVolumetricExtension) {
-				writeImages3D();
-				throw CNMRException(-1);
+				writeImage3Ds();
+				writeFields();
 			}
 			if (m_bWriteObjects)
 				writeObjects();
