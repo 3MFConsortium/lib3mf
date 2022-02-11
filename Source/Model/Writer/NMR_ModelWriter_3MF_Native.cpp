@@ -154,6 +154,9 @@ namespace NMR {
 			if (sNonRootModelPath == m_pOtherModel->rootPath())
 				continue;
 
+			if (model()->countResourcesOfPath(vctPPaths[nIndex]) == 0)
+				continue;			
+
 			m_pOtherModel->setCurrentPath(sNonRootModelPath);
 			PImportStream pStream;
 			{

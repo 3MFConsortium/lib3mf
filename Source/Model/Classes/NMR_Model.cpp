@@ -1315,4 +1315,19 @@ namespace NMR {
 		return size;
 	}
 
+	uint32_t CModel::countResourcesOfPath(PPackageModelPath pPath)
+	{
+		if (pPath.get() == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		uint32_t nResult = 0;
+		for (auto pResource : m_Resources) {
+			if (pResource->getPackageResourceID()->getPath() == pPath->getPath())
+				nResult++;
+		}
+
+		return nResult;
+	}
+
+
 }

@@ -327,6 +327,10 @@ namespace NMR {
 		nfBool hasCryptoRandCallbak() const;
 		nfUint64 generateRandomBytes(nfByte *, nfUint64);
 
+		uint32_t countResourcesOfPath (PPackageModelPath pPath);
+
+		void removeUnreferencedModelPackages ();
+
 	};
 
 	typedef std::shared_ptr <CModel> PModel;
