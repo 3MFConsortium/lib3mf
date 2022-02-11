@@ -49,8 +49,8 @@ namespace NMR {
 		std::vector<nfByte> const & iv,
 		std::vector<nfByte> const & tag,
 		std::vector<nfByte> const & aad,
+		const std::string& sPath,
 		const std::string& sKeyUUID,
-		const std::string & sPath,
 		PKeyStoreResourceDataCustomInformation pCustomInformation,
 		nfUint64 descriptor) 
 			: CKeyStoreCEKParams(compression, encryptionAlgorithm, iv, tag, aad, descriptor), 
