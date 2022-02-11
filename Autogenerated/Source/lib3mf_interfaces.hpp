@@ -84,7 +84,7 @@ class IVector3DFieldComposed;
 class IFieldReference;
 class IScalarFieldReference;
 class IVector3DFieldReference;
-class IVolumeDataLevelset;
+class IVolumeDataBoundary;
 class IVolumeDataColor;
 class IMaterialMapping;
 class IVolumeDataComposite;
@@ -1774,26 +1774,26 @@ typedef IBaseSharedPtr<IVector3DFieldReference> PIVector3DFieldReference;
 
 
 /*************************************************************************************************************************
- Class interface for VolumeDataLevelset 
+ Class interface for VolumeDataBoundary 
 **************************************************************************************************************************/
 
-class IVolumeDataLevelset : public virtual IScalarFieldReference {
+class IVolumeDataBoundary : public virtual IScalarFieldReference {
 public:
 	/**
-	* IVolumeDataLevelset::GetSolidThreshold - Returns the solidthreshold for the levelset function encoded in this VolumeDataLevelset
-	* @return The solidthreshold for the levelset function encoded in this VolumeDataLevelset
+	* IVolumeDataBoundary::GetSolidThreshold - Returns the solidthreshold for the levelset function encoded in this VolumeDataBoundary
+	* @return The solidthreshold for the levelset function encoded in this VolumeDataBoundary
 	*/
 	virtual Lib3MF_double GetSolidThreshold() = 0;
 
 	/**
-	* IVolumeDataLevelset::SetSolidThreshold - Sets the solidthreshold for the levelset function encoded in this VolumeDataLevelset
-	* @param[in] dTheSolidThreshold - The solidthreshold for the levelset function encoded in this VolumeDataLevelset
+	* IVolumeDataBoundary::SetSolidThreshold - Sets the solidthreshold for the levelset function encoded in this VolumeDataBoundary
+	* @param[in] dTheSolidThreshold - The solidthreshold for the levelset function encoded in this VolumeDataBoundary
 	*/
 	virtual void SetSolidThreshold(const Lib3MF_double dTheSolidThreshold) = 0;
 
 };
 
-typedef IBaseSharedPtr<IVolumeDataLevelset> PIVolumeDataLevelset;
+typedef IBaseSharedPtr<IVolumeDataBoundary> PIVolumeDataBoundary;
 
 
 /*************************************************************************************************************************
@@ -1874,12 +1874,6 @@ typedef IBaseSharedPtr<IVolumeDataComposite> PIVolumeDataComposite;
 class IVolumeDataProperty : public virtual IFieldReference {
 public:
 	/**
-	* IVolumeDataProperty::SetName - Sets the qualified name of this property.
-	* @param[in] sPropertyName - The new qualified name of this property
-	*/
-	virtual void SetName(const std::string & sPropertyName) = 0;
-
-	/**
 	* IVolumeDataProperty::GetName - Gets the qualified name of this property.
 	* @return The qualified name of this property.
 	*/
@@ -1909,23 +1903,22 @@ typedef IBaseSharedPtr<IVolumeDataProperty> PIVolumeDataProperty;
 class IVolumeData : public virtual IBase {
 public:
 	/**
-	* IVolumeData::GetLevelset - Returns the VolumeDataLevelset of this VolumeData instance
-	* @return filled with the VolumeDataLevelset of this VolumeData instance.
+	* IVolumeData::GetBoundary - Returns the VolumeDataBoundary of this VolumeData instance
+	* @return filled with the VolumeDataBoundary of this VolumeData instance.
 	*/
-	virtual IVolumeDataLevelset * GetLevelset() = 0;
+	virtual IVolumeDataBoundary * GetBoundary() = 0;
 
 	/**
-	* IVolumeData::CreateNewLevelset - Creates a new VolumeDataLevelset for this VolumeData instance
+	* IVolumeData::CreateNewBoundary - Creates a new VolumeDataBoundary for this VolumeData instance
 	* @param[in] pTheScalarField - ScalarField used in this element
-	* @param[in] Transform - new transformation matrix
-	* @return The new VolumeDataLevelset of this VolumeData instance.
+	* @return The new VolumeDataBoundary of this VolumeData instance.
 	*/
-	virtual IVolumeDataLevelset * CreateNewLevelset(IScalarField* pTheScalarField, const Lib3MF::sTransform Transform) = 0;
+	virtual IVolumeDataBoundary * CreateNewBoundary(IScalarField* pTheScalarField) = 0;
 
 	/**
-	* IVolumeData::RemoveLevelset - Removes the VolumeDataLevelset of this VolumeData instance
+	* IVolumeData::RemoveBoundary - Removes the VolumeDataBoundary of this VolumeData instance
 	*/
-	virtual void RemoveLevelset() = 0;
+	virtual void RemoveBoundary() = 0;
 
 	/**
 	* IVolumeData::GetComposite - Returns the VolumeDataComposite of this VolumeData instance
@@ -1977,12 +1970,20 @@ public:
 	virtual IVolumeDataProperty * GetProperty(const Lib3MF_uint32 nIndex) = 0;
 
 	/**
-	* IVolumeData::AddProperty - Adds a new VolumeDataProperty
+	* IVolumeData::AddPropertyFromScalarField - Adds a new VolumeDataProperty from a ScalarField
 	* @param[in] sName - the qualified name (namespace+name) of the Property
-	* @param[in] nUniqueResourceID - UniqueResourceID of the Field (Scalar- or Vector3DField)
+	* @param[in] pTheScalarField - ScalarField used in this element
 	* @return the newly created VolumeDataProperty.
 	*/
-	virtual IVolumeDataProperty * AddProperty(const std::string & sName, const Lib3MF_uint32 nUniqueResourceID) = 0;
+	virtual IVolumeDataProperty * AddPropertyFromScalarField(const std::string & sName, IScalarField* pTheScalarField) = 0;
+
+	/**
+	* IVolumeData::AddPropertyFromVector3DField - Adds a new VolumeDataProperty from a Vector3DField
+	* @param[in] sName - the qualified name (namespace+name) of the Property
+	* @param[in] pTheVector3DField - Vector3DField used in this element
+	* @return the newly created VolumeDataProperty.
+	*/
+	virtual IVolumeDataProperty * AddPropertyFromVector3DField(const std::string & sName, IVector3DField* pTheVector3DField) = 0;
 
 	/**
 	* IVolumeData::RemoveProperty - Removes the VolumeDataProperty with a given index

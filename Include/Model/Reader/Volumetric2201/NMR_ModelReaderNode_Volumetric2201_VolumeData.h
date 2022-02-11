@@ -29,8 +29,8 @@ NMR_ModelReaderNode_Volumetric2201_VolumeData.h covers the official 3MF volumetr
 
 --*/
 
-#ifndef __NMR_MODELREADERNODE_Volumetric2201_VOLUMEDATA
-#define __NMR_MODELREADERNODE_Volumetric2201_VOLUMEDATA
+#ifndef __NMR_MODELREADERNODE_VOLUMETRIC2201_VOLUMEDATA
+#define __NMR_MODELREADERNODE_VOLUMETRIC2201_VOLUMEDATA
 
 #include "Model/Reader/NMR_ModelReaderNode.h"
 #include "Model/Classes/NMR_ModelComponent.h"
@@ -43,7 +43,7 @@ namespace NMR {
 		CModel* m_pModel;
 		CModelVolumeData* m_pVolumeData;
 
-		nfBool m_bHasLevelset;
+		nfBool m_bHasBoundary;
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
 	public:
@@ -59,5 +59,5 @@ namespace NMR {
 
 }
 
-#endif // __NMR_MODELREADERNODE_Volumetric2201_VOLUMEDATA
+#endif // __NMR_MODELREADERNODE_VOLUMETRIC2201_VOLUMEDATA
 

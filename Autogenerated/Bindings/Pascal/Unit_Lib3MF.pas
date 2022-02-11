@@ -414,7 +414,7 @@ type
 	TLib3MFFieldReference = class;
 	TLib3MFScalarFieldReference = class;
 	TLib3MFVector3DFieldReference = class;
-	TLib3MFVolumeDataLevelset = class;
+	TLib3MFVolumeDataBoundary = class;
 	TLib3MFVolumeDataColor = class;
 	TLib3MFMaterialMapping = class;
 	TLib3MFVolumeDataComposite = class;
@@ -2412,26 +2412,26 @@ type
 	
 
 (*************************************************************************************************************************
- Function type definitions for VolumeDataLevelset
+ Function type definitions for VolumeDataBoundary
 **************************************************************************************************************************)
 
 	(**
-	* Returns the solidthreshold for the levelset function encoded in this VolumeDataLevelset
+	* Returns the solidthreshold for the levelset function encoded in this VolumeDataBoundary
 	*
-	* @param[in] pVolumeDataLevelset - VolumeDataLevelset instance.
-	* @param[out] pTheSolidThreshold - The solidthreshold for the levelset function encoded in this VolumeDataLevelset
+	* @param[in] pVolumeDataBoundary - VolumeDataBoundary instance.
+	* @param[out] pTheSolidThreshold - The solidthreshold for the levelset function encoded in this VolumeDataBoundary
 	* @return error code or 0 (success)
 	*)
-	TLib3MFVolumeDataLevelset_GetSolidThresholdFunc = function(pVolumeDataLevelset: TLib3MFHandle; out pTheSolidThreshold: Double): TLib3MFResult; cdecl;
+	TLib3MFVolumeDataBoundary_GetSolidThresholdFunc = function(pVolumeDataBoundary: TLib3MFHandle; out pTheSolidThreshold: Double): TLib3MFResult; cdecl;
 	
 	(**
-	* Sets the solidthreshold for the levelset function encoded in this VolumeDataLevelset
+	* Sets the solidthreshold for the levelset function encoded in this VolumeDataBoundary
 	*
-	* @param[in] pVolumeDataLevelset - VolumeDataLevelset instance.
-	* @param[in] dTheSolidThreshold - The solidthreshold for the levelset function encoded in this VolumeDataLevelset
+	* @param[in] pVolumeDataBoundary - VolumeDataBoundary instance.
+	* @param[in] dTheSolidThreshold - The solidthreshold for the levelset function encoded in this VolumeDataBoundary
 	* @return error code or 0 (success)
 	*)
-	TLib3MFVolumeDataLevelset_SetSolidThresholdFunc = function(pVolumeDataLevelset: TLib3MFHandle; const dTheSolidThreshold: Double): TLib3MFResult; cdecl;
+	TLib3MFVolumeDataBoundary_SetSolidThresholdFunc = function(pVolumeDataBoundary: TLib3MFHandle; const dTheSolidThreshold: Double): TLib3MFResult; cdecl;
 	
 
 (*************************************************************************************************************************
@@ -2510,15 +2510,6 @@ type
 **************************************************************************************************************************)
 
 	(**
-	* Sets the qualified name of this property.
-	*
-	* @param[in] pVolumeDataProperty - VolumeDataProperty instance.
-	* @param[in] pPropertyName - The new qualified name of this property
-	* @return error code or 0 (success)
-	*)
-	TLib3MFVolumeDataProperty_SetNameFunc = function(pVolumeDataProperty: TLib3MFHandle; const pPropertyName: PAnsiChar): TLib3MFResult; cdecl;
-	
-	(**
 	* Gets the qualified name of this property.
 	*
 	* @param[in] pVolumeDataProperty - VolumeDataProperty instance.
@@ -2553,32 +2544,31 @@ type
 **************************************************************************************************************************)
 
 	(**
-	* Returns the VolumeDataLevelset of this VolumeData instance
+	* Returns the VolumeDataBoundary of this VolumeData instance
 	*
 	* @param[in] pVolumeData - VolumeData instance.
-	* @param[out] pTheLevelsetData - filled with the VolumeDataLevelset of this VolumeData instance.
+	* @param[out] pTheBoundaryData - filled with the VolumeDataBoundary of this VolumeData instance.
 	* @return error code or 0 (success)
 	*)
-	TLib3MFVolumeData_GetLevelsetFunc = function(pVolumeData: TLib3MFHandle; out pTheLevelsetData: TLib3MFHandle): TLib3MFResult; cdecl;
+	TLib3MFVolumeData_GetBoundaryFunc = function(pVolumeData: TLib3MFHandle; out pTheBoundaryData: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
-	* Creates a new VolumeDataLevelset for this VolumeData instance
+	* Creates a new VolumeDataBoundary for this VolumeData instance
 	*
 	* @param[in] pVolumeData - VolumeData instance.
 	* @param[in] pTheScalarField - ScalarField used in this element
-	* @param[in] pTransform - new transformation matrix
-	* @param[out] pTheLevelsetData - The new VolumeDataLevelset of this VolumeData instance.
+	* @param[out] pTheBoundaryData - The new VolumeDataBoundary of this VolumeData instance.
 	* @return error code or 0 (success)
 	*)
-	TLib3MFVolumeData_CreateNewLevelsetFunc = function(pVolumeData: TLib3MFHandle; const pTheScalarField: TLib3MFHandle; const pTransform: PLib3MFTransform; out pTheLevelsetData: TLib3MFHandle): TLib3MFResult; cdecl;
+	TLib3MFVolumeData_CreateNewBoundaryFunc = function(pVolumeData: TLib3MFHandle; const pTheScalarField: TLib3MFHandle; out pTheBoundaryData: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
-	* Removes the VolumeDataLevelset of this VolumeData instance
+	* Removes the VolumeDataBoundary of this VolumeData instance
 	*
 	* @param[in] pVolumeData - VolumeData instance.
 	* @return error code or 0 (success)
 	*)
-	TLib3MFVolumeData_RemoveLevelsetFunc = function(pVolumeData: TLib3MFHandle): TLib3MFResult; cdecl;
+	TLib3MFVolumeData_RemoveBoundaryFunc = function(pVolumeData: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
 	* Returns the VolumeDataComposite of this VolumeData instance
@@ -2654,15 +2644,26 @@ type
 	TLib3MFVolumeData_GetPropertyFunc = function(pVolumeData: TLib3MFHandle; const nIndex: Cardinal; out pTheVolumeDataProperty: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
-	* Adds a new VolumeDataProperty
+	* Adds a new VolumeDataProperty from a ScalarField
 	*
 	* @param[in] pVolumeData - VolumeData instance.
 	* @param[in] pName - the qualified name (namespace+name) of the Property
-	* @param[in] nUniqueResourceID - UniqueResourceID of the Field (Scalar- or Vector3DField)
+	* @param[in] pTheScalarField - ScalarField used in this element
 	* @param[out] pTheVolumeDataProperty - the newly created VolumeDataProperty.
 	* @return error code or 0 (success)
 	*)
-	TLib3MFVolumeData_AddPropertyFunc = function(pVolumeData: TLib3MFHandle; const pName: PAnsiChar; const nUniqueResourceID: Cardinal; out pTheVolumeDataProperty: TLib3MFHandle): TLib3MFResult; cdecl;
+	TLib3MFVolumeData_AddPropertyFromScalarFieldFunc = function(pVolumeData: TLib3MFHandle; const pName: PAnsiChar; const pTheScalarField: TLib3MFHandle; out pTheVolumeDataProperty: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Adds a new VolumeDataProperty from a Vector3DField
+	*
+	* @param[in] pVolumeData - VolumeData instance.
+	* @param[in] pName - the qualified name (namespace+name) of the Property
+	* @param[in] pTheVector3DField - Vector3DField used in this element
+	* @param[out] pTheVolumeDataProperty - the newly created VolumeDataProperty.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFVolumeData_AddPropertyFromVector3DFieldFunc = function(pVolumeData: TLib3MFHandle; const pName: PAnsiChar; const pTheVector3DField: TLib3MFHandle; out pTheVolumeDataProperty: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
 	* Removes the VolumeDataProperty with a given index
@@ -5871,10 +5872,10 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 
 
 (*************************************************************************************************************************
- Class definition for VolumeDataLevelset
+ Class definition for VolumeDataBoundary
 **************************************************************************************************************************)
 
-	TLib3MFVolumeDataLevelset = class(TLib3MFScalarFieldReference)
+	TLib3MFVolumeDataBoundary = class(TLib3MFScalarFieldReference)
 	public
 		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
 		destructor Destroy; override;
@@ -5930,7 +5931,6 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 	public
 		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
 		destructor Destroy; override;
-		procedure SetName(const APropertyName: String);
 		function GetName(): String;
 		procedure SetIsRequired(const AIsRequired: Boolean);
 		function IsRequired(): Boolean;
@@ -5945,9 +5945,9 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 	public
 		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
 		destructor Destroy; override;
-		function GetLevelset(): TLib3MFVolumeDataLevelset;
-		function CreateNewLevelset(const ATheScalarField: TLib3MFScalarField; const ATransform: TLib3MFTransform): TLib3MFVolumeDataLevelset;
-		procedure RemoveLevelset();
+		function GetBoundary(): TLib3MFVolumeDataBoundary;
+		function CreateNewBoundary(const ATheScalarField: TLib3MFScalarField): TLib3MFVolumeDataBoundary;
+		procedure RemoveBoundary();
 		function GetComposite(): TLib3MFVolumeDataComposite;
 		function CreateNewComposite(): TLib3MFVolumeDataComposite;
 		procedure RemoveComposite();
@@ -5956,7 +5956,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		procedure RemoveColor();
 		function GetPropertyCount(): Cardinal;
 		function GetProperty(const AIndex: Cardinal): TLib3MFVolumeDataProperty;
-		function AddProperty(const AName: String; const AUniqueResourceID: Cardinal): TLib3MFVolumeDataProperty;
+		function AddPropertyFromScalarField(const AName: String; const ATheScalarField: TLib3MFScalarField): TLib3MFVolumeDataProperty;
+		function AddPropertyFromVector3DField(const AName: String; const ATheVector3DField: TLib3MFVector3DField): TLib3MFVolumeDataProperty;
 		procedure RemoveProperty(const AIndex: Cardinal);
 	end;
 
@@ -6645,21 +6646,20 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFScalarFieldReference_SetScalarFieldFunc: TLib3MFScalarFieldReference_SetScalarFieldFunc;
 		FLib3MFVector3DFieldReference_GetVector3DFieldFunc: TLib3MFVector3DFieldReference_GetVector3DFieldFunc;
 		FLib3MFVector3DFieldReference_SetVector3DFieldFunc: TLib3MFVector3DFieldReference_SetVector3DFieldFunc;
-		FLib3MFVolumeDataLevelset_GetSolidThresholdFunc: TLib3MFVolumeDataLevelset_GetSolidThresholdFunc;
-		FLib3MFVolumeDataLevelset_SetSolidThresholdFunc: TLib3MFVolumeDataLevelset_SetSolidThresholdFunc;
+		FLib3MFVolumeDataBoundary_GetSolidThresholdFunc: TLib3MFVolumeDataBoundary_GetSolidThresholdFunc;
+		FLib3MFVolumeDataBoundary_SetSolidThresholdFunc: TLib3MFVolumeDataBoundary_SetSolidThresholdFunc;
 		FLib3MFVolumeDataComposite_GetBaseMaterialGroupFunc: TLib3MFVolumeDataComposite_GetBaseMaterialGroupFunc;
 		FLib3MFVolumeDataComposite_SetBaseMaterialGroupFunc: TLib3MFVolumeDataComposite_SetBaseMaterialGroupFunc;
 		FLib3MFVolumeDataComposite_GetMaterialMappingCountFunc: TLib3MFVolumeDataComposite_GetMaterialMappingCountFunc;
 		FLib3MFVolumeDataComposite_GetMaterialMappingFunc: TLib3MFVolumeDataComposite_GetMaterialMappingFunc;
 		FLib3MFVolumeDataComposite_AddMaterialMappingFunc: TLib3MFVolumeDataComposite_AddMaterialMappingFunc;
 		FLib3MFVolumeDataComposite_RemoveMaterialMappingFunc: TLib3MFVolumeDataComposite_RemoveMaterialMappingFunc;
-		FLib3MFVolumeDataProperty_SetNameFunc: TLib3MFVolumeDataProperty_SetNameFunc;
 		FLib3MFVolumeDataProperty_GetNameFunc: TLib3MFVolumeDataProperty_GetNameFunc;
 		FLib3MFVolumeDataProperty_SetIsRequiredFunc: TLib3MFVolumeDataProperty_SetIsRequiredFunc;
 		FLib3MFVolumeDataProperty_IsRequiredFunc: TLib3MFVolumeDataProperty_IsRequiredFunc;
-		FLib3MFVolumeData_GetLevelsetFunc: TLib3MFVolumeData_GetLevelsetFunc;
-		FLib3MFVolumeData_CreateNewLevelsetFunc: TLib3MFVolumeData_CreateNewLevelsetFunc;
-		FLib3MFVolumeData_RemoveLevelsetFunc: TLib3MFVolumeData_RemoveLevelsetFunc;
+		FLib3MFVolumeData_GetBoundaryFunc: TLib3MFVolumeData_GetBoundaryFunc;
+		FLib3MFVolumeData_CreateNewBoundaryFunc: TLib3MFVolumeData_CreateNewBoundaryFunc;
+		FLib3MFVolumeData_RemoveBoundaryFunc: TLib3MFVolumeData_RemoveBoundaryFunc;
 		FLib3MFVolumeData_GetCompositeFunc: TLib3MFVolumeData_GetCompositeFunc;
 		FLib3MFVolumeData_CreateNewCompositeFunc: TLib3MFVolumeData_CreateNewCompositeFunc;
 		FLib3MFVolumeData_RemoveCompositeFunc: TLib3MFVolumeData_RemoveCompositeFunc;
@@ -6668,7 +6668,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFVolumeData_RemoveColorFunc: TLib3MFVolumeData_RemoveColorFunc;
 		FLib3MFVolumeData_GetPropertyCountFunc: TLib3MFVolumeData_GetPropertyCountFunc;
 		FLib3MFVolumeData_GetPropertyFunc: TLib3MFVolumeData_GetPropertyFunc;
-		FLib3MFVolumeData_AddPropertyFunc: TLib3MFVolumeData_AddPropertyFunc;
+		FLib3MFVolumeData_AddPropertyFromScalarFieldFunc: TLib3MFVolumeData_AddPropertyFromScalarFieldFunc;
+		FLib3MFVolumeData_AddPropertyFromVector3DFieldFunc: TLib3MFVolumeData_AddPropertyFromVector3DFieldFunc;
 		FLib3MFVolumeData_RemovePropertyFunc: TLib3MFVolumeData_RemovePropertyFunc;
 		FLib3MFComponent_GetObjectResourceFunc: TLib3MFComponent_GetObjectResourceFunc;
 		FLib3MFComponent_GetObjectResourceIDFunc: TLib3MFComponent_GetObjectResourceIDFunc;
@@ -7124,21 +7125,20 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFScalarFieldReference_SetScalarFieldFunc: TLib3MFScalarFieldReference_SetScalarFieldFunc read FLib3MFScalarFieldReference_SetScalarFieldFunc;
 		property Lib3MFVector3DFieldReference_GetVector3DFieldFunc: TLib3MFVector3DFieldReference_GetVector3DFieldFunc read FLib3MFVector3DFieldReference_GetVector3DFieldFunc;
 		property Lib3MFVector3DFieldReference_SetVector3DFieldFunc: TLib3MFVector3DFieldReference_SetVector3DFieldFunc read FLib3MFVector3DFieldReference_SetVector3DFieldFunc;
-		property Lib3MFVolumeDataLevelset_GetSolidThresholdFunc: TLib3MFVolumeDataLevelset_GetSolidThresholdFunc read FLib3MFVolumeDataLevelset_GetSolidThresholdFunc;
-		property Lib3MFVolumeDataLevelset_SetSolidThresholdFunc: TLib3MFVolumeDataLevelset_SetSolidThresholdFunc read FLib3MFVolumeDataLevelset_SetSolidThresholdFunc;
+		property Lib3MFVolumeDataBoundary_GetSolidThresholdFunc: TLib3MFVolumeDataBoundary_GetSolidThresholdFunc read FLib3MFVolumeDataBoundary_GetSolidThresholdFunc;
+		property Lib3MFVolumeDataBoundary_SetSolidThresholdFunc: TLib3MFVolumeDataBoundary_SetSolidThresholdFunc read FLib3MFVolumeDataBoundary_SetSolidThresholdFunc;
 		property Lib3MFVolumeDataComposite_GetBaseMaterialGroupFunc: TLib3MFVolumeDataComposite_GetBaseMaterialGroupFunc read FLib3MFVolumeDataComposite_GetBaseMaterialGroupFunc;
 		property Lib3MFVolumeDataComposite_SetBaseMaterialGroupFunc: TLib3MFVolumeDataComposite_SetBaseMaterialGroupFunc read FLib3MFVolumeDataComposite_SetBaseMaterialGroupFunc;
 		property Lib3MFVolumeDataComposite_GetMaterialMappingCountFunc: TLib3MFVolumeDataComposite_GetMaterialMappingCountFunc read FLib3MFVolumeDataComposite_GetMaterialMappingCountFunc;
 		property Lib3MFVolumeDataComposite_GetMaterialMappingFunc: TLib3MFVolumeDataComposite_GetMaterialMappingFunc read FLib3MFVolumeDataComposite_GetMaterialMappingFunc;
 		property Lib3MFVolumeDataComposite_AddMaterialMappingFunc: TLib3MFVolumeDataComposite_AddMaterialMappingFunc read FLib3MFVolumeDataComposite_AddMaterialMappingFunc;
 		property Lib3MFVolumeDataComposite_RemoveMaterialMappingFunc: TLib3MFVolumeDataComposite_RemoveMaterialMappingFunc read FLib3MFVolumeDataComposite_RemoveMaterialMappingFunc;
-		property Lib3MFVolumeDataProperty_SetNameFunc: TLib3MFVolumeDataProperty_SetNameFunc read FLib3MFVolumeDataProperty_SetNameFunc;
 		property Lib3MFVolumeDataProperty_GetNameFunc: TLib3MFVolumeDataProperty_GetNameFunc read FLib3MFVolumeDataProperty_GetNameFunc;
 		property Lib3MFVolumeDataProperty_SetIsRequiredFunc: TLib3MFVolumeDataProperty_SetIsRequiredFunc read FLib3MFVolumeDataProperty_SetIsRequiredFunc;
 		property Lib3MFVolumeDataProperty_IsRequiredFunc: TLib3MFVolumeDataProperty_IsRequiredFunc read FLib3MFVolumeDataProperty_IsRequiredFunc;
-		property Lib3MFVolumeData_GetLevelsetFunc: TLib3MFVolumeData_GetLevelsetFunc read FLib3MFVolumeData_GetLevelsetFunc;
-		property Lib3MFVolumeData_CreateNewLevelsetFunc: TLib3MFVolumeData_CreateNewLevelsetFunc read FLib3MFVolumeData_CreateNewLevelsetFunc;
-		property Lib3MFVolumeData_RemoveLevelsetFunc: TLib3MFVolumeData_RemoveLevelsetFunc read FLib3MFVolumeData_RemoveLevelsetFunc;
+		property Lib3MFVolumeData_GetBoundaryFunc: TLib3MFVolumeData_GetBoundaryFunc read FLib3MFVolumeData_GetBoundaryFunc;
+		property Lib3MFVolumeData_CreateNewBoundaryFunc: TLib3MFVolumeData_CreateNewBoundaryFunc read FLib3MFVolumeData_CreateNewBoundaryFunc;
+		property Lib3MFVolumeData_RemoveBoundaryFunc: TLib3MFVolumeData_RemoveBoundaryFunc read FLib3MFVolumeData_RemoveBoundaryFunc;
 		property Lib3MFVolumeData_GetCompositeFunc: TLib3MFVolumeData_GetCompositeFunc read FLib3MFVolumeData_GetCompositeFunc;
 		property Lib3MFVolumeData_CreateNewCompositeFunc: TLib3MFVolumeData_CreateNewCompositeFunc read FLib3MFVolumeData_CreateNewCompositeFunc;
 		property Lib3MFVolumeData_RemoveCompositeFunc: TLib3MFVolumeData_RemoveCompositeFunc read FLib3MFVolumeData_RemoveCompositeFunc;
@@ -7147,7 +7147,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFVolumeData_RemoveColorFunc: TLib3MFVolumeData_RemoveColorFunc read FLib3MFVolumeData_RemoveColorFunc;
 		property Lib3MFVolumeData_GetPropertyCountFunc: TLib3MFVolumeData_GetPropertyCountFunc read FLib3MFVolumeData_GetPropertyCountFunc;
 		property Lib3MFVolumeData_GetPropertyFunc: TLib3MFVolumeData_GetPropertyFunc read FLib3MFVolumeData_GetPropertyFunc;
-		property Lib3MFVolumeData_AddPropertyFunc: TLib3MFVolumeData_AddPropertyFunc read FLib3MFVolumeData_AddPropertyFunc;
+		property Lib3MFVolumeData_AddPropertyFromScalarFieldFunc: TLib3MFVolumeData_AddPropertyFromScalarFieldFunc read FLib3MFVolumeData_AddPropertyFromScalarFieldFunc;
+		property Lib3MFVolumeData_AddPropertyFromVector3DFieldFunc: TLib3MFVolumeData_AddPropertyFromVector3DFieldFunc read FLib3MFVolumeData_AddPropertyFromVector3DFieldFunc;
 		property Lib3MFVolumeData_RemovePropertyFunc: TLib3MFVolumeData_RemovePropertyFunc read FLib3MFVolumeData_RemovePropertyFunc;
 		property Lib3MFComponent_GetObjectResourceFunc: TLib3MFComponent_GetObjectResourceFunc read FLib3MFComponent_GetObjectResourceFunc;
 		property Lib3MFComponent_GetObjectResourceIDFunc: TLib3MFComponent_GetObjectResourceIDFunc read FLib3MFComponent_GetObjectResourceIDFunc;
@@ -10085,27 +10086,27 @@ implementation
 	end;
 
 (*************************************************************************************************************************
- Class implementation for VolumeDataLevelset
+ Class implementation for VolumeDataBoundary
 **************************************************************************************************************************)
 
-	constructor TLib3MFVolumeDataLevelset.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	constructor TLib3MFVolumeDataBoundary.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
 	begin
 		inherited Create(AWrapper, AHandle);
 	end;
 
-	destructor TLib3MFVolumeDataLevelset.Destroy;
+	destructor TLib3MFVolumeDataBoundary.Destroy;
 	begin
 		inherited;
 	end;
 
-	function TLib3MFVolumeDataLevelset.GetSolidThreshold(): Double;
+	function TLib3MFVolumeDataBoundary.GetSolidThreshold(): Double;
 	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumeDataLevelset_GetSolidThresholdFunc(FHandle, Result));
+		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumeDataBoundary_GetSolidThresholdFunc(FHandle, Result));
 	end;
 
-	procedure TLib3MFVolumeDataLevelset.SetSolidThreshold(const ATheSolidThreshold: Double);
+	procedure TLib3MFVolumeDataBoundary.SetSolidThreshold(const ATheSolidThreshold: Double);
 	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumeDataLevelset_SetSolidThresholdFunc(FHandle, ATheSolidThreshold));
+		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumeDataBoundary_SetSolidThresholdFunc(FHandle, ATheSolidThreshold));
 	end;
 
 (*************************************************************************************************************************
@@ -10218,11 +10219,6 @@ implementation
 		inherited;
 	end;
 
-	procedure TLib3MFVolumeDataProperty.SetName(const APropertyName: String);
-	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumeDataProperty_SetNameFunc(FHandle, PAnsiChar(APropertyName)));
-	end;
-
 	function TLib3MFVolumeDataProperty.GetName(): String;
 	var
 		bytesNeededPropertyName: Cardinal;
@@ -10265,36 +10261,36 @@ implementation
 		inherited;
 	end;
 
-	function TLib3MFVolumeData.GetLevelset(): TLib3MFVolumeDataLevelset;
+	function TLib3MFVolumeData.GetBoundary(): TLib3MFVolumeDataBoundary;
 	var
-		HTheLevelsetData: TLib3MFHandle;
+		HTheBoundaryData: TLib3MFHandle;
 	begin
 		Result := nil;
-		HTheLevelsetData := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumeData_GetLevelsetFunc(FHandle, HTheLevelsetData));
-		if Assigned(HTheLevelsetData) then
-			Result := TLib3MFVolumeDataLevelset.Create(FWrapper, HTheLevelsetData);
+		HTheBoundaryData := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumeData_GetBoundaryFunc(FHandle, HTheBoundaryData));
+		if Assigned(HTheBoundaryData) then
+			Result := TLib3MFVolumeDataBoundary.Create(FWrapper, HTheBoundaryData);
 	end;
 
-	function TLib3MFVolumeData.CreateNewLevelset(const ATheScalarField: TLib3MFScalarField; const ATransform: TLib3MFTransform): TLib3MFVolumeDataLevelset;
+	function TLib3MFVolumeData.CreateNewBoundary(const ATheScalarField: TLib3MFScalarField): TLib3MFVolumeDataBoundary;
 	var
 		ATheScalarFieldHandle: TLib3MFHandle;
-		HTheLevelsetData: TLib3MFHandle;
+		HTheBoundaryData: TLib3MFHandle;
 	begin
 		if Assigned(ATheScalarField) then
 		ATheScalarFieldHandle := ATheScalarField.TheHandle
 		else
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'ATheScalarField is a nil value.');
 		Result := nil;
-		HTheLevelsetData := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumeData_CreateNewLevelsetFunc(FHandle, ATheScalarFieldHandle, @ATransform, HTheLevelsetData));
-		if Assigned(HTheLevelsetData) then
-			Result := TLib3MFVolumeDataLevelset.Create(FWrapper, HTheLevelsetData);
+		HTheBoundaryData := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumeData_CreateNewBoundaryFunc(FHandle, ATheScalarFieldHandle, HTheBoundaryData));
+		if Assigned(HTheBoundaryData) then
+			Result := TLib3MFVolumeDataBoundary.Create(FWrapper, HTheBoundaryData);
 	end;
 
-	procedure TLib3MFVolumeData.RemoveLevelset();
+	procedure TLib3MFVolumeData.RemoveBoundary();
 	begin
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumeData_RemoveLevelsetFunc(FHandle));
+		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumeData_RemoveBoundaryFunc(FHandle));
 	end;
 
 	function TLib3MFVolumeData.GetComposite(): TLib3MFVolumeDataComposite;
@@ -10372,13 +10368,34 @@ implementation
 			Result := TLib3MFVolumeDataProperty.Create(FWrapper, HTheVolumeDataProperty);
 	end;
 
-	function TLib3MFVolumeData.AddProperty(const AName: String; const AUniqueResourceID: Cardinal): TLib3MFVolumeDataProperty;
+	function TLib3MFVolumeData.AddPropertyFromScalarField(const AName: String; const ATheScalarField: TLib3MFScalarField): TLib3MFVolumeDataProperty;
 	var
+		ATheScalarFieldHandle: TLib3MFHandle;
 		HTheVolumeDataProperty: TLib3MFHandle;
 	begin
+		if Assigned(ATheScalarField) then
+		ATheScalarFieldHandle := ATheScalarField.TheHandle
+		else
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'ATheScalarField is a nil value.');
 		Result := nil;
 		HTheVolumeDataProperty := nil;
-		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumeData_AddPropertyFunc(FHandle, PAnsiChar(AName), AUniqueResourceID, HTheVolumeDataProperty));
+		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumeData_AddPropertyFromScalarFieldFunc(FHandle, PAnsiChar(AName), ATheScalarFieldHandle, HTheVolumeDataProperty));
+		if Assigned(HTheVolumeDataProperty) then
+			Result := TLib3MFVolumeDataProperty.Create(FWrapper, HTheVolumeDataProperty);
+	end;
+
+	function TLib3MFVolumeData.AddPropertyFromVector3DField(const AName: String; const ATheVector3DField: TLib3MFVector3DField): TLib3MFVolumeDataProperty;
+	var
+		ATheVector3DFieldHandle: TLib3MFHandle;
+		HTheVolumeDataProperty: TLib3MFHandle;
+	begin
+		if Assigned(ATheVector3DField) then
+		ATheVector3DFieldHandle := ATheVector3DField.TheHandle
+		else
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'ATheVector3DField is a nil value.');
+		Result := nil;
+		HTheVolumeDataProperty := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFVolumeData_AddPropertyFromVector3DFieldFunc(FHandle, PAnsiChar(AName), ATheVector3DFieldHandle, HTheVolumeDataProperty));
 		if Assigned(HTheVolumeDataProperty) then
 			Result := TLib3MFVolumeDataProperty.Create(FWrapper, HTheVolumeDataProperty);
 	end;
@@ -13248,21 +13265,20 @@ implementation
 		FLib3MFScalarFieldReference_SetScalarFieldFunc := LoadFunction('lib3mf_scalarfieldreference_setscalarfield');
 		FLib3MFVector3DFieldReference_GetVector3DFieldFunc := LoadFunction('lib3mf_vector3dfieldreference_getvector3dfield');
 		FLib3MFVector3DFieldReference_SetVector3DFieldFunc := LoadFunction('lib3mf_vector3dfieldreference_setvector3dfield');
-		FLib3MFVolumeDataLevelset_GetSolidThresholdFunc := LoadFunction('lib3mf_volumedatalevelset_getsolidthreshold');
-		FLib3MFVolumeDataLevelset_SetSolidThresholdFunc := LoadFunction('lib3mf_volumedatalevelset_setsolidthreshold');
+		FLib3MFVolumeDataBoundary_GetSolidThresholdFunc := LoadFunction('lib3mf_volumedataboundary_getsolidthreshold');
+		FLib3MFVolumeDataBoundary_SetSolidThresholdFunc := LoadFunction('lib3mf_volumedataboundary_setsolidthreshold');
 		FLib3MFVolumeDataComposite_GetBaseMaterialGroupFunc := LoadFunction('lib3mf_volumedatacomposite_getbasematerialgroup');
 		FLib3MFVolumeDataComposite_SetBaseMaterialGroupFunc := LoadFunction('lib3mf_volumedatacomposite_setbasematerialgroup');
 		FLib3MFVolumeDataComposite_GetMaterialMappingCountFunc := LoadFunction('lib3mf_volumedatacomposite_getmaterialmappingcount');
 		FLib3MFVolumeDataComposite_GetMaterialMappingFunc := LoadFunction('lib3mf_volumedatacomposite_getmaterialmapping');
 		FLib3MFVolumeDataComposite_AddMaterialMappingFunc := LoadFunction('lib3mf_volumedatacomposite_addmaterialmapping');
 		FLib3MFVolumeDataComposite_RemoveMaterialMappingFunc := LoadFunction('lib3mf_volumedatacomposite_removematerialmapping');
-		FLib3MFVolumeDataProperty_SetNameFunc := LoadFunction('lib3mf_volumedataproperty_setname');
 		FLib3MFVolumeDataProperty_GetNameFunc := LoadFunction('lib3mf_volumedataproperty_getname');
 		FLib3MFVolumeDataProperty_SetIsRequiredFunc := LoadFunction('lib3mf_volumedataproperty_setisrequired');
 		FLib3MFVolumeDataProperty_IsRequiredFunc := LoadFunction('lib3mf_volumedataproperty_isrequired');
-		FLib3MFVolumeData_GetLevelsetFunc := LoadFunction('lib3mf_volumedata_getlevelset');
-		FLib3MFVolumeData_CreateNewLevelsetFunc := LoadFunction('lib3mf_volumedata_createnewlevelset');
-		FLib3MFVolumeData_RemoveLevelsetFunc := LoadFunction('lib3mf_volumedata_removelevelset');
+		FLib3MFVolumeData_GetBoundaryFunc := LoadFunction('lib3mf_volumedata_getboundary');
+		FLib3MFVolumeData_CreateNewBoundaryFunc := LoadFunction('lib3mf_volumedata_createnewboundary');
+		FLib3MFVolumeData_RemoveBoundaryFunc := LoadFunction('lib3mf_volumedata_removeboundary');
 		FLib3MFVolumeData_GetCompositeFunc := LoadFunction('lib3mf_volumedata_getcomposite');
 		FLib3MFVolumeData_CreateNewCompositeFunc := LoadFunction('lib3mf_volumedata_createnewcomposite');
 		FLib3MFVolumeData_RemoveCompositeFunc := LoadFunction('lib3mf_volumedata_removecomposite');
@@ -13271,7 +13287,8 @@ implementation
 		FLib3MFVolumeData_RemoveColorFunc := LoadFunction('lib3mf_volumedata_removecolor');
 		FLib3MFVolumeData_GetPropertyCountFunc := LoadFunction('lib3mf_volumedata_getpropertycount');
 		FLib3MFVolumeData_GetPropertyFunc := LoadFunction('lib3mf_volumedata_getproperty');
-		FLib3MFVolumeData_AddPropertyFunc := LoadFunction('lib3mf_volumedata_addproperty');
+		FLib3MFVolumeData_AddPropertyFromScalarFieldFunc := LoadFunction('lib3mf_volumedata_addpropertyfromscalarfield');
+		FLib3MFVolumeData_AddPropertyFromVector3DFieldFunc := LoadFunction('lib3mf_volumedata_addpropertyfromvector3dfield');
 		FLib3MFVolumeData_RemovePropertyFunc := LoadFunction('lib3mf_volumedata_removeproperty');
 		FLib3MFComponent_GetObjectResourceFunc := LoadFunction('lib3mf_component_getobjectresource');
 		FLib3MFComponent_GetObjectResourceIDFunc := LoadFunction('lib3mf_component_getobjectresourceid');
@@ -14106,10 +14123,10 @@ implementation
 		AResult := ALookupMethod(PAnsiChar('lib3mf_vector3dfieldreference_setvector3dfield'), @FLib3MFVector3DFieldReference_SetVector3DFieldFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_volumedatalevelset_getsolidthreshold'), @FLib3MFVolumeDataLevelset_GetSolidThresholdFunc);
+		AResult := ALookupMethod(PAnsiChar('lib3mf_volumedataboundary_getsolidthreshold'), @FLib3MFVolumeDataBoundary_GetSolidThresholdFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_volumedatalevelset_setsolidthreshold'), @FLib3MFVolumeDataLevelset_SetSolidThresholdFunc);
+		AResult := ALookupMethod(PAnsiChar('lib3mf_volumedataboundary_setsolidthreshold'), @FLib3MFVolumeDataBoundary_SetSolidThresholdFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_volumedatacomposite_getbasematerialgroup'), @FLib3MFVolumeDataComposite_GetBaseMaterialGroupFunc);
@@ -14130,9 +14147,6 @@ implementation
 		AResult := ALookupMethod(PAnsiChar('lib3mf_volumedatacomposite_removematerialmapping'), @FLib3MFVolumeDataComposite_RemoveMaterialMappingFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_volumedataproperty_setname'), @FLib3MFVolumeDataProperty_SetNameFunc);
-		if AResult <> LIB3MF_SUCCESS then
-			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_volumedataproperty_getname'), @FLib3MFVolumeDataProperty_GetNameFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
@@ -14142,13 +14156,13 @@ implementation
 		AResult := ALookupMethod(PAnsiChar('lib3mf_volumedataproperty_isrequired'), @FLib3MFVolumeDataProperty_IsRequiredFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_volumedata_getlevelset'), @FLib3MFVolumeData_GetLevelsetFunc);
+		AResult := ALookupMethod(PAnsiChar('lib3mf_volumedata_getboundary'), @FLib3MFVolumeData_GetBoundaryFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_volumedata_createnewlevelset'), @FLib3MFVolumeData_CreateNewLevelsetFunc);
+		AResult := ALookupMethod(PAnsiChar('lib3mf_volumedata_createnewboundary'), @FLib3MFVolumeData_CreateNewBoundaryFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_volumedata_removelevelset'), @FLib3MFVolumeData_RemoveLevelsetFunc);
+		AResult := ALookupMethod(PAnsiChar('lib3mf_volumedata_removeboundary'), @FLib3MFVolumeData_RemoveBoundaryFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_volumedata_getcomposite'), @FLib3MFVolumeData_GetCompositeFunc);
@@ -14175,7 +14189,10 @@ implementation
 		AResult := ALookupMethod(PAnsiChar('lib3mf_volumedata_getproperty'), @FLib3MFVolumeData_GetPropertyFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
-		AResult := ALookupMethod(PAnsiChar('lib3mf_volumedata_addproperty'), @FLib3MFVolumeData_AddPropertyFunc);
+		AResult := ALookupMethod(PAnsiChar('lib3mf_volumedata_addpropertyfromscalarfield'), @FLib3MFVolumeData_AddPropertyFromScalarFieldFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_volumedata_addpropertyfromvector3dfield'), @FLib3MFVolumeData_AddPropertyFromVector3DFieldFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_volumedata_removeproperty'), @FLib3MFVolumeData_RemovePropertyFunc);

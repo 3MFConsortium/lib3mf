@@ -804,7 +804,7 @@ namespace NMR {
 
 				writeIntAttribute(XML_3MF_ATTRIBUTE_SCALARFIELDFROMIMAGE3D_IMAGE3DID, pScalarFieldFromImage3D->getImage3DResourceID()->getModelResourceID());
 
-				if (pScalarFieldFromImage3D->getOffset() != 1.0)
+				if (pScalarFieldFromImage3D->getOffset() != 0.0)
 					writeFloatAttribute(XML_3MF_ATTRIBUTE_SCALARFIELDFROMIMAGE3_OFFSET, (nfFloat)pScalarFieldFromImage3D->getOffset());
 				if (pScalarFieldFromImage3D->getScale() != 1.0)
 					writeFloatAttribute(XML_3MF_ATTRIBUTE_SCALARFIELDFROMIMAGE3_SCALE, (nfFloat)pScalarFieldFromImage3D->getScale());

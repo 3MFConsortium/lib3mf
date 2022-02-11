@@ -2035,21 +2035,21 @@ type Lib3MFGoInterface interface {
 
 
 	/**
-	* Returns the solidthreshold for the levelset function encoded in this VolumeDataLevelset
+	* Returns the solidthreshold for the levelset function encoded in this VolumeDataBoundary
 	*
-	* @param[in] VolumeDataLevelset - VolumeDataLevelset instance.
-	* @return The solidthreshold for the levelset function encoded in this VolumeDataLevelset
+	* @param[in] VolumeDataBoundary - VolumeDataBoundary instance.
+	* @return The solidthreshold for the levelset function encoded in this VolumeDataBoundary
 	*/
-	VolumeDataLevelset_GetSolidThreshold(VolumeDataLevelset Lib3MFHandle) (float64, error)
+	VolumeDataBoundary_GetSolidThreshold(VolumeDataBoundary Lib3MFHandle) (float64, error)
 
 
 	/**
-	* Sets the solidthreshold for the levelset function encoded in this VolumeDataLevelset
+	* Sets the solidthreshold for the levelset function encoded in this VolumeDataBoundary
 	*
-	* @param[in] VolumeDataLevelset - VolumeDataLevelset instance.
-	* @param[in] dTheSolidThreshold - The solidthreshold for the levelset function encoded in this VolumeDataLevelset
+	* @param[in] VolumeDataBoundary - VolumeDataBoundary instance.
+	* @param[in] dTheSolidThreshold - The solidthreshold for the levelset function encoded in this VolumeDataBoundary
 	*/
-	VolumeDataLevelset_SetSolidThreshold(VolumeDataLevelset Lib3MFHandle, dTheSolidThreshold float64) (error)
+	VolumeDataBoundary_SetSolidThreshold(VolumeDataBoundary Lib3MFHandle, dTheSolidThreshold float64) (error)
 
 
 	/**
@@ -2109,15 +2109,6 @@ type Lib3MFGoInterface interface {
 
 
 	/**
-	* Sets the qualified name of this property.
-	*
-	* @param[in] VolumeDataProperty - VolumeDataProperty instance.
-	* @param[in] sPropertyName - The new qualified name of this property
-	*/
-	VolumeDataProperty_SetName(VolumeDataProperty Lib3MFHandle, sPropertyName string) (error)
-
-
-	/**
 	* Gets the qualified name of this property.
 	*
 	* @param[in] VolumeDataProperty - VolumeDataProperty instance.
@@ -2145,31 +2136,30 @@ type Lib3MFGoInterface interface {
 
 
 	/**
-	* Returns the VolumeDataLevelset of this VolumeData instance
+	* Returns the VolumeDataBoundary of this VolumeData instance
 	*
 	* @param[in] VolumeData - VolumeData instance.
-	* @return filled with the VolumeDataLevelset of this VolumeData instance.
+	* @return filled with the VolumeDataBoundary of this VolumeData instance.
 	*/
-	VolumeData_GetLevelset(VolumeData Lib3MFHandle) (Lib3MFHandle, error)
+	VolumeData_GetBoundary(VolumeData Lib3MFHandle) (Lib3MFHandle, error)
 
 
 	/**
-	* Creates a new VolumeDataLevelset for this VolumeData instance
+	* Creates a new VolumeDataBoundary for this VolumeData instance
 	*
 	* @param[in] VolumeData - VolumeData instance.
 	* @param[in] TheScalarField - ScalarField used in this element
-	* @param[in] sTransform - new transformation matrix
-	* @return The new VolumeDataLevelset of this VolumeData instance.
+	* @return The new VolumeDataBoundary of this VolumeData instance.
 	*/
-	VolumeData_CreateNewLevelset(VolumeData Lib3MFHandle, TheScalarField Lib3MFHandle, sTransform sLib3MFTransform) (Lib3MFHandle, error)
+	VolumeData_CreateNewBoundary(VolumeData Lib3MFHandle, TheScalarField Lib3MFHandle) (Lib3MFHandle, error)
 
 
 	/**
-	* Removes the VolumeDataLevelset of this VolumeData instance
+	* Removes the VolumeDataBoundary of this VolumeData instance
 	*
 	* @param[in] VolumeData - VolumeData instance.
 	*/
-	VolumeData_RemoveLevelset(VolumeData Lib3MFHandle) (error)
+	VolumeData_RemoveBoundary(VolumeData Lib3MFHandle) (error)
 
 
 	/**
@@ -2246,14 +2236,25 @@ type Lib3MFGoInterface interface {
 
 
 	/**
-	* Adds a new VolumeDataProperty
+	* Adds a new VolumeDataProperty from a ScalarField
 	*
 	* @param[in] VolumeData - VolumeData instance.
 	* @param[in] sName - the qualified name (namespace+name) of the Property
-	* @param[in] nUniqueResourceID - UniqueResourceID of the Field (Scalar- or Vector3DField)
+	* @param[in] TheScalarField - ScalarField used in this element
 	* @return the newly created VolumeDataProperty.
 	*/
-	VolumeData_AddProperty(VolumeData Lib3MFHandle, sName string, nUniqueResourceID uint32) (Lib3MFHandle, error)
+	VolumeData_AddPropertyFromScalarField(VolumeData Lib3MFHandle, sName string, TheScalarField Lib3MFHandle) (Lib3MFHandle, error)
+
+
+	/**
+	* Adds a new VolumeDataProperty from a Vector3DField
+	*
+	* @param[in] VolumeData - VolumeData instance.
+	* @param[in] sName - the qualified name (namespace+name) of the Property
+	* @param[in] TheVector3DField - Vector3DField used in this element
+	* @return the newly created VolumeDataProperty.
+	*/
+	VolumeData_AddPropertyFromVector3DField(VolumeData Lib3MFHandle, sName string, TheVector3DField Lib3MFHandle) (Lib3MFHandle, error)
 
 
 	/**
@@ -6181,24 +6182,24 @@ func (instance *Lib3MFVector3DFieldReference) SetVector3DField(TheVector3DField 
 
 
 /*************************************************************************************************************************
-Class definition Lib3MFVolumeDataLevelset
+Class definition Lib3MFVolumeDataBoundary
 **************************************************************************************************************************/
 
-type Lib3MFVolumeDataLevelset struct {
+type Lib3MFVolumeDataBoundary struct {
 	Lib3MFScalarFieldReference
 }
 
-func (instance *Lib3MFVolumeDataLevelset) Close() (error) {
+func (instance *Lib3MFVolumeDataBoundary) Close() (error) {
 	return instance.Handle.Close()
 }
 
-func (instance *Lib3MFVolumeDataLevelset) GetSolidThreshold() (float64, error) {
-	dTheSolidThreshold, error := instance.Interface.VolumeDataLevelset_GetSolidThreshold(instance.Handle)
+func (instance *Lib3MFVolumeDataBoundary) GetSolidThreshold() (float64, error) {
+	dTheSolidThreshold, error := instance.Interface.VolumeDataBoundary_GetSolidThreshold(instance.Handle)
 	return dTheSolidThreshold, error
 }
 
-func (instance *Lib3MFVolumeDataLevelset) SetSolidThreshold(dTheSolidThreshold float64) (error) {
-	error := instance.Interface.VolumeDataLevelset_SetSolidThreshold(instance.Handle, dTheSolidThreshold)
+func (instance *Lib3MFVolumeDataBoundary) SetSolidThreshold(dTheSolidThreshold float64) (error) {
+	error := instance.Interface.VolumeDataBoundary_SetSolidThreshold(instance.Handle, dTheSolidThreshold)
 	return error
 }
 
@@ -6293,11 +6294,6 @@ func (instance *Lib3MFVolumeDataProperty) Close() (error) {
 	return instance.Handle.Close()
 }
 
-func (instance *Lib3MFVolumeDataProperty) SetName(sPropertyName string) (error) {
-	error := instance.Interface.VolumeDataProperty_SetName(instance.Handle, sPropertyName)
-	return error
-}
-
 func (instance *Lib3MFVolumeDataProperty) GetName() (string, error) {
 	sPropertyName, error := instance.Interface.VolumeDataProperty_GetName(instance.Handle)
 	return sPropertyName, error
@@ -6326,24 +6322,24 @@ func (instance *Lib3MFVolumeData) Close() (error) {
 	return instance.Handle.Close()
 }
 
-func (instance *Lib3MFVolumeData) GetLevelset() (Lib3MFVolumeDataLevelset, error) {
-	hTheLevelsetData, error := instance.Interface.VolumeData_GetLevelset(instance.Handle)
-	var cTheLevelsetData Lib3MFVolumeDataLevelset
-	cTheLevelsetData.Interface = instance.Interface
-	cTheLevelsetData.Handle = hTheLevelsetData
-	return cTheLevelsetData, error
+func (instance *Lib3MFVolumeData) GetBoundary() (Lib3MFVolumeDataBoundary, error) {
+	hTheBoundaryData, error := instance.Interface.VolumeData_GetBoundary(instance.Handle)
+	var cTheBoundaryData Lib3MFVolumeDataBoundary
+	cTheBoundaryData.Interface = instance.Interface
+	cTheBoundaryData.Handle = hTheBoundaryData
+	return cTheBoundaryData, error
 }
 
-func (instance *Lib3MFVolumeData) CreateNewLevelset(TheScalarField Lib3MFHandle, sTransform sLib3MFTransform) (Lib3MFVolumeDataLevelset, error) {
-	hTheLevelsetData, error := instance.Interface.VolumeData_CreateNewLevelset(instance.Handle, TheScalarField, sTransform)
-	var cTheLevelsetData Lib3MFVolumeDataLevelset
-	cTheLevelsetData.Interface = instance.Interface
-	cTheLevelsetData.Handle = hTheLevelsetData
-	return cTheLevelsetData, error
+func (instance *Lib3MFVolumeData) CreateNewBoundary(TheScalarField Lib3MFHandle) (Lib3MFVolumeDataBoundary, error) {
+	hTheBoundaryData, error := instance.Interface.VolumeData_CreateNewBoundary(instance.Handle, TheScalarField)
+	var cTheBoundaryData Lib3MFVolumeDataBoundary
+	cTheBoundaryData.Interface = instance.Interface
+	cTheBoundaryData.Handle = hTheBoundaryData
+	return cTheBoundaryData, error
 }
 
-func (instance *Lib3MFVolumeData) RemoveLevelset() (error) {
-	error := instance.Interface.VolumeData_RemoveLevelset(instance.Handle)
+func (instance *Lib3MFVolumeData) RemoveBoundary() (error) {
+	error := instance.Interface.VolumeData_RemoveBoundary(instance.Handle)
 	return error
 }
 
@@ -6402,8 +6398,16 @@ func (instance *Lib3MFVolumeData) GetProperty(nIndex uint32) (Lib3MFVolumeDataPr
 	return cTheVolumeDataProperty, error
 }
 
-func (instance *Lib3MFVolumeData) AddProperty(sName string, nUniqueResourceID uint32) (Lib3MFVolumeDataProperty, error) {
-	hTheVolumeDataProperty, error := instance.Interface.VolumeData_AddProperty(instance.Handle, sName, nUniqueResourceID)
+func (instance *Lib3MFVolumeData) AddPropertyFromScalarField(sName string, TheScalarField Lib3MFHandle) (Lib3MFVolumeDataProperty, error) {
+	hTheVolumeDataProperty, error := instance.Interface.VolumeData_AddPropertyFromScalarField(instance.Handle, sName, TheScalarField)
+	var cTheVolumeDataProperty Lib3MFVolumeDataProperty
+	cTheVolumeDataProperty.Interface = instance.Interface
+	cTheVolumeDataProperty.Handle = hTheVolumeDataProperty
+	return cTheVolumeDataProperty, error
+}
+
+func (instance *Lib3MFVolumeData) AddPropertyFromVector3DField(sName string, TheVector3DField Lib3MFHandle) (Lib3MFVolumeDataProperty, error) {
+	hTheVolumeDataProperty, error := instance.Interface.VolumeData_AddPropertyFromVector3DField(instance.Handle, sName, TheVector3DField)
 	var cTheVolumeDataProperty Lib3MFVolumeDataProperty
 	cTheVolumeDataProperty.Interface = instance.Interface
 	cTheVolumeDataProperty.Handle = hTheVolumeDataProperty

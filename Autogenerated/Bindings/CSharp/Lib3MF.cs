@@ -872,11 +872,11 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfieldreference_setvector3dfield", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Vector3DFieldReference_SetVector3DField (IntPtr Handle, IntPtr ATheVector3DField);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedatalevelset_getsolidthreshold", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumeDataLevelset_GetSolidThreshold (IntPtr Handle, out Double ATheSolidThreshold);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedataboundary_getsolidthreshold", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 VolumeDataBoundary_GetSolidThreshold (IntPtr Handle, out Double ATheSolidThreshold);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedatalevelset_setsolidthreshold", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumeDataLevelset_SetSolidThreshold (IntPtr Handle, Double ATheSolidThreshold);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedataboundary_setsolidthreshold", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 VolumeDataBoundary_SetSolidThreshold (IntPtr Handle, Double ATheSolidThreshold);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedatacomposite_getbasematerialgroup", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 VolumeDataComposite_GetBaseMaterialGroup (IntPtr Handle, out IntPtr ABaseMaterialGroupInstance);
@@ -896,9 +896,6 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedatacomposite_removematerialmapping", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 VolumeDataComposite_RemoveMaterialMapping (IntPtr Handle, UInt32 AIndex);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedataproperty_setname", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumeDataProperty_SetName (IntPtr Handle, byte[] APropertyName);
-
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedataproperty_getname", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 VolumeDataProperty_GetName (IntPtr Handle, UInt32 sizePropertyName, out UInt32 neededPropertyName, IntPtr dataPropertyName);
 
@@ -908,14 +905,14 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedataproperty_isrequired", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 VolumeDataProperty_IsRequired (IntPtr Handle, out Byte AIsRequired);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedata_getlevelset", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumeData_GetLevelset (IntPtr Handle, out IntPtr ATheLevelsetData);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedata_getboundary", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 VolumeData_GetBoundary (IntPtr Handle, out IntPtr ATheBoundaryData);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedata_createnewlevelset", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumeData_CreateNewLevelset (IntPtr Handle, IntPtr ATheScalarField, InternalTransform ATransform, out IntPtr ATheLevelsetData);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedata_createnewboundary", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 VolumeData_CreateNewBoundary (IntPtr Handle, IntPtr ATheScalarField, out IntPtr ATheBoundaryData);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedata_removelevelset", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumeData_RemoveLevelset (IntPtr Handle);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedata_removeboundary", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 VolumeData_RemoveBoundary (IntPtr Handle);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedata_getcomposite", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 VolumeData_GetComposite (IntPtr Handle, out IntPtr ATheCompositeData);
@@ -941,8 +938,11 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedata_getproperty", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 VolumeData_GetProperty (IntPtr Handle, UInt32 AIndex, out IntPtr ATheVolumeDataProperty);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedata_addproperty", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumeData_AddProperty (IntPtr Handle, byte[] AName, UInt32 AUniqueResourceID, out IntPtr ATheVolumeDataProperty);
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedata_addpropertyfromscalarfield", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 VolumeData_AddPropertyFromScalarField (IntPtr Handle, byte[] AName, IntPtr ATheScalarField, out IntPtr ATheVolumeDataProperty);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedata_addpropertyfromvector3dfield", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 VolumeData_AddPropertyFromVector3DField (IntPtr Handle, byte[] AName, IntPtr ATheVector3DField, out IntPtr ATheVolumeDataProperty);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedata_removeproperty", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 VolumeData_RemoveProperty (IntPtr Handle, UInt32 AIndex);
@@ -3868,9 +3868,9 @@ namespace Lib3MF {
 
 	}
 
-	class CVolumeDataLevelset : CScalarFieldReference
+	class CVolumeDataBoundary : CScalarFieldReference
 	{
-		public CVolumeDataLevelset (IntPtr NewHandle) : base (NewHandle)
+		public CVolumeDataBoundary (IntPtr NewHandle) : base (NewHandle)
 		{
 		}
 
@@ -3878,14 +3878,14 @@ namespace Lib3MF {
 		{
 			Double resultTheSolidThreshold = 0;
 
-			CheckError(Internal.Lib3MFWrapper.VolumeDataLevelset_GetSolidThreshold (Handle, out resultTheSolidThreshold));
+			CheckError(Internal.Lib3MFWrapper.VolumeDataBoundary_GetSolidThreshold (Handle, out resultTheSolidThreshold));
 			return resultTheSolidThreshold;
 		}
 
 		public void SetSolidThreshold (Double ATheSolidThreshold)
 		{
 
-			CheckError(Internal.Lib3MFWrapper.VolumeDataLevelset_SetSolidThreshold (Handle, ATheSolidThreshold));
+			CheckError(Internal.Lib3MFWrapper.VolumeDataBoundary_SetSolidThreshold (Handle, ATheSolidThreshold));
 		}
 
 	}
@@ -3965,13 +3965,6 @@ namespace Lib3MF {
 		{
 		}
 
-		public void SetName (String APropertyName)
-		{
-			byte[] bytePropertyName = Encoding.UTF8.GetBytes(APropertyName + char.MinValue);
-
-			CheckError(Internal.Lib3MFWrapper.VolumeDataProperty_SetName (Handle, bytePropertyName));
-		}
-
 		public String GetName ()
 		{
 			UInt32 sizePropertyName = 0;
@@ -4008,27 +4001,26 @@ namespace Lib3MF {
 		{
 		}
 
-		public CVolumeDataLevelset GetLevelset ()
+		public CVolumeDataBoundary GetBoundary ()
 		{
-			IntPtr newTheLevelsetData = IntPtr.Zero;
+			IntPtr newTheBoundaryData = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.VolumeData_GetLevelset (Handle, out newTheLevelsetData));
-			return new CVolumeDataLevelset (newTheLevelsetData );
+			CheckError(Internal.Lib3MFWrapper.VolumeData_GetBoundary (Handle, out newTheBoundaryData));
+			return new CVolumeDataBoundary (newTheBoundaryData );
 		}
 
-		public CVolumeDataLevelset CreateNewLevelset (CScalarField ATheScalarField, sTransform ATransform)
+		public CVolumeDataBoundary CreateNewBoundary (CScalarField ATheScalarField)
 		{
-			Internal.InternalTransform intTransform = Internal.Lib3MFWrapper.convertStructToInternal_Transform (ATransform);
-			IntPtr newTheLevelsetData = IntPtr.Zero;
+			IntPtr newTheBoundaryData = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.VolumeData_CreateNewLevelset (Handle, ATheScalarField.GetHandle(), intTransform, out newTheLevelsetData));
-			return new CVolumeDataLevelset (newTheLevelsetData );
+			CheckError(Internal.Lib3MFWrapper.VolumeData_CreateNewBoundary (Handle, ATheScalarField.GetHandle(), out newTheBoundaryData));
+			return new CVolumeDataBoundary (newTheBoundaryData );
 		}
 
-		public void RemoveLevelset ()
+		public void RemoveBoundary ()
 		{
 
-			CheckError(Internal.Lib3MFWrapper.VolumeData_RemoveLevelset (Handle));
+			CheckError(Internal.Lib3MFWrapper.VolumeData_RemoveBoundary (Handle));
 		}
 
 		public CVolumeDataComposite GetComposite ()
@@ -4092,12 +4084,21 @@ namespace Lib3MF {
 			return new CVolumeDataProperty (newTheVolumeDataProperty );
 		}
 
-		public CVolumeDataProperty AddProperty (String AName, UInt32 AUniqueResourceID)
+		public CVolumeDataProperty AddPropertyFromScalarField (String AName, CScalarField ATheScalarField)
 		{
 			byte[] byteName = Encoding.UTF8.GetBytes(AName + char.MinValue);
 			IntPtr newTheVolumeDataProperty = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.VolumeData_AddProperty (Handle, byteName, AUniqueResourceID, out newTheVolumeDataProperty));
+			CheckError(Internal.Lib3MFWrapper.VolumeData_AddPropertyFromScalarField (Handle, byteName, ATheScalarField.GetHandle(), out newTheVolumeDataProperty));
+			return new CVolumeDataProperty (newTheVolumeDataProperty );
+		}
+
+		public CVolumeDataProperty AddPropertyFromVector3DField (String AName, CVector3DField ATheVector3DField)
+		{
+			byte[] byteName = Encoding.UTF8.GetBytes(AName + char.MinValue);
+			IntPtr newTheVolumeDataProperty = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.VolumeData_AddPropertyFromVector3DField (Handle, byteName, ATheVector3DField.GetHandle(), out newTheVolumeDataProperty));
 			return new CVolumeDataProperty (newTheVolumeDataProperty );
 		}
 

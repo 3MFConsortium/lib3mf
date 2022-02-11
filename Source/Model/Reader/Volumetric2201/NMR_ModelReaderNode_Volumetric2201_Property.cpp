@@ -45,11 +45,11 @@ namespace NMR {
 	CModelReaderNode_Volumetric2201_Property::CModelReaderNode_Volumetric2201_Property(_In_ PModelWarnings pWarnings)
 		: CModelReaderNode(pWarnings)
 	{
-		m_bHasStackId = false;
-		m_bHasChannel = false;
+		m_bHasFieldID = false;
 		m_bHasName = false;
 		m_bHasTransform = false;
 		m_bHasRequired = false;
+		m_bRequired = true;
 	}
 
 	void CModelReaderNode_Volumetric2201_Property::parseXML(_In_ CXmlReader * pXMLReader)
@@ -69,49 +69,47 @@ namespace NMR {
 		if (!pModel)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-		if (!m_bHasStackId) {
-			throw CNMRException(NMR_ERROR_MISSINGVOLUMEDATASTACKID);
-		}
-
-		if (!m_bHasChannel) {
-			throw CNMRException(NMR_ERROR_MISSINGVOLUMEDATACHANNEL);
+		if (!m_bHasFieldID) {
+			throw CNMRException(NMR_ERROR_MISSINGVOLUMEDATAFIELDID);
 		}
 
 		if (!m_bHasName) {
-			throw CNMRException(NMR_ERROR_MISSINGVOLUMEDATAPROPERTY);
+			throw CNMRException(NMR_ERROR_MISSINGVOLUMEDATAPROPERTYNAME);
 		}
 
-		PPackageResourceID pID = pModel->findPackageResourceID(pModel->currentPath(), m_nStackID);
+		PPackageResourceID pID = pModel->findPackageResourceID(pModel->currentPath(), m_nFieldID);
 		if (!pID.get()) {
 			throw CNMRException(NMR_ERROR_UNKNOWNMODELRESOURCE);
 		}
 
-		throw CNMRException(-1);
-		//PModelVolumetricStack pStack = pModel->findVolumetricStack(pID->getUniqueID());
-		//if (!pStack.get()) {
-		//	throw CNMRException(NMR_ERROR_UNKNOWNMODELRESOURCE);
-		//}
-		
-		//PVolumeDataProperty pProperty = std::make_shared<CVolumeDataProperty>(m_sName, pStack);
-		//pProperty->SetChannel(m_sChannel);
-		//if (m_bHasRequired)
-		//	pProperty->SetIsRequired(m_bRequired);
-		//if (m_bHasTransform)
-		//	pProperty->SetTransform(m_Transform);
+		NMR::PModelResource pResource = pModel->findResource(pID);
+		NMR::PModelScalarField pScalarField = std::dynamic_pointer_cast<NMR::CModelScalarField>(pResource);
 
-		//return pProperty;
+		NMR::PVolumeDataProperty pProperty;
+		if (pScalarField)
+		{
+			pProperty = std::make_shared<CVolumeDataProperty>(pScalarField, m_sName);
+		}
+		else
+		{
+			NMR::PModelVector3DField pVector3DField = std::dynamic_pointer_cast<NMR::CModelVector3DField>(pResource);
+			if (pVector3DField)
+			{
+				pProperty = std::make_shared<CVolumeDataProperty>(pVector3DField, m_sName);
+			}
+		}
+
+		if (!pProperty) {
+			throw CNMRException(NMR_ERROR_UNKNOWNMODELRESOURCE);
+		}
+		if (m_bHasTransform)
+			pProperty->setTransform(m_Transform);
+		pProperty->SetIsRequired(m_bRequired);
+		return pProperty;
 	}
 
 	void CModelReaderNode_Volumetric2201_Property::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
 	{
-		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_VOLUMEDATA_CHANNEL) == 0) {
-			if (m_bHasChannel)
-				throw CNMRException(NMR_ERROR_DUPLICATEVOLUMEDATACHANNEL);
-			m_bHasChannel = true;
-
-			m_sChannel = pAttributeValue;
-		}
-
 		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_VOLUMEDATA_TRANSFORM) == 0) {
 			if (m_bHasTransform)
 				throw CNMRException(NMR_ERROR_DUPLICATEVOLUMEDATATRANSFORM);
@@ -130,13 +128,13 @@ namespace NMR {
 			m_sName = pAttributeValue;
 		}
 
-		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_VOLUMEDATA_VOLUMETRICSTACKID) == 0) {
-			if (m_bHasStackId)
-				throw CNMRException(NMR_ERROR_DUPLICATEVOLUMEDATASTACKID);
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_VOLUMEDATA_FIELDID) == 0) {
+			if (m_bHasFieldID)
+				throw CNMRException(NMR_ERROR_DUPLICATEVOLUMEDATAFIELDID);
 
-			m_bHasStackId = true;
+			m_bHasFieldID = true;
 
-			m_nStackID = fnStringToUint32(pAttributeValue);
+			m_nFieldID = fnStringToUint32(pAttributeValue);
 		}
 
 		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_VOLUMEDATA_PROPERTY_REQUIRED) == 0) {

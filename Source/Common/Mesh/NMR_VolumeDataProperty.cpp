@@ -53,6 +53,7 @@ namespace NMR {
 	{
 		return m_sName;
 	}
+	
 	void CVolumeDataProperty::SetName(std::string sPropertyName)
 	{
 		m_sName = sPropertyName;

@@ -31,7 +31,7 @@ NMR_ModelReaderNode_Volumetric2201_VolumeData.cpp covers the official 3MF volume
 
 #include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_Volumetric2201_VolumeData.h"
 
-#include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_Volumetric2201_Levelset.h"
+#include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_Volumetric2201_Boundary.h"
 #include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_Volumetric2201_Property.h"
 #include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_Volumetric2201_Color.h"
 #include "Model/Classes/NMR_ModelConstants.h"
@@ -51,7 +51,7 @@ namespace NMR {
 		if ((pVolumeData == nullptr) ||  (pModel == nullptr))
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-		m_bHasLevelset = false;
+		m_bHasBoundary = false;
 	}
 
 	void CModelReaderNode_Volumetric2201_VolumeData::parseXML(_In_ CXmlReader * pXMLReader)
@@ -78,17 +78,17 @@ namespace NMR {
 		__NMRASSERT(pNameSpace);
 
 		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_VOLUMETRICSPEC) == 0) {
-			if (strcmp(pChildName, XML_3MF_ELEMENT_VOLUMETRIC_LEVELSET) == 0)
+			if (strcmp(pChildName, XML_3MF_ELEMENT_VOLUMETRIC_BOUNDARY) == 0)
 			{
-				if (m_bHasLevelset) {
-					throw CNMRException(NMR_ERROR_DUPLICATEVOLUMEDATALEVELSET);
+				if (m_bHasBoundary) {
+					throw CNMRException(NMR_ERROR_DUPLICATEVOLUMEDATABOUNDARY);
 				}
-				m_bHasLevelset = true;
-				PModelReaderNode_Volumetric2201_Levelset pXMLNode = std::make_shared<CModelReaderNode_Volumetric2201_Levelset>(m_pWarnings);
+				m_bHasBoundary = true;
+				PModelReaderNode_Volumetric2201_Boundary pXMLNode = std::make_shared<CModelReaderNode_Volumetric2201_Boundary>(m_pWarnings);
 				pXMLNode->parseXML(pXMLReader);
 
-				PVolumeDataLevelset pLevelSet = pXMLNode->MakeLevelset(m_pModel);
-				m_pVolumeData->SetLevelset(pLevelSet);
+				PVolumeDataBoundary pLevelSet = pXMLNode->MakeLevelset(m_pModel);
+				m_pVolumeData->SetBoundary(pLevelSet);
 			}
 			else if (strcmp(pChildName, XML_3MF_ELEMENT_VOLUMETRIC_PROPERTY) == 0)
 			{
@@ -98,10 +98,7 @@ namespace NMR {
 				PVolumeDataProperty pProperty = pXMLNode->MakeProperty(m_pModel);
 
 				if (m_pVolumeData->hasProperty(pProperty->GetName()) == false) {
-					//PVolumeDataProperty pVolDataProp = m_pVolumeData->CreateProperty(pProperty->GetName(), pProperty->GetVolumetricStack());
-					//pVolDataProp->SetIsRequired(pProperty->IsRequired());
-					//pVolDataProp->SetTransform(pProperty->GetTransform());
-					throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
+					m_pVolumeData->AddProperty(pProperty);
 				}
 				else {
 					throw CNMRException(NMR_ERROR_DUPLICATEVOLUMEDATAPROPERTY);

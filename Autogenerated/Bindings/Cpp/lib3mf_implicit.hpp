@@ -89,7 +89,7 @@ class CVector3DFieldComposed;
 class CFieldReference;
 class CScalarFieldReference;
 class CVector3DFieldReference;
-class CVolumeDataLevelset;
+class CVolumeDataBoundary;
 class CVolumeDataColor;
 class CMaterialMapping;
 class CVolumeDataComposite;
@@ -156,7 +156,7 @@ typedef CVector3DFieldComposed CLib3MFVector3DFieldComposed;
 typedef CFieldReference CLib3MFFieldReference;
 typedef CScalarFieldReference CLib3MFScalarFieldReference;
 typedef CVector3DFieldReference CLib3MFVector3DFieldReference;
-typedef CVolumeDataLevelset CLib3MFVolumeDataLevelset;
+typedef CVolumeDataBoundary CLib3MFVolumeDataBoundary;
 typedef CVolumeDataColor CLib3MFVolumeDataColor;
 typedef CMaterialMapping CLib3MFMaterialMapping;
 typedef CVolumeDataComposite CLib3MFVolumeDataComposite;
@@ -223,7 +223,7 @@ typedef std::shared_ptr<CVector3DFieldComposed> PVector3DFieldComposed;
 typedef std::shared_ptr<CFieldReference> PFieldReference;
 typedef std::shared_ptr<CScalarFieldReference> PScalarFieldReference;
 typedef std::shared_ptr<CVector3DFieldReference> PVector3DFieldReference;
-typedef std::shared_ptr<CVolumeDataLevelset> PVolumeDataLevelset;
+typedef std::shared_ptr<CVolumeDataBoundary> PVolumeDataBoundary;
 typedef std::shared_ptr<CVolumeDataColor> PVolumeDataColor;
 typedef std::shared_ptr<CMaterialMapping> PMaterialMapping;
 typedef std::shared_ptr<CVolumeDataComposite> PVolumeDataComposite;
@@ -290,7 +290,7 @@ typedef PVector3DFieldComposed PLib3MFVector3DFieldComposed;
 typedef PFieldReference PLib3MFFieldReference;
 typedef PScalarFieldReference PLib3MFScalarFieldReference;
 typedef PVector3DFieldReference PLib3MFVector3DFieldReference;
-typedef PVolumeDataLevelset PLib3MFVolumeDataLevelset;
+typedef PVolumeDataBoundary PLib3MFVolumeDataBoundary;
 typedef PVolumeDataColor PLib3MFVolumeDataColor;
 typedef PMaterialMapping PLib3MFMaterialMapping;
 typedef PVolumeDataComposite PLib3MFVolumeDataComposite;
@@ -486,7 +486,7 @@ private:
 	friend class CFieldReference;
 	friend class CScalarFieldReference;
 	friend class CVector3DFieldReference;
-	friend class CVolumeDataLevelset;
+	friend class CVolumeDataBoundary;
 	friend class CVolumeDataColor;
 	friend class CMaterialMapping;
 	friend class CVolumeDataComposite;
@@ -1269,15 +1269,15 @@ public:
 };
 	
 /*************************************************************************************************************************
- Class CVolumeDataLevelset 
+ Class CVolumeDataBoundary 
 **************************************************************************************************************************/
-class CVolumeDataLevelset : public CScalarFieldReference {
+class CVolumeDataBoundary : public CScalarFieldReference {
 public:
 	
 	/**
-	* CVolumeDataLevelset::CVolumeDataLevelset - Constructor for VolumeDataLevelset class.
+	* CVolumeDataBoundary::CVolumeDataBoundary - Constructor for VolumeDataBoundary class.
 	*/
-	CVolumeDataLevelset(CWrapper* pWrapper, Lib3MFHandle pHandle)
+	CVolumeDataBoundary(CWrapper* pWrapper, Lib3MFHandle pHandle)
 		: CScalarFieldReference(pWrapper, pHandle)
 	{
 	}
@@ -1354,7 +1354,6 @@ public:
 	{
 	}
 	
-	inline void SetName(const std::string & sPropertyName);
 	inline std::string GetName();
 	inline void SetIsRequired(const bool bIsRequired);
 	inline bool IsRequired();
@@ -1374,9 +1373,9 @@ public:
 	{
 	}
 	
-	inline PVolumeDataLevelset GetLevelset();
-	inline PVolumeDataLevelset CreateNewLevelset(CScalarField * pTheScalarField, const sTransform & Transform);
-	inline void RemoveLevelset();
+	inline PVolumeDataBoundary GetBoundary();
+	inline PVolumeDataBoundary CreateNewBoundary(CScalarField * pTheScalarField);
+	inline void RemoveBoundary();
 	inline PVolumeDataComposite GetComposite();
 	inline PVolumeDataComposite CreateNewComposite();
 	inline void RemoveComposite();
@@ -1385,7 +1384,8 @@ public:
 	inline void RemoveColor();
 	inline Lib3MF_uint32 GetPropertyCount();
 	inline PVolumeDataProperty GetProperty(const Lib3MF_uint32 nIndex);
-	inline PVolumeDataProperty AddProperty(const std::string & sName, const Lib3MF_uint32 nUniqueResourceID);
+	inline PVolumeDataProperty AddPropertyFromScalarField(const std::string & sName, CScalarField * pTheScalarField);
+	inline PVolumeDataProperty AddPropertyFromVector3DField(const std::string & sName, CVector3DField * pTheVector3DField);
 	inline void RemoveProperty(const Lib3MF_uint32 nIndex);
 };
 	
@@ -4691,28 +4691,28 @@ public:
 	}
 	
 	/**
-	 * Method definitions for class CVolumeDataLevelset
+	 * Method definitions for class CVolumeDataBoundary
 	 */
 	
 	/**
-	* CVolumeDataLevelset::GetSolidThreshold - Returns the solidthreshold for the levelset function encoded in this VolumeDataLevelset
-	* @return The solidthreshold for the levelset function encoded in this VolumeDataLevelset
+	* CVolumeDataBoundary::GetSolidThreshold - Returns the solidthreshold for the levelset function encoded in this VolumeDataBoundary
+	* @return The solidthreshold for the levelset function encoded in this VolumeDataBoundary
 	*/
-	Lib3MF_double CVolumeDataLevelset::GetSolidThreshold()
+	Lib3MF_double CVolumeDataBoundary::GetSolidThreshold()
 	{
 		Lib3MF_double resultTheSolidThreshold = 0;
-		CheckError(lib3mf_volumedatalevelset_getsolidthreshold(m_pHandle, &resultTheSolidThreshold));
+		CheckError(lib3mf_volumedataboundary_getsolidthreshold(m_pHandle, &resultTheSolidThreshold));
 		
 		return resultTheSolidThreshold;
 	}
 	
 	/**
-	* CVolumeDataLevelset::SetSolidThreshold - Sets the solidthreshold for the levelset function encoded in this VolumeDataLevelset
-	* @param[in] dTheSolidThreshold - The solidthreshold for the levelset function encoded in this VolumeDataLevelset
+	* CVolumeDataBoundary::SetSolidThreshold - Sets the solidthreshold for the levelset function encoded in this VolumeDataBoundary
+	* @param[in] dTheSolidThreshold - The solidthreshold for the levelset function encoded in this VolumeDataBoundary
 	*/
-	void CVolumeDataLevelset::SetSolidThreshold(const Lib3MF_double dTheSolidThreshold)
+	void CVolumeDataBoundary::SetSolidThreshold(const Lib3MF_double dTheSolidThreshold)
 	{
-		CheckError(lib3mf_volumedatalevelset_setsolidthreshold(m_pHandle, dTheSolidThreshold));
+		CheckError(lib3mf_volumedataboundary_setsolidthreshold(m_pHandle, dTheSolidThreshold));
 	}
 	
 	/**
@@ -4813,15 +4813,6 @@ public:
 	 */
 	
 	/**
-	* CVolumeDataProperty::SetName - Sets the qualified name of this property.
-	* @param[in] sPropertyName - The new qualified name of this property
-	*/
-	void CVolumeDataProperty::SetName(const std::string & sPropertyName)
-	{
-		CheckError(lib3mf_volumedataproperty_setname(m_pHandle, sPropertyName.c_str()));
-	}
-	
-	/**
 	* CVolumeDataProperty::GetName - Gets the qualified name of this property.
 	* @return The qualified name of this property.
 	*/
@@ -4862,48 +4853,47 @@ public:
 	 */
 	
 	/**
-	* CVolumeData::GetLevelset - Returns the VolumeDataLevelset of this VolumeData instance
-	* @return filled with the VolumeDataLevelset of this VolumeData instance.
+	* CVolumeData::GetBoundary - Returns the VolumeDataBoundary of this VolumeData instance
+	* @return filled with the VolumeDataBoundary of this VolumeData instance.
 	*/
-	PVolumeDataLevelset CVolumeData::GetLevelset()
+	PVolumeDataBoundary CVolumeData::GetBoundary()
 	{
-		Lib3MFHandle hTheLevelsetData = nullptr;
-		CheckError(lib3mf_volumedata_getlevelset(m_pHandle, &hTheLevelsetData));
+		Lib3MFHandle hTheBoundaryData = nullptr;
+		CheckError(lib3mf_volumedata_getboundary(m_pHandle, &hTheBoundaryData));
 		
-		if (hTheLevelsetData) {
-			return std::make_shared<CVolumeDataLevelset>(m_pWrapper, hTheLevelsetData);
+		if (hTheBoundaryData) {
+			return std::make_shared<CVolumeDataBoundary>(m_pWrapper, hTheBoundaryData);
 		} else {
 			return nullptr;
 		}
 	}
 	
 	/**
-	* CVolumeData::CreateNewLevelset - Creates a new VolumeDataLevelset for this VolumeData instance
+	* CVolumeData::CreateNewBoundary - Creates a new VolumeDataBoundary for this VolumeData instance
 	* @param[in] pTheScalarField - ScalarField used in this element
-	* @param[in] Transform - new transformation matrix
-	* @return The new VolumeDataLevelset of this VolumeData instance.
+	* @return The new VolumeDataBoundary of this VolumeData instance.
 	*/
-	PVolumeDataLevelset CVolumeData::CreateNewLevelset(CScalarField * pTheScalarField, const sTransform & Transform)
+	PVolumeDataBoundary CVolumeData::CreateNewBoundary(CScalarField * pTheScalarField)
 	{
 		Lib3MFHandle hTheScalarField = nullptr;
 		if (pTheScalarField != nullptr) {
 			hTheScalarField = pTheScalarField->GetHandle();
 		};
-		Lib3MFHandle hTheLevelsetData = nullptr;
-		CheckError(lib3mf_volumedata_createnewlevelset(m_pHandle, hTheScalarField, &Transform, &hTheLevelsetData));
+		Lib3MFHandle hTheBoundaryData = nullptr;
+		CheckError(lib3mf_volumedata_createnewboundary(m_pHandle, hTheScalarField, &hTheBoundaryData));
 		
-		if (!hTheLevelsetData) {
+		if (!hTheBoundaryData) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
-		return std::make_shared<CVolumeDataLevelset>(m_pWrapper, hTheLevelsetData);
+		return std::make_shared<CVolumeDataBoundary>(m_pWrapper, hTheBoundaryData);
 	}
 	
 	/**
-	* CVolumeData::RemoveLevelset - Removes the VolumeDataLevelset of this VolumeData instance
+	* CVolumeData::RemoveBoundary - Removes the VolumeDataBoundary of this VolumeData instance
 	*/
-	void CVolumeData::RemoveLevelset()
+	void CVolumeData::RemoveBoundary()
 	{
-		CheckError(lib3mf_volumedata_removelevelset(m_pHandle));
+		CheckError(lib3mf_volumedata_removeboundary(m_pHandle));
 	}
 	
 	/**
@@ -5019,15 +5009,40 @@ public:
 	}
 	
 	/**
-	* CVolumeData::AddProperty - Adds a new VolumeDataProperty
+	* CVolumeData::AddPropertyFromScalarField - Adds a new VolumeDataProperty from a ScalarField
 	* @param[in] sName - the qualified name (namespace+name) of the Property
-	* @param[in] nUniqueResourceID - UniqueResourceID of the Field (Scalar- or Vector3DField)
+	* @param[in] pTheScalarField - ScalarField used in this element
 	* @return the newly created VolumeDataProperty.
 	*/
-	PVolumeDataProperty CVolumeData::AddProperty(const std::string & sName, const Lib3MF_uint32 nUniqueResourceID)
+	PVolumeDataProperty CVolumeData::AddPropertyFromScalarField(const std::string & sName, CScalarField * pTheScalarField)
 	{
+		Lib3MFHandle hTheScalarField = nullptr;
+		if (pTheScalarField != nullptr) {
+			hTheScalarField = pTheScalarField->GetHandle();
+		};
 		Lib3MFHandle hTheVolumeDataProperty = nullptr;
-		CheckError(lib3mf_volumedata_addproperty(m_pHandle, sName.c_str(), nUniqueResourceID, &hTheVolumeDataProperty));
+		CheckError(lib3mf_volumedata_addpropertyfromscalarfield(m_pHandle, sName.c_str(), hTheScalarField, &hTheVolumeDataProperty));
+		
+		if (!hTheVolumeDataProperty) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::make_shared<CVolumeDataProperty>(m_pWrapper, hTheVolumeDataProperty);
+	}
+	
+	/**
+	* CVolumeData::AddPropertyFromVector3DField - Adds a new VolumeDataProperty from a Vector3DField
+	* @param[in] sName - the qualified name (namespace+name) of the Property
+	* @param[in] pTheVector3DField - Vector3DField used in this element
+	* @return the newly created VolumeDataProperty.
+	*/
+	PVolumeDataProperty CVolumeData::AddPropertyFromVector3DField(const std::string & sName, CVector3DField * pTheVector3DField)
+	{
+		Lib3MFHandle hTheVector3DField = nullptr;
+		if (pTheVector3DField != nullptr) {
+			hTheVector3DField = pTheVector3DField->GetHandle();
+		};
+		Lib3MFHandle hTheVolumeDataProperty = nullptr;
+		CheckError(lib3mf_volumedata_addpropertyfromvector3dfield(m_pHandle, sName.c_str(), hTheVector3DField, &hTheVolumeDataProperty));
 		
 		if (!hTheVolumeDataProperty) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);

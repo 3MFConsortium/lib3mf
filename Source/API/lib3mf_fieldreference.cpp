@@ -30,9 +30,8 @@ Abstract: This is a stub class definition of CFieldReference
 
 #include "lib3mf_fieldreference.hpp"
 #include "lib3mf_interfaceexception.hpp"
-
+#include "lib3mf_utils.hpp"
 // Include custom headers here.
-
 
 using namespace Lib3MF::Impl;
 
@@ -40,23 +39,30 @@ using namespace Lib3MF::Impl;
  Class definition of CFieldReference 
 **************************************************************************************************************************/
 
+CFieldReference::CFieldReference(NMR::PFieldReference pFieldReference)
+	:CBase(), m_pFieldReference(pFieldReference)
+{
+
+}
+
 Lib3MF_uint32 CFieldReference::GetFieldResourceID()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return m_pFieldReference->getFieldReferenceID()->getUniqueID();
 }
 
 void CFieldReference::SetFieldResourceID(const Lib3MF_uint32 nUniqueResourceID)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return m_pFieldReference->setFieldReferenceID(nUniqueResourceID);
 }
 
 Lib3MF::sTransform CFieldReference::GetTransform()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	const NMR::NMATRIX3 matrix = m_pFieldReference->getTransform();
+	return MatrixToTransform(matrix);
 }
 
 void CFieldReference::SetTransform(const Lib3MF::sTransform Transform)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	m_pFieldReference->setTransform(TransformToMatrix(Transform));
 }
 

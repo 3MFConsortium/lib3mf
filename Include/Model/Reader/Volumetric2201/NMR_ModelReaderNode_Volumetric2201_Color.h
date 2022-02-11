@@ -41,13 +41,13 @@ namespace NMR {
 
 	class CModelReaderNode_Volumetric2201_Color : public CModelReaderNode {
 	private:
-		nfBool m_bHasStackId;
+		nfBool m_bHasFieldID;
 		nfBool m_bHasTransform;
 		nfBool m_bHasRedChannel;
 		nfBool m_bHasGreenChannel;
 		nfBool m_bHasBlueChannel;
 
-		ModelResourceID m_nStackID;
+		ModelResourceID m_nFieldID;
 		NMATRIX3 m_Transform;
 		std::string m_sRedChannel;
 		std::string m_sGreenChannel;

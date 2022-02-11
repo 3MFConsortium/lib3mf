@@ -81,7 +81,7 @@ void InitAll(Handle<Object> exports, Handle<Object> module)
     CLib3MFFieldReference::Init();
     CLib3MFScalarFieldReference::Init();
     CLib3MFVector3DFieldReference::Init();
-    CLib3MFVolumeDataLevelset::Init();
+    CLib3MFVolumeDataBoundary::Init();
     CLib3MFVolumeDataColor::Init();
     CLib3MFMaterialMapping::Init();
     CLib3MFVolumeDataComposite::Init();

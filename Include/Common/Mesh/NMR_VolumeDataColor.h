@@ -46,7 +46,7 @@ namespace NMR {
 	private:
 
 	public:
-		CVolumeDataColor(PModelVector3DField pVector3DField, NMR::NMATRIX3 transform);
+		CVolumeDataColor(PModelVector3DField pVector3DField);
 	};
 
 	typedef std::shared_ptr<CVolumeDataColor> PVolumeDataColor;

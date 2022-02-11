@@ -24,13 +24,13 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CVolumeDataLevelset
+Abstract: This is the class declaration of CVolumeDataBoundary
 
 */
 
 
-#ifndef __LIB3MF_VOLUMEDATALEVELSET
-#define __LIB3MF_VOLUMEDATALEVELSET
+#ifndef __LIB3MF_VOLUMEDATABOUNDARY
+#define __LIB3MF_VOLUMEDATABOUNDARY
 
 #include "lib3mf_interfaces.hpp"
 
@@ -42,17 +42,17 @@ Abstract: This is the class declaration of CVolumeDataLevelset
 #endif
 
 // Include custom headers here.
-
+#include "Common/Mesh/NMR_VolumeDataBoundary.h"
 
 namespace Lib3MF {
 namespace Impl {
 
 
 /*************************************************************************************************************************
- Class declaration of CVolumeDataLevelset 
+ Class declaration of CVolumeDataBoundary 
 **************************************************************************************************************************/
 
-class CVolumeDataLevelset : public virtual IVolumeDataLevelset, public virtual CScalarFieldReference {
+class CVolumeDataBoundary : public virtual IVolumeDataBoundary, public virtual CScalarFieldReference {
 private:
 
 	/**
@@ -61,6 +61,7 @@ private:
 
 protected:
 
+	NMR::PVolumeDataBoundary asVolumeDataBoundary();
 	/**
 	* Put protected members here.
 	*/
@@ -70,7 +71,8 @@ public:
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-
+	CVolumeDataBoundary() = delete;
+	CVolumeDataBoundary(NMR::PVolumeDataBoundary pBoundary);
 
 	/**
 	* Public member functions to implement.
@@ -88,4 +90,4 @@ public:
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif
-#endif // __LIB3MF_VOLUMEDATALEVELSET
+#endif // __LIB3MF_VOLUMEDATABOUNDARY

@@ -54,10 +54,11 @@ namespace NMR {
 		return m_pFieldPackageResourceID;
 	}
 
-	void CFieldReference::setFieldReferenceID(PPackageResourceID pFieldResourceId)
+	void CFieldReference::setFieldReferenceID(UniqueResourceID FieldResourceId)
 	{
+		throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
 		// TODO: check if this points to a Scalar or Vector3DField
-		m_pFieldPackageResourceID = pFieldResourceId;
+		// m_pFieldPackageResourceID = m_pMpFieldResourceId;
 	}
 
 
@@ -67,10 +68,11 @@ namespace NMR {
 
 	}
 
-	void CScalarFieldReference::setFieldReferenceID(PPackageResourceID pFieldResourceId)
+	void CScalarFieldReference::setFieldReferenceID(UniqueResourceID FieldResourceId)
 	{
+		throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
 		// TODO: check if this points to a ScalarField
-		CFieldReference::setFieldReferenceID(pFieldResourceId);
+		// CFieldReference::SetFieldReferenceID(pFieldResourceId);
 	}
 
 	CVector3DFieldReference::CVector3DFieldReference(PModelVector3DField pVector3DField)
@@ -79,9 +81,10 @@ namespace NMR {
 
 	}
 
-	void CVector3DFieldReference::setFieldReferenceID(PPackageResourceID pFieldResourceId)
+	void CVector3DFieldReference::setFieldReferenceID(UniqueResourceID FieldResourceId)
 	{
+		throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
 		// TODO: check if this points to a Vector3DField
-		CFieldReference::setFieldReferenceID(pFieldResourceId);
+		// CFieldReference::SetFieldReferenceID(pFieldResourceId);
 	}
 }

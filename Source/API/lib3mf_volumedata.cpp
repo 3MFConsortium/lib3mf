@@ -31,8 +31,15 @@ Abstract: This is a stub class definition of CVolumeData
 #include "lib3mf_volumedata.hpp"
 #include "lib3mf_interfaceexception.hpp"
 
-// Include custom headers here.
+#include "lib3mf_volumedataproperty.hpp"
+#include "lib3mf_volumedataboundary.hpp"
 
+// Include custom headers here.
+#include "Model/Classes/NMR_ModelMeshObject.h"
+#include "Model/Classes/NMR_ModelResource.h"
+#include "Model/Classes/NMR_ModelScalarField.h"
+#include "Model/Classes/NMR_ModelScalarField.h"
+#include "Model/Classes/NMR_ModelVector3DField.h"
 
 using namespace Lib3MF::Impl;
 
@@ -40,17 +47,37 @@ using namespace Lib3MF::Impl;
  Class definition of CVolumeData 
 **************************************************************************************************************************/
 
-IVolumeDataLevelset * CVolumeData::GetLevelset()
+CVolumeData::CVolumeData(NMR::PModelMeshObject pMeshObject, NMR::PModelVolumeData pVolumeData)
+	:CBase(), m_pMeshObject(pMeshObject), m_pVolumeData(pVolumeData)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-IVolumeDataLevelset * CVolumeData::CreateNewLevelset(IScalarField* pTheScalarField, const Lib3MF::sTransform Transform)
+IVolumeDataBoundary* CVolumeData::GetBoundary()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	auto pBoundary = m_pVolumeData->GetBoundary();
+	if (!pBoundary) {
+		return nullptr;
+	}
+	return new CVolumeDataBoundary(pBoundary);
 }
 
-void CVolumeData::RemoveLevelset()
+IVolumeDataBoundary* CVolumeData::CreateNewBoundary(IScalarField* pTheScalarField)
+{
+	NMR::CModel* pModel = m_pMeshObject->getModel();
+
+	NMR::PModelResource pResource = pModel->findResource(pTheScalarField->GetUniqueResourceID());
+	NMR::PModelScalarField pScalarField = std::dynamic_pointer_cast<NMR::CModelScalarField>(pResource);
+
+	if (!pScalarField)
+	{
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+	}
+
+	NMR::PVolumeDataBoundary pBoundary = m_pVolumeData->CreateBoundary(pScalarField);
+	return new CVolumeDataBoundary(pBoundary);
+}
+
+void CVolumeData::RemoveBoundary()
 {
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
@@ -87,17 +114,52 @@ void CVolumeData::RemoveColor()
 
 Lib3MF_uint32 CVolumeData::GetPropertyCount()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return m_pVolumeData->GetPropertyCount();
 }
 
 IVolumeDataProperty * CVolumeData::GetProperty(const Lib3MF_uint32 nIndex)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	NMR::PVolumeDataProperty pProperty = m_pVolumeData->GetProperty(nIndex);
+	if (!pProperty) {
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+	}
+	return new CVolumeDataProperty(pProperty);
 }
 
-IVolumeDataProperty * CVolumeData::AddProperty(const std::string & sName, const Lib3MF_uint32 nUniqueResourceID)
+IVolumeDataProperty* CVolumeData::AddPropertyFromScalarField(const std::string& sName, IScalarField* pTheScalarField)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	NMR::CModel* pModel = m_pMeshObject->getModel();
+
+	NMR::PModelResource pResource = pModel->findResource(pTheScalarField->GetUniqueResourceID());
+	NMR::PModelScalarField pScalarField = std::dynamic_pointer_cast<NMR::CModelScalarField>(pResource);
+
+	if (!pScalarField) {
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+	}
+	auto pProperty = m_pVolumeData->AddProperty(sName, pScalarField);
+
+	if (!pProperty) {
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+	}
+	return new CVolumeDataProperty(pProperty);
+}
+
+IVolumeDataProperty* CVolumeData::AddPropertyFromVector3DField(const std::string& sName, IVector3DField* pTheVector3DField)
+{
+	NMR::CModel* pModel = m_pMeshObject->getModel();
+
+	NMR::PModelResource pResource = pModel->findResource(pTheVector3DField->GetUniqueResourceID());
+	NMR::PModelVector3DField pVector3DField = std::dynamic_pointer_cast<NMR::CModelVector3DField>(pResource);
+
+	if (!pVector3DField) {
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+	}
+	auto pProperty = m_pVolumeData->AddProperty(sName, pVector3DField);
+
+	if (!pProperty) {
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+	}
+	return new CVolumeDataProperty(pProperty);
 }
 
 void CVolumeData::RemoveProperty(const Lib3MF_uint32 nIndex)

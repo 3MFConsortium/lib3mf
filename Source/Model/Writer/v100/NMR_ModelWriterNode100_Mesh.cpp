@@ -369,23 +369,23 @@ namespace NMR {
 		if (m_bWriteVolumetricExtension)
 		{
 			// TODO: different logic
-			if (m_pModelMeshObject->getVolumeData()->HasLevelset() ||
+			if (m_pModelMeshObject->getVolumeData()->HasBoundary() ||
 				m_pModelMeshObject->getVolumeData()->GetPropertyCount() ||
 				m_pModelMeshObject->getVolumeData()->HasColor()) {
 
 				writeStartElementWithPrefix(XML_3MF_ELEMENT_VOLUMEDATA, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
 
-				if (m_pModelMeshObject->getVolumeData()->HasLevelset()) {
-					throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
-					//writeStartElementWithPrefix(XML_3MF_ELEMENT_VOLUMETRIC_LEVELSET, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
-					//PVolumeDataLevelset pLevelset = m_pModelMeshObject->getVolumeData()->GetLevelset();
-					//writeIntAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_VOLUMETRICSTACKID, pLevelset->GetVolumetricStack()->getPackageResourceID()->getUniqueID());
-					//writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_CHANNEL, pLevelset->GetChannel());
-					//writeFloatAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_SOLIDTHRESHOLD, float(pLevelset->GetSolidThreshold()));
-					//if (!fnMATRIX3_isIdentity(pLevelset->GetTransform())) {
-					//	writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_TRANSFORM, fnMATRIX3_toString(pLevelset->GetTransform()));
-					//}
-					//writeEndElement();
+				if (m_pModelMeshObject->getVolumeData()->HasBoundary()) {
+					writeStartElementWithPrefix(XML_3MF_ELEMENT_VOLUMETRIC_BOUNDARY, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
+					PVolumeDataBoundary pBoundary = m_pModelMeshObject->getVolumeData()->GetBoundary();
+					writeIntAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_FIELDID, pBoundary->getFieldReferenceID()->getModelResourceID());
+					if (pBoundary->GetSolidThreshold() != 0.0) {
+						writeFloatAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_SOLIDTHRESHOLD, float(pBoundary->GetSolidThreshold()));
+					}
+					if (!fnMATRIX3_isIdentity(pBoundary->getTransform())) {
+						writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_TRANSFORM, fnMATRIX3_toString(pBoundary->getTransform()));
+					}
+					writeEndElement();
 				}
 
 				if (m_pModelMeshObject->getVolumeData()->GetPropertyCount())
@@ -394,18 +394,16 @@ namespace NMR {
 
 					for (nfUint32 i = 0; i < count; i++)
 					{
-						throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
-						//writeStartElementWithPrefix(XML_3MF_ELEMENT_VOLUMETRIC_PROPERTY, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
-						//PVolumeDataProperty pProperty = m_pModelMeshObject->getVolumeData()->GetProperty(i);
-						//writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_PROPERTY, pProperty->GetName());
-						//if (!fnMATRIX3_isIdentity(pProperty->GetTransform())) {
-						//	writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_TRANSFORM, fnMATRIX3_toString(pProperty->GetTransform()));
-						//}
-						//writeIntAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_VOLUMETRICSTACKID, pProperty->GetVolumetricStack()->getPackageResourceID()->getUniqueID());
-						//writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_CHANNEL, pProperty->GetChannel());
-						//if (!pProperty->IsRequired())
-						//	writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_PROPERTY_REQUIRED, "false");
-						//writeEndElement();
+						writeStartElementWithPrefix(XML_3MF_ELEMENT_VOLUMETRIC_PROPERTY, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
+						PVolumeDataProperty pProperty = m_pModelMeshObject->getVolumeData()->GetProperty(i);
+						writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_PROPERTY, pProperty->GetName());
+						if (!fnMATRIX3_isIdentity(pProperty->getTransform())) {
+							writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_TRANSFORM, fnMATRIX3_toString(pProperty->getTransform()));
+						}
+						writeIntAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_FIELDID, pProperty->getFieldReferenceID()->getModelResourceID());
+						if (!pProperty->IsRequired())
+							writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_PROPERTY_REQUIRED, "false");
+						writeEndElement();
 					}
 				}
 
@@ -416,7 +414,7 @@ namespace NMR {
 					//PVolumeDataColor pColor = m_pModelMeshObject->getVolumeData()->GetColor();
 					//PModelVolumetricStack pStackResource = pColor->GetVolumetricStack();
 
-					//writeIntAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_VOLUMETRICSTACKID, pStackResource->getPackageResourceID()->getUniqueID());
+					//writeIntAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_FIELDID, pStackResource->getPackageResourceID()->getUniqueID());
 					//if (!fnMATRIX3_isIdentity(pColor->GetTransform())) {
 					//	writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_TRANSFORM, fnMATRIX3_toString(pColor->GetTransform()));
 					//}

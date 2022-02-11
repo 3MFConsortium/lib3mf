@@ -74,7 +74,7 @@ Persistent<Function> CLib3MFVector3DFieldComposed::constructor;
 Persistent<Function> CLib3MFFieldReference::constructor;
 Persistent<Function> CLib3MFScalarFieldReference::constructor;
 Persistent<Function> CLib3MFVector3DFieldReference::constructor;
-Persistent<Function> CLib3MFVolumeDataLevelset::constructor;
+Persistent<Function> CLib3MFVolumeDataBoundary::constructor;
 Persistent<Function> CLib3MFVolumeDataColor::constructor;
 Persistent<Function> CLib3MFMaterialMapping::constructor;
 Persistent<Function> CLib3MFVolumeDataComposite::constructor;
@@ -7790,25 +7790,25 @@ void CLib3MFVector3DFieldReference::SetVector3DField (const FunctionCallbackInfo
 }
 
 /*************************************************************************************************************************
- Class CLib3MFVolumeDataLevelset Implementation
+ Class CLib3MFVolumeDataBoundary Implementation
 **************************************************************************************************************************/
 
-CLib3MFVolumeDataLevelset::CLib3MFVolumeDataLevelset ()
+CLib3MFVolumeDataBoundary::CLib3MFVolumeDataBoundary ()
     : CLib3MFBaseClass ()
 {
 }
 
-CLib3MFVolumeDataLevelset::~CLib3MFVolumeDataLevelset()
+CLib3MFVolumeDataBoundary::~CLib3MFVolumeDataBoundary()
 {
 }
 
-void CLib3MFVolumeDataLevelset::Init()
+void CLib3MFVolumeDataBoundary::Init()
 {
     Isolate* isolate = Isolate::GetCurrent();
 
     // Prepare constructor template
     Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
-    tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFVolumeDataLevelset"));
+    tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFVolumeDataBoundary"));
     tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
 
     // Prototype
@@ -7818,22 +7818,22 @@ void CLib3MFVolumeDataLevelset::Init()
 
 }
 
-void CLib3MFVolumeDataLevelset::New(const FunctionCallbackInfo<Value>& args)
+void CLib3MFVolumeDataBoundary::New(const FunctionCallbackInfo<Value>& args)
 {
     Isolate* isolate = args.GetIsolate();
     HandleScope scope(isolate);
 
     if (args.IsConstructCall()) {
         CLib3MFBaseClass * holderObj = ObjectWrap::Unwrap<CLib3MFBaseClass>(args.Holder());
-        CLib3MFVolumeDataLevelset * volumedatalevelsetInstance = new CLib3MFVolumeDataLevelset ();
-        volumedatalevelsetInstance->Wrap(args.This());
+        CLib3MFVolumeDataBoundary * volumedataboundaryInstance = new CLib3MFVolumeDataBoundary ();
+        volumedataboundaryInstance->Wrap(args.This());
         args.GetReturnValue().Set(args.This());
     } else {
-        RaiseError (isolate, "Lib3MFVolumeDataLevelset: Invalid call to Constructor");
+        RaiseError (isolate, "Lib3MFVolumeDataBoundary: Invalid call to Constructor");
     }
 }
 
-Local<Object> CLib3MFVolumeDataLevelset::NewInstance(Local<Object> pParent, Lib3MFHandle pHandle)
+Local<Object> CLib3MFVolumeDataBoundary::NewInstance(Local<Object> pParent, Lib3MFHandle pHandle)
 {
     Isolate* isolate = Isolate::GetCurrent();
     HandleScope scope(isolate);
@@ -7847,7 +7847,7 @@ Local<Object> CLib3MFVolumeDataLevelset::NewInstance(Local<Object> pParent, Lib3
 }
 
 
-void CLib3MFVolumeDataLevelset::GetSolidThreshold (const FunctionCallbackInfo<Value>& args) 
+void CLib3MFVolumeDataBoundary::GetSolidThreshold (const FunctionCallbackInfo<Value>& args) 
 {
     Isolate* isolate = args.GetIsolate();
     HandleScope scope(isolate);
@@ -7856,10 +7856,10 @@ void CLib3MFVolumeDataLevelset::GetSolidThreshold (const FunctionCallbackInfo<Va
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
         if (wrapperTable == nullptr)
             throw std::runtime_error ("Could not get wrapper table for Lib3MF method GetSolidThreshold.");
-        if (wrapperTable->m_VolumeDataLevelset_GetSolidThreshold == nullptr)
-            throw std::runtime_error ("Could not call Lib3MF method VolumeDataLevelset::GetSolidThreshold.");
+        if (wrapperTable->m_VolumeDataBoundary_GetSolidThreshold == nullptr)
+            throw std::runtime_error ("Could not call Lib3MF method VolumeDataBoundary::GetSolidThreshold.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_VolumeDataLevelset_GetSolidThreshold (instanceHandle, &dReturnTheSolidThreshold);
+        Lib3MFResult errorCode = wrapperTable->m_VolumeDataBoundary_GetSolidThreshold (instanceHandle, &dReturnTheSolidThreshold);
         CheckError (isolate, wrapperTable, instanceHandle, errorCode);
         args.GetReturnValue().Set (Number::New (isolate, dReturnTheSolidThreshold));
 
@@ -7869,7 +7869,7 @@ void CLib3MFVolumeDataLevelset::GetSolidThreshold (const FunctionCallbackInfo<Va
 }
 
 
-void CLib3MFVolumeDataLevelset::SetSolidThreshold (const FunctionCallbackInfo<Value>& args) 
+void CLib3MFVolumeDataBoundary::SetSolidThreshold (const FunctionCallbackInfo<Value>& args) 
 {
     Isolate* isolate = args.GetIsolate();
     HandleScope scope(isolate);
@@ -7881,10 +7881,10 @@ void CLib3MFVolumeDataLevelset::SetSolidThreshold (const FunctionCallbackInfo<Va
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
         if (wrapperTable == nullptr)
             throw std::runtime_error ("Could not get wrapper table for Lib3MF method SetSolidThreshold.");
-        if (wrapperTable->m_VolumeDataLevelset_SetSolidThreshold == nullptr)
-            throw std::runtime_error ("Could not call Lib3MF method VolumeDataLevelset::SetSolidThreshold.");
+        if (wrapperTable->m_VolumeDataBoundary_SetSolidThreshold == nullptr)
+            throw std::runtime_error ("Could not call Lib3MF method VolumeDataBoundary::SetSolidThreshold.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_VolumeDataLevelset_SetSolidThreshold (instanceHandle, dTheSolidThreshold);
+        Lib3MFResult errorCode = wrapperTable->m_VolumeDataBoundary_SetSolidThreshold (instanceHandle, dTheSolidThreshold);
         CheckError (isolate, wrapperTable, instanceHandle, errorCode);
 
     } catch (std::exception & E) {
@@ -8237,7 +8237,6 @@ void CLib3MFVolumeDataProperty::Init()
     tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
 
     // Prototype
-    NODE_SET_PROTOTYPE_METHOD(tpl, "SetName", SetName);
     NODE_SET_PROTOTYPE_METHOD(tpl, "GetName", GetName);
     NODE_SET_PROTOTYPE_METHOD(tpl, "SetIsRequired", SetIsRequired);
     NODE_SET_PROTOTYPE_METHOD(tpl, "IsRequired", IsRequired);
@@ -8271,31 +8270,6 @@ Local<Object> CLib3MFVolumeDataProperty::NewInstance(Local<Object> pParent, Lib3
       instance->SetInternalField (NODEWRAPPER_HANDLEINDEX, External::New (isolate, pHandle));
     }
     return instance;
-}
-
-
-void CLib3MFVolumeDataProperty::SetName (const FunctionCallbackInfo<Value>& args) 
-{
-    Isolate* isolate = args.GetIsolate();
-    HandleScope scope(isolate);
-    try {
-        if (!args[0]->IsString()) {
-            throw std::runtime_error ("Expected string parameter 0 (PropertyName)");
-        }
-        v8::String::Utf8Value sutf8PropertyName (args[0]->ToString());
-        std::string sPropertyName = *sutf8PropertyName;
-        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
-        if (wrapperTable == nullptr)
-            throw std::runtime_error ("Could not get wrapper table for Lib3MF method SetName.");
-        if (wrapperTable->m_VolumeDataProperty_SetName == nullptr)
-            throw std::runtime_error ("Could not call Lib3MF method VolumeDataProperty::SetName.");
-        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_VolumeDataProperty_SetName (instanceHandle, sPropertyName.c_str());
-        CheckError (isolate, wrapperTable, instanceHandle, errorCode);
-
-    } catch (std::exception & E) {
-        RaiseError (isolate, E.what());
-    }
 }
 
 
@@ -8394,9 +8368,9 @@ void CLib3MFVolumeData::Init()
     tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
 
     // Prototype
-    NODE_SET_PROTOTYPE_METHOD(tpl, "GetLevelset", GetLevelset);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "CreateNewLevelset", CreateNewLevelset);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "RemoveLevelset", RemoveLevelset);
+    NODE_SET_PROTOTYPE_METHOD(tpl, "GetBoundary", GetBoundary);
+    NODE_SET_PROTOTYPE_METHOD(tpl, "CreateNewBoundary", CreateNewBoundary);
+    NODE_SET_PROTOTYPE_METHOD(tpl, "RemoveBoundary", RemoveBoundary);
     NODE_SET_PROTOTYPE_METHOD(tpl, "GetComposite", GetComposite);
     NODE_SET_PROTOTYPE_METHOD(tpl, "CreateNewComposite", CreateNewComposite);
     NODE_SET_PROTOTYPE_METHOD(tpl, "RemoveComposite", RemoveComposite);
@@ -8405,7 +8379,8 @@ void CLib3MFVolumeData::Init()
     NODE_SET_PROTOTYPE_METHOD(tpl, "RemoveColor", RemoveColor);
     NODE_SET_PROTOTYPE_METHOD(tpl, "GetPropertyCount", GetPropertyCount);
     NODE_SET_PROTOTYPE_METHOD(tpl, "GetProperty", GetProperty);
-    NODE_SET_PROTOTYPE_METHOD(tpl, "AddProperty", AddProperty);
+    NODE_SET_PROTOTYPE_METHOD(tpl, "AddPropertyFromScalarField", AddPropertyFromScalarField);
+    NODE_SET_PROTOTYPE_METHOD(tpl, "AddPropertyFromVector3DField", AddPropertyFromVector3DField);
     NODE_SET_PROTOTYPE_METHOD(tpl, "RemoveProperty", RemoveProperty);
     constructor.Reset(isolate, tpl->GetFunction());
 
@@ -8440,22 +8415,22 @@ Local<Object> CLib3MFVolumeData::NewInstance(Local<Object> pParent, Lib3MFHandle
 }
 
 
-void CLib3MFVolumeData::GetLevelset (const FunctionCallbackInfo<Value>& args) 
+void CLib3MFVolumeData::GetBoundary (const FunctionCallbackInfo<Value>& args) 
 {
     Isolate* isolate = args.GetIsolate();
     HandleScope scope(isolate);
     try {
-        Lib3MFHandle hReturnTheLevelsetData = nullptr;
+        Lib3MFHandle hReturnTheBoundaryData = nullptr;
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error ("Could not get wrapper table for Lib3MF method GetLevelset.");
-        if (wrapperTable->m_VolumeData_GetLevelset == nullptr)
-            throw std::runtime_error ("Could not call Lib3MF method VolumeData::GetLevelset.");
+            throw std::runtime_error ("Could not get wrapper table for Lib3MF method GetBoundary.");
+        if (wrapperTable->m_VolumeData_GetBoundary == nullptr)
+            throw std::runtime_error ("Could not call Lib3MF method VolumeData::GetBoundary.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_VolumeData_GetLevelset (instanceHandle, &hReturnTheLevelsetData);
+        Lib3MFResult errorCode = wrapperTable->m_VolumeData_GetBoundary (instanceHandle, &hReturnTheBoundaryData);
         CheckError (isolate, wrapperTable, instanceHandle, errorCode);
-        Local<Object> instanceObjTheLevelsetData = CLib3MFVolumeDataLevelset::NewInstance (args.Holder(), hReturnTheLevelsetData);
-        args.GetReturnValue().Set (instanceObjTheLevelsetData);
+        Local<Object> instanceObjTheBoundaryData = CLib3MFVolumeDataBoundary::NewInstance (args.Holder(), hReturnTheBoundaryData);
+        args.GetReturnValue().Set (instanceObjTheBoundaryData);
 
     } catch (std::exception & E) {
         RaiseError (isolate, E.what());
@@ -8463,7 +8438,7 @@ void CLib3MFVolumeData::GetLevelset (const FunctionCallbackInfo<Value>& args)
 }
 
 
-void CLib3MFVolumeData::CreateNewLevelset (const FunctionCallbackInfo<Value>& args) 
+void CLib3MFVolumeData::CreateNewBoundary (const FunctionCallbackInfo<Value>& args) 
 {
     Isolate* isolate = args.GetIsolate();
     HandleScope scope(isolate);
@@ -8471,26 +8446,22 @@ void CLib3MFVolumeData::CreateNewLevelset (const FunctionCallbackInfo<Value>& ar
         if (!args[0]->IsObject()) {
             throw std::runtime_error ("Expected class parameter 0 (TheScalarField)");
         }
-        if (!args[1]->IsObject()) {
-            throw std::runtime_error ("Expected struct parameter 1 (Transform)");
-        }
         Local<Object> objTheScalarField = args[0]->ToObject(isolate->GetCurrentContext()).ToLocalChecked ();
         CLib3MFScalarField * instanceTheScalarField = ObjectWrap::Unwrap<CLib3MFScalarField>(objTheScalarField);
         if (instanceTheScalarField == nullptr)
             throw std::runtime_error("Invalid Object parameter 0 (TheScalarField)");
         Lib3MFHandle hTheScalarField = instanceTheScalarField->getHandle ( objTheScalarField );
-        sLib3MFTransform sTransform = convertObjectToLib3MFTransform(isolate, args[1]);
-        Lib3MFHandle hReturnTheLevelsetData = nullptr;
+        Lib3MFHandle hReturnTheBoundaryData = nullptr;
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error ("Could not get wrapper table for Lib3MF method CreateNewLevelset.");
-        if (wrapperTable->m_VolumeData_CreateNewLevelset == nullptr)
-            throw std::runtime_error ("Could not call Lib3MF method VolumeData::CreateNewLevelset.");
+            throw std::runtime_error ("Could not get wrapper table for Lib3MF method CreateNewBoundary.");
+        if (wrapperTable->m_VolumeData_CreateNewBoundary == nullptr)
+            throw std::runtime_error ("Could not call Lib3MF method VolumeData::CreateNewBoundary.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_VolumeData_CreateNewLevelset (instanceHandle, hTheScalarField, &sTransform, &hReturnTheLevelsetData);
+        Lib3MFResult errorCode = wrapperTable->m_VolumeData_CreateNewBoundary (instanceHandle, hTheScalarField, &hReturnTheBoundaryData);
         CheckError (isolate, wrapperTable, instanceHandle, errorCode);
-        Local<Object> instanceObjTheLevelsetData = CLib3MFVolumeDataLevelset::NewInstance (args.Holder(), hReturnTheLevelsetData);
-        args.GetReturnValue().Set (instanceObjTheLevelsetData);
+        Local<Object> instanceObjTheBoundaryData = CLib3MFVolumeDataBoundary::NewInstance (args.Holder(), hReturnTheBoundaryData);
+        args.GetReturnValue().Set (instanceObjTheBoundaryData);
 
     } catch (std::exception & E) {
         RaiseError (isolate, E.what());
@@ -8498,18 +8469,18 @@ void CLib3MFVolumeData::CreateNewLevelset (const FunctionCallbackInfo<Value>& ar
 }
 
 
-void CLib3MFVolumeData::RemoveLevelset (const FunctionCallbackInfo<Value>& args) 
+void CLib3MFVolumeData::RemoveBoundary (const FunctionCallbackInfo<Value>& args) 
 {
     Isolate* isolate = args.GetIsolate();
     HandleScope scope(isolate);
     try {
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error ("Could not get wrapper table for Lib3MF method RemoveLevelset.");
-        if (wrapperTable->m_VolumeData_RemoveLevelset == nullptr)
-            throw std::runtime_error ("Could not call Lib3MF method VolumeData::RemoveLevelset.");
+            throw std::runtime_error ("Could not get wrapper table for Lib3MF method RemoveBoundary.");
+        if (wrapperTable->m_VolumeData_RemoveBoundary == nullptr)
+            throw std::runtime_error ("Could not call Lib3MF method VolumeData::RemoveBoundary.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_VolumeData_RemoveLevelset (instanceHandle);
+        Lib3MFResult errorCode = wrapperTable->m_VolumeData_RemoveBoundary (instanceHandle);
         CheckError (isolate, wrapperTable, instanceHandle, errorCode);
 
     } catch (std::exception & E) {
@@ -8711,7 +8682,7 @@ void CLib3MFVolumeData::GetProperty (const FunctionCallbackInfo<Value>& args)
 }
 
 
-void CLib3MFVolumeData::AddProperty (const FunctionCallbackInfo<Value>& args) 
+void CLib3MFVolumeData::AddPropertyFromScalarField (const FunctionCallbackInfo<Value>& args) 
 {
     Isolate* isolate = args.GetIsolate();
     HandleScope scope(isolate);
@@ -8719,20 +8690,60 @@ void CLib3MFVolumeData::AddProperty (const FunctionCallbackInfo<Value>& args)
         if (!args[0]->IsString()) {
             throw std::runtime_error ("Expected string parameter 0 (Name)");
         }
-        if (!args[1]->IsUint32()) {
-            throw std::runtime_error ("Expected uint32 parameter 1 (UniqueResourceID)");
+        if (!args[1]->IsObject()) {
+            throw std::runtime_error ("Expected class parameter 1 (TheScalarField)");
         }
         v8::String::Utf8Value sutf8Name (args[0]->ToString());
         std::string sName = *sutf8Name;
-        unsigned int nUniqueResourceID = (unsigned int) args[1]->IntegerValue ();
+        Local<Object> objTheScalarField = args[1]->ToObject(isolate->GetCurrentContext()).ToLocalChecked ();
+        CLib3MFScalarField * instanceTheScalarField = ObjectWrap::Unwrap<CLib3MFScalarField>(objTheScalarField);
+        if (instanceTheScalarField == nullptr)
+            throw std::runtime_error("Invalid Object parameter 1 (TheScalarField)");
+        Lib3MFHandle hTheScalarField = instanceTheScalarField->getHandle ( objTheScalarField );
         Lib3MFHandle hReturnTheVolumeDataProperty = nullptr;
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
         if (wrapperTable == nullptr)
-            throw std::runtime_error ("Could not get wrapper table for Lib3MF method AddProperty.");
-        if (wrapperTable->m_VolumeData_AddProperty == nullptr)
-            throw std::runtime_error ("Could not call Lib3MF method VolumeData::AddProperty.");
+            throw std::runtime_error ("Could not get wrapper table for Lib3MF method AddPropertyFromScalarField.");
+        if (wrapperTable->m_VolumeData_AddPropertyFromScalarField == nullptr)
+            throw std::runtime_error ("Could not call Lib3MF method VolumeData::AddPropertyFromScalarField.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_VolumeData_AddProperty (instanceHandle, sName.c_str(), nUniqueResourceID, &hReturnTheVolumeDataProperty);
+        Lib3MFResult errorCode = wrapperTable->m_VolumeData_AddPropertyFromScalarField (instanceHandle, sName.c_str(), hTheScalarField, &hReturnTheVolumeDataProperty);
+        CheckError (isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjTheVolumeDataProperty = CLib3MFVolumeDataProperty::NewInstance (args.Holder(), hReturnTheVolumeDataProperty);
+        args.GetReturnValue().Set (instanceObjTheVolumeDataProperty);
+
+    } catch (std::exception & E) {
+        RaiseError (isolate, E.what());
+    }
+}
+
+
+void CLib3MFVolumeData::AddPropertyFromVector3DField (const FunctionCallbackInfo<Value>& args) 
+{
+    Isolate* isolate = args.GetIsolate();
+    HandleScope scope(isolate);
+    try {
+        if (!args[0]->IsString()) {
+            throw std::runtime_error ("Expected string parameter 0 (Name)");
+        }
+        if (!args[1]->IsObject()) {
+            throw std::runtime_error ("Expected class parameter 1 (TheVector3DField)");
+        }
+        v8::String::Utf8Value sutf8Name (args[0]->ToString());
+        std::string sName = *sutf8Name;
+        Local<Object> objTheVector3DField = args[1]->ToObject(isolate->GetCurrentContext()).ToLocalChecked ();
+        CLib3MFVector3DField * instanceTheVector3DField = ObjectWrap::Unwrap<CLib3MFVector3DField>(objTheVector3DField);
+        if (instanceTheVector3DField == nullptr)
+            throw std::runtime_error("Invalid Object parameter 1 (TheVector3DField)");
+        Lib3MFHandle hTheVector3DField = instanceTheVector3DField->getHandle ( objTheVector3DField );
+        Lib3MFHandle hReturnTheVolumeDataProperty = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error ("Could not get wrapper table for Lib3MF method AddPropertyFromVector3DField.");
+        if (wrapperTable->m_VolumeData_AddPropertyFromVector3DField == nullptr)
+            throw std::runtime_error ("Could not call Lib3MF method VolumeData::AddPropertyFromVector3DField.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_VolumeData_AddPropertyFromVector3DField (instanceHandle, sName.c_str(), hTheVector3DField, &hReturnTheVolumeDataProperty);
         CheckError (isolate, wrapperTable, instanceHandle, errorCode);
         Local<Object> instanceObjTheVolumeDataProperty = CLib3MFVolumeDataProperty::NewInstance (args.Holder(), hReturnTheVolumeDataProperty);
         args.GetReturnValue().Set (instanceObjTheVolumeDataProperty);

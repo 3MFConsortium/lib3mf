@@ -25,29 +25,45 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
-
-NMR_VolumeLevelset.cpp implements the class CVolumeDataLevelset.
+NMR_ModelReaderNode_Volumetric2201_Boundary.h covers the official 3MF volumetric extension.
 
 --*/
 
-#include "Common/Mesh/NMR_VolumeDataLevelset.h"
-#include "Model/Classes/NMR_ModelScalarField.h"
+#ifndef __NMR_MODELREADERNODE_VOLUMETRIC2201_LEVLSET
+#define __NMR_MODELREADERNODE_VOLUMETRIC2201_LEVLSET
+
+#include "Model/Reader/NMR_ModelReaderNode.h"
+#include "Model/Classes/NMR_ModelComponent.h"
+#include "Model/Classes/NMR_ModelVolumeData.h"
+#include "Common/Math/NMR_Matrix.h"
 
 namespace NMR {
 
-	CVolumeDataLevelset::CVolumeDataLevelset(PModelScalarField pScalarField)
-		: CScalarFieldReference(pScalarField), m_dSolidThreshold(0.0), m_sChannelName("")
-	{
-		
-	}
+	class CModelReaderNode_Volumetric2201_Boundary : public CModelReaderNode {
+	private:
+		nfBool m_bHasFieldID;
+		nfBool m_bHasSolidThreshold;
+		nfBool m_bHasTransform;
 
-	nfDouble CVolumeDataLevelset::GetSolidThreshold()
-	{
-		return m_dSolidThreshold;
-	}
+		ModelResourceID m_nFieldID;
+		double m_dSolidThreshold;
+		NMATRIX3 m_Transform;
+	protected:
+		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
+	public:
+		CModelReaderNode_Volumetric2201_Boundary() = delete;
+		CModelReaderNode_Volumetric2201_Boundary(_In_ PModelWarnings pWarnings);
 
-	void CVolumeDataLevelset::SetSolidThreshold(nfDouble dSolidThreshold)
-	{
-		m_dSolidThreshold = dSolidThreshold;
-	}
+		virtual void parseXML(_In_ CXmlReader * pXMLReader);
+
+		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
+
+		PVolumeDataBoundary MakeLevelset(_In_ CModel* pModel);
+	};
+
+	typedef std::shared_ptr <CModelReaderNode_Volumetric2201_Boundary> PModelReaderNode_Volumetric2201_Boundary;
+
 }
+
+#endif // __NMR_MODELREADERNODE_VOLUMETRIC2201_LEVLSET
+

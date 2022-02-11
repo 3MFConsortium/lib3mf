@@ -70,7 +70,8 @@ public:
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-
+	CScalarFieldReference() = delete;
+	CScalarFieldReference(NMR::PScalarFieldReference);
 
 	/**
 	* Public member functions to implement.

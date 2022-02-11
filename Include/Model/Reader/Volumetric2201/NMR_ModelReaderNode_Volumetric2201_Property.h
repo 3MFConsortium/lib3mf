@@ -29,11 +29,10 @@ NMR_ModelReaderNode_Volumetric2201_Property.h covers the official 3MF volumetric
 
 --*/
 
-#ifndef __NMR_MODELREADERNODE_Volumetric2201_PROPERTY
-#define __NMR_MODELREADERNODE_Volumetric2201_PROPERTY
+#ifndef __NMR_MODELREADERNODE_VOLUMETRIC2201_PROPERTY
+#define __NMR_MODELREADERNODE_VOLUMETRIC2201_PROPERTY
 
 #include "Model/Reader/NMR_ModelReaderNode.h"
-#include "Model/Classes/NMR_ModelComponent.h"
 #include "Model/Classes/NMR_ModelVolumeData.h"
 #include "Common/Math/NMR_Matrix.h"
 
@@ -41,14 +40,12 @@ namespace NMR {
 
 	class CModelReaderNode_Volumetric2201_Property : public CModelReaderNode {
 	private:
-		nfBool m_bHasStackId;
-		nfBool m_bHasChannel;
+		nfBool m_bHasFieldID;
 		nfBool m_bHasName;
 		nfBool m_bHasTransform;
 		nfBool m_bHasRequired;
 
-		ModelResourceID m_nStackID;
-		std::string m_sChannel;
+		ModelResourceID m_nFieldID;
 		std::string m_sName;
 		NMATRIX3 m_Transform;
 		nfBool m_bRequired;
@@ -70,5 +67,5 @@ namespace NMR {
 
 }
 
-#endif // __NMR_MODELREADERNODE_Volumetric2201_PROPERTY
+#endif // __NMR_MODELREADERNODE_VOLUMETRIC2201_PROPERTY
 

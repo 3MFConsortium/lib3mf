@@ -46,7 +46,7 @@ namespace NMR {
 	CModelReaderNode_Volumetric2201_Color::CModelReaderNode_Volumetric2201_Color(_In_ PModelWarnings pWarnings)
 		: CModelReaderNode(pWarnings)
 	{
-		m_bHasStackId = false;
+		m_bHasFieldID = false;
 		m_bHasTransform = false;
 		m_bHasRedChannel = false;
 		m_bHasGreenChannel = false;
@@ -73,11 +73,11 @@ namespace NMR {
 		if (!m_bHasRedChannel || !m_bHasRedChannel || !m_bHasRedChannel)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-		if (!m_bHasStackId) {
-			throw CNMRException(NMR_ERROR_MISSINGVOLUMEDATASTACKID);
+		if (!m_bHasFieldID) {
+			throw CNMRException(NMR_ERROR_MISSINGVOLUMEDATAFIELDID);
 		}
 
-		PPackageResourceID pID = pModel->findPackageResourceID(pModel->currentPath(), m_nStackID);
+		PPackageResourceID pID = pModel->findPackageResourceID(pModel->currentPath(), m_nFieldID);
 		if (!pID.get()) {
 			throw CNMRException(NMR_ERROR_UNKNOWNMODELRESOURCE);
 		}
@@ -111,13 +111,13 @@ namespace NMR {
 			m_bHasTransform = true;
 		}
 
-		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_VOLUMEDATA_VOLUMETRICSTACKID) == 0) {
-			if (m_bHasStackId)
-				throw CNMRException(NMR_ERROR_DUPLICATEVOLUMEDATASTACKID);
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_VOLUMEDATA_FIELDID) == 0) {
+			if (m_bHasFieldID)
+				throw CNMRException(NMR_ERROR_DUPLICATEVOLUMEDATAFIELDID);
 
-			m_bHasStackId = true;
+			m_bHasFieldID = true;
 
-			m_nStackID = fnStringToUint32(pAttributeValue);
+			m_nFieldID = fnStringToUint32(pAttributeValue);
 		}
 	}
 	

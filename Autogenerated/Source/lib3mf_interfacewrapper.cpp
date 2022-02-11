@@ -6861,24 +6861,24 @@ Lib3MFResult lib3mf_vector3dfieldreference_setvector3dfield(Lib3MF_Vector3DField
 
 
 /*************************************************************************************************************************
- Class implementation for VolumeDataLevelset
+ Class implementation for VolumeDataBoundary
 **************************************************************************************************************************/
-Lib3MFResult lib3mf_volumedatalevelset_getsolidthreshold(Lib3MF_VolumeDataLevelset pVolumeDataLevelset, Lib3MF_double * pTheSolidThreshold)
+Lib3MFResult lib3mf_volumedataboundary_getsolidthreshold(Lib3MF_VolumeDataBoundary pVolumeDataBoundary, Lib3MF_double * pTheSolidThreshold)
 {
-	IBase* pIBaseClass = (IBase *)pVolumeDataLevelset;
+	IBase* pIBaseClass = (IBase *)pVolumeDataBoundary;
 
 	PLib3MFInterfaceJournalEntry pJournalEntry;
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumeDataLevelset, "VolumeDataLevelset", "GetSolidThreshold");
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumeDataBoundary, "VolumeDataBoundary", "GetSolidThreshold");
 		}
 		if (pTheSolidThreshold == nullptr)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		IVolumeDataLevelset* pIVolumeDataLevelset = dynamic_cast<IVolumeDataLevelset*>(pIBaseClass);
-		if (!pIVolumeDataLevelset)
+		IVolumeDataBoundary* pIVolumeDataBoundary = dynamic_cast<IVolumeDataBoundary*>(pIBaseClass);
+		if (!pIVolumeDataBoundary)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		*pTheSolidThreshold = pIVolumeDataLevelset->GetSolidThreshold();
+		*pTheSolidThreshold = pIVolumeDataBoundary->GetSolidThreshold();
 
 		if (pJournalEntry.get() != nullptr) {
 			pJournalEntry->addDoubleResult("TheSolidThreshold", *pTheSolidThreshold);
@@ -6897,21 +6897,21 @@ Lib3MFResult lib3mf_volumedatalevelset_getsolidthreshold(Lib3MF_VolumeDataLevels
 	}
 }
 
-Lib3MFResult lib3mf_volumedatalevelset_setsolidthreshold(Lib3MF_VolumeDataLevelset pVolumeDataLevelset, Lib3MF_double dTheSolidThreshold)
+Lib3MFResult lib3mf_volumedataboundary_setsolidthreshold(Lib3MF_VolumeDataBoundary pVolumeDataBoundary, Lib3MF_double dTheSolidThreshold)
 {
-	IBase* pIBaseClass = (IBase *)pVolumeDataLevelset;
+	IBase* pIBaseClass = (IBase *)pVolumeDataBoundary;
 
 	PLib3MFInterfaceJournalEntry pJournalEntry;
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumeDataLevelset, "VolumeDataLevelset", "SetSolidThreshold");
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumeDataBoundary, "VolumeDataBoundary", "SetSolidThreshold");
 			pJournalEntry->addDoubleParameter("TheSolidThreshold", dTheSolidThreshold);
 		}
-		IVolumeDataLevelset* pIVolumeDataLevelset = dynamic_cast<IVolumeDataLevelset*>(pIBaseClass);
-		if (!pIVolumeDataLevelset)
+		IVolumeDataBoundary* pIVolumeDataBoundary = dynamic_cast<IVolumeDataBoundary*>(pIBaseClass);
+		if (!pIVolumeDataBoundary)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pIVolumeDataLevelset->SetSolidThreshold(dTheSolidThreshold);
+		pIVolumeDataBoundary->SetSolidThreshold(dTheSolidThreshold);
 
 		if (pJournalEntry.get() != nullptr) {
 			pJournalEntry->writeSuccess();
@@ -7157,41 +7157,6 @@ Lib3MFResult lib3mf_volumedatacomposite_removematerialmapping(Lib3MF_VolumeDataC
 /*************************************************************************************************************************
  Class implementation for VolumeDataProperty
 **************************************************************************************************************************/
-Lib3MFResult lib3mf_volumedataproperty_setname(Lib3MF_VolumeDataProperty pVolumeDataProperty, const char * pPropertyName)
-{
-	IBase* pIBaseClass = (IBase *)pVolumeDataProperty;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumeDataProperty, "VolumeDataProperty", "SetName");
-			pJournalEntry->addStringParameter("PropertyName", pPropertyName);
-		}
-		if (pPropertyName == nullptr)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		std::string sPropertyName(pPropertyName);
-		IVolumeDataProperty* pIVolumeDataProperty = dynamic_cast<IVolumeDataProperty*>(pIBaseClass);
-		if (!pIVolumeDataProperty)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		pIVolumeDataProperty->SetName(sPropertyName);
-
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
 Lib3MFResult lib3mf_volumedataproperty_getname(Lib3MF_VolumeDataProperty pVolumeDataProperty, const Lib3MF_uint32 nPropertyNameBufferSize, Lib3MF_uint32* pPropertyNameNeededChars, char * pPropertyNameBuffer)
 {
 	IBase* pIBaseClass = (IBase *)pVolumeDataProperty;
@@ -7306,27 +7271,27 @@ Lib3MFResult lib3mf_volumedataproperty_isrequired(Lib3MF_VolumeDataProperty pVol
 /*************************************************************************************************************************
  Class implementation for VolumeData
 **************************************************************************************************************************/
-Lib3MFResult lib3mf_volumedata_getlevelset(Lib3MF_VolumeData pVolumeData, Lib3MF_VolumeDataLevelset * pTheLevelsetData)
+Lib3MFResult lib3mf_volumedata_getboundary(Lib3MF_VolumeData pVolumeData, Lib3MF_VolumeDataBoundary * pTheBoundaryData)
 {
 	IBase* pIBaseClass = (IBase *)pVolumeData;
 
 	PLib3MFInterfaceJournalEntry pJournalEntry;
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumeData, "VolumeData", "GetLevelset");
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumeData, "VolumeData", "GetBoundary");
 		}
-		if (pTheLevelsetData == nullptr)
+		if (pTheBoundaryData == nullptr)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		IBase* pBaseTheLevelsetData(nullptr);
+		IBase* pBaseTheBoundaryData(nullptr);
 		IVolumeData* pIVolumeData = dynamic_cast<IVolumeData*>(pIBaseClass);
 		if (!pIVolumeData)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pBaseTheLevelsetData = pIVolumeData->GetLevelset();
+		pBaseTheBoundaryData = pIVolumeData->GetBoundary();
 
-		*pTheLevelsetData = (IBase*)(pBaseTheLevelsetData);
+		*pTheBoundaryData = (IBase*)(pBaseTheBoundaryData);
 		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addHandleResult("TheLevelsetData", *pTheLevelsetData);
+			pJournalEntry->addHandleResult("TheBoundaryData", *pTheBoundaryData);
 			pJournalEntry->writeSuccess();
 		}
 		return LIB3MF_SUCCESS;
@@ -7342,33 +7307,33 @@ Lib3MFResult lib3mf_volumedata_getlevelset(Lib3MF_VolumeData pVolumeData, Lib3MF
 	}
 }
 
-Lib3MFResult lib3mf_volumedata_createnewlevelset(Lib3MF_VolumeData pVolumeData, Lib3MF_ScalarField pTheScalarField, const sLib3MFTransform * pTransform, Lib3MF_VolumeDataLevelset * pTheLevelsetData)
+Lib3MFResult lib3mf_volumedata_createnewboundary(Lib3MF_VolumeData pVolumeData, Lib3MF_ScalarField pTheScalarField, Lib3MF_VolumeDataBoundary * pTheBoundaryData)
 {
 	IBase* pIBaseClass = (IBase *)pVolumeData;
 
 	PLib3MFInterfaceJournalEntry pJournalEntry;
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumeData, "VolumeData", "CreateNewLevelset");
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumeData, "VolumeData", "CreateNewBoundary");
 			pJournalEntry->addHandleParameter("TheScalarField", pTheScalarField);
 		}
-		if (pTheLevelsetData == nullptr)
+		if (pTheBoundaryData == nullptr)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
 		IBase* pIBaseClassTheScalarField = (IBase *)pTheScalarField;
 		IScalarField* pITheScalarField = dynamic_cast<IScalarField*>(pIBaseClassTheScalarField);
 		if (!pITheScalarField)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDCAST);
 		
-		IBase* pBaseTheLevelsetData(nullptr);
+		IBase* pBaseTheBoundaryData(nullptr);
 		IVolumeData* pIVolumeData = dynamic_cast<IVolumeData*>(pIBaseClass);
 		if (!pIVolumeData)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pBaseTheLevelsetData = pIVolumeData->CreateNewLevelset(pITheScalarField, *pTransform);
+		pBaseTheBoundaryData = pIVolumeData->CreateNewBoundary(pITheScalarField);
 
-		*pTheLevelsetData = (IBase*)(pBaseTheLevelsetData);
+		*pTheBoundaryData = (IBase*)(pBaseTheBoundaryData);
 		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addHandleResult("TheLevelsetData", *pTheLevelsetData);
+			pJournalEntry->addHandleResult("TheBoundaryData", *pTheBoundaryData);
 			pJournalEntry->writeSuccess();
 		}
 		return LIB3MF_SUCCESS;
@@ -7384,20 +7349,20 @@ Lib3MFResult lib3mf_volumedata_createnewlevelset(Lib3MF_VolumeData pVolumeData, 
 	}
 }
 
-Lib3MFResult lib3mf_volumedata_removelevelset(Lib3MF_VolumeData pVolumeData)
+Lib3MFResult lib3mf_volumedata_removeboundary(Lib3MF_VolumeData pVolumeData)
 {
 	IBase* pIBaseClass = (IBase *)pVolumeData;
 
 	PLib3MFInterfaceJournalEntry pJournalEntry;
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumeData, "VolumeData", "RemoveLevelset");
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumeData, "VolumeData", "RemoveBoundary");
 		}
 		IVolumeData* pIVolumeData = dynamic_cast<IVolumeData*>(pIBaseClass);
 		if (!pIVolumeData)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pIVolumeData->RemoveLevelset();
+		pIVolumeData->RemoveBoundary();
 
 		if (pJournalEntry.get() != nullptr) {
 			pJournalEntry->writeSuccess();
@@ -7698,28 +7663,79 @@ Lib3MFResult lib3mf_volumedata_getproperty(Lib3MF_VolumeData pVolumeData, Lib3MF
 	}
 }
 
-Lib3MFResult lib3mf_volumedata_addproperty(Lib3MF_VolumeData pVolumeData, const char * pName, Lib3MF_uint32 nUniqueResourceID, Lib3MF_VolumeDataProperty * pTheVolumeDataProperty)
+Lib3MFResult lib3mf_volumedata_addpropertyfromscalarfield(Lib3MF_VolumeData pVolumeData, const char * pName, Lib3MF_ScalarField pTheScalarField, Lib3MF_VolumeDataProperty * pTheVolumeDataProperty)
 {
 	IBase* pIBaseClass = (IBase *)pVolumeData;
 
 	PLib3MFInterfaceJournalEntry pJournalEntry;
 	try {
 		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumeData, "VolumeData", "AddProperty");
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumeData, "VolumeData", "AddPropertyFromScalarField");
 			pJournalEntry->addStringParameter("Name", pName);
-			pJournalEntry->addUInt32Parameter("UniqueResourceID", nUniqueResourceID);
+			pJournalEntry->addHandleParameter("TheScalarField", pTheScalarField);
 		}
 		if (pName == nullptr)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
 		if (pTheVolumeDataProperty == nullptr)
 			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
 		std::string sName(pName);
+		IBase* pIBaseClassTheScalarField = (IBase *)pTheScalarField;
+		IScalarField* pITheScalarField = dynamic_cast<IScalarField*>(pIBaseClassTheScalarField);
+		if (!pITheScalarField)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDCAST);
+		
 		IBase* pBaseTheVolumeDataProperty(nullptr);
 		IVolumeData* pIVolumeData = dynamic_cast<IVolumeData*>(pIBaseClass);
 		if (!pIVolumeData)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pBaseTheVolumeDataProperty = pIVolumeData->AddProperty(sName, nUniqueResourceID);
+		pBaseTheVolumeDataProperty = pIVolumeData->AddPropertyFromScalarField(sName, pITheScalarField);
+
+		*pTheVolumeDataProperty = (IBase*)(pBaseTheVolumeDataProperty);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("TheVolumeDataProperty", *pTheVolumeDataProperty);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_volumedata_addpropertyfromvector3dfield(Lib3MF_VolumeData pVolumeData, const char * pName, Lib3MF_Vector3DField pTheVector3DField, Lib3MF_VolumeDataProperty * pTheVolumeDataProperty)
+{
+	IBase* pIBaseClass = (IBase *)pVolumeData;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pVolumeData, "VolumeData", "AddPropertyFromVector3DField");
+			pJournalEntry->addStringParameter("Name", pName);
+			pJournalEntry->addHandleParameter("TheVector3DField", pTheVector3DField);
+		}
+		if (pName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pTheVolumeDataProperty == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sName(pName);
+		IBase* pIBaseClassTheVector3DField = (IBase *)pTheVector3DField;
+		IVector3DField* pITheVector3DField = dynamic_cast<IVector3DField*>(pIBaseClassTheVector3DField);
+		if (!pITheVector3DField)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDCAST);
+		
+		IBase* pBaseTheVolumeDataProperty(nullptr);
+		IVolumeData* pIVolumeData = dynamic_cast<IVolumeData*>(pIBaseClass);
+		if (!pIVolumeData)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseTheVolumeDataProperty = pIVolumeData->AddPropertyFromVector3DField(sName, pITheVector3DField);
 
 		*pTheVolumeDataProperty = (IBase*)(pBaseTheVolumeDataProperty);
 		if (pJournalEntry.get() != nullptr) {
@@ -16630,21 +16646,20 @@ Lib3MFResult _lib3mf_getprocaddress_internal(const char * pProcName, void ** ppP
 		sProcAddressMap["lib3mf_scalarfieldreference_setscalarfield"] = (void*)&lib3mf_scalarfieldreference_setscalarfield;
 		sProcAddressMap["lib3mf_vector3dfieldreference_getvector3dfield"] = (void*)&lib3mf_vector3dfieldreference_getvector3dfield;
 		sProcAddressMap["lib3mf_vector3dfieldreference_setvector3dfield"] = (void*)&lib3mf_vector3dfieldreference_setvector3dfield;
-		sProcAddressMap["lib3mf_volumedatalevelset_getsolidthreshold"] = (void*)&lib3mf_volumedatalevelset_getsolidthreshold;
-		sProcAddressMap["lib3mf_volumedatalevelset_setsolidthreshold"] = (void*)&lib3mf_volumedatalevelset_setsolidthreshold;
+		sProcAddressMap["lib3mf_volumedataboundary_getsolidthreshold"] = (void*)&lib3mf_volumedataboundary_getsolidthreshold;
+		sProcAddressMap["lib3mf_volumedataboundary_setsolidthreshold"] = (void*)&lib3mf_volumedataboundary_setsolidthreshold;
 		sProcAddressMap["lib3mf_volumedatacomposite_getbasematerialgroup"] = (void*)&lib3mf_volumedatacomposite_getbasematerialgroup;
 		sProcAddressMap["lib3mf_volumedatacomposite_setbasematerialgroup"] = (void*)&lib3mf_volumedatacomposite_setbasematerialgroup;
 		sProcAddressMap["lib3mf_volumedatacomposite_getmaterialmappingcount"] = (void*)&lib3mf_volumedatacomposite_getmaterialmappingcount;
 		sProcAddressMap["lib3mf_volumedatacomposite_getmaterialmapping"] = (void*)&lib3mf_volumedatacomposite_getmaterialmapping;
 		sProcAddressMap["lib3mf_volumedatacomposite_addmaterialmapping"] = (void*)&lib3mf_volumedatacomposite_addmaterialmapping;
 		sProcAddressMap["lib3mf_volumedatacomposite_removematerialmapping"] = (void*)&lib3mf_volumedatacomposite_removematerialmapping;
-		sProcAddressMap["lib3mf_volumedataproperty_setname"] = (void*)&lib3mf_volumedataproperty_setname;
 		sProcAddressMap["lib3mf_volumedataproperty_getname"] = (void*)&lib3mf_volumedataproperty_getname;
 		sProcAddressMap["lib3mf_volumedataproperty_setisrequired"] = (void*)&lib3mf_volumedataproperty_setisrequired;
 		sProcAddressMap["lib3mf_volumedataproperty_isrequired"] = (void*)&lib3mf_volumedataproperty_isrequired;
-		sProcAddressMap["lib3mf_volumedata_getlevelset"] = (void*)&lib3mf_volumedata_getlevelset;
-		sProcAddressMap["lib3mf_volumedata_createnewlevelset"] = (void*)&lib3mf_volumedata_createnewlevelset;
-		sProcAddressMap["lib3mf_volumedata_removelevelset"] = (void*)&lib3mf_volumedata_removelevelset;
+		sProcAddressMap["lib3mf_volumedata_getboundary"] = (void*)&lib3mf_volumedata_getboundary;
+		sProcAddressMap["lib3mf_volumedata_createnewboundary"] = (void*)&lib3mf_volumedata_createnewboundary;
+		sProcAddressMap["lib3mf_volumedata_removeboundary"] = (void*)&lib3mf_volumedata_removeboundary;
 		sProcAddressMap["lib3mf_volumedata_getcomposite"] = (void*)&lib3mf_volumedata_getcomposite;
 		sProcAddressMap["lib3mf_volumedata_createnewcomposite"] = (void*)&lib3mf_volumedata_createnewcomposite;
 		sProcAddressMap["lib3mf_volumedata_removecomposite"] = (void*)&lib3mf_volumedata_removecomposite;
@@ -16653,7 +16668,8 @@ Lib3MFResult _lib3mf_getprocaddress_internal(const char * pProcName, void ** ppP
 		sProcAddressMap["lib3mf_volumedata_removecolor"] = (void*)&lib3mf_volumedata_removecolor;
 		sProcAddressMap["lib3mf_volumedata_getpropertycount"] = (void*)&lib3mf_volumedata_getpropertycount;
 		sProcAddressMap["lib3mf_volumedata_getproperty"] = (void*)&lib3mf_volumedata_getproperty;
-		sProcAddressMap["lib3mf_volumedata_addproperty"] = (void*)&lib3mf_volumedata_addproperty;
+		sProcAddressMap["lib3mf_volumedata_addpropertyfromscalarfield"] = (void*)&lib3mf_volumedata_addpropertyfromscalarfield;
+		sProcAddressMap["lib3mf_volumedata_addpropertyfromvector3dfield"] = (void*)&lib3mf_volumedata_addpropertyfromvector3dfield;
 		sProcAddressMap["lib3mf_volumedata_removeproperty"] = (void*)&lib3mf_volumedata_removeproperty;
 		sProcAddressMap["lib3mf_component_getobjectresource"] = (void*)&lib3mf_component_getobjectresource;
 		sProcAddressMap["lib3mf_component_getobjectresourceid"] = (void*)&lib3mf_component_getobjectresourceid;

@@ -819,9 +819,9 @@ public:
 };
 
 /*************************************************************************************************************************
- Class CLib3MFVolumeDataLevelset 
+ Class CLib3MFVolumeDataBoundary 
 **************************************************************************************************************************/
-class CLib3MFVolumeDataLevelset : public CLib3MFBaseClass {
+class CLib3MFVolumeDataBoundary : public CLib3MFBaseClass {
 private:
     static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
     static v8::Persistent<v8::Function> constructor;
@@ -829,8 +829,8 @@ private:
     static void SetSolidThreshold (const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:
-    CLib3MFVolumeDataLevelset ();
-    ~CLib3MFVolumeDataLevelset ();
+    CLib3MFVolumeDataBoundary ();
+    ~CLib3MFVolumeDataBoundary ();
     
     static void Init();
     static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
@@ -901,7 +901,6 @@ class CLib3MFVolumeDataProperty : public CLib3MFBaseClass {
 private:
     static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
     static v8::Persistent<v8::Function> constructor;
-    static void SetName (const v8::FunctionCallbackInfo<v8::Value>& args);
     static void GetName (const v8::FunctionCallbackInfo<v8::Value>& args);
     static void SetIsRequired (const v8::FunctionCallbackInfo<v8::Value>& args);
     static void IsRequired (const v8::FunctionCallbackInfo<v8::Value>& args);
@@ -922,9 +921,9 @@ class CLib3MFVolumeData : public CLib3MFBaseClass {
 private:
     static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
     static v8::Persistent<v8::Function> constructor;
-    static void GetLevelset (const v8::FunctionCallbackInfo<v8::Value>& args);
-    static void CreateNewLevelset (const v8::FunctionCallbackInfo<v8::Value>& args);
-    static void RemoveLevelset (const v8::FunctionCallbackInfo<v8::Value>& args);
+    static void GetBoundary (const v8::FunctionCallbackInfo<v8::Value>& args);
+    static void CreateNewBoundary (const v8::FunctionCallbackInfo<v8::Value>& args);
+    static void RemoveBoundary (const v8::FunctionCallbackInfo<v8::Value>& args);
     static void GetComposite (const v8::FunctionCallbackInfo<v8::Value>& args);
     static void CreateNewComposite (const v8::FunctionCallbackInfo<v8::Value>& args);
     static void RemoveComposite (const v8::FunctionCallbackInfo<v8::Value>& args);
@@ -933,7 +932,8 @@ private:
     static void RemoveColor (const v8::FunctionCallbackInfo<v8::Value>& args);
     static void GetPropertyCount (const v8::FunctionCallbackInfo<v8::Value>& args);
     static void GetProperty (const v8::FunctionCallbackInfo<v8::Value>& args);
-    static void AddProperty (const v8::FunctionCallbackInfo<v8::Value>& args);
+    static void AddPropertyFromScalarField (const v8::FunctionCallbackInfo<v8::Value>& args);
+    static void AddPropertyFromVector3DField (const v8::FunctionCallbackInfo<v8::Value>& args);
     static void RemoveProperty (const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:

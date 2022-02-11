@@ -25,47 +25,36 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
-NMR_ModelReaderNode_Volumetric2201_Levelset.h covers the official 3MF volumetric extension.
+
+NMR_VolumeDataBoundary.h defines the class CVolumeDataBoundary.
 
 --*/
 
-#ifndef __NMR_MODELREADERNODE_Volumetric2201_LEVLSET
-#define __NMR_MODELREADERNODE_Volumetric2201_LEVLSET
+#ifndef __NMR_VOLUMEDATABOUNDARY
+#define __NMR_VOLUMEDATABOUNDARY
 
-#include "Model/Reader/NMR_ModelReaderNode.h"
-#include "Model/Classes/NMR_ModelComponent.h"
-#include "Model/Classes/NMR_ModelVolumeData.h"
-#include "Common/Math/NMR_Matrix.h"
+#include "Common/NMR_Types.h"
+#include "Model/Classes/NMR_ModelTypes.h"
+#include "Common/NMR_FieldReference.h"
+#include <string>
 
 namespace NMR {
+	class CModelScalarField;
+	typedef std::shared_ptr<CModelScalarField> PModelScalarField;
 
-	class CModelReaderNode_Volumetric2201_Levelset : public CModelReaderNode {
+	class CVolumeDataBoundary : public CScalarFieldReference {
 	private:
-		nfBool m_bHasStackId;
-		nfBool m_bHasChannel;
-		nfBool m_bHasSolidThreshold;
-		nfBool m_bHasTransform;
-
-		ModelResourceID m_nStackID;
-		std::string m_sChannel;
-		double m_dSolidThreshold;
-		NMATRIX3 m_Transform;
-	protected:
-		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
+		nfDouble m_dSolidThreshold;
 	public:
-		CModelReaderNode_Volumetric2201_Levelset() = delete;
-		CModelReaderNode_Volumetric2201_Levelset(_In_ PModelWarnings pWarnings);
+		CVolumeDataBoundary() = delete;
+		CVolumeDataBoundary(PModelScalarField pScalarField);
 
-		virtual void parseXML(_In_ CXmlReader * pXMLReader);
-
-		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
-
-		PVolumeDataLevelset MakeLevelset(_In_ CModel* pModel);
+		nfDouble GetSolidThreshold();
+		void SetSolidThreshold(nfDouble dSolidThreshold);
 	};
 
-	typedef std::shared_ptr <CModelReaderNode_Volumetric2201_Levelset> PModelReaderNode_Volumetric2201_Levelset;
+	typedef std::shared_ptr<CVolumeDataBoundary> PVolumeDataBoundary;
 
 }
 
-#endif // __NMR_MODELREADERNODE_Volumetric2201_LEVLSET
-
+#endif // __NMR_VOLUMEDATABOUNDARY

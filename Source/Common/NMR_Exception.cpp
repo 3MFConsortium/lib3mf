@@ -471,16 +471,16 @@ namespace NMR {
 		case NMR_ERROR_DUPLICATEVOLUMETRICFILTER: return "Duplicate Volumetric Filter";
 		case NMR_ERROR_DUPLICATEVOLUMETRICSOURCECHANNEL: return "Duplicate Volumetric Source Channel";
 		case NMR_ERROR_DUPLICATEVOLUMETRICDESTINATIONCHANNEL: return "Duplicate Volumetric Destination Channel";
-		case NMR_ERROR_DUPLICATEVOLUMEDATALEVELSET: return "Duplicate VolumeData Levelset";
+		case NMR_ERROR_DUPLICATEVOLUMEDATABOUNDARY: return "Duplicate VolumeData Levelset";
 		case NMR_ERROR_DUPLICATEVOLUMEDATATRANSFORM: return "Duplicate VolumeData Transform";
 		case NMR_ERROR_DUPLICATEVOLUMEDATACHANNEL: return "Duplicate VolumeData Channel";
-		case NMR_ERROR_DUPLICATEVOLUMEDATASTACKID: return "Duplicate VolumeData VolumetricStackID";
+		case NMR_ERROR_DUPLICATEVOLUMEDATAFIELDID: return "Duplicate VolumeData VolumetricStackID";
 		case NMR_ERROR_DUPLICATEVOLUMEDATASOLIDTHRESHOLD: return "Duplicate VolumeData Solid Threshold";
 		case NMR_ERROR_MISSINGVOLUMEDATACHANNEL: return "Missing VolumeData Channel";
-		case NMR_ERROR_MISSINGVOLUMEDATASTACKID: return "Missing VolumeData VolumetricStackID";
+		case NMR_ERROR_MISSINGVOLUMEDATAFIELDID: return "Missing VolumeData VolumetricStackID";
 		case NMR_ERROR_INVALIDVOLUMEDATASOLIDTHRESHOLD: return "Invalid VolumeData Solid Threshold";
 		case NMR_ERROR_DUPLICATEVOLUMEDATAPROPERTY: return "Duplicate VolumeData Property";
-		case NMR_ERROR_MISSINGVOLUMEDATAPROPERTY: return "Missing VolumeData Property";
+		case NMR_ERROR_MISSINGVOLUMEDATAPROPERTYNAME: return "Missing VolumeData Property";
 		case NMR_ERROR_MISSINGVOLUMETRICSRCALPHA: return "Missing Volumetric Source Alpha";
 		case NMR_ERROR_MISSINGVOLUMETRICDSTALPHA: return "Missing Volumetric Destination Alpha";
 

@@ -42,7 +42,7 @@ Abstract: This is the class declaration of CVolumeDataProperty
 #endif
 
 // Include custom headers here.
-
+#include "Common/Mesh/NMR_VolumeDataProperty.h"
 
 namespace Lib3MF {
 namespace Impl {
@@ -64,19 +64,19 @@ protected:
 	/**
 	* Put protected members here.
 	*/
+	NMR::PVolumeDataProperty asVolumeDataProperty();
 
 public:
 
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-
+	CVolumeDataProperty() = delete;
+	CVolumeDataProperty(NMR::PVolumeDataProperty pProperty);
 
 	/**
 	* Public member functions to implement.
 	*/
-
-	void SetName(const std::string & sPropertyName) override;
 
 	std::string GetName() override;
 

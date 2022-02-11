@@ -42,7 +42,7 @@ Abstract: This is the class declaration of CFieldReference
 #endif
 
 // Include custom headers here.
-
+#include "Common/NMR_FieldReference.h"
 
 namespace Lib3MF {
 namespace Impl {
@@ -55,22 +55,20 @@ namespace Impl {
 class CFieldReference : public virtual IFieldReference, public virtual CBase {
 private:
 
-	/**
-	* Put private members here.
-	*/
-
 protected:
 
 	/**
 	* Put protected members here.
 	*/
+	NMR::PFieldReference m_pFieldReference;
 
 public:
 
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-
+	CFieldReference() = delete;
+	CFieldReference(NMR::PFieldReference);
 
 	/**
 	* Public member functions to implement.

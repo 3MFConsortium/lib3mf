@@ -238,21 +238,20 @@ type Lib3MFImplementation struct {
 	Lib3MF_scalarfieldreference_setscalarfield uintptr
 	Lib3MF_vector3dfieldreference_getvector3dfield uintptr
 	Lib3MF_vector3dfieldreference_setvector3dfield uintptr
-	Lib3MF_volumedatalevelset_getsolidthreshold uintptr
-	Lib3MF_volumedatalevelset_setsolidthreshold uintptr
+	Lib3MF_volumedataboundary_getsolidthreshold uintptr
+	Lib3MF_volumedataboundary_setsolidthreshold uintptr
 	Lib3MF_volumedatacomposite_getbasematerialgroup uintptr
 	Lib3MF_volumedatacomposite_setbasematerialgroup uintptr
 	Lib3MF_volumedatacomposite_getmaterialmappingcount uintptr
 	Lib3MF_volumedatacomposite_getmaterialmapping uintptr
 	Lib3MF_volumedatacomposite_addmaterialmapping uintptr
 	Lib3MF_volumedatacomposite_removematerialmapping uintptr
-	Lib3MF_volumedataproperty_setname uintptr
 	Lib3MF_volumedataproperty_getname uintptr
 	Lib3MF_volumedataproperty_setisrequired uintptr
 	Lib3MF_volumedataproperty_isrequired uintptr
-	Lib3MF_volumedata_getlevelset uintptr
-	Lib3MF_volumedata_createnewlevelset uintptr
-	Lib3MF_volumedata_removelevelset uintptr
+	Lib3MF_volumedata_getboundary uintptr
+	Lib3MF_volumedata_createnewboundary uintptr
+	Lib3MF_volumedata_removeboundary uintptr
 	Lib3MF_volumedata_getcomposite uintptr
 	Lib3MF_volumedata_createnewcomposite uintptr
 	Lib3MF_volumedata_removecomposite uintptr
@@ -261,7 +260,8 @@ type Lib3MFImplementation struct {
 	Lib3MF_volumedata_removecolor uintptr
 	Lib3MF_volumedata_getpropertycount uintptr
 	Lib3MF_volumedata_getproperty uintptr
-	Lib3MF_volumedata_addproperty uintptr
+	Lib3MF_volumedata_addpropertyfromscalarfield uintptr
+	Lib3MF_volumedata_addpropertyfromvector3dfield uintptr
 	Lib3MF_volumedata_removeproperty uintptr
 	Lib3MF_component_getobjectresource uintptr
 	Lib3MF_component_getobjectresourceid uintptr
@@ -1656,14 +1656,14 @@ func (implementation *Lib3MFImplementation) Initialize(DLLFileName string) error
 		return errors.New("Could not get function lib3mf_vector3dfieldreference_setvector3dfield: " + err.Error())
 	}
 	
-	implementation.Lib3MF_volumedatalevelset_getsolidthreshold, err = syscall.GetProcAddress(dllHandle, "lib3mf_volumedatalevelset_getsolidthreshold")
+	implementation.Lib3MF_volumedataboundary_getsolidthreshold, err = syscall.GetProcAddress(dllHandle, "lib3mf_volumedataboundary_getsolidthreshold")
 	if (err != nil) {
-		return errors.New("Could not get function lib3mf_volumedatalevelset_getsolidthreshold: " + err.Error())
+		return errors.New("Could not get function lib3mf_volumedataboundary_getsolidthreshold: " + err.Error())
 	}
 	
-	implementation.Lib3MF_volumedatalevelset_setsolidthreshold, err = syscall.GetProcAddress(dllHandle, "lib3mf_volumedatalevelset_setsolidthreshold")
+	implementation.Lib3MF_volumedataboundary_setsolidthreshold, err = syscall.GetProcAddress(dllHandle, "lib3mf_volumedataboundary_setsolidthreshold")
 	if (err != nil) {
-		return errors.New("Could not get function lib3mf_volumedatalevelset_setsolidthreshold: " + err.Error())
+		return errors.New("Could not get function lib3mf_volumedataboundary_setsolidthreshold: " + err.Error())
 	}
 	
 	implementation.Lib3MF_volumedatacomposite_getbasematerialgroup, err = syscall.GetProcAddress(dllHandle, "lib3mf_volumedatacomposite_getbasematerialgroup")
@@ -1696,11 +1696,6 @@ func (implementation *Lib3MFImplementation) Initialize(DLLFileName string) error
 		return errors.New("Could not get function lib3mf_volumedatacomposite_removematerialmapping: " + err.Error())
 	}
 	
-	implementation.Lib3MF_volumedataproperty_setname, err = syscall.GetProcAddress(dllHandle, "lib3mf_volumedataproperty_setname")
-	if (err != nil) {
-		return errors.New("Could not get function lib3mf_volumedataproperty_setname: " + err.Error())
-	}
-	
 	implementation.Lib3MF_volumedataproperty_getname, err = syscall.GetProcAddress(dllHandle, "lib3mf_volumedataproperty_getname")
 	if (err != nil) {
 		return errors.New("Could not get function lib3mf_volumedataproperty_getname: " + err.Error())
@@ -1716,19 +1711,19 @@ func (implementation *Lib3MFImplementation) Initialize(DLLFileName string) error
 		return errors.New("Could not get function lib3mf_volumedataproperty_isrequired: " + err.Error())
 	}
 	
-	implementation.Lib3MF_volumedata_getlevelset, err = syscall.GetProcAddress(dllHandle, "lib3mf_volumedata_getlevelset")
+	implementation.Lib3MF_volumedata_getboundary, err = syscall.GetProcAddress(dllHandle, "lib3mf_volumedata_getboundary")
 	if (err != nil) {
-		return errors.New("Could not get function lib3mf_volumedata_getlevelset: " + err.Error())
+		return errors.New("Could not get function lib3mf_volumedata_getboundary: " + err.Error())
 	}
 	
-	implementation.Lib3MF_volumedata_createnewlevelset, err = syscall.GetProcAddress(dllHandle, "lib3mf_volumedata_createnewlevelset")
+	implementation.Lib3MF_volumedata_createnewboundary, err = syscall.GetProcAddress(dllHandle, "lib3mf_volumedata_createnewboundary")
 	if (err != nil) {
-		return errors.New("Could not get function lib3mf_volumedata_createnewlevelset: " + err.Error())
+		return errors.New("Could not get function lib3mf_volumedata_createnewboundary: " + err.Error())
 	}
 	
-	implementation.Lib3MF_volumedata_removelevelset, err = syscall.GetProcAddress(dllHandle, "lib3mf_volumedata_removelevelset")
+	implementation.Lib3MF_volumedata_removeboundary, err = syscall.GetProcAddress(dllHandle, "lib3mf_volumedata_removeboundary")
 	if (err != nil) {
-		return errors.New("Could not get function lib3mf_volumedata_removelevelset: " + err.Error())
+		return errors.New("Could not get function lib3mf_volumedata_removeboundary: " + err.Error())
 	}
 	
 	implementation.Lib3MF_volumedata_getcomposite, err = syscall.GetProcAddress(dllHandle, "lib3mf_volumedata_getcomposite")
@@ -1771,9 +1766,14 @@ func (implementation *Lib3MFImplementation) Initialize(DLLFileName string) error
 		return errors.New("Could not get function lib3mf_volumedata_getproperty: " + err.Error())
 	}
 	
-	implementation.Lib3MF_volumedata_addproperty, err = syscall.GetProcAddress(dllHandle, "lib3mf_volumedata_addproperty")
+	implementation.Lib3MF_volumedata_addpropertyfromscalarfield, err = syscall.GetProcAddress(dllHandle, "lib3mf_volumedata_addpropertyfromscalarfield")
 	if (err != nil) {
-		return errors.New("Could not get function lib3mf_volumedata_addproperty: " + err.Error())
+		return errors.New("Could not get function lib3mf_volumedata_addpropertyfromscalarfield: " + err.Error())
+	}
+	
+	implementation.Lib3MF_volumedata_addpropertyfromvector3dfield, err = syscall.GetProcAddress(dllHandle, "lib3mf_volumedata_addpropertyfromvector3dfield")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_volumedata_addpropertyfromvector3dfield: " + err.Error())
 	}
 	
 	implementation.Lib3MF_volumedata_removeproperty, err = syscall.GetProcAddress(dllHandle, "lib3mf_volumedata_removeproperty")
@@ -6477,16 +6477,16 @@ func (implementation *Lib3MFImplementation) Vector3DFieldReference_SetVector3DFi
 	return err
 }
 
-func (implementation *Lib3MFImplementation) VolumeDataLevelset_GetSolidThreshold(VolumeDataLevelset Lib3MFHandle) (float64, error) {
+func (implementation *Lib3MFImplementation) VolumeDataBoundary_GetSolidThreshold(VolumeDataBoundary Lib3MFHandle) (float64, error) {
 	var err error = nil
 	var dTheSolidThreshold float64 = 0
 	
-	implementation_volumedatalevelset, err := implementation.GetWrapperHandle(VolumeDataLevelset)
+	implementation_volumedataboundary, err := implementation.GetWrapperHandle(VolumeDataBoundary)
 	if (err != nil) {
 		return 0, err
 	}
 
-	err = implementation.CallFunction(implementation.Lib3MF_volumedatalevelset_getsolidthreshold, implementation_volumedatalevelset.GetDLLInHandle(), Float64OutValue(&dTheSolidThreshold))
+	err = implementation.CallFunction(implementation.Lib3MF_volumedataboundary_getsolidthreshold, implementation_volumedataboundary.GetDLLInHandle(), Float64OutValue(&dTheSolidThreshold))
 	if (err != nil) {
 		return 0, err
 	}
@@ -6494,15 +6494,15 @@ func (implementation *Lib3MFImplementation) VolumeDataLevelset_GetSolidThreshold
 	return dTheSolidThreshold, err
 }
 
-func (implementation *Lib3MFImplementation) VolumeDataLevelset_SetSolidThreshold(VolumeDataLevelset Lib3MFHandle, dTheSolidThreshold float64) (error) {
+func (implementation *Lib3MFImplementation) VolumeDataBoundary_SetSolidThreshold(VolumeDataBoundary Lib3MFHandle, dTheSolidThreshold float64) (error) {
 	var err error = nil
 	
-	implementation_volumedatalevelset, err := implementation.GetWrapperHandle(VolumeDataLevelset)
+	implementation_volumedataboundary, err := implementation.GetWrapperHandle(VolumeDataBoundary)
 	if (err != nil) {
 		return err
 	}
 
-	err = implementation.CallFunction(implementation.Lib3MF_volumedatalevelset_setsolidthreshold, implementation_volumedatalevelset.GetDLLInHandle(), Float64InValue(dTheSolidThreshold))
+	err = implementation.CallFunction(implementation.Lib3MF_volumedataboundary_setsolidthreshold, implementation_volumedataboundary.GetDLLInHandle(), Float64InValue(dTheSolidThreshold))
 	if (err != nil) {
 		return err
 	}
@@ -6620,22 +6620,6 @@ func (implementation *Lib3MFImplementation) VolumeDataComposite_RemoveMaterialMa
 	return err
 }
 
-func (implementation *Lib3MFImplementation) VolumeDataProperty_SetName(VolumeDataProperty Lib3MFHandle, sPropertyName string) (error) {
-	var err error = nil
-	
-	implementation_volumedataproperty, err := implementation.GetWrapperHandle(VolumeDataProperty)
-	if (err != nil) {
-		return err
-	}
-
-	err = implementation.CallFunction(implementation.Lib3MF_volumedataproperty_setname, implementation_volumedataproperty.GetDLLInHandle(), StringInValue(sPropertyName))
-	if (err != nil) {
-		return err
-	}
-	
-	return err
-}
-
 func (implementation *Lib3MFImplementation) VolumeDataProperty_GetName(VolumeDataProperty Lib3MFHandle) (string, error) {
 	var err error = nil
 	var neededforPropertyName int64 = 0
@@ -6698,51 +6682,51 @@ func (implementation *Lib3MFImplementation) VolumeDataProperty_IsRequired(Volume
 	return (bIsRequired != 0), err
 }
 
-func (implementation *Lib3MFImplementation) VolumeData_GetLevelset(VolumeData Lib3MFHandle) (Lib3MFHandle, error) {
+func (implementation *Lib3MFImplementation) VolumeData_GetBoundary(VolumeData Lib3MFHandle) (Lib3MFHandle, error) {
 	var err error = nil
-	hTheLevelsetData := implementation.NewHandle()
+	hTheBoundaryData := implementation.NewHandle()
 	
 	implementation_volumedata, err := implementation.GetWrapperHandle(VolumeData)
 	if (err != nil) {
-		return hTheLevelsetData, err
+		return hTheBoundaryData, err
 	}
 
-	err = implementation.CallFunction(implementation.Lib3MF_volumedata_getlevelset, implementation_volumedata.GetDLLInHandle(), hTheLevelsetData.GetDLLOutHandle())
+	err = implementation.CallFunction(implementation.Lib3MF_volumedata_getboundary, implementation_volumedata.GetDLLInHandle(), hTheBoundaryData.GetDLLOutHandle())
 	if (err != nil) {
-		return hTheLevelsetData, err
+		return hTheBoundaryData, err
 	}
 	
-	return hTheLevelsetData, err
+	return hTheBoundaryData, err
 }
 
-func (implementation *Lib3MFImplementation) VolumeData_CreateNewLevelset(VolumeData Lib3MFHandle, TheScalarField Lib3MFHandle, sTransform sLib3MFTransform) (Lib3MFHandle, error) {
+func (implementation *Lib3MFImplementation) VolumeData_CreateNewBoundary(VolumeData Lib3MFHandle, TheScalarField Lib3MFHandle) (Lib3MFHandle, error) {
 	var err error = nil
-	hTheLevelsetData := implementation.NewHandle()
+	hTheBoundaryData := implementation.NewHandle()
 	
 	implementation_volumedata, err := implementation.GetWrapperHandle(VolumeData)
 	if (err != nil) {
-		return hTheLevelsetData, err
+		return hTheBoundaryData, err
 	}
 	implementation_thescalarfield, err := implementation.GetWrapperHandle(TheScalarField)
 	if (err != nil) {
-		return hTheLevelsetData, err
+		return hTheBoundaryData, err
 	}
 	
 	TheScalarFieldDLLHandle := implementation_thescalarfield.GetDLLInHandle()
 	if (TheScalarFieldDLLHandle == 0) {
 		err := fmt.Errorf("Handle must not be 0.")
-		return hTheLevelsetData, err
+		return hTheBoundaryData, err
 	}
 
-	err = implementation.CallFunction(implementation.Lib3MF_volumedata_createnewlevelset, implementation_volumedata.GetDLLInHandle(), TheScalarFieldDLLHandle, uintptr(unsafe.Pointer(&sTransform)), hTheLevelsetData.GetDLLOutHandle())
+	err = implementation.CallFunction(implementation.Lib3MF_volumedata_createnewboundary, implementation_volumedata.GetDLLInHandle(), TheScalarFieldDLLHandle, hTheBoundaryData.GetDLLOutHandle())
 	if (err != nil) {
-		return hTheLevelsetData, err
+		return hTheBoundaryData, err
 	}
 	
-	return hTheLevelsetData, err
+	return hTheBoundaryData, err
 }
 
-func (implementation *Lib3MFImplementation) VolumeData_RemoveLevelset(VolumeData Lib3MFHandle) (error) {
+func (implementation *Lib3MFImplementation) VolumeData_RemoveBoundary(VolumeData Lib3MFHandle) (error) {
 	var err error = nil
 	
 	implementation_volumedata, err := implementation.GetWrapperHandle(VolumeData)
@@ -6750,7 +6734,7 @@ func (implementation *Lib3MFImplementation) VolumeData_RemoveLevelset(VolumeData
 		return err
 	}
 
-	err = implementation.CallFunction(implementation.Lib3MF_volumedata_removelevelset, implementation_volumedata.GetDLLInHandle())
+	err = implementation.CallFunction(implementation.Lib3MF_volumedata_removeboundary, implementation_volumedata.GetDLLInHandle())
 	if (err != nil) {
 		return err
 	}
@@ -6902,7 +6886,7 @@ func (implementation *Lib3MFImplementation) VolumeData_GetProperty(VolumeData Li
 	return hTheVolumeDataProperty, err
 }
 
-func (implementation *Lib3MFImplementation) VolumeData_AddProperty(VolumeData Lib3MFHandle, sName string, nUniqueResourceID uint32) (Lib3MFHandle, error) {
+func (implementation *Lib3MFImplementation) VolumeData_AddPropertyFromScalarField(VolumeData Lib3MFHandle, sName string, TheScalarField Lib3MFHandle) (Lib3MFHandle, error) {
 	var err error = nil
 	hTheVolumeDataProperty := implementation.NewHandle()
 	
@@ -6910,8 +6894,45 @@ func (implementation *Lib3MFImplementation) VolumeData_AddProperty(VolumeData Li
 	if (err != nil) {
 		return hTheVolumeDataProperty, err
 	}
+	implementation_thescalarfield, err := implementation.GetWrapperHandle(TheScalarField)
+	if (err != nil) {
+		return hTheVolumeDataProperty, err
+	}
+	
+	TheScalarFieldDLLHandle := implementation_thescalarfield.GetDLLInHandle()
+	if (TheScalarFieldDLLHandle == 0) {
+		err := fmt.Errorf("Handle must not be 0.")
+		return hTheVolumeDataProperty, err
+	}
 
-	err = implementation.CallFunction(implementation.Lib3MF_volumedata_addproperty, implementation_volumedata.GetDLLInHandle(), StringInValue(sName), UInt32InValue(nUniqueResourceID), hTheVolumeDataProperty.GetDLLOutHandle())
+	err = implementation.CallFunction(implementation.Lib3MF_volumedata_addpropertyfromscalarfield, implementation_volumedata.GetDLLInHandle(), StringInValue(sName), TheScalarFieldDLLHandle, hTheVolumeDataProperty.GetDLLOutHandle())
+	if (err != nil) {
+		return hTheVolumeDataProperty, err
+	}
+	
+	return hTheVolumeDataProperty, err
+}
+
+func (implementation *Lib3MFImplementation) VolumeData_AddPropertyFromVector3DField(VolumeData Lib3MFHandle, sName string, TheVector3DField Lib3MFHandle) (Lib3MFHandle, error) {
+	var err error = nil
+	hTheVolumeDataProperty := implementation.NewHandle()
+	
+	implementation_volumedata, err := implementation.GetWrapperHandle(VolumeData)
+	if (err != nil) {
+		return hTheVolumeDataProperty, err
+	}
+	implementation_thevector3dfield, err := implementation.GetWrapperHandle(TheVector3DField)
+	if (err != nil) {
+		return hTheVolumeDataProperty, err
+	}
+	
+	TheVector3DFieldDLLHandle := implementation_thevector3dfield.GetDLLInHandle()
+	if (TheVector3DFieldDLLHandle == 0) {
+		err := fmt.Errorf("Handle must not be 0.")
+		return hTheVolumeDataProperty, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_volumedata_addpropertyfromvector3dfield, implementation_volumedata.GetDLLInHandle(), StringInValue(sName), TheVector3DFieldDLLHandle, hTheVolumeDataProperty.GetDLLOutHandle())
 	if (err != nil) {
 		return hTheVolumeDataProperty, err
 	}

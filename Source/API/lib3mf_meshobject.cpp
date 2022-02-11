@@ -392,7 +392,6 @@ IBeamLattice* CMeshObject::BeamLattice()
 
 IVolumeData * CMeshObject::VolumeData()
 {
-	// return new CVolumeData(meshObject(), meshObject()->getVolumeData(), meshObject()->getModel());
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return new CVolumeData(meshObject(), meshObject()->getVolumeData());
 }
 

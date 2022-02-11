@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -24,29 +24,30 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CVolumeDataLevelset
+Abstract:
 
-*/
+NMR_VolumeDataBoundary.cpp implements the class CVolumeDataBoundary.
 
-#include "lib3mf_volumedatalevelset.hpp"
-#include "lib3mf_interfaceexception.hpp"
+--*/
 
-// Include custom headers here.
+#include "Common/Mesh/NMR_VolumeDataBoundary.h"
+#include "Model/Classes/NMR_ModelScalarField.h"
 
+namespace NMR {
 
-using namespace Lib3MF::Impl;
+	CVolumeDataBoundary::CVolumeDataBoundary(PModelScalarField pScalarField)
+		: CScalarFieldReference(pScalarField), m_dSolidThreshold(0.0)
+	{
+		
+	}
 
-/*************************************************************************************************************************
- Class definition of CVolumeDataLevelset 
-**************************************************************************************************************************/
+	nfDouble CVolumeDataBoundary::GetSolidThreshold()
+	{
+		return m_dSolidThreshold;
+	}
 
-Lib3MF_double CVolumeDataLevelset::GetSolidThreshold()
-{
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	void CVolumeDataBoundary::SetSolidThreshold(nfDouble dSolidThreshold)
+	{
+		m_dSolidThreshold = dSolidThreshold;
+	}
 }
-
-void CVolumeDataLevelset::SetSolidThreshold(const Lib3MF_double dTheSolidThreshold)
-{
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
-}
-

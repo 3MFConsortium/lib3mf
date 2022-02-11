@@ -317,21 +317,20 @@ class FunctionTable:
 	lib3mf_scalarfieldreference_setscalarfield = None
 	lib3mf_vector3dfieldreference_getvector3dfield = None
 	lib3mf_vector3dfieldreference_setvector3dfield = None
-	lib3mf_volumedatalevelset_getsolidthreshold = None
-	lib3mf_volumedatalevelset_setsolidthreshold = None
+	lib3mf_volumedataboundary_getsolidthreshold = None
+	lib3mf_volumedataboundary_setsolidthreshold = None
 	lib3mf_volumedatacomposite_getbasematerialgroup = None
 	lib3mf_volumedatacomposite_setbasematerialgroup = None
 	lib3mf_volumedatacomposite_getmaterialmappingcount = None
 	lib3mf_volumedatacomposite_getmaterialmapping = None
 	lib3mf_volumedatacomposite_addmaterialmapping = None
 	lib3mf_volumedatacomposite_removematerialmapping = None
-	lib3mf_volumedataproperty_setname = None
 	lib3mf_volumedataproperty_getname = None
 	lib3mf_volumedataproperty_setisrequired = None
 	lib3mf_volumedataproperty_isrequired = None
-	lib3mf_volumedata_getlevelset = None
-	lib3mf_volumedata_createnewlevelset = None
-	lib3mf_volumedata_removelevelset = None
+	lib3mf_volumedata_getboundary = None
+	lib3mf_volumedata_createnewboundary = None
+	lib3mf_volumedata_removeboundary = None
 	lib3mf_volumedata_getcomposite = None
 	lib3mf_volumedata_createnewcomposite = None
 	lib3mf_volumedata_removecomposite = None
@@ -340,7 +339,8 @@ class FunctionTable:
 	lib3mf_volumedata_removecolor = None
 	lib3mf_volumedata_getpropertycount = None
 	lib3mf_volumedata_getproperty = None
-	lib3mf_volumedata_addproperty = None
+	lib3mf_volumedata_addpropertyfromscalarfield = None
+	lib3mf_volumedata_addpropertyfromvector3dfield = None
 	lib3mf_volumedata_removeproperty = None
 	lib3mf_component_getobjectresource = None
 	lib3mf_component_getobjectresourceid = None
@@ -2149,17 +2149,17 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_void_p)
 			self.lib.lib3mf_vector3dfieldreference_setvector3dfield = methodType(int(methodAddress.value))
 			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumedatalevelset_getsolidthreshold")), methodAddress)
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumedataboundary_getsolidthreshold")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_double))
-			self.lib.lib3mf_volumedatalevelset_getsolidthreshold = methodType(int(methodAddress.value))
+			self.lib.lib3mf_volumedataboundary_getsolidthreshold = methodType(int(methodAddress.value))
 			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumedatalevelset_setsolidthreshold")), methodAddress)
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumedataboundary_setsolidthreshold")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_double)
-			self.lib.lib3mf_volumedatalevelset_setsolidthreshold = methodType(int(methodAddress.value))
+			self.lib.lib3mf_volumedataboundary_setsolidthreshold = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumedatacomposite_getbasematerialgroup")), methodAddress)
 			if err != 0:
@@ -2197,12 +2197,6 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32)
 			self.lib.lib3mf_volumedatacomposite_removematerialmapping = methodType(int(methodAddress.value))
 			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumedataproperty_setname")), methodAddress)
-			if err != 0:
-				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
-			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p)
-			self.lib.lib3mf_volumedataproperty_setname = methodType(int(methodAddress.value))
-			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumedataproperty_getname")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
@@ -2221,23 +2215,23 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_bool))
 			self.lib.lib3mf_volumedataproperty_isrequired = methodType(int(methodAddress.value))
 			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumedata_getlevelset")), methodAddress)
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumedata_getboundary")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
-			self.lib.lib3mf_volumedata_getlevelset = methodType(int(methodAddress.value))
+			self.lib.lib3mf_volumedata_getboundary = methodType(int(methodAddress.value))
 			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumedata_createnewlevelset")), methodAddress)
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumedata_createnewboundary")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
-			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_void_p, ctypes.POINTER(Transform), ctypes.POINTER(ctypes.c_void_p))
-			self.lib.lib3mf_volumedata_createnewlevelset = methodType(int(methodAddress.value))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_volumedata_createnewboundary = methodType(int(methodAddress.value))
 			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumedata_removelevelset")), methodAddress)
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumedata_removeboundary")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p)
-			self.lib.lib3mf_volumedata_removelevelset = methodType(int(methodAddress.value))
+			self.lib.lib3mf_volumedata_removeboundary = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumedata_getcomposite")), methodAddress)
 			if err != 0:
@@ -2287,11 +2281,17 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p))
 			self.lib.lib3mf_volumedata_getproperty = methodType(int(methodAddress.value))
 			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumedata_addproperty")), methodAddress)
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumedata_addpropertyfromscalarfield")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
-			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p))
-			self.lib.lib3mf_volumedata_addproperty = methodType(int(methodAddress.value))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_volumedata_addpropertyfromscalarfield = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumedata_addpropertyfromvector3dfield")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_volumedata_addpropertyfromvector3dfield = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumedata_removeproperty")), methodAddress)
 			if err != 0:
@@ -4344,11 +4344,11 @@ class Wrapper:
 			self.lib.lib3mf_vector3dfieldreference_setvector3dfield.restype = ctypes.c_int32
 			self.lib.lib3mf_vector3dfieldreference_setvector3dfield.argtypes = [ctypes.c_void_p, ctypes.c_void_p]
 			
-			self.lib.lib3mf_volumedatalevelset_getsolidthreshold.restype = ctypes.c_int32
-			self.lib.lib3mf_volumedatalevelset_getsolidthreshold.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_double)]
+			self.lib.lib3mf_volumedataboundary_getsolidthreshold.restype = ctypes.c_int32
+			self.lib.lib3mf_volumedataboundary_getsolidthreshold.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_double)]
 			
-			self.lib.lib3mf_volumedatalevelset_setsolidthreshold.restype = ctypes.c_int32
-			self.lib.lib3mf_volumedatalevelset_setsolidthreshold.argtypes = [ctypes.c_void_p, ctypes.c_double]
+			self.lib.lib3mf_volumedataboundary_setsolidthreshold.restype = ctypes.c_int32
+			self.lib.lib3mf_volumedataboundary_setsolidthreshold.argtypes = [ctypes.c_void_p, ctypes.c_double]
 			
 			self.lib.lib3mf_volumedatacomposite_getbasematerialgroup.restype = ctypes.c_int32
 			self.lib.lib3mf_volumedatacomposite_getbasematerialgroup.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
@@ -4368,9 +4368,6 @@ class Wrapper:
 			self.lib.lib3mf_volumedatacomposite_removematerialmapping.restype = ctypes.c_int32
 			self.lib.lib3mf_volumedatacomposite_removematerialmapping.argtypes = [ctypes.c_void_p, ctypes.c_uint32]
 			
-			self.lib.lib3mf_volumedataproperty_setname.restype = ctypes.c_int32
-			self.lib.lib3mf_volumedataproperty_setname.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
-			
 			self.lib.lib3mf_volumedataproperty_getname.restype = ctypes.c_int32
 			self.lib.lib3mf_volumedataproperty_getname.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
 			
@@ -4380,14 +4377,14 @@ class Wrapper:
 			self.lib.lib3mf_volumedataproperty_isrequired.restype = ctypes.c_int32
 			self.lib.lib3mf_volumedataproperty_isrequired.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_bool)]
 			
-			self.lib.lib3mf_volumedata_getlevelset.restype = ctypes.c_int32
-			self.lib.lib3mf_volumedata_getlevelset.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			self.lib.lib3mf_volumedata_getboundary.restype = ctypes.c_int32
+			self.lib.lib3mf_volumedata_getboundary.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
 			
-			self.lib.lib3mf_volumedata_createnewlevelset.restype = ctypes.c_int32
-			self.lib.lib3mf_volumedata_createnewlevelset.argtypes = [ctypes.c_void_p, ctypes.c_void_p, ctypes.POINTER(Transform), ctypes.POINTER(ctypes.c_void_p)]
+			self.lib.lib3mf_volumedata_createnewboundary.restype = ctypes.c_int32
+			self.lib.lib3mf_volumedata_createnewboundary.argtypes = [ctypes.c_void_p, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
 			
-			self.lib.lib3mf_volumedata_removelevelset.restype = ctypes.c_int32
-			self.lib.lib3mf_volumedata_removelevelset.argtypes = [ctypes.c_void_p]
+			self.lib.lib3mf_volumedata_removeboundary.restype = ctypes.c_int32
+			self.lib.lib3mf_volumedata_removeboundary.argtypes = [ctypes.c_void_p]
 			
 			self.lib.lib3mf_volumedata_getcomposite.restype = ctypes.c_int32
 			self.lib.lib3mf_volumedata_getcomposite.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
@@ -4413,8 +4410,11 @@ class Wrapper:
 			self.lib.lib3mf_volumedata_getproperty.restype = ctypes.c_int32
 			self.lib.lib3mf_volumedata_getproperty.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p)]
 			
-			self.lib.lib3mf_volumedata_addproperty.restype = ctypes.c_int32
-			self.lib.lib3mf_volumedata_addproperty.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p)]
+			self.lib.lib3mf_volumedata_addpropertyfromscalarfield.restype = ctypes.c_int32
+			self.lib.lib3mf_volumedata_addpropertyfromscalarfield.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_volumedata_addpropertyfromvector3dfield.restype = ctypes.c_int32
+			self.lib.lib3mf_volumedata_addpropertyfromvector3dfield.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
 			
 			self.lib.lib3mf_volumedata_removeproperty.restype = ctypes.c_int32
 			self.lib.lib3mf_volumedata_removeproperty.argtypes = [ctypes.c_void_p, ctypes.c_uint32]
@@ -6920,20 +6920,20 @@ class Vector3DFieldReference(FieldReference):
 	
 
 
-''' Class Implementation for VolumeDataLevelset
+''' Class Implementation for VolumeDataBoundary
 '''
-class VolumeDataLevelset(ScalarFieldReference):
+class VolumeDataBoundary(ScalarFieldReference):
 	def __init__(self, handle, wrapper):
 		ScalarFieldReference.__init__(self, handle, wrapper)
 	def GetSolidThreshold(self):
 		pTheSolidThreshold = ctypes.c_double()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumedatalevelset_getsolidthreshold(self._handle, pTheSolidThreshold))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumedataboundary_getsolidthreshold(self._handle, pTheSolidThreshold))
 		
 		return pTheSolidThreshold.value
 	
 	def SetSolidThreshold(self, TheSolidThreshold):
 		dTheSolidThreshold = ctypes.c_double(TheSolidThreshold)
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumedatalevelset_setsolidthreshold(self._handle, dTheSolidThreshold))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumedataboundary_setsolidthreshold(self._handle, dTheSolidThreshold))
 		
 	
 
@@ -7015,11 +7015,6 @@ class VolumeDataComposite(Base):
 class VolumeDataProperty(FieldReference):
 	def __init__(self, handle, wrapper):
 		FieldReference.__init__(self, handle, wrapper)
-	def SetName(self, PropertyName):
-		pPropertyName = ctypes.c_char_p(str.encode(PropertyName))
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumedataproperty_setname(self._handle, pPropertyName))
-		
-	
 	def GetName(self):
 		nPropertyNameBufferSize = ctypes.c_uint64(0)
 		nPropertyNameNeededChars = ctypes.c_uint64(0)
@@ -7049,33 +7044,33 @@ class VolumeDataProperty(FieldReference):
 class VolumeData(Base):
 	def __init__(self, handle, wrapper):
 		Base.__init__(self, handle, wrapper)
-	def GetLevelset(self):
-		TheLevelsetDataHandle = ctypes.c_void_p()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumedata_getlevelset(self._handle, TheLevelsetDataHandle))
-		if TheLevelsetDataHandle:
-			TheLevelsetDataObject = VolumeDataLevelset(TheLevelsetDataHandle, self._wrapper)
+	def GetBoundary(self):
+		TheBoundaryDataHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumedata_getboundary(self._handle, TheBoundaryDataHandle))
+		if TheBoundaryDataHandle:
+			TheBoundaryDataObject = VolumeDataBoundary(TheBoundaryDataHandle, self._wrapper)
 		else:
-			TheLevelsetDataObject = None
+			TheBoundaryDataObject = None
 		
-		return TheLevelsetDataObject
+		return TheBoundaryDataObject
 	
-	def CreateNewLevelset(self, TheScalarFieldObject, Transform):
+	def CreateNewBoundary(self, TheScalarFieldObject):
 		TheScalarFieldHandle = None
 		if TheScalarFieldObject:
 			TheScalarFieldHandle = TheScalarFieldObject._handle
 		else:
 			raise ELib3MFException(ErrorCodes.INVALIDPARAM, 'Invalid return/output value')
-		TheLevelsetDataHandle = ctypes.c_void_p()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumedata_createnewlevelset(self._handle, TheScalarFieldHandle, Transform, TheLevelsetDataHandle))
-		if TheLevelsetDataHandle:
-			TheLevelsetDataObject = VolumeDataLevelset(TheLevelsetDataHandle, self._wrapper)
+		TheBoundaryDataHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumedata_createnewboundary(self._handle, TheScalarFieldHandle, TheBoundaryDataHandle))
+		if TheBoundaryDataHandle:
+			TheBoundaryDataObject = VolumeDataBoundary(TheBoundaryDataHandle, self._wrapper)
 		else:
 			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
 		
-		return TheLevelsetDataObject
+		return TheBoundaryDataObject
 	
-	def RemoveLevelset(self):
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumedata_removelevelset(self._handle))
+	def RemoveBoundary(self):
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumedata_removeboundary(self._handle))
 		
 	
 	def GetComposite(self):
@@ -7148,11 +7143,31 @@ class VolumeData(Base):
 		
 		return TheVolumeDataPropertyObject
 	
-	def AddProperty(self, Name, UniqueResourceID):
+	def AddPropertyFromScalarField(self, Name, TheScalarFieldObject):
 		pName = ctypes.c_char_p(str.encode(Name))
-		nUniqueResourceID = ctypes.c_uint32(UniqueResourceID)
+		TheScalarFieldHandle = None
+		if TheScalarFieldObject:
+			TheScalarFieldHandle = TheScalarFieldObject._handle
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDPARAM, 'Invalid return/output value')
 		TheVolumeDataPropertyHandle = ctypes.c_void_p()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumedata_addproperty(self._handle, pName, nUniqueResourceID, TheVolumeDataPropertyHandle))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumedata_addpropertyfromscalarfield(self._handle, pName, TheScalarFieldHandle, TheVolumeDataPropertyHandle))
+		if TheVolumeDataPropertyHandle:
+			TheVolumeDataPropertyObject = VolumeDataProperty(TheVolumeDataPropertyHandle, self._wrapper)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return TheVolumeDataPropertyObject
+	
+	def AddPropertyFromVector3DField(self, Name, TheVector3DFieldObject):
+		pName = ctypes.c_char_p(str.encode(Name))
+		TheVector3DFieldHandle = None
+		if TheVector3DFieldObject:
+			TheVector3DFieldHandle = TheVector3DFieldObject._handle
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDPARAM, 'Invalid return/output value')
+		TheVolumeDataPropertyHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumedata_addpropertyfromvector3dfield(self._handle, pName, TheVector3DFieldHandle, TheVolumeDataPropertyHandle))
 		if TheVolumeDataPropertyHandle:
 			TheVolumeDataPropertyObject = VolumeDataProperty(TheVolumeDataPropertyHandle, self._wrapper)
 		else:

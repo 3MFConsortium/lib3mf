@@ -30,44 +30,51 @@ NMR_ModelVolumeData.cpp implements the class CModelVolumeData.
 
 --*/
 
-#include "Model/Classes/NMR_ModelVolumeData.h" 
+#include "Model/Classes/NMR_ModelVolumeData.h"
+
+#include "Model/Classes/NMR_ModelScalarField.h"
+#include "Model/Classes/NMR_ModelVector3DField.h"
 
 namespace NMR {
 
 	CModelVolumeData::CModelVolumeData()
-		:m_pLevelset(nullptr), m_pComposite(nullptr), m_pColor(nullptr), m_mapProperties()
+		:m_pBoundary(nullptr), m_pComposite(nullptr), m_pColor(nullptr), m_mapProperties()
 	{
 
 	}
 
 	void CModelVolumeData::clear()
 	{
-
+		m_pBoundary.reset();
+		m_pComposite.reset();
+		m_pColor.reset();
+		m_mapProperties.clear();
 	}
 
-	bool CModelVolumeData::HasLevelset()
+	bool CModelVolumeData::HasBoundary() const
 	{
-		return m_pLevelset.get() != nullptr;
+		return m_pBoundary.get() != nullptr;
 	}
 
-	void CModelVolumeData::SetLevelset(PVolumeDataLevelset pLevelset)
+	void CModelVolumeData::SetBoundary(PVolumeDataBoundary pLevelset)
 	{
 		if (!pLevelset)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-		m_pLevelset = pLevelset;
+		m_pBoundary = pLevelset;
 	}
 
-	PVolumeDataLevelset CModelVolumeData::CreateLevelset()
+	PVolumeDataBoundary CModelVolumeData::CreateBoundary(PModelScalarField pScalarField)
 	{
-		//m_pLevelset = std::make_shared<CVolumeDataLevelset>(pVolumetricStack);
-		//return m_pLevelset;
-		throw CNMRException(-1);
+		if (!pScalarField)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+		m_pBoundary = std::make_shared<CVolumeDataBoundary>(pScalarField);
+		return m_pBoundary;
 	}
 
-	PVolumeDataLevelset CModelVolumeData::GetLevelset()
+	PVolumeDataBoundary CModelVolumeData::GetBoundary()
 	{
-		return m_pLevelset;
+		return m_pBoundary;
 	}
 
 
@@ -77,7 +84,7 @@ namespace NMR {
 		return iIterator != m_mapProperties.end();
 	}
 
-	nfUint32 CModelVolumeData::GetPropertyCount()
+	nfUint32 CModelVolumeData::GetPropertyCount() const
 	{
 		return (nfUint32)m_mapProperties.size();
 	}
@@ -104,16 +111,40 @@ namespace NMR {
 		return nullptr;
 	}
 
-	PVolumeDataProperty CModelVolumeData::CreateProperty(std::string sName)
+	void CModelVolumeData::AddProperty(PVolumeDataProperty pProperty)
 	{
-		throw CNMRException(-1);
-		//if (hasProperty(sName)) {
-		//	throw CNMRException(NMR_ERROR_DUPLICATEVOLUMEDATAPROPERTY);
-		//}
+		if (!pProperty)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+		if (hasProperty(pProperty->GetName())) {
+			throw CNMRException(NMR_ERROR_DUPLICATEVOLUMEDATAPROPERTY);
+		}
+		m_mapProperties.insert(std::make_pair(pProperty->GetName(), pProperty));
+	}
 
-		//PVolumeDataProperty pVolumeDataProperty = std::make_shared<CVolumeDataProperty>(sName, pVolumetricStack);
-		//m_mapProperties.insert(std::make_pair(pVolumeDataProperty->GetName(), pVolumeDataProperty));
-		//return pVolumeDataProperty;
+	PVolumeDataProperty CModelVolumeData::AddProperty(std::string sName, PModelScalarField pScalarField)
+	{
+		if (!pScalarField)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+		if (hasProperty(sName)) {
+			throw CNMRException(NMR_ERROR_DUPLICATEVOLUMEDATAPROPERTY);
+		}
+
+		PVolumeDataProperty pVolumeDataProperty = std::make_shared<CVolumeDataProperty>(pScalarField, sName);
+		m_mapProperties.insert(std::make_pair(pVolumeDataProperty->GetName(), pVolumeDataProperty));
+		return pVolumeDataProperty;
+	}
+
+	PVolumeDataProperty CModelVolumeData::AddProperty(std::string sName, PModelVector3DField pVector3DField)
+	{
+		if (!pVector3DField)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+		if (hasProperty(sName)) {
+			throw CNMRException(NMR_ERROR_DUPLICATEVOLUMEDATAPROPERTY);
+		}
+
+		PVolumeDataProperty pVolumeDataProperty = std::make_shared<CVolumeDataProperty>(pVector3DField, sName);
+		m_mapProperties.insert(std::make_pair(pVolumeDataProperty->GetName(), pVolumeDataProperty));
+		return pVolumeDataProperty;
 	}
 
 	void CModelVolumeData::RemoveProperty(std::string sName)
@@ -121,26 +152,25 @@ namespace NMR {
 		m_mapProperties.erase(sName);
 	}
 
-	bool CModelVolumeData::HasColor()
+	bool CModelVolumeData::HasColor() const
 	{
 		return m_pColor.get() != nullptr;
 	}
 
 	void CModelVolumeData::SetColor(PVolumeDataColor pColor)
 	{
-		//if (!pColor)
-		//	throw CNMRException(NMR_ERROR_INVALIDPARAM);
+		if (!pColor)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-		//m_pColor = pColor;
-
-		throw CNMRException(-1);
+		m_pColor = pColor;
 	}
 
-	PVolumeDataColor CModelVolumeData::CreateColor()
+	PVolumeDataColor CModelVolumeData::CreateColor(PModelVector3DField pVector3DField)
 	{
-		//m_pColor = std::make_shared<CVolumeDataColor>(pVolumetricStack);
-		//return m_pColor;
-		throw CNMRException(-1);
+		if (!pVector3DField)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+		m_pColor = std::make_shared<CVolumeDataColor>(pVector3DField);
+		return m_pColor;
 	}
 
 	PVolumeDataColor CModelVolumeData::GetColor()

@@ -54,7 +54,7 @@ namespace NMR {
 		void setTransform(NMR::NMATRIX3 transform);
 
 		PPackageResourceID getFieldReferenceID() const;
-		virtual void setFieldReferenceID(PPackageResourceID pFieldResourceId);
+		virtual void setFieldReferenceID(UniqueResourceID FieldResourceId);
 	};
 
 	typedef std::shared_ptr<CFieldReference> PFieldReference;
@@ -64,7 +64,7 @@ namespace NMR {
 		CScalarFieldReference() = delete;
 		CScalarFieldReference(PModelScalarField pScalarField);
 
-		void setFieldReferenceID(PPackageResourceID pFieldResourceId) override;
+		void setFieldReferenceID(UniqueResourceID FieldResourceId) override;
 	};
 
 	typedef std::shared_ptr<CScalarFieldReference> PScalarFieldReference;
@@ -74,7 +74,7 @@ namespace NMR {
 		CVector3DFieldReference() = delete;
 		CVector3DFieldReference(PModelVector3DField pVector3DField);
 
-		void setFieldReferenceID(PPackageResourceID pFieldResourceId) override;
+		void setFieldReferenceID(UniqueResourceID FieldResourceId) override;
 	};
 
 	typedef std::shared_ptr<CVector3DFieldReference> PVetor3DFieldReference;

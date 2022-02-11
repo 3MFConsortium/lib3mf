@@ -42,7 +42,9 @@ Abstract: This is the class declaration of CVolumeData
 #endif
 
 // Include custom headers here.
-
+#include "Common/Mesh/NMR_Mesh.h"
+#include "Model/Classes/NMR_ModelVolumeData.h"
+#include "Model/Classes/NMR_ModelMeshObject.h"
 
 namespace Lib3MF {
 namespace Impl {
@@ -58,6 +60,8 @@ private:
 	/**
 	* Put private members here.
 	*/
+	NMR::PModelVolumeData m_pVolumeData;
+	NMR::PModelMeshObject m_pMeshObject; // questionable
 
 protected:
 
@@ -70,17 +74,18 @@ public:
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-
+	CVolumeData() = delete;
+	CVolumeData(NMR::PModelMeshObject pMeshObject, NMR::PModelVolumeData pVolumeData);
 
 	/**
 	* Public member functions to implement.
 	*/
 
-	IVolumeDataLevelset * GetLevelset() override;
+	IVolumeDataBoundary * GetBoundary() override;
 
-	IVolumeDataLevelset * CreateNewLevelset(IScalarField* pTheScalarField, const Lib3MF::sTransform Transform) override;
+	IVolumeDataBoundary* CreateNewBoundary(IScalarField* pTheScalarField) override;
 
-	void RemoveLevelset() override;
+	void RemoveBoundary() override;
 
 	IVolumeDataComposite * GetComposite() override;
 
@@ -98,7 +103,9 @@ public:
 
 	IVolumeDataProperty * GetProperty(const Lib3MF_uint32 nIndex) override;
 
-	IVolumeDataProperty * AddProperty(const std::string & sName, const Lib3MF_uint32 nUniqueResourceID) override;
+	IVolumeDataProperty* AddPropertyFromScalarField(const std::string& sName, IScalarField* pTheScalarField) override;
+	
+	IVolumeDataProperty* AddPropertyFromVector3DField(const std::string& sName, IVector3DField* pTheVector3DField) override;
 
 	void RemoveProperty(const Lib3MF_uint32 nIndex) override;
 

@@ -236,21 +236,20 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_ScalarFieldReference_SetScalarField = NULL;
 	pWrapperTable->m_Vector3DFieldReference_GetVector3DField = NULL;
 	pWrapperTable->m_Vector3DFieldReference_SetVector3DField = NULL;
-	pWrapperTable->m_VolumeDataLevelset_GetSolidThreshold = NULL;
-	pWrapperTable->m_VolumeDataLevelset_SetSolidThreshold = NULL;
+	pWrapperTable->m_VolumeDataBoundary_GetSolidThreshold = NULL;
+	pWrapperTable->m_VolumeDataBoundary_SetSolidThreshold = NULL;
 	pWrapperTable->m_VolumeDataComposite_GetBaseMaterialGroup = NULL;
 	pWrapperTable->m_VolumeDataComposite_SetBaseMaterialGroup = NULL;
 	pWrapperTable->m_VolumeDataComposite_GetMaterialMappingCount = NULL;
 	pWrapperTable->m_VolumeDataComposite_GetMaterialMapping = NULL;
 	pWrapperTable->m_VolumeDataComposite_AddMaterialMapping = NULL;
 	pWrapperTable->m_VolumeDataComposite_RemoveMaterialMapping = NULL;
-	pWrapperTable->m_VolumeDataProperty_SetName = NULL;
 	pWrapperTable->m_VolumeDataProperty_GetName = NULL;
 	pWrapperTable->m_VolumeDataProperty_SetIsRequired = NULL;
 	pWrapperTable->m_VolumeDataProperty_IsRequired = NULL;
-	pWrapperTable->m_VolumeData_GetLevelset = NULL;
-	pWrapperTable->m_VolumeData_CreateNewLevelset = NULL;
-	pWrapperTable->m_VolumeData_RemoveLevelset = NULL;
+	pWrapperTable->m_VolumeData_GetBoundary = NULL;
+	pWrapperTable->m_VolumeData_CreateNewBoundary = NULL;
+	pWrapperTable->m_VolumeData_RemoveBoundary = NULL;
 	pWrapperTable->m_VolumeData_GetComposite = NULL;
 	pWrapperTable->m_VolumeData_CreateNewComposite = NULL;
 	pWrapperTable->m_VolumeData_RemoveComposite = NULL;
@@ -259,7 +258,8 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_VolumeData_RemoveColor = NULL;
 	pWrapperTable->m_VolumeData_GetPropertyCount = NULL;
 	pWrapperTable->m_VolumeData_GetProperty = NULL;
-	pWrapperTable->m_VolumeData_AddProperty = NULL;
+	pWrapperTable->m_VolumeData_AddPropertyFromScalarField = NULL;
+	pWrapperTable->m_VolumeData_AddPropertyFromVector3DField = NULL;
 	pWrapperTable->m_VolumeData_RemoveProperty = NULL;
 	pWrapperTable->m_Component_GetObjectResource = NULL;
 	pWrapperTable->m_Component_GetObjectResourceID = NULL;
@@ -2270,21 +2270,21 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_VolumeDataLevelset_GetSolidThreshold = (PLib3MFVolumeDataLevelset_GetSolidThresholdPtr) GetProcAddress(hLibrary, "lib3mf_volumedatalevelset_getsolidthreshold");
+	pWrapperTable->m_VolumeDataBoundary_GetSolidThreshold = (PLib3MFVolumeDataBoundary_GetSolidThresholdPtr) GetProcAddress(hLibrary, "lib3mf_volumedataboundary_getsolidthreshold");
 	#else // _WIN32
-	pWrapperTable->m_VolumeDataLevelset_GetSolidThreshold = (PLib3MFVolumeDataLevelset_GetSolidThresholdPtr) dlsym(hLibrary, "lib3mf_volumedatalevelset_getsolidthreshold");
+	pWrapperTable->m_VolumeDataBoundary_GetSolidThreshold = (PLib3MFVolumeDataBoundary_GetSolidThresholdPtr) dlsym(hLibrary, "lib3mf_volumedataboundary_getsolidthreshold");
 	dlerror();
 	#endif // _WIN32
-	if (pWrapperTable->m_VolumeDataLevelset_GetSolidThreshold == NULL)
+	if (pWrapperTable->m_VolumeDataBoundary_GetSolidThreshold == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_VolumeDataLevelset_SetSolidThreshold = (PLib3MFVolumeDataLevelset_SetSolidThresholdPtr) GetProcAddress(hLibrary, "lib3mf_volumedatalevelset_setsolidthreshold");
+	pWrapperTable->m_VolumeDataBoundary_SetSolidThreshold = (PLib3MFVolumeDataBoundary_SetSolidThresholdPtr) GetProcAddress(hLibrary, "lib3mf_volumedataboundary_setsolidthreshold");
 	#else // _WIN32
-	pWrapperTable->m_VolumeDataLevelset_SetSolidThreshold = (PLib3MFVolumeDataLevelset_SetSolidThresholdPtr) dlsym(hLibrary, "lib3mf_volumedatalevelset_setsolidthreshold");
+	pWrapperTable->m_VolumeDataBoundary_SetSolidThreshold = (PLib3MFVolumeDataBoundary_SetSolidThresholdPtr) dlsym(hLibrary, "lib3mf_volumedataboundary_setsolidthreshold");
 	dlerror();
 	#endif // _WIN32
-	if (pWrapperTable->m_VolumeDataLevelset_SetSolidThreshold == NULL)
+	if (pWrapperTable->m_VolumeDataBoundary_SetSolidThreshold == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
@@ -2342,15 +2342,6 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_VolumeDataProperty_SetName = (PLib3MFVolumeDataProperty_SetNamePtr) GetProcAddress(hLibrary, "lib3mf_volumedataproperty_setname");
-	#else // _WIN32
-	pWrapperTable->m_VolumeDataProperty_SetName = (PLib3MFVolumeDataProperty_SetNamePtr) dlsym(hLibrary, "lib3mf_volumedataproperty_setname");
-	dlerror();
-	#endif // _WIN32
-	if (pWrapperTable->m_VolumeDataProperty_SetName == NULL)
-		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
-	
-	#ifdef _WIN32
 	pWrapperTable->m_VolumeDataProperty_GetName = (PLib3MFVolumeDataProperty_GetNamePtr) GetProcAddress(hLibrary, "lib3mf_volumedataproperty_getname");
 	#else // _WIN32
 	pWrapperTable->m_VolumeDataProperty_GetName = (PLib3MFVolumeDataProperty_GetNamePtr) dlsym(hLibrary, "lib3mf_volumedataproperty_getname");
@@ -2378,30 +2369,30 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_VolumeData_GetLevelset = (PLib3MFVolumeData_GetLevelsetPtr) GetProcAddress(hLibrary, "lib3mf_volumedata_getlevelset");
+	pWrapperTable->m_VolumeData_GetBoundary = (PLib3MFVolumeData_GetBoundaryPtr) GetProcAddress(hLibrary, "lib3mf_volumedata_getboundary");
 	#else // _WIN32
-	pWrapperTable->m_VolumeData_GetLevelset = (PLib3MFVolumeData_GetLevelsetPtr) dlsym(hLibrary, "lib3mf_volumedata_getlevelset");
+	pWrapperTable->m_VolumeData_GetBoundary = (PLib3MFVolumeData_GetBoundaryPtr) dlsym(hLibrary, "lib3mf_volumedata_getboundary");
 	dlerror();
 	#endif // _WIN32
-	if (pWrapperTable->m_VolumeData_GetLevelset == NULL)
+	if (pWrapperTable->m_VolumeData_GetBoundary == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_VolumeData_CreateNewLevelset = (PLib3MFVolumeData_CreateNewLevelsetPtr) GetProcAddress(hLibrary, "lib3mf_volumedata_createnewlevelset");
+	pWrapperTable->m_VolumeData_CreateNewBoundary = (PLib3MFVolumeData_CreateNewBoundaryPtr) GetProcAddress(hLibrary, "lib3mf_volumedata_createnewboundary");
 	#else // _WIN32
-	pWrapperTable->m_VolumeData_CreateNewLevelset = (PLib3MFVolumeData_CreateNewLevelsetPtr) dlsym(hLibrary, "lib3mf_volumedata_createnewlevelset");
+	pWrapperTable->m_VolumeData_CreateNewBoundary = (PLib3MFVolumeData_CreateNewBoundaryPtr) dlsym(hLibrary, "lib3mf_volumedata_createnewboundary");
 	dlerror();
 	#endif // _WIN32
-	if (pWrapperTable->m_VolumeData_CreateNewLevelset == NULL)
+	if (pWrapperTable->m_VolumeData_CreateNewBoundary == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_VolumeData_RemoveLevelset = (PLib3MFVolumeData_RemoveLevelsetPtr) GetProcAddress(hLibrary, "lib3mf_volumedata_removelevelset");
+	pWrapperTable->m_VolumeData_RemoveBoundary = (PLib3MFVolumeData_RemoveBoundaryPtr) GetProcAddress(hLibrary, "lib3mf_volumedata_removeboundary");
 	#else // _WIN32
-	pWrapperTable->m_VolumeData_RemoveLevelset = (PLib3MFVolumeData_RemoveLevelsetPtr) dlsym(hLibrary, "lib3mf_volumedata_removelevelset");
+	pWrapperTable->m_VolumeData_RemoveBoundary = (PLib3MFVolumeData_RemoveBoundaryPtr) dlsym(hLibrary, "lib3mf_volumedata_removeboundary");
 	dlerror();
 	#endif // _WIN32
-	if (pWrapperTable->m_VolumeData_RemoveLevelset == NULL)
+	if (pWrapperTable->m_VolumeData_RemoveBoundary == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
@@ -2477,12 +2468,21 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_VolumeData_AddProperty = (PLib3MFVolumeData_AddPropertyPtr) GetProcAddress(hLibrary, "lib3mf_volumedata_addproperty");
+	pWrapperTable->m_VolumeData_AddPropertyFromScalarField = (PLib3MFVolumeData_AddPropertyFromScalarFieldPtr) GetProcAddress(hLibrary, "lib3mf_volumedata_addpropertyfromscalarfield");
 	#else // _WIN32
-	pWrapperTable->m_VolumeData_AddProperty = (PLib3MFVolumeData_AddPropertyPtr) dlsym(hLibrary, "lib3mf_volumedata_addproperty");
+	pWrapperTable->m_VolumeData_AddPropertyFromScalarField = (PLib3MFVolumeData_AddPropertyFromScalarFieldPtr) dlsym(hLibrary, "lib3mf_volumedata_addpropertyfromscalarfield");
 	dlerror();
 	#endif // _WIN32
-	if (pWrapperTable->m_VolumeData_AddProperty == NULL)
+	if (pWrapperTable->m_VolumeData_AddPropertyFromScalarField == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_VolumeData_AddPropertyFromVector3DField = (PLib3MFVolumeData_AddPropertyFromVector3DFieldPtr) GetProcAddress(hLibrary, "lib3mf_volumedata_addpropertyfromvector3dfield");
+	#else // _WIN32
+	pWrapperTable->m_VolumeData_AddPropertyFromVector3DField = (PLib3MFVolumeData_AddPropertyFromVector3DFieldPtr) dlsym(hLibrary, "lib3mf_volumedata_addpropertyfromvector3dfield");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_VolumeData_AddPropertyFromVector3DField == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32

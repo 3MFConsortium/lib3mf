@@ -1974,26 +1974,26 @@ typedef Lib3MFResult (*PLib3MFVector3DFieldReference_GetVector3DFieldPtr) (Lib3M
 typedef Lib3MFResult (*PLib3MFVector3DFieldReference_SetVector3DFieldPtr) (Lib3MF_Vector3DFieldReference pVector3DFieldReference, Lib3MF_Vector3DField pTheVector3DField);
 
 /*************************************************************************************************************************
- Class definition for VolumeDataLevelset
+ Class definition for VolumeDataBoundary
 **************************************************************************************************************************/
 
 /**
-* Returns the solidthreshold for the levelset function encoded in this VolumeDataLevelset
+* Returns the solidthreshold for the levelset function encoded in this VolumeDataBoundary
 *
-* @param[in] pVolumeDataLevelset - VolumeDataLevelset instance.
-* @param[out] pTheSolidThreshold - The solidthreshold for the levelset function encoded in this VolumeDataLevelset
+* @param[in] pVolumeDataBoundary - VolumeDataBoundary instance.
+* @param[out] pTheSolidThreshold - The solidthreshold for the levelset function encoded in this VolumeDataBoundary
 * @return error code or 0 (success)
 */
-typedef Lib3MFResult (*PLib3MFVolumeDataLevelset_GetSolidThresholdPtr) (Lib3MF_VolumeDataLevelset pVolumeDataLevelset, Lib3MF_double * pTheSolidThreshold);
+typedef Lib3MFResult (*PLib3MFVolumeDataBoundary_GetSolidThresholdPtr) (Lib3MF_VolumeDataBoundary pVolumeDataBoundary, Lib3MF_double * pTheSolidThreshold);
 
 /**
-* Sets the solidthreshold for the levelset function encoded in this VolumeDataLevelset
+* Sets the solidthreshold for the levelset function encoded in this VolumeDataBoundary
 *
-* @param[in] pVolumeDataLevelset - VolumeDataLevelset instance.
-* @param[in] dTheSolidThreshold - The solidthreshold for the levelset function encoded in this VolumeDataLevelset
+* @param[in] pVolumeDataBoundary - VolumeDataBoundary instance.
+* @param[in] dTheSolidThreshold - The solidthreshold for the levelset function encoded in this VolumeDataBoundary
 * @return error code or 0 (success)
 */
-typedef Lib3MFResult (*PLib3MFVolumeDataLevelset_SetSolidThresholdPtr) (Lib3MF_VolumeDataLevelset pVolumeDataLevelset, Lib3MF_double dTheSolidThreshold);
+typedef Lib3MFResult (*PLib3MFVolumeDataBoundary_SetSolidThresholdPtr) (Lib3MF_VolumeDataBoundary pVolumeDataBoundary, Lib3MF_double dTheSolidThreshold);
 
 /*************************************************************************************************************************
  Class definition for VolumeDataColor
@@ -2068,15 +2068,6 @@ typedef Lib3MFResult (*PLib3MFVolumeDataComposite_RemoveMaterialMappingPtr) (Lib
 **************************************************************************************************************************/
 
 /**
-* Sets the qualified name of this property.
-*
-* @param[in] pVolumeDataProperty - VolumeDataProperty instance.
-* @param[in] pPropertyName - The new qualified name of this property
-* @return error code or 0 (success)
-*/
-typedef Lib3MFResult (*PLib3MFVolumeDataProperty_SetNamePtr) (Lib3MF_VolumeDataProperty pVolumeDataProperty, const char * pPropertyName);
-
-/**
 * Gets the qualified name of this property.
 *
 * @param[in] pVolumeDataProperty - VolumeDataProperty instance.
@@ -2110,32 +2101,31 @@ typedef Lib3MFResult (*PLib3MFVolumeDataProperty_IsRequiredPtr) (Lib3MF_VolumeDa
 **************************************************************************************************************************/
 
 /**
-* Returns the VolumeDataLevelset of this VolumeData instance
+* Returns the VolumeDataBoundary of this VolumeData instance
 *
 * @param[in] pVolumeData - VolumeData instance.
-* @param[out] pTheLevelsetData - filled with the VolumeDataLevelset of this VolumeData instance.
+* @param[out] pTheBoundaryData - filled with the VolumeDataBoundary of this VolumeData instance.
 * @return error code or 0 (success)
 */
-typedef Lib3MFResult (*PLib3MFVolumeData_GetLevelsetPtr) (Lib3MF_VolumeData pVolumeData, Lib3MF_VolumeDataLevelset * pTheLevelsetData);
+typedef Lib3MFResult (*PLib3MFVolumeData_GetBoundaryPtr) (Lib3MF_VolumeData pVolumeData, Lib3MF_VolumeDataBoundary * pTheBoundaryData);
 
 /**
-* Creates a new VolumeDataLevelset for this VolumeData instance
+* Creates a new VolumeDataBoundary for this VolumeData instance
 *
 * @param[in] pVolumeData - VolumeData instance.
 * @param[in] pTheScalarField - ScalarField used in this element
-* @param[in] pTransform - new transformation matrix
-* @param[out] pTheLevelsetData - The new VolumeDataLevelset of this VolumeData instance.
+* @param[out] pTheBoundaryData - The new VolumeDataBoundary of this VolumeData instance.
 * @return error code or 0 (success)
 */
-typedef Lib3MFResult (*PLib3MFVolumeData_CreateNewLevelsetPtr) (Lib3MF_VolumeData pVolumeData, Lib3MF_ScalarField pTheScalarField, const Lib3MF::sTransform * pTransform, Lib3MF_VolumeDataLevelset * pTheLevelsetData);
+typedef Lib3MFResult (*PLib3MFVolumeData_CreateNewBoundaryPtr) (Lib3MF_VolumeData pVolumeData, Lib3MF_ScalarField pTheScalarField, Lib3MF_VolumeDataBoundary * pTheBoundaryData);
 
 /**
-* Removes the VolumeDataLevelset of this VolumeData instance
+* Removes the VolumeDataBoundary of this VolumeData instance
 *
 * @param[in] pVolumeData - VolumeData instance.
 * @return error code or 0 (success)
 */
-typedef Lib3MFResult (*PLib3MFVolumeData_RemoveLevelsetPtr) (Lib3MF_VolumeData pVolumeData);
+typedef Lib3MFResult (*PLib3MFVolumeData_RemoveBoundaryPtr) (Lib3MF_VolumeData pVolumeData);
 
 /**
 * Returns the VolumeDataComposite of this VolumeData instance
@@ -2211,15 +2201,26 @@ typedef Lib3MFResult (*PLib3MFVolumeData_GetPropertyCountPtr) (Lib3MF_VolumeData
 typedef Lib3MFResult (*PLib3MFVolumeData_GetPropertyPtr) (Lib3MF_VolumeData pVolumeData, Lib3MF_uint32 nIndex, Lib3MF_VolumeDataProperty * pTheVolumeDataProperty);
 
 /**
-* Adds a new VolumeDataProperty
+* Adds a new VolumeDataProperty from a ScalarField
 *
 * @param[in] pVolumeData - VolumeData instance.
 * @param[in] pName - the qualified name (namespace+name) of the Property
-* @param[in] nUniqueResourceID - UniqueResourceID of the Field (Scalar- or Vector3DField)
+* @param[in] pTheScalarField - ScalarField used in this element
 * @param[out] pTheVolumeDataProperty - the newly created VolumeDataProperty.
 * @return error code or 0 (success)
 */
-typedef Lib3MFResult (*PLib3MFVolumeData_AddPropertyPtr) (Lib3MF_VolumeData pVolumeData, const char * pName, Lib3MF_uint32 nUniqueResourceID, Lib3MF_VolumeDataProperty * pTheVolumeDataProperty);
+typedef Lib3MFResult (*PLib3MFVolumeData_AddPropertyFromScalarFieldPtr) (Lib3MF_VolumeData pVolumeData, const char * pName, Lib3MF_ScalarField pTheScalarField, Lib3MF_VolumeDataProperty * pTheVolumeDataProperty);
+
+/**
+* Adds a new VolumeDataProperty from a Vector3DField
+*
+* @param[in] pVolumeData - VolumeData instance.
+* @param[in] pName - the qualified name (namespace+name) of the Property
+* @param[in] pTheVector3DField - Vector3DField used in this element
+* @param[out] pTheVolumeDataProperty - the newly created VolumeDataProperty.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFVolumeData_AddPropertyFromVector3DFieldPtr) (Lib3MF_VolumeData pVolumeData, const char * pName, Lib3MF_Vector3DField pTheVector3DField, Lib3MF_VolumeDataProperty * pTheVolumeDataProperty);
 
 /**
 * Removes the VolumeDataProperty with a given index
@@ -5021,21 +5022,20 @@ typedef struct {
 	PLib3MFScalarFieldReference_SetScalarFieldPtr m_ScalarFieldReference_SetScalarField;
 	PLib3MFVector3DFieldReference_GetVector3DFieldPtr m_Vector3DFieldReference_GetVector3DField;
 	PLib3MFVector3DFieldReference_SetVector3DFieldPtr m_Vector3DFieldReference_SetVector3DField;
-	PLib3MFVolumeDataLevelset_GetSolidThresholdPtr m_VolumeDataLevelset_GetSolidThreshold;
-	PLib3MFVolumeDataLevelset_SetSolidThresholdPtr m_VolumeDataLevelset_SetSolidThreshold;
+	PLib3MFVolumeDataBoundary_GetSolidThresholdPtr m_VolumeDataBoundary_GetSolidThreshold;
+	PLib3MFVolumeDataBoundary_SetSolidThresholdPtr m_VolumeDataBoundary_SetSolidThreshold;
 	PLib3MFVolumeDataComposite_GetBaseMaterialGroupPtr m_VolumeDataComposite_GetBaseMaterialGroup;
 	PLib3MFVolumeDataComposite_SetBaseMaterialGroupPtr m_VolumeDataComposite_SetBaseMaterialGroup;
 	PLib3MFVolumeDataComposite_GetMaterialMappingCountPtr m_VolumeDataComposite_GetMaterialMappingCount;
 	PLib3MFVolumeDataComposite_GetMaterialMappingPtr m_VolumeDataComposite_GetMaterialMapping;
 	PLib3MFVolumeDataComposite_AddMaterialMappingPtr m_VolumeDataComposite_AddMaterialMapping;
 	PLib3MFVolumeDataComposite_RemoveMaterialMappingPtr m_VolumeDataComposite_RemoveMaterialMapping;
-	PLib3MFVolumeDataProperty_SetNamePtr m_VolumeDataProperty_SetName;
 	PLib3MFVolumeDataProperty_GetNamePtr m_VolumeDataProperty_GetName;
 	PLib3MFVolumeDataProperty_SetIsRequiredPtr m_VolumeDataProperty_SetIsRequired;
 	PLib3MFVolumeDataProperty_IsRequiredPtr m_VolumeDataProperty_IsRequired;
-	PLib3MFVolumeData_GetLevelsetPtr m_VolumeData_GetLevelset;
-	PLib3MFVolumeData_CreateNewLevelsetPtr m_VolumeData_CreateNewLevelset;
-	PLib3MFVolumeData_RemoveLevelsetPtr m_VolumeData_RemoveLevelset;
+	PLib3MFVolumeData_GetBoundaryPtr m_VolumeData_GetBoundary;
+	PLib3MFVolumeData_CreateNewBoundaryPtr m_VolumeData_CreateNewBoundary;
+	PLib3MFVolumeData_RemoveBoundaryPtr m_VolumeData_RemoveBoundary;
 	PLib3MFVolumeData_GetCompositePtr m_VolumeData_GetComposite;
 	PLib3MFVolumeData_CreateNewCompositePtr m_VolumeData_CreateNewComposite;
 	PLib3MFVolumeData_RemoveCompositePtr m_VolumeData_RemoveComposite;
@@ -5044,7 +5044,8 @@ typedef struct {
 	PLib3MFVolumeData_RemoveColorPtr m_VolumeData_RemoveColor;
 	PLib3MFVolumeData_GetPropertyCountPtr m_VolumeData_GetPropertyCount;
 	PLib3MFVolumeData_GetPropertyPtr m_VolumeData_GetProperty;
-	PLib3MFVolumeData_AddPropertyPtr m_VolumeData_AddProperty;
+	PLib3MFVolumeData_AddPropertyFromScalarFieldPtr m_VolumeData_AddPropertyFromScalarField;
+	PLib3MFVolumeData_AddPropertyFromVector3DFieldPtr m_VolumeData_AddPropertyFromVector3DField;
 	PLib3MFVolumeData_RemovePropertyPtr m_VolumeData_RemoveProperty;
 	PLib3MFComponent_GetObjectResourcePtr m_Component_GetObjectResource;
 	PLib3MFComponent_GetObjectResourceIDPtr m_Component_GetObjectResourceID;

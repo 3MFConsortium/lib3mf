@@ -25,11 +25,11 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
-CModelReaderNode_Volumetric2201_Levelset.cpp covers the official 3MF volumetric extension.
+CModelReaderNode_Volumetric2201_Boundary.cpp covers the official 3MF volumetric extension.
 
 --*/
 
-#include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_Volumetric2201_Levelset.h"
+#include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_Volumetric2201_Boundary.h"
 
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Model/Classes/NMR_ModelMeshObject.h"
@@ -43,16 +43,15 @@ CModelReaderNode_Volumetric2201_Levelset.cpp covers the official 3MF volumetric 
 namespace NMR {
 
 
-	CModelReaderNode_Volumetric2201_Levelset::CModelReaderNode_Volumetric2201_Levelset(_In_ PModelWarnings pWarnings)
+	CModelReaderNode_Volumetric2201_Boundary::CModelReaderNode_Volumetric2201_Boundary(_In_ PModelWarnings pWarnings)
 		: CModelReaderNode(pWarnings)
 	{
-		m_bHasStackId = false;
-		m_bHasChannel = false;
+		m_bHasFieldID = false;
 		m_bHasSolidThreshold = false;
 		m_bHasTransform = false;
 	}
 
-	void CModelReaderNode_Volumetric2201_Levelset::parseXML(_In_ CXmlReader * pXMLReader)
+	void CModelReaderNode_Volumetric2201_Boundary::parseXML(_In_ CXmlReader * pXMLReader)
 	{
 		// Parse name
 		parseName(pXMLReader);
@@ -64,43 +63,35 @@ namespace NMR {
 		parseContent(pXMLReader);
 	}
 	
-	PVolumeDataLevelset CModelReaderNode_Volumetric2201_Levelset::MakeLevelset(_In_ CModel* pModel)
+	PVolumeDataBoundary CModelReaderNode_Volumetric2201_Boundary::MakeLevelset(_In_ CModel* pModel)
 	{
 		if (!pModel)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-		if (!m_bHasStackId) {
-			throw CNMRException(NMR_ERROR_MISSINGVOLUMEDATASTACKID);
-		}
-		if (!m_bHasChannel) {
-			throw CNMRException(NMR_ERROR_MISSINGVOLUMEDATACHANNEL);
+		if (!m_bHasFieldID) {
+			throw CNMRException(NMR_ERROR_MISSINGVOLUMEDATAFIELDID);
 		}
 
-		PPackageResourceID pID = pModel->findPackageResourceID(pModel->currentPath(), m_nStackID);
+		PPackageResourceID pID = pModel->findPackageResourceID(pModel->currentPath(), m_nFieldID);
 		if (!pID.get()) {
 			throw CNMRException(NMR_ERROR_UNKNOWNMODELRESOURCE);
 		}
 		
-		throw CNMRException(-1);
-		//PVolumeDataLevelset pLevelset = std::make_shared<CVolumeDataLevelset>(pStack);
-		//pLevelset->SetChannel(m_sChannel);
-		//if (m_bHasSolidThreshold)
-		//	pLevelset->SetSolidThreshold(m_dSolidThreshold);
-		//if (m_bHasTransform)
-		//	pLevelset->SetTransform(m_Transform);
-		//return pLevelset;
-	}
-	
-	void CModelReaderNode_Volumetric2201_Levelset::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
-	{
-		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_VOLUMEDATA_CHANNEL) == 0) {
-			if (m_bHasChannel)
-				throw CNMRException(NMR_ERROR_DUPLICATEVOLUMEDATACHANNEL);
-			m_bHasChannel = true;
-
-			m_sChannel = pAttributeValue;
+		auto pScalarField = pModel->findScalarField(pID);
+		if (!pScalarField.get()) {
+			throw CNMRException(NMR_ERROR_INVALIDMODELRESOURCE);
 		}
 
+		PVolumeDataBoundary pBoundary = std::make_shared<CVolumeDataBoundary>(pScalarField);
+		if (m_bHasSolidThreshold)
+			pBoundary->SetSolidThreshold(m_dSolidThreshold);
+		if (m_bHasTransform)
+			pBoundary->setTransform(m_Transform);
+		return pBoundary;
+	}
+	
+	void CModelReaderNode_Volumetric2201_Boundary::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
+	{
 		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_VOLUMEDATA_TRANSFORM) == 0) {
 			if (m_bHasTransform)
 				throw CNMRException(NMR_ERROR_DUPLICATEVOLUMEDATATRANSFORM);
@@ -108,9 +99,7 @@ namespace NMR {
 			m_Transform = fnMATRIX3_fromString(pAttributeValue);
 
 			m_bHasTransform = true;
-		}
-
-		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_VOLUMEDATA_SOLIDTHRESHOLD) == 0) {
+		} else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_VOLUMEDATA_SOLIDTHRESHOLD) == 0) {
 			if (m_bHasSolidThreshold)
 				throw CNMRException(NMR_ERROR_DUPLICATEVOLUMEDATASOLIDTHRESHOLD);
 
@@ -126,17 +115,17 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_INVALIDVOLUMEDATASOLIDTHRESHOLD);
 		}
 
-		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_VOLUMEDATA_VOLUMETRICSTACKID) == 0) {
-			if (m_bHasStackId)
-				throw CNMRException(NMR_ERROR_DUPLICATEVOLUMEDATASTACKID);
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_VOLUMEDATA_FIELDID) == 0) {
+			if (m_bHasFieldID)
+				throw CNMRException(NMR_ERROR_DUPLICATEVOLUMEDATAFIELDID);
 
-			m_bHasStackId = true;
+			m_bHasFieldID = true;
 
-			m_nStackID = fnStringToUint32(pAttributeValue);
+			m_nFieldID = fnStringToUint32(pAttributeValue);
 		}
 	}
 	
-	void CModelReaderNode_Volumetric2201_Levelset::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
+	void CModelReaderNode_Volumetric2201_Boundary::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
 	{
 		__NMRASSERT(pChildName);
 		__NMRASSERT(pXMLReader);

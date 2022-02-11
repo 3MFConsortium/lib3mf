@@ -175,7 +175,7 @@ namespace Lib3MF
 		//ASSERT_EQ(meshObjects->MoveNext(), true);
 		//auto mesh = meshObjects->GetCurrentMeshObject();
 
-		//auto levelset = mesh->VolumeData()->GetLevelset();
+		//auto levelset = mesh->VolumeData()->GetBoundary();
 		//ASSERT_TRUE(levelset != nullptr);
 
 		//std::string sChannelName;
@@ -187,7 +187,7 @@ namespace Lib3MF
 		//auto pLevelsetStack = levelset->GetVolumetricStack();
 		//ASSERT_EQ(pLevelsetStack->GetResourceID(), pVolumetricStack->GetResourceID());
 
-		//sLib3MFTransform sTransform = levelset->GetTransform();
+		//sLib3MFTransform sTransform = levelset->SetTransform();
 		//ASSERT_FLOAT_EQ(sTransform.m_Fields[1][1], 2.0f);
 	}
 }

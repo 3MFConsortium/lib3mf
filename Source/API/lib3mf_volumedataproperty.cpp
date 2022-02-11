@@ -40,23 +40,31 @@ using namespace Lib3MF::Impl;
  Class definition of CVolumeDataProperty 
 **************************************************************************************************************************/
 
-void CVolumeDataProperty::SetName(const std::string & sPropertyName)
+CVolumeDataProperty::CVolumeDataProperty(NMR::PVolumeDataProperty pProperty)
+	: CFieldReference(pProperty)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
+
+NMR::PVolumeDataProperty CVolumeDataProperty::asVolumeDataProperty()
+{
+	NMR::PVolumeDataProperty pProperty = std::dynamic_pointer_cast<NMR::CVolumeDataProperty>(m_pFieldReference);
+	if (pProperty)
+		return pProperty;
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 }
 
 std::string CVolumeDataProperty::GetName()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return asVolumeDataProperty()->GetName();
 }
 
 void CVolumeDataProperty::SetIsRequired(const bool bIsRequired)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	asVolumeDataProperty()->SetIsRequired(bIsRequired);
 }
 
 bool CVolumeDataProperty::IsRequired()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return asVolumeDataProperty()->IsRequired();
 }
 

@@ -1011,12 +1011,12 @@
 		</method>
 	</class>
 
-	<class name="VolumeDataLevelset" parent="ScalarFieldReference">
-		<method name="GetSolidThreshold" description="Returns the solidthreshold for the levelset function encoded in this VolumeDataLevelset">
-			<param name="TheSolidThreshold" type="double" pass="return" description="The solidthreshold for the levelset function encoded in this VolumeDataLevelset"/>
+	<class name="VolumeDataBoundary" parent="ScalarFieldReference">
+		<method name="GetSolidThreshold" description="Returns the solidthreshold for the levelset function encoded in this VolumeDataBoundary">
+			<param name="TheSolidThreshold" type="double" pass="return" description="The solidthreshold for the levelset function encoded in this VolumeDataBoundary"/>
 		</method>
-		<method name="SetSolidThreshold" description="Sets the solidthreshold for the levelset function encoded in this VolumeDataLevelset">
-			<param name="TheSolidThreshold" type="double" pass="in" description="The solidthreshold for the levelset function encoded in this VolumeDataLevelset"/>
+		<method name="SetSolidThreshold" description="Sets the solidthreshold for the levelset function encoded in this VolumeDataBoundary">
+			<param name="TheSolidThreshold" type="double" pass="in" description="The solidthreshold for the levelset function encoded in this VolumeDataBoundary"/>
 		</method>
 	</class>
 
@@ -1050,9 +1050,6 @@
 	</class>
 
 	<class name="VolumeDataProperty" parent="FieldReference">
-		<method name="SetName" description="Sets the qualified name of this property.">
-			<param name="PropertyName" type="string" pass="in" description="The new qualified name of this property" />
-		</method>
 		<method name="GetName" description="Gets the qualified name of this property.">
 			<param name="PropertyName" type="string" pass="return" description="The qualified name of this property." />
 		</method>
@@ -1065,15 +1062,14 @@
 	</class>
 
 	<class name="VolumeData">
-		<method name="GetLevelset" description="Returns the VolumeDataLevelset of this VolumeData instance">
-			<param name="TheLevelsetData" type="optionalclass" class="VolumeDataLevelset" pass="return" description="filled with the VolumeDataLevelset of this VolumeData instance."/>
+		<method name="GetBoundary" description="Returns the VolumeDataBoundary of this VolumeData instance">
+			<param name="TheBoundaryData" type="optionalclass" class="VolumeDataBoundary" pass="return" description="filled with the VolumeDataBoundary of this VolumeData instance."/>
 		</method>
-		<method name="CreateNewLevelset" description="Creates a new VolumeDataLevelset for this VolumeData instance">
+		<method name="CreateNewBoundary" description="Creates a new VolumeDataBoundary for this VolumeData instance">
 			<param name="TheScalarField" type="class" class="ScalarField" pass="in" description="ScalarField used in this element"/>
-			<param name="Transform" type="struct" class="Transform" pass="in" description="new transformation matrix"/>
-			<param name="TheLevelsetData" type="class" class="VolumeDataLevelset" pass="return" description="The new VolumeDataLevelset of this VolumeData instance."/>
+			<param name="TheBoundaryData" type="class" class="VolumeDataBoundary" pass="return" description="The new VolumeDataBoundary of this VolumeData instance."/>
 		</method>
-		<method name="RemoveLevelset" description="Removes the VolumeDataLevelset of this VolumeData instance">
+		<method name="RemoveBoundary" description="Removes the VolumeDataBoundary of this VolumeData instance">
 		</method>
 		<method name="GetComposite" description="Returns the VolumeDataComposite of this VolumeData instance">
 			<param name="TheCompositeData" type="optionalclass" class="VolumeDataComposite" pass="return" description="filled with the VolumeDataComposite of this VolumeData instance."/>
@@ -1100,9 +1096,14 @@
 			<param name="Index" type="uint32" pass="in" description="the index of the VolumeDataProperty to be returned."/>
 			<param name="TheVolumeDataProperty" type="class" class="VolumeDataProperty" pass="return" description="the VolumeDataProperty at the given index."/>
 		</method>
-		<method name="AddProperty" description="Adds a new VolumeDataProperty">
+		<method name="AddPropertyFromScalarField" description="Adds a new VolumeDataProperty from a ScalarField">
 			<param name="Name" type="string" pass="in" description="the qualified name (namespace+name) of the Property"/>
-			<param name="UniqueResourceID" type="uint32" pass="in" description="UniqueResourceID of the Field (Scalar- or Vector3DField)"/>
+			<param name="TheScalarField" type="class" class="ScalarField" pass="in" description="ScalarField used in this element"/>
+			<param name="TheVolumeDataProperty" type="class" class="VolumeDataProperty" pass="return" description="the newly created VolumeDataProperty."/>
+		</method>
+		<method name="AddPropertyFromVector3DField" description="Adds a new VolumeDataProperty from a Vector3DField">
+			<param name="Name" type="string" pass="in" description="the qualified name (namespace+name) of the Property"/>
+			<param name="TheVector3DField" type="class" class="Vector3DField" pass="in" description="Vector3DField used in this element"/>
 			<param name="TheVolumeDataProperty" type="class" class="VolumeDataProperty" pass="return" description="the newly created VolumeDataProperty."/>
 		</method>
 		<method name="RemoveProperty" description="Removes the VolumeDataProperty with a given index">

@@ -173,7 +173,7 @@ typedef Lib3MFHandle Lib3MF_Vector3DFieldComposed;
 typedef Lib3MFHandle Lib3MF_FieldReference;
 typedef Lib3MFHandle Lib3MF_ScalarFieldReference;
 typedef Lib3MFHandle Lib3MF_Vector3DFieldReference;
-typedef Lib3MFHandle Lib3MF_VolumeDataLevelset;
+typedef Lib3MFHandle Lib3MF_VolumeDataBoundary;
 typedef Lib3MFHandle Lib3MF_VolumeDataColor;
 typedef Lib3MFHandle Lib3MF_MaterialMapping;
 typedef Lib3MFHandle Lib3MF_VolumeDataComposite;

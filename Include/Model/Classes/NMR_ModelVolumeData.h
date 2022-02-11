@@ -36,16 +36,22 @@ NMR_VolumeData.h defines the class CVolumeData.
 #include "Common/NMR_Types.h"
 #include "Common/Math/NMR_Geometry.h"
 #include "Common/Mesh/NMR_MeshTypes.h"
+
 #include "Common/Mesh/NMR_VolumeDataColor.h"
 #include "Common/Mesh/NMR_VolumeDataProperty.h"
-#include "Common/Mesh/NMR_VolumeDataLevelset.h"
+#include "Common/Mesh/NMR_VolumeDataBoundary.h"
 #include "Common/Mesh/NMR_VolumeDataComposite.h"
 
 namespace NMR {
 
+	class CModelScalarField;
+	typedef std::shared_ptr<CModelScalarField> PModelScalarField;
+	class CModelVector3DField;
+	typedef std::shared_ptr<CModelVector3DField> PModelVector3DField;
+
 	class CModelVolumeData {
 	private:
-		PVolumeDataLevelset m_pLevelset;
+		PVolumeDataBoundary m_pBoundary;
 		PVolumeDataComposite m_pComposite;
 		PVolumeDataColor m_pColor;
 		std::map<std::string, PVolumeDataProperty> m_mapProperties;
@@ -53,21 +59,24 @@ namespace NMR {
 		CModelVolumeData();
 
 		void clear();
-		bool HasLevelset();
-		PVolumeDataLevelset GetLevelset();
-		PVolumeDataLevelset CreateLevelset();
-		void SetLevelset(PVolumeDataLevelset pLevelset);
+
+		bool HasBoundary() const;
+		PVolumeDataBoundary GetBoundary();
+		PVolumeDataBoundary CreateBoundary(PModelScalarField);
+		void SetBoundary(PVolumeDataBoundary pLevelset);
 
 		nfBool hasProperty(std::string sName);
-		nfUint32 GetPropertyCount();
+		nfUint32 GetPropertyCount() const;
 		PVolumeDataProperty GetProperty(nfUint32 nIndex);
 		PVolumeDataProperty FindProperty(std::string sName);
-		PVolumeDataProperty CreateProperty(std::string sName);
+		void AddProperty(PVolumeDataProperty pProperty);
+		PVolumeDataProperty AddProperty(std::string sName, PModelScalarField pScalarField);
+		PVolumeDataProperty AddProperty(std::string sName, PModelVector3DField pVector3DField);
 		void RemoveProperty(std::string sName);
 
-		bool HasColor();
+		bool HasColor() const;
 		PVolumeDataColor GetColor();
-		PVolumeDataColor CreateColor();
+		PVolumeDataColor CreateColor(PModelVector3DField pVector3DField);
 		void SetColor(PVolumeDataColor pColor);
 	};
 

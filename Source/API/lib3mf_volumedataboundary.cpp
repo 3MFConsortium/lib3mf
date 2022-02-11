@@ -24,11 +24,11 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CScalarFieldReference
+Abstract: This is a stub class definition of CVolumeDataBoundary
 
 */
 
-#include "lib3mf_scalarfieldreference.hpp"
+#include "lib3mf_volumedataboundary.hpp"
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
@@ -37,20 +37,30 @@ Abstract: This is a stub class definition of CScalarFieldReference
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CScalarFieldReference 
+ Class definition of CVolumeDataBoundary 
 **************************************************************************************************************************/
 
-CScalarFieldReference::CScalarFieldReference(NMR::PScalarFieldReference pFieldReference)
-	: CFieldReference(pFieldReference)
-{}
-
-IScalarField * CScalarFieldReference::GetScalarField()
+CVolumeDataBoundary::CVolumeDataBoundary(NMR::PVolumeDataBoundary pLevelset)
+	: CScalarFieldReference(pLevelset), CFieldReference(pLevelset) // I am not sure about the second constructor here
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+
 }
 
-void CScalarFieldReference::SetScalarField(IScalarField* pTheScalarField)
+NMR::PVolumeDataBoundary CVolumeDataBoundary::asVolumeDataBoundary()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	NMR::PVolumeDataBoundary pBoundary = std::dynamic_pointer_cast<NMR::CVolumeDataBoundary>(m_pFieldReference);
+	if (pBoundary)
+		return pBoundary;
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+}
+
+Lib3MF_double CVolumeDataBoundary::GetSolidThreshold()
+{
+	return asVolumeDataBoundary()->GetSolidThreshold();
+}
+
+void CVolumeDataBoundary::SetSolidThreshold(const Lib3MF_double dTheSolidThreshold)
+{
+	asVolumeDataBoundary()->SetSolidThreshold(dTheSolidThreshold);
 }
 

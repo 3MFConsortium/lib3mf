@@ -106,15 +106,15 @@ namespace Lib3MF
 		//auto theMesh = GetMesh();
 		//auto volumeData = theMesh->VolumeData();
 
-		//ASSERT_TRUE(volumeData->GetLevelset() == nullptr);
+		//ASSERT_TRUE(volumeData->GetBoundary() == nullptr);
 		//auto levelset = volumeData->CreateNewLevelset(pVolumetricStack.get());
 
 		//Lib3MF::sTransform sTransform = wrapper->GetIdentityTransform();
-		//Lib3MF::sTransform sObtainedTransform = levelset->GetTransform();
+		//Lib3MF::sTransform sObtainedTransform = levelset->SetTransform();
 		//ASSERT_FLOAT_EQ(sObtainedTransform.m_Fields[1][1], 1.0f);
 		//sTransform.m_Fields[1][1] = 2.0;
 		//levelset->SetTransform(sTransform);
-		//sObtainedTransform = levelset->GetTransform();
+		//sObtainedTransform = levelset->SetTransform();
 		//ASSERT_FLOAT_EQ(sObtainedTransform.m_Fields[1][1], sTransform.m_Fields[1][1]);
 
 		//double dVal = 0.4;
@@ -143,18 +143,15 @@ namespace Lib3MF
 		fieldFromImage3D->SetTileStyles(Lib3MF::eTextureTileStyle::Wrap, Lib3MF::eTextureTileStyle::Mirror, Lib3MF::eTextureTileStyle::Clamp);
 
 		auto theMesh = GetMesh();
-		//auto volumeData = theMesh->VolumeData();
-		//const std::string propertyName = "MyProperty";
+		auto volumeData = theMesh->VolumeData();
+		const std::string propertyName = "MyProperty";
+		auto theProperty = volumeData->AddPropertyFromScalarField(propertyName, fieldFromImage3D.get());
+		ASSERT_EQ(volumeData->GetPropertyCount(), 1);
 
-		//auto theProperty = volumeData->AddProperty(propertyName, fieldFromImage3D->GetResourceID());
-		//ASSERT_TRUE(theProperty->GetName() == propertyName);
-		//ASSERT_TRUE(volumeData->FindProperty(propertyName) != nullptr);
-
-		//ASSERT_TRUE(theProperty->IsRequired());
-		//theProperty->SetIsRequired(false);
-		//ASSERT_FALSE(theProperty->IsRequired());
-
-		//theProperty->SetChannel("channel");
+		ASSERT_TRUE(theProperty->GetName() == propertyName);
+		ASSERT_TRUE(theProperty->IsRequired());
+		theProperty->SetIsRequired(false);
+		ASSERT_FALSE(theProperty->IsRequired());
 
 		writer3MF->WriteToFile(Volumetric::OutFolder + "MyProperty.3mf");
 
@@ -162,12 +159,32 @@ namespace Lib3MF
 			PModel ioModel = wrapper->CreateModel();
 			PReader ioReader = ioModel->QueryReader("3mf");
 			ioReader->ReadFromFile(Volumetric::OutFolder + "MyProperty.3mf");
-			
+
 			PWriter ioWriter = ioModel->QueryWriter("3mf");
 			ioWriter->WriteToFile(Volumetric::OutFolder + "MyPropertyReOut.3mf");
 		}
+	}
 
+	TEST_F(Volumetric, VolumetricLevelset)
+	{
+		auto pImage3D = SetupSheetsFromFile();
 
+		auto fieldFromImage3D = model->AddScalarFieldFromImage3D(pImage3D.get());
+
+		auto theMesh = GetMesh();
+		auto volumeData = theMesh->VolumeData();
+		auto theBoundary = volumeData->CreateNewBoundary(fieldFromImage3D.get());
+		theBoundary->SetSolidThreshold(.234);
+
+		writer3MF->WriteToFile(Volumetric::OutFolder + "Boundary.3mf");
+		{
+			PModel ioModel = wrapper->CreateModel();
+			PReader ioReader = ioModel->QueryReader("3mf");
+			ioReader->ReadFromFile(Volumetric::OutFolder + "Boundary.3mf");
+
+			PWriter ioWriter = ioModel->QueryWriter("3mf");
+			ioWriter->WriteToFile(Volumetric::OutFolder + "BoundaryReOut.3mf");
+		}
 	}
 
 	TEST_F(Volumetric, VolumetricColor)
@@ -188,8 +205,12 @@ namespace Lib3MF
 		//auto color = volumeData->CreateNewColor(pVolumetricStack.get());
 
 		//Lib3MF::sTransform sTransform = wrapper->GetIdentityTransform();
-		//Lib3MF::sTransform sObtainedTransform = color->GetTransform();
+		//Lib3MF::sTransform sObtainedTransform = color->SetTransform();
 		//ASSERT_FLOAT_EQ(sObtainedTransform.m_Fields[1][1], 1.0f);
+
+		//const std::string propertyName = "MyProperty";
+		//auto theProperty = volumeData->AddProperty(propertyName, vector3DFieldFromImage3D.get());
+		//ASSERT_EQ(volumeData->GetPropertyCount(), 1);
 
 		//sTransform.m_Fields[1][1] = 2.0;
 		//color->SetTransform(sTransform);

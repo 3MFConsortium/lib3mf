@@ -88,7 +88,7 @@ Source/API/lib3mf_vector3dfieldreference.cpp
 Source/API/lib3mf_volumedata.cpp
 Source/API/lib3mf_volumedatacolor.cpp
 Source/API/lib3mf_volumedatacomposite.cpp
-Source/API/lib3mf_volumedatalevelset.cpp
+Source/API/lib3mf_volumedataboundary.cpp
 Source/API/lib3mf_volumedataproperty.cpp
 Source/API/lib3mf_writer.cpp
 Source/Common/3MF_ProgressMonitor.cpp
@@ -109,7 +109,7 @@ Source/Common/Mesh/NMR_Mesh.cpp
 Source/Common/Mesh/NMR_BeamLattice.cpp
 Source/Common/Mesh/NMR_MeshBuilder.cpp
 Source/Common/Mesh/NMR_VolumeDataProperty.cpp
-Source/Common/Mesh/NMR_VolumeDataLevelset.cpp
+Source/Common/Mesh/NMR_VolumeDataBoundary.cpp
 Source/Common/Mesh/NMR_VolumeDataColor.cpp
 Source/Common/Mesh/NMR_VolumeDataComposite.cpp
 Source/Common/NMR_Exception.cpp
@@ -266,7 +266,7 @@ Source/Model/Reader/Volumetric2201/NMR_ModelReaderNode_Volumetric2201_ImageStack
 Source/Model/Reader/Volumetric2201/NMR_ModelReaderNode_Volumetric2201_ImageSheet.cpp
 Source/Model/Reader/Volumetric2201/NMR_ModelReaderNode_Volumetric2201_ScalarField.cpp
 Source/Model/Reader/Volumetric2201/NMR_ModelReaderNode_Volumetric2201_ScalarFieldFromImage3D.cpp
-Source/Model/Reader/Volumetric2201/NMR_ModelReaderNode_Volumetric2201_Levelset.cpp
+Source/Model/Reader/Volumetric2201/NMR_ModelReaderNode_Volumetric2201_Boundary.cpp
 Source/Model/Reader/Volumetric2201/NMR_ModelReaderNode_Volumetric2201_Property.cpp
 Source/Model/Reader/Volumetric2201/NMR_ModelReaderNode_Volumetric2201_VolumeData.cpp
 Source/Model/Reader/NMR_ModelReaderNode_StringValue.cpp
