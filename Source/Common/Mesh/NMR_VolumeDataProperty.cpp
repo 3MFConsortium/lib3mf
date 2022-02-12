@@ -49,22 +49,22 @@ namespace NMR {
 
 	}
 
-	std::string CVolumeDataProperty::GetName()
+	std::string CVolumeDataProperty::getName()
 	{
 		return m_sName;
 	}
 	
-	void CVolumeDataProperty::SetName(std::string sPropertyName)
+	void CVolumeDataProperty::setName(std::string sPropertyName)
 	{
 		m_sName = sPropertyName;
 	}
 
-	bool CVolumeDataProperty::IsRequired()
+	bool CVolumeDataProperty::isRequired()
 	{
 		return m_bIsRequired;
 	}
 
-	void CVolumeDataProperty::SetIsRequired(bool bIsRequired)
+	void CVolumeDataProperty::setIsRequired(bool bIsRequired)
 	{
 		m_bIsRequired = bIsRequired;
 	}

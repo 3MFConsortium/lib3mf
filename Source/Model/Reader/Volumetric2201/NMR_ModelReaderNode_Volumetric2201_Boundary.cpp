@@ -84,7 +84,7 @@ namespace NMR {
 
 		PVolumeDataBoundary pBoundary = std::make_shared<CVolumeDataBoundary>(pScalarField);
 		if (m_bHasSolidThreshold)
-			pBoundary->SetSolidThreshold(m_dSolidThreshold);
+			pBoundary->setSolidThreshold(m_dSolidThreshold);
 		if (m_bHasTransform)
 			pBoundary->setTransform(m_Transform);
 		return pBoundary;

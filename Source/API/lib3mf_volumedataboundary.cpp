@@ -56,11 +56,11 @@ NMR::PVolumeDataBoundary CVolumeDataBoundary::asVolumeDataBoundary()
 
 Lib3MF_double CVolumeDataBoundary::GetSolidThreshold()
 {
-	return asVolumeDataBoundary()->GetSolidThreshold();
+	return asVolumeDataBoundary()->getSolidThreshold();
 }
 
 void CVolumeDataBoundary::SetSolidThreshold(const Lib3MF_double dTheSolidThreshold)
 {
-	asVolumeDataBoundary()->SetSolidThreshold(dTheSolidThreshold);
+	asVolumeDataBoundary()->setSolidThreshold(dTheSolidThreshold);
 }
 

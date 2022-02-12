@@ -60,24 +60,24 @@ namespace NMR {
 
 		void clear();
 
-		bool HasBoundary() const;
-		PVolumeDataBoundary GetBoundary();
-		PVolumeDataBoundary CreateBoundary(PModelScalarField);
-		void SetBoundary(PVolumeDataBoundary pLevelset);
+		bool hasBoundary() const;
+		PVolumeDataBoundary getBoundary();
+		PVolumeDataBoundary createBoundary(PModelScalarField);
+		void setBoundary(PVolumeDataBoundary pLevelset);
 
 		nfBool hasProperty(std::string sName);
-		nfUint32 GetPropertyCount() const;
-		PVolumeDataProperty GetProperty(nfUint32 nIndex);
-		PVolumeDataProperty FindProperty(std::string sName);
-		void AddProperty(PVolumeDataProperty pProperty);
-		PVolumeDataProperty AddProperty(std::string sName, PModelScalarField pScalarField);
-		PVolumeDataProperty AddProperty(std::string sName, PModelVector3DField pVector3DField);
-		void RemoveProperty(std::string sName);
+		nfUint32 getPropertyCount() const;
+		PVolumeDataProperty getProperty(nfUint32 nIndex);
+		PVolumeDataProperty findProperty(std::string sName);
+		void addProperty(PVolumeDataProperty pProperty);
+		PVolumeDataProperty addProperty(std::string sName, PModelScalarField pScalarField);
+		PVolumeDataProperty addProperty(std::string sName, PModelVector3DField pVector3DField);
+		void removeProperty(std::string sName);
 
-		bool HasColor() const;
-		PVolumeDataColor GetColor();
-		PVolumeDataColor CreateColor(PModelVector3DField pVector3DField);
-		void SetColor(PVolumeDataColor pColor);
+		bool hasColor() const;
+		PVolumeDataColor getColor();
+		PVolumeDataColor createColor(PModelVector3DField pVector3DField);
+		void setColor(PVolumeDataColor pColor);
 	};
 
 	typedef std::shared_ptr <CModelVolumeData> PModelVolumeData;

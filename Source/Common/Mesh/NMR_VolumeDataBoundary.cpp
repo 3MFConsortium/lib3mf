@@ -41,12 +41,12 @@ namespace NMR {
 		
 	}
 
-	nfDouble CVolumeDataBoundary::GetSolidThreshold()
+	nfDouble CVolumeDataBoundary::getSolidThreshold()
 	{
 		return m_dSolidThreshold;
 	}
 
-	void CVolumeDataBoundary::SetSolidThreshold(nfDouble dSolidThreshold)
+	void CVolumeDataBoundary::setSolidThreshold(nfDouble dSolidThreshold)
 	{
 		m_dSolidThreshold = dSolidThreshold;
 	}

@@ -53,11 +53,11 @@ namespace NMR {
 		CVolumeDataProperty(PModelScalarField pScalarField, std::string sName);
 		CVolumeDataProperty(PModelVector3DField pVectorField, std::string sName);
 
-		std::string GetName();
-		void SetName(std::string sPropertyName);
+		std::string getName();
+		void setName(std::string sPropertyName);
 
-		bool IsRequired();
-		void SetIsRequired(bool bIsRequired);
+		bool isRequired();
+		void setIsRequired(bool bIsRequired);
 	};
 
 	typedef std::shared_ptr<CVolumeDataProperty> PVolumeDataProperty;

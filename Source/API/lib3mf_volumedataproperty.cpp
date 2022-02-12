@@ -55,16 +55,16 @@ NMR::PVolumeDataProperty CVolumeDataProperty::asVolumeDataProperty()
 
 std::string CVolumeDataProperty::GetName()
 {
-	return asVolumeDataProperty()->GetName();
+	return asVolumeDataProperty()->getName();
 }
 
 void CVolumeDataProperty::SetIsRequired(const bool bIsRequired)
 {
-	asVolumeDataProperty()->SetIsRequired(bIsRequired);
+	asVolumeDataProperty()->setIsRequired(bIsRequired);
 }
 
 bool CVolumeDataProperty::IsRequired()
 {
-	return asVolumeDataProperty()->IsRequired();
+	return asVolumeDataProperty()->isRequired();
 }
 

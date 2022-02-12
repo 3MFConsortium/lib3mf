@@ -104,7 +104,7 @@ namespace NMR {
 		}
 		if (m_bHasTransform)
 			pProperty->setTransform(m_Transform);
-		pProperty->SetIsRequired(m_bRequired);
+		pProperty->setIsRequired(m_bRequired);
 		return pProperty;
 	}
 

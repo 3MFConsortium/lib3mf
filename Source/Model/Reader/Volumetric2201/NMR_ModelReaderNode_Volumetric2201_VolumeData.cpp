@@ -88,7 +88,7 @@ namespace NMR {
 				pXMLNode->parseXML(pXMLReader);
 
 				PVolumeDataBoundary pLevelSet = pXMLNode->MakeLevelset(m_pModel);
-				m_pVolumeData->SetBoundary(pLevelSet);
+				m_pVolumeData->setBoundary(pLevelSet);
 			}
 			else if (strcmp(pChildName, XML_3MF_ELEMENT_VOLUMETRIC_PROPERTY) == 0)
 			{
@@ -97,8 +97,8 @@ namespace NMR {
 
 				PVolumeDataProperty pProperty = pXMLNode->MakeProperty(m_pModel);
 
-				if (m_pVolumeData->hasProperty(pProperty->GetName()) == false) {
-					m_pVolumeData->AddProperty(pProperty);
+				if (m_pVolumeData->hasProperty(pProperty->getName()) == false) {
+					m_pVolumeData->addProperty(pProperty);
 				}
 				else {
 					throw CNMRException(NMR_ERROR_DUPLICATEVOLUMEDATAPROPERTY);

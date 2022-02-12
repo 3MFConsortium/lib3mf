@@ -54,7 +54,7 @@ CVolumeData::CVolumeData(NMR::PModelMeshObject pMeshObject, NMR::PModelVolumeDat
 
 IVolumeDataBoundary* CVolumeData::GetBoundary()
 {
-	auto pBoundary = m_pVolumeData->GetBoundary();
+	auto pBoundary = m_pVolumeData->getBoundary();
 	if (!pBoundary) {
 		return nullptr;
 	}
@@ -73,7 +73,7 @@ IVolumeDataBoundary* CVolumeData::CreateNewBoundary(IScalarField* pTheScalarFiel
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
 	}
 
-	NMR::PVolumeDataBoundary pBoundary = m_pVolumeData->CreateBoundary(pScalarField);
+	NMR::PVolumeDataBoundary pBoundary = m_pVolumeData->createBoundary(pScalarField);
 	return new CVolumeDataBoundary(pBoundary);
 }
 
@@ -114,12 +114,12 @@ void CVolumeData::RemoveColor()
 
 Lib3MF_uint32 CVolumeData::GetPropertyCount()
 {
-	return m_pVolumeData->GetPropertyCount();
+	return m_pVolumeData->getPropertyCount();
 }
 
 IVolumeDataProperty * CVolumeData::GetProperty(const Lib3MF_uint32 nIndex)
 {
-	NMR::PVolumeDataProperty pProperty = m_pVolumeData->GetProperty(nIndex);
+	NMR::PVolumeDataProperty pProperty = m_pVolumeData->getProperty(nIndex);
 	if (!pProperty) {
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
 	}
@@ -136,7 +136,7 @@ IVolumeDataProperty* CVolumeData::AddPropertyFromScalarField(const std::string& 
 	if (!pScalarField) {
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
 	}
-	auto pProperty = m_pVolumeData->AddProperty(sName, pScalarField);
+	auto pProperty = m_pVolumeData->addProperty(sName, pScalarField);
 
 	if (!pProperty) {
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
@@ -154,7 +154,7 @@ IVolumeDataProperty* CVolumeData::AddPropertyFromVector3DField(const std::string
 	if (!pVector3DField) {
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
 	}
-	auto pProperty = m_pVolumeData->AddProperty(sName, pVector3DField);
+	auto pProperty = m_pVolumeData->addProperty(sName, pVector3DField);
 
 	if (!pProperty) {
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);

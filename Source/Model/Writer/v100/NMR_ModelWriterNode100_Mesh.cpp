@@ -369,18 +369,18 @@ namespace NMR {
 		if (m_bWriteVolumetricExtension)
 		{
 			// TODO: different logic
-			if (m_pModelMeshObject->getVolumeData()->HasBoundary() ||
-				m_pModelMeshObject->getVolumeData()->GetPropertyCount() ||
-				m_pModelMeshObject->getVolumeData()->HasColor()) {
+			if (m_pModelMeshObject->getVolumeData()->hasBoundary() ||
+				m_pModelMeshObject->getVolumeData()->getPropertyCount() ||
+				m_pModelMeshObject->getVolumeData()->hasColor()) {
 
 				writeStartElementWithPrefix(XML_3MF_ELEMENT_VOLUMEDATA, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
 
-				if (m_pModelMeshObject->getVolumeData()->HasBoundary()) {
+				if (m_pModelMeshObject->getVolumeData()->hasBoundary()) {
 					writeStartElementWithPrefix(XML_3MF_ELEMENT_VOLUMETRIC_BOUNDARY, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
-					PVolumeDataBoundary pBoundary = m_pModelMeshObject->getVolumeData()->GetBoundary();
+					PVolumeDataBoundary pBoundary = m_pModelMeshObject->getVolumeData()->getBoundary();
 					writeIntAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_FIELDID, pBoundary->getFieldReferenceID()->getModelResourceID());
-					if (pBoundary->GetSolidThreshold() != 0.0) {
-						writeFloatAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_SOLIDTHRESHOLD, float(pBoundary->GetSolidThreshold()));
+					if (pBoundary->getSolidThreshold() != 0.0) {
+						writeFloatAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_SOLIDTHRESHOLD, float(pBoundary->getSolidThreshold()));
 					}
 					if (!fnMATRIX3_isIdentity(pBoundary->getTransform())) {
 						writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_TRANSFORM, fnMATRIX3_toString(pBoundary->getTransform()));
@@ -388,26 +388,26 @@ namespace NMR {
 					writeEndElement();
 				}
 
-				if (m_pModelMeshObject->getVolumeData()->GetPropertyCount())
+				if (m_pModelMeshObject->getVolumeData()->getPropertyCount())
 				{
-					nfUint32 count = m_pModelMeshObject->getVolumeData()->GetPropertyCount();
+					nfUint32 count = m_pModelMeshObject->getVolumeData()->getPropertyCount();
 
 					for (nfUint32 i = 0; i < count; i++)
 					{
 						writeStartElementWithPrefix(XML_3MF_ELEMENT_VOLUMETRIC_PROPERTY, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
-						PVolumeDataProperty pProperty = m_pModelMeshObject->getVolumeData()->GetProperty(i);
-						writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_PROPERTY, pProperty->GetName());
+						PVolumeDataProperty pProperty = m_pModelMeshObject->getVolumeData()->getProperty(i);
+						writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_PROPERTY, pProperty->getName());
 						if (!fnMATRIX3_isIdentity(pProperty->getTransform())) {
 							writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_TRANSFORM, fnMATRIX3_toString(pProperty->getTransform()));
 						}
 						writeIntAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_FIELDID, pProperty->getFieldReferenceID()->getModelResourceID());
-						if (!pProperty->IsRequired())
+						if (!pProperty->isRequired())
 							writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_PROPERTY_REQUIRED, "false");
 						writeEndElement();
 					}
 				}
 
-				if (m_pModelMeshObject->getVolumeData()->HasColor())
+				if (m_pModelMeshObject->getVolumeData()->hasColor())
 				{
 					throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
 					//writeStartElementWithPrefix(XML_3MF_ELEMENT_VOLUMETRIC_COLOR, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);

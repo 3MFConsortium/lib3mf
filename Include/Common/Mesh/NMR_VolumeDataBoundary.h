@@ -49,8 +49,8 @@ namespace NMR {
 		CVolumeDataBoundary() = delete;
 		CVolumeDataBoundary(PModelScalarField pScalarField);
 
-		nfDouble GetSolidThreshold();
-		void SetSolidThreshold(nfDouble dSolidThreshold);
+		nfDouble getSolidThreshold();
+		void setSolidThreshold(nfDouble dSolidThreshold);
 	};
 
 	typedef std::shared_ptr<CVolumeDataBoundary> PVolumeDataBoundary;
