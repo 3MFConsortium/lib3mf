@@ -15,5 +15,7 @@ copy act.linux64 ..\..\AutomaticComponentToolkit\ /Y
 copy act.linux32.arm ..\..\AutomaticComponentToolkit\ /Y
 copy act.linux64.arm ..\..\AutomaticComponentToolkit\ /Y
 
+git rev-parse --verify HEAD >"..\..\AutomaticComponentToolkit\_githash_act.txt"
+
 cd ..
 pause
