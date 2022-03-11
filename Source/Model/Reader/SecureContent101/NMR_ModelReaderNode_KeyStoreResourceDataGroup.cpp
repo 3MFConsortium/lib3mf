@@ -85,6 +85,18 @@ namespace NMR {
 			m_pWarnings->addWarning(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE, mrwInvalidOptionalValue);
 	}
 
+
+	void CModelReaderNode_KeyStoreResourceDataGroup::OnNSAttribute(_In_z_ const nfChar* pAttributeName, _In_z_ const nfChar* pAttributeValue, _In_z_ const nfChar* pNameSpace)
+	{
+		__NMRASSERT(pAttributeName);
+		__NMRASSERT(pAttributeValue);
+		__NMRASSERT(pNameSpace);
+
+		m_pGroup->customInformation()->add(pNameSpace, pAttributeName, pAttributeValue);
+
+	}
+
+
 	void CModelReaderNode_KeyStoreResourceDataGroup::OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader)
 	{
 		__NMRASSERT(pChildName);

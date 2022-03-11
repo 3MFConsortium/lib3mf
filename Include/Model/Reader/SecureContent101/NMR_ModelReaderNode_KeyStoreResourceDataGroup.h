@@ -51,6 +51,7 @@ namespace NMR {
 		nfBool m_bHasUuid = false;
 	protected:
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
+		virtual void OnNSAttribute(_In_z_ const nfChar* pAttributeName, _In_z_ const nfChar* pAttributeValue, _In_z_ const nfChar* pNameSpace);
 		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
 	public:
 		CModelReaderNode_KeyStoreResourceDataGroup() = delete;
