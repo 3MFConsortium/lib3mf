@@ -554,6 +554,139 @@ Lib3MFResult lib3mf_writer_setcontentencryptioncallback(Lib3MF_Writer pWriter, L
 
 
 /*************************************************************************************************************************
+ Class implementation for Persistent3MFPackage
+**************************************************************************************************************************/
+Lib3MFResult lib3mf_persistent3mfpackage_extractkeystore(Lib3MF_Persistent3MFPackage pPersistent3MFPackage, Lib3MF_KeyStore * pKeyStoreInstance)
+{
+	IBase* pIBaseClass = (IBase *)pPersistent3MFPackage;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pPersistent3MFPackage, "Persistent3MFPackage", "ExtractKeyStore");
+		}
+		if (pKeyStoreInstance == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseKeyStoreInstance(nullptr);
+		IPersistent3MFPackage* pIPersistent3MFPackage = dynamic_cast<IPersistent3MFPackage*>(pIBaseClass);
+		if (!pIPersistent3MFPackage)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseKeyStoreInstance = pIPersistent3MFPackage->ExtractKeyStore();
+
+		*pKeyStoreInstance = (IBase*)(pBaseKeyStoreInstance);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("KeyStoreInstance", *pKeyStoreInstance);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_persistent3mfpackage_updatekeystore(Lib3MF_Persistent3MFPackage pPersistent3MFPackage, Lib3MF_KeyStore pKeyStoreInstance)
+{
+	IBase* pIBaseClass = (IBase *)pPersistent3MFPackage;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pPersistent3MFPackage, "Persistent3MFPackage", "UpdateKeyStore");
+			pJournalEntry->addHandleParameter("KeyStoreInstance", pKeyStoreInstance);
+		}
+		IBase* pIBaseClassKeyStoreInstance = (IBase *)pKeyStoreInstance;
+		IKeyStore* pIKeyStoreInstance = dynamic_cast<IKeyStore*>(pIBaseClassKeyStoreInstance);
+		if (!pIKeyStoreInstance)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDCAST);
+		
+		IPersistent3MFPackage* pIPersistent3MFPackage = dynamic_cast<IPersistent3MFPackage*>(pIBaseClass);
+		if (!pIPersistent3MFPackage)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIPersistent3MFPackage->UpdateKeyStore(pIKeyStoreInstance);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_persistent3mfpackage_getkeystorestring(Lib3MF_Persistent3MFPackage pPersistent3MFPackage, const Lib3MF_uint32 nKeyStoreStringBufferSize, Lib3MF_uint32* pKeyStoreStringNeededChars, char * pKeyStoreStringBuffer)
+{
+	IBase* pIBaseClass = (IBase *)pPersistent3MFPackage;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pPersistent3MFPackage, "Persistent3MFPackage", "GetKeyStoreString");
+		}
+		if ( (!pKeyStoreStringBuffer) && !(pKeyStoreStringNeededChars) )
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sKeyStoreString("");
+		IPersistent3MFPackage* pIPersistent3MFPackage = dynamic_cast<IPersistent3MFPackage*>(pIBaseClass);
+		if (!pIPersistent3MFPackage)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		bool isCacheCall = (pKeyStoreStringBuffer == nullptr);
+		if (isCacheCall) {
+			sKeyStoreString = pIPersistent3MFPackage->GetKeyStoreString();
+
+			pIPersistent3MFPackage->_setCache (new ParameterCache_1<std::string> (sKeyStoreString));
+		}
+		else {
+			auto cache = dynamic_cast<ParameterCache_1<std::string>*> (pIPersistent3MFPackage->_getCache ());
+			if (cache == nullptr)
+				throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+			cache->retrieveData (sKeyStoreString);
+			pIPersistent3MFPackage->_setCache (nullptr);
+		}
+		
+		if (pKeyStoreStringNeededChars)
+			*pKeyStoreStringNeededChars = (Lib3MF_uint32) (sKeyStoreString.size()+1);
+		if (pKeyStoreStringBuffer) {
+			if (sKeyStoreString.size() >= nKeyStoreStringBufferSize)
+				throw ELib3MFInterfaceException (LIB3MF_ERROR_BUFFERTOOSMALL);
+			for (size_t iKeyStoreString = 0; iKeyStoreString < sKeyStoreString.size(); iKeyStoreString++)
+				pKeyStoreStringBuffer[iKeyStoreString] = sKeyStoreString[iKeyStoreString];
+			pKeyStoreStringBuffer[sKeyStoreString.size()] = 0;
+		}
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addStringResult("KeyStoreString", sKeyStoreString.c_str());
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+
+/*************************************************************************************************************************
  Class implementation for Reader
 **************************************************************************************************************************/
 Lib3MFResult lib3mf_reader_readfromfile(Lib3MF_Reader pReader, const char * pFilename)
@@ -640,6 +773,43 @@ Lib3MFResult lib3mf_reader_readfromcallback(Lib3MF_Reader pReader, Lib3MFReadCal
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
 		pIReader->ReadFromCallback(pTheReadCallback, nStreamSize, pTheSeekCallback, pUserData);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_reader_readfrompersistentpackage(Lib3MF_Reader pReader, Lib3MF_Persistent3MFPackage pPersistent3MFPackage)
+{
+	IBase* pIBaseClass = (IBase *)pReader;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pReader, "Reader", "ReadFromPersistentPackage");
+			pJournalEntry->addHandleParameter("Persistent3MFPackage", pPersistent3MFPackage);
+		}
+		IBase* pIBaseClassPersistent3MFPackage = (IBase *)pPersistent3MFPackage;
+		IPersistent3MFPackage* pIPersistent3MFPackage = dynamic_cast<IPersistent3MFPackage*>(pIBaseClassPersistent3MFPackage);
+		if (!pIPersistent3MFPackage)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDCAST);
+		
+		IReader* pIReader = dynamic_cast<IReader*>(pIBaseClass);
+		if (!pIReader)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIReader->ReadFromPersistentPackage(pIPersistent3MFPackage);
 
 		if (pJournalEntry.get() != nullptr) {
 			pJournalEntry->writeSuccess();
@@ -11235,6 +11405,46 @@ Lib3MFResult lib3mf_model_queryreader(Lib3MF_Model pModel, const char * pReaderC
 	}
 }
 
+Lib3MFResult lib3mf_model_createpersistentpackagefromfile(Lib3MF_Model pModel, const char * pFileName, Lib3MF_Persistent3MFPackage * pPersistent3MFPackage)
+{
+	IBase* pIBaseClass = (IBase *)pModel;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pModel, "Model", "CreatePersistentPackageFromFile");
+			pJournalEntry->addStringParameter("FileName", pFileName);
+		}
+		if (pFileName == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		if (pPersistent3MFPackage == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		std::string sFileName(pFileName);
+		IBase* pBasePersistent3MFPackage(nullptr);
+		IModel* pIModel = dynamic_cast<IModel*>(pIBaseClass);
+		if (!pIModel)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBasePersistent3MFPackage = pIModel->CreatePersistentPackageFromFile(sFileName);
+
+		*pPersistent3MFPackage = (IBase*)(pBasePersistent3MFPackage);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Persistent3MFPackage", *pPersistent3MFPackage);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
 Lib3MFResult lib3mf_model_gettexture2dbyid(Lib3MF_Model pModel, Lib3MF_uint32 nUniqueResourceID, Lib3MF_Texture2D * pTextureInstance)
 {
 	IBase* pIBaseClass = (IBase *)pModel;
@@ -13168,12 +13378,20 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_writer_addkeywrappingcallback;
 	if (sProcName == "lib3mf_writer_setcontentencryptioncallback") 
 		*ppProcAddress = (void*) &lib3mf_writer_setcontentencryptioncallback;
+	if (sProcName == "lib3mf_persistent3mfpackage_extractkeystore") 
+		*ppProcAddress = (void*) &lib3mf_persistent3mfpackage_extractkeystore;
+	if (sProcName == "lib3mf_persistent3mfpackage_updatekeystore") 
+		*ppProcAddress = (void*) &lib3mf_persistent3mfpackage_updatekeystore;
+	if (sProcName == "lib3mf_persistent3mfpackage_getkeystorestring") 
+		*ppProcAddress = (void*) &lib3mf_persistent3mfpackage_getkeystorestring;
 	if (sProcName == "lib3mf_reader_readfromfile") 
 		*ppProcAddress = (void*) &lib3mf_reader_readfromfile;
 	if (sProcName == "lib3mf_reader_readfrombuffer") 
 		*ppProcAddress = (void*) &lib3mf_reader_readfrombuffer;
 	if (sProcName == "lib3mf_reader_readfromcallback") 
 		*ppProcAddress = (void*) &lib3mf_reader_readfromcallback;
+	if (sProcName == "lib3mf_reader_readfrompersistentpackage") 
+		*ppProcAddress = (void*) &lib3mf_reader_readfrompersistentpackage;
 	if (sProcName == "lib3mf_reader_setprogresscallback") 
 		*ppProcAddress = (void*) &lib3mf_reader_setprogresscallback;
 	if (sProcName == "lib3mf_reader_addrelationtoread") 
@@ -13734,6 +13952,8 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_model_querywriter;
 	if (sProcName == "lib3mf_model_queryreader") 
 		*ppProcAddress = (void*) &lib3mf_model_queryreader;
+	if (sProcName == "lib3mf_model_createpersistentpackagefromfile") 
+		*ppProcAddress = (void*) &lib3mf_model_createpersistentpackagefromfile;
 	if (sProcName == "lib3mf_model_gettexture2dbyid") 
 		*ppProcAddress = (void*) &lib3mf_model_gettexture2dbyid;
 	if (sProcName == "lib3mf_model_getpropertytypebyid") 

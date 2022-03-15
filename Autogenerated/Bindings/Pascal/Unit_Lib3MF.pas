@@ -373,6 +373,7 @@ type
 	TLib3MFWrapper = class;
 	TLib3MFBase = class;
 	TLib3MFWriter = class;
+	TLib3MFPersistent3MFPackage = class;
 	TLib3MFReader = class;
 	TLib3MFPackagePart = class;
 	TLib3MFResource = class;
@@ -555,6 +556,40 @@ type
 	
 
 (*************************************************************************************************************************
+ Function type definitions for Persistent3MFPackage
+**************************************************************************************************************************)
+
+	(**
+	* Reads only the keystore from the 3MF Package
+	*
+	* @param[in] pPersistent3MFPackage - Persistent3MFPackage instance.
+	* @param[out] pKeyStoreInstance - Keystore instance
+	* @return error code or 0 (success)
+	*)
+	TLib3MFPersistent3MFPackage_ExtractKeyStoreFunc = function(pPersistent3MFPackage: TLib3MFHandle; out pKeyStoreInstance: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Writes the keystore into the 3MF Package, replacing an existing one.
+	*
+	* @param[in] pPersistent3MFPackage - Persistent3MFPackage instance.
+	* @param[in] pKeyStoreInstance - Keystore instance to write to package
+	* @return error code or 0 (success)
+	*)
+	TLib3MFPersistent3MFPackage_UpdateKeyStoreFunc = function(pPersistent3MFPackage: TLib3MFHandle; const pKeyStoreInstance: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Reads only the keystore from the 3MF Package
+	*
+	* @param[in] pPersistent3MFPackage - Persistent3MFPackage instance.
+	* @param[in] nKeyStoreStringBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pKeyStoreStringNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pKeyStoreStringBuffer -  buffer of Keystore XML String, may be NULL
+	* @return error code or 0 (success)
+	*)
+	TLib3MFPersistent3MFPackage_GetKeyStoreStringFunc = function(pPersistent3MFPackage: TLib3MFHandle; const nKeyStoreStringBufferSize: Cardinal; out pKeyStoreStringNeededChars: Cardinal; pKeyStoreStringBuffer: PAnsiChar): TLib3MFResult; cdecl;
+	
+
+(*************************************************************************************************************************
  Function type definitions for Reader
 **************************************************************************************************************************)
 
@@ -588,6 +623,15 @@ type
 	* @return error code or 0 (success)
 	*)
 	TLib3MFReader_ReadFromCallbackFunc = function(pReader: TLib3MFHandle; const pTheReadCallback: PLib3MF_ReadCallback; const nStreamSize: QWord; const pTheSeekCallback: PLib3MF_SeekCallback; const pUserData: Pointer): TLib3MFResult; cdecl;
+	
+	(**
+	* Reads a model from a persistent package.
+	*
+	* @param[in] pReader - Reader instance.
+	* @param[in] pPersistent3MFPackage - Package to read from
+	* @return error code or 0 (success)
+	*)
+	TLib3MFReader_ReadFromPersistentPackageFunc = function(pReader: TLib3MFHandle; const pPersistent3MFPackage: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
 	* Set the progress callback for calls to this writer
@@ -3532,6 +3576,16 @@ type
 	TLib3MFModel_QueryReaderFunc = function(pModel: TLib3MFHandle; const pReaderClass: PAnsiChar; out pReaderInstance: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
+	* creates a persistent 3MF package from a file on disk
+	*
+	* @param[in] pModel - Model instance.
+	* @param[in] pFileName - file name to load
+	* @param[out] pPersistent3MFPackage - persistent 3MF package instance
+	* @return error code or 0 (success)
+	*)
+	TLib3MFModel_CreatePersistentPackageFromFileFunc = function(pModel: TLib3MFHandle; const pFileName: PAnsiChar; out pPersistent3MFPackage: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
 	* finds a model texture by its UniqueResourceID
 	*
 	* @param[in] pModel - Model instance.
@@ -4274,6 +4328,20 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 
 
 (*************************************************************************************************************************
+ Class definition for Persistent3MFPackage
+**************************************************************************************************************************)
+
+	TLib3MFPersistent3MFPackage = class(TLib3MFBase)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+		function ExtractKeyStore(): TLib3MFKeyStore;
+		procedure UpdateKeyStore(const AKeyStoreInstance: TLib3MFKeyStore);
+		function GetKeyStoreString(): String;
+	end;
+
+
+(*************************************************************************************************************************
  Class definition for Reader
 **************************************************************************************************************************)
 
@@ -4284,6 +4352,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		procedure ReadFromFile(const AFilename: String);
 		procedure ReadFromBuffer(const ABuffer: TByteDynArray);
 		procedure ReadFromCallback(const ATheReadCallback: PLib3MF_ReadCallback; const AStreamSize: QWord; const ATheSeekCallback: PLib3MF_SeekCallback; const AUserData: Pointer);
+		procedure ReadFromPersistentPackage(const APersistent3MFPackage: TLib3MFPersistent3MFPackage);
 		procedure SetProgressCallback(const AProgressCallback: PLib3MF_ProgressCallback; const AUserData: Pointer);
 		procedure AddRelationToRead(const ARelationShipType: String);
 		procedure RemoveRelationToRead(const ARelationShipType: String);
@@ -4993,6 +5062,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		procedure SetLanguage(const ALanguage: String);
 		function QueryWriter(const AWriterClass: String): TLib3MFWriter;
 		function QueryReader(const AReaderClass: String): TLib3MFReader;
+		function CreatePersistentPackageFromFile(const AFileName: String): TLib3MFPersistent3MFPackage;
 		function GetTexture2DByID(const AUniqueResourceID: Cardinal): TLib3MFTexture2D;
 		function GetPropertyTypeByID(const AUniqueResourceID: Cardinal): TLib3MFPropertyType;
 		function GetBaseMaterialGroupByID(const AUniqueResourceID: Cardinal): TLib3MFBaseMaterialGroup;
@@ -5066,9 +5136,13 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFWriter_GetWarningCountFunc: TLib3MFWriter_GetWarningCountFunc;
 		FLib3MFWriter_AddKeyWrappingCallbackFunc: TLib3MFWriter_AddKeyWrappingCallbackFunc;
 		FLib3MFWriter_SetContentEncryptionCallbackFunc: TLib3MFWriter_SetContentEncryptionCallbackFunc;
+		FLib3MFPersistent3MFPackage_ExtractKeyStoreFunc: TLib3MFPersistent3MFPackage_ExtractKeyStoreFunc;
+		FLib3MFPersistent3MFPackage_UpdateKeyStoreFunc: TLib3MFPersistent3MFPackage_UpdateKeyStoreFunc;
+		FLib3MFPersistent3MFPackage_GetKeyStoreStringFunc: TLib3MFPersistent3MFPackage_GetKeyStoreStringFunc;
 		FLib3MFReader_ReadFromFileFunc: TLib3MFReader_ReadFromFileFunc;
 		FLib3MFReader_ReadFromBufferFunc: TLib3MFReader_ReadFromBufferFunc;
 		FLib3MFReader_ReadFromCallbackFunc: TLib3MFReader_ReadFromCallbackFunc;
+		FLib3MFReader_ReadFromPersistentPackageFunc: TLib3MFReader_ReadFromPersistentPackageFunc;
 		FLib3MFReader_SetProgressCallbackFunc: TLib3MFReader_SetProgressCallbackFunc;
 		FLib3MFReader_AddRelationToReadFunc: TLib3MFReader_AddRelationToReadFunc;
 		FLib3MFReader_RemoveRelationToReadFunc: TLib3MFReader_RemoveRelationToReadFunc;
@@ -5349,6 +5423,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFModel_SetLanguageFunc: TLib3MFModel_SetLanguageFunc;
 		FLib3MFModel_QueryWriterFunc: TLib3MFModel_QueryWriterFunc;
 		FLib3MFModel_QueryReaderFunc: TLib3MFModel_QueryReaderFunc;
+		FLib3MFModel_CreatePersistentPackageFromFileFunc: TLib3MFModel_CreatePersistentPackageFromFileFunc;
 		FLib3MFModel_GetTexture2DByIDFunc: TLib3MFModel_GetTexture2DByIDFunc;
 		FLib3MFModel_GetPropertyTypeByIDFunc: TLib3MFModel_GetPropertyTypeByIDFunc;
 		FLib3MFModel_GetBaseMaterialGroupByIDFunc: TLib3MFModel_GetBaseMaterialGroupByIDFunc;
@@ -5442,9 +5517,13 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFWriter_GetWarningCountFunc: TLib3MFWriter_GetWarningCountFunc read FLib3MFWriter_GetWarningCountFunc;
 		property Lib3MFWriter_AddKeyWrappingCallbackFunc: TLib3MFWriter_AddKeyWrappingCallbackFunc read FLib3MFWriter_AddKeyWrappingCallbackFunc;
 		property Lib3MFWriter_SetContentEncryptionCallbackFunc: TLib3MFWriter_SetContentEncryptionCallbackFunc read FLib3MFWriter_SetContentEncryptionCallbackFunc;
+		property Lib3MFPersistent3MFPackage_ExtractKeyStoreFunc: TLib3MFPersistent3MFPackage_ExtractKeyStoreFunc read FLib3MFPersistent3MFPackage_ExtractKeyStoreFunc;
+		property Lib3MFPersistent3MFPackage_UpdateKeyStoreFunc: TLib3MFPersistent3MFPackage_UpdateKeyStoreFunc read FLib3MFPersistent3MFPackage_UpdateKeyStoreFunc;
+		property Lib3MFPersistent3MFPackage_GetKeyStoreStringFunc: TLib3MFPersistent3MFPackage_GetKeyStoreStringFunc read FLib3MFPersistent3MFPackage_GetKeyStoreStringFunc;
 		property Lib3MFReader_ReadFromFileFunc: TLib3MFReader_ReadFromFileFunc read FLib3MFReader_ReadFromFileFunc;
 		property Lib3MFReader_ReadFromBufferFunc: TLib3MFReader_ReadFromBufferFunc read FLib3MFReader_ReadFromBufferFunc;
 		property Lib3MFReader_ReadFromCallbackFunc: TLib3MFReader_ReadFromCallbackFunc read FLib3MFReader_ReadFromCallbackFunc;
+		property Lib3MFReader_ReadFromPersistentPackageFunc: TLib3MFReader_ReadFromPersistentPackageFunc read FLib3MFReader_ReadFromPersistentPackageFunc;
 		property Lib3MFReader_SetProgressCallbackFunc: TLib3MFReader_SetProgressCallbackFunc read FLib3MFReader_SetProgressCallbackFunc;
 		property Lib3MFReader_AddRelationToReadFunc: TLib3MFReader_AddRelationToReadFunc read FLib3MFReader_AddRelationToReadFunc;
 		property Lib3MFReader_RemoveRelationToReadFunc: TLib3MFReader_RemoveRelationToReadFunc read FLib3MFReader_RemoveRelationToReadFunc;
@@ -5725,6 +5804,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFModel_SetLanguageFunc: TLib3MFModel_SetLanguageFunc read FLib3MFModel_SetLanguageFunc;
 		property Lib3MFModel_QueryWriterFunc: TLib3MFModel_QueryWriterFunc read FLib3MFModel_QueryWriterFunc;
 		property Lib3MFModel_QueryReaderFunc: TLib3MFModel_QueryReaderFunc read FLib3MFModel_QueryReaderFunc;
+		property Lib3MFModel_CreatePersistentPackageFromFileFunc: TLib3MFModel_CreatePersistentPackageFromFileFunc read FLib3MFModel_CreatePersistentPackageFromFileFunc;
 		property Lib3MFModel_GetTexture2DByIDFunc: TLib3MFModel_GetTexture2DByIDFunc read FLib3MFModel_GetTexture2DByIDFunc;
 		property Lib3MFModel_GetPropertyTypeByIDFunc: TLib3MFModel_GetPropertyTypeByIDFunc read FLib3MFModel_GetPropertyTypeByIDFunc;
 		property Lib3MFModel_GetBaseMaterialGroupByIDFunc: TLib3MFModel_GetBaseMaterialGroupByIDFunc read FLib3MFModel_GetBaseMaterialGroupByIDFunc;
@@ -6510,6 +6590,56 @@ implementation
 	end;
 
 (*************************************************************************************************************************
+ Class implementation for Persistent3MFPackage
+**************************************************************************************************************************)
+
+	constructor TLib3MFPersistent3MFPackage.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFPersistent3MFPackage.Destroy;
+	begin
+		inherited;
+	end;
+
+	function TLib3MFPersistent3MFPackage.ExtractKeyStore(): TLib3MFKeyStore;
+	var
+		HKeyStoreInstance: TLib3MFHandle;
+	begin
+		Result := nil;
+		HKeyStoreInstance := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFPersistent3MFPackage_ExtractKeyStoreFunc(FHandle, HKeyStoreInstance));
+		if Assigned(HKeyStoreInstance) then
+			Result := TLib3MFKeyStore.Create(FWrapper, HKeyStoreInstance);
+	end;
+
+	procedure TLib3MFPersistent3MFPackage.UpdateKeyStore(const AKeyStoreInstance: TLib3MFKeyStore);
+	var
+		AKeyStoreInstanceHandle: TLib3MFHandle;
+	begin
+		if Assigned(AKeyStoreInstance) then
+		AKeyStoreInstanceHandle := AKeyStoreInstance.TheHandle
+		else
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'AKeyStoreInstance is a nil value.');
+		FWrapper.CheckError(Self, FWrapper.Lib3MFPersistent3MFPackage_UpdateKeyStoreFunc(FHandle, AKeyStoreInstanceHandle));
+	end;
+
+	function TLib3MFPersistent3MFPackage.GetKeyStoreString(): String;
+	var
+		bytesNeededKeyStoreString: Cardinal;
+		bytesWrittenKeyStoreString: Cardinal;
+		bufferKeyStoreString: array of Char;
+	begin
+		bytesNeededKeyStoreString:= 0;
+		bytesWrittenKeyStoreString:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFPersistent3MFPackage_GetKeyStoreStringFunc(FHandle, 0, bytesNeededKeyStoreString, nil));
+		SetLength(bufferKeyStoreString, bytesNeededKeyStoreString);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFPersistent3MFPackage_GetKeyStoreStringFunc(FHandle, bytesNeededKeyStoreString, bytesWrittenKeyStoreString, @bufferKeyStoreString[0]));
+		Result := StrPas(@bufferKeyStoreString[0]);
+	end;
+
+(*************************************************************************************************************************
  Class implementation for Reader
 **************************************************************************************************************************)
 
@@ -6551,6 +6681,17 @@ implementation
 		if not Assigned(ATheSeekCallback) then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'ATheSeekCallback is a nil value.');
 		FWrapper.CheckError(Self, FWrapper.Lib3MFReader_ReadFromCallbackFunc(FHandle, ATheReadCallback, AStreamSize, ATheSeekCallback, AUserData));
+	end;
+
+	procedure TLib3MFReader.ReadFromPersistentPackage(const APersistent3MFPackage: TLib3MFPersistent3MFPackage);
+	var
+		APersistent3MFPackageHandle: TLib3MFHandle;
+	begin
+		if Assigned(APersistent3MFPackage) then
+		APersistent3MFPackageHandle := APersistent3MFPackage.TheHandle
+		else
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'APersistent3MFPackage is a nil value.');
+		FWrapper.CheckError(Self, FWrapper.Lib3MFReader_ReadFromPersistentPackageFunc(FHandle, APersistent3MFPackageHandle));
 	end;
 
 	procedure TLib3MFReader.SetProgressCallback(const AProgressCallback: PLib3MF_ProgressCallback; const AUserData: Pointer);
@@ -9672,6 +9813,17 @@ implementation
 			Result := TLib3MFReader.Create(FWrapper, HReaderInstance);
 	end;
 
+	function TLib3MFModel.CreatePersistentPackageFromFile(const AFileName: String): TLib3MFPersistent3MFPackage;
+	var
+		HPersistent3MFPackage: TLib3MFHandle;
+	begin
+		Result := nil;
+		HPersistent3MFPackage := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFModel_CreatePersistentPackageFromFileFunc(FHandle, PAnsiChar(AFileName), HPersistent3MFPackage));
+		if Assigned(HPersistent3MFPackage) then
+			Result := TLib3MFPersistent3MFPackage.Create(FWrapper, HPersistent3MFPackage);
+	end;
+
 	function TLib3MFModel.GetTexture2DByID(const AUniqueResourceID: Cardinal): TLib3MFTexture2D;
 	var
 		HTextureInstance: TLib3MFHandle;
@@ -10250,9 +10402,13 @@ implementation
 		FLib3MFWriter_GetWarningCountFunc := LoadFunction('lib3mf_writer_getwarningcount');
 		FLib3MFWriter_AddKeyWrappingCallbackFunc := LoadFunction('lib3mf_writer_addkeywrappingcallback');
 		FLib3MFWriter_SetContentEncryptionCallbackFunc := LoadFunction('lib3mf_writer_setcontentencryptioncallback');
+		FLib3MFPersistent3MFPackage_ExtractKeyStoreFunc := LoadFunction('lib3mf_persistent3mfpackage_extractkeystore');
+		FLib3MFPersistent3MFPackage_UpdateKeyStoreFunc := LoadFunction('lib3mf_persistent3mfpackage_updatekeystore');
+		FLib3MFPersistent3MFPackage_GetKeyStoreStringFunc := LoadFunction('lib3mf_persistent3mfpackage_getkeystorestring');
 		FLib3MFReader_ReadFromFileFunc := LoadFunction('lib3mf_reader_readfromfile');
 		FLib3MFReader_ReadFromBufferFunc := LoadFunction('lib3mf_reader_readfrombuffer');
 		FLib3MFReader_ReadFromCallbackFunc := LoadFunction('lib3mf_reader_readfromcallback');
+		FLib3MFReader_ReadFromPersistentPackageFunc := LoadFunction('lib3mf_reader_readfrompersistentpackage');
 		FLib3MFReader_SetProgressCallbackFunc := LoadFunction('lib3mf_reader_setprogresscallback');
 		FLib3MFReader_AddRelationToReadFunc := LoadFunction('lib3mf_reader_addrelationtoread');
 		FLib3MFReader_RemoveRelationToReadFunc := LoadFunction('lib3mf_reader_removerelationtoread');
@@ -10533,6 +10689,7 @@ implementation
 		FLib3MFModel_SetLanguageFunc := LoadFunction('lib3mf_model_setlanguage');
 		FLib3MFModel_QueryWriterFunc := LoadFunction('lib3mf_model_querywriter');
 		FLib3MFModel_QueryReaderFunc := LoadFunction('lib3mf_model_queryreader');
+		FLib3MFModel_CreatePersistentPackageFromFileFunc := LoadFunction('lib3mf_model_createpersistentpackagefromfile');
 		FLib3MFModel_GetTexture2DByIDFunc := LoadFunction('lib3mf_model_gettexture2dbyid');
 		FLib3MFModel_GetPropertyTypeByIDFunc := LoadFunction('lib3mf_model_getpropertytypebyid');
 		FLib3MFModel_GetBaseMaterialGroupByIDFunc := LoadFunction('lib3mf_model_getbasematerialgroupbyid');
@@ -10653,6 +10810,15 @@ implementation
 		AResult := ALookupMethod(PAnsiChar('lib3mf_writer_setcontentencryptioncallback'), @FLib3MFWriter_SetContentEncryptionCallbackFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_persistent3mfpackage_extractkeystore'), @FLib3MFPersistent3MFPackage_ExtractKeyStoreFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_persistent3mfpackage_updatekeystore'), @FLib3MFPersistent3MFPackage_UpdateKeyStoreFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_persistent3mfpackage_getkeystorestring'), @FLib3MFPersistent3MFPackage_GetKeyStoreStringFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_reader_readfromfile'), @FLib3MFReader_ReadFromFileFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
@@ -10660,6 +10826,9 @@ implementation
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_reader_readfromcallback'), @FLib3MFReader_ReadFromCallbackFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_reader_readfrompersistentpackage'), @FLib3MFReader_ReadFromPersistentPackageFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_reader_setprogresscallback'), @FLib3MFReader_SetProgressCallbackFunc);
@@ -11500,6 +11669,9 @@ implementation
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_model_queryreader'), @FLib3MFModel_QueryReaderFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_model_createpersistentpackagefromfile'), @FLib3MFModel_CreatePersistentPackageFromFileFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_model_gettexture2dbyid'), @FLib3MFModel_GetTexture2DByIDFunc);

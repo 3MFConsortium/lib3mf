@@ -58,6 +58,7 @@ namespace Lib3MF {
 class CWrapper;
 class CBase;
 class CWriter;
+class CPersistent3MFPackage;
 class CReader;
 class CPackagePart;
 class CResource;
@@ -105,6 +106,7 @@ class CModel;
 typedef CWrapper CLib3MFWrapper;
 typedef CBase CLib3MFBase;
 typedef CWriter CLib3MFWriter;
+typedef CPersistent3MFPackage CLib3MFPersistent3MFPackage;
 typedef CReader CLib3MFReader;
 typedef CPackagePart CLib3MFPackagePart;
 typedef CResource CLib3MFResource;
@@ -152,6 +154,7 @@ typedef CModel CLib3MFModel;
 typedef std::shared_ptr<CWrapper> PWrapper;
 typedef std::shared_ptr<CBase> PBase;
 typedef std::shared_ptr<CWriter> PWriter;
+typedef std::shared_ptr<CPersistent3MFPackage> PPersistent3MFPackage;
 typedef std::shared_ptr<CReader> PReader;
 typedef std::shared_ptr<CPackagePart> PPackagePart;
 typedef std::shared_ptr<CResource> PResource;
@@ -199,6 +202,7 @@ typedef std::shared_ptr<CModel> PModel;
 typedef PWrapper PLib3MFWrapper;
 typedef PBase PLib3MFBase;
 typedef PWriter PLib3MFWriter;
+typedef PPersistent3MFPackage PLib3MFPersistent3MFPackage;
 typedef PReader PLib3MFReader;
 typedef PPackagePart PLib3MFPackagePart;
 typedef PResource PLib3MFResource;
@@ -526,6 +530,7 @@ private:
 
 	friend class CBase;
 	friend class CWriter;
+	friend class CPersistent3MFPackage;
 	friend class CReader;
 	friend class CPackagePart;
 	friend class CResource;
@@ -656,6 +661,25 @@ public:
 };
 	
 /*************************************************************************************************************************
+ Class CPersistent3MFPackage 
+**************************************************************************************************************************/
+class CPersistent3MFPackage : public CBase {
+public:
+	
+	/**
+	* CPersistent3MFPackage::CPersistent3MFPackage - Constructor for Persistent3MFPackage class.
+	*/
+	CPersistent3MFPackage(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CBase(pWrapper, pHandle)
+	{
+	}
+	
+	inline PKeyStore ExtractKeyStore();
+	inline void UpdateKeyStore(classParam<CKeyStore> pKeyStoreInstance);
+	inline std::string GetKeyStoreString();
+};
+	
+/*************************************************************************************************************************
  Class CReader 
 **************************************************************************************************************************/
 class CReader : public CBase {
@@ -672,6 +696,7 @@ public:
 	inline void ReadFromFile(const std::string & sFilename);
 	inline void ReadFromBuffer(const CInputVector<Lib3MF_uint8> & BufferBuffer);
 	inline void ReadFromCallback(const ReadCallback pTheReadCallback, const Lib3MF_uint64 nStreamSize, const SeekCallback pTheSeekCallback, const Lib3MF_pvoid pUserData);
+	inline void ReadFromPersistentPackage(classParam<CPersistent3MFPackage> pPersistent3MFPackage);
 	inline void SetProgressCallback(const ProgressCallback pProgressCallback, const Lib3MF_pvoid pUserData);
 	inline void AddRelationToRead(const std::string & sRelationShipType);
 	inline void RemoveRelationToRead(const std::string & sRelationShipType);
@@ -1576,6 +1601,7 @@ public:
 	inline void SetLanguage(const std::string & sLanguage);
 	inline PWriter QueryWriter(const std::string & sWriterClass);
 	inline PReader QueryReader(const std::string & sReaderClass);
+	inline PPersistent3MFPackage CreatePersistentPackageFromFile(const std::string & sFileName);
 	inline PTexture2D GetTexture2DByID(const Lib3MF_uint32 nUniqueResourceID);
 	inline ePropertyType GetPropertyTypeByID(const Lib3MF_uint32 nUniqueResourceID);
 	inline PBaseMaterialGroup GetBaseMaterialGroupByID(const Lib3MF_uint32 nUniqueResourceID);
@@ -2062,6 +2088,50 @@ public:
 	}
 	
 	/**
+	 * Method definitions for class CPersistent3MFPackage
+	 */
+	
+	/**
+	* CPersistent3MFPackage::ExtractKeyStore - Reads only the keystore from the 3MF Package
+	* @return Keystore instance
+	*/
+	PKeyStore CPersistent3MFPackage::ExtractKeyStore()
+	{
+		Lib3MFHandle hKeyStoreInstance = nullptr;
+		CheckError(lib3mf_persistent3mfpackage_extractkeystore(m_pHandle, &hKeyStoreInstance));
+		
+		if (!hKeyStoreInstance) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::make_shared<CKeyStore>(m_pWrapper, hKeyStoreInstance);
+	}
+	
+	/**
+	* CPersistent3MFPackage::UpdateKeyStore - Writes the keystore into the 3MF Package, replacing an existing one.
+	* @param[in] pKeyStoreInstance - Keystore instance to write to package
+	*/
+	void CPersistent3MFPackage::UpdateKeyStore(classParam<CKeyStore> pKeyStoreInstance)
+	{
+		Lib3MFHandle hKeyStoreInstance = pKeyStoreInstance.GetHandle();
+		CheckError(lib3mf_persistent3mfpackage_updatekeystore(m_pHandle, hKeyStoreInstance));
+	}
+	
+	/**
+	* CPersistent3MFPackage::GetKeyStoreString - Reads only the keystore from the 3MF Package
+	* @return Keystore XML String
+	*/
+	std::string CPersistent3MFPackage::GetKeyStoreString()
+	{
+		Lib3MF_uint32 bytesNeededKeyStoreString = 0;
+		Lib3MF_uint32 bytesWrittenKeyStoreString = 0;
+		CheckError(lib3mf_persistent3mfpackage_getkeystorestring(m_pHandle, 0, &bytesNeededKeyStoreString, nullptr));
+		std::vector<char> bufferKeyStoreString(bytesNeededKeyStoreString);
+		CheckError(lib3mf_persistent3mfpackage_getkeystorestring(m_pHandle, bytesNeededKeyStoreString, &bytesWrittenKeyStoreString, &bufferKeyStoreString[0]));
+		
+		return std::string(&bufferKeyStoreString[0]);
+	}
+	
+	/**
 	 * Method definitions for class CReader
 	 */
 	
@@ -2093,6 +2163,16 @@ public:
 	void CReader::ReadFromCallback(const ReadCallback pTheReadCallback, const Lib3MF_uint64 nStreamSize, const SeekCallback pTheSeekCallback, const Lib3MF_pvoid pUserData)
 	{
 		CheckError(lib3mf_reader_readfromcallback(m_pHandle, pTheReadCallback, nStreamSize, pTheSeekCallback, pUserData));
+	}
+	
+	/**
+	* CReader::ReadFromPersistentPackage - Reads a model from a persistent package.
+	* @param[in] pPersistent3MFPackage - Package to read from
+	*/
+	void CReader::ReadFromPersistentPackage(classParam<CPersistent3MFPackage> pPersistent3MFPackage)
+	{
+		Lib3MFHandle hPersistent3MFPackage = pPersistent3MFPackage.GetHandle();
+		CheckError(lib3mf_reader_readfrompersistentpackage(m_pHandle, hPersistent3MFPackage));
 	}
 	
 	/**
@@ -5745,6 +5825,22 @@ public:
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
 		return std::make_shared<CReader>(m_pWrapper, hReaderInstance);
+	}
+	
+	/**
+	* CModel::CreatePersistentPackageFromFile - creates a persistent 3MF package from a file on disk
+	* @param[in] sFileName - file name to load
+	* @return persistent 3MF package instance
+	*/
+	PPersistent3MFPackage CModel::CreatePersistentPackageFromFile(const std::string & sFileName)
+	{
+		Lib3MFHandle hPersistent3MFPackage = nullptr;
+		CheckError(lib3mf_model_createpersistentpackagefromfile(m_pHandle, sFileName.c_str(), &hPersistent3MFPackage));
+		
+		if (!hPersistent3MFPackage) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::make_shared<CPersistent3MFPackage>(m_pWrapper, hPersistent3MFPackage);
 	}
 	
 	/**

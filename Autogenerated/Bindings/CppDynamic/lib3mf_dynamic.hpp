@@ -58,6 +58,7 @@ namespace Lib3MF {
 class CWrapper;
 class CBase;
 class CWriter;
+class CPersistent3MFPackage;
 class CReader;
 class CPackagePart;
 class CResource;
@@ -105,6 +106,7 @@ class CModel;
 typedef CWrapper CLib3MFWrapper;
 typedef CBase CLib3MFBase;
 typedef CWriter CLib3MFWriter;
+typedef CPersistent3MFPackage CLib3MFPersistent3MFPackage;
 typedef CReader CLib3MFReader;
 typedef CPackagePart CLib3MFPackagePart;
 typedef CResource CLib3MFResource;
@@ -152,6 +154,7 @@ typedef CModel CLib3MFModel;
 typedef std::shared_ptr<CWrapper> PWrapper;
 typedef std::shared_ptr<CBase> PBase;
 typedef std::shared_ptr<CWriter> PWriter;
+typedef std::shared_ptr<CPersistent3MFPackage> PPersistent3MFPackage;
 typedef std::shared_ptr<CReader> PReader;
 typedef std::shared_ptr<CPackagePart> PPackagePart;
 typedef std::shared_ptr<CResource> PResource;
@@ -199,6 +202,7 @@ typedef std::shared_ptr<CModel> PModel;
 typedef PWrapper PLib3MFWrapper;
 typedef PBase PLib3MFBase;
 typedef PWriter PLib3MFWriter;
+typedef PPersistent3MFPackage PLib3MFPersistent3MFPackage;
 typedef PReader PLib3MFReader;
 typedef PPackagePart PLib3MFPackagePart;
 typedef PResource PLib3MFResource;
@@ -550,6 +554,7 @@ private:
 
 	friend class CBase;
 	friend class CWriter;
+	friend class CPersistent3MFPackage;
 	friend class CReader;
 	friend class CPackagePart;
 	friend class CResource;
@@ -680,6 +685,25 @@ public:
 };
 	
 /*************************************************************************************************************************
+ Class CPersistent3MFPackage 
+**************************************************************************************************************************/
+class CPersistent3MFPackage : public CBase {
+public:
+	
+	/**
+	* CPersistent3MFPackage::CPersistent3MFPackage - Constructor for Persistent3MFPackage class.
+	*/
+	CPersistent3MFPackage(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CBase(pWrapper, pHandle)
+	{
+	}
+	
+	inline PKeyStore ExtractKeyStore();
+	inline void UpdateKeyStore(classParam<CKeyStore> pKeyStoreInstance);
+	inline std::string GetKeyStoreString();
+};
+	
+/*************************************************************************************************************************
  Class CReader 
 **************************************************************************************************************************/
 class CReader : public CBase {
@@ -696,6 +720,7 @@ public:
 	inline void ReadFromFile(const std::string & sFilename);
 	inline void ReadFromBuffer(const CInputVector<Lib3MF_uint8> & BufferBuffer);
 	inline void ReadFromCallback(const ReadCallback pTheReadCallback, const Lib3MF_uint64 nStreamSize, const SeekCallback pTheSeekCallback, const Lib3MF_pvoid pUserData);
+	inline void ReadFromPersistentPackage(classParam<CPersistent3MFPackage> pPersistent3MFPackage);
 	inline void SetProgressCallback(const ProgressCallback pProgressCallback, const Lib3MF_pvoid pUserData);
 	inline void AddRelationToRead(const std::string & sRelationShipType);
 	inline void RemoveRelationToRead(const std::string & sRelationShipType);
@@ -1600,6 +1625,7 @@ public:
 	inline void SetLanguage(const std::string & sLanguage);
 	inline PWriter QueryWriter(const std::string & sWriterClass);
 	inline PReader QueryReader(const std::string & sReaderClass);
+	inline PPersistent3MFPackage CreatePersistentPackageFromFile(const std::string & sFileName);
 	inline PTexture2D GetTexture2DByID(const Lib3MF_uint32 nUniqueResourceID);
 	inline ePropertyType GetPropertyTypeByID(const Lib3MF_uint32 nUniqueResourceID);
 	inline PBaseMaterialGroup GetBaseMaterialGroupByID(const Lib3MF_uint32 nUniqueResourceID);
@@ -1948,9 +1974,13 @@ public:
 		pWrapperTable->m_Writer_GetWarningCount = nullptr;
 		pWrapperTable->m_Writer_AddKeyWrappingCallback = nullptr;
 		pWrapperTable->m_Writer_SetContentEncryptionCallback = nullptr;
+		pWrapperTable->m_Persistent3MFPackage_ExtractKeyStore = nullptr;
+		pWrapperTable->m_Persistent3MFPackage_UpdateKeyStore = nullptr;
+		pWrapperTable->m_Persistent3MFPackage_GetKeyStoreString = nullptr;
 		pWrapperTable->m_Reader_ReadFromFile = nullptr;
 		pWrapperTable->m_Reader_ReadFromBuffer = nullptr;
 		pWrapperTable->m_Reader_ReadFromCallback = nullptr;
+		pWrapperTable->m_Reader_ReadFromPersistentPackage = nullptr;
 		pWrapperTable->m_Reader_SetProgressCallback = nullptr;
 		pWrapperTable->m_Reader_AddRelationToRead = nullptr;
 		pWrapperTable->m_Reader_RemoveRelationToRead = nullptr;
@@ -2231,6 +2261,7 @@ public:
 		pWrapperTable->m_Model_SetLanguage = nullptr;
 		pWrapperTable->m_Model_QueryWriter = nullptr;
 		pWrapperTable->m_Model_QueryReader = nullptr;
+		pWrapperTable->m_Model_CreatePersistentPackageFromFile = nullptr;
 		pWrapperTable->m_Model_GetTexture2DByID = nullptr;
 		pWrapperTable->m_Model_GetPropertyTypeByID = nullptr;
 		pWrapperTable->m_Model_GetBaseMaterialGroupByID = nullptr;
@@ -2467,6 +2498,33 @@ public:
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
+		pWrapperTable->m_Persistent3MFPackage_ExtractKeyStore = (PLib3MFPersistent3MFPackage_ExtractKeyStorePtr) GetProcAddress(hLibrary, "lib3mf_persistent3mfpackage_extractkeystore");
+		#else // _WIN32
+		pWrapperTable->m_Persistent3MFPackage_ExtractKeyStore = (PLib3MFPersistent3MFPackage_ExtractKeyStorePtr) dlsym(hLibrary, "lib3mf_persistent3mfpackage_extractkeystore");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Persistent3MFPackage_ExtractKeyStore == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Persistent3MFPackage_UpdateKeyStore = (PLib3MFPersistent3MFPackage_UpdateKeyStorePtr) GetProcAddress(hLibrary, "lib3mf_persistent3mfpackage_updatekeystore");
+		#else // _WIN32
+		pWrapperTable->m_Persistent3MFPackage_UpdateKeyStore = (PLib3MFPersistent3MFPackage_UpdateKeyStorePtr) dlsym(hLibrary, "lib3mf_persistent3mfpackage_updatekeystore");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Persistent3MFPackage_UpdateKeyStore == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Persistent3MFPackage_GetKeyStoreString = (PLib3MFPersistent3MFPackage_GetKeyStoreStringPtr) GetProcAddress(hLibrary, "lib3mf_persistent3mfpackage_getkeystorestring");
+		#else // _WIN32
+		pWrapperTable->m_Persistent3MFPackage_GetKeyStoreString = (PLib3MFPersistent3MFPackage_GetKeyStoreStringPtr) dlsym(hLibrary, "lib3mf_persistent3mfpackage_getkeystorestring");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Persistent3MFPackage_GetKeyStoreString == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
 		pWrapperTable->m_Reader_ReadFromFile = (PLib3MFReader_ReadFromFilePtr) GetProcAddress(hLibrary, "lib3mf_reader_readfromfile");
 		#else // _WIN32
 		pWrapperTable->m_Reader_ReadFromFile = (PLib3MFReader_ReadFromFilePtr) dlsym(hLibrary, "lib3mf_reader_readfromfile");
@@ -2491,6 +2549,15 @@ public:
 		dlerror();
 		#endif // _WIN32
 		if (pWrapperTable->m_Reader_ReadFromCallback == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Reader_ReadFromPersistentPackage = (PLib3MFReader_ReadFromPersistentPackagePtr) GetProcAddress(hLibrary, "lib3mf_reader_readfrompersistentpackage");
+		#else // _WIN32
+		pWrapperTable->m_Reader_ReadFromPersistentPackage = (PLib3MFReader_ReadFromPersistentPackagePtr) dlsym(hLibrary, "lib3mf_reader_readfrompersistentpackage");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Reader_ReadFromPersistentPackage == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
@@ -5014,6 +5081,15 @@ public:
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
+		pWrapperTable->m_Model_CreatePersistentPackageFromFile = (PLib3MFModel_CreatePersistentPackageFromFilePtr) GetProcAddress(hLibrary, "lib3mf_model_createpersistentpackagefromfile");
+		#else // _WIN32
+		pWrapperTable->m_Model_CreatePersistentPackageFromFile = (PLib3MFModel_CreatePersistentPackageFromFilePtr) dlsym(hLibrary, "lib3mf_model_createpersistentpackagefromfile");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Model_CreatePersistentPackageFromFile == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
 		pWrapperTable->m_Model_GetTexture2DByID = (PLib3MFModel_GetTexture2DByIDPtr) GetProcAddress(hLibrary, "lib3mf_model_gettexture2dbyid");
 		#else // _WIN32
 		pWrapperTable->m_Model_GetTexture2DByID = (PLib3MFModel_GetTexture2DByIDPtr) dlsym(hLibrary, "lib3mf_model_gettexture2dbyid");
@@ -5711,6 +5787,18 @@ public:
 		if ( (eLookupError != 0) || (pWrapperTable->m_Writer_SetContentEncryptionCallback == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
+		eLookupError = (*pLookup)("lib3mf_persistent3mfpackage_extractkeystore", (void**)&(pWrapperTable->m_Persistent3MFPackage_ExtractKeyStore));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Persistent3MFPackage_ExtractKeyStore == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_persistent3mfpackage_updatekeystore", (void**)&(pWrapperTable->m_Persistent3MFPackage_UpdateKeyStore));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Persistent3MFPackage_UpdateKeyStore == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_persistent3mfpackage_getkeystorestring", (void**)&(pWrapperTable->m_Persistent3MFPackage_GetKeyStoreString));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Persistent3MFPackage_GetKeyStoreString == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
 		eLookupError = (*pLookup)("lib3mf_reader_readfromfile", (void**)&(pWrapperTable->m_Reader_ReadFromFile));
 		if ( (eLookupError != 0) || (pWrapperTable->m_Reader_ReadFromFile == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
@@ -5721,6 +5809,10 @@ public:
 		
 		eLookupError = (*pLookup)("lib3mf_reader_readfromcallback", (void**)&(pWrapperTable->m_Reader_ReadFromCallback));
 		if ( (eLookupError != 0) || (pWrapperTable->m_Reader_ReadFromCallback == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_reader_readfrompersistentpackage", (void**)&(pWrapperTable->m_Reader_ReadFromPersistentPackage));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Reader_ReadFromPersistentPackage == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("lib3mf_reader_setprogresscallback", (void**)&(pWrapperTable->m_Reader_SetProgressCallback));
@@ -6843,6 +6935,10 @@ public:
 		if ( (eLookupError != 0) || (pWrapperTable->m_Model_QueryReader == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
+		eLookupError = (*pLookup)("lib3mf_model_createpersistentpackagefromfile", (void**)&(pWrapperTable->m_Model_CreatePersistentPackageFromFile));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Model_CreatePersistentPackageFromFile == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
 		eLookupError = (*pLookup)("lib3mf_model_gettexture2dbyid", (void**)&(pWrapperTable->m_Model_GetTexture2DByID));
 		if ( (eLookupError != 0) || (pWrapperTable->m_Model_GetTexture2DByID == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
@@ -7284,6 +7380,50 @@ public:
 	}
 	
 	/**
+	 * Method definitions for class CPersistent3MFPackage
+	 */
+	
+	/**
+	* CPersistent3MFPackage::ExtractKeyStore - Reads only the keystore from the 3MF Package
+	* @return Keystore instance
+	*/
+	PKeyStore CPersistent3MFPackage::ExtractKeyStore()
+	{
+		Lib3MFHandle hKeyStoreInstance = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_Persistent3MFPackage_ExtractKeyStore(m_pHandle, &hKeyStoreInstance));
+		
+		if (!hKeyStoreInstance) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::make_shared<CKeyStore>(m_pWrapper, hKeyStoreInstance);
+	}
+	
+	/**
+	* CPersistent3MFPackage::UpdateKeyStore - Writes the keystore into the 3MF Package, replacing an existing one.
+	* @param[in] pKeyStoreInstance - Keystore instance to write to package
+	*/
+	void CPersistent3MFPackage::UpdateKeyStore(classParam<CKeyStore> pKeyStoreInstance)
+	{
+		Lib3MFHandle hKeyStoreInstance = pKeyStoreInstance.GetHandle();
+		CheckError(m_pWrapper->m_WrapperTable.m_Persistent3MFPackage_UpdateKeyStore(m_pHandle, hKeyStoreInstance));
+	}
+	
+	/**
+	* CPersistent3MFPackage::GetKeyStoreString - Reads only the keystore from the 3MF Package
+	* @return Keystore XML String
+	*/
+	std::string CPersistent3MFPackage::GetKeyStoreString()
+	{
+		Lib3MF_uint32 bytesNeededKeyStoreString = 0;
+		Lib3MF_uint32 bytesWrittenKeyStoreString = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_Persistent3MFPackage_GetKeyStoreString(m_pHandle, 0, &bytesNeededKeyStoreString, nullptr));
+		std::vector<char> bufferKeyStoreString(bytesNeededKeyStoreString);
+		CheckError(m_pWrapper->m_WrapperTable.m_Persistent3MFPackage_GetKeyStoreString(m_pHandle, bytesNeededKeyStoreString, &bytesWrittenKeyStoreString, &bufferKeyStoreString[0]));
+		
+		return std::string(&bufferKeyStoreString[0]);
+	}
+	
+	/**
 	 * Method definitions for class CReader
 	 */
 	
@@ -7315,6 +7455,16 @@ public:
 	void CReader::ReadFromCallback(const ReadCallback pTheReadCallback, const Lib3MF_uint64 nStreamSize, const SeekCallback pTheSeekCallback, const Lib3MF_pvoid pUserData)
 	{
 		CheckError(m_pWrapper->m_WrapperTable.m_Reader_ReadFromCallback(m_pHandle, pTheReadCallback, nStreamSize, pTheSeekCallback, pUserData));
+	}
+	
+	/**
+	* CReader::ReadFromPersistentPackage - Reads a model from a persistent package.
+	* @param[in] pPersistent3MFPackage - Package to read from
+	*/
+	void CReader::ReadFromPersistentPackage(classParam<CPersistent3MFPackage> pPersistent3MFPackage)
+	{
+		Lib3MFHandle hPersistent3MFPackage = pPersistent3MFPackage.GetHandle();
+		CheckError(m_pWrapper->m_WrapperTable.m_Reader_ReadFromPersistentPackage(m_pHandle, hPersistent3MFPackage));
 	}
 	
 	/**
@@ -10967,6 +11117,22 @@ public:
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
 		return std::make_shared<CReader>(m_pWrapper, hReaderInstance);
+	}
+	
+	/**
+	* CModel::CreatePersistentPackageFromFile - creates a persistent 3MF package from a file on disk
+	* @param[in] sFileName - file name to load
+	* @return persistent 3MF package instance
+	*/
+	PPersistent3MFPackage CModel::CreatePersistentPackageFromFile(const std::string & sFileName)
+	{
+		Lib3MFHandle hPersistent3MFPackage = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_Model_CreatePersistentPackageFromFile(m_pHandle, sFileName.c_str(), &hPersistent3MFPackage));
+		
+		if (!hPersistent3MFPackage) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::make_shared<CPersistent3MFPackage>(m_pWrapper, hPersistent3MFPackage);
 	}
 	
 	/**

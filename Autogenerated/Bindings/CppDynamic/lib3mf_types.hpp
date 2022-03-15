@@ -203,6 +203,7 @@ inline const char * LIB3MF_GETERRORSTRING (Lib3MFResult nErrorCode) {
 
 typedef Lib3MFHandle Lib3MF_Base;
 typedef Lib3MFHandle Lib3MF_Writer;
+typedef Lib3MFHandle Lib3MF_Persistent3MFPackage;
 typedef Lib3MFHandle Lib3MF_Reader;
 typedef Lib3MFHandle Lib3MF_PackagePart;
 typedef Lib3MFHandle Lib3MF_Resource;

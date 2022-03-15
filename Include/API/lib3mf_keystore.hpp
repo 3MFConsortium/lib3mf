@@ -69,7 +69,7 @@ namespace Lib3MF {
 			/**
 			* Put additional public members here. They will not be visible in the external API.
 			*/
-			CKeyStore(NMR::PModel const & pModel);
+			CKeyStore(NMR::PModel const & pModel, NMR::PKeyStore pKeyStore);
 		
 			/**
 			* Public member functions to implement.

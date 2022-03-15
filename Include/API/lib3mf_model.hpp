@@ -194,6 +194,9 @@ public:
 	IKeyStore * GetKeyStore();
 
 	void SetRandomNumberCallback(const Lib3MF::RandomNumberCallback pTheCallback, const Lib3MF_pvoid pUserData);
+
+	IPersistent3MFPackage* CreatePersistentPackageFromFile(const std::string& sFileName) override;
+
 };
 
 }

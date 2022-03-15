@@ -117,6 +117,26 @@ public:
 };
 
 /*************************************************************************************************************************
+ Class CLib3MFPersistent3MFPackage 
+**************************************************************************************************************************/
+class CLib3MFPersistent3MFPackage : public CLib3MFBaseClass {
+private:
+	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static v8::Persistent<v8::Function> constructor;
+	static void ExtractKeyStore(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void UpdateKeyStore(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetKeyStoreString(const v8::FunctionCallbackInfo<v8::Value>& args);
+
+public:
+	CLib3MFPersistent3MFPackage();
+	~CLib3MFPersistent3MFPackage();
+	
+	static void Init();
+	static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+	
+};
+
+/*************************************************************************************************************************
  Class CLib3MFReader 
 **************************************************************************************************************************/
 class CLib3MFReader : public CLib3MFBaseClass {
@@ -126,6 +146,7 @@ private:
 	static void ReadFromFile(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void ReadFromBuffer(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void ReadFromCallback(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void ReadFromPersistentPackage(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void SetProgressCallback(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void AddRelationToRead(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void RemoveRelationToRead(const v8::FunctionCallbackInfo<v8::Value>& args);
@@ -1069,6 +1090,7 @@ private:
 	static void SetLanguage(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void QueryWriter(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void QueryReader(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void CreatePersistentPackageFromFile(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetTexture2DByID(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetPropertyTypeByID(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetBaseMaterialGroupByID(const v8::FunctionCallbackInfo<v8::Value>& args);

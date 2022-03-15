@@ -188,6 +188,33 @@ Lib3MFResult CCall_lib3mf_writer_setcontentencryptioncallback(Lib3MFHandle libra
 }
 
 
+Lib3MFResult CCall_lib3mf_persistent3mfpackage_extractkeystore(Lib3MFHandle libraryHandle, Lib3MF_Persistent3MFPackage pPersistent3MFPackage, Lib3MF_KeyStore * pKeyStoreInstance)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Persistent3MFPackage_ExtractKeyStore (pPersistent3MFPackage, pKeyStoreInstance);
+}
+
+
+Lib3MFResult CCall_lib3mf_persistent3mfpackage_updatekeystore(Lib3MFHandle libraryHandle, Lib3MF_Persistent3MFPackage pPersistent3MFPackage, Lib3MF_KeyStore pKeyStoreInstance)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Persistent3MFPackage_UpdateKeyStore (pPersistent3MFPackage, pKeyStoreInstance);
+}
+
+
+Lib3MFResult CCall_lib3mf_persistent3mfpackage_getkeystorestring(Lib3MFHandle libraryHandle, Lib3MF_Persistent3MFPackage pPersistent3MFPackage, const Lib3MF_uint32 nKeyStoreStringBufferSize, Lib3MF_uint32* pKeyStoreStringNeededChars, char * pKeyStoreStringBuffer)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Persistent3MFPackage_GetKeyStoreString (pPersistent3MFPackage, nKeyStoreStringBufferSize, pKeyStoreStringNeededChars, pKeyStoreStringBuffer);
+}
+
+
 Lib3MFResult CCall_lib3mf_reader_readfromfile(Lib3MFHandle libraryHandle, Lib3MF_Reader pReader, const char * pFilename)
 {
 	if (libraryHandle == 0) 
@@ -212,6 +239,15 @@ Lib3MFResult CCall_lib3mf_reader_readfromcallback(Lib3MFHandle libraryHandle, Li
 		return LIB3MF_ERROR_INVALIDCAST;
 	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
 	return wrapperTable->m_Reader_ReadFromCallback (pReader, pTheReadCallback, nStreamSize, pTheSeekCallback, pUserData);
+}
+
+
+Lib3MFResult CCall_lib3mf_reader_readfrompersistentpackage(Lib3MFHandle libraryHandle, Lib3MF_Reader pReader, Lib3MF_Persistent3MFPackage pPersistent3MFPackage)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Reader_ReadFromPersistentPackage (pReader, pPersistent3MFPackage);
 }
 
 
@@ -2735,6 +2771,15 @@ Lib3MFResult CCall_lib3mf_model_queryreader(Lib3MFHandle libraryHandle, Lib3MF_M
 }
 
 
+Lib3MFResult CCall_lib3mf_model_createpersistentpackagefromfile(Lib3MFHandle libraryHandle, Lib3MF_Model pModel, const char * pFileName, Lib3MF_Persistent3MFPackage * pPersistent3MFPackage)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Model_CreatePersistentPackageFromFile (pModel, pFileName, pPersistent3MFPackage);
+}
+
+
 Lib3MFResult CCall_lib3mf_model_gettexture2dbyid(Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_uint32 nUniqueResourceID, Lib3MF_Texture2D * pTextureInstance)
 {
 	if (libraryHandle == 0) 
@@ -4065,6 +4110,52 @@ func (inst Writer) SetContentEncryptionCallback(theCallback ContentEncryptionCal
 }
 
 
+// Persistent3MFPackage represents a Lib3MF class.
+type Persistent3MFPackage struct {
+	Base
+}
+
+func (wrapper Wrapper) NewPersistent3MFPackage(r ref) Persistent3MFPackage {
+	return Persistent3MFPackage{wrapper.NewBase(r)}
+}
+
+// ExtractKeyStore reads only the keystore from the 3MF Package.
+func (inst Persistent3MFPackage) ExtractKeyStore() (KeyStore, error) {
+	var keyStoreInstance ref
+	ret := C.CCall_lib3mf_persistent3mfpackage_extractkeystore(inst.wrapperRef.LibraryHandle, inst.Ref, &keyStoreInstance)
+	if ret != 0 {
+		return KeyStore{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewKeyStore(keyStoreInstance), nil
+}
+
+// UpdateKeyStore writes the keystore into the 3MF Package, replacing an existing one.
+func (inst Persistent3MFPackage) UpdateKeyStore(keyStoreInstance KeyStore) error {
+	ret := C.CCall_lib3mf_persistent3mfpackage_updatekeystore(inst.wrapperRef.LibraryHandle, inst.Ref, keyStoreInstance.Ref)
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
+	return nil
+}
+
+// GetKeyStoreString reads only the keystore from the 3MF Package.
+func (inst Persistent3MFPackage) GetKeyStoreString() (string, error) {
+	var neededforkeyStoreString C.uint32_t
+	var filledinkeyStoreString C.uint32_t
+	ret := C.CCall_lib3mf_persistent3mfpackage_getkeystorestring(inst.wrapperRef.LibraryHandle, inst.Ref, 0, &neededforkeyStoreString, nil)
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	bufferSizekeyStoreString := neededforkeyStoreString
+	bufferkeyStoreString := make([]byte, bufferSizekeyStoreString)
+	ret = C.CCall_lib3mf_persistent3mfpackage_getkeystorestring(inst.wrapperRef.LibraryHandle, inst.Ref, bufferSizekeyStoreString, &filledinkeyStoreString, (*C.char)(unsafe.Pointer(&bufferkeyStoreString[0])))
+	if ret != 0 {
+		return "", makeError(uint32(ret))
+	}
+	return string(bufferkeyStoreString[:(filledinkeyStoreString-1)]), nil
+}
+
+
 // Reader represents a Lib3MF class.
 type Reader struct {
 	Base
@@ -4100,6 +4191,15 @@ func (inst Reader) ReadFromCallback(theReadCallback ReadCallbackFunc, streamSize
 	}
 	readCallbackFunc = theReadCallback
 	seekCallbackFunc = theSeekCallback
+	return nil
+}
+
+// ReadFromPersistentPackage reads a model from a persistent package.
+func (inst Reader) ReadFromPersistentPackage(persistent3MFPackage Persistent3MFPackage) error {
+	ret := C.CCall_lib3mf_reader_readfrompersistentpackage(inst.wrapperRef.LibraryHandle, inst.Ref, persistent3MFPackage.Ref)
+	if ret != 0 {
+		return makeError(uint32(ret))
+	}
 	return nil
 }
 
@@ -7613,6 +7713,16 @@ func (inst Model) QueryReader(readerClass string) (Reader, error) {
 		return Reader{}, makeError(uint32(ret))
 	}
 	return inst.wrapperRef.NewReader(readerInstance), nil
+}
+
+// CreatePersistentPackageFromFile creates a persistent 3MF package from a file on disk.
+func (inst Model) CreatePersistentPackageFromFile(fileName string) (Persistent3MFPackage, error) {
+	var persistent3MFPackage ref
+	ret := C.CCall_lib3mf_model_createpersistentpackagefromfile(inst.wrapperRef.LibraryHandle, inst.Ref, (*C.char)(unsafe.Pointer(&[]byte(fileName)[0])), &persistent3MFPackage)
+	if ret != 0 {
+		return Persistent3MFPackage{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewPersistent3MFPackage(persistent3MFPackage), nil
 }
 
 // GetTexture2DByID finds a model texture by its UniqueResourceID.

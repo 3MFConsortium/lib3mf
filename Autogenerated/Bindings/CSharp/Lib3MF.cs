@@ -364,6 +364,15 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_writer_setcontentencryptioncallback", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Writer_SetContentEncryptionCallback (IntPtr Handle, IntPtr ATheCallback, UInt64 AUserData);
 
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_persistent3mfpackage_extractkeystore", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Persistent3MFPackage_ExtractKeyStore (IntPtr Handle, out IntPtr AKeyStoreInstance);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_persistent3mfpackage_updatekeystore", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Persistent3MFPackage_UpdateKeyStore (IntPtr Handle, IntPtr AKeyStoreInstance);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_persistent3mfpackage_getkeystorestring", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Persistent3MFPackage_GetKeyStoreString (IntPtr Handle, UInt32 sizeKeyStoreString, out UInt32 neededKeyStoreString, IntPtr dataKeyStoreString);
+
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_reader_readfromfile", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Reader_ReadFromFile (IntPtr Handle, byte[] AFilename);
 
@@ -372,6 +381,9 @@ namespace Lib3MF {
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_reader_readfromcallback", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Reader_ReadFromCallback (IntPtr Handle, IntPtr ATheReadCallback, UInt64 AStreamSize, IntPtr ATheSeekCallback, UInt64 AUserData);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_reader_readfrompersistentpackage", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Reader_ReadFromPersistentPackage (IntPtr Handle, IntPtr APersistent3MFPackage);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_reader_setprogresscallback", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Reader_SetProgressCallback (IntPtr Handle, IntPtr AProgressCallback, UInt64 AUserData);
@@ -1213,6 +1225,9 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_queryreader", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Model_QueryReader (IntPtr Handle, byte[] AReaderClass, out IntPtr AReaderInstance);
 
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_createpersistentpackagefromfile", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Model_CreatePersistentPackageFromFile (IntPtr Handle, byte[] AFileName, out IntPtr APersistent3MFPackage);
+
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_gettexture2dbyid", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Model_GetTexture2DByID (IntPtr Handle, UInt32 AUniqueResourceID, out IntPtr ATextureInstance);
 
@@ -1859,6 +1874,45 @@ namespace Lib3MF {
 
 	}
 
+	public class CPersistent3MFPackage : CBase
+	{
+		public CPersistent3MFPackage (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+		public CKeyStore ExtractKeyStore ()
+		{
+			IntPtr newKeyStoreInstance = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Persistent3MFPackage_ExtractKeyStore (Handle, out newKeyStoreInstance));
+			return new CKeyStore (newKeyStoreInstance );
+		}
+
+		public void UpdateKeyStore (CKeyStore AKeyStoreInstance)
+		{
+			IntPtr AKeyStoreInstanceHandle = IntPtr.Zero;
+			if (AKeyStoreInstance != null)
+				AKeyStoreInstanceHandle = AKeyStoreInstance.GetHandle();
+
+			CheckError(Internal.Lib3MFWrapper.Persistent3MFPackage_UpdateKeyStore (Handle, AKeyStoreInstanceHandle));
+		}
+
+		public String GetKeyStoreString ()
+		{
+			UInt32 sizeKeyStoreString = 0;
+			UInt32 neededKeyStoreString = 0;
+			CheckError(Internal.Lib3MFWrapper.Persistent3MFPackage_GetKeyStoreString (Handle, sizeKeyStoreString, out neededKeyStoreString, IntPtr.Zero));
+			sizeKeyStoreString = neededKeyStoreString;
+			byte[] bytesKeyStoreString = new byte[sizeKeyStoreString];
+			GCHandle dataKeyStoreString = GCHandle.Alloc(bytesKeyStoreString, GCHandleType.Pinned);
+
+			CheckError(Internal.Lib3MFWrapper.Persistent3MFPackage_GetKeyStoreString (Handle, sizeKeyStoreString, out neededKeyStoreString, dataKeyStoreString.AddrOfPinnedObject()));
+			dataKeyStoreString.Free();
+			return Encoding.UTF8.GetString(bytesKeyStoreString).TrimEnd(char.MinValue);
+		}
+
+	}
+
 	public class CReader : CBase
 	{
 		public CReader (IntPtr NewHandle) : base (NewHandle)
@@ -1884,6 +1938,15 @@ namespace Lib3MF {
 		{
 
 			CheckError(Internal.Lib3MFWrapper.Reader_ReadFromCallback (Handle, ATheReadCallback, AStreamSize, ATheSeekCallback, AUserData));
+		}
+
+		public void ReadFromPersistentPackage (CPersistent3MFPackage APersistent3MFPackage)
+		{
+			IntPtr APersistent3MFPackageHandle = IntPtr.Zero;
+			if (APersistent3MFPackage != null)
+				APersistent3MFPackageHandle = APersistent3MFPackage.GetHandle();
+
+			CheckError(Internal.Lib3MFWrapper.Reader_ReadFromPersistentPackage (Handle, APersistent3MFPackageHandle));
 		}
 
 		public void SetProgressCallback (IntPtr AProgressCallback, UInt64 AUserData)
@@ -4779,6 +4842,15 @@ namespace Lib3MF {
 
 			CheckError(Internal.Lib3MFWrapper.Model_QueryReader (Handle, byteReaderClass, out newReaderInstance));
 			return new CReader (newReaderInstance );
+		}
+
+		public CPersistent3MFPackage CreatePersistentPackageFromFile (String AFileName)
+		{
+			byte[] byteFileName = Encoding.UTF8.GetBytes(AFileName + char.MinValue);
+			IntPtr newPersistent3MFPackage = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Model_CreatePersistentPackageFromFile (Handle, byteFileName, out newPersistent3MFPackage));
+			return new CPersistent3MFPackage (newPersistent3MFPackage );
 		}
 
 		public CTexture2D GetTexture2DByID (UInt32 AUniqueResourceID)

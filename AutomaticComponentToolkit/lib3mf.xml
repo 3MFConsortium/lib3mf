@@ -334,7 +334,24 @@
 		</method>
 	</class>
 
-	<class name="Reader" parent="Base">
+  <class name="Persistent3MFPackage">
+
+    <method name="ExtractKeyStore" description="Reads only the keystore from the 3MF Package">
+      <param name="KeyStoreInstance" type="class" class="KeyStore" pass="return" description="Keystore instance"/>
+    </method>
+
+    <method name="UpdateKeyStore" description="Writes the keystore into the 3MF Package, replacing an existing one.">
+      <param name="KeyStoreInstance" type="class" class="KeyStore" pass="in" description="Keystore instance to write to package"/>
+    </method>
+
+    <method name="GetKeyStoreString" description="Reads only the keystore from the 3MF Package">
+      <param name="KeyStoreString" type="string" pass="return" description="Keystore XML String"/>
+    </method>
+
+
+  </class>
+
+	<class name="Reader">
 		<method name="ReadFromFile" description="Reads a model from a file. The file type is specified by the Model Reader class">
 			<param name="Filename" type="string" pass="in" description="Filename to read from"/>				
 		</method>
@@ -347,7 +364,10 @@
 			<param name="TheSeekCallback" type="functiontype" class="SeekCallback" pass="in" description="Callback to call for seeking in the stream."/>
 			<param name="UserData" type="pointer" pass="in" description="Userdata that is passed to the callback function"/>
 		</method>
-		<method name="SetProgressCallback" description="Set the progress callback for calls to this writer">
+    <method name="ReadFromPersistentPackage" description="Reads a model from a persistent package.">
+      <param name="Persistent3MFPackage" type="class" class="Persistent3MFPackage" pass="in" description="Package to read from"/>
+    </method>
+    <method name="SetProgressCallback" description="Set the progress callback for calls to this writer">
 			<param name="ProgressCallback" type="functiontype" class="ProgressCallback" pass="in" description="pointer to the callback function."/>
 			<param name="UserData" type="pointer" pass="in" description="pointer to arbitrary user data that is passed without modification to the callback."/>
 		</method>
@@ -1465,7 +1485,11 @@
 			<param name="ReaderClass" type="string" pass="in" description=" string identifier for the file type"/>
 			<param name="ReaderInstance" type="handle" class="Reader" pass="return" description=" string identifier for the file type"/>
 		</method>
-		<method name="GetTexture2DByID" description="finds a model texture by its UniqueResourceID">
+    <method name="CreatePersistentPackageFromFile" description="creates a persistent 3MF package from a file on disk">
+      <param name="FileName" type="string" pass="in" description="file name to load"/>
+      <param name="Persistent3MFPackage" type="handle" class="Persistent3MFPackage" pass="return" description="persistent 3MF package instance"/>
+    </method>
+    <method name="GetTexture2DByID" description="finds a model texture by its UniqueResourceID">
 			<param name="UniqueResourceID" type="uint32" pass="in" description="UniqueResourceID"/>
 			<param name="TextureInstance" type="handle" class="Texture2D" pass="return" description="returns the texture2d instance"/>
 		</method>

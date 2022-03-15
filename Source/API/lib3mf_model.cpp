@@ -30,6 +30,7 @@ Abstract: This is a stub class definition of CModel
 
 #include "lib3mf_model.hpp"
 #include "lib3mf_interfaceexception.hpp"
+#include "lib3mf_persistent3mfpackage.hpp"
 
 #include "lib3mf_reader.hpp"
 #include "lib3mf_writer.hpp"
@@ -60,6 +61,7 @@ Abstract: This is a stub class definition of CModel
 #include "lib3mf_multipropertygroupiterator.hpp"
 #include "lib3mf_packagepart.hpp"
 #include "lib3mf_keystore.hpp"
+#include "lib3mf_persistent3mfpackage.hpp"
 
 
 // Include custom headers here.
@@ -687,7 +689,7 @@ Lib3MF::sBox CModel::GetOutbox()
 }
 
 IKeyStore * Lib3MF::Impl::CModel::GetKeyStore() {
-	return new CKeyStore(m_model);
+	return new CKeyStore(m_model, m_model->getKeyStore ());
 }
 
 void Lib3MF::Impl::CModel::SetRandomNumberCallback(Lib3MF::RandomNumberCallback pTheCallback, Lib3MF_pvoid pUserData) {
@@ -704,5 +706,11 @@ void Lib3MF::Impl::CModel::SetRandomNumberCallback(Lib3MF::RandomNumberCallback 
 	};
 
 	m_model->setCryptoRandCallback(descriptor);
+}
+
+
+IPersistent3MFPackage* Lib3MF::Impl::CModel::CreatePersistentPackageFromFile(const std::string& sFileName)
+{
+	return new Lib3MF::Impl::CPersistent3MFPackage(m_model, sFileName);
 }
 

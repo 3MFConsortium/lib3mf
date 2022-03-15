@@ -50,6 +50,7 @@ void InitAll(v8::Local<Object> exports, v8::Local<Object> module)
 {
 	CLib3MFBase::Init();
 	CLib3MFWriter::Init();
+	CLib3MFPersistent3MFPackage::Init();
 	CLib3MFReader::Init();
 	CLib3MFPackagePart::Init();
 	CLib3MFResource::Init();

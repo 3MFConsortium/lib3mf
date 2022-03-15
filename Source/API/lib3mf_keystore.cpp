@@ -17,13 +17,14 @@
 
 using namespace Lib3MF::Impl;
 
-Lib3MF::Impl::CKeyStore::CKeyStore(NMR::PModel const & pModel) 
+Lib3MF::Impl::CKeyStore::CKeyStore(NMR::PModel const& pModel, NMR::PKeyStore pKeyStore)
 	:m_pModel(pModel)
 {
 	if (nullptr == pModel)
 		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDKEYSTORE);
-	m_pKeyStore = pModel->getKeyStore();
+	m_pKeyStore = pKeyStore;
 }
+
 
 IConsumer * Lib3MF::Impl::CKeyStore::AddConsumer(const std::string & sConsumerID, const std::string & sKeyID, const std::string & sKeyValue)
 {

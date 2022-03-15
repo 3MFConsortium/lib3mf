@@ -178,6 +178,39 @@ typedef Lib3MFResult (*PLib3MFWriter_AddKeyWrappingCallbackPtr) (Lib3MF_Writer p
 typedef Lib3MFResult (*PLib3MFWriter_SetContentEncryptionCallbackPtr) (Lib3MF_Writer pWriter, Lib3MF::ContentEncryptionCallback pTheCallback, Lib3MF_pvoid pUserData);
 
 /*************************************************************************************************************************
+ Class definition for Persistent3MFPackage
+**************************************************************************************************************************/
+
+/**
+* Reads only the keystore from the 3MF Package
+*
+* @param[in] pPersistent3MFPackage - Persistent3MFPackage instance.
+* @param[out] pKeyStoreInstance - Keystore instance
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFPersistent3MFPackage_ExtractKeyStorePtr) (Lib3MF_Persistent3MFPackage pPersistent3MFPackage, Lib3MF_KeyStore * pKeyStoreInstance);
+
+/**
+* Writes the keystore into the 3MF Package, replacing an existing one.
+*
+* @param[in] pPersistent3MFPackage - Persistent3MFPackage instance.
+* @param[in] pKeyStoreInstance - Keystore instance to write to package
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFPersistent3MFPackage_UpdateKeyStorePtr) (Lib3MF_Persistent3MFPackage pPersistent3MFPackage, Lib3MF_KeyStore pKeyStoreInstance);
+
+/**
+* Reads only the keystore from the 3MF Package
+*
+* @param[in] pPersistent3MFPackage - Persistent3MFPackage instance.
+* @param[in] nKeyStoreStringBufferSize - size of the buffer (including trailing 0)
+* @param[out] pKeyStoreStringNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+* @param[out] pKeyStoreStringBuffer -  buffer of Keystore XML String, may be NULL
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFPersistent3MFPackage_GetKeyStoreStringPtr) (Lib3MF_Persistent3MFPackage pPersistent3MFPackage, const Lib3MF_uint32 nKeyStoreStringBufferSize, Lib3MF_uint32* pKeyStoreStringNeededChars, char * pKeyStoreStringBuffer);
+
+/*************************************************************************************************************************
  Class definition for Reader
 **************************************************************************************************************************/
 
@@ -211,6 +244,15 @@ typedef Lib3MFResult (*PLib3MFReader_ReadFromBufferPtr) (Lib3MF_Reader pReader, 
 * @return error code or 0 (success)
 */
 typedef Lib3MFResult (*PLib3MFReader_ReadFromCallbackPtr) (Lib3MF_Reader pReader, Lib3MF::ReadCallback pTheReadCallback, Lib3MF_uint64 nStreamSize, Lib3MF::SeekCallback pTheSeekCallback, Lib3MF_pvoid pUserData);
+
+/**
+* Reads a model from a persistent package.
+*
+* @param[in] pReader - Reader instance.
+* @param[in] pPersistent3MFPackage - Package to read from
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFReader_ReadFromPersistentPackagePtr) (Lib3MF_Reader pReader, Lib3MF_Persistent3MFPackage pPersistent3MFPackage);
 
 /**
 * Set the progress callback for calls to this writer
@@ -3116,6 +3158,16 @@ typedef Lib3MFResult (*PLib3MFModel_QueryWriterPtr) (Lib3MF_Model pModel, const 
 typedef Lib3MFResult (*PLib3MFModel_QueryReaderPtr) (Lib3MF_Model pModel, const char * pReaderClass, Lib3MF_Reader * pReaderInstance);
 
 /**
+* creates a persistent 3MF package from a file on disk
+*
+* @param[in] pModel - Model instance.
+* @param[in] pFileName - file name to load
+* @param[out] pPersistent3MFPackage - persistent 3MF package instance
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFModel_CreatePersistentPackageFromFilePtr) (Lib3MF_Model pModel, const char * pFileName, Lib3MF_Persistent3MFPackage * pPersistent3MFPackage);
+
+/**
 * finds a model texture by its UniqueResourceID
 *
 * @param[in] pModel - Model instance.
@@ -3815,9 +3867,13 @@ typedef struct {
 	PLib3MFWriter_GetWarningCountPtr m_Writer_GetWarningCount;
 	PLib3MFWriter_AddKeyWrappingCallbackPtr m_Writer_AddKeyWrappingCallback;
 	PLib3MFWriter_SetContentEncryptionCallbackPtr m_Writer_SetContentEncryptionCallback;
+	PLib3MFPersistent3MFPackage_ExtractKeyStorePtr m_Persistent3MFPackage_ExtractKeyStore;
+	PLib3MFPersistent3MFPackage_UpdateKeyStorePtr m_Persistent3MFPackage_UpdateKeyStore;
+	PLib3MFPersistent3MFPackage_GetKeyStoreStringPtr m_Persistent3MFPackage_GetKeyStoreString;
 	PLib3MFReader_ReadFromFilePtr m_Reader_ReadFromFile;
 	PLib3MFReader_ReadFromBufferPtr m_Reader_ReadFromBuffer;
 	PLib3MFReader_ReadFromCallbackPtr m_Reader_ReadFromCallback;
+	PLib3MFReader_ReadFromPersistentPackagePtr m_Reader_ReadFromPersistentPackage;
 	PLib3MFReader_SetProgressCallbackPtr m_Reader_SetProgressCallback;
 	PLib3MFReader_AddRelationToReadPtr m_Reader_AddRelationToRead;
 	PLib3MFReader_RemoveRelationToReadPtr m_Reader_RemoveRelationToRead;
@@ -4098,6 +4154,7 @@ typedef struct {
 	PLib3MFModel_SetLanguagePtr m_Model_SetLanguage;
 	PLib3MFModel_QueryWriterPtr m_Model_QueryWriter;
 	PLib3MFModel_QueryReaderPtr m_Model_QueryReader;
+	PLib3MFModel_CreatePersistentPackageFromFilePtr m_Model_CreatePersistentPackageFromFile;
 	PLib3MFModel_GetTexture2DByIDPtr m_Model_GetTexture2DByID;
 	PLib3MFModel_GetPropertyTypeByIDPtr m_Model_GetPropertyTypeByID;
 	PLib3MFModel_GetBaseMaterialGroupByIDPtr m_Model_GetBaseMaterialGroupByID;

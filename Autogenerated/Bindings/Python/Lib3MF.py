@@ -146,9 +146,13 @@ class FunctionTable:
 	lib3mf_writer_getwarningcount = None
 	lib3mf_writer_addkeywrappingcallback = None
 	lib3mf_writer_setcontentencryptioncallback = None
+	lib3mf_persistent3mfpackage_extractkeystore = None
+	lib3mf_persistent3mfpackage_updatekeystore = None
+	lib3mf_persistent3mfpackage_getkeystorestring = None
 	lib3mf_reader_readfromfile = None
 	lib3mf_reader_readfrombuffer = None
 	lib3mf_reader_readfromcallback = None
+	lib3mf_reader_readfrompersistentpackage = None
 	lib3mf_reader_setprogresscallback = None
 	lib3mf_reader_addrelationtoread = None
 	lib3mf_reader_removerelationtoread = None
@@ -429,6 +433,7 @@ class FunctionTable:
 	lib3mf_model_setlanguage = None
 	lib3mf_model_querywriter = None
 	lib3mf_model_queryreader = None
+	lib3mf_model_createpersistentpackagefromfile = None
 	lib3mf_model_gettexture2dbyid = None
 	lib3mf_model_getpropertytypebyid = None
 	lib3mf_model_getbasematerialgroupbyid = None
@@ -980,6 +985,24 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ContentEncryptionCallback, ctypes.c_void_p)
 			self.lib.lib3mf_writer_setcontentencryptioncallback = methodType(int(methodAddress.value))
 			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_persistent3mfpackage_extractkeystore")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_persistent3mfpackage_extractkeystore = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_persistent3mfpackage_updatekeystore")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_void_p)
+			self.lib.lib3mf_persistent3mfpackage_updatekeystore = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_persistent3mfpackage_getkeystorestring")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
+			self.lib.lib3mf_persistent3mfpackage_getkeystorestring = methodType(int(methodAddress.value))
+			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_reader_readfromfile")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
@@ -997,6 +1020,12 @@ class Wrapper:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ReadCallback, ctypes.c_uint64, SeekCallback, ctypes.c_void_p)
 			self.lib.lib3mf_reader_readfromcallback = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_reader_readfrompersistentpackage")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_void_p)
+			self.lib.lib3mf_reader_readfrompersistentpackage = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_reader_setprogresscallback")), methodAddress)
 			if err != 0:
@@ -2678,6 +2707,12 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p))
 			self.lib.lib3mf_model_queryreader = methodType(int(methodAddress.value))
 			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_model_createpersistentpackagefromfile")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_model_createpersistentpackagefromfile = methodType(int(methodAddress.value))
+			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_model_gettexture2dbyid")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
@@ -3085,6 +3120,15 @@ class Wrapper:
 			self.lib.lib3mf_writer_setcontentencryptioncallback.restype = ctypes.c_int32
 			self.lib.lib3mf_writer_setcontentencryptioncallback.argtypes = [ctypes.c_void_p, ContentEncryptionCallback, ctypes.c_void_p]
 			
+			self.lib.lib3mf_persistent3mfpackage_extractkeystore.restype = ctypes.c_int32
+			self.lib.lib3mf_persistent3mfpackage_extractkeystore.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_persistent3mfpackage_updatekeystore.restype = ctypes.c_int32
+			self.lib.lib3mf_persistent3mfpackage_updatekeystore.argtypes = [ctypes.c_void_p, ctypes.c_void_p]
+			
+			self.lib.lib3mf_persistent3mfpackage_getkeystorestring.restype = ctypes.c_int32
+			self.lib.lib3mf_persistent3mfpackage_getkeystorestring.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
+			
 			self.lib.lib3mf_reader_readfromfile.restype = ctypes.c_int32
 			self.lib.lib3mf_reader_readfromfile.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
 			
@@ -3093,6 +3137,9 @@ class Wrapper:
 			
 			self.lib.lib3mf_reader_readfromcallback.restype = ctypes.c_int32
 			self.lib.lib3mf_reader_readfromcallback.argtypes = [ctypes.c_void_p, ReadCallback, ctypes.c_uint64, SeekCallback, ctypes.c_void_p]
+			
+			self.lib.lib3mf_reader_readfrompersistentpackage.restype = ctypes.c_int32
+			self.lib.lib3mf_reader_readfrompersistentpackage.argtypes = [ctypes.c_void_p, ctypes.c_void_p]
 			
 			self.lib.lib3mf_reader_setprogresscallback.restype = ctypes.c_int32
 			self.lib.lib3mf_reader_setprogresscallback.argtypes = [ctypes.c_void_p, ProgressCallback, ctypes.c_void_p]
@@ -3934,6 +3981,9 @@ class Wrapper:
 			self.lib.lib3mf_model_queryreader.restype = ctypes.c_int32
 			self.lib.lib3mf_model_queryreader.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p)]
 			
+			self.lib.lib3mf_model_createpersistentpackagefromfile.restype = ctypes.c_int32
+			self.lib.lib3mf_model_createpersistentpackagefromfile.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p)]
+			
 			self.lib.lib3mf_model_gettexture2dbyid.restype = ctypes.c_int32
 			self.lib.lib3mf_model_gettexture2dbyid.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p)]
 			
@@ -4387,6 +4437,43 @@ class Writer(Base):
 	
 
 
+''' Class Implementation for Persistent3MFPackage
+'''
+class Persistent3MFPackage(Base):
+	def __init__(self, handle, wrapper):
+		Base.__init__(self, handle, wrapper)
+	def ExtractKeyStore(self):
+		KeyStoreInstanceHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_persistent3mfpackage_extractkeystore(self._handle, KeyStoreInstanceHandle))
+		if KeyStoreInstanceHandle:
+			KeyStoreInstanceObject = KeyStore(KeyStoreInstanceHandle, self._wrapper)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return KeyStoreInstanceObject
+	
+	def UpdateKeyStore(self, KeyStoreInstanceObject):
+		KeyStoreInstanceHandle = None
+		if KeyStoreInstanceObject:
+			KeyStoreInstanceHandle = KeyStoreInstanceObject._handle
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDPARAM, 'Invalid return/output value')
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_persistent3mfpackage_updatekeystore(self._handle, KeyStoreInstanceHandle))
+		
+	
+	def GetKeyStoreString(self):
+		nKeyStoreStringBufferSize = ctypes.c_uint64(0)
+		nKeyStoreStringNeededChars = ctypes.c_uint64(0)
+		pKeyStoreStringBuffer = ctypes.c_char_p(None)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_persistent3mfpackage_getkeystorestring(self._handle, nKeyStoreStringBufferSize, nKeyStoreStringNeededChars, pKeyStoreStringBuffer))
+		nKeyStoreStringBufferSize = ctypes.c_uint64(nKeyStoreStringNeededChars.value)
+		pKeyStoreStringBuffer = (ctypes.c_char * (nKeyStoreStringNeededChars.value))()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_persistent3mfpackage_getkeystorestring(self._handle, nKeyStoreStringBufferSize, nKeyStoreStringNeededChars, pKeyStoreStringBuffer))
+		
+		return pKeyStoreStringBuffer.value.decode()
+	
+
+
 ''' Class Implementation for Reader
 '''
 class Reader(Base):
@@ -4407,6 +4494,15 @@ class Reader(Base):
 		nStreamSize = ctypes.c_uint64(StreamSize)
 		pUserData = ctypes.c_void_p(UserData)
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_reader_readfromcallback(self._handle, TheReadCallbackFunc, nStreamSize, TheSeekCallbackFunc, pUserData))
+		
+	
+	def ReadFromPersistentPackage(self, Persistent3MFPackageObject):
+		Persistent3MFPackageHandle = None
+		if Persistent3MFPackageObject:
+			Persistent3MFPackageHandle = Persistent3MFPackageObject._handle
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDPARAM, 'Invalid return/output value')
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_reader_readfrompersistentpackage(self._handle, Persistent3MFPackageHandle))
 		
 	
 	def SetProgressCallback(self, ProgressCallbackFunc, UserData):
@@ -6904,6 +7000,17 @@ class Model(Base):
 			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
 		
 		return ReaderInstanceObject
+	
+	def CreatePersistentPackageFromFile(self, FileName):
+		pFileName = ctypes.c_char_p(str.encode(FileName))
+		Persistent3MFPackageHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_model_createpersistentpackagefromfile(self._handle, pFileName, Persistent3MFPackageHandle))
+		if Persistent3MFPackageHandle:
+			Persistent3MFPackageObject = Persistent3MFPackage(Persistent3MFPackageHandle, self._wrapper)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return Persistent3MFPackageObject
 	
 	def GetTexture2DByID(self, UniqueResourceID):
 		nUniqueResourceID = ctypes.c_uint32(UniqueResourceID)

@@ -131,6 +131,12 @@ void CReader::ReadFromCallback(const Lib3MFReadCallback pTheReadCallback, const 
 	}
 }
 
+void CReader::ReadFromPersistentPackage(IPersistent3MFPackage* pPersistent3MFPackage)
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
+
+
 void CReader::SetProgressCallback(const Lib3MFProgressCallback pProgressCallback, const Lib3MF_pvoid pUserData)
 {
 	NMR::Lib3MFProgressCallback lambdaCallback =

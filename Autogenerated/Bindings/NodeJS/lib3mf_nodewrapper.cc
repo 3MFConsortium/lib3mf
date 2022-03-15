@@ -43,6 +43,7 @@ using namespace v8;
 Persistent<Function> CLib3MFWrapper::constructor;
 Persistent<Function> CLib3MFBase::constructor;
 Persistent<Function> CLib3MFWriter::constructor;
+Persistent<Function> CLib3MFPersistent3MFPackage::constructor;
 Persistent<Function> CLib3MFReader::constructor;
 Persistent<Function> CLib3MFPackagePart::constructor;
 Persistent<Function> CLib3MFResource::constructor;
@@ -1597,6 +1598,142 @@ void CLib3MFWriter::SetContentEncryptionCallback(const FunctionCallbackInfo<Valu
 }
 
 /*************************************************************************************************************************
+ Class CLib3MFPersistent3MFPackage Implementation
+**************************************************************************************************************************/
+
+CLib3MFPersistent3MFPackage::CLib3MFPersistent3MFPackage()
+		: CLib3MFBaseClass()
+{
+}
+
+CLib3MFPersistent3MFPackage::~CLib3MFPersistent3MFPackage()
+{
+}
+
+void CLib3MFPersistent3MFPackage::Init()
+{
+		Isolate* isolate = Isolate::GetCurrent();
+
+		// Prepare constructor template
+		Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
+		tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFPersistent3MFPackage"));
+		tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
+
+		// Prototype
+		NODE_SET_PROTOTYPE_METHOD(tpl, "ExtractKeyStore", ExtractKeyStore);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "UpdateKeyStore", UpdateKeyStore);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetKeyStoreString", GetKeyStoreString);
+		constructor.Reset(isolate, tpl->GetFunction(isolate->GetCurrentContext()).ToLocalChecked());
+
+}
+
+void CLib3MFPersistent3MFPackage::New(const FunctionCallbackInfo<Value>& args)
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+
+		if (args.IsConstructCall()) {
+				CLib3MFBaseClass * holderObj = ObjectWrap::Unwrap<CLib3MFBaseClass>(args.Holder());
+				CLib3MFPersistent3MFPackage * persistent3mfpackageInstance = new CLib3MFPersistent3MFPackage();
+				persistent3mfpackageInstance->Wrap(args.This());
+				args.GetReturnValue().Set(args.This());
+		} else {
+				RaiseError(isolate, "Lib3MFPersistent3MFPackage: Invalid call to Constructor");
+		}
+}
+
+Local<Object> CLib3MFPersistent3MFPackage::NewInstance(Local<Object> pParent, Lib3MFHandle pHandle)
+{
+		Isolate* isolate = Isolate::GetCurrent();
+		HandleScope scope(isolate);
+		Local<Function> cons = Local<Function>::New(isolate, constructor);
+		Local<Object> instance;
+		if (cons->NewInstance(isolate->GetCurrentContext()).ToLocal(&instance)) {
+			instance->SetInternalField(NODEWRAPPER_TABLEINDEX, External::New(isolate, CLib3MFBaseClass::getDynamicWrapperTable(pParent)));
+			instance->SetInternalField(NODEWRAPPER_HANDLEINDEX, External::New(isolate, pHandle));
+		}
+		return instance;
+}
+
+
+void CLib3MFPersistent3MFPackage::ExtractKeyStore(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        Lib3MFHandle hReturnKeyStoreInstance = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method ExtractKeyStore.");
+        if (wrapperTable->m_Persistent3MFPackage_ExtractKeyStore == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Persistent3MFPackage::ExtractKeyStore.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Persistent3MFPackage_ExtractKeyStore(instanceHandle, &hReturnKeyStoreInstance);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjKeyStoreInstance = CLib3MFKeyStore::NewInstance(args.Holder(), hReturnKeyStoreInstance);
+        args.GetReturnValue().Set(instanceObjKeyStoreInstance);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFPersistent3MFPackage::UpdateKeyStore(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsObject()) {
+            throw std::runtime_error("Expected class parameter 0 (KeyStoreInstance)");
+        }
+        Local<Object> objKeyStoreInstance = args[0]->ToObject(isolate->GetCurrentContext()).ToLocalChecked();
+        CLib3MFKeyStore * instanceKeyStoreInstance = ObjectWrap::Unwrap<CLib3MFKeyStore>(objKeyStoreInstance);
+        if (instanceKeyStoreInstance == nullptr)
+            throw std::runtime_error("Invalid Object parameter 0 (KeyStoreInstance)");
+        Lib3MFHandle hKeyStoreInstance = instanceKeyStoreInstance->getHandle( objKeyStoreInstance );
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method UpdateKeyStore.");
+        if (wrapperTable->m_Persistent3MFPackage_UpdateKeyStore == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Persistent3MFPackage::UpdateKeyStore.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Persistent3MFPackage_UpdateKeyStore(instanceHandle, hKeyStoreInstance);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFPersistent3MFPackage::GetKeyStoreString(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        unsigned int bytesNeededKeyStoreString = 0;
+        unsigned int bytesWrittenKeyStoreString = 0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetKeyStoreString.");
+        if (wrapperTable->m_Persistent3MFPackage_GetKeyStoreString == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Persistent3MFPackage::GetKeyStoreString.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult initErrorCode = wrapperTable->m_Persistent3MFPackage_GetKeyStoreString(instanceHandle, 0, &bytesNeededKeyStoreString, nullptr);
+        CheckError(isolate, wrapperTable, instanceHandle, initErrorCode);
+        std::vector<char> bufferKeyStoreString;
+        bufferKeyStoreString.resize(bytesNeededKeyStoreString);
+        Lib3MFResult errorCode = wrapperTable->m_Persistent3MFPackage_GetKeyStoreString(instanceHandle, bytesNeededKeyStoreString, &bytesWrittenKeyStoreString, &bufferKeyStoreString[0]);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, &bufferKeyStoreString[0]));
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+/*************************************************************************************************************************
  Class CLib3MFReader Implementation
 **************************************************************************************************************************/
 
@@ -1622,6 +1759,7 @@ void CLib3MFReader::Init()
 		NODE_SET_PROTOTYPE_METHOD(tpl, "ReadFromFile", ReadFromFile);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "ReadFromBuffer", ReadFromBuffer);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "ReadFromCallback", ReadFromCallback);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "ReadFromPersistentPackage", ReadFromPersistentPackage);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "SetProgressCallback", SetProgressCallback);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "AddRelationToRead", AddRelationToRead);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "RemoveRelationToRead", RemoveRelationToRead);
@@ -1733,6 +1871,34 @@ void CLib3MFReader::ReadFromCallback(const FunctionCallbackInfo<Value>& args)
             throw std::runtime_error("Could not call Lib3MF method Reader::ReadFromCallback.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
         Lib3MFResult errorCode = wrapperTable->m_Reader_ReadFromCallback(instanceHandle, nullptr, nStreamSize, nullptr, (void*) nUserData);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFReader::ReadFromPersistentPackage(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsObject()) {
+            throw std::runtime_error("Expected class parameter 0 (Persistent3MFPackage)");
+        }
+        Local<Object> objPersistent3MFPackage = args[0]->ToObject(isolate->GetCurrentContext()).ToLocalChecked();
+        CLib3MFPersistent3MFPackage * instancePersistent3MFPackage = ObjectWrap::Unwrap<CLib3MFPersistent3MFPackage>(objPersistent3MFPackage);
+        if (instancePersistent3MFPackage == nullptr)
+            throw std::runtime_error("Invalid Object parameter 0 (Persistent3MFPackage)");
+        Lib3MFHandle hPersistent3MFPackage = instancePersistent3MFPackage->getHandle( objPersistent3MFPackage );
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method ReadFromPersistentPackage.");
+        if (wrapperTable->m_Reader_ReadFromPersistentPackage == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Reader::ReadFromPersistentPackage.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Reader_ReadFromPersistentPackage(instanceHandle, hPersistent3MFPackage);
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
 
 		} catch (std::exception & E) {
@@ -10876,6 +11042,7 @@ void CLib3MFModel::Init()
 		NODE_SET_PROTOTYPE_METHOD(tpl, "SetLanguage", SetLanguage);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "QueryWriter", QueryWriter);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "QueryReader", QueryReader);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "CreatePersistentPackageFromFile", CreatePersistentPackageFromFile);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetTexture2DByID", GetTexture2DByID);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetPropertyTypeByID", GetPropertyTypeByID);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetBaseMaterialGroupByID", GetBaseMaterialGroupByID);
@@ -11158,6 +11325,34 @@ void CLib3MFModel::QueryReader(const FunctionCallbackInfo<Value>& args)
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
         Local<Object> instanceObjReaderInstance = CLib3MFReader::NewInstance(args.Holder(), hReturnReaderInstance);
         args.GetReturnValue().Set(instanceObjReaderInstance);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFModel::CreatePersistentPackageFromFile(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsString()) {
+            throw std::runtime_error("Expected string parameter 0 (FileName)");
+        }
+        v8::String::Utf8Value sutf8FileName(isolate, args[0]);
+        std::string sFileName = *sutf8FileName;
+        Lib3MFHandle hReturnPersistent3MFPackage = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method CreatePersistentPackageFromFile.");
+        if (wrapperTable->m_Model_CreatePersistentPackageFromFile == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Model::CreatePersistentPackageFromFile.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Model_CreatePersistentPackageFromFile(instanceHandle, sFileName.c_str(), &hReturnPersistent3MFPackage);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjPersistent3MFPackage = CLib3MFPersistent3MFPackage::NewInstance(args.Holder(), hReturnPersistent3MFPackage);
+        args.GetReturnValue().Set(instanceObjPersistent3MFPackage);
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());

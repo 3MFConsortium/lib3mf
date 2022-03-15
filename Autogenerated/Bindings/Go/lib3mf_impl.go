@@ -62,9 +62,13 @@ type Lib3MFImplementation struct {
 	Lib3MF_writer_getwarningcount uintptr
 	Lib3MF_writer_addkeywrappingcallback uintptr
 	Lib3MF_writer_setcontentencryptioncallback uintptr
+	Lib3MF_persistent3mfpackage_extractkeystore uintptr
+	Lib3MF_persistent3mfpackage_updatekeystore uintptr
+	Lib3MF_persistent3mfpackage_getkeystorestring uintptr
 	Lib3MF_reader_readfromfile uintptr
 	Lib3MF_reader_readfrombuffer uintptr
 	Lib3MF_reader_readfromcallback uintptr
+	Lib3MF_reader_readfrompersistentpackage uintptr
 	Lib3MF_reader_setprogresscallback uintptr
 	Lib3MF_reader_addrelationtoread uintptr
 	Lib3MF_reader_removerelationtoread uintptr
@@ -339,6 +343,7 @@ type Lib3MFImplementation struct {
 	Lib3MF_model_setlanguage uintptr
 	Lib3MF_model_querywriter uintptr
 	Lib3MF_model_queryreader uintptr
+	Lib3MF_model_createpersistentpackagefromfile uintptr
 	Lib3MF_model_gettexture2dbyid uintptr
 	Lib3MF_model_getpropertytypebyid uintptr
 	Lib3MF_model_getbasematerialgroupbyid uintptr
@@ -667,6 +672,21 @@ func (implementation *Lib3MFImplementation) Initialize(DLLFileName string) error
 		return errors.New("Could not get function lib3mf_writer_setcontentencryptioncallback: " + err.Error())
 	}
 	
+	implementation.Lib3MF_persistent3mfpackage_extractkeystore, err = syscall.GetProcAddress(dllHandle, "lib3mf_persistent3mfpackage_extractkeystore")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_persistent3mfpackage_extractkeystore: " + err.Error())
+	}
+	
+	implementation.Lib3MF_persistent3mfpackage_updatekeystore, err = syscall.GetProcAddress(dllHandle, "lib3mf_persistent3mfpackage_updatekeystore")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_persistent3mfpackage_updatekeystore: " + err.Error())
+	}
+	
+	implementation.Lib3MF_persistent3mfpackage_getkeystorestring, err = syscall.GetProcAddress(dllHandle, "lib3mf_persistent3mfpackage_getkeystorestring")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_persistent3mfpackage_getkeystorestring: " + err.Error())
+	}
+	
 	implementation.Lib3MF_reader_readfromfile, err = syscall.GetProcAddress(dllHandle, "lib3mf_reader_readfromfile")
 	if (err != nil) {
 		return errors.New("Could not get function lib3mf_reader_readfromfile: " + err.Error())
@@ -680,6 +700,11 @@ func (implementation *Lib3MFImplementation) Initialize(DLLFileName string) error
 	implementation.Lib3MF_reader_readfromcallback, err = syscall.GetProcAddress(dllHandle, "lib3mf_reader_readfromcallback")
 	if (err != nil) {
 		return errors.New("Could not get function lib3mf_reader_readfromcallback: " + err.Error())
+	}
+	
+	implementation.Lib3MF_reader_readfrompersistentpackage, err = syscall.GetProcAddress(dllHandle, "lib3mf_reader_readfrompersistentpackage")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_reader_readfrompersistentpackage: " + err.Error())
 	}
 	
 	implementation.Lib3MF_reader_setprogresscallback, err = syscall.GetProcAddress(dllHandle, "lib3mf_reader_setprogresscallback")
@@ -2052,6 +2077,11 @@ func (implementation *Lib3MFImplementation) Initialize(DLLFileName string) error
 		return errors.New("Could not get function lib3mf_model_queryreader: " + err.Error())
 	}
 	
+	implementation.Lib3MF_model_createpersistentpackagefromfile, err = syscall.GetProcAddress(dllHandle, "lib3mf_model_createpersistentpackagefromfile")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_model_createpersistentpackagefromfile: " + err.Error())
+	}
+	
 	implementation.Lib3MF_model_gettexture2dbyid, err = syscall.GetProcAddress(dllHandle, "lib3mf_model_gettexture2dbyid")
 	if (err != nil) {
 		return errors.New("Could not get function lib3mf_model_gettexture2dbyid: " + err.Error())
@@ -2681,6 +2711,73 @@ func (implementation *Lib3MFImplementation) Writer_SetContentEncryptionCallback(
 	return err
 }
 
+func (implementation *Lib3MFImplementation) Persistent3MFPackage_ExtractKeyStore(Persistent3MFPackage Lib3MFHandle) (Lib3MFHandle, error) {
+	var err error = nil
+	hKeyStoreInstance := implementation.NewHandle()
+	
+	implementation_persistent3mfpackage, err := implementation.GetWrapperHandle(Persistent3MFPackage)
+	if (err != nil) {
+		return hKeyStoreInstance, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_persistent3mfpackage_extractkeystore, implementation_persistent3mfpackage.GetDLLInHandle(), hKeyStoreInstance.GetDLLOutHandle())
+	if (err != nil) {
+		return hKeyStoreInstance, err
+	}
+	
+	return hKeyStoreInstance, err
+}
+
+func (implementation *Lib3MFImplementation) Persistent3MFPackage_UpdateKeyStore(Persistent3MFPackage Lib3MFHandle, KeyStoreInstance Lib3MFHandle) (error) {
+	var err error = nil
+	
+	implementation_persistent3mfpackage, err := implementation.GetWrapperHandle(Persistent3MFPackage)
+	if (err != nil) {
+		return err
+	}
+	implementation_keystoreinstance, err := implementation.GetWrapperHandle(KeyStoreInstance)
+	if (err != nil) {
+		return err
+	}
+	
+	KeyStoreInstanceDLLHandle := implementation_keystoreinstance.GetDLLInHandle()
+	if (KeyStoreInstanceDLLHandle == 0) {
+		err := fmt.Errorf("Handle must not be 0.")
+		return err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_persistent3mfpackage_updatekeystore, implementation_persistent3mfpackage.GetDLLInHandle(), KeyStoreInstanceDLLHandle)
+	if (err != nil) {
+		return err
+	}
+	
+	return err
+}
+
+func (implementation *Lib3MFImplementation) Persistent3MFPackage_GetKeyStoreString(Persistent3MFPackage Lib3MFHandle) (string, error) {
+	var err error = nil
+	var neededforKeyStoreString int64 = 0
+	var filledinKeyStoreString int64 = 0
+	
+	implementation_persistent3mfpackage, err := implementation.GetWrapperHandle(Persistent3MFPackage)
+	if (err != nil) {
+		return "", err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_persistent3mfpackage_getkeystorestring, implementation_persistent3mfpackage.GetDLLInHandle(), Int64InValue(0), Int64OutValue(&neededforKeyStoreString), Int64InValue(0))
+	if (err != nil) {
+		return "", err
+	}
+	bufferSizeKeyStoreString := neededforKeyStoreString
+	bufferKeyStoreString := make([]byte, bufferSizeKeyStoreString)
+	err = implementation.CallFunction(implementation.Lib3MF_persistent3mfpackage_getkeystorestring, implementation_persistent3mfpackage.GetDLLInHandle(), Int64InValue(bufferSizeKeyStoreString), Int64OutValue(&filledinKeyStoreString), uintptr(unsafe.Pointer(&bufferKeyStoreString[0])))
+	if (err != nil) {
+		return "", err
+	}
+	
+	return string(bufferKeyStoreString[:(filledinKeyStoreString-1)]), err
+}
+
 func (implementation *Lib3MFImplementation) Reader_ReadFromFile(Reader Lib3MFHandle, sFilename string) (error) {
 	var err error = nil
 	
@@ -2722,6 +2819,32 @@ func (implementation *Lib3MFImplementation) Reader_ReadFromCallback(Reader Lib3M
 	}
 
 	err = implementation.CallFunction(implementation.Lib3MF_reader_readfromcallback, implementation_reader.GetDLLInHandle(), 0, UInt64InValue(nStreamSize), 0, UInt64InValue(nUserData))
+	if (err != nil) {
+		return err
+	}
+	
+	return err
+}
+
+func (implementation *Lib3MFImplementation) Reader_ReadFromPersistentPackage(Reader Lib3MFHandle, Persistent3MFPackage Lib3MFHandle) (error) {
+	var err error = nil
+	
+	implementation_reader, err := implementation.GetWrapperHandle(Reader)
+	if (err != nil) {
+		return err
+	}
+	implementation_persistent3mfpackage, err := implementation.GetWrapperHandle(Persistent3MFPackage)
+	if (err != nil) {
+		return err
+	}
+	
+	Persistent3MFPackageDLLHandle := implementation_persistent3mfpackage.GetDLLInHandle()
+	if (Persistent3MFPackageDLLHandle == 0) {
+		err := fmt.Errorf("Handle must not be 0.")
+		return err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_reader_readfrompersistentpackage, implementation_reader.GetDLLInHandle(), Persistent3MFPackageDLLHandle)
 	if (err != nil) {
 		return err
 	}
@@ -7849,6 +7972,23 @@ func (implementation *Lib3MFImplementation) Model_QueryReader(Model Lib3MFHandle
 	}
 	
 	return hReaderInstance, err
+}
+
+func (implementation *Lib3MFImplementation) Model_CreatePersistentPackageFromFile(Model Lib3MFHandle, sFileName string) (Lib3MFHandle, error) {
+	var err error = nil
+	hPersistent3MFPackage := implementation.NewHandle()
+	
+	implementation_model, err := implementation.GetWrapperHandle(Model)
+	if (err != nil) {
+		return hPersistent3MFPackage, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_model_createpersistentpackagefromfile, implementation_model.GetDLLInHandle(), StringInValue(sFileName), hPersistent3MFPackage.GetDLLOutHandle())
+	if (err != nil) {
+		return hPersistent3MFPackage, err
+	}
+	
+	return hPersistent3MFPackage, err
 }
 
 func (implementation *Lib3MFImplementation) Model_GetTexture2DByID(Model Lib3MFHandle, nUniqueResourceID uint32) (Lib3MFHandle, error) {

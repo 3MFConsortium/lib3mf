@@ -53,6 +53,7 @@ namespace Impl {
 */
 class IBase;
 class IWriter;
+class IPersistent3MFPackage;
 class IReader;
 class IPackagePart;
 class IResource;
@@ -394,6 +395,35 @@ typedef IBaseSharedPtr<IWriter> PIWriter;
 
 
 /*************************************************************************************************************************
+ Class interface for Persistent3MFPackage 
+**************************************************************************************************************************/
+
+class IPersistent3MFPackage : public virtual IBase {
+public:
+	/**
+	* IPersistent3MFPackage::ExtractKeyStore - Reads only the keystore from the 3MF Package
+	* @return Keystore instance
+	*/
+	virtual IKeyStore * ExtractKeyStore() = 0;
+
+	/**
+	* IPersistent3MFPackage::UpdateKeyStore - Writes the keystore into the 3MF Package, replacing an existing one.
+	* @param[in] pKeyStoreInstance - Keystore instance to write to package
+	*/
+	virtual void UpdateKeyStore(IKeyStore* pKeyStoreInstance) = 0;
+
+	/**
+	* IPersistent3MFPackage::GetKeyStoreString - Reads only the keystore from the 3MF Package
+	* @return Keystore XML String
+	*/
+	virtual std::string GetKeyStoreString() = 0;
+
+};
+
+typedef IBaseSharedPtr<IPersistent3MFPackage> PIPersistent3MFPackage;
+
+
+/*************************************************************************************************************************
  Class interface for Reader 
 **************************************************************************************************************************/
 
@@ -420,6 +450,12 @@ public:
 	* @param[in] nUserData - Userdata that is passed to the callback function
 	*/
 	virtual void ReadFromCallback(const Lib3MF::ReadCallback pTheReadCallback, const Lib3MF_uint64 nStreamSize, const Lib3MF::SeekCallback pTheSeekCallback, const Lib3MF_pvoid pUserData) = 0;
+
+	/**
+	* IReader::ReadFromPersistentPackage - Reads a model from a persistent package.
+	* @param[in] pPersistent3MFPackage - Package to read from
+	*/
+	virtual void ReadFromPersistentPackage(IPersistent3MFPackage* pPersistent3MFPackage) = 0;
 
 	/**
 	* IReader::SetProgressCallback - Set the progress callback for calls to this writer
@@ -2698,6 +2734,13 @@ public:
 	* @return  string identifier for the file type
 	*/
 	virtual IReader * QueryReader(const std::string & sReaderClass) = 0;
+
+	/**
+	* IModel::CreatePersistentPackageFromFile - creates a persistent 3MF package from a file on disk
+	* @param[in] sFileName - file name to load
+	* @return persistent 3MF package instance
+	*/
+	virtual IPersistent3MFPackage * CreatePersistentPackageFromFile(const std::string & sFileName) = 0;
 
 	/**
 	* IModel::GetTexture2DByID - finds a model texture by its UniqueResourceID
