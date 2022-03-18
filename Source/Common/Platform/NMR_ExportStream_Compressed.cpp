@@ -44,7 +44,8 @@ namespace NMR {
 		m_strm.zalloc = Z_NULL;
 		m_strm.zfree = Z_NULL;
 		m_strm.opaque = Z_NULL;
-		if (deflateInit(&m_strm, Z_DEFAULT_COMPRESSION) != Z_OK)
+
+		if (deflateInit2(&m_strm, Z_DEFAULT_COMPRESSION, Z_DEFLATED, -MAX_WBITS, 8, Z_DEFAULT_STRATEGY) != Z_OK)
 			throw CNMRException(NMR_ERROR_COULDNOTINITDEFLATE);
 	}
 
