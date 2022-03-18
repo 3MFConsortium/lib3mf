@@ -24,13 +24,13 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CVector3DFieldFromImage3D
+Abstract: This is the class declaration of CVector3DFieldConstant
 
 */
 
 
-#ifndef __LIB3MF_VECTOR3DFIELDFROMIMAGE3D
-#define __LIB3MF_VECTOR3DFIELDFROMIMAGE3D
+#ifndef __LIB3MF_VECTOR3DFIELDCONSTANT
+#define __LIB3MF_VECTOR3DFIELDCONSTANT
 
 #include "lib3mf_interfaces.hpp"
 
@@ -49,10 +49,10 @@ namespace Impl {
 
 
 /*************************************************************************************************************************
- Class declaration of CVector3DFieldFromImage3D 
+ Class declaration of CVector3DFieldConstant 
 **************************************************************************************************************************/
 
-class CVector3DFieldFromImage3D : public virtual IVector3DFieldFromImage3D, public virtual CVector3DField {
+class CVector3DFieldConstant : public virtual IVector3DFieldConstant, public virtual CVector3DField {
 private:
 
 	/**
@@ -76,25 +76,17 @@ public:
 	* Public member functions to implement.
 	*/
 
-	IImage3D * GetImage() override;
+	Lib3MF_double GetValueX() override;
 
-	void SetImage(IImage3D* pImage3D) override;
+	void SetValueX(const Lib3MF_double dValueX) override;
 
-	void SetFilter(const Lib3MF::eTextureFilter eFilter) override;
+	Lib3MF_double GetValueY() override;
 
-	Lib3MF::eTextureFilter GetFilter() override;
+	void SetValueY(const Lib3MF_double dValueY) override;
 
-	void SetTileStyles(const Lib3MF::eTextureTileStyle eTileStyleU, const Lib3MF::eTextureTileStyle eTileStyleV, const Lib3MF::eTextureTileStyle eTileStyleW) override;
+	Lib3MF_double GetValueZ() override;
 
-	void GetTileStyles(Lib3MF::eTextureTileStyle & eTileStyleU, Lib3MF::eTextureTileStyle & eTileStyleV, Lib3MF::eTextureTileStyle & eTileStyleW) override;
-
-	Lib3MF_double GetOffset() override;
-
-	void SetOffset(const Lib3MF_double dOffset) override;
-
-	Lib3MF_double GetScale() override;
-
-	void SetScale(const Lib3MF_double dScale) override;
+	void SetValueZ(const Lib3MF_double dValueZ) override;
 
 };
 
@@ -104,4 +96,4 @@ public:
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif
-#endif // __LIB3MF_VECTOR3DFIELDFROMIMAGE3D
+#endif // __LIB3MF_VECTOR3DFIELDCONSTANT

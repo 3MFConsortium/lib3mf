@@ -818,6 +818,9 @@
 		<method name="IsFromImage3D" description="Retrieves, if this ScalarField is a ScalarFieldFromImage3D">
 			<param name="IsFromImage3D" type="bool" pass="return" description="returns, whether the scalar field is a ScalarFieldFromImage3D"/>
 		</method>
+		<method name="IsConstant" description="Retrieves, if this ScalarField is a ScalarFieldConstant">
+			<param name="IsConstant" type="bool" pass="return" description="returns, whether the scalar field is a ScalarFieldConstant"/>
+		</method>
 		<method name="IsComposed" description="Retrieves, if this ScalarField is a ScalarFieldComposed">
 			<param name="IsComposed" type="bool" pass="return" description="returns, whether the scalar field is a ScalarFieldComposed"/>
 		</method>
@@ -831,10 +834,13 @@
 			<param name="Name" type="string" pass="in" description="The name of this Vector3DField." />
 		</method>
 		<method name="IsFromImage3D" description="Retrieves, if this Vector3DField is a Vector3DFieldFromImage3D">
-			<param name="IsFromImage3D" type="bool" pass="return" description="returns, whether the scalar field is a Vector3DFieldFromImage3D"/>
+			<param name="IsFromImage3D" type="bool" pass="return" description="returns, whether the 3d vector field is a Vector3DFieldFromImage3D"/>
 		</method>
-		<method name="IsComposed" description="Retrieves, if this Vector3DField is a ScalarFieldComposed">
-			<param name="IsComposed" type="bool" pass="return" description="returns, whether the scalar field is a Vector3DFieldComposed"/>
+		<method name="IsConstant" description="Retrieves, if this Vector3DField is a Vector3DFieldConstant">
+			<param name="IsConstant" type="bool" pass="return" description="returns, whether the 3d vector field is a Vector3DFieldConstant"/>
+		</method>
+		<method name="IsComposed" description="Retrieves, if this Vector3DField is a Vector3DFieldComposed">
+			<param name="IsComposed" type="bool" pass="return" description="returns, whether the 3d vector field is a Vector3DFieldComposed"/>
 		</method>
 	</class>
 
@@ -878,6 +884,15 @@
 		</method>
 		<method name="SetScale" description="Sets the scale value for the pixel values in the Image3D">
 			<param name="Scale" type="double" pass="in" description="the scale value for the pixel values in the Image3D"/>
+		</method>
+	</class>
+
+	<class name="ScalarFieldConstant" parent="ScalarField">
+		<method name="GetValue" description="returns the constant value of this ScalarFieldConstant">
+			<param name="Value" type="double" pass="return" description="the constant value of this ScalarFieldConstant"/>
+		</method>
+		<method name="SetValue" description="Sets the constant value of this ScalarFieldConstant">
+			<param name="Value" type="double" pass="in" description="the constant value of this ScalarFieldConstant"/>
 		</method>
 	</class>
 
@@ -945,6 +960,27 @@
 		</method>
 		<method name="SetScale" description="Sets the scale value for the pixel values in the Image3D">
 			<param name="Scale" type="double" pass="in" description="the scale value for the pixel values in the Image3D"/>
+		</method>
+	</class>
+
+	<class name="Vector3DFieldConstant" parent="Vector3DField">
+		<method name="GetValueX" description="returns the constant x-value of this Vector3DFieldConstant">
+			<param name="ValueX" type="double" pass="return" description="the constant x-value of this Vector3DFieldConstant"/>
+		</method>
+		<method name="SetValueX" description="Sets the constant x-value of this Vector3DFieldConstant">
+			<param name="ValueX" type="double" pass="in" description="the constant x-value of this Vector3DFieldConstant"/>
+		</method>
+		<method name="GetValueY" description="returns the constant y-value of this Vector3DFieldConstant">
+			<param name="ValueY" type="double" pass="return" description="the constant y-value of this Vector3DFieldConstant"/>
+		</method>
+		<method name="SetValueY" description="Sets the constant y-value of this Vector3DFieldConstant">
+			<param name="ValueY" type="double" pass="in" description="the constant y-value of this Vector3DFieldConstant"/>
+		</method>
+		<method name="GetValueZ" description="returns the constant x-value of this Vector3DFieldConstant">
+			<param name="ValueZ" type="double" pass="return" description="the constant x-value of this Vector3DFieldConstant"/>
+		</method>
+		<method name="SetValueZ" description="Sets the constant z-value of this Vector3DFieldConstant">
+			<param name="ValueZ" type="double" pass="in" description="the constant z-value of this Vector3DFieldConstant"/>
 		</method>
 	</class>
 

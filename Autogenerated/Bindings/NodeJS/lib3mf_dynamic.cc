@@ -183,10 +183,12 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_ScalarField_GetName = NULL;
 	pWrapperTable->m_ScalarField_SetName = NULL;
 	pWrapperTable->m_ScalarField_IsFromImage3D = NULL;
+	pWrapperTable->m_ScalarField_IsConstant = NULL;
 	pWrapperTable->m_ScalarField_IsComposed = NULL;
 	pWrapperTable->m_Vector3DField_GetName = NULL;
 	pWrapperTable->m_Vector3DField_SetName = NULL;
 	pWrapperTable->m_Vector3DField_IsFromImage3D = NULL;
+	pWrapperTable->m_Vector3DField_IsConstant = NULL;
 	pWrapperTable->m_Vector3DField_IsComposed = NULL;
 	pWrapperTable->m_ScalarFieldFromImage3D_GetImage = NULL;
 	pWrapperTable->m_ScalarFieldFromImage3D_SetImage = NULL;
@@ -200,6 +202,8 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_ScalarFieldFromImage3D_SetOffset = NULL;
 	pWrapperTable->m_ScalarFieldFromImage3D_GetScale = NULL;
 	pWrapperTable->m_ScalarFieldFromImage3D_SetScale = NULL;
+	pWrapperTable->m_ScalarFieldConstant_GetValue = NULL;
+	pWrapperTable->m_ScalarFieldConstant_SetValue = NULL;
 	pWrapperTable->m_ScalarFieldComposed_SetMethod = NULL;
 	pWrapperTable->m_ScalarFieldComposed_GetMethod = NULL;
 	pWrapperTable->m_ScalarFieldComposed_GetFactor1 = NULL;
@@ -219,6 +223,12 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_Vector3DFieldFromImage3D_SetOffset = NULL;
 	pWrapperTable->m_Vector3DFieldFromImage3D_GetScale = NULL;
 	pWrapperTable->m_Vector3DFieldFromImage3D_SetScale = NULL;
+	pWrapperTable->m_Vector3DFieldConstant_GetValueX = NULL;
+	pWrapperTable->m_Vector3DFieldConstant_SetValueX = NULL;
+	pWrapperTable->m_Vector3DFieldConstant_GetValueY = NULL;
+	pWrapperTable->m_Vector3DFieldConstant_SetValueY = NULL;
+	pWrapperTable->m_Vector3DFieldConstant_GetValueZ = NULL;
+	pWrapperTable->m_Vector3DFieldConstant_SetValueZ = NULL;
 	pWrapperTable->m_Vector3DFieldComposed_SetMethod = NULL;
 	pWrapperTable->m_Vector3DFieldComposed_GetMethod = NULL;
 	pWrapperTable->m_Vector3DFieldComposed_GetFactor1 = NULL;
@@ -1793,6 +1803,15 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
+	pWrapperTable->m_ScalarField_IsConstant = (PLib3MFScalarField_IsConstantPtr) GetProcAddress(hLibrary, "lib3mf_scalarfield_isconstant");
+	#else // _WIN32
+	pWrapperTable->m_ScalarField_IsConstant = (PLib3MFScalarField_IsConstantPtr) dlsym(hLibrary, "lib3mf_scalarfield_isconstant");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ScalarField_IsConstant == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
 	pWrapperTable->m_ScalarField_IsComposed = (PLib3MFScalarField_IsComposedPtr) GetProcAddress(hLibrary, "lib3mf_scalarfield_iscomposed");
 	#else // _WIN32
 	pWrapperTable->m_ScalarField_IsComposed = (PLib3MFScalarField_IsComposedPtr) dlsym(hLibrary, "lib3mf_scalarfield_iscomposed");
@@ -1826,6 +1845,15 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 	dlerror();
 	#endif // _WIN32
 	if (pWrapperTable->m_Vector3DField_IsFromImage3D == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Vector3DField_IsConstant = (PLib3MFVector3DField_IsConstantPtr) GetProcAddress(hLibrary, "lib3mf_vector3dfield_isconstant");
+	#else // _WIN32
+	pWrapperTable->m_Vector3DField_IsConstant = (PLib3MFVector3DField_IsConstantPtr) dlsym(hLibrary, "lib3mf_vector3dfield_isconstant");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Vector3DField_IsConstant == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
@@ -1943,6 +1971,24 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 	dlerror();
 	#endif // _WIN32
 	if (pWrapperTable->m_ScalarFieldFromImage3D_SetScale == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ScalarFieldConstant_GetValue = (PLib3MFScalarFieldConstant_GetValuePtr) GetProcAddress(hLibrary, "lib3mf_scalarfieldconstant_getvalue");
+	#else // _WIN32
+	pWrapperTable->m_ScalarFieldConstant_GetValue = (PLib3MFScalarFieldConstant_GetValuePtr) dlsym(hLibrary, "lib3mf_scalarfieldconstant_getvalue");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ScalarFieldConstant_GetValue == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_ScalarFieldConstant_SetValue = (PLib3MFScalarFieldConstant_SetValuePtr) GetProcAddress(hLibrary, "lib3mf_scalarfieldconstant_setvalue");
+	#else // _WIN32
+	pWrapperTable->m_ScalarFieldConstant_SetValue = (PLib3MFScalarFieldConstant_SetValuePtr) dlsym(hLibrary, "lib3mf_scalarfieldconstant_setvalue");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_ScalarFieldConstant_SetValue == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
@@ -2114,6 +2160,60 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 	dlerror();
 	#endif // _WIN32
 	if (pWrapperTable->m_Vector3DFieldFromImage3D_SetScale == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Vector3DFieldConstant_GetValueX = (PLib3MFVector3DFieldConstant_GetValueXPtr) GetProcAddress(hLibrary, "lib3mf_vector3dfieldconstant_getvaluex");
+	#else // _WIN32
+	pWrapperTable->m_Vector3DFieldConstant_GetValueX = (PLib3MFVector3DFieldConstant_GetValueXPtr) dlsym(hLibrary, "lib3mf_vector3dfieldconstant_getvaluex");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Vector3DFieldConstant_GetValueX == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Vector3DFieldConstant_SetValueX = (PLib3MFVector3DFieldConstant_SetValueXPtr) GetProcAddress(hLibrary, "lib3mf_vector3dfieldconstant_setvaluex");
+	#else // _WIN32
+	pWrapperTable->m_Vector3DFieldConstant_SetValueX = (PLib3MFVector3DFieldConstant_SetValueXPtr) dlsym(hLibrary, "lib3mf_vector3dfieldconstant_setvaluex");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Vector3DFieldConstant_SetValueX == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Vector3DFieldConstant_GetValueY = (PLib3MFVector3DFieldConstant_GetValueYPtr) GetProcAddress(hLibrary, "lib3mf_vector3dfieldconstant_getvaluey");
+	#else // _WIN32
+	pWrapperTable->m_Vector3DFieldConstant_GetValueY = (PLib3MFVector3DFieldConstant_GetValueYPtr) dlsym(hLibrary, "lib3mf_vector3dfieldconstant_getvaluey");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Vector3DFieldConstant_GetValueY == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Vector3DFieldConstant_SetValueY = (PLib3MFVector3DFieldConstant_SetValueYPtr) GetProcAddress(hLibrary, "lib3mf_vector3dfieldconstant_setvaluey");
+	#else // _WIN32
+	pWrapperTable->m_Vector3DFieldConstant_SetValueY = (PLib3MFVector3DFieldConstant_SetValueYPtr) dlsym(hLibrary, "lib3mf_vector3dfieldconstant_setvaluey");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Vector3DFieldConstant_SetValueY == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Vector3DFieldConstant_GetValueZ = (PLib3MFVector3DFieldConstant_GetValueZPtr) GetProcAddress(hLibrary, "lib3mf_vector3dfieldconstant_getvaluez");
+	#else // _WIN32
+	pWrapperTable->m_Vector3DFieldConstant_GetValueZ = (PLib3MFVector3DFieldConstant_GetValueZPtr) dlsym(hLibrary, "lib3mf_vector3dfieldconstant_getvaluez");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Vector3DFieldConstant_GetValueZ == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Vector3DFieldConstant_SetValueZ = (PLib3MFVector3DFieldConstant_SetValueZPtr) GetProcAddress(hLibrary, "lib3mf_vector3dfieldconstant_setvaluez");
+	#else // _WIN32
+	pWrapperTable->m_Vector3DFieldConstant_SetValueZ = (PLib3MFVector3DFieldConstant_SetValueZPtr) dlsym(hLibrary, "lib3mf_vector3dfieldconstant_setvaluez");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Vector3DFieldConstant_SetValueZ == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32

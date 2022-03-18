@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -24,50 +24,48 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CScalarField
+Abstract:
 
-*/
+NMR_ModelVector3DFieldConstant.cpp implements the Model Vector3DFieldConstant Class.
+--*/
 
-#include "lib3mf_scalarfield.hpp"
-#include "lib3mf_interfaceexception.hpp"
+#include "Model/Classes/NMR_ModelVector3DFieldConstant.h"
+#include "Model/Classes/NMR_ModelConstants.h"
+#include "Common/NMR_Exception.h"
 
-// Include custom headers here.
+namespace NMR {
 
+	CModelVector3DFieldConstant::CModelVector3DFieldConstant(_In_ const ModelResourceID sID, _In_ CModel * pModel)
+		: CModelVector3DField(sID, pModel)
+	{
+	
+	}
 
-using namespace Lib3MF::Impl;
+	nfDouble CModelVector3DFieldConstant::getValueX() const
+	{
+		return m_dValueX;
+	}
+	void CModelVector3DFieldConstant::setValueX(nfDouble dValueX)
+	{
+		m_dValueX = dValueX;
+	}
 
-/*************************************************************************************************************************
- Class definition of CScalarField 
-**************************************************************************************************************************/
+	nfDouble CModelVector3DFieldConstant::getValueY() const
+	{
+		return m_dValueY;
+	}
+	void CModelVector3DFieldConstant::setValueY(nfDouble dValueY)
+	{
+		m_dValueY = dValueY;
+	}
 
-CScalarField::CScalarField(NMR::PModelScalarField pResource)
-	:CResource(pResource)
-{
+	nfDouble CModelVector3DFieldConstant::getValueZ() const
+	{
+		return m_dValueZ;
+	}
+	void CModelVector3DFieldConstant::setValueZ(nfDouble dValueZ)
+	{
+		m_dValueZ = dValueZ;
+	}
 
 }
-
-std::string CScalarField::GetName()
-{
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
-}
-
-void CScalarField::SetName(const std::string & sName)
-{
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
-}
-
-bool CScalarField::IsFromImage3D()
-{
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
-}
-
-bool CScalarField::IsConstant()
-{
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
-}
-
-bool CScalarField::IsComposed()
-{
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
-}
-

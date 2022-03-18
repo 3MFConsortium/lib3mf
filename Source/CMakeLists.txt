@@ -69,6 +69,7 @@ Source/API/lib3mf_resourcedatagroup.cpp
 Source/API/lib3mf_resourceiterator.cpp
 Source/API/lib3mf_scalarfield.cpp
 Source/API/lib3mf_scalarfieldcomposed.cpp
+Source/API/lib3mf_scalarfieldconstant.cpp
 Source/API/lib3mf_scalarfieldfromimage3d.cpp
 Source/API/lib3mf_scalarfielditerator.cpp
 Source/API/lib3mf_scalarfieldreference.cpp
@@ -82,6 +83,7 @@ Source/API/lib3mf_texture2diterator.cpp
 Source/API/lib3mf_utils.cpp
 Source/API/lib3mf_vector3dfield.cpp
 Source/API/lib3mf_vector3dfieldcomposed.cpp
+Source/API/lib3mf_vector3dfieldconstant.cpp
 Source/API/lib3mf_vector3dfieldfromimage3d.cpp
 Source/API/lib3mf_vector3dfielditerator.cpp
 Source/API/lib3mf_vector3dfieldreference.cpp
@@ -171,6 +173,7 @@ Source/Model/Classes/NMR_ModelTexture2D.cpp
 Source/Model/Classes/NMR_ModelTexture2DGroup.cpp
 Source/Model/Classes/NMR_ModelScalarField.cpp
 Source/Model/Classes/NMR_ModelScalarFieldFromImage3D.cpp
+Source/Model/Classes/NMR_ModelScalarFieldConstant.cpp
 Source/Model/Classes/NMR_ModelSlice.cpp
 Source/Model/Classes/NMR_ModelSliceStack.cpp
 Source/Model/Classes/NMR_KeyStore.cpp
@@ -182,6 +185,7 @@ Source/Model/Classes/NMR_KeyStoreResourceDataGroup.cpp
 Source/Model/Classes/NMR_KeyStoreCEKParams.cpp
 Source/Model/Classes/NMR_ModelScalarField.cpp
 Source/Model/Classes/NMR_ModelVector3DField.cpp
+Source/Model/Classes/NMR_ModelVector3DFieldConstant.cpp
 Source/Model/Classes/NMR_ModelVolumeData.cpp
 Source/Model/Reader/BeamLattice1702/NMR_ModelReaderNode_BeamLattice1702_Ball.cpp
 Source/Model/Reader/BeamLattice1702/NMR_ModelReaderNode_BeamLattice1702_BallRef.cpp

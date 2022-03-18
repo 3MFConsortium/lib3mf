@@ -55,6 +55,11 @@ bool CVector3DField::IsFromImage3D()
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
+bool CVector3DField::IsConstant()
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
+
 bool CVector3DField::IsComposed()
 {
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);

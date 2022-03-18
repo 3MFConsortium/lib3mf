@@ -619,6 +619,7 @@ private:
     static void GetName (const v8::FunctionCallbackInfo<v8::Value>& args);
     static void SetName (const v8::FunctionCallbackInfo<v8::Value>& args);
     static void IsFromImage3D (const v8::FunctionCallbackInfo<v8::Value>& args);
+    static void IsConstant (const v8::FunctionCallbackInfo<v8::Value>& args);
     static void IsComposed (const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:
@@ -640,6 +641,7 @@ private:
     static void GetName (const v8::FunctionCallbackInfo<v8::Value>& args);
     static void SetName (const v8::FunctionCallbackInfo<v8::Value>& args);
     static void IsFromImage3D (const v8::FunctionCallbackInfo<v8::Value>& args);
+    static void IsConstant (const v8::FunctionCallbackInfo<v8::Value>& args);
     static void IsComposed (const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:
@@ -674,6 +676,25 @@ private:
 public:
     CLib3MFScalarFieldFromImage3D ();
     ~CLib3MFScalarFieldFromImage3D ();
+    
+    static void Init();
+    static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+    
+};
+
+/*************************************************************************************************************************
+ Class CLib3MFScalarFieldConstant 
+**************************************************************************************************************************/
+class CLib3MFScalarFieldConstant : public CLib3MFBaseClass {
+private:
+    static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+    static v8::Persistent<v8::Function> constructor;
+    static void GetValue (const v8::FunctionCallbackInfo<v8::Value>& args);
+    static void SetValue (const v8::FunctionCallbackInfo<v8::Value>& args);
+
+public:
+    CLib3MFScalarFieldConstant ();
+    ~CLib3MFScalarFieldConstant ();
     
     static void Init();
     static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
@@ -727,6 +748,29 @@ private:
 public:
     CLib3MFVector3DFieldFromImage3D ();
     ~CLib3MFVector3DFieldFromImage3D ();
+    
+    static void Init();
+    static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+    
+};
+
+/*************************************************************************************************************************
+ Class CLib3MFVector3DFieldConstant 
+**************************************************************************************************************************/
+class CLib3MFVector3DFieldConstant : public CLib3MFBaseClass {
+private:
+    static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+    static v8::Persistent<v8::Function> constructor;
+    static void GetValueX (const v8::FunctionCallbackInfo<v8::Value>& args);
+    static void SetValueX (const v8::FunctionCallbackInfo<v8::Value>& args);
+    static void GetValueY (const v8::FunctionCallbackInfo<v8::Value>& args);
+    static void SetValueY (const v8::FunctionCallbackInfo<v8::Value>& args);
+    static void GetValueZ (const v8::FunctionCallbackInfo<v8::Value>& args);
+    static void SetValueZ (const v8::FunctionCallbackInfo<v8::Value>& args);
+
+public:
+    CLib3MFVector3DFieldConstant ();
+    ~CLib3MFVector3DFieldConstant ();
     
     static void Init();
     static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);

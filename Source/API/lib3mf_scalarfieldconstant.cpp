@@ -24,84 +24,28 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is the class declaration of CVector3DFieldFromImage3D
+Abstract: This is a stub class definition of CScalarFieldConstant
 
 */
 
-
-#ifndef __LIB3MF_VECTOR3DFIELDFROMIMAGE3D
-#define __LIB3MF_VECTOR3DFIELDFROMIMAGE3D
-
-#include "lib3mf_interfaces.hpp"
-
-// Parent classes
-#include "lib3mf_vector3dfield.hpp"
-#ifdef _MSC_VER
-#pragma warning(push)
-#pragma warning(disable : 4250)
-#endif
+#include "lib3mf_scalarfieldconstant.hpp"
+#include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
 
 
-namespace Lib3MF {
-namespace Impl {
-
+using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class declaration of CVector3DFieldFromImage3D 
+ Class definition of CScalarFieldConstant 
 **************************************************************************************************************************/
 
-class CVector3DFieldFromImage3D : public virtual IVector3DFieldFromImage3D, public virtual CVector3DField {
-private:
+Lib3MF_double CScalarFieldConstant::GetValue()
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
 
-	/**
-	* Put private members here.
-	*/
-
-protected:
-
-	/**
-	* Put protected members here.
-	*/
-
-public:
-
-	/**
-	* Put additional public members here. They will not be visible in the external API.
-	*/
-
-
-	/**
-	* Public member functions to implement.
-	*/
-
-	IImage3D * GetImage() override;
-
-	void SetImage(IImage3D* pImage3D) override;
-
-	void SetFilter(const Lib3MF::eTextureFilter eFilter) override;
-
-	Lib3MF::eTextureFilter GetFilter() override;
-
-	void SetTileStyles(const Lib3MF::eTextureTileStyle eTileStyleU, const Lib3MF::eTextureTileStyle eTileStyleV, const Lib3MF::eTextureTileStyle eTileStyleW) override;
-
-	void GetTileStyles(Lib3MF::eTextureTileStyle & eTileStyleU, Lib3MF::eTextureTileStyle & eTileStyleV, Lib3MF::eTextureTileStyle & eTileStyleW) override;
-
-	Lib3MF_double GetOffset() override;
-
-	void SetOffset(const Lib3MF_double dOffset) override;
-
-	Lib3MF_double GetScale() override;
-
-	void SetScale(const Lib3MF_double dScale) override;
-
-};
-
-} // namespace Impl
-} // namespace Lib3MF
-
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
-#endif // __LIB3MF_VECTOR3DFIELDFROMIMAGE3D
+void CScalarFieldConstant::SetValue(const Lib3MF_double dValue)
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}

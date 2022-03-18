@@ -185,10 +185,12 @@ type Lib3MFImplementation struct {
 	Lib3MF_scalarfield_getname uintptr
 	Lib3MF_scalarfield_setname uintptr
 	Lib3MF_scalarfield_isfromimage3d uintptr
+	Lib3MF_scalarfield_isconstant uintptr
 	Lib3MF_scalarfield_iscomposed uintptr
 	Lib3MF_vector3dfield_getname uintptr
 	Lib3MF_vector3dfield_setname uintptr
 	Lib3MF_vector3dfield_isfromimage3d uintptr
+	Lib3MF_vector3dfield_isconstant uintptr
 	Lib3MF_vector3dfield_iscomposed uintptr
 	Lib3MF_scalarfieldfromimage3d_getimage uintptr
 	Lib3MF_scalarfieldfromimage3d_setimage uintptr
@@ -202,6 +204,8 @@ type Lib3MFImplementation struct {
 	Lib3MF_scalarfieldfromimage3d_setoffset uintptr
 	Lib3MF_scalarfieldfromimage3d_getscale uintptr
 	Lib3MF_scalarfieldfromimage3d_setscale uintptr
+	Lib3MF_scalarfieldconstant_getvalue uintptr
+	Lib3MF_scalarfieldconstant_setvalue uintptr
 	Lib3MF_scalarfieldcomposed_setmethod uintptr
 	Lib3MF_scalarfieldcomposed_getmethod uintptr
 	Lib3MF_scalarfieldcomposed_getfactor1 uintptr
@@ -221,6 +225,12 @@ type Lib3MFImplementation struct {
 	Lib3MF_vector3dfieldfromimage3d_setoffset uintptr
 	Lib3MF_vector3dfieldfromimage3d_getscale uintptr
 	Lib3MF_vector3dfieldfromimage3d_setscale uintptr
+	Lib3MF_vector3dfieldconstant_getvaluex uintptr
+	Lib3MF_vector3dfieldconstant_setvaluex uintptr
+	Lib3MF_vector3dfieldconstant_getvaluey uintptr
+	Lib3MF_vector3dfieldconstant_setvaluey uintptr
+	Lib3MF_vector3dfieldconstant_getvaluez uintptr
+	Lib3MF_vector3dfieldconstant_setvaluez uintptr
 	Lib3MF_vector3dfieldcomposed_setmethod uintptr
 	Lib3MF_vector3dfieldcomposed_getmethod uintptr
 	Lib3MF_vector3dfieldcomposed_getfactor1 uintptr
@@ -1391,6 +1401,11 @@ func (implementation *Lib3MFImplementation) Initialize(DLLFileName string) error
 		return errors.New("Could not get function lib3mf_scalarfield_isfromimage3d: " + err.Error())
 	}
 	
+	implementation.Lib3MF_scalarfield_isconstant, err = syscall.GetProcAddress(dllHandle, "lib3mf_scalarfield_isconstant")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_scalarfield_isconstant: " + err.Error())
+	}
+	
 	implementation.Lib3MF_scalarfield_iscomposed, err = syscall.GetProcAddress(dllHandle, "lib3mf_scalarfield_iscomposed")
 	if (err != nil) {
 		return errors.New("Could not get function lib3mf_scalarfield_iscomposed: " + err.Error())
@@ -1409,6 +1424,11 @@ func (implementation *Lib3MFImplementation) Initialize(DLLFileName string) error
 	implementation.Lib3MF_vector3dfield_isfromimage3d, err = syscall.GetProcAddress(dllHandle, "lib3mf_vector3dfield_isfromimage3d")
 	if (err != nil) {
 		return errors.New("Could not get function lib3mf_vector3dfield_isfromimage3d: " + err.Error())
+	}
+	
+	implementation.Lib3MF_vector3dfield_isconstant, err = syscall.GetProcAddress(dllHandle, "lib3mf_vector3dfield_isconstant")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_vector3dfield_isconstant: " + err.Error())
 	}
 	
 	implementation.Lib3MF_vector3dfield_iscomposed, err = syscall.GetProcAddress(dllHandle, "lib3mf_vector3dfield_iscomposed")
@@ -1474,6 +1494,16 @@ func (implementation *Lib3MFImplementation) Initialize(DLLFileName string) error
 	implementation.Lib3MF_scalarfieldfromimage3d_setscale, err = syscall.GetProcAddress(dllHandle, "lib3mf_scalarfieldfromimage3d_setscale")
 	if (err != nil) {
 		return errors.New("Could not get function lib3mf_scalarfieldfromimage3d_setscale: " + err.Error())
+	}
+	
+	implementation.Lib3MF_scalarfieldconstant_getvalue, err = syscall.GetProcAddress(dllHandle, "lib3mf_scalarfieldconstant_getvalue")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_scalarfieldconstant_getvalue: " + err.Error())
+	}
+	
+	implementation.Lib3MF_scalarfieldconstant_setvalue, err = syscall.GetProcAddress(dllHandle, "lib3mf_scalarfieldconstant_setvalue")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_scalarfieldconstant_setvalue: " + err.Error())
 	}
 	
 	implementation.Lib3MF_scalarfieldcomposed_setmethod, err = syscall.GetProcAddress(dllHandle, "lib3mf_scalarfieldcomposed_setmethod")
@@ -1569,6 +1599,36 @@ func (implementation *Lib3MFImplementation) Initialize(DLLFileName string) error
 	implementation.Lib3MF_vector3dfieldfromimage3d_setscale, err = syscall.GetProcAddress(dllHandle, "lib3mf_vector3dfieldfromimage3d_setscale")
 	if (err != nil) {
 		return errors.New("Could not get function lib3mf_vector3dfieldfromimage3d_setscale: " + err.Error())
+	}
+	
+	implementation.Lib3MF_vector3dfieldconstant_getvaluex, err = syscall.GetProcAddress(dllHandle, "lib3mf_vector3dfieldconstant_getvaluex")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_vector3dfieldconstant_getvaluex: " + err.Error())
+	}
+	
+	implementation.Lib3MF_vector3dfieldconstant_setvaluex, err = syscall.GetProcAddress(dllHandle, "lib3mf_vector3dfieldconstant_setvaluex")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_vector3dfieldconstant_setvaluex: " + err.Error())
+	}
+	
+	implementation.Lib3MF_vector3dfieldconstant_getvaluey, err = syscall.GetProcAddress(dllHandle, "lib3mf_vector3dfieldconstant_getvaluey")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_vector3dfieldconstant_getvaluey: " + err.Error())
+	}
+	
+	implementation.Lib3MF_vector3dfieldconstant_setvaluey, err = syscall.GetProcAddress(dllHandle, "lib3mf_vector3dfieldconstant_setvaluey")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_vector3dfieldconstant_setvaluey: " + err.Error())
+	}
+	
+	implementation.Lib3MF_vector3dfieldconstant_getvaluez, err = syscall.GetProcAddress(dllHandle, "lib3mf_vector3dfieldconstant_getvaluez")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_vector3dfieldconstant_getvaluez: " + err.Error())
+	}
+	
+	implementation.Lib3MF_vector3dfieldconstant_setvaluez, err = syscall.GetProcAddress(dllHandle, "lib3mf_vector3dfieldconstant_setvaluez")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_vector3dfieldconstant_setvaluez: " + err.Error())
 	}
 	
 	implementation.Lib3MF_vector3dfieldcomposed_setmethod, err = syscall.GetProcAddress(dllHandle, "lib3mf_vector3dfieldcomposed_setmethod")
@@ -5547,6 +5607,23 @@ func (implementation *Lib3MFImplementation) ScalarField_IsFromImage3D(ScalarFiel
 	return (bIsFromImage3D != 0), err
 }
 
+func (implementation *Lib3MFImplementation) ScalarField_IsConstant(ScalarField Lib3MFHandle) (bool, error) {
+	var err error = nil
+	var bIsConstant int64 = 0
+	
+	implementation_scalarfield, err := implementation.GetWrapperHandle(ScalarField)
+	if (err != nil) {
+		return false, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_scalarfield_isconstant, implementation_scalarfield.GetDLLInHandle(), Int64OutValue(&bIsConstant))
+	if (err != nil) {
+		return false, err
+	}
+	
+	return (bIsConstant != 0), err
+}
+
 func (implementation *Lib3MFImplementation) ScalarField_IsComposed(ScalarField Lib3MFHandle) (bool, error) {
 	var err error = nil
 	var bIsComposed int64 = 0
@@ -5619,6 +5696,23 @@ func (implementation *Lib3MFImplementation) Vector3DField_IsFromImage3D(Vector3D
 	}
 	
 	return (bIsFromImage3D != 0), err
+}
+
+func (implementation *Lib3MFImplementation) Vector3DField_IsConstant(Vector3DField Lib3MFHandle) (bool, error) {
+	var err error = nil
+	var bIsConstant int64 = 0
+	
+	implementation_vector3dfield, err := implementation.GetWrapperHandle(Vector3DField)
+	if (err != nil) {
+		return false, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_vector3dfield_isconstant, implementation_vector3dfield.GetDLLInHandle(), Int64OutValue(&bIsConstant))
+	if (err != nil) {
+		return false, err
+	}
+	
+	return (bIsConstant != 0), err
 }
 
 func (implementation *Lib3MFImplementation) Vector3DField_IsComposed(Vector3DField Lib3MFHandle) (bool, error) {
@@ -5841,6 +5935,39 @@ func (implementation *Lib3MFImplementation) ScalarFieldFromImage3D_SetScale(Scal
 	}
 
 	err = implementation.CallFunction(implementation.Lib3MF_scalarfieldfromimage3d_setscale, implementation_scalarfieldfromimage3d.GetDLLInHandle(), Float64InValue(dScale))
+	if (err != nil) {
+		return err
+	}
+	
+	return err
+}
+
+func (implementation *Lib3MFImplementation) ScalarFieldConstant_GetValue(ScalarFieldConstant Lib3MFHandle) (float64, error) {
+	var err error = nil
+	var dValue float64 = 0
+	
+	implementation_scalarfieldconstant, err := implementation.GetWrapperHandle(ScalarFieldConstant)
+	if (err != nil) {
+		return 0, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_scalarfieldconstant_getvalue, implementation_scalarfieldconstant.GetDLLInHandle(), Float64OutValue(&dValue))
+	if (err != nil) {
+		return 0, err
+	}
+	
+	return dValue, err
+}
+
+func (implementation *Lib3MFImplementation) ScalarFieldConstant_SetValue(ScalarFieldConstant Lib3MFHandle, dValue float64) (error) {
+	var err error = nil
+	
+	implementation_scalarfieldconstant, err := implementation.GetWrapperHandle(ScalarFieldConstant)
+	if (err != nil) {
+		return err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_scalarfieldconstant_setvalue, implementation_scalarfieldconstant.GetDLLInHandle(), Float64InValue(dValue))
 	if (err != nil) {
 		return err
 	}
@@ -6168,6 +6295,105 @@ func (implementation *Lib3MFImplementation) Vector3DFieldFromImage3D_SetScale(Ve
 	}
 
 	err = implementation.CallFunction(implementation.Lib3MF_vector3dfieldfromimage3d_setscale, implementation_vector3dfieldfromimage3d.GetDLLInHandle(), Float64InValue(dScale))
+	if (err != nil) {
+		return err
+	}
+	
+	return err
+}
+
+func (implementation *Lib3MFImplementation) Vector3DFieldConstant_GetValueX(Vector3DFieldConstant Lib3MFHandle) (float64, error) {
+	var err error = nil
+	var dValueX float64 = 0
+	
+	implementation_vector3dfieldconstant, err := implementation.GetWrapperHandle(Vector3DFieldConstant)
+	if (err != nil) {
+		return 0, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_vector3dfieldconstant_getvaluex, implementation_vector3dfieldconstant.GetDLLInHandle(), Float64OutValue(&dValueX))
+	if (err != nil) {
+		return 0, err
+	}
+	
+	return dValueX, err
+}
+
+func (implementation *Lib3MFImplementation) Vector3DFieldConstant_SetValueX(Vector3DFieldConstant Lib3MFHandle, dValueX float64) (error) {
+	var err error = nil
+	
+	implementation_vector3dfieldconstant, err := implementation.GetWrapperHandle(Vector3DFieldConstant)
+	if (err != nil) {
+		return err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_vector3dfieldconstant_setvaluex, implementation_vector3dfieldconstant.GetDLLInHandle(), Float64InValue(dValueX))
+	if (err != nil) {
+		return err
+	}
+	
+	return err
+}
+
+func (implementation *Lib3MFImplementation) Vector3DFieldConstant_GetValueY(Vector3DFieldConstant Lib3MFHandle) (float64, error) {
+	var err error = nil
+	var dValueY float64 = 0
+	
+	implementation_vector3dfieldconstant, err := implementation.GetWrapperHandle(Vector3DFieldConstant)
+	if (err != nil) {
+		return 0, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_vector3dfieldconstant_getvaluey, implementation_vector3dfieldconstant.GetDLLInHandle(), Float64OutValue(&dValueY))
+	if (err != nil) {
+		return 0, err
+	}
+	
+	return dValueY, err
+}
+
+func (implementation *Lib3MFImplementation) Vector3DFieldConstant_SetValueY(Vector3DFieldConstant Lib3MFHandle, dValueY float64) (error) {
+	var err error = nil
+	
+	implementation_vector3dfieldconstant, err := implementation.GetWrapperHandle(Vector3DFieldConstant)
+	if (err != nil) {
+		return err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_vector3dfieldconstant_setvaluey, implementation_vector3dfieldconstant.GetDLLInHandle(), Float64InValue(dValueY))
+	if (err != nil) {
+		return err
+	}
+	
+	return err
+}
+
+func (implementation *Lib3MFImplementation) Vector3DFieldConstant_GetValueZ(Vector3DFieldConstant Lib3MFHandle) (float64, error) {
+	var err error = nil
+	var dValueZ float64 = 0
+	
+	implementation_vector3dfieldconstant, err := implementation.GetWrapperHandle(Vector3DFieldConstant)
+	if (err != nil) {
+		return 0, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_vector3dfieldconstant_getvaluez, implementation_vector3dfieldconstant.GetDLLInHandle(), Float64OutValue(&dValueZ))
+	if (err != nil) {
+		return 0, err
+	}
+	
+	return dValueZ, err
+}
+
+func (implementation *Lib3MFImplementation) Vector3DFieldConstant_SetValueZ(Vector3DFieldConstant Lib3MFHandle, dValueZ float64) (error) {
+	var err error = nil
+	
+	implementation_vector3dfieldconstant, err := implementation.GetWrapperHandle(Vector3DFieldConstant)
+	if (err != nil) {
+		return err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_vector3dfieldconstant_setvaluez, implementation_vector3dfieldconstant.GetDLLInHandle(), Float64InValue(dValueZ))
 	if (err != nil) {
 		return err
 	}

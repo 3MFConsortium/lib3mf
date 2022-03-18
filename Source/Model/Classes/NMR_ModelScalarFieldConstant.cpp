@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -24,50 +24,30 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CScalarField
+Abstract:
 
-*/
+NMR_ModelScalarFieldConstant.cpp implements the Model ScalarFieldConstant Class.
+--*/
 
-#include "lib3mf_scalarfield.hpp"
-#include "lib3mf_interfaceexception.hpp"
+#include "Model/Classes/NMR_ModelScalarFieldConstant.h"
+#include "Model/Classes/NMR_ModelConstants.h"
+#include "Common/NMR_Exception.h"
 
-// Include custom headers here.
+namespace NMR {
 
+	CModelScalarFieldConstant::CModelScalarFieldConstant(_In_ const ModelResourceID sID, _In_ CModel * pModel)
+		: CModelScalarField(sID, pModel)
+	{
+	
+	}
 
-using namespace Lib3MF::Impl;
-
-/*************************************************************************************************************************
- Class definition of CScalarField 
-**************************************************************************************************************************/
-
-CScalarField::CScalarField(NMR::PModelScalarField pResource)
-	:CResource(pResource)
-{
+	nfDouble CModelScalarFieldConstant::getValue() const
+	{
+		return m_dValue;
+	}
+	void CModelScalarFieldConstant::setValue(nfDouble dValue)
+	{
+		m_dValue = dValue;
+	}
 
 }
-
-std::string CScalarField::GetName()
-{
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
-}
-
-void CScalarField::SetName(const std::string & sName)
-{
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
-}
-
-bool CScalarField::IsFromImage3D()
-{
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
-}
-
-bool CScalarField::IsConstant()
-{
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
-}
-
-bool CScalarField::IsComposed()
-{
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
-}
-

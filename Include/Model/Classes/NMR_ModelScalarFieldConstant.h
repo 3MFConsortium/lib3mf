@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -24,50 +24,38 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CScalarField
+Abstract:
 
-*/
+NMR_ModelScalarFieldFromConstant.h defines the Model ScalarField Class.
+--*/
 
-#include "lib3mf_scalarfield.hpp"
-#include "lib3mf_interfaceexception.hpp"
+#ifndef __NMR_MODELSCALARFIELDCONSTANT
+#define __NMR_MODELSCALARFIELDCONSTANT
 
-// Include custom headers here.
+#include "Model/Classes/NMR_Model.h"
+#include "Model/Classes/NMR_ModelScalarField.h"
+#include "Common/NMR_Types.h"
+#include "Common/Math/NMR_Matrix.h"
 
+#include <vector>
 
-using namespace Lib3MF::Impl;
+namespace NMR {
 
-/*************************************************************************************************************************
- Class definition of CScalarField 
-**************************************************************************************************************************/
+	class CModel;
+	typedef std::shared_ptr <CModel> PModel;
 
-CScalarField::CScalarField(NMR::PModelScalarField pResource)
-	:CResource(pResource)
-{
+	class CModelScalarFieldConstant : public CModelScalarField {
+	private:
+		nfDouble m_dValue = 0.0;
+	public:
+		CModelScalarFieldConstant() = delete;
+		CModelScalarFieldConstant(_In_ const ModelResourceID sID, _In_ CModel * pModel);
 
+		nfDouble getValue() const;
+		void setValue(nfDouble);
+	};
+
+	typedef std::shared_ptr <CModelScalarFieldConstant> PModelScalarFieldConstant;
 }
 
-std::string CScalarField::GetName()
-{
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
-}
-
-void CScalarField::SetName(const std::string & sName)
-{
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
-}
-
-bool CScalarField::IsFromImage3D()
-{
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
-}
-
-bool CScalarField::IsConstant()
-{
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
-}
-
-bool CScalarField::IsComposed()
-{
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
-}
-
+#endif // __NMR_MODELSCALARFIELDCONSTANT

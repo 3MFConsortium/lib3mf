@@ -83,8 +83,10 @@ class CBeamLattice;
 class CScalarField;
 class CVector3DField;
 class CScalarFieldFromImage3D;
+class CScalarFieldConstant;
 class CScalarFieldComposed;
 class CVector3DFieldFromImage3D;
+class CVector3DFieldConstant;
 class CVector3DFieldComposed;
 class CFieldReference;
 class CScalarFieldReference;
@@ -150,8 +152,10 @@ typedef CBeamLattice CLib3MFBeamLattice;
 typedef CScalarField CLib3MFScalarField;
 typedef CVector3DField CLib3MFVector3DField;
 typedef CScalarFieldFromImage3D CLib3MFScalarFieldFromImage3D;
+typedef CScalarFieldConstant CLib3MFScalarFieldConstant;
 typedef CScalarFieldComposed CLib3MFScalarFieldComposed;
 typedef CVector3DFieldFromImage3D CLib3MFVector3DFieldFromImage3D;
+typedef CVector3DFieldConstant CLib3MFVector3DFieldConstant;
 typedef CVector3DFieldComposed CLib3MFVector3DFieldComposed;
 typedef CFieldReference CLib3MFFieldReference;
 typedef CScalarFieldReference CLib3MFScalarFieldReference;
@@ -217,8 +221,10 @@ typedef std::shared_ptr<CBeamLattice> PBeamLattice;
 typedef std::shared_ptr<CScalarField> PScalarField;
 typedef std::shared_ptr<CVector3DField> PVector3DField;
 typedef std::shared_ptr<CScalarFieldFromImage3D> PScalarFieldFromImage3D;
+typedef std::shared_ptr<CScalarFieldConstant> PScalarFieldConstant;
 typedef std::shared_ptr<CScalarFieldComposed> PScalarFieldComposed;
 typedef std::shared_ptr<CVector3DFieldFromImage3D> PVector3DFieldFromImage3D;
+typedef std::shared_ptr<CVector3DFieldConstant> PVector3DFieldConstant;
 typedef std::shared_ptr<CVector3DFieldComposed> PVector3DFieldComposed;
 typedef std::shared_ptr<CFieldReference> PFieldReference;
 typedef std::shared_ptr<CScalarFieldReference> PScalarFieldReference;
@@ -284,8 +290,10 @@ typedef PBeamLattice PLib3MFBeamLattice;
 typedef PScalarField PLib3MFScalarField;
 typedef PVector3DField PLib3MFVector3DField;
 typedef PScalarFieldFromImage3D PLib3MFScalarFieldFromImage3D;
+typedef PScalarFieldConstant PLib3MFScalarFieldConstant;
 typedef PScalarFieldComposed PLib3MFScalarFieldComposed;
 typedef PVector3DFieldFromImage3D PLib3MFVector3DFieldFromImage3D;
+typedef PVector3DFieldConstant PLib3MFVector3DFieldConstant;
 typedef PVector3DFieldComposed PLib3MFVector3DFieldComposed;
 typedef PFieldReference PLib3MFFieldReference;
 typedef PScalarFieldReference PLib3MFScalarFieldReference;
@@ -504,8 +512,10 @@ private:
 	friend class CScalarField;
 	friend class CVector3DField;
 	friend class CScalarFieldFromImage3D;
+	friend class CScalarFieldConstant;
 	friend class CScalarFieldComposed;
 	friend class CVector3DFieldFromImage3D;
+	friend class CVector3DFieldConstant;
 	friend class CVector3DFieldComposed;
 	friend class CFieldReference;
 	friend class CScalarFieldReference;
@@ -1109,6 +1119,7 @@ public:
 	inline std::string GetName();
 	inline void SetName(const std::string & sName);
 	inline bool IsFromImage3D();
+	inline bool IsConstant();
 	inline bool IsComposed();
 };
 	
@@ -1129,6 +1140,7 @@ public:
 	inline std::string GetName();
 	inline void SetName(const std::string & sName);
 	inline bool IsFromImage3D();
+	inline bool IsConstant();
 	inline bool IsComposed();
 };
 	
@@ -1158,6 +1170,24 @@ public:
 	inline void SetOffset(const Lib3MF_double dOffset);
 	inline Lib3MF_double GetScale();
 	inline void SetScale(const Lib3MF_double dScale);
+};
+	
+/*************************************************************************************************************************
+ Class CScalarFieldConstant 
+**************************************************************************************************************************/
+class CScalarFieldConstant : public CScalarField {
+public:
+	
+	/**
+	* CScalarFieldConstant::CScalarFieldConstant - Constructor for ScalarFieldConstant class.
+	*/
+	CScalarFieldConstant(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CScalarField(pWrapper, pHandle)
+	{
+	}
+	
+	inline Lib3MF_double GetValue();
+	inline void SetValue(const Lib3MF_double dValue);
 };
 	
 /*************************************************************************************************************************
@@ -1209,6 +1239,28 @@ public:
 	inline void SetOffset(const Lib3MF_double dOffset);
 	inline Lib3MF_double GetScale();
 	inline void SetScale(const Lib3MF_double dScale);
+};
+	
+/*************************************************************************************************************************
+ Class CVector3DFieldConstant 
+**************************************************************************************************************************/
+class CVector3DFieldConstant : public CVector3DField {
+public:
+	
+	/**
+	* CVector3DFieldConstant::CVector3DFieldConstant - Constructor for Vector3DFieldConstant class.
+	*/
+	CVector3DFieldConstant(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CVector3DField(pWrapper, pHandle)
+	{
+	}
+	
+	inline Lib3MF_double GetValueX();
+	inline void SetValueX(const Lib3MF_double dValueX);
+	inline Lib3MF_double GetValueY();
+	inline void SetValueY(const Lib3MF_double dValueY);
+	inline Lib3MF_double GetValueZ();
+	inline void SetValueZ(const Lib3MF_double dValueZ);
 };
 	
 /*************************************************************************************************************************
@@ -2444,10 +2496,12 @@ public:
 		pWrapperTable->m_ScalarField_GetName = nullptr;
 		pWrapperTable->m_ScalarField_SetName = nullptr;
 		pWrapperTable->m_ScalarField_IsFromImage3D = nullptr;
+		pWrapperTable->m_ScalarField_IsConstant = nullptr;
 		pWrapperTable->m_ScalarField_IsComposed = nullptr;
 		pWrapperTable->m_Vector3DField_GetName = nullptr;
 		pWrapperTable->m_Vector3DField_SetName = nullptr;
 		pWrapperTable->m_Vector3DField_IsFromImage3D = nullptr;
+		pWrapperTable->m_Vector3DField_IsConstant = nullptr;
 		pWrapperTable->m_Vector3DField_IsComposed = nullptr;
 		pWrapperTable->m_ScalarFieldFromImage3D_GetImage = nullptr;
 		pWrapperTable->m_ScalarFieldFromImage3D_SetImage = nullptr;
@@ -2461,6 +2515,8 @@ public:
 		pWrapperTable->m_ScalarFieldFromImage3D_SetOffset = nullptr;
 		pWrapperTable->m_ScalarFieldFromImage3D_GetScale = nullptr;
 		pWrapperTable->m_ScalarFieldFromImage3D_SetScale = nullptr;
+		pWrapperTable->m_ScalarFieldConstant_GetValue = nullptr;
+		pWrapperTable->m_ScalarFieldConstant_SetValue = nullptr;
 		pWrapperTable->m_ScalarFieldComposed_SetMethod = nullptr;
 		pWrapperTable->m_ScalarFieldComposed_GetMethod = nullptr;
 		pWrapperTable->m_ScalarFieldComposed_GetFactor1 = nullptr;
@@ -2480,6 +2536,12 @@ public:
 		pWrapperTable->m_Vector3DFieldFromImage3D_SetOffset = nullptr;
 		pWrapperTable->m_Vector3DFieldFromImage3D_GetScale = nullptr;
 		pWrapperTable->m_Vector3DFieldFromImage3D_SetScale = nullptr;
+		pWrapperTable->m_Vector3DFieldConstant_GetValueX = nullptr;
+		pWrapperTable->m_Vector3DFieldConstant_SetValueX = nullptr;
+		pWrapperTable->m_Vector3DFieldConstant_GetValueY = nullptr;
+		pWrapperTable->m_Vector3DFieldConstant_SetValueY = nullptr;
+		pWrapperTable->m_Vector3DFieldConstant_GetValueZ = nullptr;
+		pWrapperTable->m_Vector3DFieldConstant_SetValueZ = nullptr;
 		pWrapperTable->m_Vector3DFieldComposed_SetMethod = nullptr;
 		pWrapperTable->m_Vector3DFieldComposed_GetMethod = nullptr;
 		pWrapperTable->m_Vector3DFieldComposed_GetFactor1 = nullptr;
@@ -4050,6 +4112,15 @@ public:
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
+		pWrapperTable->m_ScalarField_IsConstant = (PLib3MFScalarField_IsConstantPtr) GetProcAddress(hLibrary, "lib3mf_scalarfield_isconstant");
+		#else // _WIN32
+		pWrapperTable->m_ScalarField_IsConstant = (PLib3MFScalarField_IsConstantPtr) dlsym(hLibrary, "lib3mf_scalarfield_isconstant");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ScalarField_IsConstant == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
 		pWrapperTable->m_ScalarField_IsComposed = (PLib3MFScalarField_IsComposedPtr) GetProcAddress(hLibrary, "lib3mf_scalarfield_iscomposed");
 		#else // _WIN32
 		pWrapperTable->m_ScalarField_IsComposed = (PLib3MFScalarField_IsComposedPtr) dlsym(hLibrary, "lib3mf_scalarfield_iscomposed");
@@ -4083,6 +4154,15 @@ public:
 		dlerror();
 		#endif // _WIN32
 		if (pWrapperTable->m_Vector3DField_IsFromImage3D == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Vector3DField_IsConstant = (PLib3MFVector3DField_IsConstantPtr) GetProcAddress(hLibrary, "lib3mf_vector3dfield_isconstant");
+		#else // _WIN32
+		pWrapperTable->m_Vector3DField_IsConstant = (PLib3MFVector3DField_IsConstantPtr) dlsym(hLibrary, "lib3mf_vector3dfield_isconstant");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Vector3DField_IsConstant == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
@@ -4200,6 +4280,24 @@ public:
 		dlerror();
 		#endif // _WIN32
 		if (pWrapperTable->m_ScalarFieldFromImage3D_SetScale == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ScalarFieldConstant_GetValue = (PLib3MFScalarFieldConstant_GetValuePtr) GetProcAddress(hLibrary, "lib3mf_scalarfieldconstant_getvalue");
+		#else // _WIN32
+		pWrapperTable->m_ScalarFieldConstant_GetValue = (PLib3MFScalarFieldConstant_GetValuePtr) dlsym(hLibrary, "lib3mf_scalarfieldconstant_getvalue");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ScalarFieldConstant_GetValue == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_ScalarFieldConstant_SetValue = (PLib3MFScalarFieldConstant_SetValuePtr) GetProcAddress(hLibrary, "lib3mf_scalarfieldconstant_setvalue");
+		#else // _WIN32
+		pWrapperTable->m_ScalarFieldConstant_SetValue = (PLib3MFScalarFieldConstant_SetValuePtr) dlsym(hLibrary, "lib3mf_scalarfieldconstant_setvalue");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_ScalarFieldConstant_SetValue == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
@@ -4371,6 +4469,60 @@ public:
 		dlerror();
 		#endif // _WIN32
 		if (pWrapperTable->m_Vector3DFieldFromImage3D_SetScale == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Vector3DFieldConstant_GetValueX = (PLib3MFVector3DFieldConstant_GetValueXPtr) GetProcAddress(hLibrary, "lib3mf_vector3dfieldconstant_getvaluex");
+		#else // _WIN32
+		pWrapperTable->m_Vector3DFieldConstant_GetValueX = (PLib3MFVector3DFieldConstant_GetValueXPtr) dlsym(hLibrary, "lib3mf_vector3dfieldconstant_getvaluex");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Vector3DFieldConstant_GetValueX == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Vector3DFieldConstant_SetValueX = (PLib3MFVector3DFieldConstant_SetValueXPtr) GetProcAddress(hLibrary, "lib3mf_vector3dfieldconstant_setvaluex");
+		#else // _WIN32
+		pWrapperTable->m_Vector3DFieldConstant_SetValueX = (PLib3MFVector3DFieldConstant_SetValueXPtr) dlsym(hLibrary, "lib3mf_vector3dfieldconstant_setvaluex");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Vector3DFieldConstant_SetValueX == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Vector3DFieldConstant_GetValueY = (PLib3MFVector3DFieldConstant_GetValueYPtr) GetProcAddress(hLibrary, "lib3mf_vector3dfieldconstant_getvaluey");
+		#else // _WIN32
+		pWrapperTable->m_Vector3DFieldConstant_GetValueY = (PLib3MFVector3DFieldConstant_GetValueYPtr) dlsym(hLibrary, "lib3mf_vector3dfieldconstant_getvaluey");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Vector3DFieldConstant_GetValueY == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Vector3DFieldConstant_SetValueY = (PLib3MFVector3DFieldConstant_SetValueYPtr) GetProcAddress(hLibrary, "lib3mf_vector3dfieldconstant_setvaluey");
+		#else // _WIN32
+		pWrapperTable->m_Vector3DFieldConstant_SetValueY = (PLib3MFVector3DFieldConstant_SetValueYPtr) dlsym(hLibrary, "lib3mf_vector3dfieldconstant_setvaluey");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Vector3DFieldConstant_SetValueY == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Vector3DFieldConstant_GetValueZ = (PLib3MFVector3DFieldConstant_GetValueZPtr) GetProcAddress(hLibrary, "lib3mf_vector3dfieldconstant_getvaluez");
+		#else // _WIN32
+		pWrapperTable->m_Vector3DFieldConstant_GetValueZ = (PLib3MFVector3DFieldConstant_GetValueZPtr) dlsym(hLibrary, "lib3mf_vector3dfieldconstant_getvaluez");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Vector3DFieldConstant_GetValueZ == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Vector3DFieldConstant_SetValueZ = (PLib3MFVector3DFieldConstant_SetValueZPtr) GetProcAddress(hLibrary, "lib3mf_vector3dfieldconstant_setvaluez");
+		#else // _WIN32
+		pWrapperTable->m_Vector3DFieldConstant_SetValueZ = (PLib3MFVector3DFieldConstant_SetValueZPtr) dlsym(hLibrary, "lib3mf_vector3dfieldconstant_setvaluez");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Vector3DFieldConstant_SetValueZ == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
@@ -7606,6 +7758,10 @@ public:
 		if ( (eLookupError != 0) || (pWrapperTable->m_ScalarField_IsFromImage3D == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
+		eLookupError = (*pLookup)("lib3mf_scalarfield_isconstant", (void**)&(pWrapperTable->m_ScalarField_IsConstant));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ScalarField_IsConstant == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
 		eLookupError = (*pLookup)("lib3mf_scalarfield_iscomposed", (void**)&(pWrapperTable->m_ScalarField_IsComposed));
 		if ( (eLookupError != 0) || (pWrapperTable->m_ScalarField_IsComposed == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
@@ -7620,6 +7776,10 @@ public:
 		
 		eLookupError = (*pLookup)("lib3mf_vector3dfield_isfromimage3d", (void**)&(pWrapperTable->m_Vector3DField_IsFromImage3D));
 		if ( (eLookupError != 0) || (pWrapperTable->m_Vector3DField_IsFromImage3D == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_vector3dfield_isconstant", (void**)&(pWrapperTable->m_Vector3DField_IsConstant));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Vector3DField_IsConstant == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("lib3mf_vector3dfield_iscomposed", (void**)&(pWrapperTable->m_Vector3DField_IsComposed));
@@ -7672,6 +7832,14 @@ public:
 		
 		eLookupError = (*pLookup)("lib3mf_scalarfieldfromimage3d_setscale", (void**)&(pWrapperTable->m_ScalarFieldFromImage3D_SetScale));
 		if ( (eLookupError != 0) || (pWrapperTable->m_ScalarFieldFromImage3D_SetScale == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_scalarfieldconstant_getvalue", (void**)&(pWrapperTable->m_ScalarFieldConstant_GetValue));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ScalarFieldConstant_GetValue == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_scalarfieldconstant_setvalue", (void**)&(pWrapperTable->m_ScalarFieldConstant_SetValue));
+		if ( (eLookupError != 0) || (pWrapperTable->m_ScalarFieldConstant_SetValue == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("lib3mf_scalarfieldcomposed_setmethod", (void**)&(pWrapperTable->m_ScalarFieldComposed_SetMethod));
@@ -7748,6 +7916,30 @@ public:
 		
 		eLookupError = (*pLookup)("lib3mf_vector3dfieldfromimage3d_setscale", (void**)&(pWrapperTable->m_Vector3DFieldFromImage3D_SetScale));
 		if ( (eLookupError != 0) || (pWrapperTable->m_Vector3DFieldFromImage3D_SetScale == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_vector3dfieldconstant_getvaluex", (void**)&(pWrapperTable->m_Vector3DFieldConstant_GetValueX));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Vector3DFieldConstant_GetValueX == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_vector3dfieldconstant_setvaluex", (void**)&(pWrapperTable->m_Vector3DFieldConstant_SetValueX));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Vector3DFieldConstant_SetValueX == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_vector3dfieldconstant_getvaluey", (void**)&(pWrapperTable->m_Vector3DFieldConstant_GetValueY));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Vector3DFieldConstant_GetValueY == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_vector3dfieldconstant_setvaluey", (void**)&(pWrapperTable->m_Vector3DFieldConstant_SetValueY));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Vector3DFieldConstant_SetValueY == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_vector3dfieldconstant_getvaluez", (void**)&(pWrapperTable->m_Vector3DFieldConstant_GetValueZ));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Vector3DFieldConstant_GetValueZ == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_vector3dfieldconstant_setvaluez", (void**)&(pWrapperTable->m_Vector3DFieldConstant_SetValueZ));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Vector3DFieldConstant_SetValueZ == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("lib3mf_vector3dfieldcomposed_setmethod", (void**)&(pWrapperTable->m_Vector3DFieldComposed_SetMethod));
@@ -10702,6 +10894,18 @@ public:
 	}
 	
 	/**
+	* CScalarField::IsConstant - Retrieves, if this ScalarField is a ScalarFieldConstant
+	* @return returns, whether the scalar field is a ScalarFieldConstant
+	*/
+	bool CScalarField::IsConstant()
+	{
+		bool resultIsConstant = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ScalarField_IsConstant(m_pHandle, &resultIsConstant));
+		
+		return resultIsConstant;
+	}
+	
+	/**
 	* CScalarField::IsComposed - Retrieves, if this ScalarField is a ScalarFieldComposed
 	* @return returns, whether the scalar field is a ScalarFieldComposed
 	*/
@@ -10743,7 +10947,7 @@ public:
 	
 	/**
 	* CVector3DField::IsFromImage3D - Retrieves, if this Vector3DField is a Vector3DFieldFromImage3D
-	* @return returns, whether the scalar field is a Vector3DFieldFromImage3D
+	* @return returns, whether the 3d vector field is a Vector3DFieldFromImage3D
 	*/
 	bool CVector3DField::IsFromImage3D()
 	{
@@ -10754,8 +10958,20 @@ public:
 	}
 	
 	/**
-	* CVector3DField::IsComposed - Retrieves, if this Vector3DField is a ScalarFieldComposed
-	* @return returns, whether the scalar field is a Vector3DFieldComposed
+	* CVector3DField::IsConstant - Retrieves, if this Vector3DField is a Vector3DFieldConstant
+	* @return returns, whether the 3d vector field is a Vector3DFieldConstant
+	*/
+	bool CVector3DField::IsConstant()
+	{
+		bool resultIsConstant = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_Vector3DField_IsConstant(m_pHandle, &resultIsConstant));
+		
+		return resultIsConstant;
+	}
+	
+	/**
+	* CVector3DField::IsComposed - Retrieves, if this Vector3DField is a Vector3DFieldComposed
+	* @return returns, whether the 3d vector field is a Vector3DFieldComposed
 	*/
 	bool CVector3DField::IsComposed()
 	{
@@ -10901,6 +11117,31 @@ public:
 	void CScalarFieldFromImage3D::SetScale(const Lib3MF_double dScale)
 	{
 		CheckError(m_pWrapper->m_WrapperTable.m_ScalarFieldFromImage3D_SetScale(m_pHandle, dScale));
+	}
+	
+	/**
+	 * Method definitions for class CScalarFieldConstant
+	 */
+	
+	/**
+	* CScalarFieldConstant::GetValue - returns the constant value of this ScalarFieldConstant
+	* @return the constant value of this ScalarFieldConstant
+	*/
+	Lib3MF_double CScalarFieldConstant::GetValue()
+	{
+		Lib3MF_double resultValue = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_ScalarFieldConstant_GetValue(m_pHandle, &resultValue));
+		
+		return resultValue;
+	}
+	
+	/**
+	* CScalarFieldConstant::SetValue - Sets the constant value of this ScalarFieldConstant
+	* @param[in] dValue - the constant value of this ScalarFieldConstant
+	*/
+	void CScalarFieldConstant::SetValue(const Lib3MF_double dValue)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_ScalarFieldConstant_SetValue(m_pHandle, dValue));
 	}
 	
 	/**
@@ -11130,6 +11371,73 @@ public:
 	void CVector3DFieldFromImage3D::SetScale(const Lib3MF_double dScale)
 	{
 		CheckError(m_pWrapper->m_WrapperTable.m_Vector3DFieldFromImage3D_SetScale(m_pHandle, dScale));
+	}
+	
+	/**
+	 * Method definitions for class CVector3DFieldConstant
+	 */
+	
+	/**
+	* CVector3DFieldConstant::GetValueX - returns the constant x-value of this Vector3DFieldConstant
+	* @return the constant x-value of this Vector3DFieldConstant
+	*/
+	Lib3MF_double CVector3DFieldConstant::GetValueX()
+	{
+		Lib3MF_double resultValueX = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_Vector3DFieldConstant_GetValueX(m_pHandle, &resultValueX));
+		
+		return resultValueX;
+	}
+	
+	/**
+	* CVector3DFieldConstant::SetValueX - Sets the constant x-value of this Vector3DFieldConstant
+	* @param[in] dValueX - the constant x-value of this Vector3DFieldConstant
+	*/
+	void CVector3DFieldConstant::SetValueX(const Lib3MF_double dValueX)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_Vector3DFieldConstant_SetValueX(m_pHandle, dValueX));
+	}
+	
+	/**
+	* CVector3DFieldConstant::GetValueY - returns the constant y-value of this Vector3DFieldConstant
+	* @return the constant y-value of this Vector3DFieldConstant
+	*/
+	Lib3MF_double CVector3DFieldConstant::GetValueY()
+	{
+		Lib3MF_double resultValueY = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_Vector3DFieldConstant_GetValueY(m_pHandle, &resultValueY));
+		
+		return resultValueY;
+	}
+	
+	/**
+	* CVector3DFieldConstant::SetValueY - Sets the constant y-value of this Vector3DFieldConstant
+	* @param[in] dValueY - the constant y-value of this Vector3DFieldConstant
+	*/
+	void CVector3DFieldConstant::SetValueY(const Lib3MF_double dValueY)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_Vector3DFieldConstant_SetValueY(m_pHandle, dValueY));
+	}
+	
+	/**
+	* CVector3DFieldConstant::GetValueZ - returns the constant x-value of this Vector3DFieldConstant
+	* @return the constant x-value of this Vector3DFieldConstant
+	*/
+	Lib3MF_double CVector3DFieldConstant::GetValueZ()
+	{
+		Lib3MF_double resultValueZ = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_Vector3DFieldConstant_GetValueZ(m_pHandle, &resultValueZ));
+		
+		return resultValueZ;
+	}
+	
+	/**
+	* CVector3DFieldConstant::SetValueZ - Sets the constant z-value of this Vector3DFieldConstant
+	* @param[in] dValueZ - the constant z-value of this Vector3DFieldConstant
+	*/
+	void CVector3DFieldConstant::SetValueZ(const Lib3MF_double dValueZ)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_Vector3DFieldConstant_SetValueZ(m_pHandle, dValueZ));
 	}
 	
 	/**

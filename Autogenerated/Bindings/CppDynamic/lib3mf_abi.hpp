@@ -1466,6 +1466,15 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_scalarfield_setname(Lib3MF_ScalarField pScal
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_scalarfield_isfromimage3d(Lib3MF_ScalarField pScalarField, bool * pIsFromImage3D);
 
 /**
+* Retrieves, if this ScalarField is a ScalarFieldConstant
+*
+* @param[in] pScalarField - ScalarField instance.
+* @param[out] pIsConstant - returns, whether the scalar field is a ScalarFieldConstant
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_scalarfield_isconstant(Lib3MF_ScalarField pScalarField, bool * pIsConstant);
+
+/**
 * Retrieves, if this ScalarField is a ScalarFieldComposed
 *
 * @param[in] pScalarField - ScalarField instance.
@@ -1502,16 +1511,25 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_vector3dfield_setname(Lib3MF_Vector3DField p
 * Retrieves, if this Vector3DField is a Vector3DFieldFromImage3D
 *
 * @param[in] pVector3DField - Vector3DField instance.
-* @param[out] pIsFromImage3D - returns, whether the scalar field is a Vector3DFieldFromImage3D
+* @param[out] pIsFromImage3D - returns, whether the 3d vector field is a Vector3DFieldFromImage3D
 * @return error code or 0 (success)
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_vector3dfield_isfromimage3d(Lib3MF_Vector3DField pVector3DField, bool * pIsFromImage3D);
 
 /**
-* Retrieves, if this Vector3DField is a ScalarFieldComposed
+* Retrieves, if this Vector3DField is a Vector3DFieldConstant
 *
 * @param[in] pVector3DField - Vector3DField instance.
-* @param[out] pIsComposed - returns, whether the scalar field is a Vector3DFieldComposed
+* @param[out] pIsConstant - returns, whether the 3d vector field is a Vector3DFieldConstant
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_vector3dfield_isconstant(Lib3MF_Vector3DField pVector3DField, bool * pIsConstant);
+
+/**
+* Retrieves, if this Vector3DField is a Vector3DFieldComposed
+*
+* @param[in] pVector3DField - Vector3DField instance.
+* @param[out] pIsComposed - returns, whether the 3d vector field is a Vector3DFieldComposed
 * @return error code or 0 (success)
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_vector3dfield_iscomposed(Lib3MF_Vector3DField pVector3DField, bool * pIsComposed);
@@ -1631,6 +1649,28 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_scalarfieldfromimage3d_getscale(Lib3MF_Scala
 * @return error code or 0 (success)
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_scalarfieldfromimage3d_setscale(Lib3MF_ScalarFieldFromImage3D pScalarFieldFromImage3D, Lib3MF_double dScale);
+
+/*************************************************************************************************************************
+ Class definition for ScalarFieldConstant
+**************************************************************************************************************************/
+
+/**
+* returns the constant value of this ScalarFieldConstant
+*
+* @param[in] pScalarFieldConstant - ScalarFieldConstant instance.
+* @param[out] pValue - the constant value of this ScalarFieldConstant
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_scalarfieldconstant_getvalue(Lib3MF_ScalarFieldConstant pScalarFieldConstant, Lib3MF_double * pValue);
+
+/**
+* Sets the constant value of this ScalarFieldConstant
+*
+* @param[in] pScalarFieldConstant - ScalarFieldConstant instance.
+* @param[in] dValue - the constant value of this ScalarFieldConstant
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_scalarfieldconstant_setvalue(Lib3MF_ScalarFieldConstant pScalarFieldConstant, Lib3MF_double dValue);
 
 /*************************************************************************************************************************
  Class definition for ScalarFieldComposed
@@ -1814,6 +1854,64 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_vector3dfieldfromimage3d_getscale(Lib3MF_Vec
 * @return error code or 0 (success)
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_vector3dfieldfromimage3d_setscale(Lib3MF_Vector3DFieldFromImage3D pVector3DFieldFromImage3D, Lib3MF_double dScale);
+
+/*************************************************************************************************************************
+ Class definition for Vector3DFieldConstant
+**************************************************************************************************************************/
+
+/**
+* returns the constant x-value of this Vector3DFieldConstant
+*
+* @param[in] pVector3DFieldConstant - Vector3DFieldConstant instance.
+* @param[out] pValueX - the constant x-value of this Vector3DFieldConstant
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_vector3dfieldconstant_getvaluex(Lib3MF_Vector3DFieldConstant pVector3DFieldConstant, Lib3MF_double * pValueX);
+
+/**
+* Sets the constant x-value of this Vector3DFieldConstant
+*
+* @param[in] pVector3DFieldConstant - Vector3DFieldConstant instance.
+* @param[in] dValueX - the constant x-value of this Vector3DFieldConstant
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_vector3dfieldconstant_setvaluex(Lib3MF_Vector3DFieldConstant pVector3DFieldConstant, Lib3MF_double dValueX);
+
+/**
+* returns the constant y-value of this Vector3DFieldConstant
+*
+* @param[in] pVector3DFieldConstant - Vector3DFieldConstant instance.
+* @param[out] pValueY - the constant y-value of this Vector3DFieldConstant
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_vector3dfieldconstant_getvaluey(Lib3MF_Vector3DFieldConstant pVector3DFieldConstant, Lib3MF_double * pValueY);
+
+/**
+* Sets the constant y-value of this Vector3DFieldConstant
+*
+* @param[in] pVector3DFieldConstant - Vector3DFieldConstant instance.
+* @param[in] dValueY - the constant y-value of this Vector3DFieldConstant
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_vector3dfieldconstant_setvaluey(Lib3MF_Vector3DFieldConstant pVector3DFieldConstant, Lib3MF_double dValueY);
+
+/**
+* returns the constant x-value of this Vector3DFieldConstant
+*
+* @param[in] pVector3DFieldConstant - Vector3DFieldConstant instance.
+* @param[out] pValueZ - the constant x-value of this Vector3DFieldConstant
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_vector3dfieldconstant_getvaluez(Lib3MF_Vector3DFieldConstant pVector3DFieldConstant, Lib3MF_double * pValueZ);
+
+/**
+* Sets the constant z-value of this Vector3DFieldConstant
+*
+* @param[in] pVector3DFieldConstant - Vector3DFieldConstant instance.
+* @param[in] dValueZ - the constant z-value of this Vector3DFieldConstant
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_vector3dfieldconstant_setvaluez(Lib3MF_Vector3DFieldConstant pVector3DFieldConstant, Lib3MF_double dValueZ);
 
 /*************************************************************************************************************************
  Class definition for Vector3DFieldComposed

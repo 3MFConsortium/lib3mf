@@ -78,8 +78,10 @@ class IBeamLattice;
 class IScalarField;
 class IVector3DField;
 class IScalarFieldFromImage3D;
+class IScalarFieldConstant;
 class IScalarFieldComposed;
 class IVector3DFieldFromImage3D;
+class IVector3DFieldConstant;
 class IVector3DFieldComposed;
 class IFieldReference;
 class IScalarFieldReference;
@@ -1355,6 +1357,12 @@ public:
 	virtual bool IsFromImage3D() = 0;
 
 	/**
+	* IScalarField::IsConstant - Retrieves, if this ScalarField is a ScalarFieldConstant
+	* @return returns, whether the scalar field is a ScalarFieldConstant
+	*/
+	virtual bool IsConstant() = 0;
+
+	/**
 	* IScalarField::IsComposed - Retrieves, if this ScalarField is a ScalarFieldComposed
 	* @return returns, whether the scalar field is a ScalarFieldComposed
 	*/
@@ -1385,13 +1393,19 @@ public:
 
 	/**
 	* IVector3DField::IsFromImage3D - Retrieves, if this Vector3DField is a Vector3DFieldFromImage3D
-	* @return returns, whether the scalar field is a Vector3DFieldFromImage3D
+	* @return returns, whether the 3d vector field is a Vector3DFieldFromImage3D
 	*/
 	virtual bool IsFromImage3D() = 0;
 
 	/**
-	* IVector3DField::IsComposed - Retrieves, if this Vector3DField is a ScalarFieldComposed
-	* @return returns, whether the scalar field is a Vector3DFieldComposed
+	* IVector3DField::IsConstant - Retrieves, if this Vector3DField is a Vector3DFieldConstant
+	* @return returns, whether the 3d vector field is a Vector3DFieldConstant
+	*/
+	virtual bool IsConstant() = 0;
+
+	/**
+	* IVector3DField::IsComposed - Retrieves, if this Vector3DField is a Vector3DFieldComposed
+	* @return returns, whether the 3d vector field is a Vector3DFieldComposed
 	*/
 	virtual bool IsComposed() = 0;
 
@@ -1485,6 +1499,29 @@ public:
 };
 
 typedef IBaseSharedPtr<IScalarFieldFromImage3D> PIScalarFieldFromImage3D;
+
+
+/*************************************************************************************************************************
+ Class interface for ScalarFieldConstant 
+**************************************************************************************************************************/
+
+class IScalarFieldConstant : public virtual IScalarField {
+public:
+	/**
+	* IScalarFieldConstant::GetValue - returns the constant value of this ScalarFieldConstant
+	* @return the constant value of this ScalarFieldConstant
+	*/
+	virtual Lib3MF_double GetValue() = 0;
+
+	/**
+	* IScalarFieldConstant::SetValue - Sets the constant value of this ScalarFieldConstant
+	* @param[in] dValue - the constant value of this ScalarFieldConstant
+	*/
+	virtual void SetValue(const Lib3MF_double dValue) = 0;
+
+};
+
+typedef IBaseSharedPtr<IScalarFieldConstant> PIScalarFieldConstant;
 
 
 /*************************************************************************************************************************
@@ -1625,6 +1662,53 @@ public:
 };
 
 typedef IBaseSharedPtr<IVector3DFieldFromImage3D> PIVector3DFieldFromImage3D;
+
+
+/*************************************************************************************************************************
+ Class interface for Vector3DFieldConstant 
+**************************************************************************************************************************/
+
+class IVector3DFieldConstant : public virtual IVector3DField {
+public:
+	/**
+	* IVector3DFieldConstant::GetValueX - returns the constant x-value of this Vector3DFieldConstant
+	* @return the constant x-value of this Vector3DFieldConstant
+	*/
+	virtual Lib3MF_double GetValueX() = 0;
+
+	/**
+	* IVector3DFieldConstant::SetValueX - Sets the constant x-value of this Vector3DFieldConstant
+	* @param[in] dValueX - the constant x-value of this Vector3DFieldConstant
+	*/
+	virtual void SetValueX(const Lib3MF_double dValueX) = 0;
+
+	/**
+	* IVector3DFieldConstant::GetValueY - returns the constant y-value of this Vector3DFieldConstant
+	* @return the constant y-value of this Vector3DFieldConstant
+	*/
+	virtual Lib3MF_double GetValueY() = 0;
+
+	/**
+	* IVector3DFieldConstant::SetValueY - Sets the constant y-value of this Vector3DFieldConstant
+	* @param[in] dValueY - the constant y-value of this Vector3DFieldConstant
+	*/
+	virtual void SetValueY(const Lib3MF_double dValueY) = 0;
+
+	/**
+	* IVector3DFieldConstant::GetValueZ - returns the constant x-value of this Vector3DFieldConstant
+	* @return the constant x-value of this Vector3DFieldConstant
+	*/
+	virtual Lib3MF_double GetValueZ() = 0;
+
+	/**
+	* IVector3DFieldConstant::SetValueZ - Sets the constant z-value of this Vector3DFieldConstant
+	* @param[in] dValueZ - the constant z-value of this Vector3DFieldConstant
+	*/
+	virtual void SetValueZ(const Lib3MF_double dValueZ) = 0;
+
+};
+
+typedef IBaseSharedPtr<IVector3DFieldConstant> PIVector3DFieldConstant;
 
 
 /*************************************************************************************************************************

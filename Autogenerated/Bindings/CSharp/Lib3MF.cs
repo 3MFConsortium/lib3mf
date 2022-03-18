@@ -713,6 +713,9 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfield_isfromimage3d", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ScalarField_IsFromImage3D (IntPtr Handle, out Byte AIsFromImage3D);
 
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfield_isconstant", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ScalarField_IsConstant (IntPtr Handle, out Byte AIsConstant);
+
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfield_iscomposed", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ScalarField_IsComposed (IntPtr Handle, out Byte AIsComposed);
 
@@ -724,6 +727,9 @@ namespace Lib3MF {
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfield_isfromimage3d", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Vector3DField_IsFromImage3D (IntPtr Handle, out Byte AIsFromImage3D);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfield_isconstant", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Vector3DField_IsConstant (IntPtr Handle, out Byte AIsConstant);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfield_iscomposed", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Vector3DField_IsComposed (IntPtr Handle, out Byte AIsComposed);
@@ -763,6 +769,12 @@ namespace Lib3MF {
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfieldfromimage3d_setscale", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ScalarFieldFromImage3D_SetScale (IntPtr Handle, Double AScale);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfieldconstant_getvalue", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ScalarFieldConstant_GetValue (IntPtr Handle, out Double AValue);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfieldconstant_setvalue", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ScalarFieldConstant_SetValue (IntPtr Handle, Double AValue);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfieldcomposed_setmethod", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ScalarFieldComposed_SetMethod (IntPtr Handle, Int32 ATheMethod);
@@ -820,6 +832,24 @@ namespace Lib3MF {
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfieldfromimage3d_setscale", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Vector3DFieldFromImage3D_SetScale (IntPtr Handle, Double AScale);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfieldconstant_getvaluex", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Vector3DFieldConstant_GetValueX (IntPtr Handle, out Double AValueX);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfieldconstant_setvaluex", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Vector3DFieldConstant_SetValueX (IntPtr Handle, Double AValueX);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfieldconstant_getvaluey", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Vector3DFieldConstant_GetValueY (IntPtr Handle, out Double AValueY);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfieldconstant_setvaluey", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Vector3DFieldConstant_SetValueY (IntPtr Handle, Double AValueY);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfieldconstant_getvaluez", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Vector3DFieldConstant_GetValueZ (IntPtr Handle, out Double AValueZ);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfieldconstant_setvaluez", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Vector3DFieldConstant_SetValueZ (IntPtr Handle, Double AValueZ);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfieldcomposed_setmethod", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Vector3DFieldComposed_SetMethod (IntPtr Handle, Int32 ATheMethod);
@@ -3395,6 +3425,14 @@ namespace Lib3MF {
 			return (resultIsFromImage3D != 0);
 		}
 
+		public bool IsConstant ()
+		{
+			Byte resultIsConstant = 0;
+
+			CheckError(Internal.Lib3MFWrapper.ScalarField_IsConstant (Handle, out resultIsConstant));
+			return (resultIsConstant != 0);
+		}
+
 		public bool IsComposed ()
 		{
 			Byte resultIsComposed = 0;
@@ -3438,6 +3476,14 @@ namespace Lib3MF {
 
 			CheckError(Internal.Lib3MFWrapper.Vector3DField_IsFromImage3D (Handle, out resultIsFromImage3D));
 			return (resultIsFromImage3D != 0);
+		}
+
+		public bool IsConstant ()
+		{
+			Byte resultIsConstant = 0;
+
+			CheckError(Internal.Lib3MFWrapper.Vector3DField_IsConstant (Handle, out resultIsConstant));
+			return (resultIsConstant != 0);
 		}
 
 		public bool IsComposed ()
@@ -3547,6 +3593,28 @@ namespace Lib3MF {
 		{
 
 			CheckError(Internal.Lib3MFWrapper.ScalarFieldFromImage3D_SetScale (Handle, AScale));
+		}
+
+	}
+
+	class CScalarFieldConstant : CScalarField
+	{
+		public CScalarFieldConstant (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+		public Double GetValue ()
+		{
+			Double resultValue = 0;
+
+			CheckError(Internal.Lib3MFWrapper.ScalarFieldConstant_GetValue (Handle, out resultValue));
+			return resultValue;
+		}
+
+		public void SetValue (Double AValue)
+		{
+
+			CheckError(Internal.Lib3MFWrapper.ScalarFieldConstant_SetValue (Handle, AValue));
 		}
 
 	}
@@ -3708,6 +3776,56 @@ namespace Lib3MF {
 		{
 
 			CheckError(Internal.Lib3MFWrapper.Vector3DFieldFromImage3D_SetScale (Handle, AScale));
+		}
+
+	}
+
+	class CVector3DFieldConstant : CVector3DField
+	{
+		public CVector3DFieldConstant (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+		public Double GetValueX ()
+		{
+			Double resultValueX = 0;
+
+			CheckError(Internal.Lib3MFWrapper.Vector3DFieldConstant_GetValueX (Handle, out resultValueX));
+			return resultValueX;
+		}
+
+		public void SetValueX (Double AValueX)
+		{
+
+			CheckError(Internal.Lib3MFWrapper.Vector3DFieldConstant_SetValueX (Handle, AValueX));
+		}
+
+		public Double GetValueY ()
+		{
+			Double resultValueY = 0;
+
+			CheckError(Internal.Lib3MFWrapper.Vector3DFieldConstant_GetValueY (Handle, out resultValueY));
+			return resultValueY;
+		}
+
+		public void SetValueY (Double AValueY)
+		{
+
+			CheckError(Internal.Lib3MFWrapper.Vector3DFieldConstant_SetValueY (Handle, AValueY));
+		}
+
+		public Double GetValueZ ()
+		{
+			Double resultValueZ = 0;
+
+			CheckError(Internal.Lib3MFWrapper.Vector3DFieldConstant_GetValueZ (Handle, out resultValueZ));
+			return resultValueZ;
+		}
+
+		public void SetValueZ (Double AValueZ)
+		{
+
+			CheckError(Internal.Lib3MFWrapper.Vector3DFieldConstant_SetValueZ (Handle, AValueZ));
 		}
 
 	}

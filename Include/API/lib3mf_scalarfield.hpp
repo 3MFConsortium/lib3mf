@@ -83,6 +83,8 @@ public:
 
 	bool IsFromImage3D() override;
 
+	bool IsConstant() override;
+
 	bool IsComposed() override;
 
 };

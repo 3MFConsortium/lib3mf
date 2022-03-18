@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium (Original Author)
+Copyright (C) 2019 3MF Consortium
 
 All rights reserved.
 
@@ -24,50 +24,44 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract: This is a stub class definition of CScalarField
+Abstract:
 
-*/
+NMR_ModelVector3DFieldFromConstant.h defines the Model Vector3DFieldConstant Class.
+--*/
 
-#include "lib3mf_scalarfield.hpp"
-#include "lib3mf_interfaceexception.hpp"
+#ifndef __NMR_MODELVECTOR3DFIELDCONSTANT
+#define __NMR_MODELVECTOR3DFIELDCONSTANT
 
-// Include custom headers here.
+#include "Model/Classes/NMR_Model.h"
+#include "Model/Classes/NMR_ModelVector3DField.h"
+#include "Common/NMR_Types.h"
+#include "Common/Math/NMR_Matrix.h"
 
+#include <vector>
 
-using namespace Lib3MF::Impl;
+namespace NMR {
 
-/*************************************************************************************************************************
- Class definition of CScalarField 
-**************************************************************************************************************************/
+	class CModel;
+	typedef std::shared_ptr <CModel> PModel;
 
-CScalarField::CScalarField(NMR::PModelScalarField pResource)
-	:CResource(pResource)
-{
+	class CModelVector3DFieldConstant : public CModelVector3DField {
+	private:
+		nfDouble m_dValueX = 0.0;
+		nfDouble m_dValueY = 0.0;
+		nfDouble m_dValueZ = 0.0;
+	public:
+		CModelVector3DFieldConstant() = delete;
+		CModelVector3DFieldConstant(_In_ const ModelResourceID sID, _In_ CModel * pModel);
 
+		nfDouble getValueX() const;
+		void setValueX(nfDouble);
+		nfDouble getValueY() const;
+		void setValueY(nfDouble);
+		nfDouble getValueZ() const;
+		void setValueZ(nfDouble);
+	};
+
+	typedef std::shared_ptr<CModelVector3DFieldConstant> PModelVector3DFieldConstant;
 }
 
-std::string CScalarField::GetName()
-{
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
-}
-
-void CScalarField::SetName(const std::string & sName)
-{
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
-}
-
-bool CScalarField::IsFromImage3D()
-{
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
-}
-
-bool CScalarField::IsConstant()
-{
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
-}
-
-bool CScalarField::IsComposed()
-{
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
-}
-
+#endif // __NMR_MODELVECTOR3DFIELDCONSTANT

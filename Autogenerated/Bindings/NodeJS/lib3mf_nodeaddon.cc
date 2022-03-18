@@ -75,8 +75,10 @@ void InitAll(Handle<Object> exports, Handle<Object> module)
     CLib3MFScalarField::Init();
     CLib3MFVector3DField::Init();
     CLib3MFScalarFieldFromImage3D::Init();
+    CLib3MFScalarFieldConstant::Init();
     CLib3MFScalarFieldComposed::Init();
     CLib3MFVector3DFieldFromImage3D::Init();
+    CLib3MFVector3DFieldConstant::Init();
     CLib3MFVector3DFieldComposed::Init();
     CLib3MFFieldReference::Init();
     CLib3MFScalarFieldReference::Init();

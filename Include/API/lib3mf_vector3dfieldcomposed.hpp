@@ -35,7 +35,7 @@ Abstract: This is the class declaration of CVector3DFieldComposed
 #include "lib3mf_interfaces.hpp"
 
 // Parent classes
-#include "lib3mf_scalarfield.hpp"
+#include "lib3mf_vector3dfield.hpp"
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable : 4250)
@@ -52,7 +52,7 @@ namespace Impl {
  Class declaration of CVector3DFieldComposed 
 **************************************************************************************************************************/
 
-class CVector3DFieldComposed : public virtual IVector3DFieldComposed, public virtual CScalarField {
+class CVector3DFieldComposed : public virtual IVector3DFieldComposed, public virtual CVector3DField {
 private:
 
 	/**

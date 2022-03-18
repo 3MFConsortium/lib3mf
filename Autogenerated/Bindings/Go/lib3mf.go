@@ -1550,6 +1550,15 @@ type Lib3MFGoInterface interface {
 
 
 	/**
+	* Retrieves, if this ScalarField is a ScalarFieldConstant
+	*
+	* @param[in] ScalarField - ScalarField instance.
+	* @return returns, whether the scalar field is a ScalarFieldConstant
+	*/
+	ScalarField_IsConstant(ScalarField Lib3MFHandle) (bool, error)
+
+
+	/**
 	* Retrieves, if this ScalarField is a ScalarFieldComposed
 	*
 	* @param[in] ScalarField - ScalarField instance.
@@ -1580,16 +1589,25 @@ type Lib3MFGoInterface interface {
 	* Retrieves, if this Vector3DField is a Vector3DFieldFromImage3D
 	*
 	* @param[in] Vector3DField - Vector3DField instance.
-	* @return returns, whether the scalar field is a Vector3DFieldFromImage3D
+	* @return returns, whether the 3d vector field is a Vector3DFieldFromImage3D
 	*/
 	Vector3DField_IsFromImage3D(Vector3DField Lib3MFHandle) (bool, error)
 
 
 	/**
-	* Retrieves, if this Vector3DField is a ScalarFieldComposed
+	* Retrieves, if this Vector3DField is a Vector3DFieldConstant
 	*
 	* @param[in] Vector3DField - Vector3DField instance.
-	* @return returns, whether the scalar field is a Vector3DFieldComposed
+	* @return returns, whether the 3d vector field is a Vector3DFieldConstant
+	*/
+	Vector3DField_IsConstant(Vector3DField Lib3MFHandle) (bool, error)
+
+
+	/**
+	* Retrieves, if this Vector3DField is a Vector3DFieldComposed
+	*
+	* @param[in] Vector3DField - Vector3DField instance.
+	* @return returns, whether the 3d vector field is a Vector3DFieldComposed
 	*/
 	Vector3DField_IsComposed(Vector3DField Lib3MFHandle) (bool, error)
 
@@ -1704,6 +1722,24 @@ type Lib3MFGoInterface interface {
 	* @param[in] dScale - the scale value for the pixel values in the Image3D
 	*/
 	ScalarFieldFromImage3D_SetScale(ScalarFieldFromImage3D Lib3MFHandle, dScale float64) (error)
+
+
+	/**
+	* returns the constant value of this ScalarFieldConstant
+	*
+	* @param[in] ScalarFieldConstant - ScalarFieldConstant instance.
+	* @return the constant value of this ScalarFieldConstant
+	*/
+	ScalarFieldConstant_GetValue(ScalarFieldConstant Lib3MFHandle) (float64, error)
+
+
+	/**
+	* Sets the constant value of this ScalarFieldConstant
+	*
+	* @param[in] ScalarFieldConstant - ScalarFieldConstant instance.
+	* @param[in] dValue - the constant value of this ScalarFieldConstant
+	*/
+	ScalarFieldConstant_SetValue(ScalarFieldConstant Lib3MFHandle, dValue float64) (error)
 
 
 	/**
@@ -1879,6 +1915,60 @@ type Lib3MFGoInterface interface {
 	* @param[in] dScale - the scale value for the pixel values in the Image3D
 	*/
 	Vector3DFieldFromImage3D_SetScale(Vector3DFieldFromImage3D Lib3MFHandle, dScale float64) (error)
+
+
+	/**
+	* returns the constant x-value of this Vector3DFieldConstant
+	*
+	* @param[in] Vector3DFieldConstant - Vector3DFieldConstant instance.
+	* @return the constant x-value of this Vector3DFieldConstant
+	*/
+	Vector3DFieldConstant_GetValueX(Vector3DFieldConstant Lib3MFHandle) (float64, error)
+
+
+	/**
+	* Sets the constant x-value of this Vector3DFieldConstant
+	*
+	* @param[in] Vector3DFieldConstant - Vector3DFieldConstant instance.
+	* @param[in] dValueX - the constant x-value of this Vector3DFieldConstant
+	*/
+	Vector3DFieldConstant_SetValueX(Vector3DFieldConstant Lib3MFHandle, dValueX float64) (error)
+
+
+	/**
+	* returns the constant y-value of this Vector3DFieldConstant
+	*
+	* @param[in] Vector3DFieldConstant - Vector3DFieldConstant instance.
+	* @return the constant y-value of this Vector3DFieldConstant
+	*/
+	Vector3DFieldConstant_GetValueY(Vector3DFieldConstant Lib3MFHandle) (float64, error)
+
+
+	/**
+	* Sets the constant y-value of this Vector3DFieldConstant
+	*
+	* @param[in] Vector3DFieldConstant - Vector3DFieldConstant instance.
+	* @param[in] dValueY - the constant y-value of this Vector3DFieldConstant
+	*/
+	Vector3DFieldConstant_SetValueY(Vector3DFieldConstant Lib3MFHandle, dValueY float64) (error)
+
+
+	/**
+	* returns the constant x-value of this Vector3DFieldConstant
+	*
+	* @param[in] Vector3DFieldConstant - Vector3DFieldConstant instance.
+	* @return the constant x-value of this Vector3DFieldConstant
+	*/
+	Vector3DFieldConstant_GetValueZ(Vector3DFieldConstant Lib3MFHandle) (float64, error)
+
+
+	/**
+	* Sets the constant z-value of this Vector3DFieldConstant
+	*
+	* @param[in] Vector3DFieldConstant - Vector3DFieldConstant instance.
+	* @param[in] dValueZ - the constant z-value of this Vector3DFieldConstant
+	*/
+	Vector3DFieldConstant_SetValueZ(Vector3DFieldConstant Lib3MFHandle, dValueZ float64) (error)
 
 
 	/**
@@ -5781,6 +5871,11 @@ func (instance *Lib3MFScalarField) IsFromImage3D() (bool, error) {
 	return bIsFromImage3D, error
 }
 
+func (instance *Lib3MFScalarField) IsConstant() (bool, error) {
+	bIsConstant, error := instance.Interface.ScalarField_IsConstant(instance.Handle)
+	return bIsConstant, error
+}
+
 func (instance *Lib3MFScalarField) IsComposed() (bool, error) {
 	bIsComposed, error := instance.Interface.ScalarField_IsComposed(instance.Handle)
 	return bIsComposed, error
@@ -5812,6 +5907,11 @@ func (instance *Lib3MFVector3DField) SetName(sName string) (error) {
 func (instance *Lib3MFVector3DField) IsFromImage3D() (bool, error) {
 	bIsFromImage3D, error := instance.Interface.Vector3DField_IsFromImage3D(instance.Handle)
 	return bIsFromImage3D, error
+}
+
+func (instance *Lib3MFVector3DField) IsConstant() (bool, error) {
+	bIsConstant, error := instance.Interface.Vector3DField_IsConstant(instance.Handle)
+	return bIsConstant, error
 }
 
 func (instance *Lib3MFVector3DField) IsComposed() (bool, error) {
@@ -5892,6 +5992,29 @@ func (instance *Lib3MFScalarFieldFromImage3D) GetScale() (float64, error) {
 
 func (instance *Lib3MFScalarFieldFromImage3D) SetScale(dScale float64) (error) {
 	error := instance.Interface.ScalarFieldFromImage3D_SetScale(instance.Handle, dScale)
+	return error
+}
+
+
+/*************************************************************************************************************************
+Class definition Lib3MFScalarFieldConstant
+**************************************************************************************************************************/
+
+type Lib3MFScalarFieldConstant struct {
+	Lib3MFScalarField
+}
+
+func (instance *Lib3MFScalarFieldConstant) Close() (error) {
+	return instance.Handle.Close()
+}
+
+func (instance *Lib3MFScalarFieldConstant) GetValue() (float64, error) {
+	dValue, error := instance.Interface.ScalarFieldConstant_GetValue(instance.Handle)
+	return dValue, error
+}
+
+func (instance *Lib3MFScalarFieldConstant) SetValue(dValue float64) (error) {
+	error := instance.Interface.ScalarFieldConstant_SetValue(instance.Handle, dValue)
 	return error
 }
 
@@ -6025,6 +6148,49 @@ func (instance *Lib3MFVector3DFieldFromImage3D) GetScale() (float64, error) {
 
 func (instance *Lib3MFVector3DFieldFromImage3D) SetScale(dScale float64) (error) {
 	error := instance.Interface.Vector3DFieldFromImage3D_SetScale(instance.Handle, dScale)
+	return error
+}
+
+
+/*************************************************************************************************************************
+Class definition Lib3MFVector3DFieldConstant
+**************************************************************************************************************************/
+
+type Lib3MFVector3DFieldConstant struct {
+	Lib3MFVector3DField
+}
+
+func (instance *Lib3MFVector3DFieldConstant) Close() (error) {
+	return instance.Handle.Close()
+}
+
+func (instance *Lib3MFVector3DFieldConstant) GetValueX() (float64, error) {
+	dValueX, error := instance.Interface.Vector3DFieldConstant_GetValueX(instance.Handle)
+	return dValueX, error
+}
+
+func (instance *Lib3MFVector3DFieldConstant) SetValueX(dValueX float64) (error) {
+	error := instance.Interface.Vector3DFieldConstant_SetValueX(instance.Handle, dValueX)
+	return error
+}
+
+func (instance *Lib3MFVector3DFieldConstant) GetValueY() (float64, error) {
+	dValueY, error := instance.Interface.Vector3DFieldConstant_GetValueY(instance.Handle)
+	return dValueY, error
+}
+
+func (instance *Lib3MFVector3DFieldConstant) SetValueY(dValueY float64) (error) {
+	error := instance.Interface.Vector3DFieldConstant_SetValueY(instance.Handle, dValueY)
+	return error
+}
+
+func (instance *Lib3MFVector3DFieldConstant) GetValueZ() (float64, error) {
+	dValueZ, error := instance.Interface.Vector3DFieldConstant_GetValueZ(instance.Handle)
+	return dValueZ, error
+}
+
+func (instance *Lib3MFVector3DFieldConstant) SetValueZ(dValueZ float64) (error) {
+	error := instance.Interface.Vector3DFieldConstant_SetValueZ(instance.Handle, dValueZ)
 	return error
 }
 

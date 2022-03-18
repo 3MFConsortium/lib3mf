@@ -68,8 +68,10 @@ Persistent<Function> CLib3MFBeamLattice::constructor;
 Persistent<Function> CLib3MFScalarField::constructor;
 Persistent<Function> CLib3MFVector3DField::constructor;
 Persistent<Function> CLib3MFScalarFieldFromImage3D::constructor;
+Persistent<Function> CLib3MFScalarFieldConstant::constructor;
 Persistent<Function> CLib3MFScalarFieldComposed::constructor;
 Persistent<Function> CLib3MFVector3DFieldFromImage3D::constructor;
+Persistent<Function> CLib3MFVector3DFieldConstant::constructor;
 Persistent<Function> CLib3MFVector3DFieldComposed::constructor;
 Persistent<Function> CLib3MFFieldReference::constructor;
 Persistent<Function> CLib3MFScalarFieldReference::constructor;
@@ -5920,6 +5922,7 @@ void CLib3MFScalarField::Init()
     NODE_SET_PROTOTYPE_METHOD(tpl, "GetName", GetName);
     NODE_SET_PROTOTYPE_METHOD(tpl, "SetName", SetName);
     NODE_SET_PROTOTYPE_METHOD(tpl, "IsFromImage3D", IsFromImage3D);
+    NODE_SET_PROTOTYPE_METHOD(tpl, "IsConstant", IsConstant);
     NODE_SET_PROTOTYPE_METHOD(tpl, "IsComposed", IsComposed);
     constructor.Reset(isolate, tpl->GetFunction());
 
@@ -6028,6 +6031,28 @@ void CLib3MFScalarField::IsFromImage3D (const FunctionCallbackInfo<Value>& args)
 }
 
 
+void CLib3MFScalarField::IsConstant (const FunctionCallbackInfo<Value>& args) 
+{
+    Isolate* isolate = args.GetIsolate();
+    HandleScope scope(isolate);
+    try {
+        bool bReturnIsConstant = false;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error ("Could not get wrapper table for Lib3MF method IsConstant.");
+        if (wrapperTable->m_ScalarField_IsConstant == nullptr)
+            throw std::runtime_error ("Could not call Lib3MF method ScalarField::IsConstant.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ScalarField_IsConstant (instanceHandle, &bReturnIsConstant);
+        CheckError (isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set (Boolean::New (isolate, bReturnIsConstant));
+
+    } catch (std::exception & E) {
+        RaiseError (isolate, E.what());
+    }
+}
+
+
 void CLib3MFScalarField::IsComposed (const FunctionCallbackInfo<Value>& args) 
 {
     Isolate* isolate = args.GetIsolate();
@@ -6075,6 +6100,7 @@ void CLib3MFVector3DField::Init()
     NODE_SET_PROTOTYPE_METHOD(tpl, "GetName", GetName);
     NODE_SET_PROTOTYPE_METHOD(tpl, "SetName", SetName);
     NODE_SET_PROTOTYPE_METHOD(tpl, "IsFromImage3D", IsFromImage3D);
+    NODE_SET_PROTOTYPE_METHOD(tpl, "IsConstant", IsConstant);
     NODE_SET_PROTOTYPE_METHOD(tpl, "IsComposed", IsComposed);
     constructor.Reset(isolate, tpl->GetFunction());
 
@@ -6176,6 +6202,28 @@ void CLib3MFVector3DField::IsFromImage3D (const FunctionCallbackInfo<Value>& arg
         Lib3MFResult errorCode = wrapperTable->m_Vector3DField_IsFromImage3D (instanceHandle, &bReturnIsFromImage3D);
         CheckError (isolate, wrapperTable, instanceHandle, errorCode);
         args.GetReturnValue().Set (Boolean::New (isolate, bReturnIsFromImage3D));
+
+    } catch (std::exception & E) {
+        RaiseError (isolate, E.what());
+    }
+}
+
+
+void CLib3MFVector3DField::IsConstant (const FunctionCallbackInfo<Value>& args) 
+{
+    Isolate* isolate = args.GetIsolate();
+    HandleScope scope(isolate);
+    try {
+        bool bReturnIsConstant = false;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error ("Could not get wrapper table for Lib3MF method IsConstant.");
+        if (wrapperTable->m_Vector3DField_IsConstant == nullptr)
+            throw std::runtime_error ("Could not call Lib3MF method Vector3DField::IsConstant.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Vector3DField_IsConstant (instanceHandle, &bReturnIsConstant);
+        CheckError (isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set (Boolean::New (isolate, bReturnIsConstant));
 
     } catch (std::exception & E) {
         RaiseError (isolate, E.what());
@@ -6559,6 +6607,109 @@ void CLib3MFScalarFieldFromImage3D::SetScale (const FunctionCallbackInfo<Value>&
             throw std::runtime_error ("Could not call Lib3MF method ScalarFieldFromImage3D::SetScale.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
         Lib3MFResult errorCode = wrapperTable->m_ScalarFieldFromImage3D_SetScale (instanceHandle, dScale);
+        CheckError (isolate, wrapperTable, instanceHandle, errorCode);
+
+    } catch (std::exception & E) {
+        RaiseError (isolate, E.what());
+    }
+}
+
+/*************************************************************************************************************************
+ Class CLib3MFScalarFieldConstant Implementation
+**************************************************************************************************************************/
+
+CLib3MFScalarFieldConstant::CLib3MFScalarFieldConstant ()
+    : CLib3MFBaseClass ()
+{
+}
+
+CLib3MFScalarFieldConstant::~CLib3MFScalarFieldConstant()
+{
+}
+
+void CLib3MFScalarFieldConstant::Init()
+{
+    Isolate* isolate = Isolate::GetCurrent();
+
+    // Prepare constructor template
+    Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
+    tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFScalarFieldConstant"));
+    tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
+
+    // Prototype
+    NODE_SET_PROTOTYPE_METHOD(tpl, "GetValue", GetValue);
+    NODE_SET_PROTOTYPE_METHOD(tpl, "SetValue", SetValue);
+    constructor.Reset(isolate, tpl->GetFunction());
+
+}
+
+void CLib3MFScalarFieldConstant::New(const FunctionCallbackInfo<Value>& args)
+{
+    Isolate* isolate = args.GetIsolate();
+    HandleScope scope(isolate);
+
+    if (args.IsConstructCall()) {
+        CLib3MFBaseClass * holderObj = ObjectWrap::Unwrap<CLib3MFBaseClass>(args.Holder());
+        CLib3MFScalarFieldConstant * scalarfieldconstantInstance = new CLib3MFScalarFieldConstant ();
+        scalarfieldconstantInstance->Wrap(args.This());
+        args.GetReturnValue().Set(args.This());
+    } else {
+        RaiseError (isolate, "Lib3MFScalarFieldConstant: Invalid call to Constructor");
+    }
+}
+
+Local<Object> CLib3MFScalarFieldConstant::NewInstance(Local<Object> pParent, Lib3MFHandle pHandle)
+{
+    Isolate* isolate = Isolate::GetCurrent();
+    HandleScope scope(isolate);
+    Local<Function> cons = Local<Function>::New(isolate, constructor);
+    Local<Object> instance;
+    if (cons->NewInstance(isolate->GetCurrentContext()).ToLocal (&instance)) {
+      instance->SetInternalField (NODEWRAPPER_TABLEINDEX, External::New (isolate, CLib3MFBaseClass::getDynamicWrapperTable (pParent)));
+      instance->SetInternalField (NODEWRAPPER_HANDLEINDEX, External::New (isolate, pHandle));
+    }
+    return instance;
+}
+
+
+void CLib3MFScalarFieldConstant::GetValue (const FunctionCallbackInfo<Value>& args) 
+{
+    Isolate* isolate = args.GetIsolate();
+    HandleScope scope(isolate);
+    try {
+        double dReturnValue = 0.0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error ("Could not get wrapper table for Lib3MF method GetValue.");
+        if (wrapperTable->m_ScalarFieldConstant_GetValue == nullptr)
+            throw std::runtime_error ("Could not call Lib3MF method ScalarFieldConstant::GetValue.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ScalarFieldConstant_GetValue (instanceHandle, &dReturnValue);
+        CheckError (isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set (Number::New (isolate, dReturnValue));
+
+    } catch (std::exception & E) {
+        RaiseError (isolate, E.what());
+    }
+}
+
+
+void CLib3MFScalarFieldConstant::SetValue (const FunctionCallbackInfo<Value>& args) 
+{
+    Isolate* isolate = args.GetIsolate();
+    HandleScope scope(isolate);
+    try {
+        if (!args[0]->IsNumber()) {
+            throw std::runtime_error ("Expected double parameter 0 (Value)");
+        }
+        double dValue = (double) args[0]->NumberValue ();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error ("Could not get wrapper table for Lib3MF method SetValue.");
+        if (wrapperTable->m_ScalarFieldConstant_SetValue == nullptr)
+            throw std::runtime_error ("Could not call Lib3MF method ScalarFieldConstant::SetValue.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_ScalarFieldConstant_SetValue (instanceHandle, dValue);
         CheckError (isolate, wrapperTable, instanceHandle, errorCode);
 
     } catch (std::exception & E) {
@@ -7144,6 +7295,205 @@ void CLib3MFVector3DFieldFromImage3D::SetScale (const FunctionCallbackInfo<Value
             throw std::runtime_error ("Could not call Lib3MF method Vector3DFieldFromImage3D::SetScale.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
         Lib3MFResult errorCode = wrapperTable->m_Vector3DFieldFromImage3D_SetScale (instanceHandle, dScale);
+        CheckError (isolate, wrapperTable, instanceHandle, errorCode);
+
+    } catch (std::exception & E) {
+        RaiseError (isolate, E.what());
+    }
+}
+
+/*************************************************************************************************************************
+ Class CLib3MFVector3DFieldConstant Implementation
+**************************************************************************************************************************/
+
+CLib3MFVector3DFieldConstant::CLib3MFVector3DFieldConstant ()
+    : CLib3MFBaseClass ()
+{
+}
+
+CLib3MFVector3DFieldConstant::~CLib3MFVector3DFieldConstant()
+{
+}
+
+void CLib3MFVector3DFieldConstant::Init()
+{
+    Isolate* isolate = Isolate::GetCurrent();
+
+    // Prepare constructor template
+    Local<FunctionTemplate> tpl = FunctionTemplate::New(isolate, New);
+    tpl->SetClassName(String::NewFromUtf8(isolate, "Lib3MFVector3DFieldConstant"));
+    tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
+
+    // Prototype
+    NODE_SET_PROTOTYPE_METHOD(tpl, "GetValueX", GetValueX);
+    NODE_SET_PROTOTYPE_METHOD(tpl, "SetValueX", SetValueX);
+    NODE_SET_PROTOTYPE_METHOD(tpl, "GetValueY", GetValueY);
+    NODE_SET_PROTOTYPE_METHOD(tpl, "SetValueY", SetValueY);
+    NODE_SET_PROTOTYPE_METHOD(tpl, "GetValueZ", GetValueZ);
+    NODE_SET_PROTOTYPE_METHOD(tpl, "SetValueZ", SetValueZ);
+    constructor.Reset(isolate, tpl->GetFunction());
+
+}
+
+void CLib3MFVector3DFieldConstant::New(const FunctionCallbackInfo<Value>& args)
+{
+    Isolate* isolate = args.GetIsolate();
+    HandleScope scope(isolate);
+
+    if (args.IsConstructCall()) {
+        CLib3MFBaseClass * holderObj = ObjectWrap::Unwrap<CLib3MFBaseClass>(args.Holder());
+        CLib3MFVector3DFieldConstant * vector3dfieldconstantInstance = new CLib3MFVector3DFieldConstant ();
+        vector3dfieldconstantInstance->Wrap(args.This());
+        args.GetReturnValue().Set(args.This());
+    } else {
+        RaiseError (isolate, "Lib3MFVector3DFieldConstant: Invalid call to Constructor");
+    }
+}
+
+Local<Object> CLib3MFVector3DFieldConstant::NewInstance(Local<Object> pParent, Lib3MFHandle pHandle)
+{
+    Isolate* isolate = Isolate::GetCurrent();
+    HandleScope scope(isolate);
+    Local<Function> cons = Local<Function>::New(isolate, constructor);
+    Local<Object> instance;
+    if (cons->NewInstance(isolate->GetCurrentContext()).ToLocal (&instance)) {
+      instance->SetInternalField (NODEWRAPPER_TABLEINDEX, External::New (isolate, CLib3MFBaseClass::getDynamicWrapperTable (pParent)));
+      instance->SetInternalField (NODEWRAPPER_HANDLEINDEX, External::New (isolate, pHandle));
+    }
+    return instance;
+}
+
+
+void CLib3MFVector3DFieldConstant::GetValueX (const FunctionCallbackInfo<Value>& args) 
+{
+    Isolate* isolate = args.GetIsolate();
+    HandleScope scope(isolate);
+    try {
+        double dReturnValueX = 0.0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error ("Could not get wrapper table for Lib3MF method GetValueX.");
+        if (wrapperTable->m_Vector3DFieldConstant_GetValueX == nullptr)
+            throw std::runtime_error ("Could not call Lib3MF method Vector3DFieldConstant::GetValueX.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Vector3DFieldConstant_GetValueX (instanceHandle, &dReturnValueX);
+        CheckError (isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set (Number::New (isolate, dReturnValueX));
+
+    } catch (std::exception & E) {
+        RaiseError (isolate, E.what());
+    }
+}
+
+
+void CLib3MFVector3DFieldConstant::SetValueX (const FunctionCallbackInfo<Value>& args) 
+{
+    Isolate* isolate = args.GetIsolate();
+    HandleScope scope(isolate);
+    try {
+        if (!args[0]->IsNumber()) {
+            throw std::runtime_error ("Expected double parameter 0 (ValueX)");
+        }
+        double dValueX = (double) args[0]->NumberValue ();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error ("Could not get wrapper table for Lib3MF method SetValueX.");
+        if (wrapperTable->m_Vector3DFieldConstant_SetValueX == nullptr)
+            throw std::runtime_error ("Could not call Lib3MF method Vector3DFieldConstant::SetValueX.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Vector3DFieldConstant_SetValueX (instanceHandle, dValueX);
+        CheckError (isolate, wrapperTable, instanceHandle, errorCode);
+
+    } catch (std::exception & E) {
+        RaiseError (isolate, E.what());
+    }
+}
+
+
+void CLib3MFVector3DFieldConstant::GetValueY (const FunctionCallbackInfo<Value>& args) 
+{
+    Isolate* isolate = args.GetIsolate();
+    HandleScope scope(isolate);
+    try {
+        double dReturnValueY = 0.0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error ("Could not get wrapper table for Lib3MF method GetValueY.");
+        if (wrapperTable->m_Vector3DFieldConstant_GetValueY == nullptr)
+            throw std::runtime_error ("Could not call Lib3MF method Vector3DFieldConstant::GetValueY.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Vector3DFieldConstant_GetValueY (instanceHandle, &dReturnValueY);
+        CheckError (isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set (Number::New (isolate, dReturnValueY));
+
+    } catch (std::exception & E) {
+        RaiseError (isolate, E.what());
+    }
+}
+
+
+void CLib3MFVector3DFieldConstant::SetValueY (const FunctionCallbackInfo<Value>& args) 
+{
+    Isolate* isolate = args.GetIsolate();
+    HandleScope scope(isolate);
+    try {
+        if (!args[0]->IsNumber()) {
+            throw std::runtime_error ("Expected double parameter 0 (ValueY)");
+        }
+        double dValueY = (double) args[0]->NumberValue ();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error ("Could not get wrapper table for Lib3MF method SetValueY.");
+        if (wrapperTable->m_Vector3DFieldConstant_SetValueY == nullptr)
+            throw std::runtime_error ("Could not call Lib3MF method Vector3DFieldConstant::SetValueY.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Vector3DFieldConstant_SetValueY (instanceHandle, dValueY);
+        CheckError (isolate, wrapperTable, instanceHandle, errorCode);
+
+    } catch (std::exception & E) {
+        RaiseError (isolate, E.what());
+    }
+}
+
+
+void CLib3MFVector3DFieldConstant::GetValueZ (const FunctionCallbackInfo<Value>& args) 
+{
+    Isolate* isolate = args.GetIsolate();
+    HandleScope scope(isolate);
+    try {
+        double dReturnValueZ = 0.0;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error ("Could not get wrapper table for Lib3MF method GetValueZ.");
+        if (wrapperTable->m_Vector3DFieldConstant_GetValueZ == nullptr)
+            throw std::runtime_error ("Could not call Lib3MF method Vector3DFieldConstant::GetValueZ.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Vector3DFieldConstant_GetValueZ (instanceHandle, &dReturnValueZ);
+        CheckError (isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set (Number::New (isolate, dReturnValueZ));
+
+    } catch (std::exception & E) {
+        RaiseError (isolate, E.what());
+    }
+}
+
+
+void CLib3MFVector3DFieldConstant::SetValueZ (const FunctionCallbackInfo<Value>& args) 
+{
+    Isolate* isolate = args.GetIsolate();
+    HandleScope scope(isolate);
+    try {
+        if (!args[0]->IsNumber()) {
+            throw std::runtime_error ("Expected double parameter 0 (ValueZ)");
+        }
+        double dValueZ = (double) args[0]->NumberValue ();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error ("Could not get wrapper table for Lib3MF method SetValueZ.");
+        if (wrapperTable->m_Vector3DFieldConstant_SetValueZ == nullptr)
+            throw std::runtime_error ("Could not call Lib3MF method Vector3DFieldConstant::SetValueZ.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Vector3DFieldConstant_SetValueZ (instanceHandle, dValueZ);
         CheckError (isolate, wrapperTable, instanceHandle, errorCode);
 
     } catch (std::exception & E) {
