@@ -50,7 +50,7 @@ namespace NMR {
 		m_strm.avail_in = 0;
 		m_strm.next_in = Z_NULL;
 
-		if (inflateInit(&m_strm) != Z_OK)
+		if (inflateInit2(&m_strm, -MAX_WBITS) != Z_OK)
 			throw CNMRException(NMR_ERROR_COULDNOTINITINFLATE);
 	}
 
