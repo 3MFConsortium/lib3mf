@@ -193,11 +193,12 @@ namespace NMR {
 			if (sPartName.empty())
 				throw CNMRException(NMR_ERROR_CONTENTTYPE_EMPTY_PARTNAME);
 
-			POpcPackageContentType_Override pRelationShip = std::make_shared<COpcPackageContentType_Override>(sPartName, sContentType);
+			std::string sRelativePartName = fnRemoveLeadingPathDelimiter(sPartName);
 			for (auto it : m_Overrides) {
-				if (it->m_partName == sPartName)
+				if (it->m_partName == sRelativePartName)
 					throw CNMRException(NMR_ERROR_DUPLICATE_CONTENTTYPE);
 			}
+			POpcPackageContentType_Override pRelationShip = std::make_shared<COpcPackageContentType_Override>(sRelativePartName, sContentType);
 			m_Overrides.push_back(pRelationShip);
 		}
 		else {
