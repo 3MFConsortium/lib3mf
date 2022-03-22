@@ -794,10 +794,17 @@ namespace NMR {
 	{
 		writeStartElement(XML_3MF_ELEMENT_BUILD);
 		if (m_bWriteProductionExtension) {
-			if (!m_pModel->buildUUID().get()) {
+			PUUID pUUID;
+			if (m_bIsRootModel) {
+				pUUID = m_pModel->buildUUID();
+			}
+			else {
+				pUUID = std::make_shared<CUUID>();
+			}
+			if (!pUUID) {
 				throw CNMRException(NMR_ERROR_MISSINGUUID);
 			}
-			writePrefixedStringAttribute(XML_3MF_NAMESPACEPREFIX_PRODUCTION, XML_3MF_PRODUCTION_UUID, m_pModel->buildUUID()->toString());
+			writePrefixedStringAttribute(XML_3MF_NAMESPACEPREFIX_PRODUCTION, XML_3MF_PRODUCTION_UUID, pUUID->toString());
 		}
 
 		if (m_bIsRootModel)
