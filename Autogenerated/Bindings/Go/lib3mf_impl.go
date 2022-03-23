@@ -485,14 +485,18 @@ type Lib3MFImplementation struct {
 	Lib3MF_model_addimagestack uintptr
 	Lib3MF_model_addscalarfieldfromimage3d uintptr
 	Lib3MF_model_addscalarfieldcomposed uintptr
+	Lib3MF_model_addscalarfieldconstant uintptr
 	Lib3MF_model_getscalarfieldbyid uintptr
 	Lib3MF_model_getscalarfieldfromimage3dbyid uintptr
 	Lib3MF_model_getscalarfieldcomposedbyid uintptr
+	Lib3MF_model_getscalarfieldconstantbyid uintptr
 	Lib3MF_model_addvector3dfieldfromimage3d uintptr
 	Lib3MF_model_addvector3dfieldcomposed uintptr
+	Lib3MF_model_addvector3dfieldconstant uintptr
 	Lib3MF_model_getvector3dfieldbyid uintptr
 	Lib3MF_model_getvector3dfieldfromimage3dbyid uintptr
 	Lib3MF_model_getvector3dfieldcomposedbyid uintptr
+	Lib3MF_model_getvector3dfieldconstantbyid uintptr
 	Lib3MF_model_addbuilditem uintptr
 	Lib3MF_model_removebuilditem uintptr
 	Lib3MF_model_getmetadatagroup uintptr
@@ -2901,6 +2905,11 @@ func (implementation *Lib3MFImplementation) Initialize(DLLFileName string) error
 		return errors.New("Could not get function lib3mf_model_addscalarfieldcomposed: " + err.Error())
 	}
 	
+	implementation.Lib3MF_model_addscalarfieldconstant, err = syscall.GetProcAddress(dllHandle, "lib3mf_model_addscalarfieldconstant")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_model_addscalarfieldconstant: " + err.Error())
+	}
+	
 	implementation.Lib3MF_model_getscalarfieldbyid, err = syscall.GetProcAddress(dllHandle, "lib3mf_model_getscalarfieldbyid")
 	if (err != nil) {
 		return errors.New("Could not get function lib3mf_model_getscalarfieldbyid: " + err.Error())
@@ -2916,6 +2925,11 @@ func (implementation *Lib3MFImplementation) Initialize(DLLFileName string) error
 		return errors.New("Could not get function lib3mf_model_getscalarfieldcomposedbyid: " + err.Error())
 	}
 	
+	implementation.Lib3MF_model_getscalarfieldconstantbyid, err = syscall.GetProcAddress(dllHandle, "lib3mf_model_getscalarfieldconstantbyid")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_model_getscalarfieldconstantbyid: " + err.Error())
+	}
+	
 	implementation.Lib3MF_model_addvector3dfieldfromimage3d, err = syscall.GetProcAddress(dllHandle, "lib3mf_model_addvector3dfieldfromimage3d")
 	if (err != nil) {
 		return errors.New("Could not get function lib3mf_model_addvector3dfieldfromimage3d: " + err.Error())
@@ -2924,6 +2938,11 @@ func (implementation *Lib3MFImplementation) Initialize(DLLFileName string) error
 	implementation.Lib3MF_model_addvector3dfieldcomposed, err = syscall.GetProcAddress(dllHandle, "lib3mf_model_addvector3dfieldcomposed")
 	if (err != nil) {
 		return errors.New("Could not get function lib3mf_model_addvector3dfieldcomposed: " + err.Error())
+	}
+	
+	implementation.Lib3MF_model_addvector3dfieldconstant, err = syscall.GetProcAddress(dllHandle, "lib3mf_model_addvector3dfieldconstant")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_model_addvector3dfieldconstant: " + err.Error())
 	}
 	
 	implementation.Lib3MF_model_getvector3dfieldbyid, err = syscall.GetProcAddress(dllHandle, "lib3mf_model_getvector3dfieldbyid")
@@ -2939,6 +2958,11 @@ func (implementation *Lib3MFImplementation) Initialize(DLLFileName string) error
 	implementation.Lib3MF_model_getvector3dfieldcomposedbyid, err = syscall.GetProcAddress(dllHandle, "lib3mf_model_getvector3dfieldcomposedbyid")
 	if (err != nil) {
 		return errors.New("Could not get function lib3mf_model_getvector3dfieldcomposedbyid: " + err.Error())
+	}
+	
+	implementation.Lib3MF_model_getvector3dfieldconstantbyid, err = syscall.GetProcAddress(dllHandle, "lib3mf_model_getvector3dfieldconstantbyid")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_model_getvector3dfieldconstantbyid: " + err.Error())
 	}
 	
 	implementation.Lib3MF_model_addbuilditem, err = syscall.GetProcAddress(dllHandle, "lib3mf_model_addbuilditem")
@@ -11178,6 +11202,23 @@ func (implementation *Lib3MFImplementation) Model_AddScalarFieldComposed(Model L
 	return hTheScalarFieldComposed, err
 }
 
+func (implementation *Lib3MFImplementation) Model_AddScalarFieldConstant(Model Lib3MFHandle) (Lib3MFHandle, error) {
+	var err error = nil
+	hTheScalarFieldConstant := implementation.NewHandle()
+	
+	implementation_model, err := implementation.GetWrapperHandle(Model)
+	if (err != nil) {
+		return hTheScalarFieldConstant, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_model_addscalarfieldconstant, implementation_model.GetDLLInHandle(), hTheScalarFieldConstant.GetDLLOutHandle())
+	if (err != nil) {
+		return hTheScalarFieldConstant, err
+	}
+	
+	return hTheScalarFieldConstant, err
+}
+
 func (implementation *Lib3MFImplementation) Model_GetScalarFieldByID(Model Lib3MFHandle, nUniqueResourceID uint32) (Lib3MFHandle, error) {
 	var err error = nil
 	hScalarFieldInstance := implementation.NewHandle()
@@ -11229,6 +11270,23 @@ func (implementation *Lib3MFImplementation) Model_GetScalarFieldComposedByID(Mod
 	return hScalarFieldComposedInstance, err
 }
 
+func (implementation *Lib3MFImplementation) Model_GetScalarFieldConstantByID(Model Lib3MFHandle, nUniqueResourceID uint32) (Lib3MFHandle, error) {
+	var err error = nil
+	hScalarFieldConstantInstance := implementation.NewHandle()
+	
+	implementation_model, err := implementation.GetWrapperHandle(Model)
+	if (err != nil) {
+		return hScalarFieldConstantInstance, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_model_getscalarfieldconstantbyid, implementation_model.GetDLLInHandle(), UInt32InValue(nUniqueResourceID), hScalarFieldConstantInstance.GetDLLOutHandle())
+	if (err != nil) {
+		return hScalarFieldConstantInstance, err
+	}
+	
+	return hScalarFieldConstantInstance, err
+}
+
 func (implementation *Lib3MFImplementation) Model_AddVector3DFieldFromImage3D(Model Lib3MFHandle, Image3D Lib3MFHandle) (Lib3MFHandle, error) {
 	var err error = nil
 	hTheVector3DFieldFromImage3D := implementation.NewHandle()
@@ -11271,6 +11329,23 @@ func (implementation *Lib3MFImplementation) Model_AddVector3DFieldComposed(Model
 	}
 	
 	return hTheVector3DFieldComposed, err
+}
+
+func (implementation *Lib3MFImplementation) Model_AddVector3DFieldConstant(Model Lib3MFHandle) (Lib3MFHandle, error) {
+	var err error = nil
+	hTheVector3DFieldConstant := implementation.NewHandle()
+	
+	implementation_model, err := implementation.GetWrapperHandle(Model)
+	if (err != nil) {
+		return hTheVector3DFieldConstant, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_model_addvector3dfieldconstant, implementation_model.GetDLLInHandle(), hTheVector3DFieldConstant.GetDLLOutHandle())
+	if (err != nil) {
+		return hTheVector3DFieldConstant, err
+	}
+	
+	return hTheVector3DFieldConstant, err
 }
 
 func (implementation *Lib3MFImplementation) Model_GetVector3DFieldByID(Model Lib3MFHandle, nUniqueResourceID uint32) (Lib3MFHandle, error) {
@@ -11322,6 +11397,23 @@ func (implementation *Lib3MFImplementation) Model_GetVector3DFieldComposedByID(M
 	}
 	
 	return hVector3DFieldComposedInstance, err
+}
+
+func (implementation *Lib3MFImplementation) Model_GetVector3DFieldConstantByID(Model Lib3MFHandle, nUniqueResourceID uint32) (Lib3MFHandle, error) {
+	var err error = nil
+	hVector3DFieldConstantInstance := implementation.NewHandle()
+	
+	implementation_model, err := implementation.GetWrapperHandle(Model)
+	if (err != nil) {
+		return hVector3DFieldConstantInstance, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_model_getvector3dfieldconstantbyid, implementation_model.GetDLLInHandle(), UInt32InValue(nUniqueResourceID), hVector3DFieldConstantInstance.GetDLLOutHandle())
+	if (err != nil) {
+		return hVector3DFieldConstantInstance, err
+	}
+	
+	return hVector3DFieldConstantInstance, err
 }
 
 func (implementation *Lib3MFImplementation) Model_AddBuildItem(Model Lib3MFHandle, Object Lib3MFHandle, sTransform sLib3MFTransform) (Lib3MFHandle, error) {

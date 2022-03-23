@@ -40,12 +40,26 @@ using namespace Lib3MF::Impl;
  Class definition of CScalarFieldConstant 
 **************************************************************************************************************************/
 
+CScalarFieldConstant::CScalarFieldConstant(NMR::PModelScalarFieldConstant pScalarFieldConstant)
+	:CScalarField(pScalarFieldConstant), CResource(pScalarFieldConstant)
+{
+
+}
+
+NMR::CModelScalarFieldConstant* CScalarFieldConstant::scalarFieldConstant()
+{
+	NMR::CModelScalarFieldConstant* pFieldConstant = dynamic_cast<NMR::CModelScalarFieldConstant*>(resource().get());
+	if (pFieldConstant == nullptr)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDOBJECT);
+	return pFieldConstant;
+}
+
 Lib3MF_double CScalarFieldConstant::GetValue()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return scalarFieldConstant()->getValue();
 }
 
 void CScalarFieldConstant::SetValue(const Lib3MF_double dValue)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	scalarFieldConstant()->setValue(dValue);
 }

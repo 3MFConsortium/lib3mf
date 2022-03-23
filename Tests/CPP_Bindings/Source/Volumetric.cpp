@@ -131,7 +131,7 @@ namespace Lib3MF
 		Volumetric::writer3MF->WriteToFile(Volumetric::OutFolder + "ColoredVolume.3mf");
 	}
 
-	TEST_F(Volumetric, VolumetricProperty)
+	TEST_F(Volumetric, VolumetricProperties)
 	{
 		auto pImage3D = SetupSheetsFromFile();
 
@@ -142,26 +142,34 @@ namespace Lib3MF
 		fieldFromImage3D->SetScale(.5);
 		fieldFromImage3D->SetTileStyles(Lib3MF::eTextureTileStyle::Wrap, Lib3MF::eTextureTileStyle::Mirror, Lib3MF::eTextureTileStyle::Clamp);
 
+		auto constantField = model->AddScalarFieldConstant();
+		ASSERT_EQ(constantField->GetValue(), 0.);
+		double dValue = -0.2;
+		constantField->SetValue(dValue);
+		ASSERT_EQ(constantField->GetValue(), dValue);
+
 		auto theMesh = GetMesh();
 		auto volumeData = theMesh->VolumeData();
-		const std::string propertyName = "MyProperty";
+		std::string propertyName = "MyProperty";
 		auto theProperty = volumeData->AddPropertyFromScalarField(propertyName, fieldFromImage3D.get());
 		ASSERT_EQ(volumeData->GetPropertyCount(), 1);
-
 		ASSERT_TRUE(theProperty->GetName() == propertyName);
 		ASSERT_TRUE(theProperty->IsRequired());
 		theProperty->SetIsRequired(false);
 		ASSERT_FALSE(theProperty->IsRequired());
 
-		writer3MF->WriteToFile(Volumetric::OutFolder + "MyProperty.3mf");
+		auto theConstantProperty = volumeData->AddPropertyFromScalarField("MyConstantProperty", constantField.get());
+		ASSERT_EQ(volumeData->GetPropertyCount(), 2);
+
+		writer3MF->WriteToFile(Volumetric::OutFolder + "MyProperties.3mf");
 
 		{
 			PModel ioModel = wrapper->CreateModel();
 			PReader ioReader = ioModel->QueryReader("3mf");
-			ioReader->ReadFromFile(Volumetric::OutFolder + "MyProperty.3mf");
+			ioReader->ReadFromFile(Volumetric::OutFolder + "MyProperties.3mf");
 
 			PWriter ioWriter = ioModel->QueryWriter("3mf");
-			ioWriter->WriteToFile(Volumetric::OutFolder + "MyPropertyReOut.3mf");
+			ioWriter->WriteToFile(Volumetric::OutFolder + "MyPropertiesReOut.3mf");
 		}
 	}
 

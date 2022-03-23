@@ -45,6 +45,7 @@ This is the class for exporting the 3mf model stream root node.
 #include "Model/Classes/NMR_ModelImageStack.h"
 #include "Model/Classes/NMR_ModelScalarField.h"
 #include "Model/Classes/NMR_ModelScalarFieldFromImage3D.h"
+#include "Model/Classes/NMR_ModelScalarFieldConstant.h"
 #include "Model/Classes/NMR_ModelCompositeMaterials.h"
 #include "Model/Classes/NMR_ModelMultiPropertyGroup.h"
 #include "Model/Classes/NMR_ModelMeshObject.h"
@@ -822,6 +823,12 @@ namespace NMR {
 				if (pScalarFieldFromImage3D->getFilter() != MODELTEXTUREFILTER_AUTO)
 					writeStringAttribute(XML_3MF_ATTRIBUTE_TEXTURE2D_FILTER, CModelTexture2DResource::filterToString(pScalarFieldFromImage3D->getFilter()));
 
+				writeEndElement();
+			}
+			else if (CModelScalarFieldConstant* pScalarFieldConstant = dynamic_cast<CModelScalarFieldConstant*>(pScalarField))
+			{
+				writeStartElementWithPrefix(XML_3MF_ELEMENT_SCALARFIELDCONSTANT, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
+				writeDoubleAttribute(XML_3MF_ATTRIBUTE_SCALARFIELDCONSTANT_VALUE, pScalarFieldConstant->getValue());
 				writeEndElement();
 			}
 			else

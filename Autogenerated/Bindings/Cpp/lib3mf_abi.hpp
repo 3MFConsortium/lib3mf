@@ -4509,6 +4509,15 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_addscalarfieldfromimage3d(Lib3MF_Model
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_addscalarfieldcomposed(Lib3MF_Model pModel, Lib3MF_ScalarFieldComposed * pTheScalarFieldComposed);
 
 /**
+* creates a new ScalarFieldConstant Resource
+*
+* @param[in] pModel - Model instance.
+* @param[out] pTheScalarFieldConstant - returns the new ScalarFieldConstant instance
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_addscalarfieldconstant(Lib3MF_Model pModel, Lib3MF_ScalarFieldConstant * pTheScalarFieldConstant);
+
+/**
 * finds a ScalarField object by its UniqueResourceID
 *
 * @param[in] pModel - Model instance.
@@ -4539,6 +4548,16 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_getscalarfieldfromimage3dbyid(Lib3MF_M
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_getscalarfieldcomposedbyid(Lib3MF_Model pModel, Lib3MF_uint32 nUniqueResourceID, Lib3MF_ScalarFieldComposed * pScalarFieldComposedInstance);
 
 /**
+* finds a ScalarFieldConstant object by its UniqueResourceID
+*
+* @param[in] pModel - Model instance.
+* @param[in] nUniqueResourceID - UniqueResourceID
+* @param[out] pScalarFieldConstantInstance - returns the ScalarFieldConstant instance
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_getscalarfieldconstantbyid(Lib3MF_Model pModel, Lib3MF_uint32 nUniqueResourceID, Lib3MF_ScalarFieldConstant * pScalarFieldConstantInstance);
+
+/**
 * creates a new Vector3DFieldFromImage3D Resource
 *
 * @param[in] pModel - Model instance.
@@ -4556,6 +4575,15 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_addvector3dfieldfromimage3d(Lib3MF_Mod
 * @return error code or 0 (success)
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_addvector3dfieldcomposed(Lib3MF_Model pModel, Lib3MF_Vector3DFieldComposed * pTheVector3DFieldComposed);
+
+/**
+* creates a new Vector3DFieldConstant Resource
+*
+* @param[in] pModel - Model instance.
+* @param[out] pTheVector3DFieldConstant - returns the new Vector3DFieldConstant instance
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_addvector3dfieldconstant(Lib3MF_Model pModel, Lib3MF_Vector3DFieldConstant * pTheVector3DFieldConstant);
 
 /**
 * finds a Vector3DField object by its UniqueResourceID
@@ -4586,6 +4614,16 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_getvector3dfieldfromimage3dbyid(Lib3MF
 * @return error code or 0 (success)
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_getvector3dfieldcomposedbyid(Lib3MF_Model pModel, Lib3MF_uint32 nUniqueResourceID, Lib3MF_Vector3DFieldComposed * pVector3DFieldComposedInstance);
+
+/**
+* finds a Vector3DFieldConstant object by its UniqueResourceID
+*
+* @param[in] pModel - Model instance.
+* @param[in] nUniqueResourceID - UniqueResourceID
+* @param[out] pVector3DFieldConstantInstance - returns the Vector3DFieldConstant instance
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_getvector3dfieldconstantbyid(Lib3MF_Model pModel, Lib3MF_uint32 nUniqueResourceID, Lib3MF_Vector3DFieldConstant * pVector3DFieldConstantInstance);
 
 /**
 * adds a build item to the model.

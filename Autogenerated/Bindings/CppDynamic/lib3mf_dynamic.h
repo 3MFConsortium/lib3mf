@@ -4498,6 +4498,15 @@ typedef Lib3MFResult (*PLib3MFModel_AddScalarFieldFromImage3DPtr) (Lib3MF_Model 
 typedef Lib3MFResult (*PLib3MFModel_AddScalarFieldComposedPtr) (Lib3MF_Model pModel, Lib3MF_ScalarFieldComposed * pTheScalarFieldComposed);
 
 /**
+* creates a new ScalarFieldConstant Resource
+*
+* @param[in] pModel - Model instance.
+* @param[out] pTheScalarFieldConstant - returns the new ScalarFieldConstant instance
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFModel_AddScalarFieldConstantPtr) (Lib3MF_Model pModel, Lib3MF_ScalarFieldConstant * pTheScalarFieldConstant);
+
+/**
 * finds a ScalarField object by its UniqueResourceID
 *
 * @param[in] pModel - Model instance.
@@ -4528,6 +4537,16 @@ typedef Lib3MFResult (*PLib3MFModel_GetScalarFieldFromImage3DByIDPtr) (Lib3MF_Mo
 typedef Lib3MFResult (*PLib3MFModel_GetScalarFieldComposedByIDPtr) (Lib3MF_Model pModel, Lib3MF_uint32 nUniqueResourceID, Lib3MF_ScalarFieldComposed * pScalarFieldComposedInstance);
 
 /**
+* finds a ScalarFieldConstant object by its UniqueResourceID
+*
+* @param[in] pModel - Model instance.
+* @param[in] nUniqueResourceID - UniqueResourceID
+* @param[out] pScalarFieldConstantInstance - returns the ScalarFieldConstant instance
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFModel_GetScalarFieldConstantByIDPtr) (Lib3MF_Model pModel, Lib3MF_uint32 nUniqueResourceID, Lib3MF_ScalarFieldConstant * pScalarFieldConstantInstance);
+
+/**
 * creates a new Vector3DFieldFromImage3D Resource
 *
 * @param[in] pModel - Model instance.
@@ -4545,6 +4564,15 @@ typedef Lib3MFResult (*PLib3MFModel_AddVector3DFieldFromImage3DPtr) (Lib3MF_Mode
 * @return error code or 0 (success)
 */
 typedef Lib3MFResult (*PLib3MFModel_AddVector3DFieldComposedPtr) (Lib3MF_Model pModel, Lib3MF_Vector3DFieldComposed * pTheVector3DFieldComposed);
+
+/**
+* creates a new Vector3DFieldConstant Resource
+*
+* @param[in] pModel - Model instance.
+* @param[out] pTheVector3DFieldConstant - returns the new Vector3DFieldConstant instance
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFModel_AddVector3DFieldConstantPtr) (Lib3MF_Model pModel, Lib3MF_Vector3DFieldConstant * pTheVector3DFieldConstant);
 
 /**
 * finds a Vector3DField object by its UniqueResourceID
@@ -4575,6 +4603,16 @@ typedef Lib3MFResult (*PLib3MFModel_GetVector3DFieldFromImage3DByIDPtr) (Lib3MF_
 * @return error code or 0 (success)
 */
 typedef Lib3MFResult (*PLib3MFModel_GetVector3DFieldComposedByIDPtr) (Lib3MF_Model pModel, Lib3MF_uint32 nUniqueResourceID, Lib3MF_Vector3DFieldComposed * pVector3DFieldComposedInstance);
+
+/**
+* finds a Vector3DFieldConstant object by its UniqueResourceID
+*
+* @param[in] pModel - Model instance.
+* @param[in] nUniqueResourceID - UniqueResourceID
+* @param[out] pVector3DFieldConstantInstance - returns the Vector3DFieldConstant instance
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFModel_GetVector3DFieldConstantByIDPtr) (Lib3MF_Model pModel, Lib3MF_uint32 nUniqueResourceID, Lib3MF_Vector3DFieldConstant * pVector3DFieldConstantInstance);
 
 /**
 * adds a build item to the model.
@@ -5367,14 +5405,18 @@ typedef struct {
 	PLib3MFModel_AddImageStackPtr m_Model_AddImageStack;
 	PLib3MFModel_AddScalarFieldFromImage3DPtr m_Model_AddScalarFieldFromImage3D;
 	PLib3MFModel_AddScalarFieldComposedPtr m_Model_AddScalarFieldComposed;
+	PLib3MFModel_AddScalarFieldConstantPtr m_Model_AddScalarFieldConstant;
 	PLib3MFModel_GetScalarFieldByIDPtr m_Model_GetScalarFieldByID;
 	PLib3MFModel_GetScalarFieldFromImage3DByIDPtr m_Model_GetScalarFieldFromImage3DByID;
 	PLib3MFModel_GetScalarFieldComposedByIDPtr m_Model_GetScalarFieldComposedByID;
+	PLib3MFModel_GetScalarFieldConstantByIDPtr m_Model_GetScalarFieldConstantByID;
 	PLib3MFModel_AddVector3DFieldFromImage3DPtr m_Model_AddVector3DFieldFromImage3D;
 	PLib3MFModel_AddVector3DFieldComposedPtr m_Model_AddVector3DFieldComposed;
+	PLib3MFModel_AddVector3DFieldConstantPtr m_Model_AddVector3DFieldConstant;
 	PLib3MFModel_GetVector3DFieldByIDPtr m_Model_GetVector3DFieldByID;
 	PLib3MFModel_GetVector3DFieldFromImage3DByIDPtr m_Model_GetVector3DFieldFromImage3DByID;
 	PLib3MFModel_GetVector3DFieldComposedByIDPtr m_Model_GetVector3DFieldComposedByID;
+	PLib3MFModel_GetVector3DFieldConstantByIDPtr m_Model_GetVector3DFieldConstantByID;
 	PLib3MFModel_AddBuildItemPtr m_Model_AddBuildItem;
 	PLib3MFModel_RemoveBuildItemPtr m_Model_RemoveBuildItem;
 	PLib3MFModel_GetMetaDataGroupPtr m_Model_GetMetaDataGroup;

@@ -42,7 +42,7 @@ Abstract: This is the class declaration of CScalarFieldConstant
 #endif
 
 // Include custom headers here.
-
+#include "Model/Classes/NMR_ModelScalarFieldConstant.h"
 
 namespace Lib3MF {
 namespace Impl {
@@ -58,6 +58,7 @@ private:
 	/**
 	* Put private members here.
 	*/
+	NMR::CModelScalarFieldConstant* scalarFieldConstant();
 
 protected:
 
@@ -70,7 +71,8 @@ public:
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-
+	CScalarFieldConstant() = delete;
+	CScalarFieldConstant(NMR::PModelScalarFieldConstant pScalarFieldConstant);
 
 	/**
 	* Public member functions to implement.

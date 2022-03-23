@@ -3733,6 +3733,12 @@ public:
 	virtual IScalarFieldComposed * AddScalarFieldComposed() = 0;
 
 	/**
+	* IModel::AddScalarFieldConstant - creates a new ScalarFieldConstant Resource
+	* @return returns the new ScalarFieldConstant instance
+	*/
+	virtual IScalarFieldConstant * AddScalarFieldConstant() = 0;
+
+	/**
 	* IModel::GetScalarFieldByID - finds a ScalarField object by its UniqueResourceID
 	* @param[in] nUniqueResourceID - UniqueResourceID
 	* @return returns the scalar field instance
@@ -3754,6 +3760,13 @@ public:
 	virtual IScalarFieldComposed * GetScalarFieldComposedByID(const Lib3MF_uint32 nUniqueResourceID) = 0;
 
 	/**
+	* IModel::GetScalarFieldConstantByID - finds a ScalarFieldConstant object by its UniqueResourceID
+	* @param[in] nUniqueResourceID - UniqueResourceID
+	* @return returns the ScalarFieldConstant instance
+	*/
+	virtual IScalarFieldConstant * GetScalarFieldConstantByID(const Lib3MF_uint32 nUniqueResourceID) = 0;
+
+	/**
 	* IModel::AddVector3DFieldFromImage3D - creates a new Vector3DFieldFromImage3D Resource
 	* @param[in] pImage3D - image instance
 	* @return returns the new Vector3DFieldFromImage3D instance
@@ -3765,6 +3778,12 @@ public:
 	* @return returns the new Vector3DFieldComposed instance
 	*/
 	virtual IVector3DFieldComposed * AddVector3DFieldComposed() = 0;
+
+	/**
+	* IModel::AddVector3DFieldConstant - creates a new Vector3DFieldConstant Resource
+	* @return returns the new Vector3DFieldConstant instance
+	*/
+	virtual IVector3DFieldConstant * AddVector3DFieldConstant() = 0;
 
 	/**
 	* IModel::GetVector3DFieldByID - finds a Vector3DField object by its UniqueResourceID
@@ -3786,6 +3805,13 @@ public:
 	* @return returns the Vector3DFieldComponsed instance
 	*/
 	virtual IVector3DFieldComposed * GetVector3DFieldComposedByID(const Lib3MF_uint32 nUniqueResourceID) = 0;
+
+	/**
+	* IModel::GetVector3DFieldConstantByID - finds a Vector3DFieldConstant object by its UniqueResourceID
+	* @param[in] nUniqueResourceID - UniqueResourceID
+	* @return returns the Vector3DFieldConstant instance
+	*/
+	virtual IVector3DFieldConstant * GetVector3DFieldConstantByID(const Lib3MF_uint32 nUniqueResourceID) = 0;
 
 	/**
 	* IModel::AddBuildItem - adds a build item to the model.

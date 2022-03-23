@@ -1582,14 +1582,18 @@ private:
     static void AddImageStack (const v8::FunctionCallbackInfo<v8::Value>& args);
     static void AddScalarFieldFromImage3D (const v8::FunctionCallbackInfo<v8::Value>& args);
     static void AddScalarFieldComposed (const v8::FunctionCallbackInfo<v8::Value>& args);
+    static void AddScalarFieldConstant (const v8::FunctionCallbackInfo<v8::Value>& args);
     static void GetScalarFieldByID (const v8::FunctionCallbackInfo<v8::Value>& args);
     static void GetScalarFieldFromImage3DByID (const v8::FunctionCallbackInfo<v8::Value>& args);
     static void GetScalarFieldComposedByID (const v8::FunctionCallbackInfo<v8::Value>& args);
+    static void GetScalarFieldConstantByID (const v8::FunctionCallbackInfo<v8::Value>& args);
     static void AddVector3DFieldFromImage3D (const v8::FunctionCallbackInfo<v8::Value>& args);
     static void AddVector3DFieldComposed (const v8::FunctionCallbackInfo<v8::Value>& args);
+    static void AddVector3DFieldConstant (const v8::FunctionCallbackInfo<v8::Value>& args);
     static void GetVector3DFieldByID (const v8::FunctionCallbackInfo<v8::Value>& args);
     static void GetVector3DFieldFromImage3DByID (const v8::FunctionCallbackInfo<v8::Value>& args);
     static void GetVector3DFieldComposedByID (const v8::FunctionCallbackInfo<v8::Value>& args);
+    static void GetVector3DFieldConstantByID (const v8::FunctionCallbackInfo<v8::Value>& args);
     static void AddBuildItem (const v8::FunctionCallbackInfo<v8::Value>& args);
     static void RemoveBuildItem (const v8::FunctionCallbackInfo<v8::Value>& args);
     static void GetMetaDataGroup (const v8::FunctionCallbackInfo<v8::Value>& args);

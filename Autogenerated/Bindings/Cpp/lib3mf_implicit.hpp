@@ -2019,14 +2019,18 @@ public:
 	inline PImageStack AddImageStack(const Lib3MF_uint32 nColumnCount, const Lib3MF_uint32 nRowCount, const Lib3MF_uint32 nSheetCount);
 	inline PScalarFieldFromImage3D AddScalarFieldFromImage3D(CImage3D * pImage3D);
 	inline PScalarFieldComposed AddScalarFieldComposed();
+	inline PScalarFieldConstant AddScalarFieldConstant();
 	inline PScalarField GetScalarFieldByID(const Lib3MF_uint32 nUniqueResourceID);
 	inline PScalarFieldFromImage3D GetScalarFieldFromImage3DByID(const Lib3MF_uint32 nUniqueResourceID);
 	inline PScalarFieldComposed GetScalarFieldComposedByID(const Lib3MF_uint32 nUniqueResourceID);
+	inline PScalarFieldConstant GetScalarFieldConstantByID(const Lib3MF_uint32 nUniqueResourceID);
 	inline PVector3DFieldFromImage3D AddVector3DFieldFromImage3D(CImage3D * pImage3D);
 	inline PVector3DFieldComposed AddVector3DFieldComposed();
+	inline PVector3DFieldConstant AddVector3DFieldConstant();
 	inline PVector3DField GetVector3DFieldByID(const Lib3MF_uint32 nUniqueResourceID);
 	inline PVector3DFieldFromImage3D GetVector3DFieldFromImage3DByID(const Lib3MF_uint32 nUniqueResourceID);
 	inline PVector3DFieldComposed GetVector3DFieldComposedByID(const Lib3MF_uint32 nUniqueResourceID);
+	inline PVector3DFieldConstant GetVector3DFieldConstantByID(const Lib3MF_uint32 nUniqueResourceID);
 	inline PBuildItem AddBuildItem(CObject * pObject, const sTransform & Transform);
 	inline void RemoveBuildItem(CBuildItem * pBuildItemInstance);
 	inline PMetaDataGroup GetMetaDataGroup();
@@ -8169,6 +8173,21 @@ public:
 	}
 	
 	/**
+	* CModel::AddScalarFieldConstant - creates a new ScalarFieldConstant Resource
+	* @return returns the new ScalarFieldConstant instance
+	*/
+	PScalarFieldConstant CModel::AddScalarFieldConstant()
+	{
+		Lib3MFHandle hTheScalarFieldConstant = nullptr;
+		CheckError(lib3mf_model_addscalarfieldconstant(m_pHandle, &hTheScalarFieldConstant));
+		
+		if (!hTheScalarFieldConstant) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::make_shared<CScalarFieldConstant>(m_pWrapper, hTheScalarFieldConstant);
+	}
+	
+	/**
 	* CModel::GetScalarFieldByID - finds a ScalarField object by its UniqueResourceID
 	* @param[in] nUniqueResourceID - UniqueResourceID
 	* @return returns the scalar field instance
@@ -8217,6 +8236,22 @@ public:
 	}
 	
 	/**
+	* CModel::GetScalarFieldConstantByID - finds a ScalarFieldConstant object by its UniqueResourceID
+	* @param[in] nUniqueResourceID - UniqueResourceID
+	* @return returns the ScalarFieldConstant instance
+	*/
+	PScalarFieldConstant CModel::GetScalarFieldConstantByID(const Lib3MF_uint32 nUniqueResourceID)
+	{
+		Lib3MFHandle hScalarFieldConstantInstance = nullptr;
+		CheckError(lib3mf_model_getscalarfieldconstantbyid(m_pHandle, nUniqueResourceID, &hScalarFieldConstantInstance));
+		
+		if (!hScalarFieldConstantInstance) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::make_shared<CScalarFieldConstant>(m_pWrapper, hScalarFieldConstantInstance);
+	}
+	
+	/**
 	* CModel::AddVector3DFieldFromImage3D - creates a new Vector3DFieldFromImage3D Resource
 	* @param[in] pImage3D - image instance
 	* @return returns the new Vector3DFieldFromImage3D instance
@@ -8249,6 +8284,21 @@ public:
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
 		return std::make_shared<CVector3DFieldComposed>(m_pWrapper, hTheVector3DFieldComposed);
+	}
+	
+	/**
+	* CModel::AddVector3DFieldConstant - creates a new Vector3DFieldConstant Resource
+	* @return returns the new Vector3DFieldConstant instance
+	*/
+	PVector3DFieldConstant CModel::AddVector3DFieldConstant()
+	{
+		Lib3MFHandle hTheVector3DFieldConstant = nullptr;
+		CheckError(lib3mf_model_addvector3dfieldconstant(m_pHandle, &hTheVector3DFieldConstant));
+		
+		if (!hTheVector3DFieldConstant) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::make_shared<CVector3DFieldConstant>(m_pWrapper, hTheVector3DFieldConstant);
 	}
 	
 	/**
@@ -8297,6 +8347,22 @@ public:
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
 		return std::make_shared<CVector3DFieldComposed>(m_pWrapper, hVector3DFieldComposedInstance);
+	}
+	
+	/**
+	* CModel::GetVector3DFieldConstantByID - finds a Vector3DFieldConstant object by its UniqueResourceID
+	* @param[in] nUniqueResourceID - UniqueResourceID
+	* @return returns the Vector3DFieldConstant instance
+	*/
+	PVector3DFieldConstant CModel::GetVector3DFieldConstantByID(const Lib3MF_uint32 nUniqueResourceID)
+	{
+		Lib3MFHandle hVector3DFieldConstantInstance = nullptr;
+		CheckError(lib3mf_model_getvector3dfieldconstantbyid(m_pHandle, nUniqueResourceID, &hVector3DFieldConstantInstance));
+		
+		if (!hVector3DFieldConstantInstance) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::make_shared<CVector3DFieldConstant>(m_pWrapper, hVector3DFieldConstantInstance);
 	}
 	
 	/**

@@ -4351,6 +4351,15 @@ type Lib3MFGoInterface interface {
 
 
 	/**
+	* creates a new ScalarFieldConstant Resource
+	*
+	* @param[in] Model - Model instance.
+	* @return returns the new ScalarFieldConstant instance
+	*/
+	Model_AddScalarFieldConstant(Model Lib3MFHandle) (Lib3MFHandle, error)
+
+
+	/**
 	* finds a ScalarField object by its UniqueResourceID
 	*
 	* @param[in] Model - Model instance.
@@ -4381,6 +4390,16 @@ type Lib3MFGoInterface interface {
 
 
 	/**
+	* finds a ScalarFieldConstant object by its UniqueResourceID
+	*
+	* @param[in] Model - Model instance.
+	* @param[in] nUniqueResourceID - UniqueResourceID
+	* @return returns the ScalarFieldConstant instance
+	*/
+	Model_GetScalarFieldConstantByID(Model Lib3MFHandle, nUniqueResourceID uint32) (Lib3MFHandle, error)
+
+
+	/**
 	* creates a new Vector3DFieldFromImage3D Resource
 	*
 	* @param[in] Model - Model instance.
@@ -4397,6 +4416,15 @@ type Lib3MFGoInterface interface {
 	* @return returns the new Vector3DFieldComposed instance
 	*/
 	Model_AddVector3DFieldComposed(Model Lib3MFHandle) (Lib3MFHandle, error)
+
+
+	/**
+	* creates a new Vector3DFieldConstant Resource
+	*
+	* @param[in] Model - Model instance.
+	* @return returns the new Vector3DFieldConstant instance
+	*/
+	Model_AddVector3DFieldConstant(Model Lib3MFHandle) (Lib3MFHandle, error)
 
 
 	/**
@@ -4427,6 +4455,16 @@ type Lib3MFGoInterface interface {
 	* @return returns the Vector3DFieldComponsed instance
 	*/
 	Model_GetVector3DFieldComposedByID(Model Lib3MFHandle, nUniqueResourceID uint32) (Lib3MFHandle, error)
+
+
+	/**
+	* finds a Vector3DFieldConstant object by its UniqueResourceID
+	*
+	* @param[in] Model - Model instance.
+	* @param[in] nUniqueResourceID - UniqueResourceID
+	* @return returns the Vector3DFieldConstant instance
+	*/
+	Model_GetVector3DFieldConstantByID(Model Lib3MFHandle, nUniqueResourceID uint32) (Lib3MFHandle, error)
 
 
 	/**
@@ -8160,6 +8198,14 @@ func (instance *Lib3MFModel) AddScalarFieldComposed() (Lib3MFScalarFieldComposed
 	return cTheScalarFieldComposed, error
 }
 
+func (instance *Lib3MFModel) AddScalarFieldConstant() (Lib3MFScalarFieldConstant, error) {
+	hTheScalarFieldConstant, error := instance.Interface.Model_AddScalarFieldConstant(instance.Handle)
+	var cTheScalarFieldConstant Lib3MFScalarFieldConstant
+	cTheScalarFieldConstant.Interface = instance.Interface
+	cTheScalarFieldConstant.Handle = hTheScalarFieldConstant
+	return cTheScalarFieldConstant, error
+}
+
 func (instance *Lib3MFModel) GetScalarFieldByID(nUniqueResourceID uint32) (Lib3MFScalarField, error) {
 	hScalarFieldInstance, error := instance.Interface.Model_GetScalarFieldByID(instance.Handle, nUniqueResourceID)
 	var cScalarFieldInstance Lib3MFScalarField
@@ -8184,6 +8230,14 @@ func (instance *Lib3MFModel) GetScalarFieldComposedByID(nUniqueResourceID uint32
 	return cScalarFieldComposedInstance, error
 }
 
+func (instance *Lib3MFModel) GetScalarFieldConstantByID(nUniqueResourceID uint32) (Lib3MFScalarFieldConstant, error) {
+	hScalarFieldConstantInstance, error := instance.Interface.Model_GetScalarFieldConstantByID(instance.Handle, nUniqueResourceID)
+	var cScalarFieldConstantInstance Lib3MFScalarFieldConstant
+	cScalarFieldConstantInstance.Interface = instance.Interface
+	cScalarFieldConstantInstance.Handle = hScalarFieldConstantInstance
+	return cScalarFieldConstantInstance, error
+}
+
 func (instance *Lib3MFModel) AddVector3DFieldFromImage3D(Image3D Lib3MFHandle) (Lib3MFVector3DFieldFromImage3D, error) {
 	hTheVector3DFieldFromImage3D, error := instance.Interface.Model_AddVector3DFieldFromImage3D(instance.Handle, Image3D)
 	var cTheVector3DFieldFromImage3D Lib3MFVector3DFieldFromImage3D
@@ -8198,6 +8252,14 @@ func (instance *Lib3MFModel) AddVector3DFieldComposed() (Lib3MFVector3DFieldComp
 	cTheVector3DFieldComposed.Interface = instance.Interface
 	cTheVector3DFieldComposed.Handle = hTheVector3DFieldComposed
 	return cTheVector3DFieldComposed, error
+}
+
+func (instance *Lib3MFModel) AddVector3DFieldConstant() (Lib3MFVector3DFieldConstant, error) {
+	hTheVector3DFieldConstant, error := instance.Interface.Model_AddVector3DFieldConstant(instance.Handle)
+	var cTheVector3DFieldConstant Lib3MFVector3DFieldConstant
+	cTheVector3DFieldConstant.Interface = instance.Interface
+	cTheVector3DFieldConstant.Handle = hTheVector3DFieldConstant
+	return cTheVector3DFieldConstant, error
 }
 
 func (instance *Lib3MFModel) GetVector3DFieldByID(nUniqueResourceID uint32) (Lib3MFVector3DField, error) {
@@ -8222,6 +8284,14 @@ func (instance *Lib3MFModel) GetVector3DFieldComposedByID(nUniqueResourceID uint
 	cVector3DFieldComposedInstance.Interface = instance.Interface
 	cVector3DFieldComposedInstance.Handle = hVector3DFieldComposedInstance
 	return cVector3DFieldComposedInstance, error
+}
+
+func (instance *Lib3MFModel) GetVector3DFieldConstantByID(nUniqueResourceID uint32) (Lib3MFVector3DFieldConstant, error) {
+	hVector3DFieldConstantInstance, error := instance.Interface.Model_GetVector3DFieldConstantByID(instance.Handle, nUniqueResourceID)
+	var cVector3DFieldConstantInstance Lib3MFVector3DFieldConstant
+	cVector3DFieldConstantInstance.Interface = instance.Interface
+	cVector3DFieldConstantInstance.Handle = hVector3DFieldConstantInstance
+	return cVector3DFieldConstantInstance, error
 }
 
 func (instance *Lib3MFModel) AddBuildItem(Object Lib3MFHandle, sTransform sLib3MFTransform) (Lib3MFBuildItem, error) {

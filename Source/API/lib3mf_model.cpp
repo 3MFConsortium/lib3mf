@@ -64,6 +64,7 @@ Abstract: This is a stub class definition of CModel
 #include "lib3mf_imagestack.hpp"
 #include "lib3mf_image3diterator.hpp"
 #include "lib3mf_scalarfieldfromimage3d.hpp"
+#include "lib3mf_scalarfieldconstant.hpp"
 
 
 // Include custom headers here.
@@ -76,6 +77,7 @@ Abstract: This is a stub class definition of CModel
 #include "Model/Classes/NMR_ModelImageStack.h"
 #include "Model/Classes/NMR_ModelScalarField.h"
 #include "Model/Classes/NMR_ModelScalarFieldFromImage3D.h"
+#include "Model/Classes/NMR_ModelScalarFieldConstant.h"
 #include "Common/NMR_SecureContentTypes.h"
 #include "lib3mf_utils.hpp"
 
@@ -715,6 +717,15 @@ IScalarFieldComposed* CModel::AddScalarFieldComposed()
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
+IScalarFieldConstant* CModel::AddScalarFieldConstant()
+{
+	NMR::PModelScalarFieldConstant pResource =
+		std::make_shared<NMR::CModelScalarFieldConstant>(model().generateResourceID(), &model());
+	model().addResource(pResource);
+
+	return new CScalarFieldConstant(pResource);
+}
+
 IScalarField* CModel::GetScalarFieldByID(const Lib3MF_uint32 nUniqueResourceID)
 {
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
@@ -730,12 +741,22 @@ IScalarFieldComposed* CModel::GetScalarFieldComposedByID(const Lib3MF_uint32 nUn
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
+IScalarFieldConstant* CModel::GetScalarFieldConstantByID(const Lib3MF_uint32 nUniqueResourceID)
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
+
 IVector3DFieldFromImage3D* CModel::AddVector3DFieldFromImage3D(IImage3D* pImage3D)
 {
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
 IVector3DFieldComposed* CModel::AddVector3DFieldComposed()
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
+
+IVector3DFieldConstant* CModel::AddVector3DFieldConstant()
 {
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
@@ -751,6 +772,11 @@ IVector3DFieldFromImage3D* CModel::GetVector3DFieldFromImage3DByID(const Lib3MF_
 }
 
 IVector3DFieldComposed* CModel::GetVector3DFieldComposedByID(const Lib3MF_uint32 nUniqueResourceID)
+{
+	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+}
+
+IVector3DFieldConstant* CModel::GetVector3DFieldConstantByID(const Lib3MF_uint32 nUniqueResourceID)
 {
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }

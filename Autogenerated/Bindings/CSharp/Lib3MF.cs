@@ -1613,6 +1613,9 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_addscalarfieldcomposed", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Model_AddScalarFieldComposed (IntPtr Handle, out IntPtr ATheScalarFieldComposed);
 
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_addscalarfieldconstant", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Model_AddScalarFieldConstant (IntPtr Handle, out IntPtr ATheScalarFieldConstant);
+
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_getscalarfieldbyid", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Model_GetScalarFieldByID (IntPtr Handle, UInt32 AUniqueResourceID, out IntPtr AScalarFieldInstance);
 
@@ -1622,11 +1625,17 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_getscalarfieldcomposedbyid", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Model_GetScalarFieldComposedByID (IntPtr Handle, UInt32 AUniqueResourceID, out IntPtr AScalarFieldComposedInstance);
 
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_getscalarfieldconstantbyid", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Model_GetScalarFieldConstantByID (IntPtr Handle, UInt32 AUniqueResourceID, out IntPtr AScalarFieldConstantInstance);
+
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_addvector3dfieldfromimage3d", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Model_AddVector3DFieldFromImage3D (IntPtr Handle, IntPtr AImage3D, out IntPtr ATheVector3DFieldFromImage3D);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_addvector3dfieldcomposed", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Model_AddVector3DFieldComposed (IntPtr Handle, out IntPtr ATheVector3DFieldComposed);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_addvector3dfieldconstant", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Model_AddVector3DFieldConstant (IntPtr Handle, out IntPtr ATheVector3DFieldConstant);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_getvector3dfieldbyid", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Model_GetVector3DFieldByID (IntPtr Handle, UInt32 AUniqueResourceID, out IntPtr AVector3DFieldInstance);
@@ -1636,6 +1645,9 @@ namespace Lib3MF {
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_getvector3dfieldcomposedbyid", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Model_GetVector3DFieldComposedByID (IntPtr Handle, UInt32 AUniqueResourceID, out IntPtr AVector3DFieldComposedInstance);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_getvector3dfieldconstantbyid", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Model_GetVector3DFieldConstantByID (IntPtr Handle, UInt32 AUniqueResourceID, out IntPtr AVector3DFieldConstantInstance);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_addbuilditem", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Model_AddBuildItem (IntPtr Handle, IntPtr AObject, InternalTransform ATransform, out IntPtr ABuildItemInstance);
@@ -6297,6 +6309,14 @@ namespace Lib3MF {
 			return new CScalarFieldComposed (newTheScalarFieldComposed );
 		}
 
+		public CScalarFieldConstant AddScalarFieldConstant ()
+		{
+			IntPtr newTheScalarFieldConstant = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Model_AddScalarFieldConstant (Handle, out newTheScalarFieldConstant));
+			return new CScalarFieldConstant (newTheScalarFieldConstant );
+		}
+
 		public CScalarField GetScalarFieldByID (UInt32 AUniqueResourceID)
 		{
 			IntPtr newScalarFieldInstance = IntPtr.Zero;
@@ -6321,6 +6341,14 @@ namespace Lib3MF {
 			return new CScalarFieldComposed (newScalarFieldComposedInstance );
 		}
 
+		public CScalarFieldConstant GetScalarFieldConstantByID (UInt32 AUniqueResourceID)
+		{
+			IntPtr newScalarFieldConstantInstance = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Model_GetScalarFieldConstantByID (Handle, AUniqueResourceID, out newScalarFieldConstantInstance));
+			return new CScalarFieldConstant (newScalarFieldConstantInstance );
+		}
+
 		public CVector3DFieldFromImage3D AddVector3DFieldFromImage3D (CImage3D AImage3D)
 		{
 			IntPtr newTheVector3DFieldFromImage3D = IntPtr.Zero;
@@ -6335,6 +6363,14 @@ namespace Lib3MF {
 
 			CheckError(Internal.Lib3MFWrapper.Model_AddVector3DFieldComposed (Handle, out newTheVector3DFieldComposed));
 			return new CVector3DFieldComposed (newTheVector3DFieldComposed );
+		}
+
+		public CVector3DFieldConstant AddVector3DFieldConstant ()
+		{
+			IntPtr newTheVector3DFieldConstant = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Model_AddVector3DFieldConstant (Handle, out newTheVector3DFieldConstant));
+			return new CVector3DFieldConstant (newTheVector3DFieldConstant );
 		}
 
 		public CVector3DField GetVector3DFieldByID (UInt32 AUniqueResourceID)
@@ -6359,6 +6395,14 @@ namespace Lib3MF {
 
 			CheckError(Internal.Lib3MFWrapper.Model_GetVector3DFieldComposedByID (Handle, AUniqueResourceID, out newVector3DFieldComposedInstance));
 			return new CVector3DFieldComposed (newVector3DFieldComposedInstance );
+		}
+
+		public CVector3DFieldConstant GetVector3DFieldConstantByID (UInt32 AUniqueResourceID)
+		{
+			IntPtr newVector3DFieldConstantInstance = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Model_GetVector3DFieldConstantByID (Handle, AUniqueResourceID, out newVector3DFieldConstantInstance));
+			return new CVector3DFieldConstant (newVector3DFieldConstantInstance );
 		}
 
 		public CBuildItem AddBuildItem (CObject AObject, sTransform ATransform)
