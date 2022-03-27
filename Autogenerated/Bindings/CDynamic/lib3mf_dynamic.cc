@@ -242,9 +242,7 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_FieldReference_SetFieldResourceID = NULL;
 	pWrapperTable->m_FieldReference_GetTransform = NULL;
 	pWrapperTable->m_FieldReference_SetTransform = NULL;
-	pWrapperTable->m_ScalarFieldReference_GetScalarField = NULL;
 	pWrapperTable->m_ScalarFieldReference_SetScalarField = NULL;
-	pWrapperTable->m_Vector3DFieldReference_GetVector3DField = NULL;
 	pWrapperTable->m_Vector3DFieldReference_SetVector3DField = NULL;
 	pWrapperTable->m_VolumeDataBoundary_GetSolidThreshold = NULL;
 	pWrapperTable->m_VolumeDataBoundary_SetSolidThreshold = NULL;
@@ -481,6 +479,7 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_Model_AddCompositeMaterials = NULL;
 	pWrapperTable->m_Model_AddMultiPropertyGroup = NULL;
 	pWrapperTable->m_Model_AddImageStack = NULL;
+	pWrapperTable->m_Model_GetImageStackByID = NULL;
 	pWrapperTable->m_Model_AddScalarFieldFromImage3D = NULL;
 	pWrapperTable->m_Model_AddScalarFieldComposed = NULL;
 	pWrapperTable->m_Model_AddScalarFieldConstant = NULL;
@@ -2338,30 +2337,12 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
-	pWrapperTable->m_ScalarFieldReference_GetScalarField = (PLib3MFScalarFieldReference_GetScalarFieldPtr) GetProcAddress(hLibrary, "lib3mf_scalarfieldreference_getscalarfield");
-	#else // _WIN32
-	pWrapperTable->m_ScalarFieldReference_GetScalarField = (PLib3MFScalarFieldReference_GetScalarFieldPtr) dlsym(hLibrary, "lib3mf_scalarfieldreference_getscalarfield");
-	dlerror();
-	#endif // _WIN32
-	if (pWrapperTable->m_ScalarFieldReference_GetScalarField == NULL)
-		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
-	
-	#ifdef _WIN32
 	pWrapperTable->m_ScalarFieldReference_SetScalarField = (PLib3MFScalarFieldReference_SetScalarFieldPtr) GetProcAddress(hLibrary, "lib3mf_scalarfieldreference_setscalarfield");
 	#else // _WIN32
 	pWrapperTable->m_ScalarFieldReference_SetScalarField = (PLib3MFScalarFieldReference_SetScalarFieldPtr) dlsym(hLibrary, "lib3mf_scalarfieldreference_setscalarfield");
 	dlerror();
 	#endif // _WIN32
 	if (pWrapperTable->m_ScalarFieldReference_SetScalarField == NULL)
-		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
-	
-	#ifdef _WIN32
-	pWrapperTable->m_Vector3DFieldReference_GetVector3DField = (PLib3MFVector3DFieldReference_GetVector3DFieldPtr) GetProcAddress(hLibrary, "lib3mf_vector3dfieldreference_getvector3dfield");
-	#else // _WIN32
-	pWrapperTable->m_Vector3DFieldReference_GetVector3DField = (PLib3MFVector3DFieldReference_GetVector3DFieldPtr) dlsym(hLibrary, "lib3mf_vector3dfieldreference_getvector3dfield");
-	dlerror();
-	#endif // _WIN32
-	if (pWrapperTable->m_Vector3DFieldReference_GetVector3DField == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
@@ -4486,6 +4467,15 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 	dlerror();
 	#endif // _WIN32
 	if (pWrapperTable->m_Model_AddImageStack == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Model_GetImageStackByID = (PLib3MFModel_GetImageStackByIDPtr) GetProcAddress(hLibrary, "lib3mf_model_getimagestackbyid");
+	#else // _WIN32
+	pWrapperTable->m_Model_GetImageStackByID = (PLib3MFModel_GetImageStackByIDPtr) dlsym(hLibrary, "lib3mf_model_getimagestackbyid");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Model_GetImageStackByID == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32

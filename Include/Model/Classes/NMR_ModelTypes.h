@@ -79,8 +79,8 @@ namespace NMR {
 	};
 
 	typedef struct MODELMESHBEAM {
-		DWORD m_nIndices[2];
-		DOUBLE m_dRadius[2];	// the radius of end 0 or 1 of this beam
+		DWORD m_nIndices[2] = {0,0};
+		DOUBLE m_dRadius[2] = { 1.,1. };	// the radius of end 0 or 1 of this beam
 		eModelBeamLatticeCapMode m_eCapMode[2];
 		MODELMESHBEAM() {
 			m_eCapMode[0] = MODELBEAMLATTICECAPMODE_SPHERE;
@@ -89,8 +89,8 @@ namespace NMR {
 	} MODELMESHBEAM;
 
 	typedef struct MODELMESHBALL {
-		DWORD m_nIndex;
-		DOUBLE m_dRadius;	// the radius of this ball
+		DWORD m_nIndex = 0;
+		DOUBLE m_dRadius = 1.;	// the radius of this ball
 		MODELMESHBALL() {
 		}
 	} MODELMESHBALL;

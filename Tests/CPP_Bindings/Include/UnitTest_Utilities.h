@@ -76,44 +76,19 @@ class Lib3MFTest : public ::testing::Test {
 };
 	
 
-inline std::vector<Lib3MF_uint8> ReadFileIntoBuffer(std::string sFileName)
-{
-	// Read the file fully into a memory buffer
-	std::ifstream file(sFileName, std::ios::binary | std::ios::ate);
-	std::streamsize size = file.tellg();
-	file.seekg(0, std::ios::beg);
-	// Memory buffer
-	std::vector<Lib3MF_uint8> buffer(static_cast<size_t>(size));
-	file.read((char*)buffer.data(), size);
-	return buffer;
-}
+std::vector<Lib3MF_uint8> ReadFileIntoBuffer(std::string sFileName);
+void WriteBufferToFile(std::vector<Lib3MF_uint8> const & buffer, std::string sFileName);
 
-inline void WriteBufferToFile(std::vector<Lib3MF_uint8> const & buffer, std::string sFileName) 
-{
-	std::ofstream file(sFileName, std::ios::binary);
-	for (Lib3MF_uint8 cByte: buffer) {
-		file.put(cByte);
-	}
-	file.close();
-}
+sLib3MFTransform getIdentityTransform();
 
-inline sLib3MFTransform getIdentityTransform()
-{
-	sLib3MFTransform t;
-	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < 3; j++)
-			t.m_Fields[i][j] = 0 + 1.0f * (i==j);
-	}
-	return t;
-}
+void CompareColors(Lib3MF::sColor c1, Lib3MF::sColor c2);
+void CompareTransforms(Lib3MF::sTransform t1, Lib3MF::sTransform t2);
 
-inline void CompareColors(Lib3MF::sColor c1, Lib3MF::sColor c2)
-{
-	EXPECT_EQ(c1.m_Alpha, c2.m_Alpha);
-	EXPECT_EQ(c1.m_Red, c2.m_Red);
-	EXPECT_EQ(c1.m_Green, c2.m_Green);
-	EXPECT_EQ(c1.m_Blue, c2.m_Blue);
-}
+void CompareFieldReferences(Lib3MF::PModel m1, Lib3MF::PScalarFieldReference s1, Lib3MF::PModel m2, Lib3MF::PScalarFieldReference s2);
+void CompareImage3Ds(Lib3MF::PModel modelA, Lib3MF::PImage3D i1, Lib3MF::PModel modelB, Lib3MF::PImage3D i2);
+void CompareImageStacks(Lib3MF::PImageStack i1, Lib3MF::PImageStack i2);
+void CompareScalarFieldFromImage3D(Lib3MF::PModel modelA, Lib3MF::PScalarFieldFromImage3D A, Lib3MF::PModel modelB, Lib3MF::PScalarFieldFromImage3D B);
+void CompareScalarFieldComposed(Lib3MF::PModel modelA, Lib3MF::PScalarFieldComposed A, Lib3MF::PModel modelB, Lib3MF::PScalarFieldComposed B);
 
 template<typename T>
 struct PositionedVector
@@ -162,38 +137,10 @@ struct PositionedVector
 
 };
 
-inline sLib3MFPosition fnCreateVertex(float x, float y, float z)
-{
-	sLib3MFPosition result;
-	result.m_Coordinates[0] = x;
-	result.m_Coordinates[1] = y;
-	result.m_Coordinates[2] = z;
-	return result;
-}
-
-inline sLib3MFTriangle fnCreateTriangle(int v0, int v1, int v2)
-{
-	sLib3MFTriangle result;
-	result.m_Indices[0] = v0;
-	result.m_Indices[1] = v1;
-	result.m_Indices[2] = v2;
-	return result;
-}
-
-
+sLib3MFPosition fnCreateVertex(float x, float y, float z);
+sLib3MFTriangle fnCreateTriangle(int v0, int v1, int v2);
 void fnCreateBox(std::vector<sLib3MFPosition> &vctVertices, std::vector<sLib3MFTriangle> &vctTriangles);
 
-
-inline void CheckReaderWarnings(Lib3MF::PReader reader, Lib3MF_uint32 nWarnings)
-{
-	EXPECT_EQ(reader->GetWarningCount(), nWarnings);
-	for (Lib3MF_uint32 iWarning = 0; iWarning < reader->GetWarningCount(); iWarning++)
-	{
-		Lib3MF_uint32 nErrorCode;
-		std::string sWarning = reader->GetWarning(iWarning, nErrorCode);
-		EXPECT_TRUE(true) << iWarning << ": " << nErrorCode << ", " << sWarning;
-	}
-}
-
+void CheckReaderWarnings(Lib3MF::PReader reader, Lib3MF_uint32 nWarnings);
 
 #endif //__NMR_UNITTEST_UTILITIES

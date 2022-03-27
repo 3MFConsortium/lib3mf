@@ -197,6 +197,8 @@ public:
 
 	IImageStack * AddImageStack(const Lib3MF_uint32 nSizeX, const Lib3MF_uint32 nSizeY, const Lib3MF_uint32 nSheetCount) override;
 
+	IImageStack* GetImageStackByID(const Lib3MF_uint32 nUniqueResourceID) override;
+
 	IScalarFieldFromImage3D* AddScalarFieldFromImage3D(IImage3D* pImage3D) override;
 
 	IScalarFieldComposed* AddScalarFieldComposed() override;

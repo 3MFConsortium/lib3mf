@@ -32,7 +32,9 @@ Abstract: This is a stub class definition of CScalarField
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
-
+#include "Model/Classes/NMR_ModelScalarFieldFromImage3D.h"
+#include "Model/Classes/NMR_ModelScalarFieldComposed.h"
+#include "Model/Classes/NMR_ModelScalarFieldConstant.h"
 
 using namespace Lib3MF::Impl;
 
@@ -46,28 +48,37 @@ CScalarField::CScalarField(NMR::PModelScalarField pResource)
 
 }
 
+NMR::CModelScalarField* CScalarField::scalarField()
+{
+	NMR::CModelScalarField* pScalarField = dynamic_cast<NMR::CModelScalarField*> (resource().get());
+	if (pScalarField == nullptr)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_RESOURCENOTFOUND);
+
+	return pScalarField;
+}
+
 std::string CScalarField::GetName()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return scalarField()->getName();
 }
 
 void CScalarField::SetName(const std::string & sName)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	scalarField()->setName(sName);
 }
 
 bool CScalarField::IsFromImage3D()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return (dynamic_cast<NMR::CModelScalarFieldFromImage3D*>(scalarField()) != nullptr);
 }
 
 bool CScalarField::IsConstant()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return (dynamic_cast<NMR::CModelScalarFieldConstant*>(scalarField()) != nullptr);
 }
 
 bool CScalarField::IsComposed()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return (dynamic_cast<NMR::CModelScalarFieldComposed*>(scalarField()) != nullptr);
 }
 

@@ -50,7 +50,7 @@ namespace NMR {
 
 	void CModelScalarFieldFromImage3D::setImage3DResourceID(PPackageResourceID Image3DID)
 	{
-		if (!getModel()->findImage3D(Image3DID))
+		if (!getModel()->findImage3D(Image3DID->getUniqueID()))
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
 		m_Image3DResourceID = Image3DID;

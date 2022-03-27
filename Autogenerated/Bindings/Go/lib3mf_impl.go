@@ -244,9 +244,7 @@ type Lib3MFImplementation struct {
 	Lib3MF_fieldreference_setfieldresourceid uintptr
 	Lib3MF_fieldreference_gettransform uintptr
 	Lib3MF_fieldreference_settransform uintptr
-	Lib3MF_scalarfieldreference_getscalarfield uintptr
 	Lib3MF_scalarfieldreference_setscalarfield uintptr
-	Lib3MF_vector3dfieldreference_getvector3dfield uintptr
 	Lib3MF_vector3dfieldreference_setvector3dfield uintptr
 	Lib3MF_volumedataboundary_getsolidthreshold uintptr
 	Lib3MF_volumedataboundary_setsolidthreshold uintptr
@@ -483,6 +481,7 @@ type Lib3MFImplementation struct {
 	Lib3MF_model_addcompositematerials uintptr
 	Lib3MF_model_addmultipropertygroup uintptr
 	Lib3MF_model_addimagestack uintptr
+	Lib3MF_model_getimagestackbyid uintptr
 	Lib3MF_model_addscalarfieldfromimage3d uintptr
 	Lib3MF_model_addscalarfieldcomposed uintptr
 	Lib3MF_model_addscalarfieldconstant uintptr
@@ -1700,19 +1699,9 @@ func (implementation *Lib3MFImplementation) Initialize(DLLFileName string) error
 		return errors.New("Could not get function lib3mf_fieldreference_settransform: " + err.Error())
 	}
 	
-	implementation.Lib3MF_scalarfieldreference_getscalarfield, err = syscall.GetProcAddress(dllHandle, "lib3mf_scalarfieldreference_getscalarfield")
-	if (err != nil) {
-		return errors.New("Could not get function lib3mf_scalarfieldreference_getscalarfield: " + err.Error())
-	}
-	
 	implementation.Lib3MF_scalarfieldreference_setscalarfield, err = syscall.GetProcAddress(dllHandle, "lib3mf_scalarfieldreference_setscalarfield")
 	if (err != nil) {
 		return errors.New("Could not get function lib3mf_scalarfieldreference_setscalarfield: " + err.Error())
-	}
-	
-	implementation.Lib3MF_vector3dfieldreference_getvector3dfield, err = syscall.GetProcAddress(dllHandle, "lib3mf_vector3dfieldreference_getvector3dfield")
-	if (err != nil) {
-		return errors.New("Could not get function lib3mf_vector3dfieldreference_getvector3dfield: " + err.Error())
 	}
 	
 	implementation.Lib3MF_vector3dfieldreference_setvector3dfield, err = syscall.GetProcAddress(dllHandle, "lib3mf_vector3dfieldreference_setvector3dfield")
@@ -2893,6 +2882,11 @@ func (implementation *Lib3MFImplementation) Initialize(DLLFileName string) error
 	implementation.Lib3MF_model_addimagestack, err = syscall.GetProcAddress(dllHandle, "lib3mf_model_addimagestack")
 	if (err != nil) {
 		return errors.New("Could not get function lib3mf_model_addimagestack: " + err.Error())
+	}
+	
+	implementation.Lib3MF_model_getimagestackbyid, err = syscall.GetProcAddress(dllHandle, "lib3mf_model_getimagestackbyid")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_model_getimagestackbyid: " + err.Error())
 	}
 	
 	implementation.Lib3MF_model_addscalarfieldfromimage3d, err = syscall.GetProcAddress(dllHandle, "lib3mf_model_addscalarfieldfromimage3d")
@@ -6641,23 +6635,6 @@ func (implementation *Lib3MFImplementation) FieldReference_SetTransform(FieldRef
 	return err
 }
 
-func (implementation *Lib3MFImplementation) ScalarFieldReference_GetScalarField(ScalarFieldReference Lib3MFHandle) (Lib3MFHandle, error) {
-	var err error = nil
-	hTheScalarField := implementation.NewHandle()
-	
-	implementation_scalarfieldreference, err := implementation.GetWrapperHandle(ScalarFieldReference)
-	if (err != nil) {
-		return hTheScalarField, err
-	}
-
-	err = implementation.CallFunction(implementation.Lib3MF_scalarfieldreference_getscalarfield, implementation_scalarfieldreference.GetDLLInHandle(), hTheScalarField.GetDLLOutHandle())
-	if (err != nil) {
-		return hTheScalarField, err
-	}
-	
-	return hTheScalarField, err
-}
-
 func (implementation *Lib3MFImplementation) ScalarFieldReference_SetScalarField(ScalarFieldReference Lib3MFHandle, TheScalarField Lib3MFHandle) (error) {
 	var err error = nil
 	
@@ -6682,23 +6659,6 @@ func (implementation *Lib3MFImplementation) ScalarFieldReference_SetScalarField(
 	}
 	
 	return err
-}
-
-func (implementation *Lib3MFImplementation) Vector3DFieldReference_GetVector3DField(Vector3DFieldReference Lib3MFHandle) (Lib3MFHandle, error) {
-	var err error = nil
-	hTheVector3DField := implementation.NewHandle()
-	
-	implementation_vector3dfieldreference, err := implementation.GetWrapperHandle(Vector3DFieldReference)
-	if (err != nil) {
-		return hTheVector3DField, err
-	}
-
-	err = implementation.CallFunction(implementation.Lib3MF_vector3dfieldreference_getvector3dfield, implementation_vector3dfieldreference.GetDLLInHandle(), hTheVector3DField.GetDLLOutHandle())
-	if (err != nil) {
-		return hTheVector3DField, err
-	}
-	
-	return hTheVector3DField, err
 }
 
 func (implementation *Lib3MFImplementation) Vector3DFieldReference_SetVector3DField(Vector3DFieldReference Lib3MFHandle, TheVector3DField Lib3MFHandle) (error) {
@@ -7059,7 +7019,7 @@ func (implementation *Lib3MFImplementation) VolumeData_GetColor(VolumeData Lib3M
 	return hTheColorData, err
 }
 
-func (implementation *Lib3MFImplementation) VolumeData_CreateNewColor(VolumeData Lib3MFHandle, TheVector3DField Lib3MFHandle, sTransform sLib3MFTransform) (Lib3MFHandle, error) {
+func (implementation *Lib3MFImplementation) VolumeData_CreateNewColor(VolumeData Lib3MFHandle, TheVector3DField Lib3MFHandle) (Lib3MFHandle, error) {
 	var err error = nil
 	hTheColorData := implementation.NewHandle()
 	
@@ -7078,7 +7038,7 @@ func (implementation *Lib3MFImplementation) VolumeData_CreateNewColor(VolumeData
 		return hTheColorData, err
 	}
 
-	err = implementation.CallFunction(implementation.Lib3MF_volumedata_createnewcolor, implementation_volumedata.GetDLLInHandle(), TheVector3DFieldDLLHandle, uintptr(unsafe.Pointer(&sTransform)), hTheColorData.GetDLLOutHandle())
+	err = implementation.CallFunction(implementation.Lib3MF_volumedata_createnewcolor, implementation_volumedata.GetDLLInHandle(), TheVector3DFieldDLLHandle, hTheColorData.GetDLLOutHandle())
 	if (err != nil) {
 		return hTheColorData, err
 	}
@@ -11156,6 +11116,23 @@ func (implementation *Lib3MFImplementation) Model_AddImageStack(Model Lib3MFHand
 	}
 	
 	return hInstance, err
+}
+
+func (implementation *Lib3MFImplementation) Model_GetImageStackByID(Model Lib3MFHandle, nUniqueResourceID uint32) (Lib3MFHandle, error) {
+	var err error = nil
+	hImageStackInstance := implementation.NewHandle()
+	
+	implementation_model, err := implementation.GetWrapperHandle(Model)
+	if (err != nil) {
+		return hImageStackInstance, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_model_getimagestackbyid, implementation_model.GetDLLInHandle(), UInt32InValue(nUniqueResourceID), hImageStackInstance.GetDLLOutHandle())
+	if (err != nil) {
+		return hImageStackInstance, err
+	}
+	
+	return hImageStackInstance, err
 }
 
 func (implementation *Lib3MFImplementation) Model_AddScalarFieldFromImage3D(Model Lib3MFHandle, Image3D Lib3MFHandle) (Lib3MFHandle, error) {

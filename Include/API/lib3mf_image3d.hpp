@@ -42,7 +42,7 @@ Abstract: This is the class declaration of CImage3D
 #endif
 
 // Include custom headers here.
-
+#include "Model/Classes/NMR_ModelImage3D.h"
 
 namespace Lib3MF {
 namespace Impl {
@@ -64,7 +64,7 @@ protected:
 	/**
 	* Put protected members here.
 	*/
-
+	NMR::CModelImage3D* image3D();
 public:
 
 	/**

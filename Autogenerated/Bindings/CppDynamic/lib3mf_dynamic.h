@@ -2032,15 +2032,6 @@ typedef Lib3MFResult (*PLib3MFFieldReference_SetTransformPtr) (Lib3MF_FieldRefer
 **************************************************************************************************************************/
 
 /**
-* Returns the ScalarField
-*
-* @param[in] pScalarFieldReference - ScalarFieldReference instance.
-* @param[out] pTheScalarField - ScalarField used in this element
-* @return error code or 0 (success)
-*/
-typedef Lib3MFResult (*PLib3MFScalarFieldReference_GetScalarFieldPtr) (Lib3MF_ScalarFieldReference pScalarFieldReference, Lib3MF_ScalarField * pTheScalarField);
-
-/**
 * Sets the ScalarField to use within this volume data item.
 *
 * @param[in] pScalarFieldReference - ScalarFieldReference instance.
@@ -2052,15 +2043,6 @@ typedef Lib3MFResult (*PLib3MFScalarFieldReference_SetScalarFieldPtr) (Lib3MF_Sc
 /*************************************************************************************************************************
  Class definition for Vector3DFieldReference
 **************************************************************************************************************************/
-
-/**
-* Returns the Vector3DField
-*
-* @param[in] pVector3DFieldReference - Vector3DFieldReference instance.
-* @param[out] pTheVector3DField - Vector3DField used in this element
-* @return error code or 0 (success)
-*/
-typedef Lib3MFResult (*PLib3MFVector3DFieldReference_GetVector3DFieldPtr) (Lib3MF_Vector3DFieldReference pVector3DFieldReference, Lib3MF_Vector3DField * pTheVector3DField);
 
 /**
 * Sets the Vector3DField to use within this volume data item.
@@ -2265,11 +2247,10 @@ typedef Lib3MFResult (*PLib3MFVolumeData_GetColorPtr) (Lib3MF_VolumeData pVolume
 *
 * @param[in] pVolumeData - VolumeData instance.
 * @param[in] pTheVector3DField - Vector3DField used in this element
-* @param[in] pTransform - new transformation matrix
 * @param[out] pTheColorData - The new VolumeDataColor of this VolumeData instance.
 * @return error code or 0 (success)
 */
-typedef Lib3MFResult (*PLib3MFVolumeData_CreateNewColorPtr) (Lib3MF_VolumeData pVolumeData, Lib3MF_Vector3DField pTheVector3DField, const Lib3MF::sTransform * pTransform, Lib3MF_VolumeDataColor * pTheColorData);
+typedef Lib3MFResult (*PLib3MFVolumeData_CreateNewColorPtr) (Lib3MF_VolumeData pVolumeData, Lib3MF_Vector3DField pTheVector3DField, Lib3MF_VolumeDataColor * pTheColorData);
 
 /**
 * Removes the VolumeDataColor of this VolumeData instance
@@ -4479,6 +4460,16 @@ typedef Lib3MFResult (*PLib3MFModel_AddMultiPropertyGroupPtr) (Lib3MF_Model pMod
 typedef Lib3MFResult (*PLib3MFModel_AddImageStackPtr) (Lib3MF_Model pModel, Lib3MF_uint32 nColumnCount, Lib3MF_uint32 nRowCount, Lib3MF_uint32 nSheetCount, Lib3MF_ImageStack * pInstance);
 
 /**
+* finds an ImageStack object by its UniqueResourceID
+*
+* @param[in] pModel - Model instance.
+* @param[in] nUniqueResourceID - UniqueResourceID
+* @param[out] pImageStackInstance - returns the image stack instance
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFModel_GetImageStackByIDPtr) (Lib3MF_Model pModel, Lib3MF_uint32 nUniqueResourceID, Lib3MF_ImageStack * pImageStackInstance);
+
+/**
 * creates a new ScalarFieldFromImage3D Resource
 *
 * @param[in] pModel - Model instance.
@@ -5164,9 +5155,7 @@ typedef struct {
 	PLib3MFFieldReference_SetFieldResourceIDPtr m_FieldReference_SetFieldResourceID;
 	PLib3MFFieldReference_GetTransformPtr m_FieldReference_GetTransform;
 	PLib3MFFieldReference_SetTransformPtr m_FieldReference_SetTransform;
-	PLib3MFScalarFieldReference_GetScalarFieldPtr m_ScalarFieldReference_GetScalarField;
 	PLib3MFScalarFieldReference_SetScalarFieldPtr m_ScalarFieldReference_SetScalarField;
-	PLib3MFVector3DFieldReference_GetVector3DFieldPtr m_Vector3DFieldReference_GetVector3DField;
 	PLib3MFVector3DFieldReference_SetVector3DFieldPtr m_Vector3DFieldReference_SetVector3DField;
 	PLib3MFVolumeDataBoundary_GetSolidThresholdPtr m_VolumeDataBoundary_GetSolidThreshold;
 	PLib3MFVolumeDataBoundary_SetSolidThresholdPtr m_VolumeDataBoundary_SetSolidThreshold;
@@ -5403,6 +5392,7 @@ typedef struct {
 	PLib3MFModel_AddCompositeMaterialsPtr m_Model_AddCompositeMaterials;
 	PLib3MFModel_AddMultiPropertyGroupPtr m_Model_AddMultiPropertyGroup;
 	PLib3MFModel_AddImageStackPtr m_Model_AddImageStack;
+	PLib3MFModel_GetImageStackByIDPtr m_Model_GetImageStackByID;
 	PLib3MFModel_AddScalarFieldFromImage3DPtr m_Model_AddScalarFieldFromImage3D;
 	PLib3MFModel_AddScalarFieldComposedPtr m_Model_AddScalarFieldComposed;
 	PLib3MFModel_AddScalarFieldConstantPtr m_Model_AddScalarFieldConstant;

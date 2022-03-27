@@ -47,7 +47,7 @@ CFieldReference::CFieldReference(NMR::PFieldReference pFieldReference)
 
 Lib3MF_uint32 CFieldReference::GetFieldResourceID()
 {
-	return m_pFieldReference->getFieldReferenceID()->getUniqueID();
+	return m_pFieldReference->getFieldReferenceID();
 }
 
 void CFieldReference::SetFieldResourceID(const Lib3MF_uint32 nUniqueResourceID)

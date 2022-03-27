@@ -118,9 +118,7 @@ namespace Lib3MF
 		ASSERT_TRUE(buildItem->HasObjectTransform());
 		auto newTransformation = buildItem->GetObjectTransform();
 
-		for (int i = 0; i < 4; i++)
-			for (int j = 0; j < 3; j++)
-				ASSERT_EQ(transformation.m_Fields[i][j], newTransformation.m_Fields[i][j]);
+		CompareTransforms(transformation, newTransformation);
 	}
 
 	TEST_F(BuildItems, TestItem)

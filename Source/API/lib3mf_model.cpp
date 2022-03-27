@@ -64,7 +64,10 @@ Abstract: This is a stub class definition of CModel
 #include "lib3mf_imagestack.hpp"
 #include "lib3mf_image3diterator.hpp"
 #include "lib3mf_scalarfieldfromimage3d.hpp"
+#include "lib3mf_scalarfieldcomposed.hpp"
 #include "lib3mf_scalarfieldconstant.hpp"
+#include "lib3mf_scalarfielditerator.hpp"
+#include "lib3mf_vector3dfielditerator.hpp"
 
 
 // Include custom headers here.
@@ -77,7 +80,9 @@ Abstract: This is a stub class definition of CModel
 #include "Model/Classes/NMR_ModelImageStack.h"
 #include "Model/Classes/NMR_ModelScalarField.h"
 #include "Model/Classes/NMR_ModelScalarFieldFromImage3D.h"
+#include "Model/Classes/NMR_ModelScalarFieldComposed.h"
 #include "Model/Classes/NMR_ModelScalarFieldConstant.h"
+#include "Model/Classes/NMR_ModelVector3DField.h"
 #include "Common/NMR_SecureContentTypes.h"
 #include "lib3mf_utils.hpp"
 
@@ -703,6 +708,16 @@ IImageStack * CModel::AddImageStack(const Lib3MF_uint32 nSizeX, const Lib3MF_uin
 	return new CImageStack(pResource);
 }
 
+IImageStack* CModel::GetImageStackByID(const Lib3MF_uint32 nUniqueResourceID)
+{
+	NMR::PModelImageStack pImageStackResource = model().findImageStack(nUniqueResourceID);
+	if (pImageStackResource) {
+		return new CImageStack(pImageStackResource);
+	}
+	else
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_RESOURCENOTFOUND);
+}
+
 IScalarFieldFromImage3D* CModel::AddScalarFieldFromImage3D(IImage3D* pImage3D)
 {
 	NMR::PModelScalarFieldFromImage3D pResource =
@@ -714,7 +729,11 @@ IScalarFieldFromImage3D* CModel::AddScalarFieldFromImage3D(IImage3D* pImage3D)
 
 IScalarFieldComposed* CModel::AddScalarFieldComposed()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	NMR::PModelScalarFieldComposed pResource =
+		std::make_shared<NMR::CModelScalarFieldComposed>(model().generateResourceID(), &model());
+	model().addResource(pResource);
+
+	return new CScalarFieldComposed(pResource);
 }
 
 IScalarFieldConstant* CModel::AddScalarFieldConstant()
@@ -728,22 +747,42 @@ IScalarFieldConstant* CModel::AddScalarFieldConstant()
 
 IScalarField* CModel::GetScalarFieldByID(const Lib3MF_uint32 nUniqueResourceID)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	NMR::PModelScalarField pScalarFieldResource = model().findScalarField(nUniqueResourceID);
+	if (pScalarFieldResource) {
+		return new CScalarField(pScalarFieldResource);
+	}
+	else
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_RESOURCENOTFOUND);
 }
 
 IScalarFieldFromImage3D* CModel::GetScalarFieldFromImage3DByID(const Lib3MF_uint32 nUniqueResourceID)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	NMR::PModelScalarField pScalarFieldResource = model().findScalarField(nUniqueResourceID);
+	if (NMR::PModelScalarFieldFromImage3D pScalarFieldFromImage3DResource = std::dynamic_pointer_cast<NMR::CModelScalarFieldFromImage3D>(pScalarFieldResource) ) {
+		return new CScalarFieldFromImage3D(pScalarFieldFromImage3DResource);
+	}
+	else
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_RESOURCENOTFOUND);
 }
 
 IScalarFieldComposed* CModel::GetScalarFieldComposedByID(const Lib3MF_uint32 nUniqueResourceID)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	NMR::PModelScalarField pScalarFieldResource = model().findScalarField(nUniqueResourceID);
+	if (NMR::PModelScalarFieldComposed pScalarFieldComposedResource = std::dynamic_pointer_cast<NMR::CModelScalarFieldComposed>(pScalarFieldResource)) {
+		return new CScalarFieldComposed(pScalarFieldComposedResource);
+	}
+	else
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_RESOURCENOTFOUND);
 }
 
 IScalarFieldConstant* CModel::GetScalarFieldConstantByID(const Lib3MF_uint32 nUniqueResourceID)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	NMR::PModelScalarField pScalarFieldResource = model().findScalarField(nUniqueResourceID);
+	if (NMR::PModelScalarFieldConstant pScalarFieldConstantResource = std::dynamic_pointer_cast<NMR::CModelScalarFieldConstant>(pScalarFieldResource)) {
+		return new CScalarFieldConstant(pScalarFieldConstantResource);
+	}
+	else
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_RESOURCENOTFOUND);
 }
 
 IVector3DFieldFromImage3D* CModel::AddVector3DFieldFromImage3D(IImage3D* pImage3D)
@@ -764,21 +803,45 @@ IVector3DFieldConstant* CModel::AddVector3DFieldConstant()
 IVector3DField* CModel::GetVector3DFieldByID(const Lib3MF_uint32 nUniqueResourceID)
 {
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	//NMR::PModelVector3DField pVector3DFieldResource = model().findVector3DField(nUniqueResourceID);
+	//if (pVector3DFieldResource) {
+	//	return new CVector3DField(pVector3DFieldResource);
+	//}
+	//else
+	//	throw ELib3MFInterfaceException(LIB3MF_ERROR_RESOURCENOTFOUND);
 }
 
 IVector3DFieldFromImage3D* CModel::GetVector3DFieldFromImage3DByID(const Lib3MF_uint32 nUniqueResourceID)
 {
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	//NMR::PModelVector3DField pVector3DFieldResource = model().findVector3DField(nUniqueResourceID);
+	//if (NMR::PModelVector3DFieldFromImage3D pVector3DFieldFromImage3DResource = std::dynamic_pointer_cast<NMR::CModelVector3DFieldFromImage3D>(pVector3DFieldResource)) {
+	//	return new CVector3DFieldFromImage3D(pVector3DFieldFromImage3DResource);
+	//}
+	//else
+	//	throw ELib3MFInterfaceException(LIB3MF_ERROR_RESOURCENOTFOUND);
 }
 
 IVector3DFieldComposed* CModel::GetVector3DFieldComposedByID(const Lib3MF_uint32 nUniqueResourceID)
 {
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	//NMR::PModelVector3DField pVector3DFieldResource = model().findVector3DField(nUniqueResourceID);
+	//if (NMR::PModelVector3DFieldComposed pVector3DFieldComposedResource = std::dynamic_pointer_cast<NMR::CModelVector3DFieldComposed>(pVector3DFieldResource)) {
+	//	return new CVector3DFieldComposed(pVector3DFieldComposedResource);
+	//}
+	//else
+	//	throw ELib3MFInterfaceException(LIB3MF_ERROR_RESOURCENOTFOUND);
 }
 
 IVector3DFieldConstant* CModel::GetVector3DFieldConstantByID(const Lib3MF_uint32 nUniqueResourceID)
 {
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	//NMR::PModelVector3DField pVector3DFieldResource = model().findVector3DField(nUniqueResourceID);
+	//if (NMR::PModelVector3DFieldConstant pVector3DFieldConstantResource = std::dynamic_pointer_cast<NMR::CModelVector3DFieldConstant>(pVector3DFieldResource)) {
+	//	return new CVector3DFieldConstant(pVector3DFieldConstantResource);
+	//}
+	//else
+	//	throw ELib3MFInterfaceException(LIB3MF_ERROR_RESOURCENOTFOUND);
 }
 
 IImage3DIterator * CModel::GetImage3Ds()
@@ -795,12 +858,27 @@ IImage3DIterator * CModel::GetImage3Ds()
 
 IScalarFieldIterator* CModel::GetScalarFields()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	auto pResult = std::unique_ptr<CScalarFieldIterator>(new CScalarFieldIterator());
+	Lib3MF_uint32 nImage3DCount = model().getScalarFieldCount();
+
+	for (Lib3MF_uint32 nIdx = 0; nIdx < nImage3DCount; nIdx++) {
+		auto resource = model().getScalarFieldResource(nIdx);
+		pResult->addResource(resource);
+	}
+	return pResult.release();
 }
 
 IVector3DFieldIterator* CModel::GetVector3DFields()
 {
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	//auto pResult = std::unique_ptr<CVector3DFieldIterator>(new CVector3DFieldIterator());
+	//Lib3MF_uint32 nImage3DCount = model().getVector3DFieldCount();
+
+	//for (Lib3MF_uint32 nIdx = 0; nIdx < nImage3DCount; nIdx++) {
+	//	auto resource = model().getVector3DFieldResource(nIdx);
+	//	pResult->addResource(resource);
+	//}
+	//return pResult.release();
 }
 
 IKeyStore * Lib3MF::Impl::CModel::GetKeyStore()

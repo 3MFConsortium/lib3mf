@@ -44,13 +44,8 @@ CScalarFieldReference::CScalarFieldReference(NMR::PScalarFieldReference pFieldRe
 	: CFieldReference(pFieldReference)
 {}
 
-IScalarField * CScalarFieldReference::GetScalarField()
-{
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
-}
-
 void CScalarFieldReference::SetScalarField(IScalarField* pTheScalarField)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	m_pFieldReference->setFieldReferenceID(pTheScalarField->GetUniqueResourceID());
 }
 

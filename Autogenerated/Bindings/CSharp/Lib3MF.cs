@@ -890,14 +890,8 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_fieldreference_settransform", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 FieldReference_SetTransform (IntPtr Handle, InternalTransform ATransform);
 
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfieldreference_getscalarfield", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 ScalarFieldReference_GetScalarField (IntPtr Handle, out IntPtr ATheScalarField);
-
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_scalarfieldreference_setscalarfield", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 ScalarFieldReference_SetScalarField (IntPtr Handle, IntPtr ATheScalarField);
-
-			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfieldreference_getvector3dfield", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 Vector3DFieldReference_GetVector3DField (IntPtr Handle, out IntPtr ATheVector3DField);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfieldreference_setvector3dfield", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Vector3DFieldReference_SetVector3DField (IntPtr Handle, IntPtr ATheVector3DField);
@@ -957,7 +951,7 @@ namespace Lib3MF {
 			public unsafe extern static Int32 VolumeData_GetColor (IntPtr Handle, out IntPtr ATheColorData);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedata_createnewcolor", CallingConvention=CallingConvention.Cdecl)]
-			public unsafe extern static Int32 VolumeData_CreateNewColor (IntPtr Handle, IntPtr ATheVector3DField, InternalTransform ATransform, out IntPtr ATheColorData);
+			public unsafe extern static Int32 VolumeData_CreateNewColor (IntPtr Handle, IntPtr ATheVector3DField, out IntPtr ATheColorData);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_volumedata_removecolor", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 VolumeData_RemoveColor (IntPtr Handle);
@@ -1606,6 +1600,9 @@ namespace Lib3MF {
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_addimagestack", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Model_AddImageStack (IntPtr Handle, UInt32 AColumnCount, UInt32 ARowCount, UInt32 ASheetCount, out IntPtr AInstance);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_getimagestackbyid", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Model_GetImageStackByID (IntPtr Handle, UInt32 AUniqueResourceID, out IntPtr AImageStackInstance);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_addscalarfieldfromimage3d", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Model_AddScalarFieldFromImage3D (IntPtr Handle, IntPtr AImage3D, out IntPtr ATheScalarFieldFromImage3D);
@@ -3960,14 +3957,6 @@ namespace Lib3MF {
 		{
 		}
 
-		public CScalarField GetScalarField ()
-		{
-			IntPtr newTheScalarField = IntPtr.Zero;
-
-			CheckError(Internal.Lib3MFWrapper.ScalarFieldReference_GetScalarField (Handle, out newTheScalarField));
-			return new CScalarField (newTheScalarField );
-		}
-
 		public void SetScalarField (CScalarField ATheScalarField)
 		{
 
@@ -3980,14 +3969,6 @@ namespace Lib3MF {
 	{
 		public CVector3DFieldReference (IntPtr NewHandle) : base (NewHandle)
 		{
-		}
-
-		public CVector3DField GetVector3DField ()
-		{
-			IntPtr newTheVector3DField = IntPtr.Zero;
-
-			CheckError(Internal.Lib3MFWrapper.Vector3DFieldReference_GetVector3DField (Handle, out newTheVector3DField));
-			return new CVector3DField (newTheVector3DField );
 		}
 
 		public void SetVector3DField (CVector3DField ATheVector3DField)
@@ -4183,12 +4164,11 @@ namespace Lib3MF {
 			return new CVolumeDataColor (newTheColorData );
 		}
 
-		public CVolumeDataColor CreateNewColor (CVector3DField ATheVector3DField, sTransform ATransform)
+		public CVolumeDataColor CreateNewColor (CVector3DField ATheVector3DField)
 		{
-			Internal.InternalTransform intTransform = Internal.Lib3MFWrapper.convertStructToInternal_Transform (ATransform);
 			IntPtr newTheColorData = IntPtr.Zero;
 
-			CheckError(Internal.Lib3MFWrapper.VolumeData_CreateNewColor (Handle, ATheVector3DField.GetHandle(), intTransform, out newTheColorData));
+			CheckError(Internal.Lib3MFWrapper.VolumeData_CreateNewColor (Handle, ATheVector3DField.GetHandle(), out newTheColorData));
 			return new CVolumeDataColor (newTheColorData );
 		}
 
@@ -6291,6 +6271,14 @@ namespace Lib3MF {
 
 			CheckError(Internal.Lib3MFWrapper.Model_AddImageStack (Handle, AColumnCount, ARowCount, ASheetCount, out newInstance));
 			return new CImageStack (newInstance );
+		}
+
+		public CImageStack GetImageStackByID (UInt32 AUniqueResourceID)
+		{
+			IntPtr newImageStackInstance = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Model_GetImageStackByID (Handle, AUniqueResourceID, out newImageStackInstance));
+			return new CImageStack (newImageStackInstance );
 		}
 
 		public CScalarFieldFromImage3D AddScalarFieldFromImage3D (CImage3D AImage3D)

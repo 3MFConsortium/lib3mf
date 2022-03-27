@@ -128,7 +128,7 @@ namespace Lib3MF
 		//levelset->SetChannel(sChannelName);
 		//ASSERT_TRUE(levelset->GetChannel() == sChannelName);
 
-		Volumetric::writer3MF->WriteToFile(Volumetric::OutFolder + "ColoredVolume.3mf");
+		//Volumetric::writer3MF->WriteToFile(Volumetric::OutFolder + "ColoredVolume.3mf");
 	}
 
 	TEST_F(Volumetric, VolumetricProperties)
@@ -173,11 +173,66 @@ namespace Lib3MF
 		}
 	}
 
-	TEST_F(Volumetric, VolumetricLevelset)
+	TEST_F(Volumetric, VolumetricComposition)
 	{
 		auto pImage3D = SetupSheetsFromFile();
 
 		auto fieldFromImage3D = model->AddScalarFieldFromImage3D(pImage3D.get());
+
+		auto constantField = model->AddScalarFieldConstant();
+		ASSERT_EQ(constantField->GetValue(), 0.);
+		double dValue = -0.2;
+		constantField->SetValue(dValue);
+		ASSERT_EQ(constantField->GetValue(), dValue);
+
+		auto composedScalarField = model->AddScalarFieldComposed();
+		composedScalarField->ScalarFieldReference1()->SetFieldResourceID(fieldFromImage3D->GetUniqueResourceID());
+		composedScalarField->ScalarFieldReference2()->SetFieldResourceID(constantField->GetUniqueResourceID());
+		composedScalarField->SetMethod(Lib3MF::eCompositionMethod::WeightedSum);
+		composedScalarField->SetFactor1(1.0);
+		composedScalarField->SetFactor2(-1.0);
+
+		auto theMesh = GetMesh();
+		auto volumeData = theMesh->VolumeData();
+		auto theProperty = volumeData->CreateNewBoundary(composedScalarField.get());
+		writer3MF->WriteToFile(Volumetric::OutFolder + "MyComposition.3mf");
+
+		{
+			PModel ioModel = wrapper->CreateModel();
+			PReader ioReader = ioModel->QueryReader("3mf");
+			ioReader->ReadFromFile(Volumetric::OutFolder + "MyComposition.3mf");
+
+			auto scalarFieldIterator = ioModel->GetScalarFields();
+			ASSERT_EQ(scalarFieldIterator->Count(), 3);
+
+			ASSERT_TRUE(scalarFieldIterator->MoveNext());
+			auto scalarField = scalarFieldIterator->GetCurrentScalarField();
+			auto fieldFromImage3DReIn = ioModel->GetScalarFieldFromImage3DByID(scalarField->GetUniqueResourceID());
+			CompareScalarFieldFromImage3D(ioModel, fieldFromImage3DReIn, model, fieldFromImage3D);
+
+			ASSERT_TRUE(scalarFieldIterator->MoveNext());
+			scalarField = scalarFieldIterator->GetCurrentScalarField();
+			auto constantFieldReIn = ioModel->GetScalarFieldConstantByID(scalarField->GetUniqueResourceID());
+			ASSERT_EQ(constantFieldReIn->GetValue(), constantField->GetValue());
+			ASSERT_EQ(constantFieldReIn->GetName(), constantField->GetName());
+
+			ASSERT_TRUE(scalarFieldIterator->MoveNext());
+			scalarField = scalarFieldIterator->GetCurrentScalarField();
+			auto composedScalarFieldReIn = ioModel->GetScalarFieldComposedByID(scalarField->GetUniqueResourceID());
+			CompareScalarFieldComposed(ioModel, composedScalarFieldReIn, model, composedScalarField);
+			ASSERT_FALSE(scalarFieldIterator->MoveNext());
+
+			PWriter ioWriter = ioModel->QueryWriter("3mf");
+			ioWriter->WriteToFile(Volumetric::OutFolder + "MyCompositionReOut.3mf");
+		}
+	}
+
+	TEST_F(Volumetric, VolumetricBoundary)
+	{
+		auto pImage3D = SetupSheetsFromFile();
+
+		auto fieldFromImage3D = model->AddScalarFieldFromImage3D(pImage3D.get());
+		fieldFromImage3D->SetChannel(Lib3MF::eChannelName::Red);
 
 		auto theMesh = GetMesh();
 		auto volumeData = theMesh->VolumeData();
@@ -197,37 +252,23 @@ namespace Lib3MF
 
 	TEST_F(Volumetric, VolumetricColor)
 	{
-		auto pImage3D = SetupSheetsFromFile();
+		//auto pImage3D = SetupSheetsFromFile();
 
-		//auto pVolumetricStack = model->AddVolumetricStack();
-		//pVolumetricStack->AddDestinationChannel("r", 0.0);
-		//pVolumetricStack->AddDestinationChannel("g", 0.0);
-		//pVolumetricStack->AddDestinationChannel("b", 0.0);
-		//auto pLayer = pVolumetricStack->AddLayer(wrapper->GetIdentityTransform(), Lib3MF::eBlendMethod::Mix);
-		//auto pChannelSelector0 = pLayer->AddChannelSelector(pImage3D.get(), "r", "r");
-		//auto pChannelSelector1 = pLayer->AddChannelSelector(pImage3D.get(), "g", "g");
-		//auto pChannelSelector2 = pLayer->AddChannelSelector(pImage3D.get(), "b", "b");
+		//auto vectorFieldFromImage3D = model->AddVector3DFieldFromImage3D(pImage3D.get());
 
 		//auto theMesh = GetMesh();
 		//auto volumeData = theMesh->VolumeData();
-		//auto color = volumeData->CreateNewColor(pVolumetricStack.get());
+		//auto theBoundary = volumeData->CreateNewColor(vectorFieldFromImage3D.get());
 
-		//Lib3MF::sTransform sTransform = wrapper->GetIdentityTransform();
-		//Lib3MF::sTransform sObtainedTransform = color->SetTransform();
-		//ASSERT_FLOAT_EQ(sObtainedTransform.m_Fields[1][1], 1.0f);
+		//writer3MF->WriteToFile(Volumetric::OutFolder + "Color.3mf");
+		//{
+		//	PModel ioModel = wrapper->CreateModel();
+		//	PReader ioReader = ioModel->QueryReader("3mf");
+		//	ioReader->ReadFromFile(Volumetric::OutFolder + "Color.3mf");
 
-		//const std::string propertyName = "MyProperty";
-		//auto theProperty = volumeData->AddProperty(propertyName, vector3DFieldFromImage3D.get());
-		//ASSERT_EQ(volumeData->GetPropertyCount(), 1);
-
-		//sTransform.m_Fields[1][1] = 2.0;
-		//color->SetTransform(sTransform);
-
-		//color->SetChannel(eColorChannel::Red, "r");
-		//color->SetChannel(eColorChannel::Green, "g");
-		//color->SetChannel(eColorChannel::Blue, "b");
-
-		writer3MF->WriteToFile(Volumetric::OutFolder + "MyColor.3mf");
+		//	PWriter ioWriter = ioModel->QueryWriter("3mf");
+		//	ioWriter->WriteToFile(Volumetric::OutFolder + "ColorReOut.3mf");
+		//}
 	}
 
 }

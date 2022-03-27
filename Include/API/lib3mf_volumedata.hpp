@@ -95,7 +95,7 @@ public:
 
 	IVolumeDataColor * GetColor() override;
 
-	IVolumeDataColor * CreateNewColor(IVector3DField* pTheVector3DField, const Lib3MF::sTransform Transform) override;
+	IVolumeDataColor * CreateNewColor(IVector3DField* pTheVector3DField) override;
 
 	void RemoveColor() override;
 

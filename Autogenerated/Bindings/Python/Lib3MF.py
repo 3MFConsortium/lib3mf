@@ -323,9 +323,7 @@ class FunctionTable:
 	lib3mf_fieldreference_setfieldresourceid = None
 	lib3mf_fieldreference_gettransform = None
 	lib3mf_fieldreference_settransform = None
-	lib3mf_scalarfieldreference_getscalarfield = None
 	lib3mf_scalarfieldreference_setscalarfield = None
-	lib3mf_vector3dfieldreference_getvector3dfield = None
 	lib3mf_vector3dfieldreference_setvector3dfield = None
 	lib3mf_volumedataboundary_getsolidthreshold = None
 	lib3mf_volumedataboundary_setsolidthreshold = None
@@ -562,6 +560,7 @@ class FunctionTable:
 	lib3mf_model_addcompositematerials = None
 	lib3mf_model_addmultipropertygroup = None
 	lib3mf_model_addimagestack = None
+	lib3mf_model_getimagestackbyid = None
 	lib3mf_model_addscalarfieldfromimage3d = None
 	lib3mf_model_addscalarfieldcomposed = None
 	lib3mf_model_addscalarfieldconstant = None
@@ -2199,23 +2198,11 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(Transform))
 			self.lib.lib3mf_fieldreference_settransform = methodType(int(methodAddress.value))
 			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_scalarfieldreference_getscalarfield")), methodAddress)
-			if err != 0:
-				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
-			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
-			self.lib.lib3mf_scalarfieldreference_getscalarfield = methodType(int(methodAddress.value))
-			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_scalarfieldreference_setscalarfield")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_void_p)
 			self.lib.lib3mf_scalarfieldreference_setscalarfield = methodType(int(methodAddress.value))
-			
-			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_vector3dfieldreference_getvector3dfield")), methodAddress)
-			if err != 0:
-				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
-			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
-			self.lib.lib3mf_vector3dfieldreference_getvector3dfield = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_vector3dfieldreference_setvector3dfield")), methodAddress)
 			if err != 0:
@@ -2334,7 +2321,7 @@ class Wrapper:
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumedata_createnewcolor")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
-			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_void_p, ctypes.POINTER(Transform), ctypes.POINTER(ctypes.c_void_p))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
 			self.lib.lib3mf_volumedata_createnewcolor = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_volumedata_removecolor")), methodAddress)
@@ -3633,6 +3620,12 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint32, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p))
 			self.lib.lib3mf_model_addimagestack = methodType(int(methodAddress.value))
 			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_model_getimagestackbyid")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_model_getimagestackbyid = methodType(int(methodAddress.value))
+			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_model_addscalarfieldfromimage3d")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
@@ -4460,14 +4453,8 @@ class Wrapper:
 			self.lib.lib3mf_fieldreference_settransform.restype = ctypes.c_int32
 			self.lib.lib3mf_fieldreference_settransform.argtypes = [ctypes.c_void_p, ctypes.POINTER(Transform)]
 			
-			self.lib.lib3mf_scalarfieldreference_getscalarfield.restype = ctypes.c_int32
-			self.lib.lib3mf_scalarfieldreference_getscalarfield.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
-			
 			self.lib.lib3mf_scalarfieldreference_setscalarfield.restype = ctypes.c_int32
 			self.lib.lib3mf_scalarfieldreference_setscalarfield.argtypes = [ctypes.c_void_p, ctypes.c_void_p]
-			
-			self.lib.lib3mf_vector3dfieldreference_getvector3dfield.restype = ctypes.c_int32
-			self.lib.lib3mf_vector3dfieldreference_getvector3dfield.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
 			
 			self.lib.lib3mf_vector3dfieldreference_setvector3dfield.restype = ctypes.c_int32
 			self.lib.lib3mf_vector3dfieldreference_setvector3dfield.argtypes = [ctypes.c_void_p, ctypes.c_void_p]
@@ -4527,7 +4514,7 @@ class Wrapper:
 			self.lib.lib3mf_volumedata_getcolor.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
 			
 			self.lib.lib3mf_volumedata_createnewcolor.restype = ctypes.c_int32
-			self.lib.lib3mf_volumedata_createnewcolor.argtypes = [ctypes.c_void_p, ctypes.c_void_p, ctypes.POINTER(Transform), ctypes.POINTER(ctypes.c_void_p)]
+			self.lib.lib3mf_volumedata_createnewcolor.argtypes = [ctypes.c_void_p, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
 			
 			self.lib.lib3mf_volumedata_removecolor.restype = ctypes.c_int32
 			self.lib.lib3mf_volumedata_removecolor.argtypes = [ctypes.c_void_p]
@@ -5176,6 +5163,9 @@ class Wrapper:
 			
 			self.lib.lib3mf_model_addimagestack.restype = ctypes.c_int32
 			self.lib.lib3mf_model_addimagestack.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint32, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_model_getimagestackbyid.restype = ctypes.c_int32
+			self.lib.lib3mf_model_getimagestackbyid.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p)]
 			
 			self.lib.lib3mf_model_addscalarfieldfromimage3d.restype = ctypes.c_int32
 			self.lib.lib3mf_model_addscalarfieldfromimage3d.argtypes = [ctypes.c_void_p, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
@@ -7083,16 +7073,6 @@ class FieldReference(Base):
 class ScalarFieldReference(FieldReference):
 	def __init__(self, handle, wrapper):
 		FieldReference.__init__(self, handle, wrapper)
-	def GetScalarField(self):
-		TheScalarFieldHandle = ctypes.c_void_p()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_scalarfieldreference_getscalarfield(self._handle, TheScalarFieldHandle))
-		if TheScalarFieldHandle:
-			TheScalarFieldObject = ScalarField(TheScalarFieldHandle, self._wrapper)
-		else:
-			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
-		
-		return TheScalarFieldObject
-	
 	def SetScalarField(self, TheScalarFieldObject):
 		TheScalarFieldHandle = None
 		if TheScalarFieldObject:
@@ -7109,16 +7089,6 @@ class ScalarFieldReference(FieldReference):
 class Vector3DFieldReference(FieldReference):
 	def __init__(self, handle, wrapper):
 		FieldReference.__init__(self, handle, wrapper)
-	def GetVector3DField(self):
-		TheVector3DFieldHandle = ctypes.c_void_p()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_vector3dfieldreference_getvector3dfield(self._handle, TheVector3DFieldHandle))
-		if TheVector3DFieldHandle:
-			TheVector3DFieldObject = Vector3DField(TheVector3DFieldHandle, self._wrapper)
-		else:
-			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
-		
-		return TheVector3DFieldObject
-	
 	def SetVector3DField(self, TheVector3DFieldObject):
 		TheVector3DFieldHandle = None
 		if TheVector3DFieldObject:
@@ -7317,14 +7287,14 @@ class VolumeData(Base):
 		
 		return TheColorDataObject
 	
-	def CreateNewColor(self, TheVector3DFieldObject, Transform):
+	def CreateNewColor(self, TheVector3DFieldObject):
 		TheVector3DFieldHandle = None
 		if TheVector3DFieldObject:
 			TheVector3DFieldHandle = TheVector3DFieldObject._handle
 		else:
 			raise ELib3MFException(ErrorCodes.INVALIDPARAM, 'Invalid return/output value')
 		TheColorDataHandle = ctypes.c_void_p()
-		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumedata_createnewcolor(self._handle, TheVector3DFieldHandle, Transform, TheColorDataHandle))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_volumedata_createnewcolor(self._handle, TheVector3DFieldHandle, TheColorDataHandle))
 		if TheColorDataHandle:
 			TheColorDataObject = VolumeDataColor(TheColorDataHandle, self._wrapper)
 		else:
@@ -9362,6 +9332,17 @@ class Model(Base):
 			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
 		
 		return InstanceObject
+	
+	def GetImageStackByID(self, UniqueResourceID):
+		nUniqueResourceID = ctypes.c_uint32(UniqueResourceID)
+		ImageStackInstanceHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_model_getimagestackbyid(self._handle, nUniqueResourceID, ImageStackInstanceHandle))
+		if ImageStackInstanceHandle:
+			ImageStackInstanceObject = ImageStack(ImageStackInstanceHandle, self._wrapper)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return ImageStackInstanceObject
 	
 	def AddScalarFieldFromImage3D(self, Image3DObject):
 		Image3DHandle = None

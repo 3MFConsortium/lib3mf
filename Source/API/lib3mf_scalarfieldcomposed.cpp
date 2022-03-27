@@ -32,56 +32,81 @@ Abstract: This is a stub class definition of CScalarFieldComposed
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
-
+#include "lib3mf_scalarfieldreference.hpp"
 
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
  Class definition of CScalarFieldComposed 
 **************************************************************************************************************************/
+CScalarFieldComposed::CScalarFieldComposed(NMR::PModelScalarFieldComposed pScalarFieldComposed)
+	:CScalarField(pScalarFieldComposed), CResource(pScalarFieldComposed)
+{
+
+}
+
+NMR::CModelScalarFieldComposed* CScalarFieldComposed::scalarFieldComposed()
+{
+	NMR::CModelScalarFieldComposed* pFieldComposed = dynamic_cast<NMR::CModelScalarFieldComposed*>(resource().get());
+	if (pFieldComposed == nullptr)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDOBJECT);
+	return pFieldComposed;
+}
 
 void CScalarFieldComposed::SetMethod(const Lib3MF::eCompositionMethod eTheMethod)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	scalarFieldComposed()->setMethod(NMR::eModelCompositionMethod(eTheMethod));
 }
 
 Lib3MF::eCompositionMethod CScalarFieldComposed::GetMethod()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return Lib3MF::eCompositionMethod(scalarFieldComposed()->getMethod());
 }
 
 Lib3MF_double CScalarFieldComposed::GetFactor1()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return scalarFieldComposed()->getFactor1();
 }
 
 void CScalarFieldComposed::SetFactor1(const Lib3MF_double dFactor1)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	scalarFieldComposed()->setFactor1(dFactor1);
 }
 
 Lib3MF_double CScalarFieldComposed::GetFactor2()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return scalarFieldComposed()->getFactor2();
 }
 
 void CScalarFieldComposed::SetFactor2(const Lib3MF_double dFactor2)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	scalarFieldComposed()->setFactor2(dFactor2);
 }
 
 IScalarFieldReference * CScalarFieldComposed::ScalarFieldReference1()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	auto pScalarFieldReference1 = scalarFieldComposed()->ScalarFieldReference1();
+	if (!pScalarFieldReference1) {
+		return nullptr;
+	}
+	return new CScalarFieldReference(pScalarFieldReference1);
 }
 
 IScalarFieldReference * CScalarFieldComposed::ScalarFieldReference2()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	auto pScalarFieldReference2 = scalarFieldComposed()->ScalarFieldReference2();
+	if (!pScalarFieldReference2) {
+		return nullptr;
+	}
+	return new CScalarFieldReference(pScalarFieldReference2);
 }
 
 IScalarFieldReference * CScalarFieldComposed::ScalarFieldReferenceMask()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	auto pScalarFieldReferenceMask = scalarFieldComposed()->ScalarFieldReferenceMask();
+	if (!pScalarFieldReferenceMask) {
+		return nullptr;
+	}
+	return new CScalarFieldReference(pScalarFieldReferenceMask);
 }
 

@@ -1818,12 +1818,6 @@ typedef IBaseSharedPtr<IFieldReference> PIFieldReference;
 class IScalarFieldReference : public virtual IFieldReference {
 public:
 	/**
-	* IScalarFieldReference::GetScalarField - Returns the ScalarField
-	* @return ScalarField used in this element
-	*/
-	virtual IScalarField * GetScalarField() = 0;
-
-	/**
 	* IScalarFieldReference::SetScalarField - Sets the ScalarField to use within this volume data item.
 	* @param[in] pTheScalarField - ScalarField used in this element
 	*/
@@ -1840,12 +1834,6 @@ typedef IBaseSharedPtr<IScalarFieldReference> PIScalarFieldReference;
 
 class IVector3DFieldReference : public virtual IFieldReference {
 public:
-	/**
-	* IVector3DFieldReference::GetVector3DField - Returns the Vector3DField
-	* @return Vector3DField used in this element
-	*/
-	virtual IVector3DField * GetVector3DField() = 0;
-
 	/**
 	* IVector3DFieldReference::SetVector3DField - Sets the Vector3DField to use within this volume data item.
 	* @param[in] pTheVector3DField - Vector3DField used in this element
@@ -2030,10 +2018,9 @@ public:
 	/**
 	* IVolumeData::CreateNewColor - Creates a new VolumeDataColor for this VolumeData instance
 	* @param[in] pTheVector3DField - Vector3DField used in this element
-	* @param[in] Transform - new transformation matrix
 	* @return The new VolumeDataColor of this VolumeData instance.
 	*/
-	virtual IVolumeDataColor * CreateNewColor(IVector3DField* pTheVector3DField, const Lib3MF::sTransform Transform) = 0;
+	virtual IVolumeDataColor * CreateNewColor(IVector3DField* pTheVector3DField) = 0;
 
 	/**
 	* IVolumeData::RemoveColor - Removes the VolumeDataColor of this VolumeData instance
@@ -3718,6 +3705,13 @@ public:
 	* @return returns the new ImageStack instance
 	*/
 	virtual IImageStack * AddImageStack(const Lib3MF_uint32 nColumnCount, const Lib3MF_uint32 nRowCount, const Lib3MF_uint32 nSheetCount) = 0;
+
+	/**
+	* IModel::GetImageStackByID - finds an ImageStack object by its UniqueResourceID
+	* @param[in] nUniqueResourceID - UniqueResourceID
+	* @return returns the image stack instance
+	*/
+	virtual IImageStack * GetImageStackByID(const Lib3MF_uint32 nUniqueResourceID) = 0;
 
 	/**
 	* IModel::AddScalarFieldFromImage3D - creates a new ScalarFieldFromImage3D Resource

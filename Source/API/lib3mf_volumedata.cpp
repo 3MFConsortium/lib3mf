@@ -102,7 +102,7 @@ IVolumeDataColor * CVolumeData::GetColor()
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }
 
-IVolumeDataColor * CVolumeData::CreateNewColor(IVector3DField* pTheVector3DField, const Lib3MF::sTransform Transform)
+IVolumeDataColor * CVolumeData::CreateNewColor(IVector3DField* pTheVector3DField)
 {
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
 }

@@ -32,7 +32,7 @@ Abstract: This is a stub class definition of CScalarFieldIterator
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
-
+#include "lib3mf_scalarfield.hpp"
 
 using namespace Lib3MF::Impl;
 
@@ -42,6 +42,6 @@ using namespace Lib3MF::Impl;
 
 IScalarField * CScalarFieldIterator::GetCurrentScalarField()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return new CScalarField(std::dynamic_pointer_cast<NMR::CModelScalarField>(GetCurrentResource()));
 }
 

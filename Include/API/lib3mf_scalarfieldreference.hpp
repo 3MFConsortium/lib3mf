@@ -77,8 +77,6 @@ public:
 	* Public member functions to implement.
 	*/
 
-	IScalarField * GetScalarField() override;
-
 	void SetScalarField(IScalarField* pTheScalarField) override;
 
 };

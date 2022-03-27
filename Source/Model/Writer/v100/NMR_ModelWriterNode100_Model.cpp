@@ -46,6 +46,7 @@ This is the class for exporting the 3mf model stream root node.
 #include "Model/Classes/NMR_ModelScalarField.h"
 #include "Model/Classes/NMR_ModelScalarFieldFromImage3D.h"
 #include "Model/Classes/NMR_ModelScalarFieldConstant.h"
+#include "Model/Classes/NMR_ModelScalarFieldComposed.h"
 #include "Model/Classes/NMR_ModelCompositeMaterials.h"
 #include "Model/Classes/NMR_ModelMultiPropertyGroup.h"
 #include "Model/Classes/NMR_ModelMeshObject.h"
@@ -829,6 +830,46 @@ namespace NMR {
 			{
 				writeStartElementWithPrefix(XML_3MF_ELEMENT_SCALARFIELDCONSTANT, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
 				writeDoubleAttribute(XML_3MF_ATTRIBUTE_SCALARFIELDCONSTANT_VALUE, pScalarFieldConstant->getValue());
+				writeEndElement();
+			}
+			else if (CModelScalarFieldComposed* pScalarFieldComposed = dynamic_cast<CModelScalarFieldComposed*>(pScalarField))
+			{
+				writeStartElementWithPrefix(XML_3MF_ELEMENT_SCALARFIELDCOMPOSED, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
+				writeStringAttribute(XML_3MF_ATTRIBUTE_SCALARFIELDCOMPOSED_METHOD, CModelScalarFieldComposed::methodToString(pScalarFieldComposed->getMethod()));
+				
+				auto pID1 = m_pModel->findPackageResourceID(pScalarFieldComposed->ScalarFieldReference1()->getFieldReferenceID());
+				if (!pID1)
+					throw CNMRException(NMR_ERROR_INVALIDMODELRESOURCE);
+				writeIntAttribute(XML_3MF_ATTRIBUTE_SCALARFIELDCOMPOSED_SCALARFIELDID1, pID1->getModelResourceID());
+				auto transform1 = pScalarFieldComposed->ScalarFieldReference1()->getTransform();
+				if (!fnMATRIX3_isIdentity(transform1))
+					writeStringAttribute(XML_3MF_ATTRIBUTE_SCALARFIELDCOMPOSED_TRANSFORM1, fnMATRIX3_toString(transform1));
+				
+				auto pID2 = m_pModel->findPackageResourceID(pScalarFieldComposed->ScalarFieldReference2()->getFieldReferenceID());
+				if (!pID2)
+					throw CNMRException(NMR_ERROR_INVALIDMODELRESOURCE);
+				writeIntAttribute(XML_3MF_ATTRIBUTE_SCALARFIELDCOMPOSED_SCALARFIELDID2, pID2->getModelResourceID());
+				auto transform2 = pScalarFieldComposed->ScalarFieldReference2()->getTransform();
+				if (!fnMATRIX3_isIdentity(transform2))
+					writeStringAttribute(XML_3MF_ATTRIBUTE_SCALARFIELDCOMPOSED_TRANSFORM2, fnMATRIX3_toString(transform2));
+
+				if (pScalarFieldComposed->getMethod() == eModelCompositionMethod::MODELCOMPOSITIONMETHOD_MASK)
+				{
+					auto pIDMask = m_pModel->findPackageResourceID(pScalarFieldComposed->ScalarFieldReferenceMask()->getFieldReferenceID());
+					if (!pIDMask)
+						throw CNMRException(NMR_ERROR_INVALIDMODELRESOURCE);
+					writeIntAttribute(XML_3MF_ATTRIBUTE_SCALARFIELDCOMPOSED_SCALARFIELDID2, pIDMask->getModelResourceID());
+					auto transformMask = pScalarFieldComposed->ScalarFieldReferenceMask()->getTransform();
+					if (!fnMATRIX3_isIdentity(transformMask))
+						writeStringAttribute(XML_3MF_ATTRIBUTE_SCALARFIELDCOMPOSED_TRANSFORMMASK, fnMATRIX3_toString(transformMask));
+				}
+				if (pScalarFieldComposed->getMethod() == eModelCompositionMethod::MODELCOMPOSITIONMETHOD_WEIGHTEDSUM)
+				{
+					if (pScalarFieldComposed->getFactor1()!=1.0)
+						writeDoubleAttribute(XML_3MF_ATTRIBUTE_SCALARFIELDCOMPOSED_FACTOR1, pScalarFieldComposed->getFactor1());
+					if (pScalarFieldComposed->getFactor2() != 1.0)
+						writeDoubleAttribute(XML_3MF_ATTRIBUTE_SCALARFIELDCOMPOSED_FACTOR2, pScalarFieldComposed->getFactor2());
+				}
 				writeEndElement();
 			}
 			else

@@ -81,16 +81,13 @@ namespace NMR {
 			m_sIdentifier = "";
 		}
 	} BEAMSET;
-	typedef std::shared_ptr <BEAMSET> PBEAMSET;
+	typedef std::shared_ptr<BEAMSET> PBEAMSET;
 
 	typedef struct MESHBEAM {
-		nfInt32 m_index;
-		nfInt32 m_nodeindices[2];
-		nfDouble m_radius[2];
-		nfInt32 m_capMode[2];
-		// eModelBeamLatticeCapMode m_capMode[2];
-		MESHBEAM() { 
-		};
+		nfInt32 m_index = 1;
+		nfInt32 m_nodeindices[2] = { 0, 0 };
+		nfDouble m_radius[2] = { 1., 1. };
+		nfInt32 m_capMode[2] = { 0,0 };
 	} MESHBEAM;
 	typedef CPagedVector<MESHBEAM, NMR_MESH_BEAMBLOCKCOUNT> MESHBEAMS;
 
@@ -98,8 +95,6 @@ namespace NMR {
 		nfInt32 m_index;
 		nfInt32 m_nodeindex;
 		nfDouble m_radius;
-		MESHBALL() {
-		};
 	} MESHBALL;
 	typedef CPagedVector<MESHBALL, NMR_MESH_BALLBLOCKCOUNT> MESHBALLS;
 

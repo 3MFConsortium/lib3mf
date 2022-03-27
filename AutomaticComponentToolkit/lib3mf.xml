@@ -1030,18 +1030,12 @@
 	</class>
 
 	<class name="ScalarFieldReference" parent="FieldReference">
-		<method name="GetScalarField" description="Returns the ScalarField">
-			<param name="TheScalarField" type="class" class="ScalarField" pass="return" description="ScalarField used in this element"/>
-		</method>
 		<method name="SetScalarField" description="Sets the ScalarField to use within this volume data item.">
 			<param name="TheScalarField" type="class" class="ScalarField" pass="in" description="ScalarField used in this element"/>
 		</method>
 	</class>
 
 	<class name="Vector3DFieldReference" parent="FieldReference">
-		<method name="GetVector3DField" description="Returns the Vector3DField">
-			<param name="TheVector3DField" type="class" class="Vector3DField" pass="return" description="Vector3DField used in this element"/>
-		</method>
 		<method name="SetVector3DField" description="Sets the Vector3DField to use within this volume data item.">
 			<param name="TheVector3DField" type="class" class="Vector3DField" pass="in" description="Vector3DField used in this element"/>
 		</method>
@@ -1120,7 +1114,6 @@
 		</method>
 		<method name="CreateNewColor" description="Creates a new VolumeDataColor for this VolumeData instance">
 			<param name="TheVector3DField" type="class" class="Vector3DField" pass="in" description="Vector3DField used in this element"/>
-			<param name="Transform" type="struct" class="Transform" pass="in" description="new transformation matrix"/>
 			<param name="TheColorData" type="class" class="VolumeDataColor" pass="return" description="The new VolumeDataColor of this VolumeData instance."/>
 		</method>
 		<method name="RemoveColor" description="Removes the VolumeDataColor of this VolumeData instance">
@@ -1980,6 +1973,10 @@
 			<param name="RowCount" type="uint32" pass="in" description="the number of rows in each sheet."/>
 			<param name="SheetCount" type="uint32" pass="in" description="the number of sheets in the image stack."/>
 			<param name="Instance" type="handle" class="ImageStack" pass="return" description="returns the new ImageStack instance" />
+		</method>
+		<method name="GetImageStackByID" description="finds an ImageStack object by its UniqueResourceID">
+			<param name="UniqueResourceID" type="uint32" pass="in" description="UniqueResourceID"/>
+			<param name="ImageStackInstance" type="class" class="ImageStack" pass="return" description="returns the image stack instance"/>
 		</method>
 		<method name="AddScalarFieldFromImage3D" description="creates a new ScalarFieldFromImage3D Resource">
 			<param name="Image3D" type="class" class="Image3D" pass="in" description="image instance" />

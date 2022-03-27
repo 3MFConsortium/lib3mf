@@ -1298,7 +1298,6 @@ public:
 	{
 	}
 	
-	inline PScalarField GetScalarField();
 	inline void SetScalarField(CScalarField * pTheScalarField);
 };
 	
@@ -1316,7 +1315,6 @@ public:
 	{
 	}
 	
-	inline PVector3DField GetVector3DField();
 	inline void SetVector3DField(CVector3DField * pTheVector3DField);
 };
 	
@@ -1432,7 +1430,7 @@ public:
 	inline PVolumeDataComposite CreateNewComposite();
 	inline void RemoveComposite();
 	inline PVolumeDataColor GetColor();
-	inline PVolumeDataColor CreateNewColor(CVector3DField * pTheVector3DField, const sTransform & Transform);
+	inline PVolumeDataColor CreateNewColor(CVector3DField * pTheVector3DField);
 	inline void RemoveColor();
 	inline Lib3MF_uint32 GetPropertyCount();
 	inline PVolumeDataProperty GetProperty(const Lib3MF_uint32 nIndex);
@@ -2017,6 +2015,7 @@ public:
 	inline PCompositeMaterials AddCompositeMaterials(CBaseMaterialGroup * pBaseMaterialGroupInstance);
 	inline PMultiPropertyGroup AddMultiPropertyGroup();
 	inline PImageStack AddImageStack(const Lib3MF_uint32 nColumnCount, const Lib3MF_uint32 nRowCount, const Lib3MF_uint32 nSheetCount);
+	inline PImageStack GetImageStackByID(const Lib3MF_uint32 nUniqueResourceID);
 	inline PScalarFieldFromImage3D AddScalarFieldFromImage3D(CImage3D * pImage3D);
 	inline PScalarFieldComposed AddScalarFieldComposed();
 	inline PScalarFieldConstant AddScalarFieldConstant();
@@ -4803,21 +4802,6 @@ public:
 	 */
 	
 	/**
-	* CScalarFieldReference::GetScalarField - Returns the ScalarField
-	* @return ScalarField used in this element
-	*/
-	PScalarField CScalarFieldReference::GetScalarField()
-	{
-		Lib3MFHandle hTheScalarField = nullptr;
-		CheckError(lib3mf_scalarfieldreference_getscalarfield(m_pHandle, &hTheScalarField));
-		
-		if (!hTheScalarField) {
-			CheckError(LIB3MF_ERROR_INVALIDPARAM);
-		}
-		return std::make_shared<CScalarField>(m_pWrapper, hTheScalarField);
-	}
-	
-	/**
 	* CScalarFieldReference::SetScalarField - Sets the ScalarField to use within this volume data item.
 	* @param[in] pTheScalarField - ScalarField used in this element
 	*/
@@ -4833,21 +4817,6 @@ public:
 	/**
 	 * Method definitions for class CVector3DFieldReference
 	 */
-	
-	/**
-	* CVector3DFieldReference::GetVector3DField - Returns the Vector3DField
-	* @return Vector3DField used in this element
-	*/
-	PVector3DField CVector3DFieldReference::GetVector3DField()
-	{
-		Lib3MFHandle hTheVector3DField = nullptr;
-		CheckError(lib3mf_vector3dfieldreference_getvector3dfield(m_pHandle, &hTheVector3DField));
-		
-		if (!hTheVector3DField) {
-			CheckError(LIB3MF_ERROR_INVALIDPARAM);
-		}
-		return std::make_shared<CVector3DField>(m_pWrapper, hTheVector3DField);
-	}
 	
 	/**
 	* CVector3DFieldReference::SetVector3DField - Sets the Vector3DField to use within this volume data item.
@@ -5126,17 +5095,16 @@ public:
 	/**
 	* CVolumeData::CreateNewColor - Creates a new VolumeDataColor for this VolumeData instance
 	* @param[in] pTheVector3DField - Vector3DField used in this element
-	* @param[in] Transform - new transformation matrix
 	* @return The new VolumeDataColor of this VolumeData instance.
 	*/
-	PVolumeDataColor CVolumeData::CreateNewColor(CVector3DField * pTheVector3DField, const sTransform & Transform)
+	PVolumeDataColor CVolumeData::CreateNewColor(CVector3DField * pTheVector3DField)
 	{
 		Lib3MFHandle hTheVector3DField = nullptr;
 		if (pTheVector3DField != nullptr) {
 			hTheVector3DField = pTheVector3DField->GetHandle();
 		};
 		Lib3MFHandle hTheColorData = nullptr;
-		CheckError(lib3mf_volumedata_createnewcolor(m_pHandle, hTheVector3DField, &Transform, &hTheColorData));
+		CheckError(lib3mf_volumedata_createnewcolor(m_pHandle, hTheVector3DField, &hTheColorData));
 		
 		if (!hTheColorData) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
@@ -8135,6 +8103,22 @@ public:
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
 		return std::make_shared<CImageStack>(m_pWrapper, hInstance);
+	}
+	
+	/**
+	* CModel::GetImageStackByID - finds an ImageStack object by its UniqueResourceID
+	* @param[in] nUniqueResourceID - UniqueResourceID
+	* @return returns the image stack instance
+	*/
+	PImageStack CModel::GetImageStackByID(const Lib3MF_uint32 nUniqueResourceID)
+	{
+		Lib3MFHandle hImageStackInstance = nullptr;
+		CheckError(lib3mf_model_getimagestackbyid(m_pHandle, nUniqueResourceID, &hImageStackInstance));
+		
+		if (!hImageStackInstance) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::make_shared<CImageStack>(m_pWrapper, hImageStackInstance);
 	}
 	
 	/**

@@ -76,8 +76,6 @@ public:
 	* Public member functions to implement.
 	*/
 
-	IVector3DField * GetVector3DField() override;
-
 	void SetVector3DField(IVector3DField* pTheVector3DField) override;
 
 };

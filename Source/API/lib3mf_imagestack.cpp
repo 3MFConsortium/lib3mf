@@ -57,7 +57,7 @@ Lib3MF_uint32 CImageStack::GetRowCount()
 
 void CImageStack::SetRowCount(const Lib3MF_uint32 nRowCount)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	m_pModelImageStack->setRowCount(nRowCount);
 }
 
 Lib3MF_uint32 CImageStack::GetColumnCount()
@@ -67,7 +67,7 @@ Lib3MF_uint32 CImageStack::GetColumnCount()
 
 void CImageStack::SetColumnCount(const Lib3MF_uint32 nColumnCount)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	m_pModelImageStack->setColumnCount(nColumnCount);
 }
 
 Lib3MF_uint32 CImageStack::GetSheetCount()

@@ -7946,7 +7946,6 @@ void CLib3MFScalarFieldReference::Init()
     tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
 
     // Prototype
-    NODE_SET_PROTOTYPE_METHOD(tpl, "GetScalarField", GetScalarField);
     NODE_SET_PROTOTYPE_METHOD(tpl, "SetScalarField", SetScalarField);
     constructor.Reset(isolate, tpl->GetFunction());
 
@@ -7978,29 +7977,6 @@ Local<Object> CLib3MFScalarFieldReference::NewInstance(Local<Object> pParent, Li
       instance->SetInternalField (NODEWRAPPER_HANDLEINDEX, External::New (isolate, pHandle));
     }
     return instance;
-}
-
-
-void CLib3MFScalarFieldReference::GetScalarField (const FunctionCallbackInfo<Value>& args) 
-{
-    Isolate* isolate = args.GetIsolate();
-    HandleScope scope(isolate);
-    try {
-        Lib3MFHandle hReturnTheScalarField = nullptr;
-        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
-        if (wrapperTable == nullptr)
-            throw std::runtime_error ("Could not get wrapper table for Lib3MF method GetScalarField.");
-        if (wrapperTable->m_ScalarFieldReference_GetScalarField == nullptr)
-            throw std::runtime_error ("Could not call Lib3MF method ScalarFieldReference::GetScalarField.");
-        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_ScalarFieldReference_GetScalarField (instanceHandle, &hReturnTheScalarField);
-        CheckError (isolate, wrapperTable, instanceHandle, errorCode);
-        Local<Object> instanceObjTheScalarField = CLib3MFScalarField::NewInstance (args.Holder(), hReturnTheScalarField);
-        args.GetReturnValue().Set (instanceObjTheScalarField);
-
-    } catch (std::exception & E) {
-        RaiseError (isolate, E.what());
-    }
 }
 
 
@@ -8054,7 +8030,6 @@ void CLib3MFVector3DFieldReference::Init()
     tpl->InstanceTemplate()->SetInternalFieldCount(NODEWRAPPER_FIELDCOUNT);
 
     // Prototype
-    NODE_SET_PROTOTYPE_METHOD(tpl, "GetVector3DField", GetVector3DField);
     NODE_SET_PROTOTYPE_METHOD(tpl, "SetVector3DField", SetVector3DField);
     constructor.Reset(isolate, tpl->GetFunction());
 
@@ -8086,29 +8061,6 @@ Local<Object> CLib3MFVector3DFieldReference::NewInstance(Local<Object> pParent, 
       instance->SetInternalField (NODEWRAPPER_HANDLEINDEX, External::New (isolate, pHandle));
     }
     return instance;
-}
-
-
-void CLib3MFVector3DFieldReference::GetVector3DField (const FunctionCallbackInfo<Value>& args) 
-{
-    Isolate* isolate = args.GetIsolate();
-    HandleScope scope(isolate);
-    try {
-        Lib3MFHandle hReturnTheVector3DField = nullptr;
-        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
-        if (wrapperTable == nullptr)
-            throw std::runtime_error ("Could not get wrapper table for Lib3MF method GetVector3DField.");
-        if (wrapperTable->m_Vector3DFieldReference_GetVector3DField == nullptr)
-            throw std::runtime_error ("Could not call Lib3MF method Vector3DFieldReference::GetVector3DField.");
-        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_Vector3DFieldReference_GetVector3DField (instanceHandle, &hReturnTheVector3DField);
-        CheckError (isolate, wrapperTable, instanceHandle, errorCode);
-        Local<Object> instanceObjTheVector3DField = CLib3MFVector3DField::NewInstance (args.Holder(), hReturnTheVector3DField);
-        args.GetReturnValue().Set (instanceObjTheVector3DField);
-
-    } catch (std::exception & E) {
-        RaiseError (isolate, E.what());
-    }
 }
 
 
@@ -8936,15 +8888,11 @@ void CLib3MFVolumeData::CreateNewColor (const FunctionCallbackInfo<Value>& args)
         if (!args[0]->IsObject()) {
             throw std::runtime_error ("Expected class parameter 0 (TheVector3DField)");
         }
-        if (!args[1]->IsObject()) {
-            throw std::runtime_error ("Expected struct parameter 1 (Transform)");
-        }
         Local<Object> objTheVector3DField = args[0]->ToObject(isolate->GetCurrentContext()).ToLocalChecked ();
         CLib3MFVector3DField * instanceTheVector3DField = ObjectWrap::Unwrap<CLib3MFVector3DField>(objTheVector3DField);
         if (instanceTheVector3DField == nullptr)
             throw std::runtime_error("Invalid Object parameter 0 (TheVector3DField)");
         Lib3MFHandle hTheVector3DField = instanceTheVector3DField->getHandle ( objTheVector3DField );
-        sLib3MFTransform sTransform = convertObjectToLib3MFTransform(isolate, args[1]);
         Lib3MFHandle hReturnTheColorData = nullptr;
         sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
         if (wrapperTable == nullptr)
@@ -8952,7 +8900,7 @@ void CLib3MFVolumeData::CreateNewColor (const FunctionCallbackInfo<Value>& args)
         if (wrapperTable->m_VolumeData_CreateNewColor == nullptr)
             throw std::runtime_error ("Could not call Lib3MF method VolumeData::CreateNewColor.");
         Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
-        Lib3MFResult errorCode = wrapperTable->m_VolumeData_CreateNewColor (instanceHandle, hTheVector3DField, &sTransform, &hReturnTheColorData);
+        Lib3MFResult errorCode = wrapperTable->m_VolumeData_CreateNewColor (instanceHandle, hTheVector3DField, &hReturnTheColorData);
         CheckError (isolate, wrapperTable, instanceHandle, errorCode);
         Local<Object> instanceObjTheColorData = CLib3MFVolumeDataColor::NewInstance (args.Holder(), hReturnTheColorData);
         args.GetReturnValue().Set (instanceObjTheColorData);
@@ -14619,6 +14567,7 @@ void CLib3MFModel::Init()
     NODE_SET_PROTOTYPE_METHOD(tpl, "AddCompositeMaterials", AddCompositeMaterials);
     NODE_SET_PROTOTYPE_METHOD(tpl, "AddMultiPropertyGroup", AddMultiPropertyGroup);
     NODE_SET_PROTOTYPE_METHOD(tpl, "AddImageStack", AddImageStack);
+    NODE_SET_PROTOTYPE_METHOD(tpl, "GetImageStackByID", GetImageStackByID);
     NODE_SET_PROTOTYPE_METHOD(tpl, "AddScalarFieldFromImage3D", AddScalarFieldFromImage3D);
     NODE_SET_PROTOTYPE_METHOD(tpl, "AddScalarFieldComposed", AddScalarFieldComposed);
     NODE_SET_PROTOTYPE_METHOD(tpl, "AddScalarFieldConstant", AddScalarFieldConstant);
@@ -15865,6 +15814,33 @@ void CLib3MFModel::AddImageStack (const FunctionCallbackInfo<Value>& args)
         CheckError (isolate, wrapperTable, instanceHandle, errorCode);
         Local<Object> instanceObjInstance = CLib3MFImageStack::NewInstance (args.Holder(), hReturnInstance);
         args.GetReturnValue().Set (instanceObjInstance);
+
+    } catch (std::exception & E) {
+        RaiseError (isolate, E.what());
+    }
+}
+
+
+void CLib3MFModel::GetImageStackByID (const FunctionCallbackInfo<Value>& args) 
+{
+    Isolate* isolate = args.GetIsolate();
+    HandleScope scope(isolate);
+    try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error ("Expected uint32 parameter 0 (UniqueResourceID)");
+        }
+        unsigned int nUniqueResourceID = (unsigned int) args[0]->IntegerValue ();
+        Lib3MFHandle hReturnImageStackInstance = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error ("Could not get wrapper table for Lib3MF method GetImageStackByID.");
+        if (wrapperTable->m_Model_GetImageStackByID == nullptr)
+            throw std::runtime_error ("Could not call Lib3MF method Model::GetImageStackByID.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Model_GetImageStackByID (instanceHandle, nUniqueResourceID, &hReturnImageStackInstance);
+        CheckError (isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjImageStackInstance = CLib3MFImageStack::NewInstance (args.Holder(), hReturnImageStackInstance);
+        args.GetReturnValue().Set (instanceObjImageStackInstance);
 
     } catch (std::exception & E) {
         RaiseError (isolate, E.what());

@@ -38,13 +38,13 @@ NMR_VolumeDataProperty.cpp implements the class CVolumeDataProperty.
 namespace NMR {
 
 	CVolumeDataProperty::CVolumeDataProperty(PModelScalarField pScalarField, std::string sName)
-		: CFieldReference(pScalarField->getPackageResourceID()), m_sName(sName), m_bIsRequired(true)
+		: CFieldReference(pScalarField->getPackageResourceID()->getUniqueID()), m_sName(sName), m_bIsRequired(true)
 	{
 		
 	}
 
 	CVolumeDataProperty::CVolumeDataProperty(PModelVector3DField pVectorField, std::string sName)
-		: CFieldReference(pVectorField->getPackageResourceID()), m_sName(sName), m_bIsRequired(true)
+		: CFieldReference(pVectorField->getPackageResourceID()->getUniqueID()), m_sName(sName), m_bIsRequired(true)
 	{
 
 	}

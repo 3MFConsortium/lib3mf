@@ -32,11 +32,13 @@ NMR_ModelReaderNode_Volumetric2201_ScalarField.cpp covers the official 3MF volum
 #include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_Volumetric2201_ScalarField.h"
 #include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_Volumetric2201_ScalarFieldFromImage3D.h"
 #include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_Volumetric2201_ScalarFieldConstant.h"
+#include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_Volumetric2201_ScalarFieldComposed.h"
 
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Model/Classes/NMR_ModelScalarField.h"
 #include "Model/Classes/NMR_ModelScalarFieldFromImage3D.h"
 #include "Model/Classes/NMR_ModelScalarFieldConstant.h"
+#include "Model/Classes/NMR_ModelScalarFieldComposed.h"
 #include "Model/Classes/NMR_ModelImage3D.h"
 #include "Model/Classes/NMR_ModelResource.h"
 #include "Model/Classes/NMR_Model.h"
@@ -116,13 +118,20 @@ namespace NMR {
 			}
 			else if (strcmp(pChildName, XML_3MF_ELEMENT_SCALARFIELDCONSTANT) == 0)
 			{
-				{
-					PModelScalarFieldConstant pScalarFieldConstant = std::make_shared<CModelScalarFieldConstant>(m_nID, m_pModel);
-					PModelReaderNode_Volumetric2201_ScalarFieldConstant pXMLNode = std::make_shared<CModelReaderNode_Volumetric2201_ScalarFieldConstant>(m_pModel, pScalarFieldConstant.get(), m_pWarnings);
-					pXMLNode->parseXML(pXMLReader);
+				PModelScalarFieldConstant pScalarFieldConstant = std::make_shared<CModelScalarFieldConstant>(m_nID, m_pModel);
+				PModelReaderNode_Volumetric2201_ScalarFieldConstant pXMLNode = std::make_shared<CModelReaderNode_Volumetric2201_ScalarFieldConstant>(m_pModel, pScalarFieldConstant.get(), m_pWarnings);
+				pXMLNode->parseXML(pXMLReader);
 
-					m_pScalarField = pScalarFieldConstant;
-				}
+				m_pScalarField = pScalarFieldConstant;
+			}
+			else if (strcmp(pChildName, XML_3MF_ELEMENT_SCALARFIELDCOMPOSED) == 0)
+			{
+				PModelReaderNode_Volumetric2201_ScalarFieldComposed pXMLNode = std::make_shared<CModelReaderNode_Volumetric2201_ScalarFieldComposed>(m_pModel, m_pWarnings);
+				pXMLNode->parseXML(pXMLReader);
+
+				m_pScalarField = pXMLNode->makeScalarFieldComposed(m_nID);
+				if (!m_pScalarField)
+					throw CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT);
 			}
 			else
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);

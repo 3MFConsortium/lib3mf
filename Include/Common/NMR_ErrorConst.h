@@ -1377,6 +1377,12 @@ Model error codes (0x8XXX)
 // Missing Volumetric Destination Alpha
 #define NMR_ERROR_MISSINGVOLUMETRICDSTALPHA 0x8833
 
+// Missing attribute in scalar field composed
+#define NMR_ERROR_MISSING_ATTRIBUTE_SCALARFIELDCOMPOSED 0x8834
+
+// Duplicate attribute in scalar field composed
+#define NMR_ERROR_DUPLICATE_ATTRIBUTE_SCALARFIELDCOMPOSED 0x8835
+
 
 /*-------------------------------------------------------------------
 XML Parser Error Constants (0x9XXX)

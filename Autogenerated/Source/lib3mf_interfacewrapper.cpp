@@ -7049,42 +7049,6 @@ Lib3MFResult lib3mf_fieldreference_settransform(Lib3MF_FieldReference pFieldRefe
 /*************************************************************************************************************************
  Class implementation for ScalarFieldReference
 **************************************************************************************************************************/
-Lib3MFResult lib3mf_scalarfieldreference_getscalarfield(Lib3MF_ScalarFieldReference pScalarFieldReference, Lib3MF_ScalarField * pTheScalarField)
-{
-	IBase* pIBaseClass = (IBase *)pScalarFieldReference;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pScalarFieldReference, "ScalarFieldReference", "GetScalarField");
-		}
-		if (pTheScalarField == nullptr)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		IBase* pBaseTheScalarField(nullptr);
-		IScalarFieldReference* pIScalarFieldReference = dynamic_cast<IScalarFieldReference*>(pIBaseClass);
-		if (!pIScalarFieldReference)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		pBaseTheScalarField = pIScalarFieldReference->GetScalarField();
-
-		*pTheScalarField = (IBase*)(pBaseTheScalarField);
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addHandleResult("TheScalarField", *pTheScalarField);
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
 Lib3MFResult lib3mf_scalarfieldreference_setscalarfield(Lib3MF_ScalarFieldReference pScalarFieldReference, Lib3MF_ScalarField pTheScalarField)
 {
 	IBase* pIBaseClass = (IBase *)pScalarFieldReference;
@@ -7126,42 +7090,6 @@ Lib3MFResult lib3mf_scalarfieldreference_setscalarfield(Lib3MF_ScalarFieldRefere
 /*************************************************************************************************************************
  Class implementation for Vector3DFieldReference
 **************************************************************************************************************************/
-Lib3MFResult lib3mf_vector3dfieldreference_getvector3dfield(Lib3MF_Vector3DFieldReference pVector3DFieldReference, Lib3MF_Vector3DField * pTheVector3DField)
-{
-	IBase* pIBaseClass = (IBase *)pVector3DFieldReference;
-
-	PLib3MFInterfaceJournalEntry pJournalEntry;
-	try {
-		if (m_GlobalJournal.get() != nullptr)  {
-			pJournalEntry = m_GlobalJournal->beginClassMethod(pVector3DFieldReference, "Vector3DFieldReference", "GetVector3DField");
-		}
-		if (pTheVector3DField == nullptr)
-			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
-		IBase* pBaseTheVector3DField(nullptr);
-		IVector3DFieldReference* pIVector3DFieldReference = dynamic_cast<IVector3DFieldReference*>(pIBaseClass);
-		if (!pIVector3DFieldReference)
-			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
-		
-		pBaseTheVector3DField = pIVector3DFieldReference->GetVector3DField();
-
-		*pTheVector3DField = (IBase*)(pBaseTheVector3DField);
-		if (pJournalEntry.get() != nullptr) {
-			pJournalEntry->addHandleResult("TheVector3DField", *pTheVector3DField);
-			pJournalEntry->writeSuccess();
-		}
-		return LIB3MF_SUCCESS;
-	}
-	catch (ELib3MFInterfaceException & Exception) {
-		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
-	}
-	catch (std::exception & StdException) {
-		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
-	}
-	catch (...) {
-		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
-	}
-}
-
 Lib3MFResult lib3mf_vector3dfieldreference_setvector3dfield(Lib3MF_Vector3DFieldReference pVector3DFieldReference, Lib3MF_Vector3DField pTheVector3DField)
 {
 	IBase* pIBaseClass = (IBase *)pVector3DFieldReference;
@@ -7859,7 +7787,7 @@ Lib3MFResult lib3mf_volumedata_getcolor(Lib3MF_VolumeData pVolumeData, Lib3MF_Vo
 	}
 }
 
-Lib3MFResult lib3mf_volumedata_createnewcolor(Lib3MF_VolumeData pVolumeData, Lib3MF_Vector3DField pTheVector3DField, const sLib3MFTransform * pTransform, Lib3MF_VolumeDataColor * pTheColorData)
+Lib3MFResult lib3mf_volumedata_createnewcolor(Lib3MF_VolumeData pVolumeData, Lib3MF_Vector3DField pTheVector3DField, Lib3MF_VolumeDataColor * pTheColorData)
 {
 	IBase* pIBaseClass = (IBase *)pVolumeData;
 
@@ -7881,7 +7809,7 @@ Lib3MFResult lib3mf_volumedata_createnewcolor(Lib3MF_VolumeData pVolumeData, Lib
 		if (!pIVolumeData)
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
 		
-		pBaseTheColorData = pIVolumeData->CreateNewColor(pITheVector3DField, *pTransform);
+		pBaseTheColorData = pIVolumeData->CreateNewColor(pITheVector3DField);
 
 		*pTheColorData = (IBase*)(pBaseTheColorData);
 		if (pJournalEntry.get() != nullptr) {
@@ -15822,6 +15750,43 @@ Lib3MFResult lib3mf_model_addimagestack(Lib3MF_Model pModel, Lib3MF_uint32 nColu
 	}
 }
 
+Lib3MFResult lib3mf_model_getimagestackbyid(Lib3MF_Model pModel, Lib3MF_uint32 nUniqueResourceID, Lib3MF_ImageStack * pImageStackInstance)
+{
+	IBase* pIBaseClass = (IBase *)pModel;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pModel, "Model", "GetImageStackByID");
+			pJournalEntry->addUInt32Parameter("UniqueResourceID", nUniqueResourceID);
+		}
+		if (pImageStackInstance == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseImageStackInstance(nullptr);
+		IModel* pIModel = dynamic_cast<IModel*>(pIBaseClass);
+		if (!pIModel)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseImageStackInstance = pIModel->GetImageStackByID(nUniqueResourceID);
+
+		*pImageStackInstance = (IBase*)(pBaseImageStackInstance);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("ImageStackInstance", *pImageStackInstance);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
 Lib3MFResult lib3mf_model_addscalarfieldfromimage3d(Lib3MF_Model pModel, Lib3MF_Image3D pImage3D, Lib3MF_ScalarFieldFromImage3D * pTheScalarFieldFromImage3D)
 {
 	IBase* pIBaseClass = (IBase *)pModel;
@@ -17138,9 +17103,7 @@ Lib3MFResult _lib3mf_getprocaddress_internal(const char * pProcName, void ** ppP
 		sProcAddressMap["lib3mf_fieldreference_setfieldresourceid"] = (void*)&lib3mf_fieldreference_setfieldresourceid;
 		sProcAddressMap["lib3mf_fieldreference_gettransform"] = (void*)&lib3mf_fieldreference_gettransform;
 		sProcAddressMap["lib3mf_fieldreference_settransform"] = (void*)&lib3mf_fieldreference_settransform;
-		sProcAddressMap["lib3mf_scalarfieldreference_getscalarfield"] = (void*)&lib3mf_scalarfieldreference_getscalarfield;
 		sProcAddressMap["lib3mf_scalarfieldreference_setscalarfield"] = (void*)&lib3mf_scalarfieldreference_setscalarfield;
-		sProcAddressMap["lib3mf_vector3dfieldreference_getvector3dfield"] = (void*)&lib3mf_vector3dfieldreference_getvector3dfield;
 		sProcAddressMap["lib3mf_vector3dfieldreference_setvector3dfield"] = (void*)&lib3mf_vector3dfieldreference_setvector3dfield;
 		sProcAddressMap["lib3mf_volumedataboundary_getsolidthreshold"] = (void*)&lib3mf_volumedataboundary_getsolidthreshold;
 		sProcAddressMap["lib3mf_volumedataboundary_setsolidthreshold"] = (void*)&lib3mf_volumedataboundary_setsolidthreshold;
@@ -17377,6 +17340,7 @@ Lib3MFResult _lib3mf_getprocaddress_internal(const char * pProcName, void ** ppP
 		sProcAddressMap["lib3mf_model_addcompositematerials"] = (void*)&lib3mf_model_addcompositematerials;
 		sProcAddressMap["lib3mf_model_addmultipropertygroup"] = (void*)&lib3mf_model_addmultipropertygroup;
 		sProcAddressMap["lib3mf_model_addimagestack"] = (void*)&lib3mf_model_addimagestack;
+		sProcAddressMap["lib3mf_model_getimagestackbyid"] = (void*)&lib3mf_model_getimagestackbyid;
 		sProcAddressMap["lib3mf_model_addscalarfieldfromimage3d"] = (void*)&lib3mf_model_addscalarfieldfromimage3d;
 		sProcAddressMap["lib3mf_model_addscalarfieldcomposed"] = (void*)&lib3mf_model_addscalarfieldcomposed;
 		sProcAddressMap["lib3mf_model_addscalarfieldconstant"] = (void*)&lib3mf_model_addscalarfieldconstant;

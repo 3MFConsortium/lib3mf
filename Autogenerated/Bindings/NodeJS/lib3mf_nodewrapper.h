@@ -831,7 +831,6 @@ class CLib3MFScalarFieldReference : public CLib3MFBaseClass {
 private:
     static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
     static v8::Persistent<v8::Function> constructor;
-    static void GetScalarField (const v8::FunctionCallbackInfo<v8::Value>& args);
     static void SetScalarField (const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:
@@ -850,7 +849,6 @@ class CLib3MFVector3DFieldReference : public CLib3MFBaseClass {
 private:
     static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
     static v8::Persistent<v8::Function> constructor;
-    static void GetVector3DField (const v8::FunctionCallbackInfo<v8::Value>& args);
     static void SetVector3DField (const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:
@@ -1580,6 +1578,7 @@ private:
     static void AddCompositeMaterials (const v8::FunctionCallbackInfo<v8::Value>& args);
     static void AddMultiPropertyGroup (const v8::FunctionCallbackInfo<v8::Value>& args);
     static void AddImageStack (const v8::FunctionCallbackInfo<v8::Value>& args);
+    static void GetImageStackByID (const v8::FunctionCallbackInfo<v8::Value>& args);
     static void AddScalarFieldFromImage3D (const v8::FunctionCallbackInfo<v8::Value>& args);
     static void AddScalarFieldComposed (const v8::FunctionCallbackInfo<v8::Value>& args);
     static void AddScalarFieldConstant (const v8::FunctionCallbackInfo<v8::Value>& args);

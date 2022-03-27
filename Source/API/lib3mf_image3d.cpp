@@ -32,7 +32,7 @@ Abstract: This is a stub class definition of CImage3D
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
-
+#include "Model/Classes/NMR_ModelImageStack.h"
 
 using namespace Lib3MF::Impl;
 
@@ -44,18 +44,27 @@ CImage3D::CImage3D(NMR::PModelResource pResource)
 	:CResource(pResource)
 {}
 
+NMR::CModelImage3D* CImage3D::image3D()
+{
+	NMR::CModelImage3D* pImage3D = dynamic_cast<NMR::CModelImage3D*> (resource().get());
+	if (pImage3D == nullptr)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_RESOURCENOTFOUND);
+
+	return pImage3D;
+}
+
 std::string CImage3D::GetName()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return image3D()->getName();
 }
 
 void CImage3D::SetName(const std::string & sName)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	image3D()->setName(sName);
 }
 
 bool CImage3D::IsImageStack()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return (dynamic_cast<NMR::CModelImageStack*>(image3D()) != nullptr);
 }
 

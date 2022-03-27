@@ -378,7 +378,12 @@ namespace NMR {
 				if (m_pModelMeshObject->getVolumeData()->hasBoundary()) {
 					writeStartElementWithPrefix(XML_3MF_ELEMENT_VOLUMETRIC_BOUNDARY, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
 					PVolumeDataBoundary pBoundary = m_pModelMeshObject->getVolumeData()->getBoundary();
-					writeIntAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_FIELDID, pBoundary->getFieldReferenceID()->getModelResourceID());
+
+					PPackageResourceID pID = m_pModel->findPackageResourceID(pBoundary->getFieldReferenceID());
+					if (!pID)
+						throw CNMRException(NMR_ERROR_INVALIDMODELRESOURCE);
+					writeIntAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_FIELDID, pID->getModelResourceID());
+
 					if (pBoundary->getSolidThreshold() != 0.0) {
 						writeFloatAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_SOLIDTHRESHOLD, float(pBoundary->getSolidThreshold()));
 					}
@@ -400,7 +405,10 @@ namespace NMR {
 						if (!fnMATRIX3_isIdentity(pProperty->getTransform())) {
 							writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_TRANSFORM, fnMATRIX3_toString(pProperty->getTransform()));
 						}
-						writeIntAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_FIELDID, pProperty->getFieldReferenceID()->getModelResourceID());
+						PPackageResourceID pID = m_pModel->findPackageResourceID(pProperty->getFieldReferenceID());
+						if (!pID)
+							throw CNMRException(NMR_ERROR_INVALIDMODELRESOURCE);
+						writeIntAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_FIELDID, pID->getModelResourceID());
 						if (!pProperty->isRequired())
 							writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_PROPERTY_REQUIRED, "false");
 						writeEndElement();

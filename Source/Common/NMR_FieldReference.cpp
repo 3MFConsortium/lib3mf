@@ -34,8 +34,8 @@ NMR_FieldReference.cpp implements the class CFieldReference.
 
 namespace NMR {
 
-	CFieldReference::CFieldReference(PPackageResourceID pFieldResourceId)
-		: m_pFieldPackageResourceID(pFieldResourceId), m_transform(fnMATRIX3_identity())
+	CFieldReference::CFieldReference(UniqueResourceID FieldResourceId)
+		: m_FieldUniqueResourceID(FieldResourceId), m_transform(fnMATRIX3_identity())
 	{
 	}
 
@@ -49,42 +49,25 @@ namespace NMR {
 		m_transform = transform;
 	}
 
-	PPackageResourceID CFieldReference::getFieldReferenceID() const
+	UniqueResourceID CFieldReference::getFieldReferenceID() const
 	{
-		return m_pFieldPackageResourceID;
+		return m_FieldUniqueResourceID;
 	}
 
 	void CFieldReference::setFieldReferenceID(UniqueResourceID FieldResourceId)
 	{
-		throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
-		// TODO: check if this points to a Scalar or Vector3DField
-		// m_pFieldPackageResourceID = m_pMpFieldResourceId;
+		m_FieldUniqueResourceID = FieldResourceId;
 	}
 
-
-	CScalarFieldReference::CScalarFieldReference(PModelScalarField PModelScalarField)
-		:CFieldReference(PModelScalarField->getPackageResourceID())
+	CScalarFieldReference::CScalarFieldReference(PModelScalarField pScalarField)
+		:CFieldReference(pScalarField?pScalarField->getPackageResourceID()->getUniqueID():0)
 	{
 
-	}
-
-	void CScalarFieldReference::setFieldReferenceID(UniqueResourceID FieldResourceId)
-	{
-		throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
-		// TODO: check if this points to a ScalarField
-		// CFieldReference::SetFieldReferenceID(pFieldResourceId);
 	}
 
 	CVector3DFieldReference::CVector3DFieldReference(PModelVector3DField pVector3DField)
-		:CFieldReference(pVector3DField->getPackageResourceID())
+		:CFieldReference(pVector3DField?pVector3DField->getPackageResourceID()->getUniqueID():0)
 	{
 
-	}
-
-	void CVector3DFieldReference::setFieldReferenceID(UniqueResourceID FieldResourceId)
-	{
-		throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
-		// TODO: check if this points to a Vector3DField
-		// CFieldReference::SetFieldReferenceID(pFieldResourceId);
 	}
 }

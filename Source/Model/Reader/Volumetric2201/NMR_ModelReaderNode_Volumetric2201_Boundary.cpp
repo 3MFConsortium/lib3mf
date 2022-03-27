@@ -77,7 +77,7 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_UNKNOWNMODELRESOURCE);
 		}
 		
-		auto pScalarField = pModel->findScalarField(pID);
+		auto pScalarField = pModel->findScalarField(pID->getUniqueID());
 		if (!pScalarField.get()) {
 			throw CNMRException(NMR_ERROR_INVALIDMODELRESOURCE);
 		}

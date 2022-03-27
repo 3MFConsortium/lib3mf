@@ -1322,7 +1322,6 @@ public:
 	{
 	}
 	
-	inline PScalarField GetScalarField();
 	inline void SetScalarField(CScalarField * pTheScalarField);
 };
 	
@@ -1340,7 +1339,6 @@ public:
 	{
 	}
 	
-	inline PVector3DField GetVector3DField();
 	inline void SetVector3DField(CVector3DField * pTheVector3DField);
 };
 	
@@ -1456,7 +1454,7 @@ public:
 	inline PVolumeDataComposite CreateNewComposite();
 	inline void RemoveComposite();
 	inline PVolumeDataColor GetColor();
-	inline PVolumeDataColor CreateNewColor(CVector3DField * pTheVector3DField, const sTransform & Transform);
+	inline PVolumeDataColor CreateNewColor(CVector3DField * pTheVector3DField);
 	inline void RemoveColor();
 	inline Lib3MF_uint32 GetPropertyCount();
 	inline PVolumeDataProperty GetProperty(const Lib3MF_uint32 nIndex);
@@ -2041,6 +2039,7 @@ public:
 	inline PCompositeMaterials AddCompositeMaterials(CBaseMaterialGroup * pBaseMaterialGroupInstance);
 	inline PMultiPropertyGroup AddMultiPropertyGroup();
 	inline PImageStack AddImageStack(const Lib3MF_uint32 nColumnCount, const Lib3MF_uint32 nRowCount, const Lib3MF_uint32 nSheetCount);
+	inline PImageStack GetImageStackByID(const Lib3MF_uint32 nUniqueResourceID);
 	inline PScalarFieldFromImage3D AddScalarFieldFromImage3D(CImage3D * pImage3D);
 	inline PScalarFieldComposed AddScalarFieldComposed();
 	inline PScalarFieldConstant AddScalarFieldConstant();
@@ -2559,9 +2558,7 @@ public:
 		pWrapperTable->m_FieldReference_SetFieldResourceID = nullptr;
 		pWrapperTable->m_FieldReference_GetTransform = nullptr;
 		pWrapperTable->m_FieldReference_SetTransform = nullptr;
-		pWrapperTable->m_ScalarFieldReference_GetScalarField = nullptr;
 		pWrapperTable->m_ScalarFieldReference_SetScalarField = nullptr;
-		pWrapperTable->m_Vector3DFieldReference_GetVector3DField = nullptr;
 		pWrapperTable->m_Vector3DFieldReference_SetVector3DField = nullptr;
 		pWrapperTable->m_VolumeDataBoundary_GetSolidThreshold = nullptr;
 		pWrapperTable->m_VolumeDataBoundary_SetSolidThreshold = nullptr;
@@ -2798,6 +2795,7 @@ public:
 		pWrapperTable->m_Model_AddCompositeMaterials = nullptr;
 		pWrapperTable->m_Model_AddMultiPropertyGroup = nullptr;
 		pWrapperTable->m_Model_AddImageStack = nullptr;
+		pWrapperTable->m_Model_GetImageStackByID = nullptr;
 		pWrapperTable->m_Model_AddScalarFieldFromImage3D = nullptr;
 		pWrapperTable->m_Model_AddScalarFieldComposed = nullptr;
 		pWrapperTable->m_Model_AddScalarFieldConstant = nullptr;
@@ -4651,30 +4649,12 @@ public:
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
-		pWrapperTable->m_ScalarFieldReference_GetScalarField = (PLib3MFScalarFieldReference_GetScalarFieldPtr) GetProcAddress(hLibrary, "lib3mf_scalarfieldreference_getscalarfield");
-		#else // _WIN32
-		pWrapperTable->m_ScalarFieldReference_GetScalarField = (PLib3MFScalarFieldReference_GetScalarFieldPtr) dlsym(hLibrary, "lib3mf_scalarfieldreference_getscalarfield");
-		dlerror();
-		#endif // _WIN32
-		if (pWrapperTable->m_ScalarFieldReference_GetScalarField == nullptr)
-			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
-		
-		#ifdef _WIN32
 		pWrapperTable->m_ScalarFieldReference_SetScalarField = (PLib3MFScalarFieldReference_SetScalarFieldPtr) GetProcAddress(hLibrary, "lib3mf_scalarfieldreference_setscalarfield");
 		#else // _WIN32
 		pWrapperTable->m_ScalarFieldReference_SetScalarField = (PLib3MFScalarFieldReference_SetScalarFieldPtr) dlsym(hLibrary, "lib3mf_scalarfieldreference_setscalarfield");
 		dlerror();
 		#endif // _WIN32
 		if (pWrapperTable->m_ScalarFieldReference_SetScalarField == nullptr)
-			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
-		
-		#ifdef _WIN32
-		pWrapperTable->m_Vector3DFieldReference_GetVector3DField = (PLib3MFVector3DFieldReference_GetVector3DFieldPtr) GetProcAddress(hLibrary, "lib3mf_vector3dfieldreference_getvector3dfield");
-		#else // _WIN32
-		pWrapperTable->m_Vector3DFieldReference_GetVector3DField = (PLib3MFVector3DFieldReference_GetVector3DFieldPtr) dlsym(hLibrary, "lib3mf_vector3dfieldreference_getvector3dfield");
-		dlerror();
-		#endif // _WIN32
-		if (pWrapperTable->m_Vector3DFieldReference_GetVector3DField == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
@@ -6802,6 +6782,15 @@ public:
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
+		pWrapperTable->m_Model_GetImageStackByID = (PLib3MFModel_GetImageStackByIDPtr) GetProcAddress(hLibrary, "lib3mf_model_getimagestackbyid");
+		#else // _WIN32
+		pWrapperTable->m_Model_GetImageStackByID = (PLib3MFModel_GetImageStackByIDPtr) dlsym(hLibrary, "lib3mf_model_getimagestackbyid");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Model_GetImageStackByID == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
 		pWrapperTable->m_Model_AddScalarFieldFromImage3D = (PLib3MFModel_AddScalarFieldFromImage3DPtr) GetProcAddress(hLibrary, "lib3mf_model_addscalarfieldfromimage3d");
 		#else // _WIN32
 		pWrapperTable->m_Model_AddScalarFieldFromImage3D = (PLib3MFModel_AddScalarFieldFromImage3DPtr) dlsym(hLibrary, "lib3mf_model_addscalarfieldfromimage3d");
@@ -8038,16 +8027,8 @@ public:
 		if ( (eLookupError != 0) || (pWrapperTable->m_FieldReference_SetTransform == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
-		eLookupError = (*pLookup)("lib3mf_scalarfieldreference_getscalarfield", (void**)&(pWrapperTable->m_ScalarFieldReference_GetScalarField));
-		if ( (eLookupError != 0) || (pWrapperTable->m_ScalarFieldReference_GetScalarField == nullptr) )
-			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
-		
 		eLookupError = (*pLookup)("lib3mf_scalarfieldreference_setscalarfield", (void**)&(pWrapperTable->m_ScalarFieldReference_SetScalarField));
 		if ( (eLookupError != 0) || (pWrapperTable->m_ScalarFieldReference_SetScalarField == nullptr) )
-			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
-		
-		eLookupError = (*pLookup)("lib3mf_vector3dfieldreference_getvector3dfield", (void**)&(pWrapperTable->m_Vector3DFieldReference_GetVector3DField));
-		if ( (eLookupError != 0) || (pWrapperTable->m_Vector3DFieldReference_GetVector3DField == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("lib3mf_vector3dfieldreference_setvector3dfield", (void**)&(pWrapperTable->m_Vector3DFieldReference_SetVector3DField));
@@ -8992,6 +8973,10 @@ public:
 		
 		eLookupError = (*pLookup)("lib3mf_model_addimagestack", (void**)&(pWrapperTable->m_Model_AddImageStack));
 		if ( (eLookupError != 0) || (pWrapperTable->m_Model_AddImageStack == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_model_getimagestackbyid", (void**)&(pWrapperTable->m_Model_GetImageStackByID));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Model_GetImageStackByID == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("lib3mf_model_addscalarfieldfromimage3d", (void**)&(pWrapperTable->m_Model_AddScalarFieldFromImage3D));
@@ -11663,21 +11648,6 @@ public:
 	 */
 	
 	/**
-	* CScalarFieldReference::GetScalarField - Returns the ScalarField
-	* @return ScalarField used in this element
-	*/
-	PScalarField CScalarFieldReference::GetScalarField()
-	{
-		Lib3MFHandle hTheScalarField = nullptr;
-		CheckError(m_pWrapper->m_WrapperTable.m_ScalarFieldReference_GetScalarField(m_pHandle, &hTheScalarField));
-		
-		if (!hTheScalarField) {
-			CheckError(LIB3MF_ERROR_INVALIDPARAM);
-		}
-		return std::make_shared<CScalarField>(m_pWrapper, hTheScalarField);
-	}
-	
-	/**
 	* CScalarFieldReference::SetScalarField - Sets the ScalarField to use within this volume data item.
 	* @param[in] pTheScalarField - ScalarField used in this element
 	*/
@@ -11693,21 +11663,6 @@ public:
 	/**
 	 * Method definitions for class CVector3DFieldReference
 	 */
-	
-	/**
-	* CVector3DFieldReference::GetVector3DField - Returns the Vector3DField
-	* @return Vector3DField used in this element
-	*/
-	PVector3DField CVector3DFieldReference::GetVector3DField()
-	{
-		Lib3MFHandle hTheVector3DField = nullptr;
-		CheckError(m_pWrapper->m_WrapperTable.m_Vector3DFieldReference_GetVector3DField(m_pHandle, &hTheVector3DField));
-		
-		if (!hTheVector3DField) {
-			CheckError(LIB3MF_ERROR_INVALIDPARAM);
-		}
-		return std::make_shared<CVector3DField>(m_pWrapper, hTheVector3DField);
-	}
 	
 	/**
 	* CVector3DFieldReference::SetVector3DField - Sets the Vector3DField to use within this volume data item.
@@ -11986,17 +11941,16 @@ public:
 	/**
 	* CVolumeData::CreateNewColor - Creates a new VolumeDataColor for this VolumeData instance
 	* @param[in] pTheVector3DField - Vector3DField used in this element
-	* @param[in] Transform - new transformation matrix
 	* @return The new VolumeDataColor of this VolumeData instance.
 	*/
-	PVolumeDataColor CVolumeData::CreateNewColor(CVector3DField * pTheVector3DField, const sTransform & Transform)
+	PVolumeDataColor CVolumeData::CreateNewColor(CVector3DField * pTheVector3DField)
 	{
 		Lib3MFHandle hTheVector3DField = nullptr;
 		if (pTheVector3DField != nullptr) {
 			hTheVector3DField = pTheVector3DField->GetHandle();
 		};
 		Lib3MFHandle hTheColorData = nullptr;
-		CheckError(m_pWrapper->m_WrapperTable.m_VolumeData_CreateNewColor(m_pHandle, hTheVector3DField, &Transform, &hTheColorData));
+		CheckError(m_pWrapper->m_WrapperTable.m_VolumeData_CreateNewColor(m_pHandle, hTheVector3DField, &hTheColorData));
 		
 		if (!hTheColorData) {
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
@@ -14995,6 +14949,22 @@ public:
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
 		return std::make_shared<CImageStack>(m_pWrapper, hInstance);
+	}
+	
+	/**
+	* CModel::GetImageStackByID - finds an ImageStack object by its UniqueResourceID
+	* @param[in] nUniqueResourceID - UniqueResourceID
+	* @return returns the image stack instance
+	*/
+	PImageStack CModel::GetImageStackByID(const Lib3MF_uint32 nUniqueResourceID)
+	{
+		Lib3MFHandle hImageStackInstance = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_Model_GetImageStackByID(m_pHandle, nUniqueResourceID, &hImageStackInstance));
+		
+		if (!hImageStackInstance) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::make_shared<CImageStack>(m_pWrapper, hImageStackInstance);
 	}
 	
 	/**

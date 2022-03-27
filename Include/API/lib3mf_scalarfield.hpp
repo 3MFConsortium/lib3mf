@@ -64,6 +64,7 @@ protected:
 	/**
 	* Put protected members here.
 	*/
+	NMR::CModelScalarField* scalarField();
 
 public:
 

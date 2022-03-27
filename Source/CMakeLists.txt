@@ -173,6 +173,7 @@ Source/Model/Classes/NMR_ModelTexture2D.cpp
 Source/Model/Classes/NMR_ModelTexture2DGroup.cpp
 Source/Model/Classes/NMR_ModelScalarField.cpp
 Source/Model/Classes/NMR_ModelScalarFieldFromImage3D.cpp
+Source/Model/Classes/NMR_ModelScalarFieldComposed.cpp
 Source/Model/Classes/NMR_ModelScalarFieldConstant.cpp
 Source/Model/Classes/NMR_ModelSlice.cpp
 Source/Model/Classes/NMR_ModelSliceStack.cpp
@@ -271,6 +272,7 @@ Source/Model/Reader/Volumetric2201/NMR_ModelReaderNode_Volumetric2201_ImageSheet
 Source/Model/Reader/Volumetric2201/NMR_ModelReaderNode_Volumetric2201_ScalarField.cpp
 Source/Model/Reader/Volumetric2201/NMR_ModelReaderNode_Volumetric2201_ScalarFieldFromImage3D.cpp
 Source/Model/Reader/Volumetric2201/NMR_ModelReaderNode_Volumetric2201_ScalarFieldConstant.cpp
+Source/Model/Reader/Volumetric2201/NMR_ModelReaderNode_Volumetric2201_ScalarFieldComposed.cpp
 Source/Model/Reader/Volumetric2201/NMR_ModelReaderNode_Volumetric2201_Boundary.cpp
 Source/Model/Reader/Volumetric2201/NMR_ModelReaderNode_Volumetric2201_Property.cpp
 Source/Model/Reader/Volumetric2201/NMR_ModelReaderNode_Volumetric2201_VolumeData.cpp

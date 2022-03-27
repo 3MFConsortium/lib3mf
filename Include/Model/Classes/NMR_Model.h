@@ -99,6 +99,9 @@ namespace NMR {
 	class CModelImage3D;
 	typedef std::shared_ptr <CModelImage3D> PModelImage3D;
 
+	class CModelImageStack;
+	typedef std::shared_ptr <CModelImageStack> PModelImageStack;
+
 	class CModelScalarField;
 	typedef std::shared_ptr <CModelScalarField> PModelScalarField;
 
@@ -288,14 +291,15 @@ namespace NMR {
 		void mergeTextures2D(_In_ CModel * pSourceModel, _In_ UniqueResourceIDMapping &oldToNewMapping);
 
 		// Convenience functions for 3D Images
-		_Ret_maybenull_ PModelImage3D findImage3D(_In_ PPackageResourceID ResourceID);
+		_Ret_maybenull_ PModelImage3D findImage3D(_In_ UniqueResourceID nResourceID);
+		_Ret_maybenull_ PModelImageStack findImageStack(_In_ UniqueResourceID nResourceID);
 		nfUint32 getImage3DCount();
 		PModelResource getImage3DResource(_In_ nfUint32 nIndex);
 		CModelImage3D* getImage3D(_In_ nfUint32 nIndex);
 		void mergeImages3D(_In_ CModel* pSourceModel, _In_ std::map<PPackageResourceID, PPackageResourceID>& PackageIDMap);
 
 		// Convenience functions for ScalarFields
-		_Ret_maybenull_ PModelScalarField findScalarField(_In_ PPackageResourceID ResourceID);
+		_Ret_maybenull_ PModelScalarField findScalarField(_In_ UniqueResourceID nResourceID);
 		nfUint32 getScalarFieldCount();
 		PModelResource getScalarFieldResource(_In_ nfUint32 nIndex);
 		CModelScalarField* getScalarField(_In_ nfUint32 nIndex);

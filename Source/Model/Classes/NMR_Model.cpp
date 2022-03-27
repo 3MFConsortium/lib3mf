@@ -46,6 +46,7 @@ A model is an in memory representation of the 3MF file.
 #include "Model/Classes/NMR_ModelMultiPropertyGroup.h"
 #include "Model/Classes/NMR_ModelTexture2D.h"
 #include "Model/Classes/NMR_ModelImage3D.h"
+#include "Model/Classes/NMR_ModelImageStack.h"
 #include "Model/Classes/NMR_ModelSliceStack.h"
 #include "Model/Classes/NMR_ModelMetaDataGroup.h"
 #include "Model/Classes/NMR_KeyStore.h"
@@ -932,14 +933,27 @@ namespace NMR {
 	}
 
 	// Convenience functions for 3D Textures
-	PModelImage3D CModel::findImage3D(_In_ PPackageResourceID ResourceID)
+	PModelImage3D CModel::findImage3D(_In_ UniqueResourceID nResourceID)
 	{
-		PModelResource pResource = findResource(ResourceID);
+		PModelResource pResource = findResource(nResourceID);
 		if (pResource != nullptr) {
 			PModelImage3D pImage3DResource = std::dynamic_pointer_cast<CModelImage3D>(pResource);
 			if (pImage3DResource.get() == nullptr)
 				throw CNMRException(NMR_ERROR_RESOURCETYPEMISMATCH);
 			return pImage3DResource;
+		}
+		return nullptr;
+	}
+
+	// Convenience functions for 3D Textures
+	PModelImageStack CModel::findImageStack(_In_ UniqueResourceID nResourceID)
+	{
+		PModelResource pResource = findResource(nResourceID);
+		if (pResource != nullptr) {
+			PModelImageStack pImageStack = std::dynamic_pointer_cast<CModelImageStack>(pResource);
+			if (pImageStack.get() == nullptr)
+				throw CNMRException(NMR_ERROR_RESOURCETYPEMISMATCH);
+			return pImageStack;
 		}
 		return nullptr;
 	}
@@ -1007,9 +1021,9 @@ namespace NMR {
 	}
 
 	// Convenience functions for Scalar Fields
-	PModelScalarField CModel::findScalarField(_In_ PPackageResourceID ResourceID)
+	PModelScalarField CModel::findScalarField(_In_ UniqueResourceID nResourceID)
 	{
-		PModelResource pResource = findResource(ResourceID);
+		PModelResource pResource = findResource(nResourceID);
 		if (pResource != nullptr) {
 			PModelScalarField pScalarFieldResource = std::dynamic_pointer_cast<CModelScalarField>(pResource);
 			if (pScalarFieldResource.get() == nullptr)

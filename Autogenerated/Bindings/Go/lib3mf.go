@@ -2089,30 +2089,12 @@ type Lib3MFGoInterface interface {
 
 
 	/**
-	* Returns the ScalarField
-	*
-	* @param[in] ScalarFieldReference - ScalarFieldReference instance.
-	* @return ScalarField used in this element
-	*/
-	ScalarFieldReference_GetScalarField(ScalarFieldReference Lib3MFHandle) (Lib3MFHandle, error)
-
-
-	/**
 	* Sets the ScalarField to use within this volume data item.
 	*
 	* @param[in] ScalarFieldReference - ScalarFieldReference instance.
 	* @param[in] TheScalarField - ScalarField used in this element
 	*/
 	ScalarFieldReference_SetScalarField(ScalarFieldReference Lib3MFHandle, TheScalarField Lib3MFHandle) (error)
-
-
-	/**
-	* Returns the Vector3DField
-	*
-	* @param[in] Vector3DFieldReference - Vector3DFieldReference instance.
-	* @return Vector3DField used in this element
-	*/
-	Vector3DFieldReference_GetVector3DField(Vector3DFieldReference Lib3MFHandle) (Lib3MFHandle, error)
 
 
 	/**
@@ -2292,10 +2274,9 @@ type Lib3MFGoInterface interface {
 	*
 	* @param[in] VolumeData - VolumeData instance.
 	* @param[in] TheVector3DField - Vector3DField used in this element
-	* @param[in] sTransform - new transformation matrix
 	* @return The new VolumeDataColor of this VolumeData instance.
 	*/
-	VolumeData_CreateNewColor(VolumeData Lib3MFHandle, TheVector3DField Lib3MFHandle, sTransform sLib3MFTransform) (Lib3MFHandle, error)
+	VolumeData_CreateNewColor(VolumeData Lib3MFHandle, TheVector3DField Lib3MFHandle) (Lib3MFHandle, error)
 
 
 	/**
@@ -4332,6 +4313,16 @@ type Lib3MFGoInterface interface {
 
 
 	/**
+	* finds an ImageStack object by its UniqueResourceID
+	*
+	* @param[in] Model - Model instance.
+	* @param[in] nUniqueResourceID - UniqueResourceID
+	* @return returns the image stack instance
+	*/
+	Model_GetImageStackByID(Model Lib3MFHandle, nUniqueResourceID uint32) (Lib3MFHandle, error)
+
+
+	/**
 	* creates a new ScalarFieldFromImage3D Resource
 	*
 	* @param[in] Model - Model instance.
@@ -6345,14 +6336,6 @@ func (instance *Lib3MFScalarFieldReference) Close() (error) {
 	return instance.Handle.Close()
 }
 
-func (instance *Lib3MFScalarFieldReference) GetScalarField() (Lib3MFScalarField, error) {
-	hTheScalarField, error := instance.Interface.ScalarFieldReference_GetScalarField(instance.Handle)
-	var cTheScalarField Lib3MFScalarField
-	cTheScalarField.Interface = instance.Interface
-	cTheScalarField.Handle = hTheScalarField
-	return cTheScalarField, error
-}
-
 func (instance *Lib3MFScalarFieldReference) SetScalarField(TheScalarField Lib3MFHandle) (error) {
 	error := instance.Interface.ScalarFieldReference_SetScalarField(instance.Handle, TheScalarField)
 	return error
@@ -6369,14 +6352,6 @@ type Lib3MFVector3DFieldReference struct {
 
 func (instance *Lib3MFVector3DFieldReference) Close() (error) {
 	return instance.Handle.Close()
-}
-
-func (instance *Lib3MFVector3DFieldReference) GetVector3DField() (Lib3MFVector3DField, error) {
-	hTheVector3DField, error := instance.Interface.Vector3DFieldReference_GetVector3DField(instance.Handle)
-	var cTheVector3DField Lib3MFVector3DField
-	cTheVector3DField.Interface = instance.Interface
-	cTheVector3DField.Handle = hTheVector3DField
-	return cTheVector3DField, error
 }
 
 func (instance *Lib3MFVector3DFieldReference) SetVector3DField(TheVector3DField Lib3MFHandle) (error) {
@@ -6576,8 +6551,8 @@ func (instance *Lib3MFVolumeData) GetColor() (Lib3MFVolumeDataColor, error) {
 	return cTheColorData, error
 }
 
-func (instance *Lib3MFVolumeData) CreateNewColor(TheVector3DField Lib3MFHandle, sTransform sLib3MFTransform) (Lib3MFVolumeDataColor, error) {
-	hTheColorData, error := instance.Interface.VolumeData_CreateNewColor(instance.Handle, TheVector3DField, sTransform)
+func (instance *Lib3MFVolumeData) CreateNewColor(TheVector3DField Lib3MFHandle) (Lib3MFVolumeDataColor, error) {
+	hTheColorData, error := instance.Interface.VolumeData_CreateNewColor(instance.Handle, TheVector3DField)
 	var cTheColorData Lib3MFVolumeDataColor
 	cTheColorData.Interface = instance.Interface
 	cTheColorData.Handle = hTheColorData
@@ -8180,6 +8155,14 @@ func (instance *Lib3MFModel) AddImageStack(nColumnCount uint32, nRowCount uint32
 	cInstance.Interface = instance.Interface
 	cInstance.Handle = hInstance
 	return cInstance, error
+}
+
+func (instance *Lib3MFModel) GetImageStackByID(nUniqueResourceID uint32) (Lib3MFImageStack, error) {
+	hImageStackInstance, error := instance.Interface.Model_GetImageStackByID(instance.Handle, nUniqueResourceID)
+	var cImageStackInstance Lib3MFImageStack
+	cImageStackInstance.Interface = instance.Interface
+	cImageStackInstance.Handle = hImageStackInstance
+	return cImageStackInstance, error
 }
 
 func (instance *Lib3MFModel) AddScalarFieldFromImage3D(Image3D Lib3MFHandle) (Lib3MFScalarFieldFromImage3D, error) {

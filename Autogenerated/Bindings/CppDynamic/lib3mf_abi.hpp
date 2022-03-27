@@ -2043,15 +2043,6 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_fieldreference_settransform(Lib3MF_FieldRefe
 **************************************************************************************************************************/
 
 /**
-* Returns the ScalarField
-*
-* @param[in] pScalarFieldReference - ScalarFieldReference instance.
-* @param[out] pTheScalarField - ScalarField used in this element
-* @return error code or 0 (success)
-*/
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_scalarfieldreference_getscalarfield(Lib3MF_ScalarFieldReference pScalarFieldReference, Lib3MF_ScalarField * pTheScalarField);
-
-/**
 * Sets the ScalarField to use within this volume data item.
 *
 * @param[in] pScalarFieldReference - ScalarFieldReference instance.
@@ -2063,15 +2054,6 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_scalarfieldreference_setscalarfield(Lib3MF_S
 /*************************************************************************************************************************
  Class definition for Vector3DFieldReference
 **************************************************************************************************************************/
-
-/**
-* Returns the Vector3DField
-*
-* @param[in] pVector3DFieldReference - Vector3DFieldReference instance.
-* @param[out] pTheVector3DField - Vector3DField used in this element
-* @return error code or 0 (success)
-*/
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_vector3dfieldreference_getvector3dfield(Lib3MF_Vector3DFieldReference pVector3DFieldReference, Lib3MF_Vector3DField * pTheVector3DField);
 
 /**
 * Sets the Vector3DField to use within this volume data item.
@@ -2276,11 +2258,10 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumedata_getcolor(Lib3MF_VolumeData pVolum
 *
 * @param[in] pVolumeData - VolumeData instance.
 * @param[in] pTheVector3DField - Vector3DField used in this element
-* @param[in] pTransform - new transformation matrix
 * @param[out] pTheColorData - The new VolumeDataColor of this VolumeData instance.
 * @return error code or 0 (success)
 */
-LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumedata_createnewcolor(Lib3MF_VolumeData pVolumeData, Lib3MF_Vector3DField pTheVector3DField, const Lib3MF::sTransform * pTransform, Lib3MF_VolumeDataColor * pTheColorData);
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_volumedata_createnewcolor(Lib3MF_VolumeData pVolumeData, Lib3MF_Vector3DField pTheVector3DField, Lib3MF_VolumeDataColor * pTheColorData);
 
 /**
 * Removes the VolumeDataColor of this VolumeData instance
@@ -4488,6 +4469,16 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_addmultipropertygroup(Lib3MF_Model pMo
 * @return error code or 0 (success)
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_addimagestack(Lib3MF_Model pModel, Lib3MF_uint32 nColumnCount, Lib3MF_uint32 nRowCount, Lib3MF_uint32 nSheetCount, Lib3MF_ImageStack * pInstance);
+
+/**
+* finds an ImageStack object by its UniqueResourceID
+*
+* @param[in] pModel - Model instance.
+* @param[in] nUniqueResourceID - UniqueResourceID
+* @param[out] pImageStackInstance - returns the image stack instance
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_getimagestackbyid(Lib3MF_Model pModel, Lib3MF_uint32 nUniqueResourceID, Lib3MF_ImageStack * pImageStackInstance);
 
 /**
 * creates a new ScalarFieldFromImage3D Resource
