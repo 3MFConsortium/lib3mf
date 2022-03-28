@@ -73,7 +73,7 @@ namespace NMR {
 		CVector3DFieldReference(PModelVector3DField pVector3DField);
 	};
 
-	typedef std::shared_ptr<CVector3DFieldReference> PVetor3DFieldReference;
+	typedef std::shared_ptr<CVector3DFieldReference> PVector3DFieldReference;
 }
 
 #endif // __NMR_FIELDREFERENCE

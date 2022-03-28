@@ -194,7 +194,7 @@ namespace Lib3MF
 
 		auto theMesh = GetMesh();
 		auto volumeData = theMesh->VolumeData();
-		auto theProperty = volumeData->CreateNewBoundary(composedScalarField.get());
+		auto theBoundary = volumeData->CreateNewBoundary(composedScalarField.get());
 		writer3MF->WriteToFile(Volumetric::OutFolder + "MyComposition.3mf");
 
 		{
@@ -222,6 +222,13 @@ namespace Lib3MF
 			CompareScalarFieldComposed(ioModel, composedScalarFieldReIn, model, composedScalarField);
 			ASSERT_FALSE(scalarFieldIterator->MoveNext());
 
+			auto ioMeshObjects = ioModel->GetMeshObjects();
+			ASSERT_EQ(ioMeshObjects->Count(), 1);
+			ASSERT_TRUE(ioMeshObjects->MoveNext());
+			auto ioMesh = ioMeshObjects->GetCurrentMeshObject();
+			auto ioVolumeData = ioMesh->VolumeData();
+			CompareVolumeData(ioModel, ioVolumeData, model, volumeData);
+
 			PWriter ioWriter = ioModel->QueryWriter("3mf");
 			ioWriter->WriteToFile(Volumetric::OutFolder + "MyCompositionReOut.3mf");
 		}
@@ -244,6 +251,16 @@ namespace Lib3MF
 			PModel ioModel = wrapper->CreateModel();
 			PReader ioReader = ioModel->QueryReader("3mf");
 			ioReader->ReadFromFile(Volumetric::OutFolder + "Boundary.3mf");
+
+			auto ioMeshObjects = ioModel->GetMeshObjects();
+			ASSERT_EQ(ioMeshObjects->Count(), 1);
+			ASSERT_TRUE(ioMeshObjects->MoveNext());
+			auto ioMesh = ioMeshObjects->GetCurrentMeshObject();
+			auto ioVolumeData = ioMesh->VolumeData();
+
+			Lib3MF_uint32 nUniqueID = ioVolumeData->GetBoundary()->GetFieldResourceID();
+			auto pScalarField = ioModel->GetScalarFieldByID(nUniqueID);
+			CompareVolumeData(ioModel, ioVolumeData, model, volumeData);
 
 			PWriter ioWriter = ioModel->QueryWriter("3mf");
 			ioWriter->WriteToFile(Volumetric::OutFolder + "BoundaryReOut.3mf");

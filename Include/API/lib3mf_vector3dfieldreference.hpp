@@ -67,6 +67,8 @@ protected:
 
 public:
 
+	CVector3DFieldReference() = delete;
+	CVector3DFieldReference(NMR::PVector3DFieldReference);
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/

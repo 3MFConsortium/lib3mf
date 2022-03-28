@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<model xmlns="http://schemas.microsoft.com/3dmanufacturing/core/2015/02" unit="millimeter" xml:lang="en-US" xmlns:m="http://schemas.microsoft.com/3dmanufacturing/material/2015/02" xmlns:p="http://schemas.microsoft.com/3dmanufacturing/production/2015/06" xmlns:b="http://schemas.microsoft.com/3dmanufacturing/beamlattice/2017/02" xmlns:s="http://schemas.microsoft.com/3dmanufacturing/slice/2015/07" xmlns:v="http://schemas.microsoft.com/3dmanufacturing/volumetric/2019/07">
+	<resources>
+		<m:colorgroup id="1">
+			<m:color color="#FF8000FF"/>
+		</m:colorgroup>
+		<v:image3d id="3" sizex="10" sizey="10" sheetcount="3" name="theImage">
+			<v:image3dsheet path="/volume/layer1.png"/>
+			<v:image3dsheet path="/volume/layer2.png"/>
+			<v:image3dsheet path="/volume/layer3.png"/>
+		</v:image3d>
+		<v:volumetricstack id="4">
+			<v:dstchannel name="channel" background="0"/>
+			<v:volumetriclayer transform="1 0 0 0 1 0 0 0 1 0 0 0" srcalpha="1.0" dstalpha="1.0" blendmethod="mix">
+				<v:sourceimage3dchannelselector image3dID="3" srcchannel="channel" dstchannel="channel" filter="linear" minvalue="0" maxvalue="1" tilestyleu="wrap" tilestylev="wrap" tilestylew="wrap"/>
+			</v:volumetriclayer>
+		</v:volumetricstack>
+		<object id="2" name="Pyramid" partnumber="2719ee27-bfa5-4088-ad4f-cb37199dd612" type="model" p:UUID="2719ee27-bfa5-4088-ad4f-cb37199dd612" pid="1" pindex="0">
+			<mesh>
+				<vertices>
+					<vertex x="160.000000" y="80.000000" z="0" />
+					<vertex x="104.721360" y="156.084512" z="0" />
+					<vertex x="15.278640" y="127.022808" z="0" />
+					<vertex x="15.278640" y="32.977170" z="0" />
+					<vertex x="104.721368" y="3.915480" z="0" />
+					<vertex x="80.000000" y="80.000000" z="100.000000" />
+					<vertex x="80.000000" y="80.000000" z="0" />
+				</vertices>
+				<triangles>
+					<triangle v1="6" v2="1" v3="0" />
+					<triangle v1="6" v2="2" v3="1" />
+					<triangle v1="6" v2="3" v3="2" />
+					<triangle v1="6" v2="4" v3="3" />
+					<triangle v1="6" v2="0" v3="4" />
+					<triangle v1="0" v2="1" v3="5" />
+					<triangle v1="1" v2="2" v3="5" />
+					<triangle v1="2" v2="3" v3="5" />
+					<triangle v1="3" v2="4" v3="5" />
+					<triangle v1="4" v2="0" v3="5" />
+				</triangles>
+			</mesh>
+		</object>
+	</resources>
+	<build p:UUID="4acf1cba-a5d5-458b-acfa-f19f2b9235ee">
+		<item objectid="2" partnumber="Pyramid" p:UUID="74941f5f-2489-46c0-9b6c-82778d38a1fe" transform="1 0 0 0 1 0 0 0 1 -15.2786 -3.91548 0"/>
+	</build>
+</model>

@@ -40,8 +40,12 @@ using namespace Lib3MF::Impl;
  Class definition of CVector3DFieldReference 
 **************************************************************************************************************************/
 
+CVector3DFieldReference::CVector3DFieldReference(NMR::PVector3DFieldReference pFieldReference)
+	: CFieldReference(pFieldReference)
+{}
+
 void CVector3DFieldReference::SetVector3DField(IVector3DField* pTheVector3DField)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	m_pFieldReference->setFieldReferenceID(pTheVector3DField->GetUniqueResourceID());
 }
 

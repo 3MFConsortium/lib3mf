@@ -40,3 +40,9 @@ using namespace Lib3MF::Impl;
  Class definition of CVolumeDataColor 
 **************************************************************************************************************************/
 
+CVolumeDataColor::CVolumeDataColor(NMR::PVolumeDataColor pColor)
+	: CVector3DFieldReference(pColor), CFieldReference(pColor) // I am not sure about the second constructor here
+{
+
+}
+

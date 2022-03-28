@@ -36,7 +36,7 @@ NMR_VolumeDataBoundary.cpp implements the class CVolumeDataBoundary.
 namespace NMR {
 
 	CVolumeDataBoundary::CVolumeDataBoundary(PModelScalarField pScalarField)
-		: CScalarFieldReference(pScalarField), m_dSolidThreshold(0.0)
+		: CScalarFieldReference(pScalarField)
 	{
 		
 	}

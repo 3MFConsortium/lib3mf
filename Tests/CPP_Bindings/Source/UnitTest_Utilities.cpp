@@ -115,19 +115,58 @@ void CompareTransforms(Lib3MF::sTransform t1, Lib3MF::sTransform t2)
 			ASSERT_EQ(t1.m_Fields[i][j], t2.m_Fields[i][j]);
 }
 
-void CompareFieldReferences(Lib3MF::PModel m1, Lib3MF::PScalarFieldReference s1, Lib3MF::PModel m2, Lib3MF::PScalarFieldReference s2)
+void CompareFieldReferences(Lib3MF::PModel modelA, Lib3MF::PFieldReference A, Lib3MF::PModel modelB, Lib3MF::PFieldReference B)
 {
-	ASSERT_EQ(s1 == nullptr, s2 == nullptr);
-	if (s1 != nullptr && s2 != nullptr) {
-		auto field1 = m1->GetScalarFieldByID(s1->GetFieldResourceID());
-		auto field2 = m2->GetScalarFieldByID(s2->GetFieldResourceID());
-		ASSERT_EQ(field1 == nullptr, field2 == nullptr);
-		if (field1 != nullptr && field2 != nullptr) {
-			// scalar field
+	ASSERT_EQ(A == nullptr, B == nullptr);
+	if (A != nullptr && B != nullptr) {
+		CompareTransforms(A->GetTransform(), B->GetTransform());
+
+		auto scalarFieldA = modelA->GetScalarFieldByID(A->GetFieldResourceID());
+		auto scalarFieldB = modelB->GetScalarFieldByID(B->GetFieldResourceID());
+		ASSERT_EQ(scalarFieldA == nullptr, scalarFieldB == nullptr);
+		if (scalarFieldA != nullptr && scalarFieldB != nullptr) {
+			CompareScalarFields(modelA, scalarFieldA, modelB, scalarFieldB);
 		}
-		CompareTransforms(s1->GetTransform(), s2->GetTransform());
+		auto vectorField3DA = modelA->GetVector3DFieldByID(A->GetFieldResourceID());
+		auto vectorField3DB = modelB->GetVector3DFieldByID(B->GetFieldResourceID());
+		ASSERT_EQ(vectorField3DA == nullptr, vectorField3DB == nullptr);
+		if (scalarFieldA != nullptr && scalarFieldB != nullptr) {
+			CompareVector3DFields(modelA, vectorField3DA, modelB, vectorField3DB);
+		}
 	}
 }
+
+void CompareScalarFieldReferences(Lib3MF::PModel modelA, Lib3MF::PScalarFieldReference A, Lib3MF::PModel modelB, Lib3MF::PScalarFieldReference B)
+{
+	ASSERT_EQ(A == nullptr, B == nullptr);
+	if (A != nullptr && B != nullptr) {
+		CompareTransforms(A->GetTransform(), B->GetTransform());
+
+		auto scalarFieldA = modelA->GetScalarFieldByID(A->GetFieldResourceID());
+		auto scalarFieldB = modelB->GetScalarFieldByID(B->GetFieldResourceID());
+		ASSERT_EQ(scalarFieldA == nullptr, scalarFieldB == nullptr);
+		if (scalarFieldA != nullptr && scalarFieldB != nullptr) {
+			CompareScalarFields(modelA, scalarFieldA, modelB, scalarFieldB);
+		}
+	}
+}
+
+void CompareVector3DFieldReferences(Lib3MF::PModel modelA, Lib3MF::PVector3DFieldReference A, Lib3MF::PModel modelB, Lib3MF::PVector3DFieldReference B)
+{
+	ASSERT_EQ(A == nullptr, B == nullptr);
+	if (A != nullptr && B != nullptr)
+	{
+		CompareTransforms(A->GetTransform(), B->GetTransform());
+
+		auto vectorField3DA = modelA->GetVector3DFieldByID(A->GetFieldResourceID());
+		auto vectorField3DB = modelB->GetVector3DFieldByID(B->GetFieldResourceID());
+		ASSERT_EQ(vectorField3DA == nullptr, vectorField3DB == nullptr);
+		if (vectorField3DA != nullptr && vectorField3DB != nullptr) {
+			CompareVector3DFields(modelA, vectorField3DA, modelB, vectorField3DB);
+		}
+	}
+}
+
 void CompareImage3Ds(Lib3MF::PModel modelA, Lib3MF::PImage3D i1, Lib3MF::PModel modelB, Lib3MF::PImage3D i2)
 {
 	ASSERT_EQ(i1->GetName(), i2->GetName());
@@ -156,23 +195,165 @@ void CompareImageStacks(Lib3MF::PImageStack i1, Lib3MF::PImageStack i2)
 	}
 }
 
+void CompareScalarFields(Lib3MF::PModel modelA, Lib3MF::PScalarField A, Lib3MF::PModel modelB, Lib3MF::PScalarField B)
+{
+	if (A->IsFromImage3D() && B->IsFromImage3D())
+	{
+		CompareScalarFieldFromImage3D(modelA, modelA->GetScalarFieldFromImage3DByID(A->GetUniqueResourceID()),
+			modelB, modelB->GetScalarFieldFromImage3DByID(B->GetUniqueResourceID()));
+	}
+
+	if (A->IsConstant() && B->IsConstant())
+	{
+		CompareScalarFieldConstant(modelA, modelA->GetScalarFieldConstantByID(A->GetUniqueResourceID()),
+			modelB, modelB->GetScalarFieldConstantByID(B->GetUniqueResourceID()));
+	}
+
+	if (A->IsComposed() && B->IsComposed())
+	{
+		CompareScalarFieldComposed(modelA, modelA->GetScalarFieldComposedByID(A->GetUniqueResourceID()),
+			modelB, modelB->GetScalarFieldComposedByID(B->GetUniqueResourceID()));
+	}
+}
+
+void CompareScalarFieldConstant(Lib3MF::PModel modelA, Lib3MF::PScalarFieldConstant A, Lib3MF::PModel modelB, Lib3MF::PScalarFieldConstant B)
+{
+	ASSERT_EQ(A == nullptr, B == nullptr);
+	if (A != nullptr && B != nullptr)
+	{
+		ASSERT_EQ(A->GetName(), B->GetName());
+		ASSERT_EQ(A->GetValue(), B->GetValue());
+	}
+}
+
 void CompareScalarFieldFromImage3D(Lib3MF::PModel modelA, Lib3MF::PScalarFieldFromImage3D A, Lib3MF::PModel modelB, Lib3MF::PScalarFieldFromImage3D B)
 {
-	ASSERT_EQ(A->GetName(), B->GetName());
-	CompareImage3Ds(modelA, A->GetImage(), modelB, B->GetImage());
-	ASSERT_EQ(A->GetOffset(), B->GetOffset());
-	ASSERT_EQ(A->GetScale(), B->GetScale());
-	ASSERT_EQ(A->GetFilter(), B->GetFilter());
+	ASSERT_EQ(A == nullptr, B == nullptr);
+	if (A != nullptr && B != nullptr)
+	{
+		ASSERT_EQ(A->GetName(), B->GetName());
+		CompareImage3Ds(modelA, A->GetImage(), modelB, B->GetImage());
+		ASSERT_EQ(A->GetOffset(), B->GetOffset());
+		ASSERT_EQ(A->GetScale(), B->GetScale());
+		ASSERT_EQ(A->GetFilter(), B->GetFilter());
+	}
 }
 
 void CompareScalarFieldComposed(Lib3MF::PModel modelA, Lib3MF::PScalarFieldComposed A, Lib3MF::PModel modelB, Lib3MF::PScalarFieldComposed B)
 {
-	ASSERT_EQ(A->GetName(), B->GetName());
-	ASSERT_EQ(A->GetFactor1(), B->GetFactor1());
-	ASSERT_EQ(A->GetFactor2(), B->GetFactor2());
-	ASSERT_EQ(A->GetMethod(), B->GetMethod());
-	CompareFieldReferences(modelA, A->ScalarFieldReference1(), modelB, B->ScalarFieldReference1());
-	CompareFieldReferences(modelA, A->ScalarFieldReference2(), modelB, B->ScalarFieldReference2());
+	ASSERT_EQ(A == nullptr, B == nullptr);
+	if (A != nullptr && B != nullptr)
+	{
+		ASSERT_EQ(A->GetName(), B->GetName());
+		ASSERT_EQ(A->GetFactor1(), B->GetFactor1());
+		ASSERT_EQ(A->GetFactor2(), B->GetFactor2());
+		ASSERT_EQ(A->GetMethod(), B->GetMethod());
+		CompareScalarFieldReferences(modelA, A->ScalarFieldReference1(), modelB, B->ScalarFieldReference1());
+		CompareScalarFieldReferences(modelA, A->ScalarFieldReference2(), modelB, B->ScalarFieldReference2());
+	}
+}
+
+void CompareVector3DFields(Lib3MF::PModel modelA, Lib3MF::PVector3DField A, Lib3MF::PModel modelB, Lib3MF::PVector3DField B)
+{
+	ASSERT_EQ(A == nullptr, B == nullptr);
+	if (A != nullptr && B != nullptr)
+	{
+		if (A->IsFromImage3D() && B->IsFromImage3D())
+		{
+			CompareVector3DFieldFromImage3D(modelA, modelA->GetVector3DFieldFromImage3DByID(A->GetUniqueResourceID()),
+				modelB, modelB->GetVector3DFieldFromImage3DByID(B->GetUniqueResourceID()));
+		}
+		if (A->IsConstant() && B->IsConstant())
+		{
+			CompareVector3DFieldConstant(modelA, modelA->GetVector3DFieldConstantByID(A->GetUniqueResourceID()),
+				modelB, modelB->GetVector3DFieldConstantByID(B->GetUniqueResourceID()));
+		}
+		if (A->IsComposed() && B->IsComposed())
+		{
+			CompareVector3DFieldComposed(modelA, modelA->GetVector3DFieldComposedByID(A->GetUniqueResourceID()),
+				modelB, modelB->GetVector3DFieldComposedByID(B->GetUniqueResourceID()));
+		}
+	}
+}
+
+void CompareVector3DFieldConstant(Lib3MF::PModel modelA, Lib3MF::PVector3DFieldConstant A, Lib3MF::PModel modelB, Lib3MF::PVector3DFieldConstant B)
+{
+	ASSERT_EQ(A == nullptr, B == nullptr);
+	if (A != nullptr && B != nullptr)
+	{
+		ASSERT_EQ(A->GetName(), B->GetName());
+		ASSERT_EQ(A->GetValueX(), B->GetValueX());
+		ASSERT_EQ(A->GetValueY(), B->GetValueY());
+		ASSERT_EQ(A->GetValueZ(), B->GetValueZ());
+	}
+}
+
+void CompareVector3DFieldFromImage3D(Lib3MF::PModel modelA, Lib3MF::PVector3DFieldFromImage3D A, Lib3MF::PModel modelB, Lib3MF::PVector3DFieldFromImage3D B)
+{
+	ASSERT_EQ(A == nullptr, B == nullptr);
+	if (A != nullptr && B != nullptr)
+	{
+		ASSERT_EQ(A->GetName(), B->GetName());
+		CompareImage3Ds(modelA, A->GetImage(), modelB, B->GetImage());
+		ASSERT_EQ(A->GetOffset(), B->GetOffset());
+		ASSERT_EQ(A->GetScale(), B->GetScale());
+		ASSERT_EQ(A->GetFilter(), B->GetFilter());
+	}
+}
+
+void CompareVector3DFieldComposed(Lib3MF::PModel modelA, Lib3MF::PVector3DFieldComposed A, Lib3MF::PModel modelB, Lib3MF::PVector3DFieldComposed B)
+{
+	ASSERT_EQ(A == nullptr, B == nullptr);
+	if (A != nullptr && B != nullptr)
+	{
+		ASSERT_EQ(A->GetName(), B->GetName());
+		ASSERT_EQ(A->GetFactor1(), B->GetFactor1());
+		ASSERT_EQ(A->GetFactor2(), B->GetFactor2());
+		ASSERT_EQ(A->GetMethod(), B->GetMethod());
+		CompareVector3DFieldReferences(modelA, A->Vector3DFieldReference1(), modelB, B->Vector3DFieldReference1());
+		CompareVector3DFieldReferences(modelA, A->Vector3DFieldReference2(), modelB, B->Vector3DFieldReference2());
+	}
+}
+
+void CompareVolumeData(Lib3MF::PModel modelA, Lib3MF::PVolumeData A, Lib3MF::PModel modelB, Lib3MF::PVolumeData B)
+{
+	ASSERT_EQ(A->GetBoundary() == nullptr, B->GetBoundary() == nullptr);
+	if (A->GetBoundary())
+	{
+		CompareScalarFieldReferences(modelA, A->GetBoundary(), modelB, B->GetBoundary());
+		ASSERT_EQ(A->GetBoundary()->GetSolidThreshold(), B->GetBoundary()->GetSolidThreshold());
+	}
+
+	ASSERT_EQ(A->GetColor() == nullptr, B->GetColor() == nullptr);
+	if (A->GetColor())
+	{
+		CompareVector3DFieldReferences(modelA, A->GetColor(), modelB, B->GetColor());
+	}
+
+	ASSERT_EQ(A->GetPropertyCount(), B->GetPropertyCount());
+	for (Lib3MF_uint32 i=0; i<A->GetPropertyCount(); i++)
+	{
+		auto propertyA = A->GetProperty(i);
+		auto propertyB = B->GetProperty(i);
+		ASSERT_EQ(propertyA->GetName(), propertyB->GetName());
+		CompareFieldReferences(modelA, propertyA, modelB, propertyB);
+	}
+	// TODO
+	return;
+	//ASSERT_EQ(A->GetComposite() == nullptr, B->GetComposite() == nullptr);
+	//if (A->GetComposite() != nullptr)
+	//{
+		//auto compositeA = A->GetComposite();
+		//auto compositeB = B->GetComposite();
+		////CompareBaseMaterialGroups(compositeA->GetBaseMaterialGroup(), compositeB->GetBaseMaterialGroup());
+		//ASSERT_EQ(compositeA->GetMaterialMappingCount(), compositeB->GetMaterialMappingCount());
+		//for (Lib3MF_uint32 i = 0; i < compositeA->GetMaterialMappingCount(); i++)
+		//{
+		//	auto materialMappingA = compositeA->GetMaterialMapping(i);
+		//	auto materialMappingB = compositeB->GetMaterialMapping(i);
+		//	CompareScalarFieldReferences(modelA, materialMappingA, modelB, materialMappingB);
+		//}
+	//}
 }
 
 sLib3MFPosition fnCreateVertex(float x, float y, float z)

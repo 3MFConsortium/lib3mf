@@ -33,6 +33,8 @@ Abstract: This is a stub class definition of CVolumeData
 
 #include "lib3mf_volumedataproperty.hpp"
 #include "lib3mf_volumedataboundary.hpp"
+#include "lib3mf_volumedatacolor.hpp"
+#include "lib3mf_volumedatacomposite.hpp"
 
 // Include custom headers here.
 #include "Model/Classes/NMR_ModelMeshObject.h"
@@ -85,6 +87,11 @@ void CVolumeData::RemoveBoundary()
 IVolumeDataComposite * CVolumeData::GetComposite()
 {
 	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	//auto pComposite = m_pVolumeData->getComposite();
+	//if (!pComposite) {
+	//	return nullptr;
+	//}
+	//return new CVolumeDataComposite(pComposite);
 }
 
 IVolumeDataComposite * CVolumeData::CreateNewComposite()
@@ -99,7 +106,11 @@ void CVolumeData::RemoveComposite()
 
 IVolumeDataColor * CVolumeData::GetColor()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	auto pColor = m_pVolumeData->getColor();
+	if (!pColor) {
+		return nullptr;
+	}
+	return new CVolumeDataColor(pColor);
 }
 
 IVolumeDataColor * CVolumeData::CreateNewColor(IVector3DField* pTheVector3DField)

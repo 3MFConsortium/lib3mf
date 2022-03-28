@@ -44,7 +44,7 @@ namespace NMR {
 
 	class CVolumeDataBoundary : public CScalarFieldReference {
 	private:
-		nfDouble m_dSolidThreshold;
+		nfDouble m_dSolidThreshold = 0.;
 	public:
 		CVolumeDataBoundary() = delete;
 		CVolumeDataBoundary(PModelScalarField pScalarField);

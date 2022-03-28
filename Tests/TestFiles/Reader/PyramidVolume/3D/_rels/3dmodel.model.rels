@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+	<Relationship Type="http://schemas.microsoft.com/3dmanufacturing/2013/01/3dtexture" Target="/volume/layer1.png" Id="rel1"/>
+	<Relationship Type="http://schemas.microsoft.com/3dmanufacturing/2013/01/3dtexture" Target="/volume/layer2.png" Id="rel2"/>
+	<Relationship Type="http://schemas.microsoft.com/3dmanufacturing/2013/01/3dtexture" Target="/volume/layer3.png" Id="rel3"/>
+</Relationships>
