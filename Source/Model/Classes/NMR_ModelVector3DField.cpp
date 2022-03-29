@@ -26,7 +26,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
 
-NMR_ModelVector3DField.cpp implements the Model ScalarField Class.
+NMR_ModelVector3DField.cpp implements the Model Vector3DField Class.
 A model scalar field is the base class of different scalar field specializations.
 
 --*/

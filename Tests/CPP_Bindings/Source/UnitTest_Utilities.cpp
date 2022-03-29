@@ -205,8 +205,8 @@ void CompareScalarFields(Lib3MF::PModel modelA, Lib3MF::PScalarField A, Lib3MF::
 
 	if (A->IsConstant() && B->IsConstant())
 	{
-		CompareScalarFieldConstant(modelA, modelA->GetScalarFieldConstantByID(A->GetUniqueResourceID()),
-			modelB, modelB->GetScalarFieldConstantByID(B->GetUniqueResourceID()));
+		CompareScalarFieldConstant(modelA->GetScalarFieldConstantByID(A->GetUniqueResourceID()),
+			modelB->GetScalarFieldConstantByID(B->GetUniqueResourceID()));
 	}
 
 	if (A->IsComposed() && B->IsComposed())
@@ -216,7 +216,7 @@ void CompareScalarFields(Lib3MF::PModel modelA, Lib3MF::PScalarField A, Lib3MF::
 	}
 }
 
-void CompareScalarFieldConstant(Lib3MF::PModel modelA, Lib3MF::PScalarFieldConstant A, Lib3MF::PModel modelB, Lib3MF::PScalarFieldConstant B)
+void CompareScalarFieldConstant(Lib3MF::PScalarFieldConstant A, Lib3MF::PScalarFieldConstant B)
 {
 	ASSERT_EQ(A == nullptr, B == nullptr);
 	if (A != nullptr && B != nullptr)
@@ -265,8 +265,8 @@ void CompareVector3DFields(Lib3MF::PModel modelA, Lib3MF::PVector3DField A, Lib3
 		}
 		if (A->IsConstant() && B->IsConstant())
 		{
-			CompareVector3DFieldConstant(modelA, modelA->GetVector3DFieldConstantByID(A->GetUniqueResourceID()),
-				modelB, modelB->GetVector3DFieldConstantByID(B->GetUniqueResourceID()));
+			CompareVector3DFieldConstant(modelA->GetVector3DFieldConstantByID(A->GetUniqueResourceID()),
+				modelB->GetVector3DFieldConstantByID(B->GetUniqueResourceID()));
 		}
 		if (A->IsComposed() && B->IsComposed())
 		{
@@ -276,7 +276,7 @@ void CompareVector3DFields(Lib3MF::PModel modelA, Lib3MF::PVector3DField A, Lib3
 	}
 }
 
-void CompareVector3DFieldConstant(Lib3MF::PModel modelA, Lib3MF::PVector3DFieldConstant A, Lib3MF::PModel modelB, Lib3MF::PVector3DFieldConstant B)
+void CompareVector3DFieldConstant(Lib3MF::PVector3DFieldConstant A, Lib3MF::PVector3DFieldConstant B)
 {
 	ASSERT_EQ(A == nullptr, B == nullptr);
 	if (A != nullptr && B != nullptr)

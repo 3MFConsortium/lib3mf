@@ -25,43 +25,47 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
-NMR_ModelReaderNode_Volumetric2201_Color.h covers the official 3MF volumetric extension.
+NMR_ModelReaderNode_Volumetric2201_Vector3DFieldFromImage3D.h covers the official 3MF volumetric extension.
 
 --*/
 
-#ifndef __NMR_MODELREADERNODE_Volumetric2201_COLOR
-#define __NMR_MODELREADERNODE_Volumetric2201_COLOR
+#ifndef __NMR_MODELREADERNODE_VOLUMETRIC2201_VECTOR3DFIELDFROMIMAGE3D
+#define __NMR_MODELREADERNODE_VOLUMETRIC2201_VECTOR3DFIELDFROMIMAGE3D
 
 #include "Model/Reader/NMR_ModelReaderNode.h"
-#include "Model/Classes/NMR_ModelComponent.h"
-#include "Model/Classes/NMR_ModelVolumeData.h"
-#include "Common/Math/NMR_Matrix.h"
+#include "Model/Classes/NMR_ModelVector3DFieldFromImage3D.h"
 
 namespace NMR {
 
-	class CModelReaderNode_Volumetric2201_Color : public CModelReaderNode {
+	class CModelReaderNode_Volumetric2201_Vector3DFieldFromImage3D : public CModelReaderNode {
 	private:
-		nfBool m_bHasFieldID = false;
-		nfBool m_bHasTransform = false;
-
-		ModelResourceID m_nFieldID;
-		NMATRIX3 m_Transform = fnMATRIX3_identity();
 	protected:
+
+		CModelVector3DFieldFromImage3D* m_pVector3DFieldFromImage3D;
+		CModel* m_pModel;
+
+		nfBool m_bHasImage3DID = false;
+		nfBool m_bHasOffset = false;
+		nfBool m_bHasScale = false;
+		nfBool m_bHasChannel = false;
+		nfBool m_bHasTileStyleU = false;
+		nfBool m_bHasTileStyleV = false;
+		nfBool m_bHasTileStyleW = false;
+		nfBool m_bHasFilter = false;
+
 		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
+		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
+
 	public:
-		CModelReaderNode_Volumetric2201_Color() = delete;
-		CModelReaderNode_Volumetric2201_Color(_In_ PModelWarnings pWarnings);
+		CModelReaderNode_Volumetric2201_Vector3DFieldFromImage3D() = delete;
+		CModelReaderNode_Volumetric2201_Vector3DFieldFromImage3D(_In_ CModel* pModel, _In_ CModelVector3DFieldFromImage3D* pVector3DFieldFromImage3D, _In_ PModelWarnings pWarnings);
 
 		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 
-		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
-
-		PVolumeDataColor MakeColor(_In_ CModel* pModel);
 	};
 
-	typedef std::shared_ptr <CModelReaderNode_Volumetric2201_Color> PModelReaderNode_Volumetric2201_Color;
+	typedef std::shared_ptr <CModelReaderNode_Volumetric2201_Vector3DFieldFromImage3D> PModelReaderNode_Volumetric2201_Vector3DFieldFromImage3D;
 
 }
 
-#endif // __NMR_MODELREADERNODE_Volumetric2201_COLOR
-
+#endif // __NMR_MODELREADERNODE_VOLUMETRIC2201_VECTOR3DFIELDFROMIMAGE3D

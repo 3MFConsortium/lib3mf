@@ -47,6 +47,10 @@ This is the class for exporting the 3mf model stream root node.
 #include "Model/Classes/NMR_ModelScalarFieldFromImage3D.h"
 #include "Model/Classes/NMR_ModelScalarFieldConstant.h"
 #include "Model/Classes/NMR_ModelScalarFieldComposed.h"
+#include "Model/Classes/NMR_ModelVector3DField.h"
+#include "Model/Classes/NMR_ModelVector3DFieldFromImage3D.h"
+#include "Model/Classes/NMR_ModelVector3DFieldConstant.h"
+#include "Model/Classes/NMR_ModelVector3DFieldComposed.h"
 #include "Model/Classes/NMR_ModelCompositeMaterials.h"
 #include "Model/Classes/NMR_ModelMultiPropertyGroup.h"
 #include "Model/Classes/NMR_ModelMeshObject.h"
@@ -879,6 +883,97 @@ namespace NMR {
 
 			writeFullEndElement();
 		}
+
+
+		nCount = m_pModel->getVector3DFieldCount();
+
+		for (nfUint32 nIndex = 0; nIndex < nCount; nIndex++) {
+			CModelVector3DField* pVector3DField = m_pModel->getVector3DField(nIndex);
+
+			writeStartElementWithPrefix(XML_3MF_ELEMENT_VECTOR3DFIELD, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
+			writeIntAttribute(XML_3MF_ATTRIBUTE_VECTOR3DFIELD_ID, pVector3DField->getPackageResourceID()->getModelResourceID());
+			if (!pVector3DField->getName().empty())
+				writeStringAttribute(XML_3MF_ATTRIBUTE_VECTOR3DFIELD_NAME, pVector3DField->getName());
+
+			if (CModelVector3DFieldFromImage3D* pVector3DFieldFromImage3D = dynamic_cast<CModelVector3DFieldFromImage3D*>(pVector3DField))
+			{
+				writeStartElementWithPrefix(XML_3MF_ELEMENT_VECTOR3DFIELDFROMIMAGE3D, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
+
+				writeIntAttribute(XML_3MF_ATTRIBUTE_VECTOR3DFIELDFROMIMAGE3D_IMAGE3DID, pVector3DFieldFromImage3D->getImage3DResourceID()->getModelResourceID());
+
+				if (pVector3DFieldFromImage3D->getOffset() != 0.0)
+					writeFloatAttribute(XML_3MF_ATTRIBUTE_VECTOR3DFIELDFROMIMAGE3_OFFSET, (nfFloat)pVector3DFieldFromImage3D->getOffset());
+				if (pVector3DFieldFromImage3D->getScale() != 1.0)
+					writeFloatAttribute(XML_3MF_ATTRIBUTE_VECTOR3DFIELDFROMIMAGE3_SCALE, (nfFloat)pVector3DFieldFromImage3D->getScale());
+
+				if (pVector3DFieldFromImage3D->getTileStyleU() != MODELTEXTURETILESTYLE_WRAP)
+					writeStringAttribute(XML_3MF_ATTRIBUTE_VECTOR3DFIELDFROMIMAGE3_TILESTYLEU, CModelTexture2DResource::tileStyleToString(pVector3DFieldFromImage3D->getTileStyleU()));
+				if (pVector3DFieldFromImage3D->getTileStyleV() != MODELTEXTURETILESTYLE_WRAP)
+					writeStringAttribute(XML_3MF_ATTRIBUTE_VECTOR3DFIELDFROMIMAGE3_TILESTYLEV, CModelTexture2DResource::tileStyleToString(pVector3DFieldFromImage3D->getTileStyleV()));
+				if (pVector3DFieldFromImage3D->getTileStyleW() != MODELTEXTURETILESTYLE_WRAP)
+					writeStringAttribute(XML_3MF_ATTRIBUTE_VECTOR3DFIELDFROMIMAGE3_TILESTYLEW, CModelTexture2DResource::tileStyleToString(pVector3DFieldFromImage3D->getTileStyleW()));
+
+				if (pVector3DFieldFromImage3D->getFilter() != MODELTEXTUREFILTER_AUTO)
+					writeStringAttribute(XML_3MF_ATTRIBUTE_TEXTURE2D_FILTER, CModelTexture2DResource::filterToString(pVector3DFieldFromImage3D->getFilter()));
+
+				writeEndElement();
+			}
+			else if (CModelVector3DFieldConstant* pVector3DFieldConstant = dynamic_cast<CModelVector3DFieldConstant*>(pVector3DField))
+			{
+				writeStartElementWithPrefix(XML_3MF_ELEMENT_VECTOR3DFIELDCONSTANT, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
+				writeDoubleAttribute(XML_3MF_ATTRIBUTE_VECTOR3DFIELDCONSTANT_VALUEX, pVector3DFieldConstant->getValueX());
+				writeDoubleAttribute(XML_3MF_ATTRIBUTE_VECTOR3DFIELDCONSTANT_VALUEY, pVector3DFieldConstant->getValueY());
+				writeDoubleAttribute(XML_3MF_ATTRIBUTE_VECTOR3DFIELDCONSTANT_VALUEZ, pVector3DFieldConstant->getValueZ());
+				writeEndElement();
+			}
+			else if (CModelVector3DFieldComposed* pVector3DFieldComposed = dynamic_cast<CModelVector3DFieldComposed*>(pVector3DField))
+			{
+				writeStartElementWithPrefix(XML_3MF_ELEMENT_VECTOR3DFIELDCOMPOSED, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
+				writeStringAttribute(XML_3MF_ATTRIBUTE_VECTOR3DFIELDCOMPOSED_METHOD, CModelVector3DFieldComposed::methodToString(pVector3DFieldComposed->getMethod()));
+
+				auto pID1 = m_pModel->findPackageResourceID(pVector3DFieldComposed->Vector3DFieldReference1()->getFieldReferenceID());
+				if (!pID1)
+					throw CNMRException(NMR_ERROR_INVALIDMODELRESOURCE);
+				writeIntAttribute(XML_3MF_ATTRIBUTE_VECTOR3DFIELDCOMPOSED_VECTOR3DFIELDID1, pID1->getModelResourceID());
+				auto transform1 = pVector3DFieldComposed->Vector3DFieldReference1()->getTransform();
+				if (!fnMATRIX3_isIdentity(transform1))
+					writeStringAttribute(XML_3MF_ATTRIBUTE_VECTOR3DFIELDCOMPOSED_TRANSFORM1, fnMATRIX3_toString(transform1));
+
+				auto pID2 = m_pModel->findPackageResourceID(pVector3DFieldComposed->Vector3DFieldReference2()->getFieldReferenceID());
+				if (!pID2)
+					throw CNMRException(NMR_ERROR_INVALIDMODELRESOURCE);
+				writeIntAttribute(XML_3MF_ATTRIBUTE_VECTOR3DFIELDCOMPOSED_VECTOR3DFIELDID2, pID2->getModelResourceID());
+				auto transform2 = pVector3DFieldComposed->Vector3DFieldReference2()->getTransform();
+				if (!fnMATRIX3_isIdentity(transform2))
+					writeStringAttribute(XML_3MF_ATTRIBUTE_VECTOR3DFIELDCOMPOSED_TRANSFORM2, fnMATRIX3_toString(transform2));
+
+				if (pVector3DFieldComposed->getMethod() == eModelCompositionMethod::MODELCOMPOSITIONMETHOD_MASK)
+				{
+					auto pIDMask = m_pModel->findPackageResourceID(pVector3DFieldComposed->ScalarFieldReferenceMask()->getFieldReferenceID());
+					if (!pIDMask)
+						throw CNMRException(NMR_ERROR_INVALIDMODELRESOURCE);
+					writeIntAttribute(XML_3MF_ATTRIBUTE_VECTOR3DFIELDCOMPOSED_VECTOR3DFIELDID2, pIDMask->getModelResourceID());
+					auto transformMask = pVector3DFieldComposed->ScalarFieldReferenceMask()->getTransform();
+					if (!fnMATRIX3_isIdentity(transformMask))
+						writeStringAttribute(XML_3MF_ATTRIBUTE_VECTOR3DFIELDCOMPOSED_TRANSFORMMASK, fnMATRIX3_toString(transformMask));
+				}
+				if (pVector3DFieldComposed->getMethod() == eModelCompositionMethod::MODELCOMPOSITIONMETHOD_WEIGHTEDSUM)
+				{
+					if (pVector3DFieldComposed->getFactor1() != 1.0)
+						writeDoubleAttribute(XML_3MF_ATTRIBUTE_VECTOR3DFIELDCOMPOSED_FACTOR1, pVector3DFieldComposed->getFactor1());
+					if (pVector3DFieldComposed->getFactor2() != 1.0)
+						writeDoubleAttribute(XML_3MF_ATTRIBUTE_VECTOR3DFIELDCOMPOSED_FACTOR2, pVector3DFieldComposed->getFactor2());
+				}
+				writeEndElement();
+			}
+			else
+			{
+				throw CNMRException(-1); // TODO NMR_ERROR_UNKNOWN_VECTOR3DFIELD_TYPE
+			}
+
+			writeFullEndElement();
+		}
+
 	}
 
 	void CModelWriterNode100_Model::writeMultiProperties()

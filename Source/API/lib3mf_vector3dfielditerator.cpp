@@ -32,7 +32,7 @@ Abstract: This is a stub class definition of CVector3DFieldIterator
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
-
+#include "lib3mf_vector3dfield.hpp"
 
 using namespace Lib3MF::Impl;
 
@@ -42,6 +42,6 @@ using namespace Lib3MF::Impl;
 
 IVector3DField * CVector3DFieldIterator::GetCurrentVector3DField()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return new CVector3DField(std::dynamic_pointer_cast<NMR::CModelVector3DField>(GetCurrentResource()));
 }
 

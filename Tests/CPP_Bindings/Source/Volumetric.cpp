@@ -173,7 +173,7 @@ namespace Lib3MF
 		}
 	}
 
-	TEST_F(Volumetric, VolumetricComposition)
+	TEST_F(Volumetric, VolumetricCompositionScalar)
 	{
 		auto pImage3D = SetupSheetsFromFile();
 
@@ -213,8 +213,7 @@ namespace Lib3MF
 			ASSERT_TRUE(scalarFieldIterator->MoveNext());
 			scalarField = scalarFieldIterator->GetCurrentScalarField();
 			auto constantFieldReIn = ioModel->GetScalarFieldConstantByID(scalarField->GetUniqueResourceID());
-			ASSERT_EQ(constantFieldReIn->GetValue(), constantField->GetValue());
-			ASSERT_EQ(constantFieldReIn->GetName(), constantField->GetName());
+			CompareScalarFieldConstant(constantFieldReIn, constantField);
 
 			ASSERT_TRUE(scalarFieldIterator->MoveNext());
 			scalarField = scalarFieldIterator->GetCurrentScalarField();
@@ -258,8 +257,6 @@ namespace Lib3MF
 			auto ioMesh = ioMeshObjects->GetCurrentMeshObject();
 			auto ioVolumeData = ioMesh->VolumeData();
 
-			Lib3MF_uint32 nUniqueID = ioVolumeData->GetBoundary()->GetFieldResourceID();
-			auto pScalarField = ioModel->GetScalarFieldByID(nUniqueID);
 			CompareVolumeData(ioModel, ioVolumeData, model, volumeData);
 
 			PWriter ioWriter = ioModel->QueryWriter("3mf");
@@ -269,23 +266,101 @@ namespace Lib3MF
 
 	TEST_F(Volumetric, VolumetricColor)
 	{
-		//auto pImage3D = SetupSheetsFromFile();
+		auto pImage3D = SetupSheetsFromFile();
 
-		//auto vectorFieldFromImage3D = model->AddVector3DFieldFromImage3D(pImage3D.get());
+		auto vectorFieldFromImage3D = model->AddVector3DFieldFromImage3D(pImage3D.get());
 
-		//auto theMesh = GetMesh();
-		//auto volumeData = theMesh->VolumeData();
-		//auto theBoundary = volumeData->CreateNewColor(vectorFieldFromImage3D.get());
+		auto theMesh = GetMesh();
+		auto volumeData = theMesh->VolumeData();
+		auto theBoundary = volumeData->CreateNewColor(vectorFieldFromImage3D.get());
 
-		//writer3MF->WriteToFile(Volumetric::OutFolder + "Color.3mf");
-		//{
-		//	PModel ioModel = wrapper->CreateModel();
-		//	PReader ioReader = ioModel->QueryReader("3mf");
-		//	ioReader->ReadFromFile(Volumetric::OutFolder + "Color.3mf");
+		writer3MF->WriteToFile(Volumetric::OutFolder + "Color.3mf");
+		{
+			PModel ioModel = wrapper->CreateModel();
+			PReader ioReader = ioModel->QueryReader("3mf");
+			ioReader->ReadFromFile(Volumetric::OutFolder + "Color.3mf");
 
-		//	PWriter ioWriter = ioModel->QueryWriter("3mf");
-		//	ioWriter->WriteToFile(Volumetric::OutFolder + "ColorReOut.3mf");
-		//}
+			auto ioMeshObjects = ioModel->GetMeshObjects();
+			ASSERT_EQ(ioMeshObjects->Count(), 1);
+			ASSERT_TRUE(ioMeshObjects->MoveNext());
+			auto ioMesh = ioMeshObjects->GetCurrentMeshObject();
+			auto ioVolumeData = ioMesh->VolumeData();
+			CompareVolumeData(ioModel, ioVolumeData, model, volumeData);
+
+			PWriter ioWriter = ioModel->QueryWriter("3mf");
+			ioWriter->WriteToFile(Volumetric::OutFolder + "ColorReOut.3mf");
+		}
 	}
 
+	TEST_F(Volumetric, VolumetricCompositionVector3D)
+	{
+		auto pImage3D = SetupSheetsFromFile();
+
+		auto fieldFromImage3D = model->AddVector3DFieldFromImage3D(pImage3D.get());
+
+		auto constantField = model->AddVector3DFieldConstant();
+		ASSERT_EQ(constantField->GetValueX(), 0.);
+		ASSERT_EQ(constantField->GetValueY(), 0.);
+		ASSERT_EQ(constantField->GetValueZ(), 0.);
+		double dValueX = -0.2;
+		double dValueY = -0.3;
+		double dValueZ = -0.4;
+		constantField->SetValueX(dValueX);
+		constantField->SetValueY(dValueY);
+		constantField->SetValueZ(dValueZ);
+		ASSERT_EQ(constantField->GetValueX(), dValueX);
+		ASSERT_EQ(constantField->GetValueY(), dValueY);
+		ASSERT_EQ(constantField->GetValueZ(), dValueZ);
+
+		auto composedVector3DField = model->AddVector3DFieldComposed();
+		composedVector3DField->Vector3DFieldReference1()->SetFieldResourceID(fieldFromImage3D->GetUniqueResourceID());
+		composedVector3DField->Vector3DFieldReference2()->SetFieldResourceID(constantField->GetUniqueResourceID());
+		composedVector3DField->SetMethod(Lib3MF::eCompositionMethod::WeightedSum);
+		ASSERT_EQ(composedVector3DField->GetFactor1(), 1.);
+		ASSERT_EQ(composedVector3DField->GetFactor2(), 1.);
+		composedVector3DField->SetFactor1(1.5);
+		composedVector3DField->SetFactor2(-1.0);
+		ASSERT_EQ(composedVector3DField->GetFactor1(), 1.5);
+		ASSERT_EQ(composedVector3DField->GetFactor2(), -1.);
+
+		auto theMesh = GetMesh();
+		auto volumeData = theMesh->VolumeData();
+		auto theBoundary = volumeData->CreateNewColor(composedVector3DField.get());
+		writer3MF->WriteToFile(Volumetric::OutFolder + "MyCompositionVector3D.3mf");
+
+		{
+			PModel ioModel = wrapper->CreateModel();
+			PReader ioReader = ioModel->QueryReader("3mf");
+			ioReader->ReadFromFile(Volumetric::OutFolder + "MyCompositionVector3D.3mf");
+
+			auto vector3DFieldIterator = ioModel->GetVector3DFields();
+			ASSERT_EQ(vector3DFieldIterator->Count(), 3);
+
+			ASSERT_TRUE(vector3DFieldIterator->MoveNext());
+			auto vector3DField = vector3DFieldIterator->GetCurrentVector3DField();
+			auto fieldFromImage3DReIn = ioModel->GetVector3DFieldFromImage3DByID(vector3DField->GetUniqueResourceID());
+			CompareVector3DFieldFromImage3D(ioModel, fieldFromImage3DReIn, model, fieldFromImage3D);
+
+			ASSERT_TRUE(vector3DFieldIterator->MoveNext());
+			vector3DField = vector3DFieldIterator->GetCurrentVector3DField();
+			auto constantFieldReIn = ioModel->GetVector3DFieldConstantByID(vector3DField->GetUniqueResourceID());
+			CompareVector3DFieldConstant(constantFieldReIn, constantField);
+
+			ASSERT_TRUE(vector3DFieldIterator->MoveNext());
+			vector3DField = vector3DFieldIterator->GetCurrentVector3DField();
+			auto composedVector3DFieldReIn = ioModel->GetVector3DFieldComposedByID(vector3DField->GetUniqueResourceID());
+			CompareVector3DFieldComposed(ioModel, composedVector3DFieldReIn, model, composedVector3DField);
+			ASSERT_FALSE(vector3DFieldIterator->MoveNext());
+
+			auto ioMeshObjects = ioModel->GetMeshObjects();
+			ASSERT_EQ(ioMeshObjects->Count(), 1);
+			ASSERT_TRUE(ioMeshObjects->MoveNext());
+			auto ioMesh = ioMeshObjects->GetCurrentMeshObject();
+			auto ioVolumeData = ioMesh->VolumeData();
+			CompareVolumeData(ioModel, ioVolumeData, model, volumeData);
+
+			PWriter ioWriter = ioModel->QueryWriter("3mf");
+			ioWriter->WriteToFile(Volumetric::OutFolder + "MyCompositionVector3DReOut.3mf");
+		}
+	}
 }

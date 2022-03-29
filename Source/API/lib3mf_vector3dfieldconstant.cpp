@@ -37,35 +37,50 @@ Abstract: This is a stub class definition of CVector3DFieldConstant
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CVector3DFieldConstant 
+ Class definition of CVector3DFieldConstant
 **************************************************************************************************************************/
+
+CVector3DFieldConstant::CVector3DFieldConstant(NMR::PModelVector3DFieldConstant pVector3DFieldConstant)
+	:CVector3DField(pVector3DFieldConstant), CResource(pVector3DFieldConstant)
+{
+
+}
+
+NMR::CModelVector3DFieldConstant* CVector3DFieldConstant::vector3dFieldConstant()
+{
+	NMR::CModelVector3DFieldConstant* pFieldConstant = dynamic_cast<NMR::CModelVector3DFieldConstant*>(resource().get());
+	if (pFieldConstant == nullptr)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDOBJECT);
+	return pFieldConstant;
+}
 
 Lib3MF_double CVector3DFieldConstant::GetValueX()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return vector3dFieldConstant()->getValueX();
 }
 
-void CVector3DFieldConstant::SetValueX(const Lib3MF_double dValueX)
+void CVector3DFieldConstant::SetValueX(const Lib3MF_double dValue)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	vector3dFieldConstant()->setValueX(dValue);
 }
 
 Lib3MF_double CVector3DFieldConstant::GetValueY()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return vector3dFieldConstant()->getValueY();
 }
 
-void CVector3DFieldConstant::SetValueY(const Lib3MF_double dValueY)
+void CVector3DFieldConstant::SetValueY(const Lib3MF_double dValue)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	vector3dFieldConstant()->setValueY(dValue);
 }
 
 Lib3MF_double CVector3DFieldConstant::GetValueZ()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return vector3dFieldConstant()->getValueZ();
 }
 
-void CVector3DFieldConstant::SetValueZ(const Lib3MF_double dValueZ)
+void CVector3DFieldConstant::SetValueZ(const Lib3MF_double dValue)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	vector3dFieldConstant()->setValueZ(dValue);
 }
+

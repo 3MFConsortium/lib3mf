@@ -1383,6 +1383,13 @@ Model error codes (0x8XXX)
 // Duplicate attribute in scalar field composed
 #define NMR_ERROR_DUPLICATE_ATTRIBUTE_SCALARFIELDCOMPOSED 0x8835
 
+// Missing attribute in vector3d field composed
+#define NMR_ERROR_MISSING_ATTRIBUTE_VECTOR3DFIELDCOMPOSED 0x8836
+
+// Duplicate attribute in vector3d field composed
+#define NMR_ERROR_DUPLICATE_ATTRIBUTE_VECTOR3DFIELDCOMPOSED 0x88357
+
+
 
 /*-------------------------------------------------------------------
 XML Parser Error Constants (0x9XXX)

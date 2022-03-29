@@ -417,29 +417,18 @@ namespace NMR {
 
 				if (m_pModelMeshObject->getVolumeData()->hasColor())
 				{
-					throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
-					//writeStartElementWithPrefix(XML_3MF_ELEMENT_VOLUMETRIC_COLOR, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
-					//PVolumeDataColor pColor = m_pModelMeshObject->getVolumeData()->GetColor();
-					//PModelVolumetricStack pStackResource = pColor->GetVolumetricStack();
+					writeStartElementWithPrefix(XML_3MF_ELEMENT_VOLUMETRIC_COLOR, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
+					PVolumeDataColor pColor = m_pModelMeshObject->getVolumeData()->getColor();
 
-					//writeIntAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_FIELDID, pStackResource->getPackageResourceID()->getUniqueID());
-					//if (!fnMATRIX3_isIdentity(pColor->GetTransform())) {
-					//	writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_TRANSFORM, fnMATRIX3_toString(pColor->GetTransform()));
-					//}
+					PPackageResourceID pID = m_pModel->findPackageResourceID(pColor->getFieldReferenceID());
+					if (!pID)
+						throw CNMRException(NMR_ERROR_INVALIDMODELRESOURCE);
+					writeIntAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_FIELDID, pID->getModelResourceID());
 
-					//writeStartElementWithPrefix(XML_3MF_ELEMENT_VOLUMETRIC_COLOR_RED, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
-					//writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_CHANNEL, pColor->GetChannel(eModelColorChannel::MODELCOLORCHANNEL_RED));
-					//writeEndElement();
-
-					//writeStartElementWithPrefix(XML_3MF_ELEMENT_VOLUMETRIC_COLOR_GREEN, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
-					//writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_CHANNEL, pColor->GetChannel(eModelColorChannel::MODELCOLORCHANNEL_GREEN));
-					//writeEndElement();
-
-					//writeStartElementWithPrefix(XML_3MF_ELEMENT_VOLUMETRIC_COLOR_BLUE, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
-					//writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_CHANNEL, pColor->GetChannel(eModelColorChannel::MODELCOLORCHANNEL_BLUE));
+					if (!fnMATRIX3_isIdentity(pColor->getTransform())) {
+						writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_TRANSFORM, fnMATRIX3_toString(pColor->getTransform()));
+					}
 					writeEndElement();
-
-					writeFullEndElement();
 				}
 
 				writeFullEndElement();

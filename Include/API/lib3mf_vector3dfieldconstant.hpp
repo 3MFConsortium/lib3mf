@@ -42,7 +42,7 @@ Abstract: This is the class declaration of CVector3DFieldConstant
 #endif
 
 // Include custom headers here.
-
+#include "Model/Classes/NMR_ModelVector3DFieldConstant.h"
 
 namespace Lib3MF {
 namespace Impl {
@@ -58,6 +58,7 @@ private:
 	/**
 	* Put private members here.
 	*/
+	NMR::CModelVector3DFieldConstant* vector3dFieldConstant();
 
 protected:
 
@@ -70,7 +71,8 @@ public:
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-
+	CVector3DFieldConstant() = delete;
+	CVector3DFieldConstant(NMR::PModelVector3DFieldConstant pVector3DFieldConstant);
 
 	/**
 	* Public member functions to implement.
@@ -78,15 +80,15 @@ public:
 
 	Lib3MF_double GetValueX() override;
 
-	void SetValueX(const Lib3MF_double dValueX) override;
+	void SetValueX(const Lib3MF_double dValue) override;
 
 	Lib3MF_double GetValueY() override;
 
-	void SetValueY(const Lib3MF_double dValueY) override;
+	void SetValueY(const Lib3MF_double dValue) override;
 
 	Lib3MF_double GetValueZ() override;
 
-	void SetValueZ(const Lib3MF_double dValueZ) override;
+	void SetValueZ(const Lib3MF_double dValue) override;
 
 };
 

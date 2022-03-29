@@ -25,38 +25,44 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
+NMR_ModelReaderNode_Volumetric2201_Vector3DField.h covers the official 3MF volumetric extension.
 
-NMR_ModelScalarField.h defines the Model Vector3DField Class.
-A model scalar field is the base class of different scalar field specializations.
 --*/
 
-#ifndef __NMR_MODELVECTOR3DFIELD
-#define __NMR_MODELVECTOR3DFIELD
+#ifndef __NMR_MODELREADERNODE_VOLUMETRIC2201_VECTOR3DFIELD
+#define __NMR_MODELREADERNODE_VOLUMETRIC2201_VECTOR3DFIELD
 
-#include "Model/Classes/NMR_Model.h"
-#include "Model/Classes/NMR_ModelResource.h"
-#include "Common/NMR_Types.h"
-#include "Common/Math/NMR_Matrix.h"
-
-#include <vector>
+#include "Model/Reader/NMR_ModelReaderNode.h"
+#include "Model/Classes/NMR_ModelVector3DField.h"
 
 namespace NMR {
 
-	class CModel;
-	typedef std::shared_ptr <CModel> PModel;
-
-	class CModelVector3DField : public CModelResource { 
+	class CModelReaderNode_Volumetric2201_Vector3DField : public CModelReaderNode {
 	private:
-		std::string m_sName;
-	public:
-		CModelVector3DField() = delete;
-		CModelVector3DField(_In_ const ModelResourceID sID, _In_ CModel * pModel);
+	protected:
 
-		std::string getName();
-		void setName(_In_ std::string sName);
+		CModel * m_pModel;
+
+		ModelResourceID m_nID;
+
+		nfBool m_bHasName;
+		std::string m_sName;
+
+		PModelVector3DField m_pVector3DField;
+
+		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
+		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
+
+	public:
+		CModelReaderNode_Volumetric2201_Vector3DField() = delete;
+		CModelReaderNode_Volumetric2201_Vector3DField(_In_ CModel * pModel, _In_ PModelWarnings pWarnings);
+
+		virtual void parseXML(_In_ CXmlReader * pXMLReader);
+
 	};
 
-	typedef std::shared_ptr <CModelVector3DField> PModelVector3DField;
+	typedef std::shared_ptr<CModelReaderNode_Volumetric2201_Vector3DField> PModelReaderNode_Volumetric2201_Vector3DField;
+
 }
 
-#endif // __NMR_MODELVECTOR3DFIELD
+#endif // __NMR_MODELREADERNODE_VOLUMETRIC2201_VECTOR3DFIELD

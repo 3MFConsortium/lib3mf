@@ -25,11 +25,11 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
-NMR_ModelReaderNode_Volumetric2201_ScalarFieldComposed.cpp covers the official 3MF volumetric extension.
+NMR_ModelReaderNode_Volumetric2201_Vector3DFieldComposed.cpp covers the official 3MF volumetric extension.
 
 --*/
 
-#include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_Volumetric2201_ScalarFieldComposed.h"
+#include "Model/Reader/Volumetric2201/NMR_ModelReaderNode_Volumetric2201_Vector3DFieldComposed.h"
 
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Model/Classes/NMR_Model.h"
@@ -42,7 +42,7 @@ NMR_ModelReaderNode_Volumetric2201_ScalarFieldComposed.cpp covers the official 3
 namespace NMR {
 
 
-	CModelReaderNode_Volumetric2201_ScalarFieldComposed::CModelReaderNode_Volumetric2201_ScalarFieldComposed(_In_ CModel* pModel, _In_ PModelWarnings pWarnings)
+	CModelReaderNode_Volumetric2201_Vector3DFieldComposed::CModelReaderNode_Volumetric2201_Vector3DFieldComposed(_In_ CModel* pModel, _In_ PModelWarnings pWarnings)
 		: CModelReaderNode(pWarnings),
 		m_pModel(pModel)
 	{
@@ -50,7 +50,7 @@ namespace NMR {
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 	}
 
-	void CModelReaderNode_Volumetric2201_ScalarFieldComposed::parseXML(_In_ CXmlReader* pXMLReader)
+	void CModelReaderNode_Volumetric2201_Vector3DFieldComposed::parseXML(_In_ CXmlReader* pXMLReader)
 	{
 		// Parse name
 		parseName(pXMLReader);
@@ -64,77 +64,77 @@ namespace NMR {
 	}
 
 
-	void CModelReaderNode_Volumetric2201_ScalarFieldComposed::OnAttribute(_In_z_ const nfChar* pAttributeName, _In_z_ const nfChar* pAttributeValue)
+	void CModelReaderNode_Volumetric2201_Vector3DFieldComposed::OnAttribute(_In_z_ const nfChar* pAttributeName, _In_z_ const nfChar* pAttributeValue)
 	{
-		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_SCALARFIELDCOMPOSED_METHOD) == 0)
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_VECTOR3DFIELDCOMPOSED_METHOD) == 0)
 		{
 			if (m_bHasMethod)
-				throw CNMRException(NMR_ERROR_DUPLICATE_ATTRIBUTE_SCALARFIELDCOMPOSED);
-			m_eMethod = CModelScalarFieldComposed::methodFromString(pAttributeValue);
+				throw CNMRException(NMR_ERROR_DUPLICATE_ATTRIBUTE_VECTOR3DFIELDCOMPOSED);
+			m_eMethod = CModelVector3DFieldComposed::methodFromString(pAttributeValue);
 			m_bHasMethod = true;
 		}
-		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_SCALARFIELDCOMPOSED_SCALARFIELDID1) == 0)
+		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_VECTOR3DFIELDCOMPOSED_VECTOR3DFIELDID1) == 0)
 		{
-			if (m_bHasScalarFieldId1)
-				throw CNMRException(NMR_ERROR_DUPLICATE_ATTRIBUTE_SCALARFIELDCOMPOSED);
-			m_pScalarFieldId1 = m_pModel->findPackageResourceID(m_pModel->currentPath(), fnStringToUint32(pAttributeValue));
-			if (!m_pModel->findScalarField(m_pScalarFieldId1->getUniqueID()))
+			if (m_bHasVector3DFieldId1)
+				throw CNMRException(NMR_ERROR_DUPLICATE_ATTRIBUTE_VECTOR3DFIELDCOMPOSED);
+			m_pVector3DFieldId1 = m_pModel->findPackageResourceID(m_pModel->currentPath(), fnStringToUint32(pAttributeValue));
+			if (!m_pModel->findVector3DField(m_pVector3DFieldId1->getUniqueID()))
 				throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
 			// check that this is a scalar field
-			m_bHasScalarFieldId1 = true;
+			m_bHasVector3DFieldId1 = true;
 		}
-		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_SCALARFIELDCOMPOSED_SCALARFIELDID2) == 0)
+		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_VECTOR3DFIELDCOMPOSED_VECTOR3DFIELDID2) == 0)
 		{
-			if (m_bHasScalarFieldId2)
-				throw CNMRException(NMR_ERROR_DUPLICATE_ATTRIBUTE_SCALARFIELDCOMPOSED);
-			m_pScalarFieldId2 = m_pModel->findPackageResourceID(m_pModel->currentPath(), fnStringToUint32(pAttributeValue));
-			if (!m_pModel->findScalarField(m_pScalarFieldId2->getUniqueID()))
+			if (m_bHasVector3DFieldId2)
+				throw CNMRException(NMR_ERROR_DUPLICATE_ATTRIBUTE_VECTOR3DFIELDCOMPOSED);
+			m_pVector3DFieldId2 = m_pModel->findPackageResourceID(m_pModel->currentPath(), fnStringToUint32(pAttributeValue));
+			if (!m_pModel->findVector3DField(m_pVector3DFieldId2->getUniqueID()))
 				throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
 			// check that this is a scalar field
-			m_bHasScalarFieldId2 = true;
+			m_bHasVector3DFieldId2 = true;
 		}
-		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_SCALARFIELDCOMPOSED_SCALARFIELDMASKID) == 0)
+		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_VECTOR3DFIELDCOMPOSED_SCALARFIELDMASKID) == 0)
 		{
 			if (m_bHasScalarFieldIdMask)
-				throw CNMRException(NMR_ERROR_DUPLICATE_ATTRIBUTE_SCALARFIELDCOMPOSED);
+				throw CNMRException(NMR_ERROR_DUPLICATE_ATTRIBUTE_VECTOR3DFIELDCOMPOSED);
 			m_pScalarFieldIdMask = m_pModel->findPackageResourceID(m_pModel->currentPath(), fnStringToUint32(pAttributeValue));
-			if (!m_pModel->findScalarField(m_pScalarFieldIdMask->getUniqueID()))
+			if (!m_pModel->findVector3DField(m_pScalarFieldIdMask->getUniqueID()))
 				throw CNMRException(NMR_ERROR_RESOURCENOTFOUND);
 			// TODO check that this is a scalar field
 			m_bHasScalarFieldIdMask = true;
 		}
-		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_SCALARFIELDCOMPOSED_FACTOR1) == 0)
+		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_VECTOR3DFIELDCOMPOSED_FACTOR1) == 0)
 		{
 			if (m_bHasFactor1)
-				throw CNMRException(NMR_ERROR_DUPLICATE_ATTRIBUTE_SCALARFIELDCOMPOSED);
+				throw CNMRException(NMR_ERROR_DUPLICATE_ATTRIBUTE_VECTOR3DFIELDCOMPOSED);
 			m_dFactor1 = fnStringToDouble(pAttributeValue);
 			m_bHasFactor1 = true;
 		}
-		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_SCALARFIELDCOMPOSED_FACTOR2) == 0)
+		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_VECTOR3DFIELDCOMPOSED_FACTOR2) == 0)
 		{
 			if (m_bHasFactor2)
-				throw CNMRException(NMR_ERROR_DUPLICATE_ATTRIBUTE_SCALARFIELDCOMPOSED);
+				throw CNMRException(NMR_ERROR_DUPLICATE_ATTRIBUTE_VECTOR3DFIELDCOMPOSED);
 			m_dFactor2 = fnStringToDouble(pAttributeValue);
 			m_bHasFactor2 = true;
 		}
-		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_SCALARFIELDCOMPOSED_TRANSFORM1) == 0)
+		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_VECTOR3DFIELDCOMPOSED_TRANSFORM1) == 0)
 		{
 			if (m_bHasTransform1)
-				throw CNMRException(NMR_ERROR_DUPLICATE_ATTRIBUTE_SCALARFIELDCOMPOSED);
+				throw CNMRException(NMR_ERROR_DUPLICATE_ATTRIBUTE_VECTOR3DFIELDCOMPOSED);
 			m_mTransform1 = fnMATRIX3_fromString(pAttributeValue);
 			m_bHasTransform1 = true;
 		}
-		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_SCALARFIELDCOMPOSED_TRANSFORM2) == 0)
+		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_VECTOR3DFIELDCOMPOSED_TRANSFORM2) == 0)
 		{
 			if (m_bHasTransform2)
-				throw CNMRException(NMR_ERROR_DUPLICATE_ATTRIBUTE_SCALARFIELDCOMPOSED);
+				throw CNMRException(NMR_ERROR_DUPLICATE_ATTRIBUTE_VECTOR3DFIELDCOMPOSED);
 			m_mTransform2 = fnMATRIX3_fromString(pAttributeValue);
 			m_bHasTransform2 = true;
 		}
-		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_SCALARFIELDCOMPOSED_TRANSFORMMASK) == 0)
+		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_VECTOR3DFIELDCOMPOSED_TRANSFORMMASK) == 0)
 		{
 			if (m_bHasTransformMask)
-				throw CNMRException(NMR_ERROR_DUPLICATE_ATTRIBUTE_SCALARFIELDCOMPOSED);
+				throw CNMRException(NMR_ERROR_DUPLICATE_ATTRIBUTE_VECTOR3DFIELDCOMPOSED);
 			m_mTransformMask = fnMATRIX3_fromString(pAttributeValue);
 			m_bHasTransformMask = true;
 		}
@@ -142,7 +142,7 @@ namespace NMR {
 			m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE), mrwInvalidOptionalValue);
 	}
 
-	void CModelReaderNode_Volumetric2201_ScalarFieldComposed::OnNSChildElement(_In_z_ const nfChar* pChildName, _In_z_ const nfChar* pNameSpace, _In_ CXmlReader* pXMLReader)
+	void CModelReaderNode_Volumetric2201_Vector3DFieldComposed::OnNSChildElement(_In_z_ const nfChar* pChildName, _In_z_ const nfChar* pNameSpace, _In_ CXmlReader* pXMLReader)
 	{
 		__NMRASSERT(pChildName);
 		__NMRASSERT(pXMLReader);
@@ -153,26 +153,26 @@ namespace NMR {
 		}
 	}
 
-	PModelScalarFieldComposed CModelReaderNode_Volumetric2201_ScalarFieldComposed::makeScalarFieldComposed(ModelResourceID nID)
+	PModelVector3DFieldComposed CModelReaderNode_Volumetric2201_Vector3DFieldComposed::makeVector3DFieldComposed(ModelResourceID nID)
 	{
-		if (!(m_bHasMethod && m_bHasScalarFieldId1 && m_bHasScalarFieldId2))
+		if (!(m_bHasMethod && m_bHasVector3DFieldId1 && m_bHasVector3DFieldId2))
 		{
-			m_pWarnings->addException(CNMRException(NMR_ERROR_MISSING_ATTRIBUTE_SCALARFIELDCOMPOSED), eModelWarningLevel::mrwInvalidMandatoryValue);
+			m_pWarnings->addException(CNMRException(NMR_ERROR_MISSING_ATTRIBUTE_VECTOR3DFIELDCOMPOSED), eModelWarningLevel::mrwInvalidMandatoryValue);
 			return nullptr;
 		}
 		if (m_eMethod == eModelCompositionMethod::MODELCOMPOSITIONMETHOD_MASK && !m_bHasScalarFieldIdMask)
 		{
-			m_pWarnings->addException(CNMRException(NMR_ERROR_MISSING_ATTRIBUTE_SCALARFIELDCOMPOSED), eModelWarningLevel::mrwInvalidMandatoryValue);
+			m_pWarnings->addException(CNMRException(NMR_ERROR_MISSING_ATTRIBUTE_VECTOR3DFIELDCOMPOSED), eModelWarningLevel::mrwInvalidMandatoryValue);
 			return nullptr;
 		}
-		PModelScalarFieldComposed pOut = std::make_shared<CModelScalarFieldComposed>(nID, m_pModel);
+		PModelVector3DFieldComposed pOut = std::make_shared<CModelVector3DFieldComposed>(nID, m_pModel);
 		pOut->setFactor1(m_dFactor1);
 		pOut->setFactor2(m_dFactor2);
 		pOut->setMethod(m_eMethod);
-		pOut->ScalarFieldReference1()->setFieldReferenceID(m_pScalarFieldId1->getUniqueID());
-		pOut->ScalarFieldReference2()->setFieldReferenceID(m_pScalarFieldId2->getUniqueID());
-		pOut->ScalarFieldReference1()->setTransform(m_mTransform1);
-		pOut->ScalarFieldReference2()->setTransform(m_mTransform2);
+		pOut->Vector3DFieldReference1()->setFieldReferenceID(m_pVector3DFieldId1->getUniqueID());
+		pOut->Vector3DFieldReference2()->setFieldReferenceID(m_pVector3DFieldId2->getUniqueID());
+		pOut->Vector3DFieldReference1()->setTransform(m_mTransform1);
+		pOut->Vector3DFieldReference2()->setTransform(m_mTransform2);
 		if (m_eMethod == eModelCompositionMethod::MODELCOMPOSITIONMETHOD_MASK)
 		{
 			pOut->ScalarFieldReferenceMask()->setFieldReferenceID(m_pScalarFieldIdMask->getUniqueID());

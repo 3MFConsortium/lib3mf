@@ -115,7 +115,18 @@ IVolumeDataColor * CVolumeData::GetColor()
 
 IVolumeDataColor * CVolumeData::CreateNewColor(IVector3DField* pTheVector3DField)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	NMR::CModel* pModel = m_pMeshObject->getModel();
+
+	NMR::PModelResource pResource = pModel->findResource(pTheVector3DField->GetUniqueResourceID());
+	NMR::PModelVector3DField pVector3DField = std::dynamic_pointer_cast<NMR::CModelVector3DField>(pResource);
+
+	if (!pVector3DField)
+	{
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+	}
+
+	NMR::PVolumeDataColor pColor = m_pVolumeData->createColor(pVector3DField);
+	return new CVolumeDataColor(pColor);
 }
 
 void CVolumeData::RemoveColor()

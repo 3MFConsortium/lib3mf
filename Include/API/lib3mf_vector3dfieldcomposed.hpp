@@ -42,7 +42,7 @@ Abstract: This is the class declaration of CVector3DFieldComposed
 #endif
 
 // Include custom headers here.
-
+#include "Model/Classes/NMR_ModelVector3DFieldComposed.h"
 
 namespace Lib3MF {
 namespace Impl {
@@ -58,7 +58,7 @@ private:
 	/**
 	* Put private members here.
 	*/
-
+	NMR::CModelVector3DFieldComposed* vector3DFieldComposed();
 protected:
 
 	/**
@@ -70,7 +70,8 @@ public:
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-
+	CVector3DFieldComposed() = delete;
+	CVector3DFieldComposed(NMR::PModelVector3DFieldComposed pVector3DFieldComposed);
 
 	/**
 	* Public member functions to implement.

@@ -42,7 +42,7 @@ Abstract: This is the class declaration of CVector3DField
 #endif
 
 // Include custom headers here.
-
+#include "Model/Classes/NMR_ModelVector3DField.h"
 
 namespace Lib3MF {
 namespace Impl {
@@ -64,13 +64,15 @@ protected:
 	/**
 	* Put protected members here.
 	*/
+	NMR::CModelVector3DField* vector3DField();
 
 public:
 
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
-
+	CVector3DField() = delete;
+	CVector3DField(NMR::PModelVector3DField pResource);
 
 	/**
 	* Public member functions to implement.

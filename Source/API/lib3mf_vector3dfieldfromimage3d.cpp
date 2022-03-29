@@ -28,11 +28,12 @@ Abstract: This is a stub class definition of CVector3DFieldFromImage3D
 
 */
 
-#include "lib3mf_vector3dfieldfromimage3d.hpp"
+#include "lib3mf_vector3Dfieldfromimage3d.hpp"
+#include "lib3mf_image3d.hpp"
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
-
+#include <memory>
 
 using namespace Lib3MF::Impl;
 
@@ -40,53 +41,73 @@ using namespace Lib3MF::Impl;
  Class definition of CVector3DFieldFromImage3D 
 **************************************************************************************************************************/
 
+CVector3DFieldFromImage3D::CVector3DFieldFromImage3D(NMR::PModelVector3DFieldFromImage3D pVector3DFieldFromImage3D)
+	:CVector3DField(pVector3DFieldFromImage3D), CResource(pVector3DFieldFromImage3D)
+{
+
+}
+
+NMR::CModelVector3DFieldFromImage3D* CVector3DFieldFromImage3D::vector3DFieldFromImage3D()
+{
+	NMR::CModelVector3DFieldFromImage3D* pFieldFromImage3D = dynamic_cast<NMR::CModelVector3DFieldFromImage3D*>(resource().get());
+	if (pFieldFromImage3D == nullptr)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDOBJECT);
+	return pFieldFromImage3D;
+}
+
 IImage3D * CVector3DFieldFromImage3D::GetImage()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	NMR::PModelResource pResource = model()->findResource(vector3DFieldFromImage3D()->getImage3DResourceID());
+	return new CImage3D(pResource);
 }
 
 void CVector3DFieldFromImage3D::SetImage(IImage3D* pImage3D)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	vector3DFieldFromImage3D()->setImage3DResourceID(model()->findPackageResourceID(pImage3D->GetUniqueResourceID()));
 }
 
 void CVector3DFieldFromImage3D::SetFilter(const Lib3MF::eTextureFilter eFilter)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	vector3DFieldFromImage3D()->setFilter(NMR::eModelTextureFilter(eFilter));
 }
 
 Lib3MF::eTextureFilter CVector3DFieldFromImage3D::GetFilter()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return eTextureFilter(vector3DFieldFromImage3D()->getFilter());
 }
 
 void CVector3DFieldFromImage3D::SetTileStyles(const Lib3MF::eTextureTileStyle eTileStyleU, const Lib3MF::eTextureTileStyle eTileStyleV, const Lib3MF::eTextureTileStyle eTileStyleW)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	vector3DFieldFromImage3D()->setTileStyleU(NMR::eModelTextureTileStyle(eTileStyleU));
+	vector3DFieldFromImage3D()->setTileStyleV(NMR::eModelTextureTileStyle(eTileStyleV));
+	vector3DFieldFromImage3D()->setTileStyleW(NMR::eModelTextureTileStyle(eTileStyleW));
 }
 
 void CVector3DFieldFromImage3D::GetTileStyles(Lib3MF::eTextureTileStyle & eTileStyleU, Lib3MF::eTextureTileStyle & eTileStyleV, Lib3MF::eTextureTileStyle & eTileStyleW)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	eTileStyleU = eTextureTileStyle(vector3DFieldFromImage3D()->getTileStyleU());
+	eTileStyleV = eTextureTileStyle(vector3DFieldFromImage3D()->getTileStyleV());
+	eTileStyleW = eTextureTileStyle(vector3DFieldFromImage3D()->getTileStyleW());
+
 }
 
 Lib3MF_double CVector3DFieldFromImage3D::GetOffset()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return vector3DFieldFromImage3D()->getOffset();
 }
 
 void CVector3DFieldFromImage3D::SetOffset(const Lib3MF_double dOffset)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	vector3DFieldFromImage3D()->setOffset(dOffset);
 }
 
 Lib3MF_double CVector3DFieldFromImage3D::GetScale()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return vector3DFieldFromImage3D()->getScale();
 }
 
 void CVector3DFieldFromImage3D::SetScale(const Lib3MF_double dScale)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	vector3DFieldFromImage3D()->setScale(dScale);
 }
 

@@ -25,38 +25,41 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Abstract:
+NMR_ModelReaderNode_Volumetric2201_Vector3DFieldConstant.h covers the official 3MF volumetric extension.
 
-NMR_ModelScalarField.h defines the Model Vector3DField Class.
-A model scalar field is the base class of different scalar field specializations.
 --*/
 
-#ifndef __NMR_MODELVECTOR3DFIELD
-#define __NMR_MODELVECTOR3DFIELD
+#ifndef __NMR_MODELREADERNODE_VOLUMETRIC2201_VECTOR3DFIELDCONSTANT
+#define __NMR_MODELREADERNODE_VOLUMETRIC2201_VECTOR3DFIELDCONSTANT
 
-#include "Model/Classes/NMR_Model.h"
-#include "Model/Classes/NMR_ModelResource.h"
-#include "Common/NMR_Types.h"
-#include "Common/Math/NMR_Matrix.h"
-
-#include <vector>
+#include "Model/Reader/NMR_ModelReaderNode.h"
+#include "Model/Classes/NMR_ModelVector3DFieldConstant.h"
 
 namespace NMR {
 
-	class CModel;
-	typedef std::shared_ptr <CModel> PModel;
-
-	class CModelVector3DField : public CModelResource { 
+	class CModelReaderNode_Volumetric2201_Vector3DFieldConstant : public CModelReaderNode {
 	private:
-		std::string m_sName;
-	public:
-		CModelVector3DField() = delete;
-		CModelVector3DField(_In_ const ModelResourceID sID, _In_ CModel * pModel);
+	protected:
 
-		std::string getName();
-		void setName(_In_ std::string sName);
+		CModelVector3DFieldConstant* m_pVector3DFieldConstant;
+		CModel* m_pModel;
+
+		nfBool m_bHasValueX = false;
+		nfBool m_bHasValueY = false;
+		nfBool m_bHasValueZ = false;
+
+		virtual void OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue);
+		virtual void OnNSChildElement(_In_z_ const nfChar * pChildName, _In_z_ const nfChar * pNameSpace, _In_ CXmlReader * pXMLReader);
+
+	public:
+		CModelReaderNode_Volumetric2201_Vector3DFieldConstant() = delete;
+		CModelReaderNode_Volumetric2201_Vector3DFieldConstant(_In_ CModel* pModel, _In_ CModelVector3DFieldConstant* pVector3DFieldFromImage3D, _In_ PModelWarnings pWarnings);
+
+		virtual void parseXML(_In_ CXmlReader * pXMLReader);
 	};
 
-	typedef std::shared_ptr <CModelVector3DField> PModelVector3DField;
+	typedef std::shared_ptr<CModelReaderNode_Volumetric2201_Vector3DFieldConstant> PModelReaderNode_Volumetric2201_Vector3DFieldConstant;
+
 }
 
-#endif // __NMR_MODELVECTOR3DFIELD
+#endif // __NMR_MODELREADERNODE_VOLUMETRIC2201_VECTOR3DFIELDCONSTANT

@@ -32,56 +32,82 @@ Abstract: This is a stub class definition of CVector3DFieldComposed
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
-
+#include "lib3mf_vector3dfieldreference.hpp"
+#include "lib3mf_scalarfieldreference.hpp"
 
 using namespace Lib3MF::Impl;
 
 /*************************************************************************************************************************
- Class definition of CVector3DFieldComposed 
+ Class definition of CVector3DFieldComposed
 **************************************************************************************************************************/
+CVector3DFieldComposed::CVector3DFieldComposed(NMR::PModelVector3DFieldComposed pVector3DFieldComposed)
+	:CVector3DField(pVector3DFieldComposed), CResource(pVector3DFieldComposed)
+{
+
+}
+
+NMR::CModelVector3DFieldComposed* CVector3DFieldComposed::vector3DFieldComposed()
+{
+	NMR::CModelVector3DFieldComposed* pFieldComposed = dynamic_cast<NMR::CModelVector3DFieldComposed*>(resource().get());
+	if (pFieldComposed == nullptr)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDOBJECT);
+	return pFieldComposed;
+}
 
 void CVector3DFieldComposed::SetMethod(const Lib3MF::eCompositionMethod eTheMethod)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	vector3DFieldComposed()->setMethod(NMR::eModelCompositionMethod(eTheMethod));
 }
 
 Lib3MF::eCompositionMethod CVector3DFieldComposed::GetMethod()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return Lib3MF::eCompositionMethod(vector3DFieldComposed()->getMethod());
 }
 
 Lib3MF_double CVector3DFieldComposed::GetFactor1()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return vector3DFieldComposed()->getFactor1();
 }
 
 void CVector3DFieldComposed::SetFactor1(const Lib3MF_double dFactor1)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	vector3DFieldComposed()->setFactor1(dFactor1);
 }
 
 Lib3MF_double CVector3DFieldComposed::GetFactor2()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return vector3DFieldComposed()->getFactor2();
 }
 
 void CVector3DFieldComposed::SetFactor2(const Lib3MF_double dFactor2)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	vector3DFieldComposed()->setFactor2(dFactor2);
 }
 
-IVector3DFieldReference * CVector3DFieldComposed::Vector3DFieldReference1()
+IVector3DFieldReference* CVector3DFieldComposed::Vector3DFieldReference1()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	auto pVector3DFieldReference1 = vector3DFieldComposed()->Vector3DFieldReference1();
+	if (!pVector3DFieldReference1) {
+		return nullptr;
+	}
+	return new CVector3DFieldReference(pVector3DFieldReference1);
 }
 
-IVector3DFieldReference * CVector3DFieldComposed::Vector3DFieldReference2()
+IVector3DFieldReference* CVector3DFieldComposed::Vector3DFieldReference2()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	auto pVector3DFieldReference2 = vector3DFieldComposed()->Vector3DFieldReference2();
+	if (!pVector3DFieldReference2) {
+		return nullptr;
+	}
+	return new CVector3DFieldReference(pVector3DFieldReference2);
 }
 
-IScalarFieldReference * CVector3DFieldComposed::ScalarFieldReferenceMask()
+IScalarFieldReference* CVector3DFieldComposed::ScalarFieldReferenceMask()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	auto pScalarFieldReferenceMask = vector3DFieldComposed()->ScalarFieldReferenceMask();
+	if (!pScalarFieldReferenceMask) {
+		return nullptr;
+	}
+	return new CScalarFieldReference(pScalarFieldReferenceMask);
 }
 

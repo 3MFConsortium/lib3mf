@@ -28,11 +28,13 @@ Abstract: This is a stub class definition of CVector3DField
 
 */
 
-#include "lib3mf_vector3dfield.hpp"
+#include "lib3mf_vector3Dfield.hpp"
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.
-
+#include "Model/Classes/NMR_ModelVector3DFieldFromImage3D.h"
+#include "Model/Classes/NMR_ModelVector3DFieldComposed.h"
+#include "Model/Classes/NMR_ModelVector3DFieldConstant.h"
 
 using namespace Lib3MF::Impl;
 
@@ -40,28 +42,43 @@ using namespace Lib3MF::Impl;
  Class definition of CVector3DField 
 **************************************************************************************************************************/
 
+CVector3DField::CVector3DField(NMR::PModelVector3DField pResource)
+	:CResource(pResource)
+{
+
+}
+
+NMR::CModelVector3DField* CVector3DField::vector3DField()
+{
+	NMR::CModelVector3DField* pVector3DField = dynamic_cast<NMR::CModelVector3DField*> (resource().get());
+	if (pVector3DField == nullptr)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_RESOURCENOTFOUND);
+
+	return pVector3DField;
+}
+
 std::string CVector3DField::GetName()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return vector3DField()->getName();
 }
 
 void CVector3DField::SetName(const std::string & sName)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	vector3DField()->setName(sName);
 }
 
 bool CVector3DField::IsFromImage3D()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return (dynamic_cast<NMR::CModelVector3DFieldFromImage3D*>(vector3DField()) != nullptr);
 }
 
 bool CVector3DField::IsConstant()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return (dynamic_cast<NMR::CModelVector3DFieldConstant*>(vector3DField()) != nullptr);
 }
 
 bool CVector3DField::IsComposed()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return (dynamic_cast<NMR::CModelVector3DFieldComposed*>(vector3DField()) != nullptr);
 }
 

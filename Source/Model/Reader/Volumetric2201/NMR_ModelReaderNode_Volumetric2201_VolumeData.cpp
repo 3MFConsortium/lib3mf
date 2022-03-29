@@ -106,12 +106,11 @@ namespace NMR {
 			}
 			else if (strcmp(pChildName, XML_3MF_ELEMENT_VOLUMETRIC_COLOR) == 0)
 			{
-				//PModelReaderNode_Volumetric2201_Color pXMLNode = std::make_shared<CModelReaderNode_Volumetric2201_Color>(m_pWarnings);
-				//pXMLNode->parseXML(pXMLReader);
+				PModelReaderNode_Volumetric2201_Color pXMLNode = std::make_shared<CModelReaderNode_Volumetric2201_Color>(m_pWarnings);
+				pXMLNode->parseXML(pXMLReader);
 
-				//PVolumeDataColor pColor = pXMLNode->MakeColor(m_pModel);
-				//m_pVolumeData->SetColor(pColor);
-				throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
+				PVolumeDataColor pColor = pXMLNode->MakeColor(m_pModel);
+				m_pVolumeData->setColor(pColor);
 			}
 			else
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);

@@ -91,12 +91,12 @@ void CompareImage3Ds(Lib3MF::PModel modelA, Lib3MF::PImage3D i1, Lib3MF::PModel 
 void CompareImageStacks(Lib3MF::PImageStack i1, Lib3MF::PImageStack i2);
 
 void CompareScalarFields(Lib3MF::PModel modelA, Lib3MF::PScalarField A, Lib3MF::PModel modelB, Lib3MF::PScalarField B);
-void CompareScalarFieldConstant(Lib3MF::PModel modelA, Lib3MF::PScalarFieldConstant A, Lib3MF::PModel modelB, Lib3MF::PScalarFieldConstant B);
+void CompareScalarFieldConstant(Lib3MF::PScalarFieldConstant A, Lib3MF::PScalarFieldConstant B);
 void CompareScalarFieldFromImage3D(Lib3MF::PModel modelA, Lib3MF::PScalarFieldFromImage3D A, Lib3MF::PModel modelB, Lib3MF::PScalarFieldFromImage3D B);
 void CompareScalarFieldComposed(Lib3MF::PModel modelA, Lib3MF::PScalarFieldComposed A, Lib3MF::PModel modelB, Lib3MF::PScalarFieldComposed B);
 
 void CompareVector3DFields(Lib3MF::PModel modelA, Lib3MF::PVector3DField A, Lib3MF::PModel modelB, Lib3MF::PVector3DField B);
-void CompareVector3DFieldConstant(Lib3MF::PModel modelA, Lib3MF::PVector3DFieldConstant A, Lib3MF::PModel modelB, Lib3MF::PVector3DFieldConstant B);
+void CompareVector3DFieldConstant(Lib3MF::PVector3DFieldConstant A, Lib3MF::PVector3DFieldConstant B);
 void CompareVector3DFieldFromImage3D(Lib3MF::PModel modelA, Lib3MF::PVector3DFieldFromImage3D A, Lib3MF::PModel modelB, Lib3MF::PVector3DFieldFromImage3D B);
 void CompareVector3DFieldComposed(Lib3MF::PModel modelA, Lib3MF::PVector3DFieldComposed A, Lib3MF::PModel modelB, Lib3MF::PVector3DFieldComposed B);
 

@@ -35,14 +35,14 @@ Abstract: This is the class declaration of CVector3DFieldFromImage3D
 #include "lib3mf_interfaces.hpp"
 
 // Parent classes
-#include "lib3mf_vector3dfield.hpp"
+#include "lib3mf_vector3Dfield.hpp"
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable : 4250)
 #endif
 
 // Include custom headers here.
-
+#include "Model/Classes/NMR_ModelVector3DFieldFromImage3D.h"
 
 namespace Lib3MF {
 namespace Impl {
@@ -58,6 +58,7 @@ private:
 	/**
 	* Put private members here.
 	*/
+	NMR::CModelVector3DFieldFromImage3D* vector3DFieldFromImage3D();
 
 protected:
 
@@ -66,10 +67,11 @@ protected:
 	*/
 
 public:
-
 	/**
 	* Put additional public members here. They will not be visible in the external API.
 	*/
+	CVector3DFieldFromImage3D() = delete;
+	CVector3DFieldFromImage3D(NMR::PModelVector3DFieldFromImage3D pVector3DFieldFromImage3D);
 
 
 	/**

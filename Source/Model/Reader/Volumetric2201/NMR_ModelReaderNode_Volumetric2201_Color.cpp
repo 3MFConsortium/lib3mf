@@ -46,11 +46,6 @@ namespace NMR {
 	CModelReaderNode_Volumetric2201_Color::CModelReaderNode_Volumetric2201_Color(_In_ PModelWarnings pWarnings)
 		: CModelReaderNode(pWarnings)
 	{
-		m_bHasFieldID = false;
-		m_bHasTransform = false;
-		m_bHasRedChannel = false;
-		m_bHasGreenChannel = false;
-		m_bHasBlueChannel = false;
 	}
 
 	void CModelReaderNode_Volumetric2201_Color::parseXML(_In_ CXmlReader * pXMLReader)
@@ -70,9 +65,6 @@ namespace NMR {
 		if (!pModel)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 
-		if (!m_bHasRedChannel || !m_bHasRedChannel || !m_bHasRedChannel)
-			throw CNMRException(NMR_ERROR_INVALIDPARAM);
-
 		if (!m_bHasFieldID) {
 			throw CNMRException(NMR_ERROR_MISSINGVOLUMEDATAFIELDID);
 		}
@@ -81,23 +73,16 @@ namespace NMR {
 		if (!pID.get()) {
 			throw CNMRException(NMR_ERROR_UNKNOWNMODELRESOURCE);
 		}
+		
+		auto pVector3DField = pModel->findVector3DField(pID->getUniqueID());
+		if (!pVector3DField.get()) {
+			throw CNMRException(NMR_ERROR_INVALIDMODELRESOURCE);
+		}
 
-		throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
-
-		//PModelVolumetricStack pStack = pModel->findVolumetricStack(pID->getUniqueID());
-		//if (!pStack.get()) {
-		//	throw CNMRException(NMR_ERROR_UNKNOWNMODELRESOURCE);
-		//}
-
-		//PVolumeDataColor pColor = std::make_shared<CVolumeDataColor>(pStack);
-		//pColor->SetChannel(eModelColorChannel::MODELCOLORCHANNEL_RED,   m_sRedChannel);
-		//pColor->SetChannel(eModelColorChannel::MODELCOLORCHANNEL_GREEN, m_sGreenChannel);
-		//pColor->SetChannel(eModelColorChannel::MODELCOLORCHANNEL_BLUE,  m_sBlueChannel);
-
-		//if (m_bHasTransform)
-		//	pColor->SetTransform(m_Transform);
-			
-		//return pColor;
+		PVolumeDataColor pColor = std::make_shared<CVolumeDataColor>(pVector3DField);
+		if (m_bHasTransform)
+			pColor->setTransform(m_Transform);
+		return pColor;
 	}
 
 	void CModelReaderNode_Volumetric2201_Color::OnAttribute(_In_z_ const nfChar * pAttributeName, _In_z_ const nfChar * pAttributeValue)
@@ -105,16 +90,14 @@ namespace NMR {
 		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_VOLUMEDATA_TRANSFORM) == 0) {
 			if (m_bHasTransform)
 				throw CNMRException(NMR_ERROR_DUPLICATEVOLUMEDATATRANSFORM);
+			m_bHasTransform = true;
 
 			m_Transform = fnMATRIX3_fromString(pAttributeValue);
-
-			m_bHasTransform = true;
 		}
 
 		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_VOLUMEDATA_FIELDID) == 0) {
 			if (m_bHasFieldID)
 				throw CNMRException(NMR_ERROR_DUPLICATEVOLUMEDATAFIELDID);
-
 			m_bHasFieldID = true;
 
 			m_nFieldID = fnStringToUint32(pAttributeValue);
@@ -127,49 +110,5 @@ namespace NMR {
 		__NMRASSERT(pXMLReader);
 		__NMRASSERT(pNameSpace);
 
-		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_VOLUMETRICSPEC) == 0) {
-			if (strcmp(pChildName, XML_3MF_ELEMENT_VOLUMETRIC_COLOR_RED) == 0)
-			{
-				//PModelReaderNode_Volumetric2201_ColorChannel pXMLNode = std::make_shared<CModelReaderNode_Volumetric2201_ColorChannel>(m_pWarnings);
-				//pXMLNode->parseXML(pXMLReader);
-
-				//if (m_bHasRedChannel)
-				//	throw CNMRException(NMR_ERROR_DUPLICATECOLORVALUE);
-
-				//m_sRedChannel = pXMLNode->getChannel();
-				//if (m_sRedChannel == "")
-				//	throw CNMRException(NMR_ERROR_MISSINGVOLUMETRICDSTCHANNELNAME);
-
-				//m_bHasRedChannel = true;
-			}
-			else if (strcmp(pChildName, XML_3MF_ELEMENT_VOLUMETRIC_COLOR_GREEN) == 0)
-			{
-				//PModelReaderNode_Volumetric2201_ColorChannel pXMLNode = std::make_shared<CModelReaderNode_Volumetric2201_ColorChannel>(m_pWarnings);
-				//pXMLNode->parseXML(pXMLReader);
-
-				//if (m_bHasGreenChannel)
-				//	throw CNMRException(NMR_ERROR_DUPLICATECOLORVALUE);
-
-				//m_sGreenChannel = pXMLNode->getChannel();
-				//if (m_sGreenChannel == "")
-				//	throw CNMRException(NMR_ERROR_MISSINGVOLUMETRICDSTCHANNELNAME);
-
-				//m_bHasGreenChannel = true;
-			}
-			else if (strcmp(pChildName, XML_3MF_ELEMENT_VOLUMETRIC_COLOR_BLUE) == 0)
-			{
-				//PModelReaderNode_Volumetric2201_ColorChannel pXMLNode = std::make_shared<CModelReaderNode_Volumetric2201_ColorChannel>(m_pWarnings);
-				//pXMLNode->parseXML(pXMLReader);
-
-				//if (m_bHasBlueChannel)
-				//	throw CNMRException(NMR_ERROR_DUPLICATECOLORVALUE);
-
-				//m_sBlueChannel = pXMLNode->getChannel();
-				//if (m_sBlueChannel == "")
-				//	throw CNMRException(NMR_ERROR_MISSINGVOLUMETRICDSTCHANNELNAME);
-
-				//m_bHasBlueChannel = true;
-			}
-		}
 	}
 }
