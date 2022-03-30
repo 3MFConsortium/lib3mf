@@ -1730,6 +1730,18 @@ public:
 	virtual Lib3MF::eCompositionMethod GetMethod() = 0;
 
 	/**
+	* IVector3DFieldComposed::SetSpace - Sets the space in which composition takes place.
+	* @param[in] eTheSpace - Sets the composition space.
+	*/
+	virtual void SetSpace(const Lib3MF::eCompositionSpace eTheSpace) = 0;
+
+	/**
+	* IVector3DFieldComposed::GetSpace - Gets the space in which composition takes place.
+	* @return Gets the composition space.
+	*/
+	virtual Lib3MF::eCompositionSpace GetSpace() = 0;
+
+	/**
 	* IVector3DFieldComposed::GetFactor1 - returns the factor vector3d field 1 is multiplied with when composited
 	* @return the factor vector3d field 1 is multiplied with when composited
 	*/

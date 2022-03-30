@@ -71,6 +71,14 @@ namespace NMR {
 	{
 		m_eMethod = eMethod;
 	}
+	eModelCompositionSpace CModelVector3DFieldComposed::getSpace() const
+	{
+		return m_eSpace;
+	}
+	void CModelVector3DFieldComposed::setSpace(eModelCompositionSpace eCompositionSpace)
+	{
+		m_eSpace = eCompositionSpace;
+	}
 
 	PVector3DFieldReference CModelVector3DFieldComposed::Vector3DFieldReference1()
 	{
@@ -101,17 +109,37 @@ namespace NMR {
 	eModelCompositionMethod CModelVector3DFieldComposed::methodFromString(_In_ std::string sValue)
 	{
 		if (strcmp(sValue.c_str(), XML_3MF_ATTRIBUTE_SCALARFIELDCOMPOSED_METHOD_MASK) == 0)
-			return MODELCOMPOSITIONMETHOD_MASK;
+			return eModelCompositionMethod::MODELCOMPOSITIONMETHOD_MASK;
 		if (strcmp(sValue.c_str(), XML_3MF_ATTRIBUTE_SCALARFIELDCOMPOSED_METHOD_MIN) == 0)
-			return MODELCOMPOSITIONMETHOD_MIN;
+			return eModelCompositionMethod::MODELCOMPOSITIONMETHOD_MIN;
 		if (strcmp(sValue.c_str(), XML_3MF_ATTRIBUTE_SCALARFIELDCOMPOSED_METHOD_MAX) == 0)
-			return MODELCOMPOSITIONMETHOD_MAX;
+			return eModelCompositionMethod::MODELCOMPOSITIONMETHOD_MAX;
 		if (strcmp(sValue.c_str(), XML_3MF_ATTRIBUTE_SCALARFIELDCOMPOSED_METHOD_WEIGHTEDSUM) == 0)
-			return MODELCOMPOSITIONMETHOD_WEIGHTEDSUM;
+			return eModelCompositionMethod::MODELCOMPOSITIONMETHOD_WEIGHTEDSUM;
 		if (strcmp(sValue.c_str(), XML_3MF_ATTRIBUTE_SCALARFIELDCOMPOSED_METHOD_MULTIPLY) == 0)
-			return MODELCOMPOSITIONMETHOD_MULTIPLY;
+			return eModelCompositionMethod::MODELCOMPOSITIONMETHOD_MULTIPLY;
 		throw CNMRException(-1); // TODO: #define NMR_ERROR_INVALIDCOMPOSITIONMETHOD
-		return MODELCOMPOSITIONMETHOD_MAX;
+		return eModelCompositionMethod::MODELCOMPOSITIONMETHOD_MAX;
+	}
+
+	std::string CModelVector3DFieldComposed::spaceToString(_In_ eModelCompositionSpace eSpace)
+	{
+		switch (eSpace) {
+		case eModelCompositionSpace::MODELCOMPOSITIONSPACE_RAW: return XML_3MF_ATTRIBUTE_VECTOR3DFIELDCOMPOSED_SPACE_RAW;
+		case eModelCompositionSpace::MODELCOMPOSITIONSPACE_LINEAR: return XML_3MF_ATTRIBUTE_VECTOR3DFIELDCOMPOSED_SPACE_LINEAR;
+		default:
+			return XML_3MF_ATTRIBUTE_VECTOR3DFIELDCOMPOSED_SPACE_RAW;
+		}
+	}
+
+	eModelCompositionSpace CModelVector3DFieldComposed::spaceFromString(_In_ std::string sValue)
+	{
+		if (strcmp(sValue.c_str(), XML_3MF_ATTRIBUTE_VECTOR3DFIELDCOMPOSED_SPACE_RAW) == 0)
+			return eModelCompositionSpace::MODELCOMPOSITIONSPACE_RAW;
+		if (strcmp(sValue.c_str(), XML_3MF_ATTRIBUTE_VECTOR3DFIELDCOMPOSED_SPACE_LINEAR) == 0)
+			return eModelCompositionSpace::MODELCOMPOSITIONSPACE_LINEAR;
+		throw CNMRException(-1); // TODO: #define NMR_ERROR_INVALIDCOMPOSITIONSPACE
+		return eModelCompositionSpace::MODELCOMPOSITIONSPACE_RAW;
 	}
 
 }

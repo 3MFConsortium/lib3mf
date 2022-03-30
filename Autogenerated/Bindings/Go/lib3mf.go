@@ -170,6 +170,12 @@ const (
 		eCompositionMethod_Mask = 4
 )
 
+type ELib3MFCompositionSpace int
+const (
+		eCompositionSpace_Raw = 0
+		eCompositionSpace_Linear = 1
+)
+
 type ELib3MFEncryptionAlgorithm int
 const (
 		eEncryptionAlgorithm_AES256_GCM = 1
@@ -1987,6 +1993,24 @@ type Lib3MFGoInterface interface {
 	* @return Gets the composition method.
 	*/
 	Vector3DFieldComposed_GetMethod(Vector3DFieldComposed Lib3MFHandle) (ELib3MFCompositionMethod, error)
+
+
+	/**
+	* Sets the space in which composition takes place.
+	*
+	* @param[in] Vector3DFieldComposed - Vector3DFieldComposed instance.
+	* @param[in] eTheSpace - Sets the composition space.
+	*/
+	Vector3DFieldComposed_SetSpace(Vector3DFieldComposed Lib3MFHandle, eTheSpace ELib3MFCompositionSpace) (error)
+
+
+	/**
+	* Gets the space in which composition takes place.
+	*
+	* @param[in] Vector3DFieldComposed - Vector3DFieldComposed instance.
+	* @return Gets the composition space.
+	*/
+	Vector3DFieldComposed_GetSpace(Vector3DFieldComposed Lib3MFHandle) (ELib3MFCompositionSpace, error)
 
 
 	/**
@@ -6244,6 +6268,16 @@ func (instance *Lib3MFVector3DFieldComposed) SetMethod(eTheMethod ELib3MFComposi
 func (instance *Lib3MFVector3DFieldComposed) GetMethod() (ELib3MFCompositionMethod, error) {
 	eTheMethod, error := instance.Interface.Vector3DFieldComposed_GetMethod(instance.Handle)
 	return eTheMethod, error
+}
+
+func (instance *Lib3MFVector3DFieldComposed) SetSpace(eTheSpace ELib3MFCompositionSpace) (error) {
+	error := instance.Interface.Vector3DFieldComposed_SetSpace(instance.Handle, eTheSpace)
+	return error
+}
+
+func (instance *Lib3MFVector3DFieldComposed) GetSpace() (ELib3MFCompositionSpace, error) {
+	eTheSpace, error := instance.Interface.Vector3DFieldComposed_GetSpace(instance.Handle)
+	return eTheSpace, error
 }
 
 func (instance *Lib3MFVector3DFieldComposed) GetFactor1() (float64, error) {

@@ -325,6 +325,11 @@ namespace Lib3MF {
     Mask = 4
   };
   
+  enum class eCompositionSpace : Lib3MF_int32 {
+    Raw = 0,
+    Linear = 1
+  };
+  
   enum class eEncryptionAlgorithm : Lib3MF_int32 {
     AES256_GCM = 1
   };
@@ -513,6 +518,7 @@ typedef Lib3MF::eProgressIdentifier eLib3MFProgressIdentifier;
 typedef Lib3MF::eBlendMethod eLib3MFBlendMethod;
 typedef Lib3MF::eChannelName eLib3MFChannelName;
 typedef Lib3MF::eCompositionMethod eLib3MFCompositionMethod;
+typedef Lib3MF::eCompositionSpace eLib3MFCompositionSpace;
 typedef Lib3MF::eEncryptionAlgorithm eLib3MFEncryptionAlgorithm;
 typedef Lib3MF::eWrappingAlgorithm eLib3MFWrappingAlgorithm;
 typedef Lib3MF::eMgfAlgorithm eLib3MFMgfAlgorithm;

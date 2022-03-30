@@ -47,6 +47,9 @@ namespace NMR {
 	public:
 		nfBool m_bHasMethod = false;
 		eModelCompositionMethod m_eMethod = eModelCompositionMethod::MODELCOMPOSITIONMETHOD_MAX;
+		
+		nfBool m_bHasSpace = false;
+		eModelCompositionSpace m_eSpace = eModelCompositionSpace::MODELCOMPOSITIONSPACE_RAW;
 
 		nfBool m_bHasVector3DFieldId1 = false;
 		PPackageResourceID m_pVector3DFieldId1 = nullptr;

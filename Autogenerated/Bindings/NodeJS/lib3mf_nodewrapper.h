@@ -786,6 +786,8 @@ private:
     static v8::Persistent<v8::Function> constructor;
     static void SetMethod (const v8::FunctionCallbackInfo<v8::Value>& args);
     static void GetMethod (const v8::FunctionCallbackInfo<v8::Value>& args);
+    static void SetSpace (const v8::FunctionCallbackInfo<v8::Value>& args);
+    static void GetSpace (const v8::FunctionCallbackInfo<v8::Value>& args);
     static void GetFactor1 (const v8::FunctionCallbackInfo<v8::Value>& args);
     static void SetFactor1 (const v8::FunctionCallbackInfo<v8::Value>& args);
     static void GetFactor2 (const v8::FunctionCallbackInfo<v8::Value>& args);

@@ -7526,6 +7526,8 @@ void CLib3MFVector3DFieldComposed::Init()
     // Prototype
     NODE_SET_PROTOTYPE_METHOD(tpl, "SetMethod", SetMethod);
     NODE_SET_PROTOTYPE_METHOD(tpl, "GetMethod", GetMethod);
+    NODE_SET_PROTOTYPE_METHOD(tpl, "SetSpace", SetSpace);
+    NODE_SET_PROTOTYPE_METHOD(tpl, "GetSpace", GetSpace);
     NODE_SET_PROTOTYPE_METHOD(tpl, "GetFactor1", GetFactor1);
     NODE_SET_PROTOTYPE_METHOD(tpl, "SetFactor1", SetFactor1);
     NODE_SET_PROTOTYPE_METHOD(tpl, "GetFactor2", GetFactor2);
@@ -7605,6 +7607,52 @@ void CLib3MFVector3DFieldComposed::GetMethod (const FunctionCallbackInfo<Value>&
         Lib3MFResult errorCode = wrapperTable->m_Vector3DFieldComposed_GetMethod (instanceHandle, &eReturnTheMethod);
         CheckError (isolate, wrapperTable, instanceHandle, errorCode);
         args.GetReturnValue().Set (Integer::New (isolate, (int) eReturnTheMethod));
+
+    } catch (std::exception & E) {
+        RaiseError (isolate, E.what());
+    }
+}
+
+
+void CLib3MFVector3DFieldComposed::SetSpace (const FunctionCallbackInfo<Value>& args) 
+{
+    Isolate* isolate = args.GetIsolate();
+    HandleScope scope(isolate);
+    try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error ("Expected enum parameter 0 (TheSpace)");
+        }
+        unsigned int eTheSpace = (unsigned int) args[0]->IntegerValue ();
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error ("Could not get wrapper table for Lib3MF method SetSpace.");
+        if (wrapperTable->m_Vector3DFieldComposed_SetSpace == nullptr)
+            throw std::runtime_error ("Could not call Lib3MF method Vector3DFieldComposed::SetSpace.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Vector3DFieldComposed_SetSpace (instanceHandle, (eLib3MFCompositionSpace) eTheSpace);
+        CheckError (isolate, wrapperTable, instanceHandle, errorCode);
+
+    } catch (std::exception & E) {
+        RaiseError (isolate, E.what());
+    }
+}
+
+
+void CLib3MFVector3DFieldComposed::GetSpace (const FunctionCallbackInfo<Value>& args) 
+{
+    Isolate* isolate = args.GetIsolate();
+    HandleScope scope(isolate);
+    try {
+        eLib3MFCompositionSpace eReturnTheSpace;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable (args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error ("Could not get wrapper table for Lib3MF method GetSpace.");
+        if (wrapperTable->m_Vector3DFieldComposed_GetSpace == nullptr)
+            throw std::runtime_error ("Could not call Lib3MF method Vector3DFieldComposed::GetSpace.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle (args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Vector3DFieldComposed_GetSpace (instanceHandle, &eReturnTheSpace);
+        CheckError (isolate, wrapperTable, instanceHandle, errorCode);
+        args.GetReturnValue().Set (Integer::New (isolate, (int) eReturnTheSpace));
 
     } catch (std::exception & E) {
         RaiseError (isolate, E.what());
@@ -16771,6 +16819,8 @@ void CLib3MFWrapper::New(const FunctionCallbackInfo<Value>& args)
             newObject->Set (String::NewFromUtf8(isolate, "eCompositionMethod_Min"), Integer::New(isolate, 2));
             newObject->Set (String::NewFromUtf8(isolate, "eCompositionMethod_Max"), Integer::New(isolate, 3));
             newObject->Set (String::NewFromUtf8(isolate, "eCompositionMethod_Mask"), Integer::New(isolate, 4));
+            newObject->Set (String::NewFromUtf8(isolate, "eCompositionSpace_Raw"), Integer::New(isolate, 0));
+            newObject->Set (String::NewFromUtf8(isolate, "eCompositionSpace_Linear"), Integer::New(isolate, 1));
             newObject->Set (String::NewFromUtf8(isolate, "eEncryptionAlgorithm_AES256_GCM"), Integer::New(isolate, 1));
             newObject->Set (String::NewFromUtf8(isolate, "eWrappingAlgorithm_RSA_OAEP"), Integer::New(isolate, 0));
             newObject->Set (String::NewFromUtf8(isolate, "eMgfAlgorithm_MGF1_SHA1"), Integer::New(isolate, 160));

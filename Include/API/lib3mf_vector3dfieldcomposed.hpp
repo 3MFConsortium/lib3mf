@@ -81,6 +81,10 @@ public:
 
 	Lib3MF::eCompositionMethod GetMethod() override;
 
+	void SetSpace(const Lib3MF::eCompositionSpace eTheCompositionSpace) override;
+
+	Lib3MF::eCompositionSpace GetSpace() override;
+
 	Lib3MF_double GetFactor1() override;
 
 	void SetFactor1(const Lib3MF_double dFactor1) override;

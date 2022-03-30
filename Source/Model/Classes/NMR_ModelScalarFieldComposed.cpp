@@ -101,17 +101,17 @@ namespace NMR {
 	eModelCompositionMethod CModelScalarFieldComposed::methodFromString(_In_ std::string sValue)
 	{
 		if (strcmp(sValue.c_str(), XML_3MF_ATTRIBUTE_SCALARFIELDCOMPOSED_METHOD_MASK) == 0)
-			return MODELCOMPOSITIONMETHOD_MASK;
+			return eModelCompositionMethod::MODELCOMPOSITIONMETHOD_MASK;
 		if (strcmp(sValue.c_str(), XML_3MF_ATTRIBUTE_SCALARFIELDCOMPOSED_METHOD_MIN) == 0)
-			return MODELCOMPOSITIONMETHOD_MIN;
+			return eModelCompositionMethod::MODELCOMPOSITIONMETHOD_MIN;
 		if (strcmp(sValue.c_str(), XML_3MF_ATTRIBUTE_SCALARFIELDCOMPOSED_METHOD_MAX) == 0)
-			return MODELCOMPOSITIONMETHOD_MAX;
+			return eModelCompositionMethod::MODELCOMPOSITIONMETHOD_MAX;
 		if (strcmp(sValue.c_str(), XML_3MF_ATTRIBUTE_SCALARFIELDCOMPOSED_METHOD_WEIGHTEDSUM) == 0)
-			return MODELCOMPOSITIONMETHOD_WEIGHTEDSUM;
+			return eModelCompositionMethod::MODELCOMPOSITIONMETHOD_WEIGHTEDSUM;
 		if (strcmp(sValue.c_str(), XML_3MF_ATTRIBUTE_SCALARFIELDCOMPOSED_METHOD_MULTIPLY) == 0)
-			return MODELCOMPOSITIONMETHOD_MULTIPLY;
+			return eModelCompositionMethod::MODELCOMPOSITIONMETHOD_MULTIPLY;
 		throw CNMRException(-1); // TODO: #define NMR_ERROR_INVALIDCOMPOSITIONMETHOD
-		return MODELCOMPOSITIONMETHOD_MAX;
+		return eModelCompositionMethod::MODELCOMPOSITIONMETHOD_MAX;
 	}
 
 }

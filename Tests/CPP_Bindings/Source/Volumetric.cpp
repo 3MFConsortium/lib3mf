@@ -316,6 +316,7 @@ namespace Lib3MF
 		composedVector3DField->Vector3DFieldReference1()->SetFieldResourceID(fieldFromImage3D->GetUniqueResourceID());
 		composedVector3DField->Vector3DFieldReference2()->SetFieldResourceID(constantField->GetUniqueResourceID());
 		composedVector3DField->SetMethod(Lib3MF::eCompositionMethod::WeightedSum);
+		composedVector3DField->SetSpace(Lib3MF::eCompositionSpace::Linear);
 		ASSERT_EQ(composedVector3DField->GetFactor1(), 1.);
 		ASSERT_EQ(composedVector3DField->GetFactor2(), 1.);
 		composedVector3DField->SetFactor1(1.5);

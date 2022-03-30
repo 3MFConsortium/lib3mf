@@ -312,6 +312,8 @@ class FunctionTable:
 	lib3mf_vector3dfieldconstant_setvaluez = None
 	lib3mf_vector3dfieldcomposed_setmethod = None
 	lib3mf_vector3dfieldcomposed_getmethod = None
+	lib3mf_vector3dfieldcomposed_setspace = None
+	lib3mf_vector3dfieldcomposed_getspace = None
 	lib3mf_vector3dfieldcomposed_getfactor1 = None
 	lib3mf_vector3dfieldcomposed_setfactor1 = None
 	lib3mf_vector3dfieldcomposed_getfactor2 = None
@@ -716,6 +718,11 @@ class CompositionMethod(CTypesEnum):
 	Min = 2
 	Max = 3
 	Mask = 4
+'''Definition of CompositionSpace
+'''
+class CompositionSpace(CTypesEnum):
+	Raw = 0
+	Linear = 1
 '''Definition of EncryptionAlgorithm
 '''
 class EncryptionAlgorithm(CTypesEnum):
@@ -2131,6 +2138,18 @@ class Wrapper:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_int32))
 			self.lib.lib3mf_vector3dfieldcomposed_getmethod = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_vector3dfieldcomposed_setspace")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, CompositionSpace)
+			self.lib.lib3mf_vector3dfieldcomposed_setspace = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_vector3dfieldcomposed_getspace")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_int32))
+			self.lib.lib3mf_vector3dfieldcomposed_getspace = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_vector3dfieldcomposed_getfactor1")), methodAddress)
 			if err != 0:
@@ -4419,6 +4438,12 @@ class Wrapper:
 			
 			self.lib.lib3mf_vector3dfieldcomposed_getmethod.restype = ctypes.c_int32
 			self.lib.lib3mf_vector3dfieldcomposed_getmethod.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_int32)]
+			
+			self.lib.lib3mf_vector3dfieldcomposed_setspace.restype = ctypes.c_int32
+			self.lib.lib3mf_vector3dfieldcomposed_setspace.argtypes = [ctypes.c_void_p, CompositionSpace]
+			
+			self.lib.lib3mf_vector3dfieldcomposed_getspace.restype = ctypes.c_int32
+			self.lib.lib3mf_vector3dfieldcomposed_getspace.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_int32)]
 			
 			self.lib.lib3mf_vector3dfieldcomposed_getfactor1.restype = ctypes.c_int32
 			self.lib.lib3mf_vector3dfieldcomposed_getfactor1.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_double)]
@@ -6985,6 +7010,16 @@ class Vector3DFieldComposed(Vector3DField):
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_vector3dfieldcomposed_getmethod(self._handle, pTheMethod))
 		
 		return CompositionMethod(pTheMethod.value)
+	
+	def SetSpace(self, TheSpace):
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_vector3dfieldcomposed_setspace(self._handle, TheSpace))
+		
+	
+	def GetSpace(self):
+		pTheSpace = ctypes.c_int32()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_vector3dfieldcomposed_getspace(self._handle, pTheSpace))
+		
+		return CompositionSpace(pTheSpace.value)
 	
 	def GetFactor1(self):
 		pFactor1 = ctypes.c_double()

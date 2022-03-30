@@ -324,6 +324,11 @@ typedef enum eLib3MFCompositionMethod {
   eCompositionMethodMask = 4
 } eLib3MFCompositionMethod;
 
+typedef enum eLib3MFCompositionSpace {
+  eCompositionSpaceRaw = 0,
+  eCompositionSpaceLinear = 1
+} eLib3MFCompositionSpace;
+
 typedef enum eLib3MFEncryptionAlgorithm {
   eEncryptionAlgorithmAES256_GCM = 1
 } eLib3MFEncryptionAlgorithm;
@@ -423,6 +428,11 @@ typedef union {
   eLib3MFCompositionMethod m_enum;
   int m_code;
 } structEnumLib3MFCompositionMethod;
+
+typedef union {
+  eLib3MFCompositionSpace m_enum;
+  int m_code;
+} structEnumLib3MFCompositionSpace;
 
 typedef union {
   eLib3MFEncryptionAlgorithm m_enum;

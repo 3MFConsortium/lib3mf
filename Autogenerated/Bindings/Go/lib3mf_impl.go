@@ -233,6 +233,8 @@ type Lib3MFImplementation struct {
 	Lib3MF_vector3dfieldconstant_setvaluez uintptr
 	Lib3MF_vector3dfieldcomposed_setmethod uintptr
 	Lib3MF_vector3dfieldcomposed_getmethod uintptr
+	Lib3MF_vector3dfieldcomposed_setspace uintptr
+	Lib3MF_vector3dfieldcomposed_getspace uintptr
 	Lib3MF_vector3dfieldcomposed_getfactor1 uintptr
 	Lib3MF_vector3dfieldcomposed_setfactor1 uintptr
 	Lib3MF_vector3dfieldcomposed_getfactor2 uintptr
@@ -1642,6 +1644,16 @@ func (implementation *Lib3MFImplementation) Initialize(DLLFileName string) error
 	implementation.Lib3MF_vector3dfieldcomposed_getmethod, err = syscall.GetProcAddress(dllHandle, "lib3mf_vector3dfieldcomposed_getmethod")
 	if (err != nil) {
 		return errors.New("Could not get function lib3mf_vector3dfieldcomposed_getmethod: " + err.Error())
+	}
+	
+	implementation.Lib3MF_vector3dfieldcomposed_setspace, err = syscall.GetProcAddress(dllHandle, "lib3mf_vector3dfieldcomposed_setspace")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_vector3dfieldcomposed_setspace: " + err.Error())
+	}
+	
+	implementation.Lib3MF_vector3dfieldcomposed_getspace, err = syscall.GetProcAddress(dllHandle, "lib3mf_vector3dfieldcomposed_getspace")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_vector3dfieldcomposed_getspace: " + err.Error())
 	}
 	
 	implementation.Lib3MF_vector3dfieldcomposed_getfactor1, err = syscall.GetProcAddress(dllHandle, "lib3mf_vector3dfieldcomposed_getfactor1")
@@ -6450,6 +6462,39 @@ func (implementation *Lib3MFImplementation) Vector3DFieldComposed_GetMethod(Vect
 	}
 	
 	return ELib3MFCompositionMethod (eTheMethod), err
+}
+
+func (implementation *Lib3MFImplementation) Vector3DFieldComposed_SetSpace(Vector3DFieldComposed Lib3MFHandle, eTheSpace ELib3MFCompositionSpace) (error) {
+	var err error = nil
+	
+	implementation_vector3dfieldcomposed, err := implementation.GetWrapperHandle(Vector3DFieldComposed)
+	if (err != nil) {
+		return err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_vector3dfieldcomposed_setspace, implementation_vector3dfieldcomposed.GetDLLInHandle(), uintptr(eTheSpace))
+	if (err != nil) {
+		return err
+	}
+	
+	return err
+}
+
+func (implementation *Lib3MFImplementation) Vector3DFieldComposed_GetSpace(Vector3DFieldComposed Lib3MFHandle) (ELib3MFCompositionSpace, error) {
+	var err error = nil
+	var eTheSpace uint64 = 0
+	
+	implementation_vector3dfieldcomposed, err := implementation.GetWrapperHandle(Vector3DFieldComposed)
+	if (err != nil) {
+		return 0, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_vector3dfieldcomposed_getspace, implementation_vector3dfieldcomposed.GetDLLInHandle(), UInt64OutValue(&eTheSpace))
+	if (err != nil) {
+		return 0, err
+	}
+	
+	return ELib3MFCompositionSpace (eTheSpace), err
 }
 
 func (implementation *Lib3MFImplementation) Vector3DFieldComposed_GetFactor1(Vector3DFieldComposed Lib3MFHandle) (float64, error) {

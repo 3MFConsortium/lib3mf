@@ -52,7 +52,8 @@ namespace NMR {
 		nfDouble m_dFactor2 = 1.;
 
 		eModelCompositionMethod m_eMethod = eModelCompositionMethod::MODELCOMPOSITIONMETHOD_MIN;
-		
+		eModelCompositionSpace m_eSpace = eModelCompositionSpace::MODELCOMPOSITIONSPACE_RAW;
+
 		PVector3DFieldReference m_pVector3DFieldReference1;
 		PVector3DFieldReference m_pVector3DFieldReference2;
 		PScalarFieldReference m_pScalarFieldReferenceMask;
@@ -63,6 +64,9 @@ namespace NMR {
 		eModelCompositionMethod getMethod() const;
 		void setMethod(eModelCompositionMethod eCompositionMethod);
 
+		eModelCompositionSpace getSpace() const;
+		void setSpace(eModelCompositionSpace eCompositionMethod);
+
 		nfDouble getFactor1() const;
 		void setFactor1(nfDouble);
 		nfDouble getFactor2() const;
@@ -72,9 +76,12 @@ namespace NMR {
 		PVector3DFieldReference Vector3DFieldReference2();
 		PScalarFieldReference ScalarFieldReferenceMask();
 
-		static  std::string methodToString(_In_ eModelCompositionMethod eMethod);
-
+		static std::string methodToString(_In_ eModelCompositionMethod eMethod);
 		static eModelCompositionMethod methodFromString(_In_ std::string sValue);
+
+		static std::string spaceToString(_In_ eModelCompositionSpace eSpace);
+		static eModelCompositionSpace spaceFromString(_In_ std::string sValue);
+
 	};
 
 	typedef std::shared_ptr<CModelVector3DFieldComposed> PModelVector3DFieldComposed;

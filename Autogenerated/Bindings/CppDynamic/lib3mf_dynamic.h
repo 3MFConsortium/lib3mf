@@ -1925,6 +1925,24 @@ typedef Lib3MFResult (*PLib3MFVector3DFieldComposed_SetMethodPtr) (Lib3MF_Vector
 typedef Lib3MFResult (*PLib3MFVector3DFieldComposed_GetMethodPtr) (Lib3MF_Vector3DFieldComposed pVector3DFieldComposed, Lib3MF::eCompositionMethod * pTheMethod);
 
 /**
+* Sets the space in which composition takes place.
+*
+* @param[in] pVector3DFieldComposed - Vector3DFieldComposed instance.
+* @param[in] eTheSpace - Sets the composition space.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFVector3DFieldComposed_SetSpacePtr) (Lib3MF_Vector3DFieldComposed pVector3DFieldComposed, Lib3MF::eCompositionSpace eTheSpace);
+
+/**
+* Gets the space in which composition takes place.
+*
+* @param[in] pVector3DFieldComposed - Vector3DFieldComposed instance.
+* @param[out] pTheSpace - Gets the composition space.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFVector3DFieldComposed_GetSpacePtr) (Lib3MF_Vector3DFieldComposed pVector3DFieldComposed, Lib3MF::eCompositionSpace * pTheSpace);
+
+/**
 * returns the factor vector3d field 1 is multiplied with when composited
 *
 * @param[in] pVector3DFieldComposed - Vector3DFieldComposed instance.
@@ -5144,6 +5162,8 @@ typedef struct {
 	PLib3MFVector3DFieldConstant_SetValueZPtr m_Vector3DFieldConstant_SetValueZ;
 	PLib3MFVector3DFieldComposed_SetMethodPtr m_Vector3DFieldComposed_SetMethod;
 	PLib3MFVector3DFieldComposed_GetMethodPtr m_Vector3DFieldComposed_GetMethod;
+	PLib3MFVector3DFieldComposed_SetSpacePtr m_Vector3DFieldComposed_SetSpace;
+	PLib3MFVector3DFieldComposed_GetSpacePtr m_Vector3DFieldComposed_GetSpace;
 	PLib3MFVector3DFieldComposed_GetFactor1Ptr m_Vector3DFieldComposed_GetFactor1;
 	PLib3MFVector3DFieldComposed_SetFactor1Ptr m_Vector3DFieldComposed_SetFactor1;
 	PLib3MFVector3DFieldComposed_GetFactor2Ptr m_Vector3DFieldComposed_GetFactor2;

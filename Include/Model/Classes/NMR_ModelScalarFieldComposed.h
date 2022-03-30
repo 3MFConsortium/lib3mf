@@ -52,7 +52,7 @@ namespace NMR {
 		nfDouble m_dFactor2 = 1.;
 
 		eModelCompositionMethod m_eMethod = eModelCompositionMethod::MODELCOMPOSITIONMETHOD_MIN;
-		
+
 		PScalarFieldReference m_pScalarFieldReference1;
 		PScalarFieldReference m_pScalarFieldReference2;
 		PScalarFieldReference m_pScalarFieldReferenceMask;

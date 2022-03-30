@@ -257,6 +257,11 @@
 		<option name="Max" value="3"/>
 		<option name="Mask" value="4"/>
 	</enum>
+	
+	<enum name="CompositionSpace">
+		<option name="Raw" value="0"/>
+		<option name="Linear" value="1"/>
+	</enum>
 
 	<functiontype name="ProgressCallback" description="A callback function">
 		<param name="Abort" type="bool" pass="return" description="Returns whether the calculation should be aborted"/>
@@ -990,6 +995,12 @@
 		</method>
 		<method name="GetMethod" description="Gets the method to used for composition.">
 			<param name="TheMethod" type="enum" class="CompositionMethod" pass="return" description="Gets the composition method." />
+		</method>
+		<method name="SetSpace" description="Sets the space in which composition takes place.">
+			<param name="TheSpace" type="enum" class="CompositionSpace" pass="in" description="Sets the composition space." />
+		</method>
+		<method name="GetSpace" description="Gets the space in which composition takes place.">
+			<param name="TheSpace" type="enum" class="CompositionSpace" pass="return" description="Gets the composition space." />
 		</method>
 		<method name="GetFactor1" description="returns the factor vector3d field 1 is multiplied with when composited">
 			<param name="Factor1" type="double" pass="return" description="the factor vector3d field 1 is multiplied with when composited"/>

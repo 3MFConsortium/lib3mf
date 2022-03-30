@@ -310,6 +310,7 @@ void CompareVector3DFieldComposed(Lib3MF::PModel modelA, Lib3MF::PVector3DFieldC
 		ASSERT_EQ(A->GetFactor1(), B->GetFactor1());
 		ASSERT_EQ(A->GetFactor2(), B->GetFactor2());
 		ASSERT_EQ(A->GetMethod(), B->GetMethod());
+		ASSERT_EQ(A->GetSpace(), B->GetSpace());
 		CompareVector3DFieldReferences(modelA, A->Vector3DFieldReference1(), modelB, B->Vector3DFieldReference1());
 		CompareVector3DFieldReferences(modelA, A->Vector3DFieldReference2(), modelB, B->Vector3DFieldReference2());
 	}

@@ -1255,6 +1255,8 @@ public:
 	
 	inline void SetMethod(const eCompositionMethod eTheMethod);
 	inline eCompositionMethod GetMethod();
+	inline void SetSpace(const eCompositionSpace eTheSpace);
+	inline eCompositionSpace GetSpace();
 	inline Lib3MF_double GetFactor1();
 	inline void SetFactor1(const Lib3MF_double dFactor1);
 	inline Lib3MF_double GetFactor2();
@@ -4662,6 +4664,27 @@ public:
 		CheckError(lib3mf_vector3dfieldcomposed_getmethod(m_pHandle, &resultTheMethod));
 		
 		return resultTheMethod;
+	}
+	
+	/**
+	* CVector3DFieldComposed::SetSpace - Sets the space in which composition takes place.
+	* @param[in] eTheSpace - Sets the composition space.
+	*/
+	void CVector3DFieldComposed::SetSpace(const eCompositionSpace eTheSpace)
+	{
+		CheckError(lib3mf_vector3dfieldcomposed_setspace(m_pHandle, eTheSpace));
+	}
+	
+	/**
+	* CVector3DFieldComposed::GetSpace - Gets the space in which composition takes place.
+	* @return Gets the composition space.
+	*/
+	eCompositionSpace CVector3DFieldComposed::GetSpace()
+	{
+		eCompositionSpace resultTheSpace = (eCompositionSpace) 0;
+		CheckError(lib3mf_vector3dfieldcomposed_getspace(m_pHandle, &resultTheSpace));
+		
+		return resultTheSpace;
 	}
 	
 	/**

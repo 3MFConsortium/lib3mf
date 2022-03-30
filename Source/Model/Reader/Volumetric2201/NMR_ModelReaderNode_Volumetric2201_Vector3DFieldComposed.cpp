@@ -73,6 +73,13 @@ namespace NMR {
 			m_eMethod = CModelVector3DFieldComposed::methodFromString(pAttributeValue);
 			m_bHasMethod = true;
 		}
+		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_VECTOR3DFIELDCOMPOSED_SPACE) == 0)
+		{
+			if (m_bHasSpace)
+				throw CNMRException(NMR_ERROR_DUPLICATE_ATTRIBUTE_VECTOR3DFIELDCOMPOSED);
+			m_eSpace = CModelVector3DFieldComposed::spaceFromString(pAttributeValue);
+			m_bHasSpace = true;
+		}
 		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_VECTOR3DFIELDCOMPOSED_VECTOR3DFIELDID1) == 0)
 		{
 			if (m_bHasVector3DFieldId1)
@@ -169,6 +176,7 @@ namespace NMR {
 		pOut->setFactor1(m_dFactor1);
 		pOut->setFactor2(m_dFactor2);
 		pOut->setMethod(m_eMethod);
+		pOut->setSpace(m_eSpace);
 		pOut->Vector3DFieldReference1()->setFieldReferenceID(m_pVector3DFieldId1->getUniqueID());
 		pOut->Vector3DFieldReference2()->setFieldReferenceID(m_pVector3DFieldId2->getUniqueID());
 		pOut->Vector3DFieldReference1()->setTransform(m_mTransform1);

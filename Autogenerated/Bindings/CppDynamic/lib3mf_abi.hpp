@@ -1936,6 +1936,24 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_vector3dfieldcomposed_setmethod(Lib3MF_Vecto
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_vector3dfieldcomposed_getmethod(Lib3MF_Vector3DFieldComposed pVector3DFieldComposed, Lib3MF::eCompositionMethod * pTheMethod);
 
 /**
+* Sets the space in which composition takes place.
+*
+* @param[in] pVector3DFieldComposed - Vector3DFieldComposed instance.
+* @param[in] eTheSpace - Sets the composition space.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_vector3dfieldcomposed_setspace(Lib3MF_Vector3DFieldComposed pVector3DFieldComposed, Lib3MF::eCompositionSpace eTheSpace);
+
+/**
+* Gets the space in which composition takes place.
+*
+* @param[in] pVector3DFieldComposed - Vector3DFieldComposed instance.
+* @param[out] pTheSpace - Gets the composition space.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_vector3dfieldcomposed_getspace(Lib3MF_Vector3DFieldComposed pVector3DFieldComposed, Lib3MF::eCompositionSpace * pTheSpace);
+
+/**
 * returns the factor vector3d field 1 is multiplied with when composited
 *
 * @param[in] pVector3DFieldComposed - Vector3DFieldComposed instance.

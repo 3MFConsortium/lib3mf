@@ -119,6 +119,11 @@ namespace Lib3MF {
 		Mask = 4
 	};
 
+	public enum eCompositionSpace {
+		Raw = 0,
+		Linear = 1
+	};
+
 	public enum eEncryptionAlgorithm {
 		AES256_GCM = 1
 	};
@@ -856,6 +861,12 @@ namespace Lib3MF {
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfieldcomposed_getmethod", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Vector3DFieldComposed_GetMethod (IntPtr Handle, out Int32 ATheMethod);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfieldcomposed_setspace", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Vector3DFieldComposed_SetSpace (IntPtr Handle, Int32 ATheSpace);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfieldcomposed_getspace", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Vector3DFieldComposed_GetSpace (IntPtr Handle, out Int32 ATheSpace);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_vector3dfieldcomposed_getfactor1", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Vector3DFieldComposed_GetFactor1 (IntPtr Handle, out Double AFactor1);
@@ -3858,6 +3869,21 @@ namespace Lib3MF {
 
 			CheckError(Internal.Lib3MFWrapper.Vector3DFieldComposed_GetMethod (Handle, out resultTheMethod));
 			return (eCompositionMethod) (resultTheMethod);
+		}
+
+		public void SetSpace (eCompositionSpace ATheSpace)
+		{
+			Int32 enumTheSpace = (Int32) ATheSpace;
+
+			CheckError(Internal.Lib3MFWrapper.Vector3DFieldComposed_SetSpace (Handle, enumTheSpace));
+		}
+
+		public eCompositionSpace GetSpace ()
+		{
+			Int32 resultTheSpace = 0;
+
+			CheckError(Internal.Lib3MFWrapper.Vector3DFieldComposed_GetSpace (Handle, out resultTheSpace));
+			return (eCompositionSpace) (resultTheSpace);
 		}
 
 		public Double GetFactor1 ()

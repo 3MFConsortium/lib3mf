@@ -931,6 +931,11 @@ namespace NMR {
 				writeStartElementWithPrefix(XML_3MF_ELEMENT_VECTOR3DFIELDCOMPOSED, XML_3MF_NAMESPACEPREFIX_VOLUMETRIC);
 				writeStringAttribute(XML_3MF_ATTRIBUTE_VECTOR3DFIELDCOMPOSED_METHOD, CModelVector3DFieldComposed::methodToString(pVector3DFieldComposed->getMethod()));
 
+				if (eModelCompositionSpace::MODELCOMPOSITIONSPACE_RAW != pVector3DFieldComposed->getSpace())
+				{
+					writeStringAttribute(XML_3MF_ATTRIBUTE_VECTOR3DFIELDCOMPOSED_SPACE, CModelVector3DFieldComposed::spaceToString(pVector3DFieldComposed->getSpace()));
+				}
+
 				auto pID1 = m_pModel->findPackageResourceID(pVector3DFieldComposed->Vector3DFieldReference1()->getFieldReferenceID());
 				if (!pID1)
 					throw CNMRException(NMR_ERROR_INVALIDMODELRESOURCE);

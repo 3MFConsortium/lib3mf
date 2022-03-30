@@ -6671,6 +6671,72 @@ Lib3MFResult lib3mf_vector3dfieldcomposed_getmethod(Lib3MF_Vector3DFieldComposed
 	}
 }
 
+Lib3MFResult lib3mf_vector3dfieldcomposed_setspace(Lib3MF_Vector3DFieldComposed pVector3DFieldComposed, eLib3MFCompositionSpace eTheSpace)
+{
+	IBase* pIBaseClass = (IBase *)pVector3DFieldComposed;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pVector3DFieldComposed, "Vector3DFieldComposed", "SetSpace");
+			pJournalEntry->addEnumParameter("TheSpace", "CompositionSpace", (Lib3MF_int32)(eTheSpace));
+		}
+		IVector3DFieldComposed* pIVector3DFieldComposed = dynamic_cast<IVector3DFieldComposed*>(pIBaseClass);
+		if (!pIVector3DFieldComposed)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pIVector3DFieldComposed->SetSpace(eTheSpace);
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
+Lib3MFResult lib3mf_vector3dfieldcomposed_getspace(Lib3MF_Vector3DFieldComposed pVector3DFieldComposed, eLib3MFCompositionSpace * pTheSpace)
+{
+	IBase* pIBaseClass = (IBase *)pVector3DFieldComposed;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pVector3DFieldComposed, "Vector3DFieldComposed", "GetSpace");
+		}
+		if (pTheSpace == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IVector3DFieldComposed* pIVector3DFieldComposed = dynamic_cast<IVector3DFieldComposed*>(pIBaseClass);
+		if (!pIVector3DFieldComposed)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		*pTheSpace = pIVector3DFieldComposed->GetSpace();
+
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addEnumResult("TheSpace", "CompositionSpace", (Lib3MF_int32)(*pTheSpace));
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
 Lib3MFResult lib3mf_vector3dfieldcomposed_getfactor1(Lib3MF_Vector3DFieldComposed pVector3DFieldComposed, Lib3MF_double * pFactor1)
 {
 	IBase* pIBaseClass = (IBase *)pVector3DFieldComposed;
@@ -17092,6 +17158,8 @@ Lib3MFResult _lib3mf_getprocaddress_internal(const char * pProcName, void ** ppP
 		sProcAddressMap["lib3mf_vector3dfieldconstant_setvaluez"] = (void*)&lib3mf_vector3dfieldconstant_setvaluez;
 		sProcAddressMap["lib3mf_vector3dfieldcomposed_setmethod"] = (void*)&lib3mf_vector3dfieldcomposed_setmethod;
 		sProcAddressMap["lib3mf_vector3dfieldcomposed_getmethod"] = (void*)&lib3mf_vector3dfieldcomposed_getmethod;
+		sProcAddressMap["lib3mf_vector3dfieldcomposed_setspace"] = (void*)&lib3mf_vector3dfieldcomposed_setspace;
+		sProcAddressMap["lib3mf_vector3dfieldcomposed_getspace"] = (void*)&lib3mf_vector3dfieldcomposed_getspace;
 		sProcAddressMap["lib3mf_vector3dfieldcomposed_getfactor1"] = (void*)&lib3mf_vector3dfieldcomposed_getfactor1;
 		sProcAddressMap["lib3mf_vector3dfieldcomposed_setfactor1"] = (void*)&lib3mf_vector3dfieldcomposed_setfactor1;
 		sProcAddressMap["lib3mf_vector3dfieldcomposed_getfactor2"] = (void*)&lib3mf_vector3dfieldcomposed_getfactor2;

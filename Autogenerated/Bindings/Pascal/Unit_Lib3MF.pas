@@ -240,6 +240,11 @@ type
 		eCompositionMethodMask
 	);
 
+	TLib3MFCompositionSpace = (
+		eCompositionSpaceRaw,
+		eCompositionSpaceLinear
+	);
+
 	TLib3MFEncryptionAlgorithm = (
 		eEncryptionAlgorithmAES256_GCM
 	);
@@ -2361,6 +2366,24 @@ type
 	* @return error code or 0 (success)
 	*)
 	TLib3MFVector3DFieldComposed_GetMethodFunc = function(pVector3DFieldComposed: TLib3MFHandle; out pTheMethod: Integer): TLib3MFResult; cdecl;
+	
+	(**
+	* Sets the space in which composition takes place.
+	*
+	* @param[in] pVector3DFieldComposed - Vector3DFieldComposed instance.
+	* @param[in] eTheSpace - Sets the composition space.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFVector3DFieldComposed_SetSpaceFunc = function(pVector3DFieldComposed: TLib3MFHandle; const eTheSpace: Integer): TLib3MFResult; cdecl;
+	
+	(**
+	* Gets the space in which composition takes place.
+	*
+	* @param[in] pVector3DFieldComposed - Vector3DFieldComposed instance.
+	* @param[out] pTheSpace - Gets the composition space.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFVector3DFieldComposed_GetSpaceFunc = function(pVector3DFieldComposed: TLib3MFHandle; out pTheSpace: Integer): TLib3MFResult; cdecl;
 	
 	(**
 	* returns the factor vector3d field 1 is multiplied with when composited
@@ -5983,6 +6006,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		destructor Destroy; override;
 		procedure SetMethod(const ATheMethod: TLib3MFCompositionMethod);
 		function GetMethod(): TLib3MFCompositionMethod;
+		procedure SetSpace(const ATheSpace: TLib3MFCompositionSpace);
+		function GetSpace(): TLib3MFCompositionSpace;
 		function GetFactor1(): Double;
 		procedure SetFactor1(const AFactor1: Double);
 		function GetFactor2(): Double;
@@ -6807,6 +6832,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFVector3DFieldConstant_SetValueZFunc: TLib3MFVector3DFieldConstant_SetValueZFunc;
 		FLib3MFVector3DFieldComposed_SetMethodFunc: TLib3MFVector3DFieldComposed_SetMethodFunc;
 		FLib3MFVector3DFieldComposed_GetMethodFunc: TLib3MFVector3DFieldComposed_GetMethodFunc;
+		FLib3MFVector3DFieldComposed_SetSpaceFunc: TLib3MFVector3DFieldComposed_SetSpaceFunc;
+		FLib3MFVector3DFieldComposed_GetSpaceFunc: TLib3MFVector3DFieldComposed_GetSpaceFunc;
 		FLib3MFVector3DFieldComposed_GetFactor1Func: TLib3MFVector3DFieldComposed_GetFactor1Func;
 		FLib3MFVector3DFieldComposed_SetFactor1Func: TLib3MFVector3DFieldComposed_SetFactor1Func;
 		FLib3MFVector3DFieldComposed_GetFactor2Func: TLib3MFVector3DFieldComposed_GetFactor2Func;
@@ -7299,6 +7326,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFVector3DFieldConstant_SetValueZFunc: TLib3MFVector3DFieldConstant_SetValueZFunc read FLib3MFVector3DFieldConstant_SetValueZFunc;
 		property Lib3MFVector3DFieldComposed_SetMethodFunc: TLib3MFVector3DFieldComposed_SetMethodFunc read FLib3MFVector3DFieldComposed_SetMethodFunc;
 		property Lib3MFVector3DFieldComposed_GetMethodFunc: TLib3MFVector3DFieldComposed_GetMethodFunc read FLib3MFVector3DFieldComposed_GetMethodFunc;
+		property Lib3MFVector3DFieldComposed_SetSpaceFunc: TLib3MFVector3DFieldComposed_SetSpaceFunc read FLib3MFVector3DFieldComposed_SetSpaceFunc;
+		property Lib3MFVector3DFieldComposed_GetSpaceFunc: TLib3MFVector3DFieldComposed_GetSpaceFunc read FLib3MFVector3DFieldComposed_GetSpaceFunc;
 		property Lib3MFVector3DFieldComposed_GetFactor1Func: TLib3MFVector3DFieldComposed_GetFactor1Func read FLib3MFVector3DFieldComposed_GetFactor1Func;
 		property Lib3MFVector3DFieldComposed_SetFactor1Func: TLib3MFVector3DFieldComposed_SetFactor1Func read FLib3MFVector3DFieldComposed_SetFactor1Func;
 		property Lib3MFVector3DFieldComposed_GetFactor2Func: TLib3MFVector3DFieldComposed_GetFactor2Func read FLib3MFVector3DFieldComposed_GetFactor2Func;
@@ -7655,6 +7684,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 	function convertConstToChannelName(const AValue: Integer): TLib3MFChannelName;
 	function convertCompositionMethodToConst(const AValue: TLib3MFCompositionMethod): Integer;
 	function convertConstToCompositionMethod(const AValue: Integer): TLib3MFCompositionMethod;
+	function convertCompositionSpaceToConst(const AValue: TLib3MFCompositionSpace): Integer;
+	function convertConstToCompositionSpace(const AValue: Integer): TLib3MFCompositionSpace;
 	function convertEncryptionAlgorithmToConst(const AValue: TLib3MFEncryptionAlgorithm): Integer;
 	function convertConstToEncryptionAlgorithm(const AValue: Integer): TLib3MFEncryptionAlgorithm;
 	function convertWrappingAlgorithmToConst(const AValue: TLib3MFWrappingAlgorithm): Integer;
@@ -8051,6 +8082,27 @@ implementation
 			2: Result := eCompositionMethodMin;
 			3: Result := eCompositionMethodMax;
 			4: Result := eCompositionMethodMask;
+			else 
+				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum constant');
+		end;
+	end;
+	
+	
+	function convertCompositionSpaceToConst(const AValue: TLib3MFCompositionSpace): Integer;
+	begin
+		case AValue of
+			eCompositionSpaceRaw: Result := 0;
+			eCompositionSpaceLinear: Result := 1;
+			else 
+				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum value');
+		end;
+	end;
+	
+	function convertConstToCompositionSpace(const AValue: Integer): TLib3MFCompositionSpace;
+	begin
+		case AValue of
+			0: Result := eCompositionSpaceRaw;
+			1: Result := eCompositionSpaceLinear;
 			else 
 				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum constant');
 		end;
@@ -10202,6 +10254,20 @@ implementation
 		ResultTheMethod := 0;
 		FWrapper.CheckError(Self, FWrapper.Lib3MFVector3DFieldComposed_GetMethodFunc(FHandle, ResultTheMethod));
 		Result := convertConstToCompositionMethod(ResultTheMethod);
+	end;
+
+	procedure TLib3MFVector3DFieldComposed.SetSpace(const ATheSpace: TLib3MFCompositionSpace);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFVector3DFieldComposed_SetSpaceFunc(FHandle, convertCompositionSpaceToConst(ATheSpace)));
+	end;
+
+	function TLib3MFVector3DFieldComposed.GetSpace(): TLib3MFCompositionSpace;
+	var
+		ResultTheSpace: Integer;
+	begin
+		ResultTheSpace := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFVector3DFieldComposed_GetSpaceFunc(FHandle, ResultTheSpace));
+		Result := convertConstToCompositionSpace(ResultTheSpace);
 	end;
 
 	function TLib3MFVector3DFieldComposed.GetFactor1(): Double;
@@ -13571,6 +13637,8 @@ implementation
 		FLib3MFVector3DFieldConstant_SetValueZFunc := LoadFunction('lib3mf_vector3dfieldconstant_setvaluez');
 		FLib3MFVector3DFieldComposed_SetMethodFunc := LoadFunction('lib3mf_vector3dfieldcomposed_setmethod');
 		FLib3MFVector3DFieldComposed_GetMethodFunc := LoadFunction('lib3mf_vector3dfieldcomposed_getmethod');
+		FLib3MFVector3DFieldComposed_SetSpaceFunc := LoadFunction('lib3mf_vector3dfieldcomposed_setspace');
+		FLib3MFVector3DFieldComposed_GetSpaceFunc := LoadFunction('lib3mf_vector3dfieldcomposed_getspace');
 		FLib3MFVector3DFieldComposed_GetFactor1Func := LoadFunction('lib3mf_vector3dfieldcomposed_getfactor1');
 		FLib3MFVector3DFieldComposed_SetFactor1Func := LoadFunction('lib3mf_vector3dfieldcomposed_setfactor1');
 		FLib3MFVector3DFieldComposed_GetFactor2Func := LoadFunction('lib3mf_vector3dfieldcomposed_getfactor2');
@@ -14430,6 +14498,12 @@ implementation
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_vector3dfieldcomposed_getmethod'), @FLib3MFVector3DFieldComposed_GetMethodFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_vector3dfieldcomposed_setspace'), @FLib3MFVector3DFieldComposed_SetSpaceFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_vector3dfieldcomposed_getspace'), @FLib3MFVector3DFieldComposed_GetSpaceFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_vector3dfieldcomposed_getfactor1'), @FLib3MFVector3DFieldComposed_GetFactor1Func);

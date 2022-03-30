@@ -1279,6 +1279,8 @@ public:
 	
 	inline void SetMethod(const eCompositionMethod eTheMethod);
 	inline eCompositionMethod GetMethod();
+	inline void SetSpace(const eCompositionSpace eTheSpace);
+	inline eCompositionSpace GetSpace();
 	inline Lib3MF_double GetFactor1();
 	inline void SetFactor1(const Lib3MF_double dFactor1);
 	inline Lib3MF_double GetFactor2();
@@ -2547,6 +2549,8 @@ public:
 		pWrapperTable->m_Vector3DFieldConstant_SetValueZ = nullptr;
 		pWrapperTable->m_Vector3DFieldComposed_SetMethod = nullptr;
 		pWrapperTable->m_Vector3DFieldComposed_GetMethod = nullptr;
+		pWrapperTable->m_Vector3DFieldComposed_SetSpace = nullptr;
+		pWrapperTable->m_Vector3DFieldComposed_GetSpace = nullptr;
 		pWrapperTable->m_Vector3DFieldComposed_GetFactor1 = nullptr;
 		pWrapperTable->m_Vector3DFieldComposed_SetFactor1 = nullptr;
 		pWrapperTable->m_Vector3DFieldComposed_GetFactor2 = nullptr;
@@ -4547,6 +4551,24 @@ public:
 		dlerror();
 		#endif // _WIN32
 		if (pWrapperTable->m_Vector3DFieldComposed_GetMethod == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Vector3DFieldComposed_SetSpace = (PLib3MFVector3DFieldComposed_SetSpacePtr) GetProcAddress(hLibrary, "lib3mf_vector3dfieldcomposed_setspace");
+		#else // _WIN32
+		pWrapperTable->m_Vector3DFieldComposed_SetSpace = (PLib3MFVector3DFieldComposed_SetSpacePtr) dlsym(hLibrary, "lib3mf_vector3dfieldcomposed_setspace");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Vector3DFieldComposed_SetSpace == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Vector3DFieldComposed_GetSpace = (PLib3MFVector3DFieldComposed_GetSpacePtr) GetProcAddress(hLibrary, "lib3mf_vector3dfieldcomposed_getspace");
+		#else // _WIN32
+		pWrapperTable->m_Vector3DFieldComposed_GetSpace = (PLib3MFVector3DFieldComposed_GetSpacePtr) dlsym(hLibrary, "lib3mf_vector3dfieldcomposed_getspace");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Vector3DFieldComposed_GetSpace == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
@@ -7981,6 +8003,14 @@ public:
 		
 		eLookupError = (*pLookup)("lib3mf_vector3dfieldcomposed_getmethod", (void**)&(pWrapperTable->m_Vector3DFieldComposed_GetMethod));
 		if ( (eLookupError != 0) || (pWrapperTable->m_Vector3DFieldComposed_GetMethod == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_vector3dfieldcomposed_setspace", (void**)&(pWrapperTable->m_Vector3DFieldComposed_SetSpace));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Vector3DFieldComposed_SetSpace == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_vector3dfieldcomposed_getspace", (void**)&(pWrapperTable->m_Vector3DFieldComposed_GetSpace));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Vector3DFieldComposed_GetSpace == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("lib3mf_vector3dfieldcomposed_getfactor1", (void**)&(pWrapperTable->m_Vector3DFieldComposed_GetFactor1));
@@ -11508,6 +11538,27 @@ public:
 		CheckError(m_pWrapper->m_WrapperTable.m_Vector3DFieldComposed_GetMethod(m_pHandle, &resultTheMethod));
 		
 		return resultTheMethod;
+	}
+	
+	/**
+	* CVector3DFieldComposed::SetSpace - Sets the space in which composition takes place.
+	* @param[in] eTheSpace - Sets the composition space.
+	*/
+	void CVector3DFieldComposed::SetSpace(const eCompositionSpace eTheSpace)
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_Vector3DFieldComposed_SetSpace(m_pHandle, eTheSpace));
+	}
+	
+	/**
+	* CVector3DFieldComposed::GetSpace - Gets the space in which composition takes place.
+	* @return Gets the composition space.
+	*/
+	eCompositionSpace CVector3DFieldComposed::GetSpace()
+	{
+		eCompositionSpace resultTheSpace = (eCompositionSpace) 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_Vector3DFieldComposed_GetSpace(m_pHandle, &resultTheSpace));
+		
+		return resultTheSpace;
 	}
 	
 	/**

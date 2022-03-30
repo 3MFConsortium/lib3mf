@@ -64,6 +64,16 @@ Lib3MF::eCompositionMethod CVector3DFieldComposed::GetMethod()
 	return Lib3MF::eCompositionMethod(vector3DFieldComposed()->getMethod());
 }
 
+void CVector3DFieldComposed::SetSpace(const Lib3MF::eCompositionSpace eTheSpace)
+{
+	vector3DFieldComposed()->setSpace(NMR::eModelCompositionSpace(eTheSpace));
+}
+
+Lib3MF::eCompositionSpace CVector3DFieldComposed::GetSpace()
+{
+	return Lib3MF::eCompositionSpace(vector3DFieldComposed()->getSpace());
+}
+
 Lib3MF_double CVector3DFieldComposed::GetFactor1()
 {
 	return vector3DFieldComposed()->getFactor1();
