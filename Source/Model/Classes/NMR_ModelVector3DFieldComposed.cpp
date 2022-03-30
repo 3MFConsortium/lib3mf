@@ -33,6 +33,7 @@ It composes two vector 3d fields (and potentially a scalar field).
 #include "Model/Classes/NMR_ModelVector3DFieldComposed.h"
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Common/NMR_Exception.h"
+#include <cstring>
 
 namespace NMR {
 

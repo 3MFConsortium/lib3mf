@@ -35,7 +35,7 @@ Abstract: This is the class declaration of CVector3DFieldFromImage3D
 #include "lib3mf_interfaces.hpp"
 
 // Parent classes
-#include "lib3mf_vector3Dfield.hpp"
+#include "lib3mf_vector3dfield.hpp"
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable : 4250)

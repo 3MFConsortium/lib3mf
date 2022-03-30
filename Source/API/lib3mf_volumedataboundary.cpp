@@ -41,7 +41,7 @@ using namespace Lib3MF::Impl;
 **************************************************************************************************************************/
 
 CVolumeDataBoundary::CVolumeDataBoundary(NMR::PVolumeDataBoundary pLevelset)
-	: CScalarFieldReference(pLevelset), CFieldReference(pLevelset) // I am not sure about the second constructor here
+	: CScalarFieldReference(pLevelset), CFieldReference(pLevelset) // TODO I am not sure about the second constructor here
 {
 
 }

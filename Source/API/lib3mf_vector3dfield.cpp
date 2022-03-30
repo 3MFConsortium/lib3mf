@@ -28,7 +28,7 @@ Abstract: This is a stub class definition of CVector3DField
 
 */
 
-#include "lib3mf_vector3Dfield.hpp"
+#include "lib3mf_vector3dfield.hpp"
 #include "lib3mf_interfaceexception.hpp"
 
 // Include custom headers here.

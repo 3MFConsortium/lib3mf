@@ -34,6 +34,7 @@ interpolates in UVW and provides a scalar field.
 #include "Model/Classes/NMR_ModelScalarFieldFromImage3D.h"
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Common/NMR_Exception.h"
+#include <cstring>
 
 namespace NMR {
 

@@ -41,7 +41,7 @@ using namespace Lib3MF::Impl;
 **************************************************************************************************************************/
 
 CVolumeDataColor::CVolumeDataColor(NMR::PVolumeDataColor pColor)
-	: CVector3DFieldReference(pColor), CFieldReference(pColor) // I am not sure about the second constructor here
+	: CVector3DFieldReference(pColor), CFieldReference(pColor) // TODO I am not sure about the second constructor here
 {
 
 }
