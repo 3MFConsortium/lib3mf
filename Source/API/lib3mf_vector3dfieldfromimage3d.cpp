@@ -28,7 +28,7 @@ Abstract: This is a stub class definition of CVector3DFieldFromImage3D
 
 */
 
-#include "lib3mf_vector3Dfieldfromimage3d.hpp"
+#include "lib3mf_vector3dfieldfromimage3d.hpp"
 #include "lib3mf_image3d.hpp"
 #include "lib3mf_interfaceexception.hpp"
 

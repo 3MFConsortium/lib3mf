@@ -33,6 +33,7 @@ It composes two (or three) scalar fields.
 #include "Model/Classes/NMR_ModelScalarFieldComposed.h"
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Common/NMR_Exception.h"
+#include <cstring>
 
 namespace NMR {
 
