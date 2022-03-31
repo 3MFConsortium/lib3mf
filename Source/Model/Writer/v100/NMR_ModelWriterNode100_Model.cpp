@@ -825,7 +825,7 @@ namespace NMR {
 				if (pScalarFieldFromImage3D->getTileStyleW() != MODELTEXTURETILESTYLE_WRAP)
 					writeStringAttribute(XML_3MF_ATTRIBUTE_SCALARFIELDFROMIMAGE3_TILESTYLEW, CModelTexture2DResource::tileStyleToString(pScalarFieldFromImage3D->getTileStyleW()));
 				
-				if (pScalarFieldFromImage3D->getFilter() != MODELTEXTUREFILTER_AUTO)
+				if (pScalarFieldFromImage3D->getFilter() != MODELTEXTUREFILTER_LINEAR)
 					writeStringAttribute(XML_3MF_ATTRIBUTE_TEXTURE2D_FILTER, CModelTexture2DResource::filterToString(pScalarFieldFromImage3D->getFilter()));
 
 				writeEndElement();
@@ -913,7 +913,7 @@ namespace NMR {
 				if (pVector3DFieldFromImage3D->getTileStyleW() != MODELTEXTURETILESTYLE_WRAP)
 					writeStringAttribute(XML_3MF_ATTRIBUTE_VECTOR3DFIELDFROMIMAGE3_TILESTYLEW, CModelTexture2DResource::tileStyleToString(pVector3DFieldFromImage3D->getTileStyleW()));
 
-				if (pVector3DFieldFromImage3D->getFilter() != MODELTEXTUREFILTER_AUTO)
+				if (pVector3DFieldFromImage3D->getFilter() != MODELTEXTUREFILTER_LINEAR)
 					writeStringAttribute(XML_3MF_ATTRIBUTE_TEXTURE2D_FILTER, CModelTexture2DResource::filterToString(pVector3DFieldFromImage3D->getFilter()));
 
 				writeEndElement();
