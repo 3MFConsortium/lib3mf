@@ -173,7 +173,7 @@ const (
 type ELib3MFCompositionSpace int
 const (
 		eCompositionSpace_Raw = 0
-		eCompositionSpace_Linear = 1
+		eCompositionSpace_LinearColor = 1
 )
 
 type ELib3MFEncryptionAlgorithm int

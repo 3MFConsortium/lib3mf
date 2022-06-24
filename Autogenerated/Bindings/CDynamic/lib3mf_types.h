@@ -326,7 +326,7 @@ typedef enum eLib3MFCompositionMethod {
 
 typedef enum eLib3MFCompositionSpace {
   eCompositionSpaceRaw = 0,
-  eCompositionSpaceLinear = 1
+  eCompositionSpaceLinearColor = 1
 } eLib3MFCompositionSpace;
 
 typedef enum eLib3MFEncryptionAlgorithm {

@@ -16820,7 +16820,7 @@ void CLib3MFWrapper::New(const FunctionCallbackInfo<Value>& args)
             newObject->Set (String::NewFromUtf8(isolate, "eCompositionMethod_Max"), Integer::New(isolate, 3));
             newObject->Set (String::NewFromUtf8(isolate, "eCompositionMethod_Mask"), Integer::New(isolate, 4));
             newObject->Set (String::NewFromUtf8(isolate, "eCompositionSpace_Raw"), Integer::New(isolate, 0));
-            newObject->Set (String::NewFromUtf8(isolate, "eCompositionSpace_Linear"), Integer::New(isolate, 1));
+            newObject->Set (String::NewFromUtf8(isolate, "eCompositionSpace_LinearColor"), Integer::New(isolate, 1));
             newObject->Set (String::NewFromUtf8(isolate, "eEncryptionAlgorithm_AES256_GCM"), Integer::New(isolate, 1));
             newObject->Set (String::NewFromUtf8(isolate, "eWrappingAlgorithm_RSA_OAEP"), Integer::New(isolate, 0));
             newObject->Set (String::NewFromUtf8(isolate, "eMgfAlgorithm_MGF1_SHA1"), Integer::New(isolate, 160));

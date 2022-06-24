@@ -121,7 +121,7 @@ namespace Lib3MF {
 
 	public enum eCompositionSpace {
 		Raw = 0,
-		Linear = 1
+		LinearColor = 1
 	};
 
 	public enum eEncryptionAlgorithm {

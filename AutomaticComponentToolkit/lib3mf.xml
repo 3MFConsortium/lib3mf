@@ -260,7 +260,7 @@
 	
 	<enum name="CompositionSpace">
 		<option name="Raw" value="0"/>
-		<option name="Linear" value="1"/>
+		<option name="LinearColor" value="1"/>
 	</enum>
 
 	<functiontype name="ProgressCallback" description="A callback function">
