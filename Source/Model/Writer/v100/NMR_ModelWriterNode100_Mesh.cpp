@@ -382,7 +382,7 @@ namespace NMR {
 					PPackageResourceID pID = m_pModel->findPackageResourceID(pBoundary->getFieldReferenceID());
 					if (!pID)
 						throw CNMRException(NMR_ERROR_INVALIDMODELRESOURCE);
-					writeIntAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_FIELDID, pID->getModelResourceID());
+					writeIntAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_SCALARFIELDID, pID->getModelResourceID());
 
 					if (pBoundary->getSolidThreshold() != 0.0) {
 						writeFloatAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_SOLIDTHRESHOLD, float(pBoundary->getSolidThreshold()));
@@ -423,7 +423,7 @@ namespace NMR {
 					PPackageResourceID pID = m_pModel->findPackageResourceID(pColor->getFieldReferenceID());
 					if (!pID)
 						throw CNMRException(NMR_ERROR_INVALIDMODELRESOURCE);
-					writeIntAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_FIELDID, pID->getModelResourceID());
+					writeIntAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_VECTOR3DFIELDID, pID->getModelResourceID());
 
 					if (!fnMATRIX3_isIdentity(pColor->getTransform())) {
 						writeStringAttribute(XML_3MF_ATTRIBUTE_VOLUMEDATA_TRANSFORM, fnMATRIX3_toString(pColor->getTransform()));

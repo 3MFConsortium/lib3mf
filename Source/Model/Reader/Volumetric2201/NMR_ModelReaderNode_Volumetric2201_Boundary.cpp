@@ -115,7 +115,7 @@ namespace NMR {
 				throw CNMRException(NMR_ERROR_INVALIDVOLUMEDATASOLIDTHRESHOLD);
 		}
 
-		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_VOLUMEDATA_FIELDID) == 0) {
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_VOLUMEDATA_SCALARFIELDID) == 0) {
 			if (m_bHasFieldID)
 				throw CNMRException(NMR_ERROR_DUPLICATEVOLUMEDATAFIELDID);
 
