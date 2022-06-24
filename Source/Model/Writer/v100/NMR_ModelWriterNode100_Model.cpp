@@ -815,8 +815,7 @@ namespace NMR {
 				if (pScalarFieldFromImage3D->getScale() != 1.0)
 					writeFloatAttribute(XML_3MF_ATTRIBUTE_SCALARFIELDFROMIMAGE3_SCALE, (nfFloat)pScalarFieldFromImage3D->getScale());
 
-				if (pScalarFieldFromImage3D->getChannel() != MODELCOLORCHANNEL_RED)
-					writeStringAttribute(XML_3MF_ATTRIBUTE_SCALARFIELDFROMIMAGE3_CHANNEL, CModelScalarFieldFromImage3D::channelToString(pScalarFieldFromImage3D->getChannel()));
+				writeStringAttribute(XML_3MF_ATTRIBUTE_SCALARFIELDFROMIMAGE3_CHANNEL, CModelScalarFieldFromImage3D::channelToString(pScalarFieldFromImage3D->getChannel()));
 
 				if (pScalarFieldFromImage3D->getTileStyleU() != MODELTEXTURETILESTYLE_WRAP)
 					writeStringAttribute(XML_3MF_ATTRIBUTE_SCALARFIELDFROMIMAGE3_TILESTYLEU, CModelTexture2DResource::tileStyleToString(pScalarFieldFromImage3D->getTileStyleU()));
