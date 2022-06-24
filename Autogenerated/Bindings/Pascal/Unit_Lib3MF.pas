@@ -242,7 +242,7 @@ type
 
 	TLib3MFCompositionSpace = (
 		eCompositionSpaceRaw,
-		eCompositionSpaceLinear
+		eCompositionSpaceLinearColor
 	);
 
 	TLib3MFEncryptionAlgorithm = (
@@ -8092,7 +8092,7 @@ implementation
 	begin
 		case AValue of
 			eCompositionSpaceRaw: Result := 0;
-			eCompositionSpaceLinear: Result := 1;
+			eCompositionSpaceLinearColor: Result := 1;
 			else 
 				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum value');
 		end;
@@ -8102,7 +8102,7 @@ implementation
 	begin
 		case AValue of
 			0: Result := eCompositionSpaceRaw;
-			1: Result := eCompositionSpaceLinear;
+			1: Result := eCompositionSpaceLinearColor;
 			else 
 				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum constant');
 		end;

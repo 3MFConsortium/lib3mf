@@ -327,7 +327,7 @@ namespace Lib3MF {
   
   enum class eCompositionSpace : Lib3MF_int32 {
     Raw = 0,
-    Linear = 1
+    LinearColor = 1
   };
   
   enum class eEncryptionAlgorithm : Lib3MF_int32 {

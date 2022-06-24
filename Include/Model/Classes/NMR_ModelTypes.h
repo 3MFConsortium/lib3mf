@@ -191,7 +191,7 @@ namespace NMR {
 
 	enum class eModelCompositionSpace {
 		MODELCOMPOSITIONSPACE_RAW = 0,
-		MODELCOMPOSITIONSPACE_LINEAR = 1
+		MODELCOMPOSITIONSPACE_LINEARCOLOR = 1
 	};
 
 	typedef struct {

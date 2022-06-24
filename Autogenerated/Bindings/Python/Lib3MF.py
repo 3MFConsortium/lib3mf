@@ -722,7 +722,7 @@ class CompositionMethod(CTypesEnum):
 '''
 class CompositionSpace(CTypesEnum):
 	Raw = 0
-	Linear = 1
+	LinearColor = 1
 '''Definition of EncryptionAlgorithm
 '''
 class EncryptionAlgorithm(CTypesEnum):
