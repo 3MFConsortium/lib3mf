@@ -338,6 +338,8 @@ These are given by the 3MF Standard
 #define XML_3MF_ELEMENT_VOLUMETRIC_PROPERTY             "property"
 
 #define XML_3MF_ATTRIBUTE_VOLUMEDATA_FIELDID            "fieldid"
+#define XML_3MF_ATTRIBUTE_VOLUMEDATA_SCALARFIELDID      "scalarfieldid"
+#define XML_3MF_ATTRIBUTE_VOLUMEDATA_VECTOR3DFIELDID    "vector3dfieldid"
 #define XML_3MF_ATTRIBUTE_VOLUMEDATA_TRANSFORM          "transform"
 #define XML_3MF_ATTRIBUTE_VOLUMEDATA_CHANNEL            "channel"
 #define XML_3MF_ATTRIBUTE_VOLUMEDATA_SOLIDTHRESHOLD     "solidthreshold"

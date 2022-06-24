@@ -95,7 +95,7 @@ namespace NMR {
 			m_Transform = fnMATRIX3_fromString(pAttributeValue);
 		}
 
-		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_VOLUMEDATA_FIELDID) == 0) {
+		if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_VOLUMEDATA_VECTOR3DFIELDID) == 0) {
 			if (m_bHasFieldID)
 				throw CNMRException(NMR_ERROR_DUPLICATEVOLUMEDATAFIELDID);
 			m_bHasFieldID = true;
