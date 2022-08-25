@@ -79,3 +79,9 @@ bool CBase::DecRefCount()
 	}
 	return false;
 }
+
+// Lib3MF_uint64 CBase::ClassTypeId()
+// {
+// 	return 0x856632D0BAF1D8B7UL; // First 64 bits of SHA1 of a string: "Lib3MF::Base"
+// }
+
