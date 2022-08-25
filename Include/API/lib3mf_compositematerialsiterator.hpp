@@ -76,7 +76,9 @@ public:
 	* Public member functions to implement.
 	*/
 
-	ICompositeMaterials * GetCurrentCompositeMaterials ();
+	ICompositeMaterials * GetCurrentCompositeMaterials() override;
+
+	IResource * GetCurrent() override;
 
 };
 

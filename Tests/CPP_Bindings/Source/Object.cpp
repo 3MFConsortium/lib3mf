@@ -195,9 +195,46 @@ namespace Lib3MF
 	TEST_F(ObjectAssembled, TestObjectIterator)
 	{
 		auto objectIterator = model->GetObjects();
+
 		ASSERT_TRUE(objectIterator->MoveNext());
 		ASSERT_TRUE(objectIterator->MoveNext());
 		ASSERT_TRUE(objectIterator->MoveNext());
+		ASSERT_FALSE(objectIterator->MoveNext());
+	}
+
+	TEST_F(ObjectAssembled, TestObjectIteratorRTTI)
+	{
+		auto objectIterator = model->GetObjects();
+
+		ASSERT_TRUE(objectIterator->MoveNext());
+
+		// assert that this is a ComponentsObject
+		{
+			PResource pResource = objectIterator->GetCurrent();
+			ASSERT_TRUE(std::dynamic_pointer_cast<CObject>(pResource) != nullptr);
+			ASSERT_TRUE(std::dynamic_pointer_cast<CMeshObject>(pResource) == nullptr);
+			ASSERT_TRUE(std::dynamic_pointer_cast<CComponentsObject>(pResource) != nullptr);
+			
+			PObject pObject = objectIterator->GetCurrentObject();
+			ASSERT_TRUE(std::dynamic_pointer_cast<CMeshObject>(pObject) == nullptr);
+			ASSERT_TRUE(std::dynamic_pointer_cast<CComponentsObject>(pObject) != nullptr);
+		}
+		
+		ASSERT_TRUE(objectIterator->MoveNext());
+		ASSERT_TRUE(objectIterator->MoveNext());
+
+		// assert that this is a MeshObject
+		{
+			PResource pResource = objectIterator->GetCurrent();
+			ASSERT_TRUE(std::dynamic_pointer_cast<CObject>(pResource) != nullptr);
+			ASSERT_TRUE(std::dynamic_pointer_cast<CMeshObject>(pResource) != nullptr);
+			ASSERT_TRUE(std::dynamic_pointer_cast<CComponentsObject>(pResource) == nullptr);
+			
+			PObject pObject = objectIterator->GetCurrentObject();
+			ASSERT_TRUE(std::dynamic_pointer_cast<CMeshObject>(pObject) != nullptr);
+			ASSERT_TRUE(std::dynamic_pointer_cast<CComponentsObject>(pObject) == nullptr);
+		}
+
 		ASSERT_FALSE(objectIterator->MoveNext());
 	}
 

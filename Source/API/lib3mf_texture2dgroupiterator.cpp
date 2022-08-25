@@ -45,3 +45,7 @@ ITexture2DGroup * CTexture2DGroupIterator::GetCurrentTexture2DGroup()
 	return new CTexture2DGroup(std::dynamic_pointer_cast<NMR::CModelTexture2DGroupResource>(GetCurrentResource()));
 }
 
+IResource * CTexture2DGroupIterator::GetCurrent()
+{
+	return GetCurrentTexture2DGroup();
+}

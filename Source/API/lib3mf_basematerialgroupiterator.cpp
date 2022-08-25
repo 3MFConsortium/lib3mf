@@ -46,3 +46,7 @@ IBaseMaterialGroup * CBaseMaterialGroupIterator::GetCurrentBaseMaterialGroup()
 	return new CBaseMaterialGroup(std::dynamic_pointer_cast<NMR::CModelBaseMaterialResource>(GetCurrentResource()));
 }
 
+IResource * CBaseMaterialGroupIterator::GetCurrent()
+{
+	return GetCurrentBaseMaterialGroup();
+}
