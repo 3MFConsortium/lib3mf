@@ -84,7 +84,6 @@ public:
 	/**
 	* Public member functions to implement.
 	*/
-	// Lib3MF_uint64 ClassTypeId() override;
 };
 
 } // namespace Impl
