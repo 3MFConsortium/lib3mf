@@ -1222,11 +1222,11 @@ Model error codes (0x8XXX)
 // A beamset identifier is not unique
 #define NMR_ERROR_BEAMSET_IDENTIFIER_NOT_UNIQUE 0x810B
 
+// A transform attribute is duplicated
+#define NMR_ERROR_DUPLICATETRANSFORM 0x810C
+
 // A component resource is invalid
 #define NMR_ERROR_INVALIDCOMPONENTRESOURCE 0x810D
-
-
-
 
 /*-------------------------------------------------------------------
 XML Parser Error Constants (0x9XXX)
