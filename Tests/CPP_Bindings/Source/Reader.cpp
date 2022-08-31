@@ -126,7 +126,6 @@ namespace Lib3MF
 		ASSERT_EQ(28, model->GetObjects()->Count());
 	}
 
-
 	TEST_F(Reader, DuplicateStartPart)
 	{
 		// the /.rels-file of this 3MF contains two Relationship-entries with the StartPart relationship.
@@ -134,5 +133,10 @@ namespace Lib3MF
 		Reader::reader3MF->ReadFromFile(sTestFilesPath + "/Reader/" + "CS-1111_3dmodel-e1r1_other-e1r1.3mf");
 
 		CheckReaderWarnings(Reader::reader3MF, 1);
+	}
+
+	TEST_F(Reader, BrokeComposite) {
+		auto reader = model->QueryReader("3mf");
+		ASSERT_SPECIFIC_THROW(reader->ReadFromFile(sTestFilesPath + "/Reader/" + "DOS-FUZ-LIB3MF.3mf");, ELib3MFException);
 	}
 }
