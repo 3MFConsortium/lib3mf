@@ -126,4 +126,13 @@ namespace Lib3MF
 		ASSERT_EQ(28, model->GetObjects()->Count());
 	}
 
+
+	TEST_F(Reader, DuplicateStartPart)
+	{
+		// the /.rels-file of this 3MF contains two Relationship-entries with the StartPart relationship.
+		// The 3MFReader should raise a warning when reading this file.
+		Reader::reader3MF->ReadFromFile(sTestFilesPath + "/Reader/" + "CS-1111_3dmodel-e1r1_other-e1r1.3mf");
+
+		CheckReaderWarnings(Reader::reader3MF, 1);
+	}
 }
