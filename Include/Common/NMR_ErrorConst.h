@@ -1222,6 +1222,8 @@ Model error codes (0x8XXX)
 // A beamset identifier is not unique
 #define NMR_ERROR_BEAMSET_IDENTIFIER_NOT_UNIQUE 0x810B
 
+// A component resource is invalid
+#define NMR_ERROR_INVALIDCOMPONENTRESOURCE 0x810D
 
 
 

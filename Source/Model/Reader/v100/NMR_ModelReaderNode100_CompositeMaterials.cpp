@@ -146,6 +146,8 @@ namespace NMR {
 
 				PModelComposite pComposite = pXMLNode->getComposite();
 
+				if (!pComposite)
+					throw CNMRException(NMR_ERROR_INVALIDCOMPONENTRESOURCE);
 				m_pCompositeMaterials->addComposite(pComposite);
 			}
 			else
