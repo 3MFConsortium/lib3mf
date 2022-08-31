@@ -216,7 +216,7 @@ namespace NMR {
 		case NMR_ERROR_OPCCONTENTTYPEMISMATCH: return "Content type mismatch";
 		case NMR_ERROR_OPCRELATIONSHIPENUMERATIONFAILED: return "Could not enumerate relationships";
 		case NMR_ERROR_OPCRELATIONSHIPNOTFOUND: return "Could not find relationship type";
-		case NMR_ERROR_OPCRELATIONSHIPNOTUNIQUE: return "Ambiguous relationship type";
+		case NMR_ERROR_OPCRELATIONSHIPNOTUNIQUE: return "Relationship type not unique";
 		case NMR_ERROR_OPCCOULDNOTGETMODELSTREAM: return "Could not get OPC Model Stream";
 		case NMR_ERROR_CREATEXMLREADERFAILED: return "Could not create XML Reader";
 		case NMR_ERROR_SETXMLREADERINPUTFAILED: return "Could not set XML reader input";
