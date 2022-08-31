@@ -134,11 +134,5 @@ namespace Lib3MF
 		Reader::reader3MF->ReadFromFile(sTestFilesPath + "/Reader/" + "CS-1111_3dmodel-e1r1_other-e1r1.3mf");
 
 		CheckReaderWarnings(Reader::reader3MF, 1);
-		for (Lib3MF_uint32 iWarning = 0; iWarning < reader3MF->GetWarningCount(); iWarning++)
-		{
-			Lib3MF_uint32 nErrorCode;
-			std::string sWarning = reader3MF->GetWarning(iWarning, nErrorCode);
-			std::cout << iWarning << ": " << nErrorCode << ", " << sWarning << std::endl;
-		}
 	}
 }
