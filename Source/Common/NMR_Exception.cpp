@@ -405,7 +405,9 @@ namespace NMR {
 		case NMR_ERROR_MODELRESOURCE_IN_DIFFERENT_MODEL: return "Referenced model resource must not be in a different model.";
 		case NMR_ERROR_PATH_NOT_ABSOLUTE: return "A path attribute element is not absolute.";
 		case NMR_ERROR_BEAMSET_IDENTIFIER_NOT_UNIQUE: return "A beamset identifier is not unique.";
+		case NMR_ERROR_DUPLICATETRANSFORM: return "A transform attribute is duplicated";
 		case NMR_ERROR_INVALIDCOMPONENTRESOURCE: return "A component resource is invalid.";
+		
 			//keystore error codes
 		case NMR_ERROR_KEYSTOREDUPLICATECONSUMER: return "A consumer already exists for this consumerid";
 		case NMR_ERROR_KEYSTOREDUPLICATECONSUMERID: return "The attribute consumerid is duplicated";

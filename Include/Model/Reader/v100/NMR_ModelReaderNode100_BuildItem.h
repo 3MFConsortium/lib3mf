@@ -45,6 +45,7 @@ namespace NMR {
 		nfInt32 m_ObjectID;
 		nfBool m_bHasID;
 		std::string m_sPartNumber;
+		bool m_bHasTransform;
 		NMATRIX3 m_mTransform;
 
 		// Production Extension

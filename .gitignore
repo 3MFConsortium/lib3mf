@@ -4,3 +4,4 @@ lib3MF.pc
 Include/Model/COM/NMR_COMVersion.h
 debug
 .DS_Store
+.vscode

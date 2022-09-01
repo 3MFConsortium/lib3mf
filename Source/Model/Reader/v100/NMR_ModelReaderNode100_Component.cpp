@@ -50,6 +50,7 @@ namespace NMR {
 		m_ObjectID = 0;
 		m_bHasID = false;
 		m_sPath = "";
+		m_bHasTransform = false;
 		m_mTransform = fnMATRIX3_identity();
 
 		m_bHasPath = false;
@@ -108,7 +109,11 @@ namespace NMR {
 			m_bHasID = true;
 		}
 		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_COMPONENT_TRANSFORM) == 0) {
+			if (m_bHasTransform)
+				throw CNMRException(NMR_ERROR_DUPLICATETRANSFORM);
+
 			m_mTransform = fnMATRIX3_fromString(pAttributeValue);
+			m_bHasTransform = true;
 		}
 		else
 			m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ATTRIBUTE), mrwInvalidOptionalValue);

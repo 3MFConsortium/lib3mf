@@ -53,6 +53,7 @@ namespace NMR {
 
 		m_hasPath = false;
 
+		m_bHasTransform = false;
 		m_mTransform = fnMATRIX3_identity();
 	}
 
@@ -129,7 +130,11 @@ namespace NMR {
 			m_bHasID = true;
 		}
 		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_ITEM_TRANSFORM) == 0) {
+			if (m_bHasTransform)
+				throw CNMRException(NMR_ERROR_DUPLICATETRANSFORM);
+
 			m_mTransform = fnMATRIX3_fromString(pAttributeValue);
+			m_bHasTransform = true;
 		}
 		else if (strcmp(pAttributeName, XML_3MF_ATTRIBUTE_ITEM_PARTNUMBER) == 0) {
 			m_sPartNumber = std::string(pAttributeValue);
