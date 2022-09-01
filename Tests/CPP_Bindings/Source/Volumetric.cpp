@@ -168,6 +168,13 @@ namespace Lib3MF
 			PReader ioReader = ioModel->QueryReader("3mf");
 			ioReader->ReadFromFile(Volumetric::OutFolder + "MyProperties.3mf");
 
+			auto ioMeshObjects = ioModel->GetMeshObjects();
+			ASSERT_EQ(ioMeshObjects->Count(), 1);
+			ASSERT_TRUE(ioMeshObjects->MoveNext());
+			auto ioMesh = ioMeshObjects->GetCurrentMeshObject();
+			auto ioVolumeData = ioMesh->VolumeData();
+			CompareVolumeData(ioModel, ioVolumeData, model, volumeData);
+
 			PWriter ioWriter = ioModel->QueryWriter("3mf");
 			ioWriter->WriteToFile(Volumetric::OutFolder + "MyPropertiesReOut.3mf");
 		}

@@ -121,14 +121,17 @@ void CompareFieldReferences(Lib3MF::PModel modelA, Lib3MF::PFieldReference A, Li
 	if (A != nullptr && B != nullptr) {
 		CompareTransforms(A->GetTransform(), B->GetTransform());
 
-		auto scalarFieldA = modelA->GetScalarFieldByID(A->GetFieldResourceID());
-		auto scalarFieldB = modelB->GetScalarFieldByID(B->GetFieldResourceID());
+		Lib3MF::PResource fieldResourceA = modelA->GetResourceByID(A->GetFieldResourceID());
+		Lib3MF::PResource fieldResourceB = modelB->GetResourceByID(B->GetFieldResourceID());
+
+		auto scalarFieldA = std::dynamic_pointer_cast<Lib3MF::CScalarField>(fieldResourceA);
+		auto scalarFieldB = std::dynamic_pointer_cast<Lib3MF::CScalarField>(fieldResourceB);
 		ASSERT_EQ(scalarFieldA == nullptr, scalarFieldB == nullptr);
 		if (scalarFieldA != nullptr && scalarFieldB != nullptr) {
 			CompareScalarFields(modelA, scalarFieldA, modelB, scalarFieldB);
 		}
-		auto vectorField3DA = modelA->GetVector3DFieldByID(A->GetFieldResourceID());
-		auto vectorField3DB = modelB->GetVector3DFieldByID(B->GetFieldResourceID());
+		auto vectorField3DA = std::dynamic_pointer_cast<Lib3MF::CVector3DField>(fieldResourceA);
+		auto vectorField3DB = std::dynamic_pointer_cast<Lib3MF::CVector3DField>(fieldResourceB);
 		ASSERT_EQ(vectorField3DA == nullptr, vectorField3DB == nullptr);
 		if (scalarFieldA != nullptr && scalarFieldB != nullptr) {
 			CompareVector3DFields(modelA, vectorField3DA, modelB, vectorField3DB);
@@ -337,6 +340,7 @@ void CompareVolumeData(Lib3MF::PModel modelA, Lib3MF::PVolumeData A, Lib3MF::PMo
 		auto propertyA = A->GetProperty(i);
 		auto propertyB = B->GetProperty(i);
 		ASSERT_EQ(propertyA->GetName(), propertyB->GetName());
+		ASSERT_EQ(propertyA->IsRequired(), propertyB->IsRequired());
 		CompareFieldReferences(modelA, propertyA, modelB, propertyB);
 	}
 	// TODO

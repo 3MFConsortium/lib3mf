@@ -150,6 +150,39 @@ IResource* CModel::createIResourceFromModelResource(NMR::PModelResource pResourc
 		return new CSliceStack(p);
 	}
 
+	if (auto p = std::dynamic_pointer_cast<NMR::CModelImageStack>(pResource)) {
+		return new CImageStack(p);
+	}
+	if (auto p = std::dynamic_pointer_cast<NMR::CModelImage3D>(pResource)) {
+		return new CImage3D(p);
+	}
+
+	if (auto p = std::dynamic_pointer_cast<NMR::CModelScalarFieldFromImage3D>(pResource)) {
+		return new CScalarFieldFromImage3D(p);
+	}
+	if (auto p = std::dynamic_pointer_cast<NMR::CModelScalarFieldConstant>(pResource)) {
+		return new CScalarFieldConstant(p);
+	}
+	if (auto p = std::dynamic_pointer_cast<NMR::CModelScalarFieldComposed>(pResource)) {
+		return new CScalarFieldComposed(p);
+	}
+	if (auto p = std::dynamic_pointer_cast<NMR::CModelScalarField>(pResource)) {
+		return new CScalarField(p);
+	}
+
+	if (auto p = std::dynamic_pointer_cast<NMR::CModelVector3DFieldFromImage3D>(pResource)) {
+		return new CVector3DFieldFromImage3D(p);
+	}
+	if (auto p = std::dynamic_pointer_cast<NMR::CModelVector3DFieldConstant>(pResource)) {
+		return new CVector3DFieldConstant(p);
+	}
+	if (auto p = std::dynamic_pointer_cast<NMR::CModelVector3DFieldComposed>(pResource)) {
+		return new CVector3DFieldComposed(p);
+	}
+	if (auto p = std::dynamic_pointer_cast<NMR::CModelVector3DField>(pResource)) {
+		return new CVector3DField(p);
+	}
+
 	if (bFailIfUnkownClass)
 		throw ELib3MFInterfaceException(NMR_ERROR_UNKNOWNMODELRESOURCE);
 
