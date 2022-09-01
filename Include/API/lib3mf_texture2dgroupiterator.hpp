@@ -76,7 +76,9 @@ public:
 	* Public member functions to implement.
 	*/
 
-	ITexture2DGroup * GetCurrentTexture2DGroup ();
+	ITexture2DGroup * GetCurrentTexture2DGroup() override;
+
+	IResource * GetCurrent() override;
 
 };
 

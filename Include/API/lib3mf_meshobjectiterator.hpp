@@ -76,7 +76,7 @@ public:
 	* Public member functions to implement.
 	*/
 
-	IMeshObject * GetCurrentMeshObject ();
+	IMeshObject * GetCurrentMeshObject() override;
 
 };
 

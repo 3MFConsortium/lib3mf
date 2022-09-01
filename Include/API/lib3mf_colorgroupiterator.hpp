@@ -76,7 +76,9 @@ public:
 	* Public member functions to implement.
 	*/
 
-	IColorGroup * GetCurrentColorGroup ();
+	IColorGroup * GetCurrentColorGroup() override;
+
+	IResource * GetCurrent() override;
 
 };
 
