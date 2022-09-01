@@ -42,6 +42,7 @@ namespace NMR {
 		CModel * m_pModel;
 		ModelResourceID m_ObjectID;
 		nfBool m_bHasID;
+		nfBool m_bHasTransform;
 		NMATRIX3 m_mTransform;
 
 		nfBool m_bHasPath;

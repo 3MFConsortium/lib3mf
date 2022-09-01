@@ -79,3 +79,4 @@ bool CBase::DecRefCount()
 	}
 	return false;
 }
+

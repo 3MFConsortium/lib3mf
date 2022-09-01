@@ -76,8 +76,9 @@ public:
 	* Public member functions to implement.
 	*/
 
-	IMultiPropertyGroup * GetCurrentMultiPropertyGroup ();
+	IMultiPropertyGroup * GetCurrentMultiPropertyGroup() override;
 
+	IResource * GetCurrent() override;
 };
 
 } // namespace Impl

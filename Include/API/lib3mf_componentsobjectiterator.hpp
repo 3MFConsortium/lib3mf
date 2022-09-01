@@ -76,7 +76,7 @@ public:
 	* Public member functions to implement.
 	*/
 
-	IComponentsObject * GetCurrentComponentsObject ();
+	IComponentsObject * GetCurrentComponentsObject() override;
 
 };
 

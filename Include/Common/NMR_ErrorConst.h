@@ -299,6 +299,9 @@ NMR_ErrorConst.h defines all error code constants.
 // Failed to initialize a zlib buffer
 #define NMR_ERROR_COULDNOTINITDEFLATE 0x1052
 
+// Too many slices
+#define NMR_ERROR_TOOMANYSLICES 0x1053
+
 /*-------------------------------------------------------------------
 Core framework error codes (0x2XXX)
 -------------------------------------------------------------------*/
@@ -1219,6 +1222,12 @@ Model error codes (0x8XXX)
 // A beamset identifier is not unique
 #define NMR_ERROR_BEAMSET_IDENTIFIER_NOT_UNIQUE 0x810B
 
+// A transform attribute is duplicated
+#define NMR_ERROR_DUPLICATETRANSFORM 0x810C
+
+// A component resource is invalid
+#define NMR_ERROR_INVALIDCOMPONENTRESOURCE 0x810D
+
 // errors for the volumetric extension 0x88xx
 
 // Invalid Image3D Size
@@ -1387,9 +1396,7 @@ Model error codes (0x8XXX)
 #define NMR_ERROR_MISSING_ATTRIBUTE_VECTOR3DFIELDCOMPOSED 0x8836
 
 // Duplicate attribute in vector3d field composed
-#define NMR_ERROR_DUPLICATE_ATTRIBUTE_VECTOR3DFIELDCOMPOSED 0x88357
-
-
+#define NMR_ERROR_DUPLICATE_ATTRIBUTE_VECTOR3DFIELDCOMPOSED 0x8837
 
 /*-------------------------------------------------------------------
 XML Parser Error Constants (0x9XXX)

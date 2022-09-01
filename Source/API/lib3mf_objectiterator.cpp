@@ -45,3 +45,7 @@ IObject * CObjectIterator::GetCurrentObject ()
 	return CObject::fnCreateObjectFromModelResource(GetCurrentResource(), true);
 }
 
+IResource * CObjectIterator::GetCurrent()
+{
+	return GetCurrentObject();
+}
