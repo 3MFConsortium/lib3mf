@@ -10618,6 +10618,7 @@ void CLib3MFModel::Init()
 		NODE_SET_PROTOTYPE_METHOD(tpl, "SetLanguage", SetLanguage);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "QueryWriter", QueryWriter);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "QueryReader", QueryReader);
+		NODE_SET_PROTOTYPE_METHOD(tpl, "GetResourceByID", GetResourceByID);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetTexture2DByID", GetTexture2DByID);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetPropertyTypeByID", GetPropertyTypeByID);
 		NODE_SET_PROTOTYPE_METHOD(tpl, "GetBaseMaterialGroupByID", GetBaseMaterialGroupByID);
@@ -10900,6 +10901,33 @@ void CLib3MFModel::QueryReader(const FunctionCallbackInfo<Value>& args)
         CheckError(isolate, wrapperTable, instanceHandle, errorCode);
         Local<Object> instanceObjReaderInstance = CLib3MFReader::NewInstance(args.Holder(), hReturnReaderInstance);
         args.GetReturnValue().Set(instanceObjReaderInstance);
+
+		} catch (std::exception & E) {
+				RaiseError(isolate, E.what());
+		}
+}
+
+
+void CLib3MFModel::GetResourceByID(const FunctionCallbackInfo<Value>& args) 
+{
+		Isolate* isolate = args.GetIsolate();
+		HandleScope scope(isolate);
+		try {
+        if (!args[0]->IsUint32()) {
+            throw std::runtime_error("Expected uint32 parameter 0 (UniqueResourceID)");
+        }
+        unsigned int nUniqueResourceID = (unsigned int) args[0]->IntegerValue(isolate->GetCurrentContext()).ToChecked();
+        Lib3MFHandle hReturnResource = nullptr;
+        sLib3MFDynamicWrapperTable * wrapperTable = CLib3MFBaseClass::getDynamicWrapperTable(args.Holder());
+        if (wrapperTable == nullptr)
+            throw std::runtime_error("Could not get wrapper table for Lib3MF method GetResourceByID.");
+        if (wrapperTable->m_Model_GetResourceByID == nullptr)
+            throw std::runtime_error("Could not call Lib3MF method Model::GetResourceByID.");
+        Lib3MFHandle instanceHandle = CLib3MFBaseClass::getHandle(args.Holder());
+        Lib3MFResult errorCode = wrapperTable->m_Model_GetResourceByID(instanceHandle, nUniqueResourceID, &hReturnResource);
+        CheckError(isolate, wrapperTable, instanceHandle, errorCode);
+        Local<Object> instanceObjResource = CLib3MFResource::NewInstance(args.Holder(), hReturnResource);
+        args.GetReturnValue().Set(instanceObjResource);
 
 		} catch (std::exception & E) {
 				RaiseError(isolate, E.what());

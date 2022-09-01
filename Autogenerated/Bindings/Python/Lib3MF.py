@@ -99,6 +99,7 @@ class ErrorCodes(enum.IntEnum):
 	INVALIDPROPERTYCOUNT = 132
 	UNKOWNPROGRESSIDENTIFIER = 140
 	ELEMENTCOUNTEXCEEDSLIMIT = 141
+	INVALIDRESOURCE = 142
 	BEAMLATTICE_INVALID_OBJECTTYPE = 2000
 	INVALIDKEYSTORE = 3000
 	INVALIDKEYSTORECONSUMER = 3001
@@ -417,6 +418,7 @@ class FunctionTable:
 	lib3mf_model_setlanguage = None
 	lib3mf_model_querywriter = None
 	lib3mf_model_queryreader = None
+	lib3mf_model_getresourcebyid = None
 	lib3mf_model_gettexture2dbyid = None
 	lib3mf_model_getpropertytypebyid = None
 	lib3mf_model_getbasematerialgroupbyid = None
@@ -2618,6 +2620,12 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p))
 			self.lib.lib3mf_model_queryreader = methodType(int(methodAddress.value))
 			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_model_getresourcebyid")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_model_getresourcebyid = methodType(int(methodAddress.value))
+			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_model_gettexture2dbyid")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
@@ -3849,6 +3857,9 @@ class Wrapper:
 			
 			self.lib.lib3mf_model_queryreader.restype = ctypes.c_int32
 			self.lib.lib3mf_model_queryreader.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_model_getresourcebyid.restype = ctypes.c_int32
+			self.lib.lib3mf_model_getresourcebyid.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p)]
 			
 			self.lib.lib3mf_model_gettexture2dbyid.restype = ctypes.c_int32
 			self.lib.lib3mf_model_gettexture2dbyid.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p)]
@@ -6845,6 +6856,17 @@ class Model(Base):
 			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
 		
 		return ReaderInstanceObject
+	
+	def GetResourceByID(self, UniqueResourceID):
+		nUniqueResourceID = ctypes.c_uint32(UniqueResourceID)
+		ResourceHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_model_getresourcebyid(self._handle, nUniqueResourceID, ResourceHandle))
+		if ResourceHandle:
+			ResourceObject = self._wrapper._polymorphicFactory(ResourceHandle)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return ResourceObject
 	
 	def GetTexture2DByID(self, UniqueResourceID):
 		nUniqueResourceID = ctypes.c_uint32(UniqueResourceID)

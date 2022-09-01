@@ -336,6 +336,7 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_Model_SetLanguage = NULL;
 	pWrapperTable->m_Model_QueryWriter = NULL;
 	pWrapperTable->m_Model_QueryReader = NULL;
+	pWrapperTable->m_Model_GetResourceByID = NULL;
 	pWrapperTable->m_Model_GetTexture2DByID = NULL;
 	pWrapperTable->m_Model_GetPropertyTypeByID = NULL;
 	pWrapperTable->m_Model_GetBaseMaterialGroupByID = NULL;
@@ -3050,6 +3051,15 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 	dlerror();
 	#endif // _WIN32
 	if (pWrapperTable->m_Model_QueryReader == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Model_GetResourceByID = (PLib3MFModel_GetResourceByIDPtr) GetProcAddress(hLibrary, "lib3mf_model_getresourcebyid");
+	#else // _WIN32
+	pWrapperTable->m_Model_GetResourceByID = (PLib3MFModel_GetResourceByIDPtr) dlsym(hLibrary, "lib3mf_model_getresourcebyid");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Model_GetResourceByID == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
