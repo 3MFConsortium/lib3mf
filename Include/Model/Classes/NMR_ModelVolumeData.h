@@ -64,6 +64,7 @@ namespace NMR {
 		PVolumeDataBoundary getBoundary();
 		PVolumeDataBoundary createBoundary(PModelScalarField);
 		void setBoundary(PVolumeDataBoundary pLevelset);
+		void removeBoundary();
 
 		nfBool hasProperty(std::string sName);
 		nfUint32 getPropertyCount() const;
@@ -78,6 +79,7 @@ namespace NMR {
 		PVolumeDataColor getColor();
 		PVolumeDataColor createColor(PModelVector3DField pVector3DField);
 		void setColor(PVolumeDataColor pColor);
+		void removeColor();
 	};
 
 	typedef std::shared_ptr <CModelVolumeData> PModelVolumeData;

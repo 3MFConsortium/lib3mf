@@ -77,8 +77,12 @@ namespace NMR {
 		return m_pBoundary;
 	}
 
+	void CModelVolumeData::removeBoundary()
+	{
+		m_pBoundary.reset();
+	}
 
-	nfBool CModelVolumeData::hasProperty(_In_ std::string sName)
+	nfBool CModelVolumeData::hasProperty(std::string sName)
 	{
 		std::map<std::string, PVolumeDataProperty>::iterator iIterator = m_mapProperties.find(sName);
 		return iIterator != m_mapProperties.end();
@@ -176,5 +180,10 @@ namespace NMR {
 	PVolumeDataColor CModelVolumeData::getColor()
 	{
 		return m_pColor;
+	}
+
+	void CModelVolumeData::removeColor()
+	{
+		m_pColor.reset();
 	}
 }

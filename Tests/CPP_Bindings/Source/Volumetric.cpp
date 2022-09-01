@@ -171,6 +171,11 @@ namespace Lib3MF
 			PWriter ioWriter = ioModel->QueryWriter("3mf");
 			ioWriter->WriteToFile(Volumetric::OutFolder + "MyPropertiesReOut.3mf");
 		}
+
+		volumeData->RemoveProperty(0);
+		ASSERT_EQ(volumeData->GetPropertyCount(), 1);
+
+		writer3MF->WriteToFile(Volumetric::OutFolder + "MyProperties_after_deletion.3mf");
 	}
 
 	TEST_F(Volumetric, VolumetricCompositionScalar)
@@ -262,6 +267,10 @@ namespace Lib3MF
 			PWriter ioWriter = ioModel->QueryWriter("3mf");
 			ioWriter->WriteToFile(Volumetric::OutFolder + "BoundaryReOut.3mf");
 		}
+
+		ASSERT_TRUE(volumeData->GetBoundary() != nullptr);
+		volumeData->RemoveBoundary();
+		ASSERT_TRUE(volumeData->GetBoundary() == nullptr);
 	}
 
 	TEST_F(Volumetric, VolumetricColor)
@@ -272,7 +281,7 @@ namespace Lib3MF
 
 		auto theMesh = GetMesh();
 		auto volumeData = theMesh->VolumeData();
-		auto theBoundary = volumeData->CreateNewColor(vectorFieldFromImage3D.get());
+		auto theColour = volumeData->CreateNewColor(vectorFieldFromImage3D.get());
 
 		writer3MF->WriteToFile(Volumetric::OutFolder + "Color.3mf");
 		{
@@ -290,6 +299,10 @@ namespace Lib3MF
 			PWriter ioWriter = ioModel->QueryWriter("3mf");
 			ioWriter->WriteToFile(Volumetric::OutFolder + "ColorReOut.3mf");
 		}
+		
+		ASSERT_TRUE(volumeData->GetColor() != nullptr);
+		volumeData->RemoveColor();
+		ASSERT_TRUE(volumeData->GetColor() == nullptr);
 	}
 
 	TEST_F(Volumetric, VolumetricCompositionVector3D)

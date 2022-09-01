@@ -81,7 +81,7 @@ IVolumeDataBoundary* CVolumeData::CreateNewBoundary(IScalarField* pTheScalarFiel
 
 void CVolumeData::RemoveBoundary()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	m_pVolumeData->removeBoundary();
 }
 
 IVolumeDataComposite * CVolumeData::GetComposite()
@@ -131,7 +131,7 @@ IVolumeDataColor * CVolumeData::CreateNewColor(IVector3DField* pTheVector3DField
 
 void CVolumeData::RemoveColor()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	m_pVolumeData->removeColor();
 }
 
 Lib3MF_uint32 CVolumeData::GetPropertyCount()
