@@ -2664,6 +2664,15 @@ Lib3MFResult CCall_lib3mf_model_queryreader(Lib3MFHandle libraryHandle, Lib3MF_M
 }
 
 
+Lib3MFResult CCall_lib3mf_model_getresourcebyid(Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_uint32 nUniqueResourceID, Lib3MF_Resource * pResource)
+{
+	if (libraryHandle == 0) 
+		return LIB3MF_ERROR_INVALIDCAST;
+	sLib3MFDynamicWrapperTable * wrapperTable = (sLib3MFDynamicWrapperTable *) libraryHandle;
+	return wrapperTable->m_Model_GetResourceByID (pModel, nUniqueResourceID, pResource);
+}
+
+
 Lib3MFResult CCall_lib3mf_model_gettexture2dbyid(Lib3MFHandle libraryHandle, Lib3MF_Model pModel, Lib3MF_uint32 nUniqueResourceID, Lib3MF_Texture2D * pTextureInstance)
 {
 	if (libraryHandle == 0) 
@@ -3589,6 +3598,7 @@ const LIB3MF_ERROR_INVALIDATTACHMENTSTREAM = 131;
 const LIB3MF_ERROR_INVALIDPROPERTYCOUNT = 132;
 const LIB3MF_ERROR_UNKOWNPROGRESSIDENTIFIER = 140;
 const LIB3MF_ERROR_ELEMENTCOUNTEXCEEDSLIMIT = 141;
+const LIB3MF_ERROR_INVALIDRESOURCE = 142;
 const LIB3MF_ERROR_BEAMLATTICE_INVALID_OBJECTTYPE = 2000;
 const LIB3MF_ERROR_INVALIDKEYSTORE = 3000;
 const LIB3MF_ERROR_INVALIDKEYSTORECONSUMER = 3001;
@@ -3679,6 +3689,8 @@ func errorMessage(errorcode uint32) string {
 		return "A progress identifier is unknown";
 	case LIB3MF_ERROR_ELEMENTCOUNTEXCEEDSLIMIT:
 		return "An element buffer exceeds its spec limit";
+	case LIB3MF_ERROR_INVALIDRESOURCE:
+		return "A resource is invalid";
 	case LIB3MF_ERROR_BEAMLATTICE_INVALID_OBJECTTYPE:
 		return "This object type is not valid for beamlattices";
 	case LIB3MF_ERROR_INVALIDKEYSTORE:
@@ -7424,6 +7436,16 @@ func (inst Model) QueryReader(readerClass string) (Reader, error) {
 		return Reader{}, makeError(uint32(ret))
 	}
 	return inst.wrapperRef.NewReader(readerInstance), nil
+}
+
+// GetResourceByID finds a model resource by its UniqueResourceID.
+func (inst Model) GetResourceByID(uniqueResourceID uint32) (Resource, error) {
+	var resource ref
+	ret := C.CCall_lib3mf_model_getresourcebyid(inst.wrapperRef.LibraryHandle, inst.Ref, C.uint32_t(uniqueResourceID), &resource)
+	if ret != 0 {
+		return Resource{}, makeError(uint32(ret))
+	}
+	return inst.wrapperRef.NewResource(resource), nil
 }
 
 // GetTexture2DByID finds a model texture by its UniqueResourceID.

@@ -1061,6 +1061,7 @@ private:
 	static void SetLanguage(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void QueryWriter(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void QueryReader(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void GetResourceByID(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetTexture2DByID(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetPropertyTypeByID(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void GetBaseMaterialGroupByID(const v8::FunctionCallbackInfo<v8::Value>& args);

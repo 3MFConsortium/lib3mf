@@ -354,6 +354,7 @@ public:
 			case LIB3MF_ERROR_INVALIDPROPERTYCOUNT: return "INVALIDPROPERTYCOUNT";
 			case LIB3MF_ERROR_UNKOWNPROGRESSIDENTIFIER: return "UNKOWNPROGRESSIDENTIFIER";
 			case LIB3MF_ERROR_ELEMENTCOUNTEXCEEDSLIMIT: return "ELEMENTCOUNTEXCEEDSLIMIT";
+			case LIB3MF_ERROR_INVALIDRESOURCE: return "INVALIDRESOURCE";
 			case LIB3MF_ERROR_BEAMLATTICE_INVALID_OBJECTTYPE: return "BEAMLATTICE_INVALID_OBJECTTYPE";
 			case LIB3MF_ERROR_INVALIDKEYSTORE: return "INVALIDKEYSTORE";
 			case LIB3MF_ERROR_INVALIDKEYSTORECONSUMER: return "INVALIDKEYSTORECONSUMER";
@@ -404,6 +405,7 @@ public:
 			case LIB3MF_ERROR_INVALIDPROPERTYCOUNT: return "Invalid property count.";
 			case LIB3MF_ERROR_UNKOWNPROGRESSIDENTIFIER: return "A progress identifier is unknown";
 			case LIB3MF_ERROR_ELEMENTCOUNTEXCEEDSLIMIT: return "An element buffer exceeds its spec limit";
+			case LIB3MF_ERROR_INVALIDRESOURCE: return "A resource is invalid";
 			case LIB3MF_ERROR_BEAMLATTICE_INVALID_OBJECTTYPE: return "This object type is not valid for beamlattices";
 			case LIB3MF_ERROR_INVALIDKEYSTORE: return "The keystore object is invalid";
 			case LIB3MF_ERROR_INVALIDKEYSTORECONSUMER: return "The consumer keystore object is invalid";
@@ -1563,6 +1565,7 @@ public:
 	inline void SetLanguage(const std::string & sLanguage);
 	inline PWriter QueryWriter(const std::string & sWriterClass);
 	inline PReader QueryReader(const std::string & sReaderClass);
+	inline PResource GetResourceByID(const Lib3MF_uint32 nUniqueResourceID);
 	inline PTexture2D GetTexture2DByID(const Lib3MF_uint32 nUniqueResourceID);
 	inline ePropertyType GetPropertyTypeByID(const Lib3MF_uint32 nUniqueResourceID);
 	inline PBaseMaterialGroup GetBaseMaterialGroupByID(const Lib3MF_uint32 nUniqueResourceID);
@@ -5682,6 +5685,22 @@ inline CBase* CWrapper::polymorphicFactory(Lib3MFHandle pHandle)
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
 		return std::shared_ptr<CReader>(dynamic_cast<CReader*>(m_pWrapper->polymorphicFactory(hReaderInstance)));
+	}
+	
+	/**
+	* CModel::GetResourceByID - finds a model resource by its UniqueResourceID
+	* @param[in] nUniqueResourceID - UniqueResourceID
+	* @return returns the resource instance
+	*/
+	PResource CModel::GetResourceByID(const Lib3MF_uint32 nUniqueResourceID)
+	{
+		Lib3MFHandle hResource = nullptr;
+		CheckError(lib3mf_model_getresourcebyid(m_pHandle, nUniqueResourceID, &hResource));
+		
+		if (!hResource) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::shared_ptr<CResource>(dynamic_cast<CResource*>(m_pWrapper->polymorphicFactory(hResource)));
 	}
 	
 	/**
