@@ -186,6 +186,9 @@ IVolumeDataProperty* CVolumeData::AddPropertyFromVector3DField(const std::string
 
 void CVolumeData::RemoveProperty(const Lib3MF_uint32 nIndex)
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	auto pProperty = m_pVolumeData->getProperty(nIndex);
+	if (!pProperty)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDPARAM);
+	m_pVolumeData->removeProperty(pProperty->getName());
 }
 
