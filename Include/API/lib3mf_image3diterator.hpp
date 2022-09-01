@@ -77,7 +77,6 @@ public:
 	*/
 
 	IImage3D * GetCurrentImage3D() override;
-
 };
 
 } // namespace Impl

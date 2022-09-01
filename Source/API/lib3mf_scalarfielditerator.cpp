@@ -42,6 +42,6 @@ using namespace Lib3MF::Impl;
 
 IScalarField * CScalarFieldIterator::GetCurrentScalarField()
 {
-	return new CScalarField(std::dynamic_pointer_cast<NMR::CModelScalarField>(GetCurrentResource()));
+	return dynamic_cast<IScalarField*>(GetCurrent());
 }
 

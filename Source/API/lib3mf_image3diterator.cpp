@@ -42,6 +42,6 @@ using namespace Lib3MF::Impl;
 
 IImage3D * CImage3DIterator::GetCurrentImage3D()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	return dynamic_cast<IImage3D*>(GetCurrent());
 }
 

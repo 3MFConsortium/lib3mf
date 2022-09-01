@@ -42,6 +42,6 @@ using namespace Lib3MF::Impl;
 
 IVector3DField * CVector3DFieldIterator::GetCurrentVector3DField()
 {
-	return new CVector3DField(std::dynamic_pointer_cast<NMR::CModelVector3DField>(GetCurrentResource()));
+	return dynamic_cast<CVector3DField*>(GetCurrent());
 }
 
