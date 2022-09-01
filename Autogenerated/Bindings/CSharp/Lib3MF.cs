@@ -1533,6 +1533,9 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_queryreader", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Model_QueryReader (IntPtr Handle, byte[] AReaderClass, out IntPtr AReaderInstance);
 
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_getresourcebyid", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Model_GetResourceByID (IntPtr Handle, UInt32 AUniqueResourceID, out IntPtr AResource);
+
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_gettexture2dbyid", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Model_GetTexture2DByID (IntPtr Handle, UInt32 AUniqueResourceID, out IntPtr ATextureInstance);
 
@@ -6206,6 +6209,14 @@ namespace Lib3MF {
 
 			CheckError(Internal.Lib3MFWrapper.Model_QueryReader (Handle, byteReaderClass, out newReaderInstance));
 			return Internal.Lib3MFWrapper.PolymorphicFactory<CReader>(newReaderInstance);
+		}
+
+		public CResource GetResourceByID (UInt32 AUniqueResourceID)
+		{
+			IntPtr newResource = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Model_GetResourceByID (Handle, AUniqueResourceID, out newResource));
+			return Internal.Lib3MFWrapper.PolymorphicFactory<CResource>(newResource);
 		}
 
 		public CTexture2D GetTexture2DByID (UInt32 AUniqueResourceID)

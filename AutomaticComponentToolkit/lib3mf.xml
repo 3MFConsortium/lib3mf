@@ -76,7 +76,8 @@
 		<error name="INVALIDPROPERTYCOUNT" code="132" description="Invalid property count."/>
 		<error name="UNKOWNPROGRESSIDENTIFIER" code="140" description="A progress identifier is unknown"/>
 		<error name="ELEMENTCOUNTEXCEEDSLIMIT" code="141" description="An element buffer exceeds its spec limit"/>
-		
+		<error name="INVALIDRESOURCE" code="142" description="A resource is invalid"/>
+
 		<error name="BEAMLATTICE_INVALID_OBJECTTYPE" code="2000" description="This object type is not valid for beamlattices"/>		
 		<error name="INVALIDKEYSTORE" code="3000" description="The keystore object is invalid"/>
 		<error name="INVALIDKEYSTORECONSUMER" code="3001" description="The consumer keystore object is invalid"/>
@@ -1855,6 +1856,10 @@
 		<method name="QueryReader" description="creates a model reader instance for a specific file type">
 			<param name="ReaderClass" type="string" pass="in" description=" string identifier for the file type"/>
 			<param name="ReaderInstance" type="handle" class="Reader" pass="return" description=" string identifier for the file type"/>
+		</method>
+		<method name="GetResourceByID" description="finds a model resource by its UniqueResourceID">
+			<param name="UniqueResourceID" type="uint32" pass="in" description="UniqueResourceID"/>
+			<param name="Resource" type="handle" class="Resource" pass="return" description="returns the resource instance"/>
 		</method>
 		<method name="GetTexture2DByID" description="finds a model texture by its UniqueResourceID">
 			<param name="UniqueResourceID" type="uint32" pass="in" description="UniqueResourceID"/>

@@ -4129,6 +4129,16 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_querywriter(Lib3MF_Model pModel, const
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_queryreader(Lib3MF_Model pModel, const char * pReaderClass, Lib3MF_Reader * pReaderInstance);
 
 /**
+* finds a model resource by its UniqueResourceID
+*
+* @param[in] pModel - Model instance.
+* @param[in] nUniqueResourceID - UniqueResourceID
+* @param[out] pResource - returns the resource instance
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_getresourcebyid(Lib3MF_Model pModel, Lib3MF_uint32 nUniqueResourceID, Lib3MF_Resource * pResource);
+
+/**
 * finds a model texture by its UniqueResourceID
 *
 * @param[in] pModel - Model instance.

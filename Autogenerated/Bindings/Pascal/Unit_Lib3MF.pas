@@ -112,6 +112,7 @@ const
 	LIB3MF_ERROR_INVALIDPROPERTYCOUNT = 132;
 	LIB3MF_ERROR_UNKOWNPROGRESSIDENTIFIER = 140;
 	LIB3MF_ERROR_ELEMENTCOUNTEXCEEDSLIMIT = 141;
+	LIB3MF_ERROR_INVALIDRESOURCE = 142;
 	LIB3MF_ERROR_BEAMLATTICE_INVALID_OBJECTTYPE = 2000;
 	LIB3MF_ERROR_INVALIDKEYSTORE = 3000;
 	LIB3MF_ERROR_INVALIDKEYSTORECONSUMER = 3001;
@@ -4592,6 +4593,16 @@ type
 	TLib3MFModel_QueryReaderFunc = function(pModel: TLib3MFHandle; const pReaderClass: PAnsiChar; out pReaderInstance: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
+	* finds a model resource by its UniqueResourceID
+	*
+	* @param[in] pModel - Model instance.
+	* @param[in] nUniqueResourceID - UniqueResourceID
+	* @param[out] pResource - returns the resource instance
+	* @return error code or 0 (success)
+	*)
+	TLib3MFModel_GetResourceByIDFunc = function(pModel: TLib3MFHandle; const nUniqueResourceID: Cardinal; out pResource: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
 	* finds a model texture by its UniqueResourceID
 	*
 	* @param[in] pModel - Model instance.
@@ -6580,6 +6591,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		procedure SetLanguage(const ALanguage: String);
 		function QueryWriter(const AWriterClass: String): TLib3MFWriter;
 		function QueryReader(const AReaderClass: String): TLib3MFReader;
+		function GetResourceByID(const AUniqueResourceID: Cardinal): TLib3MFResource;
 		function GetTexture2DByID(const AUniqueResourceID: Cardinal): TLib3MFTexture2D;
 		function GetPropertyTypeByID(const AUniqueResourceID: Cardinal): TLib3MFPropertyType;
 		function GetBaseMaterialGroupByID(const AUniqueResourceID: Cardinal): TLib3MFBaseMaterialGroup;
@@ -7055,6 +7067,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFModel_SetLanguageFunc: TLib3MFModel_SetLanguageFunc;
 		FLib3MFModel_QueryWriterFunc: TLib3MFModel_QueryWriterFunc;
 		FLib3MFModel_QueryReaderFunc: TLib3MFModel_QueryReaderFunc;
+		FLib3MFModel_GetResourceByIDFunc: TLib3MFModel_GetResourceByIDFunc;
 		FLib3MFModel_GetTexture2DByIDFunc: TLib3MFModel_GetTexture2DByIDFunc;
 		FLib3MFModel_GetPropertyTypeByIDFunc: TLib3MFModel_GetPropertyTypeByIDFunc;
 		FLib3MFModel_GetBaseMaterialGroupByIDFunc: TLib3MFModel_GetBaseMaterialGroupByIDFunc;
@@ -7550,6 +7563,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFModel_SetLanguageFunc: TLib3MFModel_SetLanguageFunc read FLib3MFModel_SetLanguageFunc;
 		property Lib3MFModel_QueryWriterFunc: TLib3MFModel_QueryWriterFunc read FLib3MFModel_QueryWriterFunc;
 		property Lib3MFModel_QueryReaderFunc: TLib3MFModel_QueryReaderFunc read FLib3MFModel_QueryReaderFunc;
+		property Lib3MFModel_GetResourceByIDFunc: TLib3MFModel_GetResourceByIDFunc read FLib3MFModel_GetResourceByIDFunc;
 		property Lib3MFModel_GetTexture2DByIDFunc: TLib3MFModel_GetTexture2DByIDFunc read FLib3MFModel_GetTexture2DByIDFunc;
 		property Lib3MFModel_GetPropertyTypeByIDFunc: TLib3MFModel_GetPropertyTypeByIDFunc read FLib3MFModel_GetPropertyTypeByIDFunc;
 		property Lib3MFModel_GetBaseMaterialGroupByIDFunc: TLib3MFModel_GetBaseMaterialGroupByIDFunc read FLib3MFModel_GetBaseMaterialGroupByIDFunc;
@@ -8686,6 +8700,7 @@ implementation
 			LIB3MF_ERROR_INVALIDPROPERTYCOUNT: ADescription := 'Invalid property count.';
 			LIB3MF_ERROR_UNKOWNPROGRESSIDENTIFIER: ADescription := 'A progress identifier is unknown';
 			LIB3MF_ERROR_ELEMENTCOUNTEXCEEDSLIMIT: ADescription := 'An element buffer exceeds its spec limit';
+			LIB3MF_ERROR_INVALIDRESOURCE: ADescription := 'A resource is invalid';
 			LIB3MF_ERROR_BEAMLATTICE_INVALID_OBJECTTYPE: ADescription := 'This object type is not valid for beamlattices';
 			LIB3MF_ERROR_INVALIDKEYSTORE: ADescription := 'The keystore object is invalid';
 			LIB3MF_ERROR_INVALIDKEYSTORECONSUMER: ADescription := 'The consumer keystore object is invalid';
@@ -13098,6 +13113,17 @@ implementation
 			Result := TLib3MFPolymorphicFactory<TLib3MFReader, TLib3MFReader>.Make(FWrapper, HReaderInstance);
 	end;
 
+	function TLib3MFModel.GetResourceByID(const AUniqueResourceID: Cardinal): TLib3MFResource;
+	var
+		HResource: TLib3MFHandle;
+	begin
+		Result := nil;
+		HResource := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFModel_GetResourceByIDFunc(FHandle, AUniqueResourceID, HResource));
+		if Assigned(HResource) then
+			Result := TLib3MFPolymorphicFactory<TLib3MFResource, TLib3MFResource>.Make(FWrapper, HResource);
+	end;
+
 	function TLib3MFModel.GetTexture2DByID(const AUniqueResourceID: Cardinal): TLib3MFTexture2D;
 	var
 		HTextureInstance: TLib3MFHandle;
@@ -14278,6 +14304,7 @@ implementation
 		FLib3MFModel_SetLanguageFunc := LoadFunction('lib3mf_model_setlanguage');
 		FLib3MFModel_QueryWriterFunc := LoadFunction('lib3mf_model_querywriter');
 		FLib3MFModel_QueryReaderFunc := LoadFunction('lib3mf_model_queryreader');
+		FLib3MFModel_GetResourceByIDFunc := LoadFunction('lib3mf_model_getresourcebyid');
 		FLib3MFModel_GetTexture2DByIDFunc := LoadFunction('lib3mf_model_gettexture2dbyid');
 		FLib3MFModel_GetPropertyTypeByIDFunc := LoadFunction('lib3mf_model_getpropertytypebyid');
 		FLib3MFModel_GetBaseMaterialGroupByIDFunc := LoadFunction('lib3mf_model_getbasematerialgroupbyid');
@@ -15564,6 +15591,9 @@ implementation
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_model_queryreader'), @FLib3MFModel_QueryReaderFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_model_getresourcebyid'), @FLib3MFModel_GetResourceByIDFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_model_gettexture2dbyid'), @FLib3MFModel_GetTexture2DByIDFunc);

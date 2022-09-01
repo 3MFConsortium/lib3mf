@@ -4116,6 +4116,16 @@ typedef Lib3MFResult (*PLib3MFModel_QueryWriterPtr) (Lib3MF_Model pModel, const 
 typedef Lib3MFResult (*PLib3MFModel_QueryReaderPtr) (Lib3MF_Model pModel, const char * pReaderClass, Lib3MF_Reader * pReaderInstance);
 
 /**
+* finds a model resource by its UniqueResourceID
+*
+* @param[in] pModel - Model instance.
+* @param[in] nUniqueResourceID - UniqueResourceID
+* @param[out] pResource - returns the resource instance
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFModel_GetResourceByIDPtr) (Lib3MF_Model pModel, Lib3MF_uint32 nUniqueResourceID, Lib3MF_Resource * pResource);
+
+/**
 * finds a model texture by its UniqueResourceID
 *
 * @param[in] pModel - Model instance.
@@ -5383,6 +5393,7 @@ typedef struct {
 	PLib3MFModel_SetLanguagePtr m_Model_SetLanguage;
 	PLib3MFModel_QueryWriterPtr m_Model_QueryWriter;
 	PLib3MFModel_QueryReaderPtr m_Model_QueryReader;
+	PLib3MFModel_GetResourceByIDPtr m_Model_GetResourceByID;
 	PLib3MFModel_GetTexture2DByIDPtr m_Model_GetTexture2DByID;
 	PLib3MFModel_GetPropertyTypeByIDPtr m_Model_GetPropertyTypeByID;
 	PLib3MFModel_GetBaseMaterialGroupByIDPtr m_Model_GetBaseMaterialGroupByID;

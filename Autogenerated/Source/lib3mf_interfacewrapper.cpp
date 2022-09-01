@@ -14781,6 +14781,43 @@ Lib3MFResult lib3mf_model_queryreader(Lib3MF_Model pModel, const char * pReaderC
 	}
 }
 
+Lib3MFResult lib3mf_model_getresourcebyid(Lib3MF_Model pModel, Lib3MF_uint32 nUniqueResourceID, Lib3MF_Resource * pResource)
+{
+	IBase* pIBaseClass = (IBase *)pModel;
+
+	PLib3MFInterfaceJournalEntry pJournalEntry;
+	try {
+		if (m_GlobalJournal.get() != nullptr)  {
+			pJournalEntry = m_GlobalJournal->beginClassMethod(pModel, "Model", "GetResourceByID");
+			pJournalEntry->addUInt32Parameter("UniqueResourceID", nUniqueResourceID);
+		}
+		if (pResource == nullptr)
+			throw ELib3MFInterfaceException (LIB3MF_ERROR_INVALIDPARAM);
+		IBase* pBaseResource(nullptr);
+		IModel* pIModel = dynamic_cast<IModel*>(pIBaseClass);
+		if (!pIModel)
+			throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+		
+		pBaseResource = pIModel->GetResourceByID(nUniqueResourceID);
+
+		*pResource = (IBase*)(pBaseResource);
+		if (pJournalEntry.get() != nullptr) {
+			pJournalEntry->addHandleResult("Resource", *pResource);
+			pJournalEntry->writeSuccess();
+		}
+		return LIB3MF_SUCCESS;
+	}
+	catch (ELib3MFInterfaceException & Exception) {
+		return handleLib3MFException(pIBaseClass, Exception, pJournalEntry.get());
+	}
+	catch (std::exception & StdException) {
+		return handleStdException(pIBaseClass, StdException, pJournalEntry.get());
+	}
+	catch (...) {
+		return handleUnhandledException(pIBaseClass, pJournalEntry.get());
+	}
+}
+
 Lib3MFResult lib3mf_model_gettexture2dbyid(Lib3MF_Model pModel, Lib3MF_uint32 nUniqueResourceID, Lib3MF_Texture2D * pTextureInstance)
 {
 	IBase* pIBaseClass = (IBase *)pModel;
@@ -18188,6 +18225,8 @@ Lib3MFResult Lib3MF::Impl::Lib3MF_GetProcAddress (const char * pProcName, void *
 		*ppProcAddress = (void*) &lib3mf_model_querywriter;
 	if (sProcName == "lib3mf_model_queryreader") 
 		*ppProcAddress = (void*) &lib3mf_model_queryreader;
+	if (sProcName == "lib3mf_model_getresourcebyid") 
+		*ppProcAddress = (void*) &lib3mf_model_getresourcebyid;
 	if (sProcName == "lib3mf_model_gettexture2dbyid") 
 		*ppProcAddress = (void*) &lib3mf_model_gettexture2dbyid;
 	if (sProcName == "lib3mf_model_getpropertytypebyid") 

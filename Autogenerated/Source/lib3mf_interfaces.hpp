@@ -4140,6 +4140,13 @@ public:
 	virtual IReader * QueryReader(const std::string & sReaderClass) = 0;
 
 	/**
+	* IModel::GetResourceByID - finds a model resource by its UniqueResourceID
+	* @param[in] nUniqueResourceID - UniqueResourceID
+	* @return returns the resource instance
+	*/
+	virtual IResource * GetResourceByID(const Lib3MF_uint32 nUniqueResourceID) = 0;
+
+	/**
 	* IModel::GetTexture2DByID - finds a model texture by its UniqueResourceID
 	* @param[in] nUniqueResourceID - UniqueResourceID
 	* @return returns the texture2d instance
