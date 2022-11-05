@@ -285,6 +285,10 @@ namespace Lib3MF
 		auto pImage3D = SetupSheetsFromFile();
 
 		auto vectorFieldFromImage3D = model->AddVector3DFieldFromImage3D(pImage3D.get());
+		vectorFieldFromImage3D->SetFilter(eTextureFilter::Nearest);
+		vectorFieldFromImage3D->SetOffset(.1);
+		vectorFieldFromImage3D->SetScale(0.9);
+		vectorFieldFromImage3D->SetTileStyles(eTextureTileStyle::Clamp, eTextureTileStyle::Mirror, eTextureTileStyle::Wrap);
 
 		auto theMesh = GetMesh();
 		auto volumeData = theMesh->VolumeData();
@@ -302,6 +306,11 @@ namespace Lib3MF
 			auto ioMesh = ioMeshObjects->GetCurrentMeshObject();
 			auto ioVolumeData = ioMesh->VolumeData();
 			CompareVolumeData(ioModel, ioVolumeData, model, volumeData);
+
+			auto vectorFields = ioModel->GetVector3DFields();
+			ASSERT_TRUE(vectorFields->MoveNext());
+			auto ioVectorFieldFromImage3D = vectorFields->GetCurrentVector3DField();
+			CompareVector3DFields(ioModel, ioVectorFieldFromImage3D, model, vectorFieldFromImage3D);
 
 			PWriter ioWriter = ioModel->QueryWriter("3mf");
 			ioWriter->WriteToFile(Volumetric::OutFolder + "ColorReOut.3mf");
