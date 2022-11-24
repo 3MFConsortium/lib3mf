@@ -86,22 +86,25 @@ void CVolumeData::RemoveBoundary()
 
 IVolumeDataComposite * CVolumeData::GetComposite()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
-	//auto pComposite = m_pVolumeData->getComposite();
-	//if (!pComposite) {
-	//	return nullptr;
-	//}
-	//return new CVolumeDataComposite(pComposite);
+	auto pComposite = m_pVolumeData->getComposite();
+	if (!pComposite) {
+		return nullptr;
+	}
+	return new CVolumeDataComposite(pComposite);
 }
 
 IVolumeDataComposite * CVolumeData::CreateNewComposite()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	auto pComposite = m_pVolumeData->createComposite();
+	if (!pComposite) {
+		return nullptr;
+	}
+	return new CVolumeDataComposite(pComposite);
 }
 
 void CVolumeData::RemoveComposite()
 {
-	throw ELib3MFInterfaceException(LIB3MF_ERROR_NOTIMPLEMENTED);
+	m_pVolumeData->removeComposite();
 }
 
 IVolumeDataColor * CVolumeData::GetColor()

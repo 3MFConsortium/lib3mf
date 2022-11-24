@@ -80,6 +80,12 @@ namespace NMR {
 		PVolumeDataColor createColor(PModelVector3DField pVector3DField);
 		void setColor(PVolumeDataColor pColor);
 		void removeColor();
+
+		bool hasComposite() const;
+		PVolumeDataComposite getComposite();
+		PVolumeDataComposite createComposite(/* basematerialgroupd*/);
+		void setComposite(PVolumeDataComposite pComposite);
+		void removeComposite();
 	};
 
 	typedef std::shared_ptr <CModelVolumeData> PModelVolumeData;

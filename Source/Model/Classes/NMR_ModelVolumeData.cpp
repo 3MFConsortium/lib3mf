@@ -186,4 +186,34 @@ namespace NMR {
 	{
 		m_pColor.reset();
 	}
+
+	bool CModelVolumeData::hasComposite() const
+	{
+		return  m_pComposite.get() != nullptr;
+	}
+
+
+	PVolumeDataComposite CModelVolumeData::getComposite()
+	{
+		return m_pComposite;
+	}
+	PVolumeDataComposite CModelVolumeData::createComposite(/* basematerialgroupd*/)
+	{
+		m_pComposite = std::make_shared<CVolumeDataComposite>();
+		return m_pComposite;
+	}
+
+	void CModelVolumeData::setComposite(PVolumeDataComposite pComposite)
+	{
+		if (!pComposite)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		m_pComposite = pComposite;
+	}
+
+	void CModelVolumeData::removeComposite()
+	{
+		m_pComposite.reset();
+	}
+
 }

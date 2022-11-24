@@ -39,4 +39,36 @@ namespace NMR {
 
 	}
 
+	NMR::PModelBaseMaterialResource CVolumeDataComposite::getBaseMaterialGroup()
+	{
+		return m_pBaseMaterialGroup;
+	}
+
+	void CVolumeDataComposite::setBaseMaterialGroup(PModelBaseMaterialResource pBaseMaterialGroup)
+	{
+		m_pBaseMaterialGroup = pBaseMaterialGroup;
+	}
+
+	nfUint32 CVolumeDataComposite::materialMappingCount() const
+	{
+		return (nfUint32)m_vctFieldReferences.size();
+	}
+
+	PScalarFieldReference CVolumeDataComposite::getMaterialMapping(nfUint32 nIndex)
+	{
+		if (nIndex >= materialMappingCount())
+			throw CNMRException(NMR_ERROR_INVALIDINDEX);
+		return m_vctFieldReferences[nIndex];
+	}
+
+	PScalarFieldReference CVolumeDataComposite::addMaterialMapping(PModelScalarField pScalarField)
+	{
+		PScalarFieldReference pScalarFieldReference = std::make_shared<CScalarFieldReference>(pScalarField);
+		m_vctFieldReferences.push_back(pScalarFieldReference);
+		return pScalarFieldReference;
+	}
+
+	void CVolumeDataComposite::removeMaterialMapping(nfUint32)
+	{}
+
 }
