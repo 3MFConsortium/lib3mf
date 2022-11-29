@@ -139,6 +139,8 @@ public:
 
 	IMultiPropertyGroupIterator * GetMultiPropertyGroups() override;
 
+	IToolpathIterator* GetToolpaths() override;
+
 	ISliceStackIterator * GetSliceStacks() override;
 
 	IModel * MergeToModel() override;
@@ -164,6 +166,8 @@ public:
 	IBuildItem * AddBuildItem(IObject* pObject, const sLib3MFTransform Transform) override;
 
 	void RemoveBuildItem(IBuildItem* pBuildItemInstance) override;
+
+	IToolpath* AddToolpath(const Lib3MF_double dUnitFactor) override;
 
 	IMetaDataGroup * GetMetaDataGroup() override;
 

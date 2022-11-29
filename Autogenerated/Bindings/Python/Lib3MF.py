@@ -105,6 +105,10 @@ class ErrorCodes(enum.IntEnum):
 	KEYSTORECONSUMERNOTFOUND = 3002
 	KEYSTORERESOURCEDATANOTFOUND = 3003
 	SECURECONTEXTNOTREGISTERED = 3004
+	TOOLPATH_NOTWRITINGHEADER = 4000
+	TOOLPATH_NOTWRITINGDATA = 4001
+	TOOLPATH_DATAHASBEENWRITTEN = 4002
+	TOOLPATH_INVALIDPOINTCOUNT = 4003
 
 '''Definition of Function Table
 '''
@@ -357,6 +361,41 @@ class FunctionTable:
 	lib3mf_slice_getpolygonindices = None
 	lib3mf_slice_getpolygonindexcount = None
 	lib3mf_slice_getztop = None
+	lib3mf_toolpathprofile_getuuid = None
+	lib3mf_toolpathprofile_getname = None
+	lib3mf_toolpathprofile_hasparametervalue = None
+	lib3mf_toolpathprofile_getparameterdoublevalue = None
+	lib3mf_toolpathprofile_getparameterdoublevaluedef = None
+	lib3mf_toolpathprofile_setname = None
+	lib3mf_toolpathprofile_setparameterdoublevalue = None
+	lib3mf_toolpathlayerreader_getlayerdatauuid = None
+	lib3mf_toolpathlayerreader_getsegmentcount = None
+	lib3mf_toolpathlayerreader_getsegmentinfo = None
+	lib3mf_toolpathlayerreader_getsegmentprofile = None
+	lib3mf_toolpathlayerreader_getsegmentprofileuuid = None
+	lib3mf_toolpathlayerreader_getsegmentpart = None
+	lib3mf_toolpathlayerreader_getsegmentpartuuid = None
+	lib3mf_toolpathlayerreader_getsegmentpointdata = None
+	lib3mf_toolpathlayerdata_getlayerdatauuid = None
+	lib3mf_toolpathlayerdata_registerprofile = None
+	lib3mf_toolpathlayerdata_registerbuilditem = None
+	lib3mf_toolpathlayerdata_writehatchdata = None
+	lib3mf_toolpathlayerdata_writeloop = None
+	lib3mf_toolpathlayerdata_writepolyline = None
+	lib3mf_toolpathlayerdata_finish = None
+	lib3mf_toolpath_getunits = None
+	lib3mf_toolpath_getlayercount = None
+	lib3mf_toolpath_getprofilecount = None
+	lib3mf_toolpath_addlayer = None
+	lib3mf_toolpath_getlayerattachment = None
+	lib3mf_toolpath_readlayerdata = None
+	lib3mf_toolpath_getlayerpath = None
+	lib3mf_toolpath_getlayerzmax = None
+	lib3mf_toolpath_getlayerz = None
+	lib3mf_toolpath_addprofile = None
+	lib3mf_toolpath_getprofile = None
+	lib3mf_toolpath_getprofileuuid = None
+	lib3mf_toolpathiterator_getcurrenttoolpath = None
 	lib3mf_slicestack_getbottomz = None
 	lib3mf_slicestack_getslicecount = None
 	lib3mf_slicestack_getslice = None
@@ -439,6 +478,7 @@ class FunctionTable:
 	lib3mf_model_gettexture2dgroups = None
 	lib3mf_model_getcompositematerials = None
 	lib3mf_model_getmultipropertygroups = None
+	lib3mf_model_gettoolpaths = None
 	lib3mf_model_getslicestacks = None
 	lib3mf_model_mergetomodel = None
 	lib3mf_model_addmeshobject = None
@@ -452,6 +492,7 @@ class FunctionTable:
 	lib3mf_model_addmultipropertygroup = None
 	lib3mf_model_addbuilditem = None
 	lib3mf_model_removebuilditem = None
+	lib3mf_model_addtoolpath = None
 	lib3mf_model_getmetadatagroup = None
 	lib3mf_model_addattachment = None
 	lib3mf_model_removeattachment = None
@@ -576,6 +617,13 @@ class BlendMethod(CTypesEnum):
 	NoBlendMethod = 0
 	Mix = 1
 	Multiply = 2
+'''Definition of ToolpathSegmentType
+'''
+class ToolpathSegmentType(CTypesEnum):
+	Unknown = 0
+	Hatch = 1
+	Loop = 2
+	Polyline = 3
 '''Definition of EncryptionAlgorithm
 '''
 class EncryptionAlgorithm(CTypesEnum):
@@ -2262,6 +2310,216 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_double))
 			self.lib.lib3mf_slice_getztop = methodType(int(methodAddress.value))
 			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathprofile_getuuid")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
+			self.lib.lib3mf_toolpathprofile_getuuid = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathprofile_getname")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
+			self.lib.lib3mf_toolpathprofile_getname = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathprofile_hasparametervalue")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_bool))
+			self.lib.lib3mf_toolpathprofile_hasparametervalue = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathprofile_getparameterdoublevalue")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_double))
+			self.lib.lib3mf_toolpathprofile_getparameterdoublevalue = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathprofile_getparameterdoublevaluedef")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_double, ctypes.POINTER(ctypes.c_double))
+			self.lib.lib3mf_toolpathprofile_getparameterdoublevaluedef = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathprofile_setname")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p)
+			self.lib.lib3mf_toolpathprofile_setname = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathprofile_setparameterdoublevalue")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_double)
+			self.lib.lib3mf_toolpathprofile_setparameterdoublevalue = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_getlayerdatauuid")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
+			self.lib.lib3mf_toolpathlayerreader_getlayerdatauuid = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_getsegmentcount")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32))
+			self.lib.lib3mf_toolpathlayerreader_getsegmentcount = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_getsegmentinfo")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_int32), ctypes.POINTER(ctypes.c_uint32))
+			self.lib.lib3mf_toolpathlayerreader_getsegmentinfo = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_getsegmentprofile")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_toolpathlayerreader_getsegmentprofile = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_getsegmentprofileuuid")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
+			self.lib.lib3mf_toolpathlayerreader_getsegmentprofileuuid = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_getsegmentpart")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_toolpathlayerreader_getsegmentpart = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_getsegmentpartuuid")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
+			self.lib.lib3mf_toolpathlayerreader_getsegmentpartuuid = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerreader_getsegmentpointdata")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.POINTER(Position2D))
+			self.lib.lib3mf_toolpathlayerreader_getsegmentpointdata = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerdata_getlayerdatauuid")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
+			self.lib.lib3mf_toolpathlayerdata_getlayerdatauuid = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerdata_registerprofile")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32))
+			self.lib.lib3mf_toolpathlayerdata_registerprofile = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerdata_registerbuilditem")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32))
+			self.lib.lib3mf_toolpathlayerdata_registerbuilditem = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerdata_writehatchdata")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(Position2D))
+			self.lib.lib3mf_toolpathlayerdata_writehatchdata = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerdata_writeloop")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(Position2D))
+			self.lib.lib3mf_toolpathlayerdata_writeloop = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerdata_writepolyline")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(Position2D))
+			self.lib.lib3mf_toolpathlayerdata_writepolyline = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathlayerdata_finish")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p)
+			self.lib.lib3mf_toolpathlayerdata_finish = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpath_getunits")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_double))
+			self.lib.lib3mf_toolpath_getunits = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpath_getlayercount")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32))
+			self.lib.lib3mf_toolpath_getlayercount = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpath_getprofilecount")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32))
+			self.lib.lib3mf_toolpath_getprofilecount = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpath_addlayer")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_char_p, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_toolpath_addlayer = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpath_getlayerattachment")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_toolpath_getlayerattachment = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpath_readlayerdata")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_toolpath_readlayerdata = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpath_getlayerpath")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p)
+			self.lib.lib3mf_toolpath_getlayerpath = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpath_getlayerzmax")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_uint32))
+			self.lib.lib3mf_toolpath_getlayerzmax = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpath_getlayerz")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_uint32))
+			self.lib.lib3mf_toolpath_getlayerz = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpath_addprofile")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_toolpath_addprofile = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpath_getprofile")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_toolpath_getprofile = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpath_getprofileuuid")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_toolpath_getprofileuuid = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_toolpathiterator_getcurrenttoolpath")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_toolpathiterator_getcurrenttoolpath = methodType(int(methodAddress.value))
+			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_slicestack_getbottomz")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
@@ -2754,6 +3012,12 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
 			self.lib.lib3mf_model_getmultipropertygroups = methodType(int(methodAddress.value))
 			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_model_gettoolpaths")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_model_gettoolpaths = methodType(int(methodAddress.value))
+			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_model_getslicestacks")), methodAddress)
 			if err != 0:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
@@ -2831,6 +3095,12 @@ class Wrapper:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_void_p)
 			self.lib.lib3mf_model_removebuilditem = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_model_addtoolpath")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_double, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_model_addtoolpath = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_model_getmetadatagroup")), methodAddress)
 			if err != 0:
@@ -3665,6 +3935,111 @@ class Wrapper:
 			self.lib.lib3mf_slice_getztop.restype = ctypes.c_int32
 			self.lib.lib3mf_slice_getztop.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_double)]
 			
+			self.lib.lib3mf_toolpathprofile_getuuid.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathprofile_getuuid.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
+			
+			self.lib.lib3mf_toolpathprofile_getname.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathprofile_getname.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
+			
+			self.lib.lib3mf_toolpathprofile_hasparametervalue.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathprofile_hasparametervalue.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_bool)]
+			
+			self.lib.lib3mf_toolpathprofile_getparameterdoublevalue.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathprofile_getparameterdoublevalue.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_double)]
+			
+			self.lib.lib3mf_toolpathprofile_getparameterdoublevaluedef.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathprofile_getparameterdoublevaluedef.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_double, ctypes.POINTER(ctypes.c_double)]
+			
+			self.lib.lib3mf_toolpathprofile_setname.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathprofile_setname.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
+			
+			self.lib.lib3mf_toolpathprofile_setparameterdoublevalue.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathprofile_setparameterdoublevalue.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.c_double]
+			
+			self.lib.lib3mf_toolpathlayerreader_getlayerdatauuid.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerreader_getlayerdatauuid.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
+			
+			self.lib.lib3mf_toolpathlayerreader_getsegmentcount.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerreader_getsegmentcount.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32)]
+			
+			self.lib.lib3mf_toolpathlayerreader_getsegmentinfo.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerreader_getsegmentinfo.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_int32), ctypes.POINTER(ctypes.c_uint32)]
+			
+			self.lib.lib3mf_toolpathlayerreader_getsegmentprofile.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerreader_getsegmentprofile.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_toolpathlayerreader_getsegmentprofileuuid.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerreader_getsegmentprofileuuid.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
+			
+			self.lib.lib3mf_toolpathlayerreader_getsegmentpart.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerreader_getsegmentpart.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_toolpathlayerreader_getsegmentpartuuid.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerreader_getsegmentpartuuid.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
+			
+			self.lib.lib3mf_toolpathlayerreader_getsegmentpointdata.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerreader_getsegmentpointdata.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.POINTER(Position2D)]
+			
+			self.lib.lib3mf_toolpathlayerdata_getlayerdatauuid.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerdata_getlayerdatauuid.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
+			
+			self.lib.lib3mf_toolpathlayerdata_registerprofile.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerdata_registerprofile.argtypes = [ctypes.c_void_p, ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32)]
+			
+			self.lib.lib3mf_toolpathlayerdata_registerbuilditem.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerdata_registerbuilditem.argtypes = [ctypes.c_void_p, ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32)]
+			
+			self.lib.lib3mf_toolpathlayerdata_writehatchdata.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerdata_writehatchdata.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(Position2D)]
+			
+			self.lib.lib3mf_toolpathlayerdata_writeloop.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerdata_writeloop.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(Position2D)]
+			
+			self.lib.lib3mf_toolpathlayerdata_writepolyline.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerdata_writepolyline.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(Position2D)]
+			
+			self.lib.lib3mf_toolpathlayerdata_finish.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathlayerdata_finish.argtypes = [ctypes.c_void_p]
+			
+			self.lib.lib3mf_toolpath_getunits.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpath_getunits.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_double)]
+			
+			self.lib.lib3mf_toolpath_getlayercount.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpath_getlayercount.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32)]
+			
+			self.lib.lib3mf_toolpath_getprofilecount.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpath_getprofilecount.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32)]
+			
+			self.lib.lib3mf_toolpath_addlayer.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpath_addlayer.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_char_p, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_toolpath_getlayerattachment.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpath_getlayerattachment.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_toolpath_readlayerdata.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpath_readlayerdata.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_toolpath_getlayerpath.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpath_getlayerpath.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint64), ctypes.c_char_p]
+			
+			self.lib.lib3mf_toolpath_getlayerzmax.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpath_getlayerzmax.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_uint32)]
+			
+			self.lib.lib3mf_toolpath_getlayerz.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpath_getlayerz.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_uint32)]
+			
+			self.lib.lib3mf_toolpath_addprofile.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpath_addprofile.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_toolpath_getprofile.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpath_getprofile.argtypes = [ctypes.c_void_p, ctypes.c_uint32, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_toolpath_getprofileuuid.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpath_getprofileuuid.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_toolpathiterator_getcurrenttoolpath.restype = ctypes.c_int32
+			self.lib.lib3mf_toolpathiterator_getcurrenttoolpath.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
 			self.lib.lib3mf_slicestack_getbottomz.restype = ctypes.c_int32
 			self.lib.lib3mf_slicestack_getbottomz.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_double)]
 			
@@ -3911,6 +4286,9 @@ class Wrapper:
 			self.lib.lib3mf_model_getmultipropertygroups.restype = ctypes.c_int32
 			self.lib.lib3mf_model_getmultipropertygroups.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
 			
+			self.lib.lib3mf_model_gettoolpaths.restype = ctypes.c_int32
+			self.lib.lib3mf_model_gettoolpaths.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
 			self.lib.lib3mf_model_getslicestacks.restype = ctypes.c_int32
 			self.lib.lib3mf_model_getslicestacks.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
 			
@@ -3949,6 +4327,9 @@ class Wrapper:
 			
 			self.lib.lib3mf_model_removebuilditem.restype = ctypes.c_int32
 			self.lib.lib3mf_model_removebuilditem.argtypes = [ctypes.c_void_p, ctypes.c_void_p]
+			
+			self.lib.lib3mf_model_addtoolpath.restype = ctypes.c_int32
+			self.lib.lib3mf_model_addtoolpath.argtypes = [ctypes.c_void_p, ctypes.c_double, ctypes.POINTER(ctypes.c_void_p)]
 			
 			self.lib.lib3mf_model_getmetadatagroup.restype = ctypes.c_int32
 			self.lib.lib3mf_model_getmetadatagroup.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
@@ -6124,6 +6505,370 @@ class Slice(Base):
 	
 
 
+''' Class Implementation for ToolpathProfile
+'''
+class ToolpathProfile(Base):
+	def __init__(self, handle, wrapper):
+		Base.__init__(self, handle, wrapper)
+	def GetUUID(self):
+		nUUIDBufferSize = ctypes.c_uint64(0)
+		nUUIDNeededChars = ctypes.c_uint64(0)
+		pUUIDBuffer = ctypes.c_char_p(None)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathprofile_getuuid(self._handle, nUUIDBufferSize, nUUIDNeededChars, pUUIDBuffer))
+		nUUIDBufferSize = ctypes.c_uint64(nUUIDNeededChars.value)
+		pUUIDBuffer = (ctypes.c_char * (nUUIDNeededChars.value))()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathprofile_getuuid(self._handle, nUUIDBufferSize, nUUIDNeededChars, pUUIDBuffer))
+		
+		return pUUIDBuffer.value.decode()
+	
+	def GetName(self):
+		nNameBufferSize = ctypes.c_uint64(0)
+		nNameNeededChars = ctypes.c_uint64(0)
+		pNameBuffer = ctypes.c_char_p(None)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathprofile_getname(self._handle, nNameBufferSize, nNameNeededChars, pNameBuffer))
+		nNameBufferSize = ctypes.c_uint64(nNameNeededChars.value)
+		pNameBuffer = (ctypes.c_char * (nNameNeededChars.value))()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathprofile_getname(self._handle, nNameBufferSize, nNameNeededChars, pNameBuffer))
+		
+		return pNameBuffer.value.decode()
+	
+	def HasParameterValue(self, NameSpaceName, ValueName):
+		pNameSpaceName = ctypes.c_char_p(str.encode(NameSpaceName))
+		pValueName = ctypes.c_char_p(str.encode(ValueName))
+		pValueExists = ctypes.c_bool()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathprofile_hasparametervalue(self._handle, pNameSpaceName, pValueName, pValueExists))
+		
+		return pValueExists.value
+	
+	def GetParameterDoubleValue(self, NameSpaceName, ValueName):
+		pNameSpaceName = ctypes.c_char_p(str.encode(NameSpaceName))
+		pValueName = ctypes.c_char_p(str.encode(ValueName))
+		pValue = ctypes.c_double()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathprofile_getparameterdoublevalue(self._handle, pNameSpaceName, pValueName, pValue))
+		
+		return pValue.value
+	
+	def GetParameterDoubleValueDef(self, NameSpaceName, ValueName, DefaultValue):
+		pNameSpaceName = ctypes.c_char_p(str.encode(NameSpaceName))
+		pValueName = ctypes.c_char_p(str.encode(ValueName))
+		dDefaultValue = ctypes.c_double(DefaultValue)
+		pValue = ctypes.c_double()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathprofile_getparameterdoublevaluedef(self._handle, pNameSpaceName, pValueName, dDefaultValue, pValue))
+		
+		return pValue.value
+	
+	def SetName(self, Name):
+		pName = ctypes.c_char_p(str.encode(Name))
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathprofile_setname(self._handle, pName))
+		
+	
+	def SetParameterDoubleValue(self, NameSpaceName, ValueName, Value):
+		pNameSpaceName = ctypes.c_char_p(str.encode(NameSpaceName))
+		pValueName = ctypes.c_char_p(str.encode(ValueName))
+		dValue = ctypes.c_double(Value)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathprofile_setparameterdoublevalue(self._handle, pNameSpaceName, pValueName, dValue))
+		
+	
+
+
+''' Class Implementation for ToolpathLayerReader
+'''
+class ToolpathLayerReader(Base):
+	def __init__(self, handle, wrapper):
+		Base.__init__(self, handle, wrapper)
+	def GetLayerDataUUID(self):
+		nUUIDBufferSize = ctypes.c_uint64(0)
+		nUUIDNeededChars = ctypes.c_uint64(0)
+		pUUIDBuffer = ctypes.c_char_p(None)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getlayerdatauuid(self._handle, nUUIDBufferSize, nUUIDNeededChars, pUUIDBuffer))
+		nUUIDBufferSize = ctypes.c_uint64(nUUIDNeededChars.value)
+		pUUIDBuffer = (ctypes.c_char * (nUUIDNeededChars.value))()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getlayerdatauuid(self._handle, nUUIDBufferSize, nUUIDNeededChars, pUUIDBuffer))
+		
+		return pUUIDBuffer.value.decode()
+	
+	def GetSegmentCount(self):
+		pCount = ctypes.c_uint32()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmentcount(self._handle, pCount))
+		
+		return pCount.value
+	
+	def GetSegmentInfo(self, Index):
+		nIndex = ctypes.c_uint32(Index)
+		pType = ctypes.c_int32()
+		pPointCount = ctypes.c_uint32()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmentinfo(self._handle, nIndex, pType, pPointCount))
+		
+		return ToolpathSegmentType(pType.value), pPointCount.value
+	
+	def GetSegmentProfile(self, Index):
+		nIndex = ctypes.c_uint32(Index)
+		ProfileHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmentprofile(self._handle, nIndex, ProfileHandle))
+		if ProfileHandle:
+			ProfileObject = ToolpathProfile(ProfileHandle, self._wrapper)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return ProfileObject
+	
+	def GetSegmentProfileUUID(self, Index):
+		nIndex = ctypes.c_uint32(Index)
+		nProfileUUIDBufferSize = ctypes.c_uint64(0)
+		nProfileUUIDNeededChars = ctypes.c_uint64(0)
+		pProfileUUIDBuffer = ctypes.c_char_p(None)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmentprofileuuid(self._handle, nIndex, nProfileUUIDBufferSize, nProfileUUIDNeededChars, pProfileUUIDBuffer))
+		nProfileUUIDBufferSize = ctypes.c_uint64(nProfileUUIDNeededChars.value)
+		pProfileUUIDBuffer = (ctypes.c_char * (nProfileUUIDNeededChars.value))()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmentprofileuuid(self._handle, nIndex, nProfileUUIDBufferSize, nProfileUUIDNeededChars, pProfileUUIDBuffer))
+		
+		return pProfileUUIDBuffer.value.decode()
+	
+	def GetSegmentPart(self, Index):
+		nIndex = ctypes.c_uint32(Index)
+		BuildItemHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmentpart(self._handle, nIndex, BuildItemHandle))
+		if BuildItemHandle:
+			BuildItemObject = BuildItem(BuildItemHandle, self._wrapper)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return BuildItemObject
+	
+	def GetSegmentPartUUID(self, Index):
+		nIndex = ctypes.c_uint32(Index)
+		nPartUUIDBufferSize = ctypes.c_uint64(0)
+		nPartUUIDNeededChars = ctypes.c_uint64(0)
+		pPartUUIDBuffer = ctypes.c_char_p(None)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmentpartuuid(self._handle, nIndex, nPartUUIDBufferSize, nPartUUIDNeededChars, pPartUUIDBuffer))
+		nPartUUIDBufferSize = ctypes.c_uint64(nPartUUIDNeededChars.value)
+		pPartUUIDBuffer = (ctypes.c_char * (nPartUUIDNeededChars.value))()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmentpartuuid(self._handle, nIndex, nPartUUIDBufferSize, nPartUUIDNeededChars, pPartUUIDBuffer))
+		
+		return pPartUUIDBuffer.value.decode()
+	
+	def GetSegmentPointData(self, Index):
+		nIndex = ctypes.c_uint32(Index)
+		nPointDataCount = ctypes.c_uint64(0)
+		nPointDataNeededCount = ctypes.c_uint64(0)
+		pPointDataBuffer = (Position2D*0)()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmentpointdata(self._handle, nIndex, nPointDataCount, nPointDataNeededCount, pPointDataBuffer))
+		nPointDataCount = ctypes.c_uint64(nPointDataNeededCount.value)
+		pPointDataBuffer = (Position2D * nPointDataNeededCount.value)()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerreader_getsegmentpointdata(self._handle, nIndex, nPointDataCount, nPointDataNeededCount, pPointDataBuffer))
+		
+		return [pPointDataBuffer[i] for i in range(nPointDataNeededCount.value)]
+	
+
+
+''' Class Implementation for ToolpathLayerData
+'''
+class ToolpathLayerData(Base):
+	def __init__(self, handle, wrapper):
+		Base.__init__(self, handle, wrapper)
+	def GetLayerDataUUID(self):
+		nUUIDBufferSize = ctypes.c_uint64(0)
+		nUUIDNeededChars = ctypes.c_uint64(0)
+		pUUIDBuffer = ctypes.c_char_p(None)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerdata_getlayerdatauuid(self._handle, nUUIDBufferSize, nUUIDNeededChars, pUUIDBuffer))
+		nUUIDBufferSize = ctypes.c_uint64(nUUIDNeededChars.value)
+		pUUIDBuffer = (ctypes.c_char * (nUUIDNeededChars.value))()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerdata_getlayerdatauuid(self._handle, nUUIDBufferSize, nUUIDNeededChars, pUUIDBuffer))
+		
+		return pUUIDBuffer.value.decode()
+	
+	def RegisterProfile(self, ProfileObject):
+		ProfileHandle = None
+		if ProfileObject:
+			ProfileHandle = ProfileObject._handle
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDPARAM, 'Invalid return/output value')
+		pProfileID = ctypes.c_uint32()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerdata_registerprofile(self._handle, ProfileHandle, pProfileID))
+		
+		return pProfileID.value
+	
+	def RegisterBuildItem(self, BuildItemObject):
+		BuildItemHandle = None
+		if BuildItemObject:
+			BuildItemHandle = BuildItemObject._handle
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDPARAM, 'Invalid return/output value')
+		pPartID = ctypes.c_uint32()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerdata_registerbuilditem(self._handle, BuildItemHandle, pPartID))
+		
+		return pPartID.value
+	
+	def WriteHatchData(self, ProfileID, PartID, PointData):
+		nProfileID = ctypes.c_uint32(ProfileID)
+		nPartID = ctypes.c_uint32(PartID)
+		nPointDataCount = ctypes.c_uint64(len(PointData))
+		pPointDataBuffer = (Position2D*len(PointData))(*PointData)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerdata_writehatchdata(self._handle, nProfileID, nPartID, nPointDataCount, pPointDataBuffer))
+		
+	
+	def WriteLoop(self, ProfileID, PartID, PointData):
+		nProfileID = ctypes.c_uint32(ProfileID)
+		nPartID = ctypes.c_uint32(PartID)
+		nPointDataCount = ctypes.c_uint64(len(PointData))
+		pPointDataBuffer = (Position2D*len(PointData))(*PointData)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerdata_writeloop(self._handle, nProfileID, nPartID, nPointDataCount, pPointDataBuffer))
+		
+	
+	def WritePolyline(self, ProfileID, PartID, PointData):
+		nProfileID = ctypes.c_uint32(ProfileID)
+		nPartID = ctypes.c_uint32(PartID)
+		nPointDataCount = ctypes.c_uint64(len(PointData))
+		pPointDataBuffer = (Position2D*len(PointData))(*PointData)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerdata_writepolyline(self._handle, nProfileID, nPartID, nPointDataCount, pPointDataBuffer))
+		
+	
+	def Finish(self):
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathlayerdata_finish(self._handle))
+		
+	
+
+
+''' Class Implementation for Toolpath
+'''
+class Toolpath(Resource):
+	def __init__(self, handle, wrapper):
+		Resource.__init__(self, handle, wrapper)
+	def GetUnits(self):
+		pUnits = ctypes.c_double()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpath_getunits(self._handle, pUnits))
+		
+		return pUnits.value
+	
+	def GetLayerCount(self):
+		pCount = ctypes.c_uint32()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpath_getlayercount(self._handle, pCount))
+		
+		return pCount.value
+	
+	def GetProfileCount(self):
+		pCount = ctypes.c_uint32()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpath_getprofilecount(self._handle, pCount))
+		
+		return pCount.value
+	
+	def AddLayer(self, ZMax, Path, ModelWriterObject):
+		nZMax = ctypes.c_uint32(ZMax)
+		pPath = ctypes.c_char_p(str.encode(Path))
+		ModelWriterHandle = None
+		if ModelWriterObject:
+			ModelWriterHandle = ModelWriterObject._handle
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDPARAM, 'Invalid return/output value')
+		LayerDataHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpath_addlayer(self._handle, nZMax, pPath, ModelWriterHandle, LayerDataHandle))
+		if LayerDataHandle:
+			LayerDataObject = ToolpathLayerData(LayerDataHandle, self._wrapper)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return LayerDataObject
+	
+	def GetLayerAttachment(self, Index):
+		nIndex = ctypes.c_uint32(Index)
+		AttachmentHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpath_getlayerattachment(self._handle, nIndex, AttachmentHandle))
+		if AttachmentHandle:
+			AttachmentObject = Attachment(AttachmentHandle, self._wrapper)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return AttachmentObject
+	
+	def ReadLayerData(self, Index):
+		nIndex = ctypes.c_uint32(Index)
+		ToolpathReaderHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpath_readlayerdata(self._handle, nIndex, ToolpathReaderHandle))
+		if ToolpathReaderHandle:
+			ToolpathReaderObject = ToolpathLayerReader(ToolpathReaderHandle, self._wrapper)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return ToolpathReaderObject
+	
+	def GetLayerPath(self, Index):
+		nIndex = ctypes.c_uint32(Index)
+		nPathBufferSize = ctypes.c_uint64(0)
+		nPathNeededChars = ctypes.c_uint64(0)
+		pPathBuffer = ctypes.c_char_p(None)
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpath_getlayerpath(self._handle, nIndex, nPathBufferSize, nPathNeededChars, pPathBuffer))
+		nPathBufferSize = ctypes.c_uint64(nPathNeededChars.value)
+		pPathBuffer = (ctypes.c_char * (nPathNeededChars.value))()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpath_getlayerpath(self._handle, nIndex, nPathBufferSize, nPathNeededChars, pPathBuffer))
+		
+		return pPathBuffer.value.decode()
+	
+	def GetLayerZMax(self, Index):
+		nIndex = ctypes.c_uint32(Index)
+		pZMax = ctypes.c_uint32()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpath_getlayerzmax(self._handle, nIndex, pZMax))
+		
+		return pZMax.value
+	
+	def GetLayerZ(self, LayerIndex):
+		nLayerIndex = ctypes.c_uint32(LayerIndex)
+		pZValue = ctypes.c_uint32()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpath_getlayerz(self._handle, nLayerIndex, pZValue))
+		
+		return pZValue.value
+	
+	def AddProfile(self, Name):
+		pName = ctypes.c_char_p(str.encode(Name))
+		ProfileHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpath_addprofile(self._handle, pName, ProfileHandle))
+		if ProfileHandle:
+			ProfileObject = ToolpathProfile(ProfileHandle, self._wrapper)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return ProfileObject
+	
+	def GetProfile(self, ProfileIndex):
+		nProfileIndex = ctypes.c_uint32(ProfileIndex)
+		ProfileHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpath_getprofile(self._handle, nProfileIndex, ProfileHandle))
+		if ProfileHandle:
+			ProfileObject = ToolpathProfile(ProfileHandle, self._wrapper)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return ProfileObject
+	
+	def GetProfileUUID(self, ProfileUUID):
+		pProfileUUID = ctypes.c_char_p(str.encode(ProfileUUID))
+		ProfileHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpath_getprofileuuid(self._handle, pProfileUUID, ProfileHandle))
+		if ProfileHandle:
+			ProfileObject = ToolpathProfile(ProfileHandle, self._wrapper)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return ProfileObject
+	
+
+
+''' Class Implementation for ToolpathIterator
+'''
+class ToolpathIterator(ResourceIterator):
+	def __init__(self, handle, wrapper):
+		ResourceIterator.__init__(self, handle, wrapper)
+	def GetCurrentToolpath(self):
+		ResourceHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_toolpathiterator_getcurrenttoolpath(self._handle, ResourceHandle))
+		if ResourceHandle:
+			ResourceObject = Toolpath(ResourceHandle, self._wrapper)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return ResourceObject
+	
+
+
 ''' Class Implementation for SliceStack
 '''
 class SliceStack(Resource):
@@ -6964,6 +7709,16 @@ class Model(Base):
 		
 		return ResourceIteratorObject
 	
+	def GetToolpaths(self):
+		ResourceIteratorHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_model_gettoolpaths(self._handle, ResourceIteratorHandle))
+		if ResourceIteratorHandle:
+			ResourceIteratorObject = ToolpathIterator(ResourceIteratorHandle, self._wrapper)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return ResourceIteratorObject
+	
 	def GetSliceStacks(self):
 		ResourceIteratorHandle = ctypes.c_void_p()
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_model_getslicestacks(self._handle, ResourceIteratorHandle))
@@ -7113,6 +7868,17 @@ class Model(Base):
 			raise ELib3MFException(ErrorCodes.INVALIDPARAM, 'Invalid return/output value')
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_model_removebuilditem(self._handle, BuildItemInstanceHandle))
 		
+	
+	def AddToolpath(self, UnitFactor):
+		dUnitFactor = ctypes.c_double(UnitFactor)
+		ToolpathInstanceHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_model_addtoolpath(self._handle, dUnitFactor, ToolpathInstanceHandle))
+		if ToolpathInstanceHandle:
+			ToolpathInstanceObject = Toolpath(ToolpathInstanceHandle, self._wrapper)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return ToolpathInstanceObject
 	
 	def GetMetaDataGroup(self):
 		TheMetaDataGroupHandle = ctypes.c_void_p()

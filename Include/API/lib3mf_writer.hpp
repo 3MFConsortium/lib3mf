@@ -110,6 +110,8 @@ public:
 
 	Lib3MF_uint32 GetWarningCount();
 
+	NMR::PModelWriter getModelWriter ();
+
 };
 
 }

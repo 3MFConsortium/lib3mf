@@ -85,6 +85,11 @@ class ITexture2D;
 class IBuildItem;
 class IBuildItemIterator;
 class ISlice;
+class IToolpathProfile;
+class IToolpathLayerReader;
+class IToolpathLayerData;
+class IToolpath;
+class IToolpathIterator;
 class ISliceStack;
 class IConsumer;
 class IAccessRight;
@@ -2062,6 +2067,310 @@ typedef IBaseSharedPtr<ISlice> PISlice;
 
 
 /*************************************************************************************************************************
+ Class interface for ToolpathProfile 
+**************************************************************************************************************************/
+
+class IToolpathProfile : public virtual IBase {
+public:
+	/**
+	* IToolpathProfile::GetUUID - Retrieves the profile's uuid
+	* @return Returns the uuid value.
+	*/
+	virtual std::string GetUUID() = 0;
+
+	/**
+	* IToolpathProfile::GetName - Retrieves the profile's name
+	* @return Returns the name.
+	*/
+	virtual std::string GetName() = 0;
+
+	/**
+	* IToolpathProfile::HasParameterValue - Checks if a parameter value exists.
+	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] sValueName - Value key string.
+	* @return Returns if a value exists.
+	*/
+	virtual bool HasParameterValue(const std::string & sNameSpaceName, const std::string & sValueName) = 0;
+
+	/**
+	* IToolpathProfile::GetParameterDoubleValue - Retrieves a profile's parameter value. Fails if value does not exist.
+	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] sValueName - Value key string.
+	* @return Returns the value of the field.
+	*/
+	virtual Lib3MF_double GetParameterDoubleValue(const std::string & sNameSpaceName, const std::string & sValueName) = 0;
+
+	/**
+	* IToolpathProfile::GetParameterDoubleValueDef - Retrieves a profile's parameter value
+	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] sValueName - Value key string.
+	* @param[in] dDefaultValue - Default value if value does not exist.
+	* @return Returns the value of the field.
+	*/
+	virtual Lib3MF_double GetParameterDoubleValueDef(const std::string & sNameSpaceName, const std::string & sValueName, const Lib3MF_double dDefaultValue) = 0;
+
+	/**
+	* IToolpathProfile::SetName - Sets the profile's name
+	* @param[in] sName - Returns the name.
+	*/
+	virtual void SetName(const std::string & sName) = 0;
+
+	/**
+	* IToolpathProfile::SetParameterDoubleValue - Sets a profile's parameter value.
+	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] sValueName - Value key string.
+	* @param[in] dValue - Double value of the parameter.
+	*/
+	virtual void SetParameterDoubleValue(const std::string & sNameSpaceName, const std::string & sValueName, const Lib3MF_double dValue) = 0;
+
+};
+
+typedef IBaseSharedPtr<IToolpathProfile> PIToolpathProfile;
+
+
+/*************************************************************************************************************************
+ Class interface for ToolpathLayerReader 
+**************************************************************************************************************************/
+
+class IToolpathLayerReader : public virtual IBase {
+public:
+	/**
+	* IToolpathLayerReader::GetLayerDataUUID - Retrieves the layerdata's uuid
+	* @return Returns the uuid value.
+	*/
+	virtual std::string GetLayerDataUUID() = 0;
+
+	/**
+	* IToolpathLayerReader::GetSegmentCount - Retrieves the count of segments.
+	* @return Count
+	*/
+	virtual Lib3MF_uint32 GetSegmentCount() = 0;
+
+	/**
+	* IToolpathLayerReader::GetSegmentInfo - Retrieves the segment type information .
+	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
+	* @param[out] eType - Segment Type
+	* @param[out] nPointCount - Point count of segment.
+	*/
+	virtual void GetSegmentInfo(const Lib3MF_uint32 nIndex, Lib3MF::eToolpathSegmentType & eType, Lib3MF_uint32 & nPointCount) = 0;
+
+	/**
+	* IToolpathLayerReader::GetSegmentProfile - Retrieves the assigned segment profile.
+	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
+	* @return Segment Profile
+	*/
+	virtual IToolpathProfile * GetSegmentProfile(const Lib3MF_uint32 nIndex) = 0;
+
+	/**
+	* IToolpathLayerReader::GetSegmentProfileUUID - Retrieves the assigned segment profile uuid.
+	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
+	* @return Segment Profile UUID
+	*/
+	virtual std::string GetSegmentProfileUUID(const Lib3MF_uint32 nIndex) = 0;
+
+	/**
+	* IToolpathLayerReader::GetSegmentPart - Retrieves the assigned segment profile.
+	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
+	* @return Segment Build Item
+	*/
+	virtual IBuildItem * GetSegmentPart(const Lib3MF_uint32 nIndex) = 0;
+
+	/**
+	* IToolpathLayerReader::GetSegmentPartUUID - Retrieves the assigned segment part uuid.
+	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
+	* @return Segment Part UUID
+	*/
+	virtual std::string GetSegmentPartUUID(const Lib3MF_uint32 nIndex) = 0;
+
+	/**
+	* IToolpathLayerReader::GetSegmentPointData - Retrieves the assigned segment point list. For type hatch, the points are taken pairwise.
+	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
+	* @param[in] nPointDataBufferSize - Number of elements in buffer
+	* @param[out] pPointDataNeededCount - will be filled with the count of the written structs, or needed buffer size.
+	* @param[out] pPointDataBuffer - Position2D buffer of The point data array
+	*/
+	virtual void GetSegmentPointData(const Lib3MF_uint32 nIndex, Lib3MF_uint64 nPointDataBufferSize, Lib3MF_uint64* pPointDataNeededCount, Lib3MF::sPosition2D * pPointDataBuffer) = 0;
+
+};
+
+typedef IBaseSharedPtr<IToolpathLayerReader> PIToolpathLayerReader;
+
+
+/*************************************************************************************************************************
+ Class interface for ToolpathLayerData 
+**************************************************************************************************************************/
+
+class IToolpathLayerData : public virtual IBase {
+public:
+	/**
+	* IToolpathLayerData::GetLayerDataUUID - Retrieves the layerdata's uuid
+	* @return Returns the uuid value.
+	*/
+	virtual std::string GetLayerDataUUID() = 0;
+
+	/**
+	* IToolpathLayerData::RegisterProfile - Registers a toolpath profile
+	* @param[in] pProfile - The toolpath profile to register.
+	* @return returns the local profile ID for the layer.
+	*/
+	virtual Lib3MF_uint32 RegisterProfile(IToolpathProfile* pProfile) = 0;
+
+	/**
+	* IToolpathLayerData::RegisterBuildItem - Registers a Model Build Item
+	* @param[in] pBuildItem - The model build item to use.
+	* @return returns the local part ID for the layer.
+	*/
+	virtual Lib3MF_uint32 RegisterBuildItem(IBuildItem* pBuildItem) = 0;
+
+	/**
+	* IToolpathLayerData::WriteHatchData - writes hatch data to the layer.
+	* @param[in] nProfileID - The toolpath profile to use
+	* @param[in] nPartID - The toolpath part to use
+	* @param[in] nPointDataBufferSize - Number of elements in buffer
+	* @param[in] pPointDataBuffer - The point data
+	*/
+	virtual void WriteHatchData(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sPosition2D * pPointDataBuffer) = 0;
+
+	/**
+	* IToolpathLayerData::WriteLoop - writes loop data to the layer.
+	* @param[in] nProfileID - The toolpath profile to use
+	* @param[in] nPartID - The toolpath part to use
+	* @param[in] nPointDataBufferSize - Number of elements in buffer
+	* @param[in] pPointDataBuffer - The point data
+	*/
+	virtual void WriteLoop(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sPosition2D * pPointDataBuffer) = 0;
+
+	/**
+	* IToolpathLayerData::WritePolyline - writes polyline data to the layer.
+	* @param[in] nProfileID - The toolpath profile to use
+	* @param[in] nPartID - The toolpath part to use
+	* @param[in] nPointDataBufferSize - Number of elements in buffer
+	* @param[in] pPointDataBuffer - The point data
+	*/
+	virtual void WritePolyline(const Lib3MF_uint32 nProfileID, const Lib3MF_uint32 nPartID, const Lib3MF_uint64 nPointDataBufferSize, const Lib3MF::sPosition2D * pPointDataBuffer) = 0;
+
+	/**
+	* IToolpathLayerData::Finish - finishes all writing of the layer and compresses toolpath data.
+	*/
+	virtual void Finish() = 0;
+
+};
+
+typedef IBaseSharedPtr<IToolpathLayerData> PIToolpathLayerData;
+
+
+/*************************************************************************************************************************
+ Class interface for Toolpath 
+**************************************************************************************************************************/
+
+class IToolpath : public virtual IResource {
+public:
+	/**
+	* IToolpath::GetUnits - Retrieves the unit factor
+	* @return Returns the unit factor.
+	*/
+	virtual Lib3MF_double GetUnits() = 0;
+
+	/**
+	* IToolpath::GetLayerCount - Retrieves the count of layers
+	* @return Returns the layer count
+	*/
+	virtual Lib3MF_uint32 GetLayerCount() = 0;
+
+	/**
+	* IToolpath::GetProfileCount - Retrieves the count of profiles
+	* @return Returns the profile count
+	*/
+	virtual Lib3MF_uint32 GetProfileCount() = 0;
+
+	/**
+	* IToolpath::AddLayer - Adds a new toolpath layer
+	* @param[in] nZMax - ZMax value
+	* @param[in] sPath - Package Path
+	* @param[in] pModelWriter - The model writer that writes out the 3MF.
+	* @return Returns the layerdata object to write the layer content into.
+	*/
+	virtual IToolpathLayerData * AddLayer(const Lib3MF_uint32 nZMax, const std::string & sPath, IWriter* pModelWriter) = 0;
+
+	/**
+	* IToolpath::GetLayerAttachment - Retrieves the Attachment of a layer
+	* @param[in] nIndex - Layer Index
+	* @return Attachment
+	*/
+	virtual IAttachment * GetLayerAttachment(const Lib3MF_uint32 nIndex) = 0;
+
+	/**
+	* IToolpath::ReadLayerData - Reads the toolpath of a layer.
+	* @param[in] nIndex - Layer Index
+	* @return Toolpath Reader Instance
+	*/
+	virtual IToolpathLayerReader * ReadLayerData(const Lib3MF_uint32 nIndex) = 0;
+
+	/**
+	* IToolpath::GetLayerPath - Retrieves the Path of a layer
+	* @param[in] nIndex - Layer Index
+	* @return Package Path
+	*/
+	virtual std::string GetLayerPath(const Lib3MF_uint32 nIndex) = 0;
+
+	/**
+	* IToolpath::GetLayerZMax - Retrieves the ZMax of a layer
+	* @param[in] nIndex - Layer Index
+	* @return ZMax value
+	*/
+	virtual Lib3MF_uint32 GetLayerZMax(const Lib3MF_uint32 nIndex) = 0;
+
+	/**
+	* IToolpath::GetLayerZ - Return the z value of a layer in units.
+	* @param[in] nLayerIndex - Layer Index.
+	* @return Z Value in Units.
+	*/
+	virtual Lib3MF_uint32 GetLayerZ(const Lib3MF_uint32 nLayerIndex) = 0;
+
+	/**
+	* IToolpath::AddProfile - Adds a new profile to the toolpath.
+	* @param[in] sName - the name.
+	* @return Returns the profile.
+	*/
+	virtual IToolpathProfile * AddProfile(const std::string & sName) = 0;
+
+	/**
+	* IToolpath::GetProfile - Returns a profile of the toolpath.
+	* @param[in] nProfileIndex - Layer Index.
+	* @return Returns the profile.
+	*/
+	virtual IToolpathProfile * GetProfile(const Lib3MF_uint32 nProfileIndex) = 0;
+
+	/**
+	* IToolpath::GetProfileUUID - Returns a profile of the toolpath by UUID.
+	* @param[in] sProfileUUID - UUID string.
+	* @return Returns the profile.
+	*/
+	virtual IToolpathProfile * GetProfileUUID(const std::string & sProfileUUID) = 0;
+
+};
+
+typedef IBaseSharedPtr<IToolpath> PIToolpath;
+
+
+/*************************************************************************************************************************
+ Class interface for ToolpathIterator 
+**************************************************************************************************************************/
+
+class IToolpathIterator : public virtual IResourceIterator {
+public:
+	/**
+	* IToolpathIterator::GetCurrentToolpath - Returns the Toolpath the iterator points at.
+	* @return returns the Toolpath instance.
+	*/
+	virtual IToolpath * GetCurrentToolpath() = 0;
+
+};
+
+typedef IBaseSharedPtr<IToolpathIterator> PIToolpathIterator;
+
+
+/*************************************************************************************************************************
  Class interface for SliceStack 
 **************************************************************************************************************************/
 
@@ -2685,6 +2994,12 @@ public:
 	virtual IMultiPropertyGroupIterator * GetMultiPropertyGroups() = 0;
 
 	/**
+	* IModel::GetToolpaths - creates a Toolpath instance with all toolpath resources.
+	* @return returns the iterator instance.
+	*/
+	virtual IToolpathIterator * GetToolpaths() = 0;
+
+	/**
 	* IModel::GetSliceStacks - creates a resource iterator instance with all slice stack resources.
 	* @return returns the iterator instance.
 	*/
@@ -2767,6 +3082,13 @@ public:
 	* @param[in] pBuildItemInstance - Build item to remove.
 	*/
 	virtual void RemoveBuildItem(IBuildItem* pBuildItemInstance) = 0;
+
+	/**
+	* IModel::AddToolpath - adds an empty Toolpath resource to the model.
+	* @param[in] dUnitFactor - The toolpath instance of the created Toolpath.
+	* @return The toolpath instance of the created Toolpath.
+	*/
+	virtual IToolpath * AddToolpath(const Lib3MF_double dUnitFactor) = 0;
 
 	/**
 	* IModel::GetMetaDataGroup - Returns the metadata of the model as MetaDataGroup

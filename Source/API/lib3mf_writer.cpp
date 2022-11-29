@@ -267,3 +267,8 @@ std::string CWriter::GetWarning(const Lib3MF_uint32 nIndex, Lib3MF_uint32 & nErr
 Lib3MF_uint32 CWriter::GetWarningCount() {
 	return writer().warnings()->getWarningCount();
 }
+
+NMR::PModelWriter CWriter::getModelWriter()
+{
+	return m_pWriter;
+}

@@ -135,6 +135,10 @@ typedef void * Lib3MF_pvoid;
 #define LIB3MF_ERROR_KEYSTORECONSUMERNOTFOUND 3002
 #define LIB3MF_ERROR_KEYSTORERESOURCEDATANOTFOUND 3003
 #define LIB3MF_ERROR_SECURECONTEXTNOTREGISTERED 3004
+#define LIB3MF_ERROR_TOOLPATH_NOTWRITINGHEADER 4000
+#define LIB3MF_ERROR_TOOLPATH_NOTWRITINGDATA 4001
+#define LIB3MF_ERROR_TOOLPATH_DATAHASBEENWRITTEN 4002
+#define LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOUNT 4003
 
 /*************************************************************************************************************************
  Declaration of handle classes 
@@ -174,6 +178,11 @@ typedef Lib3MFHandle Lib3MF_Texture2D;
 typedef Lib3MFHandle Lib3MF_BuildItem;
 typedef Lib3MFHandle Lib3MF_BuildItemIterator;
 typedef Lib3MFHandle Lib3MF_Slice;
+typedef Lib3MFHandle Lib3MF_ToolpathProfile;
+typedef Lib3MFHandle Lib3MF_ToolpathLayerReader;
+typedef Lib3MFHandle Lib3MF_ToolpathLayerData;
+typedef Lib3MFHandle Lib3MF_Toolpath;
+typedef Lib3MFHandle Lib3MF_ToolpathIterator;
 typedef Lib3MFHandle Lib3MF_SliceStack;
 typedef Lib3MFHandle Lib3MF_Consumer;
 typedef Lib3MFHandle Lib3MF_AccessRight;
@@ -287,6 +296,13 @@ typedef enum eLib3MFBlendMethod {
   eBlendMethodMultiply = 2
 } eLib3MFBlendMethod;
 
+typedef enum eLib3MFToolpathSegmentType {
+  eToolpathSegmentTypeUnknown = 0,
+  eToolpathSegmentTypeHatch = 1,
+  eToolpathSegmentTypeLoop = 2,
+  eToolpathSegmentTypePolyline = 3
+} eLib3MFToolpathSegmentType;
+
 typedef enum eLib3MFEncryptionAlgorithm {
   eEncryptionAlgorithmAES256_GCM = 1
 } eLib3MFEncryptionAlgorithm;
@@ -376,6 +392,11 @@ typedef union {
   eLib3MFBlendMethod m_enum;
   int m_code;
 } structEnumLib3MFBlendMethod;
+
+typedef union {
+  eLib3MFToolpathSegmentType m_enum;
+  int m_code;
+} structEnumLib3MFToolpathSegmentType;
 
 typedef union {
   eLib3MFEncryptionAlgorithm m_enum;

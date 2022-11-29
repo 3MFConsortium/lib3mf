@@ -278,6 +278,41 @@ type Lib3MFImplementation struct {
 	Lib3MF_slice_getpolygonindices uintptr
 	Lib3MF_slice_getpolygonindexcount uintptr
 	Lib3MF_slice_getztop uintptr
+	Lib3MF_toolpathprofile_getuuid uintptr
+	Lib3MF_toolpathprofile_getname uintptr
+	Lib3MF_toolpathprofile_hasparametervalue uintptr
+	Lib3MF_toolpathprofile_getparameterdoublevalue uintptr
+	Lib3MF_toolpathprofile_getparameterdoublevaluedef uintptr
+	Lib3MF_toolpathprofile_setname uintptr
+	Lib3MF_toolpathprofile_setparameterdoublevalue uintptr
+	Lib3MF_toolpathlayerreader_getlayerdatauuid uintptr
+	Lib3MF_toolpathlayerreader_getsegmentcount uintptr
+	Lib3MF_toolpathlayerreader_getsegmentinfo uintptr
+	Lib3MF_toolpathlayerreader_getsegmentprofile uintptr
+	Lib3MF_toolpathlayerreader_getsegmentprofileuuid uintptr
+	Lib3MF_toolpathlayerreader_getsegmentpart uintptr
+	Lib3MF_toolpathlayerreader_getsegmentpartuuid uintptr
+	Lib3MF_toolpathlayerreader_getsegmentpointdata uintptr
+	Lib3MF_toolpathlayerdata_getlayerdatauuid uintptr
+	Lib3MF_toolpathlayerdata_registerprofile uintptr
+	Lib3MF_toolpathlayerdata_registerbuilditem uintptr
+	Lib3MF_toolpathlayerdata_writehatchdata uintptr
+	Lib3MF_toolpathlayerdata_writeloop uintptr
+	Lib3MF_toolpathlayerdata_writepolyline uintptr
+	Lib3MF_toolpathlayerdata_finish uintptr
+	Lib3MF_toolpath_getunits uintptr
+	Lib3MF_toolpath_getlayercount uintptr
+	Lib3MF_toolpath_getprofilecount uintptr
+	Lib3MF_toolpath_addlayer uintptr
+	Lib3MF_toolpath_getlayerattachment uintptr
+	Lib3MF_toolpath_readlayerdata uintptr
+	Lib3MF_toolpath_getlayerpath uintptr
+	Lib3MF_toolpath_getlayerzmax uintptr
+	Lib3MF_toolpath_getlayerz uintptr
+	Lib3MF_toolpath_addprofile uintptr
+	Lib3MF_toolpath_getprofile uintptr
+	Lib3MF_toolpath_getprofileuuid uintptr
+	Lib3MF_toolpathiterator_getcurrenttoolpath uintptr
 	Lib3MF_slicestack_getbottomz uintptr
 	Lib3MF_slicestack_getslicecount uintptr
 	Lib3MF_slicestack_getslice uintptr
@@ -360,6 +395,7 @@ type Lib3MFImplementation struct {
 	Lib3MF_model_gettexture2dgroups uintptr
 	Lib3MF_model_getcompositematerials uintptr
 	Lib3MF_model_getmultipropertygroups uintptr
+	Lib3MF_model_gettoolpaths uintptr
 	Lib3MF_model_getslicestacks uintptr
 	Lib3MF_model_mergetomodel uintptr
 	Lib3MF_model_addmeshobject uintptr
@@ -373,6 +409,7 @@ type Lib3MFImplementation struct {
 	Lib3MF_model_addmultipropertygroup uintptr
 	Lib3MF_model_addbuilditem uintptr
 	Lib3MF_model_removebuilditem uintptr
+	Lib3MF_model_addtoolpath uintptr
 	Lib3MF_model_getmetadatagroup uintptr
 	Lib3MF_model_addattachment uintptr
 	Lib3MF_model_removeattachment uintptr
@@ -572,6 +609,10 @@ func GetLib3MFErrorMessage(errorcode uint32) (string) {
 	case 3002: return "KEYSTORECONSUMERNOTFOUND";
 	case 3003: return "KEYSTORERESOURCEDATANOTFOUND";
 	case 3004: return "SECURECONTEXTNOTREGISTERED";
+	case 4000: return "TOOLPATH_NOTWRITINGHEADER";
+	case 4001: return "TOOLPATH_NOTWRITINGDATA";
+	case 4002: return "TOOLPATH_DATAHASBEENWRITTEN";
+	case 4003: return "TOOLPATH_INVALIDPOINTCOUNT";
 	default:
 		return "unknown";
 	}
@@ -1744,6 +1785,181 @@ func (implementation *Lib3MFImplementation) Initialize(DLLFileName string) error
 		return errors.New("Could not get function lib3mf_slice_getztop: " + err.Error())
 	}
 	
+	implementation.Lib3MF_toolpathprofile_getuuid, err = syscall.GetProcAddress(dllHandle, "lib3mf_toolpathprofile_getuuid")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_toolpathprofile_getuuid: " + err.Error())
+	}
+	
+	implementation.Lib3MF_toolpathprofile_getname, err = syscall.GetProcAddress(dllHandle, "lib3mf_toolpathprofile_getname")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_toolpathprofile_getname: " + err.Error())
+	}
+	
+	implementation.Lib3MF_toolpathprofile_hasparametervalue, err = syscall.GetProcAddress(dllHandle, "lib3mf_toolpathprofile_hasparametervalue")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_toolpathprofile_hasparametervalue: " + err.Error())
+	}
+	
+	implementation.Lib3MF_toolpathprofile_getparameterdoublevalue, err = syscall.GetProcAddress(dllHandle, "lib3mf_toolpathprofile_getparameterdoublevalue")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_toolpathprofile_getparameterdoublevalue: " + err.Error())
+	}
+	
+	implementation.Lib3MF_toolpathprofile_getparameterdoublevaluedef, err = syscall.GetProcAddress(dllHandle, "lib3mf_toolpathprofile_getparameterdoublevaluedef")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_toolpathprofile_getparameterdoublevaluedef: " + err.Error())
+	}
+	
+	implementation.Lib3MF_toolpathprofile_setname, err = syscall.GetProcAddress(dllHandle, "lib3mf_toolpathprofile_setname")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_toolpathprofile_setname: " + err.Error())
+	}
+	
+	implementation.Lib3MF_toolpathprofile_setparameterdoublevalue, err = syscall.GetProcAddress(dllHandle, "lib3mf_toolpathprofile_setparameterdoublevalue")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_toolpathprofile_setparameterdoublevalue: " + err.Error())
+	}
+	
+	implementation.Lib3MF_toolpathlayerreader_getlayerdatauuid, err = syscall.GetProcAddress(dllHandle, "lib3mf_toolpathlayerreader_getlayerdatauuid")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_toolpathlayerreader_getlayerdatauuid: " + err.Error())
+	}
+	
+	implementation.Lib3MF_toolpathlayerreader_getsegmentcount, err = syscall.GetProcAddress(dllHandle, "lib3mf_toolpathlayerreader_getsegmentcount")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_toolpathlayerreader_getsegmentcount: " + err.Error())
+	}
+	
+	implementation.Lib3MF_toolpathlayerreader_getsegmentinfo, err = syscall.GetProcAddress(dllHandle, "lib3mf_toolpathlayerreader_getsegmentinfo")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_toolpathlayerreader_getsegmentinfo: " + err.Error())
+	}
+	
+	implementation.Lib3MF_toolpathlayerreader_getsegmentprofile, err = syscall.GetProcAddress(dllHandle, "lib3mf_toolpathlayerreader_getsegmentprofile")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_toolpathlayerreader_getsegmentprofile: " + err.Error())
+	}
+	
+	implementation.Lib3MF_toolpathlayerreader_getsegmentprofileuuid, err = syscall.GetProcAddress(dllHandle, "lib3mf_toolpathlayerreader_getsegmentprofileuuid")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_toolpathlayerreader_getsegmentprofileuuid: " + err.Error())
+	}
+	
+	implementation.Lib3MF_toolpathlayerreader_getsegmentpart, err = syscall.GetProcAddress(dllHandle, "lib3mf_toolpathlayerreader_getsegmentpart")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_toolpathlayerreader_getsegmentpart: " + err.Error())
+	}
+	
+	implementation.Lib3MF_toolpathlayerreader_getsegmentpartuuid, err = syscall.GetProcAddress(dllHandle, "lib3mf_toolpathlayerreader_getsegmentpartuuid")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_toolpathlayerreader_getsegmentpartuuid: " + err.Error())
+	}
+	
+	implementation.Lib3MF_toolpathlayerreader_getsegmentpointdata, err = syscall.GetProcAddress(dllHandle, "lib3mf_toolpathlayerreader_getsegmentpointdata")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_toolpathlayerreader_getsegmentpointdata: " + err.Error())
+	}
+	
+	implementation.Lib3MF_toolpathlayerdata_getlayerdatauuid, err = syscall.GetProcAddress(dllHandle, "lib3mf_toolpathlayerdata_getlayerdatauuid")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_toolpathlayerdata_getlayerdatauuid: " + err.Error())
+	}
+	
+	implementation.Lib3MF_toolpathlayerdata_registerprofile, err = syscall.GetProcAddress(dllHandle, "lib3mf_toolpathlayerdata_registerprofile")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_toolpathlayerdata_registerprofile: " + err.Error())
+	}
+	
+	implementation.Lib3MF_toolpathlayerdata_registerbuilditem, err = syscall.GetProcAddress(dllHandle, "lib3mf_toolpathlayerdata_registerbuilditem")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_toolpathlayerdata_registerbuilditem: " + err.Error())
+	}
+	
+	implementation.Lib3MF_toolpathlayerdata_writehatchdata, err = syscall.GetProcAddress(dllHandle, "lib3mf_toolpathlayerdata_writehatchdata")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_toolpathlayerdata_writehatchdata: " + err.Error())
+	}
+	
+	implementation.Lib3MF_toolpathlayerdata_writeloop, err = syscall.GetProcAddress(dllHandle, "lib3mf_toolpathlayerdata_writeloop")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_toolpathlayerdata_writeloop: " + err.Error())
+	}
+	
+	implementation.Lib3MF_toolpathlayerdata_writepolyline, err = syscall.GetProcAddress(dllHandle, "lib3mf_toolpathlayerdata_writepolyline")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_toolpathlayerdata_writepolyline: " + err.Error())
+	}
+	
+	implementation.Lib3MF_toolpathlayerdata_finish, err = syscall.GetProcAddress(dllHandle, "lib3mf_toolpathlayerdata_finish")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_toolpathlayerdata_finish: " + err.Error())
+	}
+	
+	implementation.Lib3MF_toolpath_getunits, err = syscall.GetProcAddress(dllHandle, "lib3mf_toolpath_getunits")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_toolpath_getunits: " + err.Error())
+	}
+	
+	implementation.Lib3MF_toolpath_getlayercount, err = syscall.GetProcAddress(dllHandle, "lib3mf_toolpath_getlayercount")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_toolpath_getlayercount: " + err.Error())
+	}
+	
+	implementation.Lib3MF_toolpath_getprofilecount, err = syscall.GetProcAddress(dllHandle, "lib3mf_toolpath_getprofilecount")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_toolpath_getprofilecount: " + err.Error())
+	}
+	
+	implementation.Lib3MF_toolpath_addlayer, err = syscall.GetProcAddress(dllHandle, "lib3mf_toolpath_addlayer")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_toolpath_addlayer: " + err.Error())
+	}
+	
+	implementation.Lib3MF_toolpath_getlayerattachment, err = syscall.GetProcAddress(dllHandle, "lib3mf_toolpath_getlayerattachment")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_toolpath_getlayerattachment: " + err.Error())
+	}
+	
+	implementation.Lib3MF_toolpath_readlayerdata, err = syscall.GetProcAddress(dllHandle, "lib3mf_toolpath_readlayerdata")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_toolpath_readlayerdata: " + err.Error())
+	}
+	
+	implementation.Lib3MF_toolpath_getlayerpath, err = syscall.GetProcAddress(dllHandle, "lib3mf_toolpath_getlayerpath")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_toolpath_getlayerpath: " + err.Error())
+	}
+	
+	implementation.Lib3MF_toolpath_getlayerzmax, err = syscall.GetProcAddress(dllHandle, "lib3mf_toolpath_getlayerzmax")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_toolpath_getlayerzmax: " + err.Error())
+	}
+	
+	implementation.Lib3MF_toolpath_getlayerz, err = syscall.GetProcAddress(dllHandle, "lib3mf_toolpath_getlayerz")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_toolpath_getlayerz: " + err.Error())
+	}
+	
+	implementation.Lib3MF_toolpath_addprofile, err = syscall.GetProcAddress(dllHandle, "lib3mf_toolpath_addprofile")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_toolpath_addprofile: " + err.Error())
+	}
+	
+	implementation.Lib3MF_toolpath_getprofile, err = syscall.GetProcAddress(dllHandle, "lib3mf_toolpath_getprofile")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_toolpath_getprofile: " + err.Error())
+	}
+	
+	implementation.Lib3MF_toolpath_getprofileuuid, err = syscall.GetProcAddress(dllHandle, "lib3mf_toolpath_getprofileuuid")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_toolpath_getprofileuuid: " + err.Error())
+	}
+	
+	implementation.Lib3MF_toolpathiterator_getcurrenttoolpath, err = syscall.GetProcAddress(dllHandle, "lib3mf_toolpathiterator_getcurrenttoolpath")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_toolpathiterator_getcurrenttoolpath: " + err.Error())
+	}
+	
 	implementation.Lib3MF_slicestack_getbottomz, err = syscall.GetProcAddress(dllHandle, "lib3mf_slicestack_getbottomz")
 	if (err != nil) {
 		return errors.New("Could not get function lib3mf_slicestack_getbottomz: " + err.Error())
@@ -2154,6 +2370,11 @@ func (implementation *Lib3MFImplementation) Initialize(DLLFileName string) error
 		return errors.New("Could not get function lib3mf_model_getmultipropertygroups: " + err.Error())
 	}
 	
+	implementation.Lib3MF_model_gettoolpaths, err = syscall.GetProcAddress(dllHandle, "lib3mf_model_gettoolpaths")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_model_gettoolpaths: " + err.Error())
+	}
+	
 	implementation.Lib3MF_model_getslicestacks, err = syscall.GetProcAddress(dllHandle, "lib3mf_model_getslicestacks")
 	if (err != nil) {
 		return errors.New("Could not get function lib3mf_model_getslicestacks: " + err.Error())
@@ -2217,6 +2438,11 @@ func (implementation *Lib3MFImplementation) Initialize(DLLFileName string) error
 	implementation.Lib3MF_model_removebuilditem, err = syscall.GetProcAddress(dllHandle, "lib3mf_model_removebuilditem")
 	if (err != nil) {
 		return errors.New("Could not get function lib3mf_model_removebuilditem: " + err.Error())
+	}
+	
+	implementation.Lib3MF_model_addtoolpath, err = syscall.GetProcAddress(dllHandle, "lib3mf_model_addtoolpath")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_model_addtoolpath: " + err.Error())
 	}
 	
 	implementation.Lib3MF_model_getmetadatagroup, err = syscall.GetProcAddress(dllHandle, "lib3mf_model_getmetadatagroup")
@@ -6586,6 +6812,679 @@ func (implementation *Lib3MFImplementation) Slice_GetZTop(Slice Lib3MFHandle) (f
 	return dZTop, err
 }
 
+func (implementation *Lib3MFImplementation) ToolpathProfile_GetUUID(ToolpathProfile Lib3MFHandle) (string, error) {
+	var err error = nil
+	var neededforUUID int64 = 0
+	var filledinUUID int64 = 0
+	
+	implementation_toolpathprofile, err := implementation.GetWrapperHandle(ToolpathProfile)
+	if (err != nil) {
+		return "", err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_toolpathprofile_getuuid, implementation_toolpathprofile.GetDLLInHandle(), Int64InValue(0), Int64OutValue(&neededforUUID), Int64InValue(0))
+	if (err != nil) {
+		return "", err
+	}
+	bufferSizeUUID := neededforUUID
+	bufferUUID := make([]byte, bufferSizeUUID)
+	err = implementation.CallFunction(implementation.Lib3MF_toolpathprofile_getuuid, implementation_toolpathprofile.GetDLLInHandle(), Int64InValue(bufferSizeUUID), Int64OutValue(&filledinUUID), uintptr(unsafe.Pointer(&bufferUUID[0])))
+	if (err != nil) {
+		return "", err
+	}
+	
+	return string(bufferUUID[:(filledinUUID-1)]), err
+}
+
+func (implementation *Lib3MFImplementation) ToolpathProfile_GetName(ToolpathProfile Lib3MFHandle) (string, error) {
+	var err error = nil
+	var neededforName int64 = 0
+	var filledinName int64 = 0
+	
+	implementation_toolpathprofile, err := implementation.GetWrapperHandle(ToolpathProfile)
+	if (err != nil) {
+		return "", err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_toolpathprofile_getname, implementation_toolpathprofile.GetDLLInHandle(), Int64InValue(0), Int64OutValue(&neededforName), Int64InValue(0))
+	if (err != nil) {
+		return "", err
+	}
+	bufferSizeName := neededforName
+	bufferName := make([]byte, bufferSizeName)
+	err = implementation.CallFunction(implementation.Lib3MF_toolpathprofile_getname, implementation_toolpathprofile.GetDLLInHandle(), Int64InValue(bufferSizeName), Int64OutValue(&filledinName), uintptr(unsafe.Pointer(&bufferName[0])))
+	if (err != nil) {
+		return "", err
+	}
+	
+	return string(bufferName[:(filledinName-1)]), err
+}
+
+func (implementation *Lib3MFImplementation) ToolpathProfile_HasParameterValue(ToolpathProfile Lib3MFHandle, sNameSpaceName string, sValueName string) (bool, error) {
+	var err error = nil
+	var bValueExists int64 = 0
+	
+	implementation_toolpathprofile, err := implementation.GetWrapperHandle(ToolpathProfile)
+	if (err != nil) {
+		return false, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_toolpathprofile_hasparametervalue, implementation_toolpathprofile.GetDLLInHandle(), StringInValue(sNameSpaceName), StringInValue(sValueName), Int64OutValue(&bValueExists))
+	if (err != nil) {
+		return false, err
+	}
+	
+	return (bValueExists != 0), err
+}
+
+func (implementation *Lib3MFImplementation) ToolpathProfile_GetParameterDoubleValue(ToolpathProfile Lib3MFHandle, sNameSpaceName string, sValueName string) (float64, error) {
+	var err error = nil
+	var dValue float64 = 0
+	
+	implementation_toolpathprofile, err := implementation.GetWrapperHandle(ToolpathProfile)
+	if (err != nil) {
+		return 0, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_toolpathprofile_getparameterdoublevalue, implementation_toolpathprofile.GetDLLInHandle(), StringInValue(sNameSpaceName), StringInValue(sValueName), Float64OutValue(&dValue))
+	if (err != nil) {
+		return 0, err
+	}
+	
+	return dValue, err
+}
+
+func (implementation *Lib3MFImplementation) ToolpathProfile_GetParameterDoubleValueDef(ToolpathProfile Lib3MFHandle, sNameSpaceName string, sValueName string, dDefaultValue float64) (float64, error) {
+	var err error = nil
+	var dValue float64 = 0
+	
+	implementation_toolpathprofile, err := implementation.GetWrapperHandle(ToolpathProfile)
+	if (err != nil) {
+		return 0, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_toolpathprofile_getparameterdoublevaluedef, implementation_toolpathprofile.GetDLLInHandle(), StringInValue(sNameSpaceName), StringInValue(sValueName), Float64InValue(dDefaultValue), Float64OutValue(&dValue))
+	if (err != nil) {
+		return 0, err
+	}
+	
+	return dValue, err
+}
+
+func (implementation *Lib3MFImplementation) ToolpathProfile_SetName(ToolpathProfile Lib3MFHandle, sName string) (error) {
+	var err error = nil
+	
+	implementation_toolpathprofile, err := implementation.GetWrapperHandle(ToolpathProfile)
+	if (err != nil) {
+		return err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_toolpathprofile_setname, implementation_toolpathprofile.GetDLLInHandle(), StringInValue(sName))
+	if (err != nil) {
+		return err
+	}
+	
+	return err
+}
+
+func (implementation *Lib3MFImplementation) ToolpathProfile_SetParameterDoubleValue(ToolpathProfile Lib3MFHandle, sNameSpaceName string, sValueName string, dValue float64) (error) {
+	var err error = nil
+	
+	implementation_toolpathprofile, err := implementation.GetWrapperHandle(ToolpathProfile)
+	if (err != nil) {
+		return err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_toolpathprofile_setparameterdoublevalue, implementation_toolpathprofile.GetDLLInHandle(), StringInValue(sNameSpaceName), StringInValue(sValueName), Float64InValue(dValue))
+	if (err != nil) {
+		return err
+	}
+	
+	return err
+}
+
+func (implementation *Lib3MFImplementation) ToolpathLayerReader_GetLayerDataUUID(ToolpathLayerReader Lib3MFHandle) (string, error) {
+	var err error = nil
+	var neededforUUID int64 = 0
+	var filledinUUID int64 = 0
+	
+	implementation_toolpathlayerreader, err := implementation.GetWrapperHandle(ToolpathLayerReader)
+	if (err != nil) {
+		return "", err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_toolpathlayerreader_getlayerdatauuid, implementation_toolpathlayerreader.GetDLLInHandle(), Int64InValue(0), Int64OutValue(&neededforUUID), Int64InValue(0))
+	if (err != nil) {
+		return "", err
+	}
+	bufferSizeUUID := neededforUUID
+	bufferUUID := make([]byte, bufferSizeUUID)
+	err = implementation.CallFunction(implementation.Lib3MF_toolpathlayerreader_getlayerdatauuid, implementation_toolpathlayerreader.GetDLLInHandle(), Int64InValue(bufferSizeUUID), Int64OutValue(&filledinUUID), uintptr(unsafe.Pointer(&bufferUUID[0])))
+	if (err != nil) {
+		return "", err
+	}
+	
+	return string(bufferUUID[:(filledinUUID-1)]), err
+}
+
+func (implementation *Lib3MFImplementation) ToolpathLayerReader_GetSegmentCount(ToolpathLayerReader Lib3MFHandle) (uint32, error) {
+	var err error = nil
+	var nCount uint32 = 0
+	
+	implementation_toolpathlayerreader, err := implementation.GetWrapperHandle(ToolpathLayerReader)
+	if (err != nil) {
+		return 0, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_toolpathlayerreader_getsegmentcount, implementation_toolpathlayerreader.GetDLLInHandle(), UInt32OutValue(&nCount))
+	if (err != nil) {
+		return 0, err
+	}
+	
+	return uint32(nCount), err
+}
+
+func (implementation *Lib3MFImplementation) ToolpathLayerReader_GetSegmentInfo(ToolpathLayerReader Lib3MFHandle, nIndex uint32) (ELib3MFToolpathSegmentType, uint32, error) {
+	var err error = nil
+	var eType uint64 = 0
+	var nPointCount uint32 = 0
+	
+	implementation_toolpathlayerreader, err := implementation.GetWrapperHandle(ToolpathLayerReader)
+	if (err != nil) {
+		return 0, 0, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_toolpathlayerreader_getsegmentinfo, implementation_toolpathlayerreader.GetDLLInHandle(), UInt32InValue(nIndex), UInt64OutValue(&eType), UInt32OutValue(&nPointCount))
+	if (err != nil) {
+		return 0, 0, err
+	}
+	
+	return ELib3MFToolpathSegmentType (eType), uint32(nPointCount), err
+}
+
+func (implementation *Lib3MFImplementation) ToolpathLayerReader_GetSegmentProfile(ToolpathLayerReader Lib3MFHandle, nIndex uint32) (Lib3MFHandle, error) {
+	var err error = nil
+	hProfile := implementation.NewHandle()
+	
+	implementation_toolpathlayerreader, err := implementation.GetWrapperHandle(ToolpathLayerReader)
+	if (err != nil) {
+		return hProfile, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_toolpathlayerreader_getsegmentprofile, implementation_toolpathlayerreader.GetDLLInHandle(), UInt32InValue(nIndex), hProfile.GetDLLOutHandle())
+	if (err != nil) {
+		return hProfile, err
+	}
+	
+	return hProfile, err
+}
+
+func (implementation *Lib3MFImplementation) ToolpathLayerReader_GetSegmentProfileUUID(ToolpathLayerReader Lib3MFHandle, nIndex uint32) (string, error) {
+	var err error = nil
+	var neededforProfileUUID int64 = 0
+	var filledinProfileUUID int64 = 0
+	
+	implementation_toolpathlayerreader, err := implementation.GetWrapperHandle(ToolpathLayerReader)
+	if (err != nil) {
+		return "", err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_toolpathlayerreader_getsegmentprofileuuid, implementation_toolpathlayerreader.GetDLLInHandle(), UInt32InValue(nIndex), Int64InValue(0), Int64OutValue(&neededforProfileUUID), Int64InValue(0))
+	if (err != nil) {
+		return "", err
+	}
+	bufferSizeProfileUUID := neededforProfileUUID
+	bufferProfileUUID := make([]byte, bufferSizeProfileUUID)
+	err = implementation.CallFunction(implementation.Lib3MF_toolpathlayerreader_getsegmentprofileuuid, implementation_toolpathlayerreader.GetDLLInHandle(), UInt32InValue(nIndex), Int64InValue(bufferSizeProfileUUID), Int64OutValue(&filledinProfileUUID), uintptr(unsafe.Pointer(&bufferProfileUUID[0])))
+	if (err != nil) {
+		return "", err
+	}
+	
+	return string(bufferProfileUUID[:(filledinProfileUUID-1)]), err
+}
+
+func (implementation *Lib3MFImplementation) ToolpathLayerReader_GetSegmentPart(ToolpathLayerReader Lib3MFHandle, nIndex uint32) (Lib3MFHandle, error) {
+	var err error = nil
+	hBuildItem := implementation.NewHandle()
+	
+	implementation_toolpathlayerreader, err := implementation.GetWrapperHandle(ToolpathLayerReader)
+	if (err != nil) {
+		return hBuildItem, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_toolpathlayerreader_getsegmentpart, implementation_toolpathlayerreader.GetDLLInHandle(), UInt32InValue(nIndex), hBuildItem.GetDLLOutHandle())
+	if (err != nil) {
+		return hBuildItem, err
+	}
+	
+	return hBuildItem, err
+}
+
+func (implementation *Lib3MFImplementation) ToolpathLayerReader_GetSegmentPartUUID(ToolpathLayerReader Lib3MFHandle, nIndex uint32) (string, error) {
+	var err error = nil
+	var neededforPartUUID int64 = 0
+	var filledinPartUUID int64 = 0
+	
+	implementation_toolpathlayerreader, err := implementation.GetWrapperHandle(ToolpathLayerReader)
+	if (err != nil) {
+		return "", err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_toolpathlayerreader_getsegmentpartuuid, implementation_toolpathlayerreader.GetDLLInHandle(), UInt32InValue(nIndex), Int64InValue(0), Int64OutValue(&neededforPartUUID), Int64InValue(0))
+	if (err != nil) {
+		return "", err
+	}
+	bufferSizePartUUID := neededforPartUUID
+	bufferPartUUID := make([]byte, bufferSizePartUUID)
+	err = implementation.CallFunction(implementation.Lib3MF_toolpathlayerreader_getsegmentpartuuid, implementation_toolpathlayerreader.GetDLLInHandle(), UInt32InValue(nIndex), Int64InValue(bufferSizePartUUID), Int64OutValue(&filledinPartUUID), uintptr(unsafe.Pointer(&bufferPartUUID[0])))
+	if (err != nil) {
+		return "", err
+	}
+	
+	return string(bufferPartUUID[:(filledinPartUUID-1)]), err
+}
+
+func (implementation *Lib3MFImplementation) ToolpathLayerReader_GetSegmentPointData(ToolpathLayerReader Lib3MFHandle, nIndex uint32) ([]sLib3MFPosition2D, error) {
+	var err error = nil
+	arrayPointData := make([]sLib3MFPosition2D, 0)
+	
+	implementation_toolpathlayerreader, err := implementation.GetWrapperHandle(ToolpathLayerReader)
+	if (err != nil) {
+		return make([]sLib3MFPosition2D, 0), err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_toolpathlayerreader_getsegmentpointdata, implementation_toolpathlayerreader.GetDLLInHandle(), UInt32InValue(nIndex), 0, 0, 0)
+	if (err != nil) {
+		return make([]sLib3MFPosition2D, 0), err
+	}
+	err = implementation.CallFunction(implementation.Lib3MF_toolpathlayerreader_getsegmentpointdata, implementation_toolpathlayerreader.GetDLLInHandle(), UInt32InValue(nIndex), 0, 0, 0)
+	if (err != nil) {
+		return make([]sLib3MFPosition2D, 0), err
+	}
+	
+	return arrayPointData, err
+}
+
+func (implementation *Lib3MFImplementation) ToolpathLayerData_GetLayerDataUUID(ToolpathLayerData Lib3MFHandle) (string, error) {
+	var err error = nil
+	var neededforUUID int64 = 0
+	var filledinUUID int64 = 0
+	
+	implementation_toolpathlayerdata, err := implementation.GetWrapperHandle(ToolpathLayerData)
+	if (err != nil) {
+		return "", err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_toolpathlayerdata_getlayerdatauuid, implementation_toolpathlayerdata.GetDLLInHandle(), Int64InValue(0), Int64OutValue(&neededforUUID), Int64InValue(0))
+	if (err != nil) {
+		return "", err
+	}
+	bufferSizeUUID := neededforUUID
+	bufferUUID := make([]byte, bufferSizeUUID)
+	err = implementation.CallFunction(implementation.Lib3MF_toolpathlayerdata_getlayerdatauuid, implementation_toolpathlayerdata.GetDLLInHandle(), Int64InValue(bufferSizeUUID), Int64OutValue(&filledinUUID), uintptr(unsafe.Pointer(&bufferUUID[0])))
+	if (err != nil) {
+		return "", err
+	}
+	
+	return string(bufferUUID[:(filledinUUID-1)]), err
+}
+
+func (implementation *Lib3MFImplementation) ToolpathLayerData_RegisterProfile(ToolpathLayerData Lib3MFHandle, Profile Lib3MFHandle) (uint32, error) {
+	var err error = nil
+	var nProfileID uint32 = 0
+	
+	implementation_toolpathlayerdata, err := implementation.GetWrapperHandle(ToolpathLayerData)
+	if (err != nil) {
+		return 0, err
+	}
+	implementation_profile, err := implementation.GetWrapperHandle(Profile)
+	if (err != nil) {
+		return 0, err
+	}
+	
+	ProfileDLLHandle := implementation_profile.GetDLLInHandle()
+	if (ProfileDLLHandle == 0) {
+		err := fmt.Errorf("Handle must not be 0.")
+		return 0, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_toolpathlayerdata_registerprofile, implementation_toolpathlayerdata.GetDLLInHandle(), ProfileDLLHandle, UInt32OutValue(&nProfileID))
+	if (err != nil) {
+		return 0, err
+	}
+	
+	return uint32(nProfileID), err
+}
+
+func (implementation *Lib3MFImplementation) ToolpathLayerData_RegisterBuildItem(ToolpathLayerData Lib3MFHandle, BuildItem Lib3MFHandle) (uint32, error) {
+	var err error = nil
+	var nPartID uint32 = 0
+	
+	implementation_toolpathlayerdata, err := implementation.GetWrapperHandle(ToolpathLayerData)
+	if (err != nil) {
+		return 0, err
+	}
+	implementation_builditem, err := implementation.GetWrapperHandle(BuildItem)
+	if (err != nil) {
+		return 0, err
+	}
+	
+	BuildItemDLLHandle := implementation_builditem.GetDLLInHandle()
+	if (BuildItemDLLHandle == 0) {
+		err := fmt.Errorf("Handle must not be 0.")
+		return 0, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_toolpathlayerdata_registerbuilditem, implementation_toolpathlayerdata.GetDLLInHandle(), BuildItemDLLHandle, UInt32OutValue(&nPartID))
+	if (err != nil) {
+		return 0, err
+	}
+	
+	return uint32(nPartID), err
+}
+
+func (implementation *Lib3MFImplementation) ToolpathLayerData_WriteHatchData(ToolpathLayerData Lib3MFHandle, nProfileID uint32, nPartID uint32, PointData []sLib3MFPosition2D) (error) {
+	var err error = nil
+	
+	implementation_toolpathlayerdata, err := implementation.GetWrapperHandle(ToolpathLayerData)
+	if (err != nil) {
+		return err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_toolpathlayerdata_writehatchdata, implementation_toolpathlayerdata.GetDLLInHandle(), UInt32InValue(nProfileID), UInt32InValue(nPartID), 0, 0)
+	if (err != nil) {
+		return err
+	}
+	
+	return err
+}
+
+func (implementation *Lib3MFImplementation) ToolpathLayerData_WriteLoop(ToolpathLayerData Lib3MFHandle, nProfileID uint32, nPartID uint32, PointData []sLib3MFPosition2D) (error) {
+	var err error = nil
+	
+	implementation_toolpathlayerdata, err := implementation.GetWrapperHandle(ToolpathLayerData)
+	if (err != nil) {
+		return err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_toolpathlayerdata_writeloop, implementation_toolpathlayerdata.GetDLLInHandle(), UInt32InValue(nProfileID), UInt32InValue(nPartID), 0, 0)
+	if (err != nil) {
+		return err
+	}
+	
+	return err
+}
+
+func (implementation *Lib3MFImplementation) ToolpathLayerData_WritePolyline(ToolpathLayerData Lib3MFHandle, nProfileID uint32, nPartID uint32, PointData []sLib3MFPosition2D) (error) {
+	var err error = nil
+	
+	implementation_toolpathlayerdata, err := implementation.GetWrapperHandle(ToolpathLayerData)
+	if (err != nil) {
+		return err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_toolpathlayerdata_writepolyline, implementation_toolpathlayerdata.GetDLLInHandle(), UInt32InValue(nProfileID), UInt32InValue(nPartID), 0, 0)
+	if (err != nil) {
+		return err
+	}
+	
+	return err
+}
+
+func (implementation *Lib3MFImplementation) ToolpathLayerData_Finish(ToolpathLayerData Lib3MFHandle) (error) {
+	var err error = nil
+	
+	implementation_toolpathlayerdata, err := implementation.GetWrapperHandle(ToolpathLayerData)
+	if (err != nil) {
+		return err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_toolpathlayerdata_finish, implementation_toolpathlayerdata.GetDLLInHandle())
+	if (err != nil) {
+		return err
+	}
+	
+	return err
+}
+
+func (implementation *Lib3MFImplementation) Toolpath_GetUnits(Toolpath Lib3MFHandle) (float64, error) {
+	var err error = nil
+	var dUnits float64 = 0
+	
+	implementation_toolpath, err := implementation.GetWrapperHandle(Toolpath)
+	if (err != nil) {
+		return 0, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_toolpath_getunits, implementation_toolpath.GetDLLInHandle(), Float64OutValue(&dUnits))
+	if (err != nil) {
+		return 0, err
+	}
+	
+	return dUnits, err
+}
+
+func (implementation *Lib3MFImplementation) Toolpath_GetLayerCount(Toolpath Lib3MFHandle) (uint32, error) {
+	var err error = nil
+	var nCount uint32 = 0
+	
+	implementation_toolpath, err := implementation.GetWrapperHandle(Toolpath)
+	if (err != nil) {
+		return 0, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_toolpath_getlayercount, implementation_toolpath.GetDLLInHandle(), UInt32OutValue(&nCount))
+	if (err != nil) {
+		return 0, err
+	}
+	
+	return uint32(nCount), err
+}
+
+func (implementation *Lib3MFImplementation) Toolpath_GetProfileCount(Toolpath Lib3MFHandle) (uint32, error) {
+	var err error = nil
+	var nCount uint32 = 0
+	
+	implementation_toolpath, err := implementation.GetWrapperHandle(Toolpath)
+	if (err != nil) {
+		return 0, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_toolpath_getprofilecount, implementation_toolpath.GetDLLInHandle(), UInt32OutValue(&nCount))
+	if (err != nil) {
+		return 0, err
+	}
+	
+	return uint32(nCount), err
+}
+
+func (implementation *Lib3MFImplementation) Toolpath_AddLayer(Toolpath Lib3MFHandle, nZMax uint32, sPath string, ModelWriter Lib3MFHandle) (Lib3MFHandle, error) {
+	var err error = nil
+	hLayerData := implementation.NewHandle()
+	
+	implementation_toolpath, err := implementation.GetWrapperHandle(Toolpath)
+	if (err != nil) {
+		return hLayerData, err
+	}
+	implementation_modelwriter, err := implementation.GetWrapperHandle(ModelWriter)
+	if (err != nil) {
+		return hLayerData, err
+	}
+	
+	ModelWriterDLLHandle := implementation_modelwriter.GetDLLInHandle()
+	if (ModelWriterDLLHandle == 0) {
+		err := fmt.Errorf("Handle must not be 0.")
+		return hLayerData, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_toolpath_addlayer, implementation_toolpath.GetDLLInHandle(), UInt32InValue(nZMax), StringInValue(sPath), ModelWriterDLLHandle, hLayerData.GetDLLOutHandle())
+	if (err != nil) {
+		return hLayerData, err
+	}
+	
+	return hLayerData, err
+}
+
+func (implementation *Lib3MFImplementation) Toolpath_GetLayerAttachment(Toolpath Lib3MFHandle, nIndex uint32) (Lib3MFHandle, error) {
+	var err error = nil
+	hAttachment := implementation.NewHandle()
+	
+	implementation_toolpath, err := implementation.GetWrapperHandle(Toolpath)
+	if (err != nil) {
+		return hAttachment, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_toolpath_getlayerattachment, implementation_toolpath.GetDLLInHandle(), UInt32InValue(nIndex), hAttachment.GetDLLOutHandle())
+	if (err != nil) {
+		return hAttachment, err
+	}
+	
+	return hAttachment, err
+}
+
+func (implementation *Lib3MFImplementation) Toolpath_ReadLayerData(Toolpath Lib3MFHandle, nIndex uint32) (Lib3MFHandle, error) {
+	var err error = nil
+	hToolpathReader := implementation.NewHandle()
+	
+	implementation_toolpath, err := implementation.GetWrapperHandle(Toolpath)
+	if (err != nil) {
+		return hToolpathReader, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_toolpath_readlayerdata, implementation_toolpath.GetDLLInHandle(), UInt32InValue(nIndex), hToolpathReader.GetDLLOutHandle())
+	if (err != nil) {
+		return hToolpathReader, err
+	}
+	
+	return hToolpathReader, err
+}
+
+func (implementation *Lib3MFImplementation) Toolpath_GetLayerPath(Toolpath Lib3MFHandle, nIndex uint32) (string, error) {
+	var err error = nil
+	var neededforPath int64 = 0
+	var filledinPath int64 = 0
+	
+	implementation_toolpath, err := implementation.GetWrapperHandle(Toolpath)
+	if (err != nil) {
+		return "", err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_toolpath_getlayerpath, implementation_toolpath.GetDLLInHandle(), UInt32InValue(nIndex), Int64InValue(0), Int64OutValue(&neededforPath), Int64InValue(0))
+	if (err != nil) {
+		return "", err
+	}
+	bufferSizePath := neededforPath
+	bufferPath := make([]byte, bufferSizePath)
+	err = implementation.CallFunction(implementation.Lib3MF_toolpath_getlayerpath, implementation_toolpath.GetDLLInHandle(), UInt32InValue(nIndex), Int64InValue(bufferSizePath), Int64OutValue(&filledinPath), uintptr(unsafe.Pointer(&bufferPath[0])))
+	if (err != nil) {
+		return "", err
+	}
+	
+	return string(bufferPath[:(filledinPath-1)]), err
+}
+
+func (implementation *Lib3MFImplementation) Toolpath_GetLayerZMax(Toolpath Lib3MFHandle, nIndex uint32) (uint32, error) {
+	var err error = nil
+	var nZMax uint32 = 0
+	
+	implementation_toolpath, err := implementation.GetWrapperHandle(Toolpath)
+	if (err != nil) {
+		return 0, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_toolpath_getlayerzmax, implementation_toolpath.GetDLLInHandle(), UInt32InValue(nIndex), UInt32OutValue(&nZMax))
+	if (err != nil) {
+		return 0, err
+	}
+	
+	return uint32(nZMax), err
+}
+
+func (implementation *Lib3MFImplementation) Toolpath_GetLayerZ(Toolpath Lib3MFHandle, nLayerIndex uint32) (uint32, error) {
+	var err error = nil
+	var nZValue uint32 = 0
+	
+	implementation_toolpath, err := implementation.GetWrapperHandle(Toolpath)
+	if (err != nil) {
+		return 0, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_toolpath_getlayerz, implementation_toolpath.GetDLLInHandle(), UInt32InValue(nLayerIndex), UInt32OutValue(&nZValue))
+	if (err != nil) {
+		return 0, err
+	}
+	
+	return uint32(nZValue), err
+}
+
+func (implementation *Lib3MFImplementation) Toolpath_AddProfile(Toolpath Lib3MFHandle, sName string) (Lib3MFHandle, error) {
+	var err error = nil
+	hProfile := implementation.NewHandle()
+	
+	implementation_toolpath, err := implementation.GetWrapperHandle(Toolpath)
+	if (err != nil) {
+		return hProfile, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_toolpath_addprofile, implementation_toolpath.GetDLLInHandle(), StringInValue(sName), hProfile.GetDLLOutHandle())
+	if (err != nil) {
+		return hProfile, err
+	}
+	
+	return hProfile, err
+}
+
+func (implementation *Lib3MFImplementation) Toolpath_GetProfile(Toolpath Lib3MFHandle, nProfileIndex uint32) (Lib3MFHandle, error) {
+	var err error = nil
+	hProfile := implementation.NewHandle()
+	
+	implementation_toolpath, err := implementation.GetWrapperHandle(Toolpath)
+	if (err != nil) {
+		return hProfile, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_toolpath_getprofile, implementation_toolpath.GetDLLInHandle(), UInt32InValue(nProfileIndex), hProfile.GetDLLOutHandle())
+	if (err != nil) {
+		return hProfile, err
+	}
+	
+	return hProfile, err
+}
+
+func (implementation *Lib3MFImplementation) Toolpath_GetProfileUUID(Toolpath Lib3MFHandle, sProfileUUID string) (Lib3MFHandle, error) {
+	var err error = nil
+	hProfile := implementation.NewHandle()
+	
+	implementation_toolpath, err := implementation.GetWrapperHandle(Toolpath)
+	if (err != nil) {
+		return hProfile, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_toolpath_getprofileuuid, implementation_toolpath.GetDLLInHandle(), StringInValue(sProfileUUID), hProfile.GetDLLOutHandle())
+	if (err != nil) {
+		return hProfile, err
+	}
+	
+	return hProfile, err
+}
+
+func (implementation *Lib3MFImplementation) ToolpathIterator_GetCurrentToolpath(ToolpathIterator Lib3MFHandle) (Lib3MFHandle, error) {
+	var err error = nil
+	hResource := implementation.NewHandle()
+	
+	implementation_toolpathiterator, err := implementation.GetWrapperHandle(ToolpathIterator)
+	if (err != nil) {
+		return hResource, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_toolpathiterator_getcurrenttoolpath, implementation_toolpathiterator.GetDLLInHandle(), hResource.GetDLLOutHandle())
+	if (err != nil) {
+		return hResource, err
+	}
+	
+	return hResource, err
+}
+
 func (implementation *Lib3MFImplementation) SliceStack_GetBottomZ(SliceStack Lib3MFHandle) (float64, error) {
 	var err error = nil
 	var dZBottom float64 = 0
@@ -8183,6 +9082,23 @@ func (implementation *Lib3MFImplementation) Model_GetMultiPropertyGroups(Model L
 	return hResourceIterator, err
 }
 
+func (implementation *Lib3MFImplementation) Model_GetToolpaths(Model Lib3MFHandle) (Lib3MFHandle, error) {
+	var err error = nil
+	hResourceIterator := implementation.NewHandle()
+	
+	implementation_model, err := implementation.GetWrapperHandle(Model)
+	if (err != nil) {
+		return hResourceIterator, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_model_gettoolpaths, implementation_model.GetDLLInHandle(), hResourceIterator.GetDLLOutHandle())
+	if (err != nil) {
+		return hResourceIterator, err
+	}
+	
+	return hResourceIterator, err
+}
+
 func (implementation *Lib3MFImplementation) Model_GetSliceStacks(Model Lib3MFHandle) (Lib3MFHandle, error) {
 	var err error = nil
 	hResourceIterator := implementation.NewHandle()
@@ -8451,6 +9367,23 @@ func (implementation *Lib3MFImplementation) Model_RemoveBuildItem(Model Lib3MFHa
 	}
 	
 	return err
+}
+
+func (implementation *Lib3MFImplementation) Model_AddToolpath(Model Lib3MFHandle, dUnitFactor float64) (Lib3MFHandle, error) {
+	var err error = nil
+	hToolpathInstance := implementation.NewHandle()
+	
+	implementation_model, err := implementation.GetWrapperHandle(Model)
+	if (err != nil) {
+		return hToolpathInstance, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_model_addtoolpath, implementation_model.GetDLLInHandle(), Float64InValue(dUnitFactor), hToolpathInstance.GetDLLOutHandle())
+	if (err != nil) {
+		return hToolpathInstance, err
+	}
+	
+	return hToolpathInstance, err
 }
 
 func (implementation *Lib3MFImplementation) Model_GetMetaDataGroup(Model Lib3MFHandle) (Lib3MFHandle, error) {

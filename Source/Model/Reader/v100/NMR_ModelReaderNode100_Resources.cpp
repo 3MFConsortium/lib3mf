@@ -40,6 +40,7 @@ XML Model Stream.
 #include "Model/Reader/v100/NMR_ModelReaderNode100_CompositeMaterials.h"
 #include "Model/Reader/v100/NMR_ModelReaderNode100_MultiProperties.h"
 #include "Model/Reader/Slice1507/NMR_ModelReader_Slice1507_SliceStack.h"
+#include "Model/Reader/Toolpath1905/NMR_ModelReader_Toolpath1905_ToolpathResource.h"
 
 #include "Model/Classes/NMR_ModelConstants.h"
 #include "Common/NMR_StringUtils.h"
@@ -141,6 +142,21 @@ namespace NMR {
 				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
 		}
 
+
+		if (strcmp(pNameSpace, XML_3MF_NAMESPACE_TOOLPATHSPEC) == 0) {
+			if (strcmp(pChildName, XML_3MF_ELEMENT_TOOLPATHRESOURCE) == 0) {
+
+				m_pProgressMonitor->SetProgressIdentifier(ProgressIdentifier::PROGRESS_READRESOURCES);
+				m_pProgressMonitor->ReportProgressAndQueryCancelled(true);
+
+
+				PModelReaderNode pXMLNode = std::make_shared<CModelReaderNode_Toolpath1905_ToolpathResource>(
+					m_pModel, m_pWarnings);
+				pXMLNode->parseXML(pXMLReader);
+			}
+			else
+				m_pWarnings->addException(CNMRException(NMR_ERROR_NAMESPACE_INVALID_ELEMENT), mrwInvalidOptionalValue);
+		}
 
 	}
 

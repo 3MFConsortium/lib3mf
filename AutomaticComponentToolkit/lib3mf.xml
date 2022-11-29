@@ -83,6 +83,11 @@
 		<error name="KEYSTORECONSUMERNOTFOUND" code="3002" description="A consumer has not been found"/>
 		<error name="KEYSTORERESOURCEDATANOTFOUND" code="3003" description="A resource data has not been found"/>
 		<error name="SECURECONTEXTNOTREGISTERED" code="3004" description="A Key or Conentent encryption callback has not been registered"/>
+		<error name="TOOLPATH_NOTWRITINGHEADER" code="4000" description="Not in toolpath header writing mode" />
+		<error name="TOOLPATH_NOTWRITINGDATA" code="4001" description="Not in toolpath data writing mode" />
+		<error name="TOOLPATH_DATAHASBEENWRITTEN" code="4002" description="Toolpath has already been written out" />
+		<error name="TOOLPATH_INVALIDPOINTCOUNT" code="4003" description="Toolpath has an invalid number of points" />
+		
 	</errors>
 
 	<enum name="PropertyType">
@@ -183,6 +188,13 @@
 		<option name="NoBlendMethod" value="0"/>
 		<option name="Mix" value="1"/>
 		<option name="Multiply" value="2"/>
+	</enum>
+	
+	<enum name="ToolpathSegmentType">
+		<option name="Unknown" value="0" />
+		<option name="Hatch" value="1" />
+		<option name="Loop" value="2" />
+		<option name="Polyline" value="3" />
 	</enum>
 
 	<struct name="Triangle">
@@ -1156,6 +1168,203 @@
 			<param name="ZTop" type="double" pass="return" description="the upper Z-Coordinate of this slice"/>
 		</method>
 	</class>
+	
+	<class name="ToolpathProfile" parent="Base">
+
+		<method name="GetUUID" description="Retrieves the profile's uuid">
+			<param name="UUID" type="string" pass="return" description="Returns the uuid value." />
+		</method>
+
+		<method name="GetName" description="Retrieves the profile's name">
+			<param name="Name" type="string" pass="return" description="Returns the name." />
+		</method>
+
+		<method name="HasParameterValue" description="Checks if a parameter value exists.">
+			<param name="NameSpaceName" type="string" pass="in" description="Name of the Parameter Namespace." />
+			<param name="ValueName" type="string" pass="in" description="Value key string." />
+			<param name="ValueExists" type="bool" pass="return" description="Returns if a value exists." />
+		</method>
+
+		<method name="GetParameterDoubleValue" description="Retrieves a profile's parameter value. Fails if value does not exist.">
+			<param name="NameSpaceName" type="string" pass="in" description="Name of the Parameter Namespace." />
+			<param name="ValueName" type="string" pass="in" description="Value key string." />
+			<param name="Value" type="double" pass="return" description="Returns the value of the field." />
+		</method>
+
+		<method name="GetParameterDoubleValueDef" description="Retrieves a profile's parameter value">
+			<param name="NameSpaceName" type="string" pass="in" description="Name of the Parameter Namespace." />
+			<param name="ValueName" type="string" pass="in" description="Value key string." />
+			<param name="DefaultValue" type="double" pass="in" description="Default value if value does not exist." />
+			<param name="Value" type="double" pass="return" description="Returns the value of the field." />
+		</method>
+
+		<method name="SetName" description="Sets the profile's name">
+			<param name="Name" type="string" pass="in" description="Returns the name." />
+		</method>
+
+		<method name="SetParameterDoubleValue" description="Sets a profile's parameter value.">
+			<param name="NameSpaceName" type="string" pass="in" description="Name of the Parameter Namespace." />
+			<param name="ValueName" type="string" pass="in" description="Value key string." />
+			<param name="Value" type="double" pass="in" description="Double value of the parameter." />
+		</method>
+
+	</class>
+
+
+  <class name="ToolpathLayerReader" parent="Base">
+  
+	<method name="GetLayerDataUUID" description="Retrieves the layerdata's uuid">
+		<param name="UUID" type="string" pass="return" description="Returns the uuid value." />
+	</method>
+	
+	<method name="GetSegmentCount" description="Retrieves the count of segments.">
+		<param name="Count" type="uint32" pass="return" description="Count" />
+	</method>
+	
+	<method name="GetSegmentInfo" description="Retrieves the segment type information .">
+		<param name="Index" type="uint32" pass="in" description="Index. Must be between 0 and Count - 1." />
+		<param name="Type" type="enum" class="ToolpathSegmentType" pass="out" description="Segment Type" />
+		<param name="PointCount" type="uint32" pass="out" description="Point count of segment." />
+	</method>
+	
+	<method name="GetSegmentProfile" description="Retrieves the assigned segment profile.">
+		<param name="Index" type="uint32" pass="in" description="Index. Must be between 0 and Count - 1." />
+		<param name="Profile" type="class" class="ToolpathProfile" pass="return" description="Segment Profile" />
+	</method>
+	
+	<method name="GetSegmentProfileUUID" description="Retrieves the assigned segment profile uuid.">
+		<param name="Index" type="uint32" pass="in" description="Index. Must be between 0 and Count - 1." />
+		<param name="ProfileUUID" type="string" pass="return" description="Segment Profile UUID" />
+	</method>
+
+	<method name="GetSegmentPart" description="Retrieves the assigned segment profile.">
+		<param name="Index" type="uint32" pass="in" description="Index. Must be between 0 and Count - 1." />
+		<param name="BuildItem" type="class" class="BuildItem" pass="return" description="Segment Build Item" />
+	</method>
+	
+	<method name="GetSegmentPartUUID" description="Retrieves the assigned segment part uuid.">
+		<param name="Index" type="uint32" pass="in" description="Index. Must be between 0 and Count - 1." />
+		<param name="PartUUID" type="string" pass="return" description="Segment Part UUID" />
+	</method>
+	
+	<method name="GetSegmentPointData" description="Retrieves the assigned segment point list. For type hatch, the points are taken pairwise.">
+		<param name="Index" type="uint32" pass="in" description="Index. Must be between 0 and Count - 1." />
+	    <param name="PointData" type="structarray" class="Position2D" pass="out" description="The point data array" />
+	</method>
+	
+  </class>
+  
+	
+	
+  <class name="ToolpathLayerData" parent="Base">
+
+	<method name="GetLayerDataUUID" description="Retrieves the layerdata's uuid">
+		<param name="UUID" type="string" pass="return" description="Returns the uuid value." />
+	</method>
+  
+    <method name="RegisterProfile" description="Registers a toolpath profile">
+      <param name="Profile" class="ToolpathProfile" type="handle" pass="in" description="The toolpath profile to register." />
+      <param name="ProfileID" type="uint32" pass="return" description="returns the local profile ID for the layer." />
+    </method>
+
+    <method name="RegisterBuildItem" description="Registers a Model Build Item">
+      <param name="BuildItem" class="BuildItem" type="handle" pass="in" description="The model build item to use." />
+      <param name="PartID" type="uint32" pass="return" description="returns the local part ID for the layer." />
+    </method>
+
+    <method name="WriteHatchData" description="writes hatch data to the layer.">
+      <param name="ProfileID" type="uint32" pass="in" description="The toolpath profile to use" />
+      <param name="PartID" type="uint32" pass="in" description="The toolpath part to use" />
+      <param name="PointData" type="structarray" class="Position2D" pass="in" description="The point data" />      
+    </method>
+
+    <method name="WriteLoop" description="writes loop data to the layer.">
+      <param name="ProfileID" type="uint32" pass="in" description="The toolpath profile to use" />
+      <param name="PartID" type="uint32" pass="in" description="The toolpath part to use" />
+      <param name="PointData" type="structarray" class="Position2D" pass="in" description="The point data" />
+    </method>
+
+    <method name="WritePolyline" description="writes polyline data to the layer.">
+      <param name="ProfileID" type="uint32" pass="in" description="The toolpath profile to use" />
+      <param name="PartID" type="uint32" pass="in" description="The toolpath part to use" />
+      <param name="PointData" type="structarray" class="Position2D" pass="in" description="The point data" />
+    </method>
+
+	<method name="Finish" description="finishes all writing of the layer and compresses toolpath data.">
+    </method>
+
+  </class>
+
+
+  <class name="Toolpath" parent="Resource">
+
+		<method name="GetUnits" description="Retrieves the unit factor">
+			<param name="Units" type="double" pass="return" description="Returns the unit factor." />
+		</method>
+
+		<method name="GetLayerCount" description="Retrieves the count of layers">
+			<param name="Count" type="uint32" pass="return" description="Returns the layer count" />
+		</method>
+
+		<method name="GetProfileCount" description="Retrieves the count of profiles">
+			<param name="Count" type="uint32" pass="return" description="Returns the profile count" />
+		</method>
+
+		<method name="AddLayer" description = "Adds a new toolpath layer">
+			<param name="ZMax" type="uint32" pass="in" description="ZMax value" />
+			<param name="Path" type="string" pass="in" description="Package Path" />
+			<param name="ModelWriter" type="handle" class="Writer" pass="in" description="The model writer that writes out the 3MF." />
+			<param name="LayerData" type="handle" class="ToolpathLayerData" pass="return" description="Returns the layerdata object to write the layer content into." />
+		</method>
+
+		<method name="GetLayerAttachment" description = "Retrieves the Attachment of a layer">
+		  <param name="Index" type="uint32" pass="in" description="Layer Index" />
+		  <param name="Attachment" type="class" class="Attachment" pass="return" description="Attachment" />
+		</method>
+
+		<method name="ReadLayerData" description = "Reads the toolpath of a layer.">
+		  <param name="Index" type="uint32" pass="in" description="Layer Index" />
+		  <param name="ToolpathReader" type="class" class="ToolpathLayerReader" pass="return" description="Toolpath Reader Instance" />
+		</method>
+		
+
+		<method name="GetLayerPath" description = "Retrieves the Path of a layer">
+		  <param name="Index" type="uint32" pass="in" description="Layer Index" />
+		  <param name="Path" type="string" pass="return" description="Package Path" />
+		</method>
+
+		<method name="GetLayerZMax" description = "Retrieves the ZMax of a layer">
+		  <param name="Index" type="uint32" pass="in" description="Layer Index" />
+		  <param name="ZMax" type="uint32" pass="return" description="ZMax value" />
+		</method>
+
+		<method name="GetLayerZ" description = "Return the z value of a layer in units.">
+			<param name="LayerIndex" type="uint32" pass="in" description="Layer Index." />
+			<param name="ZValue" type="uint32" pass="return" description="Z Value in Units." />
+		</method>
+
+		<method name="AddProfile" description="Adds a new profile to the toolpath.">
+			<param name="Name" type="string" pass="in" description="the name." />
+			<param name="Profile" type="handle" class="ToolpathProfile" pass="return" description="Returns the profile." />
+		</method>
+
+		<method name="GetProfile" description="Returns a profile of the toolpath.">
+			<param name="ProfileIndex" type="uint32" pass="in" description="Layer Index." />
+			<param name="Profile" type="handle" class="ToolpathProfile" pass="return" description="Returns the profile." />
+		</method>
+
+		<method name="GetProfileUUID" description="Returns a profile of the toolpath by UUID.">
+			<param name="ProfileUUID" type="string" pass="in" description="UUID string." />
+			<param name="Profile" type="handle" class="ToolpathProfile" pass="return" description="Returns the profile." />
+		</method>
+		
+	</class>	
+
+	<class name="ToolpathIterator" parent="ResourceIterator">
+		<method name="GetCurrentToolpath" description="Returns the Toolpath the iterator points at.">
+			<param name="Resource" type="handle" class="Toolpath" pass="return" description="returns the Toolpath instance." />
+		</method>
+	</class>	
 
 	<class name="SliceStack" parent="Resource">
 		<method name="GetBottomZ" description="Get the lower Z-Coordinate of the slice stack.">
@@ -1502,6 +1711,10 @@
 		<method name="GetMultiPropertyGroups" description="creates a MultiPropertyGroupsIterator instance with all MultiPropertyGroup resources.">
 			<param name="ResourceIterator" type="handle" class="MultiPropertyGroupIterator" pass="return" description="returns the iterator instance."/>
 		</method>
+		<method name="GetToolpaths" description="creates a Toolpath instance with all toolpath resources.">
+			<param name="ResourceIterator" type="handle" class="ToolpathIterator" pass="return" description="returns the iterator instance." />
+		</method>		
+		
 		<method name="GetSliceStacks" description="creates a resource iterator instance with all slice stack resources.">
 			<param name="ResourceIterator" type="handle" class="SliceStackIterator" pass="return" description="returns the iterator instance."/>
 		</method>
@@ -1547,6 +1760,11 @@
 		<method name="RemoveBuildItem" description="removes a build item from the model">
 			<param name="BuildItemInstance" type="handle" class="BuildItem" pass="in" description="Build item to remove."/>
 		</method>
+		<method name="AddToolpath" description = "adds an empty Toolpath resource to the model.">
+			<param name="UnitFactor" type="double" pass="in" description="The toolpath instance of the created Toolpath." />
+			<param name="ToolpathInstance" type="handle" class="Toolpath" pass="return" description="The toolpath instance of the created Toolpath." />
+		</method>
+		
 		<method name="GetMetaDataGroup" description="Returns the metadata of the model as MetaDataGroup">
 			<param name="TheMetaDataGroup" type="handle" class="MetaDataGroup" pass="return" description="returns an Instance of the metadatagroup of the model"/>
 		</method>

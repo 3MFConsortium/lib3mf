@@ -180,7 +180,6 @@ namespace NMR {
 	{
 		__NMRASSERT(pModel != nullptr);
 		__NMRASSERT(pModelPart.get() != nullptr);
-		__NMRASSERT(pPackageWriter.get() != nullptr);
 
 		nfUint32 nCount = pModel->getAttachmentCount();
 		nfUint32 nIndex;
@@ -216,5 +215,19 @@ namespace NMR {
 				monitor()->IncrementProgress(1);
 			}
 		}
+
+		// Write Additional Attachments that are not part of the model
+		for (auto iAttachmentIter : m_AdditionalAttachments) {
+			CUUID uuid;
+			POpcPackagePart pAttachmentPart = m_pPackageWriter->addPart(iAttachmentIter.first);
+			pModelPart->addRelationship("attachment" + uuid.toString(), iAttachmentIter.second.second, pAttachmentPart->getURI());
+
+			PImportStream pAttachmentStream = iAttachmentIter.second.first;
+			pAttachmentStream->seekPosition(0, true);
+			pAttachmentPart->getExportStream()->copyFrom(pAttachmentStream.get(), pAttachmentStream->retrieveSize(), MODELWRITER_NATIVE_BUFFERSIZE);
+		}
+
 	}
+
+
 }

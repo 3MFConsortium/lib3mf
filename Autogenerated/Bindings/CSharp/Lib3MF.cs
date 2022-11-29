@@ -104,6 +104,13 @@ namespace Lib3MF {
 		Multiply = 2
 	};
 
+	public enum eToolpathSegmentType {
+		Unknown = 0,
+		Hatch = 1,
+		Loop = 2,
+		Polyline = 3
+	};
+
 	public enum eEncryptionAlgorithm {
 		AES256_GCM = 1
 	};
@@ -977,6 +984,111 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_slice_getztop", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Slice_GetZTop (IntPtr Handle, out Double AZTop);
 
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathprofile_getuuid", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathProfile_GetUUID (IntPtr Handle, UInt32 sizeUUID, out UInt32 neededUUID, IntPtr dataUUID);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathprofile_getname", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathProfile_GetName (IntPtr Handle, UInt32 sizeName, out UInt32 neededName, IntPtr dataName);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathprofile_hasparametervalue", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathProfile_HasParameterValue (IntPtr Handle, byte[] ANameSpaceName, byte[] AValueName, out Byte AValueExists);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathprofile_getparameterdoublevalue", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathProfile_GetParameterDoubleValue (IntPtr Handle, byte[] ANameSpaceName, byte[] AValueName, out Double AValue);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathprofile_getparameterdoublevaluedef", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathProfile_GetParameterDoubleValueDef (IntPtr Handle, byte[] ANameSpaceName, byte[] AValueName, Double ADefaultValue, out Double AValue);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathprofile_setname", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathProfile_SetName (IntPtr Handle, byte[] AName);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathprofile_setparameterdoublevalue", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathProfile_SetParameterDoubleValue (IntPtr Handle, byte[] ANameSpaceName, byte[] AValueName, Double AValue);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerreader_getlayerdatauuid", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathLayerReader_GetLayerDataUUID (IntPtr Handle, UInt32 sizeUUID, out UInt32 neededUUID, IntPtr dataUUID);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerreader_getsegmentcount", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathLayerReader_GetSegmentCount (IntPtr Handle, out UInt32 ACount);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerreader_getsegmentinfo", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathLayerReader_GetSegmentInfo (IntPtr Handle, UInt32 AIndex, out Int32 AType, out UInt32 APointCount);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerreader_getsegmentprofile", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathLayerReader_GetSegmentProfile (IntPtr Handle, UInt32 AIndex, out IntPtr AProfile);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerreader_getsegmentprofileuuid", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathLayerReader_GetSegmentProfileUUID (IntPtr Handle, UInt32 AIndex, UInt32 sizeProfileUUID, out UInt32 neededProfileUUID, IntPtr dataProfileUUID);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerreader_getsegmentpart", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathLayerReader_GetSegmentPart (IntPtr Handle, UInt32 AIndex, out IntPtr ABuildItem);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerreader_getsegmentpartuuid", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathLayerReader_GetSegmentPartUUID (IntPtr Handle, UInt32 AIndex, UInt32 sizePartUUID, out UInt32 neededPartUUID, IntPtr dataPartUUID);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerreader_getsegmentpointdata", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathLayerReader_GetSegmentPointData (IntPtr Handle, UInt32 AIndex, UInt64 sizePointData, out UInt64 neededPointData, IntPtr dataPointData);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerdata_getlayerdatauuid", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathLayerData_GetLayerDataUUID (IntPtr Handle, UInt32 sizeUUID, out UInt32 neededUUID, IntPtr dataUUID);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerdata_registerprofile", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathLayerData_RegisterProfile (IntPtr Handle, IntPtr AProfile, out UInt32 AProfileID);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerdata_registerbuilditem", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathLayerData_RegisterBuildItem (IntPtr Handle, IntPtr ABuildItem, out UInt32 APartID);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerdata_writehatchdata", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathLayerData_WriteHatchData (IntPtr Handle, UInt32 AProfileID, UInt32 APartID, UInt64 sizePointData, IntPtr dataPointData);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerdata_writeloop", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathLayerData_WriteLoop (IntPtr Handle, UInt32 AProfileID, UInt32 APartID, UInt64 sizePointData, IntPtr dataPointData);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerdata_writepolyline", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathLayerData_WritePolyline (IntPtr Handle, UInt32 AProfileID, UInt32 APartID, UInt64 sizePointData, IntPtr dataPointData);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathlayerdata_finish", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathLayerData_Finish (IntPtr Handle);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpath_getunits", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Toolpath_GetUnits (IntPtr Handle, out Double AUnits);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpath_getlayercount", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Toolpath_GetLayerCount (IntPtr Handle, out UInt32 ACount);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpath_getprofilecount", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Toolpath_GetProfileCount (IntPtr Handle, out UInt32 ACount);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpath_addlayer", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Toolpath_AddLayer (IntPtr Handle, UInt32 AZMax, byte[] APath, IntPtr AModelWriter, out IntPtr ALayerData);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpath_getlayerattachment", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Toolpath_GetLayerAttachment (IntPtr Handle, UInt32 AIndex, out IntPtr AAttachment);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpath_readlayerdata", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Toolpath_ReadLayerData (IntPtr Handle, UInt32 AIndex, out IntPtr AToolpathReader);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpath_getlayerpath", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Toolpath_GetLayerPath (IntPtr Handle, UInt32 AIndex, UInt32 sizePath, out UInt32 neededPath, IntPtr dataPath);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpath_getlayerzmax", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Toolpath_GetLayerZMax (IntPtr Handle, UInt32 AIndex, out UInt32 AZMax);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpath_getlayerz", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Toolpath_GetLayerZ (IntPtr Handle, UInt32 ALayerIndex, out UInt32 AZValue);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpath_addprofile", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Toolpath_AddProfile (IntPtr Handle, byte[] AName, out IntPtr AProfile);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpath_getprofile", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Toolpath_GetProfile (IntPtr Handle, UInt32 AProfileIndex, out IntPtr AProfile);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpath_getprofileuuid", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Toolpath_GetProfileUUID (IntPtr Handle, byte[] AProfileUUID, out IntPtr AProfile);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_toolpathiterator_getcurrenttoolpath", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 ToolpathIterator_GetCurrentToolpath (IntPtr Handle, out IntPtr AResource);
+
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_slicestack_getbottomz", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 SliceStack_GetBottomZ (IntPtr Handle, out Double AZBottom);
 
@@ -1223,6 +1335,9 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_getmultipropertygroups", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Model_GetMultiPropertyGroups (IntPtr Handle, out IntPtr AResourceIterator);
 
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_gettoolpaths", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Model_GetToolpaths (IntPtr Handle, out IntPtr AResourceIterator);
+
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_getslicestacks", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Model_GetSliceStacks (IntPtr Handle, out IntPtr AResourceIterator);
 
@@ -1261,6 +1376,9 @@ namespace Lib3MF {
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_removebuilditem", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Model_RemoveBuildItem (IntPtr Handle, IntPtr ABuildItemInstance);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_addtoolpath", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Model_AddToolpath (IntPtr Handle, Double AUnitFactor, out IntPtr AToolpathInstance);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_getmetadatagroup", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Model_GetMetaDataGroup (IntPtr Handle, out IntPtr ATheMetaDataGroup);
@@ -3963,6 +4081,391 @@ namespace Lib3MF {
 
 	}
 
+	class CToolpathProfile : CBase
+	{
+		public CToolpathProfile (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+		public String GetUUID ()
+		{
+			UInt32 sizeUUID = 0;
+			UInt32 neededUUID = 0;
+			CheckError(Internal.Lib3MFWrapper.ToolpathProfile_GetUUID (Handle, sizeUUID, out neededUUID, IntPtr.Zero));
+			sizeUUID = neededUUID;
+			byte[] bytesUUID = new byte[sizeUUID];
+			GCHandle dataUUID = GCHandle.Alloc(bytesUUID, GCHandleType.Pinned);
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathProfile_GetUUID (Handle, sizeUUID, out neededUUID, dataUUID.AddrOfPinnedObject()));
+			dataUUID.Free();
+			return Encoding.UTF8.GetString(bytesUUID).TrimEnd(char.MinValue);
+		}
+
+		public String GetName ()
+		{
+			UInt32 sizeName = 0;
+			UInt32 neededName = 0;
+			CheckError(Internal.Lib3MFWrapper.ToolpathProfile_GetName (Handle, sizeName, out neededName, IntPtr.Zero));
+			sizeName = neededName;
+			byte[] bytesName = new byte[sizeName];
+			GCHandle dataName = GCHandle.Alloc(bytesName, GCHandleType.Pinned);
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathProfile_GetName (Handle, sizeName, out neededName, dataName.AddrOfPinnedObject()));
+			dataName.Free();
+			return Encoding.UTF8.GetString(bytesName).TrimEnd(char.MinValue);
+		}
+
+		public bool HasParameterValue (String ANameSpaceName, String AValueName)
+		{
+			byte[] byteNameSpaceName = Encoding.UTF8.GetBytes(ANameSpaceName + char.MinValue);
+			byte[] byteValueName = Encoding.UTF8.GetBytes(AValueName + char.MinValue);
+			Byte resultValueExists = 0;
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathProfile_HasParameterValue (Handle, byteNameSpaceName, byteValueName, out resultValueExists));
+			return (resultValueExists != 0);
+		}
+
+		public Double GetParameterDoubleValue (String ANameSpaceName, String AValueName)
+		{
+			byte[] byteNameSpaceName = Encoding.UTF8.GetBytes(ANameSpaceName + char.MinValue);
+			byte[] byteValueName = Encoding.UTF8.GetBytes(AValueName + char.MinValue);
+			Double resultValue = 0;
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathProfile_GetParameterDoubleValue (Handle, byteNameSpaceName, byteValueName, out resultValue));
+			return resultValue;
+		}
+
+		public Double GetParameterDoubleValueDef (String ANameSpaceName, String AValueName, Double ADefaultValue)
+		{
+			byte[] byteNameSpaceName = Encoding.UTF8.GetBytes(ANameSpaceName + char.MinValue);
+			byte[] byteValueName = Encoding.UTF8.GetBytes(AValueName + char.MinValue);
+			Double resultValue = 0;
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathProfile_GetParameterDoubleValueDef (Handle, byteNameSpaceName, byteValueName, ADefaultValue, out resultValue));
+			return resultValue;
+		}
+
+		public void SetName (String AName)
+		{
+			byte[] byteName = Encoding.UTF8.GetBytes(AName + char.MinValue);
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathProfile_SetName (Handle, byteName));
+		}
+
+		public void SetParameterDoubleValue (String ANameSpaceName, String AValueName, Double AValue)
+		{
+			byte[] byteNameSpaceName = Encoding.UTF8.GetBytes(ANameSpaceName + char.MinValue);
+			byte[] byteValueName = Encoding.UTF8.GetBytes(AValueName + char.MinValue);
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathProfile_SetParameterDoubleValue (Handle, byteNameSpaceName, byteValueName, AValue));
+		}
+
+	}
+
+	class CToolpathLayerReader : CBase
+	{
+		public CToolpathLayerReader (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+		public String GetLayerDataUUID ()
+		{
+			UInt32 sizeUUID = 0;
+			UInt32 neededUUID = 0;
+			CheckError(Internal.Lib3MFWrapper.ToolpathLayerReader_GetLayerDataUUID (Handle, sizeUUID, out neededUUID, IntPtr.Zero));
+			sizeUUID = neededUUID;
+			byte[] bytesUUID = new byte[sizeUUID];
+			GCHandle dataUUID = GCHandle.Alloc(bytesUUID, GCHandleType.Pinned);
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathLayerReader_GetLayerDataUUID (Handle, sizeUUID, out neededUUID, dataUUID.AddrOfPinnedObject()));
+			dataUUID.Free();
+			return Encoding.UTF8.GetString(bytesUUID).TrimEnd(char.MinValue);
+		}
+
+		public UInt32 GetSegmentCount ()
+		{
+			UInt32 resultCount = 0;
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathLayerReader_GetSegmentCount (Handle, out resultCount));
+			return resultCount;
+		}
+
+		public void GetSegmentInfo (UInt32 AIndex, out eToolpathSegmentType AType, out UInt32 APointCount)
+		{
+			Int32 resultType = 0;
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathLayerReader_GetSegmentInfo (Handle, AIndex, out resultType, out APointCount));
+			AType = (eToolpathSegmentType) (resultType);
+		}
+
+		public CToolpathProfile GetSegmentProfile (UInt32 AIndex)
+		{
+			IntPtr newProfile = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathLayerReader_GetSegmentProfile (Handle, AIndex, out newProfile));
+			return new CToolpathProfile (newProfile );
+		}
+
+		public String GetSegmentProfileUUID (UInt32 AIndex)
+		{
+			UInt32 sizeProfileUUID = 0;
+			UInt32 neededProfileUUID = 0;
+			CheckError(Internal.Lib3MFWrapper.ToolpathLayerReader_GetSegmentProfileUUID (Handle, AIndex, sizeProfileUUID, out neededProfileUUID, IntPtr.Zero));
+			sizeProfileUUID = neededProfileUUID;
+			byte[] bytesProfileUUID = new byte[sizeProfileUUID];
+			GCHandle dataProfileUUID = GCHandle.Alloc(bytesProfileUUID, GCHandleType.Pinned);
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathLayerReader_GetSegmentProfileUUID (Handle, AIndex, sizeProfileUUID, out neededProfileUUID, dataProfileUUID.AddrOfPinnedObject()));
+			dataProfileUUID.Free();
+			return Encoding.UTF8.GetString(bytesProfileUUID).TrimEnd(char.MinValue);
+		}
+
+		public CBuildItem GetSegmentPart (UInt32 AIndex)
+		{
+			IntPtr newBuildItem = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathLayerReader_GetSegmentPart (Handle, AIndex, out newBuildItem));
+			return new CBuildItem (newBuildItem );
+		}
+
+		public String GetSegmentPartUUID (UInt32 AIndex)
+		{
+			UInt32 sizePartUUID = 0;
+			UInt32 neededPartUUID = 0;
+			CheckError(Internal.Lib3MFWrapper.ToolpathLayerReader_GetSegmentPartUUID (Handle, AIndex, sizePartUUID, out neededPartUUID, IntPtr.Zero));
+			sizePartUUID = neededPartUUID;
+			byte[] bytesPartUUID = new byte[sizePartUUID];
+			GCHandle dataPartUUID = GCHandle.Alloc(bytesPartUUID, GCHandleType.Pinned);
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathLayerReader_GetSegmentPartUUID (Handle, AIndex, sizePartUUID, out neededPartUUID, dataPartUUID.AddrOfPinnedObject()));
+			dataPartUUID.Free();
+			return Encoding.UTF8.GetString(bytesPartUUID).TrimEnd(char.MinValue);
+		}
+
+		public void GetSegmentPointData (UInt32 AIndex, out sPosition2D[] APointData)
+		{
+			UInt64 sizePointData = 0;
+			UInt64 neededPointData = 0;
+			CheckError(Internal.Lib3MFWrapper.ToolpathLayerReader_GetSegmentPointData (Handle, AIndex, sizePointData, out neededPointData, IntPtr.Zero));
+			sizePointData = neededPointData;
+			var arrayPointData = new Internal.InternalPosition2D[sizePointData];
+			GCHandle dataPointData = GCHandle.Alloc(arrayPointData, GCHandleType.Pinned);
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathLayerReader_GetSegmentPointData (Handle, AIndex, sizePointData, out neededPointData, dataPointData.AddrOfPinnedObject()));
+			dataPointData.Free();
+			APointData = new sPosition2D[sizePointData];
+			for (int index = 0; index < APointData.Length; index++)
+				APointData[index] = Internal.Lib3MFWrapper.convertInternalToStruct_Position2D(arrayPointData[index]);
+		}
+
+	}
+
+	class CToolpathLayerData : CBase
+	{
+		public CToolpathLayerData (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+		public String GetLayerDataUUID ()
+		{
+			UInt32 sizeUUID = 0;
+			UInt32 neededUUID = 0;
+			CheckError(Internal.Lib3MFWrapper.ToolpathLayerData_GetLayerDataUUID (Handle, sizeUUID, out neededUUID, IntPtr.Zero));
+			sizeUUID = neededUUID;
+			byte[] bytesUUID = new byte[sizeUUID];
+			GCHandle dataUUID = GCHandle.Alloc(bytesUUID, GCHandleType.Pinned);
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathLayerData_GetLayerDataUUID (Handle, sizeUUID, out neededUUID, dataUUID.AddrOfPinnedObject()));
+			dataUUID.Free();
+			return Encoding.UTF8.GetString(bytesUUID).TrimEnd(char.MinValue);
+		}
+
+		public UInt32 RegisterProfile (CToolpathProfile AProfile)
+		{
+			UInt32 resultProfileID = 0;
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathLayerData_RegisterProfile (Handle, AProfile.GetHandle(), out resultProfileID));
+			return resultProfileID;
+		}
+
+		public UInt32 RegisterBuildItem (CBuildItem ABuildItem)
+		{
+			UInt32 resultPartID = 0;
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathLayerData_RegisterBuildItem (Handle, ABuildItem.GetHandle(), out resultPartID));
+			return resultPartID;
+		}
+
+		public void WriteHatchData (UInt32 AProfileID, UInt32 APartID, sPosition2D[] APointData)
+		{
+			Internal.InternalPosition2D[] intdataPointData = new Internal.InternalPosition2D[APointData.Length];
+			for (int index = 0; index < APointData.Length; index++)
+				intdataPointData[index] = Internal.Lib3MFWrapper.convertStructToInternal_Position2D(APointData[index]);
+			GCHandle dataPointData = GCHandle.Alloc(intdataPointData, GCHandleType.Pinned);
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathLayerData_WriteHatchData (Handle, AProfileID, APartID, (UInt64) APointData.Length, dataPointData.AddrOfPinnedObject()));
+			dataPointData.Free ();
+		}
+
+		public void WriteLoop (UInt32 AProfileID, UInt32 APartID, sPosition2D[] APointData)
+		{
+			Internal.InternalPosition2D[] intdataPointData = new Internal.InternalPosition2D[APointData.Length];
+			for (int index = 0; index < APointData.Length; index++)
+				intdataPointData[index] = Internal.Lib3MFWrapper.convertStructToInternal_Position2D(APointData[index]);
+			GCHandle dataPointData = GCHandle.Alloc(intdataPointData, GCHandleType.Pinned);
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathLayerData_WriteLoop (Handle, AProfileID, APartID, (UInt64) APointData.Length, dataPointData.AddrOfPinnedObject()));
+			dataPointData.Free ();
+		}
+
+		public void WritePolyline (UInt32 AProfileID, UInt32 APartID, sPosition2D[] APointData)
+		{
+			Internal.InternalPosition2D[] intdataPointData = new Internal.InternalPosition2D[APointData.Length];
+			for (int index = 0; index < APointData.Length; index++)
+				intdataPointData[index] = Internal.Lib3MFWrapper.convertStructToInternal_Position2D(APointData[index]);
+			GCHandle dataPointData = GCHandle.Alloc(intdataPointData, GCHandleType.Pinned);
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathLayerData_WritePolyline (Handle, AProfileID, APartID, (UInt64) APointData.Length, dataPointData.AddrOfPinnedObject()));
+			dataPointData.Free ();
+		}
+
+		public void Finish ()
+		{
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathLayerData_Finish (Handle));
+		}
+
+	}
+
+	class CToolpath : CResource
+	{
+		public CToolpath (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+		public Double GetUnits ()
+		{
+			Double resultUnits = 0;
+
+			CheckError(Internal.Lib3MFWrapper.Toolpath_GetUnits (Handle, out resultUnits));
+			return resultUnits;
+		}
+
+		public UInt32 GetLayerCount ()
+		{
+			UInt32 resultCount = 0;
+
+			CheckError(Internal.Lib3MFWrapper.Toolpath_GetLayerCount (Handle, out resultCount));
+			return resultCount;
+		}
+
+		public UInt32 GetProfileCount ()
+		{
+			UInt32 resultCount = 0;
+
+			CheckError(Internal.Lib3MFWrapper.Toolpath_GetProfileCount (Handle, out resultCount));
+			return resultCount;
+		}
+
+		public CToolpathLayerData AddLayer (UInt32 AZMax, String APath, CWriter AModelWriter)
+		{
+			byte[] bytePath = Encoding.UTF8.GetBytes(APath + char.MinValue);
+			IntPtr newLayerData = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Toolpath_AddLayer (Handle, AZMax, bytePath, AModelWriter.GetHandle(), out newLayerData));
+			return new CToolpathLayerData (newLayerData );
+		}
+
+		public CAttachment GetLayerAttachment (UInt32 AIndex)
+		{
+			IntPtr newAttachment = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Toolpath_GetLayerAttachment (Handle, AIndex, out newAttachment));
+			return new CAttachment (newAttachment );
+		}
+
+		public CToolpathLayerReader ReadLayerData (UInt32 AIndex)
+		{
+			IntPtr newToolpathReader = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Toolpath_ReadLayerData (Handle, AIndex, out newToolpathReader));
+			return new CToolpathLayerReader (newToolpathReader );
+		}
+
+		public String GetLayerPath (UInt32 AIndex)
+		{
+			UInt32 sizePath = 0;
+			UInt32 neededPath = 0;
+			CheckError(Internal.Lib3MFWrapper.Toolpath_GetLayerPath (Handle, AIndex, sizePath, out neededPath, IntPtr.Zero));
+			sizePath = neededPath;
+			byte[] bytesPath = new byte[sizePath];
+			GCHandle dataPath = GCHandle.Alloc(bytesPath, GCHandleType.Pinned);
+
+			CheckError(Internal.Lib3MFWrapper.Toolpath_GetLayerPath (Handle, AIndex, sizePath, out neededPath, dataPath.AddrOfPinnedObject()));
+			dataPath.Free();
+			return Encoding.UTF8.GetString(bytesPath).TrimEnd(char.MinValue);
+		}
+
+		public UInt32 GetLayerZMax (UInt32 AIndex)
+		{
+			UInt32 resultZMax = 0;
+
+			CheckError(Internal.Lib3MFWrapper.Toolpath_GetLayerZMax (Handle, AIndex, out resultZMax));
+			return resultZMax;
+		}
+
+		public UInt32 GetLayerZ (UInt32 ALayerIndex)
+		{
+			UInt32 resultZValue = 0;
+
+			CheckError(Internal.Lib3MFWrapper.Toolpath_GetLayerZ (Handle, ALayerIndex, out resultZValue));
+			return resultZValue;
+		}
+
+		public CToolpathProfile AddProfile (String AName)
+		{
+			byte[] byteName = Encoding.UTF8.GetBytes(AName + char.MinValue);
+			IntPtr newProfile = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Toolpath_AddProfile (Handle, byteName, out newProfile));
+			return new CToolpathProfile (newProfile );
+		}
+
+		public CToolpathProfile GetProfile (UInt32 AProfileIndex)
+		{
+			IntPtr newProfile = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Toolpath_GetProfile (Handle, AProfileIndex, out newProfile));
+			return new CToolpathProfile (newProfile );
+		}
+
+		public CToolpathProfile GetProfileUUID (String AProfileUUID)
+		{
+			byte[] byteProfileUUID = Encoding.UTF8.GetBytes(AProfileUUID + char.MinValue);
+			IntPtr newProfile = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Toolpath_GetProfileUUID (Handle, byteProfileUUID, out newProfile));
+			return new CToolpathProfile (newProfile );
+		}
+
+	}
+
+	class CToolpathIterator : CResourceIterator
+	{
+		public CToolpathIterator (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+		public CToolpath GetCurrentToolpath ()
+		{
+			IntPtr newResource = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.ToolpathIterator_GetCurrentToolpath (Handle, out newResource));
+			return new CToolpath (newResource );
+		}
+
+	}
+
 	class CSliceStack : CResource
 	{
 		public CSliceStack (IntPtr NewHandle) : base (NewHandle)
@@ -4761,6 +5264,14 @@ namespace Lib3MF {
 			return new CMultiPropertyGroupIterator (newResourceIterator );
 		}
 
+		public CToolpathIterator GetToolpaths ()
+		{
+			IntPtr newResourceIterator = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Model_GetToolpaths (Handle, out newResourceIterator));
+			return new CToolpathIterator (newResourceIterator );
+		}
+
 		public CSliceStackIterator GetSliceStacks ()
 		{
 			IntPtr newResourceIterator = IntPtr.Zero;
@@ -4862,6 +5373,14 @@ namespace Lib3MF {
 		{
 
 			CheckError(Internal.Lib3MFWrapper.Model_RemoveBuildItem (Handle, ABuildItemInstance.GetHandle()));
+		}
+
+		public CToolpath AddToolpath (Double AUnitFactor)
+		{
+			IntPtr newToolpathInstance = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Model_AddToolpath (Handle, AUnitFactor, out newToolpathInstance));
+			return new CToolpath (newToolpathInstance );
 		}
 
 		public CMetaDataGroup GetMetaDataGroup ()

@@ -118,6 +118,10 @@ const
 	LIB3MF_ERROR_KEYSTORECONSUMERNOTFOUND = 3002;
 	LIB3MF_ERROR_KEYSTORERESOURCEDATANOTFOUND = 3003;
 	LIB3MF_ERROR_SECURECONTEXTNOTREGISTERED = 3004;
+	LIB3MF_ERROR_TOOLPATH_NOTWRITINGHEADER = 4000;
+	LIB3MF_ERROR_TOOLPATH_NOTWRITINGDATA = 4001;
+	LIB3MF_ERROR_TOOLPATH_DATAHASBEENWRITTEN = 4002;
+	LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOUNT = 4003;
 
 (*************************************************************************************************************************
  Declaration of enums
@@ -223,6 +227,13 @@ type
 		eBlendMethodNoBlendMethod,
 		eBlendMethodMix,
 		eBlendMethodMultiply
+	);
+
+	TLib3MFToolpathSegmentType = (
+		eToolpathSegmentTypeUnknown,
+		eToolpathSegmentTypeHatch,
+		eToolpathSegmentTypeLoop,
+		eToolpathSegmentTypePolyline
 	);
 
 	TLib3MFEncryptionAlgorithm = (
@@ -400,6 +411,11 @@ type
 	TLib3MFBuildItem = class;
 	TLib3MFBuildItemIterator = class;
 	TLib3MFSlice = class;
+	TLib3MFToolpathProfile = class;
+	TLib3MFToolpathLayerReader = class;
+	TLib3MFToolpathLayerData = class;
+	TLib3MFToolpath = class;
+	TLib3MFToolpathIterator = class;
 	TLib3MFSliceStack = class;
 	TLib3MFConsumer = class;
 	TLib3MFAccessRight = class;
@@ -2811,6 +2827,399 @@ type
 	
 
 (*************************************************************************************************************************
+ Function type definitions for ToolpathProfile
+**************************************************************************************************************************)
+
+	(**
+	* Retrieves the profile's uuid
+	*
+	* @param[in] pToolpathProfile - ToolpathProfile instance.
+	* @param[in] nUUIDBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pUUIDNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pUUIDBuffer -  buffer of Returns the uuid value., may be NULL
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathProfile_GetUUIDFunc = function(pToolpathProfile: TLib3MFHandle; const nUUIDBufferSize: Cardinal; out pUUIDNeededChars: Cardinal; pUUIDBuffer: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the profile's name
+	*
+	* @param[in] pToolpathProfile - ToolpathProfile instance.
+	* @param[in] nNameBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pNameNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pNameBuffer -  buffer of Returns the name., may be NULL
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathProfile_GetNameFunc = function(pToolpathProfile: TLib3MFHandle; const nNameBufferSize: Cardinal; out pNameNeededChars: Cardinal; pNameBuffer: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Checks if a parameter value exists.
+	*
+	* @param[in] pToolpathProfile - ToolpathProfile instance.
+	* @param[in] pNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] pValueName - Value key string.
+	* @param[out] pValueExists - Returns if a value exists.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathProfile_HasParameterValueFunc = function(pToolpathProfile: TLib3MFHandle; const pNameSpaceName: PAnsiChar; const pValueName: PAnsiChar; out pValueExists: Byte): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves a profile's parameter value. Fails if value does not exist.
+	*
+	* @param[in] pToolpathProfile - ToolpathProfile instance.
+	* @param[in] pNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] pValueName - Value key string.
+	* @param[out] pValue - Returns the value of the field.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathProfile_GetParameterDoubleValueFunc = function(pToolpathProfile: TLib3MFHandle; const pNameSpaceName: PAnsiChar; const pValueName: PAnsiChar; out pValue: Double): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves a profile's parameter value
+	*
+	* @param[in] pToolpathProfile - ToolpathProfile instance.
+	* @param[in] pNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] pValueName - Value key string.
+	* @param[in] dDefaultValue - Default value if value does not exist.
+	* @param[out] pValue - Returns the value of the field.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathProfile_GetParameterDoubleValueDefFunc = function(pToolpathProfile: TLib3MFHandle; const pNameSpaceName: PAnsiChar; const pValueName: PAnsiChar; const dDefaultValue: Double; out pValue: Double): TLib3MFResult; cdecl;
+	
+	(**
+	* Sets the profile's name
+	*
+	* @param[in] pToolpathProfile - ToolpathProfile instance.
+	* @param[in] pName - Returns the name.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathProfile_SetNameFunc = function(pToolpathProfile: TLib3MFHandle; const pName: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Sets a profile's parameter value.
+	*
+	* @param[in] pToolpathProfile - ToolpathProfile instance.
+	* @param[in] pNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] pValueName - Value key string.
+	* @param[in] dValue - Double value of the parameter.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathProfile_SetParameterDoubleValueFunc = function(pToolpathProfile: TLib3MFHandle; const pNameSpaceName: PAnsiChar; const pValueName: PAnsiChar; const dValue: Double): TLib3MFResult; cdecl;
+	
+
+(*************************************************************************************************************************
+ Function type definitions for ToolpathLayerReader
+**************************************************************************************************************************)
+
+	(**
+	* Retrieves the layerdata's uuid
+	*
+	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+	* @param[in] nUUIDBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pUUIDNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pUUIDBuffer -  buffer of Returns the uuid value., may be NULL
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerReader_GetLayerDataUUIDFunc = function(pToolpathLayerReader: TLib3MFHandle; const nUUIDBufferSize: Cardinal; out pUUIDNeededChars: Cardinal; pUUIDBuffer: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the count of segments.
+	*
+	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+	* @param[out] pCount - Count
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerReader_GetSegmentCountFunc = function(pToolpathLayerReader: TLib3MFHandle; out pCount: Cardinal): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the segment type information .
+	*
+	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
+	* @param[out] pType - Segment Type
+	* @param[out] pPointCount - Point count of segment.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerReader_GetSegmentInfoFunc = function(pToolpathLayerReader: TLib3MFHandle; const nIndex: Cardinal; out pType: Integer; out pPointCount: Cardinal): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the assigned segment profile.
+	*
+	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
+	* @param[out] pProfile - Segment Profile
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerReader_GetSegmentProfileFunc = function(pToolpathLayerReader: TLib3MFHandle; const nIndex: Cardinal; out pProfile: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the assigned segment profile uuid.
+	*
+	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
+	* @param[in] nProfileUUIDBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pProfileUUIDNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pProfileUUIDBuffer -  buffer of Segment Profile UUID, may be NULL
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerReader_GetSegmentProfileUUIDFunc = function(pToolpathLayerReader: TLib3MFHandle; const nIndex: Cardinal; const nProfileUUIDBufferSize: Cardinal; out pProfileUUIDNeededChars: Cardinal; pProfileUUIDBuffer: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the assigned segment profile.
+	*
+	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
+	* @param[out] pBuildItem - Segment Build Item
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerReader_GetSegmentPartFunc = function(pToolpathLayerReader: TLib3MFHandle; const nIndex: Cardinal; out pBuildItem: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the assigned segment part uuid.
+	*
+	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
+	* @param[in] nPartUUIDBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pPartUUIDNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pPartUUIDBuffer -  buffer of Segment Part UUID, may be NULL
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerReader_GetSegmentPartUUIDFunc = function(pToolpathLayerReader: TLib3MFHandle; const nIndex: Cardinal; const nPartUUIDBufferSize: Cardinal; out pPartUUIDNeededChars: Cardinal; pPartUUIDBuffer: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the assigned segment point list. For type hatch, the points are taken pairwise.
+	*
+	* @param[in] pToolpathLayerReader - ToolpathLayerReader instance.
+	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
+	* @param[in] nPointDataCount - Number of elements in buffer
+	* @param[out] pPointDataNeededCount - will be filled with the count of the written elements, or needed buffer size.
+	* @param[out] pPointDataBuffer - Position2D buffer of The point data array
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerReader_GetSegmentPointDataFunc = function(pToolpathLayerReader: TLib3MFHandle; const nIndex: Cardinal; const nPointDataCount: QWord; out pPointDataNeededCount: QWord; pPointDataBuffer: PLib3MFPosition2D): TLib3MFResult; cdecl;
+	
+
+(*************************************************************************************************************************
+ Function type definitions for ToolpathLayerData
+**************************************************************************************************************************)
+
+	(**
+	* Retrieves the layerdata's uuid
+	*
+	* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+	* @param[in] nUUIDBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pUUIDNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pUUIDBuffer -  buffer of Returns the uuid value., may be NULL
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerData_GetLayerDataUUIDFunc = function(pToolpathLayerData: TLib3MFHandle; const nUUIDBufferSize: Cardinal; out pUUIDNeededChars: Cardinal; pUUIDBuffer: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Registers a toolpath profile
+	*
+	* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+	* @param[in] pProfile - The toolpath profile to register.
+	* @param[out] pProfileID - returns the local profile ID for the layer.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerData_RegisterProfileFunc = function(pToolpathLayerData: TLib3MFHandle; const pProfile: TLib3MFHandle; out pProfileID: Cardinal): TLib3MFResult; cdecl;
+	
+	(**
+	* Registers a Model Build Item
+	*
+	* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+	* @param[in] pBuildItem - The model build item to use.
+	* @param[out] pPartID - returns the local part ID for the layer.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerData_RegisterBuildItemFunc = function(pToolpathLayerData: TLib3MFHandle; const pBuildItem: TLib3MFHandle; out pPartID: Cardinal): TLib3MFResult; cdecl;
+	
+	(**
+	* writes hatch data to the layer.
+	*
+	* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+	* @param[in] nProfileID - The toolpath profile to use
+	* @param[in] nPartID - The toolpath part to use
+	* @param[in] nPointDataCount - Number of elements in buffer
+	* @param[in] pPointDataBuffer - Position2D buffer of The point data
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerData_WriteHatchDataFunc = function(pToolpathLayerData: TLib3MFHandle; const nProfileID: Cardinal; const nPartID: Cardinal; const nPointDataCount: QWord; const pPointDataBuffer: PLib3MFPosition2D): TLib3MFResult; cdecl;
+	
+	(**
+	* writes loop data to the layer.
+	*
+	* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+	* @param[in] nProfileID - The toolpath profile to use
+	* @param[in] nPartID - The toolpath part to use
+	* @param[in] nPointDataCount - Number of elements in buffer
+	* @param[in] pPointDataBuffer - Position2D buffer of The point data
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerData_WriteLoopFunc = function(pToolpathLayerData: TLib3MFHandle; const nProfileID: Cardinal; const nPartID: Cardinal; const nPointDataCount: QWord; const pPointDataBuffer: PLib3MFPosition2D): TLib3MFResult; cdecl;
+	
+	(**
+	* writes polyline data to the layer.
+	*
+	* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+	* @param[in] nProfileID - The toolpath profile to use
+	* @param[in] nPartID - The toolpath part to use
+	* @param[in] nPointDataCount - Number of elements in buffer
+	* @param[in] pPointDataBuffer - Position2D buffer of The point data
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerData_WritePolylineFunc = function(pToolpathLayerData: TLib3MFHandle; const nProfileID: Cardinal; const nPartID: Cardinal; const nPointDataCount: QWord; const pPointDataBuffer: PLib3MFPosition2D): TLib3MFResult; cdecl;
+	
+	(**
+	* finishes all writing of the layer and compresses toolpath data.
+	*
+	* @param[in] pToolpathLayerData - ToolpathLayerData instance.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathLayerData_FinishFunc = function(pToolpathLayerData: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+
+(*************************************************************************************************************************
+ Function type definitions for Toolpath
+**************************************************************************************************************************)
+
+	(**
+	* Retrieves the unit factor
+	*
+	* @param[in] pToolpath - Toolpath instance.
+	* @param[out] pUnits - Returns the unit factor.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpath_GetUnitsFunc = function(pToolpath: TLib3MFHandle; out pUnits: Double): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the count of layers
+	*
+	* @param[in] pToolpath - Toolpath instance.
+	* @param[out] pCount - Returns the layer count
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpath_GetLayerCountFunc = function(pToolpath: TLib3MFHandle; out pCount: Cardinal): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the count of profiles
+	*
+	* @param[in] pToolpath - Toolpath instance.
+	* @param[out] pCount - Returns the profile count
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpath_GetProfileCountFunc = function(pToolpath: TLib3MFHandle; out pCount: Cardinal): TLib3MFResult; cdecl;
+	
+	(**
+	* Adds a new toolpath layer
+	*
+	* @param[in] pToolpath - Toolpath instance.
+	* @param[in] nZMax - ZMax value
+	* @param[in] pPath - Package Path
+	* @param[in] pModelWriter - The model writer that writes out the 3MF.
+	* @param[out] pLayerData - Returns the layerdata object to write the layer content into.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpath_AddLayerFunc = function(pToolpath: TLib3MFHandle; const nZMax: Cardinal; const pPath: PAnsiChar; const pModelWriter: TLib3MFHandle; out pLayerData: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the Attachment of a layer
+	*
+	* @param[in] pToolpath - Toolpath instance.
+	* @param[in] nIndex - Layer Index
+	* @param[out] pAttachment - Attachment
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpath_GetLayerAttachmentFunc = function(pToolpath: TLib3MFHandle; const nIndex: Cardinal; out pAttachment: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Reads the toolpath of a layer.
+	*
+	* @param[in] pToolpath - Toolpath instance.
+	* @param[in] nIndex - Layer Index
+	* @param[out] pToolpathReader - Toolpath Reader Instance
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpath_ReadLayerDataFunc = function(pToolpath: TLib3MFHandle; const nIndex: Cardinal; out pToolpathReader: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the Path of a layer
+	*
+	* @param[in] pToolpath - Toolpath instance.
+	* @param[in] nIndex - Layer Index
+	* @param[in] nPathBufferSize - size of the buffer (including trailing 0)
+	* @param[out] pPathNeededChars - will be filled with the count of the written bytes, or needed buffer size.
+	* @param[out] pPathBuffer -  buffer of Package Path, may be NULL
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpath_GetLayerPathFunc = function(pToolpath: TLib3MFHandle; const nIndex: Cardinal; const nPathBufferSize: Cardinal; out pPathNeededChars: Cardinal; pPathBuffer: PAnsiChar): TLib3MFResult; cdecl;
+	
+	(**
+	* Retrieves the ZMax of a layer
+	*
+	* @param[in] pToolpath - Toolpath instance.
+	* @param[in] nIndex - Layer Index
+	* @param[out] pZMax - ZMax value
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpath_GetLayerZMaxFunc = function(pToolpath: TLib3MFHandle; const nIndex: Cardinal; out pZMax: Cardinal): TLib3MFResult; cdecl;
+	
+	(**
+	* Return the z value of a layer in units.
+	*
+	* @param[in] pToolpath - Toolpath instance.
+	* @param[in] nLayerIndex - Layer Index.
+	* @param[out] pZValue - Z Value in Units.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpath_GetLayerZFunc = function(pToolpath: TLib3MFHandle; const nLayerIndex: Cardinal; out pZValue: Cardinal): TLib3MFResult; cdecl;
+	
+	(**
+	* Adds a new profile to the toolpath.
+	*
+	* @param[in] pToolpath - Toolpath instance.
+	* @param[in] pName - the name.
+	* @param[out] pProfile - Returns the profile.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpath_AddProfileFunc = function(pToolpath: TLib3MFHandle; const pName: PAnsiChar; out pProfile: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Returns a profile of the toolpath.
+	*
+	* @param[in] pToolpath - Toolpath instance.
+	* @param[in] nProfileIndex - Layer Index.
+	* @param[out] pProfile - Returns the profile.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpath_GetProfileFunc = function(pToolpath: TLib3MFHandle; const nProfileIndex: Cardinal; out pProfile: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Returns a profile of the toolpath by UUID.
+	*
+	* @param[in] pToolpath - Toolpath instance.
+	* @param[in] pProfileUUID - UUID string.
+	* @param[out] pProfile - Returns the profile.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpath_GetProfileUUIDFunc = function(pToolpath: TLib3MFHandle; const pProfileUUID: PAnsiChar; out pProfile: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+
+(*************************************************************************************************************************
+ Function type definitions for ToolpathIterator
+**************************************************************************************************************************)
+
+	(**
+	* Returns the Toolpath the iterator points at.
+	*
+	* @param[in] pToolpathIterator - ToolpathIterator instance.
+	* @param[out] pResource - returns the Toolpath instance.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFToolpathIterator_GetCurrentToolpathFunc = function(pToolpathIterator: TLib3MFHandle; out pResource: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+
+(*************************************************************************************************************************
  Function type definitions for SliceStack
 **************************************************************************************************************************)
 
@@ -3654,6 +4063,15 @@ type
 	TLib3MFModel_GetMultiPropertyGroupsFunc = function(pModel: TLib3MFHandle; out pResourceIterator: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
+	* creates a Toolpath instance with all toolpath resources.
+	*
+	* @param[in] pModel - Model instance.
+	* @param[out] pResourceIterator - returns the iterator instance.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFModel_GetToolpathsFunc = function(pModel: TLib3MFHandle; out pResourceIterator: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
 	* creates a resource iterator instance with all slice stack resources.
 	*
 	* @param[in] pModel - Model instance.
@@ -3775,6 +4193,16 @@ type
 	* @return error code or 0 (success)
 	*)
 	TLib3MFModel_RemoveBuildItemFunc = function(pModel: TLib3MFHandle; const pBuildItemInstance: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* adds an empty Toolpath resource to the model.
+	*
+	* @param[in] pModel - Model instance.
+	* @param[in] dUnitFactor - The toolpath instance of the created Toolpath.
+	* @param[out] pToolpathInstance - The toolpath instance of the created Toolpath.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFModel_AddToolpathFunc = function(pModel: TLib3MFHandle; const dUnitFactor: Double; out pToolpathInstance: TLib3MFHandle): TLib3MFResult; cdecl;
 	
 	(**
 	* Returns the metadata of the model as MetaDataGroup
@@ -4735,6 +5163,96 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 
 
 (*************************************************************************************************************************
+ Class definition for ToolpathProfile
+**************************************************************************************************************************)
+
+	TLib3MFToolpathProfile = class(TLib3MFBase)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+		function GetUUID(): String;
+		function GetName(): String;
+		function HasParameterValue(const ANameSpaceName: String; const AValueName: String): Boolean;
+		function GetParameterDoubleValue(const ANameSpaceName: String; const AValueName: String): Double;
+		function GetParameterDoubleValueDef(const ANameSpaceName: String; const AValueName: String; const ADefaultValue: Double): Double;
+		procedure SetName(const AName: String);
+		procedure SetParameterDoubleValue(const ANameSpaceName: String; const AValueName: String; const AValue: Double);
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for ToolpathLayerReader
+**************************************************************************************************************************)
+
+	TLib3MFToolpathLayerReader = class(TLib3MFBase)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+		function GetLayerDataUUID(): String;
+		function GetSegmentCount(): Cardinal;
+		procedure GetSegmentInfo(const AIndex: Cardinal; out AType: TLib3MFToolpathSegmentType; out APointCount: Cardinal);
+		function GetSegmentProfile(const AIndex: Cardinal): TLib3MFToolpathProfile;
+		function GetSegmentProfileUUID(const AIndex: Cardinal): String;
+		function GetSegmentPart(const AIndex: Cardinal): TLib3MFBuildItem;
+		function GetSegmentPartUUID(const AIndex: Cardinal): String;
+		procedure GetSegmentPointData(const AIndex: Cardinal; out APointData: ArrayOfLib3MFPosition2D);
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for ToolpathLayerData
+**************************************************************************************************************************)
+
+	TLib3MFToolpathLayerData = class(TLib3MFBase)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+		function GetLayerDataUUID(): String;
+		function RegisterProfile(const AProfile: TLib3MFToolpathProfile): Cardinal;
+		function RegisterBuildItem(const ABuildItem: TLib3MFBuildItem): Cardinal;
+		procedure WriteHatchData(const AProfileID: Cardinal; const APartID: Cardinal; const APointData: ArrayOfLib3MFPosition2D);
+		procedure WriteLoop(const AProfileID: Cardinal; const APartID: Cardinal; const APointData: ArrayOfLib3MFPosition2D);
+		procedure WritePolyline(const AProfileID: Cardinal; const APartID: Cardinal; const APointData: ArrayOfLib3MFPosition2D);
+		procedure Finish();
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for Toolpath
+**************************************************************************************************************************)
+
+	TLib3MFToolpath = class(TLib3MFResource)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+		function GetUnits(): Double;
+		function GetLayerCount(): Cardinal;
+		function GetProfileCount(): Cardinal;
+		function AddLayer(const AZMax: Cardinal; const APath: String; const AModelWriter: TLib3MFWriter): TLib3MFToolpathLayerData;
+		function GetLayerAttachment(const AIndex: Cardinal): TLib3MFAttachment;
+		function ReadLayerData(const AIndex: Cardinal): TLib3MFToolpathLayerReader;
+		function GetLayerPath(const AIndex: Cardinal): String;
+		function GetLayerZMax(const AIndex: Cardinal): Cardinal;
+		function GetLayerZ(const ALayerIndex: Cardinal): Cardinal;
+		function AddProfile(const AName: String): TLib3MFToolpathProfile;
+		function GetProfile(const AProfileIndex: Cardinal): TLib3MFToolpathProfile;
+		function GetProfileUUID(const AProfileUUID: String): TLib3MFToolpathProfile;
+	end;
+
+
+(*************************************************************************************************************************
+ Class definition for ToolpathIterator
+**************************************************************************************************************************)
+
+	TLib3MFToolpathIterator = class(TLib3MFResourceIterator)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+		function GetCurrentToolpath(): TLib3MFToolpath;
+	end;
+
+
+(*************************************************************************************************************************
  Class definition for SliceStack
 **************************************************************************************************************************)
 
@@ -4901,6 +5419,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		function GetTexture2DGroups(): TLib3MFTexture2DGroupIterator;
 		function GetCompositeMaterials(): TLib3MFCompositeMaterialsIterator;
 		function GetMultiPropertyGroups(): TLib3MFMultiPropertyGroupIterator;
+		function GetToolpaths(): TLib3MFToolpathIterator;
 		function GetSliceStacks(): TLib3MFSliceStackIterator;
 		function MergeToModel(): TLib3MFModel;
 		function AddMeshObject(): TLib3MFMeshObject;
@@ -4914,6 +5433,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		function AddMultiPropertyGroup(): TLib3MFMultiPropertyGroup;
 		function AddBuildItem(const AObject: TLib3MFObject; const ATransform: TLib3MFTransform): TLib3MFBuildItem;
 		procedure RemoveBuildItem(const ABuildItemInstance: TLib3MFBuildItem);
+		function AddToolpath(const AUnitFactor: Double): TLib3MFToolpath;
 		function GetMetaDataGroup(): TLib3MFMetaDataGroup;
 		function AddAttachment(const AURI: String; const ARelationShipType: String): TLib3MFAttachment;
 		procedure RemoveAttachment(const AAttachmentInstance: TLib3MFAttachment);
@@ -5166,6 +5686,41 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFSlice_GetPolygonIndicesFunc: TLib3MFSlice_GetPolygonIndicesFunc;
 		FLib3MFSlice_GetPolygonIndexCountFunc: TLib3MFSlice_GetPolygonIndexCountFunc;
 		FLib3MFSlice_GetZTopFunc: TLib3MFSlice_GetZTopFunc;
+		FLib3MFToolpathProfile_GetUUIDFunc: TLib3MFToolpathProfile_GetUUIDFunc;
+		FLib3MFToolpathProfile_GetNameFunc: TLib3MFToolpathProfile_GetNameFunc;
+		FLib3MFToolpathProfile_HasParameterValueFunc: TLib3MFToolpathProfile_HasParameterValueFunc;
+		FLib3MFToolpathProfile_GetParameterDoubleValueFunc: TLib3MFToolpathProfile_GetParameterDoubleValueFunc;
+		FLib3MFToolpathProfile_GetParameterDoubleValueDefFunc: TLib3MFToolpathProfile_GetParameterDoubleValueDefFunc;
+		FLib3MFToolpathProfile_SetNameFunc: TLib3MFToolpathProfile_SetNameFunc;
+		FLib3MFToolpathProfile_SetParameterDoubleValueFunc: TLib3MFToolpathProfile_SetParameterDoubleValueFunc;
+		FLib3MFToolpathLayerReader_GetLayerDataUUIDFunc: TLib3MFToolpathLayerReader_GetLayerDataUUIDFunc;
+		FLib3MFToolpathLayerReader_GetSegmentCountFunc: TLib3MFToolpathLayerReader_GetSegmentCountFunc;
+		FLib3MFToolpathLayerReader_GetSegmentInfoFunc: TLib3MFToolpathLayerReader_GetSegmentInfoFunc;
+		FLib3MFToolpathLayerReader_GetSegmentProfileFunc: TLib3MFToolpathLayerReader_GetSegmentProfileFunc;
+		FLib3MFToolpathLayerReader_GetSegmentProfileUUIDFunc: TLib3MFToolpathLayerReader_GetSegmentProfileUUIDFunc;
+		FLib3MFToolpathLayerReader_GetSegmentPartFunc: TLib3MFToolpathLayerReader_GetSegmentPartFunc;
+		FLib3MFToolpathLayerReader_GetSegmentPartUUIDFunc: TLib3MFToolpathLayerReader_GetSegmentPartUUIDFunc;
+		FLib3MFToolpathLayerReader_GetSegmentPointDataFunc: TLib3MFToolpathLayerReader_GetSegmentPointDataFunc;
+		FLib3MFToolpathLayerData_GetLayerDataUUIDFunc: TLib3MFToolpathLayerData_GetLayerDataUUIDFunc;
+		FLib3MFToolpathLayerData_RegisterProfileFunc: TLib3MFToolpathLayerData_RegisterProfileFunc;
+		FLib3MFToolpathLayerData_RegisterBuildItemFunc: TLib3MFToolpathLayerData_RegisterBuildItemFunc;
+		FLib3MFToolpathLayerData_WriteHatchDataFunc: TLib3MFToolpathLayerData_WriteHatchDataFunc;
+		FLib3MFToolpathLayerData_WriteLoopFunc: TLib3MFToolpathLayerData_WriteLoopFunc;
+		FLib3MFToolpathLayerData_WritePolylineFunc: TLib3MFToolpathLayerData_WritePolylineFunc;
+		FLib3MFToolpathLayerData_FinishFunc: TLib3MFToolpathLayerData_FinishFunc;
+		FLib3MFToolpath_GetUnitsFunc: TLib3MFToolpath_GetUnitsFunc;
+		FLib3MFToolpath_GetLayerCountFunc: TLib3MFToolpath_GetLayerCountFunc;
+		FLib3MFToolpath_GetProfileCountFunc: TLib3MFToolpath_GetProfileCountFunc;
+		FLib3MFToolpath_AddLayerFunc: TLib3MFToolpath_AddLayerFunc;
+		FLib3MFToolpath_GetLayerAttachmentFunc: TLib3MFToolpath_GetLayerAttachmentFunc;
+		FLib3MFToolpath_ReadLayerDataFunc: TLib3MFToolpath_ReadLayerDataFunc;
+		FLib3MFToolpath_GetLayerPathFunc: TLib3MFToolpath_GetLayerPathFunc;
+		FLib3MFToolpath_GetLayerZMaxFunc: TLib3MFToolpath_GetLayerZMaxFunc;
+		FLib3MFToolpath_GetLayerZFunc: TLib3MFToolpath_GetLayerZFunc;
+		FLib3MFToolpath_AddProfileFunc: TLib3MFToolpath_AddProfileFunc;
+		FLib3MFToolpath_GetProfileFunc: TLib3MFToolpath_GetProfileFunc;
+		FLib3MFToolpath_GetProfileUUIDFunc: TLib3MFToolpath_GetProfileUUIDFunc;
+		FLib3MFToolpathIterator_GetCurrentToolpathFunc: TLib3MFToolpathIterator_GetCurrentToolpathFunc;
 		FLib3MFSliceStack_GetBottomZFunc: TLib3MFSliceStack_GetBottomZFunc;
 		FLib3MFSliceStack_GetSliceCountFunc: TLib3MFSliceStack_GetSliceCountFunc;
 		FLib3MFSliceStack_GetSliceFunc: TLib3MFSliceStack_GetSliceFunc;
@@ -5248,6 +5803,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFModel_GetTexture2DGroupsFunc: TLib3MFModel_GetTexture2DGroupsFunc;
 		FLib3MFModel_GetCompositeMaterialsFunc: TLib3MFModel_GetCompositeMaterialsFunc;
 		FLib3MFModel_GetMultiPropertyGroupsFunc: TLib3MFModel_GetMultiPropertyGroupsFunc;
+		FLib3MFModel_GetToolpathsFunc: TLib3MFModel_GetToolpathsFunc;
 		FLib3MFModel_GetSliceStacksFunc: TLib3MFModel_GetSliceStacksFunc;
 		FLib3MFModel_MergeToModelFunc: TLib3MFModel_MergeToModelFunc;
 		FLib3MFModel_AddMeshObjectFunc: TLib3MFModel_AddMeshObjectFunc;
@@ -5261,6 +5817,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFModel_AddMultiPropertyGroupFunc: TLib3MFModel_AddMultiPropertyGroupFunc;
 		FLib3MFModel_AddBuildItemFunc: TLib3MFModel_AddBuildItemFunc;
 		FLib3MFModel_RemoveBuildItemFunc: TLib3MFModel_RemoveBuildItemFunc;
+		FLib3MFModel_AddToolpathFunc: TLib3MFModel_AddToolpathFunc;
 		FLib3MFModel_GetMetaDataGroupFunc: TLib3MFModel_GetMetaDataGroupFunc;
 		FLib3MFModel_AddAttachmentFunc: TLib3MFModel_AddAttachmentFunc;
 		FLib3MFModel_RemoveAttachmentFunc: TLib3MFModel_RemoveAttachmentFunc;
@@ -5533,6 +6090,41 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFSlice_GetPolygonIndicesFunc: TLib3MFSlice_GetPolygonIndicesFunc read FLib3MFSlice_GetPolygonIndicesFunc;
 		property Lib3MFSlice_GetPolygonIndexCountFunc: TLib3MFSlice_GetPolygonIndexCountFunc read FLib3MFSlice_GetPolygonIndexCountFunc;
 		property Lib3MFSlice_GetZTopFunc: TLib3MFSlice_GetZTopFunc read FLib3MFSlice_GetZTopFunc;
+		property Lib3MFToolpathProfile_GetUUIDFunc: TLib3MFToolpathProfile_GetUUIDFunc read FLib3MFToolpathProfile_GetUUIDFunc;
+		property Lib3MFToolpathProfile_GetNameFunc: TLib3MFToolpathProfile_GetNameFunc read FLib3MFToolpathProfile_GetNameFunc;
+		property Lib3MFToolpathProfile_HasParameterValueFunc: TLib3MFToolpathProfile_HasParameterValueFunc read FLib3MFToolpathProfile_HasParameterValueFunc;
+		property Lib3MFToolpathProfile_GetParameterDoubleValueFunc: TLib3MFToolpathProfile_GetParameterDoubleValueFunc read FLib3MFToolpathProfile_GetParameterDoubleValueFunc;
+		property Lib3MFToolpathProfile_GetParameterDoubleValueDefFunc: TLib3MFToolpathProfile_GetParameterDoubleValueDefFunc read FLib3MFToolpathProfile_GetParameterDoubleValueDefFunc;
+		property Lib3MFToolpathProfile_SetNameFunc: TLib3MFToolpathProfile_SetNameFunc read FLib3MFToolpathProfile_SetNameFunc;
+		property Lib3MFToolpathProfile_SetParameterDoubleValueFunc: TLib3MFToolpathProfile_SetParameterDoubleValueFunc read FLib3MFToolpathProfile_SetParameterDoubleValueFunc;
+		property Lib3MFToolpathLayerReader_GetLayerDataUUIDFunc: TLib3MFToolpathLayerReader_GetLayerDataUUIDFunc read FLib3MFToolpathLayerReader_GetLayerDataUUIDFunc;
+		property Lib3MFToolpathLayerReader_GetSegmentCountFunc: TLib3MFToolpathLayerReader_GetSegmentCountFunc read FLib3MFToolpathLayerReader_GetSegmentCountFunc;
+		property Lib3MFToolpathLayerReader_GetSegmentInfoFunc: TLib3MFToolpathLayerReader_GetSegmentInfoFunc read FLib3MFToolpathLayerReader_GetSegmentInfoFunc;
+		property Lib3MFToolpathLayerReader_GetSegmentProfileFunc: TLib3MFToolpathLayerReader_GetSegmentProfileFunc read FLib3MFToolpathLayerReader_GetSegmentProfileFunc;
+		property Lib3MFToolpathLayerReader_GetSegmentProfileUUIDFunc: TLib3MFToolpathLayerReader_GetSegmentProfileUUIDFunc read FLib3MFToolpathLayerReader_GetSegmentProfileUUIDFunc;
+		property Lib3MFToolpathLayerReader_GetSegmentPartFunc: TLib3MFToolpathLayerReader_GetSegmentPartFunc read FLib3MFToolpathLayerReader_GetSegmentPartFunc;
+		property Lib3MFToolpathLayerReader_GetSegmentPartUUIDFunc: TLib3MFToolpathLayerReader_GetSegmentPartUUIDFunc read FLib3MFToolpathLayerReader_GetSegmentPartUUIDFunc;
+		property Lib3MFToolpathLayerReader_GetSegmentPointDataFunc: TLib3MFToolpathLayerReader_GetSegmentPointDataFunc read FLib3MFToolpathLayerReader_GetSegmentPointDataFunc;
+		property Lib3MFToolpathLayerData_GetLayerDataUUIDFunc: TLib3MFToolpathLayerData_GetLayerDataUUIDFunc read FLib3MFToolpathLayerData_GetLayerDataUUIDFunc;
+		property Lib3MFToolpathLayerData_RegisterProfileFunc: TLib3MFToolpathLayerData_RegisterProfileFunc read FLib3MFToolpathLayerData_RegisterProfileFunc;
+		property Lib3MFToolpathLayerData_RegisterBuildItemFunc: TLib3MFToolpathLayerData_RegisterBuildItemFunc read FLib3MFToolpathLayerData_RegisterBuildItemFunc;
+		property Lib3MFToolpathLayerData_WriteHatchDataFunc: TLib3MFToolpathLayerData_WriteHatchDataFunc read FLib3MFToolpathLayerData_WriteHatchDataFunc;
+		property Lib3MFToolpathLayerData_WriteLoopFunc: TLib3MFToolpathLayerData_WriteLoopFunc read FLib3MFToolpathLayerData_WriteLoopFunc;
+		property Lib3MFToolpathLayerData_WritePolylineFunc: TLib3MFToolpathLayerData_WritePolylineFunc read FLib3MFToolpathLayerData_WritePolylineFunc;
+		property Lib3MFToolpathLayerData_FinishFunc: TLib3MFToolpathLayerData_FinishFunc read FLib3MFToolpathLayerData_FinishFunc;
+		property Lib3MFToolpath_GetUnitsFunc: TLib3MFToolpath_GetUnitsFunc read FLib3MFToolpath_GetUnitsFunc;
+		property Lib3MFToolpath_GetLayerCountFunc: TLib3MFToolpath_GetLayerCountFunc read FLib3MFToolpath_GetLayerCountFunc;
+		property Lib3MFToolpath_GetProfileCountFunc: TLib3MFToolpath_GetProfileCountFunc read FLib3MFToolpath_GetProfileCountFunc;
+		property Lib3MFToolpath_AddLayerFunc: TLib3MFToolpath_AddLayerFunc read FLib3MFToolpath_AddLayerFunc;
+		property Lib3MFToolpath_GetLayerAttachmentFunc: TLib3MFToolpath_GetLayerAttachmentFunc read FLib3MFToolpath_GetLayerAttachmentFunc;
+		property Lib3MFToolpath_ReadLayerDataFunc: TLib3MFToolpath_ReadLayerDataFunc read FLib3MFToolpath_ReadLayerDataFunc;
+		property Lib3MFToolpath_GetLayerPathFunc: TLib3MFToolpath_GetLayerPathFunc read FLib3MFToolpath_GetLayerPathFunc;
+		property Lib3MFToolpath_GetLayerZMaxFunc: TLib3MFToolpath_GetLayerZMaxFunc read FLib3MFToolpath_GetLayerZMaxFunc;
+		property Lib3MFToolpath_GetLayerZFunc: TLib3MFToolpath_GetLayerZFunc read FLib3MFToolpath_GetLayerZFunc;
+		property Lib3MFToolpath_AddProfileFunc: TLib3MFToolpath_AddProfileFunc read FLib3MFToolpath_AddProfileFunc;
+		property Lib3MFToolpath_GetProfileFunc: TLib3MFToolpath_GetProfileFunc read FLib3MFToolpath_GetProfileFunc;
+		property Lib3MFToolpath_GetProfileUUIDFunc: TLib3MFToolpath_GetProfileUUIDFunc read FLib3MFToolpath_GetProfileUUIDFunc;
+		property Lib3MFToolpathIterator_GetCurrentToolpathFunc: TLib3MFToolpathIterator_GetCurrentToolpathFunc read FLib3MFToolpathIterator_GetCurrentToolpathFunc;
 		property Lib3MFSliceStack_GetBottomZFunc: TLib3MFSliceStack_GetBottomZFunc read FLib3MFSliceStack_GetBottomZFunc;
 		property Lib3MFSliceStack_GetSliceCountFunc: TLib3MFSliceStack_GetSliceCountFunc read FLib3MFSliceStack_GetSliceCountFunc;
 		property Lib3MFSliceStack_GetSliceFunc: TLib3MFSliceStack_GetSliceFunc read FLib3MFSliceStack_GetSliceFunc;
@@ -5615,6 +6207,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFModel_GetTexture2DGroupsFunc: TLib3MFModel_GetTexture2DGroupsFunc read FLib3MFModel_GetTexture2DGroupsFunc;
 		property Lib3MFModel_GetCompositeMaterialsFunc: TLib3MFModel_GetCompositeMaterialsFunc read FLib3MFModel_GetCompositeMaterialsFunc;
 		property Lib3MFModel_GetMultiPropertyGroupsFunc: TLib3MFModel_GetMultiPropertyGroupsFunc read FLib3MFModel_GetMultiPropertyGroupsFunc;
+		property Lib3MFModel_GetToolpathsFunc: TLib3MFModel_GetToolpathsFunc read FLib3MFModel_GetToolpathsFunc;
 		property Lib3MFModel_GetSliceStacksFunc: TLib3MFModel_GetSliceStacksFunc read FLib3MFModel_GetSliceStacksFunc;
 		property Lib3MFModel_MergeToModelFunc: TLib3MFModel_MergeToModelFunc read FLib3MFModel_MergeToModelFunc;
 		property Lib3MFModel_AddMeshObjectFunc: TLib3MFModel_AddMeshObjectFunc read FLib3MFModel_AddMeshObjectFunc;
@@ -5628,6 +6221,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFModel_AddMultiPropertyGroupFunc: TLib3MFModel_AddMultiPropertyGroupFunc read FLib3MFModel_AddMultiPropertyGroupFunc;
 		property Lib3MFModel_AddBuildItemFunc: TLib3MFModel_AddBuildItemFunc read FLib3MFModel_AddBuildItemFunc;
 		property Lib3MFModel_RemoveBuildItemFunc: TLib3MFModel_RemoveBuildItemFunc read FLib3MFModel_RemoveBuildItemFunc;
+		property Lib3MFModel_AddToolpathFunc: TLib3MFModel_AddToolpathFunc read FLib3MFModel_AddToolpathFunc;
 		property Lib3MFModel_GetMetaDataGroupFunc: TLib3MFModel_GetMetaDataGroupFunc read FLib3MFModel_GetMetaDataGroupFunc;
 		property Lib3MFModel_AddAttachmentFunc: TLib3MFModel_AddAttachmentFunc read FLib3MFModel_AddAttachmentFunc;
 		property Lib3MFModel_RemoveAttachmentFunc: TLib3MFModel_RemoveAttachmentFunc read FLib3MFModel_RemoveAttachmentFunc;
@@ -5715,6 +6309,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 	function convertConstToProgressIdentifier(const AValue: Integer): TLib3MFProgressIdentifier;
 	function convertBlendMethodToConst(const AValue: TLib3MFBlendMethod): Integer;
 	function convertConstToBlendMethod(const AValue: Integer): TLib3MFBlendMethod;
+	function convertToolpathSegmentTypeToConst(const AValue: TLib3MFToolpathSegmentType): Integer;
+	function convertConstToToolpathSegmentType(const AValue: Integer): TLib3MFToolpathSegmentType;
 	function convertEncryptionAlgorithmToConst(const AValue: TLib3MFEncryptionAlgorithm): Integer;
 	function convertConstToEncryptionAlgorithm(const AValue: Integer): TLib3MFEncryptionAlgorithm;
 	function convertWrappingAlgorithmToConst(const AValue: TLib3MFWrappingAlgorithm): Integer;
@@ -6065,6 +6661,31 @@ implementation
 	end;
 	
 	
+	function convertToolpathSegmentTypeToConst(const AValue: TLib3MFToolpathSegmentType): Integer;
+	begin
+		case AValue of
+			eToolpathSegmentTypeUnknown: Result := 0;
+			eToolpathSegmentTypeHatch: Result := 1;
+			eToolpathSegmentTypeLoop: Result := 2;
+			eToolpathSegmentTypePolyline: Result := 3;
+			else 
+				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum value');
+		end;
+	end;
+	
+	function convertConstToToolpathSegmentType(const AValue: Integer): TLib3MFToolpathSegmentType;
+	begin
+		case AValue of
+			0: Result := eToolpathSegmentTypeUnknown;
+			1: Result := eToolpathSegmentTypeHatch;
+			2: Result := eToolpathSegmentTypeLoop;
+			3: Result := eToolpathSegmentTypePolyline;
+			else 
+				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum constant');
+		end;
+	end;
+	
+	
 	function convertEncryptionAlgorithmToConst(const AValue: TLib3MFEncryptionAlgorithm): Integer;
 	begin
 		case AValue of
@@ -6225,6 +6846,10 @@ implementation
 			LIB3MF_ERROR_KEYSTORECONSUMERNOTFOUND: ADescription := 'A consumer has not been found';
 			LIB3MF_ERROR_KEYSTORERESOURCEDATANOTFOUND: ADescription := 'A resource data has not been found';
 			LIB3MF_ERROR_SECURECONTEXTNOTREGISTERED: ADescription := 'A Key or Conentent encryption callback has not been registered';
+			LIB3MF_ERROR_TOOLPATH_NOTWRITINGHEADER: ADescription := 'Not in toolpath header writing mode';
+			LIB3MF_ERROR_TOOLPATH_NOTWRITINGDATA: ADescription := 'Not in toolpath data writing mode';
+			LIB3MF_ERROR_TOOLPATH_DATAHASBEENWRITTEN: ADescription := 'Toolpath has already been written out';
+			LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOUNT: ADescription := 'Toolpath has an invalid number of points';
 			else
 				ADescription := 'unknown';
 		end;
@@ -8691,6 +9316,433 @@ implementation
 	end;
 
 (*************************************************************************************************************************
+ Class implementation for ToolpathProfile
+**************************************************************************************************************************)
+
+	constructor TLib3MFToolpathProfile.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFToolpathProfile.Destroy;
+	begin
+		inherited;
+	end;
+
+	function TLib3MFToolpathProfile.GetUUID(): String;
+	var
+		bytesNeededUUID: Cardinal;
+		bytesWrittenUUID: Cardinal;
+		bufferUUID: array of Char;
+	begin
+		bytesNeededUUID:= 0;
+		bytesWrittenUUID:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathProfile_GetUUIDFunc(FHandle, 0, bytesNeededUUID, nil));
+		SetLength(bufferUUID, bytesNeededUUID);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathProfile_GetUUIDFunc(FHandle, bytesNeededUUID, bytesWrittenUUID, @bufferUUID[0]));
+		Result := StrPas(@bufferUUID[0]);
+	end;
+
+	function TLib3MFToolpathProfile.GetName(): String;
+	var
+		bytesNeededName: Cardinal;
+		bytesWrittenName: Cardinal;
+		bufferName: array of Char;
+	begin
+		bytesNeededName:= 0;
+		bytesWrittenName:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathProfile_GetNameFunc(FHandle, 0, bytesNeededName, nil));
+		SetLength(bufferName, bytesNeededName);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathProfile_GetNameFunc(FHandle, bytesNeededName, bytesWrittenName, @bufferName[0]));
+		Result := StrPas(@bufferName[0]);
+	end;
+
+	function TLib3MFToolpathProfile.HasParameterValue(const ANameSpaceName: String; const AValueName: String): Boolean;
+	var
+		ResultValueExists: Byte;
+	begin
+		ResultValueExists := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathProfile_HasParameterValueFunc(FHandle, PAnsiChar(ANameSpaceName), PAnsiChar(AValueName), ResultValueExists));
+		Result := (ResultValueExists <> 0);
+	end;
+
+	function TLib3MFToolpathProfile.GetParameterDoubleValue(const ANameSpaceName: String; const AValueName: String): Double;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathProfile_GetParameterDoubleValueFunc(FHandle, PAnsiChar(ANameSpaceName), PAnsiChar(AValueName), Result));
+	end;
+
+	function TLib3MFToolpathProfile.GetParameterDoubleValueDef(const ANameSpaceName: String; const AValueName: String; const ADefaultValue: Double): Double;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathProfile_GetParameterDoubleValueDefFunc(FHandle, PAnsiChar(ANameSpaceName), PAnsiChar(AValueName), ADefaultValue, Result));
+	end;
+
+	procedure TLib3MFToolpathProfile.SetName(const AName: String);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathProfile_SetNameFunc(FHandle, PAnsiChar(AName)));
+	end;
+
+	procedure TLib3MFToolpathProfile.SetParameterDoubleValue(const ANameSpaceName: String; const AValueName: String; const AValue: Double);
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathProfile_SetParameterDoubleValueFunc(FHandle, PAnsiChar(ANameSpaceName), PAnsiChar(AValueName), AValue));
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for ToolpathLayerReader
+**************************************************************************************************************************)
+
+	constructor TLib3MFToolpathLayerReader.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFToolpathLayerReader.Destroy;
+	begin
+		inherited;
+	end;
+
+	function TLib3MFToolpathLayerReader.GetLayerDataUUID(): String;
+	var
+		bytesNeededUUID: Cardinal;
+		bytesWrittenUUID: Cardinal;
+		bufferUUID: array of Char;
+	begin
+		bytesNeededUUID:= 0;
+		bytesWrittenUUID:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetLayerDataUUIDFunc(FHandle, 0, bytesNeededUUID, nil));
+		SetLength(bufferUUID, bytesNeededUUID);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetLayerDataUUIDFunc(FHandle, bytesNeededUUID, bytesWrittenUUID, @bufferUUID[0]));
+		Result := StrPas(@bufferUUID[0]);
+	end;
+
+	function TLib3MFToolpathLayerReader.GetSegmentCount(): Cardinal;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentCountFunc(FHandle, Result));
+	end;
+
+	procedure TLib3MFToolpathLayerReader.GetSegmentInfo(const AIndex: Cardinal; out AType: TLib3MFToolpathSegmentType; out APointCount: Cardinal);
+	var
+		ResultType: Integer;
+	begin
+		ResultType := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentInfoFunc(FHandle, AIndex, ResultType, APointCount));
+		AType := convertConstToToolpathSegmentType(ResultType);
+	end;
+
+	function TLib3MFToolpathLayerReader.GetSegmentProfile(const AIndex: Cardinal): TLib3MFToolpathProfile;
+	var
+		HProfile: TLib3MFHandle;
+	begin
+		Result := nil;
+		HProfile := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentProfileFunc(FHandle, AIndex, HProfile));
+		if Assigned(HProfile) then
+			Result := TLib3MFToolpathProfile.Create(FWrapper, HProfile);
+	end;
+
+	function TLib3MFToolpathLayerReader.GetSegmentProfileUUID(const AIndex: Cardinal): String;
+	var
+		bytesNeededProfileUUID: Cardinal;
+		bytesWrittenProfileUUID: Cardinal;
+		bufferProfileUUID: array of Char;
+	begin
+		bytesNeededProfileUUID:= 0;
+		bytesWrittenProfileUUID:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentProfileUUIDFunc(FHandle, AIndex, 0, bytesNeededProfileUUID, nil));
+		SetLength(bufferProfileUUID, bytesNeededProfileUUID);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentProfileUUIDFunc(FHandle, AIndex, bytesNeededProfileUUID, bytesWrittenProfileUUID, @bufferProfileUUID[0]));
+		Result := StrPas(@bufferProfileUUID[0]);
+	end;
+
+	function TLib3MFToolpathLayerReader.GetSegmentPart(const AIndex: Cardinal): TLib3MFBuildItem;
+	var
+		HBuildItem: TLib3MFHandle;
+	begin
+		Result := nil;
+		HBuildItem := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentPartFunc(FHandle, AIndex, HBuildItem));
+		if Assigned(HBuildItem) then
+			Result := TLib3MFBuildItem.Create(FWrapper, HBuildItem);
+	end;
+
+	function TLib3MFToolpathLayerReader.GetSegmentPartUUID(const AIndex: Cardinal): String;
+	var
+		bytesNeededPartUUID: Cardinal;
+		bytesWrittenPartUUID: Cardinal;
+		bufferPartUUID: array of Char;
+	begin
+		bytesNeededPartUUID:= 0;
+		bytesWrittenPartUUID:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentPartUUIDFunc(FHandle, AIndex, 0, bytesNeededPartUUID, nil));
+		SetLength(bufferPartUUID, bytesNeededPartUUID);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentPartUUIDFunc(FHandle, AIndex, bytesNeededPartUUID, bytesWrittenPartUUID, @bufferPartUUID[0]));
+		Result := StrPas(@bufferPartUUID[0]);
+	end;
+
+	procedure TLib3MFToolpathLayerReader.GetSegmentPointData(const AIndex: Cardinal; out APointData: ArrayOfLib3MFPosition2D);
+	var
+		countNeededPointData: QWord;
+		countWrittenPointData: QWord;
+	begin
+		countNeededPointData:= 0;
+		countWrittenPointData:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentPointDataFunc(FHandle, AIndex, 0, countNeededPointData, nil));
+		SetLength(APointData, countNeededPointData);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerReader_GetSegmentPointDataFunc(FHandle, AIndex, countNeededPointData, countWrittenPointData, @APointData[0]));
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for ToolpathLayerData
+**************************************************************************************************************************)
+
+	constructor TLib3MFToolpathLayerData.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFToolpathLayerData.Destroy;
+	begin
+		inherited;
+	end;
+
+	function TLib3MFToolpathLayerData.GetLayerDataUUID(): String;
+	var
+		bytesNeededUUID: Cardinal;
+		bytesWrittenUUID: Cardinal;
+		bufferUUID: array of Char;
+	begin
+		bytesNeededUUID:= 0;
+		bytesWrittenUUID:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerData_GetLayerDataUUIDFunc(FHandle, 0, bytesNeededUUID, nil));
+		SetLength(bufferUUID, bytesNeededUUID);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerData_GetLayerDataUUIDFunc(FHandle, bytesNeededUUID, bytesWrittenUUID, @bufferUUID[0]));
+		Result := StrPas(@bufferUUID[0]);
+	end;
+
+	function TLib3MFToolpathLayerData.RegisterProfile(const AProfile: TLib3MFToolpathProfile): Cardinal;
+	var
+		AProfileHandle: TLib3MFHandle;
+	begin
+		if Assigned(AProfile) then
+		AProfileHandle := AProfile.TheHandle
+		else
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'AProfile is a nil value.');
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerData_RegisterProfileFunc(FHandle, AProfileHandle, Result));
+	end;
+
+	function TLib3MFToolpathLayerData.RegisterBuildItem(const ABuildItem: TLib3MFBuildItem): Cardinal;
+	var
+		ABuildItemHandle: TLib3MFHandle;
+	begin
+		if Assigned(ABuildItem) then
+		ABuildItemHandle := ABuildItem.TheHandle
+		else
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'ABuildItem is a nil value.');
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerData_RegisterBuildItemFunc(FHandle, ABuildItemHandle, Result));
+	end;
+
+	procedure TLib3MFToolpathLayerData.WriteHatchData(const AProfileID: Cardinal; const APartID: Cardinal; const APointData: ArrayOfLib3MFPosition2D);
+	var
+		PtrPointData: PLib3MFPosition2D;
+		LenPointData: QWord;
+	begin
+		LenPointData := Length(APointData);
+		if LenPointData > $FFFFFFFF then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'array has too many entries.');
+		if LenPointData > 0 then
+			PtrPointData := @APointData[0]
+		else
+			PtrPointData := nil;
+		
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerData_WriteHatchDataFunc(FHandle, AProfileID, APartID, QWord(LenPointData), PtrPointData));
+	end;
+
+	procedure TLib3MFToolpathLayerData.WriteLoop(const AProfileID: Cardinal; const APartID: Cardinal; const APointData: ArrayOfLib3MFPosition2D);
+	var
+		PtrPointData: PLib3MFPosition2D;
+		LenPointData: QWord;
+	begin
+		LenPointData := Length(APointData);
+		if LenPointData > $FFFFFFFF then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'array has too many entries.');
+		if LenPointData > 0 then
+			PtrPointData := @APointData[0]
+		else
+			PtrPointData := nil;
+		
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerData_WriteLoopFunc(FHandle, AProfileID, APartID, QWord(LenPointData), PtrPointData));
+	end;
+
+	procedure TLib3MFToolpathLayerData.WritePolyline(const AProfileID: Cardinal; const APartID: Cardinal; const APointData: ArrayOfLib3MFPosition2D);
+	var
+		PtrPointData: PLib3MFPosition2D;
+		LenPointData: QWord;
+	begin
+		LenPointData := Length(APointData);
+		if LenPointData > $FFFFFFFF then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'array has too many entries.');
+		if LenPointData > 0 then
+			PtrPointData := @APointData[0]
+		else
+			PtrPointData := nil;
+		
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerData_WritePolylineFunc(FHandle, AProfileID, APartID, QWord(LenPointData), PtrPointData));
+	end;
+
+	procedure TLib3MFToolpathLayerData.Finish();
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathLayerData_FinishFunc(FHandle));
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for Toolpath
+**************************************************************************************************************************)
+
+	constructor TLib3MFToolpath.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFToolpath.Destroy;
+	begin
+		inherited;
+	end;
+
+	function TLib3MFToolpath.GetUnits(): Double;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpath_GetUnitsFunc(FHandle, Result));
+	end;
+
+	function TLib3MFToolpath.GetLayerCount(): Cardinal;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpath_GetLayerCountFunc(FHandle, Result));
+	end;
+
+	function TLib3MFToolpath.GetProfileCount(): Cardinal;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpath_GetProfileCountFunc(FHandle, Result));
+	end;
+
+	function TLib3MFToolpath.AddLayer(const AZMax: Cardinal; const APath: String; const AModelWriter: TLib3MFWriter): TLib3MFToolpathLayerData;
+	var
+		AModelWriterHandle: TLib3MFHandle;
+		HLayerData: TLib3MFHandle;
+	begin
+		if Assigned(AModelWriter) then
+		AModelWriterHandle := AModelWriter.TheHandle
+		else
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'AModelWriter is a nil value.');
+		Result := nil;
+		HLayerData := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpath_AddLayerFunc(FHandle, AZMax, PAnsiChar(APath), AModelWriterHandle, HLayerData));
+		if Assigned(HLayerData) then
+			Result := TLib3MFToolpathLayerData.Create(FWrapper, HLayerData);
+	end;
+
+	function TLib3MFToolpath.GetLayerAttachment(const AIndex: Cardinal): TLib3MFAttachment;
+	var
+		HAttachment: TLib3MFHandle;
+	begin
+		Result := nil;
+		HAttachment := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpath_GetLayerAttachmentFunc(FHandle, AIndex, HAttachment));
+		if Assigned(HAttachment) then
+			Result := TLib3MFAttachment.Create(FWrapper, HAttachment);
+	end;
+
+	function TLib3MFToolpath.ReadLayerData(const AIndex: Cardinal): TLib3MFToolpathLayerReader;
+	var
+		HToolpathReader: TLib3MFHandle;
+	begin
+		Result := nil;
+		HToolpathReader := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpath_ReadLayerDataFunc(FHandle, AIndex, HToolpathReader));
+		if Assigned(HToolpathReader) then
+			Result := TLib3MFToolpathLayerReader.Create(FWrapper, HToolpathReader);
+	end;
+
+	function TLib3MFToolpath.GetLayerPath(const AIndex: Cardinal): String;
+	var
+		bytesNeededPath: Cardinal;
+		bytesWrittenPath: Cardinal;
+		bufferPath: array of Char;
+	begin
+		bytesNeededPath:= 0;
+		bytesWrittenPath:= 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpath_GetLayerPathFunc(FHandle, AIndex, 0, bytesNeededPath, nil));
+		SetLength(bufferPath, bytesNeededPath);
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpath_GetLayerPathFunc(FHandle, AIndex, bytesNeededPath, bytesWrittenPath, @bufferPath[0]));
+		Result := StrPas(@bufferPath[0]);
+	end;
+
+	function TLib3MFToolpath.GetLayerZMax(const AIndex: Cardinal): Cardinal;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpath_GetLayerZMaxFunc(FHandle, AIndex, Result));
+	end;
+
+	function TLib3MFToolpath.GetLayerZ(const ALayerIndex: Cardinal): Cardinal;
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpath_GetLayerZFunc(FHandle, ALayerIndex, Result));
+	end;
+
+	function TLib3MFToolpath.AddProfile(const AName: String): TLib3MFToolpathProfile;
+	var
+		HProfile: TLib3MFHandle;
+	begin
+		Result := nil;
+		HProfile := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpath_AddProfileFunc(FHandle, PAnsiChar(AName), HProfile));
+		if Assigned(HProfile) then
+			Result := TLib3MFToolpathProfile.Create(FWrapper, HProfile);
+	end;
+
+	function TLib3MFToolpath.GetProfile(const AProfileIndex: Cardinal): TLib3MFToolpathProfile;
+	var
+		HProfile: TLib3MFHandle;
+	begin
+		Result := nil;
+		HProfile := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpath_GetProfileFunc(FHandle, AProfileIndex, HProfile));
+		if Assigned(HProfile) then
+			Result := TLib3MFToolpathProfile.Create(FWrapper, HProfile);
+	end;
+
+	function TLib3MFToolpath.GetProfileUUID(const AProfileUUID: String): TLib3MFToolpathProfile;
+	var
+		HProfile: TLib3MFHandle;
+	begin
+		Result := nil;
+		HProfile := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpath_GetProfileUUIDFunc(FHandle, PAnsiChar(AProfileUUID), HProfile));
+		if Assigned(HProfile) then
+			Result := TLib3MFToolpathProfile.Create(FWrapper, HProfile);
+	end;
+
+(*************************************************************************************************************************
+ Class implementation for ToolpathIterator
+**************************************************************************************************************************)
+
+	constructor TLib3MFToolpathIterator.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFToolpathIterator.Destroy;
+	begin
+		inherited;
+	end;
+
+	function TLib3MFToolpathIterator.GetCurrentToolpath(): TLib3MFToolpath;
+	var
+		HResource: TLib3MFHandle;
+	begin
+		Result := nil;
+		HResource := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFToolpathIterator_GetCurrentToolpathFunc(FHandle, HResource));
+		if Assigned(HResource) then
+			Result := TLib3MFToolpath.Create(FWrapper, HResource);
+	end;
+
+(*************************************************************************************************************************
  Class implementation for SliceStack
 **************************************************************************************************************************)
 
@@ -9687,6 +10739,17 @@ implementation
 			Result := TLib3MFMultiPropertyGroupIterator.Create(FWrapper, HResourceIterator);
 	end;
 
+	function TLib3MFModel.GetToolpaths(): TLib3MFToolpathIterator;
+	var
+		HResourceIterator: TLib3MFHandle;
+	begin
+		Result := nil;
+		HResourceIterator := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFModel_GetToolpathsFunc(FHandle, HResourceIterator));
+		if Assigned(HResourceIterator) then
+			Result := TLib3MFToolpathIterator.Create(FWrapper, HResourceIterator);
+	end;
+
 	function TLib3MFModel.GetSliceStacks(): TLib3MFSliceStackIterator;
 	var
 		HResourceIterator: TLib3MFHandle;
@@ -9848,6 +10911,17 @@ implementation
 		else
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'ABuildItemInstance is a nil value.');
 		FWrapper.CheckError(Self, FWrapper.Lib3MFModel_RemoveBuildItemFunc(FHandle, ABuildItemInstanceHandle));
+	end;
+
+	function TLib3MFModel.AddToolpath(const AUnitFactor: Double): TLib3MFToolpath;
+	var
+		HToolpathInstance: TLib3MFHandle;
+	begin
+		Result := nil;
+		HToolpathInstance := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFModel_AddToolpathFunc(FHandle, AUnitFactor, HToolpathInstance));
+		if Assigned(HToolpathInstance) then
+			Result := TLib3MFToolpath.Create(FWrapper, HToolpathInstance);
 	end;
 
 	function TLib3MFModel.GetMetaDataGroup(): TLib3MFMetaDataGroup;
@@ -10225,6 +11299,41 @@ implementation
 		FLib3MFSlice_GetPolygonIndicesFunc := LoadFunction('lib3mf_slice_getpolygonindices');
 		FLib3MFSlice_GetPolygonIndexCountFunc := LoadFunction('lib3mf_slice_getpolygonindexcount');
 		FLib3MFSlice_GetZTopFunc := LoadFunction('lib3mf_slice_getztop');
+		FLib3MFToolpathProfile_GetUUIDFunc := LoadFunction('lib3mf_toolpathprofile_getuuid');
+		FLib3MFToolpathProfile_GetNameFunc := LoadFunction('lib3mf_toolpathprofile_getname');
+		FLib3MFToolpathProfile_HasParameterValueFunc := LoadFunction('lib3mf_toolpathprofile_hasparametervalue');
+		FLib3MFToolpathProfile_GetParameterDoubleValueFunc := LoadFunction('lib3mf_toolpathprofile_getparameterdoublevalue');
+		FLib3MFToolpathProfile_GetParameterDoubleValueDefFunc := LoadFunction('lib3mf_toolpathprofile_getparameterdoublevaluedef');
+		FLib3MFToolpathProfile_SetNameFunc := LoadFunction('lib3mf_toolpathprofile_setname');
+		FLib3MFToolpathProfile_SetParameterDoubleValueFunc := LoadFunction('lib3mf_toolpathprofile_setparameterdoublevalue');
+		FLib3MFToolpathLayerReader_GetLayerDataUUIDFunc := LoadFunction('lib3mf_toolpathlayerreader_getlayerdatauuid');
+		FLib3MFToolpathLayerReader_GetSegmentCountFunc := LoadFunction('lib3mf_toolpathlayerreader_getsegmentcount');
+		FLib3MFToolpathLayerReader_GetSegmentInfoFunc := LoadFunction('lib3mf_toolpathlayerreader_getsegmentinfo');
+		FLib3MFToolpathLayerReader_GetSegmentProfileFunc := LoadFunction('lib3mf_toolpathlayerreader_getsegmentprofile');
+		FLib3MFToolpathLayerReader_GetSegmentProfileUUIDFunc := LoadFunction('lib3mf_toolpathlayerreader_getsegmentprofileuuid');
+		FLib3MFToolpathLayerReader_GetSegmentPartFunc := LoadFunction('lib3mf_toolpathlayerreader_getsegmentpart');
+		FLib3MFToolpathLayerReader_GetSegmentPartUUIDFunc := LoadFunction('lib3mf_toolpathlayerreader_getsegmentpartuuid');
+		FLib3MFToolpathLayerReader_GetSegmentPointDataFunc := LoadFunction('lib3mf_toolpathlayerreader_getsegmentpointdata');
+		FLib3MFToolpathLayerData_GetLayerDataUUIDFunc := LoadFunction('lib3mf_toolpathlayerdata_getlayerdatauuid');
+		FLib3MFToolpathLayerData_RegisterProfileFunc := LoadFunction('lib3mf_toolpathlayerdata_registerprofile');
+		FLib3MFToolpathLayerData_RegisterBuildItemFunc := LoadFunction('lib3mf_toolpathlayerdata_registerbuilditem');
+		FLib3MFToolpathLayerData_WriteHatchDataFunc := LoadFunction('lib3mf_toolpathlayerdata_writehatchdata');
+		FLib3MFToolpathLayerData_WriteLoopFunc := LoadFunction('lib3mf_toolpathlayerdata_writeloop');
+		FLib3MFToolpathLayerData_WritePolylineFunc := LoadFunction('lib3mf_toolpathlayerdata_writepolyline');
+		FLib3MFToolpathLayerData_FinishFunc := LoadFunction('lib3mf_toolpathlayerdata_finish');
+		FLib3MFToolpath_GetUnitsFunc := LoadFunction('lib3mf_toolpath_getunits');
+		FLib3MFToolpath_GetLayerCountFunc := LoadFunction('lib3mf_toolpath_getlayercount');
+		FLib3MFToolpath_GetProfileCountFunc := LoadFunction('lib3mf_toolpath_getprofilecount');
+		FLib3MFToolpath_AddLayerFunc := LoadFunction('lib3mf_toolpath_addlayer');
+		FLib3MFToolpath_GetLayerAttachmentFunc := LoadFunction('lib3mf_toolpath_getlayerattachment');
+		FLib3MFToolpath_ReadLayerDataFunc := LoadFunction('lib3mf_toolpath_readlayerdata');
+		FLib3MFToolpath_GetLayerPathFunc := LoadFunction('lib3mf_toolpath_getlayerpath');
+		FLib3MFToolpath_GetLayerZMaxFunc := LoadFunction('lib3mf_toolpath_getlayerzmax');
+		FLib3MFToolpath_GetLayerZFunc := LoadFunction('lib3mf_toolpath_getlayerz');
+		FLib3MFToolpath_AddProfileFunc := LoadFunction('lib3mf_toolpath_addprofile');
+		FLib3MFToolpath_GetProfileFunc := LoadFunction('lib3mf_toolpath_getprofile');
+		FLib3MFToolpath_GetProfileUUIDFunc := LoadFunction('lib3mf_toolpath_getprofileuuid');
+		FLib3MFToolpathIterator_GetCurrentToolpathFunc := LoadFunction('lib3mf_toolpathiterator_getcurrenttoolpath');
 		FLib3MFSliceStack_GetBottomZFunc := LoadFunction('lib3mf_slicestack_getbottomz');
 		FLib3MFSliceStack_GetSliceCountFunc := LoadFunction('lib3mf_slicestack_getslicecount');
 		FLib3MFSliceStack_GetSliceFunc := LoadFunction('lib3mf_slicestack_getslice');
@@ -10307,6 +11416,7 @@ implementation
 		FLib3MFModel_GetTexture2DGroupsFunc := LoadFunction('lib3mf_model_gettexture2dgroups');
 		FLib3MFModel_GetCompositeMaterialsFunc := LoadFunction('lib3mf_model_getcompositematerials');
 		FLib3MFModel_GetMultiPropertyGroupsFunc := LoadFunction('lib3mf_model_getmultipropertygroups');
+		FLib3MFModel_GetToolpathsFunc := LoadFunction('lib3mf_model_gettoolpaths');
 		FLib3MFModel_GetSliceStacksFunc := LoadFunction('lib3mf_model_getslicestacks');
 		FLib3MFModel_MergeToModelFunc := LoadFunction('lib3mf_model_mergetomodel');
 		FLib3MFModel_AddMeshObjectFunc := LoadFunction('lib3mf_model_addmeshobject');
@@ -10320,6 +11430,7 @@ implementation
 		FLib3MFModel_AddMultiPropertyGroupFunc := LoadFunction('lib3mf_model_addmultipropertygroup');
 		FLib3MFModel_AddBuildItemFunc := LoadFunction('lib3mf_model_addbuilditem');
 		FLib3MFModel_RemoveBuildItemFunc := LoadFunction('lib3mf_model_removebuilditem');
+		FLib3MFModel_AddToolpathFunc := LoadFunction('lib3mf_model_addtoolpath');
 		FLib3MFModel_GetMetaDataGroupFunc := LoadFunction('lib3mf_model_getmetadatagroup');
 		FLib3MFModel_AddAttachmentFunc := LoadFunction('lib3mf_model_addattachment');
 		FLib3MFModel_RemoveAttachmentFunc := LoadFunction('lib3mf_model_removeattachment');
@@ -11051,6 +12162,111 @@ implementation
 		AResult := ALookupMethod(PAnsiChar('lib3mf_slice_getztop'), @FLib3MFSlice_GetZTopFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathprofile_getuuid'), @FLib3MFToolpathProfile_GetUUIDFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathprofile_getname'), @FLib3MFToolpathProfile_GetNameFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathprofile_hasparametervalue'), @FLib3MFToolpathProfile_HasParameterValueFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathprofile_getparameterdoublevalue'), @FLib3MFToolpathProfile_GetParameterDoubleValueFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathprofile_getparameterdoublevaluedef'), @FLib3MFToolpathProfile_GetParameterDoubleValueDefFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathprofile_setname'), @FLib3MFToolpathProfile_SetNameFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathprofile_setparameterdoublevalue'), @FLib3MFToolpathProfile_SetParameterDoubleValueFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getlayerdatauuid'), @FLib3MFToolpathLayerReader_GetLayerDataUUIDFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getsegmentcount'), @FLib3MFToolpathLayerReader_GetSegmentCountFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getsegmentinfo'), @FLib3MFToolpathLayerReader_GetSegmentInfoFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getsegmentprofile'), @FLib3MFToolpathLayerReader_GetSegmentProfileFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getsegmentprofileuuid'), @FLib3MFToolpathLayerReader_GetSegmentProfileUUIDFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getsegmentpart'), @FLib3MFToolpathLayerReader_GetSegmentPartFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getsegmentpartuuid'), @FLib3MFToolpathLayerReader_GetSegmentPartUUIDFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerreader_getsegmentpointdata'), @FLib3MFToolpathLayerReader_GetSegmentPointDataFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerdata_getlayerdatauuid'), @FLib3MFToolpathLayerData_GetLayerDataUUIDFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerdata_registerprofile'), @FLib3MFToolpathLayerData_RegisterProfileFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerdata_registerbuilditem'), @FLib3MFToolpathLayerData_RegisterBuildItemFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerdata_writehatchdata'), @FLib3MFToolpathLayerData_WriteHatchDataFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerdata_writeloop'), @FLib3MFToolpathLayerData_WriteLoopFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerdata_writepolyline'), @FLib3MFToolpathLayerData_WritePolylineFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathlayerdata_finish'), @FLib3MFToolpathLayerData_FinishFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpath_getunits'), @FLib3MFToolpath_GetUnitsFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpath_getlayercount'), @FLib3MFToolpath_GetLayerCountFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpath_getprofilecount'), @FLib3MFToolpath_GetProfileCountFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpath_addlayer'), @FLib3MFToolpath_AddLayerFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpath_getlayerattachment'), @FLib3MFToolpath_GetLayerAttachmentFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpath_readlayerdata'), @FLib3MFToolpath_ReadLayerDataFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpath_getlayerpath'), @FLib3MFToolpath_GetLayerPathFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpath_getlayerzmax'), @FLib3MFToolpath_GetLayerZMaxFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpath_getlayerz'), @FLib3MFToolpath_GetLayerZFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpath_addprofile'), @FLib3MFToolpath_AddProfileFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpath_getprofile'), @FLib3MFToolpath_GetProfileFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpath_getprofileuuid'), @FLib3MFToolpath_GetProfileUUIDFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_toolpathiterator_getcurrenttoolpath'), @FLib3MFToolpathIterator_GetCurrentToolpathFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_slicestack_getbottomz'), @FLib3MFSliceStack_GetBottomZFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
@@ -11297,6 +12513,9 @@ implementation
 		AResult := ALookupMethod(PAnsiChar('lib3mf_model_getmultipropertygroups'), @FLib3MFModel_GetMultiPropertyGroupsFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_model_gettoolpaths'), @FLib3MFModel_GetToolpathsFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_model_getslicestacks'), @FLib3MFModel_GetSliceStacksFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
@@ -11334,6 +12553,9 @@ implementation
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_model_removebuilditem'), @FLib3MFModel_RemoveBuildItemFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_model_addtoolpath'), @FLib3MFModel_AddToolpathFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_model_getmetadatagroup'), @FLib3MFModel_GetMetaDataGroupFunc);

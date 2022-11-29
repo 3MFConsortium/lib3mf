@@ -128,6 +128,10 @@ namespace NMR {
 		case NMR_ERROR_ZIPCONTAINSINCONSISTENCIES: return "ZIP file contains inconsistencies. It might load with errors or incorrectly.";
 		case NMR_ERROR_XMLNAMESPACEALREADYREGISTERED: return "An XML namespace is already registered.";
 		case NMR_ERROR_XMLPREFIXALREADYREGISTERED: return "An XML prefix is already registered.";
+		case NMR_ERROR_COULDNOTINITINFLATE: return "Failed to initialize a zlib buffer";
+		case NMR_ERROR_COULDNOTINFLATE: return "Failed to decompress part";
+		case NMR_ERROR_COULDNOTINITDEFLATE: return "Failed to initialize a zlib buffer";
+		case NMR_ERROR_DUPLICATEVALUE: return "Duplicate value";
 
 
 		// Unhandled exception
@@ -430,6 +434,24 @@ namespace NMR {
 		case NMR_ERROR_KEYSTOREOPCCOULDNOTGETSTREAM: return "Could not get KeyStore stream";
 		case NMR_ERROR_KEYSTOREUNSUPPORTEDALGORITHM: return "The algorithm attribute is unsupported";
 		case NMR_ERROR_KEYSTORETOOMANYELEMENTS: return "Too many elements added to a keystore tree";
+		case NMR_ERROR_INVALIDMESHBINARYPATH: return "Invalid Mesh Binary Path";
+		case NMR_ERROR_DUPLICATEMESHBINARYPATH: return "Duplicate Mesh Binary Path";
+		case NMR_ERROR_INVALIDBINARYELEMENTID: return "Invalid XML attribute in namespace";
+		case NMR_ERROR_NOBINARYSTREAMAVAILABLE: return "No Binary stream available";
+		case NMR_ERROR_INCONSISTENTBINARYSTREAMCOUNT: return "Inconsistent binary stream count";
+		case NMR_ERROR_MISSINGUNITFACTOR: return "Missing Unit Factor";
+		case NMR_ERROR_MISSINGNAME: return "Missing Name";
+		case NMR_ERROR_MISSINGLASERPOWER: return "Missing Laser Power";
+		case NMR_ERROR_MISSINGLASERSPEED: return "Missing Laser Speed";
+		case NMR_ERROR_MISSINGLASERFOCUS: return "Missing Laser Focus";
+		case NMR_ERROR_MISSINGPATH: return "Missing Path";
+		case NMR_ERROR_MISSINGZTOP: return "Missing ZTop";
+		case NMR_ERROR_DUPLICATEID: return "Duplicate ID";
+		case NMR_ERROR_MISSINGID: return "Missing ID";
+		case NMR_ERROR_DUPLICATETYPEATTRIBUTE: return "Duplicate Type Attribute";
+		case NMR_ERROR_INVALIDTYPEATTRIBUTE: return "Invalid Type Attribute";
+		case NMR_ERROR_MISSINGTYPEATTRIBUTE: return "Missing Type Attribute";
+		case NMR_ERROR_MISSINGCOORDINATE: return "Missing Coordinate";
 
 		// XML Parser Error Constants(0x9XXX)
 		case NMR_ERROR_XMLPARSER_INVALIDATTRIBVALUE: return "Invalid XML attribute value";
@@ -468,6 +490,15 @@ namespace NMR {
 		case NMR_ERROR_KEKDESCRIPTORNOTFOUND: return "Required key encryption client was not registered for a consumer";
 		case NMR_ERROR_DEKDESCRIPTORNOTFOUND: return "Required data encryption client was not registered";
 		case NMR_ERROR_RNGCALLBACKNOTCRYPTOSTRONG: return "Using cryptographically weak random number generator";
+
+		// Toolpath errors (0xBXXX)
+		case NMR_ERROR_TOOLPATH_NOTWRITINGHEADER: return "Not in toolpath header writing mode";
+		case NMR_ERROR_TOOLPATH_NOTWRITINGDATA: return "Not in toolpath data writing mode";
+		case NMR_ERROR_TOOLPATH_DATAHASBEENWRITTEN: return "Toolpath has already been written out";
+		case NMR_ERROR_TOOLPATH_INVALIDPOINTCOUNT: return "Toolpath has an invalid number of points";
+		case NMR_ERROR_LAYERSEGMENTNOTOPEN: return "Layer segment is not open";
+		case NMR_ERROR_LAYERSEGMENTALREADYOPEN: return "Layer segment is already open";
+		case NMR_ERROR_PROFILEVALUENOTFOUND: return "Profile valuenot found";
 
 		default:
 			return "unknown error";

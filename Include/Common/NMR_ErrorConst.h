@@ -299,6 +299,9 @@ NMR_ErrorConst.h defines all error code constants.
 // Failed to initialize a zlib buffer
 #define NMR_ERROR_COULDNOTINITDEFLATE 0x1052
 
+// Duplicate value
+#define NMR_ERROR_DUPLICATEVALUE 0x1053
+
 /*-------------------------------------------------------------------
 Core framework error codes (0x2XXX)
 -------------------------------------------------------------------*/
@@ -1219,6 +1222,59 @@ Model error codes (0x8XXX)
 // A beamset identifier is not unique
 #define NMR_ERROR_BEAMSET_IDENTIFIER_NOT_UNIQUE 0x810B
 
+// Invalid Mesh Binary Path
+#define NMR_ERROR_INVALIDMESHBINARYPATH 0x810C
+
+// Duplicate Mesh Binary Path
+#define NMR_ERROR_DUPLICATEMESHBINARYPATH 0x810D
+
+// Invalid XML attribute in namespace
+#define NMR_ERROR_INVALIDBINARYELEMENTID 0x810E
+
+// No Binary stream available
+#define NMR_ERROR_NOBINARYSTREAMAVAILABLE 0x810F
+
+// Inconsistent binary stream count
+#define NMR_ERROR_INCONSISTENTBINARYSTREAMCOUNT 0x8110
+
+// Missing Unit Factor
+#define NMR_ERROR_MISSINGUNITFACTOR 0x8111
+
+// Missing Name
+#define NMR_ERROR_MISSINGNAME 0x8112
+
+// Missing Laser Power
+#define NMR_ERROR_MISSINGLASERPOWER 0x8113
+
+// Missing Laser Speed
+#define NMR_ERROR_MISSINGLASERSPEED 0x8114
+
+// Missing Laser Focus
+#define NMR_ERROR_MISSINGLASERFOCUS 0x8115
+
+// Missing Path
+#define NMR_ERROR_MISSINGPATH 0x8116
+
+// Missing ZTop
+#define NMR_ERROR_MISSINGZTOP 0x8117
+
+// Duplicate ID
+#define NMR_ERROR_DUPLICATEID 0x8118
+
+// Missing ID
+#define NMR_ERROR_MISSINGID 0x8119
+
+// Duplicate Type Attribute
+#define NMR_ERROR_DUPLICATETYPEATTRIBUTE 0x811A
+
+// Invalid Type Attribute
+#define NMR_ERROR_INVALIDTYPEATTRIBUTE 0x811B
+
+// Missing Type Attribute
+#define NMR_ERROR_MISSINGTYPEATTRIBUTE 0x811C
+
+// Missing Coordinate
+#define NMR_ERROR_MISSINGCOORDINATE 0x811D
 
 
 
@@ -1335,6 +1391,31 @@ Library errors (0xAXXX)
 
 // Using cryptographically weak random number generator
 #define NMR_ERROR_RNGCALLBACKNOTCRYPTOSTRONG 0XA00C
+
+/*-------------------------------------------------------------------
+Toolpath errors (0xBXXX)
+-------------------------------------------------------------------*/
+
+// Not in toolpath header writing mode
+#define NMR_ERROR_TOOLPATH_NOTWRITINGHEADER 0xB001
+
+// Not in toolpath data writing mode
+#define NMR_ERROR_TOOLPATH_NOTWRITINGDATA 0xB002
+
+// Toolpath has already been written out
+#define NMR_ERROR_TOOLPATH_DATAHASBEENWRITTEN 0xB003
+
+// Toolpath has an invalid number of points
+#define NMR_ERROR_TOOLPATH_INVALIDPOINTCOUNT 0xB004
+
+// Layer segment is not open
+#define NMR_ERROR_LAYERSEGMENTNOTOPEN 0xB005
+
+// Layer segment is already open
+#define NMR_ERROR_LAYERSEGMENTALREADYOPEN 0xB006
+
+// Profile value not found
+#define NMR_ERROR_PROFILEVALUENOTFOUND 0xB007
 
 
 #endif // __NMR_ERRORCONST

@@ -109,4 +109,12 @@ namespace NMR {
 
 		pXMLWriter->Flush();
 	}
+
+	void CModelWriter_3MF::addAdditionalAttachment(_In_ std::string sPath, _In_ PImportStream pStream, _In_ std::string sRelationShipType)
+	{
+		if (pStream.get() == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+		m_AdditionalAttachments.insert(std::make_pair(sPath, std::make_pair(pStream, sRelationShipType)));
+	}
+
 }

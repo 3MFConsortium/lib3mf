@@ -134,6 +134,10 @@ typedef void * Lib3MF_pvoid;
 #define LIB3MF_ERROR_KEYSTORECONSUMERNOTFOUND 3002
 #define LIB3MF_ERROR_KEYSTORERESOURCEDATANOTFOUND 3003
 #define LIB3MF_ERROR_SECURECONTEXTNOTREGISTERED 3004
+#define LIB3MF_ERROR_TOOLPATH_NOTWRITINGHEADER 4000
+#define LIB3MF_ERROR_TOOLPATH_NOTWRITINGDATA 4001
+#define LIB3MF_ERROR_TOOLPATH_DATAHASBEENWRITTEN 4002
+#define LIB3MF_ERROR_TOOLPATH_INVALIDPOINTCOUNT 4003
 
 /*************************************************************************************************************************
  Declaration of handle classes 
@@ -173,6 +177,11 @@ typedef Lib3MFHandle Lib3MF_Texture2D;
 typedef Lib3MFHandle Lib3MF_BuildItem;
 typedef Lib3MFHandle Lib3MF_BuildItemIterator;
 typedef Lib3MFHandle Lib3MF_Slice;
+typedef Lib3MFHandle Lib3MF_ToolpathProfile;
+typedef Lib3MFHandle Lib3MF_ToolpathLayerReader;
+typedef Lib3MFHandle Lib3MF_ToolpathLayerData;
+typedef Lib3MFHandle Lib3MF_Toolpath;
+typedef Lib3MFHandle Lib3MF_ToolpathIterator;
 typedef Lib3MFHandle Lib3MF_SliceStack;
 typedef Lib3MFHandle Lib3MF_Consumer;
 typedef Lib3MFHandle Lib3MF_AccessRight;
@@ -286,6 +295,13 @@ namespace Lib3MF {
     NoBlendMethod = 0,
     Mix = 1,
     Multiply = 2
+  };
+  
+  enum class eToolpathSegmentType : Lib3MF_int32 {
+    Unknown = 0,
+    Hatch = 1,
+    Loop = 2,
+    Polyline = 3
   };
   
   enum class eEncryptionAlgorithm : Lib3MF_int32 {
@@ -474,6 +490,7 @@ typedef Lib3MF::eBeamLatticeClipMode eLib3MFBeamLatticeClipMode;
 typedef Lib3MF::eBeamLatticeBallMode eLib3MFBeamLatticeBallMode;
 typedef Lib3MF::eProgressIdentifier eLib3MFProgressIdentifier;
 typedef Lib3MF::eBlendMethod eLib3MFBlendMethod;
+typedef Lib3MF::eToolpathSegmentType eLib3MFToolpathSegmentType;
 typedef Lib3MF::eEncryptionAlgorithm eLib3MFEncryptionAlgorithm;
 typedef Lib3MF::eWrappingAlgorithm eLib3MFWrappingAlgorithm;
 typedef Lib3MF::eMgfAlgorithm eLib3MFMgfAlgorithm;

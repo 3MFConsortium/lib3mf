@@ -153,6 +153,14 @@ const (
 		eBlendMethod_Multiply = 2
 )
 
+type ELib3MFToolpathSegmentType int
+const (
+		eToolpathSegmentType_Unknown = 0
+		eToolpathSegmentType_Hatch = 1
+		eToolpathSegmentType_Loop = 2
+		eToolpathSegmentType_Polyline = 3
+)
+
 type ELib3MFEncryptionAlgorithm int
 const (
 		eEncryptionAlgorithm_AES256_GCM = 1
@@ -2402,6 +2410,355 @@ type Lib3MFGoInterface interface {
 
 
 	/**
+	* Retrieves the profile's uuid
+	*
+	* @param[in] ToolpathProfile - ToolpathProfile instance.
+	* @return Returns the uuid value.
+	*/
+	ToolpathProfile_GetUUID(ToolpathProfile Lib3MFHandle) (string, error)
+
+
+	/**
+	* Retrieves the profile's name
+	*
+	* @param[in] ToolpathProfile - ToolpathProfile instance.
+	* @return Returns the name.
+	*/
+	ToolpathProfile_GetName(ToolpathProfile Lib3MFHandle) (string, error)
+
+
+	/**
+	* Checks if a parameter value exists.
+	*
+	* @param[in] ToolpathProfile - ToolpathProfile instance.
+	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] sValueName - Value key string.
+	* @return Returns if a value exists.
+	*/
+	ToolpathProfile_HasParameterValue(ToolpathProfile Lib3MFHandle, sNameSpaceName string, sValueName string) (bool, error)
+
+
+	/**
+	* Retrieves a profile's parameter value. Fails if value does not exist.
+	*
+	* @param[in] ToolpathProfile - ToolpathProfile instance.
+	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] sValueName - Value key string.
+	* @return Returns the value of the field.
+	*/
+	ToolpathProfile_GetParameterDoubleValue(ToolpathProfile Lib3MFHandle, sNameSpaceName string, sValueName string) (float64, error)
+
+
+	/**
+	* Retrieves a profile's parameter value
+	*
+	* @param[in] ToolpathProfile - ToolpathProfile instance.
+	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] sValueName - Value key string.
+	* @param[in] dDefaultValue - Default value if value does not exist.
+	* @return Returns the value of the field.
+	*/
+	ToolpathProfile_GetParameterDoubleValueDef(ToolpathProfile Lib3MFHandle, sNameSpaceName string, sValueName string, dDefaultValue float64) (float64, error)
+
+
+	/**
+	* Sets the profile's name
+	*
+	* @param[in] ToolpathProfile - ToolpathProfile instance.
+	* @param[in] sName - Returns the name.
+	*/
+	ToolpathProfile_SetName(ToolpathProfile Lib3MFHandle, sName string) (error)
+
+
+	/**
+	* Sets a profile's parameter value.
+	*
+	* @param[in] ToolpathProfile - ToolpathProfile instance.
+	* @param[in] sNameSpaceName - Name of the Parameter Namespace.
+	* @param[in] sValueName - Value key string.
+	* @param[in] dValue - Double value of the parameter.
+	*/
+	ToolpathProfile_SetParameterDoubleValue(ToolpathProfile Lib3MFHandle, sNameSpaceName string, sValueName string, dValue float64) (error)
+
+
+	/**
+	* Retrieves the layerdata's uuid
+	*
+	* @param[in] ToolpathLayerReader - ToolpathLayerReader instance.
+	* @return Returns the uuid value.
+	*/
+	ToolpathLayerReader_GetLayerDataUUID(ToolpathLayerReader Lib3MFHandle) (string, error)
+
+
+	/**
+	* Retrieves the count of segments.
+	*
+	* @param[in] ToolpathLayerReader - ToolpathLayerReader instance.
+	* @return Count
+	*/
+	ToolpathLayerReader_GetSegmentCount(ToolpathLayerReader Lib3MFHandle) (uint32, error)
+
+
+	/**
+	* Retrieves the segment type information .
+	*
+	* @param[in] ToolpathLayerReader - ToolpathLayerReader instance.
+	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
+	* @return Segment Type
+	* @return Point count of segment.
+	*/
+	ToolpathLayerReader_GetSegmentInfo(ToolpathLayerReader Lib3MFHandle, nIndex uint32) (ELib3MFToolpathSegmentType, uint32, error)
+
+
+	/**
+	* Retrieves the assigned segment profile.
+	*
+	* @param[in] ToolpathLayerReader - ToolpathLayerReader instance.
+	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
+	* @return Segment Profile
+	*/
+	ToolpathLayerReader_GetSegmentProfile(ToolpathLayerReader Lib3MFHandle, nIndex uint32) (Lib3MFHandle, error)
+
+
+	/**
+	* Retrieves the assigned segment profile uuid.
+	*
+	* @param[in] ToolpathLayerReader - ToolpathLayerReader instance.
+	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
+	* @return Segment Profile UUID
+	*/
+	ToolpathLayerReader_GetSegmentProfileUUID(ToolpathLayerReader Lib3MFHandle, nIndex uint32) (string, error)
+
+
+	/**
+	* Retrieves the assigned segment profile.
+	*
+	* @param[in] ToolpathLayerReader - ToolpathLayerReader instance.
+	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
+	* @return Segment Build Item
+	*/
+	ToolpathLayerReader_GetSegmentPart(ToolpathLayerReader Lib3MFHandle, nIndex uint32) (Lib3MFHandle, error)
+
+
+	/**
+	* Retrieves the assigned segment part uuid.
+	*
+	* @param[in] ToolpathLayerReader - ToolpathLayerReader instance.
+	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
+	* @return Segment Part UUID
+	*/
+	ToolpathLayerReader_GetSegmentPartUUID(ToolpathLayerReader Lib3MFHandle, nIndex uint32) (string, error)
+
+
+	/**
+	* Retrieves the assigned segment point list. For type hatch, the points are taken pairwise.
+	*
+	* @param[in] ToolpathLayerReader - ToolpathLayerReader instance.
+	* @param[in] nIndex - Index. Must be between 0 and Count - 1.
+	* @return The point data array
+	*/
+	ToolpathLayerReader_GetSegmentPointData(ToolpathLayerReader Lib3MFHandle, nIndex uint32) ([]sLib3MFPosition2D, error)
+
+
+	/**
+	* Retrieves the layerdata's uuid
+	*
+	* @param[in] ToolpathLayerData - ToolpathLayerData instance.
+	* @return Returns the uuid value.
+	*/
+	ToolpathLayerData_GetLayerDataUUID(ToolpathLayerData Lib3MFHandle) (string, error)
+
+
+	/**
+	* Registers a toolpath profile
+	*
+	* @param[in] ToolpathLayerData - ToolpathLayerData instance.
+	* @param[in] Profile - The toolpath profile to register.
+	* @return returns the local profile ID for the layer.
+	*/
+	ToolpathLayerData_RegisterProfile(ToolpathLayerData Lib3MFHandle, Profile Lib3MFHandle) (uint32, error)
+
+
+	/**
+	* Registers a Model Build Item
+	*
+	* @param[in] ToolpathLayerData - ToolpathLayerData instance.
+	* @param[in] BuildItem - The model build item to use.
+	* @return returns the local part ID for the layer.
+	*/
+	ToolpathLayerData_RegisterBuildItem(ToolpathLayerData Lib3MFHandle, BuildItem Lib3MFHandle) (uint32, error)
+
+
+	/**
+	* writes hatch data to the layer.
+	*
+	* @param[in] ToolpathLayerData - ToolpathLayerData instance.
+	* @param[in] nProfileID - The toolpath profile to use
+	* @param[in] nPartID - The toolpath part to use
+	* @param[in] PointData - The point data
+	*/
+	ToolpathLayerData_WriteHatchData(ToolpathLayerData Lib3MFHandle, nProfileID uint32, nPartID uint32, PointData []sLib3MFPosition2D) (error)
+
+
+	/**
+	* writes loop data to the layer.
+	*
+	* @param[in] ToolpathLayerData - ToolpathLayerData instance.
+	* @param[in] nProfileID - The toolpath profile to use
+	* @param[in] nPartID - The toolpath part to use
+	* @param[in] PointData - The point data
+	*/
+	ToolpathLayerData_WriteLoop(ToolpathLayerData Lib3MFHandle, nProfileID uint32, nPartID uint32, PointData []sLib3MFPosition2D) (error)
+
+
+	/**
+	* writes polyline data to the layer.
+	*
+	* @param[in] ToolpathLayerData - ToolpathLayerData instance.
+	* @param[in] nProfileID - The toolpath profile to use
+	* @param[in] nPartID - The toolpath part to use
+	* @param[in] PointData - The point data
+	*/
+	ToolpathLayerData_WritePolyline(ToolpathLayerData Lib3MFHandle, nProfileID uint32, nPartID uint32, PointData []sLib3MFPosition2D) (error)
+
+
+	/**
+	* finishes all writing of the layer and compresses toolpath data.
+	*
+	* @param[in] ToolpathLayerData - ToolpathLayerData instance.
+	*/
+	ToolpathLayerData_Finish(ToolpathLayerData Lib3MFHandle) (error)
+
+
+	/**
+	* Retrieves the unit factor
+	*
+	* @param[in] Toolpath - Toolpath instance.
+	* @return Returns the unit factor.
+	*/
+	Toolpath_GetUnits(Toolpath Lib3MFHandle) (float64, error)
+
+
+	/**
+	* Retrieves the count of layers
+	*
+	* @param[in] Toolpath - Toolpath instance.
+	* @return Returns the layer count
+	*/
+	Toolpath_GetLayerCount(Toolpath Lib3MFHandle) (uint32, error)
+
+
+	/**
+	* Retrieves the count of profiles
+	*
+	* @param[in] Toolpath - Toolpath instance.
+	* @return Returns the profile count
+	*/
+	Toolpath_GetProfileCount(Toolpath Lib3MFHandle) (uint32, error)
+
+
+	/**
+	* Adds a new toolpath layer
+	*
+	* @param[in] Toolpath - Toolpath instance.
+	* @param[in] nZMax - ZMax value
+	* @param[in] sPath - Package Path
+	* @param[in] ModelWriter - The model writer that writes out the 3MF.
+	* @return Returns the layerdata object to write the layer content into.
+	*/
+	Toolpath_AddLayer(Toolpath Lib3MFHandle, nZMax uint32, sPath string, ModelWriter Lib3MFHandle) (Lib3MFHandle, error)
+
+
+	/**
+	* Retrieves the Attachment of a layer
+	*
+	* @param[in] Toolpath - Toolpath instance.
+	* @param[in] nIndex - Layer Index
+	* @return Attachment
+	*/
+	Toolpath_GetLayerAttachment(Toolpath Lib3MFHandle, nIndex uint32) (Lib3MFHandle, error)
+
+
+	/**
+	* Reads the toolpath of a layer.
+	*
+	* @param[in] Toolpath - Toolpath instance.
+	* @param[in] nIndex - Layer Index
+	* @return Toolpath Reader Instance
+	*/
+	Toolpath_ReadLayerData(Toolpath Lib3MFHandle, nIndex uint32) (Lib3MFHandle, error)
+
+
+	/**
+	* Retrieves the Path of a layer
+	*
+	* @param[in] Toolpath - Toolpath instance.
+	* @param[in] nIndex - Layer Index
+	* @return Package Path
+	*/
+	Toolpath_GetLayerPath(Toolpath Lib3MFHandle, nIndex uint32) (string, error)
+
+
+	/**
+	* Retrieves the ZMax of a layer
+	*
+	* @param[in] Toolpath - Toolpath instance.
+	* @param[in] nIndex - Layer Index
+	* @return ZMax value
+	*/
+	Toolpath_GetLayerZMax(Toolpath Lib3MFHandle, nIndex uint32) (uint32, error)
+
+
+	/**
+	* Return the z value of a layer in units.
+	*
+	* @param[in] Toolpath - Toolpath instance.
+	* @param[in] nLayerIndex - Layer Index.
+	* @return Z Value in Units.
+	*/
+	Toolpath_GetLayerZ(Toolpath Lib3MFHandle, nLayerIndex uint32) (uint32, error)
+
+
+	/**
+	* Adds a new profile to the toolpath.
+	*
+	* @param[in] Toolpath - Toolpath instance.
+	* @param[in] sName - the name.
+	* @return Returns the profile.
+	*/
+	Toolpath_AddProfile(Toolpath Lib3MFHandle, sName string) (Lib3MFHandle, error)
+
+
+	/**
+	* Returns a profile of the toolpath.
+	*
+	* @param[in] Toolpath - Toolpath instance.
+	* @param[in] nProfileIndex - Layer Index.
+	* @return Returns the profile.
+	*/
+	Toolpath_GetProfile(Toolpath Lib3MFHandle, nProfileIndex uint32) (Lib3MFHandle, error)
+
+
+	/**
+	* Returns a profile of the toolpath by UUID.
+	*
+	* @param[in] Toolpath - Toolpath instance.
+	* @param[in] sProfileUUID - UUID string.
+	* @return Returns the profile.
+	*/
+	Toolpath_GetProfileUUID(Toolpath Lib3MFHandle, sProfileUUID string) (Lib3MFHandle, error)
+
+
+	/**
+	* Returns the Toolpath the iterator points at.
+	*
+	* @param[in] ToolpathIterator - ToolpathIterator instance.
+	* @return returns the Toolpath instance.
+	*/
+	ToolpathIterator_GetCurrentToolpath(ToolpathIterator Lib3MFHandle) (Lib3MFHandle, error)
+
+
+	/**
 	* Get the lower Z-Coordinate of the slice stack.
 	*
 	* @param[in] SliceStack - SliceStack instance.
@@ -3176,6 +3533,15 @@ type Lib3MFGoInterface interface {
 
 
 	/**
+	* creates a Toolpath instance with all toolpath resources.
+	*
+	* @param[in] Model - Model instance.
+	* @return returns the iterator instance.
+	*/
+	Model_GetToolpaths(Model Lib3MFHandle) (Lib3MFHandle, error)
+
+
+	/**
 	* creates a resource iterator instance with all slice stack resources.
 	*
 	* @param[in] Model - Model instance.
@@ -3296,6 +3662,16 @@ type Lib3MFGoInterface interface {
 	* @param[in] BuildItemInstance - Build item to remove.
 	*/
 	Model_RemoveBuildItem(Model Lib3MFHandle, BuildItemInstance Lib3MFHandle) (error)
+
+
+	/**
+	* adds an empty Toolpath resource to the model.
+	*
+	* @param[in] Model - Model instance.
+	* @param[in] dUnitFactor - The toolpath instance of the created Toolpath.
+	* @return The toolpath instance of the created Toolpath.
+	*/
+	Model_AddToolpath(Model Lib3MFHandle, dUnitFactor float64) (Lib3MFHandle, error)
 
 
 	/**
@@ -5325,6 +5701,273 @@ func (instance *Lib3MFSlice) GetZTop() (float64, error) {
 
 
 /*************************************************************************************************************************
+Class definition Lib3MFToolpathProfile
+**************************************************************************************************************************/
+
+type Lib3MFToolpathProfile struct {
+	Lib3MFBase
+}
+
+func (instance *Lib3MFToolpathProfile) Close() (error) {
+	return instance.Handle.Close()
+}
+
+func (instance *Lib3MFToolpathProfile) GetUUID() (string, error) {
+	sUUID, error := instance.Interface.ToolpathProfile_GetUUID(instance.Handle)
+	return sUUID, error
+}
+
+func (instance *Lib3MFToolpathProfile) GetName() (string, error) {
+	sName, error := instance.Interface.ToolpathProfile_GetName(instance.Handle)
+	return sName, error
+}
+
+func (instance *Lib3MFToolpathProfile) HasParameterValue(sNameSpaceName string, sValueName string) (bool, error) {
+	bValueExists, error := instance.Interface.ToolpathProfile_HasParameterValue(instance.Handle, sNameSpaceName, sValueName)
+	return bValueExists, error
+}
+
+func (instance *Lib3MFToolpathProfile) GetParameterDoubleValue(sNameSpaceName string, sValueName string) (float64, error) {
+	dValue, error := instance.Interface.ToolpathProfile_GetParameterDoubleValue(instance.Handle, sNameSpaceName, sValueName)
+	return dValue, error
+}
+
+func (instance *Lib3MFToolpathProfile) GetParameterDoubleValueDef(sNameSpaceName string, sValueName string, dDefaultValue float64) (float64, error) {
+	dValue, error := instance.Interface.ToolpathProfile_GetParameterDoubleValueDef(instance.Handle, sNameSpaceName, sValueName, dDefaultValue)
+	return dValue, error
+}
+
+func (instance *Lib3MFToolpathProfile) SetName(sName string) (error) {
+	error := instance.Interface.ToolpathProfile_SetName(instance.Handle, sName)
+	return error
+}
+
+func (instance *Lib3MFToolpathProfile) SetParameterDoubleValue(sNameSpaceName string, sValueName string, dValue float64) (error) {
+	error := instance.Interface.ToolpathProfile_SetParameterDoubleValue(instance.Handle, sNameSpaceName, sValueName, dValue)
+	return error
+}
+
+
+/*************************************************************************************************************************
+Class definition Lib3MFToolpathLayerReader
+**************************************************************************************************************************/
+
+type Lib3MFToolpathLayerReader struct {
+	Lib3MFBase
+}
+
+func (instance *Lib3MFToolpathLayerReader) Close() (error) {
+	return instance.Handle.Close()
+}
+
+func (instance *Lib3MFToolpathLayerReader) GetLayerDataUUID() (string, error) {
+	sUUID, error := instance.Interface.ToolpathLayerReader_GetLayerDataUUID(instance.Handle)
+	return sUUID, error
+}
+
+func (instance *Lib3MFToolpathLayerReader) GetSegmentCount() (uint32, error) {
+	nCount, error := instance.Interface.ToolpathLayerReader_GetSegmentCount(instance.Handle)
+	return nCount, error
+}
+
+func (instance *Lib3MFToolpathLayerReader) GetSegmentInfo(nIndex uint32) (ELib3MFToolpathSegmentType, uint32, error) {
+	eType, nPointCount, error := instance.Interface.ToolpathLayerReader_GetSegmentInfo(instance.Handle, nIndex)
+	return eType, nPointCount, error
+}
+
+func (instance *Lib3MFToolpathLayerReader) GetSegmentProfile(nIndex uint32) (Lib3MFToolpathProfile, error) {
+	hProfile, error := instance.Interface.ToolpathLayerReader_GetSegmentProfile(instance.Handle, nIndex)
+	var cProfile Lib3MFToolpathProfile
+	cProfile.Interface = instance.Interface
+	cProfile.Handle = hProfile
+	return cProfile, error
+}
+
+func (instance *Lib3MFToolpathLayerReader) GetSegmentProfileUUID(nIndex uint32) (string, error) {
+	sProfileUUID, error := instance.Interface.ToolpathLayerReader_GetSegmentProfileUUID(instance.Handle, nIndex)
+	return sProfileUUID, error
+}
+
+func (instance *Lib3MFToolpathLayerReader) GetSegmentPart(nIndex uint32) (Lib3MFBuildItem, error) {
+	hBuildItem, error := instance.Interface.ToolpathLayerReader_GetSegmentPart(instance.Handle, nIndex)
+	var cBuildItem Lib3MFBuildItem
+	cBuildItem.Interface = instance.Interface
+	cBuildItem.Handle = hBuildItem
+	return cBuildItem, error
+}
+
+func (instance *Lib3MFToolpathLayerReader) GetSegmentPartUUID(nIndex uint32) (string, error) {
+	sPartUUID, error := instance.Interface.ToolpathLayerReader_GetSegmentPartUUID(instance.Handle, nIndex)
+	return sPartUUID, error
+}
+
+func (instance *Lib3MFToolpathLayerReader) GetSegmentPointData(nIndex uint32) ([]sLib3MFPosition2D, error) {
+	arrayPointData, error := instance.Interface.ToolpathLayerReader_GetSegmentPointData(instance.Handle, nIndex)
+	return arrayPointData, error
+}
+
+
+/*************************************************************************************************************************
+Class definition Lib3MFToolpathLayerData
+**************************************************************************************************************************/
+
+type Lib3MFToolpathLayerData struct {
+	Lib3MFBase
+}
+
+func (instance *Lib3MFToolpathLayerData) Close() (error) {
+	return instance.Handle.Close()
+}
+
+func (instance *Lib3MFToolpathLayerData) GetLayerDataUUID() (string, error) {
+	sUUID, error := instance.Interface.ToolpathLayerData_GetLayerDataUUID(instance.Handle)
+	return sUUID, error
+}
+
+func (instance *Lib3MFToolpathLayerData) RegisterProfile(Profile Lib3MFHandle) (uint32, error) {
+	nProfileID, error := instance.Interface.ToolpathLayerData_RegisterProfile(instance.Handle, Profile)
+	return nProfileID, error
+}
+
+func (instance *Lib3MFToolpathLayerData) RegisterBuildItem(BuildItem Lib3MFHandle) (uint32, error) {
+	nPartID, error := instance.Interface.ToolpathLayerData_RegisterBuildItem(instance.Handle, BuildItem)
+	return nPartID, error
+}
+
+func (instance *Lib3MFToolpathLayerData) WriteHatchData(nProfileID uint32, nPartID uint32, PointData []sLib3MFPosition2D) (error) {
+	error := instance.Interface.ToolpathLayerData_WriteHatchData(instance.Handle, nProfileID, nPartID, PointData)
+	return error
+}
+
+func (instance *Lib3MFToolpathLayerData) WriteLoop(nProfileID uint32, nPartID uint32, PointData []sLib3MFPosition2D) (error) {
+	error := instance.Interface.ToolpathLayerData_WriteLoop(instance.Handle, nProfileID, nPartID, PointData)
+	return error
+}
+
+func (instance *Lib3MFToolpathLayerData) WritePolyline(nProfileID uint32, nPartID uint32, PointData []sLib3MFPosition2D) (error) {
+	error := instance.Interface.ToolpathLayerData_WritePolyline(instance.Handle, nProfileID, nPartID, PointData)
+	return error
+}
+
+func (instance *Lib3MFToolpathLayerData) Finish() (error) {
+	error := instance.Interface.ToolpathLayerData_Finish(instance.Handle)
+	return error
+}
+
+
+/*************************************************************************************************************************
+Class definition Lib3MFToolpath
+**************************************************************************************************************************/
+
+type Lib3MFToolpath struct {
+	Lib3MFResource
+}
+
+func (instance *Lib3MFToolpath) Close() (error) {
+	return instance.Handle.Close()
+}
+
+func (instance *Lib3MFToolpath) GetUnits() (float64, error) {
+	dUnits, error := instance.Interface.Toolpath_GetUnits(instance.Handle)
+	return dUnits, error
+}
+
+func (instance *Lib3MFToolpath) GetLayerCount() (uint32, error) {
+	nCount, error := instance.Interface.Toolpath_GetLayerCount(instance.Handle)
+	return nCount, error
+}
+
+func (instance *Lib3MFToolpath) GetProfileCount() (uint32, error) {
+	nCount, error := instance.Interface.Toolpath_GetProfileCount(instance.Handle)
+	return nCount, error
+}
+
+func (instance *Lib3MFToolpath) AddLayer(nZMax uint32, sPath string, ModelWriter Lib3MFHandle) (Lib3MFToolpathLayerData, error) {
+	hLayerData, error := instance.Interface.Toolpath_AddLayer(instance.Handle, nZMax, sPath, ModelWriter)
+	var cLayerData Lib3MFToolpathLayerData
+	cLayerData.Interface = instance.Interface
+	cLayerData.Handle = hLayerData
+	return cLayerData, error
+}
+
+func (instance *Lib3MFToolpath) GetLayerAttachment(nIndex uint32) (Lib3MFAttachment, error) {
+	hAttachment, error := instance.Interface.Toolpath_GetLayerAttachment(instance.Handle, nIndex)
+	var cAttachment Lib3MFAttachment
+	cAttachment.Interface = instance.Interface
+	cAttachment.Handle = hAttachment
+	return cAttachment, error
+}
+
+func (instance *Lib3MFToolpath) ReadLayerData(nIndex uint32) (Lib3MFToolpathLayerReader, error) {
+	hToolpathReader, error := instance.Interface.Toolpath_ReadLayerData(instance.Handle, nIndex)
+	var cToolpathReader Lib3MFToolpathLayerReader
+	cToolpathReader.Interface = instance.Interface
+	cToolpathReader.Handle = hToolpathReader
+	return cToolpathReader, error
+}
+
+func (instance *Lib3MFToolpath) GetLayerPath(nIndex uint32) (string, error) {
+	sPath, error := instance.Interface.Toolpath_GetLayerPath(instance.Handle, nIndex)
+	return sPath, error
+}
+
+func (instance *Lib3MFToolpath) GetLayerZMax(nIndex uint32) (uint32, error) {
+	nZMax, error := instance.Interface.Toolpath_GetLayerZMax(instance.Handle, nIndex)
+	return nZMax, error
+}
+
+func (instance *Lib3MFToolpath) GetLayerZ(nLayerIndex uint32) (uint32, error) {
+	nZValue, error := instance.Interface.Toolpath_GetLayerZ(instance.Handle, nLayerIndex)
+	return nZValue, error
+}
+
+func (instance *Lib3MFToolpath) AddProfile(sName string) (Lib3MFToolpathProfile, error) {
+	hProfile, error := instance.Interface.Toolpath_AddProfile(instance.Handle, sName)
+	var cProfile Lib3MFToolpathProfile
+	cProfile.Interface = instance.Interface
+	cProfile.Handle = hProfile
+	return cProfile, error
+}
+
+func (instance *Lib3MFToolpath) GetProfile(nProfileIndex uint32) (Lib3MFToolpathProfile, error) {
+	hProfile, error := instance.Interface.Toolpath_GetProfile(instance.Handle, nProfileIndex)
+	var cProfile Lib3MFToolpathProfile
+	cProfile.Interface = instance.Interface
+	cProfile.Handle = hProfile
+	return cProfile, error
+}
+
+func (instance *Lib3MFToolpath) GetProfileUUID(sProfileUUID string) (Lib3MFToolpathProfile, error) {
+	hProfile, error := instance.Interface.Toolpath_GetProfileUUID(instance.Handle, sProfileUUID)
+	var cProfile Lib3MFToolpathProfile
+	cProfile.Interface = instance.Interface
+	cProfile.Handle = hProfile
+	return cProfile, error
+}
+
+
+/*************************************************************************************************************************
+Class definition Lib3MFToolpathIterator
+**************************************************************************************************************************/
+
+type Lib3MFToolpathIterator struct {
+	Lib3MFResourceIterator
+}
+
+func (instance *Lib3MFToolpathIterator) Close() (error) {
+	return instance.Handle.Close()
+}
+
+func (instance *Lib3MFToolpathIterator) GetCurrentToolpath() (Lib3MFToolpath, error) {
+	hResource, error := instance.Interface.ToolpathIterator_GetCurrentToolpath(instance.Handle)
+	var cResource Lib3MFToolpath
+	cResource.Interface = instance.Interface
+	cResource.Handle = hResource
+	return cResource, error
+}
+
+
+/*************************************************************************************************************************
 Class definition Lib3MFSliceStack
 **************************************************************************************************************************/
 
@@ -5957,6 +6600,14 @@ func (instance *Lib3MFModel) GetMultiPropertyGroups() (Lib3MFMultiPropertyGroupI
 	return cResourceIterator, error
 }
 
+func (instance *Lib3MFModel) GetToolpaths() (Lib3MFToolpathIterator, error) {
+	hResourceIterator, error := instance.Interface.Model_GetToolpaths(instance.Handle)
+	var cResourceIterator Lib3MFToolpathIterator
+	cResourceIterator.Interface = instance.Interface
+	cResourceIterator.Handle = hResourceIterator
+	return cResourceIterator, error
+}
+
 func (instance *Lib3MFModel) GetSliceStacks() (Lib3MFSliceStackIterator, error) {
 	hResourceIterator, error := instance.Interface.Model_GetSliceStacks(instance.Handle)
 	var cResourceIterator Lib3MFSliceStackIterator
@@ -6056,6 +6707,14 @@ func (instance *Lib3MFModel) AddBuildItem(Object Lib3MFHandle, sTransform sLib3M
 func (instance *Lib3MFModel) RemoveBuildItem(BuildItemInstance Lib3MFHandle) (error) {
 	error := instance.Interface.Model_RemoveBuildItem(instance.Handle, BuildItemInstance)
 	return error
+}
+
+func (instance *Lib3MFModel) AddToolpath(dUnitFactor float64) (Lib3MFToolpath, error) {
+	hToolpathInstance, error := instance.Interface.Model_AddToolpath(instance.Handle, dUnitFactor)
+	var cToolpathInstance Lib3MFToolpath
+	cToolpathInstance.Interface = instance.Interface
+	cToolpathInstance.Handle = hToolpathInstance
+	return cToolpathInstance, error
 }
 
 func (instance *Lib3MFModel) GetMetaDataGroup() (Lib3MFMetaDataGroup, error) {

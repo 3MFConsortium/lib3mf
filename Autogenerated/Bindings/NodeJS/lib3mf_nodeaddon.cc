@@ -82,6 +82,11 @@ void InitAll(Handle<Object> exports, Handle<Object> module)
     CLib3MFBuildItem::Init();
     CLib3MFBuildItemIterator::Init();
     CLib3MFSlice::Init();
+    CLib3MFToolpathProfile::Init();
+    CLib3MFToolpathLayerReader::Init();
+    CLib3MFToolpathLayerData::Init();
+    CLib3MFToolpath::Init();
+    CLib3MFToolpathIterator::Init();
     CLib3MFSliceStack::Init();
     CLib3MFConsumer::Init();
     CLib3MFAccessRight::Init();
