@@ -171,6 +171,7 @@ Source/Model/Reader/BeamLattice1702/NMR_ModelReaderNode_BeamLattice1702_BeamLatt
 Source/Model/Reader/BeamLattice1702/NMR_ModelReaderNode_BeamLattice1702_BeamSet.cpp
 Source/Model/Reader/BeamLattice1702/NMR_ModelReaderNode_BeamLattice1702_BeamSets.cpp
 Source/Model/Reader/BeamLattice1702/NMR_ModelReaderNode_BeamLattice1702_Ref.cpp
+Source/Model/Reader/NMR_ModelPersistentDataSource.cpp
 Source/Model/Reader/NMR_ModelReader.cpp
 Source/Model/Reader/NMR_ModelReaderNode.cpp
 Source/Model/Reader/NMR_ModelReaderNode_ModelBase.cpp

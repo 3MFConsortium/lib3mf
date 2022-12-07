@@ -58,6 +58,7 @@ namespace Lib3MF {
 class CWrapper;
 class CBase;
 class CWriter;
+class CPersistentReaderSource;
 class CReader;
 class CPackagePart;
 class CResource;
@@ -110,6 +111,7 @@ class CModel;
 typedef CWrapper CLib3MFWrapper;
 typedef CBase CLib3MFBase;
 typedef CWriter CLib3MFWriter;
+typedef CPersistentReaderSource CLib3MFPersistentReaderSource;
 typedef CReader CLib3MFReader;
 typedef CPackagePart CLib3MFPackagePart;
 typedef CResource CLib3MFResource;
@@ -162,6 +164,7 @@ typedef CModel CLib3MFModel;
 typedef std::shared_ptr<CWrapper> PWrapper;
 typedef std::shared_ptr<CBase> PBase;
 typedef std::shared_ptr<CWriter> PWriter;
+typedef std::shared_ptr<CPersistentReaderSource> PPersistentReaderSource;
 typedef std::shared_ptr<CReader> PReader;
 typedef std::shared_ptr<CPackagePart> PPackagePart;
 typedef std::shared_ptr<CResource> PResource;
@@ -214,6 +217,7 @@ typedef std::shared_ptr<CModel> PModel;
 typedef PWrapper PLib3MFWrapper;
 typedef PBase PLib3MFBase;
 typedef PWriter PLib3MFWriter;
+typedef PPersistentReaderSource PLib3MFPersistentReaderSource;
 typedef PReader PLib3MFReader;
 typedef PPackagePart PLib3MFPackagePart;
 typedef PResource PLib3MFResource;
@@ -395,6 +399,7 @@ private:
 
 	friend class CBase;
 	friend class CWriter;
+	friend class CPersistentReaderSource;
 	friend class CReader;
 	friend class CPackagePart;
 	friend class CResource;
@@ -522,6 +527,25 @@ public:
 };
 	
 /*************************************************************************************************************************
+ Class CPersistentReaderSource 
+**************************************************************************************************************************/
+class CPersistentReaderSource : public CBase {
+public:
+	
+	/**
+	* CPersistentReaderSource::CPersistentReaderSource - Constructor for PersistentReaderSource class.
+	*/
+	CPersistentReaderSource(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CBase(pWrapper, pHandle)
+	{
+	}
+	
+	inline ePersistentReaderSourceType GetSourceType();
+	inline void InvalidateSourceData();
+	inline bool SourceDataIsValid();
+};
+	
+/*************************************************************************************************************************
  Class CReader 
 **************************************************************************************************************************/
 class CReader : public CBase {
@@ -535,6 +559,7 @@ public:
 	{
 	}
 	
+	inline void ReadFromPersistentSource(CPersistentReaderSource * pSource);
 	inline void ReadFromFile(const std::string & sFilename);
 	inline void ReadFromBuffer(const CInputVector<Lib3MF_uint8> & BufferBuffer);
 	inline void ReadFromCallback(const ReadCallback pTheReadCallback, const Lib3MF_uint64 nStreamSize, const SeekCallback pTheSeekCallback, const Lib3MF_pvoid pUserData);
@@ -1601,6 +1626,9 @@ public:
 	inline void RemoveCustomContentType(const std::string & sExtension);
 	inline void SetRandomNumberCallback(const RandomNumberCallback pTheCallback, const Lib3MF_pvoid pUserData);
 	inline PKeyStore GetKeyStore();
+	inline PPersistentReaderSource CreatePersistentSourceFromFile(const std::string & sFilename);
+	inline PPersistentReaderSource CreatePersistentSourceFromBuffer(const CInputVector<Lib3MF_uint8> & BufferBuffer);
+	inline PPersistentReaderSource CreatePersistentSourceFromCallback(const ReadCallback pTheReadCallback, const Lib3MF_uint64 nStreamSize, const SeekCallback pTheSeekCallback, const Lib3MF_pvoid pUserData);
 };
 	
 	/**
@@ -2045,8 +2073,57 @@ public:
 	}
 	
 	/**
+	 * Method definitions for class CPersistentReaderSource
+	 */
+	
+	/**
+	* CPersistentReaderSource::GetSourceType - Retrieves the type of source data.
+	* @return Reader Source Type
+	*/
+	ePersistentReaderSourceType CPersistentReaderSource::GetSourceType()
+	{
+		ePersistentReaderSourceType resultSourceType = (ePersistentReaderSourceType) 0;
+		CheckError(lib3mf_persistentreadersource_getsourcetype(m_pHandle, &resultSourceType));
+		
+		return resultSourceType;
+	}
+	
+	/**
+	* CPersistentReaderSource::InvalidateSourceData - Invalidates the reader source. Every subsequent read on this data will fail.
+	*/
+	void CPersistentReaderSource::InvalidateSourceData()
+	{
+		CheckError(lib3mf_persistentreadersource_invalidatesourcedata(m_pHandle));
+	}
+	
+	/**
+	* CPersistentReaderSource::SourceDataIsValid - Checks if the source data is valid. Any read on an invalid source object will fail.
+	* @return The source data is valid.
+	*/
+	bool CPersistentReaderSource::SourceDataIsValid()
+	{
+		bool resultDataIsValid = 0;
+		CheckError(lib3mf_persistentreadersource_sourcedataisvalid(m_pHandle, &resultDataIsValid));
+		
+		return resultDataIsValid;
+	}
+	
+	/**
 	 * Method definitions for class CReader
 	 */
+	
+	/**
+	* CReader::ReadFromPersistentSource - Reads a model from a persistent source object. The object will be referenced until the Model is destroyed or cleared.
+	* @param[in] pSource - Source object to read from
+	*/
+	void CReader::ReadFromPersistentSource(CPersistentReaderSource * pSource)
+	{
+		Lib3MFHandle hSource = nullptr;
+		if (pSource != nullptr) {
+			hSource = pSource->GetHandle();
+		};
+		CheckError(lib3mf_reader_readfrompersistentsource(m_pHandle, hSource));
+	}
 	
 	/**
 	* CReader::ReadFromFile - Reads a model from a file. The file type is specified by the Model Reader class
@@ -6958,6 +7035,57 @@ public:
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
 		return std::make_shared<CKeyStore>(m_pWrapper, hKeyStore);
+	}
+	
+	/**
+	* CModel::CreatePersistentSourceFromFile - Creates an OPC Reader Source from a file.
+	* @param[in] sFilename - Filename to read from
+	* @return The instance of the created reader source
+	*/
+	PPersistentReaderSource CModel::CreatePersistentSourceFromFile(const std::string & sFilename)
+	{
+		Lib3MFHandle hInstance = nullptr;
+		CheckError(lib3mf_model_createpersistentsourcefromfile(m_pHandle, sFilename.c_str(), &hInstance));
+		
+		if (!hInstance) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::make_shared<CPersistentReaderSource>(m_pWrapper, hInstance);
+	}
+	
+	/**
+	* CModel::CreatePersistentSourceFromBuffer - Creates an OPC Reader Source from a memory buffer. The memory buffer MUST exist as long as the Source object exists.
+	* @param[in] BufferBuffer - Buffer to read from
+	* @return The instance of the created reader source
+	*/
+	PPersistentReaderSource CModel::CreatePersistentSourceFromBuffer(const CInputVector<Lib3MF_uint8> & BufferBuffer)
+	{
+		Lib3MFHandle hInstance = nullptr;
+		CheckError(lib3mf_model_createpersistentsourcefrombuffer(m_pHandle, (Lib3MF_uint64)BufferBuffer.size(), BufferBuffer.data(), &hInstance));
+		
+		if (!hInstance) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::make_shared<CPersistentReaderSource>(m_pWrapper, hInstance);
+	}
+	
+	/**
+	* CModel::CreatePersistentSourceFromCallback - Creates an OPC Reader Source from a data provided by a callback function. The callbacks MUST exist as long as the source object exists.
+	* @param[in] pTheReadCallback - Callback to call for reading a data chunk
+	* @param[in] nStreamSize - number of bytes the callback returns
+	* @param[in] pTheSeekCallback - Callback to call for seeking in the stream.
+	* @param[in] pUserData - Userdata that is passed to the callback function
+	* @return The instance of the created reader source
+	*/
+	PPersistentReaderSource CModel::CreatePersistentSourceFromCallback(const ReadCallback pTheReadCallback, const Lib3MF_uint64 nStreamSize, const SeekCallback pTheSeekCallback, const Lib3MF_pvoid pUserData)
+	{
+		Lib3MFHandle hInstance = nullptr;
+		CheckError(lib3mf_model_createpersistentsourcefromcallback(m_pHandle, pTheReadCallback, nStreamSize, pTheSeekCallback, pUserData, &hInstance));
+		
+		if (!hInstance) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::make_shared<CPersistentReaderSource>(m_pWrapper, hInstance);
 	}
 
 } // namespace Lib3MF

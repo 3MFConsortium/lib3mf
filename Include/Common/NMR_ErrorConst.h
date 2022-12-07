@@ -1276,7 +1276,8 @@ Model error codes (0x8XXX)
 // Missing Coordinate
 #define NMR_ERROR_MISSINGCOORDINATE 0x811D
 
-
+// Data source is invalid
+#define NMR_ERROR_DATASOURCEISINVALIDATED 0x811E
 
 
 /*-------------------------------------------------------------------

@@ -58,6 +58,7 @@ namespace Lib3MF {
 class CWrapper;
 class CBase;
 class CWriter;
+class CPersistentReaderSource;
 class CReader;
 class CPackagePart;
 class CResource;
@@ -110,6 +111,7 @@ class CModel;
 typedef CWrapper CLib3MFWrapper;
 typedef CBase CLib3MFBase;
 typedef CWriter CLib3MFWriter;
+typedef CPersistentReaderSource CLib3MFPersistentReaderSource;
 typedef CReader CLib3MFReader;
 typedef CPackagePart CLib3MFPackagePart;
 typedef CResource CLib3MFResource;
@@ -162,6 +164,7 @@ typedef CModel CLib3MFModel;
 typedef std::shared_ptr<CWrapper> PWrapper;
 typedef std::shared_ptr<CBase> PBase;
 typedef std::shared_ptr<CWriter> PWriter;
+typedef std::shared_ptr<CPersistentReaderSource> PPersistentReaderSource;
 typedef std::shared_ptr<CReader> PReader;
 typedef std::shared_ptr<CPackagePart> PPackagePart;
 typedef std::shared_ptr<CResource> PResource;
@@ -214,6 +217,7 @@ typedef std::shared_ptr<CModel> PModel;
 typedef PWrapper PLib3MFWrapper;
 typedef PBase PLib3MFBase;
 typedef PWriter PLib3MFWriter;
+typedef PPersistentReaderSource PLib3MFPersistentReaderSource;
 typedef PReader PLib3MFReader;
 typedef PPackagePart PLib3MFPackagePart;
 typedef PResource PLib3MFResource;
@@ -419,6 +423,7 @@ private:
 
 	friend class CBase;
 	friend class CWriter;
+	friend class CPersistentReaderSource;
 	friend class CReader;
 	friend class CPackagePart;
 	friend class CResource;
@@ -546,6 +551,25 @@ public:
 };
 	
 /*************************************************************************************************************************
+ Class CPersistentReaderSource 
+**************************************************************************************************************************/
+class CPersistentReaderSource : public CBase {
+public:
+	
+	/**
+	* CPersistentReaderSource::CPersistentReaderSource - Constructor for PersistentReaderSource class.
+	*/
+	CPersistentReaderSource(CWrapper* pWrapper, Lib3MFHandle pHandle)
+		: CBase(pWrapper, pHandle)
+	{
+	}
+	
+	inline ePersistentReaderSourceType GetSourceType();
+	inline void InvalidateSourceData();
+	inline bool SourceDataIsValid();
+};
+	
+/*************************************************************************************************************************
  Class CReader 
 **************************************************************************************************************************/
 class CReader : public CBase {
@@ -559,6 +583,7 @@ public:
 	{
 	}
 	
+	inline void ReadFromPersistentSource(CPersistentReaderSource * pSource);
 	inline void ReadFromFile(const std::string & sFilename);
 	inline void ReadFromBuffer(const CInputVector<Lib3MF_uint8> & BufferBuffer);
 	inline void ReadFromCallback(const ReadCallback pTheReadCallback, const Lib3MF_uint64 nStreamSize, const SeekCallback pTheSeekCallback, const Lib3MF_pvoid pUserData);
@@ -1625,6 +1650,9 @@ public:
 	inline void RemoveCustomContentType(const std::string & sExtension);
 	inline void SetRandomNumberCallback(const RandomNumberCallback pTheCallback, const Lib3MF_pvoid pUserData);
 	inline PKeyStore GetKeyStore();
+	inline PPersistentReaderSource CreatePersistentSourceFromFile(const std::string & sFilename);
+	inline PPersistentReaderSource CreatePersistentSourceFromBuffer(const CInputVector<Lib3MF_uint8> & BufferBuffer);
+	inline PPersistentReaderSource CreatePersistentSourceFromCallback(const ReadCallback pTheReadCallback, const Lib3MF_uint64 nStreamSize, const SeekCallback pTheSeekCallback, const Lib3MF_pvoid pUserData);
 };
 	
 	/**
@@ -1931,6 +1959,10 @@ public:
 		pWrapperTable->m_Writer_GetWarningCount = nullptr;
 		pWrapperTable->m_Writer_AddKeyWrappingCallback = nullptr;
 		pWrapperTable->m_Writer_SetContentEncryptionCallback = nullptr;
+		pWrapperTable->m_PersistentReaderSource_GetSourceType = nullptr;
+		pWrapperTable->m_PersistentReaderSource_InvalidateSourceData = nullptr;
+		pWrapperTable->m_PersistentReaderSource_SourceDataIsValid = nullptr;
+		pWrapperTable->m_Reader_ReadFromPersistentSource = nullptr;
 		pWrapperTable->m_Reader_ReadFromFile = nullptr;
 		pWrapperTable->m_Reader_ReadFromBuffer = nullptr;
 		pWrapperTable->m_Reader_ReadFromCallback = nullptr;
@@ -2293,6 +2325,9 @@ public:
 		pWrapperTable->m_Model_RemoveCustomContentType = nullptr;
 		pWrapperTable->m_Model_SetRandomNumberCallback = nullptr;
 		pWrapperTable->m_Model_GetKeyStore = nullptr;
+		pWrapperTable->m_Model_CreatePersistentSourceFromFile = nullptr;
+		pWrapperTable->m_Model_CreatePersistentSourceFromBuffer = nullptr;
+		pWrapperTable->m_Model_CreatePersistentSourceFromCallback = nullptr;
 		pWrapperTable->m_GetLibraryVersion = nullptr;
 		pWrapperTable->m_GetPrereleaseInformation = nullptr;
 		pWrapperTable->m_GetBuildInformation = nullptr;
@@ -2475,6 +2510,42 @@ public:
 		dlerror();
 		#endif // _WIN32
 		if (pWrapperTable->m_Writer_SetContentEncryptionCallback == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_PersistentReaderSource_GetSourceType = (PLib3MFPersistentReaderSource_GetSourceTypePtr) GetProcAddress(hLibrary, "lib3mf_persistentreadersource_getsourcetype");
+		#else // _WIN32
+		pWrapperTable->m_PersistentReaderSource_GetSourceType = (PLib3MFPersistentReaderSource_GetSourceTypePtr) dlsym(hLibrary, "lib3mf_persistentreadersource_getsourcetype");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_PersistentReaderSource_GetSourceType == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_PersistentReaderSource_InvalidateSourceData = (PLib3MFPersistentReaderSource_InvalidateSourceDataPtr) GetProcAddress(hLibrary, "lib3mf_persistentreadersource_invalidatesourcedata");
+		#else // _WIN32
+		pWrapperTable->m_PersistentReaderSource_InvalidateSourceData = (PLib3MFPersistentReaderSource_InvalidateSourceDataPtr) dlsym(hLibrary, "lib3mf_persistentreadersource_invalidatesourcedata");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_PersistentReaderSource_InvalidateSourceData == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_PersistentReaderSource_SourceDataIsValid = (PLib3MFPersistentReaderSource_SourceDataIsValidPtr) GetProcAddress(hLibrary, "lib3mf_persistentreadersource_sourcedataisvalid");
+		#else // _WIN32
+		pWrapperTable->m_PersistentReaderSource_SourceDataIsValid = (PLib3MFPersistentReaderSource_SourceDataIsValidPtr) dlsym(hLibrary, "lib3mf_persistentreadersource_sourcedataisvalid");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_PersistentReaderSource_SourceDataIsValid == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Reader_ReadFromPersistentSource = (PLib3MFReader_ReadFromPersistentSourcePtr) GetProcAddress(hLibrary, "lib3mf_reader_readfrompersistentsource");
+		#else // _WIN32
+		pWrapperTable->m_Reader_ReadFromPersistentSource = (PLib3MFReader_ReadFromPersistentSourcePtr) dlsym(hLibrary, "lib3mf_reader_readfrompersistentsource");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Reader_ReadFromPersistentSource == nullptr)
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
@@ -5736,6 +5807,33 @@ public:
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		#ifdef _WIN32
+		pWrapperTable->m_Model_CreatePersistentSourceFromFile = (PLib3MFModel_CreatePersistentSourceFromFilePtr) GetProcAddress(hLibrary, "lib3mf_model_createpersistentsourcefromfile");
+		#else // _WIN32
+		pWrapperTable->m_Model_CreatePersistentSourceFromFile = (PLib3MFModel_CreatePersistentSourceFromFilePtr) dlsym(hLibrary, "lib3mf_model_createpersistentsourcefromfile");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Model_CreatePersistentSourceFromFile == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Model_CreatePersistentSourceFromBuffer = (PLib3MFModel_CreatePersistentSourceFromBufferPtr) GetProcAddress(hLibrary, "lib3mf_model_createpersistentsourcefrombuffer");
+		#else // _WIN32
+		pWrapperTable->m_Model_CreatePersistentSourceFromBuffer = (PLib3MFModel_CreatePersistentSourceFromBufferPtr) dlsym(hLibrary, "lib3mf_model_createpersistentsourcefrombuffer");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Model_CreatePersistentSourceFromBuffer == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
+		pWrapperTable->m_Model_CreatePersistentSourceFromCallback = (PLib3MFModel_CreatePersistentSourceFromCallbackPtr) GetProcAddress(hLibrary, "lib3mf_model_createpersistentsourcefromcallback");
+		#else // _WIN32
+		pWrapperTable->m_Model_CreatePersistentSourceFromCallback = (PLib3MFModel_CreatePersistentSourceFromCallbackPtr) dlsym(hLibrary, "lib3mf_model_createpersistentsourcefromcallback");
+		dlerror();
+		#endif // _WIN32
+		if (pWrapperTable->m_Model_CreatePersistentSourceFromCallback == nullptr)
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		#ifdef _WIN32
 		pWrapperTable->m_GetLibraryVersion = (PLib3MFGetLibraryVersionPtr) GetProcAddress(hLibrary, "lib3mf_getlibraryversion");
 		#else // _WIN32
 		pWrapperTable->m_GetLibraryVersion = (PLib3MFGetLibraryVersionPtr) dlsym(hLibrary, "lib3mf_getlibraryversion");
@@ -5972,6 +6070,22 @@ public:
 		
 		eLookupError = (*pLookup)("lib3mf_writer_setcontentencryptioncallback", (void**)&(pWrapperTable->m_Writer_SetContentEncryptionCallback));
 		if ( (eLookupError != 0) || (pWrapperTable->m_Writer_SetContentEncryptionCallback == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_persistentreadersource_getsourcetype", (void**)&(pWrapperTable->m_PersistentReaderSource_GetSourceType));
+		if ( (eLookupError != 0) || (pWrapperTable->m_PersistentReaderSource_GetSourceType == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_persistentreadersource_invalidatesourcedata", (void**)&(pWrapperTable->m_PersistentReaderSource_InvalidateSourceData));
+		if ( (eLookupError != 0) || (pWrapperTable->m_PersistentReaderSource_InvalidateSourceData == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_persistentreadersource_sourcedataisvalid", (void**)&(pWrapperTable->m_PersistentReaderSource_SourceDataIsValid));
+		if ( (eLookupError != 0) || (pWrapperTable->m_PersistentReaderSource_SourceDataIsValid == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_reader_readfrompersistentsource", (void**)&(pWrapperTable->m_Reader_ReadFromPersistentSource));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Reader_ReadFromPersistentSource == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
 		eLookupError = (*pLookup)("lib3mf_reader_readfromfile", (void**)&(pWrapperTable->m_Reader_ReadFromFile));
@@ -7422,6 +7536,18 @@ public:
 		if ( (eLookupError != 0) || (pWrapperTable->m_Model_GetKeyStore == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 		
+		eLookupError = (*pLookup)("lib3mf_model_createpersistentsourcefromfile", (void**)&(pWrapperTable->m_Model_CreatePersistentSourceFromFile));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Model_CreatePersistentSourceFromFile == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_model_createpersistentsourcefrombuffer", (void**)&(pWrapperTable->m_Model_CreatePersistentSourceFromBuffer));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Model_CreatePersistentSourceFromBuffer == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
+		eLookupError = (*pLookup)("lib3mf_model_createpersistentsourcefromcallback", (void**)&(pWrapperTable->m_Model_CreatePersistentSourceFromCallback));
+		if ( (eLookupError != 0) || (pWrapperTable->m_Model_CreatePersistentSourceFromCallback == nullptr) )
+			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+		
 		eLookupError = (*pLookup)("lib3mf_getlibraryversion", (void**)&(pWrapperTable->m_GetLibraryVersion));
 		if ( (eLookupError != 0) || (pWrapperTable->m_GetLibraryVersion == nullptr) )
 			return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
@@ -7659,8 +7785,57 @@ public:
 	}
 	
 	/**
+	 * Method definitions for class CPersistentReaderSource
+	 */
+	
+	/**
+	* CPersistentReaderSource::GetSourceType - Retrieves the type of source data.
+	* @return Reader Source Type
+	*/
+	ePersistentReaderSourceType CPersistentReaderSource::GetSourceType()
+	{
+		ePersistentReaderSourceType resultSourceType = (ePersistentReaderSourceType) 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_PersistentReaderSource_GetSourceType(m_pHandle, &resultSourceType));
+		
+		return resultSourceType;
+	}
+	
+	/**
+	* CPersistentReaderSource::InvalidateSourceData - Invalidates the reader source. Every subsequent read on this data will fail.
+	*/
+	void CPersistentReaderSource::InvalidateSourceData()
+	{
+		CheckError(m_pWrapper->m_WrapperTable.m_PersistentReaderSource_InvalidateSourceData(m_pHandle));
+	}
+	
+	/**
+	* CPersistentReaderSource::SourceDataIsValid - Checks if the source data is valid. Any read on an invalid source object will fail.
+	* @return The source data is valid.
+	*/
+	bool CPersistentReaderSource::SourceDataIsValid()
+	{
+		bool resultDataIsValid = 0;
+		CheckError(m_pWrapper->m_WrapperTable.m_PersistentReaderSource_SourceDataIsValid(m_pHandle, &resultDataIsValid));
+		
+		return resultDataIsValid;
+	}
+	
+	/**
 	 * Method definitions for class CReader
 	 */
+	
+	/**
+	* CReader::ReadFromPersistentSource - Reads a model from a persistent source object. The object will be referenced until the Model is destroyed or cleared.
+	* @param[in] pSource - Source object to read from
+	*/
+	void CReader::ReadFromPersistentSource(CPersistentReaderSource * pSource)
+	{
+		Lib3MFHandle hSource = nullptr;
+		if (pSource != nullptr) {
+			hSource = pSource->GetHandle();
+		};
+		CheckError(m_pWrapper->m_WrapperTable.m_Reader_ReadFromPersistentSource(m_pHandle, hSource));
+	}
 	
 	/**
 	* CReader::ReadFromFile - Reads a model from a file. The file type is specified by the Model Reader class
@@ -12572,6 +12747,57 @@ public:
 			CheckError(LIB3MF_ERROR_INVALIDPARAM);
 		}
 		return std::make_shared<CKeyStore>(m_pWrapper, hKeyStore);
+	}
+	
+	/**
+	* CModel::CreatePersistentSourceFromFile - Creates an OPC Reader Source from a file.
+	* @param[in] sFilename - Filename to read from
+	* @return The instance of the created reader source
+	*/
+	PPersistentReaderSource CModel::CreatePersistentSourceFromFile(const std::string & sFilename)
+	{
+		Lib3MFHandle hInstance = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_Model_CreatePersistentSourceFromFile(m_pHandle, sFilename.c_str(), &hInstance));
+		
+		if (!hInstance) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::make_shared<CPersistentReaderSource>(m_pWrapper, hInstance);
+	}
+	
+	/**
+	* CModel::CreatePersistentSourceFromBuffer - Creates an OPC Reader Source from a memory buffer. The memory buffer MUST exist as long as the Source object exists.
+	* @param[in] BufferBuffer - Buffer to read from
+	* @return The instance of the created reader source
+	*/
+	PPersistentReaderSource CModel::CreatePersistentSourceFromBuffer(const CInputVector<Lib3MF_uint8> & BufferBuffer)
+	{
+		Lib3MFHandle hInstance = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_Model_CreatePersistentSourceFromBuffer(m_pHandle, (Lib3MF_uint64)BufferBuffer.size(), BufferBuffer.data(), &hInstance));
+		
+		if (!hInstance) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::make_shared<CPersistentReaderSource>(m_pWrapper, hInstance);
+	}
+	
+	/**
+	* CModel::CreatePersistentSourceFromCallback - Creates an OPC Reader Source from a data provided by a callback function. The callbacks MUST exist as long as the source object exists.
+	* @param[in] pTheReadCallback - Callback to call for reading a data chunk
+	* @param[in] nStreamSize - number of bytes the callback returns
+	* @param[in] pTheSeekCallback - Callback to call for seeking in the stream.
+	* @param[in] pUserData - Userdata that is passed to the callback function
+	* @return The instance of the created reader source
+	*/
+	PPersistentReaderSource CModel::CreatePersistentSourceFromCallback(const ReadCallback pTheReadCallback, const Lib3MF_uint64 nStreamSize, const SeekCallback pTheSeekCallback, const Lib3MF_pvoid pUserData)
+	{
+		Lib3MFHandle hInstance = nullptr;
+		CheckError(m_pWrapper->m_WrapperTable.m_Model_CreatePersistentSourceFromCallback(m_pHandle, pTheReadCallback, nStreamSize, pTheSeekCallback, pUserData, &hInstance));
+		
+		if (!hInstance) {
+			CheckError(LIB3MF_ERROR_INVALIDPARAM);
+		}
+		return std::make_shared<CPersistentReaderSource>(m_pWrapper, hInstance);
 	}
 
 } // namespace Lib3MF

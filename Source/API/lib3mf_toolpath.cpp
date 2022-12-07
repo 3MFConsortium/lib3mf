@@ -37,6 +37,8 @@ Abstract: This is a stub class definition of CToolpath
 #include "lib3mf_writer.hpp"
 #include "lib3mf_toolpathlayerreader.hpp"
 
+#include "Common/NMR_Exception.h"
+
 // Include custom headers here.
 #include "Common/Platform/NMR_ImportStream_Shared_Memory.h"
 #include "Model/Classes/NMR_ModelConstants.h"
@@ -131,7 +133,7 @@ IAttachment* CToolpath::GetLayerAttachment(const Lib3MF_uint32 nIndex)
 	auto pModel = m_pToolpath->getModel();
 	auto pAttachment = pModel->findModelAttachment(pLayer->getLayerDataPath());
 	if (pAttachment.get() == nullptr)
-		throw ELib3MFInterfaceException(NMR_ERROR_INVALIDMODELATTACHMENT);
+		throw NMR::CNMRException(NMR_ERROR_INVALIDMODELATTACHMENT);
 
 	return new CAttachment(pAttachment);
 
@@ -155,12 +157,23 @@ IToolpathLayerReader* CToolpath::ReadLayerData(const Lib3MF_uint32 nIndex)
 	auto pLayer = m_pToolpath->getLayer(nIndex);
 
 	auto pModel = m_pToolpath->getModel();
+
+	NMR::PImportStream pLayerDataStream;
+
 	auto pAttachment = pModel->findModelAttachment(pLayer->getLayerDataPath());
-	if (pAttachment.get() == nullptr)
-		throw ELib3MFInterfaceException(NMR_ERROR_INVALIDMODELATTACHMENT);
+	if (pAttachment.get() != nullptr) {
+		pLayerDataStream = pAttachment->getStream();
+	}
+	else {
+		auto pOPCStream = pModel->readPathFromPersistentDataSource(pLayer->getLayerDataPath());
+		if (pOPCStream.get () == nullptr)
+			throw NMR::CNMRException(NMR_ERROR_INVALIDMODELATTACHMENT);
+
+		pLayerDataStream = pOPCStream->copyToMemory();
+	}
 
 	auto pReader = std::make_shared<NMR::CToolpathReader>(m_pToolpath, true);
-	pReader->readStream(pAttachment->getStream());
+	pReader->readStream(pLayerDataStream);
 
 	return new CToolpathLayerReader(pReader->getReadData());
 }

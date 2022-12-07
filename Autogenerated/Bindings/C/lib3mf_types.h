@@ -146,6 +146,7 @@ typedef void * Lib3MF_pvoid;
 
 typedef Lib3MFHandle Lib3MF_Base;
 typedef Lib3MFHandle Lib3MF_Writer;
+typedef Lib3MFHandle Lib3MF_PersistentReaderSource;
 typedef Lib3MFHandle Lib3MF_Reader;
 typedef Lib3MFHandle Lib3MF_PackagePart;
 typedef Lib3MFHandle Lib3MF_Resource;
@@ -209,6 +210,13 @@ typedef enum eLib3MFSlicesMeshResolution {
   eSlicesMeshResolutionFullres = 0,
   eSlicesMeshResolutionLowres = 1
 } eLib3MFSlicesMeshResolution;
+
+typedef enum eLib3MFPersistentReaderSourceType {
+  ePersistentReaderSourceTypeUnknown = 0,
+  ePersistentReaderSourceTypeFileOnDisk = 1,
+  ePersistentReaderSourceTypeMemoryBuffer = 2,
+  ePersistentReaderSourceTypeCallback = 3
+} eLib3MFPersistentReaderSourceType;
 
 typedef enum eLib3MFModelUnit {
   eModelUnitMicroMeter = 0,
@@ -342,6 +350,11 @@ typedef union {
   eLib3MFSlicesMeshResolution m_enum;
   int m_code;
 } structEnumLib3MFSlicesMeshResolution;
+
+typedef union {
+  eLib3MFPersistentReaderSourceType m_enum;
+  int m_code;
+} structEnumLib3MFPersistentReaderSourceType;
 
 typedef union {
   eLib3MFModelUnit m_enum;

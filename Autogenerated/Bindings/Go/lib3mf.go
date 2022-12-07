@@ -57,6 +57,14 @@ const (
 		eSlicesMeshResolution_Lowres = 1
 )
 
+type ELib3MFPersistentReaderSourceType int
+const (
+		ePersistentReaderSourceType_Unknown = 0
+		ePersistentReaderSourceType_FileOnDisk = 1
+		ePersistentReaderSourceType_MemoryBuffer = 2
+		ePersistentReaderSourceType_Callback = 3
+)
+
 type ELib3MFModelUnit int
 const (
 		eModelUnit_MicroMeter = 0
@@ -391,6 +399,41 @@ type Lib3MFGoInterface interface {
 	* @param[in] nUserData - Userdata that is passed to the callback function
 	*/
 	Writer_SetContentEncryptionCallback(Writer Lib3MFHandle, pTheCallback int64, nUserData uint64) (error)
+
+
+	/**
+	* Retrieves the type of source data.
+	*
+	* @param[in] PersistentReaderSource - PersistentReaderSource instance.
+	* @return Reader Source Type
+	*/
+	PersistentReaderSource_GetSourceType(PersistentReaderSource Lib3MFHandle) (ELib3MFPersistentReaderSourceType, error)
+
+
+	/**
+	* Invalidates the reader source. Every subsequent read on this data will fail.
+	*
+	* @param[in] PersistentReaderSource - PersistentReaderSource instance.
+	*/
+	PersistentReaderSource_InvalidateSourceData(PersistentReaderSource Lib3MFHandle) (error)
+
+
+	/**
+	* Checks if the source data is valid. Any read on an invalid source object will fail.
+	*
+	* @param[in] PersistentReaderSource - PersistentReaderSource instance.
+	* @return The source data is valid.
+	*/
+	PersistentReaderSource_SourceDataIsValid(PersistentReaderSource Lib3MFHandle) (bool, error)
+
+
+	/**
+	* Reads a model from a persistent source object. The object will be referenced until the Model is destroyed or cleared.
+	*
+	* @param[in] Reader - Reader instance.
+	* @param[in] Source - Source object to read from
+	*/
+	Reader_ReadFromPersistentSource(Reader Lib3MFHandle, Source Lib3MFHandle) (error)
 
 
 	/**
@@ -3806,6 +3849,39 @@ type Lib3MFGoInterface interface {
 
 
 	/**
+	* Creates an OPC Reader Source from a file.
+	*
+	* @param[in] Model - Model instance.
+	* @param[in] sFilename - Filename to read from
+	* @return The instance of the created reader source
+	*/
+	Model_CreatePersistentSourceFromFile(Model Lib3MFHandle, sFilename string) (Lib3MFHandle, error)
+
+
+	/**
+	* Creates an OPC Reader Source from a memory buffer. The memory buffer MUST exist as long as the Source object exists.
+	*
+	* @param[in] Model - Model instance.
+	* @param[in] Buffer - Buffer to read from
+	* @return The instance of the created reader source
+	*/
+	Model_CreatePersistentSourceFromBuffer(Model Lib3MFHandle, Buffer []uint8) (Lib3MFHandle, error)
+
+
+	/**
+	* Creates an OPC Reader Source from a data provided by a callback function. The callbacks MUST exist as long as the source object exists.
+	*
+	* @param[in] Model - Model instance.
+	* @param[in] pTheReadCallback - Callback to call for reading a data chunk
+	* @param[in] nStreamSize - number of bytes the callback returns
+	* @param[in] pTheSeekCallback - Callback to call for seeking in the stream.
+	* @param[in] nUserData - Userdata that is passed to the callback function
+	* @return The instance of the created reader source
+	*/
+	Model_CreatePersistentSourceFromCallback(Model Lib3MFHandle, pTheReadCallback int64, nStreamSize uint64, pTheSeekCallback int64, nUserData uint64) (Lib3MFHandle, error)
+
+
+	/**
 	* retrieves the binary version of this library.
 	*
 	* @param[in] Wrapper - Wrapper instance.
@@ -4106,6 +4182,34 @@ func (instance *Lib3MFWriter) SetContentEncryptionCallback(pTheCallback int64, n
 
 
 /*************************************************************************************************************************
+Class definition Lib3MFPersistentReaderSource
+**************************************************************************************************************************/
+
+type Lib3MFPersistentReaderSource struct {
+	Lib3MFBase
+}
+
+func (instance *Lib3MFPersistentReaderSource) Close() (error) {
+	return instance.Handle.Close()
+}
+
+func (instance *Lib3MFPersistentReaderSource) GetSourceType() (ELib3MFPersistentReaderSourceType, error) {
+	eSourceType, error := instance.Interface.PersistentReaderSource_GetSourceType(instance.Handle)
+	return eSourceType, error
+}
+
+func (instance *Lib3MFPersistentReaderSource) InvalidateSourceData() (error) {
+	error := instance.Interface.PersistentReaderSource_InvalidateSourceData(instance.Handle)
+	return error
+}
+
+func (instance *Lib3MFPersistentReaderSource) SourceDataIsValid() (bool, error) {
+	bDataIsValid, error := instance.Interface.PersistentReaderSource_SourceDataIsValid(instance.Handle)
+	return bDataIsValid, error
+}
+
+
+/*************************************************************************************************************************
 Class definition Lib3MFReader
 **************************************************************************************************************************/
 
@@ -4115,6 +4219,11 @@ type Lib3MFReader struct {
 
 func (instance *Lib3MFReader) Close() (error) {
 	return instance.Handle.Close()
+}
+
+func (instance *Lib3MFReader) ReadFromPersistentSource(Source Lib3MFHandle) (error) {
+	error := instance.Interface.Reader_ReadFromPersistentSource(instance.Handle, Source)
+	return error
 }
 
 func (instance *Lib3MFReader) ReadFromFile(sFilename string) (error) {
@@ -6806,6 +6915,30 @@ func (instance *Lib3MFModel) GetKeyStore() (Lib3MFKeyStore, error) {
 	cKeyStore.Interface = instance.Interface
 	cKeyStore.Handle = hKeyStore
 	return cKeyStore, error
+}
+
+func (instance *Lib3MFModel) CreatePersistentSourceFromFile(sFilename string) (Lib3MFPersistentReaderSource, error) {
+	hInstance, error := instance.Interface.Model_CreatePersistentSourceFromFile(instance.Handle, sFilename)
+	var cInstance Lib3MFPersistentReaderSource
+	cInstance.Interface = instance.Interface
+	cInstance.Handle = hInstance
+	return cInstance, error
+}
+
+func (instance *Lib3MFModel) CreatePersistentSourceFromBuffer(Buffer []uint8) (Lib3MFPersistentReaderSource, error) {
+	hInstance, error := instance.Interface.Model_CreatePersistentSourceFromBuffer(instance.Handle, Buffer)
+	var cInstance Lib3MFPersistentReaderSource
+	cInstance.Interface = instance.Interface
+	cInstance.Handle = hInstance
+	return cInstance, error
+}
+
+func (instance *Lib3MFModel) CreatePersistentSourceFromCallback(pTheReadCallback int64, nStreamSize uint64, pTheSeekCallback int64, nUserData uint64) (Lib3MFPersistentReaderSource, error) {
+	hInstance, error := instance.Interface.Model_CreatePersistentSourceFromCallback(instance.Handle, pTheReadCallback, nStreamSize, pTheSeekCallback, nUserData)
+	var cInstance Lib3MFPersistentReaderSource
+	cInstance.Interface = instance.Interface
+	cInstance.Handle = hInstance
+	return cInstance, error
 }
 
 func (instance *Lib3MFWrapper) GetLibraryVersion() (uint32, uint32, uint32, error) {

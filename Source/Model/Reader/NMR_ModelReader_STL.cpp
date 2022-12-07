@@ -45,10 +45,12 @@ namespace NMR {
 		// empty on purpose
 	}
 
-	void CModelReader_STL::readStream(_In_ PImportStream pStream)
+	void CModelReader_STL::readFromSource(_In_ PModelPersistentDataSource pDataSource)
 	{
-		if (pStream.get() == nullptr)
+		if (pDataSource.get() == nullptr)
 			throw CNMRException(NMR_ERROR_INVALIDPARAM);
+
+		auto pStream = pDataSource->getImportStream();
 
 		// Create STL Importer
 		PMeshImporter pImporter = std::make_shared<CMeshImporter_STL>(pStream);

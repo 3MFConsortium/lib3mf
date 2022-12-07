@@ -34,6 +34,7 @@ Abstract: This is a stub class definition of CReader
 #include "lib3mf_interfaceexception.hpp"
 #include "lib3mf_accessright.hpp"
 #include "lib3mf_contentencryptionparams.hpp"
+#include "lib3mf_persistentreadersource.hpp"
 #include "Common/Platform/NMR_Platform.h"
 #include "Common/Platform/NMR_ImportStream_Shared_Memory.h"
 #include "Common/Platform/NMR_ImportStream_Callback.h"
@@ -74,10 +75,16 @@ void CReader::ReadFromFile (const std::string & sFilename)
 {
 	NMR::PImportStream pImportStream = NMR::fnCreateImportStreamInstance(sFilename.c_str());
 
+	auto pDataSource = std::make_shared<NMR::CModelPersistentDataSource>(pImportStream);
 	try {
-		reader().readStream(pImportStream);
+		reader().readFromSource(pDataSource);
+
+		pDataSource->invalidateSource();
 	}
-	catch (NMR::CNMRException&e) {
+	catch (NMR::CNMRException&e) {		
+
+		pDataSource->invalidateSource();
+
 		if (e.getErrorCode() == NMR_USERABORTED) {
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_CALCULATIONABORTED);
 		}
@@ -85,14 +92,30 @@ void CReader::ReadFromFile (const std::string & sFilename)
 	}
 }
 
+void CReader::ReadFromPersistentSource(IPersistentReaderSource* pSource)
+{
+	auto pSourceInstance = dynamic_cast<CPersistentReaderSource*> (pSource);
+	if (pSourceInstance == nullptr)
+		throw ELib3MFInterfaceException(LIB3MF_ERROR_INVALIDCAST);
+
+	reader().readFromSource(pSourceInstance->getDataSource ());
+}
+
+
 void CReader::ReadFromBuffer (const Lib3MF_uint64 nBufferBufferSize, const Lib3MF_uint8 * pBufferBuffer)
 {
 	NMR::PImportStream pImportStream = std::make_shared<NMR::CImportStream_Shared_Memory>(pBufferBuffer, nBufferBufferSize);
 
+	auto pDataSource = std::make_shared<NMR::CModelPersistentDataSource>(pImportStream);
 	try {
-		reader().readStream(pImportStream);
+
+		reader().readFromSource(pDataSource);
+
+		pDataSource->invalidateSource();
 	}
 	catch (NMR::CNMRException&e) {
+		pDataSource->invalidateSource();
+
 		if (e.getErrorCode() == NMR_USERABORTED) {
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_CALCULATIONABORTED);
 		}
@@ -120,10 +143,16 @@ void CReader::ReadFromCallback(const Lib3MFReadCallback pTheReadCallback, const 
 	NMR::PImportStream pImportStream = std::make_shared<NMR::CImportStream_Callback>(
 		lambdaReadCallback, lambdaSeekCallback,
 		pUserData, nStreamSize);
+
+	auto pDataSource = std::make_shared<NMR::CModelPersistentDataSource>(pImportStream);
 	try {
-		reader().readStream(pImportStream);
+
+		reader().readFromSource(pDataSource);
+		pDataSource->invalidateSource();
 	}
 	catch (NMR::CNMRException&e) {
+		pDataSource->invalidateSource();
+
 		if (e.getErrorCode() == NMR_USERABORTED) {
 			throw ELib3MFInterfaceException(LIB3MF_ERROR_CALCULATIONABORTED);
 		}

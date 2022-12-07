@@ -18,6 +18,13 @@ namespace Lib3MF {
 		Lowres = 1
 	};
 
+	public enum ePersistentReaderSourceType {
+		Unknown = 0,
+		FileOnDisk = 1,
+		MemoryBuffer = 2,
+		Callback = 3
+	};
+
 	public enum eModelUnit {
 		MicroMeter = 0,
 		MilliMeter = 1,
@@ -335,6 +342,18 @@ namespace Lib3MF {
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_writer_setcontentencryptioncallback", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Writer_SetContentEncryptionCallback (IntPtr Handle, IntPtr ATheCallback, UInt64 AUserData);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_persistentreadersource_getsourcetype", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 PersistentReaderSource_GetSourceType (IntPtr Handle, out Int32 ASourceType);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_persistentreadersource_invalidatesourcedata", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 PersistentReaderSource_InvalidateSourceData (IntPtr Handle);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_persistentreadersource_sourcedataisvalid", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 PersistentReaderSource_SourceDataIsValid (IntPtr Handle, out Byte ADataIsValid);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_reader_readfrompersistentsource", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Reader_ReadFromPersistentSource (IntPtr Handle, IntPtr ASource);
 
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_reader_readfromfile", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Reader_ReadFromFile (IntPtr Handle, byte[] AFilename);
@@ -1422,6 +1441,15 @@ namespace Lib3MF {
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_getkeystore", CallingConvention=CallingConvention.Cdecl)]
 			public unsafe extern static Int32 Model_GetKeyStore (IntPtr Handle, out IntPtr AKeyStore);
 
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_createpersistentsourcefromfile", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Model_CreatePersistentSourceFromFile (IntPtr Handle, byte[] AFilename, out IntPtr AInstance);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_createpersistentsourcefrombuffer", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Model_CreatePersistentSourceFromBuffer (IntPtr Handle, UInt64 sizeBuffer, IntPtr dataBuffer, out IntPtr AInstance);
+
+			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_model_createpersistentsourcefromcallback", CallingConvention=CallingConvention.Cdecl)]
+			public unsafe extern static Int32 Model_CreatePersistentSourceFromCallback (IntPtr Handle, IntPtr ATheReadCallback, UInt64 AStreamSize, IntPtr ATheSeekCallback, UInt64 AUserData, out IntPtr AInstance);
+
 			[DllImport("lib3mf.dll", EntryPoint = "lib3mf_getlibraryversion", CharSet = CharSet.Ansi, CallingConvention=CallingConvention.Cdecl)]
 			public extern static Int32 GetLibraryVersion (out UInt32 AMajor, out UInt32 AMinor, out UInt32 AMicro);
 
@@ -1915,10 +1943,46 @@ namespace Lib3MF {
 
 	}
 
+	class CPersistentReaderSource : CBase
+	{
+		public CPersistentReaderSource (IntPtr NewHandle) : base (NewHandle)
+		{
+		}
+
+		public ePersistentReaderSourceType GetSourceType ()
+		{
+			Int32 resultSourceType = 0;
+
+			CheckError(Internal.Lib3MFWrapper.PersistentReaderSource_GetSourceType (Handle, out resultSourceType));
+			return (ePersistentReaderSourceType) (resultSourceType);
+		}
+
+		public void InvalidateSourceData ()
+		{
+
+			CheckError(Internal.Lib3MFWrapper.PersistentReaderSource_InvalidateSourceData (Handle));
+		}
+
+		public bool SourceDataIsValid ()
+		{
+			Byte resultDataIsValid = 0;
+
+			CheckError(Internal.Lib3MFWrapper.PersistentReaderSource_SourceDataIsValid (Handle, out resultDataIsValid));
+			return (resultDataIsValid != 0);
+		}
+
+	}
+
 	class CReader : CBase
 	{
 		public CReader (IntPtr NewHandle) : base (NewHandle)
 		{
+		}
+
+		public void ReadFromPersistentSource (CPersistentReaderSource ASource)
+		{
+
+			CheckError(Internal.Lib3MFWrapper.Reader_ReadFromPersistentSource (Handle, ASource.GetHandle()));
 		}
 
 		public void ReadFromFile (String AFilename)
@@ -5489,6 +5553,33 @@ namespace Lib3MF {
 
 			CheckError(Internal.Lib3MFWrapper.Model_GetKeyStore (Handle, out newKeyStore));
 			return new CKeyStore (newKeyStore );
+		}
+
+		public CPersistentReaderSource CreatePersistentSourceFromFile (String AFilename)
+		{
+			byte[] byteFilename = Encoding.UTF8.GetBytes(AFilename + char.MinValue);
+			IntPtr newInstance = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Model_CreatePersistentSourceFromFile (Handle, byteFilename, out newInstance));
+			return new CPersistentReaderSource (newInstance );
+		}
+
+		public CPersistentReaderSource CreatePersistentSourceFromBuffer (Byte[] ABuffer)
+		{
+			GCHandle dataBuffer = GCHandle.Alloc(ABuffer, GCHandleType.Pinned);
+			IntPtr newInstance = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Model_CreatePersistentSourceFromBuffer (Handle, (UInt64) ABuffer.Length, dataBuffer.AddrOfPinnedObject(), out newInstance));
+			dataBuffer.Free ();
+			return new CPersistentReaderSource (newInstance );
+		}
+
+		public CPersistentReaderSource CreatePersistentSourceFromCallback (IntPtr ATheReadCallback, UInt64 AStreamSize, IntPtr ATheSeekCallback, UInt64 AUserData)
+		{
+			IntPtr newInstance = IntPtr.Zero;
+
+			CheckError(Internal.Lib3MFWrapper.Model_CreatePersistentSourceFromCallback (Handle, IntPtr.Zero, AStreamSize, IntPtr.Zero, AUserData, out newInstance));
+			return new CPersistentReaderSource (newInstance );
 		}
 
 	}

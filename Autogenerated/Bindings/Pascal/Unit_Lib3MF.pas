@@ -143,6 +143,13 @@ type
 		eSlicesMeshResolutionLowres
 	);
 
+	TLib3MFPersistentReaderSourceType = (
+		ePersistentReaderSourceTypeUnknown,
+		ePersistentReaderSourceTypeFileOnDisk,
+		ePersistentReaderSourceTypeMemoryBuffer,
+		ePersistentReaderSourceTypeCallback
+	);
+
 	TLib3MFModelUnit = (
 		eModelUnitMicroMeter,
 		eModelUnitMilliMeter,
@@ -379,6 +386,7 @@ type
 	TLib3MFWrapper = class;
 	TLib3MFBase = class;
 	TLib3MFWriter = class;
+	TLib3MFPersistentReaderSource = class;
 	TLib3MFReader = class;
 	TLib3MFPackagePart = class;
 	TLib3MFResource = class;
@@ -566,9 +574,49 @@ type
 	
 
 (*************************************************************************************************************************
+ Function type definitions for PersistentReaderSource
+**************************************************************************************************************************)
+
+	(**
+	* Retrieves the type of source data.
+	*
+	* @param[in] pPersistentReaderSource - PersistentReaderSource instance.
+	* @param[out] pSourceType - Reader Source Type
+	* @return error code or 0 (success)
+	*)
+	TLib3MFPersistentReaderSource_GetSourceTypeFunc = function(pPersistentReaderSource: TLib3MFHandle; out pSourceType: Integer): TLib3MFResult; cdecl;
+	
+	(**
+	* Invalidates the reader source. Every subsequent read on this data will fail.
+	*
+	* @param[in] pPersistentReaderSource - PersistentReaderSource instance.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFPersistentReaderSource_InvalidateSourceDataFunc = function(pPersistentReaderSource: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Checks if the source data is valid. Any read on an invalid source object will fail.
+	*
+	* @param[in] pPersistentReaderSource - PersistentReaderSource instance.
+	* @param[out] pDataIsValid - The source data is valid.
+	* @return error code or 0 (success)
+	*)
+	TLib3MFPersistentReaderSource_SourceDataIsValidFunc = function(pPersistentReaderSource: TLib3MFHandle; out pDataIsValid: Byte): TLib3MFResult; cdecl;
+	
+
+(*************************************************************************************************************************
  Function type definitions for Reader
 **************************************************************************************************************************)
 
+	(**
+	* Reads a model from a persistent source object. The object will be referenced until the Model is destroyed or cleared.
+	*
+	* @param[in] pReader - Reader instance.
+	* @param[in] pSource - Source object to read from
+	* @return error code or 0 (success)
+	*)
+	TLib3MFReader_ReadFromPersistentSourceFunc = function(pReader: TLib3MFHandle; const pSource: TLib3MFHandle): TLib3MFResult; cdecl;
+	
 	(**
 	* Reads a model from a file. The file type is specified by the Model Reader class
 	*
@@ -4335,6 +4383,40 @@ type
 	*)
 	TLib3MFModel_GetKeyStoreFunc = function(pModel: TLib3MFHandle; out pKeyStore: TLib3MFHandle): TLib3MFResult; cdecl;
 	
+	(**
+	* Creates an OPC Reader Source from a file.
+	*
+	* @param[in] pModel - Model instance.
+	* @param[in] pFilename - Filename to read from
+	* @param[out] pInstance - The instance of the created reader source
+	* @return error code or 0 (success)
+	*)
+	TLib3MFModel_CreatePersistentSourceFromFileFunc = function(pModel: TLib3MFHandle; const pFilename: PAnsiChar; out pInstance: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Creates an OPC Reader Source from a memory buffer. The memory buffer MUST exist as long as the Source object exists.
+	*
+	* @param[in] pModel - Model instance.
+	* @param[in] nBufferCount - Number of elements in buffer
+	* @param[in] pBufferBuffer - uint8 buffer of Buffer to read from
+	* @param[out] pInstance - The instance of the created reader source
+	* @return error code or 0 (success)
+	*)
+	TLib3MFModel_CreatePersistentSourceFromBufferFunc = function(pModel: TLib3MFHandle; const nBufferCount: QWord; const pBufferBuffer: PByte; out pInstance: TLib3MFHandle): TLib3MFResult; cdecl;
+	
+	(**
+	* Creates an OPC Reader Source from a data provided by a callback function. The callbacks MUST exist as long as the source object exists.
+	*
+	* @param[in] pModel - Model instance.
+	* @param[in] pTheReadCallback - Callback to call for reading a data chunk
+	* @param[in] nStreamSize - number of bytes the callback returns
+	* @param[in] pTheSeekCallback - Callback to call for seeking in the stream.
+	* @param[in] pUserData - Userdata that is passed to the callback function
+	* @param[out] pInstance - The instance of the created reader source
+	* @return error code or 0 (success)
+	*)
+	TLib3MFModel_CreatePersistentSourceFromCallbackFunc = function(pModel: TLib3MFHandle; const pTheReadCallback: PLib3MF_ReadCallback; const nStreamSize: QWord; const pTheSeekCallback: PLib3MF_SeekCallback; const pUserData: Pointer; out pInstance: TLib3MFHandle): TLib3MFResult; cdecl;
+	
 (*************************************************************************************************************************
  Global function definitions 
 **************************************************************************************************************************)
@@ -4595,6 +4677,20 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 
 
 (*************************************************************************************************************************
+ Class definition for PersistentReaderSource
+**************************************************************************************************************************)
+
+	TLib3MFPersistentReaderSource = class(TLib3MFBase)
+	public
+		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+		destructor Destroy; override;
+		function GetSourceType(): TLib3MFPersistentReaderSourceType;
+		procedure InvalidateSourceData();
+		function SourceDataIsValid(): Boolean;
+	end;
+
+
+(*************************************************************************************************************************
  Class definition for Reader
 **************************************************************************************************************************)
 
@@ -4602,6 +4698,7 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 	public
 		constructor Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
 		destructor Destroy; override;
+		procedure ReadFromPersistentSource(const ASource: TLib3MFPersistentReaderSource);
 		procedure ReadFromFile(const AFilename: String);
 		procedure ReadFromBuffer(const ABuffer: TByteDynArray);
 		procedure ReadFromCallback(const ATheReadCallback: PLib3MF_ReadCallback; const AStreamSize: QWord; const ATheSeekCallback: PLib3MF_SeekCallback; const AUserData: Pointer);
@@ -5448,6 +5545,9 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		procedure RemoveCustomContentType(const AExtension: String);
 		procedure SetRandomNumberCallback(const ATheCallback: PLib3MF_RandomNumberCallback; const AUserData: Pointer);
 		function GetKeyStore(): TLib3MFKeyStore;
+		function CreatePersistentSourceFromFile(const AFilename: String): TLib3MFPersistentReaderSource;
+		function CreatePersistentSourceFromBuffer(const ABuffer: TByteDynArray): TLib3MFPersistentReaderSource;
+		function CreatePersistentSourceFromCallback(const ATheReadCallback: PLib3MF_ReadCallback; const AStreamSize: QWord; const ATheSeekCallback: PLib3MF_SeekCallback; const AUserData: Pointer): TLib3MFPersistentReaderSource;
 	end;
 
 (*************************************************************************************************************************
@@ -5470,6 +5570,10 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFWriter_GetWarningCountFunc: TLib3MFWriter_GetWarningCountFunc;
 		FLib3MFWriter_AddKeyWrappingCallbackFunc: TLib3MFWriter_AddKeyWrappingCallbackFunc;
 		FLib3MFWriter_SetContentEncryptionCallbackFunc: TLib3MFWriter_SetContentEncryptionCallbackFunc;
+		FLib3MFPersistentReaderSource_GetSourceTypeFunc: TLib3MFPersistentReaderSource_GetSourceTypeFunc;
+		FLib3MFPersistentReaderSource_InvalidateSourceDataFunc: TLib3MFPersistentReaderSource_InvalidateSourceDataFunc;
+		FLib3MFPersistentReaderSource_SourceDataIsValidFunc: TLib3MFPersistentReaderSource_SourceDataIsValidFunc;
+		FLib3MFReader_ReadFromPersistentSourceFunc: TLib3MFReader_ReadFromPersistentSourceFunc;
 		FLib3MFReader_ReadFromFileFunc: TLib3MFReader_ReadFromFileFunc;
 		FLib3MFReader_ReadFromBufferFunc: TLib3MFReader_ReadFromBufferFunc;
 		FLib3MFReader_ReadFromCallbackFunc: TLib3MFReader_ReadFromCallbackFunc;
@@ -5832,6 +5936,9 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		FLib3MFModel_RemoveCustomContentTypeFunc: TLib3MFModel_RemoveCustomContentTypeFunc;
 		FLib3MFModel_SetRandomNumberCallbackFunc: TLib3MFModel_SetRandomNumberCallbackFunc;
 		FLib3MFModel_GetKeyStoreFunc: TLib3MFModel_GetKeyStoreFunc;
+		FLib3MFModel_CreatePersistentSourceFromFileFunc: TLib3MFModel_CreatePersistentSourceFromFileFunc;
+		FLib3MFModel_CreatePersistentSourceFromBufferFunc: TLib3MFModel_CreatePersistentSourceFromBufferFunc;
+		FLib3MFModel_CreatePersistentSourceFromCallbackFunc: TLib3MFModel_CreatePersistentSourceFromCallbackFunc;
 		FLib3MFGetLibraryVersionFunc: TLib3MFGetLibraryVersionFunc;
 		FLib3MFGetPrereleaseInformationFunc: TLib3MFGetPrereleaseInformationFunc;
 		FLib3MFGetBuildInformationFunc: TLib3MFGetBuildInformationFunc;
@@ -5874,6 +5981,10 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFWriter_GetWarningCountFunc: TLib3MFWriter_GetWarningCountFunc read FLib3MFWriter_GetWarningCountFunc;
 		property Lib3MFWriter_AddKeyWrappingCallbackFunc: TLib3MFWriter_AddKeyWrappingCallbackFunc read FLib3MFWriter_AddKeyWrappingCallbackFunc;
 		property Lib3MFWriter_SetContentEncryptionCallbackFunc: TLib3MFWriter_SetContentEncryptionCallbackFunc read FLib3MFWriter_SetContentEncryptionCallbackFunc;
+		property Lib3MFPersistentReaderSource_GetSourceTypeFunc: TLib3MFPersistentReaderSource_GetSourceTypeFunc read FLib3MFPersistentReaderSource_GetSourceTypeFunc;
+		property Lib3MFPersistentReaderSource_InvalidateSourceDataFunc: TLib3MFPersistentReaderSource_InvalidateSourceDataFunc read FLib3MFPersistentReaderSource_InvalidateSourceDataFunc;
+		property Lib3MFPersistentReaderSource_SourceDataIsValidFunc: TLib3MFPersistentReaderSource_SourceDataIsValidFunc read FLib3MFPersistentReaderSource_SourceDataIsValidFunc;
+		property Lib3MFReader_ReadFromPersistentSourceFunc: TLib3MFReader_ReadFromPersistentSourceFunc read FLib3MFReader_ReadFromPersistentSourceFunc;
 		property Lib3MFReader_ReadFromFileFunc: TLib3MFReader_ReadFromFileFunc read FLib3MFReader_ReadFromFileFunc;
 		property Lib3MFReader_ReadFromBufferFunc: TLib3MFReader_ReadFromBufferFunc read FLib3MFReader_ReadFromBufferFunc;
 		property Lib3MFReader_ReadFromCallbackFunc: TLib3MFReader_ReadFromCallbackFunc read FLib3MFReader_ReadFromCallbackFunc;
@@ -6236,6 +6347,9 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 		property Lib3MFModel_RemoveCustomContentTypeFunc: TLib3MFModel_RemoveCustomContentTypeFunc read FLib3MFModel_RemoveCustomContentTypeFunc;
 		property Lib3MFModel_SetRandomNumberCallbackFunc: TLib3MFModel_SetRandomNumberCallbackFunc read FLib3MFModel_SetRandomNumberCallbackFunc;
 		property Lib3MFModel_GetKeyStoreFunc: TLib3MFModel_GetKeyStoreFunc read FLib3MFModel_GetKeyStoreFunc;
+		property Lib3MFModel_CreatePersistentSourceFromFileFunc: TLib3MFModel_CreatePersistentSourceFromFileFunc read FLib3MFModel_CreatePersistentSourceFromFileFunc;
+		property Lib3MFModel_CreatePersistentSourceFromBufferFunc: TLib3MFModel_CreatePersistentSourceFromBufferFunc read FLib3MFModel_CreatePersistentSourceFromBufferFunc;
+		property Lib3MFModel_CreatePersistentSourceFromCallbackFunc: TLib3MFModel_CreatePersistentSourceFromCallbackFunc read FLib3MFModel_CreatePersistentSourceFromCallbackFunc;
 		property Lib3MFGetLibraryVersionFunc: TLib3MFGetLibraryVersionFunc read FLib3MFGetLibraryVersionFunc;
 		property Lib3MFGetPrereleaseInformationFunc: TLib3MFGetPrereleaseInformationFunc read FLib3MFGetPrereleaseInformationFunc;
 		property Lib3MFGetBuildInformationFunc: TLib3MFGetBuildInformationFunc read FLib3MFGetBuildInformationFunc;
@@ -6289,6 +6403,8 @@ TLib3MFSymbolLookupMethod = function(const pSymbolName: PAnsiChar; out pValue: P
 	function convertConstToPropertyType(const AValue: Integer): TLib3MFPropertyType;
 	function convertSlicesMeshResolutionToConst(const AValue: TLib3MFSlicesMeshResolution): Integer;
 	function convertConstToSlicesMeshResolution(const AValue: Integer): TLib3MFSlicesMeshResolution;
+	function convertPersistentReaderSourceTypeToConst(const AValue: TLib3MFPersistentReaderSourceType): Integer;
+	function convertConstToPersistentReaderSourceType(const AValue: Integer): TLib3MFPersistentReaderSourceType;
 	function convertModelUnitToConst(const AValue: TLib3MFModelUnit): Integer;
 	function convertConstToModelUnit(const AValue: Integer): TLib3MFModelUnit;
 	function convertObjectTypeToConst(const AValue: TLib3MFObjectType): Integer;
@@ -6373,6 +6489,31 @@ implementation
 		case AValue of
 			0: Result := eSlicesMeshResolutionFullres;
 			1: Result := eSlicesMeshResolutionLowres;
+			else 
+				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum constant');
+		end;
+	end;
+	
+	
+	function convertPersistentReaderSourceTypeToConst(const AValue: TLib3MFPersistentReaderSourceType): Integer;
+	begin
+		case AValue of
+			ePersistentReaderSourceTypeUnknown: Result := 0;
+			ePersistentReaderSourceTypeFileOnDisk: Result := 1;
+			ePersistentReaderSourceTypeMemoryBuffer: Result := 2;
+			ePersistentReaderSourceTypeCallback: Result := 3;
+			else 
+				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum value');
+		end;
+	end;
+	
+	function convertConstToPersistentReaderSourceType(const AValue: Integer): TLib3MFPersistentReaderSourceType;
+	begin
+		case AValue of
+			0: Result := ePersistentReaderSourceTypeUnknown;
+			1: Result := ePersistentReaderSourceTypeFileOnDisk;
+			2: Result := ePersistentReaderSourceTypeMemoryBuffer;
+			3: Result := ePersistentReaderSourceTypeCallback;
 			else 
 				raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'invalid enum constant');
 		end;
@@ -6996,6 +7137,43 @@ implementation
 	end;
 
 (*************************************************************************************************************************
+ Class implementation for PersistentReaderSource
+**************************************************************************************************************************)
+
+	constructor TLib3MFPersistentReaderSource.Create(AWrapper: TLib3MFWrapper; AHandle: TLib3MFHandle);
+	begin
+		inherited Create(AWrapper, AHandle);
+	end;
+
+	destructor TLib3MFPersistentReaderSource.Destroy;
+	begin
+		inherited;
+	end;
+
+	function TLib3MFPersistentReaderSource.GetSourceType(): TLib3MFPersistentReaderSourceType;
+	var
+		ResultSourceType: Integer;
+	begin
+		ResultSourceType := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFPersistentReaderSource_GetSourceTypeFunc(FHandle, ResultSourceType));
+		Result := convertConstToPersistentReaderSourceType(ResultSourceType);
+	end;
+
+	procedure TLib3MFPersistentReaderSource.InvalidateSourceData();
+	begin
+		FWrapper.CheckError(Self, FWrapper.Lib3MFPersistentReaderSource_InvalidateSourceDataFunc(FHandle));
+	end;
+
+	function TLib3MFPersistentReaderSource.SourceDataIsValid(): Boolean;
+	var
+		ResultDataIsValid: Byte;
+	begin
+		ResultDataIsValid := 0;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFPersistentReaderSource_SourceDataIsValidFunc(FHandle, ResultDataIsValid));
+		Result := (ResultDataIsValid <> 0);
+	end;
+
+(*************************************************************************************************************************
  Class implementation for Reader
 **************************************************************************************************************************)
 
@@ -7007,6 +7185,17 @@ implementation
 	destructor TLib3MFReader.Destroy;
 	begin
 		inherited;
+	end;
+
+	procedure TLib3MFReader.ReadFromPersistentSource(const ASource: TLib3MFPersistentReaderSource);
+	var
+		ASourceHandle: TLib3MFHandle;
+	begin
+		if Assigned(ASource) then
+		ASourceHandle := ASource.TheHandle
+		else
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'ASource is a nil value.');
+		FWrapper.CheckError(Self, FWrapper.Lib3MFReader_ReadFromPersistentSourceFunc(FHandle, ASourceHandle));
 	end;
 
 	procedure TLib3MFReader.ReadFromFile(const AFilename: String);
@@ -11048,6 +11237,53 @@ implementation
 			Result := TLib3MFKeyStore.Create(FWrapper, HKeyStore);
 	end;
 
+	function TLib3MFModel.CreatePersistentSourceFromFile(const AFilename: String): TLib3MFPersistentReaderSource;
+	var
+		HInstance: TLib3MFHandle;
+	begin
+		Result := nil;
+		HInstance := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFModel_CreatePersistentSourceFromFileFunc(FHandle, PAnsiChar(AFilename), HInstance));
+		if Assigned(HInstance) then
+			Result := TLib3MFPersistentReaderSource.Create(FWrapper, HInstance);
+	end;
+
+	function TLib3MFModel.CreatePersistentSourceFromBuffer(const ABuffer: TByteDynArray): TLib3MFPersistentReaderSource;
+	var
+		PtrBuffer: PByte;
+		LenBuffer: QWord;
+		HInstance: TLib3MFHandle;
+	begin
+		LenBuffer := Length(ABuffer);
+		if LenBuffer > $FFFFFFFF then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'array has too many entries.');
+		if LenBuffer > 0 then
+			PtrBuffer := @ABuffer[0]
+		else
+			PtrBuffer := nil;
+		
+		Result := nil;
+		HInstance := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFModel_CreatePersistentSourceFromBufferFunc(FHandle, QWord(LenBuffer), PtrBuffer, HInstance));
+		if Assigned(HInstance) then
+			Result := TLib3MFPersistentReaderSource.Create(FWrapper, HInstance);
+	end;
+
+	function TLib3MFModel.CreatePersistentSourceFromCallback(const ATheReadCallback: PLib3MF_ReadCallback; const AStreamSize: QWord; const ATheSeekCallback: PLib3MF_SeekCallback; const AUserData: Pointer): TLib3MFPersistentReaderSource;
+	var
+		HInstance: TLib3MFHandle;
+	begin
+		if not Assigned(ATheReadCallback) then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'ATheReadCallback is a nil value.');
+		if not Assigned(ATheSeekCallback) then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_INVALIDPARAM, 'ATheSeekCallback is a nil value.');
+		Result := nil;
+		HInstance := nil;
+		FWrapper.CheckError(Self, FWrapper.Lib3MFModel_CreatePersistentSourceFromCallbackFunc(FHandle, ATheReadCallback, AStreamSize, ATheSeekCallback, AUserData, HInstance));
+		if Assigned(HInstance) then
+			Result := TLib3MFPersistentReaderSource.Create(FWrapper, HInstance);
+	end;
+
 (*************************************************************************************************************************
  Wrapper class implementation
 **************************************************************************************************************************)
@@ -11083,6 +11319,10 @@ implementation
 		FLib3MFWriter_GetWarningCountFunc := LoadFunction('lib3mf_writer_getwarningcount');
 		FLib3MFWriter_AddKeyWrappingCallbackFunc := LoadFunction('lib3mf_writer_addkeywrappingcallback');
 		FLib3MFWriter_SetContentEncryptionCallbackFunc := LoadFunction('lib3mf_writer_setcontentencryptioncallback');
+		FLib3MFPersistentReaderSource_GetSourceTypeFunc := LoadFunction('lib3mf_persistentreadersource_getsourcetype');
+		FLib3MFPersistentReaderSource_InvalidateSourceDataFunc := LoadFunction('lib3mf_persistentreadersource_invalidatesourcedata');
+		FLib3MFPersistentReaderSource_SourceDataIsValidFunc := LoadFunction('lib3mf_persistentreadersource_sourcedataisvalid');
+		FLib3MFReader_ReadFromPersistentSourceFunc := LoadFunction('lib3mf_reader_readfrompersistentsource');
 		FLib3MFReader_ReadFromFileFunc := LoadFunction('lib3mf_reader_readfromfile');
 		FLib3MFReader_ReadFromBufferFunc := LoadFunction('lib3mf_reader_readfrombuffer');
 		FLib3MFReader_ReadFromCallbackFunc := LoadFunction('lib3mf_reader_readfromcallback');
@@ -11445,6 +11685,9 @@ implementation
 		FLib3MFModel_RemoveCustomContentTypeFunc := LoadFunction('lib3mf_model_removecustomcontenttype');
 		FLib3MFModel_SetRandomNumberCallbackFunc := LoadFunction('lib3mf_model_setrandomnumbercallback');
 		FLib3MFModel_GetKeyStoreFunc := LoadFunction('lib3mf_model_getkeystore');
+		FLib3MFModel_CreatePersistentSourceFromFileFunc := LoadFunction('lib3mf_model_createpersistentsourcefromfile');
+		FLib3MFModel_CreatePersistentSourceFromBufferFunc := LoadFunction('lib3mf_model_createpersistentsourcefrombuffer');
+		FLib3MFModel_CreatePersistentSourceFromCallbackFunc := LoadFunction('lib3mf_model_createpersistentsourcefromcallback');
 		FLib3MFGetLibraryVersionFunc := LoadFunction('lib3mf_getlibraryversion');
 		FLib3MFGetPrereleaseInformationFunc := LoadFunction('lib3mf_getprereleaseinformation');
 		FLib3MFGetBuildInformationFunc := LoadFunction('lib3mf_getbuildinformation');
@@ -11512,6 +11755,18 @@ implementation
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_writer_setcontentencryptioncallback'), @FLib3MFWriter_SetContentEncryptionCallbackFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_persistentreadersource_getsourcetype'), @FLib3MFPersistentReaderSource_GetSourceTypeFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_persistentreadersource_invalidatesourcedata'), @FLib3MFPersistentReaderSource_InvalidateSourceDataFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_persistentreadersource_sourcedataisvalid'), @FLib3MFPersistentReaderSource_SourceDataIsValidFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_reader_readfrompersistentsource'), @FLib3MFReader_ReadFromPersistentSourceFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_reader_readfromfile'), @FLib3MFReader_ReadFromFileFunc);
@@ -12598,6 +12853,15 @@ implementation
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_model_getkeystore'), @FLib3MFModel_GetKeyStoreFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_model_createpersistentsourcefromfile'), @FLib3MFModel_CreatePersistentSourceFromFileFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_model_createpersistentsourcefrombuffer'), @FLib3MFModel_CreatePersistentSourceFromBufferFunc);
+		if AResult <> LIB3MF_SUCCESS then
+			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
+		AResult := ALookupMethod(PAnsiChar('lib3mf_model_createpersistentsourcefromcallback'), @FLib3MFModel_CreatePersistentSourceFromCallbackFunc);
 		if AResult <> LIB3MF_SUCCESS then
 			raise ELib3MFException.CreateCustomMessage(LIB3MF_ERROR_COULDNOTLOADLIBRARY, '');
 		AResult := ALookupMethod(PAnsiChar('lib3mf_getlibraryversion'), @FLib3MFGetLibraryVersionFunc);

@@ -271,4 +271,5 @@ Lib3MF_uint32 CWriter::GetWarningCount() {
 NMR::PModelWriter CWriter::getModelWriter()
 {
 	return m_pWriter;
+
 }

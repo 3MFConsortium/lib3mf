@@ -145,6 +145,7 @@ typedef void * Lib3MF_pvoid;
 
 typedef Lib3MFHandle Lib3MF_Base;
 typedef Lib3MFHandle Lib3MF_Writer;
+typedef Lib3MFHandle Lib3MF_PersistentReaderSource;
 typedef Lib3MFHandle Lib3MF_Reader;
 typedef Lib3MFHandle Lib3MF_PackagePart;
 typedef Lib3MFHandle Lib3MF_Resource;
@@ -209,6 +210,13 @@ namespace Lib3MF {
   enum class eSlicesMeshResolution : Lib3MF_int32 {
     Fullres = 0,
     Lowres = 1
+  };
+  
+  enum class ePersistentReaderSourceType : Lib3MF_int32 {
+    Unknown = 0,
+    FileOnDisk = 1,
+    MemoryBuffer = 2,
+    Callback = 3
   };
   
   enum class eModelUnit : Lib3MF_int32 {
@@ -480,6 +488,7 @@ namespace Lib3MF {
 // define legacy C-names for enums, structs and function types
 typedef Lib3MF::ePropertyType eLib3MFPropertyType;
 typedef Lib3MF::eSlicesMeshResolution eLib3MFSlicesMeshResolution;
+typedef Lib3MF::ePersistentReaderSourceType eLib3MFPersistentReaderSourceType;
 typedef Lib3MF::eModelUnit eLib3MFModelUnit;
 typedef Lib3MF::eObjectType eLib3MFObjectType;
 typedef Lib3MF::eTextureType eLib3MFTextureType;

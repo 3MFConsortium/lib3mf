@@ -53,6 +53,7 @@ A model is an in memory representation of the 3MF file.
 #include "Common/MeshInformation/NMR_MeshInformation.h"
 #include "Common/MeshInformation/NMR_MeshInformation_Properties.h"
 #include "Common/NMR_Exception.h"
+#include "Common/OPC/NMR_OpcPackagePart.h"
 #include <sstream>
 #include <memory>
 #include <random>
@@ -1315,4 +1316,34 @@ namespace NMR {
 		return size;
 	}
 
+	PImportStream CModel::readPathFromPersistentDataSource(_In_ std::string sPath)
+	{
+		if (m_pPersistentDataSource.get() != nullptr) {
+			auto pOpcPackageReader = m_pPersistentDataSource->getOpcPackageReader();
+			auto pPart = pOpcPackageReader->createPart(sPath);
+			return pPart->getImportStream();
+		}
+		else {
+			return nullptr;
+		}
+
+	}
+
+	void CModel::setPersistentDataSource(PModelPersistentDataSource pPersistentDataSource)
+	{
+		releasePersistentDataSource();
+
+		m_pPersistentDataSource = pPersistentDataSource;
+	}
+
+	void CModel::releasePersistentDataSource()
+	{
+		if (m_pPersistentDataSource.get() != nullptr)
+			m_pPersistentDataSource->invalidateSource();
+
+
+	}
+
 }
+
+

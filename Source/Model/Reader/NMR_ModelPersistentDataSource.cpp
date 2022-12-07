@@ -24,52 +24,72 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-
 --*/
 
-#include "Model/Classes/NMR_ModelContext.h"
+#include "Model/Reader/NMR_ModelPersistentDataSource.h" 
 
-#include "Model/Classes/NMR_Model.h"
-#include "Model/Classes/NMR_KeyStore.h"
-#include "Common/NMR_SecureContext.h"
-#include "Common/3MF_ProgressMonitor.h"
-#include "Common/NMR_ModelWarnings.h"
+#include "Common/NMR_Exception.h" 
+#include "Common/NMR_Exception_Windows.h" 
 
 namespace NMR {
 
-
-
-	CModelContext::CModelContext(_In_ PModel pModel) {
-		if (!pModel)
-			throw CNMRException(NMR_ERROR_INVALIDPARAM);
-
-		m_pModel = pModel;
-
-		m_pKeystore = pModel->getKeyStore();
-
-		m_pProgressMonitor = std::make_shared<CProgressMonitor>();
-
-		m_pSecureContext = std::make_shared<CSecureContext>();
-
-		m_pWarnings = std::make_shared<CModelWarnings>();
-	}
-
-	CModelContext::~CModelContext()
+	CModelPersistentDataSource::CModelPersistentDataSource(PImportStream pImportStream)
+		: m_pImportStream (pImportStream)
 	{
-		m_pWarnings = nullptr;
-		m_pSecureContext = nullptr;
-		m_pProgressMonitor = nullptr;
-		m_pKeystore = nullptr;
-		m_pModel = nullptr;
-	}
 
-	nfBool CModelContext::isComplete() const {
-		return (nullptr != m_pModel && nullptr != m_pProgressMonitor && nullptr != m_pSecureContext);
-	}
-
-	void CModelContext::SetProgressCallback(Lib3MFProgressCallback callback, void* userData) {
-		m_pProgressMonitor->SetProgressCallback(callback, userData);
+		if (pImportStream.get() == nullptr)
+			throw CNMRException(NMR_ERROR_INVALIDPARAM);
 	}
 
 
+	CModelPersistentDataSource::~CModelPersistentDataSource()
+	{
+		invalidateSource();
+	}
+
+
+	PImportStream CModelPersistentDataSource::getImportStream()
+	{
+		if (m_pImportStream.get() == nullptr)
+			throw CNMRException(NMR_ERROR_DATASOURCEISINVALIDATED);
+
+		return m_pImportStream;
+	}
+
+	PIOpcPackageReader CModelPersistentDataSource::getOpcPackageReader()
+	{
+		if (m_pPackageReader.get() == nullptr)
+			throw CNMRException(NMR_ERROR_DATASOURCEISINVALIDATED);
+
+		return m_pPackageReader;
+
+	}
+
+	void CModelPersistentDataSource::setOPCPackageReader(PIOpcPackageReader pPackageReader)
+	{
+		releaseOPCPackageReader();
+
+		m_pPackageReader = pPackageReader;
+	}
+
+	void CModelPersistentDataSource::releaseOPCPackageReader()
+	{
+		if (m_pPackageReader.get() != nullptr)
+			m_pPackageReader->close();
+
+		m_pPackageReader = nullptr;
+	}
+
+
+	bool CModelPersistentDataSource::isValid()
+	{
+		return (m_pImportStream.get() != nullptr);
+	}
+
+	void CModelPersistentDataSource::invalidateSource()
+	{
+		releaseOPCPackageReader();
+		m_pImportStream = nullptr;
+	}
+	
 }

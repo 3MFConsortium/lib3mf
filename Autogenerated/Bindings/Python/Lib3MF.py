@@ -145,6 +145,10 @@ class FunctionTable:
 	lib3mf_writer_getwarningcount = None
 	lib3mf_writer_addkeywrappingcallback = None
 	lib3mf_writer_setcontentencryptioncallback = None
+	lib3mf_persistentreadersource_getsourcetype = None
+	lib3mf_persistentreadersource_invalidatesourcedata = None
+	lib3mf_persistentreadersource_sourcedataisvalid = None
+	lib3mf_reader_readfrompersistentsource = None
 	lib3mf_reader_readfromfile = None
 	lib3mf_reader_readfrombuffer = None
 	lib3mf_reader_readfromcallback = None
@@ -507,6 +511,9 @@ class FunctionTable:
 	lib3mf_model_removecustomcontenttype = None
 	lib3mf_model_setrandomnumbercallback = None
 	lib3mf_model_getkeystore = None
+	lib3mf_model_createpersistentsourcefromfile = None
+	lib3mf_model_createpersistentsourcefrombuffer = None
+	lib3mf_model_createpersistentsourcefromcallback = None
 
 '''Definition of Enumerations
 '''
@@ -531,6 +538,13 @@ class PropertyType(CTypesEnum):
 class SlicesMeshResolution(CTypesEnum):
 	Fullres = 0
 	Lowres = 1
+'''Definition of PersistentReaderSourceType
+'''
+class PersistentReaderSourceType(CTypesEnum):
+	Unknown = 0
+	FileOnDisk = 1
+	MemoryBuffer = 2
+	Callback = 3
 '''Definition of ModelUnit
 '''
 class ModelUnit(CTypesEnum):
@@ -1013,6 +1027,30 @@ class Wrapper:
 				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ContentEncryptionCallback, ctypes.c_void_p)
 			self.lib.lib3mf_writer_setcontentencryptioncallback = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_persistentreadersource_getsourcetype")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_int32))
+			self.lib.lib3mf_persistentreadersource_getsourcetype = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_persistentreadersource_invalidatesourcedata")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p)
+			self.lib.lib3mf_persistentreadersource_invalidatesourcedata = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_persistentreadersource_sourcedataisvalid")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_bool))
+			self.lib.lib3mf_persistentreadersource_sourcedataisvalid = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_reader_readfrompersistentsource")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_void_p)
+			self.lib.lib3mf_reader_readfrompersistentsource = methodType(int(methodAddress.value))
 			
 			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_reader_readfromfile")), methodAddress)
 			if err != 0:
@@ -3186,6 +3224,24 @@ class Wrapper:
 			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
 			self.lib.lib3mf_model_getkeystore = methodType(int(methodAddress.value))
 			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_model_createpersistentsourcefromfile")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_model_createpersistentsourcefromfile = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_model_createpersistentsourcefrombuffer")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint8), ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_model_createpersistentsourcefrombuffer = methodType(int(methodAddress.value))
+			
+			err = symbolLookupMethod(ctypes.c_char_p(str.encode("lib3mf_model_createpersistentsourcefromcallback")), methodAddress)
+			if err != 0:
+				raise ELib3MFException(ErrorCodes.COULDNOTLOADLIBRARY, str(err))
+			methodType = ctypes.CFUNCTYPE(ctypes.c_int32, ctypes.c_void_p, ReadCallback, ctypes.c_uint64, SeekCallback, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p))
+			self.lib.lib3mf_model_createpersistentsourcefromcallback = methodType(int(methodAddress.value))
+			
 		except AttributeError as ae:
 			raise ELib3MFException(ErrorCodes.COULDNOTFINDLIBRARYEXPORT, ae.args[0])
 		
@@ -3286,6 +3342,18 @@ class Wrapper:
 			
 			self.lib.lib3mf_writer_setcontentencryptioncallback.restype = ctypes.c_int32
 			self.lib.lib3mf_writer_setcontentencryptioncallback.argtypes = [ctypes.c_void_p, ContentEncryptionCallback, ctypes.c_void_p]
+			
+			self.lib.lib3mf_persistentreadersource_getsourcetype.restype = ctypes.c_int32
+			self.lib.lib3mf_persistentreadersource_getsourcetype.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_int32)]
+			
+			self.lib.lib3mf_persistentreadersource_invalidatesourcedata.restype = ctypes.c_int32
+			self.lib.lib3mf_persistentreadersource_invalidatesourcedata.argtypes = [ctypes.c_void_p]
+			
+			self.lib.lib3mf_persistentreadersource_sourcedataisvalid.restype = ctypes.c_int32
+			self.lib.lib3mf_persistentreadersource_sourcedataisvalid.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_bool)]
+			
+			self.lib.lib3mf_reader_readfrompersistentsource.restype = ctypes.c_int32
+			self.lib.lib3mf_reader_readfrompersistentsource.argtypes = [ctypes.c_void_p, ctypes.c_void_p]
 			
 			self.lib.lib3mf_reader_readfromfile.restype = ctypes.c_int32
 			self.lib.lib3mf_reader_readfromfile.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
@@ -4373,6 +4441,15 @@ class Wrapper:
 			self.lib.lib3mf_model_getkeystore.restype = ctypes.c_int32
 			self.lib.lib3mf_model_getkeystore.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
 			
+			self.lib.lib3mf_model_createpersistentsourcefromfile.restype = ctypes.c_int32
+			self.lib.lib3mf_model_createpersistentsourcefromfile.argtypes = [ctypes.c_void_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_model_createpersistentsourcefrombuffer.restype = ctypes.c_int32
+			self.lib.lib3mf_model_createpersistentsourcefrombuffer.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.POINTER(ctypes.c_uint8), ctypes.POINTER(ctypes.c_void_p)]
+			
+			self.lib.lib3mf_model_createpersistentsourcefromcallback.restype = ctypes.c_int32
+			self.lib.lib3mf_model_createpersistentsourcefromcallback.argtypes = [ctypes.c_void_p, ReadCallback, ctypes.c_uint64, SeekCallback, ctypes.c_void_p, ctypes.POINTER(ctypes.c_void_p)]
+			
 		except AttributeError as ae:
 			raise ELib3MFException(ErrorCodes.COULDNOTFINDLIBRARYEXPORT, ae.args[0])
 	
@@ -4673,11 +4750,43 @@ class Writer(Base):
 	
 
 
+''' Class Implementation for PersistentReaderSource
+'''
+class PersistentReaderSource(Base):
+	def __init__(self, handle, wrapper):
+		Base.__init__(self, handle, wrapper)
+	def GetSourceType(self):
+		pSourceType = ctypes.c_int32()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_persistentreadersource_getsourcetype(self._handle, pSourceType))
+		
+		return PersistentReaderSourceType(pSourceType.value)
+	
+	def InvalidateSourceData(self):
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_persistentreadersource_invalidatesourcedata(self._handle))
+		
+	
+	def SourceDataIsValid(self):
+		pDataIsValid = ctypes.c_bool()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_persistentreadersource_sourcedataisvalid(self._handle, pDataIsValid))
+		
+		return pDataIsValid.value
+	
+
+
 ''' Class Implementation for Reader
 '''
 class Reader(Base):
 	def __init__(self, handle, wrapper):
 		Base.__init__(self, handle, wrapper)
+	def ReadFromPersistentSource(self, SourceObject):
+		SourceHandle = None
+		if SourceObject:
+			SourceHandle = SourceObject._handle
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDPARAM, 'Invalid return/output value')
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_reader_readfrompersistentsource(self._handle, SourceHandle))
+		
+	
 	def ReadFromFile(self, Filename):
 		pFilename = ctypes.c_char_p(str.encode(Filename))
 		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_reader_readfromfile(self._handle, pFilename))
@@ -7994,5 +8103,40 @@ class Model(Base):
 			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
 		
 		return KeyStoreObject
+	
+	def CreatePersistentSourceFromFile(self, Filename):
+		pFilename = ctypes.c_char_p(str.encode(Filename))
+		InstanceHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_model_createpersistentsourcefromfile(self._handle, pFilename, InstanceHandle))
+		if InstanceHandle:
+			InstanceObject = PersistentReaderSource(InstanceHandle, self._wrapper)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return InstanceObject
+	
+	def CreatePersistentSourceFromBuffer(self, Buffer):
+		nBufferCount = ctypes.c_uint64(len(Buffer))
+		pBufferBuffer = (ctypes.c_uint8*len(Buffer))(*Buffer)
+		InstanceHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_model_createpersistentsourcefrombuffer(self._handle, nBufferCount, pBufferBuffer, InstanceHandle))
+		if InstanceHandle:
+			InstanceObject = PersistentReaderSource(InstanceHandle, self._wrapper)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return InstanceObject
+	
+	def CreatePersistentSourceFromCallback(self, TheReadCallbackFunc, StreamSize, TheSeekCallbackFunc, UserData):
+		nStreamSize = ctypes.c_uint64(StreamSize)
+		pUserData = ctypes.c_void_p(UserData)
+		InstanceHandle = ctypes.c_void_p()
+		self._wrapper.checkError(self, self._wrapper.lib.lib3mf_model_createpersistentsourcefromcallback(self._handle, TheReadCallbackFunc, nStreamSize, TheSeekCallbackFunc, pUserData, InstanceHandle))
+		if InstanceHandle:
+			InstanceObject = PersistentReaderSource(InstanceHandle, self._wrapper)
+		else:
+			raise ELib3MFException(ErrorCodes.INVALIDCAST, 'Invalid return/output value')
+		
+		return InstanceObject
 	
 		

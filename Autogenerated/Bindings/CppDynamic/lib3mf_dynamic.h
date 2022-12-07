@@ -178,8 +178,47 @@ typedef Lib3MFResult (*PLib3MFWriter_AddKeyWrappingCallbackPtr) (Lib3MF_Writer p
 typedef Lib3MFResult (*PLib3MFWriter_SetContentEncryptionCallbackPtr) (Lib3MF_Writer pWriter, Lib3MF::ContentEncryptionCallback pTheCallback, Lib3MF_pvoid pUserData);
 
 /*************************************************************************************************************************
+ Class definition for PersistentReaderSource
+**************************************************************************************************************************/
+
+/**
+* Retrieves the type of source data.
+*
+* @param[in] pPersistentReaderSource - PersistentReaderSource instance.
+* @param[out] pSourceType - Reader Source Type
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFPersistentReaderSource_GetSourceTypePtr) (Lib3MF_PersistentReaderSource pPersistentReaderSource, Lib3MF::ePersistentReaderSourceType * pSourceType);
+
+/**
+* Invalidates the reader source. Every subsequent read on this data will fail.
+*
+* @param[in] pPersistentReaderSource - PersistentReaderSource instance.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFPersistentReaderSource_InvalidateSourceDataPtr) (Lib3MF_PersistentReaderSource pPersistentReaderSource);
+
+/**
+* Checks if the source data is valid. Any read on an invalid source object will fail.
+*
+* @param[in] pPersistentReaderSource - PersistentReaderSource instance.
+* @param[out] pDataIsValid - The source data is valid.
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFPersistentReaderSource_SourceDataIsValidPtr) (Lib3MF_PersistentReaderSource pPersistentReaderSource, bool * pDataIsValid);
+
+/*************************************************************************************************************************
  Class definition for Reader
 **************************************************************************************************************************/
+
+/**
+* Reads a model from a persistent source object. The object will be referenced until the Model is destroyed or cleared.
+*
+* @param[in] pReader - Reader instance.
+* @param[in] pSource - Source object to read from
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFReader_ReadFromPersistentSourcePtr) (Lib3MF_Reader pReader, Lib3MF_PersistentReaderSource pSource);
 
 /**
 * Reads a model from a file. The file type is specified by the Model Reader class
@@ -3903,6 +3942,40 @@ typedef Lib3MFResult (*PLib3MFModel_SetRandomNumberCallbackPtr) (Lib3MF_Model pM
 */
 typedef Lib3MFResult (*PLib3MFModel_GetKeyStorePtr) (Lib3MF_Model pModel, Lib3MF_KeyStore * pKeyStore);
 
+/**
+* Creates an OPC Reader Source from a file.
+*
+* @param[in] pModel - Model instance.
+* @param[in] pFilename - Filename to read from
+* @param[out] pInstance - The instance of the created reader source
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFModel_CreatePersistentSourceFromFilePtr) (Lib3MF_Model pModel, const char * pFilename, Lib3MF_PersistentReaderSource * pInstance);
+
+/**
+* Creates an OPC Reader Source from a memory buffer. The memory buffer MUST exist as long as the Source object exists.
+*
+* @param[in] pModel - Model instance.
+* @param[in] nBufferBufferSize - Number of elements in buffer
+* @param[in] pBufferBuffer - uint8 buffer of Buffer to read from
+* @param[out] pInstance - The instance of the created reader source
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFModel_CreatePersistentSourceFromBufferPtr) (Lib3MF_Model pModel, Lib3MF_uint64 nBufferBufferSize, const Lib3MF_uint8 * pBufferBuffer, Lib3MF_PersistentReaderSource * pInstance);
+
+/**
+* Creates an OPC Reader Source from a data provided by a callback function. The callbacks MUST exist as long as the source object exists.
+*
+* @param[in] pModel - Model instance.
+* @param[in] pTheReadCallback - Callback to call for reading a data chunk
+* @param[in] nStreamSize - number of bytes the callback returns
+* @param[in] pTheSeekCallback - Callback to call for seeking in the stream.
+* @param[in] pUserData - Userdata that is passed to the callback function
+* @param[out] pInstance - The instance of the created reader source
+* @return error code or 0 (success)
+*/
+typedef Lib3MFResult (*PLib3MFModel_CreatePersistentSourceFromCallbackPtr) (Lib3MF_Model pModel, Lib3MF::ReadCallback pTheReadCallback, Lib3MF_uint64 nStreamSize, Lib3MF::SeekCallback pTheSeekCallback, Lib3MF_pvoid pUserData, Lib3MF_PersistentReaderSource * pInstance);
+
 /*************************************************************************************************************************
  Global functions
 **************************************************************************************************************************/
@@ -4120,6 +4193,10 @@ typedef struct {
 	PLib3MFWriter_GetWarningCountPtr m_Writer_GetWarningCount;
 	PLib3MFWriter_AddKeyWrappingCallbackPtr m_Writer_AddKeyWrappingCallback;
 	PLib3MFWriter_SetContentEncryptionCallbackPtr m_Writer_SetContentEncryptionCallback;
+	PLib3MFPersistentReaderSource_GetSourceTypePtr m_PersistentReaderSource_GetSourceType;
+	PLib3MFPersistentReaderSource_InvalidateSourceDataPtr m_PersistentReaderSource_InvalidateSourceData;
+	PLib3MFPersistentReaderSource_SourceDataIsValidPtr m_PersistentReaderSource_SourceDataIsValid;
+	PLib3MFReader_ReadFromPersistentSourcePtr m_Reader_ReadFromPersistentSource;
 	PLib3MFReader_ReadFromFilePtr m_Reader_ReadFromFile;
 	PLib3MFReader_ReadFromBufferPtr m_Reader_ReadFromBuffer;
 	PLib3MFReader_ReadFromCallbackPtr m_Reader_ReadFromCallback;
@@ -4482,6 +4559,9 @@ typedef struct {
 	PLib3MFModel_RemoveCustomContentTypePtr m_Model_RemoveCustomContentType;
 	PLib3MFModel_SetRandomNumberCallbackPtr m_Model_SetRandomNumberCallback;
 	PLib3MFModel_GetKeyStorePtr m_Model_GetKeyStore;
+	PLib3MFModel_CreatePersistentSourceFromFilePtr m_Model_CreatePersistentSourceFromFile;
+	PLib3MFModel_CreatePersistentSourceFromBufferPtr m_Model_CreatePersistentSourceFromBuffer;
+	PLib3MFModel_CreatePersistentSourceFromCallbackPtr m_Model_CreatePersistentSourceFromCallback;
 	PLib3MFGetLibraryVersionPtr m_GetLibraryVersion;
 	PLib3MFGetPrereleaseInformationPtr m_GetPrereleaseInformation;
 	PLib3MFGetBuildInformationPtr m_GetBuildInformation;

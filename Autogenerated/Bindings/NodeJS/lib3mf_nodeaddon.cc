@@ -50,6 +50,7 @@ void InitAll(Handle<Object> exports, Handle<Object> module)
 {
     CLib3MFBase::Init();
     CLib3MFWriter::Init();
+    CLib3MFPersistentReaderSource::Init();
     CLib3MFReader::Init();
     CLib3MFPackagePart::Init();
     CLib3MFResource::Init();

@@ -24,39 +24,46 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract:
-
-NMR_ModelReader_3MF.h defines the Model Reader Class for
-3MF Files. A 3MF model reader reads in a 3MF file and generates an in-memory representation of it.
-
 --*/
 
-#ifndef __NMR_MODELREADER_3MF
-#define __NMR_MODELREADER_3MF
+#ifndef __NMR_MODELPERSISTENTDATASOURCE
+#define __NMR_MODELPERSISTENTDATASOURCE
 
-#include "Model/Reader/NMR_ModelReader.h" 
-#include "Model/Reader/NMR_ModelPersistentDataSource.h"
-#include "Common/NMR_SecureContentTypes.h"
-#include <string>
-#include <map>
+#include "Model/Classes/NMR_ModelContext.h"
+#include "Common/NMR_ModelWarnings.h" 
+#include "Common/Platform/NMR_ImportStream.h" 
+#include "Common/OPC/NMR_IOpcPackageReader.h"
+
+#include <list>
+#include <set>
 
 namespace NMR {
 
-	class CModelReader_3MF : public CModelReader {
+	class CModelPersistentDataSource {
 	protected:
-		virtual PImportStream extract3MFOPCPackage(PModelPersistentDataSource pDataSource) = 0;
-		virtual void release3MFOPCPackage() = 0;
+
+		PImportStream m_pImportStream;
+		PIOpcPackageReader m_pPackageReader;
 
 	public:
-		CModelReader_3MF() = delete;
-		CModelReader_3MF(_In_ PModel pModel);
+		CModelPersistentDataSource() = delete;
+		CModelPersistentDataSource(PImportStream pImportStream);
+		virtual ~CModelPersistentDataSource();
 
-		virtual void readFromSource(_In_ PModelPersistentDataSource pDataSource) override;
-		virtual void addTextureAttachment(_In_ std::string sPath, _In_ PImportStream pStream);
+		PImportStream getImportStream();
+		PIOpcPackageReader getOpcPackageReader();
+
+		void setOPCPackageReader(PIOpcPackageReader pPackageReader);
+		void releaseOPCPackageReader();
+
+
+
+		bool isValid();
+		void invalidateSource();
 	};
 
-	typedef std::shared_ptr <CModelReader_3MF> PModelReader_3MF;
+	typedef std::shared_ptr <CModelPersistentDataSource> PModelPersistentDataSource;
 
 }
 
-#endif // __NMR_MODELREADER_3MF
+#endif // __NMR_MODELPERSISTENTDATASOURCE

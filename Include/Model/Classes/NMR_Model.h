@@ -40,6 +40,7 @@ NMR_Model.h defines the Model Class. A model is an in memory representation of t
 #include "Common/Mesh/NMR_Mesh.h" 
 
 #include "Model/Classes/NMR_PackageResourceID.h"
+#include "Model/Reader/NMR_ModelPersistentDataSource.h"
 
 #include <list>
 #include <map>
@@ -109,6 +110,10 @@ namespace NMR {
 		std::map<UniqueResourceID, PModelResource> m_ResourceMap;
 		CResourceHandler m_resourceHandler;
 	private:
+
+		// Persistent source of model
+		PModelPersistentDataSource m_pPersistentDataSource;
+
 		std::vector<PModelResource> m_Resources;
 
 		// Model Build Items
@@ -318,6 +323,10 @@ namespace NMR {
 		// Sorts objects by correct dependency
 		std::list<CModelObject *> getSortedObjectList ();
 
+		// Persistent data source support
+		PImportStream readPathFromPersistentDataSource(_In_ std::string sPath);
+		void setPersistentDataSource(PModelPersistentDataSource pPersistentDataSource);
+		void releasePersistentDataSource();
 
 		// Gets the KeyStore
 		PKeyStore getKeyStore();

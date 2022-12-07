@@ -103,6 +103,14 @@
 		<option name="Fullres" value="0"/>
 		<option name="Lowres" value="1"/>
 	</enum>
+	
+	<enum name="PersistentReaderSourceType">
+		<option name="Unknown" value="0"/>
+		<option name="FileOnDisk" value="1"/>
+		<option name="MemoryBuffer" value="2"/>
+		<option name="Callback" value="3"/>
+	</enum>
+	
 
 	<enum name="ModelUnit">
 		<option name="MicroMeter" value="0"/>
@@ -339,8 +347,30 @@
 			<param name="UserData" type="pointer" pass="in" description="Userdata that is passed to the callback function"/>
 		</method>
 	</class>
+	
+
+	<class name="PersistentReaderSource" description="Reader class to load an OPC package from a persistent source (without unpacking everything in memory).">
+			
+		<method name="GetSourceType" description="Retrieves the type of source data.">
+			<param name="SourceType" type="enum" class="PersistentReaderSourceType" pass="return" description="Reader Source Type"/>
+		</method>
+		
+		<method name="InvalidateSourceData" description="Invalidates the reader source. Every subsequent read on this data will fail.">
+		</method>
+	
+		<method name="SourceDataIsValid" description="Checks if the source data is valid. Any read on an invalid source object will fail.">
+			<param name="DataIsValid" type="bool" pass="return" description="The source data is valid."/>
+		</method>
+		
+	</class>
+
 
 	<class name="Reader">
+	
+		<method name="ReadFromPersistentSource" description="Reads a model from a persistent source object. The object will be referenced until the Model is destroyed or cleared.">
+			<param name="Source" type="class" class="PersistentReaderSource" pass="in" description="Source object to read from"/>				
+		</method>
+	
 		<method name="ReadFromFile" description="Reads a model from a file. The file type is specified by the Model Reader class">
 			<param name="Filename" type="string" pass="in" description="Filename to read from"/>				
 		</method>
@@ -1812,6 +1842,23 @@
 		<method name="GetKeyStore" description="Gets the keystore associated with this model">
 			<param name="KeyStore" type="handle" class="KeyStore" pass="return" description="The package keystore"/>
 		</method>
+		
+		<method name="CreatePersistentSourceFromFile" description="Creates an OPC Reader Source from a file.">
+			<param name="Filename" type="string" pass="in" description="Filename to read from"/>				
+			<param name="Instance" type="class" class="PersistentReaderSource" pass="return" description="The instance of the created reader source"/>
+		</method>
+		<method name="CreatePersistentSourceFromBuffer" description="Creates an OPC Reader Source from a memory buffer. The memory buffer MUST exist as long as the Source object exists.">
+			<param name="Buffer" type="basicarray" class="uint8" pass="in" description="Buffer to read from"/>				
+			<param name="Instance" type="class" class="PersistentReaderSource" pass="return" description="The instance of the created reader source"/>
+		</method>
+		<method name="CreatePersistentSourceFromCallback" description="Creates an OPC Reader Source from a data provided by a callback function. The callbacks MUST exist as long as the source object exists.">
+			<param name="TheReadCallback" type="functiontype" class="ReadCallback" pass="in" description="Callback to call for reading a data chunk"/>
+			<param name="StreamSize" type="uint64" pass="in" description="number of bytes the callback returns"/>
+			<param name="TheSeekCallback" type="functiontype" class="SeekCallback" pass="in" description="Callback to call for seeking in the stream."/>
+			<param name="UserData" type="pointer" pass="in" description="Userdata that is passed to the callback function"/>
+			<param name="Instance" type="class" class="PersistentReaderSource" pass="return" description="The instance of the created reader source"/>
+		</method>
+		
 	</class>
 
 	<global baseclassname="Base" releasemethod="Release" acquiremethod="Acquire" journalmethod="SetJournal" versionmethod="GetLibraryVersion" errormethod="GetLastError" prereleasemethod="GetPrereleaseInformation" buildinfomethod="GetBuildInformation" symbollookupmethod="GetSymbolLookupMethod">

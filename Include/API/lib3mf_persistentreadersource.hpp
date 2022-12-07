@@ -1,6 +1,6 @@
 /*++
 
-Copyright (C) 2019 3MF Consortium
+Copyright (C) 2019 3MF Consortium (Original Author)
 
 All rights reserved.
 
@@ -24,39 +24,60 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Abstract:
+Abstract: This is the class declaration of CPersistentReaderSource
 
-NMR_ModelReader_3MF.h defines the Model Reader Class for
-3MF Files. A 3MF model reader reads in a 3MF file and generates an in-memory representation of it.
+*/
 
---*/
 
-#ifndef __NMR_MODELREADER_3MF
-#define __NMR_MODELREADER_3MF
+#ifndef __LIB3MF_PERSISTENTREADERSOURCE
+#define __LIB3MF_PERSISTENTREADERSOURCE
 
-#include "Model/Reader/NMR_ModelReader.h" 
+#include "lib3mf_interfaces.hpp"
+
+// Parent classes
+#include "lib3mf_base.hpp"
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4250)
+#endif
+
+// Include custom headers here.
 #include "Model/Reader/NMR_ModelPersistentDataSource.h"
-#include "Common/NMR_SecureContentTypes.h"
-#include <string>
-#include <map>
 
-namespace NMR {
+namespace Lib3MF {
+namespace Impl {
 
-	class CModelReader_3MF : public CModelReader {
-	protected:
-		virtual PImportStream extract3MFOPCPackage(PModelPersistentDataSource pDataSource) = 0;
-		virtual void release3MFOPCPackage() = 0;
 
-	public:
-		CModelReader_3MF() = delete;
-		CModelReader_3MF(_In_ PModel pModel);
+/*************************************************************************************************************************
+ Class declaration of CPersistentReaderSource 
+**************************************************************************************************************************/
 
-		virtual void readFromSource(_In_ PModelPersistentDataSource pDataSource) override;
-		virtual void addTextureAttachment(_In_ std::string sPath, _In_ PImportStream pStream);
-	};
+class CPersistentReaderSource : public virtual IPersistentReaderSource, public virtual CBase {
+private:
 
-	typedef std::shared_ptr <CModelReader_3MF> PModelReader_3MF;
+protected:
+	NMR::PModelPersistentDataSource m_pDataSource;
 
-}
+public:
 
-#endif // __NMR_MODELREADER_3MF
+	CPersistentReaderSource(NMR::PModelPersistentDataSource pDataSource);
+
+	virtual ~CPersistentReaderSource();
+
+	Lib3MF::ePersistentReaderSourceType GetSourceType() override;
+
+	void InvalidateSourceData() override;
+
+	bool SourceDataIsValid() override;
+
+	NMR::PModelPersistentDataSource getDataSource();
+
+};
+
+} // namespace Impl
+} // namespace Lib3MF
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
+#endif // __LIB3MF_PERSISTENTREADERSOURCE

@@ -53,6 +53,7 @@ namespace Impl {
 */
 class IBase;
 class IWriter;
+class IPersistentReaderSource;
 class IReader;
 class IPackagePart;
 class IResource;
@@ -298,11 +299,45 @@ typedef IBaseSharedPtr<IWriter> PIWriter;
 
 
 /*************************************************************************************************************************
+ Class interface for PersistentReaderSource 
+**************************************************************************************************************************/
+
+class IPersistentReaderSource : public virtual IBase {
+public:
+	/**
+	* IPersistentReaderSource::GetSourceType - Retrieves the type of source data.
+	* @return Reader Source Type
+	*/
+	virtual Lib3MF::ePersistentReaderSourceType GetSourceType() = 0;
+
+	/**
+	* IPersistentReaderSource::InvalidateSourceData - Invalidates the reader source. Every subsequent read on this data will fail.
+	*/
+	virtual void InvalidateSourceData() = 0;
+
+	/**
+	* IPersistentReaderSource::SourceDataIsValid - Checks if the source data is valid. Any read on an invalid source object will fail.
+	* @return The source data is valid.
+	*/
+	virtual bool SourceDataIsValid() = 0;
+
+};
+
+typedef IBaseSharedPtr<IPersistentReaderSource> PIPersistentReaderSource;
+
+
+/*************************************************************************************************************************
  Class interface for Reader 
 **************************************************************************************************************************/
 
 class IReader : public virtual IBase {
 public:
+	/**
+	* IReader::ReadFromPersistentSource - Reads a model from a persistent source object. The object will be referenced until the Model is destroyed or cleared.
+	* @param[in] pSource - Source object to read from
+	*/
+	virtual void ReadFromPersistentSource(IPersistentReaderSource* pSource) = 0;
+
 	/**
 	* IReader::ReadFromFile - Reads a model from a file. The file type is specified by the Model Reader class
 	* @param[in] sFilename - Filename to read from
@@ -3178,6 +3213,31 @@ public:
 	* @return The package keystore
 	*/
 	virtual IKeyStore * GetKeyStore() = 0;
+
+	/**
+	* IModel::CreatePersistentSourceFromFile - Creates an OPC Reader Source from a file.
+	* @param[in] sFilename - Filename to read from
+	* @return The instance of the created reader source
+	*/
+	virtual IPersistentReaderSource * CreatePersistentSourceFromFile(const std::string & sFilename) = 0;
+
+	/**
+	* IModel::CreatePersistentSourceFromBuffer - Creates an OPC Reader Source from a memory buffer. The memory buffer MUST exist as long as the Source object exists.
+	* @param[in] nBufferBufferSize - Number of elements in buffer
+	* @param[in] pBufferBuffer - Buffer to read from
+	* @return The instance of the created reader source
+	*/
+	virtual IPersistentReaderSource * CreatePersistentSourceFromBuffer(const Lib3MF_uint64 nBufferBufferSize, const Lib3MF_uint8 * pBufferBuffer) = 0;
+
+	/**
+	* IModel::CreatePersistentSourceFromCallback - Creates an OPC Reader Source from a data provided by a callback function. The callbacks MUST exist as long as the source object exists.
+	* @param[in] pTheReadCallback - callback function
+	* @param[in] nStreamSize - number of bytes the callback returns
+	* @param[in] pTheSeekCallback - callback function
+	* @param[in] nUserData - Userdata that is passed to the callback function
+	* @return The instance of the created reader source
+	*/
+	virtual IPersistentReaderSource * CreatePersistentSourceFromCallback(const Lib3MF::ReadCallback pTheReadCallback, const Lib3MF_uint64 nStreamSize, const Lib3MF::SeekCallback pTheSeekCallback, const Lib3MF_pvoid pUserData) = 0;
 
 };
 

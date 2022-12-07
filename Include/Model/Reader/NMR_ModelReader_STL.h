@@ -48,7 +48,7 @@ namespace NMR {
 		CModelReader_STL() = delete;
 		CModelReader_STL(_In_ PModel pModel);
 
-		virtual void readStream(_In_ PImportStream pStream);
+		virtual void readFromSource(_In_ PModelPersistentDataSource pDataSource) override;
 	};
 
 	typedef std::shared_ptr <CModelReader_STL> PModelReader_STL;

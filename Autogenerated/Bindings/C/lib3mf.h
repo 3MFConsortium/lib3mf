@@ -189,8 +189,47 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_writer_addkeywrappingcallback(Lib3MF_Writer 
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_writer_setcontentencryptioncallback(Lib3MF_Writer pWriter, Lib3MFContentEncryptionCallback pTheCallback, Lib3MF_pvoid pUserData);
 
 /*************************************************************************************************************************
+ Class definition for PersistentReaderSource
+**************************************************************************************************************************/
+
+/**
+* Retrieves the type of source data.
+*
+* @param[in] pPersistentReaderSource - PersistentReaderSource instance.
+* @param[out] pSourceType - Reader Source Type
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_persistentreadersource_getsourcetype(Lib3MF_PersistentReaderSource pPersistentReaderSource, eLib3MFPersistentReaderSourceType * pSourceType);
+
+/**
+* Invalidates the reader source. Every subsequent read on this data will fail.
+*
+* @param[in] pPersistentReaderSource - PersistentReaderSource instance.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_persistentreadersource_invalidatesourcedata(Lib3MF_PersistentReaderSource pPersistentReaderSource);
+
+/**
+* Checks if the source data is valid. Any read on an invalid source object will fail.
+*
+* @param[in] pPersistentReaderSource - PersistentReaderSource instance.
+* @param[out] pDataIsValid - The source data is valid.
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_persistentreadersource_sourcedataisvalid(Lib3MF_PersistentReaderSource pPersistentReaderSource, bool * pDataIsValid);
+
+/*************************************************************************************************************************
  Class definition for Reader
 **************************************************************************************************************************/
+
+/**
+* Reads a model from a persistent source object. The object will be referenced until the Model is destroyed or cleared.
+*
+* @param[in] pReader - Reader instance.
+* @param[in] pSource - Source object to read from
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_reader_readfrompersistentsource(Lib3MF_Reader pReader, Lib3MF_PersistentReaderSource pSource);
 
 /**
 * Reads a model from a file. The file type is specified by the Model Reader class
@@ -3913,6 +3952,40 @@ LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_setrandomnumbercallback(Lib3MF_Model p
 * @return error code or 0 (success)
 */
 LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_getkeystore(Lib3MF_Model pModel, Lib3MF_KeyStore * pKeyStore);
+
+/**
+* Creates an OPC Reader Source from a file.
+*
+* @param[in] pModel - Model instance.
+* @param[in] pFilename - Filename to read from
+* @param[out] pInstance - The instance of the created reader source
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_createpersistentsourcefromfile(Lib3MF_Model pModel, const char * pFilename, Lib3MF_PersistentReaderSource * pInstance);
+
+/**
+* Creates an OPC Reader Source from a memory buffer. The memory buffer MUST exist as long as the Source object exists.
+*
+* @param[in] pModel - Model instance.
+* @param[in] nBufferBufferSize - Number of elements in buffer
+* @param[in] pBufferBuffer - uint8 buffer of Buffer to read from
+* @param[out] pInstance - The instance of the created reader source
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_createpersistentsourcefrombuffer(Lib3MF_Model pModel, Lib3MF_uint64 nBufferBufferSize, const Lib3MF_uint8 * pBufferBuffer, Lib3MF_PersistentReaderSource * pInstance);
+
+/**
+* Creates an OPC Reader Source from a data provided by a callback function. The callbacks MUST exist as long as the source object exists.
+*
+* @param[in] pModel - Model instance.
+* @param[in] pTheReadCallback - Callback to call for reading a data chunk
+* @param[in] nStreamSize - number of bytes the callback returns
+* @param[in] pTheSeekCallback - Callback to call for seeking in the stream.
+* @param[in] pUserData - Userdata that is passed to the callback function
+* @param[out] pInstance - The instance of the created reader source
+* @return error code or 0 (success)
+*/
+LIB3MF_DECLSPEC Lib3MFResult lib3mf_model_createpersistentsourcefromcallback(Lib3MF_Model pModel, Lib3MFReadCallback pTheReadCallback, Lib3MF_uint64 nStreamSize, Lib3MFSeekCallback pTheSeekCallback, Lib3MF_pvoid pUserData, Lib3MF_PersistentReaderSource * pInstance);
 
 /*************************************************************************************************************************
  Global functions

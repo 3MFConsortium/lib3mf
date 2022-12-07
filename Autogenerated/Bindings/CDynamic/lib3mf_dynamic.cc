@@ -60,6 +60,10 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_Writer_GetWarningCount = NULL;
 	pWrapperTable->m_Writer_AddKeyWrappingCallback = NULL;
 	pWrapperTable->m_Writer_SetContentEncryptionCallback = NULL;
+	pWrapperTable->m_PersistentReaderSource_GetSourceType = NULL;
+	pWrapperTable->m_PersistentReaderSource_InvalidateSourceData = NULL;
+	pWrapperTable->m_PersistentReaderSource_SourceDataIsValid = NULL;
+	pWrapperTable->m_Reader_ReadFromPersistentSource = NULL;
 	pWrapperTable->m_Reader_ReadFromFile = NULL;
 	pWrapperTable->m_Reader_ReadFromBuffer = NULL;
 	pWrapperTable->m_Reader_ReadFromCallback = NULL;
@@ -422,6 +426,9 @@ Lib3MFResult InitLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable)
 	pWrapperTable->m_Model_RemoveCustomContentType = NULL;
 	pWrapperTable->m_Model_SetRandomNumberCallback = NULL;
 	pWrapperTable->m_Model_GetKeyStore = NULL;
+	pWrapperTable->m_Model_CreatePersistentSourceFromFile = NULL;
+	pWrapperTable->m_Model_CreatePersistentSourceFromBuffer = NULL;
+	pWrapperTable->m_Model_CreatePersistentSourceFromCallback = NULL;
 	pWrapperTable->m_GetLibraryVersion = NULL;
 	pWrapperTable->m_GetPrereleaseInformation = NULL;
 	pWrapperTable->m_GetBuildInformation = NULL;
@@ -608,6 +615,42 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 	dlerror();
 	#endif // _WIN32
 	if (pWrapperTable->m_Writer_SetContentEncryptionCallback == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_PersistentReaderSource_GetSourceType = (PLib3MFPersistentReaderSource_GetSourceTypePtr) GetProcAddress(hLibrary, "lib3mf_persistentreadersource_getsourcetype");
+	#else // _WIN32
+	pWrapperTable->m_PersistentReaderSource_GetSourceType = (PLib3MFPersistentReaderSource_GetSourceTypePtr) dlsym(hLibrary, "lib3mf_persistentreadersource_getsourcetype");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_PersistentReaderSource_GetSourceType == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_PersistentReaderSource_InvalidateSourceData = (PLib3MFPersistentReaderSource_InvalidateSourceDataPtr) GetProcAddress(hLibrary, "lib3mf_persistentreadersource_invalidatesourcedata");
+	#else // _WIN32
+	pWrapperTable->m_PersistentReaderSource_InvalidateSourceData = (PLib3MFPersistentReaderSource_InvalidateSourceDataPtr) dlsym(hLibrary, "lib3mf_persistentreadersource_invalidatesourcedata");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_PersistentReaderSource_InvalidateSourceData == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_PersistentReaderSource_SourceDataIsValid = (PLib3MFPersistentReaderSource_SourceDataIsValidPtr) GetProcAddress(hLibrary, "lib3mf_persistentreadersource_sourcedataisvalid");
+	#else // _WIN32
+	pWrapperTable->m_PersistentReaderSource_SourceDataIsValid = (PLib3MFPersistentReaderSource_SourceDataIsValidPtr) dlsym(hLibrary, "lib3mf_persistentreadersource_sourcedataisvalid");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_PersistentReaderSource_SourceDataIsValid == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Reader_ReadFromPersistentSource = (PLib3MFReader_ReadFromPersistentSourcePtr) GetProcAddress(hLibrary, "lib3mf_reader_readfrompersistentsource");
+	#else // _WIN32
+	pWrapperTable->m_Reader_ReadFromPersistentSource = (PLib3MFReader_ReadFromPersistentSourcePtr) dlsym(hLibrary, "lib3mf_reader_readfrompersistentsource");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Reader_ReadFromPersistentSource == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32
@@ -3866,6 +3909,33 @@ Lib3MFResult LoadLib3MFWrapperTable(sLib3MFDynamicWrapperTable * pWrapperTable, 
 	dlerror();
 	#endif // _WIN32
 	if (pWrapperTable->m_Model_GetKeyStore == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Model_CreatePersistentSourceFromFile = (PLib3MFModel_CreatePersistentSourceFromFilePtr) GetProcAddress(hLibrary, "lib3mf_model_createpersistentsourcefromfile");
+	#else // _WIN32
+	pWrapperTable->m_Model_CreatePersistentSourceFromFile = (PLib3MFModel_CreatePersistentSourceFromFilePtr) dlsym(hLibrary, "lib3mf_model_createpersistentsourcefromfile");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Model_CreatePersistentSourceFromFile == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Model_CreatePersistentSourceFromBuffer = (PLib3MFModel_CreatePersistentSourceFromBufferPtr) GetProcAddress(hLibrary, "lib3mf_model_createpersistentsourcefrombuffer");
+	#else // _WIN32
+	pWrapperTable->m_Model_CreatePersistentSourceFromBuffer = (PLib3MFModel_CreatePersistentSourceFromBufferPtr) dlsym(hLibrary, "lib3mf_model_createpersistentsourcefrombuffer");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Model_CreatePersistentSourceFromBuffer == NULL)
+		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
+	
+	#ifdef _WIN32
+	pWrapperTable->m_Model_CreatePersistentSourceFromCallback = (PLib3MFModel_CreatePersistentSourceFromCallbackPtr) GetProcAddress(hLibrary, "lib3mf_model_createpersistentsourcefromcallback");
+	#else // _WIN32
+	pWrapperTable->m_Model_CreatePersistentSourceFromCallback = (PLib3MFModel_CreatePersistentSourceFromCallbackPtr) dlsym(hLibrary, "lib3mf_model_createpersistentsourcefromcallback");
+	dlerror();
+	#endif // _WIN32
+	if (pWrapperTable->m_Model_CreatePersistentSourceFromCallback == NULL)
 		return LIB3MF_ERROR_COULDNOTFINDLIBRARYEXPORT;
 	
 	#ifdef _WIN32

@@ -452,7 +452,8 @@ namespace NMR {
 		case NMR_ERROR_INVALIDTYPEATTRIBUTE: return "Invalid Type Attribute";
 		case NMR_ERROR_MISSINGTYPEATTRIBUTE: return "Missing Type Attribute";
 		case NMR_ERROR_MISSINGCOORDINATE: return "Missing Coordinate";
-
+		case NMR_ERROR_DATASOURCEISINVALIDATED: return "Data source is invalidated";
+			
 		// XML Parser Error Constants(0x9XXX)
 		case NMR_ERROR_XMLPARSER_INVALIDATTRIBVALUE: return "Invalid XML attribute value";
 		case NMR_ERROR_XMLPARSER_INVALIDPARSERESULT: return "Invalid XML parse result";

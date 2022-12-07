@@ -116,12 +116,33 @@ public:
 };
 
 /*************************************************************************************************************************
+ Class CLib3MFPersistentReaderSource 
+**************************************************************************************************************************/
+class CLib3MFPersistentReaderSource : public CLib3MFBaseClass {
+private:
+    static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
+    static v8::Persistent<v8::Function> constructor;
+    static void GetSourceType (const v8::FunctionCallbackInfo<v8::Value>& args);
+    static void InvalidateSourceData (const v8::FunctionCallbackInfo<v8::Value>& args);
+    static void SourceDataIsValid (const v8::FunctionCallbackInfo<v8::Value>& args);
+
+public:
+    CLib3MFPersistentReaderSource ();
+    ~CLib3MFPersistentReaderSource ();
+    
+    static void Init();
+    static v8::Local<v8::Object> NewInstance(v8::Local<v8::Object>, Lib3MFHandle pHandle);
+    
+};
+
+/*************************************************************************************************************************
  Class CLib3MFReader 
 **************************************************************************************************************************/
 class CLib3MFReader : public CLib3MFBaseClass {
 private:
     static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
     static v8::Persistent<v8::Function> constructor;
+    static void ReadFromPersistentSource (const v8::FunctionCallbackInfo<v8::Value>& args);
     static void ReadFromFile (const v8::FunctionCallbackInfo<v8::Value>& args);
     static void ReadFromBuffer (const v8::FunctionCallbackInfo<v8::Value>& args);
     static void ReadFromCallback (const v8::FunctionCallbackInfo<v8::Value>& args);
@@ -1232,6 +1253,9 @@ private:
     static void RemoveCustomContentType (const v8::FunctionCallbackInfo<v8::Value>& args);
     static void SetRandomNumberCallback (const v8::FunctionCallbackInfo<v8::Value>& args);
     static void GetKeyStore (const v8::FunctionCallbackInfo<v8::Value>& args);
+    static void CreatePersistentSourceFromFile (const v8::FunctionCallbackInfo<v8::Value>& args);
+    static void CreatePersistentSourceFromBuffer (const v8::FunctionCallbackInfo<v8::Value>& args);
+    static void CreatePersistentSourceFromCallback (const v8::FunctionCallbackInfo<v8::Value>& args);
 
 public:
     CLib3MFModel ();

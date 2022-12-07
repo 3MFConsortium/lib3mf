@@ -62,6 +62,10 @@ type Lib3MFImplementation struct {
 	Lib3MF_writer_getwarningcount uintptr
 	Lib3MF_writer_addkeywrappingcallback uintptr
 	Lib3MF_writer_setcontentencryptioncallback uintptr
+	Lib3MF_persistentreadersource_getsourcetype uintptr
+	Lib3MF_persistentreadersource_invalidatesourcedata uintptr
+	Lib3MF_persistentreadersource_sourcedataisvalid uintptr
+	Lib3MF_reader_readfrompersistentsource uintptr
 	Lib3MF_reader_readfromfile uintptr
 	Lib3MF_reader_readfrombuffer uintptr
 	Lib3MF_reader_readfromcallback uintptr
@@ -424,6 +428,9 @@ type Lib3MFImplementation struct {
 	Lib3MF_model_removecustomcontenttype uintptr
 	Lib3MF_model_setrandomnumbercallback uintptr
 	Lib3MF_model_getkeystore uintptr
+	Lib3MF_model_createpersistentsourcefromfile uintptr
+	Lib3MF_model_createpersistentsourcefrombuffer uintptr
+	Lib3MF_model_createpersistentsourcefromcallback uintptr
 	Lib3MF_getlibraryversion uintptr
 	Lib3MF_getprereleaseinformation uintptr
 	Lib3MF_getbuildinformation uintptr
@@ -703,6 +710,26 @@ func (implementation *Lib3MFImplementation) Initialize(DLLFileName string) error
 	implementation.Lib3MF_writer_setcontentencryptioncallback, err = syscall.GetProcAddress(dllHandle, "lib3mf_writer_setcontentencryptioncallback")
 	if (err != nil) {
 		return errors.New("Could not get function lib3mf_writer_setcontentencryptioncallback: " + err.Error())
+	}
+	
+	implementation.Lib3MF_persistentreadersource_getsourcetype, err = syscall.GetProcAddress(dllHandle, "lib3mf_persistentreadersource_getsourcetype")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_persistentreadersource_getsourcetype: " + err.Error())
+	}
+	
+	implementation.Lib3MF_persistentreadersource_invalidatesourcedata, err = syscall.GetProcAddress(dllHandle, "lib3mf_persistentreadersource_invalidatesourcedata")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_persistentreadersource_invalidatesourcedata: " + err.Error())
+	}
+	
+	implementation.Lib3MF_persistentreadersource_sourcedataisvalid, err = syscall.GetProcAddress(dllHandle, "lib3mf_persistentreadersource_sourcedataisvalid")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_persistentreadersource_sourcedataisvalid: " + err.Error())
+	}
+	
+	implementation.Lib3MF_reader_readfrompersistentsource, err = syscall.GetProcAddress(dllHandle, "lib3mf_reader_readfrompersistentsource")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_reader_readfrompersistentsource: " + err.Error())
 	}
 	
 	implementation.Lib3MF_reader_readfromfile, err = syscall.GetProcAddress(dllHandle, "lib3mf_reader_readfromfile")
@@ -2515,6 +2542,21 @@ func (implementation *Lib3MFImplementation) Initialize(DLLFileName string) error
 		return errors.New("Could not get function lib3mf_model_getkeystore: " + err.Error())
 	}
 	
+	implementation.Lib3MF_model_createpersistentsourcefromfile, err = syscall.GetProcAddress(dllHandle, "lib3mf_model_createpersistentsourcefromfile")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_model_createpersistentsourcefromfile: " + err.Error())
+	}
+	
+	implementation.Lib3MF_model_createpersistentsourcefrombuffer, err = syscall.GetProcAddress(dllHandle, "lib3mf_model_createpersistentsourcefrombuffer")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_model_createpersistentsourcefrombuffer: " + err.Error())
+	}
+	
+	implementation.Lib3MF_model_createpersistentsourcefromcallback, err = syscall.GetProcAddress(dllHandle, "lib3mf_model_createpersistentsourcefromcallback")
+	if (err != nil) {
+		return errors.New("Could not get function lib3mf_model_createpersistentsourcefromcallback: " + err.Error())
+	}
+	
 	implementation.Lib3MF_getlibraryversion, err = syscall.GetProcAddress(dllHandle, "lib3mf_getlibraryversion")
 	if (err != nil) {
 		return errors.New("Could not get function lib3mf_getlibraryversion: " + err.Error())
@@ -2882,6 +2924,82 @@ func (implementation *Lib3MFImplementation) Writer_SetContentEncryptionCallback(
 	}
 
 	err = implementation.CallFunction(implementation.Lib3MF_writer_setcontentencryptioncallback, implementation_writer.GetDLLInHandle(), 0, UInt64InValue(nUserData))
+	if (err != nil) {
+		return err
+	}
+	
+	return err
+}
+
+func (implementation *Lib3MFImplementation) PersistentReaderSource_GetSourceType(PersistentReaderSource Lib3MFHandle) (ELib3MFPersistentReaderSourceType, error) {
+	var err error = nil
+	var eSourceType uint64 = 0
+	
+	implementation_persistentreadersource, err := implementation.GetWrapperHandle(PersistentReaderSource)
+	if (err != nil) {
+		return 0, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_persistentreadersource_getsourcetype, implementation_persistentreadersource.GetDLLInHandle(), UInt64OutValue(&eSourceType))
+	if (err != nil) {
+		return 0, err
+	}
+	
+	return ELib3MFPersistentReaderSourceType (eSourceType), err
+}
+
+func (implementation *Lib3MFImplementation) PersistentReaderSource_InvalidateSourceData(PersistentReaderSource Lib3MFHandle) (error) {
+	var err error = nil
+	
+	implementation_persistentreadersource, err := implementation.GetWrapperHandle(PersistentReaderSource)
+	if (err != nil) {
+		return err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_persistentreadersource_invalidatesourcedata, implementation_persistentreadersource.GetDLLInHandle())
+	if (err != nil) {
+		return err
+	}
+	
+	return err
+}
+
+func (implementation *Lib3MFImplementation) PersistentReaderSource_SourceDataIsValid(PersistentReaderSource Lib3MFHandle) (bool, error) {
+	var err error = nil
+	var bDataIsValid int64 = 0
+	
+	implementation_persistentreadersource, err := implementation.GetWrapperHandle(PersistentReaderSource)
+	if (err != nil) {
+		return false, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_persistentreadersource_sourcedataisvalid, implementation_persistentreadersource.GetDLLInHandle(), Int64OutValue(&bDataIsValid))
+	if (err != nil) {
+		return false, err
+	}
+	
+	return (bDataIsValid != 0), err
+}
+
+func (implementation *Lib3MFImplementation) Reader_ReadFromPersistentSource(Reader Lib3MFHandle, Source Lib3MFHandle) (error) {
+	var err error = nil
+	
+	implementation_reader, err := implementation.GetWrapperHandle(Reader)
+	if (err != nil) {
+		return err
+	}
+	implementation_source, err := implementation.GetWrapperHandle(Source)
+	if (err != nil) {
+		return err
+	}
+	
+	SourceDLLHandle := implementation_source.GetDLLInHandle()
+	if (SourceDLLHandle == 0) {
+		err := fmt.Errorf("Handle must not be 0.")
+		return err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_reader_readfrompersistentsource, implementation_reader.GetDLLInHandle(), SourceDLLHandle)
 	if (err != nil) {
 		return err
 	}
@@ -9627,6 +9745,57 @@ func (implementation *Lib3MFImplementation) Model_GetKeyStore(Model Lib3MFHandle
 	}
 	
 	return hKeyStore, err
+}
+
+func (implementation *Lib3MFImplementation) Model_CreatePersistentSourceFromFile(Model Lib3MFHandle, sFilename string) (Lib3MFHandle, error) {
+	var err error = nil
+	hInstance := implementation.NewHandle()
+	
+	implementation_model, err := implementation.GetWrapperHandle(Model)
+	if (err != nil) {
+		return hInstance, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_model_createpersistentsourcefromfile, implementation_model.GetDLLInHandle(), StringInValue(sFilename), hInstance.GetDLLOutHandle())
+	if (err != nil) {
+		return hInstance, err
+	}
+	
+	return hInstance, err
+}
+
+func (implementation *Lib3MFImplementation) Model_CreatePersistentSourceFromBuffer(Model Lib3MFHandle, Buffer []uint8) (Lib3MFHandle, error) {
+	var err error = nil
+	hInstance := implementation.NewHandle()
+	
+	implementation_model, err := implementation.GetWrapperHandle(Model)
+	if (err != nil) {
+		return hInstance, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_model_createpersistentsourcefrombuffer, implementation_model.GetDLLInHandle(), 0, 0, hInstance.GetDLLOutHandle())
+	if (err != nil) {
+		return hInstance, err
+	}
+	
+	return hInstance, err
+}
+
+func (implementation *Lib3MFImplementation) Model_CreatePersistentSourceFromCallback(Model Lib3MFHandle, pTheReadCallback int64, nStreamSize uint64, pTheSeekCallback int64, nUserData uint64) (Lib3MFHandle, error) {
+	var err error = nil
+	hInstance := implementation.NewHandle()
+	
+	implementation_model, err := implementation.GetWrapperHandle(Model)
+	if (err != nil) {
+		return hInstance, err
+	}
+
+	err = implementation.CallFunction(implementation.Lib3MF_model_createpersistentsourcefromcallback, implementation_model.GetDLLInHandle(), 0, UInt64InValue(nStreamSize), 0, UInt64InValue(nUserData), hInstance.GetDLLOutHandle())
+	if (err != nil) {
+		return hInstance, err
+	}
+	
+	return hInstance, err
 }
 
 
