@@ -60,6 +60,7 @@ Source/API/lib3mf_model.cpp
 Source/API/lib3mf_object.cpp
 Source/API/lib3mf_objectiterator.cpp
 Source/API/lib3mf_packagepart.cpp
+Source/API/lib3mf_persistentreadersource.cpp
 Source/API/lib3mf_reader.cpp
 Source/API/lib3mf_resource.cpp
 Source/API/lib3mf_resourceiterator.cpp
