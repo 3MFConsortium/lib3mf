@@ -317,6 +317,17 @@ namespace NMR {
 		return Stat.size;
 	}
 
+	PImportStream COpcPackageReader::readPartStreamIntoMemory(_In_ std::string sPath)
+	{
+		std::string sRealPath = fnRemoveLeadingPathDelimiter(sPath);
+		PImportStream pStream = openZIPEntry(sRealPath);
+		if (pStream.get() == nullptr)
+			throw CNMRException(NMR_ERROR_COULDNOTCREATEOPCPART);
+
+		return pStream->copyToMemory();
+	}
+
+
 	POpcPackagePart COpcPackageReader::createPart(_In_ std::string sPath)
 	{
 		std::string sRealPath = fnRemoveLeadingPathDelimiter (sPath);

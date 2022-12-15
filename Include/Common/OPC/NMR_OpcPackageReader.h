@@ -80,6 +80,9 @@ namespace NMR {
 		_Ret_maybenull_ COpcPackageRelationship * findRootRelation(_In_ std::string sRelationType, _In_ nfBool bMustBeUnique) override;
 		POpcPackagePart createPart(_In_ std::string sPath) override;
 		nfUint64 getPartSize(_In_ std::string sPath) override;
+
+		PImportStream readPartStreamIntoMemory(_In_ std::string sPath) override;
+
 	};
 
 	typedef std::shared_ptr<COpcPackageReader> POpcPackageReader;

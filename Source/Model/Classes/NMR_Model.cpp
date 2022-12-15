@@ -1320,8 +1320,7 @@ namespace NMR {
 	{
 		if (m_pPersistentDataSource.get() != nullptr) {
 			auto pOpcPackageReader = m_pPersistentDataSource->getOpcPackageReader();
-			auto pPart = pOpcPackageReader->createPart(sPath);
-			return pPart->getImportStream();
+			return pOpcPackageReader->readPartStreamIntoMemory (sPath);
 		}
 		else {
 			return nullptr;

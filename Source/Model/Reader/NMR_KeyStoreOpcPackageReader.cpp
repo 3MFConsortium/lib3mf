@@ -204,4 +204,10 @@ namespace NMR {
 			}
 		}
 	}
+
+	PImportStream CKeyStoreOpcPackageReader::readPartStreamIntoMemory(_In_ std::string sPath)
+	{
+		throw CNMRException(NMR_ERROR_NOTIMPLEMENTED);
+	}
+
 }

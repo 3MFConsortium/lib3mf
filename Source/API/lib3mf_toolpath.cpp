@@ -160,16 +160,15 @@ IToolpathLayerReader* CToolpath::ReadLayerData(const Lib3MF_uint32 nIndex)
 
 	NMR::PImportStream pLayerDataStream;
 
-	auto pAttachment = pModel->findModelAttachment(pLayer->getLayerDataPath());
+	std::string sLayerPathData = pLayer->getLayerDataPath();
+	auto pAttachment = pModel->findModelAttachment(sLayerPathData);
 	if (pAttachment.get() != nullptr) {
 		pLayerDataStream = pAttachment->getStream();
 	}
 	else {
-		auto pOPCStream = pModel->readPathFromPersistentDataSource(pLayer->getLayerDataPath());
-		if (pOPCStream.get () == nullptr)
+		pLayerDataStream = pModel->readPathFromPersistentDataSource(sLayerPathData);
+		if (pLayerDataStream.get () == nullptr)
 			throw NMR::CNMRException(NMR_ERROR_INVALIDMODELATTACHMENT);
-
-		pLayerDataStream = pOPCStream->copyToMemory();
 	}
 
 	auto pReader = std::make_shared<NMR::CToolpathReader>(m_pToolpath, true);
