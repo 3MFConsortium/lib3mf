@@ -32,12 +32,12 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
   # using GCC
   add_definitions(-DBUILD_DLL)
   add_compile_options(-Wall)
-  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2")
+  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -O2")
 elseif ("${CMAKE_SYSTEM_NAME}" MATCHES "Darwin")
   # using GCC
   add_definitions(-DBUILD_DLL)
   add_compile_options(-Wall) 
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -O2")
   set(CMAKE_MACOSX_RPATH ON)
 endif()
 
