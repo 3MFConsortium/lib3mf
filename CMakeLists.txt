@@ -167,6 +167,21 @@ else()
   target_compile_options(${PROJECT_NAME} PUBLIC "$<$<CONFIG:RELEASE>:/O2;/sdl;/WX;/Oi;/Gy;/FC;/wd4996>")
 endif()
 
+## for crossguid
+target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/Include/Libraries/)
+if(WIN32)
+	target_compile_definitions(${PROJECT_NAME} PRIVATE GUID_WINDOWS)
+	target_link_libraries(${PROJECT_NAME} PRIVATE ole32 uuid)
+else()
+	if (APPLE)
+		target_compile_definitions(${PROJECT_NAME} PRIVATE GUID_CFUUID)
+		target_link_libraries(${PROJECT_NAME} "-framework Foundation")
+	else()
+		target_compile_definitions(${PROJECT_NAME} PRIVATE GUID_LIBUUID)
+		target_link_libraries(${PROJECT_NAME} PRIVATE uuid)
+	endif()
+endif(WIN32)
+
 configure_file(lib3mf.pc.in lib3mf.pc @ONLY)
 install(FILES ${CMAKE_BINARY_DIR}/lib3mf.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
 install(TARGETS ${PROJECT_NAME}

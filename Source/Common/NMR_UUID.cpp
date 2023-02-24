@@ -34,67 +34,18 @@ NMR_UUID.cpp implements a datatype and functions to handle UUIDs
 
 #include "Common/NMR_StringUtils.h"
 #include "Common/NMR_Exception.h"
+#include "crossguid/guid.hpp"
 
 #include <algorithm>
 
-#ifdef _WIN32
-#include <objbase.h>
-#include <iomanip>
-#else
-#include <ctime>
-#endif
-
 namespace NMR
 {
-#ifndef _WIN32
-	bool CUUID::S_mtwister_initialised = false;
-	std::mutex CUUID::S_uuid_gen_mutex;
-	std::random_device CUUID::S_rand_dev;
-	std::mt19937 CUUID::S_mtwister;
-#endif
+
 
 	CUUID::CUUID()
 	{
-#ifdef _WIN32
-		GUID guid;
-		if (CoCreateGuid(&guid) != S_OK)
-			throw CNMRException(NMR_ERROR_UUIDGENERATIONFAILED);
-		LPOLESTR str; 
-		if (StringFromCLSID(guid, &str) != S_OK)
-			throw CNMRException(NMR_ERROR_UUIDGENERATIONFAILED);
-		set(fnUTF16toUTF8(str).c_str());
-#else
-		std::lock_guard<std::mutex> l_lock(S_uuid_gen_mutex);
-		if (!S_mtwister_initialised)
-		{
-			// Prepare seed data
-			uint32_t l_seed_data[std::mt19937::state_size];
-			uint32_t l_cur_time = static_cast<uint32_t>(time(nullptr));
-			for (size_t i = 0; i < std::mt19937::state_size; ++i)
-			{
-				l_seed_data[i] = S_rand_dev() ^ l_cur_time;
-			}
-
-			// Init Mersenne Twister pseudo-random generator
-			std::seed_seq l_seed_seq(std::begin(l_seed_data), std::end(l_seed_data));
-			S_mtwister.seed(l_seed_seq);
-
-			S_mtwister_initialised = true;
-		}
-
-		// generation of a v4 UUID according to https://tools.ietf.org/html/rfc4122#section-4.4
-		std::uniform_int_distribution<std::mt19937::result_type> distHexaDec(0, 15);
-		std::uniform_int_distribution<std::mt19937::result_type> dist4(0, 4);
-		const nfChar* hexaDec = "0123456789abcdef";
-		nfChar string[33];
-		for (int i = 0; i < 32; i++)
-			string[i] = hexaDec[distHexaDec(S_mtwister)];
-		string[12] = hexaDec[4]; // set version 4
-		string[16] = hexaDec[8 + dist4(S_mtwister)];
-		string[32] = 0;
-
-		set(string);
-#endif
+		auto guid = xg::newGuid();
+		set(guid.str().c_str());
 	}
 
 	CUUID::CUUID(const nfChar* pString)
