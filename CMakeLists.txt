@@ -28,7 +28,7 @@ option(USE_INCLUDED_GTEST "Used included gtest" ON)
 option(USE_INCLUDED_SSL "Use included libressl" ON)
 option(BUILD_FOR_CODECOVERAGE "Build for code coverage analysis" OFF)
 option(STRIP_BINARIES "Strip binaries (on non-apple)" ON)
-option(USE_PLATFORM_UUID "Use UUID geneator that is provided by the OS (allways ON on Windows)" ON)
+option(USE_PLATFORM_UUID "Use UUID geneator that is provided by the OS (always ON for Windows)" OFF)
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
   # using GCC
