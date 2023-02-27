@@ -37,12 +37,22 @@ NMR_UUID.h defines a datatype and functions to handle UUIDs
 #include "Common/NMR_Local.h"
 #include <string>
 
+#ifdef GUID_CUSTOM
+#include <mutex>
+#include <random>
+#include <memory>
+#endif
+
 
 namespace NMR
 {
 	class CUUID {
 	private:
 		std::string m_sUUID;
+#ifdef GUID_CUSTOM
+		static std::mutex S_uuid_gen_mutex;
+		static std::unique_ptr<std::mt19937> S_mtwister;
+#endif
 	public:
 		CUUID();
 		CUUID(const nfChar* pString);
