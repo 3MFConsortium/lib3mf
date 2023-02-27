@@ -46,10 +46,6 @@ NMR_UUID.cpp implements a datatype and functions to handle UUIDs
 #include <uuid/uuid.h>
 #endif
 
-#ifndef GUID_CFUUID
-#define GUID_CFUUID
-#endif
-
 #ifdef GUID_CFUUID
 #include <CoreFoundation/CFUUID.h>
 #endif
